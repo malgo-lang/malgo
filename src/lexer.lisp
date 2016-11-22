@@ -3,8 +3,7 @@
   (:use :cl :cl-lex))
 (in-package :malgo.lexer)
 
-;; TODO: コメントを除去する処理を追加
-(define-string-lexer ml-lexer
+(define-string-lexer ml-lexer-without-comment
   ("\\("    (return (values 'lparen $@)))
   ("\\)"    (return (values 'rparen $@)))
   ("true"   (return (values 'bool :true)))
@@ -36,3 +35,33 @@
   (";"      (return (values 'semicolon  $@)))
   ("[a-z]([0-9]|[a-z]|[A-Z]|_)*" (return (values 'ident $@)))
   )
+
+(let ((depth 0))
+
+  (defun remove-comments (src &optional result)
+    (let ((src (if (listp src) src (concatenate 'list src))))
+      (cond ((equal #\( (first src))
+             (if (openp (second src))
+                 (remove-comments (cddr src) result)
+                 (remove-comments (cdr src) (build-source #\( result))))
+            ((equal #\* (first src))
+             (if (closep (second src))
+                 (remove-comments (cddr src) result)
+                 (remove-comments (cdr src) (build-source #\* result))))
+            ((null src) (concatenate 'string (nreverse result)))
+            (t (remove-comments (rest src) (build-source (first src) result))))))
+
+  (defun openp (next)
+    (cond ((equal #\* next) (progn (incf depth) t))
+          (t nil)))
+  (defun closep (next)
+    (cond ((equal #\) next) (progn (decf depth) t))
+          (t nil)))
+
+  (defun build-source (char result)
+    (if (= depth 0)
+        (cons char result)
+        result)))
+
+(defun ml-lexer (src)
+  (ml-lexer-without-comment (remove-comments src)))
