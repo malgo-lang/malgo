@@ -17,11 +17,13 @@
   :author "Yuya Kono"
   :license "MIT"
   :depends-on (:alexandria
-               :cl-ppcre
+               :serapeum
+               :cl-lex
                :trivia)
   :components ((:module "src"
                 :components
                         ((:file "malgo" :depends-on ("lexer"))
+                         (:file "parser" :depends-on ("lexer"))
                          (:file "lexer"))))
   :description "An implementation of MinCaml with Common Lisp."
   :long-description
