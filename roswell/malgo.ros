@@ -1,0 +1,37 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp (ql:quickload '(:uiop :cl-readline) :silent t)
+  )
+
+(defpackage :ros.script.malgo.3689200977
+  (:use :cl :uiop))
+(in-package :ros.script.malgo.3689200977)
+
+(defun mread (string)
+  string)
+(defun meval (ast)
+  ast)
+(defun mprint (expression)
+  expression)
+
+(defun rep (string)
+  (mprint (meval (mread string))))
+
+(defun mreadline (prompt)
+  (format t prompt)
+  (force-output)
+  (read-line *standard-input* nil))
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (loop (let ((line (mreadline "> ")))
+          (if line
+              (format t "~a~%" line)
+              (return)))))
+
+;;; vim: set ft=lisp lisp:
