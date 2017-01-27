@@ -17,14 +17,16 @@
   :author "Yuya Kono"
   :license "MIT"
   :depends-on (:alexandria
+               :esrap
+               :parser.common-rules
                :serapeum
-               :cl-lex
-               :trivia)
+               :trivia
+               :trivia.level2
+               :trivia.ppcre)
   :components ((:module "src"
                 :components
-                        ((:file "malgo" :depends-on ("lexer"))
-                         (:file "parser" :depends-on ("lexer"))
-                         (:file "lexer"))))
+                ((:file "malgo")
+                 (:file "parsec"))))
   :description "An implementation of MinCaml with Common Lisp."
   :long-description
   #.(with-open-file (stream (merge-pathnames
