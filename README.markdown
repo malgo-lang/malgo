@@ -1,5 +1,5 @@
 # Malgo
-A Lisp interpriter and compiler inspired by kanaka/mal
+
 
 ## Usage
 

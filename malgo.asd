@@ -25,9 +25,8 @@
                :trivia.ppcre)
   :components ((:module "src"
                 :components
-                ((:file "malgo")
-                 (:file "parsec"))))
-  :description "An implementation of MinCaml with Common Lisp."
+                ((:file "malgo"))))
+  :description ""
   :long-description
   #.(with-open-file (stream (merge-pathnames
                              #p"README.markdown"
