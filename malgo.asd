@@ -17,6 +17,8 @@
   :author "Yuya Kono"
   :license "MIT"
   :depends-on (:alexandria
+               :fare-quasiquote
+               :named-readtables
                :esrap
                :parser.common-rules
                :serapeum

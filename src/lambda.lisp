@@ -25,7 +25,7 @@
 (defrule reserved (or "if ""lambda" "λ" "true" "false")
   (:constant nil))
 
-(defrule/s variable (and (! reserved) lower (? alphanumeric))
+(defrule/s variable (and  lower (* alphanumeric))
   (:lambda (v) (list :tmvar (text v))))
 
 (defrule/s type (or arrow-type)
@@ -96,9 +96,9 @@
 
 (defun alpha-conv (term &optional (ctx nil))
   (match term
-    ((list :tmabs (list :tmvar x) (list :type ty) t1)
+    ((list :tmabs (list :tmvar x) ty t1)
      (mvlet ((new-x new-ctx (pick-fresh-name x ctx)))
-       (list :tmabs (list :tmvar new-x) (list :type ty)
+       (list :tmabs (list :tmvar new-x) ty
              (alpha-conv t1 new-ctx))))
     ((list :tmapp t1 t2)
      (list :tmapp (alpha-conv t1 ctx) (alpha-conv t2 ctx )))
@@ -132,6 +132,33 @@
 (defun index2name (index name-ctx)
   (elt name-ctx index))
 
+(defun show-term% (ctx term)
+  (match term
+    ((list :tmabs x ty t1)
+     (list "(lambda " x ":" (show-type ty) ". " (show-term% (cons x ctx) t1) ")"))
+    ((list :tmapp t1 t2) (list "(" (show-term% ctx t1) " " (show-term% ctx t2) ")"))
+    ((list :tmvar k n) (if (= n (length ctx))
+                           (index2name k ctx)
+                           (error "bad index")))
+    (:tmtrue "true")
+    (:tmfalse "false")
+    ((list :tmif t1 t2 t3) (list "(if " (show-term% ctx t1) " " (show-term% ctx t2) " " (show-term% ctx t3) ")"))
+    (_ (error "bad term"))))
+
+(defun show-type (type)
+  (match type
+    (:tybool "Bool")
+    ((list :tyarr (list :tyarr ty11 ty12) ty2)
+     (format nil "(~A -> ~A) -> ~A"
+             (show-type ty11) (show-type ty12)
+             (show-type ty2)))
+    ((list :tyarr ty1 ty2) (format nil "~A -> ~A"
+                                   (show-type ty1)
+                                   (show-type ty2)))))
+
+(defun show-term (term)
+  (text (show-term% nil term)))
+
 (defun remove-names (term)
   (labels ((acc (tr ctx)
              (match tr
@@ -146,6 +173,9 @@
                ((guard v (valp v)) v)
                (_ (error "~S is not a term" tr)))))
     (acc term nil)))
+
+(defun parse-lambda (src)
+  (remove-names (alpha-conv (parse 'term src))))
 
 (defun get-type-from-context (i ctx)
   (cdr (nth i ctx)))
@@ -180,3 +210,63 @@
                           (error "arms of condtional have different types: ~S ~S" tr ctx)))
                     (error "guard of conditional not a boolean: ~S ~S" tr ctx))))))
     (acc term nil)))
+
+
+(defun map-indexed-term (onvar c term)
+  (labels ((walk (c term)
+             (match term
+               ((list :tmvar x n) (funcall onvar c x n))
+               ((list :tmabs x ty t1) (list :tmabs x ty (walk (1+ c) t1)))
+               ((list :tmapp t1 t2) (list :tmapp (walk c t1) (walk c t2)))
+               (:tmtrue :tmtrue)
+               (:tmfalse :tmfalse)
+               ((list :tmif t1 t2 t3) (list :tmif (walk c t1) (walk c t2) (walk c t3))))))
+    (walk c term)))
+
+(defun term-shift-above (d c term)
+  (map-indexed-term
+   (lambda (c x n) (if (>= x c)
+                       (list :tmvar (+ x d) (+ n d))
+                       (list :tmvar x (+ n d))))
+   c term))
+
+(defun term-shift (d term)
+  (term-shift-above d 0 term))
+
+(defun term-subst (j s term)
+  (map-indexed-term
+   (lambda (c x n) (if (= x (+ j c))
+                       (term-shift c s)
+                       (list :tmvar x n)))
+   0 term))
+
+(defun term-subst-top (s term)
+  (term-shift -1 (term-subst 0 (term-shift 1 s) term)))
+
+(define-condition no-rule-applies (error) ())
+
+(defun eval1 (ctx term)
+  (match term
+    ((list :tmapp (list :tmabs _ _ t12) (guard v2 (valp v2)))
+     (term-subst-top v2 t12))
+    ((list :tmapp (guard v1 (valp v1)) t2)
+     (list :tmapp v1 (eval1 ctx t2)))
+    ((list :tmapp t1 t2)
+     (list :tmapp (eval1 ctx t1) t2))
+    ((list :tmif (guard c (valp c)) then else)
+     (if (eq c :tmtrue)
+         then
+         else))
+    ((list :tmif c then else)
+     (list :tmif (eval1 ctx c) then else))
+    (_ (error 'no-rule-applies))))
+
+(defun eval-lambda (ctx term)
+  (handler-case (let ((v (eval1 ctx term)))
+                  (eval-lambda ctx v))
+    (no-rule-applies () term)))
+
+(defun rep (src)
+  (let ((result (eval-lambda nil (parse-lambda src))))
+    (format t "~A : ~A~%" (show-term result) (show-type (typeof result)))
+    result))
