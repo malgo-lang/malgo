@@ -27,7 +27,11 @@
                :trivia.ppcre)
   :components ((:module "src"
                 :components
-                ((:file "malgo"))))
+                ((:file "ast")
+                 (:file "parser")
+                 (:file "typing")
+                 (:file "malgo")
+                 )))
   :description ""
   :long-description
   #.(with-open-file (stream (merge-pathnames

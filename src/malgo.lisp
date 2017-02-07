@@ -1,115 +1,70 @@
 (in-package :cl-user)
 (defpackage malgo
-  (:use :cl :esrap :trivia.level2 :trivia.ppcre)
-  (:import-from :parser.common-rules
-                :defrule/s))
+  (:use :cl :trivia.level2 :malgo.ast)
+  (:export :evaluate))
 (in-package :malgo)
 
-(defstruct (id (:constructor id (name))) name)
+(named-readtables:in-readtable :fare-quasiquote)
 
-(defrule ws+ (+ (or parser.common-rules:shell-style-comment/trimmed
-                    parser.common-rules:whitespace+))
-  (:constant nil))
-(defrule ws* (* (or parser.common-rules:shell-style-comment/trimmed
-                    parser.common-rules:whitespace+))
-  (:constant nil))
+(defun map-indexed-term (onvar c term)
+  (labels ((walk (c term)
+             (match term
+               ((list :tmvar x n) (funcall onvar c x n))
+               ((list :tmabs x ty t1) (list :tmabs x ty (walk (1+ c) t1)))
+               ((list :tmapp t1 t2) (list :tmapp (walk c t1) (walk c t2)))
+               (:tmtrue :tmtrue)
+               (:tmfalse :tmfalse)
+               (:tmunit :tmunit)
+               ((list :tmif t1 t2 t3) (list :tmif (walk c t1) (walk c t2) (walk c t3))))))
+    (walk c term)))
 
-(defrule skippable ws+)
-(defrule skippable? ws*)
+(defun term-shift-above (d c term)
+  (map-indexed-term
+   (lambda (c x n) (if (>= x c)
+                       (list :tmvar (+ x d) (+ n d))
+                       (list :tmvar x (+ n d))))
+   c term))
 
-(defrule bool-literal
-    parser.common-rules:boolean-literal/lower-case
-  (:lambda (b) (list :bool b)))
+(defun term-shift (d term)
+  (term-shift-above d 0 term))
 
-(defrule string-literal
-    (or parser.common-rules:string-literal/double-quotes
-        parser.common-rules:string-literal/single-quotes)
-  (:lambda (s) (list :string s)))
+(defun term-subst (j s term)
+  (map-indexed-term
+   (lambda (c x n) (if (= x (+ j c))
+                       (term-shift c s)
+                       (list :tmvar x n)))
+   0 term))
 
-(defrule float-literal
-    parser.common-rules:float-literal
-  (:lambda (f) (list :float f)))
+(defun term-subst-top (s term)
+  (term-shift -1 (term-subst 0 (term-shift 1 s) term)))
 
-(defrule integer-literal
-    parser.common-rules:integer-literal
-  (:lambda (i) (list :integer i)))
+(define-condition no-rule-applies (error) ())
 
-(defrule alphanumeric (alphanumericp character))
-(defrule lower (lower-case-p character))
+(defun eval1 (ctx term)
+  (match term
+    ((list :tmapp (list :tmabs _ _ t12) (guard v2 (valp v2)))
+     (term-subst-top v2 t12))
+    ((list :tmapp (guard v1 (valp v1)) t2)
+     (list :tmapp v1 (eval1 ctx t2)))
+    ((list :tmapp t1 t2)
+     (list :tmapp (eval1 ctx t1) t2))
+    ((list :tmif (guard c (valp c)) then else)
+     (if (eq c :tmtrue)
+         then
+         else))
+    ((list :tmif c then else)
+     (list :tmif (eval1 ctx c) then else))
+    (_ (error 'no-rule-applies))))
 
-(defrule/s ident (and (! "let") (! "in") (! "def") (alpha-char-p character) (* alphanumeric)))
-(defrule/s variable (and lower (? ident))
-  (:lambda (v) (list :var (text (car v) (cdr v)))))
+(defun eval-lambda (ctx term)
+  (handler-case (let ((v (eval1 ctx term)))
+                  (eval-lambda ctx v))
+    (no-rule-applies () term)))
 
-(defrule/s let
-    (and "let" ws+ variable ws* "=" ws* expr/?s)
-  (:destructure
-   (let ws1 var-name ws2 eq ws3 e1)
-   (declare (ignore let ws1 ws2 eq ws3))
-   (list :let var-name e1)))
+(defun show-term-and-type (term)
+  (concatenate 'string (show-term term) " : " (show-type (malgo.typing:typeof term))))
 
-
-(defrule/s parens
-    (and "(" ws* expr ws* ")")
-  (:destructure
-   (lparen ws1 inner ws2 rparen)
-   (declare (ignore lparen ws1 ws2 rparen))
-   inner))
-
-(defrule/s simple-expr
-    (or parens
-        bool-literal
-        string-literal
-        float-literal
-        integer-literal
-        variable))
-
-(defun make-multiply (parsed rest)
-  (if (null rest)
-      parsed
-      (let ((next (car rest)))
-        (make-multiply (list (if (equal "*" (first next))
-                            :mul
-                            :div)
-                        parsed
-                        (third next))
-                  (cdr rest)))))
-
-(defrule/s multiply
-    (and add/?s (* (and (or "*" "/") ws* add/?s)))
-  (:destructure (x rest)
-                (make-multiply x rest)))
-
-(defun make-add (parsed rest)
-  (if (null rest)
-      parsed
-      (let ((next (car rest)))
-        (make-add (list (if (equal "+" (first next))
-                            :add
-                            :sub)
-                        parsed
-                        (third next))
-                  (cdr rest)))))
-
-(defrule/s add
-    (and simple-expr/?s (* (and (or "+" "-") ws* simple-expr/?s)))
-  (:destructure (x rest)
-                (make-add x rest)))
-
-(defrule/s funcall
-    (and variable/?s (+ simple-expr/?s))
-  (:destructure (func args)
-                (list :funcall func args)))
-
-
-(defrule/s expr
-    (or funcall/?s
-        multiply/?s))
-
-(defrule/s stat
-    (or let/?s funcall/?s ";"))
-
-(defrule/s stats
-    (+ stat/?s)
-  (:lambda (ast)
-    (remove ";" ast :test #'equal)))
+(defun evaluate (src)
+  (let ((result (eval-lambda nil (malgo.parser:parse src))))
+    (format t "~A~%" (show-term-and-type result))
+    (values result (malgo.typing:typeof result))))

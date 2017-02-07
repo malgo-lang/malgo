@@ -1,13 +1,12 @@
 (in-package :cl-user)
 (defpackage malgo.parser
-  (:use :cl :esrap :trivia.level2)
+  (:use :cl :esrap :trivia.level2 :malgo.ast)
   (:shadow :parse)
   (:import-from :serapeum
                 :mvlet)
   (:import-from :parser.common-rules
                 :defrule/s)
-  (:export :name2index
-           :parse))
+  (:export :parse))
 (in-package :malgo.parser)
 
 (named-readtables:in-readtable :fare-quasiquote)
@@ -27,21 +26,26 @@
 (defrule lower (lower-case-p character))
 (defrule upper (upper-case-p character))
 
-(defrule reserved (or "if ""lambda" "λ" "true" "false")
+(defrule reserved (or "if ""lambda" "λ" "unit" "true" "false")
   (:constant nil))
 
-(defrule/s variable (and  lower (* alphanumeric))
-  (:lambda (v) (list :tmvar (text v))))
+(defrule/s variable (or "_"
+                        (and (! reserved) lower (* alphanumeric)))
+  (:lambda (v) (if (equal "_" v)
+                   (list :tmvar :ignore)
+                   (list :tmvar (text v)))))
 
 (defrule/s type (or arrow-type)
   (:lambda (v) v))
 
 (defrule/s factor-type (or (and "(" ws* arrow-type/?s ")")
-                           "Bool")
+                           "Bool"
+                           "Unit")
   (:lambda (v)
     (match v
       (`("(" ,_ ,type ")") type)
-      ("Bool" :tybool))))
+      ("Bool" :tybool)
+      ("Unit" :tyunit))))
 
 (defrule/s arrow-type (or (and factor-type/?s "->" ws* arrow-type)
                           factor-type)
@@ -63,6 +67,13 @@
        (setf result (list :tmabs (car var) (cdr var) result)))
      result)))
 
+(defrule/s seq (and term/?s ";" ws* term/?s)
+  (:destructure
+   (t1 colon ws t2)
+   (declare (ignore colon ws))
+   `(:tmapp (:tmabs (:tmvar :ignore) :tyunit ,t1)
+            ,t2)))
+
 (defrule/s if (and "if" ws* value/?s value/?s value)
   (:lambda (v) (cons :tmif (cddr v))))
 
@@ -81,22 +92,29 @@
   (:lambda (v)
     (if v :tmtrue :tmfalse)))
 
-(defrule/s value (or parens if bool lambda variable))
+(defrule/s unit "unit"
+  (:constant :tmunit))
+
+(defrule/s value (or parens if bool unit lambda variable))
 
 (defrule/s parens (and "(" ws* term/?s ")")
   (:function third))
 
-(defrule/s term (or apply value parens))
+(defrule/s term (or apply seq value parens))
 
 (defun pick-fresh-name (x ctx)
-  (labels ((gen-name (y ctx)
-             (if (member y ctx :key #'car :test #'equal)
-                 (gen-name (concatenate 'string y "'") ctx)
-                 (values y (cons (cons x y) ctx)))))
-    (gen-name x ctx)))
+  (if (eq x :ignore)
+      x
+      (labels ((gen-name (y ctx)
+                 (if (member y ctx :key #'car :test #'equal)
+                     (gen-name (concatenate 'string y "'") ctx)
+                     (values y (cons (cons x y) ctx)))))
+        (gen-name x ctx))))
 
 (defun get-alpha-name (x ctx)
-  (cdr (assoc x ctx :test #'equal)))
+  (if (eq x :ignore)
+      x
+      (cdr (assoc x ctx :test #'equal))))
 
 (defun alpha-conv (term &optional (ctx nil))
   (match term
@@ -109,15 +127,6 @@
     ((list :tmvar x)
      `(:tmvar ,(get-alpha-name x ctx)))
     (x x)))
-
-(defun valp (term)
-  (match term
-    ((list* :tmvar _) t)
-    ((or :tmtrue :tmfalse) t)
-    (_ nil)))
-
-(defun name2index (name name-ctx)
-  (position name name-ctx :test #'equal))
 
 (defun remove-names (term)
   (labels ((acc (tr ctx)
