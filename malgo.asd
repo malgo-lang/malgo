@@ -21,15 +21,14 @@
                :named-readtables
                :esrap
                :parser.common-rules
+               :proc-parse
                :serapeum
                :trivia
                :trivia.level2
                :trivia.ppcre)
   :components ((:module "src"
                 :components
-                ((:file "ast")
-                 (:file "parser")
-                 (:file "typing")
+                (
                  (:file "malgo")
                  )))
   :description ""
