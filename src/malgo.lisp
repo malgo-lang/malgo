@@ -1,4 +1,4 @@
 (in-package :cl-user)
-(defpackage malgo
+(defpackage :malgo
   (:use :cl))
 (in-package :malgo)

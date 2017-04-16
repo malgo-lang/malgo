@@ -19,17 +19,17 @@
   :depends-on (:alexandria
                :fare-quasiquote
                :named-readtables
-               :esrap
-               :parser.common-rules
                :proc-parse
                :serapeum
+               :cl-lex
+               :yacc
                :trivia
-               :trivia.level2
                :trivia.ppcre)
   :components ((:module "src"
                 :components
                 (
                  (:file "malgo")
+                 (:file "parser")
                  )))
   :description ""
   :long-description
