@@ -16,8 +16,13 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Lib
+                     , Syntax
+                     , Emit
   build-depends:       base >= 4.7 && < 5
-                     , llvm-hs
+                     , llvm-hs >= 4.1
+                     , llvm-hs-pure >= 4.1
+                     , bytestring
+                     , mtl
                      , parsec
                      , flow
   default-language:    Haskell2010
