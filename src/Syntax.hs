@@ -15,7 +15,8 @@ data Expr = Nil
                  , body       :: [Expr]}
           | Call Name [Expr]
           | Var Name
-          deriving (Show, Eq)
+          | Int Int
+          deriving Show
 
 defnAdd :: Expr
 defnAdd = Defn { name = "add"
@@ -23,3 +24,6 @@ defnAdd = Defn { name = "add"
                , params = [("x", "int"), ("y", "int")]
                , body = [Call "+" [Var "x", Var "y"]]
                }
+
+sample :: [Expr]
+sample = [defnAdd, Call "add" [Int 1, Int 2]]
