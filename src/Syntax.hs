@@ -23,19 +23,7 @@ data Func = Func { name       :: Name
                  , params     :: [(Name, Type)]
                  , body       :: [Expr]
                  }
-  -- deriving Show
-
-instance Show Func where
-  show Func { name = name
-            , returnType = returnType
-            , params = params
-            , body = body } = "(" ++ name ++ ":" ++ returnType ++ " " ++ showParams params ++ ") " ++ showBody body
-    where showParams []            = ""
-          showParams [(name, typ)] = name ++ ":" ++ typ
-          showParams ((name, typ):ns) = name ++ ":" ++ typ ++ " " ++ showParams ns
-          showBody []     = ""
-          showBody [e]    = show e
-          showBody (e:es) = show e ++ " " ++ showBody es
+  deriving Show
 
 data Expr = Nil
           | Int Int
@@ -47,25 +35,7 @@ data Expr = Nil
           | Var Name
           | If Expr Expr Expr
           | Let (Name, Type, Expr) [Expr]
-
-instance Show Expr where
-  show Nil           = ""
-  show (Int i)       = show i
-  show (Bool b)      = show b
-  show (Float f)     = show f
-  show (Defn f)      = "(defn " ++ show f ++ ")"
-  show (Call n [])   = "(" ++ n ++ ")"
-  show (Call n args) = "(" ++ n ++ " " ++ showArgs args ++ ")"
-    where showArgs []     = ""
-          showArgs [e]    = show e
-          showArgs (e:es) = show e ++ " " ++ showArgs es
-  show (Var n)       = n
-  show (If p t e)    = "(if " ++ show p ++ " " ++ show t ++ " " ++ show e ++ ")"
-  show (Let (name, ty, v) es) = "(let " ++ "(" ++ name ++ ":" ++ ty ++ " " ++ show v ++ ") " ++ showBody es ++ ")"
-    where
-          showBody []     = ""
-          showBody [e]    = show e
-          showBody (e:es) = show e ++ " " ++ showBody es
+  deriving Show
 
 defnAdd :: Expr
 defnAdd = Defn $ Func { name = "add"
