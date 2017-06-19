@@ -10,8 +10,9 @@ TODO: より良いプリティプリンタ
       (if (<= m n)
           (gcd m (- n m))
           (gcd n (- m n)))))
-(let ((a:int (read-int)) (b:int (read-int)))
-  (print-int (gcd a b)))
+(define answer:int 42)
+(let ((a:int (read-int)))
+  (print-int (gcd a ans)))
 -}
 
 type Name = String
@@ -40,12 +41,12 @@ data Expr = Nil
           | Int Int
           | Bool Bool
           | Float Double
-          -- | Cell Expr Expr
           | Defn Func
+          | Def Name Type Expr
           | Call Name [Expr]
           | Var Name
           | If Expr Expr Expr
-          | Let [(Name, Type, Expr)] [Expr]
+          | Let (Name, Type, Expr) [Expr]
 
 instance Show Expr where
   show Nil           = ""
@@ -60,10 +61,8 @@ instance Show Expr where
           showArgs (e:es) = show e ++ " " ++ showArgs es
   show (Var n)       = n
   show (If p t e)    = "(if " ++ show p ++ " " ++ show t ++ " " ++ show e ++ ")"
-  show (Let defs es) = "(let " ++ "(" ++ showDefs defs ++ ") " ++ showBody es ++ ")"
-    where showDefs [] = ""
-          showDefs [(n, ty, e)] = "(" ++  n ++ ":" ++ ty ++ " " ++ show e ++ ")"
-          showDefs ((n, ty, e):ds) = "(" ++ n ++ ":" ++ ty ++ " " ++ show e ++ ") " ++ showDefs ds
+  show (Let (name, ty, v) es) = "(let " ++ "(" ++ name ++ ":" ++ ty ++ " " ++ show v ++ ") " ++ showBody es ++ ")"
+    where
           showBody []     = ""
           showBody [e]    = show e
           showBody (e:es) = show e ++ " " ++ showBody es
@@ -90,9 +89,12 @@ defnGcd = Defn $ Func
   }
 
 printgcd :: Expr
-printgcd = Let [ ("a", "int", Call "read-int" [])
-               , ("b", "int", Call "read-int" [])
-               ] [Call "gcd" [Var "a", Var "b"]]
+printgcd =
+  Let ("a", "int", Call "read-int" []) [
+  Let ("b", "int", Call "read-int" []) [
+      Call "gcd" [Var "a", Var "b"]
+      ]
+  ]
 
 sample :: [Expr]
 sample = [defnAdd, Call "add" [Int 1, Int 2], defnGcd, printgcd]
