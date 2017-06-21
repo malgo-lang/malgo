@@ -28,7 +28,7 @@ data Func = Func { name       :: Name
 data Expr = Nil
           | Int Int
           | Bool Bool
-          | Float Double
+          -- | Float Double
           | Defn Func
           | Def Name Type Expr
           | Call Name [Expr]
