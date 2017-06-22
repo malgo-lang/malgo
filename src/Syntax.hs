@@ -1,24 +1,25 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Syntax (Name, Type, Func(..), Expr(..)) where
+module Syntax (Name, Type, Expr(..)) where
 
-type Name = String
-type Type = String
+import           Control.Monad.State (evalState)
+import           Symbol
 
-data TypedVar = (:-:) Name Type
+type Name = Symbol
+data Type = IntT
+          | BoolT
+          | FunT [Type] Type
   deriving Show
 
-data Func = Func { name       :: Name
-                 , returnType :: Type
-                 , params     :: [TypedVar]
-                 , body       :: [Expr]
-                 }
+data TypedVar = (:-:) Name Type
   deriving Show
 
 data Expr = Nil
           | Int Int
           | Bool Bool
-          | Defn Func
+          | Func { params :: [TypedVar]
+                 , body   :: [Expr]
+                 }
           | Def TypedVar Expr
           | Call Name [Expr]
           | Var Name
@@ -26,9 +27,14 @@ data Expr = Nil
           | Let TypedVar Expr [Expr]
   deriving Show
 
-defineAdd =
-  Defn $ Func { name = "add"
-              , returnType = "int"
-              , params = ["x" :-: "int", "y" :-: "int"]
-              , body = [Call "+" [Var "x", Var "y"]]
-              }
+defineAdd :: Expr
+defineAdd = (`evalState` empty) $  do
+  add <- symbol "add"
+  plus <- symbol "+"
+  x <- symbol "x"
+  y <- symbol "y"
+  return $ Def (add :-: FunT [IntT, IntT] IntT) Func { params = [ x :-: IntT
+                                                                , y :-: IntT
+                                                                ]
+                                                     , body = [Call plus [Var x, Var y]]
+                                                     }
