@@ -16,6 +16,7 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Lib
+                     -- , Symbol
                      , Syntax
                      , Parser
                      , Emit
@@ -23,9 +24,11 @@ library
                      , llvm-hs >= 4.1
                      , llvm-hs-pure >= 4.1
                      , bytestring
+                     , containers
                      , mtl
                      , parsec
                      , flow
+                     , text
   default-language:    Haskell2010
 
 executable malgo-exe
