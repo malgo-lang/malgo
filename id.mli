@@ -1,0 +1,1 @@
+val genid: string -> string

@@ -5,15 +5,20 @@ OCB = ocamlbuild $(OCB_FLANGS)
 
 all: native byte
 
-clean: $(OCB) -clean
+clean:
+	$(OCB) -clean
 
-native: $(OCB) main.native
+native:
+	$(OCB) main.native
 
-byte: $(OCB) main.byte
+byte:
+	$(OCB) main.byte
 
-profile: $(OCB) -tag profile main.native
+profile:
+	$(OCB) -tag profile main.native
 
-debug: $(OCB) -tag debug main.byte
+debug:
+	$(OCB) -tag debug main.byte
 
 test: native
-      ./main.native
+	./main.native
