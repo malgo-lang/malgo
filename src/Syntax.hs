@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Syntax (Name, Type, Expr(..)) where
+module Syntax (Name, Type, Exp(..), sample) where
 
 import           Control.Monad.State (evalState)
 import           Symbol
@@ -8,33 +8,64 @@ import           Symbol
 type Name = Symbol
 data Type = IntT
           | BoolT
-          | FunT [Type] Type
+          -- | FunT [Type] Type
   deriving Show
 
-data TypedVar = (:-:) Name Type
-  deriving Show
+-- data TypedVar = (:-:) Name Type
+  -- deriving Show
 
-data Expr = Nil
+type TypedVar = (Name, Type)
+
+{-
+e ::=
+  c 定数
+  (op e_1 ... e_n) プリミティブ演算
+  (if e_1 e_2 e_3) 条件分岐
+  (let (dec) e) 変数,関数定義
+  (e_1 ... e_n) 関数呼び出し
+
+dec :: =
+  (function name (x_1:t_1 ... x_n:t_n) : t e) 関数宣言
+  (var name : t e) 変数宣言
+-}
+data Exp = Unit
           | Int Int
           | Bool Bool
-          | Func { params :: [TypedVar]
-                 , body   :: [Expr]
-                 }
-          | Def TypedVar Expr
-          | Call Name [Expr]
+          | Float Double
+          | Not Exp
+          | Neg Exp
+          | Add Exp Exp
+          | Sub Exp Exp
+          | FNeg Exp Exp
+          | FAdd Exp Exp
+          | FSub Exp Exp
+          | FMul Exp Exp
+          | FDiv Exp Exp
+          | Eq Exp Exp
+          | Lt Exp Exp
+          | Gt Exp Exp
+          | Le Exp Exp
+          | Ge Exp Exp
+          | Call Name [Exp]
           | Var Name
-          | If Expr Expr Expr
-          | Let TypedVar Expr [Expr]
+          | If Exp Exp Exp
+          | Let [Dec] [Exp]
   deriving Show
 
-defineAdd :: Expr
-defineAdd = (`evalState` empty) $  do
+data Dec = FunDec TypedVar [TypedVar] [Exp]
+         | VarDec TypedVar Exp
+  deriving Show
+
+{-
+(let ((function add (x:int y:int) : int
+        (+ x y)))
+  (+ 3 4))
+-}
+
+sample = (`evalState` empty) $ do
   add <- symbol "add"
-  plus <- symbol "+"
   x <- symbol "x"
   y <- symbol "y"
-  return $ Def (add :-: FunT [IntT, IntT] IntT) Func { params = [ x :-: IntT
-                                                                , y :-: IntT
-                                                                ]
-                                                     , body = [Call plus [Var x, Var y]]
-                                                     }
+  return (Let [FunDec (add, IntT) [(x, IntT), (y, IntT)]
+                [Add (Var x) (Var y)]]
+           [Call add [Int 3, Int 4]])
