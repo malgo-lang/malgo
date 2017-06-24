@@ -6,9 +6,11 @@ import           Control.Monad.State (evalState)
 import           Symbol
 
 type Name = Symbol
-data Type = IntT
+data Type = UnitT
+          | IntT
           | BoolT
-          -- | FunT [Type] Type
+          | FloatT
+          | StringT
   deriving Show
 
 -- data TypedVar = (:-:) Name Type
@@ -29,27 +31,28 @@ dec :: =
   (var name : t e) 変数宣言
 -}
 data Exp = Unit
-          | Int Int
-          | Bool Bool
-          | Float Double
-          | Not Exp
-          | Neg Exp
-          | Add Exp Exp
-          | Sub Exp Exp
-          | FNeg Exp Exp
-          | FAdd Exp Exp
-          | FSub Exp Exp
-          | FMul Exp Exp
-          | FDiv Exp Exp
-          | Eq Exp Exp
-          | Lt Exp Exp
-          | Gt Exp Exp
-          | Le Exp Exp
-          | Ge Exp Exp
-          | Call Name [Exp]
-          | Var Name
-          | If Exp Exp Exp
-          | Let [Dec] [Exp]
+         | Int Int
+         | Bool Bool
+         | String String
+         | Float Double
+         | Not Exp
+         | Neg Exp
+         | Add Exp Exp
+         | Sub Exp Exp
+         | FNeg Exp Exp
+         | FAdd Exp Exp
+         | FSub Exp Exp
+         | FMul Exp Exp
+         | FDiv Exp Exp
+         | Eq Exp Exp
+         | Lt Exp Exp
+         | Gt Exp Exp
+         | Le Exp Exp
+         | Ge Exp Exp
+         | Call Name [Exp]
+         | Var Name
+         | If Exp Exp Exp
+         | Let [Dec] [Exp]
   deriving Show
 
 data Dec = FunDec TypedVar [TypedVar] [Exp]

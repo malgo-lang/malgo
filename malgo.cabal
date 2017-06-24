@@ -15,10 +15,10 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib
-                     -- , Symbol
-                     , Syntax
-                     , Parser
+  exposed-modules:   Symbol
+                   , Malgo
+                     -- , Syntax
+                     -- , Parser
   build-depends:       base >= 4.7 && < 5
                      , llvm-hs >= 4.1
                      , llvm-hs-pure >= 4.1
