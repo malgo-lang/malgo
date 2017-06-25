@@ -1,4 +1,4 @@
-module Symbol (Symbol(..)) where
+module Symbol (symbol, empty, Symbol(..)) where
 
 import           Control.Monad.State
 import qualified Data.Map            as Map
@@ -18,12 +18,12 @@ symbol' name table =
     Nothing -> let i = Map.size table
                in (MkSymbol (name, i), Map.insert name i table)
 
--- symbol :: String -> State (Map.Map String Int) Symbol
--- symbol name = do
---   table <- get
---   let (sym, table1) = symbol' name table
---   put table1
---   return sym
+symbol :: String -> State (Map.Map String Int) Symbol
+symbol name = do
+  table <- get
+  let (sym, table1) = symbol' name table
+  put table1
+  return sym
 
 -- test' = do
 --   x <- symbol "x"
@@ -32,4 +32,4 @@ symbol' name table =
 
 -- test = runState test' empty
 
--- empty = Map.empty
+empty = Map.empty

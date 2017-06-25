@@ -13,12 +13,10 @@ data Type = UnitT
           | StringT
   deriving Show
 
--- data TypedVar = (:-:) Name Type
-  -- deriving Show
-
 type TypedVar = (Name, Type)
 
 {-
+MinTigerとでも呼ぶべきか
 e ::=
   c 定数
   (op e_1 ... e_n) プリミティブ演算
