@@ -5,8 +5,19 @@
           "Fizz"
           (if (= (mod n 5) 0)
               "Buzz"
-              (int-to-string n)))))
+              (intToString n)))))
 
 (define (main:int)
   (for (n (iota 1 100))
     (println (fizzbuzz n))))
+
+{--
+def fizzbuzz(n:int) :string do
+    cond do
+      (mod n 15) == 0 -> "FizzBuzz"
+      (mod n 3)  == 0 -> "Fizz"
+      (mod n 5)  == 0 -> "Buzz"
+      n               -> intToString n
+    end
+end
+--}
