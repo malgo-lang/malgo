@@ -1,8 +1,10 @@
 type t =
-  | Begin
-  | Define
-  | If
+  | Begin of t * t list
+  | Define of string * Types.t * t
+  | If of t * t * t
   | Symbol of string
-  | Number of float
-  | List of t list
+  | Int of int
+  | Float of float
+  | Cons of t * t
+  | Nil
 [@@deriving show]
