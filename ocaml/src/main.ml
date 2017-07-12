@@ -1,9 +1,5 @@
-type point2d = float * float
-[@@deriving show]
-
 let main () =
   Printf.printf "Hello, world!\n";
-  Printf.printf "%s\n" (Id.genid "hoge");
-  print_string (show_point2d (2.0, 3.0))
+  print_string (Syntax.show (Syntax.List [Syntax.Define; Syntax.Symbol "r"; Syntax.Number 10.]))
 
 let () = main ()
