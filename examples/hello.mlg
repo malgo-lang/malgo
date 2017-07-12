@@ -1,9 +1,10 @@
 (define (main:int)
   (println "Hello world")
 
-  (for (i 1 100)
-    (print-int (* i i))
-    (print " "))
+  (map (range 1 100)
+       (fn (i:int)
+           (print-int (* i i))
+           (print " ")))
   (println "")
 
   0)
@@ -12,7 +13,7 @@
 def main(): int do
   println "Hello world"
 
-  map (1..100) do i ->
+  map (1..100) do i:int ->
     print-int (i * i)
     print " "
   end
