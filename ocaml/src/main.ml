@@ -1,5 +1,5 @@
 let main () =
   Printf.printf "Hello, world!\n";
-  print_string (Syntax.show (Syntax.Define ("r", Types.Int, Syntax.Int 10)))
+  Printf.printf "%s\n%s\n" (Syntax.show Syntax.sample1) (Syntax.show Syntax.sample2)
 
 let () = main ()
