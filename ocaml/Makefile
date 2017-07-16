@@ -3,6 +3,10 @@
 OCB_FLAGS = -use-ocamlfind -tag bin_annot -I src
 OCB = ocamlbuild $(OCB_FLAGS)
 
+PKGS =
+PRED = 'byte' # or 'native'
+OCF = ocamlfind query -r -predicates $(PRED) -format "-I %d %a" $(PKG)
+
 all: native byte
 
 clean:
@@ -21,7 +25,10 @@ debug: sanity
 	$(OCB) -tag debug main.byte
 
 sanity:
-	ocamlfind query ppx_deriving.show
+# $(OCF)
+
+top:
+	utop -I _build/src _build/src/types.cmo _build/src/syntax.cmo
 
 test: native
 	./main.native

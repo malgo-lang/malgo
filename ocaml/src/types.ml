@@ -2,4 +2,8 @@ type t =
   | Int
   | Float
   | Symbol
-[@@deriving show]
+
+let rec show = function
+  | Int -> "Int"
+  | Float -> "Float"
+  | Symbol -> "Symbol"
