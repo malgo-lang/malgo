@@ -17,7 +17,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.identStart = letter <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.identLetter = alphaNum <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.reservedOpNames = ["->", ":"]
-  , Tok.reservedNames = ["Unit", "Int", "Float", "Symbol", "Bool"]
+  , Tok.reservedNames = ["Unit", "Int", "Float", "Symbol", "Bool", "List", "Vector"]
   }
 
 integer = Tok.integer lexer
@@ -36,12 +36,18 @@ parseAtomType =
   <|> (reserved "Symbol" >> return SymbolT)
   <|> parseListT
   <|> parseVectorT
+  <|> parseParens
   where
     parseListT = do
-      t <- parens parseType
+      reserved "List"
+      t <- parseAtomType
       return (ListT t)
     parseVectorT = do
-      t <- Tok.brackets lexer parseType
+      reserved "Vector"
+      t <- parseAtomType
       return (VectorT t)
+    parseParens = do
+      t <- parens parseType
+      return t
 
 parseFunT = reservedOp "->" >> return FunT

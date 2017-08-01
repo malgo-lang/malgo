@@ -22,8 +22,8 @@ instance Show Type where
   show BoolT             = "Bool"
   show FloatT            = "Float"
   show SymbolT           = "Symbol"
-  show (ListT t)         = "(" ++ show t ++ ")"
-  show (VectorT t)       = "[" ++ show t ++ "]"
+  show (ListT t)         = "List (" ++ show t ++ ")"
+  show (VectorT t)       = "Vector (" ++ show t ++ ")"
   show (FunT p ret)    = show p ++ " -> " ++ show ret
   -- show (FunT params ret) = "(" ++ showParams params ++ ")" ++ " -> " ++ show ret
   --   where showParams []     = ""
