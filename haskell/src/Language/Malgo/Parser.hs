@@ -32,18 +32,18 @@ parseAtomType =
   <|> (reserved "Int" >> return IntT)
   <|> (reserved "Float" >> return FloatT)
   <|> (reserved "Symbol" >> return SymbolT)
-  <|> (reserved "List" >> parseAtomType >>= return . ListT)
+  <|> fmap ListT (reserved "List" >> parseAtomType)
   <|> parens parseType
 
 parseFunT = reservedOp "->" >> return FunT
 
-parseExpr' = try (identifier >>= return . Symbol)
-  <|> try (float >>= return . Float)
-  <|> try (integer >>= return . Int)
+parseExpr' = try (fmap Symbol identifier)
+  <|> try (fmap Float float)
+  <|> try (fmap Int integer)
   <|> try (reserved "#t" >> return (Bool True))
   <|> try (reserved "#f" >> return (Bool False))
-  <|> (brackets (many parseExpr) >>= return . List)
-  <|> (parens (many parseExpr) >>= return . Tree)
+  <|> fmap List (brackets (many parseExpr))
+  <|> fmap Tree (parens (many parseExpr))
 
 parseTyped = do
   e <- parseExpr'
