@@ -3,10 +3,7 @@ module Language.Malgo.Parser
 
 import Language.Malgo.Syntax
 
-import Control.Applicative ((<*))
-
 import Text.Parsec
-import Text.Parsec.String
 import qualified Text.Parsec.Token as Tok
 import Text.Parsec.Language
 
@@ -35,32 +32,18 @@ parseAtomType =
   <|> (reserved "Int" >> return IntT)
   <|> (reserved "Float" >> return FloatT)
   <|> (reserved "Symbol" >> return SymbolT)
-  <|> parseListT
+  <|> (reserved "List" >> parseAtomType >>= return . ListT)
   <|> parens parseType
-  where
-    parseListT = do
-      reserved "List"
-      t <- parseAtomType
-      return (ListT t)
-    -- parseParens = do
-    --   parens (lexeme parseType)
 
 parseFunT = reservedOp "->" >> return FunT
 
-parseExpr' = try (identifier >>= \s -> return (Symbol s))
-  <|> try (float >>= \f -> return (Float f))
-  <|> try (integer >>= \i -> return (Int i))
+parseExpr' = try (identifier >>= return . Symbol)
+  <|> try (float >>= return . Float)
+  <|> try (integer >>= return . Int)
   <|> try (reserved "#t" >> return (Bool True))
   <|> try (reserved "#f" >> return (Bool False))
-  <|> parseList
-  <|> parseTree
-  where
-    parseList = do
-      xs <- brackets (many parseExpr)
-      return (List xs)
-    parseTree = do
-      xs <- parens (many parseExpr)
-      return (Tree xs)
+  <|> (brackets (many parseExpr) >>= return . List)
+  <|> (parens (many parseExpr) >>= return . Tree)
 
 parseTyped = do
   e <- parseExpr'
