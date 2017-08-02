@@ -1,11 +1,22 @@
 import           Test.Hspec
 
-import qualified Language.Malgo.Syntax as S
+import qualified Language.Malgo.Syntax as MS
+import qualified Text.Parsec as P
+import qualified Language.Malgo.Parser as MP
 
 spec = do
   describe "show :: Show AST" $ do
     it "sample1" $ do
-      show S.sample1 `shouldBe` "(def ans:Int 42)"
+      show MS.sample1 `shouldBe` "(def ans:Int 42)"
+  describe "parse & show" $ do
+    it "sample1" $ do
+      P.parse MP.parseExpr "" (show MS.sample1) `shouldBe` Right MS.sample1
+    it "sample2" $ do
+      P.parse MP.parseExpr "" (show MS.sample2) `shouldBe` Right MS.sample2
+    it "sample3" $ do
+      P.parse MP.parseExpr "" (show MS.sample3) `shouldBe` Right MS.sample3
+    it "sample4" $ do
+      P.parse MP.parseExpr "" (show MS.sample4) `shouldBe` Right MS.sample4
 
 main :: IO ()
 main = hspec spec

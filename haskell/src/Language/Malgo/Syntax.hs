@@ -12,7 +12,6 @@ data Type = UnitT
           | FloatT
           | SymbolT
           | ListT Type
-          | VectorT Type
           | FunT Type Type
   deriving Eq
 
@@ -26,13 +25,13 @@ instance Show Type where
   show (FunT p ret)    = show p ++ " -> " ++ show ret
 
 data AST = Symbol Name
-         | Int Int
+         | Int Integer
          | Float Double
          | Bool Bool
          | Typed AST Type
          | List [AST]
          | Tree [AST]
-
+  deriving Eq
 instance Show AST where
   show (Symbol name) = name
   show (Int i)       = show i
@@ -42,12 +41,6 @@ instance Show AST where
   show (Typed a t)   = show a ++ ":" ++ show t
   show (List xs)   = "[" ++ unwords (map show xs) ++ "]"
   show (Tree xs) = "(" ++ unwords (map show xs) ++ ")"
-  -- show (List [Symbol "quote", x]) = "'" ++ show x
-  -- show (List (Symbol "quote":xs)) = "'" ++ show (List xs)
-  -- show (List l)      = "(" ++ show_list l ++ ")"
-  --   where show_list []     = ""
-  --         show_list [x]    = show x
-  --         show_list (x:xs) = show x ++ " " ++ show_list xs
 
 sample1 = Tree [Symbol "def", Typed (Symbol "ans") IntT, Int 42]
 sample2 = Typed (Tree [ Symbol "if"

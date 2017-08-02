@@ -7,7 +7,6 @@ import Control.Applicative ((<*))
 
 import Text.Parsec
 import Text.Parsec.String
-import Text.Parsec.Expr
 import qualified Text.Parsec.Token as Tok
 import Text.Parsec.Language
 
@@ -17,15 +16,17 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.identStart = letter <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.identLetter = alphaNum <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.reservedOpNames = ["->", ":"]
-  , Tok.reservedNames = ["Unit", "Int", "Float", "Symbol", "Bool", "List"]
+  , Tok.reservedNames = ["#t", "#f", "Unit", "Int", "Float", "Symbol", "Bool", "List"]
   }
 
 integer = Tok.integer lexer
 float = Tok.float lexer
 parens = Tok.parens lexer
-indentifier = Tok.identifier lexer
+identifier = Tok.identifier lexer
 reserved = Tok.reserved lexer
 reservedOp = Tok.reservedOp lexer
+brackets = Tok.brackets lexer
+lexeme = Tok.lexeme lexer
 
 parseType = chainl1 parseAtomType parseFunT
 
@@ -35,19 +36,39 @@ parseAtomType =
   <|> (reserved "Float" >> return FloatT)
   <|> (reserved "Symbol" >> return SymbolT)
   <|> parseListT
-  -- <|> parseVectorT
   <|> parseParens
   where
     parseListT = do
       reserved "List"
       t <- parseAtomType
       return (ListT t)
-    -- parseVectorT = do
-    --   reserved "Vector"
-    --   t <- parseAtomType
-    --   return (VectorT t)
     parseParens = do
-      t <- parens parseType
+      t <- parens (lexeme parseType)
       return t
 
 parseFunT = reservedOp "->" >> return FunT
+
+parseExpr' = try (identifier >>= \s -> return (Symbol s))
+  <|> try (float >>= \f -> return (Float f))
+  <|> try (integer >>= \i -> return (Int i))
+  <|> try (reserved "#t" >> return (Bool True))
+  <|> try (reserved "#f" >> return (Bool False))
+  <|> parseList
+  <|> parseTree
+  where
+    parseList = do
+      xs <- brackets (many parseExpr)
+      return (List xs)
+    parseTree = do
+      xs <- parens (many parseExpr)
+      return (Tree xs)
+
+parseTyped = do
+  e <- parseExpr'
+  reservedOp ":"
+  t <- parseType
+  return (Typed e t)
+
+parseExpr = try parseTyped <|> parseExpr'
+
+parse = Text.Parsec.parse parseExpr ""
