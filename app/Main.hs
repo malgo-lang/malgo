@@ -5,7 +5,7 @@ import qualified Language.Malgo.Syntax as Syntax
 import           System.Environment    (getArgs)
 import qualified Text.Parsec.String    as P
 
--- main :: IO ()
+main :: IO ()
 main = do
   args <- getArgs
   let file = head args
