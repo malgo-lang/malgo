@@ -1,8 +1,8 @@
-(define (main:int)
+(def (main:Int)
   (println "Hello world")
 
   (map (range 1 100)
-       (fn (i:int)
+       (fn (i:Int)
            (print-int (* i i))
            (print " ")))
   (println "")

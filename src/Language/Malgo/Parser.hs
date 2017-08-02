@@ -13,7 +13,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.identStart = letter <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.identLetter = alphaNum <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.reservedOpNames = ["->", ":"]
-  , Tok.reservedNames = ["#t", "#f", "Unit", "Int", "Float", "Symbol", "Bool", "List"]
+  , Tok.reservedNames = ["#t", "#f", "Unit", "Int", "Float", "Symbol", "Bool", "String", "List"]
   }
 
 integer = Tok.integer lexer
@@ -24,6 +24,7 @@ reserved = Tok.reserved lexer
 reservedOp = Tok.reservedOp lexer
 brackets = Tok.brackets lexer
 lexeme = Tok.lexeme lexer
+stringLiteral = Tok.stringLiteral lexer
 
 parseType = chainl1 parseAtomType parseFunT
 
@@ -32,6 +33,8 @@ parseAtomType =
   <|> (reserved "Int" >> return IntT)
   <|> (reserved "Float" >> return FloatT)
   <|> (reserved "Symbol" >> return SymbolT)
+  <|> (reserved "String" >> return StringT)
+  <|> (reserved "Bool" >> return BoolT)
   <|> fmap ListT (reserved "List" >> parseAtomType)
   <|> parens parseType
 
@@ -42,6 +45,7 @@ parseExpr' = try (fmap Symbol identifier)
   <|> try (fmap Int integer)
   <|> try (reserved "#t" >> return (Bool True))
   <|> try (reserved "#f" >> return (Bool False))
+  <|> try (fmap String stringLiteral)
   <|> fmap List (brackets (many parseExpr))
   <|> fmap Tree (parens (many parseExpr))
 

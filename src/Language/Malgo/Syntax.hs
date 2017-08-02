@@ -11,15 +11,17 @@ data Type = UnitT
           | BoolT
           | FloatT
           | SymbolT
+          | StringT
           | ListT Type
           | FunT Type Type
   deriving (Eq, Show)
 
-textType UnitT             = "()"
+textType UnitT             = "Unit"
 textType IntT              = "Int"
 textType BoolT             = "Bool"
 textType FloatT            = "Float"
 textType SymbolT           = "Symbol"
+textType StringT           = "String"
 textType (ListT t)         = "List (" ++ textType t ++ ")"
 textType (FunT p ret)    = textType p ++ " -> " ++ textType ret
 
@@ -27,6 +29,7 @@ data AST = Symbol Name
          | Int Integer
          | Float Double
          | Bool Bool
+         | String String
          | Typed AST Type
          | List [AST]
          | Tree [AST]
@@ -37,6 +40,7 @@ textAST (Int i)       = show i
 textAST (Float f)     = show f
 textAST (Bool True)   = "#t"
 textAST (Bool False)  = "#f"
+textAST (String s)    = show s
 textAST (Typed a t)   = textAST a ++ ":" ++ textType t
 textAST (List xs)   = "[" ++ unwords (map textAST xs) ++ "]"
 textAST (Tree xs) = "(" ++ unwords (map textAST xs) ++ ")"
@@ -51,4 +55,4 @@ sample3 = Typed (Tree [Symbol "def"
                       , Tree [Typed (Symbol "f") IntT, Typed (Symbol "x") IntT]
                       , Tree [Symbol "*", Symbol "x", Symbol "x"]]) SymbolT
 
-sample4 = Typed (List [Symbol "a", Symbol "b"]) (ListT SymbolT)
+sample4 = Typed (List [String "a", Symbol "b"]) (ListT SymbolT)

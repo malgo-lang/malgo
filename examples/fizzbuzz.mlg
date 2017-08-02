@@ -1,4 +1,4 @@
-(define (fizzbuzz:string n:int)
+(define (fizzbuzz:String n:Int)
   (if (= (mod n 15) 0)
       "FizzBuzz"
       (if (= (mod n 3) 0)
@@ -7,7 +7,7 @@
               "Buzz"
               (intToString n)))))
 
-(define (main:int)
+(define (main:Int)
   (for (n (iota 1 100))
     (println (fizzbuzz n))))
 
