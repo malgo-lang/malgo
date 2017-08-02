@@ -13,16 +13,15 @@ data Type = UnitT
           | SymbolT
           | ListT Type
           | FunT Type Type
-  deriving Eq
+  deriving (Eq, Show)
 
-instance Show Type where
-  show UnitT             = "()"
-  show IntT              = "Int"
-  show BoolT             = "Bool"
-  show FloatT            = "Float"
-  show SymbolT           = "Symbol"
-  show (ListT t)         = "List (" ++ show t ++ ")"
-  show (FunT p ret)    = show p ++ " -> " ++ show ret
+textType UnitT             = "()"
+textType IntT              = "Int"
+textType BoolT             = "Bool"
+textType FloatT            = "Float"
+textType SymbolT           = "Symbol"
+textType (ListT t)         = "List (" ++ textType t ++ ")"
+textType (FunT p ret)    = textType p ++ " -> " ++ textType ret
 
 data AST = Symbol Name
          | Int Integer
@@ -31,16 +30,16 @@ data AST = Symbol Name
          | Typed AST Type
          | List [AST]
          | Tree [AST]
-  deriving Eq
-instance Show AST where
-  show (Symbol name) = name
-  show (Int i)       = show i
-  show (Float f)     = show f
-  show (Bool True)   = "#t"
-  show (Bool False)  = "#f"
-  show (Typed a t)   = show a ++ ":" ++ show t
-  show (List xs)   = "[" ++ unwords (map show xs) ++ "]"
-  show (Tree xs) = "(" ++ unwords (map show xs) ++ ")"
+  deriving (Eq, Show)
+
+textAST (Symbol name) = name
+textAST (Int i)       = show i
+textAST (Float f)     = show f
+textAST (Bool True)   = "#t"
+textAST (Bool False)  = "#f"
+textAST (Typed a t)   = textAST a ++ ":" ++ textType t
+textAST (List xs)   = "[" ++ unwords (map textAST xs) ++ "]"
+textAST (Tree xs) = "(" ++ unwords (map textAST xs) ++ ")"
 
 sample1 = Tree [Symbol "def", Typed (Symbol "ans") IntT, Int 42]
 sample2 = Typed (Tree [ Symbol "if"

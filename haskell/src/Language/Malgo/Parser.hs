@@ -36,15 +36,14 @@ parseAtomType =
   <|> (reserved "Float" >> return FloatT)
   <|> (reserved "Symbol" >> return SymbolT)
   <|> parseListT
-  <|> parseParens
+  <|> parens parseType
   where
     parseListT = do
       reserved "List"
       t <- parseAtomType
       return (ListT t)
-    parseParens = do
-      t <- parens (lexeme parseType)
-      return t
+    -- parseParens = do
+    --   parens (lexeme parseType)
 
 parseFunT = reservedOp "->" >> return FunT
 
