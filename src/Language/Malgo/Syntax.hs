@@ -43,6 +43,7 @@ textAST (Bool False)  = "#f"
 textAST (String s)    = show s
 textAST (Typed a t)   = textAST a ++ ":" ++ textType t
 textAST (List xs)   = "[" ++ unwords (map textAST xs) ++ "]"
+textAST (Tree [Symbol "quote", Symbol s]) = "'" ++ s
 textAST (Tree xs) = "(" ++ unwords (map textAST xs) ++ ")"
 
 sample1 = Tree [Symbol "def", Typed (Symbol "ans") IntT, Int 42]
@@ -55,4 +56,4 @@ sample3 = Typed (Tree [Symbol "def"
                       , Tree [Typed (Symbol "f") IntT, Typed (Symbol "x") IntT]
                       , Tree [Symbol "*", Symbol "x", Symbol "x"]]) SymbolT
 
-sample4 = Typed (List [String "a", Symbol "b"]) (ListT SymbolT)
+sample4 = Typed (List [String "a", Tree [Symbol "quote", Symbol "b"]]) (ListT SymbolT)

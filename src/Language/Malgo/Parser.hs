@@ -40,7 +40,8 @@ parseAtomType =
 
 parseFunT = reservedOp "->" >> return FunT
 
-parseExpr' = try (fmap Symbol identifier)
+parseExpr' = try (char '\'' >> identifier >>= \s -> return (Tree [Symbol "quote", Symbol s]))
+  <|> try (fmap Symbol identifier)
   <|> try (fmap Float float)
   <|> try (fmap Int integer)
   <|> try (reserved "#t" >> return (Bool True))
