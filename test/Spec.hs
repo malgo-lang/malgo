@@ -11,21 +11,24 @@ spec = do
       MS.textAST MS.sample1 `shouldBe` "(def ans:Int 42)"
   describe "parse" $ do
     it "sample1" $ do
-      print MS.sample1
-      print (MS.textAST MS.sample1)
       P.parse MP.parseExpr "" (MS.textAST MS.sample1) `shouldBe` Right MS.sample1
     it "sample2" $ do
-      print MS.sample2
-      print (MS.textAST MS.sample2)
       P.parse MP.parseExpr "" (MS.textAST MS.sample2) `shouldBe` Right MS.sample2
     it "sample3" $ do
-      print MS.sample3
-      print (MS.textAST MS.sample3)
       P.parse MP.parseExpr "" (MS.textAST MS.sample3) `shouldBe` Right MS.sample3
     it "sample4" $ do
-      print MS.sample4
-      print (MS.textAST MS.sample4)
       P.parse MP.parseExpr "" (MS.textAST MS.sample4) `shouldBe` Right MS.sample4
-
+    it "AtomT" $ do
+      let ast = MS.Typed (MS.Symbol "hoge") (MS.AtomT "Hoge")
+      P.parse MP.parseExpr "" (MS.textAST ast) `shouldBe` Right ast
+    it "Fn" $ do
+      let src = "(def (f:int g:(fn i8 int) x:i8) (g x))"
+      P.parse MP.parseExpr "" src `shouldBe` (Right $ MS.Tree [ MS.Symbol "def"
+                                                              , MS.Tree [ MS.Typed (MS.Symbol "f") (MS.AtomT "int")
+                                                                        , MS.Typed (MS.Symbol "g")
+                                                                          (MS.TTree [MS.AtomT "fn", MS.AtomT "i8", MS.AtomT "int"])
+                                                                        , MS.Typed (MS.Symbol "x") (MS.AtomT "i8")]
+                                                              , MS.Tree [MS.Symbol "g", MS.Symbol "x"]
+                                                              ])
 main :: IO ()
 main = hspec spec

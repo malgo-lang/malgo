@@ -6,24 +6,12 @@ import           Control.Monad.State (evalState)
 import Data.List (intercalate)
 
 type Name = String
-data Type = UnitT
-          | IntT
-          | BoolT
-          | FloatT
-          | SymbolT
-          | StringT
-          | ListT Type
-          | FunT Type Type
+data Type = AtomT String
+          | TTree [Type]
   deriving (Eq, Show)
 
-textType UnitT             = "Unit"
-textType IntT              = "Int"
-textType BoolT             = "Bool"
-textType FloatT            = "Float"
-textType SymbolT           = "Symbol"
-textType StringT           = "String"
-textType (ListT t)         = "List (" ++ textType t ++ ")"
-textType (FunT p ret)    = textType p ++ " -> " ++ textType ret
+textType (AtomT s)         = s
+textType (TTree xs) = "(" ++ unwords (map textType xs)  ++")"
 
 data AST = Symbol Name
          | Int Integer
@@ -46,14 +34,14 @@ textAST (List xs)   = "[" ++ unwords (map textAST xs) ++ "]"
 textAST (Tree [Symbol "quote", Symbol s]) = "'" ++ s
 textAST (Tree xs) = "(" ++ unwords (map textAST xs) ++ ")"
 
-sample1 = Tree [Symbol "def", Typed (Symbol "ans") IntT, Int 42]
+sample1 = Tree [Symbol "def", Typed (Symbol "ans") (AtomT "Int"), Int 42]
 sample2 = Typed (Tree [ Symbol "if"
                       , Tree [Symbol "==", Symbol "ans", Int 42]
                       , Tree [Symbol "quote", Symbol "yes"]
-                      , Tree [Symbol "quote", Symbol "no"]]) SymbolT
+                      , Tree [Symbol "quote", Symbol "no"]]) (AtomT "Symbol")
 
 sample3 = Typed (Tree [Symbol "def"
-                      , Tree [Typed (Symbol "f") IntT, Typed (Symbol "x") IntT]
-                      , Tree [Symbol "*", Symbol "x", Symbol "x"]]) SymbolT
+                      , Tree [Typed (Symbol "f") (AtomT "Int"), Typed (Symbol "x") (AtomT "Int")]
+                      , Tree [Symbol "*", Symbol "x", Symbol "x"]]) (AtomT "Symbol")
 
-sample4 = Typed (List [String "a", Tree [Symbol "quote", Symbol "b"]]) (ListT SymbolT)
+sample4 = Typed (List [String "a", Tree [Symbol "quote", Symbol "b"]]) (TTree [AtomT "List", AtomT "Symbol"])
