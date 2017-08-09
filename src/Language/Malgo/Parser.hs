@@ -12,7 +12,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.commentEnd = "-}"
   , Tok.identStart = letter <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.identLetter = alphaNum <|> oneOf "!$%&*+-./<=>?@^_~"
-  , Tok.reservedOpNames = ["->", ":"]
+  , Tok.reservedOpNames = [":"]
   , Tok.reservedNames = ["#t", "#f"]
   }
 
@@ -26,14 +26,7 @@ brackets = Tok.brackets lexer
 lexeme = Tok.lexeme lexer
 stringLiteral = Tok.stringLiteral lexer
 
-
-parseType =
- (do { xs <- identifier
-     ; return (AtomT xs)})
-  <|> (do { xs <- parens (many1 parseType)
-          ; return (TTree xs)})
-
-parseExpr' = try (char '\'' >> identifier >>= \s -> return (Tree [Symbol "quote", Symbol s]))
+parseUntyped = try (char '\'' >> identifier >>= \s -> return (Tree [Symbol "quote", Symbol s]))
   <|> try (fmap Symbol identifier)
   <|> try (fmap Float float)
   <|> try (fmap Int integer)
@@ -43,12 +36,8 @@ parseExpr' = try (char '\'' >> identifier >>= \s -> return (Tree [Symbol "quote"
   <|> fmap List (brackets (many parseExpr))
   <|> fmap Tree (parens (many parseExpr))
 
-parseTyped = do
-  e <- parseExpr'
-  reservedOp ":"
-  t <- parseType
-  return (Typed e t)
+parseTyped = parseUntyped >>= \e -> reservedOp ":" >> parseUntyped >>= \t -> return (Typed e t)
 
-parseExpr = try parseTyped <|> parseExpr'
+parseExpr = try parseTyped <|> parseUntyped
 
-parse = Text.Parsec.parse parseExpr ""
+parse = Text.Parsec.parseTest parseExpr
