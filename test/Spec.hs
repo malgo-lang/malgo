@@ -1,6 +1,6 @@
 import           Test.Hspec
 
-import qualified Language.Malgo.Syntax as MS
+import qualified Language.Malgo.SExpr as MS
 import qualified Text.Parsec as P
 import qualified Text.Parsec.String as P
 import qualified Language.Malgo.Parser as MP
@@ -32,6 +32,10 @@ spec = do
                                                               ])
     it "String" $ do
       let src = "(print \"hoge\")"
-      P.parse MP.parseExpr "" src `shouldBe` Right (MS.Tree [ MS.Symbol "print", MS.String "hoge"])
+      P.parse MP.parseExpr "" src `shouldBe` Right (MS.Tree [MS.Symbol "print", MS.String "hoge"])
+    it "Char" $ do
+      let src = "(print-char 'a')"
+      P.parse MP.parseExpr "" src `shouldBe` Right (MS.Tree [MS.Symbol "print-char", MS.Char 'a'])
+
 main :: IO ()
 main = hspec spec

@@ -1,7 +1,7 @@
 module Main where
 
 import qualified Language.Malgo.Parser as Parser
-import qualified Language.Malgo.Syntax as Syntax
+import qualified Language.Malgo.SExpr as SExpr
 import           System.Environment    (getArgs)
 import qualified Text.Parsec.String    as P
 
@@ -12,4 +12,4 @@ main = do
   result <- P.parseFromFile Parser.parseExpr file
   case result of
     Left err  -> print err
-    Right ast -> putStrLn (Syntax.textAST ast)
+    Right ast -> putStrLn (SExpr.textAST ast)

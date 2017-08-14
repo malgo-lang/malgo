@@ -16,9 +16,8 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:   src
   exposed-modules:  Language.Malgo
-                  , Language.Malgo.Syntax
+                  , Language.Malgo.SExpr
                   , Language.Malgo.Parser
-                  , Language.Malgo.VM
   build-depends:    base >= 4.7 && < 5
 --                  , llvm-hs >= 4.1
 --                  , llvm-hs-pure >= 4.1
