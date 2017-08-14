@@ -1,9 +1,9 @@
 import           Test.Hspec
 
-import qualified Language.Malgo.SExpr as MS
-import qualified Text.Parsec as P
-import qualified Text.Parsec.String as P
 import qualified Language.Malgo.Parser as MP
+import qualified Language.Malgo.Syntax as MS
+import qualified Text.Parsec           as P
+import qualified Text.Parsec.String    as P
 
 spec = do
   describe "textAST" $ do

@@ -1,11 +1,11 @@
 module Language.Malgo.Parser
   where
 
-import Language.Malgo.SExpr
+import           Language.Malgo.Syntax
 
-import Text.Parsec
-import qualified Text.Parsec.Token as Tok
-import Text.Parsec.Language
+import           Text.Parsec
+import           Text.Parsec.Language
+import qualified Text.Parsec.Token     as Tok
 
 lexer = Tok.makeTokenParser $ emptyDef {
     Tok.commentStart = "{-"
