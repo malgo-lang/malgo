@@ -1,5 +1,3 @@
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Language.Malgo.LetLang where
 
 import           Control.Monad.State
