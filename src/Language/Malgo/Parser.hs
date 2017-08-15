@@ -42,4 +42,4 @@ parseTyped = parseUntyped >>= \e -> reservedOp ":" >> parseUntyped >>= \t -> ret
 
 parseExpr = try parseTyped <|> parseUntyped
 
-parse = Text.Parsec.parseTest parseExpr
+parse = Text.Parsec.parse parseExpr "test"
