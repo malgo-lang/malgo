@@ -57,7 +57,7 @@ valueOfCond (Tree [c, body] : rest) =
 valueOfCond _ = lift . Left $ "error: cannot eval `cond`"
 
 applyFun :: Name -> [AST] -> StateT Env (Either String) AST
-applyFun "id" [a]    = return a
+applyFun "id" [a] = return a
 applyFun "cons" [car, List cdr] = return $ List $ car:cdr
 applyFun "car" [List (car:_)] = return car
 applyFun "cdr" [List (_:cdr)] = return (List cdr)
@@ -70,7 +70,7 @@ applyFun "/" [Int lhs, Int rhs] = return (Int (lhs `div` rhs))
 
 applyFun "zero?" [a] = return (Bool (a == Int 0))
 applyFun "minus" [Int i] = return (Int (-i))
-applyFun name args   = lift . Left $ "error: call " ++ name ++ " with " ++ show args ++ "is invalid"
+applyFun name args = lift . Left $ "error: call " ++ name ++ " with " ++ show args ++ "is invalid"
 
 eval :: Env -> AST -> Either String (AST, Env)
 eval env ast = runStateT (valueOf ast) env
