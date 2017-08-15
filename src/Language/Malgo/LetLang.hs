@@ -31,6 +31,17 @@ valueOf (Tree [Symbol "let", Symbol var, val, body]) =
      put $ extendEnv var val' env
      valueOf body
 
+valueOf (Tree [Symbol "let*", Tree declist, body]) =
+  do env <- get
+     extendEnv' declist
+     valueOf body
+     where extendEnv' (Symbol var:val:rest) =
+             do val' <- valueOf val
+                env <- get
+                put $ extendEnv var val' env
+                extendEnv' rest
+           extendEnv' [] = return ()
+
 valueOf (Tree [Symbol "cond", Tree clauses]) = valueOfCond clauses
 valueOf (Tree (Symbol fun : args)) =
   do env <- get
