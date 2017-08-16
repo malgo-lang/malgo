@@ -42,6 +42,13 @@ extendEnv = Map.insert
 applyEnv :: Env -> Name -> Maybe AST
 applyEnv env var = Map.lookup var env
 
+putEnv :: Name -> AST -> StateT Env (Either String) ()
+putEnv var val =
+  do val' <- valueOf val
+     env <- get
+     put $ extendEnv var val' env
+     return ()
+
 valueOf :: AST -> StateT Env (Either String) AST
 valueOf (Tree [Symbol "if", c, t, e]) =
   -- (if c t e) -> if c then t else e
@@ -52,9 +59,7 @@ valueOf (Tree [Symbol "if", c, t, e]) =
 
 valueOf (Tree [Symbol "let", Symbol var, val, body]) =
   -- (let var val body) -> [var = val]body
-  do val' <- valueOf val
-     env <- get
-     put $ extendEnv var val' env
+  do putEnv var val
      valueOf body
 
 valueOf (Tree [Symbol "let*", Tree declist, body]) =
@@ -62,9 +67,7 @@ valueOf (Tree [Symbol "let*", Tree declist, body]) =
      extendEnv' declist
      valueOf body
      where extendEnv' (Symbol var:val:rest) =
-             do val' <- valueOf val
-                env <- get
-                put $ extendEnv var val' env
+             do putEnv var val
                 extendEnv' rest
            extendEnv' [] = return ()
 
@@ -72,9 +75,7 @@ valueOf (Tree [Symbol "destruct", Tree symbols, List list, body]) =
   do extendEnv'' symbols list
      valueOf body
      where extendEnv'' (Symbol name : srest) (val:vrest) =
-             do val' <- valueOf val
-                env <- get
-                put $ extendEnv name val' env
+             do putEnv name val
                 extendEnv'' srest vrest
            extendEnv'' [] [] = return ()
            extendEnv'' x y = lift . Left $ "error: cannot destruct " ++ show x ++ " and " ++ show y
