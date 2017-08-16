@@ -33,7 +33,8 @@ trans (S.List xs)   = List (map trans xs)
 trans (S.Tree xs)   = Tree (map trans xs)
 
 initEnv :: Env
-initEnv = Map.fromList [("nil", List [])]
+initEnv = Map.fromList [("nil", List [])
+                       ,("id", Proc ["x"] (Symbol "x") Map.empty)]
 
 extendEnv :: Name -> AST -> Env -> Env
 extendEnv = Map.insert
@@ -68,22 +69,22 @@ valueOf (Tree [Symbol "let*", Tree declist, body]) =
            extendEnv' [] = return ()
 
 valueOf (Tree [Symbol "destruct", Tree symbols, List list, body]) =
-  do extendEnv' symbols list
+  do extendEnv'' symbols list
      valueOf body
-     where extendEnv' ((Symbol name):srest) (val:vrest) =
+     where extendEnv'' (Symbol name : srest) (val:vrest) =
              do val' <- valueOf val
                 env <- get
                 put $ extendEnv name val' env
-                extendEnv' srest vrest
-           extendEnv' [] [] = return ()
-           extendEnv' x y = lift . Left $ "error: cannot destruct " ++ show x ++ " and " ++ show y
+                extendEnv'' srest vrest
+           extendEnv'' [] [] = return ()
+           extendEnv'' x y = lift . Left $ "error: cannot destruct " ++ show x ++ " and " ++ show y
 
 valueOf (Tree [Symbol "cond", Tree clauses]) = valueOfCond clauses
 
 valueOf (Tree [Symbol "proc", Tree symbols, body]) =
   do env <- get
-     let symbols' = catMaybes (map unSymbol symbols)
-     if (length symbols') == (length symbols)
+     let symbols' = mapMaybe unSymbol symbols
+     if length symbols' == length symbols
        then return $ Proc symbols' body env
        else lift . Left $ "error: " ++ show symbols' ++ " are not [Symbol a]"
   where unSymbol (Symbol s) = Just s
@@ -114,7 +115,6 @@ valueOfCond (Tree [c, body] : rest) =
 valueOfCond _ = lift . Left $ "error: cannot eval `cond`"
 
 applyFun :: Name -> [AST] -> StateT Env (Either String) AST
-applyFun "id" [a] = return a
 applyFun "cons" [car, List cdr] = return $ List $ car:cdr
 applyFun "car" [List (car:_)] = return car
 applyFun "cdr" [List (_:cdr)] = return (List cdr)
@@ -132,10 +132,12 @@ applyFun name args =
   do env <- get
      if Map.member name env
        then do Proc params body penv <- valueOf (Symbol name)
-               put $ extendEnv' params args penv
-               body' <- valueOf body
-               put env
-               return body'
+               if length params == length args
+                 then do put $ extendEnv' params args penv
+                         body' <- valueOf body
+                         put env
+                         return body'
+                 else lift . Left $ "error: " ++ "the number of args is invalid " ++ show params ++ ", " ++ show args
        else lift . Left $ "error: call " ++ name ++ " with " ++ show args ++ "is invalid"
        where extendEnv' (name:nrest) (val:vrest) env = extendEnv' nrest vrest (extendEnv name val env)
              extendEnv' [] [] env = env
