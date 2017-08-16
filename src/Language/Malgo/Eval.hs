@@ -3,9 +3,33 @@ module Language.Malgo.Eval where
 import           Control.Monad.State
 import           Data.Either
 import qualified Data.Map              as Map
-import           Language.Malgo.Syntax
+import           Language.Malgo.Syntax (Name)
+import qualified Language.Malgo.Syntax as S
+
+data AST = Symbol Name
+         | Int Integer
+         | Float Double
+         | Bool Bool
+         | Char Char
+         | String String
+         | Typed AST AST
+         | List [AST]
+         | Tree [AST]
+         | Proc [Name] AST Env
+  deriving (Eq, Show)
 
 type Env = Map.Map Name AST
+
+trans :: S.AST -> AST
+trans (S.Symbol s)  = Symbol s
+trans (S.Int i)     = Int i
+trans (S.Float f)   = Float f
+trans (S.Bool b)    = Bool b
+trans (S.Char c)    = Char c
+trans (S.String s)  = String s
+trans (S.Typed e t) = Typed (trans e) (trans t)
+trans (S.List xs)   = List (map trans xs)
+trans (S.Tree xs)   = Tree (map trans xs)
 
 initEnv :: Env
 initEnv = Map.fromList [("nil", List [])]
@@ -22,7 +46,7 @@ valueOf (Tree [Symbol "if", c, t, e]) =
   do b <- valueOf c
      case b of
        Bool b -> if b then valueOf t else valueOf e
-       _      -> lift . Left $ "error: " ++ textAST c ++ " is not Bool"
+       _      -> lift . Left $ "error: " ++ show c ++ " is not Bool"
 
 valueOf (Tree [Symbol "let", Symbol var, val, body]) =
   -- (let var val body) -> [var = val]body
@@ -43,6 +67,7 @@ valueOf (Tree [Symbol "let*", Tree declist, body]) =
            extendEnv' [] = return ()
 
 valueOf (Tree [Symbol "cond", Tree clauses]) = valueOfCond clauses
+
 valueOf (Tree (Symbol fun : args)) =
   do env <- get
      let args' = map (eval env) args
@@ -64,7 +89,7 @@ valueOfCond (Tree [c, body] : rest) =
      case b of
        Bool True  -> valueOf body
        Bool False -> valueOfCond rest
-       _          -> lift . Left $ "error: " ++ textAST c ++ " is not Bool"
+       _          -> lift . Left $ "error: " ++ show c ++ " is not Bool"
 valueOfCond _ = lift . Left $ "error: cannot eval `cond`"
 
 applyFun :: Name -> [AST] -> StateT Env (Either String) AST
