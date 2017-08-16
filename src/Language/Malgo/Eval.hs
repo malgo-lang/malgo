@@ -134,7 +134,7 @@ applyFun name args =
        then do Proc params body penv <- valueOf (Symbol name)
                if length params == length args
                  then do put $ extendEnv' params args penv
-                         body' <- valueOf body
+{- Here is a dog -}      body' <- valueOf body
                          put env
                          return body'
                  else lift . Left $ "error: " ++ "the number of args is invalid " ++ show params ++ ", " ++ show args
