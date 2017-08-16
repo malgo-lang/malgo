@@ -3,6 +3,7 @@ module Language.Malgo.Eval where
 import           Control.Monad.State
 import           Data.Either
 import qualified Data.Map              as Map
+import           Data.Maybe
 import           Language.Malgo.Syntax (Name)
 import qualified Language.Malgo.Syntax as S
 
@@ -66,7 +67,27 @@ valueOf (Tree [Symbol "let*", Tree declist, body]) =
                 extendEnv' rest
            extendEnv' [] = return ()
 
+valueOf (Tree [Symbol "destruct", Tree symbols, List list, body]) =
+  do extendEnv' symbols list
+     valueOf body
+     where extendEnv' ((Symbol name):srest) (val:vrest) =
+             do val' <- valueOf val
+                env <- get
+                put $ extendEnv name val' env
+                extendEnv' srest vrest
+           extendEnv' [] [] = return ()
+           extendEnv' x y = lift . Left $ "error: cannot destruct " ++ show x ++ " and " ++ show y
+
 valueOf (Tree [Symbol "cond", Tree clauses]) = valueOfCond clauses
+
+valueOf (Tree [Symbol "proc", Tree symbols, body]) =
+  do env <- get
+     let symbols' = catMaybes (map unSymbol symbols)
+     if (length symbols') == (length symbols)
+       then return $ Proc symbols' body env
+       else lift . Left $ "error: " ++ show symbols' ++ " are not [Symbol a]"
+  where unSymbol (Symbol s) = Just s
+        unSymbol _          = Nothing
 
 valueOf (Tree (Symbol fun : args)) =
   do env <- get
@@ -106,7 +127,18 @@ applyFun "/" [Int lhs, Int rhs] = return (Int (lhs `div` rhs))
 
 applyFun "zero?" [a] = return (Bool (a == Int 0))
 applyFun "minus" [Int i] = return (Int (-i))
-applyFun name args = lift . Left $ "error: call " ++ name ++ " with " ++ show args ++ "is invalid"
+
+applyFun name args =
+  do env <- get
+     if Map.member name env
+       then do Proc params body penv <- valueOf (Symbol name)
+               put $ extendEnv' params args penv
+               body' <- valueOf body
+               put env
+               return body'
+       else lift . Left $ "error: call " ++ name ++ " with " ++ show args ++ "is invalid"
+       where extendEnv' (name:nrest) (val:vrest) env = extendEnv' nrest vrest (extendEnv name val env)
+             extendEnv' [] [] env = env
 
 eval :: Env -> AST -> Either String (AST, Env)
 eval env ast = runStateT (valueOf ast) env
