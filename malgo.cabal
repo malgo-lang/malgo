@@ -18,7 +18,8 @@ library
   exposed-modules:  Language.Malgo
                   , Language.Malgo.Syntax
                   , Language.Malgo.Parser
-                  , Language.Malgo.Eval
+                  -- , Language.Malgo.Eval
+                  , Language.Malgo.Tapl.Untyped
   build-depends:    base >= 4.7 && < 5
 --                  , llvm-hs >= 4.1
 --                  , llvm-hs-pure >= 4.1

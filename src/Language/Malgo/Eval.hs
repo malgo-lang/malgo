@@ -49,6 +49,9 @@ putEnv var val =
      put $ extendEnv var val' env
      return ()
 
+unSymbol (Symbol s) = Just s
+unSymbol _          = Nothing
+
 valueOf :: AST -> StateT Env (Either String) AST
 valueOf (Tree [Symbol "if", c, t, e]) =
   -- (if c t e) -> if c then t else e
@@ -74,11 +77,11 @@ valueOf (Tree [Symbol "let*", Tree declist, body]) =
 valueOf (Tree [Symbol "destruct", Tree symbols, List list, body]) =
   do extendEnv'' symbols list
      valueOf body
-     where extendEnv'' (Symbol name : srest) (val:vrest) =
-             do putEnv name val
-                extendEnv'' srest vrest
-           extendEnv'' [] [] = return ()
-           extendEnv'' x y = lift . Left $ "error: cannot destruct " ++ show x ++ " and " ++ show y
+       where extendEnv'' (Symbol name : srest) (val:vrest) =
+               do putEnv name val
+                  extendEnv'' srest vrest
+             extendEnv'' [] [] = return ()
+             extendEnv'' x y = lift . Left $ "error: cannot destruct " ++ show x ++ " and " ++ show y
 
 valueOf (Tree [Symbol "cond", Tree clauses]) = valueOfCond clauses
 
@@ -88,8 +91,6 @@ valueOf (Tree [Symbol "proc", Tree symbols, body]) =
      if length symbols' == length symbols
        then return $ Proc symbols' body env
        else lift . Left $ "error: " ++ show symbols' ++ " are not [Symbol a]"
-  where unSymbol (Symbol s) = Just s
-        unSymbol _          = Nothing
 
 valueOf (Tree (Symbol fun : args)) =
   do env <- get
