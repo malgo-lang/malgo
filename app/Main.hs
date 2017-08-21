@@ -12,4 +12,4 @@ main = do
   result <- P.parseFromFile Parser.parseExpr file
   case result of
     Left err  -> print err
-    Right ast -> putStrLn (Syntax.textAST ast)
+    Right ast -> print ast

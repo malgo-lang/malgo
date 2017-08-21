@@ -27,24 +27,56 @@ brackets = Tok.brackets lexer
 lexeme = Tok.lexeme lexer
 stringLiteral = Tok.stringLiteral lexer
 charLiteral = Tok.charLiteral lexer
+symbol = Tok.symbol lexer
 
 parseUntyped = do
-  try (fmap Symbol identifier)
-    <|> try (fmap Float float)
-    <|> try (fmap Int integer)
-    <|> try (reserved "#t" >> return (Bool True))
-    <|> try (reserved "#f" >> return (Bool False))
-    <|> try (fmap Char charLiteral)
-    <|> try (fmap String stringLiteral)
-    <|> try (char '\'' >> identifier >>= \s -> return (Tree [Symbol "quote", Symbol s]))
-    <|> fmap List (brackets (many parseExpr))
-    <|> fmap Tree (parens (many parseExpr))
+  pos <- getPosition
+  try (fmap (\name -> XObj (Symbol name) (Just pos) Nothing) identifier)
+    <|> try (fmap (\i -> XObj (Int i) (Just pos) (Just IntTy)) integer)
+    <|> try (fmap (\f -> XObj (Float f) (Just pos) (Just FloatTy)) float)
+    <|> try (reserved "#t" >> return (XObj (Bool True) (Just pos) (Just BoolTy)))
+    <|> try (reserved "#f" >> return (XObj (Bool False) (Just pos) (Just BoolTy)))
+    <|> try (fmap (\c -> XObj (Char c) (Just pos) (Just CharTy)) charLiteral)
+    <|> try (fmap (\s -> XObj (String s) (Just pos) (Just StringTy)) stringLiteral)
+    <|> try (char '\'' >> identifier >>= \s -> return (XObj (Tree [XObj (Symbol "quote") Nothing Nothing, XObj (Symbol s) Nothing Nothing]) (Just pos) (Just SymbolTy)))
+    <|> fmap (\xs -> XObj (List xs) (Just pos) Nothing) (brackets (many parseExpr))
+    <|> fmap (\xs -> XObj (Tree xs) (Just pos) Nothing) (parens (many parseExpr))
+
+parseType =
+  try parseAtomTy
+    <|> try parseListTy
+    <|> parseFuncTy
+    <|> parens parseType
+  where parseAtomTy = do
+          name <- identifier
+          case name of
+            "Symbol" -> return SymbolTy
+            "Int"    -> return IntTy
+            "Float"  -> return FloatTy
+            "Bool"   -> return BoolTy
+            "Char"   -> return CharTy
+            "String" -> return StringTy
+            a        -> return (AtomTy a)
+
+        parseListTy = do
+          symbol "("
+          symbol "List"
+          ty <- parseType
+          symbol ")"
+          return (ListTy ty)
+
+        parseFuncTy = do
+          symbol "("
+          symbol "Func"
+          params <- parens (many parseType)
+          ret <- parseType
+          return (FuncTy params ret)
 
 parseTyped = do
-  e <- parseUntyped
+  XObj e pos _ <- parseUntyped
   reservedOp ":"
-  t <- parseUntyped
-  return (Typed e t)
+  ty <- parseType
+  return (XObj e pos (Just ty))
 
 parseExpr = try parseTyped <|> parseUntyped
 
