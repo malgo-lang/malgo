@@ -1,7 +1,5 @@
 import           Test.Hspec
 
-import qualified Text.Parsec        as P
-import qualified Text.Parsec.String as P
 
 spec = do return ()
   -- describe "textAST" $ do
