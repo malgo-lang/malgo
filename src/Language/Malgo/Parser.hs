@@ -58,7 +58,7 @@ parseExpr = try parseTyped <|> parseUntyped
 
 parseToplevel = many parseExpr
 
-parse :: S.Symantics a => String -> Either ParseError [a]
+parse :: S.Syntax a => String -> Either ParseError [a]
 parse src = case Text.Parsec.parse parseToplevel "" src of
   Right xs -> Right (map S.astToSym xs)
   Left x   -> Left x

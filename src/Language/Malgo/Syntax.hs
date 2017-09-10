@@ -14,7 +14,7 @@ data AST = Symbol Name
          | AST :-: AST
          deriving (Eq, Show)
 
-class Symantics repr where
+class Syntax repr where
   symbol :: Name -> repr
   int :: Integer -> repr
   float :: Double -> repr
@@ -24,7 +24,7 @@ class Symantics repr where
   list :: [repr] -> repr
   (-:) :: repr -> repr -> repr
 
-instance Symantics AST where
+instance Syntax AST where
   symbol n = Symbol n
   int i = Int i
   float f = Float f
@@ -34,7 +34,7 @@ instance Symantics AST where
   list xs = List xs
   e -: t = e :-: t
 
-instance Symantics String where
+instance Syntax String where
   symbol n = n
   int i = show i
   float f = show f
@@ -44,7 +44,7 @@ instance Symantics String where
   list xs = "(" ++ unwords xs ++ ")"
   e -: t = e ++ ":" ++ t
 
-astToSym :: Symantics a => AST -> a
+astToSym :: Syntax a => AST -> a
 astToSym (Symbol x) = symbol x
 astToSym (Int x)    = int x
 astToSym (Float x)  = float x
