@@ -1,8 +1,6 @@
 module Language.Malgo.Parser where
 
-import           Language.Malgo.Syntax ((-:))
-import qualified Language.Malgo.Syntax as S
-
+import           Language.Malgo.Syntax
 import           Text.Parsec
 import           Text.Parsec.Language
 import qualified Text.Parsec.Token     as Tok
@@ -39,26 +37,23 @@ data AST = Symbol Name
 --}
 
 parseUntyped =
-  try (fmap S.symbol identifier)
-    <|> try (fmap S.int integer)
-    <|> try (fmap S.float float)
-    <|> try (reserved "#t" >> return (S.bool True))
-    <|> try (reserved "#f" >> return (S.bool False))
-    <|> try (fmap S.char charLiteral)
-    <|> try (fmap S.string stringLiteral)
-    <|> try (fmap S.list (parens $ many parseExpr))
+  try (fmap Symbol identifier)
+    <|> try (fmap Int integer)
+    <|> try (fmap Float float)
+    <|> try (reserved "#t" >> return (Bool True))
+    <|> try (reserved "#f" >> return (Bool False))
+    <|> try (fmap Char charLiteral)
+    <|> try (fmap String stringLiteral)
+    <|> try (fmap List (parens $ many parseExpr))
 
 parseTyped = do
   e <- parseUntyped
   reservedOp ":"
   t <- parseUntyped
-  return (e -: t)
+  return (e :-: t)
 
 parseExpr = try parseTyped <|> parseUntyped
 
 parseToplevel = many parseExpr
 
-parse :: S.Syntax a => String -> Either ParseError [a]
-parse src = case Text.Parsec.parse parseToplevel "" src of
-  Right xs -> Right (map S.astToSym xs)
-  Left x   -> Left x
+parse = Text.Parsec.parse parseToplevel ""

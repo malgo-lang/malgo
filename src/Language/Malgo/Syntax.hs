@@ -14,42 +14,12 @@ data AST = Symbol Name
          | AST :-: AST
          deriving (Eq, Show)
 
-class Syntax repr where
-  symbol :: Name -> repr
-  int :: Integer -> repr
-  float :: Double -> repr
-  bool :: Bool -> repr
-  char :: Char -> repr
-  string :: String -> repr
-  list :: [repr] -> repr
-  (-:) :: repr -> repr -> repr
-
-instance Syntax AST where
-  symbol n = Symbol n
-  int i = Int i
-  float f = Float f
-  bool b = Bool b
-  char c = Char c
-  string s = String s
-  list xs = List xs
-  e -: t = e :-: t
-
-instance Syntax String where
-  symbol n = n
-  int i = show i
-  float f = show f
-  bool b = if b then "#t" else "#f"
-  char c = show c
-  string s = show s
-  list xs = "(" ++ unwords xs ++ ")"
-  e -: t = e ++ ":" ++ t
-
-astToSym :: Syntax a => AST -> a
-astToSym (Symbol x) = symbol x
-astToSym (Int x)    = int x
-astToSym (Float x)  = float x
-astToSym (Bool x)   = bool x
-astToSym (Char x)   = char x
-astToSym (String x) = string x
-astToSym (List xs)  = list (map astToSym xs)
-astToSym (e :-: t)  = (astToSym e) -: (astToSym t)
+pretty :: AST -> String
+pretty (Symbol n)  = n
+pretty (Int i)     = show i
+pretty (Float f)   = show f
+pretty (Bool b)    = if b then "#t" else "#f"
+pretty  (Char c)   = show c
+pretty  (String s) = show s
+pretty  (List xs)  = "(" ++ unwords (map pretty xs) ++ ")"
+pretty  (e :-: t)  = pretty e ++ ":" ++ pretty t
