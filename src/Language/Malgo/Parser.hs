@@ -50,7 +50,7 @@ parseTyped = do
   e <- parseUntyped
   reservedOp ":"
   t <- parseUntyped
-  return (e :-: t)
+  return (Typed e t)
 
 parseExpr = try parseTyped <|> parseUntyped
 
