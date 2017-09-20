@@ -25,7 +25,6 @@ data Type = TSym S.Name
           | TList [Type]
           deriving (Eq, Show)
 
--- TODO: rewrite 'translate' as 'translate :: S.AST -> Either String IR'
 translate :: S.AST -> Either String IR
 translate (S.Symbol x) = return $ Var x
 translate (S.Int x)    = return $ Int x
