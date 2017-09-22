@@ -6,11 +6,11 @@ import           Text.Parsec.Language
 import qualified Text.Parsec.Token     as Tok
 
 lexer = Tok.makeTokenParser $ emptyDef {
-  Tok.commentLine = ";"
+  Tok.commentLine = "--"
   , Tok.identStart = letter <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.identLetter = alphaNum <|> oneOf "!$%&*+-./<=>?@^_~"
-  , Tok.reservedOpNames = [":"]
-  , Tok.reservedNames = ["#t", "#f"]
+  , Tok.reservedOpNames = [":", "="]
+  , Tok.reservedNames = ["def", "#t", "#f"]
   }
 
 integer = Tok.integer lexer
@@ -24,36 +24,64 @@ lexeme = Tok.lexeme lexer
 stringLiteral = Tok.stringLiteral lexer
 charLiteral = Tok.charLiteral lexer
 symbol = Tok.symbol lexer
+commaSep = Tok.commaSep lexer
+braces = Tok.braces lexer
+semiSep = Tok.semiSep lexer
+semi = Tok.semi lexer
 
-{-- Syntax.hs
-data AST = Symbol Name
-         | Int Integer
-         | Float Double
-         | Bool Bool
-         | Char Char
-         | String String
-         | List [AST]
-         | AST :-: AST
---}
+parseDecl = try parseDef <|> parseDefun
 
-parseUntyped =
-  try (fmap Symbol identifier)
-    <|> try (fmap Int integer)
-    <|> try (fmap Float float)
-    <|> try (reserved "#t" >> return (Bool True))
-    <|> try (reserved "#f" >> return (Bool False))
-    <|> try (fmap Char charLiteral)
-    <|> try (fmap String stringLiteral)
-    <|> try (fmap List (parens $ many parseExpr))
-
-parseTyped = do
-  e <- parseUntyped
+parseDef = do
+  reserved "def"
+  name <- identifier
   reservedOp ":"
-  t <- parseUntyped
-  return (Typed e t)
+  ty <- parseType
+  reservedOp "="
+  val <- parseExpr
+  return $ Def name ty val
 
-parseExpr = try parseTyped <|> parseUntyped
+parseDefun = do
+  reserved "def"
+  name <- identifier
+  params <- parens (commaSep param)
+  reservedOp ":"
+  ty <- parseType
+  reservedOp "="
+  body <- parseExprs
+  return $ Defun name ty params body
+  where param = do
+          name <- identifier
+          reservedOp ":"
+          ty <- parseType
+          return (name, ty)
 
-parseToplevel = many parseExpr
+parseType = try (symbol "Int" >> return IntTy)
+  <|> try (symbol "Float" >> return FloatTy)
+  <|> try (symbol "Bool" >> return BoolTy)
+  <|> try (symbol "Char" >> return CharTy)
+  <|> try (symbol "String" >> return StringTy)
+
+parseExpr = try parseCall
+  <|> try parseVar
+  <|> try parseLit
+  <|> parens parseExpr
+
+parseCall = do
+  fun <- identifier
+  args <- parens (commaSep parseExpr)
+  return $ Call fun args
+
+parseVar = identifier >>= return . Var
+
+parseLit = try (fmap Int integer)
+  <|> try (fmap Float float)
+  <|> try (reserved "#t" >> return (Bool True))
+  <|> try (reserved "#f" >> return (Bool False))
+  <|> try (fmap Char charLiteral)
+  <|> try (fmap String stringLiteral)
+
+parseExprs = try (braces (semiSep parseExpr)) <|> (parseExpr >>= \e -> return [e])
+
+parseToplevel = semiSep parseDecl >>= \ast -> eof >> return ast
 
 parse = Text.Parsec.parse parseToplevel ""
