@@ -33,7 +33,6 @@ library
 executable malgo-exe
   hs-source-dirs:      app
   main-is:             Main.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , malgo
                      , parsec
