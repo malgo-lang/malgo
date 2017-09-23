@@ -29,7 +29,7 @@ braces = Tok.braces lexer
 semiSep = Tok.semiSep lexer
 semi = Tok.semi lexer
 
-parseDecl = try parseDef <|> parseDefun
+parseDecl = try parseDefun <|> parseDef
 
 parseDef = do
   reserved "def"
