@@ -10,7 +10,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.identStart = letter <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.identLetter = alphaNum <|> oneOf "!$%&*+-./<=>?@^_~"
   , Tok.reservedOpNames = [":", "="]
-  , Tok.reservedNames = ["def", "#t", "#f"]
+  , Tok.reservedNames = ["def", "if", "else", "#t", "#f"]
   }
 
 integer = Tok.integer lexer
@@ -47,7 +47,7 @@ parseDefun = do
   reservedOp ":"
   ty <- parseType
   reservedOp "="
-  body <- parseExprs
+  body <- parseExpr
   return $ Defun name ty params body
   where param = do
           name <- identifier
@@ -64,7 +64,17 @@ parseType = try (symbol "Int" >> return IntTy)
 parseExpr = try parseCall
   <|> try parseVar
   <|> try parseLit
+  <|> try parseIf
   <|> parens parseExpr
+  <|> fmap Block (braces (semiSep parseExpr))
+
+parseIf = do
+  reserved "if"
+  cond <- parseExpr
+  then' <- parseExpr
+  reserved "else"
+  else' <- parseExpr
+  return $ If cond then' else'
 
 parseCall = do
   fun <- identifier
@@ -79,8 +89,6 @@ parseLit = try (fmap Int integer)
   <|> try (reserved "#f" >> return (Bool False))
   <|> try (fmap Char charLiteral)
   <|> try (fmap String stringLiteral)
-
-parseExprs = try (braces (semiSep parseExpr)) <|> (parseExpr >>= \e -> return [e])
 
 parseToplevel = semiSep parseDecl >>= \ast -> eof >> return ast
 
