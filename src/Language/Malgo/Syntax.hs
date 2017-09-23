@@ -6,7 +6,7 @@ type Name = String
 
 data Decl = Def Name Type Expr
           | Defun Name Type [(Name, Type)] Expr
-  deriving Show
+  deriving (Eq, Show)
 
 data Expr = Var Name
           | Int Integer
@@ -17,7 +17,7 @@ data Expr = Var Name
           | Call Name [Expr]
           | Block [Expr]
           | If Expr Expr Expr
-  deriving Show
+  deriving (Eq, Show)
 
 data Type = IntTy
           | FloatTy
@@ -25,4 +25,4 @@ data Type = IntTy
           | CharTy
           | StringTy
           | FunTy Type [Type]
-  deriving Show
+  deriving (Eq, Show)
