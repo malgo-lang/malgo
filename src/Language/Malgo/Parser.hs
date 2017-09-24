@@ -12,15 +12,16 @@ type Parser a = forall u. ParsecT String u Identity a
 
 lexer = Tok.makeTokenParser $ emptyDef {
   Tok.commentLine = "--"
-  , Tok.identStart = letter <|> oneOf "!$&?@^_~"
-  , Tok.identLetter = alphaNum <|> oneOf "!$&?@^_~"
-  , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/"]
+  , Tok.identStart = letter <|> oneOf "_" -- <|> oneOf "!$&?@^_~"
+  , Tok.identLetter = alphaNum <|> oneOf "_" -- <|> oneOf "!$&?@^_~"
+  , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/", ";"]
   , Tok.reservedNames = ["def", "if", "else", "#t", "#f"]
   }
 
 table = [ [prefix "-" (\x -> Call "negate" [x]), prefix "+" id]
         , [binary "*" Mul AssocLeft, binary "/" Div AssocLeft]
         , [binary "+" Add AssocLeft, binary "-" Sub AssocLeft]
+        , [binary ";" Seq AssocRight]
         ]
 
 prefix name fun = Prefix (reservedOp name >> return fun)
@@ -85,7 +86,7 @@ parseTerm = try parseCall
   <|> try parseLit
   <|> try parseIf
   <|> parens parseExpr
-  <|> fmap Block (braces (semiSep parseExpr))
+  <|> braces parseExpr
 
 parseExpr :: Parser Expr
 parseExpr = buildExpressionParser table parseTerm

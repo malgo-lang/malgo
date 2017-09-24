@@ -15,7 +15,8 @@ data Expr = Var Name
           | Char Char
           | String String
           | Call Name [Expr]
-          | Block [Expr]
+          -- | Block [Expr]
+          | Seq Expr Expr
           | If Expr Expr Expr
           | Add Expr Expr
           | Sub Expr Expr
