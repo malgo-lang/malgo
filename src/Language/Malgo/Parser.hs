@@ -12,8 +12,8 @@ type Parser a = forall u. ParsecT String u Identity a
 
 lexer = Tok.makeTokenParser $ emptyDef {
   Tok.commentLine = "--"
-  , Tok.identStart = letter <|> oneOf "!$%&*+-./<=>?@^_~"
-  , Tok.identLetter = alphaNum <|> oneOf "!$%&*+-./<=>?@^_~"
+  , Tok.identStart = letter <|> oneOf "!$&?@^_~"
+  , Tok.identLetter = alphaNum <|> oneOf "!$&?@^_~"
   , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/"]
   , Tok.reservedNames = ["def", "if", "else", "#t", "#f"]
   }
@@ -117,7 +117,7 @@ parseLit = try (fmap Int integer)
   <|> try (fmap String stringLiteral)
 
 parseToplevel :: Parser [Decl]
-parseToplevel = semiSep parseDecl >>= \ast -> eof >> return ast
+parseToplevel = many parseDecl >>= \ast -> eof >> return ast
 
 parse = Text.Parsec.parse parseToplevel ""
 
