@@ -89,6 +89,40 @@ typeofExpr (Div e1 e2) = do
          then return t1
          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Div e1 e2))
     else typeError (show t1) (show t2) (show (Div e1 e2))
+typeofExpr info@(Eq e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
+  if typeEq t1 t2
+    then return BoolTy
+    else typeError (show t1) (show t2) (show info)
+typeofExpr info@(Lt e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
+  if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
+    then return BoolTy
+    else typeError (show t1) (show t2) (show info)
+typeofExpr info@(Gt e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
+  if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
+    then return BoolTy
+    else typeError (show t1) (show t2) (show info)
+typeofExpr info@(And e1 e2) = do
+  t1 <- typeofExpr e1
+  if typeEq t1 BoolTy
+    then do t2 <- typeofExpr e2
+            if typeEq t2 BoolTy
+              then return BoolTy
+              else typeError (show BoolTy) (show t2) (show info)
+    else typeError (show BoolTy) (show t1) (show info)
+typeofExpr info@(Or e1 e2) = do
+  t1 <- typeofExpr e1
+  if typeEq t1 BoolTy
+    then do t2 <- typeofExpr e2
+            if typeEq t2 BoolTy
+              then return BoolTy
+              else typeError (show BoolTy) (show t2) (show info)
+    else typeError (show BoolTy) (show t1) (show info)
 
 evalTypeofExpr expr = evalStateT (typeofExpr expr) initEnv
 

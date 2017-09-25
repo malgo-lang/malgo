@@ -15,13 +15,25 @@ lexer = Tok.makeTokenParser $ emptyDef {
   Tok.commentLine = "--"
   , Tok.identStart = letter <|> char '_' -- <|> oneOf "!$&?@^_~"
   , Tok.identLetter = alphaNum <|> char '_' -- <|> oneOf "!$&?@^_~"
-  , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/", ";"]
+  , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/", ";", "==", "/=", "&&", "||", "<", "<=", ">", ">="]
   , Tok.reservedNames = ["unit", "def", "if", "else", "#t", "#f"]
   }
 
 table = [ [prefix "-" (\x -> Call "negate" [x]), prefix "+" id]
-        , [binary "*" Mul AssocLeft, binary "/" Div AssocLeft]
-        , [binary "+" Add AssocLeft, binary "-" Sub AssocLeft]
+        , [ binary "*" Mul AssocLeft
+          , binary "/" Div AssocLeft
+          , binary "==" Eq AssocNone
+          , binary "/=" (\x y -> Call "not" [Eq x y]) AssocNone
+          , binary "<=" (\x y -> Or (Lt x y) (Eq x y)) AssocNone
+          , binary "<" Lt AssocNone
+          , binary ">=" (\x y -> Or (Gt x y) (Eq x y)) AssocNone
+          , binary ">" Gt AssocNone
+          ]
+        , [ binary "+" Add AssocLeft
+          , binary "-" Sub AssocLeft
+          , binary "&&" And AssocLeft
+          , binary "||" Or AssocLeft
+          ]
         , [binary ";" Seq AssocRight]
         ]
 
@@ -70,6 +82,7 @@ parseDefun = do
 parseVar :: Parser Expr
 parseVar = fmap Var identifier
 
+parseVarWithAnn :: Parser (Name, Type)
 parseVarWithAnn = do
   (Var name) <- parseVar
   reservedOp ":"

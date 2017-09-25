@@ -20,6 +20,11 @@ data Expr = Var Name
           | Sub Expr Expr
           | Mul Expr Expr
           | Div Expr Expr
+          | Eq Expr Expr
+          | Lt Expr Expr
+          | Gt Expr Expr
+          | And Expr Expr
+          | Or Expr Expr
   deriving (Eq, Show)
 
 data Type = IntTy

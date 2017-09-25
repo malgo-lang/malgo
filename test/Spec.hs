@@ -20,6 +20,12 @@ spec = do
                                   , S.Call "eq" [S.Var "n", S.Int 1]])
                 (S.Int 1) (S.Add (S.Call "fib" [S.Sub (S.Var "n") (S.Int 1)])
                             (S.Call "fib" [S.Sub (S.Var "n") (S.Int 2)])))]
+    it "def lezero(n:Int):Bool = if n <= 0 #t else #f" $ do
+      P.parse "def lezero(n:Int):Bool = if n <= 0 #t else #f" `shouldBe`
+        Right [S.Defun "lezero" S.BoolTy [("n", S.IntTy)]
+               (S.If (S.Or (S.Lt (S.Var "n") (S.Int 0)) (S.Eq (S.Var "n") (S.Int 0)))
+                (S.Bool True)
+                (S.Bool False))]
 
   describe "Typing test(Expr)" $ do
     it "42" $ T.evalTypeofExpr (S.Int 42) `shouldBe` Right S.IntTy
@@ -62,5 +68,12 @@ spec = do
     it "def g(x:Int):Int = if #t 0 else g(x-1)" $ do
       T.evalTypeofDecl (S.Defun "g" S.IntTy [("x", S.IntTy)] (S.If (S.Bool True) (S.Int 0) (S.Call "g" [S.Sub (S.Var "x") (S.Int 1)]))) `shouldBe`
         Right (S.FunTy S.IntTy [S.IntTy])
+    it "def lezero(n:Int):Bool = if n <= 0 #t else #f" $ do
+      T.evalTypeofDecl (S.Defun "lezero" S.BoolTy [("n", S.IntTy)]
+                        (S.If (S.Or (S.Lt (S.Var "n") (S.Int 0)) (S.Eq (S.Var "n") (S.Int 0)))
+                         (S.Bool True)
+                         (S.Bool False))) `shouldBe`
+        Right (S.FunTy S.BoolTy [S.IntTy])
+
 main :: IO ()
 main = hspec spec
