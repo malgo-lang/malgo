@@ -10,10 +10,11 @@ import qualified Text.Parsec.Token     as Tok
 
 type Parser a = forall u. ParsecT String u Identity a
 
+lexer :: forall u. Tok.GenTokenParser String u Identity
 lexer = Tok.makeTokenParser $ emptyDef {
   Tok.commentLine = "--"
-  , Tok.identStart = letter <|> oneOf "_" -- <|> oneOf "!$&?@^_~"
-  , Tok.identLetter = alphaNum <|> oneOf "_" -- <|> oneOf "!$&?@^_~"
+  , Tok.identStart = letter <|> char '_' -- <|> oneOf "!$&?@^_~"
+  , Tok.identLetter = alphaNum <|> char '_' -- <|> oneOf "!$&?@^_~"
   , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/", ";"]
   , Tok.reservedNames = ["unit", "def", "if", "else", "#t", "#f"]
   }
@@ -26,7 +27,7 @@ table = [ [prefix "-" (\x -> Call "negate" [x]), prefix "+" id]
 
 prefix name fun = Prefix (reservedOp name >> return fun)
 postfix name fun = Postfix (reservedOp name >> return fun)
-binary name fun assoc = Infix (reservedOp name >> return fun) assoc
+binary name fun = Infix (reservedOp name >> return fun)
 
 integer = Tok.integer lexer
 float = Tok.float lexer
@@ -50,9 +51,7 @@ parseDecl = try parseDefun <|> parseDef
 parseDef :: Parser Decl
 parseDef = do
   reserved "def"
-  name <- identifier
-  reservedOp ":"
-  ty <- parseType
+  (name, ty) <- parseVarWithAnn
   reservedOp "="
   val <- parseExpr
   return $ Def name ty val
@@ -61,17 +60,21 @@ parseDefun :: Parser Decl
 parseDefun = do
   reserved "def"
   name <- identifier
-  params <- parens (commaSep param)
+  params <- parens (commaSep parseVarWithAnn)
   reservedOp ":"
   ty <- parseType
   reservedOp "="
   body <- parseExpr
   return $ Defun name ty params body
-  where param = do
-          name <- identifier
-          reservedOp ":"
-          ty <- parseType
-          return (name, ty)
+
+parseVar :: Parser Expr
+parseVar = fmap Var identifier
+
+parseVarWithAnn = do
+  (Var name) <- parseVar
+  reservedOp ":"
+  ty <- parseType
+  return (name, ty)
 
 parseType :: Parser Type
 parseType = (symbol "Int" >> return IntTy)
@@ -107,8 +110,6 @@ parseCall = do
   args <- parens (commaSep parseExpr)
   return $ Call fun args
 
-parseVar :: Parser Expr
-parseVar = identifier >>= return . Var
 
 parseLit :: Parser Expr
 parseLit = try (fmap Int integer)

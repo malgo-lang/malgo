@@ -1,5 +1,3 @@
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 module Language.Malgo.Syntax where
 
 type Name = String
