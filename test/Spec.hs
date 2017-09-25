@@ -9,8 +9,8 @@ spec = do
       P.parse "def answer:Int = 42" `shouldBe` Right [S.Def "answer" S.IntTy (S.Int 42)]
     it "def not(x:Bool):Bool = if x #f else #t" $ do
       P.parse "def not(x:Bool):Bool = if x #f else #t" `shouldBe` Right [S.Defun "not" S.BoolTy [("x",S.BoolTy)] (S.If (S.Var "x") (S.Bool False) (S.Bool True))]
-    it "def prints():Int = { print(\"hoge\"); print(\"foobar\") }" $ do
-      P.parse "def prints():Int = { print(\"hoge\"); print(\"foobar\") }" `shouldBe` Right [S.Defun "prints" S.IntTy [] (S.Seq (S.Call "print" [S.String "hoge"]) (S.Call "print" [S.String "foobar"]))]
+    it "def prints():Unit = { print(\"hoge\"); print(\"foobar\") }" $ do
+      P.parse "def prints():Unit = { print(\"hoge\"); print(\"foobar\") }" `shouldBe` Right [S.Defun "prints" S.UnitTy [] (S.Seq (S.Call "print" [S.String "hoge"]) (S.Call "print" [S.String "foobar"]))]
     it "def fib(n:Int):Int = if or(eq(n, 0), eq(n, 1)) 1 else fib(n-1) + fib(n-2)" $ do
       P.parse "def fib(n:Int):Int = if or(eq(n, 0), eq(n, 1)) 1 else fib(n-1) + fib(n-2)" `shouldBe`
         Right [S.Defun "fib" S.IntTy [("n", S.IntTy)]

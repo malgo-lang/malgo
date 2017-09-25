@@ -14,8 +14,8 @@ data Expr = Var Name
           | Bool Bool
           | Char Char
           | String String
+          | Unit
           | Call Name [Expr]
-          -- | Block [Expr]
           | Seq Expr Expr
           | If Expr Expr Expr
           | Add Expr Expr
@@ -29,5 +29,6 @@ data Type = IntTy
           | BoolTy
           | CharTy
           | StringTy
+          | UnitTy
           | FunTy Type [Type]
   deriving (Eq, Show)

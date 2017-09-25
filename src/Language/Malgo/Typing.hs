@@ -6,9 +6,9 @@ import           Language.Malgo.Syntax
 
 type Env = [(Name, Type)]
 
-initEnv = [ ("print", FunTy IntTy [StringTy])
-          , ("println", FunTy IntTy [StringTy])
-          , ("print_int", FunTy IntTy [IntTy])
+initEnv = [ ("print", FunTy UnitTy [StringTy])
+          , ("println", FunTy UnitTy [StringTy])
+          , ("print_int", FunTy UnitTy [IntTy])
           ]
 
 addBind :: Name -> Type -> StateT Env (Either String) ()
@@ -33,6 +33,7 @@ typeof (Float _)  = return FloatTy
 typeof (Bool _)   = return BoolTy
 typeof (Char _)   = return CharTy
 typeof (String _) = return StringTy
+typeof Unit = return UnitTy
 typeof (Call name args) = do
   argsTy <- mapM typeof args
   funty <- getType name
@@ -42,6 +43,10 @@ typeof (Call name args) = do
                             else lift . Left $ ("error: Expected -> " ++ show paramsTy ++
                                                  "; Actual -> " ++ show argsTy)
 typeof (Seq e1 e2) = do
-  typeof e1
-  typeof e2
+  ty1 <- typeof e1
+  if typeEq ty1 UnitTy
+    then typeof e2
+    else lift . Left $ "error: Expected -> " ++ show UnitTy ++ "; Actual -> " ++ show ty1
 typeof _ = lift . Left $ "TODO: implement typeof"
+
+typeCheckExpr expr = runStateT (typeof expr) initEnv

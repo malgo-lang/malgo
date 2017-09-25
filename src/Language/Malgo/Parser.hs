@@ -15,7 +15,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.identStart = letter <|> oneOf "_" -- <|> oneOf "!$&?@^_~"
   , Tok.identLetter = alphaNum <|> oneOf "_" -- <|> oneOf "!$&?@^_~"
   , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/", ";"]
-  , Tok.reservedNames = ["def", "if", "else", "#t", "#f"]
+  , Tok.reservedNames = ["unit", "def", "if", "else", "#t", "#f"]
   }
 
 table = [ [prefix "-" (\x -> Call "negate" [x]), prefix "+" id]
@@ -74,11 +74,12 @@ parseDefun = do
           return (name, ty)
 
 parseType :: Parser Type
-parseType = try (symbol "Int" >> return IntTy)
-  <|> try (symbol "Float" >> return FloatTy)
-  <|> try (symbol "Bool" >> return BoolTy)
-  <|> try (symbol "Char" >> return CharTy)
-  <|> try (symbol "String" >> return StringTy)
+parseType = (symbol "Int" >> return IntTy)
+  <|> (symbol "Float" >> return FloatTy)
+  <|> (symbol "Bool" >> return BoolTy)
+  <|> (symbol "Char" >> return CharTy)
+  <|> (symbol "String" >> return StringTy)
+  <|> (symbol "Unit" >> return UnitTy)
 
 parseTerm :: Parser Expr
 parseTerm = try parseCall
@@ -87,8 +88,8 @@ parseTerm = try parseCall
   <|> try parseIf
   <|> parens parseExpr
   <|> braces parseExpr
+  <?> "term"
 
-parseExpr :: Parser Expr
 parseExpr = buildExpressionParser table parseTerm
 
 parseIf :: Parser Expr
@@ -114,8 +115,9 @@ parseLit = try (fmap Int integer)
   <|> try (fmap Float float)
   <|> try (reserved "#t" >> return (Bool True))
   <|> try (reserved "#f" >> return (Bool False))
-  <|> try (fmap Char charLiteral)
-  <|> try (fmap String stringLiteral)
+  <|> fmap Char charLiteral
+  <|> fmap String stringLiteral
+  <|> (reserved "unit" >> return Unit)
 
 parseToplevel :: Parser [Decl]
 parseToplevel = many parseDecl >>= \ast -> eof >> return ast
