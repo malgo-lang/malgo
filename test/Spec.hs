@@ -1,7 +1,9 @@
 import           Test.Hspec
 
+import           Control.Monad.State
 import qualified Language.Malgo.Parser as P
 import qualified Language.Malgo.Syntax as S
+import qualified Language.Malgo.Typing as T
 
 spec = do
   describe "Parse test" $ do
@@ -18,6 +20,38 @@ spec = do
                                   , S.Call "eq" [S.Var "n", S.Int 1]])
                 (S.Int 1) (S.Add (S.Call "fib" [S.Sub (S.Var "n") (S.Int 1)])
                             (S.Call "fib" [S.Sub (S.Var "n") (S.Int 2)])))]
+
+  describe "Typing test(Expr)" $ do
+    it "42" $ T.typeCheckExpr (S.Int 42) `shouldBe` Right S.IntTy
+    it "3.14" $ T.typeCheckExpr (S.Float 3.14) `shouldBe` Right S.FloatTy
+    it "#t" $ T.typeCheckExpr (S.Bool True) `shouldBe` Right S.BoolTy
+    it "'c'" $ T.typeCheckExpr (S.Char 'c') `shouldBe` Right S.CharTy
+    it "\"nyaaan\"" $ T.typeCheckExpr (S.String "nyaaan") `shouldBe` Right S.StringTy
+    it "unit" $ T.typeCheckExpr S.Unit `shouldBe` Right S.UnitTy
+    it "print(\"hello\")" $ T.typeCheckExpr (S.Call "print" [S.String "hello"]) `shouldBe`
+      Right S.UnitTy
+    it "unit;1" $ T.typeCheckExpr (S.Seq S.Unit (S.Int 1)) `shouldBe`
+      Right S.IntTy
+    it "if #t 1 else 2" $ T.typeCheckExpr (S.If (S.Bool True) (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+
+    it "1 + 2" $ T.typeCheckExpr (S.Add (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+    it "1 - 2" $ T.typeCheckExpr (S.Sub (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+    it "1 * 2" $ T.typeCheckExpr (S.Mul (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+    it "1 / 2" $ T.typeCheckExpr (S.Div (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+
+    it "1.0 + 2.0" $ T.typeCheckExpr (S.Add (S.Float 1) (S.Int 2)) `shouldBe`
+      Right S.FloatTy
+    it "1.0 - 2.0" $ T.typeCheckExpr (S.Sub (S.Float 1) (S.Int 2)) `shouldBe`
+      Right S.FloatTy
+    it "1.0 * 2.0" $ T.typeCheckExpr (S.Mul (S.Float 1) (S.Int 2)) `shouldBe`
+      Right S.FloatTy
+    it "1.0 / 2.0" $ T.typeCheckExpr (S.Div (S.Float 1) (S.Int 2)) `shouldBe`
+      Right S.FloatTy
 
 main :: IO ()
 main = hspec spec
