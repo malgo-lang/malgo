@@ -28,66 +28,87 @@ typeEq = (==)
 
 typeError expected actual info = lift . Left $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual ++ "\n info: " ++ info
 
-typeof :: Expr -> StateT Env (Either String) Type
-typeof (Var name) = getType name
-typeof (Int _)    = return IntTy
-typeof (Float _)  = return FloatTy
-typeof (Bool _)   = return BoolTy
-typeof (Char _)   = return CharTy
-typeof (String _) = return StringTy
-typeof Unit = return UnitTy
-typeof (Call name args) = do
-  argsTy <- mapM typeof args
+typeofExpr :: Expr -> StateT Env (Either String) Type
+typeofExpr (Var name) = getType name
+typeofExpr (Int _)    = return IntTy
+typeofExpr (Float _)  = return FloatTy
+typeofExpr (Bool _)   = return BoolTy
+typeofExpr (Char _)   = return CharTy
+typeofExpr (String _) = return StringTy
+typeofExpr Unit = return UnitTy
+typeofExpr (Call name args) = do
+  argsTy <- mapM typeofExpr args
   funty <- getType name
   case funty of
     FunTy retTy paramsTy -> if and $ zipWith typeEq argsTy paramsTy
                             then return retTy
                             else typeError (show paramsTy) (show argsTy) (show (Call name args))
-typeof (Seq e1 e2) = do
-  ty1 <- typeof e1
+typeofExpr (Seq e1 e2) = do
+  ty1 <- typeofExpr e1
   if typeEq ty1 UnitTy
-    then typeof e2
+    then typeofExpr e2
     else typeError (show UnitTy) (show ty1) (show (Seq e1 e2))
-typeof (If c t f) = do
-  ct <- typeof c
-  tt <- typeof t
-  ft <- typeof f
+typeofExpr (If c t f) = do
+  ct <- typeofExpr c
+  tt <- typeofExpr t
+  ft <- typeofExpr f
   if typeEq ct BoolTy
     then if typeEq tt ft
          then return tt
          else typeError (show tt) (show ft) (show (If c t f))
     else typeError (show BoolTy) (show ct) (show (If c t f))
-typeof (Add e1 e2) = do
-  t1 <- typeof e1
-  t2 <- typeof e2
+typeofExpr (Add e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
   if typeEq t1 t2
     then if typeEq t1 IntTy || typeEq t1 FloatTy
          then return t1
          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Add e1 e2))
     else typeError (show t1) (show t2) (show (Add e1 e2))
-typeof (Sub e1 e2) = do
-  t1 <- typeof e1
-  t2 <- typeof e2
+typeofExpr (Sub e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
   if typeEq t1 t2
     then if typeEq t1 IntTy || typeEq t1 FloatTy
          then return t1
          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Sub e1 e2))
     else typeError (show t1) (show t2) (show (Sub e1 e2))
-typeof (Mul e1 e2) = do
-  t1 <- typeof e1
-  t2 <- typeof e2
+typeofExpr (Mul e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
   if typeEq t1 t2
     then if typeEq t1 IntTy || typeEq t1 FloatTy
          then return t1
          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Mul e1 e2))
     else typeError (show t1) (show t2) (show (Mul e1 e2))
-typeof (Div e1 e2) = do
-  t1 <- typeof e1
-  t2 <- typeof e2
+typeofExpr (Div e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
   if typeEq t1 t2
     then if typeEq t1 IntTy || typeEq t1 FloatTy
          then return t1
          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Div e1 e2))
     else typeError (show t1) (show t2) (show (Div e1 e2))
 
-typeCheckExpr expr = evalStateT (typeof expr) initEnv
+evalTypeofExpr expr = evalStateT (typeofExpr expr) initEnv
+
+typeofDecl :: Decl -> StateT Env (Either String) Type
+typeofDecl info@(Def n ty val) = do
+  tv <- typeofExpr val
+  if typeEq ty tv
+    then addBind n ty >> return ty
+    else typeError (show ty) (show tv) (show info)
+typeofDecl info@(Defun fn retTy params body) = do
+  let funTy = FunTy retTy (map snd params)
+  ctx <- get
+  put $ params ++ ctx
+  addBind fn funTy
+  bodyTy <- typeofExpr body
+  put ctx
+  if typeEq retTy bodyTy
+    then do
+      addBind fn funTy
+      return funTy
+    else typeError (show retTy) (show bodyTy) (show info)
+
+evalTypeofDecl decl = evalStateT (typeofDecl decl) initEnv

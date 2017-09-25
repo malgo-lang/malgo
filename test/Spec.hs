@@ -22,36 +22,45 @@ spec = do
                             (S.Call "fib" [S.Sub (S.Var "n") (S.Int 2)])))]
 
   describe "Typing test(Expr)" $ do
-    it "42" $ T.typeCheckExpr (S.Int 42) `shouldBe` Right S.IntTy
-    it "3.14" $ T.typeCheckExpr (S.Float 3.14) `shouldBe` Right S.FloatTy
-    it "#t" $ T.typeCheckExpr (S.Bool True) `shouldBe` Right S.BoolTy
-    it "'c'" $ T.typeCheckExpr (S.Char 'c') `shouldBe` Right S.CharTy
-    it "\"nyaaan\"" $ T.typeCheckExpr (S.String "nyaaan") `shouldBe` Right S.StringTy
-    it "unit" $ T.typeCheckExpr S.Unit `shouldBe` Right S.UnitTy
-    it "print(\"hello\")" $ T.typeCheckExpr (S.Call "print" [S.String "hello"]) `shouldBe`
+    it "42" $ T.evalTypeofExpr (S.Int 42) `shouldBe` Right S.IntTy
+    it "3.14" $ T.evalTypeofExpr (S.Float 3.14) `shouldBe` Right S.FloatTy
+    it "#t" $ T.evalTypeofExpr (S.Bool True) `shouldBe` Right S.BoolTy
+    it "'c'" $ T.evalTypeofExpr (S.Char 'c') `shouldBe` Right S.CharTy
+    it "\"nyaaan\"" $ T.evalTypeofExpr (S.String "nyaaan") `shouldBe` Right S.StringTy
+    it "unit" $ T.evalTypeofExpr S.Unit `shouldBe` Right S.UnitTy
+    it "print(\"hello\")" $ T.evalTypeofExpr (S.Call "print" [S.String "hello"]) `shouldBe`
       Right S.UnitTy
-    it "unit;1" $ T.typeCheckExpr (S.Seq S.Unit (S.Int 1)) `shouldBe`
+    it "unit;1" $ T.evalTypeofExpr (S.Seq S.Unit (S.Int 1)) `shouldBe`
       Right S.IntTy
-    it "if #t 1 else 2" $ T.typeCheckExpr (S.If (S.Bool True) (S.Int 1) (S.Int 2)) `shouldBe`
-      Right S.IntTy
-
-    it "1 + 2" $ T.typeCheckExpr (S.Add (S.Int 1) (S.Int 2)) `shouldBe`
-      Right S.IntTy
-    it "1 - 2" $ T.typeCheckExpr (S.Sub (S.Int 1) (S.Int 2)) `shouldBe`
-      Right S.IntTy
-    it "1 * 2" $ T.typeCheckExpr (S.Mul (S.Int 1) (S.Int 2)) `shouldBe`
-      Right S.IntTy
-    it "1 / 2" $ T.typeCheckExpr (S.Div (S.Int 1) (S.Int 2)) `shouldBe`
+    it "if #t 1 else 2" $ T.evalTypeofExpr (S.If (S.Bool True) (S.Int 1) (S.Int 2)) `shouldBe`
       Right S.IntTy
 
-    it "1.0 + 2.0" $ T.typeCheckExpr (S.Add (S.Float 1) (S.Float 2)) `shouldBe`
+    it "1 + 2" $ T.evalTypeofExpr (S.Add (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+    it "1 - 2" $ T.evalTypeofExpr (S.Sub (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+    it "1 * 2" $ T.evalTypeofExpr (S.Mul (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+    it "1 / 2" $ T.evalTypeofExpr (S.Div (S.Int 1) (S.Int 2)) `shouldBe`
+      Right S.IntTy
+
+    it "1.0 + 2.0" $ T.evalTypeofExpr (S.Add (S.Float 1) (S.Float 2)) `shouldBe`
       Right S.FloatTy
-    it "1.0 - 2.0" $ T.typeCheckExpr (S.Sub (S.Float 1) (S.Float 2)) `shouldBe`
+    it "1.0 - 2.0" $ T.evalTypeofExpr (S.Sub (S.Float 1) (S.Float 2)) `shouldBe`
       Right S.FloatTy
-    it "1.0 * 2.0" $ T.typeCheckExpr (S.Mul (S.Float 1) (S.Float 2)) `shouldBe`
+    it "1.0 * 2.0" $ T.evalTypeofExpr (S.Mul (S.Float 1) (S.Float 2)) `shouldBe`
       Right S.FloatTy
-    it "1.0 / 2.0" $ T.typeCheckExpr (S.Div (S.Float 1) (S.Float 2)) `shouldBe`
+    it "1.0 / 2.0" $ T.evalTypeofExpr (S.Div (S.Float 1) (S.Float 2)) `shouldBe`
       Right S.FloatTy
 
+  describe "Typing test(Decl)" $ do
+    it "def a:Int = 42" $ do
+      T.evalTypeofDecl (S.Def "a" S.IntTy (S.Int 42)) `shouldBe` Right S.IntTy
+    it "def f(x:Int, y:Int):Int = x + y" $ do
+      T.evalTypeofDecl (S.Defun "f" S.IntTy [("x", S.IntTy), ("y", S.IntTy)] (S.Add (S.Var "x") (S.Var "y"))) `shouldBe`
+        Right (S.FunTy S.IntTy [S.IntTy, S.IntTy])
+    it "def g(x:Int):Int = if #t 0 else g(x-1)" $ do
+      T.evalTypeofDecl (S.Defun "g" S.IntTy [("x", S.IntTy)] (S.If (S.Bool True) (S.Int 0) (S.Call "g" [S.Sub (S.Var "x") (S.Int 1)]))) `shouldBe`
+        Right (S.FunTy S.IntTy [S.IntTy])
 main :: IO ()
 main = hspec spec
