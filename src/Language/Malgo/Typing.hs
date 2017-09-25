@@ -49,4 +49,4 @@ typeof (Seq e1 e2) = do
     else lift . Left $ "error: Expected -> " ++ show UnitTy ++ "; Actual -> " ++ show ty1
 typeof _ = lift . Left $ "TODO: implement typeof"
 
-typeCheckExpr expr = runStateT (typeof expr) initEnv
+typeCheckExpr expr = evalStateT (typeof expr) initEnv
