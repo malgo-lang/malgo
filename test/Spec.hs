@@ -44,13 +44,13 @@ spec = do
     it "1 / 2" $ T.typeCheckExpr (S.Div (S.Int 1) (S.Int 2)) `shouldBe`
       Right S.IntTy
 
-    it "1.0 + 2.0" $ T.typeCheckExpr (S.Add (S.Float 1) (S.Int 2)) `shouldBe`
+    it "1.0 + 2.0" $ T.typeCheckExpr (S.Add (S.Float 1) (S.Float 2)) `shouldBe`
       Right S.FloatTy
-    it "1.0 - 2.0" $ T.typeCheckExpr (S.Sub (S.Float 1) (S.Int 2)) `shouldBe`
+    it "1.0 - 2.0" $ T.typeCheckExpr (S.Sub (S.Float 1) (S.Float 2)) `shouldBe`
       Right S.FloatTy
-    it "1.0 * 2.0" $ T.typeCheckExpr (S.Mul (S.Float 1) (S.Int 2)) `shouldBe`
+    it "1.0 * 2.0" $ T.typeCheckExpr (S.Mul (S.Float 1) (S.Float 2)) `shouldBe`
       Right S.FloatTy
-    it "1.0 / 2.0" $ T.typeCheckExpr (S.Div (S.Float 1) (S.Int 2)) `shouldBe`
+    it "1.0 / 2.0" $ T.typeCheckExpr (S.Div (S.Float 1) (S.Float 2)) `shouldBe`
       Right S.FloatTy
 
 main :: IO ()
