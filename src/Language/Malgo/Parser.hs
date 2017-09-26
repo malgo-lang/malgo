@@ -19,11 +19,11 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.reservedNames = ["unit", "def", "if", "else", "#t", "#f"]
   }
 
-table = [ [prefix "-" (\x -> Call "negate" [x]), prefix "+" id]
+table = [ [prefix "-" (\x -> Call (Sym "negate") [x]), prefix "+" id]
         , [ binary "*" Mul AssocLeft
           , binary "/" Div AssocLeft
           , binary "==" Eq AssocNone
-          , binary "/=" (\x y -> Call "not" [Eq x y]) AssocNone
+          , binary "/=" (\x y -> Call (Sym "not") [Eq x y]) AssocNone
           , binary "<=" (\x y -> Or (Lt x y) (Eq x y)) AssocNone
           , binary "<" Lt AssocNone
           , binary ">=" (\x y -> Or (Gt x y) (Eq x y)) AssocNone
@@ -77,10 +77,10 @@ parseDefun = do
   ty <- parseType
   reservedOp "="
   body <- parseExpr
-  return $ Defun name ty params body
+  return $ Defun (Sym name) ty params body
 
 parseVar :: Parser Expr
-parseVar = fmap Var identifier
+parseVar = fmap (Var . Sym) identifier
 
 parseVarWithAnn :: Parser (Name, Type)
 parseVarWithAnn = do
@@ -121,7 +121,7 @@ parseCall :: Parser Expr
 parseCall = do
   fun <- identifier
   args <- parens (commaSep parseExpr)
-  return $ Call fun args
+  return $ Call (Sym fun) args
 
 
 parseLit :: Parser Expr

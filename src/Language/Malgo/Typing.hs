@@ -6,9 +6,10 @@ import           Language.Malgo.Syntax
 
 type Env = [(Name, Type)]
 
-initEnv = [ ("print", FunTy UnitTy [StringTy])
-          , ("println", FunTy UnitTy [StringTy])
-          , ("print_int", FunTy UnitTy [IntTy])
+initEnv :: Env
+initEnv = [ (Sym "print", FunTy UnitTy [StringTy])
+          , (Sym "println", FunTy UnitTy [StringTy])
+          , (Sym "print_int", FunTy UnitTy [IntTy])
           ]
 
 addBind :: Name -> Type -> StateT Env (Either String) ()
@@ -21,7 +22,7 @@ getType n = do
   ctx <- get
   case lookup n ctx of
     Just ty -> return ty
-    Nothing -> lift . Left $ "error: " ++ n ++ " is not defined.\nEnv: " ++ show ctx
+    Nothing -> lift . Left $ "error: " ++ show n ++ " is not defined.\nEnv: " ++ show ctx
 
 typeEq :: Type -> Type -> Bool
 typeEq = (==)

@@ -1,6 +1,8 @@
 module Language.Malgo.Syntax where
 
-type Name = String
+data Name = Sym String
+          | Id Int
+  deriving (Eq, Show)
 
 data Decl = Def Name Type Expr
           | Defun Name Type [(Name, Type)] Expr
