@@ -34,7 +34,7 @@ table = [ [prefix "-" (\x -> Call (Sym "negate") [x]), prefix "+" id]
           , binary "&&" And AssocLeft
           , binary "||" Or AssocLeft
           ]
-        , [binary ";" Seq AssocRight]
+        -- , [binary ";" Seq AssocRight]
         ]
 
 prefix name fun = Prefix (reservedOp name >> return fun)
@@ -98,15 +98,24 @@ parseType = (symbol "Int" >> return IntTy)
   <|> (symbol "Unit" >> return UnitTy)
 
 parseTerm :: Parser Expr
-parseTerm = try parseCall
-  <|> try parseVar
-  <|> try parseLit
-  <|> try parseIf
-  <|> parens parseExpr
-  <|> braces parseExpr
-  <?> "term"
+parseTerm = (try parseCall
+             <|> try parseVar
+             <|> try parseLit
+             <|> try parseIf
+             <|> parens parseExpr
+             <|> braces parseExpr)
 
-parseExpr = buildExpressionParser table parseTerm
+parseExpr' = buildExpressionParser table parseTerm
+parseExpr = try (do
+                    e1 <- parseExpr'
+                    reservedOp ";"
+                    e2 <- parseExpr
+                    return (Seq e1 e2))
+            <|> try (do
+                        e <- parseExpr'
+                        reservedOp ";"
+                        return (Seq e Unit))
+            <|> parseExpr'
 
 parseIf :: Parser Expr
 parseIf = do
