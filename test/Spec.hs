@@ -9,10 +9,13 @@ spec = do
   describe "Parse test" $ do
     it "def answer:Int = 42" $ do
       P.parse "def answer:Int = 42" `shouldBe` Right [S.Def (S.mkName "answer") S.IntTy (S.Int 42)]
+
     it "def not(x:Bool):Bool = if x #f else #t" $ do
       P.parse "def not(x:Bool):Bool = if x #f else #t" `shouldBe` Right [S.Defun (S.mkName "not") S.BoolTy [(S.mkName "x",S.BoolTy)] (S.If (S.Var (S.mkName "x")) (S.Bool False) (S.Bool True))]
+
     it "def prints():Unit = { print(\"hoge\"); print(\"foobar\") }" $ do
       P.parse "def prints():Unit = { print(\"hoge\"); print(\"foobar\") }" `shouldBe` Right [S.Defun (S.mkName "prints") S.UnitTy [] (S.Seq (S.Call (S.mkName "print") [S.String "hoge"]) (S.Call (S.mkName "print") [S.String "foobar"]))]
+
     it "def fib(n:Int):Int = if or(eq(n, 0), eq(n, 1)) 1 else fib(n-1) + fib(n-2)" $ do
       P.parse "def fib(n:Int):Int = if or(eq(n, 0), eq(n, 1)) 1 else fib(n-1) + fib(n-2)" `shouldBe`
         Right [S.Defun (S.mkName "fib") S.IntTy [(S.mkName "n", S.IntTy)]
@@ -20,12 +23,14 @@ spec = do
                                   , S.Call (S.mkName "eq") [S.Var (S.mkName "n"), S.Int 1]])
                 (S.Int 1) (S.Add (S.Call (S.mkName "fib") [S.Sub (S.Var (S.mkName "n")) (S.Int 1)])
                             (S.Call (S.mkName "fib") [S.Sub (S.Var (S.mkName "n")) (S.Int 2)])))]
+
     it "def lezero(n:Int):Bool = if n <= 0 #t else #f" $ do
       P.parse "def lezero(n:Int):Bool = if n <= 0 #t else #f" `shouldBe`
         Right [S.Defun (S.mkName "lezero") S.BoolTy [((S.mkName "n"), S.IntTy)]
-               (S.If (S.Or (S.Lt (S.Var (S.mkName "n")) (S.Int 0)) (S.Eq (S.Var (S.mkName "n")) (S.Int 0)))
+               (S.If (S.Le (S.Var (S.mkName "n")) (S.Int 0))
                 (S.Bool True)
                 (S.Bool False))]
+
     it "def answer:Int = let a:Int = 6 * 7; a" $ do
       P.parse "def answer:Int = let a:Int = 6 * 7; a" `shouldBe`
         Right [S.Def (S.mkName "answer") S.IntTy (S.Seq (S.Let (S.mkName "a") S.IntTy (S.Mul (S.Int 6) (S.Int 7)))
@@ -72,15 +77,18 @@ spec = do
   describe "Typing test(Decl)" $ do
     it "def a:Int = 42" $ do
       T.evalTypeofDecl (S.Def (S.mkName "a") S.IntTy (S.Int 42)) `shouldBe` Right S.IntTy
+
     it "def f(x:Int, y:Int):Int = x + y" $ do
       T.evalTypeofDecl (S.Defun (S.mkName "f") S.IntTy [((S.mkName "x"), S.IntTy), ((S.mkName "y"), S.IntTy)] (S.Add (S.Var (S.mkName "x")) (S.Var (S.mkName "y")))) `shouldBe`
         Right (S.FunTy S.IntTy [S.IntTy, S.IntTy])
+
     it "def g(x:Int):Int = if #t 0 else g(x-1)" $ do
       T.evalTypeofDecl (S.Defun (S.mkName "g") S.IntTy [((S.mkName "x"), S.IntTy)] (S.If (S.Bool True) (S.Int 0) (S.Call (S.mkName "g") [S.Sub (S.Var (S.mkName "x")) (S.Int 1)]))) `shouldBe`
         Right (S.FunTy S.IntTy [S.IntTy])
+
     it "def lezero(n:Int):Bool = if n <= 0 #t else #f" $ do
       T.evalTypeofDecl (S.Defun (S.mkName "lezero") S.BoolTy [((S.mkName "n"), S.IntTy)]
-                        (S.If (S.Or (S.Lt (S.Var (S.mkName "n")) (S.Int 0)) (S.Eq (S.Var (S.mkName "n")) (S.Int 0)))
+                        (S.If (S.Le (S.Var (S.mkName "n")) (S.Int 0))
                          (S.Bool True)
                          (S.Bool False))) `shouldBe`
         Right (S.FunTy S.BoolTy [S.IntTy])
