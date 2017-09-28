@@ -98,6 +98,7 @@ typeofExpr info@(Eq e1 e2) = do
   if typeEq t1 t2
     then return BoolTy
     else typeError (show t1) (show t2) (show info)
+
 typeofExpr info@(Lt e1 e2) = do
   t1 <- typeofExpr e1
   t2 <- typeofExpr e2
@@ -110,6 +111,19 @@ typeofExpr info@(Gt e1 e2) = do
   if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
     then return BoolTy
     else typeError (show t1) (show t2) (show info)
+typeofExpr info@(Le e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
+  if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
+    then return BoolTy
+    else typeError (show t1) (show t2) (show info)
+typeofExpr info@(Ge e1 e2) = do
+  t1 <- typeofExpr e1
+  t2 <- typeofExpr e2
+  if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
+    then return BoolTy
+    else typeError (show t1) (show t2) (show info)
+
 typeofExpr info@(And e1 e2) = do
   t1 <- typeofExpr e1
   if typeEq t1 BoolTy
