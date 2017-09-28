@@ -1,16 +1,18 @@
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes        #-}
 module Language.Malgo.Parser where
 
 import           Data.Functor.Identity (Identity)
+import qualified Data.Text             as T
 import           Language.Malgo.Syntax
-import           Text.Parsec
+import           Text.Parsec           hiding (parse)
+import qualified Text.Parsec
 import           Text.Parsec.Expr
 import           Text.Parsec.Language
+import           Text.Parsec.Text
 import qualified Text.Parsec.Token     as Tok
 
-type Parser a = forall u. ParsecT String u Identity a
-
-lexer :: forall u. Tok.GenTokenParser String u Identity
+lexer :: Tok.GenTokenParser String u Identity
 lexer = Tok.makeTokenParser $ emptyDef {
   Tok.commentLine = "--"
   , Tok.identStart = letter <|> char '_' -- <|> oneOf "!$&?@^_~"
@@ -19,14 +21,15 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.reservedNames = ["let", "unit", "def", "if", "else", "#t", "#f"]
   }
 
+table :: [[Operator String u Identity Expr]]
 table = [ [prefix "-" (\x -> Call (mkName "negate") [x]), prefix "+" id]
         , [ binary "*" Mul AssocLeft
           , binary "/" Div AssocLeft
           , binary "==" Eq AssocNone
           , binary "/=" (\x y -> Call (mkName "not") [Eq x y]) AssocNone
-          , binary "<=" (\x y -> Or (Lt x y) (Eq x y)) AssocNone
+          , binary "<=" Le AssocNone
           , binary "<" Lt AssocNone
-          , binary ">=" (\x y -> Or (Gt x y) (Eq x y)) AssocNone
+          , binary ">=" Ge AssocNone
           , binary ">" Gt AssocNone
           ]
         , [ binary "+" Add AssocLeft
@@ -34,11 +37,16 @@ table = [ [prefix "-" (\x -> Call (mkName "negate") [x]), prefix "+" id]
           , binary "&&" And AssocLeft
           , binary "||" Or AssocLeft
           ]
-        -- , [binary ";" Seq AssocRight]
         ]
 
+prefix :: String -> (a -> a) -> Operator String u Identity a
 prefix name fun = Prefix (reservedOp name >> return fun)
+
+postfix :: String -> (a -> a) -> Operator String u Identity a
 postfix name fun = Postfix (reservedOp name >> return fun)
+
+binary
+  :: String -> (a -> a -> a) -> Assoc -> Operator String u Identity a
 binary name fun = Infix (reservedOp name >> return fun)
 
 integer = Tok.integer lexer
@@ -57,10 +65,10 @@ braces = Tok.braces lexer
 semiSep = Tok.semiSep lexer
 semi = Tok.semi lexer
 
-parseDecl :: Parser Decl
+parseDecl :: ParsecT String u Identity Decl
 parseDecl = try parseDefun <|> parseDef
 
-parseDef :: Parser Decl
+parseDef :: ParsecT String u Identity Decl
 parseDef = do
   reserved "def"
   (name, ty) <- parseVarWithAnn
@@ -68,7 +76,7 @@ parseDef = do
   val <- parseExpr
   return $ Def name ty val
 
-parseDefun :: Parser Decl
+parseDefun :: ParsecT String u Identity Decl
 parseDefun = do
   reserved "def"
   name <- identifier
@@ -79,17 +87,17 @@ parseDefun = do
   body <- parseExpr
   return $ Defun (mkName name) ty params body
 
-parseVar :: Parser Expr
+parseVar :: ParsecT String u Identity Expr
 parseVar = fmap (Var . mkName) identifier
 
-parseVarWithAnn :: Parser (Name, Type)
+parseVarWithAnn :: ParsecT String u Identity (Name, Type)
 parseVarWithAnn = do
   (Var name) <- parseVar
   reservedOp ":"
   ty <- parseType
   return (name, ty)
 
-parseType :: Parser Type
+parseType :: ParsecT String u Identity Type
 parseType = (symbol "Int" >> return IntTy)
   <|> (symbol "Float" >> return FloatTy)
   <|> (symbol "Bool" >> return BoolTy)
@@ -97,16 +105,16 @@ parseType = (symbol "Int" >> return IntTy)
   <|> (symbol "String" >> return StringTy)
   <|> (symbol "Unit" >> return UnitTy)
 
-parseTerm :: Parser Expr
-parseTerm = (try parseCall
-             <|> try parseVar
-             <|> try parseLit
-             <|> try parseIf
-             <|> parseLet
-             <|> parens parseExpr
-             <|> braces parseExpr)
+parseTerm :: ParsecT String u Identity Expr
+parseTerm = try parseCall
+  <|> try parseVar
+  <|> try parseLit
+  <|> try parseIf
+  <|> parseLet
+  <|> parens parseExpr
+  <|> braces parseExpr
 
-parseLet :: Parser Expr
+parseLet :: ParsecT String u Identity Expr
 parseLet = do
   reserved "let"
   (name, ty) <- parseVarWithAnn
@@ -114,7 +122,10 @@ parseLet = do
   val <- parseExpr'
   return $ Let name ty val
 
+parseExpr' :: ParsecT String u Identity Expr
 parseExpr' = buildExpressionParser table parseTerm
+
+parseExpr :: ParsecT String u Identity Expr
 parseExpr = try (do
                     e1 <- parseExpr'
                     reservedOp ";"
@@ -126,7 +137,7 @@ parseExpr = try (do
                         return (Seq e Unit))
             <|> parseExpr'
 
-parseIf :: Parser Expr
+parseIf :: ParsecT String u Identity Expr
 parseIf = do
   reserved "if"
   cond <- parseExpr
@@ -135,15 +146,15 @@ parseIf = do
   else' <- parseExpr
   return $ If cond then' else'
 
-parseCall :: Parser Expr
+parseCall :: ParsecT String u Identity Expr
 parseCall = do
   fun <- identifier
   args <- parens (commaSep parseExpr)
   return $ Call (mkName fun) args
 
 
-parseLit :: Parser Expr
-parseLit = try (fmap Int integer)
+parseLit :: ParsecT String u Identity Expr
+parseLit = try (fmap (Int . fromInteger) integer)
   <|> try (fmap Float float)
   <|> try (reserved "#t" >> return (Bool True))
   <|> try (reserved "#f" >> return (Bool False))
@@ -151,10 +162,8 @@ parseLit = try (fmap Int integer)
   <|> fmap String stringLiteral
   <|> (reserved "unit" >> return Unit)
 
-parseToplevel :: Parser [Decl]
+parseToplevel :: ParsecT String u Identity [Decl]
 parseToplevel = many parseDecl >>= \ast -> eof >> return ast
 
+parse :: String -> Either ParseError [Decl]
 parse = Text.Parsec.parse parseToplevel ""
-
-parseTest :: Show a => Parser a -> String -> IO ()
-parseTest = Text.Parsec.parseTest
