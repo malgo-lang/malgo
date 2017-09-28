@@ -20,8 +20,10 @@ library
                   , Language.Malgo.Parser
                   , Language.Malgo.Typing
   build-depends:    base >= 4.7 && < 5
+                  , hspec >= 2.4.4
                   -- , llvm-hs
                   -- , llvm-hs-pure
+                  , pretty
                   , bytestring
                   , containers
                   , mtl
