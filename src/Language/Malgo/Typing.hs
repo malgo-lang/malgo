@@ -1,15 +1,15 @@
 module Language.Malgo.Typing where
 
 import           Control.Monad.State
-import           Data.Either
+import           Data.Either           ()
 import           Language.Malgo.Syntax
 
 type Env = [(Name, Type)]
 
 initEnv :: Env
-initEnv = [ (Sym "print", FunTy UnitTy [StringTy])
-          , (Sym "println", FunTy UnitTy [StringTy])
-          , (Sym "print_int", FunTy UnitTy [IntTy])
+initEnv = [ (mkName "print", FunTy UnitTy [StringTy])
+          , (mkName "println", FunTy UnitTy [StringTy])
+          , (mkName "print_int", FunTy UnitTy [IntTy])
           ]
 
 addBind :: Name -> Type -> StateT Env (Either String) ()
@@ -27,6 +27,7 @@ getType n = do
 typeEq :: Type -> Type -> Bool
 typeEq = (==)
 
+typeError :: String -> String -> String -> StateT Env (Either String) Type
 typeError expected actual info = lift . Left $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual ++ "\n info: " ++ info
 
 typeofExpr :: Expr -> StateT Env (Either String) Type
@@ -37,13 +38,14 @@ typeofExpr (Bool _)   = return BoolTy
 typeofExpr (Char _)   = return CharTy
 typeofExpr (String _) = return StringTy
 typeofExpr Unit = return UnitTy
-typeofExpr (Call name args) = do
+typeofExpr info@(Call name args) = do
   argsTy <- mapM typeofExpr args
   funty <- getType name
   case funty of
     FunTy retTy paramsTy -> if and $ zipWith typeEq argsTy paramsTy
                             then return retTy
-                            else typeError (show paramsTy) (show argsTy) (show (Call name args))
+                            else typeError (show paramsTy) (show argsTy) (show info )
+    _ -> typeError "Function" (show funty) (show info)
 typeofExpr (Seq e1 e2) = do
   ty1 <- typeofExpr e1
   if typeEq ty1 UnitTy
@@ -124,6 +126,11 @@ typeofExpr info@(Or e1 e2) = do
               then return BoolTy
               else typeError (show BoolTy) (show t2) (show info)
     else typeError (show BoolTy) (show t1) (show info)
+typeofExpr info@(Let name ty val) = do
+  vt <- typeofExpr val
+  if typeEq ty vt
+    then addBind name ty >> return UnitTy
+    else typeError (show ty) (show vt) (show info)
 
 evalTypeofExpr expr = evalStateT (typeofExpr expr) initEnv
 
@@ -146,4 +153,5 @@ typeofDecl info@(Defun fn retTy params body) = do
       return funTy
     else typeError (show retTy) (show bodyTy) (show info)
 
+evalTypeofDecl :: Decl -> Either String Type
 evalTypeofDecl decl = evalStateT (typeofDecl decl) initEnv

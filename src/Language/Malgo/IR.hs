@@ -1,33 +1,71 @@
 module Language.Malgo.IR where
 
+import           Control.Monad.State
 import           Language.Malgo.Syntax (Name, Type)
 import qualified Language.Malgo.Syntax as S
 
-data Inst = Add Name Value Value
-          | Sub Name Value Value
-          | Mul Name Value Value
-          | Div Name Value Value
-          | Cmp Op Name Value Value
-          | Br Value [Inst] [Inst]
+data Inst = Int Integer
+          | Float Double
+          | Bool Bool
+          | Char Char
+          | String String
+          | Unit
+          | Binary Op Id Id
+          | If Id Block Block
+          | App Id [Id] -- 関数適用
+          | Appx Id [Id] -- 外部関数適用
+          | Ref Id -- 変数参照
+          | Refx Id -- 外部変数参照
+          | Def Name [Inst]
+          | Defun Name Int [Inst]
   deriving (Eq, Show)
 
-data Op = Eq | Lt | Gt | Le | Ge
+type Block = [Inst]
+
+data Op = Add | Sub | Mul | Div | Eq | Lt | Gt | And | Or
   deriving (Eq, Show)
 
-data Value = Reg Name
-           | Int Integer
-  deriving (Eq, Show)
+type Id = String
 
-{--
+data Env = Env { _k_id  :: Int -- K正規化に使用する整数
+               , _names :: [Name]
+               }
 
-Add (Int 1) (Int 2)
-==> Add [temp1] (Int 1) (Int 2)
+getK :: State Env String
+getK = do
+  env <- get
+  return $ "$k" ++ show (_k_id env)
 
-Lt (Var (Sym "x")) (Var (Id 1))
-==> Cmp Lt [temp1] (Reg "x") (Reg [offset+1])
+incK :: State Env ()
+incK = do
+  env <- get
+  put $ env { _k_id = (_k_id env) + 1 }
 
-If (Lt (Int 1) (Int 2)) [then] [else]
-==> Cmp Lt [temp1] (Int 1) (Int 2)
-    Br [temp1] [trans [then]] [trans [else]]
+getA :: String -> State Env String
+getA name = do
+  env <- get
+  return $ name ++ "$a" ++ show (_a_id env)
 
---}
+incA :: State Env ()
+incA = do
+  env <- get
+  put $ env { _a_id = (_a_id env) + 1 }
+
+-- transExpr :: S.Expr -> [Inst]
+transExpr (S.Int x)    = incK >> return [Int x]
+transExpr (S.Float x)  = incK >> return [Float x]
+transExpr (S.Bool x)   = incK >> return [Bool x]
+transExpr (S.Char x)   = incK >> return [Char x]
+transExpr (S.String x) = incK >> return [String x]
+transExpr S.Unit       = incK >> return [Unit]
+transExpr (S.Add x y) = do
+  x' <- transExpr x
+  xi <- getK
+  y' <- transExpr y
+  yi <- getK
+  return $ x' ++ y' ++ [Binary Add xi yi]
+transExpr (S.Var x) = do
+  incK
+  x' <- getA x
+  return (Ref x')
+transExpr _ = error "未実装"

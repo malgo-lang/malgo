@@ -16,14 +16,14 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.identStart = letter <|> char '_' -- <|> oneOf "!$&?@^_~"
   , Tok.identLetter = alphaNum <|> char '_' -- <|> oneOf "!$&?@^_~"
   , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/", ";", "==", "/=", "&&", "||", "<", "<=", ">", ">="]
-  , Tok.reservedNames = ["unit", "def", "if", "else", "#t", "#f"]
+  , Tok.reservedNames = ["let", "unit", "def", "if", "else", "#t", "#f"]
   }
 
-table = [ [prefix "-" (\x -> Call (Sym "negate") [x]), prefix "+" id]
+table = [ [prefix "-" (\x -> Call (mkName "negate") [x]), prefix "+" id]
         , [ binary "*" Mul AssocLeft
           , binary "/" Div AssocLeft
           , binary "==" Eq AssocNone
-          , binary "/=" (\x y -> Call (Sym "not") [Eq x y]) AssocNone
+          , binary "/=" (\x y -> Call (mkName "not") [Eq x y]) AssocNone
           , binary "<=" (\x y -> Or (Lt x y) (Eq x y)) AssocNone
           , binary "<" Lt AssocNone
           , binary ">=" (\x y -> Or (Gt x y) (Eq x y)) AssocNone
@@ -77,10 +77,10 @@ parseDefun = do
   ty <- parseType
   reservedOp "="
   body <- parseExpr
-  return $ Defun (Sym name) ty params body
+  return $ Defun (mkName name) ty params body
 
 parseVar :: Parser Expr
-parseVar = fmap (Var . Sym) identifier
+parseVar = fmap (Var . mkName) identifier
 
 parseVarWithAnn :: Parser (Name, Type)
 parseVarWithAnn = do
@@ -102,8 +102,17 @@ parseTerm = (try parseCall
              <|> try parseVar
              <|> try parseLit
              <|> try parseIf
+             <|> parseLet
              <|> parens parseExpr
              <|> braces parseExpr)
+
+parseLet :: Parser Expr
+parseLet = do
+  reserved "let"
+  (name, ty) <- parseVarWithAnn
+  reservedOp "="
+  val <- parseExpr'
+  return $ Let name ty val
 
 parseExpr' = buildExpressionParser table parseTerm
 parseExpr = try (do
@@ -130,7 +139,7 @@ parseCall :: Parser Expr
 parseCall = do
   fun <- identifier
   args <- parens (commaSep parseExpr)
-  return $ Call (Sym fun) args
+  return $ Call (mkName fun) args
 
 
 parseLit :: Parser Expr
