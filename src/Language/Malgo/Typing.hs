@@ -1,3 +1,4 @@
+{-# LANGUAGE MultiWayIf #-}
 module Language.Malgo.Typing where
 
 import           Control.Monad.State
@@ -46,11 +47,13 @@ typeofExpr info@(Call name args) = do
                             then return retTy
                             else typeError (show paramsTy) (show argsTy) (show info )
     _ -> typeError "Function" (show funty) (show info)
+
 typeofExpr (Seq e1 e2) = do
   ty1 <- typeofExpr e1
   if typeEq ty1 UnitTy
     then typeofExpr e2
     else typeError (show UnitTy) (show ty1) (show (Seq e1 e2))
+
 typeofExpr (If c t f) = do
   ct <- typeofExpr c
   tt <- typeofExpr t
@@ -60,100 +63,123 @@ typeofExpr (If c t f) = do
          then return tt
          else typeError (show tt) (show ft) (show (If c t f))
     else typeError (show BoolTy) (show ct) (show (If c t f))
-typeofExpr (Add e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2
-    then if typeEq t1 IntTy || typeEq t1 FloatTy
-         then return t1
-         else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Add e1 e2))
-    else typeError (show t1) (show t2) (show (Add e1 e2))
-typeofExpr (Sub e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2
-    then if typeEq t1 IntTy || typeEq t1 FloatTy
-         then return t1
-         else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Sub e1 e2))
-    else typeError (show t1) (show t2) (show (Sub e1 e2))
-typeofExpr (Mul e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2
-    then if typeEq t1 IntTy || typeEq t1 FloatTy
-         then return t1
-         else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Mul e1 e2))
-    else typeError (show t1) (show t2) (show (Mul e1 e2))
-typeofExpr (Div e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2
-    then if typeEq t1 IntTy || typeEq t1 FloatTy
-         then return t1
-         else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Div e1 e2))
-    else typeError (show t1) (show t2) (show (Div e1 e2))
-typeofExpr info@(Eq e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2
-    then return BoolTy
-    else typeError (show t1) (show t2) (show info)
 
-typeofExpr info@(Lt e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
-    then return BoolTy
-    else typeError (show t1) (show t2) (show info)
-typeofExpr info@(Gt e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
-    then return BoolTy
-    else typeError (show t1) (show t2) (show info)
-typeofExpr info@(Le e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
-    then return BoolTy
-    else typeError (show t1) (show t2) (show info)
-typeofExpr info@(Ge e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
-  if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
-    then return BoolTy
-    else typeError (show t1) (show t2) (show info)
+-- typeofExpr (BinOp Add e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2
+--     then if typeEq t1 IntTy || typeEq t1 FloatTy
+--          then return t1
+--          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Add e1 e2))
+--     else typeError (show t1) (show t2) (show (Add e1 e2))
+-- typeofExpr (BinOp Sub e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2
+--     then if typeEq t1 IntTy || typeEq t1 FloatTy
+--          then return t1
+--          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Sub e1 e2))
+--     else typeError (show t1) (show t2) (show (Sub e1 e2))
+-- typeofExpr (Mul e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2
+--     then if typeEq t1 IntTy || typeEq t1 FloatTy
+--          then return t1
+--          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Mul e1 e2))
+--     else typeError (show t1) (show t2) (show (Mul e1 e2))
+-- typeofExpr (Div e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2
+--     then if typeEq t1 IntTy || typeEq t1 FloatTy
+--          then return t1
+--          else typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show (Div e1 e2))
+--     else typeError (show t1) (show t2) (show (Div e1 e2))
+-- typeofExpr info@(Eq e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2
+--     then return BoolTy
+--     else typeError (show t1) (show t2) (show info)
 
-typeofExpr info@(And e1 e2) = do
+-- typeofExpr info@(Lt e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
+--     then return BoolTy
+--     else typeError (show t1) (show t2) (show info)
+-- typeofExpr info@(Gt e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
+--     then return BoolTy
+--     else typeError (show t1) (show t2) (show info)
+-- typeofExpr info@(Le e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
+--     then return BoolTy
+--     else typeError (show t1) (show t2) (show info)
+-- typeofExpr info@(Ge e1 e2) = do
+--   t1 <- typeofExpr e1
+--   t2 <- typeofExpr e2
+--   if typeEq t1 t2 && (typeEq t1 IntTy || typeEq t1 FloatTy || typeEq t1 CharTy)
+--     then return BoolTy
+--     else typeError (show t1) (show t2) (show info)
+
+-- typeofExpr info@(And e1 e2) = do
+--   t1 <- typeofExpr e1
+--   if typeEq t1 BoolTy
+--     then do t2 <- typeofExpr e2
+--             if typeEq t2 BoolTy
+--               then return BoolTy
+--               else typeError (show BoolTy) (show t2) (show info)
+--     else typeError (show BoolTy) (show t1) (show info)
+-- typeofExpr info@(Or e1 e2) = do
+--   t1 <- typeofExpr e1
+--   if typeEq t1 BoolTy
+--     then do t2 <- typeofExpr e2
+--             if typeEq t2 BoolTy
+--               then return BoolTy
+--               else typeError (show BoolTy) (show t2) (show info)
+--     else typeError (show BoolTy) (show t1) (show info)
+typeofExpr info@(BinOp op e1 e2) = do
   t1 <- typeofExpr e1
-  if typeEq t1 BoolTy
-    then do t2 <- typeofExpr e2
-            if typeEq t2 BoolTy
-              then return BoolTy
-              else typeError (show BoolTy) (show t2) (show info)
-    else typeError (show BoolTy) (show t1) (show info)
-typeofExpr info@(Or e1 e2) = do
-  t1 <- typeofExpr e1
-  if typeEq t1 BoolTy
-    then do t2 <- typeofExpr e2
-            if typeEq t2 BoolTy
-              then return BoolTy
-              else typeError (show BoolTy) (show t2) (show info)
-    else typeError (show BoolTy) (show t1) (show info)
+  t2 <- typeofExpr e2
+  if | op `elem` [Add, Sub, Mul, Div] ->
+       if | typeEq t1 IntTy -> if typeEq t2 IntTy then return IntTy else typeError (show IntTy) (show t2) (show info)
+          | typeEq t1 FloatTy -> if typeEq t2 FloatTy then return FloatTy else typeError (show FloatTy) (show t2) (show info)
+          | otherwise -> typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show info)
+     | op `elem` [Eq, Lt, Gt, Le, Ge] ->
+       if | t1 `elem` comparableTypes ->
+            if typeEq t1 t2 then return BoolTy else typeError (show t1) (show t2) (show info)
+          | otherwise -> typeError ("any one of " ++ show comparableTypes) (show t1) (show info)
+     | op `elem` [And, Or] ->
+       if typeEq t1 BoolTy
+       then if typeEq t2 BoolTy
+            then return BoolTy
+            else typeError (show BoolTy) (show t2) (show info)
+       else typeError (show BoolTy) (show t1) (show info)
+  where comparableTypes = [IntTy, FloatTy, BoolTy, CharTy, StringTy]
+
 typeofExpr info@(Let name ty val) = do
   vt <- typeofExpr val
   if typeEq ty vt
     then addBind name ty >> return UnitTy
     else typeError (show ty) (show vt) (show info)
 
+evalTypeofExpr :: Expr -> Either String Type
 evalTypeofExpr expr = evalStateT (typeofExpr expr) initEnv
 
 typeofDecl :: Decl -> StateT Env (Either String) Type
+
 typeofDecl info@(Def n ty val) = do
   tv <- typeofExpr val
   if typeEq ty tv
     then addBind n ty >> return ty
     else typeError (show ty) (show tv) (show info)
+
 typeofDecl info@(Defun fn retTy params body) = do
   let funTy = FunTy retTy (map snd params)
   ctx <- get

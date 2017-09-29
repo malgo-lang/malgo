@@ -23,17 +23,10 @@ data Expr = Var Name
           | Seq Expr Expr
           | Let Name Type Expr
           | If Expr Expr Expr
-          | Add Expr Expr
-          | Sub Expr Expr
-          | Mul Expr Expr
-          | Div Expr Expr
-          | Eq Expr Expr
-          | Lt Expr Expr
-          | Gt Expr Expr
-          | Le Expr Expr
-          | Ge Expr Expr
-          | And Expr Expr
-          | Or Expr Expr
+          | BinOp Op Expr Expr
+  deriving (Eq, Show)
+
+data Op = Add | Sub | Mul | Div | Eq | Lt | Gt | Le | Ge | And | Or
   deriving (Eq, Show)
 
 data Type = IntTy
@@ -63,23 +56,48 @@ prettyExpr (Let name ty val) = P.text "let" <+>
 prettyExpr (Var name) = P.text name
 prettyExpr (Bool True) = P.text "#t"
 prettyExpr (Bool False) = P.text "#f"
-prettyExpr (If c t f) = P.text "if" <+>
-                        prettyExpr c <+>
-                        P.lbrace $+$
-                        P.nest 4 (prettyExpr t) $+$
-                        P.rbrace <+>
-                        P.text "else" <+>
-                        P.lbrace $+$
-                        P.nest 4 (prettyExpr f) $+$
-                        P.rbrace
-prettyExpr (Add x y) = prettyExpr x <+> P.char '+' <+> prettyExpr y
-prettyExpr (Sub x y) = prettyExpr x <+> P.char '-' <+> prettyExpr y
-prettyExpr (Mul x y) = prettyExpr x <+> P.char '*' <+> prettyExpr y
-prettyExpr (Div x y) = prettyExpr x <+> P.char '/' <+> prettyExpr y
-prettyExpr (Eq x y) = prettyExpr x <+> P.text "==" <+> prettyExpr y
-prettyExpr (Lt x y) = prettyExpr x <+> P.char '<' <+> prettyExpr y
-prettyExpr (Gt x y) = prettyExpr x <+> P.char '>' <+> prettyExpr y
-prettyExpr _          = undefined
+prettyExpr (If c t f) = P.text "if"
+  <+> prettyExpr c
+  <+> P.lbrace
+  $+$ P.nest 4 (prettyExpr t)
+  $+$ P.rbrace
+  <+> P.text "else"
+  <+> P.lbrace
+  $+$ P.nest 4 (prettyExpr f)
+  $+$ P.rbrace
+prettyExpr (BinOp Add x y) = prettyExpr x <+> P.char '+' <+> prettyExpr y
+prettyExpr (BinOp Sub x y) = prettyExpr x <+> P.char '-' <+> prettyExpr y
+prettyExpr (BinOp Mul x y) = prettyExpr x <+> P.char '*' <+> prettyExpr y
+prettyExpr (BinOp Div x y) = prettyExpr x <+> P.char '/' <+> prettyExpr y
+prettyExpr (BinOp Eq x y) = prettyExpr x <+> P.text "==" <+> prettyExpr y
+prettyExpr (BinOp Lt x y) = prettyExpr x <+> P.char '<' <+> prettyExpr y
+prettyExpr (BinOp Gt x y) = prettyExpr x <+> P.char '>' <+> prettyExpr y
+prettyExpr (BinOp Le x y) = prettyExpr x <+> P.text "<=" <+> prettyExpr y
+prettyExpr (BinOp Ge x y) = prettyExpr x <+> P.text ">=" <+> prettyExpr y
+prettyExpr (BinOp And x y) = prettyExpr x <+> P.text "&&" <+> prettyExpr y
+prettyExpr (BinOp Or x y) = prettyExpr x <+> P.text "||" <+> prettyExpr y
 
 prettyType :: Type -> P.Doc
-prettyType IntTy = P.text "Int"
+prettyType IntTy              = P.text "Int"
+prettyType FloatTy            = P.text "Float"
+prettyType BoolTy             = P.text "Bool"
+prettyType CharTy             = P.text "Char"
+prettyType StringTy           = P.text "String"
+prettyType UnitTy             = P.text "Unit"
+prettyType (FunTy ret params) =
+  P.text "Fun"
+  <+> P.brackets (P.sep $
+                   P.punctuate P.comma (map prettyType params))
+  <+> prettyType ret
+
+prettyDecl :: Decl -> P.Doc
+prettyDecl (Def name ty val) = P.text "def"
+  <+> P.text name <> P.colon <> prettyType ty <+> P.equals <+> prettyExpr val
+prettyDecl (Defun name ret params body) = P.text "def"
+  <+> P.text name
+  <> P.parens (P.sep (P.punctuate P.comma (map prettyParam params)))
+  <> P.colon <> prettyType ret
+  <+> P.equals <+> P.lbrace
+  $+$ P.nest 4 (prettyExpr body)
+  $+$ P.rbrace
+  where prettyParam (n, ty) = P.text n <> P.colon <> prettyType ty

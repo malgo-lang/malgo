@@ -6,6 +6,7 @@ import qualified Language.Malgo.Syntax as Syntax
 import qualified Language.Malgo.Typing as Typing
 import           System.Environment    (getArgs)
 import qualified Text.Parsec.String    as P
+import qualified Text.PrettyPrint      as Pretty
 
 main :: IO ()
 main = do
@@ -14,5 +15,5 @@ main = do
   result <- P.parseFromFile Parser.parseToplevel file
   case result of
     Left err  -> print err
-    Right ast -> do print ast
-                    print $ runStateT (sequence (map Typing.typeofDecl ast)) Typing.initEnv
+    Right ast -> do print $ Pretty.sep (map Syntax.prettyDecl ast)
+                    print $ runStateT (mapM Typing.typeofDecl ast) Typing.initEnv

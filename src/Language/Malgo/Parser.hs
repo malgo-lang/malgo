@@ -23,19 +23,19 @@ lexer = Tok.makeTokenParser $ emptyDef {
 
 table :: [[Operator String u Identity Expr]]
 table = [ [prefix "-" (\x -> Call (mkName "negate") [x]), prefix "+" id]
-        , [ binary "*" Mul AssocLeft
-          , binary "/" Div AssocLeft
-          , binary "==" Eq AssocNone
-          , binary "/=" (\x y -> Call (mkName "not") [Eq x y]) AssocNone
-          , binary "<=" Le AssocNone
-          , binary "<" Lt AssocNone
-          , binary ">=" Ge AssocNone
-          , binary ">" Gt AssocNone
+        , [ binary "*" (BinOp Mul) AssocLeft
+          , binary "/" (BinOp Div) AssocLeft
+          , binary "==" (BinOp Eq) AssocNone
+          , binary "/=" (\x y -> Call (mkName "not") [BinOp Eq x y]) AssocNone
+          , binary "<=" (BinOp Le) AssocNone
+          , binary "<" (BinOp Lt) AssocNone
+          , binary ">=" (BinOp Ge) AssocNone
+          , binary ">" (BinOp Gt) AssocNone
           ]
-        , [ binary "+" Add AssocLeft
-          , binary "-" Sub AssocLeft
-          , binary "&&" And AssocLeft
-          , binary "||" Or AssocLeft
+        , [ binary "+" (BinOp Add) AssocLeft
+          , binary "-" (BinOp Sub) AssocLeft
+          , binary "&&" (BinOp And) AssocLeft
+          , binary "||" (BinOp Or) AssocLeft
           ]
         ]
 
