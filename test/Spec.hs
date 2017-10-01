@@ -10,6 +10,9 @@ spec = do
     it "def answer:Int = 42" $ do
       P.parse "def answer:Int = 42" `shouldBe` Right [S.Def (S.mkName "answer") S.IntTy (S.Int 42)]
 
+    it "def pi:Float = 3.14" $ do
+      P.parse "def pi:Float = 3.14" `shouldBe` Right [S.Def (S.mkName "pi") S.FloatTy (S.Float 3.14)]
+
     it "def not(x:Bool):Bool = if x #f else #t" $ do
       P.parse "def not(x:Bool):Bool = if x #f else #t" `shouldBe` Right [S.Defun (S.mkName "not") S.BoolTy [(S.mkName "x",S.BoolTy)] (S.If (S.Var (S.mkName "x")) (S.Bool False) (S.Bool True))]
 

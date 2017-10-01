@@ -107,9 +107,9 @@ parseType = (symbol "Int" >> return IntTy)
 
 parseTerm :: ParsecT String u Identity Expr
 parseTerm = try parseCall
-  <|> try parseVar
-  <|> try parseLit
-  <|> try parseIf
+  <|> parseVar
+  <|> parseLit
+  <|> parseIf
   <|> parseLet
   <|> parens parseExpr
   <|> braces parseExpr
@@ -154,10 +154,10 @@ parseCall = do
 
 
 parseLit :: ParsecT String u Identity Expr
-parseLit = try (fmap (Int . fromInteger) integer)
-  <|> try (fmap Float float)
-  <|> try (reserved "#t" >> return (Bool True))
-  <|> try (reserved "#f" >> return (Bool False))
+parseLit = try (fmap Float float)
+  <|> fmap (Int . fromInteger) integer
+  <|> (reserved "#t" >> return (Bool True))
+  <|> (reserved "#f" >> return (Bool False))
   <|> fmap Char charLiteral
   <|> fmap String stringLiteral
   <|> (reserved "unit" >> return Unit)
