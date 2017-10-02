@@ -68,12 +68,21 @@ typeofExpr info@(BinOp op e1 e2) = do
   t1 <- typeofExpr e1
   t2 <- typeofExpr e2
   if | op `elem` [Add, Sub, Mul, Div] ->
-       if | typeEq t1 IntTy   -> if typeEq t2 IntTy then return IntTy else typeError (show IntTy) (show t2) (show info)
-          | typeEq t1 FloatTy -> if typeEq t2 FloatTy then return FloatTy else typeError (show FloatTy) (show t2) (show info)
-          | otherwise         -> typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show info)
+       if | typeEq t1 IntTy ->
+              if typeEq t2 IntTy
+              then return IntTy
+              else typeError (show IntTy) (show t2) (show info)
+          | typeEq t1 FloatTy ->
+              if typeEq t2 FloatTy
+              then return FloatTy
+              else typeError (show FloatTy) (show t2) (show info)
+          | otherwise ->
+              typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show info)
      | op `elem` [Eq, Lt, Gt, Le, Ge] ->
        if | t1 `elem` comparableTypes ->
-            if typeEq t1 t2 then return BoolTy else typeError (show t1) (show t2) (show info)
+            if typeEq t1 t2
+            then return BoolTy
+            else typeError (show t1) (show t2) (show info)
           | otherwise -> typeError ("any one of " ++ show comparableTypes) (show t1) (show info)
      | op `elem` [And, Or] ->
        if typeEq t1 BoolTy

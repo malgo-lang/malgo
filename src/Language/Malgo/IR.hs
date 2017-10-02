@@ -27,29 +27,29 @@ data Op = Add | Sub | Mul | Div | Eq | Lt | Gt | And | Or
 
 type Id = String
 
-data Env = Env { _k_id  :: Int -- K正規化に使用する整数
+data Env = Env { _kId   :: Int -- K正規化に使用する整数
                , _names :: [Name]
                }
 
 getK :: State Env String
 getK = do
   env <- get
-  return $ "$k" ++ show (_k_id env)
+  return $ "$k" ++ show (_kId env)
 
 incK :: State Env ()
 incK = do
   env <- get
-  put $ env { _k_id = (_k_id env) + 1 }
+  put $ env { _kId = (_kId env) + 1 }
 
 getA :: String -> State Env String
 getA name = do
   env <- get
-  return $ name ++ "$a" ++ show (_a_id env)
+  return $ name ++ "$a" ++ show (_aId env)
 
 incA :: State Env ()
 incA = do
   env <- get
-  put $ env { _a_id = (_a_id env) + 1 }
+  put $ env { _aId = (_aId env) + 1 }
 
 -- transExpr :: S.Expr -> [Inst]
 transExpr (S.Int x)    = incK >> return [Int x]

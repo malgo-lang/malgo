@@ -7,8 +7,9 @@ import qualified Language.Malgo.Typing as T
 
 spec = do
   describe "Parse test" $ do
-    it "def answer:Int = 42" $ do
-      P.parse "def answer:Int = 42" `shouldBe` Right [S.Def (S.mkName "answer") S.IntTy (S.Int 42)]
+    it "def answer:Int = 42" $
+      P.parse "def answer:Int = 42" `shouldBe`
+        Right [S.Def (S.mkName "answer") S.IntTy (S.Int 42)]
 
     it "def pi:Float = 3.14" $ do
       P.parse "def pi:Float = 3.14" `shouldBe` Right [S.Def (S.mkName "pi") S.FloatTy (S.Float 3.14)]

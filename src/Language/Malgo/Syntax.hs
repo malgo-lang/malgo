@@ -1,6 +1,7 @@
+{-# LANGUAGE StrictData #-}
 module Language.Malgo.Syntax where
 
-import           Text.PrettyPrint (($$), ($+$), (<+>), (<>))
+import           Text.PrettyPrint (($+$), (<+>), (<>))
 import qualified Text.PrettyPrint as P
 
 type Name = String
