@@ -2,14 +2,13 @@
 {-# LANGUAGE RankNTypes        #-}
 module Language.Malgo.Parser where
 
+import           Control.Applicative
 import           Data.Functor.Identity (Identity)
-import qualified Data.Text             as T
 import           Language.Malgo.Syntax
-import           Text.Parsec           hiding (parse)
+import           Text.Parsec           hiding (many, parse, (<|>))
 import qualified Text.Parsec
 import           Text.Parsec.Expr
 import           Text.Parsec.Language
-import           Text.Parsec.Text
 import qualified Text.Parsec.Token     as Tok
 
 lexer :: Tok.GenTokenParser String u Identity
@@ -49,20 +48,35 @@ binary
   :: String -> (a -> a -> a) -> Assoc -> Operator String u Identity a
 binary name fun = Infix (reservedOp name >> return fun)
 
+integer :: ParsecT String u Identity Integer
 integer = Tok.integer lexer
+float :: ParsecT String u Identity Double
 float = Tok.float lexer
+parens :: ParsecT String u Identity a -> ParsecT String u Identity a
 parens = Tok.parens lexer
+identifier :: ParsecT String u Identity String
 identifier = Tok.identifier lexer
+reserved :: String -> ParsecT String u Identity ()
 reserved = Tok.reserved lexer
+reservedOp :: String -> ParsecT String u Identity ()
 reservedOp = Tok.reservedOp lexer
+brackets :: ParsecT String u Identity a -> ParsecT String u Identity a
 brackets = Tok.brackets lexer
+lexeme :: ParsecT String u Identity a -> ParsecT String u Identity a
 lexeme = Tok.lexeme lexer
+stringLiteral :: ParsecT String u Identity String
 stringLiteral = Tok.stringLiteral lexer
+charLiteral :: ParsecT String u Identity Char
 charLiteral = Tok.charLiteral lexer
+symbol :: String -> ParsecT String u Identity String
 symbol = Tok.symbol lexer
+commaSep :: ParsecT String u Identity a -> ParsecT String u Identity [a]
 commaSep = Tok.commaSep lexer
+braces :: ParsecT String u Identity a -> ParsecT String u Identity a
 braces = Tok.braces lexer
+semiSep :: ParsecT String u Identity a -> ParsecT String u Identity [a]
 semiSep = Tok.semiSep lexer
+semi :: ParsecT String u Identity String
 semi = Tok.semi lexer
 
 parseDecl :: ParsecT String u Identity Decl
@@ -115,43 +129,21 @@ parseTerm = try parseCall
   <|> braces parseExpr
 
 parseLet :: ParsecT String u Identity Expr
-parseLet = do
-  reserved "let"
-  (name, ty) <- parseVarWithAnn
-  reservedOp "="
-  val <- parseExpr'
-  return $ Let name ty val
+parseLet = reserved "let" >> Let <$> fmap mkName identifier <*> (reservedOp ":" >> parseType) <*> (reservedOp "=" >> parseExpr')
 
 parseExpr' :: ParsecT String u Identity Expr
 parseExpr' = buildExpressionParser table parseTerm
 
 parseExpr :: ParsecT String u Identity Expr
-parseExpr = try (do
-                    e1 <- parseExpr'
-                    reservedOp ";"
-                    e2 <- parseExpr
-                    return (Seq e1 e2))
-            <|> try (do
-                        e <- parseExpr'
-                        reservedOp ";"
-                        return (Seq e Unit))
-            <|> parseExpr'
+parseExpr = try (Seq <$> parseExpr' <*> (reservedOp ";" >> parseExpr))
+  <|> try (Seq <$> parseExpr' <*> (reservedOp ";" >> return Unit))
+  <|> parseExpr'
 
 parseIf :: ParsecT String u Identity Expr
-parseIf = do
-  reserved "if"
-  cond <- parseExpr
-  then' <- parseExpr
-  reserved "else"
-  else' <- parseExpr
-  return $ If cond then' else'
+parseIf = reserved "if" >> If <$> parseExpr <*> parseExpr <*> (reserved "else" >> parseExpr)
 
 parseCall :: ParsecT String u Identity Expr
-parseCall = do
-  fun <- identifier
-  args <- parens (commaSep parseExpr)
-  return $ Call (mkName fun) args
-
+parseCall = Call <$> fmap mkName identifier <*> parens (commaSep parseExpr)
 
 parseLit :: ParsecT String u Identity Expr
 parseLit = try (fmap Float float)
