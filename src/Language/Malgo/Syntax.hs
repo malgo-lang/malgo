@@ -92,9 +92,8 @@ prettyType CharTy             = P.text "Char"
 prettyType StringTy           = P.text "String"
 prettyType UnitTy             = P.text "Unit"
 prettyType (FunTy ret params) =
-  P.text "Fun"
-  <+> P.brackets (P.sep $
-                   P.punctuate P.comma (map prettyType params))
+  P.sep (P.punctuate (P.text " *") (map prettyType params))
+  <+> P.text "->"
   <+> prettyType ret
 
 prettyDecl :: Decl -> P.Doc
