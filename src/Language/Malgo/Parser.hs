@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes        #-}
 module Language.Malgo.Parser where
 
 import           Control.Applicative
@@ -9,6 +7,7 @@ import           Text.Parsec           hiding (many, parse, (<|>))
 import qualified Text.Parsec
 import           Text.Parsec.Expr
 import           Text.Parsec.Language
+import           Text.Parsec.Pos
 import qualified Text.Parsec.Token     as Tok
 
 lexer :: Tok.GenTokenParser String u Identity
@@ -21,32 +20,32 @@ lexer = Tok.makeTokenParser $ emptyDef {
   }
 
 table :: [[Operator String u Identity Expr]]
-table = [ [prefix "-" (\x -> Call (mkName "negate") [x]), prefix "+" id]
-        , [ binary "*" (BinOp Mul) AssocLeft
-          , binary "/" (BinOp Div) AssocLeft
-          , binary "==" (BinOp Eq) AssocNone
-          , binary "/=" (\x y -> Call (mkName "not") [BinOp Eq x y]) AssocNone
-          , binary "<=" (BinOp Le) AssocNone
-          , binary "<" (BinOp Lt) AssocNone
-          , binary ">=" (BinOp Ge) AssocNone
-          , binary ">" (BinOp Gt) AssocNone
+table = [ [ prefix "-" (\pos x -> Call pos (mkName "negate") [x])
+          , prefix "+" (flip const)]
+        , [ binary "*" (\pos -> BinOp pos Mul) AssocLeft
+          , binary "/" (\pos -> BinOp pos Div) AssocLeft
+          , binary "==" (\pos -> BinOp pos Eq) AssocNone
+          , binary "/=" (\pos -> BinOp pos Neq) AssocNone
+          , binary "<=" (\pos -> BinOp pos Le) AssocNone
+          , binary "<" (\pos -> BinOp pos Lt) AssocNone
+          , binary ">=" (\pos -> BinOp pos Ge) AssocNone
+          , binary ">" (\pos -> BinOp pos Gt) AssocNone
           ]
-        , [ binary "+" (BinOp Add) AssocLeft
-          , binary "-" (BinOp Sub) AssocLeft
-          , binary "&&" (BinOp And) AssocLeft
-          , binary "||" (BinOp Or) AssocLeft
+        , [ binary "+" (\pos -> BinOp pos Add) AssocLeft
+          , binary "-" (\pos -> BinOp pos Sub) AssocLeft
+          , binary "&&" (\pos -> BinOp pos And) AssocLeft
+          , binary "||" (\pos -> BinOp pos Or) AssocLeft
           ]
         ]
 
-prefix :: String -> (a -> a) -> Operator String u Identity a
-prefix name fun = Prefix (reservedOp name >> return fun)
+-- prefix :: String -> (a -> a) -> Operator String u Identity a
+prefix name fun = Prefix (getPosition >>= \pos -> reservedOp name >> return (fun pos))
 
-postfix :: String -> (a -> a) -> Operator String u Identity a
-postfix name fun = Postfix (reservedOp name >> return fun)
+-- postfix :: String -> (a -> a) -> Operator String u Identity a
+postfix name fun = Postfix (getPosition >>= \pos -> reservedOp name >> return (fun pos))
 
-binary
-  :: String -> (a -> a -> a) -> Assoc -> Operator String u Identity a
-binary name fun = Infix (reservedOp name >> return fun)
+-- binary :: String -> (a -> a -> a) -> Assoc -> Operator String u Identity a
+binary name fun = Infix (getPosition >>= \pos -> reservedOp name >> return (fun pos))
 
 integer :: ParsecT String u Identity Integer
 integer = Tok.integer lexer
@@ -84,14 +83,16 @@ parseDecl = try parseDefun <|> parseDef
 
 parseDef :: ParsecT String u Identity Decl
 parseDef = do
+  pos <- getPosition
   reserved "def"
   (name, ty) <- parseVarWithAnn
   reservedOp "="
   val <- parseExpr
-  return $ Def name ty val
+  return $ Def pos name ty val
 
 parseDefun :: ParsecT String u Identity Decl
 parseDefun = do
+  pos <- getPosition
   reserved "def"
   name <- identifier
   params <- parens (commaSep parseVarWithAnn)
@@ -99,14 +100,14 @@ parseDefun = do
   ty <- parseType
   reservedOp "="
   body <- parseExpr
-  return $ Defun (mkName name) ty params body
+  return $ Defun pos (mkName name) ty params body
 
 parseVar :: ParsecT String u Identity Expr
-parseVar = fmap (Var . mkName) identifier
+parseVar = getPosition >>= \pos -> fmap (\id -> Var pos (mkName id)) identifier
 
 parseVarWithAnn :: ParsecT String u Identity (Name, Type)
 parseVarWithAnn = do
-  (Var name) <- parseVar
+  (Var _ name) <- parseVar
   reservedOp ":"
   ty <- parseType
   return (name, ty)
@@ -129,30 +130,45 @@ parseTerm = try parseCall
   <|> braces parseExpr
 
 parseLet :: ParsecT String u Identity Expr
-parseLet = reserved "let" >> Let <$> fmap mkName identifier <*> (reservedOp ":" >> parseType) <*> (reservedOp "=" >> parseExpr')
+parseLet = do
+  pos <- getPosition
+  reserved "let" >> Let pos <$> fmap mkName identifier <*> (reservedOp ":" >> parseType) <*> (reservedOp "=" >> parseExpr')
 
 parseExpr' :: ParsecT String u Identity Expr
 parseExpr' = buildExpressionParser table parseTerm
 
 parseExpr :: ParsecT String u Identity Expr
-parseExpr = try (Seq <$> parseExpr' <*> (reservedOp ";" >> parseExpr))
-  <|> try (Seq <$> parseExpr' <*> (reservedOp ";" >> return Unit))
+-- parseExpr = try (Seq <$> parseExpr' <*> (reservedOp ";" >> parseExpr))
+--   <|> try (Seq <$> parseExpr' <*> (reservedOp ";" >> return Unit))
+--   <|> parseExpr'
+parseExpr =
+  try (do
+          e1 <- parseExpr'
+          pos <- getPosition
+          reservedOp ";"
+          e2 <- parseExpr
+          return $ Seq pos e1 e2)
+  <|> try (do
+              e1 <- parseExpr'
+              pos <- getPosition
+              reservedOp ";"
+              return $ Seq pos e1 (Unit pos))
   <|> parseExpr'
 
 parseIf :: ParsecT String u Identity Expr
-parseIf = reserved "if" >> If <$> parseExpr <*> parseExpr <*> (reserved "else" >> parseExpr)
+parseIf = reserved "if" >> If <$> getPosition <*> parseExpr <*> parseExpr <*> (reserved "else" >> parseExpr)
 
 parseCall :: ParsecT String u Identity Expr
-parseCall = Call <$> fmap mkName identifier <*> parens (commaSep parseExpr)
+parseCall = Call <$> getPosition <*> fmap mkName identifier <*> parens (commaSep parseExpr)
 
 parseLit :: ParsecT String u Identity Expr
-parseLit = try (fmap Float float)
-  <|> fmap (Int . fromInteger) integer
-  <|> (reserved "#t" >> return (Bool True))
-  <|> (reserved "#f" >> return (Bool False))
-  <|> fmap Char charLiteral
-  <|> fmap String stringLiteral
-  <|> (reserved "unit" >> return Unit)
+parseLit = try (Float <$> getPosition <*> float)
+  <|> (Int <$> getPosition <*> fmap fromInteger integer)
+  <|> (getPosition >>= \pos -> reserved "#t" >> return (Bool pos True))
+  <|> (getPosition >>= \pos -> reserved "#f" >> return (Bool pos False))
+  <|> (Char <$> getPosition <*> charLiteral)
+  <|> (String <$> getPosition <*> stringLiteral)
+  <|> (getPosition >>= \pos -> reserved "unit" >> return (Unit pos))
 
 parseToplevel :: ParsecT String u Identity [Decl]
 parseToplevel = many parseDecl >>= \ast -> eof >> return ast

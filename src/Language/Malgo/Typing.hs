@@ -18,12 +18,12 @@ addBind n t = do
   ctx <- get
   put $ (n, t):ctx
 
-getType :: Name -> StateT Env (Either String) Type
-getType n = do
+getType :: Name -> Pos -> StateT Env (Either String) Type
+getType n _ = do
   ctx <- get
   case lookup n ctx of
     Just ty -> return ty
-    Nothing -> lift . Left $ "error: " ++ show n ++ " is not defined.\nEnv: " ++ show ctx
+    Nothing -> lift . Left $ "error: " ++ show n ++ " is not defined.\n"
 
 typeEq :: Type -> Type -> Bool
 typeEq = (==)
@@ -32,39 +32,39 @@ typeError :: String -> String -> String -> StateT Env (Either String) Type
 typeError expected actual info = lift . Left $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual ++ "\n info: " ++ info
 
 typeofExpr :: Expr -> StateT Env (Either String) Type
-typeofExpr (Var name) = getType name
-typeofExpr (Int _)    = return IntTy
-typeofExpr (Float _)  = return FloatTy
-typeofExpr (Bool _)   = return BoolTy
-typeofExpr (Char _)   = return CharTy
-typeofExpr (String _) = return StringTy
-typeofExpr Unit = return UnitTy
-typeofExpr info@(Call name args) = do
+typeofExpr (Var pos name) = getType name pos
+typeofExpr (Int _ _)    = return IntTy
+typeofExpr (Float _ _)  = return FloatTy
+typeofExpr (Bool _ _)   = return BoolTy
+typeofExpr (Char _ _)   = return CharTy
+typeofExpr (String _ _) = return StringTy
+typeofExpr (Unit _) = return UnitTy
+typeofExpr (Call info name args) = do
   argsTy <- mapM typeofExpr args
-  funty <- getType name
+  funty <- getType name info
   case funty of
     FunTy retTy paramsTy -> if and $ zipWith typeEq argsTy paramsTy
                             then return retTy
                             else typeError (show paramsTy) (show argsTy) (show info )
     _ -> typeError "Function" (show funty) (show info)
 
-typeofExpr (Seq e1 e2) = do
+typeofExpr (Seq info e1 e2) = do
   ty1 <- typeofExpr e1
   if typeEq ty1 UnitTy
     then typeofExpr e2
-    else typeError (show UnitTy) (show ty1) (show (Seq e1 e2))
+    else typeError (show UnitTy) (show ty1) (show info)
 
-typeofExpr (If c t f) = do
+typeofExpr (If info c t f) = do
   ct <- typeofExpr c
   tt <- typeofExpr t
   ft <- typeofExpr f
   if typeEq ct BoolTy
     then if typeEq tt ft
          then return tt
-         else typeError (show tt) (show ft) (show (If c t f))
-    else typeError (show BoolTy) (show ct) (show (If c t f))
+         else typeError (show tt) (show ft) (show info)
+    else typeError (show BoolTy) (show ct) (show info)
 
-typeofExpr info@(BinOp op e1 e2) = do
+typeofExpr (BinOp info op e1 e2) = do
   t1 <- typeofExpr e1
   t2 <- typeofExpr e2
   if | op `elem` [Add, Sub, Mul, Div] ->
@@ -92,7 +92,7 @@ typeofExpr info@(BinOp op e1 e2) = do
        else typeError (show BoolTy) (show t1) (show info)
   where comparableTypes = [IntTy, FloatTy, BoolTy, CharTy, StringTy]
 
-typeofExpr info@(Let name ty val) = do
+typeofExpr (Let info name ty val) = do
   vt <- typeofExpr val
   if typeEq ty vt
     then addBind name ty >> return UnitTy
@@ -103,13 +103,13 @@ evalTypeofExpr expr = evalStateT (typeofExpr expr) initEnv
 
 typeofDecl :: Decl -> StateT Env (Either String) Type
 
-typeofDecl info@(Def n ty val) = do
+typeofDecl (Def info n ty val) = do
   tv <- typeofExpr val
   if typeEq ty tv
     then addBind n ty >> return ty
     else typeError (show ty) (show tv) (show info)
 
-typeofDecl info@(Defun fn retTy params body) = do
+typeofDecl (Defun info fn retTy params body) = do
   let funTy = FunTy retTy (map snd params)
   ctx <- get
   put $ params ++ ctx

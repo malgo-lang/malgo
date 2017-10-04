@@ -1,6 +1,9 @@
 {-# LANGUAGE StrictData #-}
+
 module Language.Malgo.Syntax where
 
+import           Control.Lens
+import           Text.Parsec.Pos
 import           Text.PrettyPrint (($+$), (<+>), (<>))
 import qualified Text.PrettyPrint as P
 
@@ -9,25 +12,27 @@ type Name = String
 mkName :: String -> Name
 mkName = id
 
-data Decl = Def Name Type Expr
-          | Defun Name Type [(Name, Type)] Expr
+type Pos = SourcePos
+
+data Decl = Def Pos Name Type Expr
+          | Defun Pos Name Type [(Name, Type)] Expr
   deriving (Eq, Show)
 
-data Expr = Var Name
-          | Int Int
-          | Float Double
-          | Bool Bool
-          | Char Char
-          | String String
-          | Unit
-          | Call Name [Expr]
-          | Seq Expr Expr
-          | Let Name Type Expr
-          | If Expr Expr Expr
-          | BinOp Op Expr Expr
+data Expr = Var Pos Name
+          | Int Pos Int
+          | Float Pos Double
+          | Bool Pos Bool
+          | Char Pos Char
+          | String Pos String
+          | Unit Pos
+          | Call Pos Name [Expr]
+          | Seq Pos Expr Expr
+          | Let Pos Name Type Expr
+          | If Pos Expr Expr Expr
+          | BinOp Pos Op Expr Expr
   deriving (Eq, Show)
 
-data Op = Add | Sub | Mul | Div | Eq | Lt | Gt | Le | Ge | And | Or
+data Op = Add | Sub | Mul | Div | Eq | Neq | Lt | Gt | Le | Ge | And | Or
   deriving (Eq, Show)
 
 data Type = IntTy
@@ -40,24 +45,24 @@ data Type = IntTy
   deriving (Eq, Show)
 
 prettyExpr :: Expr -> P.Doc
-prettyExpr (Int n)    = P.int n
-prettyExpr (Float x)  = P.double x
-prettyExpr (Char x)   = P.quotes $ P.char x
-prettyExpr (String x) = P.doubleQuotes $ P.text x
-prettyExpr Unit       = P.text "unit"
-prettyExpr (Call name args) = P.text name <> P.parens (P.sep $ P.punctuate P.comma (map prettyExpr args))
-prettyExpr (Seq x Unit) = prettyExpr x <> P.semi
-prettyExpr (Seq x y) = prettyExpr x <> P.semi $+$ prettyExpr y
-prettyExpr (Let name ty val) = P.text "let" <+>
+prettyExpr (Int _ n)    = P.int n
+prettyExpr (Float _ x)  = P.double x
+prettyExpr (Char _ x)   = P.quotes $ P.char x
+prettyExpr (String _ x) = P.doubleQuotes $ P.text x
+prettyExpr (Unit _)       = P.text "unit"
+prettyExpr (Call _ name args) = P.text name <> P.parens (P.sep $ P.punctuate P.comma (map prettyExpr args))
+prettyExpr (Seq _ x (Unit _)) = prettyExpr x <> P.semi
+prettyExpr (Seq _ x y) = prettyExpr x <> P.semi $+$ prettyExpr y
+prettyExpr (Let _ name ty val) = P.text "let" <+>
                                P.text name <>
                                P.colon <>
                                prettyType ty <+>
                                P.equals <+>
                                prettyExpr val
-prettyExpr (Var name) = P.text name
-prettyExpr (Bool True) = P.text "#t"
-prettyExpr (Bool False) = P.text "#f"
-prettyExpr (If c t f) = P.text "if"
+prettyExpr (Var _ name) = P.text name
+prettyExpr (Bool _ True) = P.text "#t"
+prettyExpr (Bool _ False) = P.text "#f"
+prettyExpr (If _ c t f) = P.text "if"
   <+> prettyExpr c
   <+> P.lbrace
   $+$ P.nest 4 (prettyExpr t)
@@ -66,17 +71,18 @@ prettyExpr (If c t f) = P.text "if"
   <+> P.lbrace
   $+$ P.nest 4 (prettyExpr f)
   $+$ P.rbrace
-prettyExpr (BinOp Add x y) = prettyExpr x <+> P.char '+' <+> prettyExpr y
-prettyExpr (BinOp Sub x y) = prettyExpr x <+> P.char '-' <+> prettyExpr y
-prettyExpr (BinOp Mul x y) = prettyExpr x <+> P.char '*' <+> prettyExpr y
-prettyExpr (BinOp Div x y) = prettyExpr x <+> P.char '/' <+> prettyExpr y
-prettyExpr (BinOp Eq x y) = prettyExpr x <+> P.text "==" <+> prettyExpr y
-prettyExpr (BinOp Lt x y) = prettyExpr x <+> P.char '<' <+> prettyExpr y
-prettyExpr (BinOp Gt x y) = prettyExpr x <+> P.char '>' <+> prettyExpr y
-prettyExpr (BinOp Le x y) = prettyExpr x <+> P.text "<=" <+> prettyExpr y
-prettyExpr (BinOp Ge x y) = prettyExpr x <+> P.text ">=" <+> prettyExpr y
-prettyExpr (BinOp And x y) = prettyExpr x <+> P.text "&&" <+> prettyExpr y
-prettyExpr (BinOp Or x y) = prettyExpr x <+> P.text "||" <+> prettyExpr y
+prettyExpr (BinOp _ Add x y) = prettyExpr x <+> P.char '+' <+> prettyExpr y
+prettyExpr (BinOp _ Sub x y) = prettyExpr x <+> P.char '-' <+> prettyExpr y
+prettyExpr (BinOp _ Mul x y) = prettyExpr x <+> P.char '*' <+> prettyExpr y
+prettyExpr (BinOp _ Div x y) = prettyExpr x <+> P.char '/' <+> prettyExpr y
+prettyExpr (BinOp _ Eq x y) = prettyExpr x <+> P.text "==" <+> prettyExpr y
+prettyExpr (BinOp _ Neq x y) = prettyExpr x <+> P.text "/=" <+> prettyExpr y
+prettyExpr (BinOp _ Lt x y) = prettyExpr x <+> P.char '<' <+> prettyExpr y
+prettyExpr (BinOp _ Gt x y) = prettyExpr x <+> P.char '>' <+> prettyExpr y
+prettyExpr (BinOp _ Le x y) = prettyExpr x <+> P.text "<=" <+> prettyExpr y
+prettyExpr (BinOp _ Ge x y) = prettyExpr x <+> P.text ">=" <+> prettyExpr y
+prettyExpr (BinOp _ And x y) = prettyExpr x <+> P.text "&&" <+> prettyExpr y
+prettyExpr (BinOp _ Or x y) = prettyExpr x <+> P.text "||" <+> prettyExpr y
 
 prettyType :: Type -> P.Doc
 prettyType IntTy              = P.text "Int"
@@ -92,9 +98,9 @@ prettyType (FunTy ret params) =
   <+> prettyType ret
 
 prettyDecl :: Decl -> P.Doc
-prettyDecl (Def name ty val) = P.text "def"
+prettyDecl (Def _ name ty val) = P.text "def"
   <+> P.text name <> P.colon <> prettyType ty <+> P.equals <+> prettyExpr val
-prettyDecl (Defun name ret params body) = P.text "def"
+prettyDecl (Defun _ name ret params body) = P.text "def"
   <+> P.text name
   <> P.parens (P.sep (P.punctuate P.comma (map prettyParam params)))
   <> P.colon <> prettyType ret
