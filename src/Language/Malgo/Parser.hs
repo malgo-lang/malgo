@@ -141,21 +141,12 @@ parseExpr' :: ParsecT String u Identity Expr
 parseExpr' = buildExpressionParser table parseTerm
 
 parseExpr :: ParsecT String u Identity Expr
--- parseExpr = try (Seq <$> parseExpr' <*> (reservedOp ";" >> parseExpr))
---   <|> try (Seq <$> parseExpr' <*> (reservedOp ";" >> return Unit))
---   <|> parseExpr'
 parseExpr =
-  try (do
-          e1 <- parseExpr'
+  try (do e1 <- parseExpr'
           pos <- getPosition
           reservedOp ";"
-          e2 <- parseExpr
+          e2 <- try parseExpr <|> pure (Unit pos)
           return $ Seq pos e1 e2)
-  <|> try (do
-              e1 <- parseExpr'
-              pos <- getPosition
-              reservedOp ";"
-              return $ Seq pos e1 (Unit pos))
   <|> parseExpr'
 
 parseIf :: ParsecT String u Identity Expr
