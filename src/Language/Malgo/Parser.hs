@@ -22,29 +22,29 @@ lexer = Tok.makeTokenParser $ emptyDef {
 table :: [[Operator String u Identity Expr]]
 table = [ [ prefix "-" (\pos x -> Call pos (mkName "negate") [x])
           , prefix "+" (flip const)]
-        , [ binary "*" (\pos -> BinOp pos Mul) AssocLeft
-          , binary "/" (\pos -> BinOp pos Div) AssocLeft
-          , binary "==" (\pos -> BinOp pos Eq) AssocNone
-          , binary "/=" (\pos -> BinOp pos Neq) AssocNone
-          , binary "<=" (\pos -> BinOp pos Le) AssocNone
-          , binary "<" (\pos -> BinOp pos Lt) AssocNone
-          , binary ">=" (\pos -> BinOp pos Ge) AssocNone
-          , binary ">" (\pos -> BinOp pos Gt) AssocNone
+        , [ binary "*" (`BinOp` Mul) AssocLeft
+          , binary "/" (`BinOp` Div) AssocLeft
+          , binary "==" (`BinOp` Eq) AssocNone
+          , binary "/=" (`BinOp` Neq) AssocNone
+          , binary "<=" (`BinOp` Le) AssocNone
+          , binary "<" (`BinOp` Lt) AssocNone
+          , binary ">=" (`BinOp` Ge) AssocNone
+          , binary ">" (`BinOp` Gt) AssocNone
           ]
-        , [ binary "+" (\pos -> BinOp pos Add) AssocLeft
-          , binary "-" (\pos -> BinOp pos Sub) AssocLeft
-          , binary "&&" (\pos -> BinOp pos And) AssocLeft
-          , binary "||" (\pos -> BinOp pos Or) AssocLeft
+        , [ binary "+" (`BinOp` Add) AssocLeft
+          , binary "-" (`BinOp` Sub) AssocLeft
+          , binary "&&" (`BinOp` And) AssocLeft
+          , binary "||" (`BinOp` Or) AssocLeft
           ]
         ]
 
--- prefix :: String -> (a -> a) -> Operator String u Identity a
+prefix :: String -> (SourcePos -> a -> a) -> Operator String u Identity a
 prefix name fun = Prefix (getPosition >>= \pos -> reservedOp name >> return (fun pos))
 
--- postfix :: String -> (a -> a) -> Operator String u Identity a
+postfix :: String -> (SourcePos -> a -> a) -> Operator String u Identity a
 postfix name fun = Postfix (getPosition >>= \pos -> reservedOp name >> return (fun pos))
 
--- binary :: String -> (a -> a -> a) -> Assoc -> Operator String u Identity a
+binary :: String -> (SourcePos -> a -> a -> a) -> Assoc -> Operator String u Identity a
 binary name fun = Infix (getPosition >>= \pos -> reservedOp name >> return (fun pos))
 
 integer :: ParsecT String u Identity Integer
@@ -103,7 +103,10 @@ parseDefun = do
   return $ Defun pos (mkName name) ty params body
 
 parseVar :: ParsecT String u Identity Expr
-parseVar = getPosition >>= \pos -> fmap (\id -> Var pos (mkName id)) identifier
+parseVar = do
+  pos <- getPosition
+  name <- identifier
+  return (Var pos (mkName name))
 
 parseVarWithAnn :: ParsecT String u Identity (Name, Type)
 parseVarWithAnn = do
@@ -156,7 +159,7 @@ parseExpr =
   <|> parseExpr'
 
 parseIf :: ParsecT String u Identity Expr
-parseIf = reserved "if" >> If <$> getPosition <*> parseExpr <*> parseExpr <*> (reserved "else" >> parseExpr)
+parseIf = getPosition >>= \pos -> reserved "if" >> If pos <$> parseExpr <*> parseExpr <*> (reserved "else" >> parseExpr)
 
 parseCall :: ParsecT String u Identity Expr
 parseCall = Call <$> getPosition <*> fmap mkName identifier <*> parens (commaSep parseExpr)

@@ -18,7 +18,7 @@ parseTest = do
       P.parse "def not(x:Bool):Bool = if x #f else #t" `shouldBe`
       Right [S.Defun (newPos "" 1 1) (S.mkName "not") S.BoolTy
              [(S.mkName "x", S.BoolTy)]
-             (S.If (newPos "" 1 27)
+             (S.If (newPos "" 1 24)
                (S.Var (newPos "" 1 27) (S.mkName "x"))
                (S.Bool (newPos "" 1 29) False)
                (S.Bool (newPos "" 1 37) True))]
@@ -38,7 +38,7 @@ parseTest = do
       P.parse "def lezero(n:Int):Bool = if n <= 0 #t else #f" `shouldBe`
         Right [S.Defun (newPos "" 1 1) (S.mkName "lezero") S.BoolTy
                [(S.mkName "n", S.IntTy)]
-               (S.If (newPos "" 1 29)
+               (S.If (newPos "" 1 26)
                 (S.BinOp (newPos "" 1 31) S.Le
                   (S.Var (newPos "" 1 29) (S.mkName "n"))
                   (S.Int (newPos "" 1 34) 0))
