@@ -1,4 +1,4 @@
-module Language.Malgo.IR where
+module Language.Malgo.HIR where
 
 import           Control.Monad.State
 import           Language.Malgo.Syntax
