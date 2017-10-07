@@ -118,6 +118,12 @@ typingTest = do
                          (S.Bool dum False)))
       `shouldBe` Right (S.FunTy S.BoolTy [S.IntTy])
 
+    it "def a:Int = {{let b:Int = 42; print_int(42)}; b}" $
+      T.evalTypeofDecl (S.Def dum (S.mkName "a") S.IntTy
+                        (S.Seq dum (S.Seq dum (S.Let dum (S.mkName "b") S.IntTy (S.Int dum 42))
+                                    (S.Call dum (S.mkName "print_int") [S.Int dum 42]))
+                         (S.Var dum "b")))
+      `shouldBe` Left "error: \"b\" is not defined.\n"
 
 spec = do
   describe "Parse test" parseTest

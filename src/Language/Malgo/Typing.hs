@@ -48,6 +48,15 @@ typeofExpr (Call info name args) = do
                             else typeError (show paramsTy) (show argsTy) (show info )
     _ -> typeError "Function" (show funty) (show info)
 
+typeofExpr (Seq info e1@Seq{} e2) = do
+  ctx <- get
+  ty1 <- typeofExpr e1
+  put ctx
+  if typeEq ty1 UnitTy
+    then typeofExpr e2
+    else typeError (show UnitTy) (show ty1) (show info)
+
+
 typeofExpr (Seq info e1 e2) = do
   ty1 <- typeofExpr e1
   if typeEq ty1 UnitTy
