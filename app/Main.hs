@@ -21,5 +21,5 @@ main = do
                     case ret of
                       Left err -> print err
                       Right (xs, env) -> do
-                        print $ Pretty.sep (map Syntax.prettyType xs)
+                        print $ Pretty.sep (Pretty.punctuate Pretty.comma (map Syntax.prettyType xs))
                         print $ map (fst &&& (Syntax.prettyType . snd)) env

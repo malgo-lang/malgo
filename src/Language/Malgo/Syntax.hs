@@ -2,7 +2,7 @@
 
 module Language.Malgo.Syntax where
 
-import           Control.Lens
+import           Control.Lens     ()
 import           Text.Parsec.Pos
 import           Text.PrettyPrint (($+$), (<+>), (<>))
 import qualified Text.PrettyPrint as P
@@ -71,18 +71,33 @@ prettyExpr (If _ c t f) = P.text "if"
   <+> P.lbrace
   $+$ P.nest 4 (prettyExpr f)
   $+$ P.rbrace
-prettyExpr (BinOp _ Add x y) = prettyExpr x <+> P.char '+' <+> prettyExpr y
-prettyExpr (BinOp _ Sub x y) = prettyExpr x <+> P.char '-' <+> prettyExpr y
-prettyExpr (BinOp _ Mul x y) = prettyExpr x <+> P.char '*' <+> prettyExpr y
-prettyExpr (BinOp _ Div x y) = prettyExpr x <+> P.char '/' <+> prettyExpr y
-prettyExpr (BinOp _ Eq x y) = prettyExpr x <+> P.text "==" <+> prettyExpr y
-prettyExpr (BinOp _ Neq x y) = prettyExpr x <+> P.text "/=" <+> prettyExpr y
-prettyExpr (BinOp _ Lt x y) = prettyExpr x <+> P.char '<' <+> prettyExpr y
-prettyExpr (BinOp _ Gt x y) = prettyExpr x <+> P.char '>' <+> prettyExpr y
-prettyExpr (BinOp _ Le x y) = prettyExpr x <+> P.text "<=" <+> prettyExpr y
-prettyExpr (BinOp _ Ge x y) = prettyExpr x <+> P.text ">=" <+> prettyExpr y
-prettyExpr (BinOp _ And x y) = prettyExpr x <+> P.text "&&" <+> prettyExpr y
-prettyExpr (BinOp _ Or x y) = prettyExpr x <+> P.text "||" <+> prettyExpr y
+prettyExpr (BinOp _ Add x y) = prettyExpr' x <+> P.char '+' <+> prettyExpr' y
+prettyExpr (BinOp _ Sub x y) = prettyExpr' x <+> P.char '-' <+> prettyExpr' y
+prettyExpr (BinOp _ Mul x y) = prettyExpr' x <+> P.char '*' <+> prettyExpr' y
+prettyExpr (BinOp _ Div x y) = prettyExpr' x <+> P.char '/' <+> prettyExpr' y
+prettyExpr (BinOp _ Eq x y) = prettyExpr' x <+> P.text "==" <+> prettyExpr' y
+prettyExpr (BinOp _ Neq x y) = prettyExpr' x <+> P.text "/=" <+> prettyExpr' y
+prettyExpr (BinOp _ Lt x y) = prettyExpr' x <+> P.char '<' <+> prettyExpr' y
+prettyExpr (BinOp _ Gt x y) = prettyExpr' x <+> P.char '>' <+> prettyExpr' y
+prettyExpr (BinOp _ Le x y) = prettyExpr' x <+> P.text "<=" <+> prettyExpr' y
+prettyExpr (BinOp _ Ge x y) = prettyExpr' x <+> P.text ">=" <+> prettyExpr' y
+prettyExpr (BinOp _ And x y) = prettyExpr' x <+> P.text "&&" <+> prettyExpr' y
+prettyExpr (BinOp _ Or x y) = prettyExpr' x <+> P.text "||" <+> prettyExpr' y
+
+prettyExpr' :: Expr -> P.Doc
+prettyExpr' (BinOp _ Add x y) = P.parens $ prettyExpr' x <+> P.char '+' <+> prettyExpr' y
+prettyExpr' (BinOp _ Sub x y) = P.parens $ prettyExpr' x <+> P.char '-' <+> prettyExpr' y
+prettyExpr' (BinOp _ Mul x y) = P.parens $ prettyExpr' x <+> P.char '*' <+> prettyExpr' y
+prettyExpr' (BinOp _ Div x y) = P.parens $ prettyExpr' x <+> P.char '/' <+> prettyExpr' y
+prettyExpr' (BinOp _ Eq x y) = P.parens $ prettyExpr' x <+> P.text "==" <+> prettyExpr' y
+prettyExpr' (BinOp _ Neq x y) = P.parens $ prettyExpr' x <+> P.text "/=" <+> prettyExpr' y
+prettyExpr' (BinOp _ Lt x y) = P.parens $ prettyExpr' x <+> P.char '<' <+> prettyExpr' y
+prettyExpr' (BinOp _ Gt x y) = P.parens $ prettyExpr' x <+> P.char '>' <+> prettyExpr' y
+prettyExpr' (BinOp _ Le x y) = P.parens $ prettyExpr' x <+> P.text "<=" <+> prettyExpr' y
+prettyExpr' (BinOp _ Ge x y) = P.parens $ prettyExpr' x <+> P.text ">=" <+> prettyExpr' y
+prettyExpr' (BinOp _ And x y) = P.parens $ prettyExpr' x <+> P.text "&&" <+> prettyExpr' y
+prettyExpr' (BinOp _ Or x y) = P.parens $ prettyExpr' x <+> P.text "||" <+> prettyExpr' y
+prettyExpr' x = prettyExpr x
 
 prettyType :: Type -> P.Doc
 prettyType IntTy              = P.text "Int"
