@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE FlexibleContexts #-}
-module Language.Malgo.Alpha where
+module Language.Malgo.KNormal where
 
 import           Control.Monad.State
 import           Language.Malgo.HIR    hiding (trans, transDecl, transExpr,
@@ -15,5 +15,5 @@ transDecl = undefined
 transExpr :: EXPR -> State Env EXPR
 transExpr = undefined
 
-trans :: HIR 'KNormal -> HIR 'Alpha
+trans :: HIR 'Raw -> HIR 'KNormal
 trans hir = HIR (evalState (transDecl (unHIR hir)) [])
