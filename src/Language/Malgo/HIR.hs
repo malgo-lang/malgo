@@ -1,6 +1,8 @@
+{-# LANGUAGE DataKinds      #-}
+{-# LANGUAGE KindSignatures #-}
 module Language.Malgo.HIR where
 
-import           Control.Monad.State
+import           Control.Monad.State   ()
 import           Language.Malgo.Syntax
 
 data DECL = DEF Name Type EXPR
@@ -22,7 +24,7 @@ data EXPR = VAR Name
           | BINOP Op EXPR EXPR
   deriving (Eq, Show)
 
-newtype IR = IR { unIR :: (DECL, Phase) }
+newtype IR (a :: Phase) = IR { unIR :: DECL }
   deriving (Eq, Show)
 
 data Phase = Raw | Alpha | KNormal
@@ -51,5 +53,5 @@ transDecl :: Decl -> DECL
 transDecl (Def _ name ty val)              = DEF name ty (transExpr val)
 transDecl (Defun _ name retty params body) = DEFUN name retty params (transExpr body)
 
-trans :: Decl -> IR
-trans decl = IR (transDecl decl, Raw)
+trans :: Decl -> IR 'Raw
+trans decl = IR $ transDecl decl
