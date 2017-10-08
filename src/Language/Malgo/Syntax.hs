@@ -16,6 +16,8 @@ type Pos = SourcePos
 
 data Decl = Def Pos Name Type Expr
           | Defun Pos Name Type [(Name, Type)] Expr
+          | ExDef Pos Name Type
+          | ExDefun Pos Name Type [(Name, Type)]
   deriving (Eq, Show)
 
 data Expr = Var Pos Name
@@ -121,4 +123,10 @@ prettyDecl (Defun _ name ret params body) = P.text "def"
   <+> P.equals <+> P.lbrace
   $+$ P.nest 4 (prettyExpr body)
   $+$ P.rbrace
-  where prettyParam (n, ty) = P.text n <> P.colon <> prettyType ty
+prettyDecl (ExDef _ name ty) = P.text "extern" <+> P.text name <> P.colon <> prettyType ty
+prettyDecl (ExDefun _ name ret params) = P.text "extern" <+> P.text name
+  <> P.parens (P.sep (P.punctuate P.comma (map prettyParam params)))
+  <> P.colon <> prettyType ret
+
+prettyParam :: (Name, Type) -> P.Doc
+prettyParam (n, ty) = P.text n <> P.colon <> prettyType ty

@@ -7,6 +7,8 @@ import           Language.Malgo.Syntax
 
 data DECL = DEF Name Type EXPR
           | DEFUN Name Type [(Name, Type)] EXPR
+          | EXDEF Name Type
+          | EXDEFUN Name Type [(Name, Type)]
   deriving (Eq, Show)
 
 data EXPR = VAR Name
@@ -24,7 +26,7 @@ data EXPR = VAR Name
           | BINOP Op EXPR EXPR
   deriving (Eq, Show)
 
-newtype IR (a :: Phase) = IR { unIR :: DECL }
+newtype HIR (a :: Phase) = HIR { unHIR :: DECL }
   deriving (Eq, Show)
 
 data Phase = Raw | Alpha | KNormal
@@ -52,6 +54,8 @@ transSeq x             = [transExpr x]
 transDecl :: Decl -> DECL
 transDecl (Def _ name ty val)              = DEF name ty (transExpr val)
 transDecl (Defun _ name retty params body) = DEFUN name retty params (transExpr body)
+transDecl (ExDef _ name ty) = EXDEF name ty
+transDecl (ExDefun _ name retty params) = EXDEFUN name retty params
 
-trans :: Decl -> IR 'Raw
-trans decl = IR $ transDecl decl
+trans :: Decl -> HIR 'Raw
+trans decl = HIR $ transDecl decl

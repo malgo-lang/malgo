@@ -17,7 +17,9 @@ main = do
   case result of
     Left err  -> print err
     Right ast -> do print $ Pretty.sep (map Syntax.prettyDecl ast)
+                    print ast
                     let ret = runStateT (mapM Typing.typeofDecl ast) Typing.initEnv
+
                     case ret of
                       Left err -> print err
                       Right (xs, env) -> do

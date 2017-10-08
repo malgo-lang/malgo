@@ -14,6 +14,12 @@ parseTest = do
     it "def pi:Float = 3.14" $ P.parse "def pi:Float = 3.14" `shouldBe`
       Right [S.Def (newPos "" 1 1) (S.mkName "pi") S.FloatTy (S.Float (newPos "" 1 16) 3.14)]
 
+    it "extern print(str:String):Unit" $ P.parse "extern print(str:String):Unit" `shouldBe`
+      Right [S.ExDefun (newPos "" 1 1) (S.mkName "print") S.UnitTy [(S.mkName "str", S.StringTy)]]
+
+    it "extern pi:Float" $ P.parse "extern pi:Float" `shouldBe`
+      Right [S.ExDef (newPos "" 1 1) (S.mkName "pi") S.FloatTy]
+
     it "def not(x:Bool):Bool = if x #f else #t" $
       P.parse "def not(x:Bool):Bool = if x #f else #t" `shouldBe`
       Right [S.Defun (newPos "" 1 1) (S.mkName "not") S.BoolTy

@@ -1,3 +1,7 @@
+extern println(str:String):Unit
+extern print(str:String):Unit
+extern print_int(i:Int):Unit
+
 def fib(n:Int):Int = {
   if (n <= 0 || n == 1) && #t {
     1

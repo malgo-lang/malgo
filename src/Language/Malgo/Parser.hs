@@ -16,7 +16,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.identStart = letter <|> char '_' -- <|> oneOf "!$&?@^_~"
   , Tok.identLetter = alphaNum <|> char '_' -- <|> oneOf "!$&?@^_~"
   , Tok.reservedOpNames = [":", "=", "+", "-", "*", "/", ";", "==", "/=", "&&", "||", "<", "<=", ">", ">="]
-  , Tok.reservedNames = ["let", "unit", "def", "if", "else", "#t", "#f"]
+  , Tok.reservedNames = ["extern", "let", "unit", "def", "if", "else", "#t", "#f"]
   }
 
 table :: [[Operator String u Identity Expr]]
@@ -79,7 +79,7 @@ semi :: ParsecT String u Identity String
 semi = Tok.semi lexer
 
 parseDecl :: ParsecT String u Identity Decl
-parseDecl = try parseDefun <|> parseDef
+parseDecl = try parseDefun <|> parseDef <|> try parseExDefun <|> parseExDef
 
 parseDef :: ParsecT String u Identity Decl
 parseDef = do
@@ -101,6 +101,21 @@ parseDefun = do
   reservedOp "="
   body <- parseExpr
   return $ Defun pos (mkName name) ty params body
+
+parseExDefun = do
+  pos <- getPosition
+  reserved "extern"
+  name <- identifier
+  params <- parens (commaSep parseVarWithAnn)
+  reservedOp ":"
+  ty <- parseType
+  return $ ExDefun pos (mkName name) ty params
+
+parseExDef = do
+  pos <- getPosition
+  reserved "extern"
+  (name, ty) <- parseVarWithAnn
+  return $ ExDef pos name ty
 
 parseVar :: ParsecT String u Identity Expr
 parseVar = do

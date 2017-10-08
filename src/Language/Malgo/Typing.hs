@@ -1,5 +1,5 @@
 {-# LANGUAGE MultiWayIf #-}
-module Language.Malgo.Typing where
+module Language.Malgo.Typing (typeofExpr, typeofDecl, evalTypeofExpr, evalTypeofDecl, initEnv) where
 
 import           Control.Monad.State
 import           Data.Either           ()
@@ -8,10 +8,7 @@ import           Language.Malgo.Syntax
 type Env = [(Name, Type)]
 
 initEnv :: Env
-initEnv = [ (mkName "print", FunTy UnitTy [StringTy])
-          , (mkName "println", FunTy UnitTy [StringTy])
-          , (mkName "print_int", FunTy UnitTy [IntTy])
-          ]
+initEnv = []
 
 addBind :: Name -> Type -> StateT Env (Either String) ()
 addBind n t = do
@@ -107,9 +104,6 @@ typeofExpr (Let info name ty val) = do
     then addBind name ty >> return UnitTy
     else typeError (show ty) (show vt) (show info)
 
-evalTypeofExpr :: Expr -> Either String Type
-evalTypeofExpr expr = evalStateT (typeofExpr expr) initEnv
-
 typeofDecl :: Decl -> StateT Env (Either String) Type
 
 typeofDecl (Def info n ty val) = do
@@ -131,5 +125,20 @@ typeofDecl (Defun info fn retTy params body) = do
       return funTy
     else typeError (show retTy) (show bodyTy) (show info)
 
+typeofDecl (ExDef _ n ty) = addBind n ty >> return ty
+typeofDecl (ExDefun _ fn retTy params) = do
+  let funTy = FunTy retTy (map snd params)
+  addBind fn funTy
+  return funTy
+
+testEnv :: Env
+testEnv = [ (mkName "print", FunTy UnitTy [StringTy])
+          , (mkName "println", FunTy UnitTy [StringTy])
+          , (mkName "print_int", FunTy UnitTy [IntTy])
+          ]
+
+evalTypeofExpr :: Expr -> Either String Type
+evalTypeofExpr expr = evalStateT (typeofExpr expr) testEnv
+
 evalTypeofDecl :: Decl -> Either String Type
-evalTypeofDecl decl = evalStateT (typeofDecl decl) initEnv
+evalTypeofDecl decl = evalStateT (typeofDecl decl) testEnv
