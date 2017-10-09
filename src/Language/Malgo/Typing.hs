@@ -155,6 +155,10 @@ typedDecl (ExDefun _ fn retTy params) = do
   return (EXDEFUN (name2Id fn) retTy
           (map ((name2Id . fst) &&& snd) params))
 
+-- typing :: Traversable t => t Decl -> Either String (t DECL)
+typing :: Traversable f => f Decl -> Either String (f (HIR 'Typed))
+typing ast = fmap HIR <$> evalStateT (mapM typedDecl ast) initEnv
+
 testEnv :: Env
 testEnv = [ (mkName "print", FunTy UnitTy [StringTy])
           , (mkName "println", FunTy UnitTy [StringTy])

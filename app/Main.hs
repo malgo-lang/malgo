@@ -1,13 +1,14 @@
 module Main where
 
-import           Control.Arrow         ((&&&))
+import           Control.Arrow          ((&&&))
 import           Control.Monad.State
-import qualified Language.Malgo.Parser as Parser
-import qualified Language.Malgo.Syntax as Syntax
-import qualified Language.Malgo.Typing as Typing
-import           System.Environment    (getArgs)
-import qualified Text.Parsec.String    as P
-import qualified Text.PrettyPrint      as Pretty
+import qualified Language.Malgo.KNormal as KNormal
+import qualified Language.Malgo.Parser  as Parser
+import qualified Language.Malgo.Syntax  as Syntax
+import qualified Language.Malgo.Typing  as Typing
+import           System.Environment     (getArgs)
+import qualified Text.Parsec.String     as P
+import qualified Text.PrettyPrint       as Pretty
 
 main :: IO ()
 main = do
@@ -16,12 +17,18 @@ main = do
   result <- P.parseFromFile Parser.parseToplevel file
   case result of
     Left err  -> print err
-    Right ast -> do print $ Pretty.sep (map Syntax.prettyDecl ast)
-                    print ast
-                    let ret = runStateT (mapM Typing.typedDecl ast) Typing.initEnv
+    Right ast -> do
+      putStrLn "Format:"
+      print $ Pretty.sep (map Syntax.prettyDecl ast)
+      putStrLn "AST:"
+      print ast
 
-                    case ret of
-                      Left err -> print err
-                      Right (xs, env) -> do
-                        print xs
-                        print $ map (fst &&& (Syntax.prettyType . snd)) env
+      putStrLn "Typed AST(HIR 'Typed):"
+      let typedAst = Typing.typing ast
+      print typedAst
+
+      putStrLn "KNormalized AST(HIR 'KNormal):"
+      let kAst = case typedAst of
+                   Right tAst -> Right $ map (fst . KNormal.trans) tAst
+                   Left x     -> Left x
+      print kAst
