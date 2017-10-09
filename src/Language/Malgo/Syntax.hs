@@ -55,12 +55,9 @@ prettyExpr (Unit _)       = P.text "unit"
 prettyExpr (Call _ name args) = P.text name <> P.parens (P.sep $ P.punctuate P.comma (map prettyExpr args))
 prettyExpr (Seq _ x (Unit _)) = prettyExpr x <> P.semi
 prettyExpr (Seq _ x y) = prettyExpr x <> P.semi $+$ prettyExpr y
-prettyExpr (Let _ name ty val) = P.text "let" <+>
-                               P.text name <>
-                               P.colon <>
-                               prettyType ty <+>
-                               P.equals <+>
-                               prettyExpr val
+prettyExpr (Let _ name ty val) =
+  P.text "let" <+> P.text name <> P.colon <> prettyType ty
+  <+> P.equals <+> prettyExpr val
 prettyExpr (Var _ name) = P.text name
 prettyExpr (Bool _ True) = P.text "#t"
 prettyExpr (Bool _ False) = P.text "#f"

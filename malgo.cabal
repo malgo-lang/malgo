@@ -18,9 +18,9 @@ library
   exposed-modules:  Language.Malgo
                   , Language.Malgo.Syntax
                   , Language.Malgo.Parser
-                  , Language.Malgo.Typing
                   , Language.Malgo.HIR
-                  , Language.Malgo.KNormal
+                  , Language.Malgo.Typing
+                  -- , Language.Malgo.KNormal
                   , Language.Malgo.Alpha
   build-depends:    base >= 4.7 && < 5
                   , hspec >= 2.4.4

@@ -1,8 +1,13 @@
-{-# LANGUAGE MultiWayIf #-}
-module Language.Malgo.Typing (typeofExpr, typeofDecl, evalTypeofExpr, evalTypeofDecl, initEnv) where
+{-# LANGUAGE DataKinds      #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE MultiWayIf     #-}
 
+module Language.Malgo.Typing where
+
+import           Control.Arrow         ((&&&))
 import           Control.Monad.State
 import           Data.Either           ()
+import           Language.Malgo.HIR
 import           Language.Malgo.Syntax
 
 type Env = [(Name, Type)]
@@ -25,111 +30,130 @@ getType n _ = do
 typeEq :: Type -> Type -> Bool
 typeEq = (==)
 
-typeError :: String -> String -> String -> StateT Env (Either String) Type
+typeError :: String -> String -> String -> StateT Env (Either String) a
 typeError expected actual info = lift . Left $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual ++ "\n info: " ++ info
 
-typeofExpr :: Expr -> StateT Env (Either String) Type
-typeofExpr (Var pos name) = getType name pos
-typeofExpr (Int _ _)    = return IntTy
-typeofExpr (Float _ _)  = return FloatTy
-typeofExpr (Bool _ _)   = return BoolTy
-typeofExpr (Char _ _)   = return CharTy
-typeofExpr (String _ _) = return StringTy
-typeofExpr (Unit _) = return UnitTy
-typeofExpr (Call info name args) = do
-  argsTy <- mapM typeofExpr args
+typedExpr :: Expr -> StateT Env (Either String) EXPR
+typedExpr (Var pos name) = do
+  ty <- getType name pos
+  return (VAR (name2Id name), ty)
+typedExpr (Int _ x)    = return (INT x, IntTy)
+typedExpr (Float _ x)  = return (FLOAT x, FloatTy)
+typedExpr (Bool _ x)   = return (BOOL x, BoolTy)
+typedExpr (Char _ x)   = return (CHAR x, CharTy)
+typedExpr (String _ x) = return (STRING x, StringTy)
+typedExpr (Unit _) = return (UNIT, UnitTy)
+
+typedExpr (Call info name args) = do
+  args' <- mapM typedExpr args
+  let argsTy = map snd args'
   funty <- getType name info
   case funty of
     FunTy retTy paramsTy -> if and $ zipWith typeEq argsTy paramsTy
-                            then return retTy
+                            then return (CALL (name2Id name) args', retTy)
                             else typeError (show paramsTy) (show argsTy) (show info )
     _ -> typeError "Function" (show funty) (show info)
 
-typeofExpr (Seq info e1@Seq{} e2) = do
+typedExpr (Seq info e1@Seq{} e2) = do
   ctx <- get
-  ty1 <- typeofExpr e1
+  e1' <- typedExpr e1
+  let ty1 = snd e1'
   put ctx
   if typeEq ty1 UnitTy
-    then typeofExpr e2
+    then do e2' <- typedExpr e2
+            return (SEQ e1' e2', snd e2')
     else typeError (show UnitTy) (show ty1) (show info)
 
-
-typeofExpr (Seq info e1 e2) = do
-  ty1 <- typeofExpr e1
+typedExpr (Seq info e1 e2) = do
+  e1' <- typedExpr e1
+  let ty1 = snd e1'
   if typeEq ty1 UnitTy
-    then typeofExpr e2
+    then do e2' <- typedExpr e2
+            return (SEQ e1' e2', snd e2')
     else typeError (show UnitTy) (show ty1) (show info)
 
-typeofExpr (If info c t f) = do
-  ct <- typeofExpr c
-  tt <- typeofExpr t
-  ft <- typeofExpr f
+typedExpr (If info c t f) = do
+  c' <- typedExpr c
+  t' <- typedExpr t
+  f' <- typedExpr f
+  let ct = snd c'
+  let tt = snd t'
+  let ft = snd f'
+
   if typeEq ct BoolTy
     then if typeEq tt ft
-         then return tt
+         then return (IF c' t' f', tt)
          else typeError (show tt) (show ft) (show info)
     else typeError (show BoolTy) (show ct) (show info)
 
-typeofExpr (BinOp info op e1 e2) = do
-  t1 <- typeofExpr e1
-  t2 <- typeofExpr e2
+typedExpr (BinOp info op e1 e2) = do
+  e1' <- typedExpr e1
+  e2' <- typedExpr e2
+  let t1 = snd e1'
+  let t2 = snd e2'
   if | op `elem` [Add, Sub, Mul, Div] ->
        if | typeEq t1 IntTy ->
               if typeEq t2 IntTy
-              then return IntTy
+              then return (BINOP op e1' e2', t2)
               else typeError (show IntTy) (show t2) (show info)
           | typeEq t1 FloatTy ->
               if typeEq t2 FloatTy
-              then return FloatTy
+              then return (BINOP op e1' e2', t2)
               else typeError (show FloatTy) (show t2) (show info)
           | otherwise ->
               typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show info)
      | op `elem` [Eq, Lt, Gt, Le, Ge] ->
        if | t1 `elem` comparableTypes ->
             if typeEq t1 t2
-            then return BoolTy
+            then return (BINOP op e1' e2', BoolTy)
             else typeError (show t1) (show t2) (show info)
           | otherwise -> typeError ("any one of " ++ show comparableTypes) (show t1) (show info)
      | op `elem` [And, Or] ->
        if typeEq t1 BoolTy
        then if typeEq t2 BoolTy
-            then return BoolTy
+            then return (BINOP op e1' e2', BoolTy)
             else typeError (show BoolTy) (show t2) (show info)
        else typeError (show BoolTy) (show t1) (show info)
   where comparableTypes = [IntTy, FloatTy, BoolTy, CharTy, StringTy]
 
-typeofExpr (Let info name ty val) = do
-  vt <- typeofExpr val
+typedExpr (Let info name ty val) = do
+  val' <- typedExpr val
+  let vt = snd val'
   if typeEq ty vt
-    then addBind name ty >> return UnitTy
+    then addBind name ty >> return (LET (name2Id name) ty val', UnitTy)
     else typeError (show ty) (show vt) (show info)
 
-typeofDecl :: Decl -> StateT Env (Either String) Type
+typedDecl :: Decl -> StateT Env (Either String) DECL
 
-typeofDecl (Def info n ty val) = do
-  tv <- typeofExpr val
+typedDecl (Def info n ty val) = do
+  val' <- typedExpr val
+  let tv = snd val'
   if typeEq ty tv
-    then addBind n ty >> return ty
+    then addBind n ty >> return (DEF (name2Id n) ty val')
     else typeError (show ty) (show tv) (show info)
 
-typeofDecl (Defun info fn retTy params body) = do
+typedDecl (Defun info fn retTy params body) = do
   let funTy = FunTy retTy (map snd params)
   ctx <- get
   put $ params ++ ctx
   addBind fn funTy
-  bodyTy <- typeofExpr body
+  body' <- typedExpr body
+  let bodyTy = snd body'
   put ctx
   if typeEq retTy bodyTy
     then do
       addBind fn funTy
-      return funTy
+      return (DEFUN (name2Id fn) retTy
+              (map ((name2Id . fst) &&& snd) params)
+              body')
     else typeError (show retTy) (show bodyTy) (show info)
 
-typeofDecl (ExDef _ n ty) = addBind n ty >> return ty
-typeofDecl (ExDefun _ fn retTy params) = do
+typedDecl (ExDef _ n ty) = addBind n ty >> return (EXDEF (name2Id n) ty)
+typedDecl (ExDefun _ fn retTy params) = do
   let funTy = FunTy retTy (map snd params)
   addBind fn funTy
-  return funTy
+  return (EXDEFUN (name2Id fn) retTy
+          (map ((name2Id . fst) &&& snd) params))
 
 testEnv :: Env
 testEnv = [ (mkName "print", FunTy UnitTy [StringTy])
@@ -137,8 +161,8 @@ testEnv = [ (mkName "print", FunTy UnitTy [StringTy])
           , (mkName "print_int", FunTy UnitTy [IntTy])
           ]
 
-evalTypeofExpr :: Expr -> Either String Type
-evalTypeofExpr expr = evalStateT (typeofExpr expr) testEnv
+evalTypedExpr :: Expr -> Either String EXPR
+evalTypedExpr expr = evalStateT (typedExpr expr) testEnv
 
-evalTypeofDecl :: Decl -> Either String Type
-evalTypeofDecl decl = evalStateT (typeofDecl decl) testEnv
+evalTypedDecl :: Decl -> Either String DECL
+evalTypedDecl decl = evalStateT (typedDecl decl) testEnv

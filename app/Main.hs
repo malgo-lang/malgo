@@ -18,10 +18,10 @@ main = do
     Left err  -> print err
     Right ast -> do print $ Pretty.sep (map Syntax.prettyDecl ast)
                     print ast
-                    let ret = runStateT (mapM Typing.typeofDecl ast) Typing.initEnv
+                    let ret = runStateT (mapM Typing.typedDecl ast) Typing.initEnv
 
                     case ret of
                       Left err -> print err
                       Right (xs, env) -> do
-                        print $ Pretty.sep (Pretty.punctuate Pretty.comma (map Syntax.prettyType xs))
+                        print xs
                         print $ map (fst &&& (Syntax.prettyType . snd)) env

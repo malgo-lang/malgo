@@ -3,7 +3,7 @@
 module Language.Malgo.Alpha where
 
 import           Control.Monad.State
-import           Language.Malgo.HIR    hiding (trans, transDecl, transExpr,
+import           Language.Malgo.HIR    hiding (Env, trans, transDecl, transExpr,
                                         transSeq)
 import           Language.Malgo.Syntax (Name, mkName)
 
