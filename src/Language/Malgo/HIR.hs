@@ -1,11 +1,7 @@
-{-# LANGUAGE DataKinds       #-}
-{-# LANGUAGE KindSignatures  #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE DataKinds      #-}
+{-# LANGUAGE KindSignatures #-}
 module Language.Malgo.HIR where
 
-import           Control.Arrow         ((&&&))
-import           Control.Lens
-import           Control.Monad.State
 import           Language.Malgo.Syntax
 
 data Id = Sym { id2name :: String}

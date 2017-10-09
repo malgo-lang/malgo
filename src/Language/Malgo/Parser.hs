@@ -7,7 +7,7 @@ import           Text.Parsec           hiding (many, parse, (<|>))
 import qualified Text.Parsec
 import           Text.Parsec.Expr
 import           Text.Parsec.Language
-import           Text.Parsec.Pos
+import           Text.Parsec.Pos       ()
 import qualified Text.Parsec.Token     as Tok
 
 lexer :: Tok.GenTokenParser String u Identity
@@ -102,6 +102,7 @@ parseDefun = do
   body <- parseExpr
   return $ Defun pos (mkName name) ty params body
 
+parseExDefun :: ParsecT String u Identity Decl
 parseExDefun = do
   pos <- getPosition
   reserved "extern"
@@ -111,6 +112,7 @@ parseExDefun = do
   ty <- parseType
   return $ ExDefun pos (mkName name) ty params
 
+parseExDef :: ParsecT String u Identity Decl
 parseExDef = do
   pos <- getPosition
   reserved "extern"
