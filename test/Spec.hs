@@ -68,50 +68,55 @@ dum = newPos "" 0 0
 
 typingTest = do
   describe "Typing test(Expr)" $ do
-    it "42" $ T.evalTypedExpr (S.Int dum 42) `shouldBe` Right (H.INT 42, S.IntTy)
-    it "3.14" $ T.evalTypedExpr (S.Float dum 3.14) `shouldBe` Right (H.FLOAT 3.14, S.FloatTy)
+    it "42" $ T.evalTypedExpr (S.Int dum 42) `shouldBe` Right (INT 42, S.IntTy)
+    it "3.14" $ T.evalTypedExpr (S.Float dum 3.14) `shouldBe` Right (FLOAT 3.14, S.FloatTy)
     it "#t" $ T.evalTypedExpr (S.Bool dum True) `shouldBe` Right (BOOL True, BoolTy)
     it "'c'" $ T.evalTypedExpr (S.Char dum 'c') `shouldBe` Right (CHAR 'c', CharTy)
     it "\"nyaaan\"" $ T.evalTypedExpr (S.String dum "nyaaan") `shouldBe` Right (STRING "nyaaan", StringTy)
     it "unit" $ T.evalTypedExpr (S.Unit dum) `shouldBe` Right (UNIT, UnitTy)
     it "print(\"hello\")" $ T.evalTypedExpr (S.Call dum (S.mkName "print") [S.String dum "hello"]) `shouldBe`
-      Right (CALL (name2Id "print") [(STRING "hello", StringTy)], UnitTy)
+      Right (CALL {_callName = Sym "print",
+                   _callArgs = [(STRING "hello",StringTy)]},UnitTy)
 
-    it "unit;1" $ T.evalTypedExpr (S.Seq dum (S.Unit dum) (S.Int dum 1)) `shouldBe`
-      Right (SEQ (UNIT,UnitTy) (INT 1,IntTy),IntTy)
+    it "unit;1" $ T.evalTypedExpr (S.Seq dum (S.Unit dum) (S.Int dum 1))
+      `shouldBe`
+      Right (LET { _letName = Sym "#_"
+                 , _letType = UnitTy
+                 , _letValue = (UNIT,UnitTy)
+                 , _letBody = (INT 1,IntTy)
+                 }
+            ,IntTy)
 
     it "if #t 1 else 2" $ T.evalTypedExpr (S.If dum
                                            (S.Bool dum True)
                                            (S.Int dum 1)
-                                           (S.Int dum 2)) `shouldBe`
+                                           (S.Int dum 2))
+      `shouldBe`
       Right (IF (BOOL True,BoolTy) (INT 1,IntTy) (INT 2,IntTy),IntTy)
-
-    it "let a:Int = 1" $ T.evalTypedExpr (S.Let dum
-                                          (S.mkName "a") S.IntTy
-                                          (S.Int dum 1)) `shouldBe`
-      Right (LET (Sym {id2name = "a"}) IntTy (INT 1,IntTy),UnitTy)
 
     it "let a:Int = 1; a" $ T.evalTypedExpr (S.Seq dum
                                               (S.Let dum (S.mkName "a") S.IntTy (S.Int dum 1))
                                               (S.Var dum (S.mkName "a")))
-      `shouldBe` Right (SEQ
-                        (LET (Sym {id2name = "a"}) IntTy (INT 1,IntTy),UnitTy)
-                        (VAR (Sym {id2name = "a"}),IntTy),IntTy)
+      `shouldBe`
+      Right (LET { _letName = Sym "a"
+                 , _letType = IntTy
+                 , _letValue = (INT 1,IntTy)
+                 , _letBody = (VAR (Sym "a"),IntTy)},IntTy)
 
   describe "Typing test(Decl)" $ do
     it "def a:Int = 42" $
       T.evalTypedDecl (S.Def dum (S.mkName "a") S.IntTy (S.Int dum 42))
-      `shouldBe` Right (DEF (Sym {id2name = "a"}) IntTy (INT 42,IntTy))
+      `shouldBe` Right (DEF (Sym "a") IntTy (INT 42,IntTy))
 
     it "def f(x:Int, y:Int):Int = x + y" $
       T.evalTypedDecl (S.Defun dum (S.mkName "f") S.IntTy
                         [(S.mkName "x", S.IntTy), (S.mkName "y", S.IntTy)]
                         (S.BinOp dum S.Add (S.Var dum (S.mkName "x")) (S.Var dum (S.mkName "y"))))
-        `shouldBe` Right (DEFUN (Sym {id2name = "f"}) IntTy
-                          [(Sym {id2name = "x"},IntTy),(Sym {id2name = "y"},IntTy)]
-                          (BINOP Add
-                           (VAR (Sym {id2name = "x"}),IntTy)
-                           (VAR (Sym {id2name = "y"}),IntTy),IntTy))
+      `shouldBe`
+      Right (DEFUN (Sym "f") IntTy [(Sym "x",IntTy),(Sym "y",IntTy)]
+             (BINOP Add
+              (VAR (Sym "x"),IntTy)
+              (VAR (Sym "y"),IntTy),IntTy))
 
     it "def g(x:Int):Int = if #t 0 else g(x-1)" $
       T.evalTypedDecl (S.Defun dum (S.mkName "g") S.IntTy [(S.mkName "x", S.IntTy)]
@@ -119,14 +124,15 @@ typingTest = do
                          (S.Bool dum True)
                          (S.Int dum 0)
                          (S.Call dum (S.mkName "g") [S.BinOp dum S.Sub (S.Var dum (S.mkName "x")) (S.Int dum 1)])))
-        `shouldBe` Right (DEFUN (Sym {id2name = "g"}) IntTy
-                          [(Sym {id2name = "x"},IntTy)]
-                          (IF (BOOL True,BoolTy)
-                           (INT 0,IntTy)
-                           (CALL (Sym {id2name = "g"})
-                            [(BINOP Sub
-                              (VAR (Sym {id2name = "x"}),IntTy)
-                              (INT 1,IntTy),IntTy)],IntTy),IntTy))
+      `shouldBe`
+      Right (DEFUN (Sym "g") IntTy [(Sym "x",IntTy)]
+             (IF (BOOL True,BoolTy)
+              (INT 0,IntTy)
+              (CALL { _callName = Sym "g"
+                    , _callArgs = [(BINOP Sub
+                                    (VAR (Sym "x"),IntTy)
+                                    (INT 1,IntTy),IntTy)]
+                    },IntTy),IntTy))
 
     it "def lezero(n:Int):Bool = if n <= 0 #t else #f" $
       T.evalTypedDecl (S.Defun dum (S.mkName "lezero") S.BoolTy [(S.mkName "n", S.IntTy)]
@@ -134,14 +140,13 @@ typingTest = do
                          (S.BinOp dum S.Le (S.Var dum (S.mkName "n")) (S.Int dum 0))
                          (S.Bool dum True)
                          (S.Bool dum False)))
-      `shouldBe` Right (DEFUN (Sym {id2name = "lezero"}) BoolTy
-                        [(Sym {id2name = "n"},IntTy)]
-                        (IF (BINOP Le
-                             (VAR (Sym {id2name = "n"}),IntTy)
-                             (INT 0,IntTy),BoolTy)
-                          (BOOL True,BoolTy)
-                          (BOOL False,BoolTy),BoolTy))
-
+      `shouldBe`
+      Right (DEFUN (Sym "lezero") BoolTy [(Sym "n",IntTy)]
+             (IF (BINOP Le
+                  (VAR (Sym "n"),IntTy)
+                  (INT 0,IntTy),BoolTy)
+               (BOOL True,BoolTy)
+               (BOOL False,BoolTy),BoolTy))
 
     it "def a:Int = {{let b:Int = 42; print_int(42)}; b}" $
       T.evalTypedDecl (S.Def dum (S.mkName "a") S.IntTy

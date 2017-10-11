@@ -46,6 +46,7 @@ data Type = IntTy
           | FunTy Type [Type]
   deriving (Eq, Show)
 
+-- TODO: もっと見やすいプリティプリンタ
 prettyExpr :: Expr -> P.Doc
 prettyExpr (Int _ n)    = P.int n
 prettyExpr (Float _ x)  = P.double x
@@ -70,32 +71,24 @@ prettyExpr (If _ c t f) = P.text "if"
   <+> P.lbrace
   $+$ P.nest 4 (prettyExpr f)
   $+$ P.rbrace
-prettyExpr (BinOp _ Add x y) = prettyExpr' x <+> P.char '+' <+> prettyExpr' y
-prettyExpr (BinOp _ Sub x y) = prettyExpr' x <+> P.char '-' <+> prettyExpr' y
-prettyExpr (BinOp _ Mul x y) = prettyExpr' x <+> P.char '*' <+> prettyExpr' y
-prettyExpr (BinOp _ Div x y) = prettyExpr' x <+> P.char '/' <+> prettyExpr' y
-prettyExpr (BinOp _ Eq x y) = prettyExpr' x <+> P.text "==" <+> prettyExpr' y
-prettyExpr (BinOp _ Neq x y) = prettyExpr' x <+> P.text "/=" <+> prettyExpr' y
-prettyExpr (BinOp _ Lt x y) = prettyExpr' x <+> P.char '<' <+> prettyExpr' y
-prettyExpr (BinOp _ Gt x y) = prettyExpr' x <+> P.char '>' <+> prettyExpr' y
-prettyExpr (BinOp _ Le x y) = prettyExpr' x <+> P.text "<=" <+> prettyExpr' y
-prettyExpr (BinOp _ Ge x y) = prettyExpr' x <+> P.text ">=" <+> prettyExpr' y
-prettyExpr (BinOp _ And x y) = prettyExpr' x <+> P.text "&&" <+> prettyExpr' y
-prettyExpr (BinOp _ Or x y) = prettyExpr' x <+> P.text "||" <+> prettyExpr' y
+prettyExpr (BinOp _ op x y) = prettyExpr' x <+> prettyOp op <+> prettyExpr' y
+
+prettyOp :: Op -> P.Doc
+prettyOp Add = P.char '+'
+prettyOp Sub = P.char '-'
+prettyOp Mul = P.char '*'
+prettyOp Div = P.char '/'
+prettyOp Eq  = P.text "=="
+prettyOp Neq = P.text "/="
+prettyOp Lt  = P.char '<'
+prettyOp Gt  = P.char '>'
+prettyOp Le  = P.text "<="
+prettyOp Ge  = P.text ">="
+prettyOp And = P.text "&&"
+prettyOp Or  = P.text "||"
 
 prettyExpr' :: Expr -> P.Doc
-prettyExpr' (BinOp _ Add x y) = P.parens $ prettyExpr' x <+> P.char '+' <+> prettyExpr' y
-prettyExpr' (BinOp _ Sub x y) = P.parens $ prettyExpr' x <+> P.char '-' <+> prettyExpr' y
-prettyExpr' (BinOp _ Mul x y) = P.parens $ prettyExpr' x <+> P.char '*' <+> prettyExpr' y
-prettyExpr' (BinOp _ Div x y) = P.parens $ prettyExpr' x <+> P.char '/' <+> prettyExpr' y
-prettyExpr' (BinOp _ Eq x y) = P.parens $ prettyExpr' x <+> P.text "==" <+> prettyExpr' y
-prettyExpr' (BinOp _ Neq x y) = P.parens $ prettyExpr' x <+> P.text "/=" <+> prettyExpr' y
-prettyExpr' (BinOp _ Lt x y) = P.parens $ prettyExpr' x <+> P.char '<' <+> prettyExpr' y
-prettyExpr' (BinOp _ Gt x y) = P.parens $ prettyExpr' x <+> P.char '>' <+> prettyExpr' y
-prettyExpr' (BinOp _ Le x y) = P.parens $ prettyExpr' x <+> P.text "<=" <+> prettyExpr' y
-prettyExpr' (BinOp _ Ge x y) = P.parens $ prettyExpr' x <+> P.text ">=" <+> prettyExpr' y
-prettyExpr' (BinOp _ And x y) = P.parens $ prettyExpr' x <+> P.text "&&" <+> prettyExpr' y
-prettyExpr' (BinOp _ Or x y) = P.parens $ prettyExpr' x <+> P.text "||" <+> prettyExpr' y
+prettyExpr' (BinOp _ op x y) = P.parens $ prettyExpr' x <+> prettyOp op <+> prettyExpr' y
 prettyExpr' x = prettyExpr x
 
 prettyType :: Type -> P.Doc

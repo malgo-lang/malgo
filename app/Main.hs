@@ -1,15 +1,15 @@
 module Main where
 
-import           Control.Arrow          ((&&&))
+import           Control.Arrow         ((&&&))
 import           Control.Monad.State
-import qualified Language.Malgo.KNormal as KNormal
-import qualified Language.Malgo.Parser  as Parser
-import qualified Language.Malgo.Syntax  as Syntax
-import qualified Language.Malgo.Typing  as Typing
-import           System.Environment     (getArgs)
-import qualified Text.Parsec.String     as P
-import qualified Text.PrettyPrint       as Pretty
-
+import qualified Language.Malgo.HIR    as HIR
+-- import qualified Language.Malgo.KNormal as KNormal
+import qualified Language.Malgo.Parser as Parser
+import qualified Language.Malgo.Syntax as Syntax
+import qualified Language.Malgo.Typing as Typing
+import           System.Environment    (getArgs)
+import qualified Text.Parsec.String    as P
+import qualified Text.PrettyPrint      as Pretty
 main :: IO ()
 main = do
   args <- getArgs
@@ -25,10 +25,14 @@ main = do
 
       putStrLn "Typed AST(HIR 'Typed):"
       let typedAst = Typing.typing ast
-      print typedAst
+      case typedAst of
+        Right xs -> print $ xs
+        Left x   -> putStrLn $ "typing error: " ++ x
 
-      putStrLn "KNormalized AST(HIR 'KNormal):"
-      let kAst = case typedAst of
-                   Right tAst -> Right $ map (fst . KNormal.trans) tAst
-                   Left x     -> Left x
-      print kAst
+      -- putStrLn "KNormalized AST(HIR 'KNormal):"
+      -- let kAst = case typedAst of
+      --              Right tAst -> Right $ map (fst . KNormal.trans) tAst
+      --              Left x     -> Left x
+      -- case kAst of
+      --   Right xs -> print $ map HIR.prettyHIR xs
+      --   Left _   -> return ();

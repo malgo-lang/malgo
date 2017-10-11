@@ -2,62 +2,104 @@
 {-# LANGUAGE KindSignatures #-}
 module Language.Malgo.HIR where
 
-import           Language.Malgo.Syntax
+import           Language.Malgo.Syntax (Name, Op, Type (..), prettyOp,
+                                        prettyType)
+import           Text.PrettyPrint
 
-data Id = Sym { id2name :: String}
-        | Tmp Int
+newtype Id = Sym String
   deriving (Eq, Show)
 
-data DECL = DEF Id Type EXPR
-          | DEFUN Id Type [(Id, Type)] EXPR
-          | EXDEF Id Type
-          | EXDEFUN Id Type [(Id, Type)]
-  deriving (Eq, Show)
-
-data EXPR' = VAR Id
-           | INT Int
-           | FLOAT Double
-           | BOOL Bool
-           | CHAR Char
-           | STRING String
-           | UNIT
-           | CALL Id [EXPR]
-           | SEQ EXPR EXPR
-           -- | BLOCK { unBLOCK :: [EXPR] }
-           | LET Id Type EXPR
-           | IF EXPR EXPR EXPR
-           | BINOP Op EXPR EXPR
-  deriving (Eq, Show)
-
-type EXPR = (EXPR', Type)
-
-newtype HIR (a :: Phase) = HIR { unHIR :: DECL }
+newtype HIR (a :: Phase) = HIR { unHIR :: DECL a }
   deriving (Eq, Show)
 
 data Phase = Typed | KNormal | Alpha
   deriving (Eq, Show)
 
+data DECL (a :: Phase) = DEF Id Type (EXPR a)
+                       | DEFUN Id Type [(Id, Type)] (EXPR a)
+                       | EXDEF Id Type
+                       | EXDEFUN Id Type [(Id, Type)]
+  deriving (Eq, Show)
+
+data EXPR' (a :: Phase) = VAR Id
+                        | INT Int
+                        | FLOAT Double
+                        | BOOL Bool
+                        | CHAR Char
+                        | STRING String
+                        | UNIT
+                        | CALL { _callName :: Id
+                               , _callArgs :: [EXPR a]
+                               }
+                        -- | SEQ (EXPR a) (EXPR a)
+                        -- | BLOCK { unBLOCK :: [EXPR] }
+                        | LET { _letName  :: Id
+                              , _letType  :: Type
+                              , _letValue :: EXPR a
+                              , _letBody  :: EXPR a}
+                        | IF (EXPR a) (EXPR a) (EXPR a)
+                        | BINOP Op (EXPR a) (EXPR a)
+  deriving (Eq, Show)
+
+type EXPR (a :: Phase) = (EXPR' a, Type)
+
 name2Id :: Name -> Id
 name2Id = Sym
 
--- transExpr :: Expr -> EXPR
--- transExpr (Var _ name)        = VAR (name2Id name)
--- transExpr (Int _ i)           = INT i
--- transExpr (Float _ f)         = FLOAT f
--- transExpr (Bool _ b)          = BOOL b
--- transExpr (Char _ c)          = CHAR c
--- transExpr (String _ s)        = STRING s
--- transExpr (Unit _)            = UNIT
--- transExpr (Call _ name xs)    = CALL (name2Id name) (map transExpr xs)
--- transExpr e@Seq{}             = transSeq e
--- transExpr (Let _ name ty val) = LET (name2Id name) ty (transExpr val) [UNIT]
--- transExpr (If _ c t f)        = IF (transExpr c) (transExpr t) (transExpr f)
--- transExpr (BinOp _ op e1 e2)  = BINOP op (transExpr e1) (transExpr e2)
+-- TODO: もっと見やすいプリティプリンタ
+-- prettyHIR :: HIR a -> Doc
+-- prettyHIR (HIR decl) = prettyDECL decl
 
--- transSeq :: Expr -> EXPR
--- transSeq (Seq _ (Let _ name ty val) e) =
---   LET (name2Id name) ty (transExpr val) $ case transExpr e of
---                                   BLOCK xs -> xs
---                                   x        -> [x]
--- transSeq (Seq _ e1 e2) = BLOCK $ transExpr e1 : unBLOCK (transSeq e2)
--- transSeq x             = BLOCK [transExpr x]
+-- prettyDECL :: DECL a -> Doc
+-- prettyDECL (DEF i t e) = text "def" <+> prettyId i <> colon <> prettyType t <+> equals <+> prettyEXPR e
+-- prettyDECL (DEFUN i t params body) =
+--   text "def"
+--   <+> prettyId i
+--   <> prettyParams params <> colon <> prettyType t
+--   <+> equals <+> lbrace
+--   $+$ nest 4 (prettyEXPR body)
+--   $+$ rbrace
+-- prettyDECL (EXDEF i t) = text "extern" <+> prettyId i <> colon <> prettyType t
+-- prettyDECL (EXDEFUN i t params) = text "extern" <+> prettyId i <> prettyParams params <> colon <> prettyType t
+
+-- prettyParams :: [(Id, Type)] -> Doc
+-- prettyParams params =
+--   parens (sep (punctuate comma
+--                (map
+--                  (\(i, ty) -> prettyId i <> colon <> prettyType ty)
+--                  params)))
+
+-- prettyId :: Id -> Doc
+-- prettyId (Sym n) = text n
+
+-- prettyEXPR :: EXPR a -> Doc
+-- prettyEXPR (e, _) = prettyEXPR' e
+
+-- prettyEXPR' :: EXPR' a -> Doc
+-- prettyEXPR' (VAR x)    = prettyId x
+-- prettyEXPR' (INT x)    = int x
+-- prettyEXPR' (FLOAT x)  = double x
+-- prettyEXPR' (BOOL True) = text "#t"
+-- prettyEXPR' (BOOL False) = text "#f"
+-- prettyEXPR' (CHAR x)   = quotes $ char x
+-- prettyEXPR' (STRING x) = doubleQuotes $ text x
+-- prettyEXPR' UNIT = text "unit"
+-- prettyEXPR' (CALL i args) =
+--   prettyId i <> parens (sep $ punctuate comma (map prettyEXPR args))
+-- prettyEXPR' (SEQ x (UNIT, UnitTy)) = prettyEXPR x <> semi
+-- prettyEXPR' (SEQ x@(SEQ{}, _) y) = braces (prettyEXPR x) <> semi
+--                               $+$ prettyEXPR y
+-- prettyEXPR' (SEQ x y) = braces $ prettyEXPR x <> semi $+$ prettyEXPR y
+-- prettyEXPR' (LET i t val) =
+--   text "let" <+> prettyId i <> colon <> prettyType t
+--   <+> equals <+> prettyEXPR val
+-- prettyEXPR' (IF c t f) = text "if"
+--   <+> prettyEXPR c
+--   <+> lbrace
+--   $+$ nest 4 (prettyEXPR t)
+--   $+$ rbrace
+--   <+> text "else"
+--   <+> lbrace
+--   $+$ nest 4 (prettyEXPR f)
+--   $+$ rbrace
+-- prettyEXPR' (BINOP op e1 e2) = prettyEXPR e1 <+> prettyOp op <+> prettyEXPR e2

@@ -1,6 +1,5 @@
-{-# LANGUAGE DataKinds      #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE MultiWayIf     #-}
+{-# LANGUAGE DataKinds  #-}
+{-# LANGUAGE MultiWayIf #-}
 
 module Language.Malgo.Typing where
 
@@ -33,7 +32,7 @@ typeEq = (==)
 typeError :: String -> String -> String -> StateT Env (Either String) a
 typeError expected actual info = lift . Left $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual ++ "\n info: " ++ info
 
-typedExpr :: Expr -> StateT Env (Either String) EXPR
+typedExpr :: Expr -> StateT Env (Either String) (EXPR 'Typed)
 typedExpr (Var pos name) = do
   ty <- getType name pos
   return (VAR (name2Id name), ty)
@@ -54,6 +53,16 @@ typedExpr (Call info name args) = do
                             else typeError (show paramsTy) (show argsTy) (show info )
     _ -> typeError "Function" (show funty) (show info)
 
+typedExpr (Seq info1 (Let info2 name ty val) body) = do
+  val' <- typedExpr val
+  let vt = snd val'
+  if typeEq ty vt
+    then do
+      addBind name ty
+      body' <- typedExpr body
+      return (LET (name2Id name) ty val' body', (snd body'))
+    else typeError (show ty) (show vt) (show info2)
+
 typedExpr (Seq info e1@Seq{} e2) = do
   ctx <- get
   e1' <- typedExpr e1
@@ -61,7 +70,7 @@ typedExpr (Seq info e1@Seq{} e2) = do
   put ctx
   if typeEq ty1 UnitTy
     then do e2' <- typedExpr e2
-            return (SEQ e1' e2', snd e2')
+            return (LET (name2Id "#_") UnitTy e1' e2', snd e2')
     else typeError (show UnitTy) (show ty1) (show info)
 
 typedExpr (Seq info e1 e2) = do
@@ -69,7 +78,7 @@ typedExpr (Seq info e1 e2) = do
   let ty1 = snd e1'
   if typeEq ty1 UnitTy
     then do e2' <- typedExpr e2
-            return (SEQ e1' e2', snd e2')
+            return (LET (name2Id "#_") UnitTy e1' e2', snd e2')
     else typeError (show UnitTy) (show ty1) (show info)
 
 typedExpr (If info c t f) = do
@@ -116,14 +125,9 @@ typedExpr (BinOp info op e1 e2) = do
        else typeError (show BoolTy) (show t1) (show info)
   where comparableTypes = [IntTy, FloatTy, BoolTy, CharTy, StringTy]
 
-typedExpr (Let info name ty val) = do
-  val' <- typedExpr val
-  let vt = snd val'
-  if typeEq ty vt
-    then addBind name ty >> return (LET (name2Id name) ty val', UnitTy)
-    else typeError (show ty) (show vt) (show info)
+typedExpr Let{} = return (UNIT, UnitTy)
 
-typedDecl :: Decl -> StateT Env (Either String) DECL
+typedDecl :: Decl -> StateT Env (Either String) (DECL 'Typed)
 
 typedDecl (Def info n ty val) = do
   val' <- typedExpr val
@@ -155,7 +159,7 @@ typedDecl (ExDefun _ fn retTy params) = do
   return (EXDEFUN (name2Id fn) retTy
           (map ((name2Id . fst) &&& snd) params))
 
--- typing :: Traversable t => t Decl -> Either String (t DECL)
+-- typing :: Traversable t => t Decl -> Either String (t (DECL 'Typed))
 typing :: Traversable f => f Decl -> Either String (f (HIR 'Typed))
 typing ast = fmap HIR <$> evalStateT (mapM typedDecl ast) initEnv
 
@@ -165,8 +169,8 @@ testEnv = [ (mkName "print", FunTy UnitTy [StringTy])
           , (mkName "print_int", FunTy UnitTy [IntTy])
           ]
 
-evalTypedExpr :: Expr -> Either String EXPR
+evalTypedExpr :: Expr -> Either String (EXPR 'Typed)
 evalTypedExpr expr = evalStateT (typedExpr expr) testEnv
 
-evalTypedDecl :: Decl -> Either String DECL
+evalTypedDecl :: Decl -> Either String (DECL 'Typed)
 evalTypedDecl decl = evalStateT (typedDecl decl) testEnv
