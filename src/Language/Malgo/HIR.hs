@@ -2,9 +2,8 @@
 {-# LANGUAGE KindSignatures #-}
 module Language.Malgo.HIR where
 
-import           Language.Malgo.Syntax (Name, Op, Type (..), prettyOp,
-                                        prettyType)
-import           Text.PrettyPrint
+import           Language.Malgo.Syntax (Name, Op, Type (..))
+-- import           Text.PrettyPrint
 
 newtype Id = Sym String
   deriving (Eq, Show)
@@ -12,7 +11,7 @@ newtype Id = Sym String
 newtype HIR (a :: Phase) = HIR { unHIR :: DECL a }
   deriving (Eq, Show)
 
-data Phase = Typed | KNormal | Alpha
+data Phase = Typed | KNormal | Alpha | Opt
   deriving (Eq, Show)
 
 data DECL (a :: Phase) = DEF Id Type (EXPR a)
@@ -31,8 +30,6 @@ data EXPR' (a :: Phase) = VAR Id
                         | CALL { _callName :: Id
                                , _callArgs :: [EXPR a]
                                }
-                        -- | SEQ (EXPR a) (EXPR a)
-                        -- | BLOCK { unBLOCK :: [EXPR] }
                         | LET { _letName  :: Id
                               , _letType  :: Type
                               , _letValue :: EXPR a

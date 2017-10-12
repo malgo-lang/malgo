@@ -26,7 +26,7 @@ insertLet v@(e, t) k = do
   x <- newId
   v' <- transExpr v
   (e', t') <- k (VAR x, t)
-  return (SEQ (LET x t v', UnitTy) (e', t'), t')
+  return (LET x t v' (e', t'), t')
 
 transExpr :: EXPR 'Typed -> State Env (EXPR 'KNormal)
 transExpr (CALL fn args, ty) = bind args [] (\xs -> return (CALL fn xs, ty))
@@ -35,11 +35,6 @@ transExpr (CALL fn args, ty) = bind args [] (\xs -> return (CALL fn xs, ty))
         bind (x:xs) args' k = insertLet x (\x' -> bind xs (x':args') k)
 
 transExpr (BINOP o e1 e2, ty) = insertLet e1 (\x -> insertLet e2 (\y -> return (BINOP o x y, ty)))
-
-transExpr (SEQ e1 e2, ty) = do
-  e1' <- transExpr e1
-  e2' <- transExpr e2
-  return (SEQ e1' e2', ty)
 
 transExpr (IF c t f, ty) =
   insertLet c (\c' -> do
@@ -54,12 +49,17 @@ transExpr (BOOL x, t) = return (BOOL x, t)
 transExpr (CHAR x, t) = return (CHAR x, t)
 transExpr (STRING x, t) = return (STRING x, t)
 transExpr (UNIT, t) = return (UNIT, t)
-transExpr (LET x t e, ty) = insertLet e (\e' -> return (LET x t e', ty))
+transExpr (LET x t e b, ty) = do
+  e' <- transExpr e
+  b' <- transExpr b
+  return (LET x t e' b', ty)
 
 transDecl :: (DECL 'Typed) -> State Env (DECL 'KNormal)
 transDecl (DEF n ty val) = fmap (DEF n ty) (transExpr val)
 transDecl (DEFUN n retTy args body) = fmap (DEFUN n retTy args) (transExpr body)
-transDecl _ = undefined
+transDecl (EXDEF n ty) = return $ EXDEF n ty
+transDecl (EXDEFUN n retTy args) = return $ EXDEFUN n retTy args
+
 -- transDecl e = return e
 
 trans :: HIR 'Typed -> (HIR 'KNormal, Env)
