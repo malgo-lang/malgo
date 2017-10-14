@@ -40,10 +40,11 @@ prettyEXPR' (CHAR x)      = char x
 prettyEXPR' (STRING x)    = doubleQuotes $ text x
 prettyEXPR' UNIT          = text "unit"
 prettyEXPR' (CALL i args) = parens $ prettyId i <+> hsep (map prettyEXPR args)
-prettyEXPR' (LET (Sym "#_") _ e1 e2) = prettyEXPR e1 $+$ prettyEXPR e2
+prettyEXPR' (LET (Sym "#_") _ e1 e2) = prettyEXPR e1 $$ prettyEXPR e2
 prettyEXPR' (LET i t v b) =
-  parens $ text "let" <+> parens (prettyId i <+> prettyType t <+> prettyEXPR v)
-  $+$ nest 2 (prettyEXPR b)
+  parens $ text "let"
+  <+> parens (prettyId i <+> prettyType t <+> prettyEXPR v)
+  $$ nest (-1) (prettyEXPR b)
 prettyEXPR' (IF c t f) =
   parens $ text "if" <+> prettyEXPR c
   $+$ nest 2 (prettyEXPR t)

@@ -11,7 +11,7 @@ newtype Id = Sym String
 newtype HIR (a :: Phase) = HIR { unHIR :: DECL a }
   deriving (Eq, Show)
 
-data Phase = Typed | KNormal | Alpha | Opt
+data Phase = Typed | KNormal
   deriving (Eq, Show)
 
 data DECL (a :: Phase) = DEF Id Type (EXPR a)

@@ -1,9 +1,10 @@
 extern println(str:String):Unit
 extern print(str:String):Unit
 extern print_int(i:Int):Unit
+extern trace_int(i:Int):Int
 
 def fib(n:Int):Int = {
-  if (n <= 0 || n == 1) && #t {
+  if (n <= 0 || trace_int(trace_int(n) + 1) == 2) && #t {
     1
   } else {
     fib(n-1) + fib(n-2)
