@@ -2,11 +2,10 @@
 
 module Language.Malgo.Syntax where
 
-import           Control.Lens     ()
+import           Control.Lens    ()
 import           Text.Parsec.Pos
-import           Text.PrettyPrint (($+$), (<+>), (<>))
-import qualified Text.PrettyPrint as P
 
+-- | 'Name' is used like symbols on LISP
 type Name = String
 
 mkName :: String -> Name
@@ -14,6 +13,12 @@ mkName = id
 
 type Pos = SourcePos
 
+{-|
+'Def' -> def <name>:<type> = <expr>
+'Defun' -> def <name>(<param1>:<type1>, <param2>:<type2>, ...):<result type> = <expr>
+'ExDef' -> extern <name>:<type>
+'ExDefun' -> extern <name>(<param1>:<type1>, <param2>:<type2>, ...):<result type>
+-}
 data Decl = Def Pos Name Type Expr
           | Defun Pos Name Type [(Name, Type)] Expr
           | ExDef Pos Name Type

@@ -49,5 +49,6 @@ prettyEXPR' (IF c t f) =
   parens $ text "if" <+> prettyEXPR c
   $+$ nest 2 (braces (prettyEXPR t))
   $+$ nest 2 (braces (prettyEXPR f))
+
 prettyEXPR' (BINOP o x y) =
   parens $ prettyOp o <+> prettyEXPR x <+> prettyEXPR y
