@@ -53,14 +53,14 @@ typedExpr (Call info name args) = do
                             else typeError (show paramsTy) (show argsTy) (show info )
     _ -> typeError "Function" (show funty) (show info)
 
-typedExpr (Seq info1 (Let info2 name ty val) body) = do
+typedExpr (Seq _ (Let info2 name ty val) body) = do
   val' <- typedExpr val
   let vt = snd val'
   if typeEq ty vt
     then do
       addBind name ty
       body' <- typedExpr body
-      return (LET (name2Id name) ty val' body', (snd body'))
+      return (LET (name2Id name) ty val' body', snd body')
     else typeError (show ty) (show vt) (show info2)
 
 typedExpr (Seq info e1@Seq{} e2) = do

@@ -7,7 +7,6 @@ import           Control.Lens
 import           Control.Monad.State
 import           Data.Either           ()
 import           Language.Malgo.HIR
-import           Language.Malgo.Syntax
 
 newtype Env = Env { _idCount :: Int }
   deriving (Show, Eq)
@@ -18,11 +17,11 @@ newId :: State Env Id
 newId = do
   c <- use idCount
   idCount .= (c + 1)
-  return $ Sym ('#' : show c)
+  return $ Sym ("#k" ++ show c)
 
-insertLet :: (EXPR 'Typed) -> (EXPR 'KNormal -> State Env (EXPR 'KNormal)) -> State Env (EXPR 'KNormal)
+insertLet :: EXPR 'Typed -> (EXPR 'KNormal -> State Env (EXPR 'KNormal)) -> State Env (EXPR 'KNormal)
 -- insertLet v@(VAR _, _) k = k v
-insertLet v@(e, t) k = do
+insertLet v@(_, t) k = do
   x <- newId
   v' <- transExpr v
   (e', t') <- k (VAR x, t)
@@ -54,13 +53,11 @@ transExpr (LET x t e b, ty) = do
   b' <- transExpr b
   return (LET x t e' b', ty)
 
-transDecl :: (DECL 'Typed) -> State Env (DECL 'KNormal)
+transDecl :: DECL 'Typed -> State Env (DECL 'KNormal)
 transDecl (DEF n ty val) = fmap (DEF n ty) (transExpr val)
 transDecl (DEFUN n retTy args body) = fmap (DEFUN n retTy args) (transExpr body)
 transDecl (EXDEF n ty) = return $ EXDEF n ty
 transDecl (EXDEFUN n retTy args) = return $ EXDEFUN n retTy args
-
--- transDecl e = return e
 
 trans :: HIR 'Typed -> (HIR 'KNormal, Env)
 trans (HIR typed) = runState (transDecl typed) (Env 0) & _1 %~ HIR

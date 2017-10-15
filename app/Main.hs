@@ -6,6 +6,7 @@ import qualified Language.Malgo.Assoc              as Assoc
 import qualified Language.Malgo.Beta               as Beta
 import qualified Language.Malgo.HIR                as HIR
 import qualified Language.Malgo.KNormal            as KNormal
+import qualified Language.Malgo.Alpha as Alpha
 import qualified Language.Malgo.Parser             as Parser
 import qualified Language.Malgo.PrettyPrint.HIR    as PH
 import qualified Language.Malgo.PrettyPrint.Syntax as PS
@@ -42,19 +43,20 @@ main = do
         Right xs -> mapM_ (print . PH.pretty . Assoc.flatten . fst) xs
         Left _   -> return ()
 
+      putStrLn "\nAlpha-converted AST(HIR 'KNormal):"
+      let alpha = case kAst of
+            Right xs -> Right $ map (Alpha.trans . fst) xs
+            Left x -> Left x
+
+      case alpha of
+        Right xs -> mapM_ (print . PH.pretty . Assoc.flatten . fst) xs
+        Left _ -> return ()
+
       putStrLn "\nBeta-reduced AST(HIR 'KNormal):"
-      let beta = case kAst of
+      let beta = case alpha of
             Right xs -> Right $ map (Beta.trans . fst) xs
             Left x   -> Left x
 
       case beta of
         Right xs -> mapM_ (print . PH.pretty . Assoc.flatten . fst) xs
         Left _   -> return ()
-
-      -- putStrLn "Flat AST(HIR 'KNormal):"
-      -- let flat = case beta of
-      --               Right a -> Right $ map (Assoc.flatten . fst) a
-      --               Left x  -> Left x
-      -- case flat of
-      --   Right xs -> mapM_ (print . PH.pretty) xs
-      --   Left _   -> return ()
