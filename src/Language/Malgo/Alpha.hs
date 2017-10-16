@@ -1,6 +1,6 @@
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TemplateHaskell  #-}
 module Language.Malgo.Alpha where
 
 -- アルファ変換
@@ -8,10 +8,10 @@ module Language.Malgo.Alpha where
 import           Control.Applicative ()
 import           Control.Lens
 import           Control.Monad.State
-import           Data.Maybe            (fromMaybe)
+import           Data.Maybe          (fromMaybe)
 import           Language.Malgo.HIR
 
-data Env = Env { _idMap :: [(Id, Id)]
+data Env = Env { _idMap   :: [(Id, Id)]
                , _idCount :: Int
                }
   deriving (Show, Eq)
@@ -21,7 +21,7 @@ newId :: Id -> State Env Id
 newId (Sym hint) = do
   c <- use idCount
   idCount .= (c + 1)
-  return $ Sym ("#a" ++ show c ++ "_" ++ hint)
+  return $ Sym ("$a" ++ show c ++ "_" ++ hint)
 
 addBind :: (Id, Id) -> State Env ()
 addBind (x, y) = do

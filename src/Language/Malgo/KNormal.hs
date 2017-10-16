@@ -5,7 +5,7 @@ module Language.Malgo.KNormal where
 
 import           Control.Lens
 import           Control.Monad.State
-import           Data.Either           ()
+import           Data.Either         ()
 import           Language.Malgo.HIR
 
 newtype Env = Env { _idCount :: Int }
@@ -17,7 +17,7 @@ newId :: State Env Id
 newId = do
   c <- use idCount
   idCount .= (c + 1)
-  return $ Sym ("#k" ++ show c)
+  return $ Sym ("$k" ++ show c)
 
 insertLet :: EXPR 'Typed -> (EXPR 'KNormal -> State Env (EXPR 'KNormal)) -> State Env (EXPR 'KNormal)
 -- insertLet v@(VAR _, _) k = k v

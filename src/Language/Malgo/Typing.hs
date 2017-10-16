@@ -30,7 +30,7 @@ typeEq :: Type -> Type -> Bool
 typeEq = (==)
 
 typeError :: String -> String -> String -> StateT Env (Either String) a
-typeError expected actual info = lift . Left $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual ++ "\n info: " ++ info
+typeError expected actual info = lift . Left $ show info ++ " error: Expected -> " ++ expected ++ "; Actual -> " ++ actual
 
 typedExpr :: Expr -> StateT Env (Either String) (EXPR 'Typed)
 typedExpr (Var pos name) = do
@@ -70,7 +70,7 @@ typedExpr (Seq info e1@Seq{} e2) = do
   put ctx
   if typeEq ty1 UnitTy
     then do e2' <- typedExpr e2
-            return (LET (name2Id "#_") UnitTy e1' e2', snd e2')
+            return (LET (name2Id "$_") UnitTy e1' e2', snd e2')
     else typeError (show UnitTy) (show ty1) (show info)
 
 typedExpr (Seq info e1 e2) = do
@@ -78,7 +78,7 @@ typedExpr (Seq info e1 e2) = do
   let ty1 = snd e1'
   if typeEq ty1 UnitTy
     then do e2' <- typedExpr e2
-            return (LET (name2Id "#_") UnitTy e1' e2', snd e2')
+            return (LET (name2Id "$_") UnitTy e1' e2', snd e2')
     else typeError (show UnitTy) (show ty1) (show info)
 
 typedExpr (If info c t f) = do
@@ -127,15 +127,23 @@ typedExpr (BinOp info op e1 e2) = do
 
 typedExpr Let{} = return (UNIT, UnitTy)
 
-typedDecl :: Decl -> StateT Env (Either String) (DECL 'Typed)
+isConstError info = lift . Left $ show info ++ " error: initializer element is not a compile-time element"
+isConst :: Expr -> StateT Env (Either String) ()
+isConst (Call info _ _)    = isConstError info
+isConst (Seq info _ _)     = isConstError info
+isConst (Let info _ _ _)   = isConstError info
+isConst (If info _ _ _)    = isConstError info
+isConst (BinOp info _ _ _) = isConstError info
+isConst _                  = return ()
 
+typedDecl :: Decl -> StateT Env (Either String) (DECL 'Typed)
 typedDecl (Def info n ty val) = do
+  isConst val
   val' <- typedExpr val
   let tv = snd val'
   if typeEq ty tv
     then addBind n ty >> return (DEF (name2Id n) ty val')
     else typeError (show ty) (show tv) (show info)
-
 typedDecl (Defun info fn retTy params body) = do
   let funTy = FunTy retTy (map snd params)
   ctx <- get
@@ -159,7 +167,6 @@ typedDecl (ExDefun _ fn retTy params) = do
   return (EXDEFUN (name2Id fn) retTy
           (map ((name2Id . fst) &&& snd) params))
 
--- typing :: Traversable t => t Decl -> Either String (t (DECL 'Typed))
 typing :: Traversable f => f Decl -> Either String (f (HIR 'Typed))
 typing ast = fmap HIR <$> evalStateT (mapM typedDecl ast) initEnv
 

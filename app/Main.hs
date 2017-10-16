@@ -10,7 +10,7 @@ import qualified Language.Malgo.KNormal            as KNormal
 import qualified Language.Malgo.MIR                as MIR
 import qualified Language.Malgo.Parser             as Parser
 import qualified Language.Malgo.PrettyPrint.HIR    as PH
-import qualified Language.Malgo.PrettyPrint.MIR    as PM
+-- import qualified Language.Malgo.PrettyPrint.MIR    as PM
 import qualified Language.Malgo.PrettyPrint.Syntax as PS
 import qualified Language.Malgo.Syntax             as Syntax
 import qualified Language.Malgo.Typing             as Typing
@@ -69,5 +69,5 @@ main = do
             Left x   -> Left x
 
       case mir of
-        Right xs -> mapM_ (print . PM.pretty) xs
+        Right xs -> mapM_ (print) xs
         Left _   -> return ()
