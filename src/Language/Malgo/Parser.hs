@@ -20,7 +20,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   }
 
 table :: [[Operator String u Identity Expr]]
-table = [ [ prefix "-" (\pos x -> Call pos (mkName "negate") [x])
+table = [ [ prefix "-" (\pos x -> BinOp pos Sub (Int pos 0) x)
           , prefix "+" (flip const)]
         , [ binary "*" (`BinOp` Mul) AssocLeft
           , binary "/" (`BinOp` Div) AssocLeft
@@ -167,7 +167,7 @@ parseExpr =
   <|> parseExpr'
 
 parseIf :: ParsecT String u Identity Expr
-parseIf = getPosition >>= \pos -> reserved "if" >> If pos <$> parseExpr <*> parseExpr <*> (reserved "else" >> parseExpr)
+parseIf = getPosition >>= \pos -> reserved "if" >> If pos <$> parseExpr <*> braces parseExpr <*> (reserved "else" >> braces parseExpr)
 
 parseCall :: ParsecT String u Identity Expr
 parseCall = Call <$> getPosition <*> fmap mkName identifier <*> parens (commaSep parseExpr)

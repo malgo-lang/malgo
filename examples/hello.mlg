@@ -12,9 +12,17 @@ def fib(n:Int):Int = {
   }
 }
 
-def main():Unit = {
+def abs(n:Int):Int = {
+  if (n >= 0) {
+    n
+  } else {
+    -n
+  }
+}
+def main():Int = {
   println("Hello, world!");
   print("fib(10) = ");
   print_int(fib(10));
   println("");
+  0
 }

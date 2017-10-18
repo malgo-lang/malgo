@@ -36,15 +36,13 @@ find x = do
 
 transDECL :: DECL 'KNormal -> State Env (DECL 'KNormal)
 transDECL (DEF i t v) = do
-  i' <- newId i
-  addBind (i, i')
-  DEF i' t <$> transEXPR v
+  DEF i t <$> transEXPR v
 transDECL (DEFUN fn retTy params body) = do
-  fn' <- newId fn
-  addBind (fn, fn')
+  -- fn' <- newId fn
+  -- addBind (fn, fn')
   addParams params
   env <- get
-  DEFUN fn'
+  DEFUN fn
     retTy
     (zip
      (evalState (mapM (find . fst) params) env)

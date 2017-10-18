@@ -7,7 +7,7 @@ import           Control.Lens
 import           Control.Monad.State
 import           Language.Malgo.HIR    (Id (..))
 import qualified Language.Malgo.HIR    as H
-import           Language.Malgo.Syntax (Op, Type)
+import           Language.Malgo.Syntax (Op, Type (..))
 
 data DECL = DEF Id Type EXPR
           | DEFUN Id Type [(Id, Type)] BLOCK
@@ -18,17 +18,21 @@ data DECL = DEF Id Type EXPR
 data BLOCK = BLOCK Id [EXPR]
   deriving (Eq, Show)
 
-data EXPR = VAR Id
-          | INT Int
-          | FLOAT Double
-          | BOOL Bool
-          | CHAR Char
-          | STRING String
-          | UNIT
-          | CALL Id [Id]
-          | LET Id Type EXPR
-          | IF Id BLOCK BLOCK
-          | BINOP Op Id Id
+type EXPR = (EXPR', Type)
+
+data EXPR' = VAR Id
+           | INT Int
+           | FLOAT Double
+           | BOOL Bool
+           | CHAR Char
+           | STRING String
+           | UNIT
+           | CALL Id [Id]
+           | LET Id Type EXPR
+           | IF Id Id BLOCK BLOCK
+           | BINOP Op Id Id
+           | IFRET Id Type EXPR
+           | RET Id Type
   deriving (Eq, Show)
 
 newtype Env = Env { _labelCount :: Int }
@@ -54,29 +58,40 @@ transBLOCK :: Id -> H.EXPR 'H.KNormal -> State Env BLOCK
 transBLOCK name hexpr = BLOCK name <$> transBLOCK' hexpr
 
 transBLOCK' :: H.EXPR 'H.KNormal -> State Env [EXPR]
-transBLOCK' (H.LET name typ val body, _) = (:) <$> (LET name typ <$> transEXPR val) <*> transBLOCK' body
+transBLOCK' (H.LET name typ val body, _) = do
+  letExpr' <- LET name typ <$> transEXPR val
+  (:) <$> pure (letExpr', UnitTy) <*> transBLOCK' body
+transBLOCK' (H.UNIT, _) = return []
 transBLOCK' e = (:[]) <$> transEXPR e
 
+-- insertRET :: BLOCK -> BLOCK
+-- insertRET (BLOCK i es) = BLOCK i $ insertRET' es
+--   where insertRET' [(IF ret c t f, ty)] = [(IF ret c (insertRET t) (insertRET f), ty)]
+--         insertRET' [e]              = [(RET e, UnitTy)]
+--         insertRET' (e:es')          = e : insertRET' es'
+--         insertRET' []               = undefined
+
 transEXPR :: H.EXPR 'H.KNormal -> State Env EXPR
-transEXPR (H.VAR name, _) = return $ VAR name
-transEXPR (H.INT x, _)    = return $ INT x
-transEXPR (H.FLOAT x, _)  = return $ FLOAT x
-transEXPR (H.BOOL x, _)   = return $ BOOL x
-transEXPR (H.CHAR x, _)   = return $ CHAR x
-transEXPR (H.STRING x, _) = return $ STRING x
-transEXPR (H.UNIT, _) = return UNIT
-transEXPR (H.CALL fn args, _) =
-  return $ CALL fn (map
-                    (\case
-                        (H.VAR x, _) -> x
-                        _ -> error $ "HIR -> MIR error: args = " ++ show args)
-                    args)
+transEXPR (H.VAR name, t) = return (VAR name, t)
+transEXPR (H.INT x, t)    = return (INT x, t)
+transEXPR (H.FLOAT x, t)  = return (FLOAT x, t)
+transEXPR (H.BOOL x, t)   = return (BOOL x, t)
+transEXPR (H.CHAR x, t)   = return (CHAR x, t)
+transEXPR (H.STRING x, t) = return (STRING x, t)
+transEXPR (H.UNIT, t) = return (UNIT, t)
+transEXPR (H.CALL fn args, t) =
+  return (CALL fn (map
+                   (\case
+                       (H.VAR x, _) -> x
+                       _ -> error $ "HIR -> MIR error: args = " ++ show args)
+                    args), t)
 transEXPR (e@H.LET{}, _) = error $ "HIR -> MIR error: LET cannot be EXPR " ++ show e
   -- LET name typ <$> transEXPR val <*> transBLOCK body
-transEXPR (H.IF (H.VAR c, _) t f, _) = do
+transEXPR (H.IF (H.VAR c, _) t f, ty) = do
   tlabel <- newLabel "then"
   flabel <- newLabel "else"
-  IF c <$> transBLOCK tlabel t <*> transBLOCK flabel f
+  if' <- IF (Sym "") c <$> transBLOCK tlabel t <*> transBLOCK flabel f
+  return (if', ty)
 transEXPR (e@H.IF{}, _) = error $ "HIR -> MIR error: IF c t f = " ++ show e
-transEXPR (H.BINOP op (H.VAR x, _) (H.VAR y, _), _) = return $ BINOP op x y
+transEXPR (H.BINOP op (H.VAR x, _) (H.VAR y, _), t) = return (BINOP op x y, t)
 transEXPR (e@H.BINOP{}, _) = error $ "HIR -> MIR error: BINOP op x y = " ++ show e

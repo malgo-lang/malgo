@@ -1,13 +1,20 @@
 #include <stdio.h>
 
-void println(char* str) {
+typedef int* Unit;
+
+int *unit;
+
+Unit println(char* str) {
   puts(str);
+  return unit;
 }
 
-void print(char* str) {
+Unit print(char* str) {
   printf("%s", str);
+  return unit;
 }
 
-void print_int(int n) {
+Unit print_int(int n) {
   printf("%d", n);
+  return unit;
 }

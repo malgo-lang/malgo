@@ -133,7 +133,8 @@ isConst (Call info _ _)    = isConstError info
 isConst (Seq info _ _)     = isConstError info
 isConst (Let info _ _ _)   = isConstError info
 isConst (If info _ _ _)    = isConstError info
-isConst (BinOp info _ _ _) = isConstError info
+-- isConst (BinOp _ _ e1 e2) = isConst e1 >> isConst e2
+isConst (BinOp info _ _ _) = isConstError info -- TODO: 定数式の畳込みをK正規化以降に追加し、LLVMの定数式の仕様に近づける
 isConst _                  = return ()
 
 typedDecl :: Decl -> StateT Env (Either String) (DECL 'Typed)

@@ -13,6 +13,8 @@ newtype Env = Env { _idCount :: Int }
 
 makeLenses ''Env
 
+initEnv = Env 0
+
 newId :: State Env Id
 newId = do
   c <- use idCount
@@ -59,5 +61,10 @@ transDecl (DEFUN n retTy args body) = fmap (DEFUN n retTy args) (transExpr body)
 transDecl (EXDEF n ty) = return $ EXDEF n ty
 transDecl (EXDEFUN n retTy args) = return $ EXDEFUN n retTy args
 
-trans :: HIR 'Typed -> (HIR 'KNormal, Env)
-trans (HIR typed) = runState (transDecl typed) (Env 0) & _1 %~ HIR
+trans :: HIR 'Typed -> State Env (HIR 'KNormal)
+trans (HIR typed) = do
+  kNormalized <- transDecl typed
+  return $ HIR kNormalized
+
+kNormalize :: [HIR 'Typed] -> [HIR 'KNormal]
+kNormalize hir = evalState (mapM trans hir) initEnv

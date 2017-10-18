@@ -5,7 +5,6 @@ module Language.Malgo.Syntax where
 import           Control.Lens    ()
 import           Text.Parsec.Pos
 
--- | 'Name' is used like symbols on LISP
 type Name = String
 
 mkName :: String -> Name
@@ -13,12 +12,14 @@ mkName = id
 
 type Pos = SourcePos
 
+-- | 宣言の構文木
 data Decl = Def Pos Name Type Expr
           | Defun Pos Name Type [(Name, Type)] Expr
           | ExDef Pos Name Type
           | ExDefun Pos Name Type [(Name, Type)]
   deriving (Eq, Show)
 
+-- | 式の構文木
 data Expr = Var Pos Name
           | Int Pos Int
           | Float Pos Double
@@ -33,9 +34,11 @@ data Expr = Var Pos Name
           | BinOp Pos Op Expr Expr
   deriving (Eq, Show)
 
+-- | 中置演算子の種類を表すタグ
 data Op = Add | Sub | Mul | Div | Eq | Neq | Lt | Gt | Le | Ge | And | Or
   deriving (Eq, Show)
 
+-- | Malgoの組み込みデータ型
 data Type = IntTy
           | FloatTy
           | BoolTy
