@@ -39,62 +39,62 @@ main = do
   case result of
     Left err  -> print err
     Right ast -> do
-      putStrLn "Format:"
-      print $ Pretty.sep (map PS.prettyDecl ast)
-      putStrLn "AST:"
-      print ast
+      -- putStrLn "Format:"
+      -- print $ Pretty.sep (map PS.prettyDecl ast)
+      -- putStrLn "AST:"
+      -- print ast
 
-      putStrLn "\nTyped AST(HIR 'Typed):"
+      -- putStrLn "\nTyped AST(HIR 'Typed):"
       let typedAst = Typing.typing ast
-      case typedAst of
-        Right xs -> mapM_ (print . PH.pretty . Assoc.flatten) xs
-        Left x   -> putStrLn $ "typing error: " ++ x
+      -- case typedAst of
+      --   Right xs -> mapM_ (print . PH.pretty . Assoc.flatten) xs
+      --   Left x   -> putStrLn $ "typing error: " ++ x
 
-      putStrLn "\nKNormalized AST(HIR 'KNormal):"
+      -- putStrLn "\nKNormalized AST(HIR 'KNormal):"
       let kAst = case typedAst of
                    Right tAst -> Right $ KNormal.kNormalize tAst
                    Left x     -> Left x
-      case kAst of
-        Right xs -> mapM_ (print . PH.pretty . Assoc.flatten) xs
-        Left _   -> return ()
+      -- case kAst of
+      --   Right xs -> mapM_ (print . PH.pretty . Assoc.flatten) xs
+      --   Left _   -> return ()
 
-      putStrLn "\nAlpha-converted AST(HIR 'KNormal):"
+      -- putStrLn "\nAlpha-converted AST(HIR 'KNormal):"
       let alpha = case kAst of
             Right xs -> Right $ map (Alpha.trans) xs
             Left x   -> Left x
 
-      case alpha of
-        Right xs -> mapM_ (print . PH.pretty . Assoc.flatten . fst) xs
-        Left _   -> return ()
+      -- case alpha of
+      --   Right xs -> mapM_ (print . PH.pretty . Assoc.flatten . fst) xs
+      --   Left _   -> return ()
 
-      putStrLn "\nBeta-reduced AST(HIR 'KNormal):"
+      -- putStrLn "\nBeta-reduced AST(HIR 'KNormal):"
       let beta = case alpha of
             Right xs -> Right $ map (Beta.trans . fst) xs
             Left x   -> Left x
 
-      case beta of
-        Right xs -> mapM_ (print . PH.pretty . Assoc.flatten . fst) xs
-        Left _   -> return ()
+      -- case beta of
+      --   Right xs -> mapM_ (print . PH.pretty . Assoc.flatten . fst) xs
+      --   Left _   -> return ()
 
-      putStrLn "\nMIR:"
+      -- putStrLn "\nMIR:"
       let mir = case beta of
             Right xs -> Right $ map (MIR.trans . Assoc.flatten . fst) xs
             Left x   -> Left x
 
-      case mir of
-        Right xs -> mapM_ (print . PM.pretty . fst) xs
-        Left _   -> return ()
+      -- case mir of
+      --   Right xs -> mapM_ (print . PM.pretty . fst) xs
+      --   Left _   -> return ()
 
-      putStrLn "\nMIR(ret inserted):"
+      -- putStrLn "\nMIR(ret inserted):"
       let mir' = case mir of
             Right xs -> Right $ map (InsertRET.trans . fst) xs
             Left x   -> Left x
 
-      case mir' of
-        Right xs -> mapM_ (print . PM.pretty . fst) xs
-        Left _   -> return ()
+      -- case mir' of
+      --   Right xs -> mapM_ (print . PM.pretty . fst) xs
+      --   Left _   -> return ()
 
-      putStrLn "\nLLVM:"
+      -- putStrLn "\nLLVM:"
       let llvm = case mir' of
             Right xs ->
               Right $ LLVM.runLLVM

@@ -342,10 +342,10 @@ store ptr val = justDo $ AST.Store False ptr val Nothing 0 []
 load :: Type.Type -> AST.Operand -> Codegen AST.Operand
 load ty ptr = instr ty Nothing $ AST.Load False ptr Nothing 0 []
 
-ret :: AST.Operand -> Codegen (AST.Named AST.Terminator)
+ret :: AST.Operand -> Codegen ()
 ret val = terminator $ AST.Do $ AST.Ret (Just val) []
 
-retvoid :: Codegen (AST.Named AST.Terminator)
+retvoid :: Codegen ()
 retvoid = terminator $ AST.Do $ AST.Ret Nothing []
 
 fromId :: IsString a => Id -> a

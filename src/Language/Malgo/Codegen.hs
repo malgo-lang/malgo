@@ -11,6 +11,7 @@ import           Language.Malgo.Syntax
 import qualified LLVM.AST.Constant     as C
 import qualified LLVM.AST.Float        as F
 import qualified LLVM.AST.Name         as Name
+import qualified LLVM.AST.Operand      as O
 import qualified LLVM.AST.Type         as T
 
 compileType IntTy = L.intTy
@@ -63,7 +64,12 @@ compileStm (LET name typ val, _) = do
   assign (fromId name) var
 compileStm (RET name ty, _) = do
   var <- getvar (fromId name)
-  ret var
-compileStm ()
+  val <- load (compileType ty) var
+  ret val
+-- compileStm ()
 
-compileOperand = undefined
+compileOperand :: EXPR -> Codegen O.Operand
+compileOperand o@(INT _, _) = return $ cons (compileConst o)
+compileOperand (VAR x, ty)  = do
+  var <- getvar (fromId x)
+  load (compileType ty) var
