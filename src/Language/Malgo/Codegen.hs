@@ -1,78 +1,69 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Codegen where
 
--- llvm-hs/llvm-hs-kaleidoscopeベース
 import           Control.Monad.State
-import qualified Data.ByteString       as B
-import qualified Data.ByteString.Short as BS
-import           Data.Char             (chr, ord)
-import           Data.String           (IsString, fromString)
-import           Language.Malgo.HIR    (Id (..))
-import qualified Language.Malgo.MIR    as MIR
-import           Language.Malgo.Syntax (Type (..))
-import qualified LLVM.AST              as AST
-import qualified LLVM.AST.Constant     as Constant
-import qualified LLVM.AST.Float        as Float
-import qualified LLVM.AST.Global       as Global
+import           Data.Char
+import           Data.String
+import           Language.Malgo.LLVM
+import qualified Language.Malgo.LLVM   as L
+import           Language.Malgo.MIR
+import           Language.Malgo.Syntax
+import qualified LLVM.AST.Constant     as C
+import qualified LLVM.AST.Float        as F
 import qualified LLVM.AST.Name         as Name
-import qualified LLVM.AST.Type         as Type
+import qualified LLVM.AST.Type         as T
 
-makeModule :: String -> [AST.Definition] -> AST.Module
-makeModule name definitions =
-  AST.defaultModule { AST.moduleName = fromString name
-                    , AST.moduleDefinitions = definitions
-                    }
+compileType IntTy = L.intTy
+compileType FloatTy = L.floatTy
+compileType BoolTy = L.boolTy
+compileType CharTy = L.charTy
+compileType UnitTy = L.unitTy
+compileType StringTy = L.stringTy
+compileType (FunTy retTy argTys) =
+  L.funTy (compileType retTy) (map compileType argTys)
 
-fromId :: IsString a => Id -> a
-fromId (Sym s) = fromString s
+compileConst :: EXPR -> C.Constant
+compileConst (INT x, _)      = C.Int 32 (toInteger x)
+compileConst (FLOAT x, _)    = C.Float (F.Double x)
+compileConst (CHAR x, _)     = C.Int 8 (toInteger (ord x))
+compileConst (BOOL True, _)  = C.Int 1 1
+compileConst (BOOL False, _) = C.Int 1 0
+compileConst (STRING x, _)   = C.Array L.charTy (map (C.Int 8 . toInteger . ord) x)
+compileConst (UNIT, _) = C.GlobalReference L.unitTy (Name.Name "unit")
+compileConst x = error $ "error: " ++ show x ++ " is not a Const"
 
-str2Name = Name.Name . fromString
+compileDECL :: DECL -> L.LLVM ()
+compileDECL (DEF name StringTy (STRING x, _)) =
+  L.defineVar (L.fromId name) (T.ArrayType (fromInteger (toInteger (length x + 1)))
+                              L.charTy)
+  (compileConst (STRING x, StringTy))
+compileDECL (DEF name ty val) =
+  L.defineVar (L.fromId name) (compileType ty) (compileConst val)
+compileDECL (DEFUN fn retTy params body) =
+  L.defineFunc
+  (compileType retTy)
+  (L.fromId fn)
+  [(compileType ty, L.fromId nm) | (nm, ty) <- params]
+  (compileBody body)
+compileDECL (EXDEF name ty) =
+  L.externalVar (L.fromId name) (compileType ty)
+compileDECL (EXDEFUN fn retTy params) =
+  L.externalFunc
+  (compileType retTy)
+  (L.fromId fn)
+  [(compileType ty, L.fromId nm) | (nm, ty) <- params]
 
-id2Name = Name.Name . fromId
+compileBody (BLOCK _ xs) = mapM compileStm xs
 
--- Type
-compileType :: Type -> Type.Type
-compileType IntTy    = Type.i32
-compileType FloatTy  = Type.double
-compileType BoolTy   = Type.i1
-compileType CharTy   = Type.i8
-compileType StringTy = Type.ptr Type.i8
-compileType UnitTy   = Type.ptr Type.i1
-compileType (FunTy retTy argTys) = Type.FunctionType (compileType retTy) (map compileType argTys) False
+-- compileStm :: EXPR -> Codegen a
+compileStm (LET name typ val, _) = do
+  var <- alloca (compileType typ) (Just (id2Name name))
+  val' <- compileOperand val
+  store var val'
+  assign (fromId name) var
+compileStm (RET name ty, _) = do
+  var <- getvar (fromId name)
+  ret var
+compileStm ()
 
--- DECL
-compileDECL :: MIR.DECL -> AST.Definition
-compileDECL (MIR.DEF name typ expr) =
-  AST.GlobalDefinition AST.globalVariableDefaults
-  { Global.name = fromId name
-  , Global.type' = compileType typ
-  , Global.initializer = Just (compileConstant expr)
-  }
-compileDECL (MIR.DEFUN fn retTy params body) =
-  AST.GlobalDefinition AST.functionDefaults
-  { Global.name = fromId fn
-  , Global.returnType = compileType retTy
-  , Global.parameters = ( [Global.Parameter
-                           (compileType ty)
-                           (id2Name n) [] | (n, ty) <- params]
-                        , False )
-  , Global.basicBlocks = [compileBLOCK body]
-  }
-
--- EXPR
-
-compileConstant :: MIR.EXPR -> Constant.Constant
-compileConstant (MIR.INT x, _)      = Constant.Int 32 (toInteger x)
-compileConstant (MIR.FLOAT x, _)    = Constant.Float (Float.Double x)
-compileConstant (MIR.BOOL True, _)  = Constant.Int 1 1
-compileConstant (MIR.BOOL False, _) = Constant.Int 1 0
-compileConstant (MIR.CHAR x, _)     = Constant.Int 8 (toInteger (ord x))
-compileConstant (MIR.STRING x, _) =
-  Constant.Array (compileType StringTy) (map (Constant.Int 8 . toInteger . ord) x)
-compileConstant (MIR.UNIT, _) = Constant.GlobalReference (compileType UnitTy) (str2Name "unit")
-compileConstant (MIR.VAR x, ty) = Constant.GlobalReference (compileType ty) (id2Name x)
-compileConstant e = error $ "MIR -> LLVM error: " ++ show e ++ " is not Constant"
-
--- BLOCK
-compileBLOCK = undefined
+compileOperand = undefined
