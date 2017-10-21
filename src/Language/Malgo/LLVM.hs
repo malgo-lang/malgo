@@ -30,6 +30,8 @@ import qualified LLVM.AST.Linkage                as Linkage
 import qualified LLVM.AST.Name                   as Name
 import qualified LLVM.AST.ParameterAttribute     as PA
 import qualified LLVM.AST.Type                   as Type
+import qualified LLVM.Context                    as Context
+import qualified LLVM.Module                     as Module
 
 -----
 -- Module
@@ -354,3 +356,11 @@ fromId (Sym s) = fromString s
 str2Name = Name.Name . fromString
 
 id2Name = Name.Name . fromId
+
+parseLLLVMFile fname = do
+  str <- readFile fname
+  Context.withContext $ \ctx -> do
+    _ <- Module.withModuleFromLLVMAssembly ctx str $ \mod -> do
+      ast <- Module.moduleAST mod
+      print ast
+    return ()

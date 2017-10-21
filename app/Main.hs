@@ -8,6 +8,7 @@ import qualified Language.Malgo.Alpha              as Alpha
 import qualified Language.Malgo.Assoc              as Assoc
 import qualified Language.Malgo.Beta               as Beta
 import qualified Language.Malgo.Codegen            as Codegen
+import qualified Language.Malgo.GlobalStr          as GlobalStr
 import qualified Language.Malgo.HIR                as HIR
 import qualified Language.Malgo.InsertRET          as InsertRET
 import qualified Language.Malgo.KNormal            as KNormal
@@ -85,21 +86,30 @@ main = do
       --   Right xs -> mapM_ (print . PM.pretty . fst) xs
       --   Left _   -> return ()
 
-      -- putStrLn "\nMIR(ret inserted):"
+      putStrLn "\nMIR(ret inserted):"
       let mir' = case mir of
             Right xs -> Right $ map (InsertRET.trans . fst) xs
             Left x   -> Left x
 
-      -- case mir' of
-      --   Right xs -> mapM_ (print . PM.pretty . fst) xs
-      --   Left _   -> return ()
+      case mir' of
+        Right xs -> mapM_ (print . PM.pretty . fst) xs
+        Left _   -> return ()
 
-      -- putStrLn "\nLLVM:"
-      let llvm = case mir' of
+      putStrLn "\nMIR(GlobalStr):"
+      let mir'' = case mir' of
+            Right xs -> Right $ GlobalStr.trans $ map fst xs
+            Left x   -> Left x
+
+      case mir'' of
+        Right xs -> mapM_ (print . PM.pretty) xs
+        Left _   -> return ()
+
+      putStrLn "\nLLVM:"
+      let llvm = case mir'' of
             Right xs ->
               Right $ LLVM.runLLVM
               (LLVM.emptyModule (fromString file))
-              (mapM Codegen.compileDECL (map fst xs))
+              (mapM Codegen.compileDECL xs)
             Left x -> Left x
 
       case llvm of

@@ -57,7 +57,7 @@ prettyType CharTy             = P.text "Char"
 prettyType StringTy           = P.text "String"
 prettyType UnitTy             = P.text "Unit"
 prettyType (FunTy ret params) =
-  P.sep (P.punctuate (P.text " *") (map prettyType params))
+  P.parens (P.sep (P.punctuate (P.text " *") (map prettyType params)))
   <+> P.text "->"
   <+> prettyType ret
 

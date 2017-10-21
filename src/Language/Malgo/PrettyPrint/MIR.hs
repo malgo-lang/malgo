@@ -37,7 +37,7 @@ prettyEXPR (BOOL False, _)   = text "#f"
 prettyEXPR (CHAR x, _)       = quotes (char x)
 prettyEXPR (STRING x, _)     = doubleQuotes (text x)
 prettyEXPR (UNIT, _)           = text "unit"
-prettyEXPR (CALL fn args, _) = prettyId fn <> parens (cat (map prettyId args))
+prettyEXPR (CALL fn args, _) = text "call" <+> prettyType (snd fn) <+> prettyId (fst fn) <> parens (cat (map (prettyId . fst) args))
 prettyEXPR (LET name typ val, _) =
   prettyId name <> colon <> prettyType typ <+> text "="
   <+> prettyEXPR val
@@ -49,3 +49,4 @@ prettyEXPR (RET name ty, _) = text "ret" <+> prettyType ty <+> prettyId name
 prettyEXPR (IFRET name ty val, _) = text "ifret"
   <+> prettyId name <> colon <> prettyType ty
   <+> text "=" <+> prettyEXPR val
+prettyEXPR (NOP, _) = empty

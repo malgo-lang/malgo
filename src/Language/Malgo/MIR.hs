@@ -27,7 +27,8 @@ data EXPR' = VAR Id
            | CHAR Char
            | STRING String
            | UNIT
-           | CALL Id [Id]
+           | NOP
+           | CALL (Id, Type) [(Id, Type)]
            | LET Id Type EXPR
            | IF Id Id BLOCK BLOCK
            | BINOP Op Id Id
@@ -80,11 +81,13 @@ transEXPR (H.CHAR x, t)   = return (CHAR x, t)
 transEXPR (H.STRING x, t) = return (STRING x, t)
 transEXPR (H.UNIT, t) = return (UNIT, t)
 transEXPR (H.CALL fn args, t) =
-  return (CALL fn (map
-                   (\case
-                       (H.VAR x, _) -> x
-                       _ -> error $ "HIR -> MIR error: args = " ++ show args)
-                    args), t)
+  return (CALL
+          (fn, FunTy t (map snd args))
+          (map
+            (\case
+                (H.VAR x, xt) -> (x, xt)
+                _ -> error $ "HIR -> MIR error: args = " ++ show args)
+            args), t)
 transEXPR (e@H.LET{}, _) = error $ "HIR -> MIR error: LET cannot be EXPR " ++ show e
   -- LET name typ <$> transEXPR val <*> transBLOCK body
 transEXPR (H.IF (H.VAR c, _) t f, ty) = do
