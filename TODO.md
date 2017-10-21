@@ -127,7 +127,7 @@ data Type -- データ型
 #### Typed
 型付きAST。意味検査をパスしたことが保証されている。
 
-```
+```haskell
 data Decl = DefVar Name Type Const
           | DefFun Name Type [(Name, Type)] Expr
           | ExVar Name Type -- 外部変数
@@ -156,7 +156,7 @@ K正規化さたIR。二項演算や関数呼び出し、ifの条件部の引数
 式の連続(Sq)がダミー変数を使ったlet式に変換されている。
 α変換やβ簡約などが行われる。
 
-```
+```haskell
 -- α変換によって連番が振られる
 -- 0で初期化
 data Id = Id Int Name
@@ -203,7 +203,7 @@ ifには返り値を代入する変数の情報が付加されている。
 
 文字列リテラルを与えられたローカル変数宣言をグローバル定数宣言に持ち上げる
 
-```
+```haskell
 data Decl = DefVar Id Type Const
           | DefFun Id Type [(Id, Type)] [Stmt]
           | ExVar Id Type -- 外部変数
@@ -232,7 +232,7 @@ ifがジャンプ命令に変換されている。
 
 phi関数の挿入を行うことで、変数の再定義がされていないことを保証する。
 
-```
+```haskell
 data Decl = DefVar Id Type Const
           | DefFun Id Type [(Id, Type)] Id [BasicBlock] -- 第四引数は最初に実行されるbasic blockの名前
           | ExVar Id Type -- 外部変数
