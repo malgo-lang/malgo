@@ -16,23 +16,28 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:   src
   exposed-modules:  Language.Malgo
-                  , Language.Malgo.PrettyPrint
+                  , Language.Malgo.Types
                   , Language.Malgo.Syntax
-                  , Language.Malgo.PrettyPrint.Syntax
                   , Language.Malgo.Parser
-                  , Language.Malgo.HIR
-                  , Language.Malgo.PrettyPrint.HIR
+                  , Language.Malgo.Typed
                   , Language.Malgo.Typing
-                  , Language.Malgo.KNormal
-                  , Language.Malgo.Alpha
-                  , Language.Malgo.Assoc
-                  , Language.Malgo.Beta
-                  , Language.Malgo.MIR
-                  , Language.Malgo.PrettyPrint.MIR
-                  , Language.Malgo.InsertRET
-                  , Language.Malgo.GlobalStr
-                  , Language.Malgo.LLVM
-                  , Language.Malgo.Codegen
+                  -- , Language.Malgo.PrettyPrint
+                  -- , Language.Malgo.Syntax
+                  -- , Language.Malgo.PrettyPrint.Syntax
+                  -- , Language.Malgo.Parser
+                  -- , Language.Malgo.HIR
+                  -- , Language.Malgo.PrettyPrint.HIR
+                  -- , Language.Malgo.Typing
+                  -- , Language.Malgo.KNormal
+                  -- , Language.Malgo.Alpha
+                  -- , Language.Malgo.Assoc
+                  -- , Language.Malgo.Beta
+                  -- , Language.Malgo.MIR
+                  -- , Language.Malgo.PrettyPrint.MIR
+                  -- , Language.Malgo.InsertRET
+                  -- , Language.Malgo.GlobalStr
+                  -- , Language.Malgo.LLVM
+                  -- , Language.Malgo.Codegen
   build-depends:    base >= 4.7 && < 5
                   , hspec >= 2.4.4
                   , llvm-hs
