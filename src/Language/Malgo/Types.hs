@@ -24,6 +24,10 @@ data Name = Name String
 instance IsString Name where
   fromString = Name
 
+fromName :: Name -> String
+fromName (Name x)  = x
+fromName DummyName = "<dummy>"
+
 -- | 中置演算子の種類を表すタグ
 data Op = Add | Sub | Mul | Div | Mod | Eq | Neq | Lt | Gt | Le | Ge | And | Or
   deriving (Eq, Show)

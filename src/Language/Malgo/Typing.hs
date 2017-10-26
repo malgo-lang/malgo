@@ -2,10 +2,36 @@
 {-# LANGUAGE MultiWayIf                 #-}
 module Language.Malgo.Typing where
 
+import           Control.Arrow
 import           Control.Monad.State
 import qualified Language.Malgo.Syntax as S
-import qualified Language.Malgo.Typed  as T
 import           Language.Malgo.Types
+
+data Decl = DefVar Name Type Const
+          | DefFun Name Type [(Name, Type)] Expr
+          | ExVar Name Type
+          | ExFun Name Type [(Name, Type)]
+  deriving (Show, Eq)
+
+data Const = Int Integer
+           | Float Double
+           | Bool Bool
+           | Char Char
+           | String String
+           | Unit
+           | CBinOp Op Const Const
+  deriving (Show, Eq)
+
+type Expr = (Expr', Type)
+
+data Expr' = Var Name
+           | Const Const
+           | Call Name [Expr]
+           | Seq Expr Expr
+           | Let Name Type Expr Expr
+           | If Expr Expr Expr
+           | BinOp Op Expr Expr
+  deriving (Show, Eq)
 
 newtype TypingState = TypingState { env :: [(Name, Type)] }
   deriving Show
@@ -37,37 +63,37 @@ typeEq = (==)
 typeError :: String -> String -> Info -> Typing a
 typeError expected actual info = error' info $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual
 
-typeofDecl :: S.Decl -> Typing T.Decl
+typeofDecl :: S.Decl -> Typing Decl
 typeofDecl (S.DefVar i name typ val) = do
   (val', valTy) <- typeofConst val
   if typeEq typ valTy
-    then return $ T.DefVar name typ val'
+    then return $ DefVar name typ val'
     else typeError (show typ) (show valTy) i
 typeofDecl (S.DefFun i name retTy params body) = do
   addBind name (FunTy retTy (map snd params))
   ctx <- get
   mapM_ (uncurry addBind) params
-  (body', bodyTy) <- typeofExpr body
+  body'@(_, bodyTy) <- typeofExpr body
   if typeEq retTy bodyTy
     then do put ctx
-            return $ T.DefFun name retTy params body'
+            return $ DefFun name retTy params body'
     else typeError (show retTy) (show bodyTy) i
-typeofDecl (S.ExVar _ name typ) = addBind name typ >> return (T.ExVar name typ)
-typeofDecl (S.ExFun _ fn retTy params) = addBind fn (FunTy retTy (map snd params)) >> return (T.ExFun fn retTy params)
+typeofDecl (S.ExVar _ name typ) = addBind name typ >> return (ExVar name typ)
+typeofDecl (S.ExFun _ fn retTy params) = addBind fn (FunTy retTy (map snd params)) >> return (ExFun fn retTy params)
 
-typeofConst :: S.Const -> Typing (T.Const, Type)
-typeofConst (S.Int _ x)    = return (T.Int x, IntTy)
-typeofConst (S.Float _ x)  = return (T.Float x, FloatTy)
-typeofConst (S.Bool _ x)   = return (T.Bool x, BoolTy)
-typeofConst (S.Char _ x)   = return (T.Char x, CharTy)
-typeofConst (S.String _ x) = return (T.String x, StringTy)
-typeofConst (S.Unit _)     = return (T.Unit, UnitTy)
+typeofConst :: S.Const -> Typing (Const, Type)
+typeofConst (S.Int _ x)    = return (Int x, IntTy)
+typeofConst (S.Float _ x)  = return (Float x, FloatTy)
+typeofConst (S.Bool _ x)   = return (Bool x, BoolTy)
+typeofConst (S.Char _ x)   = return (Char x, CharTy)
+typeofConst (S.String _ x) = return (String x, StringTy)
+typeofConst (S.Unit _)     = return (Unit, UnitTy)
 typeofConst (S.CBinOp info op x y) = do
   (x', xTy) <- typeofConst x
   (y', yTy) <- typeofConst y
   FunTy retTy [t1, t2] <- typeofOp info op xTy
   if typeEq xTy t1 && typeEq yTy t2
-    then return (T.CBinOp op x' y', retTy)
+    then return (CBinOp op x' y', retTy)
     else typeError (show [t1, t2]) (show [xTy, yTy]) info
 
 typeofOp :: Info -> Op -> Type -> Typing Type
@@ -94,41 +120,41 @@ typeofOp info op xTy =
             (show xTy)
             info
 
-typeofExpr :: S.Expr -> Typing (T.Expr, Type)
-typeofExpr (S.Var info name) = (\ty -> (T.Var ty name, ty)) <$> getType name info
-typeofExpr (S.Const c) = (\(c', ty) -> (T.Const ty c', ty)) <$> typeofConst c
+typeofExpr :: S.Expr -> Typing Expr
+typeofExpr (S.Var info name) = (\ty -> (Var name, ty)) <$> getType name info
+typeofExpr (S.Const c) = (first Const) <$> typeofConst c
 typeofExpr (S.Call info fn args) = do
   FunTy retTy paramTys <- getType fn info
   args' <- mapM typeofExpr args
   if and $ zipWith typeEq paramTys (map snd args')
-    then return (T.Call retTy fn (map fst args'), retTy)
+    then return (Call fn args', retTy)
     else typeError (show paramTys) (show (map snd args')) info
 typeofExpr (S.Seq info e1 e2) = do
-  (e1', ty1) <- typeofExpr e1
-  (e2', ty2) <- typeofExpr e2
+  e1'@(_, ty1) <- typeofExpr e1
+  e2'@(_, ty2) <- typeofExpr e2
   if typeEq ty1 UnitTy
-    then return (T.Seq ty2 e1' e2', ty2)
+    then return (Seq e1' e2', ty2)
     else typeError (show UnitTy) (show ty1) info
 typeofExpr (S.Let info name typ val body) = do
-  (val', valTy) <- typeofExpr val
+  val'@(_, valTy) <- typeofExpr val
   if typeEq valTy typ
     then do addBind name typ
-            (body', bodyTy) <- typeofExpr body
-            return (T.Let bodyTy name typ val' body', bodyTy)
+            body'@(_, bodyTy) <- typeofExpr body
+            return (Let name typ val' body', bodyTy)
     else typeError (show typ) (show valTy) info
 typeofExpr (S.If info cond t f) = do
-  (cond', condTy) <- typeofExpr cond
+  cond'@(_, condTy) <- typeofExpr cond
   if typeEq condTy BoolTy
-    then do (t', tt) <- typeofExpr t
-            (f', ft) <- typeofExpr f
+    then do t'@(_, tt) <- typeofExpr t
+            f'@(_, ft) <- typeofExpr f
             if typeEq tt ft
-              then return (T.If tt cond' t' f', tt)
+              then return (If cond' t' f', tt)
               else typeError (show tt) (show ft) info
     else typeError (show BoolTy) (show condTy) info
 typeofExpr (S.BinOp info op e1 e2) = do
-  (e1', t1) <- typeofExpr e1
-  (e2', t2) <- typeofExpr e2
+  e1'@(_, t1) <- typeofExpr e1
+  e2'@(_, t2) <- typeofExpr e2
   FunTy retTy [xt, yt] <- typeofOp info op t1
   if and (zipWith typeEq [xt, yt] [t1, t2])
-    then return (T.BinOp retTy op e1' e2', retTy)
+    then return (BinOp op e1' e2', retTy)
     else typeError (show [xt, yt]) (show [t1, t2]) info
