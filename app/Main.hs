@@ -1,6 +1,6 @@
 module Main where
 
-import           Control.Monad          (join)
+import qualified Language.Malgo.Beta    as Beta
 import qualified Language.Malgo.KNormal as KNormal
 import qualified Language.Malgo.Parser  as Parser
 import qualified Language.Malgo.Typing  as Typing
@@ -24,3 +24,6 @@ main = do
 
   let kNormal = joinE $ KNormal.knormal (mapM (mapM KNormal.transDecl) typedAST)
   print kNormal
+
+  let beta = joinE $ Beta.betaTrans (mapM (mapM Beta.transDecl) kNormal)
+  print beta
