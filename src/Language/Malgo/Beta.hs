@@ -6,8 +6,7 @@ import           Data.Maybe             (fromMaybe)
 import qualified Language.Malgo.KNormal as K
 import           Language.Malgo.Types
 
-newtype BetaTransState = BetaTransState { table :: [(Id, Id)]
-                                        }
+newtype BetaTransState = BetaTransState { table :: [(Id, Id)] }
   deriving Show
 
 newtype BetaTrans a = BetaTrans (StateT BetaTransState (Either String) a)
@@ -32,23 +31,19 @@ transDecl (K.DefFun fn retTy params body) =
 transDecl x = return x
 
 transExpr :: K.Expr -> BetaTrans K.Expr
-transExpr (K.BinOp op x y, ty) = do
-  e <- K.BinOp op <$> find x <*> find y
-  return (e, ty)
-transExpr (K.If c t f, ty)     = do
-  e <- K.If <$> find c <*> transExpr t <*> transExpr f
-  return (e, ty)
+transExpr (K.BinOp op x y, ty) =
+  (,) <$> (K.BinOp op <$> find x <*> find y) <*> pure ty
+transExpr (K.If c t f, ty) =
+  (,) <$> (K.If <$> find c <*> transExpr t <*> transExpr f) <*> pure ty
 transExpr (K.Let name typ val body, ty) = do
   val' <- transExpr val
   case val' of
-    (K.Var x, _) -> addBind (name, x) >> transExpr body
-    _ -> do
-      e <- K.Let name typ val' <$> transExpr body
-      return (e, ty)
-transExpr (K.Call fn args, ty) = do
-  e <- K.Call <$> find fn <*> mapM find args
-  return (e, ty)
-transExpr (K.Var x, ty) = do
-  e <- K.Var <$> find x
-  return (e, ty)
+    (K.Var x, _) ->
+      addBind (name, x) >> transExpr body
+    _ ->
+      (,) <$> (K.Let name typ val' <$> transExpr body) <*> pure ty
+transExpr (K.Call fn args, ty) =
+  (,) <$> (K.Call <$> find fn <*> mapM find args) <*> return ty
+transExpr (K.Var x, ty) =
+  (,) <$> (K.Var <$> find x) <*> pure ty
 transExpr (K.Const c, ty) = return (K.Const c, ty)
