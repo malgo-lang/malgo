@@ -48,10 +48,10 @@ newId hint = do
   c <- gets count
   modify $ \e -> e { count = count e + 1
                    , table = ( hint
-                             , (Id (c, Name $ fromName hint ++ show c))
-                             ) : (table e)
+                             , Id (c, hint)
+                             ) : table e
                    }
-  return (Id (c, Name $ fromName hint ++ show c))
+  return (Id (c, hint))
 
 getId :: Name -> KNormal Id
 getId name = do
@@ -60,6 +60,7 @@ getId name = do
     Just x  -> return x
     Nothing -> newId name
 
+insertLet :: T.Expr -> (Id -> KNormal Expr) -> KNormal Expr
 insertLet v@(_, t) k = do
   x <- newId (Name "$k")
   v' <- transExpr v
@@ -92,7 +93,10 @@ transExpr (T.Var x, ty) = do
   x' <- getId x
   return (Var x', ty)
 transExpr (T.Seq e1 e2, ty) = do
-  undefined -- letに変換
+  x' <- newId (Name "_")
+  e1' <- transExpr e1
+  e2' <- transExpr e2
+  return (Let x' UnitTy e1' e2', ty)
 
 transConst :: T.Const -> KNormal Const
 transConst (T.Int x)         = return (Int x)
@@ -102,3 +106,25 @@ transConst (T.Char x)        = return (Char x)
 transConst (T.String x)      = return (String x)
 transConst T.Unit            = return Unit
 transConst (T.CBinOp op x y) = CBinOp op <$> transConst x <*> transConst y
+
+transDecl :: T.Decl -> KNormal Decl
+transDecl (T.DefVar name typ val) = do
+  name' <- newId name
+  val' <- transConst val
+  return (DefVar name' typ val')
+transDecl (T.DefFun fn retTy params body) = do
+  fn' <- newId fn
+  params' <- mapM
+    (\(n, ty) -> do
+        n' <- newId n
+        return (n', ty))
+    params
+  body' <- transExpr body
+  return (DefFun fn' retTy params' body')
+transDecl (T.ExVar name typ) = flip ExVar typ <$> newId name
+transDecl (T.ExFun fn retTy params) =
+  ExFun <$> newId fn <*> return retTy
+  <*> mapM (\(n, ty) -> do
+               n' <- newId n
+               return (n', ty))
+           params
