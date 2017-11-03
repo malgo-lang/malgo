@@ -1,16 +1,32 @@
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE TypeSynonymInstances       #-}
 module Language.Malgo.KNormal where
 
 import           Control.Monad.State
 import           Data.String
+import           Language.Malgo.PrettyPrint
 import           Language.Malgo.Types
-import qualified Language.Malgo.Typing as T
+import qualified Language.Malgo.Typing      as T
+import           Text.PrettyPrint
 
 data Decl = DefVar Id Type Const
           | DefFun Id Type [(Id, Type)] Expr
           | ExVar Id Type
           | ExFun Id Type [(Id, Type)]
   deriving (Eq, Show)
+
+instance PrettyPrint Decl where
+  pretty (DefVar name typ val) =
+    parens $ text "def" <+> pretty name <> colon <> pretty typ
+    <+> pretty val
+  pretty (DefFun fn retTy params body) =
+    parens $ text "def" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    $+$ nest 4 (pretty body)
+  pretty (ExVar name typ) =
+    parens $ text "extern" <+> pretty name <> colon <> pretty typ
+  pretty (ExFun fn retTy params) =
+    parens $ text "extern" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
 
 data Const = Int Integer
            | Float Double
@@ -21,7 +37,20 @@ data Const = Int Integer
            | CBinOp Op Const Const
   deriving (Eq, Show)
 
+instance PrettyPrint Const where
+  pretty (Int x)         = integer x
+  pretty (Float x)       = double x
+  pretty (Bool True)     = text "#t"
+  pretty (Bool False)    = text "#f"
+  pretty (Char x)        = quotes $ char x
+  pretty (String x)      = doubleQuotes $ text x
+  pretty Unit            = text "()"
+  pretty (CBinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
+
 type Expr = (Expr', Type)
+
+instance PrettyPrint Expr where
+  pretty (e, t) = pretty e -- <> colon <> pretty t
 
 -- 第一引数のTypeが式の型を表す
 data Expr' = Var Id
@@ -31,6 +60,19 @@ data Expr' = Var Id
            | If Id Expr Expr
            | BinOp Op Id Id -- 第二引数が引数の型を表す
   deriving (Eq, Show)
+
+instance PrettyPrint Expr' where
+  pretty (Var name)     = pretty name
+  pretty (Const c)        = pretty c
+  pretty (Call fn args) = parens . sep $ pretty fn : map pretty args
+  pretty (Let name typ val body) =
+    parens $ text "let" <+> parens (pretty name <> colon <> pretty typ <+> pretty val)
+    $+$ nest 2 (pretty body)
+  pretty (If c t f) =
+    parens $ text "if" <+> pretty c
+    $+$ nest 2 (pretty t)
+    $+$ nest 2 (pretty f)
+  pretty (BinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
 
 data KNormalState = KNormalState { count :: Int
                                  , table :: [(Name, Id)]
@@ -59,6 +101,11 @@ getId name = do
   case lookup name t of
     Just x  -> return x
     Nothing -> newId name
+
+rawId :: Name -> KNormal Id
+rawId name = do
+  modify $ \e -> e { table = (name, Raw name) : table e }
+  return (Raw name)
 
 insertLet :: T.Expr -> (Id -> KNormal Expr) -> KNormal Expr
 insertLet v@(_, t) k = do
@@ -109,11 +156,11 @@ transConst (T.CBinOp op x y) = CBinOp op <$> transConst x <*> transConst y
 
 transDecl :: T.Decl -> KNormal Decl
 transDecl (T.DefVar name typ val) = do
-  name' <- newId name
+  name' <- rawId name
   val' <- transConst val
   return (DefVar name' typ val')
 transDecl (T.DefFun fn retTy params body) = do
-  fn' <- newId fn
+  fn' <- rawId fn
   params' <- mapM
     (\(n, ty) -> do
         n' <- newId n
@@ -121,9 +168,9 @@ transDecl (T.DefFun fn retTy params body) = do
     params
   body' <- transExpr body
   return (DefFun fn' retTy params' body')
-transDecl (T.ExVar name typ) = flip ExVar typ <$> newId name
+transDecl (T.ExVar name typ) = flip ExVar typ <$> rawId name
 transDecl (T.ExFun fn retTy params) =
-  ExFun <$> newId fn <*> return retTy
+  ExFun <$> rawId fn <*> return retTy
   <*> mapM (\(n, ty) -> do
                n' <- newId n
                return (n', ty))

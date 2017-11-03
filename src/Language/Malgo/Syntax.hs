@@ -1,6 +1,8 @@
 module Language.Malgo.Syntax where
 
+import           Language.Malgo.PrettyPrint
 import           Language.Malgo.Types
+import           Text.PrettyPrint
 
 data Decl =
   -- ^ "def" <ident:1> ":" <type:2> "=" <const_expr:3>
@@ -12,6 +14,17 @@ data Decl =
   -- ^ "extern" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2>
   | ExFun Info Name Type [(Name, Type)]
   deriving (Eq, Show)
+
+instance PrettyPrint Decl where
+  pretty (DefVar _ name typ val) =
+    parens $ text "def" <+> pretty name <> colon <> pretty typ <+> pretty val
+  pretty (DefFun _ fn retTy params body) =
+    parens $ text "def" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    $+$ nest 4 (pretty body)
+  pretty (ExVar _ name typ) =
+    parens $ text "extern" <+> pretty name <> colon <> pretty typ
+  pretty (ExFun _ fn retTy params) =
+    parens $ text "extern" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
 
 data Const =
   -- ^ 32bit整数
@@ -30,6 +43,16 @@ data Const =
   | CBinOp Info Op Const Const
   deriving (Eq, Show)
 
+instance PrettyPrint Const where
+  pretty (Int _ x)         = integer x
+  pretty (Float _ x)       = double x
+  pretty (Bool _ True)     = text "#t"
+  pretty (Bool _ False)    = text "#f"
+  pretty (Char _ x)        = quotes $ char x
+  pretty (String _ x)      = doubleQuotes $ text x
+  pretty (Unit _)          = text "()"
+  pretty (CBinOp _ op x y) = parens (pretty op <+> pretty x <+> pretty y)
+
 data Expr =
   -- ^ 変数参照
     Var Info Name
@@ -46,3 +69,17 @@ data Expr =
   -- ^ 中置演算子
   | BinOp Info Op Expr Expr
   deriving (Eq, Show)
+
+instance PrettyPrint Expr where
+  pretty (Var _ name)     = pretty name
+  pretty (Const c)        = pretty c
+  pretty (Call _ fn args) = parens . sep $ pretty fn : map pretty args
+  pretty (Seq _ e1 e2)    =  pretty e1 $+$ pretty e2
+  pretty (Let _ name typ val body) =
+    parens $ text "let" <+> parens (pretty name <> colon <> pretty typ <+> pretty val)
+    $+$ nest 2 (pretty body)
+  pretty (If _ c t f) =
+    parens $ text "if" <+> pretty c
+    $+$ nest 2 (pretty t)
+    $+$ nest 2 (pretty f)
+  pretty (BinOp _ op x y) = parens (pretty op <+> pretty x <+> pretty y)

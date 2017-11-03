@@ -1,17 +1,33 @@
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiWayIf                 #-}
+{-# LANGUAGE TypeSynonymInstances       #-}
 module Language.Malgo.Typing where
 
-import           Control.Arrow
+import           Control.Arrow              hiding ((<+>))
 import           Control.Monad.State
-import qualified Language.Malgo.Syntax as S
+import           Language.Malgo.PrettyPrint
+import qualified Language.Malgo.Syntax      as S
 import           Language.Malgo.Types
+import           Text.PrettyPrint
 
 data Decl = DefVar Name Type Const
           | DefFun Name Type [(Name, Type)] Expr
           | ExVar Name Type
           | ExFun Name Type [(Name, Type)]
   deriving (Show, Eq)
+
+instance PrettyPrint Decl where
+  pretty (DefVar name typ val) =
+    parens $ text "def" <+> pretty name <> colon <> pretty typ
+    <+> pretty val
+  pretty (DefFun fn retTy params body) =
+    parens $ text "def" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    $+$ nest 4 (pretty body)
+  pretty (ExVar name typ) =
+    parens $ text "extern" <+> pretty name <> colon <> pretty typ
+  pretty (ExFun fn retTy params) =
+    parens $ text "extern" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
 
 data Const = Int Integer
            | Float Double
@@ -22,7 +38,20 @@ data Const = Int Integer
            | CBinOp Op Const Const
   deriving (Show, Eq)
 
+instance PrettyPrint Const where
+  pretty (Int x)         = integer x
+  pretty (Float x)       = double x
+  pretty (Bool True)     = text "#t"
+  pretty (Bool False)    = text "#f"
+  pretty (Char x)        = quotes $ char x
+  pretty (String x)      = doubleQuotes $ text x
+  pretty Unit            = text "()"
+  pretty (CBinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
+
 type Expr = (Expr', Type)
+
+instance PrettyPrint Expr where
+  pretty (e, t) = pretty e <> colon <> pretty t
 
 data Expr' = Var Name
            | Const Const
@@ -32,6 +61,20 @@ data Expr' = Var Name
            | If Expr Expr Expr
            | BinOp Op Expr Expr
   deriving (Show, Eq)
+
+instance PrettyPrint Expr' where
+  pretty (Var name)     = pretty name
+  pretty (Const c)        = pretty c
+  pretty (Call fn args) = parens . sep $ pretty fn : map pretty args
+  pretty (Seq e1 (e2, _))    =  pretty e1 $+$ pretty e2
+  pretty (Let name typ val body) =
+    parens $ text "let" <+> parens (pretty name <> colon <> pretty typ <+> pretty val)
+    $+$ nest 2 (pretty body)
+  pretty (If c t f) =
+    parens $ text "if" <+> pretty c
+    $+$ nest 2 (pretty t)
+    $+$ nest 2 (pretty f)
+  pretty (BinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
 
 newtype TypingState = TypingState { env :: [(Name, Type)] }
   deriving Show
