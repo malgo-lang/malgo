@@ -1,49 +1,49 @@
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Language.Malgo.Beta where
 
-import           Control.Applicative
-import           Control.Lens
 import           Control.Monad.State
-import           Data.Maybe            (fromMaybe)
-import           Language.Malgo.HIR
-import           Language.Malgo.Syntax (Name)
+import           Data.Maybe             (fromMaybe)
+import qualified Language.Malgo.KNormal as K
+import           Language.Malgo.Types
 
-type Env = [(Id, Id)]
+newtype BetaTransState = BetaTransState { table :: [(Id, Id)] }
+  deriving Show
 
-addBind :: (Id, Id) -> State Env ()
-addBind (x, y) = modify ((x, y):)
+newtype BetaTrans a = BetaTrans (StateT BetaTransState (Either String) a)
+  deriving (Functor, Applicative, Monad, MonadState BetaTransState)
 
-find :: Id -> State Env Id
+betaTrans :: BetaTrans a -> Either String a
+betaTrans (BetaTrans m) = evalStateT m (BetaTransState [])
+
+addBind :: (Id, Id) -> BetaTrans ()
+addBind (x, y) =
+  modify $ \e -> e { table = (x, y) : table e }
+
+find :: Id -> BetaTrans Id
 find x = do
-  env <- get
+  env <- gets table
   let x' = lookup x env
   return $ fromMaybe x x'
 
-transDECL :: DECL 'KNormal -> State Env (DECL 'KNormal)
-transDECL (DEF i t v) = do
-  v' <- transEXPR v
-  return (DEF i t v')
-transDECL (DEFUN fn retTy params body) = do
-  body' <- transEXPR body
-  return (DEFUN fn retTy params body')
-transDECL e = return e
+transDecl :: K.Decl -> BetaTrans K.Decl
+transDecl (K.DefFun fn retTy params body) =
+  K.DefFun fn retTy params <$> transExpr body
+transDecl x = return x
 
-transEXPR :: EXPR 'KNormal -> State Env (EXPR 'KNormal)
-transEXPR (e, t) = do
-  e' <- transEXPR' e
-  return (e', t)
-
-transEXPR' :: EXPR' 'KNormal -> State Env (EXPR' 'KNormal)
-transEXPR' (BINOP op e1 e2) = BINOP op <$> transEXPR e1 <*> transEXPR e2
-transEXPR' (IF c t f) = IF <$> transEXPR c <*> transEXPR t <*> transEXPR f
-transEXPR' (LET i t v (e, et)) = do
-  v' <- transEXPR v
-  case v' of
-    (VAR x, _) -> addBind (i, x) >> transEXPR' e
-    _          -> LET i t v' <$> transEXPR (e, et)
-transEXPR' (VAR x) = VAR <$> find x
-transEXPR' (CALL fn args) = CALL <$> find fn <*> mapM transEXPR args
-transEXPR' x = return x
-
-trans :: HIR 'KNormal -> (HIR 'KNormal, Env)
-trans (HIR d) = runState (transDECL d) [] & _1 %~ HIR
+transExpr :: K.Expr -> BetaTrans K.Expr
+transExpr (K.BinOp op x y, ty) =
+  (,) <$> (K.BinOp op <$> find x <*> find y) <*> pure ty
+transExpr (K.If c t f, ty) =
+  (,) <$> (K.If <$> find c <*> transExpr t <*> transExpr f) <*> pure ty
+transExpr (K.Let name typ val body, ty) = do
+  val' <- transExpr val
+  case val' of
+    (K.Var x, _) ->
+      addBind (name, x) >> transExpr body
+    _ ->
+      (,) <$> (K.Let name typ val' <$> transExpr body) <*> pure ty
+transExpr (K.Call fn args, ty) =
+  (,) <$> (K.Call <$> find fn <*> mapM find args) <*> return ty
+transExpr (K.Var x, ty) =
+  (,) <$> (K.Var <$> find x) <*> pure ty
+transExpr (K.Const c, ty) = return (K.Const c, ty)

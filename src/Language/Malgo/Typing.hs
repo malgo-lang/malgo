@@ -1,185 +1,219 @@
-{-# LANGUAGE DataKinds  #-}
-{-# LANGUAGE MultiWayIf #-}
-
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiWayIf                 #-}
+{-# LANGUAGE TypeSynonymInstances       #-}
 module Language.Malgo.Typing where
 
-import           Control.Arrow         ((&&&))
+import           Control.Arrow              hiding ((<+>))
 import           Control.Monad.State
-import           Data.Either           ()
-import           Language.Malgo.HIR
-import           Language.Malgo.Syntax
+import           Language.Malgo.PrettyPrint
+import qualified Language.Malgo.Syntax      as S
+import           Language.Malgo.Types
+import           Text.PrettyPrint
 
-type Env = [(Name, Type)]
+data Decl = DefVar Name Type Const
+          | DefFun Name Type [(Name, Type)] Expr
+          | ExVar Name Type
+          | ExFun Name Type [(Name, Type)]
+  deriving (Show, Eq)
 
-initEnv :: Env
-initEnv = []
+instance PrettyPrint Decl where
+  pretty (DefVar name typ val) =
+    parens $ text "var" <+> pretty name <> colon <> pretty typ
+    <+> pretty val
+  pretty (DefFun fn retTy params body) =
+    parens $ text "fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    $+$ nest 4 (pretty body)
+  pretty (ExVar name typ) =
+    parens $ text "extern var" <+> pretty name <> colon <> pretty typ
+  pretty (ExFun fn retTy params) =
+    parens $ text "extern fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
 
-addBind :: Name -> Type -> StateT Env (Either String) ()
+data Const = Int Integer
+           | Float Double
+           | Bool Bool
+           | Char Char
+           | String String
+           | Unit
+           | CBinOp Op Const Const
+  deriving (Show, Eq)
+
+instance PrettyPrint Const where
+  pretty (Int x)         = integer x
+  pretty (Float x)       = double x
+  pretty (Bool True)     = text "#t"
+  pretty (Bool False)    = text "#f"
+  pretty (Char x)        = quotes $ char x
+  pretty (String x)      = doubleQuotes $ text x
+  pretty Unit            = text "()"
+  pretty (CBinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
+
+type Expr = (Expr', Type)
+
+instance PrettyPrint Expr where
+  pretty (e, t) = pretty e <> colon <> pretty t
+
+data Expr' = Var Name
+           | Const Const
+           | Call Name [Expr]
+           | Seq Expr Expr
+           | Let Name Type Expr Expr
+           | If Expr Expr Expr
+           | BinOp Op Expr Expr
+  deriving (Show, Eq)
+
+instance PrettyPrint Expr' where
+  pretty (Var name)     = pretty name
+  pretty (Const c)        = pretty c
+  pretty (Call fn args) = parens . sep $ pretty fn : map pretty args
+  pretty (Seq e1 (e2, _))    =  pretty e1 $+$ pretty e2
+  pretty (Let name typ val body) =
+    parens $ text "let" <+> parens (pretty name <> colon <> pretty typ <+> pretty val)
+    $+$ nest 2 (pretty body)
+  pretty (If c t f) =
+    parens $ text "if" <+> pretty c
+    $+$ nest 2 (pretty t)
+    $+$ nest 2 (pretty f)
+  pretty (BinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
+
+newtype TypingState = TypingState { env :: [(Name, Type)] }
+  deriving Show
+
+newtype Typing a = Typing (StateT TypingState (Either String) a)
+  deriving (Functor, Applicative, Monad, MonadState TypingState)
+
+typing :: Typing a -> Either String a
+typing (Typing m) = evalStateT m (TypingState [])
+
+addBind :: Name -> Type -> Typing ()
 addBind n t = do
   ctx <- get
-  put $ (n, t):ctx
+  put $ ctx { env = (n, t):env ctx }
 
-getType :: Name -> Pos -> StateT Env (Either String) Type
-getType n _ = do
+error' :: Info -> String -> Typing a
+error' info mes = Typing . lift . Left $ show info ++ " " ++ mes
+
+getType :: Name -> Info -> Typing Type
+getType n info = do
   ctx <- get
-  case lookup n ctx of
+  case lookup n (env ctx) of
     Just ty -> return ty
-    Nothing -> lift . Left $ "error: " ++ show n ++ " is not defined.\n"
+    Nothing -> error' info $ "error: " ++ show n ++ " is not defined"
 
 typeEq :: Type -> Type -> Bool
 typeEq = (==)
 
-typeError :: String -> String -> String -> StateT Env (Either String) a
-typeError expected actual info = lift . Left $ show info ++ " error: Expected -> " ++ expected ++ "; Actual -> " ++ actual
+typeError :: String -> String -> Info -> Typing a
+typeError expected actual info = error' info $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual
 
-typedExpr :: Expr -> StateT Env (Either String) (EXPR 'Typed)
-typedExpr (Var pos name) = do
-  ty <- getType name pos
-  return (VAR (name2Id name), ty)
-typedExpr (Int _ x)    = return (INT x, IntTy)
-typedExpr (Float _ x)  = return (FLOAT x, FloatTy)
-typedExpr (Bool _ x)   = return (BOOL x, BoolTy)
-typedExpr (Char _ x)   = return (CHAR x, CharTy)
-typedExpr (String _ x) = return (STRING x, StringTy)
-typedExpr (Unit _) = return (UNIT, UnitTy)
-
-typedExpr (Call info name args) = do
-  args' <- mapM typedExpr args
-  let argsTy = map snd args'
-  funty <- getType name info
-  case funty of
-    FunTy retTy paramsTy -> if and $ zipWith typeEq argsTy paramsTy
-                            then return (CALL (name2Id name) args', retTy)
-                            else typeError (show paramsTy) (show argsTy) (show info )
-    _ -> typeError "Function" (show funty) (show info)
-
-typedExpr (Seq _ (Let info2 name ty val) body) = do
-  val' <- typedExpr val
-  let vt = snd val'
-  if typeEq ty vt
-    then do
-      addBind name ty
-      body' <- typedExpr body
-      return (LET (name2Id name) ty val' body', snd body')
-    else typeError (show ty) (show vt) (show info2)
-
-typedExpr (Seq info e1@Seq{} e2) = do
+typeofDecl :: S.Decl -> Typing Decl
+typeofDecl (S.DefVar i name typ val) = do
+  (val', valTy) <- typeofConst val
+  if typeEq typ valTy
+    then return $ DefVar name typ val'
+    else typeError (show typ) (show valTy) i
+typeofDecl (S.DefFun i name retTy params body) = do
+  addBind name (FunTy retTy (map snd params))
   ctx <- get
-  e1' <- typedExpr e1
-  let ty1 = snd e1'
-  put ctx
-  if typeEq ty1 UnitTy
-    then do e2' <- typedExpr e2
-            return (LET (name2Id "$_") UnitTy e1' e2', snd e2')
-    else typeError (show UnitTy) (show ty1) (show info)
-
-typedExpr (Seq info e1 e2) = do
-  e1' <- typedExpr e1
-  let ty1 = snd e1'
-  if typeEq ty1 UnitTy
-    then do e2' <- typedExpr e2
-            return (LET (name2Id "$_") UnitTy e1' e2', snd e2')
-    else typeError (show UnitTy) (show ty1) (show info)
-
-typedExpr (If info c t f) = do
-  c' <- typedExpr c
-  t' <- typedExpr t
-  f' <- typedExpr f
-  let ct = snd c'
-  let tt = snd t'
-  let ft = snd f'
-
-  if typeEq ct BoolTy
-    then if typeEq tt ft
-         then return (IF c' t' f', tt)
-         else typeError (show tt) (show ft) (show info)
-    else typeError (show BoolTy) (show ct) (show info)
-
-typedExpr (BinOp info op e1 e2) = do
-  e1' <- typedExpr e1
-  e2' <- typedExpr e2
-  let t1 = snd e1'
-  let t2 = snd e2'
-  if | op `elem` [Add, Sub, Mul, Div] ->
-       if | typeEq t1 IntTy ->
-              if typeEq t2 IntTy
-              then return (BINOP op e1' e2', t2)
-              else typeError (show IntTy) (show t2) (show info)
-          | typeEq t1 FloatTy ->
-              if typeEq t2 FloatTy
-              then return (BINOP op e1' e2', t2)
-              else typeError (show FloatTy) (show t2) (show info)
-          | otherwise ->
-              typeError (show IntTy ++ " or " ++ show FloatTy) (show t1) (show info)
-     | op `elem` [Eq, Lt, Gt, Le, Ge] ->
-       if | t1 `elem` comparableTypes ->
-            if typeEq t1 t2
-            then return (BINOP op e1' e2', BoolTy)
-            else typeError (show t1) (show t2) (show info)
-          | otherwise -> typeError ("any one of " ++ show comparableTypes) (show t1) (show info)
-     | op `elem` [And, Or] ->
-       if typeEq t1 BoolTy
-       then if typeEq t2 BoolTy
-            then return (BINOP op e1' e2', BoolTy)
-            else typeError (show BoolTy) (show t2) (show info)
-       else typeError (show BoolTy) (show t1) (show info)
-  where comparableTypes = [IntTy, FloatTy, BoolTy, CharTy, StringTy]
-
-typedExpr Let{} = return (UNIT, UnitTy)
-
-isConstError info = lift . Left $ show info ++ " error: initializer element is not a compile-time element"
-isConst :: Expr -> StateT Env (Either String) ()
-isConst (Call info _ _)    = isConstError info
-isConst (Seq info _ _)     = isConstError info
-isConst (Let info _ _ _)   = isConstError info
-isConst (If info _ _ _)    = isConstError info
--- isConst (BinOp _ _ e1 e2) = isConst e1 >> isConst e2
-isConst (BinOp info _ _ _) = isConstError info -- TODO: 定数式の畳込みをK正規化以降に追加し、LLVMの定数式の仕様に近づける
-isConst (String info _)    = isConstError info
-isConst _                  = return ()
-
-typedDecl :: Decl -> StateT Env (Either String) (DECL 'Typed)
-typedDecl (Def info n ty val) = do
-  isConst val
-  val' <- typedExpr val
-  let tv = snd val'
-  if typeEq ty tv
-    then addBind n ty >> return (DEF (name2Id n) ty val')
-    else typeError (show ty) (show tv) (show info)
-typedDecl (Defun info fn retTy params body) = do
-  let funTy = FunTy retTy (map snd params)
-  ctx <- get
-  put $ params ++ ctx
-  addBind fn funTy
-  body' <- typedExpr body
-  let bodyTy = snd body'
-  put ctx
+  mapM_ (uncurry addBind) params
+  body'@(_, bodyTy) <- typeofExpr body
   if typeEq retTy bodyTy
-    then do
-      addBind fn funTy
-      return (DEFUN (name2Id fn) retTy
-              (map ((name2Id . fst) &&& snd) params)
-              body')
-    else typeError (show retTy) (show bodyTy) (show info)
+    then do put ctx
+            return $ DefFun name retTy params body'
+    else typeError (show retTy) (show bodyTy) i
+typeofDecl (S.ExVar _ name typ) = addBind name typ >> return (ExVar name typ)
+typeofDecl (S.ExFun _ fn retTy params) = addBind fn (FunTy retTy (map snd params)) >> return (ExFun fn retTy params)
 
-typedDecl (ExDef _ n ty) = addBind n ty >> return (EXDEF (name2Id n) ty)
-typedDecl (ExDefun _ fn retTy params) = do
-  let funTy = FunTy retTy (map snd params)
-  addBind fn funTy
-  return (EXDEFUN (name2Id fn) retTy
-          (map ((name2Id . fst) &&& snd) params))
+typeofConst :: S.Const -> Typing (Const, Type)
+typeofConst (S.Int _ x)    = return (Int x, IntTy)
+typeofConst (S.Float _ x)  = return (Float x, FloatTy)
+typeofConst (S.Bool _ x)   = return (Bool x, BoolTy)
+typeofConst (S.Char _ x)   = return (Char x, CharTy)
+typeofConst (S.String _ x) = return (String x, StringTy)
+typeofConst (S.Unit _)     = return (Unit, UnitTy)
+typeofConst (S.CBinOp info Sub (S.Int _ 0) x) = do
+  (x', xTy) <- typeofConst x
+  FunTy retTy _ <- typeofOp info Sub xTy
+  zero <- case xTy of
+            IntTy   -> return $ Int 0
+            FloatTy -> return $ Float 0
+            _       -> typeError (show [IntTy, FloatTy]) (show xTy) info
+  return (CBinOp Sub x' zero, retTy)
+typeofConst (S.CBinOp info op x y) = do
+  (x', xTy) <- typeofConst x
+  (y', yTy) <- typeofConst y
+  FunTy retTy [t1, t2] <- typeofOp info op xTy
+  if typeEq xTy t1 && typeEq yTy t2
+    then return (CBinOp op x' y', retTy)
+    else typeError (show [t1, t2]) (show [xTy, yTy]) info
 
-typing :: Traversable f => f Decl -> Either String (f (HIR 'Typed))
-typing ast = fmap HIR <$> evalStateT (mapM typedDecl ast) initEnv
+typeofOp :: Info -> Op -> Type -> Typing Type
+typeofOp info op xTy =
+  if | op `elem` [Add, Sub, Mul, Div, Mod] ->
+       if xTy `elem` [IntTy, FloatTy]
+       then return $ FunTy xTy [xTy, xTy]
+       else typeError
+            (show IntTy ++ " or " ++ show FloatTy)
+            (show xTy)
+            info
+     | op `elem` [Eq, Neq, Lt, Gt, Le, Ge] ->
+       if xTy `elem` [IntTy, FloatTy, CharTy]
+       then return $ FunTy BoolTy [xTy, xTy]
+       else typeError
+            (show [IntTy, FloatTy, CharTy])
+            (show xTy)
+            info
+     | op `elem` [And, Or] ->
+       if typeEq xTy BoolTy
+       then return $ FunTy BoolTy [BoolTy, BoolTy]
+       else typeError
+            (show BoolTy)
+            (show xTy)
+            info
 
-testEnv :: Env
-testEnv = [ (mkName "print", FunTy UnitTy [StringTy])
-          , (mkName "println", FunTy UnitTy [StringTy])
-          , (mkName "print_int", FunTy UnitTy [IntTy])
-          ]
-
-evalTypedExpr :: Expr -> Either String (EXPR 'Typed)
-evalTypedExpr expr = evalStateT (typedExpr expr) testEnv
-
-evalTypedDecl :: Decl -> Either String (DECL 'Typed)
-evalTypedDecl decl = evalStateT (typedDecl decl) testEnv
+typeofExpr :: S.Expr -> Typing Expr
+typeofExpr (S.Var info name) = (\ty -> (Var name, ty)) <$> getType name info
+typeofExpr (S.Const c) = (first Const) <$> typeofConst c
+typeofExpr (S.Call info fn args) = do
+  FunTy retTy paramTys <- getType fn info
+  args' <- mapM typeofExpr args
+  if and $ zipWith typeEq paramTys (map snd args')
+    then return (Call fn args', retTy)
+    else typeError (show paramTys) (show (map snd args')) info
+typeofExpr (S.Seq info e1 e2) = do
+  e1'@(_, ty1) <- typeofExpr e1
+  e2'@(_, ty2) <- typeofExpr e2
+  if typeEq ty1 UnitTy
+    then return (Seq e1' e2', ty2)
+    else typeError (show UnitTy) (show ty1) info
+typeofExpr (S.Let info name typ val body) = do
+  val'@(_, valTy) <- typeofExpr val
+  if typeEq valTy typ
+    then do addBind name typ
+            body'@(_, bodyTy) <- typeofExpr body
+            return (Let name typ val' body', bodyTy)
+    else typeError (show typ) (show valTy) info
+typeofExpr (S.If info cond t f) = do
+  cond'@(_, condTy) <- typeofExpr cond
+  if typeEq condTy BoolTy
+    then do t'@(_, tt) <- typeofExpr t
+            f'@(_, ft) <- typeofExpr f
+            if typeEq tt ft
+              then return (If cond' t' f', tt)
+              else typeError (show tt) (show ft) info
+    else typeError (show BoolTy) (show condTy) info
+typeofExpr (S.BinOp info Sub (S.Const (S.Int _ 0)) x) = do
+  x'@(_, xTy) <- typeofExpr x
+  FunTy retTy _ <- typeofOp info Sub xTy
+  zero <- case xTy of
+            IntTy   -> return (Const $ Int 0, IntTy)
+            FloatTy -> return (Const $ Float 0, FloatTy)
+            _       -> typeError (show [IntTy, FloatTy]) (show xTy) info
+  return (BinOp Sub x' zero, retTy)
+typeofExpr (S.BinOp info op e1 e2) = do
+  e1'@(_, t1) <- typeofExpr e1
+  e2'@(_, t2) <- typeofExpr e2
+  FunTy retTy [xt, yt] <- typeofOp info op t1
+  if and (zipWith typeEq [xt, yt] [t1, t2])
+    then return (BinOp op e1' e2', retTy)
+    else typeError (show [xt, yt]) (show [t1, t2]) info

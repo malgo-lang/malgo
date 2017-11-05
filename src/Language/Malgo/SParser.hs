@@ -1,17 +1,17 @@
-module Language.Malgo.Parser where
+module Language.Malgo.SParser where
 
 import           Control.Applicative   hiding (Const)
 import           Data.Functor.Identity (Identity)
+import           Debug.Trace
 import           Language.Malgo.Syntax
 import           Language.Malgo.Types
 import           Text.Parsec           hiding (many, parse, (<|>))
 import qualified Text.Parsec
-import           Text.Parsec.Expr
+-- import           Text.Parsec.Expr
 import           Text.Parsec.Language
 import           Text.Parsec.Pos
 import qualified Text.Parsec.Token     as Tok
 
-parseToplevel :: ParsecT String u Identity [Decl]
 parseToplevel = whiteSpace >> many parseDecl >>= \ast -> eof >> return ast
 
 parse :: SourceName -> String -> Either ParseError [Decl]
@@ -19,86 +19,39 @@ parse = Text.Parsec.parse parseToplevel
 
 lexer :: Tok.GenTokenParser String u Identity
 lexer = Tok.makeTokenParser $ emptyDef {
-  Tok.commentLine = "--"
+  Tok.commentLine = ";"
   , Tok.identStart = letter <|> oneOf "!?@_"
   , Tok.identLetter = alphaNum <|> oneOf "!?@_"
   , Tok.reservedOpNames = [ ":", "=", "+", "-", "*"
                           , "/", "%", ";", "==", "!="
                           , "&&", "||", "<", ">", "<=", ">="]
-  , Tok.reservedNames = ["extern", "var", "fun", "if", "else", "#t", "#f"]
+  , Tok.reservedNames = ["extern", "def", "if", "else", "#t", "#f"]
   }
 
-prefix
-  :: String -> (Info -> a -> a) -> Operator String u Identity a
-prefix name fun = Prefix $
-  getPosition >>= \pos -> reservedOp name >> return (fun (Info pos))
-
-postfix
-  :: String -> (Info -> a -> a) -> Operator String u Identity a
-postfix name fun = Postfix $
-  getPosition >>= \pos -> reservedOp name >> return (fun (Info pos))
-
-binary
-  :: String
-     -> (Info -> a -> a -> a)
-     -> Assoc
-     -> Operator String u Identity a
-binary name fun = Infix $
-  getPosition >>= \pos -> reservedOp name >> return (fun (Info pos))
-
-opTable
-  :: (Info -> Op -> a -> a -> a)
-     -> (Const -> a) -> [[Operator String u Identity a]]
-opTable binop cons =
-  [ [ prefix "-" (\info x -> binop info Sub (cons (Int info 0)) x)
-    -- , prefix "+" (flip const)
-    ]
-  , [ binary "*" (`binop` Mul) AssocLeft
-    , binary "/" (`binop` Div) AssocLeft
-    , binary "%" (`binop` Mod) AssocLeft
-    ]
-  , [ binary "+" (`binop` Add) AssocLeft
-    , binary "-" (`binop` Sub) AssocLeft
-    ]
-  , [ binary "==" (`binop` Eq) AssocNone
-    , binary "/=" (`binop` Neq) AssocNone
-    , binary "<=" (`binop` Le) AssocNone
-    , binary "<" (`binop` Lt) AssocNone
-    , binary ">=" (`binop` Ge) AssocNone
-    , binary ">" (`binop` Gt) AssocNone
-    ]
-  , [ binary "&&" (`binop` And) AssocLeft
-    , binary "||" (`binop` Or) AssocLeft
-    ]
-  ]
-
-getInfo :: ParsecT String u Identity Info
 getInfo = Info <$> getPosition
 
 parseDecl :: ParsecT String u Identity Decl
-parseDecl = try parseDefVar <|> parseDefFun <|> try parseExFun <|> parseExVar
+parseDecl = parens (try parseDefVar <|> parseDefFun <|> try parseExVar <|> parseExFun)
 
-parseDefVar :: ParsecT String u Identity Decl
 parseDefVar = do
   info <- getInfo
-  reserved "var"
+  reserved "def"
   (name, typ) <- parseTypedName
-  reservedOp "="
   val <- parseConstExpr
   return $ DefVar info name typ val
 
 parseDefFun :: ParsecT String u Identity Decl
 parseDefFun = do
   info <- getInfo
-  reserved "fun"
-  name <- parseName
-  params' <- parens (commaSep parseTypedName)
+  reserved "def"
+  (name, ty, params') <- parens $ do
+        (name, ty) <- parseTypedName
+        params' <- many parseTypedName
+        return (name, ty, params')
   let params = case params' of
         [] -> [(Name "_", UnitTy)]
         _  -> params'
-  reservedOp ":"
-  ty <- parseType
-  reservedOp "="
+
   body <- parseExpr
   return $ DefFun info name ty params body
 
@@ -106,7 +59,6 @@ parseExVar :: ParsecT String u Identity Decl
 parseExVar = do
   info <- getInfo
   reserved "extern"
-  reserved "var"
   (name, typ) <- parseTypedName
   return $ ExVar info name typ
 
@@ -114,15 +66,16 @@ parseExFun :: ParsecT String u Identity Decl
 parseExFun = do
   info <- getInfo
   reserved "extern"
-  reserved "fun"
-  name <- parseName
-  params' <- parens (commaSep parseTypedName)
+  (name, ty, params') <- parens $ do
+        (name, ty) <- parseTypedName
+        params' <- many parseTypedName
+        return (name, ty, params')
+
   let params = case params' of
         [] -> [(Name "_", UnitTy)]
         _  -> params'
-  reservedOp ":"
-  typ <- parseType
-  return $ ExFun info name typ params
+
+  return $ ExFun info name ty params
 
 parseName :: ParsecT String u Identity Name
 parseName = Name <$> identifier
@@ -147,56 +100,76 @@ parseConst = try (Float <$> getInfo <*> float)
   <|> (Bool <$> getInfo <*> (reserved "#f" >> return False))
   <|> try (fmap Unit (parens whiteSpace >> getInfo))
 
-parseConstExpr :: ParsecT String u Identity Const
-parseConstExpr = buildExpressionParser (opTable CBinOp id) parseConst
+parseConstExpr = try $ parseBinOp CBinOp parseConst
+  <|> parseConst
 
-parseExpr :: ParsecT String u Identity Expr
-parseExpr = buildExpressionParser (opTable BinOp Const) $
-  fmap Const parseConst
-  <|> try parseCall
+parseBinOp fn factor = parens $ do
+  info <- getInfo
+  op <- parseOp
+  x <- factor
+  y <- factor
+  return (fn info op x y)
+
+parseOp = (reservedOp "+" >> return Add)
+  <|> (reservedOp "-" >> return Sub)
+  <|> (reservedOp "*" >> return Mul)
+  <|> (reservedOp "/" >> return Div)
+  <|> (reservedOp "%" >> return Mod)
+  <|> (reservedOp "==" >> return Eq)
+  <|> (reservedOp "/=" >> return Neq)
+  <|> (reservedOp "<" >> return Lt)
+  <|> (reservedOp ">" >> return Gt)
+  <|> (reservedOp "<=" >> return Le)
+  <|> (reservedOp ">=" >> return Ge)
+  <|> (reservedOp "&&" >> return And)
+  <|> (reservedOp "||" >> return Or)
+
+parseExpr = fmap Const parseConst
   <|> (Var <$> getInfo <*> parseName)
-  <|> (If <$> getInfo
-        <*> (reserved "if" >> parseExpr)
-        <*> parseBlock
-        <*> (reserved "else" >> parseBlock))
-  <|> parseLet
-  <|> try (fmap (Const . Unit) (braces whiteSpace >> getInfo))
-  <|> parseBlock
-  <|> parens parseExpr
+  <|> try parseCall
+  <|> try (parseBinOp BinOp parseExpr)
+  <|> try (parens (do
+                      info <- getInfo
+                      reservedOp "-"
+                      x <- parseExpr
+                      return $ BinOp info Sub (Const (Int dummyInfo 0)) x))
+  <|> try (parens (If <$> getInfo
+                   <*> (reserved "if" >> parseExpr)
+                   <*> parseExpr
+                   <*> parseExpr))
+  <|> try parseLet
+  <|> parseSeq
   where
-    parseCall = do
+    parseCall = parens $ do
       i <- getInfo
       fn <- parseName
-      args <- parens (commaSep parseExpr)
+      args <- many parseExpr
       case args of
         [] -> return (Call i fn [Const $ Unit i])
         _  -> return (Call i fn args)
 
-parseLet :: ParsecT String u Identity Expr
-parseLet = do
+parseLet = parens $ do
   info <- getInfo
   reserved "let"
-  defs <- many1 parseDef
-  blk <- parseBlock
-  return $ makeLet info defs blk
-  where makeLet info [(name, typ, val)] body =
+  defs <- parens (many1 parseDef)
+  body <- parseExpr
+  return $ makeLet info defs body
+  where parseDef = (,,) <$> parseName
+          <*> (reservedOp ":" >> parseType)
+          <*> parseExpr
+        makeLet info [(name, typ, val)] body =
           Let info name typ val body
         makeLet info ((name, typ, val):xs) body =
           Let info name typ val (makeLet info xs body)
         makeLet info _ _ =
           error $ show info ++ ": the number of let definitions must be one or more"
-        parseDef = (,,) <$> parseName <*> (reservedOp ":" >> parseType) <*> (reservedOp "=" >> parseExpr)
 
-parseBlock :: ParsecT String u Identity Expr
-parseBlock = braces parseSeq
-
-parseSeq :: ParsecT String u Identity Expr
-parseSeq = try (do e1 <- parseExpr
-                   info <- getInfo
-                   reservedOp ";"
-                   e2 <- try parseSeq <|> return (Const $ Unit info)
-                   return $ Seq info e1 e2)
-  <|> parseExpr
+parseSeq = try (parens $ reserved "seq" >> parseSeq')
+           <|> braces parseSeq'
+  where parseSeq' =  do
+          info <- getInfo
+          e <- many1 parseExpr
+          return $ foldr1 (Seq info) e
 
 integer :: ParsecT String u Identity Integer
 integer = Tok.integer lexer

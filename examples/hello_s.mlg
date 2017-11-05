@@ -1,0 +1,28 @@
+(extern (println:Unit str:String))
+(extern (print:Unit str:String))
+(extern (print_int:Unit i:Int))
+(def a:Int 42)
+(def (fib:Int n:Int)
+     (if (<= n 1)
+        1
+        (+ (fib (- n 1)) (fib (- n 2)))))
+(def (abs:Int n:Int)
+     (if (>= n 0)
+        n
+        (- 0 n)))
+
+(def (do_nothing:Unit)
+     ())
+
+(def (test1:Int n:Int)
+  (-n))
+
+(def (test2:Float r:Float)
+  (-r))
+
+(def (main:Int) {
+     (println "Hello, world!")
+     (print "fib(10) = ")
+     (print_int (fib 10))
+     (println "")
+     0})
