@@ -25,7 +25,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.reservedOpNames = [ ":", "=", "+", "-", "*"
                           , "/", "%", ";", "==", "!="
                           , "&&", "||", "<", ">", "<=", ">="]
-  , Tok.reservedNames = ["extern", "def", "if", "else", "#t", "#f"]
+  , Tok.reservedNames = ["extern", "var", "fun", "if", "else", "#t", "#f"]
   }
 
 prefix
@@ -51,7 +51,8 @@ opTable
      -> (Const -> a) -> [[Operator String u Identity a]]
 opTable binop cons =
   [ [ prefix "-" (\info x -> binop info Sub (cons (Int info 0)) x)
-    , prefix "+" (flip const)]
+    -- , prefix "+" (flip const)
+    ]
   , [ binary "*" (`binop` Mul) AssocLeft
     , binary "/" (`binop` Div) AssocLeft
     , binary "%" (`binop` Mod) AssocLeft
@@ -80,7 +81,7 @@ parseDecl = try parseDefVar <|> parseDefFun <|> try parseExFun <|> parseExVar
 parseDefVar :: ParsecT String u Identity Decl
 parseDefVar = do
   info <- getInfo
-  reserved "def"
+  reserved "var"
   (name, typ) <- parseTypedName
   reservedOp "="
   val <- parseConstExpr
@@ -89,9 +90,12 @@ parseDefVar = do
 parseDefFun :: ParsecT String u Identity Decl
 parseDefFun = do
   info <- getInfo
-  reserved "def"
+  reserved "fun"
   name <- parseName
-  params <- parens (commaSep parseTypedName)
+  params' <- parens (commaSep parseTypedName)
+  let params = case params' of
+        [] -> [(Name "_", UnitTy)]
+        _  -> params'
   reservedOp ":"
   ty <- parseType
   reservedOp "="
@@ -102,6 +106,7 @@ parseExVar :: ParsecT String u Identity Decl
 parseExVar = do
   info <- getInfo
   reserved "extern"
+  reserved "var"
   (name, typ) <- parseTypedName
   return $ ExVar info name typ
 
@@ -109,8 +114,12 @@ parseExFun :: ParsecT String u Identity Decl
 parseExFun = do
   info <- getInfo
   reserved "extern"
+  reserved "fun"
   name <- parseName
-  params <- parens (commaSep parseTypedName)
+  params' <- parens (commaSep parseTypedName)
+  let params = case params' of
+        [] -> [(Name "_", UnitTy)]
+        _  -> params'
   reservedOp ":"
   typ <- parseType
   return $ ExFun info name typ params
@@ -144,17 +153,24 @@ parseConstExpr = buildExpressionParser (opTable CBinOp id) parseConst
 parseExpr :: ParsecT String u Identity Expr
 parseExpr = buildExpressionParser (opTable BinOp Const) $
   fmap Const parseConst
-  <|> try (Call <$> getInfo
-            <*> parseName
-            <*> parens (commaSep parseExpr))
+  <|> try parseCall
   <|> (Var <$> getInfo <*> parseName)
   <|> (If <$> getInfo
         <*> (reserved "if" >> parseExpr)
         <*> parseBlock
         <*> (reserved "else" >> parseBlock))
   <|> parseLet
+  <|> try (fmap (Const . Unit) (braces whiteSpace >> getInfo))
   <|> parseBlock
   <|> parens parseExpr
+  where
+    parseCall = do
+      i <- getInfo
+      fn <- parseName
+      args <- parens (commaSep parseExpr)
+      case args of
+        [] -> return (Call i fn [Const $ Unit i])
+        _  -> return (Call i fn args)
 
 parseLet :: ParsecT String u Identity Expr
 parseLet = do

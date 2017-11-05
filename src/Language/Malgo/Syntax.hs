@@ -5,26 +5,26 @@ import           Language.Malgo.Types
 import           Text.PrettyPrint
 
 data Decl =
-  -- ^ "def" <ident:1> ":" <type:2> "=" <const_expr:3>
+  -- ^ "var" <ident:1> ":" <type:2> "=" <const_expr:3>
     DefVar Info Name Type Const
-  -- ^ "def" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2> "=" <expr:4>
+  -- ^ "fun" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2> "=" <expr:4>
   | DefFun Info Name Type [(Name, Type)] Expr
-  -- ^ "extern" <ident:1> ":" <type:2>
+  -- ^ "extern var" <ident:1> ":" <type:2>
   | ExVar Info Name Type
-  -- ^ "extern" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2>
+  -- ^ "extern fun" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2>
   | ExFun Info Name Type [(Name, Type)]
   deriving (Eq, Show)
 
 instance PrettyPrint Decl where
   pretty (DefVar _ name typ val) =
-    parens $ text "def" <+> pretty name <> colon <> pretty typ <+> pretty val
+    parens $ text "var" <+> pretty name <> colon <> pretty typ <+> pretty val
   pretty (DefFun _ fn retTy params body) =
-    parens $ text "def" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    parens $ text "fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
     $+$ nest 4 (pretty body)
   pretty (ExVar _ name typ) =
-    parens $ text "extern" <+> pretty name <> colon <> pretty typ
+    parens $ text "extern var" <+> pretty name <> colon <> pretty typ
   pretty (ExFun _ fn retTy params) =
-    parens $ text "extern" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    parens $ text "extern fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
 
 data Const =
   -- ^ 32bit整数

@@ -19,15 +19,15 @@ data Decl = DefVar Name Type Const
 
 instance PrettyPrint Decl where
   pretty (DefVar name typ val) =
-    parens $ text "def" <+> pretty name <> colon <> pretty typ
+    parens $ text "var" <+> pretty name <> colon <> pretty typ
     <+> pretty val
   pretty (DefFun fn retTy params body) =
-    parens $ text "def" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    parens $ text "fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
     $+$ nest 4 (pretty body)
   pretty (ExVar name typ) =
-    parens $ text "extern" <+> pretty name <> colon <> pretty typ
+    parens $ text "extern var" <+> pretty name <> colon <> pretty typ
   pretty (ExFun fn retTy params) =
-    parens $ text "extern" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    parens $ text "extern fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
 
 data Const = Int Integer
            | Float Double
@@ -131,6 +131,14 @@ typeofConst (S.Bool _ x)   = return (Bool x, BoolTy)
 typeofConst (S.Char _ x)   = return (Char x, CharTy)
 typeofConst (S.String _ x) = return (String x, StringTy)
 typeofConst (S.Unit _)     = return (Unit, UnitTy)
+typeofConst (S.CBinOp info Sub (S.Int _ 0) x) = do
+  (x', xTy) <- typeofConst x
+  FunTy retTy _ <- typeofOp info Sub xTy
+  zero <- case xTy of
+            IntTy   -> return $ Int 0
+            FloatTy -> return $ Float 0
+            _       -> typeError (show [IntTy, FloatTy]) (show xTy) info
+  return (CBinOp Sub x' zero, retTy)
 typeofConst (S.CBinOp info op x y) = do
   (x', xTy) <- typeofConst x
   (y', yTy) <- typeofConst y
@@ -194,6 +202,14 @@ typeofExpr (S.If info cond t f) = do
               then return (If cond' t' f', tt)
               else typeError (show tt) (show ft) info
     else typeError (show BoolTy) (show condTy) info
+typeofExpr (S.BinOp info Sub (S.Const (S.Int _ 0)) x) = do
+  x'@(_, xTy) <- typeofExpr x
+  FunTy retTy _ <- typeofOp info Sub xTy
+  zero <- case xTy of
+            IntTy   -> return (Const $ Int 0, IntTy)
+            FloatTy -> return (Const $ Float 0, FloatTy)
+            _       -> typeError (show [IntTy, FloatTy]) (show xTy) info
+  return (BinOp Sub x' zero, retTy)
 typeofExpr (S.BinOp info op e1 e2) = do
   e1'@(_, t1) <- typeofExpr e1
   e2'@(_, t2) <- typeofExpr e2

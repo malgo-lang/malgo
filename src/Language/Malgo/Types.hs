@@ -37,7 +37,11 @@ instance PrettyPrint Name where
   pretty = P.text . fromName
 
 -- | 中置演算子の種類を表すタグ
-data Op = Add | Sub | Mul | Div | Mod | Eq | Neq | Lt | Gt | Le | Ge | And | Or
+data Op = Add | Sub | Mul | Div
+        | Mod
+        | Eq | Neq
+        | Lt | Gt | Le | Ge
+        | And | Or
   deriving (Eq, Show)
 
 instance PrettyPrint Op where

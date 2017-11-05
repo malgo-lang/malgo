@@ -18,15 +18,15 @@ data Decl = DefVar Id Type Const
 
 instance PrettyPrint Decl where
   pretty (DefVar name typ val) =
-    parens $ text "def" <+> pretty name <> colon <> pretty typ
+    parens $ text "var" <+> pretty name <> colon <> pretty typ
     <+> pretty val
   pretty (DefFun fn retTy params body) =
-    parens $ text "def" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    parens $ text "fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
     $+$ nest 4 (pretty body)
   pretty (ExVar name typ) =
-    parens $ text "extern" <+> pretty name <> colon <> pretty typ
+    parens $ text "extern var" <+> pretty name <> colon <> pretty typ
   pretty (ExFun fn retTy params) =
-    parens $ text "extern" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+    parens $ text "extern fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
 
 data Const = Int Integer
            | Float Double

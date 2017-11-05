@@ -1,10 +1,10 @@
-extern println(str:String):Unit
-extern print(str:String):Unit
-extern print_int(i:Int):Unit
+extern fun println(str:String):Unit
+extern fun print(str:String):Unit
+extern fun print_int(i:Int):Unit
 
-def a:Int = 42
+var a:Int = 42
 
-def fib(n:Int):Int = {
+fun fib(n:Int):Int = {
   if (n <= 1) {
     1
   } else {
@@ -12,14 +12,17 @@ def fib(n:Int):Int = {
   }
 }
 
-def abs(n:Int):Int = {
+fun abs(n:Int):Int = {
   if (n >= 0) {
     n
   } else {
     -n
   }
 }
-def main():Int = {
+
+fun do_nothing():Unit = ()
+
+fun main():Int = {
   println("Hello, world!");
   print("fib(10) = ");
   print_int(fib(10));
