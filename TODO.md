@@ -13,20 +13,21 @@ Text.PrettyPrintでなんとかなりそうなのでなんとかする
 * 文法の修正(連続した式など)
 * 中間表現の修正(Syntax, Typed, KNormal, ANormalに整理)
 * LLVM出力ユーティリティの作成
+* 入れ子の関数とクロージャオブジェクトを追加
 
 ### 文法と意味
 
 ```
-extern println(str:String) = call "println" str
-extern print(str:String) = call "print" str
+extern fun println(str:String)
+extern var print(str:String)
 
-def hello:String = "Hello, world!"
+var hello:String = "Hello, world!"
 
-def f(a:Int):Int = a * 7
+fun f(a:Int):Int = a * 7
 
-def main():Int = {
-    println(hello)
-    print("The answer is")
+fun main():Int = {
+    println(hello);
+    print("The answer is");
     let answer:Int = f(6)
     0
 }

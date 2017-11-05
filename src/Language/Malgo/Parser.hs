@@ -25,7 +25,7 @@ lexer = Tok.makeTokenParser $ emptyDef {
   , Tok.reservedOpNames = [ ":", "=", "+", "-", "*"
                           , "/", "%", ";", "==", "!="
                           , "&&", "||", "<", ">", "<=", ">="]
-  , Tok.reservedNames = ["extern", "var", "fun", "if", "else", "#t", "#f"]
+  , Tok.reservedNames = ["let", "in", "extern", "var", "fun", "if", "else", "#t", "#f"]
   }
 
 prefix
@@ -176,9 +176,10 @@ parseLet :: ParsecT String u Identity Expr
 parseLet = do
   info <- getInfo
   reserved "let"
-  defs <- many1 parseDef
-  blk <- parseBlock
-  return $ makeLet info defs blk
+  (name, typ, val) <- parseDef
+  reserved "in"
+  body <- parseExpr
+  return $ Let info name typ val body
   where makeLet info [(name, typ, val)] body =
           Let info name typ val body
         makeLet info ((name, typ, val):xs) body =

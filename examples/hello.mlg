@@ -1,6 +1,7 @@
 extern fun println(str:String):Unit
 extern fun print(str:String):Unit
 extern fun print_int(i:Int):Unit
+extern fun ord(c:Char):Int
 
 var a:Int = 42
 
@@ -21,6 +22,12 @@ fun abs(n:Int):Int = {
 }
 
 fun do_nothing():Unit = ()
+
+fun test_let(x:Char):Int = {
+   let a:Int = ord(x) in {
+     a + 2
+   }
+}
 
 fun main():Int = {
   println("Hello, world!");

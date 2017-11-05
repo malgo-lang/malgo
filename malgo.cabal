@@ -57,6 +57,7 @@ test-suite malgo-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
+  other-modules:     Language.Malgo.ParserSpec
   build-depends:       base
                      , malgo
                      , hspec

@@ -9,11 +9,11 @@ import           Test.Hspec
 spec :: Spec
 spec = do
   describe "DefVar" $ do
-    it "def a:Int = 42" $
-      parse "<test>" "def a:Int = 42"
+    it "var a:Int = 42" $
+      parse "<test>" "var a:Int = 42"
       `shouldBe`
       Right [DefVar dummyInfo (Name "a") IntTy (Int dummyInfo 42)]
-    it "def b:Float = 3.14" $
-      parse "<test>" "def b:Float = 3.14"
+    it "var b:Float = 3.14" $
+      parse "<test>" "var b:Float = 3.14"
       `shouldBe`
       Right [DefVar dummyInfo (Name "b") FloatTy (Float dummyInfo 3.14)]
