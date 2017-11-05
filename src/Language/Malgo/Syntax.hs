@@ -5,13 +5,13 @@ import           Language.Malgo.Types
 import           Text.PrettyPrint
 
 data Decl =
-  -- ^ "var" <ident:1> ":" <type:2> "=" <const_expr:3>
+  -- | "var" <ident:1> ":" <type:2> "=" <const_expr:3>
     DefVar Info Name Type Const
-  -- ^ "fun" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2> "=" <expr:4>
+  -- | "fun" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2> "=" <expr:4>
   | DefFun Info Name Type [(Name, Type)] Expr
-  -- ^ "extern var" <ident:1> ":" <type:2>
+  -- | "extern var" <ident:1> ":" <type:2>
   | ExVar Info Name Type
-  -- ^ "extern fun" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2>
+  -- | "extern fun" <ident:1> "(" (<ident:3_0> ":" <type:3_1>)*:3 ")" ":" <type:2>
   | ExFun Info Name Type [(Name, Type)]
   deriving (Eq, Show)
 
@@ -27,19 +27,19 @@ instance PrettyPrint Decl where
     parens $ text "extern fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
 
 data Const =
-  -- ^ 32bit整数
+  -- | 32bit整数
     Int Info Integer
-  -- ^ 倍精度浮動小数点数
+  -- | 倍精度浮動小数点数
   | Float Info Double
-  -- ^ 真(#t) 偽(#f)
+  -- | 真(#t) 偽(#f)
   | Bool Info Bool
-  -- ^ シングルクォートで囲まれた一文字
+  -- | シングルクォートで囲まれた一文字
   | Char Info Char
-  -- ^ ダブルクォートで囲まれた文字列
+  -- | ダブルクォートで囲まれた文字列
   | String Info String
-  -- ^ 空の値("()")
+  -- | 空の値("()")
   | Unit Info
-  -- ^ コンパイル時に計算される式
+  -- | コンパイル時に計算される式
   | CBinOp Info Op Const Const
   deriving (Eq, Show)
 
@@ -54,19 +54,19 @@ instance PrettyPrint Const where
   pretty (CBinOp _ op x y) = parens (pretty op <+> pretty x <+> pretty y)
 
 data Expr =
-  -- ^ 変数参照
+  -- | 変数参照
     Var Info Name
-  -- ^ 定数
+  -- | 定数
   | Const Const
-  -- ^ 関数呼び出し
+  -- | 関数呼び出し
   | Call Info Name [Expr]
-  -- ^ 連続した式(e1 ; e2)
+  -- | 連続した式(e1 ; e2)
   | Seq Info Expr Expr
-  -- ^ let式
+  -- | let式
   | Let Info Name Type Expr Expr
-  -- ^ if式
+  -- | if式
   | If Info Expr Expr Expr
-  -- ^ 中置演算子
+  -- | 中置演算子
   | BinOp Info Op Expr Expr
   deriving (Eq, Show)
 
