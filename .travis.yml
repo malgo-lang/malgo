@@ -14,6 +14,11 @@ sudo: false
 # Do not choose a language; we provide our own build tools.
 language: generic
 
+env:
+  global:
+    - GCC=gcc-5
+    - GXX=g++-5
+
 # Caching so the next build will be fast too.
 cache:
   directories:
@@ -24,12 +29,21 @@ addons:
   apt:
     packages:
       - libgmp-dev
+      - gcc-5
+      - g++-5
+      - libgmp-dev
+      - llvm-5.0-dev
+    sources:
+      - llvm-toolchain-trusty-5.0
+      - ubuntu-toolchain-r-test
 
 before_install:
 # Download and unpack the stack executable
 - mkdir -p ~/.local/bin
 - export PATH=$HOME/.local/bin:$PATH
 - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+- export CC=/usr/bin/$GCC
+- export CXX=/usr/bin/$GXX
 
 install:
 # Build dependencies
