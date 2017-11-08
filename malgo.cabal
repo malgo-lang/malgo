@@ -16,16 +16,16 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:   src
   exposed-modules:  Language.Malgo
-                  , Language.Malgo.PrettyPrint
-                  , Language.Malgo.Types
+                  , Language.Malgo.Utils
                   , Language.Malgo.Syntax
+                  , Language.Malgo.Lexer
                   , Language.Malgo.Parser
---                  , Language.Malgo.SParser
-                  , Language.Malgo.Typing
-                  , Language.Malgo.KNormal
-                  , Language.Malgo.Beta
+--                   , Language.Malgo.Typing
+--                   , Language.Malgo.KNormal
+--                   , Language.Malgo.Beta
   build-depends:    base >= 4.7 && < 5
                   , hspec >= 2.4.4
+                  , array
                   , llvm-hs
                   , llvm-hs-pure
                   , pretty
@@ -36,7 +36,7 @@ library
                   , flow
                   , text
                   , lens
-  default-extensions: StrictData
+  build-tools: alex, happy
   default-language: Haskell2010
 
 executable malgo-exe

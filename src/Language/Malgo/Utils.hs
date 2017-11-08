@@ -1,14 +1,18 @@
-module Language.Malgo.Types where
+module Language.Malgo.Utils where
 
 import           Data.String
-import           Language.Malgo.PrettyPrint
-import           Text.Parsec                (SourcePos)
 import qualified Text.Parsec.Pos
-import qualified Text.PrettyPrint           as P
+import qualified Text.PrettyPrint as P
+
+class PrettyPrint a where
+  pretty :: a -> P.Doc
 
 -- | ソースコードの位置情報
 -- | forall a b. Info a == Info b
-newtype Info = Info SourcePos
+type Line = Int
+type Column = Int
+type Source = String
+newtype Info = Info (Source, Line, Column)
 
 instance Eq Info where
   _ == _ = True
@@ -20,14 +24,13 @@ instance PrettyPrint Info where
   pretty = P.text . show
 
 dummyInfo :: Info
-dummyInfo = Info $ Text.Parsec.Pos.newPos "<dummy>" 0 0
+dummyInfo = Info ("<dummy>", 0, 0)
 
 data Name = Name String
           | DummyName
   deriving (Show, Eq)
 
-instance IsString Name where
-  fromString = Name
+instance IsString Name where fromString = Name
 
 fromName :: Name -> String
 fromName (Name x)  = x
@@ -51,7 +54,7 @@ instance PrettyPrint Op where
   pretty Div = P.text "/"
   pretty Mod = P.text "%"
   pretty Eq  = P.text "=="
-  pretty Neq = P.text "/="
+  pretty Neq = P.text "<>"
   pretty Lt  = P.text "<"
   pretty Gt  = P.text ">"
   pretty Le  = P.text "<="
@@ -59,28 +62,6 @@ instance PrettyPrint Op where
   pretty And = P.text "&&"
   pretty Or  = P.text "||"
 
--- | Malgoの組み込みデータ型
-data Type = IntTy -- ^ 32bit整数
-          | FloatTy -- ^ 倍精度浮動小数点数
-          | BoolTy
-          | CharTy
-          | StringTy
-          | UnitTy
-          | FunTy Type [Type]
-  deriving (Eq, Show)
-
-instance PrettyPrint Type where
-  pretty IntTy    = P.text "Int"
-  pretty FloatTy  = P.text "Float"
-  pretty BoolTy   = P.text "Bool"
-  pretty CharTy   = P.text "Char"
-  pretty StringTy = P.text "String"
-  pretty UnitTy   = P.text "Unit"
-  pretty (FunTy retTy argTys) =
-    case argTys of
-      [] -> error $ "pretty print error: the length of argTys must be 1 or more. " ++ show (FunTy retTy argTys)
-      [a] -> pretty a P.<+> P.text "->" P.<+> pretty retTy
-      _ -> P.cat $ P.punctuate (P.text " * ") $ map pretty argTys
 
 -- | 比較の計算量が定数時間
 data Id = Id (Int, Name)

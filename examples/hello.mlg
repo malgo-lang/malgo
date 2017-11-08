@@ -1,38 +1,13 @@
-extern fun println(str:String):Unit
-extern fun print(str:String):Unit
-extern fun print_int(i:Int):Unit
-extern fun ord(c:Char):Int
-
-var a:Int = 42
-
-fun fib(n:Int):Int = {
-  if (n <= 1) {
-    1
-  } else {
-    fib(n-1) + fib(n-2)
-  }
-}
-
-fun abs(n:Int):Int = {
-  if (n >= 0) {
-    n
-  } else {
-    -n
-  }
-}
-
-fun do_nothing():Unit = ()
-
-fun test_let(x:Char):Int = {
-   let a:Int = ord(x) in {
-     a + 2
-   }
-}
-
-fun main():Int = {
-  println("Hello, world!");
-  print("fib(10) = ");
-  print_int(fib(10));
-  println("");
-  0
-}
+let val a:int = 42
+    fun fib (n:int) : int =
+        if n <= 1
+        then 1
+        else fib (n - 1) + fib (n - 2)
+in
+  (
+  println "Hello, world!";
+  print "fib(10) = ";
+  print_int (fib 10);
+  println ""
+  )
+end
