@@ -19,7 +19,7 @@ data Expr =
   -- | 空の値("()")
   | Unit Info
   -- | 関数呼び出し
-  | Call Info Name [Expr]
+  | Call Info Expr [Expr]
   -- | 連続した式(e1 ; e2)
   | Seq Info Expr Expr
   -- | let式
@@ -39,8 +39,8 @@ instance PrettyPrint Expr where
   pretty (Char _ x)        = quotes $ char x
   pretty (String _ x)      = doubleQuotes $ text x
   pretty (Unit _)          = text "()"
-  pretty (Call _ fn arg) = parens $ cat (pretty fn : map pretty arg)
-  pretty (Seq _ e1 e2)    =  pretty e1 $+$ pretty e2
+  pretty (Call _ fn arg) = parens $ pretty fn <+> sep (map pretty arg)
+  pretty (Seq _ e1 e2)    =  parens $ text "seq" $+$ pretty e1 $+$ pretty e2
   pretty (Let _ decls body) =
     parens $ text "let" <+> (parens . sep $ map pretty decls)
     $+$ nest 2 (pretty body)
@@ -48,7 +48,7 @@ instance PrettyPrint Expr where
     parens $ text "if" <+> pretty c
     $+$ nest 2 (pretty t)
     $+$ nest 2 (pretty f)
-  pretty (BinOp _ op x y) = parens (pretty op <+> pretty x <+> pretty y)
+  pretty (BinOp _ op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
 -- | Malgoの組み込みデータ型
 data Type = NameTy Name

@@ -1,11 +1,19 @@
+{-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 module Language.Malgo.Utils where
 
 import           Data.String
-import qualified Text.Parsec.Pos
 import qualified Text.PrettyPrint as P
 
 class PrettyPrint a where
   pretty :: a -> P.Doc
+
+instance (PrettyPrint a, PrettyPrint b) => PrettyPrint (Either a b) where
+  pretty (Left a)  = P.text "Left" P.$+$ P.nest 1 (pretty a)
+  pretty (Right a) = P.text "Right" P.$+$ P.nest 1 (pretty a)
+
+instance PrettyPrint String where
+  pretty = P.text
 
 -- | ソースコードの位置情報
 -- | forall a b. Info a == Info b

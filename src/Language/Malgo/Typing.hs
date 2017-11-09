@@ -32,7 +32,7 @@ data Expr' =
   -- | 空の値("()")
   | Unit
   -- | 関数呼び出し
-  | Call Name [Expr]
+  | Call Expr [Expr]
   -- | 連続した式(e1 ; e2)
   | Seq Expr Expr
   -- | let式
@@ -52,8 +52,8 @@ instance PrettyPrint Expr' where
   pretty (Char x)        = quotes $ char x
   pretty (String x)      = doubleQuotes $ text x
   pretty Unit          = text "()"
-  pretty (Call fn arg) = parens $ cat (pretty fn : map pretty arg)
-  pretty (Seq e1 e2)    =  pretty e1 $+$ pretty e2
+  pretty (Call (fn, ty) arg) = parens $ sep (pretty fn <> colon <> pretty ty : map pretty arg)
+  pretty (Seq e1 e2)    =  parens $ text "seq" $+$ pretty e1 $+$ pretty e2
   pretty (Let decls body) =
     parens $ text "let" <+> (parens . sep $ map pretty decls)
     $+$ nest 2 (pretty body)
@@ -61,7 +61,7 @@ instance PrettyPrint Expr' where
     parens $ text "if" <+> pretty c
     $+$ nest 2 (pretty t)
     $+$ nest 2 (pretty f)
-  pretty (BinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
+  pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
 -- | Malgoの組み込みデータ型
 data Type = NameTy Name
@@ -138,14 +138,15 @@ typeofExpr (S.Bool _ x) = return (Bool x, NameTy (Name "Bool"))
 typeofExpr (S.Char _ x) = return (Char x, NameTy (Name "Char"))
 typeofExpr (S.String _ x) = return (String x, NameTy (Name "String"))
 typeofExpr (S.Unit _) = return (Unit, NameTy (Name "Unit"))
-typeofExpr (S.Call info fn args) = do
-  FunTy paramTy retTy <- getType fn info
+typeofExpr (S.Call info (S.Var _ fn) args) = do
+  funTy@(FunTy paramTy retTy) <- getType fn info
   args' <- mapM typeofExpr args
   if typeEq paramTy (toType (map snd args'))
-    then return (Call fn args', retTy)
+    then return (Call (Var fn, funTy) args', retTy)
     else typeError (show paramTy) (show (map snd args')) info
   where toType [] = TupleTy [NameTy (Name "Unit")]
         toType xs = TupleTy xs
+typeofExpr (S.Call info _ _) = error' info "error: function value must be a variable"
 typeofExpr (S.Seq info e1 e2) = do
   e1'@(_, ty1) <- typeofExpr e1
   e2'@(_, ty2) <- typeofExpr e2

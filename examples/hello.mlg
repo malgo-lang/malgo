@@ -4,10 +4,8 @@ let val a:Int = 42
         then 1
         else fib (n - 1) + fib (n - 2)
 in
-  (
   println("Hello, world!");
   print("fib(10) = ");
   print_int(fib(10));
   println("")
-  )
 end

@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 module Main where
 
 import           Control.Monad         (join)
@@ -22,10 +24,13 @@ main = do
   let ast = case ast' of
         Left x  -> Left $ show x
         Right x -> Right x
-  print $ pretty <$> ast
+  print ast
+  print $ pretty ast
 
   let typedAST = join $ Typing.typing (mapM Typing.typeofExpr ast)
-  print $ pretty <$> typedAST
+
+  print typedAST
+  print $ pretty typedAST
 
 --   let kNormal = join $ KNormal.knormal (mapM (mapM KNormal.transDecl) typedAST)
 --   print $ PP.vcat . map pretty <$> kNormal
