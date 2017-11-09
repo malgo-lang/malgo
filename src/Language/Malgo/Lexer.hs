@@ -18,6 +18,7 @@ data Tag = LET
          | FUN
          | LPAREN
          | RPAREN
+         | COMMA
          | COLON
          | SEMICOLON
          | EQUAL
@@ -117,6 +118,7 @@ lexer = do
     <|> (rparen >> return (Token (info, RPAREN)))
     <|> op info ":" COLON
     <|> op info ";" SEMICOLON
+    <|> op info "," COMMA
     <|> op info "==" EQ
     <|> op info "=" EQUAL
     <|> op info "<>" NEQ

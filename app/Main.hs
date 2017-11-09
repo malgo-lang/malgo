@@ -1,16 +1,16 @@
 module Main where
 
--- import           Control.Monad         (join)
+import           Control.Monad         (join)
 -- import qualified Language.Malgo.Beta        as Beta
 -- import qualified Language.Malgo.KNormal     as KNormal
 import qualified Language.Malgo.Lexer  as Lexer
 import qualified Language.Malgo.Parser as Parser
 import           Language.Malgo.Utils
 -- import           Language.Malgo.PrettyPrint
--- import qualified Language.Malgo.Typing      as Typing
+import qualified Language.Malgo.Typing as Typing
 import           System.Environment    (getArgs)
 import qualified Text.Parsec.String    as P
--- import qualified Text.PrettyPrint      as PP
+import qualified Text.PrettyPrint      as PP
 
 main :: IO ()
 main = do
@@ -24,8 +24,8 @@ main = do
         Right x -> Right x
   print $ pretty <$> ast
 
---   let typedAST = join $ Typing.typing (mapM (mapM Typing.typeofDecl) ast)
---   print $ PP.vcat . map pretty <$> typedAST
+  let typedAST = join $ Typing.typing (mapM Typing.typeofExpr ast)
+  print $ pretty <$> typedAST
 
 --   let kNormal = join $ KNormal.knormal (mapM (mapM KNormal.transDecl) typedAST)
 --   print $ PP.vcat . map pretty <$> kNormal

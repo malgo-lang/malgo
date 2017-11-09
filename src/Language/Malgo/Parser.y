@@ -24,6 +24,7 @@ else  { Token (_, ELSE) }
 ')'   { Token (_, RPAREN) }
 ':'   { Token (_, COLON) }
 ';'   { Token (_, SEMICOLON) }
+','   { Token (_, COMMA) }
 '=='  { Token (_, EQ) }
 '='   { Token (_, EQUAL) }
 '<>'  { Token (_, NEQ) }
@@ -45,6 +46,7 @@ char  { Token (_, CHAR _) }
 bool  { Token (_, BOOL _) }
 str   { Token (_, STRING _) }
 
+%left ';'
 %right then else
 %nonassoc '==' '<>'
 %nonassoc '<' '>' '<=' '>='
@@ -67,7 +69,14 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '>=' exp { BinOp (_info $2) Ge $1 $3 }
    | exp '&&' exp { BinOp (_info $2) And $1 $3 }
    | exp '||' exp { BinOp (_info $2) Or $1 $3 }
+   | let decls in exp end { Let (_info $1) (reverse $2) $4 }
+   | if exp then exp else exp { If (_info $1) $2 $4 $6 }
+   | id '(' args ')' { Call (_info $1) (_id . _tag $ $1) (reverse $3) }
+   | exp ';' exp { Seq (_info $2) $1 $3 }
    | simple_exp { $1 }
+
+args : args ',' exp { $3 : $1 }
+     | exp { [$1] }
 
 simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
           | int { Int (_info $1) (_int . _tag $ $1) }
@@ -85,6 +94,28 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
           | str  { String (_info $1) (_str . _tag $ $1) }
           | '(' ')' { Unit (_info $1) }
           | '(' exp ')' { $2 }
+
+decls : decls decl { $2 : $1 }
+      | decl { [$1] }
+
+decl :: { Decl }
+decl : val id ':' id '=' exp { ValDec (_info $1) (_id . _tag $ $2)
+                                 (NameTy (_id . _tag $ $4))
+                                 $6
+                             }
+     | fun id '(' params ')' ':' id '=' exp {
+         FunDec (_info $1) (_id . _tag $ $2)
+           (reverse $4)
+           (NameTy (_id . _tag $ $7))
+           $9
+       }
+
+params :: { [(Name, Type)] }
+params : params ',' param { $3 : $1 }
+       | param { [$1] }
+
+param :: { (Name, Type) }
+param : id ':' id { (_id . _tag $ $1, NameTy (_id . _tag $ $3)) }
 
 {
 parseError :: [Token] -> a

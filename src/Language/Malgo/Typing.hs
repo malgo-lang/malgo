@@ -4,71 +4,58 @@
 {-# LANGUAGE TypeSynonymInstances       #-}
 module Language.Malgo.Typing where
 
-import           Control.Arrow              hiding ((<+>))
+import           Control.Arrow         hiding ((<+>))
 import           Control.Monad.State
-import           Language.Malgo.PrettyPrint
-import qualified Language.Malgo.Syntax      as S
-import           Language.Malgo.Types
+
+import qualified Language.Malgo.Syntax as S
+import           Language.Malgo.Utils
 import           Text.PrettyPrint
-
-data Decl = DefVar Name Type Const
-          | DefFun Name Type [(Name, Type)] Expr
-          | ExVar Name Type
-          | ExFun Name Type [(Name, Type)]
-  deriving (Show, Eq)
-
-instance PrettyPrint Decl where
-  pretty (DefVar name typ val) =
-    parens $ text "var" <+> pretty name <> colon <> pretty typ
-    <+> pretty val
-  pretty (DefFun fn retTy params body) =
-    parens $ text "fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
-    $+$ nest 4 (pretty body)
-  pretty (ExVar name typ) =
-    parens $ text "extern var" <+> pretty name <> colon <> pretty typ
-  pretty (ExFun fn retTy params) =
-    parens $ text "extern fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
-
-data Const = Int Integer
-           | Float Double
-           | Bool Bool
-           | Char Char
-           | String String
-           | Unit
-           | CBinOp Op Const Const
-  deriving (Show, Eq)
-
-instance PrettyPrint Const where
-  pretty (Int x)         = integer x
-  pretty (Float x)       = double x
-  pretty (Bool True)     = text "#t"
-  pretty (Bool False)    = text "#f"
-  pretty (Char x)        = quotes $ char x
-  pretty (String x)      = doubleQuotes $ text x
-  pretty Unit            = text "()"
-  pretty (CBinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
 
 type Expr = (Expr', Type)
 
 instance PrettyPrint Expr where
   pretty (e, t) = pretty e <> colon <> pretty t
 
-data Expr' = Var Name
-           | Const Const
-           | Call Name [Expr]
-           | Seq Expr Expr
-           | Let Name Type Expr Expr
-           | If Expr Expr Expr
-           | BinOp Op Expr Expr
-  deriving (Show, Eq)
+data Expr' =
+  -- | 変数参照
+    Var Name
+  -- | 32bit整数
+  | Int Integer
+  -- | 倍精度浮動小数点数
+  | Float Double
+  -- | 真(#t) 偽(#f)
+  | Bool Bool
+  -- | シングルクォートで囲まれた一文字
+  | Char Char
+  -- | ダブルクォートで囲まれた文字列
+  | String String
+  -- | 空の値("()")
+  | Unit
+  -- | 関数呼び出し
+  | Call Name [Expr]
+  -- | 連続した式(e1 ; e2)
+  | Seq Expr Expr
+  -- | let式
+  | Let [Decl] Expr
+  -- | if式
+  | If Expr Expr Expr
+  -- | 中置演算子
+  | BinOp Op Expr Expr
+  deriving (Eq, Show)
 
 instance PrettyPrint Expr' where
   pretty (Var name)     = pretty name
-  pretty (Const c)        = pretty c
-  pretty (Call fn args) = parens . sep $ pretty fn : map pretty args
-  pretty (Seq e1 (e2, _))    =  pretty e1 $+$ pretty e2
-  pretty (Let name typ val body) =
-    parens $ text "let" <+> parens (pretty name <> colon <> pretty typ <+> pretty val)
+  pretty (Int x)         = integer x
+  pretty (Float x)       = double x
+  pretty (Bool True)     = text "#t"
+  pretty (Bool False)    = text "#f"
+  pretty (Char x)        = quotes $ char x
+  pretty (String x)      = doubleQuotes $ text x
+  pretty Unit          = text "()"
+  pretty (Call fn arg) = parens $ cat (pretty fn : map pretty arg)
+  pretty (Seq e1 e2)    =  pretty e1 $+$ pretty e2
+  pretty (Let decls body) =
+    parens $ text "let" <+> (parens . sep $ map pretty decls)
     $+$ nest 2 (pretty body)
   pretty (If c t f) =
     parens $ text "if" <+> pretty c
@@ -76,14 +63,48 @@ instance PrettyPrint Expr' where
     $+$ nest 2 (pretty f)
   pretty (BinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
 
+-- | Malgoの組み込みデータ型
+data Type = NameTy Name
+          | TupleTy [Type]
+          | FunTy Type Type
+  deriving (Eq, Show)
+
+instance PrettyPrint Type where
+  pretty (NameTy n)          = pretty n
+  pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
+  pretty (FunTy domTy codTy) = pretty domTy <+> text "->" <+> pretty codTy
+
+data Decl = FunDec Name [(Name, Type)] Type Expr
+          | ValDec Name Type Expr
+  deriving (Eq, Show)
+
+instance PrettyPrint Decl where
+  pretty (FunDec name params retTy body) = parens $
+    text "fun" <+> (parens . sep $ pretty name <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params)
+    $+$ nest 2 (pretty body)
+  pretty (ValDec name typ val) = parens $
+    text "val" <+> pretty name <> colon <> pretty typ <+> pretty val
+
 newtype TypingState = TypingState { env :: [(Name, Type)] }
   deriving Show
 
 newtype Typing a = Typing (StateT TypingState (Either String) a)
   deriving (Functor, Applicative, Monad, MonadState TypingState)
 
+initEnv :: [(Name, Type)]
+initEnv = [ ( Name "print"
+            , FunTy (TupleTy [NameTy (Name "String")])
+              (NameTy (Name "Unit")))
+          , ( Name "println"
+            , FunTy (TupleTy [NameTy (Name "String")])
+              (NameTy (Name "Unit")))
+          , ( Name "print_int"
+            , FunTy (TupleTy [NameTy (Name "Int")])
+              (NameTy (Name "Unit")))
+          ]
+
 typing :: Typing a -> Either String a
-typing (Typing m) = evalStateT m (TypingState [])
+typing (Typing m) = evalStateT m (TypingState initEnv)
 
 addBind :: Name -> Type -> Typing ()
 addBind n t = do
@@ -106,114 +127,96 @@ typeEq = (==)
 typeError :: String -> String -> Info -> Typing a
 typeError expected actual info = error' info $ "error: Expected -> " ++ expected ++ "; Actual -> " ++ actual
 
-typeofDecl :: S.Decl -> Typing Decl
-typeofDecl (S.DefVar i name typ val) = do
-  (val', valTy) <- typeofConst val
-  if typeEq typ valTy
-    then return $ DefVar name typ val'
-    else typeError (show typ) (show valTy) i
-typeofDecl (S.DefFun i name retTy params body) = do
-  addBind name (FunTy retTy (map snd params))
-  ctx <- get
-  mapM_ (uncurry addBind) params
-  body'@(_, bodyTy) <- typeofExpr body
-  if typeEq retTy bodyTy
-    then do put ctx
-            return $ DefFun name retTy params body'
-    else typeError (show retTy) (show bodyTy) i
-typeofDecl (S.ExVar _ name typ) = addBind name typ >> return (ExVar name typ)
-typeofDecl (S.ExFun _ fn retTy params) = addBind fn (FunTy retTy (map snd params)) >> return (ExFun fn retTy params)
-
-typeofConst :: S.Const -> Typing (Const, Type)
-typeofConst (S.Int _ x)    = return (Int x, IntTy)
-typeofConst (S.Float _ x)  = return (Float x, FloatTy)
-typeofConst (S.Bool _ x)   = return (Bool x, BoolTy)
-typeofConst (S.Char _ x)   = return (Char x, CharTy)
-typeofConst (S.String _ x) = return (String x, StringTy)
-typeofConst (S.Unit _)     = return (Unit, UnitTy)
-typeofConst (S.CBinOp info Sub (S.Int _ 0) x) = do
-  (x', xTy) <- typeofConst x
-  FunTy retTy _ <- typeofOp info Sub xTy
-  zero <- case xTy of
-            IntTy   -> return $ Int 0
-            FloatTy -> return $ Float 0
-            _       -> typeError (show [IntTy, FloatTy]) (show xTy) info
-  return (CBinOp Sub x' zero, retTy)
-typeofConst (S.CBinOp info op x y) = do
-  (x', xTy) <- typeofConst x
-  (y', yTy) <- typeofConst y
-  FunTy retTy [t1, t2] <- typeofOp info op xTy
-  if typeEq xTy t1 && typeEq yTy t2
-    then return (CBinOp op x' y', retTy)
-    else typeError (show [t1, t2]) (show [xTy, yTy]) info
-
-typeofOp :: Info -> Op -> Type -> Typing Type
-typeofOp info op xTy =
-  if | op `elem` [Add, Sub, Mul, Div, Mod] ->
-       if xTy `elem` [IntTy, FloatTy]
-       then return $ FunTy xTy [xTy, xTy]
-       else typeError
-            (show IntTy ++ " or " ++ show FloatTy)
-            (show xTy)
-            info
-     | op `elem` [Eq, Neq, Lt, Gt, Le, Ge] ->
-       if xTy `elem` [IntTy, FloatTy, CharTy]
-       then return $ FunTy BoolTy [xTy, xTy]
-       else typeError
-            (show [IntTy, FloatTy, CharTy])
-            (show xTy)
-            info
-     | op `elem` [And, Or] ->
-       if typeEq xTy BoolTy
-       then return $ FunTy BoolTy [BoolTy, BoolTy]
-       else typeError
-            (show BoolTy)
-            (show xTy)
-            info
 
 typeofExpr :: S.Expr -> Typing Expr
-typeofExpr (S.Var info name) = (\ty -> (Var name, ty)) <$> getType name info
-typeofExpr (S.Const c) = (first Const) <$> typeofConst c
+typeofExpr (S.Var info name) = do
+  ty <- getType name info
+  return (Var name, ty)
+typeofExpr (S.Int _ x) = return (Int x, NameTy (Name "Int"))
+typeofExpr (S.Float _ x) = return (Float x, NameTy (Name "Float"))
+typeofExpr (S.Bool _ x) = return (Bool x, NameTy (Name "Bool"))
+typeofExpr (S.Char _ x) = return (Char x, NameTy (Name "Char"))
+typeofExpr (S.String _ x) = return (String x, NameTy (Name "String"))
+typeofExpr (S.Unit _) = return (Unit, NameTy (Name "Unit"))
 typeofExpr (S.Call info fn args) = do
-  FunTy retTy paramTys <- getType fn info
+  FunTy paramTy retTy <- getType fn info
   args' <- mapM typeofExpr args
-  if and $ zipWith typeEq paramTys (map snd args')
+  if typeEq paramTy (toType (map snd args'))
     then return (Call fn args', retTy)
-    else typeError (show paramTys) (show (map snd args')) info
+    else typeError (show paramTy) (show (map snd args')) info
+  where toType [] = TupleTy [NameTy (Name "Unit")]
+        toType xs = TupleTy xs
 typeofExpr (S.Seq info e1 e2) = do
   e1'@(_, ty1) <- typeofExpr e1
   e2'@(_, ty2) <- typeofExpr e2
-  if typeEq ty1 UnitTy
+  if typeEq ty1 (NameTy (Name "Unit"))
     then return (Seq e1' e2', ty2)
-    else typeError (show UnitTy) (show ty1) info
-typeofExpr (S.Let info name typ val body) = do
-  val'@(_, valTy) <- typeofExpr val
-  if typeEq valTy typ
-    then do addBind name typ
-            body'@(_, bodyTy) <- typeofExpr body
-            return (Let name typ val' body', bodyTy)
-    else typeError (show typ) (show valTy) info
+    else typeError (show (NameTy (Name "Unit"))) (show ty1) info
+typeofExpr (S.Let _ decls body) = do
+  env' <- get
+  decls' <- mapM transDecl decls
+  body'@(_, bodyTy) <- typeofExpr body
+  put env'
+  return (Let decls' body', bodyTy)
 typeofExpr (S.If info cond t f) = do
   cond'@(_, condTy) <- typeofExpr cond
-  if typeEq condTy BoolTy
+  if typeEq condTy (NameTy (Name "Bool"))
     then do t'@(_, tt) <- typeofExpr t
             f'@(_, ft) <- typeofExpr f
             if typeEq tt ft
               then return (If cond' t' f', tt)
               else typeError (show tt) (show ft) info
-    else typeError (show BoolTy) (show condTy) info
-typeofExpr (S.BinOp info Sub (S.Const (S.Int _ 0)) x) = do
-  x'@(_, xTy) <- typeofExpr x
-  FunTy retTy _ <- typeofOp info Sub xTy
-  zero <- case xTy of
-            IntTy   -> return (Const $ Int 0, IntTy)
-            FloatTy -> return (Const $ Float 0, FloatTy)
-            _       -> typeError (show [IntTy, FloatTy]) (show xTy) info
-  return (BinOp Sub x' zero, retTy)
+    else typeError (show (NameTy (Name "Bool"))) (show condTy) info
 typeofExpr (S.BinOp info op e1 e2) = do
   e1'@(_, t1) <- typeofExpr e1
   e2'@(_, t2) <- typeofExpr e2
-  FunTy retTy [xt, yt] <- typeofOp info op t1
-  if and (zipWith typeEq [xt, yt] [t1, t2])
+  FunTy paramTy retTy <- typeofOp info op t1
+  if typeEq paramTy (TupleTy [t1, t2])
     then return (BinOp op e1' e2', retTy)
-    else typeError (show [xt, yt]) (show [t1, t2]) info
+    else typeError (show paramTy) (show (TupleTy [t1, t2])) info
+
+typeofOp :: Info -> Op -> Type -> Typing Type
+typeofOp info op xTy =
+  if | op `elem` [Add, Sub, Mul, Div, Mod] ->
+       if xTy `elem` [NameTy (Name "Int"), NameTy (Name "Float")]
+       then return $ FunTy (TupleTy [xTy, xTy]) xTy
+       else typeError
+            (show (NameTy (Name "Int")) ++ " or " ++ show (NameTy (Name "Float")))
+            (show xTy)
+            info
+     | op `elem` [Eq, Neq, Lt, Gt, Le, Ge] ->
+       if xTy `elem` map (NameTy . Name) ["Int", "Float", "Char"]
+       then return $ FunTy (TupleTy [xTy, xTy]) (NameTy (Name "Bool"))
+       else typeError
+            (show $ map (NameTy . Name) ["Int", "Float", "Char"])
+            (show xTy)
+            info
+     | op `elem` [And, Or] ->
+       if typeEq xTy (NameTy (Name "Bool"))
+       then return $ FunTy (TupleTy [NameTy (Name "Bool"), NameTy (Name "Bool")]) (NameTy (Name "Bool"))
+       else typeError
+            (show (NameTy (Name "Bool")))
+            (show xTy)
+            info
+
+transType :: S.Type -> Type
+transType (S.NameTy name) = NameTy name
+
+transDecl :: S.Decl -> Typing Decl
+transDecl (S.ValDec info name typ val) = do
+  (val', valTy) <- typeofExpr val
+  if typeEq (transType typ) valTy
+    then do
+      addBind name (transType typ)
+      return $ ValDec name (transType typ) (val', valTy)
+    else typeError (show typ) (show valTy) info
+transDecl (S.FunDec info name params retTy body) = do
+  env' <- get
+  let funTy = FunTy (TupleTy (map (transType . snd) params)) (transType retTy)
+  addBind name funTy
+  mapM_ (uncurry addBind . (fst &&& (transType . snd))) params
+  body'@(_, bodyTy) <- typeofExpr body
+  if typeEq (transType retTy) bodyTy
+    then return $ FunDec name (map (fst &&& (transType . snd)) params) (transType retTy) body'
+    else do put env'
+            typeError (show (transType retTy)) (show bodyTy) info

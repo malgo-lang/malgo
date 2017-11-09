@@ -1,13 +1,13 @@
-let val a:int = 42
-    fun fib (n:int) : int =
+let val a:Int = 42
+    fun fib (n:Int) : Int =
         if n <= 1
         then 1
         else fib (n - 1) + fib (n - 2)
 in
   (
-  println "Hello, world!";
-  print "fib(10) = ";
-  print_int (fib 10);
-  println ""
+  println("Hello, world!");
+  print("fib(10) = ");
+  print_int(fib(10));
+  println("")
   )
 end
