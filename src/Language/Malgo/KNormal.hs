@@ -5,74 +5,85 @@ module Language.Malgo.KNormal where
 
 import           Control.Monad.State
 import           Data.String
-import           Language.Malgo.PrettyPrint
-import           Language.Malgo.Types
-import qualified Language.Malgo.Typing      as T
+import qualified Language.Malgo.Typing as T
+import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data Decl = DefVar Id Type Const
-          | DefFun Id Type [(Id, Type)] Expr
-          | ExVar Id Type
-          | ExFun Id Type [(Id, Type)]
+type Expr = (Expr', Type)
+
+instance PrettyPrint Expr where
+  -- pretty (e, t) = pretty e <> colon <> pretty t
+  pretty (e, _) = pretty e
+
+data Expr' =
+  -- | 変数参照
+    Var Id
+  -- | 32bit整数
+  | Int Integer
+  -- | 倍精度浮動小数点数
+  | Float Double
+  -- | 真(#t) 偽(#f)
+  | Bool Bool
+  -- | シングルクォートで囲まれた一文字
+  | Char Char
+  -- | ダブルクォートで囲まれた文字列
+  | String String
+  -- | 空の値("()")
+  | Unit
+  -- | 関数呼び出し
+  | Call (Id, Type) [(Id, Type)]
+  -- | let式
+  | Let Decl Expr
+  -- | if式
+  | If (Id, Type) Expr Expr
+  -- | 中置演算子
+  | BinOp Op (Id, Type) (Id, Type)
   deriving (Eq, Show)
 
-instance PrettyPrint Decl where
-  pretty (DefVar name typ val) =
-    parens $ text "var" <+> pretty name <> colon <> pretty typ
-    <+> pretty val
-  pretty (DefFun fn retTy params body) =
-    parens $ text "fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
-    $+$ nest 4 (pretty body)
-  pretty (ExVar name typ) =
-    parens $ text "extern var" <+> pretty name <> colon <> pretty typ
-  pretty (ExFun fn retTy params) =
-    parens $ text "extern fun" <+> parens (sep (pretty fn <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params))
+instance PrettyPrint (Id, Type) where
+  -- pretty (i, t) = pretty i <> colon <> pretty t
+  pretty (i, _) = pretty i
 
-data Const = Int Integer
-           | Float Double
-           | Bool Bool
-           | Char Char
-           | String String
-           | Unit
-           | CBinOp Op Const Const
-  deriving (Eq, Show)
-
-instance PrettyPrint Const where
+instance PrettyPrint Expr' where
+  pretty (Var name)     = pretty name
   pretty (Int x)         = integer x
   pretty (Float x)       = double x
   pretty (Bool True)     = text "#t"
   pretty (Bool False)    = text "#f"
   pretty (Char x)        = quotes $ char x
   pretty (String x)      = doubleQuotes $ text x
-  pretty Unit            = text "()"
-  pretty (CBinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
-
-type Expr = (Expr', Type)
-
-instance PrettyPrint Expr where
-  pretty (e, t) = pretty e -- <> colon <> pretty t
-
--- 第一引数のTypeが式の型を表す
-data Expr' = Var Id
-           | Const Const
-           | Call Id [Id] -- 第二引数が引数の型を表す
-           | Let Id Type Expr Expr
-           | If Id Expr Expr
-           | BinOp Op Id Id -- 第二引数が引数の型を表す
-  deriving (Eq, Show)
-
-instance PrettyPrint Expr' where
-  pretty (Var name)     = pretty name
-  pretty (Const c)        = pretty c
-  pretty (Call fn args) = parens . sep $ pretty fn : map pretty args
-  pretty (Let name typ val body) =
-    parens $ text "let" <+> parens (pretty name <> colon <> pretty typ <+> pretty val)
+  pretty Unit          = text "()"
+  pretty (Call (fn, ty) arg) = parens $ sep (pretty fn {- <> colon <> pretty ty -} : map pretty arg)
+  pretty (Let decl body) =
+    parens $ text "let" <+> pretty decl
     $+$ nest 2 (pretty body)
   pretty (If c t f) =
     parens $ text "if" <+> pretty c
     $+$ nest 2 (pretty t)
     $+$ nest 2 (pretty f)
-  pretty (BinOp op x y) = parens (pretty op <+> pretty x <+> pretty y)
+  pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
+
+-- | Malgoの組み込みデータ型
+data Type = NameTy Id
+          | TupleTy [Type]
+          | FunTy Type Type
+  deriving (Eq, Show)
+
+instance PrettyPrint Type where
+  pretty (NameTy n)          = pretty n
+  pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
+  pretty (FunTy domTy codTy) = pretty domTy <+> text "->" <+> pretty codTy
+
+data Decl = FunDec Id [(Id, Type)] Type Expr
+          | ValDec Id Type Expr
+  deriving (Eq, Show)
+
+instance PrettyPrint Decl where
+  pretty (FunDec name params retTy body) = parens $
+    text "fun" <+> (parens . sep $ pretty name <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params)
+    $+$ nest 2 (pretty body)
+  pretty (ValDec name typ val) = parens $
+    text "val" <+> pretty name <> colon <> pretty typ <+> pretty val
 
 data KNormalState = KNormalState { count :: Int
                                  , table :: [(Name, Id)]
@@ -82,8 +93,14 @@ data KNormalState = KNormalState { count :: Int
 newtype KNormal a = KNormal (StateT KNormalState (Either String) a)
   deriving (Functor, Applicative, Monad, MonadState KNormalState)
 
-knormal :: KNormal a -> Either String a
-knormal (KNormal m) = evalStateT m (KNormalState 0 [])
+runKNormal :: KNormal a -> Either String a
+runKNormal (KNormal m) = evalStateT m (KNormalState 0 [])
+
+knormal :: T.Expr -> Either String Expr
+knormal a = runKNormal (initEnv T.initEnv >> transExpr a)
+
+initEnv :: [(Name, T.Type)] -> KNormal ()
+initEnv = mapM_ (newId . fst)
 
 newId :: Name -> KNormal Id
 newId hint = do
@@ -95,6 +112,9 @@ newId hint = do
                    }
   return (Id (c, hint))
 
+incCount :: Int -> KNormal ()
+incCount n = modify $ \e -> e { count = count e + n }
+
 getId :: Name -> KNormal Id
 getId name = do
   t <- gets table
@@ -104,74 +124,73 @@ getId name = do
 
 rawId :: Name -> KNormal Id
 rawId name = do
-  modify $ \e -> e { table = (name, Raw name) : table e }
-  return (Raw name)
+  t <- gets table
+  case lookup name t of
+    Just x -> return x
+    Nothing -> do
+      modify $ \e -> e { table = (name, Raw name) : table e }
+      return (Raw name)
 
-insertLet :: T.Expr -> (Id -> KNormal Expr) -> KNormal Expr
+insertLet :: T.Expr -> ((Id, Type) -> KNormal Expr) -> KNormal Expr
 insertLet v@(_, t) k = do
   x <- newId (Name "$k")
   v' <- transExpr v
-  (e', t') <- k x
-  return (Let x t v' (e', t'), t')
+  t' <- transType t
+  e' <- k (x, t')
+  return (Let (ValDec x t' v') e', snd e')
+
+transType :: T.Type -> KNormal Type
+transType (T.NameTy name) = NameTy <$> rawId name
+transType (T.TupleTy tys) = TupleTy <$> mapM transType tys
+transType (T.FunTy domTy codTy) = FunTy <$> transType domTy <*> transType codTy
 
 transExpr :: T.Expr -> KNormal Expr
-transExpr (T.Call fn args, ty) = do
+transExpr (T.Call (T.Var fn, funTy) args, ty) = do
   fn' <- getId fn
-  bind args [] (\xs -> return (Call fn' xs, ty))
+  funTy' <- transType funTy
+  ty' <- transType ty
+  bind args [] (\xs -> return (Call (fn', funTy') xs, ty'))
   where
     bind [] args' k     = k (reverse args')
     bind (x:xs) args' k = insertLet x (\x' -> bind xs (x':args') k)
-transExpr (T.BinOp op e1 e2, ty) =
-  insertLet e1 (\x -> insertLet e2 (\y -> return (BinOp op x y, ty)))
+transExpr (T.Call _ _, _) = KNormal $ lift . Left $ "error: function value must be a variable"
+transExpr (T.BinOp op e1 e2, ty) = do
+  ty' <- transType ty
+  insertLet e1 (\x -> insertLet e2 (\y -> return (BinOp op x y, ty')))
 transExpr (T.If c t f, ty) =
   insertLet c (\c' -> do
                   t' <- transExpr t
                   f' <- transExpr f
-                  return (If c' t' f', ty))
-transExpr (T.Const val, ty) = do
-  val' <- transConst val
-  return (Const val', ty)
-transExpr (T.Let name typ val body, ty) = do
-  name' <- newId name
+                  ty' <- transType ty
+                  return (If c' t' f', ty'))
+transExpr (T.Int x, ty) = (,) <$> pure (Int x) <*> transType ty
+transExpr (T.Float x, ty) = (,) <$> pure (Float x) <*> transType ty
+transExpr (T.Bool x, ty) = (,) <$> pure (Bool x) <*> transType ty
+transExpr (T.Char x, ty) = (,) <$> pure (Char x) <*> transType ty
+transExpr (T.String x, ty) = (,) <$> pure (String x) <*> transType ty
+transExpr (T.Unit, ty) = (,) <$> pure Unit <*> transType ty
+transExpr (T.Let (T.ValDec name typ val) body, ty) = do
   val' <- transExpr val
+  typ' <- transType typ
+
+  name' <- newId name -- shadowingのため、先にvalを処理する
+
   body' <- transExpr body
-  return (Let name' typ val' body', ty)
-transExpr (T.Var x, ty) = do
-  x' <- getId x
-  return (Var x', ty)
+  ty' <- transType ty
+  return (Let (ValDec name' typ' val') body', ty')
+transExpr (T.Let (T.FunDec fn params retTy fbody) body, ty) = do
+  fn' <- newId fn
+  params' <- mapM (\(n, t) -> (,) <$> newId n <*> transType t) params
+  retTy' <- transType retTy
+  fbody' <- transExpr fbody
+  body' <- transExpr body
+  ty' <- transType ty
+  return (Let (FunDec fn' params' retTy' fbody') body', ty')
+transExpr (T.Var x, ty) = (,) <$> (Var <$> getId x) <*> transType ty
 transExpr (T.Seq e1 e2, ty) = do
   x' <- newId (Name "_")
   e1' <- transExpr e1
   e2' <- transExpr e2
-  return (Let x' UnitTy e1' e2', ty)
-
-transConst :: T.Const -> KNormal Const
-transConst (T.Int x)         = return (Int x)
-transConst (T.Float x)       = return (Float x)
-transConst (T.Bool x)        = return (Bool x)
-transConst (T.Char x)        = return (Char x)
-transConst (T.String x)      = return (String x)
-transConst T.Unit            = return Unit
-transConst (T.CBinOp op x y) = CBinOp op <$> transConst x <*> transConst y
-
-transDecl :: T.Decl -> KNormal Decl
-transDecl (T.DefVar name typ val) = do
-  name' <- rawId name
-  val' <- transConst val
-  return (DefVar name' typ val')
-transDecl (T.DefFun fn retTy params body) = do
-  fn' <- rawId fn
-  params' <- mapM
-    (\(n, ty) -> do
-        n' <- newId n
-        return (n', ty))
-    params
-  body' <- transExpr body
-  return (DefFun fn' retTy params' body')
-transDecl (T.ExVar name typ) = flip ExVar typ <$> rawId name
-transDecl (T.ExFun fn retTy params) =
-  ExFun <$> rawId fn <*> return retTy
-  <*> mapM (\(n, ty) -> do
-               n' <- newId n
-               return (n', ty))
-           params
+  unitTy <- NameTy <$> rawId (Name "Unit")
+  ty' <- transType ty
+  return (Let (ValDec x' unitTy e1') e2', ty')

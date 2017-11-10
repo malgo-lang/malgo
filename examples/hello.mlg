@@ -3,9 +3,12 @@ let val a:Int = 42
         if n <= 1
         then 1
         else fib (n - 1) + fib (n - 2)
+    val a:Int = a + 1
+    fun do_nothing():Unit = ()
 in
   println("Hello, world!");
   print("fib(10) = ");
   print_int(fib(10));
-  println("")
+  println("");
+  do_nothing()
 end

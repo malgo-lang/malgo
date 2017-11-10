@@ -2,17 +2,17 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Main where
 
-import           Control.Monad         (join)
+import           Control.Monad          (join)
 -- import qualified Language.Malgo.Beta        as Beta
--- import qualified Language.Malgo.KNormal     as KNormal
-import qualified Language.Malgo.Lexer  as Lexer
-import qualified Language.Malgo.Parser as Parser
+import qualified Language.Malgo.KNormal as KNormal
+import qualified Language.Malgo.Lexer   as Lexer
+import qualified Language.Malgo.Parser  as Parser
 import           Language.Malgo.Utils
 -- import           Language.Malgo.PrettyPrint
-import qualified Language.Malgo.Typing as Typing
-import           System.Environment    (getArgs)
-import qualified Text.Parsec.String    as P
-import qualified Text.PrettyPrint      as PP
+import qualified Language.Malgo.Typing  as Typing
+import           System.Environment     (getArgs)
+import qualified Text.Parsec.String     as P
+import qualified Text.PrettyPrint       as PP
 
 main :: IO ()
 main = do
@@ -27,13 +27,13 @@ main = do
   print ast
   print $ pretty ast
 
-  let typedAST = join $ Typing.typing (mapM Typing.typeofExpr ast)
+  let typedAST = join $ Typing.typing <$> ast
 
   print typedAST
   print $ pretty typedAST
 
---   let kNormal = join $ KNormal.knormal (mapM (mapM KNormal.transDecl) typedAST)
---   print $ PP.vcat . map pretty <$> kNormal
+  let kNormal = join $ KNormal.knormal <$> typedAST
+  print $ pretty kNormal
 
 --   let beta = join $ Beta.betaTrans (mapM (mapM Beta.transDecl) kNormal)
 --   print $ PP.vcat . map pretty <$> beta

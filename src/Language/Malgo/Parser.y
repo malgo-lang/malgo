@@ -86,6 +86,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | bool { Bool (_info $1) (_bool . _tag $ $1) }
    | char { Char (_info $1) (_char . _tag $ $1) }
    | str  { String (_info $1) (_str . _tag $ $1) }
+   | id '(' ')' { Call (_info $1) (Var (_info $1) . _id . _tag $ $1) [Unit (_info $2)] }
    | id '(' args ')' { Call (_info $1) (Var (_info $1) . _id . _tag $ $1) (reverse $3) }
    | '(' ')' { Unit (_info $1) }
    | '(' exp ')' { $2 }
@@ -102,6 +103,12 @@ decl : val id ':' id '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                                  (NameTy (_id . _tag $ $4))
                                  $6
                              }
+     | fun id '(' ')' ':' id '=' exp {
+         FunDec (_info $1) (_id . _tag $ $2)
+           [(Name "_", NameTy (Name "Unit"))]
+           (NameTy (_id . _tag $ $6))
+           $8
+       }
      | fun id '(' params ')' ':' id '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
            (reverse $4)
