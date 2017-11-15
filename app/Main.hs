@@ -3,7 +3,7 @@
 module Main where
 
 import           Control.Monad          (join)
--- import qualified Language.Malgo.Beta        as Beta
+import qualified Language.Malgo.Beta    as Beta
 import qualified Language.Malgo.KNormal as KNormal
 import qualified Language.Malgo.Lexer   as Lexer
 import qualified Language.Malgo.Parser  as Parser
@@ -35,5 +35,5 @@ main = do
   let kNormal = join $ KNormal.knormal <$> typedAST
   print $ pretty kNormal
 
---   let beta = join $ Beta.betaTrans (mapM (mapM Beta.transDecl) kNormal)
---   print $ PP.vcat . map pretty <$> beta
+  let beta = join $ Beta.betaTrans <$> kNormal
+  print $ pretty beta

@@ -4,7 +4,6 @@
 module Language.Malgo.KNormal where
 
 import           Control.Monad.State
-import           Data.String
 import qualified Language.Malgo.Typing as T
 import           Language.Malgo.Utils
 import           Text.PrettyPrint

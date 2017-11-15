@@ -4,7 +4,7 @@ module Language.Malgo.Beta where
 import           Control.Monad.State
 import           Data.Maybe             (fromMaybe)
 import qualified Language.Malgo.KNormal as K
-import           Language.Malgo.Types
+import           Language.Malgo.Utils
 
 newtype BetaTransState = BetaTransState { table :: [(Id, Id)] }
   deriving Show
@@ -12,8 +12,11 @@ newtype BetaTransState = BetaTransState { table :: [(Id, Id)] }
 newtype BetaTrans a = BetaTrans (StateT BetaTransState (Either String) a)
   deriving (Functor, Applicative, Monad, MonadState BetaTransState)
 
-betaTrans :: BetaTrans a -> Either String a
-betaTrans (BetaTrans m) = evalStateT m (BetaTransState [])
+runBetaTrans :: BetaTrans a -> Either String a
+runBetaTrans (BetaTrans m) = evalStateT m (BetaTransState [])
+
+betaTrans :: K.Expr -> Either String K.Expr
+betaTrans e = runBetaTrans (trans e)
 
 addBind :: (Id, Id) -> BetaTrans ()
 addBind (x, y) =
@@ -25,25 +28,35 @@ find x = do
   let x' = lookup x env
   return $ fromMaybe x x'
 
-transDecl :: K.Decl -> BetaTrans K.Decl
-transDecl (K.DefFun fn retTy params body) =
-  K.DefFun fn retTy params <$> transExpr body
-transDecl x = return x
-
-transExpr :: K.Expr -> BetaTrans K.Expr
-transExpr (K.BinOp op x y, ty) =
-  (,) <$> (K.BinOp op <$> find x <*> find y) <*> pure ty
-transExpr (K.If c t f, ty) =
-  (,) <$> (K.If <$> find c <*> transExpr t <*> transExpr f) <*> pure ty
-transExpr (K.Let name typ val body, ty) = do
-  val' <- transExpr val
+trans :: K.Expr -> BetaTrans K.Expr
+trans (K.Let (K.FunDec fn params retTy body) lbody, ty) =
+  (,) <$> (K.Let
+            <$> (K.FunDec fn params retTy
+                  <$> trans body)
+            <*> trans lbody)
+  <*> pure ty
+trans (K.Let (K.ValDec name typ val) body, ty) = do
+  val' <- trans val
   case val' of
     (K.Var x, _) ->
-      addBind (name, x) >> transExpr body
+      addBind (name, x) >> trans body
     _ ->
-      (,) <$> (K.Let name typ val' <$> transExpr body) <*> pure ty
-transExpr (K.Call fn args, ty) =
-  (,) <$> (K.Call <$> find fn <*> mapM find args) <*> return ty
-transExpr (K.Var x, ty) =
+      (,)
+      <$> (K.Let (K.ValDec name typ val') <$> trans body)
+      <*> pure ty
+trans (K.BinOp op x y, ty) =
+  (,) <$> (K.BinOp op
+           <$> ((,) <$> find (fst x) <*> pure (snd x))
+           <*> ((,) <$> find (fst y) <*> pure (snd y)))
+  <*> pure ty
+trans (K.If c t f, ty) =
+  (,) <$> (K.If <$> ((,) <$> find (fst c) <*> pure (snd c))
+           <*> trans t <*> trans f) <*> pure ty
+trans (K.Call fn args, ty) =
+  (,) <$> (K.Call
+           <$> ((,) <$> find (fst fn) <*> pure (snd fn))
+           <*> mapM (\a -> (,) <$> find (fst a) <*> pure (snd a)) args)
+  <*> return ty
+trans (K.Var x, ty) =
   (,) <$> (K.Var <$> find x) <*> pure ty
-transExpr (K.Const c, ty) = return (K.Const c, ty)
+trans x = return x
