@@ -15,6 +15,12 @@ instance (PrettyPrint a, PrettyPrint b) => PrettyPrint (Either a b) where
 instance PrettyPrint String where
   pretty = P.text
 
+-- instance (PrettyPrint a, PrettyPrint b) => PrettyPrint (a, b) where
+--   pretty (a, _) = pretty a
+
+instance PrettyPrint Int where
+  pretty = P.int
+
 -- | ソースコードの位置情報
 -- | forall a b. Info a == Info b
 type Line = Int
@@ -87,3 +93,7 @@ instance Eq Id where
 instance PrettyPrint Id where
   pretty (Id (i, n)) = pretty n P.<> P.text "_" P.<> P.int i
   pretty (Raw n)     = pretty n
+
+fromId :: Id -> String
+fromId (Id (x, n)) = fromName n ++ '_' : show x
+fromId (Raw n)     = fromName n

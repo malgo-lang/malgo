@@ -92,11 +92,13 @@ data KNormalState = KNormalState { count :: Int
 newtype KNormal a = KNormal (StateT KNormalState (Either String) a)
   deriving (Functor, Applicative, Monad, MonadState KNormalState)
 
-runKNormal :: KNormal a -> Either String a
-runKNormal (KNormal m) = evalStateT m (KNormalState 0 [])
+runKNormal :: KNormal a -> Either String (a, KNormalState)
+runKNormal (KNormal m) = runStateT m (KNormalState 0 [])
 
-knormal :: T.Expr -> Either String Expr
-knormal a = runKNormal (initEnv T.initEnv >> transExpr a)
+knormal :: T.Expr -> Either String (Expr, Int)
+knormal a = do
+  k <- runKNormal (initEnv T.initEnv >> transExpr a)
+  return (fst k, count (snd k))
 
 initEnv :: [(Name, T.Type)] -> KNormal ()
 initEnv = mapM_ (newId . fst)

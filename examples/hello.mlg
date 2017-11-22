@@ -5,10 +5,16 @@ let val a:Int = 42
         else fib (n - 1) + fib (n - 2)
     val a:Int = a + 1
     fun do_nothing():Unit = ()
+    fun add(x:Int):Int =
+      let fun add2(y:Int):Int =
+          x + y
+      in add2(2)
+      end
 in
   println("Hello, world!");
   print("fib(10) = ");
   print_int(fib(10));
   println("");
-  do_nothing()
+  do_nothing();
+  print_int(add(2))
 end

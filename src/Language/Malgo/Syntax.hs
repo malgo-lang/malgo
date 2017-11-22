@@ -52,6 +52,7 @@ instance PrettyPrint Expr where
 
 -- | Malgoの組み込みデータ型
 data Type = NameTy Name
+          | FunTy Type Type
   deriving (Eq, Show)
 
 instance PrettyPrint Type where

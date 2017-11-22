@@ -39,6 +39,7 @@ else  { Token (_, ELSE) }
 '%'   { Token (_, PERCENT) }
 '&&'  { Token (_, AND) }
 '||'  { Token (_, OR) }
+'->'  { Token (_, ARROW)}
 id    { Token (_, ID _) }
 float { Token (_, FLOAT _) }
 int   { Token (_, INT _) }
@@ -47,12 +48,14 @@ bool  { Token (_, BOOL _) }
 str   { Token (_, STRING _) }
 
 %right ';'
+%left '->'
 %right then else
 %nonassoc '==' '<>'
 %nonassoc '<' '>' '<=' '>='
 %left '&&' '||'
 %left '+' '-'
 %left '*' '/' '%'
+%left CAL
 %nonassoc NEG
 %%
 
@@ -86,8 +89,8 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | bool { Bool (_info $1) (_bool . _tag $ $1) }
    | char { Char (_info $1) (_char . _tag $ $1) }
    | str  { String (_info $1) (_str . _tag $ $1) }
-   | id '(' ')' { Call (_info $1) (Var (_info $1) . _id . _tag $ $1) [Unit (_info $2)] }
-   | id '(' args ')' { Call (_info $1) (Var (_info $1) . _id . _tag $ $1) (reverse $3) }
+   | id '(' ')' { Call (_info $1) (Var (_info $1) (_id . _tag $ $1)) [Unit (_info $2)] }
+   | id '(' args ')' { Call (_info $1) (Var (_info $1) (_id . _tag $ $1)) (reverse $3) }
    | '(' ')' { Unit (_info $1) }
    | '(' exp ')' { $2 }
 
@@ -95,24 +98,27 @@ args : args ',' exp { $3 : $1 }
      | exp { [$1] }
 
 
+type : id { NameTy (_id . _tag $ $1) }
+     | type '->' type { FunTy $1 $3 }
+
 decls : decls decl { $2 : $1 }
       | decl { [$1] }
 
 decl :: { Decl }
-decl : val id ':' id '=' exp { ValDec (_info $1) (_id . _tag $ $2)
-                                 (NameTy (_id . _tag $ $4))
+decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
+                                 $4
                                  $6
-                             }
-     | fun id '(' ')' ':' id '=' exp {
+                               }
+     | fun id '(' ')' ':' type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
            [(Name "_", NameTy (Name "Unit"))]
-           (NameTy (_id . _tag $ $6))
+           $6
            $8
        }
-     | fun id '(' params ')' ':' id '=' exp {
+     | fun id '(' params ')' ':' type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
            (reverse $4)
-           (NameTy (_id . _tag $ $7))
+           $7
            $9
        }
 
@@ -121,7 +127,7 @@ params : params ',' param { $3 : $1 }
        | param { [$1] }
 
 param :: { (Name, Type) }
-param : id ':' id { (_id . _tag $ $1, NameTy (_id . _tag $ $3)) }
+param : id ':' type { (_id . _tag $ $1, $3) }
 
 {
 parseError :: [Token] -> a

@@ -30,6 +30,7 @@ data Tag = LET
          | ASTERISK
          | SLASH
          | PERCENT
+         | ARROW
          | EQ
          | NEQ
          | LT
@@ -68,6 +69,7 @@ lexer' = Tok.makeTokenParser $ emptyDef {
   , Tok.identStart = letter <|> oneOf "!?@_"
   , Tok.identLetter = alphaNum <|> oneOf "!?@_"
   , Tok.reservedOpNames = [ ":", "=", "+", "-", "*"
+                          , "->"
                           , "/", "%", ";", "==", "<>"
                           , "&&", "||", "<", ">", "<=", ">="]
   , Tok.reservedNames = [ "let", "in", "end"
@@ -133,6 +135,7 @@ lexer = do
     <|> op info "%" PERCENT
     <|> op info "&&" AND
     <|> op info "||" OR
+    <|> op info "->" ARROW
     <|> fmap (\str -> Token (info, ID (Name str))) identifier
     <|> try (fmap (\f -> Token (info, FLOAT f)) float)
     <|> fmap (\n -> Token (info, INT n)) natural
