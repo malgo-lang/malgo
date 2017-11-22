@@ -5,7 +5,7 @@ module Main where
 import           Control.Monad          (join)
 import qualified Language.Malgo.Assoc   as Assoc
 import qualified Language.Malgo.Beta    as Beta
--- import qualified Language.Malgo.Closure as Closure
+import qualified Language.Malgo.Closure as Closure
 import qualified Language.Malgo.KNormal as KNormal
 import qualified Language.Malgo.Lexer   as Lexer
 import qualified Language.Malgo.MIR     as MIR
@@ -49,5 +49,6 @@ main = do
   let Right (mir, count) = join $ MIR.toMIR <$> assoc <*> fmap snd kNormal
   print $ pretty mir
 
-  -- let Right (cls, env) = Closure.runClosure $ mapM Closure.freeVarsInstr (MIR.blockBody mir)
-  -- print cls
+  let Right (cls, env) = Closure.runClosure count $ Closure.trans mir
+  print $ pretty cls
+  print $ PP.sep $ map pretty (Closure.toplevel env)

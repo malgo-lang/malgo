@@ -66,12 +66,14 @@ instance PrettyPrint Expr' where
 data Type = NameTy Id
           | TupleTy [Type]
           | FunTy Type Type
+          | ClsTy Type
   deriving (Eq, Show)
 
 instance PrettyPrint Type where
   pretty (NameTy n)          = pretty n
   pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
   pretty (FunTy domTy codTy) = pretty domTy <+> text "->" <+> pretty codTy
+  pretty (ClsTy ty) = braces (pretty ty)
 
 data Decl = FunDec Id [(Id, Type)] Type Expr
           | ValDec Id Type Expr
