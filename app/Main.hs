@@ -58,7 +58,7 @@ main = do
   print $ PP.sep $ map pretty (Closure.toplevel env)
 
   let llvm = Codegen.runLLVM (Codegen.initLLVMState (fromString file)) $ do
-        mapM_ Codegen.compFun (Closure.toplevel env)
+        mapM_ Codegen.compToplevel (Closure.toplevel env)
         Codegen.compMain cls
 
   print llvm

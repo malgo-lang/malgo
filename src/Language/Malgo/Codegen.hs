@@ -6,6 +6,7 @@ import           Control.Monad.State
 import           Data.Char
 import           Data.Function
 import           Data.List
+import           Data.Maybe
 import           Data.Monoid
 import           Data.String
 
@@ -31,8 +32,8 @@ import qualified LLVM.Context                as Context
 import qualified LLVM.Module                 as Module
 
 data LLVMState = LLVMState
-  {
-    llvmModule :: AST.Module
+  { llvmModule   :: AST.Module
+  , globalSymTab :: SymbolTable
   }
   deriving Show
 
@@ -50,11 +51,12 @@ initLLVMState label = LLVMState
                                    , AST.moduleDefinitions =
                                      [AST.TypeDefinition "unit" (Just (T.StructureType False []))]
                                    }
+  , globalSymTab = []
   }
 
 -- emit :: LLVMState -> BS.ByteString
 emit :: LLVMState -> IO BS.ByteString
-emit (LLVMState mod) = Context.withContext $ \ctx ->
+emit (LLVMState mod _) = Context.withContext $ \ctx ->
   Module.withModuleFromAST ctx mod Module.moduleLLVMAssembly
 
 
@@ -68,30 +70,51 @@ addDefn d = do
                        }
                    }
 
-compFun :: Instr -> LLVM ()
-compFun ((name, _), Fun [] params retTy body) = do
+assignG :: Name.Name -> AST.Operand -> LLVM ()
+assignG name ref = do
+  st <- gets globalSymTab
+  modify $ \s -> s { globalSymTab = (name, ref) : st }
+
+compToplevel :: Instr -> LLVM ()
+compToplevel ((name, _), Fun [] params retTy body) = do
   let label = fromId name
   let retTy' = compTy retTy
   params' <- do
     let tys = map (compTy . snd) params
     let nms = map (fromId . fst) params
     return [Global.Parameter ty nm [] | (ty, nm) <- zip tys nms]
+
+  gsymtab <- gets globalSymTab
   addDefn $ AST.GlobalDefinition AST.functionDefaults
     { Global.name = Name.Name label
     , Global.parameters = (params', False)
     , Global.returnType = retTy'
-    , Global.basicBlocks = createBlocks $ compFunBody body
+    , Global.basicBlocks = createBlocks $ compFunBody gsymtab body
     }
+compToplevel ((name, _), String x) = do
+  let ty = T.ArrayType
+           (fromInteger (toInteger (length x + 1)))
+           (T.IntegerType 8)
+  let name' = Name.Name (fromId name)
+  assignG name' (AST.ConstantOperand (C.GlobalReference (T.PointerType ty (AddrSpace.AddrSpace 0)) name'))
+  addDefn $ AST.GlobalDefinition AST.globalVariableDefaults
+    { Global.name = name'
+    , Global.type' = ty
+    , Global.initializer = Just (C.Array (T.IntegerType 8)
+                                 (map (C.Int 8 . toInteger . ord) x ++ [C.Int 8 0]))
+    }
+compToplevel x = LLVM $ lift . Left $ "unreachable: compFun (" ++ show x ++ ")"
 
 compMain :: Block -> LLVM ()
 compMain body = do
   let label = "__malgo_main"
   let retTy = T.NamedTypeReference "unit"
+  gsymtab <- gets globalSymTab
   addDefn $ AST.GlobalDefinition AST.functionDefaults
     { Global.name = Name.Name label
     , Global.parameters = ([], False)
     , Global.returnType = retTy
-    , Global.basicBlocks = createBlocks $ compFunBody body
+    , Global.basicBlocks = createBlocks $ compFunBody gsymtab body
     }
 
 type Names = Map.Map BS.ShortByteString Int
@@ -192,7 +215,9 @@ fresh = do
   modify $ \s -> s { count = 1 + i }
   return (i + 1)
 
-compFunBody (Block name body) = execCodegen $ do
+-- compFunBody :: Block -> CodegenState
+compFunBody gsymtab (Block name body) = execCodegen $ do
+  modify $ \s -> s { symtab = gsymtab }
   enter <- addBlock (fromId name)
   _ <- setBlock enter
   body' <- mapM compInstr body
@@ -201,9 +226,7 @@ compFunBody (Block name body) = execCodegen $ do
 
 compTy :: Language.Malgo.KNormal.Type -> T.Type
 compTy (NameTy name) =
-  case lookup name typeMap of
-    Just x  -> x
-    Nothing -> error $ show name ++ " (type) is not found."
+  fromMaybe (error $ show name ++ " (type) is not found.") (lookup name typeMap)
   where
     typeMap = [ (Raw (Name "Int"), T.IntegerType 32)
               , (Raw (Name "Float"), T.FloatingPointType T.DoubleFP)
@@ -217,13 +240,15 @@ compTy (FunTy (TupleTy xs) retTy) =
   let xs' = map compTy xs
       retTy' = compTy retTy
   in T.FunctionType retTy' xs' False
+compTy x = error $ "unreachable: compTy (" ++ show x ++ ")"
 
-compTy x = error $ "unreachable: compTy " ++ show x
-
+alloca :: T.Type -> Maybe Name.Name -> Codegen AST.Operand
 alloca ty name = instr (T.PointerType ty (AddrSpace.AddrSpace 0)) name $ AST.Alloca ty Nothing 0 []
 
+store :: AST.Operand -> AST.Operand -> Codegen ()
 store ptr val = justDo $ AST.Store False ptr val Nothing 0 []
 
+load :: T.Type -> Maybe Name.Name -> AST.Operand -> Codegen AST.Operand
 load ty name ptr = instr ty name $ AST.Load False ptr Nothing 0 []
 
 assign :: Name.Name -> AST.Operand -> Codegen ()
@@ -234,9 +259,7 @@ assign name ref = do
 getSym :: Name.Name -> Codegen AST.Operand
 getSym name = do
   st <- gets symtab
-  return $ case lookup name st of
-    Just x  -> x
-    Nothing -> error $ show name ++ " is not found. \n" ++ show st
+  return $ fromMaybe (error $ show name ++ " is not found. \n" ++ show st) (lookup name st)
 
 instr :: T.Type -> Maybe Name.Name -> AST.Instruction -> Codegen AST.Operand
 instr ty name ins = do
@@ -258,6 +281,7 @@ justDo ins = do
   modifyBlock (blk { stack = AST.Do ins : i })
 
 -- compInstr :: Instr -> Codegen ()
+compInstr :: Instr -> Codegen AST.Operand
 compInstr ((name, ty), Int x) = do
   let ty' = compTy ty
   let name' = Name.Name (fromId name)
@@ -270,16 +294,25 @@ compInstr ((name, ty), Bool x) = do
   a <- alloca ty' Nothing
   store a $ AST.ConstantOperand (C.Int 1 (if x then 1 else 0))
   load ty' (Just name') a
--- compVal Unit = do
---   a <- alloca (T.NamedTypeReference "unit") Nothing
---   store a $ AST.ConstantOperand $ C.Undef (T.NamedTypeReference "unit")
---   load (T.NamedTypeReference "unit") a
+compInstr ((name, ty), Float x) = do
+  let ty' = compTy ty
+  let name' = Name.Name (fromId name)
+  a <- alloca ty' Nothing
+  store a $ AST.ConstantOperand (C.Float (F.Double x))
+  load ty' (Just name') a
 compInstr ((name, ty), Unit) = do
   let ty' = compTy ty
   let name' = Name.Name (fromId name)
   a <- alloca (T.NamedTypeReference "unit") Nothing
   store a $ AST.ConstantOperand $ C.Undef (T.NamedTypeReference "unit")
   load ty' (Just name') a
+compInstr ((name, ty), Char x)     = do
+  let ty' = compTy ty
+  let name' = Name.Name (fromId name)
+  a <- alloca ty' Nothing
+  store a $ AST.ConstantOperand (C.Int 8 (toInteger (ord x)))
+  load ty' (Just name') a
+
 compInstr ((name, ty), App fn args) = do
   let ty' = compTy ty
   let name' = Name.Name (fromId name)
@@ -290,35 +323,10 @@ compInstr ((name, ty), App fn args) = do
 toArgs :: [AST.Operand] -> [(AST.Operand, [PA.ParameterAttribute])]
 toArgs = map (\x -> (x, []))
 
+call :: T.Type -> Maybe Name.Name -> AST.Operand -> [AST.Operand] -> Codegen AST.Operand
 call ty name fn args = instr ty name $ AST.Call Nothing CC.C [] (Right fn) (toArgs args) [] []
 
+compCallable :: (Id, Language.Malgo.KNormal.Type) -> Codegen AST.Operand
 compCallable (name, typ) = do
   let typ' = T.PointerType (compTy typ) (AddrSpace.AddrSpace 0)
   return (AST.ConstantOperand (C.GlobalReference typ' (Name.Name (fromId name))))
-
--- -- compVal :: Val -> Codegen AST.Instruction
--- compVal (Int x)      = do
---   a <- alloca (T.IntegerType 32) Nothing
---   store a $ AST.ConstantOperand (C.Int 32 x)
---   load (T.IntegerType 32) a
--- compVal (Float x)    = do
---   a <- alloca (T.FloatingPointType T.DoubleFP) Nothing
---   store a $ AST.ConstantOperand (C.Float (F.Double x))
---   load (T.FloatingPointType T.DoubleFP) a
--- compVal (Bool True)  = do
---   a <- alloca (T.IntegerType 1) Nothing
---   store a $ AST.ConstantOperand (C.Int 1 1)
---   load (T.IntegerType 1) a
--- compVal (Bool False)  = do
---   a <- alloca (T.IntegerType 1) Nothing
---   store a $ AST.ConstantOperand (C.Int 1 0)
---   load (T.IntegerType 1) a
-
--- compVal (Char x)     = do
---   a <- alloca (T.IntegerType 8) Nothing
---   store a $ AST.ConstantOperand (C.Int 8 (toInteger (ord x)))
---   load (T.IntegerType 8) a
--- compVal (String x) = do
---   a <- alloca (T.PointerType (T.IntegerType 8) (AddrSpace.AddrSpace 0)) Nothing
---   store a $ AST.ConstantOperand $ C.Array (T.IntegerType 8) (map (C.Int 8 . toInteger . ord) x)
---   load (T.PointerType (T.IntegerType 8) (AddrSpace.AddrSpace 0)) a

@@ -10,7 +10,9 @@ let val a:Int = 42
     --       x + y
     --   in add2(2)
     --   end
+    val name:String = "malgo"
     fun print_int(n:Int):Unit = ()
+    fun print_float(f:Float):Unit = ()
 in
   -- println("Hello, world!");
   -- print("fib(10) = ");
@@ -18,5 +20,6 @@ in
   -- println("");
   -- do_nothing();
   -- print_int(add(2))
-  print_int(a)
+  print_int(a);
+  print_float(3.14)
 end
