@@ -26,8 +26,8 @@ instance PrettyPrint Instr where
   pretty ((name, typ), val) =
     pretty typ <+> pretty name <+> text "=" <+> pretty val
 
-data Val = Var Id Type
-         | Int Integer
+data Val = Int Integer
+         -- Var Id Type
          | Float Double
          | Bool Bool
          | Char Char
@@ -43,7 +43,7 @@ data Val = Var Id Type
   deriving (Show, Eq)
 
 instance PrettyPrint Val where
-  pretty (Var name _)      = pretty name
+  -- pretty (Var name _)      = pretty name
   pretty (Int x)         = text "int" <+> integer x
   pretty (Float x)       = text "float" <+> double x
   pretty (Bool True)     = text "bool" <+> text "#t"
@@ -138,7 +138,7 @@ toVal (K.If c t f, _) = do
   t' <- toBlock tlabel t
   f' <- toBlock flabel f
   return $ If c t' f'
-toVal (K.Var name, ty)       = return $ Var name ty
+-- toVal (K.Var name, ty)       = return $ Var name ty
 toVal (K.Int x, _)          = return $ Int x
 toVal (K.Float x, _)        = return $ Float x
 toVal (K.Bool x, _)         = return $ Bool x
@@ -147,5 +147,5 @@ toVal (K.String x, _)       = return $ String x
 toVal (K.Unit, _)           = return Unit
 toVal (K.Call fn params, _) = return $ App fn params
 toVal (K.BinOp op x y, _) = return $ BinOp op x y
-toVal e@(K.Let{}, _) =
+toVal e@(_, _) =
   MIR $ lift . Left $ "unreachable clause: toVal " ++ show e

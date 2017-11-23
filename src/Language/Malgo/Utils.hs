@@ -46,9 +46,9 @@ data Name = Name String
 
 instance IsString Name where fromString = Name
 
-fromName :: Name -> String
-fromName (Name x)  = x
-fromName DummyName = "<dummy>"
+fromName :: IsString a => Name -> a
+fromName (Name x)  = fromString x
+fromName DummyName = fromString "<dummy>"
 
 instance PrettyPrint Name where
   pretty = P.text . fromName
@@ -94,6 +94,6 @@ instance PrettyPrint Id where
   pretty (Id (i, n)) = pretty n P.<> P.text "_" P.<> P.int i
   pretty (Raw n)     = pretty n
 
-fromId :: Id -> String
-fromId (Id (x, n)) = fromName n ++ '_' : show x
-fromId (Raw n)     = fromName n
+fromId :: IsString a => Id -> a
+fromId (Id (x, n)) = fromString $ fromName n ++ '_' : show x
+fromId (Raw n)     = fromString $ fromName n

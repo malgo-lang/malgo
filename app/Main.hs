@@ -2,16 +2,20 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Main where
 
-import           Control.Monad          (join)
 import qualified Language.Malgo.Assoc   as Assoc
 import qualified Language.Malgo.Beta    as Beta
 import qualified Language.Malgo.Closure as Closure
+import qualified Language.Malgo.Codegen as Codegen
 import qualified Language.Malgo.KNormal as KNormal
 import qualified Language.Malgo.Lexer   as Lexer
 import qualified Language.Malgo.MIR     as MIR
 import qualified Language.Malgo.Parser  as Parser
 import qualified Language.Malgo.Typing  as Typing
 import           Language.Malgo.Utils
+
+import           Control.Monad          (join)
+import qualified Data.ByteString.Char8  as BS
+import           Data.String
 import           System.Environment     (getArgs)
 import qualified Text.Parsec.String     as P
 import qualified Text.PrettyPrint       as PP
@@ -52,3 +56,15 @@ main = do
   let Right (cls, env) = Closure.runClosure count $ Closure.trans mir
   print $ pretty cls
   print $ PP.sep $ map pretty (Closure.toplevel env)
+
+  let llvm = Codegen.runLLVM (Codegen.initLLVMState (fromString file)) $ do
+        mapM_ Codegen.compFun (Closure.toplevel env)
+        Codegen.compMain cls
+
+  print llvm
+
+  case llvm of
+    Right x -> do
+      ir <- Codegen.emit x
+      BS.putStrLn ir
+    Left x -> print x

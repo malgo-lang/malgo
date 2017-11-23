@@ -26,10 +26,13 @@ library
                   , Language.Malgo.Assoc
                   , Language.Malgo.MIR
                   , Language.Malgo.Closure
+                  , Language.Malgo.Codegen
   build-depends:    base >= 4.7 && < 5
                   , hspec >= 2.4.4
                   , array
                   , llvm-hs
+                  , directory
+                  , filepath
                   , llvm-hs-pure
                   , pretty
                   , bytestring

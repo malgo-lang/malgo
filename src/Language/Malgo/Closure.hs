@@ -50,12 +50,12 @@ freeVars ((name, _), Fun [] params retTy body) = do
 
   return $ filter (\(x, _) -> x `notElem` kns) tmp
 
-freeVars ((name, _), Var name' typ) = do
-  addKnowns name
-  is_known <- isKnown name'
-  if is_known
-    then return []
-    else return [(name', typ)]
+-- freeVars ((name, _), Var name' typ) = do
+--   addKnowns name
+--   is_known <- isKnown name'
+--   if is_known
+--     then return []
+--     else return [(name', typ)]
 freeVars ((name, _), App fn params) = do
   addKnowns name
   filterM (\(x, _) -> isnotKnown x) (fn : params)
