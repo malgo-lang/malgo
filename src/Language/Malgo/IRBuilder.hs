@@ -9,10 +9,11 @@ module Language.Malgo.IRBuilder where
 -- Stateモナドをベースとする
 
 import           Control.Monad.State
+import           Data.ByteString.Short           as BS
 import           Data.Monoid
 import           Data.String
 
-import           Data.ByteString.Short           as BS
+import qualified Language.Malgo.Utils            as U
 
 import           LLVM.AST
 import qualified LLVM.AST                        as AST
@@ -28,8 +29,8 @@ newtype ModuleBuilder a = ModuleBuilder
   { unModuleBuilder :: StateT ModuleBuilderState (Either String) a}
   deriving (Functor, Applicative, Monad, MonadState ModuleBuilderState)
 
-newtype ModuleBuilderState = ModuleBuilderState
-  { _defs :: [Definition]}
+data ModuleBuilderState = ModuleBuilderState
+  { _defs         :: [Definition] }
   deriving Show
 
 runModuleBuilder
@@ -62,8 +63,7 @@ defun label params retty body = do
   let tys = fmap fst params
   let body' = runInstrBuilder emptyInstrBuilder $ do
         paramNames <- forM params $ \(_, mname) ->
-          -- maybe (fresh Nothing) (fresh . Just) mname
-          (fresh . maybe Nothing Just) mname
+          maybe fresh (fresh `named`) mname
         body $ zipWith LocalReference tys paramNames
         return paramNames
   (paramNames, blocks) <- case body' of
@@ -103,16 +103,18 @@ newtype InstrBuilder a = InstrBuilder
   deriving (Functor, Applicative, Monad, MonadState InstrBuilderState)
 
 data InstrBuilderState = InstrBuilderState
-  { _supply    :: Word
-  , _usedNames :: [ShortByteString]
-  , _blocks    :: [BasicBlock]
-  , _block     :: Maybe PartialBlock
+  { _supply         :: Word
+  , _usedNames      :: [ShortByteString]
+  , _nameSuggestion :: Maybe ShortByteString
+  , _blocks         :: [BasicBlock]
+  , _block          :: Maybe PartialBlock
   }
 
 emptyInstrBuilder :: InstrBuilderState
 emptyInstrBuilder = InstrBuilderState
   { _supply = 0
   , _usedNames = []
+  , _nameSuggestion = Nothing
   , _blocks = []
   , _block = Nothing
   }
@@ -156,22 +158,24 @@ freshUnName = do
   modify $ \s -> s { _supply = 1 + n }
   return $ UnName n
 
-fresh :: Maybe ShortByteString -> InstrBuilder Name
-fresh Nothing = freshUnName
-fresh (Just hint) = do
-  used <- gets _usedNames
-  let candidates = hint : [hint <> fromString (show n) | n <- [(1::Int)..]]
-      (unusedName:_) = filter (not . (`elem` used)) candidates
-  modify $ \s -> s { _usedNames = unusedName : used}
-  return $ Name unusedName
+fresh :: InstrBuilder Name
+fresh = do
+  mhint <- gets _nameSuggestion
+  case mhint of
+    Nothing -> freshUnName
+    Just hint -> do
+      used <- gets _usedNames
+      let candidates = hint : [hint <> fromString (show n) | n <- [(1::Int)..]]
+          (unusedName:_) = filter (not . (`elem` used)) candidates
+      modify $ \s -> s { _usedNames = unusedName : used}
+      return $ Name unusedName
 
 emitInstr
   :: Type -- ^ Return type
-  -> Maybe ShortByteString
   -> Instruction
   -> InstrBuilder Operand
-emitInstr retty nm instr = do
-  nm <- fresh nm
+emitInstr retty instr = do
+  nm <- fresh
   modifyBlock $ \b -> b
     { _instrs = (nm := instr) : _instrs b }
   return (LocalReference retty nm)
@@ -180,8 +184,8 @@ emitTerm :: Terminator -> InstrBuilder ()
 emitTerm term = modifyBlock $ \b -> b
   { _term = Just (Do term) }
 
-block :: Maybe ShortByteString -> InstrBuilder Name
-block nm = do
+block :: InstrBuilder Name
+block = do
   mb <- gets _block
   case mb of
     Nothing -> return ()
@@ -192,6 +196,14 @@ block nm = do
             Just term -> BasicBlock (_partialBlockName b) instrs term
       modify $ \s -> s
         { _blocks = newBlock : _blocks s}
-  nm <- fresh nm
+  nm <- fresh
   modify $ \s -> s { _block = Just $ emptyPartialBlock nm }
   return nm
+
+named :: InstrBuilder r -> ShortByteString -> InstrBuilder r
+named ir name = do
+  before <- gets _nameSuggestion
+  modify $ \s -> s { _nameSuggestion = Just name }
+  result <- ir
+  modify $ \s -> s { _nameSuggestion = before }
+  return result

@@ -57,14 +57,14 @@ main = do
   print $ pretty cls
   print $ PP.sep $ map pretty (Closure.toplevel env)
 
-  let llvm = Codegen.runLLVM (Codegen.initLLVMState (fromString file)) $ do
-        mapM_ Codegen.compToplevel (Closure.toplevel env)
-        Codegen.compMain cls
+  -- let llvm = Codegen.runLLVM (Codegen.initLLVMState (fromString file)) $ do
+  --       mapM_ Codegen.compToplevel (Closure.toplevel env)
+  --       Codegen.compMain cls
 
-  print llvm
+  -- print llvm
 
-  case llvm of
-    Right x -> do
-      ir <- Codegen.emit x
-      BS.putStrLn ir
-    Left x -> print x
+  -- case llvm of
+  --   Right x -> do
+  --     ir <- Codegen.emit x
+  --     BS.putStrLn ir
+  --   Left x -> print x
