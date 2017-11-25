@@ -10,6 +10,7 @@ module Language.Malgo.IRBuilder where
 
 import           Control.Monad.State
 import           Data.ByteString.Short           as BS
+import           Data.Char
 import           Data.Monoid
 import           Data.String
 
@@ -17,17 +18,21 @@ import qualified Language.Malgo.Utils            as U
 
 import           LLVM.AST
 import qualified LLVM.AST                        as AST
+import qualified LLVM.AST.AddrSpace              as AddrSpace
 import qualified LLVM.AST.CallingConvention      as CC
 import           LLVM.AST.Constant               as C
 import qualified LLVM.AST.Constant               as C
+import           LLVM.AST.Float                  as F
 import qualified LLVM.AST.FloatingPointPredicate as FP
 import           LLVM.AST.Global                 as Global
 import qualified LLVM.AST.IntegerPredicate       as IP
 import           LLVM.AST.ParameterAttribute
+import qualified LLVM.AST.ParameterAttribute     as PA
+import qualified LLVM.AST.Type                   as T
 
 newtype ModuleBuilder a = ModuleBuilder
   { unModuleBuilder :: StateT ModuleBuilderState (Either String) a}
-  deriving (Functor, Applicative, Monad, MonadState ModuleBuilderState)
+  deriving (Functor, Applicative, Monad,  MonadState ModuleBuilderState)
 
 data ModuleBuilderState = ModuleBuilderState
   { _defs         :: [Definition] }
@@ -51,7 +56,8 @@ emptyModuleBuilder = ModuleBuilderState
   { _defs = [] }
 
 emitDefn :: Definition -> ModuleBuilder ()
-emitDefn def = modify $ \s -> s { _defs = def : _defs s}
+emitDefn def = do
+  modify $ \s -> s { _defs = def : _defs s}
 
 defun
   :: Name -- ^ Function name
@@ -77,7 +83,7 @@ defun label params retty body = do
             }
       funty = FunctionType retty tys False
   emitDefn def
-  return $ ConstantOperand $ C.GlobalReference funty label
+  return $ ConstantOperand $ C.GlobalReference (ptr funty) label
 
 defvar
   :: Name -- ^ Variable name
@@ -91,7 +97,9 @@ defvar label ty val = do
             , Global.initializer = Just val
             }
   emitDefn def
-  return $ ConstantOperand $ C.GlobalReference ty label
+  return $ ConstantOperand
+    $ C.GlobalReference (T.PointerType ty
+                          (AddrSpace.AddrSpace 0)) label
 
 deftype :: Name -> Type -> ModuleBuilder ()
 deftype label ty = do
@@ -100,7 +108,7 @@ deftype label ty = do
 
 newtype InstrBuilder a = InstrBuilder
   { unInstrBuilder :: StateT InstrBuilderState (Either String) a }
-  deriving (Functor, Applicative, Monad, MonadState InstrBuilderState)
+  deriving (Functor, Applicative, Monad,  MonadState InstrBuilderState)
 
 data InstrBuilderState = InstrBuilderState
   { _supply         :: Word
@@ -132,8 +140,8 @@ emptyPartialBlock nm = PartialBlock nm [] Nothing
 runInstrBuilder
   :: InstrBuilderState
      -> InstrBuilder t -> Either String (t, [BasicBlock])
-runInstrBuilder s (InstrBuilder m) = do
-  (a, ibs) <- runStateT m s
+runInstrBuilder s m = do
+  (a, ibs) <- runStateT (unInstrBuilder (m <* block)) s
   let blks = reverse . _blocks $ ibs
   return (a, blks)
 
@@ -150,7 +158,6 @@ modifyBlock f = do
       nm <- freshUnName
       modify $ \s -> s { _block = Just (f $ emptyPartialBlock nm) }
     Just blk -> modify $ \s -> s { _block = Just (f blk) }
-
 
 freshUnName :: InstrBuilder Name
 freshUnName = do
@@ -180,6 +187,10 @@ emitInstr retty instr = do
     { _instrs = (nm := instr) : _instrs b }
   return (LocalReference retty nm)
 
+emitDo instr = do
+  modifyBlock $ \b -> b
+    { _instrs = (Do instr) : _instrs b }
+
 emitTerm :: Terminator -> InstrBuilder ()
 emitTerm term = modifyBlock $ \b -> b
   { _term = Just (Do term) }
@@ -207,3 +218,40 @@ named ir name = do
   result <- ir
   modify $ \s -> s { _nameSuggestion = before }
   return result
+
+alloca :: Type -> Maybe Operand -> InstrBuilder Operand
+alloca ty count = emitInstr (ptr ty) $ Alloca ty count 0 []
+
+store :: Operand -> Operand -> InstrBuilder ()
+store addr val = emitDo $ Store False addr val Nothing 0 []
+
+load :: Type -> Operand -> InstrBuilder Operand
+load ty addr = emitInstr ty $ Load False addr Nothing 0 []
+
+cons :: Constant -> Operand
+cons = ConstantOperand
+
+ptr :: Type -> Type
+ptr ty = T.PointerType ty (AddrSpace.AddrSpace 0)
+
+int :: Integer -> Constant
+int = C.Int 32
+
+double :: Double -> Constant
+double = C.Float . F.Double
+
+bool :: Bool -> Constant
+bool x = if x then C.Int 1 1 else C.Int 1 0
+
+char :: Char -> Constant
+char x = C.Int 8 (fromInteger (toInteger (ord x)))
+
+undef :: Type -> Constant
+undef = C.Undef
+
+toArgs :: [Operand] -> [(Operand, [PA.ParameterAttribute])]
+toArgs = map (\x -> (x, []))
+
+call :: Type -> Operand -> [Operand] -> InstrBuilder Operand
+call ty fn args =
+  emitInstr ty $ Call Nothing CC.C [] (Right fn) (toArgs args) [] []

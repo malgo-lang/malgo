@@ -95,5 +95,5 @@ instance PrettyPrint Id where
   pretty (Raw n)     = pretty n
 
 fromId :: IsString a => Id -> a
-fromId (Id (x, n)) = fromString $ fromName n ++ '_' : show x
+fromId (Id (x, n)) = fromString $ fromName n ++ '.' : show x
 fromId (Raw n)     = fromString $ fromName n

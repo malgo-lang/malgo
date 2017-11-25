@@ -161,8 +161,7 @@ emptyBlock :: Int -> BlockState
 emptyBlock i = BlockState i [] Nothing
 
 emptyCodegen :: CodegenState
-emptyCodegen = CodegenState { currentBlock = Name.Name "entry"
-                            , blocks = Map.empty
+emptyCodegen = CodegenState { currentBlock = Name.Name "entry" , blocks = Map.empty
                             , blockCount = 1
                             , count = 0
                             , names = Map.empty
