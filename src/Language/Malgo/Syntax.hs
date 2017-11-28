@@ -50,9 +50,32 @@ instance PrettyPrint Expr where
     $+$ nest 2 (pretty f)
   pretty (BinOp _ op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
+-- | 中置演算子の種類を表すタグ
+data Op = Add | Sub | Mul | Div
+        | Mod
+        | Eq | Neq
+        | Lt | Gt | Le | Ge
+        | And | Or
+  deriving (Eq, Show)
+
+instance PrettyPrint Op where
+  pretty Add = text "+"
+  pretty Sub = text "-"
+  pretty Mul = text "*"
+  pretty Div = text "/"
+  pretty Mod = text "%"
+  pretty Eq  = text "=="
+  pretty Neq = text "<>"
+  pretty Lt  = text "<"
+  pretty Gt  = text ">"
+  pretty Le  = text "<="
+  pretty Ge  = text ">="
+  pretty And = text "&&"
+  pretty Or  = text "||"
+
 -- | Malgoの組み込みデータ型
 data Type = NameTy Name
-          | FunTy Type Type
+          -- -- | FunTy Type Type
   deriving (Eq, Show)
 
 instance PrettyPrint Type where

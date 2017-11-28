@@ -3,6 +3,7 @@
 module Language.Malgo.Lexer where
 
 import           Data.Functor.Identity (Identity)
+import           Data.String
 import           Prelude               hiding (EQ, GT, LT)
 import           Text.Parsec
 import           Text.Parsec.Language
@@ -39,7 +40,7 @@ data Tag = LET
          | GE
          | AND
          | OR
-         | ID { _id :: Name}
+         | ID { _id :: Name }
          | INT { _int :: Integer }
          | FLOAT { _float :: Double}
          | BOOL { _bool :: Bool}
@@ -136,7 +137,7 @@ lexer = do
     <|> op info "&&" AND
     <|> op info "||" OR
     <|> op info "->" ARROW
-    <|> fmap (\str -> Token (info, ID (Name str))) identifier
+    <|> fmap (\str -> Token (info, ID (fromString str))) identifier
     <|> try (fmap (\f -> Token (info, FLOAT f)) float)
     <|> fmap (\n -> Token (info, INT n)) natural
     <|> fmap (\c -> Token (info, CHAR c)) charLiteral
