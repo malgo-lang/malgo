@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE TypeSynonymInstances       #-}
 module Language.Malgo.KNormal where
 
@@ -136,7 +137,7 @@ rawId name = do
 
 insertLet :: T.Expr -> ((Id, Type) -> KNormal Expr) -> KNormal Expr
 insertLet v@(_, t) k = do
-  x <- newId (Name "$k")
+  x <- newId "$k"
   v' <- transExpr v
   t' <- transType t
   e' <- k (x, t')
@@ -191,9 +192,9 @@ transExpr (T.Let (T.FunDec fn params retTy fbody) body, ty) = do
   return (Let (FunDec fn' params' retTy' fbody') body', ty')
 transExpr (T.Var x, ty) = (,) <$> (Var <$> getId x) <*> transType ty
 transExpr (T.Seq e1 e2, ty) = do
-  x' <- newId (Name "_")
+  x' <- newId "_"
   e1' <- transExpr e1
   e2' <- transExpr e2
-  unitTy <- NameTy <$> rawId (Name "Unit")
+  unitTy <- NameTy <$> rawId "Unit"
   ty' <- transType ty
   return (Let (ValDec x' unitTy e1') e2', ty')

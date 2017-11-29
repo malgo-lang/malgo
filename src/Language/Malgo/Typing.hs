@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiWayIf                 #-}
+{-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE TypeSynonymInstances       #-}
 module Language.Malgo.Typing where
 
@@ -92,15 +93,15 @@ newtype Typing a = Typing (StateT TypingState (Either String) a)
   deriving (Functor, Applicative, Monad, MonadState TypingState)
 
 initEnv :: [(Name, Type)]
-initEnv = [ ( Name "print"
-            , FunTy (TupleTy [NameTy (Name "String")])
-              (NameTy (Name "Unit")))
-          , ( Name "println"
-            , FunTy (TupleTy [NameTy (Name "String")])
-              (NameTy (Name "Unit")))
-          , ( Name "print_int"
-            , FunTy (TupleTy [NameTy (Name "Int")])
-              (NameTy (Name "Unit")))
+initEnv = [ ( "print"
+            , FunTy (TupleTy [NameTy "String"])
+              (NameTy "Unit"))
+          , ( "println"
+            , FunTy (TupleTy [NameTy "String"])
+              (NameTy "Unit"))
+          , ( "print_int"
+            , FunTy (TupleTy [NameTy "Int"])
+              (NameTy "Unit"))
           ]
 
 runTyping :: Typing a -> Either String a
@@ -135,27 +136,27 @@ transExpr :: S.Expr -> Typing Expr
 transExpr (S.Var info name) = do
   ty <- getType name info
   return (Var name, ty)
-transExpr (S.Int _ x) = return (Int x, NameTy (Name "Int"))
-transExpr (S.Float _ x) = return (Float x, NameTy (Name "Float"))
-transExpr (S.Bool _ x) = return (Bool x, NameTy (Name "Bool"))
-transExpr (S.Char _ x) = return (Char x, NameTy (Name "Char"))
-transExpr (S.String _ x) = return (String x, NameTy (Name "String"))
-transExpr (S.Unit _) = return (Unit, NameTy (Name "Unit"))
+transExpr (S.Int _ x) = return (Int x, NameTy ("Int"))
+transExpr (S.Float _ x) = return (Float x, NameTy ("Float"))
+transExpr (S.Bool _ x) = return (Bool x, NameTy ("Bool"))
+transExpr (S.Char _ x) = return (Char x, NameTy ("Char"))
+transExpr (S.String _ x) = return (String x, NameTy ("String"))
+transExpr (S.Unit _) = return (Unit, NameTy ("Unit"))
 transExpr (S.Call info (S.Var _ fn) args) = do
   funTy@(FunTy paramTy retTy) <- getType fn info
   args' <- mapM transExpr args
   if typeEq paramTy (toType (map snd args'))
     then return (Call (Var fn, funTy) args', retTy)
     else typeError (show paramTy) (show (map snd args')) info
-  where toType [] = TupleTy [NameTy (Name "Unit")]
+  where toType [] = TupleTy [NameTy ("Unit")]
         toType xs = TupleTy xs
 transExpr (S.Call info _ _) = error' info "error: function value must be a variable"
 transExpr (S.Seq info e1 e2) = do
   e1'@(_, ty1) <- transExpr e1
   e2'@(_, ty2) <- transExpr e2
-  if typeEq ty1 (NameTy (Name "Unit"))
+  if typeEq ty1 (NameTy ("Unit"))
     then return (Seq e1' e2', ty2)
-    else typeError (show (NameTy (Name "Unit"))) (show ty1) info
+    else typeError (show (NameTy ("Unit"))) (show ty1) info
 transExpr (S.Let _ decls body) = do
   env' <- get
   decls' <- mapM transDecl decls
@@ -168,13 +169,13 @@ transExpr (S.Let _ decls body) = do
     makeLet (x:xs) body' bodyTy = (Let x (makeLet xs body' bodyTy), bodyTy)
 transExpr (S.If info cond t f) = do
   cond'@(_, condTy) <- transExpr cond
-  if typeEq condTy (NameTy (Name "Bool"))
+  if typeEq condTy (NameTy ("Bool"))
     then do t'@(_, tt) <- transExpr t
             f'@(_, ft) <- transExpr f
             if typeEq tt ft
               then return (If cond' t' f', tt)
               else typeError (show tt) (show ft) info
-    else typeError (show (NameTy (Name "Bool"))) (show condTy) info
+    else typeError (show (NameTy ("Bool"))) (show condTy) info
 transExpr (S.BinOp info op e1 e2) = do
   e1'@(_, t1) <- transExpr e1
   e2'@(_, t2) <- transExpr e2
@@ -186,24 +187,24 @@ transExpr (S.BinOp info op e1 e2) = do
     typeofOp :: Type -> Typing Type
     typeofOp xTy =
       if | op `elem` [Add, Sub, Mul, Div, Mod] ->
-           if xTy `elem` [NameTy (Name "Int"), NameTy (Name "Float")]
+           if xTy `elem` [NameTy ("Int"), NameTy ("Float")]
            then return $ FunTy (TupleTy [xTy, xTy]) xTy
            else typeError
-                (show (NameTy (Name "Int")) ++ " or " ++ show (NameTy (Name "Float")))
+                (show (NameTy ("Int")) ++ " or " ++ show (NameTy ("Float")))
                 (show xTy)
                 info
          | op `elem` [Eq, Neq, Lt, Gt, Le, Ge] ->
-           if xTy `elem` map (NameTy . Name) ["Int", "Float", "Char"]
-           then return $ FunTy (TupleTy [xTy, xTy]) (NameTy (Name "Bool"))
+           if xTy `elem` map (NameTy) ["Int", "Float", "Char"]
+           then return $ FunTy (TupleTy [xTy, xTy]) (NameTy ("Bool"))
            else typeError
-                (show $ map (NameTy . Name) ["Int", "Float", "Char"])
+                (show $ map (NameTy) ["Int", "Float", "Char"])
                 (show xTy)
                 info
          | op `elem` [And, Or] ->
-           if typeEq xTy (NameTy (Name "Bool"))
-           then return $ FunTy (TupleTy [NameTy (Name "Bool"), NameTy (Name "Bool")]) (NameTy (Name "Bool"))
+           if typeEq xTy (NameTy ("Bool"))
+           then return $ FunTy (TupleTy [NameTy ("Bool"), NameTy ("Bool")]) (NameTy ("Bool"))
            else typeError
-            (show (NameTy (Name "Bool")))
+            (show (NameTy ("Bool")))
            (show xTy)
             info
 

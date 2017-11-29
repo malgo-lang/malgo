@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Syntax where
 
 import           Language.Malgo.Utils

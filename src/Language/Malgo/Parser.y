@@ -1,10 +1,12 @@
 {
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Parser where
 
 import Prelude hiding (EQ, LT, GT)
 import Language.Malgo.Lexer
 import Language.Malgo.Syntax
 import Language.Malgo.Utils
+import Data.String
 }
 
 %name parse
@@ -111,7 +113,7 @@ decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                                }
      | fun id '(' ')' ':' type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
-           [(Name "_", NameTy (Name "Unit"))]
+           [("_", NameTy "Unit")]
            $6
            $8
        }

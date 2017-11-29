@@ -69,13 +69,13 @@ transType :: Type -> T.Type
 transType (NameTy name) =
   fromMaybe (error $ show name ++ " (type) is not found.") (lookup name typeMap)
   where
-    typeMap = [ (Raw (Name "Int"), T.IntegerType 32)
-              , (Raw (Name "Float"), T.FloatingPointType T.DoubleFP)
-              , (Raw (Name "Bool"), T.IntegerType 1)
-              , (Raw (Name "Char"), T.IntegerType 8)
-              , (Raw (Name "String"), T.PointerType (T.IntegerType 8)
+    typeMap = [ (Raw "Int", T.IntegerType 32)
+              , (Raw "Float", T.FloatingPointType T.DoubleFP)
+              , (Raw "Bool", T.IntegerType 1)
+              , (Raw "Char", T.IntegerType 8)
+              , (Raw "String", T.PointerType (T.IntegerType 8)
                                       (A.AddrSpace 0))
-              , (Raw (Name "Unit"), T.NamedTypeReference "unit")
+              , (Raw "Unit", T.NamedTypeReference "unit")
               ]
 transType (FunTy (TupleTy xs) retty) =
   let xs' = map transType xs
@@ -89,7 +89,7 @@ transMain
   -> ModuleBuilder ()
 transMain tab body = do
   let label = "__malgo_main"
-      retty = NameTy (Raw (Name "Unit"))
+      retty = NameTy (Raw "Unit")
   _ <- transFun tab label [] [] retty body
   return ()
 

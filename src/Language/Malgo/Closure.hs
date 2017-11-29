@@ -90,7 +90,7 @@ newCls :: (Id, Type) -> [(Id, Type)] -> Closure Instr
 newCls fn fv = do
   c <- gets count
   modify $ \e -> e { count = count e + 1 }
-  let new = Id (c, Name (fromId (fst fn)))
+  let new = Id (c, fromId (fst fn))
   insertClosure (fst fn) (new, ClsTy (snd fn))
   return ((new, ClsTy (snd fn)), MkCls fn fv)
 

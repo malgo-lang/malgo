@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE TypeSynonymInstances       #-}
 module Language.Malgo.MIR where
 
@@ -95,7 +96,7 @@ getId name = do
     Nothing -> newId name
 
 toName :: Id -> Name
-toName = Name . fromId
+toName = fromId
 
 -- toMIR :: K.Expr -> Either String (Block, Int)
 -- toMIR :: K.Expr -> Either String ([Instr], Int)
@@ -104,7 +105,7 @@ toMIR :: K.Expr -> Int -> Either String (Block, Int)
 toMIR expr source = do
   m <- runMIR $ do
     incCount source
-    root <- newId (Name "root")
+    root <- newId "root"
     toBlock root expr
   return (fst m, count (snd m))
 
@@ -127,14 +128,14 @@ toBlock' (K.Let (K.FunDec fn params retTy fnBody) body, _) = do
         fnTy = FunTy (TupleTy (map snd params)) retTy
 
 toBlock' e@(_, t) = do
-  n <- newId (Name "$m")
+  n <- newId "$m"
   e' <- toVal e
   return [((n, t), e')]
 
 toVal :: K.Expr -> MIR Val
 toVal (K.If c t f, _) = do
-  tlabel <- newId (Name "then")
-  flabel <- newId (Name "else")
+  tlabel <- newId "then"
+  flabel <- newId "else"
   t' <- toBlock tlabel t
   f' <- toBlock flabel f
   return $ If c t' f'

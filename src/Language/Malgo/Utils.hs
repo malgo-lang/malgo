@@ -2,8 +2,9 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Language.Malgo.Utils where
 
+import qualified Data.ByteString.Char8 as BS
 import           Data.String
-import qualified Text.PrettyPrint as P
+import qualified Text.PrettyPrint      as P
 
 class PrettyPrint a where
   pretty :: a -> P.Doc
@@ -40,18 +41,18 @@ instance PrettyPrint Info where
 dummyInfo :: Info
 dummyInfo = Info ("<dummy>", 0, 0)
 
-data Name = Name String
-          | DummyName
-  deriving (Show, Eq)
+-- data Name = Name String
+--           | DummyName
+--   deriving (Show, Eq)
 
-instance IsString Name where fromString = Name
+-- instance IsString Name where fromString = Name
 
-fromName :: IsString a => Name -> a
-fromName (Name x)  = fromString x
-fromName DummyName = fromString "<dummy>"
+-- fromName :: IsString a => Name -> a
+-- fromName (Name x)  = fromString x
+-- fromName DummyName = fromString "<dummy>"
 
-instance PrettyPrint Name where
-  pretty = P.text . fromName
+-- instance PrettyPrint Name where
+--   pretty = P.text . fromName
 
 -- | 中置演算子の種類を表すタグ
 data Op = Add | Sub | Mul | Div
@@ -76,6 +77,10 @@ instance PrettyPrint Op where
   pretty And = P.text "&&"
   pretty Or  = P.text "||"
 
+type Name = BS.ByteString
+
+fromName :: IsString a => Name -> a
+fromName = fromString . BS.unpack
 
 -- | 比較の計算量が定数時間
 data Id = Id (Int, Name)
@@ -83,7 +88,7 @@ data Id = Id (Int, Name)
   deriving Show
 
 instance IsString Id where
-  fromString x = Id (0, Name x)
+  fromString x = Id (0, (fromString x))
 
 instance Eq Id where
   (Id (x, _)) == (Id (y, _)) = x == y
@@ -94,6 +99,9 @@ instance PrettyPrint Id where
   pretty (Id (i, n)) = pretty n P.<> P.text "_" P.<> P.int i
   pretty (Raw n)     = pretty n
 
+instance PrettyPrint BS.ByteString where
+  pretty bs = P.text (BS.unpack bs)
+
 fromId :: IsString a => Id -> a
 fromId (Id (x, n)) = fromString $ fromName n ++ '.' : show x
-fromId (Raw n)     = fromString $ fromName n
+fromId (Raw n)     = fromString (fromName n)
