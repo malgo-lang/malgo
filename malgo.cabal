@@ -30,21 +30,20 @@ library
                   , Language.Malgo.Codegen
 
   build-depends:    base >= 4.7 && < 5
-                  , hspec >= 2.4.4
                   , array
-                  , llvm-hs
-                  , directory
-                  , filepath
-                  , llvm-hs-pure
-                  , pretty
                   , bytestring
                   , containers
+                  , directory
+                  , filepath
+                  , flow
+                  , lens
+                  , llvm-hs
+                  , llvm-hs-pure
                   , mtl
                   , parsec
-                  , flow
+                  , pretty
                   , text
-                  , lens
-  build-tools: alex, happy
+  build-tools: happy
   default-language: Haskell2010
 
 executable malgo-exe

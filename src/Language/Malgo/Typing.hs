@@ -102,6 +102,9 @@ initEnv = [ ( "print"
           , ( "print_int"
             , FunTy (TupleTy [NameTy "Int"])
               (NameTy "Unit"))
+          , ( "print_float"
+            , FunTy (TupleTy [NameTy "Float"])
+              (NameTy "Unit"))
           ]
 
 runTyping :: Typing a -> Either String a

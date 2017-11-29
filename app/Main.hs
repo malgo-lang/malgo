@@ -35,28 +35,33 @@ main = do
         Left x  -> Left $ show x
         Right x -> Right x
   -- print ast
-  -- print $ pretty ast
+  print $ pretty ast
 
   let typedAST = join $ Typing.typing <$> ast
 
   -- print typedAST
-  -- print $ pretty typedAST
+  print $ pretty typedAST
 
   let kNormal = join $ KNormal.knormal <$> typedAST
-  -- print $ pretty (fmap fst kNormal)
+  print $ pretty (fmap fst kNormal)
 
   let beta = join $ Beta.betaTrans <$> fmap fst kNormal
-  -- print $ pretty beta
+  print $ pretty beta
 
   let assoc = Assoc.assoc <$> beta
-  -- print $ pretty assoc
+  print $ pretty assoc
 
-  let Right (mir, count) = join $ MIR.toMIR <$> assoc <*> fmap snd kNormal
-  -- print $ pretty mir
+  let Right (mir, count) = case join $ MIR.toMIR <$> assoc <*> fmap snd kNormal of
+        Right x -> Right x
+        Left x  -> error x
+  print $ pretty mir
 
-  let Right (cls, env) = Closure.runClosure count $ Closure.trans mir
-  -- print $ pretty cls
-  -- print $ PP.sep $ map pretty (Closure.toplevel env)
+  let Right (cls, env) = case Closure.runClosure count $ Closure.trans mir of
+        Right x -> Right x
+        Left x  -> error x
+
+  print $ pretty cls
+  print $ PP.sep $ map pretty (Closure.toplevel env)
 
   let llvm = Codegen.trans file (Closure.toplevel env) cls
   -- print llvm

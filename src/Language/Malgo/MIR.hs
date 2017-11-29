@@ -5,23 +5,24 @@
 module Language.Malgo.MIR where
 
 import           Control.Monad.State
+import           Data.String
 import           Language.Malgo.KNormal (Type (..))
 import qualified Language.Malgo.KNormal as K
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data Block = Block { blockName :: Id
+data Block = Block { blockName :: Name
                    , blockBody :: [Instr]
                    }
   deriving (Show, Eq)
 
 instance PrettyPrint Block where
   pretty (Block name body) =
-    text "BEGIN:" <+> text (fromId name)
+    text "BEGIN:" <+> pretty name
     $+$ nest 2 (vcat (map pretty body))
-    $+$ text "END: " <+> text (fromId name)
+    $+$ text "END: " <+> pretty name
 
-type Instr = ((Id, Type), Val)
+type Instr = ((Name, Type), Val)
 
 instance PrettyPrint Instr where
   pretty ((name, typ), val) =
@@ -34,13 +35,13 @@ data Val = Int Integer
          | Char Char
          | String String
          | Unit
-         | App (Id, Type) [(Id, Type)]
-         | AppCls (Id, Type) [(Id, Type)]
-         | MkCls (Id, Type) [(Id, Type)]
+         | App (Name, Type) [(Name, Type)]
+         | AppCls (Name, Type) [(Name, Type)]
+         | MkCls (Name, Type) [(Name, Type)]
          -- | Fun free_vars parameter return_type body
-         | Fun [(Id, Type)] [(Id, Type)] Type Block
-         | If (Id, Type) Block Block
-         | BinOp Op (Id, Type) (Id, Type)
+         | Fun [(Name, Type)] [(Name, Type)] Type Block
+         | If (Name, Type) Block Block
+         | BinOp Op (Name, Type) (Name, Type)
   deriving (Show, Eq)
 
 instance PrettyPrint Val where
@@ -65,7 +66,7 @@ instance PrettyPrint Val where
   pretty (BinOp op x y) = text "binop" <+> pretty op <+> pretty x <+> pretty y
 
 data MIRState = MIRState { count :: Int
-                         , table :: [(Name, Id)]
+                         , table :: [(Name, Name)]
                          }
   deriving Show
 
@@ -75,28 +76,25 @@ newtype MIR a = MIR (StateT MIRState (Either String) a)
 runMIR :: MIR a -> Either String (a, MIRState)
 runMIR (MIR m) = runStateT m (MIRState 0 [])
 
-newId :: Name -> MIR Id
+newId :: Name -> MIR Name
 newId hint = do
   c <- gets count
   modify $ \e -> e { count = count e + 1
                    , table = ( hint
-                             , Id (c, hint)
+                             , hint `mappend` "." `mappend` fromString (show c)
                              ) : table e
                    }
-  return (Id (c, hint))
+  return $ hint `mappend` "." `mappend` fromString (show c)
 
 incCount :: Int -> MIR ()
 incCount n = modify $ \e -> e { count = count e + n }
 
-getId :: Name -> MIR Id
+getId :: Name -> MIR Name
 getId name = do
   t <- gets table
   case lookup name t of
     Just x  -> return x
     Nothing -> newId name
-
-toName :: Id -> Name
-toName = fromId
 
 -- toMIR :: K.Expr -> Either String (Block, Int)
 -- toMIR :: K.Expr -> Either String ([Instr], Int)
@@ -109,7 +107,7 @@ toMIR expr source = do
     toBlock root expr
   return (fst m, count (snd m))
 
-toBlock :: Id -> K.Expr -> MIR Block
+toBlock :: Name -> K.Expr -> MIR Block
 toBlock label body = Block label <$> toBlock' body
 
 toBlock' :: K.Expr -> MIR [Instr]
@@ -123,7 +121,7 @@ toBlock' (K.Let (K.FunDec fn params retTy fnBody) body, _) = do
   rest <- toBlock' body
   return $ ((fn, fnTy), fnBody') : rest
   where func = do
-          fnLabel <- newId (toName fn)
+          fnLabel <- newId fn
           Fun [] params retTy <$> toBlock fnLabel fnBody
         fnTy = FunTy (TupleTy (map snd params)) retTy
 

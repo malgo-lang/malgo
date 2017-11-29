@@ -6,7 +6,7 @@ import           Data.Maybe             (fromMaybe)
 import qualified Language.Malgo.KNormal as K
 import           Language.Malgo.Utils
 
-newtype BetaTransState = BetaTransState { table :: [(Id, Id)] }
+newtype BetaTransState = BetaTransState { table :: [(Name, Name)] }
   deriving Show
 
 newtype BetaTrans a = BetaTrans (StateT BetaTransState (Either String) a)
@@ -18,11 +18,11 @@ runBetaTrans (BetaTrans m) = evalStateT m (BetaTransState [])
 betaTrans :: K.Expr -> Either String K.Expr
 betaTrans e = runBetaTrans (trans e)
 
-addBind :: (Id, Id) -> BetaTrans ()
+addBind :: (Name, Name) -> BetaTrans ()
 addBind (x, y) =
   modify $ \e -> e { table = (x, y) : table e }
 
-find :: Id -> BetaTrans Id
+find :: Name -> BetaTrans Name
 find x = do
   env <- gets table
   let x' = lookup x env

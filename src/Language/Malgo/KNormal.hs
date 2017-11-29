@@ -5,6 +5,7 @@
 module Language.Malgo.KNormal where
 
 import           Control.Monad.State
+import           Data.String
 import qualified Language.Malgo.Typing as T
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -17,7 +18,7 @@ instance PrettyPrint Expr where
 
 data Expr' =
   -- | 変数参照
-    Var Id
+    Var Name
   -- | 32bit整数
   | Int Integer
   -- | 倍精度浮動小数点数
@@ -31,16 +32,16 @@ data Expr' =
   -- | 空の値("()")
   | Unit
   -- | 関数呼び出し
-  | Call (Id, Type) [(Id, Type)]
+  | Call (Name, Type) [(Name, Type)]
   -- | let式
   | Let Decl Expr
   -- | if式
-  | If (Id, Type) Expr Expr
+  | If (Name, Type) Expr Expr
   -- | 中置演算子
-  | BinOp Op (Id, Type) (Id, Type)
+  | BinOp Op (Name, Type) (Name, Type)
   deriving (Eq, Show)
 
-instance PrettyPrint (Id, Type) where
+instance PrettyPrint (Name, Type) where
   -- pretty (i, t) = pretty i <> colon <> pretty t
   pretty (i, _) = pretty i
 
@@ -64,20 +65,20 @@ instance PrettyPrint Expr' where
   pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
 -- | Malgoの組み込みデータ型
-data Type = NameTy Id
+data Type = NameTy Name
           | TupleTy [Type]
           | FunTy Type Type
-          | ClsTy Type
+          | ClsTy Type [Type]
   deriving (Eq, Show)
 
 instance PrettyPrint Type where
   pretty (NameTy n)          = pretty n
   pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
   pretty (FunTy domTy codTy) = pretty domTy <+> text "->" <+> pretty codTy
-  pretty (ClsTy ty) = braces (pretty ty)
+  pretty (ClsTy ty fv) = braces (pretty ty <+> brackets (sep (map pretty fv)))
 
-data Decl = FunDec Id [(Id, Type)] Type Expr
-          | ValDec Id Type Expr
+data Decl = FunDec Name [(Name, Type)] Type Expr
+          | ValDec Name Type Expr
   deriving (Eq, Show)
 
 instance PrettyPrint Decl where
@@ -88,7 +89,7 @@ instance PrettyPrint Decl where
     text "val" <+> pretty name <> colon <> pretty typ <+> pretty val
 
 data KNormalState = KNormalState { count :: Int
-                                 , table :: [(Name, Id)]
+                                 , table :: [(Name, Name)]
                                  }
   deriving Show
 
@@ -100,42 +101,39 @@ runKNormal (KNormal m) = runStateT m (KNormalState 0 [])
 
 knormal :: T.Expr -> Either String (Expr, Int)
 knormal a = do
-  k <- runKNormal (initEnv T.initEnv >> transExpr a)
+  k <- runKNormal $ transExpr a
   return (fst k, count (snd k))
 
-initEnv :: [(Name, T.Type)] -> KNormal ()
-initEnv = mapM_ (newId . fst)
-
-newId :: Name -> KNormal Id
+newId :: Name -> KNormal Name
 newId hint = do
   c <- gets count
   modify $ \e -> e { count = count e + 1
                    , table = ( hint
-                             , Id (c, hint)
+                             , hint `mappend` "." `mappend` fromString (show c)
                              ) : table e
                    }
-  return (Id (c, hint))
+  return (hint `mappend` "." `mappend` fromString (show c))
 
 incCount :: Int -> KNormal ()
 incCount n = modify $ \e -> e { count = count e + n }
 
-getId :: Name -> KNormal Id
+getId :: Name -> KNormal Name
 getId name = do
   t <- gets table
   case lookup name t of
     Just x  -> return x
-    Nothing -> newId name
+    Nothing -> rawId name
 
-rawId :: Name -> KNormal Id
+rawId :: Name -> KNormal Name
 rawId name = do
   t <- gets table
   case lookup name t of
     Just x -> return x
     Nothing -> do
-      modify $ \e -> e { table = (name, Raw name) : table e }
-      return (Raw name)
+      modify $ \e -> e { table = (name, name) : table e }
+      return name
 
-insertLet :: T.Expr -> ((Id, Type) -> KNormal Expr) -> KNormal Expr
+insertLet :: T.Expr -> ((Name, Type) -> KNormal Expr) -> KNormal Expr
 insertLet v@(_, t) k = do
   x <- newId "$k"
   v' <- transExpr v

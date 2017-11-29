@@ -10,6 +10,7 @@ import           Language.Malgo.Utils
 
 import           Control.Monad.State
 import           Data.ByteString          (ByteString)
+import qualified Data.ByteString.Short    as BS
 import           Data.Char
 import           Data.Maybe
 import           Data.String
@@ -43,7 +44,7 @@ trans name toplevel main = let mmodules = execModuleBuilder emptyModuleBuilder $
                                              , AST.moduleDefinitions = ds
                                              }
 
-type SymbolTable = [(Id, O.Operand)]
+type SymbolTable = [(Name, O.Operand)]
 
 initModuleBuilder :: ModuleBuilder ()
 initModuleBuilder = do
@@ -55,7 +56,7 @@ transToplevel tab (((name, _), String x) : xs) = do
   let ty = T.ArrayType
            (fromInteger (toInteger (length x + 1)))
            (T.IntegerType 8)
-  ref <- defvar (fromId name) ty (C.Array (T.IntegerType 8)
+  ref <- defvar (fromName name) ty (C.Array (T.IntegerType 8)
                                    (map (C.Int 8 . toInteger . ord) x
                                      ++ [C.Int 8 0]))
   transToplevel ((name, ref):tab) xs
@@ -69,13 +70,13 @@ transType :: Type -> T.Type
 transType (NameTy name) =
   fromMaybe (error $ show name ++ " (type) is not found.") (lookup name typeMap)
   where
-    typeMap = [ (Raw "Int", T.IntegerType 32)
-              , (Raw "Float", T.FloatingPointType T.DoubleFP)
-              , (Raw "Bool", T.IntegerType 1)
-              , (Raw "Char", T.IntegerType 8)
-              , (Raw "String", T.PointerType (T.IntegerType 8)
+    typeMap = [ ("Int", T.IntegerType 32)
+              , ("Float", T.FloatingPointType T.DoubleFP)
+              , ("Bool", T.IntegerType 1)
+              , ("Char", T.IntegerType 8)
+              , ("String", T.PointerType (T.IntegerType 8)
                                       (A.AddrSpace 0))
-              , (Raw "Unit", T.NamedTypeReference "unit")
+              , ("Unit", T.NamedTypeReference "unit")
               ]
 transType (FunTy (TupleTy xs) retty) =
   let xs' = map transType xs
@@ -89,25 +90,25 @@ transMain
   -> ModuleBuilder ()
 transMain tab body = do
   let label = "__malgo_main"
-      retty = NameTy (Raw "Unit")
+      retty = NameTy "Unit"
   _ <- transFun tab label [] [] retty body
   return ()
 
 transFun
   :: SymbolTable
-  -> Id
-  -> [(Id, Type)] -- 自由変数
-  -> [(Id, Type)] -- 仮引数
+  -> Name
+  -> [(Name, Type)] -- 自由変数
+  -> [(Name, Type)] -- 仮引数
   -> Type -- Return type
   -> Block
   -> ModuleBuilder SymbolTable
 transFun tab name [] params retty body = do
-  let label = fromId name
+  let label = fromName name
       retty' = transType retty
       params' = [(ty, Just nm) |
                  (ty, nm) <- zip
                                (map (transType . snd) params)
-                               (map (fromId . fst) params)]
+                               (map (fromName . fst) params)]
   let funty = ptr (T.FunctionType retty' (map fst params') False)
       funref = cons $ C.GlobalReference funty label
   fn <- (defun
@@ -121,13 +122,13 @@ transFun tab name fv params retty body = do
 
 transBody
   :: SymbolTable
-  -> (Id, O.Operand) -- 関数へのreference
+  -> (Name, O.Operand) -- 関数へのreference
   -> Block
-  -> [Id] -- 仮引数名のリスト
+  -> [Name] -- 仮引数名のリスト
   -> [O.Operand] -- 仮引数のlocal referenceのリスト
   -> InstrBuilder ()
 transBody tab fn (Block name instrs) paramIds paramRefs = do
-  _ <- block `named` fromId name
+  _ <- block `named` (fromName name)
   transBody' (zip paramIds paramRefs ++ (fn : tab)) instrs
 
 transBody'

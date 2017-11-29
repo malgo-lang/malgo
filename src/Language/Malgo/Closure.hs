@@ -1,18 +1,20 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE TypeSynonymInstances       #-}
 
 module Language.Malgo.Closure where
 
 import           Control.Monad.State
 import           Data.List
+import           Data.String
 import           Language.Malgo.KNormal (Type (..))
 import           Language.Malgo.MIR     hiding (count)
 import           Language.Malgo.Utils
 
-data ClosureState = ClosureState { knowns   :: [Id]
+data ClosureState = ClosureState { knowns   :: [Name]
                                  , toplevel :: [Instr]
-                                 , closure  :: [(Id, (Id, Type))]
+                                 , closure  :: [(Name, (Name, Type))]
                                  , count    :: Int
                                  }
   deriving Show
@@ -26,14 +28,14 @@ runClosure i (Closure m) = runStateT m (ClosureState [] [] [] i)
 resetKnowns :: Closure ()
 resetKnowns = modify $ \e -> e { knowns = [] }
 
-addKnowns :: Id -> Closure ()
+addKnowns :: Name -> Closure ()
 addKnowns name = modify $ \e -> e { knowns = name : knowns e }
 
-isKnown :: Id -> Closure Bool
+isKnown :: Name -> Closure Bool
 isKnown name =
   elem name <$> gets knowns
 
-freeVars :: Instr -> Closure [(Id, Type)]
+freeVars :: Instr -> Closure [(Name, Type)]
 freeVars ((name, _), Fun [] params retTy body) = do
   addKnowns name
 
@@ -86,19 +88,19 @@ trans :: Block -> Closure Block
 trans (Block label body) = do
   Block label <$> transInstrs body
 
-newCls :: (Id, Type) -> [(Id, Type)] -> Closure Instr
+newCls :: (Name, Type) -> [(Name, Type)] -> Closure Instr
 newCls fn fv = do
   c <- gets count
   modify $ \e -> e { count = count e + 1 }
-  let new = Id (c, fromId (fst fn))
-  insertClosure (fst fn) (new, ClsTy (snd fn))
-  return ((new, ClsTy (snd fn)), MkCls fn fv)
+  let new = fst fn `mappend` "." `mappend` fromString (show c)
+  insertClosure (fst fn) (new, ClsTy (snd fn) (map snd fv))
+  return ((new, ClsTy (snd fn) (map snd fv)), MkCls fn fv)
 
 insertToplevel :: Instr -> Closure ()
 insertToplevel instr = modify $ \e -> e { toplevel = instr : toplevel e }
-insertKnown :: Id -> Closure ()
+insertKnown :: Name -> Closure ()
 insertKnown name = modify $ \e -> e { knowns = name : knowns e }
-insertClosure :: Id -> (Id, Type) -> Closure ()
+insertClosure :: Name -> (Name, Type) -> Closure ()
 insertClosure name cls = modify $ \e -> e { closure = (name, cls) : closure e }
 
 -- 関数宣言をtoplevelに移動
