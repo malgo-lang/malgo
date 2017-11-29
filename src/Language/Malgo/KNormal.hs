@@ -87,7 +87,7 @@ instance PrettyPrint Decl where
     text "val" <+> pretty name <> colon <> pretty typ <+> pretty val
 
 data KNormalState = KNormalState { count :: Int
-                                 , table :: [(String, Id)]
+                                 , table :: [(Name, Id)]
                                  }
   deriving Show
 
@@ -102,10 +102,10 @@ knormal a = do
   k <- runKNormal (initEnv T.initEnv >> transExpr a)
   return (fst k, count (snd k))
 
-initEnv :: [(String, T.Type)] -> KNormal ()
+initEnv :: [(Name, T.Type)] -> KNormal ()
 initEnv = mapM_ (newId . fst)
 
-newId :: String -> KNormal Id
+newId :: Name -> KNormal Id
 newId hint = do
   c <- gets count
   modify $ \e -> e { count = count e + 1

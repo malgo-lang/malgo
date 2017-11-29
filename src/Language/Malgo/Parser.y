@@ -1,5 +1,4 @@
 {
-{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Parser where
 
 import Prelude hiding (EQ, LT, GT)
@@ -100,6 +99,7 @@ args : args ',' exp { $3 : $1 }
 
 
 type : id { NameTy (_id . _tag $ $1) }
+     | type '->' type { FunTy $1 $3 }
 
 decls : decls decl { $2 : $1 }
       | decl { [$1] }

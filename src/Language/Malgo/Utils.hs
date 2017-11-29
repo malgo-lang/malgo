@@ -1,16 +1,9 @@
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE StandaloneDeriving         #-}
-{-# LANGUAGE TypeSynonymInstances       #-}
+{-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 module Language.Malgo.Utils where
 
-import           Control.Applicative
-import           Control.Monad.Except
-import           Control.Monad.Identity
-import           Control.Monad.State
-import qualified Data.ByteString.Char8  as BS
 import           Data.String
-import qualified Text.PrettyPrint       as P
+import qualified Text.PrettyPrint as P
 
 class PrettyPrint a where
   pretty :: a -> P.Doc
@@ -23,7 +16,7 @@ instance PrettyPrint String where
   pretty = P.text
 
 -- instance (PrettyPrint a, PrettyPrint b) => PrettyPrint (a, b) where
---   pretty (a, b) = pretty a P.$+$ pretty b
+--   pretty (a, _) = pretty a
 
 instance PrettyPrint Int where
   pretty = P.int
@@ -47,13 +40,50 @@ instance PrettyPrint Info where
 dummyInfo :: Info
 dummyInfo = Info ("<dummy>", 0, 0)
 
+data Name = Name String
+          | DummyName
+  deriving (Show, Eq)
+
+instance IsString Name where fromString = Name
+
+fromName :: IsString a => Name -> a
+fromName (Name x)  = fromString x
+fromName DummyName = fromString "<dummy>"
+
+instance PrettyPrint Name where
+  pretty = P.text . fromName
+
+-- | 中置演算子の種類を表すタグ
+data Op = Add | Sub | Mul | Div
+        | Mod
+        | Eq | Neq
+        | Lt | Gt | Le | Ge
+        | And | Or
+  deriving (Eq, Show)
+
+instance PrettyPrint Op where
+  pretty Add = P.text "+"
+  pretty Sub = P.text "-"
+  pretty Mul = P.text "*"
+  pretty Div = P.text "/"
+  pretty Mod = P.text "%"
+  pretty Eq  = P.text "=="
+  pretty Neq = P.text "<>"
+  pretty Lt  = P.text "<"
+  pretty Gt  = P.text ">"
+  pretty Le  = P.text "<="
+  pretty Ge  = P.text ">="
+  pretty And = P.text "&&"
+  pretty Or  = P.text "||"
+
+
 -- | 比較の計算量が定数時間
-data Id = Id (Int, String)
-        | Raw String
+data Id = Id (Int, Name)
+        | Raw Name
   deriving Show
 
 instance IsString Id where
-  fromString x = Id (0, x)
+  fromString x = Id (0, Name x)
 
 instance Eq Id where
   (Id (x, _)) == (Id (y, _)) = x == y
@@ -65,42 +95,5 @@ instance PrettyPrint Id where
   pretty (Raw n)     = pretty n
 
 fromId :: IsString a => Id -> a
-fromId (Id (x, n)) = fromString $ n ++ '.' : show x
-fromId (Raw n)     = fromString n
-
-newtype Name = Name BS.ByteString
-  deriving (Show, Eq, Ord)
-
-instance IsString Name where
-  fromString x = Name (fromString x)
-
-instance PrettyPrint Name where
-  pretty = fromName
-
-fromName :: IsString a => Name -> a
-fromName (Name s) = fromString (BS.unpack s)
-
-data MalgoError = RenameError P.Doc
-                | TypingError P.Doc
-  deriving (Show, Eq)
-
-instance PrettyPrint MalgoError where
-  pretty (RenameError s) = P.text "error(rename):" P.<+> s
-  pretty (TypingError s) = P.text "error(typing):" P.<+> s
-
-newtype MalgoT s m a = MalgoT { unMalgoT :: ExceptT MalgoError (StateT s m) a }
-  deriving ( Functor, Applicative
-           , Monad, MonadError MalgoError, MonadState s
-           , MonadIO
-           )
-
-instance MonadTrans (MalgoT s) where
-  lift = MalgoT . lift . lift
-
-runMalgoT :: MalgoT s m a -> s -> m (Either MalgoError a, s)
-runMalgoT (MalgoT m) = runStateT (runExceptT m)
-
-type Malgo s a = MalgoT s Identity a
-
-runMalgo :: Malgo s a -> s -> (Either MalgoError a, s)
-runMalgo m s = runIdentity (runMalgoT m s)
+fromId (Id (x, n)) = fromString $ fromName n ++ '.' : show x
+fromId (Raw n)     = fromString $ fromName n
