@@ -1,10 +1,14 @@
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE TypeSynonymInstances       #-}
 module Language.Malgo.Utils where
 
-import qualified Data.ByteString.Char8 as BS
+import           Control.Monad.Except
+import           Control.Monad.Identity
+import           Control.Monad.State
+import qualified Data.ByteString.Char8  as BS
 import           Data.String
-import qualified Text.PrettyPrint      as P
+import qualified Text.PrettyPrint       as P
 
 class PrettyPrint a where
   pretty :: a -> P.Doc
@@ -15,9 +19,6 @@ instance (PrettyPrint a, PrettyPrint b) => PrettyPrint (Either a b) where
 
 instance PrettyPrint String where
   pretty = P.text
-
--- instance (PrettyPrint a, PrettyPrint b) => PrettyPrint (a, b) where
---   pretty (a, _) = pretty a
 
 instance PrettyPrint Int where
   pretty = P.int
@@ -69,26 +70,35 @@ type Name = BS.ByteString
 fromName :: IsString a => Name -> a
 fromName = fromString . BS.unpack
 
--- -- | 比較の計算量が定数時間
--- data Id = Id (Int, Name)
---         | Raw Name
---   deriving Show
-
--- instance IsString Id where
---   fromString x = Id (0, (fromString x))
-
--- instance Eq Id where
---   (Id (x, _)) == (Id (y, _)) = x == y
---   (Raw n1) == (Raw n2) = n1 == n2
---   _ == _ = False
-
--- instance PrettyPrint Id where
---   pretty (Id (i, n)) = pretty n P.<> P.text "_" P.<> P.int i
---   pretty (Raw n)     = pretty n
-
 instance PrettyPrint BS.ByteString where
   pretty bs = P.text (BS.unpack bs)
 
--- fromId :: IsString a => Id -> a
--- fromId (Id (x, n)) = fromString $ fromName n ++ '.' : show x
--- fromId (Raw n)     = fromString (fromName n)
+data MalgoError = ParseError Info P.Doc
+                | RenameError Info P.Doc
+                | TypeCheckError Info P.Doc
+  deriving Show
+
+instance PrettyPrint MalgoError where
+  pretty (ParseError i m) =
+    P.text "error(parse):" P.<+> pretty i P.<+> m
+  pretty (RenameError i m) =
+    P.text "error(rename):" P.<+> pretty i P.<+> m
+  pretty (TypeCheckError i m) =
+    P.text "error(typing):" P.<+> pretty i P.<+> m
+
+newtype MalgoT s m a = MalgoT { unMalgoT :: ExceptT MalgoError (StateT s m) a }
+  deriving ( Functor, Applicative
+           , Monad, MonadError MalgoError, MonadState s
+           , MonadIO
+           )
+
+instance MonadTrans (MalgoT s) where
+  lift = MalgoT . lift . lift
+
+runMalgoT :: MalgoT s m a -> s -> m (Either MalgoError a, s)
+runMalgoT (MalgoT m) = runStateT (runExceptT m)
+
+type Malgo s a = MalgoT s Identity a
+
+runMalgo :: Malgo s a -> s -> (Either MalgoError a, s)
+runMalgo m s = runIdentity (runMalgoT m s)
