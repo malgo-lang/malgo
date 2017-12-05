@@ -4,9 +4,17 @@ module Language.Malgo.Syntax where
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data Expr =
+data Toplevel a = Extern a Type
+                | Body (Expr a)
+  deriving Show
+
+instance PrettyPrint a => PrettyPrint (Toplevel a) where
+  pretty (Extern name typ) = text "extern" <+> pretty name <> colon <> pretty typ
+  pretty (Body e) = pretty e
+
+data Expr a =
   -- | 変数参照
-    Var Info Name
+    Var Info a
   -- | 32bit整数
   | Int Info Integer
   -- | 倍精度浮動小数点数
@@ -20,18 +28,18 @@ data Expr =
   -- | 空の値("()")
   | Unit Info
   -- | 関数呼び出し
-  | Call Info Expr [Expr]
+  | Call Info (Expr a) [Expr a]
   -- | 連続した式(e1 ; e2)
-  | Seq Info Expr Expr
+  | Seq Info (Expr a) (Expr a)
   -- | let式
-  | Let Info [Decl] Expr
+  | Let Info [Decl a] (Expr a)
   -- | if式
-  | If Info Expr Expr Expr
+  | If Info (Expr a) (Expr a) (Expr a)
   -- | 中置演算子
-  | BinOp Info Op Expr Expr
+  | BinOp Info Op (Expr a) (Expr a)
   deriving (Eq, Show)
 
-instance PrettyPrint Expr where
+instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Var _ name)     = pretty name
   pretty (Int _ x)         = integer x
   pretty (Float _ x)       = double x
@@ -53,19 +61,22 @@ instance PrettyPrint Expr where
 
 -- | Malgoの組み込みデータ型
 data Type = NameTy Name
+          | TupleTy [Type]
           | FunTy Type Type
+          | ClsTy Type [Type]
   deriving (Eq, Show)
 
 instance PrettyPrint Type where
   pretty (NameTy n)          = pretty n
-  -- pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
-  -- pretty (FunTy domTy codTy) = pretty domTy <+> text "->" <+> pretty codTy
+  pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
+  pretty (FunTy domTy codTy) = pretty domTy <+> text "->" <+> pretty codTy
+  pretty (ClsTy ty fv) = braces (pretty ty <+> brackets (sep (map pretty fv)))
 
-data Decl = FunDec Info Name [(Name, Type)] Type Expr
-          | ValDec Info Name Type Expr
+data Decl a = FunDec Info a [(a, Type)] Type (Expr a)
+            | ValDec Info a Type (Expr a)
   deriving (Eq, Show)
 
-instance PrettyPrint Decl where
+instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (FunDec _ name params retTy body) = parens $
     text "fun" <+> (parens . sep $ pretty name <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params)
     $+$ nest 2 (pretty body)

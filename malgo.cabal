@@ -8,26 +8,26 @@ license-file:        LICENSE
 author:              Yuya Kono
 maintainer:          takohati0821@gmail.com
 copyright:           2017 Yuya Kono
-category:            Web
+category:            Compilers/Interpreters
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
 
 library
   hs-source-dirs:   src
-  exposed-modules:  Language.Malgo
-                  , Language.Malgo.Utils
+  exposed-modules:  Language.Malgo.Utils
                   , Language.Malgo.Syntax
                   , Language.Malgo.Lexer
                   , Language.Malgo.Parser
-                  , Language.Malgo.Typing
-                  , Language.Malgo.KNormal
-                  , Language.Malgo.Beta
-                  , Language.Malgo.Assoc
-                  , Language.Malgo.MIR
-                  , Language.Malgo.Closure
-                  , Language.Malgo.IRBuilder
-                  , Language.Malgo.Codegen
+                  , Language.Malgo.Rename
+                  -- , Language.Malgo.Typing
+                  -- , Language.Malgo.KNormal
+                  -- , Language.Malgo.Beta
+                  -- , Language.Malgo.Assoc
+                  -- , Language.Malgo.MIR
+                  -- , Language.Malgo.Closure
+                  -- , Language.Malgo.IRBuilder
+                  -- , Language.Malgo.Codegen
 
   build-depends:    base >= 4.7 && < 5
                   , array

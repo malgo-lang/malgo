@@ -43,27 +43,43 @@ dummyInfo :: Info
 dummyInfo = Info ("<dummy>", 0, 0)
 
 -- | 中置演算子の種類を表すタグ
-data Op = Add | Sub | Mul | Div
+data Op = Add
+        | Sub
+        | Mul
+        | Div
+        | FAdd
+        | FSub
+        | FMul
+        | FDiv
         | Mod
-        | Eq | Neq
-        | Lt | Gt | Le | Ge
-        | And | Or
+        | Eq
+        | Neq
+        | Lt
+        | Gt
+        | Le
+        | Ge
+        | And
+        | Or
   deriving (Eq, Show)
 
 instance PrettyPrint Op where
-  pretty Add = P.text "+"
-  pretty Sub = P.text "-"
-  pretty Mul = P.text "*"
-  pretty Div = P.text "/"
-  pretty Mod = P.text "%"
-  pretty Eq  = P.text "=="
-  pretty Neq = P.text "<>"
-  pretty Lt  = P.text "<"
-  pretty Gt  = P.text ">"
-  pretty Le  = P.text "<="
-  pretty Ge  = P.text ">="
-  pretty And = P.text "&&"
-  pretty Or  = P.text "||"
+  pretty Add  = P.text "+"
+  pretty Sub  = P.text "-"
+  pretty Mul  = P.text "*"
+  pretty Div  = P.text "/"
+  pretty FAdd = P.text "+."
+  pretty FSub = P.text "-."
+  pretty FMul = P.text "*."
+  pretty FDiv = P.text "/."
+  pretty Mod  = P.text "%"
+  pretty Eq   = P.text "=="
+  pretty Neq  = P.text "<>"
+  pretty Lt   = P.text "<"
+  pretty Gt   = P.text ">"
+  pretty Le   = P.text "<="
+  pretty Ge   = P.text ">="
+  pretty And  = P.text "&&"
+  pretty Or   = P.text "||"
 
 type Name = BS.ByteString
 
@@ -73,14 +89,13 @@ fromName = fromString . BS.unpack
 instance PrettyPrint BS.ByteString where
   pretty bs = P.text (BS.unpack bs)
 
-data MalgoError = ParseError Info P.Doc
-                | RenameError Info P.Doc
+data MalgoError = RenameError Info P.Doc
                 | TypeCheckError Info P.Doc
   deriving Show
 
 instance PrettyPrint MalgoError where
-  pretty (ParseError i m) =
-    P.text "error(parse):" P.<+> pretty i P.<+> m
+  -- pretty (ParseError i m) =
+  --   P.text "error(parse):" P.<+> pretty i P.<+> m
   pretty (RenameError i m) =
     P.text "error(rename):" P.<+> pretty i P.<+> m
   pretty (TypeCheckError i m) =

@@ -27,9 +27,13 @@ data Tag = LET
          | THEN
          | ELSE
          | PLUS
+         | PLUS_DOT
          | MINUS
+         | MINUS_DOT
          | ASTERISK
+         | ASTERISK_DOT
          | SLASH
+         | SLASH_DOT
          | PERCENT
          | ARROW
          | EQ
@@ -69,7 +73,8 @@ lexer' = Tok.makeTokenParser $ emptyDef {
   Tok.commentLine = "--"
   , Tok.identStart = letter <|> oneOf "!?@_"
   , Tok.identLetter = alphaNum <|> oneOf "!?@_"
-  , Tok.reservedOpNames = [ ":", "=", "+", "-", "*"
+  , Tok.reservedOpNames = [ "+.", "-.", "*.", "/."
+                          , ":", "=", "+", "-", "*"
                           , "->"
                           , "/", "%", ";", "==", "<>"
                           , "&&", "||", "<", ">", "<=", ">="]
@@ -129,6 +134,11 @@ lexer = do
     <|> op info ">" GT
     <|> op info "<=" LE
     <|> op info ">=" GE
+    <|> op info "+." PLUS_DOT
+    <|> op info "-." MINUS_DOT
+    <|> op info "*." ASTERISK_DOT
+    <|> op info "/." SLASH_DOT
+    <|> op info "%" PERCENT
     <|> op info "+" PLUS
     <|> op info "-" MINUS
     <|> op info "*" ASTERISK

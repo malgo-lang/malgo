@@ -38,6 +38,10 @@ else  { Token (_, ELSE) }
 '-'   { Token (_, MINUS) }
 '*'   { Token (_, ASTERISK) }
 '/'   { Token (_, SLASH) }
+'+.'   { Token (_, PLUS_DOT) }
+'-.'   { Token (_, MINUS_DOT) }
+'*.'   { Token (_, ASTERISK_DOT) }
+'/.'   { Token (_, SLASH_DOT) }
 '%'   { Token (_, PERCENT) }
 '&&'  { Token (_, AND) }
 '||'  { Token (_, OR) }
@@ -55,16 +59,23 @@ str   { Token (_, STRING _) }
 %nonassoc '==' '<>'
 %nonassoc '<' '>' '<=' '>='
 %left '&&' '||'
-%left '+' '-'
-%left '*' '/' '%'
+%left '+' '-' '+.' '-.'
+%left '*' '/' '%' '*.' '/.'
 %left CAL
 %nonassoc NEG
 %%
+
+toplevel: id ':' type ';' toplevel { Extern (_id . _tag $ $1) $3 : $5 }
+        | exp { [Body $1] }
 
 exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
    | exp '*' exp { BinOp (_info $2) Mul $1 $3 }
    | exp '/' exp { BinOp (_info $2) Div $1 $3 }
+   | exp '+.' exp { BinOp (_info $2) FAdd $1 $3 }
+   | exp '-.' exp { BinOp (_info $2) FSub $1 $3 }
+   | exp '*.' exp { BinOp (_info $2) FMul $1 $3 }
+   | exp '/.' exp { BinOp (_info $2) FDiv $1 $3 }
    | exp '%' exp { BinOp (_info $2) Mod $1 $3 }
    | exp '==' exp { BinOp (_info $2) Eq $1 $3 }
    | exp '<>' exp { BinOp (_info $2) Neq $1 $3 }
@@ -102,11 +113,14 @@ args : args ',' exp { $3 : $1 }
 
 type : id { NameTy (_id . _tag $ $1) }
      | type '->' type { FunTy $1 $3 }
+     | '(' types ')' { TupleTy (reverse $2) }
+
+types : types ',' type { $3 : $1 }
+      | type { [$1] }
 
 decls : decls decl { $2 : $1 }
       | decl { [$1] }
 
-decl :: { Decl }
 decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                                  $4
                                  $6
@@ -124,11 +138,9 @@ decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
            $9
        }
 
-params :: { [(Name, Type)] }
 params : params ',' param { $3 : $1 }
        | param { [$1] }
 
-param :: { (Name, Type) }
 param : id ':' type { (_id . _tag $ $1, $3) }
 
 {
