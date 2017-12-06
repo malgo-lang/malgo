@@ -17,6 +17,7 @@ data Tag = LET
          | END
          | VAL
          | FUN
+         | EXTERN
          | LPAREN
          | RPAREN
          | COMMA
@@ -79,7 +80,7 @@ lexer' = Tok.makeTokenParser $ emptyDef {
                           , "/", "%", ";", "==", "<>"
                           , "&&", "||", "<", ">", "<=", ">="]
   , Tok.reservedNames = [ "let", "in", "end"
-                        , "val", "fun"
+                        , "val", "fun", "extern"
                         , "if", "then", "else"
                         , "true", "false"]
   }
@@ -117,6 +118,7 @@ lexer = do
     <|> keyword info "end" END
     <|> keyword info "val" VAL
     <|> keyword info "fun" FUN
+    <|> keyword info "extern" EXTERN
     <|> keyword info "if" IF
     <|> keyword info "then" THEN
     <|> keyword info "else" ELSE

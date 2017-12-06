@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.Rename (rename, ID(..), knowns, initRnEnv) where
+module Language.Malgo.Rename (rename, ID(..)) where
 
 import           Control.Monad.Except
 import           Control.Monad.State
@@ -38,7 +38,7 @@ initRnEnv :: RnEnv
 initRnEnv = RnEnv
             { count = 0
             , knowns = Map.empty
-            , idCons = External
+            , idCons = Toplevel
             }
 
 type Rename a = Malgo RnEnv a
@@ -46,8 +46,8 @@ type Rename a = Malgo RnEnv a
 runRename :: Malgo RnEnv a -> (Either MalgoError a, RnEnv)
 runRename m = runMalgo m initRnEnv
 
-rename :: [Toplevel Name] -> (Either MalgoError [Toplevel ID], RnEnv)
-rename e = runRename (mapM transToplevel e)
+rename :: [Decl Name] -> (Either MalgoError [Decl ID], RnEnv)
+rename d = runRename (mapM transDecl d)
 
 throw :: Info -> Doc -> Rename a
 throw info mes = throwError (RenameError info mes)
@@ -68,12 +68,6 @@ getID info name = do
   case Map.lookup name k of
     Just x  -> return x
     Nothing -> throw info (pretty name P.<+> text "is not defined")
-
-transToplevel :: Toplevel Name -> Rename (Toplevel ID)
-transToplevel (Extern name typ) = Extern <$> newID name <*> pure typ
-transToplevel (Body e)          = do
-  modify $ \e -> e { idCons = Toplevel }
-  Body <$> transExpr e
 
 transExpr :: Expr Name -> Rename (Expr ID)
 transExpr (Var info name) = Var info <$> getID info name
@@ -117,3 +111,9 @@ transDecl (FunDec info fn params retty body) = do
   put backup
 
   return (FunDec info fn' params' retty body')
+transDecl (ExDec info name typ orig) = do
+  cons <- gets idCons
+  modify $ \e -> e { idCons = External }
+  name' <- newID name
+  modify $ \e -> e { idCons = cons }
+  return $ ExDec info name' typ orig

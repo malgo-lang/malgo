@@ -1,16 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Syntax where
 
+import           Data.String
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
-
-data Toplevel a = Extern a Type
-                | Body (Expr a)
-  deriving Show
-
-instance PrettyPrint a => PrettyPrint (Toplevel a) where
-  pretty (Extern name typ) = text "extern" <+> pretty name <> colon <> pretty typ
-  pretty (Body e) = pretty e
 
 data Expr a =
   -- | 変数参照
@@ -59,6 +52,45 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
     $+$ nest 2 (pretty f)
   pretty (BinOp _ op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
+-- | 中置演算子の種類を表すタグ
+data Op = Add
+        | Sub
+        | Mul
+        | Div
+        | FAdd
+        | FSub
+        | FMul
+        | FDiv
+        | Mod
+        | Eq
+        | Neq
+        | Lt
+        | Gt
+        | Le
+        | Ge
+        | And
+        | Or
+  deriving (Eq, Show)
+
+instance PrettyPrint Op where
+  pretty Add  = text "+"
+  pretty Sub  = text "-"
+  pretty Mul  = text "*"
+  pretty Div  = text "/"
+  pretty FAdd = text "+."
+  pretty FSub = text "-."
+  pretty FMul = text "*."
+  pretty FDiv = text "/."
+  pretty Mod  = text "%"
+  pretty Eq   = text "=="
+  pretty Neq  = text "<>"
+  pretty Lt   = text "<"
+  pretty Gt   = text ">"
+  pretty Le   = text "<="
+  pretty Ge   = text ">="
+  pretty And  = text "&&"
+  pretty Or   = text "||"
+
 -- | Malgoの組み込みデータ型
 data Type = NameTy Name
           | TupleTy [Type]
@@ -72,13 +104,23 @@ instance PrettyPrint Type where
   pretty (FunTy domTy codTy) = pretty domTy <+> text "->" <+> pretty codTy
   pretty (ClsTy ty fv) = braces (pretty ty <+> brackets (sep (map pretty fv)))
 
+instance IsString Type where
+  fromString name = NameTy $ fromString name
+
 data Decl a = FunDec Info a [(a, Type)] Type (Expr a)
             | ValDec Info a Type (Expr a)
+            | ExDec Info a Type String
   deriving (Eq, Show)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (FunDec _ name params retTy body) = parens $
-    text "fun" <+> (parens . sep $ pretty name <> colon <> pretty retTy : map (\(n, t) -> pretty n <> colon <> pretty t) params)
+    text "fun" <+> (parens . sep $ pretty name -- <> colon <> pretty retTy
+                    : map (\(n, t) -> pretty n -- <> colon <> pretty t
+                          ) params)
     $+$ nest 2 (pretty body)
   pretty (ValDec _ name typ val) = parens $
-    text "val" <+> pretty name <> colon <> pretty typ <+> pretty val
+    text "val" <+> pretty name -- <> colon <> pretty typ
+    <+> pretty val
+  pretty (ExDec _ name typ orig) = parens $
+    text "extern" <+> pretty name -- <> colon <> pretty typ
+    <+> text orig

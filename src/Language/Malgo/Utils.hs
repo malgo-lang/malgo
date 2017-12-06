@@ -42,45 +42,6 @@ instance PrettyPrint Info where
 dummyInfo :: Info
 dummyInfo = Info ("<dummy>", 0, 0)
 
--- | 中置演算子の種類を表すタグ
-data Op = Add
-        | Sub
-        | Mul
-        | Div
-        | FAdd
-        | FSub
-        | FMul
-        | FDiv
-        | Mod
-        | Eq
-        | Neq
-        | Lt
-        | Gt
-        | Le
-        | Ge
-        | And
-        | Or
-  deriving (Eq, Show)
-
-instance PrettyPrint Op where
-  pretty Add  = P.text "+"
-  pretty Sub  = P.text "-"
-  pretty Mul  = P.text "*"
-  pretty Div  = P.text "/"
-  pretty FAdd = P.text "+."
-  pretty FSub = P.text "-."
-  pretty FMul = P.text "*."
-  pretty FDiv = P.text "/."
-  pretty Mod  = P.text "%"
-  pretty Eq   = P.text "=="
-  pretty Neq  = P.text "<>"
-  pretty Lt   = P.text "<"
-  pretty Gt   = P.text ">"
-  pretty Le   = P.text "<="
-  pretty Ge   = P.text ">="
-  pretty And  = P.text "&&"
-  pretty Or   = P.text "||"
-
 type Name = BS.ByteString
 
 fromName :: IsString a => Name -> a

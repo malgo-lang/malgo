@@ -19,6 +19,7 @@ in    { Token (_, IN) }
 end   { Token (_, END) }
 val   { Token (_, VAL) }
 fun   { Token (_, FUN) }
+extern { Token (_, EXTERN) }
 if    { Token (_, IF) }
 then  { Token (_, THEN) }
 else  { Token (_, ELSE) }
@@ -65,8 +66,37 @@ str   { Token (_, STRING _) }
 %nonassoc NEG
 %%
 
-toplevel: id ':' type ';' toplevel { Extern (_id . _tag $ $1) $3 : $5 }
-        | exp { [Body $1] }
+toplevel : decls { reverse $1 }
+
+decls : decls decl { $2 : $1 }
+      | decl { [$1] }
+
+decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
+                                 $4
+                                 $6
+                               }
+     | fun id '(' ')' ':' type '=' exp {
+         FunDec (_info $1) (_id . _tag $ $2)
+           [("_", NameTy "Unit")]
+           $6
+           $8
+       }
+     | fun id '(' params ')' ':' type '=' exp {
+         FunDec (_info $1) (_id . _tag $ $2)
+           (reverse $4)
+           $7
+           $9
+       }
+     | extern id ':' type '=' str {
+         ExDec (_info $1) (_id . _tag $ $2)
+           $4
+           (_str . _tag $ $6)
+       }
+
+params : params ',' param { $3 : $1 }
+       | param { [$1] }
+
+param : id ':' type { (_id . _tag $ $1, $3) }
 
 exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
@@ -117,32 +147,6 @@ type : id { NameTy (_id . _tag $ $1) }
 
 types : types ',' type { $3 : $1 }
       | type { [$1] }
-
-decls : decls decl { $2 : $1 }
-      | decl { [$1] }
-
-decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
-                                 $4
-                                 $6
-                               }
-     | fun id '(' ')' ':' type '=' exp {
-         FunDec (_info $1) (_id . _tag $ $2)
-           [("_", NameTy "Unit")]
-           $6
-           $8
-       }
-     | fun id '(' params ')' ':' type '=' exp {
-         FunDec (_info $1) (_id . _tag $ $2)
-           (reverse $4)
-           $7
-           $9
-       }
-
-params : params ',' param { $3 : $1 }
-       | param { [$1] }
-
-param : id ':' type { (_id . _tag $ $1, $3) }
-
 {
 parseError :: [Token] -> a
 parseError [] = error "Parse error at EOF"

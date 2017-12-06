@@ -1,32 +1,33 @@
-print : String -> Unit;
-println : String -> Unit;
-print_int : Int -> Unit;
-print_float : Float -> Unit;
-flush : Unit -> Unit;
-getchar : Unit -> Char;
-ord : Char -> Int;
-chr : Int -> Char;
-size : String -> Int;
-substrig : (String, Int, Int) -> String;
-concat : (String, String) -> String;
-not : Bool -> Bool;
-exit : Int -> Unit;
+extern print : String -> Unit = "print"
+extern println : String -> Unit = "println"
+extern print_int : Int -> Unit = "print_int"
+extern print_float : Float -> Unit = "print_float"
+extern flush : Unit -> Unit = "flush"
+extern getchar : Unit -> Char = "getchar"
+extern ord : Char -> Int = "ord"
+extern chr : Int -> Char = "chr"
+extern size : String -> Int = "size"
+extern substring : (String, Int, Int) -> String = "substring"
+extern concat : (String, String) -> String = "concat"
+extern not : Bool -> Bool = "not"
+extern exit : Int -> Unit = "exit"
 
-let val a:Int = 42
-    fun fib (n:Int) : Int =
-        if n <= 1
-        then 1
-        else fib (n - 1) + fib (n - 2)
-    val a:Int = a + 1
-    fun do_nothing():Unit = ()
-    fun add(x:Int):Int =
-      let fun add2(y:Int):Int =
-          x + y
-      in add2(2)
-      end
-    fun area(r:Float):Float = r *. r *. 3.14
-    val name:String = "malgo"
-in
+val a:Int = 42
+fun fib (n:Int) : Int =
+    if n <= 1
+    then 1
+    else fib (n - 1) + fib (n - 2)
+val a:Int = a + 1
+fun do_nothing():Unit = ()
+fun add(x:Int):Int =
+  let fun add2(y:Int):Int =
+      x + y
+  in add2(2)
+  end
+fun area(r:Float):Float = r *. r *. 3.14
+val name:String = "malgo"
+
+fun main():Unit = (
   println("Hello, world!");
   print("fib(10) = ");
   print_int(fib(10));
@@ -36,4 +37,4 @@ in
   print_int(a);
   print_float(3.14);
   print_float(area(10.0))
-end
+  )

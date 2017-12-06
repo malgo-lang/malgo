@@ -8,19 +8,19 @@ module Main where
 -- import qualified Language.Malgo.Codegen   as Codegen
 -- import qualified Language.Malgo.IRBuilder as IRBuilder
 -- import qualified Language.Malgo.KNormal   as KNormal
-import qualified Language.Malgo.Lexer  as Lexer
+import qualified Language.Malgo.Lexer     as Lexer
 -- import qualified Language.Malgo.MIR       as MIR
-import qualified Language.Malgo.Parser as Parser
--- import qualified Language.Malgo.Typing    as Typing
-import qualified Language.Malgo.Rename as Rename
+import qualified Language.Malgo.Parser    as Parser
+import qualified Language.Malgo.Rename    as Rename
+import qualified Language.Malgo.TypeCheck as TypeCheck
 import           Language.Malgo.Utils
 
-import           Control.Monad         (join)
-import qualified Data.ByteString.Char8 as BS
+import           Control.Monad            (join)
+import qualified Data.ByteString.Char8    as BS
 import           Data.String
-import           System.Environment    (getArgs)
-import qualified Text.Parsec.String    as P
-import qualified Text.PrettyPrint      as PP
+import           System.Environment       (getArgs)
+import qualified Text.Parsec.String       as P
+import qualified Text.PrettyPrint         as PP
 
 main :: IO ()
 main = do
@@ -43,6 +43,12 @@ main = do
         (Left x, _)  -> error $ show x
 
   print $ PP.sep (map pretty renamedAST)
+
+  let typedAST = case TypeCheck.typeCheck renamedAST of
+        (Right x, _) -> x
+        (Left x, _)  -> error $ show x
+
+  print $ PP.sep (map pretty typedAST)
   -- let typedAST = join $ Typing.typing <$> ast
 
   -- -- print typedAST
