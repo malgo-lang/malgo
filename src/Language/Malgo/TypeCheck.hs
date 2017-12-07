@@ -10,7 +10,6 @@ import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
 data TypedID = TypedID ID Type
-  deriving (Show, Ord, Eq)
 
 instance PrettyPrint TypedID where
   pretty (TypedID x t) = pretty x <> text ":" <> pretty t
@@ -26,8 +25,8 @@ type TypeCheck a = Malgo TcEnv a
 runTypeCheck :: TypeCheck a -> (Either MalgoError a, TcEnv)
 runTypeCheck m = runMalgo m initTcEnv
 
-typeCheck :: Expr ID -> (Either MalgoError (Expr TypedID), TcEnv)
-typeCheck = runTypeCheck . checkExpr
+typeCheck :: Traversable t => t (Decl ID) -> (Either MalgoError (t (Decl TypedID)), TcEnv)
+typeCheck d = runTypeCheck (mapM checkDecl d)
 
 throw :: Info -> Doc -> TypeCheck a
 throw info mes = throwError (TypeCheckError info mes)

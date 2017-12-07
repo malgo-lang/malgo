@@ -63,18 +63,13 @@ str   { Token (_, STRING _) }
 %left '+' '-' '+.' '-.'
 %left '*' '/' '%' '*.' '/.'
 %left CAL
-%left APP
 %nonassoc NEG
-
-%name parseDecl decl
-%name parseDecls decls
-%name parseExpr exp
-
 %%
 
-decls : decls_raw { reverse $1 }
-decls_raw : decls_raw decl { $2 : $1 }
-          | decl           { [$1] }
+toplevel : decls { reverse $1 }
+
+decls : decls decl { $2 : $1 }
+      | decl { [$1] }
 
 decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                                  $4
@@ -98,7 +93,7 @@ decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
            (_str . _tag $ $6)
        }
 
-params : params param { $3 : $1 }
+params : params ',' param { $3 : $1 }
        | param { [$1] }
 
 param : id ':' type { (_id . _tag $ $1, $3) }
@@ -120,7 +115,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '>=' exp { BinOp (_info $2) Ge $1 $3 }
    | exp '&&' exp { BinOp (_info $2) And $1 $3 }
    | exp '||' exp { BinOp (_info $2) Or $1 $3 }
-   | let decls in exp end { Let (_info $1) $2 $4 }
+   | let decls in exp end { Let (_info $1) (reverse $2) $4 }
    | if exp then exp else exp { If (_info $1) $2 $4 $6 }
    | exp ';' exp { Seq (_info $2) $1 $3 }
    | id { Var (_info $1) (_id . _tag $ $1) }
@@ -137,16 +132,12 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | bool { Bool (_info $1) (_bool . _tag $ $1) }
    | char { Char (_info $1) (_char . _tag $ $1) }
    | str  { String (_info $1) (_str . _tag $ $1) }
-   | tuple { Tuple (_info $1) (reverse $1) }
-   | exp args { Call (_info $1) $2 (reverse $3)}
-   -- | id '(' ')' { Call (_info $1) (Var (_info $1) (_id . _tag $ $1)) [Unit (_info $2)] }
-   -- | id '(' args ')' { Call (_info $1) (Var (_info $1) (_id . _tag $ $1)) (reverse $3) }
+   | id '(' ')' { Call (_info $1) (Var (_info $1) (_id . _tag $ $1)) [Unit (_info $2)] }
+   | id '(' args ')' { Call (_info $1) (Var (_info $1) (_id . _tag $ $1)) (reverse $3) }
    | '(' ')' { Unit (_info $1) }
    | '(' exp ')' { $2 }
 
-tuple : tuple ',' exp { $3 : $1 }
-      | exp { [$1] }
-args : args exp { $3 : $1 }
+args : args ',' exp { $3 : $1 }
      | exp { [$1] }
 
 

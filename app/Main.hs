@@ -30,25 +30,25 @@ main = do
   let tokens = Lexer.lexing file contents
   -- print tokens
 
-  let ast' = Parser.parseExpr <$> tokens
+  let ast' = Parser.parse <$> tokens
 
   let ast = case ast' of
         Left x  -> error $ show x
         Right x -> x
   -- print ast
-  print $ pretty ast
+  print $ PP.sep (map pretty ast)
 
   let renamedAST = case Rename.rename ast of
         (Right x, _) -> x
         (Left x, _)  -> error $ show x
 
-  print $ pretty renamedAST
+  print $ PP.sep (map pretty renamedAST)
 
   let typedAST = case TypeCheck.typeCheck renamedAST of
         (Right x, _) -> x
         (Left x, _)  -> error $ show x
 
-  print $ pretty typedAST
+  print $ PP.sep (map pretty typedAST)
   -- let typedAST = join $ Typing.typing <$> ast
 
   -- -- print typedAST

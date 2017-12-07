@@ -18,8 +18,6 @@ data Expr a =
   | Char Info Char
   -- | ダブルクォートで囲まれた文字列
   | String Info String
-  -- | 組
-  | Tuple Info [Expr a]
   -- | 空の値("()")
   | Unit Info
   -- | 関数呼び出し
@@ -98,7 +96,7 @@ data Type = NameTy Name
           | TupleTy [Type]
           | FunTy Type Type
           | ClsTy Type [Type]
-  deriving (Eq, Show, Ord)
+  deriving (Eq, Show)
 
 instance PrettyPrint Type where
   pretty (NameTy n)          = pretty n
