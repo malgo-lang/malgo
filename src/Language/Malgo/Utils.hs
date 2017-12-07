@@ -52,6 +52,7 @@ instance PrettyPrint BS.ByteString where
 
 data MalgoError = RenameError Info P.Doc
                 | TypeCheckError Info P.Doc
+                | KNormalError Info P.Doc
   deriving Show
 
 instance PrettyPrint MalgoError where
@@ -61,6 +62,8 @@ instance PrettyPrint MalgoError where
     P.text "error(rename):" P.<+> pretty i P.<+> m
   pretty (TypeCheckError i m) =
     P.text "error(typing):" P.<+> pretty i P.<+> m
+  pretty (KNormalError i m) =
+    P.text "error(knormal):" P.<+> pretty i P.<+> m
 
 newtype MalgoT s m a = MalgoT { unMalgoT :: ExceptT MalgoError (StateT s m) a }
   deriving ( Functor, Applicative

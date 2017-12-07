@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.Rename (rename, ID(..)) where
+module Language.Malgo.Rename (rename, ID(..), RnEnv(..)) where
 
 import           Control.Monad.Except
 import           Control.Monad.State
@@ -19,15 +19,16 @@ data ID = Toplevel { _name :: Name
         | External { _name :: Name
                    , _uniq :: Int
                    }
-        deriving (Show, Ord)
-
-instance Eq ID where
-  x == y = _uniq x == _uniq y
+        | Inserted { _name :: Name
+                   , _uniq :: Int
+                   }
+        deriving (Show, Ord, Eq)
 
 instance PrettyPrint ID where
   pretty (Toplevel name u) = pretty name <> P.braces (int u)
   pretty (Internal name u) = pretty name <> text "." <> int u
   pretty (External name u) = pretty name <> P.braces (int u)
+  pretty (Inserted name u) = text "$" <> pretty name <> text "." <> int u
 
 data RnEnv = RnEnv { count  :: Int
                    , knowns :: Map.Map Name ID
@@ -46,8 +47,8 @@ type Rename a = Malgo RnEnv a
 runRename :: Malgo RnEnv a -> (Either MalgoError a, RnEnv)
 runRename m = runMalgo m initRnEnv
 
-rename :: [Decl Name] -> (Either MalgoError [Decl ID], RnEnv)
-rename d = runRename (mapM transDecl d)
+rename :: Expr Name -> (Either MalgoError (Expr ID), RnEnv)
+rename x = runRename (transExpr x)
 
 throw :: Info -> Doc -> Rename a
 throw info mes = throwError (RenameError info mes)
