@@ -64,12 +64,16 @@ str   { Token (_, STRING _) }
 %left '*' '/' '%' '*.' '/.'
 %left CAL
 %nonassoc NEG
+
+%name parseDecl decl
+%name parseExpr exp
+%name parseDecls decls
 %%
 
-toplevel : decls { reverse $1 }
+decls : decls_raw { reverse $1 }
 
-decls : decls decl { $2 : $1 }
-      | decl { [$1] }
+decls_raw : decls_raw decl { $2 : $1 }
+          | decl { [$1] }
 
 decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                                  $4
@@ -115,7 +119,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '>=' exp { BinOp (_info $2) Ge $1 $3 }
    | exp '&&' exp { BinOp (_info $2) And $1 $3 }
    | exp '||' exp { BinOp (_info $2) Or $1 $3 }
-   | let decls in exp end { Let (_info $1) (reverse $2) $4 }
+   | let decls in exp end { Let (_info $1) $2 $4 }
    | if exp then exp else exp { If (_info $1) $2 $4 $6 }
    | exp ';' exp { Seq (_info $2) $1 $3 }
    | id { Var (_info $1) (_id . _tag $ $1) }
@@ -142,8 +146,8 @@ args : args ',' exp { $3 : $1 }
 
 
 type : id { NameTy (_id . _tag $ $1) }
-     | type '->' type { FunTy $1 $3 }
-     | '(' types ')' { TupleTy (reverse $2) }
+     | type '->' type { FunTy [$1] $3 }
+     | '(' types ')' '->' type { FunTy (reverse $2) $5 }
 
 types : types ',' type { $3 : $1 }
       | type { [$1] }

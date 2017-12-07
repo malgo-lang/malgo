@@ -25,8 +25,8 @@ type TypeCheck a = Malgo TcEnv a
 runTypeCheck :: TypeCheck a -> (Either MalgoError a, TcEnv)
 runTypeCheck m = runMalgo m initTcEnv
 
-typeCheck :: Traversable t => t (Decl ID) -> (Either MalgoError (t (Decl TypedID)), TcEnv)
-typeCheck d = runTypeCheck (mapM checkDecl d)
+typeCheck :: Expr ID -> (Either MalgoError (Expr TypedID), TcEnv)
+typeCheck x = runTypeCheck (checkExpr x)
 
 throw :: Info -> Doc -> TypeCheck a
 throw info mes = throwError (TypeCheckError info mes)
@@ -68,9 +68,9 @@ checkDecl (FunDec info fn params retty body) = do
                       $+$ "actual:" <+> pretty (typeOf body')
 
   where makeFnTy [] _         = throw info (text "void parameter is invalid")
-        makeFnTy [(_, t)] ret = return $ FunTy t ret
+        -- makeFnTy [(_, t)] ret = return $ FunTy t ret
         makeFnTy xs ret       =
-          return $ FunTy (TupleTy (map snd xs)) ret
+          return $ FunTy (map snd xs) ret
 
 typeOf :: Expr TypedID -> Type
 typeOf (Var _ (TypedID _ ty)) = ty
@@ -93,23 +93,23 @@ typeOf (BinOp _ op x _) =
     _            -> error "(typeOfOp op) should match (FunTy _ ty)"
 
 typeOfOp :: Op -> Type -> Type
-typeOfOp Add _  = FunTy (TupleTy ["Int", "Int"]) "Int"
-typeOfOp Sub _  = FunTy (TupleTy ["Int", "Int"]) "Int"
-typeOfOp Mul _  = FunTy (TupleTy ["Int", "Int"]) "Int"
-typeOfOp Div _  = FunTy (TupleTy ["Int", "Int"]) "Int"
-typeOfOp FAdd _ = FunTy (TupleTy ["Float", "Float"]) "Float"
-typeOfOp FSub _ = FunTy (TupleTy ["Float", "Float"]) "Float"
-typeOfOp FMul _ = FunTy (TupleTy ["Float", "Float"]) "Float"
-typeOfOp FDiv _ = FunTy (TupleTy ["Float", "Float"]) "Float"
-typeOfOp Mod  _ = FunTy (TupleTy ["Int", "Int"]) "Int"
-typeOfOp Eq ty  = FunTy (TupleTy [ty, ty]) "Bool"
-typeOfOp Neq ty = FunTy (TupleTy [ty, ty]) "Bool"
-typeOfOp Lt ty  = FunTy (TupleTy [ty, ty]) "Bool"
-typeOfOp Gt ty  = FunTy (TupleTy [ty, ty]) "Bool"
-typeOfOp Le ty  = FunTy (TupleTy [ty, ty]) "Bool"
-typeOfOp Ge ty  = FunTy (TupleTy [ty, ty]) "Bool"
-typeOfOp And _  = FunTy (TupleTy ["Bool", "Bool"]) "Bool"
-typeOfOp Or _   = FunTy (TupleTy ["Bool", "Bool"]) "Bool"
+typeOfOp Add _  = FunTy ["Int", "Int"] "Int"
+typeOfOp Sub _  = FunTy ["Int", "Int"] "Int"
+typeOfOp Mul _  = FunTy ["Int", "Int"] "Int"
+typeOfOp Div _  = FunTy ["Int", "Int"] "Int"
+typeOfOp FAdd _ = FunTy ["Float", "Float"] "Float"
+typeOfOp FSub _ = FunTy ["Float", "Float"] "Float"
+typeOfOp FMul _ = FunTy ["Float", "Float"] "Float"
+typeOfOp FDiv _ = FunTy ["Float", "Float"] "Float"
+typeOfOp Mod  _ = FunTy ["Int", "Int"] "Int"
+typeOfOp Eq ty  = FunTy [ty, ty] "Bool"
+typeOfOp Neq ty = FunTy [ty, ty] "Bool"
+typeOfOp Lt ty  = FunTy [ty, ty] "Bool"
+typeOfOp Gt ty  = FunTy [ty, ty] "Bool"
+typeOfOp Le ty  = FunTy [ty, ty] "Bool"
+typeOfOp Ge ty  = FunTy [ty, ty] "Bool"
+typeOfOp And _  = FunTy ["Bool", "Bool"] "Bool"
+typeOfOp Or _   = FunTy ["Bool", "Bool"] "Bool"
 
 comparable :: Type -> Bool
 comparable "Int"       = True
@@ -119,7 +119,7 @@ comparable "Char"      = True
 comparable "String"    = True
 comparable "Unit"      = False
 comparable (NameTy _)  = False
-comparable (TupleTy _) = False
+-- comparable (TupleTy _) = False
 comparable (FunTy _ _) = False
 comparable (ClsTy _ _) = False
 
@@ -139,10 +139,10 @@ checkExpr (Call info fn args) = do
                 _           ->
                   throw info $
                   pretty (typeOf fn') <+> "is not callable"
-  if (TupleTy (map typeOf args') == paramty) -- 引数が複数あるとき
-     || (TupleTy (map typeOf args') == TupleTy [paramty]) -- 引数が1つのとき
+  if map typeOf args' == paramty -- 引数が複数あるとき
+     -- -- | (TupleTy (map typeOf args') == TupleTy [paramty]) -- 引数が1つのとき
     then return $ Call info fn' args'
-    else throw info (text "expected:" <+> pretty paramty
+    else throw info (text "expected:" <+> cat (punctuate (text ",") (map pretty paramty))
                      $+$ text "actual:"
                      <+> parens (cat
                                  $ punctuate (text ",")
@@ -150,7 +150,7 @@ checkExpr (Call info fn args) = do
 checkExpr (BinOp info op x y) = do
   x' <- checkExpr x
   y' <- checkExpr y
-  let (FunTy (TupleTy [px, py]) _) = typeOfOp op (typeOf x')
+  let (FunTy [px, py] _) = typeOfOp op (typeOf x')
   when (typeOf x' /= px) (throw info $ text "expected:" <+> pretty px
                           $+$ text "actual:" <+> pretty (typeOf x'))
   when (typeOf y' /= py) (throw info $ text "expected:" <+> pretty py
@@ -179,9 +179,3 @@ checkExpr (If info c t f) = do
               $+$ text "actual:" <+> pretty (typeOf f')
     else throw info $ text "expected:" <+> text "Bool"
          $+$ text "actual:" <+> pretty (typeOf c')
--- checkExpr (Var info name) = do
---   name'@(TypedID _ ty) <- getBind info name
---   return (Var info name', ty)
--- checkExpr (Int info x) = return (Int info x, "Int")
--- checkExpr (Float info x) = return (Float info x, "Float")
--- checkExpr (Bool )

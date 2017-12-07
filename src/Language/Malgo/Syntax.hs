@@ -93,15 +93,17 @@ instance PrettyPrint Op where
 
 -- | Malgoの組み込みデータ型
 data Type = NameTy Name
-          | TupleTy [Type]
-          | FunTy Type Type
+          -- | TupleTy [Type]
+          | FunTy [Type] Type
           | ClsTy Type [Type]
   deriving (Eq, Show)
 
 instance PrettyPrint Type where
   pretty (NameTy n)          = pretty n
-  pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
-  pretty (FunTy domTy codTy) = pretty domTy <+> text "->" <+> pretty codTy
+  -- pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
+  pretty (FunTy paramTy codTy) =
+    parens (cat $ punctuate (text ",") (map pretty paramTy))
+    <+> text "->" <+> pretty codTy
   pretty (ClsTy ty fv) = braces (pretty ty <+> brackets (sep (map pretty fv)))
 
 instance IsString Type where

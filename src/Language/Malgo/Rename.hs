@@ -46,8 +46,8 @@ type Rename a = Malgo RnEnv a
 runRename :: Malgo RnEnv a -> (Either MalgoError a, RnEnv)
 runRename m = runMalgo m initRnEnv
 
-rename :: [Decl Name] -> (Either MalgoError [Decl ID], RnEnv)
-rename d = runRename (mapM transDecl d)
+-- rename :: [Decl Name] -> (Either MalgoError [Decl ID], RnEnv)
+rename x = runRename (transExpr x)
 
 throw :: Info -> Doc -> Rename a
 throw info mes = throwError (RenameError info mes)

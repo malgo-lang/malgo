@@ -1,3 +1,4 @@
+let
 extern print : String -> Unit = "print"
 extern println : String -> Unit = "println"
 extern print_int : Int -> Unit = "print_int"
@@ -26,8 +27,7 @@ fun add(x:Int):Int =
   end
 fun area(r:Float):Float = r *. r *. 3.14
 val name:String = "malgo"
-
-fun main():Unit = (
+in
   println("Hello, world!");
   print("fib(10) = ");
   print_int(fib(10));
@@ -37,4 +37,4 @@ fun main():Unit = (
   print_int(a);
   print_float(3.14);
   print_float(area(10.0))
-  )
+end
