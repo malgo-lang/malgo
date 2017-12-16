@@ -21,7 +21,8 @@ data Expr a =
   -- | 空の値("()")
   | Unit Info
   -- | 関数呼び出し
-  | Call Info (Expr a) [Expr a]
+  | Call Info a -- (Expr a) -- そのうち任意の関数型をもつ式を呼び出し可能にする
+    [Expr a]
   -- | 連続した式(e1 ; e2)
   | Seq Info (Expr a) (Expr a)
   -- | let式
@@ -94,17 +95,25 @@ instance PrettyPrint Op where
 -- | Malgoの組み込みデータ型
 data Type = NameTy Name
           -- | TupleTy [Type]
-          | FunTy [Type] Type
-          | ClsTy Type [Type]
+          | FunTy { _params :: [Type]
+                  , _ret    :: Type
+                  }
+          | ClsTy { _params   :: [Type]
+                  , _ret      :: Type
+                  , _captures :: [Type]
+                  }
   deriving (Eq, Show)
 
 instance PrettyPrint Type where
   pretty (NameTy n)          = pretty n
   -- pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
-  pretty (FunTy paramTy codTy) =
-    parens (cat $ punctuate (text ",") (map pretty paramTy))
-    <+> text "->" <+> pretty codTy
-  pretty (ClsTy ty fv) = braces (pretty ty <+> brackets (sep (map pretty fv)))
+  pretty (FunTy param ret) =
+    parens (cat (punctuate (text ",") (map pretty param))
+    <+> text "->" <+> pretty ret)
+  pretty (ClsTy param ret cap) = braces
+    (parens (cat (punctuate (text ",") (map pretty param))
+             <+> text "->" <+> pretty ret))
+    <+> brackets (sep (map pretty cap))
 
 instance IsString Type where
   fromString name = NameTy $ fromString name
@@ -115,14 +124,14 @@ data Decl a = FunDec Info a [(a, Type)] Type (Expr a)
   deriving (Eq, Show)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
-  pretty (FunDec _ name params retTy body) = parens $
+  pretty (FunDec _ name params _ body) = parens $
     text "fun" <+> (parens . sep $ pretty name -- <> colon <> pretty retTy
-                    : map (\(n, t) -> pretty n -- <> colon <> pretty t
+                    : map (\(n, _) -> pretty n -- <> colon <> pretty t
                           ) params)
     $+$ nest 2 (pretty body)
-  pretty (ValDec _ name typ val) = parens $
+  pretty (ValDec _ name _ val) = parens $
     text "val" <+> pretty name -- <> colon <> pretty typ
     <+> pretty val
-  pretty (ExDec _ name typ orig) = parens $
+  pretty (ExDec _ name _ orig) = parens $
     text "extern" <+> pretty name -- <> colon <> pretty typ
     <+> text orig

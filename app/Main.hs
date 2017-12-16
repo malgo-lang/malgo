@@ -7,9 +7,8 @@ module Main where
 -- import qualified Language.Malgo.Closure   as Closure
 -- import qualified Language.Malgo.Codegen   as Codegen
 -- import qualified Language.Malgo.IRBuilder as IRBuilder
--- import qualified Language.Malgo.KNormal   as KNormal
+import qualified Language.Malgo.KNormal   as KNormal
 import qualified Language.Malgo.Lexer     as Lexer
--- import qualified Language.Malgo.MIR       as MIR
 import qualified Language.Malgo.Parser    as Parser
 import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.TypeCheck as TypeCheck
@@ -38,8 +37,8 @@ main = do
   -- print ast
   print $ pretty ast
 
-  let renamedAST = case Rename.rename ast of
-        (Right x, _) -> x
+  let (renamedAST, rnenv) = case Rename.rename ast of
+        (Right x, e) -> (x, e)
         (Left x, _)  -> error $ show x
 
   print $ pretty renamedAST
@@ -49,10 +48,12 @@ main = do
         (Left x, _)  -> error $ show x
 
   print $ pretty typedAST
-  -- let typedAST = join $ Typing.typing <$> ast
 
-  -- -- print typedAST
-  -- print $ pretty typedAST
+  let knormal = case KNormal.knormal rnenv typedAST of
+        (Right x, _) -> x
+        (Left x, _)  -> error $ show x
+
+  print $ pretty knormal
 
   -- let kNormal = join $ KNormal.knormal <$> typedAST
   -- print $ pretty (fmap fst kNormal)

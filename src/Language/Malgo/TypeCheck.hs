@@ -10,6 +10,7 @@ import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
 data TypedID = TypedID ID Type
+  deriving (Eq, Show)
 
 instance PrettyPrint TypedID where
   pretty (TypedID x t) = pretty x <> text ":" <> pretty t
@@ -43,13 +44,14 @@ getBind info name = do
   case Map.lookup name t of
     Just x  -> return x
     Nothing -> throw info (pretty name <+> text "is not defined")
+
 checkDecl :: Decl ID -> TypeCheck (Decl TypedID)
 checkDecl (ExDec info name typ orig) = do
   addBind name typ
   return $ ExDec info (TypedID name typ) typ orig
 checkDecl (ValDec info name typ val) = do
   val' <- checkExpr val
-  if typ == (typeOf val')
+  if typ == typeOf val'
     then do addBind name typ
             return $ ValDec info (TypedID name typ) typ val'
     else throw info ("expected:" <+> pretty typ
@@ -62,7 +64,7 @@ checkDecl (FunDec info fn params retty body) = do
   let params' = map (\(x, t) -> (TypedID x t, t)) params
   body' <- checkExpr body
 
-  if (typeOf body') == retty
+  if typeOf body' == retty
     then return $ FunDec info fn' params' retty body'
     else throw info $ "expected:" <+> pretty retty
                       $+$ "actual:" <+> pretty (typeOf body')
@@ -81,47 +83,59 @@ typeOf (Char _ _)             = "Char"
 typeOf (String _ _)           = "String"
 typeOf (Unit _)               = "Unit"
 typeOf (Call _ fn _) =
-  case typeOf fn of
-    (FunTy _ ty) -> ty
-    _            -> error "(typeOf fn) should match (FunTy _ ty)"
+  case fn of
+    (TypedID _ (FunTy _ ty)) -> ty
+    _                        -> error "(typeOf fn) should match (FunTy _ ty)"
 typeOf (Seq _ _ e) = typeOf e
 typeOf (Let _ _ e) = typeOf e
 typeOf (If _ _ e _) = typeOf e
-typeOf (BinOp _ op x _) =
-  case typeOfOp op (typeOf x) of
-    (FunTy _ ty) -> ty
-    _            -> error "(typeOfOp op) should match (FunTy _ ty)"
+typeOf (BinOp i op x _) =
+  case runTypeCheck (typeOfOp i op (typeOf x)) of
+    (Right (FunTy _ ty), _) -> ty
+    (Left mes, _)           -> error (show mes)
+    _ -> error "(typeOfOp op) should match (FunTy _ ty)"
 
-typeOfOp :: Op -> Type -> Type
-typeOfOp Add _  = FunTy ["Int", "Int"] "Int"
-typeOfOp Sub _  = FunTy ["Int", "Int"] "Int"
-typeOfOp Mul _  = FunTy ["Int", "Int"] "Int"
-typeOfOp Div _  = FunTy ["Int", "Int"] "Int"
-typeOfOp FAdd _ = FunTy ["Float", "Float"] "Float"
-typeOfOp FSub _ = FunTy ["Float", "Float"] "Float"
-typeOfOp FMul _ = FunTy ["Float", "Float"] "Float"
-typeOfOp FDiv _ = FunTy ["Float", "Float"] "Float"
-typeOfOp Mod  _ = FunTy ["Int", "Int"] "Int"
-typeOfOp Eq ty  = FunTy [ty, ty] "Bool"
-typeOfOp Neq ty = FunTy [ty, ty] "Bool"
-typeOfOp Lt ty  = FunTy [ty, ty] "Bool"
-typeOfOp Gt ty  = FunTy [ty, ty] "Bool"
-typeOfOp Le ty  = FunTy [ty, ty] "Bool"
-typeOfOp Ge ty  = FunTy [ty, ty] "Bool"
-typeOfOp And _  = FunTy ["Bool", "Bool"] "Bool"
-typeOfOp Or _   = FunTy ["Bool", "Bool"] "Bool"
+typeOfOp :: Info -> Op -> Type -> TypeCheck Type
+typeOfOp _ Add _  = return $ FunTy ["Int", "Int"] "Int"
+typeOfOp _ Sub _  = return $ FunTy ["Int", "Int"] "Int"
+typeOfOp _ Mul _  = return $ FunTy ["Int", "Int"] "Int"
+typeOfOp _ Div _  = return $ FunTy ["Int", "Int"] "Int"
+typeOfOp _ FAdd _ = return $ FunTy ["Float", "Float"] "Float"
+typeOfOp _ FSub _ = return $ FunTy ["Float", "Float"] "Float"
+typeOfOp _ FMul _ = return $ FunTy ["Float", "Float"] "Float"
+typeOfOp _ FDiv _ = return $ FunTy ["Float", "Float"] "Float"
+typeOfOp _ Mod  _ = return $ FunTy ["Int", "Int"] "Int"
+typeOfOp i Eq ty  = if comparable ty
+                    then return $ FunTy [ty, ty] "Bool"
+                    else throw i (pretty ty <+> "is not comparable")
+typeOfOp i Neq ty  = if comparable ty
+                     then return $ FunTy [ty, ty] "Bool"
+                     else throw i (pretty ty <+> "is not comparable")
+typeOfOp i Lt ty  = if comparable ty
+                    then return $ FunTy [ty, ty] "Bool"
+                    else throw i (pretty ty <+> "is not comparable")
+typeOfOp i Gt ty  = if comparable ty
+                    then return $ FunTy [ty, ty] "Bool"
+                    else throw i (pretty ty <+> "is not comparable")
+typeOfOp i Le ty  = if comparable ty
+                    then return $ FunTy [ty, ty] "Bool"
+                    else throw i (pretty ty <+> "is not comparable")
+typeOfOp i Ge ty  = if comparable ty
+                    then return $ FunTy [ty, ty] "Bool"
+                    else throw i (pretty ty <+> "is not comparable")
+typeOfOp _ And _  = return $ FunTy ["Bool", "Bool"] "Bool"
+typeOfOp _ Or _   = return $ FunTy ["Bool", "Bool"] "Bool"
 
 comparable :: Type -> Bool
-comparable "Int"       = True
-comparable "Float"     = True
-comparable "Bool"      = True
-comparable "Char"      = True
-comparable "String"    = True
-comparable "Unit"      = False
-comparable (NameTy _)  = False
--- comparable (TupleTy _) = False
-comparable (FunTy _ _) = False
-comparable (ClsTy _ _) = False
+comparable "Int"    = True
+comparable "Float"  = True
+comparable "Bool"   = True
+comparable "Char"   = True
+comparable "String" = True
+comparable "Unit"   = False
+comparable NameTy{} = False
+comparable FunTy{}  = False
+comparable ClsTy{}  = False
 
 checkExpr :: Expr ID -> TypeCheck (Expr TypedID)
 checkExpr (Var info name) = Var info <$> getBind info name
@@ -132,13 +146,13 @@ checkExpr (Char info x)   = return $ Char info x
 checkExpr (String info x) = return $ String info x
 checkExpr (Unit info)     = return $ Unit info
 checkExpr (Call info fn args) = do
-  fn' <- checkExpr fn
+  fn' <- getBind info fn
   args' <- mapM checkExpr args
-  paramty <- case typeOf fn' of
-                (FunTy p _) -> return p
+  paramty <- case fn' of
+                (TypedID _ (FunTy p _)) -> return p
                 _           ->
                   throw info $
-                  pretty (typeOf fn') <+> "is not callable"
+                  pretty fn' <+> "is not callable"
   if map typeOf args' == paramty -- 引数が複数あるとき
      -- -- | (TupleTy (map typeOf args') == TupleTy [paramty]) -- 引数が1つのとき
     then return $ Call info fn' args'
@@ -150,7 +164,7 @@ checkExpr (Call info fn args) = do
 checkExpr (BinOp info op x y) = do
   x' <- checkExpr x
   y' <- checkExpr y
-  let (FunTy [px, py] _) = typeOfOp op (typeOf x')
+  (FunTy [px, py] _) <- typeOfOp info op (typeOf x')
   when (typeOf x' /= px) (throw info $ text "expected:" <+> pretty px
                           $+$ text "actual:" <+> pretty (typeOf x'))
   when (typeOf y' /= py) (throw info $ text "expected:" <+> pretty py
