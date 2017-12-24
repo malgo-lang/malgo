@@ -73,7 +73,8 @@ str   { Token (_, STRING _) }
 decls : decls_raw { reverse $1 }
 
 decls_raw : decls_raw decl { $2 : $1 }
-          | decl { [$1] }
+--          | decl { [$1] }
+          |      { [] }
 
 decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                                  $4

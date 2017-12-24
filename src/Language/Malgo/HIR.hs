@@ -21,7 +21,6 @@ data Expr a =
   | String String
   | Unit
   | Call a [a]
-  | Seq (Expr a) (Expr a)
   | Let (Decl a) (Expr a)
   | If a (Expr a) (Expr a)
   | BinOp Op a a
@@ -37,7 +36,6 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (String x)      = doubleQuotes $ text x
   pretty Unit            = text "()"
   pretty (Call fn arg)   = parens $ pretty fn <+> sep (map pretty arg)
-  pretty (Seq e1 e2)     =  parens $ text "seq" $+$ pretty e1 $+$ pretty e2
   pretty (Let decl body) =
     parens $ text "let" <+> parens (pretty decl)
     $+$ nest 2 (pretty body)

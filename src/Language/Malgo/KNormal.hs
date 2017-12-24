@@ -55,6 +55,12 @@ newTmp typ = do
   modify $ \e -> e { _count = c + 1 }
   return (TypedID (Internal "$k" c) typ)
 
+newUnused :: KNormal TypedID
+newUnused = do
+  c <- gets _count
+  modify $ \e -> e { _count = c + 1 }
+  return (TypedID (Internal "$_" c) "Unit")
+
 transOp :: S.Op -> S.Type -> KNormal Op
 transOp S.Add _  = return Add
 transOp S.Sub _  = return Sub
@@ -112,7 +118,10 @@ transExpr (S.Let _ [S.FunDec _ fn params _ fbody] body) = do
 transExpr (S.Let _ [S.ExDec _ name _ orig] body) = do
   addEx name orig
   transExpr body
-transExpr (S.Seq _ e1 e2) =
-  Seq <$> transExpr e1 <*> transExpr e2
+transExpr (S.Seq _ e1 e2) = do
+  unused <- newUnused
+  e1' <- transExpr e1
+  e2' <- transExpr e2
+  return $ Let (ValDec unused e1') e2'
 transExpr (S.Let info _ _) =
   throw info (text "unreachable")

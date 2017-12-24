@@ -2,11 +2,11 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Main where
 
--- import qualified Language.Malgo.Assoc     as Assoc
 -- import qualified Language.Malgo.Beta      as Beta
 -- import qualified Language.Malgo.Closure   as Closure
 -- import qualified Language.Malgo.Codegen   as Codegen
 -- import qualified Language.Malgo.IRBuilder as IRBuilder
+import qualified Language.Malgo.Flatten   as Flatten
 import qualified Language.Malgo.KNormal   as KNormal
 import qualified Language.Malgo.Lexer     as Lexer
 import qualified Language.Malgo.Parser    as Parser
@@ -55,9 +55,8 @@ main = do
 
   print $ pretty knormal
 
-  -- let kNormal = join $ KNormal.knormal <$> typedAST
-  -- print $ pretty (fmap fst kNormal)
-
+  let flatten = Flatten.flattenProgram knormal
+  print $ pretty flatten
   -- let beta = join $ Beta.betaTrans <$> fmap fst kNormal
   -- print $ pretty beta
 
