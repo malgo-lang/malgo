@@ -1,3 +1,5 @@
+# Malgo
+[![Build Status](https://travis-ci.org/takoeight0821/malgo.svg?branch=master)](https://travis-ci.org/takoeight0821/malgo)
 <!-- ## 文字列定数の宣言 -->
 <!-- MIRの段階で、出て来る定数文字列をすべてDEFに持ち上げる -->
 <!-- グローバル変数とローカル変数の区別をする -->
