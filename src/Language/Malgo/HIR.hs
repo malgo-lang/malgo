@@ -38,7 +38,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Call fn arg)   = parens $ pretty fn <+> sep (map pretty arg)
   pretty (Let decl body) =
     parens $ text "let" <+> parens (pretty decl)
-    $+$ nest 2 (pretty body)
+    $+$ pretty body
   pretty (If c t f) =
     parens $ text "if" <+> pretty c
     $+$ nest 2 (pretty t)
@@ -111,4 +111,7 @@ data Program a = Program { _externs  :: [Extern a]
                          }
 
 instance PrettyPrint a => PrettyPrint (Program a) where
-  pretty (Program e t b) = sep (map pretty e) $+$ sep (map pretty t) $+$ pretty b
+  pretty (Program e t b) =
+    text "extern:" $+$ sep (map pretty e)
+    $+$ text "toplevel:" $+$ sep (map pretty t)
+    $+$ text "body:" $+$ pretty b

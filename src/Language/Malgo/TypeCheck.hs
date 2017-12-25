@@ -10,7 +10,7 @@ import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
 data TypedID = TypedID ID Type
-  deriving (Eq, Show)
+  deriving (Eq, Show, Ord)
 
 instance PrettyPrint TypedID where
   pretty (TypedID x t) = pretty x <> text ":" <> pretty t

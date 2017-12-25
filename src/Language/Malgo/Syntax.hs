@@ -102,7 +102,7 @@ data Type = NameTy Name
                   , _ret      :: Type
                   , _captures :: [Type]
                   }
-  deriving (Eq, Show)
+  deriving (Eq, Show, Ord)
 
 instance PrettyPrint Type where
   pretty (NameTy n)          = pretty n

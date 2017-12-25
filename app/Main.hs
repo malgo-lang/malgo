@@ -6,6 +6,7 @@ module Main where
 -- import qualified Language.Malgo.Closure   as Closure
 -- import qualified Language.Malgo.Codegen   as Codegen
 -- import qualified Language.Malgo.IRBuilder as IRBuilder
+import qualified Language.Malgo.Beta      as Beta
 import qualified Language.Malgo.Flatten   as Flatten
 import qualified Language.Malgo.KNormal   as KNormal
 import qualified Language.Malgo.Lexer     as Lexer
@@ -27,36 +28,39 @@ main = do
   let file = head args
   contents <- readFile file
   let tokens = Lexer.lexing file contents
-  -- print tokens
 
   let ast' = Parser.parseExpr <$> tokens
 
   let ast = case ast' of
         Left x  -> error $ show x
         Right x -> x
-  -- print ast
-  print $ pretty ast
+  -- print $ pretty ast
 
   let (renamedAST, rnenv) = case Rename.rename ast of
         (Right x, e) -> (x, e)
         (Left x, _)  -> error $ show x
 
-  print $ pretty renamedAST
+  -- print $ pretty renamedAST
 
   let typedAST = case TypeCheck.typeCheck renamedAST of
         (Right x, _) -> x
         (Left x, _)  -> error $ show x
 
-  print $ pretty typedAST
+  -- print $ pretty typedAST
 
   let knormal = case KNormal.knormal rnenv typedAST of
         (Right x, _) -> x
         (Left x, _)  -> error $ show x
 
-  print $ pretty knormal
+  -- print $ pretty knormal
 
   let flatten = Flatten.flattenProgram knormal
-  print $ pretty flatten
+  -- print $ pretty flatten
+
+  let beta = case Beta.betaTrans flatten of
+        (Right x, _) -> x
+        (Left x, _)  -> error $ show x
+  print $ pretty beta
   -- let beta = join $ Beta.betaTrans <$> fmap fst kNormal
   -- print $ pretty beta
 
