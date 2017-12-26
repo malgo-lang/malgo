@@ -38,14 +38,14 @@ transProgram (Program exs tps body) = do
   return $ Program exs tps' body'
 
 transToplevel :: Decl TypedID -> Beta (Decl TypedID)
-transToplevel (FunDec fn params fnbody) =
-  FunDec fn params <$> transExpr fnbody
+transToplevel (FunDec fn params freevars fnbody) =
+  FunDec fn params freevars <$> transExpr fnbody
 transToplevel (ValDec name val) =
   ValDec name <$> transExpr val
 
 transExpr :: Expr TypedID -> Beta (Expr TypedID)
-transExpr (Let (FunDec fn params fnbody) body) =
-  Let <$> (FunDec fn params <$> transExpr fnbody) <*> transExpr body
+transExpr (Let (FunDec fn params freevars fnbody) body) =
+  Let <$> (FunDec fn params freevars <$> transExpr fnbody) <*> transExpr body
 transExpr (Let (ValDec name val) body) = do
   val' <- transExpr val
   case val' of
@@ -56,7 +56,7 @@ transExpr (BinOp op x y) =
   BinOp op <$> find x <*> find y
 transExpr (If c t f) =
   If <$> find c <*> transExpr t <*> transExpr f
-transExpr (Call fn args) =
-  Call <$> find fn <*> mapM find args
+transExpr (Call fn args implicts) =
+  Call <$> find fn <*> mapM find args <*> mapM find implicts
 transExpr (Var x) = Var <$> find x
 transExpr x = return x

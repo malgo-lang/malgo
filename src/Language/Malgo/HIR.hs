@@ -20,7 +20,7 @@ data Expr a =
   | Char Char
   | String String
   | Unit
-  | Call a [a]
+  | Call a [a] [a]
   | Let (Decl a) (Expr a)
   | If a (Expr a) (Expr a)
   | BinOp Op a a
@@ -35,7 +35,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Char x)        = quotes $ char x
   pretty (String x)      = doubleQuotes $ text x
   pretty Unit            = text "()"
-  pretty (Call fn arg)   = parens $ pretty fn <+> sep (map pretty arg)
+  pretty (Call fn arg implicts)   = parens $ pretty fn <+> sep (map pretty arg) <+> braces (sep (map pretty implicts))
   pretty (Let decl body) =
     parens $ text "let" <+> parens (pretty decl)
     $+$ nest (-1) (pretty body)
@@ -84,14 +84,15 @@ instance PrettyPrint Op where
   pretty And      = text "&&"
   pretty Or       = text "||"
 
-data Decl a = FunDec a [a] (Expr a)
+data Decl a = FunDec a [a] [a] (Expr a)
             | ValDec a (Expr a)
   deriving (Eq, Show)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
-  pretty (FunDec name params body) =
+  pretty (FunDec name params freevars body) =
     text "fun" <+> (parens . sep $ pretty name
                     : map pretty params)
+    <+> (braces . sep $ map pretty freevars)
     $+$ nest 2 (pretty body)
   pretty (ValDec name val) =
     text "val" <+> pretty name

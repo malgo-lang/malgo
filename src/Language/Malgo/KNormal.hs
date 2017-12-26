@@ -5,7 +5,7 @@ module Language.Malgo.KNormal where
 
 import           Control.Monad.Except
 import           Control.Monad.State
-import           Data.String
+-- import           Data.String
 import           Language.Malgo.HIR       hiding (_externs)
 import           Language.Malgo.Rename    (ID (..), RnEnv (..))
 import qualified Language.Malgo.Syntax    as S
@@ -39,8 +39,8 @@ throw :: Info -> Doc -> KNormal a
 throw info mes = throwError (KNormalError info mes)
 
 addEx :: TypedID -> String -> KNormal ()
-addEx name orig = do
-  modify $ \e -> e { _externs = (ExDec name orig) : _externs e }
+addEx name orig =
+  modify $ \e -> e { _externs = ExDec name orig : _externs e }
 
 flattenLet :: S.Expr TypedID -> S.Expr TypedID
 flattenLet (S.Let info [decl] body) =
@@ -96,7 +96,7 @@ transExpr (S.Char _ x)   = return (Char x)
 transExpr (S.String _ x) = return (String x)
 transExpr (S.Unit _)     = return Unit
 transExpr (S.Call _ fn args) =
-  bind args [] (return . Call fn)
+  bind args [] (\args' -> return $ Call fn args' [])
   where bind [] args' k     = k (reverse args')
         bind (x:xs) args' k = insertLet x (\x' -> bind xs (x':args') k)
 transExpr (S.BinOp _ op e1 e2) = do
@@ -114,7 +114,7 @@ transExpr (S.Let _ [S.ValDec _ name _ val] body) = do
 transExpr (S.Let _ [S.FunDec _ fn params _ fbody] body) = do
   fbody' <- transExpr fbody
   body' <- transExpr body
-  return (Let (FunDec fn (map fst params) fbody') body')
+  return (Let (FunDec fn (map fst params) [] fbody') body')
 transExpr (S.Let _ [S.ExDec _ name _ orig] body) = do
   addEx name orig
   transExpr body
