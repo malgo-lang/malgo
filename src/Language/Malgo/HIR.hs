@@ -38,11 +38,11 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Call fn arg)   = parens $ pretty fn <+> sep (map pretty arg)
   pretty (Let decl body) =
     parens $ text "let" <+> parens (pretty decl)
-    $+$ pretty body
+    $+$ nest (-1) (pretty body)
   pretty (If c t f) =
     parens $ text "if" <+> pretty c
-    $+$ nest 2 (pretty t)
-    $+$ nest 2 (pretty f)
+    $+$ text "then:" <+> nest 2 (pretty t)
+    $+$ text "else:" <+> nest 2 (pretty f)
   pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
 -- | 中置演算子の種類を表すタグ
