@@ -114,7 +114,7 @@ transExpr (S.Let _ [S.ValDec _ name _ val] body) = do
 transExpr (S.Let _ [S.FunDec _ fn params _ fbody] body) = do
   fbody' <- transExpr fbody
   body' <- transExpr body
-  return (Let (FunDec fn (map fst params) [] fbody') body')
+  return (Let (FunDec fn (map fst params) fbody') body')
 transExpr (S.Let _ [S.ExDec _ name _ orig] body) = do
   addEx name orig
   transExpr body

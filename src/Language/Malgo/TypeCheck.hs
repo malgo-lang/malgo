@@ -10,7 +10,10 @@ import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
 data TypedID = TypedID ID Type
-  deriving (Eq, Show, Ord)
+  deriving (Show, Ord)
+
+instance Eq TypedID where
+  (TypedID x _) == (TypedID y _) = x == y
 
 instance PrettyPrint TypedID where
   pretty (TypedID x t) = pretty x <> text ":" <> pretty t

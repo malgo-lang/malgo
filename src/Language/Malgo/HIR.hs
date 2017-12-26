@@ -84,15 +84,14 @@ instance PrettyPrint Op where
   pretty And      = text "&&"
   pretty Or       = text "||"
 
-data Decl a = FunDec a [a] [a] (Expr a)
+data Decl a = FunDec a [a] (Expr a)
             | ValDec a (Expr a)
   deriving (Eq, Show)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
-  pretty (FunDec name params freevars body) =
+  pretty (FunDec name params body) =
     text "fun" <+> (parens . sep $ pretty name
                     : map pretty params)
-    <+> (braces . sep $ map pretty freevars)
     $+$ nest 2 (pretty body)
   pretty (ValDec name val) =
     text "val" <+> pretty name

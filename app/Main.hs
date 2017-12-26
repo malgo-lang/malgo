@@ -8,6 +8,8 @@ module Main where
 -- import qualified Language.Malgo.IRBuilder as IRBuilder
 import qualified Language.Malgo.Beta      as Beta
 import qualified Language.Malgo.Flatten   as Flatten
+import qualified Language.Malgo.FreeVars  as FV
+import qualified Language.Malgo.HIR       as HIR
 import qualified Language.Malgo.KNormal   as KNormal
 import qualified Language.Malgo.Lexer     as Lexer
 import qualified Language.Malgo.Parser    as Parser
@@ -61,6 +63,9 @@ main = do
         (Right x, _) -> x
         (Left x, _)  -> error $ show $ pretty x
   print $ pretty beta
+
+  let fv = FV.fvExpr (HIR._body beta)
+  print fv
   -- let beta = join $ Beta.betaTrans <$> fmap fst kNormal
   -- print $ pretty beta
 
