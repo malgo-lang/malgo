@@ -46,8 +46,8 @@ convDecl (ValDec name val) = do
   ValDec name <$> convExpr val
 convDecl (FunDec fn params body) = do
   -- mapM_ addKnown (fn : params)
-  -- k <- gets _knowns
-  let fv = fvExpr body \\ (fn : params)
+  k <- gets _knowns
+  let fv = fvExpr body \\ ((fn : params) ++ k)
   case fv of
     []      -> FunDec fn params <$> convExpr body
     freevars -> do

@@ -27,6 +27,7 @@ fun add(x:Int):Int =
   end
 fun area(r:Float):Float = r *. r *. 3.14
 val name:String = "malgo"
+fun print_fib (n:Int) : Unit = print_int(fib(n))
 in
   println("Hello, world!");
   print("fib(10) = ");
