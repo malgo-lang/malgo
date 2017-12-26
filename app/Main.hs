@@ -6,23 +6,24 @@ module Main where
 -- import qualified Language.Malgo.Closure   as Closure
 -- import qualified Language.Malgo.Codegen   as Codegen
 -- import qualified Language.Malgo.IRBuilder as IRBuilder
-import qualified Language.Malgo.Beta      as Beta
-import qualified Language.Malgo.Flatten   as Flatten
-import qualified Language.Malgo.FreeVars  as FV
-import qualified Language.Malgo.HIR       as HIR
-import qualified Language.Malgo.KNormal   as KNormal
-import qualified Language.Malgo.Lexer     as Lexer
-import qualified Language.Malgo.Parser    as Parser
-import qualified Language.Malgo.Rename    as Rename
-import qualified Language.Malgo.TypeCheck as TypeCheck
+import qualified Language.Malgo.Beta          as Beta
+import qualified Language.Malgo.Flatten       as Flatten
+import qualified Language.Malgo.FreeVars      as FV
+import qualified Language.Malgo.HIR           as HIR
+import qualified Language.Malgo.KNormal       as KNormal
+import qualified Language.Malgo.LambdaLifting as LL
+import qualified Language.Malgo.Lexer         as Lexer
+import qualified Language.Malgo.Parser        as Parser
+import qualified Language.Malgo.Rename        as Rename
+import qualified Language.Malgo.TypeCheck     as TypeCheck
 import           Language.Malgo.Utils
 
-import           Control.Monad            (join)
-import qualified Data.ByteString.Char8    as BS
+import           Control.Monad                (join)
+import qualified Data.ByteString.Char8        as BS
 import           Data.String
-import           System.Environment       (getArgs)
-import qualified Text.Parsec.String       as P
-import qualified Text.PrettyPrint         as PP
+import           System.Environment           (getArgs)
+import qualified Text.Parsec.String           as P
+import qualified Text.PrettyPrint             as PP
 
 main :: IO ()
 main = do
@@ -64,8 +65,10 @@ main = do
         (Left x, _)  -> error $ show $ pretty x
   print $ pretty beta
 
-  let fv = FV.fvExpr (HIR._body beta)
-  print fv
+  let ll = case LL.lambdaLifting beta of
+        (Right x, _) -> x
+        (Left x, _)  -> error $ show $ pretty x
+  print $ pretty ll
   -- let beta = join $ Beta.betaTrans <$> fmap fst kNormal
   -- print $ pretty beta
 

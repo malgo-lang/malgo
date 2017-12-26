@@ -97,7 +97,9 @@ instance PrettyPrint a => PrettyPrint (Decl a) where
     text "val" <+> pretty name
     <+> pretty val
 
-data Extern a = ExDec a String
+data Extern a = ExDec { _name   :: a
+                      , _actual :: String
+                      }
   deriving (Eq, Show)
 
 instance PrettyPrint a => PrettyPrint (Extern a) where
@@ -109,6 +111,7 @@ data Program a = Program { _externs  :: [Extern a]
                          , _toplevel :: [Decl a]
                          , _body     :: Expr a
                          }
+  deriving (Show)
 
 instance PrettyPrint a => PrettyPrint (Program a) where
   pretty (Program e t b) =
