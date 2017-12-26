@@ -20,7 +20,7 @@ data Expr a =
   | Char Char
   | String String
   | Unit
-  | Call a [a] [a]
+  | Call a [a]
   | Let (Decl a) (Expr a)
   | If a (Expr a) (Expr a)
   | BinOp Op a a
@@ -35,7 +35,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Char x)        = quotes $ char x
   pretty (String x)      = doubleQuotes $ text x
   pretty Unit            = text "()"
-  pretty (Call fn arg implicts)   = parens $ pretty fn <+> sep (map pretty arg) <+> braces (sep (map pretty implicts))
+  pretty (Call fn arg)   = parens $ pretty fn <+> sep (map pretty arg)
   pretty (Let decl body) =
     parens $ text "let" <+> parens (pretty decl)
     $+$ nest (-1) (pretty body)

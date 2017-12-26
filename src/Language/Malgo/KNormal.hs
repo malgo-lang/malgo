@@ -96,7 +96,7 @@ transExpr (S.Char _ x)   = return (Char x)
 transExpr (S.String _ x) = return (String x)
 transExpr (S.Unit _)     = return Unit
 transExpr (S.Call _ fn args) =
-  bind args [] (\args' -> return $ Call fn args' [])
+  bind args [] (\args' -> return $ Call fn args')
   where bind [] args' k     = k (reverse args')
         bind (x:xs) args' k = insertLet x (\x' -> bind xs (x':args') k)
 transExpr (S.BinOp _ op e1 e2) = do

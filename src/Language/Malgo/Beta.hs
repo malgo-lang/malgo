@@ -56,7 +56,7 @@ transExpr (BinOp op x y) =
   BinOp op <$> find x <*> find y
 transExpr (If c t f) =
   If <$> find c <*> transExpr t <*> transExpr f
-transExpr (Call fn args implicts) =
-  Call <$> find fn <*> mapM find args <*> mapM find implicts
+transExpr (Call fn args) =
+  Call <$> find fn <*> mapM find args
 transExpr (Var x) = Var <$> find x
 transExpr x = return x
