@@ -15,12 +15,15 @@ data Expr a = Int Integer
             | Float Double
             | Bool Bool
             | Char Char
-            | String String
+            --- | String String
             | Unit
-            | Call { _fn   :: a
-                   , _args :: [a]
-                   , _fv   :: [a]
-                   }
+            | CallDir { _fnName :: Name
+                      , _args   :: [a]
+                      }
+            | CallCls { _fn   :: a
+                      , _args :: [a]
+                      , _fv   :: [a]
+                      }
             | If a (Expr a) (Expr a)
             | BinOp Op a a
             deriving (Show)
