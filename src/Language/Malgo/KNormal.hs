@@ -81,14 +81,15 @@ transOp S.And _  = return And
 transOp S.Or _   = return Or
 
 insertLet :: S.Expr TypedID -> (TypedID -> KNormal (Expr TypedID)) -> KNormal (Expr TypedID)
+insertLet (S.Var _ x) k = k x
 insertLet v k = do
   x <- newTmp (typeOf v)
   v' <- transExpr v
   e <- k x
   return (Let (ValDec x v') e)
 
-bind [] args' k     = k (reverse args')
-bind (x:xs) args' k = insertLet x (\x' -> bind xs (x':args') k)
+bind [] args k     = k (reverse args)
+bind (x:xs) args k = insertLet x (\x' -> bind xs (x':args) k)
 
 transExpr :: S.Expr TypedID -> KNormal (Expr TypedID)
 transExpr (S.Var _ x)    = return (Var x)
@@ -98,8 +99,6 @@ transExpr (S.Bool _ x)   = return (Bool x)
 transExpr (S.Char _ x)   = return (Char x)
 transExpr (S.String _ x) = return (String x)
 transExpr (S.Unit _)     = return Unit
-transExpr (S.Call _ (S.Var _ fn) args) =
-  bind args [] (return . Call fn)
 transExpr (S.Call _ fn args) =
   insertLet fn (\fn' ->
                   bind args [] (return . Call fn'))

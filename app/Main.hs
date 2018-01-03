@@ -34,28 +34,20 @@ main = do
   let ast = case ast' of
         Left x  -> error $ show x
         Right x -> x
-  -- print $ pretty ast
 
   let (renamedAST, rnenv) = case Rename.rename ast of
         (Right x, e) -> (x, e)
         (Left x, _)  -> error $ show $ pretty x
 
-  -- print $ pretty renamedAST
-
   let typedAST = case TypeCheck.typeCheck renamedAST of
         (Right x, _) -> x
         (Left x, _)  -> error $ show $ pretty x
-
-  -- print $ pretty typedAST
 
   let knormal = case KNormal.knormal rnenv typedAST of
         (Right x, _) -> x
         (Left x, _)  -> error $ show $ pretty x
 
-  -- print $ pretty knormal
-
   let flatten = Flatten.flattenProgram knormal
-  -- print $ pretty flatten
 
   let beta = case Beta.betaTrans flatten of
         (Right x, _) -> x
