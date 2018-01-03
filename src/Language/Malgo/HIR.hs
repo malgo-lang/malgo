@@ -1,8 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.HIR where
 
--- import           Data.String
-import           Language.Malgo.Syntax (Type (..))
+import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 

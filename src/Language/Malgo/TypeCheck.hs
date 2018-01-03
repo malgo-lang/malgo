@@ -6,6 +6,7 @@ import           Control.Monad.State
 import qualified Data.Map.Strict       as Map
 import           Language.Malgo.Rename
 import           Language.Malgo.Syntax
+import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 

@@ -5,10 +5,10 @@ module Language.Malgo.KNormal where
 
 import           Control.Monad.Except
 import           Control.Monad.State
--- import           Data.String
 import           Language.Malgo.HIR       hiding (_externs)
 import           Language.Malgo.Rename    (ID (..), RnEnv (..))
 import qualified Language.Malgo.Syntax    as S
+import           Language.Malgo.Type
 import           Language.Malgo.TypeCheck
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -49,7 +49,7 @@ flattenLet (S.Let info (d:ds) body) =
   S.Let info [d] (flattenLet (S.Let info ds body))
 flattenLet e = e
 
-newTmp :: S.Type -> KNormal TypedID
+newTmp :: Type -> KNormal TypedID
 newTmp typ = do
   c <- gets _count
   modify $ \e -> e { _count = c + 1 }
@@ -61,7 +61,7 @@ newUnused = do
   modify $ \e -> e { _count = c + 1 }
   return (TypedID (Internal "$_" c) "Unit")
 
-transOp :: S.Op -> S.Type -> KNormal Op
+transOp :: S.Op -> Type -> KNormal Op
 transOp S.Add _  = return Add
 transOp S.Sub _  = return Sub
 transOp S.Mul _  = return Mul
@@ -96,12 +96,12 @@ transExpr (S.Char _ x)   = return (Char x)
 transExpr (S.String _ x) = return (String x)
 transExpr (S.Unit _)     = return Unit
 transExpr (S.Call _ fn args) =
-  bind args [] (\args' -> return $ Call fn args')
+  bind args [] (return . Call fn)
   where bind [] args' k     = k (reverse args')
         bind (x:xs) args' k = insertLet x (\x' -> bind xs (x':args') k)
 transExpr (S.BinOp _ op e1 e2) = do
   op' <- transOp op (typeOf e1)
-  insertLet e1 (\x -> insertLet e2 (\y -> return (BinOp op' x y)))
+  insertLet e1 (\x -> insertLet e2 (return . BinOp op' x))
 transExpr (S.If _ c t f) =
   insertLet c (\c' -> do
                   t' <- transExpr t

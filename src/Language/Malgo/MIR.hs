@@ -5,18 +5,13 @@ module Language.Malgo.MIR
   , Program(..)
   ) where
 
-import           Language.Malgo.HIR    (Op (..))
-import qualified Language.Malgo.HIR    as H
-import           Language.Malgo.Syntax (Type (..))
-import qualified Language.Malgo.Syntax as S
+import           Language.Malgo.HIR   (Op (..))
 import           Language.Malgo.Utils
-import           Text.PrettyPrint
 
 data Expr a = Int Integer
             | Float Double
             | Bool Bool
             | Char Char
-            --- | String String
             | Unit
             | MakeCls a [a]
             | CallDir { _fnName :: Name

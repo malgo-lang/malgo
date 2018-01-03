@@ -4,6 +4,7 @@ module Language.Malgo.Parser where
 
 import Prelude hiding (EQ, LT, GT)
 import Language.Malgo.Lexer
+import Language.Malgo.Type
 import Language.Malgo.Syntax
 import Language.Malgo.Utils
 import Data.String

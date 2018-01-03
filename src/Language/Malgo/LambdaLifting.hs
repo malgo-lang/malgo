@@ -1,12 +1,11 @@
 module Language.Malgo.LambdaLifting (lambdaLifting) where
 
-import           Control.Monad.Except
 import           Control.Monad.State
 import           Data.List
 import qualified Data.Map.Strict          as Map
 import           Language.Malgo.FreeVars
 import           Language.Malgo.HIR
-import           Language.Malgo.Syntax    (Type (..))
+import           Language.Malgo.Type
 import           Language.Malgo.TypeCheck
 import           Language.Malgo.Utils
 
@@ -14,11 +13,13 @@ data LLEnv = LLEnv { _table  :: Map.Map TypedID (TypedID, [TypedID])
                    , _knowns :: [TypedID]
                    }
 
+initLLEnv :: LLEnv
 initLLEnv = LLEnv Map.empty []
 
 runLambdaLifting :: Malgo LLEnv a -> (Either MalgoError a, LLEnv)
 runLambdaLifting m = runMalgo m initLLEnv
 
+lambdaLifting :: Program TypedID -> (Either MalgoError (Program TypedID), LLEnv)
 lambdaLifting x = runLambdaLifting (convProg x)
 
 addKnown :: TypedID -> Malgo LLEnv ()

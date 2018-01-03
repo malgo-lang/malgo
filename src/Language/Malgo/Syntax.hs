@@ -2,6 +2,7 @@
 module Language.Malgo.Syntax where
 
 import           Data.String
+import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
@@ -91,32 +92,6 @@ instance PrettyPrint Op where
   pretty Ge   = text ">="
   pretty And  = text "&&"
   pretty Or   = text "||"
-
--- | Malgoの組み込みデータ型
-data Type = NameTy Name
-          -- | TupleTy [Type]
-          | FunTy { _params :: [Type]
-                  , _ret    :: Type
-                  }
-          | ClsTy { _params   :: [Type]
-                  , _ret      :: Type
-                  , _captures :: [Type]
-                  }
-  deriving (Eq, Show, Ord)
-
-instance PrettyPrint Type where
-  pretty (NameTy n)          = pretty n
-  -- pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
-  pretty (FunTy param ret) =
-    parens (cat (punctuate (text ",") (map pretty param))
-    <+> text "->" <+> pretty ret)
-  pretty (ClsTy param ret cap) = braces
-    (parens (cat (punctuate (text ",") (map pretty param))
-             <+> text "->" <+> pretty ret))
-    <+> brackets (sep (map pretty cap))
-
-instance IsString Type where
-  fromString name = NameTy $ fromString name
 
 data Decl a = FunDec Info a [(a, Type)] Type (Expr a)
             | ValDec Info a Type (Expr a)
