@@ -43,7 +43,7 @@ transExpr (Let (ValDec name val) body) = do
   val' <- transExpr val
   case val' of
     (Var x) ->
-      addBind name x >> transExpr body
+      addBind name x >> Let (ValDec name val') <$> transExpr body
     _ -> Let (ValDec name val') <$> transExpr body
 transExpr (BinOp op x y) =
   BinOp op <$> find x <*> find y

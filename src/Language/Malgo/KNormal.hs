@@ -87,6 +87,9 @@ insertLet v k = do
   e <- k x
   return (Let (ValDec x v') e)
 
+bind [] args' k     = k (reverse args')
+bind (x:xs) args' k = insertLet x (\x' -> bind xs (x':args') k)
+
 transExpr :: S.Expr TypedID -> KNormal (Expr TypedID)
 transExpr (S.Var _ x)    = return (Var x)
 transExpr (S.Int _ x)    = return (Int x)
@@ -95,10 +98,11 @@ transExpr (S.Bool _ x)   = return (Bool x)
 transExpr (S.Char _ x)   = return (Char x)
 transExpr (S.String _ x) = return (String x)
 transExpr (S.Unit _)     = return Unit
-transExpr (S.Call _ fn args) =
+transExpr (S.Call _ (S.Var _ fn) args) =
   bind args [] (return . Call fn)
-  where bind [] args' k     = k (reverse args')
-        bind (x:xs) args' k = insertLet x (\x' -> bind xs (x':args') k)
+transExpr (S.Call _ fn args) =
+  insertLet fn (\fn' ->
+                  bind args [] (return . Call fn'))
 transExpr (S.BinOp _ op e1 e2) = do
   op' <- transOp op (typeOf e1)
   insertLet e1 (\x -> insertLet e2 (return . BinOp op' x))

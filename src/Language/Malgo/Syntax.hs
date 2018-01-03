@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell   #-}
 module Language.Malgo.Syntax where
 
 import           Data.String
@@ -22,8 +23,7 @@ data Expr a =
   -- | 空の値("()")
   | Unit Info
   -- | 関数呼び出し
-  | Call Info a -- (Expr a) -- そのうち任意の関数型をもつ式を呼び出し可能にする
-    [Expr a]
+  | Call Info (Expr a) [Expr a]
   -- | 連続した式(e1 ; e2)
   | Seq Info (Expr a) (Expr a)
   -- | let式
@@ -33,6 +33,20 @@ data Expr a =
   -- | 中置演算子
   | BinOp Info Op (Expr a) (Expr a)
   deriving (Eq, Show)
+
+info :: Expr t -> Info
+info (Var i _)       = i
+info (Int i _)       = i
+info (Float i _)     = i
+info (Bool i _)      = i
+info (Char i _)      = i
+info (String i _)    = i
+info (Unit i)        = i
+info (Call i _ _)    = i
+info (Seq i _ _)     = i
+info (Let i _ _)     = i
+info (If i _ _ _)    = i
+info (BinOp i _ _ _) = i
 
 instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Var _ name)     = pretty name

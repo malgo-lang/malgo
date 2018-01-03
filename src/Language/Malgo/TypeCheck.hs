@@ -87,9 +87,9 @@ typeOf (Char _ _)             = "Char"
 typeOf (String _ _)           = "String"
 typeOf (Unit _)               = "Unit"
 typeOf (Call _ fn _) =
-  case fn of
-    (TypedID _ (FunTy _ ty)) -> ty
-    _                        -> error "(typeOf fn) should match (FunTy _ ty)"
+  case typeOf fn of
+    (FunTy _ ty) -> ty
+    _            -> error "(typeOf fn) should match (FunTy _ ty)"
 typeOf (Seq _ _ e) = typeOf e
 typeOf (Let _ _ e) = typeOf e
 typeOf (If _ _ e _) = typeOf e
@@ -150,10 +150,11 @@ checkExpr (Char info x)   = return $ Char info x
 checkExpr (String info x) = return $ String info x
 checkExpr (Unit info)     = return $ Unit info
 checkExpr (Call info fn args) = do
-  fn' <- getBind info fn
+  fn' <- checkExpr fn
+  -- fn' <- getBind info fn
   args' <- mapM checkExpr args
-  paramty <- case fn' of
-                (TypedID _ (FunTy p _)) -> return p
+  paramty <- case typeOf fn' of
+                (FunTy p _) -> return p
                 _           ->
                   throw info $
                   pretty fn' <+> "is not callable"

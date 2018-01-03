@@ -6,12 +6,9 @@ module Main where
 -- import qualified Language.Malgo.Closure   as Closure
 -- import qualified Language.Malgo.Codegen   as Codegen
 -- import qualified Language.Malgo.IRBuilder as IRBuilder
--- import qualified Language.Malgo.Beta          as Beta
+import qualified Language.Malgo.Beta      as Beta
 import qualified Language.Malgo.Flatten   as Flatten
--- import qualified Language.Malgo.FreeVars  as FV
--- import qualified Language.Malgo.HIR       as HIR
 import qualified Language.Malgo.KNormal   as KNormal
--- import qualified Language.Malgo.LambdaLifting as LL
 import qualified Language.Malgo.Lexer     as Lexer
 import qualified Language.Malgo.Parser    as Parser
 import qualified Language.Malgo.Rename    as Rename
@@ -58,4 +55,9 @@ main = do
   -- print $ pretty knormal
 
   let flatten = Flatten.flattenProgram knormal
-  print $ pretty flatten
+  -- print $ pretty flatten
+
+  let beta = case Beta.betaTrans flatten of
+        (Right x, _) -> x
+        (Left x, _)  -> error $ show $ pretty x
+  print $ pretty beta
