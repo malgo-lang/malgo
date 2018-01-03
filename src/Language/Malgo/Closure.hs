@@ -1,6 +1,5 @@
 module Language.Malgo.Closure (conv) where
 
-import           Control.Applicative
 import           Control.Monad.Except
 import           Control.Monad.State
 import qualified Data.Map.Strict          as Map
@@ -8,7 +7,7 @@ import           Data.String
 import qualified Language.Malgo.HIR       as H
 import           Language.Malgo.MIR
 import           Language.Malgo.Rename    (ID (..))
-import           Language.Malgo.Syntax    (Type (..))
+import           Language.Malgo.Type
 import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -31,6 +30,9 @@ runClosure m = runMalgo m initClsEnv
 
 conv :: H.Program TypedID -> (Either MalgoError (Program TypedID), ClsEnv)
 conv x = runClosure (convProgram x)
+
+throw :: Doc -> Closure a
+throw = throwError . ClosureTransError
 
 addKnown :: TypedID -> Closure ()
 addKnown name =
@@ -55,7 +57,7 @@ newClsID (TypedID fn (FunTy params ret)) fv = do
 
 convProgram :: H.Program TypedID
      -> Closure (Program TypedID)
-convProgram (H.Program exs _ body) = do
+convProgram (H.Program exs body) = do
   mapM_ (addKnown . H._name) exs
   convExterns exs
   convMain body
@@ -70,9 +72,22 @@ convExtern :: H.Extern TypedID -> Closure ()
 convExtern (H.ExDec name actual) =
   addToplevel $ ExDec name actual
 
-convMain = undefined
+convMain = undefined -- convLetを呼ぶだけ?
 
-convLet = undefined
+convLet :: H.Expr TypedID -> Closure ()
+convLet (H.Let (H.ValDec var (H.String str)) rest) = do
+  -- 文字列定数の宣言を_revToplevelに追加
+  addToplevel (StrDec var str)
+  convLet rest
+convLet (H.Let (H.ValDec _ _) _) =
+  -- id := valを_revMainに追加
+  undefined
+convLet (H.Let (H.FunDec _ _ _) _) =
+  -- クロージャ変換して_revToplevelに追加
+  undefined
+convLet x =
+  -- Do val
+  undefined
 
 convExpr :: H.Expr TypedID -> Closure (Expr TypedID)
 convExpr (H.Call fn args) = do
@@ -81,17 +96,16 @@ convExpr (H.Call fn args) = do
     (Just fn') -> return $ CallCls fn' args
     Nothing    -> return $ CallDir (_name . _id $ fn) args
 convExpr (H.If c t f) = If c <$> convExpr t <*> convExpr f
-convExpr e@H.Let{} = error $ "unreachable: " ++ show e
-convExpr (H.Var x) = undefined
-convExpr x = undefined
-
--- add :: TypedID -> ClsID -> Closure ()
--- add x x' =
---   modify $ \e -> e { _knowns = Map.insert x x' (_knowns e) }
-
--- convDecl :: Decl TypedID -> Closure (Decl ClsID)
--- convDecl = undefined
-
--- convExpr :: Expr TypedID -> Closure (Expr ClsID)
--- convExpr = undefined
--- convProgram = undefined
+convExpr e@H.Let{} = throw . text $ "unreachable: " ++ show e
+convExpr (H.Var x) = do
+  closures <- gets _closures
+  case Map.lookup x closures of
+    (Just x') -> return $ Var x'
+    Nothing   -> return $ Var x
+convExpr (H.Int x) = return $ Int x
+convExpr (H.Float x) = return $ Float x
+convExpr (H.Bool x) = return $ Bool x
+convExpr (H.Char x) = return $ Char x
+convExpr e@H.String{} = throw . text $ "unreachable: " ++ show e
+convExpr H.Unit = return Unit
+convExpr (H.BinOp op x y) = return $ BinOp op x y

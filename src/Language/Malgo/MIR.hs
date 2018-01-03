@@ -8,7 +8,8 @@ module Language.Malgo.MIR
 import           Language.Malgo.HIR   (Op (..))
 import           Language.Malgo.Utils
 
-data Expr a = Int Integer
+data Expr a = Var a
+            | Int Integer
             | Float Double
             | Bool Bool
             | Char Char

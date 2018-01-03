@@ -6,10 +6,10 @@ module Main where
 -- import qualified Language.Malgo.Closure   as Closure
 -- import qualified Language.Malgo.Codegen   as Codegen
 -- import qualified Language.Malgo.IRBuilder as IRBuilder
-import qualified Language.Malgo.Beta      as Beta
+-- import qualified Language.Malgo.Beta          as Beta
 import qualified Language.Malgo.Flatten   as Flatten
-import qualified Language.Malgo.FreeVars  as FV
-import qualified Language.Malgo.HIR       as HIR
+-- import qualified Language.Malgo.FreeVars  as FV
+-- import qualified Language.Malgo.HIR       as HIR
 import qualified Language.Malgo.KNormal   as KNormal
 -- import qualified Language.Malgo.LambdaLifting as LL
 import qualified Language.Malgo.Lexer     as Lexer
@@ -58,40 +58,4 @@ main = do
   -- print $ pretty knormal
 
   let flatten = Flatten.flattenProgram knormal
-  -- print $ pretty flatten
-
-  let beta = case Beta.betaTrans flatten of
-        (Right x, _) -> x
-        (Left x, _)  -> error $ show $ pretty x
-  print $ pretty beta
-
-  -- let ll = case LL.lambdaLifting beta of
-  --       (Right x, _) -> x
-  --       (Left x, _)  -> error $ show $ pretty x
-  -- print $ pretty ll
-  -- let beta = join $ Beta.betaTrans <$> fmap fst kNormal
-  -- print $ pretty beta
-
-  -- let assoc = Assoc.assoc <$> beta
-  -- print $ pretty assoc
-
-  -- let Right (mir, count) = case join $ MIR.toMIR <$> assoc <*> fmap snd kNormal of
-  --       Right x -> Right x
-  --       Left x  -> error x
-  -- print $ pretty mir
-
-  -- let Right (cls, env) = case Closure.runClosure count $ Closure.trans mir of
-  --       Right x -> Right x
-  --       Left x  -> error x
-
-  -- print $ pretty cls
-  -- print $ PP.sep $ map pretty (Closure.toplevel env)
-
-  -- let llvm = Codegen.trans file (Closure.toplevel env) cls
-  -- -- print llvm
-
-  -- case llvm of
-  --   Right x -> do
-  --     ir <- Codegen.emit x
-  --     BS.putStrLn ir
-  --   Left x -> print x
+  print $ pretty flatten
