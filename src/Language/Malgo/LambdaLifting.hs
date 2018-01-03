@@ -26,9 +26,9 @@ addKnown name =
   modify $ \e -> e { _knowns = name : _knowns e }
 
 convProg :: Program TypedID -> Malgo LLEnv (Program TypedID)
-convProg (Program exs _ body) = do
+convProg (Program exs body) = do
   mapM_ (addKnown . _name) exs
-  Program exs [] <$> convExpr body
+  Program exs <$> convExpr body
 
 convExpr :: Expr TypedID -> Malgo LLEnv (Expr TypedID)
 convExpr (Call fn args) = do

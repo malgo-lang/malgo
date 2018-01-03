@@ -107,14 +107,12 @@ instance PrettyPrint a => PrettyPrint (Extern a) where
     text "extern" <+> pretty name
     <+> text orig
 
-data Program a = Program { _externs  :: [Extern a]
-                         , _toplevel :: [Decl a]
-                         , _body     :: Expr a
+data Program a = Program { _externs :: [Extern a]
+                         , _body    :: Expr a
                          }
   deriving (Show)
 
 instance PrettyPrint a => PrettyPrint (Program a) where
-  pretty (Program e t b) =
+  pretty (Program e b) =
     text "extern:" $+$ sep (map pretty e)
-    $+$ text "toplevel:" $+$ sep (map pretty t)
     $+$ text "body:" $+$ pretty b

@@ -32,16 +32,9 @@ find x = do
   return $ fromMaybe x x'
 
 transProgram :: Program TypedID -> Beta (Program TypedID)
-transProgram (Program exs tps body) = do
-  tps' <- mapM transToplevel tps
+transProgram (Program exs body) = do
   body' <- transExpr body
-  return $ Program exs tps' body'
-
-transToplevel :: Decl TypedID -> Beta (Decl TypedID)
-transToplevel (FunDec fn params fnbody) =
-  FunDec fn params <$> transExpr fnbody
-transToplevel (ValDec name val) =
-  ValDec name <$> transExpr val
+  return $ Program exs body'
 
 transExpr :: Expr TypedID -> Beta (Expr TypedID)
 transExpr (Let (FunDec fn params fnbody) body) =

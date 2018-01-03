@@ -9,7 +9,7 @@ import           Language.Malgo.Syntax
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data TypedID = TypedID ID Type
+data TypedID = TypedID { _id :: ID, _type :: Type }
   deriving (Show, Ord)
 
 instance Eq TypedID where

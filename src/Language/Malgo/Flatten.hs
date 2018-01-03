@@ -1,4 +1,4 @@
-module Language.Malgo.Flatten where
+module Language.Malgo.Flatten (flattenProgram)where
 
 import           Language.Malgo.HIR
 
@@ -14,9 +14,5 @@ flatten (Let (FunDec fn params e1) e2) =
   Let (FunDec fn params (flatten e1)) (flatten e2)
 flatten e = e
 
-flattenDecl :: Decl a -> Decl a
-flattenDecl (ValDec x e)         = ValDec x (flatten e)
-flattenDecl (FunDec fn params e) = FunDec fn params (flatten e)
-
 flattenProgram :: Program a -> Program a
-flattenProgram (Program exs tps body) = Program exs (map flattenDecl tps) (flatten body)
+flattenProgram (Program exs body) = Program exs (flatten body)

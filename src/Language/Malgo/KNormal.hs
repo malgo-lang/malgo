@@ -33,7 +33,7 @@ knormal
 knormal env e = runKNormal env $ do
   e' <- transExpr (flattenLet e)
   exs <- gets _externs
-  return (Program exs [] e')
+  return (Program exs e')
 
 throw :: Info -> Doc -> KNormal a
 throw info mes = throwError (KNormalError info mes)

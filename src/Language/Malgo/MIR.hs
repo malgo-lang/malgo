@@ -2,6 +2,7 @@ module Language.Malgo.MIR
   ( Decl(..)
   , Expr(..)
   , Instr(..)
+  , Program(..)
   ) where
 
 import           Language.Malgo.HIR    (Op (..))
@@ -17,12 +18,12 @@ data Expr a = Int Integer
             | Char Char
             --- | String String
             | Unit
+            | MakeCls a [a]
             | CallDir { _fnName :: Name
                       , _args   :: [a]
                       }
-            | CallCls { _fn   :: a
+            | CallCls { _cls  :: a
                       , _args :: [a]
-                      , _fv   :: [a]
                       }
             | If a (Expr a) (Expr a)
             | BinOp Op a a
@@ -32,16 +33,16 @@ data Instr a = a := (Expr a)
              | Do (Expr a)
              deriving Show
 
-data Decl a = FunDec { _name    :: a
+data Decl a = FunDec { _decName :: a
                      , _params  :: [a]
                      , _capture :: [a]
                      , _body    :: [Instr a]
                      }
-            | StrDec { _name :: a
-                     , _val  :: String
+            | StrDec { _decName :: a
+                     , _val     :: String
                      }
-            | ExDec { _name   :: a
-                    , _actual :: String
+            | ExDec { _decName :: a
+                    , _actual  :: String
                     }
             deriving Show
 
