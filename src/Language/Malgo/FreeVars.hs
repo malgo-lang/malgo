@@ -1,37 +1,72 @@
 module Language.Malgo.FreeVars where
 
 import           Data.List
-import           Language.Malgo.HIR
+import qualified Language.Malgo.HIR       as H
+import qualified Language.Malgo.MIR       as M
+import           Language.Malgo.TypeCheck (TypedID (..))
 
--- Externはすべて自由変数とする
--- 実際に利用するときは、[Extern a] -> [a]が別に必要
+class FreeVars f where
+  knowns :: f TypedID -> [TypedID]
+  freevars :: f TypedID -> [TypedID]
 
-fvExpr :: Eq a => Expr a -> [a]
-fvExpr (Var x)        = [x]
-fvExpr (Int _)        = []
-fvExpr (Float _)      = []
-fvExpr (Bool _)       = []
-fvExpr (Char _)       = []
-fvExpr (String _)     = []
-fvExpr Unit           = []
-fvExpr (Call fn args) = if fn `elem` args
-                        then args
-                        else fn : args
-fvExpr (Let decl e) =
-  fvExpr e \\ knowns decl
-fvExpr (If c t f) =
-  delete c $ union (fvExpr t) (fvExpr f)
-fvExpr (BinOp _ x y) =
-  if x == y
-  then [x]
-  else [x, y]
+instance FreeVars H.Expr where
+  knowns _ = undefined
+  freevars (H.Var x)        = [x]
+  freevars (H.Int _)        = []
+  freevars (H.Float _)      = []
+  freevars (H.Bool _)       = []
+  freevars (H.Char _)       = []
+  freevars (H.String _)     = []
+  freevars H.Unit           = []
+  freevars (H.Call fn args) = if fn `elem` args
+                              then args
+                              else fn : args
+  freevars (H.Let decl e) =
+    freevars e \\ knowns decl
+  freevars (H.If c t f) =
+    nub $ delete c $ union (freevars t) (freevars f)
+  freevars (H.BinOp _ x y) =
+    if x == y
+    then [x]
+    else [x, y]
 
-knowns :: Decl a -> [a]
-knowns (ValDec x _)         = [x]
-knowns (FunDec fn params _) = fn : params
+instance FreeVars M.Expr where
+  knowns _ = []
+  freevars (M.Var x)            = [x]
+  freevars (M.Int _)            = []
+  freevars (M.Float _)          = []
+  freevars (M.Bool _)           = []
+  freevars (M.Char _)           = []
+  freevars M.Unit               = []
+  freevars (M.MakeCls fn fv)    = nub $ fn : fv
+  freevars (M.CallDir fn args)  = nub $ fn : args
+  freevars (M.CallCls cls args) = nub $ cls : args
+  freevars (M.If c t f) =
+    nub $ delete c $ union (freevars t) (freevars f)
+  freevars (M.BinOp _ x y) =
+    if x == y
+    then [x]
+    else [x, y]
 
-fvDecl :: Eq a => Decl a -> [a]
-fvDecl (ValDec x e) =
-  delete x $ fvExpr e
-fvDecl (FunDec fn params e) =
-  fvExpr e \\ (fn : params)
+instance FreeVars H.Decl where
+  freevars (H.ValDec x e) =
+    delete x $ freevars e
+  freevars (H.FunDec fn params e) =
+    freevars e \\ (fn : params)
+  knowns (H.ValDec x _)         = [x]
+  knowns (H.FunDec fn params _) = fn : params
+
+instance FreeVars M.Instr where
+  knowns _ = []
+  freevars (x M.:= e) = delete x $ freevars e
+  freevars (M.Do x)   = freevars x
+
+instance FreeVars M.Decl where
+  knowns (M.FunDec fn params capture _) =
+    nub $ fn : params ++ capture
+  knowns (M.StrDec x _) = [x]
+  knowns (M.ExDec x _) = [x]
+  freevars d@(M.FunDec _ _ _ e) =
+    (nub . concat $ map freevars e) \\ knowns d
+  freevars (M.StrDec _ _) = []
+  freevars (M.ExDec _ _) = []

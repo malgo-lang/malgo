@@ -2,8 +2,10 @@ module Language.Malgo.Closure (conv) where
 
 import           Control.Monad.Except
 import           Control.Monad.State
+import           Data.List
 import qualified Data.Map.Strict          as Map
 import           Data.String
+import           Language.Malgo.FreeVars
 import qualified Language.Malgo.HIR       as H
 import           Language.Malgo.MIR
 import           Language.Malgo.Rename    (ID (..))
@@ -46,6 +48,10 @@ addClosure :: TypedID -> TypedID -> Closure ()
 addClosure orig cls =
   modify $ \e -> e { _closures = Map.insert orig cls (_closures e) }
 
+addMain :: Instr TypedID -> Closure ()
+addMain instr =
+  modify $ \e -> e { _revMain = instr : _revMain e }
+
 newClsID :: TypedID -> [TypedID] -> Closure TypedID
 newClsID (TypedID fn (FunTy params ret)) fv = do
   let ty = ClsTy params ret (map _type fv)
@@ -60,7 +66,7 @@ convProgram :: H.Program TypedID
 convProgram (H.Program exs body) = do
   mapM_ (addKnown . H._name) exs
   convExterns exs
-  convMain body
+  convLet body
   t <- gets _revToplevel
   m <- gets _revMain
   return $ Program (reverse t) (reverse m)
@@ -69,32 +75,34 @@ convExterns :: [H.Extern TypedID] -> Closure ()
 convExterns = mapM_ convExtern
 
 convExtern :: H.Extern TypedID -> Closure ()
-convExtern (H.ExDec name actual) =
+convExtern (H.ExDec name actual) = do
+  addKnown name
   addToplevel $ ExDec name actual
-
-convMain = undefined -- convLetを呼ぶだけ?
 
 convLet :: H.Expr TypedID -> Closure ()
 convLet (H.Let (H.ValDec var (H.String str)) rest) = do
-  -- 文字列定数の宣言を_revToplevelに追加
   addToplevel (StrDec var str)
   convLet rest
-convLet (H.Let (H.ValDec _ _) _) =
-  -- id := valを_revMainに追加
-  undefined
-convLet (H.Let (H.FunDec _ _ _) _) =
+convLet (H.Let (H.ValDec (TypedID var _) val) rest) = do
+  val' <- convExpr val
+  addMain (TypedID var (typeOf val') := val')
+  convLet rest
+convLet (H.Let (H.FunDec fn params body) rest) = do
   -- クロージャ変換して_revToplevelに追加
-  undefined
-convLet x =
-  -- Do val
-  undefined
+  topLevelBackup <- gets _revToplevel
+  knownsBackup <- gets _knowns
 
-convExpr :: H.Expr TypedID -> Closure (Expr TypedID)
+  addKnown fn
+  body' <- convLet body
+
+convLet x =
+  addMain (Do undefined)
+
 convExpr (H.Call fn args) = do
   closures <- gets _closures
   case Map.lookup fn closures of
     (Just fn') -> return $ CallCls fn' args
-    Nothing    -> return $ CallDir (_name . _id $ fn) args
+    Nothing    -> return $ CallDir fn args
 convExpr (H.If c t f) = If c <$> convExpr t <*> convExpr f
 convExpr e@H.Let{} = throw . text $ "unreachable: " ++ show e
 convExpr (H.Var x) = do
