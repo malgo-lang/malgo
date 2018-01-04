@@ -2,7 +2,6 @@
 module Language.Malgo.MIR
   ( Decl(..)
   , Expr(..)
-  , Instr(..)
   , Program(..)
   , typeOf
   ) where
@@ -17,14 +16,15 @@ data Expr a = Var a
             | Float Double
             | Bool Bool
             | Char Char
+            | String String
             | Unit
-            | MakeCls a [a]
             | CallDir { _fn   :: a
                       , _args :: [a]
                       }
             | CallCls { _cls  :: a
                       , _args :: [a]
                       }
+            | Let (Decl a) (Expr a)
             | If a (Expr a) (Expr a)
             | BinOp Op a a
             deriving (Show)
@@ -35,7 +35,6 @@ typeOf (Float _) = "Float"
 typeOf (Bool _) = "Bool"
 typeOf (Char _) = "Char"
 typeOf Unit = "Unit"
-typeOf (MakeCls (TypedID _ ty) _) = ty
 typeOf (CallDir (TypedID _ (FunTy _ ty)) _) = ty
 typeOf (CallCls (TypedID _ (ClsTy _ ty _)) _) = ty
 typeOf (If _ t _) = typeOf t
@@ -59,24 +58,26 @@ typeOf (BinOp op _ _) =
    And     -> "Bool"
    Or      -> "Bool"
 
-data Instr a = a := (Expr a)
-             | Do (Expr a)
-             deriving Show
+data FunDec a = FunDec { _name    :: a
+                       , _params  :: [a]
+                       , _capture :: [a]
+                       , _body    :: Expr a
+                       }
+  deriving Show
 
-data Decl a = FunDec { _decName :: a
-                     , _params  :: [a]
-                     , _capture :: [a]
-                     , _body    :: [Instr a]
-                     }
-            | StrDec { _decName :: a
-                     , _val     :: String
-                     }
-            | ExDec { _decName :: a
+data Decl a = ExDec { _decName :: a
                     , _actual  :: String
                     }
+            | ValDec { _decName :: a
+                     , _value   :: Expr a
+                     }
+            | ClsDec { _decName :: a
+                     , _fnName  :: a
+                     , _fv      :: [a]
+                     }
             deriving Show
 
-data Program a = Program { _toplevel :: [Decl a]
-                         , _main     :: [Instr a]
+data Program a = Program { _toplevel :: [FunDec a]
+                         , _main     :: Expr a
                          }
   deriving Show

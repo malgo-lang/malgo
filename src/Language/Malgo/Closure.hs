@@ -66,7 +66,7 @@ convProgram :: H.Program TypedID
 convProgram (H.Program exs body) = do
   mapM_ (addKnown . H._name) exs
   convExterns exs
-  convLet body
+  -- convLet body
   t <- gets _revToplevel
   m <- gets _revMain
   return $ Program (reverse t) (reverse m)
@@ -79,24 +79,34 @@ convExtern (H.ExDec name actual) = do
   addKnown name
   addToplevel $ ExDec name actual
 
-convLet :: H.Expr TypedID -> Closure ()
-convLet (H.Let (H.ValDec var (H.String str)) rest) = do
-  addToplevel (StrDec var str)
-  convLet rest
-convLet (H.Let (H.ValDec (TypedID var _) val) rest) = do
-  val' <- convExpr val
-  addMain (TypedID var (typeOf val') := val')
-  convLet rest
-convLet (H.Let (H.FunDec fn params body) rest) = do
-  -- クロージャ変換して_revToplevelに追加
-  topLevelBackup <- gets _revToplevel
-  knownsBackup <- gets _knowns
+-- convLet :: H.Expr TypedID -> Closure ()
+-- convLet (H.Let (H.ValDec var (H.String str)) rest) = do
+--   addToplevel (StrDec var str)
+--   convLet rest
+-- convLet (H.Let (H.ValDec (TypedID var _) val) rest) = do
+--   val' <- convExpr val
+--   addMain (TypedID var (typeOf val') := val')
+--   convLet rest
+-- convLet (H.Let (H.FunDec fn params body) rest) = do
+--   -- クロージャ変換して_revToplevelに追加
+--   topLevelBackup <- gets _revToplevel
+--   knownsBackup <- gets _knowns
 
-  addKnown fn
-  body' <- convLet body
+--   -- fnに自由変数が無いと仮定してbodyをクロージャ変換
+--   addKnown fn
+--   mapM addKnown params
+--   body' <- convLet body
 
-convLet x =
-  addMain (Do undefined)
+--   knowns <- gets _knowns
+--   let bodyFv = freevars body' \\ knowns
+--   body' <- if empty bodyFv
+--            then return body'
+--            else do modify $ \e -> e { _revToplevel = _revToplevel e
+--                                     , _knowns = knowns
+--                                     }
+--                    convLet body'
+-- convLet x =
+--   addMain (Do undefined)
 
 convExpr (H.Call fn args) = do
   closures <- gets _closures
