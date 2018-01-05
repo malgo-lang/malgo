@@ -85,6 +85,7 @@ instance PrettyPrint Op where
 
 data Decl a = FunDec a [a] (Expr a)
             | ValDec a (Expr a)
+            | ExDec a String
   deriving (Eq, Show)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
@@ -95,23 +96,6 @@ instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (ValDec name val) =
     text "val" <+> pretty name
     <+> pretty val
-
-data Extern a = ExDec { _name   :: a
-                      , _actual :: String
-                      }
-  deriving (Eq, Show)
-
-instance PrettyPrint a => PrettyPrint (Extern a) where
   pretty (ExDec name orig) = parens $
     text "extern" <+> pretty name
     <+> text orig
-
-data Program a = Program { _externs :: [Extern a]
-                         , _body    :: Expr a
-                         }
-  deriving (Show)
-
-instance PrettyPrint a => PrettyPrint (Program a) where
-  pretty (Program e b) =
-    text "extern:" $+$ sep (map pretty e)
-    $+$ text "body:" $+$ pretty b

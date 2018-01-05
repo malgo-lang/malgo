@@ -5,7 +5,7 @@ module Language.Malgo.KNormal where
 
 import           Control.Monad.Except
 import           Control.Monad.State
-import           Language.Malgo.HIR       hiding (_externs)
+import           Language.Malgo.HIR
 import           Language.Malgo.Rename    (ID (..), RnEnv (..))
 import qualified Language.Malgo.Syntax    as S
 import           Language.Malgo.Type
@@ -13,13 +13,11 @@ import           Language.Malgo.TypeCheck
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data KEnv = KEnv { _externs :: [Extern TypedID]
-                 , _count   :: Int
-                 }
+newtype KEnv = KEnv { _count   :: Int }
   deriving Show
 
 initKEnv :: RnEnv -> KEnv
-initKEnv (RnEnv i _ _) = KEnv [] i
+initKEnv (RnEnv i _ _) = KEnv i
 
 type KNormal a = Malgo KEnv a
 
@@ -29,18 +27,14 @@ runKNormal env m = runMalgo m (initKEnv env)
 knormal
   :: RnEnv
      -> S.Expr TypedID
-     -> (Either MalgoError (Program TypedID), KEnv)
-knormal env e = runKNormal env $ do
-  e' <- transExpr (flattenLet e)
-  exs <- gets _externs
-  return (Program exs e')
+     -> (Either MalgoError (Expr TypedID), KEnv)
+knormal env e = runKNormal env $
+  transExpr (flattenLet e)
+  -- exs <- gets _externs
+  -- return (Program exs e')
 
 throw :: Info -> Doc -> KNormal a
 throw info mes = throwError (KNormalError info mes)
-
-addEx :: TypedID -> String -> KNormal ()
-addEx name orig =
-  modify $ \e -> e { _externs = ExDec name orig : _externs e }
 
 flattenLet :: S.Expr TypedID -> S.Expr TypedID
 flattenLet (S.Let info [decl] body) =
@@ -88,6 +82,10 @@ insertLet v k = do
   e <- k x
   return (Let (ValDec x v') e)
 
+bind :: [S.Expr TypedID]
+     -> [TypedID]
+     -> ([TypedID] -> KNormal (Expr TypedID))
+     -> KNormal (Expr TypedID)
 bind [] args k     = k (reverse args)
 bind (x:xs) args k = insertLet x (\x' -> bind xs (x':args) k)
 
@@ -119,8 +117,8 @@ transExpr (S.Let _ [S.FunDec _ fn params _ fbody] body) = do
   body' <- transExpr body
   return (Let (FunDec fn (map fst params) fbody') body')
 transExpr (S.Let _ [S.ExDec _ name _ orig] body) = do
-  addEx name orig
-  transExpr body
+  body' <- transExpr body
+  return (Let (ExDec name orig) body')
 transExpr (S.Seq _ e1 e2) = do
   unused <- newUnused
   e1' <- transExpr e1

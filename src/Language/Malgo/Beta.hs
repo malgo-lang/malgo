@@ -18,8 +18,8 @@ type Beta a = Malgo BEnv a
 runBeta :: Beta a -> (Either MalgoError a, BEnv)
 runBeta m = runMalgo m initBEnv
 
-betaTrans :: Program TypedID -> (Either MalgoError (Program TypedID), BEnv)
-betaTrans prog = runBeta $ transProgram prog
+betaTrans :: Expr TypedID -> (Either MalgoError (Expr TypedID), BEnv)
+betaTrans prog = runBeta $ transExpr prog
 
 addBind :: TypedID -> TypedID -> Beta ()
 addBind x y =
@@ -30,11 +30,6 @@ find x = do
   table <- gets _table
   let x' = Map.lookup x table
   return $ fromMaybe x x'
-
-transProgram :: Program TypedID -> Beta (Program TypedID)
-transProgram (Program exs body) = do
-  body' <- transExpr body
-  return $ Program exs body'
 
 transExpr :: Expr TypedID -> Beta (Expr TypedID)
 transExpr (Let (FunDec fn params fnbody) body) =
