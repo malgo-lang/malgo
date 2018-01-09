@@ -1,10 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.MIR
-  ( Decl(..)
-  , Expr(..)
-  , Program(..)
-  , typeOf
-  ) where
+module Language.Malgo.MIR where
 
 import           Language.Malgo.HIR       (Op (..))
 import           Language.Malgo.Type
