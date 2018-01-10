@@ -16,9 +16,7 @@ instance FreeVars H.Expr where
   freevars (H.Char _)       = []
   freevars (H.String _)     = []
   freevars H.Unit           = []
-  freevars (H.Call fn args) = if fn `elem` args
-                              then args
-                              else fn : args
+  freevars (H.Call _ args) = args
   freevars (H.Let (H.ValDec x e1) e2) =
     freevars e1 `union` delete x (freevars e2)
   freevars (H.Let (H.FunDec fn params e1) e2) =
@@ -39,7 +37,7 @@ instance FreeVars M.Expr where
   freevars (M.Char _)           = []
   freevars (M.String _)         = []
   freevars M.Unit               = []
-  freevars (M.CallDir fn args)  = nub $ fn : args
+  freevars (M.CallDir _ args)  = nub args
   freevars (M.CallCls cls args) = nub $ cls : args
   freevars (M.Let (M.ValDec x e1) e2) =
     freevars e1 `union` delete x (freevars e2)
