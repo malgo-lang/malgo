@@ -47,9 +47,10 @@ main = do
         (Right x, _) -> x
         (Left x, _)  -> error $ show $ pretty x
 
-  let flatten = Flatten.flatten knormal
-
-  let beta = case Beta.betaTrans flatten of
+  let beta = case Beta.betaTrans knormal of
         (Right x, _) -> x
         (Left x, _)  -> error $ show $ pretty x
   print $ pretty beta
+
+  let flatten = Flatten.flatten beta
+  print $ pretty flatten
