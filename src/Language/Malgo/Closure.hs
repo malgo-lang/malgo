@@ -72,6 +72,11 @@ newClsID (TypedID fn (FunTy params ret)) fv = do
 newClsID x _ = throw $ pretty x <+> text "is not function."
 
 convExpr :: H.Expr TypedID -> ClsTrans (Expr TypedID)
+convExpr (H.Let (H.ValDec (TypedID name (FunTy _ _)) val) body) = do
+  val' <- convExpr val
+  addKnown (TypedID name (typeOf val'))
+  body' <- convExpr body
+  return (Let (ValDec (TypedID name (typeOf val')) val') body')
 convExpr (H.Var x)    = Var <$> convID x
 convExpr (H.Int x)    = return (Int x)
 convExpr (H.Float x)  = return (Float x)

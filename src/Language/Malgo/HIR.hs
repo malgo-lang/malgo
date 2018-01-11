@@ -44,6 +44,22 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
     $+$ text "else:" <+> nest 2 (pretty f)
   pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
+instance Typeable a => Typeable (Expr a) where
+  typeOf (Var x) = typeOf x
+  typeOf (Int _) = "Int"
+  typeOf (Float _) = "Float"
+  typeOf (Bool _) = "Bool"
+  typeOf (Char _) = "Char"
+  typeOf (String _) = "String"
+  typeOf Unit = "Unit"
+  typeOf (Call fn _) =
+    case typeOf fn of
+      (FunTy _ ty) -> ty
+      _            -> error "(typeOf fn) should match (FunTy _ ty)"
+  typeOf (Let _ e) = typeOf e
+  typeOf (If _ e _) = typeOf e
+  typeOf (BinOp _ x _) = typeOf x
+
 -- | 中置演算子の種類を表すタグ
 data Op = Add
         | Sub

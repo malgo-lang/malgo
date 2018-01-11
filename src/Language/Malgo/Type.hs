@@ -29,3 +29,6 @@ instance PrettyPrint Type where
 
 instance IsString Type where
   fromString name = NameTy $ fromString name
+
+class Typeable a where
+  typeOf :: a -> Type

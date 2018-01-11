@@ -19,6 +19,9 @@ instance Eq TypedID where
 instance PrettyPrint TypedID where
   pretty (TypedID x t) = pretty x <> text ":" <> pretty t
 
+instance Typeable TypedID where
+  typeOf (TypedID _ ty) = ty
+
 newtype TcEnv = TcEnv { _table :: Map.Map ID TypedID }
 
 initTcEnv :: TcEnv
@@ -78,26 +81,26 @@ checkDecl (FunDec info fn params retty body) = do
         makeFnTy xs ret       =
           return $ FunTy (map snd xs) ret
 
-typeOf :: Expr TypedID -> Type
-typeOf (Var _ (TypedID _ ty)) = ty
-typeOf (Int _ _)              = "Int"
-typeOf (Float _ _)            = "Float"
-typeOf (Bool _ _)             = "Bool"
-typeOf (Char _ _)             = "Char"
-typeOf (String _ _)           = "String"
-typeOf (Unit _)               = "Unit"
-typeOf (Call _ fn _) =
-  case typeOf fn of
-    (FunTy _ ty) -> ty
-    _            -> error "(typeOf fn) should match (FunTy _ ty)"
-typeOf (Seq _ _ e) = typeOf e
-typeOf (Let _ _ e) = typeOf e
-typeOf (If _ _ e _) = typeOf e
-typeOf (BinOp i op x _) =
-  case runTypeCheck (typeOfOp i op (typeOf x)) of
-    (Right (FunTy _ ty), _) -> ty
-    (Left mes, _)           -> error (show mes)
-    _ -> error "(typeOfOp op) should match (FunTy _ ty)"
+instance Typeable a => Typeable (Expr a) where
+  typeOf (Var _ name) = typeOf name
+  typeOf (Int _ _)              = "Int"
+  typeOf (Float _ _)            = "Float"
+  typeOf (Bool _ _)             = "Bool"
+  typeOf (Char _ _)             = "Char"
+  typeOf (String _ _)           = "String"
+  typeOf (Unit _)               = "Unit"
+  typeOf (Call _ fn _) =
+    case typeOf fn of
+      (FunTy _ ty) -> ty
+      _            -> error "(typeOf fn) should match (FunTy _ ty)"
+  typeOf (Seq _ _ e) = typeOf e
+  typeOf (Let _ _ e) = typeOf e
+  typeOf (If _ _ e _) = typeOf e
+  typeOf (BinOp i op x _) =
+    case runTypeCheck (typeOfOp i op (typeOf x)) of
+      (Right (FunTy _ ty), _) -> ty
+      (Left mes, _)           -> error (show mes)
+      _ -> error "(typeOfOp op) should match (FunTy _ ty)"
 
 typeOfOp :: Info -> Op -> Type -> TypeCheck Type
 typeOfOp _ Add _  = return $ FunTy ["Int", "Int"] "Int"
