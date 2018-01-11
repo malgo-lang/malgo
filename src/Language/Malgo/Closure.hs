@@ -50,6 +50,13 @@ addFunDec :: FunDec TypedID -> ClsTrans ()
 addFunDec f =
   modify $ \e -> e { _fundecs = f : _fundecs e }
 
+convID :: TypedID -> ClsTrans TypedID
+convID name = do
+  clss <- gets _closures
+  case Map.lookup name clss of
+    Nothing  -> return name
+    Just cls -> return cls
+
 addClsTrans :: TypedID -> TypedID -> ClsTrans ()
 addClsTrans orig cls =
   modify $ \e -> e { _closures = Map.insert orig cls (_closures e) }
@@ -62,10 +69,25 @@ newClsID (TypedID fn (FunTy params ret)) fv = do
   return (TypedID
            (Internal (Language.Malgo.Rename._name fn `mappend` fromString "$cls") c)
            ty)
+newClsID x _ = throw $ pretty x <+> text "is not function."
 
 convExpr :: H.Expr TypedID -> ClsTrans (Expr TypedID)
-convExpr = undefined
-
+convExpr (H.Var x)    = Var <$> convID x
+convExpr (H.Int x)    = return (Int x)
+convExpr (H.Float x)  = return (Float x)
+convExpr (H.Bool x)   = return (Bool x)
+convExpr (H.Char x)   = return (Char x)
+convExpr (H.String x) = return (String x)
+convExpr H.Unit       = return Unit
+convExpr (H.Call fn args) = do
+  closures <- gets _closures
+  case Map.lookup fn closures of
+    Nothing  -> CallDir fn <$> mapM convID args
+    Just cls -> CallCls cls <$> mapM convID args
+convExpr (H.If c t f) =
+  If <$> convID c <*> convExpr t <*> convExpr f
+convExpr (H.BinOp op x y) =
+  BinOp op <$> convID x <*> convID y
 -- convProgram (H.Program exs body) = do
 --   mapM_ (addKnown . H._name) exs
 --   convExterns exs
