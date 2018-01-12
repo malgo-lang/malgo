@@ -12,7 +12,7 @@ data Type = NameTy Name
                   }
           | ClsTy { _params   :: [Type]
                   , _ret      :: Type
-                  , _captures :: [Type]
+                  -- , _captures :: [Type]
                   }
   deriving (Eq, Show, Ord)
 
@@ -22,10 +22,10 @@ instance PrettyPrint Type where
   pretty (FunTy param ret) =
     parens (cat (punctuate (text ",") (map pretty param))
     <+> text "->" <+> pretty ret)
-  pretty (ClsTy param ret cap) = braces
+  pretty (ClsTy param ret) = braces
     (parens (cat (punctuate (text ",") (map pretty param))
              <+> text "->" <+> pretty ret))
-    <+> brackets (sep (map pretty cap))
+    -- <+> brackets (sep (map pretty cap))
 
 instance IsString Type where
   fromString name = NameTy $ fromString name

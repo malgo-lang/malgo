@@ -112,6 +112,6 @@ instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (ValDec name val) =
     text "val" <+> pretty name
     <+> pretty val
-  pretty (ExDec name orig) = parens $
+  pretty (ExDec name orig) =
     text "extern" <+> pretty name
     <+> text orig

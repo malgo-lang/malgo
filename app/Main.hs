@@ -2,10 +2,6 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Main where
 
--- import qualified Language.Malgo.Beta      as Beta
--- import qualified Language.Malgo.Closure   as Closure
--- import qualified Language.Malgo.Codegen   as Codegen
--- import qualified Language.Malgo.IRBuilder as IRBuilder
 import qualified Language.Malgo.Beta      as Beta
 import qualified Language.Malgo.Flatten   as Flatten
 import qualified Language.Malgo.KNormal   as KNormal
@@ -13,14 +9,10 @@ import qualified Language.Malgo.Lexer     as Lexer
 import qualified Language.Malgo.Parser    as Parser
 import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.TypeCheck as TypeCheck
+import qualified Language.Malgo.Closure as Closure
 import           Language.Malgo.Utils
 
-import           Control.Monad            (join)
-import qualified Data.ByteString.Char8    as BS
-import           Data.String
 import           System.Environment       (getArgs)
-import qualified Text.Parsec.String       as P
-import qualified Text.PrettyPrint         as PP
 
 main :: IO ()
 main = do
@@ -43,8 +35,8 @@ main = do
         (Right x, _) -> x
         (Left x, _)  -> error $ show $ pretty x
 
-  let knormal = case KNormal.knormal rnenv typedAST of
-        (Right x, _) -> x
+  let (knormal, kenv) = case KNormal.knormal rnenv typedAST of
+        (Right x, e) -> (x, e)
         (Left x, _)  -> error $ show $ pretty x
 
   let beta = case Beta.betaTrans knormal of
@@ -52,4 +44,9 @@ main = do
         (Left x, _)  -> error $ show $ pretty x
 
   let flatten = Flatten.flatten beta
-  print $ pretty flatten
+
+  let closure = case Closure.conv (KNormal._count kenv) flatten of
+        (Right x, _) -> x
+        (Left x, _) -> error $ show $ pretty x
+
+  print $ pretty closure
