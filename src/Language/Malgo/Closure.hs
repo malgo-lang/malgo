@@ -15,7 +15,6 @@ import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-
 data ClsEnv = ClsEnv { _closures :: Map.Map TypedID TypedID
                      , _knowns   :: [TypedID]
                      , _fundecs  :: [FunDec TypedID]
@@ -93,67 +92,3 @@ convExpr (H.If c t f) =
   If <$> convID c <*> convExpr t <*> convExpr f
 convExpr (H.BinOp op x y) =
   BinOp op <$> convID x <*> convID y
--- convProgram (H.Program exs body) = do
---   mapM_ (addKnown . H._name) exs
---   convExterns exs
---   -- convLet body
---   t <- gets _revToplevel
---   m <- gets _revMain
---   return $ Program (reverse t) (reverse m)
-
--- convExterns :: [H.Extern TypedID] -> ClsTrans ()
--- convExterns = mapM_ convExtern
-
--- convExtern :: H.Extern TypedID -> ClsTrans ()
--- convExtern (H.ExDec name actual) = do
---   addKnown name
---   addToplevel $ ExDec name actual
-
--- -- convLet :: H.Expr TypedID -> ClsTrans ()
--- -- convLet (H.Let (H.ValDec var (H.String str)) rest) = do
--- --   addToplevel (StrDec var str)
--- --   convLet rest
--- -- convLet (H.Let (H.ValDec (TypedID var _) val) rest) = do
--- --   val' <- convExpr val
--- --   addMain (TypedID var (typeOf val') := val')
--- --   convLet rest
--- -- convLet (H.Let (H.FunDec fn params body) rest) = do
--- --   -- クロージャ変換して_revToplevelに追加
--- --   topLevelBackup <- gets _revToplevel
--- --   knownsBackup <- gets _knowns
-
--- --   -- fnに自由変数が無いと仮定してbodyをクロージャ変換
--- --   addKnown fn
--- --   mapM addKnown params
--- --   body' <- convLet body
-
--- --   knowns <- gets _knowns
--- --   let bodyFv = freevars body' \\ knowns
--- --   body' <- if empty bodyFv
--- --            then return body'
--- --            else do modify $ \e -> e { _revToplevel = _revToplevel e
--- --                                     , _knowns = knowns
--- --                                     }
--- --                    convLet body'
--- -- convLet x =
--- --   addMain (Do undefined)
-
--- convExpr (H.Call fn args) = do
---   closures <- gets _closures
---   case Map.lookup fn closures of
---     (Just fn') -> return $ CallCls fn' args
---     Nothing    -> return $ CallDir fn args
--- convExpr (H.If c t f) = If c <$> convExpr t <*> convExpr f
--- convExpr e@H.Let{} = throw . text $ "unreachable: " ++ show e
--- convExpr (H.Var x) = do
---   closures <- gets _closures
---   case Map.lookup x closures of
---     (Just x') -> return $ Var x'
---     Nothing   -> return $ Var x
--- convExpr (H.Int x) = return $ Int x
--- convExpr (H.Float x) = return $ Float x
--- convExpr (H.Bool x) = return $ Bool x
--- convExpr (H.Char x) = return $ Char x
--- convExpr e@H.String{} = throw . text $ "unreachable: " ++ show e
--- convExpr H.Unit = return Unit
--- convExpr (H.BinOp op x y) = return $ BinOp op x y

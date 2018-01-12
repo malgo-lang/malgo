@@ -1,0 +1,52 @@
+name: malgo
+version: '0.1.0.0'
+category: Compilers/Interpreters
+author: Yuya Kono
+maintainer: takohati0821@gmail.com
+copyright: 2017 Yuya Kono
+license: BSD3
+github: takoeight0821/malgo
+extra-source-files:
+- README.md
+library:
+  source-dirs: src
+  ghc-options: -Wall
+  build-tools:
+  - happy
+  dependencies:
+  - base >=4.7 && <5
+  - mtl
+  - parsec
+  - array
+  - bytestring
+  - containers
+  - directory
+  - filepath
+  - flow
+  - lens
+  - llvm-hs-pure
+  - pretty
+  - text
+executables:
+  malgo-exe:
+    main: Main.hs
+    source-dirs: app
+    ghc-options: -Wall
+    dependencies:
+    - base
+    - malgo
+    - mtl
+    - parsec
+    - pretty
+    - bytestring
+    - containers
+tests:
+  malgo-test:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+    - base
+    - malgo
+    - mtl
+    - parsec
+    - hspec
