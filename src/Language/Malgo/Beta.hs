@@ -1,6 +1,5 @@
 module Language.Malgo.Beta (betaTrans) where
 
-import           Control.Monad.Except
 import           Control.Monad.State
 import qualified Data.Map.Strict          as Map
 import           Data.Maybe

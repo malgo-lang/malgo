@@ -8,9 +8,11 @@ license: BSD3
 github: takoeight0821/malgo
 extra-source-files:
 - README.md
+
+ghc-options: -Wall
+
 library:
   source-dirs: src
-  ghc-options: -Wall
   build-tools:
   - happy
   dependencies:
@@ -31,7 +33,6 @@ executables:
   malgo-exe:
     main: Main.hs
     source-dirs: app
-    ghc-options: -Wall
     dependencies:
     - base
     - malgo

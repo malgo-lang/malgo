@@ -1,4 +1,3 @@
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RankNTypes       #-}
 module Language.Malgo.Lexer where
 
@@ -85,24 +84,49 @@ lexer' = Tok.makeTokenParser $ emptyDef {
                         , "true", "false"]
   }
 
+integer :: ParsecT String u Identity Integer
 integer = Tok.integer lexer'
+natural :: ParsecT String u Identity Integer
 natural = Tok.natural lexer'
+float :: ParsecT String u Identity Double
 float = Tok.float lexer'
+parens ::
+  ParsecT String u Identity a -> ParsecT String u Identity a
 parens = Tok.parens lexer'
+identifier :: ParsecT String u Identity String
 identifier = Tok.identifier lexer'
+reserved :: String -> ParsecT String u Identity ()
 reserved = Tok.reserved lexer'
+reservedOp :: String -> ParsecT String u Identity ()
 reservedOp = Tok.reservedOp lexer'
+brackets ::
+  ParsecT String u Identity a -> ParsecT String u Identity a
 brackets = Tok.brackets lexer'
+lexeme ::
+  ParsecT String u Identity a -> ParsecT String u Identity a
 lexeme = Tok.lexeme lexer'
+stringLiteral :: ParsecT String u Identity String
 stringLiteral = Tok.stringLiteral lexer'
+charLiteral :: ParsecT String u Identity Char
 charLiteral = Tok.charLiteral lexer'
+symbol :: String -> ParsecT String u Identity String
 symbol = Tok.symbol lexer'
+commaSep ::
+  ParsecT String u Identity a -> ParsecT String u Identity [a]
 commaSep = Tok.commaSep lexer'
+braces ::
+  ParsecT String u Identity a -> ParsecT String u Identity a
 braces = Tok.braces lexer'
+semiSep ::
+  ParsecT String u Identity a -> ParsecT String u Identity [a]
 semiSep = Tok.semiSep lexer'
+semi :: ParsecT String u Identity String
 semi = Tok.semi lexer'
+whiteSpace :: ParsecT String u Identity ()
 whiteSpace = Tok.whiteSpace lexer'
+lparen :: ParsecT String u Identity String
 lparen = symbol "("
+rparen :: ParsecT String u Identity String
 rparen = symbol ")"
 
 keyword :: Info -> String -> Tag -> Lexer Token

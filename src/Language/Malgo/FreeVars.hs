@@ -19,6 +19,8 @@ instance FreeVars H.Expr where
   freevars (H.Call _ args) = args
   freevars (H.Let (H.ValDec x e1) e2) =
     freevars e1 `union` delete x (freevars e2)
+  freevars (H.Let (H.ExDec name _) e) =
+    delete name $ freevars e
   freevars (H.Let (H.FunDec fn params e1) e2) =
     let zs = freevars e1 \\ params
     in delete fn $ zs `union` freevars e2

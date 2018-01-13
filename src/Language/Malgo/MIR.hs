@@ -3,7 +3,6 @@ module Language.Malgo.MIR where
 
 import           Language.Malgo.HIR       (Op (..))
 import           Language.Malgo.Type
-import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
@@ -45,7 +44,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
     $+$ text "else:" <+> nest 2 (pretty f)
   pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
-instance Typeable a => Typeable (Expr a) where
+instance (Typeable a, Show a) => Typeable (Expr a) where
   typeOf (Var name) = typeOf name
   typeOf (Int _)    = "Int"
   typeOf (Float _)  = "Float"
@@ -57,10 +56,12 @@ instance Typeable a => Typeable (Expr a) where
     case typeOf name of
       (FunTy _ ty) -> ty
       (ClsTy _ ty) -> ty
+      (NameTy _) -> error $ show name ++ "is not callable"
   typeOf (CallCls name _) =
     case typeOf name of
       (FunTy _ ty) -> ty
       (ClsTy _ ty) -> ty
+      (NameTy _) -> error $ show name ++ "is not callable"
   typeOf (Let _ e) = typeOf e
   typeOf (If _ t _) = typeOf t
   typeOf (BinOp op _ _) =
