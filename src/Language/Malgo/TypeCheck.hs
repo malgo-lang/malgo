@@ -5,7 +5,7 @@ import           Control.Monad.Except
 import           Control.Monad.State
 import qualified Data.Map.Strict       as Map
 import           Language.Malgo.Rename
-import           Language.Malgo.Syntax
+import           Language.Malgo.Syntax hiding (info)
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -20,7 +20,7 @@ instance PrettyPrint TypedID where
   pretty (TypedID x t) = pretty x <> text ":" <> pretty t
 
 instance Typeable TypedID where
-  typeOf (TypedID _ ty) = ty
+  typeOf = _type
 
 newtype TcEnv = TcEnv { _table :: Map.Map ID TypedID }
 

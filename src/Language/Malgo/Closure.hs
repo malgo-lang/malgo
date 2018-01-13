@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 module Language.Malgo.Closure (conv) where
 
+import Data.Maybe
 import           Control.Monad.Except
 import           Control.Monad.State
 import           Data.List
@@ -14,6 +15,8 @@ import           Language.Malgo.Type
 import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
+
+-- knownsとvarMapは引数として持ち回った方がわかりやすい
 
 data ClsEnv = ClsEnv { _closures :: Map.Map TypedID TypedID
                      , _knowns   :: [TypedID]
@@ -82,14 +85,11 @@ toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)
 toCls x = x
 
 convExpr :: H.Expr TypedID -> ClsTrans (Expr TypedID)
-convExpr (H.Let (H.ValDec x@(TypedID name (FunTy _ _)) val) body) = do
-  val' <- convExpr val
-  addClsTrans x (TypedID name (typeOf val')) -- 関数値はクロージャとして扱う
-  addVar x (TypedID name (typeOf val'))
-  body' <- convExpr body
-  return (Let (ValDec (TypedID name (typeOf val')) val') body')
 convExpr (H.Let (H.ValDec x@(TypedID name _) val) body) = do
   val' <- convExpr val
+  case typeOf val' of
+    ClsTy _ _ -> addClsTrans x (TypedID name (typeOf val')) -- 関数値はクロージャとして扱う
+    _         -> return ()
   addVar x (TypedID name (typeOf val'))
   body' <- convExpr body
   return (Let (ValDec (TypedID name (typeOf val')) val') body')
@@ -131,14 +131,9 @@ convExpr H.Unit       = return Unit
 convExpr (H.Call fn args) = do
   knowns <- gets _knowns
   if fn `elem `knowns
-    then CallDir <$> convID' fn <*> mapM convID args
+    then CallDir <$> fn' <*> mapM convID args
     else CallCls <$> convID fn <*> mapM convID args
-  where convID' fn = do
-          varMap <- gets _varMap
-          case Map.lookup fn varMap of -- 型が変わっていれば変換
-            Nothing -> return fn
-            Just fn' -> return fn'
-
+  where fn' = fromMaybe fn . Map.lookup fn <$> gets _varMap -- 型が変わっていれば変換
 convExpr (H.If c t f) =
   If <$> convID c <*> convExpr t <*> convExpr f
 convExpr (H.BinOp op x y) =
