@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleInstances #-}
 module Language.Malgo.TypeCheck (typeCheck, TypedID(..), typeOf) where
 
 import           Control.Monad.Except
@@ -81,7 +82,7 @@ checkDecl (FunDec info fn params retty body) = do
         makeFnTy xs ret       =
           return $ FunTy (map snd xs) ret
 
-instance Typeable a => Typeable (Expr a) where
+instance Typeable (Expr TypedID) where
   typeOf (Var _ name) = typeOf name
   typeOf (Int _ _)              = "Int"
   typeOf (Float _ _)            = "Float"

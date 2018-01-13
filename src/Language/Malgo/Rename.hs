@@ -5,7 +5,7 @@ import           Control.Monad.Except
 import           Control.Monad.State
 import qualified Data.Map.Strict       as Map
 import           Data.Monoid
-import           Language.Malgo.Syntax
+import           Language.Malgo.Syntax hiding (info)
 import           Language.Malgo.Utils
 import           Text.PrettyPrint      (Doc, int, text)
 import qualified Text.PrettyPrint      as P
@@ -46,7 +46,7 @@ type Rename a = Malgo RnEnv a
 runRename :: Malgo RnEnv a -> (Either MalgoError a, RnEnv)
 runRename m = runMalgo m initRnEnv
 
--- rename :: [Decl Name] -> (Either MalgoError [Decl ID], RnEnv)
+rename :: Expr Name -> (Either MalgoError (Expr ID), RnEnv)
 rename x = runRename (transExpr x)
 
 throw :: Info -> Doc -> Rename a
@@ -83,9 +83,9 @@ transExpr (Let info decls e) = do
   cons <- gets idCons
 
   decls' <- mapM transDecl decls
-  modify $ \e -> e { idCons = Internal }
+  modify $ \env -> env { idCons = Internal }
   e' <- transExpr e
-  modify $ \e -> e { idCons = cons }
+  modify $ \env -> env { idCons = cons }
 
   return (Let info decls' e')
 transExpr (If info c t f) = If info <$> transExpr c <*> transExpr t <*> transExpr f

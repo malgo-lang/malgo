@@ -1,6 +1,5 @@
 module Language.Malgo.Flatten (flatten)where
 
-import           Debug.Trace
 import           Language.Malgo.HIR
 
 flatten :: Show a => Expr a -> Expr a
