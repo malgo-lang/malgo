@@ -55,6 +55,7 @@ data MalgoError = RenameError Info P.Doc
                 | KNormalError Info P.Doc
                 | BetaTransError P.Doc
                 | ClosureTransError P.Doc
+                | EvalError P.Doc
   deriving Show
 
 instance PrettyPrint MalgoError where
@@ -70,6 +71,8 @@ instance PrettyPrint MalgoError where
     P.text "error(betatrans):" P.<+> m
   pretty (ClosureTransError m) =
     P.text "error(closuretrans):" P.<+> m
+  pretty (EvalError m) =
+    P.text "error(eval):" P.<+> m
 
 newtype MalgoT s m a = MalgoT { unMalgoT :: ExceptT MalgoError (StateT s m) a }
   deriving ( Functor, Applicative

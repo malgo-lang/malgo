@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.MIR where
 
-import           Language.Malgo.HIR       (Op (..))
+import           Language.Malgo.HIR   (Op (..))
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -56,12 +56,12 @@ instance (Typeable a, Show a) => Typeable (Expr a) where
     case typeOf name of
       (FunTy _ ty) -> ty
       (ClsTy _ ty) -> ty
-      (NameTy _) -> error $ show name ++ "is not callable"
+      (NameTy _)   -> error $ show name ++ "is not callable"
   typeOf (CallCls name _) =
     case typeOf name of
       (FunTy _ ty) -> ty
       (ClsTy _ ty) -> ty
-      (NameTy _) -> error $ show name ++ "is not callable"
+      (NameTy _)   -> error $ show name ++ "is not callable"
   typeOf (Let _ e) = typeOf e
   typeOf (If _ t _) = typeOf t
   typeOf (BinOp op _ _) =

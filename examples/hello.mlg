@@ -8,10 +8,10 @@ extern getchar : Unit -> Char = "getchar"
 extern ord : Char -> Int = "ord"
 extern chr : Int -> Char = "chr"
 extern size : String -> Int = "size"
-extern substring : (String, Int, Int) -> String = "substring"
-extern concat : (String, String) -> String = "concat"
+-- extern substring : (String, Int, Int) -> String = "substring"
+-- extern concat : (String, String) -> String = "concat"
 extern not : Bool -> Bool = "not"
-extern exit : Int -> Unit = "exit"
+-- extern exit : Int -> Unit = "exit"
 
 val a:Int = 42
 fun fib (n:Int) : Int =
