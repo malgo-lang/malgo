@@ -11,18 +11,17 @@ But HIR does'nt has "Info" property and `ExDec`.
 HIR.Let has only one Decl.
 -}
 
-data Expr a =
-  Var a
-  | Int Integer
-  | Float Double
-  | Bool Bool
-  | Char Char
-  | String String
-  | Unit
-  | Call a [a]
-  | Let (Decl a) (Expr a)
-  | If a (Expr a) (Expr a)
-  | BinOp Op a a
+data Expr a = Var a
+            | Int Integer
+            | Float Double
+            | Bool Bool
+            | Char Char
+            | String String
+            | Unit
+            | Call a [a]
+            | Let (Decl a) (Expr a)
+            | If a (Expr a) (Expr a)
+            | BinOp Op a a
   deriving (Eq, Show)
 
 instance PrettyPrint a => PrettyPrint (Expr a) where
@@ -45,11 +44,11 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
 instance Typeable a => Typeable (Expr a) where
-  typeOf (Var x) = typeOf x
-  typeOf (Int _) = "Int"
-  typeOf (Float _) = "Float"
-  typeOf (Bool _) = "Bool"
-  typeOf (Char _) = "Char"
+  typeOf (Var x)    = typeOf x
+  typeOf (Int _)    = "Int"
+  typeOf (Float _)  = "Float"
+  typeOf (Bool _)   = "Bool"
+  typeOf (Char _)   = "Char"
   typeOf (String _) = "String"
   typeOf Unit = "Unit"
   typeOf (Call fn _) =

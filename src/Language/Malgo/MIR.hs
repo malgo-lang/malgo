@@ -13,12 +13,8 @@ data Expr a = Var a
             | Char Char
             | String String
             | Unit
-            | CallDir { _fn   :: a
-                      , _args :: [a]
-                      }
-            | CallCls { _cls  :: a
-                      , _args :: [a]
-                      }
+            | CallDir a [a]
+            | CallCls a [a]
             | Let (Decl a) (Expr a)
             | If a (Expr a) (Expr a)
             | BinOp Op a a
@@ -84,11 +80,7 @@ instance (Typeable a, Show a) => Typeable (Expr a) where
       And     -> "Bool"
       Or      -> "Bool"
 
-data FunDec a = FunDec { _name    :: a
-                       , _params  :: [a]
-                       , _capture :: [a]
-                       , _body    :: Expr a
-                       }
+data FunDec a = FunDec a [a] [a] (Expr a)
   deriving Show
 
 instance PrettyPrint a => PrettyPrint (FunDec a) where
@@ -106,22 +98,14 @@ instance PrettyPrint a => PrettyPrint (ExDec a) where
      text "extern" <+> pretty name
      <+> text orig
 
-data Decl a = ValDec { _decName :: a
-                     , _value   :: Expr a
-                     }
-            | ClsDec { _decName :: a
-                     , _fnName  :: a
-                     , _fv      :: [a]
-                     }
-            deriving Show
+data Decl a = ValDec a (Expr a)
+            | ClsDec a a [a]
+  deriving Show
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (ValDec name val) =
     text "val" <+> pretty name
     <+> pretty val
-  -- pretty (ExDec name orig) =
-  --   text "extern" <+> pretty name
-  --   <+> text orig
   pretty (ClsDec name fn fv) =
     text "closure" <+> pretty name
     <+> pretty fn <+> parens (sep $ map pretty fv)
