@@ -98,10 +98,15 @@ instance PrettyPrint a => PrettyPrint (FunDec a) where
     <+> (parens . sep $ map pretty capture)
     $+$ nest 2 (pretty body)
 
-data Decl a = ExDec { _decName :: a
-                    , _actual  :: String
-                    }
-            | ValDec { _decName :: a
+data ExDec a = ExDec a String
+  deriving Show
+
+instance PrettyPrint a => PrettyPrint (ExDec a) where
+   pretty (ExDec name orig) =
+     text "extern" <+> pretty name
+     <+> text orig
+
+data Decl a = ValDec { _decName :: a
                      , _value   :: Expr a
                      }
             | ClsDec { _decName :: a
@@ -114,19 +119,18 @@ instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (ValDec name val) =
     text "val" <+> pretty name
     <+> pretty val
-  pretty (ExDec name orig) =
-    text "extern" <+> pretty name
-    <+> text orig
+  -- pretty (ExDec name orig) =
+  --   text "extern" <+> pretty name
+  --   <+> text orig
   pretty (ClsDec name fn fv) =
     text "closure" <+> pretty name
     <+> pretty fn <+> parens (sep $ map pretty fv)
 
-data Program a = Program { _toplevel :: [FunDec a]
-                         , _main     :: Expr a
-                         }
+data Program a = Program [FunDec a] [ExDec a] (Expr a)
   deriving Show
 
 instance PrettyPrint a => PrettyPrint (Program a) where
-  pretty (Program t m) =
+  pretty (Program t e m) =
     text "toplevel:" $+$ cat (map pretty t)
+    $+$ text "extern:" $+$ cat (map pretty e)
     $+$ text "main:" $+$ pretty m

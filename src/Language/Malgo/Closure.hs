@@ -1,11 +1,11 @@
 {-# LANGUAGE FlexibleContexts #-}
 module Language.Malgo.Closure (conv) where
 
-import Data.Maybe
 import           Control.Monad.Except
 import           Control.Monad.State
 import           Data.List
 import qualified Data.Map.Strict          as Map
+import           Data.Maybe
 import           Data.String
 import           Language.Malgo.FreeVars
 import qualified Language.Malgo.HIR       as H
@@ -16,18 +16,17 @@ import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
--- knownsとvarMapは引数として持ち回った方がわかりやすい
-
 data ClsEnv = ClsEnv { _closures :: Map.Map TypedID TypedID
                      , _knowns   :: [TypedID]
-                     , _varMap :: Map.Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
+                     , _varMap   :: Map.Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
                      , _fundecs  :: [FunDec TypedID]
+                     , _extern   :: [ExDec TypedID]
                      , _count    :: Int
                      }
   deriving Show
 
 initClsEnv :: Int -> ClsEnv
-initClsEnv = ClsEnv Map.empty [] Map.empty []
+initClsEnv = ClsEnv Map.empty [] Map.empty [] []
 
 type ClsTrans a = Malgo ClsEnv a
 
@@ -40,7 +39,8 @@ conv
 conv i x = runClosure i $ do
   x' <- convExpr x
   fs <- gets _fundecs
-  return (Program fs x')
+  exs <- gets _extern
+  return (Program fs exs x')
 
 throw :: Doc -> ClsTrans a
 throw = throwError . ClosureTransError
@@ -53,13 +53,17 @@ addFunDec :: FunDec TypedID -> ClsTrans ()
 addFunDec f =
   modify $ \e -> e { _fundecs = f : _fundecs e }
 
+addExDec :: ExDec TypedID -> ClsTrans ()
+addExDec ex =
+  modify $ \e -> e { _extern = ex : _extern e }
+
 convID :: TypedID -> ClsTrans TypedID
 convID name = do
   clss <- gets _closures
   varMap <- gets _varMap
   case Map.lookup name clss of -- クロージャになっていれば変換
     Nothing  -> case Map.lookup name varMap of -- 型が変わっていれば変換
-      Nothing -> return name
+      Nothing    -> return name
       Just name' -> return name'
     Just cls -> return cls
 
@@ -82,7 +86,7 @@ newClsID (TypedID fn fnty) = do
 
 toCls :: Type -> Type
 toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)
-toCls x = x
+toCls x                  = x
 
 convExpr :: H.Expr TypedID -> ClsTrans (Expr TypedID)
 convExpr (H.Let (H.ValDec x@(TypedID name _) val) body) = do
@@ -95,7 +99,8 @@ convExpr (H.Let (H.ValDec x@(TypedID name _) val) body) = do
   return (Let (ValDec (TypedID name (typeOf val')) val') body')
 convExpr (H.Let (H.ExDec name orig) body) = do
   addKnown name
-  Let (ExDec name orig) <$> convExpr body
+  addExDec (ExDec name orig)
+  convExpr body
 convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = do
   backup <- get
 

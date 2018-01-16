@@ -45,8 +45,6 @@ instance FreeVars M.Expr where
     freevars e1 `union` delete x (freevars e2)
   freevars (M.Let (M.ClsDec x _ fv) e) =
     delete x (fv `union` freevars e)
-  freevars (M.Let (M.ExDec x _) e) =
-    delete x (freevars e)
   freevars (M.If c t f) =
     nub $ delete c $ union (freevars t) (freevars f)
   freevars (M.BinOp _ x y) =
