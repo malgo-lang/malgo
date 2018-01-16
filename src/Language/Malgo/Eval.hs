@@ -4,9 +4,7 @@ module Language.Malgo.Eval (eval) where
 
 import           Control.Monad.Except
 import           Control.Monad.State
-import           Control.Monad.Trans
 import           Data.Char
-import           Data.List
 import qualified Data.Map                 as Map
 import           Language.Malgo.HIR       (Op (..))
 import qualified Language.Malgo.MIR       as M
