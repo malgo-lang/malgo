@@ -70,7 +70,7 @@ instance (Typeable a, Show a) => Typeable (Expr a) where
       FSub    -> "Float"
       FMul    -> "Float"
       FDiv    -> "Float"
-      Mod     -> "Float"
+      Mod     -> "Int"
       (Eq _)  -> "Bool"
       (Neq _) -> "Bool"
       (Lt _)  -> "Bool"

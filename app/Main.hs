@@ -3,13 +3,14 @@
 module Main where
 
 import qualified Language.Malgo.Beta      as Beta
+import qualified Language.Malgo.Closure   as Closure
+import qualified Language.Malgo.Eval      as Eval
 import qualified Language.Malgo.Flatten   as Flatten
 import qualified Language.Malgo.KNormal   as KNormal
 import qualified Language.Malgo.Lexer     as Lexer
 import qualified Language.Malgo.Parser    as Parser
 import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.TypeCheck as TypeCheck
-import qualified Language.Malgo.Closure as Closure
 import           Language.Malgo.Utils
 
 import           System.Environment       (getArgs)
@@ -47,6 +48,11 @@ main = do
 
   let closure = case Closure.conv (KNormal._count kenv) flatten of
         (Right x, _) -> x
-        (Left x, _) -> error $ show $ pretty x
+        (Left x, _)  -> error $ show $ pretty x
 
-  print $ pretty closure
+  eval <- Eval.eval closure
+  let result = case eval of
+        (Right x, _) -> x
+        (Left x, _)  -> error $ show $ pretty x
+
+  seq result $ return ()
