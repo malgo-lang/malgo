@@ -1,5 +1,5 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.TypeCheck (typeCheck, TypedID(..), typeOf) where
 
 import           Control.Monad.Except
@@ -11,7 +11,7 @@ import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data TypedID = TypedID { _id :: ID, _type :: Type }
+data TypedID = TypedID ID Type
   deriving (Show, Ord)
 
 instance Eq TypedID where
@@ -21,7 +21,7 @@ instance PrettyPrint TypedID where
   pretty (TypedID x t) = pretty x <> text ":" <> pretty t
 
 instance Typeable TypedID where
-  typeOf = _type
+  typeOf (TypedID _ t) = t
 
 newtype TcEnv = TcEnv { _table :: Map.Map ID TypedID }
 

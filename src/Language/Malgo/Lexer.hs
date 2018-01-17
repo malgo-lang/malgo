@@ -1,4 +1,4 @@
-{-# LANGUAGE RankNTypes       #-}
+{-# LANGUAGE RankNTypes #-}
 module Language.Malgo.Lexer where
 
 import           Data.Functor.Identity (Identity)
@@ -70,7 +70,9 @@ getInfo = do
 
 lexer' :: Tok.GenTokenParser String u Identity
 lexer' = Tok.makeTokenParser $ emptyDef {
-  Tok.commentLine = "--"
+  -- Tok.commentLine = "--"
+    Tok.commentStart = "(*"
+  , Tok.commentEnd = "*)"
   , Tok.identStart = letter <|> oneOf "!?@_"
   , Tok.identLetter = alphaNum <|> oneOf "!?@_"
   , Tok.reservedOpNames = [ "+.", "-.", "*.", "/."

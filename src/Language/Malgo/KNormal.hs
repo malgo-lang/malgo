@@ -30,8 +30,6 @@ knormal
      -> (Either MalgoError (Expr TypedID), KEnv)
 knormal env e = runKNormal env $
   transExpr (flattenLet e)
-  -- exs <- gets _externs
-  -- return (Program exs e')
 
 throw :: Info -> Doc -> KNormal a
 throw info mes = throwError (KNormalError info mes)
@@ -119,10 +117,9 @@ transExpr (S.Let _ [S.FunDec _ fn params _ fbody] body) = do
 transExpr (S.Let _ [S.ExDec _ name _ orig] body) = do
   body' <- transExpr body
   return (Let (ExDec name orig) body')
+transExpr (S.Let _ _ e) = transExpr e
 transExpr (S.Seq _ e1 e2) = do
   unused <- newUnused
   e1' <- transExpr e1
   e2' <- transExpr e2
   return $ Let (ValDec unused e1') e2'
-transExpr (S.Let info _ _) =
-  throw info (text "unreachable")

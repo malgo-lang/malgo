@@ -20,7 +20,7 @@ data Value = Int Integer
            | String String
            | Unit
            | Closure TypedID [TypedID]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 instance PrettyPrint Value where
   pretty (Int x)         = int (fromInteger x)
@@ -47,9 +47,9 @@ prelude =
   , ( "println"
     , \[String x] [] -> lift (putStrLn x) >> return Unit)
   , ( "print_int"
-    , \[Int x] [] -> lift (print x) >> return Unit)
+    , \[Int x] [] -> lift (putStr $ show x) >> return Unit)
   , ( "print_float"
-    , \[Float x] [] -> lift (print x) >> return Unit)
+    , \[Float x] [] -> lift (putStr $ show x) >> return Unit)
   , ( "flush"
     , \[Unit] [] -> lift (hFlush stdout) >> return Unit)
   , ( "getchar"
@@ -157,37 +157,21 @@ evalExpr (M.BinOp op x y) = do
   x' <- getVar x
   y' <- getVar y
   case (op, x', y') of
-    (Add, Int a, Int b)               -> return (Int $ a + b)
-    (Sub, Int a, Int b)               -> return (Int $ a - b)
-    (Mul, Int a, Int b)               -> return (Int $ a * b)
-    (Div, Int a, Int b)               -> return (Int $ a `div` b)
-    (Mod, Int a, Int b)               -> return (Int $ a `mod` b)
-    (FAdd, Float a, Float b)          -> return (Float $ a + b)
-    (FSub, Float a, Float b)          -> return (Float $ a - b)
-    (FMul, Float a, Float b)          -> return (Float $ a * b)
-    (FDiv, Float a, Float b)          -> return (Float $ a / b)
-    (Eq _, a, b)                      -> return (Bool $ a == b)
-    (Neq _, a, b)                     -> return (Bool $ a /= b)
-    (Lt "Int", Int a, Int b)          -> return (Bool $ a < b)
-    (Lt "Float", Float a, Float b)    -> return (Bool $ a < b)
-    (Lt "Bool", Bool a, Bool b)       -> return (Bool $ a < b)
-    (Lt "Char", Char a, Char b)       -> return (Bool $ a < b)
-    (Lt "String", String a, String b) -> return (Bool $ a < b)
-    (Gt "Int", Int a, Int b)          -> return (Bool $ a > b)
-    (Gt "Float", Float a, Float b)    -> return (Bool $ a > b)
-    (Gt "Bool", Bool a, Bool b)       -> return (Bool $ a > b)
-    (Gt "Char", Char a, Char b)       -> return (Bool $ a > b)
-    (Gt "String", String a, String b) -> return (Bool $ a > b)
-    (Le "Int", Int a, Int b)          -> return (Bool $ a <= b)
-    (Le "Float", Float a, Float b)    -> return (Bool $ a <= b)
-    (Le "Bool", Bool a, Bool b)       -> return (Bool $ a <= b)
-    (Le "Char", Char a, Char b)       -> return (Bool $ a <= b)
-    (Le "String", String a, String b) -> return (Bool $ a <= b)
-    (Ge "Int", Int a, Int b)          -> return (Bool $ a >= b)
-    (Ge "Float", Float a, Float b)    -> return (Bool $ a >= b)
-    (Ge "Bool", Bool a, Bool b)       -> return (Bool $ a >= b)
-    (Ge "Char", Char a, Char b)       -> return (Bool $ a >= b)
-    (Ge "String", String a, String b) -> return (Bool $ a >= b)
-    (And, Bool a, Bool b)             -> return (Bool $ a && b)
-    (Or, Bool a, Bool b)              -> return (Bool $ a || b)
+    (Add, Int a, Int b)      -> return (Int $ a + b)
+    (Sub, Int a, Int b)      -> return (Int $ a - b)
+    (Mul, Int a, Int b)      -> return (Int $ a * b)
+    (Div, Int a, Int b)      -> return (Int $ a `div` b)
+    (Mod, Int a, Int b)      -> return (Int $ a `mod` b)
+    (FAdd, Float a, Float b) -> return (Float $ a + b)
+    (FSub, Float a, Float b) -> return (Float $ a - b)
+    (FMul, Float a, Float b) -> return (Float $ a * b)
+    (FDiv, Float a, Float b) -> return (Float $ a / b)
+    (Eq _, a, b)             -> return (Bool $ a == b)
+    (Neq _, a, b)            -> return (Bool $ a /= b)
+    (Lt _, a, b)             -> return (Bool $ a < b)
+    (Gt _, a, b)             -> return (Bool $ a > b)
+    (Le _, a, b)             -> return (Bool $ a <= b)
+    (Ge _, a, b)             -> return (Bool $ a >= b)
+    (And, Bool a, Bool b)    -> return (Bool $ a && b)
+    (Or, Bool a, Bool b)     -> return (Bool $ a || b)
     _ -> throw $ text (show (op, x', y') ++ " is not valid")
