@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.Eval (eval) where
+module Language.Malgo.Eval (eval, Value) where
 
 import           Control.Monad.Except
 import           Control.Monad.State
@@ -37,8 +37,8 @@ data Context = Context
   , _fun :: Map.Map TypedID ([Value] -> [Value] -> Eval Value)
   }
 
-initContext :: Context
-initContext = Context Map.empty Map.empty
+instance Env Context where
+  initEnv = Context Map.empty Map.empty
 
 prelude :: [(String, [Value] -> [Value] -> Eval Value)]
 prelude =
@@ -66,9 +66,6 @@ prelude =
 
 type Eval a = MalgoT Context IO a
 
-runEval :: Eval a -> IO (Either MalgoError a, Context)
-runEval m = runMalgoT m initContext
-
 addVar :: TypedID -> Value -> Eval ()
 addVar name val =
   modify $ \e -> e { _var = Map.insert name val (_var e) }
@@ -91,8 +88,7 @@ getFun name = do
     Nothing -> throw $ pretty name <+> text "is not defined"
     Just x  -> return x
 
-eval :: M.Program TypedID -> IO (Either MalgoError Value, Context)
-eval (M.Program tp ex e) = runEval $ do
+eval (M.Program tp ex e) = do
   evalExtern ex
   evalToplevel tp
   evalExpr e

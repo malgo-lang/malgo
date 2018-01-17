@@ -13,25 +13,18 @@ import           Language.Malgo.TypeCheck
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-newtype KEnv = KEnv { _count   :: Int }
+data KEnv = KEnv
   deriving Show
 
-initKEnv :: RnEnv -> KEnv
-initKEnv (RnEnv i _ _) = KEnv i
+instance Env KEnv where
+  initEnv = KEnv
 
-type KNormal a = Malgo KEnv a
+type KNormal m a = MalgoT KEnv m a
 
-runKNormal :: RnEnv -> KNormal a -> (Either MalgoError a, KEnv)
-runKNormal env m = runMalgo m (initKEnv env)
-
-knormal
-  :: RnEnv
-     -> S.Expr TypedID
-     -> (Either MalgoError (Expr TypedID), KEnv)
-knormal env e = runKNormal env $
+knormal e =
   transExpr (flattenLet e)
 
-throw :: Info -> Doc -> KNormal a
+throw :: Monad m => Info -> Doc -> KNormal m a
 throw info mes = throwError (KNormalError info mes)
 
 flattenLet :: S.Expr TypedID -> S.Expr TypedID
@@ -41,19 +34,17 @@ flattenLet (S.Let info (d:ds) body) =
   S.Let info [d] (flattenLet (S.Let info ds body))
 flattenLet e = e
 
-newTmp :: Type -> KNormal TypedID
+newTmp :: Monad m => Type -> KNormal m TypedID
 newTmp typ = do
-  c <- gets _count
-  modify $ \e -> e { _count = c + 1 }
+  c <- newUniq
   return (TypedID (Internal "$k" c) typ)
 
-newUnused :: KNormal TypedID
+newUnused :: Monad m => KNormal m TypedID
 newUnused = do
-  c <- gets _count
-  modify $ \e -> e { _count = c + 1 }
+  c <- newUniq
   return (TypedID (Internal "$_" c) "Unit")
 
-transOp :: S.Op -> Type -> KNormal Op
+transOp :: Monad m => S.Op -> Type -> KNormal m Op
 transOp S.Add _  = return Add
 transOp S.Sub _  = return Sub
 transOp S.Mul _  = return Mul
@@ -72,7 +63,7 @@ transOp S.Ge ty  = return $ Ge ty
 transOp S.And _  = return And
 transOp S.Or _   = return Or
 
-insertLet :: S.Expr TypedID -> (TypedID -> KNormal (Expr TypedID)) -> KNormal (Expr TypedID)
+insertLet :: Monad m => S.Expr TypedID -> (TypedID -> KNormal m (Expr TypedID)) -> KNormal m (Expr TypedID)
 insertLet (S.Var _ x) k = k x
 insertLet v k = do
   x <- newTmp (typeOf v)
@@ -80,14 +71,15 @@ insertLet v k = do
   e <- k x
   return (Let (ValDec x v') e)
 
-bind :: [S.Expr TypedID]
+bind :: Monad m
+     => [S.Expr TypedID]
      -> [TypedID]
-     -> ([TypedID] -> KNormal (Expr TypedID))
-     -> KNormal (Expr TypedID)
+     -> ([TypedID] -> KNormal m (Expr TypedID))
+     -> KNormal m (Expr TypedID)
 bind [] args k     = k (reverse args)
 bind (x:xs) args k = insertLet x (\x' -> bind xs (x':args) k)
 
-transExpr :: S.Expr TypedID -> KNormal (Expr TypedID)
+transExpr :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
 transExpr (S.Var _ x)    = return (Var x)
 transExpr (S.Int _ x)    = return (Int x)
 transExpr (S.Float _ x)  = return (Float x)

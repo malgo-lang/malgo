@@ -9,28 +9,24 @@ import           Language.Malgo.Utils
 
 newtype BEnv = BEnv { _table :: Map.Map TypedID TypedID }
 
-initBEnv :: BEnv
-initBEnv = BEnv Map.empty
+instance Env BEnv where
+  initEnv = BEnv Map.empty
 
-type Beta a = Malgo BEnv a
+type Beta m a = MalgoT BEnv m a
 
-runBeta :: Beta a -> (Either MalgoError a, BEnv)
-runBeta m = runMalgo m initBEnv
+betaTrans prog = transExpr prog
 
-betaTrans :: Expr TypedID -> (Either MalgoError (Expr TypedID), BEnv)
-betaTrans prog = runBeta $ transExpr prog
-
-addBind :: TypedID -> TypedID -> Beta ()
+addBind :: Monad m => TypedID -> TypedID -> Beta m ()
 addBind x y =
   modify $ \e -> e { _table = Map.insert x y (_table e) }
 
-find :: TypedID -> Beta TypedID
+find :: Monad m => TypedID -> Beta m TypedID
 find x = do
   table <- gets _table
   let x' = Map.lookup x table
   return $ fromMaybe x x'
 
-transExpr :: Expr TypedID -> Beta (Expr TypedID)
+transExpr :: Monad m => Expr TypedID -> Beta m (Expr TypedID)
 transExpr (Let (FunDec fn params fnbody) body) =
   Let <$> (FunDec fn params <$> transExpr fnbody) <*> transExpr body
 transExpr (Let (ValDec name val) body) = do
