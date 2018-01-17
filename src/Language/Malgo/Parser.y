@@ -20,6 +20,7 @@ in    { Token (_, IN) }
 end   { Token (_, END) }
 val   { Token (_, VAL) }
 fun   { Token (_, FUN) }
+type  { Token (_, TYPE) }
 extern { Token (_, EXTERN) }
 if    { Token (_, IF) }
 then  { Token (_, THEN) }
@@ -77,23 +78,23 @@ decls_raw : decls_raw decl { $2 : $1 }
 --          | decl { [$1] }
           |      { [] }
 
-decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
+decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                                  $4
                                  $6
                                }
-     | fun id '(' ')' ':' type '=' exp {
+     | fun id '(' ')' ':' Type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
            [("_", NameTy "Unit")]
            $6
            $8
        }
-     | fun id '(' params ')' ':' type '=' exp {
+     | fun id '(' params ')' ':' Type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
            (reverse $4)
            $7
            $9
        }
-     | extern id ':' type '=' str {
+     | extern id ':' Type '=' str {
          ExDec (_info $1) (_id . _tag $ $2)
            $4
            (_str . _tag $ $6)
@@ -102,7 +103,7 @@ decl : val id ':' type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
 params : params ',' param { $3 : $1 }
        | param { [$1] }
 
-param : id ':' type { (_id . _tag $ $1, $3) }
+param : id ':' Type { (_id . _tag $ $1, $3) }
 
 exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
@@ -147,12 +148,12 @@ args : args ',' exp { $3 : $1 }
      | exp { [$1] }
 
 
-type : id { NameTy (_id . _tag $ $1) }
-     | type '->' type { FunTy [$1] $3 }
-     | '(' types ')' '->' type { FunTy (reverse $2) $5 }
+Type : id { NameTy (_id . _tag $ $1) }
+     | Type '->' Type { FunTy [$1] $3 }
+     | '(' Types ')' '->' Type { FunTy (reverse $2) $5 }
 
-types : types ',' type { $3 : $1 }
-      | type { [$1] }
+Types : Types ',' Type { $3 : $1 }
+      | Type { [$1] }
 {
 parseError :: [Token] -> a
 parseError [] = error "Parse error at EOF"

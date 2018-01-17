@@ -10,22 +10,19 @@ data Type = NameTy Name
           | FunTy { _params :: [Type]
                   , _ret    :: Type
                   }
-          | ClsTy { _params   :: [Type]
-                  , _ret      :: Type
-                  -- , _captures :: [Type]
+          | ClsTy { _params :: [Type]
+                  , _ret    :: Type
                   }
   deriving (Eq, Show, Ord)
 
 instance PrettyPrint Type where
   pretty (NameTy n)          = pretty n
-  -- pretty (TupleTy types)     = parens (cat $ punctuate (text ",") $ map pretty types)
   pretty (FunTy param ret) =
     parens (cat (punctuate (text ",") (map pretty param))
     <+> text "->" <+> pretty ret)
   pretty (ClsTy param ret) = braces
     (parens (cat (punctuate (text ",") (map pretty param))
              <+> text "->" <+> pretty ret))
-    -- <+> brackets (sep (map pretty cap))
 
 instance IsString Type where
   fromString name = NameTy $ fromString name
