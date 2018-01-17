@@ -21,43 +21,36 @@ data ClsEnv = ClsEnv { _closures :: Map.Map TypedID TypedID
                      , _varMap   :: Map.Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
                      , _fundecs  :: [FunDec TypedID]
                      , _extern   :: [ExDec TypedID]
-                     , _count    :: Int
                      }
   deriving Show
 
-initClsEnv :: Int -> ClsEnv
-initClsEnv = ClsEnv Map.empty [] Map.empty [] []
+instance Env ClsEnv where
+  initEnv = ClsEnv Map.empty [] Map.empty [] []
 
-type ClsTrans a = Malgo ClsEnv a
+type ClsTrans m a = MalgoT ClsEnv m a
 
-runClosure :: Int -> ClsTrans a -> (Either MalgoError a, ClsEnv)
-runClosure i m = runMalgo m (initClsEnv i)
-
-conv
-  :: Int -> H.Expr TypedID
-     -> (Either MalgoError (Program TypedID), ClsEnv)
-conv i x = runClosure i $ do
+conv x = do
   x' <- convExpr x
   fs <- gets _fundecs
   exs <- gets _extern
   return (Program fs exs x')
 
-throw :: Doc -> ClsTrans a
+throw :: Monad m => Doc -> ClsTrans m a
 throw = throwError . ClosureTransError
 
-addKnown :: TypedID -> ClsTrans ()
+addKnown :: Monad m => TypedID -> ClsTrans m ()
 addKnown name =
   modify $ \e -> e { _knowns = name : _knowns e }
 
-addFunDec :: FunDec TypedID -> ClsTrans ()
+addFunDec :: Monad m => FunDec TypedID -> ClsTrans m ()
 addFunDec f =
   modify $ \e -> e { _fundecs = f : _fundecs e }
 
-addExDec :: ExDec TypedID -> ClsTrans ()
+addExDec :: Monad m => ExDec TypedID -> ClsTrans m ()
 addExDec ex =
   modify $ \e -> e { _extern = ex : _extern e }
 
-convID :: TypedID -> ClsTrans TypedID
+convID :: Monad m => TypedID -> ClsTrans m TypedID
 convID name = do
   clss <- gets _closures
   varMap <- gets _varMap
@@ -67,19 +60,18 @@ convID name = do
       Just name' -> return name'
     Just cls -> return cls
 
-addClsTrans :: TypedID -> TypedID -> ClsTrans ()
+addClsTrans :: Monad m => TypedID -> TypedID -> ClsTrans m ()
 addClsTrans orig cls =
   modify $ \e -> e { _closures = Map.insert orig cls (_closures e) }
 
-addVar :: TypedID -> TypedID -> ClsTrans ()
+addVar :: Monad m => TypedID -> TypedID -> ClsTrans m ()
 addVar x x' =
   modify $ \e -> e { _varMap = Map.insert x x' (_varMap e) }
 
-newClsID :: TypedID -> ClsTrans TypedID
+newClsID :: Monad m => TypedID -> ClsTrans m TypedID
 newClsID (TypedID fn fnty) = do
   let ty = toCls fnty
-  c <- gets _count
-  modify $ \e -> e { _count = c + 1 }
+  c <- newUniq
   return (TypedID
            (Internal (Language.Malgo.Rename._name fn `mappend` fromString "$cls") c)
            ty)
@@ -88,7 +80,7 @@ toCls :: Type -> Type
 toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)
 toCls x                  = x
 
-convExpr :: H.Expr TypedID -> ClsTrans (Expr TypedID)
+convExpr :: Monad m => H.Expr TypedID -> ClsTrans m (Expr TypedID)
 convExpr (H.Let (H.ValDec x@(TypedID name _) val) body) = do
   val' <- convExpr val
   case typeOf val' of

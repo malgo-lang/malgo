@@ -29,47 +29,36 @@ instance PrettyPrint ID where
   pretty (Internal name u) = pretty name <> text "." <> int u
   pretty (External name u) = pretty name <> P.braces (int u)
 
-data RnEnv = RnEnv { count  :: Int
-                   , knowns :: Map.Map Name ID
+data RnEnv = RnEnv { knowns :: Map.Map Name ID
                    , idCons :: Name -> Int -> ID
                    }
 
-initRnEnv :: RnEnv
-initRnEnv = RnEnv
-            { count = 0
-            , knowns = Map.empty
-            , idCons = Toplevel
-            }
+instance Env RnEnv where
+  initEnv = RnEnv Map.empty Toplevel
 
-type Rename a = Malgo RnEnv a
+type Rename m a = MalgoT RnEnv m a
 
-runRename :: Malgo RnEnv a -> (Either MalgoError a, RnEnv)
-runRename m = runMalgo m initRnEnv
+rename x = transExpr x
 
-rename :: Expr Name -> (Either MalgoError (Expr ID), RnEnv)
-rename x = runRename (transExpr x)
-
-throw :: Info -> Doc -> Rename a
+throw :: Monad m => Info -> Doc -> Rename m a
 throw info mes = throwError (RenameError info mes)
 
-newID :: Name -> Rename ID
+newID :: Monad m => Name -> Rename m ID
 newID orig = do
-  c <- gets count
+  c <- newUniq
   cons <- gets idCons
   let i = cons orig c
-  modify $ \e -> e { count = count e + 1
-                   , knowns = Map.insert orig i (knowns e)
-                   }
+  modify $ \e -> e { knowns = Map.insert orig i (knowns e) }
   return i
 
-getID :: Info -> Name -> Rename ID
+getID :: Monad m => Info -> Name -> Rename m ID
 getID info name = do
   k <- gets knowns
   case Map.lookup name k of
     Just x  -> return x
     Nothing -> throw info (pretty name P.<+> text "is not defined")
 
-transExpr :: Expr Name -> Rename (Expr ID)
+transExpr :: Monad m => Expr Name -> Rename m (Expr ID)
 transExpr (Var info name) = Var info <$> getID info name
 transExpr (Int info x)    = return $ Int info x
 transExpr (Float info x)  = return $ Float info x
@@ -91,7 +80,7 @@ transExpr (Let info decls e) = do
 transExpr (If info c t f) = If info <$> transExpr c <*> transExpr t <*> transExpr f
 transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
 
-transDecl :: Decl Name -> Rename (Decl ID)
+transDecl :: Monad m => Decl Name -> Rename m (Decl ID)
 transDecl (ValDec info name typ val) = do
   backup <- get
 
