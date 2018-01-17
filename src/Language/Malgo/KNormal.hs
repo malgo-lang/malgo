@@ -4,9 +4,8 @@
 module Language.Malgo.KNormal where
 
 import           Control.Monad.Except
-import           Control.Monad.State
 import           Language.Malgo.HIR
-import           Language.Malgo.Rename    (ID (..), RnEnv (..))
+import           Language.Malgo.Rename    (ID (..))
 import qualified Language.Malgo.Syntax    as S
 import           Language.Malgo.Type
 import           Language.Malgo.TypeCheck
@@ -21,6 +20,7 @@ instance Env KEnv where
 
 type KNormal m a = MalgoT KEnv m a
 
+knormal :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
 knormal e =
   transExpr (flattenLet e)
 

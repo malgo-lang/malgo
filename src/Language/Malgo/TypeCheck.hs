@@ -31,7 +31,8 @@ instance Env TcEnv where
 
 type TypeCheck m a = MalgoT TcEnv m a
 
-typeCheck x = checkExpr x
+typeCheck :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
+typeCheck = checkExpr
 
 throw :: Monad m => Info -> Doc -> TypeCheck m a
 throw info mes = throwError (TypeCheckError info mes)

@@ -14,7 +14,8 @@ instance Env BEnv where
 
 type Beta m a = MalgoT BEnv m a
 
-betaTrans prog = transExpr prog
+betaTrans :: Monad m => Expr TypedID -> Beta m (Expr TypedID)
+betaTrans = transExpr
 
 addBind :: Monad m => TypedID -> TypedID -> Beta m ()
 addBind x y =

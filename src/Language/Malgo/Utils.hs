@@ -4,11 +4,10 @@
 module Language.Malgo.Utils where
 
 import           Control.Monad.Except
-import           Control.Monad.Identity
 import           Control.Monad.State
-import qualified Data.ByteString.Char8  as BS
+import qualified Data.ByteString.Char8 as BS
 import           Data.String
-import qualified Text.PrettyPrint       as P
+import qualified Text.PrettyPrint      as P
 
 class PrettyPrint a where
   pretty :: a -> P.Doc
@@ -98,10 +97,4 @@ doMalgoT ::
 doMalgoT (MalgoT m) = evalStateT (runExceptT m) initEnv
 
 runMalgoT :: (Env s, Monad m) => MalgoT s m a -> Int -> m (Either MalgoError a, s)
-runMalgoT (MalgoT m) i = evalStateT (runStateT (runExceptT m) initEnv) i
-
--- type Malgo s a = MalgoT s Identity a
-
--- runMalgo :: Env s => Malgo s a -> (Either MalgoError a, s)
--- runMalgo :: Env s => Malgo s a -> Int -> (Either MalgoError a, s)
--- runMalgo m i = runIdentity (runMalgoT m i)
+runMalgoT (MalgoT m) = evalStateT (runStateT (runExceptT m) initEnv)

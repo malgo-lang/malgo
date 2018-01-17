@@ -29,6 +29,7 @@ instance Env ClsEnv where
 
 type ClsTrans m a = MalgoT ClsEnv m a
 
+conv :: Monad m => H.Expr TypedID -> ClsTrans m (Program TypedID)
 conv x = do
   x' <- convExpr x
   fs <- gets _fundecs

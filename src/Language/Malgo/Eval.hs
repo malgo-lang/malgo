@@ -88,6 +88,7 @@ getFun name = do
     Nothing -> throw $ pretty name <+> text "is not defined"
     Just x  -> return x
 
+eval :: M.Program TypedID -> Eval Value
 eval (M.Program tp ex e) = do
   evalExtern ex
   evalToplevel tp

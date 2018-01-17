@@ -3,11 +3,9 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Main where
 
-import           Control.Monad
 import           Control.Monad.State
 import qualified Language.Malgo.Beta      as Beta
 import qualified Language.Malgo.Closure   as Closure
-import qualified Language.Malgo.Eval      as Eval
 import qualified Language.Malgo.Eval      as Eval
 import qualified Language.Malgo.Flatten   as Flatten
 import qualified Language.Malgo.KNormal   as KNormal
@@ -37,10 +35,9 @@ compile ast = do
   beta <- doMalgoT (Beta.betaTrans knormal)
     >>= \case Left x -> error $ show x
               Right x -> return x
-  mir <- doMalgoT (Closure.conv (Flatten.flatten beta))
+  doMalgoT (Closure.conv (Flatten.flatten beta))
     >>= \case Left x -> error $ show x
               Right x -> return x
-  return mir
 
 eval ::
   Syntax.Expr Name

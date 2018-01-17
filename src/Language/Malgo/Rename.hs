@@ -38,7 +38,8 @@ instance Env RnEnv where
 
 type Rename m a = MalgoT RnEnv m a
 
-rename x = transExpr x
+rename :: Monad m => Expr Name -> Rename m (Expr ID)
+rename = transExpr
 
 throw :: Monad m => Info -> Doc -> Rename m a
 throw info mes = throwError (RenameError info mes)
