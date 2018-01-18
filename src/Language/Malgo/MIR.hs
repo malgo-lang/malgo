@@ -15,19 +15,12 @@ data Expr a
     | Char Char
     | String String
     | Unit
-    | CallDir a
-              [a]
-    | CallCls a
-              [a]
-    | Let (Decl a)
-          (Expr a)
-    | If a
-         (Expr a)
-         (Expr a)
-    | BinOp Op
-            a
-            a
-    deriving (Show)
+    | CallDir a [a]
+    | CallCls a [a]
+    | Let (Decl a) (Expr a)
+    | If a (Expr a) (Expr a)
+    | BinOp Op a a
+    deriving Show
 
 instance PrettyPrint a => PrettyPrint (Expr a) where
     pretty (Var x) = pretty x
@@ -89,12 +82,10 @@ instance (Typeable a, Show a) => Typeable (Expr a) where
             And     -> "Bool"
             Or      -> "Bool"
 
-data FunDec a =
-    FunDec a
-           [a]
-           [a]
-           (Expr a)
-    deriving (Show)
+data FunDec a
+  -- | FunDec function_name parameters captures body
+  = FunDec a [a] [a] (Expr a)
+    deriving Show
 
 instance PrettyPrint a => PrettyPrint (FunDec a) where
     pretty (FunDec name params capture body) =
@@ -102,9 +93,9 @@ instance PrettyPrint a => PrettyPrint (FunDec a) where
         (parens . sep $ pretty name : map pretty params) <+>
         (parens . sep $ map pretty capture) $+$ nest 2 (pretty body)
 
-data ExDec a =
-    ExDec a
-          String
+data ExDec a
+  -- | ExDec name_in_the_program original_name
+  = ExDec a String
     deriving (Show)
 
 instance PrettyPrint a => PrettyPrint (ExDec a) where
@@ -113,9 +104,8 @@ instance PrettyPrint a => PrettyPrint (ExDec a) where
 data Decl a
     = ValDec a
              (Expr a)
-    | ClsDec a
-             a
-             [a]
+    -- | ClsDec closure_name function_name captures
+    | ClsDec a a [a]
     deriving (Show)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where

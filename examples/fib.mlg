@@ -1,9 +1,11 @@
 let
   extern print_int : Int -> Unit = "print_int"
+  extern newline : Unit -> Unit = "newline"
   fun fib(n : Int) : Int =
     if n <= 1
     then 1
     else fib(n - 1) + fib(n - 2)
 in
-  print_int(fib(20))
+  print_int(fib(20));
+  newline()
 end

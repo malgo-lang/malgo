@@ -52,6 +52,7 @@ prelude =
     , ("println", \[String x] [] -> lift (putStrLn x) >> return Unit)
     , ("print_int", \[Int x] [] -> lift (putStr $ show x) >> return Unit)
     , ("print_float", \[Float x] [] -> lift (putStr $ show x) >> return Unit)
+    , ("newline", \[Unit] [] -> lift (putStrLn "") >> return Unit)
     , ("flush", \[Unit] [] -> lift (hFlush stdout) >> return Unit)
     , ("getchar", \[Unit] [] -> Char <$> lift getChar)
     , ("ord", \[Char x] [] -> return $ Int (toInteger $ ord x))
