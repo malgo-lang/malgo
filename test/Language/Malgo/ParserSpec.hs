@@ -1,4 +1,6 @@
-module Language.Malgo.ParserSpec (spec) where
+module Language.Malgo.ParserSpec
+    ( spec
+    ) where
 
 import           Language.Malgo.Parser (parse)
 import           Language.Malgo.Syntax

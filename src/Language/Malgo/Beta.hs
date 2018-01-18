@@ -2,12 +2,12 @@ module Language.Malgo.Beta
     ( betaTrans
     ) where
 
-import Control.Monad.State
-import qualified Data.Map.Strict as Map
-import Data.Maybe
-import Language.Malgo.HIR
-import Language.Malgo.TypeCheck (TypedID(..))
-import Language.Malgo.Utils
+import           Control.Monad.State
+import qualified Data.Map.Strict          as Map
+import           Data.Maybe
+import           Language.Malgo.HIR
+import           Language.Malgo.TypeCheck (TypedID (..))
+import           Language.Malgo.Utils
 
 newtype BEnv = BEnv
     { _table :: Map.Map TypedID TypedID
@@ -31,7 +31,8 @@ find x = do
     return $ fromMaybe x x'
 
 transExpr :: Monad m => Expr TypedID -> Beta m (Expr TypedID)
-transExpr (Let (FunDec fn params fnbody) body) = Let <$> (FunDec fn params <$> transExpr fnbody) <*> transExpr body
+transExpr (Let (FunDec fn params fnbody) body) =
+    Let <$> (FunDec fn params <$> transExpr fnbody) <*> transExpr body
 transExpr (Let (ValDec name val) body) = do
     val' <- transExpr val
     case val' of
