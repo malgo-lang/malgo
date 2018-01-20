@@ -135,7 +135,6 @@ evalExpr (M.CallDir fn args) = do
 evalExpr (M.CallCls cls args) = do
     Closure fn capture <- getVar cls
     fn' <- getFun fn
-    -- capture' <- mapM getVar capture
     args' <- mapM getVar args
     fn' args' capture
 evalExpr (M.Let (M.ValDec name val) body) = do

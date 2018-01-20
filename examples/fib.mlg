@@ -5,7 +5,13 @@ let
     if n <= 1
     then 1
     else fib(n - 1) + fib(n - 2)
+  fun fib_loop(n : Int) : Unit =
+    if n <= 0
+    then print_int(fib(0));
+         newline()
+    else print_int(fib(n));
+         newline();
+         fib_loop(n - 1)
 in
-  print_int(fib(20));
-  newline()
+  fib_loop(10)
 end

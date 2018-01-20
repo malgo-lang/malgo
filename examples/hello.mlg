@@ -8,10 +8,13 @@ extern getchar : Unit -> Char = "getchar"
 extern ord : Char -> Int = "ord"
 extern chr : Int -> Char = "chr"
 extern size : String -> Int = "size"
+extern newline : Unit -> Unit = "newline"
 (* extern substring : (String, Int, Int) -> String = "substring" *)
 (* extern concat : (String, String) -> String = "concat" *)
 extern not : Bool -> Bool = "not"
 (* extern exit : Int -> Unit = "exit" *)
+fun println_int(x:Int) : Unit = print_int(x); newline()
+fun println_float(x:Float) : Unit = print_float(x); newline()
 
 val a:Int = 42
 fun fib (n:Int) : Int =
@@ -31,11 +34,10 @@ fun print_fib (n:Int) : Unit = print_int(fib(n))
 in
   println("Hello, world!");
   print("fib(10) = ");
-  print_int(fib(10));
-  println("");
+  println_int(fib(10));
   do_nothing();
-  print_int(add(2));
-  print_int(a);
-  print_float(3.14);
-  print_float(area(10.0))
+  println_int(add(2));
+  println_int(a);
+  println_float(3.14);
+  println_float(area(10.0))
 end
