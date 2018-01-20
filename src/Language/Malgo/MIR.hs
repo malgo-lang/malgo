@@ -15,6 +15,8 @@ data Expr a
     | Char Char
     | String String
     | Unit
+    | Tuple [a]
+    | TupleAccess a Int
     | CallDir a [a]
     | CallCls a [a]
     | Let (Decl a) (Expr a)
@@ -31,6 +33,10 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
     pretty (Char x) = quotes $ char x
     pretty (String x) = doubleQuotes $ text x
     pretty Unit = text "()"
+    pretty (Tuple xs) =
+      braces $ sep (punctuate (text ",") (map pretty xs))
+    pretty (TupleAccess x i) =
+      parens (text "." <+> pretty x <+> int i)
     pretty (CallDir fn arg) = parens $ pretty fn <+> sep (map pretty arg)
     pretty (CallCls cls args) = braces $ pretty cls <+> sep (map pretty args)
     pretty (Let decl body) =
@@ -50,16 +56,20 @@ instance (Typeable a, Show a) => Typeable (Expr a) where
     typeOf (Char _) = "Char"
     typeOf (String _) = "String"
     typeOf Unit = "Unit"
+    typeOf (Tuple xs) = TupleTy (map typeOf xs)
+    typeOf (TupleAccess x i) =
+      let TupleTy xs = typeOf x
+      in xs !! i
     typeOf (CallDir name _) =
         case typeOf name of
             (FunTy _ ty) -> ty
             (ClsTy _ ty) -> ty
-            (NameTy _)   -> error $ show name ++ "is not callable"
+            _            -> error $ show name ++ "is not callable"
     typeOf (CallCls name _) =
         case typeOf name of
             (FunTy _ ty) -> ty
             (ClsTy _ ty) -> ty
-            (NameTy _)   -> error $ show name ++ "is not callable"
+            _            -> error $ show name ++ "is not callable"
     typeOf (Let _ e) = typeOf e
     typeOf (If _ t _) = typeOf t
     typeOf (BinOp op _ _) =

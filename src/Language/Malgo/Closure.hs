@@ -129,6 +129,8 @@ convExpr (H.Bool x) = return (Bool x)
 convExpr (H.Char x) = return (Char x)
 convExpr (H.String x) = return (String x)
 convExpr H.Unit = return Unit
+convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
+convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
 convExpr (H.Call fn args) = do
   knowns <- gets _knowns
   if fn `elem` knowns

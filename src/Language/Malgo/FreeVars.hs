@@ -16,6 +16,8 @@ instance FreeVars H.Expr where
   freevars (H.Char _) = []
   freevars (H.String _) = []
   freevars H.Unit = []
+  freevars (H.Tuple xs) = xs
+  freevars (H.TupleAccess x _) = [x]
   freevars (H.Call _ args) = args
   freevars (H.Let (H.ValDec x e1) e2) =
     freevars e1 `union` delete x (freevars e2)
@@ -37,6 +39,8 @@ instance FreeVars M.Expr where
   freevars (M.Char _) = []
   freevars (M.String _) = []
   freevars M.Unit = []
+  freevars (M.Tuple xs) = xs
+  freevars (M.TupleAccess x _) = [x]
   freevars (M.CallDir _ args) = nub args
   freevars (M.CallCls cls args) = nub $ cls : args
   freevars (M.Let (M.ValDec x e1) e2) =

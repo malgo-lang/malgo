@@ -24,6 +24,7 @@ data Value
     | Char Char
     | String String
     | Unit
+    | Tuple [Value]
     | Closure TypedID
               [Value]
     deriving (Show, Eq, Ord)
@@ -36,6 +37,8 @@ instance PrettyPrint Value where
     pretty (Char x)        = quotes $ char x
     pretty (String x)      = doubleQuotes $ text x
     pretty Unit            = text "()"
+    pretty (Tuple xs) =
+      braces $ sep (punctuate (text ",") (map pretty xs))
     pretty (Closure fn fv) = braces $ pretty fn <+> sep (map pretty fv)
 
 data Context = Context
@@ -121,6 +124,10 @@ evalExpr (M.Bool x) = return (Bool x)
 evalExpr (M.Char x) = return (Char x)
 evalExpr (M.String x) = return (String x)
 evalExpr M.Unit = return Unit
+evalExpr (M.Tuple xs) = Tuple <$> mapM getVar xs
+evalExpr (M.TupleAccess x i) = do
+  Tuple xs <- getVar x
+  return $ xs !! i
 evalExpr (M.CallDir fn args) = do
     fn' <- getFun fn
     args' <- mapM getVar args

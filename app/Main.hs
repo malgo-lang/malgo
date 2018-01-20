@@ -44,7 +44,7 @@ compile ast = do
     doMalgoT (Closure.conv (Flatten.flatten beta)) >>= \case
       Left x -> error $ show x
       Right x -> return x
-  lift . print $ pretty cls
+  -- lift . print $ pretty cls
   return cls
 
 eval :: Syntax.Expr Name -> IO (Either MalgoError Eval.Value)
