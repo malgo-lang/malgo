@@ -27,6 +27,10 @@ then  { Token (_, THEN) }
 else  { Token (_, ELSE) }
 '('   { Token (_, LPAREN) }
 ')'   { Token (_, RPAREN) }
+'['   { Token (_, LBRACK) }
+']'   { Token (_, RBRACK) }
+'{'   { Token (_, LBRACE) }
+'}'   { Token (_, RBRACE) }
 ':'   { Token (_, COLON) }
 ';'   { Token (_, SEMICOLON) }
 ','   { Token (_, COMMA) }
@@ -37,6 +41,7 @@ else  { Token (_, ELSE) }
 '>'   { Token (_, GT) }
 '<='  { Token (_, LE) }
 '>='  { Token (_, GE) }
+'.'   { Token (_, DOT) }
 '+'   { Token (_, PLUS) }
 '-'   { Token (_, MINUS) }
 '*'   { Token (_, ASTERISK) }
@@ -64,6 +69,7 @@ str   { Token (_, STRING _) }
 %left '&&' '||'
 %left '+' '-' '+.' '-.'
 %left '*' '/' '%' '*.' '/.'
+%left '.'
 %left '('
 %nonassoc NEG
 
@@ -109,6 +115,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
    | exp '*' exp { BinOp (_info $2) Mul $1 $3 }
    | exp '/' exp { BinOp (_info $2) Div $1 $3 }
+   | exp '.' int { TupleAccess (_info $2) $1 (fromInteger $ _int . _tag $ $3) }
    | exp '+.' exp { BinOp (_info $2) FAdd $1 $3 }
    | exp '-.' exp { BinOp (_info $2) FSub $1 $3 }
    | exp '*.' exp { BinOp (_info $2) FMul $1 $3 }
@@ -139,6 +146,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | bool { Bool (_info $1) (_bool . _tag $ $1) }
    | char { Char (_info $1) (_char . _tag $ $1) }
    | str  { String (_info $1) (_str . _tag $ $1) }
+   | '{' args '}' { Tuple (_info $1) (reverse $2) }
    | exp '(' ')' { Call (info $1) $1 [Unit (_info $2)] }
    | exp '(' args ')' { Call (info $1) $1 (reverse $3) }
    | '(' ')' { Unit (_info $1) }
@@ -150,6 +158,7 @@ args : args ',' exp { $3 : $1 }
 
 Type : id { NameTy (_id . _tag $ $1) }
      | Type '->' Type { FunTy [$1] $3 }
+     | '{' Types '}' { TupleTy (reverse $2) }
      | '(' Types ')' '->' Type { FunTy (reverse $2) $5 }
 
 Types : Types ',' Type { $3 : $1 }

@@ -71,6 +71,8 @@ transExpr (Bool info x) = return $ Bool info x
 transExpr (Char info x) = return $ Char info x
 transExpr (String info x) = return $ String info x
 transExpr (Unit info) = return $ Unit info
+transExpr (Tuple info xs) = Tuple info <$> mapM transExpr xs
+transExpr (TupleAccess info e i) = TupleAccess info <$> transExpr e <*> pure i
 transExpr (Call info fn args) =
     Call info <$> transExpr fn <*> mapM transExpr args
 transExpr (Seq info e1 e2) = Seq info <$> transExpr e1 <*> transExpr e2

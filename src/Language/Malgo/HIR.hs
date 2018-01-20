@@ -19,6 +19,8 @@ data Expr a
     | Char Char
     | String String
     | Unit
+    | Tuple [a]
+    | TupleAccess a Int
     | Call a
            [a]
     | Let (Decl a)
@@ -39,6 +41,10 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
     pretty (Bool False) = text "#f"
     pretty (Char x) = quotes $ char x
     pretty (String x) = doubleQuotes $ text x
+    pretty (Tuple xs) =
+      braces $ sep (punctuate (text ",") (map pretty xs))
+    pretty (TupleAccess xs i) =
+      parens (text "." <+> pretty xs <+> int i)
     pretty Unit = text "()"
     pretty (Call fn arg) = parens $ pretty fn <+> sep (map pretty arg)
     pretty (Let decl body) =
@@ -57,6 +63,10 @@ instance Typeable a => Typeable (Expr a) where
     typeOf (Bool _) = "Bool"
     typeOf (Char _) = "Char"
     typeOf (String _) = "String"
+    typeOf (Tuple xs) = TupleTy (map typeOf xs)
+    typeOf (TupleAccess x i) =
+      let TupleTy xs = typeOf x
+      in xs !! i
     typeOf Unit = "Unit"
     typeOf (Call fn _) =
         case typeOf fn of

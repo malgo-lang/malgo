@@ -12,7 +12,7 @@ import           Control.Monad.Identity
 import           Control.Monad.State
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.Rename
-import           Language.Malgo.Syntax  hiding (info)
+import           Language.Malgo.Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -95,6 +95,10 @@ instance Typeable (Expr TypedID) where
     typeOf (Bool _ _) = "Bool"
     typeOf (Char _ _) = "Char"
     typeOf (String _ _) = "String"
+    typeOf (Tuple _ xs) = TupleTy (map typeOf xs)
+    typeOf (TupleAccess _ e i) =
+      let TupleTy xs = typeOf e
+      in xs !! i
     typeOf (Unit _) = "Unit"
     typeOf (Call _ fn _) =
         case typeOf fn of
@@ -147,15 +151,16 @@ typeOfOp _ And _ = return $ FunTy ["Bool", "Bool"] "Bool"
 typeOfOp _ Or _ = return $ FunTy ["Bool", "Bool"] "Bool"
 
 comparable :: Type -> Bool
-comparable "Int"     = True
-comparable "Float"   = True
-comparable "Bool"    = True
-comparable "Char"    = True
-comparable "String"  = True
-comparable "Unit"    = False
-comparable NameTy {} = False
-comparable FunTy {}  = False
-comparable ClsTy {}  = False
+comparable "Int"      = True
+comparable "Float"    = True
+comparable "Bool"     = True
+comparable "Char"     = True
+comparable "String"   = True
+comparable "Unit"     = False
+comparable NameTy {}  = False
+comparable FunTy {}   = False
+comparable ClsTy {}   = False
+comparable TupleTy {} = False
 
 checkExpr :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
 checkExpr (Var info name) = Var info <$> getBind info name
@@ -165,6 +170,9 @@ checkExpr (Bool info x) = return $ Bool info x
 checkExpr (Char info x) = return $ Char info x
 checkExpr (String info x) = return $ String info x
 checkExpr (Unit info) = return $ Unit info
+checkExpr (Tuple info xs) = do
+  xs' <- mapM checkExpr xs
+  return $ Tuple info xs'
 checkExpr (Call info fn args) = do
     fn' <- checkExpr fn
   -- fn' <- getBind info fn
@@ -183,6 +191,15 @@ checkExpr (Call info fn args) = do
                   text "actual:" <+>
                   parens
                       (cat $ punctuate (text ",") (map (pretty . typeOf) args')))
+checkExpr (TupleAccess i tuple index) = do
+  tuple' <- checkExpr tuple
+  case typeOf tuple' of
+    TupleTy xs ->
+      when (index >= length xs) $
+        throw i $ text "out of bounds:" <+> int index <+> pretty (TupleTy xs)
+    t -> throw (info tuple) $ text "expected: tuple" $+$
+         text "actual:" <+> pretty t
+  return $ TupleAccess i tuple' index
 checkExpr (BinOp info op x y) = do
     x' <- checkExpr x
     y' <- checkExpr y

@@ -33,6 +33,7 @@ data Tag
     | IF
     | THEN
     | ELSE
+    | DOT
     | PLUS
     | PLUS_DOT
     | MINUS
@@ -86,7 +87,8 @@ lexer' =
     , Tok.identStart = letter <|> oneOf "!?@_"
     , Tok.identLetter = alphaNum <|> oneOf "!?@_"
     , Tok.reservedOpNames =
-          [ "+."
+          [ "."
+          , "+."
           , "-."
           , "*."
           , "/."
@@ -221,6 +223,7 @@ lexer = do
         op info ">" GT <|>
         op info "<=" LE <|>
         op info ">=" GE <|>
+        op info "." DOT <|>
         op info "+." PLUS_DOT <|>
         op info "-." MINUS_DOT <|>
         op info "*." ASTERISK_DOT <|>

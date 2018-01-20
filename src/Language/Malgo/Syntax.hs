@@ -30,6 +30,7 @@ data Expr a
   -- | タプル
   | Tuple Info
           [Expr a]
+  | TupleAccess Info (Expr a) Int
   -- | 関数呼び出し
   | Call Info
          (Expr a)
@@ -55,19 +56,20 @@ data Expr a
   deriving (Eq, Show)
 
 info :: Expr t -> Info
-info (Var i _)       = i
-info (Int i _)       = i
-info (Float i _)     = i
-info (Bool i _)      = i
-info (Char i _)      = i
-info (String i _)    = i
-info (Tuple i _)     = i
-info (Unit i)        = i
-info (Call i _ _)    = i
-info (Seq i _ _)     = i
-info (Let i _ _)     = i
-info (If i _ _ _)    = i
-info (BinOp i _ _ _) = i
+info (Var i _)           = i
+info (Int i _)           = i
+info (Float i _)         = i
+info (Bool i _)          = i
+info (Char i _)          = i
+info (String i _)        = i
+info (Tuple i _)         = i
+info (TupleAccess i _ _) = i
+info (Unit i)            = i
+info (Call i _ _)        = i
+info (Seq i _ _)         = i
+info (Let i _ _)         = i
+info (If i _ _ _)        = i
+info (BinOp i _ _ _)     = i
 
 instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Var _ name) = pretty name
@@ -79,6 +81,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (String _ x) = doubleQuotes $ text x
   pretty (Tuple _ xs) =
     braces $ sep (punctuate (text ",") (map pretty xs))
+  pretty (TupleAccess _ e i) = parens (text "." <+> pretty e <+> int i)
   pretty (Unit _) = text "()"
   pretty (Call _ fn arg) = parens $ pretty fn <+> sep (map pretty arg)
   pretty (Seq _ e1 e2) = parens $ text "seq" $+$ pretty e1 $+$ pretty e2
@@ -100,7 +103,6 @@ data Op
   | FMul
   | FDiv
   | Mod
-  | TupleAccess
   | Eq
   | Neq
   | Lt
@@ -112,24 +114,23 @@ data Op
   deriving (Eq, Show)
 
 instance PrettyPrint Op where
-  pretty Add         = text "+"
-  pretty Sub         = text "-"
-  pretty Mul         = text "*"
-  pretty Div         = text "/"
-  pretty FAdd        = text "+."
-  pretty FSub        = text "-."
-  pretty FMul        = text "*."
-  pretty FDiv        = text "/."
-  pretty Mod         = text "%"
-  pretty TupleAccess = text "."
-  pretty Eq          = text "=="
-  pretty Neq         = text "<>"
-  pretty Lt          = text "<"
-  pretty Gt          = text ">"
-  pretty Le          = text "<="
-  pretty Ge          = text ">="
-  pretty And         = text "&&"
-  pretty Or          = text "||"
+  pretty Add  = text "+"
+  pretty Sub  = text "-"
+  pretty Mul  = text "*"
+  pretty Div  = text "/"
+  pretty FAdd = text "+."
+  pretty FSub = text "-."
+  pretty FMul = text "*."
+  pretty FDiv = text "/."
+  pretty Mod  = text "%"
+  pretty Eq   = text "=="
+  pretty Neq  = text "<>"
+  pretty Lt   = text "<"
+  pretty Gt   = text ">"
+  pretty Le   = text "<="
+  pretty Ge   = text ">="
+  pretty And  = text "&&"
+  pretty Or   = text "||"
 
 data Decl a
   = FunDec Info
