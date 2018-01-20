@@ -19,51 +19,54 @@ import qualified Language.Malgo.TypeCheck as TypeCheck
 import           Language.Malgo.Utils
 import           System.Environment       (getArgs)
 
-compile ::
-       Monad m
-    => Syntax.Expr Name
-    -> StateT Int m (MIR.Program TypeCheck.TypedID)
+-- compile ::
+--        Monad m
+--     => Syntax.Expr Name
+--     -> StateT Int m (MIR.Program TypeCheck.TypedID)
 compile ast = do
-    renamed <-
-        doMalgoT (Rename.rename ast) >>= \case
-            Left x -> error $ show x
-            Right x -> return x
-    typechecked <-
-        doMalgoT (TypeCheck.typeCheck renamed) >>= \case
-            Left x -> error $ show x
-            Right x -> return x
-    knormal <-
-        doMalgoT (KNormal.knormal typechecked) >>= \case
-            Left x -> error $ show x
-            Right x -> return x
-    beta <-
-        doMalgoT (Beta.betaTrans knormal) >>= \case
-            Left x -> error $ show x
-            Right x -> return x
+  renamed <-
+    doMalgoT (Rename.rename ast) >>= \case
+      Left x -> error $ show x
+      Right x -> return x
+  typechecked <-
+    doMalgoT (TypeCheck.typeCheck renamed) >>= \case
+      Left x -> error $ show x
+      Right x -> return x
+  knormal <-
+    doMalgoT (KNormal.knormal typechecked) >>= \case
+      Left x -> error $ show x
+      Right x -> return x
+  beta <-
+    doMalgoT (Beta.betaTrans knormal) >>= \case
+      Left x -> error $ show x
+      Right x -> return x
+  cls <-
     doMalgoT (Closure.conv (Flatten.flatten beta)) >>= \case
-        Left x -> error $ show x
-        Right x -> return x
+      Left x -> error $ show x
+      Right x -> return x
+  lift . print $ pretty cls
+  return cls
 
 eval :: Syntax.Expr Name -> IO (Either MalgoError Eval.Value)
 eval ast =
-    flip evalStateT 0 $ do
-        mir <- compile ast
-        doMalgoT (Eval.eval mir)
+  flip evalStateT 0 $ do
+    mir <- compile ast
+    doMalgoT (Eval.eval mir)
 
 main :: IO ()
 main = do
-    args <- getArgs
-    let file = head args
-    contents <- readFile file
-    let tokens = Lexer.lexing file contents
-    let ast' = Parser.parseExpr <$> tokens
-    let ast =
-            case ast' of
-                Left x  -> error $ show x
-                Right x -> x
-    e <- eval ast
-    let result =
-            case e of
-                Right x -> x
-                Left x  -> error $ show $ pretty x
-    seq result $ return ()
+  args <- getArgs
+  let file = head args
+  contents <- readFile file
+  let tokens = Lexer.lexing file contents
+  let ast' = Parser.parseExpr <$> tokens
+  let ast =
+        case ast' of
+          Left x  -> error $ show x
+          Right x -> x
+  e <- eval ast
+  let result =
+        case e of
+          Right x -> x
+          Left x  -> error $ show $ pretty x
+  seq result $ return ()

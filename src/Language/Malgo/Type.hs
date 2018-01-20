@@ -10,6 +10,7 @@ data Type
           -- | TupleTy [Type]
     | FunTy { _params :: [Type]
             , _ret    :: Type }
+    | TupleTy [Type]
     | ClsTy { _params :: [Type]
             , _ret    :: Type }
     deriving (Eq, Show, Ord)
@@ -20,6 +21,7 @@ instance PrettyPrint Type where
         parens
             (cat (punctuate (text ",") (map pretty param)) <+>
              text "->" <+> pretty ret)
+    pretty (TupleTy xs) = braces $ sep (punctuate (text ",") (map pretty xs))
     pretty (ClsTy param ret) =
         braces
             (parens

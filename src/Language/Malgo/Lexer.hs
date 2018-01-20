@@ -22,6 +22,10 @@ data Tag
     | EXTERN
     | LPAREN
     | RPAREN
+    | LBRACK
+    | RBRACK
+    | LBRACE
+    | RBRACE
     | COMMA
     | COLON
     | SEMICOLON
@@ -177,6 +181,11 @@ lparen = symbol "("
 rparen :: ParsecT String u Identity String
 rparen = symbol ")"
 
+lbrack = symbol "["
+rbrack = symbol "]"
+lbrace = symbol "{"
+rbrace = symbol "}"
+
 keyword :: Info -> String -> Tag -> Lexer Token
 keyword info word tag = reserved word >> return (Token (info, tag))
 
@@ -198,6 +207,10 @@ lexer = do
         keyword info "false" (BOOL False) <|>
         (lparen >> return (Token (info, LPAREN))) <|>
         (rparen >> return (Token (info, RPAREN))) <|>
+        (lbrack >> return (Token (info, LBRACK))) <|>
+        (rbrack >> return (Token (info, RBRACK))) <|>
+        (lbrace >> return (Token (info, LBRACE))) <|>
+        (rbrace >> return (Token (info, RBRACE))) <|>
         op info ":" COLON <|>
         op info ";" SEMICOLON <|>
         op info "," COMMA <|>

@@ -25,7 +25,7 @@ data Value
     | String String
     | Unit
     | Closure TypedID
-              [TypedID]
+              [Value]
     deriving (Show, Eq, Ord)
 
 instance PrettyPrint Value where
@@ -128,15 +128,16 @@ evalExpr (M.CallDir fn args) = do
 evalExpr (M.CallCls cls args) = do
     Closure fn capture <- getVar cls
     fn' <- getFun fn
-    capture' <- mapM getVar capture
+    -- capture' <- mapM getVar capture
     args' <- mapM getVar args
-    fn' args' capture'
+    fn' args' capture
 evalExpr (M.Let (M.ValDec name val) body) = do
     val' <- evalExpr val
     addVar name val'
     evalExpr body
 evalExpr (M.Let (M.ClsDec name fn fv) body) = do
-    addVar name (Closure fn fv)
+    capture <- mapM getVar fv
+    addVar name (Closure fn capture)
     evalExpr body
 evalExpr (M.If c t f) = do
     c' <- getVar c
