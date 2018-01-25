@@ -69,6 +69,7 @@ str   { Token (_, STRING _) }
 %left '&&' '||'
 %left '+' '-' '+.' '-.'
 %left '*' '/' '%' '*.' '/.'
+%left CALL
 %left '.'
 %left '('
 %nonassoc NEG
@@ -147,9 +148,9 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | char { Char (_info $1) (_char . _tag $ $1) }
    | str  { String (_info $1) (_str . _tag $ $1) }
    | '{' args '}' { Tuple (_info $1) (reverse $2) }
-   | exp '(' ')' { Call (info $1) $1 [Unit (_info $2)] }
-   | exp '(' args ')' { Call (info $1) $1 (reverse $3) }
-   | '(' ')' { Unit (_info $1) }
+   | exp '(' ')' %prec CALL { Call (info $1) $1 [Unit (_info $2)] }
+   | exp '(' args ')' %prec CALL { Call (info $1) $1 (reverse $3) }
+   | '{' '}' { Unit (_info $1) }
    | '(' exp ')' { $2 }
 
 args : args ',' exp { $3 : $1 }
@@ -158,6 +159,7 @@ args : args ',' exp { $3 : $1 }
 
 Type : id { NameTy (_id . _tag $ $1) }
      | Type '->' Type { FunTy [$1] $3 }
+     | '{' '}' { "Unit" }
      | '{' Types '}' { TupleTy (reverse $2) }
      | '(' Types ')' '->' Type { FunTy (reverse $2) $5 }
 
