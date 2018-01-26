@@ -1,0 +1,7 @@
+let val p : {Int, Int} = {40, 2}
+    extern print_int : Int -> Unit = "print_int"
+    extern newline : Unit -> Unit = "newline"
+    fun fst_int(p : {Int, Int}) : Int = p.0
+    fun snd_int(p : {Int, Int}) : Int = p.1
+in print_int(fst_int(p) / 10); print_int(snd_int(p)); newline()
+end

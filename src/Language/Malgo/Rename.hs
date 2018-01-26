@@ -73,6 +73,13 @@ transExpr (String info x) = return $ String info x
 transExpr (Unit info) = return $ Unit info
 transExpr (Tuple info xs) = Tuple info <$> mapM transExpr xs
 transExpr (TupleAccess info e i) = TupleAccess info <$> transExpr e <*> pure i
+transExpr (Fn info params body) = do
+  backup <- get
+  modify $ \e -> e {idCons = Internal}
+  params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
+  body' <- transExpr body
+  put backup
+  return (Fn info params' body')
 transExpr (Call info fn args) =
     Call info <$> transExpr fn <*> mapM transExpr args
 transExpr (Seq info e1 e2) = Seq info <$> transExpr e1 <*> transExpr e2

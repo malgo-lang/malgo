@@ -22,6 +22,7 @@ val   { Token (_, VAL) }
 fun   { Token (_, FUN) }
 type  { Token (_, TYPE) }
 extern { Token (_, EXTERN) }
+fn { Token (_, FN) }
 if    { Token (_, IF) }
 then  { Token (_, THEN) }
 else  { Token (_, ELSE) }
@@ -130,6 +131,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '>=' exp { BinOp (_info $2) Ge $1 $3 }
    | exp '&&' exp { BinOp (_info $2) And $1 $3 }
    | exp '||' exp { BinOp (_info $2) Or $1 $3 }
+   | fn '(' params ')' '->' exp { Fn (_info $1) (reverse $3) $6 }
    | let decls in exp end { Let (_info $1) $2 $4 }
    | if exp then exp else exp { If (_info $1) $2 $4 $6 }
    | exp ';' exp { Seq (_info $2) $1 $3 }

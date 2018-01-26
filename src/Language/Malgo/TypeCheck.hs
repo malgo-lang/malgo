@@ -12,7 +12,8 @@ import           Control.Monad.Identity
 import           Control.Monad.State
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.Rename
-import           Language.Malgo.Syntax
+import           Language.Malgo.Syntax  hiding (info)
+import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -100,6 +101,7 @@ instance Typeable (Expr TypedID) where
       let TupleTy xs = typeOf e
       in xs !! i
     typeOf (Unit _) = "Unit"
+    typeOf (Fn _ params body) = FunTy (map snd params) (typeOf body)
     typeOf (Call _ fn _) =
         case typeOf fn of
             (FunTy _ ty) -> ty
@@ -173,9 +175,13 @@ checkExpr (Unit info) = return $ Unit info
 checkExpr (Tuple info xs) = do
   xs' <- mapM checkExpr xs
   return $ Tuple info xs'
+checkExpr (Fn info params body) = do
+  mapM_ (uncurry addBind) params
+  let params' = map (\(x, t) -> (TypedID x t, t)) params
+  body' <- checkExpr body
+  return $ Fn info params' body'
 checkExpr (Call info fn args) = do
     fn' <- checkExpr fn
-  -- fn' <- getBind info fn
     args' <- mapM checkExpr args
     paramty <-
         case typeOf fn' of
@@ -197,7 +203,7 @@ checkExpr (TupleAccess i tuple index) = do
     TupleTy xs ->
       when (index >= length xs) $
         throw i $ text "out of bounds:" <+> int index <+> pretty (TupleTy xs)
-    t -> throw (info tuple) $ text "expected: tuple" $+$
+    t -> throw (Syntax.info tuple) $ text "expected: tuple" $+$
          text "actual:" <+> pretty t
   return $ TupleAccess i tuple' index
 checkExpr (BinOp info op x y) = do

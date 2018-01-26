@@ -30,6 +30,7 @@ data Tag
     | COLON
     | SEMICOLON
     | EQUAL
+    | FN
     | IF
     | THEN
     | ELSE
@@ -118,6 +119,7 @@ lexer' =
           , "fun"
           , "type"
           , "extern"
+          , "fn"
           , "if"
           , "then"
           , "else"
@@ -202,6 +204,7 @@ lexer = do
         keyword info "fun" FUN <|>
         keyword info "type" TYPE <|>
         keyword info "extern" EXTERN <|>
+        keyword info "fn" FN <|>
         keyword info "if" IF <|>
         keyword info "then" THEN <|>
         keyword info "else" ELSE <|>
