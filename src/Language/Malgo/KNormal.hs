@@ -94,6 +94,13 @@ transExpr (S.String _ x) = return (String x)
 transExpr (S.Unit _) = return Unit
 transExpr (S.Tuple _ xs) = bind xs [] (return . Tuple)
 transExpr (S.TupleAccess _ e i) = insertLet e (\e' -> return $ TupleAccess e' i)
+transExpr (S.Fn _ params body) = do
+  body' <- transExpr body
+  fn <- newFnId
+  return (Let (FunDec fn (map fst params) body') (Var fn))
+  where newFnId = do
+          c <- newUniq
+          return $ TypedID (Internal "lambda" c) (FunTy (map snd params) (typeOf body))
 transExpr (S.Call _ fn args) =
   insertLet fn (\fn' -> bind args [] (return . Call fn'))
 transExpr (S.BinOp _ op e1 e2) = do

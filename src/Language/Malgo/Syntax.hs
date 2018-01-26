@@ -31,11 +31,17 @@ data Expr a
   -- | タプル
   | Tuple Info
           [Expr a]
-  | TupleAccess Info (Expr a) Int
+  | TupleAccess Info
+                (Expr a)
+                Int
   -- | 関数呼び出し
   | Call Info
          (Expr a)
          [Expr a]
+  -- | 無名関数
+  | Fn Info
+       [(a, Type)]
+       (Expr a)
   -- | 連続した式(e1 ; e2)
   | Seq Info
         (Expr a)
@@ -67,6 +73,7 @@ info (Tuple i _)         = i
 info (TupleAccess i _ _) = i
 info (Unit i)            = i
 info (Call i _ _)        = i
+info (Fn i _ _)          = i
 info (Seq i _ _)         = i
 info (Let i _ _)         = i
 info (If i _ _ _)        = i
@@ -80,11 +87,12 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Bool _ False) = text "#f"
   pretty (Char _ x) = quotes $ char x
   pretty (String _ x) = doubleQuotes $ text x
-  pretty (Tuple _ xs) =
-    braces $ sep (punctuate (text ",") (map pretty xs))
+  pretty (Tuple _ xs) = braces $ sep (punctuate (text ",") (map pretty xs))
   pretty (TupleAccess _ e i) = parens (text "." <+> pretty e <+> int i)
   pretty (Unit _) = text "()"
   pretty (Call _ fn arg) = parens $ pretty fn <+> sep (map pretty arg)
+  pretty (Fn _ params body) =
+    parens $ text "fn" <+> parens (sep (map (pretty . fst) params)) <+> pretty body
   pretty (Seq _ e1 e2) = parens $ text "seq" $+$ pretty e1 $+$ pretty e2
   pretty (Let _ decls body) =
     parens $
@@ -153,23 +161,9 @@ instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (FunDec _ name params _ body) =
     parens $
     text "fun" <+>
-    (parens . sep $
-     pretty name -- <> colon <> pretty retTy
-      :
-     map
-       (\(n, _) -> pretty n -- <> colon <> pretty t
-        )
-       params) $+$
+    (parens . sep $ pretty name : map (\(n, _) -> pretty n) params) $+$
     nest 2 (pretty body)
   pretty (ValDec _ name _ val) =
-    parens $
-    text "val" <+>
-    pretty name -- <> colon <> pretty typ
-     <+>
-    pretty val
+    parens $ text "val" <+> pretty name <+> pretty val
   pretty (ExDec _ name _ orig) =
-    parens $
-    text "extern" <+>
-    pretty name -- <> colon <> pretty typ
-     <+>
-    text orig
+    parens $ text "extern" <+> pretty name <+> text orig
