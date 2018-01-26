@@ -1,3 +1,4 @@
+{-# LANGUAGE StrictData #-}
 module Language.Malgo.Type where
 
 import           Data.String

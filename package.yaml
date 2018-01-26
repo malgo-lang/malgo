@@ -9,12 +9,11 @@ github: takoeight0821/malgo
 extra-source-files:
 - README.md
 
-ghc-options: -Wall
-
 library:
   source-dirs: src
   build-tools:
   - happy
+  ghc-options: -Wall
   dependencies:
   - base >=4.7 && <5
   - mtl
@@ -27,8 +26,10 @@ library:
   - flow
   - lens
   - llvm-hs-pure
+  - llvm-hs-pretty
   - pretty
   - text
+
 executables:
   malgo-exe:
     main: Main.hs
