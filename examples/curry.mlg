@@ -1,0 +1,16 @@
+(*
+let rec f x y = x + y
+in f 1 2
+end
+*)
+
+let fun f(x:Int) : Int -> Int =
+    let fun f_1(y:Int) : Int =
+        let fun f_2(x:Int, y:Int) : Int =
+                x + y
+        in f_2(x, y)
+        end
+    in f_1
+    end
+in f(1)(2)
+end
