@@ -62,7 +62,7 @@ char  { Token (_, CHAR _) }
 bool  { Token (_, BOOL _) }
 str   { Token (_, STRING _) }
 
-%left '->'
+%right '->'
 %right then else
 %right ';'
 %nonassoc '==' '<>'

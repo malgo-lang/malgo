@@ -113,13 +113,16 @@ convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = d
   let fn' = TypedID name (FunTy (map toCls params) (toCls ret)) -- 引数や返り値が関数値の場合を考慮
   addFunDec $ FunDec fn' args e'fv' e''
   addVar fn fn'
-  body' <- convExpr body
-  if fn' `elem` freevars body' -- bodyにfnが自由変数として出現しないなら、クロージャ宣言を省略
-    then do
-      clsid <- newClsID fn'
-      addClsTrans fn clsid
-      Let (ClsDec clsid fn' e'fv') <$> convExpr body
-    else return body'
+  -- body' <- convExpr body
+  clsid <- newClsID fn'
+  addClsTrans fn clsid
+  Let (ClsDec clsid fn' e'fv') <$> convExpr body
+  -- if fn' `elem` freevars body' -- bodyにfnが自由変数として出現しないなら、クロージャ宣言を省略
+  --   then do
+  --     clsid <- newClsID fn'
+  --     addClsTrans fn clsid
+  --     Let (ClsDec clsid fn' e'fv') <$> convExpr body
+  --   else return body'
 convExpr (H.Let (H.FunDec x _ _) _) =
   throw $ pretty x <+> text "is not a function"
 convExpr (H.Var x) = Var <$> convID x
