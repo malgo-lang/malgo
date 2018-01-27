@@ -33,7 +33,7 @@ data Opt = Opt { _srcName     :: String
 parseOpt :: IO Opt
 parseOpt = execParser $
   info ((Opt
-          <$> strArgument (metavar "FILENAME" <> help "Source file")
+          <$> strArgument (metavar "FILENAME" <> help "Source file" <> action "file")
           <*> switch (long "dump-parsed")
           <*> switch (long "dump-renamed")
           <*> switch (long "dump-typed")

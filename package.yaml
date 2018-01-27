@@ -31,20 +31,20 @@ library:
   - pretty
   - text
 
-executables:
-  malgo-exe:
-    main: Main.hs
-    source-dirs: app
-    dependencies:
-    - base
-    - malgo
-    - mtl
-    - parsec
-    - pretty
-    - bytestring
-    - containers
+executable:
+  main: Main.hs
+  source-dirs: app
+  dependencies:
+  - base
+  - malgo
+  - mtl
+  - parsec
+  - pretty
+  - bytestring
+  - containers
+
 tests:
-  malgo-test:
+  spec:
     main: Spec.hs
     source-dirs: test
     dependencies:
