@@ -4,6 +4,7 @@
 module Language.Malgo.Eval
     ( eval
     , Value
+    , Eval
     ) where
 
 import           Control.Monad.Except
