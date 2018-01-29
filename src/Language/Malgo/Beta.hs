@@ -1,5 +1,6 @@
 module Language.Malgo.Beta
   ( betaTrans
+  , Beta
   ) where
 
 import           Control.Monad.State

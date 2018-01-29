@@ -89,7 +89,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (String _ x) = doubleQuotes $ text x
   pretty (Tuple _ xs) = braces $ sep (punctuate (text ",") (map pretty xs))
   pretty (TupleAccess _ e i) = parens (text "." <+> pretty e <+> int i)
-  pretty (Unit _) = text "()"
+  pretty (Unit _) = text "{}"
   pretty (Call _ fn arg) = parens $ pretty fn <+> sep (map pretty arg)
   pretty (Fn _ params body) =
     parens $ text "fn" <+> parens (sep (map (pretty . fst) params)) <+> pretty body

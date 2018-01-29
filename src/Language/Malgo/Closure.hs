@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleContexts #-}
-
 module Language.Malgo.Closure
   ( conv
   ) where
@@ -18,6 +17,8 @@ import           Language.Malgo.Type
 import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
+
+import           Debug.Trace
 
 data ClsEnv = ClsEnv
   { _closures :: Map.Map TypedID TypedID
@@ -55,14 +56,16 @@ convID :: Monad m => TypedID -> ClsTrans m TypedID
 convID name = do
   clss <- gets _closures
   varMap <- gets _varMap
-  case Map.lookup name clss -- クロージャになっていれば変換
-        of
-    Nothing ->
-      case Map.lookup name varMap -- 型が変わっていれば変換
-            of
+  case Map.lookup name clss of
+    Nothing
+      -- 型が変わっていれば変換
+     ->
+      case Map.lookup name varMap of
         Nothing    -> return name
         Just name' -> return name'
-    Just cls -> return cls
+    Just cls
+      -- クロージャになっていれば変換
+     -> return cls
 
 addClsTrans :: Monad m => TypedID -> TypedID -> ClsTrans m ()
 addClsTrans orig cls =
@@ -113,16 +116,9 @@ convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = d
   let fn' = TypedID name (FunTy (map toCls params) (toCls ret)) -- 引数や返り値が関数値の場合を考慮
   addFunDec $ FunDec fn' args e'fv' e''
   addVar fn fn'
-  -- body' <- convExpr body
   clsid <- newClsID fn'
   addClsTrans fn clsid
-  Let (ClsDec clsid fn' e'fv') <$> convExpr body
-  -- if fn' `elem` freevars body' -- bodyにfnが自由変数として出現しないなら、クロージャ宣言を省略
-  --   then do
-  --     clsid <- newClsID fn'
-  --     addClsTrans fn clsid
-  --     Let (ClsDec clsid fn' e'fv') <$> convExpr body
-  --   else return body'
+  Let (ClsDec clsid fn' e'fv') <$> convExpr body -- 不要なクロージャ作成はLLVMレベルで取り除く
 convExpr (H.Let (H.FunDec x _ _) _) =
   throw $ pretty x <+> text "is not a function"
 convExpr (H.Var x) = Var <$> convID x

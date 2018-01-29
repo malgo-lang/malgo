@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE StrictData                 #-}
 {-# LANGUAGE TypeSynonymInstances       #-}
 
 module Language.Malgo.Utils where
