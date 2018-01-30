@@ -185,9 +185,16 @@ lparen = symbol "("
 rparen :: ParsecT String u Identity String
 rparen = symbol ")"
 
+lbrack :: ParsecT String u Identity String
 lbrack = symbol "["
+
+rbrack :: ParsecT String u Identity String
 rbrack = symbol "]"
+
+lbrace :: ParsecT String u Identity String
 lbrace = symbol "{"
+
+rbrace :: ParsecT String u Identity String
 rbrace = symbol "}"
 
 keyword :: Info -> String -> Tag -> Lexer Token

@@ -18,8 +18,6 @@ import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-import           Debug.Trace
-
 data ClsEnv = ClsEnv
   { _closures :: Map.Map TypedID TypedID
   , _knowns   :: [TypedID]

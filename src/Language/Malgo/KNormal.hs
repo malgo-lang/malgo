@@ -13,14 +13,7 @@ import           Language.Malgo.TypeCheck
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data KEnv =
-  KEnv
-  deriving (Show)
-
-instance Env KEnv where
-  initEnv = KEnv
-
-type KNormal m a = MalgoT KEnv m a
+type KNormal m a = MalgoT () m a
 
 knormal :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
 knormal e = transExpr (flattenLet e)

@@ -81,6 +81,9 @@ instance PrettyPrint MalgoError
 class Env e where
     initEnv :: e
 
+instance Env () where
+  initEnv = ()
+
 newtype MalgoT s m a = MalgoT
     { unMalgoT :: ExceptT MalgoError (StateT s (StateT Int m)) a
     } deriving ( Functor

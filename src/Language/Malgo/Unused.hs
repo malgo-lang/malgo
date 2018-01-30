@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Unused where
 
-import           Debug.Trace
 import           Language.Malgo.MIR
 import           Language.Malgo.Type
 
@@ -31,7 +30,7 @@ remove' x = x
 
 remove :: (Typeable a, Eq a) => Program a -> Program a
 remove (Program fundec exdec body) =
-  Program (map (\(FunDec n a f body) ->
-                  FunDec n a f (remove' body)) fundec)
+  Program (map (\(FunDec n a f b) ->
+                  FunDec n a f (remove' b)) fundec)
   exdec
   (remove' body)
