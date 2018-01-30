@@ -4,14 +4,20 @@ module Language.Malgo.Unused where
 import           Language.Malgo.MIR
 import           Language.Malgo.Type
 
-used :: Eq a => Expr a -> [a]
+used :: (Typeable a, Eq a) => Expr a -> [a]
 used (Var x)                     = [x]
 used (Tuple xs)                  = xs
 used (TupleAccess x _)           = [x]
 used (CallDir _ xs)              = xs
 used (CallCls x xs)              = x:xs
-used (Let (ValDec _ e) body)     = used e ++ used body
-used (Let (ClsDec _ _ cls) body) = cls ++ used body
+used (Let (ValDec a e) body)     = -- used e ++ used body
+  if a `notElem` used body && (typeOf a /= "Unit")
+  then used body
+  else used e ++ used body
+used (Let (ClsDec a _ cls) body) = -- cls ++ used body
+  if a `notElem` used body
+  then used body
+  else cls ++ used body
 used (If c t f)                  = [c] ++ used t ++ used f
 used (BinOp _ x y)               = [x, y]
 used _                           = []
