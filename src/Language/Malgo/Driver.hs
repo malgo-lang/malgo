@@ -17,19 +17,21 @@ import           Language.Malgo.MIR
 import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.Syntax    as Syntax
 import qualified Language.Malgo.TypeCheck as TypeCheck
+import qualified Language.Malgo.Unused    as Unused
 import           Language.Malgo.Utils
 import           Options.Applicative
 import           System.IO
 
-data Opt = Opt { _srcName     :: String
-               , _dumpParsed  :: Bool
-               , _dumpRenamed :: Bool
-               , _dumpTyped   :: Bool
-               , _dumpHIR     :: Bool
-               , _dumpBeta    :: Bool
-               , _dumpFlatten :: Bool
-               , _dumpClosure :: Bool
-               , _compileOnly :: Bool
+data Opt = Opt { _srcName         :: String
+               , _dumpParsed      :: Bool
+               , _dumpRenamed     :: Bool
+               , _dumpTyped       :: Bool
+               , _dumpHIR         :: Bool
+               , _dumpBeta        :: Bool
+               , _dumpFlatten     :: Bool
+               , _dumpClosure     :: Bool
+               , _compileOnly     :: Bool
+               , _notRemoveUnused :: Bool
                }
   deriving (Eq, Show)
 
@@ -45,6 +47,7 @@ parseOpt = execParser $
           <*> switch (long "dump-flatten")
           <*> switch (long "dump-closure"))
           <*> switch (long "compile-only")
+          <*> switch (long "not-remove-unused")
          <**> helper)
   (fullDesc
     <> progDesc "A interpreter of malgo"
@@ -61,7 +64,13 @@ compile ast opt = do
   knormal <- run _dumpHIR KNormal.knormal typed
   beta <- run _dumpBeta Beta.betaTrans knormal
   flat <- run _dumpFlatten flattenM beta
-  run _dumpClosure Closure.conv flat
+  cls <- run (const False) Closure.conv flat
+  let cls' = if _notRemoveUnused opt
+             then cls
+             else Unused.remove cls
+  when (_dumpClosure opt) $
+    lift . hPrint stderr $ pretty cls'
+  return cls'
   where run key f x =
           doMalgoT (f x) >>= \case
           Left x' -> error $ show x'

@@ -46,7 +46,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
       braces $ sep (punctuate (text ",") (map pretty xs))
     pretty (TupleAccess xs i) =
       parens (text "." <+> pretty xs <+> int i)
-    pretty Unit = text "()"
+    pretty Unit = text "{}"
     pretty (Call fn arg) = parens $ pretty fn <+> sep (map pretty arg)
     pretty (Let decl body) =
         parens $ text "let" <+> parens (pretty decl) $+$ nest (-1) (pretty body)

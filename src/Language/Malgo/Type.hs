@@ -1,4 +1,5 @@
-{-# LANGUAGE StrictData #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE StrictData        #-}
 module Language.Malgo.Type where
 
 import           Data.String
@@ -17,6 +18,7 @@ data Type
     deriving (Eq, Show, Ord)
 
 instance PrettyPrint Type where
+    pretty "Unit" = text "{}"
     pretty (NameTy n) = pretty n
     pretty (FunTy param ret) =
         parens

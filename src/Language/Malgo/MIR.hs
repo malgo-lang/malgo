@@ -33,7 +33,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
     pretty (Bool False) = text "#f"
     pretty (Char x) = quotes $ char x
     pretty (String x) = doubleQuotes $ text x
-    pretty Unit = text "()"
+    pretty Unit = text "{}"
     pretty (Tuple xs) =
       braces $ sep (punctuate (text ",") (map pretty xs))
     pretty (TupleAccess x i) =

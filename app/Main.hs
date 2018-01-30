@@ -18,12 +18,9 @@ main = do
         Right x -> x
   let obj = compile ast opt
 
-  unless (_compileOnly opt) $ do
-    e <- eval obj
-    case e of
-      Left x  -> error $ show $ pretty x
-      Right _ -> return ()
-
-  when (_compileOnly opt) $ do
-    _ <- evalStateT obj 0
-    return ()
+  if _compileOnly opt
+    then void $ evalStateT obj 0
+    else do e <- eval obj
+            case e of
+              Left x  -> error $ show $ pretty x
+              Right _ -> return ()
