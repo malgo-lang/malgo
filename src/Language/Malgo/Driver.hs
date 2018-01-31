@@ -35,25 +35,10 @@ parseOpt = execParser $
           <*> switch (long "dump-closure"))
           <*> switch (long "compile-only")
           <*> switch (long "not-remove-unused")
-          <*> switch (long "debug-mode")
          <**> helper)
   (fullDesc
     <> progDesc "A interpreter of malgo"
     <> header "malgo - a toy programming language")
-
-type Obj = StateT Int IO (Program TypeCheck.TypedID)
-
--- compile ast opt = do
---   when (_dumpParsed opt) $
---     lift . print $ pretty ast
---   renamed <- run _dumpRenamed Rename.rename ast
---   where run key f x =
---           doMalgoT (f x) >>= \case
---           Left x' -> error $ show x'
---           Right x' -> do
---                          when (key opt) $
---                            lift . hPrint stderr $ pretty x'
---                          return x'
 
 compile ::
   Syntax.Expr Name -> Opt -> IO (Program TypeCheck.TypedID)
@@ -65,7 +50,7 @@ compile ast opt = do
   (knormal, s3) <- run _dumpHIR KNormal.knormal typed s2
   (beta, s4) <- run _dumpBeta Beta.betaTrans knormal s3
   (flat, s5) <- run _dumpFlatten flattenM beta s4
-  (cls, s6) <- run (const False) Closure.conv flat s5
+  (cls, _) <- run (const False) Closure.conv flat s5
   let cls' = if _notRemoveUnused opt
              then cls
              else Unused.remove cls
