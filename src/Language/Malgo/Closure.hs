@@ -3,18 +3,18 @@ module Language.Malgo.Closure
   ( conv
   ) where
 
-import           Control.Monad.Except
-import           Control.Monad.State
+import           Control.Monad.Error.Class
+import           Control.Monad.State.Class
 import           Data.List
-import qualified Data.Map.Strict          as Map
+import qualified Data.Map.Strict           as Map
 import           Data.Maybe
 import           Data.String
 import           Language.Malgo.FreeVars
-import qualified Language.Malgo.HIR       as H
+import qualified Language.Malgo.HIR        as H
 import           Language.Malgo.MIR
-import           Language.Malgo.Rename    (ID (..))
+import           Language.Malgo.Rename     (ID (..))
 import           Language.Malgo.Type
-import           Language.Malgo.TypeCheck (TypedID (..))
+import           Language.Malgo.TypeCheck  (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
@@ -24,10 +24,13 @@ data ClsEnv = ClsEnv
   , _varMap   :: Map.Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
   , _fundecs  :: [FunDec TypedID]
   , _extern   :: [ExDec TypedID]
+  , _gen      :: Int
   } deriving (Show)
 
 instance Env ClsEnv where
   initEnv = ClsEnv Map.empty [] Map.empty [] []
+  updateUniq e i = e { _gen = i }
+  getUniq = _gen
 
 type ClsTrans m a = MalgoT ClsEnv m a
 

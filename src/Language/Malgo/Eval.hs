@@ -1,19 +1,18 @@
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE OverloadedStrings #-}
-
 module Language.Malgo.Eval
     ( eval
     , Value
     , Eval
+    , Context
     ) where
 
-import           Control.Monad.Except
-import           Control.Monad.State
+import           Control.Monad.Error.Class
+import           Control.Monad.IO.Class
+import           Control.Monad.State.Class
 import           Data.Char
-import qualified Data.Map                 as Map
-import           Language.Malgo.HIR       (Op (..))
-import qualified Language.Malgo.MIR       as M
-import           Language.Malgo.TypeCheck (TypedID (..))
+import qualified Data.Map                  as Map
+import           Language.Malgo.HIR        (Op (..))
+import qualified Language.Malgo.MIR        as M
+import           Language.Malgo.TypeCheck  (TypedID (..))
 import           Language.Malgo.Utils
 import           System.IO
 import           Text.PrettyPrint
@@ -45,20 +44,23 @@ instance PrettyPrint Value where
 data Context = Context
     { _var :: Map.Map TypedID Value
     , _fun :: Map.Map TypedID ([Value] -> [Value] -> Eval Value)
+    , _gen :: Int
     }
 
 instance Env Context where
     initEnv = Context Map.empty Map.empty
+    updateUniq e i = e { _gen = i }
+    getUniq = _gen
 
 prelude :: [(String, [Value] -> [Value] -> Eval Value)]
 prelude =
-    [ ("print", \[String x] [] -> lift (putStr x) >> return Unit)
-    , ("println", \[String x] [] -> lift (putStrLn x) >> return Unit)
-    , ("print_int", \[Int x] [] -> lift (putStr $ show x) >> return Unit)
-    , ("print_float", \[Float x] [] -> lift (putStr $ show x) >> return Unit)
-    , ("newline", \[Unit] [] -> lift (putStrLn "") >> return Unit)
-    , ("flush", \[Unit] [] -> lift (hFlush stdout) >> return Unit)
-    , ("getchar", \[Unit] [] -> Char <$> lift getChar)
+    [ ("print", \[String x] [] -> liftIO (putStr x) >> return Unit)
+    , ("println", \[String x] [] -> liftIO (putStrLn x) >> return Unit)
+    , ("print_int", \[Int x] [] -> liftIO (putStr $ show x) >> return Unit)
+    , ("print_float", \[Float x] [] -> liftIO (putStr $ show x) >> return Unit)
+    , ("newline", \[Unit] [] -> liftIO (putStrLn "") >> return Unit)
+    , ("flush", \[Unit] [] -> liftIO (hFlush stdout) >> return Unit)
+    , ("getchar", \[Unit] [] -> Char <$> liftIO getChar)
     , ("ord", \[Char x] [] -> return $ Int (toInteger $ ord x))
     , ("chr", \[Int x] [] -> return $ Char (chr $ fromInteger x))
     , ("size", \[String x] [] -> return $ Int (toInteger $ length x))

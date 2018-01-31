@@ -3,19 +3,22 @@ module Language.Malgo.Beta
   , Beta
   ) where
 
-import           Control.Monad.State
-import qualified Data.Map.Strict          as Map
+import           Control.Monad.State.Class
+import qualified Data.Map.Strict           as Map
 import           Data.Maybe
 import           Language.Malgo.HIR
-import           Language.Malgo.TypeCheck (TypedID (..))
+import           Language.Malgo.TypeCheck  (TypedID (..))
 import           Language.Malgo.Utils
 
-newtype BEnv = BEnv
+data BEnv = BEnv
   { _table :: Map.Map TypedID TypedID
+  , _gen   :: Int
   }
 
 instance Env BEnv where
   initEnv = BEnv Map.empty
+  updateUniq e i = e { _gen = i }
+  getUniq = _gen
 
 type Beta m a = MalgoT BEnv m a
 

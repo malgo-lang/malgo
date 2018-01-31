@@ -4,16 +4,16 @@
 
 module Language.Malgo.KNormal where
 
-import           Control.Monad.Except
+import           Control.Monad.Error.Class
 import           Language.Malgo.HIR
-import           Language.Malgo.Rename    (ID (..))
-import qualified Language.Malgo.Syntax    as S
+import           Language.Malgo.Rename     (ID (..))
+import qualified Language.Malgo.Syntax     as S
 import           Language.Malgo.Type
 import           Language.Malgo.TypeCheck
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-type KNormal m a = MalgoT () m a
+type KNormal m a = MalgoT Int m a
 
 knormal :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
 knormal e = transExpr (flattenLet e)

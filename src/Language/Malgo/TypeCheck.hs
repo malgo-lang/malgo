@@ -7,13 +7,13 @@ module Language.Malgo.TypeCheck
     , typeOf
     ) where
 
-import           Control.Monad.Except
-import           Control.Monad.Identity
-import           Control.Monad.State
-import qualified Data.Map.Strict        as Map
-import           Language.Malgo.Rename
-import           Language.Malgo.Syntax  hiding (info)
-import qualified Language.Malgo.Syntax  as Syntax
+import           Control.Monad
+import           Control.Monad.Error.Class
+import           Control.Monad.State.Class
+import qualified Data.Map.Strict           as Map
+import           Language.Malgo.Rename     hiding (_gen)
+import           Language.Malgo.Syntax     hiding (info)
+import qualified Language.Malgo.Syntax     as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -32,12 +32,15 @@ instance PrettyPrint TypedID where
 instance Typeable TypedID where
     typeOf (TypedID _ t) = t
 
-newtype TcEnv = TcEnv
+data TcEnv = TcEnv
     { _table :: Map.Map ID TypedID
+    , _gen   :: Int
     }
 
 instance Env TcEnv where
     initEnv = TcEnv Map.empty
+    updateUniq e i = e { _gen = i }
+    getUniq = _gen
 
 type TypeCheck m a = MalgoT TcEnv m a
 
@@ -110,47 +113,46 @@ instance Typeable (Expr TypedID) where
     typeOf (Let _ _ e) = typeOf e
     typeOf (If _ _ e _) = typeOf e
     typeOf (BinOp i op x _) =
-        case runIdentity $ runMalgoT (typeOfOp i op (typeOf x)) 0 of
-            (Right (FunTy _ ty), _) -> ty
-            (Left mes, _) -> error (show mes)
-            _ -> error "(typeOfOp op) should match (FunTy _ ty)"
+        case typeOfOp i op (typeOf x) of
+            (FunTy _ ty) -> ty
+            _            -> error "(typeOfOp op) should match (FunTy _ ty)"
 
-typeOfOp :: Monad m => Info -> Op -> Type -> TypeCheck m Type
-typeOfOp _ Add _ = return $ FunTy ["Int", "Int"] "Int"
-typeOfOp _ Sub _ = return $ FunTy ["Int", "Int"] "Int"
-typeOfOp _ Mul _ = return $ FunTy ["Int", "Int"] "Int"
-typeOfOp _ Div _ = return $ FunTy ["Int", "Int"] "Int"
-typeOfOp _ FAdd _ = return $ FunTy ["Float", "Float"] "Float"
-typeOfOp _ FSub _ = return $ FunTy ["Float", "Float"] "Float"
-typeOfOp _ FMul _ = return $ FunTy ["Float", "Float"] "Float"
-typeOfOp _ FDiv _ = return $ FunTy ["Float", "Float"] "Float"
-typeOfOp _ Mod _ = return $ FunTy ["Int", "Int"] "Int"
+typeOfOp :: Info -> Op -> Type -> Type
+typeOfOp _ Add _ = FunTy ["Int", "Int"] "Int"
+typeOfOp _ Sub _ = FunTy ["Int", "Int"] "Int"
+typeOfOp _ Mul _ = FunTy ["Int", "Int"] "Int"
+typeOfOp _ Div _ = FunTy ["Int", "Int"] "Int"
+typeOfOp _ FAdd _ = FunTy ["Float", "Float"] "Float"
+typeOfOp _ FSub _ = FunTy ["Float", "Float"] "Float"
+typeOfOp _ FMul _ = FunTy ["Float", "Float"] "Float"
+typeOfOp _ FDiv _ = FunTy ["Float", "Float"] "Float"
+typeOfOp _ Mod _ = FunTy ["Int", "Int"] "Int"
 typeOfOp i Eq ty =
     if comparable ty
-        then return $ FunTy [ty, ty] "Bool"
-        else throw i (pretty ty <+> "is not comparable")
+        then FunTy [ty, ty] "Bool"
+        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Neq ty =
     if comparable ty
-        then return $ FunTy [ty, ty] "Bool"
-        else throw i (pretty ty <+> "is not comparable")
+        then FunTy [ty, ty] "Bool"
+        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Lt ty =
     if comparable ty
-        then return $ FunTy [ty, ty] "Bool"
-        else throw i (pretty ty <+> "is not comparable")
+        then FunTy [ty, ty] "Bool"
+        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Gt ty =
     if comparable ty
-        then return $ FunTy [ty, ty] "Bool"
-        else throw i (pretty ty <+> "is not comparable")
+        then FunTy [ty, ty] "Bool"
+        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Le ty =
     if comparable ty
-        then return $ FunTy [ty, ty] "Bool"
-        else throw i (pretty ty <+> "is not comparable")
+        then FunTy [ty, ty] "Bool"
+        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Ge ty =
     if comparable ty
-        then return $ FunTy [ty, ty] "Bool"
-        else throw i (pretty ty <+> "is not comparable")
-typeOfOp _ And _ = return $ FunTy ["Bool", "Bool"] "Bool"
-typeOfOp _ Or _ = return $ FunTy ["Bool", "Bool"] "Bool"
+        then FunTy [ty, ty] "Bool"
+        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+typeOfOp _ And _ = FunTy ["Bool", "Bool"] "Bool"
+typeOfOp _ Or _ = FunTy ["Bool", "Bool"] "Bool"
 
 comparable :: Type -> Bool
 comparable "Int"      = True
@@ -209,7 +211,7 @@ checkExpr (TupleAccess i tuple index) = do
 checkExpr (BinOp info op x y) = do
     x' <- checkExpr x
     y' <- checkExpr y
-    (FunTy [px, py] _) <- typeOfOp info op (typeOf x')
+    let (FunTy [px, py] _) = typeOfOp info op (typeOf x')
     when
         (typeOf x' /= px)
         (throw info $
