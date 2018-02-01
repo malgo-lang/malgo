@@ -36,15 +36,13 @@ type Source = String
 
 newtype Info =
   Info (Source, Line, Column)
+  deriving (Show, Read)
 
 instance Eq Info where
   _ == _ = True
 
-instance Show Info where
-  show (Info x) = show x
-
 instance PrettyPrint Info where
-  pretty = P.text . show
+  pretty (Info x) = P.text . show $ x
 
 dummyInfo :: Info
 dummyInfo = Info ("<dummy>", 0, 0)

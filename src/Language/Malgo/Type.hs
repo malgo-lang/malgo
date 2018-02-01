@@ -9,13 +9,12 @@ import           Text.PrettyPrint
 -- | Malgoの組み込みデータ型
 data Type
     = NameTy Name
-          -- | TupleTy [Type]
     | FunTy { _params :: [Type]
             , _ret    :: Type }
     | TupleTy [Type]
     | ClsTy { _params :: [Type]
             , _ret    :: Type }
-    deriving (Eq, Show, Ord)
+    deriving (Eq, Show, Ord, Read)
 
 instance PrettyPrint Type where
     pretty "Unit" = text "{}"

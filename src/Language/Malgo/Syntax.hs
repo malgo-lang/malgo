@@ -60,7 +60,7 @@ data Expr a
           Op
           (Expr a)
           (Expr a)
-  deriving (Eq, Show)
+  deriving (Eq, Show, Read)
 
 info :: Expr t -> Info
 info (Var i _)           = i
@@ -120,7 +120,7 @@ data Op
   | Ge
   | And
   | Or
-  deriving (Eq, Show)
+  deriving (Eq, Show, Read)
 
 instance PrettyPrint Op where
   pretty Add  = text "+"
@@ -155,7 +155,7 @@ data Decl a
           a
           Type
           String
-  deriving (Eq, Show)
+  deriving (Eq, Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (FunDec _ name params _ body) =

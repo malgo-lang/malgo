@@ -21,7 +21,7 @@ import           Text.PrettyPrint
 data TypedID =
     TypedID ID
             Type
-    deriving (Show, Ord)
+    deriving (Show, Ord, Read)
 
 instance Eq TypedID where
     (TypedID x _) == (TypedID y _) = x == y

@@ -32,7 +32,7 @@ data Expr a
     | BinOp Op
             a
             a
-    deriving (Eq, Show)
+    deriving (Eq, Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Expr a) where
     pretty (Var x) = pretty x
@@ -96,7 +96,7 @@ data Op
     | Ge Type
     | And
     | Or
-    deriving (Eq, Show)
+    deriving (Eq, Show, Read)
 
 instance PrettyPrint Op where
     pretty Add      = text "+"
@@ -125,7 +125,7 @@ data Decl a
              (Expr a)
     | ExDec a
             String
-    deriving (Eq, Show)
+    deriving (Eq, Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
     pretty (FunDec name params body) =

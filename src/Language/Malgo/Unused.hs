@@ -3,26 +3,27 @@ module Language.Malgo.Unused where
 
 import           Language.Malgo.MIR
 import           Language.Malgo.Type
+import           Language.Malgo.TypeCheck (TypedID)
 
-used :: (Typeable a, Eq a) => Expr a -> [a]
+used :: Expr TypedID -> [TypedID]
 used (Var x)                     = [x]
 used (Tuple xs)                  = xs
 used (TupleAccess x _)           = [x]
 used (CallDir _ xs)              = xs
 used (CallCls x xs)              = x:xs
-used (Let (ValDec a e) body)     = -- used e ++ used body
+used (Let (ValDec a e) body)     =
   if a `notElem` used body && (typeOf a /= "Unit")
   then used body
   else used e ++ used body
-used (Let (ClsDec a _ cls) body) = -- cls ++ used body
+used (Let (ClsDec a _ cls) body) =
   if a `notElem` used body
   then used body
   else cls ++ used body
-used (If c t f)                  = [c] ++ used t ++ used f
+used (If c t f)                  = c : used t ++ used f
 used (BinOp _ x y)               = [x, y]
 used _                           = []
 
-remove' :: (Typeable a, Eq a) => Expr a -> Expr a
+remove' :: Expr TypedID -> Expr TypedID
 remove' (Let dec@(ValDec a _) body) =
   if a `notElem` used body && (typeOf a /= "Unit")
   then remove' body
@@ -34,7 +35,7 @@ remove' (Let dec@(ClsDec a _ _) body) =
 remove' (If c t f) = If c (remove' t) (remove' f)
 remove' x = x
 
-remove :: (Typeable a, Eq a) => Program a -> Program a
+remove :: Program TypedID -> Program TypedID
 remove (Program fundec exdec body) =
   Program (map (\(FunDec n a f b) ->
                   FunDec n a f (remove' b)) fundec)

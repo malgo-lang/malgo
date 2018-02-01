@@ -23,7 +23,7 @@ data Expr a
     | Let (Decl a) (Expr a)
     | If a (Expr a) (Expr a)
     | BinOp Op a a
-    deriving Show
+    deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Expr a) where
     pretty (Var x) = pretty x
@@ -96,7 +96,7 @@ instance (Typeable a, Show a) => Typeable (Expr a) where
 data FunDec a
   -- | FunDec function_name parameters captures body
   = FunDec a [a] [a] (Expr a)
-    deriving Show
+    deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (FunDec a) where
     pretty (FunDec name params capture body) =
@@ -107,7 +107,7 @@ instance PrettyPrint a => PrettyPrint (FunDec a) where
 data ExDec a
   -- | ExDec name_in_the_program original_name
   = ExDec a String
-    deriving (Show)
+    deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (ExDec a) where
     pretty (ExDec name orig) = text "extern" <+> pretty name <+> text orig
@@ -117,7 +117,7 @@ data Decl a
              (Expr a)
     -- | ClsDec closure_name function_name captures
     | ClsDec a a [a]
-    deriving (Show)
+    deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
     pretty (ValDec name val) = text "val" <+> pretty name <+> pretty val

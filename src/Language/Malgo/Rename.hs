@@ -22,7 +22,7 @@ data ID
                , _uniq :: Int }
     | External { _name :: Name
                , _uniq :: Int }
-    deriving (Show, Ord)
+    deriving (Show, Ord, Read)
 
 instance Eq ID where
     x == y = _uniq x == _uniq y
