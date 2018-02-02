@@ -1,10 +1,12 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections     #-}
 module Language.Malgo.CodeGen where
 
 import           Control.Monad.State.Strict
 import           Data.Char
 import qualified Data.Map.Strict            as Map
+import           Data.Maybe
 import           Data.String
 import           Data.Text.Lazy.IO          as T
 
@@ -32,10 +34,26 @@ import           Language.Malgo.Utils
 --        ret r
 --   return f
 
-type CodeGen a = IRBuilderT (State (Map.Map TypedID Operand)) a
+data CodeGenState = CodeGenState { _table    :: Map.Map TypedID Operand
+                                 , _term     :: Operand -> CodeGen () -- if式の際の最終分岐先などに利用
+                                 , _internal :: Map.Map String Operand
+                                 }
+type CodeGen a = IRBuilderT (State CodeGenState) a
+
+addTable :: TypedID -> Operand -> CodeGen ()
+addTable name opr =
+  lift (modify (\s -> s { _table = Map.insert name opr (_table s)}))
+
+addInternal name opr =
+  lift (modify (\s -> s { _internal = Map.insert name opr (_internal s) }))
 
 dumpCodeGen :: CodeGen a -> [G.BasicBlock]
-dumpCodeGen m = flip evalState Map.empty $ execIRBuilderT emptyIRBuilder m
+dumpCodeGen m = flip evalState (CodeGenState Map.empty ret Map.empty) $ execIRBuilderT emptyIRBuilder
+  (do addInternal "GC_malloc" (ConstantOperand
+                               (C.GlobalReference
+                                 (LT.FunctionType (LT.ptr LT.i8) [LT.i64] False)
+                                "GC_malloc"))
+      m)
 
 convertType :: T.Type -> LT.Type
 convertType "Int"          = LT.i32
@@ -43,7 +61,8 @@ convertType "Float"        = LT.double
 convertType "Bool"         = LT.i1
 convertType "Char"         = LT.i8
 convertType "String"       = LT.ptr LT.i8
-convertType "Unit"         = LT.NamedTypeReference "Unit"
+convertType "Unit"         = -- LT.NamedTypeReference "Unit"
+  LT.StructureType False []
 convertType (T.NameTy x) = error $ "unknown type: " ++ show x
 convertType (T.TupleTy xs) =
   LT.StructureType False (map convertType xs)
@@ -54,22 +73,64 @@ convertType (T.ClsTy _ _) = error "closure is not supported"
 
 getRef :: TypedID -> CodeGen Operand
 getRef i = do
-  m <- lift get
+  m <- lift (gets _table)
   case Map.lookup i m of
     Nothing -> error $ show i ++ " is not found in " ++ show m
     Just x  -> return x
+
+term :: CodeGen Operand -> CodeGen ()
+term o = do
+  t <- lift (gets _term)
+  o' <- o
+  t o'
 
 fromTypedID :: IsString a => TypedID -> a
 fromTypedID (TypedID i _) =
   fromString $ show (_name i) ++ "zi" ++ show (_uniq i)
 
+char = pure . ConstantOperand . C.Int 8
+
+gcMalloc :: Integer -> CodeGen Operand
+gcMalloc bytes = do
+  f <- lift (fromJust . Map.lookup "GC_malloc" <$> gets _internal)
+  bytes' <- int64 bytes
+  call f [(bytes', [])]
 
 genExpr :: Expr TypedID -> CodeGen ()
-genExpr (Var a)   = ret =<< getRef a
-genExpr (Int i)   = ret =<< int32 i
-genExpr (Float d) = ret =<< double d
-genExpr (Bool b)  = ret =<< bit (if b then 1 else 0)
-genExpr (Char c)  = ret =<< char (toInteger . ord $ c)
-  where char = pure . ConstantOperand . C.Int 8
-genExpr (String _) = error "string is not supported"
-  -- TODO: GCを使えるようにする。ラッパーを書く
+genExpr e@(Var _)   = term $ genExpr' e
+genExpr e@(Int _)   = term $ genExpr' e
+genExpr e@(Float _) = term $ genExpr' e
+genExpr e@(Bool _)  = term $ genExpr' e
+genExpr e@(Char _)  = term $ genExpr' e
+genExpr e@(String _) = term $ genExpr' e
+genExpr Unit = retVoid
+genExpr (Tuple _) = error "tuple is not supported"
+genExpr (TupleAccess _ _) = error "tuple is not supported"
+genExpr (CallDir fn args) = do
+  fn' <- getRef fn
+  args' <- mapM (\a -> do a' <- getRef a; return (a', [])) args
+  term $ call fn' args'
+genExpr (CallCls _ _) = error "closure is not supported"
+genExpr (Let (ValDec name val) e) = do
+  val' <- genExpr' val
+  addTable name val'
+  genExpr e
+
+genExpr' :: Expr TypedID -> CodeGen Operand
+genExpr' (Var a)    = getRef a
+genExpr' (Int i)    = int32 i
+genExpr' (Float d)  = double d
+genExpr' (Bool b)   = bit (if b then 1 else 0)
+genExpr' (Char c)   = char (toInteger . ord $ c)
+genExpr' (String xs) = do
+  p <- gcMalloc (toInteger $ length xs + 1)
+  mapM_ (uncurry (addChar p)) (zip [0..] (xs ++ ['\0']))
+  return p
+  where addChar p i c = do
+          i' <- int32 i
+          p' <- gep p [i']
+          c' <- char (toInteger . ord $ c)
+          store p' 1 c'
+genExpr' Unit       = error "unit value is not supported"
+-- TODO: GCを使えるようにする。ラッパーを書く
+--       Unitの表現を決める
