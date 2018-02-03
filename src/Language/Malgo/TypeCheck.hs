@@ -27,7 +27,7 @@ instance Eq TypedID where
     (TypedID x _) == (TypedID y _) = x == y
 
 instance PrettyPrint TypedID where
-    pretty (TypedID x t) = pretty x <> text ":" <> pretty t
+    pretty (TypedID x _) = pretty x -- <> text ":" <> pretty t
 
 instance Typeable TypedID where
     typeOf (TypedID _ t) = t

@@ -28,9 +28,9 @@ instance Eq ID where
     x == y = _uniq x == _uniq y
 
 instance PrettyPrint ID where
-    pretty (Toplevel name u) = pretty name <> P.braces (int u)
+    pretty (Toplevel name _) = pretty name
     pretty (Internal name u) = pretty name <> text "." <> int u
-    pretty (External name u) = pretty name <> P.braces (int u)
+    pretty (External name _) = pretty name
 
 data RnEnv = RnEnv
     { knowns :: Map.Map Name ID
