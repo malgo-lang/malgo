@@ -2,11 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.CodeGen where
 
+import           Debug.Trace
+
 import           Control.Monad.State.Strict
 import           Data.Char
 import qualified Data.Map.Strict                 as Map
 import           Data.Maybe
 import           Data.String
+import qualified Data.Text.Lazy.IO               as Text
 
 import qualified LLVM.AST.Constant               as C
 import qualified LLVM.AST.FloatingPointPredicate as FP
@@ -14,7 +17,9 @@ import qualified LLVM.AST.Global                 as G
 import qualified LLVM.AST.IntegerPredicate       as IP
 import           LLVM.AST.Operand
 import qualified LLVM.AST.Type                   as LT
+import           LLVM.AST.Typed
 import           LLVM.IRBuilder                  as IRBuilder
+import           LLVM.Pretty
 
 import           Language.Malgo.HIR              (Op (..))
 import           Language.Malgo.MIR
@@ -29,27 +34,25 @@ import           Language.Malgo.Utils
 --        ret r
 --   return f
 
-data CodeGenState = CodeGenState { _table    :: Map.Map TypedID Operand
-                                 , _term     :: Operand -> CodeGen () -- if式の際の最終分岐先などに利用
-                                 , _internal :: Map.Map String Operand
-                                 }
-type CodeGen a = IRBuilderT (State CodeGenState) a
+data GenState = GenState { _table    :: Map.Map TypedID Operand
+                         , _term     :: Operand -> GenExpr () -- if式の際の最終分岐先などに利用
+                         , _internal :: Map.Map String Operand
+                         }
 
-addTable :: TypedID -> Operand -> CodeGen ()
+type GenExpr a = IRBuilderT GenDec a
+type GenDec = ModuleBuilderT (State GenState)
+
+-- addFunction :: TypedID -> Operand -> GenDec ()
+-- addFunction name opr =
+--   lift (modify (\s -> s { _table = Map.insert name opr (_table s)}))
+
+-- addTable :: TypedID -> Operand -> GenExpr ()
 addTable name opr =
   lift (modify (\s -> s { _table = Map.insert name opr (_table s)}))
 
-addInternal :: String -> Operand -> CodeGen ()
+-- addInternal :: String -> Operand -> GenExpr ()
 addInternal name opr =
   lift (modify (\s -> s { _internal = Map.insert name opr (_internal s) }))
-
-dumpCodeGen :: CodeGen a -> [G.BasicBlock]
-dumpCodeGen m = flip evalState (CodeGenState Map.empty ret Map.empty) $ execIRBuilderT emptyIRBuilder
-  (do addInternal "GC_malloc" (ConstantOperand
-                               (C.GlobalReference
-                                 (LT.FunctionType (LT.ptr LT.i8) [LT.i64] False)
-                                "GC_malloc"))
-      m)
 
 convertType :: T.Type -> LT.Type
 convertType "Int"          = LT.i32
@@ -67,33 +70,28 @@ convertType (T.FunTy params retTy) =
 convertType (T.ClsTy _ _) = error "closure is not supported"
 -- TODO: クロージャをLLVMでどのように扱うかを決める
 
-getRef :: TypedID -> CodeGen Operand
 getRef i = do
   m <- lift (gets _table)
   case Map.lookup i m of
     Nothing -> error $ show i ++ " is not found in " ++ show m
     Just x  -> return x
 
-term :: CodeGen Operand -> CodeGen ()
 term o = do
   t <- lift (gets _term)
   o' <- o
   t o'
 
-fromTypedID :: IsString a => TypedID -> a
 fromTypedID (TypedID i _) =
   fromString $ show (_name i) ++ "zi" ++ show (_uniq i)
 
-char :: Integer -> IRBuilderT (State CodeGenState) Operand
+char :: Applicative f => Integer -> f Operand
 char = pure . ConstantOperand . C.Int 8
 
-gcMalloc :: Integer -> CodeGen Operand
 gcMalloc bytes = do
   f <- lift (fromJust . Map.lookup "GC_malloc" <$> gets _internal)
   bytes' <- int64 bytes
   call f [(bytes', [])]
 
-genExpr :: Expr TypedID -> CodeGen ()
 genExpr e@(Var _)   = term (genExpr' e) `named` "var"
 genExpr e@(Int _)   = term (genExpr' e) `named` "int"
 genExpr e@(Float _) = term (genExpr' e) `named` "float"
@@ -110,7 +108,6 @@ genExpr (Let ClsDec{} _) = error "closure is not supported"
 genExpr e@If{} = term (genExpr' e) `named` "if"
 genExpr e@(BinOp op _ _) = term (genExpr' e) `named` fromString (show op)
 
-genExpr' :: Expr TypedID -> CodeGen Operand
 genExpr' (Var a)    = getRef a `named` "var"
 genExpr' (Int i)    = int32 i `named` "int"
 genExpr' (Float d)  = double d `named` "float"
@@ -202,3 +199,52 @@ genExpr' (BinOp op x y) = do
   x' <- getRef x
   y' <- getRef y
   op' x' y'
+
+genExDec (ExDec name str) = do
+  let (argtys, retty) = case T.typeOf name of
+                          (T.FunTy p r) -> (map convertType p, convertType r)
+                          _ -> error $ show name ++ " is not callable"
+  o <- extern (fromString str) argtys retty
+  addTable name o
+
+genFunDec :: FunDec TypedID -> GenDec ()
+genFunDec (FunDec fn@(TypedID _ fnty) params [] body) = do
+  let fn' = fromString (show (pretty fn))
+  let params' = map (\(TypedID name ty) ->
+                       (convertType ty, fromString (show (pretty name))))
+                params
+  let (TypedID _ (T.FunTy _ retty)) = fn
+  let retty' = convertType retty
+  let body' xs = do
+        s <- lift get
+        mapM_ (uncurry addTable) (zip params xs)
+        genExpr body
+  function fn' params' retty' body'
+  return ()
+
+genFunDec _ = error "closure is not supported"
+
+genMain e =
+  function "main" [] (convertType "Int") (\_ -> do genExpr' e `named` "main"; i <- int32 0; ret i)
+
+genProgram ::
+  Program TypedID -> GenDec ()
+genProgram (Program fs es body) = do
+  -- TODO: gc_mallocのexternを追加
+  mapM_ genExDec es
+  mapM_ addFunction fs
+  mapM_ genFunDec fs
+  _ <- genMain body
+  return ()
+  where addFunction (FunDec fn@(TypedID _ fnty) _ _ _) = do
+          let fnop = ConstantOperand $ C.GlobalReference (convertType fnty) (fromString $ show $ pretty fn)
+          addTable fn fnop
+
+
+dumpCodeGen m =
+  flip evalState (GenState Map.empty ret Map.empty) $ execModuleBuilderT emptyModuleBuilder
+  (do addInternal "GC_malloc" (ConstantOperand
+                                (C.GlobalReference
+                                  (LT.FunctionType (LT.ptr LT.i8) [LT.i64] False)
+                                  "GC_malloc"))
+      m)

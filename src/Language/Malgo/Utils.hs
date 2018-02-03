@@ -96,6 +96,7 @@ data Opt = Opt
   , _dumpClosure     :: Bool
   , _compileOnly     :: Bool
   , _notRemoveUnused :: Bool
+  , _dumpLLVM        :: Bool
   } deriving (Eq, Show)
 
 newtype MalgoT s m a = MalgoT

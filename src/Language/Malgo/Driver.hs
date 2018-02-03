@@ -7,8 +7,10 @@ import           Control.Applicative
 import           Control.Monad
 import           Control.Monad.State.Strict
 import           Data.Semigroup
+import qualified Data.Text.Lazy.IO          as Text
 import qualified Language.Malgo.Beta        as Beta
 import qualified Language.Malgo.Closure     as Closure
+import qualified Language.Malgo.CodeGen     as CodeGen
 import qualified Language.Malgo.Eval        as Eval
 import qualified Language.Malgo.Flatten     as Flatten
 import qualified Language.Malgo.HIR         as HIR
@@ -19,6 +21,7 @@ import qualified Language.Malgo.Syntax      as Syntax
 import qualified Language.Malgo.TypeCheck   as TypeCheck
 import qualified Language.Malgo.Unused      as Unused
 import           Language.Malgo.Utils
+import           LLVM.Pretty
 import           Options.Applicative
 import           System.IO
 
@@ -35,6 +38,7 @@ parseOpt = execParser $
           <*> switch (long "dump-closure"))
           <*> switch (long "compile-only")
           <*> switch (long "not-remove-unused")
+          <*> switch (long "dump-llvm")
          <**> helper)
   (fullDesc
     <> progDesc "A interpreter of malgo"
@@ -55,13 +59,16 @@ compile ast opt = do
              then cls
              else Unused.remove cls
   when (_dumpClosure opt) $
-    liftIO . hPrint stderr $ pretty cls'
+    liftIO . print $ pretty cls'
+  when (_dumpLLVM opt) $ do
+    let llvm = CodeGen.dumpCodeGen (CodeGen.genProgram cls')
+    liftIO (mapM_ Text.putStrLn (map ppll llvm))
   return cls'
   where run key f x u =
           runMalgoT (setUniq (u + 1) >> f x) >>= \case
           (Left x', _) -> error $ show x'
           (Right x', s) -> do when (key opt) $
-                                liftIO . hPrint stderr $ pretty x'
+                                liftIO . print $ pretty x'
                               return (x', getUniq s)
         flattenM :: HIR.Expr TypeCheck.TypedID -> Beta.Beta IO (HIR.Expr TypeCheck.TypedID)
         flattenM = return . Flatten.flatten
