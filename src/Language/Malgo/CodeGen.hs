@@ -1,31 +1,26 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections     #-}
 module Language.Malgo.CodeGen where
 
 import           Control.Monad.State.Strict
 import           Data.Char
-import qualified Data.Map.Strict            as Map
+import qualified Data.Map.Strict                 as Map
 import           Data.Maybe
 import           Data.String
-import           Data.Text.Lazy.IO          as T
 
-import qualified LLVM.AST.AddrSpace         as AS
-import qualified LLVM.AST.Constant          as C
-import qualified LLVM.AST.Global            as G
-import qualified LLVM.AST.IntegerPredicate  as IP
+import qualified LLVM.AST.Constant               as C
+import qualified LLVM.AST.FloatingPointPredicate as FP
+import qualified LLVM.AST.Global                 as G
+import qualified LLVM.AST.IntegerPredicate       as IP
 import           LLVM.AST.Operand
-import qualified LLVM.AST.Type              as LT
-import           LLVM.IRBuilder.Constant
-import           LLVM.IRBuilder.Instruction
-import           LLVM.IRBuilder.Module
-import           LLVM.IRBuilder.Monad
-import           LLVM.Pretty
+import qualified LLVM.AST.Type                   as LT
+import           LLVM.IRBuilder                  as IRBuilder
 
+import           Language.Malgo.HIR              (Op (..))
 import           Language.Malgo.MIR
-import           Language.Malgo.Rename      (ID (..))
-import qualified Language.Malgo.Type        as T
-import           Language.Malgo.TypeCheck   (TypedID (..))
+import           Language.Malgo.Rename           (ID (..))
+import qualified Language.Malgo.Type             as T
+import           Language.Malgo.TypeCheck        (TypedID (..))
 import           Language.Malgo.Utils
 
 -- test = T.putStrLn $ ppllvm $ buildModule "test" $ mdo
@@ -44,6 +39,7 @@ addTable :: TypedID -> Operand -> CodeGen ()
 addTable name opr =
   lift (modify (\s -> s { _table = Map.insert name opr (_table s)}))
 
+addInternal :: String -> Operand -> CodeGen ()
 addInternal name opr =
   lift (modify (\s -> s { _internal = Map.insert name opr (_internal s) }))
 
@@ -88,6 +84,7 @@ fromTypedID :: IsString a => TypedID -> a
 fromTypedID (TypedID i _) =
   fromString $ show (_name i) ++ "zi" ++ show (_uniq i)
 
+char :: Integer -> IRBuilderT (State CodeGenState) Operand
 char = pure . ConstantOperand . C.Int 8
 
 gcMalloc :: Integer -> CodeGen Operand
@@ -108,10 +105,10 @@ genExpr (Tuple _) = error "tuple is not supported"
 genExpr (TupleAccess _ _) = error "tuple is not supported"
 genExpr (CallCls _ _) = error "closure is not supported"
 genExpr e@(CallDir _ _) = term (genExpr' e) `named` "calldir"
-genExpr e@(Let (ValDec _ _) _) = do
-  term (genExpr' e) `named` "let"
-genExpr (Let (ClsDec _ _ _) _) = error "closure is not supported"
-genExpr e@(If _ _ _) = term (genExpr' e) `named` "if"
+genExpr e@(Let (ValDec _ _) _) = term (genExpr' e) `named` "let"
+genExpr (Let ClsDec{} _) = error "closure is not supported"
+genExpr e@If{} = term (genExpr' e) `named` "if"
+genExpr e@(BinOp op _ _) = term (genExpr' e) `named` fromString (show op)
 
 genExpr' :: Expr TypedID -> CodeGen Operand
 genExpr' (Var a)    = getRef a `named` "var"
@@ -137,6 +134,7 @@ genExpr' (Let (ValDec name val) e) = do
   val' <- genExpr' val `named` (fromString . show $ pretty name)
   addTable name val'
   genExpr' e
+genExpr' (Let ClsDec{} _) = error "closure is not supported"
 genExpr' (If c t f) = do
   c' <- getRef c
   r <- alloca (convertType (T.typeOf t)) Nothing 0 `named` "resultptr"
@@ -147,8 +145,60 @@ genExpr' (If c t f) = do
   emitBlockStart t'; genExpr t
   emitBlockStart f'; genExpr f
   lift (modify $ \s -> s { _term = backup })
-  emitBlockStart end;
+  emitBlockStart end
   load r 0
-
--- TODO: GCを使えるようにする。ラッパーを書く
---       Unitの表現を決める
+genExpr' (Tuple _) = error "tuple is not supported"
+genExpr' (TupleAccess _ _) = error "tuple is not supported"
+genExpr' (CallCls _ _) = error "closure is not supported"
+genExpr' (BinOp op x y) = do
+  let op' = case op of
+        Add      -> add
+        Sub      -> sub
+        Mul      -> mul
+        Div      -> sdiv
+        FAdd     -> fadd
+        FSub     -> fsub
+        FMul     -> fmul
+        FDiv     -> fdiv
+        Mod      -> frem
+        Eq ty -> case ty of
+                   "Int"   -> icmp IP.EQ
+                   "Float" -> fcmp FP.OEQ
+                   "Bool"  -> icmp IP.EQ
+                   "Char"  -> icmp IP.EQ
+                   _       -> error $ show ty ++ " is not comparable"
+        Neq ty -> case ty of
+                   "Int"   -> icmp IP.NE
+                   "Float" -> fcmp FP.ONE
+                   "Bool"  -> icmp IP.NE
+                   "Char"  -> icmp IP.NE
+                   _       -> error $ show ty ++ " is not comparable"
+        Lt ty -> case ty of
+                   "Int"   -> icmp IP.SLT
+                   "Float" -> fcmp FP.OLT
+                   "Bool"  -> icmp IP.SLT
+                   "Char"  -> icmp IP.SLT
+                   _       -> error $ show ty ++ " is not comparable"
+        Gt ty -> case ty of
+                   "Int"   -> icmp IP.SGT
+                   "Float" -> fcmp FP.OGT
+                   "Bool"  -> icmp IP.SGT
+                   "Char"  -> icmp IP.SGT
+                   _       -> error $ show ty ++ " is not comparable"
+        Le ty -> case ty of
+                   "Int"   -> icmp IP.SLE
+                   "Float" -> fcmp FP.OLE
+                   "Bool"  -> icmp IP.SLE
+                   "Char"  -> icmp IP.SLE
+                   _       -> error $ show ty ++ " is not comparable"
+        Ge ty -> case ty of
+                   "Int"   -> icmp IP.SGE
+                   "Float" -> fcmp FP.OGE
+                   "Bool"  -> icmp IP.SGE
+                   "Char"  -> icmp IP.SGE
+                   _       -> error $ show ty ++ " is not comparable"
+        And -> IRBuilder.and
+        Or -> IRBuilder.or
+  x' <- getRef x
+  y' <- getRef y
+  op' x' y'
