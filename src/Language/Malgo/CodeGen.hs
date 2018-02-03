@@ -97,13 +97,13 @@ gcMalloc bytes = do
   call f [(bytes', [])]
 
 genExpr :: Expr TypedID -> CodeGen ()
-genExpr e@(Var _)   = term $ genExpr' e
-genExpr e@(Int _)   = term $ genExpr' e
-genExpr e@(Float _) = term $ genExpr' e
-genExpr e@(Bool _)  = term $ genExpr' e
-genExpr e@(Char _)  = term $ genExpr' e
-genExpr e@(String _) = term $ genExpr' e
-genExpr Unit = retVoid
+genExpr e@(Var _)   = term (genExpr' e) `named` "var"
+genExpr e@(Int _)   = term (genExpr' e) `named` "int"
+genExpr e@(Float _) = term (genExpr' e) `named` "float"
+genExpr e@(Bool _)  = term (genExpr' e) `named` "bool"
+genExpr e@(Char _)  = term (genExpr' e) `named` "char"
+genExpr e@(String _) = term (genExpr' e) `named` "string"
+genExpr e@Unit = term (genExpr' e) `named` "unit"
 genExpr (Tuple _) = error "tuple is not supported"
 genExpr (TupleAccess _ _) = error "tuple is not supported"
 genExpr (CallDir fn args) = do
@@ -112,25 +112,35 @@ genExpr (CallDir fn args) = do
   term $ call fn' args'
 genExpr (CallCls _ _) = error "closure is not supported"
 genExpr (Let (ValDec name val) e) = do
-  val' <- genExpr' val
+  val' <- genExpr' val `named` (fromString . show $ name)
   addTable name val'
   genExpr e
+genExpr (Let (ClsDec _ _ _) _) = error "closure is not supported"
+genExpr (If c t f) = do
+  c' <- getRef c
+  r <- alloca (convertType (T.typeOf t)) Nothing 0 `named` "resultptr"
+  (end, t', f') <- (,,) <$> freshName "end" <*> freshName "then" <*> freshName "else"
+  condBr  c' t' f'
+  emitBlockStart end; term (load r 0) `named` "result"
+  lift (modify $ \s -> s { _term = \o -> store r 0 o >> br end })
+  emitBlockStart t'; genExpr t
+  emitBlockStart f'; genExpr f
 
 genExpr' :: Expr TypedID -> CodeGen Operand
-genExpr' (Var a)    = getRef a
-genExpr' (Int i)    = int32 i
-genExpr' (Float d)  = double d
-genExpr' (Bool b)   = bit (if b then 1 else 0)
-genExpr' (Char c)   = char (toInteger . ord $ c)
+genExpr' (Var a)    = getRef a `named` "var"
+genExpr' (Int i)    = int32 i `named` "int"
+genExpr' (Float d)  = double d `named` "float"
+genExpr' (Bool b)   = bit (if b then 1 else 0) `named` "bool"
+genExpr' (Char c)   = char (toInteger . ord $ c) `named` "char"
 genExpr' (String xs) = do
-  p <- gcMalloc (toInteger $ length xs + 1)
-  mapM_ (uncurry (addChar p)) (zip [0..] (xs ++ ['\0']))
+  p <- gcMalloc (toInteger $ length xs + 1) `named` "string"
+  mapM_ (uncurry $ addChar p) (zip [0..] $ xs ++ ['\0'])
   return p
   where addChar p i c = do
           i' <- int32 i
-          p' <- gep p [i']
+          p' <- gep p [i'] `named` "tmp_char"
           c' <- char (toInteger . ord $ c)
           store p' 1 c'
-genExpr' Unit       = error "unit value is not supported"
+genExpr' Unit       = (pure . ConstantOperand . C.Undef $ convertType "Unit") `named` "unit"
 -- TODO: GCを使えるようにする。ラッパーを書く
 --       Unitの表現を決める
