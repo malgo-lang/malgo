@@ -8,7 +8,6 @@ module Language.Malgo.TypeCheck
     ) where
 
 import           Control.Monad
-import           Control.Monad.Error.Class
 import           Control.Monad.State.Class
 import qualified Data.Map.Strict           as Map
 import           Language.Malgo.Rename     hiding (_gen)
@@ -32,23 +31,20 @@ instance PrettyPrint TypedID where
 instance Typeable TypedID where
     typeOf (TypedID _ t) = t
 
-data TcEnv = TcEnv
-    { _table :: Map.Map ID TypedID
-    , _gen   :: Int
-    }
+newtype TcEnv = TcEnv
+                { _table :: Map.Map ID TypedID
+                }
 
 instance Env TcEnv where
     initEnv = TcEnv Map.empty
-    updateUniq e i = e { _gen = i }
-    getUniq = _gen
 
 type TypeCheck m a = MalgoT TcEnv m a
 
 typeCheck :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
 typeCheck = checkExpr
 
-throw :: Monad m => Info -> Doc -> TypeCheck m a
-throw info mes = throwError (TypeCheckError info mes)
+throw :: Info -> Doc -> a
+throw info mes = error $ show $ pretty (TypeCheckError info mes)
 
 addBind :: Monad m => ID -> Type -> TypeCheck m ()
 addBind name typ =

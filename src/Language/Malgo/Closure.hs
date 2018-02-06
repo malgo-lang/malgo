@@ -3,7 +3,6 @@ module Language.Malgo.Closure
   ( conv
   ) where
 
-import           Control.Monad.Error.Class
 import           Control.Monad.State.Class
 import           Data.List
 import qualified Data.Map.Strict           as Map
@@ -24,13 +23,10 @@ data ClsEnv = ClsEnv
   , _varMap   :: Map.Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
   , _fundecs  :: [FunDec TypedID]
   , _extern   :: [ExDec TypedID]
-  , _gen      :: Int
   } deriving (Show)
 
 instance Env ClsEnv where
   initEnv = ClsEnv Map.empty [] Map.empty [] []
-  updateUniq e i = e { _gen = i }
-  getUniq = _gen
 
 type ClsTrans m a = MalgoT ClsEnv m a
 
@@ -41,8 +37,8 @@ conv x = do
   exs <- gets _extern
   return (Program fs exs x')
 
-throw :: Monad m => Doc -> ClsTrans m a
-throw = throwError . ClosureTransError
+throw :: Doc -> a
+throw m = error $ show $ pretty (ClosureTransError m)
 
 addKnown :: Monad m => TypedID -> ClsTrans m ()
 addKnown name = modify $ \e -> e {_knowns = name : _knowns e}

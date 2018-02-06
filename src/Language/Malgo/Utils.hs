@@ -76,14 +76,10 @@ instance PrettyPrint MalgoError where
   pretty (EvalError m) = P.text "error(eval):" P.<+> m
 
 class Env e where
-  initEnv :: Int -> e
-  updateUniq :: e -> Int -> e
-  getUniq :: e -> Int
+  initEnv :: e
 
-instance Env Int where
-  initEnv x = x
-  updateUniq _ x = x
-  getUniq x = x
+instance Env () where
+  initEnv = ()
 
 data Opt = Opt
   { _srcName         :: String
@@ -100,11 +96,10 @@ data Opt = Opt
   } deriving (Eq, Show)
 
 newtype MalgoT s m a = MalgoT
-  { unMalgoT :: ExceptT MalgoError (StateT s m) a
+  { unMalgoT :: StateT s (StateT Int m) a
   } deriving ( Functor
              , Applicative
              , Monad
-             , MonadError MalgoError
              , MonadState s
              , MonadIO
              )
@@ -112,17 +107,17 @@ newtype MalgoT s m a = MalgoT
 instance MonadTrans (MalgoT s) where
   lift = MalgoT . lift . lift
 
-newUniq :: (Env s, Monad m) => MalgoT s m Int
+newUniq :: Monad m => MalgoT s m Int
 newUniq = do
-  c <- gets getUniq
+  c <- MalgoT . lift $ get
   setUniq (c + 1)
   return c
 
-setUniq :: (Env s, Monad m) => Int -> MalgoT s m ()
-setUniq i = modify $ \e -> updateUniq e i
+setUniq :: Monad m => Int -> MalgoT s m ()
+setUniq i = MalgoT . lift $ modify $ \_ -> i
 
-runMalgoT :: Env s => MalgoT s m a -> m (Either MalgoError a, s)
-runMalgoT (MalgoT m) = runStateT (runExceptT m) (initEnv 0)
+runMalgoT :: (Env s, Monad m) => MalgoT s m a -> Int -> m (a, Int)
+runMalgoT (MalgoT m) = runStateT (evalStateT m initEnv)
 
-runMalgo :: Env s => MalgoT s Identity a -> (Either MalgoError a, s)
-runMalgo = runIdentity . runMalgoT
+runMalgo :: Env s => MalgoT s Identity a -> Int -> (a, Int)
+runMalgo m i = runIdentity $ runMalgoT m i

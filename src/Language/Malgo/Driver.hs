@@ -23,7 +23,6 @@ import qualified Language.Malgo.Unused      as Unused
 import           Language.Malgo.Utils
 import           LLVM.Pretty
 import           Options.Applicative
-import           System.IO
 
 parseOpt :: IO Opt
 parseOpt = execParser $
@@ -49,12 +48,12 @@ compile ::
 compile ast opt = do
   when (_dumpParsed opt) $
     liftIO . print $ pretty ast
-  (renamed, s1) <- run _dumpRenamed Rename.rename ast 0
-  (typed, s2) <- run _dumpTyped TypeCheck.typeCheck renamed s1
-  (knormal, s3) <- run _dumpHIR KNormal.knormal typed s2
-  (beta, s4) <- run _dumpBeta Beta.betaTrans knormal s3
-  (flat, s5) <- run _dumpFlatten flattenM beta s4
-  (cls, _) <- run (const False) Closure.conv flat s5
+  (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
+  (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
+  (knormal, s3) <- run _dumpHIR (KNormal.knormal typed) s2
+  (beta, s4) <- run _dumpBeta (Beta.betaTrans knormal) s3
+  (flat, s5) <- run _dumpFlatten (flattenM beta) s4
+  (cls, _) <- run (const False) (Closure.conv flat) s5
   let cls' = if _notRemoveUnused opt
              then cls
              else Unused.remove cls
@@ -62,19 +61,15 @@ compile ast opt = do
     liftIO . print $ pretty cls'
   when (_dumpLLVM opt) $ do
     let llvm = CodeGen.dumpCodeGen (CodeGen.genProgram cls')
-    liftIO (mapM_ Text.putStrLn (map ppll llvm))
+    liftIO (mapM_ (Text.putStrLn . ppll) llvm)
   return cls'
-  where run key f x u =
-          runMalgoT (setUniq (u + 1) >> f x) >>= \case
-          (Left x', _) -> error $ show x'
-          (Right x', s) -> do when (key opt) $
-                                liftIO . print $ pretty x'
-                              return (x', getUniq s)
+  where run key m u =
+          runMalgoT m u >>= \(x', u') ->
+                              do when (key opt) $
+                                   liftIO . print $ pretty x'
+                                 return (x', u')
         flattenM :: HIR.Expr TypeCheck.TypedID -> Beta.Beta IO (HIR.Expr TypeCheck.TypedID)
         flattenM = return . Flatten.flatten
 
-eval ::
-  Program TypeCheck.TypedID
-  -> IO (Either MalgoError Eval.Value, Eval.Context)
-eval prog = runMalgoT $
-  Eval.eval prog
+eval :: Program TypeCheck.TypedID -> IO Eval.Value
+eval prog = fst <$> runMalgoT (Eval.eval prog) 0

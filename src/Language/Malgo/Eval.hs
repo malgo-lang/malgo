@@ -44,13 +44,10 @@ instance PrettyPrint Value where
 data Context = Context
     { _var :: Map.Map TypedID Value
     , _fun :: Map.Map TypedID ([Value] -> [Value] -> Eval Value)
-    , _gen :: Int
     }
 
 instance Env Context where
     initEnv = Context Map.empty Map.empty
-    updateUniq e i = e { _gen = i }
-    getUniq = _gen
 
 prelude :: [(String, [Value] -> [Value] -> Eval Value)]
 prelude =
@@ -95,8 +92,8 @@ eval (M.Program tp ex e) = do
     evalToplevel tp
     evalExpr e
 
-throw :: Doc -> Eval a
-throw mes = throwError (EvalError mes)
+throw :: Doc -> a
+throw mes = error $ show $ pretty (EvalError mes)
 
 evalToplevel :: [M.FunDec TypedID] -> Eval ()
 evalToplevel [] = return ()

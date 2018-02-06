@@ -10,15 +10,12 @@ import           Language.Malgo.HIR
 import           Language.Malgo.TypeCheck  (TypedID (..))
 import           Language.Malgo.Utils
 
-data BEnv = BEnv
-  { _table :: Map.Map TypedID TypedID
-  , _gen   :: Int
-  }
+newtype BEnv = BEnv
+               { _table :: Map.Map TypedID TypedID
+               }
 
 instance Env BEnv where
   initEnv = BEnv Map.empty
-  updateUniq e i = e { _gen = i }
-  getUniq = _gen
 
 type Beta m a = MalgoT BEnv m a
 

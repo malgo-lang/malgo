@@ -6,7 +6,6 @@ module Language.Malgo.Rename
     , RnEnv(..)
     ) where
 
-import           Control.Monad.Error.Class
 import           Control.Monad.State.Class
 import qualified Data.Map.Strict           as Map
 import           Data.Monoid
@@ -35,21 +34,19 @@ instance PrettyPrint ID where
 data RnEnv = RnEnv
     { knowns :: Map.Map Name ID
     , idCons :: Name -> Int -> ID
-    , _gen   :: Int
     }
 
 instance Env RnEnv where
     initEnv = RnEnv Map.empty Toplevel
-    updateUniq e i = e { _gen = i }
-    getUniq = _gen
 
 type Rename m a = MalgoT RnEnv m a
 
 rename :: Monad m => Expr Name -> Rename m (Expr ID)
 rename = transExpr
 
-throw :: Monad m => Info -> Doc -> Rename m a
-throw info mes = throwError (RenameError info mes)
+-- throw :: Monad m => Info -> Doc -> Rename m a
+throw :: Info -> Doc -> a
+throw info mes = error $ show $ pretty (RenameError info mes)
 
 newID :: Monad m => Name -> Rename m ID
 newID orig = do

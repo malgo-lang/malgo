@@ -21,8 +21,4 @@ main = do
   if _compileOnly opt
     then return ()
     else do e <- eval obj
-            case e of
-              (Left x, _)  ->
-                error $ show $ pretty x
-              (Right _, _) ->
-                return ()
+            return (seq e ())
