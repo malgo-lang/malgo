@@ -1,14 +1,20 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE UndecidableInstances #-}
 module Language.Malgo.Prelude
   ( module X
   , PrettyPrint(..)
+  , Info(..)
   , HasDummy(..)
   , Dict(..)
+  , sandbox
   ) where
 
-import Protolude as X hiding (Typeable)
+import Protolude as X hiding (Typeable, sourceLine, sourceColumn)
+import Control.Monad.Trans as X
+import Data.String as X (IsString(..))
 import qualified Data.Map as Map
 import qualified Text.PrettyPrint as P
 
@@ -25,7 +31,7 @@ instance Eq Info where
   _ == _ = True
 
 instance PrettyPrint Info where
-  pretty (Info x) = P.text . show $ x
+  pretty (Info x) = P.text $ show x
 
 class HasDummy a where
   dummy :: a
@@ -51,3 +57,10 @@ instance Dict Map where
   notMember = Map.notMember
   lookup = Map.lookup
   insert = Map.insert
+
+sandbox :: MonadState s m => m a -> m (a, s)
+sandbox action = do
+  s <- get
+  ret <- action
+  put s
+  return (ret, s)

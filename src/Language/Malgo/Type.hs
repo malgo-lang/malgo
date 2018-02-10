@@ -1,8 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.Type where
 
-import           Data.String
+import           Language.Malgo.Prelude
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
