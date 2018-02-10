@@ -1,14 +1,13 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 
 module Language.Malgo.MIR where
 
-import Language.Malgo.Prelude
-import           Language.Malgo.HIR   (Op (..))
+import           Language.Malgo.HIR     (Op (..))
+import           Language.Malgo.Prelude
 import           Language.Malgo.Type
-import           Language.Malgo.Utils
-import           Text.PrettyPrint hiding ((<>))
+import           Text.PrettyPrint       hiding ((<>))
 
 data Expr a
     = Var a
