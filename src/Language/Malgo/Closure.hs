@@ -1,13 +1,11 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Closure
   ( conv
   ) where
 
-import           Control.Monad.State.Class
-import           Data.List
-import qualified Data.Map.Strict           as Map
-import           Data.Maybe
-import           Data.String
+import Language.Malgo.Prelude
+import Data.List ((\\))
 import           Language.Malgo.FreeVars
 import qualified Language.Malgo.HIR        as H
 import           Language.Malgo.MIR
@@ -18,15 +16,15 @@ import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
 data ClsEnv = ClsEnv
-  { _closures :: Map.Map TypedID TypedID
+  { _closures :: Map TypedID TypedID
   , _knowns   :: [TypedID]
-  , _varMap   :: Map.Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
+  , _varMap   :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
   , _fundecs  :: [FunDec TypedID]
   , _extern   :: [ExDec TypedID]
   } deriving (Show)
 
 instance Env ClsEnv where
-  initEnv = ClsEnv Map.empty [] Map.empty [] []
+  initEnv = ClsEnv mempty [] mempty [] []
 
 type ClsTrans m a = MalgoT ClsEnv m a
 
@@ -38,7 +36,7 @@ conv x = do
   return (Program fs exs x')
 
 throw :: Doc -> a
-throw m = error $ show $ pretty (ClosureTransError m)
+throw m = panic $ show $ pretty (ClosureTransError m)
 
 addKnown :: Monad m => TypedID -> ClsTrans m ()
 addKnown name = modify $ \e -> e {_knowns = name : _knowns e}
@@ -53,11 +51,11 @@ convID :: Monad m => TypedID -> ClsTrans m TypedID
 convID name = do
   clss <- gets _closures
   varMap <- gets _varMap
-  case Map.lookup name clss of
+  case lookup name clss of
     Nothing
       -- 型が変わっていれば変換
      ->
-      case Map.lookup name varMap of
+      case lookup name varMap of
         Nothing    -> return name
         Just name' -> return name'
     Just cls
@@ -66,10 +64,10 @@ convID name = do
 
 addClsTrans :: Monad m => TypedID -> TypedID -> ClsTrans m ()
 addClsTrans orig cls =
-  modify $ \e -> e {_closures = Map.insert orig cls (_closures e)}
+  modify $ \e -> e {_closures = insert orig cls (_closures e)}
 
 addVar :: Monad m => TypedID -> TypedID -> ClsTrans m ()
-addVar x x' = modify $ \e -> e {_varMap = Map.insert x x' (_varMap e)}
+addVar x x' = modify $ \e -> e {_varMap = insert x x' (_varMap e)}
 
 newClsID :: Monad m => TypedID -> ClsTrans m TypedID
 newClsID (TypedID fn fnty) = do
@@ -133,6 +131,6 @@ convExpr (H.Call fn args) = do
     then CallDir <$> fn' <*> mapM convID args
     else CallCls <$> convID fn <*> mapM convID args
   where
-    fn' = fromMaybe fn . Map.lookup fn <$> gets _varMap -- 型が変わっていれば変換
+    fn' = fromMaybe fn . lookup fn <$> gets _varMap -- 型が変わっていれば変換
 convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
 convExpr (H.BinOp op x y) = BinOp op <$> convID x <*> convID y

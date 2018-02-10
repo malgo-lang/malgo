@@ -1,3 +1,4 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -6,58 +7,16 @@
 
 module Language.Malgo.Utils where
 
-import           Control.Monad.Except
-import qualified Data.Text as T
-import           Control.Monad.Identity
-import           Control.Monad.State.Strict
-import           Data.String
+import Language.Malgo.Prelude
 import qualified Text.PrettyPrint           as P
 
-class PrettyPrint a where
-  pretty :: a -> P.Doc
+type Name = Text
 
-instance (PrettyPrint a, PrettyPrint b) => PrettyPrint (Either a b) where
-  pretty (Left a)  = P.text "Left" P.$+$ P.nest 1 (pretty a)
-  pretty (Right a) = P.text "Right" P.$+$ P.nest 1 (pretty a)
-
-instance PrettyPrint String where
-  pretty = P.text
-
-instance PrettyPrint Int where
-  pretty = P.int
-
--- | ソースコードの位置情報
--- | forall a b. Info a == Info b
-type Line = Int
-
-type Column = Int
-
-type Source = String
-
-newtype Info =
-  Info (Source, Line, Column)
-  deriving (Show, Read)
-
-instance Eq Info where
-  _ == _ = True
-
-instance PrettyPrint Info where
-  pretty (Info x) = P.text . show $ x
-
-dummyInfo :: Info
-dummyInfo = Info ("<dummy>", 0, 0)
-
-type Name = T.Text
-
-fromName :: IsString a => Name -> a
-fromName = fromString . T.unpack
-
-instance PrettyPrint T.Text where
-  pretty bs = P.text (T.unpack bs)
+fromName :: StringConv Name a => Name -> a
+fromName = toS
 
 data MalgoError
-  = RenameError Info
-                P.Doc
+  = RenameError Info P.Doc
   | TypeCheckError Info
                    P.Doc
   | KNormalError Info
@@ -82,7 +41,7 @@ instance Env () where
   initEnv = ()
 
 data Opt = Opt
-  { _srcName         :: String
+  { _srcName         :: Text
   , _dumpParsed      :: Bool
   , _dumpRenamed     :: Bool
   , _dumpTyped       :: Bool
@@ -114,7 +73,7 @@ newUniq = do
   return c
 
 setUniq :: Monad m => Int -> MalgoT s m ()
-setUniq i = MalgoT . lift $ modify $ \_ -> i
+setUniq i = MalgoT $ lift $ modify $ const i
 
 runMalgoT :: (Env s, Monad m) => MalgoT s m a -> Int -> m (a, Int)
 runMalgoT (MalgoT m) = runStateT (evalStateT m initEnv)

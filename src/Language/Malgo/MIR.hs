@@ -1,13 +1,13 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 
 module Language.Malgo.MIR where
 
-import           Language.Malgo.HIR   (Op (..))
-import qualified Data.Text as T
+import           Language.Malgo.HIR     (Op (..))
+import           Language.Malgo.Prelude
 import           Language.Malgo.Type
-import           Language.Malgo.Utils
-import           Text.PrettyPrint
+import           Text.PrettyPrint       hiding ((<>))
 
 data Expr a
     = Var a
@@ -15,7 +15,7 @@ data Expr a
     | Float Double
     | Bool Bool
     | Char Char
-    | String T.Text
+    | String Text
     | Unit
     | Tuple [a]
     | TupleAccess a Int
@@ -61,17 +61,17 @@ instance (Typeable a, Show a) => Typeable (Expr a) where
     typeOf (Tuple xs) = TupleTy (map typeOf xs)
     typeOf (TupleAccess x i) =
       let TupleTy xs = typeOf x
-      in xs !! i
+      in fromMaybe (panic "out of bounds") (atMay xs i)
     typeOf (CallDir name _) =
         case typeOf name of
             (FunTy _ ty) -> ty
             (ClsTy _ ty) -> ty
-            _            -> error $ show name ++ "is not callable"
+            _            -> panic $ show name <> "is not callable"
     typeOf (CallCls name _) =
         case typeOf name of
             (FunTy _ ty) -> ty
             (ClsTy _ ty) -> ty
-            _            -> error $ show name ++ "is not callable"
+            _            -> panic $ show name <> "is not callable"
     typeOf (Let _ e) = typeOf e
     typeOf (If _ t _) = typeOf t
     typeOf (BinOp op _ _) =
@@ -107,15 +107,14 @@ instance PrettyPrint a => PrettyPrint (FunDec a) where
 
 data ExDec a
   -- | ExDec name_in_the_program original_name
-  = ExDec a String
+  = ExDec a Text
     deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (ExDec a) where
-    pretty (ExDec name orig) = text "extern" <+> pretty name <+> text orig
+    pretty (ExDec name orig) = text "extern" <+> pretty name <+> pretty orig
 
 data Decl a
-    = ValDec a
-             (Expr a)
+    = ValDec a (Expr a)
     -- | ClsDec closure_name function_name captures
     | ClsDec a a [a]
     deriving (Show, Read)

@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.TypeCheck
     ( typeCheck
@@ -7,10 +8,9 @@ module Language.Malgo.TypeCheck
     , typeOf
     ) where
 
-import           Control.Monad
-import           Control.Monad.State.Class
+import Language.Malgo.Prelude
 import qualified Data.Map.Strict           as Map
-import           Language.Malgo.Rename     hiding (_gen)
+import           Language.Malgo.Rename
 import           Language.Malgo.Syntax     hiding (info)
 import qualified Language.Malgo.Syntax     as Syntax
 import           Language.Malgo.Type
@@ -44,7 +44,7 @@ typeCheck :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
 typeCheck = checkExpr
 
 throw :: Info -> Doc -> a
-throw info mes = error $ show $ pretty (TypeCheckError info mes)
+throw info mes = panic $ show $ pretty (TypeCheckError info mes)
 
 addBind :: Monad m => ID -> Type -> TypeCheck m ()
 addBind name typ =
@@ -98,20 +98,20 @@ instance Typeable (Expr TypedID) where
     typeOf (Tuple _ xs) = TupleTy (map typeOf xs)
     typeOf (TupleAccess _ e i) =
       let TupleTy xs = typeOf e
-      in xs !! i
+      in fromMaybe (panic "out of bounds") (atMay xs i)
     typeOf (Unit _) = "Unit"
     typeOf (Fn _ params body) = FunTy (map snd params) (typeOf body)
     typeOf (Call _ fn _) =
         case typeOf fn of
             (FunTy _ ty) -> ty
-            _            -> error "(typeOf fn) should match (FunTy _ ty)"
+            _            -> panic "(typeOf fn) should match (FunTy _ ty)"
     typeOf (Seq _ _ e) = typeOf e
     typeOf (Let _ _ e) = typeOf e
     typeOf (If _ _ e _) = typeOf e
     typeOf (BinOp i op x _) =
         case typeOfOp i op (typeOf x) of
             (FunTy _ ty) -> ty
-            _            -> error "(typeOfOp op) should match (FunTy _ ty)"
+            _            -> panic "(typeOfOp op) should match (FunTy _ ty)"
 
 typeOfOp :: Info -> Op -> Type -> Type
 typeOfOp _ Add _ = FunTy ["Int", "Int"] "Int"
@@ -126,27 +126,27 @@ typeOfOp _ Mod _ = FunTy ["Int", "Int"] "Int"
 typeOfOp i Eq ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Neq ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Lt ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Gt ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Le ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp i Ge ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else error $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
 typeOfOp _ And _ = FunTy ["Bool", "Bool"] "Bool"
 typeOfOp _ Or _ = FunTy ["Bool", "Bool"] "Bool"
 

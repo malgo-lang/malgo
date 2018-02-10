@@ -1,9 +1,11 @@
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE OverloadedStrings    #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
 module Language.Malgo.KNormal where
 
+import Language.Malgo.Prelude
 import           Language.Malgo.HIR
 import           Language.Malgo.Rename    (ID (..))
 import qualified Language.Malgo.Syntax    as S
@@ -18,7 +20,7 @@ knormal :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
 knormal e = transExpr (flattenLet e)
 
 throw :: Info -> Doc -> a
-throw info mes = error $ show $ pretty (KNormalError info mes)
+throw info mes = panic $ show $ pretty (KNormalError info mes)
 
 flattenLet :: S.Expr TypedID -> S.Expr TypedID
 flattenLet (S.Let info [decl] body) = S.Let info [decl] body

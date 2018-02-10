@@ -1,11 +1,12 @@
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Lexer where
 
-import           Data.Functor.Identity (Identity)
-import           Data.String
-import           Prelude               hiding (EQ, GT, LT)
-import           Text.Parsec
+import           Language.Malgo.Prelude hiding (try, EQ, LT, GT)
+import Data.String
+import           Text.Parsec hiding ((<|>), many)
 import           Text.Parsec.Language
 import           Text.Parsec.Pos       ()
 import qualified Text.Parsec.Token     as Tok
@@ -58,7 +59,7 @@ data Tag
     | FLOAT { _float :: Double }
     | BOOL { _bool :: Bool }
     | CHAR { _char :: Char }
-    | STRING { _str :: String }
+    | STRING { _str :: Text }
     deriving (Eq, Show)
 
 newtype Token =
@@ -76,7 +77,7 @@ type Lexer a = forall u. ParsecT String u Identity a
 getInfo :: Lexer Info
 getInfo = do
     pos <- getPosition
-    return (Info (sourceName pos, sourceLine pos, sourceColumn pos))
+    return (Info (toS $ sourceName pos, sourceLine pos, sourceColumn pos))
 
 lexer' :: Tok.GenTokenParser String u Identity
 lexer' =
@@ -128,80 +129,13 @@ lexer' =
           ]
     }
 
-integer :: ParsecT String u Identity Integer
-integer = Tok.integer lexer'
-
-natural :: ParsecT String u Identity Integer
-natural = Tok.natural lexer'
-
-float :: ParsecT String u Identity Double
-float = Tok.float lexer'
-
-parens :: ParsecT String u Identity a -> ParsecT String u Identity a
-parens = Tok.parens lexer'
-
-identifier :: ParsecT String u Identity String
-identifier = Tok.identifier lexer'
-
-reserved :: String -> ParsecT String u Identity ()
-reserved = Tok.reserved lexer'
-
-reservedOp :: String -> ParsecT String u Identity ()
-reservedOp = Tok.reservedOp lexer'
-
-brackets :: ParsecT String u Identity a -> ParsecT String u Identity a
-brackets = Tok.brackets lexer'
-
-lexeme :: ParsecT String u Identity a -> ParsecT String u Identity a
-lexeme = Tok.lexeme lexer'
-
-stringLiteral :: ParsecT String u Identity String
-stringLiteral = Tok.stringLiteral lexer'
-
-charLiteral :: ParsecT String u Identity Char
-charLiteral = Tok.charLiteral lexer'
-
-symbol :: String -> ParsecT String u Identity String
-symbol = Tok.symbol lexer'
-
-commaSep :: ParsecT String u Identity a -> ParsecT String u Identity [a]
-commaSep = Tok.commaSep lexer'
-
-braces :: ParsecT String u Identity a -> ParsecT String u Identity a
-braces = Tok.braces lexer'
-
-semiSep :: ParsecT String u Identity a -> ParsecT String u Identity [a]
-semiSep = Tok.semiSep lexer'
-
-semi :: ParsecT String u Identity String
-semi = Tok.semi lexer'
-
-whiteSpace :: ParsecT String u Identity ()
-whiteSpace = Tok.whiteSpace lexer'
-
-lparen :: ParsecT String u Identity String
-lparen = symbol "("
-
-rparen :: ParsecT String u Identity String
-rparen = symbol ")"
-
-lbrack :: ParsecT String u Identity String
-lbrack = symbol "["
-
-rbrack :: ParsecT String u Identity String
-rbrack = symbol "]"
-
-lbrace :: ParsecT String u Identity String
-lbrace = symbol "{"
-
-rbrace :: ParsecT String u Identity String
-rbrace = symbol "}"
-
 keyword :: Info -> String -> Tag -> Lexer Token
 keyword info word tag = reserved word >> return (Token (info, tag))
+  where reserved = Tok.reserved lexer'
 
 op :: Info -> String -> Tag -> Lexer Token
 op info sym tag = reservedOp sym >> return (Token (info, tag))
+  where reservedOp = Tok.reservedOp lexer'
 
 lexer :: Lexer Token
 lexer = do
@@ -247,11 +181,25 @@ lexer = do
         op info "&&" AND <|>
         op info "||" OR <|>
         op info "->" ARROW <|>
-        fmap (\str -> Token (info, ID (fromString str))) identifier <|>
+        fmap (\str -> Token (info, ID (toS str))) identifier <|>
         try (fmap (\f -> Token (info, FLOAT f)) float) <|>
         fmap (\n -> Token (info, INT n)) natural <|>
         fmap (\c -> Token (info, CHAR c)) charLiteral <|>
-        fmap (\s -> Token (info, STRING s)) stringLiteral
+        fmap (\s -> Token (info, STRING (toS s))) stringLiteral
+  where
+    natural = Tok.natural lexer'
+    float = Tok.float lexer'
+    identifier = Tok.identifier lexer'
+    stringLiteral = Tok.stringLiteral lexer'
+    charLiteral = Tok.charLiteral lexer'
+    symbol = Tok.symbol lexer'
+    lparen = symbol "("
+    rparen = symbol ")"
+    lbrack = symbol "["
+    rbrack = symbol "]"
+    lbrace = symbol "{"
+    rbrace = symbol "}"
 
 lexing :: SourceName -> String -> Either ParseError [Token]
 lexing = parse (whiteSpace >> many lexer >>= \toks -> eof >> return toks)
+  where whiteSpace = Tok.whiteSpace lexer'

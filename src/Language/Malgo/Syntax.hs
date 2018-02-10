@@ -1,65 +1,43 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE StrictData        #-}
 
 module Language.Malgo.Syntax where
 
 import           Language.Malgo.Type
-import           Language.Malgo.Utils
+import           Language.Malgo.Prelude
 import           Text.PrettyPrint
-import qualified Data.Text as T
 
 data Expr a
   -- | 変数参照
-  = Var Info
-        a
+  = Var Info a
   -- | 32bit整数
-  | Int Info
-        Integer
+  | Int Info Integer
   -- | 倍精度浮動小数点数
-  | Float Info
-          Double
+  | Float Info Double
   -- | 真(#t) 偽(#f)
-  | Bool Info
-         Bool
+  | Bool Info Bool
   -- | シングルクォートで囲まれた一文字
-  | Char Info
-         Char
+  | Char Info Char
   -- | ダブルクォートで囲まれた文字列
-  | String Info T.Text
+  | String Info Text
   -- | 空の値("()")
   | Unit Info
   -- | タプル
-  | Tuple Info
-          [Expr a]
-  | TupleAccess Info
-                (Expr a)
-                Int
+  | Tuple Info [Expr a]
+  | TupleAccess Info (Expr a) Int
   -- | 関数呼び出し
-  | Call Info
-         (Expr a)
-         [Expr a]
+  | Call Info (Expr a) [Expr a]
   -- | 無名関数
-  | Fn Info
-       [(a, Type)]
-       (Expr a)
+  | Fn Info [(a, Type)] (Expr a)
   -- | 連続した式(e1 ; e2)
-  | Seq Info
-        (Expr a)
-        (Expr a)
+  | Seq Info (Expr a) (Expr a)
   -- | let式
-  | Let Info
-        [Decl a]
-        (Expr a)
+  | Let Info [Decl a] (Expr a)
   -- | if式
-  | If Info
-       (Expr a)
-       (Expr a)
-       (Expr a)
+  | If Info (Expr a) (Expr a) (Expr a)
   -- | 中置演算子
-  | BinOp Info
-          Op
-          (Expr a)
-          (Expr a)
+  | BinOp Info Op (Expr a) (Expr a)
   deriving (Eq, Show, Read)
 
 info :: Expr t -> Info
@@ -142,19 +120,9 @@ instance PrettyPrint Op where
   pretty Or   = text "||"
 
 data Decl a
-  = FunDec Info
-           a
-           [(a, Type)]
-           Type
-           (Expr a)
-  | ValDec Info
-           a
-           Type
-           (Expr a)
-  | ExDec Info
-          a
-          Type
-          String
+  = FunDec Info a [(a, Type)] Type (Expr a)
+  | ValDec Info a Type (Expr a)
+  | ExDec Info a Type Text
   deriving (Eq, Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
@@ -166,4 +134,4 @@ instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (ValDec _ name _ val) =
     parens $ text "val" <+> pretty name <+> pretty val
   pretty (ExDec _ name _ orig) =
-    parens $ text "extern" <+> pretty name <+> text orig
+    parens $ text "extern" <+> pretty name <+> pretty orig

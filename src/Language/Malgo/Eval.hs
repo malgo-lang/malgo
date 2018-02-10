@@ -1,3 +1,6 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Eval
     ( eval
     , Value
@@ -5,26 +8,21 @@ module Language.Malgo.Eval
     , Context
     ) where
 
-import           Control.Monad.Error.Class
-import           Control.Monad.IO.Class
-import           Control.Monad.State.Class
-import           Data.Char
-import qualified Data.Map                  as Map
-import           Language.Malgo.HIR        (Op (..))
-import qualified Language.Malgo.MIR        as M
-import           Language.Malgo.TypeCheck  (TypedID (..))
+import qualified Data.Text                as T
+import           Language.Malgo.HIR       (Op (..))
+import qualified Language.Malgo.MIR       as M
+import           Language.Malgo.Prelude
+import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
-import           System.IO
-import           Text.PrettyPrint
-import qualified Data.Text as T
-import qualified Data.Text.IO as T
+import qualified System.IO                as S
+import           Text.PrettyPrint         hiding (empty)
 
 data Value
     = Int Integer
     | Float Double
     | Bool Bool
     | Char Char
-    | String T.Text
+    | String Text
     | Unit
     | Tuple [Value]
     | Closure TypedID
@@ -44,22 +42,22 @@ instance PrettyPrint Value where
     pretty (Closure fn fv) = braces $ pretty fn <+> sep (map pretty fv)
 
 data Context = Context
-    { _var :: Map.Map TypedID Value
-    , _fun :: Map.Map TypedID ([Value] -> [Value] -> Eval Value)
+    { _var :: Map TypedID Value
+    , _fun :: Map TypedID ([Value] -> [Value] -> Eval Value)
     }
 
 instance Env Context where
-    initEnv = Context Map.empty Map.empty
+    initEnv = Context mempty mempty
 
-prelude :: [(String, [Value] -> [Value] -> Eval Value)]
-prelude =
-    [ ("print", \[String x] [] -> liftIO (T.putStr x) >> return Unit)
-    , ("println", \[String x] [] -> liftIO (T.putStrLn x) >> return Unit)
-    , ("print_int", \[Int x] [] -> liftIO (putStr $ show x) >> return Unit)
-    , ("print_float", \[Float x] [] -> liftIO (putStr $ show x) >> return Unit)
-    , ("newline", \[Unit] [] -> liftIO (putStrLn "") >> return Unit)
-    , ("flush", \[Unit] [] -> liftIO (hFlush stdout) >> return Unit)
-    , ("getchar", \[Unit] [] -> Char <$> liftIO getChar)
+prelude :: Map Text ([Value] -> [Value] -> Eval Value)
+prelude = fromList
+    [ ("print", \[String x] [] -> liftIO (putStr x) >> return Unit)
+    , ("println", \[String x] [] -> liftIO (putStrLn x) >> return Unit)
+    , ("print_int", \[Int x] [] -> liftIO (putStr @Text $ show x) >> return Unit)
+    , ("print_float", \[Float x] [] -> liftIO (putStr @Text $ show x) >> return Unit)
+    , ("newline", \[Unit] [] -> liftIO (putStrLn @Text "") >> return Unit)
+    , ("flush", \[Unit] [] -> liftIO (S.hFlush stdout) >> return Unit)
+    , ("getchar", \[Unit] [] -> Char <$> liftIO S.getChar)
     , ("ord", \[Char x] [] -> return $ Int (toInteger $ ord x))
     , ("chr", \[Int x] [] -> return $ Char (chr $ fromInteger x))
     , ("size", \[String x] [] -> return $ Int (toInteger $ T.length x))
@@ -69,22 +67,22 @@ prelude =
 type Eval a = MalgoT Context IO a
 
 addVar :: TypedID -> Value -> Eval ()
-addVar name val = modify $ \e -> e {_var = Map.insert name val (_var e)}
+addVar name val = modify $ \e -> e {_var = insert name val (_var e)}
 
 getVar :: TypedID -> Eval Value
 getVar name = do
     vt <- gets _var
-    case Map.lookup name vt of
+    case lookup name vt of
         Nothing -> throw $ pretty name <+> text "is not defined"
         Just x  -> return x
 
 addFun :: TypedID -> ([Value] -> [Value] -> Eval Value) -> Eval ()
-addFun name fun = modify $ \e -> e {_fun = Map.insert name fun (_fun e)}
+addFun name fun = modify $ \e -> e {_fun = insert name fun (_fun e)}
 
 getFun :: TypedID -> Eval ([Value] -> [Value] -> Eval Value)
 getFun name = do
     ft <- gets _fun
-    case Map.lookup name ft of
+    case lookup name ft of
         Nothing -> throw $ pretty name <+> text "is not defined"
         Just x  -> return x
 
@@ -95,7 +93,7 @@ eval (M.Program tp ex e) = do
     evalExpr e
 
 throw :: Doc -> a
-throw mes = error $ show $ pretty (EvalError mes)
+throw mes = panic $ show $ pretty (EvalError mes)
 
 evalToplevel :: [M.FunDec TypedID] -> Eval ()
 evalToplevel [] = return ()
@@ -129,7 +127,7 @@ evalExpr M.Unit = return Unit
 evalExpr (M.Tuple xs) = Tuple <$> mapM getVar xs
 evalExpr (M.TupleAccess x i) = do
   Tuple xs <- getVar x
-  return $ xs !! i
+  return $ fromMaybe (panic "out of bounds") (atMay xs i)
 evalExpr (M.CallDir fn args) = do
     fn' <- getFun fn
     args' <- mapM getVar args
