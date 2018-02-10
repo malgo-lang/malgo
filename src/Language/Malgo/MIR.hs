@@ -4,6 +4,7 @@
 module Language.Malgo.MIR where
 
 import           Language.Malgo.HIR   (Op (..))
+import qualified Data.Text as T
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
@@ -14,7 +15,7 @@ data Expr a
     | Float Double
     | Bool Bool
     | Char Char
-    | String String
+    | String T.Text
     | Unit
     | Tuple [a]
     | TupleAccess a Int
@@ -32,7 +33,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
     pretty (Bool True) = text "#t"
     pretty (Bool False) = text "#f"
     pretty (Char x) = quotes $ char x
-    pretty (String x) = doubleQuotes $ text x
+    pretty (String x) = doubleQuotes $ pretty x
     pretty Unit = text "{}"
     pretty (Tuple xs) =
       braces $ sep (punctuate (text ",") (map pretty xs))

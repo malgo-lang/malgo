@@ -6,6 +6,7 @@ module Language.Malgo.Syntax where
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
+import qualified Data.Text as T
 
 data Expr a
   -- | 変数参照
@@ -24,8 +25,7 @@ data Expr a
   | Char Info
          Char
   -- | ダブルクォートで囲まれた文字列
-  | String Info
-           String
+  | String Info T.Text
   -- | 空の値("()")
   | Unit Info
   -- | タプル
@@ -86,7 +86,7 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Bool _ True) = text "#t"
   pretty (Bool _ False) = text "#f"
   pretty (Char _ x) = quotes $ char x
-  pretty (String _ x) = doubleQuotes $ text x
+  pretty (String _ x) = doubleQuotes $ pretty x
   pretty (Tuple _ xs) = braces $ sep (punctuate (text ",") (map pretty xs))
   pretty (TupleAccess _ e i) = parens (text "." <+> pretty e <+> int i)
   pretty (Unit _) = text "{}"

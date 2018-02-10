@@ -16,13 +16,15 @@ import           Language.Malgo.TypeCheck  (TypedID (..))
 import           Language.Malgo.Utils
 import           System.IO
 import           Text.PrettyPrint
+import qualified Data.Text as T
+import qualified Data.Text.IO as T
 
 data Value
     = Int Integer
     | Float Double
     | Bool Bool
     | Char Char
-    | String String
+    | String T.Text
     | Unit
     | Tuple [Value]
     | Closure TypedID
@@ -35,7 +37,7 @@ instance PrettyPrint Value where
     pretty (Bool True)     = text "#t"
     pretty (Bool False)    = text "#f"
     pretty (Char x)        = quotes $ char x
-    pretty (String x)      = doubleQuotes $ text x
+    pretty (String x)      = doubleQuotes $ pretty x
     pretty Unit            = text "()"
     pretty (Tuple xs) =
       braces $ sep (punctuate (text ",") (map pretty xs))
@@ -51,8 +53,8 @@ instance Env Context where
 
 prelude :: [(String, [Value] -> [Value] -> Eval Value)]
 prelude =
-    [ ("print", \[String x] [] -> liftIO (putStr x) >> return Unit)
-    , ("println", \[String x] [] -> liftIO (putStrLn x) >> return Unit)
+    [ ("print", \[String x] [] -> liftIO (T.putStr x) >> return Unit)
+    , ("println", \[String x] [] -> liftIO (T.putStrLn x) >> return Unit)
     , ("print_int", \[Int x] [] -> liftIO (putStr $ show x) >> return Unit)
     , ("print_float", \[Float x] [] -> liftIO (putStr $ show x) >> return Unit)
     , ("newline", \[Unit] [] -> liftIO (putStrLn "") >> return Unit)
@@ -60,7 +62,7 @@ prelude =
     , ("getchar", \[Unit] [] -> Char <$> liftIO getChar)
     , ("ord", \[Char x] [] -> return $ Int (toInteger $ ord x))
     , ("chr", \[Int x] [] -> return $ Char (chr $ fromInteger x))
-    , ("size", \[String x] [] -> return $ Int (toInteger $ length x))
+    , ("size", \[String x] [] -> return $ Int (toInteger $ T.length x))
     , ("not", \[Bool x] [] -> return $ Bool (not x))
     ]
 

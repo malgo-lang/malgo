@@ -148,7 +148,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
                          }
    | bool { Bool (_info $1) (_bool . _tag $ $1) }
    | char { Char (_info $1) (_char . _tag $ $1) }
-   | str  { String (_info $1) (_str . _tag $ $1) }
+   | str  { String (_info $1) (fromString $ _str . _tag $ $1) }
    | '{' args '}' { Tuple (_info $1) (reverse $2) }
    | exp '(' ')' %prec CALL { Call (info $1) $1 [Unit (_info $2)] }
    | exp '(' args ')' %prec CALL { Call (info $1) $1 (reverse $3) }

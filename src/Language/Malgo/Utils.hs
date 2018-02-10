@@ -7,9 +7,9 @@
 module Language.Malgo.Utils where
 
 import           Control.Monad.Except
+import qualified Data.Text as T
 import           Control.Monad.Identity
 import           Control.Monad.State.Strict
-import qualified Data.ByteString.Char8      as BS
 import           Data.String
 import qualified Text.PrettyPrint           as P
 
@@ -47,13 +47,13 @@ instance PrettyPrint Info where
 dummyInfo :: Info
 dummyInfo = Info ("<dummy>", 0, 0)
 
-type Name = BS.ByteString
+type Name = T.Text
 
 fromName :: IsString a => Name -> a
-fromName = fromString . BS.unpack
+fromName = fromString . T.unpack
 
-instance PrettyPrint BS.ByteString where
-  pretty bs = P.text (BS.unpack bs)
+instance PrettyPrint T.Text where
+  pretty bs = P.text (T.unpack bs)
 
 data MalgoError
   = RenameError Info

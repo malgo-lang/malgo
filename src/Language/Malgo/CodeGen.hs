@@ -9,6 +9,7 @@ import           Data.Char
 import qualified Data.Map.Strict                 as Map
 import           Data.Maybe
 import           Data.String
+import qualified Data.Text as T
 import qualified Data.Text.Lazy.IO               as Text
 
 import qualified LLVM.AST.Constant               as C
@@ -114,8 +115,8 @@ genExpr' (Float d)  = double d `named` "float"
 genExpr' (Bool b)   = bit (if b then 1 else 0) `named` "bool"
 genExpr' (Char c)   = char (toInteger . ord $ c) `named` "char"
 genExpr' (String xs) = do
-  p <- gcMalloc (toInteger $ length xs + 1) `named` "string"
-  mapM_ (uncurry $ addChar p) (zip [0..] $ xs ++ ['\0'])
+  p <- gcMalloc (toInteger $ T.length xs + 1) `named` "string"
+  mapM_ (uncurry $ addChar p) (zip [0..] $ T.unpack xs ++ ['\0'])
   return p
   where addChar p i c = do
           i' <- int32 i
