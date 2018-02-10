@@ -1,13 +1,9 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Driver where
 
-import           Control.Applicative
-import           Control.Monad
-import           Control.Monad.State.Strict
-import           Data.Semigroup
-import qualified Data.Text.Lazy.IO          as Text
+import Language.Malgo.Prelude
 import qualified Language.Malgo.Beta        as Beta
 import qualified Language.Malgo.Closure     as Closure
 import qualified Language.Malgo.CodeGen     as CodeGen
@@ -61,7 +57,7 @@ compile ast opt = do
     liftIO . print $ pretty cls'
   when (_dumpLLVM opt) $ do
     let llvm = CodeGen.dumpCodeGen (CodeGen.genProgram cls')
-    liftIO (mapM_ (Text.putStrLn . ppll) llvm)
+    liftIO (mapM_ (putStrLn . ppll) llvm)
   return cls'
   where run key m u =
           runMalgoT m u >>= \(x', u') ->

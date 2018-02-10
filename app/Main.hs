@@ -1,18 +1,17 @@
 module Main where
 
-import           Control.Monad
-import           Control.Monad.State.Strict
 import           Language.Malgo.Driver
 import qualified Language.Malgo.Lexer       as Lexer
 import qualified Language.Malgo.Parser      as Parser
 import           Language.Malgo.Utils
+import qualified Language.Malgo.Prelude as P
 
 main :: IO ()
 main = do
   opt <- parseOpt
   let file = _srcName opt
-  contents <- readFile file
-  let tokens = Lexer.lexing file contents
+  contents <- readFile (P.toS file)
+  let tokens = Lexer.lexing (P.toS file) contents
   let ast = case Parser.parseExpr <$> tokens of
         Left x  -> error $ show x
         Right x -> x

@@ -52,11 +52,14 @@ class Dict m where
 
   insert :: Ord k => k -> a -> m k a -> m k a
 
+  fromList :: Ord k => [(k, a)] -> m k a
+
 instance Dict Map where
   member = Map.member
   notMember = Map.notMember
   lookup = Map.lookup
   insert = Map.insert
+  fromList = Map.fromList
 
 sandbox :: MonadState s m => m a -> m (a, s)
 sandbox action = do
