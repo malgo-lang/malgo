@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.HIR where
 
+import Language.Malgo.Prelude
 import           Language.Malgo.Type
-import qualified Data.Text as T
-import           Language.Malgo.Utils
-import           Text.PrettyPrint
+import           Text.PrettyPrint hiding ((<>))
 
 {-
 HIR is simlar to Language.Malgo.Syntax.Expr.
@@ -19,20 +19,14 @@ data Expr a
     | Float Double
     | Bool Bool
     | Char Char
-    | String T.Text
+    | String Text
     | Unit
     | Tuple [a]
     | TupleAccess a Int
-    | Call a
-           [a]
-    | Let (Decl a)
-          (Expr a)
-    | If a
-         (Expr a)
-         (Expr a)
-    | BinOp Op
-            a
-            a
+    | Call a [a]
+    | Let (Decl a) (Expr a)
+    | If a (Expr a) (Expr a)
+    | BinOp Op a a
     deriving (Eq, Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Expr a) where
@@ -68,12 +62,12 @@ instance Typeable a => Typeable (Expr a) where
     typeOf (Tuple xs) = TupleTy (map typeOf xs)
     typeOf (TupleAccess x i) =
       let TupleTy xs = typeOf x
-      in xs !! i
+      in fromMaybe (panic "out of bounds") (atMay xs i)
     typeOf Unit = "Unit"
     typeOf (Call fn _) =
         case typeOf fn of
             (FunTy _ ty) -> ty
-            _            -> error "(typeOf fn) should match (FunTy _ ty)"
+            _            -> panic "(typeOf fn) should match (FunTy _ ty)"
     typeOf (Let _ e) = typeOf e
     typeOf (If _ e _) = typeOf e
     typeOf (BinOp _ x _) = typeOf x
@@ -119,13 +113,9 @@ instance PrettyPrint Op where
     pretty Or       = text "||"
 
 data Decl a
-    = FunDec a
-             [a]
-             (Expr a)
-    | ValDec a
-             (Expr a)
-    | ExDec a
-            String
+    = FunDec a [a] (Expr a)
+    | ValDec a (Expr a)
+    | ExDec a Text
     deriving (Eq, Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
@@ -134,4 +124,4 @@ instance PrettyPrint a => PrettyPrint (Decl a) where
         (parens . sep $ pretty name : map pretty params) $+$
         nest 2 (pretty body)
     pretty (ValDec name val) = text "val" <+> pretty name <+> pretty val
-    pretty (ExDec name orig) = text "extern" <+> pretty name <+> text orig
+    pretty (ExDec name orig) = text "extern" <+> pretty name <+> pretty orig

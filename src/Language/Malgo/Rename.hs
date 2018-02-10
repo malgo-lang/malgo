@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Rename
     ( rename
@@ -6,9 +7,8 @@ module Language.Malgo.Rename
     , RnEnv(..)
     ) where
 
-import           Control.Monad.State.Class
+import Language.Malgo.Prelude
 import qualified Data.Map.Strict           as Map
-import           Data.Monoid
 import           Language.Malgo.Syntax     hiding (info)
 import           Language.Malgo.Utils
 import           Text.PrettyPrint          (Doc, int, text)
@@ -44,9 +44,8 @@ type Rename m a = MalgoT RnEnv m a
 rename :: Monad m => Expr Name -> Rename m (Expr ID)
 rename = transExpr
 
--- throw :: Monad m => Info -> Doc -> Rename m a
 throw :: Info -> Doc -> a
-throw info mes = error $ show $ pretty (RenameError info mes)
+throw info mes = panic $ show $ pretty (RenameError info mes)
 
 newID :: Monad m => Name -> Rename m ID
 newID orig = do
@@ -74,11 +73,11 @@ transExpr (Unit info) = return $ Unit info
 transExpr (Tuple info xs) = Tuple info <$> mapM transExpr xs
 transExpr (TupleAccess info e i) = TupleAccess info <$> transExpr e <*> pure i
 transExpr (Fn info params body) = do
-  backup <- get
-  modify $ \e -> e {idCons = Internal}
-  params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
-  body' <- transExpr body
-  put backup
+  ((params', body'), _) <- sandbox $ do
+    modify $ \e -> e {idCons = Internal}
+    params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
+    body' <- transExpr body
+    return (params', body')
   return (Fn info params' body')
 transExpr (Call info fn args) =
     Call info <$> transExpr fn <*> mapM transExpr args
@@ -96,19 +95,18 @@ transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
 
 transDecl :: Monad m => Decl Name -> Rename m (Decl ID)
 transDecl (ValDec info name typ val) = do
-    backup <- get
+  (val', _) <- sandbox $ do
     modify $ \e -> e {idCons = Internal}
-    val' <- transExpr val
-    put backup
-    name' <- newID name
-    return (ValDec info name' typ val')
+    transExpr val
+  name' <- newID name
+  return (ValDec info name' typ val')
 transDecl (FunDec info fn params retty body) = do
     fn' <- newID fn
-    backup <- get
-    modify $ \e -> e {idCons = Internal}
-    params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
-    body' <- transExpr body
-    put backup
+    ((params', body'), _) <- sandbox $ do
+      modify $ \e -> e {idCons = Internal}
+      params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
+      body' <- transExpr body
+      return (params', body')
     return (FunDec info fn' params' retty body')
 transDecl (ExDec info name typ orig) = do
     cons <- gets idCons
