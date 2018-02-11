@@ -55,28 +55,29 @@ data Opt = Opt
   } deriving (Eq, Show)
 
 newtype MalgoT s m a = MalgoT
-  { unMalgoT :: StateT s (StateT Int m) a
+  { unMalgoT :: ExceptT MalgoError (StateT s (StateT Int m)) a
   } deriving ( Functor
              , Applicative
              , Monad
+             , MonadError MalgoError
              , MonadState s
              , MonadIO
              )
 
 instance MonadTrans (MalgoT s) where
-  lift = MalgoT . lift . lift
+  lift = MalgoT . lift . lift . lift
 
 newUniq :: Monad m => MalgoT s m Int
 newUniq = do
-  c <- MalgoT . lift $ get
+  c <- MalgoT $ lift $ lift get
   setUniq (c + 1)
   return c
 
 setUniq :: Monad m => Int -> MalgoT s m ()
-setUniq i = MalgoT $ lift $ modify $ const i
+setUniq i = MalgoT $ lift $ lift $ modify $ const i
 
-runMalgoT :: (Env s, Monad m) => MalgoT s m a -> Int -> m (a, Int)
-runMalgoT (MalgoT m) = runStateT (evalStateT m initEnv)
+runMalgoT :: (Env s, Monad m) => MalgoT s m a -> Int -> m (Either MalgoError a, Int)
+runMalgoT (MalgoT m) i = runStateT (evalStateT (runExceptT m) initEnv) i
 
-runMalgo :: Env s => MalgoT s Identity a -> Int -> (a, Int)
+runMalgo :: Env s => MalgoT s Identity a -> Int -> (Either MalgoError a, Int)
 runMalgo m i = runIdentity $ runMalgoT m i

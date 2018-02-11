@@ -12,7 +12,8 @@ module Language.Malgo.Prelude
   , sandbox
   ) where
 
-import Protolude as X hiding (Typeable, sourceLine, sourceColumn)
+import Prelude as X (error)
+import Protolude as X hiding (Typeable, sourceLine, sourceColumn, find)
 import Control.Monad.Trans as X
 import Data.String as X (IsString(..))
 import qualified Data.Map as Map

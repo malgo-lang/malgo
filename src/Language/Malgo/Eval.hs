@@ -92,8 +92,8 @@ eval (M.Program tp ex e) = do
     evalToplevel tp
     evalExpr e
 
-throw :: Doc -> a
-throw mes = panic $ show $ pretty (EvalError mes)
+throw :: Doc -> Eval a
+throw mes = throwError (EvalError mes)
 
 evalToplevel :: [M.FunDec TypedID] -> Eval ()
 evalToplevel [] = return ()

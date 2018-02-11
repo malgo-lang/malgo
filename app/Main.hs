@@ -20,4 +20,6 @@ main = do
   if _compileOnly opt
     then return ()
     else do e <- eval obj
-            return (seq e ())
+            case e of
+              Left err -> error $ show $ P.pretty err
+              Right result -> return (seq result ())

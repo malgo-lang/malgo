@@ -1,21 +1,20 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Beta
   ( betaTrans
   , Beta
   ) where
 
-import           Control.Monad.State.Class
-import qualified Data.Map.Strict           as Map
-import           Data.Maybe
+import Language.Malgo.Prelude
 import           Language.Malgo.HIR
 import           Language.Malgo.TypeCheck  (TypedID (..))
 import           Language.Malgo.Utils
 
 newtype BEnv = BEnv
-               { _table :: Map.Map TypedID TypedID
+               { _table :: Map TypedID TypedID
                }
 
 instance Env BEnv where
-  initEnv = BEnv Map.empty
+  initEnv = BEnv mempty
 
 type Beta m a = MalgoT BEnv m a
 
@@ -23,12 +22,12 @@ betaTrans :: Monad m => Expr TypedID -> Beta m (Expr TypedID)
 betaTrans = transExpr
 
 addBind :: Monad m => TypedID -> TypedID -> Beta m ()
-addBind x y = modify $ \e -> e {_table = Map.insert x y (_table e)}
+addBind x y = modify $ \e -> e {_table = insert x y (_table e)}
 
 find :: Monad m => TypedID -> Beta m TypedID
 find x = do
   table <- gets _table
-  let x' = Map.lookup x table
+  let x' = lookup x table
   return $ fromMaybe x x'
 
 transExpr :: Monad m => Expr TypedID -> Beta m (Expr TypedID)

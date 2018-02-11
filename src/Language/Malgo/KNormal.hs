@@ -19,8 +19,8 @@ type KNormal m a = MalgoT () m a
 knormal :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
 knormal e = transExpr (flattenLet e)
 
-throw :: Info -> Doc -> a
-throw info mes = panic $ show $ pretty (KNormalError info mes)
+throw :: Monad m => Info -> Doc -> KNormal m a
+throw info mes = throwError (KNormalError info mes)
 
 flattenLet :: S.Expr TypedID -> S.Expr TypedID
 flattenLet (S.Let info [decl] body) = S.Let info [decl] body

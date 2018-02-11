@@ -1,17 +1,17 @@
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Closure
   ( conv
   ) where
 
-import Language.Malgo.Prelude
-import Data.List ((\\))
+import           Data.List                ((\\))
 import           Language.Malgo.FreeVars
-import qualified Language.Malgo.HIR        as H
+import qualified Language.Malgo.HIR       as H
 import           Language.Malgo.MIR
-import           Language.Malgo.Rename     (ID (..))
+import           Language.Malgo.Prelude
+import           Language.Malgo.Rename    (ID (..))
 import           Language.Malgo.Type
-import           Language.Malgo.TypeCheck  (TypedID (..))
+import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
@@ -35,8 +35,8 @@ conv x = do
   exs <- gets _extern
   return (Program fs exs x')
 
-throw :: Doc -> a
-throw m = panic $ show $ pretty (ClosureTransError m)
+throw :: MonadError MalgoError m => Doc -> m a
+throw m = throwError (ClosureTransError m)
 
 addKnown :: Monad m => TypedID -> ClsTrans m ()
 addKnown name = modify $ \e -> e {_knowns = name : _knowns e}

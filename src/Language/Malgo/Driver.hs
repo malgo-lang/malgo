@@ -1,20 +1,21 @@
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Driver where
 
-import Language.Malgo.Prelude
-import qualified Language.Malgo.Beta        as Beta
-import qualified Language.Malgo.Closure     as Closure
-import qualified Language.Malgo.CodeGen     as CodeGen
-import qualified Language.Malgo.Eval        as Eval
-import qualified Language.Malgo.Flatten     as Flatten
-import qualified Language.Malgo.KNormal     as KNormal
+import qualified Language.Malgo.Beta      as Beta
+import qualified Language.Malgo.Closure   as Closure
+import qualified Language.Malgo.CodeGen   as CodeGen
+import qualified Language.Malgo.Eval      as Eval
+import qualified Language.Malgo.Flatten   as Flatten
+import qualified Language.Malgo.KNormal   as KNormal
 import           Language.Malgo.MIR
-import qualified Language.Malgo.Rename      as Rename
-import qualified Language.Malgo.Syntax      as Syntax
-import qualified Language.Malgo.TypeCheck   as TypeCheck
-import qualified Language.Malgo.Unused      as Unused
+import           Language.Malgo.Prelude
+import qualified Language.Malgo.Rename    as Rename
+import qualified Language.Malgo.Syntax    as Syntax
+import qualified Language.Malgo.TypeCheck as TypeCheck
+import qualified Language.Malgo.Unused    as Unused
 import           Language.Malgo.Utils
 import           LLVM.Pretty
 import           Options.Applicative
@@ -38,8 +39,7 @@ parseOpt = execParser $
     <> progDesc "A interpreter of malgo"
     <> header "malgo - a toy programming language")
 
-compile ::
-  Syntax.Expr Name -> Opt -> IO (Program TypeCheck.TypedID)
+compile :: Syntax.Expr Name -> Opt -> IO (Program TypeCheck.TypedID)
 compile ast opt = do
   when (_dumpParsed opt) $
     liftIO . print $ pretty ast
@@ -61,9 +61,11 @@ compile ast opt = do
   return cls'
   where run key m u =
           runMalgoT m u >>= \(x', u') ->
-                              do when (key opt) $
-                                   liftIO . print $ pretty x'
-                                 return (x', u')
+                              case x' of
+                                Left err -> die $ show $ pretty err
+                                Right result -> do when (key opt) $
+                                                     liftIO $ print $ pretty result
+                                                   return (result, u')
 
-eval :: Program TypeCheck.TypedID -> IO Eval.Value
+eval :: Program TypeCheck.TypedID -> IO (Either MalgoError Eval.Value)
 eval prog = fst <$> runMalgoT (Eval.eval prog) 0

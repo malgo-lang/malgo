@@ -43,8 +43,8 @@ type TypeCheck m a = MalgoT TcEnv m a
 typeCheck :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
 typeCheck = checkExpr
 
-throw :: Info -> Doc -> a
-throw info mes = panic $ show $ pretty (TypeCheckError info mes)
+throw :: Monad m => Info -> Doc -> TypeCheck m a
+throw info mes = throwError $ TypeCheckError info mes
 
 addBind :: Monad m => ID -> Type -> TypeCheck m ()
 addBind name typ =

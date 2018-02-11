@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Rename
@@ -11,7 +12,7 @@ import Language.Malgo.Prelude
 import qualified Data.Map.Strict           as Map
 import           Language.Malgo.Syntax     hiding (info)
 import           Language.Malgo.Utils
-import           Text.PrettyPrint          (Doc, int, text)
+import           Text.PrettyPrint          (int, text)
 import qualified Text.PrettyPrint          as P
 
 data ID
@@ -44,8 +45,8 @@ type Rename m a = MalgoT RnEnv m a
 rename :: Monad m => Expr Name -> Rename m (Expr ID)
 rename = transExpr
 
-throw :: Info -> Doc -> a
-throw info mes = panic $ show $ pretty (RenameError info mes)
+throw :: Monad m => Info -> P.Doc -> Rename m a
+throw info mes = throwError (RenameError info mes)
 
 newID :: Monad m => Name -> Rename m ID
 newID orig = do
