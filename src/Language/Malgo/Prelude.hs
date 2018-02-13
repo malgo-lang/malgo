@@ -1,8 +1,6 @@
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UndecidableInstances #-}
 module Language.Malgo.Prelude
   ( module X
   , PrettyPrint(..)
@@ -12,9 +10,11 @@ module Language.Malgo.Prelude
   , sandbox
   ) where
 
+import GHC.Exts as X (IsList(..))
 import Prelude as X (error)
-import Protolude as X hiding (Typeable, sourceLine, sourceColumn, find)
+import Protolude as X hiding (Typeable, sourceLine, sourceColumn, find, toList, sym)
 import Control.Monad.Trans as X
+import qualified Data.List as List
 import Data.String as X (IsString(..))
 import qualified Data.Map as Map
 import qualified Text.PrettyPrint as P
@@ -53,14 +53,23 @@ class Dict m where
 
   insert :: Ord k => k -> a -> m k a -> m k a
 
-  fromList :: Ord k => [(k, a)] -> m k a
-
 instance Dict Map where
   member = Map.member
   notMember = Map.notMember
   lookup = Map.lookup
   insert = Map.insert
-  fromList = Map.fromList
+
+newtype AssocList a b = AssocList [(a, b)]
+
+instance Dict AssocList where
+  member k (AssocList xs) = k `elem` map fst xs
+  lookup k (AssocList xs) = List.lookup k xs
+  insert k a (AssocList xs) = AssocList $ (k, a):xs
+
+instance (Ord k) => IsList (AssocList k a) where
+  type Item (AssocList k a) = (k, a)
+  fromList xs = AssocList xs
+  toList (AssocList xs) = xs
 
 sandbox :: MonadState s m => m a -> m (a, s)
 sandbox action = do
