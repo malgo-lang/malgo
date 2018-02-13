@@ -4,9 +4,9 @@ module Language.Malgo.Beta
   , Beta
   ) where
 
-import Language.Malgo.Prelude
 import           Language.Malgo.HIR
-import           Language.Malgo.TypeCheck  (TypedID (..))
+import           Language.Malgo.Prelude
+import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 
 newtype BEnv = BEnv

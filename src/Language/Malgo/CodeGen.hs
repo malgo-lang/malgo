@@ -1,12 +1,13 @@
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.CodeGen where
 
 import           Data.Char
 import           Data.Maybe
 import           Data.String
-import qualified Data.Text as T
+import qualified Data.Text                       as T
 
 import qualified LLVM.AST
 import qualified LLVM.AST.Constant               as C
@@ -16,18 +17,12 @@ import           LLVM.AST.Operand
 import qualified LLVM.AST.Type                   as LT
 import           LLVM.IRBuilder                  as IRBuilder
 
-import Language.Malgo.Prelude hiding (bit)
 import           Language.Malgo.HIR              (Op (..))
 import           Language.Malgo.MIR
+import           Language.Malgo.Prelude          hiding (bit)
 import           Language.Malgo.Rename           (ID (..))
 import qualified Language.Malgo.Type             as T
 import           Language.Malgo.TypeCheck        (TypedID (..))
-
--- test = T.putStrLn $ ppllvm $ buildModule "test" $ mdo
---   f <- function "fun" [(i32, "n")] i32 $ \[n] ->
---     do r <- call f [(n, [])]
---        ret r
---   return f
 
 data GenState = GenState { _table    :: Map TypedID Operand
                          , _term     :: Operand -> GenExpr () -- if式の際の最終分岐先などに利用
@@ -36,10 +31,6 @@ data GenState = GenState { _table    :: Map TypedID Operand
 
 type GenExpr a = IRBuilderT GenDec a
 type GenDec = ModuleBuilderT (State GenState)
-
--- addFunction :: TypedID -> Operand -> GenDec ()
--- addFunction name opr =
---   lift (modify (\s -> s { _table = Map.insert name opr (_table s)}))
 
 addTable ::
   (MonadState GenState m, MonadTrans t) =>

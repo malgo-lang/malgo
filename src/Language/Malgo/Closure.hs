@@ -1,5 +1,6 @@
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 module Language.Malgo.Closure
   ( conv
   ) where
@@ -15,13 +16,12 @@ import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data ClsEnv = ClsEnv
-  { _closures :: Map TypedID TypedID
-  , _knowns   :: [TypedID]
-  , _varMap   :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
-  , _fundecs  :: [FunDec TypedID]
-  , _extern   :: [ExDec TypedID]
-  } deriving (Show)
+data ClsEnv = ClsEnv { _closures :: Map TypedID TypedID
+                     , _knowns   :: [TypedID]
+                     , _varMap   :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
+                     , _fundecs  :: [FunDec TypedID]
+                     , _extern   :: [ExDec TypedID]
+                     } deriving Show
 
 instance Env ClsEnv where
   initEnv = ClsEnv mempty [] mempty [] []

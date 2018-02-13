@@ -1,12 +1,12 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.HIR where
 
-import Language.Malgo.Prelude
+import           Language.Malgo.Prelude
 import           Language.Malgo.Type
-import           Text.PrettyPrint hiding ((<>))
+import           Text.PrettyPrint       hiding ((<>))
 
 {-
 HIR is simlar to Language.Malgo.Syntax.Expr.

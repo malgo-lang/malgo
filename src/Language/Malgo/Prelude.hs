@@ -1,6 +1,7 @@
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.Prelude
   ( module X
   , PrettyPrint(..)
@@ -10,14 +11,15 @@ module Language.Malgo.Prelude
   , sandbox
   ) where
 
-import GHC.Exts as X (IsList(..))
-import Prelude as X (error)
-import Protolude as X hiding (Typeable, sourceLine, sourceColumn, find, toList, sym)
-import Control.Monad.Trans as X
-import qualified Data.List as List
-import Data.String as X (IsString(..))
-import qualified Data.Map as Map
-import qualified Text.PrettyPrint as P
+import           Control.Monad.Trans as X
+import qualified Data.List           as List
+import qualified Data.Map            as Map
+import           Data.String         as X (IsString (..))
+import           GHC.Exts            as X (IsList (..))
+import           Prelude             as X (error)
+import           Protolude           as X hiding (Typeable, find, sourceColumn,
+                                           sourceLine, sym, toList)
+import qualified Text.PrettyPrint    as P
 
 class PrettyPrint a where
   pretty :: a -> P.Doc
@@ -43,7 +45,7 @@ instance HasDummy Info where
 class Dict m where
   member :: Ord k => k -> m k a -> Bool
   member k m = case lookup k m of
-                 Just _ -> True
+                 Just _  -> True
                  Nothing -> False
 
   notMember :: Ord k => k -> m k a -> Bool

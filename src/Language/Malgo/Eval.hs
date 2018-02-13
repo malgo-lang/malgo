@@ -1,6 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications  #-}
 module Language.Malgo.Eval
     ( eval
     , Value
@@ -15,7 +15,7 @@ import           Language.Malgo.Prelude
 import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 import qualified System.IO                as S
-import           Text.PrettyPrint         hiding (empty)
+import           Text.PrettyPrint
 
 data Value
     = Int Integer

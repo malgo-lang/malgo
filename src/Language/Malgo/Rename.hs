@@ -1,6 +1,6 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Language.Malgo.Rename
     ( rename
@@ -8,12 +8,12 @@ module Language.Malgo.Rename
     , RnEnv(..)
     ) where
 
-import Language.Malgo.Prelude
-import qualified Data.Map.Strict           as Map
-import           Language.Malgo.Syntax     hiding (info)
+import qualified Data.Map.Strict        as Map
+import           Language.Malgo.Prelude
+import           Language.Malgo.Syntax  hiding (info)
 import           Language.Malgo.Utils
-import           Text.PrettyPrint          (int, text)
-import qualified Text.PrettyPrint          as P
+import           Text.PrettyPrint       (int, text)
+import qualified Text.PrettyPrint       as P
 
 data ID
     = Toplevel { _name :: Name
