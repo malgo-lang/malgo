@@ -2,8 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 module Language.Malgo.Closure
-  ( conv
-  ) where
+  ( conv ) where
 
 import           Data.List                ((\\))
 import           Language.Malgo.FreeVars
@@ -52,15 +51,14 @@ convID name = do
   clss <- gets _closures
   varMap <- gets _varMap
   case lookup name clss of
-    Nothing
+    Nothing ->
       -- 型が変わっていれば変換
-     ->
       case lookup name varMap of
         Nothing    -> return name
         Just name' -> return name'
-    Just cls
+    Just cls ->
       -- クロージャになっていれば変換
-     -> return cls
+      return cls
 
 addClsTrans :: Monad m => TypedID -> TypedID -> ClsTrans m ()
 addClsTrans orig cls =
@@ -125,11 +123,10 @@ convExpr (H.String x) = return (String x)
 convExpr H.Unit = return Unit
 convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
 convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
-convExpr (H.Call fn args) = do
-  knowns <- gets _knowns
-  if fn `elem` knowns
-    then CallDir <$> fn' <*> mapM convID args
-    else CallCls <$> convID fn <*> mapM convID args
+convExpr (H.Call fn args) =
+  ifM (elem fn <$> gets _knowns)
+    (CallDir <$> fn' <*> mapM convID args)
+    (CallCls <$> convID fn <*> mapM convID args)
   where
     fn' = fromMaybe fn . lookup fn <$> gets _varMap -- 型が変わっていれば変換
 convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f

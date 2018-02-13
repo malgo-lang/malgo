@@ -9,90 +9,89 @@ import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Text.PrettyPrint       hiding ((<>))
 
-data Expr a
-    = Var a
-    | Int Integer
-    | Float Double
-    | Bool Bool
-    | Char Char
-    | String Text
-    | Unit
-    | Tuple [a]
-    | TupleAccess a Int
-    | CallDir a [a]
-    | CallCls a [a]
-    | Let (Decl a) (Expr a)
-    | If a (Expr a) (Expr a)
-    | BinOp Op a a
+data Expr a = Var a
+            | Int Integer
+            | Float Double
+            | Bool Bool
+            | Char Char
+            | String Text
+            | Unit
+            | Tuple [a]
+            | TupleAccess a Int
+            | CallDir a [a]
+            | CallCls a [a]
+            | Let (Decl a) (Expr a)
+            | If a (Expr a) (Expr a)
+            | BinOp Op a a
     deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Expr a) where
-    pretty (Var x) = pretty x
-    pretty (Int x) = integer x
-    pretty (Float x) = double x
-    pretty (Bool True) = text "#t"
-    pretty (Bool False) = text "#f"
-    pretty (Char x) = quotes $ char x
-    pretty (String x) = doubleQuotes $ pretty x
-    pretty Unit = text "{}"
-    pretty (Tuple xs) =
-      braces $ sep (punctuate (text ",") (map pretty xs))
-    pretty (TupleAccess x i) =
-      parens (text "." <+> pretty x <+> int i)
-    pretty (CallDir fn arg) = parens $ pretty fn <+> sep (map pretty arg)
-    pretty (CallCls cls args) = braces $ pretty cls <+> sep (map pretty args)
-    pretty (Let decl body) =
-        parens $ text "let" <+> parens (pretty decl) $+$ nest (-1) (pretty body)
-    pretty (If c t f) =
-        parens $
-        text "if" <+>
-        pretty c $+$ text "then:" <+>
-        nest 2 (pretty t) $+$ text "else:" <+> nest 2 (pretty f)
-    pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
+  pretty (Var x) = pretty x
+  pretty (Int x) = integer x
+  pretty (Float x) = double x
+  pretty (Bool True) = text "#t"
+  pretty (Bool False) = text "#f"
+  pretty (Char x) = quotes $ char x
+  pretty (String x) = doubleQuotes $ pretty x
+  pretty Unit = text "{}"
+  pretty (Tuple xs) =
+    braces $ sep (punctuate (text ",") (map pretty xs))
+  pretty (TupleAccess x i) =
+    parens (text "." <+> pretty x <+> int i)
+  pretty (CallDir fn arg) = parens $ pretty fn <+> sep (map pretty arg)
+  pretty (CallCls cls args) = braces $ pretty cls <+> sep (map pretty args)
+  pretty (Let decl body) =
+    parens $ text "let" <+> parens (pretty decl) $+$ nest (-1) (pretty body)
+  pretty (If c t f) =
+    parens $
+    text "if" <+>
+    pretty c $+$ text "then:" <+>
+    nest 2 (pretty t) $+$ text "else:" <+> nest 2 (pretty f)
+  pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
 instance (Typeable a, Show a) => Typeable (Expr a) where
-    typeOf (Var name) = typeOf name
-    typeOf (Int _) = "Int"
-    typeOf (Float _) = "Float"
-    typeOf (Bool _) = "Bool"
-    typeOf (Char _) = "Char"
-    typeOf (String _) = "String"
-    typeOf Unit = "Unit"
-    typeOf (Tuple xs) = TupleTy (map typeOf xs)
-    typeOf (TupleAccess x i) =
-      let TupleTy xs = typeOf x
-      in fromMaybe (panic "out of bounds") (atMay xs i)
-    typeOf (CallDir name _) =
-        case typeOf name of
-            (FunTy _ ty) -> ty
-            (ClsTy _ ty) -> ty
-            _            -> panic $ show name <> "is not callable"
-    typeOf (CallCls name _) =
-        case typeOf name of
-            (FunTy _ ty) -> ty
-            (ClsTy _ ty) -> ty
-            _            -> panic $ show name <> "is not callable"
-    typeOf (Let _ e) = typeOf e
-    typeOf (If _ t _) = typeOf t
-    typeOf (BinOp op _ _) =
-        case op of
-            Add     -> "Int"
-            Sub     -> "Int"
-            Mul     -> "Int"
-            Div     -> "Int"
-            FAdd    -> "Float"
-            FSub    -> "Float"
-            FMul    -> "Float"
-            FDiv    -> "Float"
-            Mod     -> "Int"
-            (Eq _)  -> "Bool"
-            (Neq _) -> "Bool"
-            (Lt _)  -> "Bool"
-            (Gt _)  -> "Bool"
-            (Le _)  -> "Bool"
-            (Ge _)  -> "Bool"
-            And     -> "Bool"
-            Or      -> "Bool"
+  typeOf (Var name) = typeOf name
+  typeOf (Int _) = "Int"
+  typeOf (Float _) = "Float"
+  typeOf (Bool _) = "Bool"
+  typeOf (Char _) = "Char"
+  typeOf (String _) = "String"
+  typeOf Unit = "Unit"
+  typeOf (Tuple xs) = TupleTy (map typeOf xs)
+  typeOf (TupleAccess x i) =
+    let TupleTy xs = typeOf x
+    in fromMaybe (panic "out of bounds") (atMay xs i)
+  typeOf (CallDir name _) =
+      case typeOf name of
+          (FunTy _ ty) -> ty
+          (ClsTy _ ty) -> ty
+          _            -> panic $ show name <> "is not callable"
+  typeOf (CallCls name _) =
+      case typeOf name of
+          (FunTy _ ty) -> ty
+          (ClsTy _ ty) -> ty
+          _            -> panic $ show name <> "is not callable"
+  typeOf (Let _ e) = typeOf e
+  typeOf (If _ t _) = typeOf t
+  typeOf (BinOp op _ _) =
+      case op of
+          Add     -> "Int"
+          Sub     -> "Int"
+          Mul     -> "Int"
+          Div     -> "Int"
+          FAdd    -> "Float"
+          FSub    -> "Float"
+          FMul    -> "Float"
+          FDiv    -> "Float"
+          Mod     -> "Int"
+          (Eq _)  -> "Bool"
+          (Neq _) -> "Bool"
+          (Lt _)  -> "Bool"
+          (Gt _)  -> "Bool"
+          (Le _)  -> "Bool"
+          (Ge _)  -> "Bool"
+          And     -> "Bool"
+          Or      -> "Bool"
 
 data FunDec a
   -- | FunDec function_name parameters captures body

@@ -17,16 +17,14 @@ import           Language.Malgo.Utils
 import qualified System.IO                as S
 import           Text.PrettyPrint
 
-data Value
-    = Int Integer
-    | Float Double
-    | Bool Bool
-    | Char Char
-    | String Text
-    | Unit
-    | Tuple [Value]
-    | Closure TypedID
-              [Value]
+data Value = Int Integer
+           | Float Double
+           | Bool Bool
+           | Char Char
+           | String Text
+           | Unit
+           | Tuple [Value]
+           | Closure TypedID [Value]
     deriving (Show, Eq, Ord)
 
 instance PrettyPrint Value where
@@ -51,12 +49,24 @@ instance Env Context where
 
 prelude :: Map Text ([Value] -> [Value] -> Eval Value)
 prelude = fromList
-    [ ("print", \[String x] [] -> liftIO (putStr x) >> return Unit)
-    , ("println", \[String x] [] -> liftIO (putStrLn x) >> return Unit)
-    , ("print_int", \[Int x] [] -> liftIO (putStr @Text $ show x) >> return Unit)
-    , ("print_float", \[Float x] [] -> liftIO (putStr @Text $ show x) >> return Unit)
-    , ("newline", \[Unit] [] -> liftIO (putStrLn @Text "") >> return Unit)
-    , ("flush", \[Unit] [] -> liftIO (S.hFlush stdout) >> return Unit)
+    [ ("print", \[String x] [] ->
+          do liftIO (putStr x)
+             return Unit)
+    , ("println", \[String x] [] ->
+          do liftIO (putStrLn x)
+             return Unit)
+    , ("print_int", \[Int x] [] ->
+          do liftIO (putStr @Text $ show x)
+             return Unit)
+    , ("print_float", \[Float x] [] ->
+          do liftIO (putStr @Text $ show x)
+             return Unit)
+    , ("newline", \[Unit] [] ->
+          do liftIO (putStrLn @Text "")
+             return Unit)
+    , ("flush", \[Unit] [] ->
+          do liftIO (S.hFlush stdout)
+             return Unit)
     , ("getchar", \[Unit] [] -> Char <$> liftIO S.getChar)
     , ("ord", \[Char x] [] -> return $ Int (toInteger $ ord x))
     , ("chr", \[Int x] [] -> return $ Char (chr $ fromInteger x))
@@ -71,26 +81,26 @@ addVar name val = modify $ \e -> e {_var = insert name val (_var e)}
 
 getVar :: TypedID -> Eval Value
 getVar name = do
-    vt <- gets _var
-    case lookup name vt of
-        Nothing -> throw $ pretty name <+> text "is not defined"
-        Just x  -> return x
+  vt <- gets _var
+  case lookup name vt of
+    Nothing -> throw $ pretty name <+> text "is not defined"
+    Just x  -> return x
 
 addFun :: TypedID -> ([Value] -> [Value] -> Eval Value) -> Eval ()
 addFun name fun = modify $ \e -> e {_fun = insert name fun (_fun e)}
 
 getFun :: TypedID -> Eval ([Value] -> [Value] -> Eval Value)
 getFun name = do
-    ft <- gets _fun
-    case lookup name ft of
-        Nothing -> throw $ pretty name <+> text "is not defined"
-        Just x  -> return x
+  ft <- gets _fun
+  case lookup name ft of
+    Nothing -> throw $ pretty name <+> text "is not defined"
+    Just x  -> return x
 
 eval :: M.Program TypedID -> Eval Value
 eval (M.Program tp ex e) = do
-    evalExtern ex
-    evalToplevel tp
-    evalExpr e
+  evalExtern ex
+  evalToplevel tp
+  evalExpr e
 
 throw :: Doc -> Eval a
 throw mes = throwError (EvalError mes)
@@ -98,23 +108,23 @@ throw mes = throwError (EvalError mes)
 evalToplevel :: [M.FunDec TypedID] -> Eval ()
 evalToplevel [] = return ()
 evalToplevel (M.FunDec name params capture body:xs) = do
-    let fun ps cs = do
-            backup <- gets _var
-            mapM_ (uncurry addVar) (zip params ps)
-            mapM_ (uncurry addVar) (zip capture cs)
-            v <- evalExpr body
-            modify $ \e -> e {_var = backup}
-            return v
-    addFun name fun
-    evalToplevel xs
+  let fun ps cs = do
+        backup <- gets _var
+        mapM_ (uncurry addVar) (zip params ps)
+        mapM_ (uncurry addVar) (zip capture cs)
+        v <- evalExpr body
+        modify $ \e -> e {_var = backup}
+        return v
+  addFun name fun
+  evalToplevel xs
 
 evalExtern :: [M.ExDec TypedID] -> Eval ()
 evalExtern [] = return ()
 evalExtern (M.ExDec name orig:xs) = do
-    case lookup orig prelude of
-        Nothing -> throw $ pretty name <+> text "is not found in prelude"
-        Just x  -> addFun name x
-    evalExtern xs
+  case lookup orig prelude of
+    Nothing -> throw $ pretty name <+> text "is not found in prelude"
+    Just x  -> addFun name x
+  evalExtern xs
 
 evalExpr :: M.Expr TypedID -> Eval Value
 evalExpr (M.Var x) = getVar x
@@ -129,47 +139,47 @@ evalExpr (M.TupleAccess x i) = do
   Tuple xs <- getVar x
   return $ fromMaybe (panic "out of bounds") (atMay xs i)
 evalExpr (M.CallDir fn args) = do
-    fn' <- getFun fn
-    args' <- mapM getVar args
-    fn' args' []
+  fn' <- getFun fn
+  args' <- mapM getVar args
+  fn' args' []
 evalExpr (M.CallCls cls args) = do
-    Closure fn capture <- getVar cls
-    fn' <- getFun fn
-    args' <- mapM getVar args
-    fn' args' capture
+  Closure fn capture <- getVar cls
+  fn' <- getFun fn
+  args' <- mapM getVar args
+  fn' args' capture
 evalExpr (M.Let (M.ValDec name val) body) = do
-    val' <- evalExpr val
-    addVar name val'
-    evalExpr body
+  val' <- evalExpr val
+  addVar name val'
+  evalExpr body
 evalExpr (M.Let (M.ClsDec name fn fv) body) = do
-    capture <- mapM getVar fv
-    addVar name (Closure fn capture)
-    evalExpr body
+  capture <- mapM getVar fv
+  addVar name (Closure fn capture)
+  evalExpr body
 evalExpr (M.If c t f) = do
-    c' <- getVar c
-    case c' of
-        Bool True  -> evalExpr t
-        Bool False -> evalExpr f
-        _          -> throw $ pretty c' <+> text "is not boolean"
+  c' <- getVar c
+  case c' of
+    Bool True  -> evalExpr t
+    Bool False -> evalExpr f
+    _          -> throw $ pretty c' <+> text "is not boolean"
 evalExpr (M.BinOp op x y) = do
-    x' <- getVar x
-    y' <- getVar y
-    case (op, x', y') of
-        (Add, Int a, Int b) -> return (Int $ a + b)
-        (Sub, Int a, Int b) -> return (Int $ a - b)
-        (Mul, Int a, Int b) -> return (Int $ a * b)
-        (Div, Int a, Int b) -> return (Int $ a `div` b)
-        (Mod, Int a, Int b) -> return (Int $ a `mod` b)
-        (FAdd, Float a, Float b) -> return (Float $ a + b)
-        (FSub, Float a, Float b) -> return (Float $ a - b)
-        (FMul, Float a, Float b) -> return (Float $ a * b)
-        (FDiv, Float a, Float b) -> return (Float $ a / b)
-        (Eq _, a, b) -> return (Bool $ a == b)
-        (Neq _, a, b) -> return (Bool $ a /= b)
-        (Lt _, a, b) -> return (Bool $ a < b)
-        (Gt _, a, b) -> return (Bool $ a > b)
-        (Le _, a, b) -> return (Bool $ a <= b)
-        (Ge _, a, b) -> return (Bool $ a >= b)
-        (And, Bool a, Bool b) -> return (Bool $ a && b)
-        (Or, Bool a, Bool b) -> return (Bool $ a || b)
-        _ -> throw $ text (show (op, x', y') ++ " is not valid")
+  x' <- getVar x
+  y' <- getVar y
+  case (op, x', y') of
+    (Add, Int a, Int b) -> return (Int $ a + b)
+    (Sub, Int a, Int b) -> return (Int $ a - b)
+    (Mul, Int a, Int b) -> return (Int $ a * b)
+    (Div, Int a, Int b) -> return (Int $ a `div` b)
+    (Mod, Int a, Int b) -> return (Int $ a `mod` b)
+    (FAdd, Float a, Float b) -> return (Float $ a + b)
+    (FSub, Float a, Float b) -> return (Float $ a - b)
+    (FMul, Float a, Float b) -> return (Float $ a * b)
+    (FDiv, Float a, Float b) -> return (Float $ a / b)
+    (Eq _, a, b) -> return (Bool $ a == b)
+    (Neq _, a, b) -> return (Bool $ a /= b)
+    (Lt _, a, b) -> return (Bool $ a < b)
+    (Gt _, a, b) -> return (Bool $ a > b)
+    (Le _, a, b) -> return (Bool $ a <= b)
+    (Ge _, a, b) -> return (Bool $ a >= b)
+    (And, Bool a, Bool b) -> return (Bool $ a && b)
+    (Or, Bool a, Bool b) -> return (Bool $ a || b)
+    _ -> throw $ text (show (op, x', y') ++ " is not valid")

@@ -9,9 +9,7 @@ import           Language.Malgo.Prelude
 import           Language.Malgo.TypeCheck (TypedID (..))
 import           Language.Malgo.Utils
 
-newtype BEnv = BEnv
-               { _table :: Map TypedID TypedID
-               }
+newtype BEnv = BEnv { _table :: Map TypedID TypedID }
 
 instance Env BEnv where
   initEnv = BEnv mempty
