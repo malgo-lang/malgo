@@ -234,7 +234,8 @@ genMain e =
 genProgram ::
   Program TypedID -> GenDec ()
 genProgram (Program fs es body) = do
-  -- TODO: gc_mallocのexternを追加
+  gm <- extern (fromString "GC_malloc") [LT.i64] (LT.ptr LT.i8)
+  addInternal "GC_malloc" gm
   mapM_ genExDec es
   mapM_ addFunction fs
   mapM_ genFunDec fs
@@ -249,9 +250,4 @@ dumpCodeGen ::
   ModuleBuilderT (StateT GenState Identity) a
   -> [LLVM.AST.Definition]
 dumpCodeGen m =
-  flip evalState (GenState mempty ret mempty) $ execModuleBuilderT emptyModuleBuilder
-  (do addInternal "GC_malloc" (ConstantOperand
-                                (C.GlobalReference
-                                  (LT.FunctionType (LT.ptr LT.i8) [LT.i64] False)
-                                  "GC_malloc"))
-      m)
+  flip evalState (GenState mempty ret mempty) $ execModuleBuilderT emptyModuleBuilder m

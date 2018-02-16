@@ -7,3 +7,7 @@ void newline(void) {
 void print_int(int n) {
   printf("%d", n);
 }
+
+void println(char* str) {
+  printf("%s\n", str);
+}
