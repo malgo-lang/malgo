@@ -60,6 +60,13 @@ convertType (T.FunTy params retTy) =
 convertType (T.ClsTy _ _) = panic "closure is not supported"
 -- TODO: クロージャをLLVMでどのように扱うかを決める
 
+sizeof :: T.Type -> Int
+sizeof "Int" = 4
+sizeof "Float" = 8
+sizeof "Bool" = 1
+sizeof "Char" = 1
+sizeof "String" = 8
+sizeof "Unit" = 0
 getRef ::
   (MonadState GenState m, Monad (t m), MonadTrans t) =>
   TypedID -> t m Operand
@@ -123,6 +130,8 @@ genExpr' (String xs) = do
           c' <- char (toInteger . ord $ c)
           store p' 1 c'
 genExpr' Unit       = (pure . ConstantOperand . C.Undef $ convertType "Unit") `named` "unit"
+genExpr' (Tuple xs) = do
+  undefined
 genExpr' (CallDir fn args) = do
   fn' <- getRef fn
   args' <- mapM (\a -> do a' <- getRef a; return (a', [])) args
