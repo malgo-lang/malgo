@@ -60,13 +60,13 @@ convertType (T.FunTy params retTy) =
 convertType (T.ClsTy _ _) = panic "closure is not supported"
 -- TODO: クロージャをLLVMでどのように扱うかを決める
 
-sizeof :: T.Type -> Int
-sizeof "Int" = 4
-sizeof "Float" = 8
-sizeof "Bool" = 1
-sizeof "Char" = 1
-sizeof "String" = 8
-sizeof "Unit" = 0
+sizeof :: MonadIRBuilder m => T.Type -> m Operand
+sizeof ty = do
+  nullptr <- pure $ ConstantOperand (C.Null (LT.ptr (convertType ty)))
+  one <- int32 1
+  ptr <- gep nullptr [one]
+  ptrtoint ptr LT.i64
+
 getRef ::
   (MonadState GenState m, Monad (t m), MonadTrans t) =>
   TypedID -> t m Operand
