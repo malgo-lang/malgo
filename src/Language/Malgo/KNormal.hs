@@ -31,12 +31,12 @@ flattenLet e = e
 newTmp :: Monad m => Type -> KNormal m TypedID
 newTmp typ = do
   c <- newUniq
-  return (TypedID (Internal "$k" c) typ)
+  return (TypedID (ID "$k" c) typ)
 
 newUnused :: Monad m => KNormal m TypedID
 newUnused = do
   c <- newUniq
-  return (TypedID (Internal "$_" c) "Unit")
+  return (TypedID (ID "$_" c) "Unit")
 
 transOp :: Monad m => S.Op -> Type -> KNormal m Op
 transOp S.Add _  = return Add
@@ -94,7 +94,7 @@ transExpr (S.Fn _ params body) = do
   return (Let (FunDec fn (map fst params) body') (Var fn))
   where newFnId = do
           c <- newUniq
-          return $ TypedID (Internal "lambda" c) (FunTy (map snd params) (typeOf body))
+          return $ TypedID (ID "lambda" c) (FunTy (map snd params) (typeOf body))
 transExpr (S.Call _ fn args) =
   insertLet fn (\fn' -> bind args [] (return . Call fn'))
 transExpr (S.BinOp _ op e1 e2) = do

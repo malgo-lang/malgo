@@ -73,7 +73,7 @@ newClsID (TypedID fn fnty) = do
   c <- newUniq
   return
     (TypedID
-       (Internal (Language.Malgo.Rename._name fn `mappend` fromString "$cls") c)
+       (ID (Language.Malgo.Rename._name fn `mappend` fromString "$cls") c)
        ty)
 
 toCls :: Type -> Type

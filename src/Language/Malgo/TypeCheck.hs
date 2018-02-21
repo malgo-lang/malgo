@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Language.Malgo.TypeCheck
     ( typeCheck
@@ -8,18 +8,16 @@ module Language.Malgo.TypeCheck
     , typeOf
     ) where
 
-import Language.Malgo.Prelude
-import qualified Data.Map.Strict           as Map
+import qualified Data.Map.Strict        as Map
+import           Language.Malgo.Prelude
 import           Language.Malgo.Rename
-import           Language.Malgo.Syntax     hiding (info)
-import qualified Language.Malgo.Syntax     as Syntax
+import           Language.Malgo.Syntax  hiding (info)
+import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data TypedID =
-    TypedID ID
-            Type
+data TypedID = TypedID ID Type
     deriving (Show, Ord, Read)
 
 instance Eq TypedID where

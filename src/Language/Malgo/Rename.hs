@@ -14,28 +14,19 @@ import           Language.Malgo.Syntax  hiding (info)
 import           Language.Malgo.Utils
 import qualified Text.PrettyPrint       as P
 
-data ID = Toplevel { _name :: Name
-                   , _uniq :: Int }
-        | Internal { _name :: Name
-                   , _uniq :: Int }
-        | External { _name :: Name
-                   , _uniq :: Int }
+data ID = ID { _name :: Name, _uniq :: Int }
   deriving (Show, Ord, Read)
 
 instance Eq ID where
   x == y = _uniq x == _uniq y
 
 instance PrettyPrint ID where
-  pretty (Toplevel name _) = pretty name
-  pretty (Internal name u) = pretty name <> P.text "." <> P.int u
-  pretty (External name _) = pretty name
+  pretty (ID name u) = pretty name <> P.text "." <> P.int u
 
-data RnEnv = RnEnv { knowns :: Map.Map Name ID
-                   , idCons :: Name -> Int -> ID
-                   }
+newtype RnEnv = RnEnv { knowns :: Map.Map Name ID }
 
 instance Env RnEnv where
-  initEnv = RnEnv Map.empty Toplevel
+  initEnv = RnEnv Map.empty
 
 type Rename m a = MalgoT RnEnv m a
 
@@ -48,8 +39,8 @@ throw info mes = throwError (RenameError info mes)
 newID :: Monad m => Name -> Rename m ID
 newID orig = do
   c <- newUniq
-  cons <- gets idCons
-  let i = cons orig c
+  -- cons <- gets idCons
+  let i = ID orig c
   modify $ \e -> e {knowns = Map.insert orig i (knowns e)}
   return i
 
@@ -71,21 +62,15 @@ transExpr (Unit info) = return $ Unit info
 transExpr (Tuple info xs) = Tuple info <$> mapM transExpr xs
 transExpr (TupleAccess info e i) = TupleAccess info <$> transExpr e <*> pure i
 transExpr (Fn info params body) = do
-  ((params', body'), _) <- sandbox $ do
-    modify $ \e -> e {idCons = Internal}
-    params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
-    body' <- transExpr body
-    return (params', body')
+  params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
+  body' <- transExpr body
   return (Fn info params' body')
 transExpr (Call info fn args) =
   Call info <$> transExpr fn <*> mapM transExpr args
 transExpr (Seq info e1 e2) = Seq info <$> transExpr e1 <*> transExpr e2
 transExpr (Let info decls e) = do
-  cons <- gets idCons
   decls' <- mapM transDecl decls
-  modify $ \env -> env {idCons = Internal}
   e' <- transExpr e
-  modify $ \env -> env {idCons = cons}
   return (Let info decls' e')
 transExpr (If info c t f) =
   If info <$> transExpr c <*> transExpr t <*> transExpr f
@@ -93,22 +78,14 @@ transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
 
 transDecl :: Monad m => Decl Name -> Rename m (Decl ID)
 transDecl (ValDec info name typ val) = do
-  (val', _) <- sandbox $ do
-    modify $ \e -> e {idCons = Internal}
-    transExpr val
+  val' <- transExpr val
   name' <- newID name
   return (ValDec info name' typ val')
 transDecl (FunDec info fn params retty body) = do
   fn' <- newID fn
-  ((params', body'), _) <- sandbox $ do
-    modify $ \e -> e {idCons = Internal}
-    params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
-    body' <- transExpr body
-    return (params', body')
+  params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
+  body' <- transExpr body
   return (FunDec info fn' params' retty body')
 transDecl (ExDec info name typ orig) = do
-  cons <- gets idCons
-  modify $ \e -> e {idCons = External}
   name' <- newID name
-  modify $ \e -> e {idCons = cons}
   return $ ExDec info name' typ orig

@@ -21,6 +21,7 @@ data MalgoError
                    P.Doc
   | KNormalError Info
                  P.Doc
+  | CombineError P.Doc
   | BetaTransError P.Doc
   | ClosureTransError P.Doc
   | EvalError P.Doc
@@ -79,5 +80,7 @@ setUniq i = MalgoT $ lift $ lift $ modify $ const i
 runMalgoT :: (Env s, Monad m) => MalgoT s m a -> Int -> m (Either MalgoError a, Int)
 runMalgoT (MalgoT m) i = runStateT (evalStateT (runExceptT m) initEnv) i
 
-runMalgo :: Env s => MalgoT s Identity a -> Int -> (Either MalgoError a, Int)
+type Malgo s a = MalgoT s Identity a
+
+runMalgo :: Env s => Malgo s a -> Int -> (Either MalgoError a, Int)
 runMalgo m i = runIdentity $ runMalgoT m i
