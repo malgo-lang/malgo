@@ -54,7 +54,7 @@ convertType "Unit"         = -- LT.NamedTypeReference "Unit"
   LT.StructureType False []
 convertType (T.NameTy x) = panic $ "unknown type: " <> show x
 convertType (T.TupleTy xs) =
-  LT.StructureType False (map convertType xs)
+  LT.ptr $ LT.StructureType False (map convertType xs)
 convertType (T.FunTy params retTy) =
   LT.FunctionType (convertType retTy) (map convertType params) False
 convertType (T.ClsTy _ _) = panic "closure is not supported"
@@ -97,6 +97,10 @@ gcMalloc bytes = do
   bytes' <- int64 bytes
   call f [(bytes', [])]
 
+rawGcMalloc bytesOpr = do
+  f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
+  call f [(bytesOpr, [])]
+
 genExpr :: Expr TypedID -> IRBuilderT GenDec ()
 genExpr e@(Var _)   = term (genExpr' e) `named` "var"
 genExpr e@(Int _)   = term (genExpr' e) `named` "int"
@@ -105,8 +109,8 @@ genExpr e@(Bool _)  = term (genExpr' e) `named` "bool"
 genExpr e@(Char _)  = term (genExpr' e) `named` "char"
 genExpr e@(String _) = term (genExpr' e) `named` "string"
 genExpr e@Unit = term (genExpr' e) `named` "unit"
-genExpr (Tuple _) = panic "tuple is not supported"
-genExpr (TupleAccess _ _) = panic "tuple is not supported"
+genExpr e@(Tuple _) = term (genExpr' e) `named` "tuple"
+genExpr e@(TupleAccess _ _) = term (genExpr' e) `named` "tuple_access"
 genExpr (CallCls _ _) = panic "closure is not supported"
 genExpr e@(CallDir _ _) = term (genExpr' e) `named` "calldir"
 genExpr e@(Let (ValDec _ _) _) = term (genExpr' e) `named` "let"
@@ -128,10 +132,24 @@ genExpr' (String xs) = do
           i' <- int32 i
           p' <- gep p [i'] `named` "tmp_char"
           c' <- char (toInteger . ord $ c)
-          store p' 1 c'
+          store p' 0 c'
 genExpr' Unit       = (pure . ConstantOperand . C.Undef $ convertType "Unit") `named` "unit"
-genExpr' (Tuple xs) = do
-  undefined
+genExpr' e@(Tuple xs) = do
+  size <- sizeof (T.typeOf e) `named` "tuple_size"
+  p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< rawGcMalloc size `named` "tuple_ptr"
+  forM_ (zip [0..] xs) $ \(i, x) -> do
+    i' <- int32 i
+    zero <- int32 0
+    p' <- gep p [zero, i'] `named` "tuple_elem_ptr"
+    o <- getRef x -- `named` "tuple_elem"
+    store p' 0 o
+  return p
+genExpr' (TupleAccess x i) = do
+  x' <- getRef x
+  zero <- int32 0
+  i' <- int32 (toInteger i)
+  p <- gep x' [zero, i'] `named` "tuple_elem_ptr"
+  load p 0
 genExpr' (CallDir fn args) = do
   fn' <- getRef fn
   args' <- mapM (\a -> do a' <- getRef a; return (a', [])) args
@@ -153,8 +171,6 @@ genExpr' (If c t f) = do
   lift (modify $ \s -> s { _term = backup })
   emitBlockStart end
   load r 0
-genExpr' (Tuple _) = panic "tuple is not supported"
-genExpr' (TupleAccess _ _) = panic "tuple is not supported"
 genExpr' (CallCls _ _) = panic "closure is not supported"
 genExpr' (BinOp op x y) = do
   let op' = case op of
@@ -220,15 +236,13 @@ genExDec (ExDec name str) = do
   addTable name o
 
 genFunDec :: FunDec TypedID -> GenDec ()
-genFunDec (FunDec fn@(TypedID _ _) params [] body) = do
+genFunDec (FunDec fn@(TypedID _ (T.FunTy _ retty)) params [] body) = do
   let fn' = fromString (show (pretty fn))
   let params' = map (\(TypedID name ty) ->
                        (convertType ty, fromString (show (pretty name))))
                 params
-  let (TypedID _ (T.FunTy _ retty)) = fn
   let retty' = convertType retty
   let body' xs = do
-        -- s <- lift get
         mapM_ (uncurry addTable) (zip params xs)
         genExpr body
   _ <- function fn' params' retty' body'
@@ -236,15 +250,15 @@ genFunDec (FunDec fn@(TypedID _ _) params [] body) = do
 
 genFunDec _ = panic "closure is not supported"
 
-genMain :: Expr TypedID -> GenDec Operand
-genMain e =
-  function "main" [] (convertType "Int") (\_ -> do _ <- genExpr' e `named` "main"; i <- int32 0; ret i)
+genMain :: Expr TypedID -> GenDec ()
+genMain e = do
+  _ <- function "main" [] (convertType "Int") (\_ -> do _ <- genExpr' e `named` "main"; i <- int32 0; ret i)
+  return ()
 
 genProgram ::
   Program TypedID -> GenDec ()
 genProgram (Program fs es body) = do
-  gm <- extern (fromString "GC_malloc") [LT.i64] (LT.ptr LT.i8)
-  addInternal "GC_malloc" gm
+  addInternal "GC_malloc" =<< extern (fromString "GC_malloc") [LT.i64] (LT.ptr LT.i8)
   mapM_ genExDec es
   mapM_ addFunction fs
   mapM_ genFunDec fs

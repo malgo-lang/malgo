@@ -83,8 +83,10 @@ transDecl (ValDec info name typ val) = do
   return (ValDec info name' typ val')
 transDecl (FunDec info fn params retty body) = do
   fn' <- newID fn
-  params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
-  body' <- transExpr body
+  ((params', body'), _) <- sandbox $ do
+    params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
+    body' <- transExpr body
+    return (params', body')
   return (FunDec info fn' params' retty body')
 transDecl (ExDec info name typ orig) = do
   name' <- newID name
