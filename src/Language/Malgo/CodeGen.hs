@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -63,8 +64,7 @@ convertType (T.ClsTy _ _) = panic "closure is not supported"
 sizeof :: MonadIRBuilder m => T.Type -> m Operand
 sizeof ty = do
   nullptr <- pure $ ConstantOperand (C.Null (LT.ptr (convertType ty)))
-  one <- int32 1
-  ptr <- gep nullptr [one]
+  ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
   ptrtoint ptr LT.i64
 
 getRef ::
@@ -97,6 +97,9 @@ gcMalloc bytes = do
   bytes' <- int64 bytes
   call f [(bytes', [])]
 
+rawGcMalloc ::
+  (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) =>
+  Operand -> t m Operand
 rawGcMalloc bytesOpr = do
   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
   call f [(bytesOpr, [])]
@@ -138,17 +141,17 @@ genExpr' e@(Tuple xs) = do
   size <- sizeof (T.typeOf e) `named` "tuple_size"
   p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< rawGcMalloc size `named` "tuple_ptr"
   forM_ (zip [0..] xs) $ \(i, x) -> do
-    i' <- int32 i
-    zero <- int32 0
-    p' <- gep p [zero, i'] `named` "tuple_elem_ptr"
+    p' <- gep p [ ConstantOperand (C.Int 32 0)
+                , ConstantOperand (C.Int 32 i)
+                ] `named` "tuple_elem_ptr"
     o <- getRef x -- `named` "tuple_elem"
     store p' 0 o
   return p
 genExpr' (TupleAccess x i) = do
   x' <- getRef x
-  zero <- int32 0
-  i' <- int32 (toInteger i)
-  p <- gep x' [zero, i'] `named` "tuple_elem_ptr"
+  p <- gep x' [ ConstantOperand (C.Int 32 0)
+              , ConstantOperand (C.Int 32 (toInteger i))
+              ] `named` "tuple_elem_ptr"
   load p 0
 genExpr' (CallDir fn args) = do
   fn' <- getRef fn
