@@ -5,12 +5,16 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.CodeGen where
 
+import qualified LLVM.Pretty as P
+
 import           Data.Char
+import Data.List (last)
 import           Data.Maybe
 import           Data.String
 import qualified Data.Text                       as T
 
 import qualified LLVM.AST
+import qualified LLVM.AST.Typed as LT
 import qualified LLVM.AST.Constant               as C
 import qualified LLVM.AST.FloatingPointPredicate as FP
 import qualified LLVM.AST.IntegerPredicate       as IP
@@ -57,13 +61,23 @@ convertType (T.NameTy x) = panic $ "unknown type: " <> show x
 convertType (T.TupleTy xs) =
   LT.ptr $ LT.StructureType False (map convertType xs)
 convertType (T.FunTy params retTy) =
-  LT.FunctionType (convertType retTy) (map convertType params) False
-convertType (T.ClsTy _ _) = panic "closure is not supported"
+  LT.FunctionType (convertType retTy) (map convertType params ++ [LT.ptr LT.i8]) False
+convertType (T.ClsTy params retty) =
+  LT.ptr $ LT.StructureType False
+  [ LT.ptr $ LT.FunctionType (convertType retty) (map convertType params ++ [LT.ptr LT.i8]) False
+  , LT.ptr LT.i8
+  ]
 -- TODO: クロージャをLLVMでどのように扱うかを決める
 
 sizeof :: MonadIRBuilder m => T.Type -> m Operand
 sizeof ty = do
   nullptr <- pure $ ConstantOperand (C.Null (LT.ptr (convertType ty)))
+  ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
+  ptrtoint ptr LT.i64
+
+rawSizeof :: MonadIRBuilder m => LT.Type -> m Operand
+rawSizeof ty = do
+  nullptr <- pure $ ConstantOperand (C.Null (LT.ptr ty))
   ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
   ptrtoint ptr LT.i64
 
@@ -104,6 +118,9 @@ rawGcMalloc bytesOpr = do
   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
   call f [(bytesOpr, [])]
 
+captureStruct xs =
+  LT.StructureType False (map (\(TypedID _ ty) -> convertType ty) xs)
+
 genExpr :: Expr TypedID -> IRBuilderT GenDec ()
 genExpr e@(Var _)   = term (genExpr' e) `named` "var"
 genExpr e@(Int _)   = term (genExpr' e) `named` "int"
@@ -114,10 +131,10 @@ genExpr e@(String _) = term (genExpr' e) `named` "string"
 genExpr e@Unit = term (genExpr' e) `named` "unit"
 genExpr e@(Tuple _) = term (genExpr' e) `named` "tuple"
 genExpr e@(TupleAccess _ _) = term (genExpr' e) `named` "tuple_access"
-genExpr (CallCls _ _) = panic "closure is not supported"
+genExpr e@(CallCls _ _) = term (genExpr' e) `named` "callcls"
 genExpr e@(CallDir _ _) = term (genExpr' e) `named` "calldir"
-genExpr e@(Let (ValDec _ _) _) = term (genExpr' e) `named` "let"
-genExpr (Let ClsDec{} _) = panic "closure is not supported"
+genExpr e@(Let (ValDec _ _) _) = term (genExpr' e) `named` "valdec"
+genExpr e@(Let ClsDec{} _) = term (genExpr' e) `named` "clsdec"
 genExpr e@If{} = term (genExpr' e) `named` "if"
 genExpr e@(BinOp op _ _) = term (genExpr' e) `named` fromString (show op)
 
@@ -156,12 +173,52 @@ genExpr' (TupleAccess x i) = do
 genExpr' (CallDir fn args) = do
   fn' <- getRef fn
   args' <- mapM (\a -> do a' <- getRef a; return (a', [])) args
-  call fn' args'
+  call fn' (args' ++ [(ConstantOperand (C.Undef $ LT.ptr LT.i8), [])])
+genExpr' (CallCls cls args) = do
+  cls' <- getRef cls
+  fnptr <- gep cls' [ ConstantOperand (C.Int 32 0)
+                    -- , ConstantOperand (C.Int 32 0)
+                    , ConstantOperand (C.Int 32 0)
+                    ] `named` "fn_ptr"
+  capptr <- gep cls' [ ConstantOperand (C.Int 32 0)
+                     , ConstantOperand (C.Int 32 1)
+                     ] `named` "cap_ptr"
+  args' <- mapM (\a -> do a' <- getRef a; return (a', [])) args
+  fn <- load fnptr 0
+  cap <- load capptr 0
+  call fn (args' ++ [(cap, [])])
 genExpr' (Let (ValDec name val) e) = do
   val' <- genExpr' val `named` (fromString . show $ pretty name)
   addTable name val'
   genExpr' e
-genExpr' (Let ClsDec{} _) = panic "closure is not supported"
+genExpr' (Let (ClsDec name fn captures) e) = do
+  size <- rawSizeof (captureStruct captures) `named` "captures_size"
+  p <- flip bitcast (LT.ptr $ captureStruct captures) =<< rawGcMalloc size `named` "captures_ptr"
+  forM_ (zip [0..] captures) $ \(i, x) -> do
+    p' <- gep p [ ConstantOperand (C.Int 32 0)
+                , ConstantOperand (C.Int 32 i)
+                ] `named` "capture_ptr"
+    o <- getRef x
+    store p' 0 o
+  fn' <- getRef fn
+  let fn'ty = LT.typeOf fn' -- LT.ptr (convertType ((\(TypedID _ ty) -> ty) fn))
+  fn'size <- rawSizeof fn'ty `named` "fn_size"
+  let capty = LT.ptr LT.i8
+  cap <- bitcast p capty `named` "cap_ptr"
+  capSize <- rawSizeof capty `named` "cap_size"
+  clsSize <- add fn'size capSize `named` "cls_size"
+  clsptr <- flip bitcast (LT.ptr $ LT.StructureType False [fn'ty, capty]) =<< rawGcMalloc clsSize `named` "cls_ptr"
+  fnp <- gep clsptr [ ConstantOperand (C.Int 32 0)
+                    -- , ConstantOperand (C.Int 32 0)
+                    , ConstantOperand (C.Int 32 0)
+                    ] `named` "fn_ptr"
+  store fnp 0 fn'
+  capp <- gep clsptr [ ConstantOperand (C.Int 32 0)
+                     , ConstantOperand (C.Int 32 1)
+                     ] `named` "cap_ptr"
+  store capp 0 cap
+  addTable name clsptr
+  genExpr' e
 genExpr' (If c t f) = do
   c' <- getRef c
   r <- alloca (convertType (T.typeOf t)) Nothing 0 `named` "resultptr"
@@ -174,7 +231,6 @@ genExpr' (If c t f) = do
   lift (modify $ \s -> s { _term = backup })
   emitBlockStart end
   load r 0
-genExpr' (CallCls _ _) = panic "closure is not supported"
 genExpr' (BinOp op x y) = do
   let op' = case op of
         Add      -> add
@@ -233,25 +289,35 @@ genExDec ::
   ExDec TypedID -> t m ()
 genExDec (ExDec name str) = do
   let (argtys, retty) = case T.typeOf name of
-                          (T.FunTy p r) -> (map convertType p, convertType r)
+                          (T.FunTy p r) -> (map convertType p ++ [LT.ptr LT.i8], convertType r)
                           _ -> panic $ show name <> " is not callable"
   o <- extern (fromString $ toS str) argtys retty
   addTable name o
 
 genFunDec :: FunDec TypedID -> GenDec ()
-genFunDec (FunDec fn@(TypedID _ (T.FunTy _ retty)) params [] body) = do
+genFunDec (FunDec fn@(TypedID _ (T.FunTy _ retty)) params captures body) = do
   let fn' = fromString (show (pretty fn))
   let params' = map (\(TypedID name ty) ->
                        (convertType ty, fromString (show (pretty name))))
                 params
+                ++ [(LT.ptr LT.i8, fromString "captures")]
   let retty' = convertType retty
+  backup <- gets _table
   let body' xs = do
         mapM_ (uncurry addTable) (zip params xs)
+        unless (null captures) $ do
+          capPtr <- bitcast (last xs) (LT.ptr $ captureStruct captures) `named` "capturesPtr"
+          forM_ (zip [0..] captures) $ \(i, c) -> do
+            p' <- gep capPtr [ ConstantOperand (C.Int 32 0)
+                             , ConstantOperand (C.Int 32 i)
+                             ] `named` fromString (show (pretty c) ++ "Ptr")
+            o <- load p' 0 `named` fromString (show (pretty c))
+            addTable c o
         genExpr body
-  _ <- function fn' params' retty' body'
+  fnop <- function fn' params' retty' body'
+  modify $ \e -> e { _table = backup }
+  -- addTable fn fnop
   return ()
-
-genFunDec _ = panic "closure is not supported"
 
 genMain :: Expr TypedID -> GenDec ()
 genMain e = do
@@ -267,9 +333,14 @@ genProgram (Program fs es body) = do
   mapM_ genFunDec fs
   _ <- genMain body
   return ()
-  where addFunction (FunDec fn@(TypedID _ fnty) _ _ _) = do
-          let fnop = ConstantOperand $ C.GlobalReference (convertType fnty) (fromString $ show $ pretty fn)
-          addTable fn fnop
+  where
+    -- addFunction (FunDec fn@(TypedID _ fnty) _ [] _) = do
+    --   let fnop = ConstantOperand $ C.GlobalReference (convertType fnty) (fromString $ show $ pretty fn)
+    --   addTable fn fnop
+    addFunction (FunDec fn@(TypedID _ (T.FunTy params retty)) _ captures _) = do
+      let fnop = ConstantOperand $ C.GlobalReference (LT.FunctionType (convertType retty) (map convertType params ++ [LT.ptr LT.i8]) False) (fromString $ show $ pretty fn)
+      addTable fn fnop
+  -- LT.FunctionType (convertType retTy) (map convertType params) False
 
 
 dumpCodeGen ::

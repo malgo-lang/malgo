@@ -15,7 +15,7 @@ import           Language.Malgo.Syntax  hiding (info)
 import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.Utils
-import           Text.PrettyPrint
+import           Text.PrettyPrint hiding ((<>))
 
 data TypedID = TypedID ID Type
     deriving (Show, Ord, Read)
@@ -24,7 +24,7 @@ instance Eq TypedID where
     (TypedID x _) == (TypedID y _) = x == y
 
 instance PrettyPrint TypedID where
-    pretty (TypedID x _) = pretty x -- <> text ":" <> pretty t
+    pretty (TypedID x t) = pretty x <> text ":" <> pretty t
 
 instance Typeable TypedID where
     typeOf (TypedID _ t) = t

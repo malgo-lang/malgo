@@ -36,7 +36,7 @@ parseOpt = execParser $
           <*> switch (long "dump-llvm")
          <**> helper)
   (fullDesc
-    <> progDesc "A interpreter of malgo"
+    <> progDesc "malgo"
     <> header "malgo - a toy programming language")
 
 compile :: Syntax.Expr Name -> Opt -> IO (Program TypeCheck.TypedID)

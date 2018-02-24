@@ -1,13 +1,20 @@
 #include <stdio.h>
 
-void newline(void) {
+typedef struct {} Unit;
+
+Unit unit = {};
+
+Unit newline(Unit unused, char* unused1) {
   printf("\n");
+  return unit;
 }
 
-void print_int(int n) {
+Unit print_int(int n, char* unused) {
   printf("%d", n);
+  return unit;
 }
 
-void println(char* str) {
+Unit println(char* str, char* unused) {
   printf("%s\n", str);
+  return unit;
 }
