@@ -4,15 +4,14 @@ extern println : String -> {} = "println"
 extern print_int : Int -> {} = "print_int"
 extern print_float : Float -> {} = "print_float"
 extern flush : {} -> {} = "flush"
-extern getchar : {} -> Char = "getchar"
+extern getChar : {} -> Char = "getchar"
 extern ord : Char -> Int = "ord"
 extern chr : Int -> Char = "chr"
 extern size : String -> Int = "size"
 extern newline : {} -> {} = "newline"
-(* extern substring : (String, Int, Int) -> String = "substring" *)
-(* extern concat : (String, String) -> String = "concat" *)
+extern substring : {String, Int, Int} -> String = "substring"
+extern concat : {String, String} -> String = "concat"
 extern not : Bool -> Bool = "not"
-(* extern exit : Int -> {} = "exit" *)
 fun println_int(x:Int) : {} = print_int(x); newline()
 fun println_float(x:Float) : {} = print_float(x); newline()
 
@@ -38,6 +37,8 @@ in
   do_nothing();
   println_int(add(2));
   println_int(a);
+  println(substring({name, 1, 3}));
+  println(concat({"foo", "bar"}));
   println_float(3.14);
   println_float(area(10.0))
 end
