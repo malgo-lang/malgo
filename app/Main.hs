@@ -1,10 +1,12 @@
 module Main where
 
 import           Language.Malgo.Driver
+import qualified Language.Malgo.CodeGen as CodeGen
 import qualified Language.Malgo.Lexer       as Lexer
 import qualified Language.Malgo.Parser      as Parser
 import           Language.Malgo.Utils
 import qualified Language.Malgo.Prelude as P
+import LLVM.Pretty
 
 main :: IO ()
 main = do
@@ -15,11 +17,6 @@ main = do
   let ast = case Parser.parseExpr <$> tokens of
         Left x  -> error $ show x
         Right x -> x
-  obj <- compile ast opt
+  ll <- compile file ast opt
 
-  if _compileOnly opt
-    then return ()
-    else do e <- eval obj
-            case e of
-              Left err -> error $ show $ P.pretty err
-              Right result -> return (seq result ())
+  P.putText (P.toS $ ppllvm ll)

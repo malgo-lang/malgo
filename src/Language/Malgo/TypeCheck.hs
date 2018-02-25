@@ -17,7 +17,7 @@ import           Language.Malgo.Type
 import           Language.Malgo.Utils
 import           Text.PrettyPrint hiding ((<>))
 
-data TypedID = TypedID ID Type
+data TypedID = TypedID {_id :: ID, _type :: Type}
     deriving (Show, Ord, Read)
 
 instance Eq TypedID where

@@ -1,25 +1,23 @@
 {-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.CodeGen where
 
-import qualified LLVM.Pretty as P
-
 import           Data.Char
-import Data.List (last)
+import           Data.List                       (last)
 import           Data.Maybe
 import           Data.String
 import qualified Data.Text                       as T
 
 import qualified LLVM.AST
-import qualified LLVM.AST.Typed as LT
 import qualified LLVM.AST.Constant               as C
 import qualified LLVM.AST.FloatingPointPredicate as FP
 import qualified LLVM.AST.IntegerPredicate       as IP
 import           LLVM.AST.Operand
 import qualified LLVM.AST.Type                   as LT
+import qualified LLVM.AST.Typed                  as LT
 import           LLVM.IRBuilder                  as IRBuilder
 
 import           Language.Malgo.HIR              (Op (..))
@@ -55,7 +53,7 @@ convertType "Float"        = LT.double
 convertType "Bool"         = LT.i1
 convertType "Char"         = LT.i8
 convertType "String"       = LT.ptr LT.i8
-convertType "Unit"         = -- LT.NamedTypeReference "Unit"
+convertType "Unit"         =
   LT.StructureType False []
 convertType (T.NameTy x) = panic $ "unknown type: " <> show x
 convertType (T.TupleTy xs) =
@@ -67,16 +65,15 @@ convertType (T.ClsTy params retty) =
   [ LT.ptr $ LT.FunctionType (convertType retty) (map convertType params ++ [LT.ptr LT.i8]) False
   , LT.ptr LT.i8
   ]
--- TODO: クロージャをLLVMでどのように扱うかを決める
 
-sizeof :: MonadIRBuilder m => T.Type -> m Operand
+-- sizeof :: MonadIRBuilder m => T.Type -> m Operand
+-- sizeof ty = do
+--   nullptr <- pure $ ConstantOperand (C.Null (LT.ptr (convertType ty)))
+--   ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
+--   ptrtoint ptr LT.i64
+
+sizeof :: MonadIRBuilder m => LT.Type -> m Operand
 sizeof ty = do
-  nullptr <- pure $ ConstantOperand (C.Null (LT.ptr (convertType ty)))
-  ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
-  ptrtoint ptr LT.i64
-
-rawSizeof :: MonadIRBuilder m => LT.Type -> m Operand
-rawSizeof ty = do
   nullptr <- pure $ ConstantOperand (C.Null (LT.ptr ty))
   ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
   ptrtoint ptr LT.i64
@@ -103,23 +100,24 @@ fromTypedID (TypedID i _) =
 char :: Applicative f => Integer -> f Operand
 char = pure . ConstantOperand . C.Int 8
 
+-- gcMalloc ::
+--   (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) =>
+--   Integer -> t m Operand
+-- gcMalloc bytes = do
+--   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
+--   bytes' <- int64 bytes
+--   call f [(bytes', [])]
+
 gcMalloc ::
   (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) =>
-  Integer -> t m Operand
-gcMalloc bytes = do
-  f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
-  bytes' <- int64 bytes
-  call f [(bytes', [])]
-
-rawGcMalloc ::
-  (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) =>
   Operand -> t m Operand
-rawGcMalloc bytesOpr = do
+gcMalloc bytesOpr = do
   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
   call f [(bytesOpr, [])]
 
+captureStruct :: [TypedID] -> LT.Type
 captureStruct xs =
-  LT.StructureType False (map (\(TypedID _ ty) -> convertType ty) xs)
+  LT.StructureType False (map (convertType . _type) xs)
 
 genExpr :: Expr TypedID -> IRBuilderT GenDec ()
 genExpr e@(Var _)   = term (genExpr' e) `named` "var"
@@ -145,7 +143,7 @@ genExpr' (Float d)  = double d `named` "float"
 genExpr' (Bool b)   = bit (if b then 1 else 0) `named` "bool"
 genExpr' (Char c)   = char (toInteger . ord $ c) `named` "char"
 genExpr' (String xs) = do
-  p <- gcMalloc (toInteger $ T.length xs + 1) `named` "string"
+  p <- gcMalloc (ConstantOperand $ C.Int 64 $ toInteger $ T.length xs + 1) `named` "string"
   mapM_ (uncurry $ addChar p) (zip [0..] $ T.unpack xs <> ['\0'])
   return p
   where addChar p i c = do
@@ -153,15 +151,15 @@ genExpr' (String xs) = do
           p' <- gep p [i'] `named` "tmp_char"
           c' <- char (toInteger . ord $ c)
           store p' 0 c'
-genExpr' Unit       = (pure . ConstantOperand . C.Undef $ convertType "Unit") `named` "unit"
+genExpr' Unit = pure (ConstantOperand $ C.Undef (convertType "Unit")) `named` "unit"
 genExpr' e@(Tuple xs) = do
-  size <- sizeof (T.typeOf e) `named` "tuple_size"
-  p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< rawGcMalloc size `named` "tuple_ptr"
+  size <- sizeof (convertType $ T.typeOf e) `named` "tuple_size"
+  p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< gcMalloc size `named` "tuple_ptr"
   forM_ (zip [0..] xs) $ \(i, x) -> do
     p' <- gep p [ ConstantOperand (C.Int 32 0)
                 , ConstantOperand (C.Int 32 i)
                 ] `named` "tuple_elem_ptr"
-    o <- getRef x -- `named` "tuple_elem"
+    o <- getRef x
     store p' 0 o
   return p
 genExpr' (TupleAccess x i) = do
@@ -177,7 +175,6 @@ genExpr' (CallDir fn args) = do
 genExpr' (CallCls cls args) = do
   cls' <- getRef cls
   fnptr <- gep cls' [ ConstantOperand (C.Int 32 0)
-                    -- , ConstantOperand (C.Int 32 0)
                     , ConstantOperand (C.Int 32 0)
                     ] `named` "fn_ptr"
   capptr <- gep cls' [ ConstantOperand (C.Int 32 0)
@@ -192,8 +189,8 @@ genExpr' (Let (ValDec name val) e) = do
   addTable name val'
   genExpr' e
 genExpr' (Let (ClsDec name fn captures) e) = do
-  size <- rawSizeof (captureStruct captures) `named` "captures_size"
-  p <- flip bitcast (LT.ptr $ captureStruct captures) =<< rawGcMalloc size `named` "captures_ptr"
+  size <- sizeof (captureStruct captures) `named` "captures_size"
+  p <- flip bitcast (LT.ptr $ captureStruct captures) =<< gcMalloc size `named` "captures_ptr"
   forM_ (zip [0..] captures) $ \(i, x) -> do
     p' <- gep p [ ConstantOperand (C.Int 32 0)
                 , ConstantOperand (C.Int 32 i)
@@ -201,15 +198,14 @@ genExpr' (Let (ClsDec name fn captures) e) = do
     o <- getRef x
     store p' 0 o
   fn' <- getRef fn
-  let fn'ty = LT.typeOf fn' -- LT.ptr (convertType ((\(TypedID _ ty) -> ty) fn))
-  fn'size <- rawSizeof fn'ty `named` "fn_size"
+  let fn'ty = LT.typeOf fn'
+  fn'size <- sizeof fn'ty `named` "fn_size"
   let capty = LT.ptr LT.i8
   cap <- bitcast p capty `named` "cap_ptr"
-  capSize <- rawSizeof capty `named` "cap_size"
+  capSize <- sizeof capty `named` "cap_size"
   clsSize <- add fn'size capSize `named` "cls_size"
-  clsptr <- flip bitcast (LT.ptr $ LT.StructureType False [fn'ty, capty]) =<< rawGcMalloc clsSize `named` "cls_ptr"
+  clsptr <- flip bitcast (LT.ptr $ LT.StructureType False [fn'ty, capty]) =<< gcMalloc clsSize `named` "cls_ptr"
   fnp <- gep clsptr [ ConstantOperand (C.Int 32 0)
-                    -- , ConstantOperand (C.Int 32 0)
                     , ConstantOperand (C.Int 32 0)
                     ] `named` "fn_ptr"
   store fnp 0 fn'
@@ -314,10 +310,9 @@ genFunDec (FunDec fn@(TypedID _ (T.FunTy _ retty)) params captures body) = do
             o <- load p' 0 `named` fromString (show (pretty c))
             addTable c o
         genExpr body
-  fnop <- function fn' params' retty' body'
+  _ <- function fn' params' retty' body'
   modify $ \e -> e { _table = backup }
-  -- addTable fn fnop
-  return ()
+genFunDec x = panic (show $ pretty x <> " is not valid")
 
 genMain :: Expr TypedID -> GenDec ()
 genMain e = do
@@ -334,14 +329,10 @@ genProgram (Program fs es body) = do
   _ <- genMain body
   return ()
   where
-    -- addFunction (FunDec fn@(TypedID _ fnty) _ [] _) = do
-    --   let fnop = ConstantOperand $ C.GlobalReference (convertType fnty) (fromString $ show $ pretty fn)
-    --   addTable fn fnop
-    addFunction (FunDec fn@(TypedID _ (T.FunTy params retty)) _ captures _) = do
+    addFunction (FunDec fn@(TypedID _ (T.FunTy params retty)) _ _ _) = do
       let fnop = ConstantOperand $ C.GlobalReference (LT.FunctionType (convertType retty) (map convertType params ++ [LT.ptr LT.i8]) False) (fromString $ show $ pretty fn)
       addTable fn fnop
-  -- LT.FunctionType (convertType retTy) (map convertType params) False
-
+    addFunction x = panic (show $ pretty x <> " is not valid")
 
 dumpCodeGen ::
   ModuleBuilderT (StateT GenState Identity) a

@@ -21,7 +21,6 @@ data MalgoError
                    P.Doc
   | KNormalError Info
                  P.Doc
-  | CombineError P.Doc
   | BetaTransError P.Doc
   | ClosureTransError P.Doc
   | EvalError P.Doc
@@ -40,20 +39,6 @@ class Env e where
 
 instance Env () where
   initEnv = ()
-
-data Opt = Opt
-  { _srcName         :: Text
-  , _dumpParsed      :: Bool
-  , _dumpRenamed     :: Bool
-  , _dumpTyped       :: Bool
-  , _dumpHIR         :: Bool
-  , _dumpBeta        :: Bool
-  , _dumpFlatten     :: Bool
-  , _dumpClosure     :: Bool
-  , _compileOnly     :: Bool
-  , _notRemoveUnused :: Bool
-  , _dumpLLVM        :: Bool
-  } deriving (Eq, Show)
 
 newtype MalgoT s m a = MalgoT
   { unMalgoT :: ExceptT MalgoError (StateT s (StateT Int m)) a

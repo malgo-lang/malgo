@@ -15,10 +15,21 @@ import           Language.Malgo.Prelude
 import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.Syntax    as Syntax
 import qualified Language.Malgo.TypeCheck as TypeCheck
-import qualified Language.Malgo.Unused    as Unused
 import           Language.Malgo.Utils
-import           LLVM.Pretty
+import qualified LLVM.AST                 as L
 import           Options.Applicative
+
+data Opt = Opt
+  { _srcName     :: Text
+  , _dumpParsed  :: Bool
+  , _dumpRenamed :: Bool
+  , _dumpTyped   :: Bool
+  , _dumpHIR     :: Bool
+  , _dumpBeta    :: Bool
+  , _dumpFlatten :: Bool
+  , _dumpClosure :: Bool
+  } deriving (Eq, Show)
+
 
 parseOpt :: IO Opt
 parseOpt = execParser $
@@ -31,16 +42,13 @@ parseOpt = execParser $
           <*> switch (long "dump-beta")
           <*> switch (long "dump-flatten")
           <*> switch (long "dump-closure"))
-          <*> switch (long "compile-only")
-          <*> switch (long "not-remove-unused")
-          <*> switch (long "dump-llvm")
          <**> helper)
   (fullDesc
     <> progDesc "malgo"
     <> header "malgo - a toy programming language")
 
-compile :: Syntax.Expr Name -> Opt -> IO (Program TypeCheck.TypedID)
-compile ast opt = do
+compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module
+compile filename ast opt = do
   when (_dumpParsed opt) $
     liftIO . print $ pretty ast
   (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
@@ -50,15 +58,14 @@ compile ast opt = do
   when (_dumpFlatten opt) $
     liftIO (print $ pretty (Flatten.flatten beta))
   (cls, _) <- run (const False) (Closure.conv beta) s4
-  let cls' = if _notRemoveUnused opt
-             then cls
-             else Unused.remove cls
   when (_dumpClosure opt) $
-    liftIO . print $ pretty cls'
-  when (_dumpLLVM opt) $ do
-    let llvm = CodeGen.dumpCodeGen (CodeGen.genProgram cls')
-    liftIO (mapM_ (putStrLn . ppll) llvm)
-  return cls'
+    liftIO . print $ pretty cls
+  let defs = CodeGen.dumpCodeGen (CodeGen.genProgram cls)
+  let llvmMod = L.defaultModule { L.moduleName = fromString $ toS filename
+                                , L.moduleSourceFileName = fromString $ toS filename
+                                , L.moduleDefinitions = defs
+                                }
+  return llvmMod
   where run key m u =
           runMalgoT m u >>= \(x', u') ->
                               case x' of
