@@ -8,6 +8,7 @@ A toy pragramming language.
 
 * [stack](https://docs.haskellstack.org/en/stable/README/)
 * [bdwgc](http://www.hboehm.info/gc/)
+* [clang](https://clang.llvm.org/)
 
 ## Installation
 
