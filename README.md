@@ -7,6 +7,7 @@ A toy pragramming language.
 ## Requirement
 
 * [stack](https://docs.haskellstack.org/en/stable/README/)
+* [bdwgc](http://www.hboehm.info/gc/)
 
 ## Installation
 
@@ -19,14 +20,8 @@ $ stack install
 ## Usage
 
 ```sh
-$ malgo examples/hello.mlg
+$ malgo examples/hello.mlg > hello.ll
+$ clang hello.ll examples/lib.c -lgc
+$ ./a.out
 Hello, world
 ```
-
-<!-- ## TODO -->
-
-<!-- 1. コマンドラインオプションの実装 -->
-<!-- 1. 関数をデフォルトでカリー化 -->
-<!-- 1. 構文の変更 -->
-<!-- 1. テストの追加 -->
-<!-- 1. LLVMによるコンパイラの実装 -->
