@@ -51,7 +51,7 @@ addBind name typ =
 getBind :: Monad m => Info -> ID -> TypeCheck m TypedID
 getBind info name = do
     t <- gets _table
-    case Map.lookup name t of
+    case lookup name t of
         Just x  -> pure x
         Nothing -> throw info (pretty name <+> text "is not defined")
 

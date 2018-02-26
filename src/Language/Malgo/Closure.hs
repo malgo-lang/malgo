@@ -50,15 +50,7 @@ convID :: Monad m => TypedID -> ClsTrans m TypedID
 convID name = do
   clss <- gets _closures
   varMap <- gets _varMap
-  case lookup name clss of
-    Nothing ->
-      -- 型が変わっていれば変換
-      case lookup name varMap of
-        Nothing    -> pure name
-        Just name' -> pure name'
-    Just cls ->
-      -- クロージャになっていれば変換
-      pure cls
+  pure $ fromMaybe name (lookup name clss <|> lookup name varMap)
 
 addClsTrans :: Monad m => TypedID -> TypedID -> ClsTrans m ()
 addClsTrans orig cls =
