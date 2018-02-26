@@ -47,7 +47,7 @@ newID orig = do
 getID :: Monad m => Info -> Name -> Rename m ID
 getID info name = do
   k <- gets knowns
-  case Map.lookup name k of
+  case lookup name k of
     Just x  -> pure x
     Nothing -> throw info (pretty name P.<+> P.text "is not defined")
 

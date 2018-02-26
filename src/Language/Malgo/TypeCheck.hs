@@ -29,9 +29,7 @@ instance PrettyPrint TypedID where
 instance Typeable TypedID where
     typeOf (TypedID _ t) = t
 
-newtype TcEnv = TcEnv
-                { _table :: Map.Map ID TypedID
-                }
+newtype TcEnv = TcEnv { _table :: Map.Map ID TypedID }
 
 instance Env TcEnv where
     initEnv = TcEnv Map.empty
