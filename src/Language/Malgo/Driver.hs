@@ -4,7 +4,6 @@
 
 module Language.Malgo.Driver where
 
-import qualified Language.Malgo.Beta      as Beta
 import qualified Language.Malgo.Closure   as Closure
 import qualified Language.Malgo.CodeGen   as CodeGen
 import qualified Language.Malgo.Eval      as Eval
@@ -25,7 +24,6 @@ data Opt = Opt
   , _dumpRenamed :: Bool
   , _dumpTyped   :: Bool
   , _dumpHIR     :: Bool
-  , _dumpBeta    :: Bool
   , _dumpFlatten :: Bool
   , _dumpClosure :: Bool
   } deriving (Eq, Show)
@@ -39,7 +37,6 @@ parseOpt = execParser $
           <*> switch (long "dump-renamed")
           <*> switch (long "dump-typed")
           <*> switch (long "dump-hir")
-          <*> switch (long "dump-beta")
           <*> switch (long "dump-flatten")
           <*> switch (long "dump-closure"))
          <**> helper)
@@ -54,10 +51,9 @@ compile filename ast opt = do
   (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
   (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
   (knormal, s3) <- run _dumpHIR (KNormal.knormal typed) s2
-  (beta, s4) <- run _dumpBeta (Beta.betaTrans knormal) s3
   when (_dumpFlatten opt) $
-    liftIO (print $ pretty (Flatten.flatten beta))
-  (cls, _) <- run (const False) (Closure.conv beta) s4
+    liftIO (print $ pretty (Flatten.flatten knormal))
+  (cls, _) <- run (const False) (Closure.conv knormal) s3
   when (_dumpClosure opt) $
     liftIO . print $ pretty cls
   let defs = CodeGen.dumpCodeGen (CodeGen.genProgram cls)
