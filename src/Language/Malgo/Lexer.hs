@@ -1,15 +1,15 @@
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes        #-}
 
 module Language.Malgo.Lexer where
 
-import           Language.Malgo.Prelude hiding (try, EQ, LT, GT)
-import Data.String
-import           Text.Parsec hiding ((<|>), many)
+import           Data.String
+import           Language.Malgo.Prelude hiding (EQ, GT, LT, try)
+import           Text.Parsec            hiding (many, (<|>))
 import           Text.Parsec.Language
-import           Text.Parsec.Pos       ()
-import qualified Text.Parsec.Token     as Tok
+import           Text.Parsec.Pos        ()
+import qualified Text.Parsec.Token      as Tok
 
 import           Language.Malgo.Utils
 
@@ -77,7 +77,7 @@ type Lexer a = forall u. ParsecT String u Identity a
 getInfo :: Lexer Info
 getInfo = do
     pos <- getPosition
-    return (Info (toS $ sourceName pos, sourceLine pos, sourceColumn pos))
+    pure (Info (toS $ sourceName pos, sourceLine pos, sourceColumn pos))
 
 lexer' :: Tok.GenTokenParser String u Identity
 lexer' =
@@ -130,11 +130,11 @@ lexer' =
     }
 
 keyword :: Info -> String -> Tag -> Lexer Token
-keyword info word tag = reserved word >> return (Token (info, tag))
+keyword info word tag = reserved word >> pure (Token (info, tag))
   where reserved = Tok.reserved lexer'
 
 op :: Info -> String -> Tag -> Lexer Token
-op info sym tag = reservedOp sym >> return (Token (info, tag))
+op info sym tag = reservedOp sym >> pure (Token (info, tag))
   where reservedOp = Tok.reservedOp lexer'
 
 lexer :: Lexer Token
@@ -151,12 +151,12 @@ lexer = do
         keyword info "else" ELSE <|>
         keyword info "true" (BOOL True) <|>
         keyword info "false" (BOOL False) <|>
-        (lparen >> return (Token (info, LPAREN))) <|>
-        (rparen >> return (Token (info, RPAREN))) <|>
-        (lbrack >> return (Token (info, LBRACK))) <|>
-        (rbrack >> return (Token (info, RBRACK))) <|>
-        (lbrace >> return (Token (info, LBRACE))) <|>
-        (rbrace >> return (Token (info, RBRACE))) <|>
+        (lparen >> pure (Token (info, LPAREN))) <|>
+        (rparen >> pure (Token (info, RPAREN))) <|>
+        (lbrack >> pure (Token (info, LBRACK))) <|>
+        (rbrack >> pure (Token (info, RBRACK))) <|>
+        (lbrace >> pure (Token (info, LBRACE))) <|>
+        (rbrace >> pure (Token (info, RBRACE))) <|>
         op info ":" COLON <|>
         op info ";" SEMICOLON <|>
         op info "," COMMA <|>
@@ -181,11 +181,11 @@ lexer = do
         op info "&&" AND <|>
         op info "||" OR <|>
         op info "->" ARROW <|>
-        fmap (\str -> Token (info, ID (toS str))) identifier <|>
-        try (fmap (\f -> Token (info, FLOAT f)) float) <|>
-        fmap (\n -> Token (info, INT n)) natural <|>
-        fmap (\c -> Token (info, CHAR c)) charLiteral <|>
-        fmap (\s -> Token (info, STRING (toS s))) stringLiteral
+        map (\str -> Token (info, ID (toS str))) identifier <|>
+        try (map (\f -> Token (info, FLOAT f)) float) <|>
+        map (\n -> Token (info, INT n)) natural <|>
+        map (\c -> Token (info, CHAR c)) charLiteral <|>
+        map (\s -> Token (info, STRING (toS s))) stringLiteral
   where
     natural = Tok.natural lexer'
     float = Tok.float lexer'
@@ -201,5 +201,5 @@ lexer = do
     rbrace = symbol "}"
 
 lexing :: SourceName -> String -> Either ParseError [Token]
-lexing = parse (whiteSpace >> many lexer >>= \toks -> eof >> return toks)
+lexing = parse (whiteSpace >> many lexer >>= \toks -> eof >> pure toks)
   where whiteSpace = Tok.whiteSpace lexer'

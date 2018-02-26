@@ -51,27 +51,27 @@ prelude :: Map Text ([Value] -> [Value] -> Eval Value)
 prelude = fromList
     [ ("print", \[String x] [] ->
           do liftIO (putStr x)
-             return Unit)
+             pure Unit)
     , ("println", \[String x] [] ->
           do liftIO (putStrLn x)
-             return Unit)
+             pure Unit)
     , ("print_int", \[Int x] [] ->
           do liftIO (putStr @Text $ show x)
-             return Unit)
+             pure Unit)
     , ("print_float", \[Float x] [] ->
           do liftIO (putStr @Text $ show x)
-             return Unit)
+             pure Unit)
     , ("newline", \[Unit] [] ->
           do liftIO (putStrLn @Text "")
-             return Unit)
+             pure Unit)
     , ("flush", \[Unit] [] ->
           do liftIO (S.hFlush stdout)
-             return Unit)
+             pure Unit)
     , ("getchar", \[Unit] [] -> Char <$> liftIO S.getChar)
-    , ("ord", \[Char x] [] -> return $ Int (toInteger $ ord x))
-    , ("chr", \[Int x] [] -> return $ Char (chr $ fromInteger x))
-    , ("size", \[String x] [] -> return $ Int (toInteger $ T.length x))
-    , ("not", \[Bool x] [] -> return $ Bool (not x))
+    , ("ord", \[Char x] [] -> pure $ Int (toInteger $ ord x))
+    , ("chr", \[Int x] [] -> pure $ Char (chr $ fromInteger x))
+    , ("size", \[String x] [] -> pure $ Int (toInteger $ T.length x))
+    , ("not", \[Bool x] [] -> pure $ Bool (not x))
     ]
 
 type Eval a = MalgoT Context IO a
@@ -84,7 +84,7 @@ getVar name = do
   vt <- gets _var
   case lookup name vt of
     Nothing -> throw $ pretty name <+> text "is not defined"
-    Just x  -> return x
+    Just x  -> pure x
 
 addFun :: TypedID -> ([Value] -> [Value] -> Eval Value) -> Eval ()
 addFun name fun = modify $ \e -> e {_fun = insert name fun (_fun e)}
@@ -94,7 +94,7 @@ getFun name = do
   ft <- gets _fun
   case lookup name ft of
     Nothing -> throw $ pretty name <+> text "is not defined"
-    Just x  -> return x
+    Just x  -> pure x
 
 eval :: M.Program TypedID -> Eval Value
 eval (M.Program tp ex e) = do
@@ -106,7 +106,7 @@ throw :: Doc -> Eval a
 throw mes = throwError (EvalError mes)
 
 evalToplevel :: [M.FunDec TypedID] -> Eval ()
-evalToplevel [] = return ()
+evalToplevel [] = pure ()
 evalToplevel (M.FunDec name params capture body:xs) = do
   let fun ps cs = do
         backup <- gets _var
@@ -114,12 +114,12 @@ evalToplevel (M.FunDec name params capture body:xs) = do
         mapM_ (uncurry addVar) (zip capture cs)
         v <- evalExpr body
         modify $ \e -> e {_var = backup}
-        return v
+        pure v
   addFun name fun
   evalToplevel xs
 
 evalExtern :: [M.ExDec TypedID] -> Eval ()
-evalExtern [] = return ()
+evalExtern [] = pure ()
 evalExtern (M.ExDec name orig:xs) = do
   case lookup orig prelude of
     Nothing -> throw $ pretty name <+> text "is not found in prelude"
@@ -128,16 +128,16 @@ evalExtern (M.ExDec name orig:xs) = do
 
 evalExpr :: M.Expr TypedID -> Eval Value
 evalExpr (M.Var x) = getVar x
-evalExpr (M.Int x) = return (Int x)
-evalExpr (M.Float x) = return (Float x)
-evalExpr (M.Bool x) = return (Bool x)
-evalExpr (M.Char x) = return (Char x)
-evalExpr (M.String x) = return (String x)
-evalExpr M.Unit = return Unit
+evalExpr (M.Int x) = pure (Int x)
+evalExpr (M.Float x) = pure (Float x)
+evalExpr (M.Bool x) = pure (Bool x)
+evalExpr (M.Char x) = pure (Char x)
+evalExpr (M.String x) = pure (String x)
+evalExpr M.Unit = pure Unit
 evalExpr (M.Tuple xs) = Tuple <$> mapM getVar xs
 evalExpr (M.TupleAccess x i) = do
   Tuple xs <- getVar x
-  return $ fromMaybe (panic "out of bounds") (atMay xs i)
+  pure $ fromMaybe (panic "out of bounds") (atMay xs i)
 evalExpr (M.CallDir fn args) = do
   fn' <- getFun fn
   args' <- mapM getVar args
@@ -165,21 +165,21 @@ evalExpr (M.BinOp op x y) = do
   x' <- getVar x
   y' <- getVar y
   case (op, x', y') of
-    (Add, Int a, Int b) -> return (Int $ a + b)
-    (Sub, Int a, Int b) -> return (Int $ a - b)
-    (Mul, Int a, Int b) -> return (Int $ a * b)
-    (Div, Int a, Int b) -> return (Int $ a `div` b)
-    (Mod, Int a, Int b) -> return (Int $ a `mod` b)
-    (FAdd, Float a, Float b) -> return (Float $ a + b)
-    (FSub, Float a, Float b) -> return (Float $ a - b)
-    (FMul, Float a, Float b) -> return (Float $ a * b)
-    (FDiv, Float a, Float b) -> return (Float $ a / b)
-    (Eq _, a, b) -> return (Bool $ a == b)
-    (Neq _, a, b) -> return (Bool $ a /= b)
-    (Lt _, a, b) -> return (Bool $ a < b)
-    (Gt _, a, b) -> return (Bool $ a > b)
-    (Le _, a, b) -> return (Bool $ a <= b)
-    (Ge _, a, b) -> return (Bool $ a >= b)
-    (And, Bool a, Bool b) -> return (Bool $ a && b)
-    (Or, Bool a, Bool b) -> return (Bool $ a || b)
+    (Add, Int a, Int b) -> pure (Int $ a + b)
+    (Sub, Int a, Int b) -> pure (Int $ a - b)
+    (Mul, Int a, Int b) -> pure (Int $ a * b)
+    (Div, Int a, Int b) -> pure (Int $ a `div` b)
+    (Mod, Int a, Int b) -> pure (Int $ a `mod` b)
+    (FAdd, Float a, Float b) -> pure (Float $ a + b)
+    (FSub, Float a, Float b) -> pure (Float $ a - b)
+    (FMul, Float a, Float b) -> pure (Float $ a * b)
+    (FDiv, Float a, Float b) -> pure (Float $ a / b)
+    (Eq _, a, b) -> pure (Bool $ a == b)
+    (Neq _, a, b) -> pure (Bool $ a /= b)
+    (Lt _, a, b) -> pure (Bool $ a < b)
+    (Gt _, a, b) -> pure (Bool $ a > b)
+    (Le _, a, b) -> pure (Bool $ a <= b)
+    (Ge _, a, b) -> pure (Bool $ a >= b)
+    (And, Bool a, Bool b) -> pure (Bool $ a && b)
+    (Or, Bool a, Bool b) -> pure (Bool $ a || b)
     _ -> throw $ text (show (op, x', y') ++ " is not valid")

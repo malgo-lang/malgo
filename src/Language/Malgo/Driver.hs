@@ -65,14 +65,14 @@ compile filename ast opt = do
                                 , L.moduleSourceFileName = fromString $ toS filename
                                 , L.moduleDefinitions = defs
                                 }
-  return llvmMod
+  pure llvmMod
   where run key m u =
           runMalgoT m u >>= \(x', u') ->
                               case x' of
                                 Left err -> die $ show $ pretty err
                                 Right result -> do when (key opt) $
                                                      liftIO $ print $ pretty result
-                                                   return (result, u')
+                                                   pure (result, u')
 
 eval :: Program TypeCheck.TypedID -> IO (Either MalgoError Eval.Value)
 eval prog = fst <$> runMalgoT (Eval.eval prog) 0

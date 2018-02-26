@@ -145,7 +145,7 @@ genExpr' (Char c)   = char (toInteger . ord $ c) `named` "char"
 genExpr' (String xs) = do
   p <- gcMalloc (ConstantOperand $ C.Int 64 $ toInteger $ T.length xs + 1) `named` "string"
   mapM_ (uncurry $ addChar p) (zip [0..] $ T.unpack xs <> ['\0'])
-  return p
+  pure p
   where addChar p i c = do
           i' <- int32 i
           p' <- gep p [i'] `named` "tmp_char"
@@ -161,7 +161,7 @@ genExpr' e@(Tuple xs) = do
                 ] `named` "tuple_elem_ptr"
     o <- getRef x
     store p' 0 o
-  return p
+  pure p
 genExpr' (TupleAccess x i) = do
   x' <- getRef x
   p <- gep x' [ ConstantOperand (C.Int 32 0)
@@ -170,7 +170,7 @@ genExpr' (TupleAccess x i) = do
   load p 0
 genExpr' (CallDir fn args) = do
   fn' <- getRef fn
-  args' <- mapM (\a -> do a' <- getRef a; return (a', [])) args
+  args' <- mapM (\a -> do a' <- getRef a; pure (a', [])) args
   call fn' (args' ++ [(ConstantOperand (C.Undef $ LT.ptr LT.i8), [])])
 genExpr' (CallCls cls args) = do
   cls' <- getRef cls
@@ -180,7 +180,7 @@ genExpr' (CallCls cls args) = do
   capptr <- gep cls' [ ConstantOperand (C.Int 32 0)
                      , ConstantOperand (C.Int 32 1)
                      ] `named` "cap_ptr"
-  args' <- mapM (\a -> do a' <- getRef a; return (a', [])) args
+  args' <- mapM (\a -> do a' <- getRef a; pure (a', [])) args
   fn <- load fnptr 0
   cap <- load capptr 0
   call fn (args' ++ [(cap, [])])
@@ -317,7 +317,7 @@ genFunDec x = panic (show $ pretty x <> " is not valid")
 genMain :: Expr TypedID -> GenDec ()
 genMain e = do
   _ <- function "main" [] (convertType "Int") (\_ -> do _ <- genExpr' e `named` "main"; i <- int32 0; ret i)
-  return ()
+  pure ()
 
 genProgram ::
   Program TypedID -> GenDec ()
@@ -327,7 +327,7 @@ genProgram (Program fs es body) = do
   mapM_ addFunction fs
   mapM_ genFunDec fs
   _ <- genMain body
-  return ()
+  pure ()
   where
     addFunction (FunDec fn@(TypedID _ (T.FunTy params retty)) _ _ _) = do
       let fnop = ConstantOperand $ C.GlobalReference (LT.FunctionType (convertType retty) (map convertType params ++ [LT.ptr LT.i8]) False) (fromString $ show $ pretty fn)

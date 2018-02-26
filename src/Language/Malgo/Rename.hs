@@ -42,36 +42,36 @@ newID orig = do
   -- cons <- gets idCons
   let i = ID orig c
   modify $ \e -> e {knowns = Map.insert orig i (knowns e)}
-  return i
+  pure i
 
 getID :: Monad m => Info -> Name -> Rename m ID
 getID info name = do
   k <- gets knowns
   case Map.lookup name k of
-    Just x  -> return x
+    Just x  -> pure x
     Nothing -> throw info (pretty name P.<+> P.text "is not defined")
 
 transExpr :: Monad m => Expr Name -> Rename m (Expr ID)
 transExpr (Var info name) = Var info <$> getID info name
-transExpr (Int info x) = return $ Int info x
-transExpr (Float info x) = return $ Float info x
-transExpr (Bool info x) = return $ Bool info x
-transExpr (Char info x) = return $ Char info x
-transExpr (String info x) = return $ String info x
-transExpr (Unit info) = return $ Unit info
+transExpr (Int info x) = pure $ Int info x
+transExpr (Float info x) = pure $ Float info x
+transExpr (Bool info x) = pure $ Bool info x
+transExpr (Char info x) = pure $ Char info x
+transExpr (String info x) = pure $ String info x
+transExpr (Unit info) = pure $ Unit info
 transExpr (Tuple info xs) = Tuple info <$> mapM transExpr xs
 transExpr (TupleAccess info e i) = TupleAccess info <$> transExpr e <*> pure i
 transExpr (Fn info params body) = do
   params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
   body' <- transExpr body
-  return (Fn info params' body')
+  pure (Fn info params' body')
 transExpr (Call info fn args) =
   Call info <$> transExpr fn <*> mapM transExpr args
 transExpr (Seq info e1 e2) = Seq info <$> transExpr e1 <*> transExpr e2
 transExpr (Let info decls e) = do
   decls' <- mapM transDecl decls
   e' <- transExpr e
-  return (Let info decls' e')
+  pure (Let info decls' e')
 transExpr (If info c t f) =
   If info <$> transExpr c <*> transExpr t <*> transExpr f
 transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
@@ -80,14 +80,14 @@ transDecl :: Monad m => Decl Name -> Rename m (Decl ID)
 transDecl (ValDec info name typ val) = do
   val' <- transExpr val
   name' <- newID name
-  return (ValDec info name' typ val')
+  pure (ValDec info name' typ val')
 transDecl (FunDec info fn params retty body) = do
   fn' <- newID fn
   ((params', body'), _) <- sandbox $ do
     params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
     body' <- transExpr body
-    return (params', body')
-  return (FunDec info fn' params' retty body')
+    pure (params', body')
+  pure (FunDec info fn' params' retty body')
 transDecl (ExDec info name typ orig) = do
   name' <- newID name
-  return $ ExDec info name' typ orig
+  pure $ ExDec info name' typ orig

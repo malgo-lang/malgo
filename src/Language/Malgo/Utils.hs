@@ -57,7 +57,7 @@ newUniq :: Monad m => MalgoT s m Int
 newUniq = do
   c <- MalgoT $ lift $ lift get
   setUniq (c + 1)
-  return c
+  pure c
 
 setUniq :: Monad m => Int -> MalgoT s m ()
 setUniq i = MalgoT $ lift $ lift $ modify $ const i

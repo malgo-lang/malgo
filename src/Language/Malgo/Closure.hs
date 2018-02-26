@@ -32,7 +32,7 @@ conv x = do
   x' <- convExpr x
   fs <- gets _fundecs
   exs <- gets _extern
-  return (Program fs exs x')
+  pure (Program fs exs x')
 
 throw :: MonadError MalgoError m => Doc -> m a
 throw m = throwError (ClosureTransError m)
@@ -54,11 +54,11 @@ convID name = do
     Nothing ->
       -- 型が変わっていれば変換
       case lookup name varMap of
-        Nothing    -> return name
-        Just name' -> return name'
+        Nothing    -> pure name
+        Just name' -> pure name'
     Just cls ->
       -- クロージャになっていれば変換
-      return cls
+      pure cls
 
 addClsTrans :: Monad m => TypedID -> TypedID -> ClsTrans m ()
 addClsTrans orig cls =
@@ -71,7 +71,7 @@ newClsID :: Monad m => TypedID -> ClsTrans m TypedID
 newClsID (TypedID fn fnty) = do
   let ty = toCls fnty
   c <- newUniq
-  return
+  pure
     (TypedID
        (ID (Language.Malgo.Rename._name fn `mappend` fromString "$cls") c)
        ty)
@@ -85,10 +85,10 @@ convExpr (H.Let (H.ValDec x@(TypedID name _) val) body) = do
   val' <- convExpr val
   case typeOf val' of
     ClsTy _ _ -> addClsTrans x (TypedID name (typeOf val')) -- 関数値はクロージャとして扱う
-    _         -> return ()
+    _         -> pure ()
   addVar x (TypedID name (typeOf val'))
   body' <- convExpr body
-  return (Let (ValDec (TypedID name (typeOf val')) val') body')
+  pure (Let (ValDec (TypedID name (typeOf val')) val') body')
 convExpr (H.Let (H.ExDec name orig) body) = do
   addKnown name
   addExDec (ExDec name orig)
@@ -101,7 +101,7 @@ convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = d
   let e'fv = freevars e' \\ args
   e'' <-
     if null e'fv
-      then return e' -- fnが自由変数を持たない
+      then pure e' -- fnが自由変数を持たない
       else do
         put backup -- fnが自由変数をもつ
         convExpr e
@@ -115,12 +115,12 @@ convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = d
 convExpr (H.Let (H.FunDec x _ _) _) =
   throw $ pretty x <+> text "is not a function"
 convExpr (H.Var x) = Var <$> convID x
-convExpr (H.Int x) = return (Int x)
-convExpr (H.Float x) = return (Float x)
-convExpr (H.Bool x) = return (Bool x)
-convExpr (H.Char x) = return (Char x)
-convExpr (H.String x) = return (String x)
-convExpr H.Unit = return Unit
+convExpr (H.Int x) = pure (Int x)
+convExpr (H.Float x) = pure (Float x)
+convExpr (H.Bool x) = pure (Bool x)
+convExpr (H.Char x) = pure (Char x)
+convExpr (H.String x) = pure (String x)
+convExpr H.Unit = pure Unit
 convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
 convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
 convExpr (H.Call fn args) =

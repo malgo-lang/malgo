@@ -78,4 +78,4 @@ sandbox action = do
   s <- get
   ret <- action
   put s
-  return (ret, s)
+  pure (ret, s)

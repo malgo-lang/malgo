@@ -26,7 +26,7 @@ find :: Monad m => TypedID -> Beta m TypedID
 find x = do
   table <- gets _table
   let x' = lookup x table
-  return $ fromMaybe x x'
+  pure $ fromMaybe x x'
 
 transExpr :: Monad m => Expr TypedID -> Beta m (Expr TypedID)
 transExpr (Let (FunDec fn params fnbody) body) =
@@ -40,4 +40,4 @@ transExpr (BinOp op x y) = BinOp op <$> find x <*> find y
 transExpr (If c t f) = If <$> find c <*> transExpr t <*> transExpr f
 transExpr (Call fn args) = Call <$> find fn <*> mapM find args
 transExpr (Var x) = Var <$> find x
-transExpr x = return x
+transExpr x = pure x

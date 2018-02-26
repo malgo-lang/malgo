@@ -52,19 +52,19 @@ getBind :: Monad m => Info -> ID -> TypeCheck m TypedID
 getBind info name = do
     t <- gets _table
     case Map.lookup name t of
-        Just x  -> return x
+        Just x  -> pure x
         Nothing -> throw info (pretty name <+> text "is not defined")
 
 checkDecl :: Monad m => Decl ID -> TypeCheck m (Decl TypedID)
 checkDecl (ExDec info name typ orig) = do
     addBind name typ
-    return $ ExDec info (TypedID name typ) typ orig
+    pure $ ExDec info (TypedID name typ) typ orig
 checkDecl (ValDec info name typ val) = do
     val' <- checkExpr val
     if typ == typeOf val'
         then do
             addBind name typ
-            return $ ValDec info (TypedID name typ) typ val'
+            pure $ ValDec info (TypedID name typ) typ val'
         else throw
                  info
                  ("expected:" <+>
@@ -77,14 +77,14 @@ checkDecl (FunDec info fn params retty body) = do
     let params' = map (\(x, t) -> (TypedID x t, t)) params
     body' <- checkExpr body
     if typeOf body' == retty
-        then return $ FunDec info fn' params' retty body'
+        then pure $ FunDec info fn' params' retty body'
         else throw info $
              "expected:" <+>
              pretty retty $+$ "actual:" <+> pretty (typeOf body')
   where
     makeFnTy [] _   = throw info (text "void parameter is invalid")
-        -- makeFnTy [(_, t)] ret = return $ FunTy t ret
-    makeFnTy xs ret = return $ FunTy (map snd xs) ret
+        -- makeFnTy [(_, t)] ret = pure $ FunTy t ret
+    makeFnTy xs ret = pure $ FunTy (map snd xs) ret
 
 instance Typeable (Expr TypedID) where
     typeOf (Var _ name) = typeOf name
@@ -162,30 +162,30 @@ comparable TupleTy {} = False
 
 checkExpr :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
 checkExpr (Var info name) = Var info <$> getBind info name
-checkExpr (Int info x) = return $ Int info x
-checkExpr (Float info x) = return $ Float info x
-checkExpr (Bool info x) = return $ Bool info x
-checkExpr (Char info x) = return $ Char info x
-checkExpr (String info x) = return $ String info x
-checkExpr (Unit info) = return $ Unit info
+checkExpr (Int info x) = pure $ Int info x
+checkExpr (Float info x) = pure $ Float info x
+checkExpr (Bool info x) = pure $ Bool info x
+checkExpr (Char info x) = pure $ Char info x
+checkExpr (String info x) = pure $ String info x
+checkExpr (Unit info) = pure $ Unit info
 checkExpr (Tuple info xs) = do
   xs' <- mapM checkExpr xs
-  return $ Tuple info xs'
+  pure $ Tuple info xs'
 checkExpr (Fn info params body) = do
   mapM_ (uncurry addBind) params
   let params' = map (\(x, t) -> (TypedID x t, t)) params
   body' <- checkExpr body
-  return $ Fn info params' body'
+  pure $ Fn info params' body'
 checkExpr (Call info fn args) = do
     fn' <- checkExpr fn
     args' <- mapM checkExpr args
     paramty <-
         case typeOf fn' of
-            (FunTy p _) -> return p
+            (FunTy p _) -> pure p
             _           -> throw info $ pretty fn' <+> "is not callable"
     if map typeOf args' == paramty -- 引数が複数あるとき
      -- -- | (TupleTy (map typeOf args') == TupleTy [paramty]) -- 引数が1つのとき
-        then return $ Call info fn' args'
+        then pure $ Call info fn' args'
         else throw
                  info
                  (text "expected:" <+>
@@ -201,7 +201,7 @@ checkExpr (TupleAccess i tuple index) = do
         throw i $ text "out of bounds:" <+> int index <+> pretty (TupleTy xs)
     t -> throw (Syntax.info tuple) $ text "expected: tuple" $+$
          text "actual:" <+> pretty t
-  return $ TupleAccess i tuple' index
+  pure $ TupleAccess i tuple' index
 checkExpr (BinOp info op x y) = do
     x' <- checkExpr x
     y' <- checkExpr y
@@ -216,7 +216,7 @@ checkExpr (BinOp info op x y) = do
         (throw info $
          text "expected:" <+>
          pretty py $+$ text "actual:" <+> pretty (typeOf y'))
-    return (BinOp info op x' y')
+    pure (BinOp info op x' y')
 checkExpr (Seq info e1 e2) = do
     e1' <- checkExpr e1
     if typeOf e1' == "Unit"
@@ -229,14 +229,14 @@ checkExpr (Let info decls e) = do
     decls' <- mapM checkDecl decls
     e' <- checkExpr e
     put backup
-    return (Let info decls' e')
+    pure (Let info decls' e')
 checkExpr (If info c t f) = do
     c' <- checkExpr c
     t' <- checkExpr t
     f' <- checkExpr f
     if typeOf c' == "Bool"
         then if typeOf t' == typeOf f'
-                 then return (If info c' t' f')
+                 then pure (If info c' t' f')
                  else throw info $
                       text "expected:" <+>
                       pretty (typeOf t') $+$ text "actual:" <+>
