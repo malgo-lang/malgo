@@ -4,6 +4,7 @@
 
 module Language.Malgo.Driver where
 
+import qualified Language.Malgo.Unused as Unused
 import qualified Language.Malgo.Closure   as Closure
 import qualified Language.Malgo.CodeGen   as CodeGen
 import qualified Language.Malgo.Eval      as Eval
@@ -26,6 +27,7 @@ data Opt = Opt
   , _dumpHIR     :: Bool
   , _dumpFlatten :: Bool
   , _dumpClosure :: Bool
+  , _notDeleteUnused :: Bool
   } deriving (Eq, Show)
 
 
@@ -39,6 +41,7 @@ parseOpt = execParser $
           <*> switch (long "dump-hir")
           <*> switch (long "dump-flatten")
           <*> switch (long "dump-closure"))
+          <*> switch (long "not-delete-unused")
          <**> helper)
   (fullDesc
     <> progDesc "malgo"
@@ -56,7 +59,10 @@ compile filename ast opt = do
   (cls, _) <- run (const False) (Closure.conv knormal) s3
   when (_dumpClosure opt) $
     liftIO . print $ pretty cls
-  let defs = CodeGen.dumpCodeGen (CodeGen.genProgram cls)
+  let defs = CodeGen.dumpCodeGen (CodeGen.genProgram $
+                                  if _notDeleteUnused opt
+                                  then cls
+                                  else Unused.remove cls)
   let llvmMod = L.defaultModule { L.moduleName = fromString $ toS filename
                                 , L.moduleSourceFileName = fromString $ toS filename
                                 , L.moduleDefinitions = defs
