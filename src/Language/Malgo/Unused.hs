@@ -1,8 +1,6 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Unused where
 
 import           Language.Malgo.MIR
-import           Language.Malgo.Type
 import           Language.Malgo.TypeCheck (TypedID)
 
 used :: Expr TypedID -> [TypedID]

@@ -90,20 +90,23 @@ convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = d
     -- fnが自由変数を持たないと仮定してeを変換
   addKnown fn
   e' <- convExpr e
-  let e'fv = freevars e' \\ args
-  e'' <-
-    if null e'fv
-      then pure e' -- fnが自由変数を持たない
-      else do
-        put backup -- fnが自由変数をもつ
-        convExpr e
-  let e'fv' = freevars e'' \\ (fn : args)
   let fn' = TypedID name (FunTy (map toCls params) (toCls ret)) -- 引数や返り値が関数値の場合を考慮
-  addFunDec $ FunDec fn' args e'fv' e''
   addVar fn fn'
   clsid <- newClsID fn'
   addClsTrans fn clsid
-  Let (ClsDec clsid fn' e'fv') <$> convExpr body -- 不要なクロージャ作成はLLVMレベルで取り除く
+
+  e'fv' <- mapM convID $ freevars e' \\ args
+  e'' <- if null e'fv'
+         then pure e'
+         else do -- put backup
+                 modify $ \env -> env { _knowns = _knowns backup
+                                      , _fundecs = _fundecs backup
+                                      , _extern = _extern backup
+                                      }
+                 convExpr e
+  fv <- mapM convID $ freevars e'' \\ args
+  addFunDec $ FunDec fn' args fv e''
+  Let (ClsDec clsid fn' fv) <$> convExpr body
 convExpr (H.Let (H.FunDec x _ _) _) =
   throw $ pretty x <+> text "is not a function"
 convExpr (H.Var x) = Var <$> convID x

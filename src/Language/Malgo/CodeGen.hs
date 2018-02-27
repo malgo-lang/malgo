@@ -191,12 +191,6 @@ genExpr' (Let (ValDec name val) e) = do
 genExpr' (Let (ClsDec name fn captures) e) = do
   size <- sizeof (captureStruct captures) `named` "captures_size"
   p <- flip bitcast (LT.ptr $ captureStruct captures) =<< gcMalloc size `named` "captures_ptr"
-  forM_ (zip [0..] captures) $ \(i, x) -> do
-    p' <- gep p [ ConstantOperand (C.Int 32 0)
-                , ConstantOperand (C.Int 32 i)
-                ] `named` "capture_ptr"
-    o <- getRef x
-    store p' 0 o
   fn' <- getRef fn
   let fn'ty = LT.typeOf fn'
   fn'size <- sizeof fn'ty `named` "fn_size"
@@ -214,6 +208,12 @@ genExpr' (Let (ClsDec name fn captures) e) = do
                      ] `named` "cap_ptr"
   store capp 0 cap
   addTable name clsptr
+  forM_ (zip [0..] captures) $ \(i, x) -> do
+    p' <- gep p [ ConstantOperand (C.Int 32 0)
+                , ConstantOperand (C.Int 32 i)
+                ] `named` "capture_ptr"
+    o <- getRef x
+    store p' 0 o
   genExpr' e
 genExpr' (If c t f) = do
   c' <- getRef c
