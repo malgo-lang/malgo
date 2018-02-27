@@ -11,10 +11,8 @@ used (Tuple xs)                  = xs
 used (TupleAccess x _)           = [x]
 used (CallDir _ xs)              = xs
 used (CallCls x xs)              = x:xs
-used (Let (ValDec a e) body)     =
-  if a `notElem` used body && (typeOf a /= "Unit")
-  then used body
-  else used e ++ used body
+used (Let (ValDec _ e) body)     =
+  used e ++ used body
 used (Let (ClsDec a _ cls) body) =
   if a `notElem` used body
   then used body
@@ -24,14 +22,12 @@ used (BinOp _ x y)               = [x, y]
 used _                           = []
 
 remove' :: Expr TypedID -> Expr TypedID
-remove' (Let dec@(ValDec a _) body) =
-  if a `notElem` used body && (typeOf a /= "Unit")
-  then remove' body
-  else Let dec (remove' body)
 remove' (Let dec@(ClsDec a _ _) body) =
   if a `notElem` used body
   then remove' body
   else Let dec (remove' body)
+remove' (Let (ValDec a e) body) =
+  Let (ValDec a (remove' e)) (remove' body)
 remove' (If c t f) = If c (remove' t) (remove' f)
 remove' x = x
 
