@@ -45,7 +45,14 @@ opt env (If i c t f) =
     _ -> If i c' (opt env t) (opt env f)
   where c' = opt env c
 opt env (BinOp i op x y) =
-  BinOp i op (opt env x) (opt env y)
+  case (op, opt env x, opt env y) of
+    (Add, Int _ a, Int _ b) -> Int i $ a + b
+    (Sub, Int _ a, Int _ b) -> Int i $ a - b
+    (Mul, Int _ a, Int _ b) -> Int i $ a * b
+    (FAdd, Float _ a, Float _ b) -> Float i $ a + b
+    (FSub, Float _ a, Float _ b) -> Float i $ a - b
+    (FMul, Float _ a, Float _ b) -> Float i $ a * b
+    (_, x', y') -> BinOp i op x' y'
 opt _ e = e
 
 optDecl ::
