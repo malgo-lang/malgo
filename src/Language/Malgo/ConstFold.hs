@@ -32,19 +32,20 @@ opt env e@(TupleAccess _ (Tuple _ xs) idx) =
   if isConst e
   then maybe e (opt env) (atMay xs idx)
   else e
-opt env (Fn info params body) =
-  Fn info params (opt env body)
-opt env (Let info decs e) =
-  Let info decs' $ opt env' e
+opt env (Call i fn args) = Call i (opt env fn) (map (opt env) args)
+opt env (Fn i params body) =
+  Fn i params (opt env body)
+opt env (Let i decs e) =
+  Let i decs' $ opt env' e
   where (decs', env') = optDecl env decs []
-opt env (If info c t f) =
+opt env (If i c t f) =
   case c' of
     (Bool _ True) -> t
     (Bool _ False) -> f
-    _ -> If info c' (opt env t) (opt env f)
+    _ -> If i c' (opt env t) (opt env f)
   where c' = opt env c
-opt env (BinOp info op x y) =
-  BinOp info op (opt env x) (opt env y)
+opt env (BinOp i op x y) =
+  BinOp i op (opt env x) (opt env y)
 opt _ e = e
 
 optDecl ::
@@ -54,12 +55,12 @@ optDecl ::
   -> ([Decl TypedID], Map TypedID (Expr TypedID))
 optDecl env [] acc =
   (reverse acc, env)
-optDecl env (ValDec info name ty val:xs) acc =
+optDecl env (ValDec i name ty val:xs) acc =
   if isConst val'
-  then optDecl (insert name val' env) xs (ValDec info name ty val':acc)
-  else optDecl env xs (ValDec info name ty val':acc)
+  then optDecl (insert name val' env) xs (ValDec i name ty val':acc)
+  else optDecl env xs (ValDec i name ty val':acc)
   where val' = opt env val
-optDecl env (FunDec info name params retty body:xs) acc =
-  optDecl env xs (FunDec info name params retty (opt env body):acc)
+optDecl env (FunDec i name params retty body:xs) acc =
+  optDecl env xs (FunDec i name params retty (opt env body):acc)
 optDecl env (dec:xs) acc =
   optDecl env xs (dec:acc)

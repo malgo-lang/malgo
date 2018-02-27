@@ -1,6 +1,7 @@
 # TODO
 
-1. Lexer, Parser, Syntaxが扱う文字列をTextに変更
+## 定数畳み込み
+BinOpに対する定数畳み込みとQuickCheckによるテストを実装
 
 ## アトム
 
