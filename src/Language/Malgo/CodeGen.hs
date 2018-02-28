@@ -115,6 +115,11 @@ gcMalloc bytesOpr = do
   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
   call f [(bytesOpr, [])]
 
+gcInit :: (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) => t m Operand
+gcInit = do
+  f <- lift (fromJust . lookup "GC_init" <$> gets _internal)
+  call f []
+
 captureStruct :: [TypedID] -> LT.Type
 captureStruct xs =
   LT.StructureType False (map (convertType . _type) xs)
@@ -316,13 +321,19 @@ genFunDec x = panic (show $ pretty x <> " is not valid")
 
 genMain :: Expr TypedID -> GenDec ()
 genMain e = do
-  _ <- function "main" [] (convertType "Int") (\_ -> do _ <- genExpr' e `named` "main"; i <- int32 0; ret i)
+  _ <- function "main" [] (convertType "Int")
+       (\_ ->
+          do _ <- gcInit
+             _ <- genExpr' e `named` "main"
+             i <- int32 0
+             ret i)
   pure ()
 
 genProgram ::
   Program TypedID -> GenDec ()
 genProgram (Program fs es body) = do
   addInternal "GC_malloc" =<< extern (fromString "GC_malloc") [LT.i64] (LT.ptr LT.i8)
+  addInternal "GC_init" =<< extern (fromString "GC_init") [] LT.void
   mapM_ genExDec es
   mapM_ addFunction fs
   mapM_ genFunDec fs

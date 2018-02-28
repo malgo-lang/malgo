@@ -124,11 +124,8 @@ instance PrettyPrint a => PrettyPrint (Decl a) where
         text "closure" <+>
         pretty name <+> pretty fn <+> parens (sep $ map pretty fv)
 
-data Program a =
-    Program [FunDec a]
-            [ExDec a]
-            (Expr a)
-    deriving (Show)
+data Program a = Program [FunDec a] [ExDec a] (Expr a)
+    deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Program a) where
     pretty (Program t e m) =
