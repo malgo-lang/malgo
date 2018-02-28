@@ -66,12 +66,6 @@ convertType (T.ClsTy params retty) =
   , LT.ptr LT.i8
   ]
 
--- sizeof :: MonadIRBuilder m => T.Type -> m Operand
--- sizeof ty = do
---   nullptr <- pure $ ConstantOperand (C.Null (LT.ptr (convertType ty)))
---   ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
---   ptrtoint ptr LT.i64
-
 sizeof :: MonadIRBuilder m => LT.Type -> m Operand
 sizeof ty = do
   nullptr <- pure $ ConstantOperand (C.Null (LT.ptr ty))
@@ -100,14 +94,6 @@ fromTypedID (TypedID i _) =
 char :: Applicative f => Integer -> f Operand
 char = pure . ConstantOperand . C.Int 8
 
--- gcMalloc ::
---   (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) =>
---   Integer -> t m Operand
--- gcMalloc bytes = do
---   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
---   bytes' <- int64 bytes
---   call f [(bytes', [])]
-
 gcMalloc ::
   (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) =>
   Operand -> t m Operand
@@ -115,7 +101,7 @@ gcMalloc bytesOpr = do
   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
   call f [(bytesOpr, [])]
 
-gcInit :: (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) => t m Operand
+gcInit :: IRBuilderT GenDec Operand
 gcInit = do
   f <- lift (fromJust . lookup "GC_init" <$> gets _internal)
   call f []
