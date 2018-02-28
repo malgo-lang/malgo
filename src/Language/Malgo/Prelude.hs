@@ -5,7 +5,6 @@
 module Language.Malgo.Prelude
   ( module X
   , PrettyPrint(..)
-  , Info(..)
   , HasDummy(..)
   , Dict(..)
   , sandbox
@@ -27,20 +26,8 @@ class PrettyPrint a where
 instance PrettyPrint Text where
   pretty x = P.text (toS x)
 
-newtype Info = Info (Text, Int, Int)
-  deriving (Show, Read)
-
-instance Eq Info where
-  _ == _ = True
-
-instance PrettyPrint Info where
-  pretty (Info x) = P.text $ show x
-
 class HasDummy a where
   dummy :: a
-
-instance HasDummy Info where
-  dummy = Info ("<dummy>", 0, 0)
 
 class Dict m where
   member :: Ord k => k -> m k a -> Bool

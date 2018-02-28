@@ -1,4 +1,5 @@
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -15,13 +16,24 @@ type Name = Text
 fromName :: StringConv Name a => Name -> a
 fromName = toS
 
+newtype Info = Info (Text, Int, Int)
+  deriving (Show, Read)
+
+instance Eq Info where
+  _ == _ = True
+
+instance PrettyPrint Info where
+  pretty (Info x) = P.text $ show x
+
+instance HasDummy Info where
+  dummy = Info ("<dummy>", 0, 0)
+
 data MalgoError
   = RenameError Info P.Doc
   | TypeCheckError Info
                    P.Doc
   | KNormalError Info
                  P.Doc
-  | BetaTransError P.Doc
   | ClosureTransError P.Doc
   | EvalError P.Doc
   deriving (Show)
@@ -30,7 +42,6 @@ instance PrettyPrint MalgoError where
   pretty (RenameError i m) = P.text "error(rename):" P.<+> pretty i P.<+> m
   pretty (TypeCheckError i m) = P.text "error(typing):" P.<+> pretty i P.<+> m
   pretty (KNormalError i m) = P.text "error(knormal):" P.<+> pretty i P.<+> m
-  pretty (BetaTransError m) = P.text "error(betatrans):" P.<+> m
   pretty (ClosureTransError m) = P.text "error(closuretrans):" P.<+> m
   pretty (EvalError m) = P.text "error(eval):" P.<+> m
 
