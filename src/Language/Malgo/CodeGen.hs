@@ -306,18 +306,16 @@ genFunDec (FunDec fn@(TypedID _ (T.FunTy _ retty)) params captures body) = do
 genFunDec x = panic (show $ pretty x <> " is not valid")
 
 genMain :: Expr TypedID -> GenDec ()
-genMain e = do
-  _ <- function "main" [] (convertType "Int")
-       (\_ ->
-          do _ <- gcInit
-             _ <- genExpr' e `named` "main"
-             i <- int32 0
-             ret i)
-  pure ()
+genMain e = void $ function "main" [] (convertType "Int")
+  (\_ ->
+      do _ <- gcInit
+         _ <- genExpr' e `named` "main"
+         i <- int32 0
+         ret i)
 
 genProgram ::
   Program TypedID -> GenDec ()
-genProgram (Program fs es body) = do
+genProgram (Program fs es body _) = do
   addInternal "GC_malloc" =<< extern (fromString "GC_malloc") [LT.i64] (LT.ptr LT.i8)
   addInternal "GC_init" =<< extern (fromString "GC_init") [] LT.void
   mapM_ genExDec es

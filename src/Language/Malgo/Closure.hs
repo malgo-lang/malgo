@@ -2,7 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 module Language.Malgo.Closure
-  ( conv ) where
+  ( conv, ClsEnv(..) ) where
 
 import           Data.List                ((\\))
 import           Language.Malgo.FreeVars
@@ -32,7 +32,8 @@ conv x = do
   x' <- convExpr x
   fs <- gets _fundecs
   exs <- gets _extern
-  pure (Program fs exs x')
+  knowns <- gets _knowns
+  pure (Program fs exs x' knowns)
 
 throw :: MonadError MalgoError m => Doc -> m a
 throw m = throwError (ClosureTransError m)
@@ -87,7 +88,7 @@ convExpr (H.Let (H.ExDec name orig) body) = do
   convExpr body
 convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = do
   backup <- get
-    -- fnが自由変数を持たないと仮定してeを変換
+  -- fnが自由変数を持たないと仮定してeを変換
   addKnown fn
   e' <- convExpr e
   let fn' = TypedID name (FunTy (map toCls params) (toCls ret)) -- 引数や返り値が関数値の場合を考慮
@@ -106,7 +107,13 @@ convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = d
                  convExpr e
   fv <- mapM convID $ freevars e'' \\ args
   addFunDec $ FunDec fn' args fv e''
-  Let (ClsDec clsid fn' fv) <$> convExpr body
+
+  body' <- convExpr body
+  if clsid `elem` freevars body'
+  then do modify $ \env -> env { _knowns = _knowns backup }
+          return $ Let (ClsDec clsid fn' fv) body'
+  else return body'
+
 convExpr (H.Let (H.FunDec x _ _) _) =
   throw $ pretty x <+> text "is not a function"
 convExpr (H.Var x) = Var <$> convID x

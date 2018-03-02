@@ -19,6 +19,7 @@ import qualified Language.Malgo.TypeCheck as TypeCheck
 import           Language.Malgo.Utils
 import qualified LLVM.AST                 as L
 import           Options.Applicative
+import qualified Text.PrettyPrint as P
 
 data Opt = Opt
   { _srcName     :: Text
@@ -64,7 +65,7 @@ compile filename ast opt = do
     liftIO (print $ pretty (Flatten.flatten knormal))
   (cls, _) <- run (const False) (Closure.conv knormal) s3
   when (_dumpClosure opt) $
-    liftIO . print $ pretty cls
+    liftIO $ print $ pretty cls
   let defs = CodeGen.dumpCodeGen (CodeGen.genProgram $
                                   if _notDeleteUnused opt
                                   then cls

@@ -30,8 +30,9 @@ remove' (If c t f) = If c (remove' t) (remove' f)
 remove' x = x
 
 remove :: Program TypedID -> Program TypedID
-remove (Program fundec exdec body) =
+remove (Program fundec exdec body knowns) =
   Program (map (\(FunDec n a f b) ->
                   FunDec n a f (remove' b)) fundec)
   exdec
   (remove' body)
+  knowns

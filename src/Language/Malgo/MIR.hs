@@ -4,6 +4,7 @@
 
 module Language.Malgo.MIR where
 
+import Language.Malgo.TypeCheck (TypedID(..))
 import           Language.Malgo.HIR     (Op (..))
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
@@ -29,24 +30,24 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty (Var x) = pretty x
   pretty (Int x) = integer x
   pretty (Float x) = double x
-  pretty (Bool True) = text "#t"
-  pretty (Bool False) = text "#f"
+  pretty (Bool True) = "#t"
+  pretty (Bool False) = "#f"
   pretty (Char x) = quotes $ char x
   pretty (String x) = doubleQuotes $ pretty x
-  pretty Unit = text "{}"
+  pretty Unit = "{}"
   pretty (Tuple xs) =
-    braces $ sep (punctuate (text ",") (map pretty xs))
+    braces $ sep (punctuate "," (map pretty xs))
   pretty (TupleAccess x i) =
-    parens (text "." <+> pretty x <+> int i)
+    parens ("." <+> pretty x <+> int i)
   pretty (CallDir fn arg) = parens $ pretty fn <+> sep (map pretty arg)
   pretty (CallCls cls args) = braces $ pretty cls <+> sep (map pretty args)
   pretty (Let decl body) =
-    parens $ text "let" <+> parens (pretty decl) $+$ nest (-1) (pretty body)
+    parens $ "let" <+> parens (pretty decl) $+$ nest (-1) (pretty body)
   pretty (If c t f) =
     parens $
-    text "if" <+>
-    pretty c $+$ text "then:" <+>
-    nest 2 (pretty t) $+$ text "else:" <+> nest 2 (pretty f)
+    "if" <+>
+    pretty c $+$ "then:" <+>
+    nest 2 (pretty t) $+$ "else:" <+> nest 2 (pretty f)
   pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
 instance (Typeable a, Show a) => Typeable (Expr a) where
@@ -100,7 +101,7 @@ data FunDec a
 
 instance PrettyPrint a => PrettyPrint (FunDec a) where
     pretty (FunDec name params capture body) =
-        text "fun" <+>
+        "fun" <+>
         (parens . sep $ pretty name : map pretty params) <+>
         (parens . sep $ map pretty capture) $+$ nest 2 (pretty body)
 
@@ -110,7 +111,7 @@ data ExDec a
     deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (ExDec a) where
-    pretty (ExDec name orig) = text "extern" <+> pretty name <+> pretty orig
+    pretty (ExDec name orig) = "extern" <+> pretty name <+> pretty orig
 
 data Decl a
     = ValDec a (Expr a)
@@ -119,17 +120,17 @@ data Decl a
     deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Decl a) where
-    pretty (ValDec name val) = text "val" <+> pretty name <+> pretty val
+    pretty (ValDec name val) = "val" <+> pretty name <+> pretty val
     pretty (ClsDec name fn fv) =
-        text "closure" <+>
+        "closure" <+>
         pretty name <+> pretty fn <+> parens (sep $ map pretty fv)
 
-data Program a = Program [FunDec a] [ExDec a] (Expr a)
+data Program a = Program [FunDec a] [ExDec a] (Expr a) [TypedID]
     deriving (Show, Read)
 
 instance PrettyPrint a => PrettyPrint (Program a) where
-    pretty (Program t e m) =
-        text "toplevel:" $+$ cat (map pretty t) $+$ text "extern:" $+$
-        cat (map pretty e) $+$
-        text "main:" $+$
-        pretty m
+    pretty (Program t e m k) =
+        "toplevel:" $+$ cat (map pretty t)
+        $+$ "knowns:" $+$ cat (punctuate "," (map pretty k))
+        $+$ "extern:" $+$ cat (map pretty e)
+        $+$ "main:" $+$ pretty m

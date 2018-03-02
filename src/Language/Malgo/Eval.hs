@@ -97,7 +97,7 @@ getFun name = do
     Just x  -> pure x
 
 eval :: M.Program TypedID -> Eval Value
-eval (M.Program tp ex e) = do
+eval (M.Program tp ex e _) = do
   evalExtern ex
   evalToplevel tp
   evalExpr e
