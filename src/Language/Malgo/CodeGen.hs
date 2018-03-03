@@ -300,7 +300,7 @@ genFunDec (FunDec fn@(TypedID _ (T.FunTy _ retty)) params captures body) = do
   backup <- gets _table
   let body' xs = do
         mapM_ (uncurry addTable) (zip params xs)
-        unless (fn `elem` knowns) $ do
+        unless (fn `elem` knowns || null captures) $ do
           capPtr <- bitcast (last xs) (LT.ptr $ captureStruct captures) `named` "capturesPtr"
           forM_ (zip [0..] captures) $ \(i, c) -> do
             p' <- gep capPtr [ ConstantOperand (C.Int 32 0)
