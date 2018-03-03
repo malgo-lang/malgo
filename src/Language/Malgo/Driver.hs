@@ -19,7 +19,6 @@ import qualified Language.Malgo.TypeCheck as TypeCheck
 import           Language.Malgo.Utils
 import qualified LLVM.AST                 as L
 import           Options.Applicative
-import qualified Text.PrettyPrint as P
 
 data Opt = Opt
   { _srcName     :: Text

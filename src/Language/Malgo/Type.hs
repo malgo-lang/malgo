@@ -18,18 +18,20 @@ data Type
     deriving (Eq, Show, Ord, Read)
 
 instance PrettyPrint Type where
-    pretty "Unit" = text "{}"
+    pretty "Unit" = "{}"
     pretty (NameTy n) = pretty n
-    pretty (FunTy param ret) =
-        parens
-            (cat (punctuate (text ",") (map pretty param)) <+>
-             text "->" <+> pretty ret)
-    pretty (TupleTy xs) = braces $ sep (punctuate (text ",") (map pretty xs))
-    pretty (ClsTy param ret) =
+    pretty (FunTy [param] ret) =
+      pretty param <+> "->" <+> pretty ret
+    pretty (FunTy params ret) =
+      parens (cat (punctuate "," (map pretty params))) <+>
+      "->" <+> pretty ret
+    pretty (TupleTy xs) = braces $ sep (punctuate "," (map pretty xs))
+    pretty (ClsTy [param] ret) =
+      braces (pretty param <+> "->" <+> pretty ret)
+    pretty (ClsTy params ret) =
         braces
-            (parens
-                 (cat (punctuate (text ",") (map pretty param)) <+>
-                  text "->" <+> pretty ret))
+            (parens (cat (punctuate "," (map pretty params))) <+>
+             "->" <+> pretty ret)
 
 instance IsString Type where
     fromString name = NameTy $ fromString name

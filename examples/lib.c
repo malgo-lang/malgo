@@ -47,27 +47,16 @@ int size(char* str, char* unused) {
   return strlen(str);
 }
 
-typedef struct {
-  char* str;
-  int i1;
-  int i2;
-} Tuple_String_Int_Int;
-
-char* substring(Tuple_String_Int_Int* arg, char* unused) {
-  char* str = (char*) GC_malloc(sizeof(char) * (arg->i2 - arg->i1) + 1);
-  strncpy(str, arg->str + arg->i1, arg->i2 - arg->i1);
-  return str;
+char* substring(char* str, int i1, int i2, char* unused) {
+  char* str1 = (char*) GC_malloc(sizeof(char) * (i2 - i1) + 1);
+  strncpy(str1, str + i1, i2 - i1);
+  return str1;
 }
 
-typedef struct {
-  char* str1;
-  char* str2;
-} Tuple_String_String;
-
-char* concat(Tuple_String_String* arg, char* unused) {
-  char* str = (char*) GC_malloc(strlen(arg->str1) + strlen(arg->str2));
-  strncpy(str, arg->str1, strlen(arg->str1));
-  strncat(str, arg->str2, strlen(arg->str2));
+char* concat(char* str1, char* str2, char* unused) {
+  char* str = (char*) GC_malloc(strlen(str1) + strlen(str2));
+  strncpy(str, str1, strlen(str1));
+  strncat(str, str2, strlen(str2));
   return str;
 }
 
