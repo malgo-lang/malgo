@@ -1,7 +1,7 @@
 -- -*- mode: fundamental -*-
 {
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.Parser where
+module Language.Malgo.RevParser where
 
 import Prelude hiding (EQ, LT, GT)
 import Language.Malgo.Lexer
