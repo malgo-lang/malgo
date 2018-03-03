@@ -30,6 +30,7 @@ import           Language.Malgo.TypeCheck        (TypedID (..))
 data GenState = GenState { _table    :: Map TypedID Operand
                          , _term     :: Operand -> GenExpr () -- if式の際の最終分岐先などに利用
                          , _internal :: Map String Operand
+                         , _knowns   :: [TypedID]
                          }
 
 type GenExpr a = IRBuilderT GenDec a
@@ -160,9 +161,13 @@ genExpr' (TupleAccess x i) = do
               ] `named` "tuple_elem_ptr"
   load p 0
 genExpr' (CallDir fn args) = do
+  knowns <- gets _knowns
   fn' <- getRef fn
   args' <- mapM (\a -> do a' <- getRef a; pure (a', [])) args
-  call fn' (args' ++ [(ConstantOperand (C.Undef $ LT.ptr LT.i8), [])])
+  call fn' (args' ++
+            if fn `elem` knowns
+            then []
+            else [(ConstantOperand (C.Undef $ LT.ptr LT.i8), [])])
 genExpr' (CallCls cls args) = do
   cls' <- getRef cls
   fnptr <- gep cls' [ ConstantOperand (C.Int 32 0)
@@ -276,23 +281,26 @@ genExDec ::
   ExDec TypedID -> t m ()
 genExDec (ExDec name str) = do
   let (argtys, retty) = case T.typeOf name of
-                          (T.FunTy p r) -> (map convertType p ++ [LT.ptr LT.i8], convertType r)
+                          (T.FunTy p r) -> (map convertType p, convertType r)
                           _ -> panic $ show name <> " is not callable"
   o <- extern (fromString $ toS str) argtys retty
   addTable name o
 
 genFunDec :: FunDec TypedID -> GenDec ()
 genFunDec (FunDec fn@(TypedID _ (T.FunTy _ retty)) params captures body) = do
+  knowns <- gets _knowns
   let fn' = fromString (show (pretty fn))
   let params' = map (\(TypedID name ty) ->
                        (convertType ty, fromString (show (pretty name))))
                 params
-                ++ [(LT.ptr LT.i8, fromString "captures")]
+                ++ (if fn `elem` knowns
+                    then []
+                    else [(LT.ptr LT.i8, fromString "captures")])
   let retty' = convertType retty
   backup <- gets _table
   let body' xs = do
         mapM_ (uncurry addTable) (zip params xs)
-        unless (null captures) $ do
+        unless (fn `elem` knowns) $ do
           capPtr <- bitcast (last xs) (LT.ptr $ captureStruct captures) `named` "capturesPtr"
           forM_ (zip [0..] captures) $ \(i, c) -> do
             p' <- gep capPtr [ ConstantOperand (C.Int 32 0)
@@ -315,7 +323,8 @@ genMain e = void $ function "main" [] (convertType "Int")
 
 genProgram ::
   Program TypedID -> GenDec ()
-genProgram (Program fs es body _) = do
+genProgram (Program fs es body knowns) = do
+  modify $ \env -> env { _knowns = knowns }
   addInternal "GC_malloc" =<< extern (fromString "GC_malloc") [LT.i64] (LT.ptr LT.i8)
   addInternal "GC_init" =<< extern (fromString "GC_init") [] LT.void
   mapM_ genExDec es
@@ -333,4 +342,4 @@ dumpCodeGen ::
   ModuleBuilderT (StateT GenState Identity) a
   -> [LLVM.AST.Definition]
 dumpCodeGen m =
-  flip evalState (GenState mempty ret mempty) $ execModuleBuilderT emptyModuleBuilder m
+  flip evalState (GenState mempty ret mempty mempty) $ execModuleBuilderT emptyModuleBuilder m
