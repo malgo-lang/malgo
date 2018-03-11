@@ -8,13 +8,13 @@ module Language.Malgo.Eval
     , Context
     ) where
 
-import qualified Data.Text                as T
-import           Language.Malgo.HIR       (Op (..))
-import qualified Language.Malgo.MIR       as M
+import qualified Data.Text              as T
+import           Language.Malgo.HIR     (Op (..))
+import qualified Language.Malgo.MIR     as M
 import           Language.Malgo.Prelude
-import           Language.Malgo.TypeCheck (TypedID (..))
+import           Language.Malgo.TypedID
 import           Language.Malgo.Utils
-import qualified System.IO                as S
+import qualified System.IO              as S
 import           Text.PrettyPrint
 
 data Value = Int Integer

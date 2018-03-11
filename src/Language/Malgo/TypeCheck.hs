@@ -4,30 +4,17 @@
 
 module Language.Malgo.TypeCheck
     ( typeCheck
-    , TypedID(..)
-    , typeOf
     ) where
 
 import qualified Data.Map.Strict        as Map
+import           Language.Malgo.ID
 import           Language.Malgo.Prelude
-import           Language.Malgo.Rename
 import           Language.Malgo.Syntax  hiding (info)
 import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
+import           Language.Malgo.TypedID
 import           Language.Malgo.Utils
-import           Text.PrettyPrint hiding ((<>))
-
-data TypedID = TypedID {_id :: ID, _type :: Type}
-    deriving (Show, Ord, Read)
-
-instance Eq TypedID where
-    (TypedID x _) == (TypedID y _) = x == y
-
-instance PrettyPrint TypedID where
-    pretty (TypedID x t) = pretty x <> text ":" <> pretty t
-
-instance Typeable TypedID where
-    typeOf (TypedID _ t) = t
+import           Text.PrettyPrint
 
 newtype TcEnv = TcEnv { _table :: Map.Map ID TypedID }
 
@@ -87,80 +74,6 @@ checkDecl (FunDec info fn params retty body) = do
     makeFnTy [] _   = throw info (text "void parameter is invalid")
         -- makeFnTy [(_, t)] ret = pure $ FunTy t ret
     makeFnTy xs ret = pure $ FunTy (map snd xs) ret
-
-instance Typeable (Expr TypedID) where
-    typeOf (Var _ name) = typeOf name
-    typeOf (Int _ _) = "Int"
-    typeOf (Float _ _) = "Float"
-    typeOf (Bool _ _) = "Bool"
-    typeOf (Char _ _) = "Char"
-    typeOf (String _ _) = "String"
-    typeOf (Tuple _ xs) = TupleTy (map typeOf xs)
-    typeOf (TupleAccess _ e i) =
-      let TupleTy xs = typeOf e
-      in fromMaybe (panic "out of bounds") (atMay xs i)
-    typeOf (Unit _) = "Unit"
-    typeOf (Fn _ params body) = FunTy (map snd params) (typeOf body)
-    typeOf (Call _ fn _) =
-        case typeOf fn of
-            (FunTy _ ty) -> ty
-            _            -> panic "(typeOf fn) should match (FunTy _ ty)"
-    typeOf (Seq _ _ e) = typeOf e
-    typeOf (Let _ _ e) = typeOf e
-    typeOf (If _ _ e _) = typeOf e
-    typeOf (BinOp i op x _) =
-        case typeOfOp i op (typeOf x) of
-            (FunTy _ ty) -> ty
-            _            -> panic "(typeOfOp op) should match (FunTy _ ty)"
-
-typeOfOp :: Info -> Op -> Type -> Type
-typeOfOp _ Add _ = FunTy ["Int", "Int"] "Int"
-typeOfOp _ Sub _ = FunTy ["Int", "Int"] "Int"
-typeOfOp _ Mul _ = FunTy ["Int", "Int"] "Int"
-typeOfOp _ Div _ = FunTy ["Int", "Int"] "Int"
-typeOfOp _ FAdd _ = FunTy ["Float", "Float"] "Float"
-typeOfOp _ FSub _ = FunTy ["Float", "Float"] "Float"
-typeOfOp _ FMul _ = FunTy ["Float", "Float"] "Float"
-typeOfOp _ FDiv _ = FunTy ["Float", "Float"] "Float"
-typeOfOp _ Mod _ = FunTy ["Int", "Int"] "Int"
-typeOfOp i Eq ty =
-    if comparable ty
-        then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
-typeOfOp i Neq ty =
-    if comparable ty
-        then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
-typeOfOp i Lt ty =
-    if comparable ty
-        then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
-typeOfOp i Gt ty =
-    if comparable ty
-        then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
-typeOfOp i Le ty =
-    if comparable ty
-        then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
-typeOfOp i Ge ty =
-    if comparable ty
-        then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
-typeOfOp _ And _ = FunTy ["Bool", "Bool"] "Bool"
-typeOfOp _ Or _ = FunTy ["Bool", "Bool"] "Bool"
-
-comparable :: Type -> Bool
-comparable "Int"      = True
-comparable "Float"    = True
-comparable "Bool"     = True
-comparable "Char"     = True
-comparable "String"   = False -- TODO: Stringの比較をサポート
-comparable "Unit"     = False
-comparable NameTy {}  = False
-comparable FunTy {}   = False
-comparable ClsTy {}   = False
-comparable TupleTy {} = False
 
 checkExpr :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
 checkExpr (Var info name) = Var info <$> getBind info name

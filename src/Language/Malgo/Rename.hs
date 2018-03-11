@@ -4,24 +4,15 @@
 
 module Language.Malgo.Rename
   ( rename
-  , ID(..)
   , RnEnv(..)
   ) where
 
 import qualified Data.Map.Strict        as Map
+import           Language.Malgo.ID
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
 import           Language.Malgo.Utils
 import qualified Text.PrettyPrint       as P
-
-data ID = ID { _name :: Name, _uniq :: Int }
-  deriving (Show, Ord, Read)
-
-instance Eq ID where
-  x == y = _uniq x == _uniq y
-
-instance PrettyPrint ID where
-  pretty (ID name u) = pretty name <> P.text "." <> P.int u
 
 newtype RnEnv = RnEnv { knowns :: Map.Map Name ID }
 
