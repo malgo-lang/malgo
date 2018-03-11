@@ -37,6 +37,7 @@ in
   do_nothing();
   println_int(add(2));
   println_int(a);
+  println_int((fn (x:Int) -> x * 4)(3));
   println(substring(name, 1, 3));
   println(concat("foo", "bar"));
   println_float(3.14);

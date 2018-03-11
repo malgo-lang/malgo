@@ -31,6 +31,7 @@ data GenState = GenState { _table    :: Map TypedID Operand
                          , _term     :: Operand -> GenExpr () -- if式の際の最終分岐先などに利用
                          , _internal :: Map String Operand
                          , _knowns   :: [TypedID]
+                         , _inMain   :: Bool
                          }
 
 type GenExpr a = IRBuilderT GenDec a
@@ -67,12 +68,6 @@ convertType (T.ClsTy params retty) =
   , LT.ptr LT.i8
   ]
 
-sizeof :: MonadIRBuilder m => LT.Type -> m Operand
-sizeof ty = do
-  nullptr <- pure $ ConstantOperand (C.Null (LT.ptr ty))
-  ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
-  ptrtoint ptr LT.i64
-
 getRef ::
   (MonadState GenState m, Monad (t m), MonadTrans t) =>
   TypedID -> t m Operand
@@ -95,12 +90,24 @@ fromTypedID (TypedID i _) =
 char :: Applicative f => Integer -> f Operand
 char = pure . ConstantOperand . C.Int 8
 
+sizeof :: MonadIRBuilder m => LT.Type -> m Operand
+sizeof ty = do
+  nullptr <- pure $ ConstantOperand (C.Null (LT.ptr ty))
+  ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
+  ptrtoint ptr LT.i64
+
 gcMalloc ::
   (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) =>
   Operand -> t m Operand
 gcMalloc bytesOpr = do
   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
   call f [(bytesOpr, [])]
+
+malloc ty = do
+  inMain <- gets _inMain
+  if inMain
+  then alloca ty Nothing 0
+  else gcMalloc =<< sizeof ty
 
 gcInit :: IRBuilderT GenDec Operand
 gcInit = do
@@ -135,7 +142,10 @@ genExpr' (Float d)  = double d `named` "float"
 genExpr' (Bool b)   = bit (if b then 1 else 0) `named` "bool"
 genExpr' (Char c)   = char (toInteger . ord $ c) `named` "char"
 genExpr' (String xs) = do
-  p <- gcMalloc (ConstantOperand $ C.Int 64 $ toInteger $ T.length xs + 1) `named` "string"
+  gcflag <- fmap not $ gets _inMain
+  p <- if gcflag
+       then gcMalloc (ConstantOperand $ C.Int 64 $ toInteger $ T.length xs + 1) `named` "string"
+       else int32 (toInteger $ T.length xs + 1) >>= \c -> alloca LT.i8 (Just c) 0 `named` "string"
   mapM_ (uncurry $ addChar p) (zip [0..] $ T.unpack xs <> ['\0'])
   pure p
   where addChar p i c = do
@@ -145,8 +155,8 @@ genExpr' (String xs) = do
           store p' 0 c'
 genExpr' Unit = pure (ConstantOperand $ C.Undef (convertType "Unit")) `named` "unit"
 genExpr' e@(Tuple xs) = do
-  size <- sizeof (convertType $ T.typeOf e) `named` "tuple_size"
-  p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< gcMalloc size `named` "tuple_ptr"
+  -- size <- sizeof (convertType $ T.typeOf e) `named` "tuple_size"
+  p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< malloc (convertType $ T.typeOf e) `named` "tuple_ptr"
   forM_ (zip [0..] xs) $ \(i, x) -> do
     p' <- gep p [ ConstantOperand (C.Int 32 0)
                 , ConstantOperand (C.Int 32 i)
@@ -185,16 +195,20 @@ genExpr' (Let (ValDec name val) e) = do
   addTable name val'
   genExpr' e
 genExpr' (Let (ClsDec name fn captures) e) = do
-  size <- sizeof (captureStruct captures) `named` "captures_size"
-  p <- flip bitcast (LT.ptr $ captureStruct captures) =<< gcMalloc size `named` "captures_ptr"
+  p <- flip bitcast (LT.ptr $ captureStruct captures) =<< malloc (captureStruct captures) `named` "captures_ptr"
   fn' <- getRef fn
   let fn'ty = LT.typeOf fn'
-  fn'size <- sizeof fn'ty `named` "fn_size"
   let capty = LT.ptr LT.i8
   cap <- bitcast p capty `named` "cap_ptr"
-  capSize <- sizeof capty `named` "cap_size"
-  clsSize <- add fn'size capSize `named` "cls_size"
-  clsptr <- flip bitcast (LT.ptr $ LT.StructureType False [fn'ty, capty]) =<< gcMalloc clsSize `named` "cls_ptr"
+
+  inMain <- gets _inMain
+  clsptr <- if inMain
+            then alloca (LT.StructureType False [fn'ty, capty]) Nothing 0 `named` "cls_ptr"
+            else do fn'size <- sizeof fn'ty `named` "fn_size"
+                    capSize <- sizeof capty `named` "cap_size"
+                    clsSize <- add fn'size capSize `named` "cls_size"
+                    flip bitcast (LT.ptr $ LT.StructureType False [fn'ty, capty]) =<< gcMalloc clsSize `named` "cls_ptr"
+
   fnp <- gep clsptr [ ConstantOperand (C.Int 32 0)
                     , ConstantOperand (C.Int 32 0)
                     ] `named` "fn_ptr"
@@ -317,8 +331,10 @@ genMain :: Expr TypedID -> GenDec ()
 genMain e = void $ function "main" [] (convertType "Int")
   (\_ ->
       do _ <- gcInit
+         modify $ \env -> env { _inMain = True }
          _ <- genExpr' e `named` "main"
          i <- int32 0
+         modify $ \env -> env { _inMain = False }
          ret i)
 
 genProgram ::
@@ -342,4 +358,4 @@ dumpCodeGen ::
   ModuleBuilderT (StateT GenState Identity) a
   -> [LLVM.AST.Definition]
 dumpCodeGen m =
-  flip evalState (GenState mempty ret mempty mempty) $ execModuleBuilderT emptyModuleBuilder m
+  flip evalState (GenState mempty ret mempty mempty False) $ execModuleBuilderT emptyModuleBuilder m
