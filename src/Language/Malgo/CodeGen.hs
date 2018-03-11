@@ -110,7 +110,7 @@ malloc ty = do
   if inMain
   then alloca ty Nothing 0
   else do p <- gcMalloc =<< sizeof ty
-          bitcast p ty
+          bitcast p (LT.ptr ty)
 
 gcInit :: IRBuilderT GenDec Operand
 gcInit = do
