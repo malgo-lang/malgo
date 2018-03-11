@@ -31,6 +31,7 @@ data Tag
     | COLON
     | SEMICOLON
     | EQUAL
+    | SEMICOLON_EQUAL
     | FN
     | IF
     | THEN
@@ -96,6 +97,7 @@ lexer' =
           , "/."
           , ":"
           , "="
+          , ":="
           , "+"
           , "-"
           , "*"
@@ -157,6 +159,7 @@ lexer = do
         (rbrack >> pure (Token (info, RBRACK))) <|>
         (lbrace >> pure (Token (info, LBRACE))) <|>
         (rbrace >> pure (Token (info, RBRACE))) <|>
+        op info ":=" SEMICOLON_EQUAL <|>
         op info ":" COLON <|>
         op info ";" SEMICOLON <|>
         op info "," COMMA <|>

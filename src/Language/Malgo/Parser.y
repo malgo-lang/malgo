@@ -34,6 +34,7 @@ else  { Token (_, ELSE) }
 ']'   { Token (_, RBRACK) }
 '{'   { Token (_, LBRACE) }
 '}'   { Token (_, RBRACE) }
+':='  { Token (_, SEMICOLON_EQUAL) }
 ':'   { Token (_, COLON) }
 ';'   { Token (_, SEMICOLON) }
 ','   { Token (_, COMMA) }
@@ -90,9 +91,12 @@ decls_raw : decls_raw decl { $2 : $1 }
           |      { [] }
 
 decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
-                                 $4
+                                 (Just $4)
                                  $6
                                }
+     | val id ':=' exp { ValDec (_info $1) (_id . _tag $ $2)
+                         Nothing $4
+                       }
      | fun id '(' ')' ':' Type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
            [("_", NameTy "Unit")]

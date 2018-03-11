@@ -57,12 +57,16 @@ checkDecl :: Monad m => Decl ID -> TypeCheck m (Decl TypedID)
 checkDecl (ExDec info name typ orig) = do
     addBind name typ
     pure $ ExDec info (TypedID name typ) typ orig
-checkDecl (ValDec info name typ val) = do
+checkDecl (ValDec info name Nothing val) = do
+  val' <- checkExpr val
+  addBind name (typeOf val')
+  pure $ ValDec info (TypedID name (typeOf val')) Nothing val'
+checkDecl (ValDec info name (Just typ) val) = do
     val' <- checkExpr val
     if typ == typeOf val'
         then do
             addBind name typ
-            pure $ ValDec info (TypedID name typ) typ val'
+            pure $ ValDec info (TypedID name typ) (Just typ) val'
         else throw
                  info
                  ("expected:" <+>

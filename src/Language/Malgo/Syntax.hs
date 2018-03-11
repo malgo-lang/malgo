@@ -122,7 +122,7 @@ instance PrettyPrint Op where
 
 data Decl a
   = FunDec Info a [(a, Type)] Type (Expr a)
-  | ValDec Info a Type (Expr a)
+  | ValDec Info a (Maybe Type) (Expr a)
   | ExDec Info a Type Text
   deriving (Eq, Show, Read)
 

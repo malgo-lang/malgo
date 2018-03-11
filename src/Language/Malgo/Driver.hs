@@ -30,7 +30,6 @@ data Opt = Opt
   , _dumpClosure :: Bool
   , _notDeleteUnused :: Bool
   , _notBetaTrans :: Bool
-  , _useRevisedSyntax :: Bool
   } deriving (Eq, Show)
 
 
@@ -46,7 +45,6 @@ parseOpt = execParser $
           <*> switch (long "dump-closure"))
           <*> switch (long "not-delete-unused")
           <*> switch (long "not-beta-trans")
-          <*> switch (long "use-revised-syntax")
          <**> helper)
   (fullDesc
     <> progDesc "malgo"
