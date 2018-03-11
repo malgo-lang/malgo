@@ -103,6 +103,8 @@ gcMalloc bytesOpr = do
   f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
   call f [(bytesOpr, [])]
 
+malloc :: (MonadTrans t, MonadState GenState (t m), MonadState GenState m, MonadIRBuilder (t m)) =>
+  LT.Type -> t m Operand
 malloc ty = do
   inMain <- gets _inMain
   if inMain
@@ -155,7 +157,6 @@ genExpr' (String xs) = do
           store p' 0 c'
 genExpr' Unit = pure (ConstantOperand $ C.Undef (convertType "Unit")) `named` "unit"
 genExpr' e@(Tuple xs) = do
-  -- size <- sizeof (convertType $ T.typeOf e) `named` "tuple_size"
   p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< malloc (convertType $ T.typeOf e) `named` "tuple_ptr"
   forM_ (zip [0..] xs) $ \(i, x) -> do
     p' <- gep p [ ConstantOperand (C.Int 32 0)
