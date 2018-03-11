@@ -4,8 +4,7 @@
 
 module Language.Malgo.Driver where
 
-import qualified Language.Malgo.Unused as Unused
-import qualified Language.Malgo.Beta as Beta
+import qualified Language.Malgo.Beta      as Beta
 import qualified Language.Malgo.Closure   as Closure
 import qualified Language.Malgo.CodeGen   as CodeGen
 import qualified Language.Malgo.Eval      as Eval
@@ -16,20 +15,22 @@ import           Language.Malgo.Prelude
 import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.Syntax    as Syntax
 import qualified Language.Malgo.TypeCheck as TypeCheck
+import           Language.Malgo.TypedID
+import qualified Language.Malgo.Unused    as Unused
 import           Language.Malgo.Utils
 import qualified LLVM.AST                 as L
 import           Options.Applicative
 
 data Opt = Opt
-  { _srcName     :: Text
-  , _dumpParsed  :: Bool
-  , _dumpRenamed :: Bool
-  , _dumpTyped   :: Bool
-  , _dumpHIR     :: Bool
-  , _dumpFlatten :: Bool
-  , _dumpClosure :: Bool
+  { _srcName         :: Text
+  , _dumpParsed      :: Bool
+  , _dumpRenamed     :: Bool
+  , _dumpTyped       :: Bool
+  , _dumpHIR         :: Bool
+  , _dumpFlatten     :: Bool
+  , _dumpClosure     :: Bool
   , _notDeleteUnused :: Bool
-  , _notBetaTrans :: Bool
+  , _notBetaTrans    :: Bool
   } deriving (Eq, Show)
 
 
@@ -82,5 +83,5 @@ compile filename ast opt = do
                                                      liftIO $ print $ pretty result
                                                    pure (result, u')
 
-eval :: Program TypeCheck.TypedID -> IO (Either MalgoError Eval.Value)
+eval :: Program TypedID -> IO (Either MalgoError Eval.Value)
 eval prog = fst <$> runMalgoT (Eval.eval prog) 0

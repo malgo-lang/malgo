@@ -4,7 +4,7 @@
 
 module Language.Malgo.MIR where
 
-import Language.Malgo.TypeCheck (TypedID(..))
+import Language.Malgo.TypedID
 import           Language.Malgo.HIR     (Op (..))
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type

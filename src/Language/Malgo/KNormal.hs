@@ -1,16 +1,16 @@
 {-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE NoImplicitPrelude    #-}
 {-# LANGUAGE OverloadedStrings    #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
 module Language.Malgo.KNormal where
 
-import Language.Malgo.Prelude
 import           Language.Malgo.HIR
-import           Language.Malgo.Rename    (ID (..))
-import qualified Language.Malgo.Syntax    as S
+import           Language.Malgo.ID
+import           Language.Malgo.Prelude
+import qualified Language.Malgo.Syntax  as S
 import           Language.Malgo.Type
-import           Language.Malgo.TypeCheck
+import           Language.Malgo.TypedID
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 

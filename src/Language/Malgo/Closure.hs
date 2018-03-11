@@ -4,14 +4,14 @@
 module Language.Malgo.Closure
   ( conv, ClsEnv(..) ) where
 
-import           Data.List                ((\\))
+import           Data.List               ((\\))
 import           Language.Malgo.FreeVars
-import qualified Language.Malgo.HIR       as H
+import qualified Language.Malgo.HIR      as H
+import           Language.Malgo.ID
 import           Language.Malgo.MIR
 import           Language.Malgo.Prelude
-import           Language.Malgo.Rename    (ID (..))
 import           Language.Malgo.Type
-import           Language.Malgo.TypeCheck (TypedID (..))
+import           Language.Malgo.TypedID
 import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
@@ -66,7 +66,7 @@ newClsID (TypedID fn fnty) = do
   c <- newUniq
   pure
     (TypedID
-       (ID (Language.Malgo.Rename._name fn `mappend` fromString "$cls") c)
+       (ID (_name fn `mappend` fromString "$cls") c)
        ty)
 
 toCls :: Type -> Type

@@ -5,7 +5,7 @@ module Language.Malgo.Beta
 
 import Language.Malgo.Syntax
 import Language.Malgo.Prelude
-import Language.Malgo.TypeCheck
+import Language.Malgo.TypedID
 
 betaTrans :: Expr TypedID -> Expr TypedID
 betaTrans expr = opt mempty expr

@@ -21,11 +21,11 @@ import qualified LLVM.AST.Typed                  as LT
 import           LLVM.IRBuilder                  as IRBuilder
 
 import           Language.Malgo.HIR              (Op (..))
+import           Language.Malgo.ID
 import           Language.Malgo.MIR
 import           Language.Malgo.Prelude          hiding (bit)
-import           Language.Malgo.Rename           (ID (..))
 import qualified Language.Malgo.Type             as T
-import           Language.Malgo.TypeCheck        (TypedID (..))
+import           Language.Malgo.TypedID
 
 data GenState = GenState { _table    :: Map TypedID Operand
                          , _term     :: Operand -> GenExpr () -- if式の際の最終分岐先などに利用

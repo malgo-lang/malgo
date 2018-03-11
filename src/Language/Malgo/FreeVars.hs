@@ -1,9 +1,9 @@
 module Language.Malgo.FreeVars where
 
 import           Data.List
-import qualified Language.Malgo.HIR       as H
-import qualified Language.Malgo.MIR       as M
-import           Language.Malgo.TypeCheck (TypedID (..))
+import qualified Language.Malgo.HIR     as H
+import qualified Language.Malgo.MIR     as M
+import           Language.Malgo.TypedID
 
 class FreeVars f where
   freevars :: f TypedID -> [TypedID]
