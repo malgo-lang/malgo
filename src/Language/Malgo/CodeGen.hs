@@ -109,7 +109,8 @@ malloc ty = do
   inMain <- gets _inMain
   if inMain
   then alloca ty Nothing 0
-  else gcMalloc =<< sizeof ty
+  else do p <- gcMalloc =<< sizeof ty
+          bitcast p ty
 
 gcInit :: IRBuilderT GenDec Operand
 gcInit = do
@@ -157,7 +158,8 @@ genExpr' (String xs) = do
           store p' 0 c'
 genExpr' Unit = pure (ConstantOperand $ C.Undef (convertType "Unit")) `named` "unit"
 genExpr' e@(Tuple xs) = do
-  p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< malloc (convertType $ T.typeOf e) `named` "tuple_ptr"
+  -- p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< malloc (convertType $ T.typeOf e) `named` "tuple_ptr"
+  p <- malloc (LT.StructureType False (map (convertType . T.typeOf) xs)) `named` "tuple_ptr"
   forM_ (zip [0..] xs) $ \(i, x) -> do
     p' <- gep p [ ConstantOperand (C.Int 32 0)
                 , ConstantOperand (C.Int 32 i)
@@ -196,7 +198,7 @@ genExpr' (Let (ValDec name val) e) = do
   addTable name val'
   genExpr' e
 genExpr' (Let (ClsDec name fn captures) e) = do
-  p <- flip bitcast (LT.ptr $ captureStruct captures) =<< malloc (captureStruct captures) `named` "captures_ptr"
+  p <- malloc (captureStruct captures) `named` "captures_ptr"
   fn' <- getRef fn
   let fn'ty = LT.typeOf fn'
   let capty = LT.ptr LT.i8
