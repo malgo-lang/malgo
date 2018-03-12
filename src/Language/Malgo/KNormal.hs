@@ -3,7 +3,7 @@
 {-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
-module Language.Malgo.KNormal where
+module Language.Malgo.KNormal (knormal) where
 
 import           Language.Malgo.HIR
 import           Language.Malgo.ID
@@ -12,28 +12,11 @@ import qualified Language.Malgo.Syntax  as S
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 import           Language.Malgo.Utils
-import           Text.PrettyPrint
 
 type KNormal m a = MalgoT () m a
 
 knormal :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
-knormal e = transExpr (flattenLet e)
-
-throw :: Monad m => Info -> Doc -> KNormal m a
-throw info mes = throwError (KNormalError info mes)
-
-flattenLet :: S.Expr TypedID -> S.Expr TypedID
-flattenLet (S.Let info [decl] body) = S.Let info [flattenLet' decl] body
-flattenLet (S.Let info (d:ds) body) =
-  S.Let info [flattenLet' d] (flattenLet (S.Let info ds body))
-flattenLet e = e
-
-flattenLet' :: S.Decl TypedID -> S.Decl TypedID
-flattenLet' (S.FunDec info fn params retty body) =
-  S.FunDec info fn params retty (flattenLet body)
-flattenLet' (S.ValDec info name ty val) =
-  S.ValDec info name ty (flattenLet val)
-flattenLet' d = d
+knormal e = transExpr e
 
 newTmp :: Monad m => Type -> KNormal m TypedID
 newTmp typ = do
@@ -114,18 +97,17 @@ transExpr (S.If _ c t f) =
        t' <- transExpr t
        f' <- transExpr f
        pure (If c' t' f'))
-transExpr e@(S.Let _ [S.ValDec _ name _ val] body) = do
+transExpr (S.Let info (S.ValDec _ name _ val:ds) body) = do
   val' <- transExpr val
-  body' <- transExpr body
-  pure (Let (ValDec name val') body')
-transExpr e@(S.Let _ [S.FunDec _ fn params _ fbody] body) = do
+  rest <- transExpr (S.Let info ds body)
+  pure (Let (ValDec name val') rest)
+transExpr (S.Let info (S.FunDec _ fn params _ fbody:ds) body) = do
   fbody' <- transExpr fbody
-  body' <- transExpr body
-  pure (Let (FunDec fn (map fst params) fbody') body')
-transExpr (S.Let _ [S.ExDec _ name _ orig] body) = do
-  body' <- transExpr body
-  pure (Let (ExDec name orig) body')
-transExpr (S.Let info _ _) = throw info $ "unreachable"
+  rest <- transExpr (S.Let info ds body)
+  pure (Let (FunDec fn (map fst params) fbody') rest)
+transExpr (S.Let info (S.ExDec _ name _ orig:ds) body) =
+  Let (ExDec name orig) <$> transExpr (S.Let info ds body)
+transExpr (S.Let _ [] body) = transExpr body
 transExpr (S.Seq _ e1 e2) = do
   unused <- newUnused
   e1' <- transExpr e1
