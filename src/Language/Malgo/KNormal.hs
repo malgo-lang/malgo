@@ -23,10 +23,17 @@ throw :: Monad m => Info -> Doc -> KNormal m a
 throw info mes = throwError (KNormalError info mes)
 
 flattenLet :: S.Expr TypedID -> S.Expr TypedID
-flattenLet (S.Let info [decl] body) = S.Let info [decl] body
+flattenLet (S.Let info [decl] body) = S.Let info [flattenLet' decl] body
 flattenLet (S.Let info (d:ds) body) =
-  S.Let info [d] (flattenLet (S.Let info ds body))
+  S.Let info [flattenLet' d] (flattenLet (S.Let info ds body))
 flattenLet e = e
+
+flattenLet' :: S.Decl TypedID -> S.Decl TypedID
+flattenLet' (S.FunDec info fn params retty body) =
+  S.FunDec info fn params retty (flattenLet body)
+flattenLet' (S.ValDec info name ty val) =
+  S.ValDec info name ty (flattenLet val)
+flattenLet' d = d
 
 newTmp :: Monad m => Type -> KNormal m TypedID
 newTmp typ = do
@@ -107,18 +114,18 @@ transExpr (S.If _ c t f) =
        t' <- transExpr t
        f' <- transExpr f
        pure (If c' t' f'))
-transExpr (S.Let _ [S.ValDec _ name _ val] body) = do
+transExpr e@(S.Let _ [S.ValDec _ name _ val] body) = do
   val' <- transExpr val
   body' <- transExpr body
   pure (Let (ValDec name val') body')
-transExpr (S.Let _ [S.FunDec _ fn params _ fbody] body) = do
+transExpr e@(S.Let _ [S.FunDec _ fn params _ fbody] body) = do
   fbody' <- transExpr fbody
   body' <- transExpr body
   pure (Let (FunDec fn (map fst params) fbody') body')
 transExpr (S.Let _ [S.ExDec _ name _ orig] body) = do
   body' <- transExpr body
   pure (Let (ExDec name orig) body')
-transExpr (S.Let _ _ e) = transExpr e
+transExpr (S.Let info _ _) = throw info $ "unreachable"
 transExpr (S.Seq _ e1 e2) = do
   unused <- newUnused
   e1' <- transExpr e1
