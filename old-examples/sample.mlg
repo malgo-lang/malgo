@@ -1,0 +1,45 @@
+let
+extern print : String -> {} = "print"
+extern println : String -> {} = "println"
+extern print_int : Int -> {} = "print_int"
+extern print_float : Float -> {} = "print_float"
+extern flush : {} -> {} = "flush"
+extern getChar : {} -> Char = "getchar"
+extern ord : Char -> Int = "ord"
+extern chr : Int -> Char = "chr"
+extern size : String -> Int = "size"
+extern newline : {} -> {} = "newline"
+extern substring : (String, Int, Int) -> String = "substring"
+extern concat : (String, String) -> String = "concat"
+extern not : Bool -> Bool = "not"
+fun println_int(x:Int) : {} = print_int(x); newline()
+fun println_float(x:Float) : {} = print_float(x); newline()
+
+val a := 42
+fun fib (n:Int) : Int =
+    if n <= 1
+    then 1
+    else fib (n - 1) + fib (n - 2)
+val a:Int = a + 1
+fun do_nothing():{} = {}
+fun add(x:Int):Int =
+  let fun add2(y:Int):Int =
+      x + y
+  in add2(2)
+  end
+fun area(r:Float):Float = r *. r *. 3.14
+val name := "malgo"
+fun print_fib (n:Int) : {} = print_int(fib(n))
+in
+  println("Hello, world!");
+  print("fib(10) = ");
+  println_int(fib(10));
+  do_nothing();
+  println_int(add(2));
+  println_int(a);
+  println_int((fn (x:Int) -> x * 4)(3));
+  println(substring(name, 1, 3));
+  println(concat("foo", "bar"));
+  println_float(3.14);
+  println_float(area(10.0))
+end
