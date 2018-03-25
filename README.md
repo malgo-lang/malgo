@@ -21,8 +21,15 @@ $ stack install
 ## Usage
 
 ```sh
-$ malgo examples/hello.mlg > hello.ll
-$ clang hello.ll examples/lib.c -lgc
+$ malgo examples/fib.mlg > fib.ll
+$ clang fib.ll examples/lib.c -lgc
 $ ./a.out
-Hello, world
+1346269
+832040
+...
+5
+3
+2
+1
+1
 ```

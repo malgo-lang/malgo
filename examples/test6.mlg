@@ -1,7 +1,0 @@
-let val a:Int = 42
-    val b:Int = a
-    val c:Int = a
-    fun id(x:Int):Int = x
-    extern print_int : Int -> Unit = "print_int"
-in print_int(id(id(a)) + b + id(c))
-end

@@ -1,19 +1,19 @@
 let
   extern print_int : Int -> Unit = "print_int"
   extern newline : Unit -> Unit = "newline"
-  fun fib(n : Int) : Int =
+  fun fib (n : Int) : Int =
     if n <= 1
     then 1
-    else fib(n - 1) + fib(n - 2)
-  fun fib_loop(n : Int) : Unit =
-    let val unused:Int = fib(30)
+    else fib (n - 1) + fib (n - 2)
+  fun fib_loop (n : Int) : {} =
+    let val unused:Int = fib 30
     in if n <= 0
-       then print_int(fib(0));
-            newline()
-       else print_int(fib(n));
-            newline();
-            fib_loop(n - 1)
+       then print_int (fib 0);
+            newline {}
+       else print_int (fib n);
+            newline {};
+            fib_loop (n - 1)
     end
 in
-  fib_loop(30)
+  fib_loop 30
 end

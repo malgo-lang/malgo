@@ -1,4 +1,0 @@
-let extern f : (Int, Int) -> Int = "f"
-    val g : Int -> Int = fn (x:Int) -> f(10, x)
-in g(3)
-end
