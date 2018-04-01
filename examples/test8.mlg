@@ -1,0 +1,5 @@
+let val a:Int = 42
+    fun f(x:Int):Int = x + a
+    fun g(x:Int):Int = f(a) + x
+in g(4) + f(5)
+end

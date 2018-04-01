@@ -74,10 +74,10 @@ str   { Token (_, STRING _) }
 %left '&&' '||'
 %left '+' '-' '+.' '-.'
 %left '*' '/' '%' '*.' '/.'
-%nonassoc NEG
 %left CALL
 %left '.'
--- %left '('
+%left '('
+%nonassoc NEG
 
 %name parseDecl decl
 %name parseExpr exp
@@ -97,20 +97,17 @@ decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
      | val id ':=' exp { ValDec (_info $1) (_id . _tag $ $2)
                          Nothing $4
                        }
-     -- | fun id '(' ')' ':' Type '=' exp {
-     --     FunDec (_info $1) (_id . _tag $ $2)
-     --       [("_", NameTy "Unit")]
-     --       $6
-     --       $8
-     --   }
-     -- | fun id '(' params ')' ':' Type '=' exp {
-     --     FunDec (_info $1) (_id . _tag $ $2)
-     --       (reverse $4)
-     --       $7
-     --       $9
-     --   }
-     | fun id '(' param ')' ':' Type '=' exp {
-         FunDec (_info $1) (_id . _tag $ $2) [$4] $7 $9
+     | fun id '(' ')' ':' Type '=' exp {
+         FunDec (_info $1) (_id . _tag $ $2)
+           [("_", NameTy "Unit")]
+           $6
+           $8
+       }
+     | fun id '(' params ')' ':' Type '=' exp {
+         FunDec (_info $1) (_id . _tag $ $2)
+           (reverse $4)
+           $7
+           $9
        }
      | extern id ':' Type '=' str {
          ExDec (_info $1) (_id . _tag $ $2)
@@ -123,21 +120,7 @@ params : params ',' param { $3 : $1 }
 
 param : id ':' Type { (_id . _tag $ $1, $3) }
 
-simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
-          | int { Int (_info $1) (_int . _tag $ $1) }
-          | float { Float (_info $1) (_float . _tag $ $1) }
-          | bool { Bool (_info $1) (_bool . _tag $ $1) }
-          | char { Char (_info $1) (_char . _tag $ $1) }
-          | str  { String (_info $1) (_str . _tag $ $1) }
-          | '{' tuple_elems '}' { Tuple (_info $1) (reverse $2) }
-          | '{' '}' { Unit (_info $1) }
-          | '(' exp ')' { $2 }
-
-tuple_elems : tuple_elems ',' exp { $3 : $1 }
-            | exp { [$1] }
-
-exp: simple_exp { $1 }
-   | exp '+' exp { BinOp (_info $2) Add $1 $3 }
+exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
    | exp '*' exp { BinOp (_info $2) Mul $1 $3 }
    | exp '/' exp { BinOp (_info $2) Div $1 $3 }
@@ -159,28 +142,35 @@ exp: simple_exp { $1 }
    | let decls in exp end { Let (_info $1) $2 $4 }
    | if exp then exp else exp %prec prec_if { If (_info $1) $2 $4 $6 }
    | exp ';' exp { Seq (_info $2) $1 $3 }
+   | id { Var (_info $1) (_id . _tag $ $1) }
+   | int { Int (_info $1) (_int . _tag $ $1) }
    | '-' int %prec NEG { BinOp (_info $1) Sub
                            (Int (_info $1) 0)
                            (Int (_info $2) (_int . _tag $ $2))
                        }
+   | float { Float (_info $1) (_float . _tag $ $1) }
    | '-' float %prec NEG { BinOp (_info $1) Sub
                              (Float (_info $1) 0)
                              (Float (_info $2) (_float . _tag $ $2))
                          }
-   -- | exp '(' ')' %prec CALL { Call (info $1) $1 [Unit (_info $2)] }
-   | simple_exp args %prec CALL
-       { -- Call (info $1) $1 (reverse $2)
-         foldl (\x y -> Call (info x) x [y]) $1 (reverse $2)
-       }
+   | bool { Bool (_info $1) (_bool . _tag $ $1) }
+   | char { Char (_info $1) (_char . _tag $ $1) }
+   | str  { String (_info $1) (_str . _tag $ $1) }
+   | '{' args '}' { Tuple (_info $1) (reverse $2) }
+   | exp '(' ')' %prec CALL { Call (info $1) $1 [Unit (_info $2)] }
+   | exp '(' args ')' %prec CALL { Call (info $1) $1 (reverse $3) }
+   | '{' '}' { Unit (_info $1) }
+   | '(' exp ')' { $2 }
 
-args : args simple_exp %prec CALL { $2 : $1 }
-     | simple_exp %prec CALL { [$1] }
+args : args ',' exp { $3 : $1 }
+     | exp { [$1] }
+
 
 Type : id { NameTy (_id . _tag $ $1) }
      | Type '->' Type { FunTy [$1] $3 }
      | '{' '}' { "Unit" }
      | '{' Types '}' { TupleTy (reverse $2) }
---   | '(' Types ')' '->' Type { FunTy (reverse $2) $5 }
+     | '(' Types ')' '->' Type { FunTy (reverse $2) $5 }
 
 Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }

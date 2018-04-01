@@ -47,18 +47,18 @@ int size(char* str) {
   return strlen(str);
 }
 
-/* char* substring(char* str, int i1, int i2) { */
-/*   char* str1 = (char*) GC_malloc(sizeof(char) * (i2 - i1) + 1); */
-/*   strncpy(str1, str + i1, i2 - i1); */
-/*   return str1; */
-/* } */
+char* substring(char* str, int i1, int i2) {
+  char* str1 = (char*) GC_malloc(sizeof(char) * (i2 - i1) + 1);
+  strncpy(str1, str + i1, i2 - i1);
+  return str1;
+}
 
-/* char* concat(char* str1, char* str2) { */
-/*   char* str = (char*) GC_malloc(strlen(str1) + strlen(str2)); */
-/*   strncpy(str, str1, strlen(str1)); */
-/*   strncat(str, str2, strlen(str2)); */
-/*   return str; */
-/* } */
+char* concat(char* str1, char* str2) {
+  char* str = (char*) GC_malloc(strlen(str1) + strlen(str2));
+  strncpy(str, str1, strlen(str1));
+  strncat(str, str2, strlen(str2));
+  return str;
+}
 
 Unit newline(Unit unused) {
   printf("\n");

@@ -1,0 +1,16 @@
+let extern print_int : Int -> {} = "print_int"
+    extern newline : {} -> {} = "newline"
+    fun fib_acc(n : Int, a : Int, b : Int) : Int =
+        if n <= 0
+        then a
+        else fib_acc(n - 1, b, a + b)
+    fun fib_loop(n : Int) : Unit =
+      if n <= 0
+      then print_int(fib_acc(0, 1, 1));
+           newline()
+      else print_int(fib_acc(n, 1, 1));
+           newline();
+           fib_loop(n - 1)
+in
+  fib_loop(30)
+end

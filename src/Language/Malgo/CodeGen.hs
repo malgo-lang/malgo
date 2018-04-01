@@ -145,7 +145,7 @@ genExpr' (Float d)  = double d `named` "float"
 genExpr' (Bool b)   = bit (if b then 1 else 0) `named` "bool"
 genExpr' (Char c)   = char (toInteger . ord $ c) `named` "char"
 genExpr' (String xs) = do
-  gcflag <- not <$> gets _inMain
+  gcflag <- fmap not $ gets _inMain
   p <- if gcflag
        then gcMalloc (ConstantOperand $ C.Int 64 $ toInteger $ T.length xs + 1) `named` "string"
        else int32 (toInteger $ T.length xs + 1) >>= \c -> alloca LT.i8 (Just c) 0 `named` "string"
@@ -157,7 +157,7 @@ genExpr' (String xs) = do
           c' <- char (toInteger . ord $ c)
           store p' 0 c'
 genExpr' Unit = pure (ConstantOperand $ C.Undef (convertType "Unit")) `named` "unit"
-genExpr' (Tuple xs) = do
+genExpr' e@(Tuple xs) = do
   -- p <- (\p -> bitcast p (convertType (T.typeOf e))) =<< malloc (convertType $ T.typeOf e) `named` "tuple_ptr"
   p <- malloc (LT.StructureType False (map (convertType . T.typeOf) xs)) `named` "tuple_ptr"
   forM_ (zip [0..] xs) $ \(i, x) -> do
