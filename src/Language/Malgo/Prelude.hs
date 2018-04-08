@@ -13,6 +13,7 @@ module Language.Malgo.Prelude
 import           Control.Monad.Trans as X
 import qualified Data.List           as List
 import qualified Data.Map            as Map
+import Data.Default as X
 import           Data.String         as X (IsString (..))
 import           GHC.Exts            as X (IsList (..))
 import           Prelude             as X (error)

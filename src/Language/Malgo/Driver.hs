@@ -5,6 +5,7 @@
 module Language.Malgo.Driver where
 
 import qualified Language.Malgo.Beta      as Beta
+import qualified Language.Malgo.Monad as M
 import qualified Language.Malgo.Closure   as Closure
 import qualified Language.Malgo.CodeGen   as CodeGen
 import qualified Language.Malgo.Eval      as Eval
@@ -55,8 +56,8 @@ compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module
 compile filename ast opt = do
   when (_dumpParsed opt) $
     liftIO . print $ pretty ast
-  (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
-  (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
+  (renamed, s1) <- run' _dumpRenamed (Rename.rename ast) 0
+  (typed, s2) <- run' _dumpTyped (TypeCheck.typeCheck renamed) s1
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
                                  if _notBetaTrans opt
                                  then typed
@@ -82,6 +83,10 @@ compile filename ast opt = do
                                 Right result -> do when (key opt) $
                                                      liftIO $ print $ pretty result
                                                    pure (result, u')
-
+        run' key m u = do
+          (x, s) <- M.runMalgo (M.setUniq u >> m)
+          when (key opt) $
+            liftIO $ print $ pretty x
+          return (x, M.getUniqSupply s)
 eval :: Program TypedID -> IO (Either MalgoError Eval.Value)
 eval prog = fst <$> runMalgoT (Eval.eval prog) 0

@@ -11,23 +11,30 @@ import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
-import           Language.Malgo.Utils
+import           Language.Malgo.Utils hiding (newUniq, Malgo)
+import Language.Malgo.Monad
 import qualified Text.PrettyPrint       as P
 
-newtype RnEnv = RnEnv { knowns :: Map.Map Name ID }
+data RnEnv = RnEnv { knowns :: Map.Map Name ID
+                   , uniqSupply :: Int
+                   }
 
-instance Env RnEnv where
-  initEnv = RnEnv Map.empty
+instance Default RnEnv where
+  def = RnEnv Map.empty 0
 
-type Rename m a = MalgoT RnEnv m a
+instance HasUniqSupply RnEnv where
+  getUniqSupply = uniqSupply
+  setUniqSupply i s = s { uniqSupply = i }
 
-rename :: Monad m => Expr Name -> Rename m (Expr ID)
+type Rename a = Malgo RnEnv a
+
+rename :: Expr Name -> Rename (Expr ID)
 rename = transExpr
 
-throw :: Monad m => Info -> P.Doc -> Rename m a
-throw info mes = throwError (RenameError info mes)
+throw :: Info -> P.Doc -> Rename a
+throw info mes = malgoError $ "error(rename):" P.<+> pretty info P.<+> mes
 
-newID :: Monad m => Name -> Rename m ID
+newID :: Name -> Rename ID
 newID orig = do
   c <- newUniq
   -- cons <- gets idCons
@@ -35,14 +42,14 @@ newID orig = do
   modify $ \e -> e {knowns = Map.insert orig i (knowns e)}
   pure i
 
-getID :: Monad m => Info -> Name -> Rename m ID
+getID :: Info -> Name -> Rename ID
 getID info name = do
   k <- gets knowns
   case lookup name k of
     Just x  -> pure x
     Nothing -> throw info (pretty name P.<+> P.text "is not defined")
 
-transExpr :: Monad m => Expr Name -> Rename m (Expr ID)
+transExpr :: Expr Name -> Rename (Expr ID)
 transExpr (Var info name) = Var info <$> getID info name
 transExpr (Int info x) = pure $ Int info x
 transExpr (Float info x) = pure $ Float info x
@@ -67,7 +74,7 @@ transExpr (If info c t f) =
   If info <$> transExpr c <*> transExpr t <*> transExpr f
 transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
 
-transDecl :: Monad m => Decl Name -> Rename m (Decl ID)
+transDecl :: Decl Name -> Rename (Decl ID)
 transDecl (ValDec info name typ val) = do
   val' <- transExpr val
   name' <- newID name

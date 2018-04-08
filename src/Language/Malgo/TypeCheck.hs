@@ -13,34 +13,41 @@ import           Language.Malgo.Syntax  hiding (info)
 import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Language.Malgo.Utils
+import           Language.Malgo.Utils hiding (Malgo)
+import Language.Malgo.Monad
 import           Text.PrettyPrint
 
-newtype TcEnv = TcEnv { _table :: Map.Map ID TypedID }
+data TcEnv = TcEnv { _table :: Map.Map ID TypedID
+                   , uniqSupply :: Int
+                   }
 
-instance Env TcEnv where
-    initEnv = TcEnv Map.empty
+instance Default TcEnv where
+  def = TcEnv Map.empty 0
 
-type TypeCheck m a = MalgoT TcEnv m a
+instance HasUniqSupply TcEnv where
+  getUniqSupply = uniqSupply
+  setUniqSupply i s = s { uniqSupply = i }
 
-typeCheck :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
+type TypeCheck a = Malgo TcEnv a
+
+typeCheck :: Expr ID -> TypeCheck (Expr TypedID)
 typeCheck = checkExpr
 
-throw :: Monad m => Info -> Doc -> TypeCheck m a
-throw info mes = throwError $ TypeCheckError info mes
+throw :: Info -> Doc -> TypeCheck a
+throw info mes = malgoError $ "error(typeing):" <+> pretty info <+> mes
 
-addBind :: Monad m => ID -> Type -> TypeCheck m ()
+addBind :: ID -> Type -> TypeCheck ()
 addBind name typ =
     modify $ \e -> e {_table = Map.insert name (TypedID name typ) (_table e)}
 
-getBind :: Monad m => Info -> ID -> TypeCheck m TypedID
+getBind :: Info -> ID -> TypeCheck TypedID
 getBind info name = do
     t <- gets _table
     case lookup name t of
         Just x  -> pure x
         Nothing -> throw info (pretty name <+> text "is not defined")
 
-checkDecl :: Monad m => Decl ID -> TypeCheck m (Decl TypedID)
+checkDecl :: Decl ID -> TypeCheck (Decl TypedID)
 checkDecl (ExDec info name typ orig) = do
     addBind name typ
     pure $ ExDec info (TypedID name typ) typ orig
@@ -75,7 +82,7 @@ checkDecl (FunDec info fn params retty body) = do
         -- makeFnTy [(_, t)] ret = pure $ FunTy t ret
     makeFnTy xs ret = pure $ FunTy (map snd xs) ret
 
-checkExpr :: Monad m => Expr ID -> TypeCheck m (Expr TypedID)
+checkExpr :: Expr ID -> TypeCheck (Expr TypedID)
 checkExpr (Var info name) = Var info <$> getBind info name
 checkExpr (Int info x) = pure $ Int info x
 checkExpr (Float info x) = pure $ Float info x

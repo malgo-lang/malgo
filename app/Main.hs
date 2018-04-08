@@ -18,4 +18,7 @@ main = do
         Right x -> x
   ll <- compile file ast opt
 
-  P.putText (P.toS $ ppllvm ll)
+  P.unless (_dumpParsed opt || _dumpRenamed opt
+            || _dumpTyped opt || _dumpHIR opt
+            || _dumpFlatten opt || _dumpClosure opt) $
+    P.putText (P.toS $ ppllvm ll)
