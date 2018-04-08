@@ -175,27 +175,27 @@ typeOfOp _ Mod _ = FunTy ["Int", "Int"] "Int"
 typeOfOp i Eq ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Neq ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Lt ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Gt ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Le ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Ge ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty (TypeCheckError i (pretty ty <+> "is not comparable")))
+        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp _ And _ = FunTy ["Bool", "Bool"] "Bool"
 typeOfOp _ Or _ = FunTy ["Bool", "Bool"] "Bool"
 

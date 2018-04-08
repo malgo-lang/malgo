@@ -13,7 +13,7 @@ import           Language.Malgo.Syntax  hiding (info)
 import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Language.Malgo.Utils hiding (Malgo)
+import           Language.Malgo.Utils
 import Language.Malgo.Monad
 import           Text.PrettyPrint
 

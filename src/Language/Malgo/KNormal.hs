@@ -7,28 +7,28 @@ module Language.Malgo.KNormal (knormal) where
 
 import           Language.Malgo.HIR
 import           Language.Malgo.ID
+import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import qualified Language.Malgo.Syntax  as S
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Language.Malgo.Utils
 
-type KNormal m a = MalgoT () m a
+type KNormal a = Malgo Int a
 
-knormal :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
+knormal :: S.Expr TypedID -> KNormal (Expr TypedID)
 knormal e = transExpr e
 
-newTmp :: Monad m => Type -> KNormal m TypedID
+newTmp :: Type -> KNormal TypedID
 newTmp typ = do
   c <- newUniq
   pure (TypedID (ID "$k" c) typ)
 
-newUnused :: Monad m => KNormal m TypedID
+newUnused :: KNormal TypedID
 newUnused = do
   c <- newUniq
   pure (TypedID (ID "$_" c) "Unit")
 
-transOp :: Monad m => S.Op -> Type -> KNormal m Op
+transOp :: S.Op -> Type -> KNormal Op
 transOp S.Add _  = pure Add
 transOp S.Sub _  = pure Sub
 transOp S.Mul _  = pure Mul
@@ -48,10 +48,9 @@ transOp S.And _  = pure And
 transOp S.Or _   = pure Or
 
 insertLet ::
-     Monad m
-  => S.Expr TypedID
-  -> (TypedID -> KNormal m (Expr TypedID))
-  -> KNormal m (Expr TypedID)
+  S.Expr TypedID
+  -> (TypedID -> KNormal (Expr TypedID))
+  -> KNormal (Expr TypedID)
 insertLet (S.Var _ x) k = k x
 insertLet v k = do
   x <- newTmp (typeOf v)
@@ -60,15 +59,14 @@ insertLet v k = do
   pure (Let (ValDec x v') e)
 
 bind ::
-     Monad m
-  => [S.Expr TypedID]
+  [S.Expr TypedID]
   -> [TypedID]
-  -> ([TypedID] -> KNormal m (Expr TypedID))
-  -> KNormal m (Expr TypedID)
+  -> ([TypedID] -> KNormal (Expr TypedID))
+  -> KNormal (Expr TypedID)
 bind [] args k     = k (reverse args)
 bind (x:xs) args k = insertLet x (\x' -> bind xs (x' : args) k)
 
-transExpr :: Monad m => S.Expr TypedID -> KNormal m (Expr TypedID)
+transExpr :: S.Expr TypedID -> KNormal (Expr TypedID)
 transExpr (S.Var _ x) = pure (Var x)
 transExpr (S.Int _ x) = pure (Int x)
 transExpr (S.Float _ x) = pure (Float x)

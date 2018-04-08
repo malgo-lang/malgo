@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.Closure
   ( conv, ClsEnv(..) ) where
 
@@ -9,25 +10,30 @@ import           Language.Malgo.FreeVars
 import qualified Language.Malgo.HIR      as H
 import           Language.Malgo.ID
 import           Language.Malgo.MIR
+import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
-data ClsEnv = ClsEnv { _closures :: Map TypedID TypedID
-                     , _knowns   :: [TypedID]
-                     , _varMap   :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
-                     , _fundecs  :: [FunDec TypedID]
-                     , _extern   :: [ExDec TypedID]
+data ClsEnv = ClsEnv { _closures   :: Map TypedID TypedID
+                     , _knowns     :: [TypedID]
+                     , _varMap     :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
+                     , _fundecs    :: [FunDec TypedID]
+                     , _extern     :: [ExDec TypedID]
+                     , _uniqSupply :: Int
                      } deriving Show
 
-instance Env ClsEnv where
-  initEnv = ClsEnv mempty [] mempty [] []
+instance Default ClsEnv where
+  def = ClsEnv mempty [] mempty [] [] 0
 
-type ClsTrans m a = MalgoT ClsEnv m a
+instance HasUniqSupply ClsEnv where
+  getUniqSupply = _uniqSupply
+  setUniqSupply i s = s { _uniqSupply = i }
 
-conv :: Monad m => H.Expr TypedID -> ClsTrans m (Program TypedID)
+type ClsTrans a = Malgo ClsEnv a
+
+conv :: H.Expr TypedID -> ClsTrans (Program TypedID)
 conv x = do
   x' <- convExpr x
   fs <- gets _fundecs
@@ -35,32 +41,32 @@ conv x = do
   knowns <- gets _knowns
   pure (Program fs exs x' knowns)
 
-throw :: MonadError MalgoError m => Doc -> m a
-throw m = throwError (ClosureTransError m)
+throw :: Doc -> ClsTrans a
+throw m = malgoError $ "error(closuretrans):" <+> m
 
-addKnown :: Monad m => TypedID -> ClsTrans m ()
+addKnown :: TypedID -> ClsTrans ()
 addKnown name = modify $ \e -> e {_knowns = name : _knowns e}
 
-addFunDec :: Monad m => FunDec TypedID -> ClsTrans m ()
+addFunDec :: FunDec TypedID -> ClsTrans ()
 addFunDec f = modify $ \e -> e {_fundecs = f : _fundecs e}
 
-addExDec :: Monad m => ExDec TypedID -> ClsTrans m ()
+addExDec :: ExDec TypedID -> ClsTrans ()
 addExDec ex = modify $ \e -> e {_extern = ex : _extern e}
 
-convID :: Monad m => TypedID -> ClsTrans m TypedID
+convID :: TypedID -> ClsTrans TypedID
 convID name = do
   clss <- gets _closures
   varMap <- gets _varMap
   pure $ fromMaybe name (lookup name clss <|> lookup name varMap)
 
-addClsTrans :: Monad m => TypedID -> TypedID -> ClsTrans m ()
+addClsTrans :: TypedID -> TypedID -> ClsTrans ()
 addClsTrans orig cls =
   modify $ \e -> e {_closures = insert orig cls (_closures e)}
 
-addVar :: Monad m => TypedID -> TypedID -> ClsTrans m ()
+addVar :: TypedID -> TypedID -> ClsTrans ()
 addVar x x' = modify $ \e -> e {_varMap = insert x x' (_varMap e)}
 
-newClsID :: Monad m => TypedID -> ClsTrans m TypedID
+newClsID :: TypedID -> ClsTrans TypedID
 newClsID (TypedID fn fnty) = do
   let ty = toCls fnty
   c <- newUniq
@@ -73,7 +79,7 @@ toCls :: Type -> Type
 toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)
 toCls x                  = x
 
-convExpr :: Monad m => H.Expr TypedID -> ClsTrans m (Expr TypedID)
+convExpr :: H.Expr TypedID -> ClsTrans (Expr TypedID)
 convExpr (H.Let (H.ValDec x@(TypedID name _) val) body) = do
   val' <- convExpr val
   case typeOf val' of

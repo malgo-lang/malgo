@@ -11,7 +11,7 @@ import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
-import           Language.Malgo.Utils hiding (newUniq, Malgo)
+import           Language.Malgo.Utils
 import Language.Malgo.Monad
 import qualified Text.PrettyPrint       as P
 
