@@ -22,14 +22,20 @@ instance FreeVars H.Expr where
   freevars (H.Let (H.ValDec x e1) e2) =
     freevars e1 `union` delete x (freevars e2)
   freevars (H.Let (H.ExDec name _) e) = delete name $ freevars e
-  freevars (H.Let (H.FunDec fn params e1) e2) =
-    let zs = freevars e1 \\ params
-    in delete fn $ zs `union` freevars e2
+  freevars (H.Let (H.FunDecs fs) e) =
+    let zs = nub $ concatMap freevars fs
+    in (zs `union` freevars e) \\ fns
+    where fns = map (\(H.FunDec fn _ _) -> fn) fs
+    -- let zs = freevars e1 \\ params
+    -- in delete fn $ zs `union` freevars e2
   freevars (H.If c t f) = nub $ delete c $ union (freevars t) (freevars f)
   freevars (H.BinOp _ x y) =
     if x == y
       then [x]
       else [x, y]
+
+instance FreeVars H.FunDec where
+  freevars (H.FunDec fn params e1) = freevars e1 \\ (fn : params)
 
 instance FreeVars M.Expr where
   freevars (M.Var x) = [x]

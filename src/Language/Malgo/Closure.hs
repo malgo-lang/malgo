@@ -92,7 +92,7 @@ convExpr (H.Let (H.ExDec name orig) body) = do
   addKnown name
   addExDec (ExDec name orig)
   convExpr body
-convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = do
+convExpr (H.Let (H.FunDecs [H.FunDec fn@(TypedID name (FunTy params ret)) args e]) body) = do
   backup <- get
   -- fnが自由変数を持たないと仮定してeを変換
   addKnown fn
@@ -120,7 +120,7 @@ convExpr (H.Let (H.FunDec fn@(TypedID name (FunTy params ret)) args e) body) = d
           return $ Let (ClsDec clsid fn' fv) body'
   else return body'
 
-convExpr (H.Let (H.FunDec x _ _) _) =
+convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) =
   throw $ pretty x <+> text "is not a function"
 convExpr (H.Var x) = Var <$> convID x
 convExpr (H.Int x) = pure (Int x)

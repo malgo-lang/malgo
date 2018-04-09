@@ -79,7 +79,7 @@ transExpr (S.TupleAccess _ e i) = insertLet e (\e' -> pure $ TupleAccess e' i)
 transExpr (S.Fn _ params body) = do
   body' <- transExpr body
   fn <- newFnId
-  pure (Let (FunDec fn (map fst params) body') (Var fn))
+  pure (Let (FunDecs [FunDec fn (map fst params) body']) (Var fn))
   where newFnId = do
           c <- newUniq
           pure $ TypedID (ID "lambda" c) (FunTy (map snd params) (typeOf body))
@@ -102,7 +102,7 @@ transExpr (S.Let info (S.ValDec _ name _ val:ds) body) = do
 transExpr (S.Let info (S.FunDec _ fn params _ fbody:ds) body) = do
   fbody' <- transExpr fbody
   rest <- transExpr (S.Let info ds body)
-  pure (Let (FunDec fn (map fst params) fbody') rest)
+  pure (Let (FunDecs [FunDec fn (map fst params) fbody']) rest)
 transExpr (S.Let info (S.ExDec _ name _ orig:ds) body) =
   Let (ExDec name orig) <$> transExpr (S.Let info ds body)
 transExpr (S.Let _ [] body) = transExpr body
