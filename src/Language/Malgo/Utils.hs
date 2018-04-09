@@ -1,10 +1,6 @@
-{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE StrictData                 #-}
-{-# LANGUAGE TypeSynonymInstances       #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Utils where
 

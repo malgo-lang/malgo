@@ -8,25 +8,25 @@ module Language.Malgo.TypeCheck
 
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
+import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
 import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 import           Language.Malgo.Utils
-import Language.Malgo.Monad
 import           Text.PrettyPrint
 
-data TcEnv = TcEnv { _table :: Map.Map ID TypedID
-                   , uniqSupply :: Int
+data TcEnv = TcEnv { _table      :: Map.Map ID TypedID
+                   , _uniqSupply :: Int
                    }
 
 instance Default TcEnv where
   def = TcEnv Map.empty 0
 
 instance HasUniqSupply TcEnv where
-  getUniqSupply = uniqSupply
-  setUniqSupply i s = s { uniqSupply = i }
+  getUniqSupply = _uniqSupply
+  setUniqSupply i s = s { _uniqSupply = i }
 
 type TypeCheck a = Malgo TcEnv a
 
@@ -79,7 +79,6 @@ checkDecl (FunDec info fn params retty body) = do
              pretty retty $+$ "actual:" <+> pretty (typeOf body')
   where
     makeFnTy [] _   = throw info (text "void parameter is invalid")
-        -- makeFnTy [(_, t)] ret = pure $ FunTy t ret
     makeFnTy xs ret = pure $ FunTy (map snd xs) ret
 
 checkExpr :: Expr ID -> TypeCheck (Expr TypedID)
@@ -106,15 +105,14 @@ checkExpr (Call info fn args) = do
             (FunTy p _) -> pure p
             _           -> throw info $ pretty fn' <+> "is not callable"
     if map typeOf args' == paramty -- 引数が複数あるとき
-     -- -- | (TupleTy (map typeOf args') == TupleTy [paramty]) -- 引数が1つのとき
-        then pure $ Call info fn' args'
-        else throw
-                 info
-                 (text "expected:" <+>
-                  cat (punctuate (text ",") (map pretty paramty)) $+$
-                  text "actual:" <+>
-                  parens
-                      (cat $ punctuate (text ",") (map (pretty . typeOf) args')))
+      then pure $ Call info fn' args'
+      else throw
+           info
+           (text "expected:" <+>
+             cat (punctuate (text ",") (map pretty paramty)) $+$
+             text "actual:" <+>
+             parens
+             (cat $ punctuate (text ",") (map (pretty . typeOf) args')))
 checkExpr (TupleAccess i tuple index) = do
   tuple' <- checkExpr tuple
   case typeOf tuple' of
@@ -156,13 +154,12 @@ checkExpr (If info c t f) = do
     c' <- checkExpr c
     t' <- checkExpr t
     f' <- checkExpr f
-    if typeOf c' == "Bool"
-        then if typeOf t' == typeOf f'
-                 then pure (If info c' t' f')
-                 else throw info $
+    case (typeOf c' == "Bool", typeOf t' == typeOf f') of
+      (True, True) -> pure (If info c' t' f')
+      (True, False) ->throw info $
                       text "expected:" <+>
                       pretty (typeOf t') $+$ text "actual:" <+>
                       pretty (typeOf f')
-        else throw info $
-             text "expected:" <+>
-             text "Bool" $+$ text "actual:" <+> pretty (typeOf c')
+      _ -> throw info $
+           text "expected:" <+>
+           text "Bool" $+$ text "actual:" <+> pretty (typeOf c')

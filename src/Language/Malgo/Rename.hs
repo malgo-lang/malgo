@@ -2,10 +2,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Language.Malgo.Rename
-  ( rename
-  , RnEnv(..)
-  ) where
+module Language.Malgo.Rename ( rename ) where
 
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
@@ -37,7 +34,6 @@ throw info mes = malgoError $ "error(rename):" P.<+> pretty info P.<+> mes
 newID :: Name -> Rename ID
 newID orig = do
   c <- newUniq
-  -- cons <- gets idCons
   let i = ID orig c
   modify $ \e -> e {knowns = Map.insert orig i (knowns e)}
   pure i
