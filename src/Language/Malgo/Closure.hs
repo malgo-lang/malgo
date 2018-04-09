@@ -92,7 +92,56 @@ convExpr (H.Let (H.ExDec name orig) body) = do
   addKnown name
   addExDec (ExDec name orig)
   convExpr body
-convExpr (H.Let (H.FunDecs [H.FunDec fn@(TypedID name (FunTy params ret)) args e]) body) = do
+convExpr (H.Var x) = Var <$> convID x
+convExpr (H.Int x) = pure (Int x)
+convExpr (H.Float x) = pure (Float x)
+convExpr (H.Bool x) = pure (Bool x)
+convExpr (H.Char x) = pure (Char x)
+convExpr (H.String x) = pure (String x)
+convExpr H.Unit = pure Unit
+convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
+convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
+convExpr (H.Call fn args) =
+  ifM (elem fn <$> gets _knowns)
+    (CallDir <$> fn' <*> mapM convID args)
+    (CallCls <$> convID fn <*> mapM convID args)
+  where
+    fn' = fromMaybe fn . lookup fn <$> gets _varMap -- 型が変わっていれば変換
+convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
+convExpr (H.BinOp op x y) = BinOp op <$> convID x <*> convID y
+convExpr (H.Let (H.FunDecs fd@[H.FunDec fn@(TypedID name (FunTy params ret)) args e]) body) = do
+  -- backup <- get
+  -- -- fnが自由変数を持たないと仮定してeを変換
+  -- addKnown fn
+  -- e' <- convExpr e
+  -- let fn' = TypedID name (FunTy (map toCls params) (toCls ret)) -- 引数や返り値が関数値の場合を考慮
+  -- addVar fn fn'
+  -- clsid <- newClsID fn'
+  -- addClsTrans fn clsid
+
+  -- e'fv' <- mapM convID $ freevars e' \\ args
+  -- e'' <- if null e'fv'
+  --        then pure e'
+  --        else do -- put backup
+  --                modify $ \env -> env { _knowns = _knowns backup
+  --                                     , _fundecs = _fundecs backup
+  --                                     , _extern = _extern backup
+  --                                     }
+  --                convExpr e
+  -- fv <- mapM convID $ freevars e'' \\ args
+  -- addFunDec $ FunDec fn' args fv e''
+  backup <- get
+  [clsdec@(ClsDec clsid _ _)] <- convFunDecs fd
+  body' <- convExpr body
+  if clsid `elem` freevars body'
+  then do modify $ \env -> env { _knowns = _knowns backup }
+          return $ Let clsdec body'
+  else return body'
+convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) =
+  throw $ pretty x <+> text "is not a function"
+
+convFunDecs :: [H.FunDec TypedID] -> ClsTrans [Decl TypedID]
+convFunDecs [H.FunDec fn@(TypedID name (FunTy params ret)) args e] = do
   backup <- get
   -- fnが自由変数を持たないと仮定してeを変換
   addKnown fn
@@ -114,28 +163,4 @@ convExpr (H.Let (H.FunDecs [H.FunDec fn@(TypedID name (FunTy params ret)) args e
   fv <- mapM convID $ freevars e'' \\ args
   addFunDec $ FunDec fn' args fv e''
 
-  body' <- convExpr body
-  if clsid `elem` freevars body'
-  then do modify $ \env -> env { _knowns = _knowns backup }
-          return $ Let (ClsDec clsid fn' fv) body'
-  else return body'
-
-convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) =
-  throw $ pretty x <+> text "is not a function"
-convExpr (H.Var x) = Var <$> convID x
-convExpr (H.Int x) = pure (Int x)
-convExpr (H.Float x) = pure (Float x)
-convExpr (H.Bool x) = pure (Bool x)
-convExpr (H.Char x) = pure (Char x)
-convExpr (H.String x) = pure (String x)
-convExpr H.Unit = pure Unit
-convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
-convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
-convExpr (H.Call fn args) =
-  ifM (elem fn <$> gets _knowns)
-    (CallDir <$> fn' <*> mapM convID args)
-    (CallCls <$> convID fn <*> mapM convID args)
-  where
-    fn' = fromMaybe fn . lookup fn <$> gets _varMap -- 型が変わっていれば変換
-convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
-convExpr (H.BinOp op x y) = BinOp op <$> convID x <*> convID y
+  return [ClsDec clsid fn' fv]
