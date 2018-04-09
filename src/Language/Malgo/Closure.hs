@@ -146,21 +146,31 @@ convFunDecs [H.FunDec fn@(TypedID name (FunTy params ret)) args e] = do
   -- fnが自由変数を持たないと仮定してeを変換
   addKnown fn
   e' <- convExpr e
-  let fn' = TypedID name (FunTy (map toCls params) (toCls ret)) -- 引数や返り値が関数値の場合を考慮
-  addVar fn fn'
-  clsid <- newClsID fn'
-  addClsTrans fn clsid
 
+  -- 引数や返り値が関数値の場合を考慮
+  -- もし関数値が引数として渡された,あるいは返り値として返された場合,
+  -- それはクロージャになっているはず
+  let fn' = TypedID name (FunTy (map toCls params) (toCls ret))
+
+  addVar fn fn' -- CallDirへの変換時にfnをfn'に置き換える
+  clsid <- newClsID fn'
+  addClsTrans fn clsid -- CallClsへの変換時にfnをclsidに置き換える
+
+  -- e'に自由変数が含まれる時, knownsからfnを削除
   e'fv' <- mapM convID $ freevars e' \\ args
   e'' <- if null e'fv'
          then pure e'
-         else do -- put backup
-                 modify $ \env -> env { _knowns = _knowns backup
-                                      , _fundecs = _fundecs backup
-                                      , _extern = _extern backup
-                                      }
-                 convExpr e
+         else modify (\env -> env { _knowns = _knowns backup
+                                  , _fundecs = _fundecs backup
+                                  , _extern = _extern backup
+                                  }) >> convExpr e
+
+  -- eに含まれる自由変数
+  -- null e'fv' == null fv
   fv <- mapM convID $ freevars e'' \\ args
+
+  -- 関数宣言リストにfn'を追加
   addFunDec $ FunDec fn' args fv e''
 
+  -- fn'に対応するクロージャ宣言を返す
   return [ClsDec clsid fn' fv]
