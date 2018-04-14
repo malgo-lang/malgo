@@ -14,7 +14,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Text.PrettyPrint
+import           Text.PrettyPrint hiding ((<>))
 
 data ClsEnv = ClsEnv { _closures   :: Map TypedID TypedID
                      , _knowns     :: [TypedID]
@@ -157,8 +157,8 @@ convFunDecs [H.FunDec fn@(TypedID name (FunTy params ret)) args e] = do
   addClsTrans fn clsid -- CallClsへの変換時にfnをclsidに置き換える
 
   -- e'に自由変数が含まれる時, knownsからfnを削除
-  e'fv' <- mapM convID $ freevars e' \\ args
-  e'' <- if null e'fv'
+  e'fv <- mapM convID $ freevars e' \\ args
+  e'' <- if null e'fv
          then pure e'
          else modify (\env -> env { _knowns = _knowns backup
                                   , _fundecs = _fundecs backup
