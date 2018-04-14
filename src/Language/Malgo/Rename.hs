@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -6,22 +7,21 @@ module Language.Malgo.Rename ( rename ) where
 
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
+import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
 import           Language.Malgo.Utils
-import Language.Malgo.Monad
 import qualified Text.PrettyPrint       as P
 
-data RnEnv = RnEnv { knowns :: Map.Map Name ID
-                   , uniqSupply :: Int
+data RnEnv = RnEnv { knowns      :: Map.Map Name ID
+                   , _uniqSupply :: Int
                    }
+  deriving Generic
 
-instance Default RnEnv where
-  def = RnEnv Map.empty 0
+instance Default RnEnv
 
 instance HasUniqSupply RnEnv where
-  getUniqSupply = uniqSupply
-  setUniqSupply i s = s { uniqSupply = i }
+  uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
 
 type Rename a = Malgo RnEnv a
 

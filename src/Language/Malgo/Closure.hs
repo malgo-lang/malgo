@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
@@ -22,14 +23,12 @@ data ClsEnv = ClsEnv { _closures   :: Map TypedID TypedID
                      , _fundecs    :: [FunDec TypedID]
                      , _extern     :: [ExDec TypedID]
                      , _uniqSupply :: Int
-                     } deriving Show
+                     } deriving (Show, Generic)
 
-instance Default ClsEnv where
-  def = ClsEnv mempty [] mempty [] [] 0
+instance Default ClsEnv
 
 instance HasUniqSupply ClsEnv where
-  getUniqSupply = _uniqSupply
-  setUniqSupply i s = s { _uniqSupply = i }
+  uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
 
 type ClsTrans a = Malgo ClsEnv a
 
