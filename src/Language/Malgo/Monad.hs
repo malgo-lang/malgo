@@ -5,6 +5,7 @@ module Language.Malgo.Monad where
 import           Data.IORef
 import           Language.Malgo.Prelude
 import           Text.PrettyPrint
+import Control.Lens ((<+=))
 
 newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
   deriving ( Functor
@@ -21,11 +22,7 @@ instance HasUniqSupply Int where
   uniqSupply = identity
 
 newUniq :: HasUniqSupply s => Malgo s Int
-newUniq = do
-  s <- get
-  let u = view uniqSupply s
-  put $ set uniqSupply (u + 1) s
-  return u
+newUniq = uniqSupply <+= 1
 
 setUniq :: HasUniqSupply s => Int -> Malgo s ()
 setUniq i = modify (set uniqSupply i)

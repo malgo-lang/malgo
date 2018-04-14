@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -20,9 +21,9 @@ import           Text.PrettyPrint
 data TcEnv = TcEnv { _table      :: Map.Map ID TypedID
                    , _uniqSupply :: Int
                    }
+  deriving Generic
 
-instance Default TcEnv where
-  def = TcEnv Map.empty 0
+instance Default TcEnv
 
 instance HasUniqSupply TcEnv where
   uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })

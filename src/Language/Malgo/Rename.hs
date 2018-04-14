@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -18,9 +19,9 @@ import qualified Text.PrettyPrint       as P
 data RnEnv = RnEnv { knowns      :: Map.Map Name ID
                    , _uniqSupply :: Int
                    }
+  deriving Generic
 
-instance Default RnEnv where
-  def = RnEnv Map.empty 0
+instance Default RnEnv
 
 instance HasUniqSupply RnEnv where
   uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
