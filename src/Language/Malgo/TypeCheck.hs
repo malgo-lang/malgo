@@ -18,15 +18,14 @@ import Language.Malgo.Monad
 import           Text.PrettyPrint
 
 data TcEnv = TcEnv { _table :: Map.Map ID TypedID
-                   , uniqSupply :: Int
+                   , _uniqSupply :: Int
                    }
 
 instance Default TcEnv where
   def = TcEnv Map.empty 0
 
 instance HasUniqSupply TcEnv where
-  getUniqSupply = uniqSupply
-  setUniqSupply i s = s { uniqSupply = i }
+  uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
 
 type TypeCheck a = Malgo TcEnv a
 

@@ -77,4 +77,4 @@ compile filename ast opt = do
           (x, s) <- M.runMalgo (M.setUniq u >> m)
           when (key opt) $
             liftIO $ print $ pretty x
-          return (x, M.getUniqSupply s)
+          return (x, view M.uniqSupply s)

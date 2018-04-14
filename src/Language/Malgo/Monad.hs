@@ -15,25 +15,23 @@ newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
            )
 
 class HasUniqSupply s where
-  getUniqSupply :: s -> Int
-  setUniqSupply :: Int -> s -> s
+  uniqSupply :: Lens' s Int
 
 instance HasUniqSupply Int where
-  getUniqSupply = identity
-  setUniqSupply = const
+  uniqSupply = identity
 
 newUniq :: HasUniqSupply s => Malgo s Int
 newUniq = do
   s <- get
-  let u = getUniqSupply s
-  put $ setUniqSupply (u + 1) s
+  let u = view uniqSupply s
+  put $ set uniqSupply (u + 1) s
   return u
 
 setUniq :: HasUniqSupply s => Int -> Malgo s ()
-setUniq i = modify (setUniqSupply i)
+setUniq i = modify (set uniqSupply i)
 
 getUniq :: HasUniqSupply s => Malgo s Int
-getUniq = gets getUniqSupply
+getUniq = gets (view uniqSupply)
 
 runMalgo :: (Default s, HasUniqSupply s) => Malgo s a -> IO (a, s)
 runMalgo (Malgo m) = runStateT m def

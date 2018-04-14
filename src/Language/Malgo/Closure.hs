@@ -28,8 +28,7 @@ instance Default ClsEnv where
   def = ClsEnv mempty [] mempty [] [] 0
 
 instance HasUniqSupply ClsEnv where
-  getUniqSupply = _uniqSupply
-  setUniqSupply i s = s { _uniqSupply = i }
+  uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
 
 type ClsTrans a = Malgo ClsEnv a
 

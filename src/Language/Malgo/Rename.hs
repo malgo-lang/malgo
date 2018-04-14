@@ -16,15 +16,14 @@ import Language.Malgo.Monad
 import qualified Text.PrettyPrint       as P
 
 data RnEnv = RnEnv { knowns :: Map.Map Name ID
-                   , uniqSupply :: Int
+                   , _uniqSupply :: Int
                    }
 
 instance Default RnEnv where
   def = RnEnv Map.empty 0
 
 instance HasUniqSupply RnEnv where
-  getUniqSupply = uniqSupply
-  setUniqSupply i s = s { uniqSupply = i }
+  uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
 
 type Rename a = Malgo RnEnv a
 

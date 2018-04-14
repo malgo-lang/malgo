@@ -17,9 +17,9 @@ import Data.Default as X
 import           Data.String         as X (IsString (..))
 import           GHC.Exts            as X (IsList (..))
 import           Prelude             as X (error)
-import           Protolude           as X hiding (Typeable, find, sourceColumn,
-                                           sourceLine, sym, toList)
+import           Protolude           as X hiding (Typeable, find, sourceColumn, sourceLine, sym, toList, to, from)
 import qualified Text.PrettyPrint    as P
+import Control.Lens as X (Lens, Lens', Setter, Getter, set, view, over, to, from, lens)
 
 class PrettyPrint a where
   pretty :: a -> P.Doc
