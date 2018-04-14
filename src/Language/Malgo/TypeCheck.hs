@@ -8,16 +8,16 @@ module Language.Malgo.TypeCheck
 
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
+import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
 import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 import           Language.Malgo.Utils
-import Language.Malgo.Monad
 import           Text.PrettyPrint
 
-data TcEnv = TcEnv { _table :: Map.Map ID TypedID
+data TcEnv = TcEnv { _table      :: Map.Map ID TypedID
                    , _uniqSupply :: Int
                    }
 

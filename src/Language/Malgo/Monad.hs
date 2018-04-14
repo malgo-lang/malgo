@@ -1,10 +1,10 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
 module Language.Malgo.Monad where
 
-import Language.Malgo.Prelude
-import Data.IORef
-import Text.PrettyPrint
+import           Data.IORef
+import           Language.Malgo.Prelude
+import           Text.PrettyPrint
 
 newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
   deriving ( Functor

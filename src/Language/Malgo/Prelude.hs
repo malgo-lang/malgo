@@ -10,16 +10,19 @@ module Language.Malgo.Prelude
   , sandbox
   ) where
 
+import           Control.Lens        as X (Getter, Lens, Lens', Setter, from,
+                                           lens, over, set, to, view)
 import           Control.Monad.Trans as X
+import           Data.Default        as X
 import qualified Data.List           as List
 import qualified Data.Map            as Map
-import Data.Default as X
 import           Data.String         as X (IsString (..))
 import           GHC.Exts            as X (IsList (..))
 import           Prelude             as X (error)
-import           Protolude           as X hiding (Typeable, find, sourceColumn, sourceLine, sym, toList, to, from)
+import           Protolude           as X hiding (Typeable, find, from,
+                                           sourceColumn, sourceLine, sym, to,
+                                           toList)
 import qualified Text.PrettyPrint    as P
-import Control.Lens as X (Lens, Lens', Setter, Getter, set, view, over, to, from, lens)
 
 class PrettyPrint a where
   pretty :: a -> P.Doc

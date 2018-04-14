@@ -5,11 +5,11 @@
 module Language.Malgo.Driver where
 
 import qualified Language.Malgo.Beta      as Beta
-import qualified Language.Malgo.Monad as M
 import qualified Language.Malgo.Closure   as Closure
 import qualified Language.Malgo.CodeGen   as CodeGen
 import qualified Language.Malgo.Flatten   as Flatten
 import qualified Language.Malgo.KNormal   as KNormal
+import qualified Language.Malgo.Monad     as M
 import           Language.Malgo.Prelude
 import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.Syntax    as Syntax

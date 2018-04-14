@@ -9,13 +9,13 @@ module Language.Malgo.Rename
 
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
+import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
 import           Language.Malgo.Utils
-import Language.Malgo.Monad
 import qualified Text.PrettyPrint       as P
 
-data RnEnv = RnEnv { knowns :: Map.Map Name ID
+data RnEnv = RnEnv { knowns      :: Map.Map Name ID
                    , _uniqSupply :: Int
                    }
 

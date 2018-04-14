@@ -4,10 +4,10 @@
 
 module Language.Malgo.MIR where
 
-import Language.Malgo.TypedID
 import           Language.Malgo.HIR     (Op (..))
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
+import           Language.Malgo.TypedID
 import           Text.PrettyPrint       hiding ((<>))
 
 data Expr a = Var a

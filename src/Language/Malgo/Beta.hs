@@ -3,30 +3,30 @@ module Language.Malgo.Beta
   ( betaTrans
   ) where
 
-import Language.Malgo.Syntax
-import Language.Malgo.Prelude
-import Language.Malgo.TypedID
+import           Language.Malgo.Prelude
+import           Language.Malgo.Syntax
+import           Language.Malgo.TypedID
 
 betaTrans :: Expr TypedID -> Expr TypedID
 betaTrans expr = opt mempty expr
 
 isConst :: Expr TypedID -> Bool
-isConst Var{} = True
-isConst Int{} = True
-isConst Float{} = True
-isConst Bool{} = True
-isConst Char{} = True
-isConst String{} = True
-isConst Unit{} = True
-isConst (Tuple _ xs) = all isConst xs
+isConst Var{}                       = True
+isConst Int{}                       = True
+isConst Float{}                     = True
+isConst Bool{}                      = True
+isConst Char{}                      = True
+isConst String{}                    = True
+isConst Unit{}                      = True
+isConst (Tuple _ xs)                = all isConst xs
 isConst (TupleAccess _ t@Tuple{} _) = isConst t
-isConst TupleAccess{} = False
-isConst Call{} = False
-isConst Fn{} = False
-isConst (Seq _ e1 e2) = isConst e1 && isConst e2
-isConst Let{} = False
-isConst (If _ c t f) = isConst c && isConst t && isConst f
-isConst BinOp{} = False
+isConst TupleAccess{}               = False
+isConst Call{}                      = False
+isConst Fn{}                        = False
+isConst (Seq _ e1 e2)               = isConst e1 && isConst e2
+isConst Let{}                       = False
+isConst (If _ c t f)                = isConst c && isConst t && isConst f
+isConst BinOp{}                     = False
 
 opt :: Map TypedID (Expr TypedID) -> Expr TypedID -> Expr TypedID
 opt env v@(Var _ x) = fromMaybe v (lookup x env)
@@ -42,19 +42,19 @@ opt env (Let i decs e) =
   where (decs', env') = optDecl env decs []
 opt env (If i c t f) =
   case c' of
-    (Bool _ True) -> t
+    (Bool _ True)  -> t
     (Bool _ False) -> f
-    _ -> If i c' (opt env t) (opt env f)
+    _              -> If i c' (opt env t) (opt env f)
   where c' = opt env c
 opt env (BinOp i op x y) =
   case (op, opt env x, opt env y) of
-    (Add, Int _ a, Int _ b) -> Int i $ a + b
-    (Sub, Int _ a, Int _ b) -> Int i $ a - b
-    (Mul, Int _ a, Int _ b) -> Int i $ a * b
+    (Add, Int _ a, Int _ b)      -> Int i $ a + b
+    (Sub, Int _ a, Int _ b)      -> Int i $ a - b
+    (Mul, Int _ a, Int _ b)      -> Int i $ a * b
     (FAdd, Float _ a, Float _ b) -> Float i $ a + b
     (FSub, Float _ a, Float _ b) -> Float i $ a - b
     (FMul, Float _ a, Float _ b) -> Float i $ a * b
-    (_, x', y') -> BinOp i op x' y'
+    (_, x', y')                  -> BinOp i op x' y'
 opt _ e = e
 
 optDecl ::
