@@ -133,7 +133,7 @@ convFunDecs [H.FunDec fn@(TypedID name (FunTy paramtys ret)) params e] = do
         then addKnown fn >> convExpr e
         else convExpr e
 
-  fv <- mapM convID $ freevars e' \\ params
+  fv <- mapM convID efv
 
   addFunDec $ FunDec fn' params fv e'
 
