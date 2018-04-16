@@ -1,17 +1,11 @@
-let val odd_even : {Int -> Bool, Int -> Bool} =
-      let fun even(n:Int):Bool =
-            let fun odd(n:Int):Bool =
-                  if n == 0 then false else even(n - 1)
-            in if n == 0 then true else odd(n - 1)
-            end
-          fun odd(n:Int):Bool =
-            let fun even(n:Int):Bool =
-                  if n == 0 then true else odd(n - 1)
-            in if n == 0 then false else even(n - 1)
-            end
-      in {odd, even}
-      end
-    val odd : Int -> Bool = odd_even.0
-    val even : Int -> Bool = odd_even.1
-in odd(34)
+let fun even(n:Int):Bool =
+      if n == 0
+      then true
+      else odd(n - 1)
+    fun odd(n:Int):Bool =
+      if n == 0
+      then false
+      else even(n - 1)
+    extern println_bool : Bool -> {} = "println_bool"
+in println_bool(odd(34))
 end

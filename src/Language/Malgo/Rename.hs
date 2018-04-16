@@ -60,9 +60,13 @@ transExpr (Call info fn args) =
   Call info <$> transExpr fn <*> mapM transExpr args
 transExpr (Seq info e1 e2) = Seq info <$> transExpr e1 <*> transExpr e2
 transExpr (Let info decls e) = do
+  mapM_ (newID . getName) decls
   decls' <- mapM transDecl decls
   e' <- transExpr e
   pure (Let info decls' e')
+  where getName (ExDec _ name _ _) = name
+        getName (FunDec _ name _ _ _) = name
+        getName (ValDec _ name _ _) = name
 transExpr (If info c t f) =
   If info <$> transExpr c <*> transExpr t <*> transExpr f
 transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
@@ -70,15 +74,15 @@ transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
 transDecl :: Decl Name -> Rename (Decl ID)
 transDecl (ValDec info name typ val) = do
   val' <- transExpr val
-  name' <- newID name
+  name' <- getID info name
   pure (ValDec info name' typ val')
 transDecl (FunDec info fn params retty body) = do
-  fn' <- newID fn
+  fn' <- getID info fn
   ((params', body'), _) <- sandbox $ do
     params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
     body' <- transExpr body
     pure (params', body')
   pure (FunDec info fn' params' retty body')
 transDecl (ExDec info name typ orig) = do
-  name' <- newID name
+  name' <- getID info name
   pure $ ExDec info name' typ orig

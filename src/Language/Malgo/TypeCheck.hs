@@ -7,6 +7,7 @@ module Language.Malgo.TypeCheck
     ( typeCheck
     ) where
 
+import           Data.List              (groupBy)
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
@@ -45,9 +46,19 @@ getBind info name = do
     t <- gets _table
     maybe (throw info (pretty name <+> "is not defined")) return (lookup name t)
 
+prototypes :: [Decl a] -> [(a, Type)]
+prototypes xs = map mkPrototype (filter hasPrototype xs)
+  where hasPrototype ExDec{}  = True
+        hasPrototype FunDec{} = True
+        hasPrototype _        = False
+        mkPrototype (ExDec _ name ty _) = (name, ty)
+        mkPrototype (FunDec _ name params retty _) = (name, FunTy (map snd params) retty)
+        mkPrototype _ = error "ValDec has not prototype"
+
+
 checkDecl :: Decl ID -> TypeCheck (Decl TypedID)
-checkDecl (ExDec info name typ orig) = do
-    addBind name typ
+checkDecl (ExDec info name typ orig) =
+    -- addBind name typ
     pure $ ExDec info (TypedID name typ) typ orig
 checkDecl (ValDec info name Nothing val) = do
   val' <- checkExpr val
@@ -63,7 +74,7 @@ checkDecl (ValDec info name (Just typ) val) = do
            pretty typ $+$ "actual:" <+> pretty (typeOf val')
 checkDecl (FunDec info fn params retty body) = do
     fnty <- makeFnTy params retty
-    addBind fn fnty
+    -- addBind fn fnty
     mapM_ (uncurry addBind) params
     let fn' = TypedID fn fnty
     let params' = map (\(x, t) -> (TypedID x t, t)) params
@@ -137,6 +148,7 @@ checkExpr (Seq info e1 e2) = do
     Seq info e1' <$> checkExpr e2
 checkExpr (Let info decls e) = do
     backup <- get
+    mapM_ (uncurry addBind) (prototypes decls)
     decls' <- mapM checkDecl decls
     e' <- checkExpr e
     put backup
