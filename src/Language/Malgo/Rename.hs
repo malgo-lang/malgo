@@ -28,9 +28,6 @@ type Rename a = Malgo RnEnv a
 rename :: Expr Name -> Rename (Expr ID)
 rename = transExpr
 
-throw :: Info -> P.Doc -> Rename a
-throw info mes = malgoError $ "error(rename):" P.<+> pretty info P.<+> mes
-
 newID :: Name -> Rename ID
 newID orig = do
   c <- newUniq
@@ -43,7 +40,7 @@ getID info name = do
   k <- gets knowns
   case lookup name k of
     Just x  -> pure x
-    Nothing -> throw info (pretty name P.<+> P.text "is not defined")
+    Nothing -> malgoError $ "error(rename):" P.<+> pretty info P.<+> pretty name P.<+> P.text "is not defined"
 
 transExpr :: Expr Name -> Rename (Expr ID)
 transExpr (Var info name) = Var info <$> getID info name
