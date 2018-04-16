@@ -43,12 +43,12 @@ instance PrettyPrint a => PrettyPrint (Expr a) where
   pretty Unit = text "{}"
   pretty (Call fn arg) = parens $ pretty fn <+> sep (map pretty arg)
   pretty (Let decl body) =
-      parens $ text "let" <+> parens (pretty decl) $+$ nest (-1) (pretty body)
+    parens $ text "let" <+> parens (pretty decl) $+$ nest (-1) (pretty body)
   pretty (If c t f) =
-      parens $
-      text "if" <+>
-      pretty c $+$ text "then:" <+>
-      nest 2 (pretty t) $+$ text "else:" <+> nest 2 (pretty f)
+    parens $
+    text "if" <+>
+    pretty c $+$ text "then:" <+>
+    nest 2 (pretty t) $+$ text "else:" <+> nest 2 (pretty f)
   pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
 
 instance Typeable a => Typeable (Expr a) where
@@ -121,10 +121,10 @@ data FunDec a = FunDec a [a] (Expr a)
 instance PrettyPrint a => PrettyPrint (Decl a) where
   pretty (ValDec name val) = text "val" <+> pretty name <+> pretty val
   pretty (ExDec name orig) = text "extern" <+> pretty name <+> pretty orig
-  pretty (FunDecs fs) = sep (map pretty fs)
+  pretty (FunDecs fs)      = sep (map pretty fs)
 
 instance PrettyPrint a => PrettyPrint (FunDec a) where
   pretty (FunDec name params body) =
-      text "fun" <+>
-      (parens . sep $ pretty name : map pretty params) $+$
-      nest 2 (pretty body)
+    text "fun" <+>
+    (parens . sep $ pretty name : map pretty params) $+$
+    nest 2 (pretty body)

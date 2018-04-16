@@ -15,7 +15,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Text.PrettyPrint hiding ((<>))
+import           Text.PrettyPrint        hiding ((<>))
 
 data ClsEnv = ClsEnv { _closures   :: Map TypedID TypedID
                      , _knowns     :: [TypedID]
@@ -69,10 +69,9 @@ newClsID :: TypedID -> ClsTrans TypedID
 newClsID (TypedID fn fnty) = do
   let ty = toCls fnty
   c <- newUniq
-  pure
-    (TypedID
-       (ID (_name fn `mappend` fromString "$cls") c)
-       ty)
+  pure (TypedID
+        (ID (_name fn `mappend` fromString "$cls") c)
+        ty)
 
 toCls :: Type -> Type
 toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)

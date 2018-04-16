@@ -89,12 +89,11 @@ transExpr (S.BinOp _ op e1 e2) = do
   op' <- transOp op (typeOf e1)
   insertLet e1 (\x -> insertLet e2 (pure . BinOp op' x))
 transExpr (S.If _ c t f) =
-  insertLet
-    c
-    (\c' -> do
-       t' <- transExpr t
-       f' <- transExpr f
-       pure (If c' t' f'))
+  insertLet c
+  (\c' -> do
+      t' <- transExpr t
+      f' <- transExpr f
+      pure (If c' t' f'))
 transExpr (S.Let info (S.ValDec _ name _ val:ds) body) = do
   val' <- transExpr val
   rest <- transExpr (S.Let info ds body)
