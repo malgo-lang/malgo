@@ -7,7 +7,6 @@ module Language.Malgo.TypeCheck
     ( typeCheck
     ) where
 
-import           Data.List              (groupBy)
 import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
@@ -35,7 +34,7 @@ typeCheck :: Expr ID -> TypeCheck (Expr TypedID)
 typeCheck = checkExpr
 
 throw :: Info -> Doc -> TypeCheck a
-throw info mes = malgoError $ "error(typeing):" <+> pretty info <+> mes
+throw info mes = malgoError $ "error(typecheck):" <+> pretty info <+> mes
 
 addBind :: ID -> Type -> TypeCheck ()
 addBind name typ =

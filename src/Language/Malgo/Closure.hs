@@ -15,7 +15,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Text.PrettyPrint        hiding ((<>))
+import           Text.PrettyPrint
 
 data ClsEnv = ClsEnv { _closures   :: Map TypedID TypedID
                      , _knowns     :: [TypedID]
@@ -107,27 +107,7 @@ convExpr (H.Call fn args) =
     fn' = fromMaybe fn . lookup fn <$> gets _varMap -- 型が変わっていれば変換
 convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
 convExpr (H.BinOp op x y) = BinOp op <$> convID x <*> convID y
-convExpr (H.Let (H.FunDecs fd@[H.FunDec fn@(TypedID name (FunTy params ret)) args e]) body) = do
-  -- backup <- get
-  -- -- fnが自由変数を持たないと仮定してeを変換
-  -- addKnown fn
-  -- e' <- convExpr e
-  -- let fn' = TypedID name (FunTy (map toCls params) (toCls ret)) -- 引数や返り値が関数値の場合を考慮
-  -- addVar fn fn'
-  -- clsid <- newClsID fn'
-  -- addClsTrans fn clsid
-
-  -- e'fv' <- mapM convID $ freevars e' \\ args
-  -- e'' <- if null e'fv'
-  --        then pure e'
-  --        else do -- put backup
-  --                modify $ \env -> env { _knowns = _knowns backup
-  --                                     , _fundecs = _fundecs backup
-  --                                     , _extern = _extern backup
-  --                                     }
-  --                convExpr e
-  -- fv <- mapM convID $ freevars e'' \\ args
-  -- addFunDec $ FunDec fn' args fv e''
+convExpr (H.Let (H.FunDecs fd@[_]) body) = do
   backup <- get
   [clsdec@(ClsDec clsid _ _)] <- convFunDecs fd
   body' <- convExpr body
@@ -139,36 +119,22 @@ convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) =
   throw $ pretty x <+> text "is not a function"
 
 convFunDecs :: [H.FunDec TypedID] -> ClsTrans [Decl TypedID]
-convFunDecs [H.FunDec fn@(TypedID name (FunTy params ret)) args e] = do
-  backup <- get
-  -- fnが自由変数を持たないと仮定してeを変換
-  addKnown fn
-  e' <- convExpr e
+convFunDecs [H.FunDec fn@(TypedID name (FunTy paramtys ret)) params e] = do
+  let efv = freevars e \\ params
 
-  -- 引数や返り値が関数値の場合を考慮
-  -- もし関数値が引数として渡された,あるいは返り値として返された場合,
-  -- それはクロージャになっているはず
-  let fn' = TypedID name (FunTy (map toCls params) (toCls ret))
+  let fn' = TypedID name (FunTy (map toCls paramtys) (toCls ret))
 
   addVar fn fn' -- CallDirへの変換時にfnをfn'に置き換える
   clsid <- newClsID fn'
   addClsTrans fn clsid -- CallClsへの変換時にfnをclsidに置き換える
 
-  -- e'に自由変数が含まれる時, knownsからfnを削除
-  e'fv <- mapM convID $ freevars e' \\ args
-  e'' <- if null e'fv
-         then pure e'
-         else modify (\env -> env { _knowns = _knowns backup
-                                  , _fundecs = _fundecs backup
-                                  , _extern = _extern backup
-                                  }) >> convExpr e
+  -- eに自由変数が含まれない時、knownsにfnを追加
+  e' <- if null efv
+        then addKnown fn >> convExpr e
+        else convExpr e
 
-  -- eに含まれる自由変数
-  -- null e'fv' == null fv
-  fv <- mapM convID $ freevars e'' \\ args
+  fv <- mapM convID $ freevars e' \\ params
 
-  -- 関数宣言リストにfn'を追加
-  addFunDec $ FunDec fn' args fv e''
+  addFunDec $ FunDec fn' params fv e'
 
-  -- fn'に対応するクロージャ宣言を返す
   return [ClsDec clsid fn' fv]
