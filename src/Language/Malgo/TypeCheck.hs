@@ -43,9 +43,7 @@ addBind name typ =
 getBind :: Info -> ID -> TypeCheck TypedID
 getBind info name = do
     t <- gets _table
-    case lookup name t of
-        Just x  -> pure x
-        Nothing -> throw info (pretty name <+> text "is not defined")
+    maybe (throw info (pretty name <+> "is not defined")) return (lookup name t)
 
 checkDecl :: Decl ID -> TypeCheck (Decl TypedID)
 checkDecl (ExDec info name typ orig) = do
@@ -58,13 +56,11 @@ checkDecl (ValDec info name Nothing val) = do
 checkDecl (ValDec info name (Just typ) val) = do
     val' <- checkExpr val
     if typ == typeOf val'
-        then do
-            addBind name typ
-            pure $ ValDec info (TypedID name typ) (Just typ) val'
-        else throw
-                 info
-                 ("expected:" <+>
-                  pretty typ $+$ "actual:" <+> pretty (typeOf val'))
+      then do addBind name typ
+              pure $ ValDec info (TypedID name typ) (Just typ) val'
+      else throw info $
+           "expected:" <+>
+           pretty typ $+$ "actual:" <+> pretty (typeOf val')
 checkDecl (FunDec info fn params retty body) = do
     fnty <- makeFnTy params retty
     addBind fn fnty
@@ -73,10 +69,10 @@ checkDecl (FunDec info fn params retty body) = do
     let params' = map (\(x, t) -> (TypedID x t, t)) params
     body' <- checkExpr body
     if typeOf body' == retty
-        then pure $ FunDec info fn' params' retty body'
-        else throw info $
-             "expected:" <+>
-             pretty retty $+$ "actual:" <+> pretty (typeOf body')
+      then pure $ FunDec info fn' params' retty body'
+      else throw info $
+           "expected:" <+>
+           pretty retty $+$ "actual:" <+> pretty (typeOf body')
   where
     makeFnTy [] _   = throw info (text "void parameter is invalid")
     makeFnTy xs ret = pure $ FunTy (map snd xs) ret
@@ -89,30 +85,27 @@ checkExpr (Bool info x) = pure $ Bool info x
 checkExpr (Char info x) = pure $ Char info x
 checkExpr (String info x) = pure $ String info x
 checkExpr (Unit info) = pure $ Unit info
-checkExpr (Tuple info xs) = do
-  xs' <- mapM checkExpr xs
-  pure $ Tuple info xs'
+checkExpr (Tuple info xs) = Tuple info <$> mapM checkExpr xs
 checkExpr (Fn info params body) = do
   mapM_ (uncurry addBind) params
   let params' = map (\(x, t) -> (TypedID x t, t)) params
   body' <- checkExpr body
   pure $ Fn info params' body'
 checkExpr (Call info fn args) = do
-    fn' <- checkExpr fn
-    args' <- mapM checkExpr args
-    paramty <-
-        case typeOf fn' of
-            (FunTy p _) -> pure p
-            _           -> throw info $ pretty fn' <+> "is not callable"
-    if map typeOf args' == paramty -- 引数が複数あるとき
-      then pure $ Call info fn' args'
-      else throw
-           info
-           (text "expected:" <+>
-             cat (punctuate (text ",") (map pretty paramty)) $+$
-             text "actual:" <+>
-             parens
-             (cat $ punctuate (text ",") (map (pretty . typeOf) args')))
+  fn' <- checkExpr fn
+  args' <- mapM checkExpr args
+  paramty <-
+    case typeOf fn' of
+      (FunTy p _) -> pure p
+      _           -> throw info $ pretty fn' <+> "is not callable"
+  unless (map typeOf args' == paramty)
+    (throw info
+      (text "expected:" <+>
+        cat (punctuate (text ",") (map pretty paramty)) $+$
+        text "actual:" <+>
+        parens
+        (cat $ punctuate (text ",") (map (pretty . typeOf) args'))))
+  pure (Call info fn' args')
 checkExpr (TupleAccess i tuple index) = do
   tuple' <- checkExpr tuple
   case typeOf tuple' of
@@ -126,24 +119,22 @@ checkExpr (BinOp info op x y) = do
     x' <- checkExpr x
     y' <- checkExpr y
     let (FunTy [px, py] _) = typeOfOp info op (typeOf x')
-    when
-        (typeOf x' /= px)
-        (throw info $
-         text "expected:" <+>
-         pretty px $+$ text "actual:" <+> pretty (typeOf x'))
-    when
-        (typeOf y' /= py)
-        (throw info $
-         text "expected:" <+>
-         pretty py $+$ text "actual:" <+> pretty (typeOf y'))
+    when (typeOf x' /= px)
+      (throw info $
+        text "expected:" <+>
+        pretty px $+$ text "actual:" <+> pretty (typeOf x'))
+    when (typeOf y' /= py)
+      (throw info $
+        text "expected:" <+>
+        pretty py $+$ text "actual:" <+> pretty (typeOf y'))
     pure (BinOp info op x' y')
 checkExpr (Seq info e1 e2) = do
     e1' <- checkExpr e1
-    if typeOf e1' == "Unit"
-        then Seq info e1' <$> checkExpr e2
-        else throw info $
-             text "expected:" <+>
-             text "Unit" $+$ "actual:" <+> pretty (typeOf e1')
+    unless (typeOf e1' == "Unit")
+      (throw info $
+        text "expected:" <+>
+        text "Unit" $+$ "actual:" <+> pretty (typeOf e1'))
+    Seq info e1' <$> checkExpr e2
 checkExpr (Let info decls e) = do
     backup <- get
     decls' <- mapM checkDecl decls

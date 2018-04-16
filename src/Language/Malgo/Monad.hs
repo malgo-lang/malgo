@@ -2,10 +2,10 @@
 {-# LANGUAGE NoImplicitPrelude          #-}
 module Language.Malgo.Monad where
 
+import           Control.Lens           ((<+=))
 import           Data.IORef
 import           Language.Malgo.Prelude
 import           Text.PrettyPrint
-import Control.Lens ((<+=))
 
 newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
   deriving ( Functor
