@@ -197,11 +197,9 @@ genExpr' (Let (ValDec name val) e) = do
   addTable name val'
   genExpr' e
 genExpr' (Let (ClsDec name fn captures) e) = do
-  p <- malloc (captureStruct captures) `named` "captures_ptr"
   fn' <- getRef fn
   let fn'ty = LT.typeOf fn'
   let capty = LT.ptr LT.i8
-  cap <- bitcast p capty `named` "cap_ptr"
 
   inMain <- gets _inMain
   clsptr <- if inMain
@@ -210,6 +208,17 @@ genExpr' (Let (ClsDec name fn captures) e) = do
                     capSize <- sizeof capty `named` "cap_size"
                     clsSize <- add fn'size capSize `named` "cls_size"
                     flip bitcast (LT.ptr $ LT.StructureType False [fn'ty, capty]) =<< gcMalloc clsSize `named` "cls_ptr"
+  addTable name clsptr
+
+  capturesPtr <- malloc (captureStruct captures) `named` "captures_ptr"
+  forM_ (zip [0..] captures) $ \(i, x) -> do
+    p <- gep capturesPtr [ ConstantOperand (C.Int 32 0)
+                         , ConstantOperand (C.Int 32 i)
+                         ] `named` "capture_ptr"
+    o <- getRef x
+    store p 0 o
+
+  cap <- bitcast capturesPtr capty `named` "cap_ptr"
 
   fnp <- gep clsptr [ ConstantOperand (C.Int 32 0)
                     , ConstantOperand (C.Int 32 0)
@@ -219,13 +228,7 @@ genExpr' (Let (ClsDec name fn captures) e) = do
                      , ConstantOperand (C.Int 32 1)
                      ] `named` "cap_ptr"
   store capp 0 cap
-  addTable name clsptr
-  forM_ (zip [0..] captures) $ \(i, x) -> do
-    p' <- gep p [ ConstantOperand (C.Int 32 0)
-                , ConstantOperand (C.Int 32 i)
-                ] `named` "capture_ptr"
-    o <- getRef x
-    store p' 0 o
+
   genExpr' e
 genExpr' (If c t f) = do
   c' <- getRef c
@@ -292,9 +295,7 @@ genExpr' (BinOp op x y) = do
   y' <- getRef y
   op' x' y'
 
-genExDec ::
-  (MonadTrans t, MonadState GenState m, MonadModuleBuilder (t m)) =>
-  ExDec TypedID -> t m ()
+genExDec :: ExDec TypedID -> GenDec ()
 genExDec (ExDec name str) = do
   let (argtys, retty) = case T.typeOf name of
                           (T.FunTy p r) -> (map convertType p, convertType r)
