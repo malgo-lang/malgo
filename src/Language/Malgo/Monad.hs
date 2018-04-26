@@ -7,6 +7,7 @@ import           Data.IORef
 import           Language.Malgo.Prelude
 import           Text.PrettyPrint
 
+-- TODO: replace with `ReaderT (IORef s) IO a`
 newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
   deriving ( Functor
            , Applicative
