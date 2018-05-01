@@ -11,8 +11,6 @@ import           Text.Parsec.Language
 import           Text.Parsec.Pos        ()
 import qualified Text.Parsec.Token      as Tok
 
-import           Language.Malgo.Utils
-
 data Tag
     = LET
     | IN

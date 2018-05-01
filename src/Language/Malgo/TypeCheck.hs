@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -15,18 +16,12 @@ import           Language.Malgo.Syntax  hiding (info)
 import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
 data TcEnv = TcEnv { _table      :: Map.Map ID TypedID
                    , _uniqSupply :: Int
                    }
-  deriving Generic
-
-instance Default TcEnv
-
-instance HasUniqSupply TcEnv where
-  uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
+  deriving (Generic, Default, HasUniqSupply)
 
 type TypeCheck a = Malgo TcEnv a
 
@@ -43,7 +38,7 @@ addBind name typ =
 getBind :: Info -> ID -> TypeCheck TypedID
 getBind info name = do
     t <- gets _table
-    maybe (throw info (pretty name <+> "is not defined")) return (lookup name t)
+    maybe (throw info (pretty name <+> "is not defined")) return (view (at name) t)
 
 prototypes :: [Decl a] -> [(a, Type)]
 prototypes xs = map mkPrototype (filter hasPrototype xs)

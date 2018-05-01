@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -10,18 +11,12 @@ import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
-import           Language.Malgo.Utils
 import qualified Text.PrettyPrint       as P
 
 data RnEnv = RnEnv { knowns      :: Map.Map Name ID
                    , _uniqSupply :: Int
                    }
-  deriving Generic
-
-instance Default RnEnv
-
-instance HasUniqSupply RnEnv where
-  uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
+  deriving (Generic, Default, HasUniqSupply)
 
 type Rename a = Malgo RnEnv a
 
@@ -38,7 +33,7 @@ newID orig = do
 getID :: Info -> Name -> Rename ID
 getID info name = do
   k <- gets knowns
-  case lookup name k of
+  case view (at name) k of
     Just x  -> pure x
     Nothing -> malgoError $ "error(rename):" P.<+> pretty info P.<+> pretty name P.<+> P.text "is not defined"
 
@@ -64,9 +59,9 @@ transExpr (Let info decls e) = do
   decls' <- mapM transDecl decls
   e' <- transExpr e
   pure (Let info decls' e')
-  where getName (ExDec _ name _ _) = name
+  where getName (ExDec _ name _ _)    = name
         getName (FunDec _ name _ _ _) = name
-        getName (ValDec _ name _ _) = name
+        getName (ValDec _ name _ _)   = name
 transExpr (If info c t f) =
   If info <$> transExpr c <*> transExpr t <*> transExpr f
 transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
@@ -78,7 +73,7 @@ transDecl (ValDec info name typ val) = do
   pure (ValDec info name' typ val')
 transDecl (FunDec info fn params retty body) = do
   fn' <- getID info fn
-  ((params', body'), _) <- sandbox $ do
+  (params', body') <- sandbox $ do
     params' <- mapM (\(n, t) -> (,) <$> newID n <*> pure t) params
     body' <- transExpr body
     pure (params', body')

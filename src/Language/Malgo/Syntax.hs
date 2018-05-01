@@ -6,7 +6,6 @@ module Language.Malgo.Syntax where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
-import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
 data Expr a

@@ -29,7 +29,7 @@ isConst (If _ c t f)                = isConst c && isConst t && isConst f
 isConst BinOp{}                     = False
 
 opt :: Map TypedID (Expr TypedID) -> Expr TypedID -> Expr TypedID
-opt env v@(Var _ x) = fromMaybe v (lookup x env)
+opt env v@(Var _ x) = fromMaybe v (view (at x) env)
 opt env e@(TupleAccess _ (Tuple _ xs) idx) =
   if isConst e
   then maybe e (opt env) (atMay xs idx)
@@ -66,7 +66,8 @@ optDecl env [] acc =
   (reverse acc, env)
 optDecl env (ValDec i name ty val:xs) acc =
   if isConst val'
-  then optDecl (insert name val' env) xs (ValDec i name ty val':acc)
+  then optDecl (set (at name) (pure val') env)-- (insert name val' env)
+  xs (ValDec i name ty val':acc)
   else optDecl env xs (ValDec i name ty val':acc)
   where val' = opt env val
 optDecl env (FunDec i name params retty body:xs) acc =

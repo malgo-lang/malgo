@@ -15,7 +15,6 @@ import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.Syntax    as Syntax
 import qualified Language.Malgo.TypeCheck as TypeCheck
 import qualified Language.Malgo.Unused    as Unused
-import           Language.Malgo.Utils
 import qualified LLVM.AST                 as L
 import           Options.Applicative
 

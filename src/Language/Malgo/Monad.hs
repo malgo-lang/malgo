@@ -1,8 +1,12 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 module Language.Malgo.Monad where
 
 import           Control.Lens           ((<+=))
+import Data.Generics.Product
 import           Data.IORef
 import           Language.Malgo.Prelude
 import           Text.PrettyPrint
@@ -17,7 +21,9 @@ newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
            )
 
 class HasUniqSupply s where
-  uniqSupply :: Lens' s Int
+  uniqSupply :: Lens s s Int Int
+  default uniqSupply :: (Generic s, HasType Int s) => Lens s s Int Int
+  uniqSupply = typed @Int
 
 instance HasUniqSupply Int where
   uniqSupply = identity

@@ -41,13 +41,13 @@ addTable ::
   (MonadState GenState m, MonadTrans t) =>
   TypedID -> Operand -> t m ()
 addTable name opr =
-  lift (modify (\s -> s { _table = insert name opr (_table s)}))
+  lift (modify (\s -> s { _table = set (at name) (Just opr) (_table s)}))
 
 addInternal ::
   (MonadState GenState m, MonadTrans t) =>
   String -> Operand -> t m ()
 addInternal name opr =
-  lift (modify (\s -> s { _internal = insert name opr (_internal s) }))
+  lift (modify (\s -> s { _internal = set (at name) (Just opr) (_internal s) }))
 
 convertType :: T.Type -> LT.Type
 convertType "Int"          = LT.i32
@@ -73,7 +73,7 @@ getRef ::
   TypedID -> t m Operand
 getRef i = do
   m <- lift (gets _table)
-  case lookup i m of
+  case view (at i) m of
     Nothing -> panic $ show i <> " is not found in " <> show m
     Just x  -> pure x
 
@@ -100,7 +100,7 @@ gcMalloc ::
   (MonadIRBuilder (t m), MonadState GenState m, MonadTrans t) =>
   Operand -> t m Operand
 gcMalloc bytesOpr = do
-  f <- lift (fromJust . lookup "GC_malloc" <$> gets _internal)
+  f <- lift (fromJust . view (at "GC_malloc") <$> gets _internal)
   call f [(bytesOpr, [])]
 
 malloc :: (MonadTrans t, MonadState GenState (t m), MonadState GenState m, MonadIRBuilder (t m)) =>
@@ -114,7 +114,7 @@ malloc ty = do
 
 gcInit :: IRBuilderT GenDec Operand
 gcInit = do
-  f <- lift (fromJust . lookup "GC_init" <$> gets _internal)
+  f <- lift (fromJust . view (at "GC_init") <$> gets _internal)
   call f []
 
 captureStruct :: [TypedID] -> LT.Type

@@ -2,7 +2,6 @@ module Language.Malgo.ID
   ( ID(..) ) where
 
 import           Language.Malgo.Prelude
-import           Language.Malgo.Utils
 import qualified Text.PrettyPrint       as P
 
 data ID = ID { _name :: Name, _uniq :: Int }

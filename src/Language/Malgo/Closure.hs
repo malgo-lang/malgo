@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass        #-}
 {-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -23,12 +24,7 @@ data ClsEnv = ClsEnv { _closures   :: Map TypedID TypedID
                      , _fundecs    :: [FunDec TypedID]
                      , _extern     :: [ExDec TypedID]
                      , _uniqSupply :: Int
-                     } deriving (Show, Generic)
-
-instance Default ClsEnv
-
-instance HasUniqSupply ClsEnv where
-  uniqSupply = lens _uniqSupply (\s i -> s { _uniqSupply = i })
+                     } deriving (Show, Generic, Default, HasUniqSupply)
 
 type ClsTrans a = Malgo ClsEnv a
 
@@ -56,14 +52,14 @@ convID :: TypedID -> ClsTrans TypedID
 convID name = do
   clss <- gets _closures
   varMap <- gets _varMap
-  pure $ fromMaybe name (lookup name clss <|> lookup name varMap)
+  pure $ fromMaybe name (view (at name) clss <|> view (at name) varMap)
 
 addClsTrans :: TypedID -> TypedID -> ClsTrans ()
 addClsTrans orig cls =
-  modify $ \e -> e {_closures = insert orig cls (_closures e)}
+  modify $ \e -> e {_closures = set (at orig) (Just cls) (_closures e)}
 
 addVar :: TypedID -> TypedID -> ClsTrans ()
-addVar x x' = modify $ \e -> e {_varMap = insert x x' (_varMap e)}
+addVar x x' = modify $ \e -> e {_varMap = set (at x) (Just x') (_varMap e)}
 
 newClsID :: TypedID -> ClsTrans TypedID
 newClsID (TypedID fn fnty) = do
@@ -104,7 +100,7 @@ convExpr (H.Call fn args) =
     (CallDir <$> fn' <*> mapM convID args)
     (CallCls <$> convID fn <*> mapM convID args)
   where
-    fn' = fromMaybe fn . lookup fn <$> gets _varMap -- 型が変わっていれば変換
+    fn' = fromMaybe fn . view (at fn) <$> gets _varMap -- 型が変わっていれば変換
 convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
 convExpr (H.BinOp op x y) = BinOp op <$> convID x <*> convID y
 convExpr (H.Let (H.FunDecs fd@[_]) body) = do

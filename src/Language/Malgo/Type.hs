@@ -4,7 +4,6 @@
 module Language.Malgo.Type where
 
 import           Language.Malgo.Prelude
-import           Language.Malgo.Utils
 import           Text.PrettyPrint
 
 -- | Malgoの組み込みデータ型
