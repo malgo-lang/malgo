@@ -4,7 +4,6 @@ module Language.Malgo.ParserSpec
 
 import           Language.Malgo.Parser (parse)
 import           Language.Malgo.Syntax
-import           Language.Malgo.Utils
 
 import           Test.Hspec
 
