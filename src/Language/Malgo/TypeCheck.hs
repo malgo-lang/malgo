@@ -34,7 +34,7 @@ typeCheck :: Expr ID -> TypeCheck (Expr TypedID)
 typeCheck = checkExpr
 
 throw :: Info -> Doc -> TypeCheck a
-throw info mes = malgoError $ "error(typecheck):" <+> pretty info <+> mes
+throw info mes = malgoError $ "error(typecheck):" <+> ppr info <+> mes
 
 addBind :: ID -> Type -> TypeCheck ()
 addBind name typ = (table . at name) ?= TypedID name typ
@@ -42,7 +42,7 @@ addBind name typ = (table . at name) ?= TypedID name typ
 getBind :: Info -> ID -> TypeCheck TypedID
 getBind info name = do
     t <- use table
-    maybe (throw info (pretty name <+> "is not defined")) return (view (at name) t)
+    maybe (throw info (ppr name <+> "is not defined")) return (view (at name) t)
 
 prototypes :: [Decl a] -> [(a, Type)]
 prototypes xs = map mkPrototype (filter hasPrototype xs)
@@ -69,7 +69,7 @@ checkDecl (ValDec info name (Just typ) val) = do
               pure $ ValDec info (TypedID name typ) (Just typ) val'
       else throw info $
            "expected:" <+>
-           pretty typ $+$ "actual:" <+> pretty (typeOf val')
+           ppr typ $+$ "actual:" <+> ppr (typeOf val')
 checkDecl (FunDec info fn params retty body) = do
     fnty <- makeFnTy params retty
     -- addBind fn fnty
@@ -81,7 +81,7 @@ checkDecl (FunDec info fn params retty body) = do
       then pure $ FunDec info fn' params' retty body'
       else throw info $
            "expected:" <+>
-           pretty retty $+$ "actual:" <+> pretty (typeOf body')
+           ppr retty $+$ "actual:" <+> ppr (typeOf body')
   where
     makeFnTy [] _   = throw info (text "void parameter is invalid")
     makeFnTy xs ret = pure $ FunTy (map snd xs) ret
@@ -106,23 +106,23 @@ checkExpr (Call info fn args) = do
   paramty <-
     case typeOf fn' of
       (FunTy p _) -> pure p
-      _           -> throw info $ pretty fn' <+> "is not callable"
+      _           -> throw info $ ppr fn' <+> "is not callable"
   unless (map typeOf args' == paramty)
     (throw info
       (text "expected:" <+>
-        cat (punctuate (text ",") (map pretty paramty)) $+$
+        cat (punctuate (text ",") (map ppr paramty)) $+$
         text "actual:" <+>
         parens
-        (cat $ punctuate (text ",") (map (pretty . typeOf) args'))))
+        (cat $ punctuate (text ",") (map (ppr . typeOf) args'))))
   pure (Call info fn' args')
 checkExpr (TupleAccess i tuple index) = do
   tuple' <- checkExpr tuple
   case typeOf tuple' of
     TupleTy xs ->
       when (index >= length xs) $
-        throw i $ text "out of bounds:" <+> int index <+> pretty (TupleTy xs)
+        throw i $ text "out of bounds:" <+> int index <+> ppr (TupleTy xs)
     t -> throw (Syntax.info tuple) $ text "expected: tuple" $+$
-         text "actual:" <+> pretty t
+         text "actual:" <+> ppr t
   pure $ TupleAccess i tuple' index
 checkExpr (BinOp info op x y) = do
     x' <- checkExpr x
@@ -131,18 +131,18 @@ checkExpr (BinOp info op x y) = do
     when (typeOf x' /= px)
       (throw info $
         text "expected:" <+>
-        pretty px $+$ text "actual:" <+> pretty (typeOf x'))
+        ppr px $+$ text "actual:" <+> ppr (typeOf x'))
     when (typeOf y' /= py)
       (throw info $
         text "expected:" <+>
-        pretty py $+$ text "actual:" <+> pretty (typeOf y'))
+        ppr py $+$ text "actual:" <+> ppr (typeOf y'))
     pure (BinOp info op x' y')
 checkExpr (Seq info e1 e2) = do
     e1' <- checkExpr e1
     unless (typeOf e1' == "Unit")
       (throw info $
         text "expected:" <+>
-        text "Unit" $+$ "actual:" <+> pretty (typeOf e1'))
+        text "Unit" $+$ "actual:" <+> ppr (typeOf e1'))
     Seq info e1' <$> checkExpr e2
 checkExpr (Let info decls e) = do
     backup <- get
@@ -159,8 +159,8 @@ checkExpr (If info c t f) = do
       (True, True) -> pure (If info c' t' f')
       (True, False) ->throw info $
                       text "expected:" <+>
-                      pretty (typeOf t') $+$ text "actual:" <+>
-                      pretty (typeOf f')
+                      ppr (typeOf t') $+$ text "actual:" <+>
+                      ppr (typeOf f')
       _ -> throw info $
            text "expected:" <+>
-           text "Bool" $+$ text "actual:" <+> pretty (typeOf c')
+           text "Bool" $+$ text "actual:" <+> ppr (typeOf c')

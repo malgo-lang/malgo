@@ -28,28 +28,28 @@ data Expr a = Var a
             | BinOp Op a a
     deriving (Eq, Show, Read)
 
-instance PrettyPrint a => PrettyPrint (Expr a) where
-  pretty (Var x) = pretty x
-  pretty (Int x) = integer x
-  pretty (Float x) = double x
-  pretty (Bool True) = text "true"
-  pretty (Bool False) = text "false"
-  pretty (Char x) = quotes $ char x
-  pretty (String x) = doubleQuotes $ pretty x
-  pretty (Tuple xs) =
-    braces $ sep (punctuate (text ",") (map pretty xs))
-  pretty (TupleAccess xs i) =
-    parens (text "." <+> pretty xs <+> int i)
-  pretty Unit = text "{}"
-  pretty (Call fn arg) = parens $ pretty fn <+> sep (map pretty arg)
-  pretty (Let decl body) =
-    parens $ text "let" <+> parens (pretty decl) $+$ nest (-1) (pretty body)
-  pretty (If c t f) =
+instance Outputable a => Outputable (Expr a) where
+  ppr (Var x) = ppr x
+  ppr (Int x) = integer x
+  ppr (Float x) = double x
+  ppr (Bool True) = text "true"
+  ppr (Bool False) = text "false"
+  ppr (Char x) = quotes $ char x
+  ppr (String x) = doubleQuotes $ ppr x
+  ppr (Tuple xs) =
+    braces $ ppr xs
+  ppr (TupleAccess xs i) =
+    parens (text "." <+> ppr xs <+> int i)
+  ppr Unit = text "{}"
+  ppr (Call fn arg) = parens $ ppr fn <+> sep (map ppr arg)
+  ppr (Let decl body) =
+    parens $ text "let" <+> parens (ppr decl) $+$ nest (-1) (ppr body)
+  ppr (If c t f) =
     parens $
     text "if" <+>
-    pretty c $+$ text "then:" <+>
-    nest 2 (pretty t) $+$ text "else:" <+> nest 2 (pretty f)
-  pretty (BinOp op x y) = parens $ sep [pretty op, pretty x, pretty y]
+    ppr c $+$ text "then:" <+>
+    nest 2 (ppr t) $+$ text "else:" <+> nest 2 (ppr f)
+  ppr (BinOp op x y) = parens $ sep [ppr op, ppr x, ppr y]
 
 instance Typeable a => Typeable (Expr a) where
   typeOf (Var x) = typeOf x
@@ -91,24 +91,24 @@ data Op = Add
         | Or
   deriving (Eq, Show, Read)
 
-instance PrettyPrint Op where
-  pretty Add      = text "+"
-  pretty Sub      = text "-"
-  pretty Mul      = text "*"
-  pretty Div      = text "/"
-  pretty FAdd     = text "+."
-  pretty FSub     = text "-."
-  pretty FMul     = text "*."
-  pretty FDiv     = text "/."
-  pretty Mod      = text "%"
-  pretty (Eq ty)  = text "==" <> brackets (pretty ty)
-  pretty (Neq ty) = text "<>" <> brackets (pretty ty)
-  pretty (Lt ty)  = text "<" <> brackets (pretty ty)
-  pretty (Gt ty)  = text ">" <> brackets (pretty ty)
-  pretty (Le ty)  = text "<=" <> brackets (pretty ty)
-  pretty (Ge ty)  = text ">=" <> brackets (pretty ty)
-  pretty And      = text "&&"
-  pretty Or       = text "||"
+instance Outputable Op where
+  ppr Add      = text "+"
+  ppr Sub      = text "-"
+  ppr Mul      = text "*"
+  ppr Div      = text "/"
+  ppr FAdd     = text "+."
+  ppr FSub     = text "-."
+  ppr FMul     = text "*."
+  ppr FDiv     = text "/."
+  ppr Mod      = text "%"
+  ppr (Eq ty)  = text "==" <> brackets (ppr ty)
+  ppr (Neq ty) = text "<>" <> brackets (ppr ty)
+  ppr (Lt ty)  = text "<" <> brackets (ppr ty)
+  ppr (Gt ty)  = text ">" <> brackets (ppr ty)
+  ppr (Le ty)  = text "<=" <> brackets (ppr ty)
+  ppr (Ge ty)  = text ">=" <> brackets (ppr ty)
+  ppr And      = text "&&"
+  ppr Or       = text "||"
 
 data Decl a = FunDecs [FunDec a]
             | ValDec a (Expr a)
@@ -118,13 +118,13 @@ data Decl a = FunDecs [FunDec a]
 data FunDec a = FunDec a [a] (Expr a)
   deriving (Eq, Show, Read)
 
-instance PrettyPrint a => PrettyPrint (Decl a) where
-  pretty (ValDec name val) = text "val" <+> pretty name <+> pretty val
-  pretty (ExDec name orig) = text "extern" <+> pretty name <+> pretty orig
-  pretty (FunDecs fs)      = sep (map pretty fs)
+instance Outputable a => Outputable (Decl a) where
+  ppr (ValDec name val) = text "val" <+> ppr name <+> ppr val
+  ppr (ExDec name orig) = text "extern" <+> ppr name <+> ppr orig
+  ppr (FunDecs fs)      = sep (map ppr fs)
 
-instance PrettyPrint a => PrettyPrint (FunDec a) where
-  pretty (FunDec name params body) =
+instance Outputable a => Outputable (FunDec a) where
+  ppr (FunDec name params body) =
     text "fun" <+>
-    (parens . sep $ pretty name : map pretty params) $+$
-    nest 2 (pretty body)
+    (parens . sep $ ppr name : map ppr params) $+$
+    nest 2 (ppr body)

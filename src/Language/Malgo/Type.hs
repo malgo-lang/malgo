@@ -16,21 +16,20 @@ data Type
             , _ret    :: Type }
     deriving (Eq, Show, Ord, Read)
 
-instance PrettyPrint Type where
-    pretty "Unit" = "{}"
-    pretty (NameTy n) = pretty n
-    pretty (FunTy [param] ret) =
-      pretty param <+> "->" <+> pretty ret
-    pretty (FunTy params ret) =
-      parens (cat (punctuate "," (map pretty params))) <+>
-      "->" <+> pretty ret
-    pretty (TupleTy xs) = braces $ sep (punctuate "," (map pretty xs))
-    pretty (ClsTy [param] ret) =
-      braces (pretty param <+> "->" <+> pretty ret)
-    pretty (ClsTy params ret) =
-        braces
-            (parens (cat (punctuate "," (map pretty params))) <+>
-             "->" <+> pretty ret)
+instance Outputable Type where
+    ppr "Unit" = "{}"
+    ppr (NameTy n) = ppr n
+    ppr (FunTy [param] ret) =
+      ppr param <+> "->" <+> ppr ret
+    ppr (FunTy params ret) =
+      parens (ppr params) <+>
+      "->" <+> ppr ret
+    ppr (TupleTy xs) = braces $ ppr xs
+    ppr (ClsTy [param] ret) =
+      braces (ppr param <+> "->" <+> ppr ret)
+    ppr (ClsTy params ret) =
+        braces (parens (ppr params) <+>
+                "->" <+> ppr ret)
 
 instance IsString Type where
     fromString name = NameTy $ fromString name

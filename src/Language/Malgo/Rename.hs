@@ -40,7 +40,7 @@ getID info name = do
   k <- use knowns
   case view (at name) k of
     Just x  -> pure x
-    Nothing -> malgoError $ "error(rename):" P.<+> pretty info P.<+> pretty name P.<+> P.text "is not defined"
+    Nothing -> malgoError $ "error(rename):" P.<+> ppr info P.<+> ppr name P.<+> P.text "is not defined"
 
 transExpr :: Expr Name -> Rename (Expr ID)
 transExpr (Var info name) = Var info <$> getID info name

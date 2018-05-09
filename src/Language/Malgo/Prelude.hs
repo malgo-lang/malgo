@@ -1,11 +1,12 @@
+{-# LANGUAGE DefaultSignatures     #-}
 {-# LANGUAGE FlexibleContexts      #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.Prelude
   ( module X
-  , PrettyPrint(..)
+  , Outputable(..)
   , sandbox
   , Name
   , fromName
@@ -17,16 +18,21 @@ import           Data.Default        as X
 import           Data.String         as X (IsString (..))
 import           GHC.Exts            as X (IsList (..))
 import           Prelude             as X (error)
-import           Protolude           as X hiding (Type, Typeable,
-                                                  sourceColumn, sourceLine, sym,
-                                                  toList)
+import           Protolude           as X hiding (Type, Typeable, sourceColumn,
+                                           sourceLine, sym, toList)
 import qualified Text.PrettyPrint    as P
 
-class PrettyPrint a where
-  pretty :: a -> P.Doc
+class Outputable a where
+  ppr :: a -> P.Doc
 
-instance PrettyPrint Text where
-  pretty x = P.text (toS x)
+  pprList :: [a] -> P.Doc
+  pprList xs = P.sep (P.punctuate "," $ map ppr xs)
+
+instance Outputable Text where
+  ppr x = P.text (toS x)
+
+instance Outputable a => Outputable [a] where
+  ppr x = pprList x
 
 sandbox :: MonadState s m => m a -> m a
 sandbox action = do
@@ -47,10 +53,10 @@ instance Default Text where
   def = mempty
 
 instance Default Info where
-  def = Info (toS "", def, def)
+  def = Info ("", def, def)
 
 instance Eq Info where
   _ == _ = True
 
-instance PrettyPrint Info where
-  pretty (Info x) = P.text $ show x
+instance Outputable Info where
+  ppr (Info x) = P.text $ show x

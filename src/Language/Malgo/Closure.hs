@@ -4,10 +4,13 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.Closure
-  ( conv, ClsEnv(..) ) where
 
-import           Control.Lens            (at, view, set)
+module Language.Malgo.Closure
+  ( conv
+  , ClsEnv(..)
+  ) where
+
+import           Control.Lens            (at, set, view)
 import           Data.List               ((\\))
 import           Text.PrettyPrint
 
@@ -20,13 +23,14 @@ import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 
-data ClsEnv = ClsEnv { _closures   :: Map TypedID TypedID
-                     , _knowns     :: [TypedID]
-                     , _varMap     :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
-                     , _fundecs    :: [FunDec TypedID]
-                     , _extern     :: [ExDec TypedID]
-                     , _uniqSupply :: UniqSupply
-                     } deriving (Show, Generic, Default, HasUniqSupply)
+data ClsEnv = ClsEnv
+  { _closures   :: Map TypedID TypedID
+  , _knowns     :: [TypedID]
+  , _varMap     :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
+  , _fundecs    :: [FunDec TypedID]
+  , _extern     :: [ExDec TypedID]
+  , _uniqSupply :: UniqSupply
+  } deriving (Show, Generic, Default, HasUniqSupply)
 
 type ClsTrans a = Malgo ClsEnv a
 
@@ -57,8 +61,7 @@ convID name = do
   pure $ fromMaybe name (view (at name) clss <|> view (at name) varMap)
 
 addClsTrans :: TypedID -> TypedID -> ClsTrans ()
-addClsTrans orig cls =
-  modify $ \e -> e {_closures = set (at orig) (Just cls) (_closures e)}
+addClsTrans orig cls = modify $ \e -> e {_closures = set (at orig) (Just cls) (_closures e)}
 
 addVar :: TypedID -> TypedID -> ClsTrans ()
 addVar x x' = modify $ \e -> e {_varMap = set (at x) (Just x') (_varMap e)}
@@ -67,9 +70,7 @@ newClsID :: TypedID -> ClsTrans TypedID
 newClsID (TypedID fn fnty) = do
   let ty = toCls fnty
   c <- newUniq
-  pure (TypedID
-        (ID (_name fn `mappend` fromString "$cls") c)
-        ty)
+  pure (TypedID (ID (_name fn `mappend` fromString "$cls") c) ty)
 
 toCls :: Type -> Type
 toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)
@@ -97,10 +98,7 @@ convExpr (H.String x) = pure (String x)
 convExpr H.Unit = pure Unit
 convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
 convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
-convExpr (H.Call fn args) =
-  ifM (elem fn <$> gets _knowns)
-    (CallDir <$> fn' <*> mapM convID args)
-    (CallCls <$> convID fn <*> mapM convID args)
+convExpr (H.Call fn args) = ifM (elem fn <$> gets _knowns) (CallDir <$> fn' <*> mapM convID args) (CallCls <$> convID fn <*> mapM convID args)
   where
     fn' = fromMaybe fn . view (at fn) <$> gets _varMap -- 型が変わっていれば変換
 convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
@@ -110,29 +108,24 @@ convExpr (H.Let (H.FunDecs fd@[_]) body) = do
   [clsdec@(ClsDec clsid _ _)] <- convFunDecs fd
   body' <- convExpr body
   if clsid `elem` freevars body'
-  then do modify $ \env -> env { _knowns = _knowns backup }
-          return $ Let clsdec body'
-  else return body'
-convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) =
-  throw $ pretty x <+> text "is not a function"
+    then do
+      modify $ \env -> env {_knowns = _knowns backup}
+      return $ Let clsdec body'
+    else return body'
+convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) = throw $ ppr x <+> text "is not a function"
 
 convFunDecs :: [H.FunDec TypedID] -> ClsTrans [Decl TypedID]
 convFunDecs [H.FunDec fn@(TypedID name (FunTy paramtys ret)) params e] = do
   let efv = freevars e \\ params
-
   let fn' = TypedID name (FunTy (map toCls paramtys) (toCls ret))
-
   addVar fn fn' -- CallDirへの変換時にfnをfn'に置き換える
   clsid <- newClsID fn'
   addClsTrans fn clsid -- CallClsへの変換時にfnをclsidに置き換える
-
   -- eに自由変数が含まれない時、knownsにfnを追加
-  e' <- if null efv
-        then addKnown fn >> convExpr e
-        else convExpr e
-
+  e' <-
+    if null efv
+      then addKnown fn >> convExpr e
+      else convExpr e
   fv <- mapM convID efv
-
   addFunDec $ FunDec fn' params fv e'
-
   return [ClsDec clsid fn' fv]

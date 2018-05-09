@@ -52,7 +52,7 @@ parseOpt = execParser $
 compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module
 compile filename ast opt = do
   when (_dumpParsed opt) $
-    liftIO . print $ pretty ast
+    liftIO . print $ ppr ast
   (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
   (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
@@ -60,10 +60,10 @@ compile filename ast opt = do
                                  then typed
                                  else Beta.betaTrans typed) s2
   when (_dumpFlatten opt) $
-    liftIO (print $ pretty (Flatten.flatten knormal))
+    liftIO (print $ ppr (Flatten.flatten knormal))
   (cls, _) <- run (const False) (Closure.conv knormal) s3
   when (_dumpClosure opt) $
-    liftIO $ print $ pretty cls
+    liftIO $ print $ ppr cls
   let defs = CodeGen.dumpCodeGen (CodeGen.genProgram $
                                   if _notDeleteUnused opt
                                   then cls
@@ -76,5 +76,5 @@ compile filename ast opt = do
   where run key m u = do
           (x, s) <- M.runMalgo (M.setUniq u >> m)
           when (key opt) $
-            liftIO $ print $ pretty x
+            liftIO $ print $ ppr x
           return (x, view M.uniqSupply s)
