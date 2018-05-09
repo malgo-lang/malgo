@@ -3,6 +3,7 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings     #-}
 
 module Language.Malgo.Closure
@@ -10,9 +11,9 @@ module Language.Malgo.Closure
   , ClsEnv(..)
   ) where
 
-import           Control.Lens            (at, set, view)
+import           Control.Lens            (non, (^.), (.=), (%=), (?=), use, at, set, view, makeLenses)
 import           Data.List               ((\\))
-import           Text.PrettyPrint
+import           Text.PrettyPrint hiding ((<>))
 
 import           Language.Malgo.FreeVars
 import qualified Language.Malgo.HIR      as H
@@ -32,39 +33,47 @@ data ClsEnv = ClsEnv
   , _uniqSupply :: UniqSupply
   } deriving (Show, Generic, Default, HasUniqSupply)
 
+makeLenses ''ClsEnv
+
 type ClsTrans a = Malgo ClsEnv a
 
 conv :: H.Expr TypedID -> ClsTrans (Program TypedID)
 conv x = do
   x' <- convExpr x
-  fs <- gets _fundecs
-  exs <- gets _extern
-  knowns <- gets _knowns
-  pure (Program fs exs x' knowns)
+  fs <- use fundecs
+  exs <- use extern
+  ks <- use knowns
+  pure (Program fs exs x' ks)
 
 throw :: Doc -> ClsTrans a
 throw m = malgoError $ "error(closuretrans):" <+> m
 
 addKnown :: TypedID -> ClsTrans ()
-addKnown name = modify $ \e -> e {_knowns = name : _knowns e}
+-- addKnown name = modify $ \e -> e {_knowns = name : _knowns e}
+addKnown name = knowns %= (name:)
 
 addFunDec :: FunDec TypedID -> ClsTrans ()
-addFunDec f = modify $ \e -> e {_fundecs = f : _fundecs e}
+-- addFunDec f = modify $ \e -> e {_fundecs = f : _fundecs e}
+addFunDec f = fundecs %= (f:)
 
 addExDec :: ExDec TypedID -> ClsTrans ()
-addExDec ex = modify $ \e -> e {_extern = ex : _extern e}
+-- addExDec ex = modify $ \e -> e {_extern = ex : _extern e}
+addExDec ex = extern %= (ex:)
 
 convID :: TypedID -> ClsTrans TypedID
 convID name = do
-  clss <- gets _closures
-  varMap <- gets _varMap
-  pure $ fromMaybe name (view (at name) clss <|> view (at name) varMap)
+  clss <- use closures
+  vm <- use varMap
+  -- pure $ fromMaybe name ((clss <> vm) ^. at name)-- (clss ^. at name <|> vm ^. at name)
+  pure $ (clss <> vm) ^. (at name . non name)
 
 addClsTrans :: TypedID -> TypedID -> ClsTrans ()
-addClsTrans orig cls = modify $ \e -> e {_closures = set (at orig) (Just cls) (_closures e)}
+-- addClsTrans orig cls = modify $ \e -> e {_closures = set (at orig) (Just cls) (_closures e)}
+addClsTrans orig cls = (closures . at orig) ?= cls
 
 addVar :: TypedID -> TypedID -> ClsTrans ()
-addVar x x' = modify $ \e -> e {_varMap = set (at x) (Just x') (_varMap e)}
+-- addVar x x' = modify $ \e -> e {_varMap = set (at x) (Just x') (_varMap e)}
+addVar x x' = (varMap . at x) ?= x'
 
 newClsID :: TypedID -> ClsTrans TypedID
 newClsID (TypedID fn fnty) = do
@@ -98,9 +107,12 @@ convExpr (H.String x) = pure (String x)
 convExpr H.Unit = pure Unit
 convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
 convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
-convExpr (H.Call fn args) = ifM (elem fn <$> gets _knowns) (CallDir <$> fn' <*> mapM convID args) (CallCls <$> convID fn <*> mapM convID args)
+convExpr (H.Call fn args) =
+  ifM (elem fn <$> use knowns)
+  (CallDir <$> fn' <*> mapM convID args)
+  (CallCls <$> convID fn <*> mapM convID args)
   where
-    fn' = fromMaybe fn . view (at fn) <$> gets _varMap -- 型が変わっていれば変換
+    fn' = fromMaybe fn . view (at fn) <$> use varMap -- 型が変わっていれば変換
 convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
 convExpr (H.BinOp op x y) = BinOp op <$> convID x <*> convID y
 convExpr (H.Let (H.FunDecs fd@[_]) body) = do
@@ -109,7 +121,8 @@ convExpr (H.Let (H.FunDecs fd@[_]) body) = do
   body' <- convExpr body
   if clsid `elem` freevars body'
     then do
-      modify $ \env -> env {_knowns = _knowns backup}
+      -- modify $ \env -> env {_knowns = _knowns backup}
+      knowns .= backup ^. knowns
       return $ Let clsdec body'
     else return body'
 convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) = throw $ ppr x <+> "is not a function"
