@@ -70,7 +70,7 @@ newClsID :: TypedID -> ClsTrans TypedID
 newClsID (TypedID fn fnty) = do
   let ty = toCls fnty
   c <- newUniq
-  pure (TypedID (ID (_name fn `mappend` fromString "$cls") c) ty)
+  pure (TypedID (ID (_name fn `mappend` "$cls") c) ty)
 
 toCls :: Type -> Type
 toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)
@@ -112,7 +112,7 @@ convExpr (H.Let (H.FunDecs fd@[_]) body) = do
       modify $ \env -> env {_knowns = _knowns backup}
       return $ Let clsdec body'
     else return body'
-convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) = throw $ ppr x <+> text "is not a function"
+convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) = throw $ ppr x <+> "is not a function"
 
 convFunDecs :: [H.FunDec TypedID] -> ClsTrans [Decl TypedID]
 convFunDecs [H.FunDec fn@(TypedID name (FunTy paramtys ret)) params e] = do
