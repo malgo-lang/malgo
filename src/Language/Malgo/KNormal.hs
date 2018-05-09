@@ -13,7 +13,7 @@ import qualified Language.Malgo.Syntax  as S
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 
-type KNormal a = Malgo Int a
+type KNormal a = Malgo UniqSupply a
 
 knormal :: S.Expr TypedID -> KNormal (Expr TypedID)
 knormal e = transExpr e

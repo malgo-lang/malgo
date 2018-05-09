@@ -1,12 +1,13 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE DefaultSignatures #-}
+{-# LANGUAGE DataKinds                  #-}
+{-# LANGUAGE DefaultSignatures          #-}
+{-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE TypeApplications           #-}
 module Language.Malgo.Monad where
 
-import           Control.Lens           ((<+=))
-import Data.Generics.Product
+import           Control.Lens           (Lens', use, (+=), (.=))
+import           Data.Generics.Product
 import           Data.IORef
 import           Language.Malgo.Prelude
 import           Text.PrettyPrint
@@ -20,22 +21,30 @@ newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
            , MonadIO
            )
 
-class HasUniqSupply s where
-  uniqSupply :: Lens s s Int Int
-  default uniqSupply :: (Generic s, HasType Int s) => Lens s s Int Int
-  uniqSupply = typed @Int
+newtype UniqSupply = UniqSupply Int
+  deriving (Show, Num, Default)
 
-instance HasUniqSupply Int where
+class HasUniqSupply s where
+  uniqSupply :: Lens' s UniqSupply
+  default uniqSupply :: (Generic s, HasField' "_uniqSupply" s UniqSupply) => Lens' s UniqSupply
+  uniqSupply = field @"_uniqSupply"
+
+instance HasUniqSupply UniqSupply where
   uniqSupply = identity
 
 newUniq :: HasUniqSupply s => Malgo s Int
-newUniq = uniqSupply <+= 1
+newUniq = do
+  UniqSupply i <- use uniqSupply
+  uniqSupply += 1
+  return i
 
-setUniq :: HasUniqSupply s => Int -> Malgo s ()
-setUniq i = modify (set uniqSupply i)
+setUniq :: HasUniqSupply s => UniqSupply -> Malgo s ()
+setUniq i = uniqSupply .= i
 
 getUniq :: HasUniqSupply s => Malgo s Int
-getUniq = gets (view uniqSupply)
+getUniq = do
+  UniqSupply i <- use uniqSupply
+  return i
 
 runMalgo :: (Default s, HasUniqSupply s) => Malgo s a -> IO (a, s)
 runMalgo (Malgo m) = runStateT m def

@@ -7,7 +7,10 @@
 module Language.Malgo.Closure
   ( conv, ClsEnv(..) ) where
 
+import           Control.Lens            (at, view, set)
 import           Data.List               ((\\))
+import           Text.PrettyPrint
+
 import           Language.Malgo.FreeVars
 import qualified Language.Malgo.HIR      as H
 import           Language.Malgo.ID
@@ -16,14 +19,13 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Text.PrettyPrint
 
 data ClsEnv = ClsEnv { _closures   :: Map TypedID TypedID
                      , _knowns     :: [TypedID]
                      , _varMap     :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
                      , _fundecs    :: [FunDec TypedID]
                      , _extern     :: [ExDec TypedID]
-                     , _uniqSupply :: Int
+                     , _uniqSupply :: UniqSupply
                      } deriving (Show, Generic, Default, HasUniqSupply)
 
 type ClsTrans a = Malgo ClsEnv a

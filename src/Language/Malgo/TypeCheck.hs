@@ -3,12 +3,16 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
 module Language.Malgo.TypeCheck
     ( typeCheck
     ) where
 
-import qualified Data.Map.Strict        as Map
+import           Control.Lens           (at, view, use, (?=), makeLensesFor)
+import           Text.PrettyPrint
+
+
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
@@ -16,12 +20,13 @@ import           Language.Malgo.Syntax  hiding (info)
 import qualified Language.Malgo.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
-import           Text.PrettyPrint
 
-data TcEnv = TcEnv { _table      :: Map.Map ID TypedID
-                   , _uniqSupply :: Int
+data TcEnv = TcEnv { _table      :: Map ID TypedID
+                   , _uniqSupply :: UniqSupply
                    }
   deriving (Generic, Default, HasUniqSupply)
+
+makeLensesFor [("_table", "table")] ''TcEnv
 
 type TypeCheck a = Malgo TcEnv a
 
@@ -32,12 +37,11 @@ throw :: Info -> Doc -> TypeCheck a
 throw info mes = malgoError $ "error(typecheck):" <+> pretty info <+> mes
 
 addBind :: ID -> Type -> TypeCheck ()
-addBind name typ =
-    modify $ \e -> e {_table = Map.insert name (TypedID name typ) (_table e)}
+addBind name typ = (table . at name) ?= TypedID name typ
 
 getBind :: Info -> ID -> TypeCheck TypedID
 getBind info name = do
-    t <- gets _table
+    t <- use table
     maybe (throw info (pretty name <+> "is not defined")) return (view (at name) t)
 
 prototypes :: [Decl a] -> [(a, Type)]

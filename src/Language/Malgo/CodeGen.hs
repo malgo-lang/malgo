@@ -5,6 +5,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.CodeGen where
 
+import           Control.Lens                    (at, view, set)
 import           Data.Char
 import           Data.List                       (last)
 import           Data.Maybe

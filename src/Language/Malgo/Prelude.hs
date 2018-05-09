@@ -12,17 +12,14 @@ module Language.Malgo.Prelude
   , Info(..)
   ) where
 
-import           Control.Lens        as X (Getter, Lens, Setter, from, lens,
-                                           over, set, to, view)
-import           Control.Lens.At     as X (at)
 import           Control.Monad.Trans as X
 import           Data.Default        as X
 import           Data.String         as X (IsString (..))
 import           GHC.Exts            as X (IsList (..))
 import           Prelude             as X (error)
-import           Protolude           as X hiding (Type, Typeable, find, from,
-                                           sourceColumn, sourceLine, sym, to,
-                                           toList)
+import           Protolude           as X hiding (Type, Typeable,
+                                                  sourceColumn, sourceLine, sym,
+                                                  toList)
 import qualified Text.PrettyPrint    as P
 
 class PrettyPrint a where

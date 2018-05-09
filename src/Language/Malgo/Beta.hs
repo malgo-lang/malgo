@@ -3,6 +3,7 @@ module Language.Malgo.Beta
   ( betaTrans
   ) where
 
+import           Control.Lens           (at, set, view)
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax
 import           Language.Malgo.TypedID

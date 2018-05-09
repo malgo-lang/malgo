@@ -3,20 +3,25 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
 module Language.Malgo.Rename ( rename ) where
 
+import           Control.Lens           (at, makeLensesFor, use, view, (?=))
 import qualified Data.Map.Strict        as Map
+import qualified Text.PrettyPrint       as P
+
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
-import qualified Text.PrettyPrint       as P
 
-data RnEnv = RnEnv { knowns      :: Map.Map Name ID
-                   , _uniqSupply :: Int
+data RnEnv = RnEnv { _knowns     :: Map.Map Name ID
+                   , _uniqSupply :: UniqSupply
                    }
   deriving (Generic, Default, HasUniqSupply)
+
+makeLensesFor [("_knowns", "knowns")] ''RnEnv
 
 type Rename a = Malgo RnEnv a
 
@@ -27,12 +32,12 @@ newID :: Name -> Rename ID
 newID orig = do
   c <- newUniq
   let i = ID orig c
-  modify $ \e -> e {knowns = Map.insert orig i (knowns e)}
+  (knowns . at orig) ?= i
   pure i
 
 getID :: Info -> Name -> Rename ID
 getID info name = do
-  k <- gets knowns
+  k <- use knowns
   case view (at name) k of
     Just x  -> pure x
     Nothing -> malgoError $ "error(rename):" P.<+> pretty info P.<+> pretty name P.<+> P.text "is not defined"

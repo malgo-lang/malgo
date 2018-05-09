@@ -15,6 +15,8 @@ import qualified Language.Malgo.Rename    as Rename
 import qualified Language.Malgo.Syntax    as Syntax
 import qualified Language.Malgo.TypeCheck as TypeCheck
 import qualified Language.Malgo.Unused    as Unused
+
+import           Control.Lens             (view)
 import qualified LLVM.AST                 as L
 import           Options.Applicative
 
@@ -29,7 +31,6 @@ data Opt = Opt
   , _notDeleteUnused :: Bool
   , _notBetaTrans    :: Bool
   } deriving (Eq, Show)
-
 
 parseOpt :: IO Opt
 parseOpt = execParser $
