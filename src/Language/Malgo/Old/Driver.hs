@@ -2,19 +2,19 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.Driver where
+module Language.Malgo.Old.Driver where
 
-import qualified Language.Malgo.Beta      as Beta
-import qualified Language.Malgo.Closure   as Closure
-import qualified Language.Malgo.CodeGen   as CodeGen
-import qualified Language.Malgo.Flatten   as Flatten
-import qualified Language.Malgo.KNormal   as KNormal
-import qualified Language.Malgo.Monad     as M
-import           Language.Malgo.Prelude
-import qualified Language.Malgo.Rename    as Rename
-import qualified Language.Malgo.Syntax    as Syntax
-import qualified Language.Malgo.TypeCheck as TypeCheck
-import qualified Language.Malgo.Unused    as Unused
+import qualified Language.Malgo.Old.Beta      as Beta
+import qualified Language.Malgo.Old.Closure   as Closure
+import qualified Language.Malgo.Old.CodeGen   as CodeGen
+import qualified Language.Malgo.Old.Flatten   as Flatten
+import qualified Language.Malgo.Old.KNormal   as KNormal
+import qualified Language.Malgo.Old.Monad     as M
+import           Language.Malgo.Old.Prelude
+import qualified Language.Malgo.Old.Rename    as Rename
+import qualified Language.Malgo.Old.Syntax    as Syntax
+import qualified Language.Malgo.Old.TypeCheck as TypeCheck
+import qualified Language.Malgo.Old.Unused    as Unused
 
 import           Control.Lens             (view)
 import qualified LLVM.AST                 as L

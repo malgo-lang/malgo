@@ -3,17 +3,17 @@
 {-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
-module Language.Malgo.KNormal
+module Language.Malgo.Old.KNormal
   ( knormal
   ) where
 
-import           Language.Malgo.HIR
-import           Language.Malgo.ID
-import           Language.Malgo.Monad
-import           Language.Malgo.Prelude
-import qualified Language.Malgo.Syntax  as S
-import           Language.Malgo.Type
-import           Language.Malgo.TypedID
+import           Language.Malgo.Old.HIR
+import           Language.Malgo.Old.ID
+import           Language.Malgo.Old.Monad
+import           Language.Malgo.Old.Prelude
+import qualified Language.Malgo.Old.Syntax  as S
+import           Language.Malgo.Old.Type
+import           Language.Malgo.Old.TypedID
 
 type KNormal a = Malgo UniqSupply a
 

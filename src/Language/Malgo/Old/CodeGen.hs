@@ -3,7 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.CodeGen where
+module Language.Malgo.Old.CodeGen where
 
 import           Control.Lens                    (at, view, set)
 import           Data.Char
@@ -21,12 +21,12 @@ import qualified LLVM.AST.Type                   as LT
 import qualified LLVM.AST.Typed                  as LT
 import           LLVM.IRBuilder                  as IRBuilder
 
-import           Language.Malgo.HIR              (Op (..))
-import           Language.Malgo.ID
-import           Language.Malgo.MIR
-import           Language.Malgo.Prelude          hiding (bit)
-import qualified Language.Malgo.Type             as T
-import           Language.Malgo.TypedID
+import           Language.Malgo.Old.HIR              (Op (..))
+import           Language.Malgo.Old.ID
+import           Language.Malgo.Old.MIR
+import           Language.Malgo.Old.Prelude          hiding (bit)
+import qualified Language.Malgo.Old.Type             as T
+import           Language.Malgo.Old.TypedID
 
 data GenState = GenState { _table    :: Map TypedID Operand
                          , _term     :: Operand -> GenExpr () -- if式の際の最終分岐先などに利用

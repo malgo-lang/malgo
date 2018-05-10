@@ -1,8 +1,8 @@
-module Language.Malgo.Flatten
+module Language.Malgo.Old.Flatten
   ( flatten
   ) where
 
-import           Language.Malgo.HIR
+import           Language.Malgo.Old.HIR
 
 flatten :: Expr a -> Expr a
 flatten (If c t f) = If c (flatten t) (flatten f)

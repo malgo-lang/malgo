@@ -2,10 +2,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes        #-}
 
-module Language.Malgo.Lexer where
+module Language.Malgo.Old.Lexer where
 
 import           Data.String
-import           Language.Malgo.Prelude hiding (EQ, GT, LT, try)
+import           Language.Malgo.Old.Prelude hiding (EQ, GT, LT, try)
 import           Text.Parsec            hiding (many, (<|>))
 import           Text.Parsec.Language
 import           Text.Parsec.Pos        ()

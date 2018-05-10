@@ -1,13 +1,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.Beta
+module Language.Malgo.Old.Beta
   ( betaTrans
   ) where
 
 import Control.Lens (at, set, view)
-import Language.Malgo.Prelude
-import Language.Malgo.Syntax
-import Language.Malgo.TypedID
+import Language.Malgo.Old.Prelude
+import Language.Malgo.Old.Syntax
+import Language.Malgo.Old.TypedID
 
 betaTrans :: Expr TypedID -> Expr TypedID
 betaTrans expr = opt mempty expr

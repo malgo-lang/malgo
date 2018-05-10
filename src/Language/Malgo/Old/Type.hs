@@ -1,9 +1,9 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-module Language.Malgo.Type where
+module Language.Malgo.Old.Type where
 
-import           Language.Malgo.Prelude
+import           Language.Malgo.Old.Prelude
 import           Text.PrettyPrint
 
 -- | Malgoの組み込みデータ型

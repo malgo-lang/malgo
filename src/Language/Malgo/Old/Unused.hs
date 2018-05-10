@@ -1,7 +1,7 @@
-module Language.Malgo.Unused where
+module Language.Malgo.Old.Unused where
 
-import           Language.Malgo.MIR
-import           Language.Malgo.TypedID
+import           Language.Malgo.Old.MIR
+import           Language.Malgo.Old.TypedID
 
 used :: Expr TypedID -> [TypedID]
 used (Var x)                     = [x]

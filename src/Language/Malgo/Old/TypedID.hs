@@ -1,11 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.TypedID
+module Language.Malgo.Old.TypedID
   ( TypedID(..)
   ) where
 
-import           Language.Malgo.ID
-import           Language.Malgo.Prelude
-import           Language.Malgo.Type
+import           Language.Malgo.Old.ID
+import           Language.Malgo.Old.Prelude
+import           Language.Malgo.Old.Type
 
 data TypedID = TypedID {_id :: ID, _type :: Type}
     deriving (Show, Ord, Read)

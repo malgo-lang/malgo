@@ -2,12 +2,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 
-module Language.Malgo.MIR where
+module Language.Malgo.Old.MIR where
 
-import           Language.Malgo.HIR     (Op (..))
-import           Language.Malgo.Prelude
-import           Language.Malgo.Type
-import           Language.Malgo.TypedID
+import           Language.Malgo.Old.HIR     (Op (..))
+import           Language.Malgo.Old.Prelude
+import           Language.Malgo.Old.Type
+import           Language.Malgo.Old.TypedID
 import           Text.PrettyPrint       hiding ((<>))
 
 data Expr a = Var a
@@ -50,7 +50,7 @@ instance Outputable a => Outputable (Expr a) where
     nest 2 (ppr t) $+$ "else:" <+> nest 2 (ppr f)
   ppr (BinOp op x y) = parens $ sep [ppr op, ppr x, ppr y]
 
-instance (Typeable a, Show a) => Typeable (Expr a) where
+instance (Typeable a, Outputable a) => Typeable (Expr a) where
   typeOf (Var name) = typeOf name
   typeOf (Int _) = "Int"
   typeOf (Float _) = "Float"
@@ -66,12 +66,12 @@ instance (Typeable a, Show a) => Typeable (Expr a) where
       case typeOf name of
           (FunTy _ ty) -> ty
           (ClsTy _ ty) -> ty
-          _            -> panic $ show name <> "is not callable"
+          _            -> panic $ show $ ppr name <> "is not callable"
   typeOf (CallCls name _) =
       case typeOf name of
           (FunTy _ ty) -> ty
           (ClsTy _ ty) -> ty
-          _            -> panic $ show name <> "is not callable"
+          _            -> panic $ show $ ppr name <> "is not callable"
   typeOf (Let _ e) = typeOf e
   typeOf (If _ t _) = typeOf t
   typeOf (BinOp op _ _) =
