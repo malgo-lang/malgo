@@ -2,10 +2,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 
-module Language.Malgo.Old.Syntax where
+module Language.Malgo.Syntax where
 
-import           Language.Malgo.Old.Prelude
-import           Language.Malgo.Old.Type
+import           Language.Malgo.Prelude
+import           Language.Malgo.Type
 import           Text.PrettyPrint
 
 data Expr a

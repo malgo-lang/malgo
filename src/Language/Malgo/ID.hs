@@ -1,7 +1,7 @@
-module Language.Malgo.Old.ID
+module Language.Malgo.ID
   ( ID(..) ) where
 
-import           Language.Malgo.Old.Prelude
+import           Language.Malgo.Prelude
 import qualified Text.PrettyPrint       as P
 
 data ID = ID { _name :: Name, _uniq :: Int }

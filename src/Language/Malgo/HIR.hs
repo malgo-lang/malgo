@@ -2,10 +2,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 
-module Language.Malgo.Old.HIR where
+module Language.Malgo.HIR where
 
-import           Language.Malgo.Old.Prelude
-import           Language.Malgo.Old.Type
+import           Language.Malgo.Prelude
+import           Language.Malgo.Type
 import           Text.PrettyPrint       hiding ((<>))
 
 {-

@@ -6,7 +6,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings     #-}
 
-module Language.Malgo.Old.Closure
+module Language.Malgo.Closure
   ( conv
   , ClsEnv(..)
   ) where
@@ -15,14 +15,14 @@ import           Control.Lens            (non, (^.), (.=), (%=), (?=), use, at, 
 import           Data.List               ((\\))
 import           Text.PrettyPrint hiding ((<>))
 
-import           Language.Malgo.Old.FreeVars
-import qualified Language.Malgo.Old.HIR      as H
-import           Language.Malgo.Old.ID
-import           Language.Malgo.Old.MIR
-import           Language.Malgo.Old.Monad
-import           Language.Malgo.Old.Prelude
-import           Language.Malgo.Old.Type
-import           Language.Malgo.Old.TypedID
+import           Language.Malgo.FreeVars
+import qualified Language.Malgo.HIR      as H
+import           Language.Malgo.ID
+import           Language.Malgo.MIR
+import           Language.Malgo.Monad
+import           Language.Malgo.Prelude
+import           Language.Malgo.Type
+import           Language.Malgo.TypedID
 
 data ClsEnv = ClsEnv
   { _closures   :: Map TypedID TypedID

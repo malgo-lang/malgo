@@ -1,14 +1,14 @@
 -- -*- mode: fundamental -*-
 {
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.Old.Parser where
+module Language.Malgo.Parser where
 
 import Prelude hiding (EQ, LT, GT)
-import Language.Malgo.Old.Lexer
-import Language.Malgo.Old.Type
-import Language.Malgo.Old.Syntax
+import Language.Malgo.Lexer
+import Language.Malgo.Type
+import Language.Malgo.Syntax
 import Data.String
-import qualified Language.Malgo.Old.Prelude as P
+import qualified Language.Malgo.Prelude as P
 }
 
 %name parse

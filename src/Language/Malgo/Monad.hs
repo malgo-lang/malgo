@@ -4,12 +4,12 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE TypeApplications           #-}
-module Language.Malgo.Old.Monad where
+module Language.Malgo.Monad where
 
 import           Control.Lens           (Lens', use, (+=), (.=))
 import           Data.Generics.Product
 import           Data.IORef
-import           Language.Malgo.Old.Prelude
+import           Language.Malgo.Prelude
 import           Text.PrettyPrint
 
 -- TODO: replace with `ReaderT (IORef s) IO a`

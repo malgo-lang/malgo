@@ -5,16 +5,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module Language.Malgo.Old.Rename ( rename ) where
+module Language.Malgo.Rename ( rename ) where
 
 import           Control.Lens           (at, makeLensesFor, use, view, (?=))
 import qualified Data.Map.Strict        as Map
 import qualified Text.PrettyPrint       as P
 
-import           Language.Malgo.Old.ID
-import           Language.Malgo.Old.Monad
-import           Language.Malgo.Old.Prelude
-import           Language.Malgo.Old.Syntax  hiding (info)
+import           Language.Malgo.ID
+import           Language.Malgo.Monad
+import           Language.Malgo.Prelude
+import           Language.Malgo.Syntax  hiding (info)
 
 data RnEnv = RnEnv { _knowns     :: Map.Map Name ID
                    , _uniqSupply :: UniqSupply

@@ -5,7 +5,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module Language.Malgo.Old.TypeCheck
+module Language.Malgo.TypeCheck
     ( typeCheck
     ) where
 
@@ -13,13 +13,13 @@ import           Control.Lens           (at, view, use, (?=), makeLensesFor)
 import           Text.PrettyPrint
 
 
-import           Language.Malgo.Old.ID
-import           Language.Malgo.Old.Monad
-import           Language.Malgo.Old.Prelude
-import           Language.Malgo.Old.Syntax  hiding (info)
-import qualified Language.Malgo.Old.Syntax  as Syntax
-import           Language.Malgo.Old.Type
-import           Language.Malgo.Old.TypedID
+import           Language.Malgo.ID
+import           Language.Malgo.Monad
+import           Language.Malgo.Prelude
+import           Language.Malgo.Syntax  hiding (info)
+import qualified Language.Malgo.Syntax  as Syntax
+import           Language.Malgo.Type
+import           Language.Malgo.TypedID
 
 data TcEnv = TcEnv { _table      :: Map ID TypedID
                    , _uniqSupply :: UniqSupply

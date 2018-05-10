@@ -4,7 +4,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.Old.Prelude
+module Language.Malgo.Prelude
   ( module X
   , Outputable(..)
   , sandbox

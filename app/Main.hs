@@ -1,9 +1,9 @@
 module Main where
 
-import           Language.Malgo.Old.Driver
-import qualified Language.Malgo.Old.Lexer     as Lexer
-import qualified Language.Malgo.Old.Parser    as Parser
-import qualified Language.Malgo.Old.Prelude   as P
+import           Language.Malgo.Driver
+import qualified Language.Malgo.Lexer     as Lexer
+import qualified Language.Malgo.Parser    as Parser
+import qualified Language.Malgo.Prelude   as P
 import           LLVM.Pretty
 
 main :: IO ()
