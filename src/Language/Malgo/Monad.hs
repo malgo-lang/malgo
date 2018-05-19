@@ -1,5 +1,4 @@
-{-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE FunctionalDependencies     #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -34,20 +33,22 @@ instance MalgoEnv UniqSupply where
 
 class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
   newUniq :: m Int
-  setUniq :: UniqSupply -> m ()
+  newUniq = do
+    u <- getUniq
+    setUniq (u + 1)
+    return u
+
+  setUniq :: Int -> m ()
+
   getUniq :: m Int
 
   addTable :: Ord k => [(k, v)] -> Lens' s (Map k v) -> m a -> m a
   lookupTable :: Ord k => Doc -> k -> Lens' s (Map k v) -> m v
 
 instance MalgoEnv s => MonadMalgo s (Malgo s) where
-  newUniq = do
+  setUniq i' = do
     UniqSupply i <- use uniqSupplyL
-    i' <- readMutVar i
-    writeMutVar i (i' + 1)
-    return i'
-
-  setUniq i = uniqSupplyL .= i
+    writeMutVar i i'
 
   getUniq = do
     UniqSupply i <- use uniqSupplyL
@@ -64,7 +65,6 @@ instance MalgoEnv s => MonadMalgo s (Malgo s) where
       Just x  -> pure x
       Nothing -> malgoError err
 
--- runMalgo :: MalgoEnv s => Malgo s a -> IO (a, s)
 runMalgo :: MalgoEnv s => Malgo s a -> Int -> IO (a, s)
 runMalgo (Malgo m) u = do
   i <- UniqSupply <$> newMutVar u
