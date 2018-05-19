@@ -11,7 +11,7 @@ module Language.Malgo.Closure
   , ClsEnv(..)
   ) where
 
-import           Control.Lens            (non, (^.), (.=), (%=), (?=), use, at, set, view, makeLenses)
+import           Control.Lens            (non, (^.), (.=), (%=), (?=), use, at, view, makeLenses)
 import           Data.List               ((\\))
 import           Text.PrettyPrint hiding ((<>))
 
@@ -31,9 +31,13 @@ data ClsEnv = ClsEnv
   , _fundecs    :: [FunDec TypedID]
   , _extern     :: [ExDec TypedID]
   , _uniqSupply :: UniqSupply
-  } deriving (Show, Generic, Default, HasUniqSupply)
+  }
 
 makeLenses ''ClsEnv
+
+instance MalgoEnv ClsEnv where
+  uniqSupplyL = uniqSupply
+  genEnv = ClsEnv mempty mempty mempty mempty mempty
 
 type ClsTrans a = Malgo ClsEnv a
 

@@ -74,7 +74,8 @@ compile filename ast opt = do
                                 }
   pure llvmMod
   where run key m u = do
-          (x, s) <- M.runMalgo (M.setUniq u >> m)
+          (x, s) <- M.runMalgo m u
           when (key opt) $
             liftIO $ print $ ppr x
-          return (x, view M.uniqSupply s)
+          s' <- M.readMutVar $ M.unUniqSupply $ view M.uniqSupplyL s
+          return (x, s')

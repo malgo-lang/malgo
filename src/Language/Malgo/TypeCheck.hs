@@ -9,7 +9,7 @@ module Language.Malgo.TypeCheck
     ( typeCheck
     ) where
 
-import           Control.Lens           (at, view, use, (?=), makeLensesFor)
+import           Control.Lens           (at, view, use, (?=), makeLenses)
 import           Text.PrettyPrint
 
 
@@ -24,9 +24,12 @@ import           Language.Malgo.TypedID
 data TcEnv = TcEnv { _table      :: Map ID TypedID
                    , _uniqSupply :: UniqSupply
                    }
-  deriving (Generic, Default, HasUniqSupply)
 
-makeLensesFor [("_table", "table")] ''TcEnv
+makeLenses ''TcEnv
+
+instance MalgoEnv TcEnv where
+  uniqSupplyL = uniqSupply
+  genEnv = TcEnv mempty
 
 type TypeCheck a = Malgo TcEnv a
 
