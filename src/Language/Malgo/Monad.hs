@@ -1,3 +1,8 @@
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE DataKinds                  #-}
 {-# LANGUAGE DefaultSignatures          #-}
 {-# LANGUAGE FlexibleContexts           #-}
@@ -6,13 +11,13 @@
 {-# LANGUAGE TypeApplications           #-}
 module Language.Malgo.Monad where
 
-import           Control.Lens           (Lens', use, (+=), (.=))
+import           Control.Lens           (set, Setter', Lens', use, (+=), (.=))
 import           Data.Generics.Product
 import           Data.IORef
+import qualified Data.Map as Map
 import           Language.Malgo.Prelude
-import           Text.PrettyPrint
+import           Text.PrettyPrint hiding ((<>))
 
--- TODO: replace with `ReaderT (IORef s) IO a`
 newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
   deriving ( Functor
            , Applicative
@@ -32,19 +37,29 @@ class HasUniqSupply s where
 instance HasUniqSupply UniqSupply where
   uniqSupply = identity
 
-newUniq :: HasUniqSupply s => Malgo s Int
-newUniq = do
-  UniqSupply i <- use uniqSupply
-  uniqSupply += 1
-  return i
+class (Monad m, HasUniqSupply s) => MonadMalgo s m | m -> s where
+  newUniq :: m Int
+  setUniq :: UniqSupply -> m ()
+  getUniq :: m Int
 
-setUniq :: HasUniqSupply s => UniqSupply -> Malgo s ()
-setUniq i = uniqSupply .= i
+  addTable :: Ord k => [(k, v)] -> Lens' s (Map k v) -> m a -> m a
 
-getUniq :: HasUniqSupply s => Malgo s Int
-getUniq = do
-  UniqSupply i <- use uniqSupply
-  return i
+instance HasUniqSupply s => MonadMalgo s (Malgo s) where
+  newUniq = do
+    UniqSupply i <- use uniqSupply
+    uniqSupply += 1
+    return i
+
+  setUniq i = uniqSupply .= i
+
+  getUniq = do
+    UniqSupply i <- use uniqSupply
+    return i
+
+  addTable kvs l m = sandbox $ do
+    s <- use l
+    l .= (Map.fromList kvs <> s)
+    m
 
 runMalgo :: (Default s, HasUniqSupply s) => Malgo s a -> IO (a, s)
 runMalgo (Malgo m) = runStateT m def
