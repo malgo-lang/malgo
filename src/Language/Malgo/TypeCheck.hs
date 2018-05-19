@@ -10,7 +10,7 @@ module Language.Malgo.TypeCheck
     ( typeCheck
     ) where
 
-import           Control.Lens           (at, (?=), makeLenses)
+import           Control.Lens           (makeLenses)
 import           Text.PrettyPrint
 
 
@@ -32,22 +32,22 @@ instance MalgoEnv TcEnv where
   uniqSupplyL = uniqSupply
   genEnv = TcEnv mempty
 
-type TypeCheck a = Malgo TcEnv a
-
-typeCheck :: Expr ID -> TypeCheck (Expr TypedID)
+typeCheck :: MonadMalgo TcEnv m => Expr ID -> m (Expr TypedID)
 typeCheck = checkExpr
 
-throw :: MonadMalgo s m => Info -> Doc -> m a
+throw :: MonadMalgo TcEnv m => Info -> Doc -> m a
 throw info mes = malgoError $ "error(typecheck):" <+> ppr info <+> mes
 
-addBind :: ID -> Type -> TypeCheck ()
-addBind name typ = (table . at name) ?= TypedID name typ
+addBind :: MonadMalgo TcEnv m => ID -> Type -> m a -> m a
+addBind name typ m = addTable [(name, TypedID name typ)] table m
+addBinds :: MonadMalgo TcEnv m => [(ID, Type)] -> m a -> m a
+addBinds kvs m = addTable (map (\(name, typ) -> (name, TypedID name typ)) kvs) table m
 
 getBind :: MonadMalgo TcEnv m => Info -> ID -> m TypedID
 getBind info name =
   lookupTable ("error(typecheck):" <+> ppr info <+> ppr name <+> "is not defined") name table
 
-prototypes :: [Decl a] -> [(a, Type)]
+prototypes :: [Decl ID] -> [(ID, Type)]
 prototypes xs = map mkPrototype (filter hasPrototype xs)
   where hasPrototype ExDec{}  = True
         hasPrototype FunDec{} = True
@@ -56,26 +56,25 @@ prototypes xs = map mkPrototype (filter hasPrototype xs)
         mkPrototype (FunDec _ name params retty _) = (name, FunTy (map snd params) retty)
         mkPrototype _ = error "ValDec has not prototype"
 
-
-checkDecl :: Decl ID -> TypeCheck (Decl TypedID)
-checkDecl (ExDec info name typ orig) =
-    pure $ ExDec info (TypedID name typ) typ orig
-checkDecl (ValDec info name Nothing val) = do
+checkDecls :: MonadMalgo TcEnv m => [Decl ID] -> m [Decl TypedID]
+checkDecls [] = pure []
+checkDecls (ExDec info name typ orig : ds) =
+  (ExDec info (TypedID name typ) typ orig : ) <$> checkDecls ds
+checkDecls (ValDec info name Nothing val : ds) = do
   val' <- checkExpr val
-  addBind name (typeOf val')
-  pure $ ValDec info (TypedID name (typeOf val')) Nothing val'
-checkDecl (ValDec info name (Just typ) val) = do
+  addBind name (typeOf val') $
+    (ValDec info (TypedID name (typeOf val')) Nothing val' : ) <$> checkDecls ds
+checkDecls (ValDec info name (Just typ) val : ds) = do
     val' <- checkExpr val
     if typ == typeOf val'
-      then do addBind name typ
-              pure $ ValDec info (TypedID name typ) (Just typ) val'
+      then addBind name typ $
+           (ValDec info (TypedID name typ) (Just typ) val' : ) <$> checkDecls ds
       else throw info $
            "expected:" <+>
            ppr typ $+$ "actual:" <+> ppr (typeOf val')
-checkDecl (FunDec info fn params retty body) = do
-    fnty <- makeFnTy params retty
-    -- addBind fn fnty
-    mapM_ (uncurry addBind) params
+checkDecls (FunDec info fn params retty body : ds) = do
+  fnty <- makeFnTy params retty
+  fd <- addBinds params $ do
     let fn' = TypedID fn fnty
     let params' = map (\(x, t) -> (TypedID x t, t)) params
     body' <- checkExpr body
@@ -84,11 +83,12 @@ checkDecl (FunDec info fn params retty body) = do
       else throw info $
            "expected:" <+>
            ppr retty $+$ "actual:" <+> ppr (typeOf body')
+  (fd :) <$> checkDecls ds
   where
     makeFnTy [] _   = throw info (text "void parameter is invalid")
     makeFnTy xs ret = pure $ FunTy (map snd xs) ret
 
-checkExpr :: Expr ID -> TypeCheck (Expr TypedID)
+checkExpr :: MonadMalgo TcEnv m => Expr ID -> m (Expr TypedID)
 checkExpr (Var info name) = Var info <$> getBind info name
 checkExpr (Int info x) = pure $ Int info x
 checkExpr (Float info x) = pure $ Float info x
@@ -97,11 +97,11 @@ checkExpr (Char info x) = pure $ Char info x
 checkExpr (String info x) = pure $ String info x
 checkExpr (Unit info) = pure $ Unit info
 checkExpr (Tuple info xs) = Tuple info <$> mapM checkExpr xs
-checkExpr (Fn info params body) = do
-  mapM_ (uncurry addBind) params
-  let params' = map (\(x, t) -> (TypedID x t, t)) params
-  body' <- checkExpr body
-  pure $ Fn info params' body'
+checkExpr (Fn info params body) =
+  addBinds params $ do
+    let params' = map (\(x, t) -> (TypedID x t, t)) params
+    body' <- checkExpr body
+    pure $ Fn info params' body'
 checkExpr (Call info fn args) = do
   fn' <- checkExpr fn
   args' <- mapM checkExpr args
@@ -146,13 +146,11 @@ checkExpr (Seq info e1 e2) = do
         text "expected:" <+>
         text "Unit" $+$ "actual:" <+> ppr (typeOf e1'))
     Seq info e1' <$> checkExpr e2
-checkExpr (Let info decls e) = do
-    backup <- get
-    mapM_ (uncurry addBind) (prototypes decls)
-    decls' <- mapM checkDecl decls
-    e' <- checkExpr e
-    put backup
-    pure (Let info decls' e')
+checkExpr (Let info decls e) =
+    addBinds (prototypes decls) $ do
+      decls' <- checkDecls decls
+      e' <- checkExpr e
+      pure (Let info decls' e')
 checkExpr (If info c t f) = do
     c' <- checkExpr c
     t' <- checkExpr t
