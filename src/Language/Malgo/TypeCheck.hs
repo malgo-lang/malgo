@@ -146,11 +146,15 @@ checkExpr (Seq info e1 e2) = do
         text "expected:" <+>
         text "Unit" $+$ "actual:" <+> ppr (typeOf e1'))
     Seq info e1' <$> checkExpr e2
-checkExpr (Let info decls e) =
-    addBinds (prototypes decls) $ do
-      decls' <- checkDecls decls
-      e' <- checkExpr e
-      pure (Let info decls' e')
+checkExpr (Let info decls e) = do
+  decls' <- addBinds (prototypes decls) $ checkDecls decls
+  addDecls decls' $ do
+    e' <- checkExpr e
+    pure (Let info decls' e')
+  where addDecls decls = addBinds (map sig decls)
+        sig (FunDec _ name _ _ _) = (_id name, _type name)
+        sig (ValDec _ name _ _) = (_id name, _type name)
+        sig (ExDec _ name _ _) = (_id name, _type name)
 checkExpr (If info c t f) = do
     c' <- checkExpr c
     t' <- checkExpr t

@@ -44,9 +44,9 @@ type ClsTrans a = Malgo ClsEnv a
 conv :: H.Expr TypedID -> ClsTrans (Program TypedID)
 conv x = do
   x' <- convExpr x
-  fs <- use fundecs
-  exs <- use extern
-  ks <- use knowns
+  fs <- view fundecs <$> getEnv
+  exs <- view extern <$> getEnv
+  ks <- view knowns <$> getEnv
   pure (Program fs exs x' ks)
 
 throw :: Doc -> ClsTrans a
