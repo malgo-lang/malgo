@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -9,7 +10,7 @@ module Language.Malgo.TypeCheck
     ( typeCheck
     ) where
 
-import           Control.Lens           (at, view, use, (?=), makeLenses)
+import           Control.Lens           (at, (?=), makeLenses)
 import           Text.PrettyPrint
 
 
@@ -36,16 +37,15 @@ type TypeCheck a = Malgo TcEnv a
 typeCheck :: Expr ID -> TypeCheck (Expr TypedID)
 typeCheck = checkExpr
 
-throw :: Info -> Doc -> TypeCheck a
+throw :: MonadMalgo s m => Info -> Doc -> m a
 throw info mes = malgoError $ "error(typecheck):" <+> ppr info <+> mes
 
 addBind :: ID -> Type -> TypeCheck ()
 addBind name typ = (table . at name) ?= TypedID name typ
 
-getBind :: Info -> ID -> TypeCheck TypedID
-getBind info name = do
-    t <- use table
-    maybe (throw info (ppr name <+> "is not defined")) return (view (at name) t)
+getBind :: MonadMalgo TcEnv m => Info -> ID -> m TypedID
+getBind info name =
+  lookupTable ("error(typecheck):" <+> ppr info <+> ppr name <+> "is not defined") name table
 
 prototypes :: [Decl a] -> [(a, Type)]
 prototypes xs = map mkPrototype (filter hasPrototype xs)
@@ -59,7 +59,6 @@ prototypes xs = map mkPrototype (filter hasPrototype xs)
 
 checkDecl :: Decl ID -> TypeCheck (Decl TypedID)
 checkDecl (ExDec info name typ orig) =
-    -- addBind name typ
     pure $ ExDec info (TypedID name typ) typ orig
 checkDecl (ValDec info name Nothing val) = do
   val' <- checkExpr val
