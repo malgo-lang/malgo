@@ -26,6 +26,15 @@ Unit print_float(double d) {
   return unit;
 }
 
+Unit print_bool(int b) {
+  if (b) {
+    printf("true");
+  } else {
+    printf("false");
+  }
+  return unit;
+}
+
 Unit flush(Unit unused) {
   fflush(stdout);
   return unit;

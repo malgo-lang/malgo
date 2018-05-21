@@ -1,8 +1,13 @@
-module Language.Malgo.FreeVars where
+{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TemplateHaskell   #-}
+module Language.Malgo.FreeVars (FreeVars(..))where
 
-import           Data.List
+import           Control.Lens
+import           Data.List              (delete, nub, union, (\\))
 import qualified Language.Malgo.HIR     as H
 import qualified Language.Malgo.MIR     as M
+import           Language.Malgo.Prelude
 import           Language.Malgo.TypedID
 
 class FreeVars f where
@@ -23,7 +28,7 @@ instance FreeVars H.Expr where
     freevars e1 `union` delete x (freevars e2)
   freevars (H.Let (H.ExDec name _) e) = delete name $ freevars e
   freevars (H.Let (H.FunDecs fs) e) =
-    let zs = nub $ concatMap freevars fs
+    let zs = nub $ sort $ concatMap freevars fs
     in (zs `union` freevars e) \\ fns
     where fns = map (\(H.FunDec fn _ _) -> fn) fs
     -- let zs = freevars e1 \\ params

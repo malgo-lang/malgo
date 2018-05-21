@@ -11,7 +11,7 @@ module Language.Malgo.Closure
   , ClsEnv(..)
   ) where
 
-import           Control.Lens            (non, (^.), (.=), (%=), (?=), use, at, view, makeLenses)
+import           Control.Lens            (set, non, (^.), (.=), (%=), (?=), use, at, view, makeLenses)
 import           Data.List               ((\\))
 import           Text.PrettyPrint hiding ((<>))
 
@@ -23,13 +23,14 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
+import Language.Malgo.Closure.Knowns
 
 data ClsEnv = ClsEnv
   { _closures   :: Map TypedID TypedID
-  , _knowns     :: [TypedID]
   , _varMap     :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
   , _fundecs    :: [FunDec TypedID]
   , _extern     :: [ExDec TypedID]
+  , _knowns     :: [TypedID] -- immutable
   , _uniqSupply :: UniqSupply
   }
 
@@ -43,6 +44,7 @@ type ClsTrans a = Malgo ClsEnv a
 
 conv :: H.Expr TypedID -> ClsTrans (Program TypedID)
 conv x = do
+  modify (set knowns (knownFuns x))
   x' <- convExpr x
   fs <- view fundecs <$> getEnv
   exs <- view extern <$> getEnv
@@ -52,9 +54,9 @@ conv x = do
 throw :: Doc -> ClsTrans a
 throw m = malgoError $ "error(closuretrans):" <+> m
 
-addKnown :: TypedID -> ClsTrans ()
--- addKnown name = modify $ \e -> e {_knowns = name : _knowns e}
-addKnown name = knowns %= (name:)
+-- addKnown :: TypedID -> ClsTrans ()
+-- -- addKnown name = modify $ \e -> e {_knowns = name : _knowns e}
+-- addKnown name = knowns %= (name:)
 
 addFunDec :: FunDec TypedID -> ClsTrans ()
 -- addFunDec f = modify $ \e -> e {_fundecs = f : _fundecs e}
@@ -99,7 +101,7 @@ convExpr (H.Let (H.ValDec x@(TypedID name _) val) body) = do
   body' <- convExpr body
   pure (Let (ValDec (TypedID name (typeOf val')) val') body')
 convExpr (H.Let (H.ExDec name orig) body) = do
-  addKnown name
+  -- addKnown name
   addExDec (ExDec name orig)
   convExpr body
 convExpr (H.Var x) = Var <$> convID x
@@ -114,35 +116,35 @@ convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
 convExpr (H.Call fn args) =
   ifM (elem fn <$> use knowns)
   (CallDir <$> fn' <*> mapM convID args)
-  (CallCls <$> convID fn <*> mapM convID args)
+  (CallCls <$> cls <*> mapM convID args)
   where
     fn' = fromMaybe fn . view (at fn) <$> use varMap -- 型が変わっていれば変換
+  -- fromMaybe (malgoError $ ppr fn <+> "is not translated to closure.") (view (at fn) <$> use closures)
+    cls = do
+      cs <- use closures
+      case view (at fn) cs of
+        Just x -> return x
+        Nothing -> throw $ ppr fn <+> "is not translated to closure"
+
 convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
 convExpr (H.BinOp op x y) = BinOp op <$> convID x <*> convID y
 convExpr (H.Let (H.FunDecs fd@[_]) body) = do
-  backup <- get
-  [clsdec@(ClsDec clsid _ _)] <- convFunDecs fd
+  -- backup <- get
+  [clsdec] <- convFunDecs fd
   body' <- convExpr body
-  if clsid `elem` freevars body'
-    then do
-      -- modify $ \env -> env {_knowns = _knowns backup}
-      knowns .= backup ^. knowns
-      return $ Let clsdec body'
-    else return body'
+  return $ Let clsdec body'
+  -- if clsid `elem` freevars body'
+  --   then return $ Let clsdec body'
+  --   else return body'
 convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) = throw $ ppr x <+> "is not a function"
 
 convFunDecs :: [H.FunDec TypedID] -> ClsTrans [Decl TypedID]
 convFunDecs [H.FunDec fn@(TypedID name (FunTy paramtys ret)) params e] = do
-  let efv = freevars e \\ params
   let fn' = TypedID name (FunTy (map toCls paramtys) (toCls ret))
   addVar fn fn' -- CallDirへの変換時にfnをfn'に置き換える
   clsid <- newClsID fn'
   addClsTrans fn clsid -- CallClsへの変換時にfnをclsidに置き換える
-  -- eに自由変数が含まれない時、knownsにfnを追加
-  e' <-
-    if null efv
-      then addKnown fn >> convExpr e
-      else convExpr e
-  fv <- mapM convID efv
+  e' <- convExpr e
+  let fv = freevars e'
   addFunDec $ FunDec fn' params fv e'
   return [ClsDec clsid fn' fv]
