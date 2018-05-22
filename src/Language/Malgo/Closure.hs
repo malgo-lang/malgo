@@ -11,8 +11,7 @@ module Language.Malgo.Closure
   , ClsEnv(..)
   ) where
 
-import           Control.Lens            (set, non, (^.), (.=), (%=), (?=), use, at, view, makeLenses)
-import           Data.List               ((\\))
+import           Control.Lens            ((.~), set, non, (^.), (%=), (?=), use, at, view, makeLenses)
 import           Text.PrettyPrint hiding ((<>))
 
 import           Language.Malgo.FreeVars
@@ -54,54 +53,46 @@ conv x = do
 throw :: Doc -> ClsTrans a
 throw m = malgoError $ "error(closuretrans):" <+> m
 
--- addKnown :: TypedID -> ClsTrans ()
--- -- addKnown name = modify $ \e -> e {_knowns = name : _knowns e}
--- addKnown name = knowns %= (name:)
-
 addFunDec :: FunDec TypedID -> ClsTrans ()
--- addFunDec f = modify $ \e -> e {_fundecs = f : _fundecs e}
 addFunDec f = fundecs %= (f:)
 
 addExDec :: ExDec TypedID -> ClsTrans ()
--- addExDec ex = modify $ \e -> e {_extern = ex : _extern e}
 addExDec ex = extern %= (ex:)
 
 convID :: TypedID -> ClsTrans TypedID
 convID name = do
   clss <- use closures
   vm <- use varMap
-  -- pure $ fromMaybe name ((clss <> vm) ^. at name)-- (clss ^. at name <|> vm ^. at name)
   pure $ (clss <> vm) ^. (at name . non name)
 
 addClsTrans :: TypedID -> TypedID -> ClsTrans ()
--- addClsTrans orig cls = modify $ \e -> e {_closures = set (at orig) (Just cls) (_closures e)}
 addClsTrans orig cls = (closures . at orig) ?= cls
 
 addVar :: TypedID -> TypedID -> ClsTrans ()
--- addVar x x' = modify $ \e -> e {_varMap = set (at x) (Just x') (_varMap e)}
 addVar x x' = (varMap . at x) ?= x'
 
 newClsID :: TypedID -> ClsTrans TypedID
-newClsID (TypedID fn fnty) = do
-  let ty = toCls fnty
+newClsID fn = do
+  let ty = toCls (fn ^. meta)
   c <- newUniq
-  pure (TypedID (ID (_name fn `mappend` "$cls") c) ty)
+  pure (ID (fn ^. name <> "$cls") (fn ^. uniq) ty)
+  -- pure (over fn (<>"$cls"))
+  -- pure (TypedID (ID (_name fn `mappend` "$cls") c) ty)
 
 toCls :: Type -> Type
 toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)
 toCls x                  = x
 
 convExpr :: H.Expr TypedID -> ClsTrans (Expr TypedID)
-convExpr (H.Let (H.ValDec x@(TypedID name _) val) body) = do
+convExpr (H.Let (H.ValDec x val) body) = do
   val' <- convExpr val
   case typeOf val' of
-    ClsTy _ _ -> addClsTrans x (TypedID name (typeOf val')) -- 関数値はクロージャとして扱う
+    ClsTy _ _ -> addClsTrans x (x & meta .~ typeOf val') -- 関数値はクロージャとして扱う
     _         -> pure ()
-  addVar x (TypedID name (typeOf val'))
+  addVar x (x & meta .~ typeOf val')
   body' <- convExpr body
-  pure (Let (ValDec (TypedID name (typeOf val')) val') body')
+  pure (Let (ValDec (x & meta .~ typeOf val') val') body')
 convExpr (H.Let (H.ExDec name orig) body) = do
-  -- addKnown name
   addExDec (ExDec name orig)
   convExpr body
 convExpr (H.Var x) = Var <$> convID x
@@ -119,7 +110,6 @@ convExpr (H.Call fn args) =
   (CallCls <$> cls <*> mapM convID args)
   where
     fn' = fromMaybe fn . view (at fn) <$> use varMap -- 型が変わっていれば変換
-  -- fromMaybe (malgoError $ ppr fn <+> "is not translated to closure.") (view (at fn) <$> use closures)
     cls = do
       cs <- use closures
       case view (at fn) cs of
@@ -129,18 +119,14 @@ convExpr (H.Call fn args) =
 convExpr (H.If c t f) = If <$> convID c <*> convExpr t <*> convExpr f
 convExpr (H.BinOp op x y) = BinOp op <$> convID x <*> convID y
 convExpr (H.Let (H.FunDecs fd@[_]) body) = do
-  -- backup <- get
   [clsdec] <- convFunDecs fd
   body' <- convExpr body
   return $ Let clsdec body'
-  -- if clsid `elem` freevars body'
-  --   then return $ Let clsdec body'
-  --   else return body'
 convExpr (H.Let (H.FunDecs [H.FunDec x _ _]) _) = throw $ ppr x <+> "is not a function"
 
 convFunDecs :: [H.FunDec TypedID] -> ClsTrans [Decl TypedID]
-convFunDecs [H.FunDec fn@(TypedID name (FunTy paramtys ret)) params e] = do
-  let fn' = TypedID name (FunTy (map toCls paramtys) (toCls ret))
+convFunDecs [H.FunDec fn@(ID _ _ (FunTy paramtys ret)) params e] = do
+  let fn' = fn & meta .~ FunTy (map toCls paramtys) (toCls ret)
   addVar fn fn' -- CallDirへの変換時にfnをfn'に置き換える
   clsid <- newClsID fn'
   addClsTrans fn clsid -- CallClsへの変換時にfnをclsidに置き換える

@@ -85,7 +85,7 @@ term o = do
   t o'
 
 fromTypedID :: IsString a => TypedID -> a
-fromTypedID (TypedID i _) =
+fromTypedID i =
   fromString $ show (_name i) <> "zi" <> show (_uniq i)
 
 char :: Applicative f => Integer -> f Operand
@@ -120,7 +120,7 @@ gcInit = do
 
 captureStruct :: [TypedID] -> LT.Type
 captureStruct xs =
-  LT.StructureType False (map (convertType . _type) xs)
+  LT.StructureType False (map (convertType . _meta) xs)
 
 genExpr :: Expr TypedID -> IRBuilderT GenDec ()
 genExpr e@(Var _)   = term (genExpr' e) `named` "var"
@@ -305,10 +305,10 @@ genExDec (ExDec name str) = do
   addTable name o
 
 genFunDec :: FunDec TypedID -> GenDec ()
-genFunDec (FunDec fn@(TypedID _ (T.FunTy _ retty)) params captures body) = do
+genFunDec (FunDec fn@(ID _ _ (T.FunTy _ retty)) params captures body) = do
   knowns <- gets _knowns
   let fn' = fromString (show (ppr fn))
-  let params' = map (\(TypedID name ty) ->
+  let params' = map (\(ID name _ ty) ->
                        (convertType ty, fromString (show (ppr name))))
                 params
                 ++ (if fn `elem` knowns
@@ -353,7 +353,7 @@ genProgram (Program fs es body knowns) = do
   _ <- genMain body
   pure ()
   where
-    addFunction (FunDec fn@(TypedID _ (T.FunTy params retty)) _ _ _) = do
+    addFunction (FunDec fn@(ID _ _ (T.FunTy params retty)) _ _ _) = do
       let fnop = ConstantOperand $ C.GlobalReference (LT.FunctionType (convertType retty) (map convertType params ++ [LT.ptr LT.i8]) False) (fromString $ show $ ppr fn)
       addTable fn fnop
     addFunction x = panic (show $ ppr x <> " is not valid")

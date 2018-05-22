@@ -34,6 +34,9 @@ instance Outputable Text where
 instance Outputable a => Outputable [a] where
   ppr x = pprList x
 
+instance Outputable () where
+  ppr _ = mempty
+
 sandbox :: MonadState s m => m a -> m a
 sandbox action = do
   s <- get

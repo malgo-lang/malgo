@@ -15,7 +15,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Syntax  hiding (info)
 
-data RnEnv = RnEnv { _knowns     :: Map.Map Name ID
+data RnEnv = RnEnv { _knowns     :: Map.Map Name RawID
                    , _uniqSupply :: UniqSupply
                    }
 makeLenses ''RnEnv
@@ -24,24 +24,24 @@ instance MalgoEnv RnEnv where
   uniqSupplyL = uniqSupply
   genEnv us = RnEnv mempty us
 
-rename :: MonadMalgo RnEnv m => Expr Name -> m (Expr ID)
+rename :: MonadMalgo RnEnv m => Expr Name -> m (Expr RawID)
 rename x = transExpr x
 
-newID :: MonadMalgo s m => Name -> m (Name, ID)
+newID :: MonadMalgo s m => Name -> m (Name, RawID)
 newID orig = do
   c <- newUniq
-  let i = ID orig c
+  let i = ID orig c ()
   return (orig, i)
 
-addKnowns :: MonadMalgo RnEnv m => [(Name, ID)] -> m a -> m a
+addKnowns :: MonadMalgo RnEnv m => [(Name, RawID)] -> m a -> m a
 addKnowns kvs m =
   addTable kvs knowns m
 
-getID :: MonadMalgo RnEnv m => Info -> Name -> m ID
+getID :: MonadMalgo RnEnv m => Info -> Name -> m RawID
 getID info name =
   lookupTable ("error(rename):" P.<+> ppr info P.<+> ppr name P.<+> "is not defined") name knowns
 
-transExpr :: MonadMalgo RnEnv m => Expr Name -> m (Expr ID)
+transExpr :: MonadMalgo RnEnv m => Expr Name -> m (Expr RawID)
 transExpr (Var info name) = Var info <$> getID info name
 transExpr (Int info x) = pure $ Int info x
 transExpr (Float info x) = pure $ Float info x
@@ -73,7 +73,7 @@ transExpr (If info c t f) =
   If info <$> transExpr c <*> transExpr t <*> transExpr f
 transExpr (BinOp info op x y) = BinOp info op <$> transExpr x <*> transExpr y
 
-transDecl :: MonadMalgo RnEnv m => Decl Name -> m (Decl ID)
+transDecl :: MonadMalgo RnEnv m => Decl Name -> m (Decl RawID)
 transDecl (ValDec info name typ val) = do
   val' <- transExpr val
   name' <- getID info name

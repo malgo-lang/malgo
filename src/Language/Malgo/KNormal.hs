@@ -20,7 +20,7 @@ knormal :: MonadMalgo UniqSupply m => S.Expr TypedID -> m (Expr TypedID)
 knormal e = transExpr e
 
 newTmp :: MonadMalgo UniqSupply m => Name -> Type -> m TypedID
-newTmp name typ = TypedID <$> (ID ("$" <> name) <$> newUniq) <*> return typ
+newTmp name typ = ID ("$" <> name) <$> newUniq <*> return typ
 
 newUnused :: MonadMalgo UniqSupply m => m TypedID
 newUnused = newTmp "_" "Unit"
