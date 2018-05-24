@@ -20,7 +20,7 @@ knormal :: MonadMalgo UniqSupply m => S.Expr TypedID -> m (Expr TypedID)
 knormal e = transExpr e
 
 newTmp :: MonadMalgo UniqSupply m => Name -> Type -> m TypedID
-newTmp name typ = ID ("$" <> name) <$> newUniq <*> return typ
+newTmp n typ = ID ("$" <> n) <$> newUniq <*> return typ
 
 newUnused :: MonadMalgo UniqSupply m => m TypedID
 newUnused = newTmp "_" "Unit"
@@ -83,15 +83,15 @@ transExpr (S.If _ c t f) =
        t' <- transExpr t
        f' <- transExpr f
        return (If c' t' f'))
-transExpr (S.Let info (S.ValDec _ name _ val:ds) body) = do
+transExpr (S.Let info (S.ValDec _ n _ val:ds) body) = do
   val' <- transExpr val
   rest <- transExpr (S.Let info ds body)
-  return (Let (ValDec name val') rest)
+  return (Let (ValDec n val') rest)
 transExpr (S.Let info (S.FunDec _ fn params _ fbody:ds) body) = do
   fbody' <- transExpr fbody
   rest <- transExpr (S.Let info ds body)
   return (Let (FunDecs [FunDec fn (map fst params) fbody']) rest)
-transExpr (S.Let info (S.ExDec _ name _ orig:ds) body) = Let (ExDec name orig) <$> transExpr (S.Let info ds body)
+transExpr (S.Let info (S.ExDec _ n _ orig:ds) body) = Let (ExDec n orig) <$> transExpr (S.Let info ds body)
 transExpr (S.Let _ [] body) = transExpr body
 transExpr (S.Seq _ e1 e2) = do
   unused <- newUnused
