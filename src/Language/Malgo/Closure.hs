@@ -75,9 +75,7 @@ newClsID :: TypedID -> ClsTrans TypedID
 newClsID fn = do
   let ty = toCls (fn ^. meta)
   c <- newUniq
-  pure (ID (fn ^. name <> "$cls") (fn ^. uniq) ty)
-  -- pure (over fn (<>"$cls"))
-  -- pure (TypedID (ID (_name fn `mappend` "$cls") c) ty)
+  pure (ID (fn ^. name <> "$cls") c ty)
 
 toCls :: Type -> Type
 toCls (FunTy params ret) = ClsTy (map toCls params) (toCls ret)
