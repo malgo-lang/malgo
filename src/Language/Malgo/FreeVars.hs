@@ -1,9 +1,7 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE TemplateHaskell   #-}
 module Language.Malgo.FreeVars (FreeVars(..))where
 
-import           Control.Lens
 import           Data.List              (delete, nub, union, (\\))
 import qualified Language.Malgo.HIR     as H
 import qualified Language.Malgo.MIR     as M
