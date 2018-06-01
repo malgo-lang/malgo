@@ -14,7 +14,6 @@ module Language.Malgo.Prelude
   ) where
 
 import           Control.Monad.Trans as X
-import           Data.Default        as X
 import           Data.String         as X (IsString (..))
 import           GHC.Exts            as X (IsList (..))
 import           Prelude             as X (error)
@@ -51,12 +50,6 @@ fromName = toS
 
 newtype Info = Info (Text, Int, Int)
   deriving (Show, Read)
-
-instance Default Text where
-  def = mempty
-
-instance Default Info where
-  def = Info ("", def, def)
 
 instance Eq Info where
   _ == _ = True

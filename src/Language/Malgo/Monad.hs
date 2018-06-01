@@ -58,7 +58,6 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
       Just x  -> pure x
       Nothing -> malgoError err
 
-
 instance MalgoEnv s => MonadMalgo s (Malgo s) where
   setUniq i' = do
     UniqSupply i <- use uniqSupplyL
@@ -100,7 +99,6 @@ runMalgo' (Malgo' m) u = do
   runReaderT (do { a <- m
                  ; s <- ask
                  ; return (a, s)}) (genEnv i)
-
 
 malgoError :: MonadMalgo s m => Doc -> m a
 malgoError mes = liftIO $ die $ show mes

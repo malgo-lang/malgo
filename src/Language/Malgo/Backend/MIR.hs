@@ -1,9 +1,19 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric             #-}
+{-# LANGUAGE NoImplicitPrelude         #-}
+{-# LANGUAGE OverloadedStrings         #-}
+{-# LANGUAGE ViewPatterns              #-}
 module Language.Malgo.Backend.MIR where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
+import           Text.PrettyPrint       (Doc)
+
+data Defn a = DefFun { _fnName   :: a
+                     , _fnParams :: [a]
+                     , _fnBody   :: Expr a
+                     }
+            | DefEx { _exName :: a }
+  deriving (Show, Generic)
 
 data Expr a = Var a
             | Int Integer
@@ -12,57 +22,42 @@ data Expr a = Var a
             | String Text
             | Unit
             | Tuple [a]
-            | TupleAccess (Expr a) Int
             | Apply a [a]
             | Let a (Expr a) (Expr a)
+            | Cast MType a
+            | Access (Expr a) [Int]
             | If a (Expr a) (Expr a)
-  deriving Show
+  deriving (Show, Generic)
 
 data MType = IntTy { _bit :: Integer }
            | DoubleTy
            | PointerTy MType
            | StructTy [MType]
            | FunctionTy MType [MType]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
 
-class HasMType a where
-  mTypeOf :: a -> MType
+accessMType :: MType -> [Int] -> Maybe MType
+accessMType x [] = Just x
+accessMType (PointerTy x) (_:is) = accessMType x is
+accessMType (StructTy xs) (i:is) = do
+  xt <- atMay xs i
+  accessMType xt is
+accessMType _ _ = Nothing
 
-instance HasMType MType where
-  mTypeOf = identity
-
-instance HasMType Type where
-  mTypeOf (NameTy n) =
-    case n of
-      "Int"    -> IntTy 32
-      "Float"  -> DoubleTy
-      "Bool"   -> IntTy 1
-      "Char"   -> IntTy 8
-      "String" -> PointerTy (IntTy 8)
-      "Unit"   -> StructTy []
-      _        -> error $ show n ++ " is not valid type"
-  mTypeOf (FunTy params ret) =
-    FunctionTy (mTypeOf ret) (map mTypeOf params)
-  mTypeOf (TupleTy xs) =
-    PointerTy (StructTy (map mTypeOf xs))
-  mTypeOf ClsTy{} = error "ClsTy is not have MType"
-
-instance HasMType a => HasMType (Expr a) where
-  mTypeOf (Var x) = mTypeOf x
-  mTypeOf (Int _) = IntTy 32
-  mTypeOf (Float _) = DoubleTy
-  mTypeOf (Char _) = IntTy 8
-  mTypeOf (String _) = PointerTy (IntTy 8)
-  mTypeOf Unit = StructTy []
-  mTypeOf (Tuple xs) = PointerTy (StructTy (map mTypeOf xs))
-  mTypeOf (TupleAccess xs i) =
-    case mTypeOf xs of
-      (PointerTy (StructTy xs')) ->
-        fromMaybe (error "out of bounds") (atMay xs' i)
-      _ -> error "invalied MType"
-  mTypeOf (Apply f _) =
-    case mTypeOf f of
-      FunctionTy x _ -> x
-      _              -> error "invalied MType"
-  mTypeOf (Let _ _ e) = mTypeOf e
-  mTypeOf (If _ e _) = mTypeOf e
+toMType :: (Typeable a, Outputable a) => a -> Either Doc MType
+toMType (typeOf -> NameTy n) =
+  case n of
+    "Int"    -> Right $ IntTy 32
+    "Float"  -> Right DoubleTy
+    "Bool"   -> Right $ IntTy 1
+    "Char"   -> Right $ IntTy 8
+    "String" -> Right $ PointerTy (IntTy 8)
+    "Unit"   -> Right $ StructTy []
+    _        -> Left $ ppr n <> " is not valid type"
+toMType (typeOf -> FunTy params ret) =
+  FunctionTy <$> toMType ret <*> mapM toMType params
+toMType (typeOf -> TupleTy xs) =
+  PointerTy . StructTy <$> mapM toMType xs
+toMType (typeOf -> ClsTy{}) =
+  Left "ClsTy does not have MType"
+toMType x = Left $ "unreachable: " <> ppr x
