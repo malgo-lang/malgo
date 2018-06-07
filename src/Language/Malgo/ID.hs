@@ -1,25 +1,25 @@
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell   #-}
 module Language.Malgo.ID
-  ( ID(..), RawID, name, uniq, meta ) where
+  ( ID(..), RawID, idName, idUniq, idMeta ) where
 
-import Language.Malgo.Type
+import           Control.Lens
 import           Language.Malgo.Prelude
-import qualified Text.PrettyPrint       as P
-import Control.Lens
+import           Language.Malgo.Type
 
-data ID a = ID { _name :: Name, _uniq :: Int, _meta :: a }
+data ID a = ID { _idName :: Name, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read)
-
 
 type RawID = ID ()
 
 instance Eq (ID a) where
-  x == y = _uniq x == _uniq y
+  x == y = _idUniq x == _idUniq y
 
 makeLenses ''ID
 
-instance Outputable a => Outputable (ID a) where
-  ppr (ID n u m) = ppr n <> P.text "." <> P.int u <> P.braces (ppr m)
+instance Pretty a => Pretty (ID a) where
+  pretty (ID n u m) =
+    pretty n <> "." <> pretty u <> braces (pretty m)
 
 instance Typeable a => Typeable (ID a) where
-  typeOf i = typeOf $ i ^. meta
+  typeOf i = typeOf $ i ^. idMeta

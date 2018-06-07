@@ -10,7 +10,6 @@ import           Control.Lens           (over, Lens', at, use, view, (.=))
 import           Data.IORef
 import qualified Data.Map               as Map
 import           Language.Malgo.Prelude
-import           Text.PrettyPrint       hiding ((<>))
 
 newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
   deriving ( Functor
@@ -51,7 +50,7 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
 
   getEnv :: m s
   addTable :: Ord k => [(k, v)] -> Lens' s (Map k v) -> m a -> m a
-  lookupTable :: Ord k => Doc -> k -> Lens' s (Map k v) -> m v
+  lookupTable :: Ord k => Doc ann -> k -> Lens' s (Map k v) -> m v
   lookupTable err k l = do
     s <- view l <$> getEnv
     case view (at k) s of
@@ -100,7 +99,7 @@ runMalgo' (Malgo' m) u = do
                  ; s <- ask
                  ; return (a, s)}) (genEnv i)
 
-malgoError :: MonadMalgo s m => Doc -> m a
+malgoError :: MonadMalgo s m => Doc ann -> m a
 malgoError mes = liftIO $ die $ show mes
 
 newMutVar :: MonadIO m => a -> m (IORef a)

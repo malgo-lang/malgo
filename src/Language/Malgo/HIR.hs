@@ -6,7 +6,6 @@ module Language.Malgo.HIR where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
-import           Text.PrettyPrint       hiding ((<>))
 
 {-
 HIR is simlar to Language.Malgo.Syntax.Expr.
@@ -28,28 +27,31 @@ data Expr a = Var a
             | BinOp Op a a
     deriving (Eq, Show, Read)
 
-instance Outputable a => Outputable (Expr a) where
-  ppr (Var x) = ppr x
-  ppr (Int x) = integer x
-  ppr (Float x) = double x
-  ppr (Bool True) = text "true"
-  ppr (Bool False) = text "false"
-  ppr (Char x) = quotes $ char x
-  ppr (String x) = doubleQuotes $ ppr x
-  ppr (Tuple xs) =
-    braces $ ppr xs
-  ppr (TupleAccess xs i) =
-    parens (text "." <+> ppr xs <+> int i)
-  ppr Unit = text "{}"
-  ppr (Call fn arg) = parens $ ppr fn <+> sep (map ppr arg)
-  ppr (Let decl body) =
-    parens $ text "let" <+> parens (ppr decl) $+$ nest (-1) (ppr body)
-  ppr (If c t f) =
+instance Pretty a => Pretty (Expr a) where
+  pretty (Var x) = pretty x
+  pretty (Int x) = pretty x
+  pretty (Float x) = pretty x
+  pretty (Bool True) = "#t"
+  pretty (Bool False) = "#f"
+  pretty (Char x) = squotes $ pretty x
+  pretty (String x) = dquotes $ pretty x
+  pretty (Tuple xs) =
+    braces $ sep $ punctuate "," $ map pretty xs
+  pretty (TupleAccess xs i) =
+    parens ("." <+> pretty xs <+> pretty i)
+  pretty Unit = "{}"
+  pretty (Call fn arg) =
+    parens $ pretty fn <+> sep (map pretty arg)
+  pretty (Let decl body) =
+    parens $ "let" <+> parens (pretty decl)
+    <> line <> indent 2 (pretty body)
+  pretty (If c t f) =
     parens $
-    text "if" <+>
-    ppr c $+$ text "then:" <+>
-    nest 2 (ppr t) $+$ text "else:" <+> nest 2 (ppr f)
-  ppr (BinOp op x y) = parens $ sep [ppr op, ppr x, ppr y]
+    "if" <+> pretty c <>
+    align (vsep ["then:" <+> pretty t,
+                 "else:" <+> pretty f])
+  pretty (BinOp op x y) =
+    parens $ sep [pretty op, pretty x, pretty y]
 
 instance Typeable a => Typeable (Expr a) where
   typeOf (Var x) = typeOf x
@@ -91,24 +93,24 @@ data Op = Add
         | Or
   deriving (Eq, Show, Read)
 
-instance Outputable Op where
-  ppr Add      = text "+"
-  ppr Sub      = text "-"
-  ppr Mul      = text "*"
-  ppr Div      = text "/"
-  ppr FAdd     = text "+."
-  ppr FSub     = text "-."
-  ppr FMul     = text "*."
-  ppr FDiv     = text "/."
-  ppr Mod      = text "%"
-  ppr (Eq ty)  = text "==" <> brackets (ppr ty)
-  ppr (Neq ty) = text "<>" <> brackets (ppr ty)
-  ppr (Lt ty)  = text "<" <> brackets (ppr ty)
-  ppr (Gt ty)  = text ">" <> brackets (ppr ty)
-  ppr (Le ty)  = text "<=" <> brackets (ppr ty)
-  ppr (Ge ty)  = text ">=" <> brackets (ppr ty)
-  ppr And      = text "&&"
-  ppr Or       = text "||"
+instance Pretty Op where
+  pretty Add      = "+"
+  pretty Sub      = "-"
+  pretty Mul      = "*"
+  pretty Div      = "/"
+  pretty FAdd     = "+."
+  pretty FSub     = "-."
+  pretty FMul     = "*."
+  pretty FDiv     = "/."
+  pretty Mod      = "%"
+  pretty (Eq ty)  = "==" <> brackets (pretty ty)
+  pretty (Neq ty) = "<>" <> brackets (pretty ty)
+  pretty (Lt ty)  = "<" <> brackets (pretty ty)
+  pretty (Gt ty)  = ">" <> brackets (pretty ty)
+  pretty (Le ty)  = "<=" <> brackets (pretty ty)
+  pretty (Ge ty)  = ">=" <> brackets (pretty ty)
+  pretty And      = "&&"
+  pretty Or       = "||"
 
 data Decl a = FunDecs [FunDec a]
             | ValDec a (Expr a)
@@ -118,13 +120,13 @@ data Decl a = FunDecs [FunDec a]
 data FunDec a = FunDec a [a] (Expr a)
   deriving (Eq, Show, Read)
 
-instance Outputable a => Outputable (Decl a) where
-  ppr (ValDec name val) = text "val" <+> ppr name <+> ppr val
-  ppr (ExDec name orig) = text "extern" <+> ppr name <+> ppr orig
-  ppr (FunDecs fs)      = sep (map ppr fs)
+instance Pretty a => Pretty (Decl a) where
+  pretty (ValDec name val) = "val" <+> pretty name <+> pretty val
+  pretty (ExDec name orig) = "extern" <+> pretty name <+> pretty orig
+  pretty (FunDecs fs)      = sep (map pretty fs)
 
-instance Outputable a => Outputable (FunDec a) where
-  ppr (FunDec name params body) =
-    text "fun" <+>
-    (parens . sep $ ppr name : map ppr params) $+$
-    nest 2 (ppr body)
+instance Pretty a => Pretty (FunDec a) where
+  pretty (FunDec name params body) =
+    "fun" <+>
+    (parens . sep $ pretty name : map pretty params)
+    <> line <> indent 2 (pretty body)

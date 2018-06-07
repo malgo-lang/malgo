@@ -8,7 +8,6 @@ module Language.Malgo.Rename ( rename ) where
 
 import           Control.Lens           (makeLenses)
 import qualified Data.Map.Strict        as Map
-import qualified Text.PrettyPrint       as P
 
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
@@ -39,7 +38,7 @@ addKnowns kvs m =
 
 getID :: MonadMalgo RnEnv m => Info -> Name -> m RawID
 getID info name =
-  lookupTable ("error(rename):" P.<+> ppr info P.<+> ppr name P.<+> "is not defined") name knowns
+  lookupTable ("error(rename):" <+> pretty info <+> pretty name <+> "is not defined") name knowns
 
 transExpr :: MonadMalgo RnEnv m => Expr Name -> m (Expr RawID)
 transExpr (Var info name) = Var info <$> getID info name

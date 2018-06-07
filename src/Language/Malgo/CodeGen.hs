@@ -5,7 +5,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.CodeGen where
 
-import           Control.Lens                    (at, view, set)
+import           Control.Lens                    (at, set, view)
 import           Data.Char
 import           Data.List                       (last)
 import           Data.Maybe
@@ -84,10 +84,6 @@ term o = do
   o' <- o
   t o'
 
-fromTypedID :: IsString a => TypedID -> a
-fromTypedID i =
-  fromString $ show (_name i) <> "zi" <> show (_uniq i)
-
 char :: Applicative f => Integer -> f Operand
 char = pure . ConstantOperand . C.Int 8
 
@@ -120,7 +116,7 @@ gcInit = do
 
 captureStruct :: [TypedID] -> LT.Type
 captureStruct xs =
-  LT.StructureType False (map (convertType . _meta) xs)
+  LT.StructureType False (map (convertType . _idMeta) xs)
 
 genExpr :: Expr TypedID -> IRBuilderT GenDec ()
 genExpr e@(Var _)   = term (genExpr' e) `named` "var"
@@ -194,7 +190,7 @@ genExpr' (CallCls cls args) = do
   cap <- load capptr 0
   call fn (args' ++ [(cap, [])])
 genExpr' (Let (ValDec name val) e) = do
-  val' <- genExpr' val `named` (fromString . show $ ppr name)
+  val' <- genExpr' val `named` (fromString . show $ pretty name)
   addTable name val'
   genExpr' e
 genExpr' (Let (ClsDec name fn captures) e) = do
@@ -307,9 +303,9 @@ genExDec (ExDec name str) = do
 genFunDec :: FunDec TypedID -> GenDec ()
 genFunDec (FunDec fn@(ID _ _ (T.FunTy _ retty)) params captures body) = do
   knowns <- gets _knowns
-  let fn' = fromString (show (ppr fn))
+  let fn' = fromString (show (pretty fn))
   let params' = map (\(ID name _ ty) ->
-                       (convertType ty, fromString (show (ppr name))))
+                       (convertType ty, fromString (show (pretty name))))
                 params
                 ++ (if fn `elem` knowns
                     then []
@@ -323,13 +319,13 @@ genFunDec (FunDec fn@(ID _ _ (T.FunTy _ retty)) params captures body) = do
           forM_ (zip [0..] captures) $ \(i, c) -> do
             p' <- gep capPtr [ ConstantOperand (C.Int 32 0)
                              , ConstantOperand (C.Int 32 i)
-                             ] `named` fromString (show (ppr c) ++ "Ptr")
-            o <- load p' 0 `named` fromString (show (ppr c))
+                             ] `named` fromString (show (pretty c) ++ "Ptr")
+            o <- load p' 0 `named` fromString (show (pretty c))
             addTable c o
         genExpr body
   _ <- function fn' params' retty' body'
   modify $ \e -> e { _table = backup }
-genFunDec x = panic (show $ ppr x <> " is not valid")
+genFunDec x = panic (show $ pretty x <> " is not valid")
 
 genMain :: Expr TypedID -> GenDec ()
 genMain e = void $ function "main" [] (convertType "Int")
@@ -354,9 +350,9 @@ genProgram (Program fs es body knowns) = do
   pure ()
   where
     addFunction (FunDec fn@(ID _ _ (T.FunTy params retty)) _ _ _) = do
-      let fnop = ConstantOperand $ C.GlobalReference (LT.FunctionType (convertType retty) (map convertType params ++ [LT.ptr LT.i8]) False) (fromString $ show $ ppr fn)
+      let fnop = ConstantOperand $ C.GlobalReference (LT.FunctionType (convertType retty) (map convertType params ++ [LT.ptr LT.i8]) False) (fromString $ show $ pretty fn)
       addTable fn fnop
-    addFunction x = panic (show $ ppr x <> " is not valid")
+    addFunction x = panic (show $ pretty x <> " is not valid")
 
 dumpCodeGen ::
   ModuleBuilderT (StateT GenState Identity) a
