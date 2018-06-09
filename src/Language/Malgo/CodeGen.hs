@@ -329,13 +329,13 @@ genFunDec x = panic (show $ pretty x <> " is not valid")
 
 genMain :: Expr TypedID -> GenDec ()
 genMain e = void $ function "main" [] (convertType "Int")
-  (\_ ->
-      do _ <- gcInit
-         modify $ \env -> env { _inMain = True }
-         _ <- genExpr' e `named` "main"
-         i <- int32 0
-         modify $ \env -> env { _inMain = False }
-         ret i)
+  (\_ -> do
+      _ <- gcInit
+      modify $ \env -> env { _inMain = True }
+      _ <- genExpr' e `named` "main"
+      i <- int32 0
+      modify $ \env -> env { _inMain = False }
+      ret i)
 
 genProgram ::
   Program TypedID -> GenDec ()
