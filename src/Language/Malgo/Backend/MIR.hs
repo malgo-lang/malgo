@@ -35,6 +35,7 @@ data Expr a = Var a
             | Tuple [a]
             | Apply a [a]
             | Let a (Expr a) (Expr a)
+            | LetRec [(a, Expr a)] (Expr a)
             | Cast MType a
             | Access (Expr a) [Int]
             | If a (Expr a) (Expr a)
@@ -52,6 +53,9 @@ instance Pretty a => Pretty (Expr a) where
   pretty (Let name val body) =
     pretty name <+> "=" <+> pretty val
     <> line <> pretty body
+  pretty (LetRec defs body) =
+    align (vsep (map (\(name, val) -> "rec" <+> pretty name <+> "=" <+> pretty val) defs))
+    <> line <> pretty body
   pretty (Cast ty val) = "cast" <+> pretty ty <+> pretty val
   pretty (Access e is) = "access" <+> pretty e <+> brackets (align $ sep (punctuate "," $ map pretty is))
   pretty (If c t f) =
@@ -59,12 +63,39 @@ instance Pretty a => Pretty (Expr a) where
     <+> braces (pretty t)
     <+> "else" <+> braces (pretty f)
 
+instance HasMType a => HasMType (Expr a) where
+  mTypeOf (Var a) = mTypeOf a
+  mTypeOf (Int _) = IntTy 32
+  mTypeOf (Float _) = DoubleTy
+  mTypeOf (Char _) = IntTy 8
+  mTypeOf (String _) = PointerTy (IntTy 8)
+  mTypeOf Unit = StructTy []
+  mTypeOf (Tuple xs) = PointerTy (StructTy (map mTypeOf xs))
+  mTypeOf (Apply f _) =
+    case mTypeOf f of
+      FunctionTy t _ -> t
+      t              -> error $ show $ pretty t <+> "is not applieable"
+  mTypeOf (Let _ _ body) = mTypeOf body
+  mTypeOf (LetRec _ body) = mTypeOf body
+  mTypeOf (Cast ty _) = ty
+  mTypeOf (Access e is) =
+    case runExcept (accessMType (mTypeOf e) is) of
+      Right t  -> t
+      Left mes -> error $ show mes
+  mTypeOf (If _ e _) = mTypeOf e
+
 data MType = IntTy Integer
            | DoubleTy
            | PointerTy MType
            | StructTy [MType]
            | FunctionTy MType [MType]
   deriving (Show, Eq, Read)
+
+class HasMType a where
+  mTypeOf :: a -> MType
+
+instance HasMType MType where
+  mTypeOf = identity
 
 instance Pretty MType where
   pretty (IntTy i) = "i" <> pretty i
