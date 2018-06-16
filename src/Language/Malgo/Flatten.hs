@@ -3,6 +3,7 @@ module Language.Malgo.Flatten
   ) where
 
 import           Language.Malgo.HIR
+import           Language.Malgo.Prelude
 
 flatten :: Expr a -> Expr a
 flatten (If c t f) = If c (flatten t) (flatten f)
