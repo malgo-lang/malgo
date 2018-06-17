@@ -68,10 +68,15 @@ instance MalgoEnv s => MonadMalgo s (Malgo s) where
 
   getEnv = get
 
-  addTable kvs l m = sandbox $ do
-    s <- use l
-    l .= (Map.fromList kvs <> s)
-    m
+  addTable kvs l m = sandbox $
+    use l >>= (l .=) . (Map.fromList kvs <>) >> m
+      where
+        sandbox action = do
+          s <- get
+          ret <- action
+          put s
+          return ret
+
 
 instance MalgoEnv s => MonadMalgo s (Malgo' s) where
   setUniq i' = do

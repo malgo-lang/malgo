@@ -5,9 +5,7 @@
 {-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.Prelude
   ( module X
-  , sandbox
   , Name
-  , fromName
   , Info(..)
   ) where
 
@@ -19,18 +17,7 @@ import           Prelude                   as X (error)
 import           Protolude                 as X hiding (Type, Typeable, list,
                                                  sourceColumn, sourceLine, sym,
                                                  toList)
-
-sandbox :: MonadState s m => m a -> m a
-sandbox action = do
-  s <- get
-  ret <- action
-  put s
-  pure ret
-
 type Name = Text
-
-fromName :: StringConv Name a => Name -> a
-fromName = toS
 
 newtype Info = Info (Text, Int, Int)
   deriving (Show, Read, Pretty)
