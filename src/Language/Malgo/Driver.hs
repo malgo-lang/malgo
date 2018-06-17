@@ -1,7 +1,5 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 module Language.Malgo.Driver where
 
 import qualified Language.Malgo.Beta      as Beta

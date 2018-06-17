@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Closure.Knowns (knownFuns) where
 
 import Language.Malgo.Prelude

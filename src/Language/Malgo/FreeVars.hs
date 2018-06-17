@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.FreeVars (FreeVars(..))where
 
 import           Data.List              (delete, nub, union, (\\))

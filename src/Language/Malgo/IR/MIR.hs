@@ -1,7 +1,5 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-
 module Language.Malgo.IR.MIR where
 
 import           Language.Malgo.IR.HIR     (Op (..))

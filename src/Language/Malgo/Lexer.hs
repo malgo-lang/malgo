@@ -1,7 +1,5 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes        #-}
-
 module Language.Malgo.Lexer where
 
 import           Data.String

@@ -1,7 +1,5 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-
 module Language.Malgo.IR.Syntax where
 
 import           Language.Malgo.Prelude
