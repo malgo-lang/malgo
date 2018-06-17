@@ -9,11 +9,11 @@ module Language.Malgo.KNormal
   ( knormal
   ) where
 
-import           Language.Malgo.HIR
+import           Language.Malgo.IR.HIR
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
-import qualified Language.Malgo.Syntax  as S
+import qualified Language.Malgo.IR.Syntax  as S
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 

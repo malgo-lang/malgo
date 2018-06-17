@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 
-module Language.Malgo.Syntax where
+module Language.Malgo.IR.Syntax where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type

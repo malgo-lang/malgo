@@ -2,7 +2,7 @@ module Language.Malgo.Flatten
   ( flatten
   ) where
 
-import           Language.Malgo.HIR
+import           Language.Malgo.IR.HIR
 import           Language.Malgo.Prelude
 
 flatten :: Expr a -> Expr a

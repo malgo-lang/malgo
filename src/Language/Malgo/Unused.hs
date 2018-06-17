@@ -1,6 +1,6 @@
 module Language.Malgo.Unused where
 
-import           Language.Malgo.MIR
+import           Language.Malgo.IR.MIR
 import           Language.Malgo.TypedID
 import           Language.Malgo.Prelude
 

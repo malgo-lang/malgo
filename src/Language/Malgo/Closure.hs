@@ -15,9 +15,9 @@ import           Control.Lens                  (at, makeLenses, non, set, use,
 
 import           Language.Malgo.Closure.Knowns
 import           Language.Malgo.FreeVars
-import qualified Language.Malgo.HIR            as H
+import qualified Language.Malgo.IR.HIR            as H
 import           Language.Malgo.ID
-import           Language.Malgo.MIR
+import           Language.Malgo.IR.MIR
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type

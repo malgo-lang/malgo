@@ -3,13 +3,12 @@
 module Language.Malgo.FreeVars (FreeVars(..))where
 
 import           Data.List              (delete, nub, union, (\\))
-import qualified Language.Malgo.HIR     as H
-import qualified Language.Malgo.MIR     as M
+import qualified Language.Malgo.IR.HIR     as H
+import qualified Language.Malgo.IR.MIR     as M
 import           Language.Malgo.Prelude
-import           Language.Malgo.TypedID
 
 class FreeVars f where
-  freevars :: f TypedID -> [TypedID]
+  freevars :: Ord a => f a -> [a]
 
 instance FreeVars H.Expr where
   freevars (H.Var x) = [x]

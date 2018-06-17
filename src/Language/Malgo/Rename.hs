@@ -12,7 +12,7 @@ import qualified Data.Map.Strict        as Map
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
-import           Language.Malgo.Syntax  hiding (info)
+import           Language.Malgo.IR.Syntax  hiding (info)
 
 data RnEnv = RnEnv { _knowns     :: Map.Map Name RawID
                    , _uniqSupply :: UniqSupply

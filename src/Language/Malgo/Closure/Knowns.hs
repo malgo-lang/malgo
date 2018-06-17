@@ -5,7 +5,7 @@ module Language.Malgo.Closure.Knowns (knownFuns) where
 import Language.Malgo.Prelude
 import Language.Malgo.TypedID
 import Language.Malgo.FreeVars
-import Language.Malgo.HIR
+import Language.Malgo.IR.HIR
 
 knownFuns :: Expr TypedID -> [TypedID]
 knownFuns (Let (ExDec name _) body) =

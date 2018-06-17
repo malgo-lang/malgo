@@ -14,8 +14,8 @@ import           Control.Lens           ((^.), (.~), makeLenses)
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
-import           Language.Malgo.Syntax  hiding (info)
-import qualified Language.Malgo.Syntax  as Syntax
+import           Language.Malgo.IR.Syntax  hiding (info)
+import qualified Language.Malgo.IR.Syntax  as Syntax
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 

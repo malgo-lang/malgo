@@ -45,10 +45,10 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
     return u
 
   setUniq :: Int -> m ()
-
   getUniq :: m Int
 
   getEnv :: m s
+
   addTable :: Ord k => [(k, v)] -> Lens' s (Map k v) -> m a -> m a
   lookupTable :: Ord k => Doc ann -> k -> Lens' s (Map k v) -> m v
   lookupTable err k l = do

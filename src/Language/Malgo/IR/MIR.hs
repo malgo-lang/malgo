@@ -2,9 +2,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 
-module Language.Malgo.MIR where
+module Language.Malgo.IR.MIR where
 
-import           Language.Malgo.HIR     (Op (..))
+import           Language.Malgo.IR.HIR     (Op (..))
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID

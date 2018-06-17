@@ -12,7 +12,7 @@ import qualified Language.Malgo.KNormal   as KNormal
 import qualified Language.Malgo.Monad     as M
 import           Language.Malgo.Prelude
 import qualified Language.Malgo.Rename    as Rename
-import qualified Language.Malgo.Syntax    as Syntax
+import qualified Language.Malgo.IR.Syntax    as Syntax
 import qualified Language.Malgo.TypeCheck as TypeCheck
 import qualified Language.Malgo.Unused    as Unused
 

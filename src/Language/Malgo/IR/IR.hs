@@ -4,13 +4,18 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE StrictData            #-}
 {-# LANGUAGE ViewPatterns          #-}
-module Language.Malgo.Backend.MIR where
+module Language.Malgo.IR.IR where
 
+import           Data.List               (delete, (\\))
+import           Language.Malgo.FreeVars
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 
 newtype Program a = Program [Defn a]
   deriving (Show, Eq, Read)
+
+instance FreeVars Program where
+  freevars (Program xs) = concatMap freevars xs
 
 instance Pretty a => Pretty (Program a) where
   pretty (Program defns) =
@@ -19,6 +24,11 @@ instance Pretty a => Pretty (Program a) where
 data Defn a = DefFun a [a] (Expr a)
             | DefEx a Text
   deriving (Show, Eq, Read)
+
+instance FreeVars Defn where
+  freevars (DefFun _ params body) =
+    freevars body \\ params
+  freevars (DefEx _ _) = []
 
 instance Pretty a => Pretty (Defn a) where
   pretty (DefFun fn params body) =
@@ -37,9 +47,21 @@ data Expr a = Var a
             | Let a (Expr a) (Expr a)
             | LetRec [(a, Expr a)] (Expr a)
             | Cast MType a
-            | Access (Expr a) [Int]
+            | Access a [Int]
             | If a (Expr a) (Expr a)
   deriving (Show, Eq, Read)
+
+instance FreeVars Expr where
+  freevars (Var x) = [x]
+  freevars (Tuple xs) = xs
+  freevars (Apply _ args) = args
+  freevars (Let x v e) = freevars v ++ delete x (freevars e)
+  freevars (LetRec xs e) =
+    (concatMap (freevars . snd) xs ++ freevars e) \\ map fst xs
+  freevars (Cast _ x) = [x]
+  freevars (Access x _) = [x]
+  freevars (If c t f) = c : freevars t ++ freevars f
+  freevars _ = []
 
 instance Pretty a => Pretty (Expr a) where
   pretty (Var a) = pretty a
@@ -73,7 +95,8 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Tuple xs) = PointerTy (StructTy (map mTypeOf xs))
   mTypeOf (Apply f _) =
     case mTypeOf f of
-      FunctionTy t _ -> t
+      FunctionTy t _ -> t -- normal function
+      PointerTy (StructTy [FunctionTy t _, PointerTy (StructTy _)] ) -> t -- closure
       t              -> error $ show $ pretty t <+> "is not applieable"
   mTypeOf (Let _ _ body) = mTypeOf body
   mTypeOf (LetRec _ body) = mTypeOf body
