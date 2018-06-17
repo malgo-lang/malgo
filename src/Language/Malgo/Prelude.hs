@@ -17,7 +17,7 @@ import           Prelude                   as X (error)
 import           Protolude                 as X hiding (Strict, Type, Typeable,
                                                  from, list, sourceColumn,
                                                  sourceLine, sym, to, toList,
-                                                 uncons, unsnoc, (<&>), (<.>))
+                                                 uncons, unsnoc, (<&>), (<.>), trans)
 
 type Name = Text
 

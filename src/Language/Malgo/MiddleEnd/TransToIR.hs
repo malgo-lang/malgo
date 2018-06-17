@@ -1,24 +1,25 @@
-{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell       #-}
-module Language.Malgo.MiddleEnd.TransToIR where
+module Language.Malgo.MiddleEnd.TransToIR (trans) where
 
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
-import qualified Language.Malgo.IR.Syntax             as S
+import qualified Language.Malgo.IR.Syntax as S
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 
-newtype TEnv = TEnv { _uniqSupply :: UniqSupply }
+data TEnv = TEnv { _externVars :: [Defn (ID MType)]
+                 , _uniqSupply :: UniqSupply
+                 }
 
 makeLenses ''TEnv
 
 instance MalgoEnv TEnv where
   uniqSupplyL = uniqSupply
-  genEnv = TEnv
+  genEnv = TEnv []
 
 throw :: MonadMalgo TEnv m => Info -> Doc ann -> m a
 throw info mes = malgoError $ "error(transToIR):" <+> pretty info <+> mes
@@ -26,12 +27,24 @@ throw info mes = malgoError $ "error(transToIR):" <+> pretty info <+> mes
 update :: ID Type -> MType -> ID MType
 update a mty = a & idMeta .~ mty
 
-trans :: MonadMalgo TEnv m => S.Expr TypedID -> m (Expr (ID MType))
-trans (S.Var i a) = Var . update a <$> toMType i (typeOf a)
-trans (S.Int _ x) = return (Int x)
-trans (S.Float _ x) = return (Float x)
-trans (S.Bool _ x) = return (Bool x)
-trans (S.Char _ c) = return (Char c)
+newTmp :: MonadMalgo TEnv m => Name -> MType -> m (ID MType)
+newTmp n t = ID ("$" <> n) <$> newUniq <*> return t
+
+newUnused :: MonadMalgo TEnv m => m (ID MType)
+newUnused = newTmp "_" (StructTy [])
+
+trans :: MonadMalgo TEnv m => S.Expr TypedID -> m (Expr (ID MType), [Defn (ID MType)])
+trans e = do
+  e' <- transToIR e
+  env <- getEnv
+  return (e', env ^. externVars)
+
+transToIR :: MonadMalgo TEnv m => S.Expr TypedID -> m (Expr (ID MType))
+transToIR (S.Var i a)   = Var . update a <$> toMType i (typeOf a)
+transToIR (S.Int _ x)   = return (Int x)
+transToIR (S.Float _ x) = return (Float x)
+transToIR (S.Bool _ x)  = return (Bool x)
+transToIR (S.Char _ c)  = return (Char c)
 
 toMType :: MonadMalgo TEnv m => Info -> Type -> m MType
 toMType info (NameTy n) =
