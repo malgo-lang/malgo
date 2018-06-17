@@ -10,7 +10,6 @@ import           Language.Malgo.FreeVars
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
-import           Language.Malgo.Type
 
 newtype Program a = Program [Defn a]
   deriving (Show, Eq, Read)
@@ -51,6 +50,7 @@ instance Pretty a => Pretty (Defn a) where
 data Expr a = Var a
             | Int Integer
             | Float Double
+            | Bool Bool
             | Char Char
             | String Text
             | Unit
@@ -89,6 +89,8 @@ instance Pretty a => Pretty (Expr a) where
   pretty (Var a) = pretty a
   pretty (Int i) = pretty i
   pretty (Float d) = pretty d
+  pretty (Bool True) = "true"
+  pretty (Bool False) = "false"
   pretty (Char c) = squotes $ pretty c
   pretty (String s) = dquotes $ pretty s
   pretty Unit = lparen <> rparen
@@ -112,6 +114,7 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Var a) = mTypeOf a
   mTypeOf (Int _) = IntTy 32
   mTypeOf (Float _) = DoubleTy
+  mTypeOf (Bool _) = IntTy 1
   mTypeOf (Char _) = IntTy 8
   mTypeOf (String _) = PointerTy (IntTy 8)
   mTypeOf Unit = StructTy []
@@ -164,21 +167,3 @@ accessMType t@(StructTy xs) (i:is) =
     Just xt -> accessMType xt is
     Nothing -> throwError $ "out of bounds:" <+> pretty t <> "," <+> pretty i
 accessMType t _ = throwError $ pretty t <+> "is not accessable MType"
-
-toMType :: (Typeable a, Pretty a, MonadError (Doc ann) m) => a -> m MType
-toMType (typeOf -> NameTy n) =
-  case n of
-    "Int"    -> return $ IntTy 32
-    "Float"  -> return DoubleTy
-    "Bool"   -> return $ IntTy 1
-    "Char"   -> return $ IntTy 8
-    "String" -> return $ PointerTy (IntTy 8)
-    "Unit"   -> return $ StructTy []
-    _        -> throwError $ pretty n <+> "is not valid type"
-toMType (typeOf -> FunTy params ret) =
-  FunctionTy <$> toMType ret <*> mapM toMType params
-toMType (typeOf -> TupleTy xs) =
-  PointerTy . StructTy <$> mapM toMType xs
-toMType (typeOf -> ClsTy{}) =
-  throwError "ClsTy does not have MType"
-toMType x = throwError $ "unreachable:" <+> pretty x

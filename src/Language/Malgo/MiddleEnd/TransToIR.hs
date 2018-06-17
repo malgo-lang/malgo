@@ -1,3 +1,4 @@
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell       #-}
@@ -6,12 +7,12 @@ module Language.Malgo.MiddleEnd.TransToIR where
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import qualified Language.Malgo.IR.Syntax             as S
-import           Language.Malgo.MiddleEnd.Environment
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
+import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 
-data TEnv = TEnv { _uniqSupply :: UniqSupply }
+newtype TEnv = TEnv { _uniqSupply :: UniqSupply }
 
 makeLenses ''TEnv
 
@@ -22,11 +23,29 @@ instance MalgoEnv TEnv where
 throw :: MonadMalgo TEnv m => Info -> Doc ann -> m a
 throw info mes = malgoError $ "error(transToIR):" <+> pretty info <+> mes
 
+update :: ID Type -> MType -> ID MType
+update a mty = a & idMeta .~ mty
+
 trans :: MonadMalgo TEnv m => S.Expr TypedID -> m (Expr (ID MType))
-trans e = transToIR =<< transType e
+trans (S.Var i a) = Var . update a <$> toMType i (typeOf a)
+trans (S.Int _ x) = return (Int x)
+trans (S.Float _ x) = return (Float x)
+trans (S.Bool _ x) = return (Bool x)
+trans (S.Char _ c) = return (Char c)
 
-transType :: MonadMalgo TEnv m => S.Expr TypedID -> m (S.Expr (ID MType))
-transType = undefined
-
-transToIR :: MonadMalgo TEnv m => S.Expr (ID MType) -> m (Expr (ID MType))
-transToIR = undefined
+toMType :: MonadMalgo TEnv m => Info -> Type -> m MType
+toMType info (NameTy n) =
+  case n of
+    "Int"    -> return $ IntTy 32
+    "Float"  -> return DoubleTy
+    "Bool"   -> return $ IntTy 1
+    "Char"   -> return $ IntTy 8
+    "String" -> return $ PointerTy (IntTy 8)
+    "Unit"   -> return $ StructTy []
+    _        -> throw info $ pretty n <+> "is not valid type"
+toMType info (FunTy params ret) =
+  FunctionTy <$> toMType info ret <*> mapM (toMType info) params
+toMType info (TupleTy xs) =
+  PointerTy . StructTy <$> mapM (toMType info) xs
+toMType info ClsTy{} =
+  throw info "ClsTy does not have MType"
