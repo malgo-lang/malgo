@@ -2,6 +2,7 @@ module Language.Malgo.ParserSpec
     ( spec
     ) where
 
+import Prelude
 import           Language.Malgo.Parser (parse)
 import           Language.Malgo.Syntax
 
