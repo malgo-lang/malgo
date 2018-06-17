@@ -8,6 +8,7 @@ module Language.Malgo.IR.IR where
 
 import           Data.List               (delete, (\\))
 import           Language.Malgo.FreeVars
+import           Language.Malgo.ID
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 
@@ -42,10 +43,11 @@ data Expr a = Var a
             | Char Char
             | String Text
             | Unit
+            | PrimFun (ID (MType, [MType]))
             | Tuple [a]
             | Apply a [a]
             | Let a (Expr a) (Expr a)
-            | LetRec [(a, Expr a)] (Expr a)
+            | LetRec [(a, [a], Expr a)] (Expr a)
             | Cast MType a
             | Access a [Int]
             | If a (Expr a) (Expr a)
@@ -57,7 +59,8 @@ instance FreeVars Expr where
   freevars (Apply _ args) = args
   freevars (Let x v e) = freevars v ++ delete x (freevars e)
   freevars (LetRec xs e) =
-    (concatMap (freevars . snd) xs ++ freevars e) \\ map fst xs
+    (concatMap (\(_, params, body) -> freevars body \\ params) xs ++ freevars e)
+    \\ map (\(fn, _, _) -> fn) xs
   freevars (Cast _ x) = [x]
   freevars (Access x _) = [x]
   freevars (If c t f) = c : freevars t ++ freevars f
@@ -70,13 +73,14 @@ instance Pretty a => Pretty (Expr a) where
   pretty (Char c) = squotes $ pretty c
   pretty (String s) = dquotes $ pretty s
   pretty Unit = lparen <> rparen
+  pretty (PrimFun i) = "#" <> pretty i
   pretty (Tuple xs) = parens $ align $ sep $ punctuate "," $ map pretty xs
   pretty (Apply f args) = pretty f <> parens (align $ sep (punctuate "," $ map pretty args))
   pretty (Let name val body) =
     pretty name <+> "=" <+> pretty val
     <> line <> pretty body
   pretty (LetRec defs body) =
-    align (vsep (map (\(name, val) -> "rec" <+> pretty name <+> "=" <+> pretty val) defs))
+    align (vsep (map (\(name, params, val) -> "rec" <+> pretty name <+> sep (map pretty params) <+> "=" <+> pretty val) defs))
     <> line <> pretty body
   pretty (Cast ty val) = "cast" <+> pretty ty <+> pretty val
   pretty (Access e is) = "access" <+> pretty e <+> brackets (align $ sep (punctuate "," $ map pretty is))
@@ -92,6 +96,7 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Char _) = IntTy 8
   mTypeOf (String _) = PointerTy (IntTy 8)
   mTypeOf Unit = StructTy []
+  mTypeOf (PrimFun (ID _ _ (ret, params))) = FunctionTy ret params
   mTypeOf (Tuple xs) = PointerTy (StructTy (map mTypeOf xs))
   mTypeOf (Apply f _) =
     case mTypeOf f of
