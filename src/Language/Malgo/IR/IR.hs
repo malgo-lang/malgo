@@ -24,7 +24,6 @@ instance Pretty a => Pretty (Program a) where
     vsep (map pretty defns)
 
 data Defn a = DefFun a [a] (Expr a)
-            | DefVar a (Expr a)
             | DefEx a Text
   deriving (Show, Eq, Read)
 
@@ -37,20 +36,16 @@ exToFun d@(DefEx name orig) = do
       prim <- newID orig ty
       return $ DefFun name params' (Let prim (PrimFun orig ret params) (Apply prim params'))
     _ -> return d
-
 exToFun d = return d
 
 instance FreeVars Defn where
   freevars (DefFun _ params body) =
     freevars body \\ params
-  freevars (DefVar _ e) = freevars e
   freevars (DefEx _ _) = []
 
 instance Pretty a => Pretty (Defn a) where
   pretty (DefFun fn params body) =
     "define" <+> pretty fn <> parens (sep (punctuate "," $ map pretty params)) <> softline <> braces (indent 2 (pretty body))
-  pretty (DefVar name val) =
-    "define" <+> pretty name <+> "=" <+> pretty val
   pretty (DefEx fn name) =
     "declare" <+> pretty fn <+> "=" <+> pretty name
 
@@ -74,7 +69,7 @@ primFuns :: Expr a -> [Expr a]
 primFuns p@PrimFun{} = [p]
 primFuns (Let _ v e) = primFuns v ++ primFuns e
 primFuns (LetRec vs e) = primFuns' ++ primFuns e
-  where primFuns' = concatMap (\(_, _, e') -> primFuns e') vs
+  where primFuns' = concatMap (primFuns . view _3) vs
 primFuns (If _ t f) = primFuns t ++ primFuns f
 primFuns _ = []
 
@@ -85,7 +80,7 @@ instance FreeVars Expr where
   freevars (Let x v e) = freevars v ++ delete x (freevars e)
   freevars (LetRec xs e) =
     (concatMap (\(_, params, body) -> freevars body \\ params) xs ++ freevars e)
-    \\ map (\(fn, _, _) -> fn) xs
+    \\ map (view _1) xs
   freevars (Cast _ x) = [x]
   freevars (Access x _) = [x]
   freevars (If c t f) = c : freevars t ++ freevars f
