@@ -9,6 +9,7 @@ module Language.Malgo.IR.IR where
 import           Data.List               (delete, (\\))
 import           Language.Malgo.FreeVars
 import           Language.Malgo.ID
+import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 
@@ -23,17 +24,33 @@ instance Pretty a => Pretty (Program a) where
     vsep (map pretty defns)
 
 data Defn a = DefFun a [a] (Expr a)
+            | DefVar a (Expr a)
             | DefEx a Text
   deriving (Show, Eq, Read)
+
+exToFun :: MonadMalgo s m => Defn (ID MType) -> m (Defn (ID MType))
+exToFun d@(DefEx name orig) = do
+  let ty = mTypeOf name
+  case ty of
+    FunctionTy ret params -> do
+      params' <- mapM (newID "x") params
+      prim <- newID orig ty
+      return $ DefFun name params' (Let prim (PrimFun orig ret params) (Apply prim params'))
+    _ -> return d
+
+exToFun d = return d
 
 instance FreeVars Defn where
   freevars (DefFun _ params body) =
     freevars body \\ params
+  freevars (DefVar _ e) = freevars e
   freevars (DefEx _ _) = []
 
 instance Pretty a => Pretty (Defn a) where
   pretty (DefFun fn params body) =
     "define" <+> pretty fn <> parens (sep (punctuate "," $ map pretty params)) <> softline <> braces (indent 2 (pretty body))
+  pretty (DefVar name val) =
+    "define" <+> pretty name <+> "=" <+> pretty val
   pretty (DefEx fn name) =
     "declare" <+> pretty fn <+> "=" <+> pretty name
 
@@ -43,7 +60,7 @@ data Expr a = Var a
             | Char Char
             | String Text
             | Unit
-            | PrimFun (ID (MType, [MType]))
+            | PrimFun Text MType [MType]
             | Tuple [a]
             | Apply a [a]
             | Let a (Expr a) (Expr a)
@@ -52,6 +69,14 @@ data Expr a = Var a
             | Access a [Int]
             | If a (Expr a) (Expr a)
   deriving (Show, Eq, Read)
+
+primFuns :: Expr a -> [Expr a]
+primFuns p@PrimFun{} = [p]
+primFuns (Let _ v e) = primFuns v ++ primFuns e
+primFuns (LetRec vs e) = primFuns' ++ primFuns e
+  where primFuns' = concatMap (\(_, _, e') -> primFuns e') vs
+primFuns (If _ t f) = primFuns t ++ primFuns f
+primFuns _ = []
 
 instance FreeVars Expr where
   freevars (Var x) = [x]
@@ -73,7 +98,7 @@ instance Pretty a => Pretty (Expr a) where
   pretty (Char c) = squotes $ pretty c
   pretty (String s) = dquotes $ pretty s
   pretty Unit = lparen <> rparen
-  pretty (PrimFun i) = "#" <> pretty i
+  pretty (PrimFun name ret params) = "#" <> pretty name <> braces (pretty $ FunctionTy ret params)
   pretty (Tuple xs) = parens $ align $ sep $ punctuate "," $ map pretty xs
   pretty (Apply f args) = pretty f <> parens (align $ sep (punctuate "," $ map pretty args))
   pretty (Let name val body) =
@@ -96,7 +121,7 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Char _) = IntTy 8
   mTypeOf (String _) = PointerTy (IntTy 8)
   mTypeOf Unit = StructTy []
-  mTypeOf (PrimFun (ID _ _ (ret, params))) = FunctionTy ret params
+  mTypeOf (PrimFun _ ret params) = FunctionTy ret params
   mTypeOf (Tuple xs) = PointerTy (StructTy (map mTypeOf xs))
   mTypeOf (Apply f _) =
     case mTypeOf f of
@@ -124,6 +149,9 @@ class HasMType a where
 
 instance HasMType MType where
   mTypeOf = identity
+
+instance HasMType a => HasMType (ID a) where
+  mTypeOf = mTypeOf . _idMeta
 
 instance Pretty MType where
   pretty (IntTy i) = "i" <> pretty i

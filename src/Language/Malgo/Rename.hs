@@ -26,12 +26,6 @@ instance MalgoEnv RnEnv where
 rename :: MonadMalgo RnEnv m => Expr Name -> m (Expr RawID)
 rename x = transExpr x
 
-newID :: MonadMalgo s m => Name -> m (Name, RawID)
-newID orig = do
-  c <- newUniq
-  let i = ID orig c ()
-  return (orig, i)
-
 addKnowns :: MonadMalgo RnEnv m => [(Name, RawID)] -> m a -> m a
 addKnowns kvs m =
   addTable kvs knowns m
@@ -51,8 +45,8 @@ transExpr (Unit info) = pure $ Unit info
 transExpr (Tuple info xs) = Tuple info <$> mapM transExpr xs
 transExpr (TupleAccess info e i) = TupleAccess info <$> transExpr e <*> pure i
 transExpr (Fn info params body) = do
-  paramIDs <- mapM (newID . fst) params
-  addKnowns paramIDs $ do
+  paramIDs <- mapM (flip newID () . fst) params
+  addKnowns (zip (map fst params) paramIDs) $ do
     params' <- mapM (\(n, t) -> (,) <$> getID info n <*> pure t) params
     body' <- transExpr body
     pure (Fn info params' body')
@@ -60,8 +54,8 @@ transExpr (Call info fn args) =
   Call info <$> transExpr fn <*> mapM transExpr args
 transExpr (Seq info e1 e2) = Seq info <$> transExpr e1 <*> transExpr e2
 transExpr (Let info decls e) = do
-  declIDs <- mapM (newID . getName) decls
-  addKnowns declIDs $ do
+  declIDs <- mapM (flip newID () . getName) decls
+  addKnowns (zip (map getName decls) declIDs) $ do
     decls' <- mapM transDecl decls
     e' <- transExpr e
     pure (Let info decls' e')
@@ -79,8 +73,8 @@ transDecl (ValDec info name typ val) = do
   pure (ValDec info name' typ val')
 transDecl (FunDec info fn params retty body) = do
   fn' <- getID info fn
-  paramIDs <- mapM (newID . fst) params
-  addKnowns paramIDs $ do
+  paramIDs <- mapM (flip newID () . fst) params
+  addKnowns (zip (map fst params) paramIDs) $ do
     params' <- mapM (\(n, t) -> (,) <$> getID info n <*> pure t) params
     body' <- transExpr body
     pure (FunDec info fn' params' retty body')

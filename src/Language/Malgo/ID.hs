@@ -1,9 +1,11 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell   #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.ID
-  ( ID(..), RawID, idName, idUniq, idMeta ) where
+  ( ID(..), RawID, idName, idUniq, idMeta, newID) where
 
 import           Control.Lens
+import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 
@@ -23,3 +25,8 @@ instance Pretty a => Pretty (ID a) where
 
 instance Typeable a => Typeable (ID a) where
   typeOf i = typeOf $ i ^. idMeta
+
+newID :: MonadMalgo s m => Name -> a -> m (ID a)
+newID name ty = do
+  u <- newUniq
+  return $ ID name u ty
