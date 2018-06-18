@@ -2,7 +2,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE StrictData            #-}
-{-# LANGUAGE ViewPatterns          #-}
 module Language.Malgo.IR.IR where
 
 import           Data.List               (delete, (\\))
@@ -123,7 +122,7 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Apply f _) =
     case mTypeOf f of
       FunctionTy t _ -> t -- normal function
-      PointerTy (StructTy [FunctionTy t _, PointerTy (StructTy _)] ) -> t -- closure
+      PointerTy (StructTy [FunctionTy t _, PointerTy (StructTy _)]) -> t -- closure
       t              -> error $ show $ pretty t <+> "is not applieable"
   mTypeOf (Let _ _ body) = mTypeOf body
   mTypeOf (LetRec _ body) = mTypeOf body
