@@ -21,11 +21,13 @@ instance MalgoEnv TEnv where
   uniqSupplyL = uniqSupply
   genEnv = TEnv []
 
-throw :: MonadMalgo TEnv m => Info -> Doc ann -> m a
-throw info mes = malgoError $ "error(transToIR):" <+> pretty info <+> mes
+throw :: MonadMalgo TEnv m => Doc ann -> m a
+throw mes = malgoError $ "error(transToIR):" <+> mes
 
-update :: ID Type -> MType -> ID MType
-update a mty = a & idMeta .~ mty
+update :: MonadMalgo TEnv m => ID Type -> m (ID MType)
+update a = do
+  mty <- toMType (typeOf a)
+  return $ a & idMeta .~ mty
 
 newTmp :: MonadMalgo TEnv m => Name -> MType -> m (ID MType)
 newTmp n t = ID ("$" <> n) <$> newUniq <*> return t
@@ -39,15 +41,40 @@ trans e = do
   env <- getEnv
   return (e', env ^. externVars)
 
+insertLet :: MonadMalgo TEnv m => S.Expr (ID Type) -> (ID MType -> m (Expr (ID MType))) -> m (Expr (ID MType))
+insertLet (S.Var i x) k = do
+  ty <- toMType (typeOf x)
+  k =<< update x
+insertLet v k = do
+  ty <- toMType $ typeOf v
+  x <- newTmp "k" ty
+  v' <- transToIR v
+  e <- k x
+  return (Let x v' e)
+
 transToIR :: MonadMalgo TEnv m => S.Expr TypedID -> m (Expr (ID MType))
-transToIR (S.Var i a)   = Var . update a <$> toMType i (typeOf a)
+transToIR (S.Var _ a)   = Var <$> update a
 transToIR (S.Int _ x)   = return (Int x)
 transToIR (S.Float _ x) = return (Float x)
 transToIR (S.Bool _ x)  = return (Bool x)
 transToIR (S.Char _ c)  = return (Char c)
+transToIR (S.String _ s) = return (String s)
+transToIR (S.Unit _) = return Unit
+transToIR (S.Tuple _ vs) = bind vs [] (return . Tuple)
+  where
+    bind [] args k = k (reverse args)
+    bind (x:xs) args k =
+      insertLet x (\x' -> bind xs (x' : args) k)
+transToIR (S.TupleAccess _ e i) =
+  insertLet e (\e' -> return $ Access e' [0, i])
+transToIR (S.Fn _ params body) = do
+  body' <- transToIR body
+  fnty <- toMType (FunTy (map snd params) (typeOf body))
+  fnid <- newTmp "lambda" fnty
+  return (Let fnid body' (Var fnid))
 
-toMType :: MonadMalgo TEnv m => Info -> Type -> m MType
-toMType info (NameTy n) =
+toMType :: MonadMalgo TEnv m => Type -> m MType
+toMType (NameTy n) =
   case n of
     "Int"    -> return $ IntTy 32
     "Float"  -> return DoubleTy
@@ -55,10 +82,10 @@ toMType info (NameTy n) =
     "Char"   -> return $ IntTy 8
     "String" -> return $ PointerTy (IntTy 8)
     "Unit"   -> return $ StructTy []
-    _        -> throw info $ pretty n <+> "is not valid type"
-toMType info (FunTy params ret) =
-  FunctionTy <$> toMType info ret <*> mapM (toMType info) params
-toMType info (TupleTy xs) =
-  PointerTy . StructTy <$> mapM (toMType info) xs
-toMType info ClsTy{} =
-  throw info "ClsTy does not have MType"
+    _        -> throw $ pretty n <+> "is not valid type"
+toMType (FunTy params ret) =
+  FunctionTy <$> toMType ret <*> mapM toMType params
+toMType (TupleTy xs) =
+  PointerTy . StructTy <$> mapM toMType xs
+toMType ClsTy{} =
+  throw "ClsTy does not have MType"
