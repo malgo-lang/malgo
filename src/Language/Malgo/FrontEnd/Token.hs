@@ -1,14 +1,12 @@
+{-# LANGUAGE TemplateHaskell #-}
 module Language.Malgo.FrontEnd.Token where
 
 import Language.Malgo.Prelude
 
 data Tag
   = LET
-  | IN
-  | END
-  | VAL
-  | FUN
   | TYPE
+  | REC
   | AND
   | EXTERN
   | LPAREN
@@ -21,10 +19,8 @@ data Tag
   | COLON
   | SEMICOLON
   | EQUAL
-  | SEMICOLON_EQUAL
   | FN
   | IF
-  | THEN
   | ELSE
   | DOT
   | PLUS
@@ -53,5 +49,7 @@ data Tag
   | STRING { _str :: Text }
   deriving (Eq, Show)
 
-data Token = Token { _info :: Info, _tag :: Tag }
+data Token = Token { _tokenInfo :: Info, _tokenTag :: Tag }
   deriving (Eq, Show)
+
+makeLenses ''Token

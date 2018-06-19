@@ -3,29 +3,23 @@
 -- recursive function
 fib : Int -> Int
 rec fib n =
-  if n <= 1
-  then 1
-  else fib (n - 1) + fib (n - 2)
+  if n <= 1 {
+    1
+  } else {
+    fib (n - 1) + fib (n - 2)
+  }
 
 -- function with effect
-fibLoop : Int -> ()
-rec fibLoop n =
-  let unused = fib 30
-  in if n <= 0
-     then {printInt (fib 0); newline ()}
-     else {printInt (fib n); newline (); fibLoop (n - 1)}
-  end
-
 -- brace syntax
-fibLoop' : Int -> ()
-rec fibLoop' n = {
+fibLoop : Int -> ()
+rec fibLoop n = {
   let unused = fib 30; -- 'let' in braces
   if n <= 0 {
     printInt (fib 0);
     newline ()
   } else {
     printInt (fib n);
-    newline();
+    newline ();
     fibLoop (n - 1)
   }
 }
@@ -33,21 +27,21 @@ rec fibLoop' n = {
 -- mutual recursive functions
 even : Int -> Bool
 odd : Int -> Bool
-rec even n = if n == 0 then True  else odd  (n - 1)
-and odd  n = if n == 0 then False else even (n - 1)
+rec even n = if n == 0 { True }  else { odd  (n - 1) }
+and odd  n = if n == 0 { False } else { even (n - 1) }
 
 {-- 次のように変換される
 even : Int -> Bool
-rec even n =
-  let rec odd' n = if n == 0 then False else even (n - 1)
-  in if n == 0 then True else odd' (n - 1)
-  end
+rec even n = {
+  let rec odd' n = if n == 0 { False } else { even (n - 1) };
+  if n == 0 { True } else { odd' (n - 1) }
+  }
 
 odd : Int -> Bool
-rec odd n =
-  let rec even' n = if n == 0 then True else odd (n - 1)
-  in if n == 0 then False else even' (n - 1)
-  end
+rec odd n = {
+  let rec even' n = if n == 0 { True } else { odd (n - 1) };
+  if n == 0 { False } else { even' (n - 1) }
+  }
 -}
 
 -- entry point
