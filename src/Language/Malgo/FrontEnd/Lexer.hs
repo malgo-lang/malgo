@@ -6,15 +6,14 @@
 module Language.Malgo.FrontEnd.Lexer (lex) where
 
 import           Language.Malgo.FrontEnd.Token
-import           Language.Malgo.Prelude        hiding (many, try, (<|>))
+import           Language.Malgo.Prelude        hiding (try)
 
 import           Data.String                   (String)
 import           Text.Parsec                   (ParseError, ParsecT, SourceName,
                                                 Stream, alphaNum, char, eof,
-                                                getPosition, letter, many,
-                                                oneOf, runParserT, sourceColumn,
-                                                sourceLine, sourceName, try,
-                                                (<|>))
+                                                getPosition, letter, oneOf,
+                                                runParserT, sourceColumn,
+                                                sourceLine, sourceName, try)
 import qualified Text.Parsec.Token             as Tok
 
 getInfo :: Monad m => ParsecT s u m Info
