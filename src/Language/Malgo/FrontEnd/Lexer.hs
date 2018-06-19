@@ -1,6 +1,7 @@
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE FlexibleContexts          #-}
+{-# LANGUAGE MultiParamTypeClasses     #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE OverloadedStrings         #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 module Language.Malgo.FrontEnd.Lexer (lex) where
 
@@ -11,7 +12,7 @@ import           Data.String                   (String)
 import           Text.Parsec                   (ParseError, ParsecT, SourceName,
                                                 Stream, alphaNum, char, eof,
                                                 getPosition, letter, many,
-                                                oneOf, parse, sourceColumn,
+                                                oneOf, runParserT, sourceColumn,
                                                 sourceLine, sourceName, try,
                                                 (<|>))
 import qualified Text.Parsec.Token             as Tok
@@ -52,8 +53,8 @@ op :: Stream s m Char => Info -> String -> Tag -> ParsecT s u m Token
 op info sym tag = reservedOp sym >> return (Token info tag)
   where reservedOp = Tok.reservedOp tokenParser
 
-lexer :: Stream s m Char => ParsecT s u m Token
-lexer = do
+token :: Stream s m Char => ParsecT s u m Token
+token = do
   info <- getInfo
   foldl (\b (word, tag) -> b <|> keyword info word tag)
     (keyword info "let" LET)
@@ -94,6 +95,10 @@ lexer = do
     lbrace = symbol "{"
     rbrace = symbol "}"
 
-lex :: Stream s Identity Char => SourceName -> s -> Either ParseError [Token]
-lex = parse (whiteSpace >> many lexer >>= \toks -> eof >> return toks)
+lex :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
+lex = runParserT $ do
+  whiteSpace
+  toks <- many token
+  eof
+  return toks
   where whiteSpace = Tok.whiteSpace tokenParser
