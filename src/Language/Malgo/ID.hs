@@ -1,6 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 module Language.Malgo.ID
   ( ID(..), RawID, idName, idUniq, idMeta, newID) where
 
@@ -20,8 +21,8 @@ instance Eq (ID a) where
 makeLenses ''ID
 
 instance Pretty a => Pretty (ID a) where
-  pretty (ID n u m) =
-    pretty n <> "." <> pretty u <> braces (pretty m)
+  pretty (ID n u _) =
+    pretty n <> "." <> pretty u
 
 instance Typeable a => Typeable (ID a) where
   typeOf i = typeOf $ i ^. idMeta

@@ -1,3 +1,4 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Unused where
 
 import           Language.Malgo.IR.MIR

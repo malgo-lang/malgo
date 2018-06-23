@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}

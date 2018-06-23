@@ -1,5 +1,6 @@
-{-# LANGUAGE StrictData      #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE StrictData        #-}
+{-# LANGUAGE TemplateHaskell   #-}
 module Language.Malgo.FrontEnd.Token where
 
 import           Language.Malgo.Prelude

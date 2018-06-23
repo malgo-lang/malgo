@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.IR.MIR where
 

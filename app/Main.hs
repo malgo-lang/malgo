@@ -1,3 +1,4 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 module Main where
 
 import           Language.Malgo.Driver
@@ -20,5 +21,6 @@ main = do
 
   unless (_dumpParsed opt || _dumpRenamed opt
           || _dumpTyped opt || _dumpHIR opt
+          || _dumpIR opt
           || _dumpFlatten opt || _dumpClosure opt) $
     putText (toS $ ppllvm ll)

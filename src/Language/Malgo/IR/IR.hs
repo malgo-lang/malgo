@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE StrictData            #-}
@@ -86,23 +87,19 @@ instance Pretty a => Pretty (Expr a) where
   pretty (Char c) = squotes $ pretty c
   pretty (String s) = dquotes $ pretty s
   pretty Unit = lparen <> rparen
-  pretty (Prim name ty) = "#" <> pretty name <> braces (pretty ty)
-  pretty (Tuple xs) = parens $ align $ sep $ punctuate "," $ map pretty xs
-  pretty (Apply f args) = pretty f <> parens (align $ sep (punctuate "," $ map pretty args))
+  pretty (Prim name _) = "#" <> pretty name
+  pretty (Tuple xs) = "tuple" <> parens ( align $ sep $ punctuate "," $ map pretty xs)
+  pretty (Apply f args) = parens (pretty f <+> sep (map pretty args))
   pretty (Let name val body) =
-    pretty name <+> "=" <+> pretty val
-    <> line <> pretty body
+    parens ("let" <+> parens (align $ pretty name <+> "=" <> softline <> pretty val)
+            <> line <> indent 1 (align $ pretty body))
   pretty (LetRec defs body) =
-    align (vsep (map (\(name, params, val) -> "rec" <+> pretty name
-                       <+> sep (map pretty (fromMaybe [] params)) <+> "=" <+> pretty val) defs))
-    <> line <> pretty body
-  pretty (Cast ty val) = "cast" <+> pretty ty <+> pretty val
-  pretty (Access e is) = "access" <+> pretty e <+> brackets (align $ sep (punctuate "," $ map pretty is))
+    parens ("let" <+> align (vsep (map (\(name, params, val) -> parens ("rec" <+> pretty name <+> sep (map pretty (fromMaybe [] params)) <+> "=" <> line <> indent 1 (pretty val))) defs))
+             <> line <> indent 1 (align $ pretty body))
+  pretty (Cast ty val) = parens ("cast" <+> pretty ty <+> pretty val)
+  pretty (Access e is) = parens ("access" <+> pretty e <+> sep (map pretty is))
   pretty (If c t f) =
-    "if" <+> parens (pretty c)
-    <+> braces (pretty t)
-    <+> "else" <+> braces (pretty f)
-
+    parens ("if" <+> pretty c <> line <> indent 1 (align $ pretty t) <> line <> indent 1 (align $ pretty f))
 
 instance HasMType a => HasMType (Expr a) where
   mTypeOf (Var a) = mTypeOf a

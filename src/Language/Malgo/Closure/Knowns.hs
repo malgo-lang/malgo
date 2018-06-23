@@ -1,10 +1,11 @@
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Closure.Knowns (knownFuns) where
 
-import Language.Malgo.Prelude
-import Language.Malgo.TypedID
-import Language.Malgo.FreeVars
-import Language.Malgo.IR.HIR
+import           Language.Malgo.FreeVars
+import           Language.Malgo.IR.HIR
+import           Language.Malgo.Prelude
+import           Language.Malgo.TypedID
 
 knownFuns :: Expr TypedID -> [TypedID]
 knownFuns (Let (ExDec name _) body) =

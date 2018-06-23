@@ -1,3 +1,4 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Beta
   ( betaTrans
   ) where

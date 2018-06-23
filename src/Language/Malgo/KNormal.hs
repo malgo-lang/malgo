@@ -3,7 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeSynonymInstances  #-}
-
+{-# LANGUAGE NoImplicitPrelude     #-}
 module Language.Malgo.KNormal
   ( knormal
   ) where

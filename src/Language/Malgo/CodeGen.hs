@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.CodeGen where
 
@@ -20,8 +21,8 @@ import qualified LLVM.AST.Type                   as LT
 import qualified LLVM.AST.Typed                  as LT
 import           LLVM.IRBuilder                  as IRBuilder
 
-import           Language.Malgo.IR.HIR              (Op (..))
 import           Language.Malgo.ID
+import           Language.Malgo.IR.HIR           (Op (..))
 import           Language.Malgo.IR.MIR
 import           Language.Malgo.Prelude          hiding (bit)
 import qualified Language.Malgo.Type             as T

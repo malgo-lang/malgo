@@ -1,21 +1,23 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Driver where
 
-import qualified Language.Malgo.Beta      as Beta
-import qualified Language.Malgo.Closure   as Closure
-import qualified Language.Malgo.CodeGen   as CodeGen
-import qualified Language.Malgo.Flatten   as Flatten
-import qualified Language.Malgo.KNormal   as KNormal
-import qualified Language.Malgo.Monad     as M
+import qualified Language.Malgo.Beta                as Beta
+import qualified Language.Malgo.Closure             as Closure
+import qualified Language.Malgo.CodeGen             as CodeGen
+import qualified Language.Malgo.Flatten             as Flatten
+import qualified Language.Malgo.IR.Syntax           as Syntax
+import qualified Language.Malgo.KNormal             as KNormal
+import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
+import qualified Language.Malgo.Monad               as M
 import           Language.Malgo.Prelude
-import qualified Language.Malgo.Rename    as Rename
-import qualified Language.Malgo.IR.Syntax    as Syntax
-import qualified Language.Malgo.TypeCheck as TypeCheck
-import qualified Language.Malgo.Unused    as Unused
+import qualified Language.Malgo.Rename              as Rename
+import qualified Language.Malgo.TypeCheck           as TypeCheck
+import qualified Language.Malgo.Unused              as Unused
 
-import           Control.Lens             (view)
-import qualified LLVM.AST                 as L
+import           Control.Lens                       (view)
+import qualified LLVM.AST                           as L
 import           Options.Applicative
 
 data Opt = Opt
@@ -26,6 +28,7 @@ data Opt = Opt
   , _dumpHIR         :: Bool
   , _dumpFlatten     :: Bool
   , _dumpClosure     :: Bool
+  , _dumpIR          :: Bool
   , _notDeleteUnused :: Bool
   , _notBetaTrans    :: Bool
   } deriving (Eq, Show)
@@ -40,6 +43,7 @@ parseOpt = execParser $
           <*> switch (long "dump-hir")
           <*> switch (long "dump-flatten")
           <*> switch (long "dump-closure"))
+          <*> switch (long "dump-ir")
           <*> switch (long "not-delete-unused")
           <*> switch (long "not-beta-trans")
          <**> helper)
@@ -53,6 +57,8 @@ compile filename ast opt = do
     liftIO . print $ pretty ast
   (renamed, s1) <- run' _dumpRenamed (Rename.rename ast) 0
   (typed, s2) <- run' _dumpTyped (TypeCheck.typeCheck renamed) s1
+  when (_dumpIR opt) $
+    void $ run' _dumpIR (TransToIR.trans typed) s2
   (knormal, s3) <- run' _dumpHIR (KNormal.knormal $
                                   if _notBetaTrans opt
                                   then typed

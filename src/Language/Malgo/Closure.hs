@@ -3,7 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
-
+{-# LANGUAGE NoImplicitPrelude     #-}
 module Language.Malgo.Closure
   ( conv
   , ClsEnv(..)

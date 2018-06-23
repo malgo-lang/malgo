@@ -2,10 +2,11 @@
 {-# LANGUAGE FunctionalDependencies     #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE RankNTypes                 #-}
 module Language.Malgo.Monad where
 
-import           Control.Lens           (over, Lens', at, use, view, (.=))
+import           Control.Lens           (Lens', at, over, use, view, (.=))
 import           Data.IORef
 import qualified Data.Map               as Map
 import           Language.Malgo.Prelude

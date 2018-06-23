@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.TypedID
   ( TypedID
   ) where

@@ -1,9 +1,9 @@
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
-
 module Language.Malgo.TypeCheck
     ( typeCheck
     ) where

@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.Prelude
   ( module X
@@ -17,7 +18,8 @@ import           Prelude                   as X (error)
 import           Protolude                 as X hiding (Strict, Type, Typeable,
                                                  from, list, sourceColumn,
                                                  sourceLine, sym, to, toList,
-                                                 uncons, unsnoc, (<&>), (<.>), trans)
+                                                 trans, uncons, unsnoc, (<&>),
+                                                 (<.>))
 
 type Name = Text
 
