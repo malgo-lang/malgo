@@ -1,7 +1,8 @@
+{-# LANGUAGE StrictData      #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Language.Malgo.FrontEnd.Token where
 
-import Language.Malgo.Prelude
+import           Language.Malgo.Prelude
 
 data Tag
   = LET

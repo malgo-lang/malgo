@@ -33,7 +33,7 @@ instance Pretty a => Pretty (Defn a) where
 
 {- Closure representation
 
-Tuple [fn :: FunctionTy ret [Tuple .., x, y, ...], Tuple ..]
+Tuple [fn :: FunctionTy ret [PointerTy (IntTy 8), x, y, ...], Cast (PointerTy (IntTy 8)) (Tuple ..)]
 
 Apply (Tuple [fn, env]) args -> Apply fn (env : args)
 
@@ -117,7 +117,7 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Apply f _) =
     case mTypeOf f of
       FunctionTy t _ -> t -- normal function
-      PointerTy (StructTy [FunctionTy t _, PointerTy (StructTy _)]) -> t -- closure
+      PointerTy (StructTy [FunctionTy t _, _]) -> t -- closure
       t              -> error $ show $ pretty t <+> "is not applieable"
   mTypeOf (Let _ _ body) = mTypeOf body
   mTypeOf (LetRec _ body) = mTypeOf body

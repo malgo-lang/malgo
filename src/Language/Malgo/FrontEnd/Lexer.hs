@@ -1,6 +1,5 @@
 {-# LANGUAGE FlexibleContexts          #-}
 {-# LANGUAGE MultiParamTypeClasses     #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE OverloadedStrings         #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 module Language.Malgo.FrontEnd.Lexer (lex) where
