@@ -32,9 +32,6 @@ update a = do
 newTmp :: MonadMalgo TEnv m => Name -> MType -> m (ID MType)
 newTmp n t = ID ("$" <> n) <$> newUniq <*> return t
 
-newUnused :: MonadMalgo TEnv m => m (ID MType)
-newUnused = newTmp "_" (StructTy [])
-
 trans :: MonadMalgo TEnv m => S.Expr TypedID -> m (Expr (ID MType), [Defn (ID MType)])
 trans e = do
   e' <- transToIR e
@@ -42,9 +39,7 @@ trans e = do
   return (e', env ^. externVars)
 
 insertLet :: MonadMalgo TEnv m => S.Expr (ID Type) -> (ID MType -> m (Expr (ID MType))) -> m (Expr (ID MType))
-insertLet (S.Var i x) k = do
-  ty <- toMType (typeOf x)
-  k =<< update x
+insertLet (S.Var _ x) k = update x >>= k
 insertLet v k = do
   ty <- toMType $ typeOf v
   x <- newTmp "k" ty

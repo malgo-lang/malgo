@@ -48,10 +48,16 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
 
   getEnv :: m s
 
+  access :: Getter s a -> m a
+  access l = do
+    s <- getEnv
+    return (view l s)
+
   addTable :: Ord k => [(k, v)] -> Lens' s (Map k v) -> m a -> m a
+
   lookupTable :: Ord k => Doc ann -> k -> Lens' s (Map k v) -> m v
   lookupTable err k l = do
-    s <- view l <$> getEnv
+    s <- access l
     case view (at k) s of
       Just x  -> pure x
       Nothing -> malgoError err
