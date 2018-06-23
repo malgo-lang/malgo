@@ -142,7 +142,7 @@ instance HasMType MType where
   mTypeOf = identity
 
 instance HasMType a => HasMType (ID a) where
-  mTypeOf = mTypeOf . _idMeta
+  mTypeOf (ID _ _ m) = mTypeOf m
 
 instance Pretty MType where
   pretty (IntTy i) = "i" <> pretty i

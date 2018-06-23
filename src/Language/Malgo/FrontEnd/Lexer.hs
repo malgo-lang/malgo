@@ -1,6 +1,6 @@
-{-# LANGUAGE FlexibleContexts          #-}
-{-# LANGUAGE MultiParamTypeClasses     #-}
-{-# LANGUAGE OverloadedStrings         #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings     #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 module Language.Malgo.FrontEnd.Lexer (lex) where
 
@@ -33,14 +33,10 @@ tokenParser = Tok.makeTokenParser
   , Tok.opLetter       = oneOf ":!#$%&*+./<=>?@\\^|-~"
   , Tok.caseSensitive  = True
   , Tok.reservedOpNames =
-      [ ".", "+.", "-.", "*.", "/.", ":", "="
-      , "+", "-", "*", "/", "%", "->", ";"
-      , "==", "/=", "<", ">", "<=", ">=", "&&", "||"
-      ]
+      [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%", "->", ";"
+      , "==", "/=", "<", ">", "<=", ">=", "&&", "||" ]
   , Tok.reservedNames =
-      [ "let", "type", "rec", "and", "extern", "fn"
-      , "if", "else"
-      ]
+      [ "let", "type", "rec", "and", "extern", "fn", "if", "else" ]
   }
 
 keyword :: Stream s m Char => Info -> String -> Tag -> ParsecT s u m Token
