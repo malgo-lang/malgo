@@ -1,21 +1,20 @@
 {-# LANGUAGE DeriveAnyClass        #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
 module Language.Malgo.Closure
   ( conv
   , ClsEnv(..)
   ) where
 
-import           Control.Lens                  (at, makeLenses, non, set, use,
-                                                view, (%=), (.~), (?=), (^.))
+import           Data.IORef
 
 import           Language.Malgo.Closure.Knowns
 import           Language.Malgo.FreeVars
-import qualified Language.Malgo.IR.HIR            as H
 import           Language.Malgo.ID
+import qualified Language.Malgo.IR.HIR         as H
 import           Language.Malgo.IR.MIR
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
@@ -23,11 +22,11 @@ import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 
 data ClsEnv = ClsEnv
-  { _closures   :: Map TypedID TypedID
-  , _varMap     :: Map TypedID TypedID -- クロージャ変換前と後の型の変更を記録
-  , _fundecs    :: [FunDec TypedID]
-  , _extern     :: [ExDec TypedID]
-  , _knowns     :: [TypedID] -- immutable
+  { _closures   :: IORef (Map TypedID TypedID)
+  , _varMap     :: IORef (Map TypedID TypedID) -- クロージャ変換前と後の型の変更を記録
+  , _fundecs    :: IORef [FunDec TypedID]
+  , _extern     :: IORef [ExDec TypedID]
+  , _knowns     :: IORef [TypedID] -- immutable
   , _uniqSupply :: UniqSupply
   }
 
@@ -35,39 +34,59 @@ makeLenses ''ClsEnv
 
 instance MalgoEnv ClsEnv where
   uniqSupplyL = uniqSupply
-  genEnv = ClsEnv mempty mempty mempty mempty mempty
+  genEnv i =
+    ClsEnv <$> newMutVar mempty
+    <*> newMutVar mempty
+    <*> newMutVar mempty
+    <*> newMutVar mempty
+    <*> newMutVar mempty
+    <*> pure i
 
 type ClsTrans a = Malgo ClsEnv a
 
 conv :: H.Expr TypedID -> ClsTrans (Program TypedID)
 conv x = do
-  modify (set knowns (knownFuns x))
+  env <- getEnv
+  writeMutVar (view knowns env) (knownFuns x)
   x' <- convExpr x
-  fs <- view fundecs <$> getEnv
-  exs <- view extern <$> getEnv
-  ks <- view knowns <$> getEnv
+  fs <- readMutVar =<< access fundecs
+  exs <- readMutVar =<< access extern
+  ks <- readMutVar =<< access knowns
   pure (Program fs exs x' ks)
 
 throw :: Doc ann -> ClsTrans a
 throw m = malgoError $ "error(closuretrans):" <+> m
 
 addFunDec :: FunDec TypedID -> ClsTrans ()
-addFunDec f = fundecs %= (f:)
+addFunDec f = do
+  fs <- readMutVar =<< access fundecs
+  env <- getEnv
+  writeMutVar (view fundecs env) (f:fs)
 
 addExDec :: ExDec TypedID -> ClsTrans ()
-addExDec ex = extern %= (ex:)
+addExDec ex = do
+  es <- readMutVar =<< access extern
+  env <- getEnv
+  writeMutVar (view extern env) (ex:es)
 
 convID :: TypedID -> ClsTrans TypedID
 convID name = do
-  clss <- use closures
-  vm <- use varMap
+  env <- getEnv
+  clss <- readMutVar $ view closures env
+  vm <- readMutVar $ view varMap env
   pure $ (clss <> vm) ^. (at name . non name)
 
 addClsTrans :: TypedID -> TypedID -> ClsTrans ()
-addClsTrans orig cls = (closures . at orig) ?= cls
+addClsTrans orig cls = do
+  env <- getEnv
+  clss <- readMutVar $ view closures env
+  writeMutVar (view closures env) (clss & at orig ?~ cls)
 
 addVar :: TypedID -> TypedID -> ClsTrans ()
-addVar x x' = (varMap . at x) ?= x'
+addVar x x' = do
+  env <- getEnv
+  vm <- readMutVar $ view varMap env
+  writeMutVar (view varMap env) (vm & at x ?~ x')
 
 newClsID :: TypedID -> ClsTrans TypedID
 newClsID fn = do
@@ -100,14 +119,17 @@ convExpr (H.String x) = pure (String x)
 convExpr H.Unit = pure Unit
 convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
 convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
-convExpr (H.Call fn args) =
-  ifM (elem fn <$> use knowns)
-  (CallDir <$> fn' <*> mapM convID args)
-  (CallCls <$> cls <*> mapM convID args)
+convExpr (H.Call fn args) = do
+  ks <- readMutVar =<< access knowns
+  if fn `elem` ks
+    then CallDir <$> fn' <*> mapM convID args
+    else CallCls <$> cls <*> mapM convID args
   where
-    fn' = fromMaybe fn . view (at fn) <$> use varMap -- 型が変わっていれば変換
+    fn' = do
+      vm <- readMutVar =<< access varMap
+      return $ fromMaybe fn (view (at fn) vm)  -- 型が変わっていれば変換
     cls = do
-      cs <- use closures
+      cs <- readMutVar =<< access closures
       case view (at fn) cs of
         Just x  -> return x
         Nothing -> throw $ pretty fn <+> "is not translated to closure"

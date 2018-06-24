@@ -26,7 +26,7 @@ makeLenses ''TcEnv
 
 instance MalgoEnv TcEnv where
   uniqSupplyL = uniqSupply
-  genEnv = TcEnv mempty
+  genEnv = return . TcEnv mempty
 
 typeCheck :: MonadMalgo TcEnv m => Expr RawID -> m (Expr TypedID)
 typeCheck = checkExpr

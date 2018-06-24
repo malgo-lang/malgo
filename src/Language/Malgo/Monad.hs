@@ -6,20 +6,11 @@
 {-# LANGUAGE RankNTypes                 #-}
 module Language.Malgo.Monad where
 
-import           Control.Lens           (Lens', at, over, use, view, (.=))
 import           Data.IORef
 import qualified Data.Map               as Map
 import           Language.Malgo.Prelude
 
-newtype Malgo s a = Malgo { unMalgo :: StateT s IO a }
-  deriving ( Functor
-           , Applicative
-           , Monad
-           , MonadState s
-           , MonadIO
-           )
-
-newtype Malgo' s a = Malgo' { unMalgo' :: ReaderT s IO a }
+newtype Malgo s a = Malgo { unMalgo :: ReaderT s IO a }
   deriving ( Functor
            , Applicative
            , Monad
@@ -31,11 +22,11 @@ newtype UniqSupply = UniqSupply { unUniqSupply :: IORef Int }
 
 class MalgoEnv s where
   uniqSupplyL :: Lens' s UniqSupply
-  genEnv :: UniqSupply -> s
+  genEnv :: UniqSupply -> IO s
 
 instance MalgoEnv UniqSupply where
   uniqSupplyL = identity
-  genEnv = identity
+  genEnv = return
 
 class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
   newUniq :: m Int
@@ -65,27 +56,6 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
 
 instance MalgoEnv s => MonadMalgo s (Malgo s) where
   setUniq i' = do
-    UniqSupply i <- use uniqSupplyL
-    writeMutVar i i'
-
-  getUniq = do
-    UniqSupply i <- use uniqSupplyL
-    readMutVar i
-
-  getEnv = get
-
-  addTable kvs l m = sandbox $
-    use l >>= (l .=) . (Map.fromList kvs <>) >> m
-      where
-        sandbox action = do
-          s <- get
-          ret <- action
-          put s
-          return ret
-
-
-instance MalgoEnv s => MonadMalgo s (Malgo' s) where
-  setUniq i' = do
     UniqSupply i <- view uniqSupplyL
     writeMutVar i i'
 
@@ -101,14 +71,8 @@ instance MalgoEnv s => MonadMalgo s (Malgo' s) where
 runMalgo :: MalgoEnv s => Malgo s a -> Int -> IO (a, s)
 runMalgo (Malgo m) u = do
   i <- UniqSupply <$> newMutVar u
-  runStateT m (genEnv i)
-
-runMalgo' :: MalgoEnv s => Malgo' s a -> Int -> IO (a, s)
-runMalgo' (Malgo' m) u = do
-  i <- UniqSupply <$> newMutVar u
-  runReaderT (do { a <- m
-                 ; s <- ask
-                 ; return (a, s)}) (genEnv i)
+  s <- genEnv i
+  runReaderT ((,) <$> m <*> ask) s
 
 malgoError :: MonadMalgo s m => Doc ann -> m a
 malgoError mes = liftIO $ die $ show mes

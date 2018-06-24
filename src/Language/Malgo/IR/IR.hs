@@ -91,15 +91,15 @@ instance Pretty a => Pretty (Expr a) where
   pretty (Tuple xs) = "tuple" <> parens ( align $ sep $ punctuate "," $ map pretty xs)
   pretty (Apply f args) = parens (pretty f <+> sep (map pretty args))
   pretty (Let name val body) =
-    parens ("let" <+> parens (align $ pretty name <+> "=" <> softline <> pretty val)
-            <> line <> indent 1 (align $ pretty body))
+    parens ("let" <+> align (parens (align $ pretty name <> softline <> pretty val)
+                              <> line <> indent 1 (align $ pretty body)))
   pretty (LetRec defs body) =
-    parens ("let" <+> align (vsep (map (\(name, params, val) -> parens ("rec" <+> pretty name <+> sep (map pretty (fromMaybe [] params)) <+> "=" <> line <> indent 1 (pretty val))) defs))
+    parens ("let" <+> align (vsep (map (\(name, params, val) -> parens ("rec" <+> pretty name <+> sep (map pretty (fromMaybe [] params)) <> line <> indent 1 (pretty val))) defs))
              <> line <> indent 1 (align $ pretty body))
   pretty (Cast ty val) = parens ("cast" <+> pretty ty <+> pretty val)
   pretty (Access e is) = parens ("access" <+> pretty e <+> sep (map pretty is))
   pretty (If c t f) =
-    parens ("if" <+> pretty c <> line <> indent 1 (align $ pretty t) <> line <> indent 1 (align $ pretty f))
+    parens ("if" <+> align (pretty c <+> align (pretty t) <+> align (pretty f)))
 
 instance HasMType a => HasMType (Expr a) where
   mTypeOf (Var a) = mTypeOf a

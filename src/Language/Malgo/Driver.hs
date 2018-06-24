@@ -55,11 +55,11 @@ compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module
 compile filename ast opt = do
   when (_dumpParsed opt) $
     liftIO . print $ pretty ast
-  (renamed, s1) <- run' _dumpRenamed (Rename.rename ast) 0
-  (typed, s2) <- run' _dumpTyped (TypeCheck.typeCheck renamed) s1
+  (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
+  (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
   when (_dumpIR opt) $
-    void $ run' _dumpIR (TransToIR.trans typed) s2
-  (knormal, s3) <- run' _dumpHIR (KNormal.knormal $
+    void $ run _dumpIR (TransToIR.trans typed) s2
+  (knormal, s3) <- run _dumpHIR (KNormal.knormal $
                                   if _notBetaTrans opt
                                   then typed
                                   else Beta.betaTrans typed) s2
@@ -79,12 +79,6 @@ compile filename ast opt = do
   pure llvmMod
   where run key m u = do
           (x, s) <- M.runMalgo m u
-          when (key opt) $
-            liftIO $ print $ pretty x
-          s' <- M.readMutVar $ M.unUniqSupply $ view M.uniqSupplyL s
-          return (x, s')
-        run' key m u = do
-          (x, s) <- M.runMalgo' m u
           when (key opt) $
             liftIO $ print $ pretty x
           s' <- M.readMutVar $ M.unUniqSupply $ view M.uniqSupplyL s

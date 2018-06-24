@@ -20,7 +20,7 @@ makeLenses ''RnEnv
 
 instance MalgoEnv RnEnv where
   uniqSupplyL = uniqSupply
-  genEnv us = RnEnv mempty us
+  genEnv us = return $ RnEnv mempty us
 
 rename :: MonadMalgo RnEnv m => Expr Name -> m (Expr RawID)
 rename x = transExpr x

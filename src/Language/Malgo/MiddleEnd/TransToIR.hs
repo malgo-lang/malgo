@@ -1,8 +1,8 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.MiddleEnd.TransToIR (trans) where
 
 import           Language.Malgo.ID
@@ -19,7 +19,7 @@ makeLenses ''TEnv
 
 instance MalgoEnv TEnv where
   uniqSupplyL = uniqSupply
-  genEnv = TEnv
+  genEnv = return . TEnv
 
 throw :: MonadMalgo TEnv m => Doc ann -> m a
 throw mes = malgoError $ "error(transToIR):" <+> mes
@@ -61,9 +61,9 @@ transToIR (S.TupleAccess _ e i) =
   insertLet e (\e' -> return $ Access e' [0, i])
 transToIR (S.Fn _ params body) = do
   body' <- transToIR body
-  fnty <- toMType (FunTy (map snd params) (typeOf body))
-  fnid <- newTmp "lambda" fnty
-  return (Let fnid body' (Var fnid))
+  params' <- mapM (update . fst) params
+  fnid <- newTmp "lambda" (FunctionTy (mTypeOf body') (map mTypeOf params'))
+  return (LetRec [(fnid, Just params', body')] (Var fnid))
 transToIR (S.Call _ fn args) =
   insertLet fn (\fn' -> bind args [] (return . Apply fn'))
   where bind [] args' k     = k (reverse args')
@@ -86,7 +86,14 @@ transToIR (S.Let info (S.FunDec _ fn params _ fbody:ds) body) = do
   return $ LetRec [(fn', Just params', fbody')] rest
 transToIR (S.Let info (S.ExDec _ n _ orig:ds) body) = do
   n' <- update n
-  Let n' (Prim orig (mTypeOf n')) <$> transToIR (S.Let info ds body)
+  case mTypeOf n' of
+    FunctionTy _ params -> do
+      params' <- mapM (newTmp "x") params
+      prim <- newTmp "prim" (mTypeOf n')
+      LetRec [(n', Just params', Let prim (Prim orig (mTypeOf n')) (Apply prim params'))]
+        <$> transToIR (S.Let info ds body)
+    _ ->
+      Let n' (Prim orig (mTypeOf n')) <$> transToIR (S.Let info ds body)
 transToIR (S.Let _ [] body) =
   transToIR body
 transToIR (S.If _ c t f) =
@@ -100,15 +107,15 @@ transToIR (S.BinOp _ op x y) = do
     return $ Let opval op' (Apply opval [x', y'])
 
 transOp :: S.Op -> MType -> Expr (ID MType)
-transOp S.Add _  = Prim "add_int" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.Sub _  = Prim "sub_int" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.Mul _  = Prim "mul_int" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.Div _  = Prim "div_int" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.Mod _  = Prim "mod_int" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.FAdd _ = Prim "add_float" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
-transOp S.FSub _ = Prim "sub_float" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
-transOp S.FMul _ = Prim "mul_float" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
-transOp S.FDiv _ = Prim "div_float" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
+transOp S.Add _  = Prim "add_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
+transOp S.Sub _  = Prim "sub_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
+transOp S.Mul _  = Prim "mul_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
+transOp S.Div _  = Prim "div_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
+transOp S.Mod _  = Prim "mod_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
+transOp S.FAdd _ = Prim "add_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
+transOp S.FSub _ = Prim "sub_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
+transOp S.FMul _ = Prim "mul_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
+transOp S.FDiv _ = Prim "div_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.Eq ty  = Prim ("eq_" <> show (pretty ty)) (FunctionTy (IntTy 1) [ty, ty])
 transOp S.Neq ty = Prim ("neq_" <> show (pretty ty)) (FunctionTy (IntTy 1) [ty, ty])
 transOp S.Lt ty  = Prim ("lt_" <> show (pretty ty)) (FunctionTy (IntTy 1) [ty, ty])
