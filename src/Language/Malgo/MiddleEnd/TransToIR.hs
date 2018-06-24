@@ -2,7 +2,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.MiddleEnd.TransToIR (trans) where
 
 import           Language.Malgo.ID
@@ -11,31 +10,22 @@ import qualified Language.Malgo.IR.Syntax as S
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
-import           Language.Malgo.TypedID
 
-newtype TEnv = TEnv { _uniqSupply :: UniqSupply }
-
-makeLenses ''TEnv
-
-instance MalgoEnv TEnv where
-  uniqSupplyL = uniqSupply
-  genEnv = return . TEnv
-
-throw :: MonadMalgo TEnv m => Doc ann -> m a
+throw :: MonadMalgo s m => Doc ann -> m a
 throw mes = malgoError $ "error(transToIR):" <+> mes
 
-update :: MonadMalgo TEnv m => ID Type -> m (ID MType)
+update :: MonadMalgo UniqSupply m => ID Type -> m (ID MType)
 update a = do
   mty <- toMType (typeOf a)
   return $ a & idMeta .~ mty
 
-newTmp :: MonadMalgo TEnv m => Name -> MType -> m (ID MType)
+newTmp :: MonadMalgo s f => Name -> a -> f (ID a)
 newTmp n t = ID ("$" <> n) <$> newUniq <*> return t
 
-trans :: MonadMalgo TEnv m => S.Expr TypedID -> m (Expr (ID MType))
+trans :: MonadMalgo UniqSupply m => S.Expr (ID Type) -> m (Expr (ID MType))
 trans e = transToIR e
 
-insertLet :: MonadMalgo TEnv m => S.Expr (ID Type) -> (ID MType -> m (Expr (ID MType))) -> m (Expr (ID MType))
+insertLet :: MonadMalgo UniqSupply m => S.Expr (ID Type) -> (ID MType -> m (Expr (ID MType))) -> m (Expr (ID MType))
 insertLet (S.Var _ x) k = update x >>= k
 insertLet v k = do
   v' <- transToIR v
@@ -43,7 +33,7 @@ insertLet v k = do
   e <- k x
   return (Let x v' e)
 
-transToIR :: MonadMalgo TEnv m => S.Expr TypedID -> m (Expr (ID MType))
+transToIR :: MonadMalgo UniqSupply m => S.Expr (ID Type) -> m (Expr (ID MType))
 transToIR (S.Var _ a)   = Var <$> update a
 transToIR (S.Int _ x)   = return (Int x)
 transToIR (S.Float _ x) = return (Float x)
@@ -123,7 +113,7 @@ transOp S.Ge ty  = Prim ("neq_" <> show (pretty ty)) (FunctionTy (IntTy 1) [ty, 
 transOp S.And _  = Prim "and" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 transOp S.Or _   = Prim "or" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 
-toMType :: MonadMalgo TEnv m => Type -> m MType
+toMType :: MonadMalgo UniqSupply f => Type -> f MType
 toMType (NameTy n) =
   case n of
     "Int"    -> return $ IntTy 32
