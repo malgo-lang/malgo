@@ -38,9 +38,8 @@ trans e = transToIR e
 insertLet :: MonadMalgo TEnv m => S.Expr (ID Type) -> (ID MType -> m (Expr (ID MType))) -> m (Expr (ID MType))
 insertLet (S.Var _ x) k = update x >>= k
 insertLet v k = do
-  ty <- toMType $ typeOf v
-  x <- newTmp "k" ty
   v' <- transToIR v
+  x <- newTmp "k" (mTypeOf v')
   e <- k x
   return (Let x v' e)
 
@@ -92,8 +91,7 @@ transToIR (S.Let info (S.ExDec _ n _ orig:ds) body) = do
       prim <- newTmp "prim" (mTypeOf n')
       LetRec [(n', Just params', Let prim (Prim orig (mTypeOf n')) (Apply prim params'))]
         <$> transToIR (S.Let info ds body)
-    _ ->
-      Let n' (Prim orig (mTypeOf n')) <$> transToIR (S.Let info ds body)
+    _ -> Let n' (Prim orig (mTypeOf n')) <$> transToIR (S.Let info ds body)
 transToIR (S.Let _ [] body) =
   transToIR body
 transToIR (S.If _ c t f) =
