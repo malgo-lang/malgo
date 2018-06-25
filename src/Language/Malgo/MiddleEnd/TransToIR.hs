@@ -57,11 +57,8 @@ transToIR (S.Call _ fn args) =
   insertLet fn (\fn' -> bind args [] (return . Apply fn'))
   where bind [] args' k     = k (reverse args')
         bind (x:xs) args' k = insertLet x (\x' -> bind xs (x' : args') k)
-transToIR (S.Seq _ e1 e2) = do
-  e1' <- transToIR e1
-  tmp <- newTmp "_" (mTypeOf e1')
-  e2' <- transToIR e2
-  return (Let tmp e1' e2')
+transToIR (S.Seq _ e1 e2) =
+  insertLet e2 (\_ -> transToIR e1)
 transToIR (S.Let info (S.ValDec _ n _ val:ds) body) = do
   val' <- transToIR val
   rest <- transToIR (S.Let info ds body)
