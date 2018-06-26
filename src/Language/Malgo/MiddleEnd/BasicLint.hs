@@ -35,6 +35,5 @@ lintExpr (If c t f)
       if t' == f'
         then return t'
         else throwError $ pretty t <+> "must be typed as:" <+> pretty f'
-
   | otherwise = throwError $ pretty c <+> "must be typed as: i1"
 lintExpr e = return $ mTypeOf e
