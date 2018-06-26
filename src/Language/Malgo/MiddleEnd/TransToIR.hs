@@ -25,12 +25,13 @@ newTmp n t = ID ("$" <> n) <$> newUniq <*> return t
 trans :: MonadMalgo UniqSupply m => S.Expr (ID Type) -> m (Expr (ID MType))
 trans e = transToIR e
 
-insertLet :: MonadMalgo s m => (ID MType -> m (Expr (ID MType))) -> Expr (ID MType) -> m (Expr (ID MType))
-insertLet k (Var x) = k x
-insertLet k v = do
-  x <- newTmp "k" (mTypeOf v)
+insertLet :: MonadMalgo UniqSupply m => S.Expr (ID Type) -> (ID MType -> m (Expr (ID MType))) -> m (Expr (ID MType))
+insertLet (S.Var _ x) k = update x >>= k
+insertLet v k = do
+  v' <- transToIR v
+  x <- newTmp "k" (mTypeOf v')
   e <- k x
-  return (Let x v e)
+  return (Let x v' e)
 
 transToIR :: MonadMalgo UniqSupply m => S.Expr (ID Type) -> m (Expr (ID MType))
 transToIR (S.Var _ a)   = Var <$> update a
@@ -40,25 +41,24 @@ transToIR (S.Bool _ x)  = return (Bool x)
 transToIR (S.Char _ c)  = return (Char c)
 transToIR (S.String _ s) = return (String s)
 transToIR (S.Unit _) = return Unit
-transToIR (S.Tuple _ vs) = mapM transToIR vs >>= (\vs' -> bind vs' [] (return . Tuple))
+transToIR (S.Tuple _ vs) = bind vs [] (return . Tuple)
   where
     bind [] args k = k (reverse args)
     bind (x:xs) args k =
-      insertLet (\x' -> bind xs (x' : args) k) x
+      insertLet x (\x' -> bind xs (x' : args) k)
 transToIR (S.TupleAccess _ e i) =
-  transToIR e >>= insertLet (\e' -> return $ Access e' [0, i])
+  insertLet e (\e' -> return $ Access e' [0, i])
 transToIR (S.Fn _ params body) = do
   body' <- transToIR body
   params' <- mapM (update . fst) params
   fnid <- newTmp "lambda" (FunctionTy (mTypeOf body') (map mTypeOf params'))
   return (LetRec [(fnid, Just params', body')] (Var fnid))
-transToIR (S.Call _ fn args) = do
-  args' <- mapM transToIR args
-  insertLet (\fn' -> bind args' [] (return . Apply fn')) =<< transToIR fn
+transToIR (S.Call _ fn args) =
+  insertLet fn (\fn' -> bind args [] (return . Apply fn'))
   where bind [] args' k     = k (reverse args')
-        bind (x:xs) args' k = insertLet (\x' -> bind xs (x' : args') k) x
+        bind (x:xs) args' k = insertLet x (\x' -> bind xs (x' : args') k)
 transToIR (S.Seq _ e1 e2) =
-  transToIR e2 >>= insertLet (const $ transToIR e1)
+  insertLet e2 (\_ -> transToIR e1)
 transToIR (S.Let info (S.ValDec _ n _ val:ds) body) = do
   val' <- transToIR val
   rest <- transToIR (S.Let info ds body)
@@ -82,14 +82,14 @@ transToIR (S.Let info (S.ExDec _ n _ orig:ds) body) = do
 transToIR (S.Let _ [] body) =
   transToIR body
 transToIR (S.If _ c t f) =
-  insertLet (\c' -> If c' <$> transToIR t <*> transToIR f) =<< transToIR c
+  insertLet c (\c' -> If c' <$> transToIR t <*> transToIR f)
 transToIR (S.BinOp _ op x y) = do
-  x' <- transToIR x
-  y' <- transToIR y
-  let xty = mTypeOf x'
+  xty <- mTypeOf <$> transToIR x
   let op' = transOp op xty
   opval <- newTmp "op" (mTypeOf op')
-  insertLet (\x'' -> insertLet (\y'' -> return $ Let opval op' (Apply opval [x'', y''])) y') x'
+  insertLet x $ \x' ->
+    insertLet y $ \y' ->
+    return $ Let opval op' (Apply opval [x', y'])
 
 transOp :: S.Op -> MType -> Expr (ID MType)
 transOp S.Add _  = Prim "add_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
