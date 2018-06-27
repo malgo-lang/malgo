@@ -8,22 +8,24 @@ import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Prelude
 
+type BasicLint ann a = ReaderT [ID MType] (Except (Doc ann)) a
+
 lint :: Expr (ID MType) -> Either (Doc ann) MType
 lint expr = runExcept $ runReaderT (lintExpr expr) []
 
-defined :: (MonadError (Doc ann) m, MonadReader [ID MType] m) => ID MType -> m ()
+defined :: ID MType -> BasicLint ann ()
 defined a =
   ifM (elem a <$> ask)
   (return ())
   (throwError $ pretty a <+> "is not defined")
 
-notDefined :: (MonadError (Doc ann) m, MonadReader [ID MType] m) => ID MType -> m ()
+notDefined :: ID MType -> BasicLint ann ()
 notDefined a =
   ifM (notElem a <$> ask)
   (return ())
   (throwError $ pretty a <+> "is already defined")
 
-lintExpr :: (MonadReader [ID MType] m, MonadError (Doc ann) m) => Expr (ID MType) -> m MType
+lintExpr :: Expr (ID MType) -> BasicLint ann MType
 lintExpr (Let name val body) = do
   notDefined name
   val' <- lintExpr val
@@ -66,6 +68,6 @@ lintExpr (Cast ty a) =
   defined a >> return ty
 lintExpr e = return $ mTypeOf e
 
-lintFunDec :: (MonadError (Doc ann) m, MonadReader [ID MType] m) => (ID MType, Maybe [ID MType], Expr (ID MType)) -> m ()
+lintFunDec :: (ID MType, Maybe [ID MType], Expr (ID MType)) -> BasicLint ann ()
 lintFunDec (_, mparams, fbody) =
   local (fromMaybe [] mparams ++) $ void $ lintExpr fbody
