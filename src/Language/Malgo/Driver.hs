@@ -60,7 +60,7 @@ compile filename ast opt = do
   (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
   when (_dumpIR opt) $ do
     (ir, _) <- run _dumpIR (TransToIR.trans typed) s2
-    case BasicLint.lintExpr [] ir of
+    case BasicLint.lint ir of
       Right _ -> return ()
       Left mes -> error $ show mes
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
