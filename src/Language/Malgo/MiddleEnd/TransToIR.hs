@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -64,12 +65,18 @@ transToIR (S.Let info (S.ValDec _ n _ val:ds) body) = do
   rest <- transToIR (S.Let info ds body)
   n' <- update n
   return $ Let n' val' rest
-transToIR (S.Let info (S.FunDec _ fn params _ fbody:ds) body) = do
-  fbody' <- transToIR fbody
-  rest <- transToIR (S.Let info ds body)
-  fn' <- update fn
-  params' <- mapM (update . fst) params
-  return $ LetRec [(fn', Just params', fbody')] rest
+transToIR (S.Let info decs@(S.FunDec{}:_) body) = do
+  fundecs' <- mapM transFunDec fundecs
+  rest' <- transToIR (S.Let info rest body)
+  return $ LetRec fundecs' rest'
+  where fundecs = takeWhile (\case { S.FunDec{} -> True; _ -> False }) decs
+        rest = dropWhile (\case { S.FunDec{} -> True; _ -> False }) decs
+        transFunDec (S.FunDec _ fn params _ fbody) = do
+          fbody' <- transToIR fbody
+          fn' <- update fn
+          params' <- mapM (update . fst) params
+          return (fn', Just params', fbody')
+        transFunDec _ = throw "unreachable"
 transToIR (S.Let info (S.ExDec _ n _ orig:ds) body) = do
   n' <- update n
   case mTypeOf n' of

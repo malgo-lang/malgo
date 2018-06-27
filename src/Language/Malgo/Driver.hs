@@ -7,6 +7,7 @@ import qualified Language.Malgo.Beta                as Beta
 import qualified Language.Malgo.Closure             as Closure
 import qualified Language.Malgo.CodeGen             as CodeGen
 import qualified Language.Malgo.Flatten             as Flatten
+import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
 import qualified Language.Malgo.IR.Syntax           as Syntax
 import qualified Language.Malgo.KNormal             as KNormal
 import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
@@ -57,8 +58,11 @@ compile filename ast opt = do
     liftIO . print $ pretty ast
   (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
   (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
-  when (_dumpIR opt) $
-    void $ run _dumpIR (TransToIR.trans typed) s2
+  when (_dumpIR opt) $ do
+    (ir, _) <- run _dumpIR (TransToIR.trans typed) s2
+    case BasicLint.lintExpr [] ir of
+      Right _ -> return ()
+      Left mes -> error $ show mes
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
                                   if _notBetaTrans opt
                                   then typed
@@ -76,7 +80,7 @@ compile filename ast opt = do
                                 , L.moduleSourceFileName = fromString $ toS filename
                                 , L.moduleDefinitions = defs
                                 }
-  pure llvmMod
+  return llvmMod
   where run key m u = do
           (x, s) <- M.runMalgo m u
           when (key opt) $

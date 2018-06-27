@@ -8,13 +8,24 @@ import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Prelude
 
-lintExpr :: MonadError (Doc ann) m => Expr (ID MType) -> m MType
-lintExpr (Let name val body) = do
-  val' <- lintExpr val
+defined :: [ID MType] -> ID MType -> Either (Doc ann) ()
+defined env a | a `elem` env = Right ()
+              | otherwise = Left $ pretty a <+> "is not defined"
+
+notDefined :: [ID MType] -> ID MType -> Either (Doc ann) ()
+notDefined env a = case defined env a of
+  Right () -> Left $ pretty a <+> "is already defined"
+  Left _ -> Right ()
+
+lintExpr :: [ID MType] -> Expr (ID MType) -> Either (Doc ann) MType
+lintExpr env (Let name val body) = do
+  notDefined env name
+  val' <- lintExpr env val
   if mTypeOf name == val'
-    then lintExpr body
+    then lintExpr (name:env) body
     else throwError $ pretty val <+> "cannot assign to:" <+> pretty name <> ":" <> pretty (mTypeOf name)
-lintExpr e@(Apply f args) = do
+lintExpr env e@(Apply f args) = do
+  mapM_ (defined env) (f:args)
   paramtys <- getParamtys
   if paramtys /= argtys
     then throwError ("expected:" <+> pretty paramtys <> "," <+> "actual:" <+> pretty argtys)
@@ -26,14 +37,30 @@ lintExpr e@(Apply f args) = do
             FunctionTy _ ts -> return ts
             PointerTy (StructTy [FunctionTy _ ts, _]) -> return ts
             t -> throwError $ pretty t <+> "is not applieable"
-lintExpr (Access e is) =
-  accessMType (mTypeOf e) is
-lintExpr (If c t f)
+lintExpr env (Access e is) =
+  defined env e >> accessMType (mTypeOf e) is
+lintExpr env (If c t f)
   | mTypeOf c == IntTy 1 = do
-      t' <- lintExpr t
-      f' <- lintExpr f
+      defined env c
+      t' <- lintExpr env t
+      f' <- lintExpr env f
       if t' == f'
         then return t'
         else throwError $ pretty t <+> "must be typed as:" <+> pretty f'
   | otherwise = throwError $ pretty c <+> "must be typed as: i1"
-lintExpr e = return $ mTypeOf e
+lintExpr env (Var a) =
+  defined env a >> return (mTypeOf a)
+lintExpr env e@(Tuple xs) =
+  mapM_ (defined env) xs >> return (mTypeOf e)
+lintExpr env (LetRec fundecs body) = do
+  let env' = map (view _1) fundecs ++ env
+  mapM_ (lintFunDec env') fundecs
+  lintExpr env' body
+lintExpr env (Cast ty a) =
+  defined env a >> return ty
+lintExpr _ e = return $ mTypeOf e
+
+lintFunDec :: [ID MType] -> (ID MType, Maybe [ID MType], Expr (ID MType)) -> Either (Doc ann) ()
+lintFunDec env (_, mparams, fbody) = do
+  let env' = fromMaybe [] mparams ++ env
+  void $ lintExpr env' fbody
