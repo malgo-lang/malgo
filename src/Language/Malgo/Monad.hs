@@ -85,3 +85,6 @@ readMutVar r = liftIO $ readIORef r
 
 writeMutVar :: MonadIO m => IORef a -> a -> m ()
 writeMutVar r x = liftIO $ writeIORef r x
+
+modifyMutVar :: MonadIO m => IORef a -> (a -> a) -> m ()
+modifyMutVar r f = liftIO $ modifyIORef r f
