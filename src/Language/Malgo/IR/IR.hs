@@ -132,7 +132,7 @@ data MType = IntTy Integer
            | PointerTy MType
            | StructTy [MType]
            | FunctionTy MType [MType]
-  deriving (Show, Eq, Read)
+  deriving (Show, Eq, Read, Ord)
 
 class HasMType a where
   mTypeOf :: a -> MType

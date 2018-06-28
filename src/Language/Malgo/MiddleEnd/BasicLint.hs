@@ -8,20 +8,20 @@ import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Prelude
 
-type BasicLint ann a = ReaderT [ID MType] (Except (Doc ann)) a
+type BasicLint ann a = StateT [ID MType] (Except (Doc ann)) a
 
 lint :: Expr (ID MType) -> Either (Doc ann) MType
-lint expr = runExcept $ runReaderT (lintExpr expr) []
+lint expr = runExcept $ evalStateT (lintExpr expr) []
 
 defined :: ID MType -> BasicLint ann ()
 defined a =
-  ifM (elem a <$> ask)
+  ifM (elem a <$> get)
   (return ())
   (throwError $ pretty a <+> "is not defined")
 
 notDefined :: ID MType -> BasicLint ann ()
 notDefined a =
-  ifM (notElem a <$> ask)
+  ifM (notElem a <$> get)
   (return ())
   (throwError $ pretty a <+> "is already defined")
 
@@ -30,7 +30,7 @@ lintExpr (Let name val body) = do
   notDefined name
   val' <- lintExpr val
   if mTypeOf name == val'
-    then local (name:) $ lintExpr body
+    then modify (name:) >> lintExpr body
     else throwError $ pretty val <+> "cannot assign to:" <+> pretty name <> ":" <> pretty (mTypeOf name)
 lintExpr e@(Apply f args) = do
   mapM_ defined (f:args)
@@ -60,14 +60,14 @@ lintExpr (Var a) =
   defined a >> return (mTypeOf a)
 lintExpr e@(Tuple xs) =
   mapM_ defined xs >> return (mTypeOf e)
-lintExpr (LetRec fundecs body) =
-  local (map (view _1) fundecs ++) $
-    mapM_ lintFunDec fundecs >>
-    lintExpr body
+lintExpr (LetRec fundecs body) = do
+  modify (map (view _1) fundecs ++)
+  mapM_ lintFunDec fundecs
+  lintExpr body
 lintExpr (Cast ty a) =
   defined a >> return ty
 lintExpr e = return $ mTypeOf e
 
 lintFunDec :: (ID MType, Maybe [ID MType], Expr (ID MType)) -> BasicLint ann ()
 lintFunDec (_, mparams, fbody) =
-  local (fromMaybe [] mparams ++) $ void $ lintExpr fbody
+  modify (fromMaybe [] mparams ++) >> void (lintExpr fbody)

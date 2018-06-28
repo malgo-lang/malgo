@@ -11,6 +11,7 @@ import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
 import qualified Language.Malgo.IR.Syntax           as Syntax
 import qualified Language.Malgo.KNormal             as KNormal
 import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
+import qualified Language.Malgo.MiddleEnd.MutRec as MutRec
 import qualified Language.Malgo.Monad               as M
 import           Language.Malgo.Prelude
 import qualified Language.Malgo.Rename              as Rename
@@ -59,10 +60,15 @@ compile filename ast opt = do
   (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
   (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
   when (_dumpIR opt) $ do
-    (ir, _) <- run _dumpIR (TransToIR.trans typed) s2
+    (ir, s3) <- run _dumpIR (TransToIR.trans typed) s2
     case BasicLint.lint ir of
       Right _ -> return ()
       Left mes -> error $ show mes
+    (ir', _) <- run _dumpIR (MutRec.removeMutRec ir) s3
+    case BasicLint.lint ir' of
+      Right _ -> return ()
+      Left mes -> error $ show mes
+
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
                                   if _notBetaTrans opt
                                   then typed
