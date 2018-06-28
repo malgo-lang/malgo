@@ -43,7 +43,7 @@ lintExpr e@(Apply f args) = do
         getParamtys =
           case fty of
             FunctionTy _ ts -> return ts
-            PointerTy (StructTy [FunctionTy _ ts, _]) -> return ts
+            -- PointerTy (StructTy [FunctionTy _ ts, _]) -> return ts
             t -> throwError $ pretty t <+> "is not applieable"
 lintExpr (Access e is) =
   defined e >> accessMType (mTypeOf e) is
@@ -61,8 +61,8 @@ lintExpr (Var a) =
 lintExpr e@(Tuple xs) =
   mapM_ defined xs >> return (mTypeOf e)
 lintExpr (LetRec fundecs body) =
-  local (map (view _1) fundecs ++) $ do
-    mapM_ lintFunDec fundecs
+  local (map (view _1) fundecs ++) $
+    mapM_ lintFunDec fundecs >>
     lintExpr body
 lintExpr (Cast ty a) =
   defined a >> return ty
