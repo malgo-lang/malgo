@@ -1,25 +1,28 @@
-{-# LANGUAGE FlexibleContexts, MultiParamTypeClasses, OverloadedStrings #-}
-{-# LANGUAGE NoImplicitPrelude, TemplateHaskell #-}
-module Language.Malgo.MiddleEnd.MutRec (removeMutRec, optimizeFunDecs) where
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TemplateHaskell       #-}
+module Language.Malgo.MiddleEnd.MutRec (removeMutRec, optimizeFunDecs, lint) where
 
-import Data.List (nubBy)
-import Language.Malgo.Monad
-import Language.Malgo.Prelude
-import Language.Malgo.IR.IR
-import Language.Malgo.ID
+import           Data.List              (nubBy)
+import           Language.Malgo.ID
+import           Language.Malgo.IR.IR
+import           Language.Malgo.Monad
+import           Language.Malgo.Prelude
 
 optimizeFunDecs :: a
 optimizeFunDecs = undefined
 
 perm :: Eq a => [a] -> [[a]]
 perm xs = filter notNull $ nubBy f $ permutations xs
-  where f [] _ = False
-        f _ [] = False
+  where f [] _        = False
+        f _ []        = False
         f (x:_) (y:_) = x == y
         notNull [] = False
-        notNull _ = True
+        notNull _  = True
 
-data Env = Env { _varmap :: Map (ID MType) (ID MType)
+data Env = Env { _varmap     :: Map (ID MType) (ID MType)
                , _uniqSupply :: UniqSupply
                }
 
@@ -44,7 +47,7 @@ updateFunDecs ((f, mparams, fbody):xs) = do
   f' <- renameID f
   mparams' <- case mparams of
                 Just params -> Just <$> mapM renameID params
-                Nothing -> return Nothing
+                Nothing     -> return Nothing
   addTable (zip (f:fromMaybe [] mparams) (f':fromMaybe [] mparams')) varmap $ do
     fbody' <- removeMutRec fbody
     xs' <- updateFunDecs xs
@@ -60,7 +63,7 @@ removeMutRec (LetRec fs body) = do
     body' <- removeMutRec body
     return $ foldl (flip LetRec) body' fss'
   where head' (x:_) = x
-        head' _ = error "unreachable(head)"
+        head' _     = error "unreachable(head)"
 removeMutRec (Tuple xs) = Tuple <$> mapM updateID xs
 removeMutRec (Apply f args) = Apply <$> updateID f <*> mapM updateID args
 removeMutRec (Let n val body) = do
@@ -76,3 +79,12 @@ consFunDecs [] = []
 consFunDecs [x] = [x]
 consFunDecs ((f, mparams, fbody):xs) =
   [(f, mparams, LetRec (consFunDecs xs) fbody)]
+
+lint :: MonadError (Doc ann) m => Expr (ID MType) -> m ()
+lint (LetRec fs body) =
+  case fs of
+    [(_, _, fbody)] -> lint fbody >> lint body
+    _               -> throwError $ "invalid FunDecs:" <+> pretty fs
+lint (Let _ val body) = lint val >> lint body
+lint (If _ t f) = lint t >> lint f
+lint _ = return ()

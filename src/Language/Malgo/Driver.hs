@@ -68,7 +68,9 @@ compile filename ast opt = do
     case BasicLint.lint ir' of
       Right _ -> return ()
       Left mes -> error $ show mes
-
+    case runExcept $ MutRec.lint ir' of
+      Right _ -> return ()
+      Left mes -> error $ show mes
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
                                   if _notBetaTrans opt
                                   then typed
