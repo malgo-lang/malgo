@@ -5,7 +5,6 @@
 {-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.MiddleEnd.Closure where
 
-import           Data.IORef
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
@@ -22,12 +21,12 @@ makeLenses ''Env
 
 instance MalgoEnv Env where
   uniqSupplyL = uniqSupply
-  genEnv u = Env mempty Nothing <$> newMutVar (Program []) <*> pure [] <*> pure u
+  genEnv u = Env mempty Nothing <$> newIORef (Program []) <*> pure [] <*> pure u
 
 addDefn :: MonadMalgo Env m => Defn (ID MType) -> m ()
 addDefn defn = do
   p <- access program
-  modifyMutVar p (\(Program xs) -> Program $ defn:xs)
+  modifyIORef p (\(Program xs) -> Program $ defn:xs)
 
 trans :: Expr (ID MType) -> Malgo Env (Program (ID MType))
 trans e = do
@@ -35,7 +34,7 @@ trans e = do
   let mainFun = ID "main" u (FunctionTy (IntTy 32) [])
   e' <- transExpr e
   addDefn (DefFun mainFun [] e')
-  readMutVar =<< access program
+  readIORef =<< access program
 
 updateID :: ID MType -> Malgo Env (ID MType)
 updateID a = do

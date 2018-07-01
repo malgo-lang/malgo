@@ -93,5 +93,5 @@ compile filename ast opt = do
           (x, s) <- M.runMalgo m u
           when (key opt) $
             liftIO $ print $ pretty x
-          s' <- M.readMutVar $ M.unUniqSupply $ view M.uniqSupplyL s
+          s' <- M.readIORef $ M.unUniqSupply $ view M.uniqSupplyL s
           return (x, s')

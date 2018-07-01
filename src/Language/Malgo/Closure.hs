@@ -9,8 +9,6 @@ module Language.Malgo.Closure
   , ClsEnv(..)
   ) where
 
-import           Data.IORef
-
 import           Language.Malgo.Closure.Knowns
 import           Language.Malgo.FreeVars
 import           Language.Malgo.ID
@@ -35,11 +33,11 @@ makeLenses ''ClsEnv
 instance MalgoEnv ClsEnv where
   uniqSupplyL = uniqSupply
   genEnv i =
-    ClsEnv <$> newMutVar mempty
-    <*> newMutVar mempty
-    <*> newMutVar mempty
-    <*> newMutVar mempty
-    <*> newMutVar mempty
+    ClsEnv <$> newIORef mempty
+    <*> newIORef mempty
+    <*> newIORef mempty
+    <*> newIORef mempty
+    <*> newIORef mempty
     <*> pure i
 
 type ClsTrans a = Malgo ClsEnv a
@@ -47,11 +45,11 @@ type ClsTrans a = Malgo ClsEnv a
 conv :: H.Expr TypedID -> ClsTrans (Program TypedID)
 conv x = do
   env <- getEnv
-  writeMutVar (view knowns env) (knownFuns x)
+  writeIORef (view knowns env) (knownFuns x)
   x' <- convExpr x
-  fs <- readMutVar =<< access fundecs
-  exs <- readMutVar =<< access extern
-  ks <- readMutVar =<< access knowns
+  fs <- readIORef =<< access fundecs
+  exs <- readIORef =<< access extern
+  ks <- readIORef =<< access knowns
   pure (Program fs exs x' ks)
 
 throw :: Doc ann -> ClsTrans a
@@ -59,34 +57,34 @@ throw m = malgoError $ "error(closuretrans):" <+> m
 
 addFunDec :: FunDec TypedID -> ClsTrans ()
 addFunDec f = do
-  fs <- readMutVar =<< access fundecs
+  fs <- readIORef =<< access fundecs
   env <- getEnv
-  writeMutVar (view fundecs env) (f:fs)
+  writeIORef (view fundecs env) (f:fs)
 
 addExDec :: ExDec TypedID -> ClsTrans ()
 addExDec ex = do
-  es <- readMutVar =<< access extern
+  es <- readIORef =<< access extern
   env <- getEnv
-  writeMutVar (view extern env) (ex:es)
+  writeIORef (view extern env) (ex:es)
 
 convID :: TypedID -> ClsTrans TypedID
 convID name = do
   env <- getEnv
-  clss <- readMutVar $ view closures env
-  vm <- readMutVar $ view varMap env
+  clss <- readIORef $ view closures env
+  vm <- readIORef $ view varMap env
   pure $ (clss <> vm) ^. (at name . non name)
 
 addClsTrans :: TypedID -> TypedID -> ClsTrans ()
 addClsTrans orig cls = do
   env <- getEnv
-  clss <- readMutVar $ view closures env
-  writeMutVar (view closures env) (clss & at orig ?~ cls)
+  clss <- readIORef $ view closures env
+  writeIORef (view closures env) (clss & at orig ?~ cls)
 
 addVar :: TypedID -> TypedID -> ClsTrans ()
 addVar x x' = do
   env <- getEnv
-  vm <- readMutVar $ view varMap env
-  writeMutVar (view varMap env) (vm & at x ?~ x')
+  vm <- readIORef $ view varMap env
+  writeIORef (view varMap env) (vm & at x ?~ x')
 
 newClsID :: TypedID -> ClsTrans TypedID
 newClsID fn = do
@@ -120,16 +118,16 @@ convExpr H.Unit = pure Unit
 convExpr (H.Tuple xs) = Tuple <$> mapM convID xs
 convExpr (H.TupleAccess e i) = TupleAccess <$> convID e <*> pure i
 convExpr (H.Call fn args) = do
-  ks <- readMutVar =<< access knowns
+  ks <- readIORef =<< access knowns
   if fn `elem` ks
     then CallDir <$> fn' <*> mapM convID args
     else CallCls <$> cls <*> mapM convID args
   where
     fn' = do
-      vm <- readMutVar =<< access varMap
+      vm <- readIORef =<< access varMap
       return $ fromMaybe fn (view (at fn) vm)  -- 型が変わっていれば変換
     cls = do
-      cs <- readMutVar =<< access closures
+      cs <- readIORef =<< access closures
       case view (at fn) cs of
         Just x  -> return x
         Nothing -> throw $ pretty fn <+> "is not translated to closure"

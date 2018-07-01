@@ -4,9 +4,24 @@
 {-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE RankNTypes                 #-}
-module Language.Malgo.Monad where
+module Language.Malgo.Monad
+  ( Malgo(..)
+  , UniqSupply(..)
+  , MalgoEnv(..)
+  , MonadMalgo(..)
+  , addTable
+  , lookupTable
+  , runMalgo
+  , malgoError
+  , IORef
+  , newIORef
+  , readIORef
+  , writeIORef
+  , modifyIORef
+  ) where
 
-import           Data.IORef
+import           Data.IORef             (IORef)
+import qualified Data.IORef             as IORef
 import qualified Data.Map               as Map
 import           Language.Malgo.Prelude
 
@@ -38,12 +53,12 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
   setUniq :: Int -> m ()
   setUniq i = do
     UniqSupply u <- access uniqSupplyL
-    writeMutVar u i
+    writeIORef u i
 
   getUniq :: m Int
   getUniq = do
     UniqSupply u <- access uniqSupplyL
-    readMutVar u
+    readIORef u
 
   getEnv :: m s
 
@@ -74,21 +89,21 @@ instance MalgoEnv s => MonadMalgo s (Malgo s) where
 
 runMalgo :: MalgoEnv s => Malgo s a -> Int -> IO (a, s)
 runMalgo (Malgo m) u = do
-  i <- UniqSupply <$> newMutVar u
+  i <- UniqSupply <$> newIORef u
   s <- genEnv i
   runReaderT ((,) <$> m <*> ask) s
 
 malgoError :: MonadMalgo s m => Doc ann -> m a
 malgoError mes = liftIO $ die $ show mes
 
-newMutVar :: MonadIO m => a -> m (IORef a)
-newMutVar x = liftIO $ newIORef x
+newIORef :: MonadIO m => a -> m (IORef a)
+newIORef x = liftIO $ IORef.newIORef x
 
-readMutVar :: MonadIO m => IORef a -> m a
-readMutVar r = liftIO $ readIORef r
+readIORef :: MonadIO m => IORef a -> m a
+readIORef r = liftIO $ IORef.readIORef r
 
-writeMutVar :: MonadIO m => IORef a -> a -> m ()
-writeMutVar r x = liftIO $ writeIORef r x
+writeIORef :: MonadIO m => IORef a -> a -> m ()
+writeIORef r x = liftIO $ IORef.writeIORef r x
 
-modifyMutVar :: MonadIO m => IORef a -> (a -> a) -> m ()
-modifyMutVar r f = liftIO $ modifyIORef r f
+modifyIORef :: MonadIO m => IORef a -> (a -> a) -> m ()
+modifyIORef r f = liftIO $ IORef.modifyIORef r f
