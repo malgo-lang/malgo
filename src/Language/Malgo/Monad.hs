@@ -36,7 +36,14 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
     return u
 
   setUniq :: Int -> m ()
+  setUniq i = do
+    UniqSupply u <- access uniqSupplyL
+    writeMutVar u i
+
   getUniq :: m Int
+  getUniq = do
+    UniqSupply u <- access uniqSupplyL
+    readMutVar u
 
   getEnv :: m s
 
@@ -45,28 +52,25 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
     s <- getEnv
     return (view l s)
 
-  addTable :: Ord k => [(k, v)] -> Lens' s (Map k v) -> m a -> m a
+  change :: Setter' s v -> v -> m a -> m a
 
-  lookupTable :: Ord k => Doc ann -> k -> Lens' s (Map k v) -> m v
-  lookupTable err k l = do
-    s <- access l
-    case view (at k) s of
-      Just x  -> pure x
-      Nothing -> malgoError err
+addTable :: (MonadMalgo s m, Ord k) => [(k, v)] -> Lens' s (Map k v) -> m a -> m a
+addTable kvs l m = do
+  tbl <- access l
+  change l (Map.fromList kvs <> tbl) m
+
+lookupTable :: (MonadMalgo s m, Ord k) => Doc ann -> k -> Lens' s (Map k v) -> m v
+lookupTable err k l = do
+  s <- access l
+  case view (at k) s of
+    Just x  -> pure x
+    Nothing -> malgoError err
 
 instance MalgoEnv s => MonadMalgo s (Malgo s) where
-  setUniq i' = do
-    UniqSupply i <- view uniqSupplyL
-    writeMutVar i i'
-
-  getUniq = do
-    UniqSupply i <- view uniqSupplyL
-    readMutVar i
-
   getEnv = ask
 
-  addTable kvs l m =
-    local (over l (Map.fromList kvs <>)) m
+  change l v m =
+    local (over l (const v)) m
 
 runMalgo :: MalgoEnv s => Malgo s a -> Int -> IO (a, s)
 runMalgo (Malgo m) u = do
