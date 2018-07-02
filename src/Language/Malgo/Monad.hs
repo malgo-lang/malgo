@@ -12,6 +12,7 @@ module Language.Malgo.Monad
   , addTable
   , lookupTable
   , runMalgo
+  , runMalgo'
   , malgoError
   , IORef
   , newIORef
@@ -20,10 +21,11 @@ module Language.Malgo.Monad
   , modifyIORef
   ) where
 
-import           Data.IORef             (IORef)
-import qualified Data.IORef             as IORef
-import qualified Data.Map               as Map
-import           Language.Malgo.Prelude
+import           Data.Text.Prettyprint.Doc
+import           RIO
+import qualified RIO.Map                   as Map
+import           RIO.Process
+import           System.Environment        (lookupEnv)
 
 newtype Malgo s a = Malgo { unMalgo :: ReaderT s IO a }
   deriving ( Functor
@@ -40,7 +42,7 @@ class MalgoEnv s where
   genEnv :: UniqSupply -> IO s
 
 instance MalgoEnv UniqSupply where
-  uniqSupplyL = identity
+  uniqSupplyL = id
   genEnv = return
 
 class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
@@ -62,12 +64,12 @@ class (MonadIO m, MalgoEnv s) => MonadMalgo s m | m -> s where
 
   getEnv :: m s
 
-  access :: Getter s a -> m a
+  access :: SimpleGetter s a -> m a
   access l = do
     s <- getEnv
     return (view l s)
 
-  change :: Setter' s v -> v -> m a -> m a
+  change :: ASetter' s v -> v -> m a -> m a
 
 addTable :: (MonadMalgo s m, Ord k) => [(k, v)] -> Lens' s (Map k v) -> m a -> m a
 addTable kvs l m = do
@@ -77,7 +79,7 @@ addTable kvs l m = do
 lookupTable :: (MonadMalgo s m, Ord k) => Doc ann -> k -> Lens' s (Map k v) -> m v
 lookupTable err k l = do
   s <- access l
-  case view (at k) s of
+  case Map.lookup k s of
     Just x  -> pure x
     Nothing -> malgoError err
 
@@ -87,23 +89,25 @@ instance MalgoEnv s => MonadMalgo s (Malgo s) where
   change l v m =
     local (over l (const v)) m
 
-runMalgo :: MalgoEnv s => Malgo s a -> Int -> IO (a, s)
-runMalgo (Malgo m) u = do
+instance MalgoEnv env => MonadMalgo env (RIO env) where
+  getEnv = ask
+  change l v m =
+    local (over l (const v)) m
+
+runMalgo :: (MonadIO m, MalgoEnv s) => Malgo s a -> Int -> m (a, s)
+runMalgo (Malgo m) u = liftIO $ do
   i <- UniqSupply <$> newIORef u
   s <- genEnv i
   runReaderT ((,) <$> m <*> ask) s
 
+runMalgo' :: (HasLogFunc env, HasProcessContext env, MalgoEnv env, MonadIO m) => RIO env a -> Int -> m a
+runMalgo' m u = liftIO $ do
+  verbose <- isJust <$> lookupEnv "RIO_VERVOSE"
+  lo <- logOptionsHandle stderr verbose
+  pc <- mkDefaultProcessContext
+  withLogFunc lo $ \lf -> do
+    env <- genEnv =<< UniqSupply <$> newIORef u
+    runRIO (set processContextL pc (set logFuncL lf env)) m
+
 malgoError :: MonadMalgo s m => Doc ann -> m a
-malgoError mes = liftIO $ die $ show mes
-
-newIORef :: MonadIO m => a -> m (IORef a)
-newIORef x = liftIO $ IORef.newIORef x
-
-readIORef :: MonadIO m => IORef a -> m a
-readIORef r = liftIO $ IORef.readIORef r
-
-writeIORef :: MonadIO m => IORef a -> a -> m ()
-writeIORef r x = liftIO $ IORef.writeIORef r x
-
-modifyIORef :: MonadIO m => IORef a -> (a -> a) -> m ()
-modifyIORef r f = liftIO $ IORef.modifyIORef r f
+malgoError mes = error $ show mes
