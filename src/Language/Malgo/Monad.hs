@@ -100,14 +100,24 @@ runMalgo (Malgo m) u = liftIO $ do
   s <- genEnv i
   runReaderT ((,) <$> m <*> ask) s
 
-runMalgo' :: (HasLogFunc env, HasProcessContext env, MalgoEnv env, MonadIO m) => RIO env a -> Int -> m a
+data MalgoApp = MalgoApp
+  { maLogFunc :: !LogFunc
+  , maProcessContext :: !ProcessContext
+  , maUniqSupply :: !UniqSupply
+  }
+instance HasLogFunc MalgoApp where
+  logFuncL = lens maLogFunc (\x y -> x { maLogFunc = y })
+instance HasProcessContext MalgoApp where
+  processContextL = lens maProcessContext (\x y -> x { maProcessContext = y})
+
+runMalgo' :: MonadIO m => RIO MalgoApp a -> UniqSupply -> m a
 runMalgo' m u = liftIO $ do
   verbose <- isJust <$> lookupEnv "RIO_VERVOSE"
   lo <- logOptionsHandle stderr verbose
   pc <- mkDefaultProcessContext
   withLogFunc lo $ \lf -> do
-    env <- genEnv =<< UniqSupply <$> newIORef u
-    runRIO (set processContextL pc (set logFuncL lf env)) m
+    let malgoApp = MalgoApp { maLogFunc = lf, maProcessContext = pc, maUniqSupply = u }
+    runRIO malgoApp m
 
 malgoError :: MonadMalgo s m => Doc ann -> m a
 malgoError mes = error $ show mes
