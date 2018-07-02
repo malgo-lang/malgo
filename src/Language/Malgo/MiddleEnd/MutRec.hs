@@ -15,12 +15,9 @@ optimizeFunDecs :: a
 optimizeFunDecs = undefined
 
 perm :: Eq a => [a] -> [[a]]
-perm xs = filter notNull $ nubBy f $ permutations xs
-  where f [] _        = False
-        f _ []        = False
-        f (x:_) (y:_) = x == y
-        notNull [] = False
-        notNull _  = True
+perm xs = filter (not . null)
+          $ nubBy (\x y -> headMay x == headMay y)
+          $ permutations xs
 
 data Env = Env { _varmap     :: Map (ID MType) (ID MType)
                , _uniqSupply :: UniqSupply
