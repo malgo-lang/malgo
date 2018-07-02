@@ -19,8 +19,11 @@ main = do
         Right x -> x
   ll <- compile file ast opt
 
-  unless (_dumpParsed opt || _dumpRenamed opt
-          || _dumpTyped opt || _dumpHIR opt
+  unless (_dumpParsed opt
+          || _dumpRenamed opt
+          || _dumpTyped opt
+          || _dumpHIR opt
           || _dumpIR opt
-          || _dumpFlatten opt || _dumpClosure opt) $
+          || _dumpFlatten opt
+          || _dumpClosure opt) $
     putText (toS $ ppllvm ll)
