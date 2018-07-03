@@ -9,6 +9,7 @@ import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
+import           RIO                    (readIORef, modifyIORef, newIORef, IORef)
 
 data Env = Env { _varmap     :: Map (ID MType) (ID MType)
                , _captures   :: Maybe [ID MType]

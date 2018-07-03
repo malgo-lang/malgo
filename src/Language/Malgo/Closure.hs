@@ -18,6 +18,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
 import           Language.Malgo.TypedID
+import           RIO                           (readIORef, writeIORef, newIORef, IORef)
 
 data ClsEnv = ClsEnv
   { _closures   :: IORef (Map TypedID TypedID)

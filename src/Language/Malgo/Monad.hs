@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE FunctionalDependencies     #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -14,13 +15,11 @@ module Language.Malgo.Monad
   , runMalgo
   , runMalgo'
   , malgoError
-  , IORef
-  , newIORef
-  , readIORef
-  , writeIORef
-  , modifyIORef
+  , malgoError'
+  , newUniq'
   ) where
 
+import           Control.Monad.State
 import           Data.Text.Prettyprint.Doc
 import           RIO
 import qualified RIO.Map                   as Map
@@ -101,9 +100,9 @@ runMalgo (Malgo m) u = liftIO $ do
   runReaderT ((,) <$> m <*> ask) s
 
 data MalgoApp = MalgoApp
-  { maLogFunc :: !LogFunc
+  { maLogFunc        :: !LogFunc
   , maProcessContext :: !ProcessContext
-  , maUniqSupply :: !UniqSupply
+  , maUniqSupply     :: !UniqSupply
   }
 instance HasLogFunc MalgoApp where
   logFuncL = lens maLogFunc (\x y -> x { maLogFunc = y })
@@ -121,3 +120,12 @@ runMalgo' m u = liftIO $ do
 
 malgoError :: MonadMalgo s m => Doc ann -> m a
 malgoError mes = error $ show mes
+
+malgoError' :: (HasLogFunc env, MonadReader env m, MonadIO m) => Doc ann -> m b
+malgoError' mes = do
+  logError $ displayShow mes
+  error $ show mes
+
+newUniq' :: (MonadReader MalgoApp f, MonadIO f) => f UniqSupply
+newUniq' =
+  maUniqSupply <$> liftRIO ask

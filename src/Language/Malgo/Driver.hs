@@ -7,11 +7,11 @@ import qualified Language.Malgo.Beta                as Beta
 import qualified Language.Malgo.Closure             as Closure
 import qualified Language.Malgo.CodeGen             as CodeGen
 import qualified Language.Malgo.Flatten             as Flatten
-import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
 import qualified Language.Malgo.IR.Syntax           as Syntax
 import qualified Language.Malgo.KNormal             as KNormal
+import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
+import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
 import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
-import qualified Language.Malgo.MiddleEnd.MutRec as MutRec
 import qualified Language.Malgo.Monad               as M
 import           Language.Malgo.Prelude
 import qualified Language.Malgo.Rename              as Rename
@@ -21,6 +21,7 @@ import qualified Language.Malgo.Unused              as Unused
 import           Control.Lens                       (view)
 import qualified LLVM.AST                           as L
 import           Options.Applicative
+import           RIO                                (readIORef)
 
 data Opt = Opt
   { _srcName         :: Text
@@ -62,14 +63,14 @@ compile filename ast opt = do
   when (_dumpIR opt) $ do
     (ir, s3) <- run _dumpIR (TransToIR.trans typed) s2
     case BasicLint.lint ir of
-      Right _ -> return ()
+      Right _  -> return ()
       Left mes -> error $ show mes
     (ir', _) <- run _dumpIR (MutRec.removeMutRec ir) s3
     case BasicLint.lint ir' of
-      Right _ -> return ()
+      Right _  -> return ()
       Left mes -> error $ show mes
     case runExcept $ MutRec.lint ir' of
-      Right _ -> return ()
+      Right _  -> return ()
       Left mes -> error $ show mes
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
                                   if _notBetaTrans opt
@@ -93,5 +94,5 @@ compile filename ast opt = do
           (x, s) <- M.runMalgo m u
           when (key opt) $
             liftIO $ print $ pretty x
-          s' <- M.readIORef $ M.unUniqSupply $ view M.uniqSupplyL s
+          s' <- readIORef $ M.unUniqSupply $ view M.uniqSupplyL s
           return (x, s')
