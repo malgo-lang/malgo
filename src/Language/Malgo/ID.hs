@@ -1,14 +1,16 @@
+{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
 module Language.Malgo.ID
-  ( ID(..), RawID, idName, idUniq, idMeta, newID) where
+  (ID(..), RawID, idName, idUniq, idMeta, newID) where
 
 import           Control.Lens
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
+import           RIO                    (RIO)
 
 data ID a = ID { _idName :: Name, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read)

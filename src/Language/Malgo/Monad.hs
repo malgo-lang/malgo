@@ -13,9 +13,9 @@ module Language.Malgo.Monad
   , addTable
   , lookupTable
   , runMalgo
+  , MalgoApp
   , runMalgo'
   , malgoError
-  , malgoError'
   , newUniq'
   ) where
 
@@ -121,11 +121,7 @@ runMalgo' m u = liftIO $ do
 malgoError :: MonadMalgo s m => Doc ann -> m a
 malgoError mes = error $ show mes
 
-malgoError' :: (HasLogFunc env, MonadReader env m, MonadIO m) => Doc ann -> m b
-malgoError' mes = do
-  logError $ displayShow mes
-  error $ show mes
-
-newUniq' :: (MonadReader MalgoApp f, MonadIO f) => f UniqSupply
-newUniq' =
-  maUniqSupply <$> liftRIO ask
+newUniq' :: RIO MalgoApp Int
+newUniq' = do
+  UniqSupply u <- maUniqSupply <$> ask
+  readIORef u
