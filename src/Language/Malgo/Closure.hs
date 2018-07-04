@@ -9,7 +9,6 @@ module Language.Malgo.Closure
   , ClsEnv(..)
   ) where
 
-import           Language.Malgo.Closure.Knowns
 import           Language.Malgo.FreeVars
 import           Language.Malgo.ID
 import qualified Language.Malgo.IR.HIR         as H
@@ -150,3 +149,22 @@ convFunDecs [H.FunDec fn@(ID _ _ (FunTy paramtys ret)) params e] = do
   let fv = freevars e'
   addFunDec $ FunDec fn' params fv e'
   return [ClsDec clsid fn' fv]
+
+knownFuns :: H.Expr TypedID -> [TypedID]
+knownFuns (H.Let (H.ExDec name _) body) =
+  if name `elem` freevars body
+  then knownFuns body
+  else name : knownFuns body
+knownFuns (H.Let (H.FunDecs fd) body) =
+  filter (not . flip elem (freevars body)) (knownFuns' fd)
+  <> knownFuns body
+knownFuns (H.Let _ body) = knownFuns body
+knownFuns (H.If _ t f) =
+  knownFuns t <> knownFuns f
+knownFuns _ = []
+
+knownFuns' :: [H.FunDec TypedID] -> [TypedID]
+knownFuns' fd =
+  map fst $ filter (null . snd) $ zip fnNames fvs
+  where fnNames = map (\(H.FunDec x _ _) -> x) fd
+        fvs = map freevars fd
