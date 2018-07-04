@@ -13,7 +13,7 @@ module Language.Malgo.Monad
   , addTable
   , lookupTable
   , runMalgo
-  , MalgoApp
+  , MalgoApp(..)
   , runMalgo'
   , malgoError
   , newUniq'

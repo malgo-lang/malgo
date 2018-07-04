@@ -7,7 +7,8 @@ import qualified Language.Malgo.Beta                as Beta
 import qualified Language.Malgo.Closure             as Closure
 import qualified Language.Malgo.CodeGen             as CodeGen
 import qualified Language.Malgo.Flatten             as Flatten
-import qualified Language.Malgo.FrontEnd.Rename     as Rename'
+import qualified Language.Malgo.FrontEnd.Rename     as Rename
+import qualified Language.Malgo.FrontEnd.TypeCheck  as TypeCheck
 import qualified Language.Malgo.IR.Syntax           as Syntax
 import qualified Language.Malgo.KNormal             as KNormal
 import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
@@ -15,15 +16,13 @@ import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
 import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
 import qualified Language.Malgo.Monad               as M
 import           Language.Malgo.Prelude
-import qualified Language.Malgo.Rename              as Rename
-import qualified Language.Malgo.TypeCheck           as TypeCheck
+import           Language.Malgo.TypedID
 import qualified Language.Malgo.Unused              as Unused
-import Language.Malgo.ID (RawID)
 
 import           Control.Lens                       (view)
 import qualified LLVM.AST                           as L
 import           Options.Applicative
-import           RIO                                (RIO, readIORef)
+import           RIO                                (newIORef, RIO, readIORef)
 
 data Opt = Opt
   { _srcName         :: Text
@@ -56,19 +55,24 @@ parseOpt = execParser $
     <> progDesc "malgo"
     <> header "malgo - a toy programming language")
 
-compile' :: Syntax.Expr Text -> Opt -> RIO M.MalgoApp (Syntax.Expr RawID)
-compile' ast opt = do
+frontend :: Syntax.Expr Text -> Opt -> RIO M.MalgoApp (Syntax.Expr TypedID, Int)
+frontend ast opt = do
   when (_dumpParsed opt) $
     print $ pretty ast
-  Just renamed <- Rename'.rename ast
-  return renamed
+  Just renamed <- Rename.rename ast
+  when (_dumpRenamed opt) $
+    print $ pretty renamed
+  Just typed <- TypeCheck.typeCheck renamed
+  when (_dumpTyped opt) $
+    print $ pretty typed
+  M.UniqSupply u <- M.maUniqSupply <$> ask
+  i <- readIORef u
+  return (typed, i)
 
 compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module
 compile filename ast opt = do
-  when (_dumpParsed opt) $
-    liftIO . print $ pretty ast
-  (renamed, s1) <- run _dumpRenamed (Rename.rename ast) 0
-  (typed, s2) <- run _dumpTyped (TypeCheck.typeCheck renamed) s1
+  i <- newIORef 0
+  (typed, s2) <- M.runMalgo' (frontend ast opt) (M.UniqSupply i)
   when (_dumpIR opt) $ do
     (ir, s3) <- run _dumpIR (TransToIR.trans typed) s2
     case BasicLint.lint ir of
