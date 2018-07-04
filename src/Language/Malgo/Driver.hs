@@ -59,10 +59,10 @@ frontend :: Syntax.Expr Text -> Opt -> RIO M.MalgoApp (Syntax.Expr TypedID, Int)
 frontend ast opt = do
   when (_dumpParsed opt) $
     print $ pretty ast
-  Just renamed <- Rename.rename ast
+  renamed <- Rename.rename ast
   when (_dumpRenamed opt) $
     print $ pretty renamed
-  Just typed <- TypeCheck.typeCheck renamed
+  typed <- TypeCheck.typeCheck renamed
   when (_dumpTyped opt) $
     print $ pretty typed
   M.UniqSupply u <- M.maUniqSupply <$> ask

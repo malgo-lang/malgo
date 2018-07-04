@@ -12,17 +12,18 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude    (Info)
 import           RIO
 import qualified RIO.Map                   as Map
+import           System.Exit
 
 type RnEnv = Map.Map Text RawID
 
-rename :: Expr Text -> RIO MalgoApp (Maybe (Expr RawID))
+rename :: Expr Text -> RIO MalgoApp (Expr RawID)
 rename e = do
   e' <- runExceptT $ runReaderT (renameExpr e) Map.empty
   case e' of
-    Right x -> return (Just x)
+    Right x -> return x
     Left x -> do
       logError (displayShow x)
-      return Nothing
+      liftIO exitFailure
 
 type RenameM ann a = ReaderT RnEnv (ExceptT (Doc ann) (RIO MalgoApp)) a
 

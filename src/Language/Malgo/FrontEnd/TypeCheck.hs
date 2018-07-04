@@ -15,22 +15,23 @@ import           Language.Malgo.Type
 import           Language.Malgo.TypedID
 import           RIO
 import qualified RIO.Map                   as Map
+import           System.Exit
 
 type TcEnv = Map RawID TypedID
 
-typeCheck :: Expr RawID -> RIO MalgoApp (Maybe (Expr TypedID))
+typeCheck :: Expr RawID -> RIO MalgoApp (Expr TypedID)
 typeCheck e = do
   e' <- runExceptT $ runReaderT (checkExpr e) Map.empty
   case e' of
-    Right x -> return (Just x)
+    Right x -> return x
     Left x -> do
       logError (displayShow x)
-      return Nothing
+      liftIO exitFailure
 
 type TypeCheckM ann a = ReaderT TcEnv (ExceptT (Doc ann) (RIO MalgoApp)) a
 
 throw :: Info -> Doc ann -> TypeCheckM ann a
-throw info mes = throwError $ "error(typecheck):" <+> pretty info <+> mes
+throw info mes = throwError $ "error(typecheck):" <+> pretty info <+> align mes
 
 addBind :: RawID -> Type -> TypeCheckM ann a -> TypeCheckM ann a
 addBind name typ m =
