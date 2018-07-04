@@ -3,26 +3,26 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Driver where
 
+import           Control.Lens                       (view)
 import qualified Language.Malgo.Beta                as Beta
 import qualified Language.Malgo.Closure             as Closure
 import qualified Language.Malgo.CodeGen             as CodeGen
 import qualified Language.Malgo.Flatten             as Flatten
 import qualified Language.Malgo.FrontEnd.Rename     as Rename
 import qualified Language.Malgo.FrontEnd.TypeCheck  as TypeCheck
+import           Language.Malgo.ID
+import qualified Language.Malgo.IR.IR               as IR
 import qualified Language.Malgo.IR.Syntax           as Syntax
 import qualified Language.Malgo.KNormal             as KNormal
 import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
-import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
 import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
+import qualified Language.Malgo.MiddleEnd.MutRec as MutRec
 import qualified Language.Malgo.Monad               as M
 import           Language.Malgo.Prelude
-import           Language.Malgo.ID
 import qualified Language.Malgo.Unused              as Unused
-
-import           Control.Lens                       (view)
 import qualified LLVM.AST                           as L
 import           Options.Applicative
-import           RIO                                (newIORef, RIO, readIORef)
+import           RIO                                (RIO, newIORef, readIORef)
 
 data Opt = Opt
   { _srcName         :: Text
@@ -69,22 +69,32 @@ frontend ast opt = do
   i <- readIORef u
   return (typed, i)
 
+middleend :: Syntax.Expr TypedID -> Opt -> RIO M.MalgoApp (IR.Expr (ID IR.MType), Int)
+middleend ast opt = do
+  ir <- TransToIR.trans ast
+  case BasicLint.lint ir of
+    Right _  -> return ()
+    Left mes -> error $ show mes
+  when (_dumpIR opt) $
+    print $ pretty ir
+
+  ir' <- MutRec.remove ir
+  case BasicLint.lint ir' of
+    Right _  -> return ()
+    Left mes -> error $ show mes
+  case MutRec.lint ir' of
+    Right _ -> return ()
+    Left mes -> error $ show mes
+  when (_dumpIR opt) $
+    print $ pretty ir'
+  M.UniqSupply u <- M.maUniqSupply <$> ask
+  i <- readIORef u
+  return (ir', i)
+
 compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module
 compile filename ast opt = do
   i <- newIORef 0
   (typed, s2) <- M.runMalgo' (frontend ast opt) (M.UniqSupply i)
-  when (_dumpIR opt) $ do
-    (ir, s3) <- run _dumpIR (TransToIR.trans typed) s2
-    case BasicLint.lint ir of
-      Right _  -> return ()
-      Left mes -> error $ show mes
-    (ir', _) <- run _dumpIR (MutRec.removeMutRec ir) s3
-    case BasicLint.lint ir' of
-      Right _  -> return ()
-      Left mes -> error $ show mes
-    case runExcept $ MutRec.lint ir' of
-      Right _  -> return ()
-      Left mes -> error $ show mes
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
                                   if _notBetaTrans opt
                                   then typed
