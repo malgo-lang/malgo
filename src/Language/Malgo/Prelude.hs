@@ -16,10 +16,10 @@ import           Data.Text.Prettyprint.Doc as X hiding (group, (<>))
 import           GHC.Exts                  as X (IsList (..))
 import           Prelude                   as X (error)
 import           Protolude                 as X hiding (Strict, Type, Typeable,
-                                                 from, list, sourceColumn,
-                                                 sourceLine, sym, to, toList,
-                                                 trans, uncons, unsnoc, (<&>),
-                                                 (<.>))
+                                                        from, list, sourceColumn,
+                                                        sourceLine, sym, to, toList,
+                                                        trans, uncons, unsnoc, (<&>),
+                                                        (<.>))
 
 type Name = Text
 

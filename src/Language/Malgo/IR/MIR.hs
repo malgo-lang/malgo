@@ -6,7 +6,7 @@ module Language.Malgo.IR.MIR where
 import           Language.Malgo.IR.HIR     (Op (..))
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
-import           Language.Malgo.TypedID
+import           Language.Malgo.ID
 
 data Expr a = Var a
             | Int Integer

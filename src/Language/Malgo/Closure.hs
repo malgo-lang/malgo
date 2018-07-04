@@ -17,7 +17,6 @@ import           Language.Malgo.IR.MIR
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Type
-import           Language.Malgo.TypedID
 import           RIO                           (readIORef, writeIORef, newIORef, IORef)
 
 data ClsEnv = ClsEnv

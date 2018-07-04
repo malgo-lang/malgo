@@ -16,7 +16,7 @@ import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
 import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
 import qualified Language.Malgo.Monad               as M
 import           Language.Malgo.Prelude
-import           Language.Malgo.TypedID
+import           Language.Malgo.ID
 import qualified Language.Malgo.Unused              as Unused
 
 import           Control.Lens                       (view)

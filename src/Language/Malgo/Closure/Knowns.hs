@@ -3,21 +3,18 @@
 module Language.Malgo.Closure.Knowns (knownFuns) where
 
 import           Language.Malgo.FreeVars
+import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR
 import           Language.Malgo.Prelude
-import           Language.Malgo.TypedID
 
 knownFuns :: Expr TypedID -> [TypedID]
 knownFuns (Let (ExDec name _) body) =
-  if name `elem` fv
+  if name `elem` freevars body
   then knownFuns body
   else name : knownFuns body
-  where fv = freevars body
 knownFuns (Let (FunDecs fd) body) =
-  filter (not . flip elem fv) mayKnowns
+  filter (not . flip elem (freevars body)) (knownFuns' fd)
   <> knownFuns body
-  where fv = freevars body
-        mayKnowns = knownFuns' fd
 knownFuns (Let _ body) = knownFuns body
 knownFuns (If _ t f) =
   knownFuns t <> knownFuns f

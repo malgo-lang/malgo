@@ -26,7 +26,6 @@ import           Language.Malgo.IR.HIR           (Op (..))
 import           Language.Malgo.IR.MIR
 import           Language.Malgo.Prelude          hiding (bit)
 import qualified Language.Malgo.Type             as T
-import           Language.Malgo.TypedID
 
 data GenState = GenState { _table    :: Map TypedID Operand
                          , _term     :: Operand -> GenExpr () -- if式の際の最終分岐先などに利用

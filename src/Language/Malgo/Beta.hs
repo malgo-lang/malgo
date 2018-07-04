@@ -6,7 +6,7 @@ module Language.Malgo.Beta
 import Control.Lens (at, set, view)
 import Language.Malgo.Prelude
 import Language.Malgo.IR.Syntax
-import Language.Malgo.TypedID
+import Language.Malgo.ID
 
 betaTrans :: Expr TypedID -> Expr TypedID
 betaTrans expr = opt mempty expr

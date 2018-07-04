@@ -12,7 +12,6 @@ import qualified Language.Malgo.IR.Syntax  as Syntax
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude    (Info)
 import           Language.Malgo.Type
-import           Language.Malgo.TypedID
 import           RIO
 import qualified RIO.Map                   as Map
 import           System.Exit

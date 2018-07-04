@@ -14,7 +14,6 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import qualified Language.Malgo.IR.Syntax  as S
 import           Language.Malgo.Type
-import           Language.Malgo.TypedID
 
 knormal :: MonadMalgo UniqSupply m => S.Expr TypedID -> m (Expr TypedID)
 knormal e = transExpr e
