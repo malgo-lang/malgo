@@ -14,13 +14,11 @@ import           RIO
 import qualified RIO.Map                   as Map
 import           System.Exit
 
-type RnEnv = Map.Map Text RawID
-
 rename :: Expr Text -> RIO MalgoApp (Expr RawID)
 rename e =
   runReaderT (renameExpr e) Map.empty
 
-type RenameM ann a = ReaderT RnEnv (RIO MalgoApp) a
+type RenameM ann a = ReaderT (Map Text RawID) (RIO MalgoApp) a
 
 addKnowns :: [(Text, RawID)] -> RenameM ann a -> RenameM ann a
 addKnowns kvs m =

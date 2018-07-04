@@ -16,13 +16,11 @@ import           RIO
 import qualified RIO.Map                   as Map
 import           System.Exit
 
-type TcEnv = Map RawID TypedID
-
 typeCheck :: Expr RawID -> RIO MalgoApp (Expr TypedID)
 typeCheck e =
   runReaderT (checkExpr e) Map.empty
 
-type TypeCheckM ann a = ReaderT TcEnv (RIO MalgoApp) a
+type TypeCheckM ann a = ReaderT (Map RawID TypedID) (RIO MalgoApp) a
 
 throw :: Info -> Doc ann -> TypeCheckM ann a
 throw info mes = do
