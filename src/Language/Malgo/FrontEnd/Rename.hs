@@ -17,15 +17,10 @@ import           System.Exit
 type RnEnv = Map.Map Text RawID
 
 rename :: Expr Text -> RIO MalgoApp (Expr RawID)
-rename e = do
-  e' <- runExceptT $ runReaderT (renameExpr e) Map.empty
-  case e' of
-    Right x -> return x
-    Left x -> do
-      logError (displayShow x)
-      liftIO exitFailure
+rename e =
+  runReaderT (renameExpr e) Map.empty
 
-type RenameM ann a = ReaderT RnEnv (ExceptT (Doc ann) (RIO MalgoApp)) a
+type RenameM ann a = ReaderT RnEnv (RIO MalgoApp) a
 
 addKnowns :: [(Text, RawID)] -> RenameM ann a -> RenameM ann a
 addKnowns kvs m =
@@ -36,11 +31,13 @@ getID info name = do
   k <- ask
   case Map.lookup name k of
     Just x -> return x
-    Nothing -> throwError ("error(rename):" <+> pretty info <+> pretty name <+> "is not defined")
+    Nothing -> do
+      lift $ logError (displayShow $ "error(rename):" <+> pretty info <+> pretty name <+> "is not defined")
+      liftIO exitFailure
 
 newID :: Text -> RenameM ann RawID
 newID name = do
-  u <- lift $ lift newUniq'
+  u <- lift newUniq'
   return (ID name u ())
 
 renameExpr :: Expr Text -> RenameM ann (Expr RawID)

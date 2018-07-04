@@ -9,11 +9,17 @@ github: takoeight0821/malgo
 extra-source-files:
 - README.md
 
+ghc-options:
+- -Wall
+- -Wcompat
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wredundant-constraints
+
 library:
   source-dirs: src
   build-tools:
   - happy
-  ghc-options: -Wall
   dependencies:
   - base >=4.7 && <5
   - array
