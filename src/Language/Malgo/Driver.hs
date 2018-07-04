@@ -7,6 +7,7 @@ import qualified Language.Malgo.Beta                as Beta
 import qualified Language.Malgo.Closure             as Closure
 import qualified Language.Malgo.CodeGen             as CodeGen
 import qualified Language.Malgo.Flatten             as Flatten
+import qualified Language.Malgo.FrontEnd.Rename     as Rename'
 import qualified Language.Malgo.IR.Syntax           as Syntax
 import qualified Language.Malgo.KNormal             as KNormal
 import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
@@ -17,11 +18,12 @@ import           Language.Malgo.Prelude
 import qualified Language.Malgo.Rename              as Rename
 import qualified Language.Malgo.TypeCheck           as TypeCheck
 import qualified Language.Malgo.Unused              as Unused
+import Language.Malgo.ID (RawID)
 
 import           Control.Lens                       (view)
 import qualified LLVM.AST                           as L
 import           Options.Applicative
-import           RIO                                (readIORef)
+import           RIO                                (RIO, readIORef)
 
 data Opt = Opt
   { _srcName         :: Text
@@ -53,6 +55,13 @@ parseOpt = execParser $
   (fullDesc
     <> progDesc "malgo"
     <> header "malgo - a toy programming language")
+
+compile' :: Syntax.Expr Text -> Opt -> RIO M.MalgoApp (Syntax.Expr RawID)
+compile' ast opt = do
+  when (_dumpParsed opt) $
+    print $ pretty ast
+  Just renamed <- Rename'.rename ast
+  return renamed
 
 compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module
 compile filename ast opt = do

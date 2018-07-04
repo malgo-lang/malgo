@@ -124,4 +124,6 @@ malgoError mes = error $ show mes
 newUniq' :: RIO MalgoApp Int
 newUniq' = do
   UniqSupply u <- maUniqSupply <$> ask
-  readIORef u
+  i <- readIORef u
+  modifyIORef u (+1)
+  return i
