@@ -4,14 +4,14 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.MutRec (remove, lint) where
 
+import           Control.Lens              (_1)
 import           Data.List                 (nubBy)
 import           Data.Text.Prettyprint.Doc
-import Control.Lens (_1)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           RIO
-import qualified RIO.List as L
+import qualified RIO.List                  as L
 import qualified RIO.Map                   as Map
 import           System.Exit
 
