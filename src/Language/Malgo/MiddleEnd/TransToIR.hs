@@ -6,13 +6,13 @@
 module Language.Malgo.MiddleEnd.TransToIR (trans) where
 
 import           Data.Text.Prettyprint.Doc
-import qualified RIO.Text as Text
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import qualified Language.Malgo.IR.Syntax  as S
 import           Language.Malgo.Monad
 import           Language.Malgo.Type
 import           RIO
+import qualified RIO.Text                  as Text
 import           System.Exit
 
 throw :: Doc ann -> RIO MalgoApp a
@@ -25,7 +25,7 @@ update a = do
   mty <- toMType (typeOf a)
   return (set idMeta mty a)
 
-newTmp :: Text -> a -> RIO MalgoApp (ID a)
+newTmp :: Text -> MType -> RIO MalgoApp (ID MType)
 newTmp n t = ID ("$" <> n) <$> newUniq' <*> return t
 
 trans :: S.Expr TypedID -> RIO MalgoApp (Expr (ID MType))
@@ -39,7 +39,6 @@ insertLet v k = do
   e <- k x
   return (Let x v' e)
 
--- transToIR :: MonadMalgo UniqSupply m => S.Expr (ID Type) -> m (Expr (ID MType))
 transToIR :: S.Expr TypedID -> RIO MalgoApp (Expr (ID MType))
 transToIR (S.Var _ a)   = Var <$> update a
 transToIR (S.Int _ x)   = return (Int x)
