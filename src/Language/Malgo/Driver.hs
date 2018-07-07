@@ -23,7 +23,7 @@ import           Language.Malgo.Prelude
 import qualified Language.Malgo.Unused              as Unused
 import qualified LLVM.AST                           as L
 import           Options.Applicative
-import           RIO                                (RIO, newIORef, readIORef)
+import           RIO                                (writeIORef, RIO, newIORef, readIORef)
 
 data Opt = Opt
   { _srcName         :: Text
@@ -71,15 +71,16 @@ frontend ast opt = do
   return (typed, i)
 
 middleend ast opt = do
-  ir <- TransToIR.trans ast
+  ir <- IR.flattenExpr <$> TransToIR.trans ast
   when (_dumpIR opt) $ do
     putStrLn "TransToIR:"
     print $ pretty ir
   case BasicLint.lint ir of
     Right _  -> return ()
     Left mes -> error $ show mes
-
-  ir' <- MutRec.remove ir
+  M.UniqSupply u <- M.maUniqSupply <$> ask
+  writeIORef u 0
+  ir' <- IR.flattenExpr <$> MutRec.remove ir
   when (_dumpIR opt) $ do
     putStrLn "MutRec:"
     print $ pretty ir'
@@ -91,7 +92,7 @@ middleend ast opt = do
     Left mes -> error $ show mes
 
   -- print $ pretty $ Closure'.knownFuns ir'
-  ir'' <- Closure'.trans ir'
+  ir'' <- IR.flattenProgram <$> Closure'.trans ir'
   when (_dumpIR opt && _dumpClosure opt) $ do
     putStrLn "Closure:"
     print $ pretty ir''

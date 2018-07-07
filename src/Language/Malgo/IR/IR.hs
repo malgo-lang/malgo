@@ -13,6 +13,8 @@ import           Language.Malgo.Prelude
 newtype Program a = Program [Defn a]
   deriving (Show, Eq, Read)
 
+flattenProgram (Program defs) = Program (map flattenDefn defs)
+
 instance FreeVars Program where
   freevars (Program xs) = concatMap fv xs
 
@@ -22,6 +24,8 @@ instance Pretty a => Pretty (Program a) where
 
 data Defn a = DefFun a [a] (Expr a)
   deriving (Show, Eq, Read)
+
+flattenDefn (DefFun f params body) = DefFun f params (flattenExpr body)
 
 instance FreeVars Defn where
   freevars (DefFun _ params body) =
@@ -59,6 +63,17 @@ data Expr a = Var a
             | If a (Expr a) (Expr a)
   deriving (Show, Eq, Read)
 
+flattenExpr (Let x v1 e1) =
+  insert (flattenExpr v1)
+  where insert (Let y v2 e2) = Let y v2 (insert e2)
+        insert (LetRec xs e) = LetRec xs (insert e)
+        insert v = Let x v (flattenExpr e1)
+flattenExpr (LetRec defs body) =
+  LetRec (map flattenDef defs) (flattenExpr body)
+  where flattenDef (f, p, e) = (f, p, flattenExpr e)
+flattenExpr (If c t f) = If c (flattenExpr t) (flattenExpr f)
+flattenExpr e = e
+
 prims :: Expr a -> [Expr a]
 prims p@Prim{} = [p]
 prims (Let _ v e) = prims v ++ prims e
@@ -93,10 +108,12 @@ instance Pretty a => Pretty (Expr a) where
   pretty (Tuple xs) = "tuple" <> parens ( align $ sep $ punctuate "," $ map pretty xs)
   pretty (Apply f args) = parens (pretty f <+> sep (map pretty args))
   pretty (Let name val body) =
-    parens ("let" <+> align (parens (align $ pretty name <> softline <> pretty val)
-                              <> line <> indent 1 (align $ pretty body)))
+    parens ("let" <+> align (parens (align $ pretty name <+> pretty val))
+             <> line <> indent 1 (align $ pretty body))
   pretty (LetRec defs body) =
-    parens ("let" <+> align (vsep (map (\(name, params, val) -> parens ("rec" <+> pretty name <+> sep (map pretty (fromMaybe [] params)) <> line <> indent 1 (pretty val))) defs))
+    parens ("let" <+> align (vsep (map (\(name, params, val) ->
+                                          parens ("rec" <+> pretty name <+> sep (map pretty (fromMaybe [] params))
+                                                  <> line <> indent 1 (pretty val))) defs))
              <> line <> indent 1 (align $ pretty body))
   pretty (Cast ty val) = parens ("cast" <+> pretty ty <+> pretty val)
   pretty (Access e is) = parens ("access" <+> pretty e <+> sep (map pretty is))
