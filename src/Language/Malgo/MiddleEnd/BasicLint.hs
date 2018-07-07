@@ -2,7 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.MiddleEnd.BasicLint (lint) where
+module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
 
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
@@ -12,6 +12,9 @@ type BasicLint ann a = StateT [ID MType] (Except (Doc ann)) a
 
 lint :: Expr (ID MType) -> Either (Doc ann) MType
 lint expr = runExcept $ evalStateT (lintExpr expr) []
+
+runLint :: StateT [a1] (ExceptT e Identity) a2 -> Either e a2
+runLint = runExcept . flip evalStateT []
 
 defined :: ID MType -> BasicLint ann ()
 defined a =
@@ -71,3 +74,12 @@ lintExpr e = return $ mTypeOf e
 lintFunDec :: (ID MType, Maybe [ID MType], Expr (ID MType)) -> BasicLint ann ()
 lintFunDec (_, mparams, fbody) =
   modify (fromMaybe [] mparams ++) >> void (lintExpr fbody)
+
+lintDefn :: Defn (ID MType) -> BasicLint ann ()
+lintDefn (DefFun _ params fbody) =
+  modify (params ++) >> void (lintExpr fbody)
+
+lintProgram :: Program (ID MType) -> BasicLint ann ()
+lintProgram (Program xs) = do
+  modify (map (\(DefFun f _ _) -> f) xs ++)
+  mapM_ lintDefn xs

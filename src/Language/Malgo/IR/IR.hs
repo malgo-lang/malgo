@@ -14,7 +14,7 @@ newtype Program a = Program [Defn a]
   deriving (Show, Eq, Read)
 
 instance FreeVars Program where
-  freevars (Program xs) = concatMap freevars xs
+  freevars (Program xs) = concatMap fv xs
 
 instance Pretty a => Pretty (Program a) where
   pretty (Program defns) =
@@ -25,12 +25,12 @@ data Defn a = DefFun a [a] (Expr a)
 
 instance FreeVars Defn where
   freevars (DefFun _ params body) =
-    freevars body \\ params
+    fv body \\ params
 
 instance Pretty a => Pretty (Defn a) where
   pretty (DefFun fn params body) =
     "define" <+> pretty fn <> parens (sep (punctuate "," $ map pretty params))
-    <> softline <> braces (indent 2 (pretty body))
+    <+> braces (line <> indent 2 (pretty body) <> line)
 
 {- Closure representation
 
@@ -71,13 +71,13 @@ instance FreeVars Expr where
   freevars (Var x) = [x]
   freevars (Tuple xs) = xs
   freevars (Apply _ args) = args
-  freevars (Let x v e) = freevars v ++ delete x (freevars e)
+  freevars (Let x v e) = fv v ++ delete x (fv e)
   freevars (LetRec xs e) =
-    (concatMap (\(_, params, body) -> freevars body \\ fromMaybe [] params) xs ++ freevars e)
+    (concatMap (\(_, params, body) -> (fv body \\ fromMaybe [] params)) xs ++ fv e)
     \\ map (view _1) xs
   freevars (Cast _ x) = [x]
   freevars (Access x _) = [x]
-  freevars (If c t f) = c : freevars t ++ freevars f
+  freevars (If c t f) = c : fv t ++ fv f
   freevars _ = []
 
 instance Pretty a => Pretty (Expr a) where

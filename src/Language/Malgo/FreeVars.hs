@@ -8,9 +8,9 @@ import qualified Language.Malgo.IR.MIR     as M
 import           Language.Malgo.Prelude
 
 class FreeVars f where
-  freevars :: Ord a => f a -> [a]
+  freevars :: (Show a, Ord a) => f a -> [a]
 
-  fv :: Ord a => f a -> [a]
+  fv :: (Show a, Ord a) => f a -> [a]
   fv x = nub (freevars x)
 
 instance FreeVars H.Expr where

@@ -15,8 +15,9 @@ import qualified Language.Malgo.IR.IR               as IR
 import qualified Language.Malgo.IR.Syntax           as Syntax
 import qualified Language.Malgo.KNormal             as KNormal
 import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
+import qualified Language.Malgo.MiddleEnd.Closure   as Closure'
+import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
 import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
-import qualified Language.Malgo.MiddleEnd.MutRec as MutRec
 import qualified Language.Malgo.Monad               as M
 import           Language.Malgo.Prelude
 import qualified Language.Malgo.Unused              as Unused
@@ -69,32 +70,44 @@ frontend ast opt = do
   i <- readIORef u
   return (typed, i)
 
-middleend :: Syntax.Expr TypedID -> Opt -> RIO M.MalgoApp (IR.Expr (ID IR.MType), Int)
 middleend ast opt = do
   ir <- TransToIR.trans ast
+  when (_dumpIR opt) $ do
+    putStrLn "TransToIR:"
+    print $ pretty ir
   case BasicLint.lint ir of
     Right _  -> return ()
     Left mes -> error $ show mes
-  when (_dumpIR opt) $
-    print $ pretty ir
 
   ir' <- MutRec.remove ir
+  when (_dumpIR opt) $ do
+    putStrLn "MutRec:"
+    print $ pretty ir'
   case BasicLint.lint ir' of
     Right _  -> return ()
     Left mes -> error $ show mes
   case MutRec.lint ir' of
-    Right _ -> return ()
+    Right _  -> return ()
     Left mes -> error $ show mes
-  when (_dumpIR opt) $
-    print $ pretty ir'
+
+  -- print $ pretty $ Closure'.knownFuns ir'
+  ir'' <- Closure'.trans ir'
+  when (_dumpIR opt && _dumpClosure opt) $ do
+    putStrLn "Closure:"
+    print $ pretty ir''
+  case BasicLint.runLint (BasicLint.lintProgram ir'') of
+    Right _  -> return ()
+    Left mes -> error $ show mes
+
   M.UniqSupply u <- M.maUniqSupply <$> ask
   i <- readIORef u
-  return (ir', i)
+  return (ir'', i)
 
 compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module
 compile filename ast opt = do
   i <- newIORef 0
   (typed, s2) <- M.runMalgo' (frontend ast opt) (M.UniqSupply i)
+  _ <- M.runMalgo' (middleend typed opt) (M.UniqSupply i)
   (knormal, s3) <- run _dumpHIR (KNormal.knormal $
                                   if _notBetaTrans opt
                                   then typed
