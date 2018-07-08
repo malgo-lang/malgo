@@ -66,7 +66,6 @@ transExpr (Apply f args) = do
                 (\env -> return $ Apply fn (env : args)))
   where insertLet name e k = do
           i <- newID name (mTypeOf e)
-          traceShowM $ pretty i <+> ":" <+> pretty (view idMeta i)
           Let i e <$> k i
 transExpr (Let n val@Prim{} body) =
     Let n val <$> local (over knowns (n:)) (local (over varmap $ Map.insert n n) (transExpr body))
@@ -107,9 +106,6 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
           let zs = fv fbody' \\ (params' ++ map _fnName defs)
           -- 実際に変換後のfbody内で参照される自由変数のリスト
           zs' <- mapM transID (zs \\ [innerCls])
-
-          traceShowM $ pretty zs
-          traceShowM $ pretty zs'
 
           -- 仮引数に追加されるポインタ
           capPtr <- newID "fv" $ PointerTy (IntTy 8)
