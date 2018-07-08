@@ -1,18 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Type where
 
-import           Language.Malgo.Prelude
+import           Data.Text.Prettyprint.Doc
+import           RIO hiding (Typeable)
 
 -- | Malgoの組み込みデータ型
 data Type
-  = NameTy Name
+  = NameTy Text
   | FunTy { _params :: [Type]
           , _ret    :: Type }
   | TupleTy [Type]
-  | ClsTy { _params :: [Type]
-          , _ret    :: Type }
   deriving (Eq, Show, Ord, Read)
 
 instance Pretty Type where
@@ -25,11 +24,6 @@ instance Pretty Type where
     "->" <+> pretty ret
   pretty (TupleTy xs) =
     braces $ vsep $ punctuate "," $ map pretty xs
-  pretty (ClsTy [param] ret) =
-    braces (pretty param <+> "->" <+> pretty ret)
-  pretty (ClsTy params ret) =
-      braces (tupled (map pretty params) <+>
-              "->" <+> pretty ret)
 
 instance IsString Type where
   fromString name = NameTy $ fromString name
@@ -38,4 +32,4 @@ class Typeable a where
   typeOf :: a -> Type
 
 instance Typeable Type where
-  typeOf = identity
+  typeOf = id

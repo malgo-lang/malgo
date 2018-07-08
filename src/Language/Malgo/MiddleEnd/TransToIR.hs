@@ -26,7 +26,7 @@ update a = do
   return (set idMeta mty a)
 
 newTmp :: Text -> MType -> RIO MalgoApp (ID MType)
-newTmp n t = ID ("$" <> n) <$> newUniq' <*> return t
+newTmp n t = ID ("$" <> n) <$> newUniq <*> return t
 
 trans :: S.Expr TypedID -> RIO MalgoApp (Expr (ID MType))
 trans e = transToIR e
@@ -64,7 +64,7 @@ transToIR (S.Call _ fn args) =
   where bind [] args' k     = k (reverse args')
         bind (x:xs) args' k = insertLet x (\x' -> bind xs (x' : args') k)
 transToIR (S.Seq _ e1 e2) =
-  insertLet e2 (\_ -> transToIR e1)
+  insertLet e1 (\_ -> transToIR e2)
 transToIR (S.Let info (S.ValDec _ n _ val:ds) body) = do
   val' <- transToIR val
   rest <- transToIR (S.Let info ds body)
@@ -136,5 +136,3 @@ toMType (FunTy params ret) =
   FunctionTy <$> toMType ret <*> mapM toMType params
 toMType (TupleTy xs) =
   PointerTy . StructTy <$> mapM toMType xs
-toMType ClsTy{} =
-  throw "ClsTy does not have MType"

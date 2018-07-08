@@ -4,12 +4,13 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.ID
-  (ID(..), RawID, TypedID, idName, idUniq, idMeta, newID) where
+  (ID(..), RawID, TypedID, idName, idUniq, idMeta) where
 
-import           Control.Lens
+import           Control.Lens.TH
+import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude
 import           Language.Malgo.Type
+import           RIO                       hiding (Typeable)
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read)
@@ -28,9 +29,4 @@ instance Pretty a => Pretty (ID a) where
     pretty n <> "." <> pretty u <> braces (pretty m)
 
 instance Typeable a => Typeable (ID a) where
-  typeOf i = typeOf $ i ^. idMeta
-
-newID :: MonadMalgo s m => Name -> a -> m (ID a)
-newID name ty = do
-  u <- newUniq
-  return $ ID name u ty
+  typeOf i = typeOf $ view idMeta i

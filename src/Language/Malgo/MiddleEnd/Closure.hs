@@ -13,7 +13,6 @@ import           Language.Malgo.FreeVars
 import           Language.Malgo.ID         hiding (newID)
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude    ()
 import           RIO
 import           RIO.List                  ((\\))
 import qualified RIO.Map                   as Map
@@ -28,7 +27,7 @@ makeLenses ''Env
 
 trans :: Expr (ID MType) -> RIO MalgoApp (Program (ID MType))
 trans e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ flip runReaderT (Env Map.empty []) $ do
-  u <- lift $ lift newUniq'
+  u <- lift $ lift newUniq
   let mainFun = ID "main" u (FunctionTy (StructTy []) [])
   e' <- transExpr e
   addDefn (DefFun mainFun [] e')
@@ -42,7 +41,7 @@ addDefn defn = do
 
 newID :: Text -> a -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (ID a)
 newID name meta = do
-  u <- lift $ lift newUniq'
+  u <- lift $ lift newUniq
   return $ ID name u meta
 
 updateID a = do

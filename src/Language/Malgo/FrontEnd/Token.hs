@@ -3,7 +3,9 @@
 {-# LANGUAGE TemplateHaskell   #-}
 module Language.Malgo.FrontEnd.Token where
 
-import           Language.Malgo.Prelude
+import           Control.Lens.TH
+import           Language.Malgo.FrontEnd.Info
+import           RIO
 
 data Tag
   = LET
@@ -43,7 +45,7 @@ data Tag
   | GE_OP
   | AND_OP
   | OR_OP
-  | ID { _id :: Name }
+  | ID { _id :: Text }
   | INT { _int :: Integer }
   | FLOAT { _float :: Double }
   | BOOL { _bool :: Bool }

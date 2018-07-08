@@ -27,7 +27,7 @@ remove e = runReaderT (removeMutRec e) Map.empty
 
 renameID :: ID MType -> ReaderT Env (RIO MalgoApp) (ID MType)
 renameID (ID name _ meta) = do
-  u <- lift newUniq'
+  u <- lift newUniq
   return (ID name u meta)
 
 updateID :: ID MType -> ReaderT Env (RIO MalgoApp) (ID MType)

@@ -4,9 +4,15 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
 
+import           Control.Lens              (_1)
+import           Control.Monad
+import           Control.Monad.Except
+import           Control.Monad.State
+import           Data.Functor.Identity
+import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
-import           Language.Malgo.Prelude
+import           RIO
 
 type BasicLint ann a = StateT [ID MType] (Except (Doc ann)) a
 
@@ -15,6 +21,9 @@ lint expr = runExcept $ evalStateT (lintExpr expr) []
 
 runLint :: StateT [a1] (ExceptT e Identity) a2 -> Either e a2
 runLint = runExcept . flip evalStateT []
+
+ifM :: Monad m => m Bool -> m a -> m a -> m a
+ifM b t f = do b' <- b; if b' then t else f
 
 defined :: ID MType -> BasicLint ann ()
 defined a =

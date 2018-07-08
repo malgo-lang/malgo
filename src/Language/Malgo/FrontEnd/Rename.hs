@@ -9,7 +9,7 @@ import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID         hiding (newID)
 import           Language.Malgo.IR.Syntax  hiding (info)
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude    (Info)
+import           Language.Malgo.FrontEnd.Info
 import           RIO
 import qualified RIO.Map                   as Map
 import           System.Exit
@@ -35,7 +35,7 @@ getID info name = do
 
 newID :: Text -> RenameM ann RawID
 newID name = do
-  u <- lift newUniq'
+  u <- lift newUniq
   return (ID name u ())
 
 renameExpr :: Expr Text -> RenameM ann (Expr RawID)

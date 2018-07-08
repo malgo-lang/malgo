@@ -69,7 +69,7 @@ middleend ast opt = do
   ir <- TransToIR.trans ast
   when (_dumpIR opt) $ do
     logInfo "TransToIR:"
-    logInfo $ displayShow $ pretty ir
+    logInfo $ displayShow $ pretty $ IR.flattenExpr ir
   case BasicLint.lint ir of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -78,7 +78,7 @@ middleend ast opt = do
   ir' <- MutRec.remove ir
   when (_dumpIR opt) $ do
     logInfo "MutRec:"
-    logInfo $ displayShow $ pretty ir'
+    logInfo $ displayShow $ pretty $ IR.flattenExpr ir'
   case BasicLint.lint ir' of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -89,7 +89,7 @@ middleend ast opt = do
   ir'' <- Closure'.trans ir'
   when (_dumpIR opt && _dumpClosure opt) $ do
     logInfo "Closure:"
-    logInfo $ displayShow $ pretty ir''
+    logInfo $ displayShow $ pretty $ IR.flattenProgram ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -105,7 +105,7 @@ backend filename ir = do
                            }
 
 compile :: MonadIO m => Text -> Syntax.Expr Text -> Opt -> M.UniqSupply -> m L.Module
-compile filename ast opt = M.runMalgo' $ do
+compile filename ast opt = M.runMalgo $ do
   typed <- frontend ast opt
   ir <- middleend typed opt
   backend filename ir

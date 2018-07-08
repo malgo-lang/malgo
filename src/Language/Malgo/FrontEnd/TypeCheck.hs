@@ -10,7 +10,7 @@ import           Language.Malgo.ID
 import           Language.Malgo.IR.Syntax  hiding (info)
 import qualified Language.Malgo.IR.Syntax  as Syntax
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude    (Info)
+import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Type
 import           RIO
 import qualified RIO.Map                   as Map

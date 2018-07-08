@@ -5,10 +5,13 @@
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.IR.IR where
 
-import           Data.List               (delete, (\\))
+import           Control.Lens              (_1, _3)
+import           Control.Monad.Except
+import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.FreeVars
 import           Language.Malgo.ID
-import           Language.Malgo.Prelude
+import           RIO
+import           RIO.List                  (delete, (\\))
 
 data Program a = Program a [Defn a]
   deriving (Show, Eq, Read)
@@ -23,9 +26,9 @@ instance Pretty a => Pretty (Program a) where
   pretty (Program _ defns) =
     vsep (map pretty defns)
 
-data Defn a = DefFun { _fnName :: a
+data Defn a = DefFun { _fnName   :: a
                      , _fnParams :: [a]
-                     , _fnBody :: Expr a
+                     , _fnBody   :: Expr a
                      }
   deriving (Show, Eq, Read)
 
@@ -73,7 +76,7 @@ flattenExpr (Let x v1 e1) =
   insert (flattenExpr v1)
   where insert (Let y v2 e2) = Let y v2 (insert e2)
         insert (LetRec xs e) = LetRec xs (insert e)
-        insert v = Let x v (flattenExpr e1)
+        insert v             = Let x v (flattenExpr e1)
 flattenExpr (LetRec defs body) =
   LetRec (map flattenDef defs) (flattenExpr body)
   where flattenDef (f, p, e) = (f, p, flattenExpr e)
@@ -161,7 +164,7 @@ class HasMType a where
   mTypeOf :: a -> MType
 
 instance HasMType MType where
-  mTypeOf = identity
+  mTypeOf = id
 
 instance HasMType a => HasMType (ID a) where
   mTypeOf (ID _ _ m) = mTypeOf m
@@ -182,4 +185,7 @@ accessMType t@(StructTy xs) (i:is) =
   case atMay xs i of
     Just xt -> accessMType xt is
     Nothing -> throwError $ "out of bounds:" <+> pretty t <> "," <+> pretty i
+  where atMay (y:_) 0 = Just y
+        atMay [] _ = Nothing
+        atMay (_:ys) n = atMay ys (n - 1)
 accessMType t _ = throwError $ pretty t <+> "is not accessable MType"

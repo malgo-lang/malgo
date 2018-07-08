@@ -2,19 +2,21 @@
 module Main where
 
 import           Language.Malgo.Driver
-import qualified Language.Malgo.Lexer   as Lexer
+import qualified Language.Malgo.Lexer  as Lexer
 import           Language.Malgo.Monad
-import qualified Language.Malgo.Parser  as Parser
-import           Language.Malgo.Prelude
+import qualified Language.Malgo.Parser as Parser
 import           LLVM.Pretty
-import           RIO                    (newIORef)
+import           RIO
+import qualified RIO.Text              as Text
+import qualified RIO.Text.Lazy         as TL
+import           System.IO
 
 main :: IO ()
 main = do
   opt <- parseOpt
   let file = _srcName opt
-  contents <- readFile (toS file)
-  let tokens = Lexer.lexing (toS file) (toS contents)
+  contents <- readFile (Text.unpack file)
+  let tokens = Lexer.lexing (Text.unpack file) contents
   let parser = Parser.parseExpr
   let ast = case parser <$> tokens of
         Left x  -> error $ show x
@@ -30,4 +32,4 @@ main = do
           || _dumpIR opt
           || _dumpFlatten opt
           || _dumpClosure opt) $
-    putText (toS $ ppllvm ll)
+    putStrLn $ TL.unpack $ ppllvm ll

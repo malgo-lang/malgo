@@ -8,7 +8,6 @@ import Language.Malgo.Lexer
 import Language.Malgo.Type
 import Language.Malgo.IR.Syntax
 import Data.String
-import qualified Language.Malgo.Prelude as P
 }
 
 %name parse

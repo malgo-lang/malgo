@@ -3,12 +3,15 @@
 {-# LANGUAGE RankNTypes        #-}
 module Language.Malgo.Lexer where
 
+import           Data.Functor.Identity
 import           Data.String
-import           Language.Malgo.Prelude hiding (EQ, GT, LT, try)
-import           Text.Parsec            hiding (many, (<|>))
+import           Language.Malgo.FrontEnd.Info
+import           RIO                          hiding (EQ, GT, LT, try)
+import qualified RIO.Text                     as Text
+import           Text.Parsec                  hiding (many, (<|>))
 import           Text.Parsec.Language
-import           Text.Parsec.Pos        ()
-import qualified Text.Parsec.Token      as Tok
+import           Text.Parsec.Pos              ()
+import qualified Text.Parsec.Token            as Tok
 
 data Tag
     = LET
@@ -52,7 +55,7 @@ data Tag
     | GE
     | AND
     | OR
-    | ID { _id :: Name }
+    | ID { _id :: Text }
     | INT { _int :: Integer }
     | FLOAT { _float :: Double }
     | BOOL { _bool :: Bool }
@@ -75,7 +78,7 @@ type Lexer a = forall u. ParsecT String u Identity a
 getInfo :: Lexer Info
 getInfo = do
     pos <- getPosition
-    pure (Info (toS $ sourceName pos, sourceLine pos, sourceColumn pos))
+    pure (Info (Text.pack $ sourceName pos, sourceLine pos, sourceColumn pos))
 
 lexer' :: Tok.GenTokenParser String u Identity
 lexer' =
@@ -181,11 +184,11 @@ lexer = do
         op info "&&" AND <|>
         op info "||" OR <|>
         op info "->" ARROW <|>
-        map (\str -> Token (info, ID (toS str))) identifier <|>
-        try (map (\f -> Token (info, FLOAT f)) float) <|>
-        map (\n -> Token (info, INT n)) natural <|>
-        map (\c -> Token (info, CHAR c)) charLiteral <|>
-        map (\s -> Token (info, STRING (toS s))) stringLiteral
+        fmap (\str -> Token (info, ID (Text.pack str))) identifier <|>
+        try (fmap (\f -> Token (info, FLOAT f)) float) <|>
+        fmap (\n -> Token (info, INT n)) natural <|>
+        fmap (\c -> Token (info, CHAR c)) charLiteral <|>
+        fmap (\s -> Token (info, STRING (Text.pack s))) stringLiteral
   where
     natural = Tok.natural lexer'
     float = Tok.float lexer'

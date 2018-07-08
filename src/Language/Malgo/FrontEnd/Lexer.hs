@@ -1,14 +1,15 @@
 {-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 module Language.Malgo.FrontEnd.Lexer (lex) where
 
-import           Language.Malgo.FrontEnd.Token
-import           Language.Malgo.Prelude        hiding (try)
-
 import           Data.String                   (String)
+import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Token
+import           RIO                           hiding (try)
+import qualified RIO.Text                      as Text
 import           Text.Parsec                   (ParseError, ParsecT, SourceName,
                                                 Stream, alphaNum, char, eof,
                                                 getPosition, letter, oneOf,
@@ -19,7 +20,7 @@ import qualified Text.Parsec.Token             as Tok
 getInfo :: Monad m => ParsecT s u m Info
 getInfo = do
   pos <- getPosition
-  return (Info (toS $ sourceName pos, sourceLine pos, sourceColumn pos))
+  return (Info (Text.pack $ sourceName pos, sourceLine pos, sourceColumn pos))
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
 tokenParser = Tok.makeTokenParser
@@ -51,7 +52,7 @@ op info sym tag = reservedOp sym >> return (Token info tag)
 token :: Stream s m Char => ParsecT s u m Token
 token = do
   info <- getInfo
-  foldl (\b (word, tag) -> b <|> keyword info word tag)
+  foldl' (\b (word, tag) -> b <|> keyword info word tag)
     (keyword info "let" LET)
     [ ("type", TYPE), ("rec", REC), ("and", AND)
     , ("extern", EXTERN), ("fn", FN), ("if", IF)
@@ -62,7 +63,7 @@ token = do
     <|> (rbrack >> return (Token info RBRACK))
     <|> (lbrace >> return (Token info LBRACE))
     <|> (rbrace >> return (Token info RBRACE))
-    <|> foldl (\b (sym, tag) -> b <|> op info sym tag)
+    <|> foldl' (\b (sym, tag) -> b <|> op info sym tag)
           (op info "." DOT)
           [ ("+.", PLUS_DOT), ("-.", MINUS_DOT), ("*.", ASTERISK_DOT)
           , ("/.", SLASH_DOT), (":", COLON), ("=", EQUAL)
@@ -71,11 +72,11 @@ token = do
           , (";", SEMICOLON), ("==", EQ_OP), ("/=", NEQ_OP)
           , ("<", LT_OP), (">", GT_OP), ("<=", LE_OP)
           , (">=", GE_OP), ("&&", AND_OP), ("||", OR_OP) ]
-    <|> (Token info . ID . toS <$> identifier)
+    <|> (Token info . ID . Text.pack <$> identifier)
     <|> try (Token info . FLOAT <$> float)
     <|> (Token info . INT <$> natural)
     <|> (Token info . CHAR <$> charLiteral)
-    <|> (Token info . STRING . toS <$> stringLiteral)
+    <|> (Token info . STRING . Text.pack <$> stringLiteral)
   where
     natural = Tok.natural tokenParser
     float = Tok.float tokenParser

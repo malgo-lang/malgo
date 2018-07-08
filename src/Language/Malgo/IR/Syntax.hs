@@ -1,10 +1,13 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.IR.Syntax where
 
-import           Language.Malgo.Prelude
+import           Data.Text.Prettyprint.Doc
+import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Type
+import           RIO                          hiding (Typeable)
+import           RIO.List.Partial
 
 data Expr a
   -- | 変数参照
@@ -153,20 +156,20 @@ instance Typeable a => Typeable (Expr a) where
     typeOf (Tuple _ xs) = TupleTy (map typeOf xs)
     typeOf (TupleAccess _ e i) =
       let TupleTy xs = typeOf e
-      in fromMaybe (panic "out of bounds") (atMay xs i)
+      in xs !! i
     typeOf (Unit _) = "Unit"
     typeOf (Fn _ params body) = FunTy (map snd params) (typeOf body)
     typeOf (Call _ fn _) =
         case typeOf fn of
             (FunTy _ ty) -> ty
-            _            -> panic "(typeOf fn) should match (FunTy _ ty)"
+            _            -> error "(typeOf fn) should match (FunTy _ ty)"
     typeOf (Seq _ _ e) = typeOf e
     typeOf (Let _ _ e) = typeOf e
     typeOf (If _ _ e _) = typeOf e
     typeOf (BinOp i op x _) =
         case typeOfOp i op (typeOf x) of
             (FunTy _ ty) -> ty
-            _            -> panic "(typeOfOp op) should match (FunTy _ ty)"
+            _            -> error "(typeOfOp op) should match (FunTy _ ty)"
 
 typeOfOp :: Info -> Op -> Type -> Type
 typeOfOp _ Add _ = FunTy ["Int", "Int"] "Int"
@@ -181,27 +184,27 @@ typeOfOp _ Mod _ = FunTy ["Int", "Int"] "Int"
 typeOfOp i Eq ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Neq ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Lt ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Gt ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Le ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Ge ty =
     if comparable ty
         then FunTy [ty, ty] "Bool"
-        else panic $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp _ And _ = FunTy ["Bool", "Bool"] "Bool"
 typeOfOp _ Or _ = FunTy ["Bool", "Bool"] "Bool"
 
@@ -214,5 +217,4 @@ comparable "String"   = False -- TODO: Stringの比較をサポート
 comparable "Unit"     = False
 comparable NameTy {}  = False
 comparable FunTy {}   = False
-comparable ClsTy {}   = False
 comparable TupleTy {} = False
