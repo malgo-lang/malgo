@@ -47,7 +47,7 @@ lintExpr e@(Apply f args) = do
           case fty of
             FunctionTy _ ts -> return ts
             -- PointerTy (StructTy [FunctionTy _ ts, _]) -> return ts
-            t -> throwError $ pretty t <+> "is not applieable"
+            t -> throwError $ pretty t <+> "is not applieable" <> parens (pretty e)
 lintExpr (Access e is) =
   defined e >> accessMType (mTypeOf e) is
 lintExpr (If c t f)
@@ -80,6 +80,6 @@ lintDefn (DefFun _ params fbody) =
   modify (params ++) >> void (lintExpr fbody)
 
 lintProgram :: Program (ID MType) -> BasicLint ann ()
-lintProgram (Program xs) = do
+lintProgram (Program _ xs) = do
   modify (map (\(DefFun f _ _) -> f) xs ++)
   mapM_ lintDefn xs

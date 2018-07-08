@@ -24,8 +24,8 @@ instance Eq (ID a) where
 makeLenses ''ID
 
 instance Pretty a => Pretty (ID a) where
-  pretty (ID n u _) =
-    pretty n <> "." <> pretty u
+  pretty (ID n u m) =
+    pretty n <> "." <> pretty u <> braces (pretty m)
 
 instance Typeable a => Typeable (ID a) where
   typeOf i = typeOf $ i ^. idMeta

@@ -10,21 +10,26 @@ import           Language.Malgo.FreeVars
 import           Language.Malgo.ID
 import           Language.Malgo.Prelude
 
-newtype Program a = Program [Defn a]
+data Program a = Program a [Defn a]
   deriving (Show, Eq, Read)
 
-flattenProgram (Program defs) = Program (map flattenDefn defs)
+flattenProgram :: Program a -> Program a
+flattenProgram (Program m defs) = Program m (map flattenDefn defs)
 
 instance FreeVars Program where
-  freevars (Program xs) = concatMap fv xs
+  freevars (Program _ xs) = concatMap fv xs
 
 instance Pretty a => Pretty (Program a) where
-  pretty (Program defns) =
+  pretty (Program _ defns) =
     vsep (map pretty defns)
 
-data Defn a = DefFun a [a] (Expr a)
+data Defn a = DefFun { _fnName :: a
+                     , _fnParams :: [a]
+                     , _fnBody :: Expr a
+                     }
   deriving (Show, Eq, Read)
 
+flattenDefn :: Defn a -> Defn a
 flattenDefn (DefFun f params body) = DefFun f params (flattenExpr body)
 
 instance FreeVars Defn where
@@ -63,6 +68,7 @@ data Expr a = Var a
             | If a (Expr a) (Expr a)
   deriving (Show, Eq, Read)
 
+flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) =
   insert (flattenExpr v1)
   where insert (Let y v2 e2) = Let y v2 (insert e2)
