@@ -30,7 +30,7 @@ data GenState =
   GenState { _table      :: Map (ID MType) Operand
            , _terminator :: Operand -> GenExpr ()
            , _internal   :: Map Text Operand
-           , _prims      :: Map Text Operand
+           , _prims      :: IORef (Map Text Operand)
            , _logFunc    :: LogFunc
            }
 type GenExpr a = IRBuilderT GenDec a
@@ -42,8 +42,9 @@ dumpLLVM :: MonadIO m => GenDec a -> m [LLVM.AST.Definition]
 dumpLLVM m = liftIO $ do
   verbose <- isJust <$> lookupEnv "RIO_VERBOSE"
   lo <- logOptionsHandle stderr verbose
+  p <- newIORef Map.empty
   withLogFunc lo $ \lf -> do
-    let genState = GenState Map.empty ret Map.empty Map.empty lf
+    let genState = GenState Map.empty ret Map.empty p lf
     runRIO genState (execModuleBuilderT emptyModuleBuilder m)
 
 instance HasLogFunc GenState where
@@ -62,7 +63,7 @@ convertType (IntTy i) = LT.IntegerType (fromInteger i)
 convertType DoubleTy = LT.double
 convertType (PointerTy t) = LT.ptr $ convertType t
 convertType (StructTy xs) = LT.StructureType False (map convertType xs)
-convertType (FunctionTy retTy params) = LT.FunctionType (convertType retTy) (map convertType params) False
+convertType (FunctionTy retTy params) = LT.ptr $ LT.FunctionType (convertType retTy) (map convertType params) False
 
 getRef :: (MonadIO m, MonadReader GenState m) => ID MType -> m Operand
 getRef i = do
@@ -101,7 +102,7 @@ malloc ty = do
   bitcast p (LT.ptr ty)
 
 genExpr :: Expr (ID MType) -> IRBuilderT GenDec ()
-genExpr e = term (genExpr' e)
+genExpr e = term (genExpr' e) `named` "x"
 
 genExpr' :: Expr (ID MType) -> IRBuilderT GenDec Operand
 genExpr' (Var a) = getRef a
@@ -121,14 +122,17 @@ genExpr' (String xs) = do
 genExpr' Unit = return (ConstantOperand $ C.Undef (LT.StructureType False []))
 genExpr' (Prim orig ty) = do
   ps <- view prims
-  case Map.lookup orig ps of
+  psMap <- readIORef ps
+  case Map.lookup orig psMap of
     Just p -> return p
     Nothing -> do (argtys, retty) <-
                     case ty of
                       (FunctionTy r p) -> return (map convertType p, convertType r)
                       _ -> do liftRIO $ logError "extern symbol must have a function type"
                               liftIO exitFailure
-                  lift $ extern (fromString $ Text.unpack orig) argtys retty
+                  p <- lift $ extern (fromString $ Text.unpack orig) argtys retty
+                  liftIO $ modifyIORef ps (Map.insert orig p)
+                  return p
 genExpr' (Tuple xs) = do
   p <- malloc (LT.StructureType False (map (convertType . mTypeOf) xs))
   forM_ (zip [0..] xs) $ \(i, x) -> do
@@ -175,7 +179,10 @@ genDefn (DefFun fn params body) = do
   void $ function fn' params' retty'
     $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))
     $ genExpr body
-  where fnopr = ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ pretty fn)
+  where fnopr = ConstantOperand $ C.GlobalReference (convertType' (mTypeOf fn)) (fromString $ show $ pretty fn)
+        convertType' (FunctionTy r p) = LT.FunctionType (convertType r) (map convertType p) False
+        convertType' _ = error "unreachable"
+
 
 genProgram :: Program (ID MType) -> GenDec ()
 genProgram (Program m defs) = do
@@ -190,4 +197,6 @@ genProgram (Program m defs) = do
                   void $ call m' []
                   ret =<< int32 0)
   where defs' = map (\(DefFun fn _ _) ->
-                       ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ pretty fn)) defs
+                       ConstantOperand $ C.GlobalReference (convertType' (mTypeOf fn)) (fromString $ show $ pretty fn)) defs
+        convertType' (FunctionTy r p) = LT.FunctionType (convertType r) (map convertType p) False
+        convertType' _ = error "unreachable"

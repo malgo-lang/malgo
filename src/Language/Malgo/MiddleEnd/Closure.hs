@@ -29,7 +29,7 @@ makeLenses ''Env
 trans :: Expr (ID MType) -> RIO MalgoApp (Program (ID MType))
 trans e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ flip runReaderT (Env Map.empty []) $ do
   u <- lift $ lift newUniq'
-  let mainFun = ID "main" u (FunctionTy (IntTy 32) [])
+  let mainFun = ID "main" u (FunctionTy (StructTy []) [])
   e' <- transExpr e
   addDefn (DefFun mainFun [] e')
   Program _ xs <- get

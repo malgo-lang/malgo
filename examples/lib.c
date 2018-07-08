@@ -1,8 +1,25 @@
 #include <stdio.h>
 #include <gc.h>
 #include <string.h>
+#include <stdbool.h>
 
 typedef struct {} Unit;
+
+bool le_i32(int x, int y) {
+  return x <= y;
+}
+
+int sub_i32(int x, int y) {
+  return x - y;
+}
+
+int add_i32(int x, int y) {
+  return x + y;
+}
+
+bool eq_i32(int x, int y) {
+  return x == y;
+}
 
 Unit unit = {};
 

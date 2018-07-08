@@ -1,9 +1,11 @@
 {-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Driver where
 
-import qualified Language.Malgo.BackEnd.LLVM as LLVM
+import           Data.Text.Prettyprint.Doc
+import qualified Language.Malgo.BackEnd.LLVM        as LLVM
 import qualified Language.Malgo.FrontEnd.Rename     as Rename
 import qualified Language.Malgo.FrontEnd.TypeCheck  as TypeCheck
 import           Language.Malgo.ID
@@ -14,10 +16,10 @@ import qualified Language.Malgo.MiddleEnd.Closure   as Closure'
 import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
 import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
 import qualified Language.Malgo.Monad               as M
-import           Language.Malgo.Prelude
 import qualified LLVM.AST                           as L
 import           Options.Applicative
-import           RIO                                (writeIORef, RIO, String)
+import           RIO
+import qualified RIO.Text                           as Text
 
 data Opt = Opt
   { _srcName         :: Text
@@ -53,30 +55,30 @@ parseOpt = execParser $
 frontend :: Syntax.Expr Text -> Opt -> RIO M.MalgoApp (Syntax.Expr TypedID)
 frontend ast opt = do
   when (_dumpParsed opt) $
-    print $ pretty ast
+    logInfo $ displayShow $ pretty ast
   renamed <- Rename.rename ast
   when (_dumpRenamed opt) $
-    print $ pretty renamed
+    logInfo $ displayShow $ pretty renamed
   typed <- TypeCheck.typeCheck renamed
   when (_dumpTyped opt) $
-    print $ pretty typed
+    logInfo $ displayShow $ pretty typed
   return typed
 
 middleend :: Syntax.Expr TypedID -> Opt -> RIO M.MalgoApp (IR.Program (ID IR.MType))
 middleend ast opt = do
-  ir <- IR.flattenExpr <$> TransToIR.trans ast
+  ir <- TransToIR.trans ast
   when (_dumpIR opt) $ do
-    putStrLn "TransToIR:"
-    print $ pretty ir
+    logInfo "TransToIR:"
+    logInfo $ displayShow $ pretty ir
   case BasicLint.lint ir of
     Right _  -> return ()
     Left mes -> error $ show mes
   M.UniqSupply u <- M.maUniqSupply <$> ask
   writeIORef u 0
-  ir' <- IR.flattenExpr <$> MutRec.remove ir
+  ir' <- MutRec.remove ir
   when (_dumpIR opt) $ do
-    putStrLn "MutRec:"
-    print $ pretty ir'
+    logInfo "MutRec:"
+    logInfo $ displayShow $ pretty ir'
   case BasicLint.lint ir' of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -84,11 +86,10 @@ middleend ast opt = do
     Right _  -> return ()
     Left mes -> error $ show mes
 
-  -- print $ pretty $ Closure'.knownFuns ir'
-  ir'' <- IR.flattenProgram <$> Closure'.trans ir'
+  ir'' <- Closure'.trans ir'
   when (_dumpIR opt && _dumpClosure opt) $ do
-    putStrLn "Closure:"
-    print $ pretty ir''
+    logInfo "Closure:"
+    logInfo $ displayShow $ pretty ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -98,8 +99,8 @@ middleend ast opt = do
 backend :: MonadIO m => Text -> IR.Program (ID IR.MType) -> m L.Module
 backend filename ir = do
   defs <- LLVM.dumpLLVM (LLVM.genProgram ir)
-  return $ L.defaultModule { L.moduleName = fromString $ toS filename
-                           , L.moduleSourceFileName = fromString $ toS filename
+  return $ L.defaultModule { L.moduleName = fromString $ Text.unpack filename
+                           , L.moduleSourceFileName = fromString $ Text.unpack filename
                            , L.moduleDefinitions = defs
                            }
 
@@ -108,19 +109,3 @@ compile filename ast opt = M.runMalgo' $ do
   typed <- frontend ast opt
   ir <- middleend typed opt
   backend filename ir
-
--- compile :: Text -> Syntax.Expr Name -> Opt -> IO L.Module compile filename ast opt = do i <- newIORef 0 (typed, s2) <- M.runMalgo' (frontend ast opt) (M.UniqSupply i) _ <- M.runMalgo' (middleend typed opt) (M.UniqSupply i) (knormal, s3) <- run _dumpHIR (KNormal.knormal $ if _notBetaTrans opt then typed else Beta.betaTrans typed) s2 when (_dumpFlatten opt) $ liftIO (print $ pretty (Flatten.flatten knormal)) (cls, _) <- run (const False) (Closure.conv knormal) s3 when (_dumpClosure opt) $ liftIO $ print $ pretty cls let defs = CodeGen.dumpCodeGen (CodeGen.genProgram $
---                                   if _notDeleteUnused opt
---                                   then cls
---                                   else Unused.remove cls)
---   let llvmMod = L.defaultModule { L.moduleName = fromString $ toS filename
---                                 , L.moduleSourceFileName = fromString $ toS filename
---                                 , L.moduleDefinitions = defs
---                                 }
---   return llvmMod
---   where run key m u = do
---           (x, s) <- M.runMalgo m u
---           when (key opt) $
---             liftIO $ print $ pretty x
---           s' <- readIORef $ M.unUniqSupply $ view M.uniqSupplyL s
---           return (x, s')
