@@ -6,14 +6,14 @@ module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
 
 import           Control.Monad.Except
 import           Data.Text.Prettyprint.Doc
-import           Language.Malgo.ID
-import           Language.Malgo.IR.Syntax  hiding (info)
-import qualified Language.Malgo.IR.Syntax  as Syntax
-import           Language.Malgo.Monad
 import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.ID
+import           Language.Malgo.IR.Syntax     hiding (info)
+import qualified Language.Malgo.IR.Syntax     as Syntax
+import           Language.Malgo.Monad
 import           Language.Malgo.Type
 import           RIO
-import qualified RIO.Map                   as Map
+import qualified RIO.Map                      as Map
 import           System.Exit
 
 typeCheck :: Expr RawID -> RIO MalgoApp (Expr TypedID)

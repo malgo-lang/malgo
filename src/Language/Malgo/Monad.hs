@@ -1,8 +1,8 @@
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE RankNTypes                 #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE RankNTypes            #-}
 module Language.Malgo.Monad
   ( UniqSupply(..)
   , MalgoApp(..)
@@ -13,7 +13,7 @@ module Language.Malgo.Monad
 import           Control.Monad.State
 import           RIO
 import           RIO.Process
-import           System.Environment        (lookupEnv)
+import           System.Environment  (lookupEnv)
 
 newtype UniqSupply = UniqSupply { unUniqSupply :: IORef Int }
 

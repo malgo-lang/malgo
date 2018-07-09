@@ -10,11 +10,7 @@ import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.FrontEnd.Token
 import           RIO                           hiding (try)
 import qualified RIO.Text                      as Text
-import           Text.Parsec                   (ParseError, ParsecT, SourceName,
-                                                Stream, alphaNum, char, eof,
-                                                getPosition, letter, oneOf,
-                                                runParserT, sourceColumn,
-                                                sourceLine, sourceName, try)
+import           Text.Parsec                   hiding (many, token, (<|>))
 import qualified Text.Parsec.Token             as Tok
 
 getInfo :: Monad m => ParsecT s u m Info

@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveFoldable        #-}
+{-# LANGUAGE DeriveTraversable     #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
@@ -69,7 +71,7 @@ data Expr a = Var a
             | Cast MType a
             | Access a [Int]
             | If a (Expr a) (Expr a)
-  deriving (Show, Eq, Read)
+  deriving (Show, Eq, Read, Functor, Foldable, Traversable)
 
 flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) =
@@ -185,7 +187,7 @@ accessMType t@(StructTy xs) (i:is) =
   case atMay xs i of
     Just xt -> accessMType xt is
     Nothing -> throwError $ "out of bounds:" <+> pretty t <> "," <+> pretty i
-  where atMay (y:_) 0 = Just y
-        atMay [] _ = Nothing
+  where atMay (y:_) 0  = Just y
+        atMay [] _     = Nothing
         atMay (_:ys) n = atMay ys (n - 1)
 accessMType t _ = throwError $ pretty t <+> "is not accessable MType"

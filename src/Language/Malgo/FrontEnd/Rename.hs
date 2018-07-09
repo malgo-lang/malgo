@@ -6,12 +6,12 @@ module Language.Malgo.FrontEnd.Rename ( rename ) where
 
 import           Control.Monad.Except
 import           Data.Text.Prettyprint.Doc
-import           Language.Malgo.ID         hiding (newID)
-import           Language.Malgo.IR.Syntax  hiding (info)
-import           Language.Malgo.Monad
 import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.ID
+import           Language.Malgo.IR.Syntax     hiding (info)
+import           Language.Malgo.Monad
 import           RIO
-import qualified RIO.Map                   as Map
+import qualified RIO.Map                      as Map
 import           System.Exit
 
 rename :: Expr Text -> RIO MalgoApp (Expr RawID)
