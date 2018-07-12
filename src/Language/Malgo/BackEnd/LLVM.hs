@@ -10,14 +10,13 @@
 module Language.Malgo.BackEnd.LLVM where
 
 import           System.Environment        (lookupEnv)
-import LLVM.Pretty
 import           Control.Lens.TH
 import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR hiding (prims)
 import qualified LLVM.AST
 import qualified LLVM.AST.Constant               as C
-import           LLVM.AST.Operand
+import qualified LLVM.AST.Operand as O
 import qualified LLVM.AST.Type                   as LT
 import           LLVM.IRBuilder                  as IRBuilder
 import           RIO
@@ -27,10 +26,10 @@ import qualified RIO.Text                        as Text
 import           System.Exit
 
 data GenState =
-  GenState { _table      :: Map (ID MType) Operand
-           , _terminator :: Operand -> GenExpr ()
-           , _internal   :: Map Text Operand
-           , _prims      :: IORef (Map Text Operand)
+  GenState { _table      :: Map (ID MType) O.Operand
+           , _terminator :: O.Operand -> GenExpr ()
+           , _internal   :: Map Text O.Operand
+           , _prims      :: IORef (Map Text O.Operand)
            , _logFunc    :: LogFunc
            }
 type GenExpr a = IRBuilderT GenDec a
@@ -50,11 +49,11 @@ dumpLLVM m = liftIO $ do
 instance HasLogFunc GenState where
   logFuncL = logFunc
 
-addTable :: MonadReader GenState m => ID MType -> Operand -> m a -> m a
+addTable :: MonadReader GenState m => ID MType -> O.Operand -> m a -> m a
 addTable name opr m =
   local (over table (Map.insert name opr)) m
 
-addInternal :: MonadReader GenState m => Text -> Operand -> m a -> m a
+addInternal :: MonadReader GenState m => Text -> O.Operand -> m a -> m a
 addInternal name opr m =
   local (over internal (Map.insert name opr)) m
 
@@ -65,7 +64,7 @@ convertType (PointerTy t) = LT.ptr $ convertType t
 convertType (StructTy xs) = LT.StructureType False (map convertType xs)
 convertType (FunctionTy retTy params) = LT.ptr $ LT.FunctionType (convertType retTy) (map convertType params) False
 
-getRef :: (MonadIO m, MonadReader GenState m) => ID MType -> m Operand
+getRef :: (MonadIO m, MonadReader GenState m) => ID MType -> m O.Operand
 getRef i = do
   m <- view table
   case Map.lookup i m of
@@ -73,22 +72,22 @@ getRef i = do
     Nothing -> do liftRIO $ logError (displayShow i <> " is not found in " <> displayShow m)
                   liftIO exitFailure
 
-term :: IRBuilderT GenDec Operand -> IRBuilderT GenDec ()
+term :: IRBuilderT GenDec O.Operand -> IRBuilderT GenDec ()
 term o = do
   t <- view terminator
   o' <- o
   t o'
 
-char :: Monad m => Integer -> m Operand
-char = return . ConstantOperand . C.Int 8
+char :: Monad m => Integer -> m O.Operand
+char = return . O.ConstantOperand . C.Int 8
 
-sizeof :: MonadIRBuilder m => LT.Type -> m Operand
+sizeof :: MonadIRBuilder m => LT.Type -> m O.Operand
 sizeof ty = do
-  nullptr <- pure $ ConstantOperand (C.Null (LT.ptr ty))
-  ptr <- gep nullptr [ConstantOperand (C.Int 32 1)]
+  nullptr <- pure $ O.ConstantOperand (C.Null (LT.ptr ty))
+  ptr <- gep nullptr [O.ConstantOperand (C.Int 32 1)]
   ptrtoint ptr LT.i64
 
-gcMalloc :: (MonadIO m, MonadIRBuilder m, MonadReader GenState m) => Operand -> m Operand
+gcMalloc :: (MonadIO m, MonadIRBuilder m, MonadReader GenState m) => O.Operand -> m O.Operand
 gcMalloc bytesOpr = do
   f <- Map.lookup "GC_malloc" <$> view internal
   case f of
@@ -96,22 +95,22 @@ gcMalloc bytesOpr = do
     Nothing -> do liftRIO $ logError "unreachable(gcMalloc)"
                   liftIO exitFailure
 
-malloc :: (MonadReader GenState m, MonadIRBuilder m, MonadIO m) => LT.Type -> m Operand
+malloc :: (MonadReader GenState m, MonadIRBuilder m, MonadIO m) => LT.Type -> m O.Operand
 malloc ty = do
   p <- gcMalloc =<< sizeof ty
   bitcast p (LT.ptr ty)
 
 genExpr :: Expr (ID MType) -> IRBuilderT GenDec ()
-genExpr e = term (genExpr' e) `named` "x"
+genExpr e = term (genExpr' e) -- `named` "x"
 
-genExpr' :: Expr (ID MType) -> IRBuilderT GenDec Operand
+genExpr' :: Expr (ID MType) -> IRBuilderT GenDec O.Operand
 genExpr' (Var a) = getRef a
 genExpr' (Int i) = int32 i
 genExpr' (Float d) = double d
 genExpr' (Bool b) = bit (if b then 1 else 0)
 genExpr' (Char c) = char (toInteger $ Char.ord c)
 genExpr' (String xs) = do
-  p <- gcMalloc (ConstantOperand $ C.Int 64 $ toInteger $ Text.length xs + 1)
+  p <- gcMalloc (O.ConstantOperand $ C.Int 64 $ toInteger $ Text.length xs + 1)
   mapM_ (addChar p) (zip [0..] $ Text.unpack xs <> ['\0'])
   return p
   where addChar p (i, c) = do
@@ -119,7 +118,7 @@ genExpr' (String xs) = do
           p' <- gep p [i']
           c' <- char (toInteger $ Char.ord c)
           store p' 0 c'
-genExpr' Unit = return (ConstantOperand $ C.Undef (LT.StructureType False []))
+genExpr' Unit = return (O.ConstantOperand $ C.Undef (LT.StructureType False []))
 genExpr' (Prim orig ty) = do
   ps <- view prims
   psMap <- readIORef ps
@@ -136,7 +135,7 @@ genExpr' (Prim orig ty) = do
 genExpr' (Tuple xs) = do
   p <- malloc (LT.StructureType False (map (convertType . mTypeOf) xs))
   forM_ (zip [0..] xs) $ \(i, x) -> do
-    p' <- gep p [ ConstantOperand (C.Int 32 0), ConstantOperand (C.Int 32 i)]
+    p' <- gep p [ O.ConstantOperand (C.Int 32 0), O.ConstantOperand (C.Int 32 i)]
     o <- getRef x
     store p' 0 o
   return p
@@ -155,7 +154,7 @@ genExpr' (Cast ty a) = do
   bitcast a' (convertType ty)
 genExpr' (Access a is) = do
   a' <- getRef a
-  p <- gep a' (map (ConstantOperand . C.Int 32 . toInteger) is)
+  p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
   load p 0
 genExpr' (If c t f) = do
   c' <- getRef c
@@ -179,7 +178,7 @@ genDefn (DefFun fn params body) = do
   void $ function fn' params' retty'
     $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))
     $ genExpr body
-  where fnopr = ConstantOperand $ C.GlobalReference (convertType' (mTypeOf fn)) (fromString $ show $ pretty fn)
+  where fnopr = O.ConstantOperand $ C.GlobalReference (convertType' (mTypeOf fn)) (fromString $ show $ pretty fn)
         convertType' (FunctionTy r p) = LT.FunctionType (convertType r) (map convertType p) False
         convertType' _ = error "unreachable"
 
@@ -197,6 +196,6 @@ genProgram (Program m defs) = do
                   void $ call m' []
                   ret =<< int32 0)
   where defs' = map (\(DefFun fn _ _) ->
-                       ConstantOperand $ C.GlobalReference (convertType' (mTypeOf fn)) (fromString $ show $ pretty fn)) defs
+                       O.ConstantOperand $ C.GlobalReference (convertType' (mTypeOf fn)) (fromString $ show $ pretty fn)) defs
         convertType' (FunctionTy r p) = LT.FunctionType (convertType r) (map convertType p) False
         convertType' _ = error "unreachable"
