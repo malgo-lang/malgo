@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
@@ -9,8 +8,7 @@ module Language.Malgo.MiddleEnd.Closure (trans) where
 import           Control.Lens.TH
 import           Control.Monad.State
 import           Data.Text.Prettyprint.Doc
-import           Language.Malgo.FreeVars
-import           Language.Malgo.ID         hiding (newID)
+import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           RIO
@@ -19,7 +17,6 @@ import qualified RIO.Map                   as Map
 import           System.Exit
 
 data Env = Env { _varmap :: Map (ID MType) (ID MType)
-               -- , _closures :: Map (ID MType) (ID MType)
                , _knowns :: [ID MType]
                }
 
@@ -44,6 +41,7 @@ newID name meta = do
   u <- lift $ lift newUniq
   return $ ID name u meta
 
+updateID :: ID MType -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (ID MType)
 updateID a = do
   ma <- Map.lookup a <$> view varmap
   case ma of
@@ -114,7 +112,7 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
           let fbody'' = Let innerCls (Tuple [fn'', capPtr])
                         $ Let capPtr' (Cast (view idMeta capPtr') capPtr)
                         $ makeLet capPtr' 0 zs'
-                        $ replace (Map.fromList (zip zs zs')) fbody'
+                        $ runReader (replace fbody') (Map.fromList (zip zs zs'))
           addDefn $ DefFun fn'' (capPtr : params') fbody''
 
           -- キャプチャされる値のタプル
@@ -145,13 +143,15 @@ packFunTy (PointerTy ty) = PointerTy $ packFunTy ty
 packFunTy (StructTy xs) = StructTy $ map packFunTy xs
 packFunTy t = t
 
-replace' env a = fromMaybe a $ Map.lookup a env
-replace env (Var a) = Var $ replace' env a
-replace env (Tuple xs) = Tuple $ map (replace' env) xs
-replace env (Apply f args) = Apply f $ map (replace' env) args
-replace env (Let n v e) = Let n (replace env v) (replace env e)
-replace _ LetRec{} = error "unreachable"
-replace env (Cast ty a) = Cast ty (replace' env a)
-replace env (Access a xs) = Access (replace' env a) xs
-replace env (If c t f) = If (replace' env c) (replace env t) (replace env f)
-replace _ e = e
+replace' :: (Ord b, MonadReader (Map b b) f) => b -> f b
+replace' a = fromMaybe a . Map.lookup a <$> ask
+replace :: (Ord a, MonadReader (Map a a) f) => Expr a -> f (Expr a)
+replace (Var a) = Var <$> replace' a
+replace (Tuple xs) = Tuple <$> mapM replace' xs
+replace (Apply f args) = Apply f <$> mapM replace' args
+replace (Let n v e) = Let n <$> replace v <*> replace e
+replace  LetRec{} = error "unreachable"
+replace (Cast ty a) = Cast ty <$> replace' a
+replace (Access a xs) = Access <$> replace' a <*> pure xs
+replace (If c t f) = If <$> replace' c <*> replace t <*> replace f
+replace e = return e

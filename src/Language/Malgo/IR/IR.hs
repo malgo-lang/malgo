@@ -10,10 +10,15 @@ module Language.Malgo.IR.IR where
 import           Control.Lens              (_1, _3)
 import           Control.Monad.Except
 import           Data.Text.Prettyprint.Doc
-import           Language.Malgo.FreeVars
 import           Language.Malgo.ID
 import           RIO
-import           RIO.List                  (delete, (\\))
+import           RIO.List                  (delete, nub, (\\))
+
+class FreeVars f where
+  freevars :: Ord a => f a -> [a]
+
+  fv :: Ord a => f a -> [a]
+  fv x = nub (freevars x)
 
 data Program a = Program a [Defn a]
   deriving (Show, Eq, Read)
