@@ -1,9 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE StrictData        #-}
-{-# LANGUAGE TemplateHaskell   #-}
 module Language.Malgo.FrontEnd.Token where
 
-import           Control.Lens.TH
 import           Language.Malgo.FrontEnd.Info
 import           RIO
 
@@ -55,5 +53,3 @@ data Tag
 
 data Token = Token { _tokenInfo :: Info, _tokenTag :: Tag }
   deriving (Eq, Show)
-
-makeLenses ''Token
