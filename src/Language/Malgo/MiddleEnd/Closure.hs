@@ -8,7 +8,8 @@ module Language.Malgo.MiddleEnd.Closure (trans) where
 import           Control.Lens.TH
 import           Control.Monad.State
 import           Data.Text.Prettyprint.Doc
-import           Language.Malgo.ID
+import           Language.Malgo.ID         hiding (newID)
+import qualified Language.Malgo.ID         as ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           RIO
@@ -24,7 +25,7 @@ makeLenses ''Env
 
 trans :: Expr (ID MType) -> RIO MalgoApp (Program (ID MType))
 trans e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ flip runReaderT (Env Map.empty []) $ do
-  u <- lift $ lift newUniq
+  u <- newUniq
   let mainFun = ID "main" u (FunctionTy (StructTy []) [])
   e' <- transExpr e
   addDefn (DefFun mainFun [] e')
@@ -37,18 +38,15 @@ addDefn defn = do
   put (Program e $ defn : xs)
 
 newID :: Text -> a -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (ID a)
-newID name meta = do
-  u <- lift $ lift newUniq
-  return $ ID name u meta
+newID name meta = ID.newID meta name
 
 updateID :: ID MType -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (ID MType)
 updateID a = do
   ma <- Map.lookup a <$> view varmap
   case ma of
-    Just a' ->
-      return a'
-    Nothing -> do lift $ lift $ logError $ displayShow $ pretty a <+> "is not defined(updateID)"
-                  liftIO exitFailure
+    Just a' -> return a'
+    Nothing -> liftApp $ do logError $ displayShow $ pretty a <+> "is not defined(updateID)"
+                            liftIO exitFailure
 
 transExpr :: Expr (ID MType) -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (Expr (ID MType))
 transExpr (Var a)    = Var <$> updateID a
@@ -146,12 +144,12 @@ packFunTy t = t
 replace' :: (Ord b, MonadReader (Map b b) f) => b -> f b
 replace' a = fromMaybe a . Map.lookup a <$> ask
 replace :: (Ord a, MonadReader (Map a a) f) => Expr a -> f (Expr a)
-replace (Var a) = Var <$> replace' a
-replace (Tuple xs) = Tuple <$> mapM replace' xs
+replace (Var a)        = Var <$> replace' a
+replace (Tuple xs)     = Tuple <$> mapM replace' xs
 replace (Apply f args) = Apply f <$> mapM replace' args
-replace (Let n v e) = Let n <$> replace v <*> replace e
-replace  LetRec{} = error "unreachable"
-replace (Cast ty a) = Cast ty <$> replace' a
-replace (Access a xs) = Access <$> replace' a <*> pure xs
-replace (If c t f) = If <$> replace' c <*> replace t <*> replace f
-replace e = return e
+replace (Let n v e)    = Let n <$> replace v <*> replace e
+replace  LetRec{}      = error "unreachable"
+replace (Cast ty a)    = Cast ty <$> replace' a
+replace (Access a xs)  = Access <$> replace' a <*> pure xs
+replace (If c t f)     = If <$> replace' c <*> replace t <*> replace f
+replace e              = return e

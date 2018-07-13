@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.ID
-  (ID(..), RawID, TypedID, idName, idUniq, idMeta) where
+  (ID(..), RawID, TypedID, idName, idUniq, idMeta, newID) where
 
 import           Control.Lens.TH
 import           Data.Text.Prettyprint.Doc
@@ -30,3 +30,7 @@ instance Pretty a => Pretty (ID a) where
 
 instance Typeable a => Typeable (ID a) where
   typeOf i = typeOf $ view idMeta i
+
+newID :: MonadMalgo f => a -> Text -> f (ID a)
+newID m n =
+  ID n <$> newUniq <*> pure m

@@ -26,17 +26,15 @@ remove :: Expr (ID MType) -> RIO MalgoApp (Expr (ID MType))
 remove e = runReaderT (removeMutRec e) Map.empty
 
 renameID :: ID MType -> ReaderT Env (RIO MalgoApp) (ID MType)
-renameID (ID name _ meta) = do
-  u <- lift newUniq
-  return (ID name u meta)
+renameID (ID name _ meta) = newID meta name
 
 updateID :: ID MType -> ReaderT Env (RIO MalgoApp) (ID MType)
 updateID i = do
   env <- ask
   case Map.lookup i env of
     Just x -> return x
-    Nothing -> do lift $ logError "unreachable(removeMutRec)"
-                  liftIO exitFailure
+    Nothing -> liftApp $ do logError "unreachable(removeMutRec)"
+                            liftIO exitFailure
 
 updateFunDecs :: [(ID MType, Maybe [ID MType], Expr (ID MType))] -> ReaderT Env (RIO MalgoApp) [(ID MType, Maybe [ID MType], Expr (ID MType))]
 updateFunDecs [] = return []

@@ -168,45 +168,44 @@ instance Typeable a => Typeable (Expr a) where
     typeOf (If _ _ e _) = typeOf e
     typeOf (BinOp i op x _) =
         case typeOfOp i op (typeOf x) of
-            (FunTy _ ty) -> ty
-            _            -> error "(typeOfOp op) should match (FunTy _ ty)"
+            (_, _, ty) -> ty
 
-typeOfOp :: Info -> Op -> Type -> Type
-typeOfOp _ Add _ = FunTy ["Int", "Int"] "Int"
-typeOfOp _ Sub _ = FunTy ["Int", "Int"] "Int"
-typeOfOp _ Mul _ = FunTy ["Int", "Int"] "Int"
-typeOfOp _ Div _ = FunTy ["Int", "Int"] "Int"
-typeOfOp _ FAdd _ = FunTy ["Float", "Float"] "Float"
-typeOfOp _ FSub _ = FunTy ["Float", "Float"] "Float"
-typeOfOp _ FMul _ = FunTy ["Float", "Float"] "Float"
-typeOfOp _ FDiv _ = FunTy ["Float", "Float"] "Float"
-typeOfOp _ Mod _ = FunTy ["Int", "Int"] "Int"
+typeOfOp :: Info -> Op -> Type -> (Type, Type, Type)
+typeOfOp _ Add _ = ("Int", "Int", "Int")
+typeOfOp _ Sub _ = ("Int", "Int", "Int")
+typeOfOp _ Mul _ = ("Int", "Int", "Int")
+typeOfOp _ Div _ = ("Int", "Int", "Int")
+typeOfOp _ FAdd _ = ("Float", "Float", "Float")
+typeOfOp _ FSub _ = ("Float", "Float", "Float")
+typeOfOp _ FMul _ = ("Float", "Float", "Float")
+typeOfOp _ FDiv _ = ("Float", "Float", "Float")
+typeOfOp _ Mod _ = ("Int", "Int", "Int")
 typeOfOp i Eq ty =
     if comparable ty
-        then FunTy [ty, ty] "Bool"
+        then (ty, ty, "Bool")
         else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Neq ty =
     if comparable ty
-        then FunTy [ty, ty] "Bool"
+        then (ty, ty, "Bool")
         else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Lt ty =
     if comparable ty
-        then FunTy [ty, ty] "Bool"
+        then (ty, ty, "Bool")
         else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Gt ty =
     if comparable ty
-        then FunTy [ty, ty] "Bool"
+        then (ty, ty, "Bool")
         else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Le ty =
     if comparable ty
-        then FunTy [ty, ty] "Bool"
+        then (ty, ty, "Bool")
         else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
 typeOfOp i Ge ty =
     if comparable ty
-        then FunTy [ty, ty] "Bool"
+        then (ty, ty, "Bool")
         else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
-typeOfOp _ And _ = FunTy ["Bool", "Bool"] "Bool"
-typeOfOp _ Or _ = FunTy ["Bool", "Bool"] "Bool"
+typeOfOp _ And _ = ("Bool", "Bool", "Bool")
+typeOfOp _ Or _ = ("Bool", "Bool", "Bool")
 
 comparable :: Type -> Bool
 comparable "Int"      = True

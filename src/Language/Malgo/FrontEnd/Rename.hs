@@ -29,14 +29,9 @@ getID info name = do
   k <- ask
   case Map.lookup name k of
     Just x -> return x
-    Nothing -> do
-      lift $ logError (displayShow $ "error(rename):" <+> pretty info <+> pretty name <+> "is not defined")
+    Nothing -> liftApp $ do
+      logError (displayShow $ "error(rename):" <+> pretty info <+> pretty name <+> "is not defined")
       liftIO exitFailure
-
-newID :: Text -> RenameM ann RawID
-newID name = do
-  u <- lift newUniq
-  return (ID name u ())
 
 renameExpr :: Expr Text -> RenameM ann (Expr RawID)
 renameExpr (Var info name) = Var info <$> getID info name
@@ -49,7 +44,7 @@ renameExpr (Unit info) = return $ Unit info
 renameExpr (Tuple info xs) = Tuple info <$> mapM renameExpr xs
 renameExpr (TupleAccess info e i) = TupleAccess info <$> renameExpr e <*> pure i
 renameExpr (Fn info params body) = do
-  paramIDs <- mapM (newID . fst) params
+  paramIDs <- mapM (newID () . fst) params
   addKnowns (zip (map fst params) paramIDs) $ do
     params' <- mapM (\(n, t) -> (,) <$> getID info n <*> pure t) params
     body' <- renameExpr body
@@ -59,7 +54,7 @@ renameExpr (Call info fn args) =
 renameExpr (Seq info e1 e2) =
   Seq info <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Let info decls e) = do
-  declIDs <- mapM (newID . getName) decls
+  declIDs <- mapM (newID () . getName) decls
   addKnowns (zip (map getName decls) declIDs) $ do
     decls' <- mapM renameDecl decls
     e' <- renameExpr e
@@ -78,7 +73,7 @@ renameDecl (ValDec info name typ val) = do
   return (ValDec info name' typ val')
 renameDecl (FunDec info fn params retty body) = do
   fn' <- getID info fn
-  paramIDs <- mapM (newID . fst) params
+  paramIDs <- mapM (newID () . fst) params
   addKnowns (zip (map fst params) paramIDs) $ do
     params' <- mapM (\(n, t) -> (,) <$> getID info n <*> pure t) params
     body' <- renameExpr body

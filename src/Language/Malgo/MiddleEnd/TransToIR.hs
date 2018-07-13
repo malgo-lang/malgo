@@ -26,7 +26,7 @@ update a = do
   return (set idMeta mty a)
 
 newTmp :: Text -> MType -> RIO MalgoApp (ID MType)
-newTmp n t = ID ("$" <> n) <$> newUniq <*> return t
+newTmp n t = newID t ("$" <> n)
 
 trans :: S.Expr TypedID -> RIO MalgoApp (Expr (ID MType))
 trans e = transToIR e

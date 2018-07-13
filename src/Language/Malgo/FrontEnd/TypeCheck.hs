@@ -23,8 +23,8 @@ typeCheck e =
 type TypeCheckM ann a = ReaderT (Map RawID TypedID) (RIO MalgoApp) a
 
 throw :: Info -> Doc ann -> TypeCheckM ann a
-throw info mes = do
-  lift $ logError $ displayShow $ "error(typecheck):" <+> pretty info <+> align mes
+throw info mes = liftApp $ do
+  logError $ displayShow $ "error(typecheck):" <+> pretty info <+> align mes
   liftIO exitFailure
 
 addBind :: RawID -> Type -> TypeCheckM ann a -> TypeCheckM ann a
@@ -120,7 +120,7 @@ checkExpr (TupleAccess i tuple index) = do
 checkExpr (BinOp info op x y) = do
     x' <- checkExpr x
     y' <- checkExpr y
-    let (FunTy [px, py] _) = typeOfOp info op (typeOf x')
+    let (px, py, _) = typeOfOp info op (typeOf x')
     when (typeOf x' /= px)
       (throw info $
         "expected:" <+> pretty px
