@@ -5,6 +5,14 @@
 
 typedef struct {} Unit;
 
+void init_gc(void) {
+  GC_INIT();
+}
+
+void* malloc_gc(size_t sz) {
+  return GC_MALLOC(sz);
+}
+
 bool le_i32(int x, int y) {
   return x <= y;
 }

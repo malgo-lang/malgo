@@ -48,8 +48,7 @@ instance FreeVars Defn where
 
 instance Pretty a => Pretty (Defn a) where
   pretty (DefFun fn params body) =
-    "define" <+> pretty fn <> parens (sep (punctuate "," $ map pretty params))
-    <+> braces (line <> indent 2 (pretty body) <> line)
+    parens ("define" <+> parens (pretty fn <+> parens (sep (map pretty params))) <> line <> indent 2 (pretty body))
 
 {- Closure representation
 
@@ -134,7 +133,7 @@ instance Pretty a => Pretty (Expr a) where
   pretty (Cast ty val) = parens ("cast" <+> pretty ty <+> pretty val)
   pretty (Access e is) = parens ("access" <+> pretty e <+> sep (map pretty is))
   pretty (If c t f) =
-    parens ("if" <+> align (pretty c <+> align (pretty t) <+> align (pretty f)))
+    parens ("if" <+> align (pretty c <> line <> align (pretty t) <> line <> align (pretty f)))
 
 instance HasMType a => HasMType (Expr a) where
   mTypeOf (Var a) = mTypeOf a
@@ -180,7 +179,7 @@ instance Pretty MType where
   pretty (IntTy i) = "i" <> pretty i
   pretty DoubleTy = "double"
   pretty (PointerTy t) = parens $ "ptr" <+> pretty t
-  pretty (StructTy ts) = parens $ "struct" <+> align (sep (punctuate "," $ map pretty ts))
+  pretty (StructTy ts) = parens $ "struct" <+> parens (align (sep (punctuate "," $ map pretty ts)))
   pretty (FunctionTy ret params) =
     parens $ "fun" <+> pretty ret
     <+> parens (align $ sep (punctuate "," $ map pretty params))

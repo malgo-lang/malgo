@@ -26,12 +26,11 @@ data Opt = Opt
   , _dumpParsed      :: Bool
   , _dumpRenamed     :: Bool
   , _dumpTyped       :: Bool
-  , _dumpHIR         :: Bool
-  , _dumpFlatten     :: Bool
+  , _dumpKNormal     :: Bool
+  -- , _dumpMutRec      :: Bool
   , _dumpClosure     :: Bool
-  , _dumpIR          :: Bool
-  , _notDeleteUnused :: Bool
-  , _notBetaTrans    :: Bool
+  -- , _notDeleteUnused :: Bool
+  -- , _notBetaTrans    :: Bool
   } deriving (Eq, Show)
 
 parseOpt :: IO Opt
@@ -41,12 +40,10 @@ parseOpt = execParser $
           <*> switch (long "dump-parsed")
           <*> switch (long "dump-renamed")
           <*> switch (long "dump-typed")
-          <*> switch (long "dump-hir")
-          <*> switch (long "dump-flatten")
+          <*> switch (long "dump-knormal")
           <*> switch (long "dump-closure"))
-          <*> switch (long "dump-ir")
-          <*> switch (long "not-delete-unused")
-          <*> switch (long "not-beta-trans")
+          -- <*> switch (long "not-delete-unused")
+          -- <*> switch (long "not-beta-trans")
          <**> helper)
   (fullDesc
     <> progDesc "malgo"
@@ -67,8 +64,7 @@ frontend ast opt = do
 middleend :: Syntax.Expr TypedID -> Opt -> RIO M.MalgoApp (IR.Program (ID IR.MType))
 middleend ast opt = do
   ir <- TransToIR.trans ast
-  when (_dumpIR opt) $ do
-    logInfo "TransToIR:"
+  when (_dumpKNormal opt) $
     logInfo $ displayShow $ pretty $ IR.flattenExpr ir
   case BasicLint.lint ir of
     Right _  -> return ()
@@ -76,9 +72,9 @@ middleend ast opt = do
   M.UniqSupply u <- M.maUniqSupply <$> ask
   writeIORef u 0
   ir' <- MutRec.remove ir
-  when (_dumpIR opt) $ do
-    logInfo "MutRec:"
-    logInfo $ displayShow $ pretty $ IR.flattenExpr ir'
+  -- when (_dumpIR opt) $ do
+  --   logInfo "MutRec:"
+  --   logInfo $ displayShow $ pretty $ IR.flattenExpr ir'
   case BasicLint.lint ir' of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -87,8 +83,7 @@ middleend ast opt = do
     Left mes -> error $ show mes
 
   ir'' <- Closure'.trans ir'
-  when (_dumpIR opt && _dumpClosure opt) $ do
-    logInfo "Closure:"
+  when (_dumpClosure opt) $
     logInfo $ displayShow $ pretty $ IR.flattenProgram ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
     Right _  -> return ()

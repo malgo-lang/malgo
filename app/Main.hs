@@ -28,8 +28,6 @@ main = do
   unless (_dumpParsed opt
           || _dumpRenamed opt
           || _dumpTyped opt
-          || _dumpHIR opt
-          || _dumpIR opt
-          || _dumpFlatten opt
+          || _dumpKNormal opt
           || _dumpClosure opt) $
     putStrLn $ TL.unpack $ ppllvm ll

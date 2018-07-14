@@ -178,16 +178,16 @@ genDefn (DefFun fn params body) = do
   void $ function fn' params' retty'
     $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))
     $ genExpr body
-  where fnopr = O.ConstantOperand $ C.GlobalReference (convertType' (mTypeOf fn)) (fromString $ show $ pretty fn)
+  where fnopr = O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ pretty fn)
         convertType' (FunctionTy r p) = LT.FunctionType (convertType r) (map convertType p) False
         convertType' _ = error "unreachable"
 
 
 genProgram :: Program (ID MType) -> GenDec ()
 genProgram (Program m defs) = do
-  a <- extern "GC_malloc" [LT.i64] (LT.ptr LT.i8)
+  a <- extern "malloc_gc" [LT.i64] (LT.ptr LT.i8)
   addInternal "GC_malloc" a $ do
-    gcInit <- extern "GC_init" [] LT.void
+    gcInit <- extern "init_gc" [] LT.void
     local (over table (Map.fromList (zip (map (\(DefFun f _ _) -> f) defs) defs') <>)) $ do
       mapM_ genDefn defs
       void $ function "main" [] LT.i32
@@ -196,6 +196,6 @@ genProgram (Program m defs) = do
                   void $ call m' []
                   ret =<< int32 0)
   where defs' = map (\(DefFun fn _ _) ->
-                       O.ConstantOperand $ C.GlobalReference (convertType' (mTypeOf fn)) (fromString $ show $ pretty fn)) defs
+                       O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ pretty fn)) defs
         convertType' (FunctionTy r p) = LT.FunctionType (convertType r) (map convertType p) False
         convertType' _ = error "unreachable"

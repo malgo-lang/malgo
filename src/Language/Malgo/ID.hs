@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE CPP                   #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -24,9 +25,16 @@ instance Eq (ID a) where
 
 makeLenses ''ID
 
+ignore :: a -> b -> b
+ignore = flip const
+
 instance Pretty a => Pretty (ID a) where
   pretty (ID n u m) =
+#ifdef SHOW_META
     pretty n <> "." <> pretty u <> braces (pretty m)
+#else
+    ignore m $ pretty n <> "." <> pretty u
+#endif
 
 instance Typeable a => Typeable (ID a) where
   typeOf i = typeOf $ view idMeta i
