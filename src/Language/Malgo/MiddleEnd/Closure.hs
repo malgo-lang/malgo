@@ -77,6 +77,7 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
             $ transExpr fbody
   Program _ defs <- get
   if null (fv fbody' \\ (params' ++ map _fnName defs))
+    -- 本当に自由変数がなければknownsに追加してbodyを変換
     then do addDefn (DefFun fn' params' fbody')
             local (over knowns (fn:))
               $ local (over varmap (Map.insert fn fn'))
@@ -93,12 +94,15 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
         params' = map packID params
         trans' pg = do
           put pg
+
+          -- 再帰呼び出し用のクロージャ
           innerCls <- newID (view idName fn <> "$cls") (packFunTy $ view idMeta fn)
+          -- fnをknownsに加えずにクロージャ変換
           fbody' <- local (over varmap (Map.fromList ((fn, innerCls) : zip params params') <>))
                     $ transExpr fbody
-          -- 自由変数のリスト
           Program _ defs <- get
-          let zs = fv fbody' \\ (params' ++ map _fnName defs)
+          -- 自由変数のリスト
+          let zs = fv fbody' \\ (params' ++ map _fnName defs) -- すでに宣言されている関数名は自由変数にはならない
           -- 実際に変換後のfbody内で参照される自由変数のリスト
           zs' <- mapM transID (zs \\ [innerCls])
 
@@ -107,6 +111,7 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
           capPtr' <- newID "fv_unpacked" $ PointerTy
                      $ StructTy (map (view idMeta) $ zs \\ [innerCls])
 
+          -- 自由変数zsを対応するfv_unpackedの要素zs'に変換
           let fbody'' = Let innerCls (Tuple [fn'', capPtr])
                         $ Let capPtr' (Cast (view idMeta capPtr') capPtr)
                         $ makeLet capPtr' 0 zs'
@@ -116,6 +121,7 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
           -- キャプチャされる値のタプル
           capTuple <- newID "capture" (PointerTy $ StructTy (map (view idMeta) zs'))
           capTuple' <- newID "capture_packed" (PointerTy $ IntTy 8)
+          -- 生成されるクロージャ
           clsID <- newID (view idName fn <> "$cls") (packFunTy (mTypeOf fn))
 
           body' <- local (over varmap (Map.insert fn clsID)) (transExpr body)
