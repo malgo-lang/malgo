@@ -5,13 +5,13 @@
 {-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.MiddleEnd.Closure (trans) where
 
-import           Control.Lens.TH
 import           Control.Monad.State
 import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID         hiding (newID)
 import qualified Language.Malgo.ID         as ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
+import           Lens.Micro.Platform       (makeLenses)
 import           RIO
 import           RIO.List                  ((\\))
 import qualified RIO.Map                   as Map

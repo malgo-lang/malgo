@@ -7,10 +7,10 @@
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.IR.IR where
 
-import           Control.Lens              (_1, _3)
 import           Control.Monad.Except
 import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID
+import           Lens.Micro.Platform       (_1, _3)
 import           RIO
 import           RIO.List                  (delete, nub, (\\))
 

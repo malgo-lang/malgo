@@ -4,7 +4,6 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
 
-import           Control.Lens              (_1)
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.State
@@ -12,6 +11,7 @@ import           Data.Functor.Identity
 import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
+import           Lens.Micro.Platform       (_1)
 import           RIO
 
 type BasicLint ann a = StateT [ID MType] (Except (Doc ann)) a

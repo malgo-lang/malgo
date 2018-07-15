@@ -1,5 +1,5 @@
-{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE CPP                   #-}
+{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -7,10 +7,10 @@
 module Language.Malgo.ID
   (ID(..), RawID, TypedID, idName, idUniq, idMeta, newID) where
 
-import           Control.Lens.TH
 import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.Monad
 import           Language.Malgo.Type
+import           Lens.Micro.Platform       (makeLenses)
 import           RIO                       hiding (Typeable)
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
