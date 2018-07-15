@@ -1,4 +1,5 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE StrictData                 #-}
 module Language.Malgo.FrontEnd.Info where
 
 import           Data.Text.Prettyprint.Doc

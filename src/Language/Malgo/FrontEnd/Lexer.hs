@@ -2,7 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
+{-# LANGUAGE StrictData            #-}
 module Language.Malgo.FrontEnd.Lexer (lex) where
 
 import           Data.String                   (String)

@@ -1,9 +1,9 @@
-{-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE StrictData            #-}
 module Language.Malgo.Monad
   ( UniqSupply(..)
   , MalgoApp(..)
@@ -20,9 +20,9 @@ import           System.Environment   (lookupEnv)
 newtype UniqSupply = UniqSupply { unUniqSupply :: IORef Int }
 
 data MalgoApp = MalgoApp
-  { maLogFunc        :: !LogFunc
-  , maProcessContext :: !ProcessContext
-  , maUniqSupply     :: !UniqSupply
+  { maLogFunc        :: LogFunc
+  , maProcessContext :: ProcessContext
+  , maUniqSupply     :: UniqSupply
   }
 
 instance HasLogFunc MalgoApp where
