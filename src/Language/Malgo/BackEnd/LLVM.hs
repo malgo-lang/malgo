@@ -1,28 +1,30 @@
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE NoMonomorphismRestriction  #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE TemplateHaskell            #-}
-{-# LANGUAGE TupleSections              #-}
-module Language.Malgo.BackEnd.LLVM where
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TupleSections         #-}
+module Language.Malgo.BackEnd.LLVM
+  ( dumpLLVM
+  , genExpr
+  , genDefn
+  , genProgram
+  ) where
 
-import           System.Environment        (lookupEnv)
 import           Control.Lens.TH
 import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID
-import           Language.Malgo.IR.IR hiding (prims)
+import           Language.Malgo.IR.IR      hiding (prims)
 import qualified LLVM.AST
-import qualified LLVM.AST.Constant               as C
-import qualified LLVM.AST.Operand as O
-import qualified LLVM.AST.Type                   as LT
-import           LLVM.IRBuilder                  as IRBuilder
+import qualified LLVM.AST.Constant         as C
+import qualified LLVM.AST.Operand          as O
+import qualified LLVM.AST.Type             as LT
+import           LLVM.IRBuilder            as IRBuilder
 import           RIO
-import qualified RIO.Char                        as Char
-import qualified RIO.Map                         as Map
-import qualified RIO.Text                        as Text
+import qualified RIO.Char                  as Char
+import qualified RIO.Map                   as Map
+import qualified RIO.Text                  as Text
+import           System.Environment        (lookupEnv)
 import           System.Exit
 
 data GenState =
@@ -37,6 +39,9 @@ type GenDec = ModuleBuilderT (RIO GenState)
 
 makeLenses ''GenState
 
+instance HasLogFunc GenState where
+  logFuncL = logFunc
+
 dumpLLVM :: MonadIO m => GenDec a -> m [LLVM.AST.Definition]
 dumpLLVM m = liftIO $ do
   verbose <- isJust <$> lookupEnv "RIO_VERBOSE"
@@ -45,17 +50,6 @@ dumpLLVM m = liftIO $ do
   withLogFunc lo $ \lf -> do
     let genState = GenState Map.empty ret Map.empty p lf
     runRIO genState (execModuleBuilderT emptyModuleBuilder m)
-
-instance HasLogFunc GenState where
-  logFuncL = logFunc
-
-addTable :: MonadReader GenState m => ID MType -> O.Operand -> m a -> m a
-addTable name opr m =
-  local (over table (Map.insert name opr)) m
-
-addInternal :: MonadReader GenState m => Text -> O.Operand -> m a -> m a
-addInternal name opr m =
-  local (over internal (Map.insert name opr)) m
 
 convertType :: MType -> LT.Type
 convertType (IntTy i) = LT.IntegerType (fromInteger i)
@@ -145,7 +139,7 @@ genExpr' (Apply f args) = do
   call f' args'
 genExpr' (Let name val body) = do
   val' <- genExpr' val
-  addTable name val' (genExpr' body)
+  local (over table (Map.insert name val')) (genExpr' body)
 genExpr' LetRec{} = do
   liftRIO $ logError "unreachable(LetRec)"
   liftIO exitFailure
@@ -179,14 +173,11 @@ genDefn (DefFun fn params body) = do
     $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))
     $ genExpr body
   where fnopr = O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ pretty fn)
-        convertType' (FunctionTy r p) = LT.FunctionType (convertType r) (map convertType p) False
-        convertType' _ = error "unreachable"
-
 
 genProgram :: Program (ID MType) -> GenDec ()
 genProgram (Program m defs) = do
   a <- extern "malloc_gc" [LT.i64] (LT.ptr LT.i8)
-  addInternal "GC_malloc" a $ do
+  local (over internal (Map.insert "GC_malloc" a)) $ do
     gcInit <- extern "init_gc" [] LT.void
     local (over table (Map.fromList (zip (map (\(DefFun f _ _) -> f) defs) defs') <>)) $ do
       mapM_ genDefn defs
@@ -197,5 +188,3 @@ genProgram (Program m defs) = do
                   ret =<< int32 0)
   where defs' = map (\(DefFun fn _ _) ->
                        O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ pretty fn)) defs
-        convertType' (FunctionTy r p) = LT.FunctionType (convertType r) (map convertType p) False
-        convertType' _ = error "unreachable"
