@@ -7,11 +7,12 @@
 module Language.Malgo.ID
   (ID(..), RawID, TypedID, idName, idUniq, idMeta, newID) where
 
-import           Data.Text.Prettyprint.Doc
+import           Text.PrettyPrint.HughesPJClass hiding ((<>))
 import           Language.Malgo.Monad
 import           Language.Malgo.Type
 import           Lens.Micro.Platform       (makeLenses)
 import           RIO                       hiding (Typeable)
+import qualified RIO.Text as Text
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read)
@@ -29,11 +30,11 @@ ignore :: a -> b -> b
 ignore = flip const
 
 instance Pretty a => Pretty (ID a) where
-  pretty (ID n u m) =
+  pPrint (ID n u m) =
 #ifdef SHOW_META
-    pretty n <> "." <> pretty u <> braces (pretty m)
+    pPrint n <> "." <> pPrint u <> braces (pPrint m)
 #else
-    ignore m $ pretty n <> "." <> pretty u
+    ignore m $ pPrint (Text.unpack n) <> "." <> pPrint u
 #endif
 
 instance Typeable a => Typeable (ID a) where
