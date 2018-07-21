@@ -19,13 +19,13 @@ rename :: Expr Text -> RIO MalgoApp (Expr RawID)
 rename e =
   runReaderT (renameExpr e) Map.empty
 
-type RenameM ann a = ReaderT (Map Text RawID) (RIO MalgoApp) a
+type RenameM a = ReaderT (Map Text RawID) (RIO MalgoApp) a
 
-addKnowns :: [(Text, RawID)] -> RenameM ann a -> RenameM ann a
+addKnowns :: [(Text, RawID)] -> RenameM a -> RenameM a
 addKnowns kvs m =
   local (Map.fromList kvs <>)  m
 
-getID :: Info -> Text -> RenameM ann RawID
+getID :: Info -> Text -> RenameM RawID
 getID info name = do
   k <- ask
   case Map.lookup name k of
@@ -34,7 +34,7 @@ getID info name = do
       logError (displayShow $ "error(rename):" <+> pPrint info <+> pPrint (Text.unpack name) <+> "is not defined")
       liftIO exitFailure
 
-renameExpr :: Expr Text -> RenameM ann (Expr RawID)
+renameExpr :: Expr Text -> RenameM (Expr RawID)
 renameExpr (Var info name) = Var info <$> getID info name
 renameExpr (Int info x) = return $ Int info x
 renameExpr (Float info x) = return $ Float info x
@@ -67,7 +67,7 @@ renameExpr (If info c t f) =
   If info <$> renameExpr c <*> renameExpr t <*> renameExpr f
 renameExpr (BinOp info op x y) = BinOp info op <$> renameExpr x <*> renameExpr y
 
-renameDecl :: Decl Text -> RenameM ann (Decl RawID)
+renameDecl :: Decl Text -> RenameM (Decl RawID)
 renameDecl (ValDec info name typ val) = do
   val' <- renameExpr val
   name' <- getID info name

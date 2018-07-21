@@ -168,7 +168,7 @@ genDefn :: Defn (ID MType) -> GenDec ()
 genDefn (DefFun fn params body) = do
   let fn' = fromString $ show $ P.pPrint fn
   let params' = map (\(ID name _ ty) ->
-                       (convertType ty, fromString $ show $ P.pPrint $ Text.unpack name)) params
+                       (convertType ty, fromString $ show $ P.pPrint name)) params
   let retty' = convertType (mTypeOf body)
   void $ function fn' params' retty'
     $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))

@@ -27,6 +27,7 @@ data MalgoApp = MalgoApp
 
 instance HasLogFunc MalgoApp where
   logFuncL = lens maLogFunc (\x y -> x { maLogFunc = y })
+
 instance HasProcessContext MalgoApp where
   processContextL = lens maProcessContext (\x y -> x { maProcessContext = y})
 
