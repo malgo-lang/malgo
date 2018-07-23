@@ -4,16 +4,16 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.MutRec (remove, lint) where
 
-import           Data.List                      (nubBy)
+import           Data.List                 (nubBy)
+import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
-import           Lens.Micro.Platform            (_1)
+import           Lens.Micro.Platform       (_1)
 import           RIO
-import qualified RIO.List                       as L
-import qualified RIO.Map                        as Map
+import qualified RIO.List                  as L
+import qualified RIO.Map                   as Map
 import           System.Exit
-import           Text.PrettyPrint.HughesPJClass hiding ((<>))
 
 perm :: Eq a => [a] -> [[a]]
 perm xs = filter (not . null)
@@ -75,11 +75,11 @@ consFunDecs [x] = [x]
 consFunDecs ((f, mparams, fbody):xs) =
   [(f, mparams, LetRec (consFunDecs xs) fbody)]
 
-lint :: Pretty a => Expr a -> Either Doc ()
+lint :: Pretty a => Expr a -> Either (Doc ann) ()
 lint (LetRec fs body) =
   case fs of
     [(_, _, fbody)] -> lint fbody >> lint body
-    _               -> Left $ "invalid FunDecs:" <+> pPrint fs
+    _               -> Left $ "invalid FunDecs:" <+> pretty fs
 lint (Let _ val body) = lint val >> lint body
 lint (If _ t f) = lint t >> lint f
 lint _ = return ()

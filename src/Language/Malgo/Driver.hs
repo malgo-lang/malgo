@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Driver where
 
-import           Text.PrettyPrint.HughesPJClass hiding ((<>))
+import           Data.Text.Prettyprint.Doc
 import qualified Language.Malgo.BackEnd.LLVM        as LLVM
 import qualified Language.Malgo.FrontEnd.Rename     as Rename
 import qualified Language.Malgo.FrontEnd.TypeCheck  as TypeCheck
@@ -22,13 +22,13 @@ import           RIO
 import qualified RIO.Text                           as Text
 
 data Opt = Opt
-  { _srcName         :: Text
-  , _dumpParsed      :: Bool
-  , _dumpRenamed     :: Bool
-  , _dumpTyped       :: Bool
-  , _dumpKNormal     :: Bool
+  { _srcName     :: Text
+  , _dumpParsed  :: Bool
+  , _dumpRenamed :: Bool
+  , _dumpTyped   :: Bool
+  , _dumpKNormal :: Bool
   -- , _dumpMutRec      :: Bool
-  , _dumpClosure     :: Bool
+  , _dumpClosure :: Bool
   -- , _notDeleteUnused :: Bool
   -- , _notBetaTrans    :: Bool
   } deriving (Eq, Show)
@@ -52,20 +52,20 @@ parseOpt = execParser $
 frontend :: Syntax.Expr Text -> Opt -> RIO M.MalgoApp (Syntax.Expr TypedID)
 frontend ast opt = do
   when (_dumpParsed opt) $
-    logInfo $ displayShow $ pPrint ast
+    logInfo $ displayShow $ pretty ast
   renamed <- Rename.rename ast
   when (_dumpRenamed opt) $
-    logInfo $ displayShow $ pPrint renamed
+    logInfo $ displayShow $ pretty renamed
   typed <- TypeCheck.typeCheck renamed
   when (_dumpTyped opt) $
-    logInfo $ displayShow $ pPrint typed
+    logInfo $ displayShow $ pretty typed
   return typed
 
 middleend :: Syntax.Expr TypedID -> Opt -> RIO M.MalgoApp (IR.Program (ID IR.MType))
 middleend ast opt = do
   ir <- TransToIR.trans ast
   when (_dumpKNormal opt) $
-    logInfo $ displayShow $ pPrint $ IR.flattenExpr ir
+    logInfo $ displayShow $ pretty $ IR.flattenExpr ir
   case BasicLint.lint ir of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -74,7 +74,7 @@ middleend ast opt = do
   ir' <- MutRec.remove ir
   -- when (_dumpIR opt) $ do
   --   logInfo "MutRec:"
-  --   logInfo $ displayShow $ pPrint $ IR.flattenExpr ir'
+  --   logInfo $ displayShow $ pretty $ IR.flattenExpr ir'
   case BasicLint.lint ir' of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -84,7 +84,7 @@ middleend ast opt = do
 
   ir'' <- Closure'.trans ir'
   when (_dumpClosure opt) $
-    logInfo $ displayShow $ pPrint $ IR.flattenProgram ir''
+    logInfo $ displayShow $ pretty $ IR.flattenProgram ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
     Right _  -> return ()
     Left mes -> error $ show mes

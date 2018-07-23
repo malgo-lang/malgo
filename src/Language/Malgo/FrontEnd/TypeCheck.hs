@@ -5,15 +5,15 @@
 module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
 
 import           Control.Monad.Except
-import           Text.PrettyPrint.HughesPJClass hiding ((<>))
+import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
-import           Language.Malgo.IR.Syntax     hiding (info)
-import qualified Language.Malgo.IR.Syntax     as Syntax
+import           Language.Malgo.IR.Syntax       hiding (info)
+import qualified Language.Malgo.IR.Syntax       as Syntax
 import           Language.Malgo.Monad
 import           Language.Malgo.Type
 import           RIO
-import qualified RIO.Map                      as Map
+import qualified RIO.Map                        as Map
 import           System.Exit
 
 typeCheck :: Expr RawID -> RIO MalgoApp (Expr TypedID)
@@ -22,9 +22,9 @@ typeCheck e =
 
 type TypeCheckM a = ReaderT (Map RawID TypedID) (RIO MalgoApp) a
 
-throw :: Info -> Doc -> TypeCheckM a
+throw :: Info -> Doc ann -> TypeCheckM a
 throw info mes = liftApp $ do
-  logError $ displayShow $ "error(typecheck):" <+> pPrint info <+> mes
+  logError $ displayShow $ "error(typecheck):" <+> pretty info <+> mes
   liftIO exitFailure
 
 addBind :: RawID -> Type -> TypeCheckM a -> TypeCheckM a
@@ -40,7 +40,7 @@ getBind info name = do
   k <- ask
   case Map.lookup name k of
     Just x  -> return x
-    Nothing -> throw info (pPrint name <+> "is not defined")
+    Nothing -> throw info (pretty name <+> "is not defined")
 
 prototypes :: [Decl RawID] -> [(RawID, Type)]
 prototypes xs = map mkPrototype (filter hasPrototype xs)
@@ -65,7 +65,7 @@ checkDecls (ValDec info name (Just typ) val : ds) = do
     then addBind name typ $
          (ValDec info (set idMeta typ name) (Just typ) val' : ) <$> checkDecls ds
     else throw info $
-         "expected:" <+> pPrint typ $$ "actual:" <+> pPrint (typeOf val')
+         "expected:" <+> pretty typ <> line <> "actual:" <+> pretty (typeOf val')
 checkDecls (FunDec info fn params retty body : ds) = do
   fnty <- makeFnTy params retty
   fd <- addBinds params $ do
@@ -75,8 +75,8 @@ checkDecls (FunDec info fn params retty body : ds) = do
     if typeOf body' == retty
       then pure $ FunDec info fn' params' retty body'
       else throw info $
-           "expected:" <+> pPrint retty
-           $$ "actual:" <+> pPrint (typeOf body')
+           "expected:" <+> pretty retty
+           <> line <> "actual:" <+> pretty (typeOf body')
   (fd :) <$> checkDecls ds
   where
     makeFnTy [] _   = throw info "void parameter is invalid"
@@ -102,20 +102,20 @@ checkExpr (Call info fn args) = do
   paramty <-
     case typeOf fn' of
       (FunTy p _) -> pure p
-      _           -> throw info $ pPrint fn' <+> "is not callable"
+      _           -> throw info $ pretty fn' <+> "is not callable"
   unless (map typeOf args' == paramty)
     (throw info
-      ("expected:" <+> parens (sep $ punctuate "," (map pPrint paramty))
-       $$ "actual:" <+> parens (sep $ punctuate "," (map (pPrint . typeOf) args'))))
+      ("expected:" <+> parens (sep $ punctuate "," (map pretty paramty))
+       <> line <> "actual:" <+> parens (sep $ punctuate "," (map (pretty . typeOf) args'))))
   pure (Call info fn' args')
 checkExpr (TupleAccess i tuple index) = do
   tuple' <- checkExpr tuple
   case typeOf tuple' of
     TupleTy xs ->
       when (index >= length xs) $
-        throw i $ "out of bounds:" <+> pPrint index <+> pPrint (TupleTy xs)
+        throw i $ "out of bounds:" <+> pretty index <+> pretty (TupleTy xs)
     t -> throw (Syntax.info tuple) $ "expected: tuple"
-         $$ "actual:" <+> pPrint t
+         <> line <> "actual:" <+> pretty t
   pure $ TupleAccess i tuple' index
 checkExpr (BinOp info op x y) = do
     x' <- checkExpr x
@@ -123,18 +123,18 @@ checkExpr (BinOp info op x y) = do
     let (px, py, _) = typeOfOp info op (typeOf x')
     when (typeOf x' /= px)
       (throw info $
-        "expected:" <+> pPrint px
-        $$ "actual:" <+> pPrint (typeOf x'))
+        "expected:" <+> pretty px
+        <> line <> "actual:" <+> pretty (typeOf x'))
     when (typeOf y' /= py)
       (throw info $
-        "expected:" <+> pPrint py $$ "actual:" <+> pPrint (typeOf y'))
+        "expected:" <+> pretty py <> line <> "actual:" <+> pretty (typeOf y'))
     pure (BinOp info op x' y')
 checkExpr (Seq info e1 e2) = do
     e1' <- checkExpr e1
     unless (typeOf e1' == "Unit")
       (throw info $
         "expected:" <+>
-        "Unit" $$ "actual:" <+> pPrint (typeOf e1'))
+        "Unit" <> line <> "actual:" <+> pretty (typeOf e1'))
     Seq info e1' <$> checkExpr e2
 checkExpr (Let info decls e) = do
   decls' <- addBinds (prototypes decls) $ checkDecls decls
@@ -153,8 +153,10 @@ checkExpr (If info c t f) = do
     (True, True) -> pure (If info c' t' f')
     (True, False) -> throw info $
                      "expected:" <+>
-                     pPrint (typeOf t') $$ "actual:" <+>
-                     pPrint (typeOf f')
+                     pretty (typeOf t') <> line <>
+                     "actual:" <+>
+                     pretty (typeOf f')
     _ -> throw info $
          "expected:" <+>
-         "Bool" $$ "actual:" <+> pPrint (typeOf c')
+         "Bool" <> line <>
+         "actual:" <+> pretty (typeOf c')

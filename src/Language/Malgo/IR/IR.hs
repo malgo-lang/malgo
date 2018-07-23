@@ -8,12 +8,12 @@
 module Language.Malgo.IR.IR where
 
 import           Control.Monad.Except
+import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID
-import           Lens.Micro.Platform            (_1, _3)
+import           Lens.Micro.Platform       (_1, _3)
 import           RIO
-import           RIO.List                       (delete, nub, (\\))
-import qualified RIO.Text                       as Text
-import           Text.PrettyPrint.HughesPJClass hiding ((<>))
+import           RIO.List                  (delete, nub, (\\))
+import qualified RIO.Text                  as Text
 
 class FreeVars f where
   freevars :: Ord a => f a -> [a]
@@ -31,8 +31,8 @@ instance FreeVars Program where
   freevars (Program _ xs) = concatMap fv xs
 
 instance Pretty a => Pretty (Program a) where
-  pPrint (Program _ defns) =
-    sep (map pPrint defns)
+  pretty (Program _ defns) =
+    sep (map pretty defns)
 
 data Defn a = DefFun { _fnName   :: a
                      , _fnParams :: [a]
@@ -48,8 +48,8 @@ instance FreeVars Defn where
     fv body \\ params
 
 instance Pretty a => Pretty (Defn a) where
-  pPrint (DefFun fn params body) =
-    parens ("define" <+> parens (pPrint fn <+> parens (sep (map pPrint params))) $$ nest 2 (pPrint body))
+  pretty (DefFun fn params body) =
+    parens ("define" <+> parens (pretty fn <+> parens (sep (map pretty params))) <> line <> indent 2 (pretty body))
 
 {- Closure representation
 
@@ -112,29 +112,29 @@ instance FreeVars Expr where
   freevars _ = []
 
 instance Pretty a => Pretty (Expr a) where
-  pPrint (Var a) = pPrint a
-  pPrint (Int i) = pPrint i
-  pPrint (Float d) = pPrint d
-  pPrint (Bool True) = "true"
-  pPrint (Bool False) = "false"
-  pPrint (Char c) = quotes $ pPrint c
-  pPrint (String s) = doubleQuotes $ pPrint (Text.unpack s)
-  pPrint Unit = lparen <> rparen
-  pPrint (Prim name _) = "#" <> text (Text.unpack name)
-  pPrint (Tuple xs) = "tuple" <> parens (sep $ punctuate "," $ map pPrint xs)
-  pPrint (Apply f args) = parens (pPrint f <+> sep (map pPrint args))
-  pPrint (Let name val body) =
-    parens ("let" <+> parens (pPrint name <+> pPrint val)
-             $$ nest 1 (pPrint body))
-  pPrint (LetRec defs body) =
+  pretty (Var a) = pretty a
+  pretty (Int i) = pretty i
+  pretty (Float d) = pretty d
+  pretty (Bool True) = "true"
+  pretty (Bool False) = "false"
+  pretty (Char c) = squotes $ pretty c
+  pretty (String s) = dquotes $ pretty s
+  pretty Unit = lparen <> rparen
+  pretty (Prim name _) = "#" <> pretty name
+  pretty (Tuple xs) = "tuple" <> parens (sep $ punctuate "," $ map pretty xs)
+  pretty (Apply f args) = parens (pretty f <+> sep (map pretty args))
+  pretty (Let name val body) =
+    parens ("let" <+> parens (pretty name <+> pretty val)
+             <> line <> indent 1 (pretty body))
+  pretty (LetRec defs body) =
     parens ("let" <+> sep (map (\(name, params, val) ->
-                                          parens ("rec" <+> pPrint name <+> sep (map pPrint (fromMaybe [] params))
-                                                  $$ nest 1 (pPrint val))) defs)
-             $$ nest 1 (pPrint body))
-  pPrint (Cast ty val) = parens ("cast" <+> pPrint ty <+> pPrint val)
-  pPrint (Access e is) = parens ("access" <+> pPrint e <+> sep (map pPrint is))
-  pPrint (If c t f) =
-    parens ("if" <+> (pPrint c $+$ pPrint t $+$ pPrint f))
+                                          parens ("rec" <+> pretty name <+> sep (map pretty (fromMaybe [] params))
+                                                  <> line <> indent 1 (pretty val))) defs)
+             <> line <> indent 1 (pretty body))
+  pretty (Cast ty val) = parens ("cast" <+> pretty ty <+> pretty val)
+  pretty (Access e is) = parens ("access" <+> pretty e <+> sep (map pretty is))
+  pretty (If c t f) =
+    parens ("if" <+> (pretty c <> line <> pretty t <> line <> pretty f))
 
 instance HasMType a => HasMType (Expr a) where
   mTypeOf (Var a) = mTypeOf a
@@ -150,7 +150,7 @@ instance HasMType a => HasMType (Expr a) where
     case mTypeOf f of
       FunctionTy t _ -> t -- normal function
       -- PointerTy (StructTy [FunctionTy t _, _]) -> t -- closure
-      t              -> error $ show $ pPrint t <+> "is not applieable"
+      t              -> error $ show $ pretty t <+> "is not applieable"
   mTypeOf (Let _ _ body) = mTypeOf body
   mTypeOf (LetRec _ body) = mTypeOf body
   mTypeOf (Cast ty _) = ty
@@ -177,22 +177,22 @@ instance HasMType a => HasMType (ID a) where
   mTypeOf (ID _ _ m) = mTypeOf m
 
 instance Pretty MType where
-  pPrint (IntTy i) = "i" <> pPrint i
-  pPrint DoubleTy = "double"
-  pPrint (PointerTy t) = parens $ "ptr" <+> pPrint t
-  pPrint (StructTy ts) = parens $ "struct" <+> parens (sep (punctuate "," $ map pPrint ts))
-  pPrint (FunctionTy ret params) =
-    parens $ "fun" <+> pPrint ret
-    <+> parens (sep (punctuate "," $ map pPrint params))
+  pretty (IntTy i) = "i" <> pretty i
+  pretty DoubleTy = "double"
+  pretty (PointerTy t) = parens $ "ptr" <+> pretty t
+  pretty (StructTy ts) = parens $ "struct" <+> parens (sep (punctuate "," $ map pretty ts))
+  pretty (FunctionTy ret params) =
+    parens $ "fun" <+> pretty ret
+    <+> parens (sep (punctuate "," $ map pretty params))
 
-accessMType :: MonadError Doc m => MType -> [Int] -> m MType
+accessMType :: MonadError (Doc ann) m => MType -> [Int] -> m MType
 accessMType x [] = return x
 accessMType (PointerTy x) (_:is) = accessMType x is
 accessMType t@(StructTy xs) (i:is) =
   case atMay xs i of
     Just xt -> accessMType xt is
-    Nothing -> throwError $ "out of bounds:" <+> (pPrint t <> ",") <+> pPrint i
+    Nothing -> throwError $ "out of bounds:" <+> (pretty t <> ",") <+> pretty i
   where atMay (y:_) 0  = Just y
         atMay [] _     = Nothing
         atMay (_:ys) n = atMay ys (n - 1)
-accessMType t _ = throwError $ pPrint t <+> "is not accessable MType"
+accessMType t _ = throwError $ pretty t <+> "is not accessable MType"
