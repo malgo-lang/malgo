@@ -13,7 +13,6 @@ import           Language.Malgo.ID
 import           Lens.Micro.Platform       (_1, _3)
 import           RIO
 import           RIO.List                  (delete, nub, (\\))
-import qualified RIO.Text                  as Text
 
 class FreeVars f where
   freevars :: Ord a => f a -> [a]
