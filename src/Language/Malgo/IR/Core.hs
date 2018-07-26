@@ -9,7 +9,7 @@ module Language.Malgo.IR.Core where
 
 import           Language.Malgo.FrontEnd.Info
 import           RIO
-import Data.Text.Prettyprint.Doc
+import           Language.Malgo.Pretty
 
 data Expr t a
   -- | 変数
@@ -42,31 +42,31 @@ data Expr t a
   | Prim a
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
 
-instance (Show t, Show a, Pretty t, Pretty a) => Pretty (Expr t a) where
-  pretty (Var _ a) = pretty a
-  pretty (Int _ i) = pretty i
-  pretty (Float _ f) = pretty f
-  pretty (Bool _ True) = "true"
-  pretty (Bool _ False) = "false"
-  pretty (Char _ c) = squotes $ pretty c
-  pretty (String _ s) = dquotes $ pretty s
-  pretty (Tuple _ xs) = braces (sep (punctuate "," (map pretty xs)))
-  pretty (TupleAccess _ x i) = pretty x <> brackets (pretty i)
+instance (Pretty t, Pretty a) => Pretty (Expr t a) where
+  pPrint (Var _ a) = pPrint a
+  pPrint (Int _ i) = pPrint i
+  pPrint (Float _ f) = pPrint f
+  pPrint (Bool _ True) = "true"
+  pPrint (Bool _ False) = "false"
+  pPrint (Char _ c) = quotes $ pPrint c
+  pPrint (String _ s) = doubleQuotes $ pPrint s
+  pPrint (Tuple _ xs) = braces (sep (punctuate "," (map pPrint xs)))
+  pPrint (TupleAccess _ x i) = pPrint x <> brackets (pPrint i)
   -- TODO: 左結合な表示
-  pretty (App _ Nothing fn arg) = parens (pretty fn <+> pretty arg)
-  pretty (App _ (Just ty) fn arg) =
-    parens (pretty fn <+> ("<" <> pretty ty <> ">") <+> pretty arg)
-  pretty (Fn _ params body) =
-    parens ("fn" <+> parens (sep (map pretty' params)) <+> pretty body)
-    where pretty' (a, t) = parens $ pretty a <> ":" <> pretty t
-  pretty (Seq _ e1 e2) = pretty e1 <> ";" <> line <> pretty e2
-  pretty (Let _ bind body) =
-    parens $ "let" <+> pretty bind <> line <> indent 1 (pretty body)
-  pretty (If _ c t f) =
-    parens $ "if" <+> pretty c
-    <> line <> indent 2 (pretty t)
-    <> line <> indent 2 (pretty f)
-  pretty (Prim a) = "#" <> pretty a
+  pPrint (App _ Nothing fn arg) = parens (pPrint fn <+> pPrint arg)
+  pPrint (App _ (Just ty) fn arg) =
+    parens (pPrint fn <+> ("<" <> pPrint ty <> ">") <+> pPrint arg)
+  pPrint (Fn _ params body) =
+    parens ("fn" <+> parens (sep (map pPrint' params)) <+> pPrint body)
+    where pPrint' (a, t) = parens $ pPrint a <> ":" <> pPrint t
+  pPrint (Seq _ e1 e2) = pPrint e1 <> ";" $+$ pPrint e2
+  pPrint (Let _ bind body) =
+    parens $ "let" <+> pPrint bind $+$ nest 1 (pPrint body)
+  pPrint (If _ c t f) =
+    parens $ "if" <+> pPrint c
+    $+$ nest 2 (pPrint t)
+    $+$ nest 2 (pPrint f)
+  pPrint (Prim a) = "#" <> pPrint a
 
 data Type t = IdTy t
             | Type t :-> Type t
@@ -74,15 +74,15 @@ data Type t = IdTy t
             | PolyTy [t] (Type t)
   deriving (Show, Eq, Ord)
 
-instance Show t => Pretty (Type t)
+instance Pretty (Type t)
 
 data Bind t a = NonRec Info (BindField t a)
               | Rec Info [BindField t a]
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
 
-instance (Show t, Show a) => Pretty (Bind t a)
+instance Pretty (Bind t a)
 
 data BindField t a = BindField a (Maybe (Type t)) (Expr t a)
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
 
-instance (Show t, Show a) => Pretty (BindField t a)
+instance Pretty (BindField t a)

@@ -6,15 +6,15 @@
 module Language.Malgo.MiddleEnd.Closure (trans) where
 
 import           Control.Monad.State
-import           Data.Text.Prettyprint.Doc
-import           Language.Malgo.ID         hiding (newID)
-import qualified Language.Malgo.ID         as ID
+import           Language.Malgo.ID     hiding (newID)
+import qualified Language.Malgo.ID     as ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
-import           Lens.Micro.Platform       (makeLenses)
+import           Language.Malgo.Pretty
+import           Lens.Micro.Platform   (makeLenses)
 import           RIO
-import           RIO.List                  ((\\))
-import qualified RIO.Map                   as Map
+import           RIO.List              ((\\))
+import qualified RIO.Map               as Map
 import           System.Exit
 
 data Env = Env { _varmap :: Map (ID MType) (ID MType)
@@ -45,7 +45,7 @@ updateID a = do
   ma <- Map.lookup a <$> view varmap
   case ma of
     Just a' -> return a'
-    Nothing -> liftApp $ do logError $ displayShow $ pretty a <+> "is not defined(updateID)"
+    Nothing -> liftApp $ do logError $ displayShow $ pPrint a <+> "is not defined(updateID)"
                             liftIO exitFailure
 
 transExpr :: Expr (ID MType) -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (Expr (ID MType))

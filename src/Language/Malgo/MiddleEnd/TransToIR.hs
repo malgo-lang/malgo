@@ -5,7 +5,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.TransToIR (trans) where
 
-import           Data.Text.Prettyprint.Doc
+import           Language.Malgo.Pretty
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import qualified Language.Malgo.IR.Syntax  as S
@@ -15,7 +15,7 @@ import           RIO
 import qualified RIO.Text                  as Text
 import           System.Exit
 
-throw :: Doc ann -> RIO MalgoApp a
+throw :: Doc -> RIO MalgoApp a
 throw mes = do
   logError $ displayShow $ "error(transToIR):" <+> mes
   liftIO exitFailure
@@ -113,12 +113,12 @@ transOp S.FAdd _ = Prim "add_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.FSub _ = Prim "sub_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.FMul _ = Prim "mul_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.FDiv _ = Prim "div_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
-transOp S.Eq ty  = Prim (Text.pack $ show $ "eq_" <> pretty ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Neq ty = Prim (Text.pack $ show $ "neq_" <> pretty ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Lt ty  = Prim (Text.pack $ show $ "lt_" <> pretty ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Gt ty  = Prim (Text.pack $ show $ "gt_" <> pretty ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Le ty  = Prim (Text.pack $ show $ "le_" <> pretty ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Ge ty  = Prim (Text.pack $ show $ "neq_" <> pretty ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Eq ty  = Prim (Text.pack $ show $ "eq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Neq ty = Prim (Text.pack $ show $ "neq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Lt ty  = Prim (Text.pack $ show $ "lt_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Gt ty  = Prim (Text.pack $ show $ "gt_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Le ty  = Prim (Text.pack $ show $ "le_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Ge ty  = Prim (Text.pack $ show $ "neq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
 transOp S.And _  = Prim "and" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 transOp S.Or _   = Prim "or" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 
@@ -131,7 +131,7 @@ toMType (NameTy n) =
     "Char"   -> return $ IntTy 8
     "String" -> return $ PointerTy (IntTy 8)
     "Unit"   -> return $ StructTy []
-    _        -> throw $ pretty n <+> "is not valid type"
+    _        -> throw $ pPrint n <+> "is not valid type"
 toMType (FunTy params ret) =
   FunctionTy <$> toMType ret <*> mapM toMType params
 toMType (TupleTy xs) =

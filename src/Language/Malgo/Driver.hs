@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Driver where
 
-import           Data.Text.Prettyprint.Doc
+import           Language.Malgo.Pretty
 import qualified Language.Malgo.BackEnd.LLVM        as LLVM
 import qualified Language.Malgo.FrontEnd.Rename     as Rename
 import qualified Language.Malgo.FrontEnd.TypeCheck  as TypeCheck
@@ -52,20 +52,20 @@ parseOpt = execParser $
 frontend :: Syntax.Expr Text -> Opt -> RIO M.MalgoApp (Syntax.Expr TypedID)
 frontend ast opt = do
   when (_dumpParsed opt) $
-    logInfo $ displayShow $ pretty ast
+    logInfo $ displayShow $ pPrint ast
   renamed <- Rename.rename ast
   when (_dumpRenamed opt) $
-    logInfo $ displayShow $ pretty renamed
+    logInfo $ displayShow $ pPrint renamed
   typed <- TypeCheck.typeCheck renamed
   when (_dumpTyped opt) $
-    logInfo $ displayShow $ pretty typed
+    logInfo $ displayShow $ pPrint typed
   return typed
 
 middleend :: Syntax.Expr TypedID -> Opt -> RIO M.MalgoApp (IR.Program (ID IR.MType))
 middleend ast opt = do
   ir <- TransToIR.trans ast
   when (_dumpKNormal opt) $
-    logInfo $ displayShow $ pretty $ IR.flattenExpr ir
+    logInfo $ displayShow $ pPrint $ IR.flattenExpr ir
   case BasicLint.lint ir of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -74,7 +74,7 @@ middleend ast opt = do
   ir' <- MutRec.remove ir
   -- when (_dumpIR opt) $ do
   --   logInfo "MutRec:"
-  --   logInfo $ displayShow $ pretty $ IR.flattenExpr ir'
+  --   logInfo $ displayShow $ pPrint $ IR.flattenExpr ir'
   case BasicLint.lint ir' of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -84,7 +84,7 @@ middleend ast opt = do
 
   ir'' <- Closure'.trans ir'
   when (_dumpClosure opt) $
-    logInfo $ displayShow $ pretty $ IR.flattenProgram ir''
+    logInfo $ displayShow $ pPrint $ IR.flattenProgram ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
     Right _  -> return ()
     Left mes -> error $ show mes

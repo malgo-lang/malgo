@@ -5,7 +5,7 @@
 module Language.Malgo.FrontEnd.Rename ( rename ) where
 
 import           Control.Monad.Except
-import           Data.Text.Prettyprint.Doc
+import           Language.Malgo.Pretty
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
 import           Language.Malgo.IR.Syntax     hiding (info)
@@ -31,7 +31,7 @@ getID info name = do
   case Map.lookup name k of
     Just x -> return x
     Nothing -> liftApp $ do
-      logError (displayShow $ "error(rename):" <+> pretty info <+> pretty (Text.unpack name) <+> "is not defined")
+      logError (displayShow $ "error(rename):" <+> pPrint info <+> pPrint (Text.unpack name) <+> "is not defined")
       liftIO exitFailure
 
 renameExpr :: Expr Text -> RenameM (Expr RawID)

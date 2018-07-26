@@ -7,12 +7,12 @@ module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram)
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.State
-import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.IR.IR
-import           Lens.Micro.Platform       (_1)
+import           Language.Malgo.Pretty
+import           Lens.Micro.Platform   (_1)
 import           RIO
 
-lint :: (HasMType a, Eq a, Pretty a) => Expr a -> Either (Doc ann) MType
+lint :: (HasMType a, Eq a, Pretty a) => Expr a -> Either Doc MType
 lint expr = runExcept $ evalStateT (lintExpr expr) []
 
 runLint :: StateT [a1] (ExceptT e Identity) a2 -> Either e a2
@@ -21,30 +21,30 @@ runLint = runExcept . flip evalStateT []
 ifM :: Monad m => m Bool -> m b -> m b -> m b
 ifM b t f = do b' <- b; if b' then t else f
 
-defined :: (Foldable t, Eq a, MonadState (t a) m, MonadError (Doc ann) m, Pretty a) => a -> m ()
+defined :: (Foldable t, Eq a, MonadState (t a) m, MonadError Doc m, Pretty a) => a -> m ()
 defined a =
   ifM (elem a <$> get)
   (return ())
-  (throwError $ pretty a <+> "is not defined")
+  (throwError $ pPrint a <+> "is not defined")
 
-notDefined :: (Foldable t, Eq a, MonadState (t a) m, MonadError (Doc ann) m, Pretty a) => a -> m ()
+notDefined :: (Foldable t, Eq a, MonadState (t a) m, MonadError Doc m, Pretty a) => a -> m ()
 notDefined a =
   ifM (notElem a <$> get)
   (return ())
-  (throwError $ pretty a <+> "is already defined")
+  (throwError $ pPrint a <+> "is already defined")
 
-lintExpr :: (MonadError (Doc ann1) m, Eq a, MonadState [a] m, HasMType a, MonadError (Doc ann2) m, Pretty a) => Expr a -> m MType
+lintExpr :: (MonadState [a] m, Eq a, HasMType a, MonadError Doc m, Pretty a) => Expr a -> m MType
 lintExpr (Let name val body) = do
   notDefined name
   val' <- lintExpr val
   if mTypeOf name == val'
     then modify (name:) >> lintExpr body
-    else throwError $ pretty val <+> "cannot assign to:" <+> (pretty name <> ":" <> pretty (mTypeOf name))
+    else throwError $ pPrint val <+> "cannot assign to:" <+> (pPrint name <> ":" <> pPrint (mTypeOf name))
 lintExpr e@(Apply f args) = do
   mapM_ defined (f:args)
   paramtys <- getParamtys
   if paramtys /= argtys
-    then throwError ("expected:" <+> (pretty paramtys <> ",") <+> "actual:" <+> pretty argtys)
+    then throwError ("expected:" <+> (pPrint paramtys <> ",") <+> "actual:" <+> pPrint argtys)
     else return (mTypeOf e)
   where fty = mTypeOf f
         argtys = map mTypeOf args
@@ -52,7 +52,7 @@ lintExpr e@(Apply f args) = do
           case fty of
             FunctionTy _ ts -> return ts
             -- PointerTy (StructTy [FunctionTy _ ts, _]) -> return ts
-            t -> throwError $ pretty t <+> ("is not applieable: " <> parens (pretty e))
+            t -> throwError $ pPrint t <+> ("is not applieable: " <> parens (pPrint e))
 lintExpr (Access e is) =
   defined e >> accessMType (mTypeOf e) is
 lintExpr (If c t f)
@@ -62,8 +62,8 @@ lintExpr (If c t f)
       f' <- lintExpr f
       if t' == f'
         then return t'
-        else throwError $ pretty t <+> "must be typed as:" <+> pretty f'
-  | otherwise = throwError $ pretty c <+> "must be typed as: i1"
+        else throwError $ pPrint t <+> "must be typed as:" <+> pPrint f'
+  | otherwise = throwError $ pPrint c <+> "must be typed as: i1"
 lintExpr (Var a) =
   defined a >> return (mTypeOf a)
 lintExpr e@(Tuple xs) =
@@ -76,15 +76,15 @@ lintExpr (Cast ty a) =
   defined a >> return ty
 lintExpr e = return $ mTypeOf e
 
-lintFunDec :: (MonadError (Doc ann1) m, Eq a, MonadState [a] m, HasMType a, MonadError (Doc ann2) m, Pretty a) => (a, Maybe [a], Expr a) -> m ()
+lintFunDec :: (MonadState [a] m, Eq a, HasMType a, MonadError Doc m, Pretty a) => (a, Maybe [a], Expr a) -> m ()
 lintFunDec (_, mparams, fbody) =
   modify (fromMaybe [] mparams ++) >> void (lintExpr fbody)
 
-lintDefn :: (MonadError (Doc ann) m, HasMType a, Eq a, MonadState [a] m, Pretty a) => Defn a -> m ()
+lintDefn :: (MonadError Doc m, HasMType a, Eq a, MonadState [a] m, Pretty a) => Defn a -> m ()
 lintDefn (DefFun _ params fbody) =
   modify (params ++) >> void (lintExpr fbody)
 
-lintProgram :: (MonadState [a] m, MonadError (Doc ann) m, HasMType a, Eq a, Pretty a) => Program a -> m ()
+lintProgram :: (MonadState [a] m, MonadError Doc m, HasMType a, Eq a, Pretty a) => Program a -> m ()
 lintProgram (Program _ xs) = do
   modify (map (\(DefFun f _ _) -> f) xs ++)
   mapM_ lintDefn xs

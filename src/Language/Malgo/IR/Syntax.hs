@@ -3,7 +3,7 @@
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.IR.Syntax where
 
-import           Data.Text.Prettyprint.Doc
+import           Language.Malgo.Pretty
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Type
 import           RIO                          hiding (Typeable)
@@ -59,36 +59,36 @@ info (If i _ _ _)        = i
 info (BinOp i _ _ _)     = i
 
 instance Pretty a => Pretty (Expr a) where
-  pretty (Var _ name) = pretty name
-  pretty (Int _ x) = pretty x
-  pretty (Float _ x) = pretty x
-  pretty (Bool _ True) = "#t"
-  pretty (Bool _ False) = "#f"
-  pretty (Char _ x) = squotes $ pretty x
-  pretty (String _ x) = dquotes $ pretty x
-  pretty (Tuple _ xs) =
-    braces $ sep $ punctuate "," $ map pretty xs
-  pretty (TupleAccess _ e i) =
-    parens ("." <+> pretty e <+> pretty i)
-  pretty (Unit _) = "{}"
-  pretty (Call _ fn arg) =
-    parens $ pretty fn <+> sep (map pretty arg)
-  pretty (Fn _ params body) =
+  pPrint (Var _ name) = pPrint name
+  pPrint (Int _ x) = pPrint x
+  pPrint (Float _ x) = pPrint x
+  pPrint (Bool _ True) = "#t"
+  pPrint (Bool _ False) = "#f"
+  pPrint (Char _ x) = quotes $ pPrint x
+  pPrint (String _ x) = doubleQuotes $ pPrint x
+  pPrint (Tuple _ xs) =
+    braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (TupleAccess _ e i) =
+    parens ("." <+> pPrint e <+> pPrint i)
+  pPrint (Unit _) = "{}"
+  pPrint (Call _ fn arg) =
+    parens $ pPrint fn <+> sep (map pPrint arg)
+  pPrint (Fn _ params body) =
     parens $ "fn"
-    <+> parens (sep $ punctuate "," (map (pretty . fst) params))
-    <+> pretty body
-  pretty (Seq _ e1 e2) =
-    parens $ "seq" <+> (pretty e1 <> line <> pretty e2)
-  pretty (Let _ decls body) =
+    <+> parens (sep $ punctuate "," (map (pPrint . fst) params))
+    <+> pPrint body
+  pPrint (Seq _ e1 e2) =
+    parens $ "seq" <+> (pPrint e1 $+$ pPrint e2)
+  pPrint (Let _ decls body) =
     parens $
-    "let" <+> (parens . sep $ map pretty decls)
-    <> line <> indent 2 (pretty body)
-  pretty (If _ c t f) =
-    parens $ "if" <+> pretty c
-    <> line <> indent 2 (pretty t)
-    <> line <> indent 2 (pretty f)
-  pretty (BinOp _ op x y) =
-    parens $ sep [pretty op, pretty x, pretty y]
+    "let" <+> (parens . sep $ map pPrint decls)
+    $+$ nest 2 (pPrint body)
+  pPrint (If _ c t f) =
+    parens $ "if" <+> pPrint c
+    $+$ nest 2 (pPrint t)
+    $+$ nest 2 (pPrint f)
+  pPrint (BinOp _ op x y) =
+    parens $ sep [pPrint op, pPrint x, pPrint y]
 
 -- | 中置演算子の種類を表すタグ
 data Op
@@ -112,23 +112,23 @@ data Op
   deriving (Eq, Show, Read)
 
 instance Pretty Op where
-  pretty Add  = "+"
-  pretty Sub  = "-"
-  pretty Mul  = "*"
-  pretty Div  = "/"
-  pretty FAdd = "+."
-  pretty FSub = "-."
-  pretty FMul = "*."
-  pretty FDiv = "/."
-  pretty Mod  = "%"
-  pretty Eq   = "=="
-  pretty Neq  = "<>"
-  pretty Lt   = "<"
-  pretty Gt   = ">"
-  pretty Le   = "<="
-  pretty Ge   = ">="
-  pretty And  = "&&"
-  pretty Or   = "||"
+  pPrint Add  = "+"
+  pPrint Sub  = "-"
+  pPrint Mul  = "*"
+  pPrint Div  = "/"
+  pPrint FAdd = "+."
+  pPrint FSub = "-."
+  pPrint FMul = "*."
+  pPrint FDiv = "/."
+  pPrint Mod  = "%"
+  pPrint Eq   = "=="
+  pPrint Neq  = "<>"
+  pPrint Lt   = "<"
+  pPrint Gt   = ">"
+  pPrint Le   = "<="
+  pPrint Ge   = ">="
+  pPrint And  = "&&"
+  pPrint Or   = "||"
 
 data Decl a
   = FunDec Info a [(a, Type)] Type (Expr a)
@@ -137,14 +137,14 @@ data Decl a
   deriving (Eq, Show, Read)
 
 instance Pretty a => Pretty (Decl a) where
-  pretty (FunDec _ name params _ body) =
+  pPrint (FunDec _ name params _ body) =
     parens $ "fun" <+>
-    (parens . sep $ pretty name : map (\(n, _) -> pretty n) params)
-    <> line <> indent 2 (pretty body)
-  pretty (ValDec _ name _ val) =
-    parens $ "val" <+> pretty name <+> pretty val
-  pretty (ExDec _ name _ orig) =
-    parens $ "extern" <+> pretty name <+> pretty orig
+    (parens . sep $ pPrint name : map (\(n, _) -> pPrint n) params)
+    $+$ nest 2 (pPrint body)
+  pPrint (ValDec _ name _ val) =
+    parens $ "val" <+> pPrint name <+> pPrint val
+  pPrint (ExDec _ name _ orig) =
+    parens $ "extern" <+> pPrint name <+> pPrint orig
 
 instance Typeable a => Typeable (Expr a) where
     typeOf (Var _ name) = typeOf name
@@ -183,27 +183,27 @@ typeOfOp _ Mod _ = ("Int", "Int", "Int")
 typeOfOp i Eq ty =
     if comparable ty
         then (ty, ty, "Bool")
-        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Neq ty =
     if comparable ty
         then (ty, ty, "Bool")
-        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Lt ty =
     if comparable ty
         then (ty, ty, "Bool")
-        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Gt ty =
     if comparable ty
         then (ty, ty, "Bool")
-        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Le ty =
     if comparable ty
         then (ty, ty, "Bool")
-        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Ge ty =
     if comparable ty
         then (ty, ty, "Bool")
-        else error $ show (pretty i <+> ":" <+> pretty ty <+> "is not comparable")
+        else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp _ And _ = ("Bool", "Bool", "Bool")
 typeOfOp _ Or _ = ("Bool", "Bool", "Bool")
 

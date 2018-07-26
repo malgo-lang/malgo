@@ -12,20 +12,20 @@ module Language.Malgo.BackEnd.LLVM
   , genProgram
   ) where
 
-import           Data.Text.Prettyprint.Doc
 import           Language.Malgo.ID
-import           Language.Malgo.IR.IR      hiding (prims)
-import           Lens.Micro.Platform       (makeLenses)
+import           Language.Malgo.IR.IR  hiding (prims)
+import qualified Language.Malgo.Pretty as P
+import           Lens.Micro.Platform   (makeLenses)
 import qualified LLVM.AST
-import qualified LLVM.AST.Constant         as C
-import qualified LLVM.AST.Operand          as O
-import qualified LLVM.AST.Type             as LT
-import           LLVM.IRBuilder            as IRBuilder
+import qualified LLVM.AST.Constant     as C
+import qualified LLVM.AST.Operand      as O
+import qualified LLVM.AST.Type         as LT
+import           LLVM.IRBuilder        as IRBuilder
 import           RIO
-import qualified RIO.Char                  as Char
-import qualified RIO.Map                   as Map
-import qualified RIO.Text                  as Text
-import           System.Environment        (lookupEnv)
+import qualified RIO.Char              as Char
+import qualified RIO.Map               as Map
+import qualified RIO.Text              as Text
+import           System.Environment    (lookupEnv)
 import           System.Exit
 
 data GenState =
@@ -139,7 +139,7 @@ genExpr' (Apply f args) = do
   args' <- mapM (getRef >=> return . (, [])) args
   call f' args'
 genExpr' (Let name val body) = do
-  val' <- genExpr' val `named` fromString (show (pretty name))
+  val' <- genExpr' val `named` fromString (show (P.pPrint name))
   local (over table (Map.insert name val')) (genExpr' body)
 genExpr' LetRec{} = do
   liftRIO $ logError "unreachable(LetRec)"
@@ -166,14 +166,14 @@ genExpr' (If c t f) = do
 
 genDefn :: Defn (ID MType) -> GenDec ()
 genDefn (DefFun fn params body) = do
-  let fn' = fromString $ show $ pretty fn
+  let fn' = fromString $ show $ P.pPrint fn
   let params' = map (\(ID name _ ty) ->
-                       (convertType ty, fromString $ show $ pretty name)) params
+                       (convertType ty, fromString $ show $ P.pPrint name)) params
   let retty' = convertType (mTypeOf body)
   void $ function fn' params' retty'
     $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))
     $ genExpr body
-  where fnopr = O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ pretty fn)
+  where fnopr = O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ P.pPrint fn)
 
 genProgram :: Program (ID MType) -> GenDec ()
 genProgram (Program m defs) = do
@@ -188,4 +188,4 @@ genProgram (Program m defs) = do
                   void $ call m' []
                   ret =<< int32 0)
   where defs' = map (\(DefFun fn _ _) ->
-                       O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ pretty fn)) defs
+                       O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ P.pPrint fn)) defs
