@@ -172,7 +172,7 @@ genDefn (DefFun fn params body) = do
   let retty' = convertType (mTypeOf body)
   void $ function fn' params' retty'
     $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))
-    $ genExpr body
+             $ genExpr body
   where fnopr = O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ P.pPrint fn)
 
 genProgram :: Program (ID MType) -> GenDec ()

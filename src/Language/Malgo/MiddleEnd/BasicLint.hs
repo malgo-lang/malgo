@@ -44,7 +44,9 @@ lintExpr e@(Apply f args) = do
   mapM_ defined (f:args)
   paramtys <- getParamtys
   if paramtys /= argtys
-    then throwError ("expected:" <+> (pPrint paramtys <> ",") <+> "actual:" <+> pPrint argtys)
+    then throwError ("expected:" <+> pPrint paramtys <> ","
+                     $+$ "actual:" <+> pPrint argtys
+                     $+$ "code:" <+> pPrint e)
     else return (mTypeOf e)
   where fty = mTypeOf f
         argtys = map mTypeOf args

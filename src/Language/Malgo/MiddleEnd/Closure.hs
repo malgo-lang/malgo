@@ -58,7 +58,7 @@ transExpr (Apply f args) = do
     else do f' <- updateID f
             insertLet "fn" (Access f' [0, 0])
               (\fn -> insertLet "env" (Access f' [0, 1])
-                (\env -> return $ Apply fn (env : args)))
+                (\env -> Apply fn . (env:) <$> mapM updateID args))
   where insertLet name e k = do
           i <- newID name (mTypeOf e)
           Let i e <$> k i
@@ -76,7 +76,7 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
             $ local (over varmap (Map.fromList ((fn, fn') : zip params params') <>))
             $ transExpr fbody
   Program _ defs <- get
-  if null (fv fbody' \\ (params' ++ map _fnName defs))
+  if null (fv fbody' \\ (params' ++ map _fnName defs)) && (fn `notElem` fv body)
     -- 本当に自由変数がなければknownsに追加してbodyを変換
     then do addDefn (DefFun fn' params' fbody')
             local (over knowns (fn:))

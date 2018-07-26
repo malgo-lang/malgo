@@ -1,0 +1,6 @@
+let extern print_int : Int -> {} = "print_int"
+    fun map(f : Int -> Int, t : {Int, Int}) : {Int, Int} =
+      {f(t.0), f(t.1)}
+    fun add42(x : Int) : Int = x + 42
+in print_int(map(add42, {1, 2}).0)
+end
