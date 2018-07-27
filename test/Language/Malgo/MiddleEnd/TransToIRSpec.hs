@@ -29,7 +29,7 @@ spec =
 x :: Info
 x = Info ("<dummy>", 0, 0)
 
-tuple :: S.Expr a
+tuple :: S.Expr (ID Type)
 tuple = S.Tuple x [S.Int x 0, S.Int x 1]
 
 tuple' :: I.Expr (ID I.MType)
@@ -37,7 +37,7 @@ tuple' = I.Let (ID "$k" 0 (I.IntTy 32)) (I.Int 0)
          $ I.Let (ID "$k" 1 (I.IntTy 32)) (I.Int 1)
          $ I.Tuple[ID "$k" 0 (I.IntTy 32), ID "$k" 1 (I.IntTy 32)]
 
-tupleAccess :: S.Expr a
+tupleAccess :: S.Expr (ID Type)
 tupleAccess = S.TupleAccess x tuple 0
 
 tupleAccess' :: I.Expr (ID I.MType)
