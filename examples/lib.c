@@ -98,3 +98,24 @@ Unit newline(Unit unused) {
   printf("\n");
   return unit;
 }
+
+int* int_array_create(int n, int init) {
+  int* ptr = GC_MALLOC(sizeof(int) * n);
+  for (int i = 0; i < n; i++) {
+    ptr[i] = init;
+  }
+  return ptr;
+}
+
+int int_array_access(int* array, int index) {
+  return array[index];
+}
+
+int* int_array_update(int* array, int size, int index, int val) {
+  int* array2 = GC_MALLOC(sizeof(int) * size);
+  for (int i = 0; i < size; i++) {
+    array2[i] = array[i];
+  }
+  array2[index] = val;
+  return array2;
+}

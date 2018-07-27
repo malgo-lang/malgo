@@ -217,3 +217,4 @@ comparable "Unit"     = False
 comparable NameTy {}  = False
 comparable FunTy {}   = False
 comparable TupleTy {} = False
+comparable ArrayTy {} = False

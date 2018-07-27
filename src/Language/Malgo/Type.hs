@@ -12,6 +12,7 @@ data Type
   | FunTy { _params :: [Type]
           , _ret    :: Type }
   | TupleTy [Type]
+  | ArrayTy Type
   deriving (Eq, Show, Ord, Read)
 
 instance Pretty Type where
@@ -24,6 +25,8 @@ instance Pretty Type where
     "->" <+> pPrint ret
   pPrint (TupleTy xs) =
     braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (ArrayTy t) =
+    brackets $ pPrint t
 
 instance IsString Type where
   fromString name = NameTy $ fromString name

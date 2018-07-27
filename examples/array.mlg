@@ -1,0 +1,11 @@
+let
+  extern print_int : Int -> {} = "print_int"
+  extern newline : {} -> {} = "newline"
+  extern int_array_create : (Int, Int) -> [Int] = "int_array_create"
+  extern int_array_access : ([Int], Int) -> Int = "int_array_access"
+  extern int_array_update : ([Int], Int, Int, Int) -> [Int] = "int_array_update"
+  val a : [Int] = int_array_create(10, 42)
+  val a1 : Int = int_array_access(a, 1)
+  val a2 : Int = int_array_access(int_array_update(a, 10, 2, 48), 2)
+in print_int(a1); newline(); print_int(a2); newline()
+end

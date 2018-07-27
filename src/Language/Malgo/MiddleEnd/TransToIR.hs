@@ -136,3 +136,4 @@ toMType (FunTy params ret) =
   FunctionTy <$> toMType ret <*> mapM toMType params
 toMType (TupleTy xs) =
   PointerTy . StructTy <$> mapM toMType xs
+toMType (ArrayTy t) = PointerTy <$> toMType t

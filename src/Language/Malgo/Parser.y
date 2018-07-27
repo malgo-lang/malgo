@@ -72,9 +72,9 @@ str   { Token (_, STRING _) }
 %left '&&' '||'
 %left '+' '-' '+.' '-.'
 %left '*' '/' '%' '*.' '/.'
-%left CALL
+-- %left CALL
 %left '.'
-%left '('
+-- %left '('
 %nonassoc NEG
 
 %name parseDecl decl
@@ -122,7 +122,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
    | exp '*' exp { BinOp (_info $2) Mul $1 $3 }
    | exp '/' exp { BinOp (_info $2) Div $1 $3 }
-   | exp '.' int { TupleAccess (_info $2) $1 (fromInteger $ _int . _tag $ $3) }
+   | simple_exp '.' int { TupleAccess (_info $2) $1 (fromInteger $ _int . _tag $ $3) }
    | exp '+.' exp { BinOp (_info $2) FAdd $1 $3 }
    | exp '-.' exp { BinOp (_info $2) FSub $1 $3 }
    | exp '*.' exp { BinOp (_info $2) FMul $1 $3 }
@@ -140,25 +140,27 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | let decls in exp end { Let (_info $1) $2 $4 }
    | if exp then exp else exp %prec prec_if { If (_info $1) $2 $4 $6 }
    | exp ';' exp { Seq (_info $2) $1 $3 }
-   | id { Var (_info $1) (_id . _tag $ $1) }
-   | int { Int (_info $1) (_int . _tag $ $1) }
    | '-' int %prec NEG { BinOp (_info $1) Sub
                            (Int (_info $1) 0)
                            (Int (_info $2) (_int . _tag $ $2))
                        }
-   | float { Float (_info $1) (_float . _tag $ $1) }
    | '-' float %prec NEG { BinOp (_info $1) Sub
                              (Float (_info $1) 0)
                              (Float (_info $2) (_float . _tag $ $2))
                          }
-   | bool { Bool (_info $1) (_bool . _tag $ $1) }
-   | char { Char (_info $1) (_char . _tag $ $1) }
-   | str  { String (_info $1) (_str . _tag $ $1) }
-   | '{' args '}' { Tuple (_info $1) (reverse $2) }
-   | exp '(' ')' %prec CALL { Call (info $1) $1 [Unit (_info $2)] }
-   | exp '(' args ')' %prec CALL { Call (info $1) $1 (reverse $3) }
-   | '{' '}' { Unit (_info $1) }
-   | '(' exp ')' { $2 }
+   | simple_exp { $1 }
+
+simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
+          | int { Int (_info $1) (_int . _tag $ $1) }
+          | float { Float (_info $1) (_float . _tag $ $1) }
+          | bool { Bool (_info $1) (_bool . _tag $ $1) }
+          | char { Char (_info $1) (_char . _tag $ $1) }
+          | str  { String (_info $1) (_str . _tag $ $1) }
+          | '{' args '}' { Tuple (_info $1) (reverse $2) }
+          | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [Unit (_info $2)] }
+          | simple_exp '(' args ')' {- %prec CALL -} { Call (info $1) $1 (reverse $3) }
+          | '{' '}' { Unit (_info $1) }
+          | '(' exp ')' { $2 }
 
 args : args ',' exp { $3 : $1 }
      | exp { [$1] }
@@ -169,6 +171,7 @@ Type : id { NameTy (_id . _tag $ $1) }
      | '{' '}' { "Unit" }
      | '{' Types '}' { TupleTy (reverse $2) }
      | '(' Types ')' '->' Type { FunTy (reverse $2) $5 }
+     | '[' Type ']' { ArrayTy $2 }
 
 Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }
