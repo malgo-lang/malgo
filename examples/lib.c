@@ -99,23 +99,49 @@ Unit newline(Unit unused) {
   return unit;
 }
 
-int* int_array_create(int n, int init) {
+struct int_array {
+  int size;
+  int* array;
+};
+
+struct int_array* int_array_create(int n, int init) {
+  struct int_array* a = GC_MALLOC(sizeof(struct int_array));
+
   int* ptr = GC_MALLOC(sizeof(int) * n);
   for (int i = 0; i < n; i++) {
     ptr[i] = init;
   }
-  return ptr;
+
+  a->size = n;
+  a->array = ptr;
+
+  return a;
 }
 
-int int_array_access(int* array, int index) {
-  return array[index];
+int int_array_access(struct int_array* array, int index) {
+  return array->array[index];
 }
 
-int* int_array_update(int* array, int size, int index, int val) {
-  int* array2 = GC_MALLOC(sizeof(int) * size);
-  for (int i = 0; i < size; i++) {
-    array2[i] = array[i];
+struct int_array* int_array_update(struct int_array* a1, int index, int val) {
+  struct int_array* a2 = GC_MALLOC(sizeof(struct int_array));
+  int* ptr = GC_MALLOC(sizeof(int) * a1->size);
+  for (int i = 0; i < a1->size; i++) {
+    ptr[i] = a1->array[i];
   }
-  array2[index] = val;
-  return array2;
+
+  ptr[index] = val;
+
+  a2->size = a1->size;
+  a2->array = ptr;
+
+  return a2;
 }
+
+/* int* int_array_update(int* array, int size, int index, int val) { */
+/*   int* array2 = GC_MALLOC(sizeof(int) * size); */
+/*   for (int i = 0; i < size; i++) { */
+/*     array2[i] = array[i]; */
+/*   } */
+/*   array2[index] = val; */
+/*   return array2; */
+/* } */
