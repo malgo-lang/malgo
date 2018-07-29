@@ -136,12 +136,3 @@ struct int_array* int_array_update(struct int_array* a1, int index, int val) {
 
   return a2;
 }
-
-/* int* int_array_update(int* array, int size, int index, int val) { */
-/*   int* array2 = GC_MALLOC(sizeof(int) * size); */
-/*   for (int i = 0; i < size; i++) { */
-/*     array2[i] = array[i]; */
-/*   } */
-/*   array2[index] = val; */
-/*   return array2; */
-/* } */

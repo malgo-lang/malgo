@@ -4,10 +4,10 @@ module Language.Malgo.Pretty
   , (<+>)
   ) where
 
-import Text.PrettyPrint.HughesPJClass hiding ((<>), (<+>))
+import qualified Data.Text                      as T
+import qualified Data.Text.Lazy                 as TL
+import           Text.PrettyPrint.HughesPJClass hiding ((<+>), (<>))
 import qualified Text.PrettyPrint.HughesPJClass as P
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as TL
 
 infixl 9 <+>
 (<+>) :: Doc -> Doc -> Doc

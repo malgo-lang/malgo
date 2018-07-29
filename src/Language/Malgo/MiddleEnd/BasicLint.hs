@@ -53,7 +53,6 @@ lintExpr e@(Apply f args) = do
         getParamtys =
           case fty of
             FunctionTy _ ts -> return ts
-            -- PointerTy (StructTy [FunctionTy _ ts, _]) -> return ts
             t -> throwError $ pPrint t <+> ("is not applieable: " <> parens (pPrint e))
 lintExpr (Access e is) =
   defined e >> accessMType (mTypeOf e) is
