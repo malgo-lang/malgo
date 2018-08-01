@@ -47,7 +47,7 @@ transToIR (S.Bool _ x)  = return (Bool x)
 transToIR (S.Char _ c)  = return (Char c)
 transToIR (S.String _ s) = return (String s)
 transToIR (S.Unit _) = return Unit
-transToIR (S.Tuple _ vs) = bind vs [] (return . Tuple)
+transToIR (S.Tuple _ vs) = bind vs [] $ return . Tuple
   where
     bind [] args k = k (reverse args)
     bind (x:xs) args k =

@@ -9,6 +9,7 @@ module Language.Malgo.Monad
   , MalgoApp(..)
   , runMalgo
   , MonadMalgo(..)
+  , newUniq
   ) where
 
 import           Control.Monad.Except
@@ -40,25 +41,20 @@ runMalgo m u = liftIO $ do
     runRIO (MalgoApp lf pc u) m
 
 class Monad m => MonadMalgo m where
-  newUniq :: m Int
   liftApp :: RIO MalgoApp a -> m a
 
 instance MonadMalgo (RIO MalgoApp) where
-  newUniq = do
-    UniqSupply u <- maUniqSupply <$> ask
-    i <- readIORef u
-    modifyIORef u (+1)
-    return i
   liftApp = id
-
 instance MonadMalgo m => MonadMalgo (ReaderT r m) where
-  newUniq = lift newUniq
   liftApp = lift . liftApp
-
 instance MonadMalgo m => MonadMalgo (ExceptT e m) where
-  newUniq = lift newUniq
+  liftApp = lift . liftApp
+instance MonadMalgo m => MonadMalgo (StateT s m) where
   liftApp = lift . liftApp
 
-instance MonadMalgo m => MonadMalgo (StateT s m) where
-  newUniq = lift newUniq
-  liftApp = lift . liftApp
+newUniq :: MonadMalgo m => m Int
+newUniq = liftApp $ do
+  UniqSupply u <- maUniqSupply <$> ask
+  i <- readIORef u
+  modifyIORef u (+1)
+  return i
