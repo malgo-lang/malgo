@@ -6,17 +6,12 @@
 module Language.Malgo.FrontEnd.Lexer (lex) where
 
 import           Data.String                   (String)
-import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.Token
 import           RIO                           hiding (try)
 import qualified RIO.Text                      as Text
 import           Text.Parsec                   hiding (many, token, (<|>))
 import qualified Text.Parsec.Token             as Tok
-
-getInfo :: Monad m => ParsecT s u m Info
-getInfo = do
-  pos <- getPosition
-  return (Info (Text.pack $ sourceName pos, sourceLine pos, sourceColumn pos))
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
 tokenParser = Tok.makeTokenParser
@@ -34,33 +29,32 @@ tokenParser = Tok.makeTokenParser
       [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%", "->", ";"
       , "==", "/=", "<", ">", "<=", ">=", "&&", "||" ]
   , Tok.reservedNames =
-      [ "let", "type", "rec", "and", "extern", "fn", "if", "else" ]
+      [ "let", "type", "rec", "and", "extern", "if", "else", "fn" ]
   }
 
-keyword :: Stream s m Char => Info -> String -> Tag -> ParsecT s u m Token
-keyword info word tag = reserved word >> return (Token info tag)
+keyword :: Stream s m Char => String -> Tag -> ParsecT s u m Tag
+keyword word t = reserved word >> return t
   where reserved = Tok.reserved tokenParser
 
-op :: Stream s m Char => Info -> String -> Tag -> ParsecT s u m Token
-op info sym tag = reservedOp sym >> return (Token info tag)
+op :: Stream s m Char => String -> Tag -> ParsecT s u m Tag
+op sym t = reservedOp sym >> return t
   where reservedOp = Tok.reservedOp tokenParser
 
-token :: Stream s m Char => ParsecT s u m Token
-token = do
-  info <- getInfo
-  foldl' (\b (word, tag) -> b <|> keyword info word tag)
-    (keyword info "let" LET)
+tag :: Stream s m Char => ParsecT s u m Tag
+tag =
+  foldl' (\b (word, t) -> b <|> keyword word t)
+    (keyword "let" LET)
     [ ("type", TYPE), ("rec", REC), ("and", AND)
-    , ("extern", EXTERN), ("fn", FN), ("if", IF)
-    , ("else", ELSE) ]
-    <|> (lparen >> return (Token info LPAREN))
-    <|> (rparen >> return (Token info RPAREN))
-    <|> (lbrack >> return (Token info LBRACK))
-    <|> (rbrack >> return (Token info RBRACK))
-    <|> (lbrace >> return (Token info LBRACE))
-    <|> (rbrace >> return (Token info RBRACE))
-    <|> foldl' (\b (sym, tag) -> b <|> op info sym tag)
-          (op info "." DOT)
+    , ("extern", EXTERN), ("if", IF)
+    , ("else", ELSE), ("fn", FN)]
+    <|> (lparen >> return LPAREN)
+    <|> (rparen >> return RPAREN)
+    <|> (lbrack >> return LBRACK)
+    <|> (rbrack >> return RBRACK)
+    <|> (lbrace >> return LBRACE)
+    <|> (rbrace >> return RBRACE)
+    <|> foldl' (\b (sym, t) -> b <|> op sym t)
+          (op "." DOT)
           [ ("+.", PLUS_DOT), ("-.", MINUS_DOT), ("*.", ASTERISK_DOT)
           , ("/.", SLASH_DOT), (":", COLON), ("=", EQUAL)
           , ("+", PLUS), ("-", MINUS), ("*", ASTERISK)
@@ -68,11 +62,11 @@ token = do
           , (";", SEMICOLON), ("==", EQ_OP), ("/=", NEQ_OP)
           , ("<", LT_OP), (">", GT_OP), ("<=", LE_OP)
           , (">=", GE_OP), ("&&", AND_OP), ("||", OR_OP) ]
-    <|> (Token info . ID . Text.pack <$> identifier)
-    <|> try (Token info . FLOAT <$> float)
-    <|> (Token info . INT <$> natural)
-    <|> (Token info . CHAR <$> charLiteral)
-    <|> (Token info . STRING . Text.pack <$> stringLiteral)
+    <|> (ID . Text.pack <$> identifier)
+    <|> try (FLOAT <$> float)
+    <|> (INT <$> natural)
+    <|> (CHAR <$> charLiteral)
+    <|> (STRING . Text.pack <$> stringLiteral)
   where
     natural = Tok.natural tokenParser
     float = Tok.float tokenParser
@@ -86,6 +80,13 @@ token = do
     rbrack = symbol "]"
     lbrace = symbol "{"
     rbrace = symbol "}"
+
+token :: Stream s m Char => ParsecT s u m Token
+token = do
+  pos1 <- getPosition
+  t <- tag
+  pos2 <- getPosition
+  return $ Loc (SrcSpan (sourceName pos1) (sourceLine pos1) (sourceColumn pos1) (sourceLine pos2) (sourceColumn pos2)) t
 
 lex :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
 lex = runParserT $ do

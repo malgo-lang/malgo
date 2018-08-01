@@ -2,7 +2,7 @@
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.FrontEnd.Token where
 
-import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Loc
 import           RIO
 
 data Tag
@@ -21,7 +21,6 @@ data Tag
   | COLON
   | SEMICOLON
   | EQUAL
-  | FN
   | IF
   | ELSE
   | DOT
@@ -34,6 +33,7 @@ data Tag
   | SLASH
   | SLASH_DOT
   | PERCENT
+  | FN
   | ARROW
   | EQ_OP
   | NEQ_OP
@@ -51,5 +51,4 @@ data Tag
   | STRING { _str :: Text }
   deriving (Eq, Show)
 
-data Token = Token { _tokenInfo :: Info, _tokenTag :: Tag }
-  deriving (Eq, Show)
+type Token = Loc Tag
