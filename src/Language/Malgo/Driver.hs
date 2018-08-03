@@ -4,22 +4,24 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Driver where
 
-import           Language.Malgo.Pretty
-import qualified Language.Malgo.BackEnd.LLVM        as LLVM
-import qualified Language.Malgo.FrontEnd.Rename     as Rename
-import qualified Language.Malgo.FrontEnd.TypeCheck  as TypeCheck
+import qualified Language.Malgo.BackEnd.LLVM            as LLVM
+import qualified Language.Malgo.FrontEnd.Rename         as Rename
+import qualified Language.Malgo.FrontEnd.TypeCheck      as TypeCheck
 import           Language.Malgo.ID
-import qualified Language.Malgo.IR.IR               as IR
-import qualified Language.Malgo.IR.Syntax           as Syntax
-import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
-import qualified Language.Malgo.MiddleEnd.Closure   as Closure'
-import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
-import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
-import qualified Language.Malgo.Monad               as M
-import qualified LLVM.AST                           as L
+import qualified Language.Malgo.IR.IR                   as IR
+import qualified Language.Malgo.MiddleEnd.Closure.Preprocess as Closure
+import qualified Language.Malgo.IR.Syntax               as Syntax
+import qualified Language.Malgo.MiddleEnd.BasicLint     as BasicLint
+import qualified Language.Malgo.MiddleEnd.Closure.Trans as Closure
+import qualified Language.Malgo.MiddleEnd.MutRec        as MutRec
+import qualified Language.Malgo.MiddleEnd.TransToIR     as TransToIR
+import qualified Language.Malgo.Monad                   as M
+import           Language.Malgo.Pretty
+import qualified LLVM.AST                               as L
 import           Options.Applicative
 import           RIO
-import qualified RIO.Text                           as Text
+import qualified RIO.Map as Map
+import qualified RIO.Text                               as Text
 
 data Opt = Opt
   { _srcName     :: Text
@@ -27,6 +29,7 @@ data Opt = Opt
   , _dumpRenamed :: Bool
   , _dumpTyped   :: Bool
   , _dumpKNormal :: Bool
+  , _dumpTypeTable :: Bool
   -- , _dumpMutRec      :: Bool
   , _dumpClosure :: Bool
   -- , _notDeleteUnused :: Bool
@@ -41,6 +44,7 @@ parseOpt = execParser $
           <*> switch (long "dump-renamed")
           <*> switch (long "dump-typed")
           <*> switch (long "dump-knormal")
+          <*> switch (long "dump-type-table")
           <*> switch (long "dump-closure"))
           -- <*> switch (long "not-delete-unused")
           -- <*> switch (long "not-beta-trans")
@@ -82,7 +86,11 @@ middleend ast opt = do
     Right _  -> return ()
     Left mes -> error $ show mes
 
-  ir'' <- Closure'.trans ir'
+  let (_, tt) = Closure.divideTypeFromExpr ir'
+  when (_dumpTypeTable opt) $
+    logInfo $ displayShow $ pPrint $ Map.toList tt
+
+  ir'' <- Closure.trans ir'
   when (_dumpClosure opt) $
     logInfo $ displayShow $ pPrint $ IR.flattenProgram ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of

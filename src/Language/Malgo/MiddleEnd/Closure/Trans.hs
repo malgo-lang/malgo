@@ -3,7 +3,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
-module Language.Malgo.MiddleEnd.Closure (trans) where
+module Language.Malgo.MiddleEnd.Closure.Trans (trans) where
 
 import           Control.Monad.State
 import           Language.Malgo.ID     hiding (newID)

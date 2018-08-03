@@ -29,5 +29,6 @@ main = do
           || _dumpRenamed opt
           || _dumpTyped opt
           || _dumpKNormal opt
+          || _dumpTypeTable opt
           || _dumpClosure opt) $
     putStrLn $ TL.unpack $ ppllvm ll
