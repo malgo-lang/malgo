@@ -132,7 +132,9 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
         makeLet _ _ [] e = e
         makeLet cap i (x:xs) e =
           Let x (Access cap [0, i]) $ makeLet cap (i+1) xs e
-transExpr LetRec{} = undefined
+transExpr LetRec{} = liftApp $ do
+  logError "mutative recursion must be removed by Language.Malgo.MiddleEnd.MutRec"
+  liftIO exitFailure
 transExpr (Cast ty a) = Cast ty <$> updateID a
 transExpr (Access a xs) = Access <$> updateID a <*> pure xs
 transExpr (If c t f) = If <$> updateID c <*> transExpr t <*> transExpr f
@@ -149,6 +151,7 @@ packFunTy t = t
 
 replace' :: (Ord b, MonadReader (Map b b) f) => b -> f b
 replace' a = fromMaybe a . Map.lookup a <$> ask
+
 replace :: (Ord a, MonadReader (Map a a) f) => Expr a -> f (Expr a)
 replace (Var a)        = Var <$> replace' a
 replace (Tuple xs)     = Tuple <$> mapM replace' xs
