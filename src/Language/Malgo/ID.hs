@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE CPP                   #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -7,14 +9,15 @@
 module Language.Malgo.ID
   (ID(..), RawID, TypedID, idName, idUniq, idMeta, newID) where
 
-import           Language.Malgo.Pretty
+import           Data.Outputable
 import           Language.Malgo.Monad
+import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Lens.Micro.Platform       (makeLenses)
-import           RIO                       hiding (Typeable)
+import           Lens.Micro.Platform   (makeLenses)
+import           RIO                   hiding (Typeable)
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
-  deriving (Show, Ord, Read)
+  deriving (Show, Ord, Read, Generic, Outputable)
 
 type RawID = ID ()
 

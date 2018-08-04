@@ -4,34 +4,36 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Driver where
 
-import qualified Language.Malgo.BackEnd.LLVM            as LLVM
-import qualified Language.Malgo.FrontEnd.Rename         as Rename
-import qualified Language.Malgo.FrontEnd.TypeCheck      as TypeCheck
+import           Data.Outputable
+import qualified Language.Malgo.BackEnd.LLVM                 as LLVM
+import qualified Language.Malgo.FrontEnd.Rename              as Rename
+import qualified Language.Malgo.FrontEnd.TypeCheck           as TypeCheck
 import           Language.Malgo.ID
-import qualified Language.Malgo.IR.IR                   as IR
+import qualified Language.Malgo.IR.IR                        as IR
+import qualified Language.Malgo.IR.Syntax                    as Syntax
+import qualified Language.Malgo.MiddleEnd.BasicLint          as BasicLint
 import qualified Language.Malgo.MiddleEnd.Closure.Preprocess as Closure
-import qualified Language.Malgo.IR.Syntax               as Syntax
-import qualified Language.Malgo.MiddleEnd.BasicLint     as BasicLint
-import qualified Language.Malgo.MiddleEnd.Closure.Trans as Closure
-import qualified Language.Malgo.MiddleEnd.MutRec        as MutRec
-import qualified Language.Malgo.MiddleEnd.TransToIR     as TransToIR
-import qualified Language.Malgo.Monad                   as M
+import qualified Language.Malgo.MiddleEnd.Closure.Trans      as Closure
+import qualified Language.Malgo.MiddleEnd.MutRec             as MutRec
+import qualified Language.Malgo.MiddleEnd.TransToIR          as TransToIR
+import qualified Language.Malgo.Monad                        as M
 import           Language.Malgo.Pretty
-import qualified LLVM.AST                               as L
+import qualified LLVM.AST                                    as L
 import           Options.Applicative
 import           RIO
-import qualified RIO.Map as Map
-import qualified RIO.Text                               as Text
+import qualified RIO.Map                                     as Map
+import qualified RIO.Text                                    as Text
 
 data Opt = Opt
-  { _srcName     :: Text
-  , _dumpParsed  :: Bool
-  , _dumpRenamed :: Bool
-  , _dumpTyped   :: Bool
-  , _dumpKNormal :: Bool
+  { _srcName       :: Text
+  , _dumpParsed    :: Bool
+  , _dumpRenamed   :: Bool
+  , _dumpTyped     :: Bool
+  , _dumpKNormal   :: Bool
   , _dumpTypeTable :: Bool
   -- , _dumpMutRec      :: Bool
-  , _dumpClosure :: Bool
+  , _dumpClosure   :: Bool
+  , _isDebugMode :: Bool
   -- , _notDeleteUnused :: Bool
   -- , _notBetaTrans    :: Bool
   } deriving (Eq, Show)
@@ -46,6 +48,7 @@ parseOpt = execParser $
           <*> switch (long "dump-knormal")
           <*> switch (long "dump-type-table")
           <*> switch (long "dump-closure"))
+          <*> switch (long "debug-mode")
           -- <*> switch (long "not-delete-unused")
           -- <*> switch (long "not-beta-trans")
          <**> helper)
@@ -53,23 +56,29 @@ parseOpt = execParser $
     <> progDesc "malgo"
     <> header "malgo - a toy programming language")
 
+dump :: (MonadReader env m, Outputable a, MonadIO m, HasLogFunc env, Pretty a) => Opt -> a -> m ()
+dump opt x =
+  if _isDebugMode opt
+  then logInfo $ displayShow $ ppr x
+  else logInfo $ displayShow $ pPrint x
+
 frontend :: Syntax.Expr Text -> Opt -> RIO M.MalgoApp (Syntax.Expr TypedID)
 frontend ast opt = do
   when (_dumpParsed opt) $
-    logInfo $ displayShow $ pPrint ast
+    dump opt ast
   renamed <- Rename.rename ast
   when (_dumpRenamed opt) $
-    logInfo $ displayShow $ pPrint renamed
+    dump opt renamed
   typed <- TypeCheck.typeCheck renamed
   when (_dumpTyped opt) $
-    logInfo $ displayShow $ pPrint typed
+    dump opt typed
   return typed
 
 middleend :: Syntax.Expr TypedID -> Opt -> RIO M.MalgoApp (IR.Program (ID IR.MType))
 middleend ast opt = do
   ir <- TransToIR.trans ast
   when (_dumpKNormal opt) $
-    logInfo $ displayShow $ pPrint $ IR.flattenExpr ir
+    dump opt $ IR.flattenExpr ir
   case BasicLint.lint ir of
     Right _  -> return ()
     Left mes -> error $ show mes
@@ -88,11 +97,11 @@ middleend ast opt = do
 
   let (_, tt) = Closure.divideTypeFromExpr ir'
   when (_dumpTypeTable opt) $
-    logInfo $ displayShow $ pPrint $ Map.toList tt
+    logInfo $ displayShow $ ppr $ Map.toList tt
 
   ir'' <- Closure.trans ir'
   when (_dumpClosure opt) $
-    logInfo $ displayShow $ pPrint $ IR.flattenProgram ir''
+    dump opt $ IR.flattenProgram ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
     Right _  -> return ()
     Left mes -> error $ show mes

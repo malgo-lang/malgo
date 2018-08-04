@@ -1,9 +1,12 @@
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.Type where
 
 import           Language.Malgo.Pretty
+import Data.Outputable
 import           RIO                   hiding (Typeable)
 
 -- | Malgoの組み込みデータ型
@@ -13,7 +16,7 @@ data Type
           , _ret    :: Type }
   | TupleTy [Type]
   | ArrayTy Type
-  deriving (Eq, Show, Ord, Read)
+  deriving (Eq, Show, Ord, Read, Generic, Outputable)
 
 instance Pretty Type where
   pPrint "Unit" = "{}"

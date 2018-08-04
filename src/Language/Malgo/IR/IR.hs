@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveFoldable        #-}
 {-# LANGUAGE DeriveTraversable     #-}
 {-# LANGUAGE FlexibleContexts      #-}
@@ -8,11 +10,12 @@
 module Language.Malgo.IR.IR where
 
 import           Control.Monad.Except
-import           Language.Malgo.Pretty
+import           Data.Outputable
 import           Language.Malgo.ID
-import           Lens.Micro.Platform       (_1, _3)
+import           Language.Malgo.Pretty
+import           Lens.Micro.Platform   (_1, _3)
 import           RIO
-import           RIO.List                  (delete, nub, (\\))
+import           RIO.List              (delete, nub, (\\))
 
 class FreeVars f where
   freevars :: Ord a => f a -> [a]
@@ -21,7 +24,7 @@ class FreeVars f where
   fv x = nub (freevars x)
 
 data Program a = Program a [Defn a]
-  deriving (Show, Eq, Read)
+  deriving (Show, Eq, Read, Generic, Outputable)
 
 flattenProgram :: Program a -> Program a
 flattenProgram (Program m defs) = Program m (map flattenDefn defs)
@@ -37,7 +40,7 @@ data Defn a = DefFun { _fnName   :: a
                      , _fnParams :: [a]
                      , _fnBody   :: Expr a
                      }
-  deriving (Show, Eq, Read)
+  deriving (Show, Eq, Read, Generic, Outputable)
 
 flattenDefn :: Defn a -> Defn a
 flattenDefn (DefFun f params body) = DefFun f params (flattenExpr body)
@@ -75,7 +78,7 @@ data Expr a = Var a
             | Cast MType a
             | Access a [Int]
             | If a (Expr a) (Expr a)
-  deriving (Show, Eq, Read, Functor, Foldable, Traversable)
+  deriving (Show, Eq, Read, Functor, Foldable, Traversable, Generic, Outputable)
 
 flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) =
@@ -164,7 +167,7 @@ data MType = IntTy Integer
            | PointerTy MType
            | StructTy [MType]
            | FunctionTy MType [MType]
-  deriving (Show, Eq, Read, Ord)
+  deriving (Show, Eq, Read, Ord, Generic, Outputable)
 
 class HasMType a where
   mTypeOf :: a -> MType

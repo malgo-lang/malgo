@@ -39,7 +39,7 @@ addDefn defn = do
   Program e xs <- get
   put (Program e $ defn : xs)
 
-newID :: Text -> a -> TransM (ID a)
+newID :: MonadMalgo f => Text -> a -> f (ID a)
 newID name meta = ID.newID meta name
 
 updateID :: ID MType -> TransM (ID MType)
