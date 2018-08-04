@@ -23,6 +23,8 @@ data Env = Env { _varmap :: Map (ID MType) (ID MType)
 
 makeLenses ''Env
 
+type TransM a = ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) a
+
 trans :: Expr (ID MType) -> RIO MalgoApp (Program (ID MType))
 trans e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ flip runReaderT (Env Map.empty []) $ do
   u <- newUniq
@@ -37,10 +39,10 @@ addDefn defn = do
   Program e xs <- get
   put (Program e $ defn : xs)
 
-newID :: Text -> a -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (ID a)
+newID :: Text -> a -> TransM (ID a)
 newID name meta = ID.newID meta name
 
-updateID :: ID MType -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (ID MType)
+updateID :: ID MType -> TransM (ID MType)
 updateID a = do
   ma <- Map.lookup a <$> view varmap
   case ma of
@@ -48,7 +50,7 @@ updateID a = do
     Nothing -> liftApp $ do logError $ displayShow $ pPrint a <+> "is not defined(updateID)"
                             liftIO exitFailure
 
-transExpr :: Expr (ID MType) -> ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) (Expr (ID MType))
+transExpr :: Expr (ID MType) -> TransM (Expr (ID MType))
 transExpr (Var a)    = Var <$> updateID a
 transExpr (Tuple xs) = Tuple <$> mapM updateID xs
 transExpr (Apply f args) = do
