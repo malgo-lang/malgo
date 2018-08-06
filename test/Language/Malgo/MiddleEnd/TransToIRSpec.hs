@@ -23,8 +23,9 @@ spec =
     t2 <- translate fn 1
     it "Fn" $ t2 `shouldBe` fn'
   where
-    translate e i = runIO $
-      runMalgo (trans e) . UniqSupply =<< newIORef i
+    translate e i = runIO $ do
+      u <- UniqSupply <$> newIORef i
+      runMalgo (trans e) u (Opt "<dummy>" False False False False False False False)
 
 x :: Info
 x = Info ("<dummy>", 0, 0)
