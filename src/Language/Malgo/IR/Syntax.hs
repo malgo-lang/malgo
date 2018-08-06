@@ -1,15 +1,15 @@
-{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.IR.Syntax where
 
-import           Language.Malgo.Pretty
+import           Data.Outputable
 import           Language.Malgo.FrontEnd.Info
-import Data.Outputable
+import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           RIO                          hiding (Typeable)
+import           RIO
 import           RIO.List.Partial
 
 data Expr a
@@ -149,7 +149,7 @@ instance Pretty a => Pretty (Decl a) where
   pPrint (ExDec _ name _ orig) =
     parens $ "extern" <+> pPrint name <+> pPrint orig
 
-instance Typeable a => Typeable (Expr a) where
+instance HasType a => HasType (Expr a) where
     typeOf (Var _ name) = typeOf name
     typeOf (Int _ _) = "Int"
     typeOf (Float _ _) = "Float"

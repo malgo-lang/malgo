@@ -14,7 +14,7 @@ import           Data.Outputable
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           RIO                   hiding (Typeable)
+import           RIO
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read, Generic, Outputable)
@@ -39,7 +39,7 @@ instance Pretty a => Pretty (ID a) where
     ignore m $ pPrint n <> "." <> pPrint u
 #endif
 
-instance Typeable a => Typeable (ID a) where
+instance HasType a => HasType (ID a) where
   typeOf i = typeOf $ view idMeta i
 
 newID :: MonadMalgo f => a -> Text -> f (ID a)

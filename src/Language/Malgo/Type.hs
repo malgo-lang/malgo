@@ -5,9 +5,9 @@
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.Type where
 
+import           Data.Outputable
 import           Language.Malgo.Pretty
-import Data.Outputable
-import           RIO                   hiding (Typeable)
+import           RIO
 
 -- | Malgoの組み込みデータ型
 data Type
@@ -34,8 +34,8 @@ instance Pretty Type where
 instance IsString Type where
   fromString name = NameTy $ fromString name
 
-class Typeable a where
+class HasType a where
   typeOf :: a -> Type
 
-instance Typeable Type where
+instance HasType Type where
   typeOf = id
