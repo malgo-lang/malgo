@@ -4,12 +4,12 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.MutRec (remove, lint) where
 
+import           Control.Lens          (_1)
 import           Data.List             (nubBy)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           Lens.Micro.Platform   (_1)
 import           RIO
 import qualified RIO.List              as L
 import qualified RIO.Map               as Map

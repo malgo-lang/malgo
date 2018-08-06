@@ -4,12 +4,12 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
 
+import           Control.Lens          (_1)
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.State
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Pretty
-import           Lens.Micro.Platform   (_1)
 import           RIO
 
 lint :: (HasMType a, Eq a, Pretty a) => Expr a -> Either Doc MType

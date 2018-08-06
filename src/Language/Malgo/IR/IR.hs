@@ -1,6 +1,6 @@
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass        #-}
 {-# LANGUAGE DeriveFoldable        #-}
+{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE DeriveTraversable     #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -9,19 +9,19 @@
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.IR.IR where
 
+import           Control.Lens          (_1, _3)
 import           Control.Monad.Except
 import           Data.Outputable
 import           Language.Malgo.ID
 import           Language.Malgo.Pretty
-import           Lens.Micro.Platform   (_1, _3)
 import           RIO
 import           RIO.List              (delete, nub, (\\))
 
 class FreeVars f where
-  freevars :: Ord a => f a -> [a]
+  freevarsPrec :: Ord a => f a -> [a]
 
-  fv :: Ord a => f a -> [a]
-  fv x = nub (freevars x)
+  freevars :: Ord a => f a -> [a]
+  freevars x = nub (freevarsPrec x)
 
 data Program a = Program a [Defn a]
   deriving (Show, Eq, Read, Generic, Outputable)
@@ -30,7 +30,7 @@ flattenProgram :: Program a -> Program a
 flattenProgram (Program m defs) = Program m (map flattenDefn defs)
 
 instance FreeVars Program where
-  freevars (Program _ xs) = concatMap fv xs
+  freevarsPrec (Program _ xs) = concatMap freevars xs
 
 instance Pretty a => Pretty (Program a) where
   pPrint (Program _ defns) =
@@ -46,8 +46,8 @@ flattenDefn :: Defn a -> Defn a
 flattenDefn (DefFun f params body) = DefFun f params (flattenExpr body)
 
 instance FreeVars Defn where
-  freevars (DefFun _ params body) =
-    fv body \\ params
+  freevarsPrec (DefFun _ params body) =
+    freevars body \\ params
 
 instance Pretty a => Pretty (Defn a) where
   pPrint (DefFun fn params body) =
@@ -101,17 +101,17 @@ prims (If _ t f) = prims t ++ prims f
 prims _ = []
 
 instance FreeVars Expr where
-  freevars (Var x) = [x]
-  freevars (Tuple xs) = xs
-  freevars (Apply _ args) = args
-  freevars (Let x v e) = fv v ++ delete x (fv e)
-  freevars (LetRec xs e) =
-    (concatMap (\(_, params, body) -> (fv body \\ fromMaybe [] params)) xs ++ fv e)
+  freevarsPrec (Var x) = [x]
+  freevarsPrec (Tuple xs) = xs
+  freevarsPrec (Apply _ args) = args
+  freevarsPrec (Let x v e) = freevars v ++ delete x (freevars e)
+  freevarsPrec (LetRec xs e) =
+    (concatMap (\(_, params, body) -> (freevars body \\ fromMaybe [] params)) xs ++ freevars e)
     \\ map (view _1) xs
-  freevars (Cast _ x) = [x]
-  freevars (Access x _) = [x]
-  freevars (If c t f) = c : fv t ++ fv f
-  freevars _ = []
+  freevarsPrec (Cast _ x) = [x]
+  freevarsPrec (Access x _) = [x]
+  freevarsPrec (If c t f) = c : freevars t ++ freevars f
+  freevarsPrec _ = []
 
 instance Pretty a => Pretty (Expr a) where
   pPrint (Var a) = pPrint a

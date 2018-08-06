@@ -12,10 +12,10 @@ module Language.Malgo.BackEnd.LLVM
   , genProgram
   ) where
 
+import           Control.Lens          (makeLenses)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR  hiding (prims)
 import qualified Language.Malgo.Pretty as P
-import           Lens.Micro.Platform   (makeLenses)
 import qualified LLVM.AST
 import qualified LLVM.AST.Constant     as C
 import qualified LLVM.AST.Operand      as O

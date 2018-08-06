@@ -5,13 +5,13 @@
 {-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.MiddleEnd.Closure.Trans (trans) where
 
+import           Control.Lens          (makeLenses)
 import           Control.Monad.State
 import           Language.Malgo.ID     hiding (newID)
 import qualified Language.Malgo.ID     as ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           Lens.Micro.Platform   (makeLenses)
 import           RIO
 import           RIO.List              ((\\))
 import qualified RIO.Map               as Map
@@ -78,7 +78,7 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
             $ local (over varmap (Map.fromList ((fn, fn') : zip params params') <>))
             $ transExpr fbody
   Program _ defs <- get
-  if null (fv fbody' \\ (params' ++ map _fnName defs)) && (fn `notElem` fv body)
+  if null (freevars fbody' \\ (params' ++ map _fnName defs)) && (fn `notElem` freevars body)
     -- 本当に自由変数がなければknownsに追加してbodyを変換
     then do addDefn (DefFun fn' params' fbody')
             local (over knowns (fn:))
@@ -104,7 +104,7 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
                     $ transExpr fbody
           Program _ defs <- get
           -- 自由変数のリスト
-          let zs = fv fbody' \\ (params' ++ map _fnName defs) -- すでに宣言されている関数名は自由変数にはならない
+          let zs = freevars fbody' \\ (params' ++ map _fnName defs) -- すでに宣言されている関数名は自由変数にはならない
           -- 実際に変換後のfbody内で参照される自由変数のリスト
           zs' <- mapM transID (zs \\ [innerCls])
 
