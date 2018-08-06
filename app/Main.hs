@@ -23,7 +23,7 @@ main = do
         Right x -> x
 
   u <- newIORef 0
-  ll <- compile file ast opt (UniqSupply u)
+  ll <- compile file ast (UniqSupply u) opt
 
   unless (_dumpParsed opt
           || _dumpRenamed opt

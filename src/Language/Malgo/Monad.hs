@@ -10,6 +10,7 @@ module Language.Malgo.Monad
   , runMalgo
   , MonadMalgo(..)
   , newUniq
+  , Opt(..)
   ) where
 
 import           Control.Monad.Except
@@ -20,10 +21,22 @@ import           System.Environment   (lookupEnv)
 
 newtype UniqSupply = UniqSupply { unUniqSupply :: IORef Int }
 
+data Opt = Opt
+  { _srcName       :: Text
+  , _dumpParsed    :: Bool
+  , _dumpRenamed   :: Bool
+  , _dumpTyped     :: Bool
+  , _dumpKNormal   :: Bool
+  , _dumpTypeTable :: Bool
+  , _dumpClosure   :: Bool
+  , _isDebugMode   :: Bool
+  } deriving (Eq, Show)
+
 data MalgoApp = MalgoApp
   { maLogFunc        :: LogFunc
   , maProcessContext :: ProcessContext
   , maUniqSupply     :: UniqSupply
+  , maOption         :: Opt
   }
 
 instance HasLogFunc MalgoApp where
@@ -32,13 +45,13 @@ instance HasLogFunc MalgoApp where
 instance HasProcessContext MalgoApp where
   processContextL = lens maProcessContext (\x y -> x { maProcessContext = y})
 
-runMalgo :: MonadIO m => RIO MalgoApp a -> UniqSupply -> m a
-runMalgo m u = liftIO $ do
+runMalgo :: MonadIO m => RIO MalgoApp a -> UniqSupply -> Opt -> m a
+runMalgo m u opt = liftIO $ do
   verbose <- isJust <$> lookupEnv "RIO_VERVOSE"
   lo <- logOptionsHandle stderr verbose
   pc <- mkDefaultProcessContext
   withLogFunc lo $ \lf ->
-    runRIO (MalgoApp lf pc u) m
+    runRIO (MalgoApp lf pc u opt) m
 
 class Monad m => MonadMalgo m where
   liftApp :: RIO MalgoApp a -> m a
