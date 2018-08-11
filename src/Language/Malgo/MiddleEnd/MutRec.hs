@@ -36,17 +36,15 @@ updateID i = do
     Nothing -> liftApp $ do logError "unreachable(removeMutRec)"
                             liftIO exitFailure
 
-updateFunDecs :: [(ID MType, Maybe [ID MType], Expr (ID MType))] -> ReaderT Env (RIO MalgoApp) [(ID MType, Maybe [ID MType], Expr (ID MType))]
+updateFunDecs :: [(ID MType, [ID MType], Expr (ID MType))] -> ReaderT Env (RIO MalgoApp) [(ID MType, [ID MType], Expr (ID MType))]
 updateFunDecs [] = return []
-updateFunDecs ((f, mparams, fbody):xs) = do
+updateFunDecs ((f, params, fbody):xs) = do
   f' <- renameID f
-  mparams' <- case mparams of
-                Just params -> Just <$> mapM renameID params
-                Nothing     -> return Nothing
-  local (Map.fromList (zip (f:fromMaybe [] mparams) (f':fromMaybe [] mparams')) <>) $ do
+  params' <- mapM renameID params
+  local (Map.fromList (zip (f:params) (f':params')) <>) $ do
     fbody' <- removeMutRec fbody
     xs' <- updateFunDecs xs
-    return $ (f', mparams', fbody'):xs'
+    return $ (f', params', fbody'):xs'
 
 removeMutRec :: Expr (ID MType) -> ReaderT Env (RIO MalgoApp) (Expr (ID MType))
 removeMutRec (Var a) = Var <$> updateID a
@@ -69,11 +67,11 @@ removeMutRec (Access a xs) = Access <$> updateID a <*> pure xs
 removeMutRec (If c t f) = If <$> updateID c <*> removeMutRec t <*> removeMutRec f
 removeMutRec e = return e
 
-consFunDecs :: [(a, Maybe [a], Expr a)] -> [(a, Maybe [a], Expr a)]
+consFunDecs :: [(a, [a], Expr a)] -> [(a, [a], Expr a)]
 consFunDecs [] = []
 consFunDecs [x] = [x]
-consFunDecs ((f, mparams, fbody):xs) =
-  [(f, mparams, LetRec (consFunDecs xs) fbody)]
+consFunDecs ((f, params, fbody):xs) =
+  [(f, params, LetRec (consFunDecs xs) fbody)]
 
 lint :: Pretty a => Expr a -> Either Doc ()
 lint (LetRec fs body) =

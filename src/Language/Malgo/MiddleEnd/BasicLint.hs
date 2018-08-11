@@ -77,9 +77,9 @@ lintExpr (Cast ty a) =
   defined a >> return ty
 lintExpr e = return $ mTypeOf e
 
-lintFunDec :: (MonadState [a] m, Eq a, HasMType a, MonadError Doc m, Pretty a) => (a, Maybe [a], Expr a) -> m ()
-lintFunDec (_, mparams, fbody) =
-  modify (fromMaybe [] mparams ++) >> void (lintExpr fbody)
+lintFunDec :: (MonadState [a1] m, Eq a1, HasMType a1, MonadError Doc m, Pretty a1) => (a2, [a1], Expr a1) -> m ()
+lintFunDec (_, params, fbody) =
+  modify (params <>) >> void (lintExpr fbody)
 
 lintDefn :: (MonadError Doc m, HasMType a, Eq a, MonadState [a] m, Pretty a) => Defn a -> m ()
 lintDefn (DefFun _ params fbody) =

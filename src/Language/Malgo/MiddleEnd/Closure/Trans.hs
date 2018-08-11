@@ -71,7 +71,7 @@ transExpr (Let n val body) = do
   let n' = set idMeta (mTypeOf val') n
   local (over varmap $ Map.insert n n') $
     Let n' val' <$> transExpr body
-transExpr (LetRec [(fn, mparams, fbody)] body) = do
+transExpr (LetRec [(fn, params, fbody)] body) = do
   -- fnに自由変数がないと仮定してfbodyをクロージャ変換
   pgBackup <- get
   fbody' <- local (over knowns (fn:))
@@ -92,7 +92,6 @@ transExpr (LetRec [(fn, mparams, fbody)] body) = do
         fn'' =
           set idMeta
           (FunctionTy (packFunTy $ mTypeOf (Apply fn [])) (PointerTy (IntTy 8) : map (view idMeta) params')) fn
-        params = fromMaybe [] mparams
         params' = map packID params
         trans' pg = do
           put pg

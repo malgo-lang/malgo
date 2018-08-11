@@ -26,11 +26,11 @@ divide (Let var val e) = do
   Let (removeType var) <$> divide val <*> divide e
 divide (LetRec decs body) =
   LetRec <$> mapM divide' decs <*> divide body
-  where divide' (fn, mparams, fbody) = do
+  where divide' (fn, params, fbody) = do
           addTypeTable fn
-          mapM_ (mapM addTypeTable) mparams
+          mapM_ addTypeTable params
           fbody' <- divide fbody
-          return (removeType fn, fmap (map removeType) mparams, fbody')
+          return (removeType fn, map removeType params, fbody')
 divide (Cast ty a) = return $ Cast ty (removeType a)
 divide (Access a is) = return $ Access (removeType a) is
 divide (If c t f) = If (removeType c) <$> divide t <*> divide f

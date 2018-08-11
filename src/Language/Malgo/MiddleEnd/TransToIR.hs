@@ -58,7 +58,7 @@ transToIR (S.Fn _ params body) = do
   body' <- transToIR body
   params' <- mapM (update . fst) params
   fnid <- newTmp "lambda" (FunctionTy (mTypeOf body') (map mTypeOf params'))
-  return (LetRec [(fnid, Just params', body')] (Var fnid))
+  return (LetRec [(fnid, params', body')] (Var fnid))
 transToIR (S.Call _ fn args) =
   insertLet fn (\fn' -> bind args [] (return . Apply fn'))
   where bind [] args' k     = k (reverse args')
@@ -80,7 +80,7 @@ transToIR (S.Let info decs@(S.FunDec{}:_) body) = do
           fbody' <- transToIR fbody
           fn' <- update fn
           params' <- mapM (update . fst) params
-          return (fn', Just params', fbody')
+          return (fn', params', fbody')
         transFunDec _ = throw "unreachable"
 transToIR (S.Let info (S.ExDec _ n _ orig:ds) body) = do
   n' <- update n
@@ -88,7 +88,7 @@ transToIR (S.Let info (S.ExDec _ n _ orig:ds) body) = do
     FunctionTy _ params -> do
       params' <- mapM (newTmp "x") params
       prim <- newTmp "prim" (mTypeOf n')
-      LetRec [(n', Just params', Let prim (Prim orig (mTypeOf n')) (Apply prim params'))]
+      LetRec [(n', params', Let prim (Prim orig (mTypeOf n')) (Apply prim params'))]
         <$> transToIR (S.Let info ds body)
     _ -> Let n' (Prim orig (mTypeOf n')) <$> transToIR (S.Let info ds body)
 transToIR (S.Let _ [] body) =

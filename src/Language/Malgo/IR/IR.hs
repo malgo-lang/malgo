@@ -74,7 +74,7 @@ data Expr a = Var a
             | Tuple [a]
             | Apply a [a]
             | Let a (Expr a) (Expr a)
-            | LetRec [(a, Maybe [a], Expr a)] (Expr a)
+            | LetRec [(a, [a], Expr a)] (Expr a)
             | Cast MType a
             | Access a [Int]
             | If a (Expr a) (Expr a)
@@ -106,7 +106,7 @@ instance FreeVars Expr where
   freevarsPrec (Apply _ args) = args
   freevarsPrec (Let x v e) = freevars v ++ delete x (freevars e)
   freevarsPrec (LetRec xs e) =
-    (concatMap (\(_, params, body) -> (freevars body \\ fromMaybe [] params)) xs ++ freevars e)
+    (concatMap (\(_, params, body) -> (freevars body \\ params)) xs ++ freevars e)
     \\ map (view _1) xs
   freevarsPrec (Cast _ x) = [x]
   freevarsPrec (Access x _) = [x]
@@ -130,8 +130,8 @@ instance Pretty a => Pretty (Expr a) where
             $+$ nest 1 (pPrint body))
   pPrint (LetRec defs body) =
     parens ("let" <+> sep (map (\(name, params, val) ->
-                                          parens ("rec" <+> pPrint name <+> sep (map pPrint (fromMaybe [] params))
-                                                  $+$ nest 1 (pPrint val))) defs)
+                                   parens ("rec" <+> pPrint name <+> sep (map pPrint params)
+                                            $+$ nest 1 (pPrint val))) defs)
             $+$ nest 1 (pPrint body))
   pPrint (Cast ty val) = parens ("cast" <+> pPrint ty <+> pPrint val)
   pPrint (Access e is) = parens ("access" <+> pPrint e <+> sep (map pPrint is))
