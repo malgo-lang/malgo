@@ -1,5 +1,9 @@
+{-# LANGUAGE AllowAmbiguousTypes   #-}
+{-# LANGUAGE ConstraintKinds       #-}
+{-# LANGUAGE ExplicitForAll        #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE KindSignatures        #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE RankNTypes            #-}
@@ -11,10 +15,12 @@ module Language.Malgo.Monad
   , MonadMalgo(..)
   , newUniq
   , Opt(..)
+  , matchWith
   ) where
 
 import           Control.Monad.Except
 import           Control.Monad.State
+import           Data.Kind            (Constraint)
 import           RIO
 import           RIO.Process
 import           System.Environment   (lookupEnv)
@@ -71,3 +77,8 @@ newUniq = liftApp $ do
   i <- readIORef u
   modifyIORef u (+1)
   return i
+
+matchWith :: forall (c :: * -> Constraint) a b t.
+  (c a, c b, Eq t) =>
+  (forall v. c v => v -> t) -> a -> b -> Bool
+matchWith f a b = f a == f b

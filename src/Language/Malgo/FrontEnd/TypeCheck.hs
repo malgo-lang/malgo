@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications  #-}
 module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
 
 import           Control.Monad.Except
@@ -51,6 +52,15 @@ prototypes xs = map mkPrototype (filter hasPrototype xs)
         mkPrototype (FunDec _ name params retty _) = (name, FunTy (map snd params) retty)
         mkPrototype _ = error "ValDec has not prototype"
 
+match :: (HasType a1, HasType a2) => Info -> a1 -> a2 -> TypeCheckM ()
+match info a b = unless (matchWith @HasType typeOf a b) $
+  mismatchError info (typeOf a) (typeOf b)
+
+mismatchError :: (Pretty a, Pretty b) => Info -> a -> b -> TypeCheckM c
+mismatchError info expected actual = throw info $
+  "expected:" <+> pPrint expected
+  $+$ "actual:" <+> pPrint actual
+
 checkDecls :: [Decl RawID] -> TypeCheckM [Decl TypedID]
 checkDecls [] = return []
 checkDecls (ExDec info name typ orig : ds) =
@@ -61,22 +71,17 @@ checkDecls (ValDec info name Nothing val : ds) = do
     (ValDec info (set idMeta (typeOf val') name) Nothing val' : ) <$> checkDecls ds
 checkDecls (ValDec info name (Just typ) val : ds) = do
   val' <- checkExpr val
-  if typ == typeOf val'
-    then addBind name typ $
-         (ValDec info (set idMeta typ name) (Just typ) val' : ) <$> checkDecls ds
-    else throw info $
-         "expected:" <+> pPrint typ $+$ "actual:" <+> pPrint (typeOf val')
+  match info typ val'
+  addBind name typ $
+    (ValDec info (set idMeta typ name) (Just typ) val' : ) <$> checkDecls ds
 checkDecls (FunDec info fn params retty body : ds) = do
   fnty <- makeFnTy params retty
   fd <- addBinds params $ do
     let fn' = set idMeta fnty fn
     let params' = map (\(x, t) -> (set idMeta t x, t)) params
     body' <- checkExpr body
-    if typeOf body' == retty
-      then pure $ FunDec info fn' params' retty body'
-      else throw info $
-           "expected:" <+> pPrint retty
-           $+$ "actual:" <+> pPrint (typeOf body')
+    match info retty body'
+    return $ FunDec info fn' params' retty body'
   (fd :) <$> checkDecls ds
   where
     makeFnTy [] _   = throw info "void parameter is invalid"
@@ -103,10 +108,7 @@ checkExpr (Call info fn args) = do
     case typeOf fn' of
       (FunTy p _) -> pure p
       _           -> throw info $ pPrint fn' <+> "is not callable"
-  unless (map typeOf args' == paramty)
-    (throw info
-      ("expected:" <+> parens (sep $ punctuate "," (map pPrint paramty))
-       $+$ "actual:" <+> parens (sep $ punctuate "," (map (pPrint . typeOf) args'))))
+  mapM_ (\(arg, ty) -> match info ty arg) (zip args' paramty)
   pure (Call info fn' args')
 checkExpr (TupleAccess i tuple index) = do
   tuple' <- checkExpr tuple
@@ -118,24 +120,16 @@ checkExpr (TupleAccess i tuple index) = do
          $+$ "actual:" <+> pPrint t
   pure $ TupleAccess i tuple' index
 checkExpr (BinOp info op x y) = do
-    x' <- checkExpr x
-    y' <- checkExpr y
-    let (px, py, _) = typeOfOp info op (typeOf x')
-    when (typeOf x' /= px)
-      (throw info $
-        "expected:" <+> pPrint px
-        $+$ "actual:" <+> pPrint (typeOf x'))
-    when (typeOf y' /= py)
-      (throw info $
-        "expected:" <+> pPrint py $+$ "actual:" <+> pPrint (typeOf y'))
-    pure (BinOp info op x' y')
+  x' <- checkExpr x
+  y' <- checkExpr y
+  let (px, py, _) = typeOfOp info op (typeOf x')
+  match info px x'
+  match info py y'
+  pure (BinOp info op x' y')
 checkExpr (Seq info e1 e2) = do
-    e1' <- checkExpr e1
-    unless (typeOf e1' == "Unit")
-      (throw info $
-        "expected:" <+>
-        "Unit" $+$ "actual:" <+> pPrint (typeOf e1'))
-    Seq info e1' <$> checkExpr e2
+  e1' <- checkExpr e1
+  match info ("Unit" :: Type) e1'
+  Seq info e1' <$> checkExpr e2
 checkExpr (Let info decls e) = do
   decls' <- addBinds (prototypes decls) $ checkDecls decls
   addDecls decls' $ do
@@ -149,14 +143,6 @@ checkExpr (If info c t f) = do
   c' <- checkExpr c
   t' <- checkExpr t
   f' <- checkExpr f
-  case (typeOf c' == "Bool", typeOf t' == typeOf f') of
-    (True, True) -> pure (If info c' t' f')
-    (True, False) -> throw info $
-                     "expected:" <+>
-                     pPrint (typeOf t') $+$
-                     "actual:" <+>
-                     pPrint (typeOf f')
-    _ -> throw info $
-         "expected:" <+>
-         "Bool" $+$
-         "actual:" <+> pPrint (typeOf c')
+  match info ("Bool" :: Type) c'
+  match info t' f'
+  return $ If info c' t' f'
