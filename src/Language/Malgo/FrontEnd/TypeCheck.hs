@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeApplications  #-}
 module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
 
-import           Control.Monad.Except
+import qualified Data.Map.Strict              as Map
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
 import           Language.Malgo.IR.Syntax     hiding (info)
@@ -13,28 +13,24 @@ import qualified Language.Malgo.IR.Syntax     as Syntax
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           RIO
-import qualified RIO.Map                      as Map
-import           System.Exit
+import           Universum                    hiding (Type)
 
-typeCheck :: Expr RawID -> RIO MalgoApp (Expr TypedID)
+typeCheck :: Expr RawID -> MalgoM (Expr TypedID)
 typeCheck e =
-  runReaderT (checkExpr e) Map.empty
+  runReaderT (checkExpr e) mempty
 
-type TypeCheckM a = ReaderT (Map RawID TypedID) (RIO MalgoApp) a
+type TypeCheckM a = ReaderT (Map RawID TypedID) MalgoM a
 
 throw :: Info -> Doc -> TypeCheckM a
-throw info mes = liftApp $ do
-  logError $ displayShow $ "error(typecheck):" <+> pPrint info <+> mes
-  liftIO exitFailure
+throw info mes = malgoError $ "error(typecheck):" <+> pPrint info <+> mes
 
 addBind :: RawID -> Type -> TypeCheckM a -> TypeCheckM a
-addBind name typ m =
-  local (Map.insert name (set idMeta typ name)) m
+addBind name typ =
+  local (Map.insert name (set idMeta typ name))
 
 addBinds :: [(RawID, Type)] -> TypeCheckM a -> TypeCheckM a
-addBinds kvs m =
-  local (Map.fromList (map (\(name, typ) -> (name, set idMeta typ name)) kvs) <>) m
+addBinds kvs =
+  local (Map.fromList (map (\(name, typ) -> (name, set idMeta typ name)) kvs) <>)
 
 getBind :: Info -> RawID -> TypeCheckM TypedID
 getBind info name = do

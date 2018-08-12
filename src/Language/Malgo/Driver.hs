@@ -21,9 +21,7 @@ import           Language.Malgo.Monad                        as M
 import           Language.Malgo.Pretty
 import qualified LLVM.AST                                    as L
 import           Options.Applicative
-import           RIO
-import qualified RIO.Map                                     as Map
-import qualified RIO.Text                                    as Text
+import           Universum
 
 parseOpt :: IO Opt
 parseOpt = execParser $
@@ -40,14 +38,14 @@ parseOpt = execParser $
     <> progDesc "malgo"
     <> header "malgo - a toy programming language")
 
-dump :: (MonadReader MalgoApp m, Outputable a, MonadIO m, Pretty a) => a -> m ()
+dump :: (MonadReader MalgoEnv m, Outputable a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- asks maOption
   if _isDebugMode opt
-  then logInfo $ displayShow $ ppr x
-  else logInfo $ displayShow $ pPrint x
+  then print $ ppr x
+  else print $ pPrint x
 
-frontend :: Syntax.Expr Text -> RIO MalgoApp (Syntax.Expr TypedID)
+frontend :: Syntax.Expr Text -> MalgoM (Syntax.Expr TypedID)
 frontend ast = do
   opt <- asks maOption
   when (_dumpParsed opt) $
@@ -60,34 +58,34 @@ frontend ast = do
     dump typed
   return typed
 
-middleend :: Syntax.Expr TypedID -> RIO MalgoApp (IR.Program (ID IR.MType))
+middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID IR.MType))
 middleend ast = do
   opt <- asks maOption
   ir <- TransToIR.trans ast
   when (_dumpKNormal opt) $
     dump $ IR.flattenExpr ir
   case BasicLint.lint ir of
-    Right _  -> return ()
+    Right _  -> pass
     Left mes -> error $ show mes
   M.UniqSupply u <- M.maUniqSupply <$> ask
   writeIORef u 0
   ir' <- MutRec.remove ir
   case BasicLint.lint ir' of
-    Right _  -> return ()
+    Right _  -> pass
     Left mes -> error $ show mes
   case MutRec.lint ir' of
-    Right _  -> return ()
+    Right _  -> pass
     Left mes -> error $ show mes
 
   let (_, tt) = Closure.divideTypeFromExpr ir'
   when (_dumpTypeTable opt) $
-    logInfo $ displayShow $ ppr $ Map.toList tt
+    print $ ppr $ toPairs tt
 
   ir'' <- Closure.trans ir'
   when (_dumpClosure opt) $
     dump $ IR.flattenProgram ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
-    Right _  -> return ()
+    Right _  -> pass
     Left mes -> error $ show mes
 
   return ir''
@@ -95,8 +93,8 @@ middleend ast = do
 backend :: MonadIO m => Text -> IR.Program (ID IR.MType) -> m L.Module
 backend filename ir = do
   defs <- LLVM.dumpLLVM (LLVM.genProgram ir)
-  return $ L.defaultModule { L.moduleName = fromString $ Text.unpack filename
-                           , L.moduleSourceFileName = fromString $ Text.unpack filename
+  return $ L.defaultModule { L.moduleName = fromString $ toString filename
+                           , L.moduleSourceFileName = fromString $ toString filename
                            , L.moduleDefinitions = defs
                            }
 

@@ -9,19 +9,18 @@
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.IR.IR where
 
-import           Control.Lens          (_1, _3)
-import           Control.Monad.Except
+import           Control.Monad.Except  (MonadError, throwError)
+import           Data.List             (delete, (\\))
 import           Data.Outputable
 import           Language.Malgo.ID
 import           Language.Malgo.Pretty
-import           RIO
-import           RIO.List              (delete, nub, (\\))
+import           Universum
 
 class FreeVars f where
   freevarsPrec :: Ord a => f a -> [a]
 
   freevars :: Ord a => f a -> [a]
-  freevars x = nub (freevarsPrec x)
+  freevars x = ordNub (freevarsPrec x)
 
 data Program a = Program a [Defn a]
   deriving (Show, Eq, Read, Generic, Outputable)
@@ -157,7 +156,7 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (LetRec _ body) = mTypeOf body
   mTypeOf (Cast ty _) = ty
   mTypeOf (Access e is) =
-    case runExcept (accessMType (mTypeOf e) is) of
+    case runIdentity $ runExceptT (accessMType (mTypeOf e) is) of
       Right t  -> t
       Left mes -> error $ show mes
   mTypeOf (If _ e _) = mTypeOf e

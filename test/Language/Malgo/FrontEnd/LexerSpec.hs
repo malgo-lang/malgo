@@ -5,7 +5,7 @@ module Language.Malgo.FrontEnd.LexerSpec (spec) where
 import           Language.Malgo.FrontEnd.Lexer
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.Token
-import           RIO
+import           Universum
 import           Test.Hspec
 
 spec :: Spec

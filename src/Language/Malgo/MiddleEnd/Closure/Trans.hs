@@ -6,16 +6,14 @@
 module Language.Malgo.MiddleEnd.Closure.Trans (trans) where
 
 import           Control.Lens          (makeLenses)
-import           Control.Monad.State
+import           Data.List             ((\\))
+import qualified Data.Map.Strict       as Map
 import           Language.Malgo.ID     hiding (newID)
 import qualified Language.Malgo.ID     as ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           RIO
-import           RIO.List              ((\\))
-import qualified RIO.Map               as Map
-import           System.Exit
+import           Universum
 
 data Env = Env { _varmap :: Map (ID MType) (ID MType)
                , _knowns :: [ID MType]
@@ -23,10 +21,10 @@ data Env = Env { _varmap :: Map (ID MType) (ID MType)
 
 makeLenses ''Env
 
-type TransM a = ReaderT Env (StateT (Program (ID MType)) (RIO MalgoApp)) a
+type TransM a = ReaderT Env (StateT (Program (ID MType)) MalgoM) a
 
-trans :: Expr (ID MType) -> RIO MalgoApp (Program (ID MType))
-trans e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ flip runReaderT (Env Map.empty []) $ do
+trans :: Expr (ID MType) -> MalgoM (Program (ID MType))
+trans e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ usingReaderT (Env mempty []) $ do
   u <- newUniq
   let mainFun = ID "main" u (FunctionTy (StructTy []) [])
   e' <- transExpr e
@@ -47,8 +45,7 @@ updateID a = do
   ma <- Map.lookup a <$> view varmap
   case ma of
     Just a' -> return a'
-    Nothing -> liftApp $ do logError $ displayShow $ pPrint a <+> "is not defined(updateID)"
-                            liftIO exitFailure
+    Nothing -> malgoError $ pPrint a <+> "is not defined(updateID)"
 
 transExpr :: Expr (ID MType) -> TransM (Expr (ID MType))
 transExpr (Var a)    = Var <$> updateID a
@@ -133,9 +130,7 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
         makeLet _ _ [] e = e
         makeLet cap i (x:xs) e =
           Let x (Access cap [0, i]) $ makeLet cap (i+1) xs e
-transExpr LetRec{} = liftApp $ do
-  logError "mutative recursion must be removed by Language.Malgo.MiddleEnd.MutRec"
-  liftIO exitFailure
+transExpr LetRec{} = malgoError "mutative recursion must be removed by Language.Malgo.MiddleEnd.MutRec"
 transExpr (Cast ty a) = Cast ty <$> updateID a
 transExpr (Access a xs) = Access <$> updateID a <*> pure xs
 transExpr (If c t f) = If <$> updateID c <*> transExpr t <*> transExpr f
@@ -158,7 +153,7 @@ replace (Var a)        = Var <$> replace' a
 replace (Tuple xs)     = Tuple <$> mapM replace' xs
 replace (Apply f args) = Apply f <$> mapM replace' args
 replace (Let n v e)    = Let n <$> replace v <*> replace e
-replace  LetRec{}      = error "unreachable"
+replace LetRec{}       = error "unreachable"
 replace (Cast ty a)    = Cast ty <$> replace' a
 replace (Access a xs)  = Access <$> replace' a <*> pure xs
 replace (If c t f)     = If <$> replace' c <*> replace t <*> replace f

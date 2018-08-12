@@ -3,7 +3,7 @@
 module Language.Malgo.FrontEnd.Token where
 
 import           Language.Malgo.FrontEnd.Loc
-import           RIO
+import           Universum
 
 data Tag
   = LET

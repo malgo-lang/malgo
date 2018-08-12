@@ -3,13 +3,13 @@ module Language.Malgo.MiddleEnd.TransToIRSpec ( spec ) where
 
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
-import Language.Malgo.Type
 import qualified Language.Malgo.IR.IR               as I
 import qualified Language.Malgo.IR.Syntax           as S
 import           Language.Malgo.MiddleEnd.TransToIR
 import           Language.Malgo.Monad
-import           RIO
+import           Language.Malgo.Type
 import           Test.Hspec
+import           Universum hiding (Type)
 
 spec :: Spec
 spec =
@@ -50,6 +50,6 @@ fn = S.Fn x [(ID "x" 0 ty, ty)] (S.Var x (ID "x" 0 ty))
   where ty = "Int"
 
 fn' :: I.Expr (ID I.MType)
-fn' = I.LetRec [(fnid, Just [ID "x" 0 (I.IntTy 32)], body)] (I.Var fnid)
+fn' = I.LetRec [(fnid, [ID "x" 0 (I.IntTy 32)], body)] (I.Var fnid)
   where fnid = ID "$lambda" 1 (I.FunctionTy (I.IntTy 32) [I.IntTy 32])
         body = I.Var (ID "x" 0 (I.IntTy 32))

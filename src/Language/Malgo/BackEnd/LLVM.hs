@@ -13,6 +13,9 @@ module Language.Malgo.BackEnd.LLVM
   ) where
 
 import           Control.Lens          (makeLenses)
+import qualified Data.Char             as Char
+import qualified Data.Map.Strict       as Map
+import qualified Data.Text             as Text
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR  hiding (prims)
 import qualified Language.Malgo.Pretty as P
@@ -21,36 +24,24 @@ import qualified LLVM.AST.Constant     as C
 import qualified LLVM.AST.Operand      as O
 import qualified LLVM.AST.Type         as LT
 import           LLVM.IRBuilder        as IRBuilder
-import           RIO
-import qualified RIO.Char              as Char
-import qualified RIO.Map               as Map
-import qualified RIO.Text              as Text
-import           System.Environment    (lookupEnv)
-import           System.Exit
+import           Universum
 
 data GenState =
   GenState { _table      :: Map (ID MType) O.Operand
            , _terminator :: O.Operand -> GenExpr ()
            , _internal   :: Map Text O.Operand
            , _prims      :: IORef (Map Text O.Operand)
-           , _logFunc    :: LogFunc
            }
 type GenExpr a = IRBuilderT GenDec a
-type GenDec = ModuleBuilderT (RIO GenState)
+type GenDec = ModuleBuilderT (ReaderT GenState IO)
 
 makeLenses ''GenState
 
-instance HasLogFunc GenState where
-  logFuncL = logFunc
-
 dumpLLVM :: MonadIO m => GenDec a -> m [LLVM.AST.Definition]
 dumpLLVM m = liftIO $ do
-  verbose <- isJust <$> lookupEnv "RIO_VERBOSE"
-  lo <- logOptionsHandle stderr verbose
   p <- newIORef Map.empty
-  withLogFunc lo $ \lf -> do
-    let genState = GenState Map.empty ret Map.empty p lf
-    runRIO genState (execModuleBuilderT emptyModuleBuilder m)
+  let genState = GenState Map.empty ret Map.empty p
+  liftIO $ usingReaderT genState $ execModuleBuilderT emptyModuleBuilder m
 
 convertType :: MType -> LT.Type
 convertType (IntTy i) = LT.IntegerType (fromInteger i)
@@ -64,8 +55,8 @@ getRef i = do
   m <- view table
   case Map.lookup i m of
     Just x -> return x
-    Nothing -> do liftRIO $ logError (displayShow i <> " is not found in " <> displayShow m)
-                  liftIO exitFailure
+    Nothing -> error $ show i <> " is not found in " <> show m
+
 
 term :: IRBuilderT GenDec O.Operand -> IRBuilderT GenDec ()
 term o = do
@@ -87,8 +78,7 @@ gcMalloc bytesOpr = do
   f <- Map.lookup "GC_malloc" <$> view internal
   case f of
     Just f' -> call f' [(bytesOpr, [])]
-    Nothing -> do liftRIO $ logError "unreachable(gcMalloc)"
-                  liftIO exitFailure
+    Nothing -> error "unreachable(gcMalloc)"
 
 malloc :: (MonadReader GenState m, MonadIRBuilder m, MonadIO m) => LT.Type -> m O.Operand
 malloc ty = do
@@ -106,7 +96,7 @@ genExpr' (Bool b) = bit (if b then 1 else 0)
 genExpr' (Char c) = char (toInteger $ Char.ord c)
 genExpr' (String xs) = do
   p <- gcMalloc (O.ConstantOperand $ C.Int 64 $ toInteger $ Text.length xs + 1)
-  mapM_ (addChar p) (zip [0..] $ Text.unpack xs <> ['\0'])
+  mapM_ (addChar p) (zip [0..] $ toString xs <> ['\0'])
   return p
   where addChar p (i, c) = do
           i' <- int32 i
@@ -122,10 +112,9 @@ genExpr' (Prim orig ty) = do
     Nothing -> do (argtys, retty) <-
                     case ty of
                       (FunctionTy r p) -> return (map convertType p, convertType r)
-                      _ -> do liftRIO $ logError "extern symbol must have a function type"
-                              liftIO exitFailure
-                  p <- lift $ extern (fromString $ Text.unpack orig) argtys retty
-                  liftIO $ modifyIORef ps (Map.insert orig p)
+                      _ -> error "extern symbol must have a function type"
+                  p <- lift $ extern (fromString $ toString orig) argtys retty
+                  modifyIORef ps (Map.insert orig p)
                   return p
 genExpr' (Tuple xs) = do
   p <- malloc (LT.StructureType False (map (convertType . mTypeOf) xs))
@@ -141,9 +130,8 @@ genExpr' (Apply f args) = do
 genExpr' (Let name val body) = do
   val' <- genExpr' val `named` fromString (show (P.pPrint name))
   local (over table (Map.insert name val')) (genExpr' body)
-genExpr' LetRec{} = do
-  liftRIO $ logError "unreachable(LetRec)"
-  liftIO exitFailure
+genExpr' LetRec{} =
+  error "unreachable(LetRec)"
 genExpr' (Cast ty a) = do
   a' <- getRef a
   bitcast a' (convertType ty)

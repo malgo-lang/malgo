@@ -6,12 +6,11 @@ module Language.Malgo.Lexer where
 import           Data.Functor.Identity
 import           Data.String
 import           Language.Malgo.FrontEnd.Info
-import           RIO                          hiding (EQ, GT, LT, try)
-import qualified RIO.Text                     as Text
 import           Text.Parsec                  hiding (many, (<|>))
 import           Text.Parsec.Language
 import           Text.Parsec.Pos              ()
 import qualified Text.Parsec.Token            as Tok
+import           Universum                    hiding (EQ, GT, LT, try)
 
 data Tag
     = LET
@@ -78,7 +77,7 @@ type Lexer a = forall u. ParsecT String u Identity a
 getInfo :: Lexer Info
 getInfo = do
     pos <- getPosition
-    pure (Info (Text.pack $ sourceName pos, sourceLine pos, sourceColumn pos))
+    pure (Info (toText $ sourceName pos, sourceLine pos, sourceColumn pos))
 
 lexer' :: Tok.GenTokenParser String u Identity
 lexer' =
@@ -184,11 +183,11 @@ lexer = do
         op info "&&" AND <|>
         op info "||" OR <|>
         op info "->" ARROW <|>
-        fmap (\str -> Token (info, ID (Text.pack str))) identifier <|>
+        fmap (\str -> Token (info, ID (toText str))) identifier <|>
         try (fmap (\f -> Token (info, FLOAT f)) float) <|>
         fmap (\n -> Token (info, INT n)) natural <|>
         fmap (\c -> Token (info, CHAR c)) charLiteral <|>
-        fmap (\s -> Token (info, STRING (Text.pack s))) stringLiteral
+        fmap (\s -> Token (info, STRING (toText s))) stringLiteral
   where
     natural = Tok.natural lexer'
     float = Tok.float lexer'

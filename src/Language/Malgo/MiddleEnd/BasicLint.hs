@@ -4,36 +4,29 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
 
-import           Control.Lens          (_1)
-import           Control.Monad
-import           Control.Monad.Except
-import           Control.Monad.State
+import           Control.Monad.Except  (MonadError, runExcept, throwError)
+import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Pretty
-import           RIO
+import           Universum
 
-lint :: (HasMType a, Eq a, Pretty a) => Expr a -> Either Doc MType
+lint :: Expr (ID MType) -> Either Doc MType
 lint expr = runExcept $ evalStateT (lintExpr expr) []
 
-runLint :: StateT [a1] (ExceptT e Identity) a2 -> Either e a2
+runLint :: StateT [ID MType] (ExceptT Doc Identity) a -> Either Doc a
 runLint = runExcept . flip evalStateT []
 
-ifM :: Monad m => m Bool -> m b -> m b -> m b
-ifM b t f = do b' <- b; if b' then t else f
-
-defined :: (Foldable t, Eq a, MonadState (t a) m, MonadError Doc m, Pretty a) => a -> m ()
+defined :: (MonadState [ID MType] m, MonadError Doc m) => ID MType -> m ()
 defined a =
-  ifM (elem a <$> get)
-  (return ())
+  unlessM (elem a <$> get)
   (throwError $ pPrint a <+> "is not defined")
 
-notDefined :: (Foldable t, Eq a, MonadState (t a) m, MonadError Doc m, Pretty a) => a -> m ()
+notDefined :: (MonadState [ID MType] m, MonadError Doc m) => ID MType -> m ()
 notDefined a =
-  ifM (notElem a <$> get)
-  (return ())
+  unlessM (notElem a <$> get)
   (throwError $ pPrint a <+> "is already defined")
 
-lintExpr :: (MonadState [a] m, Eq a, HasMType a, MonadError Doc m, Pretty a) => Expr a -> m MType
+lintExpr :: (MonadState [ID MType] m, MonadError Doc m) => Expr (ID MType) -> m MType
 lintExpr (Let name val body) = do
   notDefined name
   val' <- lintExpr val
@@ -77,15 +70,15 @@ lintExpr (Cast ty a) =
   defined a >> return ty
 lintExpr e = return $ mTypeOf e
 
-lintFunDec :: (MonadState [a1] m, Eq a1, HasMType a1, MonadError Doc m, Pretty a1) => (a2, [a1], Expr a1) -> m ()
+lintFunDec :: (MonadState [ID MType] m, MonadError Doc m) => (ID MType, [ID MType], Expr (ID MType)) -> m ()
 lintFunDec (_, params, fbody) =
   modify (params <>) >> void (lintExpr fbody)
 
-lintDefn :: (MonadError Doc m, HasMType a, Eq a, MonadState [a] m, Pretty a) => Defn a -> m ()
+lintDefn :: (MonadState [ID MType] m, MonadError Doc m) => Defn (ID MType) -> m ()
 lintDefn (DefFun _ params fbody) =
   modify (params ++) >> void (lintExpr fbody)
 
-lintProgram :: (MonadState [a] m, MonadError Doc m, HasMType a, Eq a, Pretty a) => Program a -> m ()
+lintProgram :: (MonadState [ID MType] m, MonadError Doc m) => Program (ID MType) -> m ()
 lintProgram (Program _ xs) = do
   modify (map (\(DefFun f _ _) -> f) xs ++)
   mapM_ lintDefn xs

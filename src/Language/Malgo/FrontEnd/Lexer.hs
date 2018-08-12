@@ -8,10 +8,9 @@ module Language.Malgo.FrontEnd.Lexer (lex) where
 import           Data.String                   (String)
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.Token
-import           RIO                           hiding (try)
-import qualified RIO.Text                      as Text
 import           Text.Parsec                   hiding (many, token, (<|>))
 import qualified Text.Parsec.Token             as Tok
+import           Universum hiding (try)
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
 tokenParser = Tok.makeTokenParser
@@ -62,11 +61,11 @@ tag =
           , (";", SEMICOLON), ("==", EQ_OP), ("/=", NEQ_OP)
           , ("<", LT_OP), (">", GT_OP), ("<=", LE_OP)
           , (">=", GE_OP), ("&&", AND_OP), ("||", OR_OP) ]
-    <|> (ID . Text.pack <$> identifier)
+    <|> (ID . toText <$> identifier)
     <|> try (FLOAT <$> float)
     <|> (INT <$> natural)
     <|> (CHAR <$> charLiteral)
-    <|> (STRING . Text.pack <$> stringLiteral)
+    <|> (STRING . toText <$> stringLiteral)
   where
     natural = Tok.natural tokenParser
     float = Tok.float tokenParser

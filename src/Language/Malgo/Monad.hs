@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE AllowAmbiguousTypes   #-}
 {-# LANGUAGE ConstraintKinds       #-}
 {-# LANGUAGE ExplicitForAll        #-}
@@ -10,20 +11,18 @@
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.Monad
   ( UniqSupply(..)
-  , MalgoApp(..)
+  , MalgoM(..)
+  , MalgoEnv(..)
   , runMalgo
   , MonadMalgo(..)
   , newUniq
   , Opt(..)
   , matchWith
+  , malgoError
   ) where
 
-import           Control.Monad.Except
-import           Control.Monad.State
-import           Data.Kind            (Constraint)
-import           RIO
-import           RIO.Process
-import           System.Environment   (lookupEnv)
+import           Language.Malgo.Pretty
+import           Universum
 
 newtype UniqSupply = UniqSupply { unUniqSupply :: IORef Int }
 
@@ -38,45 +37,40 @@ data Opt = Opt
   , _isDebugMode   :: Bool
   } deriving (Eq, Show)
 
-data MalgoApp = MalgoApp
-  { maLogFunc        :: LogFunc
-  , maProcessContext :: ProcessContext
-  , maUniqSupply     :: UniqSupply
-  , maOption         :: Opt
+data MalgoEnv = MalgoEnv
+  { maUniqSupply :: UniqSupply
+  , maOption     :: Opt
   }
 
-instance HasLogFunc MalgoApp where
-  logFuncL = lens maLogFunc (\x y -> x { maLogFunc = y })
-
-instance HasProcessContext MalgoApp where
-  processContextL = lens maProcessContext (\x y -> x { maProcessContext = y})
-
-runMalgo :: MonadIO m => RIO MalgoApp a -> UniqSupply -> Opt -> m a
-runMalgo m u opt = liftIO $ do
-  verbose <- isJust <$> lookupEnv "RIO_VERVOSE"
-  lo <- logOptionsHandle stderr verbose
-  pc <- mkDefaultProcessContext
-  withLogFunc lo $ \lf ->
-    runRIO (MalgoApp lf pc u opt) m
+runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
+runMalgo m u opt = liftIO $ runReaderT (unMalgoM m) (MalgoEnv u opt)
 
 class Monad m => MonadMalgo m where
-  liftApp :: RIO MalgoApp a -> m a
+  liftMalgo :: MalgoM a -> m a
 
-instance MonadMalgo (RIO MalgoApp) where
-  liftApp = id
+newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
+  deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO)
+
+instance MonadMalgo MalgoM where
+  liftMalgo = id
 instance MonadMalgo m => MonadMalgo (ReaderT r m) where
-  liftApp = lift . liftApp
+  liftMalgo = lift . liftMalgo
 instance MonadMalgo m => MonadMalgo (ExceptT e m) where
-  liftApp = lift . liftApp
+  liftMalgo = lift . liftMalgo
 instance MonadMalgo m => MonadMalgo (StateT s m) where
-  liftApp = lift . liftApp
+  liftMalgo = lift . liftMalgo
 
 newUniq :: MonadMalgo m => m Int
-newUniq = liftApp $ do
+newUniq = liftMalgo $ do
   UniqSupply u <- maUniqSupply <$> ask
   i <- readIORef u
   modifyIORef u (+1)
   return i
+
+malgoError :: (MonadMalgo m) => Doc -> m a
+malgoError mes = liftMalgo $ do
+  print mes
+  exitFailure
 
 matchWith :: forall (c :: * -> Constraint) a b t.
   (c a, c b, Eq t) =>

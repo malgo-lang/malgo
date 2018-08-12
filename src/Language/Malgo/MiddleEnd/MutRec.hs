@@ -2,41 +2,38 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeOperators         #-}
 module Language.Malgo.MiddleEnd.MutRec (remove, lint) where
 
-import           Control.Lens          (_1)
 import           Data.List             (nubBy)
+import qualified Data.Map.Strict       as Map
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           RIO
-import qualified RIO.List              as L
-import qualified RIO.Map               as Map
-import           System.Exit
+import           Universum
 
 perm :: Eq a => [a] -> [[a]]
 perm xs = filter (not . null)
-          $ nubBy (\x y -> L.headMaybe x == L.headMaybe y)
-          $ L.permutations xs
+          $ nubBy (\x y -> safeHead x == safeHead y)
+          $ permutations xs
 
 type Env = Map (ID MType) (ID MType)
 
-remove :: Expr (ID MType) -> RIO MalgoApp (Expr (ID MType))
-remove e = runReaderT (removeMutRec e) Map.empty
+remove :: MonadMalgo m => Expr (ID MType) -> m (Expr (ID MType))
+remove e = runReaderT (removeMutRec e) mempty
 
-renameID :: ID MType -> ReaderT Env (RIO MalgoApp) (ID MType)
+renameID :: MonadMalgo m => ID MType -> m (ID MType)
 renameID (ID name _ meta) = newID meta name
 
-updateID :: ID MType -> ReaderT Env (RIO MalgoApp) (ID MType)
+updateID :: (MonadReader Env m, MonadMalgo m) => ID MType -> m (ID MType)
 updateID i = do
   env <- ask
   case Map.lookup i env of
-    Just x -> return x
-    Nothing -> liftApp $ do logError "unreachable(removeMutRec)"
-                            liftIO exitFailure
+    Just x  -> return x
+    Nothing -> malgoError "unreachable(removeMutRec)"
 
-updateFunDecs :: [(ID MType, [ID MType], Expr (ID MType))] -> ReaderT Env (RIO MalgoApp) [(ID MType, [ID MType], Expr (ID MType))]
+updateFunDecs :: (MonadReader Env m, MonadMalgo m) => [(ID MType, [ID MType], Expr (ID MType))] -> m [(ID MType, [ID MType], Expr (ID MType))]
 updateFunDecs [] = return []
 updateFunDecs ((f, params, fbody):xs) = do
   f' <- renameID f
@@ -46,7 +43,7 @@ updateFunDecs ((f, params, fbody):xs) = do
     xs' <- updateFunDecs xs
     return $ (f', params', fbody'):xs'
 
-removeMutRec :: Expr (ID MType) -> ReaderT Env (RIO MalgoApp) (Expr (ID MType))
+removeMutRec :: (MonadReader Env m, MonadMalgo m) => Expr (ID MType) -> m (Expr (ID MType))
 removeMutRec (Var a) = Var <$> updateID a
 removeMutRec (LetRec fs body) = do
   let fss = map consFunDecs $ perm fs
@@ -54,7 +51,7 @@ removeMutRec (LetRec fs body) = do
   let vm = zip (map (view _1 . head') fss) (map (view _1 . head') fss')
   local (Map.fromList vm <>) $ do
     body' <- removeMutRec body
-    return $ L.foldl (flip LetRec) body' fss'
+    return $ foldl (flip LetRec) body' fss'
   where head' (x:_) = x
         head' _     = error "unreachable(head)"
 removeMutRec (Tuple xs) = Tuple <$> mapM updateID xs
@@ -80,4 +77,4 @@ lint (LetRec fs body) =
     _               -> Left $ "invalid FunDecs:" <+> pPrint fs
 lint (Let _ val body) = lint val >> lint body
 lint (If _ t f) = lint t >> lint f
-lint _ = return ()
+lint _ = pass

@@ -1,15 +1,15 @@
 {-# LANGUAGE DeriveFoldable    #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveFunctor     #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.IR.Core where
 
 import           Language.Malgo.FrontEnd.Info
-import           RIO
 import           Language.Malgo.Pretty
+import           Universum hiding (Type)
 
 data Expr t a
   -- | 変数

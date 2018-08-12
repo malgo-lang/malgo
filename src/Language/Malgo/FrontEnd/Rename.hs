@@ -4,35 +4,30 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.FrontEnd.Rename ( rename ) where
 
-import           Control.Monad.Except
-import           Language.Malgo.Pretty
+import qualified Data.Map.Strict              as Map
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
 import           Language.Malgo.IR.Syntax     hiding (info)
 import           Language.Malgo.Monad
-import           RIO
-import qualified RIO.Map                      as Map
-import qualified RIO.Text                     as Text
-import           System.Exit
+import           Language.Malgo.Pretty
+import           Universum
 
-rename :: Expr Text -> RIO MalgoApp (Expr RawID)
+rename :: Expr Text -> MalgoM (Expr RawID)
 rename e =
   runReaderT (renameExpr e) Map.empty
 
-type RenameM a = ReaderT (Map Text RawID) (RIO MalgoApp) a
+type RenameM a = ReaderT (Map Text RawID) MalgoM a
 
 addKnowns :: [(Text, RawID)] -> RenameM a -> RenameM a
-addKnowns kvs m =
-  local (Map.fromList kvs <>)  m
+addKnowns kvs =
+  local (Map.fromList kvs <>)
 
 getID :: Info -> Text -> RenameM RawID
 getID info name = do
   k <- ask
   case Map.lookup name k of
     Just x -> return x
-    Nothing -> liftApp $ do
-      logError (displayShow $ "error(rename):" <+> pPrint info <+> pPrint (Text.unpack name) <+> "is not defined")
-      liftIO exitFailure
+    Nothing -> malgoError $ "error(rename):" <+> pPrint info <+> pPrint name <+> "is not defined"
 
 renameExpr :: Expr Text -> RenameM (Expr RawID)
 renameExpr (Var info name) = Var info <$> getID info name

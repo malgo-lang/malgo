@@ -5,33 +5,29 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.TransToIR (trans) where
 
-import           Language.Malgo.Pretty
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
-import qualified Language.Malgo.IR.Syntax  as S
+import qualified Language.Malgo.IR.Syntax as S
 import           Language.Malgo.Monad
+import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           RIO
-import qualified RIO.Text                  as Text
-import           System.Exit
+import           Universum
 
-throw :: Doc -> RIO MalgoApp a
-throw mes = do
-  logError $ displayShow $ "error(transToIR):" <+> mes
-  liftIO exitFailure
+throw :: MonadMalgo m => Doc -> m a
+throw mes = malgoError $ "error(transToIR):" <+> mes
 
-update :: TypedID -> RIO MalgoApp (ID MType)
+update :: (MonadMalgo m, HasType a) => ID a -> m (ID MType)
 update a = do
   mty <- toMType (typeOf a)
   return (set idMeta mty a)
 
-newTmp :: Text -> MType -> RIO MalgoApp (ID MType)
+newTmp :: MonadMalgo f => Text -> a -> f (ID a)
 newTmp n t = newID t ("$" <> n)
 
-trans :: S.Expr TypedID -> RIO MalgoApp (Expr (ID MType))
-trans e = transToIR e
+trans :: (MonadMalgo m, HasType a) => S.Expr (ID a) -> m (Expr (ID MType))
+trans = transToIR
 
-insertLet :: S.Expr TypedID -> (ID MType -> RIO MalgoApp (Expr (ID MType))) -> RIO MalgoApp (Expr (ID MType))
+insertLet :: (MonadMalgo m, HasType a) => S.Expr (ID a) -> (ID MType -> m (Expr (ID MType))) -> m (Expr (ID MType))
 insertLet (S.Var _ x) k = update x >>= k
 insertLet v k = do
   v' <- transToIR v
@@ -39,7 +35,7 @@ insertLet v k = do
   e <- k x
   return (Let x v' e)
 
-transToIR :: S.Expr TypedID -> RIO MalgoApp (Expr (ID MType))
+transToIR :: (MonadMalgo m, HasType a) => S.Expr (ID a) -> m (Expr (ID MType))
 transToIR (S.Var _ a)   = Var <$> update a
 transToIR (S.Int _ x)   = return (Int x)
 transToIR (S.Float _ x) = return (Float x)
@@ -113,16 +109,16 @@ transOp S.FAdd _ = Prim "add_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.FSub _ = Prim "sub_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.FMul _ = Prim "mul_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.FDiv _ = Prim "div_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
-transOp S.Eq ty  = Prim (Text.pack $ show $ "eq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Neq ty = Prim (Text.pack $ show $ "neq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Lt ty  = Prim (Text.pack $ show $ "lt_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Gt ty  = Prim (Text.pack $ show $ "gt_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Le ty  = Prim (Text.pack $ show $ "le_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Ge ty  = Prim (Text.pack $ show $ "neq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Eq ty  = Prim (show $ "eq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Neq ty = Prim (show $ "neq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Lt ty  = Prim (show $ "lt_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Gt ty  = Prim (show $ "gt_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Le ty  = Prim (show $ "le_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Ge ty  = Prim (show $ "neq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
 transOp S.And _  = Prim "and" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 transOp S.Or _   = Prim "or" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 
-toMType :: Type -> RIO MalgoApp MType
+toMType :: MonadMalgo f => Language.Malgo.Type.Type -> f MType
 toMType (NameTy n) =
   case n of
     "Int"    -> return $ IntTy 32

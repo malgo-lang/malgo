@@ -5,12 +5,12 @@
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.IR.Syntax where
 
+import           Data.List                    ((!!))
 import           Data.Outputable
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           RIO
-import           RIO.List.Partial
+import           Universum                    hiding (Type)
 
 data Expr a
   -- | 変数参照

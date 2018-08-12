@@ -1,11 +1,12 @@
+{-# LANGUAGE GADTs             #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.MiddleEnd.Closure.Preprocess (divideTypeFromExpr) where
 
-import           Control.Monad.State
+import qualified Data.Map.Strict      as Map
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
-import           RIO
-import qualified RIO.Map              as Map
+import           Universum
 
 divideTypeFromExpr :: Expr (ID MType) -> (Expr (ID ()), Map (ID ()) MType)
 divideTypeFromExpr e = runState (divide e) mempty

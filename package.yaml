@@ -31,9 +31,9 @@ library:
   - parsec
   - pretty
   - outputable
-  # - prettyprinter
-  - rio
   - text
+  - universum
+  - containers
 
 executable:
   main: Main.hs
@@ -45,7 +45,7 @@ executable:
   - parsec
   - containers
   - llvm-hs-pretty
-  - rio
+  - universum
 
 tests:
   spec:
@@ -53,7 +53,7 @@ tests:
     source-dirs: test
     dependencies:
     - base
-    - rio
+    - universum
     - malgo
     - mtl
     - parsec
