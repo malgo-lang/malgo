@@ -1,14 +1,14 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE ConstraintKinds            #-}
+{-# LANGUAGE ExplicitForAll             #-}
+{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE AllowAmbiguousTypes   #-}
-{-# LANGUAGE ConstraintKinds       #-}
-{-# LANGUAGE ExplicitForAll        #-}
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE KindSignatures        #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE RankNTypes            #-}
-{-# LANGUAGE StrictData            #-}
+{-# LANGUAGE KindSignatures             #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE RankNTypes                 #-}
+{-# LANGUAGE StrictData                 #-}
 module Language.Malgo.Monad
   ( UniqSupply(..)
   , MalgoM(..)
@@ -24,7 +24,7 @@ module Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Universum
 
-newtype UniqSupply = UniqSupply { unUniqSupply :: IORef Int }
+newtype UniqSupply = UniqSupply (IORef Int)
 
 data Opt = Opt
   { _srcName       :: Text
@@ -43,7 +43,7 @@ data MalgoEnv = MalgoEnv
   }
 
 runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
-runMalgo m u opt = liftIO $ runReaderT (unMalgoM m) (MalgoEnv u opt)
+runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt)
 
 class Monad m => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
@@ -52,7 +52,7 @@ newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
   deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO)
 
 instance MonadMalgo MalgoM where
-  liftMalgo = id
+  liftMalgo = identity
 instance MonadMalgo m => MonadMalgo (ReaderT r m) where
   liftMalgo = lift . liftMalgo
 instance MonadMalgo m => MonadMalgo (ExceptT e m) where
