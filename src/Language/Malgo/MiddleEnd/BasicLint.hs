@@ -2,13 +2,11 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
 
 import           Control.Monad.Except  (MonadError, runExcept, throwError)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
-import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Universum
 
@@ -29,7 +27,7 @@ notDefined a =
   (throwError $ pPrint a <+> "is already defined")
 
 match :: (HasMType a1, HasMType a2, MonadError Doc f, Pretty a1, Pretty a2) => a1 -> a2 -> f ()
-match a b = unless (matchWith @HasMType mTypeOf a b) $
+match a b = unless (mTypeOf a == mTypeOf b) $
   throwError $ "expected:" <+> pPrint (mTypeOf a)
   $+$ "actual:" <+> pPrint (mTypeOf b)
   $+$ parens (fsep [pPrint a, colon, pPrint b])

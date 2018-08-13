@@ -2,7 +2,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeApplications  #-}
 module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
 
 import qualified Data.Map.Strict              as Map
@@ -49,7 +48,7 @@ prototypes xs = map mkPrototype (filter hasPrototype xs)
         mkPrototype _ = error "ValDec has not prototype"
 
 match :: (HasType a1, HasType a2) => Info -> a1 -> a2 -> TypeCheckM ()
-match info a b = unless (matchWith @HasType typeOf a b) $
+match info a b = unless (typeOf a == typeOf b) $
   mismatchError info (typeOf a) (typeOf b)
 
 mismatchError :: (Pretty a, Pretty b) => Info -> a -> b -> TypeCheckM c

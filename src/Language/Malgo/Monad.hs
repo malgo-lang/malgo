@@ -4,7 +4,6 @@
 {-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE KindSignatures             #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE RankNTypes                 #-}
@@ -17,7 +16,6 @@ module Language.Malgo.Monad
   , MonadMalgo(..)
   , newUniq
   , Opt(..)
-  , matchWith
   , malgoError
   ) where
 
@@ -42,14 +40,14 @@ data MalgoEnv = MalgoEnv
   , maOption     :: Opt
   }
 
+newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
+  deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO)
+
 runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
 runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt)
 
 class Monad m => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
-
-newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
-  deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO)
 
 instance MonadMalgo MalgoM where
   liftMalgo = identity
@@ -71,8 +69,3 @@ malgoError :: (MonadMalgo m) => Doc -> m a
 malgoError mes = liftMalgo $ do
   print mes
   exitFailure
-
-matchWith :: forall (c :: * -> Constraint) a b t.
-  (c a, c b, Eq t) =>
-  (forall v. c v => v -> t) -> a -> b -> Bool
-matchWith f a b = f a == f b
