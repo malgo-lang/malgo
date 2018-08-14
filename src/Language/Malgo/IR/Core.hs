@@ -29,11 +29,9 @@ data Expr t a
   -- | タプルの要素の取り出し
   | TupleAccess Info (Expr t a) Int
   -- | 関数適用
-  | App Info (Maybe (Type t)) (Expr t a) (Expr t a)
+  | App Info (Expr t a) (Expr t a)
   -- | 無名関数
   | Fn Info [(a, Type t)] (Expr t a)
-  -- | 連続した式(e1; e2)
-  | Seq Info (Expr t a) (Expr t a)
   -- | let式
   | Let Info (Bind t a) (Expr t a)
   -- | if式
@@ -52,14 +50,10 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (String _ s) = doubleQuotes $ pPrint s
   pPrint (Tuple _ xs) = braces (sep (punctuate "," (map pPrint xs)))
   pPrint (TupleAccess _ x i) = pPrint x <> brackets (pPrint i)
-  -- TODO: 左結合な表示
-  pPrint (App _ Nothing fn arg) = parens (pPrint fn <+> pPrint arg)
-  pPrint (App _ (Just ty) fn arg) =
-    parens (pPrint fn <+> ("<" <> pPrint ty <> ">") <+> pPrint arg)
+  pPrint (App _ fn arg) = parens (pPrint fn <+> pPrint arg)
   pPrint (Fn _ params body) =
     parens ("fn" <+> parens (sep (map pPrint' params)) <+> pPrint body)
     where pPrint' (a, t) = parens $ pPrint a <> ":" <> pPrint t
-  pPrint (Seq _ e1 e2) = pPrint e1 <> ";" $+$ pPrint e2
   pPrint (Let _ bind body) =
     parens $ "let" <+> pPrint bind $+$ nest 1 (pPrint body)
   pPrint (If _ c t f) =
@@ -71,18 +65,33 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
 data Type t = IdTy t
             | Type t :-> Type t
             | TupleTy [t]
-            | PolyTy [t] (Type t)
+            | AnswerTy
+            --  | PolyTy [t] (Type t)
   deriving (Show, Eq, Ord)
 
-instance Pretty (Type t)
+infixr 7 :->
+instance Pretty t => Pretty (Type t) where
+  pPrintPrec l p (IdTy a) = pPrintPrec l p a
+  pPrintPrec l _ (TupleTy xs) =
+    braces $ fsep $ punctuate comma (map pPrint0 xs)
+    where pPrint0 = pPrintPrec l 0
+  pPrintPrec l p (t1 :-> t2) =
+    maybeParens (p > 7) $ pPrintPrec l 8 t1 <+> ":->" <+> pPrintPrec l 8 t2
+  pPrintPrec _ _ AnswerTy = "Answer"
 
 data Bind t a = NonRec Info (BindField t a)
               | Rec Info [BindField t a]
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
 
-instance Pretty (Bind t a)
+instance (Pretty t, Pretty a) => Pretty (Bind t a) where
+  pPrint (NonRec _ bf) = parens $ pPrint bf
+  pPrint (Rec _ bfs) = hsep $ map (parens . pPrint) bfs
 
 data BindField t a = BindField a (Maybe (Type t)) (Expr t a)
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
 
-instance Pretty (BindField t a)
+instance (Pretty t, Pretty a) => Pretty (BindField t a) where
+  pPrint (BindField name mty expr) =
+    pPrint name <+> maybeToMonoid
+    ((\ty -> colon <+> pPrint ty) <$> mty) <+> "="
+    $+$ nest 2 (pPrint expr)

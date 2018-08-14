@@ -5,12 +5,11 @@
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.FrontEnd.Lexer (lex) where
 
-import           Data.String                   (String)
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.Token
 import           Text.Parsec                   hiding (many, token, (<|>))
 import qualified Text.Parsec.Token             as Tok
-import           Universum hiding (try)
+import           Universum                     hiding (try)
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
 tokenParser = Tok.makeTokenParser
@@ -91,6 +90,7 @@ lex :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
 lex = runParserT $ do
   whiteSpace
   toks <- many token
+  whiteSpace
   eof
   return toks
   where whiteSpace = Tok.whiteSpace tokenParser

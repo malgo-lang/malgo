@@ -1,13 +1,12 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes        #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RankNTypes            #-}
 module Language.Malgo.Lexer where
 
-import           Data.Functor.Identity
-import           Data.String
 import           Language.Malgo.FrontEnd.Info
 import           Text.Parsec                  hiding (many, (<|>))
-import           Text.Parsec.Language
 import           Text.Parsec.Pos              ()
 import qualified Text.Parsec.Token            as Tok
 import           Universum                    hiding (EQ, GT, LT, try)
@@ -72,73 +71,49 @@ _info (Token a) = fst a
 _tag :: Token -> Tag
 _tag (Token a) = snd a
 
-type Lexer a = forall u. ParsecT String u Identity a
+-- type Lexer a = forall u. ParsecT String u Identity a
 
-getInfo :: Lexer Info
+getInfo :: Monad m => ParsecT s u m Info
 getInfo = do
     pos <- getPosition
     pure (Info (toText $ sourceName pos, sourceLine pos, sourceColumn pos))
 
-lexer' :: Tok.GenTokenParser String u Identity
+lexer' :: Stream s m Char => Tok.GenTokenParser s u m
 lexer' =
     Tok.makeTokenParser $
-    emptyDef
-  -- Tok.commentLine = "--"
-    { Tok.commentStart = "(*"
-    , Tok.commentEnd = "*)"
+    Tok.LanguageDef
+    { Tok.nestedComments = True
+    , Tok.opStart = oneOf ".+-*/:=%;<&|>"
+    , Tok.opLetter = oneOf ".+-*/:=%;<&|>"
+    , Tok.caseSensitive = True
+    , Tok.commentStart = "{-"
+    , Tok.commentEnd = "-}"
+    , Tok.commentLine = "--"
     , Tok.identStart = letter <|> oneOf "!?@_"
     , Tok.identLetter = alphaNum <|> oneOf "!?@_"
     , Tok.reservedOpNames =
-          [ "."
-          , "+."
-          , "-."
-          , "*."
-          , "/."
-          , ":"
-          , "="
-          , ":="
-          , "+"
-          , "-"
-          , "*"
-          , "->"
-          , "/"
-          , "%"
-          , ";"
-          , "=="
-          , "<>"
-          , "&&"
-          , "||"
-          , "<"
-          , ">"
-          , "<="
-          , ">="
+          [ ".", "+.", "-.", "*.", "/."
+          , ":", "=", ":=", "+", "-"
+          , "*", "->", "/", "%", ";"
+          , "==", "<>", "&&", "||", "<"
+          , ">", "<=", ">="
           ]
     , Tok.reservedNames =
-          [ "let"
-          , "in"
-          , "end"
-          , "val"
-          , "fun"
-          , "type"
-          , "extern"
-          , "fn"
-          , "if"
-          , "then"
-          , "else"
-          , "true"
-          , "false"
+          [ "let", "in", "end", "val", "fun"
+          , "type", "extern", "fn", "if", "then"
+          , "else", "true", "false"
           ]
     }
 
-keyword :: Info -> String -> Tag -> Lexer Token
+keyword :: Stream s m Char => Info -> String -> Tag -> ParsecT s u m Token
 keyword info word tag = reserved word >> pure (Token (info, tag))
   where reserved = Tok.reserved lexer'
 
-op :: Info -> String -> Tag -> Lexer Token
+op :: Stream s m Char => Info -> String -> Tag -> ParsecT s u m Token
 op info sym tag = reservedOp sym >> pure (Token (info, tag))
   where reservedOp = Tok.reservedOp lexer'
 
-lexer :: Lexer Token
+lexer :: Stream s m Char => ParsecT s u m Token
 lexer = do
     info <- getInfo
     keyword info "let" LET <|> keyword info "in" IN <|> keyword info "end" END <|>
@@ -202,6 +177,6 @@ lexer = do
     lbrace = symbol "{"
     rbrace = symbol "}"
 
-lexing :: SourceName -> String -> Either ParseError [Token]
-lexing = parse (whiteSpace >> many lexer >>= \toks -> eof >> pure toks)
+lexing :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
+lexing = runParserT (whiteSpace >> many lexer >>= \toks -> eof >> pure toks)
   where whiteSpace = Tok.whiteSpace lexer'

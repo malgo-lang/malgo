@@ -139,6 +139,12 @@ genExpr' (Access a is) = do
   a' <- getRef a
   p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
   load p 0
+genExpr' (Store a is v) = do
+  a' <- getRef a
+  v' <- getRef v
+  p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
+  store p 0 v'
+  genExpr' Unit
 genExpr' (If c t f) = do
   c' <- getRef c
   r <- alloca (convertType (mTypeOf t)) Nothing 0

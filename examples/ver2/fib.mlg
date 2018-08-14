@@ -2,7 +2,7 @@
 
 -- recursive function
 fib : Int -> Int
-rec fib n =
+fib n =
   if n <= 1 {
     1
   } else {
@@ -12,7 +12,7 @@ rec fib n =
 -- function with effect
 -- brace syntax
 fibLoop : Int -> ()
-rec fibLoop n = {
+fibLoop n = {
   let unused = fib 30; -- 'let' in braces
   if n <= 0 {
     printInt (fib 0);
@@ -27,22 +27,8 @@ rec fibLoop n = {
 -- mutual recursive functions
 even : Int -> Bool
 odd : Int -> Bool
-rec even n = if n == 0 { True }  else { odd  (n - 1) }
-and odd  n = if n == 0 { False } else { even (n - 1) }
-
-{-- 次のように変換される
-even : Int -> Bool
-rec even n = {
-  let rec odd' n = if n == 0 { False } else { even (n - 1) };
-  if n == 0 { True } else { odd' (n - 1) }
-  }
-
-odd : Int -> Bool
-rec odd n = {
-  let rec even' n = if n == 0 { True } else { odd (n - 1) };
-  if n == 0 { False } else { even' (n - 1) }
-  }
--}
+even n = if n == 0 { True }  else { odd  (n - 1) }
+odd  n = if n == 0 { False } else { even (n - 1) }
 
 -- entry point
 main : List String -> ()

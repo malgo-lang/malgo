@@ -76,6 +76,7 @@ data Expr a = Var a
             | LetRec [(a, [a], Expr a)] (Expr a)
             | Cast MType a
             | Access a [Int]
+            | Store a [Int] a
             | If a (Expr a) (Expr a)
   deriving (Show, Eq, Read, Functor, Foldable, Traversable, Generic, Outputable)
 
@@ -109,6 +110,7 @@ instance FreeVars Expr where
     \\ map (view _1) xs
   freevarsPrec (Cast _ x) = [x]
   freevarsPrec (Access x _) = [x]
+  freevarsPrec (Store x _ y) = [x, y]
   freevarsPrec (If c t f) = c : freevars t ++ freevars f
   freevarsPrec _ = []
 
@@ -134,6 +136,7 @@ instance Pretty a => Pretty (Expr a) where
             $+$ nest 1 (pPrint body))
   pPrint (Cast ty val) = parens ("cast" <+> pPrint ty <+> pPrint val)
   pPrint (Access e is) = parens ("access" <+> pPrint e <+> sep (map pPrint is))
+  pPrint (Store var is val) = parens ("store" <+> pPrint var <+> sep (map pPrint is) <+> pPrint val)
   pPrint (If c t f) =
     parens ("if" <+> (pPrint c $+$ pPrint t $+$ pPrint f))
 
@@ -158,6 +161,11 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Access e is) =
     case runIdentity $ runExceptT (accessMType (mTypeOf e) is) of
       Right t  -> t
+      Left mes -> error $ show mes
+  mTypeOf (Store var is val) =
+    case runIdentity $ runExceptT (accessMType (mTypeOf var) is) of
+      Right t | t == mTypeOf val -> StructTy []
+              | otherwise -> error "mTypeOf(Store)"
       Left mes -> error $ show mes
   mTypeOf (If _ e _) = mTypeOf e
 

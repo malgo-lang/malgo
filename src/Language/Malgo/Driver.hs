@@ -41,20 +41,20 @@ parseOpt = execParser $
 dump :: (MonadReader MalgoEnv m, Outputable a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- asks maOption
-  if _isDebugMode opt
+  if isDebugMode opt
   then print $ ppr x
   else print $ pPrint x
 
 frontend :: Syntax.Expr Text -> MalgoM (Syntax.Expr TypedID)
 frontend ast = do
   opt <- asks maOption
-  when (_dumpParsed opt) $
+  when (dumpParsed opt) $
     dump ast
   renamed <- Rename.rename ast
-  when (_dumpRenamed opt) $
+  when (dumpRenamed opt) $
     dump renamed
   typed <- TypeCheck.typeCheck renamed
-  when (_dumpTyped opt) $
+  when (dumpTyped opt) $
     dump typed
   return typed
 
@@ -62,7 +62,7 @@ middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID IR.MType))
 middleend ast = do
   opt <- asks maOption
   ir <- TransToIR.trans ast
-  when (_dumpKNormal opt) $
+  when (dumpKNormal opt) $
     dump $ IR.flattenExpr ir
   case BasicLint.lint ir of
     Right _  -> pass
@@ -78,11 +78,11 @@ middleend ast = do
     Left mes -> error $ show mes
 
   let (_, tt) = Closure.divideTypeFromExpr ir'
-  when (_dumpTypeTable opt) $
+  when (dumpTypeTable opt) $
     print $ ppr $ toPairs tt
 
   ir'' <- Closure.trans ir'
-  when (_dumpClosure opt) $
+  when (dumpClosure opt) $
     dump $ IR.flattenProgram ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
     Right _  -> pass

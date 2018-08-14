@@ -1,4 +1,4 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE AllowAmbiguousTypes        #-}
 {-# LANGUAGE ConstraintKinds            #-}
 {-# LANGUAGE ExplicitForAll             #-}
 {-# LANGUAGE FlexibleContexts           #-}
@@ -25,14 +25,14 @@ import           Universum
 newtype UniqSupply = UniqSupply (IORef Int)
 
 data Opt = Opt
-  { _srcName       :: Text
-  , _dumpParsed    :: Bool
-  , _dumpRenamed   :: Bool
-  , _dumpTyped     :: Bool
-  , _dumpKNormal   :: Bool
-  , _dumpTypeTable :: Bool
-  , _dumpClosure   :: Bool
-  , _isDebugMode   :: Bool
+  { srcName       :: Text
+  , dumpParsed    :: Bool
+  , dumpRenamed   :: Bool
+  , dumpTyped     :: Bool
+  , dumpKNormal   :: Bool
+  , dumpTypeTable :: Bool
+  , dumpClosure   :: Bool
+  , isDebugMode   :: Bool
   } deriving (Eq, Show)
 
 data MalgoEnv = MalgoEnv
@@ -60,12 +60,12 @@ instance MonadMalgo m => MonadMalgo (StateT s m) where
 
 newUniq :: MonadMalgo m => m Int
 newUniq = liftMalgo $ do
-  UniqSupply u <- maUniqSupply <$> ask
+  UniqSupply u <- asks maUniqSupply
   i <- readIORef u
   modifyIORef u (+1)
   return i
 
-malgoError :: (MonadMalgo m) => Doc -> m a
+malgoError :: MonadMalgo m => Doc -> m a
 malgoError mes = liftMalgo $ do
   print mes
   exitFailure

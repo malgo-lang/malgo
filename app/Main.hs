@@ -11,9 +11,9 @@ import           Universum
 main :: IO ()
 main = do
   opt <- parseOpt
-  let file = _srcName opt
+  let file = srcName opt
   contents <- readFile (toString file)
-  let tokens = Lexer.lexing (toString file) (toString contents)
+  let tokens = runIdentity $ Lexer.lexing () (toString file) contents
   let parser = Parser.parseExpr
   let ast = case parser <$> tokens of
         Left x  -> error $ show x
@@ -22,10 +22,10 @@ main = do
   u <- newIORef 0
   ll <- compile file ast (UniqSupply u) opt
 
-  unless (_dumpParsed opt
-          || _dumpRenamed opt
-          || _dumpTyped opt
-          || _dumpKNormal opt
-          || _dumpTypeTable opt
-          || _dumpClosure opt) $
+  unless (dumpParsed opt
+          || dumpRenamed opt
+          || dumpTyped opt
+          || dumpKNormal opt
+          || dumpTypeTable opt
+          || dumpClosure opt) $
     putStrLn $ ppllvm ll
