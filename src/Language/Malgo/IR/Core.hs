@@ -7,35 +7,35 @@
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.IR.Core where
 
-import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.Pretty
-import           Universum hiding (Type)
+import           Universum                   hiding (Type)
 
 data Expr t a
   -- | 変数
-  = Var Info a
+  = Var SrcSpan a
   -- | 32bit整数
-  | Int Info Integer
+  | Int SrcSpan Integer
   -- | 倍精度浮動小数点数
-  | Float Info Double
+  | Float SrcSpan Double
   -- | 真偽値
-  | Bool Info Bool
+  | Bool SrcSpan Bool
   -- | シングルクォートで囲まれた文字
-  | Char Info Char
+  | Char SrcSpan Char
   -- | ダブルクォートで囲まれた文字列
-  | String Info Text
+  | String SrcSpan Text
   -- | タプル
-  | Tuple Info [Expr t a]
+  | Tuple SrcSpan [Expr t a]
   -- | タプルの要素の取り出し
-  | TupleAccess Info (Expr t a) Int
+  | TupleAccess SrcSpan (Expr t a) Int
   -- | 関数適用
-  | App Info (Expr t a) (Expr t a)
+  | App SrcSpan (Expr t a) (Expr t a)
   -- | 無名関数
-  | Fn Info [(a, Type t)] (Expr t a)
+  | Fn SrcSpan [(a, Type t)] (Expr t a)
   -- | let式
-  | Let Info (Bind t a) (Expr t a)
+  | Let SrcSpan (Bind t a) (Expr t a)
   -- | if式
-  | If Info (Expr t a) (Expr t a) (Expr t a)
+  | If SrcSpan (Expr t a) (Expr t a) (Expr t a)
   -- | 組み込み関数
   | Prim a
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
@@ -79,13 +79,13 @@ instance Pretty t => Pretty (Type t) where
     maybeParens (p > 7) $ pPrintPrec l 8 t1 <+> ":->" <+> pPrintPrec l 8 t2
   pPrintPrec _ _ AnswerTy = "Answer"
 
-data Bind t a = NonRec Info (BindField t a)
-              | Rec Info [BindField t a]
+data Bind t a = NonRec SrcSpan (BindField t a)
+              | Rec SrcSpan [BindField t a]
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
 
 instance (Pretty t, Pretty a) => Pretty (Bind t a) where
   pPrint (NonRec _ bf) = parens $ pPrint bf
-  pPrint (Rec _ bfs) = hsep $ map (parens . pPrint) bfs
+  pPrint (Rec _ bfs)   = hsep $ map (parens . pPrint) bfs
 
 data BindField t a = BindField a (Maybe (Type t)) (Expr t a)
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
