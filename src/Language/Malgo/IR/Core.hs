@@ -5,6 +5,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
+{-# LANGUAGE TypeOperators     #-}
 module Language.Malgo.IR.Core where
 
 import           Language.Malgo.FrontEnd.Loc
@@ -31,7 +32,7 @@ data Expr t a
   -- | 関数適用
   | App SrcSpan (Expr t a) (Expr t a)
   -- | 無名関数
-  | Fn SrcSpan [(a, Type t)] (Expr t a)
+  | Fn SrcSpan [(a, Maybe $ Type t)] (Expr t a)
   -- | let式
   | Let SrcSpan (Bind t a) (Expr t a)
   -- | if式
@@ -53,7 +54,8 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (App _ fn arg) = parens (pPrint fn <+> pPrint arg)
   pPrint (Fn _ params body) =
     parens ("fn" <+> parens (sep (map pPrint' params)) <+> pPrint body)
-    where pPrint' (a, t) = parens $ pPrint a <> ":" <> pPrint t
+    where pPrint' (a, Just t)  = parens $ pPrint a <> ":" <> pPrint t
+          pPrint' (a, Nothing) = parens $ pPrint a
   pPrint (Let _ bind body) =
     parens $ "let" <+> pPrint bind $+$ nest 1 (pPrint body)
   pPrint (If _ c t f) =
@@ -93,5 +95,5 @@ data BindField t a = BindField a (Maybe (Type t)) (Expr t a)
 instance (Pretty t, Pretty a) => Pretty (BindField t a) where
   pPrint (BindField name mty expr) =
     pPrint name <+> maybeToMonoid
-    ((\ty -> colon <+> pPrint ty) <$> mty) <+> "="
+    (((colon <+>) . pPrint) <$> mty) <+> "="
     $+$ nest 2 (pPrint expr)

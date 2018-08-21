@@ -11,6 +11,8 @@ data Tag
   | REC
   | AND
   | EXTERN
+  | TRUE
+  | FALSE
   | LPAREN
   | RPAREN
   | LBRACK

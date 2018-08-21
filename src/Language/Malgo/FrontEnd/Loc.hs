@@ -3,6 +3,9 @@ module Language.Malgo.FrontEnd.Loc
   ( SrcSpan(..)
   , SrcInfo(..)
   , Loc(..)
+  , Line
+  , Column
+  , srcSpan
   ) where
 
 import           Language.Malgo.Pretty
@@ -30,6 +33,16 @@ class SrcInfo a where
   startColumn :: a -> Column
   endLine :: a -> Line
   endColumn :: a -> Column
+
+srcSpan :: (SrcInfo a, SrcInfo b) => a -> b -> SrcSpan
+srcSpan s e = SrcSpan
+  { srcSpanFilename = filename s
+  , srcSpanStartLine = startLine s
+  , srcSpanStartColumn = startColumn s
+  , srcSpanEndLine = endLine s
+  , srcSpanEndColumn = endColumn e
+  }
+
 
 instance SrcInfo SrcSpan where
   filename = srcSpanFilename

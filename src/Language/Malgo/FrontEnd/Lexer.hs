@@ -27,7 +27,7 @@ tokenParser = Tok.makeTokenParser
       [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%", "->", ";"
       , "==", "/=", "<", ">", "<=", ">=", "&&", "||" ]
   , Tok.reservedNames =
-      [ "let", "type", "rec", "and", "extern", "if", "else", "fn" ]
+      [ "let", "type", "rec", "and", "extern", "if", "else", "fn", "true", "false" ]
   }
 
 keyword :: Stream s m Char => String -> Tag -> ParsecT s u m Tag
@@ -44,7 +44,8 @@ tag =
     (keyword "let" LET)
     [ ("type", TYPE), ("rec", REC), ("and", AND)
     , ("extern", EXTERN), ("if", IF)
-    , ("else", ELSE), ("fn", FN)]
+    , ("else", ELSE), ("fn", FN)
+    , ("true", TRUE), ("false", FALSE)]
     <|> (lparen >> return LPAREN)
     <|> (rparen >> return RPAREN)
     <|> (lbrack >> return LBRACK)
@@ -86,8 +87,8 @@ token = do
   pos2 <- getPosition
   return $ Loc (SrcSpan (sourceName pos1) (sourceLine pos1) (sourceColumn pos1) (sourceLine pos2) (sourceColumn pos2)) t
 
-lex :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
-lex = runParserT $ do
+lex :: Stream s m Char => SourceName -> s -> m (Either ParseError [Token])
+lex = flip runParserT () $ do
   whiteSpace
   toks <- many token
   whiteSpace
