@@ -1,5 +1,8 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE DeriveFoldable    #-}
 {-# LANGUAGE DeriveFunctor     #-}
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -39,7 +42,22 @@ data Expr t a
   | If SrcSpan (Expr t a) (Expr t a) (Expr t a)
   -- | 組み込み関数
   | Prim a
-  deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
+  deriving (Show, Eq, Ord, Functor, Foldable, Traversable, Generic)
+
+instance SrcInfo (Expr t a) where
+  srcSpan (Var x _) = x
+  srcSpan (Int x _) = x
+  srcSpan (Float x _) = x
+  srcSpan (Bool x _) = x
+  srcSpan (Char x _) = x
+  srcSpan (String x _) = x
+  srcSpan (Tuple x _) = x
+  srcSpan (TupleAccess x _ _) = x
+  srcSpan (App x _ _) = x
+  srcSpan (Fn x _ _) = x
+  srcSpan (Let x _ _) = x
+  srcSpan (If x _ _ _) = x
+  srcSpan Prim{} = error "Prim is not have SrcSpan"
 
 instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (Var _ a) = pPrint a
@@ -84,6 +102,10 @@ instance Pretty t => Pretty (Type t) where
 data Bind t a = NonRec SrcSpan (BindField t a)
               | Rec SrcSpan [BindField t a]
   deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
+
+instance SrcInfo (Bind t a) where
+  srcSpan (NonRec x _) = x
+  srcSpan (Rec x _) = x
 
 instance (Pretty t, Pretty a) => Pretty (Bind t a) where
   pPrint (NonRec _ bf) = parens $ pPrint bf

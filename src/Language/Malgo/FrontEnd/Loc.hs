@@ -5,7 +5,6 @@ module Language.Malgo.FrontEnd.Loc
   , Loc(..)
   , Line
   , Column
-  , srcSpan
   ) where
 
 import           Language.Malgo.Pretty
@@ -28,27 +27,29 @@ instance Pretty SrcSpan where
     , "column:" <+> pPrint (startColumn s) <> "-" <> pPrint (endColumn s)]
 
 class SrcInfo a where
+  srcSpan :: a -> SrcSpan
   filename :: a -> FilePath
+  filename = srcSpanFilename . srcSpan
   startLine :: a -> Line
+  startLine = srcSpanStartLine . srcSpan
   startColumn :: a -> Column
+  startColumn = srcSpanStartColumn . srcSpan
   endLine :: a -> Line
+  endLine = srcSpanEndLine . srcSpan
   endColumn :: a -> Column
+  endColumn = srcSpanEndColumn . srcSpan
 
-srcSpan :: (SrcInfo a, SrcInfo b) => a -> b -> SrcSpan
-srcSpan s e = SrcSpan
-  { srcSpanFilename = filename s
-  , srcSpanStartLine = startLine s
-  , srcSpanStartColumn = startColumn s
-  , srcSpanEndLine = endLine s
-  , srcSpanEndColumn = endColumn e
-  }
+instance (SrcInfo a, SrcInfo b) => SrcInfo (a, b) where
+  srcSpan (x, y) = SrcSpan
+    { srcSpanFilename = filename x
+    , srcSpanStartLine = startLine x
+    , srcSpanStartColumn = startColumn x
+    , srcSpanEndLine = endLine y
+    , srcSpanEndColumn = endColumn y
+    }
 
 instance SrcInfo SrcSpan where
-  filename = srcSpanFilename
-  startLine = srcSpanStartLine
-  startColumn = srcSpanStartColumn
-  endLine = srcSpanEndLine
-  endColumn = srcSpanEndColumn
+  srcSpan = id
 
 data Loc a = Loc
   { loc   :: SrcSpan
@@ -62,8 +63,4 @@ instance Pretty a => Pretty (Loc a) where
   pPrint = pPrint . unLoc
 
 instance SrcInfo (Loc a) where
- filename = filename . loc
- startLine = startLine . loc
- startColumn = startColumn . loc
- endLine = endLine . loc
- endColumn = endColumn . loc
+  srcSpan = loc

@@ -13,6 +13,7 @@ import Data.String
 %name parse
 %tokentype { Token }
 %error { parseError }
+%errorhandlertype explist
 
 %token
 let   { Token (_, LET) }
@@ -176,7 +177,7 @@ Type : id { NameTy (_id . _tag $ $1) }
 Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }
 {
-parseError :: [Token] -> a
-parseError [] = error "Parse error at EOF"
-parseError (t:ts) = error $ "Parse error:" ++ show t
+parseError :: ([Token], [String]) -> a
+parseError ([], xs) = error $ "Parse error at EOF: " <> show xs <> " are expected."
+parseError (t:_, xs) = error $ "Parse error: " <> show t <> " is got, but " <> show xs <> " are expected."
 }

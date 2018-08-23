@@ -12,6 +12,7 @@ import Language.Malgo.IR.Core
 %name parse
 %tokentype { Token }
 %error { parseError }
+%errorhandlertype explist
 
 %token
 LET { Loc _ LET }
@@ -72,20 +73,21 @@ STRING { Loc _ STRING {} }
 %%
 
 exp: simple_exp { $1 }
-   | '-' INT %prec NEG { Int (srcSpan $1 $2) (0 - _int (unLoc $2)) }
-   | '-' FLOAT %prec NEG { Float (srcSpan $1 $2) (0 - _float (unLoc $2)) }
+   | '-' INT %prec NEG { Int (srcSpan ($1, $2)) (0 - _int (unLoc $2)) }
+   | '-' FLOAT %prec NEG { Float (srcSpan ($1, $2)) (0 - _float (unLoc $2)) }
+   | simple_exp simple_exp %prec APP { App (srcSpan ($1, $2)) $1 $2 }
 
-simple_exp: ID { Var (srcSpan $1 $1) (_id $ unLoc $1) }
-          | INT { Int (srcSpan $1 $1) (_int $ unLoc $1) }
-          | FLOAT { Float (srcSpan $1 $1) (_float $ unLoc $1) }
-          | TRUE { Bool (srcSpan $1 $1) True }
-          | FALSE { Bool (srcSpan $1 $1) False }
-          | CHAR { Char (srcSpan $1 $1) (_char $ unLoc $1) }
-          | STRING { String (srcSpan $1 $1) (_str $ unLoc $1) }
+simple_exp: ID { Var (srcSpan $1) (_id $ unLoc $1) }
+          | INT { Int (srcSpan $1) (_int $ unLoc $1) }
+          | FLOAT { Float (srcSpan $1) (_float $ unLoc $1) }
+          | TRUE { Bool (srcSpan $1) True }
+          | FALSE { Bool (srcSpan $1) False }
+          | CHAR { Char (srcSpan $1) (_char $ unLoc $1) }
+          | STRING { String (srcSpan $1) (_str $ unLoc $1) }
           | '(' exp ')' { $2 }
 
 {
-parseError :: [Token] -> a
-parseError [] = error "Parse error at EOF"
-parseError (t:ts) = error $ "Parse error:" <> show t
+parseError :: ([Token], [String]) -> a
+parseError ([], xs) = error $ "Parse error at EOF: " <> show xs <> " are expected."
+parseError (t:_, xs) = error $ "Parse error: " <> show t <> " is got, but " <> show xs <> " are expected."
 }
