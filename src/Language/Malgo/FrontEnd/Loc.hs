@@ -22,10 +22,10 @@ data SrcSpan = SrcSpan
   } deriving (Eq, Ord, Show)
 
 instance Pretty SrcSpan where
-  pPrint srcSpan = sep $ punctuate colon
-    [pPrint (filename srcSpan)
-    , "line:" <+> pPrint (startLine srcSpan) <> "-" <> pPrint (endLine srcSpan)
-    , "column:" <+> pPrint (startColumn srcSpan) <> "-" <> pPrint (endColumn srcSpan)]
+  pPrint s = sep $ punctuate colon
+    [pPrint (filename s)
+    , "line:" <+> pPrint (startLine s) <> "-" <> pPrint (endLine s)
+    , "column:" <+> pPrint (startColumn s) <> "-" <> pPrint (endColumn s)]
 
 class SrcInfo a where
   filename :: a -> FilePath
@@ -42,7 +42,6 @@ srcSpan s e = SrcSpan
   , srcSpanEndLine = endLine s
   , srcSpanEndColumn = endColumn e
   }
-
 
 instance SrcInfo SrcSpan where
   filename = srcSpanFilename
