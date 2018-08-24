@@ -37,7 +37,8 @@ lintExpr (Let name val body) = do
   notDefined name
   val' <- lintExpr val
   match name val'
-  modify (name:) >> lintExpr body
+  modify (name:)
+  lintExpr body
 lintExpr e@(Apply f args) = do
   mapM_ defined (f:args)
   paramtys <- getParamtys
@@ -49,8 +50,9 @@ lintExpr e@(Apply f args) = do
           case fty of
             FunctionTy _ ts -> return ts
             t -> throwError $ pPrint t <+> ("is not applieable: " <> parens (pPrint e))
-lintExpr (Access e is) =
-  defined e >> accessMType (mTypeOf e) is
+lintExpr (Access e is) = do
+  defined e
+  accessMType (mTypeOf e) is
 lintExpr (If c t f) = do
   match c $ IntTy 1
   defined c
@@ -58,25 +60,30 @@ lintExpr (If c t f) = do
   f' <- lintExpr f
   match t' f'
   return t'
-lintExpr (Var a) =
-  defined a >> return (mTypeOf a)
-lintExpr e@(Tuple xs) =
-  mapM_ defined xs >> return (mTypeOf e)
+lintExpr (Var a) = do
+  defined a
+  return (mTypeOf a)
+lintExpr e@(Tuple xs) = do
+  mapM_ defined xs
+  return (mTypeOf e)
 lintExpr (LetRec fundecs body) = do
   modify (map (view _1) fundecs ++)
   mapM_ lintFunDec fundecs
   lintExpr body
-lintExpr (Cast ty a) =
-  defined a >> return ty
+lintExpr (Cast ty a) = do
+  defined a
+  return ty
 lintExpr e = return $ mTypeOf e
 
 lintFunDec :: (MonadState [ID MType] m, MonadError Doc m) => (ID MType, [ID MType], Expr (ID MType)) -> m ()
-lintFunDec (_, params, fbody) =
-  modify (params <>) >> void (lintExpr fbody)
+lintFunDec (_, params, fbody) = do
+  modify (params <>)
+  void (lintExpr fbody)
 
 lintDefn :: (MonadState [ID MType] m, MonadError Doc m) => Defn (ID MType) -> m ()
-lintDefn (DefFun _ params fbody) =
-  modify (params ++) >> void (lintExpr fbody)
+lintDefn (DefFun _ params fbody) = do
+  modify (params ++)
+  void (lintExpr fbody)
 
 lintProgram :: (MonadState [ID MType] m, MonadError Doc m) => Program (ID MType) -> m ()
 lintProgram (Program _ xs) = do
