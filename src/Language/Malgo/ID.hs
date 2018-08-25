@@ -14,7 +14,7 @@ import           Data.Outputable
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum hiding (Type)
+import           Universum             hiding (Type)
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read, Generic, Outputable)

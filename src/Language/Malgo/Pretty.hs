@@ -11,6 +11,7 @@ import           Text.PrettyPrint.HughesPJClass hiding ((<+>), (<>))
 import qualified Text.PrettyPrint.HughesPJClass as P
 import           Universum
 
+-- change operator precedence
 infixl 9 <+>
 (<+>) :: Doc -> Doc -> Doc
 (<+>) = (P.<+>)
