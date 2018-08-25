@@ -24,8 +24,8 @@ import           Universum
 newtype UniqSupply = UniqSupply (IORef Int)
 
 data Opt = Opt
-  { srcName       :: Text
-  , dstName       :: Text
+  { srcName       :: String
+  , dstName       :: String
   , dumpParsed    :: Bool
   , dumpRenamed   :: Bool
   , dumpTyped     :: Bool

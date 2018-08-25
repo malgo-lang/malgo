@@ -13,7 +13,7 @@ main :: IO ()
 main = do
   opt <- parseOpt
   let file = srcName opt
-  contents <- readFile (toString file)
+  contents <- readFile file
   let tokens = runIdentity $ Lexer.lexing () (toString file) contents
   let parser = Parser.parseExpr
   let ast = case parser <$> tokens of
@@ -23,11 +23,4 @@ main = do
   u <- newIORef 0
   ll <- compile file ast (UniqSupply u) opt
 
-  T.writeFile (toString $ dstName opt) (ppllvm ll)
-  -- unless (dumpParsed opt
-  --         || dumpRenamed opt
-  --         || dumpTyped opt
-  --         || dumpKNormal opt
-  --         || dumpTypeTable opt
-  --         || dumpClosure opt) $
-  --   putStrLn $ ppllvm ll
+  T.writeFile (dstName opt) (ppllvm ll)

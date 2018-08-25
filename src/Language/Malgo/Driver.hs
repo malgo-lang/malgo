@@ -91,15 +91,15 @@ middleend ast = do
 
   return ir''
 
-backend :: MonadIO m => Text -> IR.Program (ID IR.MType) -> m L.Module
+backend :: MonadIO m => String -> IR.Program (ID IR.MType) -> m L.Module
 backend filename ir = do
   defs <- LLVM.dumpLLVM (LLVM.genProgram ir)
-  return $ L.defaultModule { L.moduleName = fromString $ toString filename
+  return $ L.defaultModule { L.moduleName = fromString $ filename
                            , L.moduleSourceFileName = fromString $ toString filename
                            , L.moduleDefinitions = defs
                            }
 
-compile :: MonadIO m => Text -> Syntax.Expr Text -> UniqSupply -> Opt -> m L.Module
+compile :: MonadIO m => String -> Syntax.Expr Text -> UniqSupply -> Opt -> m L.Module
 compile filename ast = M.runMalgo $ do
   typed <- frontend ast
   ir <- middleend typed
