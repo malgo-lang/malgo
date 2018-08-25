@@ -19,13 +19,13 @@ module Language.Malgo.Monad
   , malgoError
   ) where
 
-import           Language.Malgo.Pretty
 import           Universum
 
 newtype UniqSupply = UniqSupply (IORef Int)
 
 data Opt = Opt
   { srcName       :: Text
+  , dstName       :: Text
   , dumpParsed    :: Bool
   , dumpRenamed   :: Bool
   , dumpTyped     :: Bool
@@ -46,7 +46,7 @@ newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
 runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
 runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt)
 
-class Monad m => MonadMalgo m where
+class MonadIO m => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
 
 instance MonadMalgo MalgoM where
@@ -65,7 +65,7 @@ newUniq = liftMalgo $ do
   modifyIORef u (+1)
   return i
 
-malgoError :: MonadMalgo m => Doc -> m a
-malgoError mes = liftMalgo $ do
+malgoError :: (MonadIO m, Show a) => a -> m b
+malgoError mes = do
   print mes
   exitFailure

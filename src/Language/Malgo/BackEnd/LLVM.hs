@@ -54,9 +54,8 @@ getRef :: (MonadIO m, MonadReader GenState m) => ID MType -> m O.Operand
 getRef i = do
   m <- view table
   case Map.lookup i m of
-    Just x -> return x
+    Just x  -> return x
     Nothing -> error $ show i <> " is not found in " <> show m
-
 
 term :: IRBuilderT GenDec O.Operand -> IRBuilderT GenDec ()
 term o = do
@@ -69,24 +68,30 @@ char = return . O.ConstantOperand . C.Int 8
 
 sizeof :: MonadIRBuilder m => LT.Type -> m O.Operand
 sizeof ty = do
-  nullptr <- pure $ O.ConstantOperand (C.Null (LT.ptr ty))
+  let nullptr = O.ConstantOperand (C.Null (LT.ptr ty))
   ptr <- gep nullptr [O.ConstantOperand (C.Int 32 1)]
   ptrtoint ptr LT.i64
 
-gcMalloc :: (MonadIO m, MonadIRBuilder m, MonadReader GenState m) => O.Operand -> m O.Operand
+gcMalloc :: ( MonadIO m
+            , MonadIRBuilder m
+            , MonadReader GenState m)
+         => O.Operand -> m O.Operand
 gcMalloc bytesOpr = do
   f <- Map.lookup "GC_malloc" <$> view internal
   case f of
     Just f' -> call f' [(bytesOpr, [])]
     Nothing -> error "unreachable(gcMalloc)"
 
-malloc :: (MonadReader GenState m, MonadIRBuilder m, MonadIO m) => LT.Type -> m O.Operand
+malloc :: ( MonadReader GenState m
+          , MonadIRBuilder m
+          , MonadIO m)
+       => LT.Type -> m O.Operand
 malloc ty = do
   p <- gcMalloc =<< sizeof ty
   bitcast p (LT.ptr ty)
 
 genExpr :: Expr (ID MType) -> IRBuilderT GenDec ()
-genExpr e = term (genExpr' e) -- `named` "x"
+genExpr e = term (genExpr' e)
 
 genExpr' :: Expr (ID MType) -> IRBuilderT GenDec O.Operand
 genExpr' (Var a) = getRef a
@@ -95,7 +100,8 @@ genExpr' (Float d) = double d
 genExpr' (Bool b) = bit (if b then 1 else 0)
 genExpr' (Char c) = char (toInteger $ Char.ord c)
 genExpr' (String xs) = do
-  p <- gcMalloc (O.ConstantOperand $ C.Int 64 $ toInteger $ Text.length xs + 1)
+  p <- gcMalloc (O.ConstantOperand $ C.Int 64
+                 $ toInteger $ Text.length xs + 1)
   mapM_ (addChar p) (zip [0..] $ toString xs <> ['\0'])
   return p
   where addChar p (i, c) = do
@@ -103,7 +109,8 @@ genExpr' (String xs) = do
           p' <- gep p [i']
           c' <- char (toInteger $ Char.ord c)
           store p' 0 c'
-genExpr' Unit = return (O.ConstantOperand $ C.Undef (LT.StructureType False []))
+genExpr' Unit =
+  return (O.ConstantOperand $ C.Undef $ LT.StructureType False [])
 genExpr' (Prim orig ty) = do
   ps <- view prims
   psMap <- readIORef ps

@@ -130,7 +130,7 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
         makeLet _ _ [] e = e
         makeLet cap i (x:xs) e =
           Let x (Access cap [0, i]) $ makeLet cap (i+1) xs e
-transExpr LetRec{} = malgoError "mutative recursion must be removed by Language.Malgo.MiddleEnd.MutRec"
+transExpr LetRec{} = malgoError ("mutative recursion must be removed by Language.Malgo.MiddleEnd.MutRec" :: String)
 transExpr (Cast ty a) = Cast ty <$> updateID a
 transExpr (Access a xs) = Access <$> updateID a <*> pure xs
 transExpr (If c t f) = If <$> updateID c <*> transExpr t <*> transExpr f

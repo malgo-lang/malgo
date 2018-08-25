@@ -21,7 +21,7 @@ $ stack install
 ## Usage
 
 ```sh
-$ malgo examples/hello.mlg > hello.ll
+$ malgo examples/hello.mlg -o hello.ll
 $ clang hello.ll examples/lib.c -lgc
 $ ./a.out
 Hello, world

@@ -7,6 +7,7 @@ import           Language.Malgo.Monad
 import qualified Language.Malgo.Parser as Parser
 import           LLVM.Pretty
 import           Universum
+import qualified Data.Text.Lazy.IO as T
 
 main :: IO ()
 main = do
@@ -22,10 +23,11 @@ main = do
   u <- newIORef 0
   ll <- compile file ast (UniqSupply u) opt
 
-  unless (dumpParsed opt
-          || dumpRenamed opt
-          || dumpTyped opt
-          || dumpKNormal opt
-          || dumpTypeTable opt
-          || dumpClosure opt) $
-    putStrLn $ ppllvm ll
+  T.writeFile (toString $ dstName opt) (ppllvm ll)
+  -- unless (dumpParsed opt
+  --         || dumpRenamed opt
+  --         || dumpTyped opt
+  --         || dumpKNormal opt
+  --         || dumpTypeTable opt
+  --         || dumpClosure opt) $
+  --   putStrLn $ ppllvm ll

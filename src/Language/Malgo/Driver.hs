@@ -26,7 +26,8 @@ import           Universum
 parseOpt :: IO Opt
 parseOpt = execParser $
   info ((Opt
-          <$> strArgument (metavar "(FILENAME)" <> help "Source file" <> action "file")
+          <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
+          <*> strOption (long "output" <> short 'o' <> metavar "OUTPUT" <> value "out.ll" <> help "Write LLVM IR to OUTPUT")
           <*> switch (long "dump-parsed")
           <*> switch (long "dump-renamed")
           <*> switch (long "dump-typed")

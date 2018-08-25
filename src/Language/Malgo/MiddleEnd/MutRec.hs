@@ -31,7 +31,7 @@ updateID i = do
   env <- ask
   case Map.lookup i env of
     Just x  -> return x
-    Nothing -> malgoError "unreachable(removeMutRec)"
+    Nothing -> malgoError ("unreachable(removeMutRec)" :: String)
 
 updateFunDecs :: (MonadReader Env m, MonadMalgo m) => [(ID MType, [ID MType], Expr (ID MType))] -> m [(ID MType, [ID MType], Expr (ID MType))]
 updateFunDecs [] = return []
