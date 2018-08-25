@@ -116,6 +116,5 @@ data BindField t a = BindField a (Maybe (Type t)) (Expr t a)
 
 instance (Pretty t, Pretty a) => Pretty (BindField t a) where
   pPrint (BindField name mty expr) =
-    pPrint name <+> maybeToMonoid
-    (((colon <+>) . pPrint) <$> mty) <+> "="
+    pPrint name <+> colon <+> maybeToMonoid (pPrint <$> mty) <+> "="
     $+$ nest 2 (pPrint expr)

@@ -18,8 +18,8 @@ rename e =
 
 type RenameM a = ReaderT (Map Text RawID) MalgoM a
 
-addKnowns :: [(Text, RawID)] -> RenameM a -> RenameM a
-addKnowns kvs =
+withKnowns :: [(Text, RawID)] -> RenameM a -> RenameM a
+withKnowns kvs =
   local (Map.fromList kvs <>)
 
 getID :: Info -> Text -> RenameM RawID
@@ -38,10 +38,11 @@ renameExpr (Char info x) = return $ Char info x
 renameExpr (String info x) = return $ String info x
 renameExpr (Unit info) = return $ Unit info
 renameExpr (Tuple info xs) = Tuple info <$> mapM renameExpr xs
-renameExpr (TupleAccess info e i) = TupleAccess info <$> renameExpr e <*> pure i
+renameExpr (TupleAccess info e i) =
+  TupleAccess info <$> renameExpr e <*> pure i
 renameExpr (Fn info params body) = do
   paramIDs <- mapM (newID () . fst) params
-  addKnowns (zip (map fst params) paramIDs) $ do
+  withKnowns (zip (map fst params) paramIDs) $ do
     params' <- mapM (\(n, t) -> (,) <$> getID info n <*> pure t) params
     body' <- renameExpr body
     return $ Fn info params' body'
@@ -51,7 +52,7 @@ renameExpr (Seq info e1 e2) =
   Seq info <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Let info decls e) = do
   declIDs <- mapM (newID () . getName) decls
-  addKnowns (zip (map getName decls) declIDs) $ do
+  withKnowns (zip (map getName decls) declIDs) $ do
     decls' <- mapM renameDecl decls
     e' <- renameExpr e
     pure (Let info decls' e')
@@ -70,7 +71,7 @@ renameDecl (ValDec info name typ val) = do
 renameDecl (FunDec info fn params retty body) = do
   fn' <- getID info fn
   paramIDs <- mapM (newID () . fst) params
-  addKnowns (zip (map fst params) paramIDs) $ do
+  withKnowns (zip (map fst params) paramIDs) $ do
     params' <- mapM (\(n, t) -> (,) <$> getID info n <*> pure t) params
     body' <- renameExpr body
     return (FunDec info fn' params' retty body')
