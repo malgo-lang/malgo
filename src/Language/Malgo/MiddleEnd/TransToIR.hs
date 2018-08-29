@@ -114,7 +114,7 @@ transOp S.Neq ty = Prim (show $ "neq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, 
 transOp S.Lt ty  = Prim (show $ "lt_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
 transOp S.Gt ty  = Prim (show $ "gt_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
 transOp S.Le ty  = Prim (show $ "le_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
-transOp S.Ge ty  = Prim (show $ "neq_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
+transOp S.Ge ty  = Prim (show $ "ge_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, ty])
 transOp S.And _  = Prim "and" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 transOp S.Or _   = Prim "or" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 
