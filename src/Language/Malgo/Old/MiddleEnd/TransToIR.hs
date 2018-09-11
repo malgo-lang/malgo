@@ -3,14 +3,14 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.MiddleEnd.TransToIR (trans) where
+module Language.Malgo.Old.MiddleEnd.TransToIR (trans) where
 
-import           Language.Malgo.ID
-import           Language.Malgo.IR.IR
-import qualified Language.Malgo.IR.Syntax as S
-import           Language.Malgo.Monad
-import           Language.Malgo.Pretty
-import           Language.Malgo.Type
+import           Language.Malgo.Old.ID
+import           Language.Malgo.Old.IR.IR
+import qualified Language.Malgo.Old.IR.Syntax as S
+import           Language.Malgo.Old.Monad
+import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Old.Type
 import           Universum
 
 throw :: MonadMalgo m => Doc -> m a
@@ -118,7 +118,7 @@ transOp S.Ge ty  = Prim (show $ "ge_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, t
 transOp S.And _  = Prim "and" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 transOp S.Or _   = Prim "or" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 
-toMType :: MonadMalgo f => Language.Malgo.Type.Type -> f MType
+toMType :: MonadMalgo f => Language.Malgo.Old.Type.Type -> f MType
 toMType (NameTy n) =
   case n of
     "Int"    -> return $ IntTy 32

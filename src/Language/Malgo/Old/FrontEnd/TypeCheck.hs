@@ -2,16 +2,16 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
+module Language.Malgo.Old.FrontEnd.TypeCheck (typeCheck) where
 
 import qualified Data.Map.Strict              as Map
-import           Language.Malgo.FrontEnd.Info
-import           Language.Malgo.ID
-import           Language.Malgo.IR.Syntax     hiding (info)
-import qualified Language.Malgo.IR.Syntax     as Syntax
-import           Language.Malgo.Monad
-import           Language.Malgo.Pretty
-import           Language.Malgo.Type
+import           Language.Malgo.Old.FrontEnd.Info
+import           Language.Malgo.Old.ID
+import           Language.Malgo.Old.IR.Syntax     hiding (info)
+import qualified Language.Malgo.Old.IR.Syntax     as Syntax
+import           Language.Malgo.Old.Monad
+import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Old.Type
 import           Universum                    hiding (Type)
 
 typeCheck :: Expr RawID -> MalgoM (Expr TypedID)

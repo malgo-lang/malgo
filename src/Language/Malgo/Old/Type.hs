@@ -3,10 +3,10 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-module Language.Malgo.Type where
+module Language.Malgo.Old.Type where
 
 import           Data.Outputable
-import           Language.Malgo.Pretty
+import           Language.Malgo.Old.Pretty
 import           Universum             hiding (Type)
 
 -- | Malgoの組み込みデータ型

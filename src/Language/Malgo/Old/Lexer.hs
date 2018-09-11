@@ -3,9 +3,9 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
-module Language.Malgo.Lexer where
+module Language.Malgo.Old.Lexer where
 
-import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.Old.FrontEnd.Info
 import           Text.Parsec                  hiding (many, (<|>))
 import           Text.Parsec.Pos              ()
 import qualified Text.Parsec.Token            as Tok
@@ -54,6 +54,7 @@ data Tag
     | AND
     | OR
     | ID { _id :: Text }
+    | PRIM { _prim :: Text }
     | INT { _int :: Integer }
     | FLOAT { _float :: Double }
     | BOOL { _bool :: Bool }
@@ -80,7 +81,7 @@ getInfo = do
 
 lexer' :: Stream s m Char => Tok.GenTokenParser s u m
 lexer' =
-    Tok.makeTokenParser $
+    Tok.makeTokenParser
     Tok.LanguageDef
     { Tok.nestedComments = True
     , Tok.opStart = oneOf ".+-*/:=%;<&|>"
@@ -89,7 +90,7 @@ lexer' =
     , Tok.commentStart = "{-"
     , Tok.commentEnd = "-}"
     , Tok.commentLine = "--"
-    , Tok.identStart = letter <|> oneOf "!?@_"
+    , Tok.identStart = letter <|> oneOf "!?@_#"
     , Tok.identLetter = alphaNum <|> oneOf "!?@_"
     , Tok.reservedOpNames =
           [ ".", "+.", "-.", "*.", "/."
@@ -158,7 +159,11 @@ lexer = do
         op info "&&" AND <|>
         op info "||" OR <|>
         op info "->" ARROW <|>
-        fmap (\str -> Token (info, ID (toText str))) identifier <|>
+        do { str <- identifier
+           ; case str of
+               ('#':str') -> return $ Token (info, PRIM $ toText str')
+               _          -> return $ Token (info, ID $ toText str)
+           } <|>
         try (fmap (\f -> Token (info, FLOAT f)) float) <|>
         fmap (\n -> Token (info, INT n)) natural <|>
         fmap (\c -> Token (info, CHAR c)) charLiteral <|>

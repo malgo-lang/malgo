@@ -2,12 +2,12 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
+module Language.Malgo.Old.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
 
 import           Control.Monad.Except  (MonadError, runExcept, throwError)
-import           Language.Malgo.ID
-import           Language.Malgo.IR.IR
-import           Language.Malgo.Pretty
+import           Language.Malgo.Old.ID
+import           Language.Malgo.Old.IR.IR
+import           Language.Malgo.Old.Pretty
 import           Universum
 
 lint :: Expr (ID MType) -> Either Doc MType

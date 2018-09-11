@@ -2,10 +2,10 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE StrictData                 #-}
-module Language.Malgo.FrontEnd.Info where
+module Language.Malgo.Old.FrontEnd.Info where
 
 import           Data.Outputable
-import           Language.Malgo.Pretty
+import           Language.Malgo.Old.Pretty
 import           Universum
 
 newtype Info = Info (Text, Int, Int)

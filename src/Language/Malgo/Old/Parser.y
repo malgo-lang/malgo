@@ -1,12 +1,12 @@
 -- -*- mode: fundamental -*-
 {
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.Parser where
+module Language.Malgo.Old.Parser where
 
 import Prelude hiding (EQ, LT, GT)
-import Language.Malgo.Lexer
-import Language.Malgo.Type
-import Language.Malgo.IR.Syntax
+import Language.Malgo.Old.Lexer
+import Language.Malgo.Old.Type
+import Language.Malgo.Old.IR.Syntax
 import Data.String
 }
 
@@ -58,6 +58,7 @@ else  { Token (_, ELSE) }
 '||'  { Token (_, OR) }
 '->'  { Token (_, ARROW)}
 id    { Token (_, ID _) }
+prim  { Token (_, PRIM _) }
 float { Token (_, FLOAT _) }
 int   { Token (_, INT _) }
 char  { Token (_, CHAR _) }
@@ -152,6 +153,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | simple_exp { $1 }
 
 simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
+          | prim { Prim (_info $1) (_prim . _tag $ $1) }
           | int { Int (_info $1) (_int . _tag $ $1) }
           | float { Float (_info $1) (_float . _tag $ $1) }
           | bool { Bool (_info $1) (_bool . _tag $ $1) }

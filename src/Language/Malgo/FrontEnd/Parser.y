@@ -5,7 +5,6 @@ module Language.Malgo.FrontEnd.Parser where
 
 import Language.Malgo.FrontEnd.Token
 import Language.Malgo.FrontEnd.Loc
-import Language.Malgo.Type
 import Language.Malgo.IR.Core
 }
 

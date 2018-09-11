@@ -8,7 +8,7 @@
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE RankNTypes                 #-}
 {-# LANGUAGE StrictData                 #-}
-module Language.Malgo.Monad
+module Language.Malgo.Old.Monad
   ( UniqSupply(..)
   , MalgoM(..)
   , MalgoEnv(..)

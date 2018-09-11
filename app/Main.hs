@@ -1,10 +1,10 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module Main where
 
-import           Language.Malgo.Driver
-import qualified Language.Malgo.Lexer  as Lexer
-import           Language.Malgo.Monad
-import qualified Language.Malgo.Parser as Parser
+import           Language.Malgo.Old.Driver
+import qualified Language.Malgo.Old.Lexer  as Lexer
+import           Language.Malgo.Old.Monad
+import qualified Language.Malgo.Old.Parser as Parser
 import           LLVM.Pretty
 import           Universum
 import qualified Data.Text.Lazy.IO as T

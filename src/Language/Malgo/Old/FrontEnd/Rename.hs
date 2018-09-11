@@ -2,14 +2,14 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.FrontEnd.Rename ( rename ) where
+module Language.Malgo.Old.FrontEnd.Rename ( rename ) where
 
 import qualified Data.Map.Strict              as Map
-import           Language.Malgo.FrontEnd.Info
-import           Language.Malgo.ID
-import           Language.Malgo.IR.Syntax     hiding (info)
-import           Language.Malgo.Monad
-import           Language.Malgo.Pretty
+import           Language.Malgo.Old.FrontEnd.Info
+import           Language.Malgo.Old.ID
+import           Language.Malgo.Old.IR.Syntax     hiding (info)
+import           Language.Malgo.Old.Monad
+import           Language.Malgo.Old.Pretty
 import           Universum
 
 rename :: Expr Text -> MalgoM (Expr RawID)
@@ -31,6 +31,7 @@ getID info name = do
 
 renameExpr :: Expr Text -> RenameM (Expr RawID)
 renameExpr (Var info name) = Var info <$> getID info name
+renameExpr (Prim info name) = return $ Prim info name
 renameExpr (Int info x) = return $ Int info x
 renameExpr (Float info x) = return $ Float info x
 renameExpr (Bool info x) = return $ Bool info x

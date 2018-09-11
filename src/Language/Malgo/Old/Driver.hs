@@ -3,23 +3,22 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.Driver where
+module Language.Malgo.Old.Driver where
 
 import           Data.Outputable
-import qualified Language.Malgo.BackEnd.LLVM                 as LLVM
-import qualified Language.Malgo.FrontEnd.Rename              as Rename
-import qualified Language.Malgo.FrontEnd.TypeCheck           as TypeCheck
-import           Language.Malgo.ID
-import qualified Language.Malgo.IR.IR                        as IR
-import qualified Language.Malgo.IR.Syntax                    as Syntax
-import qualified Language.Malgo.MiddleEnd.BasicLint          as BasicLint
-import qualified Language.Malgo.MiddleEnd.Closure.Preprocess as Closure
-import qualified Language.Malgo.MiddleEnd.Closure.Trans      as Closure
-import qualified Language.Malgo.MiddleEnd.MutRec             as MutRec
-import qualified Language.Malgo.MiddleEnd.TransToIR          as TransToIR
-import           Language.Malgo.Monad                        as M
-import           Language.Malgo.Pretty
-import qualified LLVM.AST                                    as L
+import qualified Language.Malgo.Old.BackEnd.LLVM        as LLVM
+import qualified Language.Malgo.Old.FrontEnd.Rename     as Rename
+import qualified Language.Malgo.Old.FrontEnd.TypeCheck  as TypeCheck
+import           Language.Malgo.Old.ID
+import qualified Language.Malgo.Old.IR.IR               as IR
+import qualified Language.Malgo.Old.IR.Syntax           as Syntax
+import qualified Language.Malgo.Old.MiddleEnd.BasicLint as BasicLint
+import qualified Language.Malgo.Old.MiddleEnd.Closure   as Closure
+import qualified Language.Malgo.Old.MiddleEnd.MutRec    as MutRec
+import qualified Language.Malgo.Old.MiddleEnd.TransToIR as TransToIR
+import           Language.Malgo.Old.Monad               as M
+import           Language.Malgo.Old.Pretty
+import qualified LLVM.AST                               as L
 import           Options.Applicative
 import           Universum
 
@@ -77,10 +76,6 @@ middleend ast = do
   case MutRec.lint ir' of
     Right _  -> pass
     Left mes -> error $ show mes
-
-  let (_, tt) = Closure.divideTypeFromExpr ir'
-  when (dumpTypeTable opt) $
-    print $ ppr $ toPairs tt
 
   ir'' <- Closure.trans ir'
   when (dumpClosure opt) $

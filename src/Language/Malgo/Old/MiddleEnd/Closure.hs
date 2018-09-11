@@ -3,16 +3,16 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
-module Language.Malgo.MiddleEnd.Closure.Trans (trans) where
+module Language.Malgo.Old.MiddleEnd.Closure (trans) where
 
 import           Control.Lens          (makeLenses)
 import           Data.List             ((\\))
 import qualified Data.Map.Strict       as Map
-import           Language.Malgo.ID     hiding (newID)
-import qualified Language.Malgo.ID     as ID
-import           Language.Malgo.IR.IR
-import           Language.Malgo.Monad
-import           Language.Malgo.Pretty
+import           Language.Malgo.Old.ID     hiding (newID)
+import qualified Language.Malgo.Old.ID     as ID
+import           Language.Malgo.Old.IR.IR
+import           Language.Malgo.Old.Monad
+import           Language.Malgo.Old.Pretty
 import           Universum
 
 data Env = Env { _varmap :: Map (ID MType) (ID MType)
