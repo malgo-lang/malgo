@@ -1,10 +1,10 @@
-module Language.Malgo.ParserSpec
+module Language.Malgo.Old.ParserSpec
     ( spec
     ) where
 
 import Prelude
-import           Language.Malgo.Parser (parse)
-import           Language.Malgo.IR.Syntax
+import           Language.Malgo.Old.Parser (parse)
+import           Language.Malgo.Old.IR.Syntax
 
 import           Test.Hspec
 

@@ -1,13 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.MiddleEnd.TransToIRSpec ( spec ) where
+module Language.Malgo.Old.MiddleEnd.TransToIRSpec ( spec ) where
 
-import           Language.Malgo.FrontEnd.Info
-import           Language.Malgo.ID
-import qualified Language.Malgo.IR.IR               as I
-import qualified Language.Malgo.IR.Syntax           as S
-import           Language.Malgo.MiddleEnd.TransToIR
-import           Language.Malgo.Monad
-import           Language.Malgo.Type
+import           Language.Malgo.Old.FrontEnd.Info
+import           Language.Malgo.Old.ID
+import qualified Language.Malgo.Old.IR.IR               as I
+import qualified Language.Malgo.Old.IR.Syntax           as S
+import           Language.Malgo.Old.MiddleEnd.TransToIR
+import           Language.Malgo.Old.Monad
+import           Language.Malgo.Old.Type
 import           Test.Hspec
 import           Universum hiding (Type)
 
