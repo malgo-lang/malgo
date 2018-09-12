@@ -15,8 +15,6 @@ import           Universum                    hiding (Type)
 data Expr a
   -- | 変数参照
   = Var Info a
-  -- | プリミティブ関数
-  | Prim Info Text
   -- | 32bit整数
   | Int Info Integer
   -- | 倍精度浮動小数点数
@@ -48,7 +46,6 @@ data Expr a
 
 info :: Expr t -> Info
 info (Var i _)           = i
-info (Prim i _)          = i
 info (Int i _)           = i
 info (Float i _)         = i
 info (Bool i _)          = i
@@ -66,7 +63,6 @@ info (BinOp i _ _ _)     = i
 
 instance Pretty a => Pretty (Expr a) where
   pPrint (Var _ name) = pPrint name
-  pPrint (Prim _ name) = pPrint name
   pPrint (Int _ x) = pPrint x
   pPrint (Float _ x) = pPrint x
   pPrint (Bool _ True) = "true"
@@ -155,7 +151,6 @@ instance Pretty a => Pretty (Decl a) where
 
 instance HasType a => HasType (Expr a) where
     typeOf (Var _ name) = typeOf name
-    typeOf (Prim _ _) = error "typeOf (Prim _ _)"
     typeOf (Int _ _) = "Int"
     typeOf (Float _ _) = "Float"
     typeOf (Bool _ _) = "Bool"
@@ -214,9 +209,6 @@ typeOfOp i Ge ty =
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp _ And _ = ("Bool", "Bool", "Bool")
 typeOfOp _ Or _ = ("Bool", "Bool", "Bool")
-
-typeOfPrim :: Text -> Type
-typeOfPrim _ = undefined
 
 comparable :: Type -> Bool
 comparable "Int"      = True

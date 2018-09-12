@@ -31,7 +31,6 @@ getID info name = do
 
 renameExpr :: Expr Text -> RenameM (Expr RawID)
 renameExpr (Var info name) = Var info <$> getID info name
-renameExpr (Prim info name) = return $ Prim info name
 renameExpr (Int info x) = return $ Int info x
 renameExpr (Float info x) = return $ Float info x
 renameExpr (Bool info x) = return $ Bool info x

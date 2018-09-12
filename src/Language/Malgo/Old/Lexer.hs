@@ -54,7 +54,6 @@ data Tag
     | AND
     | OR
     | ID { _id :: Text }
-    | PRIM { _prim :: Text }
     | INT { _int :: Integer }
     | FLOAT { _float :: Double }
     | BOOL { _bool :: Bool }
@@ -159,11 +158,7 @@ lexer = do
         op info "&&" AND <|>
         op info "||" OR <|>
         op info "->" ARROW <|>
-        do { str <- identifier
-           ; case str of
-               ('#':str') -> return $ Token (info, PRIM $ toText str')
-               _          -> return $ Token (info, ID $ toText str)
-           } <|>
+        fmap (\str -> Token (info, ID $ toText str)) identifier <|>
         try (fmap (\f -> Token (info, FLOAT f)) float) <|>
         fmap (\n -> Token (info, INT n)) natural <|>
         fmap (\c -> Token (info, CHAR c)) charLiteral <|>
