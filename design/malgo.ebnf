@@ -14,7 +14,6 @@ scdec = ident [params] "=" expr
 scann = ident ":" type_scheme
 
 typedec = "type" ident {tyvar} "=" type ; type synonym
-        | "struct" ident {tyvar} "=" record ; record type with constructor
-        | "enum" ident {tyvar} "=" variant ; variant type with constructor
+        | "data" ident {tyvar} "=" type ; new type with constructor
 
 type_scheme = ["forall" {tyvar} "."] type
