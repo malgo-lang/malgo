@@ -1,0 +1,20 @@
+; EBNF for malgo syntax.
+
+nil = ; an empty string
+
+program = decs
+
+decs = {dec}
+
+dec = scdec
+    | scann
+    | typedec
+
+scdec = ident [params] "=" expr
+scann = ident ":" type_scheme
+
+typedec = "type" ident {tyvar} "=" type ; type synonym
+        | "struct" ident {tyvar} "=" record ; record type with constructor
+        | "enum" ident {tyvar} "=" variant ; variant type with constructor
+
+type_scheme = ["forall" {tyvar} "."] type
