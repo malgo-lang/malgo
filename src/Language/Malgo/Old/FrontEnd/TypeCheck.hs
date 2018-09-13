@@ -91,6 +91,33 @@ checkExpr (Char info x) = pure $ Char info x
 checkExpr (String info x) = pure $ String info x
 checkExpr (Unit info) = pure $ Unit info
 checkExpr (Tuple info xs) = Tuple info <$> mapM checkExpr xs
+checkExpr (MakeArray info size val) = do
+  size' <- checkExpr size
+  val' <- checkExpr val
+  match info size' ("Int" :: Type)
+  return $ MakeArray info size' val'
+checkExpr (ArrayRead info arr ix) = do
+  arr' <- checkExpr arr
+  ix' <- checkExpr ix
+  case typeOf arr' of
+    ArrayTy _ -> do
+      match info ix' ("Int" :: Type)
+      return $ ArrayRead info arr' ix'
+    t -> throw (Syntax.info arr)
+         $ "expected: array"
+         $+$ "actual:" <+> pPrint t
+checkExpr (ArrayWrite info arr ix val) = do
+  arr' <- checkExpr arr
+  ix' <- checkExpr ix
+  val' <- checkExpr val
+  case typeOf arr' of
+    ArrayTy t -> do
+      match info ix' ("Int" :: Type)
+      match info val' t
+      return $ ArrayWrite info arr' ix' val'
+    t -> throw (Syntax.info arr)
+         $ "expected: array"
+         $+$ "actual:" <+> pPrint t
 checkExpr (Fn info params body) =
   addBinds params $ do
     let params' = map (\(x, t) -> (set idMeta t x, t)) params

@@ -40,6 +40,12 @@ renameExpr (Unit info) = return $ Unit info
 renameExpr (Tuple info xs) = Tuple info <$> mapM renameExpr xs
 renameExpr (TupleAccess info e i) =
   TupleAccess info <$> renameExpr e <*> pure i
+renameExpr (MakeArray info size val) =
+  MakeArray info <$> renameExpr size <*> renameExpr val
+renameExpr (ArrayRead info arr ix) =
+  ArrayRead info <$> renameExpr arr <*> renameExpr ix
+renameExpr (ArrayWrite info arr ix val) =
+  ArrayWrite info <$> renameExpr arr <*> renameExpr ix <*> renameExpr val
 renameExpr (Fn info params body) = do
   paramIDs <- mapM (newID () . fst) params
   withKnowns (zip (map fst params) paramIDs) $ do

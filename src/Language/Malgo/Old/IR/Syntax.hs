@@ -30,6 +30,17 @@ data Expr a
   -- | タプル
   | Tuple Info [Expr a]
   | TupleAccess Info (Expr a) Int
+  -- | 配列作成
+  | MakeArray Info
+    (Expr a) -- size
+    (Expr a) -- initial value
+  | ArrayRead Info
+    (Expr a) -- array
+    (Expr a) -- index
+  | ArrayWrite Info
+    (Expr a) -- array
+    (Expr a) -- index
+    (Expr a) -- value
   -- | 関数呼び出し
   | Call Info (Expr a) [Expr a]
   -- | 無名関数
@@ -53,6 +64,9 @@ info (Char i _)          = i
 info (String i _)        = i
 info (Tuple i _)         = i
 info (TupleAccess i _ _) = i
+info (MakeArray i _ _) = i
+info (ArrayRead i _ _) = i
+info (ArrayWrite i _ _ _) = i
 info (Unit i)            = i
 info (Call i _ _)        = i
 info (Fn i _ _)          = i
@@ -73,6 +87,12 @@ instance Pretty a => Pretty (Expr a) where
     braces $ sep $ punctuate "," $ map pPrint xs
   pPrint (TupleAccess _ e i) =
     parens ("." <+> pPrint e <+> pPrint i)
+  pPrint (MakeArray _ size val) =
+    parens $ "array" <+> pPrint size <+> pPrint val
+  pPrint (ArrayRead _ arr ix) =
+    pPrint arr <> brackets (pPrint ix)
+  pPrint (ArrayWrite _ arr ix val) =
+    parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
   pPrint (Unit _) = "{}"
   pPrint (Call _ fn arg) =
     parens $ pPrint fn <+> sep (map pPrint arg)
@@ -160,6 +180,11 @@ instance HasType a => HasType (Expr a) where
     typeOf (TupleAccess _ e i) =
       let TupleTy xs = typeOf e
       in xs !! i
+    typeOf (MakeArray _ _ val) = ArrayTy (typeOf val)
+    typeOf (ArrayRead _ arr _) =
+      let ArrayTy t = typeOf arr
+      in t
+    typeOf ArrayWrite{} = "Unit"
     typeOf (Unit _) = "Unit"
     typeOf (Fn _ params body) = FunTy (map snd params) (typeOf body)
     typeOf (Call _ fn _) =

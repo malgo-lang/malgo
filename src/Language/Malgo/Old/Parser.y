@@ -27,6 +27,7 @@ fn { Token (_, FN) }
 if    { Token (_, IF) }
 then  { Token (_, THEN) }
 else  { Token (_, ELSE) }
+array { Token (_, ARRAY) }
 '('   { Token (_, LPAREN) }
 ')'   { Token (_, RPAREN) }
 '['   { Token (_, LBRACK) }
@@ -56,7 +57,8 @@ else  { Token (_, ELSE) }
 '%'   { Token (_, PERCENT) }
 '&&'  { Token (_, AND) }
 '||'  { Token (_, OR) }
-'->'  { Token (_, ARROW)}
+'->'  { Token (_, ARROW) }
+'<-'  { Token (_, LARROW) }
 id    { Token (_, ID _) }
 float { Token (_, FLOAT _) }
 int   { Token (_, INT _) }
@@ -71,11 +73,10 @@ str   { Token (_, STRING _) }
 %nonassoc '==' '<>'
 %nonassoc '<' '>' '<=' '>='
 %left '&&' '||'
+%left '<-'
 %left '+' '-' '+.' '-.'
 %left '*' '/' '%' '*.' '/.'
--- %left CALL
 %left '.'
--- %left '('
 %nonassoc NEG
 
 %name parseDecl decl
@@ -86,7 +87,6 @@ str   { Token (_, STRING _) }
 decls : decls_raw { reverse $1 }
 
 decls_raw : decls_raw decl { $2 : $1 }
---          | decl { [$1] }
           |      { [] }
 
 decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
@@ -149,6 +149,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
                              (Float (_info $1) 0)
                              (Float (_info $2) (_float . _tag $ $2))
                          }
+   | simple_exp '[' exp ']' '<-' exp { ArrayWrite (_info $5) $1 $3 $6 }
    | simple_exp { $1 }
 
 simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
@@ -158,6 +159,8 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
           | char { Char (_info $1) (_char . _tag $ $1) }
           | str  { String (_info $1) (_str . _tag $ $1) }
           | '{' args '}' { Tuple (_info $1) (reverse $2) }
+          | array '(' exp ',' exp ')' { MakeArray (_info $1) $3 $5 }
+          | simple_exp '[' exp ']' { ArrayRead (_info $2) $1 $3 }
           | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [Unit (_info $2)] }
           | simple_exp '(' args ')' {- %prec CALL -} { Call (info $1) $1 (reverse $3) }
           | '{' '}' { Unit (_info $1) }
@@ -165,7 +168,6 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
 
 args : args ',' exp { $3 : $1 }
      | exp { [$1] }
-
 
 Type : id { NameTy (_id . _tag $ $1) }
      | Type '->' Type { FunTy [$1] $3 }

@@ -53,6 +53,8 @@ data Tag
     | GE
     | AND
     | OR
+    | ARRAY
+    | LARROW
     | ID { _id :: Text }
     | INT { _int :: Integer }
     | FLOAT { _float :: Double }
@@ -96,12 +98,12 @@ lexer' =
           , ":", "=", ":=", "+", "-"
           , "*", "->", "/", "%", ";"
           , "==", "<>", "&&", "||", "<"
-          , ">", "<=", ">="
+          , ">", "<=", ">=", "<-"
           ]
     , Tok.reservedNames =
           [ "let", "in", "end", "val", "fun"
           , "type", "extern", "fn", "if", "then"
-          , "else", "true", "false"
+          , "else", "true", "false", "array"
           ]
     }
 
@@ -127,6 +129,7 @@ lexer = do
         keyword info "else" ELSE <|>
         keyword info "true" (BOOL True) <|>
         keyword info "false" (BOOL False) <|>
+        keyword info "array" ARRAY <|>
         (lparen >> pure (Token (info, LPAREN))) <|>
         (rparen >> pure (Token (info, RPAREN))) <|>
         (lbrack >> pure (Token (info, LBRACK))) <|>
@@ -158,6 +161,7 @@ lexer = do
         op info "&&" AND <|>
         op info "||" OR <|>
         op info "->" ARROW <|>
+        op info "<-" LARROW <|>
         fmap (\str -> Token (info, ID $ toText str)) identifier <|>
         try (fmap (\f -> Token (info, FLOAT f)) float) <|>
         fmap (\n -> Token (info, INT n)) natural <|>

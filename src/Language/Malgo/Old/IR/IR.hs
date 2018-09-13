@@ -71,6 +71,9 @@ data Expr a = Var a
             | Unit
             | Prim Text MType
             | Tuple [a]
+            | MakeArray a a
+            | Read a a
+            | Write a a a
             | Apply a [a]
             | Let a (Expr a) (Expr a)
             | LetRec [(a, [a], Expr a)] (Expr a)
