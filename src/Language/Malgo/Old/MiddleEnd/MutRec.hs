@@ -62,6 +62,10 @@ removeMutRec (Let n val body) = do
 removeMutRec (Cast ty a) = Cast ty <$> updateID a
 removeMutRec (Access a xs) = Access <$> updateID a <*> pure xs
 removeMutRec (If c t f) = If <$> updateID c <*> removeMutRec t <*> removeMutRec f
+removeMutRec (Store a xs v) = Store <$> updateID a <*> pure xs <*> updateID v
+removeMutRec (MakeArray ty size) = MakeArray ty <$> updateID size
+removeMutRec (Read arr ix) = Read <$> updateID arr <*> updateID ix
+removeMutRec (Write arr ix val) = Write <$> updateID arr <*> updateID ix <*> updateID val
 removeMutRec e = return e
 
 consFunDecs :: [(a, [a], Expr a)] -> [(a, [a], Expr a)]

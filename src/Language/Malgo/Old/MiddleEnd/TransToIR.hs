@@ -50,6 +50,19 @@ transToIR (S.Tuple _ vs) = bind vs [] $ return . Tuple
       insertLet x (\x' -> bind xs (x' : args) k)
 transToIR (S.TupleAccess _ e i) =
   insertLet e (\e' -> return $ Access e' [0, i])
+transToIR (S.MakeArray _ ty size) = do
+  ty' <- toMType ty
+  insertLet size $ \size' ->
+    return $ MakeArray ty' size'
+transToIR (S.ArrayRead _ arr ix) =
+  insertLet arr $ \arr' ->
+  insertLet ix $ \ix' ->
+  return $ Read arr' ix'
+transToIR (S.ArrayWrite _ arr ix val) =
+  insertLet arr $ \arr' ->
+  insertLet ix $ \ix' ->
+  insertLet val $ \val' ->
+  return $ Write arr' ix' val'
 transToIR (S.Fn _ params body) = do
   body' <- transToIR body
   params' <- mapM (update . fst) params
@@ -100,11 +113,11 @@ transToIR (S.BinOp _ op x y) = do
     return $ Let opval op' (Apply opval [x', y'])
 
 transOp :: S.Op -> MType -> Expr (ID MType)
-transOp S.Add _  = Prim "add_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.Sub _  = Prim "sub_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.Mul _  = Prim "mul_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.Div _  = Prim "div_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
-transOp S.Mod _  = Prim "mod_i32" (FunctionTy (IntTy 32) [IntTy 32, IntTy 32])
+transOp S.Add _  = Prim "add_i64" (FunctionTy (IntTy 64) [IntTy 64, IntTy 64])
+transOp S.Sub _  = Prim "sub_i64" (FunctionTy (IntTy 64) [IntTy 64, IntTy 64])
+transOp S.Mul _  = Prim "mul_i64" (FunctionTy (IntTy 64) [IntTy 64, IntTy 64])
+transOp S.Div _  = Prim "div_i64" (FunctionTy (IntTy 64) [IntTy 64, IntTy 64])
+transOp S.Mod _  = Prim "mod_i64" (FunctionTy (IntTy 64) [IntTy 64, IntTy 64])
 transOp S.FAdd _ = Prim "add_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.FSub _ = Prim "sub_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
 transOp S.FMul _ = Prim "mul_double" (FunctionTy DoubleTy [DoubleTy, DoubleTy])
@@ -121,7 +134,7 @@ transOp S.Or _   = Prim "or" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 toMType :: MonadMalgo f => Language.Malgo.Old.Type.Type -> f MType
 toMType (NameTy n) =
   case n of
-    "Int"    -> return $ IntTy 32
+    "Int"    -> return $ IntTy 64
     "Float"  -> return DoubleTy
     "Bool"   -> return $ IntTy 1
     "Char"   -> return $ IntTy 8
@@ -134,4 +147,4 @@ toMType (TupleTy xs) =
   PointerTy . StructTy <$> mapM toMType xs
 toMType (ArrayTy t) = do
   t' <- toMType t
-  return $ PointerTy $ StructTy [IntTy 32, PointerTy t']
+  return $ PointerTy t'

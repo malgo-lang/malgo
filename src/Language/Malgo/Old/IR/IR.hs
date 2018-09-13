@@ -71,7 +71,7 @@ data Expr a = Var a
             | Unit
             | Prim Text MType
             | Tuple [a]
-            | MakeArray a a
+            | MakeArray MType a
             | Read a a
             | Write a a a
             | Apply a [a]
@@ -126,6 +126,9 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Char c) = quotes $ pPrint c
   pPrint (String s) = doubleQuotes $ pPrint s
   pPrint Unit = lparen <> rparen
+  pPrint (MakeArray ty size) = "array" <> parens (pPrint ty <> "," <+> pPrint size)
+  pPrint (Read arr ix) = pPrint arr <> brackets (pPrint ix)
+  pPrint (Write arr ix val) = parens $ pPrint arr <> brackets (pPrint ix) <+> "<-" <+> pPrint val
   pPrint (Prim name _) = "#" <> pPrint name
   pPrint (Tuple xs) = "tuple" <> parens (sep $ punctuate "," $ map pPrint xs)
   pPrint (Apply f args) = parens (pPrint f <+> sep (map pPrint args))
@@ -145,12 +148,18 @@ instance Pretty a => Pretty (Expr a) where
 
 instance HasMType a => HasMType (Expr a) where
   mTypeOf (Var a) = mTypeOf a
-  mTypeOf (Int _) = IntTy 32
+  mTypeOf (Int _) = IntTy 64
   mTypeOf (Float _) = DoubleTy
   mTypeOf (Bool _) = IntTy 1
   mTypeOf (Char _) = IntTy 8
   mTypeOf (String _) = PointerTy (IntTy 8)
   mTypeOf Unit = StructTy []
+  mTypeOf (MakeArray ty val) = PointerTy ty
+  mTypeOf (Read arr _) =
+    case mTypeOf arr of
+      PointerTy t -> t
+      t -> error $ show $ pPrint t <+> "is not array"
+  mTypeOf Write{} = StructTy []
   mTypeOf (Prim _ ty) = ty
   mTypeOf (Tuple xs) = PointerTy (StructTy (map mTypeOf xs))
   mTypeOf (Apply f _) =

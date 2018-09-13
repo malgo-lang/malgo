@@ -7,8 +7,8 @@ let
   -- val a : [Int] = int_array_create(10, 42)
   -- val a1 : Int = int_array_access(a, 1)
   -- val a2 : Int = int_array_access(int_array_update(a, 2, 48), 2)
-  val a : [Int] = array(10, 42)
+  val a : [Int] = array(Int, 10)
   val a1 : Int = a[1]
-  val a2 : Int = a[2] <- 48; a[2]
+  val a2 : Int = a[2] <- 42; a[2]
 in print_int(a1); newline(); print_int(a2); newline()
 end

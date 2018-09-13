@@ -63,7 +63,7 @@ middleend ast = do
   opt <- asks maOption
   ir <- TransToIR.trans ast
   when (dumpKNormal opt) $
-    dump $ IR.flattenExpr ir
+    dump ir
   case BasicLint.lint ir of
     Right _  -> pass
     Left mes -> error $ show mes
@@ -79,7 +79,7 @@ middleend ast = do
 
   ir'' <- Closure.trans ir'
   when (dumpClosure opt) $
-    dump $ IR.flattenProgram ir''
+    dump ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of
     Right _  -> pass
     Left mes -> error $ show mes

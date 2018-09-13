@@ -91,11 +91,10 @@ checkExpr (Char info x) = pure $ Char info x
 checkExpr (String info x) = pure $ String info x
 checkExpr (Unit info) = pure $ Unit info
 checkExpr (Tuple info xs) = Tuple info <$> mapM checkExpr xs
-checkExpr (MakeArray info size val) = do
+checkExpr (MakeArray info ty size) = do
   size' <- checkExpr size
-  val' <- checkExpr val
   match info size' ("Int" :: Type)
-  return $ MakeArray info size' val'
+  return $ MakeArray info ty size'
 checkExpr (ArrayRead info arr ix) = do
   arr' <- checkExpr arr
   ix' <- checkExpr ix

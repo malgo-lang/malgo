@@ -69,7 +69,7 @@ char = return . O.ConstantOperand . C.Int 8
 sizeof :: MonadIRBuilder m => LT.Type -> m O.Operand
 sizeof ty = do
   let nullptr = O.ConstantOperand (C.Null (LT.ptr ty))
-  ptr <- gep nullptr [O.ConstantOperand (C.Int 32 1)]
+  ptr <- gep nullptr [O.ConstantOperand (C.Int 64 1)]
   ptrtoint ptr LT.i64
 
 gcMalloc :: ( MonadIO m
@@ -95,7 +95,7 @@ genExpr e = term (genExpr' e)
 
 genExpr' :: Expr (ID MType) -> IRBuilderT GenDec O.Operand
 genExpr' (Var a) = getRef a
-genExpr' (Int i) = int32 i
+genExpr' (Int i) = int64 i
 genExpr' (Float d) = double d
 genExpr' (Bool b) = bit (if b then 1 else 0)
 genExpr' (Char c) = char (toInteger $ Char.ord c)
@@ -105,7 +105,7 @@ genExpr' (String xs) = do
   mapM_ (addChar p) (zip [0..] $ toString xs <> ['\0'])
   return p
   where addChar p (i, c) = do
-          i' <- int32 i
+          i' <- int64 i
           p' <- gep p [i']
           c' <- char (toInteger $ Char.ord c)
           store p' 0 c'
@@ -126,10 +126,27 @@ genExpr' (Prim orig ty) = do
 genExpr' (Tuple xs) = do
   p <- malloc (LT.StructureType False (map (convertType . mTypeOf) xs))
   forM_ (zip [0..] xs) $ \(i, x) -> do
-    p' <- gep p [ O.ConstantOperand (C.Int 32 0), O.ConstantOperand (C.Int 32 i)]
+    p' <- gep p [ O.ConstantOperand (C.Int 64 0), O.ConstantOperand (C.Int 64 i)]
     o <- getRef x
     store p' 0 o
   return p
+genExpr' (MakeArray ty size) = do
+  size' <- getRef size
+  byteSize <- mul size' =<< sizeof (convertType ty)
+  arr <- gcMalloc byteSize
+  bitcast arr (LT.ptr $ convertType ty)
+genExpr' (Read arr ix) = do
+  arr' <- getRef arr
+  ix' <- getRef ix
+  p <- gep arr' [ix']
+  load p 0
+genExpr' (Write arr ix val) = do
+  arr' <- getRef arr
+  ix' <- getRef ix
+  val' <- getRef val
+  p <- gep arr' [ix']
+  store p 0 val'
+  return (O.ConstantOperand $ C.Undef $ LT.StructureType False [])
 genExpr' (Apply f args) = do
   f' <- getRef f
   args' <- mapM (getRef >=> return . (, [])) args
@@ -144,12 +161,12 @@ genExpr' (Cast ty a) = do
   bitcast a' (convertType ty)
 genExpr' (Access a is) = do
   a' <- getRef a
-  p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
+  p <- gep a' (map (O.ConstantOperand . C.Int 64 . toInteger) is)
   load p 0
 genExpr' (Store a is v) = do
   a' <- getRef a
   v' <- getRef v
-  p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
+  p <- gep a' (map (O.ConstantOperand . C.Int 64 . toInteger) is)
   store p 0 v'
   genExpr' Unit
 genExpr' (If c t f) = do

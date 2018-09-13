@@ -15,7 +15,7 @@ import           Universum                    hiding (Type)
 data Expr a
   -- | 変数参照
   = Var Info a
-  -- | 32bit整数
+  -- | 64bit整数
   | Int Info Integer
   -- | 倍精度浮動小数点数
   | Float Info Double
@@ -31,9 +31,7 @@ data Expr a
   | Tuple Info [Expr a]
   | TupleAccess Info (Expr a) Int
   -- | 配列作成
-  | MakeArray Info
-    (Expr a) -- size
-    (Expr a) -- initial value
+  | MakeArray Info Type (Expr a)
   | ArrayRead Info
     (Expr a) -- array
     (Expr a) -- index
@@ -87,8 +85,8 @@ instance Pretty a => Pretty (Expr a) where
     braces $ sep $ punctuate "," $ map pPrint xs
   pPrint (TupleAccess _ e i) =
     parens ("." <+> pPrint e <+> pPrint i)
-  pPrint (MakeArray _ size val) =
-    parens $ "array" <+> pPrint size <+> pPrint val
+  pPrint (MakeArray _ ty size) =
+    parens $ "array" <+> pPrint ty <+> pPrint size
   pPrint (ArrayRead _ arr ix) =
     pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite _ arr ix val) =
@@ -180,7 +178,7 @@ instance HasType a => HasType (Expr a) where
     typeOf (TupleAccess _ e i) =
       let TupleTy xs = typeOf e
       in xs !! i
-    typeOf (MakeArray _ _ val) = ArrayTy (typeOf val)
+    typeOf (MakeArray _ t _) = ArrayTy t
     typeOf (ArrayRead _ arr _) =
       let ArrayTy t = typeOf arr
       in t
