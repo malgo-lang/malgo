@@ -1,4 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.IR.AST where
 
 import           Language.Malgo.FrontEnd.Loc

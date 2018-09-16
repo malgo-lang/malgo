@@ -1,4 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.Loc
   ( SrcSpan(..)

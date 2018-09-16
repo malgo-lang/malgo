@@ -1,4 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Language.Malgo.Pretty
   ( module Text.PrettyPrint.HughesPJClass

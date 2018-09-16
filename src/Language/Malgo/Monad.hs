@@ -1,6 +1,5 @@
+{-# LANGUAGE DeriveFunctor              #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Monad
   ( UniqSupply(..)
   , Opt(..)
@@ -12,7 +11,7 @@ module Language.Malgo.Monad
   , malgoError
   ) where
 
-import Universum
+import           Universum
 
 newtype UniqSupply = UniqSupply (IORef Int)
 
@@ -20,7 +19,7 @@ data Opt = Opt
 
 data MalgoEnv = MalgoEnv
   { uniqSupply :: UniqSupply
-  , option :: Opt
+  , option     :: Opt
   }
 
 newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }

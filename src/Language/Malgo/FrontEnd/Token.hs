@@ -1,4 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.FrontEnd.Token where
 

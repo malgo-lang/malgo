@@ -20,6 +20,8 @@ library:
   source-dirs: src
   build-tools:
   - happy
+  default-extensions:
+  - NoImplicitPrelude
   dependencies:
   - base >=4.7 && <5
   - generic-lens
