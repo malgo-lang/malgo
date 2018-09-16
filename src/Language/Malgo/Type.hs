@@ -23,7 +23,7 @@ data TypeScheme a = Forall [a] (Type a)
 
 data Type a = TyApp (TyCon a) [Type a]
             | TyVar a
-  deriving (Eq, Show)
+  deriving (Eq, Show, Ord)
 
 data TyCon a = IntC Integer
              | Float32C
@@ -31,12 +31,20 @@ data TyCon a = IntC Integer
              | TupleC Integer
              | ArrayC
              | ArrowC
-             | RecordC [Field a]
+             | RecordC (Field a)
+             | VariantC (Field a)
              | TyFun [a] (Type a)
              | Unique Integer (TyCon a)
-  deriving (Eq, Show)
+  deriving (Eq, Show, Ord)
 
-type Field a = (Text, Type a)
+newtype Field a = Field [(Text, Type a)]
+  deriving Show
+
+instance Ord a => Eq (Field a) where
+  (Field x) == (Field y) = sort x == sort y
+
+instance Ord a => Ord (Field a) where
+  compare (Field x) (Field y) = compare (sort x) (sort y)
 
 instance HasType (Type a) where
   type Env (Type a) = ()
