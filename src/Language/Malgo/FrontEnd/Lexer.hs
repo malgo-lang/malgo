@@ -24,7 +24,7 @@ tokenParser = Tok.makeTokenParser
   , Tok.caseSensitive  = True
   , Tok.reservedOpNames =
       [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%"
-      , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&&", "||" ]
+      , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&", "|" ]
   , Tok.reservedNames =
       [ "let", "type", "rec", "case", "fn", "true", "false" ]
   }
@@ -57,7 +57,7 @@ tag =
           , ("/", SLASH), ("%", PERCENT), ("->", ARROW), ("=>", DARROW)
           , (";", SEMICOLON), ("==", EQ_OP), ("/=", NEQ_OP)
           , ("<", LT_OP), (">", GT_OP), ("<=", LE_OP)
-          , (">=", GE_OP), ("&&", AND_OP), ("||", OR_OP) ]
+          , (">=", GE_OP), ("&", AND_OP), ("|", OR_OP) ]
     <|> (ID . toText <$> identifier)
     <|> try (FLOAT <$> float)
     <|> (INT <$> natural)
