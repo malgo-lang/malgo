@@ -13,7 +13,7 @@ dec = scdec
 scdec = ident [params] "=" expr
 scann = ident ":" type_scheme
 
-typedec = "type" ident {tyvar} "=" type ; type synonym
-        | "data" ident {tyvar} "=" type ; new type with constructor
+typedec = "alias" ident {tyvar} "=" type ; type synonym
+        | "type" ident {tyvar} "=" type ; new type with constructor
 
 type_scheme = ["forall" {tyvar} "."] type
