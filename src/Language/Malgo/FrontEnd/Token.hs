@@ -8,8 +8,6 @@ data Tag
   = LET
   | TYPE
   | REC
-  | AND
-  | EXTERN
   | TRUE
   | FALSE
   | LPAREN
@@ -22,8 +20,7 @@ data Tag
   | COLON
   | SEMICOLON
   | EQUAL
-  | IF
-  | ELSE
+  | CASE
   | DOT
   | PLUS
   | PLUS_DOT
@@ -36,6 +33,7 @@ data Tag
   | PERCENT
   | FN
   | ARROW
+  | DARROW
   | EQ_OP
   | NEQ_OP
   | LT_OP

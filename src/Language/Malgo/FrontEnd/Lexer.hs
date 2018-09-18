@@ -23,10 +23,10 @@ tokenParser = Tok.makeTokenParser
   , Tok.opLetter       = oneOf ":!#$%&*+./<=>?@\\^|-~"
   , Tok.caseSensitive  = True
   , Tok.reservedOpNames =
-      [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%", "->", ";"
-      , "==", "/=", "<", ">", "<=", ">=", "&&", "||" ]
+      [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%"
+      , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&&", "||" ]
   , Tok.reservedNames =
-      [ "let", "type", "rec", "and", "extern", "if", "else", "fn", "true", "false" ]
+      [ "let", "type", "rec", "case", "fn", "true", "false" ]
   }
 
 keyword :: Stream s m Char => String -> Tag -> ParsecT s u m Tag
@@ -41,10 +41,8 @@ tag :: Stream s m Char => ParsecT s u m Tag
 tag =
   foldl' (\b (word, t) -> b <|> keyword word t)
     (keyword "let" LET)
-    [ ("type", TYPE), ("rec", REC), ("and", AND)
-    , ("extern", EXTERN), ("if", IF)
-    , ("else", ELSE), ("fn", FN)
-    , ("true", TRUE), ("false", FALSE)]
+    [ ("type", TYPE), ("rec", REC), ("case", CASE)
+    , ("fn", FN), ("true", TRUE), ("false", FALSE)]
     <|> (lparen >> return LPAREN)
     <|> (rparen >> return RPAREN)
     <|> (lbrack >> return LBRACK)
@@ -56,7 +54,7 @@ tag =
           [ ("+.", PLUS_DOT), ("-.", MINUS_DOT), ("*.", ASTERISK_DOT)
           , ("/.", SLASH_DOT), (":", COLON), ("=", EQUAL)
           , ("+", PLUS), ("-", MINUS), ("*", ASTERISK)
-          , ("/", SLASH), ("%", PERCENT), ("->", ARROW)
+          , ("/", SLASH), ("%", PERCENT), ("->", ARROW), ("=>", DARROW)
           , (";", SEMICOLON), ("==", EQ_OP), ("/=", NEQ_OP)
           , ("<", LT_OP), (">", GT_OP), ("<=", LE_OP)
           , (">=", GE_OP), ("&&", AND_OP), ("||", OR_OP) ]
