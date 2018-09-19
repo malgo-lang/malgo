@@ -126,7 +126,7 @@ genExpr' (Prim orig ty) = do
 genExpr' (Tuple xs) = do
   p <- malloc (LT.StructureType False (map (convertType . mTypeOf) xs))
   forM_ (zip [0..] xs) $ \(i, x) -> do
-    p' <- gep p [ O.ConstantOperand (C.Int 64 0), O.ConstantOperand (C.Int 64 i)]
+    p' <- gep p [ O.ConstantOperand (C.Int 32 0), O.ConstantOperand (C.Int 32 i)]
     o <- getRef x
     store p' 0 o
   return p
@@ -161,12 +161,12 @@ genExpr' (Cast ty a) = do
   bitcast a' (convertType ty)
 genExpr' (Access a is) = do
   a' <- getRef a
-  p <- gep a' (map (O.ConstantOperand . C.Int 64 . toInteger) is)
+  p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
   load p 0
 genExpr' (Store a is v) = do
   a' <- getRef a
   v' <- getRef v
-  p <- gep a' (map (O.ConstantOperand . C.Int 64 . toInteger) is)
+  p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
   store p 0 v'
   genExpr' Unit
 genExpr' (If c t f) = do

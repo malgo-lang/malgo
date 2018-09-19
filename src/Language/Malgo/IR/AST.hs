@@ -1,5 +1,8 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric  #-}
 module Language.Malgo.IR.AST where
 
+import           Data.Outputable
 import           Language.Malgo.FrontEnd.Loc
 import           Universum
 
@@ -11,6 +14,7 @@ data Expr a = Var SrcSpan a
             | Apply (Expr a) (Expr a)
             | Case SrcSpan (Expr a) [Clause a]
             | Fn SrcSpan [(a, Maybe SType)] (Expr a)
+  deriving (Eq, Show, Generic, Outputable)
 
 {- # Function literal transformation
 (fun (x:a) (y:b) (z:c) -> e:d) : a -> b -> c -> d
@@ -22,9 +26,11 @@ data Literal = Int Integer
              | Float Double
              | Bool Bool
              | Char Char
+  deriving (Eq, Show, Generic, Outputable)
 
 data Bind a = NonRec SrcSpan a (Maybe SType) (Expr a)
             | Rec SrcSpan a (Maybe SType) [a] (Expr a)
+  deriving (Eq, Show, Generic, Outputable)
 
 {- # Rec transformation
 rec f x y : a -> b -> c = e
@@ -35,17 +41,19 @@ rec f x y : a -> b -> c = e
 data Clause a = VariantPat SrcSpan a a SType (Expr a)
               | BoolPat SrcSpan Bool (Expr a)
               | VarPat SrcSpan a (Expr a)
+  deriving (Eq, Show, Generic, Outputable)
 
 -- | トップレベル宣言
 data Decl a = ScDef SrcSpan a [a] (Expr a) -- ^ 環境を持たない関数（定数）宣言
             | ScAnn SrcSpan a SType -- ^ 関数（定数）の型宣言
             | AliasDef SrcSpan SType [Text] SType -- ^ 型の別名定義
             | TypeDef SrcSpan SType [Text] SType -- ^ 新しい型の定義
-
+  deriving (Eq, Show, Generic, Outputable)
 
 -- | ソースコード上での型の表現
 data SType = STyApp STyCon [SType]
            | STyVar Text
+  deriving (Eq, Show, Generic, Outputable)
 
 {- # SType vs Type
 型検査時にLanguage.Malgo.Type.Typeへ翻訳される．
@@ -55,3 +63,4 @@ Forallは型検査の過程で自動生成される．
 data STyCon = SimpleC Text
             | SRecordC [(Text, SType)]
             | SVariantC [(Text, SType)]
+  deriving (Eq, Show, Generic, Outputable)

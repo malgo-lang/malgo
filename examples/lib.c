@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <gc.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
+#include <stdlib.h>
 
 typedef struct {} Unit;
 
@@ -21,6 +24,14 @@ bool ge_i64(long x, long y) {
   return x >= y;
 }
 
+bool lt_i64(long x, long y) {
+  return x < y;
+}
+
+bool gt_i64(long x, long y) {
+  return x > y;
+}
+
 long sub_i64(long x, long y) {
   return x - y;
 }
@@ -29,12 +40,20 @@ long add_i64(long x, long y) {
   return x + y;
 }
 
+long mul_i64(long x, long y) {
+  return x * y;
+}
+
 bool eq_i64(long x, long y) {
   return x == y;
 }
 
 bool neq_i64(long x, long y) {
   return x != y;
+}
+
+bool or(bool x, bool y) {
+  return x || y;
 }
 
 Unit unit = {};
@@ -66,6 +85,20 @@ Unit print_bool(int b) {
     printf("false");
   }
   return unit;
+}
+
+Unit print_char(char c) {
+  printf("%c", c);
+  return unit;
+}
+
+Unit gen_seed(Unit unused) {
+  srand((unsigned) time(NULL));
+  return unit;
+}
+
+bool rand_bool(Unit unused) {
+  return (bool)(rand() % 2);
 }
 
 Unit flush(Unit unused) {
@@ -104,5 +137,18 @@ char* concat(char* str1, char* str2) {
 
 Unit newline(Unit unused) {
   printf("\n");
+  return unit;
+}
+
+bool* copy_bool_array(bool* arr, long size) {
+  bool* cpy = (bool*) GC_malloc(sizeof(bool) * size);
+  for (int i = 0; i < size; i++) {
+    cpy[i] = arr[i];
+  }
+  return cpy;
+}
+
+Unit malgo_sleep(long sec) {
+  sleep(sec);
   return unit;
 }

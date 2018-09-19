@@ -7,6 +7,7 @@ module Language.Malgo.FrontEnd.Loc
   , Column
   ) where
 
+import           Data.Outputable
 import           Language.Malgo.Pretty
 import           Universum
 
@@ -26,6 +27,9 @@ instance Pretty SrcSpan where
     [pPrint (filename s)
     , "line:" <+> pPrint (startLine s) <> "-" <> pPrint (endLine s)
     , "column:" <+> pPrint (startColumn s) <> "-" <> pPrint (endColumn s)]
+
+instance Outputable SrcSpan where
+  pprPrec _ = parens . pPrint
 
 class SrcInfo a where
   srcSpan :: a -> SrcSpan
