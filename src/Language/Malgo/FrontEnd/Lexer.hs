@@ -26,7 +26,7 @@ tokenParser = Tok.makeTokenParser
       [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%"
       , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&", "|" ]
   , Tok.reservedNames =
-      [ "let", "type", "rec", "case", "fn", "true", "false" ]
+      [ "let", "type", "rec", "and", "case", "fn", "true", "false" ]
   }
 
 keyword :: Stream s m Char => String -> Tag -> ParsecT s u m Tag
@@ -41,7 +41,7 @@ tag :: Stream s m Char => ParsecT s u m Tag
 tag =
   foldl' (\b (word, t) -> b <|> keyword word t)
     (keyword "let" LET)
-    [ ("type", TYPE), ("rec", REC), ("case", CASE)
+    [ ("type", TYPE), ("rec", REC), ("and", AND), ("case", CASE)
     , ("fn", FN), ("true", TRUE), ("false", FALSE)]
     <|> (lparen >> return LPAREN)
     <|> (rparen >> return RPAREN)

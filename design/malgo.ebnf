@@ -1,7 +1,5 @@
 ; EBNF for malgo syntax.
 
-nil = ; an empty string
-
 program = decs
 
 decs = {dec}
@@ -25,13 +23,15 @@ expr = ident ; variable
      | char  ; char literal
      | "{" { field_expr } "}" ; record literal
      | "<" field_expr ">" ":" type ; variant literal
-     | "let" { bind } "in" expr
+     | "let" bind "in" expr
      | expr expr ; application
      | "case" expr "{" { "|" clause } "}" ; pattern match
      | "fun" {ident | "(" ident ":" type ")"} "->" expr
 
 bind = ident [":" type] "=" expr
-     | "rec" ident {ident} [":" type] "=" expr
+     | "rec" recbind { "and" recbind }
+
+recbind = ident {ident} [":" type] "=" expr
 
 clause = "<" ident "=" ident ">" ":" type "=>" expr
        | "true" "=>" expr

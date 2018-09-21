@@ -12,7 +12,7 @@ data Expr a = Var SrcSpan a
             | Record SrcSpan [(a, Expr a)]
             | Variant SrcSpan a (Expr a) SType
             | Let (Bind a) (Expr a)
-            | Apply (Expr a) (Expr a)
+            | Apply SrcSpan (Expr a) (Expr a)
             | Case SrcSpan (Expr a) [Clause a]
             | Fn SrcSpan [(a, Maybe SType)] (Expr a)
   deriving (Eq, Show, Generic)

@@ -8,6 +8,7 @@ data Tag
   = LET
   | TYPE
   | REC
+  | AND
   | TRUE
   | FALSE
   | LPAREN
