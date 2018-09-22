@@ -56,6 +56,10 @@ bool or(bool x, bool y) {
   return x || y;
 }
 
+bool and(bool x, bool y) {
+  return x && y;
+}
+
 Unit unit = {};
 
 Unit print(char* str) {
@@ -150,5 +154,19 @@ bool* copy_bool_array(bool* arr, long size) {
 
 Unit malgo_sleep(long sec) {
   sleep(sec);
+  return unit;
+}
+
+Unit pulsar(bool* cells) {
+  cells[11 * 50 + 23] = true;
+  cells[12 * 50 + 23] = true;
+  cells[13 * 50 + 23] = true;
+
+  cells[12 * 50 + 25] = true;
+
+  cells[11 * 50 + 27] = true;
+  cells[12 * 50 + 27] = true;
+  cells[13 * 50 + 27] = true;
+
   return unit;
 }

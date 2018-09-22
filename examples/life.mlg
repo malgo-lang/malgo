@@ -6,13 +6,17 @@ extern gen_seed: {} -> {} = "gen_seed"
 extern rand_bool : {} -> Bool = "rand_bool"
 extern sleep : Int -> {} = "malgo_sleep"
 extern copy_bool_array : ([Bool], Int) -> [Bool] = "copy_bool_array"
+extern pulsar : [Bool] -> {} = "pulsar"
 
 val x_width : Int = 50
 val y_width : Int = 20
 val cells : [Bool] = array(Bool, x_width * y_width)
 
 in
-let fun view(cells: [Bool], x: Int, y: Int): Bool = cells[y * x_width + x] in
+let fun view(cells: [Bool], x: Int, y: Int): Bool =
+  if (x >= x_width) || (y >= y_width) || (x < 0) || (y < 0)
+  then false
+  else cells[y * x_width + x] in
 let fun set(cells: [Bool], x: Int, y: Int, s: Bool): {} =
   cells[y * x_width + x] <- s in
 
@@ -52,7 +56,7 @@ let fun next_state(cells: [Bool], x: Int, y: Int): Bool =
     living[0] <- to_int(view(cells, x-1, y-1)) + to_int(view(cells, x, y-1)) + to_int(view(cells, x+1, y-1)) + living[0];
     if view(cells, x, y)
     then (living[0] == 2) || (living[0] == 3)
-    else living[0] == 3
+    else (living[0] == 3)
   end in
 
 let fun update_cells(cells: [Bool]): {} =
@@ -73,7 +77,7 @@ let fun update_cells(cells: [Bool]): {} =
 
 in
   gen_seed();
-  init_cells(cells, 0);
+  pulsar(cells);
 
   let fun loop(): {} =
     print_cells(cells);
