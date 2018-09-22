@@ -64,20 +64,25 @@ STRING { Loc _ (STRING _) }
 
 %%
 
-program : decs {}
+decs :: { [Decl Text] }
+decs : decs_rev { reverse $1 }
+decs_rev : decs dec { $2 : $1 }
+         | { [] }
 
-decs : decs dec {}
-     |          {}
+dec :: { Decl Text }
+dec : scdec { $1 }
 
-dec : scdec {}
+scdec :: { Decl Text }
+scdec : ID params '=' expr { ScDef (srcSpan ($1, $4)) (_id $ unLoc $1) $2 $4 }
 
-scdec : ID params '=' expr {}
-
-params : params ID {}
-       |           {}
+params :: { [Text] }
+params : params_rev { reverse $1 }
+params_rev : params_rev ID { _id (unLoc $2) : $1 }
+           | { [] }
 
 expr :: { Expr Text }
-expr : aexpr { $1 }
+expr : expr aexpr %prec App { Apply (srcSpan ($1, $2)) $1 $2 }
+     | aexpr { $1 }
 
 aexpr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
       | INT { Literal (srcSpan $1) (Int (_int $ unLoc $1)) }
@@ -87,7 +92,7 @@ aexpr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
       | CHAR { Literal (srcSpan $1) (Char (_char $ unLoc $1)) }
       | STRING { error "string literal is not supported" }
       | '{' field_exprs '}' { Record (srcSpan ($1, $3)) $2 }
-
+      | '(' expr ')' { $2 }
 
 field_expr :: { (Text, Expr Text) }
 field_expr : ID '=' expr { (_id $ unLoc $1, $3) }
