@@ -1,7 +1,15 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.Type where
+module Language.Malgo.Type
+  ( HasType(..)
+  , matchType
+  , TypeScheme(..)
+  , Type(..)
+  , TyCon(..)
+  , Field(..)
+  ) where
 
 import           Universum hiding (Type)
 
@@ -34,16 +42,10 @@ data TyCon a = IntC Integer
              | VariantC (Field a)
              | TyFun [a] (Type a)
              | Unique Integer (TyCon a)
-  deriving (Eq, Show, Ord)
+  deriving (Eq, Ord, Show)
 
-newtype Field a = Field [(Text, Type a)]
-  deriving Show
-
-instance Ord a => Eq (Field a) where
-  (Field x) == (Field y) = sort x == sort y
-
-instance Ord a => Ord (Field a) where
-  compare (Field x) (Field y) = compare (sort x) (sort y)
+newtype Field a = Field { getField :: Set (Text, Type a) }
+  deriving (Eq, Ord, Show)
 
 instance HasType (Type a) where
   type Env (Type a) = ()

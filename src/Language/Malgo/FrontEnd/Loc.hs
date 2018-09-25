@@ -59,10 +59,7 @@ instance SrcInfo SrcSpan where
 data Loc a = Loc
   { loc   :: SrcSpan
   , unLoc :: a
-  } deriving (Ord, Show)
-
-instance Eq a => Eq (Loc a) where
-  x == y = unLoc x == unLoc y
+  } deriving (Eq, Ord, Show)
 
 instance Pretty a => Pretty (Loc a) where
   pPrint = pPrint . unLoc
