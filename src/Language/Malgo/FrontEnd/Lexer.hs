@@ -10,24 +10,26 @@ import           Text.Parsec                   hiding (many, token, (<|>))
 import qualified Text.Parsec.Token             as Tok
 import           Universum                     hiding (try)
 
+langDef :: Stream s m Char => Tok.GenLanguageDef s u m
+langDef = Tok.LanguageDef
+          { Tok.commentStart   = "{-"
+          , Tok.commentEnd     = "-}"
+          , Tok.commentLine    = "--"
+          , Tok.nestedComments = True
+          , Tok.identStart     = letter <|> char '_'
+          , Tok.identLetter    = alphaNum <|> oneOf "_'"
+          , Tok.opStart        = oneOf ":!#$%&*+./<=>?@\\^|-~"
+          , Tok.opLetter       = oneOf ":!#$%&*+./<=>?@\\^|-~"
+          , Tok.caseSensitive  = True
+          , Tok.reservedOpNames =
+            [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%"
+            , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&", "|", "," ]
+          , Tok.reservedNames =
+            [ "let", "type", "rec", "and", "case", "fn", "true", "false" ]
+          }
+
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
-tokenParser = Tok.makeTokenParser
-  Tok.LanguageDef
-  { Tok.commentStart   = "{-"
-  , Tok.commentEnd     = "-}"
-  , Tok.commentLine    = "--"
-  , Tok.nestedComments = True
-  , Tok.identStart     = letter <|> char '_'
-  , Tok.identLetter    = alphaNum <|> oneOf "_'"
-  , Tok.opStart        = oneOf ":!#$%&*+./<=>?@\\^|-~"
-  , Tok.opLetter       = oneOf ":!#$%&*+./<=>?@\\^|-~"
-  , Tok.caseSensitive  = True
-  , Tok.reservedOpNames =
-      [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%"
-      , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&", "|", "," ]
-  , Tok.reservedNames =
-      [ "let", "type", "rec", "and", "case", "fn", "true", "false" ]
-  }
+tokenParser = Tok.makeTokenParser langDef
 
 keyword :: Stream s m Char => String -> Tag -> ParsecT s u m Tag
 keyword word t = reserved word >> return t
@@ -60,12 +62,14 @@ tag =
           , (">=", GE_OP), ("&", AND_OP), ("|", OR_OP)
           , (",", COLON)
           ]
+    <|> (TYCON . toText <$> do { x <- upper; xs <- many identLetter; return (x:xs) })
     <|> (ID . toText <$> identifier)
     <|> try (FLOAT <$> float)
     <|> (INT <$> natural)
     <|> (CHAR <$> charLiteral)
     <|> (STRING . toText <$> stringLiteral)
   where
+    identLetter = Tok.identLetter langDef
     natural = Tok.natural tokenParser
     float = Tok.float tokenParser
     identifier = Tok.identifier tokenParser

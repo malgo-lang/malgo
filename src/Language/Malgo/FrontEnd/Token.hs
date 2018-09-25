@@ -44,6 +44,7 @@ data Tag
   | AND_OP
   | OR_OP
   | ID { _id :: Text }
+  | TYCON { _tycon :: Text }
   | INT { _int :: Integer }
   | FLOAT { _float :: Double }
   | BOOL { _bool :: Bool }
