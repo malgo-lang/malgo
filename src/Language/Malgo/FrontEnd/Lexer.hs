@@ -25,7 +25,7 @@ langDef = Tok.LanguageDef
             [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%"
             , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&", "|", "," ]
           , Tok.reservedNames =
-            [ "let", "type", "rec", "and", "case", "fn", "true", "false" ]
+            [ "let", "in", "type", "alias", "rec", "and", "case", "fn", "true", "false" ]
           }
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
@@ -43,7 +43,7 @@ tag :: Stream s m Char => ParsecT s u m Tag
 tag =
   foldl' (\b (word, t) -> b <|> keyword word t)
     (keyword "let" LET)
-    [ ("type", TYPE), ("rec", REC), ("and", AND), ("case", CASE)
+    [ ("in", IN), ("type", TYPE), ("alias", ALIAS), ("rec", REC), ("and", AND), ("case", CASE)
     , ("fn", FN), ("true", TRUE), ("false", FALSE)]
     <|> (lparen >> return LPAREN)
     <|> (rparen >> return RPAREN)

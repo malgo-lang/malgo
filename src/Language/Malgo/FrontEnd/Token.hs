@@ -6,7 +6,9 @@ import           Universum
 
 data Tag
   = LET
+  | IN
   | TYPE
+  | ALIAS
   | REC
   | AND
   | TRUE

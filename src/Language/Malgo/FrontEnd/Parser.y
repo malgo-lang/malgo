@@ -17,7 +17,9 @@ import Language.Malgo.FrontEnd.Token
 
 %token
 LET { Loc _ LET }
+IN { Loc _ IN }
 TYPE { Loc _ TYPE }
+ALIAS { Loc _ ALIAS }
 REC { Loc _ REC }
 AND { Loc _ AND }
 CASE { Loc _ CASE }
@@ -61,6 +63,7 @@ INT { Loc _ (INT _) }
 CHAR { Loc _ (CHAR _) }
 STRING { Loc _ (STRING _) }
 
+%left AND
 %right "->"
 %nonassoc ':'
 %nonassoc '='
@@ -76,21 +79,41 @@ decs_rev : decs dec { $2 : $1 }
 dec :: { Decl Text }
 dec : scdec { $1 }
     | scann { $1 }
+    | aliasdec { $1 }
+    | typedec { $1 }
 
 scdec :: { Decl Text }
 scdec : ID params '=' expr { ScDef (srcSpan ($1, $4)) (_id $ unLoc $1) $2 $4 }
 
 scann : ID ':' type { ScAnn (srcSpan $1) (_id $ unLoc $1) $3 }
 
+aliasdec : ALIAS TYCON ty_params '=' type { AliasDef (srcSpan $1) (_tycon $ unLoc $2) $3 $5 }
+
+typedec : TYPE TYCON ty_params '=' type { TypeDef (srcSpan $1) (_tycon $ unLoc $2) $3 $5 }
+
+ty_params : ty_params_rev { reverse $1 }
+ty_params_rev : { [] }
+              | ty_params_rev ID { _id (unLoc $2) : $1 }
+
 params :: { [Text] }
 params : params_rev { reverse $1 }
-params_rev : params_rev ID { _id (unLoc $2) : $1 }
-           | { [] }
+params_rev : { [] }
+           | params_rev ID { _id (unLoc $2) : $1 }
 
 expr :: { Expr Text }
 expr : app { $1 }
      | aexpr { $1 }
      | FN fn_params "->" expr { Fn (srcSpan ($1, $4)) $2 $4 }
+     | LET ID ':' type '=' expr IN expr { Let (srcSpan ($1, $8)) (NonRec (srcSpan ($2, $5)) (_id $ unLoc $2) (Just $4) $6) $8 }
+     | LET ID '=' expr IN expr { Let (srcSpan ($1, $6)) (NonRec (srcSpan ($2, $4)) (_id $ unLoc $2) Nothing $4) $6 }
+     | LET REC recbinds IN expr { Let (srcSpan ($1, $5)) $3 $5 }
+
+recbind : ID params ':' type '=' expr { (srcSpan ($1, $6), _id (unLoc $1), Just $4, $2, $6) }
+        | ID params '=' expr { (srcSpan ($1, $4), _id (unLoc $1), Nothing, $2, $4) }
+
+recbinds : recbinds_rev { Rec $ reverse $1 }
+recbinds_rev : recbind { [$1] }
+             | recbinds_rev AND recbind { $3 : $1 }
 
 app : aexpr aexpr %prec App { Apply (srcSpan ($1, $2)) $1 $2 }
     | app aexpr %prec App { Apply (srcSpan ($1, $2)) $1 $2 }
@@ -108,6 +131,7 @@ aexpr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
       | CHAR { Literal (srcSpan $1) (Char (_char $ unLoc $1)) }
       | STRING { error "string literal is not supported" }
       | '{' field_exprs '}' { Record (srcSpan ($1, $3)) $2 }
+      | '<' field_expr '>' ':' type { Variant (srcSpan ($1, $3)) (fst $2) (snd $2) $5 }
       | '(' expr ')' { $2 }
 
 field_expr :: { (Text, Expr Text) }
