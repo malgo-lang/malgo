@@ -1,6 +1,8 @@
+{-# LANGUAGE ExplicitForAll        #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.FrontEnd.Lexer (lex) where
 
@@ -39,7 +41,7 @@ op :: Stream s m Char => String -> Tag -> ParsecT s u m Tag
 op sym t = reservedOp sym >> return t
   where reservedOp = Tok.reservedOp tokenParser
 
-tag :: Stream s m Char => ParsecT s u m Tag
+tag :: forall s u m. Stream s m Char => ParsecT s u m Tag
 tag =
   foldl' (\b (word, t) -> b <|> keyword word t)
     (keyword "let" LET)
@@ -69,10 +71,20 @@ tag =
     <|> (CHAR <$> charLiteral)
     <|> (STRING . toText <$> stringLiteral)
   where
-    lexeme = Tok.lexeme tokenParser
     identLetter = Tok.identLetter langDef
+    reservedNames = Tok.reservedNames (langDef :: Tok.GenLanguageDef s u m)
+    lexeme = Tok.lexeme tokenParser
     natural = Tok.natural tokenParser
     float = Tok.float tokenParser
+    charLiteral = Tok.charLiteral tokenParser
+    stringLiteral = Tok.stringLiteral tokenParser
+    symbol = Tok.symbol tokenParser
+    lparen = symbol "("
+    rparen = symbol ")"
+    lbrack = symbol "["
+    rbrack = symbol "]"
+    lbrace = symbol "{"
+    rbrace = symbol "}"
     identifier = Tok.identifier tokenParser
     largeIdentifier = lexeme $ try $ do
       x <- upper
@@ -80,16 +92,7 @@ tag =
       if (x:xs) `elem` reservedNames
         then unexpected ("reserved word " ++ show (x:xs))
         else return $ x:xs
-    reservedNames = Tok.reservedNames (langDef :: Tok.GenLanguageDef Text () Identity)
-    symbol = Tok.symbol tokenParser
-    charLiteral = Tok.charLiteral tokenParser
-    stringLiteral = Tok.stringLiteral tokenParser
-    lparen = symbol "("
-    rparen = symbol ")"
-    lbrack = symbol "["
-    rbrack = symbol "]"
-    lbrace = symbol "{"
-    rbrace = symbol "}"
+
 
 token :: Stream s m Char => ParsecT s u m Token
 token = do
