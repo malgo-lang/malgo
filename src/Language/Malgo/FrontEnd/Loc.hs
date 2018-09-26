@@ -20,7 +20,10 @@ data SrcSpan = SrcSpan
   , srcSpanStartColumn :: Column
   , srcSpanEndLine     :: Line
   , srcSpanEndColumn   :: Column
-  } deriving (Eq, Ord, Show)
+  } deriving (Ord, Show)
+
+instance Eq SrcSpan where
+  _ == _ = True
 
 instance Pretty SrcSpan where
   pPrint s = sep $ punctuate colon
