@@ -62,17 +62,25 @@ tag =
           , (">=", GE_OP), ("&", AND_OP), ("|", OR_OP)
           , (",", COLON)
           ]
-    <|> (TYCON . toText <$> do { x <- upper; xs <- many identLetter; return (x:xs) })
+    <|> (TYCON . toText <$> largeIdentifier)
     <|> (ID . toText <$> identifier)
     <|> try (FLOAT <$> float)
     <|> (INT <$> natural)
     <|> (CHAR <$> charLiteral)
     <|> (STRING . toText <$> stringLiteral)
   where
+    lexeme = Tok.lexeme tokenParser
     identLetter = Tok.identLetter langDef
     natural = Tok.natural tokenParser
     float = Tok.float tokenParser
     identifier = Tok.identifier tokenParser
+    largeIdentifier = lexeme $ try $ do
+      x <- upper
+      xs <- many identLetter
+      if (x:xs) `elem` reservedNames
+        then unexpected ("reserved word " ++ show (x:xs))
+        else return $ x:xs
+    reservedNames = Tok.reservedNames (langDef :: Tok.GenLanguageDef Text () Identity)
     symbol = Tok.symbol tokenParser
     charLiteral = Tok.charLiteral tokenParser
     stringLiteral = Tok.stringLiteral tokenParser

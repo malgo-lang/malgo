@@ -104,12 +104,23 @@ expr :: { Expr Text }
 expr : app { $1 }
      | aexpr { $1 }
      | FN fn_params "->" expr { Fn (srcSpan ($1, $4)) $2 $4 }
-     | LET ID ':' type '=' expr IN expr { Let (srcSpan ($1, $8)) (NonRec (srcSpan ($2, $5)) (_id $ unLoc $2) (Just $4) $6) $8 }
-     | LET ID '=' expr IN expr { Let (srcSpan ($1, $6)) (NonRec (srcSpan ($2, $4)) (_id $ unLoc $2) Nothing $4) $6 }
+     | LET ID ':' type '=' expr IN expr
+       { Let (srcSpan ($1, $8))
+         (NonRec (srcSpan ($2, $5))
+          (_id $ unLoc $2) (Just $4) $6) $8 }
+     | LET ID '=' expr IN expr
+       { Let (srcSpan ($1, $6))
+         (NonRec (srcSpan ($2, $4))
+          (_id $ unLoc $2) Nothing $4) $6 }
      | LET REC recbinds IN expr { Let (srcSpan ($1, $5)) $3 $5 }
 
-recbind : ID params ':' type '=' expr { (srcSpan ($1, $6), _id (unLoc $1), Just $4, $2, $6) }
-        | ID params '=' expr { (srcSpan ($1, $4), _id (unLoc $1), Nothing, $2, $4) }
+recbind : ID params ':' type '=' expr
+          { ( srcSpan ($1, $6)
+            , _id (unLoc $1)
+            , Just $4, $2, $6) }
+        | ID params '=' expr
+          { ( srcSpan ($1, $4)
+            , _id (unLoc $1), Nothing, $2, $4) }
 
 recbinds : recbinds_rev { Rec $ reverse $1 }
 recbinds_rev : recbind { [$1] }

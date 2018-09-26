@@ -27,6 +27,13 @@ spec =
       , Loc (ss 1 15 1 17) (ID "x")
       , Loc (ss 1 17 1 19) PLUS
       , Loc (ss 1 19 1 21) (INT 42)]
+    t2 <- lex "<test>" ("Tycon1 var1 Ty_Con2 vAr2" :: Text)
+    it "Tycon" $ t2 `shouldBe` Right
+      [ Loc (ss 1 1 1 8) (TYCON "Tycon1")
+      , Loc (ss 1 8 1 13) (ID "var1")
+      , Loc (ss 1 13 1 21) (TYCON "Ty_Con2")
+      , Loc (ss 1 21 1 25) (ID "vAr2")]
+
 
 ss :: Line -> Column -> Line -> Column -> SrcSpan
 ss = SrcSpan "<test>"
