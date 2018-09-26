@@ -159,9 +159,10 @@ field_expr : ID '=' expr { (_id $ unLoc $1, $3) }
 
 field_exprs :: { [(Text, Expr Text)] }
 field_exprs : field_exprs_rev { reverse $1 }
+            | { [] }
 field_exprs_rev : field_exprs_rev ',' field_expr { $3 : $1 }
+                | field_exprs_rev ',' { $1 }
                 | field_expr { [$1] }
-                | { [] }
 
 type :: { SType }
 type : tycon ty_args { STyApp $1 $2 }
@@ -186,9 +187,10 @@ field_type : ID ':' type { (_id $ unLoc $1, $3) }
 
 field_types :: { [(Text, SType)] }
 field_types : field_types_rev { reverse $1 }
+            | { [] }
 field_types_rev : field_types_rev ',' field_type { $3 : $1 }
+                | field_types_rev ',' { $1 }
                 | field_type { [$1] }
-                | { [] }
 
 {
 parseError :: ([Token], [String]) -> a
