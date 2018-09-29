@@ -10,7 +10,11 @@ import Language.Malgo.FrontEnd.Loc
 import Language.Malgo.FrontEnd.Token
 }
 
-%name parse
+%name parse decs
+%name parseExpr expr
+%name parseDecl dec
+%name parseType type
+
 %tokentype { Token }
 %error { parseError }
 %errorhandlertype explist
@@ -63,17 +67,18 @@ INT { Loc _ (INT _) }
 CHAR { Loc _ (CHAR _) }
 STRING { Loc _ (STRING _) }
 
+%left ';'
 %left AND
 %right "->"
-%nonassoc ':'
-%nonassoc '='
 %left App
 
 %%
 
 decs :: { [Decl Text] }
 decs : decs_rev { reverse $1 }
-decs_rev : decs dec { $2 : $1 }
+decs_rev : decs_rev ';' dec { $3 : $1 }
+         | decs_rev ';' { $1 }
+         | dec { [$1] }
          | { [] }
 
 dec :: { Decl Text }
@@ -151,7 +156,8 @@ aexpr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
       | CHAR { Literal (srcSpan $1) (Char (_char $ unLoc $1)) }
       | STRING { error "string literal is not supported" }
       | '{' field_exprs '}' { Record (srcSpan ($1, $3)) $2 }
-      | '<' field_expr '>' ':' type { Variant (srcSpan ($1, $3)) (fst $2) (snd $2) $5 }
+      | '<' field_expr '>' { Variant (srcSpan ($1, $3)) (fst $2) (snd $2) [] }
+      | '<' field_expr ',' field_types '>' { Variant (srcSpan ($1, $3)) (fst $2) (snd $2) $4 }
       | '(' expr ')' { $2 }
 
 field_expr :: { (Text, Expr Text) }

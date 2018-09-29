@@ -16,13 +16,14 @@ ghc-options:
 - -Wincomplete-uni-patterns
 - -Wredundant-constraints
 
+default-extensions:
+- NoImplicitPrelude
+- StrictData
+
 library:
   source-dirs: src
   build-tools:
   - happy
-  default-extensions:
-  - NoImplicitPrelude
-  - StrictData
   dependencies:
   - base >=4.7 && <5
   - generic-lens

@@ -34,6 +34,5 @@ spec =
       , Loc (ss 1 13 1 21) (TYCON "Ty_Con2")
       , Loc (ss 1 21 1 25) (ID "vAr2")]
 
-
 ss :: Line -> Column -> Line -> Column -> SrcSpan
 ss = SrcSpan "<test>"

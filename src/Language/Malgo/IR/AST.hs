@@ -10,7 +10,7 @@ import           Universum
 data Expr a = Var SrcSpan a
             | Literal SrcSpan Literal
             | Record SrcSpan [(a, Expr a)]
-            | Variant SrcSpan a (Expr a) SType
+            | Variant SrcSpan a (Expr a) [(Text, SType)]
             | Let SrcSpan (Bind a) (Expr a)
             | Apply SrcSpan (Expr a) (Expr a)
             | Case SrcSpan (Expr a) [Clause a]
