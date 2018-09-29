@@ -1,6 +1,6 @@
 -- -*- mode: text -*-
 {
-{-# LANGUAGE NoStrictData #-}
+{-# LANGUAGE NoStrictData, OverloadedStrings #-}
 module Language.Malgo.FrontEnd.Parser where
 
 import Prelude
@@ -69,6 +69,7 @@ STRING { Loc _ (STRING _) }
 
 %left ';'
 %left AND
+%left TyApp
 %right "->"
 %left App
 
@@ -171,8 +172,12 @@ field_exprs_rev : field_exprs_rev ',' field_expr { $3 : $1 }
                 | field_expr { [$1] }
 
 type :: { SType }
-type : tycon ty_args { STyApp $1 $2 }
+type : tycon ty_args %prec TyApp { STyApp $1 $2 }
+     | arrow { $1 }
      | atype { $1 }
+
+arrow :: { SType }
+arrow : type "->" type { STyApp (SimpleC "->") [$1, $3] }
 
 atype :: { SType }
 atype : ID { STyVar (_id $ unLoc $1) }

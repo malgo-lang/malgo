@@ -16,8 +16,8 @@ spec = describe "parser" $ do
   let a1 = parse [tok (ID "x"), tok COLON, tok (TYCON "Int")]
   it "type signature 1" $ a1 `shouldBe` [ScAnn ss "x" (STyApp (SimpleC "Int") [])]
 
-  let a2 = parse [tok (ID "f"), tok COLON, tok (TYCON "Fun"), tok (TYCON "Int"), tok (TYCON "Int")]
-  it "type signature 2" $ a2 `shouldBe` [ScAnn ss "f" (STyApp (SimpleC "Fun") [STyApp (SimpleC "Int") [], STyApp (SimpleC "Int") []])]
+  let a2 = parse [tok (ID "f"), tok COLON, tok (TYCON "Int"), tok ARROW, tok (TYCON "Int")]
+  it "type signature 2" $ a2 `shouldBe` [ScAnn ss "f" (STyApp (SimpleC "->") [STyApp (SimpleC "Int") [], STyApp (SimpleC "Int") []])]
 
 
 tok :: a -> Loc a
