@@ -27,8 +27,6 @@ spec = do
       parseType [tok (TYCON "Tuple2"), tok (ID "a"), tok (ID "b")]
       `shouldBe` STyApp (SimpleC "Tuple2") [STyVar "a", STyVar "b"]
 
-
-
   describe "parseExpr" $ do
     it "Variable" $
       parseExpr [tok (ID "x")]

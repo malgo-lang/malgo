@@ -9,30 +9,29 @@ import           Universum
 import           Test.Hspec
 
 spec :: Spec
-spec =
-  describe "lexer" $ do
-    t0 <- lex "<test>" ("let x = 42" :: Text)
-    it "let" $ t0 `shouldBe` Right
-      [ Loc (ss 1 1 1 5) LET
-      , Loc (ss 1 5 1 7) (ID "x")
-      , Loc (ss 1 7 1 9) EQUAL
-      , Loc (ss 1 9 1 11) (INT 42)]
-    t1 <- lex "<test>" ("let rec f x = x + 42" :: Text)
-    it "let rec" $ t1 `shouldBe` Right
-      [ Loc (ss 1 1 1 5) LET
-      , Loc (ss 1 5 1 9) REC
-      , Loc (ss 1 9 1 11) (ID "f")
-      , Loc (ss 1 11 1 13) (ID "x")
-      , Loc (ss 1 13 1 15) EQUAL
-      , Loc (ss 1 15 1 17) (ID "x")
-      , Loc (ss 1 17 1 19) PLUS
-      , Loc (ss 1 19 1 21) (INT 42)]
-    t2 <- lex "<test>" ("Tycon1 var1 Ty_Con2 vAr2" :: Text)
-    it "Tycon" $ t2 `shouldBe` Right
-      [ Loc (ss 1 1 1 8) (TYCON "Tycon1")
-      , Loc (ss 1 8 1 13) (ID "var1")
-      , Loc (ss 1 13 1 21) (TYCON "Ty_Con2")
-      , Loc (ss 1 21 1 25) (ID "vAr2")]
+spec = describe "lexer" $ do
+  lextest "Atomic type" "Int" [TYCON "Int"]
+  lextest "Parametized type" "List Int" [TYCON "List", TYCON "Int"]
+  lextest "Type enclosed in parentheses" "List (List Int)" [TYCON "List", LPAREN, TYCON "List", TYCON "Int", RPAREN]
+  lextest "Function type" "Int -> Int -> Int" [TYCON "Int", ARROW, TYCON "Int", ARROW, TYCON "Int"]
+  lextest "Type variable" "Tuple2 a b" [TYCON "Tuple2", ID "a", ID "b"]
 
-ss :: Line -> Column -> Line -> Column -> SrcSpan
-ss = SrcSpan "<test>"
+  lextest "Variable" "x" [ID "x"]
+
+  lextest "id function" "f x = x" [ID "f", ID "x", EQUAL, ID "x"]
+  lextest "type signature 1" "x : Int" [ID "x", COLON, TYCON "Int"]
+  lextest "type signature 2" "f : Int -> Int" [ID "f", COLON, TYCON "Int", ARROW, TYCON "Int"]
+
+ss :: SrcSpan
+ss = SrcSpan "<test>" 0 0 0 0
+
+tok :: a -> Loc a
+tok = Loc ss
+
+toks :: [a1] -> Either a2 [Loc a1]
+toks = Right . map tok
+
+lextest :: String -> Text -> [Tag] -> SpecWith ()
+lextest desc str ts = do
+  t <- lex "<test>" (str :: Text)
+  it desc $ t `shouldBe` toks ts
