@@ -31,6 +31,21 @@ spec = do
     it "Variable" $
       parseExpr [tok (ID "x")]
       `shouldBe` Var ss "x"
+    it "Int literal" $
+      parseExpr (toks [INT 42])
+      `shouldBe` Literal ss (Int 42)
+    it "Float literal" $
+      parseExpr (toks [FLOAT 3.14])
+      `shouldBe` Literal ss (Float 3.14)
+    it "True literal" $
+      parseExpr (toks [TRUE])
+      `shouldBe` Literal ss (Bool True)
+    it "False literal" $
+      parseExpr (toks [FALSE])
+      `shouldBe` Literal ss (Bool False)
+    it "Char literal" $
+      parseExpr (toks [CHAR 'c'])
+      `shouldBe` Literal ss (Char 'c')
 
   describe "parseDecl" $ do
     it "id function" $
@@ -46,7 +61,7 @@ spec = do
       `shouldBe` ScAnn ss "f" (STyApp (SimpleC "->") [atype "Int", atype "Int"])
 
 
-tok :: a -> Loc a
+tok :: Tag -> Loc Tag
 tok = Loc ss
 
 ss :: SrcSpan
@@ -54,3 +69,6 @@ ss = SrcSpan "<test>" 0 0 0 0
 
 atype :: Text -> SType
 atype x = STyApp (SimpleC x) []
+
+toks :: [Tag] -> [Loc Tag]
+toks xs = map tok xs

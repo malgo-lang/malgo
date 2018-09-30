@@ -17,6 +17,11 @@ spec = describe "lexer" $ do
   lextest "Type variable" "Tuple2 a b" [TYCON "Tuple2", ID "a", ID "b"]
 
   lextest "Variable" "x" [ID "x"]
+  lextest "Int literal" "42" [INT 42]
+  lextest "Float literal" "3.14" [FLOAT 3.14]
+  lextest "True literal" "true" [TRUE]
+  lextest "False literal" "false" [FALSE]
+  lextest "Char literal" "'c'" [CHAR 'c']
 
   lextest "id function" "f x = x" [ID "f", ID "x", EQUAL, ID "x"]
   lextest "type signature 1" "x : Int" [ID "x", COLON, TYCON "Int"]
