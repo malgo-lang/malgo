@@ -14,6 +14,20 @@ spec = do
     it "Atomic type" $
       parseType [tok (TYCON "Int")]
       `shouldBe` atype "Int"
+    it "Parametized type" $
+      parseType [tok (TYCON "List"), tok (TYCON "Int")]
+      `shouldBe` STyApp (SimpleC "List") [atype "Int"]
+    it "Type enclosed in parentheses" $
+      parseType [tok (TYCON "List"), tok LPAREN, tok (TYCON "List"), tok (TYCON "Int"), tok RPAREN]
+      `shouldBe` STyApp (SimpleC "List") [STyApp (SimpleC "List") [atype "Int"]]
+    it "Function type" $
+      parseType [tok (TYCON "Int"), tok ARROW, tok (TYCON "Int"), tok ARROW, tok (TYCON "Int")]
+      `shouldBe` STyApp (SimpleC "->") [atype "Int", STyApp (SimpleC "->") [atype "Int", atype "Int"]]
+    it "Type variable" $
+      parseType [tok (TYCON "Tuple2"), tok (ID "a"), tok (ID "b")]
+      `shouldBe` STyApp (SimpleC "Tuple2") [STyVar "a", STyVar "b"]
+
+
 
   describe "parseExpr" $ do
     it "Variable" $
