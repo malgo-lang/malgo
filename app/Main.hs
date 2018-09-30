@@ -1,13 +1,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module Main where
 
+import qualified Data.Text.Lazy.IO         as T
 import           Language.Malgo.Old.Driver
 import qualified Language.Malgo.Old.Lexer  as Lexer
 import           Language.Malgo.Old.Monad
 import qualified Language.Malgo.Old.Parser as Parser
 import           LLVM.Pretty
 import           Universum
-import qualified Data.Text.Lazy.IO as T
 
 main :: IO ()
 main = do
