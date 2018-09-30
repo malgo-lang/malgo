@@ -9,15 +9,29 @@ import           Test.Hspec
 import           Universum
 
 spec :: Spec
-spec = describe "parser" $ do
-  let a0 = parse [tok (ID "f"), tok (ID "x"), tok EQUAL, tok (ID "x")]
-  it "id function" $ a0 `shouldBe` [ScDef ss "f" ["x"] (Var ss "x")]
+spec = do
+  describe "parseType" $ do
+    it "Atomic type" $
+      parseType [tok (TYCON "Int")]
+      `shouldBe` atype "Int"
 
-  let a1 = parse [tok (ID "x"), tok COLON, tok (TYCON "Int")]
-  it "type signature 1" $ a1 `shouldBe` [ScAnn ss "x" (STyApp (SimpleC "Int") [])]
+  describe "parseExpr" $ do
+    it "Variable" $
+      parseExpr [tok (ID "x")]
+      `shouldBe` Var ss "x"
 
-  let a2 = parse [tok (ID "f"), tok COLON, tok (TYCON "Int"), tok ARROW, tok (TYCON "Int")]
-  it "type signature 2" $ a2 `shouldBe` [ScAnn ss "f" (STyApp (SimpleC "->") [STyApp (SimpleC "Int") [], STyApp (SimpleC "Int") []])]
+  describe "parseDecl" $ do
+    it "id function" $
+      parseDecl [tok (ID "f"), tok (ID "x"), tok EQUAL, tok (ID "x")]
+      `shouldBe` ScDef ss "f" ["x"] (Var ss "x")
+
+    it "type signature 1" $
+      parseDecl [tok (ID "x"), tok COLON, tok (TYCON "Int")]
+      `shouldBe` ScAnn ss "x" (atype "Int")
+
+    it "type signature 2" $
+      parseDecl [tok (ID "f"), tok COLON, tok (TYCON "Int"), tok ARROW, tok (TYCON "Int")]
+      `shouldBe` ScAnn ss "f" (STyApp (SimpleC "->") [atype "Int", atype "Int"])
 
 
 tok :: a -> Loc a
@@ -25,3 +39,6 @@ tok = Loc ss
 
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0
+
+atype :: Text -> SType
+atype x = STyApp (SimpleC x) []
