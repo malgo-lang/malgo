@@ -15,49 +15,49 @@ spec = do
       parseType [tok (TYCON "Int")]
       `shouldBe` atype "Int"
     it "Parametized type" $
-      parseType [tok (TYCON "List"), tok (TYCON "Int")]
+      parseType (toks [TYCON "List", TYCON "Int"])
       `shouldBe` STyApp (SimpleC "List") [atype "Int"]
     it "Type enclosed in parentheses" $
-      parseType [tok (TYCON "List"), tok LPAREN, tok (TYCON "List"), tok (TYCON "Int"), tok RPAREN]
+      parseType (toks [TYCON "List", LPAREN, TYCON "List", TYCON "Int", RPAREN])
       `shouldBe` STyApp (SimpleC "List") [STyApp (SimpleC "List") [atype "Int"]]
     it "Function type" $
-      parseType [tok (TYCON "Int"), tok ARROW, tok (TYCON "Int"), tok ARROW, tok (TYCON "Int")]
+      parseType (toks [TYCON "Int", ARROW, TYCON "Int", ARROW, TYCON "Int"])
       `shouldBe` STyApp (SimpleC "->") [atype "Int", STyApp (SimpleC "->") [atype "Int", atype "Int"]]
     it "Type variable" $
-      parseType [tok (TYCON "Tuple2"), tok (ID "a"), tok (ID "b")]
+      parseType (toks [TYCON "Tuple2", ID "a", ID "b"])
       `shouldBe` STyApp (SimpleC "Tuple2") [STyVar "a", STyVar "b"]
 
   describe "parseExpr" $ do
     it "Variable" $
-      parseExpr [tok (ID "x")]
+      parseExpr [tok $ ID "x"]
       `shouldBe` Var ss "x"
     it "Int literal" $
-      parseExpr (toks [INT 42])
+      parseExpr [tok $ INT 42]
       `shouldBe` Literal ss (Int 42)
     it "Float literal" $
-      parseExpr (toks [FLOAT 3.14])
+      parseExpr [tok $ FLOAT 3.14]
       `shouldBe` Literal ss (Float 3.14)
     it "True literal" $
-      parseExpr (toks [TRUE])
+      parseExpr [tok TRUE]
       `shouldBe` Literal ss (Bool True)
     it "False literal" $
-      parseExpr (toks [FALSE])
+      parseExpr [tok FALSE]
       `shouldBe` Literal ss (Bool False)
     it "Char literal" $
-      parseExpr (toks [CHAR 'c'])
+      parseExpr [tok $ CHAR 'c']
       `shouldBe` Literal ss (Char 'c')
 
   describe "parseDecl" $ do
     it "id function" $
-      parseDecl [tok (ID "f"), tok (ID "x"), tok EQUAL, tok (ID "x")]
+      parseDecl (toks [ID "f", ID "x", EQUAL, ID "x"])
       `shouldBe` ScDef ss "f" ["x"] (Var ss "x")
 
     it "type signature 1" $
-      parseDecl [tok (ID "x"), tok COLON, tok (TYCON "Int")]
+      parseDecl (toks [ID "x", COLON, TYCON "Int"])
       `shouldBe` ScAnn ss "x" (atype "Int")
 
     it "type signature 2" $
-      parseDecl [tok (ID "f"), tok COLON, tok (TYCON "Int"), tok ARROW, tok (TYCON "Int")]
+      parseDecl (toks [ID "f", COLON, TYCON "Int", ARROW, TYCON "Int"])
       `shouldBe` ScAnn ss "f" (STyApp (SimpleC "->") [atype "Int", atype "Int"])
 
 
