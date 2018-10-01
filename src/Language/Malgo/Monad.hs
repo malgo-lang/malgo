@@ -27,7 +27,7 @@ data MalgoEnv = MalgoEnv
   }
 
 newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
-  deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO)
+  deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO, MonadFail)
 
 runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
 {-# SPECIALIZE runMalgo :: MalgoM a -> UniqSupply -> Opt -> IO a #-}
