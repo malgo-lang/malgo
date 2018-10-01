@@ -24,6 +24,8 @@ spec = describe "lexer" $ do
   lextest "True literal" "true" [TRUE]
   lextest "False literal" "false" [FALSE]
   lextest "Char literal" "'c'" [CHAR 'c']
+  lextest "Record" "{x = 42, y = a}" [LBRACE, ID "x", EQUAL, INT 42, COMMA, ID "y", EQUAL, ID "a", RBRACE]
+  lextest "Variant" "<x = 42, y : List Int>" [LT_OP, ID "x", EQUAL, INT 42, COMMA, ID "y", COLON, TYCON "List", TYCON "Int", GT_OP]
 
   lextest "id function" "f x = x" [ID "f", ID "x", EQUAL, ID "x"]
   lextest "type signature 1" "x : Int" [ID "x", COLON, TYCON "Int"]
