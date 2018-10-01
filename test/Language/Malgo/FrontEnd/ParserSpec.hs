@@ -58,6 +58,28 @@ spec = do
     it "Variant" $
       parseExpr (toks [LT_OP, ID "x", EQUAL, INT 42, COMMA, ID "y", COLON, TYCON "List", TYCON "Int", GT_OP])
       `shouldBe` Variant ss "x" (Literal ss (Int 42)) [("y", STyApp (SimpleC "List") [atype "Int"])]
+    it "Anonymous function" $
+      parseExpr (toks [FN, ID "x", LPAREN, ID "y", COLON, TYCON "Int", RPAREN, ARROW, ID "x"])
+      `shouldBe` Fn ss [("x", Nothing), ("y", Just (atype "Int"))] (Var ss "x")
+    it "let 1" $
+      parseExpr (toks [LET, ID "x", COLON, TYCON "Int", EQUAL, INT 42, IN, ID "x"])
+      `shouldBe` Let ss (NonRec ss "x" (Just (atype "Int")) (Literal ss (Int 42))) (Var ss "x")
+    it "let 2" $
+      parseExpr (toks [LET, ID "x", EQUAL, INT 42, IN, ID "x"])
+      `shouldBe` Let ss (NonRec ss "x" Nothing (Literal ss (Int 42))) (Var ss "x")
+    it "let rec 1" $
+      parseExpr (toks [LET, REC, ID "f", ID "x", COLON, TYCON "Int", ARROW, TYCON "Int", EQUAL, ID "x", IN, ID "f"])
+      `shouldBe` Let ss (Rec [(ss, "f", Just (STyApp (SimpleC "->") [atype "Int", atype "Int"]), ["x"], Var ss "x")]) (Var ss "f")
+    it "let rec 2" $
+      parseExpr (toks [LET, REC, ID "f", ID "x", EQUAL, ID "x", IN, ID "f"])
+      `shouldBe` Let ss (Rec [(ss, "f", Nothing, ["x"], Var ss "x")]) (Var ss "f")
+    it "let rec 3" $
+      parseExpr (toks [LET, REC, ID "x", EQUAL, ID "x", AND, ID "y", EQUAL, ID "x", IN, ID "y"])
+      `shouldBe` Let ss (Rec [ (ss, "x", Nothing, [], Var ss "x")
+                             , (ss, "y", Nothing, [], Var ss "x")]) (Var ss "y")
+    it "Case expression" $
+      parseExpr (toks [CASE, ID "x", LBRACE, OR_OP, ID "x", DARROW, ID "x", RBRACE])
+      `shouldBe` Case ss (Var ss "x") [VarPat ss "x" (Var ss "x")]
 
   describe "parseDecl" $ do
     it "id function" $

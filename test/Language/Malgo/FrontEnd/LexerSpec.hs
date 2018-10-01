@@ -26,6 +26,27 @@ spec = describe "lexer" $ do
   lextest "Char literal" "'c'" [CHAR 'c']
   lextest "Record" "{x = 42, y = a}" [LBRACE, ID "x", EQUAL, INT 42, COMMA, ID "y", EQUAL, ID "a", RBRACE]
   lextest "Variant" "<x = 42, y : List Int>" [LT_OP, ID "x", EQUAL, INT 42, COMMA, ID "y", COLON, TYCON "List", TYCON "Int", GT_OP]
+  lextest "Anonymous function"
+    "fn x (y : Int) -> x"
+    [FN, ID "x", LPAREN, ID "y", COLON, TYCON "Int", RPAREN, ARROW, ID "x"]
+  lextest "let 1"
+    "let x : Int = 42 in x"
+    [LET, ID "x", COLON, TYCON "Int", EQUAL, INT 42, IN, ID "x"]
+  lextest "let 2"
+    "let x = 42 in x"
+    [LET, ID "x", EQUAL, INT 42, IN, ID "x"]
+  lextest "let rec 1"
+    "let rec f x : Int -> Int = x in f"
+    [LET, REC, ID "f", ID "x", COLON, TYCON "Int", ARROW, TYCON "Int", EQUAL, ID "x", IN, ID "f"]
+  lextest "let rec 2"
+    "let rec f x = x in f"
+    [LET, REC, ID "f", ID "x", EQUAL, ID "x", IN, ID "f"]
+  lextest "let rec 3"
+    "let rec x = x and y = x in y"
+    [LET, REC, ID "x", EQUAL, ID "x", AND, ID "y", EQUAL, ID "x", IN, ID "y"]
+  lextest "Case expression"
+    "case x { | x => x }"
+    [CASE, ID "x", LBRACE, OR_OP, ID "x", DARROW, ID "x", RBRACE]
 
   lextest "id function" "f x = x" [ID "f", ID "x", EQUAL, ID "x"]
   lextest "type signature 1" "x : Int" [ID "x", COLON, TYCON "Int"]
