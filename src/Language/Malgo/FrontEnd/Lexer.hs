@@ -62,7 +62,7 @@ tag =
           , (";", SEMICOLON), ("==", EQ_OP), ("/=", NEQ_OP)
           , ("<", LT_OP), (">", GT_OP), ("<=", LE_OP)
           , (">=", GE_OP), ("&", AND_OP), ("|", OR_OP)
-          , (",", COLON)
+          , (",", COMMA)
           ]
     <|> (TYCON . toText <$> largeIdentifier)
     <|> (ID . toText <$> identifier)

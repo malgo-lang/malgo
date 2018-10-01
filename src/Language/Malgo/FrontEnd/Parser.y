@@ -182,11 +182,12 @@ arrow : type "->" type { STyApp (SimpleC "->") [$1, $3] }
 atype :: { SType }
 atype : ID { STyVar (_id $ unLoc $1) }
       | tycon { STyApp $1 [] }
+      | '{' field_types '}' { STyApp (SRecordC $2) [] }
+      | '<' field_types '>' { STyApp (SVariantC $2) [] }
       | '(' type ')' { $2 }
 
 tycon :: { STyCon }
 tycon : TYCON { SimpleC (_tycon $ unLoc $1) }
-      | '{' field_types '}' { SRecordC $2 }
 
 ty_args :: { [SType] }
 ty_args : ty_args_rev { reverse $1 }

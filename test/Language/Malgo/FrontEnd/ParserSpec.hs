@@ -26,6 +26,12 @@ spec = do
     it "Type variable" $
       parseType (toks [TYCON "Tuple2", ID "a", ID "b"])
       `shouldBe` STyApp (SimpleC "Tuple2") [STyVar "a", STyVar "b"]
+    it "Record type" $
+      parseType (toks [LBRACE, ID "x", COLON, TYCON "Int", COMMA, ID "y", COLON, TYCON "List", TYCON "Int", RBRACE])
+      `shouldBe` STyApp (SRecordC [("x", atype "Int"), ("y", STyApp (SimpleC "List") [atype "Int"])]) []
+    it "Variant type" $
+      parseType (toks [LT_OP, ID "x", COLON, TYCON "Int", COMMA, ID "y", COLON, TYCON "List", TYCON "Int", GT_OP])
+      `shouldBe` STyApp (SVariantC [("x", atype "Int"), ("y", STyApp (SimpleC "List") [atype "Int"])]) []
 
   describe "parseExpr" $ do
     it "Variable" $
@@ -46,6 +52,12 @@ spec = do
     it "Char literal" $
       parseExpr [tok $ CHAR 'c']
       `shouldBe` Literal ss (Char 'c')
+    it "Record" $
+      parseExpr (toks [LBRACE, ID "x", EQUAL, INT 42, COMMA, ID "y", EQUAL, ID "a", RBRACE])
+      `shouldBe` Record ss [("x", Literal ss (Int 42)), ("y", Var ss "a")]
+    it "Variant" $
+      parseExpr (toks [LT_OP, ID "x", EQUAL, INT 42, COMMA, ID "y", COLON, TYCON "List", TYCON "Int", GT_OP])
+      `shouldBe` Variant ss "x" (Literal ss (Int 42)) [("y", STyApp (SimpleC "List") [atype "Int"])]
 
   describe "parseDecl" $ do
     it "id function" $

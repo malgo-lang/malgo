@@ -15,6 +15,8 @@ spec = describe "lexer" $ do
   lextest "Type enclosed in parentheses" "List (List Int)" [TYCON "List", LPAREN, TYCON "List", TYCON "Int", RPAREN]
   lextest "Function type" "Int -> Int -> Int" [TYCON "Int", ARROW, TYCON "Int", ARROW, TYCON "Int"]
   lextest "Type variable" "Tuple2 a b" [TYCON "Tuple2", ID "a", ID "b"]
+  lextest "Record type" "{x: Int, y : List Int }" [LBRACE, ID "x", COLON, TYCON "Int", COMMA, ID "y", COLON, TYCON "List", TYCON "Int", RBRACE]
+  lextest "Variant type" "< x:Int, y:List Int>" [LT_OP, ID "x", COLON, TYCON "Int", COMMA, ID "y", COLON, TYCON "List", TYCON "Int", GT_OP]
 
   lextest "Variable" "x" [ID "x"]
   lextest "Int literal" "42" [INT 42]
