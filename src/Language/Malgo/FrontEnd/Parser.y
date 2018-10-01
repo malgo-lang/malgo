@@ -123,6 +123,16 @@ expr : app { $1 }
          (NonRec (srcSpan ($2, $4))
           (_id $ unLoc $2) Nothing $4) $6 }
      | LET REC recbinds IN expr { Let (srcSpan ($1, $5)) $3 $5 }
+     | CASE aexpr clauses { Case (srcSpan $1) $2 $3 }
+
+clauses : '{' clauses_rev '}' { reverse $2 }
+clauses_rev : clauses_rev '|' clause { $3 : $1 }
+            | { [] }
+clause : '<' ID '=' ID '>' "=>" expr { VariantPat (srcSpan ($1, $7)) (_id $ unLoc $2) (_id $ unLoc $4) [] $7 }
+       | '<' ID '=' ID ',' field_types '>' "=>" expr { VariantPat (srcSpan ($1, $9)) (_id $ unLoc $2) (_id $ unLoc $4) $6 $9 }
+       | TRUE "=>" expr { BoolPat (srcSpan ($1, $3)) True $3 }
+       | FALSE "=>" expr { BoolPat (srcSpan ($1, $3)) False $3 }
+       | ID "=>" expr { VarPat (srcSpan ($1, $3)) (_id $ unLoc $1) $3 }
 
 recbind :: { (SrcSpan, Text, Maybe SType, [Text], Expr Text) }
 recbind : ID params ':' type '=' expr

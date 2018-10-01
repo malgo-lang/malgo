@@ -66,7 +66,7 @@ extendRec (Rec bs) = Rec $ map extendRec' bs
       (ss, f, ty, [], foldr (\x -> Fn ss [x]) e $ reverse $ zip xs $ repeat Nothing)
 extendRec b = b
 
-data Clause a = VariantPat SrcSpan a a SType (Expr a)
+data Clause a = VariantPat SrcSpan a a [(Text, SType)] (Expr a)
               | BoolPat SrcSpan Bool (Expr a)
               | VarPat SrcSpan a (Expr a)
   deriving (Eq, Show, Generic)
@@ -79,7 +79,8 @@ instance SrcInfo (Clause a) where
 -- | トップレベル宣言
 data Decl a = ScDef SrcSpan a [a] (Expr a) -- ^ 環境を持たない関数（定数）宣言
             | ScAnn SrcSpan a SType -- ^ 関数（定数）の型宣言
-            | AliasDef SrcSpan Text [Text] SType -- ^ 型の別名定義
+            |
+              AliasDef SrcSpan Text [Text] SType -- ^ 型の別名定義
             | TypeDef SrcSpan Text [Text] SType -- ^ 新しい型の定義
   deriving (Eq, Show, Generic)
 
