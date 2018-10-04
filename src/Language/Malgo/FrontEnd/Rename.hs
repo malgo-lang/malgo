@@ -17,21 +17,15 @@ type RenameM a = ReaderT (Map Text Id) MalgoM a
 
 -- Utilities
 newId :: MonadMalgo m => Text -> m Id
-newId name = do
-  i <- newUniq
-  return $ Id name i
+newId name = Id name <$> newUniq
 
 lookupId :: Text -> RenameM (Maybe Id)
-lookupId name = do
-  env <- ask
-  return $ Map.lookup name env
+lookupId name = Map.lookup name <$> ask
 
 assertDefined :: SrcSpan -> Text -> RenameM ()
 assertDefined ss name = do
   name' <- lookupId name
-  case name' of
-    Just _ -> return ()
-    Nothing -> error $ show $ pPrint ss <+> ":" <+> pPrint name <+> "is not defined"
+  whenNothing_ name' $ error $ show $ pPrint ss <+> ":" <+> pPrint name <+> "is not defined"
 
 lookupId' :: SrcSpan -> Text -> ReaderT (Map Text Id) MalgoM Id
 lookupId' ss name = do
@@ -78,3 +72,4 @@ renameDecl (TypeDef ss x ps t) = return $ TypeDef ss x ps t
 
 renameExpr :: Expr Text -> RenameM (Expr Id)
 renameExpr (Var ss a) = Var ss <$> lookupId' ss a
+renameExpr (Literal ss x) = return $ Literal ss x
