@@ -44,34 +44,35 @@ rename :: [Decl Text] -> MalgoM [Decl Id]
 rename xs = usingReaderT mempty $ do
   headers <- Map.fromList . catMaybes <$> mapM header xs
   local (headers <>) $ mapM renameDecl xs
- where
-  header (ScDef ss f _ _) = do
-    f' <- lookupId f
-    case f' of
-      Just _ -> return Nothing
-      Nothing ->
-        error
-          $   show
-          $   pPrint ss
-          <+> ":"
-          <+> "Type annotation for"
-          <+> pPrint f
-          <+> "is needed"
-  header (ScAnn ss f _) = do
-    f' <- lookupId f
-    case f' of
-      Just _ ->
-        error
-          $   show
-          $   pPrint ss
-          <+> ":"
-          <+> "Type annotation for"
-          <+> pPrint f
-          <+> "is already declared"
-      Nothing -> do
-        new <- newId f
-        return $ Just (f, new)
-  header _ = return Nothing
+
+header :: Decl Text -> RenameM (Maybe (Text, Id))
+header (ScDef ss f _ _) = do
+  f' <- lookupId f
+  case f' of
+    Just _ -> return Nothing
+    Nothing ->
+      error
+        $   show
+        $   pPrint ss
+        <+> ":"
+        <+> "Type annotation for"
+        <+> pPrint f
+        <+> "is needed"
+header (ScAnn ss f _) = do
+  f' <- lookupId f
+  case f' of
+    Just _ ->
+      error
+        $   show
+        $   pPrint ss
+        <+> ":"
+        <+> "Type annotation for"
+        <+> pPrint f
+        <+> "is already declared"
+    Nothing -> do
+      new <- newId f
+      return $ Just (f, new)
+header _ = return Nothing
 
 renameDecl :: Decl Text -> RenameM (Decl Id)
 renameDecl (ScAnn ss x t   ) = ScAnn ss <$> lookupId' ss x <*> pure t
