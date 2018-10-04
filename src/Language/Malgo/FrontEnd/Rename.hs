@@ -90,3 +90,40 @@ renameExpr (Var     ss a) = Var ss <$> lookupId' ss a
 renameExpr (Literal ss x) = return $ Literal ss x
 renameExpr (Record ss xs) =
   Record ss <$> mapM (\(l, v) -> (l, ) <$> renameExpr v) xs
+renameExpr (Variant ss l v t) = Variant ss l <$> renameExpr v <*> pure t
+renameExpr (Let ss bind e   ) = do
+  (newBinds, bind') <- renameBind bind
+  local (newBinds <>) $ Let ss bind' <$> renameExpr e
+renameExpr (Apply ss e1 e2) = Apply ss <$> renameExpr e1 <*> renameExpr e2
+renameExpr (Case ss e clauses) =
+  Case ss <$> renameExpr e <*> mapM renameClause clauses
+renameExpr (Fn ss params e) = do
+  xs <- mapM (newId . view _1) params
+  local (Map.fromList (zip (map (view _1) params) xs) <>)
+    $   Fn ss (zip xs (map (view _2) params))
+    <$> renameExpr e
+
+renameBind :: Bind Text -> RenameM (Map Text Id, Bind Id)
+renameBind (NonRec ss n t e) = do
+  e' <- renameExpr e
+  n' <- newId n
+  return (Map.singleton n n', NonRec ss n' t e')
+renameBind (Rec bs) = do
+  let fs = map (view _2) bs
+  fs' <- mapM newId fs
+  let newBinds = Map.fromList (zip fs fs')
+  local (newBinds <>) $ (newBinds, ) . Rec <$> mapM renameRec bs
+ where
+  renameRec (ss, f, mt, ps, e) = do
+    f'  <- lookupId' ss f
+    ps' <- mapM newId ps
+    local (Map.fromList (zip ps ps') <>) $ (ss, f', mt, ps', ) <$> renameExpr e
+
+renameClause :: Clause Text -> RenameM (Clause Id)
+renameClause (VariantPat ss l x t e) = do
+  x' <- newId x
+  local (Map.singleton x x' <>) $ VariantPat ss l x' t <$> renameExpr e
+renameClause (BoolPat ss b e) = BoolPat ss b <$> renameExpr e
+renameClause (VarPat  ss x e) = do
+  x' <- newId x
+  local (Map.singleton x x' <>) $ VarPat ss x' <$> renameExpr e

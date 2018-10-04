@@ -71,7 +71,7 @@ extendRec (Rec bs) = Rec $ map extendRec' bs
     )
 extendRec b = b
 
-data Clause a = VariantPat SrcSpan a a [(Text, SType)] (Expr a)
+data Clause a = VariantPat SrcSpan Text a [(Text, SType)] (Expr a)
               | BoolPat SrcSpan Bool (Expr a)
               | VarPat SrcSpan a (Expr a)
   deriving (Eq, Show, Generic)
