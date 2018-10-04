@@ -1,6 +1,7 @@
+{-# LANGUAGE TupleSections #-}
 module Language.Malgo.FrontEnd.Rename where
 
-import qualified Data.Map                      as Map
+import qualified Data.Map as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
@@ -87,3 +88,4 @@ renameDecl (TypeDef  ss x ps t) = return $ TypeDef ss x ps t
 renameExpr :: Expr Text -> RenameM (Expr Id)
 renameExpr (Var     ss a) = Var ss <$> lookupId' ss a
 renameExpr (Literal ss x) = return $ Literal ss x
+renameExpr (Record ss xs) = Record ss <$> mapM (\(l, v) -> (l,) <$> renameExpr v) xs
