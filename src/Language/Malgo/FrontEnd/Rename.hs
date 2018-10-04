@@ -1,5 +1,5 @@
 {-# LANGUAGE TupleSections #-}
-module Language.Malgo.FrontEnd.Rename where
+module Language.Malgo.FrontEnd.Rename (rename, renameDecl, renameExpr) where
 
 import qualified Data.Map                      as Map
 import           Language.Malgo.FrontEnd.Loc
