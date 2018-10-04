@@ -1,6 +1,6 @@
 module Language.Malgo.FrontEnd.Rename where
 
-import qualified Data.Map                    as Map
+import qualified Data.Map                      as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
@@ -25,7 +25,13 @@ lookupId name = Map.lookup name <$> ask
 assertDefined :: SrcSpan -> Text -> RenameM ()
 assertDefined ss name = do
   name' <- lookupId name
-  whenNothing_ name' $ error $ show $ pPrint ss <+> ":" <+> pPrint name <+> "is not defined"
+  whenNothing_ name'
+    $   error
+    $   show
+    $   pPrint ss
+    <+> ":"
+    <+> pPrint name
+    <+> "is not defined"
 
 lookupId' :: SrcSpan -> Text -> ReaderT (Map Text Id) MalgoM Id
 lookupId' ss name = do
@@ -36,40 +42,47 @@ lookupId' ss name = do
 -- Renamers
 rename :: [Decl Text] -> MalgoM [Decl Id]
 rename xs = usingReaderT mempty $ do
-  headers <- collectHeader xs
+  headers <- Map.fromList . catMaybes <$> mapM header xs
   local (headers <>) $ mapM renameDecl xs
-
-collectHeader :: [Decl Text] -> RenameM (Map Text Id)
-collectHeader xs =
-  Map.fromList . catMaybes <$> mapM header xs
-  where header (ScDef ss f _ _) = do
-          f' <- lookupId f
-          case f' of
-            Just _ -> return Nothing
-            Nothing -> error $ show $
-              pPrint ss <+> ":" <+>
-              "Type annotation for" <+> pPrint f <+> "is needed"
-        header (ScAnn ss f _) = do
-          f' <- lookupId f
-          case f' of
-            Just _ -> error $ show $
-              pPrint ss <+> ":" <+>
-              "Type annotation for" <+> pPrint f <+> "is already declared"
-            Nothing -> do
-              new <- newId f
-              return $ Just (f, new)
-        header _ = return Nothing
+ where
+  header (ScDef ss f _ _) = do
+    f' <- lookupId f
+    case f' of
+      Just _ -> return Nothing
+      Nothing ->
+        error
+          $   show
+          $   pPrint ss
+          <+> ":"
+          <+> "Type annotation for"
+          <+> pPrint f
+          <+> "is needed"
+  header (ScAnn ss f _) = do
+    f' <- lookupId f
+    case f' of
+      Just _ ->
+        error
+          $   show
+          $   pPrint ss
+          <+> ":"
+          <+> "Type annotation for"
+          <+> pPrint f
+          <+> "is already declared"
+      Nothing -> do
+        new <- newId f
+        return $ Just (f, new)
+  header _ = return Nothing
 
 renameDecl :: Decl Text -> RenameM (Decl Id)
-renameDecl (ScAnn ss x t) = ScAnn ss <$> lookupId' ss x <*> pure t
+renameDecl (ScAnn ss x t   ) = ScAnn ss <$> lookupId' ss x <*> pure t
 renameDecl (ScDef ss x ps e) = do
-  x' <- lookupId' ss x
+  x'  <- lookupId' ss x
   ps' <- mapM newId ps
-  e' <- local ((Map.fromList $ zip ps ps') <>) $ renameExpr e
+  e'  <- local ((Map.fromList $ zip ps ps') <>) $ renameExpr e
   return $ ScDef ss x' ps' e'
 renameDecl (AliasDef ss x ps t) = return $ AliasDef ss x ps t
-renameDecl (TypeDef ss x ps t) = return $ TypeDef ss x ps t
+renameDecl (TypeDef  ss x ps t) = return $ TypeDef ss x ps t
 
 renameExpr :: Expr Text -> RenameM (Expr Id)
-renameExpr (Var ss a) = Var ss <$> lookupId' ss a
+renameExpr (Var     ss a) = Var ss <$> lookupId' ss a
 renameExpr (Literal ss x) = return $ Literal ss x
