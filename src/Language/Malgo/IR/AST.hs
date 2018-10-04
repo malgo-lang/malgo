@@ -34,8 +34,8 @@ instance SrcInfo (Expr a) where
 -}
 
 extendFn :: Expr a -> Expr a
-extendFn (Fn ss (p:ps) e) = Fn ss [p] (extendFn $ Fn ss ps e)
-extendFn e                = e
+extendFn (Fn ss (p : ps) e) = Fn ss [p] (extendFn $ Fn ss ps e)
+extendFn e                  = e
 
 data Literal = Int Integer
              | Float Double
@@ -60,10 +60,15 @@ rec f x y : a -> b -> c = e
 
 extendRec :: Bind a -> Bind a
 extendRec (Rec bs) = Rec $ map extendRec' bs
-  where
-    extendRec' b@(_, _, _, [], _) = b
-    extendRec' (ss, f, ty, xs, e) =
-      (ss, f, ty, [], foldr (\x -> Fn ss [x]) e $ reverse $ zip xs $ repeat Nothing)
+ where
+  extendRec' b@(_, _, _, [], _) = b
+  extendRec' (ss, f, ty, xs, e) =
+    ( ss
+    , f
+    , ty
+    , []
+    , foldr (\x -> Fn ss [x]) e $ reverse $ zip xs $ repeat Nothing
+    )
 extendRec b = b
 
 data Clause a = VariantPat SrcSpan a a [(Text, SType)] (Expr a)
