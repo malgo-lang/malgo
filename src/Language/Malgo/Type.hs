@@ -9,9 +9,10 @@ module Language.Malgo.Type
   , Type(..)
   , TyCon(..)
   , Field(..)
-  ) where
+  )
+where
 
-import           Universum hiding (Type)
+import           Universum               hiding ( Type )
 
 class HasType a where
   type Env a :: *
@@ -19,10 +20,16 @@ class HasType a where
   typeOf :: MonadReader (Env a) m => a -> m (TypeRep a)
 
 matchType
-  :: ( HasType a, HasType b
-     , Eq (TypeRep a), MonadReader (Env a) m
-     , Env a ~ Env b, TypeRep a ~ TypeRep b)
-  => a -> b -> m Bool
+  :: ( HasType a
+     , HasType b
+     , Eq (TypeRep a)
+     , MonadReader (Env a) m
+     , Env a ~ Env b
+     , TypeRep a ~ TypeRep b
+     )
+  => a
+  -> b
+  -> m Bool
 matchType x y = (==) <$> typeOf x <*> typeOf y
 
 data TypeScheme a = Forall [a] (Type a)
@@ -35,7 +42,6 @@ data Type a = TyApp (TyCon a) [Type a]
 data TyCon a = IntC Integer
              | Float32C
              | Float64C
-             | TupleC Integer
              | ArrayC
              | ArrowC
              | RecordC (Field a)
