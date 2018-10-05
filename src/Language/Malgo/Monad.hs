@@ -9,7 +9,8 @@ module Language.Malgo.Monad
   , runMalgo
   , MonadMalgo(..)
   , newUniq
-  ) where
+  )
+where
 
 import           Universum
 
@@ -48,6 +49,6 @@ instance MonadMalgo m => MonadMalgo (StateT s m) where
 newUniq :: MonadMalgo m => m Int
 newUniq = liftMalgo $ do
   UniqSupply u <- asks uniqSupply
-  i <- readIORef u
-  modifyIORef u (+1)
+  i            <- readIORef u
+  modifyIORef u (+ 1)
   return i

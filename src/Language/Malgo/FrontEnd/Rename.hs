@@ -1,5 +1,10 @@
 {-# LANGUAGE TupleSections #-}
-module Language.Malgo.FrontEnd.Rename (rename, renameDecl, renameExpr) where
+module Language.Malgo.FrontEnd.Rename
+  ( rename
+  , renameDecl
+  , renameExpr
+  )
+where
 
 import qualified Data.Map                      as Map
 import           Language.Malgo.FrontEnd.Loc
@@ -34,7 +39,7 @@ assertDefined ss name = do
     <+> pPrint name
     <+> "is not defined"
 
-lookupId' :: SrcSpan -> Text -> ReaderT (Map Text Id) MalgoM Id
+lookupId' :: SrcSpan -> Text -> RenameM Id
 lookupId' ss name = do
   assertDefined ss name
   Just name' <- lookupId name
@@ -70,9 +75,7 @@ header (ScAnn ss f _) = do
         <+> "Type annotation for"
         <+> pPrint f
         <+> "is already declared"
-    Nothing -> do
-      new <- newId f
-      return $ Just (f, new)
+    Nothing -> Just . (f, ) <$> newId f
 header _ = return Nothing
 
 renameDecl :: Decl Text -> RenameM (Decl Id)
