@@ -16,22 +16,22 @@ spec = do
       `shouldBe` atype "Int"
     it "Parametized type" $
       parseType (toks [TYCON "List", TYCON "Int"])
-      `shouldBe` STyApp (SimpleC "List") [atype "Int"]
+      `shouldBe` STyApp ss (SimpleC ss "List") [atype "Int"]
     it "Type enclosed in parentheses" $
       parseType (toks [TYCON "List", LPAREN, TYCON "List", TYCON "Int", RPAREN])
-      `shouldBe` STyApp (SimpleC "List") [STyApp (SimpleC "List") [atype "Int"]]
+      `shouldBe` STyApp ss (SimpleC ss "List") [STyApp ss (SimpleC ss "List") [atype "Int"]]
     it "Function type" $
       parseType (toks [TYCON "Int", ARROW, TYCON "Int", ARROW, TYCON "Int"])
-      `shouldBe` STyApp (SimpleC "->") [atype "Int", STyApp (SimpleC "->") [atype "Int", atype "Int"]]
+      `shouldBe` STyApp ss (SimpleC ss "->") [atype "Int", STyApp ss (SimpleC ss "->") [atype "Int", atype "Int"]]
     it "Type variable" $
       parseType (toks [TYCON "Tuple2", ID "a", ID "b"])
-      `shouldBe` STyApp (SimpleC "Tuple2") [STyVar "a", STyVar "b"]
+      `shouldBe` STyApp ss (SimpleC ss "Tuple2") [STyVar ss "a", STyVar ss "b"]
     it "Record type" $
       parseType (toks [LBRACE, ID "x", COLON, TYCON "Int", COMMA, ID "y", COLON, TYCON "List", TYCON "Int", RBRACE])
-      `shouldBe` STyApp (SRecordC [("x", atype "Int"), ("y", STyApp (SimpleC "List") [atype "Int"])]) []
+      `shouldBe` STyApp ss (SRecordC ss [("x", atype "Int"), ("y", STyApp ss (SimpleC ss "List") [atype "Int"])]) []
     it "Variant type" $
       parseType (toks [LT_OP, ID "x", COLON, TYCON "Int", COMMA, ID "y", COLON, TYCON "List", TYCON "Int", GT_OP])
-      `shouldBe` STyApp (SVariantC [("x", atype "Int"), ("y", STyApp (SimpleC "List") [atype "Int"])]) []
+      `shouldBe` STyApp ss (SVariantC ss [("x", atype "Int"), ("y", STyApp ss (SimpleC ss "List") [atype "Int"])]) []
 
   describe "parseExpr" $ do
     it "Variable" $
@@ -57,7 +57,7 @@ spec = do
       `shouldBe` Record ss [("x", Literal ss (Int 42)), ("y", Var ss "a")]
     it "Variant" $
       parseExpr (toks [LT_OP, ID "x", EQUAL, INT 42, COMMA, ID "y", COLON, TYCON "List", TYCON "Int", GT_OP])
-      `shouldBe` Variant ss "x" (Literal ss (Int 42)) [("y", STyApp (SimpleC "List") [atype "Int"])]
+      `shouldBe` Variant ss "x" (Literal ss (Int 42)) [("y", STyApp ss (SimpleC ss "List") [atype "Int"])]
     it "Anonymous function" $
       parseExpr (toks [FN, ID "x", LPAREN, ID "y", COLON, TYCON "Int", RPAREN, ARROW, ID "x"])
       `shouldBe` Fn ss [("x", Nothing), ("y", Just (atype "Int"))] (Var ss "x")
@@ -69,7 +69,7 @@ spec = do
       `shouldBe` Let ss (NonRec ss "x" Nothing (Literal ss (Int 42))) (Var ss "x")
     it "let rec expression with type annotation" $
       parseExpr (toks [LET, REC, ID "f", ID "x", COLON, TYCON "Int", ARROW, TYCON "Int", EQUAL, ID "x", IN, ID "f"])
-      `shouldBe` Let ss (Rec [(ss, "f", Just (STyApp (SimpleC "->") [atype "Int", atype "Int"]), ["x"], Var ss "x")]) (Var ss "f")
+      `shouldBe` Let ss (Rec [(ss, "f", Just (STyApp ss (SimpleC ss "->") [atype "Int", atype "Int"]), ["x"], Var ss "x")]) (Var ss "f")
     it "let rec expression without type annotation" $
       parseExpr (toks [LET, REC, ID "f", ID "x", EQUAL, ID "x", IN, ID "f"])
       `shouldBe` Let ss (Rec [(ss, "f", Nothing, ["x"], Var ss "x")]) (Var ss "f")
@@ -92,7 +92,7 @@ spec = do
 
     it "type signature 2" $
       parseDecl (toks [ID "f", COLON, TYCON "Int", ARROW, TYCON "Int"])
-      `shouldBe` ScAnn ss "f" (STyApp (SimpleC "->") [atype "Int", atype "Int"])
+      `shouldBe` ScAnn ss "f" (STyApp ss (SimpleC ss "->") [atype "Int", atype "Int"])
 
 
 tok :: Tag -> Loc Tag
@@ -101,8 +101,8 @@ tok = Loc ss
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0
 
-atype :: Text -> SType
-atype x = STyApp (SimpleC x) []
+atype :: Text -> SType Text
+atype x = STyApp ss (SimpleC ss x) []
 
 toks :: [Tag] -> [Loc Tag]
 toks xs = map tok xs

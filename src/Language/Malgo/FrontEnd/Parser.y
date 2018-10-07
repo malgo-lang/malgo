@@ -85,7 +85,6 @@ decs_rev : decs_rev ';' dec { $3 : $1 }
 dec :: { Decl Text }
 dec : scdec { $1 }
     | scann { $1 }
-    | aliasdec { $1 }
     | typedec { $1 }
 
 scdec :: { Decl Text }
@@ -93,9 +92,6 @@ scdec : ID params '=' expr { ScDef (srcSpan ($1, $4)) (_id $ unLoc $1) $2 $4 }
 
 scann :: { Decl Text }
 scann : ID ':' type { ScAnn (srcSpan $1) (_id $ unLoc $1) $3 }
-
-aliasdec :: { Decl Text }
-aliasdec : ALIAS TYCON ty_params '=' type { AliasDef (srcSpan $1) (_tycon $ unLoc $2) $3 $5 }
 
 typedec :: { Decl Text }
 typedec : TYPE TYCON ty_params '=' type { TypeDef (srcSpan $1) (_tycon $ unLoc $2) $3 $5 }
@@ -134,7 +130,7 @@ clause : '<' ID '=' ID '>' "=>" expr { VariantPat (srcSpan ($1, $7)) (_id $ unLo
        | FALSE "=>" expr { BoolPat (srcSpan ($1, $3)) False $3 }
        | ID "=>" expr { VarPat (srcSpan ($1, $3)) (_id $ unLoc $1) $3 }
 
-recbind :: { (SrcSpan, Text, Maybe SType, [Text], Expr Text) }
+recbind :: { (SrcSpan, Text, Maybe (SType Text), [Text], Expr Text) }
 recbind : ID params ':' type '=' expr
           { ( srcSpan ($1, $6)
             , _id (unLoc $1)
@@ -152,7 +148,7 @@ app :: { Expr Text }
 app : aexpr aexpr %prec App { Apply (srcSpan ($1, $2)) $1 $2 }
     | app aexpr %prec App { Apply (srcSpan ($1, $2)) $1 $2 }
 
-fn_params :: { [(Text, Maybe SType)] }
+fn_params :: { [(Text, Maybe (SType Text))] }
 fn_params : fn_params_rev { reverse $1 }
 fn_params_rev : fn_params_rev '(' ID ':' type ')' { (_id $ unLoc $3, Just $5) : $1 }
               | fn_params_rev ID { (_id $ unLoc $2, Nothing) : $1 }
@@ -181,33 +177,33 @@ field_exprs_rev : field_exprs_rev ',' field_expr { $3 : $1 }
                 | field_exprs_rev ',' { $1 }
                 | field_expr { [$1] }
 
-type :: { SType }
-type : tycon ty_args %prec TyApp { STyApp $1 $2 }
+type :: { SType Text }
+type : tycon ty_args %prec TyApp { STyApp (srcSpan $1) $1 $2 }
      | arrow { $1 }
      | atype { $1 }
 
-arrow :: { SType }
-arrow : type "->" type { STyApp (SimpleC "->") [$1, $3] }
+arrow :: { SType Text }
+arrow : type "->" type { STyApp (srcSpan ($1, $3)) (SimpleC (srcSpan $2) "->") [$1, $3] }
 
-atype :: { SType }
-atype : ID { STyVar (_id $ unLoc $1) }
-      | tycon { STyApp $1 [] }
-      | '{' field_types '}' { STyApp (SRecordC $2) [] }
-      | '<' field_types '>' { STyApp (SVariantC $2) [] }
+atype :: { SType Text }
+atype : ID { STyVar (srcSpan $1) (_id $ unLoc $1) }
+      | tycon { STyApp (srcSpan $1) $1 [] }
+      | '{' field_types '}' { STyApp (srcSpan ($1, $3)) (SRecordC (srcSpan ($1, $3)) $2) [] }
+      | '<' field_types '>' { STyApp (srcSpan ($1, $3)) (SVariantC (srcSpan ($1, $3)) $2) [] }
       | '(' type ')' { $2 }
 
-tycon :: { STyCon }
-tycon : TYCON { SimpleC (_tycon $ unLoc $1) }
+tycon :: { STyCon Text }
+tycon : TYCON { SimpleC (srcSpan $1) (_tycon $ unLoc $1) }
 
-ty_args :: { [SType] }
+ty_args :: { [SType Text] }
 ty_args : ty_args_rev { reverse $1 }
 ty_args_rev : ty_args_rev atype { $2 : $1 }
             | atype { [$1] }
 
-field_type :: { (Text, SType) }
+field_type :: { (Text, SType Text) }
 field_type : ID ':' type { (_id $ unLoc $1, $3) }
 
-field_types :: { [(Text, SType)] }
+field_types :: { [(Text, SType Text)] }
 field_types : field_types_rev { reverse $1 }
             | { [] }
 field_types_rev : field_types_rev ',' field_type { $3 : $1 }

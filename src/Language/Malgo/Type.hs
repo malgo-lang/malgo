@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass        #-}
+{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE RankNTypes            #-}
@@ -5,14 +7,16 @@
 module Language.Malgo.Type
   ( HasType(..)
   , matchType
+  , TyRef(..)
   , TypeScheme(..)
   , Type(..)
   , TyCon(..)
-  , Field(..)
   )
 where
 
-import           Universum               hiding ( Type )
+import           Data.List (nub)
+import           Prelude   (show)
+import           Universum hiding (Type)
 
 class HasType a where
   type Env a :: *
@@ -33,25 +37,29 @@ matchType
 matchType x y = (==) <$> typeOf x <*> typeOf y
 
 data TypeScheme a = Forall [a] (Type a)
-  deriving (Eq, Show)
+  deriving Show
+
+newtype TyRef a = TyRef (IORef (Maybe (Type a)))
+  deriving Eq
+
+instance Show (TyRef a) where
+  show _ = "<meta>"
 
 data Type a = TyApp (TyCon a) [Type a]
             | TyVar a
-  deriving (Eq, Show, Ord)
+            | TyMeta (TyRef a)
+            | Field (Type a) (Type a)
+  deriving (Eq, Show)
 
 data TyCon a = IntC Integer
              | Float32C
              | Float64C
              | ArrayC
              | ArrowC
-             | RecordC (Field a)
-             | VariantC (Field a)
+             | RecordC [Text]
+             | VariantC [Text]
              | TyFun [a] (Type a)
-             | Unique Integer (TyCon a)
-  deriving (Eq, Ord, Show)
-
-newtype Field a = Field { getField :: Set (Text, Type a) }
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Show)
 
 instance HasType (Type a) where
   type Env (Type a) = ()

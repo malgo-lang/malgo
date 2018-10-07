@@ -10,11 +10,11 @@ import           Universum
 data Expr a = Var SrcSpan a
             | Literal SrcSpan Literal
             | Record SrcSpan [(Text, Expr a)]
-            | Variant SrcSpan Text (Expr a) [(Text, SType)]
+            | Variant SrcSpan Text (Expr a) [(Text, SType a)]
             | Let SrcSpan (Bind a) (Expr a)
             | Apply SrcSpan (Expr a) (Expr a)
             | Case SrcSpan (Expr a) [Clause a]
-            | Fn SrcSpan [(a, Maybe SType)] (Expr a)
+            | Fn SrcSpan [(a, Maybe (SType a))] (Expr a)
   deriving (Eq, Show, Generic)
 
 instance SrcInfo (Expr a) where
@@ -43,8 +43,8 @@ data Literal = Int Integer
              | Char Char
   deriving (Eq, Show, Generic)
 
-data Bind a = NonRec SrcSpan a (Maybe SType) (Expr a)
-            | Rec [(SrcSpan, a, Maybe SType, [a], Expr a)]
+data Bind a = NonRec SrcSpan a (Maybe (SType a)) (Expr a)
+            | Rec [(SrcSpan, a, Maybe (SType a), [a], Expr a)]
   deriving (Eq, Show, Generic)
 
 instance SrcInfo (Bind a) where
@@ -71,7 +71,7 @@ extendRec (Rec bs) = Rec $ map extendRec' bs
     )
 extendRec b = b
 
-data Clause a = VariantPat SrcSpan Text a [(Text, SType)] (Expr a)
+data Clause a = VariantPat SrcSpan Text a [(Text, SType a)] (Expr a)
               | BoolPat SrcSpan Bool (Expr a)
               | VarPat SrcSpan a (Expr a)
   deriving (Eq, Show, Generic)
@@ -83,29 +83,35 @@ instance SrcInfo (Clause a) where
 
 -- | トップレベル宣言
 data Decl a = ScDef SrcSpan a [a] (Expr a) -- ^ 環境を持たない関数（定数）宣言
-            | ScAnn SrcSpan a SType -- ^ 関数（定数）の型宣言
-            |
-              AliasDef SrcSpan Text [Text] SType -- ^ 型の別名定義
-            | TypeDef SrcSpan Text [Text] SType -- ^ 新しい型の定義
+            | ScAnn SrcSpan a (SType a) -- ^ 関数（定数）の型宣言
+            | TypeDef SrcSpan a [a] (SType a) -- ^ 新しい型名の定義
   deriving (Eq, Show, Generic)
 
 instance SrcInfo (Decl a) where
   srcSpan (ScDef ss _ _ _)    = ss
   srcSpan (ScAnn ss _ _)      = ss
-  srcSpan (AliasDef ss _ _ _) = ss
   srcSpan (TypeDef ss _ _ _)  = ss
 
 -- | ソースコード上での型の表現
-data SType = STyApp STyCon [SType]
-           | STyVar Text
+data SType a = STyApp SrcSpan (STyCon a) [SType a]
+             | STyVar SrcSpan a
   deriving (Eq, Show, Generic)
+
+instance SrcInfo (SType a) where
+  srcSpan (STyApp ss _ _) = ss
+  srcSpan (STyVar ss _)   = ss
 
 {- # SType vs Type
 型検査時にLanguage.Malgo.Type.Typeへ翻訳される．
 Forallは型検査の過程で自動生成される．
 -}
 
-data STyCon = SimpleC Text
-            | SRecordC [(Text, SType)]
-            | SVariantC [(Text, SType)]
+data STyCon a = SimpleC SrcSpan a
+              | SRecordC SrcSpan [(Text, SType a)]
+              | SVariantC SrcSpan [(Text, SType a)]
   deriving (Eq, Show, Generic)
+
+instance SrcInfo (STyCon a) where
+  srcSpan (SimpleC ss _)   = ss
+  srcSpan (SRecordC ss _)  = ss
+  srcSpan (SVariantC ss _) = ss
