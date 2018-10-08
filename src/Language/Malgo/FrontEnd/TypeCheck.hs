@@ -65,6 +65,7 @@ subst (TyMeta (TyRef r)) env = do
   case r' of
     Just t  -> subst t env
     Nothing -> return $ TyMeta (TyRef r)
+subst (Field t1 t2) env = Field <$> subst t1 env <*> subst t2 env
 
 generalize :: Type Id -> TypeCheckM (TypeScheme Id)
 generalize t = do
@@ -75,9 +76,9 @@ generalize t = do
     return tv
   return (Forall vs t)
   where
-    collectMeta (TyVar _)          = []
     collectMeta (TyApp _ ts)       = concatMap collectMeta ts
     collectMeta (TyMeta (TyRef r)) = [r]
+    collectMeta _                  = []
 
 instantiate :: TypeScheme Id -> TypeCheckM (Type Id)
 instantiate (Forall vs t) = do
@@ -147,6 +148,7 @@ occur r (TyApp _ ts) = any (occur r) ts
 occur _ (TyVar _) = False
 occur r1 (TyMeta (TyRef r2)) | r1 == r2 = True
                              | otherwise = False
+occur _ _ = False
 
 -- Functions
 typeCheck :: [Decl Id] -> MalgoM (Map Id (TypeScheme Id))

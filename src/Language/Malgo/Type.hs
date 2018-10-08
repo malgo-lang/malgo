@@ -49,6 +49,8 @@ data Type a = TyApp (TyCon a) [Type a]
             | TyVar a
             | TyMeta (TyRef a)
             | Field (Type a) (Type a)
+              -- use for inferencing type of terms like `x.field1`
+              -- `field1 :: Field <record type> <element type>`
   deriving (Eq, Show)
 
 data TyCon a = IntC Integer
