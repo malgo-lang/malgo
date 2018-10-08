@@ -17,24 +17,29 @@ import           Universum                   hiding (Type)
 data TymapEntry = Type (Type Id)
                 | TyCon (TyCon Id)
 
-data TyEnv = TyEnv { _varmap :: Map Id (TypeScheme Id)
-                   , _tymap  :: Map Id TymapEntry
+data TyEnv = TyEnv { _varmap   :: Map Id (TypeScheme Id)
+                   , _tymap    :: Map Id TymapEntry
+                   , _labelmap :: Map Text (Type Id, Type Id)
                    }
 
 data TcError = UnifyError (Type Id, Type Id)
              | DuplicatedType SrcSpan Id
              | UndefinedTyCon SrcSpan Id
              | UndefinedTyVar SrcSpan Id
+             | InvalidTypeParams SrcSpan [SType Id]
   deriving (Show)
 
 type TypeCheckM a = StateT TyEnv (ExceptT TcError MalgoM) a
 
 -- Utilities
 varmap :: Lens' TyEnv (Map Id (TypeScheme Id))
-varmap f (TyEnv v t) = fmap (\v' -> TyEnv v' t) (f v)
+varmap f (TyEnv v t l) = fmap (\v' -> TyEnv v' t l) (f v)
 
 tymap :: Lens' TyEnv (Map Id TymapEntry)
-tymap f (TyEnv v t) = fmap (\t' -> TyEnv v t') (f t)
+tymap f (TyEnv v t l) = fmap (\t' -> TyEnv v t' l) (f t)
+
+labelmap :: Functor f => (Map Text (Type Id, Type Id) -> f (Map Text (Type Id, Type Id))) -> TyEnv -> f TyEnv
+labelmap f (TyEnv v t l) = fmap (\l' -> TyEnv v t l') (f l)
 
 newMetaVar :: TypeCheckM (TyRef a)
 newMetaVar = TyRef <$> newIORef Nothing
@@ -79,14 +84,17 @@ instantiate (Forall vs t) = do
   ms <- mapM (const $ TyMeta <$> newMetaVar) vs
   subst t (Map.fromList (zip vs ms))
 
-(=:=) :: TypeScheme Id -> TypeScheme Id -> TypeCheckM Bool
+(=:=) :: TypeScheme Id -> TypeScheme Id -> TypeCheckM ()
 (Forall xs t1) =:= (Forall ys t2) = do
   t2' <- subst t2 (Map.fromList (zip ys (map TyVar xs)))
-  return $ t1 == t2'
+  unify t1 t2'
 
 expand :: Type Id -> TypeCheckM (Type Id)
 expand (TyApp (TyFun ps t) ts) =
   expand =<< subst t (Map.fromList (zip ps ts))
+expand (TyApp tycon ts) = TyApp tycon <$> mapM expand ts
+expand (Field t1 t2) =
+  Field <$> expand t1 <*> expand t2
 expand (TyMeta (TyRef r)) = do
   r' <- readIORef r
   case r' of
@@ -155,9 +163,34 @@ transTy (STyApp ss (SimpleC _ name) args) = do
   args' <- mapM transTy args
   case Map.lookup name tm of
     Just (TyCon tycon) -> return $ TyApp tycon args'
-    _ -> throwError (UndefinedTyCon ss name)
--- transTy (STyApp ss (SRecordC ss xs) [])
+    _                  -> throwError (UndefinedTyCon ss name)
+transTy (STyApp _ (SRecordC _ xs) []) = do
+  t <- TyMeta <$> newMetaVar
+  ts <- mapM (uncurry $ transFieldTy t) xs
+  let t' = TyApp (RecordC (map (view _1) xs)) ts
+  unify t t'
+  expand t
+transTy (STyApp _ (SVariantC _ xs) []) = do
+  t <- TyMeta <$> newMetaVar
+  ts <- mapM (uncurry $ transFieldTy t) xs
+  let t' = TyApp (VariantC (map (view _1) xs)) ts
+  unify t t'
+  expand t
+transTy (STyApp ss _ ts) = throwError $ InvalidTypeParams ss ts
 
+transFieldTy :: Type Id -> Text -> SType Id -> TypeCheckM (Type Id)
+transFieldTy containerTy label ty = do
+  lm <- use labelmap
+  ty' <- transTy ty
+  case Map.lookup label lm of
+    Just (containerTy', elemTy) -> do
+      unify containerTy containerTy'
+      unify ty' elemTy
+    Nothing -> do
+      modify (over labelmap (Map.singleton label (containerTy, ty') <>))
+  return ty'
+
+checkDecl :: Decl Id -> TypeCheckM ()
 checkDecl (TypeDef ss name ps ty) = do
   tm <- use tymap
   whenJust (Map.lookup name tm) $ \_ -> throwError $ DuplicatedType ss name
