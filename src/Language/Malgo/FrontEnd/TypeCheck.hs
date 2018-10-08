@@ -78,7 +78,8 @@ generalize t = do
   where
     collectMeta (TyApp _ ts)       = concatMap collectMeta ts
     collectMeta (TyMeta (TyRef r)) = [r]
-    collectMeta _                  = []
+    collectMeta (Field t1 t2)      = collectMeta t1 <> collectMeta t2
+    collectMeta (TyVar _)          = []
 
 instantiate :: TypeScheme Id -> TypeCheckM (Type Id)
 instantiate (Forall vs t) = do
