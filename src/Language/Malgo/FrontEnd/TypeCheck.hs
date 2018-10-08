@@ -23,7 +23,8 @@ data TyEnv = TyEnv { _varmap :: Map Id (TypeScheme Id)
 
 data TcError = UnifyError (Type Id, Type Id)
              | DuplicatedType SrcSpan Id
-             | UndefinedTyCon Text
+             | UndefinedTyCon SrcSpan Id
+             | UndefinedTyVar SrcSpan Id
   deriving (Show)
 
 type TypeCheckM a = StateT TyEnv (ExceptT TcError MalgoM) a
@@ -144,7 +145,18 @@ typeCheck :: [Decl Id] -> MalgoM (Map Id (TypeScheme Id))
 typeCheck = undefined
 
 transTy :: SType Id -> TypeCheckM (Type Id)
-transTy = undefined
+transTy (STyVar ss name) = do
+  tm <- use tymap
+  case Map.lookup name tm of
+    Just (Type t) -> return t
+    _             -> throwError (UndefinedTyVar ss name)
+transTy (STyApp ss (SimpleC _ name) args) = do
+  tm <- use tymap
+  args' <- mapM transTy args
+  case Map.lookup name tm of
+    Just (TyCon tycon) -> return $ TyApp tycon args'
+    _ -> throwError (UndefinedTyCon ss name)
+-- transTy (STyApp ss (SRecordC ss xs) [])
 
 checkDecl (TypeDef ss name ps ty) = do
   tm <- use tymap
