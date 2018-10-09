@@ -41,6 +41,7 @@ data TcError = UnifyError (Type Id) (Type Id)
              | DuplicatedType SrcSpan Id
              | UndefinedTyCon SrcSpan Id
              | UndefinedTyVar SrcSpan Id
+             | UndefinedLabel SrcSpan Text
              | InvalidTypeParams SrcSpan [SType Id]
   deriving (Show)
 
@@ -59,6 +60,7 @@ tymap f (TyEnv v t l) = fmap (\t' -> TyEnv v t' l) (f t)
 labelmap :: Functor f => (Map Text (Type Id, Type Id) -> f (Map Text (Type Id, Type Id))) -> TyEnv -> f TyEnv
 labelmap f (TyEnv v t l) = fmap (\l' -> TyEnv v t l') (f l)
 
+lookupVar :: Id -> TypeCheckM (Type Id)
 lookupVar name = do
   vm <- use varmap
   case Map.lookup name vm of
@@ -263,3 +265,22 @@ checkExpr (Literal _ lit) = checkLiteral lit
     checkLiteral (Float _) = return $ TyApp Float32C []
     checkLiteral (Bool _)  = return $ TyApp (IntC 1) []
     checkLiteral (Char _)  = return $ TyApp (IntC 8) []
+checkExpr (Record _ xs) = do
+  fieldTypes <- mapM (checkExpr . view _2) xs
+  let fieldNames = map (view _1) xs
+  return $ TyApp (RecordC fieldNames) fieldTypes
+checkExpr (Access ss val label) = do
+  valType <- checkExpr val
+  lm <- use labelmap
+  case Map.lookup label lm of
+    Just (containerTy, elemTy) -> do
+      unify containerTy valType
+      return elemTy
+    Nothing -> raiseError $ UndefinedLabel ss label
+checkExpr (Variant _ name val xs) = do
+  ty <- TyMeta <$> newMetaVar
+  valType <- checkExpr val
+  xs' <- mapM (uncurry $ transFieldTy ty) xs
+  let ty' = TyApp (VariantC (name : map (view _1) xs)) (valType : xs')
+  unify ty ty'
+  return ty'

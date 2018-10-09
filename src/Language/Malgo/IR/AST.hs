@@ -11,6 +11,7 @@ data Expr a = Var SrcSpan a
             | Literal SrcSpan Literal
             | Record SrcSpan [(Text, Expr a)]
             | Variant SrcSpan Text (Expr a) [(Text, SType a)]
+            | Access SrcSpan (Expr a) Text
             | Let SrcSpan (Bind a) (Expr a)
             | Apply SrcSpan (Expr a) (Expr a)
             | Case SrcSpan (Expr a) [Clause a]
@@ -22,6 +23,7 @@ instance SrcInfo (Expr a) where
   srcSpan (Literal ss _)     = ss
   srcSpan (Record ss _)      = ss
   srcSpan (Variant ss _ _ _) = ss
+  srcSpan (Access ss _ _)    = ss
   srcSpan (Let ss _ _)       = ss
   srcSpan (Apply ss _ _)     = ss
   srcSpan (Case ss _ _)      = ss
@@ -88,9 +90,9 @@ data Decl a = ScDef SrcSpan a [a] (Expr a) -- ^ 環境を持たない関数（�
   deriving (Eq, Show, Generic)
 
 instance SrcInfo (Decl a) where
-  srcSpan (ScDef ss _ _ _)    = ss
-  srcSpan (ScAnn ss _ _)      = ss
-  srcSpan (TypeDef ss _ _ _)  = ss
+  srcSpan (ScDef ss _ _ _)   = ss
+  srcSpan (ScAnn ss _ _)     = ss
+  srcSpan (TypeDef ss _ _ _) = ss
 
 -- | ソースコード上での型の表現
 data SType a = STyApp SrcSpan (STyCon a) [SType a]

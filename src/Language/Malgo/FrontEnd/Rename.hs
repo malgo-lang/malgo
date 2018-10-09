@@ -134,6 +134,8 @@ renameExpr (Record ss xs) =
 renameExpr (Variant ss l v ts) =
   Variant ss l <$> renameExpr v
   <*> mapM (\(x, t) -> (x, ) <$> renameType t) ts
+renameExpr (Access ss val label) =
+  Access ss <$> renameExpr val <*> pure label
 renameExpr (Let ss bind e   ) = do
   (newBinds, bind') <- renameBind bind
   local (over varmap (newBinds <>)) $ Let ss bind' <$> renameExpr e

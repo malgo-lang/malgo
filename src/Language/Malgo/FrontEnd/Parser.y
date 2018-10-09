@@ -162,6 +162,7 @@ aexpr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
       | FALSE { Literal (srcSpan $1) (Bool False) }
       | CHAR { Literal (srcSpan $1) (Char (_char $ unLoc $1)) }
       | STRING { error "string literal is not supported" }
+      | aexpr '.' ID { Access (srcSpan ($1, $3)) $1 (_id $ unLoc $3) }
       | '{' field_exprs '}' { Record (srcSpan ($1, $3)) $2 }
       | '<' field_expr '>' { Variant (srcSpan ($1, $3)) (fst $2) (snd $2) [] }
       | '<' field_expr ',' field_types '>' { Variant (srcSpan ($1, $3)) (fst $2) (snd $2) $4 }
