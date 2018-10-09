@@ -5,33 +5,17 @@
 module Language.Malgo.Type
   ( HasType(..)
   , matchType
+  , kind
   , TypeScheme(..)
   , TyRef(..)
   , Type(..)
+  , TypeId(..)
   )
 where
 
 import           Language.Malgo.Id
 import           Prelude           (show)
 import           Universum         hiding (Type)
-
-class HasType a where
-  type Env a :: *
-  type TypeRep a :: *
-  typeOf :: MonadReader (Env a) m => a -> m (TypeRep a)
-
-matchType
-  :: ( HasType a
-     , HasType b
-     , Eq (TypeRep a)
-     , MonadReader (Env a) m
-     , Env a ~ Env b
-     , TypeRep a ~ TypeRep b
-     )
-  => a
-  -> b
-  -> m Bool
-matchType x y = (==) <$> typeOf x <*> typeOf y
 
 newtype TyRef = TyRef (IORef (Maybe Type))
   deriving Eq
@@ -49,11 +33,20 @@ data TypeId = TypeId Id Kind
 data TypeScheme = TypeScheme [TypeId] Type
   deriving (Eq, Show)
 
-data Type = TyApp Type [Type]
+data Type = TyApp Type Type
           | TyVar TypeId
           | TyCon TyCon Kind
-          | TyMeta TyRef
+          | TyMeta TyRef Kind
   deriving (Eq, Show)
+
+kind :: Type -> Kind
+kind (TyApp t _) =
+  case kind t of
+    (_ :-> k) -> k
+    _         -> error "unreachable(kind)"
+kind (TyVar (TypeId _ k)) = k
+kind (TyCon _ k) = k
+kind (TyMeta _ k) = k
 
 data TyCon = IntC Integer
            | Float32C
@@ -62,10 +55,5 @@ data TyCon = IntC Integer
            | ArrowC
            | RecordC [Text]
            | VariantC [Text]
-           -- -- | TyFun [TypeId] Type -- TODO: TyFunの意義
+           | TyFun [TypeId] Type
   deriving (Eq, Show)
-
-instance HasType Type where
-  type Env Type = ()
-  type TypeRep Type = Type
-  typeOf = return
