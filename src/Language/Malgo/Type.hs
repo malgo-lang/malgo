@@ -5,14 +5,15 @@
 module Language.Malgo.Type
   ( HasType(..)
   , matchType
+  , TypeScheme(..)
   , TyRef(..)
   , Type(..)
-  , TyCon(..)
   )
 where
 
-import           Prelude   (show)
-import           Universum hiding (Type)
+import           Language.Malgo.Id
+import           Prelude           (show)
+import           Universum         hiding (Type)
 
 class HasType a where
   type Env a :: *
@@ -32,29 +33,39 @@ matchType
   -> m Bool
 matchType x y = (==) <$> typeOf x <*> typeOf y
 
-newtype TyRef a = TyRef (IORef (Maybe (Type a)))
+newtype TyRef = TyRef (IORef (Maybe Type))
   deriving Eq
 
-instance Show (TyRef a) where
+instance Show TyRef where
   show _ = "<meta>"
 
-data Type a = TyApp (TyCon a) [Type a]
-            | TyVar a
-            | TyMeta (TyRef a)
-            | Forall [a] (Type a)
+data Kind = Type
+          | Kind :-> Kind
   deriving (Eq, Show)
 
-data TyCon a = IntC Integer
-             | Float32C
-             | Float64C
-             | ArrayC
-             | ArrowC
-             | RecordC [Text]
-             | VariantC [Text]
-             | TyFun [a] (Type a)
+data TypeId = TypeId Id Kind
   deriving (Eq, Show)
 
-instance HasType (Type a) where
-  type Env (Type a) = ()
-  type TypeRep (Type a) = Type a
+data TypeScheme = TypeScheme [TypeId] Type
+  deriving (Eq, Show)
+
+data Type = TyApp Type [Type]
+          | TyVar TypeId
+          | TyCon TyCon Kind
+          | TyMeta TyRef
+  deriving (Eq, Show)
+
+data TyCon = IntC Integer
+           | Float32C
+           | Float64C
+           | ArrayC
+           | ArrowC
+           | RecordC [Text]
+           | VariantC [Text]
+           -- -- | TyFun [TypeId] Type -- TODO: TyFunの意義
+  deriving (Eq, Show)
+
+instance HasType Type where
+  type Env Type = ()
+  type TypeRep Type = Type
   typeOf = return
