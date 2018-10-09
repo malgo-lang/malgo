@@ -89,7 +89,7 @@ middleend ast = do
 backend :: MonadIO m => String -> IR.Program (ID IR.MType) -> m L.Module
 backend filename ir = do
   defs <- LLVM.dumpLLVM (LLVM.genProgram ir)
-  return $ L.defaultModule { L.moduleName = fromString $ filename
+  return $ L.defaultModule { L.moduleName = fromString filename
                            , L.moduleSourceFileName = fromString $ toString filename
                            , L.moduleDefinitions = defs
                            }

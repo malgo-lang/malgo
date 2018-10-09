@@ -1,5 +1,3 @@
-{-# LANGUAGE DeriveAnyClass        #-}
-{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE RankNTypes            #-}
@@ -14,7 +12,6 @@ module Language.Malgo.Type
   )
 where
 
-import           Data.List (nub)
 import           Prelude   (show)
 import           Universum hiding (Type)
 

@@ -1,8 +1,15 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GADTs            #-}
-{-# LANGUAGE TupleSections    #-}
 {-# LANGUAGE TypeFamilies     #-}
-module Language.Malgo.FrontEnd.TypeCheck (typeCheck, unify, expand, subst, (=:=), generalize, instantiate) where
+module Language.Malgo.FrontEnd.TypeCheck
+  ( typeCheck
+  , unify
+  , expand
+  , subst
+  , (=:=)
+  , generalize
+  , instantiate
+  ) where
 
 import           Data.List                      (nub)
 import qualified Data.Map                       as Map
@@ -33,15 +40,13 @@ initTyEnv rnEnv =
                 , (typeLookup "Float", TyCon Float32C)
                 , (typeLookup "Char", TyCon (IntC 8))]) mempty
   where typeLookup key =
-          case Map.lookup key (Rename._tymap rnEnv) of
-            Just i  -> i
-            Nothing -> error "unreachable(initTyEnv)"
+          fromMaybe (error "unreachable(initTyEnv)")
+          $ Map.lookup key $ Rename._tymap rnEnv
 
 data TcError = UnifyError (Type Id) (Type Id)
              | DuplicatedType SrcSpan Id
              | UndefinedTyCon SrcSpan Id
              | UndefinedTyVar SrcSpan Id
-             | UndefinedLabel SrcSpan Text
              | InvalidTypeParams SrcSpan [SType Id]
   deriving (Show)
 
@@ -58,7 +63,7 @@ tymap :: Lens' TyEnv (Map Id TymapEntry)
 tymap f (TyEnv v t l) = fmap (\t' -> TyEnv v t' l) (f t)
 
 labelmap :: Functor f => (Map Text (Type Id, Type Id) -> f (Map Text (Type Id, Type Id))) -> TyEnv -> f TyEnv
-labelmap f (TyEnv v t l) = fmap (\l' -> TyEnv v t l') (f l)
+labelmap f (TyEnv v t l) = fmap (TyEnv v t) (f l)
 
 lookupVar :: Id -> TypeCheckM (Type Id)
 lookupVar name = do
@@ -79,10 +84,10 @@ subst (TyApp (TyFun ps t) ts) env = do
   t' <- subst t (Map.fromList (zip ps ts))
   subst t' env
 subst (TyApp (RecordC ls) ts) env = do
-  ts' <- mapM (flip subst env) ts
+  ts' <- mapM (`subst` env) ts
   return (TyApp (RecordC ls) ts')
 subst (TyApp (VariantC ls) ts) env = do
-  ts' <- mapM (flip subst env) ts
+  ts' <- mapM (`subst` env) ts
   return (TyApp (VariantC ls) ts')
 subst (TyApp tycon ts) env =
   TyApp tycon <$> mapM (`subst` env) ts
@@ -127,6 +132,12 @@ expand (TyMeta (TyRef r)) = do
     Nothing -> return $ TyMeta $ TyRef r
 expand t = return t
 
+unifyField :: [Text] -> [Type Id] -> [Text] -> [Type Id] -> TypeCheckM ()
+unifyField ls1 ts1 ls2 ts2 = do
+  let ts1' = map (view _2) $ sortOn (view _1) $ zip ls1 ts1
+  let ts2' = map (view _2) $ sortOn (view _1) $ zip ls2 ts2
+  mapM_ (uncurry unify) (zip ts1' ts2')
+
 unify :: Type Id -> Type Id -> TypeCheckM ()
 unify (TyApp (TyFun ps t) ts) t2 = do
   t1 <- subst t (Map.fromList (zip ps ts))
@@ -135,16 +146,10 @@ unify t1 (TyApp (TyFun ps t) ts) = do
   t2 <- subst t (Map.fromList (zip ps ts))
   unify t1 t2
 unify t1@(TyApp (RecordC ls1) ts1) t2@(TyApp (RecordC ls2) ts2)
-  | sort ls1 == sort ls2 = do
-      let ts1' = map (view _2) $ sortOn (view _1) $ zip ls1 ts1
-      let ts2' = map (view _2) $ sortOn (view _1) $ zip ls2 ts2
-      mapM_ (uncurry unify) (zip ts1' ts2')
+  | sort ls1 == sort ls2 = unifyField ls1 ts1 ls2 ts2
   | otherwise = raiseError $ UnifyError t1 t2
 unify t1@(TyApp (VariantC ls1) ts1) t2@(TyApp (VariantC ls2) ts2)
-  | sort ls1 == sort ls2 = do
-      let ts1' = map (view _2) $ sortOn (view _1) $ zip ls1 ts1
-      let ts2' = map (view _2) $ sortOn (view _1) $ zip ls2 ts2
-      mapM_ (uncurry unify) (zip ts1' ts2')
+  | sort ls1 == sort ls2 = unifyField ls1 ts1 ls2 ts2
   | otherwise = raiseError $ UnifyError t1 t2
 unify (TyApp c1 ts1) (TyApp c2 ts2)
   | c1 == c2 = mapM_ (uncurry unify) (zip ts1 ts2)
@@ -175,8 +180,9 @@ occur r1 (TyMeta (TyRef r2)) | r1 == r2 = True
 
 -- Functions
 typeCheck :: Rename.RnEnv -> [Decl Id] -> MalgoM TyEnv
-typeCheck rnEnv ds = flip execStateT (initTyEnv rnEnv) $ do
-  mapM_ checkDecl ds
+typeCheck rnEnv ds =
+  flip execStateT (initTyEnv rnEnv)
+  $ mapM_ checkDecl ds
 
 transTy :: SType Id -> TypeCheckM (Type Id)
 transTy (STyVar ss name) = do
@@ -212,7 +218,7 @@ transFieldTy containerTy label ty = do
     Just (containerTy', elemTy) -> do
       unify containerTy containerTy'
       unify ty' elemTy
-    Nothing -> do
+    Nothing ->
       modify (over labelmap (Map.singleton label (containerTy, ty') <>))
   return ty'
 
@@ -232,8 +238,7 @@ checkDecl (TypeDef ss name ps ty) = do
 checkDecl (ScAnn _ name ty) = do
   ty' <- transTy ty
   vm <- use varmap
-  whenJust (Map.lookup name vm) $ \inferedType -> do
-    unify inferedType ty'
+  whenJust (Map.lookup name vm) $ \inferedType -> unify inferedType ty'
   modify (over varmap (Map.singleton name ty' <>))
 checkDecl (ScDef _ name params expr) = do
   paramTypes <- mapM (const $ TyMeta <$> newMetaVar) params
@@ -269,14 +274,17 @@ checkExpr (Record _ xs) = do
   fieldTypes <- mapM (checkExpr . view _2) xs
   let fieldNames = map (view _1) xs
   return $ TyApp (RecordC fieldNames) fieldTypes
-checkExpr (Access ss val label) = do
+checkExpr (Access _ val label) = do
   valType <- checkExpr val
   lm <- use labelmap
   case Map.lookup label lm of
     Just (containerTy, elemTy) -> do
       unify containerTy valType
       return elemTy
-    Nothing -> raiseError $ UndefinedLabel ss label
+    Nothing -> do
+      elemTy <- TyMeta <$> newMetaVar
+      modify (over labelmap (Map.singleton label (valType, elemTy) <>))
+      return elemTy
 checkExpr (Variant _ name val xs) = do
   ty <- TyMeta <$> newMetaVar
   valType <- checkExpr val
@@ -284,3 +292,4 @@ checkExpr (Variant _ name val xs) = do
   let ty' = TyApp (VariantC (name : map (view _1) xs)) (valType : xs')
   unify ty ty'
   return ty'
+checkExpr _ = undefined

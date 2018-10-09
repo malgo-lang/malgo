@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase       #-}
 {-# LANGUAGE RankNTypes       #-}
 {-# LANGUAGE TupleSections    #-}
 module Language.Malgo.FrontEnd.Rename
@@ -37,11 +38,11 @@ initRnEnv = do
 
 -- Utilities
 
-varmap :: Functor f => (Map Text Id -> f (Map Text Id)) -> RnEnv -> f RnEnv
-varmap f (RnEnv v t) = (\v' -> RnEnv v' t) <$> f v
+varmap :: Lens' RnEnv (Map Text Id)
+varmap f (RnEnv v t) = (`RnEnv` t) <$> f v
 
-tymap :: Functor f => (Map Text Id -> f (Map Text Id)) -> RnEnv -> f RnEnv
-tymap f (RnEnv v t) = (\t' -> RnEnv v t') <$> f t
+tymap :: Lens' RnEnv (Map Text Id)
+tymap f (RnEnv v t) = RnEnv v <$> f t
 
 lookupId :: Lens' RnEnv (Map Text Id) -> Text -> RenameM (Maybe Id)
 lookupId l name = Map.lookup name <$> view l
@@ -64,7 +65,7 @@ lookupId' l ss name = do
   return name'
 
 -- Renamers
-rename :: RnEnv -> [Decl Text] -> MalgoM ([Decl Id])
+rename :: RnEnv -> [Decl Text] -> MalgoM [Decl Id]
 rename rnEnv xs = usingReaderT rnEnv $ do
   scHeaders <- Map.fromList . catMaybes <$> mapM scHeader xs
   tyHeaders <- Map.fromList . catMaybes <$> mapM tyHeader xs
@@ -144,10 +145,9 @@ renameExpr (Case ss e clauses) =
   Case ss <$> renameExpr e <*> mapM renameClause clauses
 renameExpr (Fn ss params e) = do
   xs <- mapM (newId . view _1) params
-  ts <- forM (map (view _2) params) $ \mty ->
-    case mty of
-      Just t  -> Just <$> renameType t
-      Nothing -> return Nothing
+  ts <- forM (map (view _2) params) $ \case
+    Just t  -> Just <$> renameType t
+    Nothing -> return Nothing
   local (over varmap (Map.fromList (zip (map (view _1) params) xs) <>))
     $ Fn ss (zip xs ts)
     <$> renameExpr e

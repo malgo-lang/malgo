@@ -79,8 +79,8 @@
 
 - warn: {lhs: Data.HashSet.toList (Data.HashSet.fromList l), rhs: Universum.unstableNub}
 
-- hint: { lhs: nub, rhs: Universum.ordNub
-        , note: "'nub' is O(n^2), 'ordNub' is O(n log n)" }
+# - hint: { lhs: nub, rhs: Universum.ordNub
+#         , note: "'nub' is O(n^2), 'ordNub' is O(n log n)" }
 
 - warn: { lhs: sortBy (comparing f), rhs: Universum.sortWith f
         , note: "If the function you are using for 'comparing' is slow, use 'sortOn' instead of 'sortWith', because 'sortOn' caches applications the function and 'sortWith' doesn't." }
