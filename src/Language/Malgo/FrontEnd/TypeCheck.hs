@@ -1,6 +1,8 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GADTs            #-}
 {-# LANGUAGE TupleSections    #-}
-module Language.Malgo.FrontEnd.TypeCheck where
+{-# LANGUAGE TypeFamilies     #-}
+module Language.Malgo.FrontEnd.TypeCheck (typeCheck, unify, expand, subst, (=:=), generalize, instantiate) where
 
 import           Data.List                      (nub)
 import qualified Data.Map                       as Map
@@ -29,24 +31,23 @@ initTyEnv rnEnv =
   (Map.fromList [ (typeLookup "->", TyCon ArrowC)
                 , (typeLookup "Int", TyCon (IntC 64))
                 , (typeLookup "Float", TyCon Float32C)
-                , (typeLookup "Double", TyCon Float64C)
                 , (typeLookup "Char", TyCon (IntC 8))]) mempty
   where typeLookup key =
           case Map.lookup key (Rename._tymap rnEnv) of
-            Just i -> i
+            Just i  -> i
             Nothing -> error "unreachable(initTyEnv)"
 
-data TcError = UnifyError (Type Id, Type Id)
+data TcError = UnifyError (Type Id) (Type Id)
              | DuplicatedType SrcSpan Id
              | UndefinedTyCon SrcSpan Id
              | UndefinedTyVar SrcSpan Id
              | InvalidTypeParams SrcSpan [SType Id]
   deriving (Show)
 
-raiseError :: TcError -> TypeCheckM a
-raiseError = undefined
-
 type TypeCheckM a = StateT TyEnv MalgoM a
+
+raiseError :: TcError -> TypeCheckM a
+raiseError = error . show
 
 -- Utilities
 varmap :: Lens' TyEnv (Map Id (Type Id))
@@ -57,6 +58,12 @@ tymap f (TyEnv v t l) = fmap (\t' -> TyEnv v t' l) (f t)
 
 labelmap :: Functor f => (Map Text (Type Id, Type Id) -> f (Map Text (Type Id, Type Id))) -> TyEnv -> f TyEnv
 labelmap f (TyEnv v t l) = fmap (\l' -> TyEnv v t l') (f l)
+
+lookupVar name = do
+  vm <- use varmap
+  case Map.lookup name vm of
+    Just ty -> return ty
+    Nothing -> error "unreachable(lookupVar)"
 
 newMetaVar :: TypeCheckM (TyRef a)
 newMetaVar = TyRef <$> newIORef Nothing
@@ -130,13 +137,13 @@ unify t1@(TyApp (RecordC ls1) ts1) t2@(TyApp (RecordC ls2) ts2)
       let ts1' = map (view _2) $ sortOn (view _1) $ zip ls1 ts1
       let ts2' = map (view _2) $ sortOn (view _1) $ zip ls2 ts2
       mapM_ (uncurry unify) (zip ts1' ts2')
-  | otherwise = raiseError $ UnifyError (t1, t2)
+  | otherwise = raiseError $ UnifyError t1 t2
 unify t1@(TyApp (VariantC ls1) ts1) t2@(TyApp (VariantC ls2) ts2)
   | sort ls1 == sort ls2 = do
       let ts1' = map (view _2) $ sortOn (view _1) $ zip ls1 ts1
       let ts2' = map (view _2) $ sortOn (view _1) $ zip ls2 ts2
       mapM_ (uncurry unify) (zip ts1' ts2')
-  | otherwise = raiseError $ UnifyError (t1, t2)
+  | otherwise = raiseError $ UnifyError t1 t2
 unify (TyApp c1 ts1) (TyApp c2 ts2)
   | c1 == c2 = mapM_ (uncurry unify) (zip ts1 ts2)
 unify (TyVar x) (TyVar y) | x == y = pass
@@ -146,7 +153,7 @@ unify (TyMeta (TyRef r1)) t2 = do
     Just t1 -> unify t1 t2
     Nothing -> unifyMeta r1 t2
 unify t1 t2@TyMeta{} = unify t2 t1
-unify t1 t2 = raiseError $ UnifyError (t1, t2)
+unify t1 t2 = raiseError $ UnifyError t1 t2
 
 unifyMeta :: IORef (Maybe (Type Id)) -> Type Id -> TypeCheckM ()
 unifyMeta r1 (TyApp (TyFun ps t) ts) = do
@@ -155,7 +162,7 @@ unifyMeta r1 (TyApp (TyFun ps t) ts) = do
 unifyMeta r1 (TyMeta (TyRef r2)) = do
   r2' <- readIORef r2
   whenJust r2' (unifyMeta r1)
-unifyMeta r1 t2 | occur r1 t2 = raiseError $ UnifyError (TyMeta (TyRef r1), t2)
+unifyMeta r1 t2 | occur r1 t2 = raiseError $ UnifyError (TyMeta (TyRef r1)) t2
                 | otherwise = writeIORef r1 (Just t2)
 
 occur :: IORef (Maybe (Type a)) -> Type a -> Bool
@@ -165,13 +172,9 @@ occur r1 (TyMeta (TyRef r2)) | r1 == r2 = True
                              | otherwise = False
 
 -- Functions
-typeCheck :: Rename.RnEnv -> [Decl Id] -> MalgoM (Map Id TymapEntry, Map Id (TypeScheme Id))
-typeCheck rnEnv ds = flip evalStateT (initTyEnv rnEnv) $ do
+typeCheck :: Rename.RnEnv -> [Decl Id] -> MalgoM TyEnv
+typeCheck rnEnv ds = flip execStateT (initTyEnv rnEnv) $ do
   mapM_ checkDecl ds
-  vm <- use varmap
-  vm' <- mapM generalize vm
-  tm <- use tymap
-  return (tm, vm')
 
 transTy :: SType Id -> TypeCheckM (Type Id)
 transTy (STyVar ss name) = do
@@ -253,4 +256,10 @@ checkDecl (ScDef _ name params expr) = do
       foldr' (\t1 t2 -> TyApp ArrowC [t1, t2]) x (xs <> [ret])
 
 checkExpr :: Expr Id -> TypeCheckM (Type Id)
-checkExpr = undefined
+checkExpr (Var _ name) = lookupVar name
+checkExpr (Literal _ lit) = checkLiteral lit
+  where
+    checkLiteral (Int _)   = return $ TyApp (IntC 64) []
+    checkLiteral (Float _) = return $ TyApp Float32C []
+    checkLiteral (Bool _)  = return $ TyApp (IntC 1) []
+    checkLiteral (Char _)  = return $ TyApp (IntC 8) []

@@ -29,7 +29,7 @@ type RenameM a = ReaderT RnEnv MalgoM a
 
 initRnEnv :: MalgoM RnEnv
 initRnEnv = do
-  let tyPrims = ["->", "Int", "Float", "Double", "Char"]
+  let tyPrims = ["->", "Int", "Float", "Char"]
   tyPrimIds <- mapM newId tyPrims
   return $ RnEnv mempty (Map.fromList (zip tyPrims tyPrimIds))
 
