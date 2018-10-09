@@ -65,7 +65,6 @@ subst (TyMeta (TyRef r)) env = do
   case r' of
     Just t  -> subst t env
     Nothing -> return $ TyMeta (TyRef r)
-subst (Field t1 t2) env = Field <$> subst t1 env <*> subst t2 env
 
 generalize :: Type Id -> TypeCheckM (TypeScheme Id)
 generalize t = do
@@ -78,7 +77,6 @@ generalize t = do
   where
     collectMeta (TyApp _ ts)       = concatMap collectMeta ts
     collectMeta (TyMeta (TyRef r)) = [r]
-    collectMeta (Field t1 t2)      = collectMeta t1 <> collectMeta t2
     collectMeta (TyVar _)          = []
 
 instantiate :: TypeScheme Id -> TypeCheckM (Type Id)
@@ -91,12 +89,11 @@ instantiate (Forall vs t) = do
   t2' <- subst t2 (Map.fromList (zip ys (map TyVar xs)))
   unify t1 t2'
 
+-- | TyMetaが解決済みの場合、それを展開する
 expand :: Type Id -> TypeCheckM (Type Id)
 expand (TyApp (TyFun ps t) ts) =
   expand =<< subst t (Map.fromList (zip ps ts))
 expand (TyApp tycon ts) = TyApp tycon <$> mapM expand ts
-expand (Field t1 t2) =
-  Field <$> expand t1 <*> expand t2
 expand (TyMeta (TyRef r)) = do
   r' <- readIORef r
   case r' of
@@ -172,13 +169,13 @@ transTy (STyApp _ (SRecordC _ xs) []) = do
   ts <- mapM (uncurry $ transFieldTy t) xs
   let t' = TyApp (RecordC (map (view _1) xs)) ts
   unify t t'
-  expand t
+  return t
 transTy (STyApp _ (SVariantC _ xs) []) = do
   t <- TyMeta <$> newMetaVar
   ts <- mapM (uncurry $ transFieldTy t) xs
   let t' = TyApp (VariantC (map (view _1) xs)) ts
   unify t t'
-  expand t
+  return t
 transTy (STyApp ss _ ts) = throwError $ InvalidTypeParams ss ts
 
 transFieldTy :: Type Id -> Text -> SType Id -> TypeCheckM (Type Id)

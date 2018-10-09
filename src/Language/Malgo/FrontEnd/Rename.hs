@@ -64,13 +64,11 @@ rename xs = usingReaderT (RnEnv mempty mempty) $ do
     $ mapM renameDecl xs
 
 scHeader :: Decl Text -> RenameM (Maybe (Text, Id))
-scHeader (ScDef ss f _ _) = do
+scHeader (ScDef _ f _ _) = do
   f' <- lookupId varmap f
   case f' of
-    Just _ -> return Nothing
-    Nothing ->
-      error $ show $ pPrint ss <+> ":" <+> "Type annotation for"
-      <+> pPrint f <+> "is needed"
+    Just _  -> return Nothing
+    Nothing -> Just . (f, ) <$> newId f
 scHeader (ScAnn ss f _) = do
   f' <- lookupId varmap f
   case f' of
@@ -90,7 +88,8 @@ tyHeader (TypeDef ss name _ _) = do
 tyHeader _ = return Nothing
 
 renameDecl :: Decl Text -> RenameM (Decl Id)
-renameDecl (ScAnn ss x t) = ScAnn ss <$> lookupId' varmap ss x <*> renameType t
+renameDecl (ScAnn ss x t) =
+  ScAnn ss <$> lookupId' varmap ss x <*> renameType t
 renameDecl (ScDef ss x ps e) = do
   x'  <- lookupId' varmap ss x
   ps' <- mapM newId ps
@@ -154,7 +153,8 @@ renameBind (Rec bs) = do
   let fs = map (view _2) bs
   fs' <- mapM newId fs
   let newBinds = Map.fromList (zip fs fs')
-  local (over varmap (newBinds <>)) $ (newBinds, ) . Rec <$> mapM renameRec bs
+  local (over varmap (newBinds <>)) $ (newBinds, ) . Rec
+    <$> mapM renameRec bs
  where
   renameRec (ss, f, mt, ps, e) = do
     f'  <- lookupId' varmap ss f
@@ -162,13 +162,18 @@ renameBind (Rec bs) = do
              Just t  -> Just <$> renameType t
              Nothing -> return Nothing
     ps' <- mapM newId ps
-    local (over varmap (Map.fromList (zip ps ps') <>)) $ (ss, f', mt', ps', ) <$> renameExpr e
+    local (over varmap (Map.fromList (zip ps ps') <>))
+      $ (ss, f', mt', ps', ) <$> renameExpr e
 
 renameClause :: Clause Text -> RenameM (Clause Id)
 renameClause (VariantPat ss l x ts e) = do
   x' <- newId x
-  local (over varmap (Map.singleton x x' <>)) $ VariantPat ss l x' <$> mapM (\(lk, t) -> (lk,) <$> renameType t) ts <*> renameExpr e
+  local (over varmap (Map.singleton x x' <>))
+    $ VariantPat ss l x'
+    <$> mapM (\(lk, t) -> (lk,) <$> renameType t) ts
+    <*> renameExpr e
 renameClause (BoolPat ss b e) = BoolPat ss b <$> renameExpr e
 renameClause (VarPat  ss x e) = do
   x' <- newId x
-  local (over varmap (Map.singleton x x' <>)) $ VarPat ss x' <$> renameExpr e
+  local (over varmap (Map.singleton x x' <>))
+    $ VarPat ss x' <$> renameExpr e
