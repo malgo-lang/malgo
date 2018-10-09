@@ -6,7 +6,6 @@ module Language.Malgo.Type
   ( HasType(..)
   , matchType
   , TyRef(..)
-  , TypeScheme(..)
   , Type(..)
   , TyCon(..)
   )
@@ -33,9 +32,6 @@ matchType
   -> m Bool
 matchType x y = (==) <$> typeOf x <*> typeOf y
 
-data TypeScheme a = Forall [a] (Type a)
-  deriving Show
-
 newtype TyRef a = TyRef (IORef (Maybe (Type a)))
   deriving Eq
 
@@ -45,6 +41,7 @@ instance Show (TyRef a) where
 data Type a = TyApp (TyCon a) [Type a]
             | TyVar a
             | TyMeta (TyRef a)
+            | Forall [a] (Type a)
   deriving (Eq, Show)
 
 data TyCon a = IntC Integer
