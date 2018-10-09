@@ -65,8 +65,7 @@ lookupId' l ss name = do
 
 -- Renamers
 rename :: RnEnv -> [Decl Text] -> MalgoM ([Decl Id])
-rename rnEnv xs = do
-  usingReaderT rnEnv $ do
+rename rnEnv xs = usingReaderT rnEnv $ do
   scHeaders <- Map.fromList . catMaybes <$> mapM scHeader xs
   tyHeaders <- Map.fromList . catMaybes <$> mapM tyHeader xs
   local (over varmap (scHeaders <>))
