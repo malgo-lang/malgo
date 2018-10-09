@@ -2,11 +2,13 @@
 {-# LANGUAGE RankNTypes       #-}
 {-# LANGUAGE TupleSections    #-}
 module Language.Malgo.FrontEnd.Rename
-  ( rename
+  ( initRnEnv
+  , rename
   , renameDecl
   , renameType
   , renameExpr
   , Id
+  , RnEnv(..)
   )
 where
 
@@ -22,7 +24,14 @@ import           Universum
 data RnEnv = RnEnv { _varmap :: Map Text Id
                    , _tymap  :: Map Text Id
                    }
+
 type RenameM a = ReaderT RnEnv MalgoM a
+
+initRnEnv :: MalgoM RnEnv
+initRnEnv = do
+  let tyPrims = ["->", "Int", "Float", "Double", "Char"]
+  tyPrimIds <- mapM newId tyPrims
+  return $ RnEnv mempty (Map.fromList (zip tyPrims tyPrimIds))
 
 -- Functions
 
@@ -55,8 +64,9 @@ lookupId' l ss name = do
   return name'
 
 -- Renamers
-rename :: [Decl Text] -> MalgoM [Decl Id]
-rename xs = usingReaderT (RnEnv mempty mempty) $ do
+rename :: RnEnv -> [Decl Text] -> MalgoM ([Decl Id])
+rename rnEnv xs = do
+  usingReaderT rnEnv $ do
   scHeaders <- Map.fromList . catMaybes <$> mapM scHeader xs
   tyHeaders <- Map.fromList . catMaybes <$> mapM tyHeader xs
   local (over varmap (scHeaders <>))
