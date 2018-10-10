@@ -3,13 +3,17 @@
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.Type
-  ( HasType(..)
-  , matchType
-  , kind
+  ( kind
   , TypeScheme(..)
+  , Kind(..)
   , TyRef(..)
   , Type(..)
+  , TyCon(..)
   , TypeId(..)
+  , tInt
+  , tFloat
+  , tArrow
+  , fn
   )
 where
 
@@ -24,13 +28,13 @@ instance Show TyRef where
   show _ = "<meta>"
 
 data Kind = Type
-          | Kind :-> Kind
-  deriving (Eq, Show)
+          | KFun Kind Kind
+  deriving (Eq, Ord, Show)
 
 data TypeId = TypeId Id Kind
-  deriving (Eq, Show)
+  deriving (Eq, Ord, Show)
 
-data TypeScheme = TypeScheme [TypeId] Type
+data TypeScheme = Forall [TypeId] Type
   deriving (Eq, Show)
 
 data Type = TyApp Type Type
@@ -42,8 +46,8 @@ data Type = TyApp Type Type
 kind :: Type -> Kind
 kind (TyApp t _) =
   case kind t of
-    (_ :-> k) -> k
-    _         -> error "unreachable(kind)"
+    (KFun _ k) -> k
+    _          -> error "unreachable(kind)"
 kind (TyVar (TypeId _ k)) = k
 kind (TyCon _ k) = k
 kind (TyMeta _ k) = k
@@ -57,3 +61,13 @@ data TyCon = IntC Integer
            | VariantC [Text]
            | TyFun [TypeId] Type
   deriving (Eq, Show)
+
+tInt :: Type
+tInt = TyCon (IntC 64) Type
+tFloat :: Type
+tFloat = TyCon Float32C Type
+tArrow :: Type
+tArrow = TyCon ArrowC (KFun Type (KFun Type Type))
+
+fn :: Type -> Type -> Type
+a `fn` b = TyApp (TyApp tArrow a) b
