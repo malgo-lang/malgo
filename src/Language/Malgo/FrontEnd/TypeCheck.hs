@@ -1,11 +1,12 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE TemplateHaskell   #-}
-{-# LANGUAGE TypeFamilies      #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.TypeCheck where
 
-import qualified Data.Map.Strict as Map
 import           Control.Lens.TH
+import qualified Data.Map.Strict                as Map
 import qualified Language.Malgo.FrontEnd.Rename as Rename
 import           Language.Malgo.Id
 import           Language.Malgo.IR.AST
@@ -24,7 +25,7 @@ data TcGblEnv = TcGblEnv { _tpMap    :: Map Id TypeScheme
                          }
   deriving Show
 
-data TcLclEnv = TcLclEnv { _varMap :: Map Id TypeScheme
+data TcLclEnv = TcLclEnv { _varMap   :: Map Id TypeScheme
                          , _tyVarMap :: Map TypeId Type
                          }
   deriving Show
@@ -50,6 +51,9 @@ lookupTyVar name =
 newMetaVar :: TypeCheckM TyRef
 newMetaVar = TyRef <$> newIORef Nothing
 
+newTypeId :: Text -> TypeCheckM TypeId
+newTypeId hint = TypeId <$> newId hint <*> pure Star
+
 typeCheck :: [Decl Id] -> MalgoM TcGblEnv
 typeCheck = undefined
 
@@ -57,8 +61,8 @@ typeCheck = undefined
 genHeader :: Decl Id -> TypeCheckM ()
 genHeader (ScDef _ name params _) =
   whenNothingM_ (lookupVar name) $ do
-    paramTys <- mapM (const $ TyMeta <$> newMetaVar <*> pure Type) params
-    retTy <- TyMeta <$> newMetaVar <*> pure Type
+    paramTys <- mapM (const $ TyMeta <$> newMetaVar <*> pure Star) params
+    retTy <- TyMeta <$> newMetaVar <*> pure Star
     let sc = Forall [] $ makeTy paramTys retTy
     modify (over tpMap (Map.singleton name sc <>))
   where
@@ -80,10 +84,13 @@ genHeader (ScAnn _ name sty) = do
 transSType :: SType Id -> TypeCheckM Type
 transSType = undefined
 
+-- 検査する変数とinstantiateしたTypeをLclEnvに登録する
+-- これにより多相再帰を防ぐ
 checkDecl :: Decl Id -> TypeCheckM ()
 checkDecl = undefined
 
-checkExpr :: Expr Id -> TypeCheckM TypeScheme
+-- | return value's SType is replaced with TypeScheme
+checkExpr :: Expr Id -> TypeCheckM (Expr Id, TypeScheme)
 checkExpr = undefined
 
 -- | 型のユニフィケーションを行う
@@ -94,8 +101,24 @@ unify = undefined
 expand :: Type -> TypeCheckM Type
 expand = undefined
 
+subst :: Type -> TypeCheckM Type
+subst = undefined
+
 generalize :: Type -> TypeCheckM TypeScheme
-generalize = undefined
+generalize ty = do
+  rs <- collectMeta <$> expand ty
+  vm <- view varMap
+  ss <- concatMap collectMeta <$> mapM instantiate (elems vm)
+  let gs = filter (`notElem` ss) rs
+  gs' <- mapM (\(c, _) -> newTypeId (fromString [c])) (zip ['a'..] gs)
+  mapM_ (\(TyRef r, v) -> writeIORef r $ Just $ TyVar v) (zip gs gs')
+  Forall gs' <$> expand ty
+  where
+    collectMeta (TyMeta r _)  = [r]
+    collectMeta (TyApp t1 t2) = collectMeta t1 <> collectMeta t2
+    collectMeta _             = []
 
 instantiate :: TypeScheme -> TypeCheckM Type
-instantiate = undefined
+instantiate (Forall gs ty) = do
+  gs' <- mapM (const $ TyMeta <$> newMetaVar <*> pure Star) gs
+  local (over tyVarMap (Map.fromList (zip gs gs') <>)) $ subst ty

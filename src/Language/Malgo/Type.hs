@@ -27,7 +27,7 @@ newtype TyRef = TyRef (IORef (Maybe Type))
 instance Show TyRef where
   show _ = "<meta>"
 
-data Kind = Type
+data Kind = Star
           | KFun Kind Kind
   deriving (Eq, Ord, Show)
 
@@ -63,11 +63,11 @@ data TyCon = IntC Integer
   deriving (Eq, Show)
 
 tInt :: Type
-tInt = TyCon (IntC 64) Type
+tInt = TyCon (IntC 64) Star
 tFloat :: Type
-tFloat = TyCon Float32C Type
+tFloat = TyCon Float32C Star
 tArrow :: Type
-tArrow = TyCon ArrowC (KFun Type (KFun Type Type))
+tArrow = TyCon ArrowC (KFun Star (KFun Star Star))
 
 fn :: Type -> Type -> Type
 a `fn` b = TyApp (TyApp tArrow a) b

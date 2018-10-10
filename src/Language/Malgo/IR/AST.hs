@@ -5,7 +5,8 @@
 module Language.Malgo.IR.AST where
 
 import           Language.Malgo.FrontEnd.Loc
-import           Universum
+import           Language.Malgo.Type
+import           Universum hiding (Type)
 
 data Expr a = Var SrcSpan a
             | Literal SrcSpan Literal
@@ -97,6 +98,7 @@ instance SrcInfo (Decl a) where
 -- | ソースコード上での型の表現
 data SType a = STyApp SrcSpan (STyCon a) [SType a]
              | STyVar SrcSpan a
+             | Scheme TypeScheme
   deriving (Eq, Show, Generic)
 
 instance SrcInfo (SType a) where
