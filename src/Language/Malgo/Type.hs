@@ -6,7 +6,10 @@ module Language.Malgo.Type
   ( kind
   , TypeScheme(..)
   , Kind(..)
-  , TyRef(..)
+  , TyRef
+  , newTyRef
+  , readTyRef
+  , writeTyRef
   , Type(..)
   , TyCon(..)
   , TypeId(..)
@@ -23,6 +26,19 @@ import           Universum         hiding (Type)
 
 newtype TyRef = TyRef (IORef (Maybe Type))
   deriving Eq
+
+newTyRef :: MonadIO f => f TyRef
+newTyRef = TyRef <$> newIORef Nothing
+
+readTyRef :: MonadIO m => TyRef -> m (Maybe Type)
+readTyRef (TyRef r) = readIORef r
+
+writeTyRef :: MonadIO m => TyRef -> Type -> m ()
+writeTyRef (TyRef r) ty = do
+  mty <- readIORef r
+  case mty of
+    Just _ -> error "cannot assign a value to the same TyRef twice"
+    Nothing -> writeIORef r (Just ty)
 
 instance Show TyRef where
   show _ = "<meta>"
