@@ -33,12 +33,12 @@ newTyRef = TyRef <$> newIORef Nothing
 readTyRef :: MonadIO m => TyRef -> m (Maybe Type)
 readTyRef (TyRef r) = readIORef r
 
-writeTyRef :: MonadIO m => TyRef -> Type -> m ()
+writeTyRef :: MonadIO m => TyRef -> Type -> m Bool
 writeTyRef (TyRef r) ty = do
   mty <- readIORef r
   case mty of
-    Just _ -> error "cannot assign a value to the same TyRef twice"
-    Nothing -> writeIORef r (Just ty)
+    Just _ -> return False
+    Nothing -> writeIORef r (Just ty) >> return True
 
 instance Show TyRef where
   show _ = "<meta>"
