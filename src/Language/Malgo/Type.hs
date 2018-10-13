@@ -33,12 +33,12 @@ newTyRef = TyRef <$> newIORef Nothing
 readTyRef :: MonadIO m => TyRef -> m (Maybe Type)
 readTyRef (TyRef r) = readIORef r
 
-writeTyRef :: MonadIO m => TyRef -> Type -> m Bool
+writeTyRef :: MonadIO m => TyRef -> Type -> m ()
 writeTyRef (TyRef r) ty = do
   mty <- readIORef r
   case mty of
-    Just _ -> return False
-    Nothing -> writeIORef r (Just ty) >> return True
+    Just _ -> pass
+    Nothing -> writeIORef r (Just ty)
 
 instance Show TyRef where
   show _ = "<meta>"
@@ -73,8 +73,8 @@ data TyCon = IntC Integer
            | Float64C
            | ArrayC
            | ArrowC
-           | RecordC [Text]
-           | VariantC [Text]
+           | RecordC (Set Text)
+           | VariantC (Set Text)
            | TyFun [TypeId] Type
   deriving (Eq, Show)
 
