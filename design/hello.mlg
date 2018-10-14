@@ -1,0 +1,14 @@
+data List a = Nil | Cons a (List a)
+type String = List Char
+
+print :: String -> ()
+print str = case str {
+  | Nil => ()
+  | Cons x xs => let _ = putchar x
+                 in print xs
+  }
+
+main :: () -> ()
+main _ =
+  let msg = Cons 'h' (Cons 'e' (Cons 'l' (Cons 'l' (Cons 'o' (Cons '\n' Nil)))))
+  in print msg
