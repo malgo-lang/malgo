@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TupleSections         #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.TypeCheck where
 
@@ -19,23 +20,23 @@ import           Universum                      hiding (Type)
 data LMEntry = LMEntry { _containerType :: Type, elementType :: Type }
   deriving Show
 
-data TcGblEnv = TcGblEnv { _tpMap    :: Map Id TypeScheme
-                         , _typeMap  :: Map TypeId Type
-                         , _labelMap :: Map Id LMEntry
-                         }
-  deriving Show
+data TcGblEnv = TcGblEnv
+  { _tpMap    :: Map Id TypeScheme
+  , _typeMap  :: Map TypeId Type
+  , _labelMap :: Map Id LMEntry
+  } deriving Show
 
-data TcLclEnv = TcLclEnv { _varMap   :: Map Id TypeScheme
-                         , _tyVarMap :: Map TypeId Type
-                         }
-  deriving Show
+data TcLclEnv = TcLclEnv
+  { _varMap   :: Map Id TypeScheme
+  , _tyVarMap :: Map TypeId Type
+  } deriving Show
 
 makeLenses ''LMEntry
 makeLenses ''TcGblEnv
 makeLenses ''TcLclEnv
 
 makeTcGblEnv :: Rename.RnEnv -> MalgoM TcGblEnv
-makeTcGblEnv = undefined
+makeTcGblEnv _ = return $ TcGblEnv mempty mempty mempty
 
 type TypeCheckM a = ReaderT TcLclEnv (StateT TcGblEnv MalgoM) a
 
@@ -59,6 +60,9 @@ typeCheck rnEnv ds = do
     $ usingReaderT (TcLclEnv mempty mempty)
     $ do mapM_ genHeader ds
          mapM_ checkDecl ds
+         tm <- use typeMap
+         tm' <- mapM expand tm
+         modify (over typeMap $ const tm')
 
 -- | トップレベル宣言からヘッダーを生成してTcGblEnvに仮登録する
 genHeader :: Decl Id -> TypeCheckM ()
@@ -83,6 +87,19 @@ genHeader (ScAnn ss name sty) = do
       ty <- transSType sty
       sc <- generalize ty
       modify (over tpMap (Map.singleton name sc <>))
+genHeader (TypeDef ss name params stype) = do
+  let name' = TypeId name $ nk params
+  whenJustM (Map.lookup name' <$> use typeMap)
+    $ error $ show $ "error(genHeader):" <+> pPrint ss <+> pPrint name <+> "is already defined"
+  ty <- TyMeta <$> newTyRef <*> pure (nk params)
+  modify (over typeMap (Map.singleton name' ty <>))
+  params' <- mapM (\p -> (TypeId p Star,) . (`TyMeta` Star) <$> newTyRef) params
+  ty' <- local (over tyVarMap (Map.fromList params' <>))
+         $ transSType stype
+  unify ss ty ty'
+  where
+    nk []     = Star
+    nk (_:xs) = KFun Star (nk xs)
 
 transSType :: SType Id -> TypeCheckM Type
 transSType = undefined
