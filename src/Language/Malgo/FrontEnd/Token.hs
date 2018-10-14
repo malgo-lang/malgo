@@ -7,12 +7,13 @@ import           Universum
 data Tag
   = LET
   | IN
+  | DATA
   | TYPE
-  | ALIAS
   | REC
   | AND
   | TRUE
   | FALSE
+  | FORALL
   | LPAREN
   | RPAREN
   | LBRACK
@@ -46,7 +47,7 @@ data Tag
   | AND_OP
   | OR_OP
   | ID { _id :: Text }
-  | TYCON { _tycon :: Text }
+  | LID { _id :: Text }
   | INT { _int :: Integer }
   | FLOAT { _float :: Double }
   | BOOL { _bool :: Bool }

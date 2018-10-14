@@ -27,7 +27,7 @@ langDef = Tok.LanguageDef
             [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%"
             , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&", "|", "," ]
           , Tok.reservedNames =
-            [ "let", "in", "type", "alias", "rec", "and", "case", "fn", "true", "false" ]
+            [ "let", "in", "data", "type", "rec", "and", "case", "fn", "true", "false", "forall" ]
           }
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
@@ -45,8 +45,8 @@ tag :: forall s u m. Stream s m Char => ParsecT s u m Tag
 tag =
   foldl' (\b (word, t) -> b <|> keyword word t)
     (keyword "let" LET)
-    [ ("in", IN), ("type", TYPE), ("alias", ALIAS), ("rec", REC), ("and", AND), ("case", CASE)
-    , ("fn", FN), ("true", TRUE), ("false", FALSE)]
+    [ ("in", IN), ("type", TYPE), ("data", DATA), ("rec", REC), ("and", AND), ("case", CASE)
+    , ("fn", FN), ("true", TRUE), ("false", FALSE), ("forall", FORALL)]
     <|> (lparen >> return LPAREN)
     <|> (rparen >> return RPAREN)
     <|> (lbrack >> return LBRACK)
@@ -64,7 +64,7 @@ tag =
           , (">=", GE_OP), ("&", AND_OP), ("|", OR_OP)
           , (",", COMMA)
           ]
-    <|> (TYCON . toText <$> largeIdentifier)
+    <|> (LID . toText <$> largeIdentifier)
     <|> (ID . toText <$> identifier)
     <|> try (FLOAT <$> float)
     <|> (INT <$> natural)

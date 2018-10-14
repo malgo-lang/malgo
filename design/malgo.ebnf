@@ -6,23 +6,23 @@ decs = {dec \n}
 
 dec = scdec
     | scann
+    | datadec
     | typedec
 
 scdec = ident [params] "=" expr
 scann = ident ":" type_scheme
 
-typedec = "alias" ident {tyvar} "=" type ; type synonym
-        | "type" ident {tyvar} "=" type ; new type with constructor
+datadec = "data" Lident {tyvar} "=" constructors
+typedec = "type" Lident {tyvar} "=" type
 
 type_scheme = ["forall" {tyvar} "."] type
 
 expr = ident ; variable
      | int   ; int literal
      | float ; float literal
-     | "true" | "false" ; boolean literal
+     | "True" | "False" ; boolean literal
      | char  ; char literal
-     | "{" { field_expr } "}" ; record literal
-     | "<" field_expr ">" ":" type ; variant literal
+     | constructor
      | "let" bind "in" expr
      | expr expr ; application
      | "case" expr "{" { "|" clause } "}" ; pattern match
@@ -33,7 +33,7 @@ bind = ident [":" type] "=" expr
 
 recbind = ident {ident} [":" type] "=" expr
 
-clause = "<" ident "=" ident ">" ":" type "=>" expr
+clause = cons_pat "=>" expr
        | "true" "=>" expr
        | "false" "=>" expr
 
@@ -41,10 +41,4 @@ type = tycon {type} ; type application
      | type "->" type
      | ident        ; type variable
 
-tycon = type_name
-      | "{" { field_type } "}"
-      | "<" { field_type } ">"
-
-field_expr = ident "=" expr [","]
-
-field_type = ident ":" type [","]
+tycon = Lident

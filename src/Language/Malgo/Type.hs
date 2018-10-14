@@ -3,20 +3,13 @@
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.Type
-  ( kind
-  , TypeScheme(..)
-  , Kind(..)
+  ( TypeScheme(..)
   , TyRef
   , newTyRef
   , readTyRef
   , writeTyRef
   , Type(..)
   , TyCon(..)
-  , TypeId(..)
-  , tInt
-  , tFloat
-  , tArrow
-  , fn
   )
 where
 
@@ -37,53 +30,26 @@ writeTyRef :: MonadIO m => TyRef -> Type -> m ()
 writeTyRef (TyRef r) ty = do
   mty <- readIORef r
   case mty of
-    Just _ -> pass
+    Just _  -> pass
     Nothing -> writeIORef r (Just ty)
 
 instance Show TyRef where
   show _ = "<meta>"
 
-data Kind = Star
-          | KFun Kind Kind
-  deriving (Eq, Ord, Show)
-
-data TypeId = TypeId Id Kind
-  deriving (Eq, Ord, Show)
-
-data TypeScheme = Forall [TypeId] Type
+data TypeScheme = Forall [Id] Type
   deriving (Eq, Show)
 
-data Type = TyApp Type Type
-          | TyVar TypeId
-          | TyCon TyCon Kind
-          | TyMeta TyRef Kind
+data Type = TyApp TyCon [Type]
+          | TyVar Id
+          | TyMeta TyRef
   deriving (Eq, Show)
-
-kind :: Type -> Kind
-kind (TyApp t _) =
-  case kind t of
-    (KFun _ k) -> k
-    _          -> error "unreachable(kind)"
-kind (TyVar (TypeId _ k)) = k
-kind (TyCon _ k) = k
-kind (TyMeta _ k) = k
 
 data TyCon = IntC Integer
            | Float32C
            | Float64C
-           | ArrayC
            | ArrowC
-           | RecordC (Set Text)
-           | VariantC (Set Text)
-           | TyFun [TypeId] Type
+           | FoldedC Id -- ^ 型環境を見て適切に展開される
+           | RecordC [Text]
+           | VariantC [Text]
+           | TyFun [Id] Type
   deriving (Eq, Show)
-
-tInt :: Type
-tInt = TyCon (IntC 64) Star
-tFloat :: Type
-tFloat = TyCon Float32C Star
-tArrow :: Type
-tArrow = TyCon ArrowC (KFun Star (KFun Star Star))
-
-fn :: Type -> Type -> Type
-a `fn` b = TyApp (TyApp tArrow a) b

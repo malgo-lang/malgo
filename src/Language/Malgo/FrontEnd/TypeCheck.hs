@@ -22,16 +22,16 @@ data LMEntry = LMEntry { _containerType :: Type, elementType :: Type }
 
 data TcGblEnv = TcGblEnv
   { _tpMap    :: Map Id TypeScheme
-  , _typeMap  :: Map TypeId Type
-  , _labelMap :: Map Id LMEntry
+  , _typeMap  :: Map Id TyCon
+  , _labelMap :: Map Text LMEntry
   } deriving Show
 
 data TcLclEnv = TcLclEnv
   { _varMap   :: Map Id TypeScheme
-  , _tyVarMap :: Map TypeId Type
+  , _tyVarMap :: Map Id Type
   } deriving Show
 
-makeLenses ''LMEntry
+-- makeLenses ''LMEntry
 makeLenses ''TcGblEnv
 makeLenses ''TcLclEnv
 
@@ -46,12 +46,9 @@ lookupVar name = do
   vm <- view varMap
   return $ Map.lookup name (vm <> toplevel)
 
-lookupTyVar :: MonadReader TcLclEnv f => TypeId -> f (Maybe Type)
+lookupTyVar :: MonadReader TcLclEnv f => Id -> f (Maybe Type)
 lookupTyVar name =
   Map.lookup name <$> view tyVarMap
-
-newTypeId :: Text -> TypeCheckM TypeId
-newTypeId hint = TypeId <$> newId hint <*> pure Star
 
 typeCheck :: Rename.RnEnv -> [Decl Id] -> MalgoM TcGblEnv
 typeCheck rnEnv ds = do
@@ -60,46 +57,24 @@ typeCheck rnEnv ds = do
     $ usingReaderT (TcLclEnv mempty mempty)
     $ do mapM_ genHeader ds
          mapM_ checkDecl ds
-         tm <- use typeMap
-         tm' <- mapM expand tm
-         modify (over typeMap $ const tm')
 
 -- | トップレベル宣言からヘッダーを生成してTcGblEnvに仮登録する
 genHeader :: Decl Id -> TypeCheckM ()
-genHeader (ScDef _ name params _) =
-  whenNothingM_ (lookupVar name) $ do
-    paramTys <- mapM (const $ TyMeta <$> newTyRef <*> pure Star) params
-    retTy <- TyMeta <$> newTyRef <*> pure Star
-    let sc = Forall [] $ makeTy paramTys retTy
-    modify (over tpMap (Map.singleton name sc <>))
-  where
-    makeTy xs ret = foldr fn ret xs
-genHeader (ScAnn ss name sty) = do
-  mty <- lookupVar name
-  case mty of
-    Just t1 -> do
-      t1' <- instantiate t1
-      t2 <- transSType sty
-      unify ss t1' t2
-      sc <- generalize t1'
-      modify (over tpMap (Map.singleton name sc <>))
-    Nothing -> do
-      ty <- transSType sty
-      sc <- generalize ty
-      modify (over tpMap (Map.singleton name sc <>))
-genHeader (TypeDef ss name params stype) = do
-  let name' = TypeId name $ nk params
-  whenJustM (Map.lookup name' <$> use typeMap)
-    $ error $ show $ "error(genHeader):" <+> pPrint ss <+> pPrint name <+> "is already defined"
-  ty <- TyMeta <$> newTyRef <*> pure (nk params)
-  modify (over typeMap (Map.singleton name' ty <>))
-  params' <- mapM (\p -> (TypeId p Star,) . (`TyMeta` Star) <$> newTyRef) params
-  ty' <- local (over tyVarMap (Map.fromList params' <>))
-         $ transSType stype
-  unify ss ty ty'
-  where
-    nk []     = Star
-    nk (_:xs) = KFun Star (nk xs)
+genHeader (ScDef _ name _ _) =
+  whenNothingM_ (Map.lookup name <$> use tpMap) $ do
+    ty <- TyMeta <$> newTyRef
+    modify (over tpMap (Map.singleton name (Forall [] ty) <>))
+genHeader (ScAnn _ name _) =
+  whenNothingM_ (Map.lookup name <$> use tpMap) $ do
+    ty <- TyMeta <$> newTyRef
+    modify (over tpMap (Map.singleton name (Forall [] ty) <>))
+genHeader (TypeDef ss name xs _) = do
+  tm <- use typeMap
+  case Map.lookup name tm of
+    Just _ -> error $ show $ "error(genHeader):" <+> pPrint ss <+> pPrint name <+> "is already defined"
+    Nothing ->
+      -- type List a = List a かのように環境に登録する
+      modify (over typeMap (Map.singleton name (TyFun xs (TyApp (FoldedC name) (map TyVar xs))) <>))
 
 transSType :: SType Id -> TypeCheckM Type
 transSType = undefined
@@ -109,62 +84,82 @@ transSType = undefined
 checkDecl :: Decl Id -> TypeCheckM ()
 checkDecl = undefined
 
--- | return value's SType is replaced with TypeScheme
-checkExpr :: Expr Id -> TypeCheckM (Expr Id, TypeScheme)
-checkExpr = undefined
-
--- | 型のユニフィケーションを行う
-unify :: SrcSpan -> Type -> Type -> TypeCheckM ()
-unify ss t1 t2
-  | kind t1 == kind t2 = do
-      t1' <- subst t1
-      t2' <- subst t2
-      unify' ss t1' t2'
-  | otherwise = unifyError ss t1 t2
+checkExpr :: Expr Id -> TypeCheckM Type
+checkExpr (Var ss name) = do
+  mty <- lookupVar name
+  case mty of
+    Just ty -> instantiate ty
+    Nothing -> error $ show $ "error(checkExpr):" <+> pPrint ss <+> pPrint name <+> "is not defined"
+checkExpr (Literal _ lit) = return $ TyApp (checkLiteral lit) []
+  where
+    checkLiteral (Int _)   = IntC 64
+    checkLiteral (Float _) = Float64C
+    checkLiteral (Bool _)  = IntC 1
+    checkLiteral (Char _)  = IntC 8
+checkExpr (Record _ xs) = do
+  ts <- mapM (checkExpr . view _2) xs
+  return $ TyApp (RecordC (map (view _1) xs)) ts
+checkExpr (Access ss e label) = do
+  ety <- checkExpr e
+  lm <- use labelMap
+  case Map.lookup label lm of
+    Just (LMEntry contTy elemTy) -> do
+      unify ss ety contTy
+      return elemTy
+    Nothing -> do
+      elemTy <- TyMeta <$> newTyRef
+      modify (over labelMap
+              (Map.singleton label (LMEntry ety elemTy) <>))
+      return elemTy
 
 unifyError :: SrcSpan -> Type -> Type -> TypeCheckM a
 unifyError ss t1 t2 = error $ show $ "unify error(typeCheck):" <+> pPrint ss <+> text (show t1) <> "," <+> text (show t2)
 
-unify' :: SrcSpan -> Type -> Type -> TypeCheckM ()
-unify' ss (TyApp t1 t2) (TyApp t3 t4) = do
-  unify ss t1 t3
-  unify ss t2 t4
-unify' _ (TyVar name1) (TyVar name2)
+-- | 型のユニフィケーションを行う
+unify :: SrcSpan -> Type -> Type -> TypeCheckM ()
+unify ss (TyApp c1 ts1) (TyApp c2 ts2)
+  | c1 == c2 = mapM_ (uncurry $ unify ss) (zip ts1 ts2)
+unify _ (TyVar name1) (TyVar name2)
   | name1 == name2 = pass
-unify' _ (TyCon c1 _) (TyCon c2 _)
-  | c1 == c2 = pass
-unify' ss (TyMeta r1 _) t2 = do
+unify ss (TyMeta r1) t2 = do
   mt1 <- readTyRef r1
   case mt1 of
     Just t1 -> unify ss t1 t2
     Nothing -> writeTyRef r1 t2
-unify' ss t1 t2@TyMeta{} = unify' ss t2 t1
-unify' ss t1 t2 = unifyError ss t1 t2
+unify ss t1 t2@TyMeta{} = unify ss t2 t1
+unify ss t1 t2 = unifyError ss t1 t2
 
--- | 代入済みのTyMetaを再帰的に展開する
--- | デバッグや一致検査に利用
-expand :: Type -> TypeCheckM Type
-expand = undefined
+-- -- | 代入済みのTyMetaを再帰的に展開する
+-- -- | デバッグや一致検査に利用
+-- expand :: Type -> TypeCheckM Type
+-- expand t@(TyMeta r) = do
+--   mty <- readTyRef r
+--   case mty of
+--     Just ty -> expand ty
+--     Nothing -> return t
+-- expand (TyApp t1 t2) =
+--   TyApp <$> expand t1 <*> expand t2
+-- expand x = return x
 
 -- | 代入済みのTyVarを再帰的に置換する
 subst :: Type -> TypeCheckM Type
 subst = undefined
 
 generalize :: Type -> TypeCheckM TypeScheme
-generalize ty = do
-  rs <- collectMeta <$> expand ty
-  vm <- view varMap
-  ss <- concatMap collectMeta <$> mapM instantiate (elems vm)
-  let gs = filter (`notElem` ss) rs
-  gs' <- mapM (\(c, _) -> newTypeId (fromString [c])) (zip ['a'..] gs)
-  mapM_ (\(r, v) -> writeTyRef r $ TyVar v) (zip gs gs')
-  Forall gs' <$> expand ty
-  where
-    collectMeta (TyMeta r _)  = [r]
-    collectMeta (TyApp t1 t2) = collectMeta t1 <> collectMeta t2
-    collectMeta _             = []
+generalize ty = undefined
+  -- rs <- collectMeta <$> expand ty
+  -- vm <- view varMap
+  -- ss <- concatMap collectMeta <$> mapM instantiate (elems vm)
+  -- let gs = filter (`notElem` ss) rs
+  -- gs' <- mapM (\(c, _) -> newTypeId (fromString [c])) (zip ['a'..] gs)
+  -- mapM_ (\(r, v) -> writeTyRef r $ TyVar v) (zip gs gs')
+  -- Forall gs' <$> expand ty
+  -- where
+  --   collectMeta (TyMeta r)  = [r]
+  --   collectMeta (TyApp t1 t2) = collectMeta t1 <> collectMeta t2
+  --   collectMeta _             = []
 
 instantiate :: TypeScheme -> TypeCheckM Type
 instantiate (Forall gs ty) = do
-  gs' <- mapM (const $ TyMeta <$> newTyRef <*> pure Star) gs
+  gs' <- mapM (const $ TyMeta <$> newTyRef) gs
   local (over tyVarMap (Map.fromList (zip gs gs') <>)) $ subst ty
