@@ -98,7 +98,6 @@ instance SrcInfo (Decl a) where
 -- | ソースコード上での型の表現
 data SType a = STyApp SrcSpan (STyCon a) [SType a]
              | STyVar SrcSpan a
-             | Scheme TypeScheme
   deriving (Eq, Show, Generic)
 
 instance SrcInfo (SType a) where
