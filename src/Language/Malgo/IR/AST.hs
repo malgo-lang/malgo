@@ -5,7 +5,6 @@
 module Language.Malgo.IR.AST where
 
 import           Language.Malgo.FrontEnd.Loc
-import           Language.Malgo.Type
 import           Universum hiding (Type)
 
 data Expr a = Var SrcSpan a
