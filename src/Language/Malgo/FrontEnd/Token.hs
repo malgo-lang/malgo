@@ -7,10 +7,11 @@ import           Universum
 data Tag
   = LET
   | IN
-  | DATA
   | TYPE
   | REC
-  | AND
+  | IF
+  | THEN
+  | ELSE
   | TRUE
   | FALSE
   | FORALL
@@ -24,7 +25,6 @@ data Tag
   | COLON
   | SEMICOLON
   | EQUAL
-  | CASE
   | DOT
   | PLUS
   | PLUS_DOT
@@ -35,9 +35,7 @@ data Tag
   | SLASH
   | SLASH_DOT
   | PERCENT
-  | FN
   | ARROW
-  | DARROW
   | EQ_OP
   | NEQ_OP
   | LT_OP

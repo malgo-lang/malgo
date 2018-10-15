@@ -25,9 +25,9 @@ langDef = Tok.LanguageDef
           , Tok.caseSensitive  = True
           , Tok.reservedOpNames =
             [ ".", "+.", "-.", "*.", "/.", ":", "=", "+", "-", "*", "/", "%"
-            , "->", "=>", ";", "==", "/=", "<", ">", "<=", ">=", "&", "|", "," ]
+            , "->", ";", "==", "/=", "<", ">", "<=", ">=", "&", "|", "," ]
           , Tok.reservedNames =
-            [ "let", "in", "data", "type", "rec", "and", "case", "fn", "true", "false", "forall" ]
+            [ "let", "in", "type", "rec", "if", "then", "else", "true", "false", "forall" ]
           }
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
@@ -45,8 +45,8 @@ tag :: forall s u m. Stream s m Char => ParsecT s u m Tag
 tag =
   foldl' (\b (word, t) -> b <|> keyword word t)
     (keyword "let" LET)
-    [ ("in", IN), ("type", TYPE), ("data", DATA), ("rec", REC), ("and", AND), ("case", CASE)
-    , ("fn", FN), ("true", TRUE), ("false", FALSE), ("forall", FORALL)]
+    [ ("in", IN), ("type", TYPE), ("rec", REC), ("if", IF), ("then", THEN)
+    , ("else", ELSE), ("true", TRUE), ("false", FALSE), ("forall", FORALL)]
     <|> (lparen >> return LPAREN)
     <|> (rparen >> return RPAREN)
     <|> (lbrack >> return LBRACK)
@@ -58,7 +58,7 @@ tag =
           [ ("+.", PLUS_DOT), ("-.", MINUS_DOT), ("*.", ASTERISK_DOT)
           , ("/.", SLASH_DOT), (":", COLON), ("=", EQUAL)
           , ("+", PLUS), ("-", MINUS), ("*", ASTERISK)
-          , ("/", SLASH), ("%", PERCENT), ("->", ARROW), ("=>", DARROW)
+          , ("/", SLASH), ("%", PERCENT), ("->", ARROW)
           , (";", SEMICOLON), ("==", EQ_OP), ("/=", NEQ_OP)
           , ("<", LT_OP), (">", GT_OP), ("<=", LE_OP)
           , (">=", GE_OP), ("&", AND_OP), ("|", OR_OP)
@@ -92,7 +92,6 @@ tag =
       if (x:xs) `elem` reservedNames
         then unexpected ("reserved word " ++ show (x:xs))
         else return $ x:xs
-
 
 token :: Stream s m Char => ParsecT s u m Token
 token = do
