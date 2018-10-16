@@ -38,10 +38,10 @@ data PrimC = IntC | DoubleC | CharC | BoolC | StringC
   deriving (Eq, Show)
 
 instance Pretty PrimC where
-  pPrint IntC = "Int"
+  pPrint IntC    = "Int"
   pPrint DoubleC = "Double"
-  pPrint CharC = "Char"
-  pPrint BoolC = "Bool"
+  pPrint CharC   = "Char"
+  pPrint BoolC   = "Bool"
   pPrint StringC = "String"
 
 data TyCon = TupleC Int
@@ -52,6 +52,6 @@ data TyCon = TupleC Int
 
 instance Pretty TyCon where
   pPrint (TupleC n) = "(" <> text (replicate n ',') <> ")"
-  pPrint ArrowC = "(->)"
-  pPrint ArrayC = "Array"
-  pPrint (PrimC c) = pPrint c
+  pPrint ArrowC     = "(->)"
+  pPrint ArrayC     = "Array"
+  pPrint (PrimC c)  = pPrint c
