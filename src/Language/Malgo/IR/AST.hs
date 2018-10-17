@@ -98,7 +98,7 @@ instance Pretty a => Pretty (Bind a) where
 
 -- | トップレベル宣言
 data Decl a = ScDef SrcSpan a [a] (Expr a) -- ^ 環境を持たない関数（定数）宣言
-            | ScAnn SrcSpan a (Type a) -- ^ 関数（定数）の型宣言
+            | ScAnn SrcSpan a (TypeScheme a) -- ^ 関数（定数）の型宣言
             | TypeDef SrcSpan a [a] (Type a) -- ^ 型の別名宣言
   deriving (Eq, Show, Generic)
 

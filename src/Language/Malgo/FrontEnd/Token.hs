@@ -48,7 +48,6 @@ data Tag
   | LID { _id :: Text }
   | INT { _int :: Integer }
   | FLOAT { _float :: Double }
-  | BOOL { _bool :: Bool }
   | CHAR { _char :: Char }
   | STRING { _str :: Text }
   deriving (Eq, Show)
