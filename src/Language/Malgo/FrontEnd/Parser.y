@@ -5,6 +5,7 @@ module Language.Malgo.FrontEnd.Parser (parse) where
 
 import Prelude
 import Data.Text (Text)
+import Language.Malgo.Pretty
 import Language.Malgo.IR.AST
 import Language.Malgo.FrontEnd.Loc
 import Language.Malgo.FrontEnd.Token
@@ -75,10 +76,11 @@ STRING { Loc _ (STRING _) }
 %%
 
 decs :: { [Decl Text] }
-decs : { [] }
+decs : decs_rev { reverse $1 }
+decs_rev : { [] }
 
 {
 parseError :: ([Token], [String]) -> a
-parseError ([], xs) = error $ "Parse error at EOF: " <> show xs <> " are expected."
-parseError (t:_, xs) = error $ "Parse error: " <> show t <> " is got, but " <> show xs <> "are expected."
+parseError ([], xs) = error $ show $ "Parse error at EOF: " <> pPrint xs <> " are expected."
+parseError (t:_, xs) = error $ show $ "Parse error: " <> pPrint t <> " is got, but " <> pPrint xs <> " are expected."
 }
