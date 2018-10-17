@@ -1,7 +1,8 @@
-{-# LANGUAGE StrictData        #-}
+{-# LANGUAGE StrictData #-}
 module Language.Malgo.FrontEnd.Token where
 
 import           Language.Malgo.FrontEnd.Loc
+import           Language.Malgo.Pretty
 import           Universum
 
 data Tag
@@ -51,5 +52,8 @@ data Tag
   | CHAR { _char :: Char }
   | STRING { _str :: Text }
   deriving (Eq, Show)
+
+instance Pretty Tag where
+  pPrint = text . show
 
 type Token = Loc Tag
