@@ -18,6 +18,9 @@ spec = describe "Parser" $ do
   parseTest "function definition"
     [ID "f", ID "x", EQUAL, ID "x"]
     [ScDef ss "f" ["x"] (Var ss "x")]
+  parseTest "type alias definition"
+    [TYPE, LID "T", EQUAL, LID "Array", LID "Int"]
+    [TypeDef ss "T" [] (TyApp ArrayC [TyApp (PrimC IntC) []])]
 
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0
@@ -25,3 +28,8 @@ ss = SrcSpan "<test>" 0 0 0 0
 parseTest :: String -> [Tag] -> [Decl Text] -> SpecWith ()
 parseTest desc ts ast =
   it desc $ parse (map (Loc ss) ts) `shouldBe` ast
+
+parseExprTest :: String -> [Tag] -> Expr Text -> SpecWith ()
+parseExprTest desc ts ast =
+  it desc $ parse (map (Loc ss) $ [ID "f", EQUAL] <> ts)
+  `shouldBe` [ScDef ss "f" [] ast]
