@@ -13,8 +13,7 @@ main :: IO ()
 main = do
   opt <- parseOpt
   let file = srcName opt
-  contents <- readFile file
-  let tokens = runIdentity $ Lexer.lexing () (toString file) contents
+  tokens <- Lexer.lexing () (toString file) =<< readFile file
   let parser = Parser.parseExpr
   let ast = case parser <$> tokens of
         Left x  -> error $ show x

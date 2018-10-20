@@ -9,6 +9,7 @@ import Language.Malgo.Pretty
 import Language.Malgo.IR.AST
 import Language.Malgo.FrontEnd.Loc
 import Language.Malgo.FrontEnd.Token
+import Language.Malgo.Type
 }
 
 %name parse decs
@@ -77,7 +78,37 @@ STRING { Loc _ (STRING _) }
 
 decs :: { [Decl Text] }
 decs : decs_rev { reverse $1 }
-decs_rev : { [] }
+decs_rev : decs_rev dec { $2 : $1 }
+         | { [] }
+
+dec : ID id_list '=' expr ';' { ScDef (srcSpan ($1, $5)) (_id $ unLoc $1) $2 $4 }
+    | ID ':' typescheme ';' { ScAnn (srcSpan ($1, $4)) (_id $ unLoc $1) $3 }
+    | TYPE LID id_list '=' type ';' { TypeDef (srcSpan ($1, $6)) (_id $ unLoc $2) $3 $5 }
+
+id_list : id_list_rev { reverse $1 }
+id_list_rev : { [] }
+            | id_list_rev ID { _id (unLoc $2) : $1 }
+
+expr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
+
+typescheme : FORALL id_list '.' type { Forall $2 $4 }
+
+atype : LID { TyApp (SimpleC $ _id $ unLoc $1) [] }
+      | ID { TyVar $ _id $ unLoc $1 }
+      | '(' type_list_comma ')' { TyApp (TupleC (length $2)) $2 }
+      | '(' type ')' { $2 }
+
+type : atype { $1 }
+     | LID type_list { TyApp (SimpleC $ _id $ unLoc $1) $2 }
+     | type "->" type { TyApp ArrowC [$1, $3] }
+
+type_list : type_list_rev { reverse $1 }
+type_list_rev : atype { [$1] }
+              | type_list_rev atype { $2 : $1 }
+
+type_list_comma : type_list_comma_rev { reverse $1 }
+type_list_comma_rev : type ',' type { [$3, $1] }
+                    | type_list_comma_rev ',' type { $3 : $1 }
 
 {
 parseError :: ([Token], [String]) -> a

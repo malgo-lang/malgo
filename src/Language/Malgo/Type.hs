@@ -48,6 +48,7 @@ data TyCon = TupleC Int
            | ArrowC
            | ArrayC
            | PrimC PrimC
+           | SimpleC Text
   deriving (Eq, Show)
 
 instance Pretty TyCon where
@@ -55,3 +56,4 @@ instance Pretty TyCon where
   pPrint ArrowC     = "(->)"
   pPrint ArrayC     = "Array"
   pPrint (PrimC c)  = pPrint c
+  pPrint (SimpleC c) = pPrint c

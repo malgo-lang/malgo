@@ -1,5 +1,4 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
-{-# LANGUAGE TypeApplications          #-}
 module Language.Malgo.FrontEnd.ParserSpec where
 
 import           Language.Malgo.FrontEnd.Loc
@@ -13,14 +12,14 @@ import           Universum                      hiding (Type)
 spec :: Spec
 spec = describe "Parser" $ do
   parseTest "annotation"
-    [ID "f", COLON, FORALL, ID "a", DOT, ID "a", ARROW, ID "a"]
+    [ID "f", COLON, FORALL, ID "a", DOT, ID "a", ARROW, ID "a", SEMICOLON]
     [ScAnn ss "f" (Forall ["a"] (TyApp ArrowC [TyVar "a", TyVar "a"]))]
   parseTest "function definition"
-    [ID "f", ID "x", EQUAL, ID "x"]
+    [ID "f", ID "x", EQUAL, ID "x", SEMICOLON]
     [ScDef ss "f" ["x"] (Var ss "x")]
   parseTest "type alias definition"
-    [TYPE, LID "T", EQUAL, LID "Array", LID "Int"]
-    [TypeDef ss "T" [] (TyApp ArrayC [TyApp (PrimC IntC) []])]
+    [TYPE, LID "T", EQUAL, LID "Array", LID "Int", SEMICOLON]
+    [TypeDef ss "T" [] (TyApp (SimpleC "Array") [TyApp (SimpleC "Int") []])]
 
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0
