@@ -21,6 +21,12 @@ spec = describe "Parser" $ do
     [TYPE, LID "T", EQUAL, LID "Array", LID "Int", SEMICOLON]
     [TypeDef ss "T" [] (TyApp (SimpleC "Array") [TyApp (SimpleC "Int") []])]
 
+  parseExprTest "arithmetic expression"
+    [INT 4, ASTERISK, INT 10, PLUS, INT 2]
+    (BinOp ss Add
+     (BinOp ss Mul (Literal ss (Int 4)) (Literal ss (Int 10)))
+     (Literal ss (Int 2)))
+
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0
 
@@ -30,5 +36,5 @@ parseTest desc ts ast =
 
 parseExprTest :: String -> [Tag] -> Expr Text -> SpecWith ()
 parseExprTest desc ts ast =
-  it desc $ parse (map (Loc ss) $ [ID "f", EQUAL] <> ts)
+  it desc $ parse (map (Loc ss) $ [ID "f", EQUAL] <> ts <> [SEMICOLON])
   `shouldBe` [ScDef ss "f" [] ast]

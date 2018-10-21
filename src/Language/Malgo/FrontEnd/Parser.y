@@ -89,7 +89,11 @@ id_list : id_list_rev { reverse $1 }
 id_list_rev : { [] }
             | id_list_rev ID { _id (unLoc $2) : $1 }
 
+
 expr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
+     | INT { Literal (srcSpan $1) (Int $ _int $ unLoc $ $1) }
+     | expr '+' expr { BinOp (srcSpan ($1, $3)) Add $1 $3 }
+     | expr '*' expr { BinOp (srcSpan ($1, $3)) Mul $1 $3 }
 
 typescheme : FORALL id_list '.' type { Forall $2 $4 }
 
