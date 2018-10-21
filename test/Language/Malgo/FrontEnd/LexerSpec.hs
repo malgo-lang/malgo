@@ -29,6 +29,18 @@ spec = describe "Lexer" $ do
     "type T = Array Int"
     [TYPE, LID "T", EQUAL, LID "Array", LID "Int"]
 
+  lextest "int literal" "42" [INT 42]
+  lextest "float literal" "3.14" [FLOAT 3.14]
+  lextest "arithmetic expression"
+    "4 * 10 + 2" [INT 4, ASTERISK, INT 10, PLUS, INT 2]
+  lextest "negate"
+    "-43 - -1" [MINUS, INT 43, MINUS, MINUS, INT 1]
+
+  lextest "simple apply" "f x" [ID "f", ID "x"]
+  lextest "multiple arguments" "f x y" [ID "f", ID "x", ID "y"]
+  lextest "function call and arithmetic expression"
+    "f 1 + 2" [ID "f", INT 1, PLUS, INT 2]
+
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0
 
