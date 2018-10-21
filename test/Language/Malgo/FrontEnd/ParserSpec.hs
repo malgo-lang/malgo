@@ -21,10 +21,32 @@ spec = describe "Parser" $ do
     [TYPE, LID "T", EQUAL, LID "Array", LID "Int", SEMICOLON]
     [TypeDef ss "T" [] (TyApp (SimpleC "Array") [TyApp (SimpleC "Int") []])]
 
+  parseExprTest "int literal" [INT 42] (Literal ss (Int 42))
+  parseExprTest "float literal" [FLOAT 3.14] (Literal ss (Float 3.14))
   parseExprTest "arithmetic expression"
     [INT 4, ASTERISK, INT 10, PLUS, INT 2]
     (BinOp ss Add
      (BinOp ss Mul (Literal ss (Int 4)) (Literal ss (Int 10)))
+     (Literal ss (Int 2)))
+  parseExprTest "negate"
+    [MINUS, INT 43, MINUS, MINUS, INT 1]
+    (BinOp ss Sub
+     (Literal ss (Int $ -43))
+     (Literal ss (Int $ -1)))
+
+  parseExprTest "simple apply"
+    [ID "f", ID "x"]
+    (Apply ss (Var ss "f") (Var ss "x"))
+  parseExprTest "multiple arguments"
+    [ID "f", ID "x", ID "y"]
+    (Apply ss
+     (Apply ss (Var ss "f") (Var ss "x"))
+     (Var ss "y"))
+
+  parseExprTest "function call and arithmetic expression"
+    [ID "f", INT 1, PLUS, INT 2]
+    (BinOp ss Add
+     (Apply ss (Var ss "f") (Literal ss (Int 1)))
      (Literal ss (Int 2)))
 
 ss :: SrcSpan

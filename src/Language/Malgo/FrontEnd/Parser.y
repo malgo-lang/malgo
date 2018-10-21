@@ -71,6 +71,7 @@ STRING { Loc _ (STRING _) }
 %nonassoc '<' '>' "<=" ">="
 %left '+' '-' "+." "-." '&'
 %left '*' '/' "*." "/." '%' '|'
+%right prec_negate
 %left '.'
 %left prec_app
 
@@ -90,10 +91,21 @@ id_list_rev : { [] }
             | id_list_rev ID { _id (unLoc $2) : $1 }
 
 
-expr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
-     | INT { Literal (srcSpan $1) (Int $ _int $ unLoc $ $1) }
+aexpr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
+      | INT { Literal (srcSpan $1) (Int $ _int $ unLoc $ $1) }
+      | FLOAT { Literal (srcSpan $1) (Float $ _float $ unLoc $1) }
+      | '(' expr ')' { $2 }
+
+expr : aexpr { $1 }
+     | '-' INT %prec prec_negate { Literal (srcSpan $1) (Int $ negate $ _int $ unLoc $2) }
+     | '-' FLOAT %prec prec_negate { Literal (srcSpan $1) (Float $ negate $ _float $ unLoc $2) }
      | expr '+' expr { BinOp (srcSpan ($1, $3)) Add $1 $3 }
+     | expr '-' expr { BinOp (srcSpan ($1, $3)) Sub $1 $3 }
      | expr '*' expr { BinOp (srcSpan ($1, $3)) Mul $1 $3 }
+     | app { $1 }
+
+app : aexpr aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
+    | app aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
 
 typescheme : FORALL id_list '.' type { Forall $2 $4 }
 
