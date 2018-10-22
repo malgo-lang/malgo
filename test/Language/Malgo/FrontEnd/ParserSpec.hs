@@ -23,6 +23,11 @@ spec = describe "Parser" $ do
 
   parseExprTest "int literal" [INT 42] (Literal ss (Int 42))
   parseExprTest "float literal" [FLOAT 3.14] (Literal ss (Float 3.14))
+  parseExprTest "bool literal 1" [TRUE] (Literal ss (Bool True))
+  parseExprTest "bool literal 2" [FALSE] (Literal ss (Bool False))
+  parseExprTest "char literal" [CHAR 'c'] (Literal ss (Char 'c'))
+  parseExprTest "string literal" [STRING "str"] (Literal ss (String "str"))
+
   parseExprTest "arithmetic expression"
     [INT 4, ASTERISK, INT 10, PLUS, INT 2]
     (BinOp ss Add

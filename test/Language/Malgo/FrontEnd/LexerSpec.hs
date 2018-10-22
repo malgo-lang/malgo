@@ -29,8 +29,8 @@ spec = describe "Lexer" $ do
     "type T = Array Int"
     [TYPE, LID "T", EQUAL, LID "Array", LID "Int"]
 
-  lextest "int literal" "42" [INT 42]
-  lextest "float literal" "3.14" [FLOAT 3.14]
+  lextest "literal" "42 3.14 true false 'c' \"str\"" [INT 42, FLOAT 3.14, TRUE, FALSE, CHAR 'c', STRING "str"]
+
   lextest "arithmetic expression"
     "4 * 10 + 2" [INT 4, ASTERISK, INT 10, PLUS, INT 2]
   lextest "negate"
