@@ -69,6 +69,14 @@ spec = describe "Parser" $ do
      (Apply ss (Var ss "f") (Literal ss (Int 1)))
      (Literal ss (Int 2)))
 
+  parseExprTest "if expression"
+    [IF, ID "c", THEN, IF, ID "d", THEN, INT 1, ELSE, INT 2, ELSE, INT 3]
+    (If ss (Var ss "c")
+     (If ss (Var ss "d")
+      (Literal ss (Int 1))
+      (Literal ss (Int 2)))
+     (Literal ss (Int 3)))
+
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0
 
