@@ -35,6 +35,9 @@ spec = describe "Lexer" $ do
     "4 * 10 + 2" [INT 4, ASTERISK, INT 10, PLUS, INT 2]
   lextest "negate"
     "-43 - -1" [MINUS, INT 43, MINUS, MINUS, INT 1]
+  lextest "x - 1" "x - 1" [ID "x", MINUS, INT 1]
+  lextest "x - -1" "x - -1" [ID "x", MINUS, MINUS, INT 1]
+  lextest "3.0 +. 0.14" "3.0 +. 0.14" [FLOAT 3.0, PLUS_DOT, FLOAT 0.14]
 
   lextest "simple apply" "f x" [ID "f", ID "x"]
   lextest "multiple arguments" "f x y" [ID "f", ID "x", ID "y"]
