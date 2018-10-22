@@ -28,7 +28,7 @@ spec = describe "Parser" $ do
   parseExprTest "char literal" [CHAR 'c'] (Literal ss (Char 'c'))
   parseExprTest "string literal" [STRING "str"] (Literal ss (String "str"))
 
-  parseExprTest "arithmetic expression"
+  parseExprTest "4 * 10 + 2"
     [INT 4, ASTERISK, INT 10, PLUS, INT 2]
     (BinOp ss Add
      (BinOp ss Mul (Literal ss (Int 4)) (Literal ss (Int 10)))
@@ -38,6 +38,21 @@ spec = describe "Parser" $ do
     (BinOp ss Sub
      (Literal ss (Int $ -43))
      (Literal ss (Int $ -1)))
+  parseExprTest "x - 1"
+    [ID "x", MINUS, INT 1]
+    (BinOp ss Sub
+     (Var ss "x")
+     (Literal ss (Int 1)))
+  parseExprTest "x - -1"
+    [ID "x", MINUS, MINUS, INT 1]
+    (BinOp ss Sub
+     (Var ss "x")
+     (Literal ss (Int $ -1)))
+  parseExprTest "3.0 +. 0.14"
+    [FLOAT 3.0, PLUS_DOT, FLOAT 0.14]
+    (BinOp ss FAdd
+     (Literal ss (Float 3.0))
+     (Literal ss (Float 0.14)))
 
   parseExprTest "simple apply"
     [ID "f", ID "x"]
