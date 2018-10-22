@@ -90,7 +90,10 @@ spec = describe "Parser" $ do
     (Let ss (NonRec ss "x" (Just $ TyApp (SimpleC "Int") []) (Literal ss (Int 1))) (Var ss "x"))
   parseExprTest "let expression 4"
     [LET, REC, ID "f", ID "x", EQUAL, ID "x", IN, ID "f"]
-    (Let ss (Rec ss "f" ["x"] Nothing (Var ss "x")) (Var ss "f"))
+    (Let ss (Rec ss "f" [("x", Nothing)] Nothing (Var ss "x")) (Var ss "f"))
+  parseExprTest "let expression 5"
+    [LET, REC, ID "f", LPAREN, ID "x", COLON, LID "Int", RPAREN, COLON, LID "Int", EQUAL, ID "x", IN, ID "f"]
+    (Let ss (Rec ss "f" [("x", Just $ TyApp (SimpleC "Int") [])] (Just $ TyApp (SimpleC "Int") []) (Var ss "x")) (Var ss "f"))
 
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0

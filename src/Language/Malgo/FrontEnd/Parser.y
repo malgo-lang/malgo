@@ -121,7 +121,13 @@ app : aexpr aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
 
 bind : ID '=' expr { NonRec (srcSpan ($1, $3)) (_id $ unLoc $1) Nothing $3 }
      | ID ':' type '=' expr { NonRec (srcSpan ($1, $5)) (_id $ unLoc $1) (Just $3) $5 }
-     | REC ID id_list '=' expr { Rec (srcSpan ($1, $5)) (_id $ unLoc $2) $3 Nothing $5 }
+     | REC ID fn_params '=' expr { Rec (srcSpan ($1, $5)) (_id $ unLoc $2) $3 Nothing $5 }
+     | REC ID fn_params ':' type '=' expr { Rec (srcSpan ($1, $7)) (_id $ unLoc $2) $3 (Just $5) $7 }
+
+fn_params : fn_params_rev { reverse $1 }
+fn_params_rev : { [] }
+              | fn_params_rev ID { (_id $ unLoc $2, Nothing) : $1 }
+              | fn_params_rev '(' ID ':' type ')' { (_id $ unLoc $3, Just $5) : $1 }
 
 typescheme : FORALL id_list '.' type { Forall $2 $4 }
 
