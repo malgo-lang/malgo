@@ -54,6 +54,12 @@ spec = describe "Parser" $ do
      (Literal ss (Float 3.0))
      (Literal ss (Float 0.14)))
 
+  parseExprTest "unit"
+    [LPAREN, RPAREN] (Tuple ss [])
+  parseExprTest "tuple"
+    [LPAREN, INT 1, COMMA, INT 2, RPAREN]
+    (Tuple ss [Literal ss $ Int 1, Literal ss $ Int 2])
+
   parseExprTest "simple apply"
     [ID "f", ID "x"]
     (Apply ss (Var ss "f") (Var ss "x"))

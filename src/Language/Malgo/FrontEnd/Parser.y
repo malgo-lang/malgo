@@ -98,7 +98,9 @@ aexpr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
       | FALSE { Literal (srcSpan $1) (Bool False) }
       | CHAR { Literal (srcSpan $1) (Char $ _char $ unLoc $1) }
       | STRING { Literal (srcSpan $1) (String $ _str $ unLoc $1) }
+      | '(' ')' { Tuple (srcSpan ($1, $2)) [] }
       | '(' expr ')' { $2 }
+      | '(' expr_list_comma ')' { Tuple (srcSpan ($1, $3)) $2 }
 
 expr : aexpr { $1 }
      | '-' INT %prec prec_negate { Literal (srcSpan $1) (Int $ negate $ _int $ unLoc $2) }
@@ -112,9 +114,21 @@ expr : aexpr { $1 }
      | expr "-." expr { BinOp (srcSpan ($1, $3)) FSub $1 $3 }
      | expr "*." expr { BinOp (srcSpan ($1, $3)) FMul $1 $3 }
      | expr "/." expr { BinOp (srcSpan ($1, $3)) FDiv $1 $3 }
+     | expr "==" expr { BinOp (srcSpan ($1, $3)) Eq $1 $3 }
+     | expr "/=" expr { BinOp (srcSpan ($1, $3)) Neq $1 $3 }
+     | expr '<' expr { BinOp (srcSpan ($1, $3)) Lt $1 $3 }
+     | expr '>' expr { BinOp (srcSpan ($1, $3)) Gt $1 $3 }
+     | expr "<=" expr { BinOp (srcSpan ($1, $3)) Le $1 $3 }
+     | expr ">=" expr { BinOp (srcSpan ($1, $3)) Ge $1 $3 }
+     | expr '&' expr { BinOp (srcSpan ($1, $3)) And $1 $3 }
+     | expr '|' expr { BinOp (srcSpan ($1, $3)) Or $1 $3 }
      | IF expr THEN expr ELSE expr { If (srcSpan ($1, $6)) $2 $4 $6 }
      | LET bind IN expr { Let (srcSpan ($1, $4)) $2 $4 }
      | app { $1 }
+
+expr_list_comma : expr_list_comma_rev { reverse $1 }
+expr_list_comma_rev : expr ',' expr { [$3, $1] }
+                    | expr_list_comma_rev ',' expr { $3 : $1 }
 
 app : aexpr aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
     | app aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
