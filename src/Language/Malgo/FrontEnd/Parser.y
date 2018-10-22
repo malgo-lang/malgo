@@ -106,6 +106,12 @@ expr : aexpr { $1 }
      | expr '+' expr { BinOp (srcSpan ($1, $3)) Add $1 $3 }
      | expr '-' expr { BinOp (srcSpan ($1, $3)) Sub $1 $3 }
      | expr '*' expr { BinOp (srcSpan ($1, $3)) Mul $1 $3 }
+     | expr '/' expr { BinOp (srcSpan ($1, $3)) Div $1 $3 }
+     | expr '%' expr { BinOp (srcSpan ($1, $3)) Mod $1 $3 }
+     | expr "+." expr { BinOp (srcSpan ($1, $3)) FAdd $1 $3 }
+     | expr "-." expr { BinOp (srcSpan ($1, $3)) FSub $1 $3 }
+     | expr "*." expr { BinOp (srcSpan ($1, $3)) FMul $1 $3 }
+     | expr "/." expr { BinOp (srcSpan ($1, $3)) FDiv $1 $3 }
      | app { $1 }
 
 app : aexpr aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
