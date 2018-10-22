@@ -77,6 +77,15 @@ spec = describe "Parser" $ do
       (Literal ss (Int 2)))
      (Literal ss (Int 3)))
 
+  parseExprTest "let expression 1"
+    [LET, ID "x", EQUAL, INT 1, IN, ID "x"]
+    (Let ss (NonRec ss "x" Nothing (Literal ss (Int 1))) (Var ss "x"))
+  parseExprTest "let expression 2"
+    [LET, ID "x", EQUAL, LET, ID "y", EQUAL, INT 1, IN, ID "y", IN, ID "x"]
+    (Let ss (NonRec ss "x" Nothing
+             (Let ss (NonRec ss "y" Nothing (Literal ss (Int 1))) (Var ss "y")))
+      (Var ss "x"))
+
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0
 
