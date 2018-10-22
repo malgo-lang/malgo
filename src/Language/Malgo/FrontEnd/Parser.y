@@ -94,6 +94,10 @@ id_list_rev : { [] }
 aexpr : ID { Var (srcSpan $1) (_id $ unLoc $1) }
       | INT { Literal (srcSpan $1) (Int $ _int $ unLoc $ $1) }
       | FLOAT { Literal (srcSpan $1) (Float $ _float $ unLoc $1) }
+      | TRUE { Literal (srcSpan $1) (Bool True) }
+      | FALSE { Literal (srcSpan $1) (Bool False) }
+      | CHAR { Literal (srcSpan $1) (Char $ _char $ unLoc $1) }
+      | STRING { Literal (srcSpan $1) (String $ _str $ unLoc $1) }
       | '(' expr ')' { $2 }
 
 expr : aexpr { $1 }

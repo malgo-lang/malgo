@@ -54,7 +54,7 @@ data Literal = Int Integer
              | Float Double
              | Bool Bool
              | Char Char
-             | String String
+             | String Text
   deriving (Eq, Show)
 
 instance Pretty Literal where
