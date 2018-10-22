@@ -120,6 +120,7 @@ app : aexpr aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
     | app aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
 
 bind : ID '=' expr { NonRec (srcSpan ($1, $3)) (_id $ unLoc $1) Nothing $3 }
+     | ID ':' type '=' expr { NonRec (srcSpan ($1, $5)) (_id $ unLoc $1) (Just $3) $5 }
 
 typescheme : FORALL id_list '.' type { Forall $2 $4 }
 
