@@ -113,10 +113,13 @@ expr : aexpr { $1 }
      | expr "*." expr { BinOp (srcSpan ($1, $3)) FMul $1 $3 }
      | expr "/." expr { BinOp (srcSpan ($1, $3)) FDiv $1 $3 }
      | IF expr THEN expr ELSE expr { If (srcSpan ($1, $6)) $2 $4 $6 }
+     | LET bind IN expr { Let (srcSpan ($1, $4)) $2 $4 }
      | app { $1 }
 
 app : aexpr aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
     | app aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
+
+bind : ID '=' expr { NonRec (srcSpan ($1, $3)) (_id $ unLoc $1) Nothing $3 }
 
 typescheme : FORALL id_list '.' type { Forall $2 $4 }
 
