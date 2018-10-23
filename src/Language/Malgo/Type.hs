@@ -52,8 +52,31 @@ data TyCon = TupleC Int
   deriving (Eq, Show)
 
 instance Pretty TyCon where
-  pPrint (TupleC n) = "(" <> text (replicate n ',') <> ")"
-  pPrint ArrowC     = "(->)"
-  pPrint ArrayC     = "Array"
-  pPrint (PrimC c)  = pPrint c
+  pPrint (TupleC n)  = "(" <> text (replicate n ',') <> ")"
+  pPrint ArrowC      = "(->)"
+  pPrint ArrayC      = "Array"
+  pPrint (PrimC c)   = pPrint c
   pPrint (SimpleC c) = pPrint c
+
+intType :: Type a
+intType = TyApp (PrimC IntC) []
+doubleType :: Type a
+doubleType = TyApp (PrimC DoubleC) []
+charType :: Type a
+charType = TyApp (PrimC CharC) []
+boolType :: Type a
+boolType = TyApp (PrimC BoolC) []
+stringType :: Type a
+stringType = TyApp (PrimC StringC) []
+arrowType :: Type a -> Type a -> Type a
+arrowType a b = TyApp ArrowC [a, b]
+unitType :: Type a
+unitType = TyApp (TupleC 0) []
+tupleType :: [Type a] -> Type a
+tupleType xs = TyApp (TupleC (length xs)) xs
+arrayType :: Type a -> Type a
+arrayType a = TyApp ArrayC [a]
+
+infixr 5 -->
+(-->) :: Type a -> Type a -> Type a
+(-->) = arrowType
