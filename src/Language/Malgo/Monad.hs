@@ -34,7 +34,7 @@ runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
 {-# SPECIALIZE runMalgo :: MalgoM a -> UniqSupply -> Opt -> IO a #-}
 runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt)
 
-class MonadIO m => MonadMalgo m where
+class (MonadIO m, MonadFail m) => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
 
 instance MonadMalgo MalgoM where
