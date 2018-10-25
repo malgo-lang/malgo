@@ -1,11 +1,15 @@
+{-# LANGUAGE DeriveGeneric #-}
 module Language.Malgo.Type where
 
+import           Data.Outputable
 import           Language.Malgo.Pretty
 import           Prelude               (show)
 import           Universum             hiding (Type)
 
 data TypeScheme a = Forall [a] (Type a)
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance Outputable a => Outputable (TypeScheme a)
 
 instance Pretty a => Pretty (TypeScheme a) where
   pPrint (Forall xs ty) = "forall" <+> sep (map pPrint xs) <> "." <+> pPrint ty
@@ -19,10 +23,15 @@ instance Show (TyRef a) where
 instance Pretty (TyRef a) where
   pPrint _ = "<TyRef>"
 
+instance Outputable (TyRef a) where
+  pprPrec _ _ = "<TyRef>"
+
 data Type a = TyApp TyCon [Type a]
             | TyVar a
             | TyMeta (TyRef a)
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance Outputable a => Outputable (Type a)
 
 instance Pretty a => Pretty (Type a) where
   pPrintPrec l d (TyApp ArrowC [x, y]) =
@@ -35,7 +44,9 @@ instance Pretty a => Pretty (Type a) where
   pPrintPrec _ _ (TyMeta x) = pPrint x
 
 data PrimC = IntC | DoubleC | CharC | BoolC | StringC
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance Outputable PrimC
 
 instance Pretty PrimC where
   pPrint IntC    = "Int"
@@ -49,7 +60,9 @@ data TyCon = TupleC Int
            | ArrayC
            | PrimC PrimC
            | SimpleC Text
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance Outputable TyCon
 
 instance Pretty TyCon where
   pPrint (TupleC n)  = "(" <> text (replicate n ',') <> ")"
