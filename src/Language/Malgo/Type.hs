@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 module Language.Malgo.Type where
 
+import qualified Data.List             as List
 import           Data.Outputable
 import           Language.Malgo.Pretty
 import           Prelude               (show)
@@ -93,3 +94,17 @@ arrayType a = TyApp ArrayC [a]
 infixr 5 -->
 (-->) :: Type a -> Type a -> Type a
 (-->) = arrowType
+
+applyType :: (Eq a, MonadIO f) => ([a], Type a) -> [a] -> f (Type a)
+applyType (ks, t) vs = replaceType (zip ks vs) t
+  where
+    replaceType kvs (TyApp tycon ts) = TyApp tycon <$> mapM (replaceType kvs) ts
+    replaceType kvs (TyVar v) = return $ TyVar (fromMaybe v (List.lookup v kvs))
+    replaceType kvs m@(TyMeta (TyRef r)) = do
+      mt <- readIORef r
+      case mt of
+        Just ty -> do
+          ty' <- replaceType kvs ty
+          writeIORef r $ Just ty'
+          return m
+        Nothing -> return m
