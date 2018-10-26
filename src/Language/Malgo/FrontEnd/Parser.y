@@ -147,12 +147,12 @@ typescheme : FORALL id_list '.' type { Forall $2 $4 }
 
 atype : LID { TyApp (SimpleC $ _id $ unLoc $1) [] }
       | ID { TyVar $ _id $ unLoc $1 }
-      | '(' type_list_comma ')' { TyApp (TupleC (length $2)) $2 }
+      | '(' type_list_comma ')' { TyApp (PrimC $ TupleC (length $2)) $2 }
       | '(' type ')' { $2 }
 
 type : atype { $1 }
      | LID type_list { TyApp (SimpleC $ _id $ unLoc $1) $2 }
-     | type "->" type { TyApp ArrowC [$1, $3] }
+     | type "->" type { TyApp (PrimC ArrowC) [$1, $3] }
 
 type_list : type_list_rev { reverse $1 }
 type_list_rev : atype { [$1] }

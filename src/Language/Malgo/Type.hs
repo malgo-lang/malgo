@@ -18,6 +18,13 @@ instance Pretty a => Pretty (TypeScheme a) where
 newtype TyRef a = TyRef (IORef (Maybe (Type a)))
   deriving Eq
 
+readTyRef :: MonadIO m => TyRef a -> m (Maybe (Type a))
+readTyRef (TyRef r) = readIORef r
+writeTyRef :: MonadIO m => TyRef a -> Type a -> m ()
+writeTyRef (TyRef r) = writeIORef r . Just
+modifyTyRef :: MonadIO m => TyRef a -> (Maybe (Type a) -> Maybe (Type a)) -> m ()
+modifyTyRef (TyRef r) = modifyIORef r
+
 instance Show (TyRef a) where
   show _ = "<TyRef>"
 
@@ -27,7 +34,7 @@ instance Pretty (TyRef a) where
 instance Outputable (TyRef a) where
   pprPrec _ _ = "<TyRef>"
 
-data Type a = TyApp TyCon [Type a]
+data Type a = TyApp (TyCon a) [Type a]
             | TyVar a
             | TyMeta (TyRef a)
   deriving (Eq, Show, Generic)
@@ -35,40 +42,37 @@ data Type a = TyApp TyCon [Type a]
 instance Outputable a => Outputable (Type a)
 
 instance Pretty a => Pretty (Type a) where
-  pPrintPrec l d (TyApp ArrowC [x, y]) =
+  pPrintPrec l d (TyApp (PrimC ArrowC) [x, y]) =
     maybeParens (d > 5) $ pPrintPrec l 6 x <+> "->" <+> pPrintPrec l 6 y
-  pPrintPrec _ _ (TyApp (TupleC n) xs)
+  pPrintPrec _ _ (TyApp (PrimC (TupleC n)) xs)
     | length xs == n = parens $ sep $ punctuate "," $ map pPrint xs
   pPrintPrec l d (TyApp con args) =
     maybeParens (d > 10) $ pPrint con <+> sep (map (pPrintPrec l 11) args)
   pPrintPrec _ _ (TyVar x) = pPrint x
   pPrintPrec _ _ (TyMeta x) = pPrint x
 
-data PrimC = IntC | DoubleC | CharC | BoolC | StringC
+data PrimC = IntC | DoubleC | CharC | BoolC | StringC | TupleC Int | ArrowC | ArrayC
   deriving (Eq, Show, Generic)
 
 instance Outputable PrimC
 
 instance Pretty PrimC where
-  pPrint IntC    = "Int"
-  pPrint DoubleC = "Double"
-  pPrint CharC   = "Char"
-  pPrint BoolC   = "Bool"
-  pPrint StringC = "String"
+  pPrint IntC       = "Int"
+  pPrint DoubleC    = "Double"
+  pPrint CharC      = "Char"
+  pPrint BoolC      = "Bool"
+  pPrint StringC    = "String"
+  pPrint (TupleC n) = "(" <> text (replicate n ',') <> ")"
+  pPrint ArrowC     = "(->)"
+  pPrint ArrayC     = "Array"
 
-data TyCon = TupleC Int
-           | ArrowC
-           | ArrayC
-           | PrimC PrimC
-           | SimpleC Text
+data TyCon a = PrimC PrimC
+             | SimpleC a
   deriving (Eq, Show, Generic)
 
-instance Outputable TyCon
+instance Outputable a => Outputable (TyCon a)
 
-instance Pretty TyCon where
-  pPrint (TupleC n)  = "(" <> text (replicate n ',') <> ")"
-  pPrint ArrowC      = "(->)"
-  pPrint ArrayC      = "Array"
+instance Pretty a => Pretty (TyCon a) where
   pPrint (PrimC c)   = pPrint c
   pPrint (SimpleC c) = pPrint c
 
@@ -83,13 +87,13 @@ boolType = TyApp (PrimC BoolC) []
 stringType :: Type a
 stringType = TyApp (PrimC StringC) []
 arrowType :: Type a -> Type a -> Type a
-arrowType a b = TyApp ArrowC [a, b]
+arrowType a b = TyApp (PrimC ArrowC) [a, b]
 unitType :: Type a
-unitType = TyApp (TupleC 0) []
+unitType = TyApp (PrimC $ TupleC 0) []
 tupleType :: [Type a] -> Type a
-tupleType xs = TyApp (TupleC (length xs)) xs
+tupleType xs = TyApp (PrimC $ TupleC (length xs)) xs
 arrayType :: Type a -> Type a
-arrayType a = TyApp ArrayC [a]
+arrayType a = TyApp (PrimC ArrayC) [a]
 
 infixr 5 -->
 (-->) :: Type a -> Type a -> Type a

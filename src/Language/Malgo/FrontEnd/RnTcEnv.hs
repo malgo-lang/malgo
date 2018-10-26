@@ -15,7 +15,7 @@ import           Universum            hiding (Type)
 data RnTcEnv = RnTcEnv
   { _variableMap  :: Map Id (TypeScheme Id)
   , _builtInMap   :: Map Text Id
-  , _typeAliasMap :: Map Text ([Id], Type Id)
+  , _typeAliasMap :: Map Id ([Id], Type Id)
   }
   deriving (Show, Generic)
 
@@ -29,8 +29,9 @@ makeRnTcEnv = do
   pt <- primType
   return RnTcEnv
     { _variableMap = Map.fromList $ map (\(_, n', t) -> (n', t)) pf
-    , _builtInMap = Map.fromList $ map (\(n, n', _) -> (n, n')) pf
-    , _typeAliasMap = Map.fromList pt
+    , _builtInMap = Map.fromList (map (\(n, n', _) -> (n, n')) pf)
+                    <> Map.fromList (map (\(n, n', _) -> (n, n')) pt)
+    , _typeAliasMap = Map.fromList $ map (\(_, n', c) -> (n', c)) pt
     }
 
 primFunc :: MalgoM [(Text, Id, TypeScheme Id)]
@@ -72,13 +73,19 @@ primFunc = do
              $ arrayType (TyVar a2) --> intType --> TyVar a2 --> unitType)
          ]
 
-primType :: MalgoM [(Text, ([Id], Type Id))]
+primType :: MalgoM [(Text, Id, ([Id], Type Id))]
 primType = do
   a <- newId "a"
-  return [ ("Int", ([], intType))
-         , ("Double", ([], doubleType))
-         , ("Char", ([], charType))
-         , ("Bool", ([], boolType))
-         , ("String", ([], stringType))
-         , ("Array", ([a], arrayType (TyVar a)))
+  int <- newId "Int"
+  double <- newId "Double"
+  char <- newId "Char"
+  bool <- newId "Bool"
+  string <- newId "String"
+  array <- newId "Array"
+  return [ ("Int", int, ([], intType))
+         , ("Double", double, ([], doubleType))
+         , ("Char", char, ([], charType))
+         , ("Bool", bool, ([], boolType))
+         , ("String", string, ([], stringType))
+         , ("Array", array, ([a], arrayType (TyVar a)))
          ]

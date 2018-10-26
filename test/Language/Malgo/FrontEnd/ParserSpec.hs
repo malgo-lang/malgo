@@ -13,7 +13,7 @@ spec :: Spec
 spec = describe "Parser" $ do
   parseTest "annotation"
     [ID "f", COLON, FORALL, ID "a", DOT, ID "a", ARROW, ID "a", SEMICOLON]
-    [ScAnn ss "f" (Forall ["a"] (TyApp ArrowC [TyVar "a", TyVar "a"]))]
+    [ScAnn ss "f" (Forall ["a"] (TyApp (PrimC ArrowC) [TyVar "a", TyVar "a"]))]
   parseTest "function definition"
     [ID "f", ID "x", EQUAL, ID "x", SEMICOLON]
     [ScDef ss "f" ["x"] (Var ss "x")]

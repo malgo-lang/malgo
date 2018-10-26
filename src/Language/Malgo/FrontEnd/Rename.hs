@@ -6,7 +6,6 @@
 module Language.Malgo.FrontEnd.Rename where
 
 import           Control.Lens.TH
-import qualified Data.List as List
 import qualified Data.Map.Strict                 as Map
 import           Data.Outputable
 import           Language.Malgo.FrontEnd.Loc
@@ -109,4 +108,10 @@ renameTypeScheme (Forall xs t) = do
     $ Forall xs' <$> renameType t
 
 renameType :: (MonadReader RnEnv m, MonadMalgo m) => Type Text -> m (Type Id)
-renameType = undefined
+renameType (TyApp (SimpleC name) args) = do
+  name' <- lookupName noSrcSpan name
+  args' <- mapM renameType args
+  return $ TyApp (SimpleC name') args'
+renameType (TyApp (PrimC p) args) = TyApp (PrimC p) <$> mapM renameType args
+renameType (TyVar a) = TyVar <$> lookupName noSrcSpan a
+renameType (TyMeta _) = renameError noSrcSpan "unreachable(renameType (TyMeta _))"

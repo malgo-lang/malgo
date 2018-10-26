@@ -5,6 +5,7 @@ module Language.Malgo.FrontEnd.Loc
   , Loc(..)
   , Line
   , Column
+  , noSrcSpan
   ) where
 
 import           Data.Outputable
@@ -33,6 +34,9 @@ instance Pretty SrcSpan where
 
 instance Outputable SrcSpan where
   pprPrec _ = parens . pPrint
+
+noSrcSpan :: SrcSpan
+noSrcSpan = SrcSpan "no info" 0 0 0 0
 
 class SrcInfo a where
   srcSpan :: a -> SrcSpan
