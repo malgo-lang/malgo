@@ -65,7 +65,7 @@ renameDecl :: (MonadReader RnEnv m, MonadMalgo m) => Decl Text -> m (Decl Id)
 renameDecl (ScDef ss x ps e) = do
   x' <- lookupName ss x
   ps' <- mapM newId ps
-  local (over nameMap (Map.fromList (zip (ps :: [Text]) ps') <>))
+  local (over nameMap (Map.fromList (zip ps ps') <>))
     $ ScDef ss x' ps' <$> renameExpr e
 renameDecl (ScAnn ss x t) = do
   x' <- lookupName ss x
