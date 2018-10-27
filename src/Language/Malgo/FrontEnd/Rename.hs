@@ -96,10 +96,8 @@ renameTypeScheme (Forall xs t) = do
     $ Forall xs' <$> renameType t
 
 renameType :: (MonadReader RnEnv m, MonadState RnTcEnv m, MonadMalgo m) => Type Text -> m (Type Id)
-renameType (TyApp (SimpleC name) args) = do
-  name' <- lookupName noSrcSpan name
-  args' <- mapM renameType args
-  return $ TyApp (SimpleC name') args'
+renameType (TyApp (SimpleC name) args) =
+  TyApp <$> (SimpleC <$> lookupName noSrcSpan name) <*> mapM renameType args
 renameType (TyApp (PrimC p) args) = TyApp (PrimC p) <$> mapM renameType args
 renameType (TyVar a) = TyVar <$> lookupName noSrcSpan a
 renameType (TyMeta _) = renameError noSrcSpan "unreachable(renameType (TyMeta _))"
