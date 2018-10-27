@@ -23,7 +23,7 @@ makeLenses ''RnTcEnv
 
 instance Outputable RnTcEnv
 
-makeRnTcEnv :: MalgoM RnTcEnv
+makeRnTcEnv :: MonadMalgo m => m RnTcEnv
 makeRnTcEnv = do
   pf <- primFunc
   pt <- primType
@@ -34,7 +34,7 @@ makeRnTcEnv = do
     , _typeAliasMap = Map.fromList $ map (\(_, n', c) -> (n', c)) pt
     }
 
-primFunc :: MalgoM [(Text, Id, TypeScheme Id)]
+primFunc :: MonadMalgo m => m [(Text, Id, TypeScheme Id)]
 primFunc = do
   intToString <- newId "intToString"
   doubleToString <- newId "doubleToString"
@@ -73,7 +73,7 @@ primFunc = do
              $ arrayType (TyVar a2) --> intType --> TyVar a2 --> unitType)
          ]
 
-primType :: MalgoM [(Text, Id, ([Id], Type Id))]
+primType :: MonadMalgo m => m [(Text, Id, ([Id], Type Id))]
 primType = do
   a <- newId "a"
   int <- newId "Int"
