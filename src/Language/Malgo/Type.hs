@@ -91,7 +91,7 @@ arrowType a b = TyApp (PrimC ArrowC) [a, b]
 unitType :: Type a
 unitType = TyApp (PrimC $ TupleC 0) []
 tupleType :: [Type a] -> Type a
-tupleType xs = TyApp (PrimC $ TupleC (length xs)) xs
+tupleType xs = TyApp (PrimC $ TupleC $ length xs) xs
 arrayType :: Type a -> Type a
 arrayType a = TyApp (PrimC ArrayC) [a]
 
@@ -103,7 +103,7 @@ applyType :: (Eq a, MonadIO f) => ([a], Type a) -> [a] -> f (Type a)
 applyType (ks, t) vs = replaceType (zip ks vs) t
   where
     replaceType kvs (TyApp tycon ts) = TyApp tycon <$> mapM (replaceType kvs) ts
-    replaceType kvs (TyVar v) = return $ TyVar (fromMaybe v (List.lookup v kvs))
+    replaceType kvs (TyVar v) = return $ TyVar $ fromMaybe v $ List.lookup v kvs
     replaceType kvs m@(TyMeta (TyRef r)) = do
       mt <- readIORef r
       case mt of
