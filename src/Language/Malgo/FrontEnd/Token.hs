@@ -1,4 +1,5 @@
-{-# LANGUAGE StrictData #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE StrictData        #-}
 module Language.Malgo.FrontEnd.Token where
 
 import           Language.Malgo.FrontEnd.Loc
