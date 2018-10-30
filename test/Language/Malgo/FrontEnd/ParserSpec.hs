@@ -1,4 +1,6 @@
+{-# LANGUAGE NoImplicitPrelude         #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE OverloadedStrings         #-}
 module Language.Malgo.FrontEnd.ParserSpec where
 
 import           Language.Malgo.FrontEnd.Loc
