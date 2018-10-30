@@ -30,8 +30,12 @@ typeCheck ds = do
     typeDefs = mapMaybe (\case
                             TypeDef ss x ps t -> Just (ss, x, ps, t)
                             _ -> Nothing) ds
-    scAnns = undefined
-    scDefs = undefined
+    scAnns = mapMaybe (\case
+                          ScAnn ss x t -> Just (ss, x, t)
+                          _ -> Nothing) ds
+    scDefs = mapMaybe (\case
+                          ScDef ss x ps e -> Just (ss, x, ps, e)
+                          _ -> Nothing) ds
 
 generateHeader :: (MonadState RnTcEnv m, MonadMalgo m) => Decl Id -> m ()
 generateHeader d = undefined
