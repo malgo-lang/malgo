@@ -19,6 +19,8 @@ instance Pretty a => Pretty (TypeScheme a) where
 newtype TyRef a = TyRef (IORef (Maybe (Type a)))
   deriving Eq
 
+newTyRef :: MonadIO m => m (TyRef a)
+newTyRef = TyRef <$> newIORef Nothing
 readTyRef :: MonadIO m => TyRef a -> m (Maybe (Type a))
 readTyRef (TyRef r) = readIORef r
 writeTyRef :: MonadIO m => TyRef a -> Type a -> m ()
