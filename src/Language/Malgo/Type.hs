@@ -102,11 +102,11 @@ infixr 5 -->
 (-->) :: Type a -> Type a -> Type a
 (-->) = arrowType
 
-applyType :: (Eq a, MonadIO f) => ([a], Type a) -> [a] -> f (Type a)
+applyType :: (Eq a, MonadIO f) => ([a], Type a) -> [Type a] -> f (Type a)
 applyType (ks, t) vs = replaceType (zip ks vs) t
   where
     replaceType kvs (TyApp tycon ts) = TyApp tycon <$> mapM (replaceType kvs) ts
-    replaceType kvs (TyVar v) = return $ TyVar $ fromMaybe v $ List.lookup v kvs
+    replaceType kvs (TyVar v) = return $ fromMaybe (TyVar v) $ List.lookup v kvs
     replaceType kvs m@(TyMeta (TyRef r)) = do
       mt <- readIORef r
       case mt of

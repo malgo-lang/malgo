@@ -9,6 +9,7 @@
 module Language.Malgo.FrontEnd.TypeCheck where
 
 import           Control.Lens.TH
+import           Data.List                       ((\\))
 import qualified Data.Map.Strict                 as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
@@ -22,7 +23,7 @@ import           Universum                       hiding (Type)
 -- スコープ内に存在するメタ変数を保持する
 -- ScDefの関数と引数、letの変数、let recの関数と引数に含まれる型変数が追加され、本体部分の型検査が行われる
 -- generalizeで用いる
-newtype TcLclEnv = TcLclEnv { _tyMetaSet :: [TyRef (Type Id)] }
+newtype TcLclEnv = TcLclEnv { _tyMetaSet :: [TyRef Id] }
 
 makeLenses ''TcLclEnv
 
@@ -78,7 +79,7 @@ typeCheckScDef (ss, x, ps, e) = do
   pts <- mapM (\_ -> TyMeta <$> newTyRef) ps
   modify (over variableMap (Map.fromList (zip ps (map (Forall []) pts)) <>))
   tmp <- instantiate =<< lookupVar ss x
-  ms <- mapM collectTyMeta (tmp : pts)
+  ms <- concatMapM collectTyMeta (tmp : pts)
   retType <- local (over tyMetaSet (ms <>)) $ typeCheckExpr e
   unify tmp (funTy pts retType)
   ts <- generalize tmp
@@ -89,9 +90,15 @@ typeCheckScDef (ss, x, ps, e) = do
 typeCheckExpr = undefined
 
 -- TcLclEnv.tyMetaSetに含まれないすべての空のメタ変数を型変数にする
-generalize = undefined
+generalize t = do
+  ms <- (\\) <$> collectTyMeta t <*> view tyMetaSet
+  ps <- mapM (\_ -> newId "a") ms
+  mapM_ (uncurry writeTyRef) (zip ms (map TyVar ps))
+  return (Forall ps t)
 
-instantiate = undefined
+instantiate (Forall ps t) = do
+  ms <- mapM (\_ -> TyMeta <$> newTyRef) ps
+  applyType (ps, t) ms
 
 {-
 # generalizeとinstantiateの関係
@@ -107,4 +114,10 @@ unify = undefined
 
 -- すべての空のメタ変数を返す
 -- 代入済みのメタ変数は再帰的に中身を見に行く
-collectTyMeta = undefined
+collectTyMeta (TyApp _ xs) = concatMapM collectTyMeta xs
+collectTyMeta (TyVar _) = return []
+collectTyMeta (TyMeta r) = do
+  mt <- readTyRef r
+  case mt of
+    Nothing -> return [r]
+    Just t  -> collectTyMeta t
