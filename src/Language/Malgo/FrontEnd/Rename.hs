@@ -71,18 +71,18 @@ renameExpr (Var ss x) = Var ss <$> lookupName ss x
 renameExpr (Literal ss x) = return $ Literal ss x
 renameExpr (BinOp ss op e1 e2) = BinOp ss op <$> renameExpr e1 <*> renameExpr e2
 renameExpr (If ss c t f) = If ss <$> renameExpr c <*> renameExpr t <*> renameExpr f
-renameExpr (Let ss0 (NonRec ss1 x mt v) e) = do
+renameExpr (Let ss0 (NonRec ss1 x mTypeScheme v) e) = do
   x' <- newId x
-  mt' <- mapM renameTypeScheme mt
+  mTypeScheme' <- mapM renameTypeScheme mTypeScheme
   v' <- renameExpr v
-  Let ss0 (NonRec ss1 x' mt' v')
+  Let ss0 (NonRec ss1 x' mTypeScheme' v')
     <$> local (Map.insert x x') (renameExpr e)
-renameExpr (Let ss0 (Rec ss1 x ps mt v) e) = do
+renameExpr (Let ss0 (Rec ss1 x ps mTypeScheme v) e) = do
   x' <- newId x
   ps' <- mapM newId ps
-  mt' <- mapM renameTypeScheme mt
+  mTypeScheme' <- mapM renameTypeScheme mTypeScheme
   v' <- local (Map.fromList ((x, x') : zip ps ps') <>) $ renameExpr v
-  Let ss0 (Rec ss1 x' ps' mt' v')
+  Let ss0 (Rec ss1 x' ps' mTypeScheme' v')
     <$> local (Map.insert x x') (renameExpr e)
 renameExpr (Apply ss e1 e2) =
   Apply ss <$> renameExpr e1 <*> renameExpr e2
