@@ -81,8 +81,8 @@ instance Pretty Op where
     ; Eq -> "=="; Neq -> "/="; Lt -> "<"; Gt -> ">"; Le -> "<="; Ge -> ">="
     ; And -> "&"; Or -> "|" }
 
-data Bind a = NonRec SrcSpan a (Maybe (Type a)) (Expr a)
-            | Rec SrcSpan a [(a, Maybe (Type a))] (Maybe (Type a)) (Expr a)
+data Bind a = NonRec SrcSpan a (Maybe (TypeScheme a)) (Expr a)
+            | Rec SrcSpan a [a] (Maybe (TypeScheme a)) (Expr a)
   deriving (Eq, Show)
 
 instance SrcInfo (Bind a) where

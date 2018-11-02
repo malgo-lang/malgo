@@ -73,15 +73,15 @@ renameExpr (BinOp ss op e1 e2) = BinOp ss op <$> renameExpr e1 <*> renameExpr e2
 renameExpr (If ss c t f) = If ss <$> renameExpr c <*> renameExpr t <*> renameExpr f
 renameExpr (Let ss0 (NonRec ss1 x mt v) e) = do
   x' <- newId x
-  mt' <- mapM renameType mt
+  mt' <- mapM renameTypeScheme mt
   v' <- renameExpr v
   Let ss0 (NonRec ss1 x' mt' v')
     <$> local (Map.insert x x') (renameExpr e)
 renameExpr (Let ss0 (Rec ss1 x ps mt v) e) = do
   x' <- newId x
-  ps' <- mapM (\(p, t) -> (,) <$> newId p <*> mapM renameType t) ps
-  mt' <- mapM renameType mt
-  v' <- local (Map.fromList ((x, x') : zip (map (view _1) ps) (map (view _1) ps')) <>) $ renameExpr v
+  ps' <- mapM newId ps
+  mt' <- mapM renameTypeScheme mt
+  v' <- local (Map.fromList ((x, x') : zip ps ps') <>) $ renameExpr v
   Let ss0 (Rec ss1 x' ps' mt' v')
     <$> local (Map.insert x x') (renameExpr e)
 renameExpr (Apply ss e1 e2) =

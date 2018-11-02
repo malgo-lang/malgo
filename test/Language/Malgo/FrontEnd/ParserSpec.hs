@@ -95,13 +95,13 @@ spec = describe "Parser" $ do
       (Var ss "x"))
   parseExprTest "let expression 3"
     [LET, ID "x", COLON, LID "Int", EQUAL, INT 1, IN, ID "x"]
-    (Let ss (NonRec ss "x" (Just $ TyApp (SimpleC "Int") []) (Literal ss (Int 1))) (Var ss "x"))
+    (Let ss (NonRec ss "x" (Just $ Forall [] $ TyApp (SimpleC "Int") []) (Literal ss (Int 1))) (Var ss "x"))
   parseExprTest "let expression 4"
     [LET, REC, ID "f", ID "x", EQUAL, ID "x", IN, ID "f"]
-    (Let ss (Rec ss "f" [("x", Nothing)] Nothing (Var ss "x")) (Var ss "f"))
+    (Let ss (Rec ss "f" ["x"] Nothing (Var ss "x")) (Var ss "f"))
   parseExprTest "let expression 5"
-    [LET, REC, ID "f", LPAREN, ID "x", COLON, LID "Int", RPAREN, COLON, LID "Int", EQUAL, ID "x", IN, ID "f"]
-    (Let ss (Rec ss "f" [("x", Just $ TyApp (SimpleC "Int") [])] (Just $ TyApp (SimpleC "Int") []) (Var ss "x")) (Var ss "f"))
+    [LET, REC, ID "f", ID "x", COLON, LID "Int", ARROW, LID "Int", EQUAL, ID "x", IN, ID "f"]
+    (Let ss (Rec ss "f" ["x"] (Just $ Forall [] $ TyApp (PrimC ArrowC) [TyApp (SimpleC "Int") [], TyApp (SimpleC "Int") []]) (Var ss "x")) (Var ss "f"))
 
 ss :: SrcSpan
 ss = SrcSpan "<test>" 0 0 0 0

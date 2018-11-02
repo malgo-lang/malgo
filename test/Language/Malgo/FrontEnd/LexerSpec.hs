@@ -1,7 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude         #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE OverloadedStrings         #-}
-{-# LANGUAGE TypeApplications          #-}
 module Language.Malgo.FrontEnd.LexerSpec where
 
 import           Language.Malgo.FrontEnd.Lexer

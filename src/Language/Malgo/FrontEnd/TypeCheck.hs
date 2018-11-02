@@ -9,7 +9,7 @@
 module Language.Malgo.FrontEnd.TypeCheck where
 
 import           Control.Lens.TH
-import           Data.List                       ((\\))
+import           Data.List                       ((\\), (!!))
 import qualified Data.Map.Strict                 as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
@@ -75,7 +75,9 @@ generateHeader (ScDef _ x _ _) = do
   t <- Forall [] . TyMeta <$> newTyRef
   modify (over variableMap $ Map.insert x t)
 
-loadTypeDef (ss, x, ps, ty) = undefined
+loadTypeDef :: MonadState RnTcEnv m => (SrcSpan, Id, [Id], Type Id) -> m ()
+loadTypeDef (_, x, ps, ty) =
+  modify (over typeAliasMap $ Map.insert x (ps, ty))
 
 loadScAnn :: (MonadState RnTcEnv m, MonadMalgo m, MonadReader TcLclEnv m) => (SrcSpan, Id, TypeScheme Id) -> m ()
 loadScAnn (ss, x, typeScheme) = do
@@ -84,6 +86,7 @@ loadScAnn (ss, x, typeScheme) = do
   typeScheme' <- generalize xType
   modify (over variableMap $ Map.insert x typeScheme')
 
+typeCheckScDef :: (MonadState RnTcEnv m, MonadReader TcLclEnv m, MonadMalgo m) => (SrcSpan, Id, [Id], Expr Id) -> m ()
 typeCheckScDef (ss , x, ps, e) = do
   -- 引数の型を生成、環境に登録する
   pts <- mapM (\_ -> TyMeta <$> newTyRef) ps
@@ -103,7 +106,87 @@ typeCheckScDef (ss , x, ps, e) = do
   typeScheme <- generalize xType
   modify (over variableMap $ Map.insert x typeScheme)
 
-typeCheckExpr = undefined
+typeCheckExpr :: (MonadState RnTcEnv m, MonadMalgo m, MonadReader TcLclEnv m) => Expr Id -> m (Type Id)
+typeCheckExpr (Var ss x) = instantiate =<< lookupVar ss x
+typeCheckExpr (Literal _ (Int _)) = return intType
+typeCheckExpr (Literal _ (Float _)) = return doubleType
+typeCheckExpr (Literal _ (Bool _)) = return boolType
+typeCheckExpr (Literal _ (Char _)) = return charType
+typeCheckExpr (Literal _ (String _)) = return stringType
+typeCheckExpr (BinOp ss op x y) = do
+  xType <- typeCheckExpr x
+  yType <- typeCheckExpr y
+  (left, right, result) <- typeCheckOp op
+  unify ss left xType
+  unify ss right yType
+  return result
+typeCheckExpr (If ss c t f) = do
+  cType <- typeCheckExpr c
+  unify ss cType boolType
+
+  tType <- typeCheckExpr t
+  fType <- typeCheckExpr f
+  unify ss tType fType
+
+  return tType
+typeCheckExpr (Let _ (NonRec ss x mt v) e) = undefined
+typeCheckExpr (Apply ss f x) = do
+  retType <- TyMeta <$> newTyRef
+  xType <- typeCheckExpr x
+  fType <- typeCheckExpr f
+  unify ss fType (xType --> retType)
+  return retType
+typeCheckExpr (Tuple _ xs) = do
+  xsTypes <- mapM typeCheckExpr xs
+  return $ tupleType xsTypes
+typeCheckExpr (Access ss e i) = do
+  eType <- typeCheckExpr e
+  eType' <- expandType eType
+  case eType' of
+    (TyApp (PrimC (TupleC n)) ts)
+      | i <= n -> return $ ts !! i
+      | otherwise -> typeCheckError ss "out of bounds"
+    _ -> typeCheckError ss "infered type is not tuple"
+  where
+    expandType (TyMeta r) = do
+      rVal <- readTyRef r
+      case rVal of
+        Nothing -> typeCheckError ss "cannot infer type"
+        Just (TyMeta r') -> expandType (TyMeta r')
+        Just t -> return t
+    expandType t = return t
+
+typeCheckOp :: MonadIO m => Op -> m (Type a, Type a, Type a)
+typeCheckOp Add = return (intType, intType, intType)
+typeCheckOp Sub = return (intType, intType, intType)
+typeCheckOp Mul = return (intType, intType, intType)
+typeCheckOp Div = return (intType, intType, intType)
+typeCheckOp Mod = return (intType, intType, intType)
+typeCheckOp FAdd = return (doubleType, doubleType, doubleType)
+typeCheckOp FSub = return (doubleType, doubleType, doubleType)
+typeCheckOp FMul = return (doubleType, doubleType, doubleType)
+typeCheckOp FDiv = return (doubleType, doubleType, doubleType)
+-- Eq, Neq, Lt, Gt, Le, Geはすべての型で実行可能とする
+typeCheckOp Eq = do
+  t <- TyMeta <$> newTyRef
+  return (t, t, boolType)
+typeCheckOp Neq = do
+  t <- TyMeta <$> newTyRef
+  return (t, t, boolType)
+typeCheckOp Lt = do
+  t <- TyMeta <$> newTyRef
+  return (t, t, boolType)
+typeCheckOp Gt = do
+  t <- TyMeta <$> newTyRef
+  return (t, t, boolType)
+typeCheckOp Le = do
+  t <- TyMeta <$> newTyRef
+  return (t, t, boolType)
+typeCheckOp Ge = do
+  t <- TyMeta <$> newTyRef
+  return (t, t, boolType)
+typeCheckOp And = return (boolType, boolType, boolType)
+typeCheckOp Or = return (boolType, boolType, boolType)
 
 -- TcLclEnv.tyMetaSetに含まれないすべての空のメタ変数を型変数にする
 generalize :: (MonadReader TcLclEnv m, MonadMalgo m) => Type Id -> m (TypeScheme Id)
@@ -128,6 +211,7 @@ ts' <- generalize t
 を実行すると、ts == ts'が成り立つ(Idの違いは無視する)
 -}
 
+-- TODO: unifyをEither辺りで包んで、複数の候補のうち最初に該当したものにunifyできるようにする
 unifyError :: SrcSpan -> Type Id -> Type Id -> a
 unifyError ss a b = typeCheckError ss $ "cannot unify " <+> pPrint a <+> "with" <+> pPrint b
 
@@ -161,3 +245,5 @@ collectTyMeta (TyMeta r) = do
   case mt of
     Nothing -> return [r]
     Just t  -> collectTyMeta t
+
+isSyntactic = undefined
