@@ -9,7 +9,7 @@
 module Language.Malgo.FrontEnd.TypeCheck where
 
 import           Control.Lens.TH
-import           Data.List                       ((\\), (!!))
+import           Data.List                       ((\\))
 import qualified Data.Map.Strict                 as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
@@ -33,6 +33,8 @@ typeCheckError ss doc = error $ show $ "error(type check)[" <> pPrint ss <> "]" 
 -- TODO: 型検査が終わった後、型環境内のすべてのTyRefに値が代入されていることを検査する
 -- f :: forall a. a -> a
 -- f x = xのxの型はTyMeta (TyRef (Just (TyVar "a")))となる
+-- f :: forall a. a
+-- f = f
 typeCheck :: MonadMalgo m => [Decl Id] -> m RnTcEnv
 typeCheck ds = do
   env <- makeRnTcEnv
@@ -140,7 +142,7 @@ typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e)
       typeScheme <- generalize vType
       modify (over variableMap $ Map.insert x typeScheme)
       ms <- collectTyMeta vType
-      local (over tyMetaSet (ms <>)) $ typeCheckExpr e
+      local (over tyMetaSet (ms <>)) $ typeCheckExpr e -- TODO: このlocalが必要かどうか考える
   | otherwise = do
       vType <- typeCheckExpr v
       case mTypeScheme of
