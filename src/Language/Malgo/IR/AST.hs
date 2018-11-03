@@ -19,7 +19,6 @@ data Expr a = Var SrcSpan a
             | Let SrcSpan (Bind a) (Expr a)
             | Apply SrcSpan (Expr a) (Expr a)
             | Tuple SrcSpan [Expr a]
-            | Access SrcSpan (Expr a) Int
   deriving (Eq, Show)
 
 instance SrcInfo (Expr a) where
@@ -30,7 +29,6 @@ instance SrcInfo (Expr a) where
   srcSpan (Let ss _ _)     = ss
   srcSpan (Apply ss _ _)   = ss
   srcSpan (Tuple ss _)     = ss
-  srcSpan (Access ss _ _)  = ss
 
 instance Pretty a => Pretty (Expr a) where
   pPrintPrec _ _ (Var _ x) = pPrint x
@@ -50,8 +48,6 @@ instance Pretty a => Pretty (Expr a) where
     maybeParens (d > 10) $ pPrintPrec l 11 x <+> pPrintPrec l 11 y
   pPrintPrec l _ (Tuple _ xs) =
     parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
-  pPrintPrec l d (Access _ x i) =
-    maybeParens (d > 10) $ pPrintPrec l 11 x <> "." <> pPrint i
 
 data Literal = Int Integer
              | Float Double
@@ -83,11 +79,13 @@ instance Pretty Op where
 
 data Bind a = NonRec SrcSpan a (Maybe (TypeScheme a)) (Expr a)
             | Rec SrcSpan a [a] (Maybe (TypeScheme a)) (Expr a)
+            | TuplePat SrcSpan [a] (Maybe (TypeScheme a)) (Expr a)
   deriving (Eq, Show)
 
 instance SrcInfo (Bind a) where
   srcSpan (NonRec ss _ _ _) = ss
   srcSpan (Rec ss _ _ _ _)  = ss
+  srcSpan (TuplePat ss _ _ _) = ss
 
 instance Pretty a => Pretty (Bind a) where
   pPrint (NonRec _ x Nothing e) = pPrint x <+> "=" <+> pPrint e
@@ -98,6 +96,10 @@ instance Pretty a => Pretty (Bind a) where
   pPrint (Rec _ f xs (Just t) e) =
     "rec" <+> pPrint f <+> sep (map pPrint xs) <+> ":" <+> pPrint t <+> "="
     $+$ nest 2 (pPrint e)
+  pPrint (TuplePat _ pat Nothing e) =
+    parens (sep $ punctuate "," $ map pPrint pat) <+> "=" <+> pPrint e
+  pPrint (TuplePat _ pat (Just t) e) =
+    parens (sep $ punctuate "," $ map pPrint pat) <+> ":" <+> pPrint t <+> "=" <+> pPrint e
 
 -- | トップレベル宣言
 data Decl a = ScDef SrcSpan a [a] (Expr a) -- ^ 環境を持たない関数（定数）宣言

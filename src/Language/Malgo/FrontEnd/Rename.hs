@@ -84,12 +84,16 @@ renameExpr (Let ss0 (Rec ss1 x ps mTypeScheme v) e) = do
   v' <- local (Map.fromList ((x, x') : zip ps ps') <>) $ renameExpr v
   Let ss0 (Rec ss1 x' ps' mTypeScheme' v')
     <$> local (Map.insert x x') (renameExpr e)
+renameExpr (Let ss0 (TuplePat ss1 pat mTypeScheme v) e) = do
+  pat' <- mapM newId pat
+  mTypeScheme' <- mapM renameTypeScheme mTypeScheme
+  v' <- renameExpr v
+  Let ss0 (TuplePat ss1 pat' mTypeScheme' v')
+    <$> local (Map.fromList (zip pat pat') <>) (renameExpr e)
 renameExpr (Apply ss e1 e2) =
   Apply ss <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Tuple ss xs) =
   Tuple ss <$> mapM renameExpr xs
-renameExpr (Access ss e i) =
-  Access ss <$> renameExpr e <*> pure i
 
 renameTypeScheme :: (MonadReader RnEnv m, MonadState RnTcEnv m, MonadMalgo m) => TypeScheme Text -> m (TypeScheme Id)
 renameTypeScheme (Forall xs t) = do
