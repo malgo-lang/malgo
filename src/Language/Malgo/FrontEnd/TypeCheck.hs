@@ -129,7 +129,29 @@ typeCheckExpr (If ss c t f) = do
   unify ss tType fType
 
   return tType
-typeCheckExpr (Let _ (NonRec ss x mt v) e) = undefined
+typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e)
+  | isSyntactic v = do
+      vType <- typeCheckExpr v
+      case mTypeScheme of
+        Just typeScheme -> do
+          xType <- instantiate typeScheme
+          unify ss xType vType
+        Nothing -> pass
+      typeScheme <- generalize vType
+      modify (over variableMap $ Map.insert x typeScheme)
+      typeCheckExpr e
+  | otherwise = do
+      vType <- typeCheckExpr v
+      case mTypeScheme of
+        Nothing -> pass
+        Just (Forall [] xType) ->
+          unify ss xType vType
+        Just typeScheme ->
+          typeCheckError ss $ "type annotation" <+> pPrint typeScheme <+> "cannot have `forall`"
+      let typeScheme = Forall [] vType
+      modify (over variableMap $ Map.insert x typeScheme)
+      ms <- collectTyMeta vType
+      local (over tyMetaSet (ms <>)) $ typeCheckExpr e
 typeCheckExpr (Apply ss f x) = do
   retType <- TyMeta <$> newTyRef
   xType <- typeCheckExpr x
@@ -246,4 +268,8 @@ collectTyMeta (TyMeta r) = do
     Nothing -> return [r]
     Just t  -> collectTyMeta t
 
-isSyntactic = undefined
+isSyntactic :: Expr a -> Bool
+isSyntactic Var{} = True
+isSyntactic Literal{} = True
+isSyntactic (Tuple _ xs) = all isSyntactic xs
+isSyntactic _ = False

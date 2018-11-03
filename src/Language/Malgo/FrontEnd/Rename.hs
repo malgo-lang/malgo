@@ -15,6 +15,15 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.Type
 import           Universum                       hiding (Type)
 
+{-
+# forallのrename
+f :: forall a. a -> a
+f x = let y :: a = x in y
+は現在のRenamerでは処理できない．
+f x = let y :: forall a. a = x in y
+と書く必要がある．この式はwell-typedのはず．
+-}
+
 type RnEnv = Map Text Id
 
 renameError :: SrcSpan -> Doc -> a
