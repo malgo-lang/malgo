@@ -134,11 +134,11 @@ app : aexpr aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
     | app aexpr %prec prec_app { Apply (srcSpan ($1, $2)) $1 $2 }
 
 bind : ID '=' expr { NonRec (srcSpan ($1, $3)) (_id $ unLoc $1) Nothing $3 }
-     | ID ':' type '=' expr { NonRec (srcSpan ($1, $5)) (_id $ unLoc $1) (Just $3) $5 }
+     | ID ':' typescheme '=' expr { NonRec (srcSpan ($1, $5)) (_id $ unLoc $1) (Just $3) $5 }
      | REC ID fn_params '=' expr { Rec (srcSpan ($1, $5)) (_id $ unLoc $2) $3 Nothing $5 }
-     | REC ID fn_params ':' type '=' expr { Rec (srcSpan ($1, $7)) (_id $ unLoc $2) $3 (Just $5) $7 }
+     | REC ID fn_params ':' typescheme '=' expr { Rec (srcSpan ($1, $7)) (_id $ unLoc $2) $3 (Just $5) $7 }
      | '(' id_list_comma ')' '=' expr { TuplePat (srcSpan ($1, $5)) $2 Nothing $5 }
-     | '(' id_list_comma ')' ':' type '=' expr { TuplePat (srcSpan ($1, $7)) $2 (Just $5) $7 }
+     | '(' id_list_comma ')' ':' typescheme '=' expr { TuplePat (srcSpan ($1, $7)) $2 (Just $5) $7 }
 
 id_list_comma : id_list_comma_rev { reverse $1 }
 id_list_comma_rev : ID ',' ID { [_id $ unLoc $3, _id $ unLoc $1] }

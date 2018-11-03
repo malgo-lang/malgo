@@ -20,6 +20,13 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.Type
 import           Universum                       hiding (Type)
 
+-- スコープ内に存在するメタ変数を保持する
+-- ScDefの関数と引数、letの変数、let recの関数と引数に含まれる型変数が追加され、本体部分の型検査が行われる
+-- generalizeで用いる
+newtype TcLclEnv = TcLclEnv { _tyMetaSet :: [TyRef Id] }
+
+makeLenses ''TcLclEnv
+
 typeCheckError :: SrcSpan -> Doc -> a
 typeCheckError ss doc = error $ show $ "error(type check)[" <> pPrint ss <> "]" <+> doc
 
@@ -29,7 +36,7 @@ typeCheckError ss doc = error $ show $ "error(type check)[" <> pPrint ss <> "]" 
 typeCheck :: MonadMalgo m => [Decl Id] -> m RnTcEnv
 typeCheck ds = do
   env <- makeRnTcEnv
-  executingStateT env $ do
+  executingStateT env $ usingReaderT (TcLclEnv []) $ do
     mapM_ generateHeader ds
     mapM_ loadTypeDef typeDefs
     mapM_ typeCheckScDef scDefs
@@ -72,14 +79,14 @@ loadTypeDef :: MonadState RnTcEnv m => (SrcSpan, Id, [Id], Type Id) -> m ()
 loadTypeDef (_, x, ps, ty) =
   modify (over typeAliasMap $ Map.insert x (ps, ty))
 
-loadScAnn :: (MonadState RnTcEnv m, MonadMalgo m) => (SrcSpan, Id, TypeScheme Id) -> m ()
+loadScAnn :: (MonadState RnTcEnv m, MonadMalgo m, MonadReader TcLclEnv m) => (SrcSpan, Id, TypeScheme Id) -> m ()
 loadScAnn (ss, x, typeScheme) = do
   xType <- instantiate =<< lookupVar ss x -- typeCheckScDefで推論されたxの型を取得
   unify ss xType =<< instantiate typeScheme
   typeScheme' <- generalize xType
   modify (over variableMap $ Map.insert x typeScheme')
 
-typeCheckScDef :: (MonadState RnTcEnv m, MonadMalgo m) => (SrcSpan, Id, [Id], Expr Id) -> m ()
+typeCheckScDef :: (MonadState RnTcEnv m, MonadReader TcLclEnv m, MonadMalgo m) => (SrcSpan, Id, [Id], Expr Id) -> m ()
 typeCheckScDef (ss , x, ps, e) = do
   -- 引数の型を生成、環境に登録する
   pts <- mapM (\_ -> TyMeta <$> newTyRef) ps
@@ -89,15 +96,17 @@ typeCheckScDef (ss , x, ps, e) = do
 
   let xType = foldr (-->) retType pts -- xの型を生成
 
+  ms <- collectTyMeta xType  -- ここまでで生成したメタ変数のリスト
+
   -- 型推論を行う
-  eType <- typeCheckExpr e
+  eType <- local (over tyMetaSet (ms <>)) $ typeCheckExpr e
   unify ss retType eType
 
   -- xを型環境に登録
   typeScheme <- generalize xType
   modify (over variableMap $ Map.insert x typeScheme)
 
-typeCheckExpr :: (MonadState RnTcEnv m, MonadMalgo m) => Expr Id -> m (Type Id)
+typeCheckExpr :: (MonadState RnTcEnv m, MonadMalgo m, MonadReader TcLclEnv m) => Expr Id -> m (Type Id)
 typeCheckExpr (Var ss x) = instantiate =<< lookupVar ss x
 typeCheckExpr (Literal _ (Int _)) = return intType
 typeCheckExpr (Literal _ (Float _)) = return doubleType
@@ -120,24 +129,29 @@ typeCheckExpr (If ss c t f) = do
   unify ss tType fType
 
   return tType
-typeCheckExpr (Let _ (NonRec ss x mType v) e) = undefined
-  -- | isSyntactic v = do
-  --     vType <- typeCheckExpr v
-  --     case mType of
-  --       Just xType -> unify ss xType vType
-  --       Nothing -> pass
-  --     typeScheme <- generalize vType
-  --     modify (over variableMap $ Map.insert x typeScheme)
-  --     typeCheckExpr e
-  -- | otherwise = do
-  --     vType <- typeCheckExpr v
-  --     case mType of
-  --       Nothing -> pass
-  --       Just xType -> unify ss xType vType
-  --     let typeScheme = Forall [] vType
-  --     modify (over variableMap $ Map.insert x typeScheme)
-  --     ms <- collectTyMeta vType
-  --     local (over tyMetaSet (ms <>)) $ typeCheckExpr e
+typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e)
+  | isSyntactic v = do
+      vType <- typeCheckExpr v
+      case mTypeScheme of
+        Just typeScheme -> do
+          xType <- instantiate typeScheme
+          unify ss xType vType
+        Nothing -> pass
+      typeScheme <- generalize vType
+      modify (over variableMap $ Map.insert x typeScheme)
+      typeCheckExpr e
+  | otherwise = do
+      vType <- typeCheckExpr v
+      case mTypeScheme of
+        Nothing -> pass
+        Just (Forall [] xType) ->
+          unify ss xType vType
+        Just typeScheme ->
+          typeCheckError ss $ "type annotation" <+> pPrint typeScheme <+> "cannot have `forall`"
+      let typeScheme = Forall [] vType
+      modify (over variableMap $ Map.insert x typeScheme)
+      ms <- collectTyMeta vType
+      local (over tyMetaSet (ms <>)) $ typeCheckExpr e
 typeCheckExpr (Apply ss f x) = do
   retType <- TyMeta <$> newTyRef
   xType <- typeCheckExpr x
@@ -196,11 +210,10 @@ typeCheckOp Ge = do
 typeCheckOp And = return (boolType, boolType, boolType)
 typeCheckOp Or = return (boolType, boolType, boolType)
 
--- 空のメタ変数を型変数にする
--- 呼び出されるのはトップレベルの関数についてのみ(ランク1多相)
-generalize :: (MonadMalgo m) => Type Id -> m (TypeScheme Id)
+-- TcLclEnv.tyMetaSetに含まれないすべての空のメタ変数を型変数にする
+generalize :: (MonadReader TcLclEnv m, MonadMalgo m) => Type Id -> m (TypeScheme Id)
 generalize t = do
-  ms <- collectTyMeta t
+  ms <- (\\) <$> collectTyMeta t <*> view tyMetaSet
   ps <- mapM (\_ -> newId "a") ms
   mapM_ (uncurry writeTyRef) (zip ms (map TyVar ps))
   return (Forall ps t)
@@ -224,7 +237,7 @@ ts' <- generalize t
 unifyError :: SrcSpan -> Type Id -> Type Id -> a
 unifyError ss a b = typeCheckError ss $ "cannot unify " <+> pPrint a <+> "with" <+> pPrint b
 
-unify :: (MonadMalgo m, MonadState RnTcEnv m) => SrcSpan -> Type Id -> Type Id -> m ()
+unify :: (MonadMalgo m, MonadReader TcLclEnv m, MonadState RnTcEnv m) => SrcSpan -> Type Id -> Type Id -> m ()
 unify ss a@(TyVar v0) b@(TyVar v1)
   | v0 == v1 = pass
   | otherwise = unifyError ss a b
