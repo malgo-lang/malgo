@@ -96,7 +96,7 @@ typeCheckScDef (ss , x, ps, e) = do
 
   let xType = foldr (-->) retType pts -- xの型を生成
 
-  ms <- collectTyMeta xType  -- ここまでで生成したメタ変数のリスト
+  ms <- collectTyMeta xType -- ここまでで生成したメタ変数のリスト
 
   -- 型推論を行う
   eType <- local (over tyMetaSet (ms <>)) $ typeCheckExpr e
@@ -139,7 +139,8 @@ typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e)
         Nothing -> pass
       typeScheme <- generalize vType
       modify (over variableMap $ Map.insert x typeScheme)
-      typeCheckExpr e
+      ms <- collectTyMeta vType
+      local (over tyMetaSet (ms <>)) $ typeCheckExpr e
   | otherwise = do
       vType <- typeCheckExpr v
       case mTypeScheme of
@@ -237,6 +238,7 @@ ts' <- generalize t
 unifyError :: SrcSpan -> Type Id -> Type Id -> a
 unifyError ss a b = typeCheckError ss $ "cannot unify " <+> pPrint a <+> "with" <+> pPrint b
 
+-- FIXME: occurs check
 unify :: (MonadMalgo m, MonadReader TcLclEnv m, MonadState RnTcEnv m) => SrcSpan -> Type Id -> Type Id -> m ()
 unify ss a@(TyVar v0) b@(TyVar v1)
   | v0 == v1 = pass
