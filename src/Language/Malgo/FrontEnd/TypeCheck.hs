@@ -131,30 +131,63 @@ typeCheckExpr (If ss c t f) = do
   unify ss tType fType
 
   return tType
-typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e)
-  | isSyntactic v = do
-      vType <- typeCheckExpr v
-      case mTypeScheme of
-        Just typeScheme -> do
-          xType <- instantiate typeScheme
-          unify ss xType vType
-        Nothing -> pass
-      typeScheme <- generalize vType
-      modify (over variableMap $ Map.insert x typeScheme)
-      ms <- collectTyMeta vType
-      local (over tyMetaSet (ms <>)) $ typeCheckExpr e -- TODO: このlocalが必要かどうか考える
-  | otherwise = do
-      vType <- typeCheckExpr v
-      case mTypeScheme of
-        Nothing -> pass
-        Just (Forall [] xType) ->
-          unify ss xType vType
-        Just typeScheme ->
-          typeCheckError ss $ "type annotation" <+> pPrint typeScheme <+> "cannot have `forall`"
-      let typeScheme = Forall [] vType
-      modify (over variableMap $ Map.insert x typeScheme)
-      ms <- collectTyMeta vType
-      local (over tyMetaSet (ms <>)) $ typeCheckExpr e
+typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e) = do
+  vType <- typeCheckExpr v
+  case mTypeScheme of
+    Just (Forall [] xType) ->
+      unify ss xType vType
+    Just typeScheme
+      | isSyntactic v -> unify ss vType =<< instantiate typeScheme
+      | otherwise -> typeCheckError ss $ "type annotation" <+> pPrint typeScheme <+> "cannot have `forall`"
+    Nothing -> pass
+  typeScheme <- if isSyntactic v
+                then generalize vType
+                else pure $ Forall [] vType
+  modify (over variableMap $ Map.insert x typeScheme)
+  ms <- collectTyMeta vType
+  local (over tyMetaSet (ms <>)) $ typeCheckExpr e
+typeCheckExpr (Let _ (TuplePat ss pat mTypeScheme v) e) = do
+  vType <- typeCheckExpr v
+  case mTypeScheme of
+    Just (Forall [] xType) ->
+      unify ss xType vType
+    Just typeScheme
+      | isSyntactic v -> unify ss vType =<< instantiate typeScheme
+      | otherwise -> typeCheckError ss $ "type annotation" <+> pPrint typeScheme <+> "cannot have `forall`"
+    Nothing -> pass
+  patTypes <- mapM (const $ TyMeta <$> newTyRef) pat
+  let patType = tupleType patTypes
+  unify ss vType patType
+
+  patTypeSchemes <- if isSyntactic v
+                    then mapM generalize patTypes
+                    else pure $ map (Forall []) patTypes
+  modify (over variableMap (Map.fromList (zip pat patTypeSchemes) <>))
+  ms <- collectTyMeta patType
+  local (over tyMetaSet (ms <>)) $ typeCheckExpr e
+typeCheckExpr (Let _ (Rec ss f xs mTypeScheme v) e) = do
+  xsTypes <- mapM (const $ TyMeta <$> newTyRef) xs
+  retType <- TyMeta <$> newTyRef
+  let fType = foldr (-->) retType xsTypes
+
+  modify (over variableMap (Map.fromList ((f, Forall [] fType) : zip xs (map (Forall []) xsTypes)) <>))
+
+  ms0 <- collectTyMeta fType
+  vType <- local (over tyMetaSet (ms0 <>)) $ typeCheckExpr v
+
+  unify ss retType vType
+
+  case mTypeScheme of
+    Just typeScheme -> do
+      annType <- instantiate typeScheme
+      unify ss fType annType
+    Nothing -> pass
+
+  typeScheme <- generalize fType
+  modify (over variableMap (Map.insert f typeScheme))
+
+  ms1 <- collectTyMeta fType
+  local (over tyMetaSet (ms1 <>)) $ typeCheckExpr e
 typeCheckExpr (Apply ss f x) = do
   retType <- TyMeta <$> newTyRef
   xType <- typeCheckExpr x
