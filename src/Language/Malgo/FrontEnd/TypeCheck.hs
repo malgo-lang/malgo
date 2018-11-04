@@ -240,7 +240,6 @@ ts' <- generalize t
 unifyError :: SrcSpan -> Type Id -> Type Id -> a
 unifyError ss a b = typeCheckError ss $ "cannot unify " <+> pPrint a <+> "with" <+> pPrint b
 
--- FIXME: occurs check
 unify :: (MonadMalgo m, MonadReader TcLclEnv m, MonadState RnTcEnv m) => SrcSpan -> Type Id -> Type Id -> m ()
 unify ss a@(TyVar v0) b@(TyVar v1)
   | v0 == v1 = pass
@@ -254,12 +253,26 @@ unify ss (TyApp (SimpleC c) xs) b = do
   unify ss a' b
 unify ss a b@(TyApp (SimpleC _) _) = unify ss b a
 unify ss (TyMeta r) b = do
-  rVal <- readTyRef r
-  case rVal of
-    Just ty -> unify ss ty b
-    Nothing -> writeTyRef r b
+  isOccur <- occur r b
+  if isOccur
+    then unifyError ss (TyMeta r) b
+    else do rVal <- readTyRef r
+            case rVal of
+              Just ty -> unify ss ty b
+              Nothing -> writeTyRef r b
 unify ss a b@(TyMeta _) = unify ss b a
 unify ss a b = unifyError ss a b
+
+occur :: MonadIO m => TyRef a -> Type a -> m Bool
+occur _ (TyVar _) = return False
+occur r0 (TyApp _ ts) = allM (occur r0) ts
+occur r0 (TyMeta r1)
+  | r0 == r1 = return True
+  | otherwise = do
+      r1Val <- readTyRef r1
+      case r1Val of
+        Nothing -> return False
+        Just t -> occur r0 t
 
 -- すべての空のメタ変数を返す
 -- 代入済みのメタ変数は再帰的に中身を見に行く
