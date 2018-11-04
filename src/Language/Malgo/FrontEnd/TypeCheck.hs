@@ -272,7 +272,7 @@ occur r0 (TyMeta r1)
       r1Val <- readTyRef r1
       case r1Val of
         Nothing -> return False
-        Just t -> occur r0 t
+        Just t  -> occur r0 t
 
 -- すべての空のメタ変数を返す
 -- 代入済みのメタ変数は再帰的に中身を見に行く
@@ -286,7 +286,7 @@ collectTyMeta (TyMeta r) = do
     Just t  -> collectTyMeta t
 
 isSyntactic :: Expr a -> Bool
-isSyntactic Var{} = True
-isSyntactic Literal{} = True
+isSyntactic Var{}        = True
+isSyntactic Literal{}    = True
 isSyntactic (Tuple _ xs) = all isSyntactic xs
-isSyntactic _ = False
+isSyntactic _            = False
