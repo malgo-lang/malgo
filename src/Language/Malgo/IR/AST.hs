@@ -7,6 +7,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.IR.AST where
 
+import           Data.Outputable
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
@@ -19,7 +20,9 @@ data Expr a = Var SrcSpan a
             | Let SrcSpan (Bind a) (Expr a)
             | Apply SrcSpan (Expr a) (Expr a)
             | Tuple SrcSpan [Expr a]
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance Outputable a => Outputable (Expr a)
 
 instance SrcInfo (Expr a) where
   srcSpan (Var ss _)       = ss
@@ -54,7 +57,9 @@ data Literal = Int Integer
              | Bool Bool
              | Char Char
              | String Text
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance Outputable Literal
 
 instance Pretty Literal where
   pPrint (Int i)      = pPrint i
@@ -68,7 +73,9 @@ data Op = Add | Sub | Mul | Div | Mod
         | FAdd | FSub | FMul | FDiv
         | Eq | Neq | Lt | Gt | Le | Ge
         | And | Or
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance Outputable Op
 
 instance Pretty Op where
   pPrint op = case op of
@@ -80,11 +87,13 @@ instance Pretty Op where
 data Bind a = NonRec SrcSpan a (Maybe (TypeScheme a)) (Expr a)
             | Rec SrcSpan a [a] (Maybe (TypeScheme a)) (Expr a)
             | TuplePat SrcSpan [a] (Maybe (TypeScheme a)) (Expr a)
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance Outputable a => Outputable (Bind a)
 
 instance SrcInfo (Bind a) where
-  srcSpan (NonRec ss _ _ _) = ss
-  srcSpan (Rec ss _ _ _ _)  = ss
+  srcSpan (NonRec ss _ _ _)   = ss
+  srcSpan (Rec ss _ _ _ _)    = ss
   srcSpan (TuplePat ss _ _ _) = ss
 
 instance Pretty a => Pretty (Bind a) where
@@ -106,6 +115,8 @@ data Decl a = ScDef SrcSpan a [a] (Expr a) -- ^ 環境を持たない関数（�
             | ScAnn SrcSpan a (TypeScheme a) -- ^ 関数（定数）の型宣言
             | TypeDef SrcSpan a [a] (Type a) -- ^ 型の別名宣言
   deriving (Eq, Show, Generic)
+
+instance Outputable a => Outputable (Decl a)
 
 instance SrcInfo (Decl a) where
   srcSpan (ScDef ss _ _ _)   = ss

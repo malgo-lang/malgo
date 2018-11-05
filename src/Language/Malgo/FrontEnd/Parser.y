@@ -155,6 +155,7 @@ atype : LID { TyApp (SimpleC $ _id $ unLoc $1) [] }
       | ID { TyVar $ _id $ unLoc $1 }
       | '(' type_list_comma ')' { TyApp (PrimC $ TupleC (length $2)) $2 }
       | '(' type ')' { $2 }
+      | '(' ')' { TyApp (PrimC $ TupleC 0) [] }
 
 type : atype { $1 }
      | LID type_list { TyApp (SimpleC $ _id $ unLoc $1) $2 }

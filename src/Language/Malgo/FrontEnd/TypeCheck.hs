@@ -35,10 +35,9 @@ typeCheckError ss doc = error $ show $ "error(type check)[" <> pPrint ss <> "]" 
 -- f x = xのxの型はTyMeta (TyRef (Just (TyVar "a")))となる
 -- f :: forall a. a
 -- f = f
-typeCheck :: MonadMalgo m => [Decl Id] -> m RnTcEnv
-typeCheck ds = do
-  env <- makeRnTcEnv
-  executingStateT env $ usingReaderT (TcLclEnv []) $ do
+typeCheck :: (MonadMalgo m, MonadState RnTcEnv m) => [Decl Id] -> m ()
+typeCheck ds =
+  usingReaderT (TcLclEnv []) $ do
     mapM_ generateHeader ds
     mapM_ loadTypeDef typeDefs
     mapM_ typeCheckScDef scDefs
@@ -298,7 +297,7 @@ unify ss a b = unifyError ss a b
 
 occur :: MonadIO m => TyRef a -> Type a -> m Bool
 occur _ (TyVar _) = return False
-occur r0 (TyApp _ ts) = allM (occur r0) ts
+occur r0 (TyApp _ ts) = anyM (occur r0) ts
 occur r0 (TyMeta r1)
   | r0 == r1 = return True
   | otherwise = do
