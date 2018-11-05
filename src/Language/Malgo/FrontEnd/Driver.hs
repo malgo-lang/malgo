@@ -1,13 +1,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.FrontEnd.Driver where
 
-import Language.Malgo.IR.AST
-import Language.Malgo.FrontEnd.Lexer
-import Language.Malgo.FrontEnd.Parser
-import Language.Malgo.FrontEnd.Rename
-import Language.Malgo.FrontEnd.RnTcEnv
-import Language.Malgo.FrontEnd.TypeCheck
-import Universum hiding (Type)
+import           Language.Malgo.FrontEnd.Lexer
+import           Language.Malgo.FrontEnd.Parser
+import           Language.Malgo.FrontEnd.Rename
+import           Language.Malgo.FrontEnd.RnTcEnv
+import           Language.Malgo.FrontEnd.TypeCheck
+import           Language.Malgo.IR.AST
+import           Universum                         hiding (Type)
 
 frontend filename = do
   source <- readFile filename
