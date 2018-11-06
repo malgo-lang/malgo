@@ -20,8 +20,7 @@ import           Universum                       hiding (Type)
 f :: forall a. a -> a
 f x = let y :: a = x in y
 は現在のRenamerでは処理できない．
-f x = let y :: forall a. a = x in y
-と書く必要がある．この式はwell-typedのはず．
+型変数のrename方法を変える(例えばf.aとかに変える)
 -}
 
 type RnEnv = Map Text Id
