@@ -2,11 +2,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Type where
 
-import qualified Data.List             as List
+import qualified Data.List                     as List
 import           Data.Outputable
 import           Language.Malgo.Pretty
-import           Prelude               (show)
-import           Universum             hiding (Type)
+import           Prelude                        ( show )
+import           Universum               hiding ( Type )
 
 data TypeScheme a = Forall [a] (Type a)
   deriving (Eq, Show, Generic)
@@ -25,7 +25,8 @@ readTyRef :: MonadIO m => TyRef a -> m (Maybe (Type a))
 readTyRef (TyRef r) = readIORef r
 writeTyRef :: MonadIO m => TyRef a -> Type a -> m ()
 writeTyRef (TyRef r) = writeIORef r . Just
-modifyTyRef :: MonadIO m => TyRef a -> (Maybe (Type a) -> Maybe (Type a)) -> m ()
+modifyTyRef
+  :: MonadIO m => TyRef a -> (Maybe (Type a) -> Maybe (Type a)) -> m ()
 modifyTyRef (TyRef r) = modifyIORef r
 
 instance Show (TyRef a) where
@@ -104,14 +105,14 @@ infixr 5 -->
 
 applyType :: (Eq a, MonadIO f) => ([a], Type a) -> [Type a] -> f (Type a)
 applyType (ks, t) vs = replaceType (zip ks vs) t
-  where
-    replaceType kvs (TyApp tycon ts) = TyApp tycon <$> mapM (replaceType kvs) ts
-    replaceType kvs (TyVar v) = return $ fromMaybe (TyVar v) $ List.lookup v kvs
-    replaceType kvs m@(TyMeta (TyRef r)) = do
-      mt <- readIORef r
-      case mt of
-        Just ty -> do
-          ty' <- replaceType kvs ty
-          writeIORef r $ Just ty'
-          return m
-        Nothing -> return m
+ where
+  replaceType kvs (TyApp tycon ts) = TyApp tycon <$> mapM (replaceType kvs) ts
+  replaceType kvs (TyVar v) = return $ fromMaybe (TyVar v) $ List.lookup v kvs
+  replaceType kvs m@(TyMeta (TyRef r)) = do
+    mt <- readIORef r
+    case mt of
+      Just ty -> do
+        ty' <- replaceType kvs ty
+        writeIORef r $ Just ty'
+        return m
+      Nothing -> return m

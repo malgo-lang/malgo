@@ -6,7 +6,8 @@ module Language.Malgo.FrontEnd.Loc
   , Line
   , Column
   , noSrcSpan
-  ) where
+  )
+where
 
 import           Data.Outputable
 import           Language.Malgo.Pretty

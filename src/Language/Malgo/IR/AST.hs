@@ -11,7 +11,7 @@ import           Data.Outputable
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum                   hiding (Type)
+import           Universum               hiding ( Type )
 
 data Expr a = Var SrcSpan a
             | Literal SrcSpan Literal

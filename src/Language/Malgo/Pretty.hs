@@ -2,12 +2,17 @@
 module Language.Malgo.Pretty
   ( module Text.PrettyPrint.HughesPJClass
   , (<+>)
-  ) where
+  )
+where
 
-import qualified Data.Text                      as T
-import qualified Data.Text.Lazy                 as TL
-import           Text.PrettyPrint.HughesPJClass hiding ((<+>), (<>))
-import qualified Text.PrettyPrint.HughesPJClass as P
+import qualified Data.Text                     as T
+import qualified Data.Text.Lazy                as TL
+import           Text.PrettyPrint.HughesPJClass
+                                         hiding ( (<+>)
+                                                , (<>)
+                                                )
+import qualified Text.PrettyPrint.HughesPJClass
+                                               as P
 import           Universum
 
 -- change operator precedence
