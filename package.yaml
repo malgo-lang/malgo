@@ -21,19 +21,20 @@ library:
   build-tools:
   - happy
   dependencies:
-  - base >=4.7 && <5
   - array
+  - base >=4.7 && <5
+  - containers
+  - flow
   - lens
   - llvm-hs-pretty
   - llvm-hs-pure
   - mtl
   - optparse-applicative
+  - outputable
   - parsec
   - pretty
-  - outputable
   - text
   - universum
-  - containers
 
 executable:
   main: Main.hs
