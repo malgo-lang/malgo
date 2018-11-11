@@ -223,22 +223,6 @@ typeCheckExpr (Apply ss f x) = do
 typeCheckExpr (Tuple _ xs) = do
   xsTypes <- mapM typeCheckExpr xs
   return $ tupleType xsTypes
--- typeCheckExpr (Access ss e i) = do
---   eType <- typeCheckExpr e
---   eType' <- expandType eType
---   case eType' of
---     (TyApp (PrimC (TupleC n)) ts)
---       | i <= n -> return $ ts !! i
---       | otherwise -> typeCheckError ss "out of bounds"
---     _ -> typeCheckError ss "infered type is not tuple"
---   where
---     expandType (TyMeta r) = do
---       rVal <- readTyRef r
---       case rVal of
---         Nothing -> typeCheckError ss "cannot infer type"
---         Just (TyMeta r') -> expandType (TyMeta r')
---         Just t -> return t
---     expandType t = return t
 
 typeCheckOp :: MonadIO m => Op -> m (Type a, Type a, Type a)
 typeCheckOp Add  = return (intType, intType, intType)
