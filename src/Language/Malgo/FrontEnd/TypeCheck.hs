@@ -104,7 +104,7 @@ typeCheckScDef
   -> m ()
 typeCheckScDef (ss, x, ps, e) = do
   -- 引数の型を生成、環境に登録する
-  pts <- mapM (\_ -> TyMeta <$> newTyRef) ps
+  pts <- mapM (const $ TyMeta <$> newTyRef) ps
   modify $ over variableMap (Map.fromList (zip ps $ map (Forall []) pts) <>)
 
   retType <- TyMeta <$> newTyRef -- 返り値の型を生成
@@ -277,13 +277,13 @@ generalize
   :: (MonadReader TcLclEnv m, MonadMalgo m) => Type Id -> m (TypeScheme Id)
 generalize t = do
   ms <- (\\) <$> collectTyMeta t <*> view tyMetaSet
-  ps <- mapM (\_ -> newId "a") ms
+  ps <- mapM (const $ newId "a") ms
   mapM_ (uncurry writeTyRef) (zip ms (map TyVar ps))
   return (Forall ps t)
 
 instantiate :: (MonadIO m, Eq a) => TypeScheme a -> m (Type a)
 instantiate (Forall ps t) = do
-  ms <- mapM (\_ -> TyMeta <$> newTyRef) ps
+  ms <- mapM (const $ TyMeta <$> newTyRef) ps
   applyType (ps, t) ms
 
 {-
