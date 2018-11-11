@@ -286,7 +286,7 @@ unifyError ss a b =
   typeCheckError ss $ "cannot unify " <+> pPrint a <+> "with" <+> pPrint b
 
 unify
-  :: (MonadMalgo m, MonadReader TcLclEnv m, MonadState RnTcEnv m)
+  :: (MonadMalgo m, MonadState RnTcEnv m)
   => SrcSpan
   -> Type Id
   -> Type Id
