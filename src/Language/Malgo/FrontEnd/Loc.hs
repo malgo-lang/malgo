@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.FrontEnd.Loc
   ( SrcSpan(..)
   , SrcInfo(..)
@@ -28,10 +29,7 @@ instance Eq SrcSpan where
   _ == _ = True
 
 instance Pretty SrcSpan where
-  pPrint s = sep $ punctuate colon
-    [pPrint (filename s)
-    , "line:" <+> pPrint (startLine s) <> "-" <> pPrint (endLine s)
-    , "column:" <+> pPrint (startColumn s) <> "-" <> pPrint (endColumn s)]
+  pPrint s = pPrint (filename s) <+> parens (pPrint (startLine s) <> colon <+> pPrint (startColumn s)) <> "-" <> parens (pPrint (endLine s) <> colon <+> pPrint (endColumn s))
 
 instance Outputable SrcSpan where
   pprPrec _ = parens . pPrint
