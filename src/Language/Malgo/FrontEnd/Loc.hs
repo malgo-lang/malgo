@@ -1,5 +1,5 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.Loc
   ( SrcSpan(..)
   , SrcInfo(..)
@@ -29,7 +29,7 @@ instance Eq SrcSpan where
   _ == _ = True
 
 instance Pretty SrcSpan where
-  pPrint s = pPrint (filename s) <+> parens (pPrint (startLine s) <> colon <+> pPrint (startColumn s)) <> "-" <> parens (pPrint (endLine s) <> colon <+> pPrint (endColumn s))
+  pPrint s = pPrint (filename s) <+> pPrint (startLine s, startColumn s) <> "-" <> pPrint (endLine s, endColumn s)
 
 instance Outputable SrcSpan where
   pprPrec _ = parens . pPrint
