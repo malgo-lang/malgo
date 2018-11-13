@@ -2,6 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TupleSections         #-}
 module Language.Malgo.MiddleEnd.KNormal
   ( knormal
   , checkKNormalized
@@ -18,12 +19,18 @@ import           Language.Malgo.MiddleEnd.TypeOf
 import           Language.Malgo.Monad
 import           Universum               hiding ( Type )
 
-knormal :: (MonadMalgo m, MonadState RnTcEnv m) => [Decl Id] -> m [Decl Id]
-knormal = mapM knDecl
+knormal
+  :: (MonadMalgo m, MonadState RnTcEnv m)
+  => [Decl Id]
+  -> m [(Id, [Id], Expr Id)]
+knormal = map catMaybes . mapM knDecl
 
-knDecl :: (MonadMalgo m, MonadState RnTcEnv m) => Decl Id -> m (Decl Id)
-knDecl (ScDef ss f xs e) = ScDef ss f xs <$> knExpr e
-knDecl d                 = return d
+knDecl
+  :: (MonadMalgo m, MonadState RnTcEnv m)
+  => Decl Id
+  -> m (Maybe (Id, [Id], Expr Id))
+knDecl (ScDef _ f xs e) = Just . (f, xs, ) <$> knExpr e
+knDecl _                = return Nothing
 
 knExpr :: (MonadMalgo m, MonadState RnTcEnv m) => Expr Id -> m (Expr Id)
 knExpr (Apply ss x y) = insertLet x $ \x' -> insertLet y $ return . Apply ss x'
@@ -56,13 +63,9 @@ insertLet v       k = do
   e <- k (Var (srcSpan v) x)
   return $ Let (srcSpan v) (NonRec (srcSpan v) x (Just t) v') e
 
-checkKNormalized :: [Decl Id] -> Bool
-checkKNormalized = all ckDecl
+checkKNormalized :: (Id, [Id], Expr Id) -> Bool
+checkKNormalized = ckExpr . view _3
  where
-  ckDecl TypeDef{}       = True
-  ckDecl ScAnn{}         = True
-  ckDecl (ScDef _ _ _ e) = ckExpr e
-
   isVar Var{} = True
   isVar _     = False
 
