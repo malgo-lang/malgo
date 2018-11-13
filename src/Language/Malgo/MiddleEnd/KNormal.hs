@@ -37,10 +37,10 @@ knExpr (Let ss0 (Rec ss1 x ps mts v) e) =
   Let ss0 <$> (Rec ss1 x ps mts <$> knExpr v) <*> knExpr e
 knExpr (Let ss0 (TuplePat ss1 xs mts v) e) =
   Let ss0 <$> (TuplePat ss1 xs mts <$> knExpr v) <*> knExpr e
-knExpr (Tuple ss xs) = build xs [] $ \xs' -> return $ Tuple ss xs'
+knExpr (Tuple ss xs) = go xs [] $ \xs' -> return $ Tuple ss xs'
  where
-  build []       acc k = k $ reverse acc
-  build (y : ys) acc k = insertLet y $ \y' -> build ys (y' : acc) k
+  go []       acc k = k $ reverse acc
+  go (y : ys) acc k = insertLet y $ \y' -> go ys (y' : acc) k
 knExpr x = return x
 
 insertLet
