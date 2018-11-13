@@ -16,7 +16,6 @@ import           Language.Malgo.Id
 import           Language.Malgo.IR.AST
 import           Language.Malgo.MiddleEnd.TypeOf
 import           Language.Malgo.Monad
-import           Language.Malgo.Type
 import           Universum               hiding ( Type )
 
 knormal :: (MonadMalgo m, MonadState RnTcEnv m) => [Decl Id] -> m [Decl Id]
