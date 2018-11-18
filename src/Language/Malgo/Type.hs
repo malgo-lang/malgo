@@ -23,8 +23,12 @@ newTyRef :: MonadIO m => m (TyRef a)
 newTyRef = TyRef <$> newIORef Nothing
 readTyRef :: MonadIO m => TyRef a -> m (Maybe (Type a))
 readTyRef (TyRef r) = readIORef r
-writeTyRef :: MonadIO m => TyRef a -> Type a -> m ()
-writeTyRef (TyRef r) = writeIORef r . Just
+writeTyRef :: (MonadIO m, Outputable a) => TyRef a -> Type a -> m ()
+writeTyRef (TyRef r) ty = do
+  mt <- readIORef r
+  case mt of
+    Nothing -> writeIORef r (Just ty)
+    Just ty' -> error $ Universum.show $ "rewrite(writeTyRef):" <+> ppr ty' <+> "->" <+> ppr ty
 modifyTyRef
   :: MonadIO m => TyRef a -> (Maybe (Type a) -> Maybe (Type a)) -> m ()
 modifyTyRef (TyRef r) = modifyIORef r
@@ -111,8 +115,5 @@ applyType (ks, t) vs = replaceType (zip ks vs) t
   replaceType kvs m@(TyMeta (TyRef r)) = do
     mt <- readIORef r
     case mt of
-      Just ty -> do
-        ty' <- replaceType kvs ty
-        writeIORef r $ Just ty'
-        return m
+      Just ty -> replaceType kvs ty
       Nothing -> return m

@@ -17,7 +17,6 @@ import           Universum
 newtype UniqSupply = UniqSupply (IORef Int)
 
 newUniqSupply :: MonadIO m => m UniqSupply
-{-# SPECIALIZE newUniqSupply :: IO UniqSupply #-}
 newUniqSupply = UniqSupply <$> newIORef 0
 
 data Opt = Opt
@@ -30,9 +29,8 @@ data MalgoEnv = MalgoEnv
 newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
   deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO, MonadFail)
 
-runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
-{-# SPECIALIZE runMalgo :: MalgoM a -> UniqSupply -> Opt -> IO a #-}
-runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt)
+runMalgo :: MonadIO m => UniqSupply -> Opt -> MalgoM a -> m a
+runMalgo u opt (MalgoM m) = liftIO $ runReaderT m (MalgoEnv u opt)
 
 class (MonadIO m, MonadFail m) => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a

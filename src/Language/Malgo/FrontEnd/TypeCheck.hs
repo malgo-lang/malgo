@@ -8,9 +8,9 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.TypeCheck where
 
-import           Control.Lens.TH
-import           Data.List                      ( (\\) )
-import qualified Data.Map.Strict               as Map
+import           Control.Lens                    (assign, makeLenses)
+import           Data.List                       (nub, (\\))
+import qualified Data.Map.Strict                 as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
 import           Language.Malgo.Id
@@ -18,7 +18,7 @@ import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum               hiding ( Type )
+import           Universum                       hiding (Type)
 
 -- スコープ内に存在するメタ変数を保持する
 -- ScDefの関数と引数、letの変数、let recの関数と引数に含まれる型変数が追加され、本体部分の型検査が行われる
@@ -29,7 +29,7 @@ makeLenses ''TcLclEnv
 
 typeCheckError :: SrcSpan -> Doc -> a
 typeCheckError ss doc =
-  error $ show $ "error(type check)[" <> pPrint ss <> "]" <+> doc
+  error $ show $ "error(type check)[" <> pPrint ss <> "]" $+$ doc
 
 -- TODO: 型検査が終わった後、型環境内のすべてのTyRefに値が代入されていることを検査する
 -- f :: forall a. a -> a
@@ -42,6 +42,7 @@ typeCheck ds = usingReaderT (TcLclEnv []) $ do
   mapM_ loadTypeDef    typeDefs
   mapM_ typeCheckScDef scDefs
   mapM_ loadScAnn      scAnns
+  assign variableMap =<< mapM unfoldTyMetaScheme =<< use variableMap
  where
   typeDefs = mapMaybe
     (\case
@@ -281,9 +282,11 @@ ts' <- generalize t
 -}
 
 -- TODO: unifyをEither辺りで包んで、複数の候補のうち最初に該当したものにunifyできるようにする
-unifyError :: SrcSpan -> Type Id -> Type Id -> a
-unifyError ss a b =
-  typeCheckError ss $ "cannot unify " <+> pPrint a <+> "with" <+> pPrint b
+unifyError :: MonadIO m => SrcSpan -> Type Id -> Type Id -> m a
+unifyError ss a b = do
+  a' <- unfoldTyMeta a
+  b' <- unfoldTyMeta b
+  typeCheckError ss $ "cannot unify " <+> pPrint a' <+> "with" <+> pPrint b'
 
 unify
   :: (MonadMalgo m, MonadState RnTcEnv m)
@@ -325,18 +328,44 @@ occur r0 (TyMeta r1)
       Just t  -> occur r0 t
 
 -- すべての空のメタ変数を返す
+collectTyMeta :: (MonadIO m, Pretty a) => Type a -> m [TyRef a]
+collectTyMeta t = do
+  xs <- collectTyMeta' t
+  xs' <- mapM flat xs
+  return $ nub xs'
+  where
+    flat ref = do
+      mt <- readTyRef ref
+      case mt of
+        Nothing -> return ref
+        Just (TyMeta ref') -> flat ref'
+        Just ty -> error $ show $ "unreachable(collectTyMeta):" <+> pPrint ty
+
+-- すべての空のメタ変数を返す
 -- 代入済みのメタ変数は再帰的に中身を見に行く
-collectTyMeta :: MonadIO f => Type a -> f [TyRef a]
-collectTyMeta (TyApp _ xs) = concatMapM collectTyMeta xs
-collectTyMeta (TyVar  _  ) = return []
-collectTyMeta (TyMeta r  ) = do
+collectTyMeta' :: MonadIO f => Type a -> f [TyRef a]
+collectTyMeta' (TyApp _ xs) = concatMapM collectTyMeta' xs
+collectTyMeta' (TyVar  _  ) = return []
+collectTyMeta' (TyMeta r  ) = do
   mt <- readTyRef r
   case mt of
     Nothing -> return [r]
-    Just t  -> collectTyMeta t
+    Just t  -> collectTyMeta' t
 
 isSyntactic :: Expr a -> Bool
 isSyntactic Var{}        = True
 isSyntactic Literal{}    = True
 isSyntactic (Tuple _ xs) = all isSyntactic xs
 isSyntactic _            = False
+
+unfoldTyMetaScheme :: MonadIO f => TypeScheme a -> f (TypeScheme a)
+unfoldTyMetaScheme (Forall xs t) = Forall xs <$> unfoldTyMeta t
+
+unfoldTyMeta :: MonadIO f => Type a -> f (Type a)
+unfoldTyMeta (TyApp c xs) = TyApp c <$> mapM unfoldTyMeta xs
+unfoldTyMeta (TyVar x)    = return $ TyVar x
+unfoldTyMeta (TyMeta ref) = do
+  mt <- readTyRef ref
+  case mt of
+    Nothing -> return $ TyMeta ref
+    Just t  -> unfoldTyMeta t

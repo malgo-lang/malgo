@@ -10,14 +10,16 @@ module Language.Malgo.MiddleEnd.KNormal
 where
 
 import           Control.Monad.Cont
-import qualified Data.Map                      as Map
+import qualified Data.Map                          as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
+import           Language.Malgo.FrontEnd.TypeCheck (unfoldTyMeta,
+                                                    unfoldTyMetaScheme)
 import           Language.Malgo.Id
 import           Language.Malgo.IR.AST
 import           Language.Malgo.MiddleEnd.TypeOf
 import           Language.Malgo.Monad
-import           Universum               hiding ( Type )
+import           Universum                         hiding (Type)
 
 knormal
   :: (MonadMalgo m, MonadState RnTcEnv m)
@@ -58,7 +60,7 @@ insertLet x@Var{} k = k x
 insertLet v       k = do
   v' <- knExpr v
   x  <- newId "k"
-  t  <- typeOf v'
+  t  <- unfoldTyMetaScheme =<< typeOf v'
   modify (over variableMap (Map.insert x t))
   e <- k (Var (srcSpan v) x)
   return $ Let (srcSpan v) (NonRec (srcSpan v) x (Just t) v') e
