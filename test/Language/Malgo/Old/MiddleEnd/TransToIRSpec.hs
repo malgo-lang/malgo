@@ -25,7 +25,7 @@ spec =
   where
     translate e i = runIO $ do
       u <- UniqSupply <$> newIORef i
-      runMalgo (trans e) u (Opt "<dummy>" "<dummy>" False False False False False False False)
+      runMalgo (trans e) u (Opt "<dummy>" "<dummy>" False False False False False False False False)
 
 x :: Info
 x = Info ("<dummy>", 0, 0)
