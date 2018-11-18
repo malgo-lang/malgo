@@ -1,0 +1,16 @@
+-- -*- tab-width: 2 -*-
+
+id x = x;
+
+-- recursive function
+fib : Int -> Int;
+fib n =
+  if n <= 1
+  then 1
+  else fib (n - 1) + fib (n - 2);
+
+-- entry point
+main : Array String -> ();
+main argv =
+  let f = id
+  in println (intToString ((id fib) 30));
