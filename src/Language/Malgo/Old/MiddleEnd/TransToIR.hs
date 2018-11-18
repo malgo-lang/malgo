@@ -9,7 +9,7 @@ import           Language.Malgo.Old.ID
 import           Language.Malgo.Old.IR.IR
 import qualified Language.Malgo.Old.IR.Syntax as S
 import           Language.Malgo.Old.Monad
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Language.Malgo.Old.Type
 import           Universum
 

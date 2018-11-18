@@ -13,7 +13,7 @@ import           Control.Monad.Except  (MonadError, throwError)
 import           Data.List             (delete, (\\))
 import           Data.Outputable
 import           Language.Malgo.Old.ID
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Universum
 
 class FreeVars f where

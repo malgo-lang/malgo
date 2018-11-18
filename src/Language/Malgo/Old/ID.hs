@@ -12,7 +12,7 @@ module Language.Malgo.Old.ID
 import           Control.Lens          (makeLenses)
 import           Data.Outputable
 import           Language.Malgo.Old.Monad
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Language.Malgo.Old.Type
 import           Universum             hiding (Type)
 

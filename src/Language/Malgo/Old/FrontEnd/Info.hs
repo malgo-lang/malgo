@@ -5,7 +5,7 @@
 module Language.Malgo.Old.FrontEnd.Info where
 
 import           Data.Outputable
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Universum
 
 newtype Info = Info (Text, Int, Int)

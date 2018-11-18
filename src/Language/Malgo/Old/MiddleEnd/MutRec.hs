@@ -10,7 +10,7 @@ import qualified Data.Map.Strict       as Map
 import           Language.Malgo.Old.ID
 import           Language.Malgo.Old.IR.IR
 import           Language.Malgo.Old.Monad
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Universum
 
 perm :: Eq a => [a] -> [[a]]

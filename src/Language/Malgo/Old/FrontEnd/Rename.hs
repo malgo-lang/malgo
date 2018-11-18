@@ -9,7 +9,7 @@ import           Language.Malgo.Old.FrontEnd.Info
 import           Language.Malgo.Old.ID
 import           Language.Malgo.Old.IR.Syntax     hiding (info)
 import           Language.Malgo.Old.Monad
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Universum
 
 rename :: Expr Text -> MalgoM (Expr RawID)

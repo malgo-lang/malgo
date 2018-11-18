@@ -17,7 +17,7 @@ import qualified Language.Malgo.Old.MiddleEnd.Closure   as Closure
 import qualified Language.Malgo.Old.MiddleEnd.MutRec    as MutRec
 import qualified Language.Malgo.Old.MiddleEnd.TransToIR as TransToIR
 import           Language.Malgo.Old.Monad               as M
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import qualified LLVM.AST                               as L
 import           Options.Applicative
 import           Universum
@@ -34,6 +34,7 @@ parseOpt = execParser $
           <*> switch (long "dump-type-table")
           <*> switch (long "dump-closure"))
           <*> switch (long "debug-mode")
+          <*> switch (long "version-2")
          <**> helper) (fullDesc
     <> progDesc "malgo"
     <> header "malgo - a toy programming language")

@@ -12,7 +12,7 @@ import           Language.Malgo.Old.ID     hiding (newID)
 import qualified Language.Malgo.Old.ID     as ID
 import           Language.Malgo.Old.IR.IR
 import           Language.Malgo.Old.Monad
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Universum
 
 data Env = Env { _varmap :: Map (ID MType) (ID MType)

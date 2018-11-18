@@ -8,7 +8,7 @@ module Language.Malgo.Old.IR.Syntax where
 import           Data.List                    ((!!))
 import           Data.Outputable
 import           Language.Malgo.Old.FrontEnd.Info
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Language.Malgo.Old.Type
 import           Universum                    hiding (Type)
 

@@ -33,6 +33,7 @@ data Opt = Opt
   , dumpTypeTable :: Bool
   , dumpClosure   :: Bool
   , isDebugMode   :: Bool
+  , isVersion2    :: Bool
   } deriving (Eq, Show)
 
 data MalgoEnv = MalgoEnv

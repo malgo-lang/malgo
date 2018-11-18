@@ -6,7 +6,7 @@
 module Language.Malgo.Old.Type where
 
 import           Data.Outputable
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Universum             hiding (Type)
 
 -- | Malgoの組み込みデータ型

@@ -7,7 +7,7 @@ module Language.Malgo.Old.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProg
 import           Control.Monad.Except  (MonadError, runExcept, throwError)
 import           Language.Malgo.Old.ID
 import           Language.Malgo.Old.IR.IR
-import           Language.Malgo.Old.Pretty
+import           Language.Malgo.Pretty
 import           Universum
 
 lint :: Expr (ID MType) -> Either Doc MType
