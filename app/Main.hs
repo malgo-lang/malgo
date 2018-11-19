@@ -5,8 +5,8 @@ import           Data.Outputable
 import qualified Data.Text.Lazy.IO                as T
 import qualified Language.Malgo.FrontEnd.Driver   as Driver
 import qualified Language.Malgo.FrontEnd.Lexer    as Lexer2
-import qualified Language.Malgo.MiddleEnd.Flatten as Flatten
 import qualified Language.Malgo.FrontEnd.Parser   as Parser2
+import qualified Language.Malgo.MiddleEnd.Flatten as Flatten
 import qualified Language.Malgo.MiddleEnd.KNormal as KNormal
 import qualified Language.Malgo.Monad             as Monad
 import           Language.Malgo.Old.Driver
@@ -48,16 +48,17 @@ main = do
                     Left x  -> error $ show x
                     Right x -> x
         putStrLn "-- parsed ast --"
-        print $ pPrint ast
+        dump ast
         (ast', env) <- Driver.frontend ast
         putStrLn "-- type checked ast --"
-        print $ pPrint ast'
+        dump ast'
         putStrLn "-- type environment --"
         print $ ppr env
         (ast'', env') <- usingStateT env (KNormal.knormal ast')
         putStrLn "-- knormalized ast --"
-        print $ pPrint ast''
+        dump ast''
         putStrLn "-- type environment --"
         print $ ppr env'
         putStrLn "-- flatten ast --"
-        print $ pPrint $ map (over _3 Flatten.flatten) ast''
+        dump $ map (over _3 Flatten.flatten) ast''
+    dump x = putStrLn $ renderStyle (style { lineLength = 80 }) $ pPrint x
