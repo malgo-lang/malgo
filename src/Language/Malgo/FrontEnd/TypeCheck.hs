@@ -327,7 +327,7 @@ occur r0 (TyMeta r1)
       Nothing -> return False
       Just t  -> occur r0 t
 
--- すべての空のメタ変数を返す
+-- すべてのTyMeta (TyRef Nothing)を返す
 collectTyMeta :: (MonadIO m, Pretty a) => Type a -> m [TyRef a]
 collectTyMeta t = do
   xs <- collectTyMeta' t
