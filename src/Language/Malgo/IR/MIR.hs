@@ -46,10 +46,10 @@ data Constant = Int Int Integer
   deriving (Eq, Show, Generic, Outputable)
 
 data Inst = Let Name Expr
+          | Do Expr
   deriving (Eq, Show, Generic, Outputable)
 
-data Block = Block { insts :: [Inst], term :: Expr }
-  deriving (Eq, Show, Generic, Outputable)
+type Block = [Inst]
 
 data TypeRep = BoxType
              | IntType Int
