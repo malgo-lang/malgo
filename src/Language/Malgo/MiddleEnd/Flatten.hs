@@ -1,8 +1,10 @@
+{-# LANGUAGE TypeOperators #-}
 module Language.Malgo.MiddleEnd.Flatten where
 
 import           Language.Malgo.IR.AST
+import           Language.Malgo.Utils
 
-flatten :: Expr a -> Expr a
+flatten :: Expr ~> Expr
 flatten (BinOp ss op e1 e2) = BinOp ss op (flatten e1) (flatten e2)
 flatten (If ss c t f) = If ss (flatten c) (flatten t) (flatten f)
 flatten (Let ss0 (NonRec ss1 x mts0 e0) e1) = go (flatten e0)

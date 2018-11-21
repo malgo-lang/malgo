@@ -7,6 +7,7 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE OverloadedStrings         #-}
 {-# LANGUAGE TemplateHaskell           #-}
+{-# LANGUAGE TypeOperators             #-}
 module Language.Malgo.MiddleEnd.Closure
   ( trans
   )
@@ -22,6 +23,7 @@ import           Language.Malgo.IR.MIR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
+import           Language.Malgo.Utils
 import           Universum                       hiding (Type)
 
 data ClsEnv = ClsEnv { _typeEnv :: Map Id TypeRep
@@ -31,7 +33,7 @@ makeLenses ''ClsEnv
 
 data ClsInfo = ClsInfo { _rnTcEnv :: RnTcEnv
                        , _knowns  :: [Id]
-                       , _clsMap :: Map Id Id -- Map <元の関数名> <対応するクロージャ変数名>
+                       , _clsMap  :: Map Id Id -- Map <元の関数名> <対応するクロージャ変数名>
                        } deriving (Show, Generic, Outputable)
 makeLenses ''ClsInfo
 
@@ -93,5 +95,5 @@ transFlatExpr = undefined
 transType :: Trans m => TypeScheme Id -> m TypeRep
 transType = undefined
 
-freevars :: AST.Expr Id -> [Id]
+freevars :: AST.Expr ~> []
 freevars = undefined

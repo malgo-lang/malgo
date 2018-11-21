@@ -36,8 +36,8 @@ typeCheckError ss doc =
 -- f x = xのxの型はTyMeta (TyRef (Just (TyVar "a")))となる
 -- f :: forall a. a
 -- f = f
-typeCheck :: (MonadMalgo m, MonadState RnTcEnv m) => [Decl Id] -> m ()
-typeCheck ds = usingReaderT (TcLclEnv []) $ do
+typeCheck :: (MonadMalgo m, MonadState RnTcEnv m) => Program Id -> m ()
+typeCheck (Program ds) = usingReaderT (TcLclEnv []) $ do
   mapM_ generateHeader ds
   mapM_ loadTypeDef    typeDefs
   mapM_ typeCheckScDef scDefs

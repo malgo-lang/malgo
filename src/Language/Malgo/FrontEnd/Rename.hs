@@ -29,10 +29,11 @@ renameError :: SrcSpan -> Doc -> a
 renameError ss doc =
   error $ show $ "error(rename)[" <> pPrint ss <> "]:" <+> doc
 
-rename :: (MonadState RnTcEnv m, MonadMalgo m) => [Decl Text] -> m [Decl Id]
-rename ds = usingReaderT Map.empty $ do
+rename :: (MonadState RnTcEnv m, MonadMalgo m) => Program Text -> m (Program Id)
+rename (Program ds) = usingReaderT Map.empty $ do
   nm <- renameTopLevel [] ds
-  local (Map.fromList nm <>) $ mapM renameDecl ds
+  local (Map.fromList nm <>) $
+    Program <$> mapM renameDecl ds
 
 renameTopLevel :: MonadMalgo m => [(Text, Id)] -> [Decl Text] -> m [(Text, Id)]
 renameTopLevel xs [] = return xs

@@ -12,7 +12,7 @@ import Language.Malgo.FrontEnd.Token
 import Language.Malgo.Type
 }
 
-%name parse decs
+%name parse program
 
 %tokentype { Token }
 %error { parseError }
@@ -76,6 +76,9 @@ STRING { Loc _ (STRING _) }
 %left prec_app
 
 %%
+
+program :: { Program Text }
+program : decs { Program $1 }
 
 decs :: { [Decl Text] }
 decs : decs_rev { reverse $1 }

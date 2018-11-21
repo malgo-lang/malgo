@@ -13,8 +13,7 @@ import           Control.Monad.Cont
 import qualified Data.Map                          as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
-import           Language.Malgo.FrontEnd.TypeCheck (unfoldTyMeta,
-                                                    unfoldTyMetaScheme)
+import           Language.Malgo.FrontEnd.TypeCheck (unfoldTyMetaScheme)
 import           Language.Malgo.Id
 import           Language.Malgo.IR.AST
 import           Language.Malgo.MiddleEnd.TypeOf
@@ -23,9 +22,9 @@ import           Universum                         hiding (Type)
 
 knormal
   :: (MonadMalgo m, MonadState RnTcEnv m)
-  => [Decl Id]
+  => Program Id
   -> m [(Id, [Id], Expr Id)]
-knormal = map catMaybes . mapM knDecl
+knormal (Program ds) = map catMaybes $ mapM knDecl ds
 
 knDecl
   :: (MonadMalgo m, MonadState RnTcEnv m)

@@ -9,10 +9,10 @@ import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
 import           Universum               hiding ( Type )
 
-frontend :: MonadMalgo m => [Decl Text] -> m ([Decl Id], RnTcEnv)
-frontend decs = do
+frontend :: MonadMalgo m => Program Text -> m (Program Id, RnTcEnv)
+frontend program = do
   rnTcEnv <- makeRnTcEnv
   usingStateT rnTcEnv $ do
-    decs' <- rename decs
-    typeCheck decs'
-    return decs'
+    program' <- rename program
+    typeCheck program'
+    return program'

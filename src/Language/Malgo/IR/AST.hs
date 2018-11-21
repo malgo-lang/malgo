@@ -129,3 +129,11 @@ instance Pretty a => Pretty (Decl a) where
     $+$ nest 2 (pPrint e)
   pPrint (ScAnn _ x t) = pPrint x <+> ":" <+> pPrint t
   pPrint (TypeDef _ n ps t) = "type" <+> pPrint n <+> sep (map pPrint ps) <+> "=" <+> pPrint t
+
+newtype Program a = Program [Decl a]
+  deriving (Eq, Show, Generic)
+
+instance Outputable a => Outputable (Program a)
+
+instance Pretty a => Pretty (Program a) where
+  pPrint (Program ds) = sep $ punctuate ";" $ map pPrint ds
