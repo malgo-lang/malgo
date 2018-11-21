@@ -2,11 +2,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Type where
 
-import qualified Data.List                     as List
+import qualified Data.List             as List
 import           Data.Outputable
 import           Language.Malgo.Pretty
-import           Prelude                        ( show )
-import           Universum               hiding ( Type )
+import           Prelude               (show)
+import           Universum             hiding (Type)
 
 data TypeScheme a = Forall [a] (Type a)
   deriving (Eq, Show, Generic)
@@ -59,7 +59,7 @@ instance Pretty a => Pretty (Type a) where
   pPrintPrec _ _ (TyVar x) = pPrint x
   pPrintPrec _ _ (TyMeta x) = pPrint x
 
-data PrimC = IntC | DoubleC | CharC | BoolC | StringC | TupleC Int | ArrowC | ArrayC
+data PrimC = IntC | DoubleC | CharC | BoolC | StringC | TupleC Int | ArrowC | ArrayC | AnswerC
   deriving (Eq, Show, Generic)
 
 instance Outputable PrimC
@@ -73,6 +73,7 @@ instance Pretty PrimC where
   pPrint (TupleC n) = "(" <> text (replicate n ',') <> ")"
   pPrint ArrowC     = "(->)"
   pPrint ArrayC     = "Array"
+  pPrint AnswerC    = "Answer"
 
 data TyCon a = PrimC PrimC
              | SimpleC a
@@ -102,6 +103,8 @@ tupleType :: [Type a] -> Type a
 tupleType xs = TyApp (PrimC $ TupleC $ length xs) xs
 arrayType :: Type a -> Type a
 arrayType a = TyApp (PrimC ArrayC) [a]
+answerType :: Type a
+answerType = TyApp (PrimC AnswerC) []
 
 infixr 5 -->
 (-->) :: Type a -> Type a -> Type a

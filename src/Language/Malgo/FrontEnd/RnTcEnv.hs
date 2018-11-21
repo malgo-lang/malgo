@@ -50,6 +50,7 @@ primFunc = do
   newArray       <- newId "newArray"
   readArray      <- newId "readArray"
   writeArray     <- newId "writeArray"
+  exit           <- newId "exit"
 
   a0             <- newId "a"
   a1             <- newId "a"
@@ -60,22 +61,26 @@ primFunc = do
     , ("doubleToString", doubleToString, Forall [] $ doubleType --> stringType)
     , ("charToString"  , charToString  , Forall [] $ charType --> stringType)
     , ("boolToString"  , boolToString  , Forall [] $ boolType --> stringType)
-    , ("print"         , print         , Forall [] $ stringType --> unitType)
-    , ("println"       , println       , Forall [] $ stringType --> unitType)
-    , ("getChar"       , getChar       , Forall [] $ unitType --> charType)
-    , ("getLine"       , getLine       , Forall [] $ unitType --> stringType)
-    , ("getContents"   , getContents   , Forall [] $ unitType --> stringType)
+    , ("print"         , print         , Forall [] $ stringType --> (unitType --> answerType) --> answerType)
+    , ("println"       , println       , Forall [] $ stringType --> (unitType --> answerType) --> answerType)
+    , ("getChar"       , getChar       , Forall [] $ unitType --> (charType --> answerType) --> answerType)
+    , ("getLine"       , getLine       , Forall [] $ unitType --> (stringType --> answerType) --> answerType)
+    , ("getContents"   , getContents   , Forall [] $ unitType --> (stringType --> answerType) --> answerType)
     , ( "newArray"
       , newArray
-      , Forall [a0] $ intType --> TyVar a0 --> arrayType (TyVar a0)
+      , Forall [a0] $ intType --> TyVar a0 --> (arrayType (TyVar a0) --> answerType) --> answerType
       )
     , ( "readArray"
       , readArray
-      , Forall [a1] $ arrayType (TyVar a1) --> intType --> TyVar a1
+      , Forall [a1] $ arrayType (TyVar a1) --> intType --> (TyVar a1 --> answerType) --> answerType
       )
     , ( "writeArray"
       , writeArray
-      , Forall [a2] $ arrayType (TyVar a2) --> intType --> TyVar a2 --> unitType
+      , Forall [a2] $ arrayType (TyVar a2) --> intType --> TyVar a2 --> (unitType --> answerType) --> answerType
+      )
+    , ( "exit"
+      , exit
+      , Forall [] $ unitType --> answerType
       )
     ]
 
@@ -88,6 +93,7 @@ primType = do
   bool   <- newId "Bool"
   string <- newId "String"
   array  <- newId "Array"
+  answer <- newId "Answer"
   return
     [ ("Int"   , int   , ([], intType))
     , ("Double", double, ([], doubleType))
@@ -95,4 +101,5 @@ primType = do
     , ("Bool"  , bool  , ([], boolType))
     , ("String", string, ([], stringType))
     , ("Array" , array , ([a], arrayType (TyVar a)))
+    , ("Answer", answer, ([], answerType))
     ]

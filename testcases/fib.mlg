@@ -10,7 +10,7 @@ fib n =
   else fib (n - 1) + fib (n - 2);
 
 -- entry point
-main : Array String -> ();
+main : Array String -> Answer;
 main argv =
   let f = id
-  in println (intToString ((id fib) 30));
+  in println (intToString ((id fib) 30)) exit;
