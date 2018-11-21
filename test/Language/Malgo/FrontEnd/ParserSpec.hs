@@ -108,9 +108,9 @@ ss = SrcSpan "<test>" 0 0 0 0
 
 parseTest :: String -> [Tag] -> [Decl Text] -> SpecWith ()
 parseTest desc ts ast =
-  it desc $ parse (map (Loc ss) ts) `shouldBe` ast
+  it desc $ parse (map (Loc ss) ts) `shouldBe` Program ast
 
 parseExprTest :: String -> [Tag] -> Expr Text -> SpecWith ()
 parseExprTest desc ts ast =
   it desc $ parse (map (Loc ss) $ [ID "f", EQUAL] <> ts <> [SEMICOLON])
-  `shouldBe` [ScDef ss "f" [] ast]
+  `shouldBe` Program [ScDef ss "f" [] ast]
