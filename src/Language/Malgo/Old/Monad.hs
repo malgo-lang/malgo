@@ -51,7 +51,7 @@ class MonadIO m => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
 
 instance MonadMalgo MalgoM where
-  liftMalgo = identity
+  liftMalgo = id
 instance MonadMalgo m => MonadMalgo (ReaderT r m) where
   liftMalgo = lift . liftMalgo
 instance MonadMalgo m => MonadMalgo (ExceptT e m) where
