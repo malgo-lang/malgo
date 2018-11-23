@@ -74,6 +74,10 @@ transExpr (AST.Let _ (AST.NonRec _ x _ v) e) = do
   addTypeEnv x t
   (xs, v') <- transFlatExpr v
   ((xs <> [Let x v']) <>) <$> transExpr e
+transExpr (AST.Let _ (AST.TuplePat _ xs _ v) e) = do
+  ts <- mapM (\x -> transType =<< lookup x <$> view (rnTcEnv . variableMap)) xs
+  zipWithM_ addTypeEnv xs ts
+  undefined
 
 {-
 返り値の_1はクロージャ呼び出しなど、一つのAST.Exprが複数行のInstになるときに用いる。

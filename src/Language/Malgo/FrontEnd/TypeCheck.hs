@@ -263,7 +263,7 @@ generalize
 generalize t = do
   ms <- (\\) <$> collectTyMeta t <*> view tyMetaSet
   ps <- mapM (const $ newId "a") ms
-  mapM_ (uncurry writeTyRef) (zip ms (map TyVar ps))
+  zipWithM_ writeTyRef ms (map TyVar ps)
   return (Forall ps t)
 
 instantiate :: (MonadIO m, Eq a) => TypeScheme a -> m (Type a)
@@ -297,7 +297,7 @@ unify
 unify ss a@(TyVar v0) b@(TyVar v1) | v0 == v1  = pass
                                    | otherwise = unifyError ss a b
 unify ss a@(TyApp (PrimC c0) xs) b@(TyApp (PrimC c1) ys)
-  | c0 == c1 && length xs == length ys = mapM_ (uncurry $ unify ss) (zip xs ys)
+  | c0 == c1 && length xs == length ys = zipWithM_ (unify ss) xs ys
   | otherwise = unifyError ss a b
 unify ss (TyApp (SimpleC c) xs) b = do
   typeAlias <- lookupTypeAlias ss c
