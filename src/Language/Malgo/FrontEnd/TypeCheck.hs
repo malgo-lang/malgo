@@ -272,7 +272,7 @@ instantiate (Forall ps t) = do
   applyType (ps, t) ms
 
 {-
-# generalizeとinstantiateの関係
+generalizeとinstantiateの関係
 ts :: TypeScheme Idとする
 
 t <- instantiate ts

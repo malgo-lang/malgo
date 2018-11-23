@@ -16,7 +16,7 @@ import           Language.Malgo.Type
 import           Universum               hiding ( Type )
 
 {-
-# forallのrename
+forallのrename
 f :: forall a. a -> a
 f x = let y :: a = x in y
 は現在のRenamerでは処理できない．
