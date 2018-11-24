@@ -31,7 +31,3 @@ viewSpan s (File f)
     scolumn = startColumn s
     eline = endLine s
     ecolumn = endColumn s
-
--- natural transformation
-type NaturalTransformation f g = forall a. f a -> g a
-type f ~> g = NaturalTransformation f g
