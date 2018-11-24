@@ -8,9 +8,13 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.TypeCheck where
 
-import           Control.Lens                    (assign, makeLenses)
-import           Data.List                       (nub, (\\))
-import qualified Data.Map.Strict                 as Map
+import           Control.Lens                   ( assign
+                                                , makeLenses
+                                                )
+import           Data.List                      ( nub
+                                                , (\\)
+                                                )
+import qualified Data.Map.Strict               as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
 import           Language.Malgo.Id
@@ -18,7 +22,7 @@ import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum                       hiding (Type)
+import           Universum               hiding ( Type )
 
 -- スコープ内に存在するメタ変数を保持する
 -- ScDefの関数と引数、letの変数、let recの関数と引数に含まれる型変数が追加され、本体部分の型検査が行われる
@@ -204,11 +208,7 @@ typeCheckExpr (Let _ (Rec ss f xs mTypeScheme v) e) = do
 
   unify ss retType vType
 
-  case mTypeScheme of
-    Just typeScheme -> do
-      annType <- instantiate typeScheme
-      unify ss fType annType
-    Nothing -> pass
+  whenJust mTypeScheme $ unify ss fType <=< instantiate
 
   typeScheme <- generalize fType
   modify $ over variableMap $ Map.insert f typeScheme
@@ -298,21 +298,17 @@ unify ss a@(TyVar v0) b@(TyVar v1) | v0 == v1  = pass
                                    | otherwise = unifyError ss a b
 unify ss a@(TyApp (PrimC c0) xs) b@(TyApp (PrimC c1) ys)
   | c0 == c1 && length xs == length ys = zipWithM_ (unify ss) xs ys
-  | otherwise = unifyError ss a b
+  | otherwise                          = unifyError ss a b
 unify ss (TyApp (SimpleC c) xs) b = do
   typeAlias <- lookupTypeAlias ss c
   a'        <- applyType typeAlias xs
   unify ss a' b
-unify ss a          b@(TyApp (SimpleC _) _) = unify ss b a
-unify ss (TyMeta r) b                       = do
-  isOccur <- occur r b
-  if isOccur
-    then unifyError ss (TyMeta r) b
-    else do
-      rVal <- readTyRef r
-      case rVal of
-        Just ty -> unify ss ty b
-        Nothing -> writeTyRef r b
+unify ss a b@(TyApp (SimpleC _) _) = unify ss b a
+unify ss (TyMeta r) b = ifM (occur r b) (unifyError ss (TyMeta r) b) $ do
+  rVal <- readTyRef r
+  case rVal of
+    Just ty -> unify ss ty b
+    Nothing -> writeTyRef r b
 unify ss a b@(TyMeta _) = unify ss b a
 unify ss a b            = unifyError ss a b
 
@@ -330,16 +326,16 @@ occur r0 (TyMeta r1)
 -- すべてのTyMeta (TyRef Nothing)を返す
 collectTyMeta :: (MonadIO m, Pretty a) => Type a -> m [TyRef a]
 collectTyMeta t = do
-  xs <- collectTyMeta' t
+  xs  <- collectTyMeta' t
   xs' <- mapM flat xs
   return $ nub xs'
-  where
-    flat ref = do
-      mt <- readTyRef ref
-      case mt of
-        Nothing -> return ref
-        Just (TyMeta ref') -> flat ref'
-        Just ty -> error $ show $ "unreachable(collectTyMeta):" <+> pPrint ty
+ where
+  flat ref = do
+    mt <- readTyRef ref
+    case mt of
+      Nothing -> return ref
+      Just (TyMeta ref') -> flat ref'
+      Just ty -> error $ show $ "unreachable(collectTyMeta):" <+> pPrint ty
 
 -- すべての空のメタ変数を返す
 -- 代入済みのメタ変数は再帰的に中身を見に行く
@@ -363,7 +359,7 @@ unfoldTyMetaScheme (Forall xs t) = Forall xs <$> unfoldTyMeta t
 
 unfoldTyMeta :: MonadIO f => Type a -> f (Type a)
 unfoldTyMeta (TyApp c xs) = TyApp c <$> mapM unfoldTyMeta xs
-unfoldTyMeta (TyVar x)    = return $ TyVar x
+unfoldTyMeta (TyVar  x  ) = return $ TyVar x
 unfoldTyMeta (TyMeta ref) = do
   mt <- readTyRef ref
   case mt of

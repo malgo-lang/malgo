@@ -32,8 +32,7 @@ renameError ss doc =
 rename :: (MonadState RnTcEnv m, MonadMalgo m) => Program Text -> m (Program Id)
 rename (Program ds) = usingReaderT Map.empty $ do
   nm <- renameTopLevel [] ds
-  local (Map.fromList nm <>) $
-    Program <$> mapM renameDecl ds
+  local (Map.fromList nm <>) $ Program <$> mapM renameDecl ds
 
 renameTopLevel :: MonadMalgo m => [(Text, Id)] -> [Decl Text] -> m [(Text, Id)]
 renameTopLevel xs [] = return xs
@@ -60,7 +59,7 @@ renameTopLevel xs (TypeDef ss x _ _ : ds)
 lookupName
   :: (MonadReader RnEnv m, MonadState RnTcEnv m) => SrcSpan -> Text -> m Id
 lookupName ss x = do
-  mx <- Map.lookup x <$> ((<>) <$> ask <*> use builtInMap)
+  mx <- liftM2 (<|>) (Map.lookup x <$> use builtInMap) (Map.lookup x <$> ask)
   case mx of
     Just x' -> return x'
     Nothing -> renameError ss $ pPrint x <+> "is not defined."
