@@ -21,9 +21,10 @@ import           Language.Malgo.Id
 import qualified Language.Malgo.IR.AST           as AST
 import           Language.Malgo.IR.MIR
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
+import           Language.Malgo.Utils
+import           Universum                       hiding (Type)
 
 data ClsEnv = ClsEnv { _typeEnv :: Map Id TypeRep
                      , _defs    :: [Def]

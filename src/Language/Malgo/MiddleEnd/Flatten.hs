@@ -1,9 +1,8 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE TypeOperators #-}
 module Language.Malgo.MiddleEnd.Flatten where
 
 import           Language.Malgo.IR.AST
-import           Language.Malgo.Prelude
+import           Language.Malgo.Utils
 
 flatten :: Expr ~> Expr
 flatten (BinOp ss op e1 e2) = BinOp ss op (flatten e1) (flatten e2)
