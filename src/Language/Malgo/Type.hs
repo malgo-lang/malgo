@@ -1,6 +1,23 @@
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.Type where
+module Language.Malgo.Type
+  ( TypeScheme(..)
+  , TyRef
+  , _tyRefId
+  , _tyRef
+  , newTyRef
+  , readTyRef
+  , writeTyRef
+  , modifyTyRef
+  , Type(..)
+  , PrimC(..)
+  , TyCon(..)
+  , intType, doubleType, charType
+  , boolType, stringType, arrowType
+  , unitType, tupleType, arrayType
+  , answerType, (-->), applyType
+  , replaceType
+  ) where
 
 import qualified Data.List             as List
 import           Data.Outputable
