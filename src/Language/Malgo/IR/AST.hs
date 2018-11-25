@@ -48,7 +48,7 @@ instance Pretty a => Pretty (Expr a) where
     $ "let" <+> pPrintPrec l 0 bind
     $+$ "in" <+> pPrintPrec l 0 expr
   pPrintPrec l d (Apply _ x y) =
-    maybeParens (d > 10) $ pPrintPrec l 11 x <+> pPrintPrec l 11 y
+    maybeParens (d > 10) $ sep [pPrintPrec l 11 x, nest 2 $ pPrintPrec l 11 y]
   pPrintPrec l _ (Tuple _ xs) =
     parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
 
@@ -97,18 +97,18 @@ instance SrcInfo (Bind a) where
   srcSpan (TuplePat ss _ _ _) = ss
 
 instance Pretty a => Pretty (Bind a) where
-  pPrint (NonRec _ x Nothing e) = pPrint x <+> "=" <+> pPrint e
-  pPrint (NonRec _ x (Just t) e) = pPrint x <+> ":" <+> pPrint t <+> "=" <+> pPrint e
+  pPrint (NonRec _ x Nothing e) = sep [pPrint x <+> "=", nest 2 $ pPrint e]
+  pPrint (NonRec _ x (Just t) e) = sep [pPrint x <+> ":" <+> pPrint t <+> "=", nest 2 $ pPrint e]
   pPrint (Rec _ f xs Nothing e) =
-    "rec" <+> pPrint f <+> sep (map pPrint xs) <+> "="
-    $+$ nest 2 (pPrint e)
+    sep [ "rec" <+> pPrint f <+> sep (map pPrint xs) <+> "="
+        , nest 2 (pPrint e)]
   pPrint (Rec _ f xs (Just t) e) =
-    "rec" <+> pPrint f <+> sep (map pPrint xs) <+> ":" <+> pPrint t <+> "="
-    $+$ nest 2 (pPrint e)
+    sep [ "rec" <+> pPrint f <+> sep (map pPrint xs) <+> ":" <+> pPrint t <+> "="
+        , nest 2 (pPrint e)]
   pPrint (TuplePat _ pat Nothing e) =
-    parens (sep $ punctuate "," $ map pPrint pat) <+> "=" <+> pPrint e
+    sep [parens (sep $ punctuate "," $ map pPrint pat) <+> "=", nest 2 $ pPrint e]
   pPrint (TuplePat _ pat (Just t) e) =
-    parens (sep $ punctuate "," $ map pPrint pat) <+> ":" <+> pPrint t <+> "=" <+> pPrint e
+    sep [parens (sep $ punctuate "," $ map pPrint pat) <+> ":" <+> pPrint t <+> "=", nest 2 $ pPrint e]
 
 -- | トップレベル宣言
 data Decl a = ScDef SrcSpan a [a] (Expr a) -- ^ 環境を持たない関数（定数）宣言

@@ -2,17 +2,22 @@
 module Main where
 
 import           Data.Outputable
-import qualified Data.Text.Lazy.IO                as T
-import qualified Language.Malgo.FrontEnd.Driver   as Driver
-import qualified Language.Malgo.FrontEnd.Lexer    as Lexer2
-import qualified Language.Malgo.FrontEnd.Parser   as Parser2
-import qualified Language.Malgo.MiddleEnd.Flatten as Flatten
-import qualified Language.Malgo.MiddleEnd.KNormal as KNormal
-import qualified Language.Malgo.Monad             as Monad
+import qualified Data.Text.Lazy.IO                 as T
+import qualified Language.Malgo.FrontEnd.Driver    as Driver
+import qualified Language.Malgo.FrontEnd.Lexer     as Lexer2
+import           Language.Malgo.FrontEnd.Loc
+import qualified Language.Malgo.FrontEnd.Parser    as Parser2
+import qualified Language.Malgo.FrontEnd.Rename    as Rename
+import qualified Language.Malgo.FrontEnd.RnTcEnv   as RnTcEnv
+import qualified Language.Malgo.FrontEnd.TypeCheck as TypeCheck
+import           Language.Malgo.IR.AST
+import qualified Language.Malgo.MiddleEnd.Flatten  as Flatten
+import qualified Language.Malgo.MiddleEnd.KNormal  as KNormal
+import qualified Language.Malgo.Monad              as Monad
 import           Language.Malgo.Old.Driver
-import qualified Language.Malgo.Old.Lexer         as Lexer
+import qualified Language.Malgo.Old.Lexer          as Lexer
 import           Language.Malgo.Old.Monad
-import qualified Language.Malgo.Old.Parser        as Parser
+import qualified Language.Malgo.Old.Parser         as Parser
 import           Language.Malgo.Pretty
 import           LLVM.Pretty
 import           Universum
@@ -47,18 +52,23 @@ main = do
         let ast = case Parser2.parse <$> tokens of
                     Left x  -> error $ show x
                     Right x -> x
+
+        env <- RnTcEnv.makeRnTcEnv
         putStrLn "-- parsed ast --"
         dump ast
-        (ast', env) <- Driver.frontend ast
-        putStrLn "-- type checked ast --"
-        dump ast'
+        (renamedAst, env0) <- usingStateT env (Rename.rename ast)
+        putStrLn "-- renamed ast --"
+        dump renamedAst
+        env1 <- executingStateT env0 (TypeCheck.typeCheck renamedAst)
         putStrLn "-- type environment --"
-        print $ ppr env
-        (ast'', env') <- usingStateT env (KNormal.knormal ast')
+        print $ ppr env1
+        knormalizedAst <- KNormal.knormal renamedAst
         putStrLn "-- knormalized ast --"
-        dump ast''
+        dump knormalizedAst
+        env2 <- executingStateT env (TypeCheck.typeCheck (makeProgram knormalizedAst))
         putStrLn "-- type environment --"
-        print $ ppr env'
+        print $ ppr env2
         putStrLn "-- flatten ast --"
-        dump $ map (over _3 Flatten.flatten) ast''
+        dump $ map (over _3 Flatten.flatten) knormalizedAst
     dump x = putStrLn $ renderStyle (style { lineLength = 80 }) $ pPrint x
+    makeProgram ds = Program $ map (\(f, xs, e) -> ScDef noSrcSpan f xs e) ds

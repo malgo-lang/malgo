@@ -6,15 +6,12 @@
 {-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.FrontEnd.TypeCheck where
+module Language.Malgo.FrontEnd.TypeCheck (TcLclEnv(..), generalize, instantiate, typeCheck, unify, unfoldTyMetaScheme) where
 
-import           Control.Lens                   ( assign
-                                                , makeLenses
-                                                )
-import           Data.List                      ( nub
-                                                , (\\)
-                                                )
-import qualified Data.Map.Strict               as Map
+import           Control.Lens                    (assign, makeLenses)
+import           Data.List                       ((\\))
+import qualified Data.Map.Strict                 as Map
+import           Data.Outputable
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
 import           Language.Malgo.Id
@@ -22,12 +19,13 @@ import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum               hiding ( Type )
+import           Universum                       hiding (Type)
 
 -- スコープ内に存在するメタ変数を保持する
 -- ScDefの関数と引数、letの変数、let recの関数と引数に含まれる型変数が追加され、本体部分の型検査が行われる
 -- generalizeで用いる
-newtype TcLclEnv = TcLclEnv { _tyMetaSet :: [TyRef Id] }
+newtype TcLclEnv = TcLclEnv { _typeSet :: [Type Id] }
+  deriving (Show)
 
 makeLenses ''TcLclEnv
 
@@ -42,7 +40,7 @@ typeCheckError ss doc =
 -- f = f
 typeCheck :: (MonadMalgo m, MonadState RnTcEnv m) => Program Id -> m ()
 typeCheck (Program ds) = usingReaderT (TcLclEnv []) $ do
-  mapM_ generateHeader ds
+  -- mapM_ generateHeader ds
   mapM_ loadTypeDef    typeDefs
   mapM_ typeCheckScDef scDefs
   mapM_ loadScAnn      scAnns
@@ -81,7 +79,14 @@ lookupTypeAlias ss x = do
     Just typeAlias -> return typeAlias
     Nothing        -> typeCheckError ss $ pPrint x <+> "is not defined"
 
-generateHeader :: (MonadIO f, MonadState RnTcEnv f) => Decl Id -> f ()
+-- 相互再帰関数のサポートに利用
+{-
+相互再帰関数サポートのためのメモ
+
+generateHeaderで仮の型を生成して型検査した後、
+トップレベル以外の型環境を消してもう一度型検査する
+-}
+generateHeader :: (MonadMalgo f, MonadState RnTcEnv f) => Decl Id -> f ()
 generateHeader TypeDef{}     = pass
 generateHeader (ScAnn _ x _) = do
   t <- Forall [] . TyMeta <$> newTyRef
@@ -114,12 +119,13 @@ typeCheckScDef (ss, x, ps, e) = do
 
   retType <- TyMeta <$> newTyRef -- 返り値の型を生成
 
-  let xType = foldr (-->) retType pts -- xの型を生成
-
-  ms    <- collectTyMeta xType -- ここまでで生成したメタ変数のリスト
+  -- xの型を生成
+  let xType = foldr (-->) retType pts
+  modify $ over variableMap (Map.insert x (Forall [] xType))
 
   -- 型推論を行う
-  eType <- local (over tyMetaSet (ms <>)) $ typeCheckExpr e
+  -- pts, retTypeはxTypeに含まれる
+  eType <- local (over typeSet (xType :)) $ typeCheckExpr e
   unify ss retType eType
 
   -- xを型環境に登録
@@ -156,16 +162,15 @@ typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e) = do
   vType <- typeCheckExpr v
   case mTypeScheme of
     Just typeScheme -> unify ss vType =<< instantiate typeScheme
-    Nothing -> pass
+    Nothing         -> pass
   typeScheme <- generalize vType
   modify $ over variableMap $ Map.insert x typeScheme
-  ms <- collectTyMeta vType
-  local (over tyMetaSet (ms <>)) $ typeCheckExpr e
+  local (over typeSet (vType:)) $ typeCheckExpr e
 typeCheckExpr (Let _ (TuplePat ss pat mTypeScheme v) e) = do
   vType <- typeCheckExpr v
   case mTypeScheme of
     Just typeScheme -> unify ss vType =<< instantiate typeScheme
-    Nothing -> pass
+    Nothing         -> pass
   patTypes <- mapM (const $ TyMeta <$> newTyRef) pat
   let patType = tupleType patTypes
   unify ss vType patType
@@ -173,8 +178,7 @@ typeCheckExpr (Let _ (TuplePat ss pat mTypeScheme v) e) = do
   patTypeSchemes <- mapM generalize patTypes
 
   modify $ over variableMap (Map.fromList (zip pat patTypeSchemes) <>)
-  ms <- collectTyMeta patType
-  local (over tyMetaSet (ms <>)) $ typeCheckExpr e
+  local (over typeSet (patType :)) $ typeCheckExpr e
 typeCheckExpr (Let _ (Rec ss f xs mTypeScheme v) e) = do
   xsTypes <- mapM (const $ TyMeta <$> newTyRef) xs
   retType <- TyMeta <$> newTyRef
@@ -184,8 +188,7 @@ typeCheckExpr (Let _ (Rec ss f xs mTypeScheme v) e) = do
     variableMap
     (Map.fromList ((f, Forall [] fType) : zip xs (map (Forall []) xsTypes)) <>)
 
-  ms0   <- collectTyMeta fType
-  vType <- local (over tyMetaSet (ms0 <>)) $ typeCheckExpr v
+  vType <- local (over typeSet (fType:)) $ typeCheckExpr v
 
   unify ss retType vType
 
@@ -194,8 +197,7 @@ typeCheckExpr (Let _ (Rec ss f xs mTypeScheme v) e) = do
   typeScheme <- generalize fType
   modify $ over variableMap $ Map.insert f typeScheme
 
-  ms1 <- collectTyMeta fType
-  local (over tyMetaSet (ms1 <>)) $ typeCheckExpr e
+  local (over typeSet (fType:)) $ typeCheckExpr e
 typeCheckExpr (Apply ss f x) = do
   retType <- TyMeta <$> newTyRef
   xType   <- typeCheckExpr x
@@ -206,7 +208,7 @@ typeCheckExpr (Tuple _ xs) = do
   xsTypes <- mapM typeCheckExpr xs
   return $ tupleType xsTypes
 
-typeCheckOp :: MonadIO m => Op -> m (Type a, Type a, Type a)
+typeCheckOp :: MonadMalgo m => Op -> m (Type a, Type a, Type a)
 typeCheckOp Add  = return (intType, intType, intType)
 typeCheckOp Sub  = return (intType, intType, intType)
 typeCheckOp Mul  = return (intType, intType, intType)
@@ -238,16 +240,14 @@ typeCheckOp Ge = do
 typeCheckOp And = return (boolType, boolType, boolType)
 typeCheckOp Or  = return (boolType, boolType, boolType)
 
--- TcLclEnv.tyMetaSetに含まれないすべての空のメタ変数を型変数にする
-generalize
-  :: (MonadReader TcLclEnv m, MonadMalgo m) => Type Id -> m (TypeScheme Id)
+generalize :: (MonadReader TcLclEnv m, MonadMalgo m) => Type Id -> m (TypeScheme Id)
 generalize t = do
-  ms <- (\\) <$> collectTyMeta t <*> view tyMetaSet
+  ms <- (\\) <$> collectTyMeta t <*> (ordNub <$> (concatMapM collectTyMeta =<< view typeSet))
   ps <- mapM (const $ newId "a") ms
   zipWithM_ writeTyRef ms (map TyVar ps)
   return (Forall ps t)
 
-instantiate :: (MonadIO m, Eq a) => TypeScheme a -> m (Type a)
+instantiate :: (MonadMalgo m, Eq a) => TypeScheme a -> m (Type a)
 instantiate (Forall ps t) = do
   ms <- mapM (const $ TyMeta <$> newTyRef) ps
   applyType (ps, t) ms
@@ -263,11 +263,13 @@ ts' <- generalize t
 -}
 
 -- TODO: unifyをEither辺りで包んで、複数の候補のうち最初に該当したものにunifyできるようにする
-unifyError :: MonadIO m => SrcSpan -> Type Id -> Type Id -> m a
+unifyError :: (MonadIO m, MonadState RnTcEnv m) => SrcSpan -> Type Id -> Type Id -> m a
 unifyError ss a b = do
   a' <- unfoldTyMeta a
   b' <- unfoldTyMeta b
-  typeCheckError ss $ "cannot unify " <+> pPrint a' <+> "with" <+> pPrint b'
+  env <- get
+  print $ ppr env
+  typeCheckError ss $ "cannot unify" <+> pPrint a' <+> "with" <+> pPrint b'
 
 unify
   :: (MonadMalgo m, MonadState RnTcEnv m)
@@ -285,11 +287,22 @@ unify ss (TyApp (SimpleC c) xs) b = do
   a'        <- applyType typeAlias xs
   unify ss a' b
 unify ss a b@(TyApp (SimpleC _) _) = unify ss b a
-unify ss (TyMeta r) b = ifM (occur r b) (unifyError ss (TyMeta r) b) $ do
+unify ss (TyMeta r) b = do
+  whenJustM (readTyRef r) (unify ss b)
   rVal <- readTyRef r
   case rVal of
-    Just ty -> unify ss ty b
-    Nothing -> writeTyRef r b
+    Just t -> unify ss t b
+    Nothing ->
+      case b of
+        TyMeta r1 | r == r1 -> pass
+                  | otherwise -> do
+                      r1Val <- readTyRef r1
+                      case r1Val of
+                        Just t  -> unify ss (TyMeta r) t
+                        Nothing -> writeTyRef r b
+        _ -> do
+          whenM (occur r b) (unifyError ss (TyMeta r) b)
+          writeTyRef r b
 unify ss a b@(TyMeta _) = unify ss b a
 unify ss a b            = unifyError ss a b
 
@@ -308,15 +321,7 @@ occur r0 (TyMeta r1)
 collectTyMeta :: (MonadIO m, Pretty a) => Type a -> m [TyRef a]
 collectTyMeta t = do
   xs  <- collectTyMeta' t
-  xs' <- mapM flat xs
-  return $ nub xs'
- where
-  flat ref = do
-    mt <- readTyRef ref
-    case mt of
-      Nothing -> return ref
-      Just (TyMeta ref') -> flat ref'
-      Just ty -> error $ show $ "unreachable(collectTyMeta):" <+> pPrint ty
+  return $ ordNub xs
 
 -- すべての空のメタ変数を返す
 -- 代入済みのメタ変数は再帰的に中身を見に行く

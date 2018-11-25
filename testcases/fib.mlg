@@ -3,14 +3,15 @@
 id x = x;
 
 -- recursive function
-fib : Int -> Int;
 fib n =
   if n <= 1
   then 1
-  else fib (n - 1) + fib (n - 2);
+  else let a = fib (n - 1) in
+       let b = fib (n - 2) in
+       a + b;
 
 -- entry point
 main : Array String -> Answer;
 main argv =
-  let f = id
+  let f = id id
   in println (intToString ((id fib) 30)) exit;

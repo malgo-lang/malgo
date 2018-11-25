@@ -4,6 +4,7 @@ module Language.Malgo.Type where
 
 import qualified Data.List             as List
 import           Data.Outputable
+import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Prelude               (show)
 import           Universum             hiding (Type)
@@ -16,31 +17,34 @@ instance Outputable a => Outputable (TypeScheme a)
 instance Pretty a => Pretty (TypeScheme a) where
   pPrint (Forall xs ty) = "forall" <+> sep (map pPrint xs) <> "." <+> pPrint ty
 
-newtype TyRef a = TyRef (IORef (Maybe (Type a)))
+data TyRef a = TyRef { _tyRefId :: Int, _tyRef :: IORef (Maybe (Type a)) }
   deriving Eq
 
-newTyRef :: MonadIO m => m (TyRef a)
-newTyRef = TyRef <$> newIORef Nothing
+instance Ord (TyRef a) where
+  compare x y = compare (_tyRefId x) (_tyRefId y)
+
+newTyRef :: MonadMalgo m => m (TyRef a)
+newTyRef = TyRef <$> newUniq <*> newIORef Nothing
 readTyRef :: MonadIO m => TyRef a -> m (Maybe (Type a))
-readTyRef (TyRef r) = readIORef r
+readTyRef (TyRef _ r) = readIORef r
 writeTyRef :: (MonadIO m, Outputable a) => TyRef a -> Type a -> m ()
-writeTyRef (TyRef r) ty = do
+writeTyRef (TyRef _ r) ty = do
   mt <- readIORef r
   case mt of
     Nothing -> writeIORef r (Just ty)
     Just ty' -> error $ Universum.show $ "rewrite(writeTyRef):" <+> ppr ty' <+> "->" <+> ppr ty
 modifyTyRef
   :: MonadIO m => TyRef a -> (Maybe (Type a) -> Maybe (Type a)) -> m ()
-modifyTyRef (TyRef r) = modifyIORef r
+modifyTyRef (TyRef _ r) = modifyIORef r
 
 instance Show (TyRef a) where
-  show _ = "<TyRef>"
+  show (TyRef i _) = "<TyRef " <> Prelude.show i <> ">"
 
 instance Pretty (TyRef a) where
-  pPrint _ = "<TyRef>"
+  pPrint (TyRef i _) = "<TyRef" <+> pPrint i <> ">"
 
 instance Outputable (TyRef a) where
-  pprPrec _ _ = "<TyRef>"
+  pprPrec _ (TyRef i _) = "<TyRef" <+> ppr i <> ">"
 
 data Type a = TyApp (TyCon a) [Type a]
             | TyVar a
@@ -116,7 +120,7 @@ applyType (ks, t) vs = replaceType (zip ks vs) t
 replaceType :: (Eq a, MonadIO f) => [(a, Type a)] -> Type a -> f (Type a)
 replaceType kvs (TyApp tycon ts) = TyApp tycon <$> mapM (replaceType kvs) ts
 replaceType kvs (TyVar v) = return $ fromMaybe (TyVar v) $ List.lookup v kvs
-replaceType kvs m@(TyMeta (TyRef r)) = do
+replaceType kvs m@(TyMeta (TyRef _ r)) = do
   mt <- readIORef r
   case mt of
     Just ty -> replaceType kvs ty
