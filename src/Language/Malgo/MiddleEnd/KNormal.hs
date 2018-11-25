@@ -34,35 +34,36 @@ knDecl (ScDef _ f xs e) = Just . (f, xs, ) <$> knExpr e
 knDecl _                = return Nothing
 
 knExpr :: (MonadMalgo m, MonadState RnTcEnv m) => Expr Id -> m (Expr Id)
-knExpr (Apply ss x y) = insertLet x $ \x' -> insertLet y $ return . Apply ss x'
-knExpr (BinOp ss op x y) =
-  insertLet x $ \x' -> insertLet y $ return . BinOp ss op x'
-knExpr (If ss c t f) = insertLet c $ \c' -> If ss c' <$> knExpr t <*> knExpr f
+knExpr (Apply ss x y) = do
+  (letX, x') <- insertLet x
+  (letY, y') <- insertLet y
+  return $ letX $ letY $ Apply ss x' y'
+knExpr (BinOp ss op x y) = do
+  (letX, x') <- insertLet x
+  (letY, y') <- insertLet y
+  return $ letX $ letY $ BinOp ss op x' y'
+knExpr (If ss c t f) = do
+  (letC, c') <- insertLet c
+  letC <$> (If ss c' <$> knExpr t <*> knExpr f)
 knExpr (Let ss0 (NonRec ss1 x mts v) e) =
   Let ss0 <$> (NonRec ss1 x mts <$> knExpr v) <*> knExpr e
 knExpr (Let ss0 (Rec ss1 x ps mts v) e) =
   Let ss0 <$> (Rec ss1 x ps mts <$> knExpr v) <*> knExpr e
 knExpr (Let ss0 (TuplePat ss1 xs mts v) e) =
   Let ss0 <$> (TuplePat ss1 xs mts <$> knExpr v) <*> knExpr e
-knExpr (Tuple ss xs) = go xs [] $ \xs' -> return $ Tuple ss xs'
- where
-  go []       acc k = k $ reverse acc
-  go (y : ys) acc k = insertLet y $ \y' -> go ys (y' : acc) k
+knExpr (Tuple ss xs) = do
+  (letXs, xs') <- mapAndUnzipM insertLet xs
+  return $ foldr (.) id letXs $ Tuple ss xs'
 knExpr x = return x
 
-insertLet
-  :: (MonadMalgo m, MonadState RnTcEnv m)
-  => Expr Id
-  -> (Expr Id -> m (Expr Id))
-  -> m (Expr Id)
-insertLet x@Var{} k = k x
-insertLet v       k = do
+insertLet :: (MonadMalgo m, MonadState RnTcEnv m) => Expr Id -> m (Expr Id -> Expr Id, Expr Id)
+insertLet x@Var{} = return (id, x)
+insertLet v = do
   v' <- knExpr v
-  x  <- newId "k"
-  t  <- unfoldTyMetaScheme =<< typeOf v'
+  x <- newId "k"
+  t <- unfoldTyMetaScheme =<< typeOf v'
   modify (over variableMap (Map.insert x t))
-  e <- k (Var (srcSpan v) x)
-  return $ Let (srcSpan v) (NonRec (srcSpan v) x (Just t) v') e
+  return (Let (srcSpan v) (NonRec (srcSpan v) x (Just t) v'), Var (srcSpan v) x)
 
 checkKNormalized :: (Id, [Id], Expr Id) -> Bool
 checkKNormalized = ckExpr . view _3
