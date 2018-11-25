@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.Rename where
 
-import qualified Data.Map.Strict               as Map
+import qualified Data.Map.Strict                 as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
 import           Language.Malgo.Id
@@ -13,7 +13,7 @@ import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum               hiding ( Type )
+import           Universum                       hiding (Type)
 
 {-
 forallのrename
@@ -94,21 +94,21 @@ renameExpr (Let ss0 (NonRec ss1 x mTypeScheme v) e) = do
   x'           <- newId x
   mTypeScheme' <- mapM renameTypeScheme mTypeScheme
   v'           <- renameExpr v
-  Let ss0 (NonRec ss1 x' mTypeScheme' v')
-    <$> local (Map.insert x x') (renameExpr e)
+  local (Map.insert x x') $
+    Let ss0 (NonRec ss1 x' mTypeScheme' v') <$> renameExpr e
 renameExpr (Let ss0 (Rec ss1 x ps mTypeScheme v) e) = do
   x'           <- newId x
   ps'          <- mapM newId ps
   mTypeScheme' <- mapM renameTypeScheme mTypeScheme
   v'           <- local (Map.fromList ((x, x') : zip ps ps') <>) $ renameExpr v
-  Let ss0 (Rec ss1 x' ps' mTypeScheme' v')
-    <$> local (Map.insert x x') (renameExpr e)
+  local (Map.insert x x') $
+    Let ss0 (Rec ss1 x' ps' mTypeScheme' v') <$> renameExpr e
 renameExpr (Let ss0 (TuplePat ss1 pat mTypeScheme v) e) = do
   pat'         <- mapM newId pat
   mTypeScheme' <- mapM renameTypeScheme mTypeScheme
   v'           <- renameExpr v
-  Let ss0 (TuplePat ss1 pat' mTypeScheme' v')
-    <$> local (Map.fromList (zip pat pat') <>) (renameExpr e)
+  local (Map.fromList (zip pat pat') <>) $
+    Let ss0 (TuplePat ss1 pat' mTypeScheme' v') <$> renameExpr e
 renameExpr (Apply ss e1 e2) = Apply ss <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Tuple ss xs   ) = Tuple ss <$> mapM renameExpr xs
 

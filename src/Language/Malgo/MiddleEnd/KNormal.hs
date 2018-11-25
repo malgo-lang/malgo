@@ -52,8 +52,8 @@ knExpr (Let ss0 (Rec ss1 x ps mts v) e) =
 knExpr (Let ss0 (TuplePat ss1 xs mts v) e) =
   Let ss0 <$> (TuplePat ss1 xs mts <$> knExpr v) <*> knExpr e
 knExpr (Tuple ss xs) = do
-  (letXs, xs') <- mapAndUnzipM insertLet xs
-  return $ foldr (.) id letXs $ Tuple ss xs'
+  (letXs, xs') <- first (foldr (.) id) <$> mapAndUnzipM insertLet xs
+  return $ letXs $ Tuple ss xs'
 knExpr x = return x
 
 insertLet :: (MonadMalgo m, MonadState RnTcEnv m) => Expr Id -> m (Expr Id -> Expr Id, Expr Id)

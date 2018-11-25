@@ -155,42 +155,23 @@ typeCheckExpr (If ss c t f) = do
 typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e) = do
   vType <- typeCheckExpr v
   case mTypeScheme of
-    Just (Forall [] xType) -> unify ss xType vType
-    Just typeScheme
-      | isSyntactic v
-      -> unify ss vType =<< instantiate typeScheme
-      | otherwise
-      -> typeCheckError ss
-        $   "type annotation"
-        <+> pPrint typeScheme
-        <+> "cannot have `forall`"
+    Just typeScheme -> unify ss vType =<< instantiate typeScheme
     Nothing -> pass
-  typeScheme <- if isSyntactic v
-    then generalize vType
-    else pure $ Forall [] vType
+  typeScheme <- generalize vType
   modify $ over variableMap $ Map.insert x typeScheme
   ms <- collectTyMeta vType
   local (over tyMetaSet (ms <>)) $ typeCheckExpr e
 typeCheckExpr (Let _ (TuplePat ss pat mTypeScheme v) e) = do
   vType <- typeCheckExpr v
   case mTypeScheme of
-    Just (Forall [] xType) -> unify ss xType vType
-    Just typeScheme
-      | isSyntactic v
-      -> unify ss vType =<< instantiate typeScheme
-      | otherwise
-      -> typeCheckError ss
-        $   "type annotation"
-        <+> pPrint typeScheme
-        <+> "cannot have `forall`"
+    Just typeScheme -> unify ss vType =<< instantiate typeScheme
     Nothing -> pass
   patTypes <- mapM (const $ TyMeta <$> newTyRef) pat
   let patType = tupleType patTypes
   unify ss vType patType
 
-  patTypeSchemes <- if isSyntactic v
-    then mapM generalize patTypes
-    else pure $ map (Forall []) patTypes
+  patTypeSchemes <- mapM generalize patTypes
+
   modify $ over variableMap (Map.fromList (zip pat patTypeSchemes) <>)
   ms <- collectTyMeta patType
   local (over tyMetaSet (ms <>)) $ typeCheckExpr e
@@ -347,12 +328,6 @@ collectTyMeta' (TyMeta r  ) = do
   case mt of
     Nothing -> return [r]
     Just t  -> collectTyMeta' t
-
-isSyntactic :: Expr a -> Bool
-isSyntactic Var{}        = True
-isSyntactic Literal{}    = True
-isSyntactic (Tuple _ xs) = all isSyntactic xs
-isSyntactic _            = False
 
 unfoldTyMetaScheme :: MonadIO f => TypeScheme a -> f (TypeScheme a)
 unfoldTyMetaScheme (Forall xs t) = Forall xs <$> unfoldTyMeta t
