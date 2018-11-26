@@ -288,9 +288,8 @@ unify ss a@(TyVar v0) b@(TyVar v1) | v0 == v1  = pass
 unify ss a@(TyApp (PrimC c0) xs) b@(TyApp (PrimC c1) ys)
   | c0 == c1 && length xs == length ys = zipWithM_ (unify ss) xs ys
   | otherwise                          = unifyError ss a b
-unify ss (TyApp (SimpleC c) xs) b = do
-  typeAlias <- lookupTypeAlias ss c
-  a'        <- applyType typeAlias xs
+unify ss a@(TyApp (SimpleC _) _) b = do
+  a' <- extractTypeAlias ss a
   unify ss a' b
 unify ss a b@(TyApp (SimpleC _) _) = unify ss b a
 unify ss (TyMeta r) b = do
@@ -351,3 +350,11 @@ unfoldTyMeta (TyMeta ref) = do
   case mt of
     Nothing -> return $ TyMeta ref
     Just t  -> unfoldTyMeta t
+
+extractTypeAlias :: (MonadMalgo m, MonadState RnTcEnv m) => SrcSpan -> Type Id -> m (Type Id)
+extractTypeAlias ss (TyApp (SimpleC name) ts) = do
+  ts' <- mapM (extractTypeAlias ss) ts
+  typeAlias <- lookupTypeAlias ss name
+  applyType typeAlias ts'
+extractTypeAlias ss (TyApp c ts) = TyApp c <$> mapM (extractTypeAlias ss) ts
+extractTypeAlias _ t = return t
