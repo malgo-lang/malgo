@@ -19,4 +19,5 @@ flatten (Let ss0 (TuplePat ss1 xs mts0 e0) e1) = go (flatten e0)
     go e                 = Let ss0 (TuplePat ss1 xs mts0 e) (flatten e1)
 flatten (Apply ss e1 e2) = Apply ss (flatten e1) (flatten e2)
 flatten (Tuple ss xs) = Tuple ss (map flatten xs)
+flatten (Fn ss xs e) = Fn ss xs $ flatten e
 flatten e = e

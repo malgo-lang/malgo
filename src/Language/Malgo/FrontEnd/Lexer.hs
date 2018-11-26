@@ -113,6 +113,7 @@ tag =
           , ("*" , ASTERISK)
           , ("/" , SLASH)
           , ("%" , PERCENT)
+          , ("\\", BACKSLASH)
           , ("->", ARROW)
           , (";" , SEMICOLON)
           , ("==", EQ_OP)

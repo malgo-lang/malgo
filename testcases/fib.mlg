@@ -16,4 +16,5 @@ fib n =
 main : Argv -> Answer;
 main argv =
   let f = id id
-  in println (intToString ((id fib) 30)) exit;
+  in println (intToString ((id fib) 30)) (\u ->
+    println "hello world" exit);

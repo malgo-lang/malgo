@@ -213,6 +213,11 @@ typeCheckExpr (Apply ss f x) = do
 typeCheckExpr (Tuple _ xs) = do
   xsTypes <- mapM typeCheckExpr xs
   return $ tupleType xsTypes
+typeCheckExpr (Fn _ xs e) = do
+  xsTypes <- mapM (const $ TyMeta <$> newTyRef) xs
+  modify $ over variableMap (Map.fromList (zip xs (map (Forall []) xsTypes)) <>)
+  eType <- local (over typeSet (xsTypes <>)) $ typeCheckExpr e
+  return $ foldr (-->) eType xsTypes
 
 typeCheckOp :: MonadMalgo m => Op -> m (Type a, Type a, Type a)
 typeCheckOp Add  = return (intType, intType, intType)

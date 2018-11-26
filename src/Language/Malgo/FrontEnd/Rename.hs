@@ -111,6 +111,10 @@ renameExpr (Let ss0 (TuplePat ss1 pat mTypeScheme v) e) = do
     Let ss0 (TuplePat ss1 pat' mTypeScheme' v') <$> renameExpr e
 renameExpr (Apply ss e1 e2) = Apply ss <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Tuple ss xs   ) = Tuple ss <$> mapM renameExpr xs
+renameExpr (Fn ss xs e) = do
+  xs' <- mapM newId xs
+  local (Map.fromList (zip xs xs') <>) $
+    Fn ss xs' <$> renameExpr e
 
 renameTypeScheme
   :: (MonadReader RnEnv m, MonadState RnTcEnv m, MonadMalgo m)

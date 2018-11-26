@@ -36,6 +36,7 @@ data Tag
   | ASTERISK_DOT
   | SLASH
   | SLASH_DOT
+  | BACKSLASH
   | PERCENT
   | ARROW
   | EQ_OP

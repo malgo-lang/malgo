@@ -55,6 +55,7 @@ knExpr (Let ss0 (TuplePat ss1 xs mts v) e) =
 knExpr (Tuple ss xs) = appInsert $ do
   xs' <- mapM insertLet xs
   return $ Tuple ss xs'
+knExpr (Fn ss xs e) = Fn ss xs <$> knExpr e
 knExpr x = return x
 
 appInsert :: (MonadMalgo m) => WriterT (Endo (Expr Id)) m (Expr Id) -> m (Expr Id)
@@ -85,3 +86,4 @@ checkKNormalized = ckExpr . view _3
   ckExpr (Let   _ (TuplePat _ _ _ v) e) = ckExpr v && ckExpr e
   ckExpr (Apply _ x                  y) = isVar x && isVar y
   ckExpr (Tuple _ xs                  ) = all isVar xs
+  ckExpr (Fn _ _ e)                     = ckExpr e

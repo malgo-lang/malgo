@@ -49,6 +49,7 @@ FORALL { Loc _ FORALL }
 '/' { Loc _ SLASH }
 "/." { Loc _ SLASH_DOT }
 '%' { Loc _ PERCENT }
+'\\' { Loc _ BACKSLASH }
 "->" { Loc _ ARROW }
 "==" { Loc _ EQ_OP }
 "/=" { Loc _ NEQ_OP }
@@ -67,6 +68,7 @@ STRING { Loc _ (STRING _) }
 
 %right "->"
 %right IN THEN ELSE
+%right prec_fn
 %nonassoc "==" "/="
 %nonassoc '<' '>' "<=" ">="
 %left '+' '-' "+." "-." '&'
@@ -128,6 +130,7 @@ expr : aexpr { $1 }
      | IF expr THEN expr ELSE expr { If (srcSpan ($1, $6)) $2 $4 $6 }
      | LET bind IN expr { Let (srcSpan ($1, $4)) $2 $4 }
      | app { $1 }
+     | '\\' id_list "->" expr %prec prec_fn { Fn (srcSpan ($1, $4)) $2 $4 }
 
 expr_list_comma : expr_list_comma_rev { reverse $1 }
 expr_list_comma_rev : expr ',' expr { [$3, $1] }

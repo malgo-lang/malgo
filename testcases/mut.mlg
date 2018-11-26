@@ -5,8 +5,6 @@ main : Array String -> Answer;
 main argv =
   let rec id x = x in
   let rec addOne x = x + 1 in
-  let rec fin f = exit (f ()) in
-  let rec k1 a =
-    let rec k2 unit = readArray a 0 fin in
-    writeArray a 0 addOne k2 in
-  newArray 1 id k1;
+  newArray 1 id (\a ->
+    writeArray a 0 addOne (\unit ->
+      readArray a 0 exit));

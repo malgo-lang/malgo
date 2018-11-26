@@ -11,7 +11,7 @@ import           Data.Outputable
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum               hiding ( Type )
+import           Universum                   hiding (Type)
 
 data Expr a = Var SrcSpan a
             | Literal SrcSpan Literal
@@ -20,6 +20,7 @@ data Expr a = Var SrcSpan a
             | Let SrcSpan (Bind a) (Expr a)
             | Apply SrcSpan (Expr a) (Expr a)
             | Tuple SrcSpan [Expr a]
+            | Fn SrcSpan [a] (Expr a)
   deriving (Eq, Show, Generic)
 
 instance Outputable a => Outputable (Expr a)
@@ -32,6 +33,7 @@ instance SrcInfo (Expr a) where
   srcSpan (Let ss _ _)     = ss
   srcSpan (Apply ss _ _)   = ss
   srcSpan (Tuple ss _)     = ss
+  srcSpan (Fn ss _ _)      = ss
 
 instance Pretty a => Pretty (Expr a) where
   pPrintPrec _ _ (Var _ x) = pPrint x
@@ -51,6 +53,8 @@ instance Pretty a => Pretty (Expr a) where
     maybeParens (d > 10) $ sep [pPrintPrec l 11 x, nest 2 $ pPrintPrec l 11 y]
   pPrintPrec l _ (Tuple _ xs) =
     parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
+  pPrintPrec l _ (Fn _ xs e) =
+    parens $ "\\" <> sep (map (pPrintPrec l 0) xs) <+> "->" <+> pPrintPrec l 0 e
 
 data Literal = Int Integer
              | Float Double
