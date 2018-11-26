@@ -7,6 +7,7 @@ import qualified Language.Malgo.FrontEnd.Driver    as Driver
 import qualified Language.Malgo.FrontEnd.Lexer     as Lexer2
 import           Language.Malgo.FrontEnd.Loc
 import qualified Language.Malgo.FrontEnd.Parser    as Parser2
+import qualified Data.Map as Map
 import qualified Language.Malgo.FrontEnd.Rename    as Rename
 import qualified Language.Malgo.FrontEnd.RnTcEnv   as RnTcEnv
 import qualified Language.Malgo.FrontEnd.TypeCheck as TypeCheck
@@ -65,9 +66,9 @@ main = do
         knormalizedAst <- KNormal.knormal renamedAst
         putStrLn "-- knormalized ast --"
         dump knormalizedAst
-        env2 <- executingStateT env (TypeCheck.typeCheck (makeProgram knormalizedAst))
+        env2 <- executingStateT env1 (TypeCheck.typeCheck (makeProgram knormalizedAst))
         putStrLn "-- type environment --"
-        print $ ppr env2
+        print $ pPrint $ Map.toList $ view RnTcEnv.variableMap env2
         putStrLn "-- flatten ast --"
         dump $ map (over _3 Flatten.flatten) knormalizedAst
     dump x = putStrLn $ renderStyle (style { lineLength = 80 }) $ pPrint x

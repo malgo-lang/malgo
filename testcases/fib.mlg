@@ -1,5 +1,7 @@
 -- -*- tab-width: 2 -*-
 
+type Argv = Array String;
+
 id x = x;
 
 -- recursive function
@@ -11,7 +13,7 @@ fib n =
        a + b;
 
 -- entry point
-main : Array String -> Answer;
+main : Argv -> Answer;
 main argv =
   let f = id id
   in println (intToString ((id fib) 30)) exit;

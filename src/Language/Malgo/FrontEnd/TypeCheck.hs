@@ -121,6 +121,12 @@ typeCheckScDef (ss, x, ps, e) = do
 
   -- xの型を生成
   let xType = foldr (-->) retType pts
+
+  -- すでにxの型が宣言されている場合
+  -- K正規化後の型検査で利用
+  whenJustM (Map.lookup x <$> use variableMap) $
+    unify ss xType <=< instantiate
+
   modify $ over variableMap (Map.insert x (Forall [] xType))
 
   -- 型推論を行う
