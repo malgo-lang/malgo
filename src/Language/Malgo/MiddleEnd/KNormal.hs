@@ -11,13 +11,9 @@ where
 
 import           Control.Monad.Cont
 import           Control.Monad.Writer
-import qualified Data.Map                          as Map
 import           Language.Malgo.FrontEnd.Loc
-import           Language.Malgo.FrontEnd.RnTcEnv
-import           Language.Malgo.FrontEnd.TypeCheck (unfoldTyMetaScheme)
 import           Language.Malgo.Id
 import           Language.Malgo.IR.AST
-import           Language.Malgo.MiddleEnd.TypeOf
 import           Language.Malgo.Monad
 import           Universum                         hiding (Type)
 
@@ -66,8 +62,6 @@ insertLet x@Var{} = return x
 insertLet v = do
   v' <- knExpr v
   x <- newId "k"
-  -- t <- unfoldTyMetaScheme =<< typeOf v'
-  -- modify (over variableMap (Map.insert x t))
   tell $ Endo $ Let (srcSpan v) (NonRec (srcSpan v) x Nothing v')
   return $ Var (srcSpan v) x
 
