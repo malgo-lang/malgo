@@ -14,6 +14,7 @@ module Language.Malgo.MiddleEnd.Closure
 where
 
 import           Control.Lens                    (makeLenses)
+import           Control.Monad.Writer.Strict     (MonadWriter (..), execWriterT)
 import qualified Data.Map.Strict                 as Map
 import           Data.Outputable
 import           Language.Malgo.FrontEnd.RnTcEnv
@@ -37,12 +38,8 @@ data ClsInfo = ClsInfo { _rnTcEnv :: RnTcEnv
                        } deriving (Show, Generic, Outputable)
 makeLenses ''ClsInfo
 
-type Trans m = (MonadReader ClsInfo m, MonadState ClsEnv m, MonadMalgo m)
-
-pushDef :: Trans m => Id -> [Id] -> Block -> m ()
 pushDef f xs b = modify $ over defs (Def f xs b :)
 
-addTypeEnv :: Trans m => Id -> TypeRep -> m ()
 addTypeEnv x t = modify $ over typeEnv $ Map.insert x t
 
 trans :: MonadMalgo m => RnTcEnv -> [(Id, [Id], AST.Expr Id)] -> m [Def]
@@ -52,14 +49,15 @@ trans rte xs =
     $ executingStateT (ClsEnv mempty [])
     $ mapM_ transDef xs
 
-transDef :: Trans m => (Id, [Id], AST.Expr Id) -> m ()
 transDef (f, xs, e) = do
-  e' <- local (over knowns ((f:xs) <>)) $ transExpr e
+  e' <- local (over knowns ((f:xs) <>)) $ transBlock e
   pushDef f xs e'
 
 lookup :: Id -> Map Id a -> a
 lookup x m =
   fromMaybe (error $ show $ "unreachable(lookup):" <+> pPrint x) (Map.lookup x m)
+
+transBlock e = appEndo <$> execWriterT (transExpr e) <*> pure []
 
 {-
 Language.Malgo.MiddleEnd.FlattenでflatなASTに変形されている。
@@ -67,22 +65,19 @@ let x = v in eについて、
 transFlatExprがvをExprに変換し、
 transExprが全体をLet x = v' : transExpr eに変換する
 -}
-
-transExpr :: Trans m => AST.Expr Id -> m Block
 transExpr (AST.Let _ (AST.NonRec _ x _ v) e) = do
   t <- transType =<< lookup x <$> view (rnTcEnv . variableMap)
   addTypeEnv x t
-  (xs, v') <- transFlatExpr v
-  ((xs <> [Let x v']) <>) <$> transExpr e
-transExpr (AST.Let _ (AST.TuplePat _ xs _ v) e) = do
-  ts <- mapM (\x -> transType =<< lookup x <$> view (rnTcEnv . variableMap)) xs
-  zipWithM_ addTypeEnv xs ts
-  undefined
+  v' <- transFlatExpr v
+  tell $ Endo (Let x v' :)
+  transExpr e
+transExpr (AST.Let _ _ _) = undefined
+transExpr x = do
+  x' <- transFlatExpr x
+  tell $ Endo (Do x' :)
 
 {-
-返り値の_1はクロージャ呼び出しなど、一つのAST.Exprが複数行のInstになるときに用いる。
-
-例えば、Apply a bについて
+Apply a bについて
 aのTypeRepがTupleType [ArrowType BoxType _, BoxType]の場合、
 ( [ Let function = Access a 0
   , Let capture = Access a 1
@@ -92,12 +87,10 @@ aのTypeRepがTupleType [ArrowType BoxType _, BoxType]の場合、
 )
 に変換する。
 -}
-transFlatExpr :: Trans m => AST.Expr Id -> m ([Inst], Expr)
 transFlatExpr = undefined
 
 {- TyVarはBoxに、その他はよしなに変換する -}
-transType :: Trans m => TypeScheme Id -> m TypeRep
 transType = undefined
 
-freevars :: AST.Expr ~> []
-freevars = undefined
+-- freevars :: AST.Expr ~> []
+-- freevars = undefined
