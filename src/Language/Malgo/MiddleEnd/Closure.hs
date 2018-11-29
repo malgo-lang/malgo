@@ -17,6 +17,7 @@ import           Control.Lens                    (makeLenses)
 import           Control.Monad.Writer.Strict     (MonadWriter (..), execWriterT)
 import qualified Data.Map.Strict                 as Map
 import           Data.Outputable
+import qualified Data.Set                        as Set
 import           Language.Malgo.FrontEnd.RnTcEnv
 import           Language.Malgo.Id
 import qualified Language.Malgo.IR.AST           as AST
@@ -92,5 +93,16 @@ transFlatExpr = undefined
 {- TyVarはBoxに、その他はよしなに変換する -}
 transType = undefined
 
--- freevars :: AST.Expr ~> []
--- freevars = undefined
+freevars :: AST.Expr Id -> Set Id
+freevars (AST.Var _ a)       = Set.singleton a
+freevars (AST.Literal _ _)   = Set.empty
+freevars (AST.BinOp _ _ x y) = freevars x <> freevars y
+freevars (AST.If _ c t f) = freevars c <> freevars t <> freevars f
+freevars (AST.Let _ (AST.NonRec _ x _ v) e) = freevars v <> Set.delete x (freevars e)
+freevars (AST.Let _ (AST.Rec _ f xs _ v) e) =
+  foldl (flip Set.delete) (freevars v) (f:xs) <> Set.delete f (freevars e)
+freevars (AST.Let _ (AST.TuplePat _ xs _ v) e) =
+  freevars v <> foldl (flip Set.delete) (freevars e) xs
+freevars (AST.Apply _ f x) = freevars f <> freevars x
+freevars (AST.Tuple _ xs) = Set.unions (map freevars xs)
+freevars (AST.Fn _ xs e) = foldl (flip Set.delete) (freevars e) xs
