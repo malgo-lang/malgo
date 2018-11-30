@@ -3,7 +3,6 @@ module Main where
 
 import           Data.Outputable
 import qualified Data.Text.Lazy.IO                 as T
-import qualified Language.Malgo.FrontEnd.Driver    as Driver
 import qualified Language.Malgo.FrontEnd.Lexer     as Lexer2
 import           Language.Malgo.FrontEnd.Loc
 import qualified Language.Malgo.FrontEnd.Parser    as Parser2

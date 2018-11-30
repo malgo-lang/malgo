@@ -1,18 +1,20 @@
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TemplateHaskell   #-}
 {-# LANGUAGE TupleSections     #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 module Language.Malgo.FrontEnd.RnTcEnv where
 
 import           Control.Lens.TH
-import qualified Data.Map.Strict               as Map
+import           Data.Map.Strict      (Map)
+import qualified Data.Map.Strict      as Map
 import           Data.Outputable
+import           Data.Text            (Text)
+import           GHC.Generics         (Generic)
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Type
-import           Universum               hiding ( Type )
+
 
 data RnTcEnv = RnTcEnv
   { _variableMap  :: Map Id (TypeScheme Id)

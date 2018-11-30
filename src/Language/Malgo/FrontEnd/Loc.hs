@@ -1,4 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.Loc
   ( SrcSpan(..)
@@ -12,7 +11,6 @@ where
 
 import           Data.Outputable
 import           Language.Malgo.Pretty
-import           Universum
 
 type Line = Int
 type Column = Int

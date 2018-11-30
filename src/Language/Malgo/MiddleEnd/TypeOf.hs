@@ -1,9 +1,11 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.TypeOf where
 
+import           Control.Lens                      (use)
+import           Control.Monad.Reader
+import           Control.Monad.State.Class         (MonadState (..))
 import qualified Data.Map.Strict                   as Map
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
@@ -13,10 +15,9 @@ import           Language.Malgo.Id
 import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
 import           Language.Malgo.Type
-import           Universum                         hiding (Type)
 
 typeOf :: (MonadMalgo m, MonadState RnTcEnv m) => Expr Id -> m (TypeScheme Id)
-typeOf = usingReaderT (TcLclEnv []) . typeOf'
+typeOf = flip runReaderT (TcLclEnv []) . typeOf'
  where
   typeOf' (Var _ x) = do
     vm <- use variableMap
@@ -55,3 +56,4 @@ typeOf = usingReaderT (TcLclEnv []) . typeOf'
     generalize retType
   typeOf' (Tuple _ xs) =
     generalize =<< tupleType <$> (mapM instantiate =<< mapM typeOf' xs)
+  typeOf' Fn{} = error "unreachable(typeOf')"

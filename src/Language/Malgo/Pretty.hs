@@ -5,15 +5,10 @@ module Language.Malgo.Pretty
   )
 where
 
-import qualified Data.Text                     as T
-import qualified Data.Text.Lazy                as TL
-import           Text.PrettyPrint.HughesPJClass
-                                         hiding ( (<+>)
-                                                , (<>)
-                                                )
-import qualified Text.PrettyPrint.HughesPJClass
-                                               as P
-import           Universum
+import qualified Data.Text                      as T
+import qualified Data.Text.Lazy                 as TL
+import           Text.PrettyPrint.HughesPJClass hiding ((<+>), (<>))
+import qualified Text.PrettyPrint.HughesPJClass as P
 
 -- change operator precedence
 infixl 9 <+>
@@ -21,7 +16,7 @@ infixl 9 <+>
 (<+>) = (P.<+>)
 
 instance Pretty T.Text where
-  pPrint = text . toString
+  pPrint = text . T.unpack
 
 instance Pretty TL.Text where
-  pPrint = text . toString
+  pPrint = text . TL.unpack

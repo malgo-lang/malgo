@@ -1,23 +1,18 @@
 {-# LANGUAGE ExplicitForAll        #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE StrictData            #-}
-module Language.Malgo.FrontEnd.Lexer
-  ( lex
-  )
-where
+module Language.Malgo.FrontEnd.Lexer ( lex ) where
 
+import           Data.List
+import qualified Data.Text                     as T
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.Token
-import           Text.Parsec             hiding ( many
-                                                , token
-                                                , (<|>)
-                                                )
+import           Prelude                       hiding (lex)
+import           Text.Parsec                   hiding (token)
 import qualified Text.Parsec.Token             as Tok
-import           Universum               hiding ( try )
 
 langDef :: Stream s m Char => Tok.GenLanguageDef s u m
 langDef = Tok.LanguageDef
@@ -30,39 +25,14 @@ langDef = Tok.LanguageDef
   , Tok.opStart         = oneOf ":!#$%&*+./<=>?@\\^|-~"
   , Tok.opLetter        = oneOf ":!#$%&*+./<=>?@\\^|-~"
   , Tok.caseSensitive   = True
-  , Tok.reservedOpNames = [ "."
-                          , "+."
-                          , "-."
-                          , "*."
-                          , "/."
-                          , ":"
-                          , "="
-                          , "+"
-                          , "-"
-                          , "*"
-                          , "/"
-                          , "%"
-                          , "->"
-                          , ";"
-                          , "=="
-                          , "/="
-                          , "<"
-                          , ">"
-                          , "<="
-                          , ">="
-                          , "&"
-                          , "|"
-                          , ","
+  , Tok.reservedOpNames = [ ".", "+.", "-.", "*.", "/.", ":"
+                          , "=", "+", "-", "*", "/", "%", "->"
+                          , ";", "==", "/=", "<", ">", "<=", ">="
+                          , "&", "|", ","
                           ]
-  , Tok.reservedNames   = [ "let"
-                          , "in"
-                          , "type"
-                          , "rec"
-                          , "if"
-                          , "then"
-                          , "else"
-                          , "true"
-                          , "false"
+  , Tok.reservedNames   = [ "let", "in", "type", "rec"
+                          , "if", "then", "else"
+                          , "true", "false"
                           , "forall"
                           ]
   }
@@ -126,12 +96,12 @@ tag =
           , ("|" , OR_OP)
           , ("," , COMMA)
           ]
-    <|> (LID . toText <$> largeIdentifier)
-    <|> (ID . toText <$> identifier)
+    <|> (LID . T.pack <$> largeIdentifier)
+    <|> (ID . T.pack <$> identifier)
     <|> try (FLOAT <$> float)
     <|> (INT <$> natural)
     <|> (CHAR <$> charLiteral)
-    <|> (STRING . toText <$> stringLiteral)
+    <|> (STRING . T.pack <$> stringLiteral)
  where
   identLetter     = Tok.identLetter langDef
   reservedNames   = Tok.reservedNames (langDef :: Tok.GenLanguageDef s u m)

@@ -1,10 +1,9 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE StrictData        #-}
+{-# LANGUAGE StrictData #-}
 module Language.Malgo.FrontEnd.Token where
 
+import           Data.Text                   (Text)
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.Pretty
-import           Universum
 
 data Tag
   = LET

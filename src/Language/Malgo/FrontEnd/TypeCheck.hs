@@ -1,17 +1,23 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.TypeCheck (TcLclEnv(..), generalize, instantiate, typeCheck, unify, unfoldTyMetaScheme) where
 
-import           Control.Lens                    (assign, makeLenses)
+import           Control.Lens                    (assign, makeLenses, over, use,
+                                                  view)
+import           Control.Monad
+import           Control.Monad.IO.Class
+import           Control.Monad.Reader            (MonadReader (..), runReaderT)
+import           Control.Monad.State.Class       (MonadState (..), modify)
 import           Data.List                       ((\\))
 import qualified Data.Map.Strict                 as Map
+import           Data.Maybe                      (mapMaybe)
 import           Data.Outputable
+import qualified Data.Set                        as Set
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
 import           Language.Malgo.Id
@@ -19,7 +25,6 @@ import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum                       hiding (Type)
 
 -- スコープ内に存在するメタ変数を保持する
 -- ScDefの関数と引数、letの変数、let recの関数と引数に含まれる型変数が追加され、本体部分の型検査が行われる
@@ -39,7 +44,7 @@ typeCheckError ss doc =
 -- f :: forall a. a
 -- f = f
 typeCheck :: (MonadMalgo m, MonadState RnTcEnv m) => Program Id -> m ()
-typeCheck (Program ds) = usingReaderT (TcLclEnv []) $ do
+typeCheck (Program ds) = flip runReaderT (TcLclEnv []) $ do
   -- mapM_ generateHeader ds
   mapM_ loadTypeDef    typeDefs
   mapM_ typeCheckScDef scDefs
@@ -87,7 +92,7 @@ generateHeaderで仮の型を生成して型検査した後、
 トップレベル以外の型環境を消してもう一度型検査する
 -}
 generateHeader :: (MonadMalgo f, MonadState RnTcEnv f) => Decl Id -> f ()
-generateHeader TypeDef{}     = pass
+generateHeader TypeDef{}     = return ()
 generateHeader (ScAnn _ x _) = do
   t <- Forall [] . TyMeta <$> newTyRef
   modify $ over variableMap $ Map.insert x t
@@ -168,7 +173,7 @@ typeCheckExpr (Let _ (NonRec ss x mTypeScheme v) e) = do
   vType <- typeCheckExpr v
   case mTypeScheme of
     Just typeScheme -> unify ss vType =<< instantiate typeScheme
-    Nothing         -> pass
+    Nothing         -> return ()
   typeScheme <- generalize vType
   modify $ over variableMap $ Map.insert x typeScheme
   local (over typeSet (vType:)) $ typeCheckExpr e
@@ -176,7 +181,7 @@ typeCheckExpr (Let _ (TuplePat ss pat mTypeScheme v) e) = do
   vType <- typeCheckExpr v
   case mTypeScheme of
     Just typeScheme -> unify ss vType =<< instantiate typeScheme
-    Nothing         -> pass
+    Nothing         -> return ()
   patTypes <- mapM (const $ TyMeta <$> newTyRef) pat
   let patType = tupleType patTypes
   unify ss vType patType
@@ -279,7 +284,7 @@ unifyError ss a b = do
   a' <- unfoldTyMeta a
   b' <- unfoldTyMeta b
   env <- get
-  print $ ppr env
+  liftIO $ print $ ppr env
   typeCheckError ss $ "cannot unify" <+> pPrint a' <+> "with" <+> pPrint b'
 
 unify
@@ -288,7 +293,7 @@ unify
   -> Type Id
   -> Type Id
   -> m ()
-unify ss a@(TyVar v0) b@(TyVar v1) | v0 == v1  = pass
+unify ss a@(TyVar v0) b@(TyVar v1) | v0 == v1  = return ()
                                    | otherwise = unifyError ss a b
 unify ss a@(TyApp (PrimC c0) xs) b@(TyApp (PrimC c1) ys)
   | c0 == c1 && length xs == length ys = zipWithM_ (unify ss) xs ys
@@ -304,7 +309,7 @@ unify ss (TyMeta r) b = do
     Just t -> unify ss t b
     Nothing ->
       case b of
-        TyMeta r1 | r == r1 -> pass
+        TyMeta r1 | r == r1 -> return ()
                   | otherwise -> do
                       r1Val <- readTyRef r1
                       case r1Val of
@@ -363,3 +368,33 @@ extractTypeAlias ss (TyApp (SimpleC name) ts) = do
   applyType typeAlias ts'
 extractTypeAlias ss (TyApp c ts) = TyApp c <$> mapM (extractTypeAlias ss) ts
 extractTypeAlias _ t = return t
+
+whenJust :: Applicative f => Maybe a -> (a -> f ()) -> f ()
+whenJust (Just x) f = f x
+
+whenJust Nothing _  = pure ()
+whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
+whenJustM mm f = mm >>= \m -> whenJust m f
+
+ordNub :: (Ord a) => [a] -> [a]
+ordNub = go Set.empty
+  where
+    go _ []     = []
+    go s (x:xs) =
+      if x `Set.member` s
+      then go s xs
+      else x : go (Set.insert x s) xs
+
+concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
+concatMapM f xs = concat <$> mapM f xs
+
+whenM :: Monad m => m Bool -> m () -> m ()
+whenM mb a = mb >>= \b -> when b a
+
+anyM :: Monad m => (a -> m Bool) -> [a] -> m Bool
+anyM _ []     = return False
+anyM f (x:xs) = do
+  b <- f x
+  if b
+    then return True
+    else anyM f xs

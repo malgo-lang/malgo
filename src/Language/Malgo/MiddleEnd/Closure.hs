@@ -3,21 +3,24 @@
 {-# LANGUAGE DeriveGeneric             #-}
 {-# LANGUAGE FlexibleContexts          #-}
 {-# LANGUAGE MultiParamTypeClasses     #-}
-{-# LANGUAGE NoImplicitPrelude         #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE OverloadedStrings         #-}
 {-# LANGUAGE TemplateHaskell           #-}
 {-# LANGUAGE TypeOperators             #-}
-module Language.Malgo.MiddleEnd.Closure
-  ( trans
-  )
-where
+module Language.Malgo.MiddleEnd.Closure ( trans ) where
 
-import           Control.Lens                    (makeLenses)
+import           Control.Lens
+import           Control.Monad.Reader
+import           Control.Monad.State.Strict
 import           Control.Monad.Writer.Strict     (MonadWriter (..), execWriterT)
+import           Data.Map.Strict                 (Map)
 import qualified Data.Map.Strict                 as Map
+import           Data.Maybe
+import           Data.Monoid
 import           Data.Outputable
+import           Data.Set                        (Set)
 import qualified Data.Set                        as Set
+import           GHC.Generics                    (Generic)
 import           Language.Malgo.FrontEnd.RnTcEnv
 import           Language.Malgo.Id
 import qualified Language.Malgo.IR.AST           as AST
@@ -25,7 +28,6 @@ import           Language.Malgo.IR.MIR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum                       hiding (Type)
 
 data ClsEnv = ClsEnv { _typeEnv :: Map Id TypeRep
                      , _defs    :: [Def]
@@ -44,18 +46,18 @@ addTypeEnv x t = modify $ over typeEnv $ Map.insert x t
 
 trans :: MonadMalgo m => RnTcEnv -> [(Id, [Id], AST.Expr Id)] -> m [Def]
 trans rte xs =
-  map (view defs)
-    $ usingReaderT (ClsInfo rte [] mempty)
-    $ executingStateT (ClsEnv mempty [])
-    $ mapM_ transDef xs
+  fmap (view defs)
+  $ flip runReaderT (ClsInfo rte [] mempty)
+  $ flip execStateT (ClsEnv mempty [])
+  $ mapM_ transDef xs
 
 transDef (f, xs, e) = do
   e' <- local (over knowns ((f:xs) <>)) $ transBlock e
   pushDef f xs e'
 
-lookup :: Id -> Map Id a -> a
-lookup x m =
-  fromMaybe (error $ show $ "unreachable(lookup):" <+> pPrint x) (Map.lookup x m)
+lookupVar :: Id -> Map Id a -> a
+lookupVar x m =
+  fromMaybe (error $ show $ "unreachable(lookupVar):" <+> pPrint x) (Map.lookup x m)
 
 transBlock e = appEndo <$> execWriterT (transExpr e) <*> pure []
 
@@ -66,7 +68,7 @@ transFlatExprがvをExprに変換し、
 transExprが全体をLet x = v' : transExpr eに変換する
 -}
 transExpr (AST.Let _ (AST.NonRec _ x _ v) e) = do
-  t <- transType =<< lookup x <$> view (rnTcEnv . variableMap)
+  t <- transType =<< lookupVar x <$> view (rnTcEnv . variableMap)
   addTypeEnv x t
   v' <- transFlatExpr v
   tell $ Endo (Let x v' :)

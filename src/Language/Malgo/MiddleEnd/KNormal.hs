@@ -1,6 +1,5 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TupleSections         #-}
 module Language.Malgo.MiddleEnd.KNormal
@@ -9,19 +8,19 @@ module Language.Malgo.MiddleEnd.KNormal
   )
 where
 
-import           Control.Monad.Cont
+import           Control.Lens                (view, _3)
 import           Control.Monad.Writer
+import           Data.Maybe                  (catMaybes)
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.Id
 import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
-import           Universum                         hiding (Type)
 
 knormal
   :: (MonadMalgo m)
   => Program Id
   -> m [(Id, [Id], Expr Id)]
-knormal (Program ds) = map catMaybes $ mapM knDecl ds
+knormal (Program ds) = catMaybes <$> mapM knDecl ds
 
 knDecl
   :: (MonadMalgo m)
@@ -55,7 +54,7 @@ knExpr (Fn ss xs e) = Fn ss xs <$> knExpr e
 knExpr x = return x
 
 appInsert :: (MonadMalgo m) => WriterT (Endo (Expr Id)) m (Expr Id) -> m (Expr Id)
-appInsert = map (uncurry (flip appEndo)) . runWriterT
+appInsert = fmap (uncurry (flip appEndo)) . runWriterT
 
 insertLet :: (MonadMalgo m, MonadWriter (Endo (Expr Id)) m) => Expr Id -> m (Expr Id)
 insertLet x@Var{} = return x

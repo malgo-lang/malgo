@@ -1,11 +1,17 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.Rename where
 
+import           Control.Applicative
+import           Control.Lens                    (use, view, _1)
+import           Control.Monad
+import           Control.Monad.Reader            (MonadReader (..), runReaderT)
+import           Control.Monad.State.Class       (MonadState (..))
+import           Data.Map.Strict                 (Map)
 import qualified Data.Map.Strict                 as Map
+import           Data.Text                       (Text)
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.FrontEnd.RnTcEnv
 import           Language.Malgo.Id
@@ -13,7 +19,6 @@ import           Language.Malgo.IR.AST
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum                       hiding (Type)
 
 {-
 forallのrename
@@ -30,7 +35,7 @@ renameError ss doc =
   error $ show $ "error(rename)[" <> pPrint ss <> "]:" <+> doc
 
 rename :: (MonadState RnTcEnv m, MonadMalgo m) => Program Text -> m (Program Id)
-rename (Program ds) = usingReaderT Map.empty $ do
+rename (Program ds) = flip runReaderT Map.empty $ do
   nm <- renameTopLevel [] ds
   local (Map.fromList nm <>) $ Program <$> mapM renameDecl ds
 

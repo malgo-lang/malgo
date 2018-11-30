@@ -1,17 +1,17 @@
 {-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE StrictData            #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.IR.AST where
 
 import           Data.Outputable
+import           Data.Text                   (Text)
+import           GHC.Generics                (Generic)
 import           Language.Malgo.FrontEnd.Loc
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum                   hiding (Type)
 
 data Expr a = Var SrcSpan a
             | Literal SrcSpan Literal

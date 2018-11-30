@@ -1,13 +1,13 @@
 {-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.IR.MIR where
 
+import           Data.Map.Strict       (Map)
 import           Data.Outputable
+import           GHC.Generics          (Generic)
 import           Language.Malgo.Id
 import           Language.Malgo.Pretty
-import           Universum             hiding (Type)
 
 type Name = Id
 

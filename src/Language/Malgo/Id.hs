@@ -3,9 +3,10 @@
 module Language.Malgo.Id where
 
 import           Data.Outputable
+import           Data.Text             (Text)
+import           GHC.Generics          (Generic)
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           Universum
 
 data Id = Id { _name :: Text, _uniq :: Int }
     deriving (Show, Eq, Ord, Generic)

@@ -19,12 +19,14 @@ module Language.Malgo.Type
   , replaceType
   ) where
 
-import qualified Data.List             as List
+import           Control.Monad.IO.Class
+import           Data.IORef
+import qualified Data.List              as List
+import           Data.Maybe
 import           Data.Outputable
+import           GHC.Generics           (Generic)
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           Prelude               (show)
-import           Universum             hiding (Type)
 
 data TypeScheme a = Forall [a] (Type a)
   deriving (Eq, Show, Generic)
@@ -41,18 +43,18 @@ instance Ord (TyRef a) where
   compare x y = compare (_tyRefId x) (_tyRefId y)
 
 newTyRef :: MonadMalgo m => m (TyRef a)
-newTyRef = TyRef <$> newUniq <*> newIORef Nothing
+newTyRef = TyRef <$> newUniq <*> liftIO (newIORef Nothing)
 readTyRef :: MonadIO m => TyRef a -> m (Maybe (Type a))
-readTyRef (TyRef _ r) = readIORef r
+readTyRef (TyRef _ r) = liftIO $ readIORef r
 writeTyRef :: (MonadIO m, Outputable a) => TyRef a -> Type a -> m ()
 writeTyRef (TyRef _ r) ty = do
-  mt <- readIORef r
+  mt <- liftIO $ readIORef r
   case mt of
-    Nothing -> writeIORef r (Just ty)
-    Just ty' -> error $ Universum.show $ "rewrite(writeTyRef):" <+> ppr ty' <+> "->" <+> ppr ty
+    Nothing -> liftIO $ writeIORef r (Just ty)
+    Just ty' -> error $ show $ "rewrite(writeTyRef):" <+> ppr ty' <+> "->" <+> ppr ty
 modifyTyRef
   :: MonadIO m => TyRef a -> (Maybe (Type a) -> Maybe (Type a)) -> m ()
-modifyTyRef (TyRef _ r) = modifyIORef r
+modifyTyRef (TyRef _ r) = liftIO . modifyIORef r
 
 instance Show (TyRef a) where
   show (TyRef i _) = "<TyRef " <> Prelude.show i <> ">"
@@ -138,7 +140,7 @@ replaceType :: (Eq a, MonadIO f) => [(a, Type a)] -> Type a -> f (Type a)
 replaceType kvs (TyApp tycon ts) = TyApp tycon <$> mapM (replaceType kvs) ts
 replaceType kvs (TyVar v) = return $ fromMaybe (TyVar v) $ List.lookup v kvs
 replaceType kvs m@(TyMeta (TyRef _ r)) = do
-  mt <- readIORef r
+  mt <- liftIO $ readIORef r
   case mt of
     Just ty -> replaceType kvs ty
     Nothing -> return m
