@@ -66,7 +66,7 @@ term o = do
 char :: Monad m => Integer -> m O.Operand
 char = return . O.ConstantOperand . C.Int 8
 
-sizeof :: MonadIRBuilder m => LT.Type -> m O.Operand
+sizeof :: (MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m O.Operand
 sizeof ty = do
   let nullptr = O.ConstantOperand (C.Null (LT.ptr ty))
   ptr <- gep nullptr [O.ConstantOperand (C.Int 64 1)]
@@ -82,7 +82,8 @@ gcMalloc bytesOpr = do
     Just f' -> call f' [(bytesOpr, [])]
     Nothing -> error "unreachable(gcMalloc)"
 
-malloc :: ( MonadReader GenState m
+malloc :: ( MonadModuleBuilder m
+          , MonadReader GenState m
           , MonadIRBuilder m
           , MonadIO m)
        => LT.Type -> m O.Operand
