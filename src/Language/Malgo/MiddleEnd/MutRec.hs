@@ -3,13 +3,13 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeOperators         #-}
-module Language.Malgo.Old.MiddleEnd.MutRec (remove, lint) where
+module Language.Malgo.MiddleEnd.MutRec (remove, lint) where
 
 import           Data.List             (nubBy)
 import qualified Data.Map.Strict       as Map
-import           Language.Malgo.Old.ID
-import           Language.Malgo.Old.IR.IR
-import           Language.Malgo.Old.Monad
+import           Language.Malgo.ID
+import           Language.Malgo.IR.IR
+import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Universum
 

@@ -2,7 +2,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE StrictData                 #-}
-module Language.Malgo.Old.FrontEnd.Info where
+module Language.Malgo.FrontEnd.Info where
 
 import           Data.Outputable
 import           Language.Malgo.Pretty

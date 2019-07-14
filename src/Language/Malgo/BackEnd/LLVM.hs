@@ -5,7 +5,7 @@
 {-# LANGUAGE StrictData            #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TupleSections         #-}
-module Language.Malgo.Old.BackEnd.LLVM
+module Language.Malgo.BackEnd.LLVM
   ( dumpLLVM
   , genExpr
   , genDefn
@@ -16,8 +16,8 @@ import           Control.Lens             (makeLenses)
 import qualified Data.Char                as Char
 import qualified Data.Map.Strict          as Map
 import qualified Data.Text                as Text
-import           Language.Malgo.Old.ID
-import           Language.Malgo.Old.IR.IR hiding (prims)
+import           Language.Malgo.ID
+import           Language.Malgo.IR.IR hiding (prims)
 import qualified Language.Malgo.Pretty    as P
 import qualified LLVM.AST
 import qualified LLVM.AST.Constant        as C

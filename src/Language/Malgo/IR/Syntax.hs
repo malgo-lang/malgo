@@ -3,13 +3,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-module Language.Malgo.Old.IR.Syntax where
+module Language.Malgo.IR.Syntax where
 
 import           Data.List                    ((!!))
 import           Data.Outputable
-import           Language.Malgo.Old.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
-import           Language.Malgo.Old.Type
+import           Language.Malgo.Type
 import           Universum                    hiding (Type)
 
 data Expr a

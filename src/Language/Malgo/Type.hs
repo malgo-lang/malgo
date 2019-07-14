@@ -3,7 +3,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-module Language.Malgo.Old.Type where
+module Language.Malgo.Type where
 
 import           Data.Outputable
 import           Language.Malgo.Pretty

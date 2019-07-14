@@ -3,9 +3,9 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
-module Language.Malgo.Old.Lexer where
+module Language.Malgo.Lexer where
 
-import           Language.Malgo.Old.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Info
 import           Text.Parsec                  hiding (many, (<|>))
 import           Text.Parsec.Pos              ()
 import qualified Text.Parsec.Token            as Tok

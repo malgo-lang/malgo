@@ -7,12 +7,12 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE StrictData            #-}
-module Language.Malgo.Old.IR.IR where
+module Language.Malgo.IR.IR where
 
 import           Control.Monad.Except  (MonadError, throwError)
 import           Data.List             (delete, (\\))
 import           Data.Outputable
-import           Language.Malgo.Old.ID
+import           Language.Malgo.ID
 import           Language.Malgo.Pretty
 import           Universum
 

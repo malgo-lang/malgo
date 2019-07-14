@@ -2,13 +2,13 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.Old.FrontEnd.Rename ( rename ) where
+module Language.Malgo.FrontEnd.Rename ( rename ) where
 
 import qualified Data.Map.Strict              as Map
-import           Language.Malgo.Old.FrontEnd.Info
-import           Language.Malgo.Old.ID
-import           Language.Malgo.Old.IR.Syntax     hiding (info)
-import           Language.Malgo.Old.Monad
+import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.ID
+import           Language.Malgo.IR.Syntax     hiding (info)
+import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Universum
 

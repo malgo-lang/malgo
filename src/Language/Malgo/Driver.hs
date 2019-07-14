@@ -3,20 +3,20 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.Old.Driver where
+module Language.Malgo.Driver where
 
 import           Data.Outputable
-import qualified Language.Malgo.Old.BackEnd.LLVM        as LLVM
-import qualified Language.Malgo.Old.FrontEnd.Rename     as Rename
-import qualified Language.Malgo.Old.FrontEnd.TypeCheck  as TypeCheck
-import           Language.Malgo.Old.ID
-import qualified Language.Malgo.Old.IR.IR               as IR
-import qualified Language.Malgo.Old.IR.Syntax           as Syntax
-import qualified Language.Malgo.Old.MiddleEnd.BasicLint as BasicLint
-import qualified Language.Malgo.Old.MiddleEnd.Closure   as Closure
-import qualified Language.Malgo.Old.MiddleEnd.MutRec    as MutRec
-import qualified Language.Malgo.Old.MiddleEnd.TransToIR as TransToIR
-import           Language.Malgo.Old.Monad               as M
+import qualified Language.Malgo.BackEnd.LLVM        as LLVM
+import qualified Language.Malgo.FrontEnd.Rename     as Rename
+import qualified Language.Malgo.FrontEnd.TypeCheck  as TypeCheck
+import           Language.Malgo.ID
+import qualified Language.Malgo.IR.IR               as IR
+import qualified Language.Malgo.IR.Syntax           as Syntax
+import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
+import qualified Language.Malgo.MiddleEnd.Closure   as Closure
+import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
+import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
+import           Language.Malgo.Monad               as M
 import           Language.Malgo.Pretty
 import qualified LLVM.AST                               as L
 import           Options.Applicative

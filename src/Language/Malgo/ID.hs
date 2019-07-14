@@ -6,15 +6,15 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
-module Language.Malgo.Old.ID
+module Language.Malgo.ID
   (ID(..), RawID, TypedID, idName, idUniq, idMeta, newID) where
 
-import           Control.Lens          (makeLenses)
+import           Control.Lens             (makeLenses)
 import           Data.Outputable
-import           Language.Malgo.Old.Monad
+import           Language.Malgo.Monad
+import           Language.Malgo.Type
 import           Language.Malgo.Pretty
-import           Language.Malgo.Old.Type
-import           Universum             hiding (Type)
+import           Universum                hiding (Type)
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read, Generic, Outputable)
