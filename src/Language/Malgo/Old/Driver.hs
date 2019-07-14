@@ -34,7 +34,6 @@ parseOpt = execParser $
           <*> switch (long "dump-type-table")
           <*> switch (long "dump-closure"))
           <*> switch (long "debug-mode")
-          <*> switch (long "version-2")
          <**> helper) (fullDesc
     <> progDesc "malgo"
     <> header "malgo - a toy programming language")
