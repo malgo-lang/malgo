@@ -19,7 +19,7 @@ module Language.Malgo.Monad
   , malgoError
   ) where
 
-import           Universum
+import           Relude
 
 newtype UniqSupply = UniqSupply (IORef Int)
 

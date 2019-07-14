@@ -9,7 +9,7 @@ import           Language.Malgo.FrontEnd.Info
 import           Text.Parsec                  hiding (many, (<|>))
 import           Text.Parsec.Pos              ()
 import qualified Text.Parsec.Token            as Tok
-import           Universum                    hiding (EQ, GT, LT, try)
+import           Relude                    hiding (EQ, GT, LT, try)
 
 data Tag
     = LET

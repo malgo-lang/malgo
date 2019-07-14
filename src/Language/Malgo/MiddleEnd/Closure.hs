@@ -5,7 +5,7 @@
 {-# LANGUAGE TemplateHaskell       #-}
 module Language.Malgo.MiddleEnd.Closure (trans) where
 
-import           Control.Lens          (makeLenses)
+import           Control.Lens
 import           Data.List             ((\\))
 import qualified Data.Map.Strict       as Map
 import           Language.Malgo.ID     hiding (newID)
@@ -13,7 +13,7 @@ import qualified Language.Malgo.ID     as ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           Universum
+import           Relude
 
 data Env = Env { _varmap :: Map (ID MType) (ID MType)
                , _knowns :: [ID MType]

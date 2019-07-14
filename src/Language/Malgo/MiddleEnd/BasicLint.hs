@@ -4,11 +4,12 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
 
+import           Control.Lens
 import           Control.Monad.Except  (MonadError, runExcept, throwError)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Pretty
-import           Universum
+import           Relude
 
 lint :: Expr (ID MType) -> Either Doc MType
 lint expr = runExcept $ evalStateT (lintExpr expr) []

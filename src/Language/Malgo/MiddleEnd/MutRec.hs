@@ -5,17 +5,18 @@
 {-# LANGUAGE TypeOperators         #-}
 module Language.Malgo.MiddleEnd.MutRec (remove, lint) where
 
-import           Data.List             (nubBy)
+import           Control.Lens
+import           Data.List             (nubBy, foldl)
 import qualified Data.Map.Strict       as Map
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           Universum
+import           Relude
 
 perm :: Eq a => [a] -> [[a]]
 perm xs = filter (not . null)
-          $ nubBy (\x y -> safeHead x == safeHead y)
+          $ nubBy (\x y -> viaNonEmpty head x == viaNonEmpty head y)
           $ permutations xs
 
 type Env = Map (ID MType) (ID MType)

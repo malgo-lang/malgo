@@ -6,7 +6,7 @@ module Language.Malgo.FrontEnd.Info where
 
 import           Data.Outputable
 import           Language.Malgo.Pretty
-import           Universum
+import           Relude
 
 newtype Info = Info (Text, Int, Int)
   deriving (Show, Eq, Ord, Read, Generic, Outputable)

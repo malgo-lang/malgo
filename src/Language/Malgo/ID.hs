@@ -9,12 +9,12 @@
 module Language.Malgo.ID
   (ID(..), RawID, TypedID, idName, idUniq, idMeta, newID) where
 
-import           Control.Lens             (makeLenses)
+import           Control.Lens             (makeLenses, view)
 import           Data.Outputable
 import           Language.Malgo.Monad
 import           Language.Malgo.Type
 import           Language.Malgo.Pretty
-import           Universum                hiding (Type)
+import           Relude                hiding (Type)
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read, Generic, Outputable)

@@ -4,6 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
 
+import           Control.Lens
 import qualified Data.Map.Strict              as Map
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
@@ -12,7 +13,7 @@ import qualified Language.Malgo.IR.Syntax     as Syntax
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum                    hiding (Type)
+import           Relude                       hiding (Type)
 
 typeCheck :: Expr RawID -> MalgoM (Expr TypedID)
 typeCheck e =

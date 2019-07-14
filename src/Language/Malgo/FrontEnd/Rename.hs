@@ -10,7 +10,7 @@ import           Language.Malgo.ID
 import           Language.Malgo.IR.Syntax     hiding (info)
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           Universum
+import           Relude
 
 rename :: Expr Text -> MalgoM (Expr RawID)
 rename e =

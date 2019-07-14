@@ -7,7 +7,7 @@ module Language.Malgo.Type where
 
 import           Data.Outputable
 import           Language.Malgo.Pretty
-import           Universum             hiding (Type)
+import           Relude             hiding (Type)
 
 -- | Malgoの組み込みデータ型
 data Type

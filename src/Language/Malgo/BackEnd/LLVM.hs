@@ -12,7 +12,7 @@ module Language.Malgo.BackEnd.LLVM
   , genProgram
   ) where
 
-import           Control.Lens             (makeLenses)
+import           Control.Lens
 import qualified Data.Char                as Char
 import qualified Data.Map.Strict          as Map
 import qualified Data.Text                as Text
@@ -24,7 +24,7 @@ import qualified LLVM.AST.Constant        as C
 import qualified LLVM.AST.Operand         as O
 import qualified LLVM.AST.Type            as LT
 import           LLVM.IRBuilder           as IRBuilder
-import           Universum
+import           Relude
 
 data GenState =
   GenState { _table      :: Map (ID MType) O.Operand

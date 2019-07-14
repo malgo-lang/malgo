@@ -10,7 +10,7 @@ import           Data.Outputable
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum                    hiding (Type)
+import           Relude                    hiding (Type, Op)
 
 data Expr a
   -- | 変数参照

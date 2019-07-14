@@ -5,13 +5,14 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.TransToIR (trans) where
 
+import           Control.Lens             (set)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import qualified Language.Malgo.IR.Syntax as S
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Universum
+import           Relude
 
 throw :: MonadMalgo m => Doc -> m a
 throw mes = malgoError $ "error(transToIR):" <+> mes

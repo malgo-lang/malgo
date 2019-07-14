@@ -9,12 +9,13 @@
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.IR.IR where
 
+import           Control.Lens          (view, _1, _3)
 import           Control.Monad.Except  (MonadError, throwError)
 import           Data.List             (delete, (\\))
 import           Data.Outputable
 import           Language.Malgo.ID
 import           Language.Malgo.Pretty
-import           Universum
+import           Relude
 
 class FreeVars f where
   freevarsPrec :: Ord a => f a -> [a]
@@ -158,7 +159,7 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Read arr _) =
     case mTypeOf arr of
       PointerTy t -> t
-      t -> error $ show $ pPrint t <+> "is not array"
+      t           -> error $ show $ pPrint t <+> "is not array"
   mTypeOf Write{} = StructTy []
   mTypeOf (Prim _ ty) = ty
   mTypeOf (Tuple xs) = PointerTy (StructTy (map mTypeOf xs))
