@@ -16,6 +16,7 @@ data Type
           , _ret    :: Type }
   | TupleTy [Type]
   | ArrayTy Type
+  | MetaTy Int
   deriving (Eq, Show, Ord, Read, Generic, Outputable)
 
 instance Pretty Type where
@@ -30,6 +31,7 @@ instance Pretty Type where
     braces $ sep $ punctuate "," $ map pPrint xs
   pPrint (ArrayTy t) =
     brackets $ pPrint t
+  pPrint (MetaTy i) = pPrint i
 
 instance IsString Type where
   fromString name = NameTy $ fromString name
