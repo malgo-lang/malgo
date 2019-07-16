@@ -12,12 +12,6 @@ import           Relude             hiding (Type)
 -- | Malgoの組み込みデータ型
 data Type
   = NameTy Text
-  | IntTy
-  | FloatTy
-  | BoolTy
-  | CharTy
-  | StringTy
-  | UnitTy
   | FunTy { _params :: [Type]
           , _ret    :: Type }
   | TupleTy [Type]
@@ -27,12 +21,6 @@ data Type
 instance Pretty Type where
   pPrint "Unit" = "{}"
   pPrint (NameTy n) = pPrint n
-  pPrint IntTy = "Int"
-  pPrint FloatTy = "Float"
-  pPrint BoolTy = "Bool"
-  pPrint CharTy = "Char"
-  pPrint StringTy = "String"
-  pPrint UnitTy = "Unit"
   pPrint (FunTy [param] ret) =
     pPrint param <+> "->" <+> pPrint ret
   pPrint (FunTy params ret) =
