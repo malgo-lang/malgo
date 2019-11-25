@@ -48,7 +48,6 @@ executable:
   - containers
   - text
   - llvm-hs-pretty
-  - universum
   - outputable
 
 tests:
@@ -57,7 +56,6 @@ tests:
     source-dirs: test
     dependencies:
     - base
-    - universum
     - malgo
     - mtl
     - parsec
