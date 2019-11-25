@@ -5,8 +5,8 @@
 {-# LANGUAGE TypeOperators         #-}
 module Language.Malgo.MiddleEnd.MutRec (remove, lint) where
 
-import           Control.Lens
-import           Data.List             (nubBy, foldl)
+import           Control.Lens          hiding (ix)
+import           Data.List             (foldl, nubBy)
 import qualified Data.Map.Strict       as Map
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR

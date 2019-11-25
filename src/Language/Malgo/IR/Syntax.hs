@@ -10,7 +10,7 @@ import           Data.Outputable
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
-import           Relude                    hiding (Type, Op)
+import           Relude                       hiding (Op, Type)
 
 data Expr a
   -- | 変数参照
@@ -54,24 +54,24 @@ data Expr a
   deriving (Eq, Show, Read, Generic, Outputable)
 
 info :: Expr t -> Info
-info (Var i _)           = i
-info (Int i _)           = i
-info (Float i _)         = i
-info (Bool i _)          = i
-info (Char i _)          = i
-info (String i _)        = i
-info (Tuple i _)         = i
-info (TupleAccess i _ _) = i
-info (MakeArray i _ _) = i
-info (ArrayRead i _ _) = i
+info (Var i _)            = i
+info (Int i _)            = i
+info (Float i _)          = i
+info (Bool i _)           = i
+info (Char i _)           = i
+info (String i _)         = i
+info (Tuple i _)          = i
+info (TupleAccess i _ _)  = i
+info (MakeArray i _ _)    = i
+info (ArrayRead i _ _)    = i
 info (ArrayWrite i _ _ _) = i
-info (Unit i)            = i
-info (Call i _ _)        = i
-info (Fn i _ _)          = i
-info (Seq i _ _)         = i
-info (Let i _ _)         = i
-info (If i _ _ _)        = i
-info (BinOp i _ _ _)     = i
+info (Unit i)             = i
+info (Call i _ _)         = i
+info (Fn i _ _)           = i
+info (Seq i _ _)          = i
+info (Let i _ _)          = i
+info (If i _ _ _)         = i
+info (BinOp i _ _ _)      = i
 
 instance Pretty a => Pretty (Expr a) where
   pPrint (Var _ name) = pPrint name
@@ -244,3 +244,4 @@ comparable NameTy {}  = False
 comparable FunTy {}   = False
 comparable TupleTy {} = False
 comparable ArrayTy {} = False
+comparable MetaTy {}  = False

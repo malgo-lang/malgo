@@ -6,10 +6,10 @@
 module Language.Malgo.Lexer where
 
 import           Language.Malgo.FrontEnd.Info
+import           Relude                       hiding (EQ, GT, LT)
 import           Text.Parsec                  hiding (many, (<|>))
 import           Text.Parsec.Pos              ()
 import qualified Text.Parsec.Token            as Tok
-import           Relude                    hiding (EQ, GT, LT, try)
 
 data Tag
     = LET

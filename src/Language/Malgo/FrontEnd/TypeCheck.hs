@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
 
-import           Control.Lens
+import           Control.Lens                 hiding (ix, index, op)
 import qualified Data.Map.Strict              as Map
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
