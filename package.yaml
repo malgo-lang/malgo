@@ -26,7 +26,6 @@ library:
   - containers
   - flow
   - lens
-  - llvm-hs-pretty
   - llvm-hs-pure
   - transformers
   - mtl
@@ -47,8 +46,10 @@ executable:
   - parsec
   - containers
   - text
-  - llvm-hs-pretty
+  - llvm-hs
   - outputable
+  - relude
+  - llvm-hs-pure
 
 tests:
   spec:

@@ -96,9 +96,9 @@ genExpr e = term (genExpr' e)
 
 genExpr' :: Expr (ID MType) -> IRBuilderT GenDec O.Operand
 genExpr' (Var a) = getRef a
-genExpr' (Int i) = int64 i
-genExpr' (Float d) = double d
-genExpr' (Bool b) = bit (if b then 1 else 0)
+genExpr' (Int i) = pure $ int64 i
+genExpr' (Float d) = pure $ double d
+genExpr' (Bool b) = pure $ bit (if b then 1 else 0)
 genExpr' (Char c) = char (toInteger $ Char.ord c)
 genExpr' (String xs) = do
   p <- gcMalloc (O.ConstantOperand $ C.Int 64
@@ -106,8 +106,7 @@ genExpr' (String xs) = do
   mapM_ (addChar p) (zip [0..] $ toString xs <> ['\0'])
   return p
   where addChar p (i, c) = do
-          i' <- int64 i
-          p' <- gep p [i']
+          p' <- gep p [int64 i]
           c' <- char (toInteger $ Char.ord c)
           store p' 0 c'
 genExpr' Unit =
@@ -205,6 +204,6 @@ genProgram (Program m defs) = do
         (\_ -> do void $ call gcInit []
                   m' <- getRef m
                   void $ call m' []
-                  ret =<< int32 0)
+                  ret (int32 0))
   where defs' = map (\(DefFun fn _ _) ->
                        O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ P.pPrint fn)) defs
