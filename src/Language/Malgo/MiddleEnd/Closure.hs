@@ -33,9 +33,9 @@ type TransM a = ReaderT Env (StateT (Program (ID MType)) MalgoM) a
 
 closureConv :: Expr (ID MType) -> MalgoM (Program (ID MType))
 closureConv e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ usingReaderT (Env mempty []) $ do
-  u <- newUniq
-  let mainFun = ID "main" u (FunctionTy (StructTy []) [])
   e' <- transExpr e
+  u <- newUniq
+  let mainFun = ID "main" u (FunctionTy (mTypeOf e') [])
   addDefn (DefFun mainFun [] e')
   Program _ xs <- get
   put $ Program mainFun xs
