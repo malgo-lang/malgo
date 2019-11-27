@@ -32,6 +32,7 @@ parseOpt = execParser $
           <*> switch (long "dump-typed")
           <*> switch (long "dump-knormal")
           <*> switch (long "dump-type-table")
+          <*> switch (long "dump-mutrec")
           <*> switch (long "dump-closure"))
           <*> switch (long "debug-mode")
          <**> helper) (fullDesc
@@ -43,16 +44,16 @@ frontend ast = do
   opt <- asks maOption
   when (dumpParsed opt) $
     dump ast
-  trans @Rename ast >>= trans @TypeCheck
+  transform @Rename ast >>= transform @TypeCheck
 
 middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID IR.MType))
-middleend ast = trans @TransToIR ast
-  >>= trans @BasicLint
-  >>= trans @MutRec
-  >>= trans @BasicLint
-  >>= trans @MutRecLint
-  >>= trans @Closure
-  >>= trans @BasicProgramLint
+middleend ast = transform @TransToIR ast
+  >>= transform @BasicLint
+  >>= transform @MutRec
+  >>= transform @BasicLint
+  >>= transform @MutRecLint
+  >>= transform @Closure
+  >>= transform @BasicProgramLint
 
 backend :: MonadIO m => String -> IR.Program (ID IR.MType) -> m L.Module
 backend filename ir = do

@@ -20,7 +20,7 @@ data MutRec
 data MutRecLint
 
 instance Pass MutRec (Expr (ID MType)) (Expr (ID MType)) where
-  isDump _ = False
+  isDump = dumpMutRec
   trans = remove
 
 instance Pass MutRecLint (Expr (ID MType)) (Expr (ID MType)) where
