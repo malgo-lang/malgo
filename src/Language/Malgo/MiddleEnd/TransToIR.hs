@@ -1,18 +1,26 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.MiddleEnd.TransToIR (trans) where
+module Language.Malgo.MiddleEnd.TransToIR (TransToIR, transToIR) where
 
 import           Control.Lens             (set)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import qualified Language.Malgo.IR.Syntax as S
 import           Language.Malgo.Monad
+import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
 import           Relude
+
+data TransToIR
+
+instance Pass TransToIR (S.Expr (ID TypedID)) (Expr (ID MType)) where
+  isDump _ = dumpKNormal
+  trans _ = transToIR
 
 throw :: MonadMalgo m => Doc -> m a
 throw mes = malgoError $ "error(transToIR):" <+> mes
@@ -24,9 +32,6 @@ update a = do
 
 newTmp :: MonadMalgo f => Text -> a -> f (ID a)
 newTmp n t = newID t ("$" <> n)
-
-trans :: (MonadMalgo m, HasType a) => S.Expr (ID a) -> m (Expr (ID MType))
-trans = transToIR
 
 insertLet :: (MonadMalgo m, HasType a) => S.Expr (ID a) -> (ID MType -> m (Expr (ID MType))) -> m (Expr (ID MType))
 insertLet (S.Var _ x) k = update x >>= k

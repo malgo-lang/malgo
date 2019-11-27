@@ -61,7 +61,7 @@ frontend ast = do
 middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID IR.MType))
 middleend ast = do
   opt <- asks maOption
-  ir <- TransToIR.trans ast
+  ir <- TransToIR.transToIR ast
   when (dumpKNormal opt) $
     dump ir
   case BasicLint.lint ir of
@@ -77,7 +77,7 @@ middleend ast = do
     Right _  -> pass
     Left mes -> error $ show mes
 
-  ir'' <- Closure.trans ir'
+  ir'' <- Closure.closureConv ir'
   when (dumpClosure opt) $
     dump ir''
   case BasicLint.runLint (BasicLint.lintProgram ir'') of

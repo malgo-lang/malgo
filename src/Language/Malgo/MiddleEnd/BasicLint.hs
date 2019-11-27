@@ -1,15 +1,27 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.MiddleEnd.BasicLint (lint, runLint, lintExpr, lintProgram) where
+{-# LANGUAGE TypeFamilies          #-}
+module Language.Malgo.MiddleEnd.BasicLint (BasicLint, lint, runLint, lintExpr, lintProgram) where
 
 import           Control.Lens
 import           Control.Monad.Except  (MonadError, runExcept, throwError)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
+import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Relude
+
+data BasicLint
+
+instance Pass BasicLint (Expr (ID MType)) () where
+  isDump _ _ = False
+  trans _ s =
+    case lint s of
+      Right _  -> pass
+      Left mes -> error $ show mes
 
 lint :: Expr (ID MType) -> Either Doc MType
 lint expr = runExcept $ evalStateT (lintExpr expr) []

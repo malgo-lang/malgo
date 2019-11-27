@@ -1,9 +1,10 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
-module Language.Malgo.MiddleEnd.Closure (trans) where
+module Language.Malgo.MiddleEnd.Closure (closureConv) where
 
 import           Control.Lens
 import           Data.List             ((\\))
@@ -12,6 +13,7 @@ import           Language.Malgo.ID     hiding (newID)
 import qualified Language.Malgo.ID     as ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
+import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Relude
 
@@ -21,10 +23,16 @@ data Env = Env { _varmap :: Map (ID MType) (ID MType)
 
 makeLenses ''Env
 
+data Closure
+
+instance Pass Closure (Expr (ID MType)) (Program (ID MType)) where
+  isDump _ = dumpClosure
+  trans _ = closureConv
+
 type TransM a = ReaderT Env (StateT (Program (ID MType)) MalgoM) a
 
-trans :: Expr (ID MType) -> MalgoM (Program (ID MType))
-trans e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ usingReaderT (Env mempty []) $ do
+closureConv :: Expr (ID MType) -> MalgoM (Program (ID MType))
+closureConv e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ usingReaderT (Env mempty []) $ do
   u <- newUniq
   let mainFun = ID "main" u (FunctionTy (StructTy []) [])
   e' <- transExpr e

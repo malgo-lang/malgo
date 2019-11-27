@@ -1,19 +1,28 @@
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-module Language.Malgo.FrontEnd.TypeCheck (typeCheck) where
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeFamilies          #-}
+module Language.Malgo.FrontEnd.TypeCheck ( TypeCheck, typeCheck) where
 
-import           Control.Lens                 hiding (ix, index, op)
+import           Control.Lens                 hiding (index, ix, op)
 import qualified Data.Map.Strict              as Map
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
 import           Language.Malgo.IR.Syntax     hiding (info)
 import qualified Language.Malgo.IR.Syntax     as Syntax
 import           Language.Malgo.Monad
+import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
 import           Relude                       hiding (Type)
+
+data TypeCheck
+
+instance Pass TypeCheck (Expr RawID) (Expr TypedID) where
+  isDump _ = dumpTyped
+  trans _ s = runReaderT (checkExpr s) mempty
 
 typeCheck :: Expr RawID -> MalgoM (Expr TypedID)
 typeCheck e =

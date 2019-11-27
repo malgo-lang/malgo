@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -11,8 +12,15 @@ import qualified Data.Map.Strict       as Map
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Monad
+import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Relude
+
+data MutRec
+
+instance Pass MutRec (Expr (ID MType)) (Expr (ID MType)) where
+  isDump _ _ = False
+  trans _ = remove
 
 perm :: Eq a => [a] -> [[a]]
 perm xs = filter (not . null)

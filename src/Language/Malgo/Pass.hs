@@ -1,23 +1,21 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE DataKinds              #-}
+{-# LANGUAGE FlexibleContexts       #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses  #-}
+{-# LANGUAGE NoImplicitPrelude      #-}
+{-# LANGUAGE TypeFamilies           #-}
 module Language.Malgo.Pass where
 
-import Language.Malgo.Monad
-import Data.Kind (Type)
-import Data.Proxy
-import Control.Monad.Reader
-import Data.Outputable
-import Language.Malgo.Pretty
-import Relude
+import           Control.Monad.Reader
+import           Data.Outputable
+import           Language.Malgo.Monad
+import           Language.Malgo.Pretty
+import           Relude
 
-class (Outputable (Target p), Pretty (Target p)) => Pass p where
-  type Source p :: Type
-  type Target p :: Type
+class (Outputable t, Pretty t) => Pass p s t | p -> s t where
   isDump :: Proxy p -> Opt -> Bool
-  trans :: Proxy p -> Source p -> MalgoM (Target p)
- 
+  trans :: Proxy p -> s -> MalgoM t
+
 dump :: (MonadReader MalgoEnv m, Outputable a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- asks maOption
@@ -25,7 +23,7 @@ dump x = do
   then print $ ppr x
   else print $ pPrint x
 
-transform :: Pass p => Proxy p -> Source p -> MalgoM (Target p)
+transform :: Pass p s t => Proxy p -> s -> MalgoM t
 transform p s = do
   opt <- asks maOption
   t <- trans p s

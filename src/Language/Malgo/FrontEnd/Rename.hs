@@ -1,16 +1,25 @@
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.FrontEnd.Rename ( rename ) where
+{-# LANGUAGE TypeFamilies          #-}
+module Language.Malgo.FrontEnd.Rename ( Rename, rename ) where
 
 import qualified Data.Map.Strict              as Map
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
 import           Language.Malgo.IR.Syntax     hiding (info)
 import           Language.Malgo.Monad
+import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Relude
+
+data Rename
+
+instance Pass Rename (Expr Text) (Expr RawID) where
+  isDump _ = dumpRenamed
+  trans _ s = runReaderT (renameExpr s) mempty
 
 rename :: Expr Text -> MalgoM (Expr RawID)
 rename e =
