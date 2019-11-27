@@ -108,32 +108,31 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
           Program _ defs <- get
           -- 自由変数のリスト
           let zs = freevars fbody' \\ (params' ++ map _fnName defs) -- すでに宣言されている関数名は自由変数にはならない
+
           -- 実際に変換後のfbody内で参照される自由変数のリスト
-          zs' <- mapM transID (zs \\ [innerCls])
+          zs' <- mapM cloneID (zs \\ [innerCls])
 
           -- 仮引数に追加されるポインタ
           capPtr <- newID "fv" $ PointerTy (IntTy 8)
-          capPtr' <- newID "fv_unpacked" $ PointerTy
-                     $ StructTy (map (view idMeta) $ zs \\ [innerCls])
+          capStruct <- newID "fv_unpacked" $ PointerTy $ StructTy (map (view idMeta) $ zs \\ [innerCls])
 
           -- 自由変数zsを対応するfv_unpackedの要素zs'に変換
           let fbody'' = Let innerCls (Tuple [unknownFn, capPtr])
-                        $ Let capPtr' (Cast (view idMeta capPtr') capPtr)
-                        $ makeLet capPtr' 0 zs'
+                        $ Let capStruct (Cast (view idMeta capStruct) capPtr)
+                        $ makeLet capStruct 0 zs'
                         $ runReader (replace fbody') (Map.fromList (zip zs zs'))
           addDefn $ DefFun unknownFn (capPtr : params') fbody''
 
-          -- キャプチャされる値のタプル
-          capTuple <- newID "capture" (PointerTy $ StructTy (map (view idMeta) zs'))
-          capTuple' <- newID "capture_packed" (PointerTy $ IntTy 8)
-          -- 生成されるクロージャ
+          -- 生成されるクロージャと環境のID
           clsID <- newID (view idName fn <> "$cls") (packFunTy (mTypeOf fn))
+          capStruct' <- cloneID capStruct
+          capPtr' <- cloneID capPtr
 
-          body' <- local (over varmap (Map.insert fn clsID)) (transExpr body)
-          return $ Let capTuple (Tuple $ zs \\ [innerCls])
-            $ Let capTuple' (Cast (PointerTy $ IntTy 8) capTuple)
-            $ Let clsID (Tuple [unknownFn, capTuple']) body'
-        transID x = newID (view idName x) (view idMeta x)
+          Let capStruct' (Tuple $ zs \\ [innerCls])
+            . Let capPtr' (Cast (PointerTy $ IntTy 8) capStruct')
+            . Let clsID (Tuple [unknownFn, capPtr'])
+            <$> local (over varmap (Map.insert fn clsID)) (transExpr body)
+        cloneID x = newID (view idName x) (view idMeta x)
         makeLet _ _ [] e = e
         makeLet cap i (x:xs) e =
           Let x (Access cap [0, i]) $ makeLet cap (i+1) xs e

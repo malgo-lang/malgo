@@ -110,7 +110,7 @@ instance FreeVars Expr where
   freevarsPrec (Apply _ args) = args
   freevarsPrec (Let x v e) = freevars v ++ delete x (freevars e)
   freevarsPrec (LetRec xs e) =
-    (concatMap (\(_, params, body) -> (freevars body \\ params)) xs ++ freevars e)
+    (concatMap (\(_, params, body) -> freevars body \\ params) xs ++ freevars e)
     \\ map (view _1) xs
   freevarsPrec (Cast _ x) = [x]
   freevarsPrec (Access x _) = [x]
@@ -155,7 +155,7 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Char _) = IntTy 8
   mTypeOf (String _) = PointerTy (IntTy 8)
   mTypeOf Unit = StructTy []
-  mTypeOf (MakeArray ty val) = PointerTy ty
+  mTypeOf (MakeArray ty _) = PointerTy ty
   mTypeOf (Read arr _) =
     case mTypeOf arr of
       PointerTy t -> t
