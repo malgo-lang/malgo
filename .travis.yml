@@ -34,7 +34,8 @@ addons:
       - libgmp-dev
       - llvm-9-dev
     sources:
-      - llvm-toolchain-bionic-9
+      - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main'
+        key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
       - ubuntu-toolchain-r-test
 
 before_install:
