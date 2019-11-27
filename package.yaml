@@ -26,7 +26,7 @@ library:
   - containers
   - flow
   - lens
-  - llvm-hs-pure
+  - llvm-hs-pure == 9.0.*
   - transformers
   - mtl
   - optparse-applicative
@@ -46,10 +46,10 @@ executable:
   - parsec
   - containers
   - text
-  - llvm-hs
+  - llvm-hs == 9.0.*
   - outputable
   - relude
-  - llvm-hs-pure
+  - llvm-hs-pure == 9.0.*
 
 tests:
   spec:
