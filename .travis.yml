@@ -8,6 +8,7 @@
 # Copy these contents into the root directory of your Github project in a file
 # named .travis.yml
 
+dist: 
 # Use new container infrastructure to enable caching
 sudo: false
 
@@ -16,8 +17,8 @@ language: generic
 
 env:
   global:
-    - GCC=gcc-5
-    - GXX=g++-5
+    - GCC=clang-9
+    - GXX=clang++-9
 
 # Caching so the next build will be fast too.
 cache:
@@ -29,12 +30,11 @@ addons:
   apt:
     packages:
       - libgmp-dev
-      - gcc-5
-      - g++-5
+      - clang-9
       - libgmp-dev
-      # - llvm-5.0-dev
+      - llvm-9-dev
     sources:
-      # - llvm-toolchain-trusty-5.0
+      - llvm-toolchain-bionic-9
       - ubuntu-toolchain-r-test
 
 before_install:
