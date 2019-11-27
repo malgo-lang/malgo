@@ -20,7 +20,7 @@ data TransToIR
 
 instance Pass TransToIR (S.Expr TypedID) (Expr (ID MType)) where
   isDump = dumpKNormal
-  trans = transToIR
+  trans = fmap flattenExpr . transToIR
 
 throw :: MonadMalgo m => Doc -> m a
 throw mes = malgoError $ "error(transToIR):" <+> mes

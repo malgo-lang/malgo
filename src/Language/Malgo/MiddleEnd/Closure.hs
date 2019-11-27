@@ -27,7 +27,7 @@ data Closure
 
 instance Pass Closure (Expr (ID MType)) (Program (ID MType)) where
   isDump = dumpClosure
-  trans = closureConv
+  trans = fmap flattenProgram . closureConv
 
 type TransM a = ReaderT Env (StateT (Program (ID MType)) MalgoM) a
 
@@ -106,15 +106,16 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
           fbody' <- local (over varmap (Map.fromList ((fn, innerCls) : zip params params') <>))
                     $ transExpr fbody
           Program _ defs <- get
+
           -- 自由変数のリスト
-          let zs = freevars fbody' \\ (params' ++ map _fnName defs) -- すでに宣言されている関数名は自由変数にはならない
+          let zs = freevars fbody' \\ (innerCls : params' ++ map _fnName defs) -- すでに宣言されている関数名は自由変数にはならない
 
           -- 実際に変換後のfbody内で参照される自由変数のリスト
-          zs' <- mapM cloneID (zs \\ [innerCls])
+          zs' <- mapM cloneID zs 
 
           -- 仮引数に追加されるポインタ
           capPtr <- newID "fv" $ PointerTy (IntTy 8)
-          capStruct <- newID "fv_unpacked" $ PointerTy $ StructTy (map (view idMeta) $ zs \\ [innerCls])
+          capStruct <- newID "fv_unpacked" $ PointerTy $ StructTy (map (view idMeta) zs)
 
           -- 自由変数zsを対応するfv_unpackedの要素zs'に変換
           let fbody'' = Let innerCls (Tuple [unknownFn, capPtr])

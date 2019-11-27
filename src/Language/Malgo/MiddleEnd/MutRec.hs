@@ -21,7 +21,7 @@ data MutRecLint
 
 instance Pass MutRec (Expr (ID MType)) (Expr (ID MType)) where
   isDump = dumpMutRec
-  trans = remove
+  trans = fmap flattenExpr . remove
 
 instance Pass MutRecLint (Expr (ID MType)) (Expr (ID MType)) where
   isDump _ = False
