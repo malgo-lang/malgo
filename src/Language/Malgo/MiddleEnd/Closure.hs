@@ -80,21 +80,20 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
   -- fnに自由変数がないと仮定してfbodyをクロージャ変換
   pgBackup <- get
   fbody' <- local (over knowns (fn:))
-            $ local (over varmap (Map.fromList ((fn, fn') : zip params params') <>))
+            $ local (over varmap (Map.fromList ((fn, knownFn) : zip params params') <>))
             $ transExpr fbody
   Program _ defs <- get
   if null (freevars fbody' \\ (params' ++ map _fnName defs)) && (fn `notElem` freevars body)
     -- 本当に自由変数がなければknownsに追加してbodyを変換
-    then do addDefn (DefFun fn' params' fbody')
+    then do addDefn (DefFun knownFn params' fbody')
             local (over knowns (fn:))
-              $ local (over varmap (Map.insert fn fn'))
+              $ local (over varmap (Map.insert fn knownFn))
               $ transExpr body
     else trans' pgBackup
-
-  where fn' =
+  where knownFn =
           set idMeta
           (FunctionTy (packFunTy $ mTypeOf (Apply fn [])) (map (view idMeta) params')) fn
-        fn'' =
+        unknownFn =
           set idMeta
           (FunctionTy (packFunTy $ mTypeOf (Apply fn [])) (PointerTy (IntTy 8) : map (view idMeta) params')) fn
         params' = map packID params
@@ -118,11 +117,11 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
                      $ StructTy (map (view idMeta) $ zs \\ [innerCls])
 
           -- 自由変数zsを対応するfv_unpackedの要素zs'に変換
-          let fbody'' = Let innerCls (Tuple [fn'', capPtr])
+          let fbody'' = Let innerCls (Tuple [unknownFn, capPtr])
                         $ Let capPtr' (Cast (view idMeta capPtr') capPtr)
                         $ makeLet capPtr' 0 zs'
                         $ runReader (replace fbody') (Map.fromList (zip zs zs'))
-          addDefn $ DefFun fn'' (capPtr : params') fbody''
+          addDefn $ DefFun unknownFn (capPtr : params') fbody''
 
           -- キャプチャされる値のタプル
           capTuple <- newID "capture" (PointerTy $ StructTy (map (view idMeta) zs'))
@@ -133,7 +132,7 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
           body' <- local (over varmap (Map.insert fn clsID)) (transExpr body)
           return $ Let capTuple (Tuple $ zs \\ [innerCls])
             $ Let capTuple' (Cast (PointerTy $ IntTy 8) capTuple)
-            $ Let clsID (Tuple [fn'', capTuple']) body'
+            $ Let clsID (Tuple [unknownFn, capTuple']) body'
         transID x = newID (view idName x) (view idMeta x)
         makeLet _ _ [] e = e
         makeLet cap i (x:xs) e =
