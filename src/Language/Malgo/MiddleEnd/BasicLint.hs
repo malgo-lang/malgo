@@ -97,14 +97,16 @@ lintExpr (Cast ty a) = do
 lintExpr e = return $ mTypeOf e
 
 lintFunDec :: (MonadState [ID MType] m, MonadError Doc m) => (ID MType, [ID MType], Expr (ID MType)) -> m ()
-lintFunDec (_, params, fbody) = do
+lintFunDec (fn, params, body) = do
   modify (params <>)
-  void (lintExpr fbody)
+  bodyType <- lintExpr body
+  match fn (FunctionTy bodyType (map mTypeOf params))
 
 lintDefn :: (MonadState [ID MType] m, MonadError Doc m) => Defn (ID MType) -> m ()
-lintDefn (DefFun _ params fbody) = do
-  modify (params ++)
-  void (lintExpr fbody)
+lintDefn (DefFun fn params body) = do
+  modify (params <>)
+  bodyType <- lintExpr body
+  match fn (FunctionTy bodyType (map mTypeOf params))
 
 lintProgram :: (MonadState [ID MType] m, MonadError Doc m) => Program (ID MType) -> m ()
 lintProgram (Program _ xs) = do
