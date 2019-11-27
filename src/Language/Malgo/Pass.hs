@@ -1,8 +1,11 @@
+{-# LANGUAGE AllowAmbiguousTypes    #-}
 {-# LANGUAGE DataKinds              #-}
 {-# LANGUAGE FlexibleContexts       #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE NoImplicitPrelude      #-}
+{-# LANGUAGE ScopedTypeVariables    #-}
+{-# LANGUAGE TypeApplications       #-}
 {-# LANGUAGE TypeFamilies           #-}
 module Language.Malgo.Pass where
 
@@ -13,8 +16,8 @@ import           Language.Malgo.Pretty
 import           Relude
 
 class (Outputable t, Pretty t) => Pass p s t | p -> s t where
-  isDump :: Proxy p -> Opt -> Bool
-  trans :: Proxy p -> s -> MalgoM t
+  isDump :: Opt -> Bool
+  trans :: s -> MalgoM t
 
 dump :: (MonadReader MalgoEnv m, Outputable a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
@@ -23,10 +26,10 @@ dump x = do
   then print $ ppr x
   else print $ pPrint x
 
-transform :: Pass p s t => Proxy p -> s -> MalgoM t
-transform p s = do
+transform :: forall p s t. Pass p s t => s -> MalgoM t
+transform s = do
   opt <- asks maOption
-  t <- trans p s
-  when (isDump p opt) $
+  t <- trans @p s
+  when (isDump @p opt) $
     dump t
   return t

@@ -4,7 +4,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.FrontEnd.Rename ( Rename, rename ) where
+module Language.Malgo.FrontEnd.Rename ( Rename ) where
 
 import qualified Data.Map.Strict              as Map
 import           Language.Malgo.FrontEnd.Info
@@ -18,12 +18,8 @@ import           Relude
 data Rename
 
 instance Pass Rename (Expr Text) (Expr RawID) where
-  isDump _ = dumpRenamed
-  trans _ s = runReaderT (renameExpr s) mempty
-
-rename :: Expr Text -> MalgoM (Expr RawID)
-rename e =
-  runReaderT (renameExpr e) Map.empty
+  isDump = dumpRenamed
+  trans s = runReaderT (renameExpr s) mempty
 
 type RenameM a = ReaderT (Map Text RawID) MalgoM a
 

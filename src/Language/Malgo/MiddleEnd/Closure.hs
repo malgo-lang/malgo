@@ -4,7 +4,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
-module Language.Malgo.MiddleEnd.Closure (closureConv) where
+module Language.Malgo.MiddleEnd.Closure (Closure) where
 
 import           Control.Lens
 import           Data.List             ((\\))
@@ -26,8 +26,8 @@ makeLenses ''Env
 data Closure
 
 instance Pass Closure (Expr (ID MType)) (Program (ID MType)) where
-  isDump _ = dumpClosure
-  trans _ = closureConv
+  isDump = dumpClosure
+  trans = closureConv
 
 type TransM a = ReaderT Env (StateT (Program (ID MType)) MalgoM) a
 

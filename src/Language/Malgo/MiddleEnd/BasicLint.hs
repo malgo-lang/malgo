@@ -4,7 +4,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.MiddleEnd.BasicLint (BasicLint, lint, runLint, lintExpr, lintProgram) where
+module Language.Malgo.MiddleEnd.BasicLint (BasicLint, BasicProgramLint) where
 
 import           Control.Lens
 import           Control.Monad.Except  (MonadError, runExcept, throwError)
@@ -15,12 +15,20 @@ import           Language.Malgo.Pretty
 import           Relude
 
 data BasicLint
+data BasicProgramLint
 
-instance Pass BasicLint (Expr (ID MType)) () where
-  isDump _ _ = False
-  trans _ s =
+instance Pass BasicLint (Expr (ID MType)) (Expr (ID MType)) where
+  isDump _ = False
+  trans s =
     case lint s of
-      Right _  -> pass
+      Right _  -> pure s
+      Left mes -> error $ show mes
+
+instance Pass BasicProgramLint (Program (ID MType)) (Program (ID MType)) where
+  isDump _ = False
+  trans s =
+    case runLint (lintProgram s) of
+      Right _  -> pure s
       Left mes -> error $ show mes
 
 lint :: Expr (ID MType) -> Either Doc MType

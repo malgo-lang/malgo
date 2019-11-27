@@ -3,22 +3,22 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.Driver where
 
-import           Data.Outputable
 import qualified Language.Malgo.BackEnd.LLVM        as LLVM
-import qualified Language.Malgo.FrontEnd.Rename     as Rename
-import qualified Language.Malgo.FrontEnd.TypeCheck  as TypeCheck
+import           Language.Malgo.FrontEnd.Rename
+import           Language.Malgo.FrontEnd.TypeCheck
 import           Language.Malgo.ID
 import qualified Language.Malgo.IR.IR               as IR
 import qualified Language.Malgo.IR.Syntax           as Syntax
-import qualified Language.Malgo.MiddleEnd.BasicLint as BasicLint
-import qualified Language.Malgo.MiddleEnd.Closure   as Closure
-import qualified Language.Malgo.MiddleEnd.MutRec    as MutRec
-import qualified Language.Malgo.MiddleEnd.TransToIR as TransToIR
+import           Language.Malgo.MiddleEnd.BasicLint
+import           Language.Malgo.MiddleEnd.Closure
+import           Language.Malgo.MiddleEnd.MutRec
+import           Language.Malgo.MiddleEnd.TransToIR
 import           Language.Malgo.Monad               as M
-import           Language.Malgo.Pretty
-import qualified LLVM.AST                               as L
+import           Language.Malgo.Pass
+import qualified LLVM.AST                           as L
 import           Options.Applicative
 import           Relude
 
@@ -38,53 +38,21 @@ parseOpt = execParser $
     <> progDesc "malgo"
     <> header "malgo - a toy programming language")
 
-dump :: (MonadReader MalgoEnv m, Outputable a, MonadIO m, Pretty a) => a -> m ()
-dump x = do
-  opt <- asks maOption
-  if isDebugMode opt
-  then print $ ppr x
-  else print $ pPrint x
-
 frontend :: Syntax.Expr Text -> MalgoM (Syntax.Expr TypedID)
 frontend ast = do
   opt <- asks maOption
   when (dumpParsed opt) $
     dump ast
-  renamed <- Rename.rename ast
-  when (dumpRenamed opt) $
-    dump renamed
-  typed <- TypeCheck.typeCheck renamed
-  when (dumpTyped opt) $
-    dump typed
-  return typed
+  trans @Rename ast >>= trans @TypeCheck
 
 middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID IR.MType))
-middleend ast = do
-  opt <- asks maOption
-  ir <- TransToIR.transToIR ast
-  when (dumpKNormal opt) $
-    dump ir
-  case BasicLint.lint ir of
-    Right _  -> pass
-    Left mes -> error $ show mes
-  M.UniqSupply u <- M.maUniqSupply <$> ask
-  writeIORef u 0
-  ir' <- MutRec.remove ir
-  case BasicLint.lint ir' of
-    Right _  -> pass
-    Left mes -> error $ show mes
-  case MutRec.lint ir' of
-    Right _  -> pass
-    Left mes -> error $ show mes
-
-  ir'' <- Closure.closureConv ir'
-  when (dumpClosure opt) $
-    dump ir''
-  case BasicLint.runLint (BasicLint.lintProgram ir'') of
-    Right _  -> pass
-    Left mes -> error $ show mes
-
-  return ir''
+middleend ast = trans @TransToIR ast
+  >>= trans @BasicLint
+  >>= trans @MutRec
+  >>= trans @BasicLint
+  >>= trans @MutRecLint
+  >>= trans @Closure
+  >>= trans @BasicProgramLint
 
 backend :: MonadIO m => String -> IR.Program (ID IR.MType) -> m L.Module
 backend filename ir = do

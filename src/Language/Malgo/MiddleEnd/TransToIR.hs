@@ -4,7 +4,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.MiddleEnd.TransToIR (TransToIR, transToIR) where
+module Language.Malgo.MiddleEnd.TransToIR ( TransToIR ) where
 
 import           Control.Lens             (set)
 import           Language.Malgo.ID
@@ -18,9 +18,9 @@ import           Relude
 
 data TransToIR
 
-instance Pass TransToIR (S.Expr (ID TypedID)) (Expr (ID MType)) where
-  isDump _ = dumpKNormal
-  trans _ = transToIR
+instance Pass TransToIR (S.Expr TypedID) (Expr (ID MType)) where
+  isDump = dumpKNormal
+  trans = transToIR
 
 throw :: MonadMalgo m => Doc -> m a
 throw mes = malgoError $ "error(transToIR):" <+> mes

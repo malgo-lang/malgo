@@ -4,7 +4,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.FrontEnd.TypeCheck ( TypeCheck, typeCheck) where
+module Language.Malgo.FrontEnd.TypeCheck ( TypeCheck ) where
 
 import           Control.Lens                 hiding (index, ix, op)
 import qualified Data.Map.Strict              as Map
@@ -21,12 +21,8 @@ import           Relude                       hiding (Type)
 data TypeCheck
 
 instance Pass TypeCheck (Expr RawID) (Expr TypedID) where
-  isDump _ = dumpTyped
-  trans _ s = runReaderT (checkExpr s) mempty
-
-typeCheck :: Expr RawID -> MalgoM (Expr TypedID)
-typeCheck e =
-  runReaderT (checkExpr e) mempty
+  isDump = dumpTyped
+  trans s = runReaderT (checkExpr s) mempty
 
 type TypeCheckM a = ReaderT (Map RawID TypedID) MalgoM a
 

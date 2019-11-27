@@ -4,7 +4,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeOperators         #-}
-module Language.Malgo.MiddleEnd.MutRec (remove, lint) where
+module Language.Malgo.MiddleEnd.MutRec (MutRec, MutRecLint) where
 
 import           Control.Lens          hiding (ix)
 import           Data.List             (foldl, nubBy)
@@ -17,10 +17,18 @@ import           Language.Malgo.Pretty
 import           Relude
 
 data MutRec
+data MutRecLint
 
 instance Pass MutRec (Expr (ID MType)) (Expr (ID MType)) where
-  isDump _ _ = False
-  trans _ = remove
+  isDump _ = False
+  trans = remove
+
+instance Pass MutRecLint (Expr (ID MType)) (Expr (ID MType)) where
+  isDump _ = False
+  trans s =
+    case lint s of
+      Right _  -> pure s
+      Left mes -> error $ show mes
 
 perm :: Eq a => [a] -> [[a]]
 perm xs = filter (not . null)
