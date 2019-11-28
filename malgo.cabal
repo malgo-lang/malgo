@@ -1,0 +1,99 @@
+cabal-version: 1.12
+
+name:           malgo
+version:        1.0.0.0
+category:       Compilers/Interpreters
+homepage:       https://github.com/takoeight0821/malgo#readme
+bug-reports:    https://github.com/takoeight0821/malgo/issues
+author:         Yuya Kono
+maintainer:     takohati0821@gmail.com
+copyright:      2017-2019 Yuya Kono
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/takoeight0821/malgo
+
+library
+  exposed-modules:
+      Language.Malgo.BackEnd.LLVM
+      Language.Malgo.Driver
+      Language.Malgo.FrontEnd.Info
+      Language.Malgo.FrontEnd.Rename
+      Language.Malgo.FrontEnd.TypeCheck
+      Language.Malgo.ID
+      Language.Malgo.IR.IR
+      Language.Malgo.IR.Syntax
+      Language.Malgo.Lexer
+      Language.Malgo.MiddleEnd.BasicLint
+      Language.Malgo.MiddleEnd.Closure
+      Language.Malgo.MiddleEnd.MutRec
+      Language.Malgo.MiddleEnd.TransToIR
+      Language.Malgo.Monad
+      Language.Malgo.Parser
+      Language.Malgo.Pass
+      Language.Malgo.Pretty
+      Language.Malgo.Type
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
+  build-tools:
+      happy
+  build-depends:
+      array
+    , base >=4.7 && <5
+    , containers
+    , flow
+    , lens
+    , llvm-hs-pure ==9.0.*
+    , mtl
+    , optparse-applicative
+    , outputable
+    , parsec
+    , pretty
+    , relude
+    , text
+    , transformers
+  default-language: Haskell2010
+
+executable malgo
+  main-is: Main.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
+  build-depends:
+      base
+    , containers
+    , llvm-hs ==9.0.*
+    , llvm-hs-pure ==9.0.*
+    , malgo
+    , mtl
+    , outputable
+    , parsec
+    , relude
+    , text
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
+  build-depends:
+      base
+    , hspec
+    , malgo
+    , mtl
+    , parsec
+  default-language: Haskell2010
