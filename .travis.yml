@@ -47,7 +47,7 @@ before_install:
  - export LD_LIBRARY_PATH=$HOME/llvm-build-${LLVM_VER}/lib:$LD_LIBRARY_PATH
  - export PATH=$HOME/llvm-build-${LLVM_VER}/bin:$PATH
  - mkdir -p $HOME/bin
- - export PATH=$HOME/bin:$PATH
+ - export PATH=$HOME/.cabal/bin:$HOME/bin:$PATH
 
 install:
  - curl -L https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz | tar -xzf - -C $HOME
@@ -76,6 +76,7 @@ install:
  - sed -i.bak 's/^jobs:/-- jobs:/' ${HOME}/.cabal/config
  - rm -fv cabal.project.local
  - rm -rf .ghc.environment.*
+ - cabal install hspec-discover
  - cabal new-configure --enable-tests
  - cabal new-build -w ${HC} --dep -j2 all
 
