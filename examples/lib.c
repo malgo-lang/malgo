@@ -6,8 +6,10 @@
 #include <time.h>
 #include <stdlib.h>
 
+/* Unit type */
 typedef struct {} Unit;
 
+/* GC */
 void init_gc(void) {
   GC_INIT();
 }
@@ -16,43 +18,41 @@ void* malloc_gc(size_t sz) {
   return GC_MALLOC(sz);
 }
 
-bool le_i64(long x, long y) {
-  return x <= y;
-}
+/* operators */
 
-bool ge_i64(long x, long y) {
-  return x >= y;
-}
-
-bool lt_i64(long x, long y) {
-  return x < y;
-}
-
-bool gt_i64(long x, long y) {
-  return x > y;
-}
-
-long sub_i64(long x, long y) {
-  return x - y;
-}
-
-long add_i64(long x, long y) {
-  return x + y;
-}
-
-long mul_i64(long x, long y) {
-  return x * y;
-}
-
+long add_i64(long x, long y) { return x + y; }
+long sub_i64(long x, long y) { return x - y; }
+long mul_i64(long x, long y) { return x * y; }
+long div_i64(long x, long y) { return x / y; }
+long mod_i64(long x, long y) { return x % y; }
+double add_double(double x, double y) { return x + y; }
+double sub_double(double x, double y) { return x - y; }
 double mul_double(double x, double y) { return x * y; }
-
-bool eq_i64(long x, long y) {
-  return x == y;
-}
-
-bool neq_i64(long x, long y) {
-  return x != y;
-}
+double div_double(double x, double y) { return x / y; }
+bool eq_i64(long x, long y) { return x == y; }
+bool neq_i64(long x, long y) { return x != y; }
+bool lt_i64(long x, long y) { return x < y; }
+bool gt_i64(long x, long y) { return x > y; }
+bool le_i64(long x, long y) { return x <= y; }
+bool ge_i64(long x, long y) { return x >= y; }
+bool eq_i8(char x, char y) { return x == y; }
+bool neq_i8(char x, char y) { return x != y; }
+bool lt_i8(char x, char y) { return x < y; }
+bool gt_i8(char x, char y) { return x > y; }
+bool le_i8(char x, char y) { return x <= y; }
+bool ge_i8(char x, char y) { return x >= y; }
+bool eq_i1(bool x, bool y) { return x == y; }
+bool neq_i1(bool x, bool y) { return x != y; }
+bool lt_i1(bool x, bool y) { return x < y; }
+bool gt_i1(bool x, bool y) { return x > y; }
+bool le_i1(bool x, bool y) { return x <= y; }
+bool ge_i1(bool x, bool y) { return x >= y; }
+bool eq_double(double x, double y) { return x == y; }
+bool neq_double(double x, double y) { return x != y; }
+bool lt_double(double x, double y) { return x < y; }
+bool gt_double(double x, double y) { return x > y; }
+bool le_double(double x, double y) { return x <= y; }
+bool ge_double(double x, double y) { return x >= y; }
 
 bool or(bool x, bool y) {
   return x || y;
