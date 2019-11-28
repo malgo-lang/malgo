@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
 # examplesがコンパイルできるかチェック
-ls ./examples | grep mlg | xargs -I{} sh -c 'echo {}; malgo ./examples/{}; clang -lgc ./examples/lib.c out.ll'
+mkdir ./tmp
+ls ./examples | grep mlg | xargs -I{} sh -c 'echo {}; malgo ./examples/{} -o ./tmp/{}.ll; clang -lgc ./examples/lib.c ./tmp/{}.ll'
+rm ./tmp/*.ll
