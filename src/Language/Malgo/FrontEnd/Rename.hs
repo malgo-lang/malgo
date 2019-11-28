@@ -3,9 +3,11 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TupleSections         #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.Rename ( Rename ) where
 
+import           Data.List                    (span)
 import qualified Data.Map.Strict              as Map
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
@@ -62,30 +64,56 @@ renameExpr (Call info fn args) =
 renameExpr (Seq info e1 e2) =
   Seq info <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Let info decls e) = do
-  declIDs <- mapM (newID () . getName) decls
-  withKnowns (zip (map getName decls) declIDs) $ do
-    decls' <- mapM renameDecl decls
-    e' <- renameExpr e
-    pure (Let info decls' e')
-  where getName (ExDec _ name _ _)    = name
-        getName (FunDec _ name _ _ _) = name
-        getName (ValDec _ name _ _)   = name
+  let splitedDecls = splitDecl decls
+  k <- renameDecls info splitedDecls
+  k e
+  where
+    splitDecl [] = []
+    splitDecl ds@(FunDec{} : _) =
+      let (fundecs , rest) = span isFunDec ds
+      in Fun fundecs : splitDecl rest
+    splitDecl (d@ValDec{} : ds) = Val d : splitDecl ds
+    splitDecl (d@ExDec{} : ds) = Ex d : splitDecl ds
+    isFunDec FunDec{} = True
+    isFunDec _        = False
 renameExpr (If info c t f) =
   If info <$> renameExpr c <*> renameExpr t <*> renameExpr f
 renameExpr (BinOp info op x y) = BinOp info op <$> renameExpr x <*> renameExpr y
 
-renameDecl :: Decl Text -> RenameM (Decl RawID)
-renameDecl (ValDec info name typ val) = do
+data SplitedDecl = Val (Decl Text)
+                 | Fun [Decl Text]
+                 | Ex (Decl Text)
+
+renameDecls :: Info -> [SplitedDecl] -> RenameM (Expr Text -> RenameM (Expr RawID))
+renameDecls _ [] = pure $ \e -> renameExpr e
+renameDecls info0 (Val (ValDec info1 name typ val) : ds) = do
   val' <- renameExpr val
-  name' <- getID info name
-  return (ValDec info name' typ val')
-renameDecl (FunDec info fn params retty body) = do
+  name' <- newID () name
+  k <- withKnowns [(name, name')] $ renameDecls info0 ds
+  pure $ \e ->
+    Let info0 [ValDec info1 name' typ val'] <$> withKnowns [(name, name')] (k e)
+renameDecls info0 (Fun fs : ds) = do
+  functionNames <- mapM (newID () . getName) fs
+  let newKnowns = zip (map getName fs) functionNames
+  fs' <- withKnowns newKnowns $ mapM renameFunDec fs
+  k <- withKnowns newKnowns $ renameDecls info0 ds
+  pure $ \e -> Let info0 fs' <$> withKnowns newKnowns (k e)
+  where
+    getName (FunDec _ name _ _ _) = name
+    getName _                     = error "unreachable(renameDecls#getName)"
+renameDecls info0 (Ex (ExDec info1 name typ orig) : ds) = do
+  name' <- newID () name
+  k <- withKnowns [(name, name')] $ renameDecls info0 ds
+  pure $ \e ->
+    Let info1 [ExDec info1 name' typ orig] <$> withKnowns [(name, name')] (k e)
+renameDecls _ _ = error "unreachable(renameDecls)"
+
+renameFunDec :: Decl Text -> RenameM (Decl RawID)
+renameFunDec (FunDec info fn params retty body) = do
   fn' <- getID info fn
   paramIDs <- mapM (newID () . fst) params
   withKnowns (zip (map fst params) paramIDs) $ do
-    params' <- mapM (\(n, t) -> (,) <$> getID info n <*> pure t) params
+    params' <- mapM (\(n, t) -> (,t) <$> getID info n) params
     body' <- renameExpr body
     return (FunDec info fn' params' retty body')
-renameDecl (ExDec info name typ orig) = do
-  name' <- getID info name
-  return $ ExDec info name' typ orig
+renameFunDec _ = error "unreachable(renameFunDec)"
