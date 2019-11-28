@@ -84,3 +84,5 @@ script:
  - cabal new-build -w ${HC} all
  - cabal new-test -w ${HC} all
  - cabal new-haddock -w ${HC} all
+ - cabal install
+ - ./test.sh

@@ -44,6 +44,8 @@ long mul_i64(long x, long y) {
   return x * y;
 }
 
+double mul_double(double x, double y) { return x * y; }
+
 bool eq_i64(long x, long y) {
   return x == y;
 }
@@ -59,6 +61,8 @@ bool or(bool x, bool y) {
 bool and(bool x, bool y) {
   return x && y;
 }
+
+bool not(bool x) { return !x; }
 
 Unit unit = {};
 
