@@ -12,7 +12,6 @@ module Language.Malgo.IR.IR where
 import           Control.Lens          (view, _1, _3)
 import           Control.Monad.Except  (MonadError, throwError)
 import           Data.List             (delete, (\\))
-import           Data.Outputable
 import           Language.Malgo.ID
 import           Language.Malgo.Pretty
 import           Relude
@@ -24,7 +23,7 @@ class FreeVars f where
   freevars x = ordNub (freevarsPrec x)
 
 data Program a = Program a [Defn a]
-  deriving (Show, Eq, Read, Generic, Outputable)
+  deriving (Show, Eq, Read, Generic, PrettyVal)
 
 flattenProgram :: Program a -> Program a
 flattenProgram (Program m defs) = Program m (map flattenDefn defs)
@@ -40,7 +39,7 @@ data Defn a = DefFun { _fnName   :: a
                      , _fnParams :: [a]
                      , _fnBody   :: Expr a
                      }
-  deriving (Show, Eq, Read, Generic, Outputable)
+  deriving (Show, Eq, Read, Generic, PrettyVal)
 
 flattenDefn :: Defn a -> Defn a
 flattenDefn (DefFun f params body) = DefFun f params (flattenExpr body)
@@ -82,7 +81,7 @@ data Expr a = Var a
             | Access a [Int]
             | Store a [Int] a
             | If a (Expr a) (Expr a)
-  deriving (Show, Eq, Read, Functor, Foldable, Traversable, Generic, Outputable)
+  deriving (Show, Eq, Read, Functor, Foldable, Traversable, Generic, PrettyVal)
 
 flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) =
@@ -187,7 +186,7 @@ data MType = IntTy Integer
            | PointerTy MType
            | StructTy [MType]
            | FunctionTy MType [MType]
-  deriving (Show, Eq, Read, Ord, Generic, Outputable)
+  deriving (Show, Eq, Read, Ord, Generic, PrettyVal)
 
 class HasMType a where
   mTypeOf :: a -> MType

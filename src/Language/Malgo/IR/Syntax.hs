@@ -6,7 +6,6 @@
 module Language.Malgo.IR.Syntax where
 
 import           Data.List                    ((!!))
-import           Data.Outputable
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
 import           Language.Malgo.Type
@@ -51,7 +50,7 @@ data Expr a
   | If Info (Expr a) (Expr a) (Expr a)
   -- | 中置演算子
   | BinOp Info Op (Expr a) (Expr a)
-  deriving (Eq, Show, Read, Generic, Outputable)
+  deriving (Eq, Show, Read, Generic, PrettyVal)
 
 info :: Expr t -> Info
 info (Var i _)            = i
@@ -130,7 +129,7 @@ data Op
   | Ge
   | And
   | Or
-  deriving (Eq, Show, Read, Generic, Outputable)
+  deriving (Eq, Show, Read, Generic, PrettyVal)
 
 instance Pretty Op where
   pPrint Add  = "+"
@@ -155,7 +154,7 @@ data Decl a
   = FunDec Info a [(a, Type)] Type (Expr a)
   | ValDec Info a (Maybe Type) (Expr a)
   | ExDec Info a Type Text
-  deriving (Eq, Show, Read, Generic, Outputable)
+  deriving (Eq, Show, Read, Generic, PrettyVal)
 
 instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec _ name params _ body) =

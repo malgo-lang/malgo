@@ -5,9 +5,8 @@
 {-# LANGUAGE StrictData        #-}
 module Language.Malgo.Type where
 
-import           Data.Outputable
 import           Language.Malgo.Pretty
-import           Relude             hiding (Type)
+import           Relude                hiding (Type)
 
 -- | Malgoの組み込みデータ型
 data Type
@@ -17,7 +16,7 @@ data Type
   | TupleTy [Type]
   | ArrayTy Type
   | MetaTy Int
-  deriving (Eq, Show, Ord, Read, Generic, Outputable)
+  deriving (Eq, Show, Ord, Read, Generic, PrettyVal)
 
 instance Pretty Type where
   pPrint "Unit" = "{}"

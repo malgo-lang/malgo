@@ -4,12 +4,11 @@
 {-# LANGUAGE StrictData                 #-}
 module Language.Malgo.FrontEnd.Info where
 
-import           Data.Outputable
 import           Language.Malgo.Pretty
 import           Relude
 
 newtype Info = Info (Text, Int, Int)
-  deriving (Show, Eq, Ord, Read, Generic, Outputable)
+  deriving (Show, Eq, Ord, Read, Generic, PrettyVal)
 
 instance Pretty Info where
   pPrint (Info (file, line, column)) =

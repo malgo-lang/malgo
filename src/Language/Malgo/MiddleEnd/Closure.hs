@@ -111,7 +111,7 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
           let zs = freevars fbody' \\ (innerCls : params' ++ map _fnName defs) -- すでに宣言されている関数名は自由変数にはならない
 
           -- 実際に変換後のfbody内で参照される自由変数のリスト
-          zs' <- mapM cloneID zs 
+          zs' <- mapM cloneID zs
 
           -- 仮引数に追加されるポインタ
           capPtr <- newID "fv" $ PointerTy (IntTy 8)

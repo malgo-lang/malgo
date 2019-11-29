@@ -54,9 +54,9 @@ library
     , llvm-hs-pure ==9.0.*
     , mtl
     , optparse-applicative
-    , outputable
     , parsec
     , pretty
+    , pretty-show
     , relude
     , text
     , transformers
@@ -76,7 +76,7 @@ executable malgo
     , llvm-hs-pure ==9.0.*
     , malgo
     , mtl
-    , outputable
+    , pretty-show
     , parsec
     , relude
     , text
