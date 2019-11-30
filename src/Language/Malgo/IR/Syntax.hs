@@ -1,4 +1,6 @@
 {-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveFoldable    #-}
+{-# LANGUAGE DeriveFunctor     #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -50,7 +52,7 @@ data Expr a
   | If Info (Expr a) (Expr a) (Expr a)
   -- | 中置演算子
   | BinOp Info Op (Expr a) (Expr a)
-  deriving (Eq, Show, Read, Generic, PrettyVal)
+  deriving (Eq, Show, Read, Functor, Foldable, Generic, PrettyVal)
 
 info :: Expr t -> Info
 info (Var i _)            = i
@@ -111,24 +113,12 @@ instance Pretty a => Pretty (Expr a) where
     parens $ sep [pPrint op, pPrint x, pPrint y]
 
 -- | 中置演算子の種類を表すタグ
-data Op
-  = Add
-  | Sub
-  | Mul
-  | Div
-  | FAdd
-  | FSub
-  | FMul
-  | FDiv
-  | Mod
-  | Eq
-  | Neq
-  | Lt
-  | Gt
-  | Le
-  | Ge
-  | And
-  | Or
+data Op = Add | Sub | Mul | Div
+        | FAdd | FSub | FMul | FDiv
+        | Mod
+        | Eq | Neq
+        | Lt | Gt | Le | Ge
+        | And | Or
   deriving (Eq, Show, Read, Generic, PrettyVal)
 
 instance Pretty Op where
@@ -154,7 +144,7 @@ data Decl a
   = FunDec Info a [(a, Type)] Type (Expr a)
   | ValDec Info a (Maybe Type) (Expr a)
   | ExDec Info a Type Text
-  deriving (Eq, Show, Read, Generic, PrettyVal)
+  deriving (Eq, Show, Read, Functor, Foldable, Generic, PrettyVal)
 
 instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec _ name params _ body) =
