@@ -1,5 +1,7 @@
 {-# LANGUAGE CPP                   #-}
 {-# LANGUAGE DeriveAnyClass        #-}
+{-# LANGUAGE DeriveFoldable        #-}
+{-# LANGUAGE DeriveFunctor         #-}
 {-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -16,7 +18,7 @@ import           Language.Malgo.TypeRep.Type
 import           Relude                      hiding (Type)
 
 data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
-  deriving (Show, Ord, Read, Generic, PrettyVal)
+  deriving (Show, Ord, Read, Functor, Foldable, Generic, PrettyVal)
 
 type RawID = ID ()
 

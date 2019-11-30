@@ -5,7 +5,6 @@
 module Language.Malgo.FrontEnd.Typing.Subst (Subst(..), Substitutable(..)) where
 
 import           Language.Malgo.ID
-import           Language.Malgo.IR.Syntax
 import           Language.Malgo.TypeRep.Type
 import           Relude                      hiding (Type)
 import           Relude.Extra.Map
@@ -46,7 +45,3 @@ instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
 instance Substitutable Subst where
   apply s = apply s . coerce
   ftv = ftv @(Map TyVar Type) . coerce
-
-instance Substitutable a => Substitutable (ID a) where
-  apply s (ID name uniq meta) = ID name uniq (apply s meta)
-  ftv (ID _ _ meta) = ftv meta

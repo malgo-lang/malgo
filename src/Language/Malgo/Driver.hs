@@ -6,20 +6,21 @@
 {-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.Driver where
 
-import qualified Language.Malgo.BackEnd.LLVM        as LLVM
+import qualified Language.Malgo.BackEnd.LLVM          as LLVM
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.TypeCheck
+import           Language.Malgo.FrontEnd.Typing.Infer
 import           Language.Malgo.ID
-import qualified Language.Malgo.IR.IR               as IR
-import qualified Language.Malgo.IR.Syntax           as Syntax
+import qualified Language.Malgo.IR.IR                 as IR
+import qualified Language.Malgo.IR.Syntax             as Syntax
 import           Language.Malgo.MiddleEnd.BasicLint
 import           Language.Malgo.MiddleEnd.Closure
 import           Language.Malgo.MiddleEnd.MutRec
 import           Language.Malgo.MiddleEnd.TransToIR
-import           Language.Malgo.Monad               as M
+import           Language.Malgo.Monad                 as M
 import           Language.Malgo.Pass
 import           Language.Malgo.TypeRep.MType
-import qualified LLVM.AST                           as L
+import qualified LLVM.AST                             as L
 import           Options.Applicative
 import           Relude
 
@@ -45,7 +46,9 @@ frontend ast = do
   opt <- asks maOption
   when (dumpParsed opt) $
     dump ast
-  transWithDump @Rename ast >>= transWithDump @TypeCheck
+  ast' <- transWithDump @Rename ast
+  transWithDump @Typing ast'
+  transWithDump @TypeCheck ast'
 
 middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID MType))
 middleend ast = transWithDump @TransToIR ast
