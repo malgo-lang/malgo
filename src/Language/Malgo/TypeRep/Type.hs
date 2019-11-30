@@ -9,8 +9,11 @@ module Language.Malgo.TypeRep.Type where
 import           Language.Malgo.Pretty
 import           Relude                hiding (Type)
 
+type TyVar = Int
+
 -- | Malgoの組み込みデータ型
 data Type = TyApp TyCon [Type]
+          | TyMeta TyVar
   deriving (Eq, Show, Ord, Read, Generic, PrettyVal)
 
 data TyCon = FunC Type | IntC | FloatC | BoolC | CharC | StringC | TupleC | ArrayC
@@ -20,6 +23,7 @@ instance Pretty Type where
   pPrint (TyApp (FunC ret) params) = parens (sep $ punctuate "," $ map pPrint params) <+> "->" <+> pPrint ret
   pPrint (TyApp TupleC ts) = braces $ sep $ punctuate "," $ map pPrint ts
   pPrint (TyApp c ts) = pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
+  pPrint (TyMeta v) = pPrint v
 
 instance Pretty TyCon where
   pPrint (FunC t) = "->" <+> pPrint t

@@ -175,19 +175,21 @@ instance HasType a => HasType (Expr a) where
     typeOf (String _ _) = TyString
     typeOf (Tuple _ xs) = TyTuple (map typeOf xs)
     typeOf (TupleAccess _ e i) =
-      let TyTuple xs = typeOf e
-      in xs !! i
+      case typeOf e of
+        TyTuple xs -> xs !! i
+        _          -> error "(typeOf e) should match (TyTuple xs)"
     typeOf (MakeArray _ t _) = TyArray t
     typeOf (ArrayRead _ arr _) =
-      let TyArray t = typeOf arr
-      in t
+      case typeOf arr of
+        TyArray t -> t
+        _         -> error "(typeof arr) should match (TyArray xs)"
     typeOf ArrayWrite{} = TyTuple []
     typeOf (Unit _) = TyTuple []
     typeOf (Fn _ params body) = TyFun (map snd params) (typeOf body)
     typeOf (Call _ fn _) =
         case typeOf fn of
             (TyFun _ ty) -> ty
-            _            -> error "(typeOf fn) should match (FunTy _ ty)"
+            _            -> error "(typeOf fn) should match (TyFun _ ty)"
     typeOf (Seq _ _ e) = typeOf e
     typeOf (Let _ _ e) = typeOf e
     typeOf (If _ _ e _) = typeOf e
