@@ -50,7 +50,7 @@ prototypes xs = map mkPrototype (filter hasPrototype xs)
         hasPrototype FunDec{} = True
         hasPrototype _        = False
         mkPrototype (ExDec _ name ty _) = (name, ty)
-        mkPrototype (FunDec _ name params retty _) = (name, FunTy (map snd params) retty)
+        mkPrototype (FunDec _ name params retty _) = (name, TyFun (map snd params) retty)
         mkPrototype _ = error "ValDec has not prototype"
 
 match :: (HasType a1, HasType a2) => Info -> a1 -> a2 -> TypeCheckM ()
@@ -86,7 +86,7 @@ checkDecls (FunDec info fn params retty body : ds) = do
   (fd :) <$> checkDecls ds
   where
     makeFnTy [] _   = throw info "void parameter is invalid"
-    makeFnTy xs ret = pure $ FunTy (map snd xs) ret
+    makeFnTy xs ret = pure $ TyFun (map snd xs) ret
 
 checkExpr :: Expr RawID -> TypeCheckM (Expr TypedID)
 checkExpr (Var info name) = Var info <$> getBind info name
@@ -99,14 +99,14 @@ checkExpr (Unit info) = pure $ Unit info
 checkExpr (Tuple info xs) = Tuple info <$> mapM checkExpr xs
 checkExpr (MakeArray info ty size) = do
   size' <- checkExpr size
-  match info size' ("Int" :: Type)
+  match info size' TyInt
   return $ MakeArray info ty size'
 checkExpr (ArrayRead info arr ix) = do
   arr' <- checkExpr arr
   ix' <- checkExpr ix
   case typeOf arr' of
-    ArrayTy _ -> do
-      match info ix' ("Int" :: Type)
+    TyArray _ -> do
+      match info ix' TyInt
       return $ ArrayRead info arr' ix'
     t -> throw (Syntax.info arr)
          $ "expected: array"
@@ -116,8 +116,8 @@ checkExpr (ArrayWrite info arr ix val) = do
   ix' <- checkExpr ix
   val' <- checkExpr val
   case typeOf arr' of
-    ArrayTy t -> do
-      match info ix' ("Int" :: Type)
+    TyArray t -> do
+      match info ix' TyInt
       match info val' t
       return $ ArrayWrite info arr' ix' val'
     t -> throw (Syntax.info arr)
@@ -133,16 +133,16 @@ checkExpr (Call info fn args) = do
   args' <- mapM checkExpr args
   paramty <-
     case typeOf fn' of
-      (FunTy p _) -> pure p
-      _           -> throw info $ pPrint fn' <+> "is not callable"
+      (TyFun ps _) -> pure ps
+      _            -> throw info $ pPrint fn' <+> "is not callable"
   mapM_ (\(arg, ty) -> match info ty arg) (zip args' paramty)
   pure (Call info fn' args')
 checkExpr (TupleAccess i tuple index) = do
   tuple' <- checkExpr tuple
   case typeOf tuple' of
-    TupleTy xs ->
+    TyTuple xs ->
       when (index >= length xs) $
-        throw i $ "out of bounds:" <+> pPrint index <+> pPrint (TupleTy xs)
+        throw i $ "out of bounds:" <+> pPrint index <+> pPrint (TyTuple xs)
     t -> throw (Syntax.info tuple) $ "expected: tuple"
          $+$ "actual:" <+> pPrint t
   pure $ TupleAccess i tuple' index
@@ -155,7 +155,7 @@ checkExpr (BinOp info op x y) = do
   pure (BinOp info op x' y')
 checkExpr (Seq info e1 e2) = do
   e1' <- checkExpr e1
-  match info ("Unit" :: Type) e1'
+  match info (TyTuple []) e1'
   Seq info e1' <$> checkExpr e2
 checkExpr (Let info decls e) = do
   decls' <- addBinds (prototypes decls) $ checkDecls decls
@@ -170,6 +170,6 @@ checkExpr (If info c t f) = do
   c' <- checkExpr c
   t' <- checkExpr t
   f' <- checkExpr f
-  match info ("Bool" :: Type) c'
+  match info TyBool c'
   match info t' f'
   return $ If info c' t' f'

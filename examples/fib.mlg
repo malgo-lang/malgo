@@ -1,11 +1,11 @@
 let
-  extern print_int : Int -> Unit = "print_int"
-  extern newline : Unit -> Unit = "newline"
+  extern print_int : Int -> {} = "print_int"
+  extern newline : {} -> {} = "newline"
   fun fib(n : Int) : Int =
     if n <= 1
     then 1
     else fib(n - 1) + fib(n - 2)
-  fun fib_loop(n : Int, acc : Int) : Unit =
+  fun fib_loop(n : Int, acc : Int) : {} =
     (print_int(fib(acc)); newline(); if n <= acc then {} else fib_loop(n, acc + 1))
 in
   fib_loop(30, 0)

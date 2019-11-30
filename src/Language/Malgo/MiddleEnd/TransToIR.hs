@@ -139,19 +139,16 @@ transOp S.And _  = Prim "and" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 transOp S.Or _   = Prim "or" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 
 toMType :: MonadMalgo f => Language.Malgo.TypeRep.Type.Type -> f MType
-toMType (NameTy n) =
-  case n of
-    "Int"    -> return $ IntTy 64
-    "Float"  -> return DoubleTy
-    "Bool"   -> return $ IntTy 1
-    "Char"   -> return $ IntTy 8
-    "String" -> return $ PointerTy (IntTy 8)
-    "Unit"   -> return $ StructTy []
-    _        -> throw $ pPrint n <+> "is not valid type"
-toMType (FunTy params ret) =
-  FunctionTy <$> toMType ret <*> mapM toMType params
-toMType (TupleTy xs) =
-  PointerTy . StructTy <$> mapM toMType xs
-toMType (ArrayTy t) = do
-  t' <- toMType t
-  return $ PointerTy t'
+toMType t@(TyApp c []) =
+  case c of
+    IntC    -> return $ IntTy 64
+    FloatC  -> return DoubleTy
+    BoolC   -> return $ IntTy 1
+    CharC   -> return $ IntTy 8
+    StringC -> return $ PointerTy (IntTy 8)
+    TupleC  -> return $ StructTy []
+    _       -> throw $ pPrint t <+> "is not valid type"
+toMType (TyApp (FunC ret) params) = FunctionTy <$> toMType ret <*> mapM toMType params
+toMType (TyApp TupleC xs) = PointerTy . StructTy <$> mapM toMType xs
+toMType (TyApp ArrayC [t]) = PointerTy <$> toMType t
+toMType t = throw $ pPrint t <+> "is not valid type"

@@ -29,6 +29,11 @@ if    { Token (_, IF) }
 then  { Token (_, THEN) }
 else  { Token (_, ELSE) }
 array { Token (_, ARRAY) }
+Int   { Token (_, TY_INT) }
+Float { Token (_, TY_FLOAT) }
+Bool  { Token (_, TY_BOOL) }
+Char  { Token (_, TY_CHAR) }
+String { Token (_, TY_STRING) }
 '('   { Token (_, LPAREN) }
 ')'   { Token (_, RPAREN) }
 '['   { Token (_, LBRACK) }
@@ -99,7 +104,7 @@ decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                        }
      | fun id '(' ')' ':' Type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
-           [("_", NameTy "Unit")]
+           [("_", TyTuple [])]
            $6
            $8
        }
@@ -170,12 +175,16 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
 args : args ',' exp { $3 : $1 }
      | exp { [$1] }
 
-Type : id { NameTy (_id . _tag $ $1) }
-     | Type '->' Type { FunTy [$1] $3 }
-     | '{' '}' { "Unit" }
-     | '{' Types '}' { TupleTy (reverse $2) }
-     | '(' Types ')' '->' Type { FunTy (reverse $2) $5 }
-     | '[' Type ']' { ArrayTy $2 }
+Type : Int { TyInt }
+	 | Float { TyFloat }
+	 | Bool { TyBool }
+	 | Char { TyChar }
+	 | String { TyString }
+     | Type '->' Type { TyFun [$1] $3 }
+     | '{' '}' { TyTuple [] }
+     | '{' Types '}' { TyTuple (reverse $2) }
+     | '(' Types ')' '->' Type { TyFun (reverse $2) $5 }
+     | '[' Type ']' { TyArray $2 }
 
 Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }

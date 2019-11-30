@@ -1,7 +1,7 @@
 let val p : {Int, String} = {42, " is the answer"}
-    extern print_int : Int -> Unit = "print_int"
-    extern println : String -> Unit = "println"
-    extern newline : Unit -> Unit = "newline"
+    extern print_int : Int -> {} = "print_int"
+    extern println : String -> {} = "println"
+    extern newline : {} -> {} = "newline"
     fun fst_int(p : {Int, String}) : Int = p.0
     fun snd_str(p : {Int, String}) : String= p.1
 in print_int(fst_int(p)); println(snd_str(p))

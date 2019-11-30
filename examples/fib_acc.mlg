@@ -4,7 +4,7 @@ let extern print_int : Int -> {} = "print_int"
         if n <= 0
         then a
         else fib_acc(n - 1, b, a + b)
-    fun fib_loop(n : Int) : Unit =
+    fun fib_loop(n : Int) : {} =
       if n <= 0
       then print_int(fib_acc(0, 1, 1));
            newline()

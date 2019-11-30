@@ -1,4 +1,4 @@
-let fun f(x:Unit):Unit = x
-    val g:Unit -> Unit = f
+let fun f(x:{}):{} = x
+    val g:{} -> {} = f
 in f(g({}))
 end

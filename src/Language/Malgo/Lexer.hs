@@ -61,6 +61,11 @@ data Tag
     | BOOL { _bool :: Bool }
     | CHAR { _char :: Char }
     | STRING { _str :: Text }
+    | TY_INT
+    | TY_FLOAT
+    | TY_BOOL
+    | TY_CHAR
+    | TY_STRING
     deriving (Eq, Show)
 
 newtype Token =
@@ -104,6 +109,7 @@ lexer' =
           [ "let", "in", "end", "val", "fun"
           , "type", "extern", "fn", "if", "then"
           , "else", "true", "false", "array"
+          , "Int", "Float", "Bool", "Char", "String"
           ]
     }
 
@@ -130,6 +136,11 @@ lexer = do
         keyword info "true" (BOOL True) <|>
         keyword info "false" (BOOL False) <|>
         keyword info "array" ARRAY <|>
+        keyword info "Int" TY_INT <|>
+        keyword info "Float" TY_FLOAT <|>
+        keyword info "Bool" TY_BOOL <|>
+        keyword info "Char" TY_CHAR <|>
+        keyword info "String" TY_STRING <|>
         (lparen >> pure (Token (info, LPAREN))) <|>
         (rparen >> pure (Token (info, RPAREN))) <|>
         (lbrack >> pure (Token (info, LBRACK))) <|>

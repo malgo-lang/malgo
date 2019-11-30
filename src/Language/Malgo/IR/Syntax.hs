@@ -168,25 +168,25 @@ instance Pretty a => Pretty (Decl a) where
 
 instance HasType a => HasType (Expr a) where
     typeOf (Var _ name) = typeOf name
-    typeOf (Int _ _) = "Int"
-    typeOf (Float _ _) = "Float"
-    typeOf (Bool _ _) = "Bool"
-    typeOf (Char _ _) = "Char"
-    typeOf (String _ _) = "String"
-    typeOf (Tuple _ xs) = TupleTy (map typeOf xs)
+    typeOf (Int _ _) = TyInt
+    typeOf (Float _ _) = TyFloat
+    typeOf (Bool _ _) = TyBool
+    typeOf (Char _ _) = TyChar
+    typeOf (String _ _) = TyString
+    typeOf (Tuple _ xs) = TyTuple (map typeOf xs)
     typeOf (TupleAccess _ e i) =
-      let TupleTy xs = typeOf e
+      let TyTuple xs = typeOf e
       in xs !! i
-    typeOf (MakeArray _ t _) = ArrayTy t
+    typeOf (MakeArray _ t _) = TyArray t
     typeOf (ArrayRead _ arr _) =
-      let ArrayTy t = typeOf arr
+      let TyArray t = typeOf arr
       in t
-    typeOf ArrayWrite{} = "Unit"
-    typeOf (Unit _) = "Unit"
-    typeOf (Fn _ params body) = FunTy (map snd params) (typeOf body)
+    typeOf ArrayWrite{} = TyTuple []
+    typeOf (Unit _) = TyTuple []
+    typeOf (Fn _ params body) = TyFun (map snd params) (typeOf body)
     typeOf (Call _ fn _) =
         case typeOf fn of
-            (FunTy _ ty) -> ty
+            (TyFun _ ty) -> ty
             _            -> error "(typeOf fn) should match (FunTy _ ty)"
     typeOf (Seq _ _ e) = typeOf e
     typeOf (Let _ _ e) = typeOf e
@@ -196,51 +196,39 @@ instance HasType a => HasType (Expr a) where
             (_, _, ty) -> ty
 
 typeOfOp :: Info -> Op -> Type -> (Type, Type, Type)
-typeOfOp _ Add _ = ("Int", "Int", "Int")
-typeOfOp _ Sub _ = ("Int", "Int", "Int")
-typeOfOp _ Mul _ = ("Int", "Int", "Int")
-typeOfOp _ Div _ = ("Int", "Int", "Int")
-typeOfOp _ FAdd _ = ("Float", "Float", "Float")
-typeOfOp _ FSub _ = ("Float", "Float", "Float")
-typeOfOp _ FMul _ = ("Float", "Float", "Float")
-typeOfOp _ FDiv _ = ("Float", "Float", "Float")
-typeOfOp _ Mod _ = ("Int", "Int", "Int")
+typeOfOp _ Add _ = (TyInt, TyInt, TyInt)
+typeOfOp _ Sub _ = (TyInt, TyInt, TyInt)
+typeOfOp _ Mul _ = (TyInt, TyInt, TyInt)
+typeOfOp _ Div _ = (TyInt, TyInt, TyInt)
+typeOfOp _ FAdd _ = (TyFloat, TyFloat, TyFloat)
+typeOfOp _ FSub _ = (TyFloat, TyFloat, TyFloat)
+typeOfOp _ FMul _ = (TyFloat, TyFloat, TyFloat)
+typeOfOp _ FDiv _ = (TyFloat, TyFloat, TyFloat)
+typeOfOp _ Mod _ = (TyInt, TyInt, TyInt)
 typeOfOp i Eq ty =
     if comparable ty
-        then (ty, ty, "Bool")
+        then (ty, ty, TyBool)
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Neq ty =
     if comparable ty
-        then (ty, ty, "Bool")
+        then (ty, ty, TyBool)
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Lt ty =
     if comparable ty
-        then (ty, ty, "Bool")
+        then (ty, ty, TyBool)
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Gt ty =
     if comparable ty
-        then (ty, ty, "Bool")
+        then (ty, ty, TyBool)
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Le ty =
     if comparable ty
-        then (ty, ty, "Bool")
+        then (ty, ty, TyBool)
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Ge ty =
     if comparable ty
-        then (ty, ty, "Bool")
+        then (ty, ty, TyBool)
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
-typeOfOp _ And _ = ("Bool", "Bool", "Bool")
-typeOfOp _ Or _ = ("Bool", "Bool", "Bool")
+typeOfOp _ And _ = (TyBool, TyBool, TyBool)
+typeOfOp _ Or _ = (TyBool, TyBool, TyBool)
 
-comparable :: Type -> Bool
-comparable "Int"      = True
-comparable "Float"    = True
-comparable "Bool"     = True
-comparable "Char"     = True
-comparable "String"   = False -- TODO: Stringの比較をサポート
-comparable "Unit"     = False
-comparable NameTy {}  = False
-comparable FunTy {}   = False
-comparable TupleTy {} = False
-comparable ArrayTy {} = False
-comparable MetaTy {}  = False
