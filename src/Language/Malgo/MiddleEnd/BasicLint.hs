@@ -7,11 +7,13 @@
 module Language.Malgo.MiddleEnd.BasicLint (BasicLint, BasicProgramLint) where
 
 import           Control.Lens
-import           Control.Monad.Except  (MonadError, runExcept, throwError)
+import           Control.Monad.Except         (MonadError, runExcept,
+                                               throwError)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
+import           Language.Malgo.TypeRep.MType
 import           Relude
 
 data BasicLint

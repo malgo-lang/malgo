@@ -12,18 +12,19 @@ module Language.Malgo.BackEnd.LLVM
   , genProgram
   ) where
 
-import           Control.Lens          hiding (ix)
-import qualified Data.Char             as Char
-import qualified Data.Map.Strict       as Map
-import qualified Data.Text             as Text
+import           Control.Lens                 hiding (ix)
+import qualified Data.Char                    as Char
+import qualified Data.Map.Strict              as Map
+import qualified Data.Text                    as Text
 import           Language.Malgo.ID
-import           Language.Malgo.IR.IR  hiding (prims)
-import qualified Language.Malgo.Pretty as P
+import           Language.Malgo.IR.IR         hiding (prims)
+import qualified Language.Malgo.Pretty        as P
+import           Language.Malgo.TypeRep.MType
 import qualified LLVM.AST
-import qualified LLVM.AST.Constant     as C
-import qualified LLVM.AST.Operand      as O
-import qualified LLVM.AST.Type         as LT
-import           LLVM.IRBuilder        as IRBuilder
+import qualified LLVM.AST.Constant            as C
+import qualified LLVM.AST.Operand             as O
+import qualified LLVM.AST.Type                as LT
+import           LLVM.IRBuilder               as IRBuilder
 import           Relude
 
 data GenState =

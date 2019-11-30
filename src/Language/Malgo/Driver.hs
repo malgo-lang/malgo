@@ -18,6 +18,7 @@ import           Language.Malgo.MiddleEnd.MutRec
 import           Language.Malgo.MiddleEnd.TransToIR
 import           Language.Malgo.Monad               as M
 import           Language.Malgo.Pass
+import           Language.Malgo.TypeRep.MType
 import qualified LLVM.AST                           as L
 import           Options.Applicative
 import           Relude
@@ -46,7 +47,7 @@ frontend ast = do
     dump ast
   transform @Rename ast >>= transform @TypeCheck
 
-middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID IR.MType))
+middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID MType))
 middleend ast = transform @TransToIR ast
   >>= transform @BasicLint
   >>= transform @MutRec
@@ -55,7 +56,7 @@ middleend ast = transform @TransToIR ast
   >>= transform @Closure
   >>= transform @BasicProgramLint
 
-backend :: MonadIO m => String -> IR.Program (ID IR.MType) -> m L.Module
+backend :: MonadIO m => String -> IR.Program (ID MType) -> m L.Module
 backend filename ir = do
   defs <- LLVM.dumpLLVM (LLVM.genProgram ir)
   return $ L.defaultModule { L.moduleName = fromString filename
