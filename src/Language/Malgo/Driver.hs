@@ -45,16 +45,16 @@ frontend ast = do
   opt <- asks maOption
   when (dumpParsed opt) $
     dump ast
-  transform @Rename ast >>= transform @TypeCheck
+  transWithDump @Rename ast >>= transWithDump @TypeCheck
 
 middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID MType))
-middleend ast = transform @TransToIR ast
-  >>= transform @BasicLint
-  >>= transform @MutRec
-  >>= transform @BasicLint
-  >>= transform @MutRecLint
-  >>= transform @Closure
-  >>= transform @BasicProgramLint
+middleend ast = transWithDump @TransToIR ast
+  >>= transWithDump @BasicLint
+  >>= transWithDump @MutRec
+  >>= transWithDump @BasicLint
+  >>= transWithDump @MutRecLint
+  >>= transWithDump @Closure
+  >>= transWithDump @BasicProgramLint
 
 backend :: MonadIO m => String -> IR.Program (ID MType) -> m L.Module
 backend filename ir = do

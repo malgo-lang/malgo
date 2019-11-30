@@ -14,7 +14,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Relude
 
-class (PrettyVal t, Pretty t) => Pass p s t | p -> s t where
+class Pass p s t | p -> s t where
   isDump :: Opt -> Bool
   trans :: s -> MalgoM t
 
@@ -25,8 +25,8 @@ dump x = do
   then liftIO $ dumpIO x
   else print $ pPrint x
 
-transform :: forall p s t. Pass p s t => s -> MalgoM t
-transform s = do
+transWithDump :: forall p s t. (Pass p s t, PrettyVal t, Pretty t) => s -> MalgoM t
+transWithDump s = do
   opt <- asks maOption
   t <- trans @p s
   when (isDump @p opt) $
