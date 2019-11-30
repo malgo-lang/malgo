@@ -3,7 +3,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-module Language.Malgo.Type where
+module Language.Malgo.TypeRep.Type where
 
 import           Language.Malgo.Pretty
 import           Relude                hiding (Type)

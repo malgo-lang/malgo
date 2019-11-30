@@ -8,7 +8,7 @@ module Language.Malgo.IR.Syntax where
 import           Data.List                    ((!!))
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
-import           Language.Malgo.Type
+import           Language.Malgo.TypeRep.Type
 import           Relude                       hiding (Op, Type)
 
 data Expr a

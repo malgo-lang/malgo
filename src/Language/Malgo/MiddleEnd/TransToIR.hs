@@ -6,14 +6,14 @@
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.TransToIR ( TransToIR ) where
 
-import           Control.Lens             (set)
+import           Control.Lens                (set)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.IR
-import qualified Language.Malgo.IR.Syntax as S
+import qualified Language.Malgo.IR.Syntax    as S
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
-import           Language.Malgo.Type
+import           Language.Malgo.TypeRep.Type
 import           Relude
 
 data TransToIR
@@ -137,7 +137,7 @@ transOp S.Ge ty  = Prim (show $ "ge_" <> pPrint ty) (FunctionTy (IntTy 1) [ty, t
 transOp S.And _  = Prim "and" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 transOp S.Or _   = Prim "or" (FunctionTy (IntTy 1) [IntTy 1, IntTy 1])
 
-toMType :: MonadMalgo f => Language.Malgo.Type.Type -> f MType
+toMType :: MonadMalgo f => Language.Malgo.TypeRep.Type.Type -> f MType
 toMType (NameTy n) =
   case n of
     "Int"    -> return $ IntTy 64

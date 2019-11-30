@@ -15,7 +15,7 @@ import qualified Language.Malgo.IR.Syntax     as Syntax
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
-import           Language.Malgo.Type
+import           Language.Malgo.TypeRep.Type
 import           Relude                       hiding (Type)
 
 data TypeCheck
