@@ -105,10 +105,7 @@ lintFunDec (fn, params, body) = do
   match fn (FunctionTy bodyType (map mTypeOf params))
 
 lintDefn :: (MonadState [ID MType] m, MonadError Doc m) => Defn (ID MType) -> m ()
-lintDefn (DefFun fn params body) = do
-  modify (params <>)
-  bodyType <- lintExpr body
-  match fn (FunctionTy bodyType (map mTypeOf params))
+lintDefn (DefFun fn params body) = lintFunDec (fn, params, body)
 
 lintProgram :: (MonadState [ID MType] m, MonadError Doc m) => Program (ID MType) -> m ()
 lintProgram (Program _ xs) = do
