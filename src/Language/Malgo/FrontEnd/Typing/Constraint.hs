@@ -30,7 +30,6 @@ solver (su, (t1 :~ t2) : cs) = do
 unify :: Type -> Type -> Either UnifyError Subst
 unify (TyMeta a) t = bind a t
 unify t (TyMeta a) = bind a t
-unify (TyApp (FunC t1) ts1) (TyApp (FunC t2) ts2) = unifyMany (t1 : ts1) (t2 : ts2)
 unify (TyApp c1 ts1) (TyApp c2 ts2)
   | c1 == c2 = unifyMany ts1 ts2
   | otherwise = Left $ MismatchConstructor c1 c2

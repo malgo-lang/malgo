@@ -24,9 +24,13 @@ instance Pass Typing (Expr RawID) (Expr TypedID) where
   isDump = dumpTyped
   trans e = evaluatingStateT mempty $ do
     (cs, _) <- typingExpr e
-    subst <- catchUnifyError (Syntax.info e) $ solve cs
+    subst <- catchUnifyError (Syntax.info e) Nothing $ solve cs
     env <- gets (defaulting . apply subst)
     mapM (updateID env) e
+
+defaulting :: Substitutable a => a -> a
+defaulting t = apply (Subst $ fromList $ zip (toList $ ftv t) (repeat TyInt)) t
+
 
 type Env = Map RawID TypedID
 
@@ -35,14 +39,23 @@ type InferM a = StateT Env MalgoM a
 throw :: Info -> Doc -> InferM a
 throw info mes = malgoError $ "error(typing):" <+> pPrint info $+$ mes
 
-catchUnifyError :: Info -> Either UnifyError a -> InferM a
-catchUnifyError i (Left (MismatchConstructor c1 c2)) =
+catchUnifyError :: Info -> Maybe RawID -> Either UnifyError a -> InferM a
+catchUnifyError i n (Left (MismatchConstructor c1 c2)) =
   throw i $ "mismatch constructor" <+> pPrint c1 <+> pPrint c2
-catchUnifyError i (Left (MismatchLength ts1 ts2)) =
+  $+$ case n of
+        Nothing -> mempty
+        Just n' -> "on" <+> pPrint n'
+catchUnifyError i n (Left (MismatchLength ts1 ts2)) =
   throw i $ "mismatch length" <+> pPrint ts1 <+> pPrint ts2
-catchUnifyError i (Left (InfinitType var ty)) =
+  $+$ case n of
+        Nothing -> mempty
+        Just n' -> "on" <+> pPrint n'
+catchUnifyError i n (Left (InfinitType var ty)) =
   throw i $ "infinit type" <+> pPrint var <+> pPrint ty
-catchUnifyError _ (Right a) = pure a
+  $+$ case n of
+        Nothing -> mempty
+        Just n' -> "on" <+> pPrint n'
+catchUnifyError _ _ (Right a) = pure a
 
 updateID :: Env -> RawID -> InferM TypedID
 updateID env x = case lookup x env of
@@ -54,7 +67,7 @@ newTyMeta = TyMeta <$> newUniq
 
 defineVar :: Info -> RawID -> Type -> [Constraint] -> InferM ()
 defineVar i x t cs = do
-  sub <- catchUnifyError i $ solve cs
+  sub <- catchUnifyError i (Just x) $ solve cs
   x' <- newID (apply sub t) (_idName x)
   modify (insert x x')
 
@@ -87,7 +100,7 @@ typingExpr (TupleAccess _ e _) = do
   return (cs, t)
 typingExpr (MakeArray _ ty sizeNode) = do
   (cs, sizeTy) <- typingExpr sizeNode
-  return (TyInt :~ sizeTy : cs, ty)
+  return (TyInt :~ sizeTy : cs, TyArray ty)
 typingExpr (ArrayRead _ arr _) = do
   (cs, arrTy) <- typingExpr arr
   resultTy <- newTyMeta
@@ -170,6 +183,3 @@ typingExpr (BinOp _ op x y) = do
     typingOp Ge   = newTyMeta >>= \a -> pure $ TyFun [a, a] TyBool
     typingOp And  = pure $ TyFun [TyBool, TyBool] TyBool
     typingOp Or   = pure $ TyFun [TyBool, TyBool] TyBool
-
-defaulting :: Substitutable a => a -> a
-defaulting t = apply (Subst $ fromList $ zip (toList $ ftv t) (repeat TyInt)) t

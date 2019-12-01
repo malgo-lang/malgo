@@ -148,7 +148,7 @@ toMType t@(TyApp c []) =
     StringC -> return $ PointerTy (IntTy 8)
     TupleC  -> return $ StructTy []
     _       -> throw $ pPrint t <+> "is not valid type"
-toMType (TyApp (FunC ret) params) = FunctionTy <$> toMType ret <*> mapM toMType params
+toMType (TyApp FunC (ret:params)) = FunctionTy <$> toMType ret <*> mapM toMType params
 toMType (TyApp TupleC xs) = PointerTy . StructTy <$> mapM toMType xs
 toMType (TyApp ArrayC [t]) = PointerTy <$> toMType t
 toMType t = throw $ pPrint t <+> "is not valid type"

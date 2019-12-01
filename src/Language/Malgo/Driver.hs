@@ -8,7 +8,6 @@ module Language.Malgo.Driver where
 
 import qualified Language.Malgo.BackEnd.LLVM          as LLVM
 import           Language.Malgo.FrontEnd.Rename
-import           Language.Malgo.FrontEnd.TypeCheck
 import           Language.Malgo.FrontEnd.Typing.Infer
 import           Language.Malgo.ID
 import qualified Language.Malgo.IR.IR                 as IR
@@ -48,7 +47,6 @@ frontend ast = do
     dump ast
   ast' <- transWithDump @Rename ast
   transWithDump @Typing ast'
-  -- transWithDump @TypeCheck ast'
 
 middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID MType))
 middleend ast = transWithDump @TransToIR ast
