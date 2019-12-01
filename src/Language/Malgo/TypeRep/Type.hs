@@ -26,7 +26,7 @@ instance Pretty Type where
   pPrint (TyMeta v) = pPrint v
 
 instance Pretty TyCon where
-  pPrint (FunC t) = "->" <+> pPrint t
+  pPrint (FunC t) = parens $ "_ ->" <+> pPrint t
   pPrint IntC     = "Int"
   pPrint FloatC   = "Float"
   pPrint BoolC    = "Bool"

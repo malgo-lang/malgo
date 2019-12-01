@@ -25,7 +25,7 @@ instance Pass Typing (Expr RawID) (Expr TypedID) where
   trans e = evaluatingStateT mempty $ do
     (cs, _) <- typingExpr e
     subst <- catchUnifyError (Syntax.info e) $ solve cs
-    env <- gets (apply subst)
+    env <- gets (defaulting . apply subst)
     mapM (updateID env) e
 
 type Env = Map RawID TypedID
@@ -33,7 +33,7 @@ type Env = Map RawID TypedID
 type InferM a = StateT Env MalgoM a
 
 throw :: Info -> Doc -> InferM a
-throw info mes = malgoError $ "error(typing):" <+> pPrint info <+> mes
+throw info mes = malgoError $ "error(typing):" <+> pPrint info $+$ mes
 
 catchUnifyError :: Info -> Either UnifyError a -> InferM a
 catchUnifyError i (Left (MismatchConstructor c1 c2)) =
@@ -55,7 +55,7 @@ newTyMeta = TyMeta <$> newUniq
 defineVar :: Info -> RawID -> Type -> [Constraint] -> InferM ()
 defineVar i x t cs = do
   sub <- catchUnifyError i $ solve cs
-  x' <- newID (defaulting $ apply sub t) (_idName x)
+  x' <- newID (apply sub t) (_idName x)
   modify (insert x x')
 
 lookupVar :: RawID -> InferM Type
@@ -128,9 +128,13 @@ typingExpr (Let i fs e) = do
   (cs2, t) <- typingExpr e
   return (cs1 <> cs2, t)
   where
-    prepare (FunDec i' f _ _ _) = defineVar i' f <$> newTyMeta
+    prepare :: Decl RawID -> InferM ()
+    prepare (FunDec i' f _ _ _) = do
+      v <- newTyMeta
+      defineVar i' f v []
     prepare _                   = malgoError $ "error(prepare):" <+> pPrint i
     typingFunDec (FunDec i' f params retty body) = do
+      mapM_ (\(p, t) -> defineVar i' p t []) params
       (cs1, t) <- typingExpr body
       tv <- lookupVar f
       let cs = tv :~ TyFun (map snd params) retty : t :~ retty : cs1

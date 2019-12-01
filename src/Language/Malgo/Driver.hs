@@ -48,7 +48,7 @@ frontend ast = do
     dump ast
   ast' <- transWithDump @Rename ast
   transWithDump @Typing ast'
-  transWithDump @TypeCheck ast'
+  -- transWithDump @TypeCheck ast'
 
 middleend :: Syntax.Expr TypedID -> MalgoM (IR.Program (ID MType))
 middleend ast = transWithDump @TransToIR ast

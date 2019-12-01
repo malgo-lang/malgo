@@ -79,14 +79,16 @@ in
   gen_seed();
   pulsar(cells);
 
-  let fun loop(): {} =
-    print_cells(cells);
-    update_cells(cells);
-    newline();
-    sleep(1);
-    loop()
+  let fun loop(n:Int): {} =
+    if n > 0
+    then (print_cells(cells);
+    	  update_cells(cells);
+          newline();
+          sleep(1);
+          loop(n - 1))
+    else {}
   in
-    loop()
+    loop(10)
   end
 
 end end end end end end end end end

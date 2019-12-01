@@ -2,5 +2,4 @@
 
 # examplesがコンパイルできるかチェック
 mkdir ./tmp
-ls ./examples | grep mlg | xargs -I{} sh -c 'echo {}; malgo ./examples/{} -o ./tmp/{}.ll; clang -lgc ./examples/lib.c ./tmp/{}.ll'
-rm ./tmp/*.ll
+ls ./examples | grep mlg | xargs -I{} sh -c 'echo {}; malgo ./examples/{} -o ./tmp/{}.ll; clang -lgc ./examples/lib.c ./tmp/{}.ll; ./a.out' && rm ./tmp/*.ll
