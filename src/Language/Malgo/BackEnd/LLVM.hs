@@ -64,13 +64,10 @@ term o = do
   o' <- o
   t o'
 
-char :: Monad m => Integer -> m O.Operand
-char = return . O.ConstantOperand . C.Int 8
-
 sizeof :: (MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m O.Operand
 sizeof ty = do
   let nullptr = O.ConstantOperand (C.Null (LT.ptr ty))
-  ptr <- gep nullptr [O.ConstantOperand (C.Int 64 1)]
+  ptr <- gep nullptr [int64 1]
   ptrtoint ptr LT.i64
 
 gcMalloc :: ( MonadIO m
@@ -100,16 +97,14 @@ genExpr' (Var a) = getRef a
 genExpr' (Int i) = pure $ int64 i
 genExpr' (Float d) = pure $ double d
 genExpr' (Bool b) = pure $ bit (if b then 1 else 0)
-genExpr' (Char c) = char (toInteger $ Char.ord c)
+genExpr' (Char c) = pure $ int8 $ toInteger $ Char.ord c
 genExpr' (String xs) = do
-  p <- gcMalloc (O.ConstantOperand $ C.Int 64
-                 $ toInteger $ Text.length xs + 1)
+  p <- gcMalloc (int64 $ toInteger $ Text.length xs + 1)
   mapM_ (addChar p) (zip [0..] $ toString xs <> ['\0'])
   return p
   where addChar p (i, c) = do
           p' <- gep p [int64 i]
-          c' <- char (toInteger $ Char.ord c)
-          store p' 0 c'
+          store p' 0 (int8 $ toInteger $ Char.ord c)
 genExpr' Unit =
   return (O.ConstantOperand $ C.Undef $ LT.StructureType False [])
 genExpr' (Prim orig ty) = do
@@ -127,7 +122,7 @@ genExpr' (Prim orig ty) = do
 genExpr' (Tuple xs) = do
   p <- malloc (LT.StructureType False (map (convertType . mTypeOf) xs))
   forM_ (zip [0..] xs) $ \(i, x) -> do
-    p' <- gep p [ O.ConstantOperand (C.Int 32 0), O.ConstantOperand (C.Int 32 i)]
+    p' <- gep p [int32 0, int32 i]
     o <- getRef x
     store p' 0 o
   return p
@@ -162,12 +157,12 @@ genExpr' (Cast ty a) = do
   bitcast a' (convertType ty)
 genExpr' (Access a is) = do
   a' <- getRef a
-  p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
+  p <- gep a' (map (int32 . toInteger) is)
   load p 0
 genExpr' (Store a is v) = do
   a' <- getRef a
   v' <- getRef v
-  p <- gep a' (map (O.ConstantOperand . C.Int 32 . toInteger) is)
+  p <- gep a' (map (int32 . toInteger) is)
   store p 0 v'
   genExpr' Unit
 genExpr' (If c t f) = do
