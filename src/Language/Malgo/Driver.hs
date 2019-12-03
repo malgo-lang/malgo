@@ -6,20 +6,21 @@
 {-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.Driver where
 
-import qualified Language.Malgo.BackEnd.LLVM          as LLVM
+import qualified Language.Malgo.BackEnd.LLVM             as LLVM
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
 import           Language.Malgo.ID
-import qualified Language.Malgo.IR.IR                 as IR
-import qualified Language.Malgo.IR.Syntax             as Syntax
+import qualified Language.Malgo.IR.IR                    as IR
+import qualified Language.Malgo.IR.Syntax                as Syntax
 import           Language.Malgo.MiddleEnd.BasicLint
 import           Language.Malgo.MiddleEnd.Closure
 import           Language.Malgo.MiddleEnd.MutRec
+import           Language.Malgo.MiddleEnd.New.TransToHIR
 import           Language.Malgo.MiddleEnd.TransToIR
-import           Language.Malgo.Monad                 as M
+import           Language.Malgo.Monad                    as M
 import           Language.Malgo.Pass
 import           Language.Malgo.TypeRep.MType
-import qualified LLVM.AST                             as L
+import qualified LLVM.AST                                as L
 import           Options.Applicative
 import           Relude
 
@@ -68,5 +69,6 @@ backend filename ir = do
 compile :: MonadIO m => String -> Syntax.Expr Text -> UniqSupply -> Opt -> m L.Module
 compile filename ast = M.runMalgo $ do
   typed <- frontend ast
+  _ <- transWithDump @TransToHIR typed
   ir <- middleend typed
   backend filename ir

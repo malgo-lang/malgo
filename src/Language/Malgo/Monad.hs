@@ -18,6 +18,7 @@ module Language.Malgo.Monad
   , malgoError
   ) where
 
+import           Control.Monad.Trans.Writer.CPS
 import           Relude
 
 newtype UniqSupply = UniqSupply (IORef Int)
@@ -56,6 +57,8 @@ instance MonadMalgo m => MonadMalgo (ReaderT r m) where
 instance MonadMalgo m => MonadMalgo (ExceptT e m) where
   liftMalgo = lift . liftMalgo
 instance MonadMalgo m => MonadMalgo (StateT s m) where
+  liftMalgo = lift . liftMalgo
+instance MonadMalgo m => MonadMalgo (WriterT w m) where
   liftMalgo = lift . liftMalgo
 
 newUniq :: MonadMalgo m => m Int
