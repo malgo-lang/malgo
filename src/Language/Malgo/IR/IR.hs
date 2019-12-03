@@ -9,17 +9,12 @@
 {-# LANGUAGE StrictData            #-}
 module Language.Malgo.IR.IR where
 
-import           Control.Lens                 (view, _1, _3)
-import           Data.List                    (delete, (\\))
+import           Control.Lens                      (view, _1, _3)
+import           Data.List                         (delete, (\\))
+import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.MType
 import           Relude
-
-class FreeVars f where
-  freevarsPrec :: Ord a => f a -> [a]
-
-  freevars :: Ord a => f a -> [a]
-  freevars x = ordNub (freevarsPrec x)
 
 data Program a = Program a [Defn a]
   deriving (Show, Eq, Read, Generic, PrettyVal)

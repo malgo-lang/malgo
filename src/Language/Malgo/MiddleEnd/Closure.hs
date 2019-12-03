@@ -7,11 +7,12 @@
 module Language.Malgo.MiddleEnd.Closure (Closure) where
 
 import           Control.Lens
-import           Data.List                    ((\\))
-import qualified Data.Map.Strict              as Map
-import           Language.Malgo.ID            hiding (newID)
-import qualified Language.Malgo.ID            as ID
+import           Data.List                         ((\\))
+import qualified Data.Map.Strict                   as Map
+import           Language.Malgo.ID                 hiding (newID)
+import qualified Language.Malgo.ID                 as ID
 import           Language.Malgo.IR.IR
+import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
