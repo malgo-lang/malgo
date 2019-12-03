@@ -8,9 +8,9 @@
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.LIR where
 
-import           Data.Set              (delete)
+import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
-import           Relude                hiding (Op)
+import           Relude                            hiding (Op)
 
 type Program t a = ([Func t a], Expr t a)
 
@@ -71,21 +71,21 @@ flattenExpr e = e
 flattenDef :: (a, [a], Expr t a) -> (a, [a], Expr t a)
 flattenDef (f, ps, e) = (f, ps, flattenExpr e)
 
-freevars :: Ord a => Expr t a -> Set a
-freevars (Var x)            = one x
-freevars Lit{}              = mempty
-freevars (Tuple xs)         = fromList xs
-freevars (TupleAccess x _)  = one x
-freevars (MakeArray _ x)    = one x
-freevars (ArrayRead x y)    = fromList [x, y]
-freevars (ArrayWrite x y z) = fromList [x, y, z]
-freevars (CallDir x xs)     = fromList $ x:xs
-freevars (CallCls x xs)     = fromList $ x:xs
-freevars (MakeCls x xs)     = fromList $ x:xs
-freevars (Let x v e)        = freevars v <> delete x (freevars e)
-freevars (If c t f)         = one c <> freevars t <> freevars f
-freevars (Prim _ _)         = mempty
-freevars (BinOp _ x y)      = fromList [x, y]
+instance FreeVars (Expr t) where
+  freevars (Var x)            = one x
+  freevars Lit{}              = mempty
+  freevars (Tuple xs)         = fromList xs
+  freevars (TupleAccess x _)  = one x
+  freevars (MakeArray _ x)    = one x
+  freevars (ArrayRead x y)    = fromList [x, y]
+  freevars (ArrayWrite x y z) = fromList [x, y, z]
+  freevars (CallDir x xs)     = fromList $ x:xs
+  freevars (CallCls x xs)     = fromList $ x:xs
+  freevars (MakeCls x xs)     = fromList $ x:xs
+  freevars (Let x v e)        = freevars v <> delete x (freevars e)
+  freevars (If c t f)         = one c <> freevars t <> freevars f
+  freevars (Prim _ _)         = mempty
+  freevars (BinOp _ x y)      = fromList [x, y]
 
 instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (Var x) = pPrint x

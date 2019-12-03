@@ -7,12 +7,12 @@
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.HIR where
 
-import           Control.Lens                (view, _1)
-import           Data.Set                    (delete, (\\))
+import           Control.Lens                      (view, _1)
+import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Relude                      hiding (Op)
-import           Relude.Unsafe               ((!!))
+import           Relude                            hiding (Op)
+import           Relude.Unsafe                     ((!!))
 
 data Expr t a = Var a
               | Lit Lit
@@ -63,24 +63,24 @@ flattenExpr e = e
 flattenDef :: (a, [a], Expr t a) -> (a, [a], Expr t a)
 flattenDef (f, ps, e) = (f, ps, flattenExpr e)
 
-freevars :: Ord a => Expr t a -> Set a
-freevars (Var x)             = one x
-freevars Lit{}               = mempty
-freevars (Tuple xs)          = fromList xs
-freevars (TupleAccess x _) = one x
-freevars (MakeArray _ x)     = one x
-freevars (ArrayRead x y)     = fromList [x, y]
-freevars (ArrayWrite x y z)  = fromList [x, y, z]
-freevars (Call x xs)         = fromList $ x:xs
-freevars (Let x v e)         = freevars v <> delete x (freevars e)
-freevars (LetRec xs e) =
-  let efv = freevars e
-      xsfv = mconcat $ map (\(_, ps, b) -> freevars b \\ fromList ps) xs
-      fs = fromList $ map (view _1) xs
-  in (efv <> xsfv) \\ fs
-freevars (If c t f) = one c <> freevars t <> freevars f
-freevars (Prim _ _) = mempty
-freevars (BinOp _ x y) = fromList [x, y]
+instance FreeVars (Expr t) where
+  freevars (Var x)             = one x
+  freevars Lit{}               = mempty
+  freevars (Tuple xs)          = fromList xs
+  freevars (TupleAccess x _) = one x
+  freevars (MakeArray _ x)     = one x
+  freevars (ArrayRead x y)     = fromList [x, y]
+  freevars (ArrayWrite x y z)  = fromList [x, y, z]
+  freevars (Call x xs)         = fromList $ x:xs
+  freevars (Let x v e)         = freevars v <> delete x (freevars e)
+  freevars (LetRec xs e) =
+    let efv = freevars e
+        xsfv = mconcat $ map (\(_, ps, b) -> freevars b \\ fromList ps) xs
+        fs = fromList $ map (view _1) xs
+    in (efv <> xsfv) \\ fs
+  freevars (If c t f) = one c <> freevars t <> freevars f
+  freevars (Prim _ _) = mempty
+  freevars (BinOp _ x y) = fromList [x, y]
 
 instance (HasType t, HasType a) => HasType (Expr t a) where
   typeOf (Var x) = typeOf x
