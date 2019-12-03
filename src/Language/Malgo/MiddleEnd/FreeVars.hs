@@ -1,10 +1,8 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-module Language.Malgo.MiddleEnd.FreeVars where
+module Language.Malgo.MiddleEnd.FreeVars (FreeVars(..), delete, (\\)) where
 
+import           Data.Set (delete, (\\))
 import           Relude
 
 class FreeVars f where
-  freevarsPrec :: Ord a => f a -> [a]
-
-  freevars :: Ord a => f a -> [a]
-  freevars x = ordNub (freevarsPrec x)
+  freevars :: Ord a => f a -> Set a

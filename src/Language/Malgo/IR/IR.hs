@@ -10,7 +10,6 @@
 module Language.Malgo.IR.IR where
 
 import           Control.Lens                      (view, _1, _3)
-import           Data.List                         (delete, (\\))
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.MType
@@ -23,7 +22,7 @@ flattenProgram :: Program a -> Program a
 flattenProgram (Program m defs) = Program m (map flattenDefn defs)
 
 instance FreeVars Program where
-  freevarsPrec (Program _ xs) = concatMap freevars xs
+  freevars (Program _ xs) = mconcat $ map freevars xs
 
 instance Pretty a => Pretty (Program a) where
   pPrint (Program _ defns) =
@@ -39,8 +38,8 @@ flattenDefn :: Defn a -> Defn a
 flattenDefn (DefFun f params body) = DefFun f params (flattenExpr body)
 
 instance FreeVars Defn where
-  freevarsPrec (DefFun _ params body) =
-    freevars body \\ params
+  freevars (DefFun _ params body) =
+    freevars body \\ fromList params
 
 instance Pretty a => Pretty (Defn a) where
   pPrint (DefFun fn params body) =
@@ -98,18 +97,18 @@ prims (If _ t f) = prims t ++ prims f
 prims _ = []
 
 instance FreeVars Expr where
-  freevarsPrec (Var x) = [x]
-  freevarsPrec (Tuple xs) = xs
-  freevarsPrec (Apply _ args) = args
-  freevarsPrec (Let x v e) = freevars v ++ delete x (freevars e)
-  freevarsPrec (LetRec xs e) =
-    (concatMap (\(_, params, body) -> freevars body \\ params) xs ++ freevars e)
-    \\ map (view _1) xs
-  freevarsPrec (Cast _ x) = [x]
-  freevarsPrec (Access x _) = [x]
-  freevarsPrec (Store x _ y) = [x, y]
-  freevarsPrec (If c t f) = c : freevars t ++ freevars f
-  freevarsPrec _ = []
+  freevars (Var x) = one x
+  freevars (Tuple xs) = fromList xs
+  freevars (Apply _ args) = fromList args
+  freevars (Let x v e) = freevars v <> delete x (freevars e)
+  freevars (LetRec xs e) =
+    (mconcat (map (\(_, params, body) -> freevars body \\ fromList params) xs) <> freevars e)
+    \\ fromList (map (view _1) xs)
+  freevars (Cast _ x) = one x
+  freevars (Access x _) = one x
+  freevars (Store x _ y) = fromList [x, y]
+  freevars (If c t f) = one c <> freevars t <> freevars f
+  freevars _ = mempty
 
 instance Pretty a => Pretty (Expr a) where
   pPrint (Var a) = pPrint a

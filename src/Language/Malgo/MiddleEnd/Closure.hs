@@ -7,7 +7,6 @@
 module Language.Malgo.MiddleEnd.Closure (Closure) where
 
 import           Control.Lens
-import           Data.List                         ((\\))
 import qualified Data.Map.Strict                   as Map
 import           Language.Malgo.ID                 hiding (newID)
 import qualified Language.Malgo.ID                 as ID
@@ -18,6 +17,7 @@ import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.MType
 import           Relude
+import           Relude.Extra.Map
 
 data Env = Env { _varmap :: Map (ID MType) (ID MType)
                , _knowns :: [ID MType]
@@ -85,7 +85,7 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
             $ local (over varmap (Map.fromList ((fn, knownFn) : zip params params') <>))
             $ transExpr fbody
   Program _ defs <- get
-  if null (freevars fbody' \\ (params' ++ map _fnName defs)) && (fn `notElem` freevars body)
+  if null (freevars fbody' \\ fromList (params' <> map _fnName defs)) && not (fn `member` freevars body)
     -- 本当に自由変数がなければknownsに追加してbodyを変換
     then do addDefn (DefFun knownFn params' fbody')
             local (over knowns (fn:))
@@ -110,7 +110,8 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
           Program _ defs <- get
 
           -- 自由変数のリスト
-          let zs = freevars fbody' \\ (innerCls : params' ++ map _fnName defs) -- すでに宣言されている関数名は自由変数にはならない
+          -- すでに宣言されている関数名は自由変数にはならない
+          let zs = toList $ freevars fbody' \\ fromList (innerCls : params' <> map _fnName defs)
 
           -- 実際に変換後のfbody内で参照される自由変数のリスト
           zs' <- mapM cloneID zs
@@ -131,7 +132,7 @@ transExpr (LetRec [(fn, params, fbody)] body) = do
           capStruct' <- cloneID capStruct
           capPtr' <- cloneID capPtr
 
-          Let capStruct' (Tuple $ zs \\ [innerCls])
+          Let capStruct' (Tuple zs)
             . Let capPtr' (Cast (PointerTy $ IntTy 8) capStruct')
             . Let clsID (Tuple [unknownFn, capPtr'])
             <$> local (over varmap (Map.insert fn clsID)) (transExpr body)
