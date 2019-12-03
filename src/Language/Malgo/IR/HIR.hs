@@ -1,19 +1,22 @@
 {-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.HIR where
 
-import           Control.Lens          (view, _1)
-import           Data.Set              (delete, (\\))
+import           Control.Lens                (view, _1)
+import           Data.Set                    (delete, (\\))
 import           Language.Malgo.ID
 import           Language.Malgo.Pretty
+import           Language.Malgo.TypeRep.Type
 import           Relude
+import           Relude.Unsafe               ((!!))
 
 data Expr t = Var (ID t)
             | Lit Lit
             | Tuple [ID t]
-            | TupleAccess t (ID t) Int
+            | TupleAccess (ID t) Int
             | MakeArray
               t -- type of element
               (ID t) -- size
@@ -56,7 +59,7 @@ freevars :: Ord t => Expr t -> Set (ID t)
 freevars (Var x)             = one x
 freevars Lit{}               = mempty
 freevars (Tuple xs)          = fromList xs
-freevars (TupleAccess _ x _) = one x
+freevars (TupleAccess x _) = one x
 freevars (MakeArray _ x)     = one x
 freevars (ArrayRead x y)     = fromList [x, y]
 freevars (ArrayWrite x y z)  = fromList [x, y, z]
@@ -69,3 +72,33 @@ freevars (LetRec xs e) =
   in (efv <> xsfv) \\ fs
 freevars (If c t f) = one c <> freevars t <> freevars f
 freevars (Prim _ _ xs) = fromList xs
+
+instance HasType t => HasType (Expr t) where
+  typeOf (Var x) = typeOf x
+  typeOf (Lit x) = typeOf x
+  typeOf (Tuple xs) = TyTuple $ map typeOf xs
+  typeOf (TupleAccess x i) =
+    case typeOf x of
+      TyTuple xs -> xs !! i
+      _          -> error "(typeOf e) should match (TyTuple xs)"
+  typeOf (MakeArray t _) = TyArray $ typeOf t
+  typeOf (ArrayRead arr _) =
+    case typeOf arr of
+      TyArray t -> t
+      _         -> error "(typeOf arr) should match (TyArray xs)"
+  typeOf ArrayWrite{} = TyTuple []
+  typeOf (Call fn _) =
+    case typeOf fn of
+      (TyFun _ ty) -> ty
+      _            -> error "(typeOf fn) should match (TyFun _ ty)"
+  typeOf (Let _ _ e) = typeOf e
+  typeOf (LetRec _ e) = typeOf e
+  typeOf (If _ x _) = typeOf x
+  typeOf (Prim _ ty _) = typeOf ty
+
+instance HasType Lit where
+  typeOf Int{}    = TyInt
+  typeOf Float{}  = TyFloat
+  typeOf Bool{}   = TyBool
+  typeOf Char{}   = TyChar
+  typeOf String{} = TyString
