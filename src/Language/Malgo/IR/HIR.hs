@@ -1,8 +1,11 @@
 {-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.HIR where
 
+import           Control.Lens          (view, _1)
+import           Data.Set              (delete, (\\))
 import           Language.Malgo.ID
 import           Language.Malgo.Pretty
 import           Relude
@@ -48,3 +51,21 @@ flattenExpr e = e
 
 flattenDef :: (ID t, [ID t], Expr t) -> (ID t, [ID t], Expr t)
 flattenDef (f, ps, e) = (f, ps, flattenExpr e)
+
+freevars :: Ord t => Expr t -> Set (ID t)
+freevars (Var x)             = one x
+freevars Lit{}               = mempty
+freevars (Tuple xs)          = fromList xs
+freevars (TupleAccess _ x _) = one x
+freevars (MakeArray _ x)     = one x
+freevars (ArrayRead x y)     = fromList [x, y]
+freevars (ArrayWrite x y z)  = fromList [x, y, z]
+freevars (Call x xs)         = fromList $ x:xs
+freevars (Let x v e)         = freevars v <> delete x (freevars e)
+freevars (LetRec xs e) =
+  let efv = freevars e
+      xsfv = mconcat $ map (\(_, ps, b) -> freevars b \\ fromList ps) xs
+      fs = fromList $ map (view _1) xs
+  in (efv <> xsfv) \\ fs
+freevars (If c t f) = one c <> freevars t <> freevars f
+freevars (Prim _ _ xs) = fromList xs
