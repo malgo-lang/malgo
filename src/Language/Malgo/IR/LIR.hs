@@ -45,7 +45,7 @@ data Expr t a = Var a
                 a -- value
               | MakeCls
                 a -- function
-                [a] -- captured variables
+                [a] -- captured variables (may recursive)
               | CallDir a [a] -- direct call
               | CallWithCaptures a [a] -- indirect call for mutrec functions
               | CallCls a [a] -- indirect call
