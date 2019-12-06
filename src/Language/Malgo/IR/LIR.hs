@@ -8,6 +8,7 @@
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.LIR where
 
+import           Data.Set                          ((\\))
 import           Language.Malgo.IR.HIR             (Lit (..), Op (..))
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
@@ -19,7 +20,7 @@ data Program t a = Program { functions :: [Func t a], mainExpr :: Expr t a }
 instance (Pretty t, Pretty a) => Pretty (Program t a) where
   pPrint Program { functions, mainExpr } =
     vcat (map pPrint functions)
-    $$ pPrint mainExpr
+    $$ "entry point =" $$ nest 2 (pPrint mainExpr)
 
 data Func t a = Func { name :: a, captures :: [a], params :: [a], body :: Expr t a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
@@ -27,7 +28,7 @@ data Func t a = Func { name :: a, captures :: [a], params :: [a], body :: Expr t
 instance (Pretty t, Pretty a) => Pretty (Func t a) where
   pPrint Func { name, captures, params, body } =
     pPrint name <+> brackets (sep $ map pPrint captures) <+> sep (map pPrint params) <+> "="
-    $+$ pPrint body
+    $+$ nest 2 (pPrint body)
 
 data Expr t a = Var a
               | Lit Lit
@@ -49,17 +50,20 @@ data Expr t a = Var a
               | CallDir a [a] -- direct call
               | CallWithCaptures a [a] -- indirect call for mutrec functions
               | CallCls a [a] -- indirect call
-              | Let a (Expr t a) (Expr t a)
+              | Let [(a, Expr t a)] (Expr t a)
               | If a (Expr t a) (Expr t a)
               | Prim Text t
               | BinOp Op a a
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
 flattenExpr :: Expr t a -> Expr t a
-flattenExpr (Let x v1 e1) =
+flattenExpr (Let [(x, v1)] e1) =
   insert (flattenExpr v1)
-  where insert (Let y v2 e2) = Let y v2 (insert e2)
-        insert v             = Let x v (flattenExpr e1)
+  where insert (Let [(y, v2)] e2) = Let [(y, v2)] (insert e2)
+        insert (Let xs e)         = Let xs (insert e)
+        insert v                  = Let [(x, v)] (flattenExpr e1)
+flattenExpr (Let xs e) =
+  Let (map (\(n, v) -> (n, flattenExpr v)) xs) (flattenExpr e)
 flattenExpr (If c t f) = If c (flattenExpr t) (flattenExpr f)
 flattenExpr e = e
 
@@ -78,7 +82,9 @@ instance FreeVars (Expr t) where
   freevars (CallWithCaptures _ xs) = fromList xs
   freevars (CallCls f xs)          = fromList $ f:xs
   freevars (MakeCls _ xs)          = fromList xs
-  freevars (Let x v e)             = freevars v <> delete x (freevars e)
+  freevars (Let xs e)              =
+    let (ns, vs) = unzip xs
+    in (mconcat (map freevars vs) <> freevars e) \\ fromList ns
   freevars (If c t f)              = one c <> freevars t <> freevars f
   freevars (Prim _ _)              = mempty
   freevars (BinOp _ x y)           = fromList [x, y]
@@ -95,13 +101,13 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (CallWithCaptures f xs) = parens $ "withcap" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallCls f xs) = parens $ "cls" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (MakeCls f xs) = parens $ "closure" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (Let x v e) =
-    parens $ "let" <+> pPrint x <+> pPrint v
+  pPrint (Let xs e) =
+    vcat (map (\(n, v) -> pPrint n <+> "=" <+> pPrint v) xs)
     $+$ pPrint e
   pPrint (If c t f) =
     parens $ "if" <+> pPrint c
-    $+$ pPrint t
-    $+$ pPrint f
+    $+$ "then" <+> pPrint t
+    $+$ "else" <+> pPrint f
   pPrint (BinOp op x y) =
     parens $ sep [pPrint op, pPrint x, pPrint y]
   pPrint (Prim x t) = parens $ "prim" <+> pPrint x <+> pPrint t

@@ -69,19 +69,16 @@ lintExpr (TupleAccess x _) = definedVar x
 lintExpr (MakeArray _ x) = definedVar x
 lintExpr (ArrayRead arr ix) = definedVar arr >> definedVar ix
 lintExpr (ArrayWrite arr ix val) = definedVar arr >> definedVar ix >> definedVar val
-lintExpr MakeCls{} = malgoError ("unreachable(LIRLint)" :: Doc)
+lintExpr (MakeCls f xs) = isFunc f >> mapM_ definedVar xs
 lintExpr (CallDir f xs) = isKnownFunc f >> mapM_ definedVar xs
 lintExpr (CallWithCaptures f xs) = isFunc f >> mapM_ definedVar xs
 lintExpr (CallCls f xs) = definedVar f >> mapM_ definedVar xs
-lintExpr (Let x (MakeCls f xs) e) = do
-  notDefinedVar x
-  local (\env -> env { variables = x : variables env })
-    (isFunc f >> mapM_ definedVar xs >> lintExpr e)
-lintExpr (Let x v e) = do
-  notDefinedVar x
-  lintExpr v
-  local (\env -> env { variables = x : variables env })
-    (lintExpr e)
+lintExpr (Let xs e) = do
+  mapM_ notDefinedVar ns
+  local (\env -> env { variables = ns <> variables env })
+    (mapM_ lintExpr vs >> lintExpr e)
+  where
+    (ns, vs) = unzip xs
 lintExpr (If _ t f) = lintExpr t >> lintExpr f
 lintExpr (Prim _ _) = pure ()
 lintExpr (BinOp _ x y) = definedVar x >> definedVar y

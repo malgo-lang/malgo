@@ -10,8 +10,8 @@ import qualified Data.Text                      as T
 import qualified Data.Text.Lazy                 as TL
 import           Text.PrettyPrint.HughesPJClass hiding (empty, (<+>), (<>))
 import qualified Text.PrettyPrint.HughesPJClass as P
-import           Text.Show.Pretty               (PrettyVal (..), dumpIO,
-                                                 dumpStr)
+import           Text.Show.Pretty               (PrettyVal (..), dumpDoc,
+                                                 dumpIO, dumpStr)
 import qualified Text.Show.Pretty               as S
 
 -- change operator precedence

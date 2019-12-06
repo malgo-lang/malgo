@@ -57,7 +57,9 @@ transExpr (H.Call f xs) = do
   pure $ if | f `elem` knowns -> CallDir f xs -- 直接呼び出せる関数はCallDir
             | f `elem` mutrecs -> CallWithCaptures f xs -- (相互)再帰している関数はCallWithCaptures
             | otherwise -> CallCls f xs -- それ以外はCallCls
-transExpr (H.Let x v e) = Let x <$> transExpr v <*> transExpr e
+transExpr (H.Let x v e) = do
+  v' <- transExpr v
+  Let [(x, v')] <$> transExpr e
 transExpr (H.If c t f) = If c <$> transExpr t <*> transExpr f
 transExpr (H.Prim orig ty) = pure $ Prim orig ty
 transExpr (H.BinOp op x y) = pure $ BinOp op x y
@@ -70,7 +72,7 @@ transExpr (H.LetRec defs e) = do
      | otherwise -> do
          put envBackup
          defs' <- local (\env -> (env :: Env) { captures = fv, mutrecs = map (\(f, _, _) -> f) defs }) (transDefs defs)
-         defs' <$> transExpr e
+         Let defs' <$> transExpr e
   where
     funcNames = map (\(f, _, _) -> f) defs
     getFreeVars = do
@@ -78,10 +80,10 @@ transExpr (H.LetRec defs e) = do
       mconcat <$> forM funcNames (\f -> do
                                      Func {params, body} <- getFunc f
                                      pure $ freevars body \\ fromList params)
-    transDefs []              = pure id
+    transDefs []              = pure []
     transDefs ((f, xs, b):ds) = do
       b' <- transExpr b
       Env { captures } <- ask
       addFunc (Func { name = f, captures = toList captures, params = xs, body = b' })
-      k <- transDefs ds
-      pure (k . Let f (MakeCls f $ toList captures))
+      ks <- transDefs ds
+      pure ((f, MakeCls f $ toList captures) : ks)

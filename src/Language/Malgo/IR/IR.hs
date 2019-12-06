@@ -139,7 +139,7 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (If c t f) =
     parens ("if" <+> (pPrint c $+$ pPrint t $+$ pPrint f))
 
-instance HasMType a => HasMType (Expr a) where
+instance (HasMType a, PrettyVal a) => HasMType (Expr a) where
   mTypeOf (Var a) = mTypeOf a
   mTypeOf (Int _) = IntTy 64
   mTypeOf (Float _) = DoubleTy
@@ -166,10 +166,10 @@ instance HasMType a => HasMType (Expr a) where
   mTypeOf (Access e is) =
     case runIdentity $ runExceptT (accessMType (mTypeOf e) is) of
       Right t  -> t
-      Left mes -> error $ show mes
+      Left mes -> error $ show $ dumpDoc (Access e is) <+> mes
   mTypeOf (Store var is val) =
     case runIdentity $ runExceptT (accessMType (mTypeOf var) is) of
       Right t | t == mTypeOf val -> StructTy []
               | otherwise -> error "mTypeOf(Store)"
-      Left mes -> error $ show mes
+      Left mes -> error $ show $ dumpDoc (Store var is val) <+> mes
   mTypeOf (If _ e _) = mTypeOf e
