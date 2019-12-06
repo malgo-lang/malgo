@@ -16,6 +16,8 @@ import           Language.Malgo.MiddleEnd.BasicLint
 import           Language.Malgo.MiddleEnd.Closure
 import           Language.Malgo.MiddleEnd.MutRec
 import qualified Language.Malgo.MiddleEnd.New.Closure    as New
+import           Language.Malgo.MiddleEnd.New.HIRLint
+import           Language.Malgo.MiddleEnd.New.LIRLint
 import           Language.Malgo.MiddleEnd.New.TransToHIR
 import           Language.Malgo.MiddleEnd.TransToIR
 import           Language.Malgo.Monad                    as M
@@ -71,6 +73,8 @@ compile :: MonadIO m => String -> Syntax.Expr Text -> UniqSupply -> Opt -> m L.M
 compile filename ast = M.runMalgo $ do
   typed <- frontend ast
   hir <- transWithDump @TransToHIR typed
-  _ <- transWithDump @New.Closure hir
+  _ <- transWithDump @HIRLint hir
+  lir <- transWithDump @New.Closure hir
+  _ <- transWithDump @LIRLint lir
   ir <- middleend typed
   backend filename ir

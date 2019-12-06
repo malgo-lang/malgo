@@ -5,6 +5,7 @@
 {-# LANGUAGE MultiWayIf            #-}
 {-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.New.Closure ( Closure ) where
 
 import           Data.Set                          (intersection)
@@ -14,6 +15,7 @@ import           Language.Malgo.IR.LIR             as L
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
+import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Relude                            hiding (Type)
 
@@ -36,6 +38,12 @@ type TransM a = ReaderT Env (StateT [Func Type TypedID] MalgoM) a
 addFunc :: MonadState [Func t a] m => Func t a -> m ()
 addFunc func = modify (func:)
 
+getFunc func = do
+  env <- get
+  case find (\Func{name} -> name == func) env of
+    Just f -> pure f
+    Nothing -> malgoError $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
+
 transExpr :: H.Expr Type (ID Type) -> TransM (L.Expr Type TypedID)
 transExpr (H.Var x) = pure $ Var x
 transExpr (H.Lit x) = pure $ Lit x
@@ -53,16 +61,23 @@ transExpr (H.Let x v e) = Let x <$> transExpr v <*> transExpr e
 transExpr (H.If c t f) = If c <$> transExpr t <*> transExpr f
 transExpr (H.Prim orig ty) = pure $ Prim orig ty
 transExpr (H.BinOp op x y) = pure $ BinOp op x y
-transExpr (H.LetRec defs e)
-  | fv == mempty && (freevars e `intersection` fromList funcNames) == mempty = do
-      _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, captures = mempty, mutrecs = mempty }) (transDefs defs)
-      local (\env -> env { knowns = funcNames <> knowns env }) $ transExpr e
-  | otherwise = do
-      defs' <- local (\env -> (env :: Env) { captures = fv, mutrecs = map (\(f, _, _) -> f) defs }) (transDefs defs)
-      defs' <$> transExpr e
+transExpr (H.LetRec defs e) = do
+  envBackup <- get
+  fv <- getFreeVars
+  if | fv == mempty && (freevars e `intersection` fromList funcNames) == mempty ->
+         -- _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, captures = mempty, mutrecs = mempty }) (transDefs defs)
+         local (\env -> env { knowns = funcNames <> knowns env }) $ transExpr e
+     | otherwise -> do
+         put envBackup
+         defs' <- local (\env -> (env :: Env) { captures = fv, mutrecs = map (\(f, _, _) -> f) defs }) (transDefs defs)
+         defs' <$> transExpr e
   where
     funcNames = map (\(f, _, _) -> f) defs
-    fv = mconcat $ map (\(_, ps, b) -> freevars b \\ fromList ps) defs
+    getFreeVars = do
+      _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, captures = mempty, mutrecs = mempty }) (transDefs defs)
+      mconcat <$> forM funcNames (\f -> do
+                                     Func {params, body} <- getFunc f
+                                     pure $ freevars body \\ fromList params)
     transDefs []              = pure id
     transDefs ((f, xs, b):ds) = do
       b' <- transExpr b

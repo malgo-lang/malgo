@@ -77,7 +77,7 @@ instance FreeVars (Expr t) where
   freevars (CallDir _ xs)          = fromList xs
   freevars (CallWithCaptures _ xs) = fromList xs
   freevars (CallCls f xs)          = fromList $ f:xs
-  freevars (MakeCls x xs)          = fromList $ x:xs
+  freevars (MakeCls _ xs)          = fromList xs
   freevars (Let x v e)             = freevars v <> delete x (freevars e)
   freevars (If c t f)              = one c <> freevars t <> freevars f
   freevars (Prim _ _)              = mempty
@@ -97,11 +97,11 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (MakeCls f xs) = parens $ "closure" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (Let x v e) =
     parens $ "let" <+> pPrint x <+> pPrint v
-    $+$ nest 2 (pPrint e)
+    $+$ pPrint e
   pPrint (If c t f) =
     parens $ "if" <+> pPrint c
-    $+$ nest 2 (pPrint t)
-    $+$ nest 2 (pPrint f)
+    $+$ pPrint t
+    $+$ pPrint f
   pPrint (BinOp op x y) =
     parens $ sep [pPrint op, pPrint x, pPrint y]
   pPrint (Prim x t) = parens $ "prim" <+> pPrint x <+> pPrint t
