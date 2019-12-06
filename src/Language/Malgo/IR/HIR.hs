@@ -71,7 +71,7 @@ instance FreeVars (Expr t) where
   freevars (MakeArray _ x)     = one x
   freevars (ArrayRead x y)     = fromList [x, y]
   freevars (ArrayWrite x y z)  = fromList [x, y, z]
-  freevars (Call x xs)         = fromList $ x:xs
+  freevars (Call _ xs)         = fromList xs
   freevars (Let x v e)         = freevars v <> delete x (freevars e)
   freevars (LetRec xs e) =
     let efv = freevars e
