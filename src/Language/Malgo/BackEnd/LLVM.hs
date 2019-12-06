@@ -2,6 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RecursiveDo           #-}
 {-# LANGUAGE StrictData            #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TupleSections         #-}
@@ -148,7 +149,7 @@ genExpr' (Apply f args) = do
   args' <- mapM (getRef >=> return . (, [])) args
   call f' args'
 genExpr' (Let name val body) = do
-  val' <- genExpr' val `named` fromString (show (P.pPrint name))
+  val' <- genExpr' val
   local (over table (Map.insert name val')) (genExpr' body)
 genExpr' LetRec{} =
   error "unreachable(LetRec)"
@@ -165,24 +166,22 @@ genExpr' (Store a is v) = do
   p <- gep a' (map (int32 . toInteger) is)
   store p 0 v'
   genExpr' Unit
-genExpr' (If c t f) = do
+genExpr' (If c t f) = mdo
   c' <- getRef c
   r <- alloca (convertType (mTypeOf t)) Nothing 0
-  end <- freshName "end"
-  tLabel <- freshName "then"
-  fLabel <- freshName "else"
   condBr c' tLabel fLabel
-  local (set terminator (\o -> store r 0 o >> br end)) $ do
-    emitBlockStart tLabel; genExpr t
-    emitBlockStart fLabel; genExpr f
-  emitBlockStart end
+  (tLabel, fLabel) <- local (set terminator (\o -> store r 0 o >> br end)) $ do
+    tl <- block `named` "then"; genExpr t
+    fl <- block `named` "else"; genExpr f
+    return (tl, fl)
+  end <- block `named` "endif"
   load r 0
 
 genDefn :: Defn (ID MType) -> GenDec ()
 genDefn (DefFun fn params body) = do
   let fn' = fromString $ show $ P.pPrint fn
-  let params' = map (\(ID name _ ty) ->
-                       (convertType ty, fromString $ show $ P.pPrint name)) params
+  let params' = map (\(ID _ _ ty) ->
+                       (convertType ty, NoParameterName)) params
   let retty' = convertType (mTypeOf body)
   void $ function fn' params' retty'
     $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))
