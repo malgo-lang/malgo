@@ -54,9 +54,9 @@ transExpr (H.ArrayRead arr ix) = pure $ ArrayRead arr ix
 transExpr (H.ArrayWrite arr ix val) = pure $ ArrayWrite arr ix val
 transExpr (H.Call f xs) = do
   Env { knowns, mutrecs } <- ask
-  pure $ if | f `elem` knowns -> CallDir f xs -- 直接呼び出せる関数はCallDir
+  pure $ if | f `elem` knowns -> CallDirect f xs -- 直接呼び出せる関数はCallDir
             | f `elem` mutrecs -> CallWithCaptures f xs -- (相互)再帰している関数はCallWithCaptures
-            | otherwise -> CallCls f xs -- それ以外はCallCls
+            | otherwise -> CallClosure f xs -- それ以外はCallCls
 transExpr (H.Let x v e) = do
   v' <- transExpr v
   Let [(x, v')] <$> transExpr e
@@ -86,4 +86,4 @@ transExpr (H.LetRec defs e) = do
       Env { captures } <- ask
       addFunc (Func { name = f, captures = toList captures, params = xs, body = b' })
       ks <- transDefs ds
-      pure ((f, MakeCls f $ toList captures) : ks)
+      pure ((f, MakeClosure f $ toList captures) : ks)

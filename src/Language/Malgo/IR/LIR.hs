@@ -44,12 +44,12 @@ data Expr t a = Var a
                 a -- array
                 a -- index
                 a -- value
-              | MakeCls
+              | MakeClosure
                 a -- function
                 [a] -- captured variables (may recursive)
-              | CallDir a [a] -- direct call
+              | CallDirect a [a] -- direct call
               | CallWithCaptures a [a] -- indirect call for mutrec functions
-              | CallCls a [a] -- indirect call
+              | CallClosure a [a] -- indirect call
               | Let [(a, Expr t a)] (Expr t a)
               | If a (Expr t a) (Expr t a)
               | Prim Text t
@@ -78,10 +78,10 @@ instance FreeVars (Expr t) where
   freevars (MakeArray _ x)         = one x
   freevars (ArrayRead x y)         = fromList [x, y]
   freevars (ArrayWrite x y z)      = fromList [x, y, z]
-  freevars (CallDir _ xs)          = fromList xs
+  freevars (CallDirect _ xs)          = fromList xs
   freevars (CallWithCaptures _ xs) = fromList xs
-  freevars (CallCls f xs)          = fromList $ f:xs
-  freevars (MakeCls _ xs)          = fromList xs
+  freevars (CallClosure f xs)          = fromList $ f:xs
+  freevars (MakeClosure _ xs)          = fromList xs
   freevars (Let xs e)              =
     let (ns, vs) = unzip xs
     in (mconcat (map freevars vs) <> freevars e) \\ fromList ns
@@ -97,10 +97,10 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (MakeArray ty size) = parens $ "array" <+> pPrint ty <+> pPrint size
   pPrint (ArrayRead arr ix) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite arr ix val) = parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
-  pPrint (CallDir f xs) = parens $ "dir" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (CallDirect f xs) = parens $ "dir" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallWithCaptures f xs) = parens $ "withcap" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (CallCls f xs) = parens $ "cls" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (MakeCls f xs) = parens $ "closure" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (CallClosure f xs) = parens $ "cls" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (MakeClosure f xs) = parens $ "closure" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (Let xs e) =
     vcat (map (\(n, v) -> pPrint n <+> "=" <+> pPrint v) xs)
     $+$ pPrint e

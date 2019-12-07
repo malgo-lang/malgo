@@ -69,10 +69,10 @@ lintExpr (TupleAccess x _) = definedVar x
 lintExpr (MakeArray _ x) = definedVar x
 lintExpr (ArrayRead arr ix) = definedVar arr >> definedVar ix
 lintExpr (ArrayWrite arr ix val) = definedVar arr >> definedVar ix >> definedVar val
-lintExpr (MakeCls f xs) = isFunc f >> mapM_ definedVar xs
-lintExpr (CallDir f xs) = isKnownFunc f >> mapM_ definedVar xs
+lintExpr (MakeClosure f xs) = isFunc f >> mapM_ definedVar xs
+lintExpr (CallDirect f xs) = isKnownFunc f >> mapM_ definedVar xs
 lintExpr (CallWithCaptures f xs) = isFunc f >> mapM_ definedVar xs
-lintExpr (CallCls f xs) = definedVar f >> mapM_ definedVar xs
+lintExpr (CallClosure f xs) = definedVar f >> mapM_ definedVar xs
 lintExpr (Let xs e) = do
   mapM_ notDefinedVar ns
   local (\env -> env { variables = ns <> variables env })
