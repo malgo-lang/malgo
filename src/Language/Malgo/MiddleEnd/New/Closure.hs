@@ -29,7 +29,7 @@ instance Pass Closure (H.Expr Type TypedID) (Program Type TypedID) where
     pure (Program fs e')
 
 data Env = Env { knowns   :: [TypedID]
-               , captures :: Set TypedID
+               , captures :: Maybe [TypedID]
                , mutrecs  :: [TypedID]
                }
 
@@ -67,15 +67,15 @@ transExpr (H.LetRec defs e) = do
   envBackup <- get
   fv <- getFreeVars
   if | fv == mempty && (freevars e `intersection` fromList funcNames) == mempty ->
-         local (\env -> env { knowns = funcNames <> knowns env }) $ transExpr e
+         local (\env -> env { knowns = funcNames <> knowns env, captures = Nothing }) $ transExpr e
      | otherwise -> do
          put envBackup
-         defs' <- local (\env -> (env :: Env) { captures = fv, mutrecs = map (\(f, _, _) -> f) defs }) (transDefs defs)
+         defs' <- local (\env -> (env :: Env) { captures = Just $ toList fv, mutrecs = map (\(f, _, _) -> f) defs }) (transDefs defs)
          Let defs' <$> transExpr e
   where
     funcNames = map (\(f, _, _) -> f) defs
     getFreeVars = do
-      _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, captures = mempty, mutrecs = mempty }) (transDefs defs)
+      _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, captures = Nothing, mutrecs = mempty }) (transDefs defs)
       mconcat <$> forM funcNames (\f -> do
                                      Func {params, body} <- getFunc f
                                      pure $ freevars body \\ fromList params)
@@ -83,6 +83,8 @@ transExpr (H.LetRec defs e) = do
     transDefs ((f, xs, b):ds) = do
       b' <- transExpr b
       Env { captures } <- ask
-      addFunc (Func { name = f, captures = toList captures, params = xs, body = b' })
+      addFunc (Func { name = f, captures = captures, params = xs, body = b' })
       ks <- transDefs ds
-      pure ((f, MakeClosure f $ toList captures) : ks)
+      case captures of
+        Just caps -> pure ((f, MakeClosure f caps) : ks)
+        Nothing   -> pure ks

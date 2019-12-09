@@ -41,9 +41,10 @@ isKnownFunc a = do
   Env { functions } <- ask
   let mfunc = find (\Func {name} -> name == a) functions
   case mfunc of
-    Just Func{ captures = [] } -> pure ()
+    Just Func{ captures = Nothing } -> pure ()
     _ -> malgoError $ pPrint a <+> "is not known function"
 
+isFunc :: (MonadReader Env m, MonadIO m) => TypedID -> m ()
 isFunc a = do
   Env { functions } <- ask
   let mfunc = find (\Func {name} -> name == a) functions
@@ -58,7 +59,7 @@ lintProgram Program {functions, mainExpr} = do
 
 lintFunc :: (MonadReader Env m, MonadIO m) => Func t TypedID -> m ()
 lintFunc Func { name = _, captures, params, body } =
-  local (\e -> e { variables = captures <> params }) $
+  local (\e -> e { variables = fromMaybe [] captures <> params }) $
     lintExpr body
 
 lintExpr :: (MonadReader Env m, MonadIO m) => Expr t TypedID -> m ()

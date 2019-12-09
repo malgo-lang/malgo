@@ -11,29 +11,32 @@
 {-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.BackEnd.New.LLVM ( GenLLVM ) where
 
-import qualified Data.ByteString             as B
-import qualified Data.Map                    as Map
+import qualified Data.ByteString                 as B
+import qualified Data.Map                        as Map
 import           Language.Malgo.ID
-import           Language.Malgo.IR.HIR       (Lit (..))
+import           Language.Malgo.IR.HIR           (Lit (..), Op (..))
 import           Language.Malgo.IR.LIR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import qualified LLVM.AST
-import qualified LLVM.AST.Constant           as C
-import qualified LLVM.AST.Operand            as O
-import qualified LLVM.AST.Type               as LT
-import           LLVM.IRBuilder              as IRBuilder
-import           Relude                      hiding (Type)
-import           Relude.Extra.Map            hiding (size)
+import qualified LLVM.AST.Constant               as C
+import qualified LLVM.AST.FloatingPointPredicate as FP
+import qualified LLVM.AST.IntegerPredicate       as IP
+import qualified LLVM.AST.Operand                as O
+import qualified LLVM.AST.Type                   as LT
+import           LLVM.IRBuilder                  as IRBuilder
+import           Relude                          hiding (Type)
+import           Relude.Extra.Map                hiding (size)
 
 data GenLLVM
 
 instance Pass GenLLVM (Program Type TypedID) [LLVM.AST.Definition] where
   isDump _ = False -- TODO: support dump llvm-ir ast
-  trans Program{ functions, mainExpr } = dumpLLVM $ mdo
-    funMap <- local (\st -> st { functionMap = funMap }) $ genFunctions functions
+  trans Program{ functions, mainExpr } = dumpLLVM $ do
+    let funMap = mconcat $ map genFunMap functions
+    local (\st -> st { functionMap = funMap }) $ mapM_ genFunction functions
     local (\st -> st { functionMap = funMap }) $ void $ function "main" [] LT.i32 $ \_ -> do
       void $ genExpr mainExpr
       ret (int32 0)
@@ -72,9 +75,6 @@ convertType (TyApp TupleC xs) = LT.ptr (LT.StructureType False (map convertType 
 convertType (TyApp ArrayC [x]) = LT.ptr (convertType x)
 convertType t = error $ fromString $ "unreachable(convertType): " <> dumpStr t
 
-functionType :: (HasType a1, HasType a2) => [a2] -> a1 -> LT.Type
-functionType ps r = LT.ptr $ LT.FunctionType (convertType $ typeOf r) (LT.ptr LT.i8 : map (convertType . typeOf) ps) False
-
 getVar :: MonadReader GenState m => ID Type -> m O.Operand
 getVar i = do
   m <- asks variableMap
@@ -112,7 +112,22 @@ sizeof = O.ConstantOperand . C.sizeof
 undef :: LT.Type -> O.Operand
 undef ty = O.ConstantOperand $ C.Undef ty
 
-genFunctions = undefined
+genFunMap :: Func Type TypedID -> Map TypedID O.Operand
+genFunMap Func { name, captures, params = _, body = _ } =
+  let TyFun ps r = typeOf name
+  in Map.singleton name
+     $ O.ConstantOperand
+     $ C.GlobalReference (functionType (isNothing captures) ps r)
+     (fromString $ show $ pPrint name)
+
+genFunction = undefined
+
+functionType :: (HasType a1, HasType a2) => Bool -> [a2] -> a1 -> LT.Type
+functionType isKnown ps r = LT.ptr $ LT.FunctionType
+  { LT.resultType = convertType $ typeOf r
+  , LT.argumentTypes = (if isKnown then (LT.ptr LT.i8 :) else id) $ map (convertType . typeOf) ps
+  , LT.isVarArg = False
+  }
 
 genTermExpr :: Expr Type (ID Type) -> GenExpr ()
 genTermExpr e = term (genExpr e)
@@ -177,12 +192,12 @@ genExpr (MakeClosure f cs) = do
   pure clsPtr
 genExpr (CallDirect f args) = do
   funOpr <- getFun f
-  argOprs <- genArgs (undef (LT.ptr LT.i8)) args
+  argOprs <- mapM (fmap (,[]) . getVar) args
   call funOpr argOprs
 genExpr (CallWithCaptures f args) = do
   funOpr <- getFun f
   GenState { captures } <- ask
-  argOprs <- genArgs captures args
+  argOprs <- ((captures, []) :) <$> mapM (fmap (,[]) . getVar) args
   call funOpr argOprs
 genExpr (CallClosure f args) = do
   clsPtr <- getVar f
@@ -190,7 +205,7 @@ genExpr (CallClosure f args) = do
   clsFunOpr <- load clsFunPtr 0
   clsCapPtr <- gep clsPtr [int32 0, int32 1]
   clsCapOpr <- load clsCapPtr 0
-  argOprs <- genArgs clsCapOpr args
+  argOprs <- ((clsCapOpr, []) :) <$> mapM (fmap (,[]) . getVar) args
   call clsFunOpr argOprs
 genExpr (Let defs e) = mdo
   defs' <- local (\st -> st {
@@ -223,8 +238,27 @@ genExpr (Prim orig ty xs) = do
       f <- extern (fromString $ toString orig) argtys retty
       modifyIORef prims (Map.insert orig f)
       call f =<< mapM (fmap (,[]) . getVar) xs
-
-genArgs :: MonadReader GenState m => O.Operand -> [ID Type] -> m [(O.Operand, [a])]
-genArgs capturesOpr xs = do
-  xs' <- mapM (fmap (,[]) . getVar) xs
-  pure $ (capturesOpr, []) : xs'
+genExpr (BinOp op x y) = do
+  xOpr <- getVar x
+  yOpr <- getVar y
+  opInstr xOpr yOpr
+  where
+    opInstr = case (op, convertType $ typeOf x) of
+      (Add, _) -> add; (Sub, _) -> sub; (Mul, _) -> mul; (Div, _) -> sdiv;
+      (Mod, _) -> srem;
+      (FAdd, _) -> fadd; (FSub, _) -> fsub; (FMul, _) -> fmul; (FDiv, _) -> fdiv;
+      (Eq, LT.IntegerType _) -> icmp IP.EQ
+      (Eq, LT.FloatingPointType _) -> fcmp FP.OEQ
+      (Neq, LT.IntegerType _) -> icmp IP.NE
+      (Neq, LT.FloatingPointType _) -> fcmp FP.ONE
+      (Lt, LT.IntegerType _) -> icmp IP.SLT
+      (Lt, LT.FloatingPointType _) -> fcmp FP.OLT
+      (Gt, LT.IntegerType _) -> icmp IP.SGT
+      (Gt, LT.FloatingPointType _) -> fcmp FP.OGT
+      (Le, LT.IntegerType _) -> icmp IP.SLE
+      (Le, LT.FloatingPointType _) -> fcmp FP.OLE
+      (Ge, LT.IntegerType _) -> icmp IP.SGE
+      (Ge, LT.FloatingPointType _) -> fcmp FP.OGE
+      (And, _) -> IRBuilder.and
+      (Or, _) -> IRBuilder.or
+      (_, t) -> error $ show t <> " is not comparable"

@@ -25,13 +25,16 @@ instance (Pretty t, Pretty a) => Pretty (Program t a) where
     vcat (map pPrint functions)
     $$ "entry point =" $$ nest 2 (pPrint mainExpr)
 
-data Func t a = Func { name :: a, captures :: [a], params :: [a], body :: Expr t a }
+data Func t a = Func { name :: a, captures :: Maybe [a], params :: [a], body :: Expr t a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
 instance (Pretty t, Pretty a) => Pretty (Func t a) where
   pPrint Func { name, captures, params, body } =
-    pPrint name <+> brackets (sep $ map pPrint captures) <+> sep (map pPrint params) <+> "="
-    $+$ nest 2 (pPrint body)
+    case captures of
+      Just caps -> pPrint name <+> brackets (sep $ map pPrint caps) <+> sep (map pPrint params) <+> "="
+                   $+$ nest 2 (pPrint body)
+      Nothing -> pPrint name <+> sep (map pPrint params) <+> "="
+                 $+$ nest 2 (pPrint body)
 
 data Expr t a = Var a
               | Lit Lit
