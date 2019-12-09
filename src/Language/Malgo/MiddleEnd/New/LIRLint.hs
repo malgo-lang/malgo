@@ -44,12 +44,12 @@ isKnownFunc a = do
     Just Func{ captures = Nothing } -> pure ()
     _ -> malgoError $ pPrint a <+> "is not known function"
 
-isFunc :: (MonadReader Env m, MonadIO m) => TypedID -> m ()
-isFunc a = do
+isUnknownFunc :: (MonadReader Env m, MonadIO m) => TypedID -> m ()
+isUnknownFunc a = do
   Env { functions } <- ask
   let mfunc = find (\Func {name} -> name == a) functions
   case mfunc of
-    Just _ -> pure ()
+    Just Func{ captures = Just _ } -> pure ()
     _      -> malgoError $ pPrint a <+> "is not known function"
 
 lintProgram :: (MonadReader Env m, MonadIO m) => Program t TypedID -> m ()
@@ -70,9 +70,9 @@ lintExpr (TupleAccess x _) = definedVar x
 lintExpr (MakeArray _ x) = definedVar x
 lintExpr (ArrayRead arr ix) = definedVar arr >> definedVar ix
 lintExpr (ArrayWrite arr ix val) = definedVar arr >> definedVar ix >> definedVar val
-lintExpr (MakeClosure f xs) = isFunc f >> mapM_ definedVar xs
+lintExpr (MakeClosure f xs) = isUnknownFunc f >> mapM_ definedVar xs
 lintExpr (CallDirect f xs) = isKnownFunc f >> mapM_ definedVar xs
-lintExpr (CallWithCaptures f xs) = isFunc f >> mapM_ definedVar xs
+lintExpr (CallWithCaptures f xs) = isUnknownFunc f >> mapM_ definedVar xs
 lintExpr (CallClosure f xs) = definedVar f >> mapM_ definedVar xs
 lintExpr (Let xs e) = do
   mapM_ notDefinedVar ns
