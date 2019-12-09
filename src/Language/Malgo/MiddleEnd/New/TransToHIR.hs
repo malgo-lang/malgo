@@ -71,9 +71,8 @@ transToHIR (S.Let info (S.ExDec _ n _ orig:ds) body) =
   case typeOf n of
     TyFun ps _ -> do
       params <- mapM (newTmp "x") ps
-      prim <- newTmp "prim" (typeOf n)
-      LetRec [(n, params, Let prim (Prim orig $ typeOf n) (Call prim params))] <$> transToHIR (S.Let info ds body)
-    _ -> Let n (Prim orig $ typeOf n) <$> transToHIR (S.Let info ds body)
+      LetRec [(n, params, Prim orig (typeOf n) params)] <$> transToHIR (S.Let info ds body)
+    _ -> error "external variable is not supported"
 transToHIR (S.Let _ [] body) = transToHIR body
 transToHIR (S.If _ c t f) = appInsert $ If <$> insertLet c <*> transToHIR t <*> transToHIR f
 transToHIR (S.BinOp _ op x y) =

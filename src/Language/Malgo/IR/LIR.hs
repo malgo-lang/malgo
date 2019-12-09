@@ -55,7 +55,7 @@ data Expr t a = Var a
               | CallClosure a [a] -- indirect call
               | Let [(a, Expr t a)] (Expr t a)
               | If a (Expr t a) (Expr t a)
-              | Prim Text t
+              | Prim Text t [a]
               | BinOp Op a a
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
@@ -89,7 +89,7 @@ instance FreeVars (Expr t) where
     let (ns, vs) = unzip xs
     in (mconcat (map freevars vs) <> freevars e) \\ fromList ns
   freevars (If c t f)              = one c <> freevars t <> freevars f
-  freevars (Prim _ _)              = mempty
+  freevars (Prim _ _ xs)           = fromList xs
   freevars (BinOp _ x y)           = fromList [x, y]
 
 instance (Pretty t, Pretty a) => Pretty (Expr t a) where
@@ -113,7 +113,7 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
     $+$ "else" <+> pPrint f
   pPrint (BinOp op x y) =
     parens $ sep [pPrint op, pPrint x, pPrint y]
-  pPrint (Prim x t) = parens $ "prim" <+> pPrint x <+> pPrint t
+  pPrint (Prim x t xs) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
 
 instance (HasType t, HasType a) => HasType (Expr t a) where
   typeOf (Var x) = typeOf x

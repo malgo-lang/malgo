@@ -32,7 +32,7 @@ data Expr t a = Var a
               | Let a (Expr t a) (Expr t a)
               | LetRec [(a, [a], Expr t a)] (Expr t a)
               | If a (Expr t a) (Expr t a)
-              | Prim Text t
+              | Prim Text t [a]
               | BinOp Op a a
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
@@ -79,7 +79,7 @@ instance FreeVars (Expr t) where
         fs = fromList $ map (view _1) xs
     in (efv <> xsfv) \\ fs
   freevars (If c t f) = one c <> freevars t <> freevars f
-  freevars (Prim _ _) = mempty
+  freevars (Prim _ _ xs) = fromList xs
   freevars (BinOp _ x y) = fromList [x, y]
 
 instance (HasType t, HasType a) => HasType (Expr t a) where
@@ -103,7 +103,10 @@ instance (HasType t, HasType a) => HasType (Expr t a) where
   typeOf (Let _ _ e) = typeOf e
   typeOf (LetRec _ e) = typeOf e
   typeOf (If _ x _) = typeOf x
-  typeOf (Prim _ ty) = typeOf ty
+  typeOf (Prim _ ty _) =
+    case typeOf ty of
+      (TyFun _ ret) -> ret
+      _             -> error "(typeOf ty) should match (TyFun _ ret)"
   typeOf (BinOp op _ _) =
     case op of
       Add  -> TyInt
@@ -152,7 +155,7 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
     $+$ nest 2 (pPrint f)
   pPrint (BinOp op x y) =
     parens $ sep [pPrint op, pPrint x, pPrint y]
-  pPrint (Prim x t) = parens $ "prim" <+> pPrint x <+> pPrint t
+  pPrint (Prim x t xs) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
 
 instance Pretty Lit where
   pPrint (Int x)      = pPrint x

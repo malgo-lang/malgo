@@ -80,5 +80,5 @@ lintExpr (Let xs e) = do
   where
     (ns, vs) = unzip xs
 lintExpr (If _ t f) = lintExpr t >> lintExpr f
-lintExpr (Prim _ _) = pure ()
+lintExpr (Prim _ _ xs) = mapM_ definedVar xs
 lintExpr (BinOp _ x y) = definedVar x >> definedVar y

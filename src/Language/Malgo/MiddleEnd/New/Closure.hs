@@ -61,13 +61,12 @@ transExpr (H.Let x v e) = do
   v' <- transExpr v
   Let [(x, v')] <$> transExpr e
 transExpr (H.If c t f) = If c <$> transExpr t <*> transExpr f
-transExpr (H.Prim orig ty) = pure $ Prim orig ty
+transExpr (H.Prim orig ty xs) = pure $ Prim orig ty xs
 transExpr (H.BinOp op x y) = pure $ BinOp op x y
 transExpr (H.LetRec defs e) = do
   envBackup <- get
   fv <- getFreeVars
   if | fv == mempty && (freevars e `intersection` fromList funcNames) == mempty ->
-         -- _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, captures = mempty, mutrecs = mempty }) (transDefs defs)
          local (\env -> env { knowns = funcNames <> knowns env }) $ transExpr e
      | otherwise -> do
          put envBackup
