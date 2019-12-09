@@ -18,6 +18,7 @@ module Language.Malgo.Monad
   , malgoError
   ) where
 
+import           Control.Monad.Fix
 import           Control.Monad.Trans.Writer.CPS
 import           Relude
 
@@ -42,7 +43,7 @@ data MalgoEnv = MalgoEnv
   }
 
 newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
-  deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO)
+  deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO, MonadFix)
 
 runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
 runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt)

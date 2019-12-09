@@ -8,7 +8,8 @@ where
 
 import qualified Data.Text                      as T
 import qualified Data.Text.Lazy                 as TL
-import           Text.PrettyPrint.HughesPJClass hiding (empty, (<+>), (<>))
+import           Text.PrettyPrint.HughesPJClass hiding (double, empty, (<+>),
+                                                 (<>))
 import qualified Text.PrettyPrint.HughesPJClass as P
 import           Text.Show.Pretty               (PrettyVal (..), dumpDoc,
                                                  dumpIO, dumpStr)

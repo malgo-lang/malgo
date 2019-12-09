@@ -12,7 +12,10 @@ import           Data.Set                          ((\\))
 import           Language.Malgo.IR.HIR             (Lit (..), Op (..))
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
-import           Relude                            hiding (Op)
+import           Language.Malgo.TypeRep.Type
+import           Relude                            hiding (Op, Type)
+import           Relude.Unsafe                     ((!!))
+
 
 data Program t a = Program { functions :: [Func t a], mainExpr :: Expr t a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
@@ -111,3 +114,34 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (BinOp op x y) =
     parens $ sep [pPrint op, pPrint x, pPrint y]
   pPrint (Prim x t) = parens $ "prim" <+> pPrint x <+> pPrint t
+
+instance (HasType t, HasType a) => HasType (Expr t a) where
+  typeOf (Var x) = typeOf x
+  typeOf (Lit x) = typeOf x
+  typeOf (Tuple xs) = TyTuple $ map typeOf xs
+  typeOf (TupleAccess x i) =
+    case typeOf x of
+      TyTuple xs -> xs !! i
+      _          -> error "(typeOf e) should match (TyTuple xs)"
+  typeOf (MakeArray ty _) = TyArray $ typeOf ty
+  typeOf (ArrayRead arr _) =
+    case typeOf arr of
+      TyArray ty -> ty
+      _          -> error "(typeOf arr) should match (TyArray xs)"
+
+  typeOf ArrayWrite{} = TyTuple []
+  typeOf (CallDirect fn _) =
+    case typeOf fn of
+      (TyFun _ ty) -> ty
+      _            -> error "(typeOf fn) should match (TyFun _ ty)"
+  typeOf (CallWithCaptures fn _) =
+    case typeOf fn of
+      (TyFun _ ty) -> ty
+      _            -> error "(typeOf fn) should match (TyFun _ ty)"
+  typeOf (CallClosure fn _) =
+    case typeOf fn of
+      (TyFun _ ty) -> ty
+      _            -> error "(typeOf fn) should match (TyFun _ ty)"
+  typeOf (MakeClosure fn _) = TyTuple [typeOf fn, TyString]
+  typeOf (Let _ e) = typeOf e
+  typeOf (If _ t _) = typeOf t
