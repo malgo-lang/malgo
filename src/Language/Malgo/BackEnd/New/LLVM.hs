@@ -113,14 +113,15 @@ undef :: LT.Type -> O.Operand
 undef ty = O.ConstantOperand $ C.Undef ty
 
 genFunMap :: Func Type TypedID -> Map TypedID O.Operand
-genFunMap Func { name, captures, params = _, body = _ } =
+genFunMap Func{ name, captures, params = _, body = _ } =
   let TyFun ps r = typeOf name
   in Map.singleton name
      $ O.ConstantOperand
      $ C.GlobalReference (functionType (isNothing captures) ps r)
      (fromString $ show $ pPrint name)
 
-genFunction = undefined
+genFunction :: Func Type TypedID -> GenDec ()
+genFunction Func{ name, captures, params, body }= undefined
 
 functionType :: (HasType a1, HasType a2) => Bool -> [a2] -> a1 -> LT.Type
 functionType isKnown ps r = LT.ptr $ LT.FunctionType
