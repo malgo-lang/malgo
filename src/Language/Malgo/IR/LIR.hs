@@ -145,3 +145,14 @@ instance (HasType t, HasType a) => HasType (Expr t a) where
   typeOf (MakeClosure fn _) = TyTuple [typeOf fn, TyString]
   typeOf (Let _ e) = typeOf e
   typeOf (If _ t _) = typeOf t
+  typeOf (Prim _ ty _) =
+    case typeOf ty of
+      TyFun _ ret -> ret
+      _           -> error "(typeOf ty) should match (TyFun _ ret)"
+  typeOf (BinOp op _ _) =
+    case op of
+      Add -> TyInt; Sub -> TyInt; Mul -> TyInt; Div -> TyInt;
+      Mod -> TyInt; FAdd -> TyFloat; FSub -> TyFloat;
+      FMul -> TyFloat; FDiv -> TyFloat; Eq -> TyBool;
+      Neq -> TyBool; Lt -> TyBool; Gt -> TyBool; Le -> TyBool;
+      Ge -> TyBool; And -> TyBool; Or -> TyBool
