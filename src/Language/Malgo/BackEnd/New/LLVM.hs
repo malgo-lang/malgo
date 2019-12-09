@@ -211,6 +211,18 @@ genExpr (If c t f) = mdo
     pure (tl, fl)
   end <- block `named` "endif"
   load result 0
+genExpr (Prim orig ty xs) = do
+  GenState { prims } <- ask
+  psMap <- readIORef prims
+  case lookup orig psMap of
+    Just f -> call f =<< mapM (fmap (,[]) . getVar) xs
+    Nothing -> do
+      (argtys, retty) <- case ty of
+        (TyFun ps r) -> pure (map convertType ps, convertType r)
+        _            -> error "extern symbol must have a function type"
+      f <- extern (fromString $ toString orig) argtys retty
+      modifyIORef prims (Map.insert orig f)
+      call f =<< mapM (fmap (,[]) . getVar) xs
 
 genArgs :: MonadReader GenState m => O.Operand -> [ID Type] -> m [(O.Operand, [a])]
 genArgs capturesOpr xs = do
