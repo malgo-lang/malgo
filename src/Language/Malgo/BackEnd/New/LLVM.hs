@@ -11,6 +11,7 @@
 {-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.BackEnd.New.LLVM ( GenLLVM ) where
 
+import           Control.Exception               (assert)
 import qualified Data.ByteString                 as B
 import qualified Data.Map                        as Map
 import           Language.Malgo.ID
@@ -26,7 +27,9 @@ import qualified LLVM.AST.FloatingPointPredicate as FP
 import qualified LLVM.AST.IntegerPredicate       as IP
 import qualified LLVM.AST.Operand                as O
 import qualified LLVM.AST.Type                   as LT
-import           LLVM.IRBuilder                  as IRBuilder
+import qualified LLVM.AST.Typed                  as LT
+import           LLVM.IRBuilder                  hiding (store)
+import qualified LLVM.IRBuilder                  as IRBuilder
 import           Relude                          hiding (Type)
 import           Relude.Extra.Map                hiding (size)
 
@@ -113,16 +116,6 @@ mallocType :: (MonadReader GenState m, MonadIO m, MonadIRBuilder m,
 mallocType ty = do
   p <- mallocBytes (sizeof ty)
   bitcast p (LT.ptr ty)
-
-sizeof :: LT.Type -> O.Operand
-sizeof ty = O.ConstantOperand $ C.PtrToInt szPtr LT.i64
-  where
-    ptrType = LT.ptr ty
-    nullPtr = C.IntToPtr (C.Int 32 0) ptrType
-    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
-
-undef :: LT.Type -> O.Operand
-undef ty = O.ConstantOperand $ C.Undef ty
 
 genFunMap :: Func Type TypedID -> Map TypedID O.Operand
 genFunMap Func{ name, captures, params = _, body = _ } =
@@ -220,12 +213,12 @@ genExpr (MakeClosure f cs) = do
     store capElemPtr 0 valOpr
 
   -- generate closure
-  let clsTy = convertType (typeOf f)
+  let LT.PointerType clsTy _ = convertType (typeOf f)
   clsPtr <- mallocType clsTy
   clsFunPtr <- gep clsPtr [int32 0, int32 0]
   funOpr <- getFun f
   store clsFunPtr 0 funOpr
-  clsCapPtr <- gep clsPtr [int32 0, int32 1]
+  clsCapPtr <- (\rawPtr -> bitcast rawPtr (LT.ptr $ LT.typeOf capPtr)) =<< gep clsPtr [int32 0, int32 1]
   store clsCapPtr 0 capPtr
 
   pure clsPtr
@@ -251,8 +244,9 @@ genExpr (Let defs e) = do
   defsMap <- mapM (\(x, ptr) -> (x, ) <$> load ptr 0) $ toPairs defPtrs
   local (\st -> st { variableMap = fromList defsMap <> variableMap st }) $ do
     forM_ defs $ \(x, val) -> do
+      let defPtr = lookupDefault (undef (convertType (typeOf x))) x defPtrs
       valOpr <- genExpr val
-      store (lookupDefault (undef (convertType (typeOf x))) x defPtrs) 0 valOpr
+      store defPtr 0 valOpr
     genExpr e
 genExpr (If c t f) = mdo
   cOpr <- getVar c
@@ -302,3 +296,25 @@ genExpr (BinOp op x y) = do
       (And, _) -> IRBuilder.and
       (Or, _) -> IRBuilder.or
       (_, t) -> error $ show t <> " is not comparable"
+
+-- wrapped IRBuilder and utilities
+
+store :: (HasCallStack, MonadIRBuilder m) => O.Operand -> Word32 -> O.Operand -> m ()
+store ptr align val =
+  assert (isPointerType $ LT.typeOf ptr) $
+  assert (LT.pointerReferent (LT.typeOf ptr) == LT.typeOf val) $
+  IRBuilder.store ptr align val
+
+sizeof :: LT.Type -> O.Operand
+sizeof ty = O.ConstantOperand $ C.PtrToInt szPtr LT.i64
+  where
+    ptrType = LT.ptr ty
+    nullPtr = C.IntToPtr (C.Int 32 0) ptrType
+    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
+
+undef :: LT.Type -> O.Operand
+undef ty = O.ConstantOperand $ C.Undef ty
+
+isPointerType :: LT.Type -> Bool
+isPointerType LT.PointerType{} = True
+isPointerType _                = False
