@@ -115,7 +115,11 @@ mallocType ty = do
   bitcast p (LT.ptr ty)
 
 sizeof :: LT.Type -> O.Operand
-sizeof = O.ConstantOperand . C.sizeof
+sizeof ty = O.ConstantOperand $ C.PtrToInt szPtr LT.i64
+  where
+    ptrType = LT.ptr ty
+    nullPtr = C.IntToPtr (C.Int 32 0) ptrType
+    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 undef :: LT.Type -> O.Operand
 undef ty = O.ConstantOperand $ C.Undef ty
@@ -156,9 +160,10 @@ genFunction Func{ name, captures = Just caps, params, body } = do
       (genTermExpr body)
   where
     genUnpackCaps :: O.Operand -> GenExpr (Map TypedID O.Operand)
-    genUnpackCaps capsPtr =
+    genUnpackCaps capsPtr = do
+      capsPtr' <- bitcast capsPtr (LT.ptr $ LT.StructureType False (map (convertType . typeOf) caps))
       fmap mconcat $ forM (zip [0..] caps) $ \(i, c) -> do
-        cPtr <- gep capsPtr [int32 0, int32 i]
+        cPtr <- gep capsPtr' [int32 0, int32 i]
         cOpr <- load cPtr 0
         pure (Map.fromList [(c, cOpr)])
 
@@ -175,7 +180,8 @@ genExpr (Lit (Char x)) = pure $ int8 $ toInteger $ ord x
 genExpr (Lit (String x)) = do
   let bytes = B.unpack $ encodeUtf8 @Text @ByteString x
   n <- fresh
-  global n (LT.ArrayType (toEnum $ length bytes + 1) LT.i8) (C.Array LT.i8 $ map (C.Int 8 . toInteger) (bytes <> [0]))
+  p <- global n (LT.ArrayType (toEnum $ length bytes + 1) LT.i8) (C.Array LT.i8 $ map (C.Int 8 . toInteger) (bytes <> [0]))
+  bitcast p (LT.ptr LT.i8)
 genExpr (Tuple xs) = do
   tuplePtr <- mallocType (LT.StructureType False (map (convertType . typeOf) xs))
   forM_ (zip [0..] xs) $ \(i, x) -> do
@@ -189,7 +195,7 @@ genExpr (TupleAccess t i) = do
   load elemPtr 0
 genExpr (MakeArray ty size) = do
   sizeVal <- getVar size
-  byteSize <- mul sizeVal (sizeof (convertType ty))
+  byteSize <- mul sizeVal $ sizeof (convertType ty)
   arr <- mallocBytes byteSize
   bitcast arr (LT.ptr $ convertType ty)
 genExpr (ArrayRead arr ix) = do
@@ -226,10 +232,6 @@ genExpr (MakeClosure f cs) = do
 genExpr (CallDirect f args) = do
   funOpr <- getFun f
   argOprs <- mapM (fmap (,[]) . getVar) args
-  traceM "=== CallDirect ==="
-  traceShowM f
-  traceShowM funOpr
-  traceShowM argOprs
   call funOpr argOprs
 genExpr (CallWithCaptures f args) = do
   funOpr <- getFun f
@@ -265,15 +267,17 @@ genExpr (If c t f) = mdo
 genExpr (Prim orig ty xs) = do
   GenState { prims } <- ask
   psMap <- readIORef prims
-  case lookup orig psMap of
-    Just f -> call f =<< mapM (fmap (,[]) . getVar) xs
+  f <- case lookup orig psMap of
+    Just f -> pure f -- call f =<< mapM (fmap (,[]) . getVar) xs
     Nothing -> do
       (argtys, retty) <- case ty of
         (TyFun ps r) -> pure (map convertType ps, convertType r)
         _            -> error "extern symbol must have a function type"
       f <- extern (fromString $ toString orig) argtys retty
       modifyIORef prims (Map.insert orig f)
-      call f =<< mapM (fmap (,[]) . getVar) xs
+      pure f
+  args <- mapM (fmap (,[]) . getVar) xs
+  call f args
 genExpr (BinOp op x y) = do
   xOpr <- getVar x
   yOpr <- getVar y
