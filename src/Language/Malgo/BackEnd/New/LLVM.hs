@@ -137,18 +137,16 @@ genFunction Func{ name, captures = Nothing, params, body } = do
   let funcName = fromString $ show $ pPrint name
   let llvmParams = map (\(ID _ _ ty) -> (convertType ty, NoParameterName)) params
   let retty = convertType (typeOf body)
-  fnOpr <- getFun name
   void $ function funcName llvmParams retty $ \args ->
-    local (\st -> st { variableMap = fromList ((name, fnOpr) : zip params args) }) $
+    local (\st -> st { variableMap = fromList (zip params args) }) $
     genTermExpr body
 genFunction Func{ name, captures = Just caps, params, body } = do
   let funcName = fromString $ show $ pPrint name
   let llvmParams = (LT.ptr LT.i8, NoParameterName) : map (\(ID _ _ ty) -> (convertType ty, NoParameterName)) params
   let retty = convertType (typeOf body)
-  fnOpr <- getFun name
   void $ function funcName llvmParams retty $ \(capsPtr : args) -> do
     capsMap <- genUnpackCaps capsPtr
-    local (\st -> st { variableMap = fromList ((name, fnOpr) : zip params args) <> capsMap
+    local (\st -> st { variableMap = fromList (zip params args) <> capsMap
                      , captures = capsPtr })
       (genTermExpr body)
   where
