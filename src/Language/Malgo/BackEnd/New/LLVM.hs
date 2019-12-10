@@ -94,13 +94,21 @@ term o =
   asks terminator >>= \t ->
     t =<< o
 
-mallocBytes :: (MonadModuleBuilder m, MonadIRBuilder m) =>
+mallocBytes :: (MonadReader GenState m, MonadIO m,
+                  MonadIRBuilder m, MonadModuleBuilder m) =>
                  O.Operand -> m O.Operand
 mallocBytes bytesOpr = do
-  f <- extern "GC_malloc" [LT.i64] (LT.ptr LT.i8)
-  call f [(bytesOpr, [])]
+  GenState { prims } <- ask
+  psMap <- readIORef prims
+  case lookup "GC_malloc" psMap of
+    Just f -> call f [(bytesOpr, [])]
+    Nothing -> do
+      f <- extern "GC_malloc" [LT.i64] (LT.ptr LT.i8)
+      modifyIORef prims (Map.insert "GC_malloc" f)
+      call f [(bytesOpr, [])]
 
-mallocType :: (MonadModuleBuilder m, MonadIRBuilder m) =>
+mallocType :: (MonadReader GenState m, MonadIO m, MonadIRBuilder m,
+                 MonadModuleBuilder m) =>
                 LT.Type -> m O.Operand
 mallocType ty = do
   p <- mallocBytes (sizeof ty)
@@ -120,15 +128,39 @@ genFunMap Func{ name, captures, params = _, body = _ } =
      $ C.GlobalReference (functionType (isNothing captures) ps r)
      (fromString $ show $ pPrint name)
 
-genFunction :: Func Type TypedID -> GenDec ()
-genFunction Func{ name, captures, params, body }= undefined
-
 functionType :: (HasType a1, HasType a2) => Bool -> [a2] -> a1 -> LT.Type
 functionType isKnown ps r = LT.ptr $ LT.FunctionType
   { LT.resultType = convertType $ typeOf r
-  , LT.argumentTypes = (if isKnown then (LT.ptr LT.i8 :) else id) $ map (convertType . typeOf) ps
+  , LT.argumentTypes = (if isKnown then id else (LT.ptr LT.i8 :)) $ map (convertType . typeOf) ps
   , LT.isVarArg = False
   }
+
+genFunction :: Func Type TypedID -> GenDec ()
+genFunction Func{ name, captures = Nothing, params, body } = do
+  let funcName = fromString $ show $ pPrint name
+  let llvmParams = map (\(ID _ _ ty) -> (convertType ty, NoParameterName)) params
+  let retty = convertType (typeOf body)
+  fnOpr <- getFun name
+  void $ function funcName llvmParams retty $ \args ->
+    local (\st -> st { variableMap = fromList ((name, fnOpr) : zip params args) }) $
+    genTermExpr body
+genFunction Func{ name, captures = Just caps, params, body } = do
+  let funcName = fromString $ show $ pPrint name
+  let llvmParams = (LT.ptr LT.i8, NoParameterName) : map (\(ID _ _ ty) -> (convertType ty, NoParameterName)) params
+  let retty = convertType (typeOf body)
+  fnOpr <- getFun name
+  void $ function funcName llvmParams retty $ \(capsPtr : args) -> do
+    capsMap <- genUnpackCaps capsPtr
+    local (\st -> st { variableMap = fromList ((name, fnOpr) : zip params args) <> capsMap
+                     , captures = capsPtr })
+      (genTermExpr body)
+  where
+    genUnpackCaps :: O.Operand -> GenExpr (Map TypedID O.Operand)
+    genUnpackCaps capsPtr =
+      fmap mconcat $ forM (zip [0..] caps) $ \(i, c) -> do
+        cPtr <- gep capsPtr [int32 0, int32 i]
+        cOpr <- load cPtr 0
+        pure (Map.fromList [(c, cOpr)])
 
 genTermExpr :: Expr Type (ID Type) -> GenExpr ()
 genTermExpr e = term (genExpr e)
@@ -143,7 +175,7 @@ genExpr (Lit (Char x)) = pure $ int8 $ toInteger $ ord x
 genExpr (Lit (String x)) = do
   let bytes = B.unpack $ encodeUtf8 @Text @ByteString x
   n <- fresh
-  global n (LT.ArrayType (toEnum $ length bytes + 1) LT.i8) (C.Array LT.i8 $ map (C.Int 8 . toInteger) bytes)
+  global n (LT.ArrayType (toEnum $ length bytes + 1) LT.i8) (C.Array LT.i8 $ map (C.Int 8 . toInteger) (bytes <> [0]))
 genExpr (Tuple xs) = do
   tuplePtr <- mallocType (LT.StructureType False (map (convertType . typeOf) xs))
   forM_ (zip [0..] xs) $ \(i, x) -> do
@@ -194,6 +226,10 @@ genExpr (MakeClosure f cs) = do
 genExpr (CallDirect f args) = do
   funOpr <- getFun f
   argOprs <- mapM (fmap (,[]) . getVar) args
+  traceM "=== CallDirect ==="
+  traceShowM f
+  traceShowM funOpr
+  traceShowM argOprs
   call funOpr argOprs
 genExpr (CallWithCaptures f args) = do
   funOpr <- getFun f
@@ -208,14 +244,13 @@ genExpr (CallClosure f args) = do
   clsCapOpr <- load clsCapPtr 0
   argOprs <- ((clsCapOpr, []) :) <$> mapM (fmap (,[]) . getVar) args
   call clsFunOpr argOprs
-genExpr (Let defs e) = mdo
-  defs' <- local (\st -> st {
-                     variableMap = defs' <> variableMap st })
-    $ fmap mconcat
-    $ forM defs $ \(x, val) -> do
-    valOpr <- genExpr val
-    pure $ Map.fromList [(x, valOpr)]
-  local (\st -> st { variableMap = defs' <> variableMap st }) $
+genExpr (Let defs e) = do
+  defPtrs <- Map.fromList <$> mapM (\(x, _) -> (x, ) <$> alloca (convertType (typeOf x)) Nothing 0) defs
+  defsMap <- mapM (\(x, ptr) -> (x, ) <$> load ptr 0) $ toPairs defPtrs
+  local (\st -> st { variableMap = fromList defsMap <> variableMap st }) $ do
+    forM_ defs $ \(x, val) -> do
+      valOpr <- genExpr val
+      store (lookupDefault (undef (convertType (typeOf x))) x defPtrs) 0 valOpr
     genExpr e
 genExpr (If c t f) = mdo
   cOpr <- getVar c

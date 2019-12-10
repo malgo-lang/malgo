@@ -7,6 +7,7 @@
 module Language.Malgo.Driver where
 
 import qualified Language.Malgo.BackEnd.LLVM             as LLVM
+import qualified Language.Malgo.BackEnd.New.LLVM         as New
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
 import           Language.Malgo.ID
@@ -76,5 +77,10 @@ compile filename ast = M.runMalgo $ do
   _ <- transWithDump @HIRLint hir
   lir <- transWithDump @New.Closure hir
   _ <- transWithDump @LIRLint lir
-  ir <- middleend typed
-  backend filename ir
+  llvmir <- trans @New.GenLLVM lir
+  return $ L.defaultModule { L.moduleName = fromString filename
+                           , L.moduleSourceFileName = fromString $ toString filename
+                           , L.moduleDefinitions = llvmir
+                           }
+  -- ir <- middleend typed
+  -- backend filename ir
