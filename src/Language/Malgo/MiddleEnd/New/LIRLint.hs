@@ -58,8 +58,8 @@ lintProgram Program {functions, mainExpr} = do
   lintExpr mainExpr
 
 lintFunc :: (MonadReader Env m, MonadIO m) => Func t TypedID -> m ()
-lintFunc Func { name = _, captures, params, body } =
-  local (\e -> e { variables = fromMaybe [] captures <> params }) $
+lintFunc Func { name = _, captures, mutrecs, params, body } =
+  local (\e -> e { variables = fromMaybe [] captures <> params <> mutrecs }) $
     lintExpr body
 
 lintExpr :: (MonadReader Env m, MonadIO m) => Expr t TypedID -> m ()

@@ -83,8 +83,7 @@ transExpr (H.LetRec defs e) = do
     transDefs ((f, xs, b):ds) = do
       b' <- transExpr b
       Env { captures } <- ask
-      -- TODO: funcNamesのクロージャを作成
-      addFunc (Func { name = f, captures = captures, params = xs, body = b' })
+      addFunc (Func { name = f, captures = captures, mutrecs = funcNames, params = xs, body = b' })
       ks <- transDefs ds
       case captures of
         Just caps -> pure ((f, MakeClosure f caps) : ks)

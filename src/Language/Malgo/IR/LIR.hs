@@ -25,7 +25,7 @@ instance (Pretty t, Pretty a) => Pretty (Program t a) where
     vcat (map pPrint functions)
     $$ "entry point =" $$ nest 2 (pPrint mainExpr)
 
-data Func t a = Func { name :: a, captures :: Maybe [a], params :: [a], body :: Expr t a }
+data Func t a = Func { name :: a, captures :: Maybe [a], mutrecs :: [a], params :: [a], body :: Expr t a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
 instance (Pretty t, Pretty a) => Pretty (Func t a) where

@@ -140,13 +140,14 @@ genFunction Func{ name, captures = Nothing, params, body } = do
   void $ function funcName llvmParams retty $ \args ->
     local (\st -> st { variableMap = fromList (zip params args) }) $
     genTermExpr body
-genFunction Func{ name, captures = Just caps, params, body } = do
+genFunction Func{ name, captures = Just caps, mutrecs, params, body } = do
   let funcName = fromString $ show $ pPrint name
   let llvmParams = (LT.ptr LT.i8, NoParameterName) : map (\(ID _ _ ty) -> (convertType ty, NoParameterName)) params
   let retty = convertType (typeOf body)
   void $ function funcName llvmParams retty $ \(capsPtr : args) -> do
     capsMap <- genUnpackCaps capsPtr
-    local (\st -> st { variableMap = fromList (zip params args) <> capsMap
+    clsMap <- genCls capsPtr
+    local (\st -> st { variableMap = fromList (zip params args) <> capsMap <> clsMap
                      , captures = capsPtr })
       (genTermExpr body)
   where
@@ -157,6 +158,15 @@ genFunction Func{ name, captures = Just caps, params, body } = do
         cPtr <- gep capsPtr' [int32 0, int32 i]
         cOpr <- load cPtr 0
         pure (Map.fromList [(c, cOpr)])
+    genCls capsPtr = fmap mconcat $ forM mutrecs $ \f -> do
+      let LT.PointerType clsTy _ = convertType $ typeOf f
+      clsPtr <- mallocType clsTy
+      clsFunPtr <- gep clsPtr [int32 0, int32 0]
+      funOpr <- getFun f
+      store clsFunPtr 0 funOpr
+      clsCapPtr <- gep clsPtr [int32 0, int32 1]
+      store clsCapPtr 0 capsPtr
+      pure (Map.fromList [(f, clsPtr)])
 
 genTermExpr :: Expr Type (ID Type) -> GenExpr ()
 genTermExpr e = term (genExpr e)
