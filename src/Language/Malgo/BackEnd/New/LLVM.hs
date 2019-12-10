@@ -202,7 +202,7 @@ genExpr (ArrayWrite arr ix val) = do
   valOpr <- getVar val
   ptr <- gep arrOpr [ixOpr]
   store ptr 0 valOpr
-  pure $ undef $ LT.StructureType False []
+  pure $ undef $ LT.ptr $ LT.StructureType False []
 genExpr (MakeClosure f cs) = do
   -- generate captures
   let capTy = LT.StructureType False (map (convertType . typeOf) cs)
