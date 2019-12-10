@@ -238,14 +238,8 @@ genExpr (CallClosure f args) = do
   argOprs <- ((clsCapOpr, []) :) <$> mapM (fmap (,[]) . getVar) args
   call clsFunOpr argOprs
 genExpr (Let defs e) = do
-  defPtrs <- Map.fromList <$> mapM (\(x, _) -> (x, ) <$> alloca (convertType (typeOf x)) Nothing 0) defs
-  defsMap <- mapM (\(x, ptr) -> (x, ) <$> load ptr 0) $ toPairs defPtrs
-  local (\st -> st { variableMap = fromList defsMap <> variableMap st }) $ do
-    forM_ defs $ \(x, val) -> do
-      let defPtr = lookupDefault (undef (convertType (typeOf x))) x defPtrs
-      valOpr <- genExpr val
-      store defPtr 0 valOpr
-    genExpr e
+  defsMap <- mapM (\(x, val) -> (x, ) <$> genExpr val) defs
+  local (\st -> st { variableMap = fromList defsMap <> variableMap st }) $ genExpr e
 genExpr (If c t f) = mdo
   cOpr <- getVar c
   result <- alloca (convertType (typeOf t)) Nothing 0

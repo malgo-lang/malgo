@@ -70,7 +70,7 @@ transExpr (H.LetRec defs e) = do
          local (\env -> env { knowns = funcNames <> knowns env, captures = Nothing }) $ transExpr e
      | otherwise -> do
          put envBackup
-         defs' <- local (\env -> (env :: Env) { captures = Just $ toList fv, mutrecs = map (\(f, _, _) -> f) defs }) (transDefs defs)
+         defs' <- local (\env -> (env :: Env) { captures = Just $ toList (fv \\ fromList funcNames), mutrecs = funcNames }) (transDefs defs)
          Let defs' <$> transExpr e
   where
     funcNames = map (\(f, _, _) -> f) defs
@@ -83,6 +83,7 @@ transExpr (H.LetRec defs e) = do
     transDefs ((f, xs, b):ds) = do
       b' <- transExpr b
       Env { captures } <- ask
+      -- TODO: funcNamesのクロージャを作成
       addFunc (Func { name = f, captures = captures, params = xs, body = b' })
       ks <- transDefs ds
       case captures of
