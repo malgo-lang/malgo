@@ -4,7 +4,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.MiddleEnd.New.HIRLint (HIRLint) where
+module Language.Malgo.MiddleEnd.HIRLint (HIRLint) where
 
 import           Control.Lens                (view, _1)
 import           Language.Malgo.ID

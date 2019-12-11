@@ -6,7 +6,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.MiddleEnd.New.LIRLint (LIRLint) where
+module Language.Malgo.MiddleEnd.LIRLint (LIRLint) where
 
 import           Language.Malgo.ID
 import           Language.Malgo.IR.LIR

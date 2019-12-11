@@ -21,7 +21,6 @@ source-repository head
 library
   exposed-modules:
       Language.Malgo.BackEnd.LLVM
-      Language.Malgo.BackEnd.New.LLVM
       Language.Malgo.Driver
       Language.Malgo.FrontEnd.Info
       Language.Malgo.FrontEnd.Rename
@@ -31,23 +30,17 @@ library
       Language.Malgo.ID
       Language.Malgo.IR.HIR
       Language.Malgo.IR.LIR
-      Language.Malgo.IR.IR
       Language.Malgo.IR.Syntax
       Language.Malgo.Lexer
-      Language.Malgo.MiddleEnd.BasicLint
       Language.Malgo.MiddleEnd.Closure
       Language.Malgo.MiddleEnd.FreeVars
-      Language.Malgo.MiddleEnd.MutRec
-      Language.Malgo.MiddleEnd.TransToIR
-      Language.Malgo.MiddleEnd.New.Closure
-      Language.Malgo.MiddleEnd.New.HIRLint
-      Language.Malgo.MiddleEnd.New.LIRLint
-      Language.Malgo.MiddleEnd.New.TransToHIR
+      Language.Malgo.MiddleEnd.HIRLint
+      Language.Malgo.MiddleEnd.LIRLint
+      Language.Malgo.MiddleEnd.TransToHIR
       Language.Malgo.Monad
       Language.Malgo.Parser
       Language.Malgo.Pass
       Language.Malgo.Pretty
-      Language.Malgo.TypeRep.MType
       Language.Malgo.TypeRep.Type
   other-modules:
       Paths_malgo

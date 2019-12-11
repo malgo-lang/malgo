@@ -1,204 +1,322 @@
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RecursiveDo           #-}
 {-# LANGUAGE StrictData            #-}
-{-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TupleSections         #-}
-module Language.Malgo.BackEnd.LLVM
-  ( dumpLLVM
-  , genExpr
-  , genDefn
-  , genProgram
-  ) where
+{-# LANGUAGE TypeApplications      #-}
+module Language.Malgo.BackEnd.LLVM ( GenLLVM ) where
 
-import           Control.Lens                 hiding (ix)
-import qualified Data.Char                    as Char
-import qualified Data.Map.Strict              as Map
-import qualified Data.Text                    as Text
+import           Control.Exception               (assert)
+import qualified Data.ByteString                 as B
+import qualified Data.Map                        as Map
 import           Language.Malgo.ID
-import           Language.Malgo.IR.IR         hiding (prims)
-import qualified Language.Malgo.Pretty        as P
-import           Language.Malgo.TypeRep.MType
+import           Language.Malgo.IR.HIR           (Lit (..), Op (..))
+import           Language.Malgo.IR.LIR
+import           Language.Malgo.Monad
+import           Language.Malgo.Pass
+import           Language.Malgo.Pretty
+import           Language.Malgo.TypeRep.Type
 import qualified LLVM.AST
-import qualified LLVM.AST.Constant            as C
-import qualified LLVM.AST.Operand             as O
-import qualified LLVM.AST.Type                as LT
-import           LLVM.IRBuilder               as IRBuilder
-import           Relude
+import qualified LLVM.AST.Constant               as C
+import qualified LLVM.AST.FloatingPointPredicate as FP
+import qualified LLVM.AST.IntegerPredicate       as IP
+import qualified LLVM.AST.Operand                as O
+import qualified LLVM.AST.Type                   as LT
+import qualified LLVM.AST.Typed                  as LT
+import           LLVM.IRBuilder                  hiding (store)
+import qualified LLVM.IRBuilder                  as IRBuilder
+import           Relude                          hiding (Type)
+import           Relude.Extra.Map                hiding (size)
+
+data GenLLVM
+
+instance Pass GenLLVM (Program Type TypedID) [LLVM.AST.Definition] where
+  isDump _ = False -- TODO: support dump llvm-ir ast
+  trans Program{ functions, mainExpr } = dumpLLVM $ do
+    let funMap = mconcat $ map genFunMap functions
+    local (\st -> st { functionMap = funMap }) $ mapM_ genFunction functions
+    local (\st -> st { functionMap = funMap }) $ void $ function "main" [] LT.i32 $ \_ -> do
+      void $ genExpr mainExpr
+      ret (int32 0)
 
 data GenState =
-  GenState { _table      :: Map (ID MType) O.Operand
-           , _terminator :: O.Operand -> GenExpr ()
-           , _internal   :: Map Text O.Operand
-           , _prims      :: IORef (Map Text O.Operand)
+  GenState { variableMap :: Map TypedID O.Operand
+           , functionMap :: Map TypedID O.Operand
+           , terminator  :: O.Operand -> GenExpr ()
+           , captures    :: O.Operand
+           , prims       :: IORef (Map Text O.Operand)
            }
+
 type GenExpr a = IRBuilderT GenDec a
-type GenDec = ModuleBuilderT (ReaderT GenState IO)
+type GenDec = ModuleBuilderT (ReaderT GenState MalgoM)
 
-makeLenses ''GenState
+dumpLLVM :: MonadIO m => ModuleBuilderT (ReaderT GenState m) a -> m [LLVM.AST.Definition]
+dumpLLVM m = do
+  p <- newIORef mempty
+  let genState = GenState { variableMap = mempty
+                          , functionMap = mempty
+                          , terminator = ret
+                          , captures = undef (LT.ptr LT.i8)
+                          , prims = p
+                          }
+  usingReaderT genState $ execModuleBuilderT emptyModuleBuilder m
 
-dumpLLVM :: MonadIO m => GenDec a -> m [LLVM.AST.Definition]
-dumpLLVM m = liftIO $ do
-  p <- newIORef Map.empty
-  let genState = GenState Map.empty ret Map.empty p
-  liftIO $ usingReaderT genState $ execModuleBuilderT emptyModuleBuilder m
+convertType :: Type -> LT.Type
+convertType (TyApp FunC (r:ps)) =
+  LT.ptr $ LT.StructureType False [LT.ptr $ LT.FunctionType (convertType r) (LT.ptr LT.i8 : map convertType ps) False, LT.ptr LT.i8]
+convertType (TyApp IntC []) = LT.i64
+convertType (TyApp FloatC []) = LT.double
+convertType (TyApp BoolC []) = LT.i1
+convertType (TyApp CharC []) = LT.i8
+convertType (TyApp StringC []) = LT.ptr LT.i8
+convertType (TyApp TupleC xs) = LT.ptr (LT.StructureType False (map convertType xs))
+convertType (TyApp ArrayC [x]) = LT.ptr (convertType x)
+convertType t = error $ fromString $ "unreachable(convertType): " <> dumpStr t
 
-convertType :: MType -> LT.Type
-convertType (IntTy i) = LT.IntegerType (fromInteger i)
-convertType DoubleTy = LT.double
-convertType (PointerTy t) = LT.ptr $ convertType t
-convertType (StructTy xs) = LT.StructureType False (map convertType xs)
-convertType (FunctionTy retTy params) = LT.ptr $ LT.FunctionType (convertType retTy) (map convertType params) False
-
-getRef :: (MonadIO m, MonadReader GenState m) => ID MType -> m O.Operand
-getRef i = do
-  m <- view table
-  case Map.lookup i m of
-    Just x  -> return x
+getVar :: MonadReader GenState m => ID Type -> m O.Operand
+getVar i = do
+  m <- asks variableMap
+  case lookup i m of
+    Just x  -> pure x
     Nothing -> error $ show i <> " is not found in " <> show m
 
-term :: IRBuilderT GenDec O.Operand -> IRBuilderT GenDec ()
-term o = do
-  t <- view terminator
-  o' <- o
-  t o'
+getFun :: MonadReader GenState m => ID Type -> m O.Operand
+getFun i = do
+  m <- asks functionMap
+  case lookup i m of
+    Just x  -> pure x
+    Nothing -> error $ show i <> " is not found in " <> show m
 
-sizeof :: (MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m O.Operand
-sizeof ty = do
-  let nullptr = O.ConstantOperand (C.Null (LT.ptr ty))
-  ptr <- gep nullptr [int64 1]
-  ptrtoint ptr LT.i64
+term :: GenExpr O.Operand -> GenExpr ()
+term o =
+  asks terminator >>= \t ->
+    t =<< o
 
-gcMalloc :: ( MonadIO m
-            , MonadIRBuilder m
-            , MonadReader GenState m)
-         => O.Operand -> m O.Operand
-gcMalloc bytesOpr = do
-  f <- Map.lookup "GC_malloc" <$> view internal
-  case f of
-    Just f' -> call f' [(bytesOpr, [])]
-    Nothing -> error "unreachable(gcMalloc)"
+mallocBytes :: (MonadReader GenState m, MonadIO m,
+                  MonadIRBuilder m, MonadModuleBuilder m) =>
+                 O.Operand -> m O.Operand
+mallocBytes bytesOpr = do
+  GenState { prims } <- ask
+  psMap <- readIORef prims
+  case lookup "GC_malloc" psMap of
+    Just f -> call f [(bytesOpr, [])]
+    Nothing -> do
+      f <- extern "GC_malloc" [LT.i64] (LT.ptr LT.i8)
+      modifyIORef prims (Map.insert "GC_malloc" f)
+      call f [(bytesOpr, [])]
 
-malloc :: ( MonadModuleBuilder m
-          , MonadReader GenState m
-          , MonadIRBuilder m
-          , MonadIO m)
-       => LT.Type -> m O.Operand
-malloc ty = do
-  p <- gcMalloc =<< sizeof ty
+mallocType :: (MonadReader GenState m, MonadIO m, MonadIRBuilder m,
+                 MonadModuleBuilder m) =>
+                LT.Type -> m O.Operand
+mallocType ty = do
+  p <- mallocBytes (sizeof ty)
   bitcast p (LT.ptr ty)
 
-genExpr :: Expr (ID MType) -> IRBuilderT GenDec ()
-genExpr e = term (genExpr' e)
+genFunMap :: Func Type TypedID -> Map TypedID O.Operand
+genFunMap Func{ name, captures, params = _, body = _ } =
+  let TyFun ps r = typeOf name
+  in Map.singleton name
+     $ O.ConstantOperand
+     $ C.GlobalReference (functionType (isNothing captures) ps r)
+     (fromString $ show $ pPrint name)
 
-genExpr' :: Expr (ID MType) -> IRBuilderT GenDec O.Operand
-genExpr' (Var a) = getRef a
-genExpr' (Int i) = pure $ int64 i
-genExpr' (Float d) = pure $ double d
-genExpr' (Bool b) = pure $ bit (if b then 1 else 0)
-genExpr' (Char c) = pure $ int8 $ toInteger $ Char.ord c
-genExpr' (String xs) = do
-  p <- gcMalloc (int64 $ toInteger $ Text.length xs + 1)
-  mapM_ (addChar p) (zip [0..] $ toString xs <> ['\0'])
-  return p
-  where addChar p (i, c) = do
-          p' <- gep p [int64 i]
-          store p' 0 (int8 $ toInteger $ Char.ord c)
-genExpr' Unit =
-  return (O.ConstantOperand $ C.Undef $ LT.StructureType False [])
-genExpr' (Prim orig ty) = do
-  ps <- view prims
-  psMap <- readIORef ps
-  case Map.lookup orig psMap of
-    Just p -> return p
-    Nothing -> do (argtys, retty) <-
-                    case ty of
-                      (FunctionTy r p) -> return (map convertType p, convertType r)
-                      _ -> error "extern symbol must have a function type"
-                  p <- lift $ extern (fromString $ toString orig) argtys retty
-                  modifyIORef ps (Map.insert orig p)
-                  return p
-genExpr' (Tuple xs) = do
-  p <- malloc (LT.StructureType False (map (convertType . mTypeOf) xs))
+functionType :: (HasType a1, HasType a2) => Bool -> [a2] -> a1 -> LT.Type
+functionType isKnown ps r = LT.ptr $ LT.FunctionType
+  { LT.resultType = convertType $ typeOf r
+  , LT.argumentTypes = (if isKnown then id else (LT.ptr LT.i8 :)) $ map (convertType . typeOf) ps
+  , LT.isVarArg = False
+  }
+
+genFunction :: Func Type TypedID -> GenDec ()
+genFunction Func{ name, captures = Nothing, params, body } = do
+  let funcName = fromString $ show $ pPrint name
+  let llvmParams = map (\(ID _ _ ty) -> (convertType ty, NoParameterName)) params
+  let retty = convertType (typeOf body)
+  void $ function funcName llvmParams retty $ \args ->
+    local (\st -> st { variableMap = fromList (zip params args) }) $
+    genTermExpr body
+genFunction Func{ name, captures = Just caps, mutrecs, params, body } = do
+  let funcName = fromString $ show $ pPrint name
+  let llvmParams = (LT.ptr LT.i8, NoParameterName) : map (\(ID _ _ ty) -> (convertType ty, NoParameterName)) params
+  let retty = convertType (typeOf body)
+  void $ function funcName llvmParams retty $ \(capsPtr : args) -> do
+    capsMap <- genUnpackCaps capsPtr
+    clsMap <- genCls capsPtr
+    local (\st -> st { variableMap = fromList (zip params args) <> capsMap <> clsMap
+                     , captures = capsPtr })
+      (genTermExpr body)
+  where
+    genUnpackCaps :: O.Operand -> GenExpr (Map TypedID O.Operand)
+    genUnpackCaps capsPtr = do
+      capsPtr' <- bitcast capsPtr (LT.ptr $ LT.StructureType False (map (convertType . typeOf) caps))
+      fmap mconcat $ forM (zip [0..] caps) $ \(i, c) -> do
+        cPtr <- gep capsPtr' [int32 0, int32 i]
+        cOpr <- load cPtr 0
+        pure (Map.fromList [(c, cOpr)])
+    genCls capsPtr = fmap mconcat $ forM mutrecs $ \f -> do
+      let LT.PointerType clsTy _ = convertType $ typeOf f
+      clsPtr <- mallocType clsTy
+      clsFunPtr <- gep clsPtr [int32 0, int32 0]
+      funOpr <- getFun f
+      store clsFunPtr 0 funOpr
+      clsCapPtr <- gep clsPtr [int32 0, int32 1]
+      store clsCapPtr 0 capsPtr
+      pure (Map.fromList [(f, clsPtr)])
+
+genTermExpr :: Expr Type (ID Type) -> GenExpr ()
+genTermExpr e = term (genExpr e)
+
+genExpr :: Expr Type (ID Type) -> GenExpr O.Operand
+genExpr (Var a)       = getVar a
+genExpr (Lit (Int x)) = pure $ int64 x
+genExpr (Lit (Float x)) = pure $ double x
+genExpr (Lit (Bool True)) = pure $ bit 1
+genExpr (Lit (Bool False)) = pure $ bit 0
+genExpr (Lit (Char x)) = pure $ int8 $ toInteger $ ord x
+genExpr (Lit (String x)) = do
+  let bytes = B.unpack $ encodeUtf8 @Text @ByteString x
+  n <- fresh
+  p <- global n (LT.ArrayType (toEnum $ length bytes + 1) LT.i8) (C.Array LT.i8 $ map (C.Int 8 . toInteger) (bytes <> [0]))
+  bitcast p (LT.ptr LT.i8)
+genExpr (Tuple xs) = do
+  tuplePtr <- mallocType (LT.StructureType False (map (convertType . typeOf) xs))
   forM_ (zip [0..] xs) $ \(i, x) -> do
-    p' <- gep p [int32 0, int32 i]
-    o <- getRef x
-    store p' 0 o
-  return p
-genExpr' (MakeArray ty size) = do
-  size' <- getRef size
-  byteSize <- mul size' =<< sizeof (convertType ty)
-  arr <- gcMalloc byteSize
+    elemPtr <- gep tuplePtr [int32 0, int32 i]
+    valOpr <- getVar x
+    store elemPtr 0 valOpr
+  pure tuplePtr
+genExpr (TupleAccess t i) = do
+  tuplePtr <- getVar t
+  elemPtr <- gep tuplePtr [int32 0, int32 $ toInteger i]
+  load elemPtr 0
+genExpr (MakeArray ty size) = do
+  sizeVal <- getVar size
+  byteSize <- mul sizeVal $ sizeof (convertType ty)
+  arr <- mallocBytes byteSize
   bitcast arr (LT.ptr $ convertType ty)
-genExpr' (Read arr ix) = do
-  arr' <- getRef arr
-  ix' <- getRef ix
-  p <- gep arr' [ix']
-  load p 0
-genExpr' (Write arr ix val) = do
-  arr' <- getRef arr
-  ix' <- getRef ix
-  val' <- getRef val
-  p <- gep arr' [ix']
-  store p 0 val'
-  return (O.ConstantOperand $ C.Undef $ LT.StructureType False [])
-genExpr' (Apply f args) = do
-  f' <- getRef f
-  args' <- mapM (getRef >=> return . (, [])) args
-  call f' args'
-genExpr' (Let name val body) = do
-  val' <- genExpr' val
-  local (over table (Map.insert name val')) (genExpr' body)
-genExpr' LetRec{} =
-  error "unreachable(LetRec)"
-genExpr' (Cast ty a) = do
-  a' <- getRef a
-  bitcast a' (convertType ty)
-genExpr' (Access a is) = do
-  a' <- getRef a
-  p <- gep a' (map (int32 . toInteger) is)
-  load p 0
-genExpr' (Store a is v) = do
-  a' <- getRef a
-  v' <- getRef v
-  p <- gep a' (map (int32 . toInteger) is)
-  store p 0 v'
-  genExpr' Unit
-genExpr' (If c t f) = mdo
-  c' <- getRef c
-  r <- alloca (convertType (mTypeOf t)) Nothing 0
-  condBr c' tLabel fLabel
-  (tLabel, fLabel) <- local (set terminator (\o -> store r 0 o >> br end)) $ do
-    tl <- block `named` "then"; genExpr t
-    fl <- block `named` "else"; genExpr f
-    return (tl, fl)
+genExpr (ArrayRead arr ix) = do
+  arrOpr <- getVar arr
+  ixOpr <- getVar ix
+  ptr <- gep arrOpr [ixOpr]
+  load ptr 0
+genExpr (ArrayWrite arr ix val) = do
+  arrOpr <- getVar arr
+  ixOpr <- getVar ix
+  valOpr <- getVar val
+  ptr <- gep arrOpr [ixOpr]
+  store ptr 0 valOpr
+  pure $ undef $ LT.ptr $ LT.StructureType False []
+genExpr (MakeClosure f cs) = do
+  -- generate captures
+  let capTy = LT.StructureType False (map (convertType . typeOf) cs)
+  capPtr <- mallocType capTy
+  forM_ (zip [0..] cs) $ \(i, c) -> do
+    capElemPtr <- gep capPtr [int32 0, int32 i]
+    valOpr <- getVar c
+    store capElemPtr 0 valOpr
+
+  -- generate closure
+  let LT.PointerType clsTy _ = convertType (typeOf f)
+  clsPtr <- mallocType clsTy
+  clsFunPtr <- gep clsPtr [int32 0, int32 0]
+  funOpr <- getFun f
+  store clsFunPtr 0 funOpr
+  clsCapPtr <- (\rawPtr -> bitcast rawPtr (LT.ptr $ LT.typeOf capPtr)) =<< gep clsPtr [int32 0, int32 1]
+  store clsCapPtr 0 capPtr
+
+  pure clsPtr
+genExpr (CallDirect f args) = do
+  funOpr <- getFun f
+  argOprs <- mapM (fmap (,[]) . getVar) args
+  call funOpr argOprs
+genExpr (CallWithCaptures f args) = do
+  funOpr <- getFun f
+  GenState { captures } <- ask
+  argOprs <- ((captures, []) :) <$> mapM (fmap (,[]) . getVar) args
+  call funOpr argOprs
+genExpr (CallClosure f args) = do
+  clsPtr <- getVar f
+  clsFunPtr <- gep clsPtr [int32 0, int32 0]
+  clsFunOpr <- load clsFunPtr 0
+  clsCapPtr <- gep clsPtr [int32 0, int32 1]
+  clsCapOpr <- load clsCapPtr 0
+  argOprs <- ((clsCapOpr, []) :) <$> mapM (fmap (,[]) . getVar) args
+  call clsFunOpr argOprs
+genExpr (Let defs e) = do
+  defsMap <- mapM (\(x, val) -> (x, ) <$> genExpr val) defs
+  local (\st -> st { variableMap = fromList defsMap <> variableMap st }) $ genExpr e
+genExpr (If c t f) = mdo
+  cOpr <- getVar c
+  result <- alloca (convertType (typeOf t)) Nothing 0
+  condBr cOpr tLabel fLabel
+  (tLabel, fLabel) <- local (\st -> st { terminator = \o -> store result 0 o >> br end}) $ do
+    tl <- block `named` "then"; genTermExpr t
+    fl <- block `named` "else"; genTermExpr f
+    pure (tl, fl)
   end <- block `named` "endif"
-  load r 0
+  load result 0
+genExpr (Prim orig ty xs) = do
+  GenState { prims } <- ask
+  psMap <- readIORef prims
+  f <- case lookup orig psMap of
+    Just f -> pure f -- call f =<< mapM (fmap (,[]) . getVar) xs
+    Nothing -> do
+      (argtys, retty) <- case ty of
+        (TyFun ps r) -> pure (map convertType ps, convertType r)
+        _            -> error "extern symbol must have a function type"
+      f <- extern (fromString $ toString orig) argtys retty
+      modifyIORef prims (Map.insert orig f)
+      pure f
+  args <- mapM (fmap (,[]) . getVar) xs
+  call f args
+genExpr (BinOp op x y) = do
+  xOpr <- getVar x
+  yOpr <- getVar y
+  opInstr xOpr yOpr
+  where
+    opInstr = case (op, convertType $ typeOf x) of
+      (Add, _) -> add; (Sub, _) -> sub; (Mul, _) -> mul; (Div, _) -> sdiv;
+      (Mod, _) -> srem;
+      (FAdd, _) -> fadd; (FSub, _) -> fsub; (FMul, _) -> fmul; (FDiv, _) -> fdiv;
+      (Eq, LT.IntegerType _) -> icmp IP.EQ
+      (Eq, LT.FloatingPointType _) -> fcmp FP.OEQ
+      (Neq, LT.IntegerType _) -> icmp IP.NE
+      (Neq, LT.FloatingPointType _) -> fcmp FP.ONE
+      (Lt, LT.IntegerType _) -> icmp IP.SLT
+      (Lt, LT.FloatingPointType _) -> fcmp FP.OLT
+      (Gt, LT.IntegerType _) -> icmp IP.SGT
+      (Gt, LT.FloatingPointType _) -> fcmp FP.OGT
+      (Le, LT.IntegerType _) -> icmp IP.SLE
+      (Le, LT.FloatingPointType _) -> fcmp FP.OLE
+      (Ge, LT.IntegerType _) -> icmp IP.SGE
+      (Ge, LT.FloatingPointType _) -> fcmp FP.OGE
+      (And, _) -> IRBuilder.and
+      (Or, _) -> IRBuilder.or
+      (_, t) -> error $ show t <> " is not comparable"
 
-genDefn :: Defn (ID MType) -> GenDec ()
-genDefn (DefFun fn params body) = do
-  let fn' = fromString $ show $ P.pPrint fn
-  let params' = map (\(ID _ _ ty) ->
-                       (convertType ty, NoParameterName)) params
-  let retty' = convertType (mTypeOf body)
-  void $ function fn' params' retty'
-    $ \xs -> local (over table (Map.fromList ((fn, fnopr) : zip params xs) <>))
-             $ genExpr body
-  where fnopr = O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ P.pPrint fn)
+-- wrapped IRBuilder and utilities
 
-genProgram :: Program (ID MType) -> GenDec ()
-genProgram (Program m defs) = do
-  a <- extern "malloc_gc" [LT.i64] (LT.ptr LT.i8)
-  local (over internal (Map.insert "GC_malloc" a)) $ do
-    gcInit <- extern "init_gc" [] LT.void
-    local (over table (Map.fromList (zip (map (\(DefFun f _ _) -> f) defs) defs') <>)) $ do
-      mapM_ genDefn defs
-      void $ function "main" [] LT.i32
-        (\_ -> do void $ call gcInit []
-                  m' <- getRef m
-                  void $ call m' []
-                  ret (int32 0))
-  where defs' = map (\(DefFun fn _ _) ->
-                       O.ConstantOperand $ C.GlobalReference (convertType (mTypeOf fn)) (fromString $ show $ P.pPrint fn)) defs
+store :: (HasCallStack, MonadIRBuilder m) => O.Operand -> Word32 -> O.Operand -> m ()
+store ptr align val =
+  assert (isPointerType $ LT.typeOf ptr) $
+  assert (LT.pointerReferent (LT.typeOf ptr) == LT.typeOf val) $
+  IRBuilder.store ptr align val
+
+sizeof :: LT.Type -> O.Operand
+sizeof ty = O.ConstantOperand $ C.PtrToInt szPtr LT.i64
+  where
+    ptrType = LT.ptr ty
+    nullPtr = C.IntToPtr (C.Int 32 0) ptrType
+    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
+
+undef :: LT.Type -> O.Operand
+undef ty = O.ConstantOperand $ C.Undef ty
+
+isPointerType :: LT.Type -> Bool
+isPointerType LT.PointerType{} = True
+isPointerType _                = False

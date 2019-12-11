@@ -3,7 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.MiddleEnd.New.TransToHIR ( TransToHIR ) where
+module Language.Malgo.MiddleEnd.TransToHIR ( TransToHIR ) where
 
 import           Control.Monad.Trans.Writer.CPS
 import           Language.Malgo.ID

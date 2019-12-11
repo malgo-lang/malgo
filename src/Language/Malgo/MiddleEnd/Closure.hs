@@ -1,170 +1,90 @@
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE MultiWayIf            #-}
+{-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TemplateHaskell       #-}
-module Language.Malgo.MiddleEnd.Closure (Closure) where
+module Language.Malgo.MiddleEnd.Closure ( Closure ) where
 
-import           Control.Lens
-import qualified Data.Map.Strict                   as Map
-import           Language.Malgo.ID                 hiding (newID)
-import qualified Language.Malgo.ID                 as ID
-import           Language.Malgo.IR.IR
+import           Data.Set                          (intersection)
+import           Language.Malgo.ID
+import qualified Language.Malgo.IR.HIR             as H
+import           Language.Malgo.IR.LIR             as L
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.MType
-import           Relude
-import           Relude.Extra.Map
-
-data Env = Env { _varmap :: Map (ID MType) (ID MType)
-               , _knowns :: [ID MType]
-               }
-
-makeLenses ''Env
+import           Language.Malgo.TypeRep.Type
+import           Relude                            hiding (Type)
 
 data Closure
 
-instance Pass Closure (Expr (ID MType)) (Program (ID MType)) where
+instance Pass Closure (H.Expr Type TypedID) (Program Type TypedID) where
   isDump = dumpClosure
-  trans = fmap flattenProgram . closureConv
+  trans e = evaluatingStateT [] $ usingReaderT (Env [] mempty []) $ do
+    e' <- transExpr e
+    fs <- get
+    pure (Program fs e')
 
-type TransM a = ReaderT Env (StateT (Program (ID MType)) MalgoM) a
+data Env = Env { knowns   :: [TypedID]
+               , captures :: Maybe [TypedID]
+               , mutrecs  :: [TypedID]
+               }
 
-closureConv :: Expr (ID MType) -> MalgoM (Program (ID MType))
-closureConv e = flip execStateT (Program (ID "" (-1) (IntTy 0)) []) $ usingReaderT (Env mempty []) $ do
-  e' <- transExpr e
-  u <- newUniq
-  let mainFun = ID "main" u (FunctionTy (mTypeOf e') [])
-  addDefn (DefFun mainFun [] e')
-  Program _ xs <- get
-  put $ Program mainFun xs
+type TransM a = ReaderT Env (StateT [Func Type TypedID] MalgoM) a
 
-addDefn :: MonadState (Program a) m => Defn a -> m ()
-addDefn defn = do
-  Program e xs <- get
-  put (Program e $ defn : xs)
+addFunc :: MonadState [Func t a] m => Func t a -> m ()
+addFunc func = modify (func:)
 
-newID :: MonadMalgo f => Text -> a -> f (ID a)
-newID name meta = ID.newID meta name
+getFunc func = do
+  env <- get
+  case find (\Func{name} -> name == func) env of
+    Just f -> pure f
+    Nothing -> malgoError $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 
-updateID :: ID MType -> TransM (ID MType)
-updateID a = do
-  ma <- Map.lookup a <$> view varmap
-  case ma of
-    Just a' -> return a'
-    Nothing -> malgoError $ pPrint a <+> "is not defined(updateID)"
-
-transExpr :: Expr (ID MType) -> TransM (Expr (ID MType))
-transExpr (Var a)    = Var <$> updateID a
-transExpr (Tuple xs) = Tuple <$> mapM updateID xs
-transExpr (Apply f args) = do
-  k <- view knowns
-  if f `elem` k
-    then Apply <$> updateID f <*> mapM updateID args
-    else do f' <- updateID f
-            insertLet "fn" (Access f' [0, 0])
-              (\fn -> insertLet "env" (Access f' [0, 1])
-                (\env -> Apply fn . (env:) <$> mapM updateID args))
-  where insertLet name e k = do
-          i <- newID name (mTypeOf e)
-          Let i e <$> k i
-transExpr (Let n val@Prim{} body) =
-    Let n val <$> local (over knowns (n:)) (local (over varmap $ Map.insert n n) (transExpr body))
-transExpr (Let n val body) = do
-  val' <- transExpr val
-  let n' = set idMeta (mTypeOf val') n
-  local (over varmap $ Map.insert n n') $
-    Let n' val' <$> transExpr body
-transExpr (LetRec [(fn, params, fbody)] body) = do
-  -- fnに自由変数がないと仮定してfbodyをクロージャ変換
-  pgBackup <- get
-  fbody' <- local (over knowns (fn:))
-            $ local (over varmap (Map.fromList ((fn, knownFn) : zip params params') <>))
-            $ transExpr fbody
-  Program _ defs <- get
-  if null (freevars fbody' \\ fromList (params' <> map _fnName defs)) && not (fn `member` freevars body)
-    -- 本当に自由変数がなければknownsに追加してbodyを変換
-    then do addDefn (DefFun knownFn params' fbody')
-            local (over knowns (fn:))
-              $ local (over varmap (Map.insert fn knownFn))
-              $ transExpr body
-    else trans' pgBackup
-  where knownFn =
-          set idMeta
-          (FunctionTy (packFunTy $ mTypeOf (Apply fn [])) (map (view idMeta) params')) fn
-        unknownFn =
-          set idMeta
-          (FunctionTy (packFunTy $ mTypeOf (Apply fn [])) (PointerTy (IntTy 8) : map (view idMeta) params')) fn
-        params' = map packID params
-        trans' pg = do
-          put pg
-
-          -- 再帰呼び出し用のクロージャ
-          innerCls <- newID (view idName fn <> "$cls") (packFunTy $ view idMeta fn)
-          -- fnをknownsに加えずにクロージャ変換
-          fbody' <- local (over varmap (Map.fromList ((fn, innerCls) : zip params params') <>))
-                    $ transExpr fbody
-          Program _ defs <- get
-
-          -- 自由変数のリスト
-          -- すでに宣言されている関数名は自由変数にはならない
-          let zs = toList $ freevars fbody' \\ fromList (innerCls : params' <> map _fnName defs)
-
-          -- 実際に変換後のfbody内で参照される自由変数のリスト
-          zs' <- mapM cloneID zs
-
-          -- 仮引数に追加されるポインタ
-          capPtr <- newID "fv" $ PointerTy (IntTy 8)
-          capStruct <- newID "fv_unpacked" $ PointerTy $ StructTy (map (view idMeta) zs)
-
-          -- 自由変数zsを対応するfv_unpackedの要素zs'に変換
-          let fbody'' = Let innerCls (Tuple [unknownFn, capPtr])
-                        $ Let capStruct (Cast (view idMeta capStruct) capPtr)
-                        $ makeLet capStruct 0 zs'
-                        $ runReader (replace fbody') (Map.fromList (zip zs zs'))
-          addDefn $ DefFun unknownFn (capPtr : params') fbody''
-
-          -- 生成されるクロージャと環境のID
-          clsID <- newID (view idName fn <> "$cls") (packFunTy (mTypeOf fn))
-          capStruct' <- cloneID capStruct
-          capPtr' <- cloneID capPtr
-
-          Let capStruct' (Tuple zs)
-            . Let capPtr' (Cast (PointerTy $ IntTy 8) capStruct')
-            . Let clsID (Tuple [unknownFn, capPtr'])
-            <$> local (over varmap (Map.insert fn clsID)) (transExpr body)
-        cloneID x = newID (view idName x) (view idMeta x)
-        makeLet _ _ [] e = e
-        makeLet cap i (x:xs) e =
-          Let x (Access cap [0, i]) $ makeLet cap (i+1) xs e
-transExpr LetRec{} = malgoError ("mutative recursion must be removed by Language.Malgo.MiddleEnd.MutRec" :: String)
-transExpr (Cast ty a) = Cast ty <$> updateID a
-transExpr (Access a xs) = Access <$> updateID a <*> pure xs
-transExpr (If c t f) = If <$> updateID c <*> transExpr t <*> transExpr f
-transExpr e = return e
-
-packID :: ID MType -> ID MType
-packID x = set idMeta (packFunTy $ view idMeta x) x
-
-packFunTy :: MType -> MType
-packFunTy (FunctionTy ret params) = PointerTy $ StructTy [FunctionTy (packFunTy ret) (PointerTy (IntTy 8) : map packFunTy params), PointerTy (IntTy 8)]
-packFunTy (PointerTy ty) = PointerTy $ packFunTy ty
-packFunTy (StructTy xs) = StructTy $ map packFunTy xs
-packFunTy t = t
-
-replace' :: (Ord b, MonadReader (Map b b) f) => b -> f b
-replace' a = fromMaybe a . Map.lookup a <$> ask
-
-replace :: (Ord a, MonadReader (Map a a) f) => Expr a -> f (Expr a)
-replace (Var a)        = Var <$> replace' a
-replace (Tuple xs)     = Tuple <$> mapM replace' xs
-replace (Apply f args) = Apply f <$> mapM replace' args
-replace (Let n v e)    = Let n <$> replace v <*> replace e
-replace LetRec{}       = error "unreachable"
-replace (Cast ty a)    = Cast ty <$> replace' a
-replace (Access a xs)  = Access <$> replace' a <*> pure xs
-replace (If c t f)     = If <$> replace' c <*> replace t <*> replace f
-replace e              = return e
+transExpr :: H.Expr Type (ID Type) -> TransM (L.Expr Type TypedID)
+transExpr (H.Var x) = pure $ Var x
+transExpr (H.Lit x) = pure $ Lit x
+transExpr (H.Tuple xs) = pure $ Tuple xs
+transExpr (H.TupleAccess x i) = pure $ TupleAccess x i
+transExpr (H.MakeArray ty x) = pure $ MakeArray ty x
+transExpr (H.ArrayRead arr ix) = pure $ ArrayRead arr ix
+transExpr (H.ArrayWrite arr ix val) = pure $ ArrayWrite arr ix val
+transExpr (H.Call f xs) = do
+  Env { knowns, mutrecs } <- ask
+  pure $ if | f `elem` knowns -> CallDirect f xs -- 直接呼び出せる関数はCallDir
+            | f `elem` mutrecs -> CallWithCaptures f xs -- (相互)再帰している関数はCallWithCaptures
+            | otherwise -> CallClosure f xs -- それ以外はCallCls
+transExpr (H.Let x v e) = do
+  v' <- transExpr v
+  Let [(x, v')] <$> transExpr e
+transExpr (H.If c t f) = If c <$> transExpr t <*> transExpr f
+transExpr (H.Prim orig ty xs) = pure $ Prim orig ty xs
+transExpr (H.BinOp op x y) = pure $ BinOp op x y
+transExpr (H.LetRec defs e) = do
+  envBackup <- get
+  fv <- getFreeVars
+  if | fv == mempty && (freevars e `intersection` fromList funcNames) == mempty ->
+         local (\env -> env { knowns = funcNames <> knowns env, captures = Nothing }) $ transExpr e
+     | otherwise -> do
+         put envBackup
+         defs' <- local (\env -> (env :: Env) { captures = Just $ toList (fv \\ fromList funcNames), mutrecs = funcNames }) (transDefs defs)
+         Let defs' <$> transExpr e
+  where
+    funcNames = map (\(f, _, _) -> f) defs
+    getFreeVars = do
+      _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, captures = Nothing, mutrecs = mempty }) (transDefs defs)
+      mconcat <$> forM funcNames (\f -> do
+                                     Func {params, body} <- getFunc f
+                                     pure $ freevars body \\ fromList params)
+    transDefs []              = pure []
+    transDefs ((f, xs, b):ds) = do
+      b' <- transExpr b
+      Env { captures } <- ask
+      addFunc (Func { name = f, captures = captures, mutrecs = funcNames, params = xs, body = b' })
+      ks <- transDefs ds
+      case captures of
+        Just caps -> pure ((f, MakeClosure f caps) : ks)
+        Nothing   -> pure ks
