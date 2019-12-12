@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
@@ -159,14 +160,21 @@ genFunction Func{ name, captures = Just caps, mutrecs, params, body } = do
         cOpr <- load cPtr 0
         pure (Map.fromList [(c, cOpr)])
     genCls capsPtr = fmap mconcat $ forM mutrecs $ \f -> do
-      let LT.PointerType clsTy _ = convertType $ typeOf f
-      clsPtr <- mallocType clsTy
-      clsFunPtr <- gep clsPtr [int32 0, int32 0]
-      funOpr <- getFun f
-      store clsFunPtr 0 funOpr
-      clsCapPtr <- gep clsPtr [int32 0, int32 1]
-      store clsCapPtr 0 capsPtr
+      clsPtr <- packClosure f capsPtr
       pure (Map.fromList [(f, clsPtr)])
+
+packClosure :: (MonadReader GenState m, MonadIO m,
+                MonadIRBuilder m, MonadModuleBuilder m) =>
+  ID Type -> O.Operand -> m O.Operand
+packClosure f capsPtr = do
+  let LT.PointerType clsTy _ = convertType $ typeOf f
+  clsPtr <- mallocType clsTy
+  clsFunPtr <- gep clsPtr [int32 0, int32 0]
+  funOpr <- getFun f
+  store clsFunPtr 0 funOpr
+  clsCapPtr <- gep clsPtr [int32 0, int32 1]
+  store clsCapPtr 0 capsPtr
+  pure clsPtr
 
 genTermExpr :: Expr Type (ID Type) -> GenExpr ()
 genTermExpr e = term (genExpr e)
@@ -221,15 +229,7 @@ genExpr (MakeClosure f cs) = do
     store capElemPtr 0 valOpr
 
   -- generate closure
-  let LT.PointerType clsTy _ = convertType (typeOf f)
-  clsPtr <- mallocType clsTy
-  clsFunPtr <- gep clsPtr [int32 0, int32 0]
-  funOpr <- getFun f
-  store clsFunPtr 0 funOpr
-  clsCapPtr <- (\rawPtr -> bitcast rawPtr (LT.ptr $ LT.typeOf capPtr)) =<< gep clsPtr [int32 0, int32 1]
-  store clsCapPtr 0 capPtr
-
-  pure clsPtr
+  packClosure f =<< bitcast capPtr (LT.ptr LT.i8)
 genExpr (CallDirect f args) = do
   funOpr <- getFun f
   argOprs <- mapM (fmap (,[]) . getVar) args

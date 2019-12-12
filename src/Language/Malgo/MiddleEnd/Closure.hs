@@ -38,6 +38,8 @@ type TransM a = ReaderT Env (StateT [Func Type TypedID] MalgoM) a
 addFunc :: MonadState [Func t a] m => Func t a -> m ()
 addFunc func = modify (func:)
 
+getFunc :: (MonadState [Func Type TypedID] m, MonadIO m) =>
+  TypedID -> m (Func Type TypedID)
 getFunc func = do
   env <- get
   case find (\Func{name} -> name == func) env of
