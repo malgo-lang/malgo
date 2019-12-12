@@ -1,20 +1,14 @@
 ; ModuleID = './examples/test.mlg'
 source_filename = "./examples/test.mlg"
 
-declare i8* @malloc_gc(i64)
-
-declare void @init_gc()
-
-define {} @main.8() {
-  ret {} undef
-}
-
-define i64 @answer.6({}) {
+define i64 @answer.5({}*) {
   ret i64 42
 }
 
+declare i8* @GC_malloc(i64)
+
 define i32 @main() {
-  call void @init_gc()
-  %1 = call {} @main.8()
+  %1 = call i8* @GC_malloc(i64 0)
+  %2 = bitcast i8* %1 to {}*
   ret i32 0
 }

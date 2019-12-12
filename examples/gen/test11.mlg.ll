@@ -1,11 +1,7 @@
 ; ModuleID = './examples/test11.mlg'
 source_filename = "./examples/test11.mlg"
 
-declare i8* @malloc_gc(i64)
-
-declare void @init_gc()
-
-define i1 @main.12() {
+define i32 @main() {
   %1 = alloca i1
   br i1 true, label %then_0, label %else_0
 
@@ -45,11 +41,5 @@ endif_1:                                          ; preds = %else_2, %endif_0
 
 endif_2:                                          ; preds = %endif_1, %then_0
   %6 = load i1, i1* %1
-  ret i1 %6
-}
-
-define i32 @main() {
-  call void @init_gc()
-  %1 = call i1 @main.12()
   ret i32 0
 }

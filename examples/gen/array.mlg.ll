@@ -1,45 +1,39 @@
 ; ModuleID = './examples/array.mlg'
 source_filename = "./examples/array.mlg"
 
-declare i8* @malloc_gc(i64)
+declare {}* @newline({}*)
 
-declare void @init_gc()
-
-define {} @main.66() {
-  %1 = getelementptr i64, i64* null, i64 1
-  %2 = ptrtoint i64* %1 to i64
-  %3 = mul i64 10, %2
-  %4 = call i8* @malloc_gc(i64 %3)
-  %5 = bitcast i8* %4 to i64*
-  %6 = getelementptr i64, i64* %5, i64 1
-  %7 = load i64, i64* %6
-  %8 = getelementptr i64, i64* %5, i64 2
-  store i64 42, i64* %8
-  %9 = getelementptr i64, i64* %5, i64 2
-  %10 = load i64, i64* %9
-  %11 = call {} @print_int.46(i64 %7)
-  %12 = call {} @newline.49({} undef)
-  %13 = call {} @print_int.46(i64 %10)
-  %14 = call {} @newline.49({} undef)
-  ret {} %14
+define {}* @newline.6({}*) {
+  %2 = call {}* @newline({}* %0)
+  ret {}* %2
 }
 
-declare {} @newline({})
+declare {}* @print_int(i64)
 
-define {} @newline.49({}) {
-  %2 = call {} @newline({} %0)
-  ret {} %2
+define {}* @print_int.5(i64) {
+  %2 = call {}* @print_int(i64 %0)
+  ret {}* %2
 }
 
-declare {} @print_int(i64)
-
-define {} @print_int.46(i64) {
-  %2 = call {} @print_int(i64 %0)
-  ret {} %2
-}
+declare i8* @GC_malloc(i64)
 
 define i32 @main() {
-  call void @init_gc()
-  %1 = call {} @main.66()
+  %1 = mul i64 10, ptrtoint (i64* getelementptr inbounds (i64, i64* null, i32 1) to i64)
+  %2 = call i8* @GC_malloc(i64 %1)
+  %3 = bitcast i8* %2 to i64*
+  %4 = getelementptr i64, i64* %3, i64 1
+  %5 = load i64, i64* %4
+  %6 = getelementptr i64, i64* %3, i64 2
+  store i64 42, i64* %6
+  %7 = getelementptr i64, i64* %3, i64 2
+  %8 = load i64, i64* %7
+  %9 = call {}* @print_int.5(i64 %5)
+  %10 = call i8* @GC_malloc(i64 0)
+  %11 = bitcast i8* %10 to {}*
+  %12 = call {}* @newline.6({}* %11)
+  %13 = call {}* @print_int.5(i64 %8)
+  %14 = call i8* @GC_malloc(i64 0)
+  %15 = bitcast i8* %14 to {}*
+  %16 = call {}* @newline.6({}* %15)
   ret i32 0
 }
