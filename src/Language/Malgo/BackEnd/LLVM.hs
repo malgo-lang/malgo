@@ -7,7 +7,6 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RecursiveDo           #-}
-{-# LANGUAGE StrictData            #-}
 {-# LANGUAGE TupleSections         #-}
 {-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.BackEnd.LLVM ( GenLLVM ) where

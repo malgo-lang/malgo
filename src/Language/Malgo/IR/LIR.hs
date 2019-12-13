@@ -17,7 +17,7 @@ data Program t a = Program { functions :: [Func t a], mainFunc :: a }
 data Func t a = Func { name :: a, params :: [a], body :: Block t a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
-data Block t a = Block { insts :: [(a, Expr t a)], term :: Stmt t a }
+newtype Block t a = Block { insts :: [(a, Expr t a)] }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
 data Expr t a = Var a
@@ -29,8 +29,5 @@ data Expr t a = Var a
               | Cast t a
               | Undef t
               | BinOp Op a a
+              | If a (Block t a) (Block t a)
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
-
-data Stmt t a = If a (Block t a) (Block t a)
-              | Ret a
-   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
