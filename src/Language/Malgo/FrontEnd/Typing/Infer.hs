@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -116,9 +117,12 @@ typingExpr (Call _ fn args) = do
   retTy <- newTyMeta
   return (TyFun argTypes retTy :~ fnTy : cs1 <> cs2, retTy)
 typingExpr (Fn i params body) = do
-  mapM_ (\(p, t) -> defineVar i p t []) params
+  paramTypes <- mapM (\case
+                         (_, Just t) -> pure t
+                         (_, Nothing) -> newTyMeta) params
+  mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
   (cs, t) <- typingExpr body
-  return (cs, TyFun (map snd params) t)
+  return (cs, TyFun paramTypes t)
 typingExpr (Seq _ e1 e2) = do
   (cs1, _) <- typingExpr e1
   (cs2, t) <- typingExpr e2
@@ -147,10 +151,13 @@ typingExpr (Let i fs e) = do
       defineVar i' f v []
     prepare _                   = malgoError $ "error(prepare):" <+> pPrint i
     typingFunDec (FunDec i' f params retty body) = do
-      mapM_ (\(p, t) -> defineVar i' p t []) params
+      paramTypes <- mapM (\case
+                             (_, Just t) -> pure t
+                             (_, Nothing) -> newTyMeta) params
+      mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
       (cs1, t) <- typingExpr body
       tv <- lookupVar f
-      let cs = tv :~ TyFun (map snd params) retty : t :~ retty : cs1
+      let cs = tv :~ TyFun paramTypes retty : t :~ retty : cs1
       defineVar i' f tv cs
       return cs
     typingFunDec x = malgoError $ "error(typingFunDec):" <+> pPrint x

@@ -44,7 +44,7 @@ data Expr a
   -- | 関数呼び出し
   | Call Info (Expr a) [Expr a]
   -- | 無名関数
-  | Fn Info [(a, Type)] (Expr a)
+  | Fn Info [(a, Maybe Type)] (Expr a)
   -- | 連続した式(e1 ; e2)
   | Seq Info (Expr a) (Expr a)
   -- | let式
@@ -142,7 +142,7 @@ instance Pretty Op where
   pPrint Or   = "||"
 
 data Decl a
-  = FunDec Info a [(a, Type)] Type (Expr a)
+  = FunDec Info a [(a, Maybe Type)] Type (Expr a)
   | ValDec Info a (Maybe Type) (Expr a)
   | ExDec Info a Type Text
   deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic, PrettyVal)
@@ -176,7 +176,7 @@ instance HasType a => HasType (Expr a) where
         _         -> error "(typeof arr) should match (TyArray xs)"
     typeOf ArrayWrite{} = TyTuple []
     typeOf (Unit _) = TyTuple []
-    typeOf (Fn _ params body) = TyFun (map snd params) (typeOf body)
+    typeOf (Fn _ params body) = TyFun (map (typeOf . fst) params) (typeOf body)
     typeOf (Call _ fn _) =
         case typeOf fn of
             (TyFun _ ty) -> ty

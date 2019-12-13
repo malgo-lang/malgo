@@ -104,7 +104,7 @@ decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                        }
      | fun id '(' ')' ':' Type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
-           [("_", TyTuple [])]
+           [("_", Just (TyTuple []))]
            $6
            $8
        }
@@ -123,7 +123,8 @@ decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
 params : params ',' param { $3 : $1 }
        | param { [$1] }
 
-param : id ':' Type { (_id . _tag $ $1, $3) }
+param : id ':' Type { (_id . _tag $ $1, Just $3) }
+	  | id { (_id . _tag $ $1, Nothing) }
 
 exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
