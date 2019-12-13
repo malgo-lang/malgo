@@ -17,7 +17,7 @@ import qualified Data.ByteString                 as B
 import qualified Data.Map                        as Map
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR           (Lit (..), Op (..))
-import           Language.Malgo.IR.LIR
+import           Language.Malgo.IR.MIR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty

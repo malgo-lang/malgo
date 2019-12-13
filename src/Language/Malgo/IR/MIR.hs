@@ -6,7 +6,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies      #-}
-module Language.Malgo.IR.LIR where
+module Language.Malgo.IR.MIR where
 
 import           Data.Set                          ((\\))
 import           Language.Malgo.IR.HIR             (Lit (..), Op (..))

@@ -12,7 +12,7 @@ import           Language.Malgo.FrontEnd.Typing.Infer
 import qualified Language.Malgo.IR.Syntax             as Syntax
 import           Language.Malgo.MiddleEnd.Closure
 import           Language.Malgo.MiddleEnd.HIRLint
-import           Language.Malgo.MiddleEnd.LIRLint
+import           Language.Malgo.MiddleEnd.MIRLint
 import           Language.Malgo.MiddleEnd.TransToHIR
 import           Language.Malgo.Monad                 as M
 import           Language.Malgo.Pass
@@ -47,7 +47,7 @@ compile filename ast = M.runMalgo $ do
     >>= transWithDump @TransToHIR
     >>= transWithDump @HIRLint
     >>= transWithDump @Closure
-    >>= transWithDump @LIRLint
+    >>= transWithDump @MIRLint
     >>= trans @GenLLVM
     >>= \llvmir ->
           return $ L.defaultModule { L.moduleName = fromString filename

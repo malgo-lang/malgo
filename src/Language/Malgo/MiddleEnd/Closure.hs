@@ -11,7 +11,7 @@ module Language.Malgo.MiddleEnd.Closure ( Closure ) where
 import           Data.Set                          (intersection)
 import           Language.Malgo.ID
 import qualified Language.Malgo.IR.HIR             as H
-import           Language.Malgo.IR.LIR             as L
+import           Language.Malgo.IR.MIR             as M
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
@@ -46,7 +46,7 @@ getFunc func = do
     Just f -> pure f
     Nothing -> malgoError $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 
-transExpr :: H.Expr Type (ID Type) -> TransM (L.Expr Type TypedID)
+transExpr :: H.Expr Type (ID Type) -> TransM (M.Expr Type TypedID)
 transExpr (H.Var x) = pure $ Var x
 transExpr (H.Lit x) = pure $ Lit x
 transExpr (H.Tuple xs) = pure $ Tuple xs

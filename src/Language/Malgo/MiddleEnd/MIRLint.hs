@@ -6,19 +6,19 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Language.Malgo.MiddleEnd.LIRLint (LIRLint) where
+module Language.Malgo.MiddleEnd.MIRLint (MIRLint) where
 
 import           Language.Malgo.ID
-import           Language.Malgo.IR.LIR
+import           Language.Malgo.IR.MIR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Relude                      hiding (Type)
 
-data LIRLint
+data MIRLint
 
-instance Pass LIRLint (Program Type TypedID) (Program Type TypedID) where
+instance Pass MIRLint (Program Type TypedID) (Program Type TypedID) where
   isDump _ = False
   trans e@(Program fs _) = usingReaderT (Env fs []) (lintProgram e) >> pure e
 
