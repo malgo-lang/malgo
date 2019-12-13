@@ -23,7 +23,7 @@ newtype Block t a = Block { insts :: [(a, Expr t a)] }
 data Expr t a = Var a
               | Lit Lit
               | Call a [a]
-              | Alloca t
+              | Alloca t a
               | Load a [a]
               | Store a [a] a
               | Cast t a
