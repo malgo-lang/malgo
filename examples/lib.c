@@ -100,21 +100,21 @@ Unit print_char(char c) {
   return unit;
 }
 
-Unit gen_seed(Unit unused) {
+Unit gen_seed() {
   srand((unsigned) time(NULL));
   return unit;
 }
 
-bool rand_bool(Unit unused) {
+bool rand_bool() {
   return (bool)(rand() % 2);
 }
 
-Unit flush(Unit unused) {
+Unit flush() {
   fflush(stdout);
   return unit;
 }
 
-char getChar(Unit unused) {
+char getChar() {
   return fgetc(stdin);
 }
 
@@ -143,7 +143,7 @@ char* concat(char* str1, char* str2) {
   return str;
 }
 
-Unit newline(Unit unused) {
+Unit newline() {
   printf("\n");
   return unit;
 }

@@ -104,7 +104,7 @@ decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
                        }
      | fun id '(' ')' ':' Type '=' exp {
          FunDec (_info $1) (_id . _tag $ $2)
-           [("_", Just (TyTuple []))]
+           []
            $6
            $8
        }
@@ -168,7 +168,7 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
           | '{' args '}' { Tuple (_info $1) (reverse $2) }
           | array '(' Type ',' exp ')' { MakeArray (_info $1) $3 $5 }
           | simple_exp '[' exp ']' { ArrayRead (_info $2) $1 $3 }
-          | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [Unit (_info $2)] }
+          | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [] }
           | simple_exp '(' args ')' {- %prec CALL -} { Call (info $1) $1 (reverse $3) }
           | '{' '}' { Unit (_info $1) }
           | '(' exp ')' { $2 }
@@ -184,6 +184,7 @@ Type : Int { TyInt }
      | Type '->' Type { TyFun [$1] $3 }
      | '{' '}' { TyTuple [] }
      | '{' Types '}' { TyTuple (reverse $2) }
+	 | '(' ')' '->' Type { TyFun [] $4 }
      | '(' Types ')' '->' Type { TyFun (reverse $2) $5 }
      | '[' Type ']' { TyArray $2 }
 

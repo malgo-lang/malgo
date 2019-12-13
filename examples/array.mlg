@@ -1,6 +1,6 @@
 let
   extern print_int : Int -> {} = "print_int"
-  extern newline : {} -> {} = "newline"
+  extern newline : () -> {} = "newline"
   val a : [Int] = array(Int, 10)
   val a1 : Int = a[1]
   val a2 : Int = a[2] <- 42; a[2]

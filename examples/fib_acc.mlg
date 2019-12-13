@@ -1,5 +1,5 @@
 let extern print_int : Int -> {} = "print_int"
-    extern newline : {} -> {} = "newline"
+    extern newline : () -> {} = "newline"
     fun fib_acc(n : Int, a : Int, b : Int) : Int =
         if n <= 0
         then a

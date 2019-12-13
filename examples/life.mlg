@@ -1,9 +1,9 @@
 let
 
 extern print_char : Char -> {} = "print_char"
-extern newline : {} -> {} = "newline"
-extern gen_seed: {} -> {} = "gen_seed"
-extern rand_bool : {} -> Bool = "rand_bool"
+extern newline : () -> {} = "newline"
+extern gen_seed: () -> {} = "gen_seed"
+extern rand_bool : () -> Bool = "rand_bool"
 extern sleep : Int -> {} = "malgo_sleep"
 extern copy_bool_array : ([Bool], Int) -> [Bool] = "copy_bool_array"
 extern pulsar : [Bool] -> {} = "pulsar"

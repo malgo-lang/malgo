@@ -1,6 +1,6 @@
 let
   extern print_int : Int -> {} = "print_int"
-  extern newline : {} -> {} = "newline"
+  extern newline : () -> {} = "newline"
   fun fib(n) : Int =
     if n <= 1
     then 1
