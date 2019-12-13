@@ -4,7 +4,6 @@
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.FrontEnd.Typing.Subst (Subst(..), Substitutable(..)) where
 
-import           Language.Malgo.ID
 import           Language.Malgo.TypeRep.Type
 import           Relude                      hiding (Type)
 import           Relude.Extra.Map
