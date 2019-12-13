@@ -1,11 +1,11 @@
 ; ModuleID = './examples/array.mlg'
 source_filename = "./examples/array.mlg"
 
-declare {}* @newline({}*)
+declare {}* @newline()
 
-define {}* @newline.6({}*) {
-  %2 = call {}* @newline({}* %0)
-  ret {}* %2
+define {}* @newline.6() {
+  %1 = call {}* @newline()
+  ret {}* %1
 }
 
 declare {}* @print_int(i64)
@@ -28,12 +28,8 @@ define i32 @main() {
   %7 = getelementptr i64, i64* %3, i64 2
   %8 = load i64, i64* %7
   %9 = call {}* @print_int.5(i64 %5)
-  %10 = call i8* @GC_malloc(i64 0)
-  %11 = bitcast i8* %10 to {}*
-  %12 = call {}* @newline.6({}* %11)
-  %13 = call {}* @print_int.5(i64 %8)
-  %14 = call i8* @GC_malloc(i64 0)
-  %15 = bitcast i8* %14 to {}*
-  %16 = call {}* @newline.6({}* %15)
+  %10 = call {}* @newline.6()
+  %11 = call {}* @print_int.5(i64 %8)
+  %12 = call {}* @newline.6()
   ret i32 0
 }

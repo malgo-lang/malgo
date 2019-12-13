@@ -15,11 +15,11 @@ define i64 @fst_int.18({ i64, i8* }*) {
   ret i64 %3
 }
 
-declare {}* @newline({}*)
+declare {}* @newline()
 
-define {}* @newline.11({}*) {
-  %2 = call {}* @newline({}* %0)
-  ret {}* %2
+define {}* @newline.11() {
+  %1 = call {}* @newline()
+  ret {}* %1
 }
 
 declare {}* @println(i8*)

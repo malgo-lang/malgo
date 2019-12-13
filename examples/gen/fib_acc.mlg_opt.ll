@@ -3,40 +3,34 @@ source_filename = "./examples/fib_acc.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-declare i8* @GC_malloc(i64) local_unnamed_addr
-
 define {}* @fib_loop.34(i64) local_unnamed_addr {
   %2 = icmp slt i64 %0, 1
   br i1 %2, label %then_0, label %else_0.i.preheader
 
 else_0.i.preheader:                               ; preds = %1, %fib_acc.22.exit
-  %.tr2 = phi i64 [ %14, %fib_acc.22.exit ], [ %0, %1 ]
+  %.tr2 = phi i64 [ %10, %fib_acc.22.exit ], [ %0, %1 ]
   br label %else_0.i
 
 then_0:                                           ; preds = %fib_acc.22.exit, %1
   %3 = tail call {}* @print_int(i64 1)
-  %4 = tail call i8* @GC_malloc(i64 0)
-  %5 = bitcast i8* %4 to {}*
-  %6 = tail call {}* @newline({}* %5)
-  ret {}* %6
+  %4 = tail call {}* @newline()
+  ret {}* %4
 
 else_0.i:                                         ; preds = %else_0.i.preheader, %else_0.i
-  %.tr36.i = phi i64 [ %8, %else_0.i ], [ 1, %else_0.i.preheader ]
+  %.tr36.i = phi i64 [ %6, %else_0.i ], [ 1, %else_0.i.preheader ]
   %.tr25.i = phi i64 [ %.tr36.i, %else_0.i ], [ 1, %else_0.i.preheader ]
-  %.tr4.i = phi i64 [ %7, %else_0.i ], [ %.tr2, %else_0.i.preheader ]
-  %7 = add nsw i64 %.tr4.i, -1
-  %8 = add i64 %.tr25.i, %.tr36.i
-  %9 = icmp slt i64 %.tr4.i, 2
-  br i1 %9, label %fib_acc.22.exit, label %else_0.i
+  %.tr4.i = phi i64 [ %5, %else_0.i ], [ %.tr2, %else_0.i.preheader ]
+  %5 = add nsw i64 %.tr4.i, -1
+  %6 = add i64 %.tr25.i, %.tr36.i
+  %7 = icmp slt i64 %.tr4.i, 2
+  br i1 %7, label %fib_acc.22.exit, label %else_0.i
 
 fib_acc.22.exit:                                  ; preds = %else_0.i
-  %10 = tail call {}* @print_int(i64 %.tr36.i)
-  %11 = tail call i8* @GC_malloc(i64 0)
-  %12 = bitcast i8* %11 to {}*
-  %13 = tail call {}* @newline({}* %12)
-  %14 = add nsw i64 %.tr2, -1
-  %15 = icmp slt i64 %.tr2, 2
-  br i1 %15, label %then_0, label %else_0.i.preheader
+  %8 = tail call {}* @print_int(i64 %.tr36.i)
+  %9 = tail call {}* @newline()
+  %10 = add nsw i64 %.tr2, -1
+  %11 = icmp slt i64 %.tr2, 2
+  br i1 %11, label %then_0, label %else_0.i.preheader
 }
 
 ; Function Attrs: nounwind readnone
@@ -58,11 +52,11 @@ endif_0:                                          ; preds = %else_0, %3
   ret i64 %.tr2.lcssa
 }
 
-declare {}* @newline({}*) local_unnamed_addr
+declare {}* @newline() local_unnamed_addr
 
-define {}* @newline.9({}*) local_unnamed_addr {
-  %2 = tail call {}* @newline({}* %0)
-  ret {}* %2
+define {}* @newline.9() local_unnamed_addr {
+  %1 = tail call {}* @newline()
+  ret {}* %1
 }
 
 declare {}* @print_int(i64) local_unnamed_addr
@@ -77,7 +71,7 @@ define i32 @main() local_unnamed_addr {
 
 else_0.i.preheader.i:                             ; preds = %fib_acc.22.exit.i, %0
   %indvar = phi i64 [ %indvar.next, %fib_acc.22.exit.i ], [ 0, %0 ]
-  %.tr2.i = phi i64 [ %17, %fib_acc.22.exit.i ], [ 30, %0 ]
+  %.tr2.i = phi i64 [ %15, %fib_acc.22.exit.i ], [ 30, %0 ]
   %1 = sub i64 30, %indvar
   %2 = sub i64 29, %indvar
   %xtraiter = and i64 %1, 7
@@ -123,19 +117,15 @@ else_0.i.i.epil:                                  ; preds = %fib_acc.22.exit.i.u
 fib_acc.22.exit.i:                                ; preds = %else_0.i.i.epil, %fib_acc.22.exit.i.unr-lcssa
   %.tr36.i.i.lcssa = phi i64 [ %.tr36.i.i.lcssa.ph, %fib_acc.22.exit.i.unr-lcssa ], [ %.tr36.i.i.epil, %else_0.i.i.epil ]
   %13 = tail call {}* @print_int(i64 %.tr36.i.i.lcssa)
-  %14 = tail call i8* @GC_malloc(i64 0)
-  %15 = bitcast i8* %14 to {}*
-  %16 = tail call {}* @newline({}* %15)
-  %17 = add nsw i64 %.tr2.i, -1
-  %18 = icmp ult i64 %.tr2.i, 2
+  %14 = tail call {}* @newline()
+  %15 = add nsw i64 %.tr2.i, -1
+  %16 = icmp ult i64 %.tr2.i, 2
   %indvar.next = add i64 %indvar, 1
-  br i1 %18, label %fib_loop.34.exit, label %else_0.i.preheader.i
+  br i1 %16, label %fib_loop.34.exit, label %else_0.i.preheader.i
 
 fib_loop.34.exit:                                 ; preds = %fib_acc.22.exit.i
-  %19 = tail call {}* @print_int(i64 1)
-  %20 = tail call i8* @GC_malloc(i64 0)
-  %21 = bitcast i8* %20 to {}*
-  %22 = tail call {}* @newline({}* %21)
+  %17 = tail call {}* @print_int(i64 1)
+  %18 = tail call {}* @newline()
   ret i32 0
 }
 

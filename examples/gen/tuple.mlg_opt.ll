@@ -19,11 +19,11 @@ define i64 @fst_int.18({ i64, i8* }* nocapture readonly) local_unnamed_addr #0 {
   ret i64 %3
 }
 
-declare {}* @newline({}*) local_unnamed_addr
+declare {}* @newline() local_unnamed_addr
 
-define {}* @newline.11({}*) local_unnamed_addr {
-  %2 = tail call {}* @newline({}* %0)
-  ret {}* %2
+define {}* @newline.11() local_unnamed_addr {
+  %1 = tail call {}* @newline()
+  ret {}* %1
 }
 
 declare {}* @println(i8*) local_unnamed_addr
