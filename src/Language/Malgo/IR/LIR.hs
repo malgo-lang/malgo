@@ -33,6 +33,7 @@ instance HasLType a => HasLType (Block a) where
 data Inst a = Var a
             | Constant Constant
             | Call a [a]
+            | CallExt Text LType [a]
             | Alloca LType (Maybe a)
             | LoadC a [Int]
             | Load a [a]
@@ -45,18 +46,19 @@ data Inst a = Var a
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
 instance (HasLType a, PrettyVal a) => HasLType (Inst a) where
-  ltypeOf (Var x)                               = ltypeOf x
-  ltypeOf (Constant x)                          = ltypeOf x
-  ltypeOf (Call (ltypeOf -> Function t _) _)    = t
-  ltypeOf (Alloca t _)                          = Ptr t
+  ltypeOf (Var x) = ltypeOf x
+  ltypeOf (Constant x) = ltypeOf x
+  ltypeOf (Call (ltypeOf -> Function t _) _) = t
+  ltypeOf (CallExt _ t _) = t
+  ltypeOf (Alloca t _) = Ptr t
   ltypeOf (LoadC (ltypeOf -> Ptr t) _) = t
-  ltypeOf (Load (ltypeOf -> Ptr t) _)           = t
+  ltypeOf (Load (ltypeOf -> Ptr t) _) = t
   ltypeOf StoreC{} = Void
-  ltypeOf Store{}                               = Void
-  ltypeOf (Cast t _)                            = t
-  ltypeOf (Undef t)                             = t
+  ltypeOf Store{} = Void
+  ltypeOf (Cast t _) = t
+  ltypeOf (Undef t) = t
   ltypeOf (BinOp op x _) = ltypeOfOp op (ltypeOf x)
-  ltypeOf (If _ x _)                            = ltypeOf x
+  ltypeOf (If _ x _) = ltypeOf x
   ltypeOf t = error $ fromString $ "unreachable(ltypeOf) " <> dumpStr t
 
 data Constant = Bool Bool
