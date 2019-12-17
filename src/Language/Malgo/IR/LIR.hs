@@ -33,8 +33,10 @@ instance HasLType a => HasLType (Block a) where
 data Inst a = Var a
             | Constant Constant
             | Call a [a]
-            | Alloca LType a
+            | Alloca LType (Maybe a)
+            | LoadC a [Int]
             | Load a [a]
+            | StoreC a [Int] a
             | Store a [a] a
             | Cast LType a
             | Undef LType
@@ -47,7 +49,9 @@ instance (HasLType a, PrettyVal a) => HasLType (Inst a) where
   ltypeOf (Constant x)                          = ltypeOf x
   ltypeOf (Call (ltypeOf -> Function t _) _)    = t
   ltypeOf (Alloca t _)                          = Ptr t
+  ltypeOf (LoadC (ltypeOf -> Ptr t) _) = t
   ltypeOf (Load (ltypeOf -> Ptr t) _)           = t
+  ltypeOf StoreC{} = Void
   ltypeOf Store{}                               = Void
   ltypeOf (Cast t _)                            = t
   ltypeOf (Undef t)                             = t
@@ -61,15 +65,19 @@ data Constant = Bool Bool
               | Word8 Word8
               | Word32 Word32
               | Word64 Word64
+              | Float64 Double
+              | String [Word8]
   deriving (Eq, Show, Read, Generic, PrettyVal)
 
 instance HasLType Constant where
-  ltypeOf Bool{}   = Bit
-  ltypeOf Int32{}  = I32
-  ltypeOf Int64{}  = I64
-  ltypeOf Word8{}  = U8
-  ltypeOf Word32{} = U32
-  ltypeOf Word64{} = U64
+  ltypeOf Bool{}    = Bit
+  ltypeOf Int32{}   = I32
+  ltypeOf Int64{}   = I64
+  ltypeOf Word8{}   = U8
+  ltypeOf Word32{}  = U32
+  ltypeOf Word64{}  = U64
+  ltypeOf Float64{} = F64
+  ltypeOf String{}  = Ptr U8
 
 data Op = ADD  | SUB  | MUL  | SDIV | SREM | UDIV | UREM
         | FADD | FSUB | FMUL | FDIV
@@ -92,10 +100,10 @@ ltypeOfOp SDIV I32 = I32
 ltypeOfOp SDIV I64 = I64
 ltypeOfOp UDIV U32 = I32
 ltypeOfOp UDIV U64 = I64
-ltypeOfOp FADD _   = Double
-ltypeOfOp FSUB _   = Double
-ltypeOfOp FMUL _   = Double
-ltypeOfOp FDIV _   = Double
+ltypeOfOp FADD _   = F64
+ltypeOfOp FSUB _   = F64
+ltypeOfOp FMUL _   = F64
+ltypeOfOp FDIV _   = F64
 ltypeOfOp IEQ _    = Bit
 ltypeOfOp INE _    = Bit
 ltypeOfOp SLT I32  = I32
