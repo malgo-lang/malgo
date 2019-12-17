@@ -34,7 +34,7 @@ getID info name = do
   k <- ask
   case Map.lookup name k of
     Just x -> return x
-    Nothing -> malgoError $ "error(rename):" <+> pPrint info <+> pPrint name <+> "is not defined"
+    Nothing -> errorDoc $ "error(rename):" <+> pPrint info <+> pPrint name <+> "is not defined"
 
 renameExpr :: Expr Text -> RenameM (Expr RawID)
 renameExpr (Var info name) = Var info <$> getID info name

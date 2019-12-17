@@ -44,7 +44,7 @@ getFunc func = do
   env <- get
   case find (\Func{name} -> name == func) env of
     Just f -> pure f
-    Nothing -> malgoError $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
+    Nothing -> errorDoc $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 
 transExpr :: H.Expr Type (ID Type) -> TransM (M.Expr Type TypedID)
 transExpr (H.Var x) = pure $ Var x

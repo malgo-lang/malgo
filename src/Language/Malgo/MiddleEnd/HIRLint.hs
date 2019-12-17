@@ -24,16 +24,16 @@ instance Pass HIRLint (Expr Type TypedID) (Expr Type TypedID) where
 defined :: TypedID -> ReaderT [TypedID] MalgoM ()
 defined a =
   unlessM (elem a <$> ask)
-  (malgoError $ pPrint a <+> "is not defined")
+  (errorDoc $ pPrint a <+> "is not defined")
 
 notDefined :: TypedID -> ReaderT [TypedID] MalgoM ()
 notDefined a =
   unlessM (notElem a <$> ask)
-  (malgoError $ pPrint a <+> "is already defined")
+  (errorDoc $ pPrint a <+> "is already defined")
 
 match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [TypedID] MalgoM ()
 match a b = unless (typeOf a == typeOf b) $
-  malgoError $ "expected:" <+> pPrint (typeOf a)
+  errorDoc $ "expected:" <+> pPrint (typeOf a)
   $+$ "actual:" <+> pPrint (typeOf b)
   $+$ parens (fsep [pPrint a, colon, pPrint b])
 
@@ -49,7 +49,7 @@ lintExpr e@(Call f xs) = do
     getParamtys =
       case fty of
         TyFun ps _ -> pure ps
-        t -> malgoError $ pPrint t <+> ("is not callable: " <> parens (pPrint e))
+        t -> errorDoc $ pPrint t <+> ("is not callable: " <> parens (pPrint e))
 lintExpr (Let name val body) = do
   notDefined name
   val' <- lintExpr val

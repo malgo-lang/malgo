@@ -15,7 +15,6 @@ module Language.Malgo.Monad
   , MonadMalgo(..)
   , newUniq
   , Opt(..)
-  , malgoError
   ) where
 
 import           Control.Monad.Fix
@@ -68,8 +67,3 @@ newUniq = liftMalgo $ do
   i <- readIORef u
   modifyIORef u (+1)
   return i
-
-malgoError :: (MonadIO m, Show a) => a -> m b
-malgoError mes = do
-  print mes
-  exitFailure

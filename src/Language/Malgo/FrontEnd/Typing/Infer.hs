@@ -38,7 +38,7 @@ type Env = Map RawID TypedID
 type InferM a = StateT Env MalgoM a
 
 throw :: Info -> Doc -> InferM a
-throw info mes = malgoError $ "error(typing):" <+> pPrint info $+$ mes
+throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
 
 catchUnifyError :: Info -> Maybe RawID -> Either UnifyError a -> InferM a
 catchUnifyError i n (Left (MismatchConstructor c1 c2)) =
@@ -60,7 +60,7 @@ catchUnifyError _ _ (Right a) = pure a
 
 updateID :: Env -> RawID -> InferM TypedID
 updateID env x = case lookup x env of
-  Nothing -> malgoError $ "error(updateID):" <+> pPrint x
+  Nothing -> errorDoc $ "error(updateID):" <+> pPrint x
   Just y  -> return y
 
 newTyMeta :: InferM Type
@@ -76,7 +76,7 @@ lookupVar :: RawID -> InferM Type
 lookupVar x = do
   env <- get
   case lookup x env of
-    Nothing -> malgoError $ "error(lookupVar):" <+> pPrint x
+    Nothing -> errorDoc $ "error(lookupVar):" <+> pPrint x
     Just y  -> pure $ typeOf y
 
 typingExpr :: Expr RawID -> InferM ([Constraint], Type)
@@ -149,7 +149,7 @@ typingExpr (Let i fs e) = do
     prepare (FunDec i' f _ _ _) = do
       v <- newTyMeta
       defineVar i' f v []
-    prepare _                   = malgoError $ "error(prepare):" <+> pPrint i
+    prepare _                   = errorDoc $ "error(prepare):" <+> pPrint i
     typingFunDec (FunDec i' f params retty body) = do
       paramTypes <- mapM (\case
                              (_, Just t) -> pure t
@@ -160,7 +160,7 @@ typingExpr (Let i fs e) = do
       let cs = tv :~ TyFun paramTypes retty : t :~ retty : cs1
       defineVar i' f tv cs
       return cs
-    typingFunDec x = malgoError $ "error(typingFunDec):" <+> pPrint x
+    typingFunDec x = errorDoc $ "error(typingFunDec):" <+> pPrint x
 typingExpr (If _ c t f) = do
   (cs1, ct) <- typingExpr c
   (cs2, tt) <- typingExpr t
