@@ -6,6 +6,8 @@
 {-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.Driver (parseOpt, compile) where
 
+import Language.Malgo.Pretty
+import           Language.Malgo.BackEnd.GenLIR
 import           Language.Malgo.BackEnd.LLVM
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
@@ -42,15 +44,16 @@ compile filename ast = M.runMalgo $ do
   opt <- asks maOption
   when (dumpParsed opt) $
     dump ast
-  transWithDump @Rename ast
+  mir <- transWithDump @Rename ast
     >>= transWithDump @Typing
     >>= transWithDump @TransToHIR
     >>= transWithDump @HIRLint
     >>= transWithDump @Closure
     >>= transWithDump @MIRLint
-    >>= trans @GenLLVM
-    >>= \llvmir ->
-          return $ L.defaultModule { L.moduleName = fromString filename
-                                   , L.moduleSourceFileName = fromString $ toString filename
-                                   , L.moduleDefinitions = llvmir
-                                   }
+  lir <- trans @GenLIR mir
+  liftIO $ dumpIO lir
+  llvmir <- trans @GenLLVM mir
+  return $ L.defaultModule { L.moduleName = fromString filename
+                           , L.moduleSourceFileName = fromString $ toString filename
+                           , L.moduleDefinitions = llvmir
+                           }

@@ -36,7 +36,7 @@ data Inst a = Var a
             | CallExt Text LType [a]
             | Alloca LType (Maybe a)
             | LoadC a [Int]
-            | Load a [a]
+            | Load a a
             | StoreC a [Int] a
             | Store a [a] a
             | Cast LType a
@@ -51,7 +51,7 @@ instance (HasLType a, PrettyVal a) => HasLType (Inst a) where
   ltypeOf (Call (ltypeOf -> Function t _) _) = t
   ltypeOf (CallExt _ t _) = t
   ltypeOf (Alloca t _) = Ptr t
-  ltypeOf (LoadC (ltypeOf -> Ptr t) _) = t
+  ltypeOf (LoadC x is) = accessType (ltypeOf x) is
   ltypeOf (Load (ltypeOf -> Ptr t) _) = t
   ltypeOf StoreC{} = Void
   ltypeOf Store{} = Void

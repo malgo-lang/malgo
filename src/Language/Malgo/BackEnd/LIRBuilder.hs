@@ -15,53 +15,55 @@ import           Language.Malgo.TypeRep.Type  as M
 import           Relude                       hiding (Type)
 import           Relude.Extra.Map             hiding (size)
 
-data ProgramEnv = ProgramEnv { -- defs        :: [L.Func (ID LType)]
-                             functionMap :: Map (ID Type) (ID LType)
-                             }
+newtype ProgramEnv = ProgramEnv { functionMap :: Map (ID Type) (ID LType)
+                                }
 
 data ExprEnv = ExprEnv { partialBlockInsts :: IORef [(ID LType, Inst (ID LType))]
                        , variableMap       :: Map (ID Type) (ID LType)
                        , nameHint          :: Text
                        , captures          :: Maybe (ID LType) }
 
-runGenProgram ::
-  Monad m
-  => a
-  -> ReaderT ProgramEnv m [L.Func a]
-  -> m (L.Program a)
+type GenProgram = ReaderT ProgramEnv MalgoM
+type GenExpr = ReaderT ExprEnv GenProgram
+
+runGenProgram :: a -> GenProgram [L.Func a] -> MalgoM (L.Program a)
 runGenProgram mainFunc m = do
   defs <- runReaderT m (ProgramEnv mempty)
   pure $ L.Program { L.functions = defs, mainFunc = mainFunc }
 
 runGenExpr ::
-  MonadIO m
-  => Map (ID Type) (ID LType)
+  Map (ID Type) (ID LType)
   -> Text
-  -> ReaderT ExprEnv m a
-  -> m (Block (ID LType))
+  -> GenExpr a
+  -> GenProgram (Block (ID LType))
 runGenExpr variableMap nameHint m = do
   psRef <- newIORef []
   _ <- runReaderT m (ExprEnv psRef variableMap nameHint Nothing)
   ps <- readIORef psRef
   pure $ Block { insts = reverse ps }
 
+addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
   ExprEnv { partialBlockInsts, nameHint } <- ask
   i <- newID (ltypeOf inst) nameHint
   modifyIORef partialBlockInsts (\s -> snoc s (i, inst))
   pure i
 
+findVar :: ID Type -> GenExpr (ID LType)
 findVar x = do
   ExprEnv { variableMap } <- ask
   case lookup x variableMap of
     Just x' -> pure x'
     Nothing -> error $ show $ "findVar " <+> pPrint x
 
+findFun :: ID Type -> GenProgram (ID LType)
 findFun x = do
   ProgramEnv { functionMap } <- ask
   case lookup x functionMap of
     Just x' -> pure x'
     Nothing -> error $ show $ "findFun " <+> pPrint x
+
+setHint x m = local (\s -> s { nameHint = x }) m
 
 alloca ty msize = addInst $ Alloca ty msize
 loadC ptr xs = addInst $ LoadC ptr xs
