@@ -17,14 +17,26 @@ import           Relude                       hiding (Op, Type)
 data Program a = Program { functions :: [Func a], mainFunc :: a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
+instance Pretty a => Pretty (Program a) where
+  pPrint Program{ functions, mainFunc } =
+    "program" <+> pPrint mainFunc
+    $$ vcat (map pPrint functions)
+
 data Func a = Func { name :: a, params :: [a], body :: Block a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+
+instance Pretty a => Pretty (Func a) where
+  pPrint Func{ name, params, body } =
+    "func" <+> pPrint name <> parens (sep $ punctuate "," $ map pPrint params) $$ nest 1 (pPrint body)
 
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
 newtype Block a = Block { insts :: [(a, Inst a)] }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+
+instance Pretty a => Pretty (Block a) where
+  pPrint (Block xs) = brackets $ vcat $ punctuate ";" $ map pPrint xs
 
 instance HasLType a => HasLType (Block a) where
   ltypeOf Block{ insts = [] }   = Void
@@ -44,6 +56,23 @@ data Inst a = Var a
             | BinOp Op a a
             | If a (Block a) (Block a)
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+
+instance Pretty a => Pretty (Inst a) where
+  pPrint (Var x) = pPrint x
+  pPrint (Constant c) = pPrint c
+  pPrint (Call f xs) = pPrint f <> parens (sep $ punctuate "," $ map pPrint xs)
+  pPrint (CallExt f t xs) = pPrint f <> "<" <> pPrint t <> ">" <> parens (sep $ punctuate "," $ map pPrint xs)
+  pPrint (Alloca t s) = "alloca" <+> pPrint t <+> pPrint s
+  pPrint (LoadC x is) = "loadc" <+> pPrint x <+> pPrint is
+  pPrint (Load x i) = "load" <+> pPrint x <+> pPrint i
+  pPrint (StoreC x is v) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
+  pPrint (Store x is v) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
+  pPrint (Cast t a) = "cast" <+> pPrint t <+> pPrint a
+  pPrint (Undef t) = "undef" <+> pPrint t
+  pPrint (BinOp op x y) = pPrint op <+> pPrint x <+> pPrint y
+  pPrint (If c t f) = "if" <+> pPrint c
+    $$ ("then:" <+> pPrint t)
+    $$ ("else:" <+> pPrint f)
 
 instance (HasLType a, PrettyVal a) => HasLType (Inst a) where
   ltypeOf (Var x) = ltypeOf x
@@ -71,6 +100,9 @@ data Constant = Bool Bool
               | String [Word8]
   deriving (Eq, Show, Read, Generic, PrettyVal)
 
+instance Pretty Constant where
+  pPrint = dumpDoc
+
 instance HasLType Constant where
   ltypeOf Bool{}    = Bit
   ltypeOf Int32{}   = I32
@@ -90,6 +122,9 @@ data Op = ADD  | SUB  | MUL  | SDIV | SREM | UDIV | UREM
         | FLT | FGT | FLE | FGE
         | AND | OR
   deriving (Eq, Show, Read, Generic, PrettyVal)
+
+instance Pretty Op where
+  pPrint = dumpDoc
 
 ltypeOfOp :: Op -> LType -> LType
 ltypeOfOp ADD I32  = I32

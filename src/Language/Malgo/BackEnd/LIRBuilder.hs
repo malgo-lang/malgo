@@ -46,7 +46,7 @@ addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
   ExprEnv { partialBlockInsts, nameHint } <- ask
   i <- newID (ltypeOf inst) nameHint
-  modifyIORef partialBlockInsts (\s -> snoc s (i, inst))
+  modifyIORef partialBlockInsts (\s -> (i, inst) : s)
   pure i
 
 findVar :: ID Type -> GenExpr (ID LType)

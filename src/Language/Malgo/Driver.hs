@@ -33,7 +33,8 @@ parseOpt = execParser $
           <*> switch (long "dump-knormal")
           <*> switch (long "dump-type-table")
           <*> switch (long "dump-mutrec")
-          <*> switch (long "dump-closure"))
+          <*> switch (long "dump-closure")
+          <*> switch (long "dump-lir"))
           <*> switch (long "debug-mode")
          <**> helper) (fullDesc
     <> progDesc "malgo"
@@ -50,8 +51,7 @@ compile filename ast = M.runMalgo $ do
     >>= transWithDump @HIRLint
     >>= transWithDump @Closure
     >>= transWithDump @MIRLint
-  lir <- trans @GenLIR mir
-  liftIO $ dumpIO lir
+  _ <- transWithDump @GenLIR mir
   llvmir <- trans @GenLLVM mir
   return $ L.defaultModule { L.moduleName = fromString filename
                            , L.moduleSourceFileName = fromString $ toString filename

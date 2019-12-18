@@ -33,6 +33,7 @@ data Opt = Opt
   , dumpTypeTable :: Bool
   , dumpMutRec    :: Bool
   , dumpClosure   :: Bool
+  , dumpLIR       :: Bool
   , isDebugMode   :: Bool
   } deriving (Eq, Show)
 

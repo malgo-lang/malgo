@@ -7,7 +7,6 @@ module Language.Malgo.TypeRep.LType where
 
 import           Language.Malgo.ID
 import           Language.Malgo.Pretty
-import           Language.Malgo.Pretty
 import           Relude                hiding (Type)
 import           Relude.Unsafe         ((!!))
 
@@ -23,6 +22,12 @@ data LType = Ptr LType
            | Function LType [LType]
            | Void
   deriving (Eq, Show, Read, Generic, PrettyVal)
+
+instance Pretty LType where
+  pPrint (Ptr t) = "ptr" <> parens (pPrint t)
+  pPrint (Struct xs) = braces (sep $ punctuate "," $ map pPrint xs)
+  pPrint (Function ret params) = parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
+  pPrint t = dumpDoc t
 
 pattern Boxed :: LType
 pattern Boxed = Ptr Void

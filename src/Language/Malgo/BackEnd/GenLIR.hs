@@ -18,16 +18,14 @@ import           Language.Malgo.IR.LIR             as L
 import           Language.Malgo.IR.MIR             as M
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType      as L
 import           Language.Malgo.TypeRep.Type       as M
 import           Relude                            hiding (Type)
-import           Relude.Extra.Map                  hiding (size)
 
 data GenLIR
 
 instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
-  isDump _ = False
+  isDump = dumpLIR
   trans M.Program{ functions, mainExpr } = do
     mainFuncId <- newID (Function I32 []) "main"
     funMap <- mconcat <$> mapM genFunMap functions
