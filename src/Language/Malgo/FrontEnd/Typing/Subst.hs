@@ -1,7 +1,7 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE TypeApplications  #-}
-{-# LANGUAGE TypeFamilies      #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.FrontEnd.Typing.Subst (Subst(..), Substitutable(..)) where
 
 import           Language.Malgo.TypeRep.Type
@@ -9,7 +9,7 @@ import           Relude                      hiding (Type)
 import           Relude.Extra.Map
 
 newtype Subst = Subst (Map TyVar Type)
-  deriving (Eq, Show)
+  deriving (Eq, Show, Substitutable, Monoid)
 
 instance StaticMap Subst where
   type Key Subst = TyVar
@@ -18,14 +18,8 @@ instance StaticMap Subst where
   lookup k (Subst s) = lookup k s
   member k (Subst s) = member k s
 
-compose :: Subst -> Subst -> Subst
-compose (Subst s1) (Subst s2) = Subst $ apply (Subst s1) s2 <> s1
-
 instance Semigroup Subst where
-  (<>) = compose
-
-instance Monoid Subst where
-  mempty = Subst mempty
+  Subst s1 <> Subst s2 = Subst $ apply (Subst s1) s2 <> s1
 
 class Substitutable a where
   apply :: Subst -> a -> a
@@ -35,12 +29,8 @@ instance Substitutable Type where
   apply s t@(TyMeta a) = lookupDefault t a s
   apply s (TyApp c ts) = TyApp c $ apply s ts
   ftv (TyMeta a)   = one a
-  ftv (TyApp _ ts) = foldr ((<>) . ftv) mempty ts
+  ftv (TyApp _ ts) = foldMap ftv ts
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
   apply = fmap . apply
-  ftv = foldr ((<>) . ftv) mempty
-
-instance Substitutable Subst where
-  apply s = apply s . coerce
-  ftv = ftv @(Map TyVar Type) . coerce
+  ftv = foldMap ftv
