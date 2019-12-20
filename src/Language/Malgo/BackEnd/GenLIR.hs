@@ -67,12 +67,12 @@ genFunction M.Func{ name, captures = Just caps, mutrecs, params, body } = do
   pure $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
   where
     genUnpackCaps capsId = do
-      capsId' <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-      fmap mconcat $ forM (zip [0..] caps) $ \(i, c) -> do
+      capsId' <- setHint "boxedCaps" $ cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
+      setHint "capture" $ fmap mconcat $ forM (zip [0..] caps) $ \(i, c) -> do
         cOpr <- loadC capsId' [0, i]
         pure (Map.fromList [(c, cOpr)])
     genCls capsId = fmap mconcat $ forM mutrecs $ \f -> do
-      clsId <- packClosure f capsId
+      clsId <- setHint (_idName f) $ packClosure f capsId
       pure (Map.fromList [(f, clsId)])
 
 genMainFunction :: ID LType -> Expr Type (ID Type) -> GenProgram (L.Func (ID LType))
@@ -112,8 +112,8 @@ genExpr (M.ArrayWrite arr ix val) = do
   undef (Ptr (Struct []))
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)
-  capPtr <- alloca capTy Nothing
-  forM_ (zip [0..] cs) $ \(i, c) -> do
+  capPtr <- setHint "captures" $ alloca capTy Nothing
+  setHint "capture" $ forM_ (zip [0..] cs) $ \(i, c) -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
   packClosure f =<< cast Boxed capPtr

@@ -35,7 +35,7 @@ instance Substitutable Type where
   apply s t@(TyMeta a) = lookupDefault t a s
   apply s (TyApp c ts) = TyApp c $ apply s ts
   ftv (TyMeta a)   = one a
-  ftv (TyApp _ ts) = ftv ts
+  ftv (TyApp _ ts) = foldr ((<>) . ftv) mempty ts
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
   apply = fmap . apply
