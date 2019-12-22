@@ -32,18 +32,16 @@ instance (HasLType a, Pretty a) => Pretty (Func a) where
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
-newtype Block a = Block { insts :: [(a, Inst a)] }
+data Block a = Block { insts :: [(a, Inst a)], value :: a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
 instance Pretty a => Pretty (Block a) where
-  pPrint (Block xs) = brackets $ vcat $ punctuate ";" $ map pPrint xs
+  pPrint Block{ insts, value } = brackets $ vcat (punctuate ";" $ map pPrint insts) $$ pPrint value
 
 instance HasLType a => HasLType (Block a) where
-  ltypeOf Block{ insts = [] }   = Void
-  ltypeOf Block{ insts = x:xs } = ltypeOf $ fst $ last (x :| xs)
+  ltypeOf Block{ value = x } = ltypeOf x
 
-data Inst a = Var a
-            | Constant Constant
+data Inst a = Constant Constant
             | Call a [a]
             | CallExt Text LType [a]
             | Alloca LType (Maybe a)
@@ -58,7 +56,6 @@ data Inst a = Var a
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
 instance Pretty a => Pretty (Inst a) where
-  pPrint (Var x) = pPrint x
   pPrint (Constant c) = pPrint c
   pPrint (Call f xs) = pPrint f <> parens (sep $ punctuate "," $ map pPrint xs)
   pPrint (CallExt f t xs) = pPrint f <> "<" <> pPrint t <> ">" <> parens (sep $ punctuate "," $ map pPrint xs)
@@ -75,7 +72,6 @@ instance Pretty a => Pretty (Inst a) where
     $$ ("else:" <+> pPrint f)
 
 instance (HasLType a, PrettyVal a) => HasLType (Inst a) where
-  ltypeOf (Var x) = ltypeOf x
   ltypeOf (Constant x) = ltypeOf x
   ltypeOf (Call (ltypeOf -> Function t _) _) = t
   ltypeOf (CallExt _ (ltypeOf -> Function t _) _) = t

@@ -126,17 +126,15 @@ genFunction Func{ name, params, body } =
     retty = convertType (ltypeOf body)
 
 genBlock :: Block (ID LType) -> GenExpr ()
-genBlock Block{ insts } = term =<< go insts
+genBlock Block{ insts, value } = go insts
   where
-    go [] = pure Nothing
-    go [(_, inst)] = Just <$> genInst inst
+    go [] = (term . Just) =<< findVar value
     go ((x, inst) : xs) = do
       opr <- genInst inst
       local (\st -> st { variableMap = insert x opr (variableMap st) })
         $ go xs
 
 genInst :: HasCallStack => Inst (ID LType) -> GenExpr Operand
-genInst (Var x) = findVar x
 genInst (Constant x) = genConstant x
 genInst (Call f xs) = do
   f' <- findVar f
@@ -146,7 +144,7 @@ genInst (CallExt f (Function r ps) xs) = do
   f' <- findExt f (map convertType ps) (convertType r)
   xs' <- mapM (fmap (,[]) . findVar) xs
   call f' xs'
-genInst (CallExt _ _ _) = error "extern symbol must have a function type"
+genInst CallExt{} = error "extern symbol must have a function type"
 genInst (Alloca ty Nothing) = do
   let size = sizeof (convertType ty)
   mallocBytes size (Just $ convertType ty)

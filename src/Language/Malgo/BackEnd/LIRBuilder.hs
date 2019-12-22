@@ -33,13 +33,13 @@ runGenProgram mainFunc m = do
 runGenExpr ::
   Map (ID Type) (ID LType)
   -> Text
-  -> GenExpr a
+  -> GenExpr (ID LType)
   -> GenProgram (Block (ID LType))
 runGenExpr variableMap nameHint m = do
   psRef <- newIORef []
-  _ <- runReaderT m (ExprEnv psRef variableMap nameHint Nothing)
+  value <- runReaderT m (ExprEnv psRef variableMap nameHint Nothing)
   ps <- readIORef psRef
-  pure $ Block { insts = reverse ps }
+  pure $ Block { insts = reverse ps, value = value }
 
 addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
@@ -64,9 +64,6 @@ findFun x = do
 
 setHint :: MonadReader ExprEnv m => Text -> m a -> m a
 setHint x = local (\s -> s { nameHint = x })
-
-var :: ID LType -> GenExpr (ID LType)
-var x = addInst $ Var x
 
 alloca :: LType -> Maybe (ID LType) -> GenExpr (ID LType)
 alloca ty msize = addInst $ Alloca ty msize
@@ -106,18 +103,18 @@ binop :: L.Op -> ID LType -> ID LType -> GenExpr (ID LType)
 binop op x y = addInst $ L.BinOp op x y
 
 branchIf :: ID LType
-              -> GenExpr a
-              -> GenExpr a
+              -> GenExpr (ID LType)
+              -> GenExpr (ID LType)
               -> GenExpr (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
   tBlockRef <- newIORef []
   fBlockRef <- newIORef []
-  _ <- local (\s -> s { partialBlockInsts = tBlockRef }) genWhenTrue
-  _ <- local (\s -> s { partialBlockInsts = fBlockRef }) genWhenFalse
+  tvalue <- local (\s -> s { partialBlockInsts = tBlockRef }) genWhenTrue
+  fvalue <- local (\s -> s { partialBlockInsts = fBlockRef }) genWhenFalse
   tBlock <- reverse <$> readIORef tBlockRef
   fBlock <- reverse <$> readIORef fBlockRef
 
-  addInst $ L.If c (Block tBlock) (Block fBlock)
+  addInst $ L.If c (Block tBlock tvalue) (Block fBlock fvalue)
 
 convertType :: HasCallStack => Type -> LType
 convertType (TyApp FunC (r:ps)) =

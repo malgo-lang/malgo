@@ -81,7 +81,7 @@ genMainFunction mainFuncId mainExpr = do
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
 genExpr :: Expr Type (ID Type) -> GenExpr (ID LType)
-genExpr (M.Var x)       = addInst =<< L.Var <$> findVar x
+genExpr (M.Var x)       = findVar x
 genExpr (M.Lit (Int x)) = addInst $ Constant $ Int64 $ fromInteger x
 genExpr (M.Lit (Float x)) = addInst $ Constant $ Float64 x
 genExpr (M.Lit (H.Bool True)) = addInst $ Constant $ L.Bool True
@@ -93,7 +93,7 @@ genExpr (M.Tuple xs) = do
   forM_ (zip [0..] xs) $ \(i, x) -> do
     val <- findVar x
     storeC tuplePtr [0, i] val
-  var tuplePtr
+  pure tuplePtr
 genExpr (M.TupleAccess t i) = do
   tuplePtr <- findVar t
   loadC tuplePtr [0, i]
@@ -165,5 +165,5 @@ packClosure f capsId = setHint "closure" $
       clsId <- alloca clsTy Nothing
       _ <- storeC clsId [0, 0] =<< lift (findFun f)
       _ <- storeC clsId [0, 1] capsId
-      var clsId
+      pure clsId
     _ -> error "packClosure"
