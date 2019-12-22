@@ -50,12 +50,12 @@ functionType isKnown ps r = Function
 
 genFunction :: M.Func Type (ID Type) -> GenProgram (L.Func (ID LType))
 genFunction M.Func{ name, captures = Nothing, params, body } = do
-  funcName <- newID (functionType True params body) (_idName name)
+  funcName <- findFun name
   funcParams <- mapM (\x -> newID (convertType (typeOf x)) (_idName x)) params
   bodyBlock <- runGenExpr (fromList (zip params funcParams)) "x" (genExpr body)
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func{ name, captures = Just caps, mutrecs, params, body } = do
-  funcName <- newID (functionType False params body) (_idName name)
+  funcName <- findFun name
   capsId <- newID Boxed "caps"
   funcParams <- mapM (\x -> newID (convertType (typeOf x)) (_idName x)) params
   bodyBlock <- runGenExpr (fromList (zip params funcParams)) "x" $ do
@@ -77,7 +77,7 @@ genFunction M.Func{ name, captures = Just caps, mutrecs, params, body } = do
 
 genMainFunction :: ID LType -> Expr Type (ID Type) -> GenProgram (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
-  body <- runGenExpr mempty "x" $ genExpr mainExpr
+  body <- runGenExpr mempty "x" $ genExpr mainExpr >> addInst (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
 genExpr :: Expr Type (ID Type) -> GenExpr (ID LType)
@@ -93,7 +93,7 @@ genExpr (M.Tuple xs) = do
   forM_ (zip [0..] xs) $ \(i, x) -> do
     val <- findVar x
     storeC tuplePtr [0, i] val
-  pure tuplePtr
+  var tuplePtr
 genExpr (M.TupleAccess t i) = do
   tuplePtr <- findVar t
   loadC tuplePtr [0, i]
@@ -138,10 +138,9 @@ genExpr (M.Let defs e) = do
 genExpr (M.If c t f) = do
   cOpr <- findVar c
   branchIf cOpr (genExpr t) (genExpr f)
-genExpr (M.Prim orig (TyFun _ ty) xs) = do
+genExpr (M.Prim orig (TyFun ps r) xs) = do
   argOprs <- mapM findVar xs
-  callExt orig (convertType ty) argOprs
-genExpr M.Prim{} = error "extern symbol must have a function type"
+  callExt orig (Function (convertType r) (map convertType ps)) argOprs
 genExpr (M.BinOp op x y) = do
   xOpr <- findVar x
   yOpr <- findVar y
@@ -165,5 +164,5 @@ packClosure f capsId = setHint "closure" $
       clsId <- alloca clsTy Nothing
       _ <- storeC clsId [0, 0] =<< lift (findFun f)
       _ <- storeC clsId [0, 1] capsId
-      pure clsId
+      var clsId
     _ -> error "packClosure"

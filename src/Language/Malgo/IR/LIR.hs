@@ -17,7 +17,7 @@ import           Relude                       hiding (Op, Type)
 data Program a = Program { functions :: [Func a], mainFunc :: a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
-instance Pretty a => Pretty (Program a) where
+instance (HasLType a, Pretty a) => Pretty (Program a) where
   pPrint Program{ functions, mainFunc } =
     "program" <+> pPrint mainFunc
     $$ vcat (map pPrint functions)
@@ -25,9 +25,9 @@ instance Pretty a => Pretty (Program a) where
 data Func a = Func { name :: a, params :: [a], body :: Block a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
-instance Pretty a => Pretty (Func a) where
+instance (HasLType a, Pretty a) => Pretty (Func a) where
   pPrint Func{ name, params, body } =
-    "func" <+> pPrint name <> parens (sep $ punctuate "," $ map pPrint params) $$ nest 1 (pPrint body)
+    "func" <+> pPrint name <> "<" <> pPrint (ltypeOf name) <> ">" <> parens (sep $ punctuate "," $ map pPrint params) $$ nest 1 (pPrint body)
 
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
@@ -78,12 +78,12 @@ instance (HasLType a, PrettyVal a) => HasLType (Inst a) where
   ltypeOf (Var x) = ltypeOf x
   ltypeOf (Constant x) = ltypeOf x
   ltypeOf (Call (ltypeOf -> Function t _) _) = t
-  ltypeOf (CallExt _ t _) = t
+  ltypeOf (CallExt _ (ltypeOf -> Function t _) _) = t
   ltypeOf (Alloca t _) = Ptr t
   ltypeOf (LoadC x is) = accessType (ltypeOf x) is
   ltypeOf (Load (ltypeOf -> Ptr t) _) = t
-  ltypeOf StoreC{} = Void
-  ltypeOf Store{} = Void
+  ltypeOf StoreC{} = Ptr (Struct [])
+  ltypeOf Store{} = Ptr (Struct [])
   ltypeOf (Cast t _) = t
   ltypeOf (Undef t) = t
   ltypeOf (BinOp op x _) = ltypeOfOp op (ltypeOf x)

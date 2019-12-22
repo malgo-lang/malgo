@@ -21,7 +21,7 @@ data LType = Ptr LType
            | Struct [LType]
            | Function LType [LType]
            | Void
-  deriving (Eq, Show, Read, Generic, PrettyVal)
+  deriving (Eq, Ord, Show, Read, Generic, PrettyVal)
 
 instance Pretty LType where
   pPrint (Ptr t) = "ptr" <> parens (pPrint t)
@@ -30,7 +30,7 @@ instance Pretty LType where
   pPrint t = dumpDoc t
 
 pattern Boxed :: LType
-pattern Boxed = Ptr Void
+pattern Boxed = Ptr U8
 
 class HasLType a where
   ltypeOf :: a -> LType

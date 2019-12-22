@@ -4,10 +4,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.BackEnd.LIRBuilder where
 
-import           Control.Lens                 (snoc)
+import           Control.Exception            (assert)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.LIR        as L
-import           Language.Malgo.IR.MIR        as M
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType as L
@@ -63,15 +62,26 @@ findFun x = do
     Just x' -> pure x'
     Nothing -> error $ show $ "findFun " <+> pPrint x
 
-setHint x m = local (\s -> s { nameHint = x }) m
+setHint x = local (\s -> s { nameHint = x })
 
+var x = addInst $ Var x
 alloca ty msize = addInst $ Alloca ty msize
 loadC ptr xs = addInst $ LoadC ptr xs
 load ptr xs = addInst $ Load ptr xs
 storeC ptr xs val = addInst $ StoreC ptr xs val
 store ptr xs val = addInst $ Store ptr xs val
-call f xs = addInst $ Call f xs
-callExt f retTy xs = addInst $ CallExt f retTy xs
+call :: HasCallStack => ID LType -> [ID LType] -> ReaderT ExprEnv GenProgram (ID LType)
+call f xs = do
+  case (ltypeOf f, map ltypeOf xs) of
+    (Function _ ps, as) -> assert (ps == as) (pure ())
+    _                   -> error "function must be typed as function"
+  addInst $ Call f xs
+callExt :: Text -> LType -> [ID LType] -> ReaderT ExprEnv GenProgram (ID LType)
+callExt f funTy xs = do
+  case (funTy, map ltypeOf xs) of
+    (Function _ ps, as) -> assert (ps == as) (pure ())
+    _                   -> error "external function must be typed as function"
+  addInst $ CallExt f funTy xs
 cast ty val = addInst $ Cast ty val
 undef ty = addInst $ Undef ty
 binop op x y = addInst $ L.BinOp op x y
@@ -80,8 +90,8 @@ branchIf c genWhenTrue genWhenFalse = do
   fBlockRef <- newIORef []
   _ <- local (\s -> s { partialBlockInsts = tBlockRef }) genWhenTrue
   _ <- local (\s -> s { partialBlockInsts = fBlockRef }) genWhenFalse
-  tBlock <- readIORef tBlockRef
-  fBlock <- readIORef fBlockRef
+  tBlock <- reverse <$> readIORef tBlockRef
+  fBlock <- reverse <$> readIORef fBlockRef
 
   addInst $ L.If c (Block tBlock) (Block fBlock)
 
