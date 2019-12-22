@@ -7,8 +7,7 @@
 module Language.Malgo.Driver (parseOpt, compile) where
 
 import           Language.Malgo.BackEnd.GenLIR
-import qualified Language.Malgo.BackEnd.GenLLVM       as New
-import           Language.Malgo.BackEnd.LLVM
+import           Language.Malgo.BackEnd.GenLLVM
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
 import qualified Language.Malgo.IR.Syntax             as Syntax
@@ -18,7 +17,6 @@ import           Language.Malgo.MiddleEnd.MIRLint
 import           Language.Malgo.MiddleEnd.TransToHIR
 import           Language.Malgo.Monad                 as M
 import           Language.Malgo.Pass
-import           Language.Malgo.Pretty
 import qualified LLVM.AST                             as L
 import           Options.Applicative
 import           Relude
@@ -53,8 +51,7 @@ compile filename ast = M.runMalgo $ do
     >>= transWithDump @Closure
     >>= transWithDump @MIRLint
   lir <- transWithDump @GenLIR mir
-  llvmir <- trans @New.GenLLVM lir
-  -- llvmir <- trans @GenLLVM mir
+  llvmir <- trans @GenLLVM lir
   return $ L.defaultModule { L.moduleName = fromString filename
                            , L.moduleSourceFileName = fromString $ toString filename
                            , L.moduleDefinitions = llvmir

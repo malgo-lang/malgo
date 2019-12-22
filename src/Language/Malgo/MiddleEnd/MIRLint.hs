@@ -10,7 +10,6 @@ module Language.Malgo.MiddleEnd.MIRLint (MIRLint) where
 
 import           Language.Malgo.ID
 import           Language.Malgo.IR.MIR
-import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type

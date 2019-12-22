@@ -62,14 +62,27 @@ findFun x = do
     Just x' -> pure x'
     Nothing -> error $ show $ "findFun " <+> pPrint x
 
+setHint :: MonadReader ExprEnv m => Text -> m a -> m a
 setHint x = local (\s -> s { nameHint = x })
 
+var :: ID LType -> GenExpr (ID LType)
 var x = addInst $ Var x
+
+alloca :: LType -> Maybe (ID LType) -> GenExpr (ID LType)
 alloca ty msize = addInst $ Alloca ty msize
+
+loadC :: ID LType -> [Int] -> GenExpr (ID LType)
 loadC ptr xs = addInst $ LoadC ptr xs
+
+load :: ID LType -> ID LType -> GenExpr (ID LType)
 load ptr xs = addInst $ Load ptr xs
+
+storeC :: ID LType -> [Int] -> ID LType -> GenExpr (ID LType)
 storeC ptr xs val = addInst $ StoreC ptr xs val
+
+store :: ID LType -> [ID LType] -> ID LType -> GenExpr (ID LType)
 store ptr xs val = addInst $ Store ptr xs val
+
 call :: HasCallStack => ID LType -> [ID LType] -> ReaderT ExprEnv GenProgram (ID LType)
 call f xs = do
   case (ltypeOf f, map ltypeOf xs) of
@@ -82,9 +95,20 @@ callExt f funTy xs = do
     (Function _ ps, as) -> assert (ps == as) (pure ())
     _                   -> error "external function must be typed as function"
   addInst $ CallExt f funTy xs
+
+cast :: LType -> ID LType -> GenExpr (ID LType)
 cast ty val = addInst $ Cast ty val
+
+undef :: LType -> GenExpr (ID LType)
 undef ty = addInst $ Undef ty
+
+binop :: L.Op -> ID LType -> ID LType -> GenExpr (ID LType)
 binop op x y = addInst $ L.BinOp op x y
+
+branchIf :: ID LType
+              -> GenExpr a
+              -> GenExpr a
+              -> GenExpr (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
   tBlockRef <- newIORef []
   fBlockRef <- newIORef []
