@@ -1,7 +1,6 @@
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
@@ -44,7 +43,6 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
         ret (int32 0)
 
 data GenState = GenState { variableMap :: Map (ID LType) Operand
-                         , terminator  :: Maybe Operand -> GenExpr ()
                          , prims       :: IORef (Map Text Operand)
                          }
 
@@ -55,9 +53,6 @@ dumpLLVM :: MonadIO m => ModuleBuilderT (ReaderT GenState m) a -> m [LLVM.AST.De
 dumpLLVM m = do
   p <- newIORef mempty
   let genState = GenState { variableMap = mempty
-                          , terminator = \case
-                              Just x -> ret x
-                              Nothing -> retVoid
                           , prims = p
                           }
   usingReaderT genState $ execModuleBuilderT emptyModuleBuilder m
@@ -92,11 +87,6 @@ findExt name ps r = do
       modifyIORef prims (Map.insert name opr)
       pure opr
 
-term :: Maybe Operand -> GenExpr ()
-term o = do
-  t <- asks terminator
-  t o
-
 mallocBytes :: Operand -> Maybe Type -> GenExpr Operand
 mallocBytes bytesOpr maybeType = do
   gcMalloc <- findExt "GC_malloc" [i64] (ptr i8)
@@ -119,16 +109,16 @@ genFunction :: Func (ID LType) -> GenDec ()
 genFunction Func{ name, params, body } =
   void $ function funcName llvmParams retty $ \args ->
     local (\st -> st { variableMap = fromList (zip params args) <> variableMap st })
-    $ genBlock body
+    $ genBlock body ret
   where
     funcName = fromString $ show $ pPrint name
     llvmParams = map (\x -> (convertType (_idMeta x), NoParameterName)) params
     retty = convertType (ltypeOf body)
 
-genBlock :: Block (ID LType) -> GenExpr ()
-genBlock Block{ insts, value } = go insts
+genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a
+genBlock Block{ insts, value } term = go insts
   where
-    go [] = (term . Just) =<< findVar value
+    go [] = term =<< findVar value
     go ((x, inst) : xs) = do
       opr <- genInst inst
       local (\st -> st { variableMap = insert x opr (variableMap st) })
@@ -189,9 +179,8 @@ genInst (If cond thenBlock elseBlock) = do
   elseLabel <- freshName "else"
   endLabel <- freshName "end"
   condBr cOpr thenLabel elseLabel
-  local (\st -> st { terminator = \case { Just o -> store result 0 o >> br endLabel; Nothing -> br endLabel }} ) $ do
-    emitBlockStart thenLabel; genBlock thenBlock
-    emitBlockStart elseLabel; genBlock elseBlock
+  emitBlockStart thenLabel; genBlock thenBlock (\o -> store result 0 o >> br endLabel)
+  emitBlockStart elseLabel; genBlock elseBlock (\o -> store result 0 o >> br endLabel)
   emitBlockStart endLabel
   load result 0
 
