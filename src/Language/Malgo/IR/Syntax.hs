@@ -157,27 +157,27 @@ instance Pretty a => Pretty (Decl a) where
 
 instance HasType a => HasType (Expr a) where
     typeOf (Var _ name) = typeOf name
-    typeOf (Int _ _) = TyInt
-    typeOf (Float _ _) = TyFloat
-    typeOf (Bool _ _) = TyBool
-    typeOf (Char _ _) = TyChar
-    typeOf (String _ _) = TyString
-    typeOf (Tuple _ xs) = TyTuple (map typeOf xs)
+    typeOf (Int _ _) = TyApp IntC []
+    typeOf (Float _ _) = TyApp FloatC []
+    typeOf (Bool _ _) = TyApp BoolC []
+    typeOf (Char _ _) = TyApp CharC []
+    typeOf (String _ _) = TyApp StringC []
+    typeOf (Tuple _ xs) = TyApp TupleC (map typeOf xs)
     typeOf (TupleAccess _ e i) =
       case typeOf e of
-        TyTuple xs -> xs !! i
+        TyApp TupleC xs -> xs !! i
         _          -> error "(typeOf e) should match (TyTuple xs)"
-    typeOf (MakeArray _ t _) = TyArray t
+    typeOf (MakeArray _ t _) = TyApp ArrayC [t]
     typeOf (ArrayRead _ arr _) =
       case typeOf arr of
-        TyArray t -> t
+        TyApp ArrayC [t] -> t
         _         -> error "(typeof arr) should match (TyArray xs)"
-    typeOf ArrayWrite{} = TyTuple []
-    typeOf (Unit _) = TyTuple []
-    typeOf (Fn _ params body) = TyFun (map (typeOf . fst) params) (typeOf body)
+    typeOf ArrayWrite{} = TyApp TupleC []
+    typeOf (Unit _) = TyApp TupleC []
+    typeOf (Fn _ params body) = TyApp FunC $ typeOf body : map (typeOf . fst) params
     typeOf (Call _ fn _) =
         case typeOf fn of
-            (TyFun _ ty) -> ty
+            (TyApp FunC (ret:_)) -> ret
             _            -> error "(typeOf fn) should match (TyFun _ ty)"
     typeOf (Seq _ _ e) = typeOf e
     typeOf (Let _ _ e) = typeOf e
@@ -187,39 +187,39 @@ instance HasType a => HasType (Expr a) where
             (_, _, ty) -> ty
 
 typeOfOp :: Info -> Op -> Type -> (Type, Type, Type)
-typeOfOp _ Add _ = (TyInt, TyInt, TyInt)
-typeOfOp _ Sub _ = (TyInt, TyInt, TyInt)
-typeOfOp _ Mul _ = (TyInt, TyInt, TyInt)
-typeOfOp _ Div _ = (TyInt, TyInt, TyInt)
-typeOfOp _ FAdd _ = (TyFloat, TyFloat, TyFloat)
-typeOfOp _ FSub _ = (TyFloat, TyFloat, TyFloat)
-typeOfOp _ FMul _ = (TyFloat, TyFloat, TyFloat)
-typeOfOp _ FDiv _ = (TyFloat, TyFloat, TyFloat)
-typeOfOp _ Mod _ = (TyInt, TyInt, TyInt)
+typeOfOp _ Add _ = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+typeOfOp _ Sub _ = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+typeOfOp _ Mul _ = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+typeOfOp _ Div _ = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+typeOfOp _ FAdd _ = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
+typeOfOp _ FSub _ = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
+typeOfOp _ FMul _ = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
+typeOfOp _ FDiv _ = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
+typeOfOp _ Mod _ = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
 typeOfOp i Eq ty =
     if comparable ty
-        then (ty, ty, TyBool)
+        then (ty, ty, TyApp BoolC [])
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Neq ty =
     if comparable ty
-        then (ty, ty, TyBool)
+        then (ty, ty, TyApp BoolC [])
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Lt ty =
     if comparable ty
-        then (ty, ty, TyBool)
+        then (ty, ty, TyApp BoolC [])
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Gt ty =
     if comparable ty
-        then (ty, ty, TyBool)
+        then (ty, ty, TyApp BoolC [])
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Le ty =
     if comparable ty
-        then (ty, ty, TyBool)
+        then (ty, ty, TyApp BoolC [])
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
 typeOfOp i Ge ty =
     if comparable ty
-        then (ty, ty, TyBool)
+        then (ty, ty, TyApp BoolC [])
         else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
-typeOfOp _ And _ = (TyBool, TyBool, TyBool)
-typeOfOp _ Or _ = (TyBool, TyBool, TyBool)
+typeOfOp _ And _ = (TyApp BoolC [], TyApp BoolC [], TyApp BoolC [])
+typeOfOp _ Or _ = (TyApp BoolC [], TyApp BoolC [], TyApp BoolC [])
 

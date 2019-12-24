@@ -87,54 +87,54 @@ instance FreeVars (Expr t) where
 instance (HasType t, HasType a) => HasType (Expr t a) where
   typeOf (Var x) = typeOf x
   typeOf (Lit x) = typeOf x
-  typeOf (Tuple xs) = TyTuple $ map typeOf xs
+  typeOf (Tuple xs) = TyApp TupleC $ map typeOf xs
   typeOf (TupleAccess x i) =
     case typeOf x of
-      TyTuple xs -> xs !! i
+      TyApp TupleC xs -> xs !! i
       _          -> error "(typeOf e) should match (TyTuple xs)"
-  typeOf (MakeArray t _) = TyArray $ typeOf t
+  typeOf (MakeArray t _) = TyApp ArrayC [typeOf t]
   typeOf (ArrayRead arr _) =
     case typeOf arr of
-      TyArray t -> t
+      TyApp ArrayC [t] -> t
       _         -> error "(typeOf arr) should match (TyArray xs)"
-  typeOf ArrayWrite{} = TyTuple []
+  typeOf ArrayWrite{} = TyApp TupleC []
   typeOf (Call fn _) =
     case typeOf fn of
-      (TyFun _ ty) -> ty
+      TyApp FunC (ret:_) -> ret
       _            -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (Let _ _ e) = typeOf e
   typeOf (LetRec _ e) = typeOf e
   typeOf (If _ x _) = typeOf x
   typeOf (Prim _ ty _) =
     case typeOf ty of
-      (TyFun _ ret) -> ret
+      TyApp FunC (ret:_) -> ret
       _             -> error "(typeOf ty) should match (TyFun _ ret)"
   typeOf (BinOp op _ _) =
     case op of
-      Add  -> TyInt
-      Sub  -> TyInt
-      Mul  -> TyInt
-      Div  -> TyInt
-      Mod  -> TyInt
-      FAdd -> TyFloat
-      FSub -> TyFloat
-      FMul -> TyFloat
-      FDiv -> TyFloat
-      Eq   -> TyBool
-      Neq  -> TyBool
-      Lt   -> TyBool
-      Gt   -> TyBool
-      Le   -> TyBool
-      Ge   -> TyBool
-      And  -> TyBool
-      Or   -> TyBool
+      Add  -> TyApp IntC []
+      Sub  -> TyApp IntC []
+      Mul  -> TyApp IntC []
+      Div  -> TyApp IntC []
+      Mod  -> TyApp IntC []
+      FAdd -> TyApp FloatC []
+      FSub -> TyApp FloatC []
+      FMul -> TyApp FloatC []
+      FDiv -> TyApp FloatC []
+      Eq   -> TyApp BoolC []
+      Neq  -> TyApp BoolC []
+      Lt   -> TyApp BoolC []
+      Gt   -> TyApp BoolC []
+      Le   -> TyApp BoolC []
+      Ge   -> TyApp BoolC []
+      And  -> TyApp BoolC []
+      Or   -> TyApp BoolC []
 
 instance HasType Lit where
-  typeOf Int{}    = TyInt
-  typeOf Float{}  = TyFloat
-  typeOf Bool{}   = TyBool
-  typeOf Char{}   = TyChar
-  typeOf String{} = TyString
+  typeOf Int{}    = TyApp IntC []
+  typeOf Float{}  = TyApp FloatC []
+  typeOf Bool{}   = TyApp BoolC []
+  typeOf Char{}   = TyApp CharC []
+  typeOf String{} = TyApp StringC [] 
 
 instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (Var x) = pPrint x

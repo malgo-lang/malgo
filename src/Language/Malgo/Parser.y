@@ -177,17 +177,17 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
 args : args ',' exp { $3 : $1 }
      | exp { [$1] }
 
-Type : Int { TyInt }
-	 | Float { TyFloat }
-	 | Bool { TyBool }
-	 | Char { TyChar }
-	 | String { TyString }
-     | Type '->' Type { TyFun [$1] $3 }
-     | '{' '}' { TyTuple [] }
-     | '{' Types '}' { TyTuple (reverse $2) }
-	 | '(' ')' '->' Type { TyFun [] $4 }
-     | '(' Types ')' '->' Type { TyFun (reverse $2) $5 }
-     | '[' Type ']' { TyArray $2 }
+Type : Int { TyApp IntC [] }
+	 | Float { TyApp FloatC [] }
+	 | Bool { TyApp BoolC [] }
+	 | Char { TyApp CharC [] }
+	 | String { TyApp StringC [] }
+     | Type '->' Type { TyApp FunC [$3, $1] }
+     | '{' '}' { TyApp TupleC [] }
+     | '{' Types '}' { TyApp TupleC (reverse $2) }
+	 | '(' ')' '->' Type { TyApp FunC [$4] }
+     | '(' Types ')' '->' Type { TyApp FunC ($5 : reverse $2) }
+     | '[' Type ']' { TyApp ArrayC [$2] }
 
 Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }

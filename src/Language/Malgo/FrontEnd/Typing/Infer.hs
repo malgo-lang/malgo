@@ -30,7 +30,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     mapM (updateID env) e
 
 defaulting :: Substitutable a => a -> a
-defaulting t = apply (Subst $ fromList $ zip (toList $ ftv t) (repeat TyInt)) t
+defaulting t = apply (Subst $ fromList $ zip (toList $ ftv t) (repeat $ TyApp IntC [])) t
 
 
 type Env = IDMap () (ID Type)
@@ -85,15 +85,15 @@ typingExpr (Var i x) = do
   case lookup x env of
     Nothing -> throw i $ "unbound variable:" <+> pPrint x $+$ "Env:" <+> pPrint (toList env)
     Just y  -> return ([], idMeta y)
-typingExpr Int{} = return ([], TyInt)
-typingExpr Float{} = return ([], TyFloat)
-typingExpr Bool{} = return ([], TyBool)
-typingExpr Char{} = return ([], TyChar)
-typingExpr String{} = return ([], TyString)
-typingExpr Unit{} = return ([], TyTuple [])
+typingExpr Int{} = return ([], TyApp IntC [])
+typingExpr Float{} = return ([], TyApp FloatC [])
+typingExpr Bool{} = return ([], TyApp BoolC [])
+typingExpr Char{} = return ([], TyApp CharC [])
+typingExpr String{} = return ([], TyApp StringC [])
+typingExpr Unit{} = return ([], TyApp TupleC [])
 typingExpr (Tuple _ xs) = do
   (cs, ts) <- first mconcat <$> mapAndUnzipM typingExpr xs
-  return (cs, TyTuple ts)
+  return (cs, TyApp TupleC ts)
 typingExpr (TupleAccess _ e _) = do
   -- FIXME: 正しく型付けする
   (cs, _) <- typingExpr e
@@ -101,28 +101,28 @@ typingExpr (TupleAccess _ e _) = do
   return (cs, t)
 typingExpr (MakeArray _ ty sizeNode) = do
   (cs, sizeTy) <- typingExpr sizeNode
-  return (TyInt :~ sizeTy : cs, TyArray ty)
+  return (TyApp IntC [] :~ sizeTy : cs, TyApp ArrayC [ty])
 typingExpr (ArrayRead _ arr _) = do
   (cs, arrTy) <- typingExpr arr
   resultTy <- newTyMeta
-  return (TyArray resultTy :~ arrTy : cs, resultTy)
+  return (TyApp ArrayC [resultTy] :~ arrTy : cs, resultTy)
 typingExpr (ArrayWrite _ arr ix val) = do
   (cs1, arrTy) <- typingExpr arr
   (cs2, ixTy) <- typingExpr ix
   (cs3, valTy) <- typingExpr val
-  return (ixTy :~ TyInt : arrTy :~ TyArray valTy : cs3 <> cs2 <> cs1, TyTuple [])
+  return (ixTy :~ TyApp IntC [] : arrTy :~ TyApp ArrayC [valTy] : cs3 <> cs2 <> cs1, TyApp TupleC [])
 typingExpr (Call _ fn args) = do
   (cs1, fnTy) <- typingExpr fn
   (cs2, argTypes) <- first mconcat <$> mapAndUnzipM typingExpr args
   retTy <- newTyMeta
-  return (TyFun argTypes retTy :~ fnTy : cs1 <> cs2, retTy)
+  return (TyApp FunC (retTy : argTypes) :~ fnTy : cs1 <> cs2, retTy)
 typingExpr (Fn i params body) = do
   paramTypes <- mapM (\case
                          (_, Just t) -> pure t
                          (_, Nothing) -> newTyMeta) params
   mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
   (cs, t) <- typingExpr body
-  return (cs, TyFun paramTypes t)
+  return (cs, TyApp FunC (t : paramTypes))
 typingExpr (Seq _ e1 e2) = do
   (cs1, _) <- typingExpr e1
   (cs2, t) <- typingExpr e2
@@ -157,7 +157,7 @@ typingExpr (Let i fs e) = do
       mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
       (cs1, t) <- typingExpr body
       tv <- lookupVar f
-      let cs = tv :~ TyFun paramTypes retty : t :~ retty : cs1
+      let cs = tv :~ TyApp FunC (retty : paramTypes) : t :~ retty : cs1
       defineVar i' f tv cs
       return cs
     typingFunDec x = errorDoc $ "error(typingFunDec):" <+> pPrint x
@@ -165,28 +165,28 @@ typingExpr (If _ c t f) = do
   (cs1, ct) <- typingExpr c
   (cs2, tt) <- typingExpr t
   (cs3, ft) <- typingExpr f
-  return (ct :~ TyBool : tt :~ ft : cs1 <> cs2 <> cs3, ft)
+  return (ct :~ TyApp BoolC [] : tt :~ ft : cs1 <> cs2 <> cs3, ft)
 typingExpr (BinOp _ op x y) = do
   opType <- typingOp op
   (cs1, xt) <- typingExpr x
   (cs2, yt) <- typingExpr y
   resultType <- newTyMeta
-  return (opType :~ TyFun [xt, yt] resultType : cs1 <> cs2, resultType)
+  return (opType :~ TyApp FunC [resultType, xt, yt] : cs1 <> cs2, resultType)
   where
-    typingOp Add  = pure $ TyFun [TyInt, TyInt] TyInt
-    typingOp Sub  = pure $ TyFun [TyInt, TyInt] TyInt
-    typingOp Mul  = pure $ TyFun [TyInt, TyInt] TyInt
-    typingOp Div  = pure $ TyFun [TyInt, TyInt] TyInt
-    typingOp Mod  = pure $ TyFun [TyInt, TyInt] TyInt
-    typingOp FAdd = pure $ TyFun [TyFloat, TyFloat] TyFloat
-    typingOp FSub = pure $ TyFun [TyFloat, TyFloat] TyFloat
-    typingOp FMul = pure $ TyFun [TyFloat, TyFloat] TyFloat
-    typingOp FDiv = pure $ TyFun [TyFloat, TyFloat] TyFloat
-    typingOp Eq   = newTyMeta >>= \a -> pure $ TyFun [a, a] TyBool
-    typingOp Neq  = newTyMeta >>= \a -> pure $ TyFun [a, a] TyBool
-    typingOp Lt   = newTyMeta >>= \a -> pure $ TyFun [a, a] TyBool
-    typingOp Gt   = newTyMeta >>= \a -> pure $ TyFun [a, a] TyBool
-    typingOp Le   = newTyMeta >>= \a -> pure $ TyFun [a, a] TyBool
-    typingOp Ge   = newTyMeta >>= \a -> pure $ TyFun [a, a] TyBool
-    typingOp And  = pure $ TyFun [TyBool, TyBool] TyBool
-    typingOp Or   = pure $ TyFun [TyBool, TyBool] TyBool
+    typingOp Add  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
+    typingOp Sub  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
+    typingOp Mul  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
+    typingOp Div  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
+    typingOp Mod  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
+    typingOp FAdd = pure $ TyApp FunC [TyApp FloatC [], TyApp FloatC [], TyApp FloatC []]
+    typingOp FSub = pure $ TyApp FunC [TyApp FloatC [], TyApp FloatC [], TyApp FloatC []]
+    typingOp FMul = pure $ TyApp FunC [TyApp FloatC [], TyApp FloatC [], TyApp FloatC []]
+    typingOp FDiv = pure $ TyApp FunC [TyApp FloatC [], TyApp FloatC [], TyApp FloatC []]
+    typingOp Eq   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
+    typingOp Neq  = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
+    typingOp Lt   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
+    typingOp Gt   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
+    typingOp Le   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
+    typingOp Ge   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
+    typingOp And  = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
+    typingOp Or   = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]

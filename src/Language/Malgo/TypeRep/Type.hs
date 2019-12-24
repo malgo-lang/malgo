@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternSynonyms   #-}
 module Language.Malgo.TypeRep.Type where
 
 import           Language.Malgo.Pretty
@@ -39,22 +38,9 @@ class HasType a where
 instance HasType Type where
   typeOf = id
 
-pattern TyInt, TyFloat, TyBool, TyChar, TyString :: Type
-pattern TyTuple :: [Type] -> Type
-pattern TyArray :: Type -> Type
-pattern TyFun :: [Type] -> Type -> Type
-pattern TyInt = TyApp IntC []
-pattern TyFloat = TyApp FloatC []
-pattern TyBool = TyApp BoolC []
-pattern TyChar = TyApp CharC []
-pattern TyString = TyApp StringC []
-pattern TyTuple xs = TyApp TupleC xs
-pattern TyArray x = TyApp ArrayC [x]
-pattern TyFun ps r = TyApp FunC (r:ps)
-
 comparable :: Type -> Bool
-comparable TyInt   = True
-comparable TyFloat = True
-comparable TyBool  = True
-comparable TyChar  = True
+comparable (TyApp IntC []) = True
+comparable (TyApp FloatC []) = True
+comparable (TyApp BoolC []) = True
+comparable (TyApp CharC []) = True
 comparable _       = False

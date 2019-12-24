@@ -70,7 +70,7 @@ transToHIR (S.Let info decs@(S.FunDec{}:_) body) = do
     transFunDec _ = error "unreachable"
 transToHIR (S.Let info (S.ExDec _ n _ orig:ds) body) =
   case typeOf n of
-    TyFun ps _ -> do
+    TyApp FunC (_:ps) -> do
       params <- mapM (newTmp "x") ps
       LetRec [Def{ name = n, params = params, expr = Prim orig (typeOf n) params}] <$> transToHIR (S.Let info ds body)
     _ -> error "external variable is not supported"

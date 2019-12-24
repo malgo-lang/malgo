@@ -39,7 +39,7 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
       pure (mf : fs)
    where
     genFunMap M.Func { name, captures } = case typeOf name of
-      TyFun ps r -> do
+      TyApp FunC (r:ps) -> do
         newName <- newID (functionType (isNothing captures) ps r) (idName name)
         pure $ one (name, newName)
       _ -> error "genFunMap"
@@ -48,7 +48,7 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
       | isKnown = Function (convertType $ typeOf r)
                            (map (convertType . typeOf) ps)
       | otherwise = Function (convertType $ typeOf r)
-                             (Boxed : map (convertType . typeOf) ps)
+                             (Ptr U8 : map (convertType . typeOf) ps)
 
 newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
 
@@ -155,7 +155,7 @@ branchIf c genWhenTrue genWhenFalse = do
 
 convertType :: HasCallStack => Type -> LType
 convertType (TyApp FunC (r : ps)) =
-  Ptr $ Struct [Function (convertType r) (Boxed : map convertType ps), Boxed]
+  Ptr $ Struct [Function (convertType r) (Ptr U8 : map convertType ps), Ptr U8]
 convertType (TyApp IntC    [] ) = I64
 convertType (TyApp FloatC  [] ) = F64
 convertType (TyApp BoolC   [] ) = Bit
@@ -176,7 +176,7 @@ genFunction M.Func { name, captures = Nothing, params, body } = do
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName   <- findFun name
-  capsId     <- newID Boxed "caps"
+  capsId     <- newID (Ptr U8) "caps"
   funcParams <- mapM (\x -> newID (convertType (typeOf x)) (idName x)) params
   bodyBlock  <-
     runGenExpr (foldr (uncurry insert) mempty (zip params funcParams)) "x" $ do
@@ -247,7 +247,7 @@ genExpr (M.MakeClosure f cs) = do
   setHint "capture" $ forM_ (zip [0 ..] cs) $ \(i, c) -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
-  packClosure f =<< cast Boxed capPtr
+  packClosure f =<< cast (Ptr U8) capPtr
 genExpr (M.CallDirect f args) = do
   funOpr  <- lift $ findFun f
   argOprs <- mapM findVar args
@@ -270,7 +270,7 @@ genExpr (M.Let defs e) = do
 genExpr (M.If c t f) = do
   cOpr <- findVar c
   branchIf cOpr (genExpr t) (genExpr f)
-genExpr (M.Prim orig (TyFun ps r) xs) = do
+genExpr (M.Prim orig (TyApp FunC (r:ps)) xs) = do
   argOprs <- mapM findVar xs
   callExt orig (Function (convertType r) (map convertType ps)) argOprs
 genExpr M.Prim{}         = error "external variable is not supported"

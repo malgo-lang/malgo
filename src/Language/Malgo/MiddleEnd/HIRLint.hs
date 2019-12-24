@@ -48,7 +48,7 @@ lintExpr e@(Call f xs) = do
     argtys = map typeOf xs
     getParamtys =
       case fty of
-        TyFun ps _ -> pure ps
+        TyApp FunC (_:ps) -> pure ps
         t -> errorDoc $ pPrint t <+> ("is not callable: " <> parens (pPrint e))
 lintExpr (Let name val body) = do
   notDefined name
@@ -61,7 +61,7 @@ lintExpr (LetRec fundecs body) =
     mapM_ lintFunDec fundecs
     lintExpr body
 lintExpr (If c t f) = do
-  match c TyBool
+  match c $ TyApp BoolC []
   _ <- lintExpr t
   lintExpr f
 lintExpr e = pure $ typeOf e

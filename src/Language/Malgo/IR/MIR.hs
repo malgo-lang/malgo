@@ -15,7 +15,6 @@ import           Language.Malgo.TypeRep.Type
 import           Relude                            hiding (Op, Type)
 import           Relude.Unsafe                     ((!!))
 
-
 data Program t a = Program { functions :: [Func t a], mainExpr :: Expr t a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
@@ -120,41 +119,41 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
 instance (HasType t, HasType a) => HasType (Expr t a) where
   typeOf (Var x) = typeOf x
   typeOf (Lit x) = typeOf x
-  typeOf (Tuple xs) = TyTuple $ map typeOf xs
+  typeOf (Tuple xs) = TyApp TupleC $ map typeOf xs
   typeOf (TupleAccess x i) =
     case typeOf x of
-      TyTuple xs -> xs !! i
+      TyApp TupleC xs -> xs !! i
       _          -> error "(typeOf e) should match (TyTuple xs)"
-  typeOf (MakeArray ty _) = TyArray $ typeOf ty
+  typeOf (MakeArray ty _) = TyApp ArrayC [typeOf ty]
   typeOf (ArrayRead arr _) =
     case typeOf arr of
-      TyArray ty -> ty
+      TyApp ArrayC [ty] -> ty
       _          -> error "(typeOf arr) should match (TyArray xs)"
 
-  typeOf ArrayWrite{} = TyTuple []
+  typeOf ArrayWrite{} = TyApp TupleC []
   typeOf (CallDirect fn _) =
     case typeOf fn of
-      (TyFun _ ty) -> ty
+      TyApp FunC (ret:_) -> ret
       _            -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (CallWithCaptures fn _) =
     case typeOf fn of
-      (TyFun _ ty) -> ty
+      TyApp FunC (ret:_) -> ret
       _            -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (CallClosure fn _) =
     case typeOf fn of
-      (TyFun _ ty) -> ty
+      TyApp FunC (ret:_) -> ret
       _            -> error "(typeOf fn) should match (TyFun _ ty)"
-  typeOf (MakeClosure fn _) = TyTuple [typeOf fn, TyString]
+  typeOf (MakeClosure fn _) = TyApp TupleC [typeOf fn, TyApp StringC []]
   typeOf (Let _ e) = typeOf e
   typeOf (If _ t _) = typeOf t
   typeOf (Prim _ ty _) =
     case typeOf ty of
-      TyFun _ ret -> ret
+      TyApp FunC (ret:_) -> ret
       _           -> error "(typeOf ty) should match (TyFun _ ret)"
   typeOf (BinOp op _ _) =
     case op of
-      Add -> TyInt; Sub -> TyInt; Mul -> TyInt; Div -> TyInt;
-      Mod -> TyInt; FAdd -> TyFloat; FSub -> TyFloat;
-      FMul -> TyFloat; FDiv -> TyFloat; Eq -> TyBool;
-      Neq -> TyBool; Lt -> TyBool; Gt -> TyBool; Le -> TyBool;
-      Ge -> TyBool; And -> TyBool; Or -> TyBool
+      Add -> TyApp IntC []; Sub -> TyApp IntC []; Mul -> TyApp IntC []; Div -> TyApp IntC [];
+      Mod -> TyApp IntC []; FAdd -> TyApp FloatC []; FSub -> TyApp FloatC [];
+      FMul -> TyApp FloatC []; FDiv -> TyApp FloatC []; Eq -> TyApp BoolC [];
+      Neq -> TyApp BoolC []; Lt -> TyApp BoolC []; Gt -> TyApp BoolC []; Le -> TyApp BoolC [];
+      Ge -> TyApp BoolC []; And -> TyApp BoolC []; Or -> TyApp BoolC []

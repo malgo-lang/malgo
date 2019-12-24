@@ -2,7 +2,6 @@
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternSynonyms   #-}
 module Language.Malgo.TypeRep.LType where
 
 import           Language.Malgo.ID
@@ -28,9 +27,6 @@ instance Pretty LType where
   pPrint (Struct xs) = braces (sep $ punctuate "," $ map pPrint xs)
   pPrint (Function ret params) = parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
   pPrint t = text $ toString $ pShow t
-
-pattern Boxed :: LType
-pattern Boxed = Ptr U8
 
 class HasLType a where
   ltypeOf :: a -> LType
