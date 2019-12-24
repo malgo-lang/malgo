@@ -33,9 +33,6 @@ data ID a = ID { idName :: Text, idUniq :: Int, idMeta :: a }
 instance Eq (ID a) where
   x == y = idUniq x == idUniq y
 
-ignore :: a -> b -> b
-ignore = flip const
-
 instance Pretty a => Pretty (ID a) where
   pPrint (ID n u _) = pPrint n <> "." <> pPrint u
 
