@@ -24,8 +24,7 @@ import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType  as L
 import           Language.Malgo.TypeRep.Type   as M
-import           Relude                  hiding ( Type )
-import           Relude.Extra.Map        hiding ( size )
+import           Language.Malgo.Prelude
 
 data GenLIR
 
@@ -33,7 +32,7 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
   isDump = dumpLIR
   trans M.Program { functions, mainExpr } = do
     mainFuncId <- newID (Function I32 []) "main"
-    funMap <- foldMapM genFunMap functions
+    funMap     <- foldMapM genFunMap functions
     runGenProgram mainFuncId $ local (\s -> s { functionMap = funMap }) $ do
       fs <- mapM genFunction functions
       mf <- genMainFunction mainFuncId mainExpr
