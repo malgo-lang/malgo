@@ -16,11 +16,12 @@
 {-# LANGUAGE TemplateHaskell            #-}
 {-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.ID
-  (ID(..), RawID, TypedID, idName, idUniq, idMeta, newID, IDMap(..)) where
+  (ID(..), idName, idUniq, idMeta, newID, IDMap(..)) where
 
 import           Control.Lens                (makeLenses, view)
 import           Data.Data                   (Data)
 import           Data.Functor.Classes
+import           GHC.Exts                    (Item)
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
@@ -31,10 +32,6 @@ data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
   deriving (Show, Ord, Read, Functor, Foldable, Generic)
 
 instance PrettyVal a => PrettyVal (ID a)
-
-type RawID = ID ()
-
-type TypedID = ID Type
 
 instance Eq (ID a) where
   x == y = _idUniq x == _idUniq y

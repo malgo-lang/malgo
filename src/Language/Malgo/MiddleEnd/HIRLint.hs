@@ -17,27 +17,27 @@ import           Relude                      hiding (Type)
 
 data HIRLint
 
-instance Pass HIRLint (Expr Type TypedID) (Expr Type TypedID) where
+instance Pass HIRLint (Expr Type (ID Type)) (Expr Type (ID Type)) where
   isDump _ = False
   trans e = usingReaderT [] (lintExpr e) >> pure e
 
-defined :: TypedID -> ReaderT [TypedID] MalgoM ()
+defined :: ID Type -> ReaderT [ID Type] MalgoM ()
 defined a =
   unlessM (elem a <$> ask)
   (errorDoc $ pPrint a <+> "is not defined")
 
-notDefined :: TypedID -> ReaderT [TypedID] MalgoM ()
+notDefined :: ID Type -> ReaderT [ID Type] MalgoM ()
 notDefined a =
   unlessM (notElem a <$> ask)
   (errorDoc $ pPrint a <+> "is already defined")
 
-match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [TypedID] MalgoM ()
+match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [ID Type] MalgoM ()
 match a b = unless (typeOf a == typeOf b) $
   errorDoc $ "expected:" <+> pPrint (typeOf a)
   $+$ "actual:" <+> pPrint (typeOf b)
   $+$ parens (fsep [pPrint a, colon, pPrint b])
 
-lintExpr :: Expr Type TypedID -> ReaderT [TypedID] MalgoM Type
+lintExpr :: Expr Type (ID Type) -> ReaderT [ID Type] MalgoM Type
 lintExpr e@(Call f xs) = do
   mapM_ defined (f:xs)
   paramtys <- getParamtys
@@ -66,7 +66,7 @@ lintExpr (If c t f) = do
   lintExpr f
 lintExpr e = pure $ typeOf e
 
-lintFunDec :: (TypedID, [TypedID], Expr Type TypedID) -> ReaderT [TypedID] MalgoM Type
+lintFunDec :: (ID Type, [ID Type], Expr Type (ID Type)) -> ReaderT [ID Type] MalgoM Type
 lintFunDec (_, ps, e) =
   local (ps <>) $
     lintExpr e

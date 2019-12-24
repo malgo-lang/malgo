@@ -7,20 +7,22 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TupleSections         #-}
 {-# LANGUAGE TypeApplications      #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
 
-import qualified Data.ByteString                   as B
-import qualified Data.Map.Strict                   as Map
-import           Language.Malgo.BackEnd.LIRBuilder
+import           Control.Exception            (assert)
+import qualified Data.ByteString              as B
 import           Language.Malgo.ID
-import           Language.Malgo.IR.HIR             as H (Lit (..), Op (..))
-import           Language.Malgo.IR.LIR             as L
-import           Language.Malgo.IR.MIR             as M
+import           Language.Malgo.IR.HIR        as H (Lit (..), Op (..))
+import           Language.Malgo.IR.LIR        as L
+import           Language.Malgo.IR.MIR        as M
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.TypeRep.LType      as L
-import           Language.Malgo.TypeRep.Type       as M
-import           Relude                            hiding (Type)
+import           Language.Malgo.Pretty
+import           Language.Malgo.TypeRep.LType as L
+import           Language.Malgo.TypeRep.Type  as M
+import           Relude                       hiding (Type)
+import           Relude.Extra.Map             hiding (size)
 
 data GenLIR
 
@@ -34,12 +36,125 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
       mf <- genMainFunction mainFuncId mainExpr
       pure (mf : fs)
 
-genFunMap :: M.Func Type (ID Type) -> MalgoM (Map (ID Type) (ID LType))
+newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
+
+data ExprEnv = ExprEnv { partialBlockInsts :: IORef [(ID LType, Inst (ID LType))]
+                       , variableMap       :: IDMap Type (ID LType)
+                       , nameHint          :: Text
+                       , captures          :: Maybe (ID LType) }
+
+type GenProgram = ReaderT ProgramEnv MalgoM
+type GenExpr = ReaderT ExprEnv GenProgram
+
+runGenProgram :: a -> GenProgram [L.Func a] -> MalgoM (L.Program a)
+runGenProgram mainFunc m = do
+  defs <- runReaderT m (ProgramEnv mempty)
+  pure $ L.Program { L.functions = defs, mainFunc = mainFunc }
+
+runGenExpr ::
+  IDMap Type (ID LType)
+  -> Text
+  -> GenExpr (ID LType)
+  -> GenProgram (Block (ID LType))
+runGenExpr variableMap nameHint m = do
+  psRef <- newIORef []
+  value <- runReaderT m (ExprEnv psRef variableMap nameHint Nothing)
+  ps <- readIORef psRef
+  pure $ Block { insts = reverse ps, value = value }
+
+addInst :: Inst (ID LType) -> GenExpr (ID LType)
+addInst inst = do
+  ExprEnv { partialBlockInsts, nameHint } <- ask
+  i <- newID (ltypeOf inst) nameHint
+  modifyIORef partialBlockInsts (\s -> (i, inst) : s)
+  pure i
+
+findVar :: ID Type -> GenExpr (ID LType)
+findVar x = do
+  ExprEnv { variableMap } <- ask
+  case lookup x variableMap of
+    Just x' -> pure x'
+    Nothing -> error $ show $ "findVar " <+> pPrint x
+
+findFun :: ID Type -> GenProgram (ID LType)
+findFun x = do
+  ProgramEnv { functionMap } <- ask
+  case lookup x functionMap of
+    Just x' -> pure x'
+    Nothing -> error $ show $ "findFun " <+> pPrint x
+
+setHint :: MonadReader ExprEnv m => Text -> m a -> m a
+setHint x = local (\s -> s { nameHint = x })
+
+alloca :: LType -> Maybe (ID LType) -> GenExpr (ID LType)
+alloca ty msize = addInst $ Alloca ty msize
+
+loadC :: ID LType -> [Int] -> GenExpr (ID LType)
+loadC ptr xs = addInst $ LoadC ptr xs
+
+load :: ID LType -> ID LType -> GenExpr (ID LType)
+load ptr xs = addInst $ Load ptr xs
+
+storeC :: ID LType -> [Int] -> ID LType -> GenExpr (ID LType)
+storeC ptr xs val = addInst $ StoreC ptr xs val
+
+store :: ID LType -> [ID LType] -> ID LType -> GenExpr (ID LType)
+store ptr xs val = addInst $ Store ptr xs val
+
+call :: HasCallStack => ID LType -> [ID LType] -> ReaderT ExprEnv GenProgram (ID LType)
+call f xs = do
+  case (ltypeOf f, map ltypeOf xs) of
+    (Function _ ps, as) -> assert (ps == as) (pure ())
+    _                   -> error "function must be typed as function"
+  addInst $ Call f xs
+callExt :: Text -> LType -> [ID LType] -> ReaderT ExprEnv GenProgram (ID LType)
+callExt f funTy xs = do
+  case (funTy, map ltypeOf xs) of
+    (Function _ ps, as) -> assert (ps == as) (pure ())
+    _                   -> error "external function must be typed as function"
+  addInst $ CallExt f funTy xs
+
+cast :: LType -> ID LType -> GenExpr (ID LType)
+cast ty val = addInst $ Cast ty val
+
+undef :: LType -> GenExpr (ID LType)
+undef ty = addInst $ Undef ty
+
+binop :: L.Op -> ID LType -> ID LType -> GenExpr (ID LType)
+binop op x y = addInst $ L.BinOp op x y
+
+branchIf :: ID LType
+              -> GenExpr (ID LType)
+              -> GenExpr (ID LType)
+              -> GenExpr (ID LType)
+branchIf c genWhenTrue genWhenFalse = do
+  tBlockRef <- newIORef []
+  fBlockRef <- newIORef []
+  tvalue <- local (\s -> s { partialBlockInsts = tBlockRef }) genWhenTrue
+  fvalue <- local (\s -> s { partialBlockInsts = fBlockRef }) genWhenFalse
+  tBlock <- reverse <$> readIORef tBlockRef
+  fBlock <- reverse <$> readIORef fBlockRef
+
+  addInst $ L.If c (Block tBlock tvalue) (Block fBlock fvalue)
+
+convertType :: HasCallStack => Type -> LType
+convertType (TyApp FunC (r:ps)) =
+  Ptr $ Struct [Function (convertType r) (Boxed : map convertType ps), Boxed]
+convertType (TyApp IntC []) = I64
+convertType (TyApp FloatC []) = F64
+convertType (TyApp BoolC []) = Bit
+convertType (TyApp CharC []) = U8
+convertType (TyApp StringC []) = Ptr U8
+convertType (TyApp TupleC xs) = Ptr $ Struct $ map convertType xs
+convertType (TyApp ArrayC [x]) = Ptr $ convertType x
+convertType t = error $ fromString $ "unreachable(convertType): " <> dumpStr t
+
+genFunMap :: M.Func Type (ID Type) -> MalgoM (IDMap Type (ID LType))
 genFunMap M.Func{ name, captures } =
   case typeOf name of
     TyFun ps r -> do
       newName <- newID (functionType (isNothing captures) ps r) (_idName name)
-      pure $ Map.singleton name newName
+      pure $ one (name, newName)
     _ -> error "genFunMap"
 
 functionType :: (HasType a, HasType b) => Bool -> [a] -> b -> LType
@@ -52,13 +167,13 @@ genFunction :: M.Func Type (ID Type) -> GenProgram (L.Func (ID LType))
 genFunction M.Func{ name, captures = Nothing, params, body } = do
   funcName <- findFun name
   funcParams <- mapM (\x -> newID (convertType (typeOf x)) (_idName x)) params
-  bodyBlock <- runGenExpr (fromList (zip params funcParams)) "x" (genExpr body)
+  bodyBlock <- runGenExpr (foldr (uncurry insert) mempty (zip params funcParams)) "x" (genExpr body)
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func{ name, captures = Just caps, mutrecs, params, body } = do
   funcName <- findFun name
   capsId <- newID Boxed "caps"
   funcParams <- mapM (\x -> newID (convertType (typeOf x)) (_idName x)) params
-  bodyBlock <- runGenExpr (fromList (zip params funcParams)) "x" $ do
+  bodyBlock <- runGenExpr (foldr (uncurry insert) mempty (zip params funcParams)) "x" $ do
     capsMap <- genUnpackCaps capsId
     clsMap <- genCls capsId
     local (\s -> s { variableMap = variableMap s <> capsMap <> clsMap
@@ -70,10 +185,10 @@ genFunction M.Func{ name, captures = Just caps, mutrecs, params, body } = do
       capsId' <- setHint "boxedCaps" $ cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
       setHint "capture" $ fmap mconcat $ forM (zip [0..] caps) $ \(i, c) -> do
         cOpr <- loadC capsId' [0, i]
-        pure (Map.fromList [(c, cOpr)])
+        pure (one (c, cOpr))
     genCls capsId = fmap mconcat $ forM mutrecs $ \f -> do
       clsId <- setHint (_idName f) $ packClosure f capsId
-      pure (Map.fromList [(f, clsId)])
+      pure (one (f, clsId))
 
 genMainFunction :: ID LType -> Expr Type (ID Type) -> GenProgram (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
@@ -133,8 +248,8 @@ genExpr (M.CallClosure f args) = do
   argOprs <- (clsCap :) <$> mapM findVar args
   call clsFun argOprs
 genExpr (M.Let defs e) = do
-  defsMap <- mapM (\(x, val) -> (x, ) <$> genExpr val) defs
-  local (\st -> st { variableMap = fromList defsMap <> variableMap st }) $ genExpr e
+  defsMap <- mapM (\(ID{_idUniq}, val) -> (_idUniq, ) <$> genExpr val) defs
+  local (\st -> st { variableMap = IDMap (fromList defsMap) <> variableMap st }) $ genExpr e
 genExpr (M.If c t f) = do
   cOpr <- findVar c
   branchIf cOpr (genExpr t) (genExpr f)

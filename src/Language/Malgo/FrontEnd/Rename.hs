@@ -19,24 +19,24 @@ import           Relude
 
 data Rename
 
-instance Pass Rename (Expr Text) (Expr RawID) where
+instance Pass Rename (Expr Text) (Expr (ID ())) where
   isDump = dumpRenamed
   trans s = runReaderT (renameExpr s) mempty
 
-type RenameM a = ReaderT (Map Text RawID) MalgoM a
+type RenameM a = ReaderT (Map Text (ID ())) MalgoM a
 
-withKnowns :: [(Text, RawID)] -> RenameM a -> RenameM a
+withKnowns :: [(Text, ID ())] -> RenameM a -> RenameM a
 withKnowns kvs =
   local (Map.fromList kvs <>)
 
-getID :: Info -> Text -> RenameM RawID
+getID :: Info -> Text -> RenameM (ID ())
 getID info name = do
   k <- ask
   case Map.lookup name k of
     Just x -> return x
     Nothing -> errorDoc $ "error(rename):" <+> pPrint info <+> pPrint name <+> "is not defined"
 
-renameExpr :: Expr Text -> RenameM (Expr RawID)
+renameExpr :: Expr Text -> RenameM (Expr (ID ()))
 renameExpr (Var info name) = Var info <$> getID info name
 renameExpr (Int info x) = return $ Int info x
 renameExpr (Float info x) = return $ Float info x
@@ -84,7 +84,7 @@ data SplitedDecl = Val (Decl Text)
                  | Fun [Decl Text]
                  | Ex (Decl Text)
 
-renameDecls :: Info -> [SplitedDecl] -> RenameM (Expr Text -> RenameM (Expr RawID))
+renameDecls :: Info -> [SplitedDecl] -> RenameM (Expr Text -> RenameM (Expr (ID ())))
 renameDecls _ [] = pure $ \e -> renameExpr e
 renameDecls info0 (Val (ValDec info1 name typ val) : ds) = do
   val' <- renameExpr val
@@ -108,7 +108,7 @@ renameDecls info0 (Ex (ExDec info1 name typ orig) : ds) = do
     Let info1 [ExDec info1 name' typ orig] <$> withKnowns [(name, name')] (k e)
 renameDecls _ _ = error "unreachable(renameDecls)"
 
-renameFunDec :: Decl Text -> RenameM (Decl RawID)
+renameFunDec :: Decl Text -> RenameM (Decl (ID ()))
 renameFunDec (FunDec info fn params retty body) = do
   fn' <- getID info fn
   paramIDs <- mapM (newID () . fst) params

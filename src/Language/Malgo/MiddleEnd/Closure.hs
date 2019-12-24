@@ -21,32 +21,31 @@ import           Relude                            hiding (Type)
 
 data Closure
 
-instance Pass Closure (H.Expr Type TypedID) (Program Type TypedID) where
+instance Pass Closure (H.Expr Type (ID Type)) (Program Type (ID Type)) where
   isDump = dumpClosure
   trans e = evaluatingStateT [] $ usingReaderT (Env [] mempty []) $ do
     e' <- transExpr e
     fs <- get
     pure (Program fs e')
 
-data Env = Env { knowns   :: [TypedID]
-               , captures :: Maybe [TypedID]
-               , mutrecs  :: [TypedID]
+data Env = Env { knowns   :: [ID Type]
+               , captures :: Maybe [ID Type]
+               , mutrecs  :: [ID Type]
                }
 
-type TransM a = ReaderT Env (StateT [Func Type TypedID] MalgoM) a
+type TransM a = ReaderT Env (StateT [Func Type (ID Type)] MalgoM) a
 
 addFunc :: MonadState [Func t a] m => Func t a -> m ()
 addFunc func = modify (func:)
 
-getFunc :: (MonadState [Func Type TypedID] m, MonadIO m) =>
-  TypedID -> m (Func Type TypedID)
+getFunc :: (MonadState [Func Type (ID Type)] m, MonadIO m) => ID Type -> m (Func Type (ID Type))
 getFunc func = do
   env <- get
   case find (\Func{name} -> name == func) env of
     Just f -> pure f
     Nothing -> errorDoc $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 
-transExpr :: H.Expr Type (ID Type) -> TransM (M.Expr Type TypedID)
+transExpr :: H.Expr Type (ID Type) -> TransM (M.Expr Type (ID Type))
 transExpr (H.Var x) = pure $ Var x
 transExpr (H.Lit x) = pure $ Lit x
 transExpr (H.Tuple xs) = pure $ Tuple xs

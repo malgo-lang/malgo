@@ -21,7 +21,7 @@ import           Relude.Extra.Map
 
 data Typing
 
-instance Pass Typing (Expr RawID) (Expr TypedID) where
+instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
   isDump = dumpTyped
   trans e = evaluatingStateT mempty $ do
     (cs, _) <- typingExpr e
@@ -33,14 +33,14 @@ defaulting :: Substitutable a => a -> a
 defaulting t = apply (Subst $ fromList $ zip (toList $ ftv t) (repeat TyInt)) t
 
 
-type Env = Map RawID TypedID
+type Env = IDMap () (ID Type)
 
 type InferM a = StateT Env MalgoM a
 
 throw :: Info -> Doc -> InferM a
 throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
 
-catchUnifyError :: Info -> Maybe RawID -> Either UnifyError a -> InferM a
+catchUnifyError :: Info -> Maybe (ID ()) -> Either UnifyError a -> InferM a
 catchUnifyError i n (Left (MismatchConstructor c1 c2)) =
   throw i $ "mismatch constructor" <+> pPrint c1 <+> pPrint c2
   $+$ case n of
@@ -58,7 +58,7 @@ catchUnifyError i n (Left (InfinitType var ty)) =
         Just n' -> "on" <+> pPrint n'
 catchUnifyError _ _ (Right a) = pure a
 
-updateID :: Env -> RawID -> InferM TypedID
+updateID :: Env -> ID () -> InferM (ID Type)
 updateID env x = case lookup x env of
   Nothing -> errorDoc $ "error(updateID):" <+> pPrint x
   Just y  -> return y
@@ -66,20 +66,20 @@ updateID env x = case lookup x env of
 newTyMeta :: InferM Type
 newTyMeta = TyMeta <$> newUniq
 
-defineVar :: Info -> RawID -> Type -> [Constraint] -> InferM ()
+defineVar :: Info -> ID () -> Type -> [Constraint] -> InferM ()
 defineVar i x t cs = do
   sub <- catchUnifyError i (Just x) $ solve cs
   x' <- newID (apply sub t) (_idName x)
   modify (insert x x')
 
-lookupVar :: RawID -> InferM Type
+lookupVar :: ID () -> InferM Type
 lookupVar x = do
   env <- get
   case lookup x env of
     Nothing -> errorDoc $ "error(lookupVar):" <+> pPrint x
     Just y  -> pure $ typeOf y
 
-typingExpr :: Expr RawID -> InferM ([Constraint], Type)
+typingExpr :: Expr (ID ()) -> InferM ([Constraint], Type)
 typingExpr (Var i x) = do
   env <- get
   case lookup x env of
@@ -145,7 +145,7 @@ typingExpr (Let i fs e) = do
   (cs2, t) <- typingExpr e
   return (cs1 <> cs2, t)
   where
-    prepare :: Decl RawID -> InferM ()
+    prepare :: Decl (ID ()) -> InferM ()
     prepare (FunDec i' f _ _ _) = do
       v <- newTyMeta
       defineVar i' f v []

@@ -16,7 +16,7 @@ import           Relude                         hiding (Type)
 
 data TransToHIR
 
-instance Pass TransToHIR (S.Expr TypedID) (Expr Type TypedID) where
+instance Pass TransToHIR (S.Expr (ID Type)) (Expr Type (ID Type)) where
   isDump = dumpKNormal
   trans e = flattenExpr <$> transToHIR e
 
