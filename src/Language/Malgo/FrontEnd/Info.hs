@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings          #-}
 module Language.Malgo.FrontEnd.Info where
 

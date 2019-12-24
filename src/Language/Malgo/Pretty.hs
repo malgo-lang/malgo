@@ -29,10 +29,10 @@ infixl 9 <+>
 (<+>) = (P.<+>)
 
 instance Pretty T.Text where
-  pPrint = text . T.unpack
+  pPrint = text . toString
 
 instance Pretty TL.Text where
-  pPrint = text . TL.unpack
+  pPrint = text . toString
 
 errorDoc :: HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ render x

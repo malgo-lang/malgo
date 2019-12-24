@@ -122,13 +122,13 @@ call
   -> ReaderT ExprEnv GenProgram (ID LType)
 call f xs = do
   case (ltypeOf f, map ltypeOf xs) of
-    (Function _ ps, as) -> assert (ps == as) (pure ())
+    (Function _ ps, as) -> assert (ps == as) pass
     _                   -> error "function must be typed as function"
   addInst $ Call f xs
 callExt :: Text -> LType -> [ID LType] -> ReaderT ExprEnv GenProgram (ID LType)
 callExt f funTy xs = do
   case (funTy, map ltypeOf xs) of
-    (Function _ ps, as) -> assert (ps == as) (pure ())
+    (Function _ ps, as) -> assert (ps == as) pass
     _                   -> error "external function must be typed as function"
   addInst $ CallExt f funTy xs
 

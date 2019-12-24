@@ -49,8 +49,9 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
     genFunMap :: Func (ID LType) -> Map (ID LType) Operand
     genFunMap Func { name } =
       let Function r ps = ltypeOf name
-      in  Map.singleton name
-            $ ConstantOperand
+      in  one
+            ( name
+            , ConstantOperand
             $ GlobalReference
                 (ptr $ FunctionType { resultType    = convertType r
                                     , argumentTypes = map convertType ps
@@ -58,6 +59,7 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
                                     }
                 )
             $ genFuncName name
+            )
 
 data GenState = GenState { variableMap :: Map (ID LType) Operand
                          , prims       :: IORef (Map Text Operand)
@@ -222,7 +224,7 @@ genConstant (Float64 x    ) = pure $ double x
 genConstant (String  bytes) = do
   n <- fresh
   p <- global n
-              (ArrayType (toEnum $ length bytes + 1) i8)
+              (ArrayType (fromIntegral $ length bytes + 1) i8)
               (Array i8 $ map (Int 8 . toInteger) (bytes <> [0]))
   bitcast p (ptr i8)
 

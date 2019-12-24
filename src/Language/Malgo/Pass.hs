@@ -2,14 +2,12 @@
 {-# LANGUAGE DataKinds              #-}
 {-# LANGUAGE FlexibleContexts       #-}
 {-# LANGUAGE FunctionalDependencies #-}
-{-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE NoImplicitPrelude      #-}
 {-# LANGUAGE ScopedTypeVariables    #-}
 {-# LANGUAGE TypeApplications       #-}
 {-# LANGUAGE TypeFamilies           #-}
 module Language.Malgo.Pass where
 
-import           Control.Monad.Reader
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude

@@ -41,7 +41,7 @@ isKnownFunc a = do
   Env { functions } <- ask
   let mfunc = find (\Func { name } -> name == a) functions
   case mfunc of
-    Just Func { captures = Nothing } -> pure ()
+    Just Func { captures = Nothing } -> pass
     _ -> errorDoc $ pPrint a <+> "is not known function"
 
 isUnknownFunc :: (MonadReader Env m, MonadIO m) => ID Type -> m ()
@@ -49,7 +49,7 @@ isUnknownFunc a = do
   Env { functions } <- ask
   let mfunc = find (\Func { name } -> name == a) functions
   case mfunc of
-    Just Func { captures = Just _ } -> pure ()
+    Just Func { captures = Just _ } -> pass
     _ -> errorDoc $ pPrint a <+> "is not known function"
 
 lintProgram :: (MonadReader Env m, MonadIO m) => Program Type (ID Type) -> m ()
@@ -64,7 +64,7 @@ lintFunc Func { name = _, captures, mutrecs, params, body } =
 
 lintExpr :: (MonadReader Env m, MonadIO m) => Expr Type (ID Type) -> m ()
 lintExpr (Var   a           ) = definedVar a
-lintExpr (Lit   _           ) = pure ()
+lintExpr (Lit   _           ) = pass
 lintExpr (Tuple xs          ) = mapM_ definedVar xs
 lintExpr (TupleAccess x   _ ) = definedVar x
 lintExpr (MakeArray   _   x ) = definedVar x
