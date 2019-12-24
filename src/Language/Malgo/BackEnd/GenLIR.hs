@@ -39,7 +39,7 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
       pure (mf : fs)
    where
     genFunMap M.Func { name, captures } = case typeOf name of
-      TyApp FunC (r:ps) -> do
+      TyApp FunC (r : ps) -> do
         newName <- newID (functionType (isNothing captures) ps r) (idName name)
         pure $ one (name, newName)
       _ -> error "genFunMap"
@@ -270,7 +270,7 @@ genExpr (M.Let defs e) = do
 genExpr (M.If c t f) = do
   cOpr <- findVar c
   branchIf cOpr (genExpr t) (genExpr f)
-genExpr (M.Prim orig (TyApp FunC (r:ps)) xs) = do
+genExpr (M.Prim orig (TyApp FunC (r : ps)) xs) = do
   argOprs <- mapM findVar xs
   callExt orig (Function (convertType r) (map convertType ps)) argOprs
 genExpr M.Prim{}         = error "external variable is not supported"

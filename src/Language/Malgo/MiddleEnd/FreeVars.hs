@@ -1,7 +1,14 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-module Language.Malgo.MiddleEnd.FreeVars (FreeVars(..), delete, (\\)) where
+module Language.Malgo.MiddleEnd.FreeVars
+  ( FreeVars(..)
+  , delete
+  , (\\)
+  )
+where
 
-import           Data.Set (delete, (\\))
+import           Data.Set                       ( delete
+                                                , (\\)
+                                                )
 import           Relude
 
 class FreeVars f where

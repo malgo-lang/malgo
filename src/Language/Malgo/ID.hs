@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP                        #-}
 {-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE DeriveFoldable             #-}
 {-# LANGUAGE DeriveFunctor              #-}
@@ -14,14 +13,18 @@
 {-# LANGUAGE QuantifiedConstraints      #-}
 {-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.ID
-  (ID(..), newID, IDMap(..)) where
+  ( ID(..)
+  , newID
+  , IDMap(..)
+  )
+where
 
-import           Data.Data                   (Data)
+import           Data.Data                      ( Data )
 import           Data.Functor.Classes
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Relude                      hiding (Type)
+import           Relude                  hiding ( Type )
 import           Relude.Extra.Map
 
 data ID a = ID { idName :: Text, idUniq :: Int, idMeta :: a }
@@ -34,19 +37,13 @@ ignore :: a -> b -> b
 ignore = flip const
 
 instance Pretty a => Pretty (ID a) where
-  pPrint (ID n u m) =
-#ifdef SHOW_META
-    pPrint n <> "." <> pPrint u <> braces (pPrint m)
-#else
-    ignore m $ pPrint n <> "." <> pPrint u
-#endif
+  pPrint (ID n u _) = pPrint n <> "." <> pPrint u
 
 instance HasType a => HasType (ID a) where
-  typeOf ID{ idMeta } = typeOf idMeta
+  typeOf ID { idMeta } = typeOf idMeta
 
 newID :: MonadMalgo f => a -> Text -> f (ID a)
-newID m n =
-  ID n <$> newUniq <*> pure m
+newID m n = ID n <$> newUniq <*> pure m
 
 newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
   deriving stock (Eq, Ord, Read, Show, Functor, Foldable, Traversable, Generic, Data)
@@ -60,11 +57,11 @@ instance StaticMap (IDMap a v) where
   type Key (IDMap a v) = ID a
   type Val (IDMap a v) = v
   size = size . unwrapIDMap
-  lookup ID{ idUniq } = lookup idUniq . unwrapIDMap
-  member ID{ idUniq } = member idUniq . unwrapIDMap
+  lookup ID { idUniq } = lookup idUniq . unwrapIDMap
+  member ID { idUniq } = member idUniq . unwrapIDMap
 
 instance DynamicMap (IDMap a v) where
-  insert ID{ idUniq } v = IDMap . insert idUniq v . unwrapIDMap
-  insertWith f ID{ idUniq } v = IDMap . insertWith f idUniq v . unwrapIDMap
-  delete ID{ idUniq } = IDMap . delete idUniq . unwrapIDMap
-  alter f ID{ idUniq } = IDMap . alter f idUniq . unwrapIDMap
+  insert ID { idUniq } v = IDMap . insert idUniq v . unwrapIDMap
+  insertWith f ID { idUniq } v = IDMap . insertWith f idUniq v . unwrapIDMap
+  delete ID { idUniq } = IDMap . delete idUniq . unwrapIDMap
+  alter f ID { idUniq } = IDMap . alter f idUniq . unwrapIDMap

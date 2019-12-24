@@ -2,10 +2,14 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE TypeFamilies               #-}
-module Language.Malgo.FrontEnd.Typing.Subst (Subst(..), Substitutable(..)) where
+module Language.Malgo.FrontEnd.Typing.Subst
+  ( Subst(..)
+  , Substitutable(..)
+  )
+where
 
 import           Language.Malgo.TypeRep.Type
-import           Relude                      hiding (Type)
+import           Relude                  hiding ( Type )
 import           Relude.Extra.Map
 
 newtype Subst = Subst (Map TyVar Type)
@@ -26,11 +30,11 @@ class Substitutable a where
   ftv :: a -> Set TyVar
 
 instance Substitutable Type where
-  apply s t@(TyMeta a) = lookupDefault t a s
-  apply s (TyApp c ts) = TyApp c $ apply s ts
-  ftv (TyMeta a)   = one a
+  apply s t@(TyMeta a  ) = lookupDefault t a s
+  apply s (  TyApp c ts) = TyApp c $ apply s ts
+  ftv (TyMeta a  ) = one a
   ftv (TyApp _ ts) = foldMap ftv ts
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
   apply = fmap . apply
-  ftv = foldMap ftv
+  ftv   = foldMap ftv

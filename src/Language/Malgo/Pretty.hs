@@ -9,14 +9,19 @@ module Language.Malgo.Pretty
   )
 where
 
-import qualified Data.Text                      as T
-import qualified Data.Text.Lazy                 as TL
+import qualified Data.Text                     as T
+import qualified Data.Text.Lazy                as TL
 import qualified Prelude
 import           Relude
-import           Text.Pretty.Simple             (pShow)
-import           Text.PrettyPrint.HughesPJClass hiding (double, empty, (<+>),
-                                                 (<>))
-import qualified Text.PrettyPrint.HughesPJClass as P
+import           Text.Pretty.Simple             ( pShow )
+import           Text.PrettyPrint.HughesPJClass
+                                         hiding ( double
+                                                , empty
+                                                , (<+>)
+                                                , (<>)
+                                                )
+import qualified Text.PrettyPrint.HughesPJClass
+                                               as P
 
 -- change operator precedence
 infixl 9 <+>

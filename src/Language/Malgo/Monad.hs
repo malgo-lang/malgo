@@ -14,7 +14,8 @@ module Language.Malgo.Monad
   , MonadMalgo(..)
   , newUniq
   , Opt(..)
-  ) where
+  )
+where
 
 import           Control.Monad.Fix
 import           Control.Monad.Trans.Writer.CPS
@@ -64,6 +65,6 @@ instance MonadMalgo m => MonadMalgo (WriterT w m) where
 newUniq :: MonadMalgo m => m Int
 newUniq = liftMalgo $ do
   UniqSupply u <- asks maUniqSupply
-  i <- readIORef u
-  modifyIORef u (+1)
+  i            <- readIORef u
+  modifyIORef u (+ 1)
   return i
