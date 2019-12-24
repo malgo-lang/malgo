@@ -3,7 +3,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
-{-# LANGUAGE StrictData        #-}
 module Language.Malgo.TypeRep.Type where
 
 import           Language.Malgo.Pretty

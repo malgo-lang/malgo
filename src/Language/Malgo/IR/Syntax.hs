@@ -5,7 +5,6 @@
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE StrictData        #-}
 module Language.Malgo.IR.Syntax where
 
 import           Data.List                    ((!!))

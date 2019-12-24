@@ -2,6 +2,7 @@
 {
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoStrictData #-}
+{-# LANGUAGE NoStrict #-}
 module Language.Malgo.Parser where
 
 import Prelude hiding (EQ, LT, GT)

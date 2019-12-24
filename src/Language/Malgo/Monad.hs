@@ -6,7 +6,6 @@
 {-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE RankNTypes                 #-}
-{-# LANGUAGE StrictData                 #-}
 module Language.Malgo.Monad
   ( UniqSupply(..)
   , MalgoM(..)

@@ -10,7 +10,7 @@
 module Language.Malgo.BackEnd.GenLIR where
 
 import qualified Data.ByteString                   as B
-import qualified Data.Map                          as Map
+import qualified Data.Map.Strict                   as Map
 import           Language.Malgo.BackEnd.LIRBuilder
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR             as H (Lit (..), Op (..))

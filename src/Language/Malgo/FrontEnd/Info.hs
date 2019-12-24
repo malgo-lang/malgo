@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE StrictData                 #-}
 module Language.Malgo.FrontEnd.Info where
 
 import           Language.Malgo.Pretty

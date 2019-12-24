@@ -9,7 +9,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLLVM ( GenLLVM ) where
 
-import qualified Data.Map                        as Map
+import qualified Data.Map.Strict                 as Map
 import           Language.Malgo.ID
 import           Language.Malgo.IR.LIR           as IR
 import           Language.Malgo.Monad
