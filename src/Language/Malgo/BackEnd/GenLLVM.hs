@@ -112,7 +112,7 @@ genFunction Func{ name, params, body } =
     $ genBlock body ret
   where
     funcName = fromString $ show $ pPrint name
-    llvmParams = map (\x -> (convertType (_idMeta x), NoParameterName)) params
+    llvmParams = map (\ID{ idMeta } -> (convertType idMeta, NoParameterName)) params
     retty = convertType (ltypeOf body)
 
 genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a

@@ -12,31 +12,25 @@
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE QuantifiedConstraints      #-}
-{-# LANGUAGE StandaloneDeriving         #-}
-{-# LANGUAGE TemplateHaskell            #-}
 {-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.ID
-  (ID(..), idName, idUniq, idMeta, newID, IDMap(..)) where
+  (ID(..), newID, IDMap(..)) where
 
-import           Control.Lens                (makeLenses, view)
 import           Data.Data                   (Data)
 import           Data.Functor.Classes
-import           GHC.Exts                    (Item)
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Relude                      hiding (Type)
 import           Relude.Extra.Map
 
-data ID a = ID { _idName :: Text, _idUniq :: Int, _idMeta :: a }
+data ID a = ID { idName :: Text, idUniq :: Int, idMeta :: a }
   deriving (Show, Ord, Read, Functor, Foldable, Generic)
 
 instance PrettyVal a => PrettyVal (ID a)
 
 instance Eq (ID a) where
-  x == y = _idUniq x == _idUniq y
-
-makeLenses ''ID
+  x == y = idUniq x == idUniq y
 
 ignore :: a -> b -> b
 ignore = flip const
@@ -50,7 +44,7 @@ instance Pretty a => Pretty (ID a) where
 #endif
 
 instance HasType a => HasType (ID a) where
-  typeOf i = typeOf $ view idMeta i
+  typeOf ID{ idMeta } = typeOf idMeta
 
 newID :: MonadMalgo f => a -> Text -> f (ID a)
 newID m n =
@@ -62,17 +56,17 @@ newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
 
 instance One (IDMap a v) where
   type OneItem (IDMap a v) = (ID a, v)
-  one (ID {_idUniq}, v) = IDMap (one (_idUniq, v))
+  one (ID { idUniq }, v) = IDMap (one (idUniq, v))
 
 instance StaticMap (IDMap a v) where
   type Key (IDMap a v) = ID a
   type Val (IDMap a v) = v
   size = size . unwrapIDMap
-  lookup ID{_idUniq} = lookup _idUniq . unwrapIDMap
-  member ID{_idUniq} = member _idUniq . unwrapIDMap
+  lookup ID{ idUniq } = lookup idUniq . unwrapIDMap
+  member ID{ idUniq } = member idUniq . unwrapIDMap
 
 instance DynamicMap (IDMap a v) where
-  insert ID{_idUniq} v = IDMap . insert _idUniq v . unwrapIDMap
-  insertWith f ID{_idUniq} v = IDMap . insertWith f _idUniq v . unwrapIDMap
-  delete ID{_idUniq} = IDMap . delete _idUniq . unwrapIDMap
-  alter f ID{_idUniq} = IDMap . alter f _idUniq . unwrapIDMap
+  insert ID{ idUniq } v = IDMap . insert idUniq v . unwrapIDMap
+  insertWith f ID{ idUniq } v = IDMap . insertWith f idUniq v . unwrapIDMap
+  delete ID{ idUniq } = IDMap . delete idUniq . unwrapIDMap
+  alter f ID{ idUniq } = IDMap . alter f idUniq . unwrapIDMap

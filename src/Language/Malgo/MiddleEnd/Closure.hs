@@ -71,21 +71,23 @@ transExpr (H.LetRec defs e) = do
          local (\env -> env { knowns = funcNames <> knowns env, captures = Nothing }) $ transExpr e
      | otherwise -> do
          put envBackup
-         defs' <- local (\env -> (env :: Env) { captures = Just $ toList (fv \\ fromList funcNames), mutrecs = funcNames }) (transDefs defs)
+         defs' <- local (\env -> (env :: Env) { captures = Just $ toList (fv \\ fromList funcNames)
+                                              , mutrecs = funcNames })
+                  $ transDefs defs
          Let defs' <$> transExpr e
   where
-    funcNames = map (\(f, _, _) -> f) defs
+    funcNames = map H.name defs
     getFreeVars = do
       _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, captures = Nothing, mutrecs = mempty }) (transDefs defs)
       mconcat <$> forM funcNames (\f -> do
                                      Func {params, body} <- getFunc f
                                      pure $ freevars body \\ fromList params)
     transDefs []              = pure []
-    transDefs ((f, xs, b):ds) = do
-      b' <- transExpr b
+    transDefs (H.Def{ name, params, expr }:ds) = do
+      expr' <- transExpr expr
       Env { captures } <- ask
-      addFunc (Func { name = f, captures = captures, mutrecs = funcNames, params = xs, body = b' })
+      addFunc (Func { name = name, captures = captures, mutrecs = funcNames, params = params, body = expr' })
       ks <- transDefs ds
       case captures of
-        Just caps -> pure ((f, MakeClosure f caps) : ks)
+        Just caps -> pure ((name, MakeClosure name caps) : ks)
         Nothing   -> pure ks

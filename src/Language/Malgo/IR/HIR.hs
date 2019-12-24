@@ -2,12 +2,12 @@
 {-# LANGUAGE DeriveFoldable    #-}
 {-# LANGUAGE DeriveFunctor     #-}
 {-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.HIR where
 
-import           Control.Lens                      (view, _1)
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
@@ -30,10 +30,13 @@ data Expr t a = Var a
                 a -- value
               | Call a [a]
               | Let a (Expr t a) (Expr t a)
-              | LetRec [(a, [a], Expr t a)] (Expr t a)
+              | LetRec [Def t a] (Expr t a)
               | If a (Expr t a) (Expr t a)
               | Prim Text t [a]
               | BinOp Op a a
+  deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+
+data Def t a = Def { name :: a, params :: [a], expr :: Expr t a }
   deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
 
 data Lit = Int Integer
@@ -60,8 +63,8 @@ flattenExpr (LetRec defs body) =
 flattenExpr (If c t f) = If c (flattenExpr t) (flattenExpr f)
 flattenExpr e = e
 
-flattenDef :: (a, [a], Expr t a) -> (a, [a], Expr t a)
-flattenDef (f, ps, e) = (f, ps, flattenExpr e)
+flattenDef :: Def t a -> Def t a
+flattenDef Def{ name, params, expr }  = Def { name = name, params = params, expr = flattenExpr expr }
 
 instance FreeVars (Expr t) where
   freevars (Var x)             = one x
@@ -75,8 +78,8 @@ instance FreeVars (Expr t) where
   freevars (Let x v e)         = freevars v <> delete x (freevars e)
   freevars (LetRec xs e) =
     let efv = freevars e
-        xsfv = mconcat $ map (\(_, ps, b) -> freevars b \\ fromList ps) xs
-        fs = fromList $ map (view _1) xs
+        xsfv = mconcat $ map (\Def{ params, expr } -> freevars expr \\ fromList params) xs
+        fs = fromList $ map name xs
     in (efv <> xsfv) \\ fs
   freevars (If c t f) = one c <> freevars t <> freevars f
   freevars (Prim _ _ xs) = fromList xs
@@ -156,6 +159,11 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (BinOp op x y) =
     parens $ sep [pPrint op, pPrint x, pPrint y]
   pPrint (Prim x t xs) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
+
+instance (Pretty t, Pretty a) => Pretty (Def t a) where
+  pPrint Def{ name, params, expr } =
+    pPrint name <+> parens (sep $ punctuate "," $ map pPrint params) <+> "="
+    $$ nest 1 (pPrint expr)
 
 instance Pretty Lit where
   pPrint (Int x)      = pPrint x

@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.TransToHIR ( TransToHIR ) where
@@ -51,7 +52,7 @@ transToHIR (S.Call _ f xs) = appInsert $ Call <$> insertLet f <*> mapM insertLet
 transToHIR f@(S.Fn _ ps e) = do
   fn <- newTmp "lambda" (typeOf f)
   e' <- transToHIR e
-  return $ LetRec [(fn, map fst ps, e')] (Var fn)
+  return $ LetRec [Def{ name = fn, params = map fst ps, expr = e'  }] (Var fn)
 transToHIR (S.Seq _ e1 e2) = appInsert $ insertLet e1 >> transToHIR e2
 transToHIR (S.Let info (S.ValDec _ n _ val:ds) body) = do
   val' <- transToHIR val
@@ -65,13 +66,13 @@ transToHIR (S.Let info decs@(S.FunDec{}:_) body) = do
     (fundecs, rest) = break (\case { S.FunDec{} -> False; _ -> True }) decs
     transFunDec (S.FunDec _ fn params _ fbody) = do
       fbody' <- transToHIR fbody
-      return (fn, map fst params, fbody')
+      return Def{ name = fn, params = map fst params, expr = fbody' }
     transFunDec _ = error "unreachable"
 transToHIR (S.Let info (S.ExDec _ n _ orig:ds) body) =
   case typeOf n of
     TyFun ps _ -> do
       params <- mapM (newTmp "x") ps
-      LetRec [(n, params, Prim orig (typeOf n) params)] <$> transToHIR (S.Let info ds body)
+      LetRec [Def{ name = n, params = params, expr = Prim orig (typeOf n) params}] <$> transToHIR (S.Let info ds body)
     _ -> error "external variable is not supported"
 transToHIR (S.Let _ [] body) = transToHIR body
 transToHIR (S.If _ c t f) = appInsert $ If <$> insertLet c <*> transToHIR t <*> transToHIR f

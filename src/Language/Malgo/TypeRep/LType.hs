@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
@@ -39,7 +40,7 @@ instance HasLType LType where
   ltypeOf x = x
 
 instance HasLType a => HasLType (ID a) where
-  ltypeOf x = ltypeOf $ _idMeta x
+  ltypeOf ID{ idMeta } = ltypeOf idMeta
 
 accessType :: LType -> [Int] -> LType
 accessType t []               = t

@@ -1,12 +1,12 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.MiddleEnd.HIRLint (HIRLint) where
 
-import           Control.Lens                (view, _1)
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR
 import           Language.Malgo.Monad
@@ -57,7 +57,7 @@ lintExpr (Let name val body) = do
   local (name:) $
     lintExpr body
 lintExpr (LetRec fundecs body) =
-  local (map (view _1) fundecs <>) $ do
+  local (map name fundecs <>) $ do
     mapM_ lintFunDec fundecs
     lintExpr body
 lintExpr (If c t f) = do
@@ -66,7 +66,6 @@ lintExpr (If c t f) = do
   lintExpr f
 lintExpr e = pure $ typeOf e
 
-lintFunDec :: (ID Type, [ID Type], Expr Type (ID Type)) -> ReaderT [ID Type] MalgoM Type
-lintFunDec (_, ps, e) =
-  local (ps <>) $
-    lintExpr e
+lintFunDec :: Def Type (ID Type) -> ReaderT [ID Type] MalgoM Type
+lintFunDec Def{ params, expr } =
+  local (params <>) $ lintExpr expr

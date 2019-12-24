@@ -69,7 +69,7 @@ newTyMeta = TyMeta <$> newUniq
 defineVar :: Info -> ID () -> Type -> [Constraint] -> InferM ()
 defineVar i x t cs = do
   sub <- catchUnifyError i (Just x) $ solve cs
-  x' <- newID (apply sub t) (_idName x)
+  x' <- newID (apply sub t) (idName x)
   modify (insert x x')
 
 lookupVar :: ID () -> InferM Type
@@ -84,7 +84,7 @@ typingExpr (Var i x) = do
   env <- get
   case lookup x env of
     Nothing -> throw i $ "unbound variable:" <+> pPrint x $+$ "Env:" <+> pPrint (toList env)
-    Just y  -> return ([], _idMeta y)
+    Just y  -> return ([], idMeta y)
 typingExpr Int{} = return ([], TyInt)
 typingExpr Float{} = return ([], TyFloat)
 typingExpr Bool{} = return ([], TyBool)

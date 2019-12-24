@@ -153,7 +153,7 @@ genFunMap :: M.Func Type (ID Type) -> MalgoM (IDMap Type (ID LType))
 genFunMap M.Func{ name, captures } =
   case typeOf name of
     TyFun ps r -> do
-      newName <- newID (functionType (isNothing captures) ps r) (_idName name)
+      newName <- newID (functionType (isNothing captures) ps r) (idName name)
       pure $ one (name, newName)
     _ -> error "genFunMap"
 
@@ -166,13 +166,13 @@ functionType isKnown ps r = Function
 genFunction :: M.Func Type (ID Type) -> GenProgram (L.Func (ID LType))
 genFunction M.Func{ name, captures = Nothing, params, body } = do
   funcName <- findFun name
-  funcParams <- mapM (\x -> newID (convertType (typeOf x)) (_idName x)) params
+  funcParams <- mapM (\x -> newID (convertType (typeOf x)) (idName x)) params
   bodyBlock <- runGenExpr (foldr (uncurry insert) mempty (zip params funcParams)) "x" (genExpr body)
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func{ name, captures = Just caps, mutrecs, params, body } = do
   funcName <- findFun name
   capsId <- newID Boxed "caps"
-  funcParams <- mapM (\x -> newID (convertType (typeOf x)) (_idName x)) params
+  funcParams <- mapM (\x -> newID (convertType (typeOf x)) (idName x)) params
   bodyBlock <- runGenExpr (foldr (uncurry insert) mempty (zip params funcParams)) "x" $ do
     capsMap <- genUnpackCaps capsId
     clsMap <- genCls capsId
@@ -187,7 +187,7 @@ genFunction M.Func{ name, captures = Just caps, mutrecs, params, body } = do
         cOpr <- loadC capsId' [0, i]
         pure (one (c, cOpr))
     genCls capsId = fmap mconcat $ forM mutrecs $ \f -> do
-      clsId <- setHint (_idName f) $ packClosure f capsId
+      clsId <- setHint (idName f) $ packClosure f capsId
       pure (one (f, clsId))
 
 genMainFunction :: ID LType -> Expr Type (ID Type) -> GenProgram (L.Func (ID LType))
@@ -248,7 +248,7 @@ genExpr (M.CallClosure f args) = do
   argOprs <- (clsCap :) <$> mapM findVar args
   call clsFun argOprs
 genExpr (M.Let defs e) = do
-  defsMap <- mapM (\(ID{_idUniq}, val) -> (_idUniq, ) <$> genExpr val) defs
+  defsMap <- mapM (\(ID{ idUniq }, val) -> (idUniq, ) <$> genExpr val) defs
   local (\st -> st { variableMap = IDMap (fromList defsMap) <> variableMap st }) $ genExpr e
 genExpr (M.If c t f) = do
   cOpr <- findVar c
