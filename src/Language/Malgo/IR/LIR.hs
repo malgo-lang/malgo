@@ -10,9 +10,7 @@ module Language.Malgo.IR.LIR where
 
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType
-import           Relude                  hiding ( Op
-                                                , Type
-                                                )
+import           Language.Malgo.Prelude
 
 data Program a = Program { functions :: [Func a], mainFunc :: a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)

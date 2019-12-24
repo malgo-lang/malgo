@@ -10,7 +10,7 @@ module Language.Malgo.IR.HIR where
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Op )
+import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( (!!) )
 
 data Expr t a = Var a
@@ -52,11 +52,11 @@ data Op = Add | Sub | Mul | Div | Mod
   deriving (Eq, Show, Read, Generic)
 
 flattenExpr :: Expr t a -> Expr t a
-flattenExpr (Let x v1 e1) = insert (flattenExpr v1)
+flattenExpr (Let x v1 e1) = go (flattenExpr v1)
  where
-  insert (Let y v2 e2) = Let y v2 (insert e2)
-  insert (LetRec xs e) = LetRec xs (insert e)
-  insert v             = Let x v (flattenExpr e1)
+  go (Let y v2 e2) = Let y v2 (go e2)
+  go (LetRec xs e) = LetRec xs (go e)
+  go v             = Let x v (flattenExpr e1)
 flattenExpr (LetRec defs body) =
   LetRec (map flattenDef defs) (flattenExpr body)
 flattenExpr (If c t f) = If c (flattenExpr t) (flattenExpr f)
@@ -77,10 +77,13 @@ instance FreeVars (Expr t) where
   freevars (Call _ xs       ) = fromList xs
   freevars (Let x v e       ) = freevars v <> delete x (freevars e)
   freevars (LetRec xs e) =
-    let efv  = freevars e
-        xsfv = foldMap (\Def { params, expr } -> freevars expr \\ fromList params) xs
-        fs = fromList $ map name xs
-    in  (efv <> xsfv) \\ fs
+    let
+      efv = freevars e
+      xsfv =
+        foldMap (\Def { params, expr } -> freevars expr \\ fromList params) xs
+      fs = fromList $ map name xs
+    in
+      (efv <> xsfv) \\ fs
   freevars (If    c t f ) = one c <> freevars t <> freevars f
   freevars (Prim  _ _ xs) = fromList xs
   freevars (BinOp _ x y ) = fromList [x, y]

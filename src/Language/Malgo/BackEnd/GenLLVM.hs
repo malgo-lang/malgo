@@ -17,6 +17,7 @@ import           Language.Malgo.ID
 import           Language.Malgo.IR.LIR         as IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
+import           Language.Malgo.Prelude
 import           Language.Malgo.TypeRep.LType  as IR
 import qualified LLVM.AST
 import           LLVM.AST.Constant              ( Constant(..) )
@@ -31,8 +32,6 @@ import           LLVM.AST.Type           hiding ( double
 import qualified LLVM.AST.Type                 as LT
 import           LLVM.IRBuilder
 import qualified LLVM.IRBuilder                as IRBuilder
-import           Relude                  hiding ( Type )
-import           Relude.Extra.Map        hiding ( size )
 
 data GenLLVM
 

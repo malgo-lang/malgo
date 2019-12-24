@@ -19,7 +19,7 @@ import           Language.Malgo.IR.Syntax
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
-import           Relude
+import           Language.Malgo.Prelude
 
 data Rename
 

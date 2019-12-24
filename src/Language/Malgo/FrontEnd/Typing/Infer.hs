@@ -19,10 +19,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty   hiding ( first )
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Constraint
-                                                , Type
-                                                )
-import           Relude.Extra.Map
+import           Language.Malgo.Prelude
 
 data Typing
 

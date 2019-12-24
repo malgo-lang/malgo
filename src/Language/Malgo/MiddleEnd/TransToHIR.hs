@@ -16,7 +16,7 @@ import qualified Language.Malgo.IR.Syntax      as S
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Type )
+import           Language.Malgo.Prelude
 
 data TransToHIR
 

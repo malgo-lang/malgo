@@ -8,10 +8,7 @@ where
 
 import           Language.Malgo.FrontEnd.Typing.Subst
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Constraint
-                                                , Type
-                                                )
-import           Relude.Extra.Map
+import           Language.Malgo.Prelude
 
 data Constraint = Type :~ Type
   deriving (Eq, Show)

@@ -4,7 +4,7 @@
 module Language.Malgo.FrontEnd.Info where
 
 import           Language.Malgo.Pretty
-import           Relude
+import           Language.Malgo.Prelude
 
 newtype Info = Info (Text, Int, Int)
   deriving (Show, Eq, Ord, Read, Generic)

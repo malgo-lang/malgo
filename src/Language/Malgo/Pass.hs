@@ -12,7 +12,7 @@ module Language.Malgo.Pass where
 import           Control.Monad.Reader
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
-import           Relude
+import           Language.Malgo.Prelude
 
 class Pass p s t | p -> s t where
   isDump :: Opt -> Bool

@@ -23,7 +23,7 @@ import           Language.Malgo.Monad          as M
 import           Language.Malgo.Pass
 import qualified LLVM.AST                      as L
 import           Options.Applicative
-import           Relude
+import           Language.Malgo.Prelude
 
 parseOpt :: IO Opt
 parseOpt = execParser $ info

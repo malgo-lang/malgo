@@ -4,7 +4,7 @@
 module Language.Malgo.TypeRep.Type where
 
 import           Language.Malgo.Pretty
-import           Relude                  hiding ( Type )
+import           Language.Malgo.Prelude
 
 type TyVar = Int
 

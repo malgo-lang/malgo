@@ -16,7 +16,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Type )
+import           Language.Malgo.Prelude
 
 data HIRLint
 

@@ -6,8 +6,8 @@ module Language.Malgo.TypeRep.LType where
 
 import           Language.Malgo.ID
 import           Language.Malgo.Pretty
-import           Relude                  hiding ( Type )
-import           Relude.Unsafe                  ( (!!) )
+import           Language.Malgo.Prelude
+import           Relude.Unsafe
 
 data LType = Ptr LType
            | Bit

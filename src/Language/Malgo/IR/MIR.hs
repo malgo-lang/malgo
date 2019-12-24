@@ -7,16 +7,13 @@
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.MIR where
 
-import           Data.Set                       ( (\\) )
 import           Language.Malgo.IR.HIR          ( Lit(..)
                                                 , Op(..)
                                                 )
 import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Op
-                                                , Type
-                                                )
+import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( (!!) )
 
 data Program t a = Program { functions :: [Func t a], mainExpr :: Expr t a }
@@ -67,11 +64,11 @@ data Expr t a = Var a
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 flattenExpr :: Expr t a -> Expr t a
-flattenExpr (Let [(x, v1)] e1) = insert (flattenExpr v1)
+flattenExpr (Let [(x, v1)] e1) = go (flattenExpr v1)
  where
-  insert (Let [(y, v2)] e2) = Let [(y, v2)] (insert e2)
-  insert (Let xs        e ) = Let xs (insert e)
-  insert v                  = Let [(x, v)] (flattenExpr e1)
+  go (Let [(y, v2)] e2) = Let [(y, v2)] (go e2)
+  go (Let xs        e ) = Let xs (go e)
+  go v                  = Let [(x, v)] (flattenExpr e1)
 flattenExpr (Let xs e) =
   Let (map (\(n, v) -> (n, flattenExpr v)) xs) (flattenExpr e)
 flattenExpr (If c t f) = If c (flattenExpr t) (flattenExpr f)

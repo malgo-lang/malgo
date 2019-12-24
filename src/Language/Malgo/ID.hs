@@ -24,7 +24,7 @@ import           Data.Functor.Classes
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Type )
+import           Language.Malgo.Prelude  hiding ( delete )
 import           Relude.Extra.Map
 
 data ID a = ID { idName :: Text, idUniq :: Int, idMeta :: a }

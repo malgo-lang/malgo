@@ -10,9 +10,7 @@ import           Data.List                      ( (!!) )
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Op
-                                                , Type
-                                                )
+import           Language.Malgo.Prelude
 
 data Expr a
   -- | 変数参照

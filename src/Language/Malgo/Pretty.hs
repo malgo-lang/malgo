@@ -12,7 +12,7 @@ where
 import qualified Data.Text                     as T
 import qualified Data.Text.Lazy                as TL
 import qualified Prelude
-import           Relude
+import           Language.Malgo.Prelude
 import           Text.Pretty.Simple             ( pShow )
 import           Text.PrettyPrint.HughesPJClass
                                          hiding ( double

@@ -6,9 +6,9 @@
 module Language.Malgo.Lexer where
 
 import           Language.Malgo.FrontEnd.Info
-import           Relude                  hiding ( EQ
-                                                , GT
+import           Language.Malgo.Prelude  hiding ( EQ
                                                 , LT
+                                                , GT
                                                 )
 import           Text.Parsec             hiding ( many
                                                 , (<|>)

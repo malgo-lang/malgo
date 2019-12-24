@@ -19,7 +19,7 @@ where
 
 import           Control.Monad.Fix
 import           Control.Monad.Trans.Writer.CPS
-import           Relude
+import           Language.Malgo.Prelude
 
 newtype UniqSupply = UniqSupply (IORef Int)
 

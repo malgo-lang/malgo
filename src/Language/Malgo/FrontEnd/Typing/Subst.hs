@@ -9,7 +9,7 @@ module Language.Malgo.FrontEnd.Typing.Subst
 where
 
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Type )
+import           Language.Malgo.Prelude
 import           Relude.Extra.Map
 
 newtype Subst = Subst (Map TyVar Type)
