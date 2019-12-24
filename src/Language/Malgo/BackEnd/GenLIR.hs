@@ -196,10 +196,10 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   genUnpackCaps capsId = do
     capsId' <- setHint "boxedCaps"
       $ cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-    setHint "capture" $ fmap mconcat $ forM (zip [0 ..] caps) $ \(i, c) -> do
+    setHint "capture" $ foldForM (zip [0 ..] caps) $ \(i, c) -> do
       cOpr <- loadC capsId' [0, i]
       pure (one (c, cOpr))
-  genCls capsId = fmap mconcat $ forM mutrecs $ \f -> do
+  genCls capsId = foldForM mutrecs $ \f -> do
     clsId <- setHint (idName f) $ packClosure f capsId
     pure (one (f, clsId))
 

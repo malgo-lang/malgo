@@ -39,13 +39,26 @@ data GenLLVM
 instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
   isDump _ = False
   trans Program { functions, mainFunc } = dumpLLVM $ do
-    let funMap = mconcat $ map genFunMap functions
+    let funMap = foldMap genFunMap functions
     local (\st -> st { variableMap = funMap }) $ do
       mapM_ genFunction functions
       void $ function "main" [] LT.i32 $ \_ -> do
         mainFuncOpr <- findVar mainFunc
         void $ call mainFuncOpr []
         ret (int32 0)
+   where
+    genFunMap :: Func (ID LType) -> Map (ID LType) Operand
+    genFunMap Func { name } =
+      let Function r ps = ltypeOf name
+      in  Map.singleton name
+            $ ConstantOperand
+            $ GlobalReference
+                (ptr $ FunctionType { resultType    = convertType r
+                                    , argumentTypes = map convertType ps
+                                    , isVarArg      = False
+                                    }
+                )
+            $ genFuncName name
 
 data GenState = GenState { variableMap :: Map (ID LType) Operand
                          , prims       :: IORef (Map Text Operand)
@@ -109,19 +122,6 @@ mallocBytes bytesOpr maybeType = do
 genFuncName :: ID a -> LLVM.AST.Name
 genFuncName ID { idName, idUniq } =
   LLVM.AST.mkName $ toString $ idName <> show idUniq
-
-genFunMap :: Func (ID LType) -> Map (ID LType) Operand
-genFunMap Func { name } =
-  let Function r ps = ltypeOf name
-  in  Map.singleton name
-        $ ConstantOperand
-        $ GlobalReference
-            (ptr $ FunctionType { resultType    = convertType r
-                                , argumentTypes = map convertType ps
-                                , isVarArg      = False
-                                }
-            )
-        $ genFuncName name
 
 genFunction :: Func (ID LType) -> GenDec ()
 genFunction Func { name, params, body } =

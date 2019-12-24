@@ -78,8 +78,7 @@ instance FreeVars (Expr t) where
   freevars (Let x v e       ) = freevars v <> delete x (freevars e)
   freevars (LetRec xs e) =
     let efv  = freevars e
-        xsfv = mconcat
-          $ map (\Def { params, expr } -> freevars expr \\ fromList params) xs
+        xsfv = foldMap (\Def { params, expr } -> freevars expr \\ fromList params) xs
         fs = fromList $ map name xs
     in  (efv <> xsfv) \\ fs
   freevars (If    c t f ) = one c <> freevars t <> freevars f

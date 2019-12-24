@@ -20,7 +20,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Relude                  hiding ( Type )
+import           Language.Malgo.Prelude
 
 data Closure
 
@@ -77,13 +77,12 @@ transExpr (H.BinOp op   x  y ) = pure $ BinOp op x y
 transExpr (H.LetRec defs e   ) = do
   envBackup <- get
   fv        <- getFreeVars
-  if
-    | fv == mempty && (freevars e `intersection` fromList funcNames) == mempty
-    -> local
-        (\env -> env { knowns = funcNames <> knowns env, captures = Nothing })
-      $ transExpr e
-    | otherwise
-    -> do
+  if fv == mempty && (freevars e `intersection` fromList funcNames) == mempty
+    then
+      local
+          (\env -> env { knowns = funcNames <> knowns env, captures = Nothing })
+        $ transExpr e
+    else do
       put envBackup
       defs' <-
         local
@@ -104,12 +103,9 @@ transExpr (H.LetRec defs e   ) = do
                             }
       )
       (transDefs defs)
-    mconcat <$> forM
-      funcNames
-      (\f -> do
-        Func { params, body } <- getFunc f
-        pure $ freevars body \\ fromList params
-      )
+    foldForM funcNames $ \f -> do
+      Func { params, body } <- getFunc f
+      pure $ freevars body \\ fromList params
   transDefs [] = pure []
   transDefs (H.Def { name, params, expr } : ds) = do
     expr'            <- transExpr expr

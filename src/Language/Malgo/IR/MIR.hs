@@ -94,7 +94,7 @@ instance FreeVars (Expr t) where
   freevars (MakeClosure      _ xs) = fromList xs
   freevars (Let xs e) =
     let (ns, vs) = unzip xs
-    in  (mconcat (map freevars vs) <> freevars e) \\ fromList ns
+    in  (foldMap freevars vs <> freevars e) \\ fromList ns
   freevars (If    c t f ) = one c <> freevars t <> freevars f
   freevars (Prim  _ _ xs) = fromList xs
   freevars (BinOp _ x y ) = fromList [x, y]

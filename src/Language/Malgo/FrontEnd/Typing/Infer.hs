@@ -96,7 +96,7 @@ typingExpr Char{}       = return ([], TyApp CharC [])
 typingExpr String{}     = return ([], TyApp StringC [])
 typingExpr Unit{}       = return ([], TyApp TupleC [])
 typingExpr (Tuple _ xs) = do
-  (cs, ts) <- first mconcat <$> mapAndUnzipM typingExpr xs
+  (cs, ts) <- first mconcat . unzip <$> mapM typingExpr xs
   return (cs, TyApp TupleC ts)
 typingExpr (TupleAccess _ e _) = do
   -- FIXME: 正しく型付けする
@@ -120,7 +120,7 @@ typingExpr (ArrayWrite _ arr ix val) = do
     )
 typingExpr (Call _ fn args) = do
   (cs1, fnTy    ) <- typingExpr fn
-  (cs2, argTypes) <- first mconcat <$> mapAndUnzipM typingExpr args
+  (cs2, argTypes) <- first mconcat . unzip <$> mapM typingExpr args
   retTy           <- newTyMeta
   return (TyApp FunC (retTy : argTypes) :~ fnTy : cs1 <> cs2, retTy)
 typingExpr (Fn i params body) = do
@@ -151,7 +151,7 @@ typingExpr (Let _ [ExDec i name typ _] body) = do
   return (cs, t)
 typingExpr (Let i fs e) = do
   mapM_ prepare fs
-  cs1      <- concat <$> mapM typingFunDec fs
+  cs1      <- foldMapM typingFunDec fs
   (cs2, t) <- typingExpr e
   return (cs1 <> cs2, t)
  where
