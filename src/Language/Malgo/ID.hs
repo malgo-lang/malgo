@@ -27,8 +27,6 @@ import           Relude.Extra.Map
 data ID a = ID { idName :: Text, idUniq :: Int, idMeta :: a }
   deriving (Show, Ord, Read, Functor, Foldable, Generic)
 
-instance PrettyVal a => PrettyVal (ID a)
-
 instance Eq (ID a) where
   x == y = idUniq x == idUniq y
 

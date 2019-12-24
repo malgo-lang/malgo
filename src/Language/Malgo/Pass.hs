@@ -18,14 +18,14 @@ class Pass p s t | p -> s t where
   isDump :: Opt -> Bool
   trans :: s -> MalgoM t
 
-dump :: (MonadReader MalgoEnv m, PrettyVal a, MonadIO m, Pretty a) => a -> m ()
+dump :: (MonadReader MalgoEnv m, Show a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- asks maOption
   if isDebugMode opt
-  then liftIO $ dumpIO x
+  then putLTextLn $ pShow x
   else print $ pPrint x
 
-transWithDump :: forall p s t. (Pass p s t, PrettyVal t, Pretty t) => s -> MalgoM t
+transWithDump :: forall p s t. (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do
   opt <- asks maOption
   t <- trans @p s

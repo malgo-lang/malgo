@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveFoldable    #-}
 {-# LANGUAGE DeriveFunctor     #-}
 {-# LANGUAGE DeriveGeneric     #-}
@@ -18,7 +17,7 @@ import           Relude.Unsafe                     ((!!))
 
 
 data Program t a = Program { functions :: [Func t a], mainExpr :: Expr t a }
-  deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+  deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (Pretty t, Pretty a) => Pretty (Program t a) where
   pPrint Program { functions, mainExpr } =
@@ -26,7 +25,7 @@ instance (Pretty t, Pretty a) => Pretty (Program t a) where
     $$ "entry point =" $$ nest 2 (pPrint mainExpr)
 
 data Func t a = Func { name :: a, captures :: Maybe [a], mutrecs :: [a], params :: [a], body :: Expr t a }
-  deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+  deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (Pretty t, Pretty a) => Pretty (Func t a) where
   pPrint Func { name, captures, params, body } =
@@ -60,7 +59,7 @@ data Expr t a = Var a
               | If a (Expr t a) (Expr t a)
               | Prim Text t [a]
               | BinOp Op a a
-  deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+  deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 flattenExpr :: Expr t a -> Expr t a
 flattenExpr (Let [(x, v1)] e1) =

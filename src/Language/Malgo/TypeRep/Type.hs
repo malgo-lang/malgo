@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -13,10 +12,10 @@ type TyVar = Int
 -- | Malgoの組み込みデータ型
 data Type = TyApp TyCon [Type]
           | TyMeta TyVar
-  deriving (Eq, Show, Ord, Read, Generic, PrettyVal)
+  deriving (Eq, Show, Ord, Read, Generic)
 
 data TyCon = FunC | IntC | FloatC | BoolC | CharC | StringC | TupleC | ArrayC
-  deriving (Eq, Show, Ord, Read, Generic, PrettyVal)
+  deriving (Eq, Show, Ord, Read, Generic)
 
 instance Pretty Type where
   pPrint (TyApp FunC (ret : params)) = parens (sep $ punctuate "," $ map pPrint params) <+> "->" <+> pPrint ret

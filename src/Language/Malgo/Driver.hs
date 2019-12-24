@@ -53,6 +53,6 @@ compile filename ast = M.runMalgo $ do
   lir <- transWithDump @GenLIR mir
   llvmir <- trans @GenLLVM lir
   return $ L.defaultModule { L.moduleName = fromString filename
-                           , L.moduleSourceFileName = fromString $ toString filename
+                           , L.moduleSourceFileName = encodeUtf8 filename
                            , L.moduleDefinitions = llvmir
                            }

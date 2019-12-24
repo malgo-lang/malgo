@@ -7,7 +7,7 @@ import           Language.Malgo.Pretty
 import           Relude
 
 newtype Info = Info (Text, Int, Int)
-  deriving (Show, Eq, Ord, Read, Generic, PrettyVal)
+  deriving (Show, Eq, Ord, Read, Generic)
 
 instance Pretty Info where
   pPrint (Info (file, line, column)) =

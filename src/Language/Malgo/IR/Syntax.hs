@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveFoldable    #-}
 {-# LANGUAGE DeriveFunctor     #-}
 {-# LANGUAGE DeriveGeneric     #-}
@@ -52,7 +51,7 @@ data Expr a
   | If Info (Expr a) (Expr a) (Expr a)
   -- | 中置演算子
   | BinOp Info Op (Expr a) (Expr a)
-  deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic, PrettyVal)
+  deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 info :: Expr t -> Info
 info (Var i _)            = i
@@ -119,7 +118,7 @@ data Op = Add | Sub | Mul | Div
         | Eq | Neq
         | Lt | Gt | Le | Ge
         | And | Or
-  deriving (Eq, Show, Read, Generic, PrettyVal)
+  deriving (Eq, Show, Read, Generic)
 
 instance Pretty Op where
   pPrint Add  = "+"
@@ -144,7 +143,7 @@ data Decl a
   = FunDec Info a [(a, Maybe Type)] Type (Expr a)
   | ValDec Info a (Maybe Type) (Expr a)
   | ExDec Info a Type Text
-  deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic, PrettyVal)
+  deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec _ name params _ body) =

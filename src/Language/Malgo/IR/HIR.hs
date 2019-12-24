@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveFoldable    #-}
 {-# LANGUAGE DeriveFunctor     #-}
 {-# LANGUAGE DeriveGeneric     #-}
@@ -34,23 +33,23 @@ data Expr t a = Var a
               | If a (Expr t a) (Expr t a)
               | Prim Text t [a]
               | BinOp Op a a
-  deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+  deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 data Def t a = Def { name :: a, params :: [a], expr :: Expr t a }
-  deriving (Eq, Show, Read, Generic, PrettyVal, Functor, Foldable)
+  deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 data Lit = Int Integer
          | Float Double
          | Bool Bool
          | Char Char
          | String Text
-  deriving (Eq, Show, Read, Generic, PrettyVal)
+  deriving (Eq, Show, Read, Generic)
 
 data Op = Add | Sub | Mul | Div | Mod
         | FAdd | FSub | FMul | FDiv
         | Eq | Neq | Lt | Gt | Le | Ge
         | And | Or
-  deriving (Eq, Show, Read, Generic, PrettyVal)
+  deriving (Eq, Show, Read, Generic)
 
 flattenExpr :: Expr t a -> Expr t a
 flattenExpr (Let x v1 e1) =

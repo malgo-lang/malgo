@@ -14,7 +14,6 @@ import           Language.Malgo.ID
 import           Language.Malgo.IR.LIR           as IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType    as IR
 import qualified LLVM.AST
 import           LLVM.AST.Constant               (Constant (..))
@@ -83,7 +82,7 @@ findExt name ps r = do
   case lookup name psMap of
     Just opr -> pure opr
     Nothing -> do
-      opr <- extern (fromString $ toString name) ps r
+      opr <- extern (LLVM.AST.mkName $ toString name) ps r
       modifyIORef prims (Map.insert name opr)
       pure opr
 
@@ -95,6 +94,9 @@ mallocBytes bytesOpr maybeType = do
     Just t  -> bitcast ptrOpr (ptr t)
     Nothing -> pure ptrOpr
 
+genFuncName :: ID a -> LLVM.AST.Name
+genFuncName ID{ idName, idUniq } = LLVM.AST.mkName $ toString $ idName <> show idUniq
+
 genFunMap :: Func (ID LType) -> Map (ID LType) Operand
 genFunMap Func{ name } =
   let Function r ps = ltypeOf name
@@ -103,7 +105,7 @@ genFunMap Func{ name } =
      $ GlobalReference (ptr $ FunctionType { resultType = convertType r
                                            , argumentTypes = map convertType ps
                                            , isVarArg = False })
-     $ fromString $ show $ pPrint name
+     $ genFuncName name
 
 genFunction :: Func (ID LType) -> GenDec ()
 genFunction Func{ name, params, body } =
@@ -111,7 +113,7 @@ genFunction Func{ name, params, body } =
     local (\st -> st { variableMap = fromList (zip params args) <> variableMap st })
     $ genBlock body ret
   where
-    funcName = fromString $ show $ pPrint name
+    funcName = genFuncName name
     llvmParams = map (\ID{ idMeta } -> (convertType idMeta, NoParameterName)) params
     retty = convertType (ltypeOf body)
 

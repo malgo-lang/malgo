@@ -147,7 +147,7 @@ convertType (TyApp CharC []) = U8
 convertType (TyApp StringC []) = Ptr U8
 convertType (TyApp TupleC xs) = Ptr $ Struct $ map convertType xs
 convertType (TyApp ArrayC [x]) = Ptr $ convertType x
-convertType t = error $ fromString $ "unreachable(convertType): " <> dumpStr t
+convertType t = error $ toText $ "unreachable(convertType): " <> pShow t
 
 genFunMap :: M.Func Type (ID Type) -> MalgoM (IDMap Type (ID LType))
 genFunMap M.Func{ name, captures } =

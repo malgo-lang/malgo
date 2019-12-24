@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -22,13 +21,13 @@ data LType = Ptr LType
            | Struct [LType]
            | Function LType [LType]
            | Void
-  deriving (Eq, Ord, Show, Read, Generic, PrettyVal)
+  deriving (Eq, Ord, Show, Read, Generic)
 
 instance Pretty LType where
   pPrint (Ptr t) = "ptr" <> parens (pPrint t)
   pPrint (Struct xs) = braces (sep $ punctuate "," $ map pPrint xs)
   pPrint (Function ret params) = parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
-  pPrint t = dumpDoc t
+  pPrint t = text $ toString $ pShow t
 
 pattern Boxed :: LType
 pattern Boxed = Ptr U8
@@ -46,4 +45,4 @@ accessType :: LType -> [Int] -> LType
 accessType t []               = t
 accessType (Ptr t) (_:xs)     = accessType t xs
 accessType (Struct ts) (i:xs) = accessType (ts !! i) xs
-accessType t _ = error $ fromString $ dumpStr t <> " is not accessable"
+accessType t _ = error $ toText $ pShow t <> " is not accessable"
