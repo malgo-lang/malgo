@@ -29,7 +29,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
   isDump = dumpTyped
   trans e = evaluatingStateT mempty $ do
     (cs, _) <- typingExpr e
-    subst   <- catchUnifyError (Syntax.info e) Nothing $ solve cs
+    subst   <- catchUnifyError (Syntax.info e) "toplevel" $ solve cs
     env     <- gets (defaulting . apply subst)
     pure $ fmap (\x -> fromJust $ lookup x env) e
 
@@ -41,30 +41,24 @@ type Env = IDMap () (ID Type)
 
 type InferM a = StateT Env MalgoM a
 
-throw :: Info -> Doc -> InferM a
+throw :: HasCallStack => Info -> Doc -> InferM a
 throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
 
-catchUnifyError :: Info -> Maybe (ID ()) -> Either UnifyError a -> InferM a
-catchUnifyError i n (Left (MismatchConstructor c1 c2)) =
-  throw i $ "mismatch constructor" <+> pPrint c1 <+> pPrint c2 $+$ case n of
-    Nothing -> mempty
-    Just n' -> "on" <+> pPrint n'
-catchUnifyError i n (Left (MismatchLength ts1 ts2)) =
-  throw i $ "mismatch length" <+> pPrint ts1 <+> pPrint ts2 $+$ case n of
-    Nothing -> mempty
-    Just n' -> "on" <+> pPrint n'
-catchUnifyError i n (Left (InfinitType var ty)) =
-  throw i $ "infinit type" <+> pPrint var <+> pPrint ty $+$ case n of
-    Nothing -> mempty
-    Just n' -> "on" <+> pPrint n'
+catchUnifyError :: HasCallStack => Info -> Doc -> Either UnifyError a -> InferM a
+catchUnifyError i name (Left (MismatchConstructor c1 c2)) =
+  throw i $ "mismatch constructor" <+> pPrint c1 <+> pPrint c2 $+$ "on" <+> name
+catchUnifyError i name (Left (MismatchLength ts1 ts2)) =
+  throw i $ "mismatch length" <+> pPrint ts1 <+> pPrint ts2 $+$ "on" <+> name
+catchUnifyError i name (Left (InfinitType var ty)) =
+  throw i $ "infinit type" <+> pPrint var <+> pPrint ty $+$ "on" <+> name
 catchUnifyError _ _ (Right a) = pure a
 
 newTyMeta :: InferM Type
 newTyMeta = TyMeta <$> newUniq
 
-defineVar :: Info -> ID () -> Type -> [Constraint] -> InferM ()
+defineVar :: HasCallStack => Info -> ID () -> Type -> [Constraint] -> InferM ()
 defineVar i x t cs = do
-  sub <- catchUnifyError i (Just x) $ solve cs
+  sub <- catchUnifyError i (pPrint x) $ solve cs
   x'  <- newID (apply sub t) (idName x)
   modify (insert x x')
 
