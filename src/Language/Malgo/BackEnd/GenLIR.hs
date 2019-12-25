@@ -5,7 +5,6 @@
 {-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TupleSections         #-}
 {-# LANGUAGE TypeApplications      #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
@@ -257,10 +256,10 @@ genExpr (M.CallClosure f args) = do
   clsCap  <- setHint "clsCap" $ loadC clsPtr [0, 1]
   argOprs <- (clsCap :) <$> mapM findVar args
   call clsFun argOprs
-genExpr (M.Let defs e) = do
-  defsMap <- mapM (\(ID { idUniq }, val) -> (idUniq, ) <$> genExpr val) defs
-  local (\st -> st { variableMap = IDMap (fromList defsMap) <> variableMap st })
-    $ genExpr e
+genExpr (M.Let name val expr) = do
+  val' <- genExpr val
+  local (\st -> st { variableMap = insert name val' (variableMap st) })
+    $ genExpr expr
 genExpr (M.If c t f) = do
   cOpr <- findVar c
   branchIf cOpr (genExpr t) (genExpr f)

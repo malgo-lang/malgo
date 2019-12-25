@@ -71,15 +71,14 @@ lintExpr (MakeArray   _   x ) = definedVar x
 lintExpr (ArrayRead   arr ix) = definedVar arr >> definedVar ix
 lintExpr (ArrayWrite arr ix val) =
   definedVar arr >> definedVar ix >> definedVar val
-lintExpr (MakeClosure      f  xs) = isUnknownFunc f >> mapM_ definedVar xs
-lintExpr (CallDirect       f  xs) = isKnownFunc f >> mapM_ definedVar xs
-lintExpr (CallWithCaptures f  xs) = isUnknownFunc f >> mapM_ definedVar xs
-lintExpr (CallClosure      f  xs) = definedVar f >> mapM_ definedVar xs
-lintExpr (Let              xs e ) = do
-  mapM_ notDefinedVar ns
-  local (\env -> env { variables = ns <> variables env })
-        (mapM_ lintExpr vs >> lintExpr e)
-  where (ns, vs) = unzip xs
+lintExpr (MakeClosure      f xs) = isUnknownFunc f >> mapM_ definedVar xs
+lintExpr (CallDirect       f xs) = isKnownFunc f >> mapM_ definedVar xs
+lintExpr (CallWithCaptures f xs) = isUnknownFunc f >> mapM_ definedVar xs
+lintExpr (CallClosure      f xs) = definedVar f >> mapM_ definedVar xs
+lintExpr (Let n v e            ) = do
+  notDefinedVar n
+  local (\env -> env { variables = n : variables env })
+        (lintExpr v >> lintExpr e)
 lintExpr (If    _ t f ) = lintExpr t >> lintExpr f
 lintExpr (Prim  _ _ xs) = mapM_ definedVar xs
 lintExpr (BinOp _ x y ) = definedVar x >> definedVar y

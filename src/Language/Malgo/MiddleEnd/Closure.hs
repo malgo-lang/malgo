@@ -68,9 +68,7 @@ transExpr (H.Call f xs            ) = do
       f `elem` mutrecs -> CallWithCaptures f xs
     | -- (相互)再帰している関数はCallWithCaptures
       otherwise        -> CallClosure f xs -- それ以外はCallCls
-transExpr (H.Let x v e) = do
-  v' <- transExpr v
-  Let [(x, v')] <$> transExpr e
+transExpr (H.Let   x    v  e ) = Let x <$> transExpr v <*> transExpr e
 transExpr (H.If    c    t  f ) = If c <$> transExpr t <*> transExpr f
 transExpr (H.Prim  orig ty xs) = pure $ Prim orig ty xs
 transExpr (H.BinOp op   x  y ) = pure $ BinOp op x y
@@ -78,11 +76,13 @@ transExpr (H.LetRec defs e   ) = do
   envBackup <- get
   fv        <- getFreeVars
   if fv == mempty && (freevars e `intersection` fromList funcNames) == mempty
+    -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
     then
       local
           (\env -> env { knowns = funcNames <> knowns env, captures = Nothing })
         $ transExpr e
     else do
+      -- 自由変数をcapturesに、相互再帰しうる関数名をmutrecsに入れてMIRに変換する
       put envBackup
       defs' <-
         local
@@ -91,10 +91,11 @@ transExpr (H.LetRec defs e   ) = do
               , mutrecs  = funcNames
               }
             )
-          $ transDefs defs
-      Let defs' <$> transExpr e
+          $ foldMapM transDef defs
+      appEndo defs' <$> transExpr e
  where
   funcNames   = map H.name defs
+  -- | defsがすべてknownだと仮定してMIRに変換し、その自由変数を求める
   getFreeVars = do
     _ <- local
       (\env -> (env :: Env) { knowns   = funcNames <> knowns env
@@ -102,23 +103,19 @@ transExpr (H.LetRec defs e   ) = do
                             , mutrecs  = mempty
                             }
       )
-      (transDefs defs)
+      (mapM_ transDef defs)
     foldForM funcNames $ \f -> do
       Func { params, body } <- getFunc f
       pure $ freevars body \\ fromList params
-  transDefs [] = pure []
-  transDefs (H.Def { name, params, expr } : ds) = do
-    expr'            <- transExpr expr
-    Env { captures } <- ask
-    addFunc
-      (Func { name     = name
-            , captures = captures
-            , mutrecs  = funcNames
-            , params   = params
-            , body     = expr'
-            }
-      )
-    ks <- transDefs ds
+  transDef H.Def { name, params, expr } = do
+    expr'                     <- transExpr expr
+    Env { captures, mutrecs } <- ask
+    addFunc $ Func { name     = name
+                   , captures = captures
+                   , mutrecs  = mutrecs
+                   , params   = params
+                   , body     = expr'
+                   }
     case captures of
-      Just caps -> pure ((name, MakeClosure name caps) : ks)
-      Nothing   -> pure ks
+      Nothing   -> pure mempty
+      Just caps -> pure $ Endo $ Let name (MakeClosure name caps)

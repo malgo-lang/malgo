@@ -57,20 +57,17 @@ data Expr t a = Var a
               | CallDirect a [a] -- direct call
               | CallWithCaptures a [a] -- indirect call for mutrec functions
               | CallClosure a [a] -- indirect call
-              | Let [(a, Expr t a)] (Expr t a)
+              | Let a (Expr t a) (Expr t a)
               | If a (Expr t a) (Expr t a)
               | Prim Text t [a]
               | BinOp Op a a
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 flattenExpr :: Expr t a -> Expr t a
-flattenExpr (Let [(x, v1)] e1) = go (flattenExpr v1)
+flattenExpr (Let x v1 e1) = go (flattenExpr v1)
  where
-  go (Let [(y, v2)] e2) = Let [(y, v2)] (go e2)
-  go (Let xs        e ) = Let xs (go e)
-  go v                  = Let [(x, v)] (flattenExpr e1)
-flattenExpr (Let xs e) =
-  Let (map (\(n, v) -> (n, flattenExpr v)) xs) (flattenExpr e)
+  go (Let y v2 e2) = Let y v2 (go e2)
+  go v             = Let x v (flattenExpr e1)
 flattenExpr (If c t f) = If c (flattenExpr t) (flattenExpr f)
 flattenExpr e          = e
 
@@ -89,12 +86,10 @@ instance FreeVars (Expr t) where
   freevars (CallWithCaptures _ xs) = fromList xs
   freevars (CallClosure      f xs) = fromList $ f : xs
   freevars (MakeClosure      _ xs) = fromList xs
-  freevars (Let xs e) =
-    let (ns, vs) = unzip xs
-    in  (foldMap freevars vs <> freevars e) \\ fromList ns
-  freevars (If    c t f ) = one c <> freevars t <> freevars f
-  freevars (Prim  _ _ xs) = fromList xs
-  freevars (BinOp _ x y ) = fromList [x, y]
+  freevars (Let   n v e          ) = delete n (freevars v <> freevars e)
+  freevars (If    c t f          ) = one c <> freevars t <> freevars f
+  freevars (Prim  _ _ xs         ) = fromList xs
+  freevars (BinOp _ x y          ) = fromList [x, y]
 
 instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (Var   x             ) = pPrint x
@@ -113,8 +108,7 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
     parens $ "cls" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (MakeClosure f xs) =
     parens $ "closure" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (Let xs e) =
-    vcat (map (\(n, v) -> pPrint n <+> "=" <+> pPrint v) xs) $+$ pPrint e
+  pPrint (Let n v e) = pPrint n <+> "=" <+> pPrint v $+$ pPrint e
   pPrint (If c t f) =
     parens $ "if" <+> pPrint c $+$ "then" <+> pPrint t $+$ "else" <+> pPrint f
   pPrint (BinOp op x y) = parens $ sep [pPrint op, pPrint x, pPrint y]
@@ -144,7 +138,7 @@ instance (HasType t, HasType a) => HasType (Expr t a) where
     TyApp FunC (ret : _) -> ret
     _                    -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (MakeClosure fn _) = TyApp TupleC [typeOf fn, TyApp StringC []]
-  typeOf (Let         _  e) = typeOf e
+  typeOf (Let  _ _  e     ) = typeOf e
   typeOf (If   _ t  _     ) = typeOf t
   typeOf (Prim _ ty _     ) = case typeOf ty of
     TyApp FunC (ret : _) -> ret
