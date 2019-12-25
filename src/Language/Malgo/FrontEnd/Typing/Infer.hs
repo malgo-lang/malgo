@@ -31,7 +31,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     (cs, _) <- typingExpr e
     subst   <- catchUnifyError (Syntax.info e) Nothing $ solve cs
     env     <- gets (defaulting . apply subst)
-    pure $ fmap (updateID env) e
+    pure $ fmap (\x -> fromJust $ lookup x env) e
 
 defaulting :: Substitutable a => a -> a
 defaulting t =
@@ -59,9 +59,6 @@ catchUnifyError i n (Left (InfinitType var ty)) =
     Just n' -> "on" <+> pPrint n'
 catchUnifyError _ _ (Right a) = pure a
 
-updateID :: Env -> ID () -> ID Type
-updateID env x = fromJust $ lookup x env
-
 newTyMeta :: InferM Type
 newTyMeta = TyMeta <$> newUniq
 
@@ -72,14 +69,10 @@ defineVar i x t cs = do
   modify (insert x x')
 
 lookupVar :: ID () -> InferM Type
-lookupVar x = do
-  env <- get
-  case lookup x env of
-    Nothing -> errorDoc $ "error(lookupVar):" <+> pPrint x
-    Just y  -> pure $ typeOf y
+lookupVar x = typeOf . fromJust . lookup x <$> get
 
 typingExpr :: Expr (ID ()) -> InferM ([Constraint], Type)
-typingExpr (Var i x)    = ([], ) <$> lookupVar x
+typingExpr (Var _ x)    = ([], ) <$> lookupVar x
 typingExpr Int{}        = return ([], TyApp IntC [])
 typingExpr Float{}      = return ([], TyApp FloatC [])
 typingExpr Bool{}       = return ([], TyApp BoolC [])
@@ -115,12 +108,8 @@ typingExpr (Call _ fn args) = do
   retTy           <- newTyMeta
   return (TyApp FunC (retTy : argTypes) :~ fnTy : cs1 <> cs2, retTy)
 typingExpr (Fn i params body) = do
-  paramTypes <- mapM
-    (\case
-      (_, Just t ) -> pure t
-      (_, Nothing) -> newTyMeta
-    )
-    params
+  paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
+                     params
   mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
   (cs, t) <- typingExpr body
   return (cs, TyApp FunC (t : paramTypes))
@@ -152,12 +141,8 @@ typingExpr (Let i fs e) = do
     defineVar i' f v []
   prepare _ = errorDoc $ "error(prepare):" <+> pPrint i
   typingFunDec (FunDec i' f params retty body) = do
-    paramTypes <- mapM
-      (\case
-        (_, Just t ) -> pure t
-        (_, Nothing) -> newTyMeta
-      )
-      params
+    paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
+                       params
     mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
     (cs1, t) <- typingExpr body
     tv       <- lookupVar f
