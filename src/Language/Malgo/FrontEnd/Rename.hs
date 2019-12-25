@@ -11,7 +11,6 @@ module Language.Malgo.FrontEnd.Rename
 where
 
 import           Data.List                      ( span )
-import qualified Data.Map.Strict               as Map
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
 import           Language.Malgo.IR.Syntax
@@ -30,12 +29,12 @@ instance Pass Rename (Expr Text) (Expr (ID ())) where
 type RenameM a = ReaderT (Map Text (ID ())) MalgoM a
 
 withKnowns :: [(Text, ID ())] -> RenameM a -> RenameM a
-withKnowns kvs = local (Map.fromList kvs <>)
+withKnowns kvs = local (fromList kvs <>)
 
 getID :: Info -> Text -> RenameM (ID ())
 getID info name = do
   k <- ask
-  case Map.lookup name k of
+  case lookup name k of
     Just x -> return x
     Nothing ->
       errorDoc

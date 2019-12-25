@@ -3,6 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TupleSections         #-}
 module Language.Malgo.FrontEnd.Typing.Infer
   ( Typing
   )
@@ -20,6 +21,7 @@ import           Language.Malgo.Pass
 import           Language.Malgo.Pretty   hiding ( first )
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+import           Relude.Unsafe                  ( fromJust )
 
 data Typing
 
@@ -29,12 +31,11 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     (cs, _) <- typingExpr e
     subst   <- catchUnifyError (Syntax.info e) Nothing $ solve cs
     env     <- gets (defaulting . apply subst)
-    mapM (updateID env) e
+    pure $ fmap (updateID env) e
 
 defaulting :: Substitutable a => a -> a
 defaulting t =
   apply (Subst $ fromList $ zip (toList $ ftv t) (repeat $ TyApp IntC [])) t
-
 
 type Env = IDMap () (ID Type)
 
@@ -58,10 +59,8 @@ catchUnifyError i n (Left (InfinitType var ty)) =
     Just n' -> "on" <+> pPrint n'
 catchUnifyError _ _ (Right a) = pure a
 
-updateID :: Env -> ID () -> InferM (ID Type)
-updateID env x = case lookup x env of
-  Nothing -> errorDoc $ "error(updateID):" <+> pPrint x
-  Just y  -> return y
+updateID :: Env -> ID () -> ID Type
+updateID env x = fromJust $ lookup x env
 
 newTyMeta :: InferM Type
 newTyMeta = TyMeta <$> newUniq
@@ -80,12 +79,7 @@ lookupVar x = do
     Just y  -> pure $ typeOf y
 
 typingExpr :: Expr (ID ()) -> InferM ([Constraint], Type)
-typingExpr (Var i x) = do
-  env <- get
-  case lookup x env of
-    Nothing -> throw i $ "unbound variable:" <+> pPrint x $+$ "Env:" <+> pPrint
-      (toList env)
-    Just y -> return ([], idMeta y)
+typingExpr (Var i x)    = ([], ) <$> lookupVar x
 typingExpr Int{}        = return ([], TyApp IntC [])
 typingExpr Float{}      = return ([], TyApp FloatC [])
 typingExpr Bool{}       = return ([], TyApp BoolC [])
