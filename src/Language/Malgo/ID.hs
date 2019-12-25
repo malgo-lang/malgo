@@ -21,6 +21,7 @@ where
 
 import           Data.Data                      ( Data )
 import           Data.Functor.Classes
+import           GHC.Exts                       ( IsList(..) )
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
@@ -62,3 +63,8 @@ instance DynamicMap (IDMap a v) where
   insertWith f ID { idUniq } v = IDMap . insertWith f idUniq v . unwrapIDMap
   delete ID { idUniq } = IDMap . delete idUniq . unwrapIDMap
   alter f ID { idUniq } = IDMap . alter f idUniq . unwrapIDMap
+
+instance IsList (IDMap a v) where
+  type Item (IDMap a v) = (ID a, v)
+  fromList = foldr (uncurry insert) mempty
+  toList = error "cannot convert to list"

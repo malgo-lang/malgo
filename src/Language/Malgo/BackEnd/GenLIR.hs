@@ -25,6 +25,7 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType  as L
 import           Language.Malgo.TypeRep.Type   as M
 import           Language.Malgo.Prelude
+import           Relude.Unsafe                  ( fromJust )
 
 data GenLIR
 
@@ -86,16 +87,12 @@ addInst inst = do
 findVar :: ID Type -> GenExpr (ID LType)
 findVar x = do
   ExprEnv { variableMap } <- ask
-  case lookup x variableMap of
-    Just x' -> pure x'
-    Nothing -> error $ show $ "findVar " <+> pPrint x
+  pure $ fromJust $ lookup x variableMap
 
 findFun :: ID Type -> GenProgram (ID LType)
 findFun x = do
   ProgramEnv { functionMap } <- ask
-  case lookup x functionMap of
-    Just x' -> pure x'
-    Nothing -> error $ show $ "findFun " <+> pPrint x
+  pure $ fromJust $ lookup x functionMap
 
 setHint :: MonadReader ExprEnv m => Text -> m a -> m a
 setHint x = local (\s -> s { nameHint = x })
@@ -109,11 +106,11 @@ loadC ptr xs = addInst $ LoadC ptr xs
 load :: ID LType -> ID LType -> GenExpr (ID LType)
 load ptr xs = addInst $ Load ptr xs
 
-storeC :: ID LType -> [Int] -> ID LType -> GenExpr (ID LType)
-storeC ptr xs val = addInst $ StoreC ptr xs val
+storeC :: ID LType -> [Int] -> ID LType -> GenExpr ()
+storeC ptr xs val = addInst (StoreC ptr xs val) >> pass
 
-store :: ID LType -> [ID LType] -> ID LType -> GenExpr (ID LType)
-store ptr xs val = addInst $ Store ptr xs val
+store :: ID LType -> [ID LType] -> ID LType -> GenExpr ()
+store ptr xs val = addInst (Store ptr xs val) >> pass
 
 call
   :: HasCallStack
@@ -168,26 +165,23 @@ convertType t = error $ toText $ "unreachable(convertType): " <> pShow t
 genFunction :: M.Func Type (ID Type) -> GenProgram (L.Func (ID LType))
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName   <- findFun name
-  funcParams <- mapM (\x -> newID (convertType (typeOf x)) (idName x)) params
-  bodyBlock  <- runGenExpr
-    (foldr (uncurry insert) mempty (zip params funcParams))
-    "x"
-    (genExpr body)
+  funcParams <- forM params
+    $ \ID { idName, idMeta } -> newID (convertType idMeta) idName
+  bodyBlock <- runGenExpr (fromList (zip params funcParams)) "x" (genExpr body)
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName   <- findFun name
   capsId     <- newID (Ptr U8) "caps"
   funcParams <- mapM (\x -> newID (convertType (typeOf x)) (idName x)) params
-  bodyBlock  <-
-    runGenExpr (foldr (uncurry insert) mempty (zip params funcParams)) "x" $ do
-      capsMap <- genUnpackCaps capsId
-      clsMap  <- genCls capsId
-      local
-          (\s -> s { variableMap = variableMap s <> capsMap <> clsMap
-                   , captures    = Just capsId
-                   }
-          )
-        $ genExpr body
+  bodyBlock  <- runGenExpr (fromList (zip params funcParams)) "x" $ do
+    capsMap <- genUnpackCaps capsId
+    clsMap  <- genCls capsId
+    local
+        (\s -> s { variableMap = variableMap s <> capsMap <> clsMap
+                 , captures    = Just capsId
+                 }
+        )
+      $ genExpr body
   pure $ L.Func { name   = funcName
                 , params = capsId : funcParams
                 , body   = bodyBlock
@@ -239,7 +233,7 @@ genExpr (M.ArrayWrite arr ix val) = do
   arrOpr <- findVar arr
   ixOpr  <- findVar ix
   valOpr <- findVar val
-  _      <- store arrOpr [ixOpr] valOpr
+  store arrOpr [ixOpr] valOpr
   undef (Ptr (Struct []))
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)
@@ -313,7 +307,7 @@ packClosure :: ID Type -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
 packClosure f capsId = setHint "closure" $ case convertType $ typeOf f of
   Ptr clsTy -> do
     clsId <- alloca clsTy Nothing
-    _     <- storeC clsId [0, 0] =<< lift (findFun f)
-    _     <- storeC clsId [0, 1] capsId
+    storeC clsId [0, 0] =<< lift (findFun f)
+    storeC clsId [0, 1] capsId
     pure clsId
   _ -> error "packClosure"
