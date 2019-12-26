@@ -26,13 +26,12 @@ data Closure
 
 instance Pass Closure (H.Expr Type (ID Type)) (Program Type (ID Type)) where
   isDump = dumpClosure
-  trans e = evaluatingStateT [] $ usingReaderT (Env [] mempty []) $ do
+  trans e = evaluatingStateT [] $ usingReaderT (Env [] []) $ do
     e' <- transExpr e
     fs <- get
     pure (Program fs e')
 
 data Env = Env { knowns   :: [ID Type]
-               , captures :: Maybe [ID Type]
                , mutrecs  :: [ID Type]
                }
 
@@ -63,11 +62,12 @@ transExpr (H.ArrayWrite arr ix val) = pure $ ArrayWrite arr ix val
 transExpr (H.Call f xs            ) = do
   Env { knowns, mutrecs } <- ask
   pure $ if
-    | f `elem` knowns  -> CallDirect f xs
     | -- 直接呼び出せる関数はCallDir
-      f `elem` mutrecs -> CallWithCaptures f xs
+      f `elem` knowns  -> CallDirect f xs
     | -- (相互)再帰している関数はCallWithCaptures
-      otherwise        -> CallClosure f xs -- それ以外はCallCls
+      f `elem` mutrecs -> CallWithCaptures f xs
+    | -- それ以外はCallCls
+      otherwise        -> CallClosure f xs
 transExpr (H.Let   x    v  e ) = Let x <$> transExpr v <*> transExpr e
 transExpr (H.If    c    t  f ) = If c <$> transExpr t <*> transExpr f
 transExpr (H.Prim  orig ty xs) = pure $ Prim orig ty xs
@@ -77,39 +77,28 @@ transExpr (H.LetRec defs e   ) = do
   fv        <- getFreeVars
   if fv == mempty && (freevars e `intersection` fromList funcNames) == mempty
     -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
-    then
-      local
-          (\env -> env { knowns = funcNames <> knowns env, captures = Nothing })
-        $ transExpr e
+    then local (\env -> env { knowns = funcNames <> knowns env }) $ transExpr e
     else do
       -- 自由変数をcapturesに、相互再帰しうる関数名をmutrecsに入れてMIRに変換する
       put envBackup
-      defs' <-
-        local
-            (\env -> (env :: Env)
-              { captures = Just $ toList (fv \\ fromList funcNames)
-              , mutrecs  = funcNames
-              }
-            )
-          $ foldMapM transDef defs
+      defs' <- local (\env -> (env :: Env) { mutrecs = funcNames })
+        $ foldMapM (transDef $ Just $ toList $ fv \\ fromList funcNames) defs
       appEndo defs' <$> transExpr e
  where
   funcNames   = map H.name defs
   -- | defsがすべてknownだと仮定してMIRに変換し、その自由変数を求める
   getFreeVars = do
     _ <- local
-      (\env -> (env :: Env) { knowns   = funcNames <> knowns env
-                            , captures = Nothing
-                            , mutrecs  = mempty
-                            }
+      (\env ->
+        (env :: Env) { knowns = funcNames <> knowns env, mutrecs = mempty }
       )
-      (mapM_ transDef defs)
+      (mapM_ (transDef Nothing) defs)
     foldForM funcNames $ \f -> do
       Func { params, body } <- getFunc f
       pure $ freevars body \\ fromList params
-  transDef H.Def { name, params, expr } = do
-    expr'                     <- transExpr expr
-    Env { captures, mutrecs } <- ask
+  transDef captures H.Def { name, params, expr } = do
+    expr'           <- transExpr expr
+    Env { mutrecs } <- ask
     addFunc $ Func { name     = name
                    , captures = captures
                    , mutrecs  = mutrecs
