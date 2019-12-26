@@ -110,7 +110,7 @@ typingExpr (Seq _ e1 e2) = do
   (cs1, _) <- typingExpr e1
   (cs2, t) <- typingExpr e2
   return (cs1 <> cs2, t)
-typingExpr (Let _ [ValDec i name mtyp val] body) = do
+typingExpr (Let _ (ValDec i name mtyp val) body) = do
   (cs1, valType) <- typingExpr val
   let cs2 = case mtyp of
         Just typ -> valType :~ typ : cs1
@@ -118,22 +118,20 @@ typingExpr (Let _ [ValDec i name mtyp val] body) = do
   defineVar i name valType cs2
   (cs3, t) <- typingExpr body
   return (cs1 <> cs2 <> cs3, t)
-typingExpr (Let _ [ExDec i name typ _] body) = do
+typingExpr (Let _ (ExDec i name typ _) body) = do
   defineVar i name typ []
   (cs, t) <- typingExpr body
   return (cs, t)
-typingExpr (Let i fs e) = do
+typingExpr (Let i (FunDec fs) e) = do
   mapM_ prepare fs
   cs1      <- foldMapM typingFunDec fs
   (cs2, t) <- typingExpr e
   return (cs1 <> cs2, t)
  where
-  prepare :: Decl (ID ()) -> InferM ()
-  prepare (FunDec i' f _ _ _) = do
+  prepare (i', f, _, _, _) = do
     v <- newTyMeta
     defineVar i' f v []
-  prepare _ = errorDoc $ "error(prepare):" <+> pPrint i
-  typingFunDec (FunDec i' f params retty body) = do
+  typingFunDec (i', f, params, retty, body) = do
     paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
                        params
     mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
@@ -142,7 +140,6 @@ typingExpr (Let i fs e) = do
     let cs = tv :~ TyApp FunC (retty : paramTypes) : t :~ retty : cs1
     defineVar i' f tv cs
     return cs
-  typingFunDec x = errorDoc $ "error(typingFunDec):" <+> pPrint x
 typingExpr (If _ c t f) = do
   (cs1, ct) <- typingExpr c
   (cs2, tt) <- typingExpr t

@@ -1,6 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 {-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -65,33 +64,21 @@ transToHIR f@(S.Fn _ ps e) = do
   e' <- transToHIR e
   return $ LetRec [Def { name = fn, params = map fst ps, expr = e' }] (Var fn)
 transToHIR (S.Seq _ e1 e2) = appInsert $ insertLet e1 >> transToHIR e2
-transToHIR (S.Let info (S.ValDec _ n _ val : ds) body) = do
-  val' <- transToHIR val
-  rest <- transToHIR (S.Let info ds body)
-  return $ Let n val' rest
-transToHIR (S.Let info decs@(S.FunDec{} : _) body) = do
-  fundecs' <- mapM transFunDec fundecs
-  rest'    <- transToHIR (S.Let info rest body)
-  return $ LetRec fundecs' rest'
+transToHIR (S.Let _ (S.ValDec _ n _ val) body) =
+  Let n <$> transToHIR val <*> transToHIR body
+transToHIR (S.Let _ (S.FunDec fundecs) body) =
+  LetRec <$> mapM transFunDec fundecs <*> transToHIR body
  where
-  (fundecs, rest) = break
-    (\case
-      S.FunDec{} -> False
-      _          -> True
-    )
-    decs
-  transFunDec (S.FunDec _ fn params _ fbody) = do
+  transFunDec (_, fn, params, _, fbody) = do
     fbody' <- transToHIR fbody
     return Def { name = fn, params = map fst params, expr = fbody' }
-  transFunDec _ = error "unreachable"
-transToHIR (S.Let info (S.ExDec _ n _ orig : ds) body) = case typeOf n of
+transToHIR (S.Let _ (S.ExDec _ n _ orig) body) = case typeOf n of
   TyApp FunC (_ : ps) -> do
     params <- mapM (newTmp "x") ps
     LetRec
         [Def { name = n, params = params, expr = Prim orig (typeOf n) params }]
-      <$> transToHIR (S.Let info ds body)
+      <$> transToHIR body
   _ -> error "external variable is not supported"
-transToHIR (S.Let _ [] body) = transToHIR body
 transToHIR (S.If _ c t f) =
   appInsert $ If <$> insertLet c <*> transToHIR t <*> transToHIR f
 transToHIR (S.BinOp _ op x y) =

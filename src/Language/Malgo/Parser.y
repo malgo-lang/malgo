@@ -9,7 +9,9 @@ import Prelude hiding (EQ, LT, GT)
 import Language.Malgo.Lexer
 import Language.Malgo.TypeRep.Type
 import Language.Malgo.IR.Syntax
+import Language.Malgo.FrontEnd.Info
 import Data.String
+import Data.Text (Text)
 }
 
 %name parse
@@ -94,32 +96,19 @@ str   { Token (_, STRING _) }
 decls : decls_raw { reverse $1 }
 
 decls_raw : decls_raw decl { $2 : $1 }
-          |      { [] }
+          | { [] }
 
-decl : val id ':' Type '=' exp { ValDec (_info $1) (_id . _tag $ $2)
-                                 (Just $4)
-                                 $6
-                               }
-     | val id ':=' exp { ValDec (_info $1) (_id . _tag $ $2)
-                         Nothing $4
-                       }
-     | fun id '(' ')' ':' Type '=' exp {
-         FunDec (_info $1) (_id . _tag $ $2)
-           []
-           $6
-           $8
-       }
-     | fun id '(' params ')' ':' Type '=' exp {
-         FunDec (_info $1) (_id . _tag $ $2)
-           (reverse $4)
-           $7
-           $9
-       }
-     | extern id ':' Type '=' str {
-         ExDec (_info $1) (_id . _tag $ $2)
-           $4
-           (_str . _tag $ $6)
-       }
+val_decl : val id ':' Type '=' exp { V (_info $1) (_id $ _tag $ $2) (Just $4) $6 }
+         | val id ':=' exp { V (_info $1) (_id $ _tag $ $2) Nothing $4 }
+
+fun_decl : fun id '(' ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) [] $6 $8 }
+         | fun id '(' params ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) $7 $9 }
+
+ext_decl : extern id ':' Type '=' str { E (_info $1) (_id . _tag $ $2) $4 (_str . _tag $ $6) }
+
+decl : val_decl { $1 }
+     | fun_decl { $1 }
+     | ext_decl { $1 }
 
 params : params ',' param { $3 : $1 }
        | param { [$1] }
@@ -146,7 +135,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '&&' exp { BinOp (_info $2) And $1 $3 }
    | exp '||' exp { BinOp (_info $2) Or $1 $3 }
    | fn '(' params ')' '->' exp { Fn (_info $1) (reverse $3) $6 }
-   | let decls in exp end { Let (_info $1) $2 $4 }
+   | let decls in exp end { toLet (_info $1) $2 $4 }
    | if exp then exp else exp %prec prec_if { If (_info $1) $2 $4 $6 }
    | exp ';' exp { Seq (_info $2) $1 $3 }
    | '-' int %prec NEG { BinOp (_info $1) Sub
@@ -182,12 +171,12 @@ Type : Int { TyApp IntC [] }
 	 | Bool { TyApp BoolC [] }
 	 | Char { TyApp CharC [] }
 	 | String { TyApp StringC [] }
-     | Type '->' Type { TyApp FunC [$3, $1] }
-     | '{' '}' { TyApp TupleC [] }
-     | '{' Types '}' { TyApp TupleC (reverse $2) }
+   | Type '->' Type { TyApp FunC [$3, $1] }
+   | '{' '}' { TyApp TupleC [] }
+   | '{' Types '}' { TyApp TupleC (reverse $2) }
 	 | '(' ')' '->' Type { TyApp FunC [$4] }
-     | '(' Types ')' '->' Type { TyApp FunC ($5 : reverse $2) }
-     | '[' Type ']' { TyApp ArrayC [$2] }
+   | '(' Types ')' '->' Type { TyApp FunC ($5 : reverse $2) }
+   | '[' Type ']' { TyApp ArrayC [$2] }
 
 Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }
@@ -195,4 +184,23 @@ Types : Types ',' Type { $3 : $1 }
 parseError :: ([Token], [String]) -> a
 parseError ([], xs) = error $ "Parse error at EOF: " <> show xs <> " are expected."
 parseError (t:_, xs) = error $ "Parse error: " <> show t <> " is got, but " <> show xs <> " are expected."
+
+data D = V Info Text (Maybe Type) (Expr Text)
+       | F Info Text [(Text, Maybe Type)] Type (Expr Text)
+       | E Info Text Type Text
+
+toLet :: Info -> [D] -> Expr Text -> Expr Text
+toLet _ [] = id
+toLet li (V i n t e : xs) = Let li (ValDec i n t e) . toLet li xs
+toLet li xs@(F{} : _) =
+  let (fundecs, rest) = span isF xs
+  in Let li (FunDec $ map toFunDec fundecs) . toLet li rest
+toLet li (E i n t o : xs) = Let li (ExDec i n t o). toLet li xs
+
+isF :: D -> Bool
+isF F{} = True
+isF _ = False
+
+toFunDec :: D -> _
+toFunDec (F i f ps r e) = (i, f, ps, r, e)
 }
