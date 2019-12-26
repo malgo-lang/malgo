@@ -4,6 +4,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE TupleSections         #-}
 module Language.Malgo.FrontEnd.Rename
   ( Rename
   )
@@ -26,8 +27,11 @@ instance Pass Rename (Expr Text) (Expr (ID ())) where
 
 type RenameM a = ReaderT (Map Text (ID ())) MalgoM a
 
-withKnowns :: [(Text, ID ())] -> RenameM a -> RenameM a
-withKnowns kvs = local (fromList kvs <>)
+withKnowns
+  :: (MonadMalgo m, MonadReader (Map Text (ID ())) m) => [Text] -> m b -> m b
+withKnowns ks m = do
+  vs <- mapM (newID ()) ks
+  local (fromList (zip ks vs) <>) m
 
 getID :: Info -> Text -> RenameM (ID ())
 getID info name = do
@@ -57,41 +61,35 @@ renameExpr (ArrayRead info arr ix) =
   ArrayRead info <$> renameExpr arr <*> renameExpr ix
 renameExpr (ArrayWrite info arr ix val) =
   ArrayWrite info <$> renameExpr arr <*> renameExpr ix <*> renameExpr val
-renameExpr (Fn info params body) = do
-  paramIDs <- mapM (newID () . fst) params
-  withKnowns (zip (map fst params) paramIDs) $ do
-    params' <- mapM (\(n, t) -> (,) <$> getID info n <*> pure t) params
-    body'   <- renameExpr body
-    return $ Fn info params' body'
+renameExpr (Fn info params body) = withKnowns (map fst params) $ do
+  params' <- mapM (\(n, t) -> (,t) <$> getID info n) params
+  body'   <- renameExpr body
+  return $ Fn info params' body'
 renameExpr (Call info fn args) =
   Call info <$> renameExpr fn <*> mapM renameExpr args
 renameExpr (Seq info e1 e2) = Seq info <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Let info0 (ValDec info1 name typ val) e) = do
-  val'  <- renameExpr val
-  name' <- newID () name
-  withKnowns [(name, name')]
-    $   Let info0 (ValDec info1 name' typ val')
-    <$> renameExpr e
-renameExpr (Let info0 (FunDec fs) e) = do
-  functionNames <- mapM (newID () . getName) fs
-  let newKnowns = zip (map getName fs) functionNames
-  withKnowns newKnowns $ do
-    fs' <- mapM renameFunDec fs
-    Let info0 (FunDec fs') <$> renameExpr e
+  val' <- renameExpr val
+  withKnowns [name]
+    $   Let info0
+    <$> (ValDec info1 <$> getID info1 name <*> pure typ <*> pure val')
+    <*> renameExpr e
+renameExpr (Let info0 (FunDec fs) e) = withKnowns (map getName fs) $ do
+  fs' <- mapM renameFunDec fs
+  Let info0 (FunDec fs') <$> renameExpr e
  where
   getName (_, f, _, _, _) = f
   renameFunDec (info, fn, params, retty, body) = do
-    fn'      <- getID info fn
-    paramIDs <- mapM (newID () . fst) params
-    withKnowns (zip (map fst params) paramIDs) $ do
-      let params' = zip paramIDs (map snd params)
-      body' <- renameExpr body
+    fn' <- getID info fn
+    withKnowns (map fst params) $ do
+      params' <- mapM (\(p, t) -> (, t) <$> getID info p) params
+      body'   <- renameExpr body
       return (info, fn', params', retty, body')
-renameExpr (Let info0 (ExDec info1 name typ orig) e) = do
-  name' <- newID () name
-  withKnowns [(name, name')]
-    $   Let info0 (ExDec info1 name' typ orig)
-    <$> renameExpr e
+renameExpr (Let info0 (ExDec info1 name typ orig) e) =
+  withKnowns [name]
+    $   Let info0
+    <$> (ExDec info1 <$> (getID info1 name) <*> pure typ <*> pure orig)
+    <*> renameExpr e
 renameExpr (If info c t f) =
   If info <$> renameExpr c <*> renameExpr t <*> renameExpr f
 renameExpr (BinOp info op x y) =
