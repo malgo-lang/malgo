@@ -16,8 +16,8 @@ import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
 import qualified Language.Malgo.IR.Syntax      as Syntax
 import           Language.Malgo.MiddleEnd.Closure
-import           Language.Malgo.MiddleEnd.HIRLint
-import           Language.Malgo.MiddleEnd.MIRLint
+-- import           Language.Malgo.MiddleEnd.HIRLint
+-- import           Language.Malgo.MiddleEnd.MIRLint
 import           Language.Malgo.MiddleEnd.TransToHIR
 import           Language.Malgo.Monad          as M
 import           Language.Malgo.Pass
@@ -59,9 +59,9 @@ compile filename ast = M.runMalgo $ do
     transWithDump @Rename ast
     >>= transWithDump @Typing
     >>= transWithDump @TransToHIR
-    >>= transWithDump @HIRLint
+    -- >>= transWithDump @HIRLint
     >>= transWithDump @Closure
-    >>= transWithDump @MIRLint
+    -- >>= transWithDump @MIRLint
   lir    <- transWithDump @GenLIR mir
   llvmir <- trans @GenLLVM lir
   return $ L.defaultModule { L.moduleName           = fromString filename
