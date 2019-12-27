@@ -33,7 +33,8 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     subst   <- catchUnifyError (Syntax.info e) "toplevel" =<< solve cs
     env     <- gets (apply subst)
     let dcs = defaulting env
-    subst' <- catchUnifyError (Syntax.info e) "toplevel defaulting" =<< solve dcs
+    subst' <- catchUnifyError (Syntax.info e) "toplevel defaulting"
+      =<< solve dcs
     let env' = apply subst' env
 
     opt <- liftMalgo $ asks maOption
@@ -44,8 +45,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     pure $ fmap (\x -> fromJust $ lookup x env') e
 
 defaulting :: Substitutable a => a -> [Constraint]
-defaulting t =
-  map (\v -> TyMeta v :~ TyApp IntC []) $ toList $ ftv t
+defaulting t = map (\v -> TyMeta v :~ TyApp IntC []) $ toList $ ftv t
 
 type Env = IDMap () (ID Type)
 
@@ -67,11 +67,17 @@ catchUnifyError _ _ (Right a) = pure a
 newTyMeta :: InferM Type
 newTyMeta = TyMeta <$> newUniq
 
-generalize :: MonadState Env m => Type -> m Type
-generalize t = do
-  env <- get
-  let ts = toList $ ftv t \\ ftv env
-  pure $ TyForall ts t
+generalize :: Env -> Type -> Type
+generalize env t | null fv   = t
+                 | otherwise = TyForall fv t
+  where fv = toList $ ftv t \\ ftv env
+
+letVar :: Info -> Env -> ID () -> Type -> [Constraint] -> InferM ()
+letVar info env var ty cs = do
+  subst <- catchUnifyError info (pPrint var) =<< solve cs
+  let sc = generalize (apply subst env) (apply subst ty)
+  defineVar var sc
+  modify (apply subst)
 
 defineVar :: HasCallStack => ID () -> Type -> InferM ()
 defineVar x t = do
@@ -128,17 +134,20 @@ typingExpr (Seq _ e1 e2) = do
   (cs2, t) <- typingExpr e2
   return (cs1 <> cs2, t)
 typingExpr (Let _ (ValDec i name mtyp val) body) = do
+  env            <- get
+
   (cs1, valType) <- typingExpr val
   let cs2 = case mtyp of
         Just typ -> valType :~ typ : cs1
         Nothing  -> cs1
 
-  sub <- catchUnifyError i (pPrint name) =<< solve cs2
-  let dcs = defaulting (apply sub valType)
-  sub' <- catchUnifyError i (pPrint name <+> "defaulting") =<< solve dcs
-  let valType' = apply (sub <> sub') valType
-  defineVar name valType'
-  modify (apply (sub <> sub'))
+  -- sub <- catchUnifyError i (pPrint name) =<< solve cs2
+  -- let dcs = defaulting (apply sub valType)
+  -- sub' <- catchUnifyError i (pPrint name <+> "defaulting") =<< solve dcs
+  -- let valType' = apply (sub <> sub') valType
+  -- defineVar name valType'
+  -- modify (apply (sub <> sub'))
+  letVar i env name valType cs2
 
   (cs3, t) <- typingExpr body
   return (cs1 <> cs2 <> cs3, t)
@@ -156,6 +165,7 @@ typingExpr (Let _ (FunDec fs) e) = do
     v <- newTyMeta
     defineVar f v
   typingFunDec (i', f, params, retty, body) = do
+    env        <- get
     paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
                        params
     mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
@@ -163,12 +173,13 @@ typingExpr (Let _ (FunDec fs) e) = do
     tv       <- lookupVar f
     let cs = tv :~ TyApp FunC (retty : paramTypes) : t :~ retty : cs1
 
-    sub <- catchUnifyError i' (pPrint f) =<< solve cs
-    let dcs = defaulting (apply sub tv)
-    sub' <- catchUnifyError i' (pPrint f <+> "defaulting") =<< solve dcs
-    let fType = apply (sub <> sub') tv
-    defineVar f fType
-    modify $ apply (sub <> sub')
+    -- sub <- catchUnifyError i' (pPrint f) =<< solve cs
+    -- let dcs = defaulting (apply sub tv)
+    -- sub' <- catchUnifyError i' (pPrint f <+> "defaulting") =<< solve dcs
+    -- let fType = apply (sub <> sub') tv
+    -- defineVar f fType
+    -- modify $ apply (sub <> sub')
+    letVar i' env f tv cs
 
     return cs
 typingExpr (If _ c t f) = do
