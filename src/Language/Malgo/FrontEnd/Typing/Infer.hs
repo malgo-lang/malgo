@@ -100,9 +100,11 @@ typingExpr (TupleAccess _ e _) = do
   (cs, _) <- typingExpr e
   t       <- newTyMeta
   return (cs, t)
-typingExpr (MakeArray _ ty sizeNode) = do
-  (cs, sizeTy) <- typingExpr sizeNode
-  return (TyApp IntC [] :~ sizeTy : cs, TyApp ArrayC [ty])
+typingExpr (MakeArray _ initNode sizeNode) = do
+  (cs1, initTy) <- typingExpr initNode
+  (cs2, sizeTy) <- typingExpr sizeNode
+  let cs = TyApp IntC [] :~ sizeTy : cs1 <> cs2
+  return (cs, TyApp ArrayC [initTy])
 typingExpr (ArrayRead _ arr _) = do
   (cs, arrTy) <- typingExpr arr
   resultTy    <- newTyMeta

@@ -31,7 +31,8 @@ data Expr a
   | Tuple Info [Expr a]
   | TupleAccess Info (Expr a) Int
   -- | 配列作成
-  | MakeArray Info Type (Expr a)
+  | MakeArray Info (Expr a) -- ^ init value
+                   (Expr a) -- ^ size
   | ArrayRead Info
     (Expr a) -- array
     (Expr a) -- index
@@ -74,17 +75,18 @@ info (If    i _ _ _     ) = i
 info (BinOp i _ _ _     ) = i
 
 instance Pretty a => Pretty (Expr a) where
-  pPrint (Var    _ name         ) = pPrint name
-  pPrint (Int    _ x            ) = pPrint x
-  pPrint (Float  _ x            ) = pPrint x
-  pPrint (Bool   _ True         ) = "true"
-  pPrint (Bool   _ False        ) = "false"
-  pPrint (Char   _ x            ) = quotes $ pPrint x
-  pPrint (String _ x            ) = doubleQuotes $ pPrint x
-  pPrint (Tuple  _ xs           ) = braces $ sep $ punctuate "," $ map pPrint xs
-  pPrint (TupleAccess _ e   i   ) = parens ("." <+> pPrint e <+> pPrint i)
-  pPrint (MakeArray _ ty size) = parens $ "array" <+> pPrint ty <+> pPrint size
-  pPrint (ArrayRead   _ arr ix  ) = pPrint arr <> brackets (pPrint ix)
+  pPrint (Var    _ name    ) = pPrint name
+  pPrint (Int    _ x       ) = pPrint x
+  pPrint (Float  _ x       ) = pPrint x
+  pPrint (Bool   _ True    ) = "true"
+  pPrint (Bool   _ False   ) = "false"
+  pPrint (Char   _ x       ) = quotes $ pPrint x
+  pPrint (String _ x       ) = doubleQuotes $ pPrint x
+  pPrint (Tuple  _ xs      ) = braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (TupleAccess _ e i) = parens ("." <+> pPrint e <+> pPrint i)
+  pPrint (MakeArray _ init size) =
+    parens $ "array" <+> pPrint init <+> pPrint size
+  pPrint (ArrayRead _ arr ix) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite _ arr ix val) =
     parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
   pPrint (Unit _       ) = "{}"
@@ -158,8 +160,8 @@ instance HasType a => HasType (Expr a) where
   typeOf (TupleAccess _ e i) = case typeOf e of
     TyApp TupleC xs -> xs !! i
     _               -> error "(typeOf e) should match (TyTuple xs)"
-  typeOf (MakeArray _ t   _) = TyApp ArrayC [t]
-  typeOf (ArrayRead _ arr _) = case typeOf arr of
+  typeOf (MakeArray _ init _) = TyApp ArrayC [typeOf init]
+  typeOf (ArrayRead _ arr  _) = case typeOf arr of
     TyApp ArrayC [t] -> t
     _                -> error "(typeof arr) should match (TyArray xs)"
   typeOf ArrayWrite{} = TyApp TupleC []

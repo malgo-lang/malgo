@@ -10,7 +10,7 @@ extern pulsar : [Bool] -> {} = "pulsar"
 
 val x_width : Int = 50
 val y_width : Int = 20
-val cells : [Bool] = array(Bool, x_width * y_width)
+val cells : [Bool] = array(false, x_width * y_width)
 
 in
 let fun view(cells: [Bool], x: Int, y: Int): Bool =
@@ -49,7 +49,7 @@ let fun print_cells(cells: [Bool]): {} =
 let fun to_int(b: Bool): Int = if b then 1 else 0 in
 
 let fun next_state(cells: [Bool], x: Int, y: Int): Bool =
-  let val living: [Int] = array(Int, 1)
+  let val living: [Int] = array(0, 1)
   in
     living[0] <- to_int(view(cells, x-1, y+1)) + to_int(view(cells, x, y+1)) + to_int(view(cells, x+1, y+1));
     living[0] <- to_int(view(cells, x-1, y)) + to_int(view(cells, x+1, y)) + living[0];

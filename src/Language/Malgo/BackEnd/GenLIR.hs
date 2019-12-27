@@ -95,8 +95,11 @@ findFun x = do
 setHint :: MonadReader ExprEnv m => Text -> m a -> m a
 setHint x = local (\s -> s { nameHint = x })
 
-alloca :: LType -> Maybe (ID LType) -> GenExpr (ID LType)
-alloca ty msize = addInst $ Alloca ty msize
+arrayCreate :: ID LType -> ID LType -> GenExpr (ID LType)
+arrayCreate init size = addInst $ ArrayCreate init size
+
+alloca :: LType -> GenExpr (ID LType)
+alloca ty = addInst $ Alloca ty
 
 loadC :: ID LType -> [Int] -> GenExpr (ID LType)
 loadC ptr xs = addInst $ LoadC ptr xs
@@ -212,7 +215,7 @@ genExpr (M.Lit (Char x)) = addInst $ Constant $ Word8 $ fromIntegral $ ord x
 genExpr (M.Lit (H.String xs)) =
   addInst $ Constant $ L.String $ B.unpack $ encodeUtf8 @Text @ByteString xs
 genExpr (M.Tuple xs) = do
-  tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs) Nothing
+  tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs)
   forM_ (zip [0 ..] xs) $ \(i, x) -> do
     val <- findVar x
     storeC tuplePtr [0, i] val
@@ -220,9 +223,10 @@ genExpr (M.Tuple xs) = do
 genExpr (M.TupleAccess t i) = do
   tuplePtr <- findVar t
   loadC tuplePtr [0, i]
-genExpr (M.MakeArray ty size) = do
+genExpr (M.MakeArray init size) = do
+  initVal <- findVar init
   sizeVal <- findVar size
-  alloca (convertType ty) (Just sizeVal)
+  arrayCreate initVal sizeVal
 genExpr (M.ArrayRead arr ix) = do
   arrOpr <- findVar arr
   ixOpr  <- findVar ix
@@ -235,7 +239,7 @@ genExpr (M.ArrayWrite arr ix val) = do
   undef (Ptr (Struct []))
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)
-  capPtr <- setHint "captures" $ alloca capTy Nothing
+  capPtr <- setHint "captures" $ alloca capTy
   setHint "capture" $ forM_ (zip [0 ..] cs) $ \(i, c) -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
@@ -304,7 +308,7 @@ genExpr (M.BinOp op x y) = do
 packClosure :: ID Type -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
 packClosure f capsId = setHint "closure" $ case convertType $ typeOf f of
   Ptr clsTy -> do
-    clsId <- alloca clsTy Nothing
+    clsId <- alloca clsTy
     storeC clsId [0, 0] =<< lift (findFun f)
     storeC clsId [0, 1] capsId
     pure clsId

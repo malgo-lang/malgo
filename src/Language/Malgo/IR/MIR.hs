@@ -42,7 +42,7 @@ data Expr t a = Var a
               | Tuple [a]
               | TupleAccess a Int
               | MakeArray
-                t -- type of element
+                a -- init
                 a -- size
               | ArrayRead
                 a -- array

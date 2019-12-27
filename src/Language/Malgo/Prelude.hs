@@ -13,6 +13,7 @@ where
 import           Relude                  hiding ( Constraint
                                                 , Type
                                                 , Op
+                                                , init
                                                 )
 import           Relude.Extra.Map        hiding ( size
                                                 , delete

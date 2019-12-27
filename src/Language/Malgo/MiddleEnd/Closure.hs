@@ -55,9 +55,9 @@ transExpr :: H.Expr Type (ID Type) -> TransM (M.Expr Type (ID Type))
 transExpr (H.Var   x              ) = pure $ Var x
 transExpr (H.Lit   x              ) = pure $ Lit x
 transExpr (H.Tuple xs             ) = pure $ Tuple xs
-transExpr (H.TupleAccess x   i    ) = pure $ TupleAccess x i
-transExpr (H.MakeArray   ty  x    ) = pure $ MakeArray ty x
-transExpr (H.ArrayRead   arr ix   ) = pure $ ArrayRead arr ix
+transExpr (H.TupleAccess x    i   ) = pure $ TupleAccess x i
+transExpr (H.MakeArray   init size) = pure $ MakeArray init size
+transExpr (H.ArrayRead   arr  ix  ) = pure $ ArrayRead arr ix
 transExpr (H.ArrayWrite arr ix val) = pure $ ArrayWrite arr ix val
 transExpr (H.Call f xs            ) = do
   Env { knowns, mutrecs } <- ask

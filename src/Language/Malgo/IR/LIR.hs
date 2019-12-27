@@ -48,7 +48,9 @@ instance HasLType a => HasLType (Block a) where
 data Inst a = Constant Constant
             | Call a [a]
             | CallExt Text LType [a]
-            | Alloca LType (Maybe a)
+            | ArrayCreate a -- ^ init
+                          a -- ^ size
+            | Alloca LType
             | LoadC a [Int]
             | Load a a
             | StoreC a [Int] a
@@ -64,9 +66,11 @@ instance Pretty a => Pretty (Inst a) where
   pPrint (Call f xs) = pPrint f <> parens (sep $ punctuate "," $ map pPrint xs)
   pPrint (CallExt f t xs) = pPrint f <> "<" <> pPrint t <> ">" <> parens
     (sep $ punctuate "," $ map pPrint xs)
-  pPrint (Alloca t s   ) = "alloca" <+> pPrint t <+> pPrint s
-  pPrint (LoadC  x is  ) = "loadc" <+> pPrint x <+> pPrint is
-  pPrint (Load   x i   ) = "load" <+> pPrint x <+> pPrint i
+  pPrint (ArrayCreate init size) =
+    "arrayCreate" <+> pPrint init <+> pPrint size
+  pPrint (Alloca t     ) = "alloca" <+> pPrint t
+  pPrint (LoadC x is   ) = "loadc" <+> pPrint x <+> pPrint is
+  pPrint (Load  x i    ) = "load" <+> pPrint x <+> pPrint i
   pPrint (StoreC x is v) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Store  x is v) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Cast t a     ) = "cast" <+> pPrint t <+> pPrint a
@@ -79,7 +83,8 @@ instance (HasLType a, Show a) => HasLType (Inst a) where
   ltypeOf (Constant x)   = ltypeOf x
   ltypeOf (Call (ltypeOf -> Function t _) _) = t
   ltypeOf (CallExt _ (ltypeOf -> Function t _) _) = t
-  ltypeOf (Alloca t _)   = Ptr t
+  ltypeOf (ArrayCreate init _) = Ptr (ltypeOf init)
+  ltypeOf (Alloca t)     = Ptr t
   ltypeOf (LoadC x is)   = accessType (ltypeOf x) is
   ltypeOf (Load (ltypeOf -> Ptr t) _) = t
   ltypeOf StoreC{}       = Ptr (Struct [])

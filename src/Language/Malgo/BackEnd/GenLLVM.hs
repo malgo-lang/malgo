@@ -120,6 +120,43 @@ mallocBytes bytesOpr maybeType = do
     Just t  -> bitcast ptrOpr (ptr t)
     Nothing -> pure ptrOpr
 
+initArray :: Operand -> ID LType -> ID LType -> GenExpr ()
+initArray ptrOpr init size = do
+  initOpr <- findVar init
+  sizeOpr <- findVar size
+
+  condLabel <- freshName "cond"
+  bodyLabel <- freshName "copyelem"
+  endLabel <- freshName "end"
+
+  {-
+    for (i64 i = 0; i < size; i++) {
+      ptrOpr[i] = init;
+    }
+  -}
+  -- for (i64 i = 0;
+  iPtr <- alloca i64 Nothing 0
+  store iPtr 0 (int64 0)
+  br condLabel
+
+  -- cond: i < size;
+  emitBlockStart condLabel
+  iOpr <- load iPtr 0
+  cond <- icmp IP.SLT iOpr sizeOpr -- TODO: sizeを正の数に限定する
+  condBr cond bodyLabel endLabel
+
+  -- copyelem: { ptrOpr[i] = init;
+  emitBlockStart bodyLabel
+  addr <- gep ptrOpr [iOpr]
+  store addr 0 initOpr
+  
+  -- i++)
+  store iPtr 0 =<< add iOpr (int64 1)
+  br condLabel
+
+  -- end: }
+  emitBlockStart endLabel
+
 genFuncName :: ID a -> LLVM.AST.Name
 genFuncName ID { idName, idUniq } =
   LLVM.AST.mkName $ toString $ idName <> show idUniq
@@ -157,11 +194,14 @@ genInst (CallExt f (Function r ps) xs) = do
   xs' <- mapM (fmap (, []) . findVar) xs
   call f' xs'
 genInst CallExt{}           = error "extern symbol must have a function type"
-genInst (Alloca ty Nothing) = do
+genInst (ArrayCreate init size) = do
+  let ty = convertType $ ltypeOf init
+  size' <- mul (sizeof ty) =<< findVar size
+  ptrOpr <- mallocBytes size' (Just ty)
+  initArray ptrOpr init size
+  pure ptrOpr
+genInst (Alloca ty) = do
   let size = sizeof (convertType ty)
-  mallocBytes size (Just $ convertType ty)
-genInst (Alloca ty (Just num)) = do
-  size <- mul (sizeof (convertType ty)) =<< findVar num
   mallocBytes size (Just $ convertType ty)
 genInst (LoadC x is) = do
   xOpr    <- findVar x
