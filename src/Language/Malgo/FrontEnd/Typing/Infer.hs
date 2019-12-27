@@ -1,3 +1,4 @@
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -34,6 +35,12 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     let dcs = defaulting env
     subst' <- catchUnifyError (Syntax.info e) "toplevel defaulting" =<< solve dcs
     let env' = apply subst' env
+
+    opt <- liftMalgo $ asks maOption
+    when (dumpTyped opt && dumpTypeTable opt) $ do
+      let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env')
+      dump xs
+
     pure $ fmap (\x -> fromJust $ lookup x env') e
 
 defaulting :: Substitutable a => a -> [Constraint]

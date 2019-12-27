@@ -25,7 +25,7 @@ import           GHC.Exts                       ( IsList(..) )
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Language.Malgo.Prelude  hiding ( delete )
+import           Language.Malgo.Prelude  hiding ( delete, toList )
 import           Relude.Extra.Map
 
 data ID a = ID { idName :: Text, idUniq :: Int, idMeta :: a }
@@ -46,6 +46,9 @@ newID m n = ID n <$> newUniq <*> pure m
 newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
   deriving stock (Eq, Ord, Read, Show, Functor, Foldable, Traversable, Generic, Data)
   deriving newtype ( Eq1, Ord1, Read1, Show1, Semigroup, Monoid, NFData)
+
+instance Pretty v => Pretty (IDMap a v) where
+  pPrint = pPrint . toList . unwrapIDMap
 
 instance One (IDMap a v) where
   type OneItem (IDMap a v) = (ID a, v)
