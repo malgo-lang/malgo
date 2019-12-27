@@ -32,20 +32,17 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     (cs, _) <- typingExpr e
     subst   <- catchUnifyError (Syntax.info e) "toplevel" =<< solve cs
     env     <- gets (apply subst)
-    let dcs = defaulting env
-    subst' <- catchUnifyError (Syntax.info e) "toplevel defaulting"
-      =<< solve dcs
-    let env' = apply subst' env
+    -- let dcs = defaulting env
+    -- subst' <- catchUnifyError (Syntax.info e) "toplevel defaulting"
+    --   =<< solve dcs
+    -- let env' = apply subst' env
 
     opt <- liftMalgo $ asks maOption
     when (dumpTyped opt && dumpTypeTable opt) $ do
-      let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env')
+      let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env)
       dump xs
 
-    pure $ fmap (\x -> fromJust $ lookup x env') e
-
-defaulting :: Substitutable a => a -> [Constraint]
-defaulting t = map (\v -> TyMeta v :~ TyApp IntC []) $ toList $ ftv t
+    pure $ fmap (\x -> fromJust $ lookup x env) e
 
 type Env = IDMap () (ID Type)
 
@@ -141,12 +138,6 @@ typingExpr (Let _ (ValDec i name mtyp val) body) = do
         Just typ -> valType :~ typ : cs1
         Nothing  -> cs1
 
-  -- sub <- catchUnifyError i (pPrint name) =<< solve cs2
-  -- let dcs = defaulting (apply sub valType)
-  -- sub' <- catchUnifyError i (pPrint name <+> "defaulting") =<< solve dcs
-  -- let valType' = apply (sub <> sub') valType
-  -- defineVar name valType'
-  -- modify (apply (sub <> sub'))
   letVar i env name valType cs2
 
   (cs3, t) <- typingExpr body
@@ -156,29 +147,25 @@ typingExpr (Let _ (ExDec _ name typ _) body) = do
   (cs, t) <- typingExpr body
   return (cs, t)
 typingExpr (Let _ (FunDec fs) e) = do
+  env <- get
   mapM_ prepare fs
-  cs1      <- foldMapM typingFunDec fs
+  cs1      <- foldMapM (typingFunDec env) fs
   (cs2, t) <- typingExpr e
   return (cs1 <> cs2, t)
  where
   prepare (_, f, _, _, _) = do
     v <- newTyMeta
     defineVar f v
-  typingFunDec (i', f, params, retty, body) = do
-    env        <- get
+  typingFunDec env (i', f, params, mretty, body) = do
     paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
                        params
+    retType <- whenNothing mretty newTyMeta
+
     mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
     (cs1, t) <- typingExpr body
     tv       <- lookupVar f
-    let cs = tv :~ TyApp FunC (retty : paramTypes) : t :~ retty : cs1
+    let cs = tv :~ TyApp FunC (retType : paramTypes) : t :~ retType : cs1
 
-    -- sub <- catchUnifyError i' (pPrint f) =<< solve cs
-    -- let dcs = defaulting (apply sub tv)
-    -- sub' <- catchUnifyError i' (pPrint f <+> "defaulting") =<< solve dcs
-    -- let fType = apply (sub <> sub') tv
-    -- defineVar f fType
-    -- modify $ apply (sub <> sub')
     letVar i' env f tv cs
 
     return cs

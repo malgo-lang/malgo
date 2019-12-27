@@ -101,8 +101,10 @@ decls_raw : decls_raw decl { $2 : $1 }
 val_decl : val id ':' Type '=' exp { V (_info $1) (_id $ _tag $ $2) (Just $4) $6 }
          | val id ':=' exp { V (_info $1) (_id $ _tag $ $2) Nothing $4 }
 
-fun_decl : fun id '(' ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) [] $6 $8 }
-         | fun id '(' params ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) $7 $9 }
+fun_decl : fun id '(' ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) [] (Just $6) $8 }
+         | fun id '(' ')' '=' exp { F (_info $1) (_id . _tag $ $2) [] Nothing $6 }
+         | fun id '(' params ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) (Just $7) $9 }
+         | fun id '(' params ')' '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) Nothing $7 }
 
 ext_decl : extern id ':' Type '=' str { E (_info $1) (_id . _tag $ $2) $4 (_str . _tag $ $6) }
 
@@ -167,16 +169,16 @@ args : args ',' exp { $3 : $1 }
      | exp { [$1] }
 
 Type : Int { TyApp IntC [] }
-	 | Float { TyApp FloatC [] }
-	 | Bool { TyApp BoolC [] }
-	 | Char { TyApp CharC [] }
-	 | String { TyApp StringC [] }
-   | Type '->' Type { TyApp FunC [$3, $1] }
-   | '{' '}' { TyApp TupleC [] }
-   | '{' Types '}' { TyApp TupleC (reverse $2) }
-	 | '(' ')' '->' Type { TyApp FunC [$4] }
-   | '(' Types ')' '->' Type { TyApp FunC ($5 : reverse $2) }
-   | '[' Type ']' { TyApp ArrayC [$2] }
+	  | Float { TyApp FloatC [] }
+	  | Bool { TyApp BoolC [] }
+	  | Char { TyApp CharC [] }
+	  | String { TyApp StringC [] }
+     | Type '->' Type { TyApp FunC [$3, $1] }
+     | '{' '}' { TyApp TupleC [] }
+     | '{' Types '}' { TyApp TupleC (reverse $2) }
+	  | '(' ')' '->' Type { TyApp FunC [$4] }
+     | '(' Types ')' '->' Type { TyApp FunC ($5 : reverse $2) }
+     | '[' Type ']' { TyApp ArrayC [$2] }
 
 Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }
@@ -186,7 +188,7 @@ parseError ([], xs) = error $ "Parse error at EOF: " <> show xs <> " are expecte
 parseError (t:_, xs) = error $ "Parse error: " <> show t <> " is got, but " <> show xs <> " are expected."
 
 data D = V Info Text (Maybe Type) (Expr Text)
-       | F Info Text [(Text, Maybe Type)] Type (Expr Text)
+       | F Info Text [(Text, Maybe Type)] (Maybe Type) (Expr Text)
        | E Info Text Type Text
 
 toLet :: Info -> [D] -> Expr Text -> Expr Text

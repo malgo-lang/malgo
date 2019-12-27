@@ -130,7 +130,7 @@ instance Pretty Op where
   pPrint Or   = "||"
 
 data Decl a
-  = FunDec [(Info, a, [(a, Maybe Type)], Type, Expr a)]
+  = FunDec [(Info, a, [(a, Maybe Type)], Maybe Type, Expr a)]
   | ValDec Info a (Maybe Type) (Expr a)
   | ExDec Info a Type Text
   deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
