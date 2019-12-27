@@ -1,6 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.MiddleEnd.FreeVars
-  ( FreeVars(..) )
+  ( FreeVars(..)
+  )
 where
 
 import           Language.Malgo.Prelude

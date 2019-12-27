@@ -122,12 +122,12 @@ mallocBytes bytesOpr maybeType = do
 
 initArray :: Operand -> ID LType -> ID LType -> GenExpr ()
 initArray ptrOpr init size = do
-  initOpr <- findVar init
-  sizeOpr <- findVar size
+  initOpr   <- findVar init
+  sizeOpr   <- findVar size
 
   condLabel <- freshName "cond"
   bodyLabel <- freshName "copyelem"
-  endLabel <- freshName "end"
+  endLabel  <- freshName "end"
 
   {-
     for (i64 i = 0; i < size; i++) {
@@ -135,7 +135,7 @@ initArray ptrOpr init size = do
     }
   -}
   -- for (i64 i = 0;
-  iPtr <- alloca i64 Nothing 0
+  iPtr      <- alloca i64 Nothing 0
   store iPtr 0 (int64 0)
   br condLabel
 
@@ -149,7 +149,7 @@ initArray ptrOpr init size = do
   emitBlockStart bodyLabel
   addr <- gep ptrOpr [iOpr]
   store addr 0 initOpr
-  
+
   -- i++)
   store iPtr 0 =<< add iOpr (int64 1)
   br condLabel
@@ -193,10 +193,10 @@ genInst (CallExt f (Function r ps) xs) = do
   f'  <- findExt f (map convertType ps) (convertType r)
   xs' <- mapM (fmap (, []) . findVar) xs
   call f' xs'
-genInst CallExt{}           = error "extern symbol must have a function type"
+genInst CallExt{} = error "extern symbol must have a function type"
 genInst (ArrayCreate init size) = do
   let ty = convertType $ ltypeOf init
-  size' <- mul (sizeof ty) =<< findVar size
+  size'  <- mul (sizeof ty) =<< findVar size
   ptrOpr <- mallocBytes size' (Just ty)
   initArray ptrOpr init size
   pure ptrOpr

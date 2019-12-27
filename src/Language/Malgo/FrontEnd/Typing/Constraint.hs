@@ -9,7 +9,7 @@ module Language.Malgo.FrontEnd.Typing.Constraint
   )
 where
 
-import Language.Malgo.Monad
+import           Language.Malgo.Monad
 import           Language.Malgo.FrontEnd.Typing.Subst
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
@@ -27,12 +27,10 @@ data UnifyError = MismatchConstructor TyCon TyCon
                 | MismatchLevel Type Type
   deriving Show
 
-solve :: MonadMalgo m =>
-           [Constraint] -> m (Either UnifyError Subst)
+solve :: MonadMalgo m => [Constraint] -> m (Either UnifyError Subst)
 solve cs = runExceptT $ solver (mempty, cs)
 
-solver :: MonadMalgo m =>
-            (Subst, [Constraint]) -> ExceptT UnifyError m Subst
+solver :: MonadMalgo m => (Subst, [Constraint]) -> ExceptT UnifyError m Subst
 solver (su, []             ) = return su
 solver (su, (t1 :~ t2) : cs) = do
   su1 <- unify t1 t2
@@ -46,9 +44,9 @@ inst1 (TyForall vs ty) = do
 inst1 t = pure t
 
 instantiate :: MonadMalgo f => Type -> f Type
-instantiate (TyMeta a) = pure $ TyMeta a
-instantiate (TyApp c ts) = TyApp c <$> mapM instantiate ts
-instantiate (TyForall vs t) = do
+instantiate (TyMeta a      ) = pure $ TyMeta a
+instantiate (TyApp    c  ts) = TyApp c <$> mapM instantiate ts
+instantiate (TyForall vs t ) = do
   ts <- mapM (\_ -> TyMeta <$> newUniq) vs
   let subst = Subst $ fromList $ zip vs ts
   t' <- instantiate t
@@ -60,14 +58,12 @@ unify t          (TyMeta a) = bind a t
 unify (TyApp c1 ts1) (TyApp c2 ts2)
   | c1 == c2  = unifyMany ts1 ts2
   | otherwise = hoistEither $ Left $ MismatchConstructor c1 c2
-unify (TyForall ts1 t1) (TyForall ts2 t2)
-  | length ts1 == length ts2 = do
-    let subst = Subst $ fromList $ zipWith (\v1 v2 -> (v1, TyMeta v2)) ts1 ts2
-    unify (apply subst t1) (apply subst t2)
+unify (TyForall ts1 t1) (TyForall ts2 t2) | length ts1 == length ts2 = do
+  let subst = Subst $ fromList $ zipWith (\v1 v2 -> (v1, TyMeta v2)) ts1 ts2
+  unify (apply subst t1) (apply subst t2)
 unify t1 t2 = hoistEither $ Left $ MismatchLevel t1 t2
 
-unifyMany :: MonadMalgo m =>
-               [Type] -> [Type] -> ExceptT UnifyError m Subst
+unifyMany :: MonadMalgo m => [Type] -> [Type] -> ExceptT UnifyError m Subst
 unifyMany []         []         = return mempty
 unifyMany (t1 : ts1) (t2 : ts2) = do
   s1 <- unify t1 t2

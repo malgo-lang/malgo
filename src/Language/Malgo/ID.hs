@@ -25,7 +25,9 @@ import           GHC.Exts                       ( IsList(..) )
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
-import           Language.Malgo.Prelude  hiding ( delete, toList )
+import           Language.Malgo.Prelude  hiding ( delete
+                                                , toList
+                                                )
 import           Relude.Extra.Map
 
 data ID a = ID { idName :: Text, idUniq :: Int, idMeta :: a }
@@ -70,4 +72,4 @@ instance DynamicMap (IDMap a v) where
 instance IsList (IDMap a v) where
   type Item (IDMap a v) = (ID a, v)
   fromList = foldr (uncurry insert) mempty
-  toList = error "cannot convert to list"
+  toList   = error "cannot convert to list"

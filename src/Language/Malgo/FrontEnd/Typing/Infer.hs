@@ -33,7 +33,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     subst   <- catchUnifyError (Syntax.info e) "toplevel" =<< solve cs
     env     <- gets (apply subst)
 
-    opt <- liftMalgo $ asks maOption
+    opt     <- liftMalgo $ asks maOption
     when (dumpTyped opt && dumpTypeTable opt) $ do
       let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env)
       dump xs
@@ -50,13 +50,31 @@ throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
 catchUnifyError
   :: HasCallStack => Info -> Doc -> Either UnifyError a -> InferM a
 catchUnifyError i name (Left (MismatchConstructor c1 c2)) =
-  throw i $ "mismatch constructor" <+> pPrint c1 <> "," <+> pPrint c2 $+$ "on" <+> name
+  throw i
+    $   "mismatch constructor"
+    <+> pPrint c1
+    <>  ","
+    <+> pPrint c2
+    $+$ "on"
+    <+> name
 catchUnifyError i name (Left (MismatchLength ts1 ts2)) =
-  throw i $ "mismatch length" <+> pPrint ts1 <> "," <+> pPrint ts2 $+$ "on" <+> name
+  throw i
+    $   "mismatch length"
+    <+> pPrint ts1
+    <>  ","
+    <+> pPrint ts2
+    $+$ "on"
+    <+> name
 catchUnifyError i name (Left (InfinitType var ty)) =
   throw i $ "infinit type" <+> pPrint var <> "," <+> pPrint ty $+$ "on" <+> name
 catchUnifyError i name (Left (MismatchLevel ty1 ty2)) =
-  throw i $ "mismatch level" <+> pPrint ty1 <> "," <+> pPrint ty2 $+$ "on" <+> name
+  throw i
+    $   "mismatch level"
+    <+> pPrint ty1
+    <>  ","
+    <+> pPrint ty2
+    $+$ "on"
+    <+> name
 catchUnifyError _ _ (Right a) = pure a
 
 newTyMeta :: InferM Type
@@ -117,21 +135,26 @@ typingExpr (ArrayWrite _ arr ix val) = do
     )
 typingExpr (Call _ fn args) = do
   (cs1, fnTy    ) <- traverse inst1 =<< typingExpr fn
-  (cs2, argTypes) <- traverse (traverse instantiate) =<< first mconcat . unzip <$> mapM typingExpr args
-  retTy           <- newTyMeta
+  (cs2, argTypes) <-
+    traverse (traverse instantiate)
+    =<< first mconcat
+    .   unzip
+    <$> mapM typingExpr args
+  retTy <- newTyMeta
   return (TyApp FunC (retTy : argTypes) :~ fnTy : cs1 <> cs2, retTy)
 typingExpr (Fn i params body) = do
-  env <- get
+  env        <- get
   paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
                      params
   mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
   (cs, t) <- typingExpr body
-  sub <- catchUnifyError i "function literal" =<< solve cs
-  let funTy = generalize (apply sub env) $ apply sub (TyApp FunC (t : paramTypes))
+  sub     <- catchUnifyError i "function literal" =<< solve cs
+  let funTy =
+        generalize (apply sub env) $ apply sub (TyApp FunC (t : paramTypes))
   return (cs, funTy)
 typingExpr (Seq i e1 e2) = do
   (cs1, _) <- typingExpr e1
-  _ <- catchUnifyError i "seq" =<< solve cs1
+  _        <- catchUnifyError i "seq" =<< solve cs1
   (cs2, t) <- typingExpr e2
   return (cs1 <> cs2, t)
 typingExpr (Let _ (ValDec i name mtyp val) body) = do
@@ -143,9 +166,7 @@ typingExpr (Let _ (ValDec i name mtyp val) body) = do
         Nothing  -> cs1
 
   -- value restriction
-  if isValue val
-    then letVar i env name valType cs2
-    else defineVar name valType
+  if isValue val then letVar i env name valType cs2 else defineVar name valType
 
   (cs3, t) <- typingExpr body
   return (cs1 <> cs2 <> cs3, t)
@@ -217,13 +238,13 @@ typingExpr (BinOp _ op x y) = do
   typingOp Or =
     pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
 
-isValue Var{} = True
-isValue Int{} = True
-isValue Float{} = True
-isValue Bool{} = True
-isValue Char{} = True
-isValue String{} = True
-isValue Unit{} = True
-isValue Fn{} = True
+isValue Var{}        = True
+isValue Int{}        = True
+isValue Float{}      = True
+isValue Bool{}       = True
+isValue Char{}       = True
+isValue String{}     = True
+isValue Unit{}       = True
+isValue Fn{}         = True
 isValue (Tuple _ xs) = all isValue xs
-isValue _ = False
+isValue _            = False

@@ -56,13 +56,14 @@ renameExpr (Unit info       ) = return $ Unit info
 renameExpr (Tuple info xs   ) = Tuple info <$> mapM renameExpr xs
 renameExpr (TupleAccess info e i) =
   TupleAccess info <$> renameExpr e <*> pure i
-renameExpr (MakeArray info init size) = MakeArray info <$> renameExpr init <*> renameExpr size
+renameExpr (MakeArray info init size) =
+  MakeArray info <$> renameExpr init <*> renameExpr size
 renameExpr (ArrayRead info arr ix) =
   ArrayRead info <$> renameExpr arr <*> renameExpr ix
 renameExpr (ArrayWrite info arr ix val) =
   ArrayWrite info <$> renameExpr arr <*> renameExpr ix <*> renameExpr val
 renameExpr (Fn info params body) = withKnowns (map fst params) $ do
-  params' <- mapM (\(n, t) -> (,t) <$> getID info n) params
+  params' <- mapM (\(n, t) -> (, t) <$> getID info n) params
   body'   <- renameExpr body
   return $ Fn info params' body'
 renameExpr (Call info fn args) =
