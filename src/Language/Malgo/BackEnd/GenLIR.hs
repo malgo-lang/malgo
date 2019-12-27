@@ -43,7 +43,6 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
         newName <- newID (functionType (isNothing captures) ps r) (idName name)
         pure $ one (name, newName)
       _ -> error "genFunMap"
-
     functionType isKnown ps r
       | isKnown = Function (convertType $ typeOf r)
                            (map (convertType . typeOf) ps)
