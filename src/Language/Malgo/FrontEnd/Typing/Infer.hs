@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -30,12 +30,15 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
   trans e = evaluatingStateT mempty $ do
     (cs, _) <- typingExpr e
     subst   <- catchUnifyError (Syntax.info e) "toplevel" =<< solve cs
-    env     <- gets (defaulting . apply subst)
-    pure $ fmap (\x -> fromJust $ lookup x env) e
+    env     <- gets (apply subst)
+    let dcs = defaulting env
+    subst' <- catchUnifyError (Syntax.info e) "toplevel defaulting" =<< solve dcs
+    let env' = apply subst' env
+    pure $ fmap (\x -> fromJust $ lookup x env') e
 
-defaulting :: Substitutable a => a -> a
+defaulting :: Substitutable a => a -> [Constraint]
 defaulting t =
-  apply (Subst $ fromList $ zip (toList $ ftv t) (repeat $ TyApp IntC [])) t
+  map (\v -> TyMeta v :~ TyApp IntC []) $ toList $ ftv t
 
 type Env = IDMap () (ID Type)
 
@@ -44,7 +47,8 @@ type InferM a = StateT Env MalgoM a
 throw :: HasCallStack => Info -> Doc -> InferM a
 throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
 
-catchUnifyError :: HasCallStack => Info -> Doc -> Either UnifyError a -> InferM a
+catchUnifyError
+  :: HasCallStack => Info -> Doc -> Either UnifyError a -> InferM a
 catchUnifyError i name (Left (MismatchConstructor c1 c2)) =
   throw i $ "mismatch constructor" <+> pPrint c1 <+> pPrint c2 $+$ "on" <+> name
 catchUnifyError i name (Left (MismatchLength ts1 ts2)) =
@@ -62,10 +66,9 @@ generalize t = do
   let ts = toList $ ftv t \\ ftv env
   pure $ TyForall ts t
 
-defineVar :: HasCallStack => Info -> ID () -> Type -> [Constraint] -> InferM ()
-defineVar i x t cs = do
-  sub <- catchUnifyError i (pPrint x) =<< solve cs
-  x'  <- newID (apply sub t) (idName x)
+defineVar :: HasCallStack => ID () -> Type -> InferM ()
+defineVar x t = do
+  x' <- newID t (idName x)
   modify (insert x x')
 
 lookupVar :: ID () -> InferM Type
@@ -107,10 +110,10 @@ typingExpr (Call _ fn args) = do
   (cs2, argTypes) <- first mconcat . unzip <$> mapM typingExpr args
   retTy           <- newTyMeta
   return (TyApp FunC (retTy : argTypes) :~ fnTy : cs1 <> cs2, retTy)
-typingExpr (Fn i params body) = do
+typingExpr (Fn _ params body) = do
   paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
                      params
-  mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
+  mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
   (cs, t) <- typingExpr body
   return (cs, TyApp FunC (t : paramTypes))
 typingExpr (Seq _ e1 e2) = do
@@ -122,30 +125,44 @@ typingExpr (Let _ (ValDec i name mtyp val) body) = do
   let cs2 = case mtyp of
         Just typ -> valType :~ typ : cs1
         Nothing  -> cs1
-  defineVar i name valType cs2
+
+  sub <- catchUnifyError i (pPrint name) =<< solve cs2
+  let dcs = defaulting (apply sub valType)
+  sub' <- catchUnifyError i (pPrint name <+> "defaulting") =<< solve dcs
+  let valType' = apply (sub <> sub') valType
+  defineVar name valType'
+  modify (apply (sub <> sub'))
+
   (cs3, t) <- typingExpr body
   return (cs1 <> cs2 <> cs3, t)
-typingExpr (Let _ (ExDec i name typ _) body) = do
-  defineVar i name typ []
+typingExpr (Let _ (ExDec _ name typ _) body) = do
+  defineVar name typ
   (cs, t) <- typingExpr body
   return (cs, t)
-typingExpr (Let i (FunDec fs) e) = do
+typingExpr (Let _ (FunDec fs) e) = do
   mapM_ prepare fs
   cs1      <- foldMapM typingFunDec fs
   (cs2, t) <- typingExpr e
   return (cs1 <> cs2, t)
  where
-  prepare (i', f, _, _, _) = do
+  prepare (_, f, _, _, _) = do
     v <- newTyMeta
-    defineVar i' f v []
+    defineVar f v
   typingFunDec (i', f, params, retty, body) = do
     paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
                        params
-    mapM_ (\((p, _), t) -> defineVar i p t []) (zip params paramTypes)
+    mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
     (cs1, t) <- typingExpr body
     tv       <- lookupVar f
     let cs = tv :~ TyApp FunC (retty : paramTypes) : t :~ retty : cs1
-    defineVar i' f tv cs
+
+    sub <- catchUnifyError i' (pPrint f) =<< solve cs
+    let dcs = defaulting (apply sub tv)
+    sub' <- catchUnifyError i' (pPrint f <+> "defaulting") =<< solve dcs
+    let fType = apply (sub <> sub') tv
+    defineVar f fType
+    modify $ apply (sub <> sub')
+
     return cs
 typingExpr (If _ c t f) = do
   (cs1, ct) <- typingExpr c
