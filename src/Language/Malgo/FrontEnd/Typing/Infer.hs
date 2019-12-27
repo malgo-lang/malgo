@@ -32,10 +32,6 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     (cs, _) <- typingExpr e
     subst   <- catchUnifyError (Syntax.info e) "toplevel" =<< solve cs
     env     <- gets (apply subst)
-    -- let dcs = defaulting env
-    -- subst' <- catchUnifyError (Syntax.info e) "toplevel defaulting"
-    --   =<< solve dcs
-    -- let env' = apply subst' env
 
     opt <- liftMalgo $ asks maOption
     when (dumpTyped opt && dumpTypeTable opt) $ do
@@ -54,11 +50,13 @@ throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
 catchUnifyError
   :: HasCallStack => Info -> Doc -> Either UnifyError a -> InferM a
 catchUnifyError i name (Left (MismatchConstructor c1 c2)) =
-  throw i $ "mismatch constructor" <+> pPrint c1 <+> pPrint c2 $+$ "on" <+> name
+  throw i $ "mismatch constructor" <+> pPrint c1 <> "," <+> pPrint c2 $+$ "on" <+> name
 catchUnifyError i name (Left (MismatchLength ts1 ts2)) =
-  throw i $ "mismatch length" <+> pPrint ts1 <+> pPrint ts2 $+$ "on" <+> name
+  throw i $ "mismatch length" <+> pPrint ts1 <> "," <+> pPrint ts2 $+$ "on" <+> name
 catchUnifyError i name (Left (InfinitType var ty)) =
-  throw i $ "infinit type" <+> pPrint var <+> pPrint ty $+$ "on" <+> name
+  throw i $ "infinit type" <+> pPrint var <> "," <+> pPrint ty $+$ "on" <+> name
+catchUnifyError i name (Left (MismatchLevel ty1 ty2)) =
+  throw i $ "mismatch level" <+> pPrint ty1 <> "," <+> pPrint ty2 $+$ "on" <+> name
 catchUnifyError _ _ (Right a) = pure a
 
 newTyMeta :: InferM Type
@@ -101,35 +99,39 @@ typingExpr (TupleAccess _ e _) = do
   t       <- newTyMeta
   return (cs, t)
 typingExpr (MakeArray _ initNode sizeNode) = do
-  (cs1, initTy) <- typingExpr initNode
-  (cs2, sizeTy) <- typingExpr sizeNode
+  (cs1, initTy) <- traverse instantiate =<< typingExpr initNode
+  (cs2, sizeTy) <- traverse instantiate =<< typingExpr sizeNode
   let cs = TyApp IntC [] :~ sizeTy : cs1 <> cs2
   return (cs, TyApp ArrayC [initTy])
 typingExpr (ArrayRead _ arr _) = do
-  (cs, arrTy) <- typingExpr arr
+  (cs, arrTy) <- traverse instantiate =<< typingExpr arr
   resultTy    <- newTyMeta
   return (TyApp ArrayC [resultTy] :~ arrTy : cs, resultTy)
 typingExpr (ArrayWrite _ arr ix val) = do
-  (cs1, arrTy) <- typingExpr arr
-  (cs2, ixTy ) <- typingExpr ix
-  (cs3, valTy) <- typingExpr val
+  (cs1, arrTy) <- traverse instantiate =<< typingExpr arr
+  (cs2, ixTy ) <- traverse instantiate =<< typingExpr ix
+  (cs3, valTy) <- traverse instantiate =<< typingExpr val
   return
     ( ixTy :~ TyApp IntC [] : arrTy :~ TyApp ArrayC [valTy] : cs3 <> cs2 <> cs1
     , TyApp TupleC []
     )
 typingExpr (Call _ fn args) = do
-  (cs1, fnTy    ) <- typingExpr fn
-  (cs2, argTypes) <- first mconcat . unzip <$> mapM typingExpr args
+  (cs1, fnTy    ) <- traverse inst1 =<< typingExpr fn
+  (cs2, argTypes) <- traverse (traverse instantiate) =<< first mconcat . unzip <$> mapM typingExpr args
   retTy           <- newTyMeta
   return (TyApp FunC (retTy : argTypes) :~ fnTy : cs1 <> cs2, retTy)
-typingExpr (Fn _ params body) = do
+typingExpr (Fn i params body) = do
+  env <- get
   paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta)
                      params
   mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
   (cs, t) <- typingExpr body
-  return (cs, TyApp FunC (t : paramTypes))
-typingExpr (Seq _ e1 e2) = do
+  sub <- catchUnifyError i "function literal" =<< solve cs
+  let funTy = generalize (apply sub env) $ apply sub (TyApp FunC (t : paramTypes))
+  return (cs, funTy)
+typingExpr (Seq i e1 e2) = do
   (cs1, _) <- typingExpr e1
+  _ <- catchUnifyError i "seq" =<< solve cs1
   (cs2, t) <- typingExpr e2
   return (cs1 <> cs2, t)
 typingExpr (Let _ (ValDec i name mtyp val) body) = do
@@ -140,7 +142,10 @@ typingExpr (Let _ (ValDec i name mtyp val) body) = do
         Just typ -> valType :~ typ : cs1
         Nothing  -> cs1
 
-  letVar i env name valType cs2
+  -- value restriction
+  if isValue val
+    then letVar i env name valType cs2
+    else defineVar name valType
 
   (cs3, t) <- typingExpr body
   return (cs1 <> cs2 <> cs3, t)
@@ -211,3 +216,14 @@ typingExpr (BinOp _ op x y) = do
     pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
   typingOp Or =
     pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
+
+isValue Var{} = True
+isValue Int{} = True
+isValue Float{} = True
+isValue Bool{} = True
+isValue Char{} = True
+isValue String{} = True
+isValue Unit{} = True
+isValue Fn{} = True
+isValue (Tuple _ xs) = all isValue xs
+isValue _ = False

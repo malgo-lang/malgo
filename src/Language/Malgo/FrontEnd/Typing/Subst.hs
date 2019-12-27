@@ -1,18 +1,21 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE TypeApplications #-}
 module Language.Malgo.FrontEnd.Typing.Subst
   ( Subst(..)
   , Substitutable(..)
   )
 where
 
+import           Data.List                      ( intersect )
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 import           Relude.Extra.Map
 
-newtype Subst = Subst (Map TyVar Type)
+newtype Subst = Subst { unwrapSubst :: Map TyVar Type }
   deriving (Eq, Show, Substitutable, Monoid)
 
 instance StaticMap Subst where
@@ -32,10 +35,12 @@ class Substitutable a where
 instance Substitutable Type where
   apply s t@(TyMeta a  ) = lookupDefault t a s
   apply s (  TyApp c ts) = TyApp c $ apply s ts
-  apply s (TyForall ts t) = TyForall ts $ apply s t
-  ftv (TyMeta a  ) = one a
-  ftv (TyApp _ ts) = foldMap ftv ts
-  ftv (TyForall ts t) = ftv t \\ fromList ts
+  apply s (TyForall ts t)
+    | null (keys (unwrapSubst s) `intersect` ts) = TyForall ts $ apply s t
+    | otherwise                    = error "invalid subst"
+  ftv (TyMeta a      ) = one a
+  ftv (TyApp    _  ts) = foldMap ftv ts
+  ftv (TyForall ts t ) = ftv t \\ fromList ts
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
   apply = fmap . apply

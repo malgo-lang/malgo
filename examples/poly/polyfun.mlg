@@ -1,6 +1,9 @@
-let fun f(x) = x
-    val v1 := f(1)
-	val v2 := f('a')
-	val v3 := {f, f}
-in v3 
+let fun id(x) = x
+    fun addOne(x) = x + 1
+    val funRef := array(addOne, 1)
+    val f := fn (x) -> fn (y) -> {x, array(y, 1)}
+    val v := id(id)
+	val g := f(1)
+in
+  funRef[0] <- id; funRef[0](1)
 end
