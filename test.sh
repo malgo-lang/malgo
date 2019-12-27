@@ -2,4 +2,12 @@
 
 # examplesがコンパイルできるかチェック
 mkdir ./tmp
-ls ./examples | grep mlg | xargs -I{} sh -c 'echo {} && cabal exec malgo -- ./examples/{} -o ./tmp/{}.ll && clang -lgc ./examples/lib.c ./tmp/{}.ll && rm ./tmp/{}.ll && ./a.out'
+
+for file in `ls ./examples | grep mlg`; do
+  echo $file
+  if cabal exec malgo -- "./examples/${file}" -o "./tmp/${file}.ll" && clang -lgc ./examples/lib.c "./tmp/${file}.ll" && rm "./tmp/${file}.ll" && ./a.out; then
+    echo "PASS"
+  else
+    exit 1
+  fi
+done
