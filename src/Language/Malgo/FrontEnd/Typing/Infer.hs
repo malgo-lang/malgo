@@ -238,6 +238,7 @@ typingExpr (BinOp _ op x y) = do
   typingOp Or =
     pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
 
+isValue :: Expr a -> Bool
 isValue Var{}        = True
 isValue Int{}        = True
 isValue Float{}      = True
