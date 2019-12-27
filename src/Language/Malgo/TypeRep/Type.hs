@@ -11,6 +11,7 @@ type TyVar = Int
 -- | Malgoの組み込みデータ型
 data Type = TyApp TyCon [Type]
           | TyMeta TyVar
+          | TyForall [TyVar] Type
   deriving (Eq, Show, Ord, Read, Generic)
 
 data TyCon = FunC | IntC | FloatC | BoolC | CharC | StringC | TupleC | ArrayC
@@ -23,6 +24,7 @@ instance Pretty Type where
   pPrint (TyApp c ts) =
     pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
   pPrint (TyMeta v) = pPrint v
+  pPrint (TyForall ts t) = "forall" <> sep (map pPrint ts) <> "." <+> pPrint t
 
 instance Pretty TyCon where
   pPrint FunC    = "Fun"

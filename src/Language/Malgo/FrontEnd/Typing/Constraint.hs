@@ -1,4 +1,5 @@
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE FlexibleContexts  #-}
 module Language.Malgo.FrontEnd.Typing.Constraint
   ( Constraint(..)
   , solve
@@ -6,6 +7,7 @@ module Language.Malgo.FrontEnd.Typing.Constraint
   )
 where
 
+import Language.Malgo.Monad
 import           Language.Malgo.FrontEnd.Typing.Subst
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
@@ -22,33 +24,50 @@ data UnifyError = MismatchConstructor TyCon TyCon
                 | InfinitType TyVar Type
   deriving Show
 
-solve :: [Constraint] -> Either UnifyError Subst
-solve cs = solver (mempty, cs)
+solve :: MonadMalgo m =>
+           [Constraint] -> m (Either UnifyError Subst)
+solve cs = runExceptT $ solver (mempty, cs)
 
-solver :: (Subst, [Constraint]) -> Either UnifyError Subst
+solver :: MonadMalgo m =>
+            (Subst, [Constraint]) -> ExceptT UnifyError m Subst
 solver (su, []             ) = return su
 solver (su, (t1 :~ t2) : cs) = do
   su1 <- unify t1 t2
   solver (su1 <> su, apply su1 cs)
 
-unify :: Type -> Type -> Either UnifyError Subst
+instantiate :: (MonadMalgo m, Substitutable b) =>
+                 [TyVar] -> b -> ExceptT UnifyError m b
+instantiate vs ty = do
+  newTypes <- mapM (\_ -> TyMeta <$> newUniq) vs
+  let cs = map (\(v, t) -> TyMeta v :~ t) (zip vs newTypes)
+  s <- solver  (mempty, cs)
+  pure $ apply s ty
+
+unify :: MonadMalgo m => Type -> Type -> ExceptT UnifyError m Subst
 unify (TyMeta a) t          = bind a t
 unify t          (TyMeta a) = bind a t
 unify (TyApp c1 ts1) (TyApp c2 ts2)
   | c1 == c2  = unifyMany ts1 ts2
-  | otherwise = Left $ MismatchConstructor c1 c2
+  | otherwise = hoistEither $ Left $ MismatchConstructor c1 c2
+unify (TyForall ts t1) t2 = do
+  t1' <- instantiate ts t1
+  unify t1' t2
+unify t1 (TyForall ts t2) = do
+  t2' <- instantiate ts t2
+  unify t1 t2'
 
-unifyMany :: [Type] -> [Type] -> Either UnifyError Subst
+unifyMany :: MonadMalgo m =>
+               [Type] -> [Type] -> ExceptT UnifyError m Subst
 unifyMany []         []         = return mempty
 unifyMany (t1 : ts1) (t2 : ts2) = do
   s1 <- unify t1 t2
   s2 <- unifyMany (apply s1 ts1) (apply s1 ts2)
   return $ s2 <> s1
-unifyMany ts1 ts2 = Left $ MismatchLength ts1 ts2
+unifyMany ts1 ts2 = hoistEither $ Left $ MismatchLength ts1 ts2
 
-bind :: TyVar -> Type -> Either UnifyError Subst
+bind :: Monad m => TyVar -> Type -> ExceptT UnifyError m Subst
 bind a t | t == TyMeta a   = return mempty
-         | occursCheck a t = Left $ InfinitType a t
+         | occursCheck a t = hoistEither $ Left $ InfinitType a t
          | otherwise       = return $ Subst (one (a, t))
 
 occursCheck :: Substitutable a => TyVar -> a -> Bool

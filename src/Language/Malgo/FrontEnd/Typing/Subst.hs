@@ -32,8 +32,10 @@ class Substitutable a where
 instance Substitutable Type where
   apply s t@(TyMeta a  ) = lookupDefault t a s
   apply s (  TyApp c ts) = TyApp c $ apply s ts
+  apply s (TyForall ts t) = TyForall ts $ apply s t
   ftv (TyMeta a  ) = one a
   ftv (TyApp _ ts) = foldMap ftv ts
+  ftv (TyForall ts t) = ftv t \\ fromList ts
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
   apply = fmap . apply

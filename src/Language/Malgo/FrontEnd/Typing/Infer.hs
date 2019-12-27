@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -28,7 +29,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
   isDump = dumpTyped
   trans e = evaluatingStateT mempty $ do
     (cs, _) <- typingExpr e
-    subst   <- catchUnifyError (Syntax.info e) "toplevel" $ solve cs
+    subst   <- catchUnifyError (Syntax.info e) "toplevel" =<< solve cs
     env     <- gets (defaulting . apply subst)
     pure $ fmap (\x -> fromJust $ lookup x env) e
 
@@ -55,9 +56,15 @@ catchUnifyError _ _ (Right a) = pure a
 newTyMeta :: InferM Type
 newTyMeta = TyMeta <$> newUniq
 
+generalize :: MonadState Env m => Type -> m Type
+generalize t = do
+  env <- get
+  let ts = toList $ ftv t \\ ftv env
+  pure $ TyForall ts t
+
 defineVar :: HasCallStack => Info -> ID () -> Type -> [Constraint] -> InferM ()
 defineVar i x t cs = do
-  sub <- catchUnifyError i (pPrint x) $ solve cs
+  sub <- catchUnifyError i (pPrint x) =<< solve cs
   x'  <- newID (apply sub t) (idName x)
   modify (insert x x')
 
