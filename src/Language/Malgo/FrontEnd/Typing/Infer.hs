@@ -38,7 +38,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
       let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env)
       dump xs
 
-    pure $ fmap (\x -> fromJust $ lookup x env) e
+    pure $ fmap (\x -> removeExplictForall <$> fromJust (lookup x env)) e
 
 type Env = IDMap () (ID Type)
 
