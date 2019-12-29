@@ -34,7 +34,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     env     <- gets (apply subst)
 
     opt     <- liftMalgo $ asks maOption
-    when (dumpTyped opt && dumpTypeTable opt) $ do
+    when (dumpTypeTable opt) $ do
       let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env)
       dump xs
 

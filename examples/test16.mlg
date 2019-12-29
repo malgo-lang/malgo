@@ -1,0 +1,9 @@
+let fun id(x) = x
+    val a := {id, id}
+    val b := id(a)
+    val c := b.0
+    val d := c(1)
+    extern print_int : Int -> {} = "print_int"
+in
+  print_int(d)
+end

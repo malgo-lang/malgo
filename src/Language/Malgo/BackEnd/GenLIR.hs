@@ -133,14 +133,14 @@ store ptr xs val = addInst (Store ptr xs val) >> pass
 call :: HasCallStack => ID LType -> [ID LType] -> GenExpr (ID LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
-    as <- zipWithM genArg ps xs
+    as <- zipWithM coerceTo ps xs
     addInst $ Call f as
   _ -> error "function must be typed as function"
 
 callExt :: Text -> LType -> [ID LType] -> GenExpr (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
-    as <- zipWithM genArg ps xs
+    as <- zipWithM coerceTo ps xs
     addInst $ CallExt f funTy as
   _ -> error "external function must be typed as function"
 
@@ -260,7 +260,7 @@ genExpr (M.ArrayWrite arr ix val) = case typeOf arr of
   TyApp ArrayC [t] -> do
     arrOpr <- findVar arr
     ixOpr  <- findVar ix
-    valOpr <- genArg (convertType t) =<< findVar val
+    valOpr <- coerceTo (convertType t) =<< findVar val
     store arrOpr [ixOpr] valOpr
     undef (Ptr (Struct []))
   _ -> error $ toText $ pShow arr <> " is not an array"
@@ -289,7 +289,7 @@ genExpr (M.CallClosure f args) = do
   argOprs <- (clsCap :) <$> mapM findVar args
   call clsFun argOprs
 genExpr (M.Let name val expr) = do
-  val' <- genExpr val
+  val' <- coerceTo (convertType $ typeOf name) =<< genExpr val
   local (\st -> st { variableMap = insert name val' (variableMap st) })
     $ genExpr expr
 genExpr (M.If c t f) = do
@@ -368,22 +368,23 @@ wrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
                                , body   = bodyBlock
                                }
   cast (Ptr U8) =<< packClosure fwName boxedX
-wrap (Ptr _)     = cast (Ptr U8)
-wrap Bit         = zext U64 >=> cast (Ptr U8)
-wrap I32         = sext I64 >=> cast (Ptr U8)
-wrap I64         = cast (Ptr U8)
-wrap U8          = zext U64 >=> cast (Ptr U8)
-wrap U32         = zext U64 >=> cast (Ptr U8)
-wrap U64         = cast (Ptr U8)
-wrap F64         = cast (Ptr U8)
-wrap (Struct ts) = \x -> do
+wrap (Ptr (Struct ts)) = \x -> do
   ptr <- alloca (Struct (replicate (length ts) (Ptr U8)))
   forM_ (zip [0 ..] ts) $ \(i, t) -> do
-    raw    <- loadC x [i]
+    raw    <- loadC x [0, i]
     wraped <- wrap t raw
     storeC ptr [0, i] wraped
-  pure ptr
+  cast (Ptr U8) ptr
+wrap (Ptr _)    = cast (Ptr U8)
+wrap Bit        = zext U64 >=> cast (Ptr U8)
+wrap I32        = sext I64 >=> cast (Ptr U8)
+wrap I64        = cast (Ptr U8)
+wrap U8         = zext U64 >=> cast (Ptr U8)
+wrap U32        = zext U64 >=> cast (Ptr U8)
+wrap U64        = cast (Ptr U8)
+wrap F64        = cast (Ptr U8)
 wrap Function{} = cast (Ptr U8)
+wrap Struct{}   = error "cannot convert Struct to boxed value"
 wrap Void       = error "cannot convert Void to boxed value"
 
 -- | convert boxed value to unboxed value
@@ -416,57 +417,63 @@ unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
                                , body   = bodyBlock
                                }
   packClosure foName x
-unwrap (Ptr t)     = cast (Ptr t)
-unwrap Bit         = cast U64 >=> trunc Bit
-unwrap I32         = cast I64 >=> trunc I32
-unwrap I64         = cast I64
-unwrap U8          = cast U64 >=> trunc U8
-unwrap U32         = cast U64 >=> trunc U32
-unwrap U64         = cast U64
-unwrap F64         = cast F64
-unwrap (Struct ts) = \x -> do
+unwrap (Ptr (Struct ts)) = \x -> do
+  x' <- cast (Ptr $ Struct $ replicate (length ts) (Ptr U8)) x
   ptr <- alloca (Struct ts)
   forM_ (zip [0 ..] ts) $ \(i, t) -> do
-    wraped <- loadC x [0, i]
+    wraped <- loadC x' [0, i]
     raw    <- unwrap t wraped
     storeC ptr [0, i] raw
-  loadC ptr [0]
+  pure ptr
+unwrap (Ptr t)      = cast (Ptr t)
+unwrap Bit          = cast U64 >=> trunc Bit
+unwrap I32          = cast I64 >=> trunc I32
+unwrap I64          = cast I64
+unwrap U8           = cast U64 >=> trunc U8
+unwrap U32          = cast U64 >=> trunc U32
+unwrap U64          = cast U64
+unwrap F64          = cast F64
 unwrap t@Function{} = cast t
+unwrap Struct{}     = error "cannot convert boxed value to Struct"
 unwrap Void         = error "cannot convert boxed value to Void"
 
-genArg :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
-genArg t x | t == ltypeOf x = pure x
-genArg (Ptr U8) x           = wrap (ltypeOf x) x
-genArg (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x = case ltypeOf x of
-  Ptr (Struct [Function _ (Ptr U8 : xps), Ptr U8]) -> do
-    -- generate new captured environment
-    -- f captures the original closure
-    boxedX      <- cast (Ptr U8) x
+coerceTo :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
+coerceTo t x | t == ltypeOf x = pure x
+coerceTo (Ptr U8) x           = wrap (ltypeOf x) x
+coerceTo (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x =
+  case ltypeOf x of
+    Ptr (Struct [Function _ (Ptr U8 : xps), Ptr U8]) -> do
+      -- generate new captured environment
+      -- f captures the original closure
+      boxedX      <- cast (Ptr U8) x
 
-    -- generate f
-    fName       <- newID (Function r (Ptr U8 : ps)) "f"
-    fBoxedXName <- newID (Ptr U8) "boxedCaps"
-    fParamNames <- mapM (\p -> newID (ltypeOf p) "p") ps
-    bodyBlock   <- lift $ runGenExpr mempty $ do
-      fUnboxedX <- cast (ltypeOf x) fBoxedXName
-      as        <- zipWithM genArg xps fParamNames
-      xFun      <- loadC fUnboxedX [0, 0]
-      xCap      <- loadC fUnboxedX [0, 1]
-      retVal    <- call xFun (xCap : as)
-      genArg r retVal
-    lift $ addInnerFunc $ L.Func { name   = fName
-                                 , params = fBoxedXName : fParamNames
-                                 , body   = bodyBlock
-                                 }
-    packClosure fName boxedX
-  _ -> error "x is not closure"
-genArg (Ptr (Struct ts)) x = do
-  ptr <- alloca (Struct ts)
-  forM_ (zip [0 ..] ts) $ \(i, t) -> do
-    xElem  <- loadC x [0, 0]
-    xElem' <- genArg t xElem
-    storeC ptr [0, i] xElem'
-  pure ptr
-genArg t x = case ltypeOf x of
+      -- generate f
+      fName       <- newID (Function r (Ptr U8 : ps)) "f"
+      fBoxedXName <- newID (Ptr U8) "boxedCaps"
+      fParamNames <- mapM (\p -> newID (ltypeOf p) "p") ps
+      bodyBlock   <- lift $ runGenExpr mempty $ do
+        fUnboxedX <- cast (ltypeOf x) fBoxedXName
+        as        <- zipWithM coerceTo xps fParamNames
+        xFun      <- loadC fUnboxedX [0, 0]
+        xCap      <- loadC fUnboxedX [0, 1]
+        retVal    <- call xFun (xCap : as)
+        coerceTo r retVal
+      lift $ addInnerFunc $ L.Func { name   = fName
+                                   , params = fBoxedXName : fParamNames
+                                   , body   = bodyBlock
+                                   }
+      packClosure fName boxedX
+    _ -> error "x is not closure"
+coerceTo (Ptr (Struct ts)) x = case ltypeOf x of
+  Ptr U8         -> unwrap (Ptr (Struct ts)) x
+  Ptr (Struct _) -> do
+    ptr <- alloca (Struct ts)
+    forM_ (zip [0 ..] ts) $ \(i, t) -> do
+      xElem  <- loadC x [0, 0]
+      xElem' <- coerceTo t xElem
+      storeC ptr [0, i] xElem'
+    pure ptr
+  _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
+coerceTo t x = case ltypeOf x of
   Ptr U8 -> unwrap t x
   _      -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow t
