@@ -36,7 +36,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     opt     <- liftMalgo $ asks maOption
     when (dumpTypeTable opt) $ do
       let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env)
-      dump xs
+      liftMalgo $ dump xs
 
     pure $ fmap (\x -> removeExplictForall <$> fromJust (lookup x env)) e
 

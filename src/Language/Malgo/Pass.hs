@@ -6,6 +6,7 @@
 {-# LANGUAGE ScopedTypeVariables    #-}
 {-# LANGUAGE TypeApplications       #-}
 {-# LANGUAGE TypeFamilies           #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Pass where
 
 import           Language.Malgo.Monad
@@ -16,10 +17,12 @@ class Pass p s t | p -> s t where
   isDump :: Opt -> Bool
   trans :: s -> MalgoM t
 
-dump :: (MonadReader MalgoEnv m, Show a, MonadIO m, Pretty a) => a -> m ()
+dump :: (MonadReader (MalgoEnv m) m, HasLog (MalgoEnv m) Message m, Show a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- asks maOption
-  if isDebugMode opt then putLTextLn $ pShow x else print $ pPrint x
+  if isDebugMode opt
+    then logDebug $ "dump:\n" <> toText (pShow x)
+    else logInfo $ "dump:\n" <> show (pPrint x)
 
 transWithDump :: forall  p s t . (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do

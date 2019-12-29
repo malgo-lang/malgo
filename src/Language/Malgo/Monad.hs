@@ -14,9 +14,18 @@ module Language.Malgo.Monad
   , MonadMalgo(..)
   , newUniq
   , Opt(..)
+  , Colog.HasLog
+  , Colog.Message
+  , logDebug
+  , Colog.logInfo
+  , Colog.logWarning
+  , Colog.logError
+  , Colog.logException
   )
 where
 
+import           Colog                   hiding ( logDebug )
+import qualified Colog
 import           Control.Monad.Fix
 import           Control.Monad.Trans.Writer.CPS
 import           Language.Malgo.Prelude
@@ -37,16 +46,27 @@ data Opt = Opt
   , isDebugMode   :: Bool
   } deriving (Eq, Show)
 
-data MalgoEnv = MalgoEnv
+data MalgoEnv m = MalgoEnv
   { maUniqSupply :: UniqSupply
   , maOption     :: Opt
+  , maLogAction :: LogAction m Message
   }
 
-newtype MalgoM a = MalgoM { unMalgoM :: ReaderT MalgoEnv IO a }
-  deriving (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadIO, MonadFix, MonadFail)
+instance HasLog (MalgoEnv m) Message m where
+  getLogAction = maLogAction
+  setLogAction newLogAction env = env { maLogAction = newLogAction }
+
+newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) IO a }
+  deriving (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadIO, MonadFix, MonadFail)
 
 runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
-runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt)
+runMalgo (MalgoM m) u opt =
+  liftIO $ runReaderT m (MalgoEnv u opt richMessageAction)
+
+logDebug :: MonadMalgo m => Text -> m ()
+logDebug msg = liftMalgo $ do
+  opt <- asks maOption
+  when (isDebugMode opt) $ Colog.logDebug msg
 
 class MonadIO m => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
