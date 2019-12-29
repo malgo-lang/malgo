@@ -32,10 +32,13 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
   trans M.Program { functions, mainExpr } = do
     mainFuncId <- newID (Function I32 []) "main"
     funMap     <- foldMapM genFunMap functions
-    runGenProgram mainFuncId $ local (\s -> s { functionMap = funMap }) $ do
+    innerFuncsRef <- newIORef []
+    prog <- runGenProgram mainFuncId innerFuncsRef $ local (\s -> s { functionMap = funMap }) $ do
       fs <- mapM genFunction functions
       mf <- genMainFunction mainFuncId mainExpr
       pure (mf : fs)
+    innerFuncs <- readIORef innerFuncsRef
+    pure ((prog :: L.Program (ID LType)) { functions = innerFuncs <> L.functions prog })
    where
     genFunMap M.Func { name, captures } = case typeOf name of
       TyApp FunC (r : ps) -> do
@@ -48,7 +51,9 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
       | otherwise = Function (convertType $ typeOf r)
                              (Ptr U8 : map (convertType . typeOf) ps)
 
-newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
+data ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType)
+                             , innerFunctions :: IORef [L.Func (ID LType)]
+                             }
 
 data ExprEnv = ExprEnv { partialBlockInsts :: IORef [(ID LType, Inst (ID LType))]
                        , variableMap       :: IDMap Type (ID LType)
@@ -57,9 +62,9 @@ data ExprEnv = ExprEnv { partialBlockInsts :: IORef [(ID LType, Inst (ID LType))
 type GenProgram = ReaderT ProgramEnv MalgoM
 type GenExpr = ReaderT ExprEnv GenProgram
 
-runGenProgram :: a -> GenProgram [L.Func a] -> MalgoM (L.Program a)
-runGenProgram mainFunc m = do
-  defs <- runReaderT m (ProgramEnv mempty)
+runGenProgram :: a -> IORef [L.Func (ID LType)] -> GenProgram [L.Func a] -> MalgoM (L.Program a)
+runGenProgram mainFunc ref m = do
+  defs <- runReaderT m (ProgramEnv mempty ref)
   pure $ L.Program { L.functions = defs, mainFunc = mainFunc }
 
 runGenExpr
@@ -83,6 +88,11 @@ findFun x = do
   pure $ fromJust $ lookup x functionMap
 
 -- LIR builder
+
+addInnerFunc :: L.Func (ID LType) -> GenProgram ()
+addInnerFunc fun = do
+  ProgramEnv { innerFunctions } <- ask
+  modifyIORef innerFunctions (fun:)
 
 addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
@@ -324,6 +334,25 @@ packClosure f capsId = do
 -- | convert to boxed value
 wrap :: LType -> ID LType -> GenExpr (ID LType)
 wrap (Ptr U8)    = pure
+wrap (Ptr (Struct [Function r (Ptr U8:ps), Ptr U8])) = \x -> do
+  -- generate new captured environment
+  -- fw captures the original closure
+  -- note: ltypeOf x == Ptr $ Struct [Function r (Ptr U8:ps), Ptr U8]
+  boxedX <- cast (Ptr U8) x
+
+  -- generate fw
+  fwName <- newID (Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8))) "fw"
+  fwBoxedXName <- newID (Ptr U8) "boxedCaps"
+  fwParamNames <- replicateM (length ps) $ newID (Ptr U8) "a"
+  bodyBlock <- lift $ runGenExpr mempty $ do
+    fwUnboxedX <- cast (ltypeOf x) fwBoxedXName
+    as <- zipWithM unwrap ps fwParamNames
+    xFun <- loadC fwUnboxedX [0, 0]
+    xCap <- loadC fwUnboxedX [0, 1]
+    retVal <- call xFun (xCap : as)
+    wrap r retVal
+  lift $ addInnerFunc $ L.Func { name = fwName, params = fwBoxedXName : fwParamNames, body = bodyBlock }
+  cast (Ptr U8) =<< packClosure fwName boxedX
 wrap (Ptr _ )    = cast (Ptr U8)
 wrap Bit         = zext U64 >=> cast (Ptr U8)
 wrap I32         = sext I64 >=> cast (Ptr U8)
