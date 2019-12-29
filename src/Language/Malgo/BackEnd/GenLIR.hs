@@ -199,7 +199,8 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
       cOpr <- loadC capsId' [0, i]
       pure (one (c, cOpr))
   genCls capsId = foldForM mutrecs $ \f -> do
-    clsId <- packClosure f capsId
+    f' <- lift $ findFun f
+    clsId <- packClosure f' capsId
     pure (one (f, clsId))
 
 genMainFunction
@@ -249,7 +250,9 @@ genExpr (M.MakeClosure f cs) = do
   forM_ (zip [0 ..] cs) $ \(i, c) -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
-  packClosure f =<< cast (Ptr U8) capPtr
+  f' <- lift $ findFun f
+  capPtr' <- cast (Ptr U8) capPtr
+  packClosure f' capPtr'
 genExpr (M.CallDirect f args) = do
   funOpr  <- lift $ findFun f
   argOprs <- mapM findVar args
@@ -311,14 +314,12 @@ genExpr (M.BinOp op x y) = do
     (Or  , _  ) -> OR
     (_   , t  ) -> error $ show t <> " is not comparable"
 
-packClosure :: ID Type -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
-packClosure f capsId = case convertType $ typeOf f of
-  Ptr clsTy -> do
-    clsId <- alloca clsTy
-    storeC clsId [0, 0] =<< lift (findFun f)
-    storeC clsId [0, 1] capsId
-    pure clsId
-  _ -> error "packClosure"
+packClosure :: ID LType -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
+packClosure f capsId = do
+  clsId <- alloca (Struct [ltypeOf f, Ptr U8])
+  storeC clsId [0, 0] f
+  storeC clsId [0, 1] capsId
+  pure clsId
 
 -- | convert to boxed value
 wrap :: LType -> ID LType -> GenExpr (ID LType)
