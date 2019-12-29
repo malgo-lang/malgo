@@ -75,13 +75,6 @@ runGenExpr variableMap nameHint m = do
   ps    <- readIORef psRef
   pure $ Block { insts = reverse ps, value = value }
 
-addInst :: Inst (ID LType) -> GenExpr (ID LType)
-addInst inst = do
-  ExprEnv { partialBlockInsts, nameHint } <- ask
-  i <- newID (ltypeOf inst) nameHint
-  modifyIORef partialBlockInsts (\s -> (i, inst) : s)
-  pure i
-
 findVar :: ID Type -> GenExpr (ID LType)
 findVar x = do
   ExprEnv { variableMap } <- ask
@@ -91,6 +84,15 @@ findFun :: ID Type -> GenProgram (ID LType)
 findFun x = do
   ProgramEnv { functionMap } <- ask
   pure $ fromJust $ lookup x functionMap
+
+-- LIR builder
+
+addInst :: Inst (ID LType) -> GenExpr (ID LType)
+addInst inst = do
+  ExprEnv { partialBlockInsts, nameHint } <- ask
+  i <- newID (ltypeOf inst) nameHint
+  modifyIORef partialBlockInsts (\s -> (i, inst) : s)
+  pure i
 
 setHint :: MonadReader ExprEnv m => Text -> m a -> m a
 setHint x = local (\s -> s { nameHint = x })
@@ -133,6 +135,15 @@ callExt f funTy xs = do
 cast :: LType -> ID LType -> GenExpr (ID LType)
 cast ty val = addInst $ Cast ty val
 
+trunc :: LType -> ID LType -> GenExpr (ID LType)
+trunc ty val = addInst $ Trunc ty val
+
+zext :: LType -> ID LType -> GenExpr (ID LType)
+zext ty val = addInst $ Zext ty val
+
+sext :: LType -> ID LType -> GenExpr (ID LType)
+sext ty val = addInst $ Sext ty val
+
 undef :: LType -> GenExpr (ID LType)
 undef ty = addInst $ Undef ty
 
@@ -162,6 +173,8 @@ convertType (TyApp StringC [] ) = Ptr U8
 convertType (TyApp TupleC  xs ) = Ptr $ Struct $ map convertType xs
 convertType (TyApp ArrayC  [x]) = Ptr $ convertType x
 convertType t = error $ toText $ "unreachable(convertType): " <> pShow t
+
+-- generate LIR
 
 genFunction :: M.Func Type (ID Type) -> GenProgram (L.Func (ID LType))
 genFunction M.Func { name, captures = Nothing, params, body } = do
@@ -313,3 +326,38 @@ packClosure f capsId = setHint "closure" $ case convertType $ typeOf f of
     storeC clsId [0, 1] capsId
     pure clsId
   _ -> error "packClosure"
+
+-- | convert to boxed value
+wrap :: LType -> ID LType -> GenExpr (ID LType)
+wrap (Ptr U8) = pure
+wrap (Ptr _) = cast (Ptr U8)
+wrap Bit = zext U64 >=> cast (Ptr U8)
+wrap I32 = sext I64 >=> cast (Ptr U8)
+wrap I64 = cast (Ptr U8)
+wrap U8 = zext U64 >=> cast (Ptr U8)
+wrap U32 = zext U64 >=> cast (Ptr U8)
+wrap U64 = cast (Ptr U8)
+wrap F64 = cast (Ptr U8)
+wrap (Struct ts) = \x -> do
+  ptr <- alloca (Struct ts)
+  storeC ptr [0] x
+  pure ptr
+wrap Function{} = cast (Ptr U8)
+wrap Void = error "cannot convert Void to boxed value"
+
+-- | convert boxed value to unboxed value
+unwrap :: LType -> ID LType -> GenExpr (ID LType)
+unwrap (Ptr U8) = pure
+unwrap (Ptr t) = cast (Ptr t)
+unwrap Bit = cast U64 >=> trunc Bit
+unwrap I32 = cast I64 >=> trunc I32
+unwrap I64 = cast I64
+unwrap U8 = cast U64 >=> trunc U8
+unwrap U32 = cast U64 >=> trunc U32
+unwrap U64 = cast U64
+unwrap F64 = cast F64
+unwrap (Struct ts) = \x -> do
+  ptr <- cast (Ptr (Struct ts)) x
+  loadC ptr [0]
+unwrap t@Function{} = cast t
+unwrap Void = error "cannot convert boxed value to Void"
