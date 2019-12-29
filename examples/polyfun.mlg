@@ -5,5 +5,5 @@ let fun id(x) = x
     val v := id(id)
     val g := f(1)
 in
-  funRef[0] <- id
+  funRef[0] <- id; funRef[0](1)
 end

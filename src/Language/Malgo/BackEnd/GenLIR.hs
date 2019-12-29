@@ -30,15 +30,22 @@ data GenLIR
 instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
   isDump = dumpLIR
   trans M.Program { functions, mainExpr } = do
-    mainFuncId <- newID (Function I32 []) "main"
-    funMap     <- foldMapM genFunMap functions
+    mainFuncId    <- newID (Function I32 []) "main"
+    funMap        <- foldMapM genFunMap functions
     innerFuncsRef <- newIORef []
-    prog <- runGenProgram mainFuncId innerFuncsRef $ local (\s -> s { functionMap = funMap }) $ do
-      fs <- mapM genFunction functions
-      mf <- genMainFunction mainFuncId mainExpr
-      pure (mf : fs)
+    prog          <-
+      runGenProgram mainFuncId innerFuncsRef
+      $ local (\s -> s { functionMap = funMap })
+      $ do
+          fs <- mapM genFunction functions
+          mf <- genMainFunction mainFuncId mainExpr
+          pure (mf : fs)
     innerFuncs <- readIORef innerFuncsRef
-    pure ((prog :: L.Program (ID LType)) { functions = innerFuncs <> L.functions prog })
+    pure
+      ((prog :: L.Program (ID LType)) { functions = innerFuncs
+                                        <> L.functions prog
+                                      }
+      )
    where
     genFunMap M.Func { name, captures } = case typeOf name of
       TyApp FunC (r : ps) -> do
@@ -62,7 +69,11 @@ data ExprEnv = ExprEnv { partialBlockInsts :: IORef [(ID LType, Inst (ID LType))
 type GenProgram = ReaderT ProgramEnv MalgoM
 type GenExpr = ReaderT ExprEnv GenProgram
 
-runGenProgram :: a -> IORef [L.Func (ID LType)] -> GenProgram [L.Func a] -> MalgoM (L.Program a)
+runGenProgram
+  :: a
+  -> IORef [L.Func (ID LType)]
+  -> GenProgram [L.Func a]
+  -> MalgoM (L.Program a)
 runGenProgram mainFunc ref m = do
   defs <- runReaderT m (ProgramEnv mempty ref)
   pure $ L.Program { L.functions = defs, mainFunc = mainFunc }
@@ -92,7 +103,7 @@ findFun x = do
 addInnerFunc :: L.Func (ID LType) -> GenProgram ()
 addInnerFunc fun = do
   ProgramEnv { innerFunctions } <- ask
-  modifyIORef innerFunctions (fun:)
+  modifyIORef innerFunctions (fun :)
 
 addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
@@ -209,7 +220,7 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
       cOpr <- loadC capsId' [0, i]
       pure (one (c, cOpr))
   genCls capsId = foldForM mutrecs $ \f -> do
-    f' <- lift $ findFun f
+    f'    <- lift $ findFun f
     clsId <- packClosure f' capsId
     pure (one (f, clsId))
 
@@ -245,22 +256,21 @@ genExpr (M.ArrayRead arr ix) = do
   arrOpr <- findVar arr
   ixOpr  <- findVar ix
   load arrOpr ixOpr
-genExpr (M.ArrayWrite arr ix val) =
-  case typeOf arr of
-    TyApp ArrayC [t] -> do
-      arrOpr <- findVar arr
-      ixOpr  <- findVar ix
-      valOpr <- genArg (convertType t) =<< findVar val
-      store arrOpr [ixOpr] valOpr
-      undef (Ptr (Struct []))
-    _ -> error $ toText $ pShow arr <> " is not an array"
+genExpr (M.ArrayWrite arr ix val) = case typeOf arr of
+  TyApp ArrayC [t] -> do
+    arrOpr <- findVar arr
+    ixOpr  <- findVar ix
+    valOpr <- genArg (convertType t) =<< findVar val
+    store arrOpr [ixOpr] valOpr
+    undef (Ptr (Struct []))
+  _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)
   capPtr <- alloca capTy
   forM_ (zip [0 ..] cs) $ \(i, c) -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
-  f' <- lift $ findFun f
+  f'      <- lift $ findFun f
   capPtr' <- cast (Ptr U8) capPtr
   packClosure f' capPtr'
 genExpr (M.CallDirect f args) = do
@@ -333,27 +343,32 @@ packClosure f capsId = do
 
 -- | convert to boxed value
 wrap :: LType -> ID LType -> GenExpr (ID LType)
-wrap (Ptr U8)    = pure
-wrap (Ptr (Struct [Function r (Ptr U8:ps), Ptr U8])) = \x -> do
+wrap (Ptr U8) = pure
+wrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
   -- generate new captured environment
   -- fw captures the original closure
   -- note: ltypeOf x == Ptr $ Struct [Function r (Ptr U8:ps), Ptr U8]
   boxedX <- cast (Ptr U8) x
 
   -- generate fw
-  fwName <- newID (Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8))) "fw"
+  fwName <- newID
+    (Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)))
+    "fw"
   fwBoxedXName <- newID (Ptr U8) "boxedCaps"
   fwParamNames <- replicateM (length ps) $ newID (Ptr U8) "a"
-  bodyBlock <- lift $ runGenExpr mempty $ do
+  bodyBlock    <- lift $ runGenExpr mempty $ do
     fwUnboxedX <- cast (ltypeOf x) fwBoxedXName
-    as <- zipWithM unwrap ps fwParamNames
-    xFun <- loadC fwUnboxedX [0, 0]
-    xCap <- loadC fwUnboxedX [0, 1]
-    retVal <- call xFun (xCap : as)
+    as         <- zipWithM unwrap ps fwParamNames
+    xFun       <- loadC fwUnboxedX [0, 0]
+    xCap       <- loadC fwUnboxedX [0, 1]
+    retVal     <- call xFun (xCap : as)
     wrap r retVal
-  lift $ addInnerFunc $ L.Func { name = fwName, params = fwBoxedXName : fwParamNames, body = bodyBlock }
+  lift $ addInnerFunc $ L.Func { name   = fwName
+                               , params = fwBoxedXName : fwParamNames
+                               , body   = bodyBlock
+                               }
   cast (Ptr U8) =<< packClosure fwName boxedX
-wrap (Ptr _ )    = cast (Ptr U8)
+wrap (Ptr _)     = cast (Ptr U8)
 wrap Bit         = zext U64 >=> cast (Ptr U8)
 wrap I32         = sext I64 >=> cast (Ptr U8)
 wrap I64         = cast (Ptr U8)
@@ -373,26 +388,35 @@ wrap Void       = error "cannot convert Void to boxed value"
 
 -- | convert boxed value to unboxed value
 unwrap :: LType -> ID LType -> GenExpr (ID LType)
-unwrap (Ptr U8)    = pure
-unwrap (Ptr (Struct [Function r (Ptr U8:ps), Ptr U8])) = \x -> do
+unwrap (Ptr U8) = pure
+unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
   -- new capturesd environment is `x`
   -- fo captures the boxed closure
   -- note: ltypeOf x == Ptr U8
 
   -- generate fo
-  foName <- newID (Function r (Ptr U8:ps)) "fo"
-  foXName <- newID (Ptr U8) "x"
+  foName       <- newID (Function r (Ptr U8 : ps)) "fo"
+  foXName      <- newID (Ptr U8) "x"
   foParamNames <- mapM (\t -> newID t "a") ps
-  bodyBlock <- lift $ runGenExpr mempty $ do
-    foUnboxedX <- cast (Ptr (Struct [Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)), Ptr U8])) foXName
+  bodyBlock    <- lift $ runGenExpr mempty $ do
+    foUnboxedX <- cast
+      (Ptr
+        (Struct
+          [Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)), Ptr U8]
+        )
+      )
+      foXName
     wrappedParams <- mapM (\p -> wrap (ltypeOf p) p) foParamNames
-    xFun <- loadC foUnboxedX [0, 0]
-    xCap <- loadC foUnboxedX [0, 1]
-    retVal <- call xFun (xCap : wrappedParams)
+    xFun          <- loadC foUnboxedX [0, 0]
+    xCap          <- loadC foUnboxedX [0, 1]
+    retVal        <- call xFun (xCap : wrappedParams)
     unwrap r retVal
-  lift $ addInnerFunc $ L.Func { name = foName, params = foXName : foParamNames, body = bodyBlock }
+  lift $ addInnerFunc $ L.Func { name   = foName
+                               , params = foXName : foParamNames
+                               , body   = bodyBlock
+                               }
   packClosure foName x
-unwrap (Ptr t )    = cast (Ptr t)
+unwrap (Ptr t)     = cast (Ptr t)
 unwrap Bit         = cast U64 >=> trunc Bit
 unwrap I32         = cast I64 >=> trunc I32
 unwrap I64         = cast I64
@@ -408,36 +432,38 @@ unwrap (Struct ts) = \x -> do
     storeC ptr [0, i] raw
   loadC ptr [0]
 unwrap t@Function{} = cast t
-unwrap Void       = error "cannot convert boxed value to Void"
+unwrap Void         = error "cannot convert boxed value to Void"
 
 genArg :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
 genArg t x | t == ltypeOf x = pure x
-genArg (Ptr    U8) x        = wrap (ltypeOf x) x
-genArg (Ptr (Struct [Function r (Ptr U8:ps), Ptr U8])) x =
-  case ltypeOf x of
-    Ptr (Struct [Function _ (Ptr U8:xps), Ptr U8]) -> do
-      -- generate new captured environment
-      -- f captures the original closure
-      boxedX <- cast (Ptr U8) x
+genArg (Ptr U8) x           = wrap (ltypeOf x) x
+genArg (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x = case ltypeOf x of
+  Ptr (Struct [Function _ (Ptr U8 : xps), Ptr U8]) -> do
+    -- generate new captured environment
+    -- f captures the original closure
+    boxedX      <- cast (Ptr U8) x
 
-      -- generate f
-      fName <- newID (Function r (Ptr U8:ps)) "f"
-      fBoxedXName <- newID (Ptr U8) "boxedCaps"
-      fParamNames <- mapM (\p -> newID (ltypeOf p) "p") ps 
-      bodyBlock <- lift $ runGenExpr mempty $ do
-        fUnboxedX <- cast (ltypeOf x) fBoxedXName
-        as <- zipWithM genArg xps fParamNames
-        xFun <- loadC fUnboxedX [0, 0]
-        xCap <- loadC fUnboxedX [0, 1]
-        retVal <- call xFun (xCap : as)
-        genArg r retVal
-      lift $ addInnerFunc $ L.Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock}
-      packClosure fName boxedX
-    _ -> error "x is not closure"
+    -- generate f
+    fName       <- newID (Function r (Ptr U8 : ps)) "f"
+    fBoxedXName <- newID (Ptr U8) "boxedCaps"
+    fParamNames <- mapM (\p -> newID (ltypeOf p) "p") ps
+    bodyBlock   <- lift $ runGenExpr mempty $ do
+      fUnboxedX <- cast (ltypeOf x) fBoxedXName
+      as        <- zipWithM genArg xps fParamNames
+      xFun      <- loadC fUnboxedX [0, 0]
+      xCap      <- loadC fUnboxedX [0, 1]
+      retVal    <- call xFun (xCap : as)
+      genArg r retVal
+    lift $ addInnerFunc $ L.Func { name   = fName
+                                 , params = fBoxedXName : fParamNames
+                                 , body   = bodyBlock
+                                 }
+    packClosure fName boxedX
+  _ -> error "x is not closure"
 genArg (Ptr (Struct ts)) x = do
   ptr <- alloca (Struct ts)
-  forM_ (zip [0..] ts) $ \(i, t) -> do
-    xElem <- loadC x [0, 0]
+  forM_ (zip [0 ..] ts) $ \(i, t) -> do
+    xElem  <- loadC x [0, 0]
     xElem' <- genArg t xElem
     storeC ptr [0, i] xElem'
   pure ptr
