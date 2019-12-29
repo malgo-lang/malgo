@@ -17,14 +17,17 @@ module Language.Malgo.Monad
   , Colog.HasLog
   , Colog.Message
   , logDebug
-  , Colog.logInfo
-  , Colog.logWarning
-  , Colog.logError
-  , Colog.logException
+  , logInfo
+  , logWarning
+  , logError
   )
 where
 
-import           Colog                   hiding ( logDebug )
+import           Colog                          ( HasLog(..)
+                                                , Message
+                                                , LogAction(..)
+                                                , richMessageAction
+                                                )
 import qualified Colog
 import           Control.Monad.Fix
 import           Control.Monad.Trans.Writer.CPS
@@ -67,6 +70,15 @@ logDebug :: MonadMalgo m => Text -> m ()
 logDebug msg = liftMalgo $ do
   opt <- asks maOption
   when (isDebugMode opt) $ Colog.logDebug msg
+
+logInfo :: MonadMalgo m => Text -> m ()
+logInfo msg = liftMalgo $ Colog.logInfo msg
+
+logWarning :: MonadMalgo m => Text -> m ()
+logWarning msg = liftMalgo $ Colog.logWarning msg
+
+logError :: MonadMalgo m => Text -> m ()
+logError msg = liftMalgo $ Colog.logWarning msg
 
 class MonadIO m => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
