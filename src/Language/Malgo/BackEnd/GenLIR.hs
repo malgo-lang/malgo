@@ -109,6 +109,7 @@ addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
   ExprEnv { partialBlockInsts } <- ask
   i                             <- newID (ltypeOf inst) "%"
+  -- traceShowM $ pPrint i <+> "=" <+> pPrint inst
   modifyIORef partialBlockInsts (\s -> (i, inst) : s)
   pure i
 
