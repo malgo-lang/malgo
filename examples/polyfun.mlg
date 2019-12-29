@@ -4,6 +4,7 @@ let fun id(x) = x
     val f := fn (x) -> fn (y) -> {x, array(y, 1)}
     val v := id(id)
     val g := f(1)
+    extern print_int : Int -> {} = "print_int"
 in
-  funRef[0] <- id; funRef[0](1)
+  funRef[0] <- id; print_int(funRef[0](1))
 end
