@@ -228,6 +228,15 @@ genInst (Store x is val) = do
 genInst (Cast ty x) = do
   xOpr <- findVar x
   bitcast xOpr (convertType ty)
+genInst (IR.Trunc ty x) = do
+  xOpr <- findVar x
+  trunc xOpr (convertType ty)
+genInst (Zext ty x) = do
+  xOpr <- findVar x
+  zext xOpr (convertType ty)
+genInst (Sext ty x) = do
+  xOpr <- findVar x
+  sext xOpr (convertType ty)
 genInst (IR.Undef ty ) = pure $ ConstantOperand $ C.Undef (convertType ty)
 genInst (BinOp op x y) = do
   xOpr <- findVar x

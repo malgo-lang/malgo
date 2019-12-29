@@ -56,6 +56,9 @@ data Inst a = Constant Constant
             | StoreC a [Int] a
             | Store a [a] a
             | Cast LType a
+            | Trunc LType a
+            | Zext LType a
+            | Sext LType a
             | Undef LType
             | BinOp Op a a
             | If a (Block a) (Block a)
@@ -74,6 +77,9 @@ instance Pretty a => Pretty (Inst a) where
   pPrint (StoreC x is v) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Store  x is v) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Cast t a     ) = "cast" <+> pPrint t <+> pPrint a
+  pPrint (Trunc t a) = "trunc" <+> pPrint t <+> pPrint a
+  pPrint (Zext t a     ) = "zext" <+> pPrint t <+> pPrint a
+  pPrint (Sext t a     ) = "sext" <+> pPrint t <+> pPrint a
   pPrint (Undef t      ) = "undef" <+> pPrint t
   pPrint (BinOp op x y ) = pPrint op <+> pPrint x <+> pPrint y
   pPrint (If c t f) =
