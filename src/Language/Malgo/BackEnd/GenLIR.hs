@@ -374,6 +374,24 @@ wrap Void       = error "cannot convert Void to boxed value"
 -- | convert boxed value to unboxed value
 unwrap :: LType -> ID LType -> GenExpr (ID LType)
 unwrap (Ptr U8)    = pure
+unwrap (Ptr (Struct [Function r (Ptr U8:ps), Ptr U8])) = \x -> do
+  -- new capturesd environment is `x`
+  -- fo captures the boxed closure
+  -- note: ltypeOf x == Ptr U8
+
+  -- generate fo
+  foName <- newID (Function r (Ptr U8:ps)) "fo"
+  foXName <- newID (Ptr U8) "x"
+  foParamNames <- mapM (\t -> newID t "a") ps
+  bodyBlock <- lift $ runGenExpr mempty $ do
+    foUnboxedX <- cast (Ptr (Struct [Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)), Ptr U8])) foXName
+    wrappedParams <- mapM (\p -> wrap (ltypeOf p) p) foParamNames
+    xFun <- loadC foUnboxedX [0, 0]
+    xCap <- loadC foUnboxedX [0, 1]
+    retVal <- call xFun (xCap : wrappedParams)
+    unwrap r retVal
+  lift $ addInnerFunc $ L.Func { name = foName, params = foXName : foParamNames, body = bodyBlock }
+  packClosure foName x
 unwrap (Ptr t )    = cast (Ptr t)
 unwrap Bit         = cast U64 >=> trunc Bit
 unwrap I32         = cast I64 >=> trunc I32
@@ -395,13 +413,14 @@ unwrap Void       = error "cannot convert boxed value to Void"
 genArg :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
 genArg t x | t == ltypeOf x = pure x
 genArg (Ptr    U8) x        = wrap (ltypeOf x) x
-genArg (Struct ts) x        = do
+genArg (Ptr (Struct [Function r (Ptr U8:ps), Ptr U8])) x = undefined
+genArg (Ptr (Struct ts)) x = do
   ptr <- alloca (Struct ts)
-  forM_ (zip [0 ..] ts) $ \(i, t) -> do
-    xElem  <- loadC x [0]
+  forM_ (zip [0..] ts) $ \(i, t) -> do
+    xElem <- loadC x [0, 0]
     xElem' <- genArg t xElem
     storeC ptr [0, i] xElem'
-  loadC ptr [0]
+  pure ptr
 genArg t x = case ltypeOf x of
   Ptr U8 -> unwrap t x
   _      -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow t
