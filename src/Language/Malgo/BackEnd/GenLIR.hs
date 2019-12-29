@@ -413,7 +413,27 @@ unwrap Void       = error "cannot convert boxed value to Void"
 genArg :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
 genArg t x | t == ltypeOf x = pure x
 genArg (Ptr    U8) x        = wrap (ltypeOf x) x
-genArg (Ptr (Struct [Function r (Ptr U8:ps), Ptr U8])) x = undefined
+genArg (Ptr (Struct [Function r (Ptr U8:ps), Ptr U8])) x =
+  case ltypeOf x of
+    Ptr (Struct [Function _ (Ptr U8:xps), Ptr U8]) -> do
+      -- generate new captured environment
+      -- f captures the original closure
+      boxedX <- cast (Ptr U8) x
+
+      -- generate f
+      fName <- newID (Function r (Ptr U8:ps)) "f"
+      fBoxedXName <- newID (Ptr U8) "boxedCaps"
+      fParamNames <- mapM (\p -> newID (ltypeOf p) "p") ps 
+      bodyBlock <- lift $ runGenExpr mempty $ do
+        fUnboxedX <- cast (ltypeOf x) fBoxedXName
+        as <- zipWithM genArg xps fParamNames
+        xFun <- loadC fUnboxedX [0, 0]
+        xCap <- loadC fUnboxedX [0, 1]
+        retVal <- call xFun (xCap : as)
+        genArg r retVal
+      lift $ addInnerFunc $ L.Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock}
+      packClosure fName boxedX
+    _ -> error "x is not closure"
 genArg (Ptr (Struct ts)) x = do
   ptr <- alloca (Struct ts)
   forM_ (zip [0..] ts) $ \(i, t) -> do
