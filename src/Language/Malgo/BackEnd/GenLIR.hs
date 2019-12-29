@@ -30,6 +30,7 @@ data GenLIR
 instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
   isDump = dumpLIR
   trans M.Program { functions, mainExpr } = do
+    logDebug "Start GenLIR"
     mainFuncId    <- newID (Function I32 []) "main"
     funMap        <- foldMapM genFunMap functions
     innerFuncsRef <- newIORef []
@@ -41,6 +42,7 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
           mf <- genMainFunction mainFuncId mainExpr
           pure (mf : fs)
     innerFuncs <- readIORef innerFuncsRef
+    logDebug "End GenLIR"
     pure
       ((prog :: L.Program (ID LType)) { functions = innerFuncs
                                         <> L.functions prog
@@ -109,7 +111,7 @@ addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
   ExprEnv { partialBlockInsts } <- ask
   i                             <- newID (ltypeOf inst) "%"
-  -- traceShowM $ pPrint i <+> "=" <+> pPrint inst
+  logDebug $ toText $ renderStyle (style { mode = OneLineMode }) $ pPrint i <+> "=" <+> pPrint inst
   modifyIORef partialBlockInsts (\s -> (i, inst) : s)
   pure i
 
@@ -464,7 +466,8 @@ coerceTo (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x =
                                    , body   = bodyBlock
                                    }
       packClosure fName boxedX
-    _ -> error "x is not closure"
+    Ptr U8 -> unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x
+    _ -> error $ toText $ pShow x <> " is not closure"
 coerceTo (Ptr (Struct ts)) x = case ltypeOf x of
   Ptr U8         -> unwrap (Ptr (Struct ts)) x
   Ptr (Struct _) -> do
