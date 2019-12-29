@@ -9,7 +9,6 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
 
-import           Control.Exception              ( assert )
 import qualified Data.ByteString               as B
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR         as H
@@ -53,7 +52,6 @@ newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
 
 data ExprEnv = ExprEnv { partialBlockInsts :: IORef [(ID LType, Inst (ID LType))]
                        , variableMap       :: IDMap Type (ID LType)
-                       , nameHint          :: Text
                        , captures          :: Maybe (ID LType) }
 
 type GenProgram = ReaderT ProgramEnv MalgoM
@@ -66,12 +64,11 @@ runGenProgram mainFunc m = do
 
 runGenExpr
   :: IDMap Type (ID LType)
-  -> Text
   -> GenExpr (ID LType)
   -> GenProgram (Block (ID LType))
-runGenExpr variableMap nameHint m = do
+runGenExpr variableMap m = do
   psRef <- newIORef []
-  value <- runReaderT m (ExprEnv psRef variableMap nameHint Nothing)
+  value <- runReaderT m (ExprEnv psRef variableMap Nothing)
   ps    <- readIORef psRef
   pure $ Block { insts = reverse ps, value = value }
 
@@ -89,13 +86,10 @@ findFun x = do
 
 addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
-  ExprEnv { partialBlockInsts, nameHint } <- ask
-  i <- newID (ltypeOf inst) nameHint
+  ExprEnv { partialBlockInsts } <- ask
+  i                             <- newID (ltypeOf inst) "%"
   modifyIORef partialBlockInsts (\s -> (i, inst) : s)
   pure i
-
-setHint :: MonadReader ExprEnv m => Text -> m a -> m a
-setHint x = local (\s -> s { nameHint = x })
 
 arrayCreate :: ID LType -> ID LType -> GenExpr (ID LType)
 arrayCreate init size = addInst $ ArrayCreate init size
@@ -115,22 +109,33 @@ storeC ptr xs val = addInst (StoreC ptr xs val) >> pass
 store :: ID LType -> [ID LType] -> ID LType -> GenExpr ()
 store ptr xs val = addInst (Store ptr xs val) >> pass
 
-call
-  :: HasCallStack
-  => ID LType
-  -> [ID LType]
-  -> ReaderT ExprEnv GenProgram (ID LType)
-call f xs = do
-  case (ltypeOf f, map ltypeOf xs) of
-    (Function _ ps, as) -> assert (ps == as) pass
-    _                   -> error "function must be typed as function"
-  addInst $ Call f xs
-callExt :: Text -> LType -> [ID LType] -> ReaderT ExprEnv GenProgram (ID LType)
-callExt f funTy xs = do
-  case (funTy, map ltypeOf xs) of
-    (Function _ ps, as) -> assert (ps == as) pass
-    _                   -> error "external function must be typed as function"
-  addInst $ CallExt f funTy xs
+genArg :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
+genArg t x | t == ltypeOf x = pure x
+genArg (Ptr    U8) x        = wrap (ltypeOf x) x
+genArg (Struct ts) x        = do
+  ptr <- alloca (Struct ts)
+  forM_ (zip [0 ..] ts) $ \(i, t) -> do
+    xElem  <- loadC x [0]
+    xElem' <- genArg t xElem
+    storeC ptr [0, i] xElem'
+  loadC ptr [0]
+genArg t x = case ltypeOf x of
+  Ptr U8 -> unwrap t x
+  _      -> error $ toText $ "cannot convert " <> pShow x <> " to " <> pShow t
+
+call :: HasCallStack => ID LType -> [ID LType] -> GenExpr (ID LType)
+call f xs = case ltypeOf f of
+  Function _ ps -> do
+    as <- zipWithM genArg ps xs
+    addInst $ Call f as
+  _ -> error "function must be typed as function"
+
+callExt :: Text -> LType -> [ID LType] -> GenExpr (ID LType)
+callExt f funTy xs = case funTy of
+  Function _ ps -> do
+    as <- zipWithM genArg ps xs
+    addInst $ CallExt f funTy as
+  _ -> error "external function must be typed as function"
 
 cast :: LType -> ID LType -> GenExpr (ID LType)
 cast ty val = addInst $ Cast ty val
@@ -172,6 +177,7 @@ convertType (TyApp CharC   [] ) = U8
 convertType (TyApp StringC [] ) = Ptr U8
 convertType (TyApp TupleC  xs ) = Ptr $ Struct $ map convertType xs
 convertType (TyApp ArrayC  [x]) = Ptr $ convertType x
+convertType TyMeta{}            = Ptr U8
 convertType t = error $ toText $ "unreachable(convertType): " <> pShow t
 
 -- generate LIR
@@ -181,13 +187,13 @@ genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName   <- findFun name
   funcParams <- forM params
     $ \ID { idName, idMeta } -> newID (convertType idMeta) idName
-  bodyBlock <- runGenExpr (fromList (zip params funcParams)) "x" (genExpr body)
+  bodyBlock <- runGenExpr (fromList (zip params funcParams)) (genExpr body)
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName   <- findFun name
   capsId     <- newID (Ptr U8) "caps"
   funcParams <- mapM (\x -> newID (convertType (typeOf x)) (idName x)) params
-  bodyBlock  <- runGenExpr (fromList (zip params funcParams)) "x" $ do
+  bodyBlock  <- runGenExpr (fromList (zip params funcParams)) $ do
     capsMap <- genUnpackCaps capsId
     clsMap  <- genCls capsId
     local
@@ -202,20 +208,18 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
                 }
  where
   genUnpackCaps capsId = do
-    capsId' <- setHint "boxedCaps"
-      $ cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-    setHint "capture" $ foldForM (zip [0 ..] caps) $ \(i, c) -> do
+    capsId' <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
+    foldForM (zip [0 ..] caps) $ \(i, c) -> do
       cOpr <- loadC capsId' [0, i]
       pure (one (c, cOpr))
   genCls capsId = foldForM mutrecs $ \f -> do
-    clsId <- setHint (idName f) $ packClosure f capsId
+    clsId <- packClosure f capsId
     pure (one (f, clsId))
 
 genMainFunction
   :: ID LType -> Expr Type (ID Type) -> GenProgram (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
-  body <- runGenExpr mempty "x" $ genExpr mainExpr >> addInst
-    (Constant $ Int32 0)
+  body <- runGenExpr mempty $ genExpr mainExpr >> addInst (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
 genExpr :: Expr Type (ID Type) -> GenExpr (ID LType)
@@ -252,8 +256,8 @@ genExpr (M.ArrayWrite arr ix val) = do
   undef (Ptr (Struct []))
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)
-  capPtr <- setHint "captures" $ alloca capTy
-  setHint "capture" $ forM_ (zip [0 ..] cs) $ \(i, c) -> do
+  capPtr <- alloca capTy
+  forM_ (zip [0 ..] cs) $ \(i, c) -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
   packClosure f =<< cast (Ptr U8) capPtr
@@ -268,8 +272,8 @@ genExpr (M.CallWithCaptures f args) = do
   call funOpr argOprs
 genExpr (M.CallClosure f args) = do
   clsPtr  <- findVar f
-  clsFun  <- setHint "clsFun" $ loadC clsPtr [0, 0]
-  clsCap  <- setHint "clsCap" $ loadC clsPtr [0, 1]
+  clsFun  <- loadC clsPtr [0, 0]
+  clsCap  <- loadC clsPtr [0, 1]
   argOprs <- (clsCap :) <$> mapM findVar args
   call clsFun argOprs
 genExpr (M.Let name val expr) = do
@@ -319,7 +323,7 @@ genExpr (M.BinOp op x y) = do
     (_   , t  ) -> error $ show t <> " is not comparable"
 
 packClosure :: ID Type -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
-packClosure f capsId = setHint "closure" $ case convertType $ typeOf f of
+packClosure f capsId = case convertType $ typeOf f of
   Ptr clsTy -> do
     clsId <- alloca clsTy
     storeC clsId [0, 0] =<< lift (findFun f)
@@ -329,42 +333,42 @@ packClosure f capsId = setHint "closure" $ case convertType $ typeOf f of
 
 -- | convert to boxed value
 wrap :: LType -> ID LType -> GenExpr (ID LType)
-wrap (Ptr U8) = pure
-wrap (Ptr _) = cast (Ptr U8)
-wrap Bit = zext U64 >=> cast (Ptr U8)
-wrap I32 = sext I64 >=> cast (Ptr U8)
-wrap I64 = cast (Ptr U8)
-wrap U8 = zext U64 >=> cast (Ptr U8)
-wrap U32 = zext U64 >=> cast (Ptr U8)
-wrap U64 = cast (Ptr U8)
-wrap F64 = cast (Ptr U8)
+wrap (Ptr U8)    = pure
+wrap (Ptr _ )    = cast (Ptr U8)
+wrap Bit         = zext U64 >=> cast (Ptr U8)
+wrap I32         = sext I64 >=> cast (Ptr U8)
+wrap I64         = cast (Ptr U8)
+wrap U8          = zext U64 >=> cast (Ptr U8)
+wrap U32         = zext U64 >=> cast (Ptr U8)
+wrap U64         = cast (Ptr U8)
+wrap F64         = cast (Ptr U8)
 wrap (Struct ts) = \x -> do
   ptr <- alloca (Struct (replicate (length ts) (Ptr U8)))
-  forM_ (zip [0..] ts) $ \(i, t) -> do
-    raw <- loadC x [i]
+  forM_ (zip [0 ..] ts) $ \(i, t) -> do
+    raw    <- loadC x [i]
     wraped <- wrap t raw
     storeC ptr [0, i] wraped
   pure ptr
-wrap Function{} = cast (Ptr U8)
-wrap Void = error "cannot convert Void to boxed value"
+wrap Function{} = error "cannot convert Function to boxed value"
+wrap Void       = error "cannot convert Void to boxed value"
 
 -- | convert boxed value to unboxed value
 unwrap :: LType -> ID LType -> GenExpr (ID LType)
-unwrap (Ptr U8) = pure
-unwrap (Ptr t) = cast (Ptr t)
-unwrap Bit = cast U64 >=> trunc Bit
-unwrap I32 = cast I64 >=> trunc I32
-unwrap I64 = cast I64
-unwrap U8 = cast U64 >=> trunc U8
-unwrap U32 = cast U64 >=> trunc U32
-unwrap U64 = cast U64
-unwrap F64 = cast F64
+unwrap (Ptr U8)    = pure
+unwrap (Ptr t )    = cast (Ptr t)
+unwrap Bit         = cast U64 >=> trunc Bit
+unwrap I32         = cast I64 >=> trunc I32
+unwrap I64         = cast I64
+unwrap U8          = cast U64 >=> trunc U8
+unwrap U32         = cast U64 >=> trunc U32
+unwrap U64         = cast U64
+unwrap F64         = cast F64
 unwrap (Struct ts) = \x -> do
   ptr <- alloca (Struct ts)
-  forM_ (zip [0..] ts) $ \(i, t) -> do
+  forM_ (zip [0 ..] ts) $ \(i, t) -> do
     wraped <- loadC x [0, i]
-    raw <- unwrap t wraped
+    raw    <- unwrap t wraped
     storeC ptr [0, i] raw
   loadC ptr [0]
-unwrap t@Function{} = cast t
-unwrap Void = error "cannot convert boxed value to Void"
+unwrap Function{} = error "cannot convert boxed value to Function"
+unwrap Void       = error "cannot convert boxed value to Void"
