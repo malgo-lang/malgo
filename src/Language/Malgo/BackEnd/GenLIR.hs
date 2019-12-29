@@ -339,8 +339,11 @@ wrap U32 = zext U64 >=> cast (Ptr U8)
 wrap U64 = cast (Ptr U8)
 wrap F64 = cast (Ptr U8)
 wrap (Struct ts) = \x -> do
-  ptr <- alloca (Struct ts)
-  storeC ptr [0] x
+  ptr <- alloca (Struct (replicate (length ts) (Ptr U8)))
+  forM_ (zip [0..] ts) $ \(i, t) -> do
+    raw <- loadC x [i]
+    wraped <- wrap t raw
+    storeC ptr [0, i] wraped
   pure ptr
 wrap Function{} = cast (Ptr U8)
 wrap Void = error "cannot convert Void to boxed value"
@@ -357,7 +360,11 @@ unwrap U32 = cast U64 >=> trunc U32
 unwrap U64 = cast U64
 unwrap F64 = cast F64
 unwrap (Struct ts) = \x -> do
-  ptr <- cast (Ptr (Struct ts)) x
+  ptr <- alloca (Struct ts)
+  forM_ (zip [0..] ts) $ \(i, t) -> do
+    wraped <- loadC x [0, i]
+    raw <- unwrap t wraped
+    storeC ptr [0, i] raw
   loadC ptr [0]
 unwrap t@Function{} = cast t
 unwrap Void = error "cannot convert boxed value to Void"
