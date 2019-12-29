@@ -78,9 +78,9 @@ instance FreeVars (Expr t) where
   freevars (Var x)                 = one x
   freevars Lit{}                   = mempty
   freevars (Tuple xs             ) = fromList xs
-  freevars (TupleAccess x _      ) = one x
-  freevars (MakeArray   _ x      ) = one x
-  freevars (ArrayRead   x y      ) = fromList [x, y]
+  freevars (TupleAccess x    _   ) = one x
+  freevars (MakeArray   init size) = fromList [init, size]
+  freevars (ArrayRead   x    y   ) = fromList [x, y]
   freevars (ArrayWrite x y z     ) = fromList [x, y, z]
   freevars (CallDirect       _ xs) = fromList xs
   freevars (CallWithCaptures _ xs) = fromList xs

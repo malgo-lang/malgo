@@ -38,9 +38,9 @@ instance HasLType a => HasLType (Func a) where
 data Block a = Block { insts :: [(a, Inst a)], value :: a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
-instance Pretty a => Pretty (Block a) where
+instance (HasLType a, Pretty a) => Pretty (Block a) where
   pPrint Block { insts, value } =
-    brackets $ vcat (punctuate ";" $ map pPrint insts) $$ pPrint value
+    brackets $ vcat (punctuate ";" $ map (\(x, inst) -> pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst) insts) $$ pPrint value
 
 instance HasLType a => HasLType (Block a) where
   ltypeOf Block { value = x } = ltypeOf x
@@ -64,7 +64,7 @@ data Inst a = Constant Constant
             | If a (Block a) (Block a)
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
-instance Pretty a => Pretty (Inst a) where
+instance (HasLType a, Pretty a) => Pretty (Inst a) where
   pPrint (Constant c) = pPrint c
   pPrint (Call f xs) = pPrint f <> parens (sep $ punctuate "," $ map pPrint xs)
   pPrint (CallExt f t xs) = pPrint f <> "<" <> pPrint t <> ">" <> parens

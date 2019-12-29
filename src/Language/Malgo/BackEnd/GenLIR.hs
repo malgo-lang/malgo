@@ -109,20 +109,6 @@ storeC ptr xs val = addInst (StoreC ptr xs val) >> pass
 store :: ID LType -> [ID LType] -> ID LType -> GenExpr ()
 store ptr xs val = addInst (Store ptr xs val) >> pass
 
-genArg :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
-genArg t x | t == ltypeOf x = pure x
-genArg (Ptr    U8) x        = wrap (ltypeOf x) x
-genArg (Struct ts) x        = do
-  ptr <- alloca (Struct ts)
-  forM_ (zip [0 ..] ts) $ \(i, t) -> do
-    xElem  <- loadC x [0]
-    xElem' <- genArg t xElem
-    storeC ptr [0, i] xElem'
-  loadC ptr [0]
-genArg t x = case ltypeOf x of
-  Ptr U8 -> unwrap t x
-  _      -> error $ toText $ "cannot convert " <> pShow x <> " to " <> pShow t
-
 call :: HasCallStack => ID LType -> [ID LType] -> GenExpr (ID LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
@@ -248,12 +234,15 @@ genExpr (M.ArrayRead arr ix) = do
   arrOpr <- findVar arr
   ixOpr  <- findVar ix
   load arrOpr ixOpr
-genExpr (M.ArrayWrite arr ix val) = do
-  arrOpr <- findVar arr
-  ixOpr  <- findVar ix
-  valOpr <- findVar val
-  store arrOpr [ixOpr] valOpr
-  undef (Ptr (Struct []))
+genExpr (M.ArrayWrite arr ix val) =
+  case typeOf arr of
+    TyApp ArrayC [t] -> do
+      arrOpr <- findVar arr
+      ixOpr  <- findVar ix
+      valOpr <- genArg (convertType t) =<< findVar val
+      store arrOpr [ixOpr] valOpr
+      undef (Ptr (Struct []))
+    _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)
   capPtr <- alloca capTy
@@ -349,7 +338,7 @@ wrap (Struct ts) = \x -> do
     wraped <- wrap t raw
     storeC ptr [0, i] wraped
   pure ptr
-wrap Function{} = error "cannot convert Function to boxed value"
+wrap Function{} = cast (Ptr U8)
 wrap Void       = error "cannot convert Void to boxed value"
 
 -- | convert boxed value to unboxed value
@@ -370,5 +359,19 @@ unwrap (Struct ts) = \x -> do
     raw    <- unwrap t wraped
     storeC ptr [0, i] raw
   loadC ptr [0]
-unwrap Function{} = error "cannot convert boxed value to Function"
+unwrap t@Function{} = cast t
 unwrap Void       = error "cannot convert boxed value to Void"
+
+genArg :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
+genArg t x | t == ltypeOf x = pure x
+genArg (Ptr    U8) x        = wrap (ltypeOf x) x
+genArg (Struct ts) x        = do
+  ptr <- alloca (Struct ts)
+  forM_ (zip [0 ..] ts) $ \(i, t) -> do
+    xElem  <- loadC x [0]
+    xElem' <- genArg t xElem
+    storeC ptr [0, i] xElem'
+  loadC ptr [0]
+genArg t x = case ltypeOf x of
+  Ptr U8 -> unwrap t x
+  _      -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow t

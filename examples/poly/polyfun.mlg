@@ -3,7 +3,7 @@ let fun id(x) = x
     val funRef := array(addOne, 1)
     val f := fn (x) -> fn (y) -> {x, array(y, 1)}
     val v := id(id)
-	val g := f(1)
+    val g := f(1)
 in
-  funRef[0] <- id; funRef[0](1)
+  funRef[0] <- id
 end
