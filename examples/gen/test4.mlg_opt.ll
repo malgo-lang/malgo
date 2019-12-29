@@ -6,7 +6,12 @@ target triple = "x86_64-apple-macosx10.15.0"
 @0 = internal global [6 x i8] c"hello\00"
 
 ; Function Attrs: norecurse nounwind readnone
-define i8* @f.7(i64, i8) local_unnamed_addr #0 {
+define i32 @main11() local_unnamed_addr #0 {
+  ret i32 0
+}
+
+; Function Attrs: norecurse nounwind readnone
+define i8* @f12(i64, i8) local_unnamed_addr #0 {
   ret i8* getelementptr inbounds ([6 x i8], [6 x i8]* @0, i64 0, i64 0)
 }
 
