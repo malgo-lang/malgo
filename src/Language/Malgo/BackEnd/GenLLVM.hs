@@ -227,7 +227,25 @@ genInst (Store x is val) = do
   unit
 genInst (Cast ty x) = do
   xOpr <- findVar x
-  bitcast xOpr (convertType ty)
+  case (ty, ltypeOf x) of
+    (Ptr ty1, Ptr _) -> bitcast xOpr (ptr $ convertType ty1)
+    (Ptr ty1, I64)   -> inttoptr xOpr (ptr $ convertType ty1)
+    (Ptr ty1, U64)   -> inttoptr xOpr (ptr $ convertType ty1)
+    (Ptr ty1, F64)  -> do
+      p <- alloca LT.double Nothing 0
+      store p 0 xOpr
+      p' <- bitcast p (ptr i64)
+      i <- load p' 0
+      inttoptr i (ptr $ convertType ty1)
+    (I64, Ptr{}) -> ptrtoint xOpr i64
+    (U64, Ptr{}) -> ptrtoint xOpr i64
+    (F64, Ptr{}) -> do
+      i <- ptrtoint xOpr i64
+      p <- alloca i64 Nothing 0
+      store p 0 i
+      p' <- bitcast p (ptr LT.double)
+      load p' 0
+    _ -> error "invalid cast"
 genInst (IR.Trunc ty x) = do
   xOpr <- findVar x
   trunc xOpr (convertType ty)
