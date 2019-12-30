@@ -5,26 +5,10 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i32 @main15() local_unnamed_addr {
-  %1 = tail call i8* @GC_malloc(i64 0)
-  %2 = tail call i8* @GC_malloc(i64 16)
-  %3 = bitcast i8* %2 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @f16, {}* (i8*, i64)** %3, align 8
-  %4 = tail call i8* @GC_malloc(i64 0)
-  %5 = getelementptr i8, i8* %2, i64 8
-  %6 = bitcast i8* %5 to i8**
-  store i8* %1, i8** %6, align 8
-  %7 = tail call i8* @GC_malloc(i64 0)
-  %8 = load {}* (i8*, i64)*, {}* (i8*, i64)** %3, align 8
-  %9 = load i8*, i8** %6, align 8
-  %10 = tail call {}* %8(i8* %9, i64 5)
-  ret i32 0
-}
-
-define {}* @f16(i8*, i64) {
+define {}* @f15(i8*, i64) {
   %3 = tail call i8* @GC_malloc(i64 16)
   %4 = bitcast i8* %3 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @f16, {}* (i8*, i64)** %4, align 8
+  store {}* (i8*, i64)* @f15, {}* (i8*, i64)** %4, align 8
   %5 = tail call i8* @GC_malloc(i64 0)
   %6 = getelementptr i8, i8* %3, i64 8
   %7 = bitcast i8* %6 to i8**
@@ -60,7 +44,7 @@ define i32 @main() local_unnamed_addr {
   %1 = tail call i8* @GC_malloc(i64 0)
   %2 = tail call i8* @GC_malloc(i64 16)
   %3 = bitcast i8* %2 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @f16, {}* (i8*, i64)** %3, align 8
+  store {}* (i8*, i64)* @f15, {}* (i8*, i64)** %3, align 8
   %4 = tail call i8* @GC_malloc(i64 0)
   %5 = getelementptr i8, i8* %2, i64 8
   %6 = bitcast i8* %5 to i8**

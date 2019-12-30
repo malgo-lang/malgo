@@ -1,7 +1,7 @@
 ; ModuleID = './examples/test11.mlg'
 source_filename = "./examples/test11.mlg"
 
-define i32 @main5() {
+define i32 @main() {
   %1 = alloca i1
   br i1 true, label %then_0, label %else_0
 
@@ -41,10 +41,5 @@ end_1:                                            ; preds = %else_1, %end_2
 
 end_0:                                            ; preds = %end_1, %then_0
   %6 = load i1, i1* %1
-  ret i32 0
-}
-
-define i32 @main() {
-  %1 = call i32 @main5()
   ret i32 0
 }

@@ -5,11 +5,6 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i32 @main0() local_unnamed_addr {
-  %1 = tail call i8* @GC_malloc(i64 0)
-  ret i32 0
-}
-
 define i32 @main() local_unnamed_addr {
   %1 = tail call i8* @GC_malloc(i64 0)
   ret i32 0

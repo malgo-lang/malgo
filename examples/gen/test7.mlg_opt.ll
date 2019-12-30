@@ -5,26 +5,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i32 @main18() local_unnamed_addr {
-  %1 = tail call i8* @GC_malloc(i64 8)
-  %2 = bitcast i8* %1 to i64*
-  store i64 42, i64* %2, align 8
-  %3 = tail call i8* @GC_malloc(i64 0)
-  %4 = tail call i8* @GC_malloc(i64 16)
-  %5 = bitcast i8* %4 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @f19, i64 (i8*, i64)** %5, align 8
-  %6 = tail call i8* @GC_malloc(i64 0)
-  %7 = getelementptr i8, i8* %4, i64 8
-  %8 = bitcast i8* %7 to i8**
-  store i8* %1, i8** %8, align 8
-  %9 = tail call i8* @GC_malloc(i64 0)
-  %10 = load i64 (i8*, i64)*, i64 (i8*, i64)** %5, align 8
-  %11 = load i8*, i8** %8, align 8
-  %12 = tail call i64 %10(i8* %11, i64 3)
-  ret i32 0
-}
-
-define i64 @f19(i8*, i64) {
+define i64 @f18(i8*, i64) {
   %3 = bitcast i8* %0 to i64*
   br label %tailrecurse
 
@@ -33,7 +14,7 @@ tailrecurse:                                      ; preds = %tailrecurse, %2
   %4 = load i64, i64* %3, align 8
   %5 = tail call i8* @GC_malloc(i64 16)
   %6 = bitcast i8* %5 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @f19, i64 (i8*, i64)** %6, align 8
+  store i64 (i8*, i64)* @f18, i64 (i8*, i64)** %6, align 8
   %7 = tail call i8* @GC_malloc(i64 0)
   %8 = getelementptr i8, i8* %5, i64 8
   %9 = bitcast i8* %8 to i8**
@@ -54,7 +35,7 @@ define i32 @main() local_unnamed_addr {
   %3 = tail call i8* @GC_malloc(i64 0)
   %4 = tail call i8* @GC_malloc(i64 16)
   %5 = bitcast i8* %4 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @f19, i64 (i8*, i64)** %5, align 8
+  store i64 (i8*, i64)* @f18, i64 (i8*, i64)** %5, align 8
   %6 = tail call i8* @GC_malloc(i64 0)
   %7 = getelementptr i8, i8* %4, i64 8
   %8 = bitcast i8* %7 to i8**
