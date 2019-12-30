@@ -12,7 +12,6 @@ module Language.Malgo.Monad
   , MalgoEnv(..)
   , runMalgo
   , MonadMalgo(..)
-  , newUniq
   , Opt(..)
   , Colog.HasLog
   , Colog.Message
@@ -20,6 +19,8 @@ module Language.Malgo.Monad
   , logInfo
   , logWarning
   , logError
+  , newUniq
+  , getFileName
   )
 where
 
@@ -27,6 +28,7 @@ import           Colog                          ( HasLog(..)
                                                 , Message
                                                 , LogAction(..)
                                                 , richMessageAction
+                                                , cfilter
                                                 )
 import qualified Colog
 import           Control.Monad.Fix
@@ -63,21 +65,15 @@ newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) IO a }
   deriving (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadIO, MonadFix, MonadFail)
 
 runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
-runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt richMessageAction)
-
-logDebug :: MonadMalgo m => Text -> m ()
-logDebug msg = liftMalgo $ do
-  opt <- asks maOption
-  when (isDebugMode opt) $ Colog.logDebug msg
-
-logInfo :: MonadMalgo m => Text -> m ()
-logInfo msg = liftMalgo $ Colog.logInfo msg
-
-logWarning :: MonadMalgo m => Text -> m ()
-logWarning msg = liftMalgo $ Colog.logWarning msg
-
-logError :: MonadMalgo m => Text -> m ()
-logError msg = liftMalgo $ Colog.logWarning msg
+runMalgo (MalgoM m) u opt = liftIO $ runReaderT
+  m
+  MalgoEnv
+    { maUniqSupply = u
+    , maOption     = opt
+    , maLogAction  = if isDebugMode opt
+                       then richMessageAction
+                       else cfilter (\(Colog.Msg sev _ _) -> sev > Colog.Debug) richMessageAction
+    }
 
 class MonadIO m => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
@@ -93,9 +89,24 @@ instance MonadMalgo m => MonadMalgo (StateT s m) where
 instance MonadMalgo m => MonadMalgo (WriterT w m) where
   liftMalgo = lift . liftMalgo
 
+logDebug :: MonadMalgo m => Text -> m ()
+logDebug msg = liftMalgo $ Colog.logDebug msg
+
+logInfo :: MonadMalgo m => Text -> m ()
+logInfo msg = liftMalgo $ Colog.logInfo msg
+
+logWarning :: MonadMalgo m => Text -> m ()
+logWarning msg = liftMalgo $ Colog.logWarning msg
+
+logError :: MonadMalgo m => Text -> m ()
+logError msg = liftMalgo $ Colog.logWarning msg
+
 newUniq :: MonadMalgo m => m Int
 newUniq = liftMalgo $ do
   UniqSupply u <- asks maUniqSupply
   i            <- readIORef u
   modifyIORef u (+ 1)
   return i
+
+getFileName :: (MonadMalgo m, IsString a) => m a
+getFileName = liftMalgo $ asks (fromString . srcName . maOption)
