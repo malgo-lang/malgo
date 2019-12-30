@@ -111,7 +111,12 @@ addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
   ExprEnv { partialBlockInsts } <- ask
   i                             <- newID (ltypeOf inst) "%"
-  logDebug $ toText $ renderStyle (style { mode = OneLineMode }) $ pPrint i <+> "=" <+> pPrint inst
+  logDebug
+    $   toText
+    $   renderStyle (style { mode = OneLineMode })
+    $   pPrint i
+    <+> "="
+    <+> pPrint inst
   modifyIORef partialBlockInsts (\s -> (i, inst) : s)
   pure i
 
@@ -421,7 +426,7 @@ unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
                                }
   packClosure foName x
 unwrap (Ptr (Struct ts)) = \x -> do
-  x' <- cast (Ptr $ Struct $ replicate (length ts) (Ptr U8)) x
+  x'  <- cast (Ptr $ Struct $ replicate (length ts) (Ptr U8)) x
   ptr <- alloca (Struct ts)
   forM_ (zip [0 ..] ts) $ \(i, t) -> do
     wraped <- loadC x' [0, i]
@@ -467,7 +472,7 @@ coerceTo (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x =
                                    }
       packClosure fName boxedX
     Ptr U8 -> unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x
-    _ -> error $ toText $ pShow x <> " is not closure"
+    _      -> error $ toText $ pShow x <> " is not closure"
 coerceTo (Ptr (Struct ts)) x = case ltypeOf x of
   Ptr U8         -> unwrap (Ptr (Struct ts)) x
   Ptr (Struct _) -> do
@@ -477,7 +482,8 @@ coerceTo (Ptr (Struct ts)) x = case ltypeOf x of
       xElem' <- coerceTo t xElem
       storeC ptr [0, i] xElem'
     pure ptr
-  _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
+  _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow
+    (Ptr (Struct ts))
 coerceTo t x = case ltypeOf x of
   Ptr U8 -> unwrap t x
   _      -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow t

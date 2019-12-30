@@ -229,13 +229,13 @@ genInst (Cast ty x) = do
   xOpr <- findVar x
   case (ty, ltypeOf x) of
     (Ptr ty1, Ptr _) -> bitcast xOpr (ptr $ convertType ty1)
-    (Ptr ty1, I64)   -> inttoptr xOpr (ptr $ convertType ty1)
-    (Ptr ty1, U64)   -> inttoptr xOpr (ptr $ convertType ty1)
-    (Ptr ty1, F64)  -> do
+    (Ptr ty1, I64  ) -> inttoptr xOpr (ptr $ convertType ty1)
+    (Ptr ty1, U64  ) -> inttoptr xOpr (ptr $ convertType ty1)
+    (Ptr ty1, F64  ) -> do
       p <- alloca LT.double Nothing 0
       store p 0 xOpr
       p' <- bitcast p (ptr i64)
-      i <- load p' 0
+      i  <- load p' 0
       inttoptr i (ptr $ convertType ty1)
     (I64, Ptr{}) -> ptrtoint xOpr i64
     (U64, Ptr{}) -> ptrtoint xOpr i64

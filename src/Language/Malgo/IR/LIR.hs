@@ -40,7 +40,15 @@ data Block a = Block { insts :: [(a, Inst a)], value :: a }
 
 instance (HasLType a, Pretty a) => Pretty (Block a) where
   pPrint Block { insts, value } =
-    brackets $ vcat (punctuate ";" $ map (\(x, inst) -> pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst) insts) $$ pPrint value
+    brackets
+      $  vcat
+           (punctuate ";" $ map
+             (\(x, inst) ->
+               pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst
+             )
+             insts
+           )
+      $$ pPrint value
 
 instance HasLType a => HasLType (Block a) where
   ltypeOf Block { value = x } = ltypeOf x
@@ -76,10 +84,10 @@ instance (HasLType a, Pretty a) => Pretty (Inst a) where
   pPrint (Load  x i    ) = "load" <+> pPrint x <+> pPrint i
   pPrint (StoreC x is v) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Store  x is v) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
-  pPrint (Cast t a     ) = "cast" <+> pPrint t <+> pPrint a
-  pPrint (Trunc t a) = "trunc" <+> pPrint t <+> pPrint a
-  pPrint (Zext t a     ) = "zext" <+> pPrint t <+> pPrint a
-  pPrint (Sext t a     ) = "sext" <+> pPrint t <+> pPrint a
+  pPrint (Cast  t a    ) = "cast" <+> pPrint t <+> pPrint a
+  pPrint (Trunc t a    ) = "trunc" <+> pPrint t <+> pPrint a
+  pPrint (Zext  t a    ) = "zext" <+> pPrint t <+> pPrint a
+  pPrint (Sext  t a    ) = "sext" <+> pPrint t <+> pPrint a
   pPrint (Undef t      ) = "undef" <+> pPrint t
   pPrint (BinOp op x y ) = pPrint op <+> pPrint x <+> pPrint y
   pPrint (If c t f) =

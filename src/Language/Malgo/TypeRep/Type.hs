@@ -50,6 +50,6 @@ comparable (TyApp CharC  []) = True
 comparable _                 = False
 
 removeExplictForall :: Type -> Type
-removeExplictForall (TyForall _ t) = removeExplictForall t
-removeExplictForall (TyApp c ts) = TyApp c $ map removeExplictForall ts
-removeExplictForall (TyMeta x) = TyMeta x
+removeExplictForall (TyForall _ t ) = removeExplictForall t
+removeExplictForall (TyApp    c ts) = TyApp c $ map removeExplictForall ts
+removeExplictForall (TyMeta x     ) = TyMeta x
