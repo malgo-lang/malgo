@@ -22,6 +22,7 @@ library
   exposed-modules:
       Language.Malgo.BackEnd.GenLIR
       Language.Malgo.BackEnd.GenLLVM
+      Language.Malgo.BackEnd.LIRBuilder
       Language.Malgo.Driver
       Language.Malgo.FrontEnd.Info
       Language.Malgo.FrontEnd.Rename
@@ -61,6 +62,7 @@ library
     , bytestring
     , containers
     , co-log
+    , lens
     , llvm-hs-pure ==9.0.*
     , mtl
     , optparse-applicative
