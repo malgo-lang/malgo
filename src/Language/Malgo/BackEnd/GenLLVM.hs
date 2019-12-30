@@ -68,40 +68,35 @@ data GenState = GenState { variableMap :: Map (ID LType) Operand
 type GenExpr a = IRBuilderT GenDec a
 type GenDec = ModuleBuilderT (ReaderT GenState MalgoM)
 
-dumpLLVM
-  :: MonadIO m
-  => ModuleBuilderT (ReaderT GenState m) a
-  -> m [LLVM.AST.Definition]
+dumpLLVM :: MonadIO m => ModuleBuilderT (ReaderT GenState m) a -> m [LLVM.AST.Definition]
 dumpLLVM m = do
   p <- newIORef mempty
   let genState = GenState { variableMap = mempty, prims = p }
   usingReaderT genState $ execModuleBuilderT emptyModuleBuilder m
 
 convertType :: LType -> Type
-convertType (Ptr x)        = ptr (convertType x)
-convertType Bit            = i1
-convertType I32            = i32
-convertType I64            = i64
-convertType U8             = i8
-convertType U32            = i32
-convertType U64            = i64
-convertType F64            = LT.double
-convertType (IR.Struct xs) = StructureType False (map convertType xs)
-convertType (Function r ps) =
-  ptr $ FunctionType (convertType r) (map convertType ps) False
-convertType Void = LT.void
+convertType (Ptr x)         = ptr (convertType x)
+convertType Bit             = i1
+convertType I32             = i32
+convertType I64             = i64
+convertType U8              = i8
+convertType U32             = i32
+convertType U64             = i64
+convertType F64             = LT.double
+convertType (IR.Struct xs ) = StructureType False (map convertType xs)
+convertType (Function r ps) = ptr $ FunctionType (convertType r) (map convertType ps) False
+convertType Void            = LT.void
 
 findVar :: MonadReader GenState m => ID LType -> m Operand
 findVar i = do
   m <- asks variableMap
   pure $ lookupDefault (error $ show i <> " is not found in " <> show m) i m
 
-findExt
-  :: (MonadReader GenState m, MonadIO m, MonadModuleBuilder m)
-  => Text
-  -> [Type]
-  -> Type
-  -> m Operand
+findExt :: (MonadReader GenState m, MonadIO m, MonadModuleBuilder m)
+        => Text
+        -> [Type]
+        -> Type
+        -> m Operand
 findExt name ps r = do
   GenState { prims } <- ask
   psMap              <- readIORef prims
@@ -158,22 +153,16 @@ initArray ptrOpr init size = do
   emitBlockStart endLabel
 
 genFuncName :: ID a -> LLVM.AST.Name
-genFuncName ID { idName, idUniq } =
-  LLVM.AST.mkName $ toString $ idName <> show idUniq
+genFuncName ID { idName, idUniq } = LLVM.AST.mkName $ toString $ idName <> show idUniq
 
 genFunction :: Func (ID LType) -> GenDec ()
-genFunction Func { name, params, body } =
-  void $ function funcName llvmParams retty $ \args ->
-    local
-        (\st ->
-          st { variableMap = fromList (zip params args) <> variableMap st }
-        )
-      $ genBlock body ret
+genFunction Func { name, params, body } = void $ function funcName llvmParams retty $ \args ->
+  local (\st -> st { variableMap = fromList (zip params args) <> variableMap st })
+    $ genBlock body ret
  where
-  funcName = genFuncName name
-  llvmParams =
-    map (\ID { idMeta } -> (convertType idMeta, NoParameterName)) params
-  retty = convertType (ltypeOf body)
+  funcName   = genFuncName name
+  llvmParams = map (\ID { idMeta } -> (convertType idMeta, NoParameterName)) params
+  retty      = convertType (ltypeOf body)
 
 genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a
 genBlock Block { insts, value } term = go insts
@@ -193,7 +182,7 @@ genInst (CallExt f (Function r ps) xs) = do
   f'  <- findExt f (map convertType ps) (convertType r)
   xs' <- mapM (fmap (, []) . findVar) xs
   call f' xs'
-genInst CallExt{} = error "extern symbol must have a function type"
+genInst CallExt{}               = error "extern symbol must have a function type"
 genInst (ArrayCreate init size) = do
   let ty = convertType $ ltypeOf init
   size'  <- mul (sizeof ty) =<< findVar size

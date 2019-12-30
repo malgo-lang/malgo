@@ -55,9 +55,8 @@ instantiate (TyForall vs t ) = do
 unify :: MonadMalgo m => Type -> Type -> ExceptT UnifyError m Subst
 unify (TyMeta a) t          = bind a t
 unify t          (TyMeta a) = bind a t
-unify (TyApp c1 ts1) (TyApp c2 ts2)
-  | c1 == c2  = unifyMany ts1 ts2
-  | otherwise = hoistEither $ Left $ MismatchConstructor c1 c2
+unify (TyApp c1 ts1) (TyApp c2 ts2) | c1 == c2  = unifyMany ts1 ts2
+                                    | otherwise = hoistEither $ Left $ MismatchConstructor c1 c2
 unify (TyForall ts1 t1) (TyForall ts2 t2) | length ts1 == length ts2 = do
   let subst = Subst $ fromList $ zipWith (\v1 v2 -> (v1, TyMeta v2)) ts1 ts2
   unify (apply subst t1) (apply subst t2)

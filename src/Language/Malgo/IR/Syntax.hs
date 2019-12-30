@@ -75,33 +75,27 @@ info (If    i _ _ _     ) = i
 info (BinOp i _ _ _     ) = i
 
 instance Pretty a => Pretty (Expr a) where
-  pPrint (Var    _ name    ) = pPrint name
-  pPrint (Int    _ x       ) = pPrint x
-  pPrint (Float  _ x       ) = pPrint x
-  pPrint (Bool   _ True    ) = "true"
-  pPrint (Bool   _ False   ) = "false"
-  pPrint (Char   _ x       ) = quotes $ pPrint x
-  pPrint (String _ x       ) = doubleQuotes $ pPrint x
-  pPrint (Tuple  _ xs      ) = braces $ sep $ punctuate "," $ map pPrint xs
-  pPrint (TupleAccess _ e i) = parens ("." <+> pPrint e <+> pPrint i)
-  pPrint (MakeArray _ init size) =
-    parens $ "array" <+> pPrint init <+> pPrint size
-  pPrint (ArrayRead _ arr ix) = pPrint arr <> brackets (pPrint ix)
+  pPrint (Var    _ name          ) = pPrint name
+  pPrint (Int    _ x             ) = pPrint x
+  pPrint (Float  _ x             ) = pPrint x
+  pPrint (Bool   _ True          ) = "true"
+  pPrint (Bool   _ False         ) = "false"
+  pPrint (Char   _ x             ) = quotes $ pPrint x
+  pPrint (String _ x             ) = doubleQuotes $ pPrint x
+  pPrint (Tuple  _ xs            ) = braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (TupleAccess _ e    i   ) = parens ("." <+> pPrint e <+> pPrint i)
+  pPrint (MakeArray   _ init size) = parens $ "array" <+> pPrint init <+> pPrint size
+  pPrint (ArrayRead   _ arr  ix  ) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite _ arr ix val) =
     parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
   pPrint (Unit _       ) = "{}"
   pPrint (Call _ fn arg) = parens $ pPrint fn <+> sep (map pPrint arg)
   pPrint (Fn _ params body) =
-    parens
-      $   "fn"
-      <+> parens (sep $ punctuate "," (map (pPrint . fst) params))
-      <+> pPrint body
-  pPrint (Seq _ e1 e2) = parens $ "seq" <+> (pPrint e1 $+$ pPrint e2)
-  pPrint (Let _ decl body) =
-    parens $ "let" <+> pPrint decl $+$ nest 2 (pPrint body)
-  pPrint (If _ c t f) =
-    parens $ "if" <+> pPrint c $+$ nest 2 (pPrint t) $+$ nest 2 (pPrint f)
-  pPrint (BinOp _ op x y) = parens $ sep [pPrint op, pPrint x, pPrint y]
+    parens $ "fn" <+> parens (sep $ punctuate "," (map (pPrint . fst) params)) <+> pPrint body
+  pPrint (Seq _ e1   e2  ) = parens $ "seq" <+> (pPrint e1 $+$ pPrint e2)
+  pPrint (Let _ decl body) = parens $ "let" <+> pPrint decl $+$ nest 2 (pPrint body)
+  pPrint (If    _ c  t f ) = parens $ "if" <+> pPrint c $+$ nest 2 (pPrint t) $+$ nest 2 (pPrint f)
+  pPrint (BinOp _ op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
 
 -- | 中置演算子の種類を表すタグ
 data Op = Add | Sub | Mul | Div
@@ -141,13 +135,11 @@ instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec fs) = sep $ map pp fs
    where
     pp (_, name, params, _, body) =
-      parens
-        $   "fun"
-        <+> (parens . sep $ pPrint name : map (\(n, _) -> pPrint n) params)
-        $+$ nest 2 (pPrint body)
-  pPrint (ValDec _ name _ val) = parens $ "val" <+> pPrint name <+> pPrint val
-  pPrint (ExDec _ name _ orig) =
-    parens $ "extern" <+> pPrint name <+> pPrint orig
+      parens $ "fun" <+> (parens . sep $ pPrint name : map (\(n, _) -> pPrint n) params) $+$ nest
+        2
+        (pPrint body)
+  pPrint (ValDec _ name _ val ) = parens $ "val" <+> pPrint name <+> pPrint val
+  pPrint (ExDec  _ name _ orig) = parens $ "extern" <+> pPrint name <+> pPrint orig
 
 instance HasType a => HasType (Expr a) where
   typeOf (Var    _ name    ) = typeOf name
@@ -164,11 +156,10 @@ instance HasType a => HasType (Expr a) where
   typeOf (ArrayRead _ arr  _) = case typeOf arr of
     TyApp ArrayC [t] -> t
     _                -> error "(typeof arr) should match (TyArray xs)"
-  typeOf ArrayWrite{} = TyApp TupleC []
-  typeOf (Unit _)     = TyApp TupleC []
-  typeOf (Fn _ params body) =
-    TyApp FunC $ typeOf body : map (typeOf . fst) params
-  typeOf (Call _ fn _) = case typeOf fn of
+  typeOf ArrayWrite{}         = TyApp TupleC []
+  typeOf (Unit _            ) = TyApp TupleC []
+  typeOf (Fn   _ params body) = TyApp FunC $ typeOf body : map (typeOf . fst) params
+  typeOf (Call _ fn     _   ) = case typeOf fn of
     (TyApp FunC (ret : _)) -> ret
     _                      -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (Seq _ _ e     ) = typeOf e

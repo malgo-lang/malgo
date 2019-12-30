@@ -29,13 +29,10 @@ data Func t a = Func { name :: a, captures :: Maybe [a], mutrecs :: [a], params 
 instance (Pretty t, Pretty a) => Pretty (Func t a) where
   pPrint Func { name, captures, params, body } = case captures of
     Just caps ->
-      pPrint name
-        <+> brackets (sep $ map pPrint caps)
-        <+> sep (map pPrint params)
-        <+> "="
-        $+$ nest 2 (pPrint body)
-    Nothing ->
-      pPrint name <+> sep (map pPrint params) <+> "=" $+$ nest 2 (pPrint body)
+      pPrint name <+> brackets (sep $ map pPrint caps) <+> sep (map pPrint params) <+> "=" $+$ nest
+        2
+        (pPrint body)
+    Nothing -> pPrint name <+> sep (map pPrint params) <+> "=" $+$ nest 2 (pPrint body)
 
 data Expr t a = Var a
               | Lit Lit
@@ -100,20 +97,14 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (ArrayRead   arr ix  ) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite arr ix val) =
     parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
-  pPrint (CallDirect f xs) =
-    parens $ "dir" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (CallWithCaptures f xs) =
-    parens $ "withcap" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (CallClosure f xs) =
-    parens $ "cls" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (MakeClosure f xs) =
-    parens $ "closure" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (Let n v e) = pPrint n <+> "=" <+> pPrint v $+$ pPrint e
-  pPrint (If c t f) =
-    parens $ "if" <+> pPrint c $+$ "then" <+> pPrint t $+$ "else" <+> pPrint f
-  pPrint (BinOp op x y) = parens $ sep [pPrint op, pPrint x, pPrint y]
-  pPrint (Prim x t xs) =
-    parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
+  pPrint (CallDirect       f xs) = parens $ "dir" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (CallWithCaptures f xs) = parens $ "withcap" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (CallClosure      f xs) = parens $ "cls" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (MakeClosure      f xs) = parens $ "closure" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (Let   n  v e         ) = pPrint n <+> "=" <+> pPrint v $+$ pPrint e
+  pPrint (If c t f) = parens $ "if" <+> pPrint c $+$ "then" <+> pPrint t $+$ "else" <+> pPrint f
+  pPrint (BinOp op x y         ) = parens $ sep [pPrint op, pPrint x, pPrint y]
+  pPrint (Prim  x  t xs        ) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
 
 instance (HasType t, HasType a) => HasType (Expr t a) where
   typeOf (Var   x        ) = typeOf x

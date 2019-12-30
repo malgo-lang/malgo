@@ -42,4 +42,4 @@ accessType :: HasCallStack => LType -> [Int] -> LType
 accessType t           []       = t
 accessType (Ptr    t ) (_ : xs) = accessType t xs
 accessType (Struct ts) (i : xs) = accessType (ts !! i) xs
-accessType t _ = error $ toText $ pShow t <> " is not accessable"
+accessType t           _        = error $ toText $ pShow t <> " is not accessable"

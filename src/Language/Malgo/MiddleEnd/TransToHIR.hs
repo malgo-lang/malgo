@@ -26,10 +26,7 @@ instance Pass TransToHIR (S.Expr (ID Type)) (Expr Type (ID Type)) where
 newTmp :: MonadMalgo f => Text -> a -> f (ID a)
 newTmp n t = newID t ("$" <> n)
 
-insertLet
-  :: MonadMalgo m
-  => S.Expr (ID Type)
-  -> WriterT (Endo (Expr Type (ID Type))) m (ID Type)
+insertLet :: MonadMalgo m => S.Expr (ID Type) -> WriterT (Endo (Expr Type (ID Type))) m (ID Type)
 insertLet (S.Var _ x) = pure x
 insertLet v           = do
   v' <- transToHIR v
@@ -41,31 +38,26 @@ appInsert :: Functor f => WriterT (Endo b) f b -> f b
 appInsert m = uncurry (flip appEndo) <$> runWriterT m
 
 transToHIR :: MonadMalgo m => S.Expr (ID Type) -> m (Expr Type (ID Type))
-transToHIR (S.Var    _ a) = pure $ Var a
-transToHIR (S.Int    _ x) = pure $ Lit $ Int x
-transToHIR (S.Float  _ x) = pure $ Lit $ Float x
-transToHIR (S.Bool   _ x) = pure $ Lit $ Bool x
-transToHIR (S.Char   _ x) = pure $ Lit $ Char x
-transToHIR (S.String _ x) = pure $ Lit $ String x
-transToHIR (S.Unit _    ) = pure $ Tuple []
-transToHIR (S.Tuple _ xs) = appInsert $ Tuple <$> mapM insertLet xs
-transToHIR (S.TupleAccess _ e i) =
-  appInsert $ TupleAccess <$> insertLet e <*> pure i
-transToHIR (S.MakeArray _ init size) =
-  appInsert $ MakeArray <$> insertLet init <*> insertLet size
-transToHIR (S.ArrayRead _ arr ix) =
-  appInsert $ ArrayRead <$> insertLet arr <*> insertLet ix
+transToHIR (S.Var    _ a             ) = pure $ Var a
+transToHIR (S.Int    _ x             ) = pure $ Lit $ Int x
+transToHIR (S.Float  _ x             ) = pure $ Lit $ Float x
+transToHIR (S.Bool   _ x             ) = pure $ Lit $ Bool x
+transToHIR (S.Char   _ x             ) = pure $ Lit $ Char x
+transToHIR (S.String _ x             ) = pure $ Lit $ String x
+transToHIR (S.Unit _                 ) = pure $ Tuple []
+transToHIR (S.Tuple _ xs             ) = appInsert $ Tuple <$> mapM insertLet xs
+transToHIR (S.TupleAccess _ e    i   ) = appInsert $ TupleAccess <$> insertLet e <*> pure i
+transToHIR (S.MakeArray   _ init size) = appInsert $ MakeArray <$> insertLet init <*> insertLet size
+transToHIR (S.ArrayRead   _ arr  ix  ) = appInsert $ ArrayRead <$> insertLet arr <*> insertLet ix
 transToHIR (S.ArrayWrite _ arr ix val) =
   appInsert $ ArrayWrite <$> insertLet arr <*> insertLet ix <*> insertLet val
-transToHIR (S.Call _ f xs) =
-  appInsert $ Call <$> insertLet f <*> mapM insertLet xs
-transToHIR f@(S.Fn _ ps e) = do
+transToHIR (  S.Call _ f  xs) = appInsert $ Call <$> insertLet f <*> mapM insertLet xs
+transToHIR f@(S.Fn   _ ps e ) = do
   fn <- newTmp "lambda" (typeOf f)
   e' <- transToHIR e
   return $ LetRec [Def { name = fn, params = map fst ps, expr = e' }] (Var fn)
-transToHIR (S.Seq _ e1 e2) = appInsert $ insertLet e1 >> transToHIR e2
-transToHIR (S.Let _ (S.ValDec _ n _ val) body) =
-  Let n <$> transToHIR val <*> transToHIR body
+transToHIR (S.Seq _ e1                   e2  ) = appInsert $ insertLet e1 >> transToHIR e2
+transToHIR (S.Let _ (S.ValDec _ n _ val) body) = Let n <$> transToHIR val <*> transToHIR body
 transToHIR (S.Let _ (S.FunDec fundecs) body) =
   LetRec <$> mapM transFunDec fundecs <*> transToHIR body
  where
@@ -75,14 +67,11 @@ transToHIR (S.Let _ (S.FunDec fundecs) body) =
 transToHIR (S.Let _ (S.ExDec _ n _ orig) body) = case typeOf n of
   TyApp FunC (_ : ps) -> do
     params <- mapM (newTmp "x") ps
-    LetRec
-        [Def { name = n, params = params, expr = Prim orig (typeOf n) params }]
+    LetRec [Def { name = n, params = params, expr = Prim orig (typeOf n) params }]
       <$> transToHIR body
   _ -> error "external variable is not supported"
-transToHIR (S.If _ c t f) =
-  appInsert $ If <$> insertLet c <*> transToHIR t <*> transToHIR f
-transToHIR (S.BinOp _ op x y) =
-  appInsert $ BinOp op' <$> insertLet x <*> insertLet y
+transToHIR (S.If    _ c  t f) = appInsert $ If <$> insertLet c <*> transToHIR t <*> transToHIR f
+transToHIR (S.BinOp _ op x y) = appInsert $ BinOp op' <$> insertLet x <*> insertLet y
  where
   op' = case op of
     S.Add  -> Add

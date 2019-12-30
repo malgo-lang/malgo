@@ -27,18 +27,14 @@ makeLenses ''ExprEnv
 type GenProgram = ReaderT ProgramEnv MalgoM
 type GenExpr = ReaderT ExprEnv GenProgram
 
-runGenProgram
-  :: ID LType -> GenProgram [Func (ID LType)] -> MalgoM (Program (ID LType))
+runGenProgram :: ID LType -> GenProgram [Func (ID LType)] -> MalgoM (Program (ID LType))
 runGenProgram mainName m = do
   ref       <- newIORef []
   defs      <- runReaderT m (ProgramEnv mempty ref)
   innerDefs <- readIORef ref
   pure $ Program { functions = innerDefs <> defs, mainFunc = mainName }
 
-runGenExpr
-  :: IDMap Type (ID LType)
-  -> GenExpr (ID LType)
-  -> GenProgram (Block (ID LType))
+runGenExpr :: IDMap Type (ID LType) -> GenExpr (ID LType) -> GenProgram (Block (ID LType))
 runGenExpr varMap m = do
   psRef <- newIORef []
   val   <- runReaderT m (ExprEnv psRef varMap Nothing)
@@ -57,12 +53,7 @@ addInnerFunc fun = flip modifyIORef (fun :) =<< view innerFunctions
 addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
   i <- newID (ltypeOf inst) "%"
-  logDebug
-    $   toText
-    $   renderStyle (style { mode = OneLineMode })
-    $   pPrint i
-    <+> "="
-    <+> pPrint inst
+  logDebug $ toText $ renderStyle (style { mode = OneLineMode }) $ pPrint i <+> "=" <+> pPrint inst
   flip modifyIORef ((i, inst) :) =<< view partialBlockInsts
   pure i
 
@@ -116,8 +107,7 @@ undef ty = addInst $ Undef ty
 binop :: Op -> ID LType -> ID LType -> GenExpr (ID LType)
 binop o x y = addInst $ BinOp o x y
 
-branchIf
-  :: ID LType -> GenExpr (ID LType) -> GenExpr (ID LType) -> GenExpr (ID LType)
+branchIf :: ID LType -> GenExpr (ID LType) -> GenExpr (ID LType) -> GenExpr (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
   tBlockRef <- newIORef []
   fBlockRef <- newIORef []
@@ -138,7 +128,7 @@ convertType (TyApp StringC [] ) = Ptr U8
 convertType (TyApp TupleC  xs ) = Ptr $ Struct $ map convertType xs
 convertType (TyApp ArrayC  [x]) = Ptr $ convertType x
 convertType TyMeta{}            = Ptr U8
-convertType t = error $ toText $ "unreachable(convertType): " <> pShow t
+convertType t                   = error $ toText $ "unreachable(convertType): " <> pShow t
 
 packClosure :: ID LType -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
 packClosure f capsId = do
@@ -154,12 +144,10 @@ wrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
   -- generate new captured environment
   -- fw captures the original closure
   -- note: ltypeOf x == Ptr $ Struct [Function r (Ptr U8:ps), Ptr U8]
-  boxedX <- cast (Ptr U8) x
+  boxedX       <- cast (Ptr U8) x
 
   -- generate fw
-  fwName <- newID
-    (Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)))
-    "fw"
+  fwName       <- newID (Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8))) "fw"
   fwBoxedXName <- newID (Ptr U8) "boxedCaps"
   fwParamNames <- replicateM (length ps) $ newID (Ptr U8) "a"
   bodyBlock    <- lift $ runGenExpr mempty $ do
@@ -207,21 +195,14 @@ unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
   foParamNames <- mapM (\t -> newID t "a") ps
   bodyBlock    <- lift $ runGenExpr mempty $ do
     foUnboxedX <- cast
-      (Ptr
-        (Struct
-          [Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)), Ptr U8]
-        )
-      )
+      (Ptr (Struct [Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)), Ptr U8]))
       foXName
     wrappedParams <- mapM (\p -> wrap (ltypeOf p) p) foParamNames
     xFun          <- loadC foUnboxedX [0, 0]
     xCap          <- loadC foUnboxedX [0, 1]
     retVal        <- call xFun (xCap : wrappedParams)
     unwrap r retVal
-  lift $ addInnerFunc $ Func { name   = foName
-                             , params = foXName : foParamNames
-                             , body   = bodyBlock
-                             }
+  lift $ addInnerFunc $ Func { name = foName, params = foXName : foParamNames, body = bodyBlock }
   packClosure foName x
 unwrap (Ptr (Struct ts)) = \x -> do
   x'  <- cast (Ptr $ Struct $ replicate (length ts) (Ptr U8)) x
@@ -245,31 +226,30 @@ unwrap Void         = error "cannot convert boxed value to Void"
 coerceTo :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
 coerceTo t x | t == ltypeOf x = pure x
 coerceTo (Ptr U8) x           = wrap (ltypeOf x) x
-coerceTo (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x =
-  case ltypeOf x of
-    Ptr (Struct [Function _ (Ptr U8 : xps), Ptr U8]) -> do
-      -- generate new captured environment
-      -- f captures the original closure
-      boxedX      <- cast (Ptr U8) x
+coerceTo (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x = case ltypeOf x of
+  Ptr (Struct [Function _ (Ptr U8 : xps), Ptr U8]) -> do
+    -- generate new captured environment
+    -- f captures the original closure
+    boxedX      <- cast (Ptr U8) x
 
-      -- generate f
-      fName       <- newID (Function r (Ptr U8 : ps)) "f"
-      fBoxedXName <- newID (Ptr U8) "boxedCaps"
-      fParamNames <- mapM (\p -> newID (ltypeOf p) "p") ps
-      bodyBlock   <- lift $ runGenExpr mempty $ do
-        fUnboxedX <- cast (ltypeOf x) fBoxedXName
-        as        <- zipWithM coerceTo xps fParamNames
-        xFun      <- loadC fUnboxedX [0, 0]
-        xCap      <- loadC fUnboxedX [0, 1]
-        retVal    <- call xFun (xCap : as)
-        coerceTo r retVal
-      lift $ addInnerFunc $ Func { name   = fName
-                                 , params = fBoxedXName : fParamNames
-                                 , body   = bodyBlock
-                                 }
-      packClosure fName boxedX
-    Ptr U8 -> unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x
-    _      -> error $ toText $ pShow x <> " is not closure"
+    -- generate f
+    fName       <- newID (Function r (Ptr U8 : ps)) "f"
+    fBoxedXName <- newID (Ptr U8) "boxedCaps"
+    fParamNames <- mapM (\p -> newID (ltypeOf p) "p") ps
+    bodyBlock   <- lift $ runGenExpr mempty $ do
+      fUnboxedX <- cast (ltypeOf x) fBoxedXName
+      as        <- zipWithM coerceTo xps fParamNames
+      xFun      <- loadC fUnboxedX [0, 0]
+      xCap      <- loadC fUnboxedX [0, 1]
+      retVal    <- call xFun (xCap : as)
+      coerceTo r retVal
+    lift $ addInnerFunc $ Func { name   = fName
+                               , params = fBoxedXName : fParamNames
+                               , body   = bodyBlock
+                               }
+    packClosure fName boxedX
+  Ptr U8 -> unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x
+  _      -> error $ toText $ pShow x <> " is not closure"
 coerceTo (Ptr (Struct ts)) x = case ltypeOf x of
   Ptr U8         -> unwrap (Ptr (Struct ts)) x
   Ptr (Struct _) -> do
@@ -279,8 +259,7 @@ coerceTo (Ptr (Struct ts)) x = case ltypeOf x of
       xElem' <- coerceTo t xElem
       storeC ptr [0, i] xElem'
     pure ptr
-  _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow
-    (Ptr (Struct ts))
+  _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
 coerceTo t x = case ltypeOf x of
   Ptr U8 -> unwrap t x
   _      -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow t

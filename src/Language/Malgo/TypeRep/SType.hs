@@ -19,15 +19,13 @@ data SType = TyVar Text
   deriving (Eq, Show, Read, Generic)
 
 instance Pretty SType where
-  pPrint (TyVar x) = text $ toString x
-  pPrint TyInt     = "Int"
-  pPrint TyFloat   = "Float"
-  pPrint TyBool    = "Bool"
-  pPrint TyChar    = "Char"
-  pPrint TyString  = "String"
-  pPrint (TyFun ps r) =
-    parens (sep $ punctuate "," $ map pPrint ps) <+> "->" <+> pPrint r
-  pPrint (TyTuple ts) = braces (sep $ punctuate "," $ map pPrint ts)
-  pPrint (TyArray t ) = brackets $ pPrint t
-  pPrint (TyForall ts t) =
-    "forall" <+> sep (map (text . toString) ts) <> "." <+> pPrint t
+  pPrint (TyVar x)       = text $ toString x
+  pPrint TyInt           = "Int"
+  pPrint TyFloat         = "Float"
+  pPrint TyBool          = "Bool"
+  pPrint TyChar          = "Char"
+  pPrint TyString        = "String"
+  pPrint (TyFun ps r   ) = parens (sep $ punctuate "," $ map pPrint ps) <+> "->" <+> pPrint r
+  pPrint (TyTuple ts   ) = braces (sep $ punctuate "," $ map pPrint ts)
+  pPrint (TyArray t    ) = brackets $ pPrint t
+  pPrint (TyForall ts t) = "forall" <+> sep (map (text . toString) ts) <> "." <+> pPrint t

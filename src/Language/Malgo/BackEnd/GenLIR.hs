@@ -46,19 +46,16 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
         pure $ one (name, newName)
       _ -> error "genFunMap"
     functionType isKnown ps r
-      | isKnown = Function (convertType $ typeOf r)
-                           (map (convertType . typeOf) ps)
-      | otherwise = Function (convertType $ typeOf r)
-                             (Ptr U8 : map (convertType . typeOf) ps)
+      | isKnown   = Function (convertType $ typeOf r) (map (convertType . typeOf) ps)
+      | otherwise = Function (convertType $ typeOf r) (Ptr U8 : map (convertType . typeOf) ps)
 
 -- generate LIR
 
 genFunction :: M.Func Type (ID Type) -> GenProgram (L.Func (ID LType))
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName   <- findFun name
-  funcParams <- forM params
-    $ \ID { idName, idMeta } -> newID (convertType idMeta) idName
-  bodyBlock <- runGenExpr (fromList (zip params funcParams)) (genExpr body)
+  funcParams <- forM params $ \ID { idName, idMeta } -> newID (convertType idMeta) idName
+  bodyBlock  <- runGenExpr (fromList (zip params funcParams)) (genExpr body)
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName   <- findFun name
@@ -67,15 +64,9 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   bodyBlock  <- runGenExpr (fromList (zip params funcParams)) $ do
     capsMap <- genUnpackCaps capsId
     clsMap  <- genCls capsId
-    local
-        ( over variableMap ((capsMap <> clsMap) <>)
-        . set currentCaptures (Just capsId)
-        )
+    local (over variableMap ((capsMap <> clsMap) <>) . set currentCaptures (Just capsId))
       $ genExpr body
-  pure $ L.Func { name   = funcName
-                , params = capsId : funcParams
-                , body   = bodyBlock
-                }
+  pure $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
  where
   genUnpackCaps capsId = do
     capsId' <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
@@ -87,8 +78,7 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     clsId <- packClosure f' capsId
     pure (one (f, clsId))
 
-genMainFunction
-  :: ID LType -> Expr Type (ID Type) -> GenProgram (L.Func (ID LType))
+genMainFunction :: ID LType -> Expr Type (ID Type) -> GenProgram (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
   body <- runGenExpr mempty $ genExpr mainExpr >> addInst (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
@@ -99,7 +89,7 @@ genExpr (M.Lit (Int    x    )) = addInst $ Constant $ Int64 $ fromInteger x
 genExpr (M.Lit (Float  x    )) = addInst $ Constant $ Float64 x
 genExpr (M.Lit (H.Bool True )) = addInst $ Constant $ L.Bool True
 genExpr (M.Lit (H.Bool False)) = addInst $ Constant $ L.Bool False
-genExpr (M.Lit (Char x)) = addInst $ Constant $ Word8 $ fromIntegral $ ord x
+genExpr (M.Lit (Char   x    )) = addInst $ Constant $ Word8 $ fromIntegral $ ord x
 genExpr (M.Lit (H.String xs)) =
   addInst $ Constant $ L.String $ B.unpack $ encodeUtf8 @Text @ByteString xs
 genExpr (M.Tuple xs) = do
@@ -160,7 +150,7 @@ genExpr (M.If c t f) = do
 genExpr (M.Prim orig (TyApp FunC (r : ps)) xs) = do
   argOprs <- mapM findVar xs
   callExt orig (Function (convertType r) (map convertType ps)) argOprs
-genExpr M.Prim{}         = error "external variable is not supported"
+genExpr M.Prim{}        = error "external variable is not supported"
 genExpr (M.BinOp o x y) = do
   xOpr <- findVar x
   yOpr <- findVar y

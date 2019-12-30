@@ -40,16 +40,12 @@ type TransM a = ReaderT Env (StateT [Func Type (ID Type)] MalgoM) a
 addFunc :: MonadState [Func t a] m => Func t a -> m ()
 addFunc func = modify (func :)
 
-getFunc
-  :: (MonadState [Func Type (ID Type)] m, MonadIO m)
-  => ID Type
-  -> m (Func Type (ID Type))
+getFunc :: (MonadState [Func Type (ID Type)] m, MonadIO m) => ID Type -> m (Func Type (ID Type))
 getFunc func = do
   env <- get
   case find (\Func { name } -> name == func) env of
-    Just f -> pure f
-    Nothing ->
-      errorDoc $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
+    Just f  -> pure f
+    Nothing -> errorDoc $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 
 transExpr :: H.Expr Type (ID Type) -> TransM (M.Expr Type (ID Type))
 transExpr (H.Var   x              ) = pure $ Var x
@@ -88,11 +84,8 @@ transExpr (H.LetRec defs e   ) = do
   funcNames   = map H.name defs
   -- | defsがすべてknownだと仮定してMIRに変換し、その自由変数を求める
   getFreeVars = do
-    _ <- local
-      (\env ->
-        (env :: Env) { knowns = funcNames <> knowns env, mutrecs = mempty }
-      )
-      (mapM_ (transDef Nothing) defs)
+    _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, mutrecs = mempty })
+               (mapM_ (transDef Nothing) defs)
     foldForM funcNames $ \f -> do
       Func { params, body } <- getFunc f
       pure $ freevars body \\ fromList params

@@ -63,8 +63,7 @@ newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) IO a }
   deriving (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadIO, MonadFix, MonadFail)
 
 runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
-runMalgo (MalgoM m) u opt =
-  liftIO $ runReaderT m (MalgoEnv u opt richMessageAction)
+runMalgo (MalgoM m) u opt = liftIO $ runReaderT m (MalgoEnv u opt richMessageAction)
 
 logDebug :: MonadMalgo m => Text -> m ()
 logDebug msg = liftMalgo $ do

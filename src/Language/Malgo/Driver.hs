@@ -30,11 +30,8 @@ parseOpt = execParser $ info
   (    (   Opt
        <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
        <*> strOption
-             (  long "output"
-             <> short 'o'
-             <> metavar "OUTPUT"
-             <> value "out.ll"
-             <> help "Write LLVM IR to OUTPUT"
+             (long "output" <> short 'o' <> metavar "OUTPUT" <> value "out.ll" <> help
+               "Write LLVM IR to OUTPUT"
              )
        <*> switch (long "dump-parsed")
        <*> switch (long "dump-renamed")
@@ -50,8 +47,7 @@ parseOpt = execParser $ info
   )
   (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
 
-compile
-  :: MonadIO m => String -> Syntax.Expr Text -> UniqSupply -> Opt -> m L.Module
+compile :: MonadIO m => String -> Syntax.Expr Text -> UniqSupply -> Opt -> m L.Module
 compile filename ast = M.runMalgo $ do
   opt <- asks maOption
   when (dumpParsed opt) $ dump ast

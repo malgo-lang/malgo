@@ -57,10 +57,9 @@ flattenExpr (Let x v1 e1) = go (flattenExpr v1)
   go (Let y v2 e2) = Let y v2 (go e2)
   go (LetRec xs e) = LetRec xs (go e)
   go v             = Let x v (flattenExpr e1)
-flattenExpr (LetRec defs body) =
-  LetRec (map flattenDef defs) (flattenExpr body)
-flattenExpr (If c t f) = If c (flattenExpr t) (flattenExpr f)
-flattenExpr e          = e
+flattenExpr (LetRec defs body) = LetRec (map flattenDef defs) (flattenExpr body)
+flattenExpr (If c t f        ) = If c (flattenExpr t) (flattenExpr f)
+flattenExpr e                  = e
 
 flattenDef :: Def t a -> Def t a
 flattenDef Def { name, params, expr } =
@@ -77,13 +76,10 @@ instance FreeVars (Expr t) where
   freevars (Call _ xs            ) = fromList xs
   freevars (Let x v e            ) = freevars v <> delete x (freevars e)
   freevars (LetRec xs e) =
-    let
-      efv = freevars e
-      xsfv =
-        foldMap (\Def { params, expr } -> freevars expr \\ fromList params) xs
-      fs = fromList $ map name xs
-    in
-      (efv <> xsfv) \\ fs
+    let efv  = freevars e
+        xsfv = foldMap (\Def { params, expr } -> freevars expr \\ fromList params) xs
+        fs   = fromList $ map name xs
+    in  (efv <> xsfv) \\ fs
   freevars (If    c t f ) = one c <> freevars t <> freevars f
   freevars (Prim  _ _ xs) = fromList xs
   freevars (BinOp _ x y ) = fromList [x, y]
@@ -144,23 +140,16 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (ArrayRead   arr ix  ) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite arr ix val) =
     parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
-  pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
-  pPrint (Let x v e) =
-    parens $ "let" <+> pPrint x <+> pPrint v $+$ nest 2 (pPrint e)
-  pPrint (LetRec xs e) =
-    parens $ "let rec" <+> parens (sep $ map pPrint xs) $+$ nest 2 (pPrint e)
-  pPrint (If c t f) =
-    parens $ "if" <+> pPrint c $+$ nest 2 (pPrint t) $+$ nest 2 (pPrint f)
-  pPrint (BinOp op x y) = parens $ sep [pPrint op, pPrint x, pPrint y]
-  pPrint (Prim x t xs) =
-    parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
+  pPrint (Call f xs    ) = parens $ pPrint f <+> sep (map pPrint xs)
+  pPrint (Let x v e    ) = parens $ "let" <+> pPrint x <+> pPrint v $+$ nest 2 (pPrint e)
+  pPrint (LetRec xs e  ) = parens $ "let rec" <+> parens (sep $ map pPrint xs) $+$ nest 2 (pPrint e)
+  pPrint (If    c  t f ) = parens $ "if" <+> pPrint c $+$ nest 2 (pPrint t) $+$ nest 2 (pPrint f)
+  pPrint (BinOp op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
+  pPrint (Prim  x  t xs) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
 
 instance (Pretty t, Pretty a) => Pretty (Def t a) where
   pPrint Def { name, params, expr } =
-    pPrint name
-      <+> parens (sep $ punctuate "," $ map pPrint params)
-      <+> "="
-      $$  nest 1 (pPrint expr)
+    pPrint name <+> parens (sep $ punctuate "," $ map pPrint params) <+> "=" $$ nest 1 (pPrint expr)
 
 instance Pretty Lit where
   pPrint (Int    x    ) = pPrint x

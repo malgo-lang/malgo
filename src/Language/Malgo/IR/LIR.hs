@@ -43,9 +43,7 @@ instance (HasLType a, Pretty a) => Pretty (Block a) where
     brackets
       $  vcat
            (punctuate ";" $ map
-             (\(x, inst) ->
-               pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst
-             )
+             (\(x, inst) -> pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst)
              insts
            )
       $$ pPrint value
@@ -74,24 +72,22 @@ data Inst a = Constant Constant
 
 instance (HasLType a, Pretty a) => Pretty (Inst a) where
   pPrint (Constant c) = pPrint c
-  pPrint (Call f xs) = pPrint f <> parens (sep $ punctuate "," $ map pPrint xs)
-  pPrint (CallExt f t xs) = pPrint f <> "<" <> pPrint t <> ">" <> parens
-    (sep $ punctuate "," $ map pPrint xs)
-  pPrint (ArrayCreate init size) =
-    "arrayCreate" <+> pPrint init <+> pPrint size
-  pPrint (Alloca t     ) = "alloca" <+> pPrint t
-  pPrint (LoadC x is   ) = "loadc" <+> pPrint x <+> pPrint is
-  pPrint (Load  x i    ) = "load" <+> pPrint x <+> pPrint i
-  pPrint (StoreC x is v) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
-  pPrint (Store  x is v) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
-  pPrint (Cast  t a    ) = "cast" <+> pPrint t <+> pPrint a
-  pPrint (Trunc t a    ) = "trunc" <+> pPrint t <+> pPrint a
-  pPrint (Zext  t a    ) = "zext" <+> pPrint t <+> pPrint a
-  pPrint (Sext  t a    ) = "sext" <+> pPrint t <+> pPrint a
-  pPrint (Undef t      ) = "undef" <+> pPrint t
-  pPrint (BinOp op x y ) = pPrint op <+> pPrint x <+> pPrint y
-  pPrint (If c t f) =
-    "if" <+> pPrint c $$ ("then:" <+> pPrint t) $$ ("else:" <+> pPrint f)
+  pPrint (Call f xs ) = pPrint f <> parens (sep $ punctuate "," $ map pPrint xs)
+  pPrint (CallExt f t xs) =
+    pPrint f <> "<" <> pPrint t <> ">" <> parens (sep $ punctuate "," $ map pPrint xs)
+  pPrint (ArrayCreate init size) = "arrayCreate" <+> pPrint init <+> pPrint size
+  pPrint (Alloca t             ) = "alloca" <+> pPrint t
+  pPrint (LoadC x is           ) = "loadc" <+> pPrint x <+> pPrint is
+  pPrint (Load  x i            ) = "load" <+> pPrint x <+> pPrint i
+  pPrint (StoreC x is v        ) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
+  pPrint (Store  x is v        ) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
+  pPrint (Cast  t a            ) = "cast" <+> pPrint t <+> pPrint a
+  pPrint (Trunc t a            ) = "trunc" <+> pPrint t <+> pPrint a
+  pPrint (Zext  t a            ) = "zext" <+> pPrint t <+> pPrint a
+  pPrint (Sext  t a            ) = "sext" <+> pPrint t <+> pPrint a
+  pPrint (Undef t              ) = "undef" <+> pPrint t
+  pPrint (BinOp op x y         ) = pPrint op <+> pPrint x <+> pPrint y
+  pPrint (If c t f) = "if" <+> pPrint c $$ ("then:" <+> pPrint t) $$ ("else:" <+> pPrint f)
 
 instance (HasLType a, Show a) => HasLType (Inst a) where
   ltypeOf (Constant x)   = ltypeOf x
@@ -186,5 +182,4 @@ ltypeOfOp FGT  _   = Bit
 ltypeOfOp FGE  _   = Bit
 ltypeOfOp AND  _   = Bit
 ltypeOfOp OR   _   = Bit
-ltypeOfOp op t =
-  error $ toText $ "unreachable(ltypeOfOp):" <> pShow op <> " " <> pShow t
+ltypeOfOp op   t   = error $ toText $ "unreachable(ltypeOfOp):" <> pShow op <> " " <> pShow t

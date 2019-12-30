@@ -21,10 +21,9 @@ instance Pretty Type where
   pPrint (TyApp FunC (ret : params)) =
     parens (sep $ punctuate "," $ map pPrint params) <+> "->" <+> pPrint ret
   pPrint (TyApp TupleC ts) = braces $ sep $ punctuate "," $ map pPrint ts
-  pPrint (TyApp c ts) =
-    pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
-  pPrint (TyMeta v     ) = pPrint v
-  pPrint (TyForall ts t) = "forall" <+> sep (map pPrint ts) <> "." <+> pPrint t
+  pPrint (TyApp c      ts) = pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
+  pPrint (TyMeta v       ) = pPrint v
+  pPrint (TyForall ts t  ) = "forall" <+> sep (map pPrint ts) <> "." <+> pPrint t
 
 instance Pretty TyCon where
   pPrint FunC    = "Fun"

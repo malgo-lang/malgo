@@ -28,14 +28,9 @@ defined :: ID Type -> ReaderT [ID Type] MalgoM ()
 defined a = unlessM (elem a <$> ask) (errorDoc $ pPrint a <+> "is not defined")
 
 notDefined :: ID Type -> ReaderT [ID Type] MalgoM ()
-notDefined a =
-  unlessM (notElem a <$> ask) (errorDoc $ pPrint a <+> "is already defined")
+notDefined a = unlessM (notElem a <$> ask) (errorDoc $ pPrint a <+> "is already defined")
 
-match
-  :: (Pretty a, Pretty b, HasType a, HasType b)
-  => a
-  -> b
-  -> ReaderT [ID Type] MalgoM ()
+match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [ID Type] MalgoM ()
 match a b =
   unless (typeOf a == typeOf b)
     $   errorDoc
@@ -56,7 +51,7 @@ lintExpr e@(Call f xs) = do
   argtys      = map typeOf xs
   getParamtys = case fty of
     TyApp FunC (_ : ps) -> pure ps
-    t -> errorDoc $ pPrint t <+> ("is not callable: " <> parens (pPrint e))
+    t                   -> errorDoc $ pPrint t <+> ("is not callable: " <> parens (pPrint e))
 lintExpr (Let name val body) = do
   notDefined name
   val' <- lintExpr val

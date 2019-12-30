@@ -229,7 +229,6 @@ lexer = do
   lbrace        = symbol "{"
   rbrace        = symbol "}"
 
-lexing
-  :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
+lexing :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
 lexing = runParserT (whiteSpace >> many lexer >>= \toks -> eof >> pure toks)
   where whiteSpace = Tok.whiteSpace lexer'
