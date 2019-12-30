@@ -109,6 +109,7 @@ genExpr (M.ArrayRead arr idx) = do
   load arrOpr ixOpr
 genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   TyApp ArrayC [t] -> do
+    when (t /= typeOf val) $ logWarning $ "typeOf val /= " <> show t
     arrOpr <- findVar arr
     ixOpr  <- findVar idx
     valOpr <- coerceTo (convertType t) =<< findVar val
