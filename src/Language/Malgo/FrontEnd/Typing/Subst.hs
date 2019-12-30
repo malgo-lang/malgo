@@ -3,7 +3,6 @@
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE TypeFamilies               #-}
-{-# LANGUAGE TypeApplications #-}
 module Language.Malgo.FrontEnd.Typing.Subst
   ( Subst(..)
   , Substitutable(..)
