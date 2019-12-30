@@ -33,18 +33,16 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
   isDump = dumpLIR
   trans M.Program { functions, mainExpr } = do
     logDebug "Start GenLIR"
-    mainFuncId <- newID (Function I32 []) "main"
     funMap     <- foldMapM genFunMap functions
-    runGenProgram mainFuncId $ local (set functionMap funMap) $ do
-      fs <- mapM genFunction functions
-      mf <- genMainFunction mainFuncId mainExpr
-      pure (mf : fs)
+    runGenProgram $ local (set functionMap funMap) $ do
+      mapM_ (addFunc <=< genFunction) functions
+      runGenExpr mempty $ genExpr mainExpr
    where
-    genFunMap M.Func { name, captures } = case typeOf name of
-      TyApp FunC (r : ps) -> do
-        newName <- newID (functionType (isNothing captures) ps r) (idName name)
-        pure $ one (name, newName)
-      _ -> error "genFunMap"
+    genFunMap M.Func { name, captures, params, body } = do
+      let ps = map typeOf params
+          r = typeOf body
+      newName <- newID (functionType (isNothing captures) ps r) (idName name)
+      pure $ one (name, newName)
     functionType isKnown ps r
       | isKnown   = Function (convertType $ typeOf r) (map (convertType . typeOf) ps)
       | otherwise = Function (convertType $ typeOf r) (Ptr U8 : map (convertType . typeOf) ps)

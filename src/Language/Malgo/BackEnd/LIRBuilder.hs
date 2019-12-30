@@ -14,7 +14,7 @@ import           Control.Lens
 import           Relude.Unsafe                  ( fromJust )
 
 data ProgramEnv = ProgramEnv { _functionMap :: IDMap Type (ID LType)
-                             , _innerFunctions :: IORef [Func (ID LType)]
+                             , _functionListRef :: IORef [Func (ID LType)]
                              }
 makeLenses ''ProgramEnv
 
@@ -27,12 +27,12 @@ makeLenses ''ExprEnv
 type GenProgram = ReaderT ProgramEnv MalgoM
 type GenExpr = ReaderT ExprEnv GenProgram
 
-runGenProgram :: ID LType -> GenProgram [Func (ID LType)] -> MalgoM (Program (ID LType))
-runGenProgram mainName m = do
-  ref       <- newIORef []
-  defs      <- runReaderT m (ProgramEnv mempty ref)
-  innerDefs <- readIORef ref
-  pure $ Program { functions = innerDefs <> defs, mainFunc = mainName }
+runGenProgram :: GenProgram (Block (ID LType)) -> MalgoM (Program (ID LType))
+runGenProgram m = do
+  ref      <- newIORef []
+  mf <- runReaderT m (ProgramEnv mempty ref)
+  defs     <- readIORef ref
+  pure $ Program { functions = defs, mainFunc = mf }
 
 runGenExpr :: IDMap Type (ID LType) -> GenExpr (ID LType) -> GenProgram (Block (ID LType))
 runGenExpr varMap m = do
@@ -47,8 +47,10 @@ findVar x = fromJust . lookup x <$> view variableMap
 findFun :: ID Type -> GenProgram (ID LType)
 findFun x = fromJust . lookup x <$> view functionMap
 
-addInnerFunc :: Func (ID LType) -> GenProgram ()
-addInnerFunc fun = flip modifyIORef (fun :) =<< view innerFunctions
+addFunc :: Func (ID LType) -> GenProgram ()
+addFunc fun = do
+  logDebug $ fromString $ render $ "register: " $$ pPrint fun
+  flip modifyIORef (fun :) =<< view functionListRef
 
 addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
@@ -156,10 +158,7 @@ wrap x = case ltypeOf x of
       xCap       <- loadC fwUnboxedX [0, 1]
       retVal     <- call xFun (xCap : as)
       wrap retVal
-    lift $ addInnerFunc $ Func { name   = fwName
-                               , params = fwBoxedXName : fwParamNames
-                               , body   = bodyBlock
-                               }
+    lift $ addFunc $ Func { name = fwName, params = fwBoxedXName : fwParamNames, body = bodyBlock }
     cast (Ptr U8) =<< packClosure fwName boxedX
   Ptr (Struct ts) -> do
     ptr <- alloca (Struct (replicate (length ts) (Ptr U8)))
@@ -197,7 +196,7 @@ unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
     xCap          <- loadC foUnboxedX [0, 1]
     retVal        <- call xFun (xCap : wrappedParams)
     unwrap r retVal
-  lift $ addInnerFunc $ Func { name = foName, params = foXName : foParamNames, body = bodyBlock }
+  lift $ addFunc $ Func { name = foName, params = foXName : foParamNames, body = bodyBlock }
   packClosure foName x
 unwrap (Ptr (Struct ts)) = \x -> do
   x'  <- cast (Ptr $ Struct $ replicate (length ts) (Ptr U8)) x
@@ -239,10 +238,7 @@ coerceTo (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x = case ltypeOf x of
       xCap      <- loadC fUnboxedX [0, 1]
       retVal    <- call xFun (xCap : as)
       coerceTo r retVal
-    lift $ addInnerFunc $ Func { name   = fName
-                               , params = fBoxedXName : fParamNames
-                               , body   = bodyBlock
-                               }
+    lift $ addFunc $ Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock }
     packClosure fName boxedX
   Ptr U8 -> unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x
   _      -> error $ toText $ pShow x <> " is not closure"

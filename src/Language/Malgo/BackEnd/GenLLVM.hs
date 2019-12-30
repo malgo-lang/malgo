@@ -41,10 +41,7 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
     let funMap = foldMap genFunMap functions
     local (\st -> st { variableMap = funMap }) $ do
       mapM_ genFunction functions
-      void $ function "main" [] LT.i32 $ \_ -> do
-        mainFuncOpr <- findVar mainFunc
-        void $ call mainFuncOpr []
-        ret (int32 0)
+      void $ function "main" [] LT.i32 $ \_ -> genBlock mainFunc (const (ret (int32 0)))
    where
     genFunMap :: Func (ID LType) -> Map (ID LType) Operand
     genFunMap Func { name } =

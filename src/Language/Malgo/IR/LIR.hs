@@ -12,7 +12,7 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.Prelude
 
-data Program a = Program { functions :: [Func a], mainFunc :: a }
+data Program a = Program { functions :: [Func a], mainFunc :: Block a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Program a) where
