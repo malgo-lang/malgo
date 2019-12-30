@@ -2,6 +2,7 @@
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms   #-}
 module Language.Malgo.TypeRep.LType where
 
 import           Language.Malgo.ID
@@ -21,6 +22,9 @@ data LType = Ptr LType
            | Function LType [LType]
            | Void
   deriving (Eq, Ord, Show, Read, Generic)
+
+pattern ClosurePtr :: LType -> [LType] -> LType
+pattern ClosurePtr r ps = Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])
 
 instance Pretty LType where
   pPrint (Ptr    t ) = "ptr" <> parens (pPrint t)
