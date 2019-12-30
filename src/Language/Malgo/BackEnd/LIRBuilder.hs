@@ -138,48 +138,44 @@ packClosure f capsId = do
   pure clsId
 
 -- | convert to boxed value
-wrap :: LType -> ID LType -> GenExpr (ID LType)
-wrap (Ptr U8) = pure
-wrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
-  -- generate new captured environment
-  -- fw captures the original closure
-  -- note: ltypeOf x == Ptr $ Struct [Function r (Ptr U8:ps), Ptr U8]
-  boxedX       <- cast (Ptr U8) x
-
-  -- generate fw
-  fwName       <- newID (Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8))) "fw"
-  fwBoxedXName <- newID (Ptr U8) "boxedCaps"
-  fwParamNames <- replicateM (length ps) $ newID (Ptr U8) "a"
-  bodyBlock    <- lift $ runGenExpr mempty $ do
-    fwUnboxedX <- cast (ltypeOf x) fwBoxedXName
-    as         <- zipWithM unwrap ps fwParamNames
-    xFun       <- loadC fwUnboxedX [0, 0]
-    xCap       <- loadC fwUnboxedX [0, 1]
-    retVal     <- call xFun (xCap : as)
-    wrap r retVal
-  lift $ addInnerFunc $ Func { name   = fwName
-                             , params = fwBoxedXName : fwParamNames
-                             , body   = bodyBlock
-                             }
-  cast (Ptr U8) =<< packClosure fwName boxedX
-wrap (Ptr (Struct ts)) = \x -> do
-  ptr <- alloca (Struct (replicate (length ts) (Ptr U8)))
-  forM_ (zip [0 ..] ts) $ \(i, t) -> do
-    raw    <- loadC x [0, i]
-    wraped <- wrap t raw
-    storeC ptr [0, i] wraped
-  cast (Ptr U8) ptr
-wrap (Ptr _)    = cast (Ptr U8)
-wrap Bit        = zext U64 >=> cast (Ptr U8)
-wrap I32        = sext I64 >=> cast (Ptr U8)
-wrap I64        = cast (Ptr U8)
-wrap U8         = zext U64 >=> cast (Ptr U8)
-wrap U32        = zext U64 >=> cast (Ptr U8)
-wrap U64        = cast (Ptr U8)
-wrap F64        = cast (Ptr U8)
-wrap Function{} = cast (Ptr U8)
-wrap Struct{}   = error "cannot convert Struct to boxed value"
-wrap Void       = error "cannot convert Void to boxed value"
+wrap :: ID LType -> GenExpr (ID LType)
+wrap x = case ltypeOf x of
+  Ptr U8 -> pure x
+  Ptr (Struct [Function _ (Ptr U8 : ps), Ptr U8]) -> do
+    -- generate new captured environment
+    -- fw captures the original closure
+    boxedX       <- cast (Ptr U8) x
+    -- generate fw
+    fwName       <- newID (Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8))) "fw"
+    fwBoxedXName <- newID (Ptr U8) "boxedCaps"
+    fwParamNames <- replicateM (length ps) $ newID (Ptr U8) "a"
+    bodyBlock    <- lift $ runGenExpr mempty $ do
+      fwUnboxedX <- cast (ltypeOf x) fwBoxedXName
+      as         <- zipWithM unwrap ps fwParamNames
+      xFun       <- loadC fwUnboxedX [0, 0]
+      xCap       <- loadC fwUnboxedX [0, 1]
+      retVal     <- call xFun (xCap : as)
+      wrap retVal
+    lift $ addInnerFunc $ Func { name   = fwName
+                               , params = fwBoxedXName : fwParamNames
+                               , body   = bodyBlock
+                               }
+    cast (Ptr U8) =<< packClosure fwName boxedX
+  Ptr (Struct ts) -> do
+    ptr <- alloca (Struct (replicate (length ts) (Ptr U8)))
+    forM_ [0 .. length ts - 1] $ \i -> do
+      raw    <- loadC x [0, i]
+      wraped <- wrap raw
+      storeC ptr [0, i] wraped
+    cast (Ptr U8) ptr
+  Ptr _ -> cast (Ptr U8) x
+  Bit   -> zext U64 x >>= cast (Ptr U8)
+  I32   -> sext I64 x >>= cast (Ptr U8)
+  I64   -> cast (Ptr U8) x
+  U32   -> zext U64 x >>= cast (Ptr U8)
+  U64   -> cast (Ptr U8) x
+  F64   -> cast (Ptr U8) x
+  t     -> errorDoc $ "cannot convert" <+> pPrint t <+> "to boxed value"
 
 -- | convert boxed value to unboxed value
 unwrap :: LType -> ID LType -> GenExpr (ID LType)
@@ -188,16 +184,15 @@ unwrap (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) = \x -> do
   -- new capturesd environment is `x`
   -- fo captures the boxed closure
   -- note: ltypeOf x == Ptr U8
-
   -- generate fo
   foName       <- newID (Function r (Ptr U8 : ps)) "fo"
   foXName      <- newID (Ptr U8) "x"
-  foParamNames <- mapM (\t -> newID t "a") ps
+  foParamNames <- mapM (`newID` "a") ps
   bodyBlock    <- lift $ runGenExpr mempty $ do
     foUnboxedX <- cast
       (Ptr (Struct [Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)), Ptr U8]))
       foXName
-    wrappedParams <- mapM (\p -> wrap (ltypeOf p) p) foParamNames
+    wrappedParams <- mapM wrap foParamNames
     xFun          <- loadC foUnboxedX [0, 0]
     xCap          <- loadC foUnboxedX [0, 1]
     retVal        <- call xFun (xCap : wrappedParams)
@@ -223,9 +218,10 @@ unwrap F64          = cast F64
 unwrap t@Function{} = cast t
 unwrap Struct{}     = error "cannot convert boxed value to Struct"
 unwrap Void         = error "cannot convert boxed value to Void"
+
 coerceTo :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
 coerceTo t x | t == ltypeOf x = pure x
-coerceTo (Ptr U8) x           = wrap (ltypeOf x) x
+coerceTo (Ptr U8) x           = wrap x
 coerceTo (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])) x = case ltypeOf x of
   Ptr (Struct [Function _ (Ptr U8 : xps), Ptr U8]) -> do
     -- generate new captured environment
