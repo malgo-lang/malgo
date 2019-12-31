@@ -142,39 +142,17 @@ packClosure f capsId = do
 
 coerceTo :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
 coerceTo t x | t == ltypeOf x = pure x
-coerceTo (Ptr U8) x           = case ltypeOf x of
-  ClosurePtr _ ps -> do
-    -- generate new captured environment
-    -- fw captures the original closure
-    boxedX      <- cast (Ptr U8) x
-    -- generate fw
-    fName       <- newID (Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8))) "fw"
-    fBoxedXName <- newID (Ptr U8) "x"
-    fParamNames <- replicateM (length ps) $ newID (Ptr U8) "a"
-    bodyBlock   <- lift $ runGenExpr mempty $ do
-      fUnboxedX <- cast (ltypeOf x) fBoxedXName
-      as        <- zipWithM coerceTo ps fParamNames
-      xFun      <- loadC fUnboxedX [0, 0]
-      xCap      <- loadC fUnboxedX [0, 1]
-      retVal    <- call xFun (xCap : as)
-      coerceTo (Ptr U8) retVal
-    lift $ addFunc $ Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock }
-    cast (Ptr U8) =<< packClosure fName boxedX
-  Ptr (Struct ts) -> do
-    ptr <- alloca (Struct (replicate (length ts) (Ptr U8)))
-    forM_ [0 .. length ts - 1] $ \i -> do
-      raw    <- loadC x [0, i]
-      wraped <- coerceTo (Ptr U8) raw
-      storeC ptr [0, i] wraped
-    cast (Ptr U8) ptr
-  Ptr _ -> cast (Ptr U8) x
-  Bit   -> zext U64 x >>= cast (Ptr U8)
-  I32   -> sext I64 x >>= cast (Ptr U8)
-  I64   -> cast (Ptr U8) x
-  U32   -> zext U64 x >>= cast (Ptr U8)
-  U64   -> cast (Ptr U8) x
-  F64   -> cast (Ptr U8) x
-  t     -> errorDoc $ "cannot convert" <+> pPrint t <+> "to boxed value"
+coerceTo (Ptr U8) x           = cast (Ptr U8) =<< case ltypeOf x of
+  ClosurePtr _ ps -> coerceTo (ClosurePtr (Ptr U8) (replicate (length ps) (Ptr U8))) x
+  Ptr (Struct ts) -> coerceTo (Ptr (Struct (replicate (length ts) (Ptr U8)))) x
+  Ptr _           -> pure x
+  Bit             -> zext U64 x
+  I32             -> sext I64 x
+  I64             -> pure x
+  U32             -> zext U64 x
+  U64             -> pure x
+  F64             -> pure x
+  t               -> errorDoc $ "cannot convert" <+> pPrint t <+> "to boxed value"
 coerceTo (ClosurePtr r ps) x = do
   -- generate new captured environment
   -- f captures the original closure
