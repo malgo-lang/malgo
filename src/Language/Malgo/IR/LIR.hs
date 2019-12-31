@@ -54,7 +54,7 @@ instance HasLType a => HasLType (Block a) where
 data Inst a = Constant Constant
             | Call a [a]
             | CallExt Text LType [a]
-            | ArrayCreate a -- ^ init
+            | ArrayCreate LType -- ^ type of element
                           a -- ^ size
             | Alloca LType
             | LoadC a [Int]
@@ -68,6 +68,10 @@ data Inst a = Constant Constant
             | Undef LType
             | BinOp Op a a
             | If a (Block a) (Block a)
+            | For a -- ^ index
+                  a -- ^ from
+                  a -- ^ to
+                  (Block a) -- ^ body
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Inst a) where
@@ -88,6 +92,15 @@ instance (HasLType a, Pretty a) => Pretty (Inst a) where
   pPrint (Undef t              ) = "undef" <+> pPrint t
   pPrint (BinOp op x y         ) = pPrint op <+> pPrint x <+> pPrint y
   pPrint (If c t f) = "if" <+> pPrint c $$ ("then:" <+> pPrint t) $$ ("else:" <+> pPrint f)
+  pPrint (For index from to body) =
+    "for"
+      <+> pPrint index
+      <+> "from"
+      <+> pPrint from
+      <+> "to"
+      <+> pPrint to
+      $$  "loop:"
+      <+> pPrint body
 
 instance (HasLType a, Show a) => HasLType (Inst a) where
   ltypeOf (Constant x)   = ltypeOf x
@@ -103,6 +116,7 @@ instance (HasLType a, Show a) => HasLType (Inst a) where
   ltypeOf (Undef t     ) = t
   ltypeOf (BinOp op x _) = ltypeOfOp op (ltypeOf x)
   ltypeOf (If    _  x _) = ltypeOf x
+  ltypeOf For{}          = Ptr (Struct [])
   ltypeOf t              = error $ toText $ "unreachable(ltypeOf) " <> pShow t
 
 data Constant = Bool Bool

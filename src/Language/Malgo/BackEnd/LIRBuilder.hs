@@ -11,7 +11,10 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.IR.LIR
-import           Control.Lens
+import           Control.Lens                   ( view
+                                                , set
+                                                , makeLenses
+                                                )
 import           Relude.Unsafe                  ( fromJust )
 
 data ProgramEnv = ProgramEnv { _functionMap :: IDMap Type (ID LType)
@@ -60,7 +63,7 @@ addInst inst = do
   flip modifyIORef ((i, inst) :) =<< view partialBlockInsts
   pure i
 
-arrayCreate :: ID LType -> ID LType -> GenExpr (ID LType)
+arrayCreate :: LType -> ID LType -> GenExpr (ID LType)
 arrayCreate init size = addInst $ ArrayCreate init size
 
 alloca :: LType -> GenExpr (ID LType)
@@ -119,6 +122,14 @@ branchIf c genWhenTrue genWhenFalse = do
   tBlock    <- reverse <$> readIORef tBlockRef
   fBlock    <- reverse <$> readIORef fBlockRef
   addInst $ If c (Block tBlock tvalue) (Block fBlock fvalue)
+
+forLoop :: ID LType -> ID LType -> (ID LType -> GenExpr (ID LType)) -> GenExpr ()
+forLoop from to k = do
+  index    <- newID I64 "i"
+  blockRef <- newIORef []
+  val      <- local (set partialBlockInsts blockRef) (k index)
+  block    <- reverse <$> readIORef blockRef
+  void $ addInst $ For index from to (Block block val)
 
 convertType :: HasCallStack => Type -> LType
 convertType (TyApp FunC (r : ps)) =
@@ -188,7 +199,7 @@ coerceTo (Ptr (Struct ts)) x = do
 coerceTo SizeT x = case ltypeOf x of
   I64 -> cast SizeT x
   U64 -> cast SizeT x
-  _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow SizeT
+  _   -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow SizeT
 coerceTo t x = case ltypeOf x of
   Ptr U8 -> case t of
     Ptr t1     -> cast (Ptr t1) x

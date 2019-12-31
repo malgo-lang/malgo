@@ -102,7 +102,12 @@ genExpr (M.TupleAccess t i) = do
 genExpr (M.MakeArray init size) = do
   initVal <- findVar init
   sizeVal <- coerceTo SizeT =<< findVar size
-  arrayCreate initVal sizeVal
+  ptr <- arrayCreate (ltypeOf initVal) sizeVal
+  zero <- addInst $ Constant $ Int64 0 
+  forLoop zero sizeVal $ \idx -> do
+    store ptr [idx] initVal
+    undef (Ptr (Struct []))
+  pure ptr
 genExpr (M.ArrayRead arr idx) = do
   arrOpr <- findVar arr
   ixOpr  <- coerceTo SizeT =<< findVar idx

@@ -113,43 +113,6 @@ mallocBytes bytesOpr maybeType = do
     Just t  -> bitcast ptrOpr (ptr t)
     Nothing -> pure ptrOpr
 
-initArray :: Operand -> ID LType -> ID LType -> GenExpr ()
-initArray ptrOpr init size = do
-  initOpr   <- findVar init
-  sizeOpr   <- findVar size
-
-  condLabel <- freshName "cond"
-  bodyLabel <- freshName "copyelem"
-  endLabel  <- freshName "end"
-
-  {-
-    for (i64 i = 0; i < size; i++) {
-      ptrOpr[i] = init;
-    }
-  -}
-  -- for (i64 i = 0;
-  iPtr      <- alloca i64 Nothing 0
-  store iPtr 0 (int64 0)
-  br condLabel
-
-  -- cond: i < size;
-  emitBlockStart condLabel
-  iOpr <- load iPtr 0
-  cond <- icmp IP.SLT iOpr sizeOpr -- TODO: sizeを正の数に限定する
-  condBr cond bodyLabel endLabel
-
-  -- copyelem: { ptrOpr[i] = init;
-  emitBlockStart bodyLabel
-  addr <- gep ptrOpr [iOpr]
-  store addr 0 initOpr
-
-  -- i++)
-  store iPtr 0 =<< add iOpr (int64 1)
-  br condLabel
-
-  -- end: }
-  emitBlockStart endLabel
-
 genFuncName :: ID a -> LLVM.AST.Name
 genFuncName ID { idName, idUniq } = LLVM.AST.mkName $ toString $ idName <> show idUniq
 
@@ -180,13 +143,11 @@ genInst (CallExt f (Function r ps) xs) = do
   f'  <- findExt f (map convertType ps) (convertType r)
   xs' <- mapM (fmap (, []) . findVar) xs
   call f' xs'
-genInst CallExt{}               = error "extern symbol must have a function type"
-genInst (ArrayCreate init size) = do
-  let ty = convertType $ ltypeOf init
-  size'  <- mul (sizeof ty) =<< findVar size
-  ptrOpr <- mallocBytes size' (Just ty)
-  initArray ptrOpr init size
-  pure ptrOpr
+genInst CallExt{}             = error "extern symbol must have a function type"
+genInst (ArrayCreate ty size) = do
+  let ty' = convertType ty
+  size' <- mul (sizeof ty') =<< findVar size
+  mallocBytes size' (Just ty')
 genInst (Alloca ty) = do
   let size = sizeof (convertType ty)
   mallocBytes size (Just $ convertType ty)
@@ -232,11 +193,11 @@ genInst (Cast ty x) = do
       store p 0 i
       p' <- bitcast p (ptr LT.double)
       load p' 0
-    (I64, SizeT) -> pure xOpr
-    (U64, SizeT) -> pure xOpr
-    (SizeT, I64) -> pure xOpr
-    (SizeT, U64) -> pure xOpr
-    _ -> error "invalid cast"
+    (I64  , SizeT) -> pure xOpr
+    (U64  , SizeT) -> pure xOpr
+    (SizeT, I64  ) -> pure xOpr
+    (SizeT, U64  ) -> pure xOpr
+    _              -> error "invalid cast"
 genInst (IR.Trunc ty x) = do
   xOpr <- findVar x
   trunc xOpr (convertType ty)
@@ -264,6 +225,31 @@ genInst (If cond thenBlock elseBlock) = do
   genBlock elseBlock (\o -> store result 0 o >> br endLabel)
   emitBlockStart endLabel
   load result 0
+genInst (For index from to body) = do
+  condLabel <- freshName "cond"
+  bodyLabel <- freshName "body"
+  endLabel  <- freshName "end"
+  -- for (i64 i = from;
+  iPtr      <- alloca i64 Nothing 0
+  store iPtr 0 =<< findVar from
+  br condLabel
+
+  -- cond: i < to;
+  emitBlockStart condLabel
+  iOpr <- load iPtr 0
+  cond <- icmp IP.SLT iOpr =<< findVar to
+  condBr cond bodyLabel endLabel
+
+  -- body: genBlock body
+  emitBlockStart bodyLabel
+  local (\st -> st { variableMap = insert index iOpr $ variableMap st }) $ genBlock body $ \_ -> do
+    -- i++)
+    store iPtr 0 =<< add iOpr (int64 1)
+    br condLabel
+
+  -- end: }
+  emitBlockStart endLabel
+  unit
 
 unit :: IRBuilderT GenDec Operand
 unit =
