@@ -18,6 +18,7 @@ data LType = Ptr LType
            | U32
            | U64
            | F64
+           | SizeT
            | Struct [LType]
            | Function LType [LType]
            | Void

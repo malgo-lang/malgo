@@ -101,17 +101,17 @@ genExpr (M.TupleAccess t i) = do
   loadC tuplePtr [0, i]
 genExpr (M.MakeArray init size) = do
   initVal <- findVar init
-  sizeVal <- findVar size
+  sizeVal <- coerceTo SizeT =<< findVar size
   arrayCreate initVal sizeVal
 genExpr (M.ArrayRead arr idx) = do
   arrOpr <- findVar arr
-  ixOpr  <- findVar idx
+  ixOpr  <- coerceTo SizeT =<< findVar idx
   load arrOpr ixOpr
 genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   TyApp ArrayC [t] -> do
     when (t /= typeOf val) $ logWarning $ "typeOf val /= " <> show t
     arrOpr <- findVar arr
-    ixOpr  <- findVar idx
+    ixOpr  <- coerceTo SizeT =<< findVar idx
     valOpr <- coerceTo (convertType t) =<< findVar val
     store arrOpr [ixOpr] valOpr
     undef (Ptr (Struct []))

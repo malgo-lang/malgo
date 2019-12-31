@@ -185,6 +185,10 @@ coerceTo (Ptr (Struct ts)) x = do
     xElem' <- coerceTo t xElem
     storeC ptr [0, i] xElem'
   pure ptr
+coerceTo SizeT x = case ltypeOf x of
+  I64 -> cast SizeT x
+  U64 -> cast SizeT x
+  _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow SizeT
 coerceTo t x = case ltypeOf x of
   Ptr U8 -> case t of
     Ptr t1     -> cast (Ptr t1) x

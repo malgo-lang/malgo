@@ -80,6 +80,7 @@ convertType U8              = i8
 convertType U32             = i32
 convertType U64             = i64
 convertType F64             = LT.double
+convertType SizeT           = i64
 convertType (IR.Struct xs ) = StructureType False (map convertType xs)
 convertType (Function r ps) = ptr $ FunctionType (convertType r) (map convertType ps) False
 convertType Void            = LT.void
@@ -231,6 +232,10 @@ genInst (Cast ty x) = do
       store p 0 i
       p' <- bitcast p (ptr LT.double)
       load p' 0
+    (I64, SizeT) -> pure xOpr
+    (U64, SizeT) -> pure xOpr
+    (SizeT, I64) -> pure xOpr
+    (SizeT, U64) -> pure xOpr
     _ -> error "invalid cast"
 genInst (IR.Trunc ty x) = do
   xOpr <- findVar x
