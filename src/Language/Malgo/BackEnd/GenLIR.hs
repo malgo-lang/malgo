@@ -33,14 +33,14 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
   isDump = dumpLIR
   trans M.Program { functions, mainExpr } = do
     logDebug "Start GenLIR"
-    funMap     <- foldMapM genFunMap functions
+    funMap <- foldMapM genFunMap functions
     runGenProgram $ local (set functionMap funMap) $ do
       mapM_ (addFunc <=< genFunction) functions
       runGenExpr mempty $ genExpr mainExpr
    where
     genFunMap M.Func { name, captures, params, body } = do
       let ps = map typeOf params
-          r = typeOf body
+          r  = typeOf body
       newName <- newID (functionType (isNothing captures) ps r) (idName name)
       pure $ one (name, newName)
     functionType isKnown ps r
@@ -102,11 +102,9 @@ genExpr (M.TupleAccess t i) = do
 genExpr (M.MakeArray init size) = do
   initVal <- findVar init
   sizeVal <- coerceTo SizeT =<< findVar size
-  ptr <- arrayCreate (ltypeOf initVal) sizeVal
-  zero <- addInst $ Constant $ Int64 0 
-  forLoop zero sizeVal $ \idx -> do
-    store ptr [idx] initVal
-    undef (Ptr (Struct []))
+  ptr     <- arrayCreate (ltypeOf initVal) sizeVal
+  zero    <- addInst $ Constant $ Int64 0
+  _       <- forLoop zero sizeVal $ \idx -> store ptr [idx] initVal
   pure ptr
 genExpr (M.ArrayRead arr idx) = do
   arrOpr <- findVar arr
@@ -119,7 +117,6 @@ genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
     ixOpr  <- coerceTo SizeT =<< findVar idx
     valOpr <- coerceTo (convertType t) =<< findVar val
     store arrOpr [ixOpr] valOpr
-    undef (Ptr (Struct []))
   _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)

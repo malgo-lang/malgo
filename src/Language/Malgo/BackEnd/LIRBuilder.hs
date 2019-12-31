@@ -75,11 +75,11 @@ loadC ptr xs = addInst $ LoadC ptr xs
 load :: ID LType -> ID LType -> GenExpr (ID LType)
 load ptr xs = addInst $ Load ptr xs
 
-storeC :: ID LType -> [Int] -> ID LType -> GenExpr ()
-storeC ptr xs val = addInst (StoreC ptr xs val) >> pass
+storeC :: ID LType -> [Int] -> ID LType -> GenExpr (ID LType)
+storeC ptr xs val = addInst (StoreC ptr xs val)
 
-store :: ID LType -> [ID LType] -> ID LType -> GenExpr ()
-store ptr xs val = addInst (Store ptr xs val) >> pass
+store :: ID LType -> [ID LType] -> ID LType -> GenExpr (ID LType)
+store ptr xs val = addInst (Store ptr xs val)
 
 call :: HasCallStack => ID LType -> [ID LType] -> GenExpr (ID LType)
 call f xs = case ltypeOf f of
@@ -123,13 +123,13 @@ branchIf c genWhenTrue genWhenFalse = do
   fBlock    <- reverse <$> readIORef fBlockRef
   addInst $ If c (Block tBlock tvalue) (Block fBlock fvalue)
 
-forLoop :: ID LType -> ID LType -> (ID LType -> GenExpr (ID LType)) -> GenExpr ()
+forLoop :: ID LType -> ID LType -> (ID LType -> GenExpr (ID LType)) -> GenExpr (ID LType)
 forLoop from to k = do
   index    <- newID I64 "i"
   blockRef <- newIORef []
   val      <- local (set partialBlockInsts blockRef) (k index)
   block    <- reverse <$> readIORef blockRef
-  void $ addInst $ For index from to (Block block val)
+  addInst $ For index from to (Block block val)
 
 convertType :: HasCallStack => Type -> LType
 convertType (TyApp FunC (r : ps)) =
@@ -147,8 +147,8 @@ convertType t                   = error $ toText $ "unreachable(convertType): " 
 packClosure :: ID LType -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
 packClosure f capsId = do
   clsId <- alloca (Struct [ltypeOf f, Ptr U8])
-  storeC clsId [0, 0] f
-  storeC clsId [0, 1] capsId
+  _ <- storeC clsId [0, 0] f
+  _ <- storeC clsId [0, 1] capsId
   pure clsId
 
 coerceTo :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
