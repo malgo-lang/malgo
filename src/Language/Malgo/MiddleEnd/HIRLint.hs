@@ -31,14 +31,18 @@ notDefined :: ID Type -> ReaderT [ID Type] MalgoM ()
 notDefined a = unlessM (notElem a <$> ask) (errorDoc $ pPrint a <+> "is already defined")
 
 match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [ID Type] MalgoM ()
-match a b =
-  unless (typeOf a == typeOf b)
-    $   errorDoc
-    $   "expected:"
-    <+> pPrint (typeOf a)
-    $+$ "actual:"
-    <+> pPrint (typeOf b)
-    $+$ parens (fsep [pPrint a, colon, pPrint b])
+match a b = case (typeOf a, typeOf b) of
+  (TyMeta _, _       )                    -> pass
+  (_       , TyMeta _)                    -> pass
+  (TyApp c1 ts1, TyApp c2 ts2) | c1 == c2 -> zipWithM_ match ts1 ts2
+  (t1, t2) ->
+    unless (t1 == t2)
+      $   errorDoc
+      $   "expected:"
+      <+> pPrint (typeOf a)
+      $+$ "actual:"
+      <+> pPrint (typeOf b)
+      $+$ parens (fsep [pPrint a, colon, pPrint b])
 
 lintExpr :: Expr Type (ID Type) -> ReaderT [ID Type] MalgoM Type
 lintExpr e@(Call f xs) = do
