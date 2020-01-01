@@ -104,19 +104,22 @@ genExpr (M.MakeArray init size) = do
   sizeVal <- coerceTo SizeT =<< findVar size
   ptr     <- arrayCreate (ltypeOf initVal) sizeVal
   zero    <- addInst $ Constant $ Int64 0
-  _       <- forLoop zero sizeVal $ \idx -> store ptr [idx] initVal
+  _       <- forLoop zero sizeVal $ \idx -> do
+    rawAddr <- loadC ptr [0, 0]
+    store rawAddr [idx] initVal
   pure ptr
 genExpr (M.ArrayRead arr idx) = do
   arrOpr <- findVar arr
+  arrRawOpr <- loadC arrOpr [0, 0]
   ixOpr  <- coerceTo SizeT =<< findVar idx
-  load arrOpr ixOpr
+  load arrRawOpr ixOpr
 genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   TyApp ArrayC [t] -> do
-    when (t /= typeOf val) $ logWarning $ "typeOf val /= " <> show t
     arrOpr <- findVar arr
+    arrRawOpr <- loadC arrOpr [0, 0]
     ixOpr  <- coerceTo SizeT =<< findVar idx
     valOpr <- coerceTo (convertType t) =<< findVar val
-    store arrOpr [ixOpr] valOpr
+    store arrRawOpr [ixOpr] valOpr
   _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)

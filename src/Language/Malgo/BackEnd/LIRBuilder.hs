@@ -140,7 +140,7 @@ convertType (TyApp BoolC   [] ) = Bit
 convertType (TyApp CharC   [] ) = U8
 convertType (TyApp StringC [] ) = Ptr U8
 convertType (TyApp TupleC  xs ) = Ptr $ Struct $ map convertType xs
-convertType (TyApp ArrayC  [x]) = Ptr $ convertType x
+convertType (TyApp ArrayC  [x]) = Ptr $ Struct [Ptr $ convertType x, SizeT]
 convertType TyMeta{}            = Ptr U8
 convertType t                   = error $ toText $ "unreachable(convertType): " <> pShow t
 
@@ -163,6 +163,7 @@ coerceTo (Ptr U8) x           = cast (Ptr U8) =<< case ltypeOf x of
   U32             -> zext U64 x
   U64             -> pure x
   F64             -> pure x
+  SizeT           -> pure x
   t               -> errorDoc $ "cannot convert" <+> pPrint t <+> "to boxed value"
 coerceTo (ClosurePtr r ps) x = do
   -- generate new captured environment
@@ -199,6 +200,7 @@ coerceTo (Ptr (Struct ts)) x = do
 coerceTo SizeT x = case ltypeOf x of
   I64 -> cast SizeT x
   U64 -> cast SizeT x
+  Ptr U8 -> cast SizeT x
   _   -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow SizeT
 coerceTo t x = case ltypeOf x of
   Ptr U8 -> case t of

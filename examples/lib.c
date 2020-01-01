@@ -148,12 +148,20 @@ Unit newline() {
   return unit;
 }
 
-bool* copy_bool_array(bool* arr, long size) {
+typedef struct {
+  bool* raw;
+  long size;
+} bool_array;
+
+bool_array* copy_bool_array(bool_array* arr, long size) {
   bool* cpy = (bool*) GC_malloc(sizeof(bool) * size);
+  bool_array* cpy_arr = (bool_array*) GC_malloc(sizeof(bool_array));
   for (int i = 0; i < size; i++) {
-    cpy[i] = arr[i];
+    cpy[i] = arr->raw[i];
   }
-  return cpy;
+  cpy_arr->raw = cpy;
+  cpy_arr->size = size;
+  return cpy_arr;
 }
 
 Unit malgo_sleep(long sec) {
@@ -161,16 +169,16 @@ Unit malgo_sleep(long sec) {
   return unit;
 }
 
-Unit pulsar(bool* cells) {
-  cells[11 * 50 + 23] = true;
-  cells[12 * 50 + 23] = true;
-  cells[13 * 50 + 23] = true;
+Unit pulsar(bool_array* cells) {
+  cells->raw[11 * 50 + 23] = true;
+  cells->raw[12 * 50 + 23] = true;
+  cells->raw[13 * 50 + 23] = true;
 
-  cells[12 * 50 + 25] = true;
+  cells->raw[12 * 50 + 25] = true;
 
-  cells[11 * 50 + 27] = true;
-  cells[12 * 50 + 27] = true;
-  cells[13 * 50 + 27] = true;
+  cells->raw[11 * 50 + 27] = true;
+  cells->raw[12 * 50 + 27] = true;
+  cells->raw[13 * 50 + 27] = true;
 
   return unit;
 }

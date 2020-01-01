@@ -147,7 +147,14 @@ genInst CallExt{}             = error "extern symbol must have a function type"
 genInst (ArrayCreate ty size) = do
   let ty' = convertType ty
   size' <- mul (sizeof ty') =<< findVar size
-  mallocBytes size' (Just ty')
+  raw   <- mallocBytes size' (Just ty')
+  arr   <- mallocBytes (sizeof $ StructureType False [LT.ptr ty', i64])
+                       (Just $ StructureType False [LT.ptr ty', i64])
+  arrRawAddr <- gep arr [int32 0, int32 0]
+  store arrRawAddr 0 raw
+  arrSizeAddr <- gep arr [int32 0, int32 1]
+  store arrSizeAddr 0 =<< findVar size
+  pure arr
 genInst (Alloca ty) = do
   let size = sizeof (convertType ty)
   mallocBytes size (Just $ convertType ty)
@@ -179,15 +186,17 @@ genInst (Cast ty x) = do
     (Ptr ty1, Ptr _) -> bitcast xOpr (ptr $ convertType ty1)
     (Ptr ty1, I64  ) -> inttoptr xOpr (ptr $ convertType ty1)
     (Ptr ty1, U64  ) -> inttoptr xOpr (ptr $ convertType ty1)
+    (Ptr ty1, SizeT) -> inttoptr xOpr (ptr $ convertType ty1)
     (Ptr ty1, F64  ) -> do
       p <- alloca LT.double Nothing 0
       store p 0 xOpr
       p' <- bitcast p (ptr i64)
       i  <- load p' 0
       inttoptr i (ptr $ convertType ty1)
-    (I64, Ptr{}) -> ptrtoint xOpr i64
-    (U64, Ptr{}) -> ptrtoint xOpr i64
-    (F64, Ptr{}) -> do
+    (I64  , Ptr{}) -> ptrtoint xOpr i64
+    (U64  , Ptr{}) -> ptrtoint xOpr i64
+    (SizeT, Ptr{}) -> ptrtoint xOpr i64
+    (F64  , Ptr{}) -> do
       i <- ptrtoint xOpr i64
       p <- alloca i64 Nothing 0
       store p 0 i
