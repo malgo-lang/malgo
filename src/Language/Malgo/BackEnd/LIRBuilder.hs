@@ -147,24 +147,25 @@ convertType t                   = error $ toText $ "unreachable(convertType): " 
 packClosure :: ID LType -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
 packClosure f capsId = do
   clsId <- alloca (Struct [ltypeOf f, Ptr U8])
-  _ <- storeC clsId [0, 0] f
-  _ <- storeC clsId [0, 1] capsId
+  _     <- storeC clsId [0, 0] f
+  _     <- storeC clsId [0, 1] capsId
   pure clsId
 
 coerceTo :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
 coerceTo t x | t == ltypeOf x = pure x
 coerceTo (Ptr U8) x           = cast (Ptr U8) =<< case ltypeOf x of
-  ClosurePtr _ ps -> coerceTo (ClosurePtr (Ptr U8) (replicate (length ps) (Ptr U8))) x
-  Ptr (Struct ts) -> coerceTo (Ptr (Struct (replicate (length ts) (Ptr U8)))) x
-  Ptr _           -> pure x
-  Bit             -> zext U64 x
-  I32             -> sext I64 x
-  I64             -> pure x
-  U32             -> zext U64 x
-  U64             -> pure x
-  F64             -> pure x
-  SizeT           -> pure x
-  t               -> errorDoc $ "cannot convert" <+> pPrint t <+> "to boxed value"
+  ClosurePtr _ ps             -> coerceTo (ClosurePtr (Ptr U8) (replicate (length ps) (Ptr U8))) x
+  Ptr (Struct [Ptr _, SizeT]) -> coerceTo (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
+  Ptr (Struct ts            ) -> coerceTo (Ptr (Struct (replicate (length ts) (Ptr U8)))) x
+  Ptr _                       -> pure x
+  Bit                         -> zext U64 x
+  I32                         -> sext I64 x
+  I64                         -> pure x
+  U32                         -> zext U64 x
+  U64                         -> pure x
+  F64                         -> pure x
+  SizeT                       -> pure x
+  t                           -> errorDoc $ "cannot convert" <+> pPrint t <+> "to boxed value"
 coerceTo (ClosurePtr r ps) x = do
   -- generate new captured environment
   -- f captures the original closure
@@ -186,6 +187,22 @@ coerceTo (ClosurePtr r ps) x = do
     coerceTo r retVal
   lift $ addFunc $ Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock }
   packClosure fName boxedX
+coerceTo (Ptr (Struct [Ptr t, SizeT])) x = do
+  x' <- case ltypeOf x of
+    Ptr U8 -> cast (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
+    Ptr (Struct [Ptr _, SizeT]) -> pure x
+    _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow
+      (Ptr (Struct [Ptr t, SizeT]))
+  xRaw      <- loadC x' [0, 0]
+  size      <- loadC x' [0, 1]
+  newArr    <- arrayCreate t size
+  newArrRaw <- loadC newArr [0, 0]
+  void $ storeC newArr [0, 1] size
+  zero <- addInst $ Constant $ Int64 0
+  void $ forLoop zero size $ \i -> do
+    val <- load xRaw i
+    store newArrRaw [i] =<< coerceTo t val
+  pure newArr
 coerceTo (Ptr (Struct ts)) x = do
   x' <- case ltypeOf x of
     Ptr U8 -> cast (Ptr (Struct $ replicate (length ts) (Ptr U8))) x
@@ -198,10 +215,10 @@ coerceTo (Ptr (Struct ts)) x = do
     storeC ptr [0, i] xElem'
   pure ptr
 coerceTo SizeT x = case ltypeOf x of
-  I64 -> cast SizeT x
-  U64 -> cast SizeT x
+  I64    -> cast SizeT x
+  U64    -> cast SizeT x
   Ptr U8 -> cast SizeT x
-  _   -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow SizeT
+  _      -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow SizeT
 coerceTo t x = case ltypeOf x of
   Ptr U8 -> case t of
     Ptr t1     -> cast (Ptr t1) x
