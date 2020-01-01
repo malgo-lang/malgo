@@ -153,14 +153,14 @@ typedef struct {
   long size;
 } bool_array;
 
-bool_array* copy_bool_array(bool_array* arr, long size) {
-  bool* cpy = (bool*) GC_malloc(sizeof(bool) * size);
+bool_array* copy_bool_array(bool_array* arr) {
+  bool* cpy = (bool*) GC_malloc(sizeof(bool) * arr->size);
   bool_array* cpy_arr = (bool_array*) GC_malloc(sizeof(bool_array));
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < arr->size; i++) {
     cpy[i] = arr->raw[i];
   }
   cpy_arr->raw = cpy;
-  cpy_arr->size = size;
+  cpy_arr->size = arr->size;
   return cpy_arr;
 }
 

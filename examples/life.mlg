@@ -5,7 +5,7 @@ extern newline : () -> {} = "newline"
 extern gen_seed: () -> {} = "gen_seed"
 extern rand_bool : () -> Bool = "rand_bool"
 extern sleep : Int -> {} = "malgo_sleep"
-extern copy_bool_array : ([Bool], Int) -> [Bool] = "copy_bool_array"
+extern copy_bool_array : [Bool] -> [Bool] = "copy_bool_array"
 extern pulsar : [Bool] -> {} = "pulsar"
 
 val x_width : Int = 50
@@ -59,7 +59,7 @@ fun next_state(cells: [Bool], x: Int, y: Int): Bool =
 
 fun update_cells(cells: [Bool]): {} =
   let
-    val copy: [Bool] = copy_bool_array(cells, x_width * y_width)
+    val copy: [Bool] = copy_bool_array(cells)
     fun go_y(y: Int): {} =
       let fun go_x(x: Int): {} =
         if x >= x_width
