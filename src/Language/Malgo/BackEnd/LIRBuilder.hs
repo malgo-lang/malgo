@@ -151,83 +151,85 @@ packClosure f capsId = do
   _     <- storeC clsId [0, 1] capsId
   pure clsId
 
-coerceTo :: HasCallStack => LType -> ID LType -> GenExpr (ID LType)
-coerceTo t x | t == ltypeOf x = pure x
-coerceTo (Ptr U8) x           = cast (Ptr U8) =<< case ltypeOf x of
-  ClosurePtr _ ps             -> coerceTo (ClosurePtr (Ptr U8) (replicate (length ps) (Ptr U8))) x
-  Ptr (Struct [Ptr _, SizeT]) -> coerceTo (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
-  Ptr (Struct ts            ) -> coerceTo (Ptr (Struct (replicate (length ts) (Ptr U8)))) x
-  Ptr _                       -> pure x
-  Bit                         -> zext U64 x
-  I32                         -> sext I64 x
-  I64                         -> pure x
-  U32                         -> zext U64 x
-  U64                         -> pure x
-  F64                         -> pure x
-  SizeT                       -> pure x
-  t                           -> errorDoc $ "cannot convert" <+> pPrint t <+> "to boxed value"
-coerceTo (ClosurePtr r ps) x = do
-  -- generate new captured environment
-  -- f captures the original closure
-  (boxedX, xps, unboxedXType) <- case ltypeOf x of
-    t@(ClosurePtr _ xs) -> (, xs, t) <$> cast (Ptr U8) x
-    Ptr U8 ->
-      pure (x, replicate (length ps) (Ptr U8), ClosurePtr (Ptr U8) (replicate (length ps) (Ptr U8)))
-    _ -> error $ toText $ pShow x <> " is not closure"
-  -- generate f
-  fName       <- newID (Function r (Ptr U8 : ps)) "fo"
-  fBoxedXName <- newID (Ptr U8) "x"
-  fParamNames <- mapM (`newID` "a") ps
-  bodyBlock   <- lift $ runGenExpr mempty $ do
-    fUnboxedX <- cast unboxedXType fBoxedXName
-    as        <- zipWithM coerceTo xps fParamNames
-    xFun      <- loadC fUnboxedX [0, 0]
-    xCap      <- loadC fUnboxedX [0, 1]
-    retVal    <- call xFun (xCap : as)
-    coerceTo r retVal
-  lift $ addFunc $ Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock }
-  packClosure fName boxedX
-coerceTo (Ptr (Struct [Ptr t, SizeT])) x = do
-  x' <- case ltypeOf x of
-    Ptr U8 -> cast (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
-    Ptr (Struct [Ptr _, SizeT]) -> pure x
-    _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow
-      (Ptr (Struct [Ptr t, SizeT]))
-  xRaw      <- loadC x' [0, 0]
-  size      <- loadC x' [0, 1]
-  newArr    <- arrayCreate t size
-  newArrRaw <- loadC newArr [0, 0]
-  void $ storeC newArr [0, 1] size
-  zero <- addInst $ Constant $ Int64 0
-  void $ forLoop zero size $ \i -> do
-    val <- load xRaw i
-    store newArrRaw [i] =<< coerceTo t val
-  pure newArr
-coerceTo (Ptr (Struct ts)) x = do
-  x' <- case ltypeOf x of
-    Ptr U8 -> cast (Ptr (Struct $ replicate (length ts) (Ptr U8))) x
-    Ptr (Struct _) -> pure x
-    _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
-  ptr <- alloca (Struct ts)
-  forM_ (zip [0 ..] ts) $ \(i, t) -> do
-    xElem  <- loadC x' [0, 0]
-    xElem' <- coerceTo t xElem
-    storeC ptr [0, i] xElem'
-  pure ptr
-coerceTo SizeT x = case ltypeOf x of
-  I64    -> cast SizeT x
-  U64    -> cast SizeT x
-  Ptr U8 -> cast SizeT x
-  _      -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow SizeT
-coerceTo t x = case ltypeOf x of
-  Ptr U8 -> case t of
-    Ptr t1     -> cast (Ptr t1) x
-    Bit        -> cast U64 x >>= trunc Bit
-    I32        -> cast I64 x >>= trunc I32
-    I64        -> cast I64 x
-    U8         -> cast U64 x >>= trunc U8
-    U32        -> cast U64 x >>= trunc U32
-    U64        -> cast U64 x
-    Function{} -> cast t x
-    _          -> error $ toText $ "cannot convert boxed value " <> pShow x <> "\n to " <> pShow t
-  _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow t
+coerceTo :: LType -> ID LType -> GenExpr (ID LType)
+coerceTo to x = case (to, ltypeOf x) of
+  (ty, xty) | ty == xty -> pure x
+  -- boxing closure
+  (Ptr U8, Ptr (Struct [Function _ (Ptr U8 : ps), Ptr U8])) ->
+    cast (Ptr U8)
+      =<< coerceTo
+            (Ptr (Struct [Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)), Ptr U8]))
+            x
+  -- boxing array
+  (Ptr U8, Ptr (Struct [Ptr _, SizeT])) ->
+    cast (Ptr U8) =<< coerceTo (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
+  (Ptr U8, Ptr (Struct ts)) ->
+    cast (Ptr U8) =<< coerceTo (Ptr (Struct (replicate (length ts) (Ptr U8)))) x
+  (Ptr U8, Ptr _) -> cast (Ptr U8) x
+  (Ptr U8, Bit  ) -> cast (Ptr U8) =<< zext U64 x
+  (Ptr U8, I32  ) -> cast (Ptr U8) =<< sext I64 x
+  (Ptr U8, I64  ) -> cast (Ptr U8) x
+  (Ptr U8, U32  ) -> cast (Ptr U8) =<< zext U64 x
+  (Ptr U8, U64  ) -> cast (Ptr U8) x
+  (Ptr U8, F64  ) -> cast (Ptr U8) x
+  (Ptr U8, SizeT) -> cast (Ptr U8) x
+  (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8]), xty) -> do
+    -- generate new captured environment
+    -- f captures the original closure
+    (boxedX, xps, unboxedXType) <- case xty of
+      ClosurePtr _ xs -> (, xs, xty) <$> cast (Ptr U8) x
+      Ptr U8          -> pure
+        (x, replicate (length ps) (Ptr U8), ClosurePtr (Ptr U8) (replicate (length ps) (Ptr U8)))
+      _ -> error $ toText $ pShow x <> " is not closure"
+    -- generate f
+    fName       <- newID (Function r (Ptr U8 : ps)) "fo"
+    fBoxedXName <- newID (Ptr U8) "x"
+    fParamNames <- mapM (`newID` "a") ps
+    bodyBlock   <- lift $ runGenExpr mempty $ do
+      fUnboxedX <- cast unboxedXType fBoxedXName
+      as        <- zipWithM coerceTo xps fParamNames
+      xFun      <- loadC fUnboxedX [0, 0]
+      xCap      <- loadC fUnboxedX [0, 1]
+      retVal    <- call xFun (xCap : as)
+      coerceTo r retVal
+    lift $ addFunc $ Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock }
+    packClosure fName boxedX
+  (Ptr (Struct [Ptr ty, SizeT]), xty) -> do
+    x' <- case xty of
+      Ptr U8 -> cast (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
+      Ptr (Struct [Ptr _, SizeT]) -> pure x
+      _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow
+        (Ptr (Struct [Ptr ty, SizeT]))
+    xRaw      <- loadC x' [0, 0]
+    size      <- loadC x' [0, 1]
+    newArr    <- arrayCreate ty size
+    newArrRaw <- loadC newArr [0, 0]
+    void $ storeC newArr [0, 1] size
+    zero <- addInst $ Constant $ Int64 0
+    void $ forLoop zero size $ \i -> do
+      val <- load xRaw i
+      store newArrRaw [i] =<< coerceTo ty val
+    pure newArr
+  (Ptr (Struct ts), xty) -> do
+    x' <- case xty of
+      Ptr U8 -> cast (Ptr (Struct $ replicate (length ts) (Ptr U8))) x
+      Ptr (Struct _) -> pure x
+      _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
+    ptr <- alloca (Struct ts)
+    forM_ (zip [0 ..] ts) $ \(i, ty) -> do
+      xElem  <- loadC x' [0, 0]
+      xElem' <- coerceTo ty xElem
+      storeC ptr [0, i] xElem'
+    pure ptr
+  (SizeT     , I64   ) -> cast SizeT x
+  (SizeT     , U64   ) -> cast SizeT x
+  (SizeT     , Ptr U8) -> cast SizeT x
+  (Ptr ty    , Ptr U8) -> cast (Ptr ty) x
+  (Bit       , Ptr U8) -> cast U64 x >>= trunc Bit
+  (I32       , Ptr U8) -> cast I64 x >>= trunc I32
+  (I64       , Ptr U8) -> cast I64 x
+  (U8        , Ptr U8) -> cast U64 x >>= trunc U8
+  (U32       , Ptr U8) -> cast U64 x >>= trunc U32
+  (U64       , Ptr U8) -> cast U64 x
+  (Function{}, Ptr U8) -> cast to x
+  (_         , _     ) -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow to
