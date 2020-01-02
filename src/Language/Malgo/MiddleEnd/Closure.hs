@@ -25,6 +25,7 @@ import           Language.Malgo.Prelude
 data Closure
 
 instance Pass Closure (H.Expr Type (ID Type)) (Program Type (ID Type)) where
+  passName = "Closure"
   isDump = dumpClosure
   trans e = evaluatingStateT [] $ usingReaderT (Env [] []) $ do
     e' <- transExpr e

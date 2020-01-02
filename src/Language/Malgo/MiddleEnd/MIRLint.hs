@@ -21,6 +21,7 @@ import           Language.Malgo.Prelude
 data MIRLint
 
 instance Pass MIRLint (Program Type (ID Type)) (Program Type (ID Type)) where
+  passName = "MIRLint"
   isDump _ = False
   trans e@(Program fs _) = usingReaderT (Env fs []) (lintProgram e) >> pure e
 

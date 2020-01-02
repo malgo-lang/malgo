@@ -27,6 +27,7 @@ import           Relude.Unsafe                  ( fromJust )
 data Typing
 
 instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
+  passName = "Typing"
   isDump = dumpTyped
   trans e = evaluatingStateT mempty $ do
     (cs, _) <- typingExpr e

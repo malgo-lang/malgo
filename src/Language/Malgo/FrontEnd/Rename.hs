@@ -22,6 +22,7 @@ import           Language.Malgo.Prelude
 data Rename
 
 instance Pass Rename (Expr Text) (Expr (ID ())) where
+  passName = "Rename"
   isDump = dumpRenamed
   trans s = runReaderT (renameExpr s) mempty
 

@@ -14,6 +14,7 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
 
 class Pass p s t | p -> s t where
+  passName :: Text
   isDump :: Opt -> Bool
   trans :: s -> MalgoM t
 
@@ -21,12 +22,14 @@ dump :: (MonadMalgo m, Show a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- liftMalgo $ asks maOption
   if isDebugMode opt
-    then logDebug $ "dump:\n" <> toText (pShow x)
-    else liftMalgo $ logInfo $ "dump:\n" <> show (pPrint x)
+    then liftMalgo $ logDebug $ toText (pShow x)
+    else liftMalgo $ logInfo $ show (pPrint x)
 
 transWithDump :: forall  p s t . (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do
   opt <- asks maOption
   t   <- trans @p s
-  when (isDump @p opt) $ dump t
+  when (isDump @p opt) $ do
+    liftMalgo $ logInfo $ "dump " <> passName @p
+    dump t
   return t

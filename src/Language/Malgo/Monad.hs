@@ -15,10 +15,10 @@ module Language.Malgo.Monad
   , Opt(..)
   , Colog.HasLog
   , Colog.Message
-  , logDebug
-  , logInfo
-  , logWarning
-  , logError
+  , Colog.logDebug
+  , Colog.logInfo
+  , Colog.logWarning
+  , Colog.logError
   , newUniq
   , getFileName
   )
@@ -45,7 +45,6 @@ data Opt = Opt
   , dumpTyped     :: Bool
   , dumpKNormal   :: Bool
   , dumpTypeTable :: Bool
-  , dumpMutRec    :: Bool
   , dumpClosure   :: Bool
   , dumpLIR       :: Bool
   , isDebugMode   :: Bool
@@ -88,18 +87,6 @@ instance MonadMalgo m => MonadMalgo (StateT s m) where
   liftMalgo = lift . liftMalgo
 instance MonadMalgo m => MonadMalgo (WriterT w m) where
   liftMalgo = lift . liftMalgo
-
-logDebug :: MonadMalgo m => Text -> m ()
-logDebug msg = liftMalgo $ Colog.logDebug msg
-
-logInfo :: MonadMalgo m => Text -> m ()
-logInfo msg = liftMalgo $ Colog.logInfo msg
-
-logWarning :: MonadMalgo m => Text -> m ()
-logWarning msg = liftMalgo $ Colog.logWarning msg
-
-logError :: MonadMalgo m => Text -> m ()
-logError msg = liftMalgo $ Colog.logWarning msg
 
 newUniq :: MonadMalgo m => m Int
 newUniq = liftMalgo $ do

@@ -36,6 +36,7 @@ import qualified LLVM.IRBuilder                as IRBuilder
 data GenLLVM
 
 instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
+  passName = "GenLLVM"
   isDump _ = False
   trans Program { functions, mainFunc } = dumpLLVM $ do
     let funMap = foldMap genFunMap functions

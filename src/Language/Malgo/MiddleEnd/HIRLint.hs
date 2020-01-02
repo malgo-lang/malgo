@@ -21,6 +21,7 @@ import           Language.Malgo.Prelude
 data HIRLint
 
 instance Pass HIRLint (Expr Type (ID Type)) (Expr Type (ID Type)) where
+  passName = "HIRLint"
   isDump _ = False
   trans e = usingReaderT [] (lintExpr e) >> pure e
 

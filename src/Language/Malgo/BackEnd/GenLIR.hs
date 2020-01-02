@@ -30,6 +30,7 @@ import           Language.Malgo.BackEnd.LIRBuilder
 data GenLIR
 
 instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
+  passName = "GenLIR"
   isDump = dumpLIR
   trans M.Program { functions, mainExpr } = do
     logDebug "Start GenLIR"

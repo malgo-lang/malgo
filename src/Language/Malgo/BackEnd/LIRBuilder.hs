@@ -53,13 +53,13 @@ findFun x = fromJust . lookup x <$> view functionMap
 
 addFunc :: Func (ID LType) -> GenProgram ()
 addFunc fun = do
-  logDebug $ fromString $ render $ "register: " $$ pPrint fun
+  liftMalgo $ logDebug $ fromString $ render $ "register: " $$ pPrint fun
   flip modifyIORef (fun :) =<< view functionListRef
 
 addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
   i <- newID (ltypeOf inst) "%"
-  logDebug $ toText $ renderStyle (style { mode = OneLineMode }) $ pPrint i <+> "=" <+> pPrint inst
+  liftMalgo $ logDebug $ toText $ renderStyle (style { mode = OneLineMode }) $ pPrint i <+> "=" <+> pPrint inst
   flip modifyIORef ((i, inst) :) =<< view partialBlockInsts
   pure i
 

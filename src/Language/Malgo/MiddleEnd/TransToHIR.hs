@@ -20,6 +20,7 @@ import           Language.Malgo.Prelude
 data TransToHIR
 
 instance Pass TransToHIR (S.Expr (ID Type)) (Expr Type (ID Type)) where
+  passName = "TransToHIR"
   isDump = dumpKNormal
   trans e = flattenExpr <$> transToHIR e
 
