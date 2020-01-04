@@ -22,8 +22,8 @@ dump :: (MonadMalgo m, Show a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- liftMalgo $ asks maOption
   if isDebugMode opt
-    then liftMalgo $ logDebug $ toText (pShow x)
-    else liftMalgo $ logInfo $ show (pPrint x)
+    then liftMalgo $ logDebug $ "\n" <> toText (pShow x)
+    else liftMalgo $ logInfo $ "\n" <> show (pPrint x)
 
 transWithDump :: forall  p s t . (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do
