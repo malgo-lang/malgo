@@ -7,7 +7,6 @@
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.HIR where
 
-import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
@@ -64,25 +63,6 @@ flattenExpr e                  = e
 flattenDef :: Def t a -> Def t a
 flattenDef Def { name, params, expr } =
   Def { name = name, params = params, expr = flattenExpr expr }
-
-instance FreeVars (Expr t) where
-  freevars (Var x)                 = one x
-  freevars Lit{}                   = mempty
-  freevars (Tuple xs             ) = fromList xs
-  freevars (TupleAccess x    _   ) = one x
-  freevars (MakeArray   init size) = fromList [init, size]
-  freevars (ArrayRead   x    y   ) = fromList [x, y]
-  freevars (ArrayWrite x y z     ) = fromList [x, y, z]
-  freevars (Call _ xs            ) = fromList xs
-  freevars (Let x v e            ) = freevars v <> delete x (freevars e)
-  freevars (LetRec xs e) =
-    let efv  = freevars e
-        xsfv = foldMap (\Def { params, expr } -> freevars expr \\ fromList params) xs
-        fs   = fromList $ map name xs
-    in  (efv <> xsfv) \\ fs
-  freevars (If    c t f ) = one c <> freevars t <> freevars f
-  freevars (Prim  _ _ xs) = fromList xs
-  freevars (BinOp _ x y ) = fromList [x, y]
 
 instance (HasType t, HasType a) => HasType (Expr t a) where
   typeOf (Var   x        ) = typeOf x

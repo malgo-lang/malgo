@@ -15,7 +15,6 @@ import           Data.Set                       ( intersection )
 import           Language.Malgo.ID
 import qualified Language.Malgo.IR.HIR         as H
 import           Language.Malgo.IR.MIR         as M
-import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
@@ -72,9 +71,10 @@ transExpr (H.BinOp op   x  y ) = pure $ BinOp op x y
 transExpr (H.LetRec defs e   ) = do
   envBackup <- get
   fv        <- getFreeVars
-  if fv == mempty && (freevars e `intersection` fromList funcNames) == mempty
+  e' <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, mutrecs = mempty }) (transExpr e)
+  if fv == mempty && (freevars e' `intersection` fromList funcNames) == mempty
     -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
-    then local (\env -> env { knowns = funcNames <> knowns env }) $ transExpr e
+    then pure e'
     else do
       -- 自由変数をcapturesに、相互再帰しうる関数名をmutrecsに入れてMIRに変換する
       put envBackup
@@ -102,3 +102,20 @@ transExpr (H.LetRec defs e   ) = do
     case captures of
       Nothing   -> pure mempty
       Just caps -> pure $ Endo $ Let name (MakeClosure name caps)
+
+freevars :: Ord a => Expr t a -> Set a
+freevars (Var x)                 = one x
+freevars Lit{}                   = mempty
+freevars (Tuple xs             ) = fromList xs
+freevars (TupleAccess x    _   ) = one x
+freevars (MakeArray   init size) = fromList [init, size]
+freevars (ArrayRead   x    y   ) = fromList [x, y]
+freevars (ArrayWrite x y z     ) = fromList [x, y, z]
+freevars (CallDirect       _ xs) = fromList xs
+freevars (CallWithCaptures _ xs) = fromList xs
+freevars (CallClosure      f xs) = fromList $ f : xs
+freevars (MakeClosure      _ xs) = fromList xs
+freevars (Let   n v e          ) = delete n (freevars v <> freevars e)
+freevars (If    c t f          ) = one c <> freevars t <> freevars f
+freevars (Prim  _ _ xs         ) = fromList xs
+freevars (BinOp _ x y          ) = fromList [x, y]

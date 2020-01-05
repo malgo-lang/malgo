@@ -10,7 +10,6 @@ module Language.Malgo.IR.MIR where
 import           Language.Malgo.IR.HIR          ( Lit(..)
                                                 , Op(..)
                                                 )
-import           Language.Malgo.MiddleEnd.FreeVars
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
@@ -70,23 +69,6 @@ flattenExpr e          = e
 
 flattenDef :: (a, [a], Expr t a) -> (a, [a], Expr t a)
 flattenDef (f, ps, e) = (f, ps, flattenExpr e)
-
-instance FreeVars (Expr t) where
-  freevars (Var x)                 = one x
-  freevars Lit{}                   = mempty
-  freevars (Tuple xs             ) = fromList xs
-  freevars (TupleAccess x    _   ) = one x
-  freevars (MakeArray   init size) = fromList [init, size]
-  freevars (ArrayRead   x    y   ) = fromList [x, y]
-  freevars (ArrayWrite x y z     ) = fromList [x, y, z]
-  freevars (CallDirect       _ xs) = fromList xs
-  freevars (CallWithCaptures _ xs) = fromList xs
-  freevars (CallClosure      f xs) = fromList $ f : xs
-  freevars (MakeClosure      _ xs) = fromList xs
-  freevars (Let   n v e          ) = delete n (freevars v <> freevars e)
-  freevars (If    c t f          ) = one c <> freevars t <> freevars f
-  freevars (Prim  _ _ xs         ) = fromList xs
-  freevars (BinOp _ x y          ) = fromList [x, y]
 
 instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (Var   x             ) = pPrint x
