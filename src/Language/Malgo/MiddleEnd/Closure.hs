@@ -25,7 +25,7 @@ data Closure
 
 instance Pass Closure (H.Expr Type (ID Type)) (Program Type (ID Type)) where
   passName = "Closure"
-  isDump = dumpClosure
+  isDump   = dumpClosure
   trans e = evaluatingStateT [] $ usingReaderT (Env [] []) $ do
     e' <- transExpr e
     fs <- get
@@ -70,8 +70,13 @@ transExpr (H.Prim  orig ty xs) = pure $ Prim orig ty xs
 transExpr (H.BinOp op   x  y ) = pure $ BinOp op x y
 transExpr (H.LetRec defs e   ) = do
   envBackup <- get
-  fv        <- getFreeVars
-  e' <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, mutrecs = mempty }) (transExpr e)
+  -- defsがすべてknownだと仮定してMIRに変換し、その自由変数を求める
+  e' <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, mutrecs = mempty }) $ do
+    mapM_ (transDef Nothing) defs
+    transExpr e
+  fv <- foldForM funcNames $ \f -> do
+    Func { params, body } <- getFunc f
+    pure $ freevars body \\ fromList params
   if fv == mempty && (freevars e' `intersection` fromList funcNames) == mempty
     -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
     then pure e'
@@ -82,14 +87,7 @@ transExpr (H.LetRec defs e   ) = do
         $ foldMapM (transDef $ Just $ toList $ fv \\ fromList funcNames) defs
       appEndo defs' <$> transExpr e
  where
-  funcNames   = map H.name defs
-  -- | defsがすべてknownだと仮定してMIRに変換し、その自由変数を求める
-  getFreeVars = do
-    _ <- local (\env -> (env :: Env) { knowns = funcNames <> knowns env, mutrecs = mempty })
-               (mapM_ (transDef Nothing) defs)
-    foldForM funcNames $ \f -> do
-      Func { params, body } <- getFunc f
-      pure $ freevars body \\ fromList params
+  funcNames = map H.name defs
   transDef captures H.Def { name, params, expr } = do
     expr'           <- transExpr expr
     Env { mutrecs } <- ask
