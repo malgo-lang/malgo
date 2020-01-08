@@ -88,7 +88,9 @@ transExpr (H.LetRec defs e   ) = do
                  (getFunc >=> \Func { params, body } -> pure $ freevars body \\ fromList params)
   if fv == mempty && (freevars e' `intersection` fromList funcNames) == mempty
     -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
-    then pure e'
+    then do
+      writeIORef functions =<< readIORef newRef
+      pure e'
     else do
       -- 自由変数をcapturesに、相互再帰しうる関数名をmutrecsに入れてMIRに変換する
       defs' <- local (\env -> (env :: Env) { mutrecs = funcNames })
