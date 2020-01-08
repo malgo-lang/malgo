@@ -64,11 +64,11 @@ transExpr (H.ArrayWrite arr ix val) = pure $ ArrayWrite arr ix val
 transExpr (H.Call f xs            ) = do
   Env { knowns, mutrecs } <- ask
   pure $ if
-    | -- 直接呼び出せる関数はCallDir
+    | -- 直接呼び出せる関数はCallDirect
       f `elem` knowns  -> CallDirect f xs
     | -- (相互)再帰している関数はCallWithCaptures
       f `elem` mutrecs -> CallWithCaptures f xs
-    | -- それ以外はCallCls
+    | -- それ以外はCallClosure
       otherwise        -> CallClosure f xs
 transExpr (H.Let   x    v  e ) = Let x <$> transExpr v <*> transExpr e
 transExpr (H.If    c    t  f ) = If c <$> transExpr t <*> transExpr f
