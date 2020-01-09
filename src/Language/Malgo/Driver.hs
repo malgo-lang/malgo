@@ -50,15 +50,15 @@ compile :: MonadIO m => String -> Syntax.Expr String -> UniqSupply -> Opt -> m L
 compile filename ast = M.runMalgo $ do
   opt <- asks maOption
   when (dumpParsed opt) $ dump ast
-  mir <-
+  llvmir <-
     transWithDump @Rename ast
     >>= transWithDump @Typing
     >>= transWithDump @TransToHIR
     >>= transWithDump @HIRLint
     >>= transWithDump @Closure
     >>= transWithDump @MIRLint
-  lir    <- transWithDump @GenLIR mir
-  llvmir <- trans @GenLLVM lir
+    >>= transWithDump @GenLIR
+    >>= trans @GenLLVM
   return $ L.defaultModule { L.moduleName           = fromString filename
                            , L.moduleSourceFileName = encodeUtf8 filename
                            , L.moduleDefinitions    = llvmir

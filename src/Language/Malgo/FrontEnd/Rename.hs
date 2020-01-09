@@ -80,7 +80,7 @@ renameExpr (Let info0 (FunDec fs) e) = withKnowns (map getName fs) $ do
 renameExpr (Let info0 (ExDec info1 name typ orig) e) =
   withKnowns [name]
     $   Let info0
-    <$> (ExDec info1 <$> (getID info1 name) <*> pure typ <*> pure orig)
+    <$> (ExDec info1 <$> getID info1 name <*> pure typ <*> pure orig)
     <*> renameExpr e
 renameExpr (If    info c  t f) = If info <$> renameExpr c <*> renameExpr t <*> renameExpr f
 renameExpr (BinOp info op x y) = BinOp info op <$> renameExpr x <*> renameExpr y
