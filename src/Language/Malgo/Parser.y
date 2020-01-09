@@ -106,7 +106,7 @@ fun_decl : fun id '(' ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) [] (
          | fun id '(' params ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) (Just $7) $9 }
          | fun id '(' params ')' '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) Nothing $7 }
 
-ext_decl : extern id ':' Type '=' str { E (_info $1) (_id . _tag $ $2) $4 (_str . _tag $ $6) }
+ext_decl : extern id ':' Type '=' str { E (_info $1) (_id . _tag $ $2) $4 (_str $ _tag $ $6) }
 
 decl : val_decl { $1 }
      | fun_decl { $1 }
@@ -189,7 +189,7 @@ parseError (t:_, xs) = error $ "Parse error: " <> show t <> " is got, but " <> s
 
 data D = V Info Text (Maybe Type) (Expr Text)
        | F Info Text [(Text, Maybe Type)] (Maybe Type) (Expr Text)
-       | E Info Text Type Text
+       | E Info Text Type String
 
 toLet :: Info -> [D] -> Expr Text -> Expr Text
 toLet _ [] = id

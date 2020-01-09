@@ -55,7 +55,7 @@ data Expr t a = Var a
               | CallClosure a [a] -- indirect call
               | Let a (Expr t a) (Expr t a)
               | If a (Expr t a) (Expr t a)
-              | Prim Text t [a]
+              | Prim String t [a]
               | BinOp Op a a
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 

@@ -24,7 +24,7 @@ data Expr a
   -- | シングルクォートで囲まれた一文字
   | Char Info Char
   -- | ダブルクォートで囲まれた文字列
-  | String Info Text
+  | String Info String
   -- | 空の値("()")
   | Unit Info
   -- | タプル
@@ -128,7 +128,7 @@ instance Pretty Op where
 data Decl a
   = FunDec [(Info, a, [(a, Maybe Type)], Maybe Type, Expr a)]
   | ValDec Info a (Maybe Type) (Expr a)
-  | ExDec Info a Type Text
+  | ExDec Info a Type String
   deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 instance Pretty a => Pretty (Decl a) where

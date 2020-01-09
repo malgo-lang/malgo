@@ -94,7 +94,7 @@ call f xs = case ltypeOf f of
     addInst $ Call f as
   _ -> error "function must be typed as function"
 
-callExt :: Text -> LType -> [ID LType] -> GenExpr (ID LType)
+callExt :: String -> LType -> [ID LType] -> GenExpr (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs

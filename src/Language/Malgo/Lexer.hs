@@ -65,7 +65,7 @@ data Tag
     | FLOAT { _float :: Double }
     | BOOL { _bool :: Bool }
     | CHAR { _char :: Char }
-    | STRING { _str :: Text }
+    | STRING { _str :: String }
     | TY_INT
     | TY_FLOAT
     | TY_BOOL
@@ -212,9 +212,9 @@ lexer = do
     <|> op info "<-" LARROW
     <|> fmap (\str -> Token (info, ID $ toText str)) identifier
     <|> try (fmap (\f -> Token (info, FLOAT f)) float)
-    <|> fmap (\n -> Token (info, INT n))             natural
-    <|> fmap (\c -> Token (info, CHAR c))            charLiteral
-    <|> fmap (\s -> Token (info, STRING (toText s))) stringLiteral
+    <|> fmap (\n -> Token (info, INT n))    natural
+    <|> fmap (\c -> Token (info, CHAR c))   charLiteral
+    <|> fmap (\s -> Token (info, STRING s)) stringLiteral
  where
   natural       = Tok.natural lexer'
   float         = Tok.float lexer'

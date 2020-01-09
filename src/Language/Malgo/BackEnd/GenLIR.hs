@@ -5,12 +5,10 @@
 {-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TypeApplications      #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
 
 import           Control.Lens
-import qualified Data.ByteString               as B
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR         as H
                                                 ( Lit(..)
@@ -90,7 +88,7 @@ genExpr (M.Lit (H.Bool True )) = addInst $ Constant $ L.Bool True
 genExpr (M.Lit (H.Bool False)) = addInst $ Constant $ L.Bool False
 genExpr (M.Lit (Char   x    )) = addInst $ Constant $ Word8 $ fromIntegral $ ord x
 genExpr (M.Lit (H.String xs)) =
-  addInst $ Constant $ L.String $ B.unpack $ encodeUtf8 @Text @ByteString xs
+  addInst $ Constant $ L.String xs
 genExpr (M.Tuple xs) = do
   tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs)
   forM_ (zip [0 ..] xs) $ \(i, x) -> do

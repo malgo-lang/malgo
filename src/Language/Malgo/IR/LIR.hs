@@ -53,7 +53,7 @@ instance HasLType a => HasLType (Block a) where
 
 data Inst a = Constant Constant
             | Call a [a]
-            | CallExt Text LType [a]
+            | CallExt String LType [a]
             | ArrayCreate LType -- ^ type of element
                           a -- ^ size
             | Alloca LType
@@ -126,7 +126,7 @@ data Constant = Bool Bool
               | Word32 Word32
               | Word64 Word64
               | Float64 Double
-              | String [Word8]
+              | String String
   deriving (Eq, Show, Read, Generic)
 
 instance Pretty Constant where

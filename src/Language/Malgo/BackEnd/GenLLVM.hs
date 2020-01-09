@@ -60,7 +60,7 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
             )
 
 data GenState = GenState { variableMap :: Map (ID LType) Operand
-                         , prims       :: IORef (Map Text Operand)
+                         , prims       :: IORef (Map String Operand)
                          }
 
 type GenExpr a = IRBuilderT GenDec a
@@ -92,7 +92,7 @@ findVar i = do
   pure $ lookupDefault (error $ show i <> " is not found in " <> show m) i m
 
 findExt :: (MonadReader GenState m, MonadIO m, MonadModuleBuilder m)
-        => Text
+        => String
         -> [Type]
         -> Type
         -> m Operand
@@ -102,7 +102,7 @@ findExt name ps r = do
   case lookup name psMap of
     Just opr -> pure opr
     Nothing  -> do
-      opr <- extern (LLVM.AST.mkName $ toString name) ps r
+      opr <- extern (LLVM.AST.mkName name) ps r
       modifyIORef prims (Map.insert name opr)
       pure opr
 
@@ -270,12 +270,9 @@ genConstant (Word8   x    ) = pure $ int8 $ toInteger x
 genConstant (Word32  x    ) = pure $ int32 $ toInteger x
 genConstant (Word64  x    ) = pure $ int64 $ toInteger x
 genConstant (Float64 x    ) = pure $ double x
-genConstant (String  bytes) = do
+genConstant (String str) = do
   n <- fresh
-  p <- global n
-              (ArrayType (fromIntegral $ length bytes + 1) i8)
-              (Array i8 $ map (Int 8 . toInteger) (bytes <> [0]))
-  bitcast p (ptr i8)
+  ConstantOperand <$> globalStringPtr str n
 
 genBinOp :: MonadIRBuilder m => IR.Op -> Operand -> Operand -> m Operand
 genBinOp ADD  = add

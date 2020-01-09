@@ -30,7 +30,7 @@ data Expr t a = Var a
               | Let a (Expr t a) (Expr t a)
               | LetRec [Def t a] (Expr t a)
               | If a (Expr t a) (Expr t a)
-              | Prim Text t [a]
+              | Prim String t [a]
               | BinOp Op a a
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
@@ -41,7 +41,7 @@ data Lit = Int Integer
          | Float Double
          | Bool Bool
          | Char Char
-         | String Text
+         | String String
   deriving (Eq, Show, Read, Generic)
 
 data Op = Add | Sub | Mul | Div | Mod
