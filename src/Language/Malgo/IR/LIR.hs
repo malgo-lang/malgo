@@ -110,13 +110,13 @@ instance (HasLType a, Show a) => HasLType (Inst a) where
   ltypeOf (Alloca t)     = Ptr t
   ltypeOf (LoadC x is)   = accessType (ltypeOf x) is
   ltypeOf (Load (ltypeOf -> Ptr t) _) = t
-  ltypeOf StoreC{}       = Ptr (Struct [])
-  ltypeOf Store{}        = Ptr (Struct [])
+  ltypeOf StoreC{}       = Void
+  ltypeOf Store{}        = Void
   ltypeOf (Cast t _    ) = t
   ltypeOf (Undef t     ) = t
   ltypeOf (BinOp op x _) = ltypeOfOp op (ltypeOf x)
   ltypeOf (If    _  x _) = ltypeOf x
-  ltypeOf For{}          = Ptr (Struct [])
+  ltypeOf For{}          = Void
   ltypeOf t              = error $ toText $ "unreachable(ltypeOf) " <> pShow t
 
 data Constant = Bool Bool

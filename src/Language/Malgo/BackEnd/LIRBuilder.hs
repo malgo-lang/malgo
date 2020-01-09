@@ -59,7 +59,13 @@ addFunc fun = do
 addInst :: Inst (ID LType) -> GenExpr (ID LType)
 addInst inst = do
   i <- newID (ltypeOf inst) "%"
-  liftMalgo $ logDebug $ toText $ renderStyle (style { mode = OneLineMode }) $ pPrint i <+> "=" <+> pPrint inst
+  liftMalgo
+    $   logDebug
+    $   toText
+    $   renderStyle (style { mode = OneLineMode })
+    $   pPrint i
+    <+> "="
+    <+> pPrint inst
   flip modifyIORef ((i, inst) :) =<< view partialBlockInsts
   pure i
 
@@ -132,17 +138,16 @@ forLoop from to k = do
   addInst $ For index from to (Block block val)
 
 convertType :: HasCallStack => Type -> LType
-convertType (TyApp FunC (r : ps)) =
-  Ptr $ Struct [Function (convertType r) (Ptr U8 : map convertType ps), Ptr U8]
-convertType (TyApp IntC    [] ) = I64
-convertType (TyApp FloatC  [] ) = F64
-convertType (TyApp BoolC   [] ) = Bit
-convertType (TyApp CharC   [] ) = U8
-convertType (TyApp StringC [] ) = Ptr U8
-convertType (TyApp TupleC  xs ) = Ptr $ Struct $ map convertType xs
-convertType (TyApp ArrayC  [x]) = Ptr $ Struct [Ptr $ convertType x, SizeT]
-convertType TyMeta{}            = Ptr U8
-convertType t                   = error $ toText $ "unreachable(convertType): " <> pShow t
+convertType (TyApp FunC    (r : ps)) = ClosurePtr (convertType r) (map convertType ps)
+convertType (TyApp IntC    []      ) = I64
+convertType (TyApp FloatC  []      ) = F64
+convertType (TyApp BoolC   []      ) = Bit
+convertType (TyApp CharC   []      ) = U8
+convertType (TyApp StringC []      ) = Ptr U8
+convertType (TyApp TupleC  xs      ) = Ptr $ Struct $ map convertType xs
+convertType (TyApp ArrayC  [x]     ) = Ptr $ Struct [Ptr $ convertType x, SizeT]
+convertType TyMeta{}                 = Ptr U8
+convertType t                        = error $ toText $ "unreachable(convertType): " <> pShow t
 
 packClosure :: ID LType -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
 packClosure f capsId = do
@@ -155,25 +160,22 @@ coerceTo :: LType -> ID LType -> GenExpr (ID LType)
 coerceTo to x = case (to, ltypeOf x) of
   (ty, xty) | ty == xty -> pure x
   -- boxing closure
-  (Ptr U8, Ptr (Struct [Function _ (Ptr U8 : ps), Ptr U8])) ->
-    cast (Ptr U8)
-      =<< coerceTo
-            (Ptr (Struct [Function (Ptr U8) (Ptr U8 : replicate (length ps) (Ptr U8)), Ptr U8]))
-            x
+  (Ptr U8, ClosurePtr _ ps) ->
+    cast (Ptr U8) =<< coerceTo (ClosurePtr (Ptr U8) (replicate (length ps) (Ptr U8))) x
   -- boxing array
   (Ptr U8, Ptr (Struct [Ptr _, SizeT])) ->
     cast (Ptr U8) =<< coerceTo (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
   (Ptr U8, Ptr (Struct ts)) ->
     cast (Ptr U8) =<< coerceTo (Ptr (Struct (replicate (length ts) (Ptr U8)))) x
-  (Ptr U8, Ptr _) -> cast (Ptr U8) x
-  (Ptr U8, Bit  ) -> cast (Ptr U8) =<< zext U64 x
-  (Ptr U8, I32  ) -> cast (Ptr U8) =<< sext I64 x
-  (Ptr U8, I64  ) -> cast (Ptr U8) x
-  (Ptr U8, U32  ) -> cast (Ptr U8) =<< zext U64 x
-  (Ptr U8, U64  ) -> cast (Ptr U8) x
-  (Ptr U8, F64  ) -> cast (Ptr U8) x
-  (Ptr U8, SizeT) -> cast (Ptr U8) x
-  (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8]), xty) -> do
+  (Ptr U8         , Ptr _) -> cast (Ptr U8) x
+  (Ptr U8         , Bit  ) -> cast (Ptr U8) =<< zext U64 x
+  (Ptr U8         , I32  ) -> cast (Ptr U8) =<< sext I64 x
+  (Ptr U8         , I64  ) -> cast (Ptr U8) x
+  (Ptr U8         , U32  ) -> cast (Ptr U8) =<< zext U64 x
+  (Ptr U8         , U64  ) -> cast (Ptr U8) x
+  (Ptr U8         , F64  ) -> cast (Ptr U8) x
+  (Ptr U8         , SizeT) -> cast (Ptr U8) x
+  (ClosurePtr r ps, xty  ) -> do
     -- generate new captured environment
     -- f captures the original closure
     (boxedX, xps, unboxedXType) <- case xty of

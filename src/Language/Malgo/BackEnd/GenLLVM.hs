@@ -173,14 +173,14 @@ genInst (StoreC x is val) = do
   valOpr  <- findVar val
   valAddr <- gep xOpr (map (int32 . toInteger) is)
   store valAddr 0 valOpr
-  unit
+  pure $ ConstantOperand $ C.Undef LT.VoidType
 genInst (Store x is val) = do
   xOpr    <- findVar x
   iOprs   <- mapM findVar is
   valOpr  <- findVar val
   valAddr <- gep xOpr iOprs
   store valAddr 0 valOpr
-  unit
+  pure $ ConstantOperand $ C.Undef LT.VoidType
 genInst (Cast ty x) = do
   xOpr <- findVar x
   case (ty, ltypeOf x) of
@@ -259,12 +259,7 @@ genInst (For index from to body) = do
 
   -- end: }
   emitBlockStart endLabel
-  unit
-
-unit :: IRBuilderT GenDec Operand
-unit =
-  flip bitcast (ptr $ StructureType False [])
-    =<< mallocBytes (sizeof (StructureType False [])) Nothing
+  pure $ ConstantOperand $ C.Undef LT.VoidType
 
 genConstant :: IR.Constant -> GenExpr Operand
 genConstant (Bool    True ) = pure $ bit 1

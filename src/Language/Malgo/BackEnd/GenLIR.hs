@@ -120,7 +120,8 @@ genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
     arrRawOpr <- loadC arrOpr [0, 0]
     ixOpr  <- coerceTo SizeT =<< findVar idx
     valOpr <- coerceTo (convertType t) =<< findVar val
-    store arrRawOpr [ixOpr] valOpr
+    _ <- store arrRawOpr [ixOpr] valOpr
+    undef (Ptr (Struct []))
   _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)
