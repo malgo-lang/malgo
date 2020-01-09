@@ -46,7 +46,7 @@ parseOpt = execParser $ info
   )
   (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
 
-compile :: MonadIO m => String -> Syntax.Expr Text -> UniqSupply -> Opt -> m L.Module
+compile :: MonadIO m => String -> Syntax.Expr String -> UniqSupply -> Opt -> m L.Module
 compile filename ast = M.runMalgo $ do
   opt <- asks maOption
   when (dumpParsed opt) $ dump ast

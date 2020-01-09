@@ -115,7 +115,7 @@ mallocBytes bytesOpr maybeType = do
     Nothing -> pure ptrOpr
 
 genFuncName :: ID a -> LLVM.AST.Name
-genFuncName ID { idName, idUniq } = LLVM.AST.mkName $ toString $ idName <> show idUniq
+genFuncName ID { idName, idUniq } = LLVM.AST.mkName $ idName <> show idUniq
 
 genFunction :: Func (ID LType) -> GenDec ()
 genFunction Func { name, params, body } = void $ function funcName llvmParams retty $ \args ->
@@ -270,7 +270,7 @@ genConstant (Word8   x    ) = pure $ int8 $ toInteger x
 genConstant (Word32  x    ) = pure $ int32 $ toInteger x
 genConstant (Word64  x    ) = pure $ int64 $ toInteger x
 genConstant (Float64 x    ) = pure $ double x
-genConstant (String str) = do
+genConstant (String  str  ) = do
   n <- fresh
   ConstantOperand <$> globalStringPtr str n
 

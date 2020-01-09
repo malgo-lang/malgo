@@ -21,26 +21,26 @@ import           Language.Malgo.Prelude
 
 data Rename
 
-instance Pass Rename (Expr Text) (Expr (ID ())) where
+instance Pass Rename (Expr String) (Expr (ID ())) where
   passName = "Rename"
   isDump = dumpRenamed
   trans s = runReaderT (renameExpr s) mempty
 
-type RenameM a = ReaderT (Map Text (ID ())) MalgoM a
+type RenameM a = ReaderT (Map String (ID ())) MalgoM a
 
-withKnowns :: (MonadMalgo m, MonadReader (Map Text (ID ())) m) => [Text] -> m b -> m b
+withKnowns :: (MonadMalgo m, MonadReader (Map String (ID ())) m) => [String] -> m b -> m b
 withKnowns ks m = do
   vs <- mapM (newID ()) ks
   local (fromList (zip ks vs) <>) m
 
-getID :: Info -> Text -> RenameM (ID ())
+getID :: Info -> String -> RenameM (ID ())
 getID info name = do
   k <- ask
   case lookup name k of
     Just x  -> return x
     Nothing -> errorDoc $ "error(rename):" <+> pPrint info <+> pPrint name <+> "is not defined"
 
-renameExpr :: Expr Text -> RenameM (Expr (ID ()))
+renameExpr :: Expr String -> RenameM (Expr (ID ()))
 renameExpr (Var    info name          ) = Var info <$> getID info name
 renameExpr (Int    info x             ) = return $ Int info x
 renameExpr (Float  info x             ) = return $ Float info x

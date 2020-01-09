@@ -187,11 +187,11 @@ parseError :: ([Token], [String]) -> a
 parseError ([], xs) = error $ "Parse error at EOF: " <> show xs <> " are expected."
 parseError (t:_, xs) = error $ "Parse error: " <> show t <> " is got, but " <> show xs <> " are expected."
 
-data D = V Info Text (Maybe Type) (Expr Text)
-       | F Info Text [(Text, Maybe Type)] (Maybe Type) (Expr Text)
-       | E Info Text Type String
+data D = V Info String (Maybe Type) (Expr String)
+       | F Info String [(String, Maybe Type)] (Maybe Type) (Expr String)
+       | E Info String Type String
 
-toLet :: Info -> [D] -> Expr Text -> Expr Text
+toLet :: Info -> [D] -> Expr String -> Expr String
 toLet _ [] = id
 toLet li (V i n t e : xs) = Let li (ValDec i n t e) . toLet li xs
 toLet li xs@(F{} : _) =

@@ -24,7 +24,7 @@ instance Pass TransToHIR (S.Expr (ID Type)) (Expr Type (ID Type)) where
   isDump = dumpKNormal
   trans e = flattenExpr <$> transToHIR e
 
-newTmp :: MonadMalgo f => Text -> a -> f (ID a)
+newTmp :: MonadMalgo f => String -> a -> f (ID a)
 newTmp n t = newID t ("$" <> n)
 
 insertLet :: MonadMalgo m => S.Expr (ID Type) -> WriterT (Endo (Expr Type (ID Type))) m (ID Type)

@@ -30,7 +30,7 @@ import           Language.Malgo.Prelude  hiding ( delete
                                                 )
 import           Relude.Extra.Map
 
-data ID a = ID { idName :: Text, idUniq :: Int, idMeta :: a }
+data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }
   deriving (Show, Ord, Read, Functor, Foldable, Generic)
 
 instance Eq (ID a) where
@@ -42,7 +42,7 @@ instance Pretty a => Pretty (ID a) where
 instance HasType a => HasType (ID a) where
   typeOf ID { idMeta } = typeOf idMeta
 
-newID :: MonadMalgo f => a -> Text -> f (ID a)
+newID :: MonadMalgo f => a -> String -> f (ID a)
 newID m n = ID n <$> newUniq <*> pure m
 
 newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }

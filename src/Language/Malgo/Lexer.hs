@@ -60,7 +60,7 @@ data Tag
     | OR
     | ARRAY
     | LARROW
-    | ID { _id :: Text }
+    | ID { _id :: String }
     | INT { _int :: Integer }
     | FLOAT { _float :: Double }
     | BOOL { _bool :: Bool }
@@ -210,7 +210,7 @@ lexer = do
     <|> op info "||" OR
     <|> op info "->" ARROW
     <|> op info "<-" LARROW
-    <|> fmap (\str -> Token (info, ID $ toText str)) identifier
+    <|> fmap (\str -> Token (info, ID str)) identifier
     <|> try (fmap (\f -> Token (info, FLOAT f)) float)
     <|> fmap (\n -> Token (info, INT n))    natural
     <|> fmap (\c -> Token (info, CHAR c))   charLiteral
