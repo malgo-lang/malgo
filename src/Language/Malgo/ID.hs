@@ -30,12 +30,13 @@ import           Language.Malgo.Prelude  hiding ( delete
                                                 , toList
                                                 )
 import           Relude.Extra.Map
+import           Numeric (showHex)
 
 data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }
   deriving (Show, Eq, Ord, Read, Functor, Foldable, Generic)
 
 instance Pretty a => Pretty (ID a) where
-  pPrint (ID n u _) = text n <> "." <> pPrint u
+  pPrint (ID n u _) = text n <> "." <> text (showHex u "")
 
 instance HasType a => HasType (ID a) where
   typeOf ID { idMeta } = typeOf idMeta

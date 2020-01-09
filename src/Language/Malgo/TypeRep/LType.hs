@@ -28,7 +28,7 @@ pattern ClosurePtr :: LType -> [LType] -> LType
 pattern ClosurePtr r ps = Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])
 
 instance Pretty LType where
-  pPrint (Ptr    t ) = "ptr" <> parens (pPrint t)
+  pPrint (Ptr    t ) = pPrint t <> "*"
   pPrint (Struct xs) = braces (sep $ punctuate "," $ map pPrint xs)
   pPrint (Function ret params) =
     parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
