@@ -131,7 +131,7 @@ branchIf c genWhenTrue genWhenFalse = do
 
 forLoop :: ID LType -> ID LType -> (ID LType -> GenExpr (ID LType)) -> GenExpr (ID LType)
 forLoop from to k = do
-  index    <- newID I64 "i"
+  index    <- newID I64 "$i"
   blockRef <- newIORef []
   val      <- local (set partialBlockInsts blockRef) (k index)
   block    <- reverse <$> readIORef blockRef
@@ -184,9 +184,9 @@ coerceTo to x = case (to, ltypeOf x) of
         (x, replicate (length ps) (Ptr U8), ClosurePtr (Ptr U8) (replicate (length ps) (Ptr U8)))
       _ -> error $ toText $ pShow x <> " is not closure"
     -- generate f
-    fName       <- newID (Function r (Ptr U8 : ps)) "fo"
-    fBoxedXName <- newID (Ptr U8) "x"
-    fParamNames <- mapM (`newID` "a") ps
+    fName       <- newID (Function r (Ptr U8 : ps)) "$fo"
+    fBoxedXName <- newID (Ptr U8) "$x"
+    fParamNames <- mapM (`newID` "$a") ps
     bodyBlock   <- lift $ runGenExpr mempty $ do
       fUnboxedX <- cast unboxedXType fBoxedXName
       as        <- zipWithM coerceTo xps fParamNames

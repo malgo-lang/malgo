@@ -56,7 +56,7 @@ genFunction M.Func { name, captures = Nothing, params, body } = do
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName   <- findFun name
-  capsId     <- newID (Ptr U8) "caps"
+  capsId     <- newID (Ptr U8) "$caps"
   let funcParams = map (\x -> updateID x (convertType (typeOf x))) params
   bodyBlock  <- runGenExpr (fromList (zip params funcParams)) $ do
     capsMap <- genUnpackCaps capsId
