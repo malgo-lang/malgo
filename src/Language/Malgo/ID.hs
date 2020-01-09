@@ -15,6 +15,7 @@
 module Language.Malgo.ID
   ( ID(..)
   , newID
+  , updateID
   , IDMap(..)
   )
 where
@@ -31,19 +32,19 @@ import           Language.Malgo.Prelude  hiding ( delete
 import           Relude.Extra.Map
 
 data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }
-  deriving (Show, Ord, Read, Functor, Foldable, Generic)
-
-instance Eq (ID a) where
-  x == y = idUniq x == idUniq y
+  deriving (Show, Eq, Ord, Read, Functor, Foldable, Generic)
 
 instance Pretty a => Pretty (ID a) where
-  pPrint (ID n u _) = pPrint n <> "." <> pPrint u
+  pPrint (ID n u _) = text n <> "." <> pPrint u
 
 instance HasType a => HasType (ID a) where
   typeOf ID { idMeta } = typeOf idMeta
 
 newID :: MonadMalgo f => a -> String -> f (ID a)
 newID m n = ID n <$> newUniq <*> pure m
+
+updateID :: ID a -> b -> ID b
+updateID i m = i { idMeta = m }
 
 newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
   deriving stock (Eq, Ord, Read, Show, Functor, Foldable, Traversable, Generic, Data)

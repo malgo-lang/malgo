@@ -75,9 +75,7 @@ letVar info env var ty cs = do
   modify (apply subst)
 
 defineVar :: HasCallStack => ID () -> Type -> InferM ()
-defineVar x t = do
-  x' <- newID t (idName x)
-  modify (insert x x')
+defineVar x t = modify (insert x $ x { idMeta = t })
 
 lookupVar :: ID () -> InferM Type
 lookupVar x = typeOf . fromJust . lookup x <$> get

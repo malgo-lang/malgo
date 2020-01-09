@@ -40,7 +40,7 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
     genFunMap M.Func { name, captures, params, body } = do
       let ps = map typeOf params
           r  = typeOf body
-      newName <- newID (functionType (isNothing captures) ps r) (idName name)
+      let newName = updateID name (functionType (isNothing captures) ps r)
       pure $ one (name, newName)
     functionType isKnown ps r
       | isKnown   = Function (convertType $ typeOf r) (map (convertType . typeOf) ps)
@@ -51,13 +51,13 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
 genFunction :: M.Func Type (ID Type) -> GenProgram (L.Func (ID LType))
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName   <- findFun name
-  funcParams <- forM params $ \ID { idName, idMeta } -> newID (convertType idMeta) idName
+  let funcParams = map (\p@ID{ idMeta } -> updateID p (convertType idMeta)) params
   bodyBlock  <- runGenExpr (fromList (zip params funcParams)) (genExpr body)
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName   <- findFun name
   capsId     <- newID (Ptr U8) "caps"
-  funcParams <- mapM (\x -> newID (convertType (typeOf x)) (idName x)) params
+  let funcParams = map (\x -> updateID x (convertType (typeOf x))) params
   bodyBlock  <- runGenExpr (fromList (zip params funcParams)) $ do
     capsMap <- genUnpackCaps capsId
     clsMap  <- genCls capsId
