@@ -1,7 +1,7 @@
 ; ModuleID = './examples/test.mlg'
 source_filename = "./examples/test.mlg"
 
-define i64 @answer4() {
+define i64 @answer0() {
   ret i64 42
 }
 

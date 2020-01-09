@@ -1,17 +1,15 @@
 ; ModuleID = './examples/polytuple.mlg'
 source_filename = "./examples/polytuple.mlg"
 
-declare i8* @GC_malloc(i64)
-
-define {}* @f21({ i8**, i64 }*, i8*) {
+define {}* @f0({ i8**, i64 }*, i8*) {
   %3 = getelementptr { i8**, i64 }, { i8**, i64 }* %0, i32 0, i32 0
   %4 = load i8**, i8*** %3
   %5 = getelementptr i8*, i8** %4, i64 0
   store i8* %1, i8** %5
-  %6 = call i8* @GC_malloc(i64 0)
-  %7 = bitcast i8* %6 to {}*
-  ret {}* %7
+  ret {}* undef
 }
+
+declare i8* @GC_malloc(i64)
 
 define i32 @main() {
   %1 = mul i64 ptrtoint (i64* getelementptr inbounds (i64, i64* null, i32 1) to i64), 10
@@ -37,61 +35,51 @@ body_0:                                           ; preds = %cond_0
   %12 = load i64*, i64** %11
   %13 = getelementptr i64, i64* %12, i64 %9
   store i64 1, i64* %13
-  %14 = call i8* @GC_malloc(i64 0)
-  %15 = bitcast i8* %14 to {}*
-  %16 = add i64 %9, 1
-  store i64 %16, i64* %8
+  %14 = add i64 %9, 1
+  store i64 %14, i64* %8
   br label %cond_0
 
 end_0:                                            ; preds = %cond_0
-  %17 = call i8* @GC_malloc(i64 0)
-  %18 = bitcast i8* %17 to {}*
-  %19 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 0
-  %20 = load i64*, i64** %19
-  %21 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 1
-  %22 = load i64, i64* %21
-  %23 = mul i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), %22
-  %24 = call i8* @GC_malloc(i64 %23)
-  %25 = bitcast i8* %24 to i8**
-  %26 = call i8* @GC_malloc(i64 ptrtoint ({ i8**, i64 }* getelementptr inbounds ({ i8**, i64 }, { i8**, i64 }* null, i32 1) to i64))
-  %27 = bitcast i8* %26 to { i8**, i64 }*
-  %28 = getelementptr { i8**, i64 }, { i8**, i64 }* %27, i32 0, i32 0
-  store i8** %25, i8*** %28
-  %29 = getelementptr { i8**, i64 }, { i8**, i64 }* %27, i32 0, i32 1
-  store i64 %22, i64* %29
-  %30 = getelementptr { i8**, i64 }, { i8**, i64 }* %27, i32 0, i32 0
-  %31 = load i8**, i8*** %30
-  %32 = getelementptr { i8**, i64 }, { i8**, i64 }* %27, i32 0, i32 1
-  store i64 %22, i64* %32
-  %33 = call i8* @GC_malloc(i64 0)
-  %34 = bitcast i8* %33 to {}*
-  %35 = alloca i64
-  store i64 0, i64* %35
+  %15 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 0
+  %16 = load i64*, i64** %15
+  %17 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 1
+  %18 = load i64, i64* %17
+  %19 = mul i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), %18
+  %20 = call i8* @GC_malloc(i64 %19)
+  %21 = bitcast i8* %20 to i8**
+  %22 = call i8* @GC_malloc(i64 ptrtoint ({ i8**, i64 }* getelementptr inbounds ({ i8**, i64 }, { i8**, i64 }* null, i32 1) to i64))
+  %23 = bitcast i8* %22 to { i8**, i64 }*
+  %24 = getelementptr { i8**, i64 }, { i8**, i64 }* %23, i32 0, i32 0
+  store i8** %21, i8*** %24
+  %25 = getelementptr { i8**, i64 }, { i8**, i64 }* %23, i32 0, i32 1
+  store i64 %18, i64* %25
+  %26 = getelementptr { i8**, i64 }, { i8**, i64 }* %23, i32 0, i32 0
+  %27 = load i8**, i8*** %26
+  %28 = getelementptr { i8**, i64 }, { i8**, i64 }* %23, i32 0, i32 1
+  store i64 %18, i64* %28
+  %29 = alloca i64
+  store i64 0, i64* %29
   br label %cond_1
 
 cond_1:                                           ; preds = %body_1, %end_0
-  %36 = load i64, i64* %35
-  %37 = icmp slt i64 %36, %22
-  br i1 %37, label %body_1, label %end_1
+  %30 = load i64, i64* %29
+  %31 = icmp slt i64 %30, %18
+  br i1 %31, label %body_1, label %end_1
 
 body_1:                                           ; preds = %cond_1
-  %38 = getelementptr i64, i64* %20, i64 %36
-  %39 = load i64, i64* %38
-  %40 = inttoptr i64 %39 to i8*
-  %41 = getelementptr i8*, i8** %31, i64 %36
-  store i8* %40, i8** %41
-  %42 = call i8* @GC_malloc(i64 0)
-  %43 = bitcast i8* %42 to {}*
-  %44 = add i64 %36, 1
-  store i64 %44, i64* %35
+  %32 = getelementptr i64, i64* %16, i64 %30
+  %33 = load i64, i64* %32
+  %34 = inttoptr i64 %33 to i8*
+  %35 = getelementptr i8*, i8** %27, i64 %30
+  store i8* %34, i8** %35
+  %36 = add i64 %30, 1
+  store i64 %36, i64* %29
   br label %cond_1
 
 end_1:                                            ; preds = %cond_1
-  %45 = call i8* @GC_malloc(i64 0)
-  %46 = bitcast i8* %45 to {}*
-  %47 = inttoptr i64 10 to i8*
-  %48 = call {}* @f21({ i8**, i64 }* %27, i8* %47)
-  %49 = call i8* @GC_malloc(i64 0)
-  %50 = bitcast i8* %49 to {}*
+  %37 = inttoptr i64 10 to i8*
+  %38 = call {}* @f0({ i8**, i64 }* %23, i8* %37)
+  %39 = call i8* @GC_malloc(i64 0)
+  %40 = bitcast i8* %39 to {}*
   ret i32 0
 }

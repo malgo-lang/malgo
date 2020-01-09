@@ -5,38 +5,38 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i64 @add_i64(i64, i64) local_unnamed_addr
 
-define i64 @f14(i64, i64) local_unnamed_addr {
+define i64 @f0(i64, i64) local_unnamed_addr {
   %3 = tail call i64 @add_i64(i64 %0, i64 %1)
   ret i64 %3
 }
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i64 @"$lambda13"(i8*, i64) {
+define i64 @"$lambda7"(i8*, i64) {
   %3 = tail call i8* @GC_malloc(i64 16)
   %4 = bitcast i8* %3 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda13", i64 (i8*, i64)** %4, align 8
-  %5 = tail call i8* @GC_malloc(i64 0)
-  %6 = getelementptr i8, i8* %3, i64 8
-  %7 = bitcast i8* %6 to i8**
-  store i8* %0, i8** %7, align 8
-  %8 = tail call i8* @GC_malloc(i64 0)
-  %9 = tail call i64 @add_i64(i64 10, i64 %1)
-  ret i64 %9
+  store i64 (i8*, i64)* @"$lambda7", i64 (i8*, i64)** %4, align 8
+  %5 = getelementptr i8, i8* %3, i64 8
+  %6 = bitcast i8* %5 to i8**
+  store i8* %0, i8** %6, align 8
+  %7 = tail call i64 @add_i64(i64 10, i64 %1)
+  ret i64 %7
 }
 
 define i32 @main() local_unnamed_addr {
   %1 = tail call i8* @GC_malloc(i64 0)
   %2 = tail call i8* @GC_malloc(i64 16)
   %3 = bitcast i8* %2 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda13", i64 (i8*, i64)** %3, align 8
-  %4 = tail call i8* @GC_malloc(i64 0)
-  %5 = getelementptr i8, i8* %2, i64 8
-  %6 = bitcast i8* %5 to i8**
-  store i8* %1, i8** %6, align 8
-  %7 = tail call i8* @GC_malloc(i64 0)
-  %8 = load i64 (i8*, i64)*, i64 (i8*, i64)** %3, align 8
-  %9 = load i8*, i8** %6, align 8
-  %10 = tail call i64 %8(i8* %9, i64 3)
+  store i64 (i8*, i64)* @"$lambda7", i64 (i8*, i64)** %3, align 8
+  %4 = getelementptr i8, i8* %2, i64 8
+  %5 = bitcast i8* %4 to i8**
+  store i8* %1, i8** %5, align 8
+  %6 = tail call i8* @GC_malloc(i64 16)
+  %7 = bitcast i8* %6 to i64 (i8*, i64)**
+  store i64 (i8*, i64)* @"$lambda7", i64 (i8*, i64)** %7, align 8
+  %8 = getelementptr i8, i8* %6, i64 8
+  %9 = bitcast i8* %8 to i8**
+  store i8* %1, i8** %9, align 8
+  %10 = tail call i64 @add_i64(i64 10, i64 3)
   ret i32 0
 }

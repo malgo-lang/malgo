@@ -5,7 +5,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define {}* @void33(i1) local_unnamed_addr {
+define {}* @void0(i1) local_unnamed_addr {
   %2 = tail call i8* @GC_malloc(i64 0)
   %3 = bitcast i8* %2 to {}*
   ret {}* %3

@@ -3,14 +3,14 @@ source_filename = "./examples/array.mlg"
 
 declare {}* @print_int(i64)
 
-define {}* @print_int28(i64) {
+define {}* @print_int0(i64) {
   %2 = call {}* @print_int(i64 %0)
   ret {}* %2
 }
 
 declare {}* @newline()
 
-define {}* @newline27() {
+define {}* @newline1() {
   %1 = call {}* @newline()
   ret {}* %1
 }
@@ -41,32 +41,26 @@ body_0:                                           ; preds = %cond_0
   %12 = load i64*, i64** %11
   %13 = getelementptr i64, i64* %12, i64 %9
   store i64 0, i64* %13
-  %14 = call i8* @GC_malloc(i64 0)
-  %15 = bitcast i8* %14 to {}*
-  %16 = add i64 %9, 1
-  store i64 %16, i64* %8
+  %14 = add i64 %9, 1
+  store i64 %14, i64* %8
   br label %cond_0
 
 end_0:                                            ; preds = %cond_0
-  %17 = call i8* @GC_malloc(i64 0)
-  %18 = bitcast i8* %17 to {}*
+  %15 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 0
+  %16 = load i64*, i64** %15
+  %17 = getelementptr i64, i64* %16, i64 1
+  %18 = load i64, i64* %17
   %19 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 0
   %20 = load i64*, i64** %19
-  %21 = getelementptr i64, i64* %20, i64 1
-  %22 = load i64, i64* %21
-  %23 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 0
-  %24 = load i64*, i64** %23
-  %25 = getelementptr i64, i64* %24, i64 2
-  store i64 42, i64* %25
-  %26 = call i8* @GC_malloc(i64 0)
-  %27 = bitcast i8* %26 to {}*
-  %28 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 0
-  %29 = load i64*, i64** %28
-  %30 = getelementptr i64, i64* %29, i64 2
-  %31 = load i64, i64* %30
-  %32 = call {}* @print_int28(i64 %22)
-  %33 = call {}* @newline27()
-  %34 = call {}* @print_int28(i64 %31)
-  %35 = call {}* @newline27()
+  %21 = getelementptr i64, i64* %20, i64 2
+  store i64 42, i64* %21
+  %22 = getelementptr { i64*, i64 }, { i64*, i64 }* %5, i32 0, i32 0
+  %23 = load i64*, i64** %22
+  %24 = getelementptr i64, i64* %23, i64 2
+  %25 = load i64, i64* %24
+  %26 = call {}* @print_int0(i64 %18)
+  %27 = call {}* @newline1()
+  %28 = call {}* @print_int0(i64 %25)
+  %29 = call {}* @newline1()
   ret i32 0
 }
