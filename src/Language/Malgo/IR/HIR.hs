@@ -121,15 +121,15 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (ArrayWrite arr ix val) =
     parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
   pPrint (Call f xs    ) = parens $ pPrint f <+> sep (map pPrint xs)
-  pPrint (Let x v e    ) = parens $ "let" <+> pPrint x <+> pPrint v $+$ nest 2 (pPrint e)
-  pPrint (LetRec xs e  ) = parens $ "let rec" <+> parens (sep $ map pPrint xs) $+$ nest 2 (pPrint e)
-  pPrint (If    c  t f ) = parens $ "if" <+> pPrint c $+$ nest 2 (pPrint t) $+$ nest 2 (pPrint f)
+  pPrint (Let x v e    ) = parens $ "let" <+> pPrint x <+> pPrint v $+$ pPrint e
+  pPrint (LetRec xs e  ) = parens $ "let rec" <+> parens (sep $ map pPrint xs) $+$ pPrint e
+  pPrint (If    c  t f ) = parens $ "if" <+> pPrint c $+$ pPrint t $+$ pPrint f
   pPrint (BinOp op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
   pPrint (Prim  x  t xs) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
 
 instance (Pretty t, Pretty a) => Pretty (Def t a) where
   pPrint Def { name, params, expr } =
-    pPrint name <+> parens (sep $ punctuate "," $ map pPrint params) <+> "=" $$ nest 1 (pPrint expr)
+    pPrint name <+> parens (sep $ punctuate "," $ map pPrint params) <+> "=" $+$ pPrint expr
 
 instance Pretty Lit where
   pPrint (Int    x    ) = pPrint x

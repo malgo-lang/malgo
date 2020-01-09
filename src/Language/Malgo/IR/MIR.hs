@@ -20,7 +20,7 @@ data Program t a = Program { functions :: [Func t a], mainExpr :: Expr t a }
 
 instance (Pretty t, Pretty a) => Pretty (Program t a) where
   pPrint Program { functions, mainExpr } =
-    vcat (map pPrint functions) $$ "entry point =" $$ nest 2 (pPrint mainExpr)
+    vcat (map pPrint functions) $$ "entry point =" $+$ nest 2 (pPrint mainExpr)
 
 data Func t a = Func { name :: a, captures :: Maybe [a], mutrecs :: [a], params :: [a], body :: Expr t a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)

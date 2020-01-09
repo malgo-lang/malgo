@@ -93,8 +93,8 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Fn _ params body) =
     parens $ "fn" <+> parens (sep $ punctuate "," (map (pPrint . fst) params)) <+> pPrint body
   pPrint (Seq _ e1   e2  ) = parens $ "seq" <+> (pPrint e1 $+$ pPrint e2)
-  pPrint (Let _ decl body) = parens $ "let" <+> pPrint decl $+$ nest 2 (pPrint body)
-  pPrint (If    _ c  t f ) = parens $ "if" <+> pPrint c $+$ nest 2 (pPrint t) $+$ nest 2 (pPrint f)
+  pPrint (Let _ decl body) = parens $ "let" <+> pPrint decl $+$ pPrint body
+  pPrint (If    _ c  t f ) = parens $ "if" <+> pPrint c $+$ pPrint t $+$ pPrint f
   pPrint (BinOp _ op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
 
 -- | 中置演算子の種類を表すタグ
@@ -135,9 +135,10 @@ instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec fs) = sep $ map pp fs
    where
     pp (_, name, params, _, body) =
-      parens $ "fun" <+> (parens . sep $ pPrint name : map (\(n, _) -> pPrint n) params) $+$ nest
-        2
-        (pPrint body)
+      parens
+        $   "fun"
+        <+> (parens . sep $ pPrint name : map (\(n, _) -> pPrint n) params)
+        $+$ pPrint body
   pPrint (ValDec _ name _ val ) = parens $ "val" <+> pPrint name <+> pPrint val
   pPrint (ExDec  _ name _ orig) = parens $ "extern" <+> pPrint name <+> pPrint orig
 

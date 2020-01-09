@@ -30,7 +30,7 @@ instance (HasLType a, Pretty a) => Pretty (Func a) where
       <>  pPrint (ltypeOf name)
       <>  ">"
       <>  parens (sep $ punctuate "," $ map pPrint params)
-      $$  nest 1 (pPrint body)
+      $+$ nest 1 (pPrint body)
 
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
