@@ -7,6 +7,7 @@ module Language.Malgo.Prelude
   , foldForA
   , foldForM
   , Complement(..)
+  , localState
   )
 where
 
@@ -40,3 +41,11 @@ instance Ord a => Complement (Set a) where
 
 instance Eq a => Complement [a] where
   (\\) = (List.\\)
+
+localState :: MonadState s m => s -> m a -> m a
+localState s m = do
+  backup <- get
+  put s
+  v <- m
+  put backup
+  pure v

@@ -107,12 +107,9 @@ addInst inst = do
 
 runLocalBlock :: MonadState ExprState m =>
                    m (ID LType) -> m (Block (ID LType))
-runLocalBlock m = do
-  backup <- get
-  put (ExprState mempty)
+runLocalBlock m = localState (ExprState mempty) $ do
   retval <- m
   insts <- flip appEndo [] <$> gets (view partialBlockInsts)
-  put backup
   pure (Block insts retval)
 
 arrayCreate :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
