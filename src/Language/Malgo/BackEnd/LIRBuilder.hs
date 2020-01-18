@@ -2,7 +2,39 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-module Language.Malgo.BackEnd.LIRBuilder where
+module Language.Malgo.BackEnd.LIRBuilder
+  ( GenProgram
+  , GenExpr
+  , runGenProgram
+  , functionMap
+  , addFunc
+  , runGenExpr
+  , variableMap
+  , currentCaptures
+  , convertType
+  , coerceTo
+  , packClosure
+  , findVar
+  , findFun
+  , addInst
+  , arrayCreate
+  , alloca
+  , loadC
+  , load
+  , storeC
+  , store
+  , call
+  , callExt
+  , cast
+  , trunc
+  , zext
+  , sext
+  , undef
+  , binop
+  , branchIf
+  , forLoop
+  )
+where
 
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
