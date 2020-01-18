@@ -5,8 +5,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.BackEnd.LIRBuilder
-  ( GenProgram
-  , GenExpr
+  ( GenProgramM
+  , GenExprM
   , runGenProgram
   , functionMap
   , addFunc
@@ -65,19 +65,16 @@ makeLenses ''ExprEnv
 newtype ExprState = ExprState { _partialBlockInsts :: Endo [(ID LType, Inst (ID LType))] }
 makeLenses ''ExprState
 
-type GenProgram = ReaderT ProgramEnv (StateT ProgramState MalgoM)
-type GenExpr = ReaderT ExprEnv (StateT ExprState GenProgram)
+type GenProgramM = ReaderT ProgramEnv (StateT ProgramState MalgoM)
+type GenExprM = ReaderT ExprEnv (StateT ExprState GenProgramM)
 
-runGenProgram :: ReaderT ProgramEnv (StateT ProgramState MalgoM) (Block (ID LType))
-              -> MalgoM (Program (ID LType))
+runGenProgram :: GenProgramM (Block (ID LType)) -> MalgoM (Program (ID LType))
 runGenProgram m = do
   (mf, ProgramState { _functionList }) <- runStateT (runReaderT m (ProgramEnv mempty))
                                                     (ProgramState mempty)
   pure $ Program { functions = appEndo _functionList [], mainFunc = mf }
 
-runGenExpr :: IDMap Type (ID LType)
-           -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
-           -> GenProgram (Block (ID LType))
+runGenExpr :: IDMap Type (ID LType) -> GenExprM (ID LType) -> GenProgramM (Block (ID LType))
 runGenExpr varMap m = do
   (val, ExprState { _partialBlockInsts = ps }) <- runStateT
     (runReaderT m (ExprEnv varMap Nothing))
@@ -108,6 +105,16 @@ addInst inst = do
   modifying partialBlockInsts (<> Endo ((i, inst) :))
   pure i
 
+runLocalBlock :: MonadState ExprState m =>
+                   m (ID LType) -> m (Block (ID LType))
+runLocalBlock m = do
+  backup <- get
+  put (ExprState mempty)
+  retval <- m
+  insts <- flip appEndo [] <$> gets (view partialBlockInsts)
+  put backup
+  pure (Block insts retval)
+
 arrayCreate :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
 arrayCreate init size = addInst $ ArrayCreate init size
 
@@ -130,14 +137,14 @@ store :: (MonadMalgo m, MonadState ExprState m)
       -> m (ID LType)
 store ptr xs val = addInst (Store ptr xs val)
 
-call :: ID LType -> [ID LType] -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
+call :: ID LType -> [ID LType] -> GenExprM (ID LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
     addInst $ Call f as
   _ -> error "function must be typed as function"
 
-callExt :: String -> LType -> [ID LType] -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
+callExt :: String -> LType -> [ID LType] -> GenExprM (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
@@ -161,16 +168,6 @@ undef ty = addInst $ Undef ty
 
 binop :: (MonadMalgo m, MonadState ExprState m) => Op -> ID LType -> ID LType -> m (ID LType)
 binop o x y = addInst $ BinOp o x y
-
-runLocalBlock :: MonadState ExprState m =>
-                   m (ID LType) -> m (Block (ID LType))
-runLocalBlock m = do
-  backup <- get
-  put (ExprState mempty)
-  retval <- m
-  insts <- flip appEndo [] <$> gets (view partialBlockInsts)
-  put backup
-  pure (Block insts retval)
 
 branchIf :: (MonadState ExprState m, MonadMalgo m)
          => ID LType
@@ -211,7 +208,7 @@ packClosure f capsId = do
   _     <- storeC clsId [0, 1] capsId
   pure clsId
 
-coerceTo :: LType -> ID LType -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
+coerceTo :: LType -> ID LType -> GenExprM (ID LType)
 coerceTo to x = case (to, ltypeOf x) of
   (ty, xty) | ty == xty -> pure x
   -- boxing closure

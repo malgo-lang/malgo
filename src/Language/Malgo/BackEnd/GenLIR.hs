@@ -48,7 +48,7 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
 
 -- generate LIR
 
-genFunction :: M.Func Type (ID Type) -> GenProgram (L.Func (ID LType))
+genFunction :: M.Func Type (ID Type) -> GenProgramM (L.Func (ID LType))
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName   <- findFun name
   let funcParams = map (\p@ID{ idMeta } -> updateID p (convertType idMeta)) params
@@ -75,12 +75,12 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     clsId <- packClosure f' capsId
     pure (one (f, clsId))
 
-genMainFunction :: ID LType -> Expr Type (ID Type) -> GenProgram (L.Func (ID LType))
+genMainFunction :: ID LType -> Expr Type (ID Type) -> GenProgramM (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
   body <- runGenExpr mempty $ genExpr mainExpr >> addInst (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
-genExpr :: Expr Type (ID Type) -> GenExpr (ID LType)
+genExpr :: Expr Type (ID Type) -> GenExprM (ID LType)
 genExpr (M.Var x             ) = findVar x
 genExpr (M.Lit (Int    x    )) = addInst $ Constant $ Int64 $ fromInteger x
 genExpr (M.Lit (Float  x    )) = addInst $ Constant $ Float64 x
