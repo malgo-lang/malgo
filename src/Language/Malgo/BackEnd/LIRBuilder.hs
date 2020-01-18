@@ -1,3 +1,5 @@
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -44,51 +46,56 @@ import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.IR.LIR
 import           Control.Lens                   ( view
-                                                , set
+                                                , modifying
                                                 , makeLenses
                                                 )
 import           Relude.Unsafe                  ( fromJust )
 
-data ProgramEnv = ProgramEnv { _functionMap :: IDMap Type (ID LType)
-                             , _functionListRef :: IORef [Func (ID LType)]
-                             }
+newtype ProgramEnv = ProgramEnv { _functionMap :: IDMap Type (ID LType) }
 makeLenses ''ProgramEnv
 
-data ExprEnv = ExprEnv { _partialBlockInsts :: IORef [(ID LType, Inst (ID LType))]
-                       , _variableMap :: IDMap Type (ID LType)
+newtype ProgramState = ProgramState { _functionList :: [Func (ID LType)] }
+makeLenses ''ProgramState
+
+data ExprEnv = ExprEnv { _variableMap :: IDMap Type (ID LType)
                        , _currentCaptures :: Maybe (ID LType)
                        }
 makeLenses ''ExprEnv
 
-type GenProgram = ReaderT ProgramEnv MalgoM
-type GenExpr = ReaderT ExprEnv GenProgram
+newtype ExprState = ExprState { _partialBlockInsts :: [(ID LType, Inst (ID LType))] }
+makeLenses ''ExprState
 
-runGenProgram :: GenProgram (Block (ID LType)) -> MalgoM (Program (ID LType))
+type GenProgram = ReaderT ProgramEnv (StateT ProgramState MalgoM)
+type GenExpr = ReaderT ExprEnv (StateT ExprState GenProgram)
+
+runGenProgram :: ReaderT ProgramEnv (StateT ProgramState MalgoM) (Block (ID LType))
+              -> MalgoM (Program (ID LType))
 runGenProgram m = do
-  ref  <- newIORef []
-  mf   <- runReaderT m (ProgramEnv mempty ref)
-  defs <- readIORef ref
-  pure $ Program { functions = defs, mainFunc = mf }
+  (mf, ProgramState { _functionList }) <- runStateT (runReaderT m (ProgramEnv mempty))
+                                                    (ProgramState [])
+  pure $ Program { functions = _functionList, mainFunc = mf }
 
-runGenExpr :: IDMap Type (ID LType) -> GenExpr (ID LType) -> GenProgram (Block (ID LType))
+runGenExpr :: IDMap Type (ID LType)
+           -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
+           -> GenProgram (Block (ID LType))
 runGenExpr varMap m = do
-  psRef <- newIORef []
-  val   <- runReaderT m (ExprEnv psRef varMap Nothing)
-  ps    <- readIORef psRef
+  (val, ExprState { _partialBlockInsts = ps }) <- runStateT
+    (runReaderT m (ExprEnv varMap Nothing))
+    (ExprState [])
   pure $ Block { insts = reverse ps, value = val }
 
-findVar :: ID Type -> GenExpr (ID LType)
+findVar :: MonadReader ExprEnv f => ID Type -> f (ID LType)
 findVar x = fromJust . lookup x <$> view variableMap
 
-findFun :: ID Type -> GenProgram (ID LType)
+findFun :: MonadReader ProgramEnv f => ID Type -> f (ID LType)
 findFun x = fromJust . lookup x <$> view functionMap
 
-addFunc :: Func (ID LType) -> GenProgram ()
+addFunc :: (MonadMalgo m, MonadState ProgramState m) => Func (ID LType) -> m ()
 addFunc fun = do
   liftMalgo $ logDebug $ fromString $ render $ "register: " $$ pPrint fun
-  flip modifyIORef (fun :) =<< view functionListRef
+  modifying functionList (fun :)
 
-addInst :: Inst (ID LType) -> GenExpr (ID LType)
+addInst :: (MonadMalgo m, MonadState ExprState m) => Inst (ID LType) -> m (ID LType)
 addInst inst = do
   i <- newID (ltypeOf inst) "%"
   liftMalgo
@@ -98,75 +105,94 @@ addInst inst = do
     $   pPrint i
     <+> "="
     <+> pPrint inst
-  flip modifyIORef ((i, inst) :) =<< view partialBlockInsts
+  modifying partialBlockInsts ((i, inst) :)
   pure i
 
-arrayCreate :: LType -> ID LType -> GenExpr (ID LType)
+arrayCreate :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
 arrayCreate init size = addInst $ ArrayCreate init size
 
-alloca :: LType -> GenExpr (ID LType)
+alloca :: (MonadMalgo m, MonadState ExprState m) => LType -> m (ID LType)
 alloca ty = addInst $ Alloca ty
 
-loadC :: ID LType -> [Int] -> GenExpr (ID LType)
+loadC :: (MonadMalgo m, MonadState ExprState m) => ID LType -> [Int] -> m (ID LType)
 loadC ptr xs = addInst $ LoadC ptr xs
 
-load :: ID LType -> ID LType -> GenExpr (ID LType)
+load :: (MonadMalgo m, MonadState ExprState m) => ID LType -> ID LType -> m (ID LType)
 load ptr xs = addInst $ Load ptr xs
 
-storeC :: ID LType -> [Int] -> ID LType -> GenExpr (ID LType)
+storeC :: (MonadMalgo m, MonadState ExprState m) => ID LType -> [Int] -> ID LType -> m (ID LType)
 storeC ptr xs val = addInst (StoreC ptr xs val)
 
-store :: ID LType -> [ID LType] -> ID LType -> GenExpr (ID LType)
+store :: (MonadMalgo m, MonadState ExprState m)
+      => ID LType
+      -> [ID LType]
+      -> ID LType
+      -> m (ID LType)
 store ptr xs val = addInst (Store ptr xs val)
 
-call :: HasCallStack => ID LType -> [ID LType] -> GenExpr (ID LType)
+call :: ID LType -> [ID LType] -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
     addInst $ Call f as
   _ -> error "function must be typed as function"
 
-callExt :: String -> LType -> [ID LType] -> GenExpr (ID LType)
+callExt :: String -> LType -> [ID LType] -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
     addInst $ CallExt f funTy as
   _ -> error "external function must be typed as function"
 
-cast :: LType -> ID LType -> GenExpr (ID LType)
+cast :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
 cast ty val = addInst $ Cast ty val
 
-trunc :: LType -> ID LType -> GenExpr (ID LType)
+trunc :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
 trunc ty val = addInst $ Trunc ty val
 
-zext :: LType -> ID LType -> GenExpr (ID LType)
+zext :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
 zext ty val = addInst $ Zext ty val
 
-sext :: LType -> ID LType -> GenExpr (ID LType)
+sext :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
 sext ty val = addInst $ Sext ty val
 
-undef :: LType -> GenExpr (ID LType)
+undef :: (MonadMalgo m, MonadState ExprState m) => LType -> m (ID LType)
 undef ty = addInst $ Undef ty
 
-binop :: Op -> ID LType -> ID LType -> GenExpr (ID LType)
+binop :: (MonadMalgo m, MonadState ExprState m) => Op -> ID LType -> ID LType -> m (ID LType)
 binop o x y = addInst $ BinOp o x y
 
-branchIf :: ID LType -> GenExpr (ID LType) -> GenExpr (ID LType) -> GenExpr (ID LType)
+branchIf :: (MonadState ExprState m, MonadMalgo m)
+         => ID LType
+         -> m (ID LType)
+         -> m (ID LType)
+         -> m (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
-  tBlockRef <- newIORef []
-  fBlockRef <- newIORef []
-  tvalue    <- local (set partialBlockInsts tBlockRef) genWhenTrue
-  fvalue    <- local (set partialBlockInsts fBlockRef) genWhenFalse
-  tBlock    <- reverse <$> readIORef tBlockRef
-  fBlock    <- reverse <$> readIORef fBlockRef
+  backup <- get
+
+  put (ExprState [])
+  tvalue <- genWhenTrue
+  tBlock <- reverse <$> gets (view partialBlockInsts)
+
+  put (ExprState [])
+  fvalue <- genWhenFalse
+  fBlock <- reverse <$> gets (view partialBlockInsts)
+
+  put backup
   addInst $ If c (Block tBlock tvalue) (Block fBlock fvalue)
 
-forLoop :: ID LType -> ID LType -> (ID LType -> GenExpr (ID LType)) -> GenExpr (ID LType)
+forLoop :: (MonadState ExprState m, MonadMalgo m)
+        => ID LType
+        -> ID LType
+        -> (ID LType -> m (ID LType))
+        -> m (ID LType)
 forLoop from to k = do
-  index    <- newID I64 "$i"
-  blockRef <- newIORef []
-  val      <- local (set partialBlockInsts blockRef) (k index)
-  block    <- reverse <$> readIORef blockRef
+  backup <- get
+  put (ExprState [])
+  index <- newID I64 "$i"
+  val   <- k index
+  block <- reverse <$> gets (view partialBlockInsts)
+  put backup
   addInst $ For index from to (Block block val)
 
 convertType :: HasCallStack => Type -> LType
@@ -181,14 +207,14 @@ convertType (TyApp ArrayC  [x]     ) = Ptr $ Struct [Ptr $ convertType x, SizeT]
 convertType TyMeta{}                 = Ptr U8
 convertType t                        = error $ toText $ "unreachable(convertType): " <> pShow t
 
-packClosure :: ID LType -> ID LType -> ReaderT ExprEnv GenProgram (ID LType)
+packClosure :: (MonadMalgo m, MonadState ExprState m) => ID LType -> ID LType -> m (ID LType)
 packClosure f capsId = do
   clsId <- alloca (Struct [ltypeOf f, Ptr U8])
   _     <- storeC clsId [0, 0] f
   _     <- storeC clsId [0, 1] capsId
   pure clsId
 
-coerceTo :: LType -> ID LType -> GenExpr (ID LType)
+coerceTo :: LType -> ID LType -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
 coerceTo to x = case (to, ltypeOf x) of
   (ty, xty) | ty == xty -> pure x
   -- boxing closure
@@ -219,14 +245,23 @@ coerceTo to x = case (to, ltypeOf x) of
     fName       <- newID (Function r (Ptr U8 : ps)) "$fo"
     fBoxedXName <- newID (Ptr U8) "$x"
     fParamNames <- mapM (`newID` "$a") ps
-    bodyBlock   <- lift $ runGenExpr mempty $ do
+
+    backup      <- get
+    put (ExprState [])
+    retval <- local (const (ExprEnv mempty Nothing)) $ do
       fUnboxedX <- cast unboxedXType fBoxedXName
       as        <- zipWithM coerceTo xps fParamNames
       xFun      <- loadC fUnboxedX [0, 0]
       xCap      <- loadC fUnboxedX [0, 1]
       retVal    <- call xFun (xCap : as)
       coerceTo r retVal
-    lift $ addFunc $ Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock }
+    instsRev <- gets (view partialBlockInsts)
+    let bodyBlock = Block (reverse instsRev) retval
+    put backup
+    lift $ lift $ addFunc $ Func { name   = fName
+                                 , params = fBoxedXName : fParamNames
+                                 , body   = bodyBlock
+                                 }
     packClosure fName boxedX
   (Ptr (Struct [Ptr ty, SizeT]), xty) -> do
     x' <- case xty of
@@ -241,8 +276,9 @@ coerceTo to x = case (to, ltypeOf x) of
     void $ storeC newArr [0, 1] size
     zero <- addInst $ Constant $ Int64 0
     void $ forLoop zero size $ \i -> do
-      val <- load xRaw i
-      store newArrRaw [i] =<< coerceTo ty val
+      val  <- load xRaw i
+      val' <- coerceTo ty val
+      store newArrRaw [i] val'
     pure newArr
   (Ptr (Struct ts), xty) -> do
     x' <- case xty of
