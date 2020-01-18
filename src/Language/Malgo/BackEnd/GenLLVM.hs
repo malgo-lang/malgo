@@ -18,6 +18,7 @@ import           Language.Malgo.IR.LIR         as IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType  as IR
 import qualified LLVM.AST
 import           LLVM.AST.Constant              ( Constant(..) )
@@ -89,7 +90,7 @@ convertType Void            = LT.void
 findVar :: MonadReader GenState m => ID LType -> m Operand
 findVar i = do
   m <- asks variableMap
-  pure $ lookupDefault (error $ show i <> " is not found in " <> show m) i m
+  pure $ lookupDefault (error $ show $ pPrint i <> " is not found in " <> pPrint (keys m)) i m
 
 findExt :: (MonadReader GenState m, MonadIO m, MonadModuleBuilder m)
         => String

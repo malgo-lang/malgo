@@ -54,7 +54,7 @@ import           Relude.Unsafe                  ( fromJust )
 newtype ProgramEnv = ProgramEnv { _functionMap :: IDMap Type (ID LType) }
 makeLenses ''ProgramEnv
 
-newtype ProgramState = ProgramState { _functionList :: [Func (ID LType)] }
+newtype ProgramState = ProgramState { _functionList :: Endo [Func (ID LType)] }
 makeLenses ''ProgramState
 
 data ExprEnv = ExprEnv { _variableMap :: IDMap Type (ID LType)
@@ -62,7 +62,7 @@ data ExprEnv = ExprEnv { _variableMap :: IDMap Type (ID LType)
                        }
 makeLenses ''ExprEnv
 
-newtype ExprState = ExprState { _partialBlockInsts :: [(ID LType, Inst (ID LType))] }
+newtype ExprState = ExprState { _partialBlockInsts :: Endo [(ID LType, Inst (ID LType))] }
 makeLenses ''ExprState
 
 type GenProgram = ReaderT ProgramEnv (StateT ProgramState MalgoM)
@@ -72,8 +72,8 @@ runGenProgram :: ReaderT ProgramEnv (StateT ProgramState MalgoM) (Block (ID LTyp
               -> MalgoM (Program (ID LType))
 runGenProgram m = do
   (mf, ProgramState { _functionList }) <- runStateT (runReaderT m (ProgramEnv mempty))
-                                                    (ProgramState [])
-  pure $ Program { functions = _functionList, mainFunc = mf }
+                                                    (ProgramState mempty)
+  pure $ Program { functions = appEndo _functionList [], mainFunc = mf }
 
 runGenExpr :: IDMap Type (ID LType)
            -> ReaderT ExprEnv (StateT ExprState GenProgram) (ID LType)
@@ -81,8 +81,8 @@ runGenExpr :: IDMap Type (ID LType)
 runGenExpr varMap m = do
   (val, ExprState { _partialBlockInsts = ps }) <- runStateT
     (runReaderT m (ExprEnv varMap Nothing))
-    (ExprState [])
-  pure $ Block { insts = reverse ps, value = val }
+    (ExprState mempty)
+  pure $ Block { insts = appEndo ps [], value = val }
 
 findVar :: MonadReader ExprEnv f => ID Type -> f (ID LType)
 findVar x = fromJust . lookup x <$> view variableMap
@@ -93,7 +93,7 @@ findFun x = fromJust . lookup x <$> view functionMap
 addFunc :: (MonadMalgo m, MonadState ProgramState m) => Func (ID LType) -> m ()
 addFunc fun = do
   liftMalgo $ logDebug $ fromString $ render $ "register: " $$ pPrint fun
-  modifying functionList (fun :)
+  modifying functionList (Endo (fun :) <>)
 
 addInst :: (MonadMalgo m, MonadState ExprState m) => Inst (ID LType) -> m (ID LType)
 addInst inst = do
@@ -105,7 +105,7 @@ addInst inst = do
     $   pPrint i
     <+> "="
     <+> pPrint inst
-  modifying partialBlockInsts ((i, inst) :)
+  modifying partialBlockInsts (<> Endo ((i, inst) :))
   pure i
 
 arrayCreate :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
@@ -162,24 +162,25 @@ undef ty = addInst $ Undef ty
 binop :: (MonadMalgo m, MonadState ExprState m) => Op -> ID LType -> ID LType -> m (ID LType)
 binop o x y = addInst $ BinOp o x y
 
+runLocalBlock :: MonadState ExprState m =>
+                   m (ID LType) -> m (Block (ID LType))
+runLocalBlock m = do
+  backup <- get
+  put (ExprState mempty)
+  retval <- m
+  insts <- flip appEndo [] <$> gets (view partialBlockInsts)
+  put backup
+  pure (Block insts retval)
+
 branchIf :: (MonadState ExprState m, MonadMalgo m)
          => ID LType
          -> m (ID LType)
          -> m (ID LType)
          -> m (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
-  backup <- get
-
-  put (ExprState [])
-  tvalue <- genWhenTrue
-  tBlock <- reverse <$> gets (view partialBlockInsts)
-
-  put (ExprState [])
-  fvalue <- genWhenFalse
-  fBlock <- reverse <$> gets (view partialBlockInsts)
-
-  put backup
-  addInst $ If c (Block tBlock tvalue) (Block fBlock fvalue)
+  tBlock <- runLocalBlock genWhenTrue
+  fBlock <- runLocalBlock genWhenFalse
+  addInst $ If c tBlock fBlock
 
 forLoop :: (MonadState ExprState m, MonadMalgo m)
         => ID LType
@@ -187,13 +188,9 @@ forLoop :: (MonadState ExprState m, MonadMalgo m)
         -> (ID LType -> m (ID LType))
         -> m (ID LType)
 forLoop from to k = do
-  backup <- get
-  put (ExprState [])
   index <- newID I64 "$i"
-  val   <- k index
-  block <- reverse <$> gets (view partialBlockInsts)
-  put backup
-  addInst $ For index from to (Block block val)
+  block <- runLocalBlock (k index)
+  addInst $ For index from to block
 
 convertType :: HasCallStack => Type -> LType
 convertType (TyApp FunC    (r : ps)) = ClosurePtr (convertType r) (map convertType ps)
@@ -246,18 +243,13 @@ coerceTo to x = case (to, ltypeOf x) of
     fBoxedXName <- newID (Ptr U8) "$x"
     fParamNames <- mapM (`newID` "$a") ps
 
-    backup      <- get
-    put (ExprState [])
-    retval <- local (const (ExprEnv mempty Nothing)) $ do
+    bodyBlock <- runLocalBlock $ do
       fUnboxedX <- cast unboxedXType fBoxedXName
       as        <- zipWithM coerceTo xps fParamNames
       xFun      <- loadC fUnboxedX [0, 0]
       xCap      <- loadC fUnboxedX [0, 1]
       retVal    <- call xFun (xCap : as)
       coerceTo r retVal
-    instsRev <- gets (view partialBlockInsts)
-    let bodyBlock = Block (reverse instsRev) retval
-    put backup
     lift $ lift $ addFunc $ Func { name   = fName
                                  , params = fBoxedXName : fParamNames
                                  , body   = bodyBlock
