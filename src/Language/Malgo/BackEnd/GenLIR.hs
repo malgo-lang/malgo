@@ -8,7 +8,6 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
 
-import           Control.Lens
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR         as H
                                                 ( Lit(..)
@@ -24,18 +23,19 @@ import           Language.Malgo.TypeRep.Type   as M
 import           Language.Malgo.Prelude
 import           Language.Malgo.BackEnd.LIRBuilder
                                                as L
+import           Relude.Unsafe                  ( fromJust )
 
 data GenLIR
 
 instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
   passName = "GenLIR"
-  isDump = dumpLIR
+  isDump   = dumpLIR
   trans M.Program { functions, mainExpr } = do
     logDebug "Start GenLIR"
     funMap <- foldMapM genFunMap functions
-    runGenProgram $ local (set functionMap funMap) $ do
+    runProgramBuilder (ProgramEnv funMap) $ do
       mapM_ (addFunc <=< genFunction) functions
-      runGenExpr mempty $ genExpr mainExpr
+      runExprBuilder (ExprEnv mempty Nothing) $ genExpr mainExpr
    where
     genFunMap M.Func { name, captures, params, body } = do
       let ps = map typeOf params
@@ -47,22 +47,20 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
       | otherwise = Function (convertType $ typeOf r) (Ptr U8 : map (convertType . typeOf) ps)
 
 -- generate LIR
-
-genFunction :: M.Func Type (ID Type) -> GenProgramM (L.Func (ID LType))
+genFunction :: M.Func Type (ID Type) -> ProgramBuilder (L.Func (ID LType))
 genFunction M.Func { name, captures = Nothing, params, body } = do
-  funcName   <- findFun name
-  let funcParams = map (\p@ID{ idMeta } -> updateID p (convertType idMeta)) params
-  bodyBlock  <- runGenExpr (fromList (zip params funcParams)) (genExpr body)
+  funcName <- findFunc name
+  let funcParams = map (\p@ID { idMeta } -> updateID p (convertType idMeta)) params
+  bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) Nothing) (genExpr body)
   pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
-  funcName   <- findFun name
-  capsId     <- newID (Ptr U8) "$caps"
+  funcName <- findFunc name
+  capsId   <- newID (Ptr U8) "$caps"
   let funcParams = map (\x -> updateID x (convertType (typeOf x))) params
-  bodyBlock  <- runGenExpr (fromList (zip params funcParams)) $ do
+  bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
     capsMap <- genUnpackCaps capsId
     clsMap  <- genCls capsId
-    local (over variableMap ((capsMap <> clsMap) <>) . set currentCaptures (Just capsId))
-      $ genExpr body
+    withVariables (capsMap <> clsMap) $ genExpr body
   pure $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
  where
   genUnpackCaps capsId = do
@@ -71,25 +69,24 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
       cOpr <- loadC capsId' [0, i]
       pure (one (c, cOpr))
   genCls capsId = foldForM mutrecs $ \f -> do
-    f'    <- lift $ findFun f
+    f'    <- findFunc f
     clsId <- packClosure f' capsId
     pure (one (f, clsId))
 
-genMainFunction :: ID LType -> Expr Type (ID Type) -> GenProgramM (L.Func (ID LType))
+genMainFunction :: ID LType -> Expr Type (ID Type) -> ProgramBuilder (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
-  body <- runGenExpr mempty $ genExpr mainExpr >> addInst (Constant $ Int32 0)
+  body <- runExprBuilder (ExprEnv mempty Nothing) $ genExpr mainExpr >> addInst (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
-genExpr :: Expr Type (ID Type) -> GenExprM (ID LType)
-genExpr (M.Var x             ) = findVar x
-genExpr (M.Lit (Int    x    )) = addInst $ Constant $ Int64 $ fromInteger x
-genExpr (M.Lit (Float  x    )) = addInst $ Constant $ Float64 x
-genExpr (M.Lit (H.Bool True )) = addInst $ Constant $ L.Bool True
-genExpr (M.Lit (H.Bool False)) = addInst $ Constant $ L.Bool False
-genExpr (M.Lit (Char   x    )) = addInst $ Constant $ Word8 $ fromIntegral $ ord x
-genExpr (M.Lit (H.String xs)) =
-  addInst $ Constant $ L.String xs
-genExpr (M.Tuple xs) = do
+genExpr :: MonadExprBuilder m => Expr Type (ID Type) -> m (ID LType)
+genExpr (M.Var   x               ) = findVar x
+genExpr (M.Lit   (Int      x    )) = addInst $ Constant $ Int64 $ fromInteger x
+genExpr (M.Lit   (Float    x    )) = addInst $ Constant $ Float64 x
+genExpr (M.Lit   (H.Bool   True )) = addInst $ Constant $ L.Bool True
+genExpr (M.Lit   (H.Bool   False)) = addInst $ Constant $ L.Bool False
+genExpr (M.Lit   (Char     x    )) = addInst $ Constant $ Word8 $ fromIntegral $ ord x
+genExpr (M.Lit   (H.String xs   )) = addInst $ Constant $ L.String xs
+genExpr (M.Tuple xs              ) = do
   tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs)
   forM_ (zip [0 ..] xs) $ \(i, x) -> do
     val <- findVar x
@@ -108,17 +105,17 @@ genExpr (M.MakeArray init size) = do
     store rawAddr [idx] initVal
   pure ptr
 genExpr (M.ArrayRead arr idx) = do
-  arrOpr <- findVar arr
+  arrOpr    <- findVar arr
   arrRawOpr <- loadC arrOpr [0, 0]
-  ixOpr  <- coerceTo SizeT =<< findVar idx
+  ixOpr     <- coerceTo SizeT =<< findVar idx
   load arrRawOpr ixOpr
 genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   TyApp ArrayC [t] -> do
-    arrOpr <- findVar arr
+    arrOpr    <- findVar arr
     arrRawOpr <- loadC arrOpr [0, 0]
-    ixOpr  <- coerceTo SizeT =<< findVar idx
-    valOpr <- coerceTo (convertType t) =<< findVar val
-    _ <- store arrRawOpr [ixOpr] valOpr
+    ixOpr     <- coerceTo SizeT =<< findVar idx
+    valOpr    <- coerceTo (convertType t) =<< findVar val
+    _         <- store arrRawOpr [ixOpr] valOpr
     undef (Ptr (Struct []))
   _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
@@ -127,17 +124,17 @@ genExpr (M.MakeClosure f cs) = do
   forM_ (zip [0 ..] cs) $ \(i, c) -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
-  f'      <- lift $ findFun f
+  f'      <- findFunc f
   capPtr' <- cast (Ptr U8) capPtr
   packClosure f' capPtr'
 genExpr (M.CallDirect f args) = do
-  funOpr  <- lift $ findFun f
+  funOpr  <- findFunc f
   argOprs <- mapM findVar args
   call funOpr argOprs
 genExpr (M.CallWithCaptures f args) = do
-  funOpr    <- lift $ findFun f
-  Just caps <- view currentCaptures
-  argOprs   <- (caps :) <$> mapM findVar args
+  funOpr  <- findFunc f
+  caps    <- fromJust <$> getCurrentCaptures
+  argOprs <- (caps :) <$> mapM findVar args
   call funOpr argOprs
 genExpr (M.CallClosure f args) = do
   clsPtr  <- findVar f
@@ -147,7 +144,7 @@ genExpr (M.CallClosure f args) = do
   call clsFun argOprs
 genExpr (M.Let name val expr) = do
   val' <- coerceTo (convertType $ typeOf name) =<< genExpr val
-  local (over variableMap (insert name val')) $ genExpr expr
+  withVariables (fromList [(name, val')]) $ genExpr expr
 genExpr (M.If c t f) = do
   cOpr <- findVar c
   branchIf cOpr (genExpr t) (genExpr f)

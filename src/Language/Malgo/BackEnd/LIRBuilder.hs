@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TupleSections #-}
@@ -5,20 +6,14 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.BackEnd.LIRBuilder
-  ( GenProgramM
-  , GenExprM
-  , runGenProgram
-  , functionMap
-  , addFunc
-  , runGenExpr
-  , variableMap
-  , currentCaptures
-  , convertType
-  , coerceTo
-  , packClosure
-  , findVar
-  , findFun
-  , addInst
+  ( MonadProgramBuilder(..)
+  , ProgramBuilder
+  , ProgramEnv(..)
+  , runProgramBuilder
+  , MonadExprBuilder(..)
+  , ExprBuilder
+  , ExprEnv(..)
+  , runExprBuilder
   , arrayCreate
   , alloca
   , loadC
@@ -35,6 +30,9 @@ module Language.Malgo.BackEnd.LIRBuilder
   , binop
   , branchIf
   , forLoop
+  , convertType
+  , packClosure
+  , coerceTo
   )
 where
 
@@ -46,16 +44,44 @@ import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.IR.LIR
 import           Control.Lens                   ( view
+                                                , over
                                                 , modifying
                                                 , makeLenses
                                                 )
 import           Relude.Unsafe                  ( fromJust )
+
+-- Program Builder
+class MonadMalgo m => MonadProgramBuilder m where
+  findFunc :: ID Type -> m (ID LType)
+  addFunc :: Func (ID LType) -> m ()
 
 newtype ProgramEnv = ProgramEnv { _functionMap :: IDMap Type (ID LType) }
 makeLenses ''ProgramEnv
 
 newtype ProgramState = ProgramState { _functionList :: Endo [Func (ID LType)] }
 makeLenses ''ProgramState
+
+newtype ProgramBuilder a = ProgramBuilder (ReaderT ProgramEnv (StateT ProgramState MalgoM) a)
+  deriving (Functor, Applicative, Monad, MonadIO, MonadMalgo)
+
+runProgramBuilder :: ProgramEnv -> ProgramBuilder (Block (ID LType)) -> MalgoM (Program (ID LType))
+runProgramBuilder env (ProgramBuilder m) = do
+  (mf, ProgramState { _functionList }) <- runStateT (runReaderT m env) (ProgramState mempty)
+  pure $ Program { functions = appEndo _functionList [], mainFunc = mf }
+
+instance MonadProgramBuilder ProgramBuilder where
+  findFunc x = ProgramBuilder $ fromJust . lookup x <$> view functionMap
+  addFunc fun = ProgramBuilder $ do
+    liftMalgo $ logDebug $ fromString $ render $ "register: " $$ pPrint fun
+    modifying functionList (Endo (fun :) <>)
+
+-- Expr Builder
+class MonadProgramBuilder m => MonadExprBuilder m where
+  findVar :: ID Type -> m (ID LType)
+  withVariables :: IDMap Type (ID LType) -> m a -> m a
+  addInst :: Inst (ID LType) -> m (ID LType)
+  localBlock :: m (ID LType) -> m (Block (ID LType))
+  getCurrentCaptures :: m (Maybe (ID LType))
 
 data ExprEnv = ExprEnv { _variableMap :: IDMap Type (ID LType)
                        , _currentCaptures :: Maybe (ID LType)
@@ -65,125 +91,99 @@ makeLenses ''ExprEnv
 newtype ExprState = ExprState { _partialBlockInsts :: Endo [(ID LType, Inst (ID LType))] }
 makeLenses ''ExprState
 
-type GenProgramM = ReaderT ProgramEnv (StateT ProgramState MalgoM)
-type GenExprM = ReaderT ExprEnv (StateT ExprState GenProgramM)
+newtype ExprBuilder a = ExprBuilder (ReaderT ExprEnv (StateT ExprState ProgramBuilder) a)
+  deriving (Functor, Applicative, Monad, MonadIO, MonadMalgo)
 
-runGenProgram :: GenProgramM (Block (ID LType)) -> MalgoM (Program (ID LType))
-runGenProgram m = do
-  (mf, ProgramState { _functionList }) <- runStateT (runReaderT m (ProgramEnv mempty))
-                                                    (ProgramState mempty)
-  pure $ Program { functions = appEndo _functionList [], mainFunc = mf }
-
-runGenExpr :: IDMap Type (ID LType) -> GenExprM (ID LType) -> GenProgramM (Block (ID LType))
-runGenExpr varMap m = do
-  (val, ExprState { _partialBlockInsts = ps }) <- runStateT
-    (runReaderT m (ExprEnv varMap Nothing))
-    (ExprState mempty)
+runExprBuilder :: ExprEnv -> ExprBuilder (ID LType) -> ProgramBuilder (Block (ID LType))
+runExprBuilder env (ExprBuilder m) = do
+  (val, ExprState { _partialBlockInsts = ps }) <- runStateT (runReaderT m env) (ExprState mempty)
   pure $ Block { insts = appEndo ps [], value = val }
 
-findVar :: MonadReader ExprEnv f => ID Type -> f (ID LType)
-findVar x = fromJust . lookup x <$> view variableMap
+instance MonadProgramBuilder ExprBuilder where
+  findFunc x = ExprBuilder $ lift $ lift $ findFunc x
+  addFunc fun = ExprBuilder $ lift $ lift $ addFunc fun
 
-findFun :: MonadReader ProgramEnv f => ID Type -> f (ID LType)
-findFun x = fromJust . lookup x <$> view functionMap
+instance MonadExprBuilder ExprBuilder where
+  findVar x = ExprBuilder $ fromJust . lookup x <$> view variableMap
+  withVariables varMap (ExprBuilder m) = ExprBuilder $ local (over variableMap (varMap <>)) m
+  addInst inst = ExprBuilder $ do
+    i <- newID (ltypeOf inst) "%"
+    liftMalgo
+      $   logDebug
+      $   toText
+      $   renderStyle (style { mode = OneLineMode })
+      $   pPrint i
+      <+> "="
+      <+> pPrint inst
+    modifying partialBlockInsts (<> Endo ((i, inst) :))
+    pure i
+  localBlock (ExprBuilder m) = ExprBuilder $ localState (ExprState mempty) $ do
+    retval <- m
+    insts  <- flip appEndo [] <$> gets (view partialBlockInsts)
+    pure (Block insts retval)
+  getCurrentCaptures = ExprBuilder $ view currentCaptures
 
-addFunc :: (MonadMalgo m, MonadState ProgramState m) => Func (ID LType) -> m ()
-addFunc fun = do
-  liftMalgo $ logDebug $ fromString $ render $ "register: " $$ pPrint fun
-  modifying functionList (Endo (fun :) <>)
-
-addInst :: (MonadMalgo m, MonadState ExprState m) => Inst (ID LType) -> m (ID LType)
-addInst inst = do
-  i <- newID (ltypeOf inst) "%"
-  liftMalgo
-    $   logDebug
-    $   toText
-    $   renderStyle (style { mode = OneLineMode })
-    $   pPrint i
-    <+> "="
-    <+> pPrint inst
-  modifying partialBlockInsts (<> Endo ((i, inst) :))
-  pure i
-
-runLocalBlock :: MonadState ExprState m =>
-                   m (ID LType) -> m (Block (ID LType))
-runLocalBlock m = localState (ExprState mempty) $ do
-  retval <- m
-  insts <- flip appEndo [] <$> gets (view partialBlockInsts)
-  pure (Block insts retval)
-
-arrayCreate :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
+-- instructions
+arrayCreate :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
 arrayCreate init size = addInst $ ArrayCreate init size
 
-alloca :: (MonadMalgo m, MonadState ExprState m) => LType -> m (ID LType)
+alloca :: MonadExprBuilder m => LType -> m (ID LType)
 alloca ty = addInst $ Alloca ty
 
-loadC :: (MonadMalgo m, MonadState ExprState m) => ID LType -> [Int] -> m (ID LType)
+loadC :: MonadExprBuilder m => ID LType -> [Int] -> m (ID LType)
 loadC ptr xs = addInst $ LoadC ptr xs
 
-load :: (MonadMalgo m, MonadState ExprState m) => ID LType -> ID LType -> m (ID LType)
+load :: MonadExprBuilder m => ID LType -> ID LType -> m (ID LType)
 load ptr xs = addInst $ Load ptr xs
 
-storeC :: (MonadMalgo m, MonadState ExprState m) => ID LType -> [Int] -> ID LType -> m (ID LType)
+storeC :: MonadExprBuilder m => ID LType -> [Int] -> ID LType -> m (ID LType)
 storeC ptr xs val = addInst (StoreC ptr xs val)
 
-store :: (MonadMalgo m, MonadState ExprState m)
-      => ID LType
-      -> [ID LType]
-      -> ID LType
-      -> m (ID LType)
+store :: MonadExprBuilder m => ID LType -> [ID LType] -> ID LType -> m (ID LType)
 store ptr xs val = addInst (Store ptr xs val)
 
-call :: ID LType -> [ID LType] -> GenExprM (ID LType)
+call :: MonadExprBuilder m => ID LType -> [ID LType] -> m (ID LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
     addInst $ Call f as
   _ -> error "function must be typed as function"
 
-callExt :: String -> LType -> [ID LType] -> GenExprM (ID LType)
+callExt :: MonadExprBuilder m => String -> LType -> [ID LType] -> m (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
     addInst $ CallExt f funTy as
   _ -> error "external function must be typed as function"
 
-cast :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
+cast :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
 cast ty val = addInst $ Cast ty val
 
-trunc :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
+trunc :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
 trunc ty val = addInst $ Trunc ty val
 
-zext :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
+zext :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
 zext ty val = addInst $ Zext ty val
 
-sext :: (MonadMalgo m, MonadState ExprState m) => LType -> ID LType -> m (ID LType)
+sext :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
 sext ty val = addInst $ Sext ty val
 
-undef :: (MonadMalgo m, MonadState ExprState m) => LType -> m (ID LType)
+undef :: MonadExprBuilder m => LType -> m (ID LType)
 undef ty = addInst $ Undef ty
 
-binop :: (MonadMalgo m, MonadState ExprState m) => Op -> ID LType -> ID LType -> m (ID LType)
+binop :: MonadExprBuilder m => Op -> ID LType -> ID LType -> m (ID LType)
 binop o x y = addInst $ BinOp o x y
 
-branchIf :: (MonadState ExprState m, MonadMalgo m)
-         => ID LType
-         -> m (ID LType)
-         -> m (ID LType)
-         -> m (ID LType)
+branchIf :: MonadExprBuilder m => ID LType -> m (ID LType) -> m (ID LType) -> m (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
-  tBlock <- runLocalBlock genWhenTrue
-  fBlock <- runLocalBlock genWhenFalse
+  tBlock <- localBlock genWhenTrue
+  fBlock <- localBlock genWhenFalse
   addInst $ If c tBlock fBlock
 
-forLoop :: (MonadState ExprState m, MonadMalgo m)
-        => ID LType
-        -> ID LType
-        -> (ID LType -> m (ID LType))
-        -> m (ID LType)
+forLoop :: MonadExprBuilder m => ID LType -> ID LType -> (ID LType -> m (ID LType)) -> m (ID LType)
 forLoop from to k = do
   index <- newID I64 "$i"
-  block <- runLocalBlock (k index)
+  block <- localBlock (k index)
   addInst $ For index from to block
 
 convertType :: HasCallStack => Type -> LType
@@ -198,14 +198,14 @@ convertType (TyApp ArrayC  [x]     ) = Ptr $ Struct [Ptr $ convertType x, SizeT]
 convertType TyMeta{}                 = Ptr U8
 convertType t                        = error $ toText $ "unreachable(convertType): " <> pShow t
 
-packClosure :: (MonadMalgo m, MonadState ExprState m) => ID LType -> ID LType -> m (ID LType)
+packClosure :: MonadExprBuilder m => ID LType -> ID LType -> m (ID LType)
 packClosure f capsId = do
   clsId <- alloca (Struct [ltypeOf f, Ptr U8])
   _     <- storeC clsId [0, 0] f
   _     <- storeC clsId [0, 1] capsId
   pure clsId
 
-coerceTo :: LType -> ID LType -> GenExprM (ID LType)
+coerceTo :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
 coerceTo to x = case (to, ltypeOf x) of
   (ty, xty) | ty == xty -> pure x
   -- boxing closure
@@ -237,17 +237,14 @@ coerceTo to x = case (to, ltypeOf x) of
     fBoxedXName <- newID (Ptr U8) "$x"
     fParamNames <- mapM (`newID` "$a") ps
 
-    bodyBlock <- runLocalBlock $ do
+    bodyBlock   <- localBlock $ do
       fUnboxedX <- cast unboxedXType fBoxedXName
       as        <- zipWithM coerceTo xps fParamNames
       xFun      <- loadC fUnboxedX [0, 0]
       xCap      <- loadC fUnboxedX [0, 1]
       retVal    <- call xFun (xCap : as)
       coerceTo r retVal
-    lift $ lift $ addFunc $ Func { name   = fName
-                                 , params = fBoxedXName : fParamNames
-                                 , body   = bodyBlock
-                                 }
+    addFunc $ Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock }
     packClosure fName boxedX
   (Ptr (Struct [Ptr ty, SizeT]), xty) -> do
     x' <- case xty of
