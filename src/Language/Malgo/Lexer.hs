@@ -3,6 +3,7 @@
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE Strict                #-}
 module Language.Malgo.Lexer where
 
 import           Language.Malgo.FrontEnd.Info
