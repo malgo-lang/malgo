@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE Strict                #-}
-module Language.Malgo.Lexer where
+module Language.Malgo.Lexer ( Token(..), Tag(..), _info, _tag, lexing ) where
 
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Prelude  hiding ( EQ

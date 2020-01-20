@@ -7,8 +7,7 @@
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE RankNTypes                 #-}
 module Language.Malgo.Monad
-  ( UniqSupply(..)
-  , MalgoM(..)
+  ( MalgoM(..)
   , MalgoEnv(..)
   , runMalgo
   , MonadMalgo(..)
@@ -35,8 +34,6 @@ import           Control.Monad.Fix
 import           Control.Monad.Trans.Writer.CPS
 import           Language.Malgo.Prelude
 
-newtype UniqSupply = UniqSupply (IORef Int)
-
 data Opt = Opt
   { srcName       :: String
   , dstName       :: String
@@ -51,24 +48,24 @@ data Opt = Opt
   } deriving (Eq, Show)
 
 data MalgoEnv m = MalgoEnv
-  { maUniqSupply :: UniqSupply
-  , maOption     :: Opt
-  , maLogAction :: LogAction m Message
+  { maOption     :: Opt
+  , maLogAction  :: LogAction m Message
   }
+
+newtype MalgoState = MalgoState { maUniqSupply :: Int }
 
 instance HasLog (MalgoEnv m) Message m where
   getLogAction = maLogAction
   setLogAction newLogAction env = env { maLogAction = newLogAction }
 
-newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) IO a }
-  deriving (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadIO, MonadFix, MonadFail)
+newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT MalgoState IO) a }
+  deriving (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState MalgoState, MonadIO, MonadFix, MonadFail)
 
-runMalgo :: MonadIO m => MalgoM a -> UniqSupply -> Opt -> m a
-runMalgo (MalgoM m) u opt = liftIO $ runReaderT
+runMalgo :: MonadIO m => MalgoM a -> Opt -> m a
+runMalgo (MalgoM m) opt = liftIO $ evaluatingStateT (MalgoState 0) $ runReaderT
   m
   MalgoEnv
-    { maUniqSupply = u
-    , maOption     = opt
+    { maOption     = opt
     , maLogAction  = if isDebugMode opt
                        then richMessageAction
                        else cfilter (\(Colog.Msg sev _ _) -> sev > Colog.Debug) richMessageAction
@@ -90,9 +87,8 @@ instance MonadMalgo m => MonadMalgo (WriterT w m) where
 
 newUniq :: MonadMalgo m => m Int
 newUniq = liftMalgo $ do
-  UniqSupply u <- asks maUniqSupply
-  i            <- readIORef u
-  modifyIORef u (+ 1)
+  i <- maUniqSupply <$> get
+  modify (\s -> s { maUniqSupply = i + 1 })
   return i
 
 getFileName :: (MonadMalgo m, IsString a) => m a

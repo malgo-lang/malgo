@@ -3,7 +3,6 @@
 {-# LANGUAGE TypeApplications  #-}
 module Main where
 
-import qualified Data.Text.IO          as T
 import           Language.Malgo.Driver
 import qualified Language.Malgo.Lexer  as Lexer
 import           Language.Malgo.Monad
@@ -24,10 +23,9 @@ main = do
               Left x  -> error $ show x
               Right x -> x
 
-  u <- newIORef 0
-  ll <- compile file ast (UniqSupply u) opt
+  ll <- compile file ast opt
 
-  T.writeFile (dstName opt) =<< ppllvm ll
+  writeFileText (dstName opt) =<< ppllvm ll
 
 ppllvm :: LLVM.AST.Module -> IO Text
 ppllvm ast = withContext $ \ctx ->
