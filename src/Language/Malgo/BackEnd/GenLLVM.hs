@@ -7,6 +7,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TupleSections         #-}
 {-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE RecursiveDo           #-}
 module Language.Malgo.BackEnd.GenLLVM
   ( GenLLVM
   )
@@ -223,43 +224,37 @@ genInst (BinOp op x y) = do
   xOpr <- findVar x
   yOpr <- findVar y
   genBinOp op xOpr yOpr
-genInst (If cond thenBlock elseBlock) = do
-  cOpr      <- findVar cond
-  result    <- alloca (convertType (ltypeOf thenBlock)) Nothing 0
-  thenLabel <- freshName "then"
-  elseLabel <- freshName "else"
-  endLabel  <- freshName "end"
+genInst (If cond thenBlock elseBlock) = mdo
+  cOpr   <- findVar cond
+  result <- alloca (convertType (ltypeOf thenBlock)) Nothing 0
   condBr cOpr thenLabel elseLabel
-  emitBlockStart thenLabel
+  thenLabel <- block `named` "then"
   genBlock thenBlock (\o -> store result 0 o >> br endLabel)
-  emitBlockStart elseLabel
+  elseLabel <- block `named` "else"
   genBlock elseBlock (\o -> store result 0 o >> br endLabel)
-  emitBlockStart endLabel
+  endLabel <- block `named` "end"
   load result 0
-genInst (For index from to body) = do
-  condLabel <- freshName "cond"
-  bodyLabel <- freshName "body"
-  endLabel  <- freshName "end"
+genInst (For index from to body) = mdo
   -- for (i64 i = from;
-  iPtr      <- alloca i64 Nothing 0
+  iPtr <- alloca i64 Nothing 0
   store iPtr 0 =<< findVar from
   br condLabel
 
   -- cond: i < to;
-  emitBlockStart condLabel
-  iOpr <- load iPtr 0
-  cond <- icmp IP.SLT iOpr =<< findVar to
+  condLabel <- block `named` "cond"
+  iOpr      <- load iPtr 0
+  cond      <- icmp IP.SLT iOpr =<< findVar to
   condBr cond bodyLabel endLabel
 
   -- body: genBlock body
-  emitBlockStart bodyLabel
+  bodyLabel <- block `named` "body"
   local (\st -> st { variableMap = insert index iOpr $ variableMap st }) $ genBlock body $ \_ -> do
     -- i++)
     store iPtr 0 =<< add iOpr (int64 1)
     br condLabel
 
   -- end: }
-  emitBlockStart endLabel
+  endLabel <- block `named` "end"
   pure $ ConstantOperand $ C.Undef LT.VoidType
 
 genConstant :: IR.Constant -> GenExpr Operand
