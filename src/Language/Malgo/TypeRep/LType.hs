@@ -24,9 +24,6 @@ data LType = Ptr LType
            | Void
   deriving (Eq, Ord, Show, Read, Generic)
 
-pattern ClosurePtr :: LType -> [LType] -> LType
-pattern ClosurePtr r ps = Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8])
-
 instance Pretty LType where
   pPrint (Ptr    t ) = pPrint t <> "*"
   pPrint (Struct xs) = braces (sep $ punctuate "," $ map pPrint xs)
