@@ -1,8 +1,13 @@
+{-# OPTIONS_GHC -Wno-orphans #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ConstrainedClassMethods #-}
 module Language.Malgo.Prelude
   ( module Relude
   , module Relude.Extra.Map
+  , module Control.Monad.Trans.Writer.CPS
+  , module Control.Monad.Writer.Class
   , foldFor
   , foldForA
   , foldForM
@@ -17,12 +22,16 @@ import           Relude                  hiding ( Constraint
                                                 , Op
                                                 , init
                                                 , unzip
+                                                , pass
                                                 )
 import           Relude.Extra.Map        hiding ( size
                                                 , delete
                                                 )
 import qualified Data.Set                      as Set
 import qualified Data.List                     as List
+import           Control.Monad.Trans.Writer.CPS ( WriterT, runWriterT )
+import qualified Control.Monad.Trans.Writer.CPS as W
+import           Control.Monad.Writer.Class
 
 {-# INLINE foldFor #-}
 foldFor :: (Foldable t, Monoid m) => t a -> (a -> m) -> m
@@ -60,3 +69,9 @@ localState s m = do
 
 unzip :: Functor f => f (a, b) -> (f a, f b)
 unzip xs = (fst <$> xs, snd <$> xs)
+
+instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
+  writer = W.writer
+  tell = W.tell
+  listen = W.listen
+  pass = W.pass

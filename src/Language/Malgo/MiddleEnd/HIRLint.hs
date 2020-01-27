@@ -33,8 +33,8 @@ notDefined a = unlessM (notElem a <$> ask) (errorDoc $ pPrint a <+> "is already 
 
 match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [ID Type] MalgoM ()
 match a b = case (typeOf a, typeOf b) of
-  (TyMeta _, _       )                    -> pass
-  (_       , TyMeta _)                    -> pass
+  (TyMeta _, _       )                    -> pure ()
+  (_       , TyMeta _)                    -> pure ()
   (TyApp c1 ts1, TyApp c2 ts2) | c1 == c2 -> zipWithM_ match ts1 ts2
   (t1, t2) ->
     unless (t1 == t2)

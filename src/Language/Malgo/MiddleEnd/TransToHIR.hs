@@ -8,7 +8,6 @@ module Language.Malgo.MiddleEnd.TransToHIR
   )
 where
 
-import           Control.Monad.Trans.Writer.CPS
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR
 import qualified Language.Malgo.IR.Syntax      as S

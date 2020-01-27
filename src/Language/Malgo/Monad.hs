@@ -31,7 +31,6 @@ import           Colog                          ( HasLog(..)
                                                 )
 import qualified Colog
 import           Control.Monad.Fix
-import           Control.Monad.Trans.Writer.CPS
 import           Language.Malgo.Prelude
 
 data Opt = Opt
