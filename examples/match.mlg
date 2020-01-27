@@ -1,0 +1,9 @@
+let 
+  fun add(xy : { Int, Int }): Int =
+    match xy with
+    | {x, y} => x + y
+  val p = { 1, 2 }
+in
+  add(p)
+end
+ 

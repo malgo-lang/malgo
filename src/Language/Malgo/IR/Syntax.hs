@@ -11,6 +11,9 @@ import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+import           Control.Lens                   ( view
+                                                , _3
+                                                )
 
 data Expr a
   -- | 変数参照
@@ -52,6 +55,8 @@ data Expr a
   | If Info (Expr a) (Expr a) (Expr a)
   -- | 中置演算子
   | BinOp Info Op (Expr a) (Expr a)
+  -- | パターンマッチ
+  | Match Info (Expr a) (NonEmpty (Pat a, Expr a))
   deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 info :: Expr t -> Info
@@ -73,6 +78,7 @@ info (Seq  i _ _        ) = i
 info (Let  i _ _        ) = i
 info (If    i _ _ _     ) = i
 info (BinOp i _ _ _     ) = i
+info (Match i _ _       ) = i
 
 instance Pretty a => Pretty (Expr a) where
   pPrint (Var    _ name          ) = pPrint name
@@ -96,6 +102,17 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Let _ decl body) = parens $ "let" <+> pPrint decl $+$ pPrint body
   pPrint (If    _ c  t f ) = parens $ "if" <+> pPrint c $+$ pPrint t $+$ pPrint f
   pPrint (BinOp _ op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
+  pPrint (Match _ s cs   ) = parens $ "match" <+> pPrint s $+$ sep
+    (punctuate "|" (toList $ fmap pPrintClause cs))
+    where pPrintClause (p, e) = pPrint p <+> "=>" <+> pPrint e
+
+data Pat a = VarP a
+           | TupleP [Pat a]
+  deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
+
+instance Pretty a => Pretty (Pat a) where
+  pPrint (VarP   x ) = pPrint x
+  pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
 
 -- | 中置演算子の種類を表すタグ
 data Op = Add | Sub | Mul | Div
@@ -163,11 +180,11 @@ instance HasType a => HasType (Expr a) where
   typeOf (Call _ fn     _   ) = case typeOf fn of
     (TyApp FunC (ret : _)) -> ret
     _                      -> error "(typeOf fn) should match (TyFun _ ty)"
-  typeOf (Seq _ _ e     ) = typeOf e
-  typeOf (Let _ _ e     ) = typeOf e
-  typeOf (If    _ _  e _) = typeOf e
-  typeOf (BinOp i op x _) = case typeOfOp i op (typeOf x) of
-    (_, _, ty) -> ty
+  typeOf (Seq _ _ e              ) = typeOf e
+  typeOf (Let _ _ e              ) = typeOf e
+  typeOf (If    _ _  e _         ) = typeOf e
+  typeOf (BinOp i op x _         ) = view _3 $ typeOfOp i op (typeOf x)
+  typeOf (Match _ _ ((_, e) :| _)) = typeOf e
 
 typeOfOp :: Info -> Op -> Type -> (Type, Type, Type)
 typeOfOp _ Add  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])

@@ -61,6 +61,10 @@ data Tag
     | OR
     | ARRAY
     | LARROW
+    | BAR
+    | DARROW
+    | MATCH
+    | WITH
     | ID { _id :: String }
     | INT { _int :: Integer }
     | FLOAT { _float :: Double }
@@ -126,6 +130,8 @@ tokenParser = Tok.makeTokenParser Tok.LanguageDef
                           , "<="
                           , ">="
                           , "<-"
+                          , "|"
+                          , "=>"
                           ]
   , Tok.reservedNames   = [ "let"
                           , "in"
@@ -141,6 +147,8 @@ tokenParser = Tok.makeTokenParser Tok.LanguageDef
                           , "true"
                           , "false"
                           , "array"
+                          , "match"
+                          , "with"
                           , "Int"
                           , "Float"
                           , "Bool"
@@ -174,6 +182,8 @@ lexer = do
     <|> keyword info "true"   (BOOL True)
     <|> keyword info "false"  (BOOL False)
     <|> keyword info "array"  ARRAY
+    <|> keyword info "match"  MATCH
+    <|> keyword info "with"   WITH
     <|> keyword info "Int"    TY_INT
     <|> keyword info "Float"  TY_FLOAT
     <|> keyword info "Bool"   TY_BOOL
@@ -211,6 +221,8 @@ lexer = do
     <|> op info "||" OR
     <|> op info "->" ARROW
     <|> op info "<-" LARROW
+    <|> op info "|" BAR
+    <|> op info "=>" DARROW
     <|> fmap (\str -> Token (info, ID str)) identifier
     <|> try (fmap (\f -> Token (info, FLOAT f)) float)
     <|> fmap (\n -> Token (info, INT n))    natural
