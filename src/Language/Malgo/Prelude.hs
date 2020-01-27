@@ -8,6 +8,7 @@ module Language.Malgo.Prelude
   , foldForM
   , Complement(..)
   , localState
+  , unzip
   )
 where
 
@@ -15,6 +16,7 @@ import           Relude                  hiding ( Constraint
                                                 , Type
                                                 , Op
                                                 , init
+                                                , unzip
                                                 )
 import           Relude.Extra.Map        hiding ( size
                                                 , delete
@@ -55,3 +57,6 @@ localState s m = do
   v <- m
   put backup
   pure v
+
+unzip :: Functor f => f (a, b) -> (f a, f b)
+unzip xs = (fst <$> xs, snd <$> xs)

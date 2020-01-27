@@ -28,7 +28,7 @@ data Typing
 
 instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
   passName = "Typing"
-  isDump = dumpTyped
+  isDump   = dumpTyped
   trans e = evaluatingStateT mempty $ do
     (cs, _) <- typingExpr e
     subst   <- catchUnifyError (Syntax.info e) "toplevel" =<< solve cs
@@ -198,6 +198,19 @@ typingExpr (BinOp _ op x y) = do
   typingOp Ge   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
   typingOp And  = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
   typingOp Or   = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
+typingExpr (Match _ scrutinee clauses) = do
+  (cs1, ty1) <- typingExpr scrutinee
+  let (pats, exprs) = unzip clauses
+  cs2 <- mapM (typingPat ty1) pats
+  (css, t :| _) <- unzip <$> mapM typingExpr exprs
+  pure (cs1 <> concat cs2 <> concat css, t)
+
+typingPat :: Type -> Pat (ID ()) -> InferM [Constraint]
+typingPat ty (VarP   x ) = defineVar x ty >> pure []
+typingPat ty (TupleP ps) = do
+  vs <- replicateM (length ps) newTyMeta
+  cs <- concat <$> zipWithM typingPat vs ps
+  pure (ty :~ TyApp TupleC vs : cs)
 
 isValue :: Expr a -> Bool
 isValue Var{}        = True
