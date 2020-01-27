@@ -23,7 +23,7 @@ data Rename
 
 instance Pass Rename (Expr String) (Expr (ID ())) where
   passName = "Rename"
-  isDump = dumpRenamed
+  isDump   = dumpRenamed
   trans s = runReaderT (renameExpr s) mempty
 
 type RenameM a = ReaderT (Map String (ID ())) MalgoM a
@@ -84,3 +84,15 @@ renameExpr (Let info0 (ExDec info1 name typ orig) e) =
     <*> renameExpr e
 renameExpr (If    info c  t f) = If info <$> renameExpr c <*> renameExpr t <*> renameExpr f
 renameExpr (BinOp info op x y) = BinOp info op <$> renameExpr x <*> renameExpr y
+renameExpr (Match info scrutinee clauses) =
+  Match info <$> renameExpr scrutinee <*> mapM (renameClause info) clauses
+
+renameClause :: Info -> (Pat String, Expr String) -> RenameM (Pat (ID ()), Expr (ID ()))
+renameClause info (p, e) = renamePat info p $ \p' -> (p', ) <$> renameExpr e
+
+renamePat :: Info -> Pat String -> (Pat (ID ()) -> RenameM b) -> RenameM b
+renamePat info (VarP   x ) k = withKnowns [x] $ VarP <$> getID info x >>= k
+renamePat info (TupleP ps) k = go ps []
+ where
+  go []       acc = k (TupleP $ reverse acc)
+  go (x : xs) acc = renamePat info x $ \x' -> go xs (x' : acc)
