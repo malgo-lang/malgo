@@ -91,8 +91,8 @@ getInfo = do
   pos <- getPosition
   pure (Info (toText $ sourceName pos, sourceLine pos, sourceColumn pos))
 
-lexer' :: Stream s m Char => Tok.GenTokenParser s u m
-lexer' = Tok.makeTokenParser Tok.LanguageDef
+tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
+tokenParser = Tok.makeTokenParser Tok.LanguageDef
   { Tok.nestedComments  = True
   , Tok.opStart         = oneOf ".+-*/:=%;<&|>"
   , Tok.opLetter        = oneOf ".+-*/:=%;<&|>"
@@ -151,11 +151,11 @@ lexer' = Tok.makeTokenParser Tok.LanguageDef
 
 keyword :: Stream s m Char => Info -> String -> Tag -> ParsecT s u m Token
 keyword info word tag = reserved word >> pure (Token (info, tag))
-  where reserved = Tok.reserved lexer'
+  where reserved = Tok.reserved tokenParser
 
 op :: Stream s m Char => Info -> String -> Tag -> ParsecT s u m Token
 op info sym tag = reservedOp sym >> pure (Token (info, tag))
-  where reservedOp = Tok.reservedOp lexer'
+  where reservedOp = Tok.reservedOp tokenParser
 
 lexer :: Stream s m Char => ParsecT s u m Token
 lexer = do
@@ -217,12 +217,12 @@ lexer = do
     <|> fmap (\c -> Token (info, CHAR c))   charLiteral
     <|> fmap (\s -> Token (info, STRING s)) stringLiteral
  where
-  natural       = Tok.natural lexer'
-  float         = Tok.float lexer'
-  identifier    = Tok.identifier lexer'
-  stringLiteral = Tok.stringLiteral lexer'
-  charLiteral   = Tok.charLiteral lexer'
-  symbol        = Tok.symbol lexer'
+  natural       = Tok.natural tokenParser
+  float         = Tok.float tokenParser
+  identifier    = Tok.identifier tokenParser
+  stringLiteral = Tok.stringLiteral tokenParser
+  charLiteral   = Tok.charLiteral tokenParser
+  symbol        = Tok.symbol tokenParser
   lparen        = symbol "("
   rparen        = symbol ")"
   lbrack        = symbol "["
@@ -232,4 +232,4 @@ lexer = do
 
 lexing :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
 lexing = runParserT (whiteSpace >> many lexer >>= \toks -> eof >> pure toks)
-  where whiteSpace = Tok.whiteSpace lexer'
+  where whiteSpace = Tok.whiteSpace tokenParser
