@@ -3,6 +3,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ConstrainedClassMethods #-}
+{-# LANGUAGE UndecidableInstances #-}
 module Language.Malgo.Prelude
   ( module Relude
   , module Relude.Extra.Map
@@ -75,3 +76,13 @@ instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
   tell = W.tell
   listen = W.listen
   pass = W.pass
+
+instance (Monoid w, MonadReader r m) => MonadReader r (WriterT w m) where
+  ask = lift ask
+  local = W.mapWriterT . local
+  reader = lift . reader
+
+instance (Monoid w, MonadState s m) => MonadState s (WriterT w m) where
+  get = lift get
+  put = lift . put
+  state = lift . state
