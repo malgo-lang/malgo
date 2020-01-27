@@ -277,7 +277,7 @@ coerceTo to x = case (to, ltypeOf x) of
   (SizeT     , I64   ) -> cast SizeT x
   (SizeT     , U64   ) -> cast SizeT x
   (SizeT     , Ptr U8) -> cast SizeT x
-  (Ptr ty    , Ptr U8) -> cast (Ptr ty) x
+  (Ptr ty    , Ptr _) -> cast (Ptr ty) x
   (Bit       , Ptr U8) -> cast U64 x >>= trunc Bit
   (I32       , Ptr U8) -> cast I64 x >>= trunc I32
   (I64       , Ptr U8) -> cast I64 x
