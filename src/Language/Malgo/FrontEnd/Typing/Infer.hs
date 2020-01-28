@@ -5,7 +5,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TupleSections         #-}
 module Language.Malgo.FrontEnd.Typing.Infer
   ( Typing
   )
@@ -118,12 +117,11 @@ typingExpr (Call _ fn args) = do
   pure retTy
 typingExpr (Fn i params body) = do
   env        <- get
-  paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta) params
+  paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
   mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
   (t, cs) <- listen $ typingExpr body
   sub     <- catchUnifyError i "function literal" =<< solve cs
-  let funTy = generalize (apply sub env) $ apply sub (TyApp FunC (t : paramTypes))
-  pure funTy
+  pure $ generalize (apply sub env) $ apply sub (TyApp FunC (t : paramTypes))
 typingExpr (Seq i e1 e2) = do
   (_, cs1) <- listen $ typingExpr e1
   _        <- catchUnifyError i "seq" =<< solve cs1
@@ -150,12 +148,10 @@ typingExpr (Let _ (FunDec fs) e) = do
   mapM_ (typingFunDec env) fs
   typingExpr e
  where
-  prepare (_, f, _, _, _) = do
-    v <- newTyMeta
-    defineVar f v
+  prepare (_, f, _, _, _) = defineVar f =<< newTyMeta
   typingFunDec env (i', f, params, mretty, body) = do
-    paramTypes <- mapM (\(_, mparamType) -> whenNothing mparamType newTyMeta) params
-    retType    <- whenNothing mretty newTyMeta
+    paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
+    retType    <- mretty `whenNothing` newTyMeta
 
     mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
     (t, cs1) <- listen $ typingExpr body
