@@ -32,6 +32,11 @@ data Expr a = Var a
             | If a (Expr a) (Expr a)
             | Prim String Type [a]
             | BinOp Op a a
+            | Match a (NonEmpty (Pat a, Expr a))
+  deriving (Eq, Show, Read, Generic, Functor, Foldable)
+
+data Pat a = VarP a
+           | TupleP [a]
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 data Def a = Def { name :: a, params :: [a], expr :: Expr a }
@@ -103,6 +108,7 @@ instance HasType a => HasType (Expr a) where
     Ge   -> TyApp BoolC []
     And  -> TyApp BoolC []
     Or   -> TyApp BoolC []
+  typeOf (Match _ ((_, e) :| _)) = typeOf e
 
 instance HasType Lit where
   typeOf Int{}    = TyApp IntC []
@@ -124,8 +130,14 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Let x v e    ) = parens $ "let" <+> pPrint x <+> pPrint v $+$ pPrint e
   pPrint (LetRec xs e  ) = parens $ "let rec" <+> parens (sep $ map pPrint xs) $+$ pPrint e
   pPrint (If    c  t f ) = parens $ "if" <+> pPrint c $+$ pPrint t $+$ pPrint f
-  pPrint (BinOp op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
   pPrint (Prim  x  t xs) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
+  pPrint (BinOp op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
+  pPrint (Match s cs) = parens $ "match" <+> pPrint s $+$ parens (sep $ toList $ fmap f cs)
+    where f (p, e) = parens $ pPrint p <+> pPrint e
+
+instance Pretty a => Pretty (Pat a) where
+  pPrint (VarP x) = pPrint x
+  pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
 
 instance Pretty a => Pretty (Def a) where
   pPrint Def { name, params, expr } =

@@ -114,6 +114,10 @@ instance Pretty a => Pretty (Pat a) where
   pPrint (VarP   x ) = pPrint x
   pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
 
+instance HasType a => HasType (Pat a) where
+  typeOf (VarP x) = typeOf x
+  typeOf (TupleP xs) = TyApp TupleC $ map typeOf xs
+
 -- | 中置演算子の種類を表すタグ
 data Op = Add | Sub | Mul | Div
         | FAdd | FSub | FMul | FDiv

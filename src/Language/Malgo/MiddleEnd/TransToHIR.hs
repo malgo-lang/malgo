@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
@@ -91,4 +92,17 @@ transToHIR (S.BinOp _ op x y) = appInsert $ BinOp op' <$> insertLet x <*> insert
     S.Ge   -> Ge
     S.And  -> And
     S.Or   -> Or
-transToHIR (S.Match{}) = undefined
+transToHIR (S.Match _ s cs) =
+  appInsert $ Match <$> insertLet s <*> mapM (\(p, e) -> crushPat p =<< transToHIR e) cs
+
+crushPat :: MonadMalgo m => S.Pat (ID Type) -> Expr (ID Type) -> m (Pat (ID Type), Expr (ID Type))
+crushPat (S.VarP   x ) e = pure (VarP x, e)
+crushPat (S.TupleP xs) e = go xs [] e
+ where
+  go []              acc e = pure (TupleP $ reverse acc, e)
+  go (S.VarP x : ps) acc e = go ps (x : acc) e
+  go (p        : ps) acc e = do
+    x <- newTmp "pat" $ typeOf p
+    go ps (x : acc) =<< do
+      clause <- crushPat p e
+      pure $ Match x (clause :| [])
