@@ -60,10 +60,9 @@ instance Eq a => Complement [a] where
   (\\) = (List.\\)
 
 {-# INLINE localState #-}
-localState :: MonadState s m => s -> m a -> m a
-localState s m = do
+localState :: MonadState s m => m a -> m a
+localState m = do
   backup <- get
-  put s
   v <- m
   put backup
   pure v

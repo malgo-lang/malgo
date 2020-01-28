@@ -117,7 +117,8 @@ instance MonadExprBuilder ExprBuilder where
       <+> pPrint inst
     modifying partialBlockInsts (<> Endo ((i, inst) :))
     pure i
-  localBlock (ExprBuilder m) = ExprBuilder $ localState (ExprState mempty) $ do
+  localBlock (ExprBuilder m) = ExprBuilder $ localState $ do
+    put (ExprState mempty)
     retval <- m
     insts  <- flip appEndo [] <$> gets (view partialBlockInsts)
     pure (Block insts retval)
