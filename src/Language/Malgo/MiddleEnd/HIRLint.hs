@@ -20,7 +20,7 @@ import           Language.Malgo.Prelude
 
 data HIRLint
 
-instance Pass HIRLint (Expr Type (ID Type)) (Expr Type (ID Type)) where
+instance Pass HIRLint (Expr (ID Type)) (Expr (ID Type)) where
   passName = "HIRLint"
   isDump _ = False
   trans e = usingReaderT [] (lintExpr e) >> pure e
@@ -45,7 +45,7 @@ match a b = case (typeOf a, typeOf b) of
       <+> pPrint (typeOf b)
       $+$ parens (fsep [pPrint a, colon, pPrint b])
 
-lintExpr :: Expr Type (ID Type) -> ReaderT [ID Type] MalgoM Type
+lintExpr :: Expr (ID Type) -> ReaderT [ID Type] MalgoM Type
 lintExpr e@(Call f xs) = do
   mapM_ defined (f : xs)
   paramtys <- getParamtys
@@ -71,5 +71,5 @@ lintExpr (If c t f) = do
   lintExpr f
 lintExpr e = pure $ typeOf e
 
-lintFunDec :: Def Type (ID Type) -> ReaderT [ID Type] MalgoM Type
+lintFunDec :: Def (ID Type) -> ReaderT [ID Type] MalgoM Type
 lintFunDec Def { params, expr } = local (params <>) $ lintExpr expr

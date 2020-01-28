@@ -23,7 +23,7 @@ import           Language.Malgo.Prelude
 
 data Closure
 
-instance Pass Closure (H.Expr Type (ID Type)) (Program Type (ID Type)) where
+instance Pass Closure (H.Expr (ID Type)) (Program (ID Type)) where
   passName = "Closure"
   isDump   = dumpClosure
   trans e = do
@@ -35,17 +35,17 @@ instance Pass Closure (H.Expr Type (ID Type)) (Program Type (ID Type)) where
 
 data Env = Env { knowns   :: [ID Type]
                , mutrecs  :: [ID Type]
-               , functions :: IORef [Func Type (ID Type)]
+               , functions :: IORef [Func (ID Type)]
                }
 
 type TransM a = ReaderT Env MalgoM a
 
-addFunc :: Func Type (ID Type) -> TransM ()
+addFunc :: Func (ID Type) -> TransM ()
 addFunc func = do
   Env { functions } <- ask
   modifyIORef functions (func :)
 
-getFunc :: ID Type -> TransM (Func Type (ID Type))
+getFunc :: ID Type -> TransM (Func (ID Type))
 getFunc func = do
   Env { functions } <- ask
   fs                <- readIORef functions
@@ -53,7 +53,7 @@ getFunc func = do
     Just f  -> pure f
     Nothing -> errorDoc $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 
-transExpr :: H.Expr Type (ID Type) -> TransM (M.Expr Type (ID Type))
+transExpr :: H.Expr (ID Type) -> TransM (M.Expr (ID Type))
 transExpr (H.Var   x              ) = pure $ Var x
 transExpr (H.Lit   x              ) = pure $ Lit x
 transExpr (H.Tuple xs             ) = pure $ Tuple xs
@@ -111,7 +111,7 @@ transExpr (H.LetRec defs e   ) = do
       Nothing   -> pure mempty
       Just caps -> pure $ Endo $ Let name (MakeClosure name caps)
 
-freevars :: Ord a => Expr t a -> Set a
+freevars :: Ord a => Expr a -> Set a
 freevars (Var x)                 = one x
 freevars Lit{}                   = mempty
 freevars (Tuple xs             ) = fromList xs

@@ -15,17 +15,17 @@ import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( (!!) )
 
-data Program t a = Program { functions :: [Func t a], mainExpr :: Expr t a }
+data Program a = Program { functions :: [Func a], mainExpr :: Expr a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
-instance (Pretty t, Pretty a) => Pretty (Program t a) where
+instance Pretty a => Pretty (Program a) where
   pPrint Program { functions, mainExpr } =
     vcat (map pPrint functions) $$ "entry point =" $+$ nest 2 (pPrint mainExpr)
 
-data Func t a = Func { name :: a, captures :: Maybe [a], mutrecs :: [a], params :: [a], body :: Expr t a }
+data Func a = Func { name :: a, captures :: Maybe [a], mutrecs :: [a], params :: [a], body :: Expr a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
-instance (Pretty t, Pretty a) => Pretty (Func t a) where
+instance Pretty a => Pretty (Func a) where
   pPrint Func { name, captures, params, body } = case captures of
     Just caps ->
       pPrint name <+> brackets (sep $ map pPrint caps) <+> sep (map pPrint params) <+> "=" $+$ nest
@@ -33,33 +33,33 @@ instance (Pretty t, Pretty a) => Pretty (Func t a) where
         (pPrint body)
     Nothing -> pPrint name <+> sep (map pPrint params) <+> "=" $+$ nest 2 (pPrint body)
 
-data Expr t a = Var a
-              | Lit Lit
-              | Tuple [a]
-              | TupleAccess a Int
-              | MakeArray
-                a -- init
-                a -- size
-              | ArrayRead
-                a -- array
-                a -- index
-              | ArrayWrite
-                a -- array
-                a -- index
-                a -- value
-              | MakeClosure
-                a -- function
-                [a] -- captured variables (may recursive)
-              | CallDirect a [a] -- direct call
-              | CallWithCaptures a [a] -- indirect call for mutrec functions
-              | CallClosure a [a] -- indirect call
-              | Let a (Expr t a) (Expr t a)
-              | If a (Expr t a) (Expr t a)
-              | Prim String t [a]
-              | BinOp Op a a
+data Expr a = Var a
+            | Lit Lit
+            | Tuple [a]
+            | TupleAccess a Int
+            | MakeArray
+              a -- init
+              a -- size
+            | ArrayRead
+              a -- array
+              a -- index
+            | ArrayWrite
+              a -- array
+              a -- index
+              a -- value
+            | MakeClosure
+              a -- function
+              [a] -- captured variables (may recursive)
+            | CallDirect a [a] -- direct call
+            | CallWithCaptures a [a] -- indirect call for mutrec functions
+            | CallClosure a [a] -- indirect call
+            | Let a (Expr a) (Expr a)
+            | If a (Expr a) (Expr a)
+            | Prim String Type [a]
+            | BinOp Op a a
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
-flattenExpr :: Expr t a -> Expr t a
+flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) = go (flattenExpr v1)
  where
   go (Let y v2 e2) = Let y v2 (go e2)
@@ -67,10 +67,10 @@ flattenExpr (Let x v1 e1) = go (flattenExpr v1)
 flattenExpr (If c t f) = If c (flattenExpr t) (flattenExpr f)
 flattenExpr e          = e
 
-flattenDef :: (a, [a], Expr t a) -> (a, [a], Expr t a)
+flattenDef :: (a, [a], Expr a) -> (a, [a], Expr a)
 flattenDef (f, ps, e) = (f, ps, flattenExpr e)
 
-instance (Pretty t, Pretty a) => Pretty (Expr t a) where
+instance Pretty a => Pretty (Expr a) where
   pPrint (Var   x             ) = pPrint x
   pPrint (Lit   x             ) = pPrint x
   pPrint (Tuple xs            ) = braces $ sep $ punctuate "," $ map pPrint xs
@@ -88,7 +88,7 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (BinOp op x y         ) = parens $ sep [pPrint op, pPrint x, pPrint y]
   pPrint (Prim  x  t xs        ) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
 
-instance (HasType t, HasType a) => HasType (Expr t a) where
+instance HasType a => HasType (Expr a) where
   typeOf (Var   x        ) = typeOf x
   typeOf (Lit   x        ) = typeOf x
   typeOf (Tuple xs       ) = TyApp TupleC $ map typeOf xs

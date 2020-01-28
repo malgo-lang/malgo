@@ -27,7 +27,7 @@ import           Relude.Unsafe                  ( fromJust )
 
 data GenLIR
 
-instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
+instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
   passName = "GenLIR"
   isDump   = dumpLIR
   trans M.Program { functions, mainExpr } = do
@@ -47,7 +47,7 @@ instance Pass GenLIR (M.Program Type (ID Type)) (L.Program (ID LType)) where
       | otherwise = Function (convertType $ typeOf r) (Ptr U8 : map (convertType . typeOf) ps)
 
 -- generate LIR
-genFunction :: M.Func Type (ID Type) -> ProgramBuilder (L.Func (ID LType))
+genFunction :: M.Func (ID Type) -> ProgramBuilder (L.Func (ID LType))
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
   let funcParams = map (\p@ID { idMeta } -> updateID p (convertType idMeta)) params
@@ -73,12 +73,12 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     clsId <- packClosure f' capsId
     pure (one (f, clsId))
 
-genMainFunction :: ID LType -> Expr Type (ID Type) -> ProgramBuilder (L.Func (ID LType))
+genMainFunction :: ID LType -> Expr (ID Type) -> ProgramBuilder (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
   body <- runExprBuilder (ExprEnv mempty Nothing) $ genExpr mainExpr >> addInst (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
-genExpr :: MonadExprBuilder m => Expr Type (ID Type) -> m (ID LType)
+genExpr :: MonadExprBuilder m => Expr (ID Type) -> m (ID LType)
 genExpr (M.Var   x               ) = findVar x
 genExpr (M.Lit   (Int      x    )) = addInst $ Constant $ Int64 $ fromInteger x
 genExpr (M.Lit   (Float    x    )) = addInst $ Constant $ Float64 x

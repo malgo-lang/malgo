@@ -20,12 +20,12 @@ import           Language.Malgo.Prelude
 
 data MIRLint
 
-instance Pass MIRLint (Program Type (ID Type)) (Program Type (ID Type)) where
+instance Pass MIRLint (Program (ID Type)) (Program (ID Type)) where
   passName = "MIRLint"
   isDump _ = False
   trans e@(Program fs _) = usingReaderT (Env fs []) (lintProgram e) >> pure e
 
-data Env = Env { functions :: [Func Type (ID Type)]
+data Env = Env { functions :: [Func (ID Type)]
                , variables :: [ID Type]
                }
 
@@ -52,16 +52,16 @@ isUnknownFunc a = do
     Just Func { captures = Just _ } -> pure ()
     _                               -> errorDoc $ pPrint a <+> "is not known function"
 
-lintProgram :: (MonadReader Env m, MonadIO m) => Program Type (ID Type) -> m ()
+lintProgram :: (MonadReader Env m, MonadIO m) => Program (ID Type) -> m ()
 lintProgram Program { functions, mainExpr } = do
   mapM_ lintFunc functions
   lintExpr mainExpr
 
-lintFunc :: (MonadReader Env m, MonadIO m) => Func Type (ID Type) -> m ()
+lintFunc :: (MonadReader Env m, MonadIO m) => Func (ID Type) -> m ()
 lintFunc Func { name = _, captures, mutrecs, params, body } =
   local (\e -> e { variables = fromMaybe [] captures <> params <> mutrecs }) $ lintExpr body
 
-lintExpr :: (MonadReader Env m, MonadIO m) => Expr Type (ID Type) -> m ()
+lintExpr :: (MonadReader Env m, MonadIO m) => Expr (ID Type) -> m ()
 lintExpr (Var   a              ) = definedVar a
 lintExpr (Lit   _              ) = pure ()
 lintExpr (Tuple xs             ) = mapM_ definedVar xs

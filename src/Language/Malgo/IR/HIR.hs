@@ -12,29 +12,29 @@ import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( (!!) )
 
-data Expr t a = Var a
-              | Lit Lit
-              | Tuple [a]
-              | TupleAccess a Int
-              | MakeArray
-                a -- init 
-                a -- size
-              | ArrayRead
-                a -- array
-                a -- index
-              | ArrayWrite
-                a -- array
-                a -- index
-                a -- value
-              | Call a [a]
-              | Let a (Expr t a) (Expr t a)
-              | LetRec [Def t a] (Expr t a)
-              | If a (Expr t a) (Expr t a)
-              | Prim String t [a]
-              | BinOp Op a a
+data Expr a = Var a
+            | Lit Lit
+            | Tuple [a]
+            | TupleAccess a Int
+            | MakeArray
+              a -- init 
+              a -- size
+            | ArrayRead
+              a -- array
+              a -- index
+            | ArrayWrite
+              a -- array
+              a -- index
+              a -- value
+            | Call a [a]
+            | Let a (Expr a) (Expr a)
+            | LetRec [Def a] (Expr a)
+            | If a (Expr a) (Expr a)
+            | Prim String Type [a]
+            | BinOp Op a a
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
-data Def t a = Def { name :: a, params :: [a], expr :: Expr t a }
+data Def a = Def { name :: a, params :: [a], expr :: Expr a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)
 
 data Lit = Int Integer
@@ -50,7 +50,7 @@ data Op = Add | Sub | Mul | Div | Mod
         | And | Or
   deriving (Eq, Show, Read, Generic)
 
-flattenExpr :: Expr t a -> Expr t a
+flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) = go (flattenExpr v1)
  where
   go (Let y v2 e2) = Let y v2 (go e2)
@@ -60,11 +60,11 @@ flattenExpr (LetRec defs body) = LetRec (map flattenDef defs) (flattenExpr body)
 flattenExpr (If c t f        ) = If c (flattenExpr t) (flattenExpr f)
 flattenExpr e                  = e
 
-flattenDef :: Def t a -> Def t a
+flattenDef :: Def a -> Def a
 flattenDef Def { name, params, expr } =
   Def { name = name, params = params, expr = flattenExpr expr }
 
-instance (HasType t, HasType a) => HasType (Expr t a) where
+instance HasType a => HasType (Expr a) where
   typeOf (Var   x        ) = typeOf x
   typeOf (Lit   x        ) = typeOf x
   typeOf (Tuple xs       ) = TyApp TupleC $ map typeOf xs
@@ -111,7 +111,7 @@ instance HasType Lit where
   typeOf Char{}   = TyApp CharC []
   typeOf String{} = TyApp StringC []
 
-instance (Pretty t, Pretty a) => Pretty (Expr t a) where
+instance Pretty a => Pretty (Expr a) where
   pPrint (Var   x             ) = pPrint x
   pPrint (Lit   x             ) = pPrint x
   pPrint (Tuple xs            ) = braces $ sep $ punctuate "," $ map pPrint xs
@@ -127,7 +127,7 @@ instance (Pretty t, Pretty a) => Pretty (Expr t a) where
   pPrint (BinOp op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
   pPrint (Prim  x  t xs) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
 
-instance (Pretty t, Pretty a) => Pretty (Def t a) where
+instance Pretty a => Pretty (Def a) where
   pPrint Def { name, params, expr } =
     pPrint name <+> parens (sep $ punctuate "," $ map pPrint params) <+> "=" $+$ pPrint expr
 
