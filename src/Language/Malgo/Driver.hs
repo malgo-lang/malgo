@@ -15,7 +15,7 @@ import           Language.Malgo.BackEnd.GenLLVM
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
 import qualified Language.Malgo.IR.Syntax      as Syntax
-import           Language.Malgo.MiddleEnd.Closure
+import           Language.Malgo.MiddleEnd.TransToMIR
 import           Language.Malgo.MiddleEnd.HIRLint
 import           Language.Malgo.MiddleEnd.MIRLint
 import           Language.Malgo.MiddleEnd.TransToHIR
@@ -55,7 +55,7 @@ compile filename ast = M.runMalgo $ do
     >>= transWithDump @Typing
     >>= transWithDump @TransToHIR
     >>= transWithDump @HIRLint
-    >>= transWithDump @Closure
+    >>= transWithDump @TransToMIR
     >>= transWithDump @MIRLint
     >>= transWithDump @GenLIR
     >>= trans @GenLLVM

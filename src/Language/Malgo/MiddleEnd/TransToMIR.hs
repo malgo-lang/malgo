@@ -6,8 +6,8 @@
 {-# LANGUAGE NamedFieldPuns        #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE OverloadedStrings     #-}
-module Language.Malgo.MiddleEnd.Closure
-  ( Closure
+module Language.Malgo.MiddleEnd.TransToMIR
+  ( TransToMIR
   )
 where
 
@@ -21,10 +21,10 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 
-data Closure
+data TransToMIR
 
-instance Pass Closure (H.Expr (ID Type)) (Program (ID Type)) where
-  passName = "Closure"
+instance Pass TransToMIR (H.Expr (ID Type)) (Program (ID Type)) where
+  passName = "TransToMIR"
   isDump   = dumpClosure
   trans e = do
     functionsRef <- newIORef []
@@ -110,6 +110,10 @@ transExpr (H.LetRec defs e   ) = do
     case captures of
       Nothing   -> pure mempty
       Just caps -> pure $ Endo $ Let name (MakeClosure name caps)
+transExpr (H.Match s ((H.VarP x, e) :| _)) = Let x (Var s) <$> transExpr e
+transExpr (H.Match s ((H.TupleP xs, e) :| _)) =
+  appEndo (mconcat $ zipWith (\i x -> Endo (Let x (TupleAccess s i))) [0 ..] xs)
+    <$> transExpr e
 
 freevars :: Ord a => Expr a -> Set a
 freevars (Var x)                 = one x
