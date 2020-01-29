@@ -13,6 +13,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.FrontEnd.Typing.Subst
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+import           Control.Monad.Error.Class
 
 data Constraint = Type :~ Type
   deriving (Eq, Show)
@@ -30,7 +31,7 @@ data UnifyError = MismatchConstructor TyCon TyCon
 solve :: MonadMalgo m => [Constraint] -> m (Either UnifyError Subst)
 solve cs = runExceptT $ solver (mempty, cs)
 
-solver :: MonadMalgo m => (Subst, [Constraint]) -> ExceptT UnifyError m Subst
+solver :: MonadError UnifyError m => (Subst, [Constraint]) -> m Subst
 solver (su, []             ) = return su
 solver (su, (t1 :~ t2) : cs) = do
   su1 <- unify t1 t2
@@ -52,27 +53,27 @@ instantiate (TyForall vs t ) = do
   t' <- instantiate t
   pure $ apply subst t'
 
-unify :: MonadMalgo m => Type -> Type -> ExceptT UnifyError m Subst
+unify :: MonadError UnifyError m => Type -> Type -> m Subst
 unify (TyMeta a) t          = bind a t
 unify t          (TyMeta a) = bind a t
 unify (TyApp c1 ts1) (TyApp c2 ts2) | c1 == c2  = unifyMany ts1 ts2
-                                    | otherwise = hoistEither $ Left $ MismatchConstructor c1 c2
+                                    | otherwise = throwError $ MismatchConstructor c1 c2
 unify (TyForall ts1 t1) (TyForall ts2 t2) | length ts1 == length ts2 = do
   let subst = Subst $ fromList $ zipWith (\v1 v2 -> (v1, TyMeta v2)) ts1 ts2
   unify (apply subst t1) (apply subst t2)
-unify t1 t2 = hoistEither $ Left $ MismatchLevel t1 t2
+unify t1 t2 = throwError $ MismatchLevel t1 t2
 
-unifyMany :: MonadMalgo m => [Type] -> [Type] -> ExceptT UnifyError m Subst
+unifyMany :: MonadError UnifyError m => [Type] -> [Type] -> m Subst
 unifyMany []         []         = return mempty
 unifyMany (t1 : ts1) (t2 : ts2) = do
   s1 <- unify t1 t2
   s2 <- unifyMany (apply s1 ts1) (apply s1 ts2)
   return $ s2 <> s1
-unifyMany ts1 ts2 = hoistEither $ Left $ MismatchLength ts1 ts2
+unifyMany ts1 ts2 = throwError $ MismatchLength ts1 ts2
 
-bind :: Monad m => TyVar -> Type -> ExceptT UnifyError m Subst
+bind :: MonadError UnifyError m => TyVar -> Type -> m Subst
 bind a t | t == TyMeta a   = return mempty
-         | occursCheck a t = hoistEither $ Left $ InfinitType a t
+         | occursCheck a t = throwError $ InfinitType a t
          | otherwise       = return $ Subst (one (a, t))
 
 occursCheck :: Substitutable a => TyVar -> a -> Bool
