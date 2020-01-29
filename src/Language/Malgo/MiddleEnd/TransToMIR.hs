@@ -78,8 +78,8 @@ transExpr (H.LetRec defs e   ) = do
     (,)
       <$> transExpr e
       -- 変換したdefsの自由変数を集計する
-      <*> foldForM funcNames
-                   (getFunc >=> \Func { params, body } -> pure $ freevars body \\ fromList params)
+      <*> foldMapM (getFunc >=> \Func { params, body } -> pure $ freevars body \\ fromList params)
+                   funcNames
   if fv == mempty && (freevars e' `intersection` fromList funcNames) == mempty
     -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
     then pure e'

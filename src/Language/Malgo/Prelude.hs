@@ -9,9 +9,6 @@ module Language.Malgo.Prelude
   , module Relude.Extra.Map
   , module Control.Monad.Trans.Writer.CPS
   , module Control.Monad.Writer.Class
-  , foldFor
-  , foldForA
-  , foldForM
   , Complement(..)
   , localState
   , unzip
@@ -38,19 +35,6 @@ import           Control.Monad.Trans.Writer.CPS ( WriterT
 import qualified Control.Monad.Trans.Writer.CPS
                                                as W
 import           Control.Monad.Writer.Class
-
--- flip foldMap*
-{-# INLINE foldFor #-}
-foldFor :: (Foldable t, Monoid m) => t a -> (a -> m) -> m
-foldFor = flip foldMap
-
-{-# INLINE foldForA #-}
-foldForA :: (Monoid b, Applicative m, Foldable f) => f a -> (a -> m b) -> m b
-foldForA = flip foldMapA
-
-{-# INLINE foldForM #-}
-foldForM :: (Monoid b, Monad m, Foldable f) => f a -> (a -> m b) -> m b
-foldForM = flip foldMapM
 
 -- 差分を取ることができるデータ構造を表す型クラス
 class One a => Complement a where

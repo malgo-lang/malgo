@@ -8,7 +8,9 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
 
-import           Control.Lens.Indexed           ( iforM, iforM_ )
+import           Control.Lens.Indexed           ( iforM_
+                                                , ifoldlM
+                                                )
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR         as H
                                                 ( Lit(..)
@@ -59,20 +61,17 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   capsId   <- newID (Ptr U8) "$caps"
   let funcParams = map (\x -> updateID x (convertType (typeOf x))) params
   bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
-    capsMap <- genUnpackCaps capsId
-    clsMap  <- genCls capsId
+    -- unwrap captures
+    capsMap <- do
+      capsId' <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
+      ifoldlM (\i m c -> insert c <$> loadC capsId' [0, i] <*> pure m) mempty caps
+    -- generate closures of mutrec functions
+    clsMap <- foldlM
+      (\m f -> insert f <$> (findFunc f >>= \f' -> packClosure f' capsId) <*> pure m)
+      mempty
+      mutrecs
     withVariables (capsMap <> clsMap) $ genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
- where
-  genUnpackCaps capsId = do
-    capsId' <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-    fmap fromList $ iforM caps $ \i c -> do
-      cOpr <- loadC capsId' [0, i]
-      pure (c, cOpr)
-  genCls capsId = foldForM mutrecs $ \f -> do
-    f'    <- findFunc f
-    clsId <- packClosure f' capsId
-    pure (one (f, clsId))
 
 genMainFunction :: ID LType -> Expr (ID Type) -> ProgramBuilder (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
@@ -89,9 +88,7 @@ genExpr (M.Lit   (Char     x    )) = addInst $ Constant $ Word8 $ fromIntegral $
 genExpr (M.Lit   (H.String xs   )) = addInst $ Constant $ L.String xs
 genExpr (M.Tuple xs              ) = do
   tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs)
-  iforM_ xs $ \i x -> do
-    val <- findVar x
-    storeC tuplePtr [0, i] val
+  iforM_ xs $ \i x -> storeC tuplePtr [0, i] =<< findVar x
   pure tuplePtr
 genExpr (M.TupleAccess t i) = do
   tuplePtr <- findVar t
