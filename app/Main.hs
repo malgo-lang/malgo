@@ -17,7 +17,7 @@ main = do
   opt <- parseOpt
 
   let file = srcName opt
-  tokens <- Lexer.lexing () file =<< readFile file
+  tokens <- Lexer.tokenize () file =<< readFile file
   let parser = Parser.parseExpr
   let ast = case parser <$> tokens of
               Left x  -> error $ show x

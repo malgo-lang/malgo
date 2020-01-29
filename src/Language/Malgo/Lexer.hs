@@ -4,7 +4,10 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE Strict                #-}
-module Language.Malgo.Lexer ( Token(..), Tag(..), _info, _tag, lexing ) where
+module Language.Malgo.Lexer
+  ( tokenize
+  )
+where
 
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Prelude  hiding ( EQ
@@ -16,79 +19,11 @@ import           Text.Parsec             hiding ( many
                                                 )
 import           Text.Parsec.Pos                ( )
 import qualified Text.Parsec.Token             as Tok
+import           Language.Malgo.Token
 
-data Tag
-    = LET
-    | IN
-    | END
-    | VAL
-    | FUN
-    | TYPE
-    | EXTERN
-    | LPAREN
-    | RPAREN
-    | LBRACK
-    | RBRACK
-    | LBRACE
-    | RBRACE
-    | COMMA
-    | COLON
-    | SEMICOLON
-    | EQUAL
-    | SEMICOLON_EQUAL
-    | FN
-    | IF
-    | THEN
-    | ELSE
-    | DOT
-    | PLUS
-    | PLUS_DOT
-    | MINUS
-    | MINUS_DOT
-    | ASTERISK
-    | ASTERISK_DOT
-    | SLASH
-    | SLASH_DOT
-    | PERCENT
-    | ARROW
-    | EQ
-    | NEQ
-    | LT
-    | GT
-    | LE
-    | GE
-    | AND
-    | OR
-    | ARRAY
-    | LARROW
-    | BAR
-    | DARROW
-    | MATCH
-    | WITH
-    | ID { _id :: String }
-    | INT { _int :: Integer }
-    | FLOAT { _float :: Double }
-    | BOOL { _bool :: Bool }
-    | CHAR { _char :: Char }
-    | STRING { _str :: String }
-    | TY_INT
-    | TY_FLOAT
-    | TY_BOOL
-    | TY_CHAR
-    | TY_STRING
-    deriving (Eq, Show)
-
-newtype Token =
-    Token (Info, Tag)
-    deriving (Eq, Show)
-
-_info :: Token -> Info
-_info (Token a) = fst a
-
-_tag :: Token -> Tag
-_tag (Token a) = snd a
-
--- type Lexer a = forall u. ParsecT String u Identity a
+tokenize :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
+tokenize = runParserT (whiteSpace >> many lexer >>= \toks -> eof >> pure toks)
+  where whiteSpace = Tok.whiteSpace tokenParser
 
 getInfo :: Monad m => ParsecT s u m Info
 getInfo = do
@@ -221,7 +156,7 @@ lexer = do
     <|> op info "||" OR
     <|> op info "->" ARROW
     <|> op info "<-" LARROW
-    <|> op info "|" BAR
+    <|> op info "|"  BAR
     <|> op info "=>" DARROW
     <|> fmap (\str -> Token (info, ID str)) identifier
     <|> try (fmap (\f -> Token (info, FLOAT f)) float)
@@ -241,7 +176,3 @@ lexer = do
   rbrack        = symbol "]"
   lbrace        = symbol "{"
   rbrace        = symbol "}"
-
-lexing :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
-lexing = runParserT (whiteSpace >> many lexer >>= \toks -> eof >> pure toks)
-  where whiteSpace = Tok.whiteSpace tokenParser

@@ -6,7 +6,7 @@
 module Language.Malgo.Parser where
 
 import Prelude hiding (EQ, LT, GT)
-import Language.Malgo.Lexer
+import Language.Malgo.Token
 import Language.Malgo.TypeRep.Type
 import Language.Malgo.IR.Syntax
 import Language.Malgo.FrontEnd.Info
