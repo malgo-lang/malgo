@@ -55,7 +55,7 @@ renameExpr (ArrayRead   info arr  ix  ) = ArrayRead info <$> renameExpr arr <*> 
 renameExpr (ArrayWrite info arr ix val) =
   ArrayWrite info <$> renameExpr arr <*> renameExpr ix <*> renameExpr val
 renameExpr (Fn info params body) = withKnowns (map fst params) $ do
-  params' <- mapM (\(n, t) -> (, t) <$> getID info n) params
+  params' <- mapM (ltraverse (getID info)) params
   body'   <- renameExpr body
   return $ Fn info params' body'
 renameExpr (Call info fn args) = Call info <$> renameExpr fn <*> mapM renameExpr args
@@ -74,7 +74,7 @@ renameExpr (Let info0 (FunDec fs) e) = withKnowns (map getName fs) $ do
   renameFunDec (info, fn, params, retty, body) = do
     fn' <- getID info fn
     withKnowns (map fst params) $ do
-      params' <- mapM (\(p, t) -> (, t) <$> getID info p) params
+      params' <- mapM (ltraverse (getID info)) params
       body'   <- renameExpr body
       return (info, fn', params', retty, body')
 renameExpr (Let info0 (ExDec info1 name typ orig) e) =
