@@ -14,6 +14,16 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( (!!) )
+import           Text.PrettyPrint.HughesPJClass ( vcat
+                                                , ($$)
+                                                , ($+$)
+                                                , nest
+                                                , brackets
+                                                , sep
+                                                , braces
+                                                , punctuate
+                                                , parens
+                                                )
 
 data Program a = Program { functions :: [Func a], mainExpr :: Expr a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)

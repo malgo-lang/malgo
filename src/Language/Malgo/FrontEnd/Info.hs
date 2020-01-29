@@ -4,6 +4,10 @@ module Language.Malgo.FrontEnd.Info where
 
 import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
+import           Text.PrettyPrint.HughesPJClass ( parens
+                                                , sep
+                                                , punctuate
+                                                )
 
 newtype Info = Info (Text, Int, Int)
   deriving (Show, Eq, Ord, Read, Generic)

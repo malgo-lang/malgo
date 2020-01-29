@@ -5,6 +5,11 @@ module Language.Malgo.TypeRep.Type where
 
 import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
+import           Text.PrettyPrint.HughesPJClass ( parens
+                                                , sep
+                                                , punctuate
+                                                , braces
+                                                )
 
 type TyVar = Int
 

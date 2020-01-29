@@ -11,6 +11,16 @@ module Language.Malgo.IR.LIR where
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.Prelude
+import           Text.PrettyPrint.HughesPJClass ( ($$)
+                                                , vcat
+                                                , parens
+                                                , sep
+                                                , punctuate
+                                                , ($+$)
+                                                , nest
+                                                , brackets
+                                                , text
+                                                )
 
 data Program a = Program { functions :: [Func a], mainFunc :: Block a }
   deriving (Eq, Show, Read, Generic, Functor, Foldable)

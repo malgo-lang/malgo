@@ -14,6 +14,15 @@ import           Language.Malgo.Prelude
 import           Control.Lens                   ( view
                                                 , _3
                                                 )
+import           Text.PrettyPrint.HughesPJClass ( quotes
+                                                , doubleQuotes
+                                                , braces
+                                                , sep
+                                                , punctuate
+                                                , parens
+                                                , brackets
+                                                , ($+$)
+                                                )
 
 data Expr a
   -- | 変数参照
@@ -115,7 +124,7 @@ instance Pretty a => Pretty (Pat a) where
   pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
 
 instance HasType a => HasType (Pat a) where
-  typeOf (VarP x) = typeOf x
+  typeOf (VarP   x ) = typeOf x
   typeOf (TupleP xs) = TyApp TupleC $ map typeOf xs
 
 -- | 中置演算子の種類を表すタグ

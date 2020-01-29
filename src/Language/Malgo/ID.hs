@@ -31,6 +31,7 @@ import           Language.Malgo.Prelude  hiding ( delete
                                                 )
 import           Relude.Extra.Map
 import           Numeric                        ( showHex )
+import           Text.PrettyPrint.HughesPJClass ( text )
 
 data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }
   deriving (Show, Eq, Ord, Read, Functor, Foldable, Generic)

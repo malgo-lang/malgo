@@ -11,6 +11,15 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( (!!) )
+import           Text.PrettyPrint.HughesPJClass ( braces
+                                                , sep
+                                                , punctuate
+                                                , parens
+                                                , brackets
+                                                , ($+$)
+                                                , quotes
+                                                , doubleQuotes
+                                                )
 
 data Expr a = Var a
             | Lit Lit
@@ -132,11 +141,11 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (If    c  t f ) = parens $ "if" <+> pPrint c $+$ pPrint t $+$ pPrint f
   pPrint (Prim  x  t xs) = parens $ "prim" <+> pPrint x <+> pPrint t <+> sep (map pPrint xs)
   pPrint (BinOp op x y ) = parens $ sep [pPrint op, pPrint x, pPrint y]
-  pPrint (Match s cs) = parens $ "match" <+> pPrint s $+$ parens (sep $ toList $ fmap f cs)
+  pPrint (Match s cs   ) = parens $ "match" <+> pPrint s $+$ parens (sep $ toList $ fmap f cs)
     where f (p, e) = parens $ pPrint p <+> pPrint e
 
 instance Pretty a => Pretty (Pat a) where
-  pPrint (VarP x) = pPrint x
+  pPrint (VarP   x ) = pPrint x
   pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
 
 instance Pretty a => Pretty (Def a) where

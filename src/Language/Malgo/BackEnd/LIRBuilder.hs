@@ -49,6 +49,13 @@ import           Control.Lens                   ( view
                                                 , makeLenses
                                                 )
 import           Relude.Unsafe                  ( fromJust )
+import           Text.PrettyPrint.HughesPJClass ( Style(mode)
+                                                , render
+                                                , ($$)
+                                                , renderStyle
+                                                , style
+                                                , Mode(OneLineMode)
+                                                )
 
 -- Program Builder
 class MonadMalgo m => MonadProgramBuilder m where

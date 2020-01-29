@@ -19,10 +19,11 @@ import           Language.Malgo.IR.Syntax
 import qualified Language.Malgo.IR.Syntax      as Syntax
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Pretty   hiding ( first )
+import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( fromJust )
+import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 
 data Typing
 

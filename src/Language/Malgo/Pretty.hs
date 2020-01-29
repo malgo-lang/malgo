@@ -14,11 +14,8 @@ import qualified Data.Text.Lazy                as TL
 import qualified Prelude
 import           Language.Malgo.Prelude
 import           Text.Pretty.Simple             ( pShow )
-import           Text.PrettyPrint.HughesPJClass
-                                         hiding ( double
-                                                , empty
-                                                , (<+>)
-                                                , (<>)
+import           Text.PrettyPrint.HughesPJClass ( Pretty(..)
+                                                , Doc
                                                 )
 import qualified Text.PrettyPrint.HughesPJClass
                                                as P
@@ -29,10 +26,10 @@ infixl 9 <+>
 (<+>) = (P.<+>)
 
 instance Pretty T.Text where
-  pPrint = text . toString
+  pPrint = P.text . toString
 
 instance Pretty TL.Text where
-  pPrint = text . toString
+  pPrint = P.text . toString
 
 errorDoc :: HasCallStack => Doc -> a
-errorDoc x = Prelude.error $ render x
+errorDoc x = Prelude.error $ P.render x

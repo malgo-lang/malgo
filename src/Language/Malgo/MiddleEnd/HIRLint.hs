@@ -17,6 +17,11 @@ import           Language.Malgo.Pass
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+import           Text.PrettyPrint.HughesPJClass ( ($+$)
+                                                , parens
+                                                , fsep
+                                                , colon
+                                                )
 
 data HIRLint
 

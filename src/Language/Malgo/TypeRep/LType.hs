@@ -9,6 +9,12 @@ import           Language.Malgo.ID
 import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
 import           Relude.Unsafe
+import           Text.PrettyPrint.HughesPJClass ( braces
+                                                , sep
+                                                , punctuate
+                                                , parens
+                                                , text
+                                                )
 
 data LType = Ptr LType
            | Bit
