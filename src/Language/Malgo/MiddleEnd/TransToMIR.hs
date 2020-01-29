@@ -11,6 +11,7 @@ module Language.Malgo.MiddleEnd.TransToMIR
   )
 where
 
+import           Control.Lens.Indexed           ( ifoldMap )
 import           Data.Set                       ( intersection )
 import           Language.Malgo.ID
 import qualified Language.Malgo.IR.HIR         as H
@@ -103,7 +104,7 @@ transExpr (H.LetRec defs e   ) = do
     pure $ foldMap (Endo . Let name . MakeClosure name) captures
 transExpr (H.Match s ((H.VarP x, e) :| _)) = Let x (Var s) <$> transExpr e
 transExpr (H.Match s ((H.TupleP xs, e) :| _)) =
-  appEndo (mconcat $ zipWith (\i x -> Endo (Let x (TupleAccess s i))) [0 ..] xs) <$> transExpr e
+  appEndo (ifoldMap (\i x -> Endo (Let x (TupleAccess s i))) xs) <$> transExpr e
 
 freevars :: Ord a => Expr a -> Set a
 freevars (Var x)                 = one x
