@@ -64,13 +64,13 @@ runMalgo :: MonadIO m => MalgoM a -> Opt -> m a
 runMalgo (MalgoM m) opt = liftIO $ evaluatingStateT (MalgoState 0) $ runReaderT
   m
   MalgoEnv
-    { maOption     = opt
-    , maLogAction  = if isDebugMode opt
-                       then richMessageAction
-                       else cfilter (\(Colog.Msg sev _ _) -> sev > Colog.Debug) richMessageAction
+    { maOption    = opt
+    , maLogAction = if isDebugMode opt
+                      then richMessageAction
+                      else cfilter (\(Colog.Msg sev _ _) -> sev > Colog.Debug) richMessageAction
     }
 
-class MonadIO m => MonadMalgo m where
+class Monad m => MonadMalgo m where
   liftMalgo :: MalgoM a -> m a
 
 instance MonadMalgo MalgoM where
