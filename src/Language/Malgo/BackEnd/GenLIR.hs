@@ -8,6 +8,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
 
+import           Control.Lens.Indexed           ( iforM, iforM_ )
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR         as H
                                                 ( Lit(..)
@@ -34,7 +35,7 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
     logDebug "Start GenLIR"
     funMap <- foldMapM genFunMap functions
     runProgramBuilder (ProgramEnv funMap) $ do
-      mapM_ (addFunc <=< genFunction) functions
+      mapM_ genFunction functions
       runExprBuilder (ExprEnv mempty Nothing) $ genExpr mainExpr
    where
     genFunMap M.Func { name, captures, params, body } = do
@@ -47,12 +48,12 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
       | otherwise = Function (convertType $ typeOf r) (Ptr U8 : map (convertType . typeOf) ps)
 
 -- generate LIR
-genFunction :: M.Func (ID Type) -> ProgramBuilder (L.Func (ID LType))
+genFunction :: M.Func (ID Type) -> ProgramBuilder ()
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
   let funcParams = map (\p@ID { idMeta } -> updateID p (convertType idMeta)) params
   bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) Nothing) (genExpr body)
-  pure $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
+  addFunc $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName <- findFunc name
   capsId   <- newID (Ptr U8) "$caps"
@@ -61,13 +62,13 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     capsMap <- genUnpackCaps capsId
     clsMap  <- genCls capsId
     withVariables (capsMap <> clsMap) $ genExpr body
-  pure $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
+  addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
  where
   genUnpackCaps capsId = do
     capsId' <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-    foldForM (zip [0 ..] caps) $ \(i, c) -> do
+    fmap fromList $ iforM caps $ \i c -> do
       cOpr <- loadC capsId' [0, i]
-      pure (one (c, cOpr))
+      pure (c, cOpr)
   genCls capsId = foldForM mutrecs $ \f -> do
     f'    <- findFunc f
     clsId <- packClosure f' capsId
@@ -88,7 +89,7 @@ genExpr (M.Lit   (Char     x    )) = addInst $ Constant $ Word8 $ fromIntegral $
 genExpr (M.Lit   (H.String xs   )) = addInst $ Constant $ L.String xs
 genExpr (M.Tuple xs              ) = do
   tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs)
-  forM_ (zip [0 ..] xs) $ \(i, x) -> do
+  iforM_ xs $ \i x -> do
     val <- findVar x
     storeC tuplePtr [0, i] val
   pure tuplePtr
@@ -121,7 +122,7 @@ genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
 genExpr (M.MakeClosure f cs) = do
   let capTy = Struct (map (convertType . typeOf) cs)
   capPtr <- alloca capTy
-  forM_ (zip [0 ..] cs) $ \(i, c) -> do
+  iforM_ cs $ \i c -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
   f'      <- findFunc f

@@ -36,6 +36,7 @@ module Language.Malgo.BackEnd.LIRBuilder
   )
 where
 
+import           Control.Lens.Indexed           ( iforM_ )
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
@@ -290,7 +291,7 @@ coerceTo to x = case (to, ltypeOf x) of
       Ptr (Struct _) -> pure x
       _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
     ptr <- alloca (Struct ts)
-    forM_ (zip [0 ..] ts) $ \(i, ty) -> do
+    iforM_ ts $ \i ty -> do
       xElem  <- loadC x' [0, 0]
       xElem' <- coerceTo ty xElem
       storeC ptr [0, i] xElem'
