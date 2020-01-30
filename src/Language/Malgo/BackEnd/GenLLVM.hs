@@ -40,26 +40,24 @@ data GenLLVM
 instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
   passName = "GenLLVM"
   isDump _ = False
-  trans Program { functions, mainFunc } = dumpLLVM $ do
-    let funMap = foldMap genFunMap functions
-    local (\st -> st { variableMap = funMap }) $ do
-      mapM_ genFunction functions
-      void $ function "main" [] LT.i32 $ \_ -> genBlock mainFunc (const (ret (int32 0)))
-   where
-    genFunMap :: Func (ID LType) -> Map (ID LType) Operand
-    genFunMap Func { name } =
-      let Function r ps = ltypeOf name
-      in  one
-            ( name
-            , ConstantOperand
-            $ GlobalReference
-                (ptr $ FunctionType { resultType    = convertType r
-                                    , argumentTypes = map convertType ps
-                                    , isVarArg      = False
-                                    }
-                )
-            $ genFuncName name
-            )
+  trans Program { functions, mainFunc } =
+    dumpLLVM
+      $ local
+          (\st -> st
+            { variableMap = foldr
+              (\Func { name } ->
+                insert name
+                  $ ConstantOperand
+                  $ GlobalReference (convertType (ltypeOf name))
+                  $ genFuncName name
+              )
+              mempty
+              functions
+            }
+          )
+      $ do
+          mapM_ genFunction functions
+          void $ function "main" [] LT.i32 $ \_ -> genBlock mainFunc (const (ret (int32 0)))
 
 data GenState = GenState { variableMap :: Map (ID LType) Operand
                          , prims       :: IORef (Map String Operand)

@@ -22,8 +22,8 @@ import qualified Text.Parsec.Token             as Tok
 import           Language.Malgo.Token
 
 tokenize :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
-tokenize = runParserT (whiteSpace >> many (getInfo >>= lexer) >>= \toks -> eof >> pure toks)
-  where whiteSpace = Tok.whiteSpace tokenParser
+tokenize =
+  runParserT (Tok.whiteSpace tokenParser >> many (getInfo >>= lexer) >>= \toks -> eof >> pure toks)
 
 getInfo :: Monad m => ParsecT s u m Info
 getInfo = do

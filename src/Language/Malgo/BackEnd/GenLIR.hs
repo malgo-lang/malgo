@@ -35,19 +35,21 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
   isDump   = dumpLIR
   trans M.Program { functions, mainExpr } = do
     logDebug "Start GenLIR"
-    funMap <- foldMapM genFunMap functions
-    runProgramBuilder (ProgramEnv funMap) $ do
-      mapM_ genFunction functions
-      runExprBuilder (ExprEnv mempty Nothing) $ genExpr mainExpr
-   where
-    genFunMap M.Func { name, captures, params, body } = do
-      let ps = map typeOf params
-          r  = typeOf body
-      let newName = updateID name (functionType (isNothing captures) ps r)
-      pure $ one (name, newName)
-    functionType isKnown ps r
-      | isKnown   = Function (convertType $ typeOf r) (map (convertType . typeOf) ps)
-      | otherwise = Function (convertType $ typeOf r) (Ptr U8 : map (convertType . typeOf) ps)
+    runProgramBuilder
+        (ProgramEnv $ foldr
+          (\M.Func { name, captures, params, body } ->
+            insert name
+              $ updateID name
+              $ Function (convertType $ typeOf body)
+              $ (if isNothing captures then id else (Ptr U8 :))
+              $ map (convertType . typeOf) params
+          )
+          mempty
+          functions
+        )
+      $ do
+          mapM_ genFunction functions
+          runExprBuilder (ExprEnv mempty Nothing) $ genExpr mainExpr
 
 -- generate LIR
 genFunction :: M.Func (ID Type) -> ProgramBuilder ()
