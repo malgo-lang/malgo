@@ -33,7 +33,7 @@ insertLet v           = do
   v' <- transToHIR v
   x  <- newTmp "k" (typeOf v')
   tell $ Endo $ Let x v'
-  return x
+  pure x
 
 appInsert :: Functor f => WriterT (Endo b) f b -> f b
 appInsert m = uncurry (flip appEndo) <$> runWriterT m
@@ -56,7 +56,7 @@ transToHIR (  S.Call _ f  xs) = appInsert $ Call <$> insertLet f <*> mapM insert
 transToHIR f@(S.Fn   _ ps e ) = do
   fn <- newTmp "lambda" (typeOf f)
   e' <- transToHIR e
-  return $ LetRec [Def { name = fn, params = map fst ps, expr = e' }] (Var fn)
+  pure $ LetRec [Def { name = fn, params = map fst ps, expr = e' }] (Var fn)
 transToHIR (S.Seq _ e1                   e2  ) = appInsert $ insertLet e1 >> transToHIR e2
 transToHIR (S.Let _ (S.ValDec _ n _ val) body) = Let n <$> transToHIR val <*> transToHIR body
 transToHIR (S.Let _ (S.FunDec fundecs) body) =
@@ -64,7 +64,7 @@ transToHIR (S.Let _ (S.FunDec fundecs) body) =
  where
   transFunDec (_, fn, params, _, fbody) = do
     fbody' <- transToHIR fbody
-    return Def { name = fn, params = map fst params, expr = fbody' }
+    pure Def { name = fn, params = map fst params, expr = fbody' }
 transToHIR (S.Let _ (S.ExDec _ n _ orig) body) = case typeOf n of
   TyApp FunC (_ : ps) -> do
     params <- mapM (newTmp "x") ps

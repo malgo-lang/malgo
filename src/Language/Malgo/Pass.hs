@@ -32,4 +32,4 @@ transWithDump s = do
   when (isDump @p opt) $ do
     liftMalgo $ logInfo $ "dump " <> passName @p
     dump t
-  return t
+  pure t

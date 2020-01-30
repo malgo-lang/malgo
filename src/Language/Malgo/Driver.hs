@@ -59,7 +59,7 @@ compile filename ast = M.runMalgo $ do
     >>= transWithDump @MIRLint
     >>= transWithDump @GenLIR
     >>= trans @GenLLVM
-  return $ L.defaultModule { L.moduleName           = fromString filename
-                           , L.moduleSourceFileName = encodeUtf8 filename
-                           , L.moduleDefinitions    = llvmir
-                           }
+  pure $ L.defaultModule { L.moduleName           = fromString filename
+                         , L.moduleSourceFileName = encodeUtf8 filename
+                         , L.moduleDefinitions    = llvmir
+                         }

@@ -88,7 +88,7 @@ newUniq :: MonadMalgo m => m Int
 newUniq = liftMalgo $ do
   i <- maUniqSupply <$> get
   modify (\s -> s { maUniqSupply = i + 1 })
-  return i
+  pure i
 
 getFileName :: (MonadMalgo m, IsString a) => m a
 getFileName = liftMalgo $ asks (fromString . srcName . maOption)

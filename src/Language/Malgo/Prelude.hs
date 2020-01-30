@@ -23,6 +23,7 @@ import           Relude                  hiding ( Constraint
                                                 , init
                                                 , unzip
                                                 , pass
+                                                , return
                                                 )
 import           Relude.Extra.Map        hiding ( size
                                                 , delete
