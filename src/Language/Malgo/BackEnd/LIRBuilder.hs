@@ -209,7 +209,7 @@ convertType TyMeta{}            = Ptr U8
 convertType t                   = error $ toText $ "unreachable(convertType): " <> pShow t
 
 packClosure :: MonadExprBuilder m => ID LType -> ID LType -> m (ID LType)
-packClosure f capsId = do
+packClosure capsId f = do
   clsId <- alloca (Struct [ltypeOf f, Ptr U8])
   _     <- storeC clsId [0, 0] f
   _     <- storeC clsId [0, 1] capsId
@@ -265,7 +265,7 @@ coerceTo to x = case (to, ltypeOf x) of
       retVal    <- call xFun (xCap : as)
       coerceTo r retVal
     addFunc $ Func { name = fName, params = fBoxedXName : fParamNames, body = bodyBlock }
-    packClosure fName boxedX
+    packClosure boxedX fName
   -- array
   (Ptr (Struct [Ptr ty, SizeT]), xty) -> do
     x' <- case xty of

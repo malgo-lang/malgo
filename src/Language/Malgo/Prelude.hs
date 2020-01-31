@@ -7,6 +7,7 @@
 module Language.Malgo.Prelude
   ( module Relude
   , module Relude.Extra.Map
+  , module Relude.Extra.Tuple
   , module Control.Monad.Trans.Writer.CPS
   , module Control.Monad.Writer.Class
   , Complement(..)
@@ -28,6 +29,7 @@ import           Relude                  hiding ( Constraint
 import           Relude.Extra.Map        hiding ( size
                                                 , delete
                                                 )
+import           Relude.Extra.Tuple
 import qualified Data.Set                      as Set
 import qualified Data.List                     as List
 import           Control.Monad.Trans.Writer.CPS ( WriterT

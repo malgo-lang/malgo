@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
@@ -8,10 +9,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
 
-import           Control.Lens                   ( (.~) )
-import           Control.Lens.Indexed           ( iforM_
-                                                , ifoldlM
-                                                )
+import           Control.Lens
 import           Language.Malgo.ID
 import           Language.Malgo.IR.HIR         as H
                                                 ( Lit(..)
@@ -67,12 +65,14 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   let funcParams = map (\x -> x & metaL .~ convertType (typeOf x)) params
   bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
     -- unwrap captures
-    capsMap <- do
-      capsId' <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-      ifoldlM (\i m c -> insert c <$> loadC capsId' [0, i] <*> pure m) mempty caps
+    unwrapedCapsId <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
+    capsMap <- ifoldlM (\i m c -> insert c <$> loadC unwrapedCapsId [0, i] <*> pure m) mempty caps
     -- generate closures of mutrec functions
     clsMap <- foldlM
-      (\m f -> insert f <$> (findFunc f >>= \f' -> packClosure f' capsId) <*> pure m)
+      (\m f -> do
+        fc <- findFunc f >>= packClosure capsId
+        pure $ insert f fc m
+      )
       mempty
       mutrecs
     withVariables (capsMap <> clsMap) $ genExpr body
@@ -129,7 +129,7 @@ genExpr (M.MakeClosure f cs) = do
     storeC capPtr [0, i] valOpr
   f'      <- findFunc f
   capPtr' <- cast (Ptr U8) capPtr
-  packClosure f' capPtr'
+  packClosure capPtr' f'
 genExpr (M.CallDirect f args) = do
   funOpr  <- findFunc f
   argOprs <- mapM findVar args
