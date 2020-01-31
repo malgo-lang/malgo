@@ -12,14 +12,21 @@
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE QuantifiedConstraints      #-}
 {-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
 module Language.Malgo.ID
   ( ID(..)
+  , nameL
+  , uniqL
+  , metaL
   , newID
-  , updateID
+--  , updateID
   , IDMap(..)
   )
 where
 
+import           Control.Lens                   ( Lens
+                                                , lens
+                                                )
 import           Data.Data                      ( Data )
 import           Data.Functor.Classes
 import           GHC.Exts                       ( IsList(..) )
@@ -42,11 +49,17 @@ instance Pretty a => Pretty (ID a) where
 instance HasType a => HasType (ID a) where
   typeOf ID { idMeta } = typeOf idMeta
 
+nameL :: Lens (ID a) (ID a) String String
+nameL = lens idName (\i x -> i { idName = x })
+
+uniqL :: Lens (ID a) (ID a) Int Int
+uniqL = lens idUniq (\i x -> i { idUniq = x })
+
+metaL :: Lens (ID a) (ID b) a b
+metaL = lens idMeta (\i x -> i { idMeta = x })
+
 newID :: MonadMalgo f => a -> String -> f (ID a)
 newID m n = ID n <$> newUniq <*> pure m
-
-updateID :: ID a -> b -> ID b
-updateID i m = i { idMeta = m }
 
 newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
   deriving stock (Eq, Ord, Read, Show, Functor, Foldable, Traversable, Generic, Data)

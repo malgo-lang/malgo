@@ -44,14 +44,14 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
     dumpLLVM
       $ local
           (\st -> st
-            { variableMap = foldr
+            { variableMap = foldMap
               (\Func { name } ->
-                insert name
-                  $ ConstantOperand
-                  $ GlobalReference (convertType (ltypeOf name))
-                  $ genFuncName name
+                one
+                  ( name
+                  , ConstantOperand $ GlobalReference (convertType (ltypeOf name)) $ genFuncName
+                    name
+                  )
               )
-              mempty
               functions
             }
           )

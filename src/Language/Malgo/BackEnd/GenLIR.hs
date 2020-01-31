@@ -8,6 +8,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR where
 
+import           Control.Lens                   ( (.~) )
 import           Control.Lens.Indexed           ( iforM_
                                                 , ifoldlM
                                                 )
@@ -36,15 +37,17 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
   trans M.Program { functions, mainExpr } = do
     logDebug "Start GenLIR"
     runProgramBuilder
-        (ProgramEnv $ foldr
-          (\M.Func { name, captures, params, body } ->
-            insert name
-              $ updateID name
-              $ Function (convertType $ typeOf body)
-              $ (if isNothing captures then id else (Ptr U8 :))
-              $ map (convertType . typeOf) params
+        (ProgramEnv $ foldMap
+          (\M.Func { name, captures, params, body } -> one
+            ( name
+            , name & metaL .~ Function
+              (convertType $ typeOf body)
+              (if isNothing captures
+                then map (convertType . typeOf) params
+                else Ptr U8 : map (convertType . typeOf) params
+              )
+            )
           )
-          mempty
           functions
         )
       $ do
@@ -55,13 +58,13 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
 genFunction :: M.Func (ID Type) -> ProgramBuilder ()
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
-  let funcParams = map (\p@ID { idMeta } -> updateID p (convertType idMeta)) params
+  let funcParams = map (\p@ID { idMeta } -> p & metaL .~ convertType idMeta) params
   bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) Nothing) (genExpr body)
   addFunc $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName <- findFunc name
   capsId   <- newID (Ptr U8) "$caps"
-  let funcParams = map (\x -> updateID x (convertType (typeOf x))) params
+  let funcParams = map (\x -> x & metaL .~ convertType (typeOf x)) params
   bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
     -- unwrap captures
     capsMap <- do
