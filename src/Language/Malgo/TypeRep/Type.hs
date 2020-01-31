@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -17,10 +18,10 @@ type TyVar = Int
 data Type = TyApp TyCon [Type]
           | TyMeta TyVar
           | TyForall [TyVar] Type
-  deriving (Eq, Show, Ord, Read, Generic)
+  deriving stock (Eq, Show, Ord, Read, Generic)
 
 data TyCon = FunC | IntC | FloatC | BoolC | CharC | StringC | TupleC | ArrayC
-  deriving (Eq, Show, Ord, Read, Generic)
+  deriving stock (Eq, Show, Ord, Read, Generic)
 
 instance Pretty Type where
   pPrint (TyApp FunC (ret : params)) =

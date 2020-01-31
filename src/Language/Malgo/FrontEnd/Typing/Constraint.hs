@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE FlexibleContexts  #-}
 module Language.Malgo.FrontEnd.Typing.Constraint
@@ -16,7 +17,7 @@ import           Language.Malgo.Prelude
 import           Control.Monad.Error.Class
 
 data Constraint = Type :~ Type
-  deriving (Eq, Show)
+  deriving stock (Eq, Show)
 
 instance Substitutable Constraint where
   apply s (t1 :~ t2) = apply s t1 :~ apply s t2
@@ -26,7 +27,7 @@ data UnifyError = MismatchConstructor TyCon TyCon
                 | MismatchLength [Type] [Type]
                 | InfinitType TyVar Type
                 | MismatchLevel Type Type
-  deriving Show
+  deriving stock Show
 
 solve :: MonadMalgo m => [Constraint] -> m (Either UnifyError Subst)
 solve cs = runExceptT $ solver (mempty, cs)

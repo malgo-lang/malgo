@@ -71,7 +71,7 @@ newtype ProgramState = ProgramState { _functionList :: Endo [Func (ID LType)] }
 makeLenses ''ProgramState
 
 newtype ProgramBuilder a = ProgramBuilder (ReaderT ProgramEnv (StateT ProgramState MalgoM) a)
-  deriving (Functor, Applicative, Monad, MonadIO, MonadMalgo)
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo)
   deriving Semigroup via (Ap ProgramBuilder a)
   deriving Monoid via (Ap ProgramBuilder a)
 
@@ -103,7 +103,7 @@ newtype ExprState = ExprState { _partialBlockInsts :: Endo [(ID LType, Inst (ID 
 makeLenses ''ExprState
 
 newtype ExprBuilder a = ExprBuilder (ReaderT ExprEnv (StateT ExprState ProgramBuilder) a)
-  deriving (Functor, Applicative, Monad, MonadIO, MonadMalgo)
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo)
   deriving Semigroup via (Ap ExprBuilder a)
   deriving Monoid via (Ap ExprBuilder a)
 

@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveFoldable    #-}
 {-# LANGUAGE DeriveFunctor     #-}
 {-# LANGUAGE DeriveGeneric     #-}
@@ -66,7 +67,7 @@ data Expr a
   | BinOp Info Op (Expr a) (Expr a)
   -- | パターンマッチ
   | Match Info (Expr a) (NonEmpty (Pat a, Expr a))
-  deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
+  deriving stock (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 info :: Expr t -> Info
 info (Var    i _        ) = i
@@ -117,7 +118,7 @@ instance Pretty a => Pretty (Expr a) where
 
 data Pat a = VarP a
            | TupleP [Pat a]
-  deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
+  deriving stock (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 instance Pretty a => Pretty (Pat a) where
   pPrint (VarP   x ) = pPrint x
@@ -134,7 +135,7 @@ data Op = Add | Sub | Mul | Div
         | Eq | Neq
         | Lt | Gt | Le | Ge
         | And | Or
-  deriving (Eq, Show, Read, Generic)
+  deriving stock (Eq, Show, Read, Generic)
 
 instance Pretty Op where
   pPrint Add  = "+"
@@ -159,7 +160,7 @@ data Decl a
   = FunDec [(Info, a, [(a, Maybe Type)], Maybe Type, Expr a)]
   | ValDec Info a (Maybe Type) (Expr a)
   | ExDec Info a Type String
-  deriving (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
+  deriving stock (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec fs) = sep $ map pp fs

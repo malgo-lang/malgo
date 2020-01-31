@@ -52,7 +52,7 @@ library
       Paths_malgo
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-deriving-strategies
   default-extensions: StrictData
   build-tools:
       happy

@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE DeriveGeneric     #-}
@@ -23,7 +24,7 @@ data SType = TyVar Text
            | TyTuple [SType]
            | TyArray SType
            | TyForall [Text] SType
-  deriving (Eq, Show, Read, Generic)
+  deriving stock (Eq, Show, Read, Generic)
 
 instance Pretty SType where
   pPrint (TyVar x)       = text $ toString x

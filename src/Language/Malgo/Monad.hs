@@ -45,7 +45,7 @@ data Opt = Opt
   , dumpClosure   :: Bool
   , dumpLIR       :: Bool
   , isDebugMode   :: Bool
-  } deriving (Eq, Show)
+  } deriving stock (Eq, Show)
 
 data MalgoEnv m = MalgoEnv
   { maOption     :: Opt
@@ -59,7 +59,7 @@ instance HasLog (MalgoEnv m) Message m where
   setLogAction newLogAction env = env { maLogAction = newLogAction }
 
 newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT MalgoState IO) a }
-  deriving (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState MalgoState, MonadIO, MonadFix, MonadFail)
+  deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState MalgoState, MonadIO, MonadFix, MonadFail)
   deriving Semigroup via (Ap MalgoM a)
   deriving Monoid via (Ap MalgoM a)
 

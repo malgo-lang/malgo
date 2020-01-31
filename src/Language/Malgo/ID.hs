@@ -41,7 +41,7 @@ import           Numeric                        ( showHex )
 import           Text.PrettyPrint.HughesPJClass ( text )
 
 data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }
-  deriving (Show, Eq, Ord, Read, Functor, Foldable, Generic)
+  deriving stock (Show, Eq, Ord, Read, Functor, Foldable, Generic)
 
 instance Pretty a => Pretty (ID a) where
   pPrint (ID n u _) = text n <> "." <> text (showHex u "")

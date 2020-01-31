@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE StrictData #-}
 module Language.Malgo.Token
@@ -70,11 +71,11 @@ data Tag
     | TY_BOOL
     | TY_CHAR
     | TY_STRING
-    deriving (Eq, Show)
+    deriving stock (Eq, Show)
 
 newtype Token =
     Token (Info, Tag)
-    deriving (Eq, Show)
+    deriving stock (Eq, Show)
 
 _info :: Token -> Info
 _info (Token a) = fst a

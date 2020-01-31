@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
@@ -15,7 +16,8 @@ import           Language.Malgo.Prelude
 import           Relude.Extra.Map
 
 newtype Subst = Subst { unwrapSubst :: Map TyVar Type }
-  deriving (Eq, Show, Substitutable, Monoid)
+  deriving stock (Eq, Show)
+  deriving newtype (Substitutable, Monoid)
 
 instance StaticMap Subst where
   type Key Subst = TyVar

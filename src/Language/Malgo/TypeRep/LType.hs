@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -28,7 +29,7 @@ data LType = Ptr LType
            | Struct [LType]
            | Function LType [LType]
            | Void
-  deriving (Eq, Ord, Show, Read, Generic)
+  deriving stock (Eq, Ord, Show, Read, Generic)
 
 instance Pretty LType where
   pPrint (Ptr    t ) = pPrint t <> "*"

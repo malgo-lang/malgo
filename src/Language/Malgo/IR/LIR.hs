@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveFoldable        #-}
 {-# LANGUAGE DeriveFunctor         #-}
 {-# LANGUAGE DeriveGeneric         #-}
@@ -23,14 +24,14 @@ import           Text.PrettyPrint.HughesPJClass ( ($$)
                                                 )
 
 data Program a = Program { functions :: [Func a], mainFunc :: Block a }
-  deriving (Eq, Show, Read, Generic, Functor, Foldable)
+  deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Program a) where
   pPrint Program { functions, mainFunc } =
     "program" <+> pPrint mainFunc $$ vcat (map pPrint functions)
 
 data Func a = Func { name :: a, params :: [a], body :: Block a }
-  deriving (Eq, Show, Read, Generic, Functor, Foldable)
+  deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Func a) where
   pPrint Func { name, params, body } =
@@ -46,7 +47,7 @@ instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
 data Block a = Block { insts :: [(a, Inst a)], value :: a }
-  deriving (Eq, Show, Read, Generic, Functor, Foldable)
+  deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Block a) where
   pPrint Block { insts, value } =
@@ -82,7 +83,7 @@ data Inst a = Constant Constant
                   a -- ^ from
                   a -- ^ to
                   (Block a) -- ^ body
-  deriving (Eq, Show, Read, Generic, Functor, Foldable)
+  deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Inst a) where
   pPrint (Constant c) = pPrint c
@@ -137,7 +138,7 @@ data Constant = Bool Bool
               | Word64 Word64
               | Float64 Double
               | String String
-  deriving (Eq, Show, Read, Generic)
+  deriving stock (Eq, Show, Read, Generic)
 
 instance Pretty Constant where
   pPrint = text . toString . pShow
@@ -160,7 +161,7 @@ data Op = ADD  | SUB  | MUL  | SDIV | SREM | UDIV | UREM
         | FEQ | FNE
         | FLT | FGT | FLE | FGE
         | AND | OR
-  deriving (Eq, Show, Read, Generic)
+  deriving stock (Eq, Show, Read, Generic)
 
 instance Pretty Op where
   pPrint = text . toString . pShow
