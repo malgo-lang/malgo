@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -71,6 +72,8 @@ makeLenses ''ProgramState
 
 newtype ProgramBuilder a = ProgramBuilder (ReaderT ProgramEnv (StateT ProgramState MalgoM) a)
   deriving (Functor, Applicative, Monad, MonadIO, MonadMalgo)
+  deriving Semigroup via (Ap ProgramBuilder a)
+  deriving Monoid via (Ap ProgramBuilder a)
 
 runProgramBuilder :: ProgramEnv -> ProgramBuilder (Block (ID LType)) -> MalgoM (Program (ID LType))
 runProgramBuilder env (ProgramBuilder m) = do
@@ -101,6 +104,8 @@ makeLenses ''ExprState
 
 newtype ExprBuilder a = ExprBuilder (ReaderT ExprEnv (StateT ExprState ProgramBuilder) a)
   deriving (Functor, Applicative, Monad, MonadIO, MonadMalgo)
+  deriving Semigroup via (Ap ExprBuilder a)
+  deriving Monoid via (Ap ExprBuilder a)
 
 runExprBuilder :: ExprEnv -> ExprBuilder (ID LType) -> ProgramBuilder (Block (ID LType))
 runExprBuilder env (ExprBuilder m) = do

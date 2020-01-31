@@ -79,8 +79,8 @@ transExpr (H.LetRec defs e   ) = do
     (,)
       <$> transExpr e
       -- 変換したdefsの自由変数を集計する
-      <*> foldMapM (getFunc >=> \Func { params, body } -> pure $ freevars body \\ fromList params)
-                   funcNames
+      <*> foldMap (getFunc >=> \Func { params, body } -> pure $ freevars body \\ fromList params)
+                  funcNames
   if fv == mempty && (freevars e' `intersection` fromList funcNames) == mempty
     -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
     then pure e'
@@ -88,7 +88,7 @@ transExpr (H.LetRec defs e   ) = do
       put backup
       -- 自由変数をcapturesに、相互再帰しうる関数名をmutrecsに入れてMIRに変換する
       defs' <- local (\env -> (env :: Env) { mutrecs = funcNames })
-        $ foldMapM (transDef $ Just $ toList $ fv \\ fromList funcNames) defs
+        $ foldMap (transDef $ Just $ toList $ fv \\ fromList funcNames) defs
       appEndo defs' <$> transExpr e
  where
   funcNames = map H.name defs

@@ -1,4 +1,3 @@
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
@@ -66,15 +65,9 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
     -- unwrap captures
     unwrapedCapsId <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-    capsMap <- ifoldlM (\i m c -> insert c <$> loadC unwrapedCapsId [0, i] <*> pure m) mempty caps
+    capsMap <- ifoldMap (\i -> fmap one . traverseToSnd (const $ loadC unwrapedCapsId [0, i])) caps
     -- generate closures of mutrec functions
-    clsMap <- foldlM
-      (\m f -> do
-        fc <- findFunc f >>= packClosure capsId
-        pure $ insert f fc m
-      )
-      mempty
-      mutrecs
+    clsMap <- foldMap (fmap one . traverseToSnd (findFunc >=> packClosure capsId)) mutrecs
     withVariables (capsMap <> clsMap) $ genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
 
