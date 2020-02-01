@@ -65,9 +65,11 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
     -- unwrap captures
     unwrapedCapsId <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-    capsMap <- ifoldMap (\i -> fmap one . traverseToSnd (const $ loadC unwrapedCapsId [0, i])) caps
+    capsMap        <- getAp
+      $ ifoldMap (\i -> Ap . fmap one . traverseToSnd (const $ loadC unwrapedCapsId [0, i])) caps
     -- generate closures of mutrec functions
-    clsMap <- foldMap (fmap one . traverseToSnd (findFunc >=> packClosure capsId)) mutrecs
+    clsMap <- getAp
+      $ foldMap (Ap . fmap one . traverseToSnd (findFunc >=> packClosure capsId)) mutrecs
     withVariables (capsMap <> clsMap) $ genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
 

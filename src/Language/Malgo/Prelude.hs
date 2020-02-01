@@ -1,5 +1,3 @@
-{-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE DerivingVia #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -91,12 +89,3 @@ instance (Monoid w, MonadState s m) => MonadState s (WriterT w m) where
   get   = lift get
   put   = lift . put
   state = lift . state
-
-deriving via (Ap (ReaderT r m) a) instance (Applicative m, Semigroup a) => Semigroup (ReaderT r m a)
-deriving via (Ap (ReaderT r m) a) instance (Applicative m, Monoid a) => Monoid (ReaderT r m a)
-
-deriving via (Ap (StateT s m) a) instance (Monad m, Semigroup a) => Semigroup (StateT s m a)
-deriving via (Ap (StateT s m) a) instance (Monad m, Monoid a) => Monoid (StateT s m a)
-
-deriving via (Ap (WriterT w m) a) instance (Monad m, Semigroup a) => Semigroup (WriterT w m a)
-deriving via (Ap (WriterT w m) a) instance (Monad m, Monoid a) => Monoid (WriterT w m a)

@@ -27,30 +27,28 @@ data TransToMIR
 instance Pass TransToMIR (H.Expr (ID Type)) (Program (ID Type)) where
   passName = "TransToMIR"
   isDump   = dumpClosure
-  trans e = evaluatingStateT [] $ usingReaderT (Env [] []) $ do
+  trans e = evaluatingStateT mempty $ usingReaderT (Env [] []) $ do
     e' <- transExpr e
-    fs <- get
+    fs <- gets elems
     pure (Program fs e')
 
 data Env = Env { knowns   :: [ID Type]
                , mutrecs  :: [ID Type]
                }
 
-type Defined = [Func (ID Type)]
+type FuncMap = Map (ID Type) (Func (ID Type))
 
-type TransM a = ReaderT Env (StateT Defined MalgoM) a
+addFunc :: MonadState FuncMap m => Func (ID Type) -> m ()
+addFunc func = modify (insert (M.name func) func)
 
-addFunc :: Func (ID Type) -> TransM ()
-addFunc func = modify (func :)
-
-getFunc :: ID Type -> TransM (Func (ID Type))
+getFunc :: MonadState FuncMap m => ID Type -> m (Func (ID Type))
 getFunc func = do
   fs <- get
-  case find (\Func { name } -> name == func) fs of
+  case lookup func fs of
     Just f  -> pure f
     Nothing -> errorDoc $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 
-transExpr :: H.Expr (ID Type) -> TransM (M.Expr (ID Type))
+transExpr :: (MonadState FuncMap f, MonadReader Env f) => H.Expr (ID Type) -> f (Expr (ID Type))
 transExpr (H.Var   x              ) = pure $ Var x
 transExpr (H.Lit   x              ) = pure $ Lit x
 transExpr (H.Tuple xs             ) = pure $ Tuple xs
@@ -72,23 +70,24 @@ transExpr (H.If    c    t  f ) = If c <$> transExpr t <*> transExpr f
 transExpr (H.Prim  orig ty xs) = pure $ Prim orig ty xs
 transExpr (H.BinOp op   x  y ) = pure $ BinOp op x y
 transExpr (H.LetRec defs e   ) = do
-  backup   <- get
+  backup <- get
   -- defsがすべてknownだと仮定してMIRに変換し、その自由変数を求める
-  (e', fv) <- local (\env -> env { knowns = funcNames <> knowns env, mutrecs = mempty }) $ do
+  e'     <- local (\env -> env { knowns = funcNames <> knowns env, mutrecs = mempty }) $ do
     mapM_ (transDef Nothing) defs
-    (,)
-      <$> transExpr e
-      -- 変換したdefsの自由変数を集計する
-      <*> foldMap (getFunc >=> \Func { params, body } -> pure $ freevars body \\ fromList params)
-                  funcNames
-  if fv == mempty && (freevars e' `intersection` fromList funcNames) == mempty
+    transExpr e
+  -- 変換したdefsの自由変数を集計
+  fv <- getAp $ foldMap
+    (Ap . getFunc >=> \Func { params, body } -> pure $ freevars body \\ fromList params)
+    funcNames
+  if null fv && null (freevars e' `intersection` fromList funcNames)
     -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
     then pure e'
     else do
       put backup
       -- 自由変数をcapturesに、相互再帰しうる関数名をmutrecsに入れてMIRに変換する
-      defs' <- local (\env -> (env :: Env) { mutrecs = funcNames })
-        $ foldMap (transDef $ Just $ toList $ fv \\ fromList funcNames) defs
+      defs' <- local (\env -> (env :: Env) { mutrecs = funcNames }) $ getAp $ foldMap
+        (Ap . transDef (Just $ toList $ fv \\ fromList funcNames))
+        defs
       appEndo defs' <$> transExpr e
  where
   funcNames = map H.name defs
