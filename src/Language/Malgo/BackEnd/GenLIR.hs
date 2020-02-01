@@ -33,7 +33,7 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
   isDump   = dumpLIR
   trans M.Program { functions, mainExpr } = do
     logDebug "Start GenLIR"
-    runProgramBuilder
+    runProgramBuilderT
         (ProgramEnv $ foldMap
           (\M.Func { name, captures, params, body } -> one
             ( name
@@ -49,20 +49,20 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
         )
       $ do
           mapM_ genFunction functions
-          runExprBuilder (ExprEnv mempty Nothing) $ genExpr mainExpr
+          runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr
 
 -- generate LIR
-genFunction :: M.Func (ID Type) -> ProgramBuilder ()
+genFunction :: MonadProgramBuilder m => M.Func (ID Type) -> m ()
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
   let funcParams = map (\p@ID { idMeta } -> p & metaL .~ convertType idMeta) params
-  bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) Nothing) (genExpr body)
+  bodyBlock <- runExprBuilderT (ExprEnv (fromList (zip params funcParams)) Nothing) (genExpr body)
   addFunc $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName <- findFunc name
   capsId   <- newID (Ptr U8) "$caps"
   let funcParams = map (\x -> x & metaL .~ convertType (typeOf x)) params
-  bodyBlock <- runExprBuilder (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
+  bodyBlock <- runExprBuilderT (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
     -- unwrap captures
     unwrapedCapsId <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
     capsMap        <- getAp
@@ -73,9 +73,10 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     withVariables (capsMap <> clsMap) $ genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
 
-genMainFunction :: ID LType -> Expr (ID Type) -> ProgramBuilder (L.Func (ID LType))
+genMainFunction :: MonadProgramBuilder m => ID LType -> Expr (ID Type) -> m (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
-  body <- runExprBuilder (ExprEnv mempty Nothing) $ genExpr mainExpr >> addInst (Constant $ Int32 0)
+  body <- runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr >> addInst
+    (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
 genExpr :: MonadExprBuilder m => Expr (ID Type) -> m (ID LType)
@@ -103,14 +104,12 @@ genExpr (M.MakeArray init size) = do
     store rawAddr [idx] initVal
   pure ptr
 genExpr (M.ArrayRead arr idx) = do
-  arrOpr    <- findVar arr
-  arrRawOpr <- loadC arrOpr [0, 0]
+  arrRawOpr <- flip loadC [0, 0] =<< findVar arr
   ixOpr     <- coerceTo SizeT =<< findVar idx
   load arrRawOpr ixOpr
 genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   TyApp ArrayC [t] -> do
-    arrOpr    <- findVar arr
-    arrRawOpr <- loadC arrOpr [0, 0]
+    arrRawOpr <- flip loadC [0, 0] =<< findVar arr
     ixOpr     <- coerceTo SizeT =<< findVar idx
     valOpr    <- coerceTo (convertType t) =<< findVar val
     _         <- store arrRawOpr [ixOpr] valOpr
