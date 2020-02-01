@@ -19,8 +19,8 @@ module Language.Malgo.Monad
   , Colog.logInfo
   , Colog.logWarning
   , Colog.logError
-  , newUniq
   , getFileName
+  , MonadUniq(..)
   )
 where
 
@@ -52,19 +52,19 @@ data MalgoEnv m = MalgoEnv
   , maLogAction  :: LogAction m Message
   }
 
-newtype MalgoState = MalgoState { maUniqSupply :: Int }
+newtype UniqSupply = UniqSupply { uniqSupply :: Int }
 
 instance HasLog (MalgoEnv m) Message m where
   getLogAction = maLogAction
   setLogAction newLogAction env = env { maLogAction = newLogAction }
 
-newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT MalgoState IO) a }
-  deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState MalgoState, MonadIO, MonadFix, MonadFail)
+newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT UniqSupply IO) a }
+  deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState UniqSupply, MonadIO, MonadFix, MonadFail)
   deriving Semigroup via (Ap MalgoM a)
   deriving Monoid via (Ap MalgoM a)
 
 runMalgo :: MonadIO m => MalgoM a -> Opt -> m a
-runMalgo (MalgoM m) opt = liftIO $ evaluatingStateT (MalgoState 0) $ runReaderT
+runMalgo (MalgoM m) opt = liftIO $ evaluatingStateT (UniqSupply 0) $ runReaderT
   m
   MalgoEnv
     { maOption    = opt
@@ -87,11 +87,28 @@ instance MonadMalgo m => MonadMalgo (StateT s m) where
 instance MonadMalgo m => MonadMalgo (WriterT w m) where
   liftMalgo = lift . liftMalgo
 
-newUniq :: MonadMalgo m => m Int
-newUniq = liftMalgo $ do
-  i <- maUniqSupply <$> get
-  modify (\s -> s { maUniqSupply = i + 1 })
-  pure i
-
 getFileName :: (MonadMalgo m, IsString a) => m a
 getFileName = liftMalgo $ asks (fromString . srcName . maOption)
+
+class Monad m => MonadUniq m where
+  getUniqSupply :: m UniqSupply
+  getUniq :: m Int
+
+instance MonadUniq MalgoM where
+  getUniqSupply = get
+  getUniq = do
+    i <- uniqSupply <$> getUniqSupply
+    modify (\s -> s { uniqSupply = i + 1 })
+    pure i
+instance MonadUniq m => MonadUniq (ReaderT r m) where
+  getUniqSupply = lift getUniqSupply
+  getUniq = lift getUniq
+instance MonadUniq m => MonadUniq (ExceptT e m) where
+  getUniqSupply = lift getUniqSupply
+  getUniq = lift getUniq
+instance MonadUniq m => MonadUniq (StateT s m) where
+  getUniqSupply = lift getUniqSupply
+  getUniq = lift getUniq
+instance MonadUniq m => MonadUniq (WriterT w m) where
+  getUniqSupply = lift getUniqSupply
+  getUniq = lift getUniq

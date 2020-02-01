@@ -29,7 +29,7 @@ data UnifyError = MismatchConstructor TyCon TyCon
                 | MismatchLevel Type Type
   deriving stock Show
 
-solve :: MonadMalgo m => [Constraint] -> m (Either UnifyError Subst)
+solve :: Monad m => [Constraint] -> m (Either UnifyError Subst)
 solve cs = runExceptT $ solver (mempty, cs)
 
 solver :: MonadError UnifyError m => (Subst, [Constraint]) -> m Subst
@@ -38,17 +38,17 @@ solver (su, (t1 :~ t2) : cs) = do
   su1 <- unify t1 t2
   solver (su1 <> su, apply su1 cs)
 
-inst1 :: MonadMalgo m => Type -> m Type
+inst1 :: MonadUniq m => Type -> m Type
 inst1 (TyForall vs ty) = do
-  ts <- mapM (\_ -> TyMeta <$> newUniq) vs
+  ts <- mapM (\_ -> TyMeta <$> getUniq) vs
   pure $ apply (Subst $ fromList $ zip vs ts) ty
 inst1 t = pure t
 
-instantiate :: MonadMalgo f => Type -> f Type
+instantiate :: MonadUniq f => Type -> f Type
 instantiate (TyMeta a      ) = pure $ TyMeta a
 instantiate (TyApp    c  ts) = TyApp c <$> mapM instantiate ts
 instantiate (TyForall vs t ) = do
-  ts <- mapM (\_ -> TyMeta <$> newUniq) vs
+  ts <- mapM (\_ -> TyMeta <$> getUniq) vs
   t' <- instantiate t
   pure $ apply (Subst $ fromList $ zip vs ts) t'
 

@@ -69,12 +69,12 @@ newtype ExprState = ExprState { _partialBlockInsts :: Endo [(ID LType, Inst (ID 
 makeLenses ''ExprState
 
 -- Program Builder
-class MonadMalgo m => MonadProgramBuilder m where
+class Monad m => MonadProgramBuilder m where
   findFunc :: ID Type -> m (ID LType)
   addFunc :: Func (ID LType) -> m ()
 
 newtype ProgramBuilderT m a = ProgramBuilderT (ReaderT ProgramEnv (StateT ProgramState m) a)
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo)
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
 runProgramBuilderT :: Monad m
                    => ProgramEnv
@@ -84,7 +84,7 @@ runProgramBuilderT env (ProgramBuilderT m) = do
   (mf, ProgramState { _functionList }) <- runStateT (runReaderT m env) (ProgramState mempty)
   pure $ Program { functions = appEndo _functionList [], mainFunc = mf }
 
-instance MonadMalgo m => MonadProgramBuilder (ProgramBuilderT m) where
+instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
   findFunc x = ProgramBuilderT $ fromJust . lookup x <$> view functionMap
   addFunc fun = ProgramBuilderT $ modifying functionList (Endo (fun :) <>)
 
@@ -97,7 +97,7 @@ class MonadProgramBuilder m => MonadExprBuilder m where
   getCurrentCaptures :: m (Maybe (ID LType))
 
 newtype ExprBuilderT m a = ExprBuilderT (ReaderT ExprEnv (StateT ExprState m) a)
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo)
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
 -- runExprBuilderT :: ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
 runExprBuilderT :: Monad m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
@@ -109,7 +109,7 @@ instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
   addFunc fun = ExprBuilderT $ lift $ lift $ addFunc fun
 
-instance (MonadMalgo m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
+instance (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
   findVar x = ExprBuilderT $ fromJust . lookup x <$> view variableMap
   withVariables varMap (ExprBuilderT m) = ExprBuilderT $ local (over variableMap (varMap <>)) m
   addInst inst = ExprBuilderT $ do
@@ -149,14 +149,14 @@ storeC ptr xs val = addInst (StoreC ptr xs val)
 store :: MonadExprBuilder m => ID LType -> [ID LType] -> ID LType -> m (ID LType)
 store ptr xs val = addInst (Store ptr xs val)
 
-call :: MonadExprBuilder m => ID LType -> [ID LType] -> m (ID LType)
+call :: (MonadUniq m, MonadExprBuilder m) => ID LType -> [ID LType] -> m (ID LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
     addInst $ Call f as
   _ -> error "function must be typed as function"
 
-callExt :: MonadExprBuilder m => String -> LType -> [ID LType] -> m (ID LType)
+callExt :: (MonadUniq m, MonadExprBuilder m) => String -> LType -> [ID LType] -> m (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
@@ -187,7 +187,11 @@ branchIf c genWhenTrue genWhenFalse = do
   fBlock <- localBlock genWhenFalse
   addInst $ If c tBlock fBlock
 
-forLoop :: MonadExprBuilder m => ID LType -> ID LType -> (ID LType -> m (ID LType)) -> m (ID LType)
+forLoop :: (MonadUniq m, MonadExprBuilder m)
+        => ID LType
+        -> ID LType
+        -> (ID LType -> m (ID LType))
+        -> m (ID LType)
 forLoop from to k = do
   index <- newID I64 "$i"
   block <- localBlock (k index)
@@ -213,7 +217,7 @@ packClosure capsId f = do
   _     <- storeC clsId [0, 1] capsId
   pure clsId
 
-coerceTo :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
+coerceTo :: (MonadUniq m, MonadExprBuilder m) => LType -> ID LType -> m (ID LType)
 coerceTo to x = case (to, ltypeOf x) of
   (ty, xty) | ty == xty -> pure x
   -- wrap

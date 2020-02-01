@@ -26,21 +26,21 @@ instance Pass Rename (Expr String) (Expr (ID ())) where
   isDump   = dumpRenamed
   trans s = runReaderT (renameExpr s) mempty
 
-type RenameM a = ReaderT (Map String (ID ())) MalgoM a
+type Known = Map String (ID ())
 
-withKnowns :: (MonadMalgo m, MonadReader (Map String (ID ())) m) => [String] -> m b -> m b
+withKnowns :: (MonadUniq m, MonadReader Known m) => [String] -> m b -> m b
 withKnowns ks m = do
   vs <- mapM (newID ()) ks
   local (fromList (zip ks vs) <>) m
 
-getID :: Info -> String -> RenameM (ID ())
+getID :: MonadReader Known m => Info -> String -> m (ID ())
 getID info name = do
   k <- ask
   case lookup name k of
     Just x  -> pure x
     Nothing -> errorDoc $ "error(rename):" <+> pPrint info <+> pPrint name <+> "is not defined"
 
-renameExpr :: Expr String -> RenameM (Expr (ID ()))
+renameExpr :: (MonadUniq m, MonadReader Known m) => Expr String -> m (Expr (ID ()))
 renameExpr (Var    info name          ) = Var info <$> getID info name
 renameExpr (Int    info x             ) = pure $ Int info x
 renameExpr (Float  info x             ) = pure $ Float info x
@@ -87,10 +87,13 @@ renameExpr (BinOp info op x y) = BinOp info op <$> renameExpr x <*> renameExpr y
 renameExpr (Match info scrutinee clauses) =
   Match info <$> renameExpr scrutinee <*> mapM (renameClause info) clauses
 
-renameClause :: Info -> (Pat String, Expr String) -> RenameM (Pat (ID ()), Expr (ID ()))
+renameClause :: (MonadUniq m, MonadReader Known m)
+             => Info
+             -> (Pat String, Expr String)
+             -> m (Pat (ID ()), Expr (ID ()))
 renameClause info (p, e) = renamePat info p $ \p' -> (p', ) <$> renameExpr e
 
-renamePat :: Info -> Pat String -> (Pat (ID ()) -> RenameM b) -> RenameM b
+renamePat :: (MonadUniq m, MonadReader Known m) => Info -> Pat String -> (Pat (ID ()) -> m b) -> m b
 renamePat info (VarP   x ) k = withKnowns [x] $ VarP <$> getID info x >>= k
 renamePat info (TupleP ps) k = go ps []
  where

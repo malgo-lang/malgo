@@ -23,10 +23,10 @@ instance Pass TransToHIR (S.Expr (ID Type)) (Expr (ID Type)) where
   isDump   = dumpKNormal
   trans e = flattenExpr <$> transToHIR e
 
-newTmp :: MonadMalgo f => String -> a -> f (ID a)
+newTmp :: MonadUniq f => String -> a -> f (ID a)
 newTmp n t = newID t ("$" <> n)
 
-insertLet :: MonadMalgo m => S.Expr (ID Type) -> WriterT (Endo (Expr (ID Type))) m (ID Type)
+insertLet :: MonadUniq m => S.Expr (ID Type) -> WriterT (Endo (Expr (ID Type))) m (ID Type)
 insertLet (S.Var _ x) = pure x
 insertLet v           = do
   v' <- transToHIR v
@@ -37,7 +37,7 @@ insertLet v           = do
 appInsert :: Functor f => WriterT (Endo b) f b -> f b
 appInsert m = uncurry (flip appEndo) <$> runWriterT m
 
-transToHIR :: MonadMalgo m => S.Expr (ID Type) -> m (Expr (ID Type))
+transToHIR :: MonadUniq m => S.Expr (ID Type) -> m (Expr (ID Type))
 transToHIR (S.Var    _ a             ) = pure $ Var a
 transToHIR (S.Int    _ x             ) = pure $ Lit $ Int x
 transToHIR (S.Float  _ x             ) = pure $ Lit $ Float x
@@ -94,7 +94,7 @@ transToHIR (S.BinOp _ op x y) = appInsert $ BinOp op' <$> insertLet x <*> insert
 transToHIR (S.Match _ s cs) =
   appInsert $ Match <$> insertLet s <*> mapM (\(p, e) -> crushPat p =<< transToHIR e) cs
 
-crushPat :: MonadMalgo m => S.Pat (ID Type) -> Expr (ID Type) -> m (Pat (ID Type), Expr (ID Type))
+crushPat :: MonadUniq m => S.Pat (ID Type) -> Expr (ID Type) -> m (Pat (ID Type), Expr (ID Type))
 crushPat (S.VarP   x ) e = pure (VarP x, e)
 crushPat (S.TupleP xs) e = go xs [] e
  where

@@ -58,15 +58,16 @@ catchUnifyError i name (Left (MismatchLevel ty1 ty2)) =
   throw i $ "mismatch level" <+> pPrint ty1 <> "," <+> pPrint ty2 $+$ "on" <+> name
 catchUnifyError _ _ (Right a) = pure a
 
-newTyMeta :: MonadMalgo m => m Type
-newTyMeta = TyMeta <$> newUniq
+newTyMeta :: MonadUniq m => m Type
+newTyMeta = TyMeta <$> getUniq
 
 generalize :: Env -> Type -> Type
 generalize env t | null fv   = t
                  | otherwise = TyForall fv t
   where fv = toList $ ftv t \\ ftv env
 
-letVar :: (MonadState Env m, MonadMalgo m) => Info -> Env -> ID () -> Type -> [Constraint] -> m ()
+letVar :: MonadState Env m =>
+            Info -> Env -> ID () -> Type -> [Constraint] -> m ()
 letVar info env var ty cs = do
   subst <- catchUnifyError info (pPrint var) =<< solve cs
   let sc = generalize (apply subst env) (apply subst ty)
@@ -79,7 +80,7 @@ defineVar x t = modify (insert x $ x { idMeta = t })
 lookupVar :: MonadState Env f => ID () -> f Type
 lookupVar x = typeOf . fromJust . lookup x <$> get
 
-typingExpr :: (MonadWriter [Constraint] f, MonadState Env f, MonadMalgo f) => Expr (ID ()) -> f Type
+typingExpr :: (MonadWriter [Constraint] f, MonadState Env f, MonadUniq f) => Expr (ID ()) -> f Type
 typingExpr (Var _ x)    = lookupVar x
 typingExpr Int{}        = pure $ TyApp IntC []
 typingExpr Float{}      = pure $ TyApp FloatC []
@@ -199,7 +200,7 @@ typingExpr (Match _ scrutinee clauses) = do
   t :| _ <- mapM typingExpr exprs
   pure t
 
-typingPat :: (MonadState Env m, MonadMalgo m, MonadWriter [Constraint] m)
+typingPat :: (MonadState Env m, MonadUniq m, MonadWriter [Constraint] m)
           => Type
           -> Pat (ID ())
           -> m ()

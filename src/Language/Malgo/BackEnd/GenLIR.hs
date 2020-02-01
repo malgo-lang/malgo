@@ -52,7 +52,7 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
           runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr
 
 -- generate LIR
-genFunction :: MonadProgramBuilder m => M.Func (ID Type) -> m ()
+genFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => M.Func (ID Type) -> m ()
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
   let funcParams = map (\p@ID { idMeta } -> p & metaL .~ convertType idMeta) params
@@ -73,13 +73,16 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     withVariables (capsMap <> clsMap) $ genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
 
-genMainFunction :: MonadProgramBuilder m => ID LType -> Expr (ID Type) -> m (L.Func (ID LType))
+genMainFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m)
+                => ID LType
+                -> Expr (ID Type)
+                -> m (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
   body <- runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr >> addInst
     (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
-genExpr :: MonadExprBuilder m => Expr (ID Type) -> m (ID LType)
+genExpr :: (MonadUniq m, MonadExprBuilder m) => Expr (ID Type) -> m (ID LType)
 genExpr (M.Var   x               ) = findVar x
 genExpr (M.Lit   (Int      x    )) = addInst $ Constant $ Int64 $ fromInteger x
 genExpr (M.Lit   (Float    x    )) = addInst $ Constant $ Float64 x

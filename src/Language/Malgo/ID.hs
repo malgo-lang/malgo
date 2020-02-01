@@ -58,8 +58,8 @@ uniqL = lens idUniq (\i x -> i { idUniq = x })
 metaL :: Lens (ID a) (ID b) a b
 metaL = lens idMeta (\i x -> i { idMeta = x })
 
-newID :: MonadMalgo f => a -> String -> f (ID a)
-newID m n = ID n <$> newUniq <*> pure m
+newID :: MonadUniq f => a -> String -> f (ID a)
+newID m n = ID n <$> getUniq <*> pure m
 
 newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
   deriving stock (Eq, Ord, Read, Show, Functor, Foldable, Traversable, Generic, Data)
