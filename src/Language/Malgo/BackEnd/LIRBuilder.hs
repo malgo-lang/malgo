@@ -1,15 +1,14 @@
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.BackEnd.LIRBuilder
   ( MonadProgramBuilder(..)
   , ProgramBuilderT
-  , ProgramEnv(..)
   , runProgramBuilderT
   , MonadExprBuilder(..)
   , ExprBuilderT
@@ -45,11 +44,6 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.IR.LIR
-import           Control.Lens                   ( view
-                                                , over
-                                                , modifying
-                                                , makeLenses
-                                                )
 import           Relude.Unsafe                  ( fromJust )
 import           Text.PrettyPrint.HughesPJClass ( Style(mode)
                                                 , renderStyle
@@ -57,16 +51,20 @@ import           Text.PrettyPrint.HughesPJClass ( Style(mode)
                                                 , Mode(OneLineMode)
                                                 )
 
-newtype ProgramEnv = ProgramEnv { _functionMap :: IDMap Type (ID LType) }
-makeLenses ''ProgramEnv
-newtype ProgramState = ProgramState { _functionList :: Endo [Func (ID LType)] }
-makeLenses ''ProgramState
-data ExprEnv = ExprEnv { _variableMap :: IDMap Type (ID LType)
-                       , _currentCaptures :: Maybe (ID LType)
+newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
+  deriving newtype (Semigroup, Monoid)
+
+instance One ProgramEnv where
+  type OneItem ProgramEnv = (ID Type, ID LType)
+  one = ProgramEnv . one
+
+newtype ProgramState = ProgramState { functionList :: Endo [Func (ID LType)] }
+
+data ExprEnv = ExprEnv { variableMap :: IDMap Type (ID LType)
+                       , currentCaptures :: Maybe (ID LType)
                        }
-makeLenses ''ExprEnv
-newtype ExprState = ExprState { _partialBlockInsts :: Endo [(ID LType, Inst (ID LType))] }
-makeLenses ''ExprState
+
+newtype ExprState = ExprState { partialBlockInsts :: Endo [(ID LType, Inst (ID LType))] }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where
@@ -81,12 +79,13 @@ runProgramBuilderT :: Monad m
                    -> ProgramBuilderT m (Block (ID LType))
                    -> m (Program (ID LType))
 runProgramBuilderT env (ProgramBuilderT m) = do
-  (mf, ProgramState { _functionList }) <- runStateT (runReaderT m env) (ProgramState mempty)
-  pure $ Program { functions = appEndo _functionList [], mainFunc = mf }
+  (mf, ProgramState { functionList }) <- runStateT (runReaderT m env) (ProgramState mempty)
+  pure $ Program { functions = appEndo functionList [], mainFunc = mf }
 
 instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
-  findFunc x = ProgramBuilderT $ fromJust . lookup x <$> view functionMap
-  addFunc fun = ProgramBuilderT $ modifying functionList (Endo (fun :) <>)
+  findFunc x = ProgramBuilderT $ fromJust . lookup x <$> asks functionMap
+  addFunc fun =
+    ProgramBuilderT $ modify (\e -> e { functionList = Endo (fun :) <> functionList e })
 
 -- Expr Builder
 class MonadProgramBuilder m => MonadExprBuilder m where
@@ -99,19 +98,19 @@ class MonadProgramBuilder m => MonadExprBuilder m where
 newtype ExprBuilderT m a = ExprBuilderT (ReaderT ExprEnv (StateT ExprState m) a)
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
--- runExprBuilderT :: ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
 runExprBuilderT :: Monad m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
 runExprBuilderT env (ExprBuilderT m) = do
-  (val, ExprState { _partialBlockInsts = ps }) <- runStateT (runReaderT m env) (ExprState mempty)
-  pure $ Block { insts = appEndo ps [], value = val }
+  (val, ExprState { partialBlockInsts }) <- runStateT (runReaderT m env) (ExprState mempty)
+  pure $ Block { insts = appEndo partialBlockInsts [], value = val }
 
 instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m) where
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
   addFunc fun = ExprBuilderT $ lift $ lift $ addFunc fun
 
 instance (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
-  findVar x = ExprBuilderT $ fromJust . lookup x <$> view variableMap
-  withVariables varMap (ExprBuilderT m) = ExprBuilderT $ local (over variableMap (varMap <>)) m
+  findVar x = ExprBuilderT $ fromJust . lookup x <$> asks variableMap
+  withVariables varMap (ExprBuilderT m) =
+    ExprBuilderT $ local (\e -> e { variableMap = varMap <> variableMap e }) m
   addInst inst = ExprBuilderT $ do
     i <- newID (ltypeOf inst) "%"
     liftMalgo
@@ -121,14 +120,14 @@ instance (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => MonadExprBuilder 
       $   pPrint i
       <+> "="
       <+> pPrint inst
-    modifying partialBlockInsts (<> Endo ((i, inst) :))
+    modify (\e -> e { partialBlockInsts = partialBlockInsts e <> Endo ((i, inst) :) })
     pure i
   localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
     put (ExprState mempty)
     retval <- m
-    insts  <- flip appEndo [] <$> gets (view partialBlockInsts)
+    insts  <- flip appEndo [] <$> gets partialBlockInsts
     pure (Block insts retval)
-  getCurrentCaptures = ExprBuilderT $ view currentCaptures
+  getCurrentCaptures = ExprBuilderT $ asks currentCaptures
 
 -- instructions
 arrayCreate :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)

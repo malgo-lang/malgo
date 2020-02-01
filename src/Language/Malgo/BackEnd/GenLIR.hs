@@ -34,7 +34,7 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
   trans M.Program { functions, mainExpr } = do
     logDebug "Start GenLIR"
     runProgramBuilderT
-        (ProgramEnv $ foldMap
+        (foldMap
           (\M.Func { name, captures, params, body } -> one
             ( name
             , name & metaL .~ Function
