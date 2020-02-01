@@ -1,3 +1,6 @@
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -10,11 +13,13 @@ module Language.Malgo.Prelude
   , module Relude.Extra.Tuple
   , module Control.Monad.Trans.Writer.CPS
   , module Control.Monad.Writer.Class
+  , module Control.Lens.Cons
   , Complement(..)
   , localState
   , unzip
   , ltraverse
   , rtraverse
+  , DiffList
   )
 where
 
@@ -25,6 +30,7 @@ import           Relude                  hiding ( Constraint
                                                 , unzip
                                                 , pass
                                                 , return
+                                                , uncons
                                                 )
 import           Relude.Extra.Map        hiding ( size
                                                 , delete
@@ -38,6 +44,12 @@ import           Control.Monad.Trans.Writer.CPS ( WriterT
 import qualified Control.Monad.Trans.Writer.CPS
                                                as W
 import           Control.Monad.Writer.Class
+import           Control.Lens.Cons
+import           Control.Lens.Prism             ( prism )
+import           GHC.Exts                       ( Item
+                                                , toList
+                                                )
+import qualified Data.List
 
 -- 差分を取ることができるデータ構造を表す型クラス
 class One a => Complement a where
@@ -72,6 +84,44 @@ ltraverse f = bitraverse f pure
 
 rtraverse :: (Bitraversable t, Applicative f) => (b -> f c) -> t a b -> f (t a c)
 rtraverse = bitraverse pure
+
+newtype DiffList a = DiffList (Endo [a])
+  deriving newtype (Semigroup, Monoid, Generic)
+
+instance One (DiffList a) where
+  type OneItem (DiffList a) = a
+  one x = DiffList (Endo (x :))
+
+instance Cons (DiffList a) (DiffList b) a b where
+  _Cons = prism (\(x, xs) -> one x <> xs) $ \(DiffList xxs) -> case appEndo xxs [] of
+    (x : _) -> Right (x, DiffList (Endo (drop 1) <> xxs))
+    []      -> Left mempty
+  {-# INLINE _Cons #-}
+
+instance Snoc (DiffList a) (DiffList b) a b where
+  _Snoc = prism (\(xs, x) -> xs <> one x) $ \(DiffList xxs) -> case appEndo xxs [] of
+    []   -> Left mempty
+    list -> Right (DiffList $ Endo (Data.List.init list <>), Data.List.last list)
+  {-# INLINE _Snoc #-}
+
+instance IsList (DiffList a) where
+  type Item (DiffList a) = a
+  fromList xs = DiffList $ Endo (xs <>)
+  {-# INLINE fromList #-}
+  toList (DiffList xs) = appEndo xs []
+  {-# INLINE toList #-}
+
+instance Functor DiffList where
+  fmap f (DiffList xs) = DiffList $ Endo (map f (appEndo xs []) <>)
+  {-# INLINE fmap #-}
+
+instance Foldable DiffList where
+  foldMap f (DiffList xs) = foldMap f (appEndo xs [])
+  {-# INLINE foldMap #-}
+  foldr f a (DiffList xs) = foldr f a (appEndo xs [])
+  {-# INLINE foldr #-}
+  toList = GHC.Exts.toList
+  {-# INLINE toList #-}
 
 -- mtlのインスタンスの追加定義
 instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where

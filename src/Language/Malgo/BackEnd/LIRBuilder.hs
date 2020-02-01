@@ -58,13 +58,13 @@ instance One ProgramEnv where
   type OneItem ProgramEnv = (ID Type, ID LType)
   one = ProgramEnv . one
 
-newtype ProgramState = ProgramState { functionList :: Endo [Func (ID LType)] }
+newtype ProgramState = ProgramState { functionList :: DiffList (Func (ID LType)) }
 
 data ExprEnv = ExprEnv { variableMap :: IDMap Type (ID LType)
                        , currentCaptures :: Maybe (ID LType)
                        }
 
-newtype ExprState = ExprState { partialBlockInsts :: Endo [(ID LType, Inst (ID LType))] }
+newtype ExprState = ExprState { partialBlockInsts :: DiffList (ID LType, Inst (ID LType)) }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where
@@ -80,12 +80,11 @@ runProgramBuilderT :: Monad m
                    -> m (Program (ID LType))
 runProgramBuilderT env (ProgramBuilderT m) = do
   (mf, ProgramState { functionList }) <- runStateT (runReaderT m env) (ProgramState mempty)
-  pure $ Program { functions = appEndo functionList [], mainFunc = mf }
+  pure $ Program { functions = toList functionList, mainFunc = mf }
 
 instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
   findFunc x = ProgramBuilderT $ fromJust . lookup x <$> asks functionMap
-  addFunc fun =
-    ProgramBuilderT $ modify (\e -> e { functionList = Endo (fun :) <> functionList e })
+  addFunc fun = ProgramBuilderT $ modify (\e -> e { functionList = cons fun $ functionList e })
 
 -- Expr Builder
 class MonadProgramBuilder m => MonadExprBuilder m where
@@ -101,7 +100,7 @@ newtype ExprBuilderT m a = ExprBuilderT (ReaderT ExprEnv (StateT ExprState m) a)
 runExprBuilderT :: Monad m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
 runExprBuilderT env (ExprBuilderT m) = do
   (val, ExprState { partialBlockInsts }) <- runStateT (runReaderT m env) (ExprState mempty)
-  pure $ Block { insts = appEndo partialBlockInsts [], value = val }
+  pure $ Block { insts = toList partialBlockInsts, value = val }
 
 instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m) where
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
@@ -120,12 +119,12 @@ instance (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => MonadExprBuilder 
       $   pPrint i
       <+> "="
       <+> pPrint inst
-    modify (\e -> e { partialBlockInsts = partialBlockInsts e <> Endo ((i, inst) :) })
+    modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (i, inst) })
     pure i
   localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
     put (ExprState mempty)
     retval <- m
-    insts  <- flip appEndo [] <$> gets partialBlockInsts
+    insts  <- toList <$> gets partialBlockInsts
     pure (Block insts retval)
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
 
