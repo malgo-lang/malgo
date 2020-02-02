@@ -130,7 +130,6 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
    | exp '*' exp { BinOp (_info $2) Mul $1 $3 }
    | exp '/' exp { BinOp (_info $2) Div $1 $3 }
-   | simple_exp '.' int { TupleAccess (_info $2) $1 (fromInteger $ _int . _tag $ $3) }
    | exp '+.' exp { BinOp (_info $2) FAdd $1 $3 }
    | exp '-.' exp { BinOp (_info $2) FSub $1 $3 }
    | exp '*.' exp { BinOp (_info $2) FMul $1 $3 }

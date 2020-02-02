@@ -3,9 +3,16 @@ source_filename = "./examples/test12.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
+declare {}* @print_bool(i1) local_unnamed_addr
+
+define {}* @print_bool5(i1) local_unnamed_addr {
+  %2 = tail call {}* @print_bool(i1 %0)
+  ret {}* %2
+}
+
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i1 @even1(i8*, i64) {
+define i1 @odd2(i8*, i64) {
   %3 = bitcast i8* %0 to i64*
   %4 = load i64, i64* %3, align 8
   %5 = tail call i8* @GC_malloc(i64 16)
@@ -61,11 +68,11 @@ else_0:                                           ; preds = %2, %tailrecurse
   br i1 %34, label %end_0, label %tailrecurse
 
 end_0:                                            ; preds = %tailrecurse, %else_0, %2
-  %.0 = phi i1 [ true, %2 ], [ false, %else_0 ], [ true, %tailrecurse ]
+  %.0 = phi i1 [ false, %2 ], [ true, %else_0 ], [ false, %tailrecurse ]
   ret i1 %.0
 }
 
-define i1 @odd2(i8*, i64) {
+define i1 @even1(i8*, i64) {
   %3 = bitcast i8* %0 to i64*
   %4 = load i64, i64* %3, align 8
   %5 = tail call i8* @GC_malloc(i64 16)
@@ -85,19 +92,12 @@ define i1 @odd2(i8*, i64) {
 
 else_0:                                           ; preds = %2
   %14 = add i64 %1, -1
-  %15 = tail call i1 @even1(i8* nonnull %0, i64 %14)
+  %15 = tail call i1 @odd2(i8* nonnull %0, i64 %14)
   br label %end_0
 
 end_0:                                            ; preds = %2, %else_0
-  %.0 = phi i1 [ %15, %else_0 ], [ false, %2 ]
+  %.0 = phi i1 [ %15, %else_0 ], [ true, %2 ]
   ret i1 %.0
-}
-
-declare {}* @print_bool(i1) local_unnamed_addr
-
-define {}* @print_bool5(i1) local_unnamed_addr {
-  %2 = tail call {}* @print_bool(i1 %0)
-  ret {}* %2
 }
 
 define i32 @main() local_unnamed_addr {
@@ -119,28 +119,7 @@ define i32 @main() local_unnamed_addr {
   %11 = getelementptr i8, i8* %9, i64 8
   %12 = bitcast i8* %11 to i8**
   store i8* %7, i8** %12, align 8
-  %13 = load i64, i64* %8, align 8
-  %14 = tail call i8* @GC_malloc(i64 16)
-  %15 = bitcast i8* %14 to i1 (i8*, i64)**
-  store i1 (i8*, i64)* @even1, i1 (i8*, i64)** %15, align 8
-  %16 = getelementptr i8, i8* %14, i64 8
-  %17 = bitcast i8* %16 to i8**
-  store i8* %7, i8** %17, align 8
-  %18 = tail call i8* @GC_malloc(i64 16)
-  %19 = bitcast i8* %18 to i1 (i8*, i64)**
-  store i1 (i8*, i64)* @odd2, i1 (i8*, i64)** %19, align 8
-  %20 = getelementptr i8, i8* %18, i64 8
-  %21 = bitcast i8* %20 to i8**
-  store i8* %7, i8** %21, align 8
-  %22 = icmp eq i64 %13, 34
-  br i1 %22, label %odd2.exit, label %else_0.i
-
-else_0.i:                                         ; preds = %0
-  %23 = tail call i1 @even1(i8* nonnull %7, i64 33)
-  br label %odd2.exit
-
-odd2.exit:                                        ; preds = %0, %else_0.i
-  %.0.i = phi i1 [ %23, %else_0.i ], [ false, %0 ]
-  %24 = tail call {}* @print_bool(i1 %.0.i)
+  %13 = tail call i1 @odd2(i8* %7, i64 34)
+  %14 = tail call {}* @print_bool(i1 %13)
   ret i32 0
 }

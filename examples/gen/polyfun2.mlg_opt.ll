@@ -27,7 +27,36 @@ define i8* @"$fo113"(i8* nocapture readonly, i8*) {
   ret i8* %10
 }
 
+declare {}* @print_int(i64) local_unnamed_addr
+
+define {}* @print_int9(i64) local_unnamed_addr {
+  %2 = tail call {}* @print_int(i64 %0)
+  ret {}* %2
+}
+
 declare i8* @GC_malloc(i64) local_unnamed_addr
+
+define i8* @id1(i8*, i8* readnone returned) {
+  %3 = tail call i8* @GC_malloc(i64 16)
+  %4 = bitcast i8* %3 to i8* (i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }*)**
+  store i8* (i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }*)* @f0, i8* (i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }*)** %4, align 8
+  %5 = getelementptr i8, i8* %3, i64 8
+  %6 = bitcast i8* %5 to i8**
+  store i8* %0, i8** %6, align 8
+  %7 = tail call i8* @GC_malloc(i64 16)
+  %8 = bitcast i8* %7 to i8* (i8*, i8*)**
+  store i8* (i8*, i8*)* @id1, i8* (i8*, i8*)** %8, align 8
+  %9 = getelementptr i8, i8* %7, i64 8
+  %10 = bitcast i8* %9 to i8**
+  store i8* %0, i8** %10, align 8
+  %11 = tail call i8* @GC_malloc(i64 16)
+  %12 = bitcast i8* %11 to i64 (i8*, i64)**
+  store i64 (i8*, i64)* @addOne2, i64 (i8*, i64)** %12, align 8
+  %13 = getelementptr i8, i8* %11, i64 8
+  %14 = bitcast i8* %13 to i8**
+  store i8* %0, i8** %14, align 8
+  ret i8* %1
+}
 
 define i8* @f0(i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }* nocapture readonly) {
   %3 = tail call i8* @GC_malloc(i64 16)
@@ -60,28 +89,6 @@ define i8* @f0(i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }* nocapture readonly) {
   ret i8* %23
 }
 
-define i8* @id1(i8*, i8* readnone returned) {
-  %3 = tail call i8* @GC_malloc(i64 16)
-  %4 = bitcast i8* %3 to i8* (i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }*)**
-  store i8* (i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }*)* @f0, i8* (i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }*)** %4, align 8
-  %5 = getelementptr i8, i8* %3, i64 8
-  %6 = bitcast i8* %5 to i8**
-  store i8* %0, i8** %6, align 8
-  %7 = tail call i8* @GC_malloc(i64 16)
-  %8 = bitcast i8* %7 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @id1, i8* (i8*, i8*)** %8, align 8
-  %9 = getelementptr i8, i8* %7, i64 8
-  %10 = bitcast i8* %9 to i8**
-  store i8* %0, i8** %10, align 8
-  %11 = tail call i8* @GC_malloc(i64 16)
-  %12 = bitcast i8* %11 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @addOne2, i64 (i8*, i64)** %12, align 8
-  %13 = getelementptr i8, i8* %11, i64 8
-  %14 = bitcast i8* %13 to i8**
-  store i8* %0, i8** %14, align 8
-  ret i8* %1
-}
-
 define i64 @addOne2(i8*, i64) {
   %3 = tail call i8* @GC_malloc(i64 16)
   %4 = bitcast i8* %3 to i8* (i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }*)**
@@ -103,13 +110,6 @@ define i64 @addOne2(i8*, i64) {
   store i8* %0, i8** %14, align 8
   %15 = add i64 %1, 1
   ret i64 %15
-}
-
-declare {}* @print_int(i64) local_unnamed_addr
-
-define {}* @print_int9(i64) local_unnamed_addr {
-  %2 = tail call {}* @print_int(i64 %0)
-  ret {}* %2
 }
 
 define i32 @main() local_unnamed_addr {

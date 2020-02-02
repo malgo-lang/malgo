@@ -3,20 +3,6 @@ source_filename = "./examples/test5.mlg"
 
 declare i8* @GC_malloc(i64)
 
-define i64 @"$lambda13"(i8*, i64) {
-  %3 = bitcast i8* %0 to { i64 }*
-  %4 = getelementptr { i64 }, { i64 }* %3, i32 0, i32 0
-  %5 = load i64, i64* %4
-  %6 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
-  %7 = bitcast i8* %6 to { i64 (i8*, i64)*, i8* }*
-  %8 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %7, i32 0, i32 0
-  store i64 (i8*, i64)* @"$lambda13", i64 (i8*, i64)** %8
-  %9 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %7, i32 0, i32 1
-  store i8* %0, i8** %9
-  %10 = add i64 %1, %5
-  ret i64 %10
-}
-
 define { i64 (i8*, i64)*, i8* }* @k1(i8*, i64) {
   %3 = bitcast i8* %0 to { i64 }*
   %4 = getelementptr { i64 }, { i64 }* %3, i32 0, i32 0
@@ -70,6 +56,20 @@ define i64 @f2(i8*, i64, i64) {
   %19 = load i8*, i8** %18
   %20 = call i64 %17(i8* %19, i64 %2)
   ret i64 %20
+}
+
+define i64 @"$lambda13"(i8*, i64) {
+  %3 = bitcast i8* %0 to { i64 }*
+  %4 = getelementptr { i64 }, { i64 }* %3, i32 0, i32 0
+  %5 = load i64, i64* %4
+  %6 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
+  %7 = bitcast i8* %6 to { i64 (i8*, i64)*, i8* }*
+  %8 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %7, i32 0, i32 0
+  store i64 (i8*, i64)* @"$lambda13", i64 (i8*, i64)** %8
+  %9 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %7, i32 0, i32 1
+  store i8* %0, i8** %9
+  %10 = add i64 %1, %5
+  ret i64 %10
 }
 
 define i32 @main() {

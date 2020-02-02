@@ -83,6 +83,13 @@ define i8* @"$fo117"(i8*, i8*) {
   ret i8* %8
 }
 
+declare {}* @print_int(i64)
+
+define {}* @print_int10(i64) {
+  %2 = call {}* @print_int(i64 %0)
+  ret {}* %2
+}
+
 define i8* @id0(i8*, i8*) {
   %3 = bitcast i8* %0 to {}*
   %4 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
@@ -185,13 +192,6 @@ define { { i8*, { i8**, i64 }* }* (i8*, i8*)*, i8* }* @"$lambda31"(i8*, i8*) {
   %15 = getelementptr { { i8*, { i8**, i64 }* }* (i8*, i8*)*, i8* }, { { i8*, { i8**, i64 }* }* (i8*, i8*)*, i8* }* %13, i32 0, i32 1
   store i8* %11, i8** %15
   ret { { i8*, { i8**, i64 }* }* (i8*, i8*)*, i8* }* %13
-}
-
-declare {}* @print_int(i64)
-
-define {}* @print_int10(i64) {
-  %2 = call {}* @print_int(i64 %0)
-  ret {}* %2
 }
 
 define i32 @main() {

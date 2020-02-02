@@ -1,15 +1,15 @@
 ; ModuleID = './examples/test6.mlg'
 source_filename = "./examples/test6.mlg"
 
-define i64 @id3(i64) {
-  ret i64 %0
-}
-
 declare {}* @print_int(i64)
 
 define {}* @print_int5(i64) {
   %2 = call {}* @print_int(i64 %0)
   ret {}* %2
+}
+
+define i64 @id3(i64) {
+  ret i64 %0
 }
 
 define i32 @main() {

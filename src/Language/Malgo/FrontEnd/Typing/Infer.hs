@@ -91,10 +91,6 @@ typingExpr Unit{}       = pure $ TyApp TupleC []
 typingExpr (Tuple _ xs) = do
   ts <- mapM typingExpr xs
   pure $ TyApp TupleC ts
-typingExpr (TupleAccess _ e _) = do
-  -- FIXME: 正しく型付けする
-  _ <- typingExpr e
-  newTyMeta
 typingExpr (MakeArray _ initNode sizeNode) = do
   initTy <- instantiate =<< typingExpr initNode
   sizeTy <- instantiate =<< typingExpr sizeNode

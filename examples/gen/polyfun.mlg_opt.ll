@@ -270,6 +270,13 @@ define i8* @"$fo117"(i8* nocapture readonly, i8*) {
   ret i8* %8
 }
 
+declare {}* @print_int(i64) local_unnamed_addr
+
+define {}* @print_int10(i64) local_unnamed_addr {
+  %2 = tail call {}* @print_int(i64 %0)
+  ret {}* %2
+}
+
 define i8* @id0(i8*, i8* readnone returned) {
   %3 = tail call i8* @GC_malloc(i64 16)
   %4 = bitcast i8* %3 to i8* (i8*, i8*)**
@@ -350,13 +357,6 @@ define { { i8*, { i8**, i64 }* }* (i8*, i8*)*, i8* }* @"$lambda31"(i8*, i8*) {
   %13 = bitcast i8* %12 to i8**
   store i8* %7, i8** %13, align 8
   ret { { i8*, { i8**, i64 }* }* (i8*, i8*)*, i8* }* %10
-}
-
-declare {}* @print_int(i64) local_unnamed_addr
-
-define {}* @print_int10(i64) local_unnamed_addr {
-  %2 = tail call {}* @print_int(i64 %0)
-  ret {}* %2
 }
 
 define i32 @main() local_unnamed_addr {

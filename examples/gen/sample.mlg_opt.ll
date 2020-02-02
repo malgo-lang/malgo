@@ -9,11 +9,30 @@ target triple = "x86_64-apple-macosx10.15.0"
 @3 = internal unnamed_addr constant [4 x i8] c"foo\00"
 @4 = internal unnamed_addr constant [4 x i8] c"bar\00"
 
-declare {}* @print(i8*) local_unnamed_addr
+declare i8* @substring(i8*, i64, i64) local_unnamed_addr
 
-define {}* @print0(i8*) local_unnamed_addr {
-  %2 = tail call {}* @print(i8* %0)
-  ret {}* %2
+define i8* @substring10(i8*, i64, i64) local_unnamed_addr {
+  %4 = tail call i8* @substring(i8* %0, i64 %1, i64 %2)
+  ret i8* %4
+}
+
+declare i64 @size(i8*) local_unnamed_addr
+
+define i64 @size8(i8*) local_unnamed_addr {
+  %2 = tail call i64 @size(i8* %0)
+  ret i64 %2
+}
+
+define {}* @println_int13(i64) local_unnamed_addr {
+  %2 = tail call {}* @print_int(i64 %0)
+  %3 = tail call {}* @newline()
+  ret {}* %3
+}
+
+define {}* @println_float14(double) local_unnamed_addr {
+  %2 = tail call {}* @print_float(double %0)
+  %3 = tail call {}* @newline()
+  ret {}* %3
 }
 
 declare {}* @println(i8*) local_unnamed_addr
@@ -37,10 +56,37 @@ define {}* @print_float3(double) local_unnamed_addr {
   ret {}* %2
 }
 
-declare {}* @flush() local_unnamed_addr
+define {}* @print_fib29(i64) local_unnamed_addr {
+  %2 = tail call i64 @fib18(i64 %0)
+  %3 = tail call {}* @print_int(i64 %2)
+  ret {}* %3
+}
 
-define {}* @flush4() local_unnamed_addr {
-  %1 = tail call {}* @flush()
+declare {}* @print(i8*) local_unnamed_addr
+
+define {}* @print0(i8*) local_unnamed_addr {
+  %2 = tail call {}* @print(i8* %0)
+  ret {}* %2
+}
+
+declare i64 @ord(i8) local_unnamed_addr
+
+define i64 @ord6(i8) local_unnamed_addr {
+  %2 = tail call i64 @ord(i8 %0)
+  ret i64 %2
+}
+
+declare i1 @not(i1) local_unnamed_addr
+
+define i1 @not12(i1) local_unnamed_addr {
+  %2 = tail call i1 @not(i1 %0)
+  ret i1 %2
+}
+
+declare {}* @newline() local_unnamed_addr
+
+define {}* @newline9() local_unnamed_addr {
+  %1 = tail call {}* @newline()
   ret {}* %1
 }
 
@@ -53,65 +99,11 @@ define i8 @getChar5() local_unnamed_addr #0 {
   ret i8 %1
 }
 
-declare i64 @ord(i8) local_unnamed_addr
+declare {}* @flush() local_unnamed_addr
 
-define i64 @ord6(i8) local_unnamed_addr {
-  %2 = tail call i64 @ord(i8 %0)
-  ret i64 %2
-}
-
-declare i8 @chr(i64) local_unnamed_addr
-
-define i8 @chr7(i64) local_unnamed_addr {
-  %2 = tail call i8 @chr(i64 %0)
-  ret i8 %2
-}
-
-declare i64 @size(i8*) local_unnamed_addr
-
-define i64 @size8(i8*) local_unnamed_addr {
-  %2 = tail call i64 @size(i8* %0)
-  ret i64 %2
-}
-
-declare {}* @newline() local_unnamed_addr
-
-define {}* @newline9() local_unnamed_addr {
-  %1 = tail call {}* @newline()
+define {}* @flush4() local_unnamed_addr {
+  %1 = tail call {}* @flush()
   ret {}* %1
-}
-
-declare i8* @substring(i8*, i64, i64) local_unnamed_addr
-
-define i8* @substring10(i8*, i64, i64) local_unnamed_addr {
-  %4 = tail call i8* @substring(i8* %0, i64 %1, i64 %2)
-  ret i8* %4
-}
-
-declare i8* @concat(i8*, i8*) local_unnamed_addr
-
-define i8* @concat11(i8*, i8*) local_unnamed_addr {
-  %3 = tail call i8* @concat(i8* %0, i8* %1)
-  ret i8* %3
-}
-
-declare i1 @not(i1) local_unnamed_addr
-
-define i1 @not12(i1) local_unnamed_addr {
-  %2 = tail call i1 @not(i1 %0)
-  ret i1 %2
-}
-
-define {}* @println_int13(i64) local_unnamed_addr {
-  %2 = tail call {}* @print_int(i64 %0)
-  %3 = tail call {}* @newline()
-  ret {}* %3
-}
-
-define {}* @println_float14(double) local_unnamed_addr {
-  %2 = tail call {}* @print_float(double %0)
-  %3 = tail call {}* @newline()
-  ret {}* %3
 }
 
 ; Function Attrs: nounwind readnone
@@ -140,6 +132,27 @@ define {}* @do_nothing21() local_unnamed_addr {
   %1 = tail call i8* @GC_malloc(i64 0)
   %2 = bitcast i8* %1 to {}*
   ret {}* %2
+}
+
+declare i8* @concat(i8*, i8*) local_unnamed_addr
+
+define i8* @concat11(i8*, i8*) local_unnamed_addr {
+  %3 = tail call i8* @concat(i8* %0, i8* %1)
+  ret i8* %3
+}
+
+declare i8 @chr(i64) local_unnamed_addr
+
+define i8 @chr7(i64) local_unnamed_addr {
+  %2 = tail call i8 @chr(i64 %0)
+  ret i8 %2
+}
+
+; Function Attrs: norecurse nounwind readnone
+define double @area23(double) local_unnamed_addr #2 {
+  %2 = fmul double %0, %0
+  %3 = fmul double %2, 3.140000e+00
+  ret double %3
 }
 
 define i64 @add225(i8*, i64) {
@@ -174,19 +187,6 @@ define i64 @add22(i64) local_unnamed_addr {
   store i8* %2, i8** %12, align 8
   %13 = add i64 %8, 2
   ret i64 %13
-}
-
-; Function Attrs: norecurse nounwind readnone
-define double @area23(double) local_unnamed_addr #2 {
-  %2 = fmul double %0, %0
-  %3 = fmul double %2, 3.140000e+00
-  ret double %3
-}
-
-define {}* @print_fib29(i64) local_unnamed_addr {
-  %2 = tail call i64 @fib18(i64 %0)
-  %3 = tail call {}* @print_int(i64 %2)
-  ret {}* %3
 }
 
 define i64 @"$lambda116"(i8*, i64) {

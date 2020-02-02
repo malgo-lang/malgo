@@ -7,11 +7,30 @@ source_filename = "./examples/sample.mlg"
 @3 = unnamed_addr constant [4 x i8] c"foo\00"
 @4 = unnamed_addr constant [4 x i8] c"bar\00"
 
-declare {}* @print(i8*)
+declare i8* @substring(i8*, i64, i64)
 
-define {}* @print0(i8*) {
-  %2 = call {}* @print(i8* %0)
-  ret {}* %2
+define i8* @substring10(i8*, i64, i64) {
+  %4 = call i8* @substring(i8* %0, i64 %1, i64 %2)
+  ret i8* %4
+}
+
+declare i64 @size(i8*)
+
+define i64 @size8(i8*) {
+  %2 = call i64 @size(i8* %0)
+  ret i64 %2
+}
+
+define {}* @println_int13(i64) {
+  %2 = call {}* @print_int2(i64 %0)
+  %3 = call {}* @newline9()
+  ret {}* %3
+}
+
+define {}* @println_float14(double) {
+  %2 = call {}* @print_float3(double %0)
+  %3 = call {}* @newline9()
+  ret {}* %3
 }
 
 declare {}* @println(i8*)
@@ -35,10 +54,37 @@ define {}* @print_float3(double) {
   ret {}* %2
 }
 
-declare {}* @flush()
+define {}* @print_fib29(i64) {
+  %2 = call i64 @fib18(i64 %0)
+  %3 = call {}* @print_int2(i64 %2)
+  ret {}* %3
+}
 
-define {}* @flush4() {
-  %1 = call {}* @flush()
+declare {}* @print(i8*)
+
+define {}* @print0(i8*) {
+  %2 = call {}* @print(i8* %0)
+  ret {}* %2
+}
+
+declare i64 @ord(i8)
+
+define i64 @ord6(i8) {
+  %2 = call i64 @ord(i8 %0)
+  ret i64 %2
+}
+
+declare i1 @not(i1)
+
+define i1 @not12(i1) {
+  %2 = call i1 @not(i1 %0)
+  ret i1 %2
+}
+
+declare {}* @newline()
+
+define {}* @newline9() {
+  %1 = call {}* @newline()
   ret {}* %1
 }
 
@@ -49,65 +95,11 @@ define i8 @getChar5() {
   ret i8 %1
 }
 
-declare i64 @ord(i8)
+declare {}* @flush()
 
-define i64 @ord6(i8) {
-  %2 = call i64 @ord(i8 %0)
-  ret i64 %2
-}
-
-declare i8 @chr(i64)
-
-define i8 @chr7(i64) {
-  %2 = call i8 @chr(i64 %0)
-  ret i8 %2
-}
-
-declare i64 @size(i8*)
-
-define i64 @size8(i8*) {
-  %2 = call i64 @size(i8* %0)
-  ret i64 %2
-}
-
-declare {}* @newline()
-
-define {}* @newline9() {
-  %1 = call {}* @newline()
+define {}* @flush4() {
+  %1 = call {}* @flush()
   ret {}* %1
-}
-
-declare i8* @substring(i8*, i64, i64)
-
-define i8* @substring10(i8*, i64, i64) {
-  %4 = call i8* @substring(i8* %0, i64 %1, i64 %2)
-  ret i8* %4
-}
-
-declare i8* @concat(i8*, i8*)
-
-define i8* @concat11(i8*, i8*) {
-  %3 = call i8* @concat(i8* %0, i8* %1)
-  ret i8* %3
-}
-
-declare i1 @not(i1)
-
-define i1 @not12(i1) {
-  %2 = call i1 @not(i1 %0)
-  ret i1 %2
-}
-
-define {}* @println_int13(i64) {
-  %2 = call {}* @print_int2(i64 %0)
-  %3 = call {}* @newline9()
-  ret {}* %3
-}
-
-define {}* @println_float14(double) {
-  %2 = call {}* @print_float3(double %0)
-  %3 = call {}* @newline9()
-  ret {}* %3
 }
 
 define i64 @fib18(i64) {
@@ -139,6 +131,26 @@ define {}* @do_nothing21() {
   %1 = call i8* @GC_malloc(i64 0)
   %2 = bitcast i8* %1 to {}*
   ret {}* %2
+}
+
+declare i8* @concat(i8*, i8*)
+
+define i8* @concat11(i8*, i8*) {
+  %3 = call i8* @concat(i8* %0, i8* %1)
+  ret i8* %3
+}
+
+declare i8 @chr(i64)
+
+define i8 @chr7(i64) {
+  %2 = call i8 @chr(i64 %0)
+  ret i8 %2
+}
+
+define double @area23(double) {
+  %2 = fmul double %0, %0
+  %3 = fmul double %2, 3.140000e+00
+  ret double %3
 }
 
 define i64 @add225(i8*, i64) {
@@ -173,18 +185,6 @@ define i64 @add22(i64) {
   %13 = load i8*, i8** %12
   %14 = call i64 %11(i8* %13, i64 2)
   ret i64 %14
-}
-
-define double @area23(double) {
-  %2 = fmul double %0, %0
-  %3 = fmul double %2, 3.140000e+00
-  ret double %3
-}
-
-define {}* @print_fib29(i64) {
-  %2 = call i64 @fib18(i64 %0)
-  %3 = call {}* @print_int2(i64 %2)
-  ret {}* %3
 }
 
 define i64 @"$lambda116"(i8*, i64) {

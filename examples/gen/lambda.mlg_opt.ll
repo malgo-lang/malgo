@@ -19,17 +19,6 @@ define {}* @newline1() local_unnamed_addr {
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i64 @"$lambda19"(i8*, i64) {
-  %3 = tail call i8* @GC_malloc(i64 16)
-  %4 = bitcast i8* %3 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda19", i64 (i8*, i64)** %4, align 8
-  %5 = getelementptr i8, i8* %3, i64 8
-  %6 = bitcast i8* %5 to i8**
-  store i8* %0, i8** %6, align 8
-  %7 = add i64 %1, 1
-  ret i64 %7
-}
-
 define i64 @"$lambda22"(i8*, i64) {
   %3 = bitcast i8* %0 to i64*
   %4 = load i64, i64* %3, align 8
@@ -61,6 +50,17 @@ define { i64 (i8*, i64)*, i8* }* @"$lambda21"(i8*, i64) {
   %13 = bitcast i8* %12 to i8**
   store i8* %7, i8** %13, align 8
   ret { i64 (i8*, i64)*, i8* }* %10
+}
+
+define i64 @"$lambda19"(i8*, i64) {
+  %3 = tail call i8* @GC_malloc(i64 16)
+  %4 = bitcast i8* %3 to i64 (i8*, i64)**
+  store i64 (i8*, i64)* @"$lambda19", i64 (i8*, i64)** %4, align 8
+  %5 = getelementptr i8, i8* %3, i64 8
+  %6 = bitcast i8* %5 to i8**
+  store i8* %0, i8** %6, align 8
+  %7 = add i64 %1, 1
+  ret i64 %7
 }
 
 define i32 @main() local_unnamed_addr {

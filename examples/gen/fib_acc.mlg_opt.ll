@@ -17,25 +17,6 @@ define {}* @newline1() local_unnamed_addr {
   ret {}* %1
 }
 
-; Function Attrs: nounwind readnone
-define i64 @fib_acc2(i64, i64, i64) local_unnamed_addr #0 {
-  %4 = icmp slt i64 %0, 1
-  br i1 %4, label %end_0, label %else_0
-
-else_0:                                           ; preds = %3, %else_0
-  %.tr36 = phi i64 [ %6, %else_0 ], [ %2, %3 ]
-  %.tr25 = phi i64 [ %.tr36, %else_0 ], [ %1, %3 ]
-  %.tr4 = phi i64 [ %5, %else_0 ], [ %0, %3 ]
-  %5 = add nsw i64 %.tr4, -1
-  %6 = add i64 %.tr36, %.tr25
-  %7 = icmp slt i64 %.tr4, 2
-  br i1 %7, label %end_0, label %else_0
-
-end_0:                                            ; preds = %else_0, %3
-  %.tr2.lcssa = phi i64 [ %1, %3 ], [ %.tr36, %else_0 ]
-  ret i64 %.tr2.lcssa
-}
-
 define {}* @fib_loop3(i64) local_unnamed_addr {
   %2 = icmp slt i64 %0, 1
   br i1 %2, label %then_0, label %else_0.i.preheader
@@ -64,6 +45,25 @@ fib_acc2.exit:                                    ; preds = %else_0.i
   %10 = add nsw i64 %.tr2, -1
   %11 = icmp slt i64 %.tr2, 2
   br i1 %11, label %then_0, label %else_0.i.preheader
+}
+
+; Function Attrs: nounwind readnone
+define i64 @fib_acc2(i64, i64, i64) local_unnamed_addr #0 {
+  %4 = icmp slt i64 %0, 1
+  br i1 %4, label %end_0, label %else_0
+
+else_0:                                           ; preds = %3, %else_0
+  %.tr36 = phi i64 [ %6, %else_0 ], [ %2, %3 ]
+  %.tr25 = phi i64 [ %.tr36, %else_0 ], [ %1, %3 ]
+  %.tr4 = phi i64 [ %5, %else_0 ], [ %0, %3 ]
+  %5 = add nsw i64 %.tr4, -1
+  %6 = add i64 %.tr36, %.tr25
+  %7 = icmp slt i64 %.tr4, 2
+  br i1 %7, label %end_0, label %else_0
+
+end_0:                                            ; preds = %else_0, %3
+  %.tr2.lcssa = phi i64 [ %1, %3 ], [ %.tr36, %else_0 ]
+  ret i64 %.tr2.lcssa
 }
 
 define i32 @main() local_unnamed_addr {

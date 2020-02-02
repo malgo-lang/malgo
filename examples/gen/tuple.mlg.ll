@@ -3,17 +3,25 @@ source_filename = "./examples/tuple.mlg"
 
 @0 = unnamed_addr constant [15 x i8] c" is the answer\00"
 
-declare {}* @print_int(i64)
-
-define {}* @print_int1(i64) {
-  %2 = call {}* @print_int(i64 %0)
-  ret {}* %2
+define i8* @snd_str5({ i64, i8* }*) {
+  %2 = getelementptr { i64, i8* }, { i64, i8* }* %0, i32 0, i32 0
+  %3 = load i64, i64* %2
+  %4 = getelementptr { i64, i8* }, { i64, i8* }* %0, i32 0, i32 1
+  %5 = load i8*, i8** %4
+  ret i8* %5
 }
 
 declare {}* @println(i8*)
 
 define {}* @println2(i8*) {
   %2 = call {}* @println(i8* %0)
+  ret {}* %2
+}
+
+declare {}* @print_int(i64)
+
+define {}* @print_int1(i64) {
+  %2 = call {}* @print_int(i64 %0)
   ret {}* %2
 }
 
@@ -27,13 +35,9 @@ define {}* @newline3() {
 define i64 @fst_int4({ i64, i8* }*) {
   %2 = getelementptr { i64, i8* }, { i64, i8* }* %0, i32 0, i32 0
   %3 = load i64, i64* %2
+  %4 = getelementptr { i64, i8* }, { i64, i8* }* %0, i32 0, i32 1
+  %5 = load i8*, i8** %4
   ret i64 %3
-}
-
-define i8* @snd_str5({ i64, i8* }*) {
-  %2 = getelementptr { i64, i8* }, { i64, i8* }* %0, i32 0, i32 1
-  %3 = load i8*, i8** %2
-  ret i8* %3
 }
 
 declare i8* @GC_malloc(i64)

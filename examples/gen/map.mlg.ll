@@ -26,22 +26,22 @@ define { i64, i64 }* @map1(i8*, { i64 (i8*, i64)*, i8* }*, { i64, i64 }*) {
   store i8* %0, i8** %12
   %13 = getelementptr { i64, i64 }, { i64, i64 }* %2, i32 0, i32 0
   %14 = load i64, i64* %13
-  %15 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i32 0, i32 0
-  %16 = load i64 (i8*, i64)*, i64 (i8*, i64)** %15
-  %17 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i32 0, i32 1
-  %18 = load i8*, i8** %17
-  %19 = call i64 %16(i8* %18, i64 %14)
-  %20 = getelementptr { i64, i64 }, { i64, i64 }* %2, i32 0, i32 1
-  %21 = load i64, i64* %20
+  %15 = getelementptr { i64, i64 }, { i64, i64 }* %2, i32 0, i32 1
+  %16 = load i64, i64* %15
+  %17 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i32 0, i32 0
+  %18 = load i64 (i8*, i64)*, i64 (i8*, i64)** %17
+  %19 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i32 0, i32 1
+  %20 = load i8*, i8** %19
+  %21 = call i64 %18(i8* %20, i64 %14)
   %22 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i32 0, i32 0
   %23 = load i64 (i8*, i64)*, i64 (i8*, i64)** %22
   %24 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i32 0, i32 1
   %25 = load i8*, i8** %24
-  %26 = call i64 %23(i8* %25, i64 %21)
+  %26 = call i64 %23(i8* %25, i64 %16)
   %27 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i64* getelementptr (i64, i64* null, i32 1) to i64), i64 2))
   %28 = bitcast i8* %27 to { i64, i64 }*
   %29 = getelementptr { i64, i64 }, { i64, i64 }* %28, i32 0, i32 0
-  store i64 %19, i64* %29
+  store i64 %21, i64* %29
   %30 = getelementptr { i64, i64 }, { i64, i64 }* %28, i32 0, i32 1
   store i64 %26, i64* %30
   ret { i64, i64 }* %28
@@ -97,6 +97,8 @@ define i32 @main() {
   %23 = call { i64, i64 }* %20(i8* %22, { i64 (i8*, i64)*, i8* }* %12, { i64, i64 }* %16)
   %24 = getelementptr { i64, i64 }, { i64, i64 }* %23, i32 0, i32 0
   %25 = load i64, i64* %24
-  %26 = call {}* @print_int0(i64 %25)
+  %26 = getelementptr { i64, i64 }, { i64, i64 }* %23, i32 0, i32 1
+  %27 = load i64, i64* %26
+  %28 = call {}* @print_int0(i64 %25)
   ret i32 0
 }

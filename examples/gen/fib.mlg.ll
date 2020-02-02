@@ -15,29 +15,6 @@ define {}* @newline1() {
   ret {}* %1
 }
 
-define i64 @fib2(i64) {
-  %2 = icmp sle i64 %0, 1
-  %3 = alloca i64
-  br i1 %2, label %then_0, label %else_0
-
-then_0:                                           ; preds = %1
-  store i64 1, i64* %3
-  br label %end_0
-
-else_0:                                           ; preds = %1
-  %4 = sub i64 %0, 1
-  %5 = call i64 @fib2(i64 %4)
-  %6 = sub i64 %0, 2
-  %7 = call i64 @fib2(i64 %6)
-  %8 = add i64 %5, %7
-  store i64 %8, i64* %3
-  br label %end_0
-
-end_0:                                            ; preds = %else_0, %then_0
-  %9 = load i64, i64* %3
-  ret i64 %9
-}
-
 declare i8* @GC_malloc(i64)
 
 define {}* @fib_loop3(i64, i64) {
@@ -63,6 +40,29 @@ else_0:                                           ; preds = %2
 end_0:                                            ; preds = %else_0, %then_0
   %12 = load {}*, {}** %7
   ret {}* %12
+}
+
+define i64 @fib2(i64) {
+  %2 = icmp sle i64 %0, 1
+  %3 = alloca i64
+  br i1 %2, label %then_0, label %else_0
+
+then_0:                                           ; preds = %1
+  store i64 1, i64* %3
+  br label %end_0
+
+else_0:                                           ; preds = %1
+  %4 = sub i64 %0, 1
+  %5 = call i64 @fib2(i64 %4)
+  %6 = sub i64 %0, 2
+  %7 = call i64 @fib2(i64 %6)
+  %8 = add i64 %5, %7
+  store i64 %8, i64* %3
+  br label %end_0
+
+end_0:                                            ; preds = %else_0, %then_0
+  %9 = load i64, i64* %3
+  ret i64 %9
 }
 
 define i32 @main() {

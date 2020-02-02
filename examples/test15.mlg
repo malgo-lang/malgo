@@ -1,10 +1,10 @@
 let fun f(n:Int):{} =
       if n < 0
       then {}
-      else ({g, {}}.0)(n - 1)
+      else match {g, {}} with | {x, y} => x(n - 1)
 	fun g(n:Int):{} =
       if n < 0
-	  then {}
-	  else ({f, {}}.0)(n - 1)
+	then {}
+	else (match {f, {}} with | {x, y} => x)(n - 1)
 in f(5)
 end

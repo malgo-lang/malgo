@@ -27,20 +27,20 @@ define { i64, i64 }* @map1(i8*, { i64 (i8*, i64)*, i8* }* nocapture readonly, { 
   store i8* %0, i8** %11, align 8
   %12 = getelementptr { i64, i64 }, { i64, i64 }* %2, i64 0, i32 0
   %13 = load i64, i64* %12, align 8
-  %14 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i64 0, i32 0
-  %15 = load i64 (i8*, i64)*, i64 (i8*, i64)** %14, align 8
-  %16 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i64 0, i32 1
-  %17 = load i8*, i8** %16, align 8
-  %18 = tail call i64 %15(i8* %17, i64 %13)
-  %19 = getelementptr { i64, i64 }, { i64, i64 }* %2, i64 0, i32 1
-  %20 = load i64, i64* %19, align 8
-  %21 = load i64 (i8*, i64)*, i64 (i8*, i64)** %14, align 8
-  %22 = load i8*, i8** %16, align 8
-  %23 = tail call i64 %21(i8* %22, i64 %20)
+  %14 = getelementptr { i64, i64 }, { i64, i64 }* %2, i64 0, i32 1
+  %15 = load i64, i64* %14, align 8
+  %16 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i64 0, i32 0
+  %17 = load i64 (i8*, i64)*, i64 (i8*, i64)** %16, align 8
+  %18 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %1, i64 0, i32 1
+  %19 = load i8*, i8** %18, align 8
+  %20 = tail call i64 %17(i8* %19, i64 %13)
+  %21 = load i64 (i8*, i64)*, i64 (i8*, i64)** %16, align 8
+  %22 = load i8*, i8** %18, align 8
+  %23 = tail call i64 %21(i8* %22, i64 %15)
   %24 = tail call i8* @GC_malloc(i64 16)
   %25 = bitcast i8* %24 to { i64, i64 }*
   %26 = bitcast i8* %24 to i64*
-  store i64 %18, i64* %26, align 8
+  store i64 %20, i64* %26, align 8
   %27 = getelementptr i8, i8* %24, i64 8
   %28 = bitcast i8* %27 to i64*
   store i64 %23, i64* %28, align 8

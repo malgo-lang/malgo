@@ -5,19 +5,6 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i64 @"$lambda13"(i8*, i64) {
-  %3 = bitcast i8* %0 to i64*
-  %4 = load i64, i64* %3, align 8
-  %5 = tail call i8* @GC_malloc(i64 16)
-  %6 = bitcast i8* %5 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda13", i64 (i8*, i64)** %6, align 8
-  %7 = getelementptr i8, i8* %5, i64 8
-  %8 = bitcast i8* %7 to i8**
-  store i8* %0, i8** %8, align 8
-  %9 = add i64 %4, %1
-  ret i64 %9
-}
-
 define { i64 (i8*, i64)*, i8* }* @k1(i8*, i64) {
   %3 = bitcast i8* %0 to i64*
   %4 = load i64, i64* %3, align 8
@@ -91,6 +78,19 @@ define i64 @f2(i8*, i64, i64) {
   store i8* %22, i8** %32, align 8
   %33 = add i64 %28, %2
   ret i64 %33
+}
+
+define i64 @"$lambda13"(i8*, i64) {
+  %3 = bitcast i8* %0 to i64*
+  %4 = load i64, i64* %3, align 8
+  %5 = tail call i8* @GC_malloc(i64 16)
+  %6 = bitcast i8* %5 to i64 (i8*, i64)**
+  store i64 (i8*, i64)* @"$lambda13", i64 (i8*, i64)** %6, align 8
+  %7 = getelementptr i8, i8* %5, i64 8
+  %8 = bitcast i8* %7 to i8**
+  store i8* %0, i8** %8, align 8
+  %9 = add i64 %4, %1
+  ret i64 %9
 }
 
 define i32 @main() local_unnamed_addr {

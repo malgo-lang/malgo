@@ -7,7 +7,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.IR.Syntax where
 
-import           Data.List                      ( (!!) )
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
@@ -42,7 +41,6 @@ data Expr a
   | Unit Info
   -- | タプル
   | Tuple Info [Expr a]
-  | TupleAccess Info (Expr a) Int
   -- | 配列作成
   | MakeArray Info (Expr a) -- ^ init value
                    (Expr a) -- ^ size
@@ -77,7 +75,6 @@ info (Bool   i _        ) = i
 info (Char   i _        ) = i
 info (String i _        ) = i
 info (Tuple  i _        ) = i
-info (TupleAccess i _ _ ) = i
 info (MakeArray   i _ _ ) = i
 info (ArrayRead   i _ _ ) = i
 info (ArrayWrite i _ _ _) = i
@@ -99,7 +96,6 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Char   _ x             ) = quotes $ pPrint x
   pPrint (String _ x             ) = doubleQuotes $ pPrint x
   pPrint (Tuple  _ xs            ) = braces $ sep $ punctuate "," $ map pPrint xs
-  pPrint (TupleAccess _ e    i   ) = parens ("." <+> pPrint e <+> pPrint i)
   pPrint (MakeArray   _ init size) = parens $ "array" <+> pPrint init <+> pPrint size
   pPrint (ArrayRead   _ arr  ix  ) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite _ arr ix val) =
@@ -181,9 +177,6 @@ instance HasType a => HasType (Expr a) where
   typeOf (Char   _ _       ) = TyApp CharC []
   typeOf (String _ _       ) = TyApp StringC []
   typeOf (Tuple  _ xs      ) = TyApp TupleC (map typeOf xs)
-  typeOf (TupleAccess _ e i) = case typeOf e of
-    TyApp TupleC xs -> xs !! i
-    _               -> error "(typeOf e) should match (TyTuple xs)"
   typeOf (MakeArray _ init _) = TyApp ArrayC [typeOf init]
   typeOf (ArrayRead _ arr  _) = case typeOf arr of
     TyApp ArrayC [t] -> t
