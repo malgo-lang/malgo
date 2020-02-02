@@ -49,59 +49,69 @@ import           Control.Lens.Prism             ( prism )
 import           GHC.Exts                       ( Item
                                                 , toList
                                                 )
-import qualified Data.List
 
 -- 差分を取ることができるデータ構造を表す型クラス
 class One a => Complement a where
   (\\) :: a -> a -> a
 
-  {-# INLINE delete #-}
   delete :: OneItem a -> a -> a
   delete x s = s \\ one x
+  {-# INLINE delete #-}
 
 instance Ord a => Complement (Set a) where
   (\\) = (Set.\\)
+  {-# INLINE (\\) #-}
+  delete = Set.delete
+  {-# INLINE delete #-}
 
 instance Eq a => Complement [a] where
   (\\) = (List.\\)
+  {-# INLINE (\\) #-}
+  delete = List.delete
+  {-# INLINE delete #-}
 
 -- Stateモナドのヘルパー。ローカルな状態を表現する
-{-# INLINE localState #-}
 localState :: MonadState s m => m a -> m a
 localState m = do
   backup <- get
   v      <- m
   put backup
   pure v
+{-# INLINE localState #-}
 
--- unzip :: [(a, b)] -> (f a, f b) の一般化
+-- unzip :: [(a, b)] -> ([a], [b]) の一般化
 unzip :: Functor f => f (a, b) -> (f a, f b)
 unzip xs = (fst <$> xs, snd <$> xs)
+{-# INLINE unzip #-}
 
 -- bitraverseの部分適用
 ltraverse :: (Bitraversable t, Applicative f) => (a -> f c) -> t a d -> f (t c d)
 ltraverse f = bitraverse f pure
+{-# INLINE ltraverse #-}
 
 rtraverse :: (Bitraversable t, Applicative f) => (b -> f c) -> t a b -> f (t a c)
 rtraverse = bitraverse pure
+{-# INLINE rtraverse #-}
 
+-- 差分リスト
 newtype DiffList a = DiffList (Endo [a])
   deriving newtype (Semigroup, Monoid, Generic)
 
 instance One (DiffList a) where
   type OneItem (DiffList a) = a
   one x = DiffList (Endo (x :))
+  {-# INLINE one #-}
 
 instance Cons (DiffList a) (DiffList b) a b where
   _Cons = prism (\(x, xs) -> one x <> xs) $ \(DiffList xxs) -> case appEndo xxs [] of
-    (x : _) -> Right (x, DiffList (Endo (drop 1) <> xxs))
-    []      -> Left mempty
+    (x : xs) -> Right (x, DiffList (Endo (xs <>)))
+    []       -> Left mempty
   {-# INLINE _Cons #-}
 
 instance Snoc (DiffList a) (DiffList b) a b where
   _Snoc = prism (\(xs, x) -> xs <> one x) $ \(DiffList xxs) -> case appEndo xxs [] of
     []   -> Left mempty
-    list -> Right (DiffList $ Endo (Data.List.init list <>), Data.List.last list)
+    list -> Right (DiffList $ Endo (List.init list <>), List.last list)
   {-# INLINE _Snoc #-}
 
 instance IsList (DiffList a) where
@@ -129,13 +139,23 @@ instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
   tell   = W.tell
   listen = W.listen
   pass   = W.pass
+  {-# INLINE writer #-}
+  {-# INLINE tell #-}
+  {-# INLINE listen #-}
+  {-# INLINE pass #-}
 
 instance (Monoid w, MonadReader r m) => MonadReader r (WriterT w m) where
   ask    = lift ask
   local  = W.mapWriterT . local
   reader = lift . reader
+  {-# INLINE ask #-}
+  {-# INLINE local #-}
+  {-# INLINE reader #-}
 
 instance (Monoid w, MonadState s m) => MonadState s (WriterT w m) where
   get   = lift get
   put   = lift . put
   state = lift . state
+  {-# INLINE get #-}
+  {-# INLINE put #-}
+  {-# INLINE state #-}

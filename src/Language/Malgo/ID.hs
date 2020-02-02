@@ -63,7 +63,7 @@ newID m n = ID n <$> getUniq <*> pure m
 
 newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
   deriving stock (Eq, Ord, Read, Show, Functor, Foldable, Traversable, Generic, Data)
-  deriving newtype ( Eq1, Ord1, Read1, Show1, Semigroup, Monoid, NFData)
+  deriving newtype (Eq1, Ord1, Read1, Show1, Semigroup, Monoid, NFData)
 
 instance Pretty v => Pretty (IDMap a v) where
   pPrint = pPrint . toList . unwrapIDMap
