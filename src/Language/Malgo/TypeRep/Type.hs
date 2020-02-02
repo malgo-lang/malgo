@@ -25,7 +25,7 @@ data TyCon = FunC | IntC | FloatC | BoolC | CharC | StringC | TupleC | ArrayC
 
 instance Pretty Type where
   pPrint (TyApp FunC (ret : params)) =
-    parens (sep $ punctuate "," $ map pPrint params) <+> "->" <+> pPrint ret
+    parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
   pPrint (TyApp TupleC ts) = braces $ sep $ punctuate "," $ map pPrint ts
   pPrint (TyApp c      ts) = pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
   pPrint (TyMeta v       ) = pPrint v
