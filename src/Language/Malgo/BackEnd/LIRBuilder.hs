@@ -292,7 +292,7 @@ coerceTo to x = case (to, ltypeOf x) of
       _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
     ptr <- alloca (Struct ts)
     iforM_ ts $ \i ty -> do
-      xElem  <- loadC x' [0, 0]
+      xElem  <- loadC x' [0, i]
       xElem' <- coerceTo ty xElem
       storeC ptr [0, i] xElem'
     pure ptr
