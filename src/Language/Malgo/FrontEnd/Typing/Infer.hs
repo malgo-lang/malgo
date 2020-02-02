@@ -44,20 +44,6 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
 
 type Env = IDMap () (ID Type)
 
-throw :: Info -> Doc -> b
-throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
-
-catchUnifyError :: Info -> Doc -> Either UnifyError a -> a
-catchUnifyError i name (Left (MismatchConstructor c1 c2)) =
-  throw i $ "mismatch constructor" <+> pPrint c1 <> "," <+> pPrint c2 $+$ "on" <+> name
-catchUnifyError i name (Left (MismatchLength ts1 ts2)) =
-  throw i $ "mismatch length" <+> pPrint ts1 <> "," <+> pPrint ts2 $+$ "on" <+> name
-catchUnifyError i name (Left (InfinitType var ty)) =
-  throw i $ "infinit type" <+> pPrint var <> "," <+> pPrint ty $+$ "on" <+> name
-catchUnifyError i name (Left (MismatchLevel ty1 ty2)) =
-  throw i $ "mismatch level" <+> pPrint ty1 <> "," <+> pPrint ty2 $+$ "on" <+> name
-catchUnifyError _ _ (Right a) = a
-
 newTyMeta :: MonadUniq m => m Type
 newTyMeta = TyMeta <$> getUniq
 

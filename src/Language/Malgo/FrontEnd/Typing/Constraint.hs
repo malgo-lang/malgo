@@ -1,6 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.Typing.Constraint
   ( Constraint(..)
   , solve
@@ -10,11 +11,14 @@ module Language.Malgo.FrontEnd.Typing.Constraint
   )
 where
 
+import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.Pretty
 import           Language.Malgo.Monad
 import           Language.Malgo.FrontEnd.Typing.Subst
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 import           Control.Monad.Error.Class
+import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 
 data Constraint = Type :~ Type
   deriving stock (Eq, Show)
@@ -28,6 +32,20 @@ data UnifyError = MismatchConstructor TyCon TyCon
                 | InfinitType TyVar Type
                 | MismatchLevel Type Type
   deriving stock Show
+
+throw :: Info -> Doc -> b
+throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
+
+catchUnifyError :: Info -> Doc -> Either UnifyError a -> a
+catchUnifyError i name (Left (MismatchConstructor c1 c2)) =
+  throw i $ "mismatch constructor" <+> pPrint c1 <> "," <+> pPrint c2 $+$ "on" <+> name
+catchUnifyError i name (Left (MismatchLength ts1 ts2)) =
+  throw i $ "mismatch length" <+> pPrint ts1 <> "," <+> pPrint ts2 $+$ "on" <+> name
+catchUnifyError i name (Left (InfinitType var ty)) =
+  throw i $ "infinit type" <+> pPrint var <> "," <+> pPrint ty $+$ "on" <+> name
+catchUnifyError i name (Left (MismatchLevel ty1 ty2)) =
+  throw i $ "mismatch level" <+> pPrint ty1 <> "," <+> pPrint ty2 $+$ "on" <+> name
+catchUnifyError _ _ (Right a) = a
 
 solve :: [Constraint] -> Either UnifyError Subst
 solve cs = runIdentity $ runExceptT $ solver (mempty, cs)
