@@ -70,7 +70,7 @@ define i32 @main() {
   %20 = bitcast { i8* (i8*, i8*)*, i8* }* %19 to i8*
   %21 = getelementptr { i8*, i8* }, { i8*, i8* }* %17, i32 0, i32 0
   store i8* %20, i8** %21
-  %22 = getelementptr { { i8* (i8*, i8*)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }, { { i8* (i8*, i8*)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }* %9, i32 0, i32 0
+  %22 = getelementptr { { i8* (i8*, i8*)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }, { { i8* (i8*, i8*)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }* %9, i32 0, i32 1
   %23 = load { i8* (i8*, i8*)*, i8* }*, { i8* (i8*, i8*)*, i8* }** %22
   %24 = bitcast { i8* (i8*, i8*)*, i8* }* %23 to i8*
   %25 = getelementptr { i8*, i8* }, { i8*, i8* }* %17, i32 0, i32 1
@@ -90,7 +90,7 @@ define i32 @main() {
   store i8* %32, i8** %36
   %37 = getelementptr { { i64 (i8*, i64)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }, { { i64 (i8*, i64)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }* %30, i32 0, i32 0
   store { i64 (i8*, i64)*, i8* }* %34, { i64 (i8*, i64)*, i8* }** %37
-  %38 = getelementptr { i8*, i8* }, { i8*, i8* }* %28, i32 0, i32 0
+  %38 = getelementptr { i8*, i8* }, { i8*, i8* }* %28, i32 0, i32 1
   %39 = load i8*, i8** %38
   %40 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
   %41 = bitcast i8* %40 to { i8* (i8*, i8*)*, i8* }*
