@@ -29,8 +29,8 @@ data UnifyError = MismatchConstructor TyCon TyCon
                 | MismatchLevel Type Type
   deriving stock Show
 
-solve :: Monad m => [Constraint] -> m (Either UnifyError Subst)
-solve cs = runExceptT $ solver (mempty, cs)
+solve :: [Constraint] -> Either UnifyError Subst
+solve cs = runIdentity $ runExceptT $ solver (mempty, cs)
 
 solver :: MonadError UnifyError m => (Subst, [Constraint]) -> m Subst
 solver (su, []             ) = pure su

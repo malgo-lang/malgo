@@ -32,10 +32,10 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
   isDump   = dumpTyped
   trans e = evaluatingStateT mempty $ do
     (_, cs) <- runWriterT $ typingExpr e
-    subst   <- catchUnifyError (Syntax.info e) "toplevel" =<< solve cs
-    env     <- gets (apply subst)
+    let subst = catchUnifyError (Syntax.info e) "toplevel" (solve cs)
+    env <- gets (apply subst)
 
-    opt     <- liftMalgo $ asks maOption
+    opt <- liftMalgo $ asks maOption
     when (dumpTypeTable opt) $ do
       let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env)
       liftMalgo $ dump xs
@@ -47,7 +47,7 @@ type Env = IDMap () (ID Type)
 throw :: Info -> Doc -> b
 throw info mes = errorDoc $ "error(typing):" <+> pPrint info $+$ mes
 
-catchUnifyError :: Applicative f => Info -> Doc -> Either UnifyError a -> f a
+catchUnifyError :: Info -> Doc -> Either UnifyError a -> a
 catchUnifyError i name (Left (MismatchConstructor c1 c2)) =
   throw i $ "mismatch constructor" <+> pPrint c1 <> "," <+> pPrint c2 $+$ "on" <+> name
 catchUnifyError i name (Left (MismatchLength ts1 ts2)) =
@@ -56,7 +56,7 @@ catchUnifyError i name (Left (InfinitType var ty)) =
   throw i $ "infinit type" <+> pPrint var <> "," <+> pPrint ty $+$ "on" <+> name
 catchUnifyError i name (Left (MismatchLevel ty1 ty2)) =
   throw i $ "mismatch level" <+> pPrint ty1 <> "," <+> pPrint ty2 $+$ "on" <+> name
-catchUnifyError _ _ (Right a) = pure a
+catchUnifyError _ _ (Right a) = a
 
 newTyMeta :: MonadUniq m => m Type
 newTyMeta = TyMeta <$> getUniq
@@ -66,11 +66,10 @@ generalize env t | null fv   = t
                  | otherwise = TyForall fv t
   where fv = toList $ ftv t \\ ftv env
 
-letVar :: MonadState Env m =>
-            Info -> Env -> ID () -> Type -> [Constraint] -> m ()
+letVar :: MonadState Env m => Info -> Env -> ID () -> Type -> [Constraint] -> m ()
 letVar info env var ty cs = do
-  subst <- catchUnifyError info (pPrint var) =<< solve cs
-  let sc = generalize (apply subst env) (apply subst ty)
+  let subst = catchUnifyError info (pPrint var) (solve cs)
+  let sc    = generalize (apply subst env) (apply subst ty)
   defineVar var sc
   modify (apply subst)
 
@@ -117,12 +116,11 @@ typingExpr (Fn i params body) = do
   paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
   mapM_ (\((p, _), t) -> defineVar p t) (zip params paramTypes)
   (t, cs) <- listen $ typingExpr body
-  sub     <- catchUnifyError i "function literal" =<< solve cs
+  let sub = catchUnifyError i "function literal" (solve cs)
   pure $ generalize (apply sub env) $ apply sub (TyApp FunC (t : paramTypes))
 typingExpr (Seq i e1 e2) = do
   (_, cs1) <- listen $ typingExpr e1
-  _        <- catchUnifyError i "seq" =<< solve cs1
-  typingExpr e2
+  catchUnifyError i "seq" (solve cs1) `seq` typingExpr e2
 typingExpr (Let _ (ValDec i name mtyp val) body) = do
   env            <- get
 
