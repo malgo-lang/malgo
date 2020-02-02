@@ -1,0 +1,11 @@
+let fun f(p) = match p with
+               | { k, x } => k(x)
+    fun id(x) = x
+    -- fun addOne(x) = x + 1
+    val funRef0 = array({id, 1}, 1)
+    -- val funRef1 = array({addOne, 1}, 1)
+    extern print_int : Int -> {} = "print_int"
+in
+  print_int(f(funRef0[0]))
+  -- print_int(match funRef0[0] with | { k, x } => x)
+end
