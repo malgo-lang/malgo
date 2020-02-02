@@ -8,6 +8,8 @@ module Language.Malgo.FrontEnd.Typing.Constraint
   , UnifyError(..)
   , inst1
   , instantiate
+  , throw
+  , catchUnifyError
   )
 where
 
