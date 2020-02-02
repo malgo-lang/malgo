@@ -9,6 +9,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Pass where
 
+import           Text.PrettyPrint.HughesPJClass ( renderStyle
+                                                , style
+                                                , Style(..)
+                                                )
 import           Language.Malgo.Monad
 import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
@@ -23,9 +27,10 @@ dump x = do
   opt <- liftMalgo $ asks maOption
   if isDebugMode opt
     then liftMalgo $ logDebug $ "\n" <> toText (pShow x)
-    else liftMalgo $ logInfo $ "\n" <> show (pPrint x)
+    else liftMalgo $ logInfo $ "\n" <> toText
+      (renderStyle (style { lineLength = maxInt }) (pPrint x))
 
-transWithDump :: forall  p s t . (Pass p s t, Show t, Pretty t) => s -> MalgoM t
+transWithDump :: forall p s t . (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do
   opt <- asks maOption
   t   <- trans @p s
