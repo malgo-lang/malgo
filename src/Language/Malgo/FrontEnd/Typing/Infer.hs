@@ -23,7 +23,6 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( fromJust )
-import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 
 data Typing
 

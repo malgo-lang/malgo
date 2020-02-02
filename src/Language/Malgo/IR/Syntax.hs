@@ -11,9 +11,6 @@ import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
-import           Control.Lens                   ( view
-                                                , _3
-                                                )
 import           Text.PrettyPrint.HughesPJClass ( quotes
                                                 , doubleQuotes
                                                 , braces
@@ -73,8 +70,8 @@ info (Bool   i _        ) = i
 info (Char   i _        ) = i
 info (String i _        ) = i
 info (Tuple  i _        ) = i
-info (MakeArray   i _ _ ) = i
-info (ArrayRead   i _ _ ) = i
+info (MakeArray i _ _   ) = i
+info (ArrayRead i _ _   ) = i
 info (ArrayWrite i _ _ _) = i
 info (Call i _ _        ) = i
 info (Fn   i _ _        ) = i
@@ -85,16 +82,16 @@ info (BinOp i _ _ _     ) = i
 info (Match i _ _       ) = i
 
 instance Pretty a => Pretty (Expr a) where
-  pPrint (Var    _ name          ) = pPrint name
-  pPrint (Int    _ x             ) = pPrint x
-  pPrint (Float  _ x             ) = pPrint x
-  pPrint (Bool   _ True          ) = "true"
-  pPrint (Bool   _ False         ) = "false"
-  pPrint (Char   _ x             ) = quotes $ pPrint x
-  pPrint (String _ x             ) = doubleQuotes $ pPrint x
-  pPrint (Tuple  _ xs            ) = braces $ sep $ punctuate "," $ map pPrint xs
-  pPrint (MakeArray   _ init size) = parens $ "array" <+> pPrint init <+> pPrint size
-  pPrint (ArrayRead   _ arr  ix  ) = pPrint arr <> brackets (pPrint ix)
+  pPrint (Var    _ name        ) = pPrint name
+  pPrint (Int    _ x           ) = pPrint x
+  pPrint (Float  _ x           ) = pPrint x
+  pPrint (Bool   _ True        ) = "true"
+  pPrint (Bool   _ False       ) = "false"
+  pPrint (Char   _ x           ) = quotes $ pPrint x
+  pPrint (String _ x           ) = doubleQuotes $ pPrint x
+  pPrint (Tuple  _ xs          ) = braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (MakeArray _ init size) = parens $ "array" <+> pPrint init <+> pPrint size
+  pPrint (ArrayRead _ arr  ix  ) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite _ arr ix val) =
     parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
   pPrint (Call _ fn arg) = parens $ pPrint fn <+> sep (map pPrint arg)
@@ -165,57 +162,58 @@ instance Pretty a => Pretty (Decl a) where
   pPrint (ValDec _ name _ val ) = parens $ "val" <+> pPrint name <+> pPrint val
   pPrint (ExDec  _ name _ orig) = parens $ "extern" <+> pPrint name <+> pPrint orig
 
-instance HasType a => HasType (Expr a) where
-  typeOf (Var    _ name    ) = typeOf name
-  typeOf (Int    _ _       ) = TyApp IntC []
-  typeOf (Float  _ _       ) = TyApp FloatC []
-  typeOf (Bool   _ _       ) = TyApp BoolC []
-  typeOf (Char   _ _       ) = TyApp CharC []
-  typeOf (String _ _       ) = TyApp StringC []
-  typeOf (Tuple  _ xs      ) = TyApp TupleC (map typeOf xs)
-  typeOf (MakeArray _ init _) = TyApp ArrayC [typeOf init]
-  typeOf (ArrayRead _ arr  _) = case typeOf arr of
-    TyApp ArrayC [t] -> t
-    _                -> error "(typeof arr) should match (TyArray xs)"
-  typeOf ArrayWrite{}         = TyApp TupleC []
-  typeOf (Fn   _ params body) = TyApp FunC $ typeOf body : map (typeOf . fst) params
-  typeOf (Call _ fn     _   ) = case typeOf fn of
-    (TyApp FunC (ret : _)) -> ret
-    _                      -> error "(typeOf fn) should match (TyFun _ ty)"
-  typeOf (Seq _ _ e              ) = typeOf e
-  typeOf (Let _ _ e              ) = typeOf e
-  typeOf (If    _ _  e _         ) = typeOf e
-  typeOf (BinOp i op x _         ) = view _3 $ typeOfOp i op (typeOf x)
-  typeOf (Match _ _ ((_, e) :| _)) = typeOf e
+-- instance HasType a => HasType (Expr a) where
+--   typeOf (Var    _ name     ) = typeOf name
+--   typeOf (Int    _ _        ) = TyApp IntC []
+--   typeOf (Float  _ _        ) = TyApp FloatC []
+--   typeOf (Bool   _ _        ) = TyApp BoolC []
+--   typeOf (Char   _ _        ) = TyApp CharC []
+--   typeOf (String _ _        ) = TyApp StringC []
+--   typeOf (Tuple  _ xs       ) = TyApp TupleC (map typeOf xs)
+--   typeOf (MakeArray _ init _) = TyApp ArrayC [typeOf init]
+--   typeOf (ArrayRead _ arr  _) = case typeOf arr of
+--     TyApp ArrayC [t] -> t
+--     _                -> error "(typeof arr) should match (TyArray xs)"
+--   typeOf ArrayWrite{}         = TyApp TupleC []
+--   typeOf (Fn   _ params body) = TyApp FunC $ typeOf body : map (typeOf . fst) params
+--   typeOf (Call i fn     as  ) = case typeOf fn of
+--     (TyApp FunC (ret : ps)) ->
+--       apply (catchUnifyError i "typeOf" $ solve (zipWith (:~) (map typeOf as) ps)) ret
+--     _ -> error "(typeOf fn) should match (TyFun _ ty)"
+--   typeOf (Seq _ _ e              ) = typeOf e
+--   typeOf (Let _ _ e              ) = typeOf e
+--   typeOf (If    _ _  e _         ) = typeOf e
+--   typeOf (BinOp i op x _         ) = view _3 $ typeOfOp i op (typeOf x)
+--   typeOf (Match _ _ ((_, e) :| _)) = typeOf e
 
-typeOfOp :: Info -> Op -> Type -> (Type, Type, Type)
-typeOfOp _ Add  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
-typeOfOp _ Sub  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
-typeOfOp _ Mul  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
-typeOfOp _ Div  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
-typeOfOp _ FAdd _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
-typeOfOp _ FSub _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
-typeOfOp _ FMul _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
-typeOfOp _ FDiv _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
-typeOfOp _ Mod  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
-typeOfOp i Eq   ty = if comparable ty
-  then (ty, ty, TyApp BoolC [])
-  else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
-typeOfOp i Neq ty = if comparable ty
-  then (ty, ty, TyApp BoolC [])
-  else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
-typeOfOp i Lt ty = if comparable ty
-  then (ty, ty, TyApp BoolC [])
-  else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
-typeOfOp i Gt ty = if comparable ty
-  then (ty, ty, TyApp BoolC [])
-  else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
-typeOfOp i Le ty = if comparable ty
-  then (ty, ty, TyApp BoolC [])
-  else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
-typeOfOp i Ge ty = if comparable ty
-  then (ty, ty, TyApp BoolC [])
-  else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
-typeOfOp _ And _ = (TyApp BoolC [], TyApp BoolC [], TyApp BoolC [])
-typeOfOp _ Or  _ = (TyApp BoolC [], TyApp BoolC [], TyApp BoolC [])
+-- typeOfOp :: Info -> Op -> Type -> (Type, Type, Type)
+-- typeOfOp _ Add  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+-- typeOfOp _ Sub  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+-- typeOfOp _ Mul  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+-- typeOfOp _ Div  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+-- typeOfOp _ FAdd _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
+-- typeOfOp _ FSub _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
+-- typeOfOp _ FMul _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
+-- typeOfOp _ FDiv _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
+-- typeOfOp _ Mod  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
+-- typeOfOp i Eq   ty = if comparable ty
+--   then (ty, ty, TyApp BoolC [])
+--   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
+-- typeOfOp i Neq ty = if comparable ty
+--   then (ty, ty, TyApp BoolC [])
+--   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
+-- typeOfOp i Lt ty = if comparable ty
+--   then (ty, ty, TyApp BoolC [])
+--   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
+-- typeOfOp i Gt ty = if comparable ty
+--   then (ty, ty, TyApp BoolC [])
+--   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
+-- typeOfOp i Le ty = if comparable ty
+--   then (ty, ty, TyApp BoolC [])
+--   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
+-- typeOfOp i Ge ty = if comparable ty
+--   then (ty, ty, TyApp BoolC [])
+--   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
+-- typeOfOp _ And _ = (TyApp BoolC [], TyApp BoolC [], TyApp BoolC [])
+-- typeOfOp _ Or  _ = (TyApp BoolC [], TyApp BoolC [], TyApp BoolC [])
 

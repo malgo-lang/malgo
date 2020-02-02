@@ -38,21 +38,21 @@ appInsert :: Functor f => WriterT (Endo b) f b -> f b
 appInsert m = uncurry (flip appEndo) <$> runWriterT m
 
 transToHIR :: MonadUniq m => S.Expr (ID Type) -> m (Expr (ID Type))
-transToHIR (S.Var    _ a             ) = pure $ Var a
-transToHIR (S.Int    _ x             ) = pure $ Lit $ Int x
-transToHIR (S.Float  _ x             ) = pure $ Lit $ Float x
-transToHIR (S.Bool   _ x             ) = pure $ Lit $ Bool x
-transToHIR (S.Char   _ x             ) = pure $ Lit $ Char x
-transToHIR (S.String _ x             ) = pure $ Lit $ String x
-transToHIR (S.Tuple _ xs             ) = appInsert $ Tuple <$> mapM insertLet xs
-transToHIR (S.MakeArray   _ init size) = appInsert $ MakeArray <$> insertLet init <*> insertLet size
-transToHIR (S.ArrayRead   _ arr  ix  ) = appInsert $ ArrayRead <$> insertLet arr <*> insertLet ix
+transToHIR (S.Var    _ a           ) = pure $ Var a
+transToHIR (S.Int    _ x           ) = pure $ Lit $ Int x
+transToHIR (S.Float  _ x           ) = pure $ Lit $ Float x
+transToHIR (S.Bool   _ x           ) = pure $ Lit $ Bool x
+transToHIR (S.Char   _ x           ) = pure $ Lit $ Char x
+transToHIR (S.String _ x           ) = pure $ Lit $ String x
+transToHIR (S.Tuple  _ xs          ) = appInsert $ Tuple <$> mapM insertLet xs
+transToHIR (S.MakeArray _ init size) = appInsert $ MakeArray <$> insertLet init <*> insertLet size
+transToHIR (S.ArrayRead _ arr  ix  ) = appInsert $ ArrayRead <$> insertLet arr <*> insertLet ix
 transToHIR (S.ArrayWrite _ arr ix val) =
   appInsert $ ArrayWrite <$> insertLet arr <*> insertLet ix <*> insertLet val
-transToHIR (  S.Call _ f  xs) = appInsert $ Call <$> insertLet f <*> mapM insertLet xs
-transToHIR f@(S.Fn   _ ps e ) = do
-  fn <- newTmp "lambda" (typeOf f)
+transToHIR (S.Call _ f  xs) = appInsert $ Call <$> insertLet f <*> mapM insertLet xs
+transToHIR (S.Fn   _ ps e ) = do
   e' <- transToHIR e
+  fn <- newTmp "lambda" (TyApp FunC (typeOf e' : map (typeOf . fst) ps))
   pure $ LetRec [Def { name = fn, params = map fst ps, expr = e' }] (Var fn)
 transToHIR (S.Seq _ e1                   e2  ) = appInsert $ insertLet e1 >> transToHIR e2
 transToHIR (S.Let _ (S.ValDec _ n _ val) body) = Let n <$> transToHIR val <*> transToHIR body
