@@ -195,7 +195,7 @@ forLoop from to k = do
   block <- localBlock (k index)
   addInst $ For index from to block
 
-convertType :: HasCallStack => Type -> LType
+convertType :: Type -> LType
 convertType (TyApp FunC (r : ps)) =
   Ptr (Struct [Function (convertType r) (Ptr U8 : map convertType ps), Ptr U8])
 convertType (TyApp IntC    [] ) = I64

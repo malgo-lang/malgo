@@ -39,7 +39,7 @@ instance Pretty LType where
   pPrint t = text $ toString $ pShow t
 
 class HasLType a where
-  ltypeOf :: HasCallStack => a -> LType
+  ltypeOf :: a -> LType
 
 instance HasLType LType where
   ltypeOf x = x
@@ -47,7 +47,7 @@ instance HasLType LType where
 instance HasLType a => HasLType (ID a) where
   ltypeOf ID { idMeta } = ltypeOf idMeta
 
-accessType :: HasCallStack => LType -> [Int] -> LType
+accessType :: LType -> [Int] -> LType
 accessType t           []       = t
 accessType (Ptr    t ) (_ : xs) = accessType t xs
 accessType (Struct ts) (i : xs) = accessType (ts !! i) xs

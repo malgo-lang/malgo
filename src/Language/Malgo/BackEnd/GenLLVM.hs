@@ -134,7 +134,7 @@ genBlock Block { insts, value } term = go insts
     opr <- genInst inst
     local (\st -> st { variableMap = insert x opr (variableMap st) }) $ go xs
 
-genInst :: HasCallStack => Inst (ID LType) -> GenExpr Operand
+genInst :: Inst (ID LType) -> GenExpr Operand
 genInst (Constant x) = genConstant x
 genInst (Call f xs ) = do
   f'  <- findVar f
