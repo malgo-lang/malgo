@@ -8,8 +8,10 @@
 {-# LANGUAGE TypeFamilies      #-}
 module Language.Malgo.IR.HIR where
 
-import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
+import           Language.Malgo.FrontEnd.Typing.Subst
+import           Language.Malgo.FrontEnd.Typing.Constraint
+import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
 import           Relude.Unsafe                  ( (!!) )
 import           Text.PrettyPrint.HughesPJClass ( braces
@@ -73,6 +75,7 @@ flattenExpr (Let x v1 e1) = go (flattenExpr v1)
   go v             = Let x v (flattenExpr e1)
 flattenExpr (LetRec defs body) = LetRec (map flattenDef defs) (flattenExpr body)
 flattenExpr (If c t f        ) = If c (flattenExpr t) (flattenExpr f)
+flattenExpr (Match s cs      ) = Match s (secondF flattenExpr cs)
 flattenExpr e                  = e
 
 flattenDef :: Def a -> Def a
@@ -91,9 +94,9 @@ instance HasType a => HasType (Expr a) where
     TyApp ArrayC [t] -> t
     _                -> error "(typeOf arr) should match (TyArray xs)"
   typeOf ArrayWrite{} = TyApp TupleC []
-  typeOf (Call fn _)  = case typeOf fn of
-    TyApp FunC (ret : _) -> ret
-    _                    -> error "(typeOf fn) should match (TyFun _ ty)"
+  typeOf (Call fn as) = case typeOf fn of
+    TyApp FunC (ret : ps) -> apply (fold $ solve $ zipWith (:~) (map typeOf as) ps) ret
+    _                     -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (Let _ _ e  ) = typeOf e
   typeOf (LetRec _ e ) = typeOf e
   typeOf (If   _ x  _) = typeOf x

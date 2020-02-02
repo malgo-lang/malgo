@@ -11,6 +11,7 @@ module Language.Malgo.Prelude
   ( module Relude
   , module Relude.Extra.Map
   , module Relude.Extra.Tuple
+  , module Relude.Extra.Bifunctor
   , module Control.Monad.Trans.Writer.CPS
   , module Control.Monad.Writer.Class
   , module Control.Lens.Cons
@@ -36,6 +37,7 @@ import           Relude.Extra.Map        hiding ( size
                                                 , delete
                                                 )
 import           Relude.Extra.Tuple
+import           Relude.Extra.Bifunctor
 import qualified Data.Set                      as Set
 import qualified Data.List                     as List
 import           Control.Monad.Trans.Writer.CPS ( WriterT
