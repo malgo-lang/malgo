@@ -87,7 +87,6 @@ typingExpr Float{}      = pure $ TyApp FloatC []
 typingExpr Bool{}       = pure $ TyApp BoolC []
 typingExpr Char{}       = pure $ TyApp CharC []
 typingExpr String{}     = pure $ TyApp StringC []
-typingExpr Unit{}       = pure $ TyApp TupleC []
 typingExpr (Tuple _ xs) = do
   ts <- mapM typingExpr xs
   pure $ TyApp TupleC ts
@@ -213,7 +212,6 @@ isValue Float{}      = True
 isValue Bool{}       = True
 isValue Char{}       = True
 isValue String{}     = True
-isValue Unit{}       = True
 isValue Fn{}         = True
 isValue (Tuple _ xs) = all isValue xs
 isValue _            = False

@@ -44,7 +44,6 @@ transToHIR (S.Float  _ x             ) = pure $ Lit $ Float x
 transToHIR (S.Bool   _ x             ) = pure $ Lit $ Bool x
 transToHIR (S.Char   _ x             ) = pure $ Lit $ Char x
 transToHIR (S.String _ x             ) = pure $ Lit $ String x
-transToHIR (S.Unit _                 ) = pure $ Tuple []
 transToHIR (S.Tuple _ xs             ) = appInsert $ Tuple <$> mapM insertLet xs
 transToHIR (S.MakeArray   _ init size) = appInsert $ MakeArray <$> insertLet init <*> insertLet size
 transToHIR (S.ArrayRead   _ arr  ix  ) = appInsert $ ArrayRead <$> insertLet arr <*> insertLet ix

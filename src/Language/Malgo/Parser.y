@@ -179,7 +179,7 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
           | simple_exp '[' exp ']' { ArrayRead (_info $2) $1 $3 }
           | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [] }
           | simple_exp '(' args ')' {- %prec CALL -} { Call (info $1) $1 (reverse $3) }
-          | '{' '}' { Unit (_info $1) }
+          | '{' '}' { Tuple (_info $1) [] }
           | '(' exp ')' { $2 }
 
 args : args ',' exp { $3 : $1 }

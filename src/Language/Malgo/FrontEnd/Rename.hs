@@ -47,7 +47,6 @@ renameExpr (Float  info x             ) = pure $ Float info x
 renameExpr (Bool   info x             ) = pure $ Bool info x
 renameExpr (Char   info x             ) = pure $ Char info x
 renameExpr (String info x             ) = pure $ String info x
-renameExpr (Unit info                 ) = pure $ Unit info
 renameExpr (Tuple info xs             ) = Tuple info <$> mapM renameExpr xs
 renameExpr (MakeArray   info init size) = MakeArray info <$> renameExpr init <*> renameExpr size
 renameExpr (ArrayRead   info arr  ix  ) = ArrayRead info <$> renameExpr arr <*> renameExpr ix

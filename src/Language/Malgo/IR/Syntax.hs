@@ -37,8 +37,6 @@ data Expr a
   | Char Info Char
   -- | ダブルクォートで囲まれた文字列
   | String Info String
-  -- | 空の値("()")
-  | Unit Info
   -- | タプル
   | Tuple Info [Expr a]
   -- | 配列作成
@@ -78,7 +76,6 @@ info (Tuple  i _        ) = i
 info (MakeArray   i _ _ ) = i
 info (ArrayRead   i _ _ ) = i
 info (ArrayWrite i _ _ _) = i
-info (Unit i            ) = i
 info (Call i _ _        ) = i
 info (Fn   i _ _        ) = i
 info (Seq  i _ _        ) = i
@@ -100,7 +97,6 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (ArrayRead   _ arr  ix  ) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite _ arr ix val) =
     parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
-  pPrint (Unit _       ) = "{}"
   pPrint (Call _ fn arg) = parens $ pPrint fn <+> sep (map pPrint arg)
   pPrint (Fn _ params body) =
     parens $ "fn" <+> parens (sep $ punctuate "," (map (pPrint . fst) params)) <+> pPrint body
@@ -182,7 +178,6 @@ instance HasType a => HasType (Expr a) where
     TyApp ArrayC [t] -> t
     _                -> error "(typeof arr) should match (TyArray xs)"
   typeOf ArrayWrite{}         = TyApp TupleC []
-  typeOf (Unit _            ) = TyApp TupleC []
   typeOf (Fn   _ params body) = TyApp FunC $ typeOf body : map (typeOf . fst) params
   typeOf (Call _ fn     _   ) = case typeOf fn of
     (TyApp FunC (ret : _)) -> ret
