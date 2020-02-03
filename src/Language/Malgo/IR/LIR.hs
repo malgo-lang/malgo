@@ -46,23 +46,28 @@ instance (HasLType a, Pretty a) => Pretty (Func a) where
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
-data Block a = Block { insts :: [(a, Inst a)], value :: a }
+data Block a = Block { insns :: [Insn a], value :: a }
   deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Block a) where
-  pPrint Block { insts, value } =
+  pPrint Block { insns, value } =
     brackets
       $  vcat
-           (punctuate ";" $ map
-             (\(x, inst) -> pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst)
-             insts
+           (punctuate ";" $ map pPrint insns
+             -- (\(x, inst) -> pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst)
            )
       $$ pPrint value
 
 instance HasLType a => HasLType (Block a) where
   ltypeOf Block { value = x } = ltypeOf x
 
-data Inst a = Constant Constant
+data Insn a = Assign a (Expr a)
+  deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
+
+instance (HasLType a, Pretty a) => Pretty (Insn a) where
+  pPrint (Assign x e) = pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint e
+
+data Expr a = Constant Constant
             | Call a [a]
             | CallExt String LType [a]
             | ArrayCreate LType -- ^ type of element
@@ -85,7 +90,7 @@ data Inst a = Constant Constant
                   (Block a) -- ^ body
   deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
-instance (HasLType a, Pretty a) => Pretty (Inst a) where
+instance (HasLType a, Pretty a) => Pretty (Expr a) where
   pPrint (Constant c) = pPrint c
   pPrint (Call f xs ) = pPrint f <> parens (sep $ punctuate "," $ map pPrint xs)
   pPrint (CallExt f t xs) =
@@ -113,7 +118,7 @@ instance (HasLType a, Pretty a) => Pretty (Inst a) where
       $$  "loop:"
       <+> pPrint body
 
-instance (HasLType a, Show a) => HasLType (Inst a) where
+instance (HasLType a, Show a) => HasLType (Expr a) where
   ltypeOf (Constant x)   = ltypeOf x
   ltypeOf (Call (ltypeOf -> Function t _) _) = t
   ltypeOf (CallExt _ (ltypeOf -> Function t _) _) = t

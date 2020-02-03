@@ -127,25 +127,25 @@ genFunction Func { name, params, body } = void $ function funcName llvmParams re
   retty      = convertType (ltypeOf body)
 
 genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a
-genBlock Block { insts, value } term = go insts
+genBlock Block { insns, value } term = go insns
  where
   go []               = term =<< findVar value
-  go ((x, inst) : xs) = do
-    opr <- genInst inst
+  go (Assign x e : xs) = do
+    opr <- genExpr e
     local (\st -> st { variableMap = insert x opr (variableMap st) }) $ go xs
 
-genInst :: Inst (ID LType) -> GenExpr Operand
-genInst (Constant x) = genConstant x
-genInst (Call f xs ) = do
+genExpr :: Expr (ID LType) -> GenExpr Operand
+genExpr (Constant x) = genConstant x
+genExpr (Call f xs ) = do
   f'  <- findVar f
   xs' <- mapM (fmap (, []) . findVar) xs
   call f' xs'
-genInst (CallExt f (Function r ps) xs) = do
+genExpr (CallExt f (Function r ps) xs) = do
   f'  <- findExt f (map convertType ps) (convertType r)
   xs' <- mapM (fmap (, []) . findVar) xs
   call f' xs'
-genInst CallExt{}             = error "extern symbol must have a function type"
-genInst (ArrayCreate ty size) = do
+genExpr CallExt{}             = error "extern symbol must have a function type"
+genExpr (ArrayCreate ty size) = do
   let ty' = convertType ty
   size' <- mul (sizeof ty') =<< findVar size
   raw   <- mallocBytes size' (Just ty')
@@ -156,32 +156,32 @@ genInst (ArrayCreate ty size) = do
   arrSizeAddr <- gep arr [int32 0, int32 1]
   store arrSizeAddr 0 =<< findVar size
   pure arr
-genInst (Alloca ty) = do
+genExpr (Alloca ty) = do
   let size = sizeof (convertType ty)
   mallocBytes size (Just $ convertType ty)
-genInst (LoadC x is) = do
+genExpr (LoadC x is) = do
   xOpr    <- findVar x
   valAddr <- gep xOpr (map (int32 . toInteger) is)
   load valAddr 0
-genInst (Load _ x is) = do
+genExpr (Load _ x is) = do
   xOpr    <- findVar x
   iOprs   <- mapM findVar is
   valAddr <- gep xOpr iOprs
   load valAddr 0
-genInst (StoreC x is val) = do
+genExpr (StoreC x is val) = do
   xOpr    <- findVar x
   valOpr  <- findVar val
   valAddr <- gep xOpr (map (int32 . toInteger) is)
   store valAddr 0 valOpr
   pure $ ConstantOperand $ C.Undef LT.VoidType
-genInst (Store x is val) = do
+genExpr (Store x is val) = do
   xOpr    <- findVar x
   iOprs   <- mapM findVar is
   valOpr  <- findVar val
   valAddr <- gep xOpr iOprs
   store valAddr 0 valOpr
   pure $ ConstantOperand $ C.Undef LT.VoidType
-genInst (Cast ty x) = do
+genExpr (Cast ty x) = do
   xOpr <- findVar x
   case (ty, ltypeOf x) of
     (Ptr ty1, Ptr _) -> bitcast xOpr (ptr $ convertType ty1)
@@ -208,21 +208,21 @@ genInst (Cast ty x) = do
     (SizeT, I64  ) -> pure xOpr
     (SizeT, U64  ) -> pure xOpr
     _              -> error "invalid cast"
-genInst (IR.Trunc ty x) = do
+genExpr (IR.Trunc ty x) = do
   xOpr <- findVar x
   trunc xOpr (convertType ty)
-genInst (Zext ty x) = do
+genExpr (Zext ty x) = do
   xOpr <- findVar x
   zext xOpr (convertType ty)
-genInst (Sext ty x) = do
+genExpr (Sext ty x) = do
   xOpr <- findVar x
   sext xOpr (convertType ty)
-genInst (IR.Undef ty ) = pure $ ConstantOperand $ C.Undef (convertType ty)
-genInst (BinOp op x y) = do
+genExpr (IR.Undef ty ) = pure $ ConstantOperand $ C.Undef (convertType ty)
+genExpr (BinOp op x y) = do
   xOpr <- findVar x
   yOpr <- findVar y
   genBinOp op xOpr yOpr
-genInst (If cond thenBlock elseBlock) = mdo
+genExpr (If cond thenBlock elseBlock) = mdo
   cOpr   <- findVar cond
   result <- alloca (convertType (ltypeOf thenBlock)) Nothing 0
   condBr cOpr thenLabel elseLabel
@@ -232,7 +232,7 @@ genInst (If cond thenBlock elseBlock) = mdo
   genBlock elseBlock (\o -> store result 0 o >> br endLabel)
   endLabel <- block `named` "end"
   load result 0
-genInst (For index from to body) = mdo
+genExpr (For index from to body) = mdo
   -- for (i64 i = from;
   iPtr <- alloca i64 Nothing 0
   store iPtr 0 =<< findVar from

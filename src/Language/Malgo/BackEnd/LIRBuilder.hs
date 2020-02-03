@@ -59,7 +59,7 @@ data ExprEnv = ExprEnv { variableMap :: IDMap Type (ID LType)
                        , currentCaptures :: Maybe (ID LType)
                        }
 
-newtype ExprState = ExprState { partialBlockInsts :: DiffList (ID LType, Inst (ID LType)) }
+newtype ExprState = ExprState { partialBlockInsts :: DiffList (Insn (ID LType)) }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where
@@ -85,7 +85,7 @@ instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
 class MonadProgramBuilder m => MonadExprBuilder m where
   findVar :: ID Type -> m (ID LType)
   withVariables :: IDMap Type (ID LType) -> m a -> m a
-  addInst :: Inst (ID LType) -> m (ID LType)
+  addInsn :: Expr (ID LType) -> m (ID LType)
   localBlock :: m (ID LType) -> m (Block (ID LType))
   getCurrentCaptures :: m (Maybe (ID LType))
 
@@ -95,7 +95,7 @@ newtype ExprBuilderT m a = ExprBuilderT (ReaderT ExprEnv (StateT ExprState m) a)
 runExprBuilderT :: Monad m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
 runExprBuilderT env (ExprBuilderT m) = do
   (val, ExprState { partialBlockInsts }) <- runStateT (runReaderT m env) (ExprState mempty)
-  pure $ Block { insts = toList partialBlockInsts, value = val }
+  pure $ Block { insns = toList partialBlockInsts, value = val }
 
 instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m) where
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
@@ -105,10 +105,10 @@ instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBu
   findVar x = ExprBuilderT $ fromJust . lookup x <$> asks variableMap
   withVariables varMap (ExprBuilderT m) =
     ExprBuilderT $ local (\e -> e { variableMap = varMap <> variableMap e }) m
-  addInst inst = ExprBuilderT $ do
-    i <- newID (ltypeOf inst) "%"
+  addInsn expr = ExprBuilderT $ do
+    i <- newID (ltypeOf expr) "%"
     -- liftMalgo $ logDebug $ toText $ _ $ pPrint i <+> "=" <+> pPrint inst
-    modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (i, inst) })
+    modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Assign i expr) })
     pure i
   localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
     put (ExprState mempty)
@@ -119,66 +119,66 @@ instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBu
 
 -- instructions
 arrayCreate :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
-arrayCreate init size = addInst $ ArrayCreate init size
+arrayCreate init size = addInsn $ ArrayCreate init size
 
 alloca :: MonadExprBuilder m => LType -> m (ID LType)
-alloca ty = addInst $ Alloca ty
+alloca ty = addInsn $ Alloca ty
 
 loadC :: MonadExprBuilder m => ID LType -> [Int] -> m (ID LType)
-loadC ptr xs = addInst $ LoadC ptr xs
+loadC ptr xs = addInsn $ LoadC ptr xs
 
 load :: MonadExprBuilder m => LType -> ID LType -> [ID LType] -> m (ID LType)
-load ltype ptr xs = addInst $ Load ltype ptr xs
+load ltype ptr xs = addInsn $ Load ltype ptr xs
 
 storeC :: MonadExprBuilder m => ID LType -> [Int] -> ID LType -> m ()
-storeC ptr xs val = void $ addInst (StoreC ptr xs val)
+storeC ptr xs val = void $ addInsn (StoreC ptr xs val)
 
 store :: MonadExprBuilder m => ID LType -> [ID LType] -> ID LType -> m ()
-store ptr xs val = void $ addInst (Store ptr xs val)
+store ptr xs val = void $ addInsn (Store ptr xs val)
 
 call :: (MonadUniq m, MonadExprBuilder m) => ID LType -> [ID LType] -> m (ID LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
-    addInst $ Call f as
+    addInsn $ Call f as
   _ -> error "function must be typed as function"
 
 callExt :: (MonadUniq m, MonadExprBuilder m) => String -> LType -> [ID LType] -> m (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
-    addInst $ CallExt f funTy as
+    addInsn $ CallExt f funTy as
   _ -> error "external function must be typed as function"
 
 cast :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
-cast ty val = addInst $ Cast ty val
+cast ty val = addInsn $ Cast ty val
 
 trunc :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
-trunc ty val = addInst $ Trunc ty val
+trunc ty val = addInsn $ Trunc ty val
 
 zext :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
-zext ty val = addInst $ Zext ty val
+zext ty val = addInsn $ Zext ty val
 
 sext :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
-sext ty val = addInst $ Sext ty val
+sext ty val = addInsn $ Sext ty val
 
 undef :: MonadExprBuilder m => LType -> m (ID LType)
-undef ty = addInst $ Undef ty
+undef ty = addInsn $ Undef ty
 
 binop :: MonadExprBuilder m => Op -> ID LType -> ID LType -> m (ID LType)
-binop o x y = addInst $ BinOp o x y
+binop o x y = addInsn $ BinOp o x y
 
 branchIf :: MonadExprBuilder m => ID LType -> m (ID LType) -> m (ID LType) -> m (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
   tBlock <- localBlock genWhenTrue
   fBlock <- localBlock genWhenFalse
-  addInst $ If c tBlock fBlock
+  addInsn $ If c tBlock fBlock
 
 forLoop :: (MonadUniq m, MonadExprBuilder m) => ID LType -> ID LType -> (ID LType -> m a) -> m ()
 forLoop from to k = do
   index <- newID I64 "$i"
   block <- localBlock (k index >> undef Void)
-  void $ addInst $ For index from to block
+  void $ addInsn $ For index from to block
 
 convertType :: Type -> LType
 convertType (TyApp FunC (r : ps)) =
@@ -263,7 +263,7 @@ coerceTo to x = case (to, ltypeOf x) of
     newArr    <- arrayCreate ty size
     newArrRaw <- loadC newArr [0, 0]
     void $ storeC newArr [0, 1] size
-    zero <- addInst $ Constant $ Int64 0
+    zero <- addInsn $ Constant $ Int64 0
     void $ forLoop zero size $ \i -> do
       val  <- load elemTy xRaw [i]
       val' <- coerceTo ty val

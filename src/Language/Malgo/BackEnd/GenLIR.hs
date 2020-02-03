@@ -73,21 +73,21 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
 
 genMainFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m)
                 => ID LType
-                -> Expr (ID Type)
+                -> M.Expr (ID Type)
                 -> m (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
-  body <- runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr >> addInst
+  body <- runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr >> addInsn
     (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
-genExpr :: (MonadUniq m, MonadExprBuilder m) => Expr (ID Type) -> m (ID LType)
+genExpr :: (MonadUniq m, MonadExprBuilder m) => M.Expr (ID Type) -> m (ID LType)
 genExpr (M.Var   x               ) = findVar x
-genExpr (M.Lit   (Int      x    )) = addInst $ Constant $ Int64 $ fromInteger x
-genExpr (M.Lit   (Float    x    )) = addInst $ Constant $ Float64 x
-genExpr (M.Lit   (H.Bool   True )) = addInst $ Constant $ L.Bool True
-genExpr (M.Lit   (H.Bool   False)) = addInst $ Constant $ L.Bool False
-genExpr (M.Lit   (Char     x    )) = addInst $ Constant $ Word8 $ fromIntegral $ ord x
-genExpr (M.Lit   (H.String xs   )) = addInst $ Constant $ L.String xs
+genExpr (M.Lit   (Int      x    )) = addInsn $ Constant $ Int64 $ fromInteger x
+genExpr (M.Lit   (Float    x    )) = addInsn $ Constant $ Float64 x
+genExpr (M.Lit   (H.Bool   True )) = addInsn $ Constant $ L.Bool True
+genExpr (M.Lit   (H.Bool   False)) = addInsn $ Constant $ L.Bool False
+genExpr (M.Lit   (Char     x    )) = addInsn $ Constant $ Word8 $ fromIntegral $ ord x
+genExpr (M.Lit   (H.String xs   )) = addInsn $ Constant $ L.String xs
 genExpr (M.Tuple xs              ) = do
   tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs)
   iforM_ xs $ \i x -> storeC tuplePtr [0, i] =<< findVar x
@@ -99,7 +99,7 @@ genExpr (M.MakeArray init size) = do
   initVal <- findVar init
   sizeVal <- coerceTo SizeT =<< findVar size
   ptr     <- arrayCreate (ltypeOf initVal) sizeVal
-  zero    <- addInst $ Constant $ Int64 0
+  zero    <- addInsn $ Constant $ Int64 0
   _       <- forLoop zero sizeVal $ \idx -> do
     rawAddr <- loadC ptr [0, 0]
     store rawAddr [idx] initVal
@@ -109,7 +109,7 @@ genExpr (M.ArrayRead arr idx) = do
   ixOpr     <- coerceTo SizeT =<< findVar idx
   case ltypeOf arrRawOpr of
     Ptr t -> load t arrRawOpr [ixOpr]
-    _ -> error $ toText $ pShow arr <> " is not an array"
+    _     -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   TyApp ArrayC [t] -> do
     arrRawOpr <- flip loadC [0, 0] =<< findVar arr
