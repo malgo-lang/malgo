@@ -8,19 +8,19 @@ import           Language.Malgo.ID
 
 import           Compiler.Hoopl
 
-data Program = Program { functions :: [Func] }
+newtype Program = Program { functions :: [Func] }
 
 data Func = Func { name :: Var, params :: [Var], entry :: Label, body :: Graph Insn C C }
 
 type Var = ID LType
 
 data Insn e x where
-  Label ::Label -> Insn C O
-  Assign ::Var -> Expr -> Insn O O
-  Store ::Var -> Expr -> Expr -> Insn O O
-  Branch ::Label -> Insn O C
-  Cond ::Expr -> Label -> Label -> Insn O C
-  Return ::Expr -> Insn O C
+  Label :: Label -> Insn C O
+  Assign :: Var -> Expr -> Insn O O
+  Store :: Var -> Expr -> Expr -> Insn O O
+  Branch :: Label -> Insn O C
+  Cond :: Expr -> Label -> Label -> Insn O C
+  Return :: Expr -> Insn O C
 
 data Expr = Bool Bool
           | Int32 Int32
