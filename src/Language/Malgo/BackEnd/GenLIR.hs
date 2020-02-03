@@ -31,8 +31,7 @@ data GenLIR
 instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
   passName = "GenLIR"
   isDump   = dumpLIR
-  trans M.Program { functions, mainExpr } = do
-    logDebug "Start GenLIR"
+  trans M.Program { functions, mainExpr } =
     runProgramBuilderT
         (foldMap
           (\M.Func { name, captures, params, body } -> one
@@ -68,8 +67,7 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     capsMap        <- getAp
       $ ifoldMap (\i -> Ap . fmap one . traverseToSnd (const $ loadC unwrapedCapsId [0, i])) caps
     -- generate closures of mutrec functions
-    clsMap <- getAp
-      $ foldMap (Ap . fmap one . traverseToSnd (findFunc >=> packClosure capsId)) mutrecs
+    clsMap <- foldMapA (fmap one . traverseToSnd (findFunc >=> packClosure capsId)) mutrecs
     withVariables (capsMap <> clsMap) $ genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
 

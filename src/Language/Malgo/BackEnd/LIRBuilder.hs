@@ -45,11 +45,6 @@ import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.IR.LIR
 import           Relude.Unsafe                  ( fromJust )
-import           Text.PrettyPrint.HughesPJClass ( Style(mode)
-                                                , renderStyle
-                                                , style
-                                                , Mode(OneLineMode)
-                                                )
 
 newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
   deriving newtype (Semigroup, Monoid)
@@ -106,19 +101,13 @@ instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
   addFunc fun = ExprBuilderT $ lift $ lift $ addFunc fun
 
-instance (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
+instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
   findVar x = ExprBuilderT $ fromJust . lookup x <$> asks variableMap
   withVariables varMap (ExprBuilderT m) =
     ExprBuilderT $ local (\e -> e { variableMap = varMap <> variableMap e }) m
   addInst inst = ExprBuilderT $ do
     i <- newID (ltypeOf inst) "%"
-    liftMalgo
-      $   logDebug
-      $   toText
-      $   renderStyle (style { mode = OneLineMode })
-      $   pPrint i
-      <+> "="
-      <+> pPrint inst
+    -- liftMalgo $ logDebug $ toText $ _ $ pPrint i <+> "=" <+> pPrint inst
     modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (i, inst) })
     pure i
   localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
@@ -141,11 +130,11 @@ loadC ptr xs = addInst $ LoadC ptr xs
 load :: MonadExprBuilder m => ID LType -> ID LType -> m (ID LType)
 load ptr xs = addInst $ Load ptr xs
 
-storeC :: MonadExprBuilder m => ID LType -> [Int] -> ID LType -> m (ID LType)
-storeC ptr xs val = addInst (StoreC ptr xs val)
+storeC :: MonadExprBuilder m => ID LType -> [Int] -> ID LType -> m ()
+storeC ptr xs val = void $ addInst (StoreC ptr xs val)
 
-store :: MonadExprBuilder m => ID LType -> [ID LType] -> ID LType -> m (ID LType)
-store ptr xs val = addInst (Store ptr xs val)
+store :: MonadExprBuilder m => ID LType -> [ID LType] -> ID LType -> m ()
+store ptr xs val = void $ addInst (Store ptr xs val)
 
 call :: (MonadUniq m, MonadExprBuilder m) => ID LType -> [ID LType] -> m (ID LType)
 call f xs = case ltypeOf f of
@@ -185,15 +174,11 @@ branchIf c genWhenTrue genWhenFalse = do
   fBlock <- localBlock genWhenFalse
   addInst $ If c tBlock fBlock
 
-forLoop :: (MonadUniq m, MonadExprBuilder m)
-        => ID LType
-        -> ID LType
-        -> (ID LType -> m (ID LType))
-        -> m (ID LType)
+forLoop :: (MonadUniq m, MonadExprBuilder m) => ID LType -> ID LType -> (ID LType -> m a) -> m ()
 forLoop from to k = do
   index <- newID I64 "$i"
-  block <- localBlock (k index)
-  addInst $ For index from to block
+  block <- localBlock (k index >> undef Void)
+  void $ addInst $ For index from to block
 
 convertType :: Type -> LType
 convertType (TyApp FunC (r : ps)) =
