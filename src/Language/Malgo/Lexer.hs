@@ -71,13 +71,13 @@ reservedNames =
 
 reservedOpNames :: [(String, Tag)]
 reservedOpNames =
-  [ (":=", SEMICOLON_EQUAL)
+  [ (":=", COLON_EQUAL)
   , (":" , COLON)
   , (";" , SEMICOLON)
   , ("," , COMMA)
   , ("==", EQ)
   , ("=" , EQUAL)
-  , ("<>", NEQ)
+  , ("/=", NEQ)
   , ("<" , LT)
   , (">" , GT)
   , ("<=", LE)

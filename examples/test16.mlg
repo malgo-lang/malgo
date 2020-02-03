@@ -1,7 +1,7 @@
 let fun id(x) = x
     val a := {id, id}
     val b := id(a)
-    val c := match b with | {x, y} => x
+    val c := match b with | {x, y} -> x
     val d := c(1)
     extern print_int : Int -> {} = "print_int"
 in

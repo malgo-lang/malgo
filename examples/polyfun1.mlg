@@ -1,5 +1,5 @@
 let fun f(p) = match p with
-               | { k, x } => k(x)
+               | { k, x } -> k(x)
     fun succ(x) = x + 1
     val funRef = array({succ, 1}, 1)
     extern print_int : Int -> {} = "print_int"

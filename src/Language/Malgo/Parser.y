@@ -10,9 +10,13 @@ import Language.Malgo.Token
 import Language.Malgo.TypeRep.Type
 import Language.Malgo.IR.Syntax
 import Language.Malgo.FrontEnd.Info
+import Language.Malgo.Pretty
+import Language.Malgo.Prelude (toText)
+import Text.PrettyPrint.HughesPJ (text, hang)
 import Data.String
 import Data.Text (Text)
 import Data.List.NonEmpty (NonEmpty(..), fromList)
+import Data.List (intercalate)
 }
 
 %name parse
@@ -46,7 +50,7 @@ String { Token (_, TY_STRING) }
 ']'   { Token (_, RBRACK) }
 '{'   { Token (_, LBRACE) }
 '}'   { Token (_, RBRACE) }
-':='  { Token (_, SEMICOLON_EQUAL) }
+':='  { Token (_, COLON_EQUAL) }
 ':'   { Token (_, COLON) }
 ';'   { Token (_, SEMICOLON) }
 ','   { Token (_, COMMA) }
@@ -159,8 +163,8 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | simple_exp '[' exp ']' '<-' exp { ArrayWrite (_info $5) $1 $3 $6 }
    | simple_exp { $1 }
 
-clauses : clauses '|' pat '=>' exp { ($3, $5) : $1 }
-        | pat '=>' exp { [($1, $3)] }
+clauses : clauses '|' pat '->' exp { ($3, $5) : $1 }
+        | pat '->' exp { [($1, $3)] }
 
 pat : id { VarP (_id . _tag $ $1) }
     | '{' tuple_pat '}' { TupleP $ reverse $2 }
@@ -201,8 +205,8 @@ Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }
 {
 parseError :: ([Token], [String]) -> a
-parseError ([], xs) = error $ "Parse error at EOF: " <> show xs <> " are expected."
-parseError (t:_, xs) = error $ "Parse error: " <> show t <> " is got, but " <> show xs <> " are expected."
+parseError ([], xs) = error $ show $ "Parse error at EOF: " <> pPrint xs <> " are expected."
+parseError (t:_, xs) = error $ show $ hang "Parse error: " 0 $ pPrint t <> " is got, but " <> text (intercalate "," xs) <> " are expected."
 
 data D = V Info String (Maybe Type) (Expr String)
        | F Info String [(String, Maybe Type)] (Maybe Type) (Expr String)
