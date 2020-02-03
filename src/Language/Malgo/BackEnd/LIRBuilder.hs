@@ -127,8 +127,8 @@ alloca ty = addInst $ Alloca ty
 loadC :: MonadExprBuilder m => ID LType -> [Int] -> m (ID LType)
 loadC ptr xs = addInst $ LoadC ptr xs
 
-load :: MonadExprBuilder m => ID LType -> ID LType -> m (ID LType)
-load ptr xs = addInst $ Load ptr xs
+load :: MonadExprBuilder m => LType -> ID LType -> [ID LType] -> m (ID LType)
+load ltype ptr xs = addInst $ Load ltype ptr xs
 
 storeC :: MonadExprBuilder m => ID LType -> [Int] -> ID LType -> m ()
 storeC ptr xs val = void $ addInst (StoreC ptr xs val)
@@ -253,9 +253,9 @@ coerceTo to x = case (to, ltypeOf x) of
     packClosure boxedX fName
   -- array
   (Ptr (Struct [Ptr ty, SizeT]), xty) -> do
-    x' <- case xty of
-      Ptr U8 -> cast (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
-      Ptr (Struct [Ptr _, SizeT]) -> pure x
+    (elemTy, x') <- case xty of
+      Ptr U8 -> (Ptr U8, ) <$> cast (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
+      Ptr (Struct [Ptr t, SizeT]) -> pure (t, x)
       _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow
         (Ptr (Struct [Ptr ty, SizeT]))
     xRaw      <- loadC x' [0, 0]
@@ -265,7 +265,7 @@ coerceTo to x = case (to, ltypeOf x) of
     void $ storeC newArr [0, 1] size
     zero <- addInst $ Constant $ Int64 0
     void $ forLoop zero size $ \i -> do
-      val  <- load xRaw i
+      val  <- load elemTy xRaw [i]
       val' <- coerceTo ty val
       store newArrRaw [i] val'
     pure newArr

@@ -163,10 +163,10 @@ genInst (LoadC x is) = do
   xOpr    <- findVar x
   valAddr <- gep xOpr (map (int32 . toInteger) is)
   load valAddr 0
-genInst (Load x i) = do
+genInst (Load _ x is) = do
   xOpr    <- findVar x
-  iOpr    <- findVar i
-  valAddr <- gep xOpr [iOpr]
+  iOprs   <- mapM findVar is
+  valAddr <- gep xOpr iOprs
   load valAddr 0
 genInst (StoreC x is val) = do
   xOpr    <- findVar x

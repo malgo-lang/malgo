@@ -107,7 +107,9 @@ genExpr (M.MakeArray init size) = do
 genExpr (M.ArrayRead arr idx) = do
   arrRawOpr <- flip loadC [0, 0] =<< findVar arr
   ixOpr     <- coerceTo SizeT =<< findVar idx
-  load arrRawOpr ixOpr
+  case ltypeOf arrRawOpr of
+    Ptr t -> load t arrRawOpr [ixOpr]
+    _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   TyApp ArrayC [t] -> do
     arrRawOpr <- flip loadC [0, 0] =<< findVar arr

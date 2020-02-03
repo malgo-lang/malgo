@@ -69,7 +69,7 @@ data Inst a = Constant Constant
                           a -- ^ size
             | Alloca LType
             | LoadC a [Int]
-            | Load a a
+            | Load LType a [a]
             | StoreC a [Int] a
             | Store a [a] a
             | Cast LType a
@@ -93,7 +93,7 @@ instance (HasLType a, Pretty a) => Pretty (Inst a) where
   pPrint (ArrayCreate init size) = "arrayCreate" <+> pPrint init <+> pPrint size
   pPrint (Alloca t             ) = "alloca" <+> pPrint t
   pPrint (LoadC x is           ) = "loadc" <+> pPrint x <+> pPrint is
-  pPrint (Load  x i            ) = "load" <+> pPrint x <+> pPrint i
+  pPrint (Load   t x  i        ) = "load" <+> pPrint t <+> pPrint x <+> pPrint i
   pPrint (StoreC x is v        ) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Store  x is v        ) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Cast  t a            ) = "cast" <+> pPrint t <+> pPrint a
@@ -120,7 +120,7 @@ instance (HasLType a, Show a) => HasLType (Inst a) where
   ltypeOf (ArrayCreate init _) = Ptr $ Struct [Ptr (ltypeOf init), SizeT]
   ltypeOf (Alloca t)     = Ptr t
   ltypeOf (LoadC x is)   = accessType (ltypeOf x) is
-  ltypeOf (Load (ltypeOf -> Ptr t) _) = t
+  ltypeOf (Load t _ _)   = t
   ltypeOf StoreC{}       = Void
   ltypeOf Store{}        = Void
   ltypeOf (Cast t _    ) = t
