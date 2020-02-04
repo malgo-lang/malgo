@@ -57,7 +57,7 @@ data ExprEnv = ExprEnv { variableMap :: IDMap Type (ID LType)
                        , currentCaptures :: Maybe (ID LType)
                        }
 
-data ExprState = ExprState { partialBlockInsts :: DiffList (Insn (ID LType)) }
+newtype ExprState = ExprState { partialBlockInsts :: DiffList (Insn (ID LType)) }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where
@@ -92,12 +92,13 @@ class MonadProgramBuilder m => MonadExprBuilder m where
 newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (StateT ExprState m) a }
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
-runExprBuilderT :: Monad m => ExprEnv -> (ID LType -> ExprBuilderT m (Control (ID LType))) -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
+runExprBuilderT :: MonadUniq m => ExprEnv -> (ID LType -> ExprBuilderT m (Control (ID LType))) -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
 runExprBuilderT env term (ExprBuilderT m) = evaluatingStateT (ExprState mempty) $ usingReaderT env $ do
+  label <- newID () "label"
   val <- m
   ExprState { partialBlockInsts } <- get
   terminator <- unExprBuilderT $ term val
-  pure $ Block { insns = toList partialBlockInsts, value = terminator }
+  pure $ Block { label = label, insns = toList partialBlockInsts, value = terminator }
 
 instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m) where
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
@@ -117,11 +118,12 @@ instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBu
   store var is val = ExprBuilderT
     $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Store var is val) })
   localBlock term (ExprBuilderT m) = ExprBuilderT $ localState $ do
+    label <- newID () "label"
     put (ExprState mempty)
     retval <- m
     insts  <- toList <$> gets partialBlockInsts
     terminator <- unExprBuilderT $ term retval
-    pure (Block insts terminator)
+    pure (Block label insts terminator)
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
 
 -- instructions

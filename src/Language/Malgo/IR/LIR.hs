@@ -9,6 +9,7 @@
 {-# LANGUAGE ViewPatterns          #-}
 module Language.Malgo.IR.LIR where
 
+import           Language.Malgo.ID
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.Prelude
@@ -46,7 +47,7 @@ instance (HasLType a, Pretty a) => Pretty (Func a) where
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
-data Block a = Block { insns :: [Insn a], value :: Control a }
+data Block a = Block { label :: ID (), insns :: [Insn a], value :: Control a }
   deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Block a) where

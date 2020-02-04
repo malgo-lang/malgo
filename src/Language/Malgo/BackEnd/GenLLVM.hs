@@ -48,8 +48,7 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
               (\Func { name } ->
                 one
                   ( name
-                  , ConstantOperand $ GlobalReference (convertType (ltypeOf name)) $ genFuncName
-                    name
+                  , ConstantOperand $ GlobalReference (convertType (ltypeOf name)) $ genName name
                   )
               )
               functions
@@ -114,36 +113,36 @@ mallocBytes bytesOpr maybeType = do
     Just t  -> bitcast ptrOpr (ptr t)
     Nothing -> pure ptrOpr
 
-genFuncName :: ID a -> LLVM.AST.Name
-genFuncName ID { idName, idUniq } = LLVM.AST.mkName $ idName <> show idUniq
+genName :: ID a -> LLVM.AST.Name
+genName ID { idName, idUniq } = LLVM.AST.mkName $ idName <> show idUniq
 
 genFunction :: Func (ID LType) -> GenDec ()
 genFunction Func { name, params, body } = void $ function funcName llvmParams retty $ \args ->
   local (\st -> st { variableMap = fromList (zip params args) <> variableMap st })
     $ genBlock body ret
  where
-  funcName   = genFuncName name
+  funcName   = genName name
   llvmParams = map (\ID { idMeta } -> (convertType idMeta, NoParameterName)) params
   retty      = convertType (ltypeOf body)
 
 genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a
 genBlock Block { insns, value = Term retval } term = go insns
  where
-  go []               = term =<< findVar retval
+  go []                = term =<< findVar retval
   go (Assign x e : xs) = do
     opr <- genExpr e
     local (\st -> st { variableMap = insert x opr (variableMap st) }) $ go xs
-  go (StoreC x is val :  xs) = do
-    xOpr <- findVar x
+  go (StoreC x is val : xs) = do
+    xOpr   <- findVar x
     valOpr <- findVar val
-    xAddr <- gep xOpr (map (int32 . toInteger) is)
+    xAddr  <- gep xOpr (map (int32 . toInteger) is)
     store xAddr 0 valOpr
     go xs
   go (Store x is val : xs) = do
-    xOpr    <- findVar x
-    iOprs   <- mapM findVar is
-    valOpr  <- findVar val
-    xAddr <- gep xOpr iOprs
+    xOpr   <- findVar x
+    iOprs  <- mapM findVar is
+    valOpr <- findVar val
+    xAddr  <- gep xOpr iOprs
     store xAddr 0 valOpr
     go xs
 
