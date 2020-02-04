@@ -51,30 +51,27 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
         )
       $ do
           mapM_ genFunction functions
-          runExprBuilderT (ExprEnv mempty Nothing) (pure . Term) $ genExpr mainExpr
+          runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr
 
 -- generate LIR
 genFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => M.Func (ID Type) -> m ()
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
   let funcParams = map (\p@ID { idMeta } -> p & metaL .~ convertType idMeta) params
-  bodyBlock <- runExprBuilderT (ExprEnv (fromList (zip params funcParams)) Nothing)
-                               (pure . Term)
-                               (genExpr body)
+  bodyBlock <- runExprBuilderT (ExprEnv (fromList (zip params funcParams)) Nothing) (genExpr body)
   addFunc $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName <- findFunc name
   capsId   <- newID (Ptr U8) "$caps"
   let funcParams = map (\x -> x & metaL .~ convertType (typeOf x)) params
-  bodyBlock <-
-    runExprBuilderT (ExprEnv (fromList (zip params funcParams)) (Just capsId)) (pure . Term) $ do
+  bodyBlock <- runExprBuilderT (ExprEnv (fromList (zip params funcParams)) (Just capsId)) $ do
     -- unwrap captures
-      unwrapedCapsId <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-      capsMap        <- getAp
-        $ ifoldMap (\i -> Ap . fmap one . traverseToSnd (const $ loadC unwrapedCapsId [0, i])) caps
-      -- generate closures of mutrec functions
-      clsMap <- foldMapA (fmap one . traverseToSnd (findFunc >=> packClosure capsId)) mutrecs
-      withVariables (capsMap <> clsMap) $ genExpr body
+    unwrapedCapsId <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
+    capsMap        <- getAp
+      $ ifoldMap (\i -> Ap . fmap one . traverseToSnd (const $ loadC unwrapedCapsId [0, i])) caps
+    -- generate closures of mutrec functions
+    clsMap <- foldMapA (fmap one . traverseToSnd (findFunc >=> packClosure capsId)) mutrecs
+    withVariables (capsMap <> clsMap) $ genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
 
 genMainFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m)
@@ -82,8 +79,7 @@ genMainFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m)
                 -> M.Expr (ID Type)
                 -> m (L.Func (ID LType))
 genMainFunction mainFuncId mainExpr = do
-  body <- runExprBuilderT (ExprEnv mempty Nothing) (pure . Term) $ genExpr mainExpr >> assign
-    (Constant $ Int32 0)
+  body <- runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr >> assign (Constant $ Int32 0)
   pure $ L.Func { name = mainFuncId, params = [], body = body }
 
 genExpr :: (MonadUniq m, MonadExprBuilder m) => M.Expr (ID Type) -> m (ID LType)

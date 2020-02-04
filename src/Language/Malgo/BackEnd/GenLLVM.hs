@@ -126,9 +126,9 @@ genFunction Func { name, params, body } = void $ function funcName llvmParams re
   retty      = convertType (ltypeOf body)
 
 genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a
-genBlock Block { insns, value = Term retval } term = go insns
+genBlock Block { insns, value } term = go insns
  where
-  go []                = term =<< findVar retval
+  go []                = term =<< findVar value
   go (Assign x e : xs) = do
     opr <- genExpr e
     local (\st -> st { variableMap = insert x opr (variableMap st) }) $ go xs
@@ -144,6 +144,29 @@ genBlock Block { insns, value = Term retval } term = go insns
     valOpr <- findVar val
     xAddr  <- gep xOpr iOprs
     store xAddr 0 valOpr
+    go xs
+
+  go (For index from to body : xs) = mdo
+    -- for (i64 i = from;
+    iPtr <- alloca i64 Nothing 0
+    store iPtr 0 =<< findVar from
+    br condLabel
+
+    -- cond: i < to;
+    condLabel <- block `named` "cond"
+    iOpr      <- load iPtr 0
+    cond      <- icmp IP.SLT iOpr =<< findVar to
+    condBr cond bodyLabel endLabel
+
+    -- body: genBlock body
+    bodyLabel <- block `named` "body"
+    local (\st -> st { variableMap = insert index iOpr $ variableMap st }) $ genBlock body $ \_ -> do
+      -- i++)
+      store iPtr 0 =<< add iOpr (int64 1)
+      br condLabel
+
+    -- end: }
+    endLabel <- block `named` "end"
     go xs
 
 genExpr :: Expr (ID LType) -> GenExpr Operand
@@ -231,28 +254,6 @@ genExpr (If cond thenBlock elseBlock) = mdo
   genBlock elseBlock (\o -> store result 0 o >> br endLabel)
   endLabel <- block `named` "end"
   load result 0
-genExpr (For index from to body) = mdo
-  -- for (i64 i = from;
-  iPtr <- alloca i64 Nothing 0
-  store iPtr 0 =<< findVar from
-  br condLabel
-
-  -- cond: i < to;
-  condLabel <- block `named` "cond"
-  iOpr      <- load iPtr 0
-  cond      <- icmp IP.SLT iOpr =<< findVar to
-  condBr cond bodyLabel endLabel
-
-  -- body: genBlock body
-  bodyLabel <- block `named` "body"
-  local (\st -> st { variableMap = insert index iOpr $ variableMap st }) $ genBlock body $ \_ -> do
-    -- i++)
-    store iPtr 0 =<< add iOpr (int64 1)
-    br condLabel
-
-  -- end: }
-  endLabel <- block `named` "end"
-  pure $ ConstantOperand $ C.Undef LT.VoidType
 
 genConstant :: IR.Constant -> GenExpr Operand
 genConstant (Bool    True ) = pure $ bit 1

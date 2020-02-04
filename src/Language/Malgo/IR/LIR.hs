@@ -9,7 +9,6 @@
 {-# LANGUAGE ViewPatterns          #-}
 module Language.Malgo.IR.LIR where
 
-import           Language.Malgo.ID
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.Prelude
@@ -47,16 +46,12 @@ instance (HasLType a, Pretty a) => Pretty (Func a) where
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
-data Block a = Block { label :: ID (), insns :: [Insn a], value :: Control a }
+data Block a = Block { insns :: [Insn a], value :: a }
   deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Block a) where
   pPrint Block { insns, value } =
-    brackets
-      $  vcat (punctuate ";" $ map pPrint insns
-             -- (\(x, inst) -> pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst)
-                                               )
-      $$ pPrint value
+    brackets $ vcat (punctuate ";" $ map pPrint insns) $$ pPrint value
 
 instance HasLType a => HasLType (Block a) where
   ltypeOf Block { value = x } = ltypeOf x
@@ -64,21 +59,25 @@ instance HasLType a => HasLType (Block a) where
 data Insn a = Assign a (Expr a)
             | StoreC a [Int] a
             | Store a [a] a
+            | For a -- ^ index
+                  a -- ^ from
+                  a -- ^ to
+                  (Block a) -- ^ body
   deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Insn a) where
   pPrint (Assign x e   ) = pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint e
   pPrint (StoreC x is v) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Store  x is v) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
-
-newtype Control a = Term a
-  deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
-
-instance Pretty a => Pretty (Control a) where
-  pPrint (Term a) = pPrint a
-
-instance HasLType a => HasLType (Control a) where
-  ltypeOf (Term a) = ltypeOf a
+  pPrint (For index from to body) =
+    "for"
+      <+> pPrint index
+      <+> "from"
+      <+> pPrint from
+      <+> "to"
+      <+> pPrint to
+      $$  "loop:"
+      <+> pPrint body
 
 data Expr a = Constant Constant
             | Call a [a]
@@ -95,10 +94,6 @@ data Expr a = Constant Constant
             | Undef LType
             | BinOp Op a a
             | If a (Block a) (Block a)
-            | For a -- ^ index
-                  a -- ^ from
-                  a -- ^ to
-                  (Block a) -- ^ body
   deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Expr a) where
@@ -117,15 +112,6 @@ instance (HasLType a, Pretty a) => Pretty (Expr a) where
   pPrint (Undef t              ) = "undef" <+> pPrint t
   pPrint (BinOp op x y         ) = pPrint op <+> pPrint x <+> pPrint y
   pPrint (If c t f) = "if" <+> pPrint c $$ ("then:" <+> pPrint t) $$ ("else:" <+> pPrint f)
-  pPrint (For index from to body) =
-    "for"
-      <+> pPrint index
-      <+> "from"
-      <+> pPrint from
-      <+> "to"
-      <+> pPrint to
-      $$  "loop:"
-      <+> pPrint body
 
 instance (HasLType a, Show a) => HasLType (Expr a) where
   ltypeOf (Constant x) = ltypeOf x
@@ -139,8 +125,7 @@ instance (HasLType a, Show a) => HasLType (Expr a) where
   ltypeOf (Undef t) = t
   ltypeOf (BinOp op x _) = ltypeOfOp op (ltypeOf x)
   ltypeOf (If _ x _) = ltypeOf x
-  ltypeOf For{} = Void
-  ltypeOf t     = error $ toText $ "unreachable(ltypeOf) " <> pShow t
+  ltypeOf t = error $ toText $ "unreachable(ltypeOf) " <> pShow t
 
 data Constant = Bool Bool
               | Int32 Int32

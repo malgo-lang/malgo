@@ -27,7 +27,6 @@ module Language.Malgo.BackEnd.LIRBuilder
   , undef
   , binop
   , branchIf
-  , forLoop
   , convertType
   , packClosure
   , coerceTo
@@ -86,19 +85,18 @@ class MonadProgramBuilder m => MonadExprBuilder m where
   assign :: Expr (ID LType) -> m (ID LType)
   storeC :: ID LType -> [Int] -> ID LType -> m ()
   store :: ID LType -> [ID LType] -> ID LType -> m ()
-  localBlock :: (ID LType -> m (Control (ID LType))) -> m (ID LType) -> m (Block (ID LType))
+  forLoop :: ID LType -> ID LType -> (ID LType -> m ()) -> m ()
+  localBlock :: m (ID LType) -> m (Block (ID LType))
   getCurrentCaptures :: m (Maybe (ID LType))
 
 newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (StateT ExprState m) a }
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
-runExprBuilderT :: MonadUniq m => ExprEnv -> (ID LType -> ExprBuilderT m (Control (ID LType))) -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
-runExprBuilderT env term (ExprBuilderT m) = evaluatingStateT (ExprState mempty) $ usingReaderT env $ do
-  label <- newID () "label"
-  val <- m
+runExprBuilderT :: MonadUniq m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
+runExprBuilderT env (ExprBuilderT m) = evaluatingStateT (ExprState mempty) $ usingReaderT env $ do
+  value <- m
   ExprState { partialBlockInsts } <- get
-  terminator <- unExprBuilderT $ term val
-  pure $ Block { label = label, insns = toList partialBlockInsts, value = terminator }
+  pure $ Block { insns = toList partialBlockInsts, value = value }
 
 instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m) where
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
@@ -108,22 +106,29 @@ instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBu
   findVar x = ExprBuilderT $ fromJust . lookup x <$> asks variableMap
   withVariables varMap (ExprBuilderT m) =
     ExprBuilderT $ local (\e -> e { variableMap = varMap <> variableMap e }) m
+
   assign expr = ExprBuilderT $ do
     i <- newID (ltypeOf expr) "%"
     -- liftMalgo $ logDebug $ toText $ _ $ pPrint i <+> "=" <+> pPrint inst
     modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Assign i expr) })
     pure i
+
   storeC var is val = ExprBuilderT
     $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (StoreC var is val) })
+    
   store var is val = ExprBuilderT
     $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Store var is val) })
-  localBlock term (ExprBuilderT m) = ExprBuilderT $ localState $ do
-    label <- newID () "label"
+
+  forLoop from to k = ExprBuilderT $ do
+    index <- newID I64 "$i"
+    block <- unExprBuilderT $ localBlock (k index >> undef Void) -- TODO: remove undef
+    modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (For index from to block) })
+
+  localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
     put (ExprState mempty)
     retval <- m
     insts  <- toList <$> gets partialBlockInsts
-    terminator <- unExprBuilderT $ term retval
-    pure (Block label insts terminator)
+    pure (Block insts retval)
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
 
 -- instructions
@@ -173,15 +178,10 @@ binop o x y = assign $ BinOp o x y
 
 branchIf :: MonadExprBuilder m => ID LType -> m (ID LType) -> m (ID LType) -> m (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
-  tBlock <- localBlock (pure . Term) genWhenTrue
-  fBlock <- localBlock (pure . Term) genWhenFalse
+  tBlock <- localBlock genWhenTrue
+  fBlock <- localBlock genWhenFalse
   assign $ If c tBlock fBlock
 
-forLoop :: (MonadUniq m, MonadExprBuilder m) => ID LType -> ID LType -> (ID LType -> m a) -> m ()
-forLoop from to k = do
-  index <- newID I64 "$i"
-  block <- localBlock (pure . Term) (k index >> undef Void)
-  void $ assign $ For index from to block
 
 convertType :: Type -> LType
 convertType (TyApp FunC (r : ps)) =
@@ -245,7 +245,7 @@ coerceTo to x = case (to, ltypeOf x) of
     fBoxedXName <- newID (Ptr U8) "$x"
     fParamNames <- mapM (`newID` "$a") ps
 
-    bodyBlock   <- localBlock (pure . Term) $ do
+    bodyBlock   <- localBlock $ do
       fUnboxedX <- cast unboxedXType fBoxedXName
       as        <- zipWithM coerceTo xps fParamNames
       xFun      <- loadC fUnboxedX [0, 0]
