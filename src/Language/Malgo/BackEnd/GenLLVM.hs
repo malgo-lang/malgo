@@ -1,38 +1,40 @@
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns        #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TupleSections         #-}
-{-# LANGUAGE TypeFamilies          #-}
-{-# LANGUAGE RecursiveDo           #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE RecursiveDo #-}
 module Language.Malgo.BackEnd.GenLLVM
   ( GenLLVM
   )
 where
 
-import qualified Data.Map.Strict               as Map
 import           Language.Malgo.ID
-import           Language.Malgo.IR.LIR         as IR
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
+
+import           Language.Malgo.IR.LIR         as IR
+
 import           Language.Malgo.TypeRep.LType  as IR
-import qualified LLVM.AST
+
 import           LLVM.AST.Constant              ( Constant(..) )
-import qualified LLVM.AST.Constant             as C
-import qualified LLVM.AST.FloatingPointPredicate
-                                               as FP
-import qualified LLVM.AST.IntegerPredicate     as IP
 import           LLVM.AST.Operand               ( Operand(..) )
 import           LLVM.AST.Type           hiding ( double
                                                 , void
                                                 )
-import qualified LLVM.AST.Type                 as LT
 import           LLVM.IRBuilder
+import qualified LLVM.AST
+import qualified LLVM.AST.Constant             as C
+import qualified LLVM.AST.FloatingPointPredicate
+                                               as FP
+import qualified LLVM.AST.IntegerPredicate     as IP
+import qualified LLVM.AST.Type                 as LT
 import qualified LLVM.IRBuilder                as IRBuilder
 
 data GenLLVM
@@ -43,33 +45,28 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
   trans Program { functions, mainFunc } =
     dumpLLVM
       $ local
-          (\st -> st
-            { variableMap = foldMap
-              (\Func { name } ->
-                one
-                  ( name
-                  , ConstantOperand $ GlobalReference (convertType (ltypeOf name)) $ genName name
-                  )
-              )
-              functions
-            }
+          (const $ foldMap
+            (\Func { name } ->
+              one
+                ( name
+                , ConstantOperand $ GlobalReference (convertType (ltypeOf name)) $ genName name
+                )
+            )
+            functions
           )
       $ do
           mapM_ genFunction functions
           void $ function "main" [] LT.i32 $ \_ -> genBlock mainFunc (const (ret (int32 0)))
 
-data GenState = GenState { variableMap :: Map (ID LType) Operand
-                         , prims       :: IORef (Map String Operand)
-                         }
-
 type GenExpr a = IRBuilderT GenDec a
-type GenDec = ModuleBuilderT (ReaderT GenState MalgoM)
+type GenDec = ModuleBuilderT (ReaderT OprMap (StateT PrimMap MalgoM))
+type OprMap = Map (ID LType) Operand
+type PrimMap = Map String Operand
 
-dumpLLVM :: MonadIO m => ModuleBuilderT (ReaderT GenState m) a -> m [LLVM.AST.Definition]
-dumpLLVM m = do
-  p <- newIORef mempty
-  let genState = GenState { variableMap = mempty, prims = p }
-  usingReaderT genState $ execModuleBuilderT emptyModuleBuilder m
+-- dumpLLVM :: MonadIO m => ModuleBuilderT (ReaderT GenState m) a -> m [LLVM.AST.Definition]
+dumpLLVM :: GenDec a -> MalgoM [LLVM.AST.Definition]
+dumpLLVM m =
+  evaluatingStateT mempty $ usingReaderT mempty $ execModuleBuilderT emptyModuleBuilder m
 
 convertType :: LType -> Type
 convertType (Ptr x)         = ptr (convertType x)
@@ -85,24 +82,19 @@ convertType (IR.Struct xs ) = StructureType False (map convertType xs)
 convertType (Function r ps) = ptr $ FunctionType (convertType r) (map convertType ps) False
 convertType Void            = LT.void
 
-findVar :: MonadReader GenState m => ID LType -> m Operand
+findVar :: MonadReader OprMap m => ID LType -> m Operand
 findVar i = do
-  m <- asks variableMap
+  m <- ask
   pure $ lookupDefault (error $ show $ pPrint i <> " is not found in " <> pPrint (keys m)) i m
 
-findExt :: (MonadReader GenState m, MonadIO m, MonadModuleBuilder m)
-        => String
-        -> [Type]
-        -> Type
-        -> m Operand
+findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [Type] -> Type -> m Operand
 findExt name ps r = do
-  GenState { prims } <- ask
-  psMap              <- readIORef prims
+  psMap <- get
   case lookup name psMap of
     Just opr -> pure opr
     Nothing  -> do
       opr <- extern (LLVM.AST.mkName name) ps r
-      modifyIORef prims (Map.insert name opr)
+      modify (insert name opr)
       pure opr
 
 mallocBytes :: Operand -> Maybe Type -> GenExpr Operand
@@ -118,8 +110,7 @@ genName ID { idName, idUniq } = LLVM.AST.mkName $ idName <> show idUniq
 
 genFunction :: Func (ID LType) -> GenDec ()
 genFunction Func { name, params, body } = void $ function funcName llvmParams retty $ \args ->
-  local (\st -> st { variableMap = fromList (zip params args) <> variableMap st })
-    $ genBlock body ret
+  local (fromList (zip params args) <>) $ genBlock body ret
  where
   funcName   = genName name
   llvmParams = map (\ID { idMeta } -> (convertType idMeta, NoParameterName)) params
@@ -131,7 +122,7 @@ genBlock Block { insns, value } term = go insns
   go []                = term =<< findVar value
   go (Assign x e : xs) = do
     opr <- genExpr e
-    local (\st -> st { variableMap = insert x opr (variableMap st) }) $ go xs
+    local (insert x opr) $ go xs
   go (StoreC x is val : xs) = do
     xOpr   <- findVar x
     valOpr <- findVar val
@@ -160,7 +151,7 @@ genBlock Block { insns, value } term = go insns
 
     -- body: genBlock body
     bodyLabel <- block `named` "body"
-    local (\st -> st { variableMap = insert index iOpr $ variableMap st }) $ genBlock body $ \_ -> do
+    local (insert index iOpr) $ genBlock body $ \_ -> do
       -- i++)
       store iPtr 0 =<< add iOpr (int64 1)
       br condLabel

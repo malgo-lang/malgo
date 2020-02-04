@@ -1,23 +1,25 @@
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TypeFamilies          #-}
-{-# LANGUAGE TupleSections         #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.FrontEnd.Rename
   ( Rename
   )
 where
 
-import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.ID
-import           Language.Malgo.IR.Syntax
-                                         hiding ( info )
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.IR.Syntax
+                                         hiding ( info )
+
+import           Language.Malgo.FrontEnd.Info
 
 data Rename
 

@@ -1,18 +1,18 @@
-{-# LANGUAGE DeriveDataTypeable         #-}
-{-# LANGUAGE DeriveFoldable             #-}
-{-# LANGUAGE DeriveFunctor              #-}
-{-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE DeriveTraversable          #-}
-{-# LANGUAGE DerivingStrategies         #-}
-{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NamedFieldPuns             #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE QuantifiedConstraints      #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuantifiedConstraints #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.ID
   ( ID(..)
   , nameL
@@ -24,20 +24,22 @@ module Language.Malgo.ID
   )
 where
 
+import           Language.Malgo.Monad
+import           Language.Malgo.Prelude  hiding ( delete
+                                                , toList
+                                                )
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.TypeRep.Type
+
 import           Control.Lens                   ( Lens
                                                 , lens
                                                 )
 import           Data.Data                      ( Data )
 import           Data.Functor.Classes
 import           GHC.Exts                       ( IsList(..) )
-import           Language.Malgo.Monad
-import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.Type
-import           Language.Malgo.Prelude  hiding ( delete
-                                                , toList
-                                                )
-import           Relude.Extra.Map
 import           Numeric                        ( showHex )
+import           Relude.Extra.Map
 import           Text.PrettyPrint.HughesPJClass ( text )
 
 data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }

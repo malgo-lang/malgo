@@ -1,17 +1,19 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE DeriveFoldable        #-}
-{-# LANGUAGE DeriveFunctor         #-}
-{-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE NamedFieldPuns        #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE ViewPatterns          #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ViewPatterns #-}
 module Language.Malgo.IR.LIR where
 
-import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.TypeRep.LType
+
 import           Text.PrettyPrint.HughesPJClass ( ($$)
                                                 , vcat
                                                 , parens

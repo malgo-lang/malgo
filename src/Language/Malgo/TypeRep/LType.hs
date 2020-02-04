@@ -1,14 +1,15 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE NamedFieldPuns    #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternSynonyms   #-}
+{-# LANGUAGE PatternSynonyms #-}
 module Language.Malgo.TypeRep.LType where
 
 import           Language.Malgo.ID
-import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
 import           Relude.Unsafe
 import           Text.PrettyPrint.HughesPJClass ( braces
                                                 , sep

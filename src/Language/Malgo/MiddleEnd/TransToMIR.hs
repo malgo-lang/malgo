@@ -1,26 +1,29 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE MultiWayIf            #-}
-{-# LANGUAGE NamedFieldPuns        #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE MultiWayIf #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.MiddleEnd.TransToMIR
   ( TransToMIR
   )
 where
 
-import           Control.Lens.Indexed           ( ifoldMap )
-import           Data.Set                       ( intersection )
 import           Language.Malgo.ID
-import qualified Language.Malgo.IR.HIR         as H
-import           Language.Malgo.IR.MIR         as M
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.IR.MIR         as M
+import qualified Language.Malgo.IR.HIR         as H
+
+import           Language.Malgo.TypeRep.Type
+
+import           Control.Lens.Indexed           ( ifoldMap )
+import           Data.Set                       ( intersection )
 
 data TransToMIR
 

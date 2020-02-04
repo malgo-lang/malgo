@@ -1,21 +1,22 @@
-{-# LANGUAGE AllowAmbiguousTypes    #-}
-{-# LANGUAGE DataKinds              #-}
-{-# LANGUAGE FlexibleContexts       #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FunctionalDependencies #-}
-{-# LANGUAGE NoImplicitPrelude      #-}
-{-# LANGUAGE ScopedTypeVariables    #-}
-{-# LANGUAGE TypeApplications       #-}
-{-# LANGUAGE TypeFamilies           #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.Pass where
+
+import           Language.Malgo.Monad
+import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
 
 import           Text.PrettyPrint.HughesPJClass ( renderStyle
                                                 , style
                                                 , Style(..)
                                                 )
-import           Language.Malgo.Monad
-import           Language.Malgo.Pretty
-import           Language.Malgo.Prelude
 
 class Pass p s t | p -> s t where
   passName :: Text

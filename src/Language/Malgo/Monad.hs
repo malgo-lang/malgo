@@ -1,12 +1,12 @@
 {-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE AllowAmbiguousTypes        #-}
-{-# LANGUAGE ConstraintKinds            #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE RankNTypes                 #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RankNTypes #-}
 module Language.Malgo.Monad
   ( MalgoM(..)
   , MalgoEnv(..)
@@ -24,6 +24,8 @@ module Language.Malgo.Monad
   )
 where
 
+import           Language.Malgo.Prelude
+
 import           Colog                          ( HasLog(..)
                                                 , Message
                                                 , LogAction(..)
@@ -32,7 +34,6 @@ import           Colog                          ( HasLog(..)
                                                 )
 import qualified Colog
 import           Control.Monad.Fix
-import           Language.Malgo.Prelude
 
 data Opt = Opt
   { srcName       :: String

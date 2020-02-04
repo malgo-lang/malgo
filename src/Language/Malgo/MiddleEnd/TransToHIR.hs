@@ -1,20 +1,22 @@
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
-{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.MiddleEnd.TransToHIR
   ( TransToHIR
   )
 where
 
 import           Language.Malgo.ID
-import           Language.Malgo.IR.HIR
-import qualified Language.Malgo.IR.Syntax      as S
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+
+import           Language.Malgo.IR.HIR
+import qualified Language.Malgo.IR.Syntax      as S
+
+import           Language.Malgo.TypeRep.Type
 
 data TransToHIR
 

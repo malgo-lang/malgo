@@ -1,27 +1,30 @@
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.FrontEnd.Typing.Infer
   ( Typing
   )
 where
 
+import           Language.Malgo.ID
+import           Language.Malgo.Monad
+import           Language.Malgo.Pass
+import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.IR.Syntax hiding ( info )
+import qualified Language.Malgo.IR.Syntax      as Syntax
+
+import           Language.Malgo.TypeRep.Type
+
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
-import           Language.Malgo.ID
-import           Language.Malgo.IR.Syntax
-                                         hiding ( info )
-import qualified Language.Malgo.IR.Syntax      as Syntax
-import           Language.Malgo.Monad
-import           Language.Malgo.Pass
-import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.Type
-import           Language.Malgo.Prelude
+
 import           Relude.Unsafe                  ( fromJust )
 
 data Typing

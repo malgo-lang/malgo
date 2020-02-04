@@ -1,18 +1,21 @@
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE DeriveFoldable    #-}
-{-# LANGUAGE DeriveFunctor     #-}
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE NamedFieldPuns    #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies      #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.IR.HIR where
 
-import           Language.Malgo.TypeRep.Type
-import           Language.Malgo.FrontEnd.Typing.Subst
-import           Language.Malgo.FrontEnd.Typing.Constraint
-import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.TypeRep.Type
+
+import           Language.Malgo.FrontEnd.Typing.Constraint
+import           Language.Malgo.FrontEnd.Typing.Subst
+
 import           Relude.Unsafe                  ( (!!) )
 import           Text.PrettyPrint.HughesPJClass ( braces
                                                 , sep

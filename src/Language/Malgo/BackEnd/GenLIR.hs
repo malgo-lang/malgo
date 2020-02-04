@@ -1,32 +1,33 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns        #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.BackEnd.GenLIR where
+
+import           Language.Malgo.ID
+import           Language.Malgo.Monad
+import           Language.Malgo.Pass
+import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.IR.HIR         as H
+import           Language.Malgo.IR.LIR         as L
+import           Language.Malgo.IR.MIR         as M
+
+import           Language.Malgo.TypeRep.LType  as L
+import           Language.Malgo.TypeRep.Type   as M
+
+import           Language.Malgo.BackEnd.LIRBuilder
+                                               as L
 
 import           Control.Lens                   ( (.~)
                                                 , ifoldMap
                                                 , iforM_
                                                 )
-import           Language.Malgo.ID
-import           Language.Malgo.IR.HIR         as H
-                                                ( Lit(..)
-                                                , Op(..)
-                                                )
-import           Language.Malgo.IR.LIR         as L
-import           Language.Malgo.IR.MIR         as M
-import           Language.Malgo.Monad
-import           Language.Malgo.Pass
-import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.LType  as L
-import           Language.Malgo.TypeRep.Type   as M
-import           Language.Malgo.Prelude
-import           Language.Malgo.BackEnd.LIRBuilder
-                                               as L
 import           Relude.Unsafe                  ( fromJust )
 
 data GenLIR
@@ -102,7 +103,7 @@ genExpr (M.MakeArray init size) = do
   sizeVal <- coerceTo SizeT =<< findVar size
   ptr     <- arrayCreate (ltypeOf initVal) sizeVal
   zero    <- assign $ Constant $ Int64 0
-  _       <- forLoop zero sizeVal $ \idx -> do
+  forLoop zero sizeVal $ \idx -> do
     rawAddr <- loadC ptr [0, 0]
     store rawAddr [idx] initVal
   pure ptr
@@ -117,12 +118,11 @@ genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
     arrRawOpr <- flip loadC [0, 0] =<< findVar arr
     ixOpr     <- coerceTo SizeT =<< findVar idx
     valOpr    <- coerceTo (convertType t) =<< findVar val
-    _         <- store arrRawOpr [ixOpr] valOpr
-    undef (Ptr (Struct []))
+    store arrRawOpr [ixOpr] valOpr
+    undef (Ptr (Struct [])) -- TODO: generate unique Unit value
   _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
-  let capTy = Struct (map (convertType . typeOf) cs)
-  capPtr <- alloca capTy
+  capPtr <- alloca $ Struct (map (convertType . typeOf) cs)
   iforM_ cs $ \i c -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr

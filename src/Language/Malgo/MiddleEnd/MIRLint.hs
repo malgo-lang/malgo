@@ -1,22 +1,24 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns        #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.MiddleEnd.MIRLint
   ( MIRLint
   )
 where
 
 import           Language.Malgo.ID
-import           Language.Malgo.IR.MIR
 import           Language.Malgo.Pass
-import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.IR.MIR
+
+import           Language.Malgo.TypeRep.Type
 
 data MIRLint
 

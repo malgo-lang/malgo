@@ -1,18 +1,20 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.FrontEnd.Typing.Subst
   ( Subst(..)
   , Substitutable(..)
   )
 where
 
-import           Data.List                      ( intersect )
-import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+
+import           Language.Malgo.TypeRep.Type
+
+import           Data.List                      ( intersect )
 import           Relude.Extra.Map
 
 newtype Subst = Subst { unwrapSubst :: Map TyVar Type }

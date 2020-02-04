@@ -1,7 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE StrictData #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE StrictData #-}
 module Language.Malgo.Token
   ( Token(..)
   , Tag(..)
@@ -10,9 +10,11 @@ module Language.Malgo.Token
   )
 where
 
-import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
+
+import           Language.Malgo.FrontEnd.Info
+
 import qualified Text.PrettyPrint.HughesPJClass
                                                as P
 

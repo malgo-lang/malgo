@@ -1,11 +1,11 @@
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.BackEnd.LIRBuilder
   ( MonadProgramBuilder(..)
   , ProgramBuilderT
@@ -33,14 +33,17 @@ module Language.Malgo.BackEnd.LIRBuilder
   )
 where
 
-import           Control.Lens.Indexed           ( iforM_ )
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
+
+import           Language.Malgo.IR.LIR
+
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
-import           Language.Malgo.IR.LIR
+
+import           Control.Lens.Indexed           ( iforM_ )
 import           Relude.Unsafe                  ( fromJust )
 
 newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
@@ -56,7 +59,7 @@ data ExprEnv = ExprEnv { variableMap :: IDMap Type (ID LType)
                        , currentCaptures :: Maybe (ID LType)
                        }
 
-newtype ExprState = ExprState { partialBlockInsts :: DiffList (Insn (ID LType)) }
+newtype ExprState = ExprState { partialBlockInsns :: DiffList (Insn (ID LType)) }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where
@@ -94,9 +97,9 @@ newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (Sta
 
 runExprBuilderT :: MonadUniq m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
 runExprBuilderT env (ExprBuilderT m) = evaluatingStateT (ExprState mempty) $ usingReaderT env $ do
-  value <- m
-  ExprState { partialBlockInsts } <- get
-  pure $ Block { insns = toList partialBlockInsts, value = value }
+  value                           <- m
+  ExprState { partialBlockInsns } <- get
+  pure $ Block { insns = toList partialBlockInsns, value = value }
 
 instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m) where
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
@@ -110,24 +113,24 @@ instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBu
   assign expr = ExprBuilderT $ do
     i <- newID (ltypeOf expr) "%"
     -- liftMalgo $ logDebug $ toText $ _ $ pPrint i <+> "=" <+> pPrint inst
-    modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Assign i expr) })
+    modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (Assign i expr) })
     pure i
 
   storeC var is val = ExprBuilderT
-    $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (StoreC var is val) })
-    
+    $ modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (StoreC var is val) })
+
   store var is val = ExprBuilderT
-    $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Store var is val) })
+    $ modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (Store var is val) })
 
   forLoop from to k = ExprBuilderT $ do
     index <- newID I64 "$i"
     block <- unExprBuilderT $ localBlock (k index >> undef Void) -- TODO: remove undef
-    modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (For index from to block) })
+    modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (For index from to block) })
 
   localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
     put (ExprState mempty)
     retval <- m
-    insts  <- toList <$> gets partialBlockInsts
+    insts  <- toList <$> gets partialBlockInsns
     pure (Block insts retval)
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
 
@@ -182,7 +185,6 @@ branchIf c genWhenTrue genWhenFalse = do
   fBlock <- localBlock genWhenFalse
   assign $ If c tBlock fBlock
 
-
 convertType :: Type -> LType
 convertType (TyApp FunC (r : ps)) =
   Ptr (Struct [Function (convertType r) (Ptr U8 : map convertType ps), Ptr U8])
@@ -199,8 +201,8 @@ convertType t                   = error $ toText $ "unreachable(convertType): " 
 packClosure :: MonadExprBuilder m => ID LType -> ID LType -> m (ID LType)
 packClosure capsId f = do
   clsId <- alloca (Struct [ltypeOf f, Ptr U8])
-  _     <- storeC clsId [0, 0] f
-  _     <- storeC clsId [0, 1] capsId
+  storeC clsId [0, 0] f
+  storeC clsId [0, 1] capsId
   pure clsId
 
 coerceTo :: (MonadUniq m, MonadExprBuilder m) => LType -> ID LType -> m (ID LType)

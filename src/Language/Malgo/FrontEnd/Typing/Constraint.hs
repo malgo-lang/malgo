@@ -1,6 +1,6 @@
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.Typing.Constraint
   ( Constraint(..)
@@ -13,12 +13,15 @@ module Language.Malgo.FrontEnd.Typing.Constraint
   )
 where
 
-import           Language.Malgo.FrontEnd.Info
-import           Language.Malgo.Pretty
 import           Language.Malgo.Monad
-import           Language.Malgo.FrontEnd.Typing.Subst
-import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.TypeRep.Type
+
+import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Typing.Subst
+
 import           Control.Monad.Error.Class
 import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 

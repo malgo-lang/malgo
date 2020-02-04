@@ -1,10 +1,11 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.Info where
 
-import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
 import           Text.PrettyPrint.HughesPJClass ( parens
                                                 , sep
                                                 , punctuate

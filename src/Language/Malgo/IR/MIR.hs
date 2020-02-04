@@ -1,19 +1,22 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE DeriveFoldable    #-}
-{-# LANGUAGE DeriveFunctor     #-}
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE NamedFieldPuns    #-}
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies      #-}
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.IR.MIR where
+
+import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.HIR          ( Lit(..)
                                                 , Op(..)
                                                 )
-import           Language.Malgo.Pretty
+
 import           Language.Malgo.TypeRep.Type
-import           Language.Malgo.Prelude
+
 import           Relude.Unsafe                  ( (!!) )
 import           Text.PrettyPrint.HughesPJClass ( vcat
                                                 , ($$)

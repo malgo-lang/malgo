@@ -1,16 +1,19 @@
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE DeriveFoldable    #-}
-{-# LANGUAGE DeriveFunctor     #-}
-{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.IR.Syntax where
 
-import           Language.Malgo.FrontEnd.Info
-import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import           Language.Malgo.TypeRep.Type
+
+import           Language.Malgo.FrontEnd.Info
+
 import           Text.PrettyPrint.HughesPJClass ( quotes
                                                 , doubleQuotes
                                                 , braces

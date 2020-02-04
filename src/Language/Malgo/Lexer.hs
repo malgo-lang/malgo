@@ -1,25 +1,27 @@
-{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE RankNTypes            #-}
-{-# LANGUAGE Strict                #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE Strict #-}
 module Language.Malgo.Lexer
   ( tokenize
   )
 where
 
-import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.Token
 import           Language.Malgo.Prelude  hiding ( EQ
                                                 , LT
                                                 , GT
                                                 )
+
+import           Language.Malgo.FrontEnd.Info
+
 import           Text.Parsec             hiding ( many
                                                 , (<|>)
                                                 )
 import           Text.Parsec.Pos                ( )
 import qualified Text.Parsec.Token             as Tok
-import           Language.Malgo.Token
 
 tokenize :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
 tokenize =

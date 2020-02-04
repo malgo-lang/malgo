@@ -4,8 +4,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.TypeRep.Type where
 
-import           Language.Malgo.Pretty
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
 import           Text.PrettyPrint.HughesPJClass ( parens
                                                 , sep
                                                 , punctuate

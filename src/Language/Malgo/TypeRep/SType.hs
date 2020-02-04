@@ -1,11 +1,12 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE DeriveGeneric #-}
 module Language.Malgo.TypeRep.SType where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
+
 import           Text.PrettyPrint.HughesPJClass ( text
                                                 , parens
                                                 , sep
