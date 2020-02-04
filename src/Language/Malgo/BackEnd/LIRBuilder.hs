@@ -57,7 +57,7 @@ data ExprEnv = ExprEnv { variableMap :: IDMap Type (ID LType)
                        , currentCaptures :: Maybe (ID LType)
                        }
 
-newtype ExprState = ExprState { partialBlockInsts :: DiffList (Insn (ID LType)) }
+data ExprState = ExprState { partialBlockInsts :: DiffList (Insn (ID LType)) }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where
@@ -86,16 +86,18 @@ class MonadProgramBuilder m => MonadExprBuilder m where
   assign :: Expr (ID LType) -> m (ID LType)
   storeC :: ID LType -> [Int] -> ID LType -> m ()
   store :: ID LType -> [ID LType] -> ID LType -> m ()
-  localBlock :: m (ID LType) -> m (Block (ID LType))
+  localBlock :: (ID LType -> m (Control (ID LType))) -> m (ID LType) -> m (Block (ID LType))
   getCurrentCaptures :: m (Maybe (ID LType))
 
-newtype ExprBuilderT m a = ExprBuilderT (ReaderT ExprEnv (StateT ExprState m) a)
+newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (StateT ExprState m) a }
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
-runExprBuilderT :: Monad m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
-runExprBuilderT env (ExprBuilderT m) = do
-  (val, ExprState { partialBlockInsts }) <- runStateT (runReaderT m env) (ExprState mempty)
-  pure $ Block { insns = toList partialBlockInsts, value = val }
+runExprBuilderT :: Monad m => ExprEnv -> (ID LType -> ExprBuilderT m (Control (ID LType))) -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
+runExprBuilderT env term (ExprBuilderT m) = evaluatingStateT (ExprState mempty) $ usingReaderT env $ do
+  val <- m
+  ExprState { partialBlockInsts } <- get
+  terminator <- unExprBuilderT $ term val
+  pure $ Block { insns = toList partialBlockInsts, value = terminator }
 
 instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m) where
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
@@ -114,11 +116,12 @@ instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBu
     $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (StoreC var is val) })
   store var is val = ExprBuilderT
     $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Store var is val) })
-  localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
+  localBlock term (ExprBuilderT m) = ExprBuilderT $ localState $ do
     put (ExprState mempty)
     retval <- m
     insts  <- toList <$> gets partialBlockInsts
-    pure (Block insts retval)
+    terminator <- unExprBuilderT $ term retval
+    pure (Block insts terminator)
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
 
 -- instructions
@@ -168,14 +171,14 @@ binop o x y = assign $ BinOp o x y
 
 branchIf :: MonadExprBuilder m => ID LType -> m (ID LType) -> m (ID LType) -> m (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
-  tBlock <- localBlock genWhenTrue
-  fBlock <- localBlock genWhenFalse
+  tBlock <- localBlock (pure . Term) genWhenTrue
+  fBlock <- localBlock (pure . Term) genWhenFalse
   assign $ If c tBlock fBlock
 
 forLoop :: (MonadUniq m, MonadExprBuilder m) => ID LType -> ID LType -> (ID LType -> m a) -> m ()
 forLoop from to k = do
   index <- newID I64 "$i"
-  block <- localBlock (k index >> undef Void)
+  block <- localBlock (pure . Term) (k index >> undef Void)
   void $ assign $ For index from to block
 
 convertType :: Type -> LType
@@ -240,7 +243,7 @@ coerceTo to x = case (to, ltypeOf x) of
     fBoxedXName <- newID (Ptr U8) "$x"
     fParamNames <- mapM (`newID` "$a") ps
 
-    bodyBlock   <- localBlock $ do
+    bodyBlock   <- localBlock (pure . Term) $ do
       fUnboxedX <- cast unboxedXType fBoxedXName
       as        <- zipWithM coerceTo xps fParamNames
       xFun      <- loadC fUnboxedX [0, 0]

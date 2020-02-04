@@ -46,7 +46,7 @@ instance (HasLType a, Pretty a) => Pretty (Func a) where
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
-data Block a = Block { insns :: [Insn a], value :: a }
+data Block a = Block { insns :: [Insn a], value :: Control a }
   deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Block a) where
@@ -69,6 +69,15 @@ instance (HasLType a, Pretty a) => Pretty (Insn a) where
   pPrint (Assign x e   ) = pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint e
   pPrint (StoreC x is v) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
   pPrint (Store  x is v) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
+
+newtype Control a = Term a
+  deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
+
+instance Pretty a => Pretty (Control a) where
+  pPrint (Term a) = pPrint a
+
+instance HasLType a => HasLType (Control a) where
+  ltypeOf (Term a) = ltypeOf a
 
 data Expr a = Constant Constant
             | Call a [a]

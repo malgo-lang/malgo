@@ -127,9 +127,9 @@ genFunction Func { name, params, body } = void $ function funcName llvmParams re
   retty      = convertType (ltypeOf body)
 
 genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a
-genBlock Block { insns, value } term = go insns
+genBlock Block { insns, value = Term retval } term = go insns
  where
-  go []               = term =<< findVar value
+  go []               = term =<< findVar retval
   go (Assign x e : xs) = do
     opr <- genExpr e
     local (\st -> st { variableMap = insert x opr (variableMap st) }) $ go xs
