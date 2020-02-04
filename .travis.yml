@@ -79,7 +79,7 @@ install:
  - sed -i.bak 's/^jobs:/-- jobs:/' ${HOME}/.cabal/config
  - rm -fv cabal.project.local
  - rm -rf .ghc.environment.*
- - cabal install hspec-discover
+ - cabal install hspec-discover --allow-newer
  - cabal new-configure --enable-tests
  - cabal new-build -w ${HC} --dep -j2 all
 
