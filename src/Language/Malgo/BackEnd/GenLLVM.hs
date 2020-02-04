@@ -133,6 +133,19 @@ genBlock Block { insns, value } term = go insns
   go (Assign x e : xs) = do
     opr <- genExpr e
     local (\st -> st { variableMap = insert x opr (variableMap st) }) $ go xs
+  go (StoreC x is val :  xs) = do
+    xOpr <- findVar x
+    valOpr <- findVar val
+    xAddr <- gep xOpr (map (int32 . toInteger) is)
+    store xAddr 0 valOpr
+    go xs
+  go (Store x is val : xs) = do
+    xOpr    <- findVar x
+    iOprs   <- mapM findVar is
+    valOpr  <- findVar val
+    xAddr <- gep xOpr iOprs
+    store xAddr 0 valOpr
+    go xs
 
 genExpr :: Expr (ID LType) -> GenExpr Operand
 genExpr (Constant x) = genConstant x
@@ -168,19 +181,6 @@ genExpr (Load _ x is) = do
   iOprs   <- mapM findVar is
   valAddr <- gep xOpr iOprs
   load valAddr 0
-genExpr (StoreC x is val) = do
-  xOpr    <- findVar x
-  valOpr  <- findVar val
-  valAddr <- gep xOpr (map (int32 . toInteger) is)
-  store valAddr 0 valOpr
-  pure $ ConstantOperand $ C.Undef LT.VoidType
-genExpr (Store x is val) = do
-  xOpr    <- findVar x
-  iOprs   <- mapM findVar is
-  valOpr  <- findVar val
-  valAddr <- gep xOpr iOprs
-  store valAddr 0 valOpr
-  pure $ ConstantOperand $ C.Undef LT.VoidType
 genExpr (Cast ty x) = do
   xOpr <- findVar x
   case (ty, ltypeOf x) of

@@ -52,20 +52,23 @@ data Block a = Block { insns :: [Insn a], value :: a }
 instance (HasLType a, Pretty a) => Pretty (Block a) where
   pPrint Block { insns, value } =
     brackets
-      $  vcat
-           (punctuate ";" $ map pPrint insns
+      $  vcat (punctuate ";" $ map pPrint insns
              -- (\(x, inst) -> pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint inst)
-           )
+                                               )
       $$ pPrint value
 
 instance HasLType a => HasLType (Block a) where
   ltypeOf Block { value = x } = ltypeOf x
 
 data Insn a = Assign a (Expr a)
+            | StoreC a [Int] a
+            | Store a [a] a
   deriving stock (Eq, Show, Read, Generic, Functor, Foldable)
 
 instance (HasLType a, Pretty a) => Pretty (Insn a) where
-  pPrint (Assign x e) = pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint e
+  pPrint (Assign x e   ) = pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint e
+  pPrint (StoreC x is v) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
+  pPrint (Store  x is v) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
 
 data Expr a = Constant Constant
             | Call a [a]
@@ -75,8 +78,6 @@ data Expr a = Constant Constant
             | Alloca LType
             | LoadC a [Int]
             | Load LType a [a]
-            | StoreC a [Int] a
-            | Store a [a] a
             | Cast LType a
             | Trunc LType a
             | Zext LType a
@@ -98,9 +99,7 @@ instance (HasLType a, Pretty a) => Pretty (Expr a) where
   pPrint (ArrayCreate init size) = "arrayCreate" <+> pPrint init <+> pPrint size
   pPrint (Alloca t             ) = "alloca" <+> pPrint t
   pPrint (LoadC x is           ) = "loadc" <+> pPrint x <+> pPrint is
-  pPrint (Load   t x  i        ) = "load" <+> pPrint t <+> pPrint x <+> pPrint i
-  pPrint (StoreC x is v        ) = "storec" <+> pPrint x <+> pPrint is <+> pPrint v
-  pPrint (Store  x is v        ) = "store" <+> pPrint x <+> pPrint is <+> pPrint v
+  pPrint (Load t x i           ) = "load" <+> pPrint t <+> pPrint x <+> pPrint i
   pPrint (Cast  t a            ) = "cast" <+> pPrint t <+> pPrint a
   pPrint (Trunc t a            ) = "trunc" <+> pPrint t <+> pPrint a
   pPrint (Zext  t a            ) = "zext" <+> pPrint t <+> pPrint a
@@ -119,21 +118,19 @@ instance (HasLType a, Pretty a) => Pretty (Expr a) where
       <+> pPrint body
 
 instance (HasLType a, Show a) => HasLType (Expr a) where
-  ltypeOf (Constant x)   = ltypeOf x
+  ltypeOf (Constant x) = ltypeOf x
   ltypeOf (Call (ltypeOf -> Function t _) _) = t
   ltypeOf (CallExt _ (ltypeOf -> Function t _) _) = t
   ltypeOf (ArrayCreate init _) = Ptr $ Struct [Ptr (ltypeOf init), SizeT]
-  ltypeOf (Alloca t)     = Ptr t
-  ltypeOf (LoadC x is)   = accessType (ltypeOf x) is
-  ltypeOf (Load t _ _)   = t
-  ltypeOf StoreC{}       = Void
-  ltypeOf Store{}        = Void
-  ltypeOf (Cast t _    ) = t
-  ltypeOf (Undef t     ) = t
+  ltypeOf (Alloca t) = Ptr t
+  ltypeOf (LoadC x is) = accessType (ltypeOf x) is
+  ltypeOf (Load t _ _) = t
+  ltypeOf (Cast t _) = t
+  ltypeOf (Undef t) = t
   ltypeOf (BinOp op x _) = ltypeOfOp op (ltypeOf x)
-  ltypeOf (If    _  x _) = ltypeOf x
-  ltypeOf For{}          = Void
-  ltypeOf t              = error $ toText $ "unreachable(ltypeOf) " <> pShow t
+  ltypeOf (If _ x _) = ltypeOf x
+  ltypeOf For{} = Void
+  ltypeOf t     = error $ toText $ "unreachable(ltypeOf) " <> pShow t
 
 data Constant = Bool Bool
               | Int32 Int32

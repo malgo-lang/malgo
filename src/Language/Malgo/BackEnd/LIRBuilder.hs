@@ -18,8 +18,6 @@ module Language.Malgo.BackEnd.LIRBuilder
   , alloca
   , loadC
   , load
-  , storeC
-  , store
   , call
   , callExt
   , cast
@@ -86,6 +84,8 @@ class MonadProgramBuilder m => MonadExprBuilder m where
   findVar :: ID Type -> m (ID LType)
   withVariables :: IDMap Type (ID LType) -> m a -> m a
   assign :: Expr (ID LType) -> m (ID LType)
+  storeC :: ID LType -> [Int] -> ID LType -> m ()
+  store :: ID LType -> [ID LType] -> ID LType -> m ()
   localBlock :: m (ID LType) -> m (Block (ID LType))
   getCurrentCaptures :: m (Maybe (ID LType))
 
@@ -110,6 +110,10 @@ instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBu
     -- liftMalgo $ logDebug $ toText $ _ $ pPrint i <+> "=" <+> pPrint inst
     modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Assign i expr) })
     pure i
+  storeC var is val = ExprBuilderT
+    $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (StoreC var is val) })
+  store var is val = ExprBuilderT
+    $ modify (\e -> e { partialBlockInsts = snoc (partialBlockInsts e) (Store var is val) })
   localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
     put (ExprState mempty)
     retval <- m
@@ -129,12 +133,6 @@ loadC ptr xs = assign $ LoadC ptr xs
 
 load :: MonadExprBuilder m => LType -> ID LType -> [ID LType] -> m (ID LType)
 load ltype ptr xs = assign $ Load ltype ptr xs
-
-storeC :: MonadExprBuilder m => ID LType -> [Int] -> ID LType -> m ()
-storeC ptr xs val = void $ assign (StoreC ptr xs val)
-
-store :: MonadExprBuilder m => ID LType -> [ID LType] -> ID LType -> m ()
-store ptr xs val = void $ assign (Store ptr xs val)
 
 call :: (MonadUniq m, MonadExprBuilder m) => ID LType -> [ID LType] -> m (ID LType)
 call f xs = case ltypeOf f of
