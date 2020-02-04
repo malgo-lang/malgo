@@ -7,6 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.FrontEnd.Typing.Infer
   ( Typing
+  , generalize
   )
 where
 

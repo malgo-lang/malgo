@@ -124,7 +124,7 @@ instance HasType a => HasType (Expr a) where
   typeOf (CallClosure fn _) = case typeOf fn of
     TyApp FunC (ret : _) -> ret
     _                    -> error "(typeOf fn) should match (TyFun _ ty)"
-  typeOf (MakeClosure fn _) = TyApp TupleC [typeOf fn, TyApp StringC []]
+  typeOf (MakeClosure fn _) = typeOf fn
   typeOf (Let  _ _  e     ) = typeOf e
   typeOf (If   _ t  _     ) = typeOf t
   typeOf (Prim _ ty _     ) = case typeOf ty of
