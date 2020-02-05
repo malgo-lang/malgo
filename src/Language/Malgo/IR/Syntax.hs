@@ -5,6 +5,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+-- | Malgoの抽象構文木の定義
 module Language.Malgo.IR.Syntax where
 
 import           Language.Malgo.Prelude
@@ -24,47 +25,62 @@ import           Text.PrettyPrint.HughesPJClass ( quotes
                                                 , ($+$)
                                                 )
 
+-- | 式。
+-- 型変数aは識別子の型を表す。ParserはExpr Stringを生成する。
 data Expr a
-  -- | 変数参照
-  = Var Info a
-  -- | 64bit整数
-  | Int Info Integer
-  -- | 倍精度浮動小数点数
-  | Float Info Double
-  -- | 真(#t) 偽(#f)
-  | Bool Info Bool
-  -- | シングルクォートで囲まれた一文字
-  | Char Info Char
-  -- | ダブルクォートで囲まれた文字列
-  | String Info String
-  -- | タプル
-  | Tuple Info [Expr a]
-  -- | 配列作成
-  | MakeArray Info (Expr a) -- ^ init value
-                   (Expr a) -- ^ size
-  | ArrayRead Info
-    (Expr a) -- array
-    (Expr a) -- index
-  | ArrayWrite Info
-    (Expr a) -- array
-    (Expr a) -- index
-    (Expr a) -- value
-  -- | 関数呼び出し
-  | Call Info (Expr a) [Expr a]
-  -- | 無名関数
-  | Fn Info [(a, Maybe Type)] (Expr a)
-  -- | 連続した式(e1 ; e2)
-  | Seq Info (Expr a) (Expr a)
-  -- | let式
-  | Let Info (Decl a) (Expr a)
-  -- | if式
-  | If Info (Expr a) (Expr a) (Expr a)
-  -- | 中置演算子
-  | BinOp Info Op (Expr a) (Expr a)
-  -- | パターンマッチ
-  | Match Info (Expr a) (NonEmpty (Pat a, Expr a))
+  = Var Info a -- ^ 変数参照
+  | Int Info Integer -- ^ 64bit整数
+  | Float Info Double -- ^ 倍精度浮動小数点数
+  | Bool Info Bool -- ^ 真偽値
+  | Char Info Char -- ^ 文字リテラル。シングルクォート(')で囲まれた一文字
+  | String Info String -- ^ 文字列リテラル。ダブルクォートで囲まれた文字列
+  | Tuple Info [Expr a] -- ^ タプル
+  | MakeArray -- ^ 配列の作成
+    Info
+    (Expr a) -- ^ 初期値 
+    (Expr a) -- ^ 長さ
+  | ArrayRead -- ^ 配列の要素へのアクセス
+    Info
+    (Expr a) -- ^ 配列
+    (Expr a) -- ^ 要素のインデックス
+  | ArrayWrite -- ^ 配列の要素の書き込み
+    Info
+    (Expr a) -- ^ 配列
+    (Expr a) -- ^ 要素のインデックス
+    (Expr a) -- ^ 書き込む式
+  | Call -- ^ 関数呼び出し
+    Info
+    (Expr a) -- ^ 関数
+    [Expr a] -- ^ 引数のリスト
+  | Fn -- ^ 無名関数
+    Info
+    [(a, Maybe Type)] -- ^ 仮引数とその型のリスト
+    (Expr a) -- ^ 関数本体
+  | Seq -- ^ 連続した式(e1; e2)
+    Info
+    (Expr a) -- ^ 先に実行される式
+    (Expr a) -- ^ 後に実行される式
+  | Let -- ^ 変数, 関数, 外部関数の定義
+    Info
+    (Decl a) -- ^ 定義
+    (Expr a) -- ^ 定義の元で実行される式
+  | If -- ^ if式
+    Info
+    (Expr a) -- ^ 条件
+    (Expr a) -- ^ 真のときの式
+    (Expr a) -- ^ 偽のときの式
+  | BinOp -- ^ 中置演算子
+    Info
+    Op -- ^ 演算子
+    (Expr a) -- ^ 左辺
+    (Expr a) -- ^ 右辺
+  | Match -- ^ パターンマッチ
+    Info
+    (Expr a) -- ^ 対象とある値
+    (NonEmpty (Pat a, Expr a)) -- ^ パターンとマッチしたときの式のリスト
   deriving stock (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
+-- | Exprからソースコード上の位置情報を取り出すための補助関数
 info :: Expr t -> Info
 info (Var    i _        ) = i
 info (Int    i _        ) = i
@@ -108,8 +124,9 @@ instance Pretty a => Pretty (Expr a) where
     (punctuate "|" (toList $ fmap pPrintClause cs))
     where pPrintClause (p, e) = pPrint p <+> "=>" <+> pPrint e
 
-data Pat a = VarP a
-           | TupleP [Pat a]
+-- | パターン
+data Pat a = VarP a -- ^ 変数パターン
+           | TupleP [Pat a] -- ^ タプルパターン
   deriving stock (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 instance Pretty a => Pretty (Pat a) where
@@ -148,10 +165,11 @@ instance Pretty Op where
   pPrint And  = "&&"
   pPrint Or   = "||"
 
+-- | 変数定義、関数定義、外部関数定義
 data Decl a
-  = FunDec [(Info, a, [(a, Maybe Type)], Maybe Type, Expr a)]
-  | ValDec Info a (Maybe Type) (Expr a)
-  | ExDec Info a Type String
+  = FunDec [(Info, a, [(a, Maybe Type)], Maybe Type, Expr a)] -- ^ 関数定義。相互再帰しうる関数定義のリスト
+  | ValDec Info a (Maybe Type) (Expr a) -- ^ 変数定義
+  | ExDec Info a Type String -- ^ 外部関数定義
   deriving stock (Eq, Show, Read, Functor, Foldable, Traversable, Generic)
 
 instance Pretty a => Pretty (Decl a) where
@@ -164,59 +182,3 @@ instance Pretty a => Pretty (Decl a) where
         $+$ pPrint body
   pPrint (ValDec _ name _ val ) = parens $ "val" <+> pPrint name <+> pPrint val
   pPrint (ExDec  _ name _ orig) = parens $ "extern" <+> pPrint name <+> pPrint orig
-
--- instance HasType a => HasType (Expr a) where
---   typeOf (Var    _ name     ) = typeOf name
---   typeOf (Int    _ _        ) = TyApp IntC []
---   typeOf (Float  _ _        ) = TyApp FloatC []
---   typeOf (Bool   _ _        ) = TyApp BoolC []
---   typeOf (Char   _ _        ) = TyApp CharC []
---   typeOf (String _ _        ) = TyApp StringC []
---   typeOf (Tuple  _ xs       ) = TyApp TupleC (map typeOf xs)
---   typeOf (MakeArray _ init _) = TyApp ArrayC [typeOf init]
---   typeOf (ArrayRead _ arr  _) = case typeOf arr of
---     TyApp ArrayC [t] -> t
---     _                -> error "(typeof arr) should match (TyArray xs)"
---   typeOf ArrayWrite{}         = TyApp TupleC []
---   typeOf (Fn   _ params body) = TyApp FunC $ typeOf body : map (typeOf . fst) params
---   typeOf (Call i fn     as  ) = case typeOf fn of
---     (TyApp FunC (ret : ps)) ->
---       apply (catchUnifyError i "typeOf" $ solve (zipWith (:~) (map typeOf as) ps)) ret
---     _ -> error "(typeOf fn) should match (TyFun _ ty)"
---   typeOf (Seq _ _ e              ) = typeOf e
---   typeOf (Let _ _ e              ) = typeOf e
---   typeOf (If    _ _  e _         ) = typeOf e
---   typeOf (BinOp i op x _         ) = view _3 $ typeOfOp i op (typeOf x)
---   typeOf (Match _ _ ((_, e) :| _)) = typeOf e
-
--- typeOfOp :: Info -> Op -> Type -> (Type, Type, Type)
--- typeOfOp _ Add  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
--- typeOfOp _ Sub  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
--- typeOfOp _ Mul  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
--- typeOfOp _ Div  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
--- typeOfOp _ FAdd _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
--- typeOfOp _ FSub _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
--- typeOfOp _ FMul _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
--- typeOfOp _ FDiv _  = (TyApp FloatC [], TyApp FloatC [], TyApp FloatC [])
--- typeOfOp _ Mod  _  = (TyApp IntC [], TyApp IntC [], TyApp IntC [])
--- typeOfOp i Eq   ty = if comparable ty
---   then (ty, ty, TyApp BoolC [])
---   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
--- typeOfOp i Neq ty = if comparable ty
---   then (ty, ty, TyApp BoolC [])
---   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
--- typeOfOp i Lt ty = if comparable ty
---   then (ty, ty, TyApp BoolC [])
---   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
--- typeOfOp i Gt ty = if comparable ty
---   then (ty, ty, TyApp BoolC [])
---   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
--- typeOfOp i Le ty = if comparable ty
---   then (ty, ty, TyApp BoolC [])
---   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
--- typeOfOp i Ge ty = if comparable ty
---   then (ty, ty, TyApp BoolC [])
---   else error $ show (pPrint i <+> ":" <+> pPrint ty <+> "is not comparable")
--- typeOfOp _ And _ = (TyApp BoolC [], TyApp BoolC [], TyApp BoolC [])
--- typeOfOp _ Or  _ = (TyApp BoolC [], TyApp BoolC [], TyApp BoolC [])
-
