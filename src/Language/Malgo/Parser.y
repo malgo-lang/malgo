@@ -93,7 +93,7 @@ str   { Token (_, STRING _) }
 %nonassoc '==' '<>'
 %nonassoc '<' '>' '<=' '>='
 %left '&&' '||'
-%left '<-'
+%left ':='
 %left '+' '-' '+.' '-.'
 %left '*' '/' '%' '*.' '/.'
 %left '.'
@@ -111,7 +111,6 @@ decls_raw : decls_raw decl { $2 : $1 }
 
 val_decl : val id ':' Type '=' exp { V (_info $1) (_id $ _tag $ $2) (Just $4) $6 }
          | val id '=' exp { V (_info $1) (_id $ _tag $ $2) Nothing $4 }
-         | val id ':=' exp { V (_info $1) (_id $ _tag $ $2) Nothing $4 }
 
 fun_decl : fun id '(' ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) [] (Just $6) $8 }
          | fun id '(' ')' '=' exp { F (_info $1) (_id . _tag $ $2) [] Nothing $6 }
@@ -160,7 +159,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
                              (Float (_info $1) 0)
                              (Float (_info $2) (_float . _tag $ $2))
                          }
-   | simple_exp '[' exp ']' '<-' exp { ArrayWrite (_info $5) $1 $3 $6 }
+   | simple_exp '[' exp ']' ':=' exp { ArrayWrite (_info $5) $1 $3 $6 }
    | simple_exp { $1 }
 
 clauses : clauses '|' pat '->' exp { ($3, $5) : $1 }

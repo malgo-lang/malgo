@@ -3,6 +3,6 @@ let
   extern newline : () -> {} = "newline"
   val a : [Int] = array(0, 10)
   val a1 : Int = a[1]
-  val a2 : Int = a[2] <- 42; a[2]
+  val a2 : Int = a[2] := 42; a[2]
 in print_int(a1); newline(); print_int(a2); newline()
 end

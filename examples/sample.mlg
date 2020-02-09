@@ -15,7 +15,7 @@ extern not : Bool -> Bool = "not"
 fun println_int(x:Int) : {} = print_int(x); newline()
 fun println_float(x:Float) : {} = print_float(x); newline()
 
-val a := 42
+val a = 42
 fun fib (n:Int) : Int =
     if n <= 1
     then 1
@@ -28,7 +28,7 @@ fun add(x:Int):Int =
   in add2(2)
   end
 fun area(r:Float):Float = r *. r *. 3.14
-val name := "malgo"
+val name = "malgo"
 fun print_fib (n:Int) : {} = print_int(fib(n))
 in
   println("Hello, world!");

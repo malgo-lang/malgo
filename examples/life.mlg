@@ -17,12 +17,12 @@ fun view(cells: [Bool], x: Int, y: Int): Bool =
   then false
   else cells[y * x_width + x]
 fun set(cells: [Bool], x: Int, y: Int, s: Bool): {} =
-  cells[y * x_width + x] <- s
+  cells[y * x_width + x] := s
 
 fun init_cells(cells: [Bool], i: Int): {} =
   if i >= x_width * y_width
   then {}
-  else cells[i] <- rand_bool(); init_cells(cells, i + 1)
+  else cells[i] := rand_bool(); init_cells(cells, i + 1)
 
 fun to_char(s: Bool): Char =
   if s
@@ -49,9 +49,9 @@ fun to_int(b: Bool): Int = if b then 1 else 0
 fun next_state(cells: [Bool], x: Int, y: Int): Bool =
   let val living: [Int] = array(0, 1)
   in
-    living[0] <- to_int(view(cells, x-1, y+1)) + to_int(view(cells, x, y+1)) + to_int(view(cells, x+1, y+1));
-    living[0] <- to_int(view(cells, x-1, y)) + to_int(view(cells, x+1, y)) + living[0];
-    living[0] <- to_int(view(cells, x-1, y-1)) + to_int(view(cells, x, y-1)) + to_int(view(cells, x+1, y-1)) + living[0];
+    living[0] := to_int(view(cells, x-1, y+1)) + to_int(view(cells, x, y+1)) + to_int(view(cells, x+1, y+1));
+    living[0] := to_int(view(cells, x-1, y)) + to_int(view(cells, x+1, y)) + living[0];
+    living[0] := to_int(view(cells, x-1, y-1)) + to_int(view(cells, x, y-1)) + to_int(view(cells, x+1, y-1)) + living[0];
     if view(cells, x, y)
     then (living[0] == 2) || (living[0] == 3)
     else (living[0] == 3)
