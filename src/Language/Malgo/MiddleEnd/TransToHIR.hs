@@ -29,7 +29,7 @@ instance Pass TransToHIR (S.Expr (ID Type)) (Expr (ID Type)) where
 newTmp :: MonadUniq f => String -> a -> f (ID a)
 newTmp n t = newID t ("$" <> n)
 
-insertLet :: MonadUniq m => S.Expr (ID Type) -> WriterT (Endo (Expr (ID Type))) m (ID Type)
+insertLet :: (MonadUniq f, MonadWriter (Endo (Expr (ID Type))) f) => S.Expr (ID Type) -> f (ID Type)
 insertLet (S.Var _ x) = pure x
 insertLet v           = do
   v' <- transToHIR v
