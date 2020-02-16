@@ -48,13 +48,13 @@ appInsert :: Functor f => WriterT (Endo b) f b -> f b
 appInsert m = uncurry (flip appEndo) <$> runWriterT m
 
 transToHIR :: MonadUniq m => S.Expr (ID Type) -> m (Expr (ID Type))
-transToHIR (S.Var    _ a       ) = pure $ Var a
-transToHIR (S.Int    _ x       ) = pure $ Lit $ Int x
-transToHIR (S.Float  _ x       ) = pure $ Lit $ Float x
-transToHIR (S.Bool   _ x       ) = pure $ Lit $ Bool x
-transToHIR (S.Char   _ x       ) = pure $ Lit $ Char x
-transToHIR (S.String _ x       ) = pure $ Lit $ String x
-transToHIR (S.Tuple  _ xs      ) = appInsert $ Tuple <$> mapM insertLet xs
+transToHIR (S.Var    _ a        ) = pure $ Var a
+transToHIR (S.Int    _ x        ) = pure $ Lit $ Int x
+transToHIR (S.Float  _ x        ) = pure $ Lit $ Float x
+transToHIR (S.Bool   _ x        ) = pure $ Lit $ Bool x
+transToHIR (S.Char   _ x        ) = pure $ Lit $ Char x
+transToHIR (S.String _ x        ) = pure $ Lit $ String x
+transToHIR (S.Tuple  _ xs       ) = appInsert $ Tuple <$> mapM insertLet xs
 transToHIR (S.Array  i (x :| xs)) = appInsert $ do
   arr <- insertLet $ S.MakeArray i x (S.Int i $ fromIntegral $ length (x : xs))
   forM_ (zip [1 ..] xs)
