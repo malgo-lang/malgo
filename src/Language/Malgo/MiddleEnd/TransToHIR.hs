@@ -55,8 +55,7 @@ transToHIR (S.Bool   _ x       ) = pure $ Lit $ Bool x
 transToHIR (S.Char   _ x       ) = pure $ Lit $ Char x
 transToHIR (S.String _ x       ) = pure $ Lit $ String x
 transToHIR (S.Tuple  _ xs      ) = appInsert $ Tuple <$> mapM insertLet xs
-transToHIR (S.Array  _ []      ) = error "cannot make empty array"
-transToHIR (S.Array  i (x : xs)) = appInsert $ do
+transToHIR (S.Array  i (x :| xs)) = appInsert $ do
   arr <- insertLet $ S.MakeArray i x (S.Int i $ fromIntegral $ length (x : xs))
   forM_ (zip [1 ..] xs)
     $ \(i, v) -> insertLet' =<< ArrayWrite arr <$> insertLet' (Lit (Int i)) <*> insertLet v

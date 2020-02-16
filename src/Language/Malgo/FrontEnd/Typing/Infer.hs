@@ -81,7 +81,7 @@ typingExpr (Tuple _ xs) = do
 typingExpr (Array _ xs) = do
   ts <- mapM typingExpr xs
   ty <- newTyMeta
-  tell (map (ty :~) ts)
+  tell (toList $ fmap (ty :~) ts)
   pure $ TyApp ArrayC [ty]
 typingExpr (MakeArray _ initNode sizeNode) = do
   initTy <- instantiate =<< typingExpr initNode

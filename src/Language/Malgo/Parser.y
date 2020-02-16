@@ -178,7 +178,7 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
           | char { Char (_info $1) (_char . _tag $ $1) }
           | str  { String (_info $1) (_str . _tag $ $1) }
           | '{' args '}' { Tuple (_info $1) (reverse $2) }
-          | '[' args ']' { Array (_info $1) (reverse $2) }
+          | '[' args ']' { Array (_info $1) (fromList $ reverse $2) }
           | array '(' exp ',' exp ')' { MakeArray (_info $1) $3 $5 }
           | simple_exp '[' exp ']' { ArrayRead (_info $2) $1 $3 }
           | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [] }
