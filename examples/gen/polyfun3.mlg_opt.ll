@@ -3,7 +3,7 @@ source_filename = "./examples/polyfun3.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-define i8* @"$fo111"(i8* nocapture readonly, i8*) {
+define i8* @"$fo94"(i8* nocapture readonly, i8*) {
   %3 = ptrtoint i8* %1 to i64
   %4 = bitcast i8* %0 to i64 (i8*, i64)**
   %5 = load i64 (i8*, i64)*, i64 (i8*, i64)** %4, align 8
@@ -15,7 +15,7 @@ define i8* @"$fo111"(i8* nocapture readonly, i8*) {
   ret i8* %10
 }
 
-define i64 @"$fo85"(i8* nocapture readonly, i64) {
+define i64 @"$fo73"(i8* nocapture readonly, i64) {
   %3 = inttoptr i64 %1 to i8*
   %4 = bitcast i8* %0 to i8* (i8*, i8*)**
   %5 = load i8* (i8*, i8*)*, i8* (i8*, i8*)** %4, align 8
@@ -133,7 +133,7 @@ body_1:                                           ; preds = %body_0, %body_1
   %35 = load i64, i64* %34, align 8
   %36 = tail call i8* @GC_malloc(i64 16)
   %37 = bitcast i8* %36 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$fo85", i64 (i8*, i64)** %37, align 8
+  store i64 (i8*, i64)* @"$fo73", i64 (i8*, i64)** %37, align 8
   %38 = getelementptr i8, i8* %36, i64 8
   %39 = bitcast i8* %38 to i64*
   store i64 %35, i64* %39, align 8
@@ -166,7 +166,7 @@ end_1:                                            ; preds = %end_1.loopexit, %bo
   %55 = load i64, i64* %54, align 8
   %56 = tail call i8* @GC_malloc(i64 16)
   %57 = bitcast i8* %56 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo111", i8* (i8*, i8*)** %57, align 8
+  store i8* (i8*, i8*)* @"$fo94", i8* (i8*, i8*)** %57, align 8
   %58 = getelementptr i8, i8* %56, i64 8
   %59 = bitcast i8* %58 to i64*
   store i64 %55, i64* %59, align 8

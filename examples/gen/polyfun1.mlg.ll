@@ -1,7 +1,7 @@
 ; ModuleID = './examples/polyfun1.mlg'
 source_filename = "./examples/polyfun1.mlg"
 
-define i8* @"$fo86"(i8*, i8*) {
+define i8* @"$fo75"(i8*, i8*) {
   %3 = bitcast i8* %0 to { i64 (i8*, i64)*, i8* }*
   %4 = ptrtoint i8* %1 to i64
   %5 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %3, i32 0, i32 0
@@ -135,7 +135,7 @@ end_0:                                            ; preds = %cond_0
   %46 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
   %47 = bitcast i8* %46 to { i8* (i8*, i8*)*, i8* }*
   %48 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %47, i32 0, i32 0
-  store i8* (i8*, i8*)* @"$fo86", i8* (i8*, i8*)** %48
+  store i8* (i8*, i8*)* @"$fo75", i8* (i8*, i8*)** %48
   %49 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %47, i32 0, i32 1
   store i8* %45, i8** %49
   %50 = getelementptr { { i8* (i8*, i8*)*, i8* }*, i8* }, { { i8* (i8*, i8*)*, i8* }*, i8* }* %42, i32 0, i32 0

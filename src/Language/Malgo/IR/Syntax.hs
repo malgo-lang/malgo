@@ -35,6 +35,7 @@ data Expr a
   | Char Info Char -- ^ 文字リテラル。シングルクォート(')で囲まれた一文字
   | String Info String -- ^ 文字列リテラル。ダブルクォートで囲まれた文字列
   | Tuple Info [Expr a] -- ^ タプル
+  | Array Info [Expr a] -- ^ 配列リテラル
   | MakeArray -- ^ 配列の作成
     Info
     (Expr a) -- ^ 初期値 
@@ -89,6 +90,7 @@ info (Bool   i _        ) = i
 info (Char   i _        ) = i
 info (String i _        ) = i
 info (Tuple  i _        ) = i
+info (Array  i _        ) = i
 info (MakeArray i _ _   ) = i
 info (ArrayRead i _ _   ) = i
 info (ArrayWrite i _ _ _) = i
@@ -109,6 +111,7 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Char   _ x           ) = quotes $ pPrint x
   pPrint (String _ x           ) = doubleQuotes $ pPrint x
   pPrint (Tuple  _ xs          ) = braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (Array  _ xs          ) = brackets $ sep $ punctuate "," $ map pPrint xs
   pPrint (MakeArray _ init size) = parens $ "array" <+> pPrint init <+> pPrint size
   pPrint (ArrayRead _ arr  ix  ) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite _ arr ix val) =

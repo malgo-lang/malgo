@@ -78,6 +78,11 @@ typingExpr String{}     = pure $ TyApp StringC []
 typingExpr (Tuple _ xs) = do
   ts <- mapM typingExpr xs
   pure $ TyApp TupleC ts
+typingExpr (Array _ xs) = do
+  ts <- mapM typingExpr xs
+  ty <- newTyMeta
+  tell (map (ty :~) ts)
+  pure $ TyApp ArrayC [ty]
 typingExpr (MakeArray _ initNode sizeNode) = do
   initTy <- instantiate =<< typingExpr initNode
   sizeTy <- instantiate =<< typingExpr sizeNode

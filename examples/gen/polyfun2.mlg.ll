@@ -1,7 +1,7 @@
 ; ModuleID = './examples/polyfun2.mlg'
 source_filename = "./examples/polyfun2.mlg"
 
-define i8* @"$fo195"(i8*, i8*) {
+define i8* @"$fo161"(i8*, i8*) {
   %3 = bitcast i8* %0 to { i64 (i8*, i64)*, i8* }*
   %4 = ptrtoint i8* %1 to i64
   %5 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %3, i32 0, i32 0
@@ -13,7 +13,7 @@ define i8* @"$fo195"(i8*, i8*) {
   ret i8* %10
 }
 
-define i8* @"$fo167"(i8*, i8*) {
+define i8* @"$fo137"(i8*, i8*) {
   %3 = bitcast i8* %0 to { i64 (i8*, i64)*, i8* }*
   %4 = ptrtoint i8* %1 to i64
   %5 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %3, i32 0, i32 0
@@ -25,7 +25,7 @@ define i8* @"$fo167"(i8*, i8*) {
   ret i8* %10
 }
 
-define i64 @"$fo129"(i8*, i64) {
+define i64 @"$fo107"(i8*, i64) {
   %3 = bitcast i8* %0 to { i8* (i8*, i8*)*, i8* }*
   %4 = inttoptr i64 %1 to i8*
   %5 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %3, i32 0, i32 0
@@ -224,7 +224,7 @@ body_1:                                           ; preds = %cond_1
   %64 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
   %65 = bitcast i8* %64 to { i64 (i8*, i64)*, i8* }*
   %66 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %65, i32 0, i32 0
-  store i64 (i8*, i64)* @"$fo129", i64 (i8*, i64)** %66
+  store i64 (i8*, i64)* @"$fo107", i64 (i8*, i64)** %66
   %67 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %65, i32 0, i32 1
   store i8* %63, i8** %67
   %68 = getelementptr { { i64 (i8*, i64)*, i8* }*, i64 }, { { i64 (i8*, i64)*, i8* }*, i64 }* %60, i32 0, i32 0
@@ -290,7 +290,7 @@ end_2:                                            ; preds = %cond_2
   %105 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
   %106 = bitcast i8* %105 to { i8* (i8*, i8*)*, i8* }*
   %107 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %106, i32 0, i32 0
-  store i8* (i8*, i8*)* @"$fo167", i8* (i8*, i8*)** %107
+  store i8* (i8*, i8*)* @"$fo137", i8* (i8*, i8*)** %107
   %108 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %106, i32 0, i32 1
   store i8* %104, i8** %108
   %109 = getelementptr { { i8* (i8*, i8*)*, i8* }*, i8* }, { { i8* (i8*, i8*)*, i8* }*, i8* }* %101, i32 0, i32 0
@@ -319,7 +319,7 @@ end_2:                                            ; preds = %cond_2
   %130 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
   %131 = bitcast i8* %130 to { i8* (i8*, i8*)*, i8* }*
   %132 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %131, i32 0, i32 0
-  store i8* (i8*, i8*)* @"$fo195", i8* (i8*, i8*)** %132
+  store i8* (i8*, i8*)* @"$fo161", i8* (i8*, i8*)** %132
   %133 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %131, i32 0, i32 1
   store i8* %129, i8** %133
   %134 = getelementptr { { i8* (i8*, i8*)*, i8* }*, i8* }, { { i8* (i8*, i8*)*, i8* }*, i8* }* %126, i32 0, i32 0

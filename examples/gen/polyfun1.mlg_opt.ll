@@ -3,7 +3,7 @@ source_filename = "./examples/polyfun1.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-define i8* @"$fo86"(i8* nocapture readonly, i8*) {
+define i8* @"$fo75"(i8* nocapture readonly, i8*) {
   %3 = ptrtoint i8* %1 to i64
   %4 = bitcast i8* %0 to i64 (i8*, i64)**
   %5 = load i64 (i8*, i64)*, i64 (i8*, i64)** %4, align 8
@@ -108,7 +108,7 @@ body_0:
   %28 = load i64, i64* %27, align 8
   %29 = tail call i8* @GC_malloc(i64 16)
   %30 = bitcast i8* %29 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo86", i8* (i8*, i8*)** %30, align 8
+  store i8* (i8*, i8*)* @"$fo75", i8* (i8*, i8*)** %30, align 8
   %31 = getelementptr i8, i8* %29, i64 8
   %32 = bitcast i8* %31 to i64*
   store i64 %28, i64* %32, align 8

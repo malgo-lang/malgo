@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -36,17 +37,30 @@ insertLet v           = do
   tell $ Endo $ Let x v'
   pure x
 
+insertLet' :: (MonadUniq f, MonadWriter (Endo (Expr (ID Type))) f) => Expr (ID Type) -> f (ID Type)
+insertLet' (Var x) = pure x
+insertLet' v       = do
+  x <- newTmp "k" (typeOf v)
+  tell $ Endo $ Let x v
+  pure x
+
 appInsert :: Functor f => WriterT (Endo b) f b -> f b
 appInsert m = uncurry (flip appEndo) <$> runWriterT m
 
 transToHIR :: MonadUniq m => S.Expr (ID Type) -> m (Expr (ID Type))
-transToHIR (S.Var    _ a           ) = pure $ Var a
-transToHIR (S.Int    _ x           ) = pure $ Lit $ Int x
-transToHIR (S.Float  _ x           ) = pure $ Lit $ Float x
-transToHIR (S.Bool   _ x           ) = pure $ Lit $ Bool x
-transToHIR (S.Char   _ x           ) = pure $ Lit $ Char x
-transToHIR (S.String _ x           ) = pure $ Lit $ String x
-transToHIR (S.Tuple  _ xs          ) = appInsert $ Tuple <$> mapM insertLet xs
+transToHIR (S.Var    _ a       ) = pure $ Var a
+transToHIR (S.Int    _ x       ) = pure $ Lit $ Int x
+transToHIR (S.Float  _ x       ) = pure $ Lit $ Float x
+transToHIR (S.Bool   _ x       ) = pure $ Lit $ Bool x
+transToHIR (S.Char   _ x       ) = pure $ Lit $ Char x
+transToHIR (S.String _ x       ) = pure $ Lit $ String x
+transToHIR (S.Tuple  _ xs      ) = appInsert $ Tuple <$> mapM insertLet xs
+transToHIR (S.Array  _ []      ) = error "cannot make empty array"
+transToHIR (S.Array  i (x : xs)) = appInsert $ do
+  arr <- insertLet $ S.MakeArray i x (S.Int i $ fromIntegral $ length (x : xs))
+  forM_ (zip [1 ..] xs)
+    $ \(i, v) -> insertLet' =<< ArrayWrite arr <$> insertLet' (Lit (Int i)) <*> insertLet v
+  pure $ Var arr
 transToHIR (S.MakeArray _ init size) = appInsert $ MakeArray <$> insertLet init <*> insertLet size
 transToHIR (S.ArrayRead _ arr  ix  ) = appInsert $ ArrayRead <$> insertLet arr <*> insertLet ix
 transToHIR (S.ArrayWrite _ arr ix val) =

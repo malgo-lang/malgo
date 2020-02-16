@@ -3,7 +3,7 @@ source_filename = "./examples/polyfun2.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-define i8* @"$fo195"(i8* nocapture readonly, i8*) {
+define i8* @"$fo161"(i8* nocapture readonly, i8*) {
   %3 = ptrtoint i8* %1 to i64
   %4 = bitcast i8* %0 to i64 (i8*, i64)**
   %5 = load i64 (i8*, i64)*, i64 (i8*, i64)** %4, align 8
@@ -15,7 +15,7 @@ define i8* @"$fo195"(i8* nocapture readonly, i8*) {
   ret i8* %10
 }
 
-define i8* @"$fo167"(i8* nocapture readonly, i8*) {
+define i8* @"$fo137"(i8* nocapture readonly, i8*) {
   %3 = ptrtoint i8* %1 to i64
   %4 = bitcast i8* %0 to i64 (i8*, i64)**
   %5 = load i64 (i8*, i64)*, i64 (i8*, i64)** %4, align 8
@@ -27,7 +27,7 @@ define i8* @"$fo167"(i8* nocapture readonly, i8*) {
   ret i8* %10
 }
 
-define i64 @"$fo129"(i8* nocapture readonly, i64) {
+define i64 @"$fo107"(i8* nocapture readonly, i64) {
   %3 = inttoptr i64 %1 to i8*
   %4 = bitcast i8* %0 to i8* (i8*, i8*)**
   %5 = load i8* (i8*, i8*)*, i8* (i8*, i8*)** %4, align 8
@@ -187,7 +187,7 @@ body_1:                                           ; preds = %body_0, %body_1
   %40 = load i64, i64* %39, align 8
   %41 = tail call i8* @GC_malloc(i64 16)
   %42 = bitcast i8* %41 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$fo129", i64 (i8*, i64)** %42, align 8
+  store i64 (i8*, i64)* @"$fo107", i64 (i8*, i64)** %42, align 8
   %43 = getelementptr i8, i8* %41, i64 8
   %44 = bitcast i8* %43 to i64*
   store i64 %40, i64* %44, align 8
@@ -232,7 +232,7 @@ end_1:                                            ; preds = %body_1, %body_0
   %71 = load i64, i64* %70, align 8
   %72 = tail call i8* @GC_malloc(i64 16)
   %73 = bitcast i8* %72 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo167", i8* (i8*, i8*)** %73, align 8
+  store i8* (i8*, i8*)* @"$fo137", i8* (i8*, i8*)** %73, align 8
   %74 = getelementptr i8, i8* %72, i64 8
   %75 = bitcast i8* %74 to i64*
   store i64 %71, i64* %75, align 8
@@ -256,7 +256,7 @@ end_1:                                            ; preds = %body_1, %body_0
   %91 = load i64, i64* %90, align 8
   %92 = tail call i8* @GC_malloc(i64 16)
   %93 = bitcast i8* %92 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo195", i8* (i8*, i8*)** %93, align 8
+  store i8* (i8*, i8*)* @"$fo161", i8* (i8*, i8*)** %93, align 8
   %94 = getelementptr i8, i8* %92, i64 8
   %95 = bitcast i8* %94 to i64*
   store i64 %91, i64* %95, align 8

@@ -43,15 +43,16 @@ getID info name = do
     Nothing -> errorDoc $ "error(rename):" <+> pPrint info <+> pPrint name <+> "is not defined"
 
 renameExpr :: (MonadUniq m, MonadReader Known m) => Expr String -> m (Expr (ID ()))
-renameExpr (Var    info name          ) = Var info <$> getID info name
-renameExpr (Int    info x             ) = pure $ Int info x
-renameExpr (Float  info x             ) = pure $ Float info x
-renameExpr (Bool   info x             ) = pure $ Bool info x
-renameExpr (Char   info x             ) = pure $ Char info x
-renameExpr (String info x             ) = pure $ String info x
-renameExpr (Tuple info xs             ) = Tuple info <$> mapM renameExpr xs
-renameExpr (MakeArray   info init size) = MakeArray info <$> renameExpr init <*> renameExpr size
-renameExpr (ArrayRead   info arr  ix  ) = ArrayRead info <$> renameExpr arr <*> renameExpr ix
+renameExpr (Var    info name        ) = Var info <$> getID info name
+renameExpr (Int    info x           ) = pure $ Int info x
+renameExpr (Float  info x           ) = pure $ Float info x
+renameExpr (Bool   info x           ) = pure $ Bool info x
+renameExpr (Char   info x           ) = pure $ Char info x
+renameExpr (String info x           ) = pure $ String info x
+renameExpr (Tuple  info xs          ) = Tuple info <$> mapM renameExpr xs
+renameExpr (Array  info xs          ) = Array info <$> mapM renameExpr xs
+renameExpr (MakeArray info init size) = MakeArray info <$> renameExpr init <*> renameExpr size
+renameExpr (ArrayRead info arr  ix  ) = ArrayRead info <$> renameExpr arr <*> renameExpr ix
 renameExpr (ArrayWrite info arr ix val) =
   ArrayWrite info <$> renameExpr arr <*> renameExpr ix <*> renameExpr val
 renameExpr (Fn info params body) = withKnowns (map fst params) $ do

@@ -1,0 +1,7 @@
+let
+  extern print_int : Int -> {} = "print_int"
+  extern newline : () -> {} = "newline"
+  val a : [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+in
+  print_int(a[1]); newline(); print_int(a[2]); newline()
+end
