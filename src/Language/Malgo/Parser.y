@@ -127,7 +127,7 @@ params : params ',' param { $3 : $1 }
        | param { [$1] }
 
 param : id ':' Type { (_id . _tag $ $1, Just $3) }
-	  | id { (_id . _tag $ $1, Nothing) }
+       | id { (_id . _tag $ $1, Nothing) }
 
 exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
@@ -189,14 +189,14 @@ args : args ',' exp { $3 : $1 }
      | exp { [$1] }
 
 Type : Int { TyApp IntC [] }
-	   | Float { TyApp FloatC [] }
-	   | Bool { TyApp BoolC [] }
-	   | Char { TyApp CharC [] }
-	   | String { TyApp StringC [] }
+     | Float { TyApp FloatC [] }
+     | Bool { TyApp BoolC [] }
+     | Char { TyApp CharC [] }
+     | String { TyApp StringC [] }
      | Type '->' Type { TyApp FunC [$3, $1] }
      | '{' '}' { TyApp TupleC [] }
      | '{' Types '}' { TyApp TupleC (reverse $2) }
-	   | '(' ')' '->' Type { TyApp FunC [$4] }
+     | '(' ')' '->' Type { TyApp FunC [$4] }
      | '(' Types ')' '->' Type { TyApp FunC ($5 : reverse $2) }
      | '[' Type ']' { TyApp ArrayC [$2] }
 
