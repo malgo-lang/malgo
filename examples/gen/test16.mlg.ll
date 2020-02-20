@@ -1,7 +1,7 @@
 ; ModuleID = './examples/test16.mlg'
 source_filename = "./examples/test16.mlg"
 
-define i8* @"$fo55"(i8*, i8*) {
+define i8* @"$fo58"(i8*, i8*) {
   %3 = bitcast i8* %0 to { i8* (i8*, i8*)*, i8* }*
   %4 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %3, i32 0, i32 0
   %5 = load i8* (i8*, i8*)*, i8* (i8*, i8*)** %4
@@ -11,7 +11,7 @@ define i8* @"$fo55"(i8*, i8*) {
   ret i8* %8
 }
 
-define i64 @"$fo44"(i8*, i64) {
+define i64 @"$fo47"(i8*, i64) {
   %3 = bitcast i8* %0 to { i8* (i8*, i8*)*, i8* }*
   %4 = inttoptr i64 %1 to i8*
   %5 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %3, i32 0, i32 0
@@ -85,7 +85,7 @@ define i32 @main() {
   %33 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
   %34 = bitcast i8* %33 to { i64 (i8*, i64)*, i8* }*
   %35 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %34, i32 0, i32 0
-  store i64 (i8*, i64)* @"$fo44", i64 (i8*, i64)** %35
+  store i64 (i8*, i64)* @"$fo47", i64 (i8*, i64)** %35
   %36 = getelementptr { i64 (i8*, i64)*, i8* }, { i64 (i8*, i64)*, i8* }* %34, i32 0, i32 1
   store i8* %32, i8** %36
   %37 = getelementptr { { i64 (i8*, i64)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }, { { i64 (i8*, i64)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }* %30, i32 0, i32 0
@@ -95,7 +95,7 @@ define i32 @main() {
   %40 = call i8* @GC_malloc(i64 mul nuw (i64 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i64), i64 2))
   %41 = bitcast i8* %40 to { i8* (i8*, i8*)*, i8* }*
   %42 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %41, i32 0, i32 0
-  store i8* (i8*, i8*)* @"$fo55", i8* (i8*, i8*)** %42
+  store i8* (i8*, i8*)* @"$fo58", i8* (i8*, i8*)** %42
   %43 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %41, i32 0, i32 1
   store i8* %39, i8** %43
   %44 = getelementptr { { i64 (i8*, i64)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }, { { i64 (i8*, i64)*, i8* }*, { i8* (i8*, i8*)*, i8* }* }* %30, i32 0, i32 1
