@@ -79,7 +79,7 @@ typingExpr (Tuple _ xs) = do
   ts <- mapM typingExpr xs
   pure $ TyApp TupleC ts
 typingExpr (Array _ xs) = do
-  ts <- mapM typingExpr xs
+  ts <- mapM (instantiate <=< typingExpr) xs
   ty <- newTyMeta
   tell (toList $ fmap (ty :~) ts)
   pure $ TyApp ArrayC [ty]
@@ -181,7 +181,7 @@ typingExpr (BinOp _ op x y) = do
   typingOp And  = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
   typingOp Or   = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
 typingExpr (Match _ scrutinee clauses) = do
-  ty1 <- typingExpr scrutinee
+  ty1 <- inst1 =<< typingExpr scrutinee
   let (pats, exprs) = unzip clauses
   mapM_ (typingPat ty1) pats
   t :| _ <- mapM typingExpr exprs
