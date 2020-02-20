@@ -1,0 +1,7 @@
+let
+  fun snd(p) = match p with
+               | {_, x} -> x
+  val f = {(fn (x) -> x)(1), fn (x) -> fn (y) -> {x, [y]}}
+  val g = (match f with | {_, x} -> x)(1)
+in {}
+end

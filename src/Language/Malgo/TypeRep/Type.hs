@@ -15,14 +15,19 @@ import           Text.PrettyPrint.HughesPJClass ( parens
 
 type TyVar = Int
 
+data Scheme = Forall [TyVar] Type
+  deriving stock (Eq, Show, Ord, Read, Generic)
+
 -- | Malgoの組み込みデータ型
 data Type = TyApp TyCon [Type]
           | TyMeta TyVar
-          | TyForall [TyVar] Type
   deriving stock (Eq, Show, Ord, Read, Generic)
 
 data TyCon = FunC | IntC | FloatC | BoolC | CharC | StringC | TupleC | ArrayC
   deriving stock (Eq, Show, Ord, Read, Generic)
+
+instance Pretty Scheme where
+  pPrint (Forall ts t) = "forall" <+> sep (map pPrint ts) <> "." <+> pPrint t
 
 instance Pretty Type where
   pPrint (TyApp FunC (ret : params)) =
@@ -30,7 +35,6 @@ instance Pretty Type where
   pPrint (TyApp TupleC ts) = braces $ sep $ punctuate "," $ map pPrint ts
   pPrint (TyApp c      ts) = pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
   pPrint (TyMeta v       ) = pPrint v
-  pPrint (TyForall ts t  ) = "forall" <+> sep (map pPrint ts) <> "." <+> pPrint t
 
 instance Pretty TyCon where
   pPrint FunC    = "Fun"
@@ -55,7 +59,5 @@ comparable (TyApp BoolC  []) = True
 comparable (TyApp CharC  []) = True
 comparable _                 = False
 
-removeExplictForall :: Type -> Type
-removeExplictForall (TyForall _ t ) = removeExplictForall t
-removeExplictForall (TyApp    c ts) = TyApp c $ map removeExplictForall ts
-removeExplictForall (TyMeta x     ) = TyMeta x
+removeExplictForall :: Scheme -> Type
+removeExplictForall (Forall _ t) = t

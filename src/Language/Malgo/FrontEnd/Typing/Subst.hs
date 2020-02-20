@@ -35,14 +35,16 @@ class Substitutable a where
   apply :: Subst -> a -> a
   ftv :: a -> Set TyVar
 
+instance Substitutable Scheme where
+  apply s (Forall ts t) | null (keys (unwrapSubst s) `intersect` ts) = Forall ts $ apply s t
+                        | otherwise = error "invalid subst"
+  ftv (Forall ts t) = ftv t \\ fromList ts
+
 instance Substitutable Type where
   apply s t@(TyMeta a  ) = lookupDefault t a s
   apply s (  TyApp c ts) = TyApp c $ apply s ts
-  apply s (TyForall ts t) | null (keys (unwrapSubst s) `intersect` ts) = TyForall ts $ apply s t
-                          | otherwise = error "invalid subst"
-  ftv (TyMeta a      ) = one a
-  ftv (TyApp    _  ts) = foldMap ftv ts
-  ftv (TyForall ts t ) = ftv t \\ fromList ts
+  ftv (TyMeta a  ) = one a
+  ftv (TyApp _ ts) = foldMap ftv ts
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
   apply = fmap . apply
