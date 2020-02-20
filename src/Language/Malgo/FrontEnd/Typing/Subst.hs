@@ -10,11 +10,10 @@ module Language.Malgo.FrontEnd.Typing.Subst
   )
 where
 
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( delete )
 
 import           Language.Malgo.TypeRep.Type
 
-import           Data.List                      ( intersect )
 import           Relude.Extra.Map
 
 newtype Subst = Subst { unwrapSubst :: Map TyVar Type }
@@ -36,8 +35,8 @@ class Substitutable a where
   ftv :: a -> Set TyVar
 
 instance Substitutable Scheme where
-  apply s (Forall ts t) | null (keys (unwrapSubst s) `intersect` ts) = Forall ts $ apply s t
-                        | otherwise = error "invalid subst"
+  apply s (Forall ts t) = Forall ts $ apply s' t
+    where s' = Subst $ foldr delete (unwrapSubst s) ts
   ftv (Forall ts t) = ftv t \\ fromList ts
 
 instance Substitutable Type where

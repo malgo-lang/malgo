@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -19,7 +18,6 @@ import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.Syntax
                                          hiding ( info )
-import qualified Language.Malgo.IR.Syntax      as Syntax
 
 import           Language.Malgo.TypeRep.Type
 
@@ -35,14 +33,11 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
   passName = "Typing"
   isDump   = dumpTyped
   trans e = evaluatingStateT mempty $ do
-    (_, cs) <- runWriterT $ typingExpr e
-    let subst = catchUnifyError (Syntax.info e) "toplevel" (solve cs)
-    env <- gets (apply subst)
+    (_, subst) <- runWriterT $ typingExpr e
+    env        <- gets (apply subst)
 
-    opt <- liftMalgo $ asks maOption
-    when (dumpTypeTable opt) $ do
-      let xs = map (\x@ID { idMeta } -> (x, idMeta)) (toList env)
-      liftMalgo $ dump xs
+    opt        <- liftMalgo $ asks maOption
+    when (dumpTypeTable opt) $ liftMalgo $ dump (toList env)
 
     pure $ fmap (\x -> removeExplictForall <$> fromJust (lookup x env)) e
 
@@ -54,12 +49,10 @@ newTyMeta = TyMeta <$> getUniq
 generalize :: Env -> Type -> Scheme
 generalize env t = Forall fv t where fv = toList $ ftv t \\ ftv env
 
-letVar :: MonadState Env m => Info -> Env -> ID () -> Type -> [Constraint] -> m ()
-letVar info env var ty cs = do
-  let subst = catchUnifyError info (pPrint var) (solve cs)
-  let sc    = generalize (apply subst env) (apply subst ty)
+letVar :: MonadState Env m => Env -> ID () -> Type -> m ()
+letVar env var ty = do
+  let sc = generalize env ty
   defineVar var sc
-  modify (apply subst)
 
 defineVar :: MonadState Env m => ID () -> Scheme -> m ()
 defineVar x t = modify (insert x $ x { idMeta = t })
@@ -69,99 +62,96 @@ lookupVar x = do
   Just ID { idMeta = scheme } <- lookup x <$> get
   instantiate scheme
 
-typingExpr :: (MonadWriter [Constraint] f, MonadState Env f, MonadUniq f, MonadFail f)
+updateSubst :: (MonadWriter Subst m, MonadState Env m) => Info -> Doc -> [Constraint] -> m ()
+updateSubst i doc cs = do
+  let subst = catchUnifyError i doc $ solve cs
+  tell subst
+  modify (apply subst)
+
+typingExpr :: (MonadWriter Subst m, MonadState Env m, MonadUniq m, MonadFail m)
            => Expr (ID ())
-           -> f Type
-typingExpr (Var _ x)    = lookupVar x
-typingExpr Int{}        = pure $ TyApp IntC []
-typingExpr Float{}      = pure $ TyApp FloatC []
-typingExpr Bool{}       = pure $ TyApp BoolC []
-typingExpr Char{}       = pure $ TyApp CharC []
-typingExpr String{}     = pure $ TyApp StringC []
-typingExpr (Tuple _ xs) = do
+           -> m Type
+typingExpr e = do
+  (t, subst) <- listen $ typingExpr' e
+  pure $ apply subst t
+
+typingExpr' :: (MonadWriter Subst f, MonadState Env f, MonadUniq f, MonadFail f)
+            => Expr (ID ())
+            -> f Type
+typingExpr' (Var _ x)    = lookupVar x
+typingExpr' Int{}        = pure $ TyApp IntC []
+typingExpr' Float{}      = pure $ TyApp FloatC []
+typingExpr' Bool{}       = pure $ TyApp BoolC []
+typingExpr' Char{}       = pure $ TyApp CharC []
+typingExpr' String{}     = pure $ TyApp StringC []
+typingExpr' (Tuple _ xs) = do
   ts <- mapM typingExpr xs
   pure $ TyApp TupleC ts
-typingExpr (Array _ xs) = do
+typingExpr' (Array i xs) = do
   ts <- mapM typingExpr xs
   ty <- newTyMeta
-  tell (toList $ fmap (ty :~) ts)
+  updateSubst i "array literal" (toList $ fmap (ty :~) ts)
   pure $ TyApp ArrayC [ty]
-typingExpr (MakeArray _ initNode sizeNode) = do
+typingExpr' (MakeArray i initNode sizeNode) = do
   initTy <- typingExpr initNode
   sizeTy <- typingExpr sizeNode
-  tell [TyApp IntC [] :~ sizeTy]
+  updateSubst i "make array" [TyApp IntC [] :~ sizeTy]
   pure $ TyApp ArrayC [initTy]
-typingExpr (ArrayRead _ arr _) = do
+typingExpr' (ArrayRead i arr _) = do
   arrTy    <- typingExpr arr
   resultTy <- newTyMeta
-  tell [TyApp ArrayC [resultTy] :~ arrTy]
+  updateSubst i "array read" [TyApp ArrayC [resultTy] :~ arrTy]
   pure resultTy
-typingExpr (ArrayWrite _ arr ix val) = do
+typingExpr' (ArrayWrite i arr ix val) = do
   arrTy <- typingExpr arr
   ixTy  <- typingExpr ix
   valTy <- typingExpr val
-  tell [ixTy :~ TyApp IntC [], arrTy :~ TyApp ArrayC [valTy]]
+  updateSubst i "array write" [ixTy :~ TyApp IntC [], arrTy :~ TyApp ArrayC [valTy]]
   pure $ TyApp TupleC []
-typingExpr (Call _ fn args) = do
+typingExpr' (Call i fn args) = do
   fnTy     <- typingExpr fn
   argTypes <- mapM typingExpr args
   retTy    <- newTyMeta
-  tell [TyApp FunC (retTy : argTypes) :~ fnTy]
+  updateSubst i "call" [TyApp FunC (retTy : argTypes) :~ fnTy]
   pure retTy
-typingExpr (Fn _ params body) = do
+typingExpr' (Fn _ params body) = do
   paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
   mapM_ (\((p, _), t) -> defineVar p $ Forall [] t) (zip params paramTypes)
   t <- typingExpr body
   pure $ TyApp FunC (t : paramTypes)
-typingExpr (Seq i e1 e2) = do
-  (_, cs1) <- listen $ typingExpr e1
-  catchUnifyError i "seq" (solve cs1) `seq` typingExpr e2
-typingExpr (Let _ (ValDec i name mtyp val) body) = do
-  env            <- get
+typingExpr' (Seq _ e1                       e2  ) = typingExpr e1 >> typingExpr e2
+typingExpr' (Let _ (ValDec i name mtyp val) body) = do
+  env     <- get
+  valType <- typingExpr val
 
-  (valType, cs1) <- listen $ typingExpr val
-
-  cs2            <- case mtyp of
-    Just typ -> tell [valType :~ typ] >> pure (valType :~ typ : cs1)
-    Nothing  -> pure cs1
+  case mtyp of
+    Just typ -> updateSubst i "val signature" [valType :~ typ]
+    Nothing  -> pure ()
 
   -- value restriction
-  if isValue val then letVar i env name valType cs2 else defineVar name (Forall [] valType)
+  if isValue val then letVar env name valType else defineVar name (Forall [] valType)
 
   typingExpr body
-typingExpr (Let _ (ExDec _ name typ _) body) = do
+typingExpr' (Let _ (ExDec _ name typ _) body) = do
   defineVar name (Forall [] typ)
   typingExpr body
-typingExpr (Let _ (FunDec fs) e) = do
+typingExpr' (Let _ (FunDec fs) e) = do
   env <- get
   mapM_ prepare            fs
   mapM_ (typingFunDec env) fs
   typingExpr e
- where
-  prepare (_, f, _, _, _) = defineVar f . Forall [] =<< newTyMeta
-  typingFunDec env (i', f, params, mretty, body) = do
-    paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
-    retType    <- mretty `whenNothing` newTyMeta
-
-    mapM_ (\((p, _), t) -> defineVar p $ Forall [] t) (zip params paramTypes)
-    (t, cs1) <- listen $ typingExpr body
-    tv       <- lookupVar f
-    let cs2 = [tv :~ TyApp FunC (retType : paramTypes), t :~ retType]
-    tell cs2
-    letVar i' env f tv $ cs2 <> cs1
-
-typingExpr (If _ c t f) = do
+typingExpr' (If i c t f) = do
   ct <- typingExpr c
   tt <- typingExpr t
   ft <- typingExpr f
-  tell [ct :~ TyApp BoolC [], tt :~ ft]
+  updateSubst i "if" [ct :~ TyApp BoolC [], tt :~ ft]
   pure ft
-typingExpr (BinOp _ op x y) = do
+typingExpr' (BinOp i op x y) = do
   opType     <- typingOp op
   xt         <- typingExpr x
   yt         <- typingExpr y
   resultType <- newTyMeta
-  tell [opType :~ TyApp FunC [resultType, xt, yt]]
+  updateSubst i "binary op" [opType :~ TyApp FunC [resultType, xt, yt]]
   pure resultType
  where
   typingOp Add  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
@@ -181,22 +171,42 @@ typingExpr (BinOp _ op x y) = do
   typingOp Ge   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
   typingOp And  = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
   typingOp Or   = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
-typingExpr (Match _ scrutinee clauses) = do
+typingExpr' (Match i scrutinee clauses) = do
   ty1 <- typingExpr scrutinee
   let (pats, exprs) = unzip clauses
-  mapM_ (typingPat ty1) pats
+  mapM_ (typingPat i ty1) pats
   t :| _ <- mapM typingExpr exprs
   pure t
 
-typingPat :: (MonadState Env m, MonadUniq m, MonadWriter [Constraint] m)
-          => Type
+prepare :: (MonadState Env m, MonadUniq m) => (a, ID (), c, d, e) -> m ()
+prepare (_, f, _, _, _) = defineVar f . Forall [] =<< newTyMeta
+
+typingFunDec :: (MonadUniq m, MonadState Env m, MonadWriter Subst m, MonadFail m)
+             => Env
+             -> (Info, ID (), [(ID (), Maybe Type)], Maybe Type, Expr (ID ()))
+             -> m ()
+typingFunDec env (i', f, params, mretty, body) = do
+  (tv, subst) <- listen $ do
+    paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
+    retType    <- mretty `whenNothing` newTyMeta
+
+    mapM_ (\((p, _), t) -> defineVar p $ Forall [] t) (zip params paramTypes)
+    t  <- typingExpr body
+    tv <- lookupVar f
+    updateSubst i' "fun dec" [tv :~ TyApp FunC (retType : paramTypes), t :~ retType]
+    pure tv
+  letVar (apply subst env) f (apply subst tv)
+
+typingPat :: (MonadState Env m, MonadUniq m, MonadWriter Subst m)
+          => Info
+          -> Type
           -> Pat (ID ())
           -> m ()
-typingPat ty (VarP   x ) = defineVar x (Forall [] ty)
-typingPat ty (TupleP ps) = do
+typingPat _ ty (VarP   x ) = defineVar x (Forall [] ty)
+typingPat i ty (TupleP ps) = do
   vs <- replicateM (length ps) newTyMeta
-  tell [ty :~ TyApp TupleC vs]
-  zipWithM_ typingPat vs ps
+  updateSubst i "tuple pat" [ty :~ TyApp TupleC vs]
+  zipWithM_ (typingPat i) vs ps
 
 isValue :: Expr a -> Bool
 isValue Var{}        = True
