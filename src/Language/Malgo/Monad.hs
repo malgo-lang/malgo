@@ -50,6 +50,7 @@ data Opt = Opt
 
 data MalgoEnv m = MalgoEnv
   { maOption     :: Opt
+  , maSource :: Text
   , maLogAction  :: LogAction m Message
   }
 
@@ -64,11 +65,12 @@ newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT UniqSu
   deriving Semigroup via (Ap MalgoM a)
   deriving Monoid via (Ap MalgoM a)
 
-runMalgo :: MonadIO m => MalgoM a -> Opt -> m a
-runMalgo (MalgoM m) opt = liftIO $ evaluatingStateT (UniqSupply 0) $ runReaderT
+runMalgo :: MonadIO m => MalgoM a -> Opt -> Text -> m a
+runMalgo (MalgoM m) opt source = liftIO $ evaluatingStateT (UniqSupply 0) $ runReaderT
   m
   MalgoEnv
     { maOption    = opt
+    , maSource    = source
     , maLogAction = if isDebugMode opt
                       then richMessageAction
                       else cfilter (\(Colog.Msg sev _ _) -> sev > Colog.Debug) richMessageAction
@@ -97,19 +99,19 @@ class Monad m => MonadUniq m where
 
 instance MonadUniq MalgoM where
   getUniqSupply = get
-  getUniq = do
+  getUniq       = do
     i <- uniqSupply <$> getUniqSupply
     modify (\s -> s { uniqSupply = i + 1 })
     pure i
 instance MonadUniq m => MonadUniq (ReaderT r m) where
   getUniqSupply = lift getUniqSupply
-  getUniq = lift getUniq
+  getUniq       = lift getUniq
 instance MonadUniq m => MonadUniq (ExceptT e m) where
   getUniqSupply = lift getUniqSupply
-  getUniq = lift getUniq
+  getUniq       = lift getUniq
 instance MonadUniq m => MonadUniq (StateT s m) where
   getUniqSupply = lift getUniqSupply
-  getUniq = lift getUniq
+  getUniq       = lift getUniq
 instance MonadUniq m => MonadUniq (WriterT w m) where
   getUniqSupply = lift getUniqSupply
-  getUniq = lift getUniq
+  getUniq       = lift getUniq

@@ -13,8 +13,10 @@ where
 import           Language.Malgo.Monad          as M
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
 
-import qualified Language.Malgo.IR.Syntax      as Syntax
+import qualified Language.Malgo.Lexer          as Lexer
+import qualified Language.Malgo.Parser         as Parser
 
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
@@ -51,9 +53,14 @@ parseOpt = execParser $ info
   )
   (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
 
-compile :: MonadIO m => String -> Syntax.Expr String -> Opt -> m L.Module
-compile filename ast = M.runMalgo $ do
-  opt <- asks maOption
+compile :: MonadIO m => Opt -> Text -> m L.Module
+compile = M.runMalgo $ do
+  opt    <- asks maOption
+  source <- asks maSource
+  tokens <- Lexer.tokenize () (srcName opt) source
+  let ast = case Parser.parseExpr <$> tokens of
+        Left  x -> error $ toText $ pShow x
+        Right x -> x
   when (dumpParsed opt) $ dump ast
   llvmir <-
     transWithDump @Rename ast
@@ -64,7 +71,7 @@ compile filename ast = M.runMalgo $ do
     >>= transWithDump @MIRLint
     >>= transWithDump @GenLIR
     >>= trans @GenLLVM
-  pure $ L.defaultModule { L.moduleName           = fromString filename
-                         , L.moduleSourceFileName = encodeUtf8 filename
+  pure $ L.defaultModule { L.moduleName           = fromString (srcName opt)
+                         , L.moduleSourceFileName = encodeUtf8 (srcName opt)
                          , L.moduleDefinitions    = llvmir
                          }
