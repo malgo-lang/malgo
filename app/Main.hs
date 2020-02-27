@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 import           Language.Malgo.Driver
@@ -13,4 +14,7 @@ main = do
 
   ll  <- compile opt =<< readFileText (srcName opt)
 
-  writeFileLText (dstName opt) $ ppllvm ll
+  let (x:xs) = lines $ toText $ ppllvm ll
+  let ir = unlines (x : ("source_filename = " <> show (srcName opt)) : xs)
+
+  writeFileText (dstName opt) ir
