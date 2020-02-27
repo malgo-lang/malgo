@@ -256,7 +256,8 @@ genConstant (Word32  x    ) = pure $ int32 $ toInteger x
 genConstant (Word64  x    ) = pure $ int64 $ toInteger x
 genConstant (Float64 x    ) = pure $ double x
 genConstant (String  str  ) = do
-  n <- fresh
+  i <- lift $ lift getUniq
+  let n = fromString ("$globle_str_" <> show i)
   ConstantOperand <$> globalStringPtr str n
 
 genBinOp :: MonadIRBuilder m => IR.Op -> Operand -> Operand -> m Operand
