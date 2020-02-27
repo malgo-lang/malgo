@@ -59,7 +59,6 @@ library
   build-depends:
       array
     , base
-    , bytestring
     , containers
     , co-log
     , lens
@@ -86,7 +85,6 @@ executable malgo
     , llvm-hs-pretty
     , malgo
     , relude
-    , text
   default-language: Haskell2010
 
 test-suite spec
