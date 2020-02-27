@@ -64,11 +64,8 @@ toExpr (S.Fn   _ ps e            ) = do
   pure $ LetRec [Def { name = fn, params = map fst ps, expr = e' }] (Var fn)
 toExpr (S.Seq _ e1                   e2  ) = runDef $ toVar e1 >> toExpr e2
 toExpr (S.Let _ (S.ValDec _ n _ val) body) = Let n <$> toExpr val <*> toExpr body
-toExpr (S.Let _ (S.FunDec fundecs  ) body) = LetRec <$> mapM transFunDec fundecs <*> toExpr body
- where
-  transFunDec (_, fn, params, _, fbody) = do
-    fbody' <- toExpr fbody
-    pure Def { name = fn, params = map fst params, expr = fbody' }
+toExpr (S.Let _ (S.FunDec fundecs) body) =
+  LetRec <$> mapM (\(_, fn, ps, _, e) -> Def fn (map fst ps) <$> toExpr e) fundecs <*> toExpr body
 toExpr (S.Let _ (S.ExDec _ n _ orig) body) = case typeOf n of
   TyApp FunC (_ : ps) -> do
     params <- mapM (newTmp "x") ps
