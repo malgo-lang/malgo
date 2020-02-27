@@ -3,7 +3,7 @@ source_filename = "./examples/tuple.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-@0 = internal unnamed_addr constant [15 x i8] c" is the answer\00"
+@"$globle_str_43" = unnamed_addr constant [15 x i8] c" is the answer\00"
 
 ; Function Attrs: norecurse nounwind readonly
 define i8* @snd_str5({ i64, i8* }* nocapture readonly) local_unnamed_addr #0 {
@@ -48,7 +48,7 @@ define i32 @main() local_unnamed_addr {
   store i64 42, i64* %2, align 8
   %3 = getelementptr i8, i8* %1, i64 8
   %4 = bitcast i8* %3 to i8**
-  store i8* getelementptr inbounds ([15 x i8], [15 x i8]* @0, i64 0, i64 0), i8** %4, align 8
+  store i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"$globle_str_43", i64 0, i64 0), i8** %4, align 8
   %5 = tail call {}* @print_int(i64 42)
   %6 = load i8*, i8** %4, align 8
   %7 = tail call {}* @println(i8* %6)
