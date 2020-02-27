@@ -63,7 +63,7 @@ library
     , containers
     , co-log
     , lens
-    , llvm-hs-pure ==9.0.*
+    , llvm-hs-pure
     , mtl
     , optparse-applicative
     , parsec
@@ -72,9 +72,6 @@ library
     , relude
     , text
     , transformers
-    , hoopl
-    -- for flycheck-haskell
-    , hspec
   default-language: Haskell2010
 
 executable malgo
@@ -86,13 +83,8 @@ executable malgo
   ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns
   build-depends:
       base
-    , containers
-    , llvm-hs ==9.0.*
-    , llvm-hs-pure ==9.0.*
+    , llvm-hs-pretty
     , malgo
-    , mtl
-    , pretty-show
-    , parsec
     , relude
     , text
   default-language: Haskell2010
