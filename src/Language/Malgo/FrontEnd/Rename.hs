@@ -21,6 +21,8 @@ import           Language.Malgo.IR.Syntax
 
 import           Language.Malgo.FrontEnd.Info
 
+import           Control.Monad.Cont
+
 data Rename
 
 instance Pass Rename (Expr String) (Expr (ID ())) where
@@ -92,11 +94,7 @@ renameClause :: (MonadUniq m, MonadReader Known m)
              => Info
              -> (Pat String, Expr String)
              -> m (Pat (ID ()), Expr (ID ()))
-renameClause info (p, e) = renamePat info p $ \p' -> (p', ) <$> renameExpr e
-
-renamePat :: (MonadUniq m, MonadReader Known m) => Info -> Pat String -> (Pat (ID ()) -> m b) -> m b
-renamePat info (VarP   x ) k = withKnowns [x] $ VarP <$> getID info x >>= k
-renamePat info (TupleP ps) k = go ps []
+renameClause info (p, e) = runContT (renamePat p) $ \p' -> (p', ) <$> renameExpr e
  where
-  go []       acc = k (TupleP $ reverse acc)
-  go (x : xs) acc = renamePat info x $ \x' -> go xs (x' : acc)
+  renamePat (VarP   x ) = ContT $ \k -> withKnowns [x] $ VarP <$> getID info x >>= k
+  renamePat (TupleP ps) = TupleP <$> mapM renamePat ps
