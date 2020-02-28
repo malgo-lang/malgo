@@ -68,7 +68,7 @@ updateSubst i doc cs = do
   tell subst
   modify (apply subst)
 
-applySubst :: (MonadState s m, Substitutable s, Substitutable b) => WriterT Subst m b -> m b
+applySubst :: (MonadState Env m, Substitutable a) => WriterT Subst m a -> m a
 applySubst m = do
   (x, subst) <- runWriterT m
   modify (apply subst)
@@ -76,24 +76,22 @@ applySubst m = do
 
 typingExpr :: (MonadState Env f, MonadUniq f, MonadFail f) => Expr (ID ()) -> f Type
 typingExpr (Var _ x)    = lookupVar x
-typingExpr Int{}        = pure $ TyApp IntC []
-typingExpr Float{}      = pure $ TyApp FloatC []
-typingExpr Bool{}       = pure $ TyApp BoolC []
-typingExpr Char{}       = pure $ TyApp CharC []
-typingExpr String{}     = pure $ TyApp StringC []
-typingExpr (Tuple _ xs) = applySubst $ do
-  ts <- mapM typingExpr xs
-  pure $ TyApp TupleC ts
+typingExpr Int{}        = pure intTy
+typingExpr Float{}      = pure floatTy
+typingExpr Bool{}       = pure boolTy
+typingExpr Char{}       = pure charTy
+typingExpr String{}     = pure stringTy
+typingExpr (Tuple _ xs) = applySubst $ tupleTy <$> mapM typingExpr xs
 typingExpr (Array i xs) = applySubst $ do
   ts <- mapM typingExpr xs
   ty <- newTyMeta
   updateSubst i "array literal" (toList $ fmap (ty :~) ts)
-  pure $ TyApp ArrayC [ty]
+  pure $ arrayTy ty
 typingExpr (MakeArray i initNode sizeNode) = applySubst $ do
   initTy <- typingExpr initNode
   sizeTy <- typingExpr sizeNode
   updateSubst i "make array" [TyApp IntC [] :~ sizeTy]
-  pure $ TyApp ArrayC [initTy]
+  pure $ arrayTy initTy
 typingExpr (ArrayRead i arr _) = applySubst $ do
   arrTy    <- typingExpr arr
   resultTy <- newTyMeta
@@ -104,7 +102,7 @@ typingExpr (ArrayWrite i arr ix val) = applySubst $ do
   ixTy  <- typingExpr ix
   valTy <- typingExpr val
   updateSubst i "array write" [ixTy :~ TyApp IntC [], arrTy :~ TyApp ArrayC [valTy]]
-  pure $ TyApp TupleC []
+  pure $ tupleTy []
 typingExpr (Call i fn args) = applySubst $ do
   fnTy     <- typingExpr fn
   argTypes <- mapM typingExpr args
@@ -113,9 +111,9 @@ typingExpr (Call i fn args) = applySubst $ do
   pure retTy
 typingExpr (Fn _ params body) = applySubst $ do
   paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
-  mapM_ (\((p, _), t) -> defineVar p $ Forall [] t) (zip params paramTypes)
-  t <- typingExpr body
-  pure $ TyApp FunC (t : paramTypes)
+  zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
+  retType <- typingExpr body
+  pure $ paramTypes --> retType
 typingExpr (Seq _ e1                       e2  ) = applySubst $ typingExpr e1 >> typingExpr e2
 typingExpr (Let _ (ValDec i name mtyp val) body) = applySubst $ do
   env     <- get
@@ -141,33 +139,33 @@ typingExpr (If i c t f) = applySubst $ do
   ct <- typingExpr c
   tt <- typingExpr t
   ft <- typingExpr f
-  updateSubst i "if" [ct :~ TyApp BoolC [], tt :~ ft]
+  updateSubst i "if" [ct :~ boolTy, tt :~ ft]
   pure ft
 typingExpr (BinOp i op x y) = applySubst $ do
   opType     <- typingOp op
   xt         <- typingExpr x
   yt         <- typingExpr y
   resultType <- newTyMeta
-  updateSubst i "binary op" [opType :~ TyApp FunC [resultType, xt, yt]]
+  updateSubst i "binary op" [opType :~ [xt, yt] --> resultType]
   pure resultType
  where
-  typingOp Add  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
-  typingOp Sub  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
-  typingOp Mul  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
-  typingOp Div  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
-  typingOp Mod  = pure $ TyApp FunC [TyApp IntC [], TyApp IntC [], TyApp IntC []]
-  typingOp FAdd = pure $ TyApp FunC [TyApp FloatC [], TyApp FloatC [], TyApp FloatC []]
-  typingOp FSub = pure $ TyApp FunC [TyApp FloatC [], TyApp FloatC [], TyApp FloatC []]
-  typingOp FMul = pure $ TyApp FunC [TyApp FloatC [], TyApp FloatC [], TyApp FloatC []]
-  typingOp FDiv = pure $ TyApp FunC [TyApp FloatC [], TyApp FloatC [], TyApp FloatC []]
-  typingOp Eq   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
-  typingOp Neq  = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
-  typingOp Lt   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
-  typingOp Gt   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
-  typingOp Le   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
-  typingOp Ge   = newTyMeta >>= \a -> pure $ TyApp FunC [TyApp BoolC [], a, a]
-  typingOp And  = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
-  typingOp Or   = pure $ TyApp FunC [TyApp BoolC [], TyApp BoolC [], TyApp BoolC []]
+  typingOp Add  = pure $ [intTy, intTy] --> intTy
+  typingOp Sub  = pure $ [intTy, intTy] --> intTy
+  typingOp Mul  = pure $ [intTy, intTy] --> intTy
+  typingOp Div  = pure $ [intTy, intTy] --> intTy
+  typingOp Mod  = pure $ [intTy, intTy] --> intTy
+  typingOp FAdd = pure $ [floatTy, floatTy] --> floatTy
+  typingOp FSub = pure $ [floatTy, floatTy] --> floatTy
+  typingOp FMul = pure $ [floatTy, floatTy] --> floatTy
+  typingOp FDiv = pure $ [floatTy, floatTy] --> floatTy
+  typingOp Eq   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
+  typingOp Neq  = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
+  typingOp Lt   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
+  typingOp Gt   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
+  typingOp Le   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
+  typingOp Ge   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
+  typingOp And  = pure $ [boolTy, boolTy] --> boolTy
+  typingOp Or   = pure $ [boolTy, boolTy] --> boolTy
 typingExpr (Match i scrutinee clauses) = applySubst $ do
   ty1 <- typingExpr scrutinee
   let (pats, exprs) = unzip clauses

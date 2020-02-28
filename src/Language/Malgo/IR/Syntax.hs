@@ -6,12 +6,21 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Malgoの抽象構文木の定義
-module Language.Malgo.IR.Syntax where
+module Language.Malgo.IR.Syntax
+  ( module Export
+  , Decl(..)
+  , Expr(..)
+  , Pat(..)
+  , info
+  )
+where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
+
+import           Language.Malgo.IR.Op          as Export
 
 import           Language.Malgo.FrontEnd.Info
 
@@ -139,34 +148,6 @@ instance Pretty a => Pretty (Pat a) where
 instance HasType a => HasType (Pat a) where
   typeOf (VarP   x ) = typeOf x
   typeOf (TupleP xs) = TyApp TupleC $ map typeOf xs
-
--- | 中置演算子の種類を表すタグ
-data Op = Add | Sub | Mul | Div
-        | FAdd | FSub | FMul | FDiv
-        | Mod
-        | Eq | Neq
-        | Lt | Gt | Le | Ge
-        | And | Or
-  deriving stock (Eq, Show, Read, Generic)
-
-instance Pretty Op where
-  pPrint Add  = "+"
-  pPrint Sub  = "-"
-  pPrint Mul  = "*"
-  pPrint Div  = "/"
-  pPrint FAdd = "+."
-  pPrint FSub = "-."
-  pPrint FMul = "*."
-  pPrint FDiv = "/."
-  pPrint Mod  = "%"
-  pPrint Eq   = "=="
-  pPrint Neq  = "<>"
-  pPrint Lt   = "<"
-  pPrint Gt   = ">"
-  pPrint Le   = "<="
-  pPrint Ge   = ">="
-  pPrint And  = "&&"
-  pPrint Or   = "||"
 
 -- | 変数定義、関数定義、外部関数定義
 data Decl a

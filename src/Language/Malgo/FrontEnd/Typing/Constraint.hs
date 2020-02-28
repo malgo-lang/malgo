@@ -25,6 +25,7 @@ import           Language.Malgo.FrontEnd.Typing.Subst
 import           Control.Monad.Error.Class
 import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 
+infixl 5 :~
 data Constraint = Type :~ Type
   deriving stock (Eq, Show)
 

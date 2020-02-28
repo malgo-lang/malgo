@@ -6,12 +6,23 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
-module Language.Malgo.IR.HIR where
+module Language.Malgo.IR.HIR
+  ( module Export
+  , Expr(..)
+  , Def(..)
+  , Lit(..)
+  , Pat(..)
+  , flattenDef
+  , flattenExpr
+  )
+where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
+
+import           Language.Malgo.IR.Op          as Export
 
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
@@ -62,12 +73,6 @@ data Lit = Int Integer
          | Bool Bool
          | Char Char
          | String String
-  deriving stock (Eq, Show, Read, Generic)
-
-data Op = Add | Sub | Mul | Div | Mod
-        | FAdd | FSub | FMul | FDiv
-        | Eq | Neq | Lt | Gt | Le | Ge
-        | And | Or
   deriving stock (Eq, Show, Read, Generic)
 
 flattenExpr :: Expr a -> Expr a
@@ -166,22 +171,3 @@ instance Pretty Lit where
   pPrint (Bool   False) = "false"
   pPrint (Char   x    ) = quotes $ pPrint x
   pPrint (String x    ) = doubleQuotes $ pPrint x
-
-instance Pretty Op where
-  pPrint Add  = "+"
-  pPrint Sub  = "-"
-  pPrint Mul  = "*"
-  pPrint Div  = "/"
-  pPrint FAdd = "+."
-  pPrint FSub = "-."
-  pPrint FMul = "*."
-  pPrint FDiv = "/."
-  pPrint Mod  = "%"
-  pPrint Eq   = "=="
-  pPrint Neq  = "<>"
-  pPrint Lt   = "<"
-  pPrint Gt   = ">"
-  pPrint Le   = "<="
-  pPrint Ge   = ">="
-  pPrint And  = "&&"
-  pPrint Or   = "||"

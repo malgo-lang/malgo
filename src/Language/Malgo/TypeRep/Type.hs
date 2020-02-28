@@ -1,6 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.TypeRep.Type where
 
@@ -61,3 +62,23 @@ comparable _                 = False
 
 removeExplictForall :: Scheme -> Type
 removeExplictForall (Forall _ t) = t
+
+
+intTy :: Type
+intTy = TyApp IntC []
+floatTy :: Type
+floatTy = TyApp FloatC []
+boolTy :: Type
+boolTy = TyApp BoolC []
+charTy :: Type
+charTy = TyApp CharC []
+stringTy :: Type
+stringTy = TyApp StringC []
+tupleTy :: [Type] -> Type
+tupleTy = TyApp TupleC
+arrayTy :: Type -> Type
+arrayTy x = TyApp ArrayC [x]
+
+infixl 6 -->
+(-->) :: [Type] -> Type -> Type
+ps --> r = TyApp FunC (r : ps)

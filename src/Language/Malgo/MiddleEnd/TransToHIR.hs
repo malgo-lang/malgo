@@ -72,26 +72,7 @@ toExpr (S.Let _ (S.ExDec _ n _ orig) body) = case typeOf n of
     LetRec [Def { name = n, params = params, expr = Prim orig (typeOf n) params }] <$> toExpr body
   _ -> error "external variable is not supported"
 toExpr (S.If    _ c  t f) = runDef $ If <$> toVar c <*> toExpr t <*> toExpr f
-toExpr (S.BinOp _ op x y) = runDef $ BinOp op' <$> toVar x <*> toVar y
- where
-  op' = case op of
-    S.Add  -> Add
-    S.Sub  -> Sub
-    S.Mul  -> Mul
-    S.Div  -> Div
-    S.Mod  -> Mod
-    S.FAdd -> FAdd
-    S.FSub -> FSub
-    S.FMul -> FMul
-    S.FDiv -> FDiv
-    S.Eq   -> Eq
-    S.Neq  -> Neq
-    S.Lt   -> Lt
-    S.Gt   -> Gt
-    S.Le   -> Le
-    S.Ge   -> Ge
-    S.And  -> And
-    S.Or   -> Or
+toExpr (S.BinOp _ op x y) = runDef $ BinOp op <$> toVar x <*> toVar y
 toExpr (S.Match _ s cs) =
   runDef $ Match <$> toVar s <*> mapM (\(p, e) -> crushPat p =<< toExpr e) cs
 
