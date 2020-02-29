@@ -80,10 +80,8 @@ crushPat :: MonadUniq m => S.Pat (ID Type) -> Expr (ID Type) -> m (Pat (ID Type)
 crushPat (S.VarP   x ) e = pure (VarP x, e)
 crushPat (S.TupleP xs) e = go xs [] e
  where
-  go []              acc e = pure (TupleP $ reverse acc, e)
-  go (S.VarP x : ps) acc e = go ps (x : acc) e
-  go (p        : ps) acc e = do
-    x <- newTmp "pat" $ typeOf p
-    go ps (x : acc) =<< do
-      clause <- crushPat p e
-      pure $ Match x (clause :| [])
+  go []       acc e = pure (TupleP $ reverse acc, e)
+  go (p : ps) acc e = do
+    x      <- newTmp "pat" $ typeOf p
+    clause <- crushPat p e
+    go ps (x : acc) (Match x (clause :| []))

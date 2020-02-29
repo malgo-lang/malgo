@@ -5,14 +5,14 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i8* @"$fo53"(i8* nocapture readonly, i8* nocapture readonly) {
+define i8* @"$fo55"(i8* nocapture readonly, i8* nocapture readonly) {
   %3 = tail call i8* @GC_malloc(i64 16)
   %4 = bitcast i8* %3 to { { i8* (i8*, i8*)*, i8* }*, i8* }*
   %5 = bitcast i8* %1 to i64*
   %6 = load i64, i64* %5, align 8
   %7 = tail call i8* @GC_malloc(i64 16)
   %8 = bitcast i8* %7 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo60", i8* (i8*, i8*)** %8, align 8
+  store i8* (i8*, i8*)* @"$fo62", i8* (i8*, i8*)** %8, align 8
   %9 = getelementptr i8, i8* %7, i64 8
   %10 = bitcast i8* %9 to i64*
   store i64 %6, i64* %10, align 8
@@ -33,7 +33,7 @@ define i8* @"$fo53"(i8* nocapture readonly, i8* nocapture readonly) {
   ret i8* %22
 }
 
-define i8* @"$fo60"(i8* nocapture readonly, i8*) {
+define i8* @"$fo62"(i8* nocapture readonly, i8*) {
   %3 = bitcast i8* %0 to i8* (i8*, i8*)**
   %4 = load i8* (i8*, i8*)*, i8* (i8*, i8*)** %3, align 8
   %5 = getelementptr i8, i8* %0, i64 8
@@ -102,7 +102,7 @@ body_0:
   store i8* %0, i8** %4, align 8
   %5 = tail call i8* @GC_malloc(i64 16)
   %6 = bitcast i8* %5 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo53", i8* (i8*, i8*)** %6, align 8
+  store i8* (i8*, i8*)* @"$fo55", i8* (i8*, i8*)** %6, align 8
   %7 = getelementptr i8, i8* %5, i64 8
   %8 = bitcast i8* %7 to i8**
   store i8* %1, i8** %8, align 8
