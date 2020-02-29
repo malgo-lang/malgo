@@ -62,8 +62,6 @@ instance HasLog (MalgoEnv m) Message m where
 
 newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT UniqSupply IO) a }
   deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState UniqSupply, MonadIO, MonadFix, MonadFail)
-  deriving Semigroup via (Ap MalgoM a)
-  deriving Monoid via (Ap MalgoM a)
 
 runMalgo :: MonadIO m => MalgoM a -> Opt -> Text -> m a
 runMalgo (MalgoM m) opt source = liftIO $ evaluatingStateT (UniqSupply 0) $ runReaderT
