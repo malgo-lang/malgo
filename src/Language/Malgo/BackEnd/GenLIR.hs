@@ -6,7 +6,10 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
-module Language.Malgo.BackEnd.GenLIR (GenLIR) where
+module Language.Malgo.BackEnd.GenLIR
+  ( GenLIR
+  )
+where
 
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
