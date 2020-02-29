@@ -23,11 +23,15 @@ define external ccc  {}* @newline1()    {
 }
 
 
+declare external ccc  void @GC_init()    
+
+
 declare external ccc  i8* @GC_malloc(i64)    
 
 
 define external ccc  i32 @main()    {
 ; <label>:0:
+   call ccc  void  @GC_init()  
   %1 = mul   i64 ptrtoint (i64* getelementptr inbounds (i64, i64* inttoptr (i32 0 to i64*), i32 1) to i64), 10 
   %2 =  call ccc  i8*  @GC_malloc(i64  %1)  
   %3 = bitcast i8* %2 to i64* 

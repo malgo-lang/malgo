@@ -3,7 +3,7 @@ source_filename = "./examples/polyfun2.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-define i8* @"$fo166"(i8* nocapture readonly, i8*) {
+define i8* @"$fo167"(i8* nocapture readonly, i8*) {
   %3 = bitcast i8* %0 to i64 (i8*, i8*)**
   %4 = load i64 (i8*, i8*)*, i64 (i8*, i8*)** %3, align 8
   %5 = getelementptr i8, i8* %0, i64 8
@@ -14,7 +14,7 @@ define i8* @"$fo166"(i8* nocapture readonly, i8*) {
   ret i8* %9
 }
 
-define i64 @"$fo115"(i8* nocapture readonly, i8*) {
+define i64 @"$fo116"(i8* nocapture readonly, i8*) {
   %3 = ptrtoint i8* %1 to i64
   %4 = bitcast i8* %0 to i64 (i8*, i64)**
   %5 = load i64 (i8*, i64)*, i64 (i8*, i64)** %4, align 8
@@ -27,14 +27,14 @@ define i64 @"$fo115"(i8* nocapture readonly, i8*) {
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i8* @"$fo88"(i8* nocapture readonly, i8* nocapture readonly) {
+define i8* @"$fo89"(i8* nocapture readonly, i8* nocapture readonly) {
   %3 = tail call i8* @GC_malloc(i64 16)
   %4 = bitcast i8* %3 to { { i8* (i8*, i8*)*, i8* }*, i8* }*
   %5 = bitcast i8* %1 to i64*
   %6 = load i64, i64* %5, align 8
   %7 = tail call i8* @GC_malloc(i64 16)
   %8 = bitcast i8* %7 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo95", i8* (i8*, i8*)** %8, align 8
+  store i8* (i8*, i8*)* @"$fo96", i8* (i8*, i8*)** %8, align 8
   %9 = getelementptr i8, i8* %7, i64 8
   %10 = bitcast i8* %9 to i64*
   store i64 %6, i64* %10, align 8
@@ -55,7 +55,7 @@ define i8* @"$fo88"(i8* nocapture readonly, i8* nocapture readonly) {
   ret i8* %22
 }
 
-define i8* @"$fo95"(i8* nocapture readonly, i8*) {
+define i8* @"$fo96"(i8* nocapture readonly, i8*) {
   %3 = bitcast i8* %0 to i8* (i8*, i8*)**
   %4 = load i8* (i8*, i8*)*, i8* (i8*, i8*)** %3, align 8
   %5 = getelementptr i8, i8* %0, i64 8
@@ -148,8 +148,11 @@ define i64 @addOne2(i8*, i64) {
   ret i64 %15
 }
 
+declare void @GC_init() local_unnamed_addr
+
 define i32 @main() local_unnamed_addr {
 body_0:
+  tail call void @GC_init()
   %0 = tail call i8* @GC_malloc(i64 0)
   %1 = tail call i8* @GC_malloc(i64 16)
   %2 = bitcast i8* %1 to i8* (i8*, { { i8* (i8*, i8*)*, i8* }*, i8* }*)**
@@ -159,7 +162,7 @@ body_0:
   store i8* %0, i8** %4, align 8
   %5 = tail call i8* @GC_malloc(i64 16)
   %6 = bitcast i8* %5 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo88", i8* (i8*, i8*)** %6, align 8
+  store i8* (i8*, i8*)* @"$fo89", i8* (i8*, i8*)** %6, align 8
   %7 = getelementptr i8, i8* %5, i64 8
   %8 = bitcast i8* %7 to i8**
   store i8* %1, i8** %8, align 8
@@ -179,7 +182,7 @@ body_0:
   store i8* %14, i8** %18, align 8
   %19 = tail call i8* @GC_malloc(i64 16)
   %20 = bitcast i8* %19 to i64 (i8*, i8*)**
-  store i64 (i8*, i8*)* @"$fo115", i64 (i8*, i8*)** %20, align 8
+  store i64 (i8*, i8*)* @"$fo116", i64 (i8*, i8*)** %20, align 8
   %21 = getelementptr i8, i8* %19, i64 8
   %22 = bitcast i8* %21 to i8**
   store i8* %15, i8** %22, align 8
@@ -241,7 +244,7 @@ body_0:
   %66 = load i64, i64* %65, align 8
   %67 = tail call i8* @GC_malloc(i64 16)
   %68 = bitcast i8* %67 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo166", i8* (i8*, i8*)** %68, align 8
+  store i8* (i8*, i8*)* @"$fo167", i8* (i8*, i8*)** %68, align 8
   %69 = getelementptr i8, i8* %67, i64 8
   %70 = bitcast i8* %69 to i64*
   store i64 %66, i64* %70, align 8

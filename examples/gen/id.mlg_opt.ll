@@ -8,8 +8,10 @@ define i64 @id0(i64 returned) local_unnamed_addr #0 {
   ret i64 %0
 }
 
-; Function Attrs: norecurse nounwind readnone
-define i32 @main() local_unnamed_addr #0 {
+declare void @GC_init() local_unnamed_addr
+
+define i32 @main() local_unnamed_addr {
+  tail call void @GC_init()
   ret i32 0
 }
 

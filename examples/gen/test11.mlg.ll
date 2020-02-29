@@ -5,8 +5,12 @@ source_filename = "./examples/test11.mlg"
  
 
 
+declare external ccc  void @GC_init()    
+
+
 define external ccc  i32 @main()    {
 ; <label>:0:
+   call ccc  void  @GC_init()  
   %1 = alloca i1 
   br i1 1, label %then_0, label %else_0 
 then_0:

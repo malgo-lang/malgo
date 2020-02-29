@@ -63,8 +63,11 @@ define i64 @"$lambda20"(i8*, i64) {
   ret i64 %7
 }
 
+declare void @GC_init() local_unnamed_addr
+
 define i32 @main() local_unnamed_addr {
 then_0:
+  tail call void @GC_init()
   %0 = tail call i8* @GC_malloc(i64 0)
   %1 = tail call i8* @GC_malloc(i64 16)
   %2 = bitcast i8* %1 to i64 (i8*, i64)**

@@ -15,7 +15,11 @@ define external ccc  {}* @void0(i1 )    {
 }
 
 
+declare external ccc  void @GC_init()    
+
+
 define external ccc  i32 @main()    {
+   call ccc  void  @GC_init()  
   %1 = icmp eq i64 1, 1 
   %2 =  call ccc  {}*  @void0(i1  %1)  
   %3 = fcmp oeq double 1.100000e0, 1.100000e0 

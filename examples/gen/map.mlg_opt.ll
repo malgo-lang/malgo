@@ -64,7 +64,10 @@ define i64 @add422(i8*, i64) {
   ret i64 %11
 }
 
+declare void @GC_init() local_unnamed_addr
+
 define i32 @main() local_unnamed_addr {
+  tail call void @GC_init()
   %1 = tail call i8* @GC_malloc(i64 0)
   %2 = tail call i8* @GC_malloc(i64 16)
   %3 = bitcast i8* %2 to { i64, i64 }* (i8*, { i64 (i8*, i64)*, i8* }*, { i64, i64 }*)**

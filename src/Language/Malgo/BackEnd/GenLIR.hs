@@ -6,7 +6,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
-module Language.Malgo.BackEnd.GenLIR where
+module Language.Malgo.BackEnd.GenLIR (GenLIR) where
 
 import           Language.Malgo.ID
 import           Language.Malgo.Monad
@@ -52,7 +52,9 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
         )
       $ do
           mapM_ genFunction functions
-          runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr
+          runExprBuilderT (ExprEnv mempty Nothing) $ do
+            _ <- callExt "GC_init" (Function Void []) []
+            genExpr mainExpr
 
 -- generate LIR
 genFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => M.Func (ID Type) -> m ()
@@ -74,14 +76,6 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     clsMap <- foldMapA (fmap one . traverseToSnd (findFunc >=> packClosure capsId)) mutrecs
     withVariables (capsMap <> clsMap) $ genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
-
-genMainFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m)
-                => ID LType
-                -> M.Expr (ID Type)
-                -> m (L.Func (ID LType))
-genMainFunction mainFuncId mainExpr = do
-  body <- runExprBuilderT (ExprEnv mempty Nothing) $ genExpr mainExpr >> assign (Constant $ Int32 0)
-  pure $ L.Func { name = mainFuncId, params = [], body = body }
 
 genExpr :: (MonadUniq m, MonadExprBuilder m) => M.Expr (ID Type) -> m (ID LType)
 genExpr (M.Var   x               ) = findVar x

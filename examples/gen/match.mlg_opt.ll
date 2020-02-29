@@ -18,9 +18,12 @@ define i64 @add0({ { i64, i64 }*, i64 }* nocapture readonly) local_unnamed_addr 
   ret i64 %11
 }
 
+declare void @GC_init() local_unnamed_addr
+
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
 define i32 @main() local_unnamed_addr {
+  tail call void @GC_init()
   %1 = tail call i8* @GC_malloc(i64 16)
   %2 = bitcast i8* %1 to <2 x i64>*
   store <2 x i64> <i64 1, i64 2>, <2 x i64>* %2, align 8

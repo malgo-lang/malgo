@@ -1041,8 +1041,12 @@ define external ccc  {i1*, i64}* @copy_bool_array5({i1*, i64}* )    {
 }
 
 
+declare external ccc  void @GC_init()    
+
+
 define external ccc  i32 @main()    {
 ; <label>:0:
+   call ccc  void  @GC_init()  
   %1 = mul   i64 50, 20 
   %2 = mul   i64 ptrtoint (i1* getelementptr inbounds (i1, i1* inttoptr (i32 0 to i1*), i32 1) to i64), %1 
   %3 =  call ccc  i8*  @GC_malloc(i64  %2)  

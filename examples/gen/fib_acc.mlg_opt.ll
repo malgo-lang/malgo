@@ -66,7 +66,10 @@ end_0:                                            ; preds = %else_0, %3
   ret i64 %.tr2.lcssa
 }
 
+declare void @GC_init() local_unnamed_addr
+
 define i32 @main() local_unnamed_addr {
+  tail call void @GC_init()
   br label %else_0.i.preheader.i
 
 else_0.i.preheader.i:                             ; preds = %fib_acc2.exit.i, %0

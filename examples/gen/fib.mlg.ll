@@ -72,7 +72,11 @@ end_0:
 }
 
 
+declare external ccc  void @GC_init()    
+
+
 define external ccc  i32 @main()    {
+   call ccc  void  @GC_init()  
   %1 =  call ccc  {}*  @fib_loop3(i64  30, i64  0)  
   ret i32 0 
 }

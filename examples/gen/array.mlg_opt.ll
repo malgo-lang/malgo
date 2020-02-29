@@ -17,10 +17,13 @@ define {}* @newline1() local_unnamed_addr {
   ret {}* %1
 }
 
+declare void @GC_init() local_unnamed_addr
+
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
 define i32 @main() local_unnamed_addr {
 body_0:
+  tail call void @GC_init()
   %0 = tail call i8* @GC_malloc(i64 80)
   %1 = tail call i8* @GC_malloc(i64 16)
   %2 = bitcast i8* %1 to i64**

@@ -20,10 +20,14 @@ define external ccc  i64 @add0({{i64, i64}*, i64}* )    {
 }
 
 
+declare external ccc  void @GC_init()    
+
+
 declare external ccc  i8* @GC_malloc(i64)    
 
 
 define external ccc  i32 @main()    {
+   call ccc  void  @GC_init()  
   %1 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64, i64}* getelementptr inbounds ({i64, i64}, {i64, i64}* inttoptr (i32 0 to {i64, i64}*), i32 1) to i64))  
   %2 = bitcast i8* %1 to {i64, i64}* 
   %3 = getelementptr  {i64, i64}, {i64, i64}* %2, i32 0, i32 0 

@@ -26,8 +26,11 @@ end_0:                                            ; preds = %tailrecurse
   ret i64 %4
 }
 
+declare void @GC_init() local_unnamed_addr
+
 define i32 @main() local_unnamed_addr {
 tailrecurse.i:
+  tail call void @GC_init()
   %0 = tail call i8* @GC_malloc(i64 8)
   %1 = bitcast i8* %0 to i64*
   store i64 42, i64* %1, align 8

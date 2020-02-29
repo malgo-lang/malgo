@@ -39,7 +39,11 @@ define external ccc  {i64 (i8*, i64)*, i8*}* @add0(i64 )    {
 }
 
 
+declare external ccc  void @GC_init()    
+
+
 define external ccc  i32 @main()    {
+   call ccc  void  @GC_init()  
   %1 =  call ccc  {i64 (i8*, i64)*, i8*}*  @add0(i64  3)  
   %2 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %1, i32 0, i32 0 
   %3 = load  i64 (i8*, i64)*, i64 (i8*, i64)** %2 

@@ -19,7 +19,11 @@ define external ccc  i64 @id3(i64 )    {
 }
 
 
+declare external ccc  void @GC_init()    
+
+
 define external ccc  i32 @main()    {
+   call ccc  void  @GC_init()  
   %1 =  call ccc  i64  @id3(i64  42)  
   %2 =  call ccc  i64  @id3(i64  %1)  
   %3 = add   i64 %2, 42 

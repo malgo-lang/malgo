@@ -15,7 +15,10 @@ define i64 @id3(i64 returned) local_unnamed_addr #0 {
   ret i64 %0
 }
 
+declare void @GC_init() local_unnamed_addr
+
 define i32 @main() local_unnamed_addr {
+  tail call void @GC_init()
   %1 = tail call {}* @print_int(i64 126)
   ret i32 0
 }

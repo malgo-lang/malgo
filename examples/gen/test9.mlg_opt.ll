@@ -17,7 +17,10 @@ define i64 @f3(i8*) {
   ret i64 %3
 }
 
+declare void @GC_init() local_unnamed_addr
+
 define i32 @main() local_unnamed_addr {
+  tail call void @GC_init()
   %1 = tail call i8* @GC_malloc(i64 8)
   %2 = bitcast i8* %1 to i64*
   store i64 42, i64* %2, align 8

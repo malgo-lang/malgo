@@ -8,9 +8,12 @@ define i64 @answer0() local_unnamed_addr #0 {
   ret i64 42
 }
 
+declare void @GC_init() local_unnamed_addr
+
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
 define i32 @main() local_unnamed_addr {
+  tail call void @GC_init()
   %1 = tail call i8* @GC_malloc(i64 0)
   ret i32 0
 }

@@ -57,7 +57,10 @@ end_0:                                            ; preds = %else_0, %1
   ret i64 %accumulator.tr.lcssa
 }
 
+declare void @GC_init() local_unnamed_addr
+
 define i32 @main() local_unnamed_addr {
+  tail call void @GC_init()
   br label %tailrecurse.i
 
 tailrecurse.i:                                    ; preds = %tailrecurse.i, %0
