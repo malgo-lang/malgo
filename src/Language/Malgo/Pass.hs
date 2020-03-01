@@ -25,17 +25,16 @@ class Pass p s t | p -> s t where
 
 dump :: (MonadMalgo m, Show a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
-  opt <- liftMalgo $ asks maOption
+  opt <- getOpt
   if isDebugMode opt
-    then liftMalgo $ logDebug $ "\n" <> toText (pShow x)
-    else liftMalgo $ logInfo $ "\n" <> toText
-      (renderStyle (style { lineLength = maxInt }) (pPrint x))
+    then log Debug $ "\n" <> toText (pShow x)
+    else log Debug $ "\n" <> toText (renderStyle (style { lineLength = maxInt }) (pPrint x))
 
 transWithDump :: forall p s t . (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do
   opt <- asks maOption
   t   <- trans @p s
   when (isDump @p opt) $ do
-    liftMalgo $ logInfo $ "dump " <> passName @p
+    log Info $ "dump " <> passName @p
     dump t
   pure t

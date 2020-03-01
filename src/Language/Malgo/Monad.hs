@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE ConstraintKinds #-}
@@ -13,12 +15,7 @@ module Language.Malgo.Monad
   , runMalgo
   , MonadMalgo(..)
   , Opt(..)
-  , Colog.HasLog
-  , Colog.Message
-  , Colog.logDebug
-  , Colog.logInfo
-  , Colog.logWarning
-  , Colog.logError
+  , Colog.Severity(..)
   , getFileName
   , MonadUniq(..)
   )
@@ -29,6 +26,7 @@ import           Language.Malgo.Prelude
 import           Colog                          ( HasLog(..)
                                                 , Message
                                                 , LogAction(..)
+                                                , Severity(..)
                                                 , richMessageAction
                                                 , cfilter
                                                 )
@@ -49,9 +47,9 @@ data Opt = Opt
   } deriving stock (Eq, Show)
 
 data MalgoEnv m = MalgoEnv
-  { maOption     :: Opt
+  { maOption :: Opt
   , maSource :: Text
-  , maLogAction  :: LogAction m Message
+  , maLogAction :: LogAction m Message
   }
 
 newtype UniqSupply = UniqSupply { uniqSupply :: Int }
@@ -75,25 +73,32 @@ runMalgo (MalgoM m) opt source = liftIO $ evaluatingStateT (UniqSupply 0) $ runR
     }
 
 class Monad m => MonadMalgo m where
-  liftMalgo :: MalgoM a -> m a
+  getOpt :: m Opt
+  default getOpt :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => m Opt
+  getOpt = lift getOpt
+  log :: Severity -> Text -> m ()
+  default log :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => Severity -> Text -> m ()
+  log s t = lift $ log s t
 
 instance MonadMalgo MalgoM where
-  liftMalgo = id
-instance MonadMalgo m => MonadMalgo (ReaderT r m) where
-  liftMalgo = lift . liftMalgo
-instance MonadMalgo m => MonadMalgo (ExceptT e m) where
-  liftMalgo = lift . liftMalgo
-instance MonadMalgo m => MonadMalgo (StateT s m) where
-  liftMalgo = lift . liftMalgo
-instance MonadMalgo m => MonadMalgo (WriterT w m) where
-  liftMalgo = lift . liftMalgo
+  getOpt = asks maOption
+  log = Colog.log
+
+instance MonadMalgo m => MonadMalgo (ReaderT r m)
+instance MonadMalgo m => MonadMalgo (ExceptT e m)
+instance MonadMalgo m => MonadMalgo (StateT s m)
+instance MonadMalgo m => MonadMalgo (WriterT w m)
 
 getFileName :: (MonadMalgo m, IsString a) => m a
-getFileName = liftMalgo $ asks (fromString . srcName . maOption)
+getFileName = fromString . srcName <$> getOpt
 
 class Monad m => MonadUniq m where
   getUniqSupply :: m UniqSupply
+  default getUniqSupply :: (MonadTrans t, MonadUniq m1, m ~ t m1) => m UniqSupply
+  getUniqSupply = lift getUniqSupply
   getUniq :: m Int
+  default getUniq :: (MonadTrans t, MonadUniq m1, m ~ t m1) => m Int
+  getUniq = lift getUniq
 
 instance MonadUniq MalgoM where
   getUniqSupply = get
@@ -101,15 +106,8 @@ instance MonadUniq MalgoM where
     i <- uniqSupply <$> getUniqSupply
     modify (\s -> s { uniqSupply = i + 1 })
     pure i
+
 instance MonadUniq m => MonadUniq (ReaderT r m) where
-  getUniqSupply = lift getUniqSupply
-  getUniq       = lift getUniq
 instance MonadUniq m => MonadUniq (ExceptT e m) where
-  getUniqSupply = lift getUniqSupply
-  getUniq       = lift getUniq
 instance MonadUniq m => MonadUniq (StateT s m) where
-  getUniqSupply = lift getUniqSupply
-  getUniq       = lift getUniq
 instance MonadUniq m => MonadUniq (WriterT w m) where
-  getUniqSupply = lift getUniqSupply
-  getUniq       = lift getUniq

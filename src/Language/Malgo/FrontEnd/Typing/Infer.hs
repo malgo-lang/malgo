@@ -36,8 +36,8 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     _   <- typingExpr e
     env <- get
 
-    opt <- liftMalgo $ asks maOption
-    when (dumpTypeTable opt) $ liftMalgo $ dump (toList env)
+    opt <- getOpt
+    when (dumpTypeTable opt) $ dump (toList env)
 
     pure $ fmap (\x -> removeExplictForall <$> fromJust (lookup x env)) e
 

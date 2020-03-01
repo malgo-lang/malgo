@@ -105,14 +105,13 @@ instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
   addFunc fun = ExprBuilderT $ lift $ lift $ addFunc fun
 
-instance (MonadUniq m, {- MonadMalgo m, -} MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
+instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
   findVar x = ExprBuilderT $ fromJust . lookup x <$> asks variableMap
   withVariables varMap (ExprBuilderT m) =
     ExprBuilderT $ local (\e -> e { variableMap = varMap <> variableMap e }) m
 
   assign expr = ExprBuilderT $ do
     i <- newID (ltypeOf expr) "%"
-    -- liftMalgo $ logDebug $ toText $ _ $ pPrint i <+> "=" <+> pPrint inst
     modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (Assign i expr) })
     pure i
 
