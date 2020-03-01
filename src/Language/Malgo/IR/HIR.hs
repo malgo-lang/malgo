@@ -1,5 +1,3 @@
-{-# LANGUAGE DeriveFoldable #-}
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -58,14 +56,14 @@ data Expr a = Var a
             | Prim String Type [a]
             | BinOp Op a a
             | Match a (NonEmpty (Pat a, Expr a))
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show)
 
 data Pat a = VarP a
            | TupleP [a]
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show)
 
 data Def a = Def { name :: a, params :: [a], expr :: Expr a }
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show)
 
 data Lit = Int Integer
          | Float Double

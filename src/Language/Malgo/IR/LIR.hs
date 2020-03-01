@@ -1,6 +1,4 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE DeriveFoldable #-}
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -25,14 +23,14 @@ import           Text.PrettyPrint.HughesPJClass ( ($$)
                                                 )
 
 data Program a = Program { functions :: [Func a], mainFunc :: Block a }
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Program a) where
   pPrint Program { functions, mainFunc } =
     "program" <+> pPrint mainFunc $$ vcat (map pPrint functions)
 
 data Func a = Func { name :: a, params :: [a], body :: Block a }
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Func a) where
   pPrint Func { name, params, body } =
@@ -48,7 +46,7 @@ instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
 data Block a = Block { insns :: [Insn a], value :: a }
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Block a) where
   pPrint Block { insns, value } =
@@ -64,7 +62,7 @@ data Insn a = Assign a (Expr a)
                   a -- ^ from
                   a -- ^ to
                   (Block a) -- ^ body
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Insn a) where
   pPrint (Assign x e   ) = pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint e
@@ -95,7 +93,7 @@ data Expr a = Constant Constant
             | Undef LType
             | BinOp Op a a
             | If a (Block a) (Block a)
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Expr a) where
   pPrint (Constant c) = pPrint c
