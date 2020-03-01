@@ -10,7 +10,7 @@ data Op = Add | Sub | Mul | Div | Mod
         | FAdd | FSub | FMul | FDiv
         | Eq | Neq | Lt | Gt | Le | Ge
         | And | Or
-  deriving stock (Eq, Show, Read)
+  deriving stock (Eq, Show)
 
 instance Pretty Op where
   pPrint Add  = "+"

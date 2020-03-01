@@ -24,7 +24,7 @@ data SType = TyVar Text
            | TyTuple [SType]
            | TyArray SType
            | TyForall [Text] SType
-  deriving stock (Eq, Show, Read)
+  deriving stock (Eq, Show)
 
 instance Pretty SType where
   pPrint (TyVar x)       = text $ toString x

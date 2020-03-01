@@ -29,7 +29,7 @@ data LType = Ptr LType
            | Struct [LType]
            | Function LType [LType]
            | Void
-  deriving stock (Eq, Ord, Show, Read)
+  deriving stock (Eq, Ord, Show)
 
 instance Pretty LType where
   pPrint (Ptr    t ) = pPrint t <> "*"

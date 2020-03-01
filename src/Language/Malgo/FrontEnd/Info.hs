@@ -11,7 +11,7 @@ import           Text.PrettyPrint.HughesPJClass ( parens
                                                 )
 
 newtype Info = Info (Text, Int, Int)
-  deriving stock (Show, Eq, Ord, Read)
+  deriving stock (Show, Eq, Ord)
 
 instance Pretty Info where
   pPrint (Info (file, line, column)) =

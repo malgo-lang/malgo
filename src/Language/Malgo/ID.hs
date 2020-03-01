@@ -40,7 +40,7 @@ import           Relude.Extra.Map
 import           Text.PrettyPrint.HughesPJClass ( text )
 
 data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }
-  deriving stock (Show, Eq, Ord, Read, Functor, Foldable)
+  deriving stock (Show, Eq, Ord, Functor, Foldable)
 
 instance Pretty a => Pretty (ID a) where
   pPrint (ID n u m) = text n <> "." <> text (showHex u "") <> ":" <> pPrint m
@@ -61,8 +61,8 @@ newID :: MonadUniq f => a -> String -> f (ID a)
 newID m n = ID n <$> getUniq <*> pure m
 
 newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
-  deriving stock (Eq, Ord, Read, Show, Functor, Foldable, Traversable)
-  deriving newtype (Eq1, Ord1, Read1, Show1, Semigroup, Monoid, NFData)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Traversable)
+  deriving newtype (Eq1, Ord1, Show1, Semigroup, Monoid, NFData)
 
 instance Pretty v => Pretty (IDMap a v) where
   pPrint = pPrint . toList . unwrapIDMap

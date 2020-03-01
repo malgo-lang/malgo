@@ -58,21 +58,21 @@ data Expr a = Var a
             | Prim String Type [a]
             | BinOp Op a a
             | Match a (NonEmpty (Pat a, Expr a))
-  deriving stock (Eq, Show, Read, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 data Pat a = VarP a
            | TupleP [a]
-  deriving stock (Eq, Show, Read, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 data Def a = Def { name :: a, params :: [a], expr :: Expr a }
-  deriving stock (Eq, Show, Read, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 data Lit = Int Integer
          | Float Double
          | Bool Bool
          | Char Char
          | String String
-  deriving stock (Eq, Show, Read)
+  deriving stock (Eq, Show)
 
 flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) = go (flattenExpr v1)

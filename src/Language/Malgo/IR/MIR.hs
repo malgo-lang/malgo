@@ -29,14 +29,14 @@ import           Text.PrettyPrint.HughesPJClass ( vcat
                                                 )
 
 data Program a = Program { functions :: [Func a], mainExpr :: Expr a }
-  deriving stock (Eq, Show, Read, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Program a) where
   pPrint Program { functions, mainExpr } =
     vcat (map pPrint functions) $$ "entry point =" $+$ nest 2 (pPrint mainExpr)
 
 data Func a = Func { name :: a, captures :: Maybe [a], mutrecs :: [a], params :: [a], body :: Expr a }
-  deriving stock (Eq, Show, Read, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Func a) where
   pPrint Func { name, captures, params, body } = case captures of
@@ -70,7 +70,7 @@ data Expr a = Var a
             | If a (Expr a) (Expr a)
             | Prim String Type [a]
             | BinOp Op a a
-  deriving stock (Eq, Show, Read, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) = go (flattenExpr v1)

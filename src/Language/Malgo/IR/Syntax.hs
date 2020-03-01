@@ -87,7 +87,7 @@ data Expr a
     Info
     (Expr a) -- ^ 対象とある値
     (NonEmpty (Pat a, Expr a)) -- ^ パターンとマッチしたときの式のリスト
-  deriving stock (Eq, Show, Read, Functor, Foldable, Traversable)
+  deriving stock (Eq, Show, Functor, Foldable, Traversable)
 
 -- | Exprからソースコード上の位置情報を取り出すための補助関数
 info :: Expr t -> Info
@@ -138,7 +138,7 @@ instance Pretty a => Pretty (Expr a) where
 -- | パターン
 data Pat a = VarP a -- ^ 変数パターン
            | TupleP [Pat a] -- ^ タプルパターン
-  deriving stock (Eq, Show, Read, Functor, Foldable, Traversable)
+  deriving stock (Eq, Show, Functor, Foldable, Traversable)
 
 instance Pretty a => Pretty (Pat a) where
   pPrint (VarP   x ) = pPrint x
@@ -153,7 +153,7 @@ data Decl a
   = FunDec [(Info, a, [(a, Maybe Type)], Maybe Type, Expr a)] -- ^ 関数定義。相互再帰しうる関数定義のリスト
   | ValDec Info a (Maybe Type) (Expr a) -- ^ 変数定義
   | ExDec Info a Type String -- ^ 外部関数定義
-  deriving stock (Eq, Show, Read, Functor, Foldable, Traversable)
+  deriving stock (Eq, Show, Functor, Foldable, Traversable)
 
 instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec fs) = sep $ map pp fs
