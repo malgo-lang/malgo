@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.FrontEnd.Info where
@@ -12,7 +11,7 @@ import           Text.PrettyPrint.HughesPJClass ( parens
                                                 )
 
 newtype Info = Info (Text, Int, Int)
-  deriving stock (Show, Eq, Ord, Read, Generic)
+  deriving stock (Show, Eq, Ord, Read)
 
 instance Pretty Info where
   pPrint (Info (file, line, column)) =

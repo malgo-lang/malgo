@@ -1,7 +1,6 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE DeriveGeneric #-}
 module Language.Malgo.TypeRep.SType where
 
 import           Language.Malgo.Prelude
@@ -25,7 +24,7 @@ data SType = TyVar Text
            | TyTuple [SType]
            | TyArray SType
            | TyForall [Text] SType
-  deriving stock (Eq, Show, Read, Generic)
+  deriving stock (Eq, Show, Read)
 
 instance Pretty SType where
   pPrint (TyVar x)       = text $ toString x

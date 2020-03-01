@@ -97,7 +97,7 @@ rtraverse = bitraverse pure
 
 -- 差分リスト
 newtype DiffList a = DiffList (Endo [a])
-  deriving newtype (Semigroup, Monoid, Generic)
+  deriving newtype (Semigroup, Monoid)
 
 instance One (DiffList a) where
   type OneItem (DiffList a) = a
