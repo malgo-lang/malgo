@@ -27,7 +27,6 @@ import Data.List (intercalate)
 %token
 let   { Token (_, LET) }
 in    { Token (_, IN) }
-end   { Token (_, END) }
 val   { Token (_, VAL) }
 fun   { Token (_, FUN) }
 type  { Token (_, TYPE) }
@@ -84,6 +83,7 @@ char  { Token (_, CHAR _) }
 bool  { Token (_, BOOL _) }
 str   { Token (_, STRING _) }
 
+%nonassoc in
 %right '->'
 %right prec_match
 %right prec_if
@@ -147,7 +147,7 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '&&' exp { BinOp (_info $2) And $1 $3 }
    | exp '||' exp { BinOp (_info $2) Or $1 $3 }
    | fn '(' params ')' '->' exp { Fn (_info $1) (reverse $3) $6 }
-   | let decls in exp end { toLet (_info $1) $2 $4 }
+   | let decls in exp { toLet (_info $1) $2 $4 }
    | if exp then exp else exp %prec prec_if { If (_info $1) $2 $4 $6 }
    | match exp with '|' clauses { Match (_info $1) $2 (fromList $ reverse $5) }
    | exp ';' exp { Seq (_info $2) $1 $3 }

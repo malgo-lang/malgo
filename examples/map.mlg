@@ -4,4 +4,3 @@ let extern print_int : Int -> {} = "print_int"
       | {x, y} -> {f(x), f(y)}
     fun add42(x : Int) : Int = x + 42
 in print_int(match map(add42, {1, 2}) with | { x, y } -> x)
-end

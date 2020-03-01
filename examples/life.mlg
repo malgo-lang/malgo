@@ -39,10 +39,8 @@ fun print_cells(cells: [Bool]): {} =
       if y >= y_width
       then {}
       else (go_x(0); newline(); go_y(y + 1))
-    end
   in
     go_y(0)
-  end
 
 fun to_int(b: Bool): Int = if b then 1 else 0
 
@@ -55,7 +53,6 @@ fun next_state(cells: [Bool], x: Int, y: Int): Bool =
     if view(cells, x, y)
     then (living[0] == 2) || (living[0] == 3)
     else (living[0] == 3)
-  end
 
 fun update_cells(cells: [Bool]): {} =
   let
@@ -69,9 +66,7 @@ fun update_cells(cells: [Bool]): {} =
         if y >= y_width
         then {}
         else go_x(0); go_y(y + 1)
-      end
   in go_y(0)
-  end
 
 in
   gen_seed();
@@ -87,6 +82,3 @@ in
     else {}
   in
     loop(10)
-  end
-
-end

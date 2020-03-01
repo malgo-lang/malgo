@@ -6,4 +6,3 @@ let extern print_int : Int -> {} = "print_int"
     val y = if x then 42 else 48
 in print_int(inc_int(41)); newline();
    print_int(add(2)(3)); newline()
-end

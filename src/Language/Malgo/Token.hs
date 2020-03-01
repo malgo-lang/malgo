@@ -21,7 +21,6 @@ import qualified Text.PrettyPrint.HughesPJClass
 data Tag
     = LET
     | IN
-    | END
     | VAL
     | FUN
     | TYPE
@@ -95,7 +94,6 @@ instance Pretty Token where
 instance Pretty Tag where
   pPrint LET                     = "let"
   pPrint IN                      = "in"
-  pPrint END                     = "end"
   pPrint VAL                     = "val"
   pPrint FUN                     = "fun"
   pPrint TYPE                    = "type"

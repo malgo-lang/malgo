@@ -9,4 +9,3 @@ let
     (print_int(fib(acc)); newline(); if n <= acc then {} else fib_loop(n, acc + 1))
 in
   fib_loop(30, 0)
-end

@@ -7,4 +7,3 @@ let fun id(x) = x
     extern print_int : Int -> {} = "print_int"
 in
   funRef[0] := id; print_int(funRef[0](1))
-end

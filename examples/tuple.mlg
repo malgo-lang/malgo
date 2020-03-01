@@ -5,4 +5,3 @@ let val p : {Int, String} = {42, " is the answer"}
     fun fst_int(p : {Int, String}) : Int = match p with | { x, y } -> x
     fun snd_str(p : {Int, String}) : String = match p with | { x, y } -> y
 in print_int(fst_int(p)); println(snd_str(p))
-end

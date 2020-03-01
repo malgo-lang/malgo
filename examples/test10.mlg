@@ -1,4 +1,3 @@
 let extern f : (Int, Int) -> Int = "add_i64"
     val g : Int -> Int = fn (x:Int) -> f(10, x)
 in g(3)
-end

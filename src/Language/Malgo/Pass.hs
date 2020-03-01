@@ -28,7 +28,7 @@ dump x = do
   opt <- getOpt
   if isDebugMode opt
     then log Debug $ "\n" <> toText (pShow x)
-    else log Debug $ "\n" <> toText (renderStyle (style { lineLength = maxInt }) (pPrint x))
+    else log Info $ "\n" <> toText (renderStyle (style { lineLength = maxInt }) (pPrint x))
 
 transWithDump :: forall p s t . (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do

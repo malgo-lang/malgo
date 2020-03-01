@@ -50,7 +50,6 @@ reservedNames :: [(String, Tag)]
 reservedNames =
   [ ("let"   , LET)
   , ("in"    , IN)
-  , ("end"   , END)
   , ("val"   , VAL)
   , ("fun"   , FUN)
   , ("type"  , TYPE)

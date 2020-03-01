@@ -26,7 +26,6 @@ fun add(x:Int):Int =
   let fun add2(y:Int):Int =
       x + y
   in add2(2)
-  end
 fun area(r:Float):Float = r *. r *. 3.14
 val name = "malgo"
 fun print_fib (n:Int) : {} = print_int(fib(n))
@@ -42,4 +41,3 @@ in
   println(concat("foo", "bar"));
   println_float(3.14);
   println_float(area(10.0))
-end

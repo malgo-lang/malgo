@@ -14,10 +14,8 @@ let
         then (print(if col[i] == j then " O" else " ."); loopj(j + 1))
         else print("\n")
         in loopj(0); loopi(i + 1)
-        end
       else print("\n")
     in loopi(0)
-    end
   
   fun try(c) =
     let fun loop(r) =
@@ -33,7 +31,5 @@ let
     in if c == n
        then printboard()
        else loop(0)
-    end
 in try(0)
-end
   
