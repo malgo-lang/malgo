@@ -266,9 +266,9 @@ coerceTo to x = case (to, ltypeOf x) of
     size      <- loadC x' [0, 1]
     newArr    <- arrayCreate ty size
     newArrRaw <- loadC newArr [0, 0]
-    void $ storeC newArr [0, 1] size
+    storeC newArr [0, 1] size
     zero <- assign $ Constant $ Int64 0
-    void $ forLoop zero size $ \i -> do
+    forLoop zero size $ \i -> do
       val  <- load elemTy xRaw [i]
       val' <- coerceTo ty val
       store newArrRaw [i] val'
