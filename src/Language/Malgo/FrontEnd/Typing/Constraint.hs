@@ -5,7 +5,6 @@
 module Language.Malgo.FrontEnd.Typing.Constraint
   ( Constraint(..)
   , solve
-  , UnifyError(..)
   , instantiate
   )
 where
@@ -25,12 +24,6 @@ data Constraint = Type :~ Type
 instance Substitutable Constraint where
   apply s (t1 :~ t2) = apply s t1 :~ apply s t2
   ftv (t1 :~ t2) = ftv t1 <> ftv t2
-
-data UnifyError = MismatchConstructor TyCon TyCon
-                | MismatchLength [Type] [Type]
-                | InfinitType TyVar Type
-                | MismatchLevel Type Type
-  deriving stock Show
 
 solve :: [Constraint] -> Either Doc Subst
 solve cs = solver (mempty, cs)

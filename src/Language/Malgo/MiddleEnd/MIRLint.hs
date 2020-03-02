@@ -78,7 +78,7 @@ checkCall f xs = case typeOf f of
     case solve (zipWith (:~) ps' xs') of
       Right _ -> pure ()
       Left err ->
-        errorDoc $ ("type mismatch:" <+> pPrint f <+> "and" <+> pPrint xs) $+$ pPrint (pShow err)
+        errorDoc $ ("type mismatch:" <+> pPrint f <+> "and" <+> pPrint xs) $+$ err
   _ -> errorDoc $ pPrint f <+> "is not function"
 
 lintExpr :: (MonadReader Env m, MonadIO m, MonadUniq m) => Expr (ID Type) -> m ()
@@ -109,7 +109,7 @@ lintExpr (Let n v e) = do
   case solve [typeOf n :~ typeOf v] of
     Right _ -> pure ()
     Left err ->
-      errorDoc $ ("type mismatch:" <+> pPrint n <+> "and" <+> pPrint v) $+$ pPrint (pShow err)
+      errorDoc $ ("type mismatch:" <+> pPrint n <+> "and" <+> pPrint v) $+$ err
   local (\env -> env { variables = n : variables env }) (lintExpr v >> lintExpr e)
 lintExpr (If    _ t f ) = lintExpr t >> lintExpr f
 lintExpr (Prim  _ _ xs) = mapM_ definedVar xs

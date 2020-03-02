@@ -121,11 +121,9 @@ typingExpr (Let _ (ValDec i name mtyp val) body) = applySubst $ do
   env     <- get
   valType <- typingExpr val
 
-  case mtyp of
-    Just typ -> do
-      typ' <- evalStateT (toType typ) mempty
-      updateSubst i "val signature" [valType :~ typ']
-    Nothing -> pure ()
+  whenJust mtyp $ \typ -> do
+    typ' <- evalStateT (toType typ) mempty
+    updateSubst i "val signature" [valType :~ typ']
 
   -- value restriction
   if isValue val then letVar env name valType else defineVar name (Forall [] valType)
