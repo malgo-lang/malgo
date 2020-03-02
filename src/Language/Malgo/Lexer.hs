@@ -63,6 +63,7 @@ reservedNames =
   , ("array" , ARRAY)
   , ("match" , MATCH)
   , ("with"  , WITH)
+  , ("as"    , AS)
   , ("Int"   , TY_INT)
   , ("Float" , TY_FLOAT)
   , ("Bool"  , TY_BOOL)

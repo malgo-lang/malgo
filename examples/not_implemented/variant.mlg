@@ -1,0 +1,9 @@
+let val n = <none={}> as <none:{}, some:Int>
+    val s = <some=1> as <none:{}, some:Int>
+
+    extern println : String -> {} = "println"
+    extern print_int : Int -> {} = "print_int"
+    extern newline : () -> {} = "newline"
+in match s with
+   | <none={}> -> println("none")
+   | <some=x> -> print_int(x); newline()
