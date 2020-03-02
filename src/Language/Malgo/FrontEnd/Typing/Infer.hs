@@ -26,6 +26,7 @@ import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
+import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 import           Relude.Unsafe                  ( fromJust )
 
 data Typing
@@ -64,10 +65,9 @@ lookupVar x = do
   instantiate scheme
 
 updateSubst :: (MonadWriter Subst m, MonadState Env m) => Info -> Doc -> [Constraint] -> m ()
-updateSubst i doc cs = do
-  let subst = catchUnifyError i doc $ solve cs
-  tell subst
-  modify (apply subst)
+updateSubst i doc cs = case solve cs of
+  Right subst -> tell subst >> modify (apply subst)
+  Left  e     -> errorDoc $ "error(typing):" <+> pPrint i $+$ e $+$ "on" <+> doc
 
 applySubst :: (MonadState Env m, Substitutable a) => WriterT Subst m a -> m a
 applySubst m = do
@@ -111,8 +111,8 @@ typingExpr (Call i fn args) = applySubst $ do
   updateSubst i "call" [TyApp FunC (retTy : argTypes) :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = applySubst $ do
-  paramTypes <- forM params $ \(_, paramType) ->
-    evalStateT (mapM toType paramType) mempty `whenNothingM` newTyMeta
+  paramTypes <- forM params
+    $ \(_, paramType) -> evalStateT (mapM toType paramType) mempty `whenNothingM` newTyMeta
   zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
   retType <- typingExpr body
   pure $ paramTypes --> retType
@@ -224,17 +224,17 @@ toType :: MonadUniq m => SType -> StateT (Map Text Type) m Type
 toType (TyVar x) = do
   kvs <- get
   lookup x kvs `whenNothing` do
-      t <- newTyMeta
-      modify (insert x t)
-      pure t
-toType TyInt = pure intTy
-toType TyFloat = pure floatTy
-toType TyBool = pure boolTy
-toType TyChar = pure charTy
-toType TyString = pure stringTy
-toType (TyFun ps r) = (-->) <$> mapM toType ps <*> toType r
-toType (TyTuple xs) = tupleTy <$> mapM toType xs
-toType (TyArray x) = arrayTy <$> toType x
+    t <- newTyMeta
+    modify (insert x t)
+    pure t
+toType TyInt           = pure intTy
+toType TyFloat         = pure floatTy
+toType TyBool          = pure boolTy
+toType TyChar          = pure charTy
+toType TyString        = pure stringTy
+toType (TyFun ps r   ) = (-->) <$> mapM toType ps <*> toType r
+toType (TyTuple xs   ) = tupleTy <$> mapM toType xs
+toType (TyArray x    ) = arrayTy <$> toType x
 toType (TyForall xs t) = do
   mapM_ (\x -> modify . insert x =<< newTyMeta) xs
   toType t
