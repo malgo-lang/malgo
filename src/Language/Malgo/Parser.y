@@ -38,7 +38,6 @@ else  { Token (_, ELSE) }
 array { Token (_, ARRAY) }
 match { Token (_, MATCH) }
 with  { Token (_, WITH) }
-as    { Token (_, AS) }
 Int   { Token (_, TY_INT) }
 Float { Token (_, TY_FLOAT) }
 Bool  { Token (_, TY_BOOL) }
@@ -147,7 +146,6 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '>=' exp { BinOp (_info $2) Ge $1 $3 }
    | exp '&&' exp { BinOp (_info $2) And $1 $3 }
    | exp '||' exp { BinOp (_info $2) Or $1 $3 }
-   | '<' id '=' exp '>' as Type { Variant (_info $1) (_id $ _tag $2) $4 $7 }
    | fn '(' params ')' '->' exp { Fn (_info $1) (reverse $3) $6 }
    | let decls in exp { toLet (_info $1) $2 $4 }
    | if exp then exp else exp %prec prec_if { If (_info $1) $2 $4 $6 }
@@ -168,9 +166,7 @@ clauses : clauses '|' pat '->' exp { ($3, $5) : $1 }
         | pat '->' exp { [($1, $3)] }
 
 pat : id { VarP (_id . _tag $ $1) }
-    | '{' '}' { TupleP [] }
     | '{' tuple_pat '}' { TupleP $ reverse $2 }
-    | '<' id '=' pat '>' { VariantP (_id $ _tag $2) $4 }
 
 tuple_pat : tuple_pat ',' pat { $3 : $1 }
           | pat { [$1] }
@@ -204,14 +200,9 @@ Type : Int { TyApp IntC [] }
      | '(' ')' '->' Type { TyApp FunC [$4] }
      | '(' Types ')' '->' Type { TyApp FunC ($5 : reverse $2) }
      | '[' Type ']' { TyApp ArrayC [$2] }
-     | '<' labeled_types '>' { TyApp (VariantC (map fst $ reverse $2)) (map snd $ reverse $2) }
 
 Types : Types ',' Type { $3 : $1 }
       | Type { [$1] }
-
-labeled_types : labeled_types ',' id ':' Type { (_id $ _tag $3, $5) : $1 }
-              | id ':' Type { [(_id $ _tag $1, $3)] }
-
 {
 parseError :: ([Token], [String]) -> a
 parseError ([], xs) = error $ show $ "Parse error at EOF: " <> pPrint xs <> " are expected."

@@ -65,7 +65,6 @@ data Tag
     | DARROW
     | MATCH
     | WITH
-    | AS
     | ID { _id :: String }
     | INT { _int :: Integer }
     | FLOAT { _float :: Double }
@@ -139,7 +138,6 @@ instance Pretty Tag where
   pPrint DARROW                  = "=>"
   pPrint MATCH                   = "match"
   pPrint WITH                    = "with"
-  pPrint AS                      = "as"
   pPrint (ID     x)              = P.text x
   pPrint (INT    x)              = P.integer x
   pPrint (FLOAT  x)              = P.double x

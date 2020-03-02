@@ -31,7 +31,6 @@ import           Text.PrettyPrint.HughesPJClass ( quotes
                                                 , parens
                                                 , brackets
                                                 , ($+$)
-                                                , text
                                                 )
 
 -- | 式。
@@ -88,11 +87,6 @@ data Expr a
     Info
     (Expr a) -- ^ 対象とある値
     (NonEmpty (Pat a, Expr a)) -- ^ パターンとマッチしたときの式のリスト
-  | Variant -- ^ ヴァリアント
-    Info
-    String -- ^ ラベル
-    (Expr a) -- ^ 値
-    Type -- ^ 型
   deriving stock (Eq, Show, Functor)
 
 -- | Exprからソースコード上の位置情報を取り出すための補助関数
@@ -115,7 +109,6 @@ info (Let  i _ _        ) = i
 info (If    i _ _ _     ) = i
 info (BinOp i _ _ _     ) = i
 info (Match i _ _       ) = i
-info (Variant i _ _ _   ) = i
 
 instance Pretty a => Pretty (Expr a) where
   pPrint (Var    _ name        ) = pPrint name
@@ -141,23 +134,19 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Match _ s cs   ) = parens $ "match" <+> pPrint s $+$ sep
     (punctuate "|" (toList $ fmap pPrintClause cs))
     where pPrintClause (p, e) = pPrint p <+> "=>" <+> pPrint e
-  pPrint (Variant _ l e t) = "<" <> text l <+> "=" <+> pPrint e <> ">" <+> "as" <+> pPrint t
 
 -- | パターン
 data Pat a = VarP a -- ^ 変数パターン
            | TupleP [Pat a] -- ^ タプルパターン
-           | VariantP String (Pat a) -- ^ ヴァリアントパターン
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Pat a) where
-  pPrint (VarP   x    ) = pPrint x
-  pPrint (TupleP xs   ) = braces $ sep $ punctuate "," $ map pPrint xs
-  pPrint (VariantP l x) = "<" <> text l <+> "=" <+> pPrint x <> ">"
+  pPrint (VarP   x ) = pPrint x
+  pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
 
 instance HasType a => HasType (Pat a) where
   typeOf (VarP   x    ) = typeOf x
   typeOf (TupleP xs   ) = TyApp TupleC $ map typeOf xs
-  typeOf (VariantP l x) = TyApp (VariantPC l) [typeOf x]
 
 -- | 変数定義、関数定義、外部関数定義
 data Decl a
