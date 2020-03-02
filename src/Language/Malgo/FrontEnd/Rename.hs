@@ -89,6 +89,7 @@ renameExpr (If    info c  t f) = If info <$> renameExpr c <*> renameExpr t <*> r
 renameExpr (BinOp info op x y) = BinOp info op <$> renameExpr x <*> renameExpr y
 renameExpr (Match info scrutinee clauses) =
   Match info <$> renameExpr scrutinee <*> mapM (renameClause info) clauses
+renameExpr (Variant info l e t) = Variant info l <$> renameExpr e <*> pure t
 
 renameClause :: (MonadUniq m, MonadReader Known m)
              => Info
@@ -96,5 +97,6 @@ renameClause :: (MonadUniq m, MonadReader Known m)
              -> m (Pat (ID ()), Expr (ID ()))
 renameClause info (p, e) = runContT (renamePat p) $ \p' -> (p', ) <$> renameExpr e
  where
-  renamePat (VarP   x ) = ContT $ \k -> withKnowns [x] $ VarP <$> getID info x >>= k
-  renamePat (TupleP ps) = TupleP <$> mapM renamePat ps
+  renamePat (VarP   x    ) = ContT $ \k -> withKnowns [x] $ VarP <$> getID info x >>= k
+  renamePat (TupleP ps   ) = TupleP <$> mapM renamePat ps
+  renamePat (VariantP l x) = VariantP l <$> renamePat x

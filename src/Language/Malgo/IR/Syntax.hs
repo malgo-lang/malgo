@@ -150,13 +150,14 @@ data Pat a = VarP a -- ^ 変数パターン
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Pat a) where
-  pPrint (VarP   x ) = pPrint x
-  pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (VarP   x    ) = pPrint x
+  pPrint (TupleP xs   ) = braces $ sep $ punctuate "," $ map pPrint xs
   pPrint (VariantP l x) = "<" <> text l <+> "=" <+> pPrint x <> ">"
 
 instance HasType a => HasType (Pat a) where
-  typeOf (VarP   x ) = typeOf x
-  typeOf (TupleP xs) = TyApp TupleC $ map typeOf xs
+  typeOf (VarP   x    ) = typeOf x
+  typeOf (TupleP xs   ) = TyApp TupleC $ map typeOf xs
+  typeOf (VariantP l x) = TyApp (VariantPC l) [typeOf x]
 
 -- | 変数定義、関数定義、外部関数定義
 data Decl a
