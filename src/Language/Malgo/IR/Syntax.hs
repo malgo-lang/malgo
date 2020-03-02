@@ -62,7 +62,7 @@ data Expr a
     [Expr a] -- ^ 引数のリスト
   | Fn -- ^ 無名関数
     Info
-    [(a, Maybe SType)] -- ^ 仮引数とその型のリスト
+    [(a, Maybe (SType a))] -- ^ 仮引数とその型のリスト
     (Expr a) -- ^ 関数本体
   | Seq -- ^ 連続した式(e1; e2)
     Info
@@ -149,9 +149,9 @@ instance HasType a => HasType (Pat a) where
 
 -- | 変数定義、関数定義、外部関数定義
 data Decl a
-  = FunDec [(Info, a, [(a, Maybe SType)], Maybe SType, Expr a)] -- ^ 関数定義。相互再帰しうる関数定義のリスト
-  | ValDec Info a (Maybe SType) (Expr a) -- ^ 変数定義
-  | ExDec Info a SType String -- ^ 外部関数定義
+  = FunDec [(Info, a, [(a, Maybe (SType a))], Maybe (SType a), Expr a)] -- ^ 関数定義。相互再帰しうる関数定義のリスト
+  | ValDec Info a (Maybe (SType a)) (Expr a) -- ^ 変数定義
+  | ExDec Info a (SType a) String -- ^ 外部関数定義
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Decl a) where

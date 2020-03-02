@@ -41,6 +41,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     opt <- getOpt
     when (dumpTypeTable opt) $ dump (toList env)
 
+    -- TODO: TyVarにはKindをはめる
     pure $ fmap (\x -> removeExplictForall <$> fromJust (lookup x env)) e
 
 type Env = IDMap () (ID Scheme)
@@ -181,7 +182,7 @@ prepare (_, f, _, _, _) = defineVar f . Forall [] =<< newTyMeta
 
 typingFunDec :: (MonadUniq m, MonadState Env m, MonadWriter Subst m, MonadFail m)
              => Env
-             -> (Info, ID (), [(ID (), Maybe SType)], Maybe SType, Expr (ID ()))
+             -> (Info, ID (), [(ID (), Maybe (SType (ID ())))], Maybe (SType (ID ())), Expr (ID ()))
              -> m ()
 typingFunDec env (i', f, params, mretty, body) = do
   (tv, subst) <- listen $ do
@@ -218,7 +219,7 @@ isValue Fn{}         = True
 isValue (Tuple _ xs) = all isValue xs
 isValue _            = False
 
-toType :: MonadUniq m => SType -> StateT (Map Text Type) m Type
+toType :: MonadUniq m => SType (ID ()) -> StateT (Map (ID ()) Type) m Type
 toType (TyVar x) = do
   kvs <- get
   lookup x kvs `whenNothing` do

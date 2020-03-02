@@ -42,8 +42,10 @@ instance Substitutable Scheme where
 instance Substitutable Type where
   apply s t@(TyMeta a  ) = lookupDefault t a s
   apply s (  TyApp c ts) = TyApp c $ apply s ts
+  apply _ Kind           = Kind
   ftv (TyMeta a  ) = one a
   ftv (TyApp _ ts) = foldMap ftv ts
+  ftv Kind         = mempty
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
   apply = fmap . apply

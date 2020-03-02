@@ -208,9 +208,9 @@ parseError :: ([Token], [String]) -> a
 parseError ([], xs) = error $ show $ "Parse error at EOF: " <> pPrint xs <> " are expected."
 parseError (t:_, xs) = error $ show $ hang "Parse error: " 0 $ pPrint t <> " is got, but " <> text (intercalate "," xs) <> " are expected."
 
-data D = V Info String (Maybe SType) (Expr String)
-       | F Info String [(String, Maybe SType)] (Maybe SType) (Expr String)
-       | E Info String SType String
+data D = V Info String (Maybe (SType String)) (Expr String)
+       | F Info String [(String, Maybe (SType String))] (Maybe (SType String)) (Expr String)
+       | E Info String (SType String) String
 
 toLet :: Info -> [D] -> Expr String -> Expr String
 toLet _ [] = id

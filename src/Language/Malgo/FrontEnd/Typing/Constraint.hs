@@ -40,6 +40,9 @@ instantiate (Forall vs t) = do
   pure $ apply (Subst $ fromList $ zip vs ts) t
 
 unify :: Type -> Type -> Either Doc Subst
+unify Kind       Kind       = pure mempty
+unify Kind       t          = Left $ "mismatch level" <+> pPrint Kind <+> "," <+> pPrint t
+unify t          Kind       = Left $ "mismatch level" <+> pPrint Kind <+> "," <+> pPrint t
 unify (TyMeta a) t          = bind a t
 unify t          (TyMeta a) = bind a t
 unify (TyApp c1 ts1) (TyApp c2 ts2)
