@@ -1,5 +1,3 @@
-{-# LANGUAGE DeriveFoldable #-}
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -18,6 +16,7 @@ import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
+import           Language.Malgo.TypeRep.SType
 
 import           Language.Malgo.IR.Op          as Export
 
@@ -63,7 +62,7 @@ data Expr a
     [Expr a] -- ^ 引数のリスト
   | Fn -- ^ 無名関数
     Info
-    [(a, Maybe Type)] -- ^ 仮引数とその型のリスト
+    [(a, Maybe SType)] -- ^ 仮引数とその型のリスト
     (Expr a) -- ^ 関数本体
   | Seq -- ^ 連続した式(e1; e2)
     Info
@@ -145,14 +144,14 @@ instance Pretty a => Pretty (Pat a) where
   pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
 
 instance HasType a => HasType (Pat a) where
-  typeOf (VarP   x    ) = typeOf x
-  typeOf (TupleP xs   ) = TyApp TupleC $ map typeOf xs
+  typeOf (VarP   x ) = typeOf x
+  typeOf (TupleP xs) = TyApp TupleC $ map typeOf xs
 
 -- | 変数定義、関数定義、外部関数定義
 data Decl a
-  = FunDec [(Info, a, [(a, Maybe Type)], Maybe Type, Expr a)] -- ^ 関数定義。相互再帰しうる関数定義のリスト
-  | ValDec Info a (Maybe Type) (Expr a) -- ^ 変数定義
-  | ExDec Info a Type String -- ^ 外部関数定義
+  = FunDec [(Info, a, [(a, Maybe SType)], Maybe SType, Expr a)] -- ^ 関数定義。相互再帰しうる関数定義のリスト
+  | ValDec Info a (Maybe SType) (Expr a) -- ^ 変数定義
+  | ExDec Info a SType String -- ^ 外部関数定義
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Decl a) where

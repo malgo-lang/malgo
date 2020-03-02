@@ -20,6 +20,7 @@ import           Language.Malgo.IR.Syntax
                                          hiding ( info )
 
 import           Language.Malgo.TypeRep.Type
+import           Language.Malgo.TypeRep.SType
 
 import           Language.Malgo.FrontEnd.Info
 import           Language.Malgo.FrontEnd.Typing.Constraint
@@ -110,7 +111,8 @@ typingExpr (Call i fn args) = applySubst $ do
   updateSubst i "call" [TyApp FunC (retTy : argTypes) :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = applySubst $ do
-  paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
+  paramTypes <- forM params $ \(_, paramType) ->
+    evalStateT (mapM toType paramType) mempty `whenNothingM` newTyMeta
   zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
   retType <- typingExpr body
   pure $ paramTypes --> retType
@@ -120,15 +122,18 @@ typingExpr (Let _ (ValDec i name mtyp val) body) = applySubst $ do
   valType <- typingExpr val
 
   case mtyp of
-    Just typ -> updateSubst i "val signature" [valType :~ typ]
-    Nothing  -> pure ()
+    Just typ -> do
+      typ' <- evalStateT (toType typ) mempty
+      updateSubst i "val signature" [valType :~ typ']
+    Nothing -> pure ()
 
   -- value restriction
   if isValue val then letVar env name valType else defineVar name (Forall [] valType)
 
   typingExpr body
 typingExpr (Let _ (ExDec _ name typ _) body) = applySubst $ do
-  defineVar name (Forall [] typ)
+  typ' <- evalStateT (toType typ) mempty
+  defineVar name (Forall [] typ')
   typingExpr body
 typingExpr (Let _ (FunDec fs) e) = applySubst $ do
   env <- get
@@ -178,12 +183,13 @@ prepare (_, f, _, _, _) = defineVar f . Forall [] =<< newTyMeta
 
 typingFunDec :: (MonadUniq m, MonadState Env m, MonadWriter Subst m, MonadFail m)
              => Env
-             -> (Info, ID (), [(ID (), Maybe Type)], Maybe Type, Expr (ID ()))
+             -> (Info, ID (), [(ID (), Maybe SType)], Maybe SType, Expr (ID ()))
              -> m ()
 typingFunDec env (i', f, params, mretty, body) = do
   (tv, subst) <- listen $ do
-    paramTypes <- mapM (\(_, paramType) -> paramType `whenNothing` newTyMeta) params
-    retType    <- mretty `whenNothing` newTyMeta
+    paramTypes <- forM params
+      $ \(_, paramType) -> evalStateT (mapM toType paramType) mempty `whenNothingM` newTyMeta
+    retType <- evalStateT (mapM toType mretty) mempty `whenNothingM` newTyMeta
 
     mapM_ (\((p, _), t) -> defineVar p $ Forall [] t) (zip params paramTypes)
     t  <- typingExpr body
@@ -213,3 +219,22 @@ isValue String{}     = True
 isValue Fn{}         = True
 isValue (Tuple _ xs) = all isValue xs
 isValue _            = False
+
+toType :: MonadUniq m => SType -> StateT (Map Text Type) m Type
+toType (TyVar x) = do
+  kvs <- get
+  lookup x kvs `whenNothing` do
+      t <- newTyMeta
+      modify (insert x t)
+      pure t
+toType TyInt = pure intTy
+toType TyFloat = pure floatTy
+toType TyBool = pure boolTy
+toType TyChar = pure charTy
+toType TyString = pure stringTy
+toType (TyFun ps r) = (-->) <$> mapM toType ps <*> toType r
+toType (TyTuple xs) = tupleTy <$> mapM toType xs
+toType (TyArray x) = arrayTy <$> toType x
+toType (TyForall xs t) = do
+  mapM_ (\x -> modify . insert x =<< newTyMeta) xs
+  toType t
