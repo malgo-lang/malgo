@@ -25,24 +25,24 @@ import Data.List (intercalate)
 %errorhandlertype explist
 
 %token
-let   { Token (_, LET) }
-in    { Token (_, IN) }
-val   { Token (_, VAL) }
-fun   { Token (_, FUN) }
-type  { Token (_, TYPE) }
-extern { Token (_, EXTERN) }
-fn { Token (_, FN) }
-if    { Token (_, IF) }
-then  { Token (_, THEN) }
-else  { Token (_, ELSE) }
-array { Token (_, ARRAY) }
-match { Token (_, MATCH) }
-with  { Token (_, WITH) }
-Int   { Token (_, TY_INT) }
-Float { Token (_, TY_FLOAT) }
-Bool  { Token (_, TY_BOOL) }
-Char  { Token (_, TY_CHAR) }
-String { Token (_, TY_STRING) }
+'let'    { Token (_, LET) }
+'in'     { Token (_, IN) }
+'val'    { Token (_, VAL) }
+'fun'    { Token (_, FUN) }
+'type'   { Token (_, TYPE) }
+'extern' { Token (_, EXTERN) }
+'fn'     { Token (_, FN) }
+'if'     { Token (_, IF) }
+'then'   { Token (_, THEN) }
+'else'   { Token (_, ELSE) }
+'array'  { Token (_, ARRAY) }
+'match'  { Token (_, MATCH) }
+'with'   { Token (_, WITH) }
+'Int'    { Token (_, TY_INT) }
+'Float'  { Token (_, TY_FLOAT) }
+'Bool'   { Token (_, TY_BOOL) }
+'Char'   { Token (_, TY_CHAR) }
+'String' { Token (_, TY_STRING) }
 '('   { Token (_, LPAREN) }
 ')'   { Token (_, RPAREN) }
 '['   { Token (_, LBRACK) }
@@ -83,7 +83,7 @@ char  { Token (_, CHAR _) }
 bool  { Token (_, BOOL _) }
 str   { Token (_, STRING _) }
 
-%nonassoc in
+%nonassoc 'in'
 %right '->'
 %right prec_match
 %right prec_if
@@ -109,15 +109,15 @@ decls : decls_raw { reverse $1 }
 decls_raw : decls_raw decl { $2 : $1 }
           | { [] }
 
-val_decl : val id ':' Type '=' exp { V (_info $1) (_id $ _tag $ $2) (Just $4) $6 }
-         | val id '=' exp { V (_info $1) (_id $ _tag $ $2) Nothing $4 }
+val_decl : 'val' id ':' type '=' exp { V (_info $1) (_id $ _tag $ $2) (Just $4) $6 }
+         | 'val' id '=' exp { V (_info $1) (_id $ _tag $ $2) Nothing $4 }
 
-fun_decl : fun id '(' ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) [] (Just $6) $8 }
-         | fun id '(' ')' '=' exp { F (_info $1) (_id . _tag $ $2) [] Nothing $6 }
-         | fun id '(' params ')' ':' Type '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) (Just $7) $9 }
-         | fun id '(' params ')' '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) Nothing $7 }
+fun_decl : 'fun' id '(' ')' ':' type '=' exp { F (_info $1) (_id . _tag $ $2) [] (Just $6) $8 }
+         | 'fun' id '(' ')' '=' exp { F (_info $1) (_id . _tag $ $2) [] Nothing $6 }
+         | 'fun' id '(' params ')' ':' type '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) (Just $7) $9 }
+         | 'fun' id '(' params ')' '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) Nothing $7 }
 
-ext_decl : extern id ':' Type '=' str { E (_info $1) (_id . _tag $ $2) $4 (_str $ _tag $ $6) }
+ext_decl : 'extern' id ':' type '=' str { E (_info $1) (_id . _tag $ $2) $4 (_str $ _tag $ $6) }
 
 decl : val_decl { $1 }
      | fun_decl { $1 }
@@ -126,7 +126,7 @@ decl : val_decl { $1 }
 params : params ',' param { $3 : $1 }
        | param { [$1] }
 
-param : id ':' Type { (_id . _tag $ $1, Just $3) }
+param : id ':' type { (_id . _tag $ $1, Just $3) }
        | id { (_id . _tag $ $1, Nothing) }
 
 exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
@@ -146,10 +146,10 @@ exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
    | exp '>=' exp { BinOp (_info $2) Ge $1 $3 }
    | exp '&&' exp { BinOp (_info $2) And $1 $3 }
    | exp '||' exp { BinOp (_info $2) Or $1 $3 }
-   | fn '(' params ')' '->' exp { Fn (_info $1) (reverse $3) $6 }
-   | let decls in exp { toLet (_info $1) $2 $4 }
-   | if exp then exp else exp %prec prec_if { If (_info $1) $2 $4 $6 }
-   | match exp with '|' clauses { Match (_info $1) $2 (fromList $ reverse $5) }
+   | 'fn' '(' params ')' '->' exp { Fn (_info $1) (reverse $3) $6 }
+   | 'let' decls 'in' exp { toLet (_info $1) $2 $4 }
+   | 'if' exp 'then' exp 'else' exp %prec prec_if { If (_info $1) $2 $4 $6 }
+   | 'match' exp 'with' '|' clauses { Match (_info $1) $2 (fromList $ reverse $5) }
    | exp ';' exp { Seq (_info $2) $1 $3 }
    | '-' int %prec NEG { BinOp (_info $1) Sub
                            (Int (_info $1) 0)
@@ -179,7 +179,7 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
           | str  { String (_info $1) (_str . _tag $ $1) }
           | '{' args '}' { Tuple (_info $1) (reverse $2) }
           | '[' args ']' { Array (_info $1) (fromList $ reverse $2) }
-          | array '(' exp ',' exp ')' { MakeArray (_info $1) $3 $5 }
+          | 'array' '(' exp ',' exp ')' { MakeArray (_info $1) $3 $5 }
           | simple_exp '[' exp ']' { ArrayRead (_info $2) $1 $3 }
           | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [] }
           | simple_exp '(' args ')' {- %prec CALL -} { Call (info $1) $1 (reverse $3) }
@@ -189,20 +189,21 @@ simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
 args : args ',' exp { $3 : $1 }
      | exp { [$1] }
 
-Type : Int { TyInt }
-     | Float { TyFloat }
-     | Bool { TyBool }
-     | Char { TyChar }
-     | String { TyString }
-     | Type '->' Type { TyFun [$1] $3 }
+type : 'Int' { TyInt }
+     | 'Float' { TyFloat }
+     | 'Bool' { TyBool }
+     | 'Char' { TyChar }
+     | 'String' { TyString }
+     | id { TyVar $ _id $ _tag $1 }
+     | type '->' type { TyFun [$1] $3 }
      | '{' '}' { TyTuple [] }
-     | '{' Types '}' { TyTuple (reverse $2) }
-     | '(' ')' '->' Type { TyFun [] $4 }
-     | '(' Types ')' '->' Type { TyFun (reverse $2) $5 }
-     | '[' Type ']' { TyArray $2 }
+     | '{' types '}' { TyTuple (reverse $2) }
+     | '(' ')' '->' type { TyFun [] $4 }
+     | '(' types ')' '->' type { TyFun (reverse $2) $5 }
+     | '[' type ']' { TyArray $2 }
 
-Types : Types ',' Type { $3 : $1 }
-      | Type { [$1] }
+types : types ',' type { $3 : $1 }
+      | type { [$1] }
 {
 parseError :: ([Token], [String]) -> a
 parseError ([], xs) = error $ show $ "Parse error at EOF: " <> pPrint xs <> " are expected."

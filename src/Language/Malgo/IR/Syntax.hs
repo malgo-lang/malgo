@@ -157,10 +157,17 @@ data Decl a
 instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec fs) = sep $ map pp fs
    where
-    pp (_, name, params, _, body) =
+    pp (_, name, params, ret, body) =
       parens
         $   "fun"
-        <+> (parens . sep $ pPrint name : map (\(n, _) -> pPrint n) params)
+        <+> ( parens
+            . sep
+            $ pPrint name
+            : map (\(n, t) -> pPrint n <> maybeToMonoid (fmap ((":" <>) . pPrint) t)) params
+            )
+        <>  maybeToMonoid (fmap ((":" <>) . pPrint) ret)
         $+$ pPrint body
-  pPrint (ValDec _ name _ val ) = parens $ "val" <+> pPrint name <+> pPrint val
-  pPrint (ExDec  _ name _ orig) = parens $ "extern" <+> pPrint name <+> pPrint orig
+  pPrint (ValDec _ name t val) =
+    parens $ "val" <+> pPrint name <> maybeToMonoid (fmap ((":" <>) . pPrint) t) <+> pPrint val
+  pPrint (ExDec _ name t orig) =
+    parens $ "extern" <+> pPrint name <> ":" <> pPrint t <+> pPrint orig
