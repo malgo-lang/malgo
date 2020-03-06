@@ -1,12 +1,12 @@
 {
-    "name": "GHC 8.6.5 with HIE",
+    "name": "GHC 8.8.2 with HIE",
     "dockerFile": "Dockerfile",
     "runArgs": [],
 
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
     "workspaceFolder": "/workspace",
 
-    "remoteEnv": {"BOOTSTRAP_HASKELL_NONINTERACTIVE": "true", "TERM": "xterm", "PATH":"/home/vscode/.local/bin:${containerEnv:PATH}"},
+    "remoteEnv": {"BOOTSTRAP_HASKELL_NONINTERACTIVE": "true", "TERM": "xterm", "PATH":"/home/vscode/.local/bin:/home/vscode/.cabal/bin:${containerEnv:PATH}"},
 
     // Use 'settings' to set *default* container specific settings.json values on container create. 
     // You can edit these settings after create using File > Preferences > Settings > Remote.

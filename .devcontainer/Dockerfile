@@ -22,16 +22,18 @@ RUN runuser -l ${USERNAME} -c 'curl https://gitlab.haskell.org/haskell/ghcup/raw
 RUN runuser -l ${USERNAME} -c 'chmod +x install.sh'
 RUN runuser -l ${USERNAME} -c 'BOOTSTRAP_HASKELL_NONINTERACTIVE=true ./install.sh'
 RUN runuser -l ${USERNAME} -c '. /home/vscode/.ghcup/env'
+RUN runuser -l ${USERNAME} -c '. /home/vscode/.ghcup/env && ghcup install 8.8.2'
+RUN runuser -l ${USERNAME} -c '. /home/vscode/.ghcup/env && ghcup set 8.8.2'
 RUN runuser -l ${USERNAME} -c "echo '. /home/vscode/.ghcup/env' >> /home/vscode/.bashrc"
 
 RUN runuser -l ${USERNAME} -c 'curl -sSL https://get.haskellstack.org/ | sh'
 RUN runuser -l ${USERNAME} -c 'stack setup'
 
-RUN runuser -l ${USERNAME} -c 'cd ~ && git clone https://github.com/haskell/haskell-ide-engine --recurse-submodules'
-RUN runuser -l ${USERNAME} -c 'cd ~/haskell-ide-engine && stack ./install.hs hie-8.8.2'
-RUN runuser -l ${USERNAME} -c 'cd ~/haskell-ide-engine && stack ./install.hs data'
-
 RUN runuser -l ${USERNAME} -c '. /home/vscode/.ghcup/env && cabal update'
 RUN runuser -l ${USERNAME} -c 'stack update'
+
+RUN runuser -l ${USERNAME} -c 'cd ~ && git clone https://github.com/haskell/haskell-ide-engine --recurse-submodules'
+RUN runuser -l ${USERNAME} -c '. /home/vscode/.ghcup/env && cd ~/haskell-ide-engine && ./cabal-hie-install hie-8.8.2'
+RUN runuser -l ${USERNAME} -c '. /home/vscode/.ghcup/env && cd ~/haskell-ide-engine && ./cabal-hie-install data'
 
 USER ${USERNAME}
