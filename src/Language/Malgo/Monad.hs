@@ -9,6 +9,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Language.Malgo.Monad
   ( MalgoM(..)
   , MalgoEnv(..)
@@ -17,11 +18,16 @@ module Language.Malgo.Monad
   , Opt(..)
   , Colog.Severity(..)
   , getFileName
+  , viewLine
+  , malgoError
   , MonadUniq(..)
   )
 where
 
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
+
+import qualified Language.Malgo.FrontEnd.Info  as Info
 
 import           Colog                          ( HasLog(..)
                                                 , Message
@@ -32,6 +38,10 @@ import           Colog                          ( HasLog(..)
                                                 )
 import qualified Colog
 import           Control.Monad.Fix
+import           Relude.Unsafe                  ( (!!) )
+import           Text.PrettyPrint               ( ($$)
+                                                , text
+                                                )
 
 data Opt = Opt
   { srcName       :: String
@@ -76,13 +86,17 @@ class Monad m => MonadMalgo m where
   getOpt :: m Opt
   default getOpt :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => m Opt
   getOpt = lift getOpt
+  getSource :: m Text
+  default getSource :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => m Text
+  getSource = lift getSource
   log :: Severity -> Text -> m ()
   default log :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => Severity -> Text -> m ()
   log s t = lift $ log s t
 
 instance MonadMalgo MalgoM where
-  getOpt = asks maOption
-  log = Colog.log
+  getOpt    = asks maOption
+  getSource = asks maSource
+  log       = Colog.log
 
 instance MonadMalgo m => MonadMalgo (ReaderT r m)
 instance MonadMalgo m => MonadMalgo (ExceptT e m)
@@ -91,6 +105,16 @@ instance MonadMalgo m => MonadMalgo (WriterT w m)
 
 getFileName :: (MonadMalgo m, IsString a) => m a
 getFileName = fromString . srcName <$> getOpt
+
+viewLine :: MonadMalgo m => Int -> m Text
+viewLine linum = do
+  s <- getSource
+  pure $ lines s !! (linum - 1)
+
+malgoError :: MonadMalgo m => Info.Info -> Doc -> Doc -> m a
+malgoError i@(Info.Info (_, l, _)) tag mes = do
+  line <- viewLine l
+  errorDoc $ "error(" <> tag <> "):" <+> mes $$ "on" <+> pPrint i <> ":" $$ text (toString line) <> "\n"
 
 class Monad m => MonadUniq m where
   getUniqSupply :: m UniqSupply

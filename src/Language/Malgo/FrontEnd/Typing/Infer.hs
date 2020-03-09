@@ -14,7 +14,6 @@ import           Language.Malgo.ID
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
-import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.Syntax
                                          hiding ( info )
@@ -22,11 +21,10 @@ import           Language.Malgo.IR.Syntax
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.TypeRep.SType
 
-import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Info  as FrontEnd
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
-import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 import           Relude.Unsafe                  ( fromJust )
 
 data Typing
@@ -65,10 +63,10 @@ lookupVar x = do
   Just ID { idMeta = scheme } <- lookup x <$> get
   instantiate scheme
 
-updateSubst :: MonadState Env m => Info -> Doc -> [Constraint] -> WriterT Subst m ()
-updateSubst i doc cs = case solve cs of
+updateSubst :: (MonadWriter Subst m, MonadState Env m, MonadMalgo m) => Info -> [Constraint] -> m ()
+updateSubst i cs = case solve cs of
   Right subst -> tell subst >> modify (apply subst)
-  Left  e     -> errorDoc $ "error(typing):" <+> pPrint i $+$ e $+$ "on" <+> doc
+  Left  e     -> malgoError i "typing" e
 
 applySubst :: (MonadState Env m, Substitutable a) => WriterT Subst m a -> m a
 applySubst m = do
@@ -76,7 +74,7 @@ applySubst m = do
   modify (apply subst)
   pure (apply subst x)
 
-typingExpr :: (MonadState Env f, MonadUniq f, MonadFail f) => Expr (ID ()) -> f Type
+typingExpr :: (MonadState Env m, MonadUniq m, MonadFail m, MonadMalgo m) => Expr (ID ()) -> m Type
 typingExpr (Var _ x)    = lookupVar x
 typingExpr Int{}        = pure intTy
 typingExpr Float{}      = pure floatTy
@@ -87,29 +85,29 @@ typingExpr (Tuple _ xs) = tupleTy <$> mapM typingExpr xs
 typingExpr (Array i xs) = applySubst $ do
   ts <- mapM typingExpr xs
   ty <- newTyMeta
-  updateSubst i "array literal" (toList $ fmap (ty :~) ts)
+  updateSubst i (toList $ fmap (ty :~) ts)
   pure $ arrayTy ty
 typingExpr (MakeArray i initNode sizeNode) = applySubst $ do
   initTy <- typingExpr initNode
   sizeTy <- typingExpr sizeNode
-  updateSubst i "make array" [TyApp IntC [] :~ sizeTy]
+  updateSubst i [TyApp IntC [] :~ sizeTy]
   pure $ arrayTy initTy
 typingExpr (ArrayRead i arr _) = applySubst $ do
   arrTy    <- typingExpr arr
   resultTy <- newTyMeta
-  updateSubst i "array read" [TyApp ArrayC [resultTy] :~ arrTy]
+  updateSubst i [TyApp ArrayC [resultTy] :~ arrTy]
   pure resultTy
 typingExpr (ArrayWrite i arr ix val) = applySubst $ do
   arrTy <- typingExpr arr
   ixTy  <- typingExpr ix
   valTy <- typingExpr val
-  updateSubst i "array write" [ixTy :~ TyApp IntC [], arrTy :~ TyApp ArrayC [valTy]]
+  updateSubst i [ixTy :~ TyApp IntC [], arrTy :~ TyApp ArrayC [valTy]]
   pure $ tupleTy []
 typingExpr (Call i fn args) = applySubst $ do
   fnTy     <- typingExpr fn
   argTypes <- mapM typingExpr args
   retTy    <- newTyMeta
-  updateSubst i "call" [TyApp FunC (retTy : argTypes) :~ fnTy]
+  updateSubst i [TyApp FunC (retTy : argTypes) :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = do
   paramTypes <- evaluatingStateT mempty
@@ -124,7 +122,7 @@ typingExpr (Let _ (ValDec i name mtyp val) body) = applySubst $ do
 
   whenJust mtyp $ \typ -> do
     typ' <- evalStateT (toType typ) mempty
-    updateSubst i "val signature" [valType :~ typ']
+    updateSubst i [valType :~ typ']
 
   -- value restriction
   if isValue val then letVar env name valType else defineVar name (Forall [] valType)
@@ -146,7 +144,7 @@ typingExpr (Let _ (FunDec fs) e) = do
 
     t  <- typingExpr body
     tv <- lookupVar f
-    updateSubst i' "fun dec" [tv :~ TyApp FunC (retType : paramTypes), t :~ retType]
+    updateSubst i' [tv :~ TyApp FunC (retType : paramTypes), t :~ retType]
     pure tv
 
   typingExpr e
@@ -154,14 +152,14 @@ typingExpr (If i c t f) = applySubst $ do
   ct <- typingExpr c
   tt <- typingExpr t
   ft <- typingExpr f
-  updateSubst i "if" [ct :~ boolTy, tt :~ ft]
+  updateSubst i [ct :~ boolTy, tt :~ ft]
   pure ft
 typingExpr (BinOp i op x y) = applySubst $ do
   opType     <- typingOp op
   xt         <- typingExpr x
   yt         <- typingExpr y
   resultType <- newTyMeta
-  updateSubst i "binary op" [opType :~ [xt, yt] --> resultType]
+  updateSubst i [opType :~ [xt, yt] --> resultType]
   pure resultType
  where
   typingOp Add  = pure $ [intTy, intTy] --> intTy
@@ -188,11 +186,15 @@ typingExpr (Match i scrutinee clauses) = applySubst $ do
   t :| _ <- mapM typingExpr exprs
   pure t
 
-typingPat :: (MonadState Env m, MonadUniq m) => Info -> Type -> Pat (ID ()) -> WriterT Subst m ()
+typingPat :: (MonadMalgo m, MonadState Env m, MonadUniq m)
+          => Info
+          -> Type
+          -> Pat (ID ())
+          -> WriterT Subst m ()
 typingPat _ ty (VarP   x ) = defineVar x (Forall [] ty)
 typingPat i ty (TupleP ps) = do
   vs <- replicateM (length ps) newTyMeta
-  updateSubst i "tuple pat" [ty :~ TyApp TupleC vs]
+  updateSubst i [ty :~ TyApp TupleC vs]
   zipWithM_ (typingPat i) vs ps
 
 isValue :: Expr a -> Bool
@@ -213,11 +215,11 @@ toType (TyVar x) = do
     t <- newTyMeta
     modify (insert x t)
     pure t
-toType TyInt           = pure intTy
-toType TyFloat         = pure floatTy
-toType TyBool          = pure boolTy
-toType TyChar          = pure charTy
-toType TyString        = pure stringTy
-toType (TyFun ps r   ) = (-->) <$> mapM toType ps <*> toType r
-toType (TyTuple xs   ) = tupleTy <$> mapM toType xs
-toType (TyArray x    ) = arrayTy <$> toType x
+toType TyInt        = pure intTy
+toType TyFloat      = pure floatTy
+toType TyBool       = pure boolTy
+toType TyChar       = pure charTy
+toType TyString     = pure stringTy
+toType (TyFun ps r) = (-->) <$> mapM toType ps <*> toType r
+toType (TyTuple xs) = tupleTy <$> mapM toType xs
+toType (TyArray x ) = arrayTy <$> toType x

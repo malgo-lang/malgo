@@ -23,7 +23,7 @@ import           Language.Malgo.IR.Syntax
 
 import           Language.Malgo.TypeRep.SType
 
-import           Language.Malgo.FrontEnd.Info
+import           Language.Malgo.FrontEnd.Info  as FrontEnd
 
 import           Control.Monad.Cont
 import           Control.Lens            hiding ( ix
@@ -53,19 +53,18 @@ withKnowns lens ks m = do
   vs <- mapM (newID ()) ks
   local (over lens (fromList (zip ks vs) <>)) m
 
-getID :: MonadReader Known m
+getID :: (MonadReader s m, MonadMalgo m)
       => Info
-      -> Getting (Map String (ID ())) Known (Map String (ID ()))
+      -> Getting (Map String (ID ())) s (Map String (ID ()))
       -> String
       -> m (ID ())
 getID info lens name = do
   k <- view lens
   case lookup name (k :: Map String (ID ())) of
-    Just x -> pure x
-    Nothing ->
-      errorDoc $ "error(rename):" <+> pPrint (info :: Info) <+> pPrint name <+> "is not defined"
+    Just x  -> pure x
+    Nothing -> malgoError info "rename" $ pPrint name <+> "is not defined"
 
-renameExpr :: (MonadUniq m, MonadReader Known m) => Expr String -> m (Expr (ID ()))
+renameExpr :: (MonadMalgo m, MonadUniq m, MonadReader Known m) => Expr String -> m (Expr (ID ()))
 renameExpr (Var    info name        ) = Var info <$> getID info var name
 renameExpr (Int    info x           ) = pure $ Int info x
 renameExpr (Float  info x           ) = pure $ Float info x
@@ -116,7 +115,7 @@ renameExpr (BinOp info op x y) = BinOp info op <$> renameExpr x <*> renameExpr y
 renameExpr (Match info scrutinee clauses) =
   Match info <$> renameExpr scrutinee <*> mapM (renameClause info) clauses
 
-renameClause :: (MonadUniq m, MonadReader Known m)
+renameClause :: (MonadMalgo m, MonadUniq m, MonadReader Known m)
              => Info
              -> (Pat String, Expr String)
              -> m (Pat (ID ()), Expr (ID ()))
@@ -125,7 +124,10 @@ renameClause info (p, e) = runContT (renamePat p) $ \p' -> (p', ) <$> renameExpr
   renamePat (VarP   x ) = ContT $ \k -> withKnowns var [x] $ VarP <$> getID info var x >>= k
   renamePat (TupleP ps) = TupleP <$> mapM renamePat ps
 
-renameSType :: (MonadReader Known m, MonadUniq m) => Info -> SType String -> m (SType (ID ()))
+renameSType :: (MonadMalgo m, MonadReader Known m, MonadUniq m)
+            => Info
+            -> SType String
+            -> m (SType (ID ()))
 renameSType i (TyVar x)    = TyVar <$> getID i tyVar x
 renameSType _ TyInt        = pure TyInt
 renameSType _ TyFloat      = pure TyFloat
