@@ -78,10 +78,11 @@ renameExpr (MakeArray info init size) = MakeArray info <$> renameExpr init <*> r
 renameExpr (ArrayRead info arr  ix  ) = ArrayRead info <$> renameExpr arr <*> renameExpr ix
 renameExpr (ArrayWrite info arr ix val) =
   ArrayWrite info <$> renameExpr arr <*> renameExpr ix <*> renameExpr val
-renameExpr (Fn info params body) = withKnowns var (map fst params) $ do
-  params' <- mapM (bitraverse (getID info var) (mapM (renameSType info))) params
-  body'   <- renameExpr body
-  pure $ Fn info params' body'
+renameExpr (Fn info params body) =
+  withKnowns var (map fst params)
+    $   Fn info
+    <$> mapM (bitraverse (getID info var) (mapM (renameSType info))) params
+    <*> renameExpr body
 renameExpr (Call info fn args) = Call info <$> renameExpr fn <*> mapM renameExpr args
 renameExpr (Seq info e1 e2) = Seq info <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Let info0 (ValDec info1 name typ val) e) = do
@@ -91,11 +92,10 @@ renameExpr (Let info0 (ValDec info1 name typ val) e) = do
     $   Let info0
     <$> (ValDec info1 <$> getID info1 var name <*> mapM (renameSType info1) typ <*> pure val')
     <*> renameExpr e
-renameExpr (Let info0 (FunDec fs) e) = withKnowns var (map getName fs) $ do
+renameExpr (Let info0 (FunDec fs) e) = withKnowns var (map (view _2) fs) $ do
   fs' <- mapM renameFunDec fs
   Let info0 (FunDec fs') <$> renameExpr e
  where
-  getName (_, f, _, _, _) = f
   renameFunDec (info, fn, params, retty, body) = do
     fn' <- getID info var fn
     withKnowns var (map fst params)
@@ -135,5 +135,3 @@ renameSType _ TyString     = pure TyString
 renameSType i (TyFun ps r) = TyFun <$> mapM (renameSType i) ps <*> renameSType i r
 renameSType i (TyTuple xs) = TyTuple <$> mapM (renameSType i) xs
 renameSType i (TyArray x ) = TyArray <$> renameSType i x
-renameSType i (TyForall xs t) =
-  withKnowns tyVar xs $ TyForall <$> mapM (getID i tyVar) xs <*> renameSType i t

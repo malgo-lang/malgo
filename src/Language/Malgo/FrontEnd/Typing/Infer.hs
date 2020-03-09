@@ -112,8 +112,8 @@ typingExpr (Call i fn args) = applySubst $ do
   updateSubst i "call" [TyApp FunC (retTy : argTypes) :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = do
-  paramTypes <- traverse (\(_, t) -> evalStateT (mapM toType t) mempty `whenNothingM` newTyMeta)
-                         params
+  paramTypes <- evaluatingStateT mempty
+    $ traverse (\(_, t) -> mapM toType t `whenNothingM` newTyMeta) params
   zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
   retType <- typingExpr body
   pure $ paramTypes --> retType
@@ -138,9 +138,9 @@ typingExpr (Let _ (FunDec fs) e) = do
   env <- get
   for_ fs $ \(_, f, _, _, _) -> defineVar f . Forall [] =<< newTyMeta
   for_ fs $ \(i', f, params, mretType, body) -> letVar env f <=< applySubst $ do
-    paramTypes <- traverse (\(_, t) -> evalStateT (mapM toType t) mempty `whenNothingM` newTyMeta)
-                           params
-    retType <- evalStateT (mapM toType mretType) mempty `whenNothingM` newTyMeta
+    (paramTypes, s) <- usingStateT mempty
+      $ traverse (\(_, t) -> traverse toType t `whenNothingM` newTyMeta) params
+    retType <- evalStateT (mapM toType mretType) s `whenNothingM` newTyMeta
 
     zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
 
@@ -221,6 +221,3 @@ toType TyString        = pure stringTy
 toType (TyFun ps r   ) = (-->) <$> mapM toType ps <*> toType r
 toType (TyTuple xs   ) = tupleTy <$> mapM toType xs
 toType (TyArray x    ) = arrayTy <$> toType x
-toType (TyForall xs t) = do
-  mapM_ (\x -> modify . insert x =<< newTyMeta) xs
-  toType t

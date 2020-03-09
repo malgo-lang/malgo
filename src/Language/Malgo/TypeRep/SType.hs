@@ -24,7 +24,6 @@ data SType a = TyVar a
              | TyFun [SType a] (SType a)
              | TyTuple [SType a]
              | TyArray (SType a)
-             | TyForall [a] (SType a)
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (SType a) where
@@ -37,4 +36,3 @@ instance Pretty a => Pretty (SType a) where
   pPrint (TyFun ps r   ) = parens (sep $ punctuate "," $ map pPrint ps) <+> "->" <+> pPrint r
   pPrint (TyTuple ts   ) = braces (sep $ punctuate "," $ map pPrint ts)
   pPrint (TyArray t    ) = brackets $ pPrint t
-  pPrint (TyForall ts t) = "forall" <+> sep (map pPrint ts) <> "." <+> pPrint t
