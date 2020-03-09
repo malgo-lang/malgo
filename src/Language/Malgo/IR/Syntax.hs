@@ -8,7 +8,7 @@ module Language.Malgo.IR.Syntax
   , Decl(..)
   , Expr(..)
   , Pat(..)
-  , info
+  , position
   )
 where
 
@@ -88,25 +88,25 @@ data Expr a
   deriving stock (Eq, Show, Functor)
 
 -- | Exprからソースコード上の位置情報を取り出すための補助関数
-info :: Expr t -> SourcePos
-info (Var    i _        ) = i
-info (Int    i _        ) = i
-info (Float  i _        ) = i
-info (Bool   i _        ) = i
-info (Char   i _        ) = i
-info (String i _        ) = i
-info (Tuple  i _        ) = i
-info (Array  i _        ) = i
-info (MakeArray i _ _   ) = i
-info (ArrayRead i _ _   ) = i
-info (ArrayWrite i _ _ _) = i
-info (Call i _ _        ) = i
-info (Fn   i _ _        ) = i
-info (Seq  i _ _        ) = i
-info (Let  i _ _        ) = i
-info (If    i _ _ _     ) = i
-info (BinOp i _ _ _     ) = i
-info (Match i _ _       ) = i
+position :: Expr t -> SourcePos
+position (Var    i _        ) = i
+position (Int    i _        ) = i
+position (Float  i _        ) = i
+position (Bool   i _        ) = i
+position (Char   i _        ) = i
+position (String i _        ) = i
+position (Tuple  i _        ) = i
+position (Array  i _        ) = i
+position (MakeArray i _ _   ) = i
+position (ArrayRead i _ _   ) = i
+position (ArrayWrite i _ _ _) = i
+position (Call i _ _        ) = i
+position (Fn   i _ _        ) = i
+position (Seq  i _ _        ) = i
+position (Let  i _ _        ) = i
+position (If    i _ _ _     ) = i
+position (BinOp i _ _ _     ) = i
+position (Match i _ _       ) = i
 
 instance Pretty a => Pretty (Expr a) where
   pPrint (Var    _ name        ) = pPrint name

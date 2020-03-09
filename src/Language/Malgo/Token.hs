@@ -88,7 +88,7 @@ _tag :: Token -> Tag
 _tag (Token a) = snd a
 
 instance Pretty Token where
-  pPrint (Token (i, t)) = pPrint i P.$+$ pPrint t
+  pPrint (Token (p, t)) = pPrint p P.$+$ pPrint t
 
 instance Pretty Tag where
   pPrint LET                     = "let"

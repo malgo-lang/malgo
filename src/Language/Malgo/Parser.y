@@ -181,8 +181,8 @@ simple_exp: id { Var (_sourcePos $1) (_id . _tag $ $1) }
           | '[' args ']' { Array (_sourcePos $1) (fromList $ reverse $2) }
           | 'array' '(' exp ',' exp ')' { MakeArray (_sourcePos $1) $3 $5 }
           | simple_exp '[' exp ']' { ArrayRead (_sourcePos $2) $1 $3 }
-          | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [] }
-          | simple_exp '(' args ')' {- %prec CALL -} { Call (info $1) $1 (reverse $3) }
+          | simple_exp '(' ')' {- %prec CALL -} { Call (position $1) $1 [] }
+          | simple_exp '(' args ')' {- %prec CALL -} { Call (position $1) $1 (reverse $3) }
           | '{' '}' { Tuple (_sourcePos $1) [] }
           | '(' exp ')' { $2 }
 
@@ -215,16 +215,16 @@ data D = V SourcePos String (Maybe (SType String)) (Expr String)
 
 toLet :: SourcePos -> [D] -> Expr String -> Expr String
 toLet _ [] = id
-toLet li (V i n t e : xs) = Let li (ValDec i n t e) . toLet li xs
+toLet li (V pos n t e : xs) = Let li (ValDec pos n t e) . toLet li xs
 toLet li xs@(F{} : _) =
   let (fundecs, rest) = span isF xs
   in Let li (FunDec $ map toFunDec fundecs) . toLet li rest
-toLet li (E i n t o : xs) = Let li (ExDec i n t o). toLet li xs
+toLet li (E pos n t o : xs) = Let li (ExDec pos n t o). toLet li xs
 
 isF :: D -> Bool
 isF F{} = True
 isF _ = False
 
 toFunDec :: D -> _
-toFunDec (F i f ps r e) = (i, f, ps, r, e)
+toFunDec (F pos f ps r e) = (i, f, ps, r, e)
 }
