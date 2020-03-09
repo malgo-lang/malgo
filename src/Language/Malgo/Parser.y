@@ -226,5 +226,5 @@ isF F{} = True
 isF _ = False
 
 toFunDec :: D -> _
-toFunDec (F pos f ps r e) = (i, f, ps, r, e)
+toFunDec (F pos f ps r e) = (pos, f, ps, r, e)
 }
