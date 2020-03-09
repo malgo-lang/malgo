@@ -21,6 +21,7 @@ module Language.Malgo.Prelude
   , ltraverse
   , rtraverse
   , DiffList
+  , Unreachable(..)
   )
 where
 
@@ -161,3 +162,10 @@ instance (Monoid w, MonadState s m) => MonadState s (WriterT w m) where
   {-# INLINE get #-}
   {-# INLINE put #-}
   {-# INLINE state #-}
+
+-- Unreachable
+
+data Unreachable = Unreachable
+  deriving stock (Show, Typeable)
+
+instance Exception Unreachable

@@ -58,10 +58,12 @@ letVar env var ty = do
 defineVar :: MonadState Env m => ID () -> Scheme -> m ()
 defineVar x t = modify (insert x $ x { idMeta = t })
 
-lookupVar :: (MonadFail f, MonadState Env f, MonadUniq f) => ID () -> f Type
+lookupVar :: (MonadState Env f, MonadUniq f) => ID () -> f Type
 lookupVar x = do
-  Just ID { idMeta = scheme } <- lookup x <$> get
-  instantiate scheme
+  env <- get
+  case lookup x env of
+    Just ID { idMeta = scheme } -> instantiate scheme
+    Nothing -> bug Unreachable
 
 updateSubst :: (MonadWriter Subst m, MonadState Env m, MonadMalgo m) => Info -> [Constraint] -> m ()
 updateSubst i cs = case solve cs of
@@ -74,7 +76,7 @@ applySubst m = do
   modify (apply subst)
   pure (apply subst x)
 
-typingExpr :: (MonadState Env m, MonadUniq m, MonadFail m, MonadMalgo m) => Expr (ID ()) -> m Type
+typingExpr :: (MonadState Env m, MonadUniq m, MonadMalgo m) => Expr (ID ()) -> m Type
 typingExpr (Var _ x)    = lookupVar x
 typingExpr Int{}        = pure intTy
 typingExpr Float{}      = pure floatTy
