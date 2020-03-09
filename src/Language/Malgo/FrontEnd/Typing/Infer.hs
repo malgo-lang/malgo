@@ -112,8 +112,8 @@ typingExpr (Call i fn args) = applySubst $ do
   updateSubst i "call" [TyApp FunC (retTy : argTypes) :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = do
-  paramTypes <- forM params
-    $ \(_, paramType) -> evalStateT (mapM toType paramType) mempty `whenNothingM` newTyMeta
+  paramTypes <- traverse (\(_, t) -> evalStateT (mapM toType t) mempty `whenNothingM` newTyMeta)
+                         params
   zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
   retType <- typingExpr body
   pure $ paramTypes --> retType
@@ -136,8 +136,19 @@ typingExpr (Let _ (ExDec _ name typ _) body) = do
   typingExpr body
 typingExpr (Let _ (FunDec fs) e) = do
   env <- get
-  mapM_ prepare            fs
-  mapM_ (typingFunDec env) fs
+  for_ fs $ \(_, f, _, _, _) -> defineVar f . Forall [] =<< newTyMeta
+  for_ fs $ \(i', f, params, mretType, body) -> letVar env f <=< applySubst $ do
+    paramTypes <- traverse (\(_, t) -> evalStateT (mapM toType t) mempty `whenNothingM` newTyMeta)
+                           params
+    retType <- evalStateT (mapM toType mretType) mempty `whenNothingM` newTyMeta
+
+    zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
+
+    t  <- typingExpr body
+    tv <- lookupVar f
+    updateSubst i' "fun dec" [tv :~ TyApp FunC (retType : paramTypes), t :~ retType]
+    pure tv
+
   typingExpr e
 typingExpr (If i c t f) = applySubst $ do
   ct <- typingExpr c
@@ -176,31 +187,6 @@ typingExpr (Match i scrutinee clauses) = applySubst $ do
   mapM_ (typingPat i ty1) pats
   t :| _ <- mapM typingExpr exprs
   pure t
-
-prepare :: (MonadState Env m, MonadUniq m) => (a, ID (), c, d, e) -> m ()
-prepare (_, f, _, _, _) = defineVar f . Forall [] =<< newTyMeta
-
-typingFunDec :: (MonadState Env m, MonadUniq m, MonadFail m)
-             => Env
-             -> ( Info
-                , ID ()
-                , [(ID (), Maybe (SType (ID ())))]
-                , Maybe (SType (ID ()))
-                , Expr (ID ())
-                )
-             -> m ()
-typingFunDec env (i', f, params, mretty, body) = do
-  applySubst $ do
-    paramTypes <- forM params
-      $ \(_, paramType) -> evalStateT (mapM toType paramType) mempty `whenNothingM` newTyMeta
-    retType <- evalStateT (mapM toType mretty) mempty `whenNothingM` newTyMeta
-
-    mapM_ (\((p, _), t) -> defineVar p $ Forall [] t) (zip params paramTypes)
-    t  <- typingExpr body
-    tv <- lookupVar f
-    updateSubst i' "fun dec" [tv :~ TyApp FunC (retType : paramTypes), t :~ retType]
-  ty <- lookupVar f
-  letVar env f ty
 
 typingPat :: (MonadState Env m, MonadUniq m) => Info -> Type -> Pat (ID ()) -> WriterT Subst m ()
 typingPat _ ty (VarP   x ) = defineVar x (Forall [] ty)

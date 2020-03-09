@@ -43,7 +43,7 @@ import           Language.Malgo.IR.LIR
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 
-import           Control.Lens.Indexed           ( iforM_ )
+import           Control.Lens.Indexed           ( ifor_ )
 import           Relude.Unsafe                  ( fromJust )
 
 newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
@@ -280,7 +280,7 @@ coerceTo to x = case (to, ltypeOf x) of
       Ptr (Struct _) -> pure x
       _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
     ptr <- alloca (Struct ts)
-    iforM_ ts $ \i ty -> do
+    ifor_ ts $ \i ty -> do
       xElem  <- loadC x' [0, i]
       xElem' <- coerceTo ty xElem
       storeC ptr [0, i] xElem'

@@ -29,7 +29,7 @@ import           Language.Malgo.BackEnd.LIRBuilder
 
 import           Control.Lens                   ( (.~)
                                                 , ifoldMap
-                                                , iforM_
+                                                , ifor_
                                                 )
 import           Relude.Unsafe                  ( fromJust )
 
@@ -90,7 +90,7 @@ genExpr (M.Lit   (Char     x    )) = assign $ Constant $ Word8 $ fromIntegral $ 
 genExpr (M.Lit   (H.String xs   )) = assign $ Constant $ L.String xs
 genExpr (M.Tuple xs              ) = do
   tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs)
-  iforM_ xs $ \i x -> storeC tuplePtr [0, i] =<< findVar x
+  ifor_ xs $ \i x -> storeC tuplePtr [0, i] =<< findVar x
   pure tuplePtr
 genExpr (M.TupleAccess t i) = do
   tuplePtr <- findVar t
@@ -120,7 +120,7 @@ genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   _ -> error $ toText $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
   capPtr <- alloca $ Struct (map (convertType . typeOf) cs)
-  iforM_ cs $ \i c -> do
+  ifor_ cs $ \i c -> do
     valOpr <- findVar c
     storeC capPtr [0, i] valOpr
   f'      <- findFunc f

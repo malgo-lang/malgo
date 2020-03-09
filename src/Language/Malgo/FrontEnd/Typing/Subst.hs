@@ -33,10 +33,6 @@ class Substitutable a where
   apply :: Subst -> a -> a
   ftv :: a -> Set TyVar
 
-instance Substitutable () where
-  apply _ _ = ()
-  ftv _ = mempty
-
 instance Substitutable Scheme where
   apply s (Forall ts t) = Forall ts $ apply s' t
     where s' = Subst $ foldr delete (unwrapSubst s) ts
