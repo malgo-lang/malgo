@@ -5,7 +5,7 @@
 module Language.Malgo.Token
   ( Token(..)
   , Tag(..)
-  , _info
+  , _sourcePos
   , _tag
   )
 where
@@ -13,10 +13,9 @@ where
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import           Language.Malgo.FrontEnd.Info
-
 import qualified Text.PrettyPrint.HughesPJClass
                                                as P
+import           Text.Parsec.Pos                ( SourcePos )
 
 data Tag
     = LET
@@ -79,11 +78,11 @@ data Tag
     deriving stock (Eq, Show)
 
 newtype Token =
-    Token (Info, Tag)
+    Token (SourcePos, Tag)
     deriving stock (Eq, Show)
 
-_info :: Token -> Info
-_info (Token a) = fst a
+_sourcePos :: Token -> SourcePos
+_sourcePos (Token a) = fst a
 
 _tag :: Token -> Tag
 _tag (Token a) = snd a

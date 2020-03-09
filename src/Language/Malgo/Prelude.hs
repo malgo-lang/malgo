@@ -52,6 +52,10 @@ import           Control.Lens.Prism             ( prism )
 import           GHC.Exts                       ( Item
                                                 , toList
                                                 )
+import           Text.PrettyPrint.HughesPJClass ( Pretty(..)
+                                                , text
+                                                )
+import           Text.Parsec.Pos                ( SourcePos )
 
 -- 差分を取ることができるデータ構造を表す型クラス
 class One a => Complement a where
@@ -164,8 +168,11 @@ instance (Monoid w, MonadState s m) => MonadState s (WriterT w m) where
   {-# INLINE state #-}
 
 -- Unreachable
-
 data Unreachable = Unreachable
   deriving stock (Show, Typeable)
 
 instance Exception Unreachable
+
+-- Pretty SourcePos
+instance Pretty SourcePos where
+  pPrint = text . show

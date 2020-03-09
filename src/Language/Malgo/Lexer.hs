@@ -15,8 +15,6 @@ import           Language.Malgo.Prelude  hiding ( EQ
                                                 , GT
                                                 )
 
-import           Language.Malgo.FrontEnd.Info
-
 import           Text.Parsec             hiding ( many
                                                 , (<|>)
                                                 )
@@ -25,12 +23,7 @@ import qualified Text.Parsec.Token             as Tok
 
 tokenize :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
 tokenize =
-  runParserT (Tok.whiteSpace tokenParser >> many (getInfo >>= lexer) >>= \toks -> eof >> pure toks)
-
-getInfo :: Monad m => ParsecT s u m Info
-getInfo = do
-  pos <- getPosition
-  pure (Info (toText $ sourceName pos, sourceLine pos, sourceColumn pos))
+  runParserT (Tok.whiteSpace tokenParser >> many (getPosition >>= lexer) >>= \toks -> eof >> pure toks)
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
 tokenParser = Tok.makeTokenParser Tok.LanguageDef { Tok.nestedComments  = True
@@ -101,8 +94,8 @@ reservedOpNames =
   , ("=>", DARROW)
   ]
 
-lexer :: Stream s m Char => Info -> ParsecT s u m Token
-lexer info =
+lexer :: Stream s m Char => SourcePos -> ParsecT s u m Token
+lexer pos =
   asumMap (simpleToken Tok.reserved) reservedNames
     <|> asumMap (simpleToken Tok.reservedOp) reservedOpNames
     <|> asumMap
@@ -114,5 +107,5 @@ lexer info =
     <|> valueToken Tok.charLiteral   CHAR
     <|> valueToken Tok.stringLiteral STRING
  where
-  simpleToken eatToken (s, t) = eatToken tokenParser s >> pure (Token (info, t))
-  valueToken scanToken builder = scanToken tokenParser >>= \v -> pure (Token (info, builder v))
+  simpleToken eatToken (s, t) = eatToken tokenParser s >> pure (Token (pos, t))
+  valueToken scanToken builder = scanToken tokenParser >>= \v -> pure (Token (pos, builder v))

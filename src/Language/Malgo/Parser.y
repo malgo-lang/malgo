@@ -9,7 +9,6 @@ import Prelude hiding (EQ, LT, GT)
 import Language.Malgo.Token
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.IR.Syntax
-import Language.Malgo.FrontEnd.Info
 import Language.Malgo.Pretty
 import Language.Malgo.Prelude (toText)
 import Text.PrettyPrint.HughesPJ (text, hang)
@@ -17,6 +16,7 @@ import Data.String
 import Data.Text (Text)
 import Data.List.NonEmpty (NonEmpty(..), fromList)
 import Data.List (intercalate)
+import Text.Parsec.Pos (SourcePos)
 }
 
 %name parse
@@ -109,15 +109,15 @@ decls : decls_raw { reverse $1 }
 decls_raw : decls_raw decl { $2 : $1 }
           | { [] }
 
-val_decl : 'val' id ':' type '=' exp { V (_info $1) (_id $ _tag $ $2) (Just $4) $6 }
-         | 'val' id '=' exp { V (_info $1) (_id $ _tag $ $2) Nothing $4 }
+val_decl : 'val' id ':' type '=' exp { V (_sourcePos $1) (_id $ _tag $ $2) (Just $4) $6 }
+         | 'val' id '=' exp { V (_sourcePos $1) (_id $ _tag $ $2) Nothing $4 }
 
-fun_decl : 'fun' id '(' ')' ':' type '=' exp { F (_info $1) (_id . _tag $ $2) [] (Just $6) $8 }
-         | 'fun' id '(' ')' '=' exp { F (_info $1) (_id . _tag $ $2) [] Nothing $6 }
-         | 'fun' id '(' params ')' ':' type '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) (Just $7) $9 }
-         | 'fun' id '(' params ')' '=' exp { F (_info $1) (_id . _tag $ $2) (reverse $4) Nothing $7 }
+fun_decl : 'fun' id '(' ')' ':' type '=' exp { F (_sourcePos $1) (_id . _tag $ $2) [] (Just $6) $8 }
+         | 'fun' id '(' ')' '=' exp { F (_sourcePos $1) (_id . _tag $ $2) [] Nothing $6 }
+         | 'fun' id '(' params ')' ':' type '=' exp { F (_sourcePos $1) (_id . _tag $ $2) (reverse $4) (Just $7) $9 }
+         | 'fun' id '(' params ')' '=' exp { F (_sourcePos $1) (_id . _tag $ $2) (reverse $4) Nothing $7 }
 
-ext_decl : 'extern' id ':' type '=' str { E (_info $1) (_id . _tag $ $2) $4 (_str $ _tag $ $6) }
+ext_decl : 'extern' id ':' type '=' str { E (_sourcePos $1) (_id . _tag $ $2) $4 (_str $ _tag $ $6) }
 
 decl : val_decl { $1 }
      | fun_decl { $1 }
@@ -129,37 +129,37 @@ params : params ',' param { $3 : $1 }
 param : id ':' type { (_id . _tag $ $1, Just $3) }
        | id { (_id . _tag $ $1, Nothing) }
 
-exp: exp '+' exp { BinOp (_info $2) Add $1 $3 }
-   | exp '-' exp { BinOp (_info $2) Sub $1 $3 }
-   | exp '*' exp { BinOp (_info $2) Mul $1 $3 }
-   | exp '/' exp { BinOp (_info $2) Div $1 $3 }
-   | exp '+.' exp { BinOp (_info $2) FAdd $1 $3 }
-   | exp '-.' exp { BinOp (_info $2) FSub $1 $3 }
-   | exp '*.' exp { BinOp (_info $2) FMul $1 $3 }
-   | exp '/.' exp { BinOp (_info $2) FDiv $1 $3 }
-   | exp '%' exp { BinOp (_info $2) Mod $1 $3 }
-   | exp '==' exp { BinOp (_info $2) Eq $1 $3 }
-   | exp '<>' exp { BinOp (_info $2) Neq $1 $3 }
-   | exp '<' exp { BinOp (_info $2) Lt $1 $3 }
-   | exp '>' exp { BinOp (_info $2) Gt $1 $3 }
-   | exp '<=' exp { BinOp (_info $2) Le $1 $3 }
-   | exp '>=' exp { BinOp (_info $2) Ge $1 $3 }
-   | exp '&&' exp { BinOp (_info $2) And $1 $3 }
-   | exp '||' exp { BinOp (_info $2) Or $1 $3 }
-   | 'fn' '(' params ')' '->' exp { Fn (_info $1) (reverse $3) $6 }
-   | 'let' decls 'in' exp { toLet (_info $1) $2 $4 }
-   | 'if' exp 'then' exp 'else' exp %prec prec_if { If (_info $1) $2 $4 $6 }
-   | 'match' exp 'with' '|' clauses { Match (_info $1) $2 (fromList $ reverse $5) }
-   | exp ';' exp { Seq (_info $2) $1 $3 }
-   | '-' int %prec NEG { BinOp (_info $1) Sub
-                           (Int (_info $1) 0)
-                           (Int (_info $2) (_int . _tag $ $2))
+exp: exp '+' exp { BinOp (_sourcePos $2) Add $1 $3 }
+   | exp '-' exp { BinOp (_sourcePos $2) Sub $1 $3 }
+   | exp '*' exp { BinOp (_sourcePos $2) Mul $1 $3 }
+   | exp '/' exp { BinOp (_sourcePos $2) Div $1 $3 }
+   | exp '+.' exp { BinOp (_sourcePos $2) FAdd $1 $3 }
+   | exp '-.' exp { BinOp (_sourcePos $2) FSub $1 $3 }
+   | exp '*.' exp { BinOp (_sourcePos $2) FMul $1 $3 }
+   | exp '/.' exp { BinOp (_sourcePos $2) FDiv $1 $3 }
+   | exp '%' exp { BinOp (_sourcePos $2) Mod $1 $3 }
+   | exp '==' exp { BinOp (_sourcePos $2) Eq $1 $3 }
+   | exp '<>' exp { BinOp (_sourcePos $2) Neq $1 $3 }
+   | exp '<' exp { BinOp (_sourcePos $2) Lt $1 $3 }
+   | exp '>' exp { BinOp (_sourcePos $2) Gt $1 $3 }
+   | exp '<=' exp { BinOp (_sourcePos $2) Le $1 $3 }
+   | exp '>=' exp { BinOp (_sourcePos $2) Ge $1 $3 }
+   | exp '&&' exp { BinOp (_sourcePos $2) And $1 $3 }
+   | exp '||' exp { BinOp (_sourcePos $2) Or $1 $3 }
+   | 'fn' '(' params ')' '->' exp { Fn (_sourcePos $1) (reverse $3) $6 }
+   | 'let' decls 'in' exp { toLet (_sourcePos $1) $2 $4 }
+   | 'if' exp 'then' exp 'else' exp %prec prec_if { If (_sourcePos $1) $2 $4 $6 }
+   | 'match' exp 'with' '|' clauses { Match (_sourcePos $1) $2 (fromList $ reverse $5) }
+   | exp ';' exp { Seq (_sourcePos $2) $1 $3 }
+   | '-' int %prec NEG { BinOp (_sourcePos $1) Sub
+                           (Int (_sourcePos $1) 0)
+                           (Int (_sourcePos $2) (_int . _tag $ $2))
                        }
-   | '-' float %prec NEG { BinOp (_info $1) Sub
-                             (Float (_info $1) 0)
-                             (Float (_info $2) (_float . _tag $ $2))
+   | '-' float %prec NEG { BinOp (_sourcePos $1) Sub
+                             (Float (_sourcePos $1) 0)
+                             (Float (_sourcePos $2) (_float . _tag $ $2))
                          }
-   | simple_exp '[' exp ']' ':=' exp { ArrayWrite (_info $5) $1 $3 $6 }
+   | simple_exp '[' exp ']' ':=' exp { ArrayWrite (_sourcePos $5) $1 $3 $6 }
    | simple_exp { $1 }
 
 clauses : clauses '|' pat '->' exp { ($3, $5) : $1 }
@@ -171,19 +171,19 @@ pat : id { VarP (_id . _tag $ $1) }
 tuple_pat : tuple_pat ',' pat { $3 : $1 }
           | pat { [$1] }
 
-simple_exp: id { Var (_info $1) (_id . _tag $ $1) }
-          | int { Int (_info $1) (_int . _tag $ $1) }
-          | float { Float (_info $1) (_float . _tag $ $1) }
-          | bool { Bool (_info $1) (_bool . _tag $ $1) }
-          | char { Char (_info $1) (_char . _tag $ $1) }
-          | str  { String (_info $1) (_str . _tag $ $1) }
-          | '{' args '}' { Tuple (_info $1) (reverse $2) }
-          | '[' args ']' { Array (_info $1) (fromList $ reverse $2) }
-          | 'array' '(' exp ',' exp ')' { MakeArray (_info $1) $3 $5 }
-          | simple_exp '[' exp ']' { ArrayRead (_info $2) $1 $3 }
+simple_exp: id { Var (_sourcePos $1) (_id . _tag $ $1) }
+          | int { Int (_sourcePos $1) (_int . _tag $ $1) }
+          | float { Float (_sourcePos $1) (_float . _tag $ $1) }
+          | bool { Bool (_sourcePos $1) (_bool . _tag $ $1) }
+          | char { Char (_sourcePos $1) (_char . _tag $ $1) }
+          | str  { String (_sourcePos $1) (_str . _tag $ $1) }
+          | '{' args '}' { Tuple (_sourcePos $1) (reverse $2) }
+          | '[' args ']' { Array (_sourcePos $1) (fromList $ reverse $2) }
+          | 'array' '(' exp ',' exp ')' { MakeArray (_sourcePos $1) $3 $5 }
+          | simple_exp '[' exp ']' { ArrayRead (_sourcePos $2) $1 $3 }
           | simple_exp '(' ')' {- %prec CALL -} { Call (info $1) $1 [] }
           | simple_exp '(' args ')' {- %prec CALL -} { Call (info $1) $1 (reverse $3) }
-          | '{' '}' { Tuple (_info $1) [] }
+          | '{' '}' { Tuple (_sourcePos $1) [] }
           | '(' exp ')' { $2 }
 
 args : args ',' exp { $3 : $1 }
@@ -209,11 +209,11 @@ parseError :: ([Token], [String]) -> a
 parseError ([], xs) = error $ show $ "Parse error at EOF: " <> pPrint xs <> " are expected."
 parseError (t:_, xs) = error $ show $ hang "Parse error: " 0 $ pPrint t <> " is got, but " <> text (intercalate "," xs) <> " are expected."
 
-data D = V Info String (Maybe (SType String)) (Expr String)
-       | F Info String [(String, Maybe (SType String))] (Maybe (SType String)) (Expr String)
-       | E Info String (SType String) String
+data D = V SourcePos String (Maybe (SType String)) (Expr String)
+       | F SourcePos String [(String, Maybe (SType String))] (Maybe (SType String)) (Expr String)
+       | E SourcePos String (SType String) String
 
-toLet :: Info -> [D] -> Expr String -> Expr String
+toLet :: SourcePos -> [D] -> Expr String -> Expr String
 toLet _ [] = id
 toLet li (V i n t e : xs) = Let li (ValDec i n t e) . toLet li xs
 toLet li xs@(F{} : _) =

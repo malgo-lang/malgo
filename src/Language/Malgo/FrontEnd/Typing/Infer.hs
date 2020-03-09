@@ -21,11 +21,11 @@ import           Language.Malgo.IR.Syntax
 import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.TypeRep.SType
 
-import           Language.Malgo.FrontEnd.Info  as FrontEnd
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
 import           Relude.Unsafe                  ( fromJust )
+import           Text.Parsec.Pos                ( SourcePos )
 
 data Typing
 
@@ -63,9 +63,12 @@ lookupVar x = do
   env <- get
   case lookup x env of
     Just ID { idMeta = scheme } -> instantiate scheme
-    Nothing -> bug Unreachable
+    Nothing                     -> bug Unreachable
 
-updateSubst :: (MonadWriter Subst m, MonadState Env m, MonadMalgo m) => Info -> [Constraint] -> m ()
+updateSubst :: (MonadWriter Subst m, MonadState Env m, MonadMalgo m)
+            => SourcePos
+            -> [Constraint]
+            -> m ()
 updateSubst i cs = case solve cs of
   Right subst -> tell subst >> modify (apply subst)
   Left  e     -> malgoError i "typing" e
@@ -189,7 +192,7 @@ typingExpr (Match i scrutinee clauses) = applySubst $ do
   pure t
 
 typingPat :: (MonadMalgo m, MonadState Env m, MonadUniq m)
-          => Info
+          => SourcePos
           -> Type
           -> Pat (ID ())
           -> WriterT Subst m ()

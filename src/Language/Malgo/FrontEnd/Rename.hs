@@ -23,13 +23,12 @@ import           Language.Malgo.IR.Syntax
 
 import           Language.Malgo.TypeRep.SType
 
-import           Language.Malgo.FrontEnd.Info  as FrontEnd
-
 import           Control.Monad.Cont
 import           Control.Lens            hiding ( ix
                                                 , op
                                                 , lens
                                                 )
+import           Text.Parsec.Pos                ( SourcePos )
 
 data Known = Known { _var :: Map String (ID ())
                    , _tyVar :: Map String (ID ())
@@ -54,7 +53,7 @@ withKnowns lens ks m = do
   local (over lens (fromList (zip ks vs) <>)) m
 
 getID :: (MonadReader s m, MonadMalgo m)
-      => Info
+      => SourcePos
       -> Getting (Map String (ID ())) s (Map String (ID ()))
       -> String
       -> m (ID ())
@@ -116,7 +115,7 @@ renameExpr (Match info scrutinee clauses) =
   Match info <$> renameExpr scrutinee <*> mapM (renameClause info) clauses
 
 renameClause :: (MonadMalgo m, MonadUniq m, MonadReader Known m)
-             => Info
+             => SourcePos
              -> (Pat String, Expr String)
              -> m (Pat (ID ()), Expr (ID ()))
 renameClause info (p, e) = runContT (renamePat p) $ \p' -> (p', ) <$> renameExpr e
@@ -125,7 +124,7 @@ renameClause info (p, e) = runContT (renamePat p) $ \p' -> (p', ) <$> renameExpr
   renamePat (TupleP ps) = TupleP <$> mapM renamePat ps
 
 renameSType :: (MonadMalgo m, MonadReader Known m, MonadUniq m)
-            => Info
+            => SourcePos
             -> SType String
             -> m (SType (ID ()))
 renameSType i (TyVar x)    = TyVar <$> getID i tyVar x

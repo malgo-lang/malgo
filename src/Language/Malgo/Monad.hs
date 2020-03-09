@@ -27,8 +27,6 @@ where
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import qualified Language.Malgo.FrontEnd.Info  as Info
-
 import           Colog                          ( HasLog(..)
                                                 , Message
                                                 , LogAction(..)
@@ -41,6 +39,9 @@ import           Control.Monad.Fix
 import           Relude.Unsafe                  ( (!!) )
 import           Text.PrettyPrint               ( ($$)
                                                 , text
+                                                )
+import           Text.Parsec.Pos                ( SourcePos
+                                                , sourceLine
                                                 )
 
 data Opt = Opt
@@ -111,10 +112,19 @@ viewLine linum = do
   s <- getSource
   pure $ lines s !! (linum - 1)
 
-malgoError :: MonadMalgo m => Info.Info -> Doc -> Doc -> m a
-malgoError i@(Info.Info (_, l, _)) tag mes = do
-  line <- viewLine l
-  errorDoc $ "error(" <> tag <> "):" <+> mes $$ "on" <+> pPrint i <> ":" $$ text (toString line) <> "\n"
+malgoError :: MonadMalgo m => SourcePos -> Doc -> Doc -> m a
+malgoError pos tag mes = do
+  line <- viewLine (sourceLine pos)
+  errorDoc
+    $   "error("
+    <>  tag
+    <>  "):"
+    <+> mes
+    $$  "on"
+    <+> pPrint pos
+    <>  ":"
+    $$  text (toString line)
+    <>  "\n"
 
 class Monad m => MonadUniq m where
   getUniqSupply :: m UniqSupply
