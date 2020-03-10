@@ -18,6 +18,7 @@ import           Language.Malgo.IR.HIR
 import qualified Language.Malgo.IR.Syntax      as S
 
 import           Language.Malgo.TypeRep.Type
+import           Control.Lens.Indexed           ( ifor_ )
 
 data TransToHIR
 
@@ -52,7 +53,7 @@ toExpr (S.String _ x        ) = pure $ Lit $ String x
 toExpr (S.Tuple  _ xs       ) = runDef $ Tuple <$> mapM toVar xs
 toExpr (S.Array  _ (x :| xs)) = runDef $ do
   arr <- def =<< MakeArray <$> toVar x <*> def (Lit $ Int $ fromIntegral $ length (x : xs))
-  for_ (zip [1 ..] xs) $ \(i, v) -> def =<< ArrayWrite arr <$> def (Lit (Int i)) <*> toVar v
+  ifor_ xs $ \i v -> def =<< ArrayWrite arr <$> def (Lit $ Int $ fromIntegral $ i + 1) <*> toVar v
   pure $ Var arr
 toExpr (S.MakeArray _ init size  ) = runDef $ MakeArray <$> toVar init <*> toVar size
 toExpr (S.ArrayRead _ arr  ix    ) = runDef $ ArrayRead <$> toVar arr <*> toVar ix
