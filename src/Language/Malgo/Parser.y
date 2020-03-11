@@ -31,6 +31,7 @@ import Text.Parsec.Pos (SourcePos)
 'fun'    { Token (_, FUN) }
 'type'   { Token (_, TYPE) }
 'extern' { Token (_, EXTERN) }
+'and'    { Token (_, AND) }
 'fn'     { Token (_, FN) }
 'if'     { Token (_, IF) }
 'then'   { Token (_, THEN) }
@@ -70,8 +71,8 @@ import Text.Parsec.Pos (SourcePos)
 '*.'   { Token (_, ASTERISK_DOT) }
 '/.'   { Token (_, SLASH_DOT) }
 '%'   { Token (_, PERCENT) }
-'&&'  { Token (_, AND) }
-'||'  { Token (_, OR) }
+'&&'  { Token (_, AND_AND) }
+'||'  { Token (_, OR_OR) }
 '->'  { Token (_, ARROW) }
 '<-'  { Token (_, LARROW) }
 '|'   { Token (_, BAR) }
@@ -109,18 +110,23 @@ decls : decls_raw { reverse $1 }
 decls_raw : decls_raw decl { $2 : $1 }
           | { [] }
 
-val_decl : 'val' id ':' type '=' exp { V (_sourcePos $1) (_id $ _tag $ $2) (Just $4) $6 }
-         | 'val' id '=' exp { V (_sourcePos $1) (_id $ _tag $ $2) Nothing $4 }
+val_decl : 'val' id ':' type '=' exp { ValDec (_sourcePos $1) (_id $ _tag $ $2) (Just $4) $6 }
+         | 'val' id '=' exp { ValDec (_sourcePos $1) (_id $ _tag $ $2) Nothing $4 }
 
-fun_decl : 'fun' id '(' ')' ':' type '=' exp { F (_sourcePos $1) (_id . _tag $ $2) [] (Just $6) $8 }
-         | 'fun' id '(' ')' '=' exp { F (_sourcePos $1) (_id . _tag $ $2) [] Nothing $6 }
-         | 'fun' id '(' params ')' ':' type '=' exp { F (_sourcePos $1) (_id . _tag $ $2) (reverse $4) (Just $7) $9 }
-         | 'fun' id '(' params ')' '=' exp { F (_sourcePos $1) (_id . _tag $ $2) (reverse $4) Nothing $7 }
+fun_decls : fun_decls_raw { FunDec (reverse $1) }
 
-ext_decl : 'extern' id ':' type '=' str { E (_sourcePos $1) (_id . _tag $ $2) $4 (_str $ _tag $ $6) }
+fun_decls_raw : fun_decls_raw 'and' fun_decl { $3 : $1 }
+              | 'fun' fun_decl { [$2] }
+
+fun_decl : id '(' ')' ':' type '=' exp { (_sourcePos $1, _id $ _tag $1, [], Just $5, $7) }
+         | id '(' ')' '=' exp { (_sourcePos $1, _id $ _tag $1, [], Nothing, $5) }
+         | id '(' params ')' ':' type '=' exp { (_sourcePos $1, _id $ _tag $1, reverse $3, Just $6, $8) }
+         | id '(' params ')' '=' exp { (_sourcePos $1, _id $ _tag $1, reverse $3, Nothing, $6) }
+
+ext_decl : 'extern' id ':' type '=' str { ExDec (_sourcePos $1) (_id . _tag $ $2) $4 (_str $ _tag $ $6) }
 
 decl : val_decl { $1 }
-     | fun_decl { $1 }
+     | fun_decls { $1 }
      | ext_decl { $1 }
 
 params : params ',' param { $3 : $1 }
@@ -147,7 +153,7 @@ exp: exp '+' exp { BinOp (_sourcePos $2) Add $1 $3 }
    | exp '&&' exp { BinOp (_sourcePos $2) And $1 $3 }
    | exp '||' exp { BinOp (_sourcePos $2) Or $1 $3 }
    | 'fn' '(' params ')' '->' exp { Fn (_sourcePos $1) (reverse $3) $6 }
-   | 'let' decls 'in' exp { toLet (_sourcePos $1) $2 $4 }
+   | 'let' decl 'in' exp { Let (_sourcePos $1) $2 $4 }
    | 'if' exp 'then' exp 'else' exp %prec prec_if { If (_sourcePos $1) $2 $4 $6 }
    | 'match' exp 'with' '|' clauses { Match (_sourcePos $1) $2 (fromList $ reverse $5) }
    | exp ';' exp { Seq (_sourcePos $2) $1 $3 }

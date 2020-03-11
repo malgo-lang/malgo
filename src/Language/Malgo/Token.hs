@@ -24,6 +24,7 @@ data Tag
     | FUN
     | TYPE
     | EXTERN
+    | AND
     | LPAREN
     | RPAREN
     | LBRACK
@@ -56,8 +57,8 @@ data Tag
     | GT
     | LE
     | GE
-    | AND
-    | OR
+    | AND_AND
+    | OR_OR
     | ARRAY
     | LARROW
     | BAR
@@ -97,6 +98,7 @@ instance Pretty Tag where
   pPrint FUN                     = "fun"
   pPrint TYPE                    = "type"
   pPrint EXTERN                  = "extern"
+  pPrint AND                     = "and"
   pPrint LPAREN                  = "("
   pPrint RPAREN                  = ")"
   pPrint LBRACK                  = "["
@@ -129,8 +131,8 @@ instance Pretty Tag where
   pPrint Language.Malgo.Token.GT = ">"
   pPrint LE                      = "<="
   pPrint GE                      = ">="
-  pPrint AND                     = "&&"
-  pPrint OR                      = "||"
+  pPrint AND_AND                 = "&&"
+  pPrint OR_OR                   = "||"
   pPrint ARRAY                   = "array"
   pPrint LARROW                  = "<-"
   pPrint BAR                     = "|"
