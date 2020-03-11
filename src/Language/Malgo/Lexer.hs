@@ -69,7 +69,7 @@ reservedOpNames =
   , (":" , COLON)
   , (";" , SEMICOLON)
   , ("," , COMMA)
-  , ("==", EQ)
+  , ("==", EQUAL_EQUAL)
   , ("=" , EQUAL)
   , ("/=", NEQ)
   , ("<" , LT)

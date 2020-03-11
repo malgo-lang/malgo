@@ -50,7 +50,7 @@ data Tag
     | SLASH_DOT
     | PERCENT
     | ARROW
-    | EQ
+    | EQUAL_EQUAL
     | NEQ
     | LT
     | GT
@@ -123,7 +123,7 @@ instance Pretty Tag where
   pPrint SLASH_DOT               = "/."
   pPrint PERCENT                 = "%"
   pPrint ARROW                   = "->"
-  pPrint Language.Malgo.Token.EQ = "=="
+  pPrint EQUAL_EQUAL             = "=="
   pPrint NEQ                     = "/="
   pPrint Language.Malgo.Token.LT = "<"
   pPrint Language.Malgo.Token.GT = ">"

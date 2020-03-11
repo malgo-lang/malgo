@@ -53,7 +53,7 @@ import Text.Parsec.Pos (SourcePos)
 ':'   { Token (_, COLON) }
 ';'   { Token (_, SEMICOLON) }
 ','   { Token (_, COMMA) }
-'=='  { Token (_, EQ) }
+'=='  { Token (_, EQUAL_EQUAL) }
 '='   { Token (_, EQUAL) }
 '<>'  { Token (_, NEQ) }
 '<'   { Token (_, LT) }
