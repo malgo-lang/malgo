@@ -3,9 +3,13 @@ ghc:
   - "8.8.2"
 before_install:
   - sudo apt-get -y install libgc-dev clang
+install:
+  - cabal new-configure --enable-tests --allow-newer
+  - cabal new-build --dep -j2 all
+
 script:
- - cabal new-build -w ${HC} all
- - cabal new-test -w ${HC} all
- - cabal new-haddock -w ${HC} all
+ - cabal new-build all
+ - cabal new-test all
+ - cabal new-haddock all
  - cabal install
  - ./test.sh
