@@ -4,8 +4,8 @@ ghc:
 before_install:
   - sudo apt-get -y install libgc-dev clang
 install:
-  - cabal install cabal-install
-  - cabal install hspec-discover
+  - cabal new-install --allow-newer cabal-install
+  - cabal new-install --allow-newer hspec-discover
   - cabal new-configure
   - cabal new-build --dep -j2 all
 
