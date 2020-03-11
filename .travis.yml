@@ -1,4 +1,6 @@
 language: haskell
+ghc:
+  - "8.8.2"
 before_install:
   - sudo apt-get -y install libgc-dev clang
 script:
