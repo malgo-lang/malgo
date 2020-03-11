@@ -5,6 +5,11 @@ source_filename = "./examples/test1.mlg"
  
 
 
+define external ccc  i64 @answer0()    {
+  ret i64 42 
+}
+
+
 declare external ccc  void @GC_init()    
 
 

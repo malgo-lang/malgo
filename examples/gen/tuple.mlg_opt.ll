@@ -6,7 +6,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @"$globle_str_48" = unnamed_addr constant [15 x i8] c" is the answer\00"
 
 ; Function Attrs: norecurse nounwind readonly
-define i8* @snd_str5({ i64, i8* }* nocapture readonly) local_unnamed_addr #0 {
+define i8* @snd_str8({ i64, i8* }* nocapture readonly) local_unnamed_addr #0 {
   %2 = getelementptr { i64, i8* }, { i64, i8* }* %0, i64 0, i32 1
   %3 = load i8*, i8** %2, align 8
   ret i8* %3

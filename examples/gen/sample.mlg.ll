@@ -30,7 +30,7 @@ define external ccc  {}* @println_int13(i64 )    {
 }
 
 
-define external ccc  {}* @println_float14(double )    {
+define external ccc  {}* @println_float15(double )    {
   %2 =  call ccc  {}*  @print_float3(double  %0)  
   %3 =  call ccc  {}*  @newline9()  
   ret {}* %3 
@@ -175,21 +175,21 @@ define external ccc  i8 @chr7(i64 )    {
 }
 
 
-define external ccc  double @area23(double )    {
+define external ccc  double @area26(double )    {
   %2 = fmul double %0, %0 
   %3 = fmul double %2, 3.140000e0 
   ret double %3 
 }
 
 
-define external ccc  i64 @add225(i8* , i64 )    {
+define external ccc  i64 @add224(i8* , i64 )    {
   %3 = bitcast i8* %0 to {i64}* 
   %4 = getelementptr  {i64}, {i64}* %3, i32 0, i32 0 
   %5 = load  i64, i64* %4 
   %6 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
   %7 = bitcast i8* %6 to {i64 (i8*, i64)*, i8*}* 
   %8 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %7, i32 0, i32 0 
-  store  i64 (i8*, i64)* @add225, i64 (i8*, i64)** %8 
+  store  i64 (i8*, i64)* @add224, i64 (i8*, i64)** %8 
   %9 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %7, i32 0, i32 1 
   store  i8* %0, i8** %9 
   %10 = add   i64 %5, %1 
@@ -206,7 +206,7 @@ define external ccc  i64 @add22(i64 )    {
   %6 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
   %7 = bitcast i8* %6 to {i64 (i8*, i64)*, i8*}* 
   %8 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %7, i32 0, i32 0 
-  store  i64 (i8*, i64)* @add225, i64 (i8*, i64)** %8 
+  store  i64 (i8*, i64)* @add224, i64 (i8*, i64)** %8 
   %9 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %7, i32 0, i32 1 
   store  i8* %5, i8** %9 
   %10 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %7, i32 0, i32 0 
@@ -279,8 +279,8 @@ define external ccc  i32 @main()    {
   %24 =  call ccc  {}*  @println1(i8*  %23)  
   %25 =  call ccc  i8*  @concat11(i8*  getelementptr inbounds ([4 x i8], [4 x i8]* @$globle_str_226, i32 0, i32 0), i8*  getelementptr inbounds ([4 x i8], [4 x i8]* @$globle_str_227, i32 0, i32 0))  
   %26 =  call ccc  {}*  @println1(i8*  %25)  
-  %27 =  call ccc  {}*  @println_float14(double  3.140000e0)  
-  %28 =  call ccc  double  @area23(double  1.000000e1)  
-  %29 =  call ccc  {}*  @println_float14(double  %28)  
+  %27 =  call ccc  {}*  @println_float15(double  3.140000e0)  
+  %28 =  call ccc  double  @area26(double  1.000000e1)  
+  %29 =  call ccc  {}*  @println_float15(double  %28)  
   ret i32 0 
 }

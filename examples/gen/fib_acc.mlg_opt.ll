@@ -17,7 +17,7 @@ define {}* @newline1() local_unnamed_addr {
   ret {}* %1
 }
 
-define {}* @fib_loop3(i64) local_unnamed_addr {
+define {}* @fib_loop6(i64) local_unnamed_addr {
   %2 = icmp slt i64 %0, 1
   br i1 %2, label %then_0, label %else_0.i.preheader
 
@@ -124,9 +124,9 @@ fib_acc2.exit.i:                                  ; preds = %else_0.i.i.epil, %f
   %15 = add nsw i64 %.tr2.i, -1
   %16 = icmp ult i64 %.tr2.i, 2
   %indvar.next = add i64 %indvar, 1
-  br i1 %16, label %fib_loop3.exit, label %else_0.i.preheader.i
+  br i1 %16, label %fib_loop6.exit, label %else_0.i.preheader.i
 
-fib_loop3.exit:                                   ; preds = %fib_acc2.exit.i
+fib_loop6.exit:                                   ; preds = %fib_acc2.exit.i
   %17 = tail call {}* @print_int(i64 1)
   %18 = tail call {}* @newline()
   ret i32 0

@@ -1,5 +1,5 @@
-; ModuleID = './examples/gen/test15.mlg.ll'
-source_filename = "./examples/test15.mlg"
+; ModuleID = './examples/gen/mutrec_tuple.mlg.ll'
+source_filename = "./examples/mutrec_tuple.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 

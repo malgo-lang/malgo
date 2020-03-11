@@ -5,7 +5,7 @@ source_filename = "./examples/tuple.mlg"
  
 
 
-define external ccc  i8* @snd_str5({i64, i8*}* )    {
+define external ccc  i8* @snd_str8({i64, i8*}* )    {
   %2 = getelementptr  {i64, i8*}, {i64, i8*}* %0, i32 0, i32 0 
   %3 = load  i64, i64* %2 
   %4 = getelementptr  {i64, i8*}, {i64, i8*}* %0, i32 0, i32 1 
@@ -69,7 +69,7 @@ define external ccc  i32 @main()    {
   store  i8* getelementptr inbounds ([15 x i8], [15 x i8]* @$globle_str_48, i32 0, i32 0), i8** %4 
   %5 =  call ccc  i64  @fst_int4({i64, i8*}*  %2)  
   %6 =  call ccc  {}*  @print_int1(i64  %5)  
-  %7 =  call ccc  i8*  @snd_str5({i64, i8*}*  %2)  
+  %7 =  call ccc  i8*  @snd_str8({i64, i8*}*  %2)  
   %8 =  call ccc  {}*  @println2(i8*  %7)  
   ret i32 0 
 }

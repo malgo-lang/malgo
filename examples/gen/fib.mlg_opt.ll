@@ -19,7 +19,7 @@ define {}* @newline1() local_unnamed_addr {
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define {}* @fib_loop3(i64, i64) local_unnamed_addr {
+define {}* @fib_loop4(i64, i64) local_unnamed_addr {
   br label %tailrecurse
 
 tailrecurse:                                      ; preds = %tailrecurse, %2
@@ -70,9 +70,9 @@ tailrecurse.i:                                    ; preds = %tailrecurse.i, %0
   %3 = tail call {}* @newline()
   %4 = add nuw nsw i64 %.tr3.i, 1
   %exitcond = icmp eq i64 %4, 31
-  br i1 %exitcond, label %fib_loop3.exit, label %tailrecurse.i
+  br i1 %exitcond, label %fib_loop4.exit, label %tailrecurse.i
 
-fib_loop3.exit:                                   ; preds = %tailrecurse.i
+fib_loop4.exit:                                   ; preds = %tailrecurse.i
   %5 = tail call i8* @GC_malloc(i64 0)
   ret i32 0
 }

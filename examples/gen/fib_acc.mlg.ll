@@ -23,7 +23,7 @@ define external ccc  {}* @newline1()    {
 }
 
 
-define external ccc  {}* @fib_loop3(i64 )    {
+define external ccc  {}* @fib_loop6(i64 )    {
 ; <label>:1:
   %2 = icmp sle i64 %0, 0 
   %3 = alloca {}* 
@@ -39,7 +39,7 @@ else_0:
   %8 =  call ccc  {}*  @print_int0(i64  %7)  
   %9 =  call ccc  {}*  @newline1()  
   %10 = sub   i64 %0, 1 
-  %11 =  call ccc  {}*  @fib_loop3(i64  %10)  
+  %11 =  call ccc  {}*  @fib_loop6(i64  %10)  
   store  {}* %11, {}** %3 
   br label %end_0 
 end_0:
@@ -73,6 +73,6 @@ declare external ccc  void @GC_init()
 
 define external ccc  i32 @main()    {
    call ccc  void  @GC_init()  
-  %1 =  call ccc  {}*  @fib_loop3(i64  30)  
+  %1 =  call ccc  {}*  @fib_loop6(i64  30)  
   ret i32 0 
 }

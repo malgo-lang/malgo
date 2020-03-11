@@ -26,7 +26,7 @@ define external ccc  {}* @newline1()    {
 declare external ccc  i8* @GC_malloc(i64)    
 
 
-define external ccc  {}* @fib_loop3(i64 , i64 )    {
+define external ccc  {}* @fib_loop4(i64 , i64 )    {
 ; <label>:2:
   %3 =  call ccc  i64  @fib2(i64  %1)  
   %4 =  call ccc  {}*  @print_int0(i64  %3)  
@@ -41,7 +41,7 @@ then_0:
   br label %end_0 
 else_0:
   %10 = add   i64 %1, 1 
-  %11 =  call ccc  {}*  @fib_loop3(i64  %0, i64  %10)  
+  %11 =  call ccc  {}*  @fib_loop4(i64  %0, i64  %10)  
   store  {}* %11, {}** %7 
   br label %end_0 
 end_0:
@@ -77,6 +77,6 @@ declare external ccc  void @GC_init()
 
 define external ccc  i32 @main()    {
    call ccc  void  @GC_init()  
-  %1 =  call ccc  {}*  @fib_loop3(i64  30, i64  0)  
+  %1 =  call ccc  {}*  @fib_loop4(i64  30, i64  0)  
   ret i32 0 
 }

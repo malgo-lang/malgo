@@ -1,5 +1,5 @@
-; ModuleID = './examples/test15.mlg'
-source_filename = "./examples/test15.mlg"
+; ModuleID = './examples/mutrec_tuple.mlg'
+source_filename = "./examples/mutrec_tuple.mlg"
 
 
  
