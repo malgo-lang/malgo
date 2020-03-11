@@ -214,23 +214,4 @@ types : types ',' type { $3 : $1 }
 parseError :: ([Token], [String]) -> a
 parseError ([], xs) = error $ show $ "Parse error at EOF: " <> pPrint xs <> " are expected."
 parseError (t:_, xs) = error $ show $ hang "Parse error: " 0 $ pPrint t <> " is got, but " <> text (intercalate "," xs) <> " are expected."
-
-data D = V SourcePos String (Maybe (SType String)) (Expr String)
-       | F SourcePos String [(String, Maybe (SType String))] (Maybe (SType String)) (Expr String)
-       | E SourcePos String (SType String) String
-
-toLet :: SourcePos -> [D] -> Expr String -> Expr String
-toLet _ [] = id
-toLet li (V pos n t e : xs) = Let li (ValDec pos n t e) . toLet li xs
-toLet li xs@(F{} : _) =
-  let (fundecs, rest) = span isF xs
-  in Let li (FunDec $ map toFunDec fundecs) . toLet li rest
-toLet li (E pos n t o : xs) = Let li (ExDec pos n t o). toLet li xs
-
-isF :: D -> Bool
-isF F{} = True
-isF _ = False
-
-toFunDec :: D -> _
-toFunDec (F pos f ps r e) = (pos, f, ps, r, e)
 }
