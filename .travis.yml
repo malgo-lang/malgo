@@ -1,17 +1,47 @@
+sudo: true
 language: haskell
-ghc:
-  - "8.8.2"
-before_install:
-  - sudo apt-get -y install libgc-dev clang
+
+git:
+  depth: 5
+
+cabal: "2.4"
+
+cache:
+  directories:
+  - "$HOME/.cabal/store"
+  - "$HOME/.stack"
+  - "$TRAVIS_BUILD_DIR/.stack-work"
+
+matrix:
+  include:
+
+  # Cabal
+  - ghc: 8.8.2
+
+  # Stack
+  - ghc: 8.8.2
+    env: STACK_YAML="$TRAVIS_BUILD_DIR/stack.yaml"
+
 install:
-  - cabal new-install --allow-newer cabal-install
-  - cabal new-install --allow-newer hspec-discover
-  - cabal new-configure
-  - cabal new-build --dep -j2 all
+  - |
+    if [ -z "$STACK_YAML" ]; then
+      ghc --version
+      cabal --version
+      cabal new-update
+      cabal new-build --enable-tests --enable-benchmarks
+    else
+      # install stack
+      curl -sSL https://get.haskellstack.org/ | sh
+
+      # build project with stack
+      stack --version
+      stack build --system-ghc --test --bench --no-run-tests --no-run-benchmarks
+    fi
 
 script:
- - cabal new-build all
- - cabal new-test all
- - cabal new-haddock all
- - cabal install
- - ./test.sh
+  - |
+    if [ -z "$STACK_YAML" ]; then
+      cabal new-test --enable-tests
+    else
+      stack test --system-ghc
+    fi
