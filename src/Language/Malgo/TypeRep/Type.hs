@@ -36,7 +36,7 @@ instance Pretty Type where
   pPrint (TyApp TupleC ts) = braces $ sep $ punctuate "," $ map pPrint ts
   pPrint (TyApp c      ts) = pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
   pPrint (TyMeta v       ) = pPrint v
-  pPrint Kind              = "Type"
+  pPrint Kind              = "*"
 
 instance Pretty TyCon where
   pPrint FunC    = "Fun"
@@ -63,7 +63,6 @@ comparable _                 = False
 
 removeExplictForall :: Scheme -> Type
 removeExplictForall (Forall _ t) = t
-
 
 intTy :: Type
 intTy = TyApp IntC []

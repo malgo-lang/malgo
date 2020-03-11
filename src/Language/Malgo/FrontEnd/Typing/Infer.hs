@@ -23,8 +23,8 @@ import           Language.Malgo.TypeRep.SType
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
-import           Relude.Unsafe                  ( fromJust )
 import           Text.Parsec.Pos                ( SourcePos )
+import           Control.Lens.Setter            ( (.~) )
 
 data Typing
 
@@ -38,8 +38,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     opt <- getOpt
     when (dumpTypeTable opt) $ dump (toList env)
 
-    -- TODO: TyVarにはKindをはめる
-    pure $ fmap (\x -> removeExplictForall <$> fromJust (lookup x env)) e
+    pure $ fmap (\x -> maybe (x & metaL .~ Kind) (fmap removeExplictForall) (lookup x env)) e
 
 type Env = IDMap () (ID Scheme)
 
@@ -47,12 +46,10 @@ newTyMeta :: MonadUniq m => m Type
 newTyMeta = TyMeta <$> getUniq
 
 generalize :: Env -> Type -> Scheme
-generalize env t = Forall fv t where fv = toList $ ftv t \\ ftv env
+generalize env t = Forall (toList $ ftv t \\ ftv env) t
 
 letVar :: MonadState Env m => Env -> ID () -> Type -> m ()
-letVar env var ty = do
-  let sc = generalize env ty
-  defineVar var sc
+letVar env var ty = defineVar var $ generalize env ty
 
 defineVar :: MonadState Env m => ID () -> Scheme -> m ()
 defineVar x t = modify (insert x $ x { idMeta = t })
