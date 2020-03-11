@@ -1,8 +1,8 @@
 let extern print_int : Int -> {} = "print_int" in
 let extern newline : () -> {} = "newline" in
 let val x = true in
-let val inc_int : Int -> Int = fn (x:Int) -> x + 1 in
-let val add : Int -> Int -> Int = fn (x:Int) -> fn (y:Int) -> x + y in
+let val inc_int : Int -> Int = fn (x:Int) => x + 1 in
+let val add : Int -> Int -> Int = fn (x:Int) => fn (y:Int) => x + y in
 let val y = if x then 42 else 48 in
 print_int(inc_int(41)); newline();
 print_int(add(2)(3)); newline()

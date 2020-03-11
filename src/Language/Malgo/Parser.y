@@ -150,7 +150,7 @@ exp: exp '+' exp { BinOp (_sourcePos $2) Add $1 $3 }
    | exp '>=' exp { BinOp (_sourcePos $2) Ge $1 $3 }
    | exp '&&' exp { BinOp (_sourcePos $2) And $1 $3 }
    | exp '||' exp { BinOp (_sourcePos $2) Or $1 $3 }
-   | 'fn' '(' params ')' '->' exp { Fn (_sourcePos $1) (reverse $3) $6 }
+   | 'fn' '(' params ')' '=>' exp { Fn (_sourcePos $1) (reverse $3) $6 }
    | 'let' decls 'in' exp { foldl (\e d -> Let (_sourcePos $1) d e) $4 $2 }
    | 'if' exp 'then' exp 'else' exp %prec prec_if { If (_sourcePos $1) $2 $4 $6 }
    | 'match' exp 'with' '|' clauses { Match (_sourcePos $1) $2 (fromList $ reverse $5) }
@@ -166,8 +166,8 @@ exp: exp '+' exp { BinOp (_sourcePos $2) Add $1 $3 }
    | simple_exp '[' exp ']' ':=' exp { ArrayWrite (_sourcePos $5) $1 $3 $6 }
    | simple_exp { $1 }
 
-clauses : clauses '|' pat '->' exp { ($3, $5) : $1 }
-        | pat '->' exp { [($1, $3)] }
+clauses : clauses '|' pat '=>' exp { ($3, $5) : $1 }
+        | pat '=>' exp { [($1, $3)] }
 
 pat : id { VarP (_id . _tag $ $1) }
     | '{' tuple_pat '}' { TupleP $ reverse $2 }

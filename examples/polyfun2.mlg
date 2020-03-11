@@ -1,5 +1,5 @@
 let fun f(p) = match p with
-               | { k, x } -> k(x) in
+               | { k, x } => k(x) in
 let fun id(x) = x in
 let fun addOne(x) = x + 1 in
 let val funRef0 = array({id, 1}, 1) in

@@ -1,5 +1,5 @@
 let fun snd(p) = match p with
-               | {_, x} -> x in
-let val f = {(fn (x) -> x)(1), fn (x) -> fn (y) -> {x, [y]}} in
-let val g = (match f with | {_, x} -> x)(1) in
+               | {_, x} => x in
+let val f = {(fn (x) => x)(1), fn (x) => fn (y) => {x, [y]}} in
+let val g = (match f with | {_, x} => x)(1) in
 {}
