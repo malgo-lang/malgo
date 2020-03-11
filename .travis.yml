@@ -1,8 +1,6 @@
 language: haskell
 ghc:
   - "8.8.2"
-cabal:
-  - "3.0.0"
 before_install:
   - sudo apt-get -y install libgc-dev clang
 install:
