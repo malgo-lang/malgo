@@ -1,6 +1,6 @@
-let val a:Int = 42
-    fun f(x:Int):Int =
-      if x <= 1
-      then a
-      else f(x - 1)
-in f(3)
+let val a:Int = 42 in
+let fun f(x:Int):Int =
+  if x <= 1
+  then a
+  else f(x - 1) in
+f(3)

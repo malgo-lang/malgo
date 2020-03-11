@@ -1,8 +1,6 @@
-let 
-  fun add(xy : { { Int, Int}, Int }): Int =
-    match xy with
-    | {{x, y}, z} -> x + y + z
-  val p = { { 1, 2 }, 3 }
-in
-  add(p)
+let fun add(xy : { { Int, Int}, Int }): Int =
+  match xy with
+  | {{x, y}, z} -> x + y + z in
+let val p = { { 1, 2 }, 3 } in
+add(p)
  

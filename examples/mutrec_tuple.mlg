@@ -1,0 +1,9 @@
+let fun f(n:Int):{} =
+  if n < 0
+  then {}
+  else match {g, {}} with | {x, y} -> x(n - 1)
+and g(n:Int):{} =
+  if n < 0
+  then {}
+  else (match {f, {}} with | {x, y} -> x)(n - 1) in
+f(5)

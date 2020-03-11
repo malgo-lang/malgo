@@ -1,7 +1,6 @@
 let fun f(p) = match p with
-               | { k, x } -> k(x)
-    fun id(x) = x
-    val funRef = array({id, 1}, 1)
-    extern print_int : Int -> {} = "print_int"
-in
-  print_int(f(funRef[0]))
+               | { k, x } -> k(x) in
+let fun id(x) = x in
+let val funRef = array({id, 1}, 1) in
+let extern print_int : Int -> {} = "print_int" in
+print_int(f(funRef[0]))

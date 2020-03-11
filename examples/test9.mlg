@@ -1,5 +1,5 @@
-let val a:Int = 42
-    val b:Int = a
-    val c:Int = b
-    fun f():Int = c
-in f() + b
+let val a:Int = 42 in
+let val b:Int = a in
+let val c:Int = b in
+let fun f():Int = c in
+f() + b

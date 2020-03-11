@@ -1,6 +1,6 @@
-let extern print_int : Int -> {} = "print_int"
-    fun map(f : Int -> Int, t : {Int, Int}) : {Int, Int} =
-      match t with
-      | {x, y} -> {f(x), f(y)}
-    fun add42(x : Int) : Int = x + 42
-in print_int(match map(add42, {1, 2}) with | { x, y } -> x)
+let extern print_int : Int -> {} = "print_int" in
+let fun map(f : Int -> Int, t : {Int, Int}) : {Int, Int} =
+  match t with
+  | {x, y} -> {f(x), f(y)} in
+let fun add42(x : Int) : Int = x + 42 in
+print_int(match map(add42, {1, 2}) with | { x, y } -> x)

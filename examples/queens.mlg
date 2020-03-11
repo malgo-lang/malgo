@@ -1,23 +1,22 @@
-let
-  extern print : (String) -> {} = "print"
-  val n = 8
-  val row = array(0, n)
-  val col = array(0, n)
-  val diag1 = array(0, n + n - 1)
-  val diag2 = array(0, n + n - 1)
+let extern print : (String) -> {} = "print" in
+let val n = 8 in
+let val row = array(0, n) in
+let val col = array(0, n) in
+let val diag1 = array(0, n + n - 1) in
+let val diag2 = array(0, n + n - 1) in
 
-  fun printboard() =
+let fun printboard() =
     let fun loopi(i) =
       if i < n
       then let fun loopj(j) = 
-        if j < n
-        then (print(if col[i] == j then " O" else " ."); loopj(j + 1))
-        else print("\n")
-        in loopj(0); loopi(i + 1)
-      else print("\n")
-    in loopi(0)
+             if j < n
+             then (print(if col[i] == j then " O" else " ."); loopj(j + 1))
+             else print("\n") in
+           loopj(0); loopi(i + 1)
+      else print("\n") in
+    loopi(0) in
   
-  fun try(c) =
+let fun try(c) =
     let fun loop(r) =
       if r < n
       then if row[r] == 0 && diag1[r + c] == 0 && diag2[r + 7 - c] == 0
@@ -27,9 +26,9 @@ let
                  row[r] := 0; diag1[r + c] := 0; diag2[r + 7 - c] := 0;
                  loop(r + 1))
            else loop(r + 1)
-      else {}
-    in if c == n
-       then printboard()
-       else loop(0)
-in try(0)
+      else {} in
+    if c == n
+    then printboard()
+    else loop(0) in
+try(0)
   

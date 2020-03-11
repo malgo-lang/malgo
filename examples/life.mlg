@@ -1,84 +1,75 @@
-let
+let extern print_char : Char -> {} = "print_char" in
+let extern newline : () -> {} = "newline" in
+let extern gen_seed: () -> {} = "gen_seed" in
+let extern rand_bool : () -> Bool = "rand_bool" in
+let extern sleep : Int -> {} = "malgo_sleep" in
+let extern copy_bool_array : [Bool] -> [Bool] = "copy_bool_array" in
+let extern pulsar : [Bool] -> {} = "pulsar" in
 
-extern print_char : Char -> {} = "print_char"
-extern newline : () -> {} = "newline"
-extern gen_seed: () -> {} = "gen_seed"
-extern rand_bool : () -> Bool = "rand_bool"
-extern sleep : Int -> {} = "malgo_sleep"
-extern copy_bool_array : [Bool] -> [Bool] = "copy_bool_array"
-extern pulsar : [Bool] -> {} = "pulsar"
+let val x_width : Int = 50 in
+let val y_width : Int = 20 in
+let val cells : [Bool] = array(false, x_width * y_width) in
 
-val x_width : Int = 50
-val y_width : Int = 20
-val cells : [Bool] = array(false, x_width * y_width)
-
-fun view(cells: [Bool], x: Int, y: Int): Bool =
+let fun view(cells: [Bool], x: Int, y: Int): Bool =
   if (x >= x_width) || (y >= y_width) || (x < 0) || (y < 0)
   then false
-  else cells[y * x_width + x]
-fun set(cells: [Bool], x: Int, y: Int, s: Bool): {} =
-  cells[y * x_width + x] := s
+  else cells[y * x_width + x] in
+let fun set(cells: [Bool], x: Int, y: Int, s: Bool): {} =
+  cells[y * x_width + x] := s in
 
-fun init_cells(cells: [Bool], i: Int): {} =
+let fun init_cells(cells: [Bool], i: Int): {} =
   if i >= x_width * y_width
   then {}
-  else cells[i] := rand_bool(); init_cells(cells, i + 1)
+  else cells[i] := rand_bool(); init_cells(cells, i + 1) in
 
-fun to_char(s: Bool): Char =
+let fun to_char(s: Bool): Char =
   if s
   then '#'
-  else '_'
+  else '_' in
 
-fun print_cells(cells: [Bool]): {} =
+let fun print_cells(cells: [Bool]): {} =
   let fun go_y(y: Int): {} =
     let fun go_x(x: Int): {} =
       if x >= x_width
       then {}
-      else (print_char(to_char(view(cells, x, y))); go_x(x + 1))
-    in
-      if y >= y_width
-      then {}
-      else (go_x(0); newline(); go_y(y + 1))
-  in
-    go_y(0)
+      else (print_char(to_char(view(cells, x, y))); go_x(x + 1)) in
+    if y >= y_width
+    then {}
+    else (go_x(0); newline(); go_y(y + 1)) in
+  go_y(0) in
 
-fun to_int(b: Bool): Int = if b then 1 else 0
+let fun to_int(b: Bool): Int = if b then 1 else 0 in
 
-fun next_state(cells: [Bool], x: Int, y: Int): Bool =
-  let val living: [Int] = array(0, 1)
-  in
-    living[0] := to_int(view(cells, x-1, y+1)) + to_int(view(cells, x, y+1)) + to_int(view(cells, x+1, y+1));
-    living[0] := to_int(view(cells, x-1, y)) + to_int(view(cells, x+1, y)) + living[0];
-    living[0] := to_int(view(cells, x-1, y-1)) + to_int(view(cells, x, y-1)) + to_int(view(cells, x+1, y-1)) + living[0];
-    if view(cells, x, y)
-    then (living[0] == 2) || (living[0] == 3)
-    else (living[0] == 3)
+let fun next_state(cells: [Bool], x: Int, y: Int): Bool =
+  let val living: [Int] = array(0, 1) in
+  living[0] := to_int(view(cells, x-1, y+1)) + to_int(view(cells, x, y+1)) + to_int(view(cells, x+1, y+1));
+  living[0] := to_int(view(cells, x-1, y)) + to_int(view(cells, x+1, y)) + living[0];
+  living[0] := to_int(view(cells, x-1, y-1)) + to_int(view(cells, x, y-1)) + to_int(view(cells, x+1, y-1)) + living[0];
+  if view(cells, x, y)
+  then (living[0] == 2) || (living[0] == 3)
+  else (living[0] == 3) in
 
-fun update_cells(cells: [Bool]): {} =
-  let
-    val copy: [Bool] = copy_bool_array(cells)
-    fun go_y(y: Int): {} =
+let fun update_cells(cells: [Bool]): {} =
+  let val copy: [Bool] = copy_bool_array(cells) in
+  let fun go_y(y: Int): {} =
       let fun go_x(x: Int): {} =
         if x >= x_width
         then {}
-        else set(cells, x, y, next_state(copy, x, y)); go_x(x + 1)
-      in
-        if y >= y_width
-        then {}
-        else go_x(0); go_y(y + 1)
-  in go_y(0)
+        else set(cells, x, y, next_state(copy, x, y)); go_x(x + 1) in
+      if y >= y_width
+      then {}
+      else go_x(0); go_y(y + 1) in
+  go_y(0) in
 
-in
-  gen_seed();
-  pulsar(cells);
+gen_seed();
+pulsar(cells);
 
-  let fun loop(n:Int): {} =
-    if n > 0
-    then (print_cells(cells);
-    	  update_cells(cells);
-          newline();
-          -- sleep(1);
-          loop(n - 1))
-    else {}
-  in
-    loop(10)
+let fun loop(n:Int): {} =
+  if n > 0
+  then (print_cells(cells);
+  	  update_cells(cells);
+        newline();
+        -- sleep(1);
+        loop(n - 1))
+  else {} in
+loop(10)

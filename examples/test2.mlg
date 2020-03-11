@@ -1,4 +1,3 @@
-let fun f():{} = {}
-    val a:()->{} = f
-in
-    a()
+let fun f():{} = {} in
+let val a:()->{} = f in
+a()

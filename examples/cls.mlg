@@ -1,5 +1,5 @@
 let fun add(x:Int) : Int -> Int =
-  let fun add_inner(y:Int) : Int = x + y
-  in add_inner
-in let val add3 : Int -> Int = add(3)
-   in add3(4)
+  let fun add_inner(y:Int) : Int = x + y in
+    add_inner in
+let val add3 : Int -> Int = add(3) in
+add3(4)
