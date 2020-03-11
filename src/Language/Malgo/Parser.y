@@ -105,10 +105,8 @@ str   { Token (_, STRING _) }
 %name parseDecls decls
 %%
 
-decls : decls_raw { reverse $1 }
-
-decls_raw : decls_raw decl { $2 : $1 }
-          | { [] }
+decls : decls decl { $2 : $1 }
+      | { [] }
 
 val_decl : 'val' id ':' type '=' exp { ValDec (_sourcePos $1) (_id $ _tag $ $2) (Just $4) $6 }
          | 'val' id '=' exp { ValDec (_sourcePos $1) (_id $ _tag $ $2) Nothing $4 }
@@ -153,7 +151,7 @@ exp: exp '+' exp { BinOp (_sourcePos $2) Add $1 $3 }
    | exp '&&' exp { BinOp (_sourcePos $2) And $1 $3 }
    | exp '||' exp { BinOp (_sourcePos $2) Or $1 $3 }
    | 'fn' '(' params ')' '->' exp { Fn (_sourcePos $1) (reverse $3) $6 }
-   | 'let' decl 'in' exp { Let (_sourcePos $1) $2 $4 }
+   | 'let' decls 'in' exp { foldl (\e d -> Let (_sourcePos $1) d e) $4 $2 }
    | 'if' exp 'then' exp 'else' exp %prec prec_if { If (_sourcePos $1) $2 $4 $6 }
    | 'match' exp 'with' '|' clauses { Match (_sourcePos $1) $2 (fromList $ reverse $5) }
    | exp ';' exp { Seq (_sourcePos $2) $1 $3 }
