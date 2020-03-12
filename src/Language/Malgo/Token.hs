@@ -66,6 +66,7 @@ data Tag
     | MATCH
     | WITH
     | ID { _id :: String }
+    | LID { _lid :: String }
     | INT { _int :: Integer }
     | FLOAT { _float :: Double }
     | BOOL { _bool :: Bool }
@@ -140,6 +141,7 @@ instance Pretty Tag where
   pPrint MATCH                   = "match"
   pPrint WITH                    = "with"
   pPrint (ID     x)              = P.text x
+  pPrint (LID    x)              = P.text x
   pPrint (INT    x)              = P.integer x
   pPrint (FLOAT  x)              = P.double x
   pPrint (BOOL   x)              = pPrint x

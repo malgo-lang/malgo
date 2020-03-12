@@ -78,6 +78,7 @@ import Text.Parsec.Pos (SourcePos)
 '|'   { Token (_, BAR) }
 '=>'  { Token (_, DARROW) }
 id    { Token (_, ID _) }
+lid   { Token (_, LID _) }
 float { Token (_, FLOAT _) }
 int   { Token (_, INT _) }
 char  { Token (_, CHAR _) }
