@@ -178,10 +178,14 @@ undef ty = assign $ Undef ty
 binop :: MonadExprBuilder m => Op -> ID LType -> ID LType -> m (ID LType)
 binop o x y = assign $ BinOp o x y
 
-branchIf :: MonadExprBuilder m => ID LType -> m (ID LType) -> m (ID LType) -> m (ID LType)
+branchIf :: (MonadUniq m, MonadExprBuilder m)
+         => ID LType
+         -> m (ID LType)
+         -> m (ID LType)
+         -> m (ID LType)
 branchIf c genWhenTrue genWhenFalse = do
   tBlock <- localBlock genWhenTrue
-  fBlock <- localBlock genWhenFalse
+  fBlock <- localBlock (genWhenFalse >>= coerceTo (ltypeOf tBlock))
   assign $ If c tBlock fBlock
 
 convertType :: Type -> LType

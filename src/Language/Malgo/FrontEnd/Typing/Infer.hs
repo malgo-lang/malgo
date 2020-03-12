@@ -93,10 +93,11 @@ typingExpr (MakeArray pos initNode sizeNode) = applySubst $ do
   sizeTy <- typingExpr sizeNode
   updateSubst pos [TyApp IntC [] :~ sizeTy]
   pure $ arrayTy initTy
-typingExpr (ArrayRead pos arr _) = applySubst $ do
+typingExpr (ArrayRead pos arr ix) = applySubst $ do
   arrTy    <- typingExpr arr
   resultTy <- newTyMeta
-  updateSubst pos [TyApp ArrayC [resultTy] :~ arrTy]
+  ixTy <- typingExpr ix
+  updateSubst pos [TyApp ArrayC [resultTy] :~ arrTy, ixTy :~ intTy]
   pure resultTy
 typingExpr (ArrayWrite pos arr ix val) = applySubst $ do
   arrTy <- typingExpr arr
@@ -130,8 +131,10 @@ typingExpr (Let _ (ValDec pos name mtyp val) body) = applySubst $ do
 
   typingExpr body
 typingExpr (Let _ (ExDec _ name typ _) body) = do
+  env <- get
   typ' <- evalStateT (toType typ) mempty
-  defineVar name (Forall [] typ')
+  letVar env name typ'
+  -- defineVar name (Forall [] typ')
   typingExpr body
 typingExpr (Let _ (FunDec fs) e) = do
   env <- get
