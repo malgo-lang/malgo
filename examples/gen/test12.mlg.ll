@@ -32,7 +32,7 @@ define external ccc  i1 @view6(i8* , {i1*, i64}* , i64 , i64 )    {
   br i1 %20, label %then_0, label %else_0 
 then_0:
   store  i1 0, i1* %21 
-  br label %end_1 
+  br label %end_2 
 else_0:
   %22 = mul   i64 %3, %7 
   %23 = add   i64 %22, %2 
@@ -72,13 +72,48 @@ body_0:
   br label %cond_0 
 end_0:
   %47 =  call ccc  i8*  @sub3({i8**, i64}*  %32, i64  %23)  
-  %48 = ptrtoint i8* %47 to i64 
-  %49 = trunc i64 %48 to i1  
-  store  i1 %49, i1* %21 
-  br label %end_1 
+  %48 = getelementptr  {i8**, i64}, {i8**, i64}* %32, i32 0, i32 0 
+  %49 = load  i8**, i8*** %48 
+  %50 = getelementptr  {i8**, i64}, {i8**, i64}* %32, i32 0, i32 1 
+  %51 = load  i64, i64* %50 
+  %52 = mul   i64 ptrtoint (i1* getelementptr inbounds (i1, i1* inttoptr (i32 0 to i1*), i32 1) to i64), %51 
+  %53 =  call ccc  i8*  @GC_malloc(i64  %52)  
+  %54 = bitcast i8* %53 to i1* 
+  %55 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i1*, i64}* getelementptr inbounds ({i1*, i64}, {i1*, i64}* inttoptr (i32 0 to {i1*, i64}*), i32 1) to i64))  
+  %56 = bitcast i8* %55 to {i1*, i64}* 
+  %57 = getelementptr  {i1*, i64}, {i1*, i64}* %56, i32 0, i32 0 
+  store  i1* %54, i1** %57 
+  %58 = getelementptr  {i1*, i64}, {i1*, i64}* %56, i32 0, i32 1 
+  store  i64 %51, i64* %58 
+  %59 = getelementptr  {i1*, i64}, {i1*, i64}* %56, i32 0, i32 0 
+  %60 = load  i1*, i1** %59 
+  %61 = getelementptr  {i1*, i64}, {i1*, i64}* %56, i32 0, i32 1 
+  store  i64 %51, i64* %61 
+  %62 = alloca i64 
+  store  i64 0, i64* %62 
+  br label %cond_1 
+cond_1:
+  %63 = load  i64, i64* %62 
+  %64 = icmp slt i64 %63, %51 
+  br i1 %64, label %body_1, label %end_1 
+body_1:
+  %65 = getelementptr  i8*, i8** %49, i64 %63 
+  %66 = load  i8*, i8** %65 
+  %67 = ptrtoint i8* %66 to i64 
+  %68 = trunc i64 %67 to i1  
+  %69 = getelementptr  i1, i1* %60, i64 %63 
+  store  i1 %68, i1* %69 
+  %70 = add   i64 %63, 1 
+  store  i64 %70, i64* %62 
+  br label %cond_1 
 end_1:
-  %50 = load  i1, i1* %21 
-  ret i1 %50 
+  %71 = ptrtoint i8* %47 to i64 
+  %72 = trunc i64 %71 to i1  
+  store  i1 %72, i1* %21 
+  br label %end_2 
+end_2:
+  %73 = load  i1, i1* %21 
+  ret i1 %73 
 }
 
 

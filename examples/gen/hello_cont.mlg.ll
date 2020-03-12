@@ -8,6 +8,21 @@ source_filename = "./examples/hello_cont.mlg"
 declare external ccc  i8* @GC_malloc(i64)    
 
 
+define external ccc  i8* @$fo45(i8* , i8* )    {
+  %3 = bitcast i8* %0 to {{}* (i8*, {}*)*, i8*}* 
+  %4 = bitcast i8* %1 to {}* 
+  %5 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({}* getelementptr inbounds ({}, {}* inttoptr (i32 0 to {}*), i32 1) to i64))  
+  %6 = bitcast i8* %5 to {}* 
+  %7 = getelementptr  {{}* (i8*, {}*)*, i8*}, {{}* (i8*, {}*)*, i8*}* %3, i32 0, i32 0 
+  %8 = load  {}* (i8*, {}*)*, {}* (i8*, {}*)** %7 
+  %9 = getelementptr  {{}* (i8*, {}*)*, i8*}, {{}* (i8*, {}*)*, i8*}* %3, i32 0, i32 1 
+  %10 = load  i8*, i8** %9 
+  %11 =  call ccc  {}*  %8(i8*  %10, {}*  %6)  
+  %12 = bitcast {}* %11 to i8* 
+  ret i8* %12 
+}
+
+
 define external ccc  {}* @$fo32(i8* , {}* )    {
   %3 = bitcast i8* %0 to {i8* (i8*, i8*)*, i8*}* 
   %4 = bitcast {}* %1 to i8* 
@@ -58,7 +73,7 @@ define external ccc  i8* @id4(i8* , i8* )    {
 declare external ccc  void @GC_init()    
 
 
-@$globle_str_44 =  unnamed_addr  constant [13 x i8] c"hello, world\00"
+@$globle_str_56 =  unnamed_addr  constant [13 x i8] c"hello, world\00"
 
 
 define external ccc  i32 @main()    {
@@ -79,6 +94,13 @@ define external ccc  i32 @main()    {
   store  {}* (i8*, {}*)* @$fo32, {}* (i8*, {}*)** %11 
   %12 = getelementptr  {{}* (i8*, {}*)*, i8*}, {{}* (i8*, {}*)*, i8*}* %10, i32 0, i32 1 
   store  i8* %8, i8** %12 
-  %13 =  call ccc  {}*  @println_k1(i8*  getelementptr inbounds ([13 x i8], [13 x i8]* @$globle_str_44, i32 0, i32 0), {{}* (i8*, {}*)*, i8*}*  %10)  
+  %13 =  call ccc  {}*  @println_k1(i8*  getelementptr inbounds ([13 x i8], [13 x i8]* @$globle_str_56, i32 0, i32 0), {{}* (i8*, {}*)*, i8*}*  %10)  
+  %14 = bitcast {{}* (i8*, {}*)*, i8*}* %10 to i8* 
+  %15 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i8* (i8*, i8*)*, i8*}* getelementptr inbounds ({i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i8* (i8*, i8*)*, i8*}*), i32 1) to i64))  
+  %16 = bitcast i8* %15 to {i8* (i8*, i8*)*, i8*}* 
+  %17 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %16, i32 0, i32 0 
+  store  i8* (i8*, i8*)* @$fo45, i8* (i8*, i8*)** %17 
+  %18 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %16, i32 0, i32 1 
+  store  i8* %14, i8** %18 
   ret i32 0 
 }

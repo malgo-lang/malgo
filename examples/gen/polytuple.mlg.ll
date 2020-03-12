@@ -84,7 +84,42 @@ body_1:
 end_1:
   %37 = inttoptr i64 10 to i8* 
   %38 =  call ccc  {}*  @f0({i8**, i64}*  %23, i8*  %37)  
-  %39 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({}* getelementptr inbounds ({}, {}* inttoptr (i32 0 to {}*), i32 1) to i64))  
-  %40 = bitcast i8* %39 to {}* 
+  %39 = getelementptr  {i8**, i64}, {i8**, i64}* %23, i32 0, i32 0 
+  %40 = load  i8**, i8*** %39 
+  %41 = getelementptr  {i8**, i64}, {i8**, i64}* %23, i32 0, i32 1 
+  %42 = load  i64, i64* %41 
+  %43 = mul   i64 ptrtoint (i64* getelementptr inbounds (i64, i64* inttoptr (i32 0 to i64*), i32 1) to i64), %42 
+  %44 =  call ccc  i8*  @GC_malloc(i64  %43)  
+  %45 = bitcast i8* %44 to i64* 
+  %46 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64*, i64}* getelementptr inbounds ({i64*, i64}, {i64*, i64}* inttoptr (i32 0 to {i64*, i64}*), i32 1) to i64))  
+  %47 = bitcast i8* %46 to {i64*, i64}* 
+  %48 = getelementptr  {i64*, i64}, {i64*, i64}* %47, i32 0, i32 0 
+  store  i64* %45, i64** %48 
+  %49 = getelementptr  {i64*, i64}, {i64*, i64}* %47, i32 0, i32 1 
+  store  i64 %42, i64* %49 
+  %50 = getelementptr  {i64*, i64}, {i64*, i64}* %47, i32 0, i32 0 
+  %51 = load  i64*, i64** %50 
+  %52 = getelementptr  {i64*, i64}, {i64*, i64}* %47, i32 0, i32 1 
+  store  i64 %42, i64* %52 
+  %53 = alloca i64 
+  store  i64 0, i64* %53 
+  br label %cond_2 
+cond_2:
+  %54 = load  i64, i64* %53 
+  %55 = icmp slt i64 %54, %42 
+  br i1 %55, label %body_2, label %end_2 
+body_2:
+  %56 = getelementptr  i8*, i8** %40, i64 %54 
+  %57 = load  i8*, i8** %56 
+  %58 = ptrtoint i8* %57 to i64 
+  %59 = getelementptr  i64, i64* %51, i64 %54 
+  store  i64 %58, i64* %59 
+  %60 = add   i64 %54, 1 
+  store  i64 %60, i64* %53 
+  br label %cond_2 
+end_2:
+  %61 = ptrtoint i8* %37 to i64 
+  %62 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({}* getelementptr inbounds ({}, {}* inttoptr (i32 0 to {}*), i32 1) to i64))  
+  %63 = bitcast i8* %62 to {}* 
   ret i32 0 
 }

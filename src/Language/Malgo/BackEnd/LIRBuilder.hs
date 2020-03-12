@@ -55,11 +55,11 @@ instance One ProgramEnv where
 
 newtype ProgramState = ProgramState { functionList :: DiffList (Func (ID LType)) }
 
-data ExprEnv = ExprEnv { variableMap :: IDMap Type (ID LType)
-                       , currentCaptures :: Maybe (ID LType)
-                       }
+newtype ExprEnv = ExprEnv { currentCaptures :: Maybe (ID LType) }
 
-newtype ExprState = ExprState { partialBlockInsns :: DiffList (Insn (ID LType)) }
+data ExprState = ExprState { variableMap :: IDMap Type (ID LType)
+                           , partialBlockInsns :: DiffList (Insn (ID LType))
+                           }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where
@@ -84,19 +84,20 @@ instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
 -- Expr Builder
 class MonadProgramBuilder m => MonadExprBuilder m where
   findVar :: ID Type -> m (ID LType)
-  withVariables :: IDMap Type (ID LType) -> m a -> m a
+  defineVar :: ID Type -> ID LType -> m ()
   assign :: Expr (ID LType) -> m (ID LType)
   storeC :: ID LType -> [Int] -> ID LType -> m ()
   store :: ID LType -> [ID LType] -> ID LType -> m ()
   forLoop :: ID LType -> ID LType -> (ID LType -> m ()) -> m ()
   localBlock :: m (ID LType) -> m (Block (ID LType))
   getCurrentCaptures :: m (Maybe (ID LType))
+  updateVariableMap :: ID LType -> ID LType -> m ()
 
 newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (StateT ExprState m) a }
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
 runExprBuilderT :: MonadUniq m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
-runExprBuilderT env (ExprBuilderT m) = evaluatingStateT (ExprState mempty) $ usingReaderT env $ do
+runExprBuilderT env (ExprBuilderT m) = evaluatingStateT (ExprState mempty mempty) $ usingReaderT env $ do
   value                           <- m
   ExprState { partialBlockInsns } <- get
   pure $ Block { insns = toList partialBlockInsns, value = value }
@@ -106,9 +107,8 @@ instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m
   addFunc fun = ExprBuilderT $ lift $ lift $ addFunc fun
 
 instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
-  findVar x = ExprBuilderT $ fromJust . lookup x <$> asks variableMap
-  withVariables varMap (ExprBuilderT m) =
-    ExprBuilderT $ local (\e -> e { variableMap = varMap <> variableMap e }) m
+  findVar x = ExprBuilderT $ fromJust . lookup x <$> gets variableMap
+  defineVar x y = ExprBuilderT $ modify (\s -> s { variableMap = insert x y (variableMap s) })
 
   assign expr = ExprBuilderT $ do
     i <- newID (ltypeOf expr) "%"
@@ -126,12 +126,19 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
     block <- unExprBuilderT $ localBlock (k index >> undef Void) -- TODO: remove undef
     modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (For index from to block) })
 
-  localBlock (ExprBuilderT m) = ExprBuilderT $ localState $ do
-    put (ExprState mempty)
-    retval <- m
-    insts  <- toList <$> gets partialBlockInsns
-    pure (Block insts retval)
+  localBlock (ExprBuilderT m) = ExprBuilderT $ do
+    (block, vm) <- localState $ do
+      vm <- gets variableMap
+      put (ExprState vm mempty)
+      retval <- m
+      insts  <- toList <$> gets partialBlockInsns
+      vm' <- gets variableMap
+      pure (Block insts retval, vm')
+    modify (\s -> s { variableMap = vm })
+    pure block
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
+  updateVariableMap x y = ExprBuilderT $
+    modify $ \s -> s { variableMap = (\a -> if x == a then y else a) <$> variableMap s }
 
 -- instructions
 arrayCreate :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
@@ -150,14 +157,20 @@ call :: (MonadUniq m, MonadExprBuilder m) => ID LType -> [ID LType] -> m (ID LTy
 call f xs = case ltypeOf f of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
-    assign $ Call f as
+    result <- assign $ Call f as
+    xs' <- zipWithM coerceTo (map ltypeOf xs) as
+    zipWithM_ updateVariableMap xs xs'
+    pure result
   _ -> error "function must be typed as function"
 
 callExt :: (MonadUniq m, MonadExprBuilder m) => String -> LType -> [ID LType] -> m (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as <- zipWithM coerceTo ps xs
-    assign $ CallExt f funTy as
+    result <- assign $ CallExt f funTy as
+    xs' <- zipWithM coerceTo (map ltypeOf xs) as
+    zipWithM_ updateVariableMap xs xs'
+    pure result
   _ -> error "external function must be typed as function"
 
 cast :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)

@@ -82,7 +82,15 @@ body_0:
   %29 = getelementptr { i8* (i8*, i8*)*, i8* }, { i8* (i8*, i8*)*, i8* }* %26, i64 0, i32 1
   %30 = load i8*, i8** %29, align 8
   %31 = tail call i8* %28(i8* %30, i8* %.cast)
-  %32 = ptrtoint i8* %31 to i64
-  %33 = tail call {}* @print_int(i64 %32)
+  %32 = tail call i8* @GC_malloc(i64 16)
+  %33 = load i64, i64* %21, align 8
+  %34 = bitcast i8* %32 to i64*
+  store i64 %33, i64* %34, align 8
+  %35 = load i64, i64* %25, align 8
+  %36 = getelementptr i8, i8* %32, i64 8
+  %37 = bitcast i8* %36 to i64*
+  store i64 %35, i64* %37, align 8
+  %38 = ptrtoint i8* %31 to i64
+  %39 = tail call {}* @print_int(i64 %38)
   ret i32 0
 }

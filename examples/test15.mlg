@@ -1,0 +1,4 @@
+let val xs = [1, 2, 3]
+    fun update(xs, i, v) = xs.(i) <- v
+    extern print_int : Int -> {} = "print_int" in
+update(xs, 0, 42); print_int(xs.(0))
