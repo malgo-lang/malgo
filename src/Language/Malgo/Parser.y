@@ -95,7 +95,7 @@ str   { Token (_, STRING _) }
 %left '&&' '||'
 %nonassoc '==' '<>'
 %nonassoc '<' '>' '<=' '>='
-%left ':='
+%left '<-'
 %left '+' '-' '+.' '-.'
 %left '*' '/' '%' '*.' '/.'
 %left '.'
@@ -164,7 +164,7 @@ exp: exp '+' exp { BinOp (_sourcePos $2) Add $1 $3 }
                              (Float (_sourcePos $1) 0)
                              (Float (_sourcePos $2) (_float . _tag $ $2))
                          }
-   | simple_exp '[' exp ']' ':=' exp { ArrayWrite (_sourcePos $5) $1 $3 $6 }
+   | simple_exp '.' '(' exp ')' '<-' exp { ArrayWrite (_sourcePos $6) $1 $4 $7 }
    | simple_exp { $1 }
 
 clauses : clauses '|' pat '=>' exp { ($3, $5) : $1 }
@@ -185,7 +185,7 @@ simple_exp: id { Var (_sourcePos $1) (_id . _tag $ $1) }
           | '{' args '}' { Tuple (_sourcePos $1) (reverse $2) }
           | '[' args ']' { Array (_sourcePos $1) (fromList $ reverse $2) }
           | 'array' '(' exp ',' exp ')' { MakeArray (_sourcePos $1) $3 $5 }
-          | simple_exp '[' exp ']' { ArrayRead (_sourcePos $2) $1 $3 }
+          | simple_exp '.' '(' exp ')' { ArrayRead (_sourcePos $2) $1 $4 }
           | simple_exp '(' ')' {- %prec CALL -} { Call (position $1) $1 [] }
           | simple_exp '(' args ')' {- %prec CALL -} { Call (position $1) $1 (reverse $3) }
           | '{' '}' { Tuple (_sourcePos $1) [] }

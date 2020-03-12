@@ -1,4 +1,4 @@
-let fun f(a, x) = a[0] := x in
+let fun f(a, x) = a.(0) <- x in
 let val arr = array(1, 10) in
 let val b = f(arr, 10) in
 {}

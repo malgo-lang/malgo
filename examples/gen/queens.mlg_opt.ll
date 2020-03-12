@@ -3,10 +3,10 @@ source_filename = "./examples/queens.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-@"$globle_str_353" = unnamed_addr constant [3 x i8] c" O\00"
-@"$globle_str_354" = unnamed_addr constant [3 x i8] c" .\00"
-@"$globle_str_355" = unnamed_addr constant [2 x i8] c"\0A\00"
-@"$globle_str_356" = unnamed_addr constant [2 x i8] c"\0A\00"
+@"$globle_str_356" = unnamed_addr constant [3 x i8] c" O\00"
+@"$globle_str_357" = unnamed_addr constant [3 x i8] c" .\00"
+@"$globle_str_358" = unnamed_addr constant [2 x i8] c"\0A\00"
+@"$globle_str_359" = unnamed_addr constant [2 x i8] c"\0A\00"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
@@ -126,7 +126,7 @@ then_0:                                           ; preds = %2, %then_0
   %20 = getelementptr i64, i64* %19, i64 %16
   %21 = load i64, i64* %20, align 8
   %22 = icmp eq i64 %21, %.tr23
-  %. = select i1 %22, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"$globle_str_353", i64 0, i64 0), i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"$globle_str_354", i64 0, i64 0)
+  %. = select i1 %22, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"$globle_str_356", i64 0, i64 0), i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"$globle_str_357", i64 0, i64 0)
   %23 = tail call {}* @print(i8* %.)
   %24 = add i64 %.tr23, 1
   %25 = load { i64*, i64 }*, { i64*, i64 }** %3, align 8
@@ -142,7 +142,7 @@ then_0:                                           ; preds = %2, %then_0
   br i1 %32, label %then_0, label %else_1
 
 else_1:                                           ; preds = %then_0, %2
-  %33 = tail call {}* @print(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"$globle_str_355", i64 0, i64 0))
+  %33 = tail call {}* @print(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"$globle_str_358", i64 0, i64 0))
   ret {}* %33
 }
 
@@ -202,7 +202,7 @@ then_0.i:                                         ; preds = %then_0, %then_0.i
   %38 = getelementptr i64, i64* %37, i64 %34
   %39 = load i64, i64* %38, align 8
   %40 = icmp eq i64 %39, %.tr23.i
-  %..i = select i1 %40, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"$globle_str_353", i64 0, i64 0), i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"$globle_str_354", i64 0, i64 0)
+  %..i = select i1 %40, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"$globle_str_356", i64 0, i64 0), i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"$globle_str_357", i64 0, i64 0)
   %41 = tail call {}* @print(i8* %..i)
   %42 = add i64 %.tr23.i, 1
   %43 = load { i64*, i64 }*, { i64*, i64 }** %25, align 8
@@ -218,7 +218,7 @@ then_0.i:                                         ; preds = %then_0, %then_0.i
   br i1 %50, label %then_0.i, label %loopj9.exit
 
 loopj9.exit:                                      ; preds = %then_0.i, %then_0
-  %51 = tail call {}* @print(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"$globle_str_355", i64 0, i64 0))
+  %51 = tail call {}* @print(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"$globle_str_358", i64 0, i64 0))
   %52 = add i64 %.tr34, 1
   %53 = load i64, i64* %3, align 8
   %54 = load i64, i64* %6, align 8
@@ -232,7 +232,7 @@ loopj9.exit:                                      ; preds = %then_0.i, %then_0
   br i1 %59, label %then_0, label %else_0
 
 else_0:                                           ; preds = %loopj9.exit, %2
-  %60 = tail call {}* @print(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"$globle_str_356", i64 0, i64 0))
+  %60 = tail call {}* @print(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"$globle_str_359", i64 0, i64 0))
   ret {}* %60
 }
 

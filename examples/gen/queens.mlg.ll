@@ -120,13 +120,13 @@ define external ccc  {}* @print0(i8* )    {
 }
 
 
-@$globle_str_353 =  unnamed_addr  constant [3 x i8] c" O\00"
+@$globle_str_356 =  unnamed_addr  constant [3 x i8] c" O\00"
 
 
-@$globle_str_354 =  unnamed_addr  constant [3 x i8] c" .\00"
+@$globle_str_357 =  unnamed_addr  constant [3 x i8] c" .\00"
 
 
-@$globle_str_355 =  unnamed_addr  constant [2 x i8] c"\0a\00"
+@$globle_str_358 =  unnamed_addr  constant [2 x i8] c"\0a\00"
 
 
 define external ccc  {}* @loopj9(i8* , i64 )    {
@@ -156,10 +156,10 @@ then_0:
   %21 = alloca i8* 
   br i1 %20, label %then_1, label %else_0 
 then_1:
-  store  i8* getelementptr inbounds ([3 x i8], [3 x i8]* @$globle_str_353, i32 0, i32 0), i8** %21 
+  store  i8* getelementptr inbounds ([3 x i8], [3 x i8]* @$globle_str_356, i32 0, i32 0), i8** %21 
   br label %end_0 
 else_0:
-  store  i8* getelementptr inbounds ([3 x i8], [3 x i8]* @$globle_str_354, i32 0, i32 0), i8** %21 
+  store  i8* getelementptr inbounds ([3 x i8], [3 x i8]* @$globle_str_357, i32 0, i32 0), i8** %21 
   br label %end_0 
 end_0:
   %22 = load  i8*, i8** %21 
@@ -169,7 +169,7 @@ end_0:
   store  {}* %25, {}** %15 
   br label %end_1 
 else_1:
-  %26 =  call ccc  {}*  @print0(i8*  getelementptr inbounds ([2 x i8], [2 x i8]* @$globle_str_355, i32 0, i32 0))  
+  %26 =  call ccc  {}*  @print0(i8*  getelementptr inbounds ([2 x i8], [2 x i8]* @$globle_str_358, i32 0, i32 0))  
   store  {}* %26, {}** %15 
   br label %end_1 
 end_1:
@@ -178,7 +178,7 @@ end_1:
 }
 
 
-@$globle_str_356 =  unnamed_addr  constant [2 x i8] c"\0a\00"
+@$globle_str_359 =  unnamed_addr  constant [2 x i8] c"\0a\00"
 
 
 define external ccc  {}* @loopi7(i8* , i64 )    {
@@ -223,7 +223,7 @@ then_0:
   store  {}* %30, {}** %13 
   br label %end_0 
 else_0:
-  %31 =  call ccc  {}*  @print0(i8*  getelementptr inbounds ([2 x i8], [2 x i8]* @$globle_str_356, i32 0, i32 0))  
+  %31 =  call ccc  {}*  @print0(i8*  getelementptr inbounds ([2 x i8], [2 x i8]* @$globle_str_359, i32 0, i32 0))  
   store  {}* %31, {}** %13 
   br label %end_0 
 end_0:

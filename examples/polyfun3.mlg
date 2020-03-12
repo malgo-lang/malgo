@@ -3,4 +3,4 @@ let fun f(p) = match p with
 let fun id(x) = x in
 let val funRef = array({id, 1}, 1) in
 let extern print_int : Int -> {} = "print_int" in
-print_int(f(funRef[0]))
+print_int(f(funRef.(0)))
