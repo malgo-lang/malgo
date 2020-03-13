@@ -1,4 +1,3 @@
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -76,9 +75,9 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     zipWithM_ defineVar params funcParams
     -- unwrap captures
     unwrapedCapsId <- cast (Ptr $ Struct (map (convertType . typeOf) caps)) capsId
-    ifor_ caps (\i v -> loadC unwrapedCapsId [0, i] >>= defineVar v)
+    ifor_ caps (\i v -> defineVar v =<< loadC unwrapedCapsId [0, i])
     -- -- generate closures of mutrec functions
-    for_ mutrecs (\v -> findFunc v >>= packClosure capsId >>= defineVar v)
+    for_ mutrecs (\v -> defineVar v =<< packClosure capsId =<< findFunc v)
     genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
 

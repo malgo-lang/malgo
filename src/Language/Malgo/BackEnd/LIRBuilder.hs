@@ -97,10 +97,11 @@ newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (Sta
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
 runExprBuilderT :: MonadUniq m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
-runExprBuilderT env (ExprBuilderT m) = evaluatingStateT (ExprState mempty mempty) $ usingReaderT env $ do
-  value                           <- m
-  ExprState { partialBlockInsns } <- get
-  pure $ Block { insns = toList partialBlockInsns, value = value }
+runExprBuilderT env (ExprBuilderT m) =
+  evaluatingStateT (ExprState mempty mempty) $ usingReaderT env $ do
+    value                           <- m
+    ExprState { partialBlockInsns } <- get
+    pure $ Block { insns = toList partialBlockInsns, value = value }
 
 instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m) where
   findFunc x = ExprBuilderT $ lift $ lift $ findFunc x
@@ -132,13 +133,13 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
       put (ExprState vm mempty)
       retval <- m
       insts  <- toList <$> gets partialBlockInsns
-      vm' <- gets variableMap
+      vm'    <- gets variableMap
       pure (Block insts retval, vm')
     modify (\s -> s { variableMap = vm })
     pure block
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
-  updateVariableMap x y = ExprBuilderT $
-    modify $ \s -> s { variableMap = (\a -> if x == a then y else a) <$> variableMap s }
+  updateVariableMap x y = ExprBuilderT $ modify $ \s ->
+    s { variableMap = (\a -> if x == a then y else a) <$> variableMap s }
 
 -- instructions
 arrayCreate :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
@@ -156,20 +157,20 @@ load ltype ptr xs = assign $ Load ltype ptr xs
 call :: (MonadUniq m, MonadExprBuilder m) => ID LType -> [ID LType] -> m (ID LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
-    as <- zipWithM coerceTo ps xs
+    as     <- zipWithM coerceTo ps xs
     result <- assign $ Call f as
-    xs' <- zipWithM coerceTo (map ltypeOf xs) as
-    zipWithM_ updateVariableMap xs xs'
+    -- "write back". See also 'coerceTo'.
+    zipWithM_ (\x a -> updateVariableMap x =<< coerceTo (ltypeOf x) a) xs as
     pure result
   _ -> error "function must be typed as function"
 
 callExt :: (MonadUniq m, MonadExprBuilder m) => String -> LType -> [ID LType] -> m (ID LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
-    as <- zipWithM coerceTo ps xs
+    as     <- zipWithM coerceTo ps xs
     result <- assign $ CallExt f funTy as
-    xs' <- zipWithM coerceTo (map ltypeOf xs) as
-    zipWithM_ updateVariableMap xs xs'
+    -- "write back". See also 'coerceTo'.
+    zipWithM_ (\x a -> updateVariableMap x =<< coerceTo (ltypeOf x) a) xs as
     pure result
   _ -> error "external function must be typed as function"
 
@@ -221,6 +222,8 @@ packClosure capsId f = do
   storeC clsId [0, 1] capsId
   pure clsId
 
+-- 'coerceTo' may create a different entity. To keep the values ​​identical before and after 'coerceTo',
+-- you need to apply 'coerceTo' again and “write back”.
 coerceTo :: (MonadUniq m, MonadExprBuilder m) => LType -> ID LType -> m (ID LType)
 coerceTo to x = case (to, ltypeOf x) of
   (ty, xty) | ty == xty -> pure x
