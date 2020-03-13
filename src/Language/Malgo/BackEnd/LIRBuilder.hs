@@ -213,7 +213,7 @@ convertType (TyApp StringC [] ) = Ptr U8
 convertType (TyApp TupleC  xs ) = Ptr $ Struct $ map convertType xs
 convertType (TyApp ArrayC  [x]) = Ptr $ Struct [Ptr $ convertType x, SizeT]
 convertType TyMeta{}            = Ptr U8
-convertType t                   = error $ toText $ "unreachable(convertType): " <> pShow t
+convertType _                   = bug Unreachable
 
 packClosure :: MonadExprBuilder m => ID LType -> ID LType -> m (ID LType)
 packClosure capsId f = do

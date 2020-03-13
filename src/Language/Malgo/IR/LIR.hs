@@ -127,7 +127,7 @@ instance (HasLType a, Show a) => HasLType (Expr a) where
   ltypeOf (Undef t) = t
   ltypeOf (BinOp op x _) = ltypeOfOp op (ltypeOf x)
   ltypeOf (If _ x _) = ltypeOf x
-  ltypeOf t = error $ toText $ "unreachable(ltypeOf) " <> pShow t
+  ltypeOf _ = bug Unreachable
 
 data Constant = Bool Bool
               | Int32 Int32
@@ -206,4 +206,4 @@ ltypeOfOp FGT  _   = Bit
 ltypeOfOp FGE  _   = Bit
 ltypeOfOp AND  _   = Bit
 ltypeOfOp OR   _   = Bit
-ltypeOfOp op   t   = error $ toText $ "unreachable(ltypeOfOp):" <> pShow op <> " " <> pShow t
+ltypeOfOp _    _   = bug Unreachable
