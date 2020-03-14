@@ -27,11 +27,9 @@ where
 import           Relude                  hiding ( Constraint
                                                 , Type
                                                 , Op
-                                                , init
                                                 , unzip
                                                 , pass
                                                 , return
-                                                , uncons
                                                 )
 import           Relude.Extra.Map
 import           Relude.Extra.Tuple
@@ -43,7 +41,7 @@ import           Control.Monad.Trans.Writer.CPS ( WriterT
 import qualified Control.Monad.Trans.Writer.CPS
                                                as W
 import           Control.Monad.Writer.Class
-import           Control.Lens.Cons
+import           Control.Lens.Cons       hiding ( uncons )
 import           Control.Lens.Prism             ( prism )
 import           GHC.Exts                       ( Item
                                                 , toList

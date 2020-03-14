@@ -5,7 +5,7 @@ source_filename = "./examples/polyfun.mlg"
  
 
 
-define external ccc  i64 @$fo163(i8* , i64 )    {
+define external ccc  i64 @$f165(i8* , i64 )    {
   %3 = bitcast i8* %0 to {i8* (i8*, i8*)*, i8*}* 
   %4 = inttoptr i64 %1 to i8* 
   %5 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %3, i32 0, i32 0 
@@ -21,7 +21,7 @@ define external ccc  i64 @$fo163(i8* , i64 )    {
 declare external ccc  i8* @GC_malloc(i64)    
 
 
-define external ccc  {i64, {i8**, i64}*}* @$fo147(i8* , i8* )    {
+define external ccc  {i64, {i8**, i64}*}* @$f149(i8* , i8* )    {
   %3 = bitcast i8* %0 to {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* 
   %4 = getelementptr  {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}, {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* %3, i32 0, i32 0 
   %5 = load  {i8*, {i8**, i64}*}* (i8*, i8*)*, {i8*, {i8**, i64}*}* (i8*, i8*)** %4 
@@ -43,7 +43,7 @@ define external ccc  {i64, {i8**, i64}*}* @$fo147(i8* , i8* )    {
 }
 
 
-define external ccc  i8* @$fo132(i8* , i8* )    {
+define external ccc  i8* @$f134(i8* , i8* )    {
   %3 = bitcast i8* %0 to {i8* (i8*, i8*)*, i8*}* 
   %4 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %3, i32 0, i32 0 
   %5 = load  i8* (i8*, i8*)*, i8* (i8*, i8*)** %4 
@@ -54,7 +54,7 @@ define external ccc  i8* @$fo132(i8* , i8* )    {
 }
 
 
-define external ccc  i8* @$fo124(i8* , i8* )    {
+define external ccc  i8* @$f125(i8* , i8* )    {
   %3 = bitcast i8* %0 to {i8* (i8*, i8*)*, i8*}* 
   %4 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %3, i32 0, i32 0 
   %5 = load  i8* (i8*, i8*)*, i8* (i8*, i8*)** %4 
@@ -65,7 +65,7 @@ define external ccc  i8* @$fo124(i8* , i8* )    {
 }
 
 
-define external ccc  i64 @$fo107(i8* , i64 )    {
+define external ccc  i64 @$f107(i8* , i64 )    {
   %3 = bitcast i8* %0 to {i64 (i8*, i8*)*, i8*}* 
   %4 = inttoptr i64 %1 to i8* 
   %5 = getelementptr  {i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* %3, i32 0, i32 0 
@@ -77,7 +77,7 @@ define external ccc  i64 @$fo107(i8* , i64 )    {
 }
 
 
-define external ccc  i64 @$fo83(i8* , i8* )    {
+define external ccc  i64 @$f83(i8* , i8* )    {
   %3 = bitcast i8* %0 to {i64 (i8*, i64)*, i8*}* 
   %4 = ptrtoint i8* %1 to i64 
   %5 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %3, i32 0, i32 0 
@@ -220,7 +220,7 @@ define external ccc  i32 @main()    {
   %16 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i8*)*, i8*}* getelementptr inbounds ({i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i8*)*, i8*}*), i32 1) to i64))  
   %17 = bitcast i8* %16 to {i64 (i8*, i8*)*, i8*}* 
   %18 = getelementptr  {i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* %17, i32 0, i32 0 
-  store  i64 (i8*, i8*)* @$fo83, i64 (i8*, i8*)** %18 
+  store  i64 (i8*, i8*)* @$f83, i64 (i8*, i8*)** %18 
   %19 = getelementptr  {i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* %17, i32 0, i32 1 
   store  i8* %15, i8** %19 
   %20 = mul   i64 ptrtoint ({i64 (i8*, i8*)*, i8*}** getelementptr inbounds ({i64 (i8*, i8*)*, i8*}*, {i64 (i8*, i8*)*, i8*}** inttoptr (i32 0 to {i64 (i8*, i8*)*, i8*}**), i32 1) to i64), 1 
@@ -279,7 +279,7 @@ body_1:
   %54 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
   %55 = bitcast i8* %54 to {i64 (i8*, i64)*, i8*}* 
   %56 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %55, i32 0, i32 0 
-  store  i64 (i8*, i64)* @$fo107, i64 (i8*, i64)** %56 
+  store  i64 (i8*, i64)* @$f107, i64 (i8*, i64)** %56 
   %57 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %55, i32 0, i32 1 
   store  i8* %53, i8** %57 
   %58 = getelementptr  {i64 (i8*, i64)*, i8*}*, {i64 (i8*, i64)*, i8*}** %46, i64 %49 
@@ -303,52 +303,54 @@ end_1:
   %70 = load  i8*, i8** %69 
   %71 = bitcast {i8* (i8*, i8*)*, i8*}* %5 to i8* 
   %72 =  call ccc  i8*  %68(i8*  %70, i8*  %71)  
-  %73 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i8* (i8*, i8*)*, i8*}* getelementptr inbounds ({i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i8* (i8*, i8*)*, i8*}*), i32 1) to i64))  
-  %74 = bitcast i8* %73 to {i8* (i8*, i8*)*, i8*}* 
-  %75 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %74, i32 0, i32 0 
-  store  i8* (i8*, i8*)* @$fo124, i8* (i8*, i8*)** %75 
-  %76 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %74, i32 0, i32 1 
-  store  i8* %71, i8** %76 
-  %77 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i8* (i8*, i8*)*, i8*}* getelementptr inbounds ({i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i8* (i8*, i8*)*, i8*}*), i32 1) to i64))  
-  %78 = bitcast i8* %77 to {i8* (i8*, i8*)*, i8*}* 
-  %79 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %78, i32 0, i32 0 
-  store  i8* (i8*, i8*)* @$fo132, i8* (i8*, i8*)** %79 
-  %80 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %78, i32 0, i32 1 
-  store  i8* %72, i8** %80 
-  %81 = getelementptr  {{{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, i8*}, {{{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, i8*}* %64, i32 0, i32 0 
-  %82 = load  {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)** %81 
-  %83 = getelementptr  {{{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, i8*}, {{{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, i8*}* %64, i32 0, i32 1 
-  %84 = load  i8*, i8** %83 
-  %85 = inttoptr i64 1 to i8* 
-  %86 =  call ccc  {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}*  %82(i8*  %84, i8*  %85)  
-  %87 = ptrtoint i8* %85 to i64 
-  %88 = bitcast {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* %86 to i8* 
-  %89 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* getelementptr inbounds ({{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}, {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* inttoptr (i32 0 to {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}*), i32 1) to i64))  
-  %90 = bitcast i8* %89 to {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* 
-  %91 = getelementptr  {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}, {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* %90, i32 0, i32 0 
-  store  {i64, {i8**, i64}*}* (i8*, i8*)* @$fo147, {i64, {i8**, i64}*}* (i8*, i8*)** %91 
-  %92 = getelementptr  {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}, {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* %90, i32 0, i32 1 
-  store  i8* %88, i8** %92 
-  %93 = getelementptr  {{i64 (i8*, i64)*, i8*}**, i64}, {{i64 (i8*, i64)*, i8*}**, i64}* %42, i32 0, i32 0 
-  %94 = load  {i64 (i8*, i64)*, i8*}**, {i64 (i8*, i64)*, i8*}*** %93 
-  %95 = bitcast {i8* (i8*, i8*)*, i8*}* %74 to i8* 
-  %96 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
-  %97 = bitcast i8* %96 to {i64 (i8*, i64)*, i8*}* 
-  %98 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %97, i32 0, i32 0 
-  store  i64 (i8*, i64)* @$fo163, i64 (i8*, i64)** %98 
-  %99 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %97, i32 0, i32 1 
-  store  i8* %95, i8** %99 
-  %100 = getelementptr  {i64 (i8*, i64)*, i8*}*, {i64 (i8*, i64)*, i8*}** %94, i64 0 
-  store  {i64 (i8*, i64)*, i8*}* %97, {i64 (i8*, i64)*, i8*}** %100 
-  %101 = getelementptr  {{i64 (i8*, i64)*, i8*}**, i64}, {{i64 (i8*, i64)*, i8*}**, i64}* %42, i32 0, i32 0 
-  %102 = load  {i64 (i8*, i64)*, i8*}**, {i64 (i8*, i64)*, i8*}*** %101 
-  %103 = getelementptr  {i64 (i8*, i64)*, i8*}*, {i64 (i8*, i64)*, i8*}** %102, i64 0 
-  %104 = load  {i64 (i8*, i64)*, i8*}*, {i64 (i8*, i64)*, i8*}** %103 
-  %105 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %104, i32 0, i32 0 
-  %106 = load  i64 (i8*, i64)*, i64 (i8*, i64)** %105 
-  %107 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %104, i32 0, i32 1 
-  %108 = load  i8*, i8** %107 
-  %109 =  call ccc  i64  %106(i8*  %108, i64  1)  
-  %110 =  call ccc  {}*  @print_int10(i64  %109)  
+  %73 = bitcast i8* %71 to i8* 
+  %74 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i8* (i8*, i8*)*, i8*}* getelementptr inbounds ({i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i8* (i8*, i8*)*, i8*}*), i32 1) to i64))  
+  %75 = bitcast i8* %74 to {i8* (i8*, i8*)*, i8*}* 
+  %76 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %75, i32 0, i32 0 
+  store  i8* (i8*, i8*)* @$f125, i8* (i8*, i8*)** %76 
+  %77 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %75, i32 0, i32 1 
+  store  i8* %73, i8** %77 
+  %78 = bitcast i8* %72 to i8* 
+  %79 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i8* (i8*, i8*)*, i8*}* getelementptr inbounds ({i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i8* (i8*, i8*)*, i8*}*), i32 1) to i64))  
+  %80 = bitcast i8* %79 to {i8* (i8*, i8*)*, i8*}* 
+  %81 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %80, i32 0, i32 0 
+  store  i8* (i8*, i8*)* @$f134, i8* (i8*, i8*)** %81 
+  %82 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %80, i32 0, i32 1 
+  store  i8* %78, i8** %82 
+  %83 = getelementptr  {{{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, i8*}, {{{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, i8*}* %64, i32 0, i32 0 
+  %84 = load  {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)** %83 
+  %85 = getelementptr  {{{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, i8*}, {{{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* (i8*, i8*)*, i8*}* %64, i32 0, i32 1 
+  %86 = load  i8*, i8** %85 
+  %87 = inttoptr i64 1 to i8* 
+  %88 =  call ccc  {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}*  %84(i8*  %86, i8*  %87)  
+  %89 = ptrtoint i8* %87 to i64 
+  %90 = bitcast {{i8*, {i8**, i64}*}* (i8*, i8*)*, i8*}* %88 to i8* 
+  %91 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* getelementptr inbounds ({{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}, {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* inttoptr (i32 0 to {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}*), i32 1) to i64))  
+  %92 = bitcast i8* %91 to {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* 
+  %93 = getelementptr  {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}, {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* %92, i32 0, i32 0 
+  store  {i64, {i8**, i64}*}* (i8*, i8*)* @$f149, {i64, {i8**, i64}*}* (i8*, i8*)** %93 
+  %94 = getelementptr  {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}, {{i64, {i8**, i64}*}* (i8*, i8*)*, i8*}* %92, i32 0, i32 1 
+  store  i8* %90, i8** %94 
+  %95 = getelementptr  {{i64 (i8*, i64)*, i8*}**, i64}, {{i64 (i8*, i64)*, i8*}**, i64}* %42, i32 0, i32 0 
+  %96 = load  {i64 (i8*, i64)*, i8*}**, {i64 (i8*, i64)*, i8*}*** %95 
+  %97 = bitcast {i8* (i8*, i8*)*, i8*}* %75 to i8* 
+  %98 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
+  %99 = bitcast i8* %98 to {i64 (i8*, i64)*, i8*}* 
+  %100 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %99, i32 0, i32 0 
+  store  i64 (i8*, i64)* @$f165, i64 (i8*, i64)** %100 
+  %101 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %99, i32 0, i32 1 
+  store  i8* %97, i8** %101 
+  %102 = getelementptr  {i64 (i8*, i64)*, i8*}*, {i64 (i8*, i64)*, i8*}** %96, i64 0 
+  store  {i64 (i8*, i64)*, i8*}* %99, {i64 (i8*, i64)*, i8*}** %102 
+  %103 = getelementptr  {{i64 (i8*, i64)*, i8*}**, i64}, {{i64 (i8*, i64)*, i8*}**, i64}* %42, i32 0, i32 0 
+  %104 = load  {i64 (i8*, i64)*, i8*}**, {i64 (i8*, i64)*, i8*}*** %103 
+  %105 = getelementptr  {i64 (i8*, i64)*, i8*}*, {i64 (i8*, i64)*, i8*}** %104, i64 0 
+  %106 = load  {i64 (i8*, i64)*, i8*}*, {i64 (i8*, i64)*, i8*}** %105 
+  %107 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %106, i32 0, i32 0 
+  %108 = load  i64 (i8*, i64)*, i64 (i8*, i64)** %107 
+  %109 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %106, i32 0, i32 1 
+  %110 = load  i8*, i8** %109 
+  %111 =  call ccc  i64  %108(i8*  %110, i64  1)  
+  %112 =  call ccc  {}*  @print_int10(i64  %111)  
   ret i32 0 
 }

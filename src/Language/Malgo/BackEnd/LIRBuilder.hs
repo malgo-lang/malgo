@@ -253,16 +253,16 @@ coerceTo to x = case (to, ltypeOf x) of
   (Ptr (Struct [Function r (Ptr U8 : ps), Ptr U8]), xty) -> do
     -- generate new captured environment
     -- 'f' captures the original closure
-    (boxedX, xps, unboxedXType) <- case xty of
-      Ptr (Struct [Function _ (Ptr U8 : xs), Ptr U8]) -> (, xs, xty) <$> cast (Ptr U8) x
-      Ptr U8 -> pure
-        ( x
-        , replicate (length ps) (Ptr U8)
-        , Ptr (Struct [Function (Ptr U8) (replicate (length ps + 1) (Ptr U8)), Ptr U8])
-        )
-      _ -> error $ toText $ pShow x <> " is not closure"
+    boxedX <- cast (Ptr U8) x
+    let (xps, unboxedXType) = case xty of
+          Ptr (Struct [Function _ (Ptr U8 : xs), Ptr U8]) -> (xs, xty)
+          Ptr U8 ->
+            ( replicate (length ps) (Ptr U8)
+            , Ptr (Struct [Function (Ptr U8) (replicate (length ps + 1) (Ptr U8)), Ptr U8])
+            )
+          _ -> error $ toText $ pShow x <> " is not closure"
     -- generate 'f'
-    fName       <- newID (Function r (Ptr U8 : ps)) "$fo"
+    fName       <- newID (Function r (Ptr U8 : ps)) "$f"
     fBoxedXName <- newID (Ptr U8) "$x"
     fParamNames <- mapM (`newID` "$a") ps
 

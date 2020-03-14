@@ -3,7 +3,7 @@ source_filename = "./examples/polyfun2.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-define i64 @"$fo148"(i8* nocapture readonly, i8*) {
+define i64 @"$f148"(i8* nocapture readonly, i8*) {
   %3 = bitcast i8* %0 to i8* (i8*, i8*)**
   %4 = load i8* (i8*, i8*)*, i8* (i8*, i8*)** %3, align 8
   %5 = getelementptr i8, i8* %0, i64 8
@@ -14,7 +14,7 @@ define i64 @"$fo148"(i8* nocapture readonly, i8*) {
   ret i64 %9
 }
 
-define i8* @"$fo133"(i8* nocapture readonly, i8*) {
+define i8* @"$f133"(i8* nocapture readonly, i8*) {
   %3 = bitcast i8* %0 to i64 (i8*, i8*)**
   %4 = load i64 (i8*, i8*)*, i64 (i8*, i8*)** %3, align 8
   %5 = getelementptr i8, i8* %0, i64 8
@@ -25,7 +25,7 @@ define i8* @"$fo133"(i8* nocapture readonly, i8*) {
   ret i8* %9
 }
 
-define i64 @"$fo83"(i8* nocapture readonly, i8*) {
+define i64 @"$f83"(i8* nocapture readonly, i8*) {
   %3 = ptrtoint i8* %1 to i64
   %4 = bitcast i8* %0 to i64 (i8*, i64)**
   %5 = load i64 (i8*, i64)*, i64 (i8*, i64)** %4, align 8
@@ -100,7 +100,7 @@ body_0:
   store i8* %5, i8** %9, align 8
   %10 = tail call i8* @GC_malloc(i64 16)
   %11 = bitcast i8* %10 to i64 (i8*, i8*)**
-  store i64 (i8*, i8*)* @"$fo83", i64 (i8*, i8*)** %11, align 8
+  store i64 (i8*, i8*)* @"$f83", i64 (i8*, i8*)** %11, align 8
   %12 = getelementptr i8, i8* %10, i64 8
   %13 = bitcast i8* %12 to i8**
   store i8* %6, i8** %13, align 8
@@ -172,7 +172,7 @@ body_0:
   %64 = load i64, i64* %63, align 8
   %65 = tail call i8* @GC_malloc(i64 16)
   %66 = bitcast i8* %65 to i8* (i8*, i8*)**
-  store i8* (i8*, i8*)* @"$fo133", i8* (i8*, i8*)** %66, align 8
+  store i8* (i8*, i8*)* @"$f133", i8* (i8*, i8*)** %66, align 8
   %67 = getelementptr i8, i8* %65, i64 8
   %68 = bitcast i8* %67 to i64*
   store i64 %64, i64* %68, align 8
@@ -195,7 +195,7 @@ body_0:
   %82 = load i64, i64* %81, align 8
   %83 = tail call i8* @GC_malloc(i64 16)
   %84 = bitcast i8* %83 to i64 (i8*, i8*)**
-  store i64 (i8*, i8*)* @"$fo148", i64 (i8*, i8*)** %84, align 8
+  store i64 (i8*, i8*)* @"$f148", i64 (i8*, i8*)** %84, align 8
   %85 = getelementptr i8, i8* %83, i64 8
   %86 = bitcast i8* %85 to i64*
   store i64 %82, i64* %86, align 8
