@@ -30,7 +30,7 @@ import           Language.Malgo.BackEnd.LIRBuilder
 import           Control.Lens                   ( (.~)
                                                 , ifor_
                                                 )
-import           Relude.Unsafe                  ( fromJust )
+import           Data.Maybe                     ( fromJust )
 
 data GenLIR
 
@@ -96,9 +96,9 @@ genExpr (M.Tuple xs              ) = do
 genExpr (M.TupleAccess t i) = do
   tuplePtr <- findVar t
   loadC tuplePtr [0, i]
-genExpr (M.MakeArray init size) = do
-  initVal <- findVar init
-  sizeVal <- coerceTo SizeT =<< findVar size
+genExpr (M.MakeArray x n) = do
+  initVal <- findVar x
+  sizeVal <- coerceTo SizeT =<< findVar n
   ptr     <- arrayCreate (ltypeOf initVal) sizeVal
   zero    <- assign $ Constant $ Int64 0
   forLoop zero sizeVal $ \idx -> do

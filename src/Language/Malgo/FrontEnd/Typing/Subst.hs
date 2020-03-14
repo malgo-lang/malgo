@@ -9,11 +9,11 @@ module Language.Malgo.FrontEnd.Typing.Subst
   )
 where
 
-import           Language.Malgo.Prelude  hiding ( delete )
+import           Language.Malgo.Prelude
 
 import           Language.Malgo.TypeRep.Type
 
-import           Relude.Extra.Map
+import           Data.Set                       ( (\\) )
 
 newtype Subst = Subst { unwrapSubst :: Map TyVar Type }
   deriving stock (Eq, Show)

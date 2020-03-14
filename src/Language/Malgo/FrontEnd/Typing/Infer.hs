@@ -25,6 +25,7 @@ import           Language.Malgo.FrontEnd.Typing.Subst
 
 import           Text.Parsec.Pos                ( SourcePos )
 import           Control.Lens.Setter            ( (.~) )
+import           Data.Set                       ( (\\) )
 
 data Typing
 
@@ -96,7 +97,7 @@ typingExpr (MakeArray pos initNode sizeNode) = applySubst $ do
 typingExpr (ArrayRead pos arr ix) = applySubst $ do
   arrTy    <- typingExpr arr
   resultTy <- newTyMeta
-  ixTy <- typingExpr ix
+  ixTy     <- typingExpr ix
   updateSubst pos [TyApp ArrayC [resultTy] :~ arrTy, ixTy :~ intTy]
   pure resultTy
 typingExpr (ArrayWrite pos arr ix val) = applySubst $ do
@@ -131,7 +132,7 @@ typingExpr (Let _ (ValDec pos name mtyp val) body) = applySubst $ do
 
   typingExpr body
 typingExpr (Let _ (ExDec _ name typ _) body) = do
-  env <- get
+  env  <- get
   typ' <- evalStateT (toType typ) mempty
   letVar env name typ'
   -- defineVar name (Forall [] typ')

@@ -15,7 +15,6 @@ module Language.Malgo.Prelude
   , module Control.Monad.Trans.Writer.CPS
   , module Control.Monad.Writer.Class
   , module Control.Lens.Cons
-  , Complement(..)
   , localState
   , unzip
   , ltraverse
@@ -34,12 +33,9 @@ import           Relude                  hiding ( Constraint
                                                 , return
                                                 , uncons
                                                 )
-import           Relude.Extra.Map        hiding ( size
-                                                , delete
-                                                )
+import           Relude.Extra.Map
 import           Relude.Extra.Tuple
 import           Relude.Extra.Bifunctor
-import qualified Data.Set                      as Set
 import qualified Data.List                     as List
 import           Control.Monad.Trans.Writer.CPS ( WriterT
                                                 , runWriterT
@@ -56,26 +52,6 @@ import           Text.PrettyPrint.HughesPJClass ( Pretty(..)
                                                 , text
                                                 )
 import           Text.Parsec.Pos                ( SourcePos )
-
--- 差分を取ることができるデータ構造を表す型クラス
-class One a => Complement a where
-  (\\) :: a -> a -> a
-
-  delete :: OneItem a -> a -> a
-  delete x s = s \\ one x
-  {-# INLINE delete #-}
-
-instance Ord a => Complement (Set a) where
-  (\\) = (Set.\\)
-  {-# INLINE (\\) #-}
-  delete = Set.delete
-  {-# INLINE delete #-}
-
-instance Eq a => Complement [a] where
-  (\\) = (List.\\)
-  {-# INLINE (\\) #-}
-  delete = List.delete
-  {-# INLINE delete #-}
 
 -- Stateモナドのヘルパー。ローカルな状態を表現する
 localState :: MonadState s m => m a -> m a

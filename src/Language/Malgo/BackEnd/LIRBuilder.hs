@@ -44,7 +44,7 @@ import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 
 import           Control.Lens.Indexed           ( ifor_ )
-import           Relude.Unsafe                  ( fromJust )
+import           Data.Maybe                     ( fromJust )
 
 newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
   deriving newtype (Semigroup, Monoid)
@@ -143,7 +143,7 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
 
 -- instructions
 arrayCreate :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
-arrayCreate init size = assign $ ArrayCreate init size
+arrayCreate t n = assign $ ArrayCreate t n
 
 alloca :: MonadExprBuilder m => LType -> m (ID LType)
 alloca ty = assign $ Alloca ty
@@ -283,12 +283,12 @@ coerceTo to x = case (to, ltypeOf x) of
       _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow
         (Ptr (Struct [Ptr ty, SizeT]))
     xRaw      <- loadC x' [0, 0]
-    size      <- loadC x' [0, 1]
-    newArr    <- arrayCreate ty size
+    len       <- loadC x' [0, 1]
+    newArr    <- arrayCreate ty len
     newArrRaw <- loadC newArr [0, 0]
-    storeC newArr [0, 1] size
+    storeC newArr [0, 1] len
     zero <- assign $ Constant $ Int64 0
-    forLoop zero size $ \i -> do
+    forLoop zero len $ \i -> do
       val  <- load elemTy xRaw [i]
       val' <- coerceTo ty val
       store newArrRaw [i] val'

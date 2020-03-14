@@ -9,7 +9,7 @@ import           Language.Malgo.ID
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import           Relude.Unsafe
+import           Data.List                      ( (!!) )
 import           Text.PrettyPrint.HughesPJClass ( braces
                                                 , sep
                                                 , punctuate

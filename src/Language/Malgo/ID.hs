@@ -23,9 +23,7 @@ module Language.Malgo.ID
 where
 
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude  hiding ( delete
-                                                , toList
-                                                )
+import           Language.Malgo.Prelude  hiding ( toList )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
@@ -36,7 +34,6 @@ import           Control.Lens                   ( Lens
 import           Data.Functor.Classes
 import           GHC.Exts                       ( IsList(..) )
 import           Numeric                        ( showHex )
-import           Relude.Extra.Map
 import           Text.PrettyPrint.HughesPJClass ( text )
 
 data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }

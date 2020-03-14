@@ -23,7 +23,10 @@ import qualified Language.Malgo.IR.HIR         as H
 import           Language.Malgo.TypeRep.Type
 
 import           Control.Lens.Indexed           ( ifoldMap )
-import           Data.Set                       ( intersection )
+import           Data.Set                       ( intersection
+                                                , (\\)
+                                                )
+import qualified Data.Set                      as Set
 
 data TransToMIR
 
@@ -55,9 +58,9 @@ transExpr :: (MonadState FuncMap f, MonadReader Env f) => H.Expr (ID Type) -> f 
 transExpr (H.Var   x              ) = pure $ Var x
 transExpr (H.Lit   x              ) = pure $ Lit x
 transExpr (H.Tuple xs             ) = pure $ Tuple xs
-transExpr (H.TupleAccess x    i   ) = pure $ TupleAccess x i
-transExpr (H.MakeArray   init size) = pure $ MakeArray init size
-transExpr (H.ArrayRead   arr  ix  ) = pure $ ArrayRead arr ix
+transExpr (H.TupleAccess x   i    ) = pure $ TupleAccess x i
+transExpr (H.MakeArray   x   n    ) = pure $ MakeArray x n
+transExpr (H.ArrayRead   arr ix   ) = pure $ ArrayRead arr ix
 transExpr (H.ArrayWrite arr ix val) = pure $ ArrayWrite arr ix val
 transExpr (H.Call f xs            ) = do
   Env { knowns, mutrecs } <- ask
@@ -110,15 +113,15 @@ freevars :: Ord a => Expr a -> Set a
 freevars (Var x)                 = one x
 freevars Lit{}                   = mempty
 freevars (Tuple xs             ) = fromList xs
-freevars (TupleAccess x    _   ) = one x
-freevars (MakeArray   init size) = fromList [init, size]
-freevars (ArrayRead   x    y   ) = fromList [x, y]
+freevars (TupleAccess x _      ) = one x
+freevars (MakeArray   x n      ) = fromList [x, n]
+freevars (ArrayRead   x y      ) = fromList [x, y]
 freevars (ArrayWrite x y z     ) = fromList [x, y, z]
 freevars (CallDirect       _ xs) = fromList xs
 freevars (CallWithCaptures _ xs) = fromList xs
 freevars (CallClosure      f xs) = fromList $ f : xs
 freevars (MakeClosure      _ xs) = fromList xs
-freevars (Let   n v e          ) = delete n (freevars v <> freevars e)
+freevars (Let   n v e          ) = Set.delete n (freevars v <> freevars e)
 freevars (If    c t f          ) = one c <> freevars t <> freevars f
 freevars (Prim  _ _ xs         ) = fromList xs
 freevars (BinOp _ x y          ) = fromList [x, y]

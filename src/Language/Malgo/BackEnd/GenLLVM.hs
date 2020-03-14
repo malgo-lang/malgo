@@ -170,21 +170,19 @@ genExpr (CallExt f (Function r ps) xs) = do
   f'  <- findExt f (map convertType ps) (convertType r)
   xs' <- mapM (fmap (, []) . findVar) xs
   call f' xs'
-genExpr CallExt{}             = error "extern symbol must have a function type"
-genExpr (ArrayCreate ty size) = do
+genExpr CallExt{}          = error "extern symbol must have a function type"
+genExpr (ArrayCreate ty n) = do
   let ty' = convertType ty
-  size' <- mul (sizeof ty') =<< findVar size
+  size' <- mul (sizeof ty') =<< findVar n
   raw   <- mallocBytes size' (Just ty')
   arr   <- mallocBytes (sizeof $ StructureType False [LT.ptr ty', i64])
                        (Just $ StructureType False [LT.ptr ty', i64])
   arrRawAddr <- gep arr [int32 0, int32 0]
   store arrRawAddr 0 raw
   arrSizeAddr <- gep arr [int32 0, int32 1]
-  store arrSizeAddr 0 =<< findVar size
+  store arrSizeAddr 0 =<< findVar n
   pure arr
-genExpr (Alloca ty) = do
-  let size = sizeof (convertType ty)
-  mallocBytes size (Just $ convertType ty)
+genExpr (Alloca ty ) = mallocBytes (sizeof (convertType ty)) (Just $ convertType ty)
 genExpr (LoadC x is) = do
   xOpr    <- findVar x
   valAddr <- gep xOpr (map (int32 . toInteger) is)

@@ -24,7 +24,7 @@ import           Language.Malgo.IR.Op          as Export
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
-import           Relude.Unsafe                  ( (!!) )
+import           Data.List                      ( (!!) )
 import           Text.PrettyPrint.HughesPJClass ( braces
                                                 , sep
                                                 , punctuate
@@ -136,12 +136,12 @@ instance HasType Lit where
   typeOf String{} = TyApp StringC []
 
 instance Pretty a => Pretty (Expr a) where
-  pPrint (Var   x             ) = pPrint x
-  pPrint (Lit   x             ) = pPrint x
-  pPrint (Tuple xs            ) = braces $ sep $ punctuate "," $ map pPrint xs
-  pPrint (TupleAccess e   i   ) = parens $ "." <+> pPrint e <+> pPrint i
-  pPrint (MakeArray   ty  size) = parens $ "array" <+> pPrint ty <+> pPrint size
-  pPrint (ArrayRead   arr ix  ) = pPrint arr <> brackets (pPrint ix)
+  pPrint (Var   x           ) = pPrint x
+  pPrint (Lit   x           ) = pPrint x
+  pPrint (Tuple xs          ) = braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (TupleAccess e   i ) = parens $ "." <+> pPrint e <+> pPrint i
+  pPrint (MakeArray   x   n ) = parens $ "array" <+> pPrint x <+> pPrint n
+  pPrint (ArrayRead   arr ix) = pPrint arr <> brackets (pPrint ix)
   pPrint (ArrayWrite arr ix val) =
     parens $ "<-" <+> (pPrint arr <> brackets (pPrint ix)) <+> pPrint val
   pPrint (Call f xs    ) = parens $ pPrint f <+> sep (map pPrint xs)

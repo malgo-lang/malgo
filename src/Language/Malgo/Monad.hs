@@ -36,7 +36,7 @@ import           Colog                          ( HasLog(..)
                                                 )
 import qualified Colog
 import           Control.Monad.Fix
-import           Relude.Unsafe                  ( (!!) )
+import           Data.List                      ( (!!) )
 import           Text.PrettyPrint               ( ($$)
                                                 , text
                                                 )

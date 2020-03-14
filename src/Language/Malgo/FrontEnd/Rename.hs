@@ -63,16 +63,16 @@ getID pos lens name = do
     Nothing -> malgoError pos "rename" $ pPrint name <+> "is not defined"
 
 renameExpr :: (MonadMalgo m, MonadUniq m, MonadReader Known m) => Expr String -> m (Expr (ID ()))
-renameExpr (Var    pos name        ) = Var pos <$> getID pos var name
-renameExpr (Int    pos x           ) = pure $ Int pos x
-renameExpr (Float  pos x           ) = pure $ Float pos x
-renameExpr (Bool   pos x           ) = pure $ Bool pos x
-renameExpr (Char   pos x           ) = pure $ Char pos x
-renameExpr (String pos x           ) = pure $ String pos x
-renameExpr (Tuple  pos xs          ) = Tuple pos <$> mapM renameExpr xs
-renameExpr (Array  pos xs          ) = Array pos <$> mapM renameExpr xs
-renameExpr (MakeArray pos init size) = MakeArray pos <$> renameExpr init <*> renameExpr size
-renameExpr (ArrayRead pos arr  ix  ) = ArrayRead pos <$> renameExpr arr <*> renameExpr ix
+renameExpr (Var    pos name     ) = Var pos <$> getID pos var name
+renameExpr (Int    pos x        ) = pure $ Int pos x
+renameExpr (Float  pos x        ) = pure $ Float pos x
+renameExpr (Bool   pos x        ) = pure $ Bool pos x
+renameExpr (Char   pos x        ) = pure $ Char pos x
+renameExpr (String pos x        ) = pure $ String pos x
+renameExpr (Tuple  pos xs       ) = Tuple pos <$> mapM renameExpr xs
+renameExpr (Array  pos xs       ) = Array pos <$> mapM renameExpr xs
+renameExpr (MakeArray pos x   n ) = MakeArray pos <$> renameExpr x <*> renameExpr n
+renameExpr (ArrayRead pos arr ix) = ArrayRead pos <$> renameExpr arr <*> renameExpr ix
 renameExpr (ArrayWrite pos arr ix val) =
   ArrayWrite pos <$> renameExpr arr <*> renameExpr ix <*> renameExpr val
 renameExpr (Fn pos params body) =
