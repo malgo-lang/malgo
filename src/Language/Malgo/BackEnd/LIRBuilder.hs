@@ -91,7 +91,7 @@ class MonadProgramBuilder m => MonadExprBuilder m where
   forLoop :: ID LType -> ID LType -> (ID LType -> m ()) -> m ()
   localBlock :: m (ID LType) -> m (Block (ID LType))
   getCurrentCaptures :: m (Maybe (ID LType))
-  updateVariableMap :: ID LType -> ID LType -> m ()
+  replaceVar :: ID LType -> ID LType -> m ()
 
 newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (StateT ExprState m) a }
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
@@ -138,7 +138,7 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
     modify (\s -> s { variableMap = vm })
     pure block
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
-  updateVariableMap x y = ExprBuilderT $ modify $ \s ->
+  replaceVar x y = ExprBuilderT $ modify $ \s ->
     s { variableMap = (\a -> if x == a then y else a) <$> variableMap s }
 
 -- instructions
@@ -160,7 +160,7 @@ call f xs = case ltypeOf f of
     as     <- zipWithM coerceTo ps xs
     result <- assign $ Call f as
     -- "write back". See also 'coerceTo'.
-    zipWithM_ (\x a -> updateVariableMap x =<< coerceTo (ltypeOf x) a) xs as
+    zipWithM_ (\x a -> replaceVar x =<< coerceTo (ltypeOf x) a) xs as
     pure result
   _ -> error "function must be typed as function"
 
@@ -170,7 +170,7 @@ callExt f funTy xs = case funTy of
     as     <- zipWithM coerceTo ps xs
     result <- assign $ CallExt f funTy as
     -- "write back". See also 'coerceTo'.
-    zipWithM_ (\x a -> updateVariableMap x =<< coerceTo (ltypeOf x) a) xs as
+    zipWithM_ (\x a -> replaceVar x =<< coerceTo (ltypeOf x) a) xs as
     pure result
   _ -> error "external function must be typed as function"
 
