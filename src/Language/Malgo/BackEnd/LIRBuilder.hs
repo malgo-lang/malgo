@@ -44,7 +44,12 @@ import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 
 import           Control.Lens.Indexed           ( ifor_ )
+import           Control.Lens.Setter            ( set )
+import           Control.Lens.Getter            ( view )
+import           Control.Lens.At                ( at )
 import           Data.Maybe                     ( fromJust )
+import           Data.DList                     ( DList(..) )
+import qualified Data.DList                    as D
 
 newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
   deriving newtype (Semigroup, Monoid)
@@ -53,12 +58,12 @@ instance One ProgramEnv where
   type OneItem ProgramEnv = (ID Type, ID LType)
   one = ProgramEnv . one
 
-newtype ProgramState = ProgramState { functionList :: DiffList (Func (ID LType)) }
+newtype ProgramState = ProgramState { functionList :: DList (Func (ID LType)) }
 
 newtype ExprEnv = ExprEnv { currentCaptures :: Maybe (ID LType) }
 
 data ExprState = ExprState { variableMap :: IDMap Type (ID LType)
-                           , partialBlockInsns :: DiffList (Insn (ID LType))
+                           , partialBlockInsns :: DList (Insn (ID LType))
                            }
 
 -- Program Builder
@@ -78,8 +83,8 @@ runProgramBuilderT env (ProgramBuilderT m) = do
   pure $ Program { functions = toList functionList, mainFunc = mf }
 
 instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
-  findFunc x = ProgramBuilderT $ fromJust . lookup x <$> asks functionMap
-  addFunc fun = ProgramBuilderT $ modify (\e -> e { functionList = cons fun $ functionList e })
+  findFunc x = ProgramBuilderT $ fromJust . view (at x) <$> asks functionMap
+  addFunc fun = ProgramBuilderT $ modify (\e -> e { functionList = D.cons fun $ functionList e })
 
 -- Expr Builder
 class MonadProgramBuilder m => MonadExprBuilder m where
@@ -108,31 +113,32 @@ instance (Monad m, MonadProgramBuilder m) => MonadProgramBuilder (ExprBuilderT m
   addFunc fun = ExprBuilderT $ lift $ lift $ addFunc fun
 
 instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT m) where
-  findVar x = ExprBuilderT $ fromJust . lookup x <$> gets variableMap
-  defineVar x y = ExprBuilderT $ modify (\s -> s { variableMap = insert x y (variableMap s) })
+  findVar x = ExprBuilderT $ fromJust . view (at x) <$> gets variableMap
+  defineVar x y =
+    ExprBuilderT $ modify (\s -> s { variableMap = set (at x) (Just y) (variableMap s) })
 
   assign expr = ExprBuilderT $ do
     i <- newID (ltypeOf expr) "%"
-    modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (Assign i expr) })
+    modify (\e -> e { partialBlockInsns = D.snoc (partialBlockInsns e) (Assign i expr) })
     pure i
 
   storeC var is val = ExprBuilderT
-    $ modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (StoreC var is val) })
+    $ modify (\e -> e { partialBlockInsns = D.snoc (partialBlockInsns e) (StoreC var is val) })
 
   store var is val = ExprBuilderT
-    $ modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (Store var is val) })
+    $ modify (\e -> e { partialBlockInsns = D.snoc (partialBlockInsns e) (Store var is val) })
 
   forLoop from to k = ExprBuilderT $ do
     index <- newID I64 "$i"
     block <- unExprBuilderT $ localBlock (k index >> undef Void) -- TODO: remove undef
-    modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (For index from to block) })
+    modify (\e -> e { partialBlockInsns = D.snoc (partialBlockInsns e) (For index from to block) })
 
   localBlock (ExprBuilderT m) = ExprBuilderT $ do
     backup <- get
-    block <- do
+    block  <- do
       put $ backup { partialBlockInsns = mempty }
       retval <- m
-      insts <- toList <$> gets partialBlockInsns
+      insts  <- toList <$> gets partialBlockInsns
       pure (Block insts retval)
     vm <- gets variableMap
     put $ backup { variableMap = vm }

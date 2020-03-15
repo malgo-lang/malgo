@@ -36,6 +36,9 @@ import qualified LLVM.AST.FloatingPointPredicate
 import qualified LLVM.AST.IntegerPredicate     as IP
 import qualified LLVM.AST.Type                 as LT
 import qualified LLVM.IRBuilder                as IRBuilder
+import           Control.Lens.Getter            ( view )
+import           Control.Lens.At                ( at )
+import           Control.Lens.Setter            ( set )
 
 data GenLLVM
 
@@ -85,16 +88,17 @@ convertType Void            = LT.void
 findVar :: MonadReader OprMap m => ID LType -> m Operand
 findVar i = do
   m <- ask
-  pure $ lookupDefault (error $ show $ pPrint i <> " is not found in " <> pPrint (keys m)) i m
+  pure $ fromMaybe (error $ show $ pPrint i <> " is not found") (view (at i) m)
+  -- pure $ lookupDefault (error $ show $ pPrint i <> " is not found in " <> pPrint (keys m)) i m
 
 findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [Type] -> Type -> m Operand
 findExt name ps r = do
   psMap <- get
-  case lookup name psMap of
+  case view (at name) psMap of
     Just opr -> pure opr
     Nothing  -> do
       opr <- extern (LLVM.AST.mkName name) ps r
-      modify (insert name opr)
+      modify (set (at name) $ Just opr)
       pure opr
 
 mallocBytes :: Operand -> Maybe Type -> GenExpr Operand
@@ -122,7 +126,7 @@ genBlock Block { insns, value } term = go insns
   go []                = term =<< findVar value
   go (Assign x e : xs) = do
     opr <- genExpr e
-    local (insert x opr) $ go xs
+    local (set (at x) $ Just opr) $ go xs
   go (StoreC x is val : xs) = do
     xOpr   <- findVar x
     valOpr <- findVar val
@@ -151,7 +155,7 @@ genBlock Block { insns, value } term = go insns
 
     -- body: genBlock body
     bodyLabel <- block `named` "body"
-    local (insert index iOpr) $ genBlock body $ \_ -> do
+    local (set (at index) $ Just iOpr) $ genBlock body $ \_ -> do
       -- i++)
       store iPtr 0 =<< add iOpr (int64 1)
       br condLabel

@@ -58,7 +58,7 @@ getID :: (MonadReader s m, MonadMalgo m)
       -> m (ID ())
 getID pos lens name = do
   k <- view lens
-  case lookup name (k :: Map String (ID ())) of
+  case view (at name) k of
     Just x  -> pure x
     Nothing -> malgoError pos "rename" $ pPrint name <+> "is not defined"
 

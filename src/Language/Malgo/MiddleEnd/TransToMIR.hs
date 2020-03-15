@@ -23,6 +23,9 @@ import qualified Language.Malgo.IR.HIR         as H
 import           Language.Malgo.TypeRep.Type
 
 import           Control.Lens.Indexed           ( ifoldMap )
+import           Control.Lens.At                ( at )
+import           Control.Lens.Setter            ( (?~) )
+import           Control.Lens.Getter            ( (^.) )
 import           Data.Set                       ( intersection
                                                 , (\\)
                                                 )
@@ -35,7 +38,7 @@ instance Pass TransToMIR (H.Expr (ID Type)) (Program (ID Type)) where
   isDump   = dumpClosure
   trans e = evaluatingStateT mempty $ usingReaderT (Env [] []) $ do
     e' <- transExpr e
-    fs <- gets elems
+    fs <- gets toList
     pure (Program fs e')
 
 data Env = Env { knowns   :: [ID Type]
@@ -45,12 +48,12 @@ data Env = Env { knowns   :: [ID Type]
 type FuncMap = Map (ID Type) (Func (ID Type))
 
 addFunc :: MonadState FuncMap m => Func (ID Type) -> m ()
-addFunc func = modify (insert (M.name func) func)
+addFunc func = modify (at (M.name func) ?~ func)
 
 getFunc :: MonadState FuncMap m => ID Type -> m (Func (ID Type))
 getFunc func = do
   fs <- get
-  case lookup func fs of
+  case fs ^. at func of
     Just f  -> pure f
     Nothing -> errorDoc $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 

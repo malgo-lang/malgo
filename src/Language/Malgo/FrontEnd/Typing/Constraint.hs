@@ -16,6 +16,8 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 
 import           Language.Malgo.FrontEnd.Typing.Subst
+import           Control.Lens.Getter            ( (^.) )
+import           Control.Lens.At                ( contains )
 
 infixl 5 :~
 data Constraint = Type :~ Type
@@ -62,4 +64,4 @@ bind a t | t == TyMeta a   = pure mempty
          | otherwise       = pure $ Subst (one (a, t))
 
 occursCheck :: Substitutable a => TyVar -> a -> Bool
-occursCheck a t = a `member` ftv t
+occursCheck a t = ftv t ^. contains a

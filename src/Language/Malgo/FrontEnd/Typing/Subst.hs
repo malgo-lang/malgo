@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -14,17 +15,20 @@ import           Language.Malgo.Prelude
 import           Language.Malgo.TypeRep.Type
 
 import           Data.Set                       ( (\\) )
+import qualified Data.Map.Strict as Map
+import           Control.Lens.At
+import           Control.Lens.Getter            ( view )
 
 newtype Subst = Subst { unwrapSubst :: Map TyVar Type }
   deriving stock (Eq, Show)
   deriving newtype (Substitutable, Monoid)
 
-instance StaticMap Subst where
-  type Key Subst = TyVar
-  type Val Subst = Type
-  size (Subst s) = size s
-  lookup k (Subst s) = lookup k s
-  member k (Subst s) = member k s
+instance Ixed Subst
+instance At Subst where
+  at k f (Subst m) = Subst <$> Map.alterF f k m
+
+type instance Index Subst = TyVar
+type instance IxValue Subst = Type
 
 instance Semigroup Subst where
   Subst s1 <> Subst s2 = Subst $ apply (Subst s1) s2 <> s1
@@ -34,12 +38,11 @@ class Substitutable a where
   ftv :: a -> Set TyVar
 
 instance Substitutable Scheme where
-  apply s (Forall ts t) = Forall ts $ apply s' t
-    where s' = Subst $ foldr delete (unwrapSubst s) ts
+  apply s (Forall ts t) = Forall ts $ apply s' t where s' = Subst $ foldr sans (unwrapSubst s) ts
   ftv (Forall ts t) = ftv t \\ fromList ts
 
 instance Substitutable Type where
-  apply s t@(TyMeta a  ) = lookupDefault t a s
+  apply s t@(TyMeta a  ) = fromMaybe t $ view (at a) s
   apply s (  TyApp c ts) = TyApp c $ apply s ts
   apply _ Kind           = Kind
   ftv (TyMeta a  ) = one a

@@ -80,7 +80,7 @@ flattenExpr (Let x v1 e1) = go (flattenExpr v1)
   go v             = Let x v (flattenExpr e1)
 flattenExpr (LetRec defs body) = LetRec (map flattenDef defs) (flattenExpr body)
 flattenExpr (If c t f        ) = If c (flattenExpr t) (flattenExpr f)
-flattenExpr (Match s cs      ) = Match s (secondF flattenExpr cs)
+flattenExpr (Match s cs      ) = Match s (fmap (second flattenExpr) cs)
 flattenExpr e                  = e
 
 flattenDef :: Def a -> Def a

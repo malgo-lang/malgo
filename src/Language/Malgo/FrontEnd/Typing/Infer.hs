@@ -24,7 +24,11 @@ import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
 import           Text.Parsec.Pos                ( SourcePos )
-import           Control.Lens.Setter            ( (.~) )
+import           Control.Lens.Setter            ( (.~)
+                                                , (?~)
+                                                )
+import           Control.Lens.At                ( at )
+import           Control.Lens.Getter            ( (^.) )
 import           Data.Set                       ( (\\) )
 
 data Typing
@@ -39,7 +43,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
     opt <- getOpt
     when (dumpTypeTable opt) $ dump (toList env)
 
-    pure $ fmap (\x -> maybe (x & metaL .~ Kind) (fmap removeExplictForall) (lookup x env)) e
+    pure $ fmap (\x -> maybe (x & metaL .~ Kind) (fmap removeExplictForall) (env ^. at x)) e
 
 type Env = IDMap () (ID Scheme)
 
@@ -53,12 +57,12 @@ letVar :: MonadState Env m => Env -> ID () -> Type -> m ()
 letVar env var ty = defineVar var $ generalize env ty
 
 defineVar :: MonadState Env m => ID () -> Scheme -> m ()
-defineVar x t = modify (insert x $ x { idMeta = t })
+defineVar x t = modify (at x ?~ x { idMeta = t })
 
 lookupVar :: (MonadState Env f, MonadUniq f) => ID () -> f Type
 lookupVar x = do
   env <- get
-  case lookup x env of
+  case env ^. at x of
     Just ID { idMeta = scheme } -> instantiate scheme
     Nothing                     -> bug Unreachable
 
@@ -216,9 +220,9 @@ isValue _            = False
 toType :: MonadUniq m => SType (ID ()) -> StateT (Map (ID ()) Type) m Type
 toType (TyVar x) = do
   kvs <- get
-  lookup x kvs `whenNothing` do
+  (kvs ^. at x) `whenNothing` do
     t <- newTyMeta
-    modify (insert x t)
+    modify (at x ?~ t)
     pure t
 toType TyInt        = pure intTy
 toType TyFloat      = pure floatTy

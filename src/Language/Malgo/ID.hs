@@ -1,3 +1,5 @@
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveTraversable #-}
@@ -28,10 +30,9 @@ import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
 
-import           Control.Lens                   ( Lens
-                                                , lens
-                                                )
+import           Control.Lens.Combinators
 import           Data.Functor.Classes
+import qualified Data.IntMap                   as IntMap
 import           GHC.Exts                       ( IsList(..) )
 import           Numeric                        ( showHex )
 import           Text.PrettyPrint.HughesPJClass ( text )
@@ -68,20 +69,15 @@ instance One (IDMap a v) where
   type OneItem (IDMap a v) = (ID a, v)
   one (ID { idUniq }, v) = IDMap (one (idUniq, v))
 
-instance StaticMap (IDMap a v) where
-  type Key (IDMap a v) = ID a
-  type Val (IDMap a v) = v
-  size = size . unwrapIDMap
-  lookup ID { idUniq } = lookup idUniq . unwrapIDMap
-  member ID { idUniq } = member idUniq . unwrapIDMap
+type instance Index (IDMap a v) = ID a
+type instance IxValue (IDMap a v) = v
 
-instance DynamicMap (IDMap a v) where
-  insert ID { idUniq } v = IDMap . insert idUniq v . unwrapIDMap
-  insertWith f ID { idUniq } v = IDMap . insertWith f idUniq v . unwrapIDMap
-  delete ID { idUniq } = IDMap . delete idUniq . unwrapIDMap
-  alter f ID { idUniq } = IDMap . alter f idUniq . unwrapIDMap
+instance Ixed (IDMap a v)
+
+instance At (IDMap a v) where
+  at ID { idUniq } f (IDMap m) = IDMap <$> IntMap.alterF f idUniq m
 
 instance IsList (IDMap a v) where
   type Item (IDMap a v) = (ID a, v)
-  fromList = foldr (uncurry insert) mempty
+  fromList = foldr (\(k, v) m -> m & set (at k) (Just v)) mempty
   toList   = error "cannot convert to list"
