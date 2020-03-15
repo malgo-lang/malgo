@@ -128,15 +128,16 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
     modify (\e -> e { partialBlockInsns = snoc (partialBlockInsns e) (For index from to block) })
 
   localBlock (ExprBuilderT m) = ExprBuilderT $ do
-    (block, vm) <- localState $ do
-      vm <- gets variableMap
-      put (ExprState vm mempty)
+    backup <- get
+    block <- do
+      put $ backup { partialBlockInsns = mempty }
       retval <- m
-      insts  <- toList <$> gets partialBlockInsns
-      vm'    <- gets variableMap
-      pure (Block insts retval, vm')
-    modify (\s -> s { variableMap = vm })
+      insts <- toList <$> gets partialBlockInsns
+      pure (Block insts retval)
+    vm <- gets variableMap
+    put $ backup { variableMap = vm }
     pure block
+
   getCurrentCaptures = ExprBuilderT $ asks currentCaptures
   replaceVar x y = ExprBuilderT $ modify $ \s ->
     s { variableMap = (\a -> if x == a then y else a) <$> variableMap s }

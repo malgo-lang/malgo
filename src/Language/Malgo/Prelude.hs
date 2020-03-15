@@ -15,7 +15,6 @@ module Language.Malgo.Prelude
   , module Control.Monad.Trans.Writer.CPS
   , module Control.Monad.Writer.Class
   , module Control.Lens.Cons
-  , localState
   , unzip
   , ltraverse
   , rtraverse
@@ -50,15 +49,6 @@ import           Text.PrettyPrint.HughesPJClass ( Pretty(..)
                                                 , text
                                                 )
 import           Text.Parsec.Pos                ( SourcePos )
-
--- Stateモナドのヘルパー。ローカルな状態を表現する
-localState :: MonadState s m => m a -> m a
-localState m = do
-  backup <- get
-  v      <- m
-  put backup
-  pure v
-{-# INLINE localState #-}
 
 -- unzip :: [(a, b)] -> ([a], [b]) の一般化
 unzip :: Functor f => f (a, b) -> (f a, f b)
