@@ -10,6 +10,14 @@ copyright: "2017-2020 Yuya Kono"
 extra-source-files:
   README.md
 
+build-type: Custom
+
+custom-setup:
+  dependencies:
+    - base
+    - Cabal
+    - hpack
+
 dependencies:
   - array
   - base
