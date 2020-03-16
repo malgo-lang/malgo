@@ -38,7 +38,9 @@ import qualified LLVM.AST.Type                 as LT
 import qualified LLVM.IRBuilder                as IRBuilder
 import           Control.Lens.Getter            ( view )
 import           Control.Lens.At                ( at )
-import           Control.Lens.Setter            ( set )
+import           Control.Lens.Setter            ( set
+                                                , (?~)
+                                                )
 
 data GenLLVM
 
@@ -86,10 +88,7 @@ convertType (Function r ps) = ptr $ FunctionType (convertType r) (map convertTyp
 convertType Void            = LT.void
 
 findVar :: MonadReader OprMap m => ID LType -> m Operand
-findVar i = do
-  m <- ask
-  pure $ fromMaybe (error $ show $ pPrint i <> " is not found") (view (at i) m)
-  -- pure $ lookupDefault (error $ show $ pPrint i <> " is not found in " <> pPrint (keys m)) i m
+findVar i = fromMaybe (error $ show $ pPrint i <> " is not found") . view (at i) <$> ask
 
 findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [Type] -> Type -> m Operand
 findExt name ps r = do
@@ -121,27 +120,27 @@ genFunction Func { name, params, body } = void $ function funcName llvmParams re
   retty      = convertType (ltypeOf body)
 
 genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a
-genBlock Block { insns, value } term = go insns
+genBlock Block { insns, value } term = do
+  env' <- foldlM (\e i -> local (e <>) (genInsn i <*> ask)) ?? insns =<< ask
+  local (env' <>) $ term =<< findVar value
  where
-  go []                = term =<< findVar value
-  go (Assign x e : xs) = do
+  genInsn (Assign x e) = do
     opr <- genExpr e
-    local (set (at x) $ Just opr) $ go xs
-  go (StoreC x is val : xs) = do
+    pure (at x ?~ opr)
+  genInsn (StoreC x is val) = do
     xOpr   <- findVar x
     valOpr <- findVar val
     xAddr  <- gep xOpr (map (int32 . toInteger) is)
     store xAddr 0 valOpr
-    go xs
-  go (Store x is val : xs) = do
+    pure id
+  genInsn (Store x is val) = do
     xOpr   <- findVar x
     iOprs  <- mapM findVar is
     valOpr <- findVar val
     xAddr  <- gep xOpr iOprs
     store xAddr 0 valOpr
-    go xs
-
-  go (For index from to body : xs) = mdo
+    pure id
+  genInsn (For index from to body) = mdo
     -- for (i64 i = from;
     iPtr <- alloca i64 Nothing 0
     store iPtr 0 =<< findVar from
@@ -162,7 +161,7 @@ genBlock Block { insns, value } term = go insns
 
     -- end: }
     endLabel <- block `named` "end"
-    go xs
+    pure id
 
 genExpr :: Expr (ID LType) -> GenExpr Operand
 genExpr (Constant x) = genConstant x

@@ -34,14 +34,13 @@ import           Control.Lens.Combinators
 import           Data.Functor.Classes
 import qualified Data.IntMap                   as IntMap
 import           GHC.Exts                       ( IsList(..) )
-import           Numeric                        ( showHex )
 import           Text.PrettyPrint.HughesPJClass ( text )
 
 data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }
   deriving stock (Show, Eq, Ord, Functor, Foldable)
 
 instance Pretty a => Pretty (ID a) where
-  pPrint (ID n u m) = text n <> "." <> text (showHex u "") <> "<" <> pPrint m <> ">"
+  pPrint (ID n u m) = text n <> "." <> text (show u) <> "<" <> pPrint m <> ">"
 
 instance HasType a => HasType (ID a) where
   typeOf ID { idMeta } = typeOf idMeta
