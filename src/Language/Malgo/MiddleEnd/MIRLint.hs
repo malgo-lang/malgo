@@ -29,23 +29,23 @@ import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 
 data MIRLint
 
-instance Pass MIRLint (Program (ID Type)) (Program (ID Type)) where
+instance Pass MIRLint (Program (Id Type)) (Program (Id Type)) where
   passName = "MIRLint"
   isDump _ = False
   trans e@(Program fs _) = usingReaderT (Env fs []) (lintProgram e) >> pure e
 
-data Env = Env { functions :: [Func (ID Type)]
-               , variables :: [ID Type]
+data Env = Env { functions :: [Func (Id Type)]
+               , variables :: [Id Type]
                }
 
-definedVar :: (MonadReader Env m, MonadIO m) => ID Type -> m ()
+definedVar :: (MonadReader Env m, MonadIO m) => Id Type -> m ()
 definedVar a = unlessM (elem a <$> asks variables) (errorDoc $ pPrint a <+> "is not defined")
 
-notDefinedVar :: (MonadReader Env m, MonadIO m) => ID Type -> m ()
+notDefinedVar :: (MonadReader Env m, MonadIO m) => Id Type -> m ()
 notDefinedVar a =
   unlessM (notElem a <$> asks variables) (errorDoc $ pPrint a <+> "is already defined")
 
-isKnownFunc :: (MonadReader Env m, MonadIO m) => ID Type -> m ()
+isKnownFunc :: (MonadReader Env m, MonadIO m) => Id Type -> m ()
 isKnownFunc a = do
   Env { functions } <- ask
   let mfunc = find (\Func { name } -> name == a) functions
@@ -53,7 +53,7 @@ isKnownFunc a = do
     Just Func { captures = Nothing } -> pure ()
     _ -> errorDoc $ pPrint a <+> "is not known function"
 
-isUnknownFunc :: (MonadReader Env m, MonadIO m) => ID Type -> m ()
+isUnknownFunc :: (MonadReader Env m, MonadIO m) => Id Type -> m ()
 isUnknownFunc a = do
   Env { functions } <- ask
   let mfunc = find (\Func { name } -> name == a) functions
@@ -61,12 +61,12 @@ isUnknownFunc a = do
     Just Func { captures = Just _ } -> pure ()
     _                               -> errorDoc $ pPrint a <+> "is not known function"
 
-lintProgram :: (MonadReader Env m, MonadIO m, MonadUniq m) => Program (ID Type) -> m ()
+lintProgram :: (MonadReader Env m, MonadIO m, MonadUniq m) => Program (Id Type) -> m ()
 lintProgram Program { functions, mainExpr } = do
   mapM_ lintFunc functions
   lintExpr mainExpr
 
-lintFunc :: (MonadReader Env m, MonadIO m, MonadUniq m) => Func (ID Type) -> m ()
+lintFunc :: (MonadReader Env m, MonadIO m, MonadUniq m) => Func (Id Type) -> m ()
 lintFunc Func { name = _, captures, mutrecs, params, body } =
   local (\e -> e { variables = fromMaybe [] captures <> params <> mutrecs }) $ lintExpr body
 
@@ -81,7 +81,7 @@ checkCall f xs = case typeOf f of
         errorDoc $ ("type mismatch:" <+> pPrint f <+> "and" <+> pPrint xs) $+$ err
   _ -> errorDoc $ pPrint f <+> "is not function"
 
-lintExpr :: (MonadReader Env m, MonadIO m, MonadUniq m) => Expr (ID Type) -> m ()
+lintExpr :: (MonadReader Env m, MonadIO m, MonadUniq m) => Expr (Id Type) -> m ()
 lintExpr (Var   a              ) = definedVar a
 lintExpr (Lit   _              ) = pure ()
 lintExpr (Tuple xs             ) = mapM_ definedVar xs

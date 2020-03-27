@@ -51,33 +51,33 @@ import           Data.Maybe                     ( fromJust )
 import           Data.DList                     ( DList(..) )
 import qualified Data.DList                    as D
 
-newtype ProgramEnv = ProgramEnv { functionMap :: IDMap Type (ID LType) }
+newtype ProgramEnv = ProgramEnv { functionMap :: IdMap Type (Id LType) }
   deriving newtype (Semigroup, Monoid)
 
 instance One ProgramEnv where
-  type OneItem ProgramEnv = (ID Type, ID LType)
+  type OneItem ProgramEnv = (Id Type, Id LType)
   one = ProgramEnv . one
 
-newtype ProgramState = ProgramState { functionList :: DList (Func (ID LType)) }
+newtype ProgramState = ProgramState { functionList :: DList (Func (Id LType)) }
 
-newtype ExprEnv = ExprEnv { currentCaptures :: Maybe (ID LType) }
+newtype ExprEnv = ExprEnv { currentCaptures :: Maybe (Id LType) }
 
-data ExprState = ExprState { variableMap :: IDMap Type (ID LType)
-                           , partialBlockInsns :: DList (Insn (ID LType))
+data ExprState = ExprState { variableMap :: IdMap Type (Id LType)
+                           , partialBlockInsns :: DList (Insn (Id LType))
                            }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where
-  findFunc :: ID Type -> m (ID LType)
-  addFunc :: Func (ID LType) -> m ()
+  findFunc :: Id Type -> m (Id LType)
+  addFunc :: Func (Id LType) -> m ()
 
 newtype ProgramBuilderT m a = ProgramBuilderT (ReaderT ProgramEnv (StateT ProgramState m) a)
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
 runProgramBuilderT :: Monad m
                    => ProgramEnv
-                   -> ProgramBuilderT m (Block (ID LType))
-                   -> m (Program (ID LType))
+                   -> ProgramBuilderT m (Block (Id LType))
+                   -> m (Program (Id LType))
 runProgramBuilderT env (ProgramBuilderT m) = do
   (mf, ProgramState { functionList }) <- runStateT (runReaderT m env) (ProgramState mempty)
   pure $ Program { functions = toList functionList, mainFunc = mf }
@@ -88,20 +88,20 @@ instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
 
 -- Expr Builder
 class MonadProgramBuilder m => MonadExprBuilder m where
-  findVar :: ID Type -> m (ID LType)
-  defineVar :: ID Type -> ID LType -> m ()
-  assign :: Expr (ID LType) -> m (ID LType)
-  storeC :: ID LType -> [Int] -> ID LType -> m ()
-  store :: ID LType -> [ID LType] -> ID LType -> m ()
-  forLoop :: ID LType -> ID LType -> (ID LType -> m ()) -> m ()
-  localBlock :: m (ID LType) -> m (Block (ID LType))
-  getCurrentCaptures :: m (Maybe (ID LType))
-  replaceVar :: ID LType -> ID LType -> m ()
+  findVar :: Id Type -> m (Id LType)
+  defineVar :: Id Type -> Id LType -> m ()
+  assign :: Expr (Id LType) -> m (Id LType)
+  storeC :: Id LType -> [Int] -> Id LType -> m ()
+  store :: Id LType -> [Id LType] -> Id LType -> m ()
+  forLoop :: Id LType -> Id LType -> (Id LType -> m ()) -> m ()
+  localBlock :: m (Id LType) -> m (Block (Id LType))
+  getCurrentCaptures :: m (Maybe (Id LType))
+  replaceVar :: Id LType -> Id LType -> m ()
 
 newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (StateT ExprState m) a }
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadMalgo, MonadUniq)
 
-runExprBuilderT :: MonadUniq m => ExprEnv -> ExprBuilderT m (ID LType) -> m (Block (ID LType))
+runExprBuilderT :: MonadUniq m => ExprEnv -> ExprBuilderT m (Id LType) -> m (Block (Id LType))
 runExprBuilderT env (ExprBuilderT m) =
   evaluatingStateT (ExprState mempty mempty) $ usingReaderT env $ do
     value                           <- m
@@ -118,7 +118,7 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
     ExprBuilderT $ modify (\s -> s { variableMap = set (at x) (Just y) (variableMap s) })
 
   assign expr = ExprBuilderT $ do
-    i <- newID (ltypeOf expr) "%"
+    i <- newId (ltypeOf expr) "%"
     modify (\e -> e { partialBlockInsns = D.snoc (partialBlockInsns e) (Assign i expr) })
     pure i
 
@@ -129,7 +129,7 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
     $ modify (\e -> e { partialBlockInsns = D.snoc (partialBlockInsns e) (Store var is val) })
 
   forLoop from to k = ExprBuilderT $ do
-    index <- newID I64 "$i"
+    index <- newId I64 "$i"
     block <- unExprBuilderT $ localBlock (k index >> undef Void) -- TODO: remove undef
     modify (\e -> e { partialBlockInsns = D.snoc (partialBlockInsns e) (For index from to block) })
 
@@ -149,19 +149,19 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
     s { variableMap = (\a -> if x == a then y else a) <$> variableMap s }
 
 -- instructions
-arrayCreate :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
+arrayCreate :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
 arrayCreate t n = assign $ ArrayCreate t n
 
-alloca :: MonadExprBuilder m => LType -> m (ID LType)
+alloca :: MonadExprBuilder m => LType -> m (Id LType)
 alloca ty = assign $ Alloca ty
 
-loadC :: MonadExprBuilder m => ID LType -> [Int] -> m (ID LType)
+loadC :: MonadExprBuilder m => Id LType -> [Int] -> m (Id LType)
 loadC ptr xs = assign $ LoadC ptr xs
 
-load :: MonadExprBuilder m => LType -> ID LType -> [ID LType] -> m (ID LType)
+load :: MonadExprBuilder m => LType -> Id LType -> [Id LType] -> m (Id LType)
 load ltype ptr xs = assign $ Load ltype ptr xs
 
-call :: (MonadUniq m, MonadExprBuilder m) => ID LType -> [ID LType] -> m (ID LType)
+call :: (MonadUniq m, MonadExprBuilder m) => Id LType -> [Id LType] -> m (Id LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
     as     <- zipWithM coerceTo ps xs
@@ -171,7 +171,7 @@ call f xs = case ltypeOf f of
     pure result
   _ -> error "function must be typed as function"
 
-callExt :: (MonadUniq m, MonadExprBuilder m) => String -> LType -> [ID LType] -> m (ID LType)
+callExt :: (MonadUniq m, MonadExprBuilder m) => String -> LType -> [Id LType] -> m (Id LType)
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as     <- zipWithM coerceTo ps xs
@@ -181,29 +181,29 @@ callExt f funTy xs = case funTy of
     pure result
   _ -> error "external function must be typed as function"
 
-cast :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
+cast :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
 cast ty val = assign $ Cast ty val
 
-trunc :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
+trunc :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
 trunc ty val = assign $ Trunc ty val
 
-zext :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
+zext :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
 zext ty val = assign $ Zext ty val
 
-sext :: MonadExprBuilder m => LType -> ID LType -> m (ID LType)
+sext :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
 sext ty val = assign $ Sext ty val
 
-undef :: MonadExprBuilder m => LType -> m (ID LType)
+undef :: MonadExprBuilder m => LType -> m (Id LType)
 undef ty = assign $ Undef ty
 
-binop :: MonadExprBuilder m => Op -> ID LType -> ID LType -> m (ID LType)
+binop :: MonadExprBuilder m => Op -> Id LType -> Id LType -> m (Id LType)
 binop o x y = assign $ BinOp o x y
 
 branchIf :: (MonadUniq m, MonadExprBuilder m)
-         => ID LType
-         -> m (ID LType)
-         -> m (ID LType)
-         -> m (ID LType)
+         => Id LType
+         -> m (Id LType)
+         -> m (Id LType)
+         -> m (Id LType)
 branchIf c genWhenTrue genWhenFalse = do
   tBlock <- localBlock genWhenTrue
   fBlock <- localBlock (genWhenFalse >>= coerceTo (ltypeOf tBlock))
@@ -222,7 +222,7 @@ convertType (TyApp ArrayC  [x]) = Ptr $ Struct [Ptr $ convertType x, SizeT]
 convertType TyMeta{}            = Ptr U8
 convertType _                   = bug Unreachable
 
-packClosure :: MonadExprBuilder m => ID LType -> ID LType -> m (ID LType)
+packClosure :: MonadExprBuilder m => Id LType -> Id LType -> m (Id LType)
 packClosure capsId f = do
   clsId <- alloca (Struct [ltypeOf f, Ptr U8])
   storeC clsId [0, 0] f
@@ -231,7 +231,7 @@ packClosure capsId f = do
 
 -- 'coerceTo' may create a different entity. To keep the values ​​identical before and after 'coerceTo',
 -- you need to apply 'coerceTo' again and “write back”.
-coerceTo :: (MonadUniq m, MonadExprBuilder m) => LType -> ID LType -> m (ID LType)
+coerceTo :: (MonadUniq m, MonadExprBuilder m) => LType -> Id LType -> m (Id LType)
 coerceTo to x = case (to, ltypeOf x) of
   (ty, xty) | ty == xty -> pure x
   -- wrap
@@ -269,9 +269,9 @@ coerceTo to x = case (to, ltypeOf x) of
             )
           _ -> error $ toText $ pShow x <> " is not closure"
     -- generate 'f'
-    fName       <- newID (Function r (Ptr U8 : ps)) "$f"
-    fBoxedXName <- newID (Ptr U8) "$x"
-    fParamNames <- mapM (`newID` "$a") ps
+    fName       <- newId (Function r (Ptr U8 : ps)) "$f"
+    fBoxedXName <- newId (Ptr U8) "$x"
+    fParamNames <- mapM (`newId` "$a") ps
 
     bodyBlock   <- localBlock $ do
       fUnboxedX <- cast unboxedXType fBoxedXName

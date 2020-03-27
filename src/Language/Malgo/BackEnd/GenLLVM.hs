@@ -44,7 +44,7 @@ import           Control.Lens.Setter            ( set
 
 data GenLLVM
 
-instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
+instance Pass GenLLVM (IR.Program (Id LType)) [LLVM.AST.Definition] where
   passName = "GenLLVM"
   isDump _ = False
   trans Program { functions, mainFunc } =
@@ -65,7 +65,7 @@ instance Pass GenLLVM (IR.Program (ID LType)) [LLVM.AST.Definition] where
 
 type GenExpr a = IRBuilderT GenDec a
 type GenDec = ModuleBuilderT (ReaderT OprMap (StateT PrimMap MalgoM))
-type OprMap = Map (ID LType) Operand
+type OprMap = Map (Id LType) Operand
 type PrimMap = Map String Operand
 
 -- dumpLLVM :: MonadIO m => ModuleBuilderT (ReaderT GenState m) a -> m [LLVM.AST.Definition]
@@ -87,7 +87,7 @@ convertType (IR.Struct xs ) = StructureType False (map convertType xs)
 convertType (Function r ps) = ptr $ FunctionType (convertType r) (map convertType ps) False
 convertType Void            = LT.void
 
-findVar :: MonadReader OprMap m => ID LType -> m Operand
+findVar :: MonadReader OprMap m => Id LType -> m Operand
 findVar i = fromMaybe (error $ show $ pPrint i <> " is not found") . view (at i) <$> ask
 
 findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [Type] -> Type -> m Operand
@@ -108,18 +108,18 @@ mallocBytes bytesOpr maybeType = do
     Just t  -> bitcast ptrOpr (ptr t)
     Nothing -> pure ptrOpr
 
-genName :: ID a -> LLVM.AST.Name
-genName ID { idName, idUniq } = LLVM.AST.mkName $ idName <> show idUniq
+genName :: Id a -> LLVM.AST.Name
+genName Id { idName, idUniq } = LLVM.AST.mkName $ idName <> show idUniq
 
-genFunction :: Func (ID LType) -> GenDec ()
+genFunction :: Func (Id LType) -> GenDec ()
 genFunction Func { name, params, body } = void $ function funcName llvmParams retty $ \args ->
   local (fromList (zip params args) <>) $ genBlock body ret
  where
   funcName   = genName name
-  llvmParams = map (\ID { idMeta } -> (convertType idMeta, NoParameterName)) params
+  llvmParams = map (\Id { idMeta } -> (convertType idMeta, NoParameterName)) params
   retty      = convertType (ltypeOf body)
 
-genBlock :: Block (ID LType) -> (Operand -> GenExpr a) -> GenExpr a
+genBlock :: Block (Id LType) -> (Operand -> GenExpr a) -> GenExpr a
 genBlock Block { insns, value } term = do
   env' <- foldlM (\e i -> local (e <>) (genInsn i <*> ask)) ?? insns =<< ask
   local (env' <>) $ term =<< findVar value
@@ -163,7 +163,7 @@ genBlock Block { insns, value } term = do
     endLabel <- block `named` "end"
     pure id
 
-genExpr :: Expr (ID LType) -> GenExpr Operand
+genExpr :: Expr (Id LType) -> GenExpr Operand
 genExpr (Constant x) = genConstant x
 genExpr (Call f xs ) = do
   f'  <- findVar f

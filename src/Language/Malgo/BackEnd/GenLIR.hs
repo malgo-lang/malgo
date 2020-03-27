@@ -34,7 +34,7 @@ import           Data.Maybe                     ( fromJust )
 
 data GenLIR
 
-instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
+instance Pass GenLIR (M.Program (Id Type)) (L.Program (Id LType)) where
   passName = "GenLIR"
   isDump   = dumpLIR
   trans M.Program { functions, mainExpr } =
@@ -59,17 +59,17 @@ instance Pass GenLIR (M.Program (ID Type)) (L.Program (ID LType)) where
             genExpr mainExpr
 
 -- generate LIR
-genFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => M.Func (ID Type) -> m ()
+genFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => M.Func (Id Type) -> m ()
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
-  let funcParams = map (\p@ID { idMeta } -> p & metaL .~ convertType idMeta) params
+  let funcParams = map (\p@Id { idMeta } -> p & metaL .~ convertType idMeta) params
   bodyBlock <- runExprBuilderT (ExprEnv Nothing) $ do
     zipWithM_ defineVar params funcParams
     genExpr body
   addFunc $ L.Func { name = funcName, params = funcParams, body = bodyBlock }
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName <- findFunc name
-  capsId   <- newID (Ptr U8) "$caps"
+  capsId   <- newId (Ptr U8) "$caps"
   let funcParams = map (\x -> x & metaL .~ convertType (typeOf x)) params
   bodyBlock <- runExprBuilderT (ExprEnv (Just capsId)) $ do
     zipWithM_ defineVar params funcParams
@@ -81,7 +81,7 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
     genExpr body
   addFunc $ L.Func { name = funcName, params = capsId : funcParams, body = bodyBlock }
 
-genExpr :: (MonadUniq m, MonadExprBuilder m) => M.Expr (ID Type) -> m (ID LType)
+genExpr :: (MonadUniq m, MonadExprBuilder m) => M.Expr (Id Type) -> m (Id LType)
 genExpr (M.Var   x               ) = findVar x
 genExpr (M.Lit   (Int      x    )) = assign $ Constant $ Int64 $ fromInteger x
 genExpr (M.Lit   (Float    x    )) = assign $ Constant $ Float64 x
