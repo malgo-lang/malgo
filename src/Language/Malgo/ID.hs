@@ -11,14 +11,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuantifiedConstraints #-}
 {-# LANGUAGE TypeFamilies #-}
-module Language.Malgo.ID
-  ( ID(..)
+module Language.Malgo.Id
+  ( Id(..)
   , nameL
   , uniqL
   , metaL
-  , newID
---  , updateID
-  , IDMap(..)
+  , newId
+  , IdMap(..)
   )
 where
 
@@ -34,47 +33,47 @@ import qualified Data.IntMap                   as IntMap
 import           GHC.Exts                       ( IsList(..) )
 import           Text.PrettyPrint.HughesPJClass ( text )
 
-data ID a = ID { idName :: String, idUniq :: Int, idMeta :: a }
+data Id a = Id { idName :: String, idUniq :: Int, idMeta :: a }
   deriving stock (Show, Eq, Ord, Functor, Foldable)
 
-instance Pretty a => Pretty (ID a) where
-  pPrint (ID n u m) = text n <> "." <> text (show u) <> "<" <> pPrint m <> ">"
+instance Pretty a => Pretty (Id a) where
+  pPrint (Id n u m) = text n <> "." <> text (show u) <> "<" <> pPrint m <> ">"
 
-instance HasType a => HasType (ID a) where
-  typeOf ID { idMeta } = typeOf idMeta
+instance HasType a => HasType (Id a) where
+  typeOf Id { idMeta } = typeOf idMeta
 
-nameL :: Lens (ID a) (ID a) String String
+nameL :: Lens (Id a) (Id a) String String
 nameL = lens idName (\i x -> i { idName = x })
 
-uniqL :: Lens (ID a) (ID a) Int Int
+uniqL :: Lens (Id a) (Id a) Int Int
 uniqL = lens idUniq (\i x -> i { idUniq = x })
 
-metaL :: Lens (ID a) (ID b) a b
+metaL :: Lens (Id a) (Id b) a b
 metaL = lens idMeta (\i x -> i { idMeta = x })
 
-newID :: MonadUniq f => a -> String -> f (ID a)
-newID m n = ID n <$> getUniq <*> pure m
+newId :: MonadUniq f => a -> String -> f (Id a)
+newId m n = Id n <$> getUniq <*> pure m
 
-newtype IDMap a v = IDMap { unwrapIDMap :: IntMap v }
+newtype IdMap a v = IdMap { unwrapIdMap :: IntMap v }
   deriving stock (Eq, Ord, Show, Functor, Foldable, Traversable)
   deriving newtype (Eq1, Ord1, Show1, Semigroup, Monoid, NFData)
 
-instance Pretty v => Pretty (IDMap a v) where
-  pPrint = pPrint . toList . unwrapIDMap
+instance Pretty v => Pretty (IdMap a v) where
+  pPrint = pPrint . toList . unwrapIdMap
 
-instance One (IDMap a v) where
-  type OneItem (IDMap a v) = (ID a, v)
-  one (ID { idUniq }, v) = IDMap (one (idUniq, v))
+instance One (IdMap a v) where
+  type OneItem (IdMap a v) = (Id a, v)
+  one (Id { idUniq }, v) = IdMap (one (idUniq, v))
 
-type instance Index (IDMap a v) = ID a
-type instance IxValue (IDMap a v) = v
+type instance Index (IdMap a v) = Id a
+type instance IxValue (IdMap a v) = v
 
-instance Ixed (IDMap a v)
+instance Ixed (IdMap a v)
 
-instance At (IDMap a v) where
-  at ID { idUniq } f (IDMap m) = IDMap <$> IntMap.alterF f idUniq m
+instance At (IdMap a v) where
+  at Id { idUniq } f (IdMap m) = IdMap <$> IntMap.alterF f idUniq m
 
-instance IsList (IDMap a v) where
-  type Item (IDMap a v) = (ID a, v)
+instance IsList (IdMap a v) where
+  type Item (IdMap a v) = (Id a, v)
   fromList = foldr (\(k, v) m -> m & set (at k) (Just v)) mempty
   toList   = error "cannot convert to list"
