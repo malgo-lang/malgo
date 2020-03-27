@@ -33,7 +33,7 @@ module Language.Malgo.BackEnd.LIRBuilder
   )
 where
 
-import           Language.Malgo.ID
+import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty

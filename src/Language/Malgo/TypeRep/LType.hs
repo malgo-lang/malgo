@@ -5,7 +5,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 module Language.Malgo.TypeRep.LType where
 
-import           Language.Malgo.ID
+import           Language.Malgo.Id
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
@@ -44,8 +44,8 @@ class HasLType a where
 instance HasLType LType where
   ltypeOf x = x
 
-instance HasLType a => HasLType (ID a) where
-  ltypeOf ID { idMeta } = ltypeOf idMeta
+instance HasLType a => HasLType (Id a) where
+  ltypeOf Id { idMeta } = ltypeOf idMeta
 
 accessType :: LType -> [Int] -> LType
 accessType t           []       = t

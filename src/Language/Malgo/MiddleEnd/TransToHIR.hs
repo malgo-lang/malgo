@@ -9,7 +9,7 @@ module Language.Malgo.MiddleEnd.TransToHIR
   )
 where
 
-import           Language.Malgo.ID
+import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
@@ -22,18 +22,18 @@ import           Control.Lens.Indexed           ( ifor_ )
 
 data TransToHIR
 
-instance Pass TransToHIR (S.Expr (ID Type)) (Expr (ID Type)) where
+instance Pass TransToHIR (S.Expr (Id Type)) (Expr (Id Type)) where
   passName = "TransToHIR"
   isDump   = dumpKNormal
   trans e = flattenExpr <$> toExpr e
 
-newTmp :: MonadUniq f => String -> a -> f (ID a)
-newTmp n t = newID t ("$" <> n)
+newTmp :: MonadUniq f => String -> a -> f (Id a)
+newTmp n t = newId t ("$" <> n)
 
-toVar :: (MonadUniq f, MonadWriter (Endo (Expr (ID Type))) f) => S.Expr (ID Type) -> f (ID Type)
+toVar :: (MonadUniq f, MonadWriter (Endo (Expr (Id Type))) f) => S.Expr (Id Type) -> f (Id Type)
 toVar = def <=< toExpr
 
-def :: (MonadUniq f, MonadWriter (Endo (Expr (ID Type))) f) => Expr (ID Type) -> f (ID Type)
+def :: (MonadUniq f, MonadWriter (Endo (Expr (Id Type))) f) => Expr (Id Type) -> f (Id Type)
 def (Var x) = pure x
 def v       = do
   x <- newTmp "k" (typeOf v)
@@ -43,7 +43,7 @@ def v       = do
 runDef :: Functor f => WriterT (Endo b) f b -> f b
 runDef m = uncurry (flip appEndo) <$> runWriterT m
 
-toExpr :: MonadUniq m => S.Expr (ID Type) -> m (Expr (ID Type))
+toExpr :: MonadUniq m => S.Expr (Id Type) -> m (Expr (Id Type))
 toExpr (S.Var    _ a        ) = pure $ Var a
 toExpr (S.Int    _ x        ) = pure $ Lit $ Int x
 toExpr (S.Float  _ x        ) = pure $ Lit $ Float x
@@ -77,7 +77,7 @@ toExpr (S.BinOp _ op x y) = runDef $ BinOp op <$> toVar x <*> toVar y
 toExpr (S.Match _ s cs) =
   runDef $ Match <$> toVar s <*> mapM (\(p, e) -> crushPat p =<< toExpr e) cs
 
-crushPat :: MonadUniq m => S.Pat (ID Type) -> Expr (ID Type) -> m (Pat (ID Type), Expr (ID Type))
+crushPat :: MonadUniq m => S.Pat (Id Type) -> Expr (Id Type) -> m (Pat (Id Type), Expr (Id Type))
 crushPat (S.VarP   x ) e = pure (VarP x, e)
 crushPat (S.TupleP xs) e = go xs [] e
  where

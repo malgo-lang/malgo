@@ -10,7 +10,7 @@ module Language.Malgo.MiddleEnd.HIRLint
   )
 where
 
-import           Language.Malgo.ID
+import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
@@ -28,18 +28,18 @@ import           Text.PrettyPrint.HughesPJClass ( ($+$)
 
 data HIRLint
 
-instance Pass HIRLint (Expr (ID Type)) (Expr (ID Type)) where
+instance Pass HIRLint (Expr (Id Type)) (Expr (Id Type)) where
   passName = "HIRLint"
   isDump _ = False
   trans e = usingReaderT [] (lintExpr e) >> pure e
 
-defined :: ID Type -> ReaderT [ID Type] MalgoM ()
+defined :: Id Type -> ReaderT [Id Type] MalgoM ()
 defined a = unlessM (elem a <$> ask) (errorDoc $ pPrint a <+> "is not defined")
 
-notDefined :: ID Type -> ReaderT [ID Type] MalgoM ()
+notDefined :: Id Type -> ReaderT [Id Type] MalgoM ()
 notDefined a = unlessM (notElem a <$> ask) (errorDoc $ pPrint a <+> "is already defined")
 
-match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [ID Type] MalgoM ()
+match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [Id Type] MalgoM ()
 match a b = case (typeOf a, typeOf b) of
   (TyMeta _, _       )                    -> pure ()
   (_       , TyMeta _)                    -> pure ()
@@ -53,7 +53,7 @@ match a b = case (typeOf a, typeOf b) of
       <+> pPrint (typeOf b)
       $+$ parens (fsep [pPrint a, colon, pPrint b])
 
-lintExpr :: Expr (ID Type) -> ReaderT [ID Type] MalgoM Type
+lintExpr :: Expr (Id Type) -> ReaderT [Id Type] MalgoM Type
 lintExpr e@(Call f xs) = do
   mapM_ defined (f : xs)
   paramtys <- getParamtys
@@ -79,5 +79,5 @@ lintExpr (If c t f) = do
   lintExpr f
 lintExpr e = pure $ typeOf e
 
-lintFunDec :: Def (ID Type) -> ReaderT [ID Type] MalgoM Type
+lintFunDec :: Def (Id Type) -> ReaderT [Id Type] MalgoM Type
 lintFunDec Def { params, expr } = local (params <>) $ lintExpr expr

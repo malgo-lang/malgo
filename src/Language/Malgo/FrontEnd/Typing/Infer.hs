@@ -10,7 +10,7 @@ module Language.Malgo.FrontEnd.Typing.Infer
   )
 where
 
-import           Language.Malgo.ID
+import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
@@ -33,7 +33,7 @@ import           Data.Set                       ( (\\) )
 
 data Typing
 
-instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
+instance Pass Typing (Expr (Id ())) (Expr (Id Type)) where
   passName = "Typing"
   isDump   = dumpTyped
   trans e = evaluatingStateT mempty $ do
@@ -45,7 +45,7 @@ instance Pass Typing (Expr (ID ())) (Expr (ID Type)) where
 
     pure $ fmap (\x -> maybe (x & metaL .~ Kind) (fmap removeExplictForall) (env ^. at x)) e
 
-type Env = IDMap () (ID Scheme)
+type Env = IdMap () (Id Scheme)
 
 newTyMeta :: MonadUniq m => m Type
 newTyMeta = TyMeta <$> getUniq
@@ -53,17 +53,17 @@ newTyMeta = TyMeta <$> getUniq
 generalize :: Env -> Type -> Scheme
 generalize env t = Forall (toList $ ftv t \\ ftv env) t
 
-letVar :: MonadState Env m => Env -> ID () -> Type -> m ()
+letVar :: MonadState Env m => Env -> Id () -> Type -> m ()
 letVar env var ty = defineVar var $ generalize env ty
 
-defineVar :: MonadState Env m => ID () -> Scheme -> m ()
+defineVar :: MonadState Env m => Id () -> Scheme -> m ()
 defineVar x t = modify (at x ?~ x { idMeta = t })
 
-lookupVar :: (MonadState Env f, MonadUniq f) => ID () -> f Type
+lookupVar :: (MonadState Env f, MonadUniq f) => Id () -> f Type
 lookupVar x = do
   env <- get
   case env ^. at x of
-    Just ID { idMeta = scheme } -> instantiate scheme
+    Just Id { idMeta = scheme } -> instantiate scheme
     Nothing                     -> bug Unreachable
 
 updateSubst :: (MonadWriter Subst m, MonadState Env m, MonadMalgo m)
@@ -80,7 +80,7 @@ applySubst m = do
   modify (apply subst)
   pure (apply subst x)
 
-typingExpr :: (MonadState Env m, MonadUniq m, MonadMalgo m) => Expr (ID ()) -> m Type
+typingExpr :: (MonadState Env m, MonadUniq m, MonadMalgo m) => Expr (Id ()) -> m Type
 typingExpr (Var _ x)      = lookupVar x
 typingExpr Int{}          = pure intTy
 typingExpr Float{}        = pure floatTy
@@ -198,7 +198,7 @@ typingExpr (Match pos scrutinee clauses) = applySubst $ do
 typingPat :: (MonadMalgo m, MonadState Env m, MonadUniq m)
           => SourcePos
           -> Type
-          -> Pat (ID ())
+          -> Pat (Id ())
           -> WriterT Subst m ()
 typingPat _   ty (VarP   x ) = defineVar x (Forall [] ty)
 typingPat pos ty (TupleP ps) = do
@@ -217,7 +217,7 @@ isValue Fn{}         = True
 isValue (Tuple _ xs) = all isValue xs
 isValue _            = False
 
-toType :: MonadUniq m => SType (ID ()) -> StateT (Map (ID ()) Type) m Type
+toType :: MonadUniq m => SType (Id ()) -> StateT (Map (Id ()) Type) m Type
 toType (TyVar x) = do
   kvs <- get
   (kvs ^. at x) `whenNothing` do

@@ -11,7 +11,7 @@ module Language.Malgo.MiddleEnd.TransToMIR
   )
 where
 
-import           Language.Malgo.ID
+import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
@@ -33,7 +33,7 @@ import qualified Data.Set                      as Set
 
 data TransToMIR
 
-instance Pass TransToMIR (H.Expr (ID Type)) (Program (ID Type)) where
+instance Pass TransToMIR (H.Expr (Id Type)) (Program (Id Type)) where
   passName = "TransToMIR"
   isDump   = dumpClosure
   trans e = evaluatingStateT mempty $ usingReaderT (Env [] []) $ do
@@ -41,23 +41,23 @@ instance Pass TransToMIR (H.Expr (ID Type)) (Program (ID Type)) where
     fs <- gets toList
     pure (Program fs e')
 
-data Env = Env { knowns   :: [ID Type]
-               , mutrecs  :: [ID Type]
+data Env = Env { knowns   :: [Id Type]
+               , mutrecs  :: [Id Type]
                }
 
-type FuncMap = Map (ID Type) (Func (ID Type))
+type FuncMap = Map (Id Type) (Func (Id Type))
 
-addFunc :: MonadState FuncMap m => Func (ID Type) -> m ()
+addFunc :: MonadState FuncMap m => Func (Id Type) -> m ()
 addFunc func = modify (at (M.name func) ?~ func)
 
-getFunc :: MonadState FuncMap m => ID Type -> m (Func (ID Type))
+getFunc :: MonadState FuncMap m => Id Type -> m (Func (Id Type))
 getFunc func = do
   fs <- get
   case fs ^. at func of
     Just f  -> pure f
     Nothing -> errorDoc $ "error(getFunc): function" <+> pPrint func <+> "is not defined"
 
-transExpr :: (MonadState FuncMap f, MonadReader Env f) => H.Expr (ID Type) -> f (Expr (ID Type))
+transExpr :: (MonadState FuncMap f, MonadReader Env f) => H.Expr (Id Type) -> f (Expr (Id Type))
 transExpr (H.Var   x              ) = pure $ Var x
 transExpr (H.Lit   x              ) = pure $ Lit x
 transExpr (H.Tuple xs             ) = pure $ Tuple xs

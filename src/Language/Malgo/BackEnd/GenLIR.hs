@@ -11,7 +11,7 @@ module Language.Malgo.BackEnd.GenLIR
   )
 where
 
-import           Language.Malgo.ID
+import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
