@@ -10,7 +10,6 @@ import Language.Malgo.Token
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.IR.Syntax
 import Language.Malgo.Pretty
-import Language.Malgo.Prelude (toText)
 import Text.PrettyPrint.HughesPJ (text, hang)
 import Data.String
 import Data.Text (Text)

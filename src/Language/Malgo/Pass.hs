@@ -13,6 +13,8 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
+import qualified Data.Text                     as T
+import qualified Data.Text.Lazy                as TL
 import           Text.PrettyPrint.HughesPJClass ( renderStyle
                                                 , style
                                                 , Style(..)
@@ -27,8 +29,8 @@ dump :: (MonadMalgo m, Show a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- getOpt
   if isDebugMode opt
-    then log Debug $ "\n" <> toText (pShow x)
-    else log Info $ "\n" <> toText (renderStyle (style { lineLength = maxInt }) (pPrint x))
+    then log Debug $ "\n" <> TL.toStrict (pShow x)
+    else log Info $ "\n" <> T.pack (renderStyle (style { lineLength = maxBound }) (pPrint x))
 
 transWithDump :: forall p s t . (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do

@@ -11,6 +11,9 @@ import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.LType
 
+import           Data.Int
+import           Data.Word
+import qualified Data.Text.Lazy as TL
 import           Text.PrettyPrint.HughesPJClass ( ($$)
                                                 , vcat
                                                 , parens
@@ -140,7 +143,7 @@ data Constant = Bool Bool
   deriving stock (Eq, Show)
 
 instance Pretty Constant where
-  pPrint = text . toString . pShow
+  pPrint = text . TL.unpack . pShow
 
 instance HasLType Constant where
   ltypeOf Bool{}    = Bit
@@ -163,7 +166,7 @@ data Op = ADD  | SUB  | MUL  | SDIV | SREM | UDIV | UREM
   deriving stock (Eq, Show)
 
 instance Pretty Op where
-  pPrint = text . toString . pShow
+  pPrint = text . TL.unpack . pShow
 
 ltypeOfOp :: Op -> LType -> LType
 ltypeOfOp ADD  I32 = I32

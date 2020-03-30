@@ -16,8 +16,8 @@ import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.Type
 
 import           Language.Malgo.FrontEnd.Typing.Subst
-import           Control.Lens.Getter            ( (^.) )
-import           Control.Lens.At                ( contains )
+
+import qualified Data.Map as Map
 
 infixl 5 :~
 data Constraint = Type :~ Type
@@ -39,7 +39,7 @@ solver (su, (t1 :~ t2) : cs) = do
 instantiate :: MonadUniq m => Scheme -> m Type
 instantiate (Forall vs t) = do
   ts <- mapM (\_ -> TyMeta <$> getUniq) vs
-  pure $ apply (Subst $ fromList $ zip vs ts) t
+  pure $ apply (Subst $ Map.fromList $ zip vs ts) t
 
 unify :: Type -> Type -> Either Doc Subst
 unify Kind       Kind       = pure mempty
@@ -61,7 +61,7 @@ unify (TyApp c1 ts1) (TyApp c2 ts2)
 bind :: TyVar -> Type -> Either Doc Subst
 bind a t | t == TyMeta a   = pure mempty
          | occursCheck a t = Left $ "infinit type" <+> pPrint a <> "," <+> pPrint t
-         | otherwise       = pure $ Subst (one (a, t))
+         | otherwise       = pure $ Subst (Map.singleton a t)
 
 occursCheck :: Substitutable a => TyVar -> a -> Bool
 occursCheck a t = ftv t ^. contains a

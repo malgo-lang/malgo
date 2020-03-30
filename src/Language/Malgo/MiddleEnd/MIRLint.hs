@@ -25,6 +25,7 @@ import           Language.Malgo.FrontEnd.Typing.Infer
 
 import           Language.Malgo.TypeRep.Type
 
+import           Control.Exception              ( assert )
 import           Text.PrettyPrint.HughesPJClass ( ($+$) )
 
 data MIRLint
@@ -32,18 +33,17 @@ data MIRLint
 instance Pass MIRLint (Program (Id Type)) (Program (Id Type)) where
   passName = "MIRLint"
   isDump _ = False
-  trans e@(Program fs _) = usingReaderT (Env fs []) (lintProgram e) >> pure e
+  trans e@(Program fs _) = runReaderT (lintProgram e) (Env fs []) >> pure e
 
 data Env = Env { functions :: [Func (Id Type)]
                , variables :: [Id Type]
                }
 
 definedVar :: (MonadReader Env m, MonadIO m) => Id Type -> m ()
-definedVar a = unlessM (elem a <$> asks variables) (errorDoc $ pPrint a <+> "is not defined")
+definedVar a = (assert ?? ()) <$> (elem a <$> asks variables)
 
 notDefinedVar :: (MonadReader Env m, MonadIO m) => Id Type -> m ()
-notDefinedVar a =
-  unlessM (notElem a <$> asks variables) (errorDoc $ pPrint a <+> "is already defined")
+notDefinedVar a = (assert ?? ()) <$> (notElem a <$> asks variables)
 
 isKnownFunc :: (MonadReader Env m, MonadIO m) => Id Type -> m ()
 isKnownFunc a = do
@@ -76,9 +76,8 @@ checkCall f xs = case typeOf f of
     ps' <- mapM (instantiate . generalize mempty) ps
     xs' <- mapM (instantiate . generalize mempty . typeOf) xs
     case solve (zipWith (:~) ps' xs') of
-      Right _ -> pure ()
-      Left err ->
-        errorDoc $ ("type mismatch:" <+> pPrint f <+> "and" <+> pPrint xs) $+$ err
+      Right _   -> pure ()
+      Left  err -> errorDoc $ ("type mismatch:" <+> pPrint f <+> "and" <+> pPrint xs) $+$ err
   _ -> errorDoc $ pPrint f <+> "is not function"
 
 lintExpr :: (MonadReader Env m, MonadIO m, MonadUniq m) => Expr (Id Type) -> m ()
@@ -107,9 +106,8 @@ lintExpr (CallClosure f xs) = do
 lintExpr (Let n v e) = do
   notDefinedVar n
   case solve [typeOf n :~ typeOf v] of
-    Right _ -> pure ()
-    Left err ->
-      errorDoc $ ("type mismatch:" <+> pPrint n <+> "and" <+> pPrint v) $+$ err
+    Right _   -> pure ()
+    Left  err -> errorDoc $ ("type mismatch:" <+> pPrint n <+> "and" <+> pPrint v) $+$ err
   local (\env -> env { variables = n : variables env }) (lintExpr v >> lintExpr e)
 lintExpr (If    _ t f ) = lintExpr t >> lintExpr f
 lintExpr (Prim  _ _ xs) = mapM_ definedVar xs

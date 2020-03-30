@@ -36,7 +36,7 @@ import           Colog                          ( HasLog(..)
                                                 )
 import qualified Colog
 import           Control.Monad.Fix
-import           Data.List                      ( (!!) )
+import qualified Data.Text                     as T
 import           Text.PrettyPrint               ( ($$)
                                                 , text
                                                 )
@@ -73,7 +73,7 @@ newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT UniqSu
   deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState UniqSupply, MonadIO, MonadFix, MonadFail)
 
 runMalgo :: MonadIO m => MalgoM a -> Opt -> Text -> m a
-runMalgo (MalgoM m) opt source = liftIO $ evaluatingStateT (UniqSupply 0) $ runReaderT
+runMalgo (MalgoM m) opt source = liftIO $ evalStateT ?? (UniqSupply 0) $ runReaderT
   m
   MalgoEnv
     { maOption    = opt
@@ -110,7 +110,7 @@ getFileName = fromString . srcName <$> getOpt
 viewLine :: MonadMalgo m => Int -> m Text
 viewLine linum = do
   s <- getSource
-  pure $ lines s !! (linum - 1)
+  pure $ T.lines s !! (linum - 1)
 
 malgoError :: MonadMalgo m => SourcePos -> Doc -> Doc -> m a
 malgoError pos tag mes = do
@@ -123,7 +123,7 @@ malgoError pos tag mes = do
     $$  "on"
     <+> pPrint pos
     <>  ":"
-    $$  text (toString line)
+    $$  text (T.unpack line)
     <>  "\n"
 
 class Monad m => MonadUniq m where

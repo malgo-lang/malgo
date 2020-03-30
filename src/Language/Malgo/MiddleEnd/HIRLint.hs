@@ -20,6 +20,8 @@ import           Language.Malgo.IR.HIR
 
 import           Language.Malgo.TypeRep.Type
 
+import           Control.Exception              ( assert )
+import qualified Data.Text.Lazy                as TL
 import           Text.PrettyPrint.HughesPJClass ( ($+$)
                                                 , parens
                                                 , fsep
@@ -31,13 +33,13 @@ data HIRLint
 instance Pass HIRLint (Expr (Id Type)) (Expr (Id Type)) where
   passName = "HIRLint"
   isDump _ = False
-  trans e = usingReaderT [] (lintExpr e) >> pure e
+  trans e = runReaderT (lintExpr e) [] >> pure e
 
 defined :: Id Type -> ReaderT [Id Type] MalgoM ()
-defined a = unlessM (elem a <$> ask) (errorDoc $ pPrint a <+> "is not defined")
+defined a = (assert ?? ()) <$> (elem a <$> ask)
 
 notDefined :: Id Type -> ReaderT [Id Type] MalgoM ()
-notDefined a = unlessM (notElem a <$> ask) (errorDoc $ pPrint a <+> "is already defined")
+notDefined a = (assert ?? ()) <$> (notElem a <$> ask)
 
 match :: (Pretty a, Pretty b, HasType a, HasType b) => a -> b -> ReaderT [Id Type] MalgoM ()
 match a b = case (typeOf a, typeOf b) of

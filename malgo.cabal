@@ -4,7 +4,7 @@ cabal-version: 1.24
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: eb706c8a2b3fba29319f21df8e3992366566379238dcf2acc2160346dd09a9dd
+-- hash: 3f46ffefe0c9066d4f8503f6e54c9f358c277ee0a76d6b3a3edd669523e9b3c5
 
 name:           malgo
 version:        1.0.0.0
@@ -71,6 +71,7 @@ library
   build-depends:
       array
     , base
+    , bytestring
     , co-log
     , containers
     , dlist
@@ -81,7 +82,6 @@ library
     , parsec
     , pretty
     , pretty-simple
-    , relude
     , text
     , transformers
   default-language: Haskell2010
@@ -99,6 +99,7 @@ executable malgo
   build-depends:
       array
     , base
+    , bytestring
     , co-log
     , containers
     , dlist
@@ -111,7 +112,6 @@ executable malgo
     , parsec
     , pretty
     , pretty-simple
-    , relude
     , text
     , transformers
   default-language: Haskell2010
@@ -130,6 +130,7 @@ test-suite malgo-test
   build-depends:
       array
     , base
+    , bytestring
     , co-log
     , containers
     , dlist
@@ -142,7 +143,6 @@ test-suite malgo-test
     , parsec
     , pretty
     , pretty-simple
-    , relude
     , text
     , transformers
   default-language: Haskell2010

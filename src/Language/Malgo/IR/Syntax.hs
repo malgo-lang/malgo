@@ -162,11 +162,11 @@ instance Pretty a => Pretty (Decl a) where
         <+> ( parens
             . sep
             $ pPrint name
-            : map (\(n, t) -> pPrint n <> maybeToMonoid (fmap ((":" <>) . pPrint) t)) params
+            : map (\(n, t) -> pPrint n <> maybe mempty ((":" <>) . pPrint) t) params
             )
-        <>  maybeToMonoid (fmap ((":" <>) . pPrint) ret)
+        <>  maybe mempty ((":" <>) . pPrint) ret
         $+$ pPrint body
   pPrint (ValDec _ name t val) =
-    parens $ "val" <+> pPrint name <> maybeToMonoid (fmap ((":" <>) . pPrint) t) <+> pPrint val
+    parens $ "val" <+> pPrint name <> maybe mempty ((":" <>) . pPrint) t <+> pPrint val
   pPrint (ExDec _ name t orig) =
     parens $ "extern" <+> pPrint name <> ":" <> pPrint t <+> pPrint orig

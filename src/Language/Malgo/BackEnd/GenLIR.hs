@@ -27,10 +27,9 @@ import           Language.Malgo.TypeRep.Type   as M
 import           Language.Malgo.BackEnd.LIRBuilder
                                                as L
 
-import           Control.Lens                   ( (.~)
-                                                , ifor_
-                                                )
-import           Data.Maybe                     ( fromJust )
+import           Data.Char                      ( ord )
+import qualified Data.Map                      as Map
+import qualified Data.Text.Lazy                as TL
 
 data GenLIR
 
@@ -40,14 +39,16 @@ instance Pass GenLIR (M.Program (Id Type)) (L.Program (Id LType)) where
   trans M.Program { functions, mainExpr } =
     runProgramBuilderT
         (foldMap
-          (\M.Func { name, captures, params, body } -> one
-            ( name
-            , name & metaL .~ Function
-              (convertType $ typeOf body)
-              (if isNothing captures
-                then map (convertType . typeOf) params
-                else Ptr U8 : map (convertType . typeOf) params
-              )
+          (\M.Func { name, captures, params, body } -> ProgramEnv
+            (  mempty
+            &  at name
+            ?~ (name & metaL .~ Function
+                 (convertType $ typeOf body)
+                 (if isNothing captures
+                   then map (convertType . typeOf) params
+                   else Ptr U8 : map (convertType . typeOf) params
+                 )
+               )
             )
           )
           functions
@@ -83,12 +84,12 @@ genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
 
 genExpr :: (MonadUniq m, MonadExprBuilder m) => M.Expr (Id Type) -> m (Id LType)
 genExpr (M.Var   x               ) = findVar x
-genExpr (M.Lit   (Int      x    )) = assign $ Constant $ Int64 $ fromInteger x
-genExpr (M.Lit   (Float    x    )) = assign $ Constant $ Float64 x
-genExpr (M.Lit   (H.Bool   True )) = assign $ Constant $ L.Bool True
-genExpr (M.Lit   (H.Bool   False)) = assign $ Constant $ L.Bool False
-genExpr (M.Lit   (Char     x    )) = assign $ Constant $ Word8 $ fromIntegral $ ord x
-genExpr (M.Lit   (H.String xs   )) = assign $ Constant $ L.String xs
+genExpr (M.Lit   (Int      x    )) = def $ Constant $ Int64 $ fromInteger x
+genExpr (M.Lit   (Float    x    )) = def $ Constant $ Float64 x
+genExpr (M.Lit   (H.Bool   True )) = def $ Constant $ L.Bool True
+genExpr (M.Lit   (H.Bool   False)) = def $ Constant $ L.Bool False
+genExpr (M.Lit   (Char     x    )) = def $ Constant $ Word8 $ fromIntegral $ ord x
+genExpr (M.Lit   (H.String xs   )) = def $ Constant $ L.String xs
 genExpr (M.Tuple xs              ) = do
   tuplePtr <- alloca (Struct $ map (convertType . typeOf) xs)
   ifor_ xs $ \i x -> storeC tuplePtr [0, i] =<< findVar x
@@ -100,7 +101,7 @@ genExpr (M.MakeArray x n) = do
   initVal <- findVar x
   sizeVal <- coerceTo SizeT =<< findVar n
   ptr     <- arrayCreate (ltypeOf initVal) sizeVal
-  zero    <- assign $ Constant $ Int64 0
+  zero    <- def $ Constant $ Int64 0
   forLoop zero sizeVal $ \idx -> do
     rawAddr <- loadC ptr [0, 0]
     store rawAddr [idx] initVal
@@ -110,7 +111,7 @@ genExpr (M.ArrayRead arr idx) = do
   ixOpr     <- coerceTo SizeT =<< findVar idx
   case ltypeOf arrRawOpr of
     Ptr t -> load t arrRawOpr [ixOpr]
-    _     -> error $ toText $ pShow arr <> " is not an array"
+    _     -> error $ TL.unpack $ pShow arr <> " is not an array"
 genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
   TyApp ArrayC [t] -> do
     arrRawOpr <- flip loadC [0, 0] =<< findVar arr
@@ -118,7 +119,7 @@ genExpr (M.ArrayWrite arr idx val) = case typeOf arr of
     valOpr    <- coerceTo (convertType t) =<< findVar val
     store arrRawOpr [ixOpr] valOpr
     undef (Ptr (Struct [])) -- TODO: generate unique Unit value
-  _ -> error $ toText $ pShow arr <> " is not an array"
+  _ -> error $ TL.unpack $ pShow arr <> " is not an array"
 genExpr (M.MakeClosure f cs) = do
   capPtr <- alloca $ Struct (map (convertType . typeOf) cs)
   ifor_ cs $ \i c -> do

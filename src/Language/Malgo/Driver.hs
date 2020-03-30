@@ -29,6 +29,10 @@ import           Language.Malgo.MiddleEnd.TransToMIR
 import           Language.Malgo.BackEnd.GenLIR
 import           Language.Malgo.BackEnd.GenLLVM
 
+import qualified Data.ByteString.Short         as B
+import qualified Data.Text                     as T
+import qualified Data.Text.Encoding            as T
+import qualified Data.Text.Lazy                as TL
 import           Options.Applicative
 import qualified LLVM.AST                      as L
 
@@ -59,7 +63,7 @@ compile = M.runMalgo $ do
   source <- asks maSource
   tokens <- Lexer.tokenize () (srcName opt) source
   let ast = case Parser.parseExpr <$> tokens of
-        Left  x -> error $ toText $ pShow x
+        Left  x -> error $ TL.unpack $ pShow x
         Right x -> x
   when (dumpParsed opt) $ dump ast
   llvmir <-
@@ -71,7 +75,7 @@ compile = M.runMalgo $ do
     >>= transWithDump @MIRLint
     >>= transWithDump @GenLIR
     >>= trans @GenLLVM
-  pure $ L.defaultModule { L.moduleName           = fromString (srcName opt)
-                         , L.moduleSourceFileName = encodeUtf8 (srcName opt)
+  pure $ L.defaultModule { L.moduleName           = fromString $ srcName opt
+                         , L.moduleSourceFileName = B.toShort $ T.encodeUtf8 $ T.pack $ srcName opt
                          , L.moduleDefinitions    = llvmir
                          }

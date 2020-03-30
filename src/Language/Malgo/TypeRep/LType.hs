@@ -9,7 +9,7 @@ import           Language.Malgo.Id
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import           Data.List                      ( (!!) )
+import qualified Data.Text.Lazy as TL
 import           Text.PrettyPrint.HughesPJClass ( braces
                                                 , sep
                                                 , punctuate
@@ -36,7 +36,7 @@ instance Pretty LType where
   pPrint (Struct xs) = braces (sep $ punctuate "," $ map pPrint xs)
   pPrint (Function ret params) =
     parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
-  pPrint t = text $ toString $ pShow t
+  pPrint t = text $ TL.unpack $ pShow t
 
 class HasLType a where
   ltypeOf :: a -> LType
@@ -51,4 +51,4 @@ accessType :: LType -> [Int] -> LType
 accessType t           []       = t
 accessType (Ptr    t ) (_ : xs) = accessType t xs
 accessType (Struct ts) (i : xs) = accessType (ts !! i) xs
-accessType t           _        = error $ toText $ pShow t <> " is not accessable"
+accessType t           _        = error $ TL.unpack $ pShow t <> " is not accessable"

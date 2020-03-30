@@ -29,6 +29,7 @@ import           Language.Malgo.TypeRep.Type
 
 import           Control.Lens.Combinators
 import           Data.Functor.Classes
+import           Data.IntMap                    ( IntMap )
 import qualified Data.IntMap                   as IntMap
 import           GHC.Exts                       ( IsList(..) )
 import           Text.PrettyPrint.HughesPJClass ( text )
@@ -56,14 +57,10 @@ newId m n = Id n <$> getUniq <*> pure m
 
 newtype IdMap a v = IdMap { unwrapIdMap :: IntMap v }
   deriving stock (Eq, Ord, Show, Functor, Foldable, Traversable)
-  deriving newtype (Eq1, Ord1, Show1, Semigroup, Monoid, NFData)
+  deriving newtype (Eq1, Ord1, Show1, Semigroup, Monoid)
 
 instance Pretty v => Pretty (IdMap a v) where
   pPrint = pPrint . toList . unwrapIdMap
-
-instance One (IdMap a v) where
-  type OneItem (IdMap a v) = (Id a, v)
-  one (Id { idUniq }, v) = IdMap (one (idUniq, v))
 
 type instance Index (IdMap a v) = Id a
 type instance IxValue (IdMap a v) = v

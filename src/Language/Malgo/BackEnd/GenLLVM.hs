@@ -36,11 +36,8 @@ import qualified LLVM.AST.FloatingPointPredicate
 import qualified LLVM.AST.IntegerPredicate     as IP
 import qualified LLVM.AST.Type                 as LT
 import qualified LLVM.IRBuilder                as IRBuilder
-import           Control.Lens.Getter            ( view )
-import           Control.Lens.At                ( at )
-import           Control.Lens.Setter            ( set
-                                                , (?~)
-                                                )
+
+import qualified Data.Map                      as Map
 
 data GenLLVM
 
@@ -51,11 +48,9 @@ instance Pass GenLLVM (IR.Program (Id LType)) [LLVM.AST.Definition] where
     dumpLLVM
       $ local
           (const $ foldMap
-            (\Func { name } ->
-              one
-                ( name
-                , ConstantOperand $ GlobalReference (convertType (ltypeOf name)) $ genName name
-                )
+            (\Func { name } -> Map.singleton
+              name
+              (ConstantOperand $ GlobalReference (convertType (ltypeOf name)) $ genName name)
             )
             functions
           )
@@ -71,7 +66,7 @@ type PrimMap = Map String Operand
 -- dumpLLVM :: MonadIO m => ModuleBuilderT (ReaderT GenState m) a -> m [LLVM.AST.Definition]
 dumpLLVM :: GenDec a -> MalgoM [LLVM.AST.Definition]
 dumpLLVM m =
-  evaluatingStateT mempty $ usingReaderT mempty $ execModuleBuilderT emptyModuleBuilder m
+  evalStateT ?? mempty $ runReaderT ?? mempty $ execModuleBuilderT emptyModuleBuilder m
 
 convertType :: LType -> Type
 convertType (Ptr x)         = ptr (convertType x)
@@ -113,7 +108,7 @@ genName Id { idName, idUniq } = LLVM.AST.mkName $ idName <> show idUniq
 
 genFunction :: Func (Id LType) -> GenDec ()
 genFunction Func { name, params, body } = void $ function funcName llvmParams retty $ \args ->
-  local (fromList (zip params args) <>) $ genBlock body ret
+  local (Map.fromList (zip params args) <>) $ genBlock body ret
  where
   funcName   = genName name
   llvmParams = map (\Id { idMeta } -> (convertType idMeta, NoParameterName)) params
@@ -121,7 +116,7 @@ genFunction Func { name, params, body } = void $ function funcName llvmParams re
 
 genBlock :: Block (Id LType) -> (Operand -> GenExpr a) -> GenExpr a
 genBlock Block { insns, value } term = do
-  env' <- foldlM (\e i -> local (e <>) (genInsn i <*> ask)) ?? insns =<< ask
+  env' <- (foldlM (\e i -> local (e <>) (genInsn i <*> ask)) ?? insns) =<< ask
   local (env' <>) $ term =<< findVar value
  where
   genInsn (Assign x e) = do

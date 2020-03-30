@@ -15,9 +15,8 @@ import           Language.Malgo.Prelude
 import           Language.Malgo.TypeRep.Type
 
 import           Data.Set                       ( (\\) )
-import qualified Data.Map.Strict as Map
-import           Control.Lens.At
-import           Control.Lens.Getter            ( view )
+import qualified Data.Set                      as Set
+import qualified Data.Map.Strict               as Map
 
 newtype Subst = Subst { unwrapSubst :: Map TyVar Type }
   deriving stock (Eq, Show)
@@ -39,13 +38,13 @@ class Substitutable a where
 
 instance Substitutable Scheme where
   apply s (Forall ts t) = Forall ts $ apply s' t where s' = Subst $ foldr sans (unwrapSubst s) ts
-  ftv (Forall ts t) = ftv t \\ fromList ts
+  ftv (Forall ts t) = ftv t \\ Set.fromList ts
 
 instance Substitutable Type where
   apply s t@(TyMeta a  ) = fromMaybe t $ view (at a) s
   apply s (  TyApp c ts) = TyApp c $ apply s ts
   apply _ Kind           = Kind
-  ftv (TyMeta a  ) = one a
+  ftv (TyMeta a  ) = Set.singleton a
   ftv (TyApp _ ts) = foldMap ftv ts
   ftv Kind         = mempty
 

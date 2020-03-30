@@ -27,6 +27,7 @@ import           Control.Lens            hiding ( ix
                                                 , op
                                                 , lens
                                                 )
+import qualified Data.Map as Map
 import           Text.Parsec.Pos                ( SourcePos )
 
 data Known = Known { _var :: Map String (Id ())
@@ -49,7 +50,7 @@ withKnowns :: (MonadUniq m, MonadReader Known m)
            -> m a
 withKnowns lens ks m = do
   vs <- mapM (newId ()) ks
-  local (over lens (fromList (zip ks vs) <>)) m
+  local (over lens (Map.fromList (zip ks vs) <>)) m
 
 getId :: (MonadReader s m, MonadMalgo m)
       => SourcePos

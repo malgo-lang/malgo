@@ -36,7 +36,7 @@ data TransToMIR
 instance Pass TransToMIR (H.Expr (Id Type)) (Program (Id Type)) where
   passName = "TransToMIR"
   isDump   = dumpClosure
-  trans e = evaluatingStateT mempty $ usingReaderT (Env [] []) $ do
+  trans e = evalStateT ?? mempty $ runReaderT ?? (Env [] []) $ do
     e' <- transExpr e
     fs <- gets toList
     pure (Program fs e')
@@ -85,16 +85,17 @@ transExpr (H.LetRec defs e   ) = do
     mapM_ (transDef Nothing) defs
     transExpr e
   -- 変換したdefsの自由変数を集計
-  fv <- foldMapA (getFunc >=> \Func { params, body } -> pure $ freevars body \\ fromList params)
-                 funcNames
+  fv <- foldMapA
+    (getFunc >=> \Func { params, body } -> pure $ freevars body \\ Set.fromList params)
+    funcNames
   -- defsが自由変数を含まず、またdefsで宣言される関数がeの中で値として現れないならdefsはknownである
-  if null fv && null (freevars e' `intersection` fromList funcNames)
+  if null fv && null (freevars e' `intersection` Set.fromList funcNames)
     then pure e'
     else do
       put backup
       -- 自由変数をcapturesに、相互再帰しうる関数名をmutrecsに入れてMIRに変換する
       defs' <- local (\env -> (env :: Env) { mutrecs = funcNames })
-        $ foldMapA (transDef (Just $ toList $ fv \\ fromList funcNames)) defs
+        $ foldMapA (transDef (Just $ toList $ fv \\ Set.fromList funcNames)) defs
       appEndo defs' <$> transExpr e
  where
   funcNames = map H.name defs
@@ -113,18 +114,18 @@ transExpr (H.Match s ((H.TupleP xs, e) :| _)) =
   appEndo (ifoldMap (\i x -> Endo (Let x (TupleAccess s i))) xs) <$> transExpr e
 
 freevars :: Ord a => Expr a -> Set a
-freevars (Var x)                 = one x
+freevars (Var x)                 = Set.singleton x
 freevars Lit{}                   = mempty
-freevars (Tuple xs             ) = fromList xs
-freevars (TupleAccess x _      ) = one x
-freevars (MakeArray   x n      ) = fromList [x, n]
-freevars (ArrayRead   x y      ) = fromList [x, y]
-freevars (ArrayWrite x y z     ) = fromList [x, y, z]
-freevars (CallDirect       _ xs) = fromList xs
-freevars (CallWithCaptures _ xs) = fromList xs
-freevars (CallClosure      f xs) = fromList $ f : xs
-freevars (MakeClosure      _ xs) = fromList xs
+freevars (Tuple xs             ) = Set.fromList xs
+freevars (TupleAccess x _      ) = Set.singleton x
+freevars (MakeArray   x n      ) = Set.fromList [x, n]
+freevars (ArrayRead   x y      ) = Set.fromList [x, y]
+freevars (ArrayWrite x y z     ) = Set.fromList [x, y, z]
+freevars (CallDirect       _ xs) = Set.fromList xs
+freevars (CallWithCaptures _ xs) = Set.fromList xs
+freevars (CallClosure      f xs) = Set.fromList $ f : xs
+freevars (MakeClosure      _ xs) = Set.fromList xs
 freevars (Let   n v e          ) = Set.delete n (freevars v <> freevars e)
-freevars (If    c t f          ) = one c <> freevars t <> freevars f
-freevars (Prim  _ _ xs         ) = fromList xs
-freevars (BinOp _ x y          ) = fromList [x, y]
+freevars (If    c t f          ) = Set.singleton c <> freevars t <> freevars f
+freevars (Prim  _ _ xs         ) = Set.fromList xs
+freevars (BinOp _ x y          ) = Set.fromList [x, y]

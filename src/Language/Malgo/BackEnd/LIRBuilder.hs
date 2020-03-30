@@ -10,6 +10,7 @@ module Language.Malgo.BackEnd.LIRBuilder
   ( MonadProgramBuilder(..)
   , ProgramBuilderT
   , runProgramBuilderT
+  , ProgramEnv(..)
   , MonadExprBuilder(..)
   , ExprBuilderT
   , ExprEnv(..)
@@ -43,20 +44,12 @@ import           Language.Malgo.IR.LIR
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 
-import           Control.Lens.Indexed           ( ifor_ )
-import           Control.Lens.Setter            ( set )
-import           Control.Lens.Getter            ( view )
-import           Control.Lens.At                ( at )
-import           Data.Maybe                     ( fromJust )
+import qualified Data.Text.Lazy                as TL
 import           Data.DList                     ( DList(..) )
 import qualified Data.DList                    as D
 
 newtype ProgramEnv = ProgramEnv { functionMap :: IdMap Type (Id LType) }
   deriving newtype (Semigroup, Monoid)
-
-instance One ProgramEnv where
-  type OneItem ProgramEnv = (Id Type, Id LType)
-  one = ProgramEnv . one
 
 newtype ProgramState = ProgramState { functionList :: DList (Func (Id LType)) }
 
@@ -90,7 +83,7 @@ instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
 class MonadProgramBuilder m => MonadExprBuilder m where
   findVar :: Id Type -> m (Id LType)
   defineVar :: Id Type -> Id LType -> m ()
-  assign :: Expr (Id LType) -> m (Id LType)
+  def :: Expr (Id LType) -> m (Id LType)
   storeC :: Id LType -> [Int] -> Id LType -> m ()
   store :: Id LType -> [Id LType] -> Id LType -> m ()
   forLoop :: Id LType -> Id LType -> (Id LType -> m ()) -> m ()
@@ -103,7 +96,7 @@ newtype ExprBuilderT m a = ExprBuilderT { unExprBuilderT :: ReaderT ExprEnv (Sta
 
 runExprBuilderT :: MonadUniq m => ExprEnv -> ExprBuilderT m (Id LType) -> m (Block (Id LType))
 runExprBuilderT env (ExprBuilderT m) =
-  evaluatingStateT (ExprState mempty mempty) $ usingReaderT env $ do
+  evalStateT ?? (ExprState mempty mempty) $ runReaderT ?? env $ do
     value                           <- m
     ExprState { partialBlockInsns } <- get
     pure $ Block { insns = toList partialBlockInsns, value = value }
@@ -117,7 +110,7 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
   defineVar x y =
     ExprBuilderT $ modify (\s -> s { variableMap = set (at x) (Just y) (variableMap s) })
 
-  assign expr = ExprBuilderT $ do
+  def expr = ExprBuilderT $ do
     i <- newId (ltypeOf expr) "%"
     modify (\e -> e { partialBlockInsns = D.snoc (partialBlockInsns e) (Assign i expr) })
     pure i
@@ -150,22 +143,22 @@ instance (MonadUniq m, MonadProgramBuilder m) => MonadExprBuilder (ExprBuilderT 
 
 -- instructions
 arrayCreate :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
-arrayCreate t n = assign $ ArrayCreate t n
+arrayCreate t n = def $ ArrayCreate t n
 
 alloca :: MonadExprBuilder m => LType -> m (Id LType)
-alloca ty = assign $ Alloca ty
+alloca ty = def $ Alloca ty
 
 loadC :: MonadExprBuilder m => Id LType -> [Int] -> m (Id LType)
-loadC ptr xs = assign $ LoadC ptr xs
+loadC ptr xs = def $ LoadC ptr xs
 
 load :: MonadExprBuilder m => LType -> Id LType -> [Id LType] -> m (Id LType)
-load ltype ptr xs = assign $ Load ltype ptr xs
+load ltype ptr xs = def $ Load ltype ptr xs
 
 call :: (MonadUniq m, MonadExprBuilder m) => Id LType -> [Id LType] -> m (Id LType)
 call f xs = case ltypeOf f of
   Function _ ps -> do
     as     <- zipWithM coerceTo ps xs
-    result <- assign $ Call f as
+    result <- def $ Call f as
     -- "write back". See also 'coerceTo'.
     zipWithM_ (\x a -> replaceVar x =<< coerceTo (ltypeOf x) a) xs as
     pure result
@@ -175,29 +168,29 @@ callExt :: (MonadUniq m, MonadExprBuilder m) => String -> LType -> [Id LType] ->
 callExt f funTy xs = case funTy of
   Function _ ps -> do
     as     <- zipWithM coerceTo ps xs
-    result <- assign $ CallExt f funTy as
+    result <- def $ CallExt f funTy as
     -- "write back". See also 'coerceTo'.
     zipWithM_ (\x a -> replaceVar x =<< coerceTo (ltypeOf x) a) xs as
     pure result
   _ -> error "external function must be typed as function"
 
 cast :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
-cast ty val = assign $ Cast ty val
+cast ty val = def $ Cast ty val
 
 trunc :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
-trunc ty val = assign $ Trunc ty val
+trunc ty val = def $ Trunc ty val
 
 zext :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
-zext ty val = assign $ Zext ty val
+zext ty val = def $ Zext ty val
 
 sext :: MonadExprBuilder m => LType -> Id LType -> m (Id LType)
-sext ty val = assign $ Sext ty val
+sext ty val = def $ Sext ty val
 
 undef :: MonadExprBuilder m => LType -> m (Id LType)
-undef ty = assign $ Undef ty
+undef ty = def $ Undef ty
 
 binop :: MonadExprBuilder m => Op -> Id LType -> Id LType -> m (Id LType)
-binop o x y = assign $ BinOp o x y
+binop o x y = def $ BinOp o x y
 
 branchIf :: (MonadUniq m, MonadExprBuilder m)
          => Id LType
@@ -207,7 +200,7 @@ branchIf :: (MonadUniq m, MonadExprBuilder m)
 branchIf c genWhenTrue genWhenFalse = do
   tBlock <- localBlock genWhenTrue
   fBlock <- localBlock (genWhenFalse >>= coerceTo (ltypeOf tBlock))
-  assign $ If c tBlock fBlock
+  def $ If c tBlock fBlock
 
 convertType :: Type -> LType
 convertType (TyApp FunC (r : ps)) =
@@ -267,7 +260,7 @@ coerceTo to x = case (to, ltypeOf x) of
             ( replicate (length ps) (Ptr U8)
             , Ptr (Struct [Function (Ptr U8) (replicate (length ps + 1) (Ptr U8)), Ptr U8])
             )
-          _ -> error $ toText $ pShow x <> " is not closure"
+          _ -> error $ TL.unpack $ pShow x <> " is not closure"
     -- generate 'f'
     fName       <- newId (Function r (Ptr U8 : ps)) "$f"
     fBoxedXName <- newId (Ptr U8) "$x"
@@ -287,14 +280,14 @@ coerceTo to x = case (to, ltypeOf x) of
     (elemTy, x') <- case xty of
       Ptr U8 -> (Ptr U8, ) <$> cast (Ptr (Struct [Ptr (Ptr U8), SizeT])) x
       Ptr (Struct [Ptr t, SizeT]) -> pure (t, x)
-      _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow
+      _ -> error $ TL.unpack $ "cannot convert " <> pShow x <> "\n to " <> pShow
         (Ptr (Struct [Ptr ty, SizeT]))
     xRaw      <- loadC x' [0, 0]
     len       <- loadC x' [0, 1]
     newArr    <- arrayCreate ty len
     newArrRaw <- loadC newArr [0, 0]
     storeC newArr [0, 1] len
-    zero <- assign $ Constant $ Int64 0
+    zero <- def $ Constant $ Int64 0
     forLoop zero len $ \i -> do
       val  <- load elemTy xRaw [i]
       val' <- coerceTo ty val
@@ -305,7 +298,7 @@ coerceTo to x = case (to, ltypeOf x) of
     x' <- case xty of
       Ptr U8 -> cast (Ptr (Struct $ replicate (length ts) (Ptr U8))) x
       Ptr (Struct _) -> pure x
-      _ -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
+      _ -> error $ TL.unpack $ "cannot convert " <> pShow x <> "\n to " <> pShow (Ptr (Struct ts))
     ptr <- alloca (Struct ts)
     ifor_ ts $ \i ty -> do
       xElem  <- loadC x' [0, i]
@@ -327,4 +320,4 @@ coerceTo to x = case (to, ltypeOf x) of
   -- size_t to integer types
   (SizeT     , I64   ) -> cast SizeT x
   (SizeT     , U64   ) -> cast SizeT x
-  (_         , _     ) -> error $ toText $ "cannot convert " <> pShow x <> "\n to " <> pShow to
+  (_         , _     ) -> error $ TL.unpack $ "cannot convert " <> pShow x <> "\n to " <> pShow to

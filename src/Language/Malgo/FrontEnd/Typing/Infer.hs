@@ -36,7 +36,7 @@ data Typing
 instance Pass Typing (Expr (Id ())) (Expr (Id Type)) where
   passName = "Typing"
   isDump   = dumpTyped
-  trans e = evaluatingStateT mempty $ do
+  trans e = evalStateT ?? mempty $ do
     _   <- typingExpr e
     env <- get
 
@@ -117,8 +117,9 @@ typingExpr (Call pos fn args) = applySubst $ do
   updateSubst pos [TyApp FunC (retTy : argTypes) :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = do
-  paramTypes <- evaluatingStateT mempty
-    $ traverse (\(_, t) -> mapM toType t `whenNothingM` newTyMeta) params
+  paramTypes <- evalStateT ?? mempty $ traverse
+    (\(_, t) -> fromMaybe <$> newTyMeta <*> traverse toType t)
+    params
   zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
   retType <- typingExpr body
   pure $ paramTypes --> retType
@@ -127,7 +128,7 @@ typingExpr (Let _ (ValDec pos name mtyp val) body) = applySubst $ do
   env     <- get
   valType <- typingExpr val
 
-  whenJust mtyp $ \typ -> do
+  for_ mtyp $ \typ -> do
     typ' <- evalStateT (toType typ) mempty
     updateSubst pos [valType :~ typ']
 
@@ -145,9 +146,10 @@ typingExpr (Let _ (FunDec fs) e) = do
   env <- get
   for_ fs $ \(_, f, _, _, _) -> defineVar f . Forall [] =<< newTyMeta
   for_ fs $ \(pos, f, params, mretType, body) -> letVar env f <=< applySubst $ do
-    (paramTypes, s) <- usingStateT mempty
-      $ traverse (\(_, t) -> traverse toType t `whenNothingM` newTyMeta) params
-    retType <- evalStateT (mapM toType mretType) s `whenNothingM` newTyMeta
+    (paramTypes, s) <- runStateT ?? mempty $ traverse
+      (\(_, t) -> fromMaybe <$> newTyMeta <*> traverse toType t)
+      params
+    retType <- fromMaybe <$> newTyMeta <*> evalStateT (mapM toType mretType) s
 
     zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
 
@@ -220,7 +222,7 @@ isValue _            = False
 toType :: MonadUniq m => SType (Id ()) -> StateT (Map (Id ()) Type) m Type
 toType (TyVar x) = do
   kvs <- get
-  (kvs ^. at x) `whenNothing` do
+  (fromMaybe ?? kvs ^. at x) <$> do
     t <- newTyMeta
     modify (at x ?~ t)
     pure t
