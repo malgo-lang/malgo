@@ -14,7 +14,9 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( ix
+                                                , op
+                                                )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.MIR         as M
@@ -22,10 +24,6 @@ import qualified Language.Malgo.IR.HIR         as H
 
 import           Language.Malgo.TypeRep.Type
 
-import           Control.Lens.Indexed           ( ifoldMap )
-import           Control.Lens.At                ( at )
-import           Control.Lens.Setter            ( (?~) )
-import           Control.Lens.Getter            ( (^.) )
 import           Data.Set                       ( intersection
                                                 , (\\)
                                                 )

@@ -21,7 +21,6 @@ import           Language.Malgo.IR.HIR
 import           Language.Malgo.TypeRep.Type
 
 import           Control.Exception              ( assert )
-import qualified Data.Text.Lazy                as TL
 import           Text.PrettyPrint.HughesPJClass ( ($+$)
                                                 , parens
                                                 , fsep

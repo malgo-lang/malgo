@@ -1,13 +1,13 @@
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE RecursiveDo #-}
+{-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RecursiveDo           #-}
+{-# LANGUAGE TupleSections         #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLLVM
   ( GenLLVM
   )
@@ -16,25 +16,29 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( from
+                                                , index
+                                                , op
+                                                , to
+                                                )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.LIR         as IR
 
 import           Language.Malgo.TypeRep.LType  as IR
 
-import           LLVM.AST.Constant              ( Constant(..) )
-import           LLVM.AST.Operand               ( Operand(..) )
-import           LLVM.AST.Type           hiding ( double
-                                                , void
-                                                )
-import           LLVM.IRBuilder
 import qualified LLVM.AST
+import           LLVM.AST.Constant              ( Constant(..) )
 import qualified LLVM.AST.Constant             as C
 import qualified LLVM.AST.FloatingPointPredicate
                                                as FP
 import qualified LLVM.AST.IntegerPredicate     as IP
+import           LLVM.AST.Operand               ( Operand(..) )
+import           LLVM.AST.Type           hiding ( double
+                                                , void
+                                                )
 import qualified LLVM.AST.Type                 as LT
+import           LLVM.IRBuilder
 import qualified LLVM.IRBuilder                as IRBuilder
 
 import qualified Data.Map                      as Map
@@ -65,8 +69,7 @@ type PrimMap = Map String Operand
 
 -- dumpLLVM :: MonadIO m => ModuleBuilderT (ReaderT GenState m) a -> m [LLVM.AST.Definition]
 dumpLLVM :: GenDec a -> MalgoM [LLVM.AST.Definition]
-dumpLLVM m =
-  evalStateT ?? mempty $ runReaderT ?? mempty $ execModuleBuilderT emptyModuleBuilder m
+dumpLLVM m = evalStateT ?? mempty $ runReaderT ?? mempty $ execModuleBuilderT emptyModuleBuilder m
 
 convertType :: LType -> Type
 convertType (Ptr x)         = ptr (convertType x)

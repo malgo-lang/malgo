@@ -15,7 +15,10 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( lens
+                                                , ix
+                                                , op
+                                                )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.Syntax
@@ -23,11 +26,7 @@ import           Language.Malgo.IR.Syntax
 import           Language.Malgo.TypeRep.SType
 
 import           Control.Monad.Cont
-import           Control.Lens            hiding ( ix
-                                                , op
-                                                , lens
-                                                )
-import qualified Data.Map as Map
+import qualified Data.Map                      as Map
 import           Text.Parsec.Pos                ( SourcePos )
 
 data Known = Known { _var :: Map String (Id ())

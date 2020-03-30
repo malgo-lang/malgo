@@ -14,7 +14,9 @@ module Language.Malgo.IR.HIR
   )
 where
 
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( op
+                                                , ix
+                                                )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
@@ -24,7 +26,6 @@ import           Language.Malgo.IR.Op          as Export
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
-import           Data.List                      ( (!!) )
 import           Text.PrettyPrint.HughesPJClass ( braces
                                                 , sep
                                                 , punctuate

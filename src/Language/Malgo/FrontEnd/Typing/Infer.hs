@@ -13,7 +13,9 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( ix
+                                                , op
+                                                )
 
 import           Language.Malgo.IR.Syntax
 
@@ -24,11 +26,6 @@ import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
 import           Text.Parsec.Pos                ( SourcePos )
-import           Control.Lens.Setter            ( (.~)
-                                                , (?~)
-                                                )
-import           Control.Lens.At                ( at )
-import           Control.Lens.Getter            ( (^.) )
 import           Data.Set                       ( (\\) )
 
 data Typing

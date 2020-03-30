@@ -1,16 +1,16 @@
-{-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE DeriveFoldable #-}
-{-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE DeriveFoldable             #-}
+{-# LANGUAGE DeriveFunctor              #-}
+{-# LANGUAGE DeriveTraversable          #-}
+{-# LANGUAGE DerivingVia                #-}
+{-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuantifiedConstraints #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE NamedFieldPuns             #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE NoMonomorphismRestriction  #-}
+{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE QuantifiedConstraints      #-}
+{-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.Id
   ( Id(..)
   , nameL
@@ -27,15 +27,18 @@ import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
 
-import           Control.Lens.Combinators
 import           Data.Functor.Classes
 import           Data.IntMap                    ( IntMap )
 import qualified Data.IntMap                   as IntMap
 import           GHC.Exts                       ( IsList(..) )
 import           Text.PrettyPrint.HughesPJClass ( text )
 
-data Id a = Id { idName :: String, idUniq :: Int, idMeta :: a }
-  deriving stock (Show, Eq, Ord, Functor, Foldable)
+data Id a = Id
+    { idName :: String
+    , idUniq :: Int
+    , idMeta :: a
+    }
+    deriving stock (Show, Eq, Ord, Functor, Foldable)
 
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n u m) = text n <> "." <> text (show u) <> "<" <> pPrint m <> ">"

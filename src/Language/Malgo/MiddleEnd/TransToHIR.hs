@@ -18,7 +18,6 @@ import           Language.Malgo.IR.HIR
 import qualified Language.Malgo.IR.Syntax      as S
 
 import           Language.Malgo.TypeRep.Type
-import           Control.Lens.Indexed           ( ifor_ )
 
 data TransToHIR
 

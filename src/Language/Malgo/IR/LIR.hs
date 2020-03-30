@@ -6,14 +6,18 @@
 {-# LANGUAGE ViewPatterns #-}
 module Language.Malgo.IR.LIR where
 
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( index
+                                                , from
+                                                , to
+                                                , op
+                                                )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.LType
 
 import           Data.Int
 import           Data.Word
-import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Lazy                as TL
 import           Text.PrettyPrint.HughesPJClass ( ($$)
                                                 , vcat
                                                 , parens

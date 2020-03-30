@@ -28,7 +28,6 @@ import           Language.Malgo.BackEnd.LIRBuilder
                                                as L
 
 import           Data.Char                      ( ord )
-import qualified Data.Map                      as Map
 import qualified Data.Text.Lazy                as TL
 
 data GenLIR

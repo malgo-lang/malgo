@@ -5,7 +5,9 @@
 {-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.IR.MIR where
 
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( ix
+                                                , op
+                                                )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.HIR          ( Lit(..)
@@ -14,7 +16,6 @@ import           Language.Malgo.IR.HIR          ( Lit(..)
 
 import           Language.Malgo.TypeRep.Type
 
-import           Data.List                      ( (!!) )
 import           Text.PrettyPrint.HughesPJClass ( vcat
                                                 , ($$)
                                                 , ($+$)

@@ -14,7 +14,7 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( ix )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.MIR

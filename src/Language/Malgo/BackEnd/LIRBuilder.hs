@@ -36,7 +36,10 @@ where
 
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( from
+                                                , to
+                                                , index
+                                                )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.LIR

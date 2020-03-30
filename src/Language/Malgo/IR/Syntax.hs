@@ -12,7 +12,9 @@ module Language.Malgo.IR.Syntax
   )
 where
 
-import           Language.Malgo.Prelude
+import           Language.Malgo.Prelude  hiding ( ix
+                                                , op
+                                                )
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
