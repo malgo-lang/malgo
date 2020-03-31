@@ -1,31 +1,34 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE PatternSynonyms    #-}
 module Language.Malgo.TypeRep.Type where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import           Text.PrettyPrint.HughesPJClass ( parens
-                                                , sep
-                                                , punctuate
-                                                , braces
-                                                )
+import           Text.PrettyPrint.HughesPJClass (braces, parens, punctuate, sep)
 
 type TyVar = Int
 
 data Scheme = Forall [TyVar] Type
-  deriving stock (Eq, Show, Ord)
+    deriving stock (Eq, Show, Ord)
 
 -- | Malgoの組み込みデータ型
 data Type = TyApp TyCon [Type]
-          | TyMeta TyVar
-          | Kind
-  deriving stock (Eq, Show, Ord)
+    | TyMeta TyVar
+    | Kind
+    deriving stock (Eq, Show, Ord)
 
-data TyCon = FunC | IntC | FloatC | BoolC | CharC | StringC | TupleC | ArrayC
-  deriving stock (Eq, Show, Ord)
+data TyCon = FunC
+    | IntC
+    | FloatC
+    | BoolC
+    | CharC
+    | StringC
+    | TupleC
+    | ArrayC
+    deriving stock (Eq, Show, Ord)
 
 instance Pretty Scheme where
   pPrint (Forall ts t) = "forall" <+> sep (map pPrint ts) <> "." <+> pPrint t

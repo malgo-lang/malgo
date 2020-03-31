@@ -1,35 +1,31 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE NamedFieldPuns     #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE PatternSynonyms    #-}
 module Language.Malgo.TypeRep.LType where
 
 import           Language.Malgo.Id
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import qualified Data.Text.Lazy as TL
-import           Text.PrettyPrint.HughesPJClass ( braces
-                                                , sep
-                                                , punctuate
-                                                , parens
-                                                , text
-                                                )
+import qualified Data.Text.Lazy                 as TL
+import           Text.PrettyPrint.HughesPJClass (braces, parens, punctuate, sep,
+                                                 text)
 
 data LType = Ptr LType
-           | Bit
-           | I32
-           | I64
-           | U8
-           | U32
-           | U64
-           | F64
-           | SizeT
-           | Struct [LType]
-           | Function LType [LType]
-           | Void
-  deriving stock (Eq, Ord, Show)
+    | Bit
+    | I32
+    | I64
+    | U8
+    | U32
+    | U64
+    | F64
+    | SizeT
+    | Struct [LType]
+    | Function LType [LType]
+    | Void
+    deriving stock (Eq, Ord, Show)
 
 instance Pretty LType where
   pPrint (Ptr    t ) = pPrint t <> "*"

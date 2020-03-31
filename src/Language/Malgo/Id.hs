@@ -22,16 +22,16 @@ module Language.Malgo.Id
 where
 
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude  hiding ( toList )
+import           Language.Malgo.Prelude         hiding (toList)
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
 
 import           Data.Functor.Classes
-import           Data.IntMap                    ( IntMap )
-import qualified Data.IntMap                   as IntMap
-import           GHC.Exts                       ( IsList(..) )
-import           Text.PrettyPrint.HughesPJClass ( text )
+import           Data.IntMap                    (IntMap)
+import qualified Data.IntMap                    as IntMap
+import           GHC.Exts                       (IsList (..))
+import           Text.PrettyPrint.HughesPJClass (text)
 
 data Id a = Id
     { idName :: String

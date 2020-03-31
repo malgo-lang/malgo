@@ -1,7 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE StrictData #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE StrictData         #-}
 module Language.Malgo.Token
   ( Token(..)
   , Tag(..)
@@ -13,12 +13,10 @@ where
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import qualified Text.PrettyPrint.HughesPJClass
-                                               as P
-import           Text.Parsec.Pos                ( SourcePos )
+import           Text.Parsec.Pos                (SourcePos)
+import qualified Text.PrettyPrint.HughesPJClass as P
 
-data Tag
-    = LET
+data Tag = LET
     | IN
     | VAL
     | FUN
@@ -65,13 +63,27 @@ data Tag
     | DARROW
     | MATCH
     | WITH
-    | ID { _id :: String }
-    | LID { _lid :: String }
-    | INT { _int :: Integer }
-    | FLOAT { _float :: Double }
-    | BOOL { _bool :: Bool }
-    | CHAR { _char :: Char }
-    | STRING { _str :: String }
+    | ID
+    { _id :: String
+    }
+    | LID
+    { _lid :: String
+    }
+    | INT
+    { _int :: Integer
+    }
+    | FLOAT
+    { _float :: Double
+    }
+    | BOOL
+    { _bool :: Bool
+    }
+    | CHAR
+    { _char :: Char
+    }
+    | STRING
+    { _str :: String
+    }
     | TY_INT
     | TY_FLOAT
     | TY_BOOL

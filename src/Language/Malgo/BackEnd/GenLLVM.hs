@@ -16,32 +16,25 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude  hiding ( from
-                                                , index
-                                                , op
-                                                , to
-                                                )
+import           Language.Malgo.Prelude          hiding (from, index, op, to)
 import           Language.Malgo.Pretty
 
-import           Language.Malgo.IR.LIR         as IR
+import           Language.Malgo.IR.LIR           as IR
 
-import           Language.Malgo.TypeRep.LType  as IR
+import           Language.Malgo.TypeRep.LType    as IR
 
 import qualified LLVM.AST
-import           LLVM.AST.Constant              ( Constant(..) )
-import qualified LLVM.AST.Constant             as C
-import qualified LLVM.AST.FloatingPointPredicate
-                                               as FP
-import qualified LLVM.AST.IntegerPredicate     as IP
-import           LLVM.AST.Operand               ( Operand(..) )
-import           LLVM.AST.Type           hiding ( double
-                                                , void
-                                                )
-import qualified LLVM.AST.Type                 as LT
+import           LLVM.AST.Constant               (Constant (..))
+import qualified LLVM.AST.Constant               as C
+import qualified LLVM.AST.FloatingPointPredicate as FP
+import qualified LLVM.AST.IntegerPredicate       as IP
+import           LLVM.AST.Operand                (Operand (..))
+import           LLVM.AST.Type                   hiding (double, void)
+import qualified LLVM.AST.Type                   as LT
 import           LLVM.IRBuilder
-import qualified LLVM.IRBuilder                as IRBuilder
+import qualified LLVM.IRBuilder                  as IRBuilder
 
-import qualified Data.Map                      as Map
+import qualified Data.Map                        as Map
 
 data GenLLVM
 

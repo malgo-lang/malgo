@@ -1,30 +1,26 @@
-{-# LANGUAGE DeriveFoldable #-}
-{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveFoldable     #-}
+{-# LANGUAGE DeriveFunctor      #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
 module Language.Malgo.TypeRep.SType where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import           Text.PrettyPrint.HughesPJClass ( parens
-                                                , sep
-                                                , punctuate
-                                                , braces
-                                                , brackets
-                                                )
+import           Text.PrettyPrint.HughesPJClass (braces, brackets, parens,
+                                                 punctuate, sep)
 
 data SType a = TyVar a
-             | TyInt
-             | TyFloat
-             | TyBool
-             | TyChar
-             | TyString
-             | TyFun [SType a] (SType a)
-             | TyTuple [SType a]
-             | TyArray (SType a)
-  deriving stock (Eq, Show, Functor, Foldable)
+    | TyInt
+    | TyFloat
+    | TyBool
+    | TyChar
+    | TyString
+    | TyFun [SType a] (SType a)
+    | TyTuple [SType a]
+    | TyArray (SType a)
+    deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (SType a) where
   pPrint (TyVar x)       = pPrint x

@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -F -pgmF hspec-discover #-}
 
+import           Prelude
 import           Test.Hspec
-import Prelude
 
 spec = return ()
 

@@ -45,13 +45,6 @@ module Language.Malgo.Prelude
   )
 where
 
--- import           Relude                  hiding ( Constraint
---                                                 , Type
---                                                 , Op
---                                                 , unzip
---                                                 , pass
---                                                 , return
---                                                 )
 import           Control.Applicative
 import           Control.Exception
 import           Control.Lens
@@ -60,44 +53,31 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Reader.Class
 import           Control.Monad.State.Class
 import           Control.Monad.Trans
-import           Control.Monad.Trans.Except     ( ExceptT(..) )
-import           Control.Monad.Trans.Reader     ( ReaderT(..)
-                                                , runReader
-                                                , runReaderT
-                                                )
-import           Control.Monad.Trans.State.Strict
-                                                ( StateT(..)
-                                                , evalStateT
-                                                , execStateT
-                                                , runStateT
-                                                )
-import           Control.Monad.Trans.Writer.CPS ( WriterT
-                                                , runWriterT
-                                                )
-import qualified Control.Monad.Trans.Writer.CPS
-                                               as W
+import           Control.Monad.Trans.Except       (ExceptT (..))
+import           Control.Monad.Trans.Reader       (ReaderT (..), runReader,
+                                                   runReaderT)
+import           Control.Monad.Trans.State.Strict (StateT (..), evalStateT,
+                                                   execStateT, runStateT)
+import           Control.Monad.Trans.Writer.CPS   (WriterT, runWriterT)
+import qualified Control.Monad.Trans.Writer.CPS   as W
 import           Control.Monad.Writer.Class
 import           Data.Bifunctor
 import           Data.Bitraversable
 import           Data.Coerce
 import           Data.Foldable
-import           Data.List.NonEmpty             ( NonEmpty(..) )
+import           Data.List.NonEmpty               (NonEmpty (..))
+import           Data.Map                         (Map)
 import           Data.Maybe
-import           Data.Map                       ( Map )
 import           Data.Monoid
-import           Data.Set                       ( Set )
-import qualified Data.Set                      as Set
-import           Data.String                    ( IsString(..) )
-import           Data.Text                      ( Text )
+import           Data.Set                         (Set)
+import qualified Data.Set                         as Set
+import           Data.String                      (IsString (..))
+import           Data.Text                        (Text)
 import           Data.Typeable
-import           GHC.Stack                      ( HasCallStack )
-import           Prelude                 hiding ( log
-                                                , unzip
-                                                )
-import           Text.Parsec.Pos                ( SourcePos )
-import           Text.PrettyPrint.HughesPJClass ( Pretty(..)
-                                                , text
-                                                )
+import           GHC.Stack                        (HasCallStack)
+import           Prelude                          hiding (log, unzip)
+import           Text.Parsec.Pos                  (SourcePos)
+import           Text.PrettyPrint.HughesPJClass   (Pretty (..), text)
 
 -- | unzip :: [(a, b)] -> ([a], [b]) の一般化
 unzip :: Functor f => f (a, b) -> (f a, f b)

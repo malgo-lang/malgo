@@ -1,9 +1,7 @@
 import           Distribution.Simple
-import           Distribution.Simple.Setup      ( BuildFlags )
-import           Distribution.Types.HookedBuildInfo
-                                                ( HookedBuildInfo
-                                                , emptyHookedBuildInfo
-                                                )
+import           Distribution.Simple.Setup          (BuildFlags)
+import           Distribution.Types.HookedBuildInfo (HookedBuildInfo,
+                                                     emptyHookedBuildInfo)
 import           Hpack
 
 main = do

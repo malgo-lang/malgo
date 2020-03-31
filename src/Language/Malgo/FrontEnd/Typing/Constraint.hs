@@ -1,7 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts   #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
 module Language.Malgo.FrontEnd.Typing.Constraint
   ( Constraint(..)
   , solve
@@ -17,11 +17,11 @@ import           Language.Malgo.TypeRep.Type
 
 import           Language.Malgo.FrontEnd.Typing.Subst
 
-import qualified Data.Map as Map
+import qualified Data.Map                             as Map
 
 infixl 5 :~
 data Constraint = Type :~ Type
-  deriving stock (Eq, Show)
+    deriving stock (Eq, Show)
 
 instance Substitutable Constraint where
   apply s (t1 :~ t2) = apply s t1 :~ apply s t2

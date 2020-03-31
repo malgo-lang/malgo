@@ -1,12 +1,12 @@
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DerivingStrategies    #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TupleSections         #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.Rename
   ( Rename
   )
@@ -15,10 +15,7 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude  hiding ( lens
-                                                , ix
-                                                , op
-                                                )
+import           Language.Malgo.Prelude       hiding (ix, lens, op)
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.Syntax
@@ -26,12 +23,13 @@ import           Language.Malgo.IR.Syntax
 import           Language.Malgo.TypeRep.SType
 
 import           Control.Monad.Cont
-import qualified Data.Map                      as Map
-import           Text.Parsec.Pos                ( SourcePos )
+import qualified Data.Map                     as Map
+import           Text.Parsec.Pos              (SourcePos)
 
-data Known = Known { _var :: Map String (Id ())
-                   , _tyVar :: Map String (Id ())
-                   }
+data Known = Known
+    { _var   :: Map String (Id ())
+    , _tyVar :: Map String (Id ())
+    }
 
 makeLenses ''Known
 

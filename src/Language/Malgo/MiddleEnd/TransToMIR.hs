@@ -1,11 +1,11 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE MultiWayIf            #-}
+{-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
 module Language.Malgo.MiddleEnd.TransToMIR
   ( TransToMIR
   )
@@ -14,20 +14,16 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude  hiding ( ix
-                                                , op
-                                                )
+import           Language.Malgo.Prelude      hiding (ix, op)
 import           Language.Malgo.Pretty
 
-import           Language.Malgo.IR.MIR         as M
-import qualified Language.Malgo.IR.HIR         as H
+import qualified Language.Malgo.IR.HIR       as H
+import           Language.Malgo.IR.MIR       as M
 
 import           Language.Malgo.TypeRep.Type
 
-import           Data.Set                       ( intersection
-                                                , (\\)
-                                                )
-import qualified Data.Set                      as Set
+import           Data.Set                    (intersection, (\\))
+import qualified Data.Set                    as Set
 
 data TransToMIR
 
@@ -39,9 +35,10 @@ instance Pass TransToMIR (H.Expr (Id Type)) (Program (Id Type)) where
     fs <- gets toList
     pure (Program fs e')
 
-data Env = Env { knowns   :: [Id Type]
-               , mutrecs  :: [Id Type]
-               }
+data Env = Env
+    { knowns  :: [Id Type]
+    , mutrecs :: [Id Type]
+    }
 
 type FuncMap = Map (Id Type) (Func (Id Type))
 

@@ -1,9 +1,9 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.FrontEnd.Typing.Infer
   ( Typing
   , generalize
@@ -13,20 +13,18 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude  hiding ( ix
-                                                , op
-                                                )
+import           Language.Malgo.Prelude                    hiding (ix, op)
 
 import           Language.Malgo.IR.Syntax
 
-import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.TypeRep.SType
+import           Language.Malgo.TypeRep.Type
 
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
-import           Text.Parsec.Pos                ( SourcePos )
-import           Data.Set                       ( (\\) )
+import           Data.Set                                  ((\\))
+import           Text.Parsec.Pos                           (SourcePos)
 
 data Typing
 

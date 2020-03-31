@@ -1,41 +1,39 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NamedFieldPuns     #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE TypeFamilies       #-}
 module Language.Malgo.IR.MIR where
 
-import           Language.Malgo.Prelude  hiding ( ix
-                                                , op
-                                                )
+import           Language.Malgo.Prelude         hiding (ix, op)
 import           Language.Malgo.Pretty
 
-import           Language.Malgo.IR.HIR          ( Lit(..)
-                                                , Op(..)
-                                                )
+import           Language.Malgo.IR.HIR          (Lit (..), Op (..))
 
 import           Language.Malgo.TypeRep.Type
 
-import           Text.PrettyPrint.HughesPJClass ( vcat
-                                                , ($$)
-                                                , ($+$)
-                                                , nest
-                                                , brackets
-                                                , sep
-                                                , braces
-                                                , punctuate
-                                                , parens
-                                                )
+import           Text.PrettyPrint.HughesPJClass (braces, brackets, nest, parens,
+                                                 punctuate, sep, vcat, ($$),
+                                                 ($+$))
 
-data Program a = Program { functions :: [Func a], mainExpr :: Expr a }
-  deriving stock (Eq, Show)
+data Program a = Program
+    { functions :: [Func a]
+    , mainExpr  :: Expr a
+    }
+    deriving stock (Eq, Show)
 
 instance Pretty a => Pretty (Program a) where
   pPrint Program { functions, mainExpr } =
     vcat (map pPrint functions) $$ "entry point =" $+$ nest 2 (pPrint mainExpr)
 
-data Func a = Func { name :: a, captures :: Maybe [a], mutrecs :: [a], params :: [a], body :: Expr a }
-  deriving stock (Eq, Show)
+data Func a = Func
+    { name     :: a
+    , captures :: Maybe [a]
+    , mutrecs  :: [a]
+    , params   :: [a]
+    , body     :: Expr a
+    }
+    deriving stock (Eq, Show)
 
 instance Pretty a => Pretty (Func a) where
   pPrint Func { name, captures, params, body } = case captures of
@@ -46,30 +44,21 @@ instance Pretty a => Pretty (Func a) where
     Nothing -> pPrint name <+> sep (map pPrint params) <+> "=" $+$ nest 2 (pPrint body)
 
 data Expr a = Var a
-            | Lit Lit
-            | Tuple [a]
-            | TupleAccess a Int
-            | MakeArray
-              a -- init
-              a -- size
-            | ArrayRead
-              a -- array
-              a -- index
-            | ArrayWrite
-              a -- array
-              a -- index
-              a -- value
-            | MakeClosure
-              a -- function
-              [a] -- captured variables (may recursive)
-            | CallDirect a [a] -- direct call
-            | CallWithCaptures a [a] -- indirect call for mutrec functions
-            | CallClosure a [a] -- indirect call
-            | Let a (Expr a) (Expr a)
-            | If a (Expr a) (Expr a)
-            | Prim String Type [a]
-            | BinOp Op a a
-  deriving stock (Eq, Show)
+    | Lit Lit
+    | Tuple [a]
+    | TupleAccess a Int
+    | MakeArray a a
+    | ArrayRead a a
+    | ArrayWrite a a a
+    | MakeClosure a [a]
+    | CallDirect a [a]
+    | CallWithCaptures a [a]
+    | CallClosure a [a]
+    | Let a (Expr a) (Expr a)
+    | If a (Expr a) (Expr a)
+    | Prim String Type [a]
+    | BinOp Op a a
+    deriving stock (Eq, Show)
 
 flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) = go (flattenExpr v1)

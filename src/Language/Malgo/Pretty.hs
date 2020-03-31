@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 module Language.Malgo.Pretty
   ( module Text.PrettyPrint.HughesPJClass
@@ -11,15 +11,12 @@ where
 
 import           Language.Malgo.Prelude
 
-import qualified Data.Text                     as T
-import qualified Data.Text.Lazy                as TL
+import qualified Data.Text                      as T
+import qualified Data.Text.Lazy                 as TL
 import qualified Prelude
-import           Text.Pretty.Simple             ( pShow )
-import           Text.PrettyPrint.HughesPJClass ( Pretty(..)
-                                                , Doc
-                                                )
-import qualified Text.PrettyPrint.HughesPJClass
-                                               as P
+import           Text.Pretty.Simple             (pShow)
+import           Text.PrettyPrint.HughesPJClass (Doc, Pretty (..))
+import qualified Text.PrettyPrint.HughesPJClass as P
 
 -- change operator precedence
 infixl 9 <+>

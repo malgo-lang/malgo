@@ -1,16 +1,29 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
 module Language.Malgo.IR.Op where
 
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-data Op = Add | Sub | Mul | Div | Mod
-        | FAdd | FSub | FMul | FDiv
-        | Eq | Neq | Lt | Gt | Le | Ge
-        | And | Or
-  deriving stock (Eq, Show)
+data Op = Add
+    | Sub
+    | Mul
+    | Div
+    | Mod
+    | FAdd
+    | FSub
+    | FMul
+    | FDiv
+    | Eq
+    | Neq
+    | Lt
+    | Gt
+    | Le
+    | Ge
+    | And
+    | Or
+    deriving stock (Eq, Show)
 
 instance Pretty Op where
   pPrint Add  = "+"

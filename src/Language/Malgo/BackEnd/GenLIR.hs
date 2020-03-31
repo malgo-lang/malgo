@@ -1,11 +1,11 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.BackEnd.GenLIR
   ( GenLIR
   )
@@ -17,18 +17,17 @@ import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import           Language.Malgo.IR.HIR         as H
-import           Language.Malgo.IR.LIR         as L
-import           Language.Malgo.IR.MIR         as M
+import           Language.Malgo.IR.HIR             as H
+import           Language.Malgo.IR.LIR             as L
+import           Language.Malgo.IR.MIR             as M
 
-import           Language.Malgo.TypeRep.LType  as L
-import           Language.Malgo.TypeRep.Type   as M
+import           Language.Malgo.TypeRep.LType      as L
+import           Language.Malgo.TypeRep.Type       as M
 
-import           Language.Malgo.BackEnd.LIRBuilder
-                                               as L
+import           Language.Malgo.BackEnd.LIRBuilder as L
 
-import           Data.Char                      ( ord )
-import qualified Data.Text.Lazy                as TL
+import           Data.Char                         (ord)
+import qualified Data.Text.Lazy                    as TL
 
 data GenLIR
 

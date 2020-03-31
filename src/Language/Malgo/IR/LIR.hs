@@ -1,43 +1,39 @@
-{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingStrategies    #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ViewPatterns #-}
+{-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE ViewPatterns          #-}
 module Language.Malgo.IR.LIR where
 
-import           Language.Malgo.Prelude  hiding ( index
-                                                , from
-                                                , to
-                                                , op
-                                                )
+import           Language.Malgo.Prelude         hiding (from, index, op, to)
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.LType
 
 import           Data.Int
+import qualified Data.Text.Lazy                 as TL
 import           Data.Word
-import qualified Data.Text.Lazy                as TL
-import           Text.PrettyPrint.HughesPJClass ( ($$)
-                                                , vcat
-                                                , parens
-                                                , sep
-                                                , punctuate
-                                                , ($+$)
-                                                , nest
-                                                , brackets
-                                                , text
-                                                )
+import           Text.PrettyPrint.HughesPJClass (brackets, nest, parens,
+                                                 punctuate, sep, text, vcat,
+                                                 ($$), ($+$))
 
-data Program a = Program { functions :: [Func a], mainFunc :: Block a }
-  deriving stock (Eq, Show)
+data Program a = Program
+    { functions :: [Func a]
+    , mainFunc  :: Block a
+    }
+    deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Program a) where
   pPrint Program { functions, mainFunc } =
     "program" <+> pPrint mainFunc $$ vcat (map pPrint functions)
 
-data Func a = Func { name :: a, params :: [a], body :: Block a }
-  deriving stock (Eq, Show)
+data Func a = Func
+    { name   :: a
+    , params :: [a]
+    , body   :: Block a
+    }
+    deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Func a) where
   pPrint Func { name, params, body } =
@@ -52,8 +48,11 @@ instance (HasLType a, Pretty a) => Pretty (Func a) where
 instance HasLType a => HasLType (Func a) where
   ltypeOf Func { name } = ltypeOf name
 
-data Block a = Block { insns :: [Insn a], value :: a }
-  deriving stock (Eq, Show)
+data Block a = Block
+    { insns :: [Insn a]
+    , value :: a
+    }
+    deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Block a) where
   pPrint Block { insns, value } =
@@ -63,13 +62,10 @@ instance HasLType a => HasLType (Block a) where
   ltypeOf Block { value = x } = ltypeOf x
 
 data Insn a = Assign a (Expr a)
-            | StoreC a [Int] a
-            | Store a [a] a
-            | For a -- ^ index
-                  a -- ^ from
-                  a -- ^ to
-                  (Block a) -- ^ body
-  deriving stock (Eq, Show)
+    | StoreC a [Int] a
+    | Store a [a] a
+    | For a a a (Block a)
+    deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Insn a) where
   pPrint (Assign x e   ) = pPrint x <> ":" <> pPrint (ltypeOf x) <+> "=" <+> pPrint e
@@ -86,21 +82,20 @@ instance (HasLType a, Pretty a) => Pretty (Insn a) where
       <+> pPrint body
 
 data Expr a = Constant Constant
-            | Call a [a]
-            | CallExt String LType [a]
-            | ArrayCreate LType -- ^ type of element
-                          a -- ^ size
-            | Alloca LType
-            | LoadC a [Int]
-            | Load LType a [a]
-            | Cast LType a
-            | Trunc LType a
-            | Zext LType a
-            | Sext LType a
-            | Undef LType
-            | BinOp Op a a
-            | If a (Block a) (Block a)
-  deriving stock (Eq, Show)
+    | Call a [a]
+    | CallExt String LType [a]
+    | ArrayCreate LType a
+    | Alloca LType
+    | LoadC a [Int]
+    | Load LType a [a]
+    | Cast LType a
+    | Trunc LType a
+    | Zext LType a
+    | Sext LType a
+    | Undef LType
+    | BinOp Op a a
+    | If a (Block a) (Block a)
+    deriving stock (Eq, Show)
 
 instance (HasLType a, Pretty a) => Pretty (Expr a) where
   pPrint (Constant c) = pPrint c
@@ -137,14 +132,14 @@ instance (HasLType a, Show a) => HasLType (Expr a) where
   ltypeOf _ = bug Unreachable
 
 data Constant = Bool Bool
-              | Int32 Int32
-              | Int64 Int64
-              | Word8 Word8
-              | Word32 Word32
-              | Word64 Word64
-              | Float64 Double
-              | String String
-  deriving stock (Eq, Show)
+    | Int32 Int32
+    | Int64 Int64
+    | Word8 Word8
+    | Word32 Word32
+    | Word64 Word64
+    | Float64 Double
+    | String String
+    deriving stock (Eq, Show)
 
 instance Pretty Constant where
   pPrint = text . TL.unpack . pShow
@@ -159,15 +154,36 @@ instance HasLType Constant where
   ltypeOf Float64{} = F64
   ltypeOf String{}  = Ptr U8
 
-data Op = ADD  | SUB  | MUL  | SDIV | SREM | UDIV | UREM
-        | FADD | FSUB | FMUL | FDIV
-        | IEQ | INE
-        | SLT | SGT | SLE | SGE
-        | ULT | UGT | ULE | UGE
-        | FEQ | FNE
-        | FLT | FGT | FLE | FGE
-        | AND | OR
-  deriving stock (Eq, Show)
+data Op = ADD
+    | SUB
+    | MUL
+    | SDIV
+    | SREM
+    | UDIV
+    | UREM
+    | FADD
+    | FSUB
+    | FMUL
+    | FDIV
+    | IEQ
+    | INE
+    | SLT
+    | SGT
+    | SLE
+    | SGE
+    | ULT
+    | UGT
+    | ULE
+    | UGE
+    | FEQ
+    | FNE
+    | FLT
+    | FGT
+    | FLE
+    | FGE
+    | AND
+    | OR
+    deriving stock (Eq, Show)
 
 instance Pretty Op where
   pPrint = text . TL.unpack . pShow

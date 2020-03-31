@@ -1,11 +1,11 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.MiddleEnd.MIRLint
   ( MIRLint
   )
@@ -14,19 +14,18 @@ where
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
 import           Language.Malgo.Pass
-import           Language.Malgo.Prelude  hiding ( ix )
+import           Language.Malgo.Prelude                    hiding (ix)
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.MIR
 
 import           Language.Malgo.FrontEnd.Typing.Constraint
-import           Language.Malgo.FrontEnd.Typing.Infer
-                                                ( generalize )
+import           Language.Malgo.FrontEnd.Typing.Infer      (generalize)
 
 import           Language.Malgo.TypeRep.Type
 
-import           Control.Exception              ( assert )
-import           Text.PrettyPrint.HughesPJClass ( ($+$) )
+import           Control.Exception                         (assert)
+import           Text.PrettyPrint.HughesPJClass            (($+$))
 
 data MIRLint
 
@@ -35,9 +34,10 @@ instance Pass MIRLint (Program (Id Type)) (Program (Id Type)) where
   isDump _ = False
   trans e@(Program fs _) = runReaderT (lintProgram e) (Env fs []) >> pure e
 
-data Env = Env { functions :: [Func (Id Type)]
-               , variables :: [Id Type]
-               }
+data Env = Env
+    { functions :: [Func (Id Type)]
+    , variables :: [Id Type]
+    }
 
 definedVar :: (MonadReader Env m, MonadIO m) => Id Type -> m ()
 definedVar a = (assert ?? ()) <$> (elem a <$> asks variables)

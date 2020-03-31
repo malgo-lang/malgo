@@ -1,8 +1,8 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NamedFieldPuns     #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE TypeFamilies       #-}
 module Language.Malgo.IR.HIR
   ( module Export
   , Expr(..)
@@ -14,64 +14,54 @@ module Language.Malgo.IR.HIR
   )
 where
 
-import           Language.Malgo.Prelude  hiding ( op
-                                                , ix
-                                                )
+import           Language.Malgo.Prelude                    hiding (ix, op)
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.TypeRep.Type
 
-import           Language.Malgo.IR.Op          as Export
+import           Language.Malgo.IR.Op                      as Export
 
 import           Language.Malgo.FrontEnd.Typing.Constraint
 import           Language.Malgo.FrontEnd.Typing.Subst
 
-import           Text.PrettyPrint.HughesPJClass ( braces
-                                                , sep
-                                                , punctuate
-                                                , parens
-                                                , brackets
-                                                , ($+$)
-                                                , quotes
-                                                , doubleQuotes
-                                                )
+import           Text.PrettyPrint.HughesPJClass            (braces, brackets,
+                                                            doubleQuotes,
+                                                            parens, punctuate,
+                                                            quotes, sep, ($+$))
 
 data Expr a = Var a
-            | Lit Lit
-            | Tuple [a]
-            | TupleAccess a Int
-            | MakeArray
-              a -- init 
-              a -- size
-            | ArrayRead
-              a -- array
-              a -- index
-            | ArrayWrite
-              a -- array
-              a -- index
-              a -- value
-            | Call a [a]
-            | Let a (Expr a) (Expr a)
-            | LetRec [Def a] (Expr a)
-            | If a (Expr a) (Expr a)
-            | Prim String Type [a]
-            | BinOp Op a a
-            | Match a (NonEmpty (Pat a, Expr a))
-  deriving stock (Eq, Show)
+    | Lit Lit
+    | Tuple [a]
+    | TupleAccess a Int
+    | MakeArray a a
+    | ArrayRead a a
+    | ArrayWrite a a a
+    | Call a [a]
+    | Let a (Expr a) (Expr a)
+    | LetRec [Def a] (Expr a)
+    | If a (Expr a) (Expr a)
+    | Prim String Type [a]
+    | BinOp Op a a
+    | Match a (NonEmpty (Pat a, Expr a))
+    deriving stock (Eq, Show)
 
 data Pat a = VarP a
-           | TupleP [a]
-  deriving stock (Eq, Show)
+    | TupleP [a]
+    deriving stock (Eq, Show)
 
-data Def a = Def { name :: a, params :: [a], expr :: Expr a }
-  deriving stock (Eq, Show)
+data Def a = Def
+    { name   :: a
+    , params :: [a]
+    , expr   :: Expr a
+    }
+    deriving stock (Eq, Show)
 
 data Lit = Int Integer
-         | Float Double
-         | Bool Bool
-         | Char Char
-         | String String
-  deriving stock (Eq, Show)
+    | Float Double
+    | Bool Bool
+    | Char Char
+    | String String
+    deriving stock (Eq, Show)
 
 flattenExpr :: Expr a -> Expr a
 flattenExpr (Let x v1 e1) = go (flattenExpr v1)

@@ -1,15 +1,15 @@
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE DefaultSignatures #-}
-{-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE AllowAmbiguousTypes        #-}
+{-# LANGUAGE ConstraintKinds            #-}
+{-# LANGUAGE DefaultSignatures          #-}
+{-# LANGUAGE DerivingVia                #-}
+{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE RankNTypes                 #-}
+{-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.Monad
   ( MalgoM(..)
   , MalgoEnv(..)
@@ -27,41 +27,34 @@ where
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import           Colog                          ( HasLog(..)
-                                                , Message
-                                                , LogAction(..)
-                                                , Severity(..)
-                                                , richMessageAction
-                                                , cfilter
-                                                )
+import           Colog                  (HasLog (..), LogAction (..), Message,
+                                         Severity (..), cfilter,
+                                         richMessageAction)
 import qualified Colog
 import           Control.Monad.Fix
-import qualified Data.Text                     as T
-import           Text.PrettyPrint               ( ($$)
-                                                , text
-                                                )
-import           Text.Parsec.Pos                ( SourcePos
-                                                , sourceLine
-                                                )
+import qualified Data.Text              as T
+import           Text.Parsec.Pos        (SourcePos, sourceLine)
+import           Text.PrettyPrint       (text, ($$))
 
 data Opt = Opt
-  { srcName       :: String
-  , dstName       :: String
-  , dumpParsed    :: Bool
-  , dumpRenamed   :: Bool
-  , dumpTyped     :: Bool
-  , dumpKNormal   :: Bool
-  , dumpTypeTable :: Bool
-  , dumpClosure   :: Bool
-  , dumpLIR       :: Bool
-  , isDebugMode   :: Bool
-  } deriving stock (Eq, Show)
+    { srcName       :: String
+    , dstName       :: String
+    , dumpParsed    :: Bool
+    , dumpRenamed   :: Bool
+    , dumpTyped     :: Bool
+    , dumpKNormal   :: Bool
+    , dumpTypeTable :: Bool
+    , dumpClosure   :: Bool
+    , dumpLIR       :: Bool
+    , isDebugMode   :: Bool
+    }
+    deriving stock (Eq, Show)
 
 data MalgoEnv m = MalgoEnv
-  { maOption :: Opt
-  , maSource :: Text
-  , maLogAction :: LogAction m Message
-  }
+    { maOption    :: Opt
+    , maSource    :: Text
+    , maLogAction :: LogAction m Message
+    }
 
 newtype UniqSupply = UniqSupply { uniqSupply :: Int }
 

@@ -3,13 +3,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import qualified Data.Text.IO           as T
+import qualified Data.Text.Lazy         as TL
+import qualified Data.Text.Lazy.IO      as TL
 import           Language.Malgo.Driver
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
-import           LLVM.Pretty                    ( ppllvm )
-import qualified Data.Text.IO                  as T
-import qualified Data.Text.Lazy                as TL
-import qualified Data.Text.Lazy.IO             as TL
+import           LLVM.Pretty            (ppllvm)
 
 main :: IO ()
 main = do

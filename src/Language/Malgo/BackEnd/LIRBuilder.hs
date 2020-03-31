@@ -1,11 +1,11 @@
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE DerivingStrategies         #-}
+{-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NamedFieldPuns             #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE TupleSections              #-}
+{-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.BackEnd.LIRBuilder
   ( MonadProgramBuilder(..)
   , ProgramBuilderT
@@ -36,10 +36,7 @@ where
 
 import           Language.Malgo.Id
 import           Language.Malgo.Monad
-import           Language.Malgo.Prelude  hiding ( from
-                                                , to
-                                                , index
-                                                )
+import           Language.Malgo.Prelude       hiding (from, index, to)
 import           Language.Malgo.Pretty
 
 import           Language.Malgo.IR.LIR
@@ -47,9 +44,9 @@ import           Language.Malgo.IR.LIR
 import           Language.Malgo.TypeRep.LType
 import           Language.Malgo.TypeRep.Type
 
-import qualified Data.Text.Lazy                as TL
-import           Data.DList                     ( DList(..) )
-import qualified Data.DList                    as D
+import           Data.DList                   (DList (..))
+import qualified Data.DList                   as D
+import qualified Data.Text.Lazy               as TL
 
 newtype ProgramEnv = ProgramEnv { functionMap :: IdMap Type (Id LType) }
   deriving newtype (Semigroup, Monoid)
@@ -58,9 +55,10 @@ newtype ProgramState = ProgramState { functionList :: DList (Func (Id LType)) }
 
 newtype ExprEnv = ExprEnv { currentCaptures :: Maybe (Id LType) }
 
-data ExprState = ExprState { variableMap :: IdMap Type (Id LType)
-                           , partialBlockInsns :: DList (Insn (Id LType))
-                           }
+data ExprState = ExprState
+    { variableMap       :: IdMap Type (Id LType)
+    , partialBlockInsns :: DList (Insn (Id LType))
+    }
 
 -- Program Builder
 class Monad m => MonadProgramBuilder m where

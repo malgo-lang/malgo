@@ -1,10 +1,10 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Language.Malgo.MiddleEnd.HIRLint
   ( HIRLint
   )
@@ -20,12 +20,8 @@ import           Language.Malgo.IR.HIR
 
 import           Language.Malgo.TypeRep.Type
 
-import           Control.Exception              ( assert )
-import           Text.PrettyPrint.HughesPJClass ( ($+$)
-                                                , parens
-                                                , fsep
-                                                , colon
-                                                )
+import           Control.Exception              (assert)
+import           Text.PrettyPrint.HughesPJClass (colon, fsep, parens, ($+$))
 
 data HIRLint
 

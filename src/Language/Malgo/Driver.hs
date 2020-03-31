@@ -1,22 +1,22 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeApplications      #-}
 module Language.Malgo.Driver
   ( parseOpt
   , compile
   )
 where
 
-import           Language.Malgo.Monad          as M
+import           Language.Malgo.Monad                 as M
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 
-import qualified Language.Malgo.Lexer          as Lexer
-import qualified Language.Malgo.Parser         as Parser
+import qualified Language.Malgo.Lexer                 as Lexer
+import qualified Language.Malgo.Parser                as Parser
 
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
@@ -29,12 +29,12 @@ import           Language.Malgo.MiddleEnd.TransToMIR
 import           Language.Malgo.BackEnd.GenLIR
 import           Language.Malgo.BackEnd.GenLLVM
 
-import qualified Data.ByteString.Short         as B
-import qualified Data.Text                     as T
-import qualified Data.Text.Encoding            as T
-import qualified Data.Text.Lazy                as TL
+import qualified Data.ByteString.Short                as B
+import qualified Data.Text                            as T
+import qualified Data.Text.Encoding                   as T
+import qualified Data.Text.Lazy                       as TL
+import qualified LLVM.AST                             as L
 import           Options.Applicative
-import qualified LLVM.AST                      as L
 
 parseOpt :: IO Opt
 parseOpt = execParser $ info

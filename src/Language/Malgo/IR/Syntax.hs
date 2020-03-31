@@ -1,7 +1,7 @@
-{-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE DeriveTraversable  #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
 -- | Malgoの抽象構文木の定義
 module Language.Malgo.IR.Syntax
   ( module Export
@@ -12,82 +12,40 @@ module Language.Malgo.IR.Syntax
   )
 where
 
-import           Language.Malgo.Prelude  hiding ( ix
-                                                , op
-                                                )
+import           Language.Malgo.Prelude         hiding (ix, op)
 import           Language.Malgo.Pretty
 
-import           Language.Malgo.TypeRep.Type
 import           Language.Malgo.TypeRep.SType
+import           Language.Malgo.TypeRep.Type
 
-import           Language.Malgo.IR.Op          as Export
+import           Language.Malgo.IR.Op           as Export
 
-import           Text.PrettyPrint.HughesPJClass ( quotes
-                                                , doubleQuotes
-                                                , braces
-                                                , sep
-                                                , punctuate
-                                                , parens
-                                                , brackets
-                                                , ($+$)
-                                                )
-import           Text.Parsec.Pos                ( SourcePos )
+import           Text.Parsec.Pos                (SourcePos)
+import           Text.PrettyPrint.HughesPJClass (braces, brackets, doubleQuotes,
+                                                 parens, punctuate, quotes, sep,
+                                                 ($+$))
 
 -- | 式。
 -- 型変数aは識別子の型を表す。ParserはExpr Stringを生成する。
-data Expr a
-  = Var SourcePos a -- ^ 変数参照
-  | Int SourcePos Integer -- ^ 64bit整数
-  | Float SourcePos Double -- ^ 倍精度浮動小数点数
-  | Bool SourcePos Bool -- ^ 真偽値
-  | Char SourcePos Char -- ^ 文字リテラル。シングルクォート(')で囲まれた一文字
-  | String SourcePos String -- ^ 文字列リテラル。ダブルクォートで囲まれた文字列
-  | Tuple SourcePos [Expr a] -- ^ タプル
-  | Array SourcePos (NonEmpty (Expr a)) -- ^ 配列リテラル
-  | MakeArray -- ^ 配列の作成
-    SourcePos
-    (Expr a) -- ^ 初期値 
-    (Expr a) -- ^ 長さ
-  | ArrayRead -- ^ 配列の要素へのアクセス
-    SourcePos
-    (Expr a) -- ^ 配列
-    (Expr a) -- ^ 要素のインデックス
-  | ArrayWrite -- ^ 配列の要素の書き込み
-    SourcePos
-    (Expr a) -- ^ 配列
-    (Expr a) -- ^ 要素のインデックス
-    (Expr a) -- ^ 書き込む式
-  | Call -- ^ 関数呼び出し
-    SourcePos
-    (Expr a) -- ^ 関数
-    [Expr a] -- ^ 引数のリスト
-  | Fn -- ^ 無名関数
-    SourcePos
-    [(a, Maybe (SType a))] -- ^ 仮引数とその型のリスト
-    (Expr a) -- ^ 関数本体
-  | Seq -- ^ 連続した式(e1; e2)
-    SourcePos
-    (Expr a) -- ^ 先に実行される式
-    (Expr a) -- ^ 後に実行される式
-  | Let -- ^ 変数, 関数, 外部関数の定義
-    SourcePos
-    (Decl a) -- ^ 定義
-    (Expr a) -- ^ 定義の元で実行される式
-  | If -- ^ if式
-    SourcePos
-    (Expr a) -- ^ 条件
-    (Expr a) -- ^ 真のときの式
-    (Expr a) -- ^ 偽のときの式
-  | BinOp -- ^ 中置演算子
-    SourcePos
-    Op -- ^ 演算子
-    (Expr a) -- ^ 左辺
-    (Expr a) -- ^ 右辺
-  | Match -- ^ パターンマッチ
-    SourcePos
-    (Expr a) -- ^ 対象とある値
-    (NonEmpty (Pat a, Expr a)) -- ^ パターンとマッチしたときの式のリスト
-  deriving stock (Eq, Show, Functor)
+data Expr a = Var SourcePos a
+    | Int SourcePos Integer
+    | Float SourcePos Double
+    | Bool SourcePos Bool
+    | Char SourcePos Char
+    | String SourcePos String
+    | Tuple SourcePos [Expr a]
+    | Array SourcePos (NonEmpty (Expr a))
+    | MakeArray SourcePos (Expr a) (Expr a)
+    | ArrayRead SourcePos (Expr a) (Expr a)
+    | ArrayWrite SourcePos (Expr a) (Expr a) (Expr a)
+    | Call SourcePos (Expr a) [Expr a]
+    | Fn SourcePos [(a, Maybe (SType a))] (Expr a)
+    | Seq SourcePos (Expr a) (Expr a)
+    | Let SourcePos (Decl a) (Expr a)
+    | If SourcePos (Expr a) (Expr a) (Expr a)
+    | BinOp SourcePos Op (Expr a) (Expr a)
+    | Match SourcePos (Expr a) (NonEmpty (Pat a, Expr a))
+    deriving stock (Eq, Show, Functor)
 
 -- | Exprからソースコード上の位置情報を取り出すための補助関数
 position :: Expr t -> SourcePos
@@ -136,9 +94,9 @@ instance Pretty a => Pretty (Expr a) where
     where pPrintClause (p, e) = pPrint p <+> "=>" <+> pPrint e
 
 -- | パターン
-data Pat a = VarP a -- ^ 変数パターン
-           | TupleP [Pat a] -- ^ タプルパターン
-  deriving stock (Eq, Show, Functor)
+data Pat a = VarP a
+    | TupleP [Pat a]
+    deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Pat a) where
   pPrint (VarP   x ) = pPrint x
@@ -149,11 +107,11 @@ instance HasType a => HasType (Pat a) where
   typeOf (TupleP xs) = TyApp TupleC $ map typeOf xs
 
 -- | 変数定義、関数定義、外部関数定義
-data Decl a
-  = FunDec [(SourcePos, a, [(a, Maybe (SType a))], Maybe (SType a), Expr a)] -- ^ 関数定義。相互再帰しうる関数定義のリスト
-  | ValDec SourcePos a (Maybe (SType a)) (Expr a) -- ^ 変数定義
-  | ExDec SourcePos a (SType a) String -- ^ 外部関数定義
-  deriving stock (Eq, Show, Functor)
+data Decl a = FunDec [(SourcePos, a, [(a, Maybe (SType a))], Maybe (SType a),
+           Expr a)]
+    | ValDec SourcePos a (Maybe (SType a)) (Expr a)
+    | ExDec SourcePos a (SType a) String
+    deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec fs) = sep $ map pp fs

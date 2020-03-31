@@ -1,9 +1,9 @@
-{-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DerivingStrategies         #-}
+{-# LANGUAGE DerivingVia                #-}
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.FrontEnd.Typing.Subst
   ( Subst(..)
   , Substitutable(..)
@@ -14,9 +14,9 @@ import           Language.Malgo.Prelude
 
 import           Language.Malgo.TypeRep.Type
 
-import           Data.Set                       ( (\\) )
-import qualified Data.Set                      as Set
-import qualified Data.Map.Strict               as Map
+import qualified Data.Map.Strict             as Map
+import           Data.Set                    ((\\))
+import qualified Data.Set                    as Set
 
 newtype Subst = Subst { unwrapSubst :: Map TyVar Type }
   deriving stock (Eq, Show)
