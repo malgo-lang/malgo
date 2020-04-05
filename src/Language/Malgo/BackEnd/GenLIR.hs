@@ -40,7 +40,7 @@ instance Pass GenLIR (M.Program (Id Type)) (L.Program (Id LType)) where
           (\M.Func { name, captures, params, body } -> ProgramEnv
             (  mempty
             &  at name
-            ?~ (name & metaL .~ Function
+            ?~ (name & idMeta .~ Function
                  (convertType $ typeOf body)
                  (if isNothing captures
                    then map (convertType . typeOf) params
@@ -61,7 +61,7 @@ instance Pass GenLIR (M.Program (Id Type)) (L.Program (Id LType)) where
 genFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => M.Func (Id Type) -> m ()
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
-  let funcParams = map (over metaL convertType) params
+  let funcParams = map (over idMeta convertType) params
   bodyBlock <- runExprBuilderT (ExprEnv Nothing) $ do
     zipWithM_ defineVar params funcParams
     genExpr body
@@ -69,7 +69,7 @@ genFunction M.Func { name, captures = Nothing, params, body } = do
 genFunction M.Func { name, captures = Just caps, mutrecs, params, body } = do
   funcName <- findFunc name
   capsId   <- newId (Ptr U8) "$caps"
-  let funcParams = map (\x -> x & metaL .~ convertType (typeOf x)) params
+  let funcParams = map (\x -> x & idMeta .~ convertType (typeOf x)) params
   bodyBlock <- runExprBuilderT (ExprEnv (Just capsId)) $ do
     zipWithM_ defineVar params funcParams
     -- unwrap captures

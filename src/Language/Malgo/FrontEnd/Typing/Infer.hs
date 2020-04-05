@@ -38,7 +38,7 @@ instance Pass Typing (Expr (Id ())) (Expr (Id Type)) where
     opt <- getOpt
     when (dumpTypeTable opt) $ dump (toList env)
 
-    pure $ fmap (\x -> maybe (x & metaL .~ Kind) (fmap removeExplictForall) (env ^. at x)) e
+    pure $ fmap (\x -> maybe (x & idMeta .~ Kind) (fmap removeExplictForall) (env ^. at x)) e
 
 type Env = IdMap () (Id Scheme)
 
@@ -52,13 +52,13 @@ letVar :: MonadState Env m => Env -> Id () -> Type -> m ()
 letVar env var ty = defineVar var $ generalize env ty
 
 defineVar :: MonadState Env m => Id () -> Scheme -> m ()
-defineVar x t = modify (at x ?~ (x & metaL .~ t))
+defineVar x t = modify (at x ?~ (x & idMeta .~ t))
 
 lookupVar :: (MonadState Env f, MonadUniq f) => Id () -> f Type
 lookupVar x = do
   env <- get
   case env ^. at x of
-    Just x' -> instantiate $ x' ^. metaL
+    Just x' -> instantiate $ x' ^. idMeta
     Nothing -> bug Unreachable
 
 updateSubst :: (MonadState Env m, MonadMalgo m)

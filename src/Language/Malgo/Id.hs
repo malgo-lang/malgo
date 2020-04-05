@@ -13,9 +13,9 @@
 {-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.Id
   ( Id
-  , nameL
-  , uniqL
-  , metaL
+  , idName
+  , idUniq
+  , idMeta
   , newId
   , IdMap(..)
   )
@@ -34,9 +34,9 @@ import           GHC.Exts                       (IsList (..))
 import           Text.PrettyPrint.HughesPJClass (text)
 
 data Id a = Id
-    { idName :: String
-    , idUniq :: Int
-    , idMeta :: a
+    { _idName :: String
+    , _idUniq :: Int
+    , _idMeta :: a
     }
     deriving stock (Show, Eq, Ord, Functor, Foldable)
 
@@ -44,16 +44,16 @@ instance Pretty a => Pretty (Id a) where
   pPrint (Id n u m) = text n <> "." <> text (show u) <> "<" <> pPrint m <> ">"
 
 instance HasType a => HasType (Id a) where
-  typeOf Id { idMeta } = typeOf idMeta
+  typeOf Id { _idMeta } = typeOf _idMeta
 
-nameL :: Lens (Id a) (Id a) String String
-nameL = lens idName (\i x -> i { idName = x })
+idName :: Lens (Id a) (Id a) String String
+idName = lens _idName (\i x -> i { _idName = x })
 
-uniqL :: Getter (Id a) Int
-uniqL = lens idUniq (\i x -> i { idUniq = x })
+idUniq :: Getter (Id a) Int
+idUniq = lens _idUniq (\i x -> i { _idUniq = x })
 
-metaL :: Lens (Id a) (Id b) a b
-metaL = lens idMeta (\i x -> i { idMeta = x })
+idMeta :: Lens (Id a) (Id b) a b
+idMeta = lens _idMeta (\i x -> i { _idMeta = x })
 
 newId :: MonadUniq f => a -> String -> f (Id a)
 newId m n = Id n <$> getUniq <*> pure m
@@ -71,7 +71,7 @@ type instance IxValue (IdMap a v) = v
 instance Ixed (IdMap a v)
 
 instance At (IdMap a v) where
-  at Id { idUniq } f (IdMap m) = IdMap <$> IntMap.alterF f idUniq m
+  at Id { _idUniq } f (IdMap m) = IdMap <$> IntMap.alterF f _idUniq m
 
 instance IsList (IdMap a v) where
   type Item (IdMap a v) = (Id a, v)
