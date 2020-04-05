@@ -5,6 +5,7 @@
 module Language.Malgo.IR.Core where
 
 import           Language.Malgo.Prelude
+import           Language.Malgo.TypeRep.CType
 
 {-
 Atoms  a ::= unboxed | x
@@ -12,6 +13,10 @@ Atoms  a ::= unboxed | x
 data Atom a = Var a
     | Unboxed Unboxed
     deriving stock (Eq, Show, Functor)
+
+instance HasCType a => HasCType (Atom a) where
+  cTypeOf (Var x)     = cTypeOf x
+  cTypeOf (Unboxed x) = cTypeOf x
 
 {-
 Unboxed values  unboxed
@@ -21,6 +26,12 @@ data Unboxed = Int Integer
     | Char Char
     | String String
     deriving stock (Eq, Show)
+
+instance HasCType Unboxed where
+  cTypeOf Int{}    = IntT
+  cTypeOf Float{}  = FloatT
+  cTypeOf Char{}   = CharT
+  cTypeOf String{} = StringT
 
 {-
 Constructors  C ::= <tag n>
@@ -39,12 +50,19 @@ Expressions  e ::= a              Atom
 -}
 data Exp a = Atom (Atom a)
     | Call a [Atom a]
-    | PrimCall Text [Atom a]
+    | PrimCall Text CType [Atom a]
     | Let [(a, Obj a)] (Exp a)
     | Match (Exp a) [Case a] (a, Exp a)
     | Undefined
     deriving stock (Eq, Show, Functor)
 
+instance HasCType a => HasCType (Exp a) where
+  cTypeOf (Atom x) = cTypeOf x
+  cTypeOf (Call f xs) = go (cTypeOf f) xs
+    where go (_ :-> t) []       = t
+          go (_ :-> t) (_:rest) = go t rest
+          go AnyT _             = AnyT
+          go _ _                = bug Unreachable
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
 -}
@@ -85,7 +103,7 @@ plusInt = Fun ["a", "b"] $ Match
   [ Unpack (Con "Int" 1) ["x"] $ Match
       (Atom (Var "b"))
       [ Unpack (Con "Int" 1) ["y"] $ Match
-          (PrimCall "+" [Var "x", Var "y"])
+          (PrimCall "+" (IntT :-> IntT :-> IntT) [Var "x", Var "y"])
           []
           ("z", Let [("r", Pack (Con "Int" 1) [Var "z"])] $ Atom (Var "r"))
       ]
@@ -117,7 +135,7 @@ fib :: Obj Text
 fib = Fun ["n"] $ Match
   (Atom (Var "n"))
   [ Unpack (Con "Int" 1) ["n'"] $ Match
-      (PrimCall "<=" [Var "n'", Unboxed (Int 1)])
+      (PrimCall "<=" (IntT :-> IntT :-> PackT "Bool" []) [Var "n'", Unboxed (Int 1)])
       [ Unpack (Con "False" 0) [] $ Let [("v1", Pack (Con "Int" 1) [Unboxed (Int 1)])] $ Match
         (Call "minusInt" [Var "n", Var "v1"])
         []
