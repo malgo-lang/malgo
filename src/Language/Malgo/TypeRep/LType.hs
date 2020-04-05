@@ -41,7 +41,7 @@ instance HasLType LType where
   ltypeOf x = x
 
 instance HasLType a => HasLType (Id a) where
-  ltypeOf Id { idMeta } = ltypeOf idMeta
+  ltypeOf = ltypeOf . (^. metaL)
 
 accessType :: LType -> [Int] -> LType
 accessType t           []       = t

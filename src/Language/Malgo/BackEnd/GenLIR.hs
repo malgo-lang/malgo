@@ -61,7 +61,7 @@ instance Pass GenLIR (M.Program (Id Type)) (L.Program (Id LType)) where
 genFunction :: (MonadUniq m, MonadMalgo m, MonadProgramBuilder m) => M.Func (Id Type) -> m ()
 genFunction M.Func { name, captures = Nothing, params, body } = do
   funcName <- findFunc name
-  let funcParams = map (\p@Id { idMeta } -> p & metaL .~ convertType idMeta) params
+  let funcParams = map (over metaL convertType) params
   bodyBlock <- runExprBuilderT (ExprEnv Nothing) $ do
     zipWithM_ defineVar params funcParams
     genExpr body

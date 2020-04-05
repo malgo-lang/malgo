@@ -100,14 +100,14 @@ mallocBytes bytesOpr maybeType = do
     Nothing -> pure ptrOpr
 
 genName :: Id a -> LLVM.AST.Name
-genName Id { idName, idUniq } = LLVM.AST.mkName $ idName <> show idUniq
+genName x = LLVM.AST.mkName $ x ^. nameL <> show (x ^. uniqL)
 
 genFunction :: Func (Id LType) -> GenDec ()
 genFunction Func { name, params, body } = void $ function funcName llvmParams retty $ \args ->
   local (Map.fromList (zip params args) <>) $ genBlock body ret
  where
   funcName   = genName name
-  llvmParams = map (\Id { idMeta } -> (convertType idMeta, NoParameterName)) params
+  llvmParams = map (\x -> (convertType (x ^. metaL), NoParameterName)) params
   retty      = convertType (ltypeOf body)
 
 genBlock :: Block (Id LType) -> (Operand -> GenExpr a) -> GenExpr a

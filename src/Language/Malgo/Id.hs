@@ -12,7 +12,7 @@
 {-# LANGUAGE QuantifiedConstraints      #-}
 {-# LANGUAGE TypeFamilies               #-}
 module Language.Malgo.Id
-  ( Id(..)
+  ( Id
   , nameL
   , uniqL
   , metaL
@@ -49,7 +49,7 @@ instance HasType a => HasType (Id a) where
 nameL :: Lens (Id a) (Id a) String String
 nameL = lens idName (\i x -> i { idName = x })
 
-uniqL :: Lens (Id a) (Id a) Int Int
+uniqL :: Getter (Id a) Int
 uniqL = lens idUniq (\i x -> i { idUniq = x })
 
 metaL :: Lens (Id a) (Id b) a b

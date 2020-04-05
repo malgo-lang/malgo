@@ -52,14 +52,14 @@ letVar :: MonadState Env m => Env -> Id () -> Type -> m ()
 letVar env var ty = defineVar var $ generalize env ty
 
 defineVar :: MonadState Env m => Id () -> Scheme -> m ()
-defineVar x t = modify (at x ?~ x { idMeta = t })
+defineVar x t = modify (at x ?~ (x & metaL .~ t))
 
 lookupVar :: (MonadState Env f, MonadUniq f) => Id () -> f Type
 lookupVar x = do
   env <- get
   case env ^. at x of
-    Just Id { idMeta = scheme } -> instantiate scheme
-    Nothing                     -> bug Unreachable
+    Just x' -> instantiate $ x' ^. metaL
+    Nothing -> bug Unreachable
 
 updateSubst :: (MonadState Env m, MonadMalgo m)
             => SourcePos
