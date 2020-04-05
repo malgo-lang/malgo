@@ -46,7 +46,7 @@ instance Pretty a => Pretty (Id a) where
 instance HasType a => HasType (Id a) where
   typeOf Id { _idMeta } = typeOf _idMeta
 
-idName :: Lens (Id a) (Id a) String String
+idName :: Getter (Id a) String
 idName = lens _idName (\i x -> i { _idName = x })
 
 idUniq :: Getter (Id a) Int
