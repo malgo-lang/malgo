@@ -11,6 +11,7 @@ data CType = CType :-> CType
     | CharT
     | StringT
     | PackT Text [CType]
+    | ArrayT CType
     | AnyT
     deriving stock (Eq, Show, Ord)
 
