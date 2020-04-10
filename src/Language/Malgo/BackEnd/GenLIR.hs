@@ -148,7 +148,7 @@ genExpr (M.Let name val expr) = do
 genExpr (M.If c t f) = do
   cOpr <- findVar c
   branchIf cOpr (genExpr t) (genExpr f)
-genExpr (M.Prim orig (TyApp FunC (r : ps)) xs) = do
+genExpr (M.Prim orig (ps :-> r) xs) = do
   argOprs <- mapM findVar xs
   callExt orig (Function (convertType r) (map convertType ps)) argOprs
 genExpr M.Prim{}        = error "external variable is not supported"

@@ -41,6 +41,7 @@ match a b = case (typeOf a, typeOf b) of
   (TyMeta _, _       )                    -> pure ()
   (_       , TyMeta _)                    -> pure ()
   (TyApp c1 ts1, TyApp c2 ts2) | c1 == c2 -> zipWithM_ match ts1 ts2
+  (ps1 :-> r1, ps2 :-> r2) -> match r1 r2 >> zipWithM_ match ps1 ps2
   (t1, t2) ->
     unless (t1 == t2)
       $   errorDoc
@@ -60,7 +61,7 @@ lintExpr e@(Call f xs) = do
   fty         = typeOf f
   argtys      = map typeOf xs
   getParamtys = case fty of
-    TyApp FunC (_ : ps) -> pure ps
+    ps :-> _ -> pure ps
     t                   -> errorDoc $ pPrint t <+> ("is not callable: " <> parens (pPrint e))
 lintExpr (Let name val body) = do
   notDefined name

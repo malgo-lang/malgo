@@ -103,20 +103,20 @@ instance HasType a => HasType (Expr a) where
 
   typeOf ArrayWrite{}      = TyApp TupleC []
   typeOf (CallDirect fn _) = case typeOf fn of
-    TyApp FunC (ret : _) -> ret
-    _                    -> error "(typeOf fn) should match (TyFun _ ty)"
+    _ :->ret -> ret
+    _        -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (CallWithCaptures fn _) = case typeOf fn of
-    TyApp FunC (ret : _) -> ret
-    _                    -> error "(typeOf fn) should match (TyFun _ ty)"
+    _ :-> ret -> ret
+    _         -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (CallClosure fn _) = case typeOf fn of
-    TyApp FunC (ret : _) -> ret
-    _                    -> error "(typeOf fn) should match (TyFun _ ty)"
+    _ :-> ret -> ret
+    _         -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (MakeClosure fn _) = typeOf fn
   typeOf (Let  _ _  e     ) = typeOf e
   typeOf (If   _ t  _     ) = typeOf t
   typeOf (Prim _ ty _     ) = case typeOf ty of
-    TyApp FunC (ret : _) -> ret
-    _                    -> error "(typeOf ty) should match (TyFun _ ret)"
+    _ :-> ret -> ret
+    _         -> error "(typeOf ty) should match (TyFun _ ret)"
   typeOf (BinOp op _ _) = case op of
     Add  -> TyApp IntC []
     Sub  -> TyApp IntC []

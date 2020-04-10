@@ -60,14 +60,14 @@ toExpr (S.ArrayWrite _ arr ix val) = runDef $ ArrayWrite <$> toVar arr <*> toVar
 toExpr (S.Call _ f  xs           ) = runDef $ Call <$> toVar f <*> mapM toVar xs
 toExpr (S.Fn   _ ps e            ) = do
   e' <- toExpr e
-  fn <- newTmp "lambda" (TyApp FunC (typeOf e' : map (typeOf . fst) ps))
+  fn <- newTmp "lambda" (map (typeOf . fst) ps :-> typeOf e')
   pure $ LetRec [Def { name = fn, params = map fst ps, expr = e' }] (Var fn)
 toExpr (S.Seq _ e1                   e2  ) = runDef $ toVar e1 >> toExpr e2
 toExpr (S.Let _ (S.ValDec _ n _ val) body) = Let n <$> toExpr val <*> toExpr body
 toExpr (S.Let _ (S.FunDec fundecs) body) =
   LetRec <$> mapM (\(_, fn, ps, _, e) -> Def fn (map fst ps) <$> toExpr e) fundecs <*> toExpr body
 toExpr (S.Let _ (S.ExDec _ n _ orig) body) = case typeOf n of
-  TyApp FunC (_ : ps) -> do
+  ps :-> _ -> do
     params <- mapM (newTmp "x") ps
     LetRec [Def { name = n, params = params, expr = Prim orig (typeOf n) params }] <$> toExpr body
   _ -> error "external variable is not supported"

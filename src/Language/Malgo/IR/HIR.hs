@@ -91,14 +91,14 @@ instance HasType a => HasType (Expr a) where
     _                -> error "(typeOf arr) should match (TyArray xs)"
   typeOf ArrayWrite{} = TyApp TupleC []
   typeOf (Call fn as) = case typeOf fn of
-    TyApp FunC (ret : ps) -> apply (fold $ solve $ zipWith (:~) (map typeOf as) ps) ret
-    _                     -> error "(typeOf fn) should match (TyFun _ ty)"
+    ps :-> ret -> apply (fold $ solve $ zipWith (:~) (map typeOf as) ps) ret
+    _          -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (Let _ _ e  ) = typeOf e
   typeOf (LetRec _ e ) = typeOf e
   typeOf (If   _ x  _) = typeOf x
   typeOf (Prim _ ty _) = case typeOf ty of
-    TyApp FunC (ret : _) -> ret
-    _                    -> error "(typeOf ty) should match (TyFun _ ret)"
+    _ :-> ret -> ret
+    _         -> error "(typeOf ty) should match (TyFun _ ret)"
   typeOf (BinOp op _ _) = case op of
     Add  -> TyApp IntC []
     Sub  -> TyApp IntC []

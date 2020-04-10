@@ -109,7 +109,7 @@ typingExpr (Call pos fn args) = runSubst $ do
   fnTy     <- typingExpr fn
   argTypes <- mapM typingExpr args
   retTy    <- newTyMeta
-  updateSubst pos [TyApp FunC (retTy : argTypes) :~ fnTy]
+  updateSubst pos [argTypes :-> retTy :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = do
   paramTypes <- evalStateT ?? mempty $ traverse
@@ -117,7 +117,7 @@ typingExpr (Fn _ params body) = do
     params
   zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
   retType <- typingExpr body
-  pure $ paramTypes --> retType
+  pure $ paramTypes :-> retType
 typingExpr (Seq _ e1                         e2  ) = typingExpr e1 >> typingExpr e2
 typingExpr (Let _ (ValDec pos name mtyp val) body) = runSubst $ do
   env     <- get
@@ -150,7 +150,7 @@ typingExpr (Let _ (FunDec fs) e) = do
 
     t  <- typingExpr body
     tv <- lookupVar f
-    updateSubst pos [tv :~ TyApp FunC (retType : paramTypes), t :~ retType]
+    updateSubst pos [tv :~ paramTypes :-> retType, t :~ retType]
     pure tv
 
   typingExpr e
@@ -165,26 +165,26 @@ typingExpr (BinOp pos op x y) = runSubst $ do
   xt         <- typingExpr x
   yt         <- typingExpr y
   resultType <- newTyMeta
-  updateSubst pos [opType :~ [xt, yt] --> resultType]
+  updateSubst pos [opType :~ [xt, yt] :-> resultType]
   pure resultType
  where
-  typingOp Add  = pure $ [intTy, intTy] --> intTy
-  typingOp Sub  = pure $ [intTy, intTy] --> intTy
-  typingOp Mul  = pure $ [intTy, intTy] --> intTy
-  typingOp Div  = pure $ [intTy, intTy] --> intTy
-  typingOp Mod  = pure $ [intTy, intTy] --> intTy
-  typingOp FAdd = pure $ [floatTy, floatTy] --> floatTy
-  typingOp FSub = pure $ [floatTy, floatTy] --> floatTy
-  typingOp FMul = pure $ [floatTy, floatTy] --> floatTy
-  typingOp FDiv = pure $ [floatTy, floatTy] --> floatTy
-  typingOp Eq   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
-  typingOp Neq  = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
-  typingOp Lt   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
-  typingOp Gt   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
-  typingOp Le   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
-  typingOp Ge   = newTyMeta >>= \a -> pure $ [a, a] --> boolTy
-  typingOp And  = pure $ [boolTy, boolTy] --> boolTy
-  typingOp Or   = pure $ [boolTy, boolTy] --> boolTy
+  typingOp Add  = pure $ [intTy, intTy] :-> intTy
+  typingOp Sub  = pure $ [intTy, intTy] :-> intTy
+  typingOp Mul  = pure $ [intTy, intTy] :-> intTy
+  typingOp Div  = pure $ [intTy, intTy] :-> intTy
+  typingOp Mod  = pure $ [intTy, intTy] :-> intTy
+  typingOp FAdd = pure $ [floatTy, floatTy] :-> floatTy
+  typingOp FSub = pure $ [floatTy, floatTy] :-> floatTy
+  typingOp FMul = pure $ [floatTy, floatTy] :-> floatTy
+  typingOp FDiv = pure $ [floatTy, floatTy] :-> floatTy
+  typingOp Eq   = newTyMeta >>= \a -> pure $ [a, a] :-> boolTy
+  typingOp Neq  = newTyMeta >>= \a -> pure $ [a, a] :-> boolTy
+  typingOp Lt   = newTyMeta >>= \a -> pure $ [a, a] :-> boolTy
+  typingOp Gt   = newTyMeta >>= \a -> pure $ [a, a] :-> boolTy
+  typingOp Le   = newTyMeta >>= \a -> pure $ [a, a] :-> boolTy
+  typingOp Ge   = newTyMeta >>= \a -> pure $ [a, a] :-> boolTy
+  typingOp And  = pure $ [boolTy, boolTy] :-> boolTy
+  typingOp Or   = pure $ [boolTy, boolTy] :-> boolTy
 typingExpr (Match pos scrutinee clauses) = runSubst $ do
   ty1 <- typingExpr scrutinee
   let (pats, exprs) = unzip clauses
@@ -226,6 +226,6 @@ toType TyFloat      = pure floatTy
 toType TyBool       = pure boolTy
 toType TyChar       = pure charTy
 toType TyString     = pure stringTy
-toType (TyFun ps r) = (-->) <$> mapM toType ps <*> toType r
+toType (TyFun ps r) = (:->) <$> mapM toType ps <*> toType r
 toType (TyTuple xs) = tupleTy <$> mapM toType xs
 toType (TyArray x ) = arrayTy <$> toType x

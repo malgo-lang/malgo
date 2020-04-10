@@ -17,11 +17,13 @@ data Scheme = Forall [TyVar] Type
 -- | Malgoの組み込みデータ型
 data Type = TyApp TyCon [Type]
     | TyMeta TyVar
+    | [Type] :-> Type
     | Kind
     deriving stock (Eq, Show, Ord)
 
-data TyCon = FunC
-    | IntC
+infixl 6 :->
+
+data TyCon = IntC
     | FloatC
     | BoolC
     | CharC
@@ -34,15 +36,13 @@ instance Pretty Scheme where
   pPrint (Forall ts t) = "forall" <+> sep (map pPrint ts) <> "." <+> pPrint t
 
 instance Pretty Type where
-  pPrint (TyApp FunC (ret : params)) =
-    parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
   pPrint (TyApp TupleC ts) = braces $ sep $ punctuate "," $ map pPrint ts
   pPrint (TyApp c      ts) = pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
   pPrint (TyMeta v       ) = pPrint v
+  pPrint (params :-> ret)  = parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
   pPrint Kind              = "*"
 
 instance Pretty TyCon where
-  pPrint FunC    = "Fun"
   pPrint IntC    = "Int"
   pPrint FloatC  = "Float"
   pPrint BoolC   = "Bool"
@@ -81,7 +81,3 @@ tupleTy :: [Type] -> Type
 tupleTy = TyApp TupleC
 arrayTy :: Type -> Type
 arrayTy x = TyApp ArrayC [x]
-
-infixl 6 -->
-(-->) :: [Type] -> Type -> Type
-ps --> r = TyApp FunC (r : ps)

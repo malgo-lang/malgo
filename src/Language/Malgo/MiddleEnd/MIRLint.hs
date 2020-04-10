@@ -72,7 +72,7 @@ lintFunc Func { name = _, captures, mutrecs, params, body } =
 
 checkCall :: (MonadUniq m, HasType a1, HasType a2, Pretty a1, Pretty a2) => a1 -> [a2] -> m ()
 checkCall f xs = case typeOf f of
-  TyApp FunC (_ : ps) -> do
+  ps :-> _ -> do
     ps' <- mapM (instantiate . generalize mempty) ps
     xs' <- mapM (instantiate . generalize mempty . typeOf) xs
     case solve (zipWith (:~) ps' xs') of

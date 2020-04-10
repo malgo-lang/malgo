@@ -204,7 +204,7 @@ branchIf c genWhenTrue genWhenFalse = do
   def $ If c tBlock fBlock
 
 convertType :: Type -> LType
-convertType (TyApp FunC (r : ps)) =
+convertType (ps :-> r) =
   Ptr (Struct [Function (convertType r) (Ptr U8 : map convertType ps), Ptr U8])
 convertType (TyApp IntC    [] ) = I64
 convertType (TyApp FloatC  [] ) = F64
