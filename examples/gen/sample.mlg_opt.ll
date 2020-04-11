@@ -3,11 +3,11 @@ source_filename = "./examples/sample.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-@"$globle_str_223" = unnamed_addr constant [6 x i8] c"malgo\00"
-@"$globle_str_224" = unnamed_addr constant [14 x i8] c"Hello, world!\00"
-@"$globle_str_225" = unnamed_addr constant [11 x i8] c"fib(10) = \00"
-@"$globle_str_226" = unnamed_addr constant [4 x i8] c"foo\00"
-@"$globle_str_227" = unnamed_addr constant [4 x i8] c"bar\00"
+@"$globle_str_239" = unnamed_addr constant [6 x i8] c"malgo\00"
+@"$globle_str_240" = unnamed_addr constant [14 x i8] c"Hello, world!\00"
+@"$globle_str_241" = unnamed_addr constant [11 x i8] c"fib(10) = \00"
+@"$globle_str_242" = unnamed_addr constant [4 x i8] c"foo\00"
+@"$globle_str_243" = unnamed_addr constant [4 x i8] c"bar\00"
 
 declare i8* @substring(i8*, i64, i64) local_unnamed_addr
 
@@ -189,10 +189,10 @@ define i64 @add22(i64) local_unnamed_addr {
   ret i64 %13
 }
 
-define i64 @"$lambda117"(i8*, i64) {
+define i64 @"$lambda133"(i8*, i64) {
   %3 = tail call i8* @GC_malloc(i64 16)
   %4 = bitcast i8* %3 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda117", i64 (i8*, i64)** %4, align 8
+  store i64 (i8*, i64)* @"$lambda133", i64 (i8*, i64)** %4, align 8
   %5 = getelementptr i8, i8* %3, i64 8
   %6 = bitcast i8* %5 to i8**
   store i8* %0, i8** %6, align 8
@@ -204,8 +204,8 @@ declare void @GC_init() local_unnamed_addr
 
 define i32 @main() local_unnamed_addr {
   tail call void @GC_init()
-  %1 = tail call {}* @println(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"$globle_str_224", i64 0, i64 0))
-  %2 = tail call {}* @print(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"$globle_str_225", i64 0, i64 0))
+  %1 = tail call {}* @println(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"$globle_str_240", i64 0, i64 0))
+  %2 = tail call {}* @print(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"$globle_str_241", i64 0, i64 0))
   %3 = tail call i64 @fib18(i64 10)
   %4 = tail call {}* @print_int(i64 %3)
   %5 = tail call {}* @newline()
@@ -234,21 +234,21 @@ define i32 @main() local_unnamed_addr {
   %23 = tail call i8* @GC_malloc(i64 0)
   %24 = tail call i8* @GC_malloc(i64 16)
   %25 = bitcast i8* %24 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda117", i64 (i8*, i64)** %25, align 8
+  store i64 (i8*, i64)* @"$lambda133", i64 (i8*, i64)** %25, align 8
   %26 = getelementptr i8, i8* %24, i64 8
   %27 = bitcast i8* %26 to i8**
   store i8* %23, i8** %27, align 8
   %28 = tail call i8* @GC_malloc(i64 16)
   %29 = bitcast i8* %28 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda117", i64 (i8*, i64)** %29, align 8
+  store i64 (i8*, i64)* @"$lambda133", i64 (i8*, i64)** %29, align 8
   %30 = getelementptr i8, i8* %28, i64 8
   %31 = bitcast i8* %30 to i8**
   store i8* %23, i8** %31, align 8
   %32 = tail call {}* @print_int(i64 12)
   %33 = tail call {}* @newline()
-  %34 = tail call i8* @substring(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"$globle_str_223", i64 0, i64 0), i64 1, i64 3)
+  %34 = tail call i8* @substring(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"$globle_str_239", i64 0, i64 0), i64 1, i64 3)
   %35 = tail call {}* @println(i8* %34)
-  %36 = tail call i8* @concat(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @"$globle_str_226", i64 0, i64 0), i8* getelementptr inbounds ([4 x i8], [4 x i8]* @"$globle_str_227", i64 0, i64 0))
+  %36 = tail call i8* @concat(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @"$globle_str_242", i64 0, i64 0), i8* getelementptr inbounds ([4 x i8], [4 x i8]* @"$globle_str_243", i64 0, i64 0))
   %37 = tail call {}* @println(i8* %36)
   %38 = tail call {}* @print_float(double 3.140000e+00)
   %39 = tail call {}* @newline()

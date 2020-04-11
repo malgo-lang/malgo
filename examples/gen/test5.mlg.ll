@@ -26,7 +26,7 @@ define external ccc  {i64 (i8*, i64)*, i8*}* @k1(i8* , i64 )    {
   %14 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
   %15 = bitcast i8* %14 to {i64 (i8*, i64)*, i8*}* 
   %16 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %15, i32 0, i32 0 
-  store  i64 (i8*, i64)* @$lambda13, i64 (i8*, i64)** %16 
+  store  i64 (i8*, i64)* @$lambda19, i64 (i8*, i64)** %16 
   %17 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %15, i32 0, i32 1 
   store  i8* %13, i8** %17 
   ret {i64 (i8*, i64)*, i8*}* %15 
@@ -57,14 +57,14 @@ define external ccc  i64 @f4(i8* , i64 , i64 )    {
 }
 
 
-define external ccc  i64 @$lambda13(i8* , i64 )    {
+define external ccc  i64 @$lambda19(i8* , i64 )    {
   %3 = bitcast i8* %0 to {i64}* 
   %4 = getelementptr  {i64}, {i64}* %3, i32 0, i32 0 
   %5 = load  i64, i64* %4 
   %6 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
   %7 = bitcast i8* %6 to {i64 (i8*, i64)*, i8*}* 
   %8 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %7, i32 0, i32 0 
-  store  i64 (i8*, i64)* @$lambda13, i64 (i8*, i64)** %8 
+  store  i64 (i8*, i64)* @$lambda19, i64 (i8*, i64)** %8 
   %9 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %7, i32 0, i32 1 
   store  i8* %0, i8** %9 
   %10 = add   i64 %1, %5 

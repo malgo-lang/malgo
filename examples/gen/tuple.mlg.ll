@@ -53,7 +53,7 @@ define external ccc  i64 @fst_int4({i64, i8*}* )    {
 declare external ccc  void @GC_init()    
 
 
-@$globle_str_48 =  unnamed_addr  constant [15 x i8] c" is the answer\00"
+@$globle_str_52 =  unnamed_addr  constant [15 x i8] c" is the answer\00"
 
 
 declare external ccc  i8* @GC_malloc(i64)    
@@ -66,7 +66,7 @@ define external ccc  i32 @main()    {
   %3 = getelementptr  {i64, i8*}, {i64, i8*}* %2, i32 0, i32 0 
   store  i64 42, i64* %3 
   %4 = getelementptr  {i64, i8*}, {i64, i8*}* %2, i32 0, i32 1 
-  store  i8* getelementptr inbounds ([15 x i8], [15 x i8]* @$globle_str_48, i32 0, i32 0), i8** %4 
+  store  i8* getelementptr inbounds ([15 x i8], [15 x i8]* @$globle_str_52, i32 0, i32 0), i8** %4 
   %5 =  call ccc  i64  @fst_int4({i64, i8*}*  %2)  
   %6 =  call ccc  {}*  @print_int1(i64  %5)  
   %7 =  call ccc  i8*  @snd_str8({i64, i8*}*  %2)  

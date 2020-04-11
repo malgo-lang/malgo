@@ -218,12 +218,12 @@ define external ccc  i64 @add22(i64 )    {
 }
 
 
-define external ccc  i64 @$lambda117(i8* , i64 )    {
+define external ccc  i64 @$lambda133(i8* , i64 )    {
   %3 = bitcast i8* %0 to {}* 
   %4 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
   %5 = bitcast i8* %4 to {i64 (i8*, i64)*, i8*}* 
   %6 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %5, i32 0, i32 0 
-  store  i64 (i8*, i64)* @$lambda117, i64 (i8*, i64)** %6 
+  store  i64 (i8*, i64)* @$lambda133, i64 (i8*, i64)** %6 
   %7 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %5, i32 0, i32 1 
   store  i8* %0, i8** %7 
   %8 = mul   i64 %1, 4 
@@ -234,26 +234,26 @@ define external ccc  i64 @$lambda117(i8* , i64 )    {
 declare external ccc  void @GC_init()    
 
 
-@$globle_str_223 =  unnamed_addr  constant [6 x i8] c"malgo\00"
+@$globle_str_239 =  unnamed_addr  constant [6 x i8] c"malgo\00"
 
 
-@$globle_str_224 =  unnamed_addr  constant [14 x i8] c"Hello, world!\00"
+@$globle_str_240 =  unnamed_addr  constant [14 x i8] c"Hello, world!\00"
 
 
-@$globle_str_225 =  unnamed_addr  constant [11 x i8] c"fib(10) = \00"
+@$globle_str_241 =  unnamed_addr  constant [11 x i8] c"fib(10) = \00"
 
 
-@$globle_str_226 =  unnamed_addr  constant [4 x i8] c"foo\00"
+@$globle_str_242 =  unnamed_addr  constant [4 x i8] c"foo\00"
 
 
-@$globle_str_227 =  unnamed_addr  constant [4 x i8] c"bar\00"
+@$globle_str_243 =  unnamed_addr  constant [4 x i8] c"bar\00"
 
 
 define external ccc  i32 @main()    {
    call ccc  void  @GC_init()  
   %1 = add   i64 42, 1 
-  %2 =  call ccc  {}*  @println1(i8*  getelementptr inbounds ([14 x i8], [14 x i8]* @$globle_str_224, i32 0, i32 0))  
-  %3 =  call ccc  {}*  @print0(i8*  getelementptr inbounds ([11 x i8], [11 x i8]* @$globle_str_225, i32 0, i32 0))  
+  %2 =  call ccc  {}*  @println1(i8*  getelementptr inbounds ([14 x i8], [14 x i8]* @$globle_str_240, i32 0, i32 0))  
+  %3 =  call ccc  {}*  @print0(i8*  getelementptr inbounds ([11 x i8], [11 x i8]* @$globle_str_241, i32 0, i32 0))  
   %4 =  call ccc  i64  @fib18(i64  10)  
   %5 =  call ccc  {}*  @println_int13(i64  %4)  
   %6 =  call ccc  {}*  @do_nothing21()  
@@ -266,7 +266,7 @@ define external ccc  i32 @main()    {
   %13 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
   %14 = bitcast i8* %13 to {i64 (i8*, i64)*, i8*}* 
   %15 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %14, i32 0, i32 0 
-  store  i64 (i8*, i64)* @$lambda117, i64 (i8*, i64)** %15 
+  store  i64 (i8*, i64)* @$lambda133, i64 (i8*, i64)** %15 
   %16 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %14, i32 0, i32 1 
   store  i8* %12, i8** %16 
   %17 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %14, i32 0, i32 0 
@@ -275,9 +275,9 @@ define external ccc  i32 @main()    {
   %20 = load  i8*, i8** %19 
   %21 =  call ccc  i64  %18(i8*  %20, i64  3)  
   %22 =  call ccc  {}*  @println_int13(i64  %21)  
-  %23 =  call ccc  i8*  @substring10(i8*  getelementptr inbounds ([6 x i8], [6 x i8]* @$globle_str_223, i32 0, i32 0), i64  1, i64  3)  
+  %23 =  call ccc  i8*  @substring10(i8*  getelementptr inbounds ([6 x i8], [6 x i8]* @$globle_str_239, i32 0, i32 0), i64  1, i64  3)  
   %24 =  call ccc  {}*  @println1(i8*  %23)  
-  %25 =  call ccc  i8*  @concat11(i8*  getelementptr inbounds ([4 x i8], [4 x i8]* @$globle_str_226, i32 0, i32 0), i8*  getelementptr inbounds ([4 x i8], [4 x i8]* @$globle_str_227, i32 0, i32 0))  
+  %25 =  call ccc  i8*  @concat11(i8*  getelementptr inbounds ([4 x i8], [4 x i8]* @$globle_str_242, i32 0, i32 0), i8*  getelementptr inbounds ([4 x i8], [4 x i8]* @$globle_str_243, i32 0, i32 0))  
   %26 =  call ccc  {}*  @println1(i8*  %25)  
   %27 =  call ccc  {}*  @println_float15(double  3.140000e0)  
   %28 =  call ccc  double  @area26(double  1.000000e1)  
