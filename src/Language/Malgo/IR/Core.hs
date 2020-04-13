@@ -42,15 +42,19 @@ data Con = Con Tag Int
     deriving stock (Eq, Show)
 
 {-
-Expressions  e ::= a              Atom
-                 | f a_1 ... a_n  Function call (arity(f) >= 1)
-                 | p a_1 ... a_n  Saturated primitive operation (n >= 1)
+Expressions  e ::= a               Atom
+                 | f a_1 ... a_n   Function call (arity(f) >= 1)
+                 | p a_1 ... a_n   Saturated primitive operation (n >= 1)
+                 | a_1[a_2]        Read array
+                 | a_1[a_2] <- a_3 Write array
                  | LET x = obj IN e
                  | MATCH e WITH { alt_1; ... alt_n; x -> e } (n >= 0)
 -}
 data Exp a = Atom (Atom a)
     | Call a [Atom a]
     | PrimCall Text CType [Atom a]
+    | ArrayRead (Atom a) (Atom a)
+    | ArrayWrite (Atom a) (Atom a) (Atom a)
     | Let [(a, Obj a)] (Exp a)
     | Match (Exp a) [Case a] (a, Exp a)
     | Undefined
@@ -73,10 +77,12 @@ data Case a = Unpack Con [a] (Exp a)
 Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
                     | PAP(f a_1 ... a_n)     Partial application (f is always a FUN with arity(f) > n >= 1)
                     | PACK(C a_1 ... a_n)    Saturated constructor (n >= 0)
+                    | ARRAY(a, n)            Array (n > 0)
 -}
 data Obj a = Fun [a] (Exp a)
     | Pap a [Atom a]
     | Pack Con [Atom a]
+    | Array a a
     deriving stock (Eq, Show, Functor)
 
 {-
