@@ -55,6 +55,13 @@ toExp (S.String _ x) =
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (def <=< toExp) xs
   let_ (Pack (Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs) vs) $ pure . Atom . Var
+toExp (S.Array _ (x :| xs)) = runDef $ do
+  x' <- def =<< toExp x
+  let_ (Array x' $ Unboxed (Int $ fromIntegral $ length xs + 1)) $ \arr -> do
+    ifor_ xs $ \i v -> do
+      v' <- def =<< toExp v
+      def (ArrayWrite (Var arr) (Unboxed (Int $ fromIntegral $ i + 1)) v')
+    pure $ Atom $ Var arr
 toExp (S.MakeArray _ a n) = runDef $ do
   a' <- def =<< toExp a
   n' <- def =<< toExp n
