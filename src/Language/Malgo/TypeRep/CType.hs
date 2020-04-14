@@ -2,8 +2,8 @@
 {-# LANGUAGE NoImplicitPrelude  #-}
 module Language.Malgo.TypeRep.CType where
 
+import           Language.Malgo.Id
 import           Language.Malgo.Prelude
-import Language.Malgo.Id
 
 data CType = CType :-> CType
     | IntT

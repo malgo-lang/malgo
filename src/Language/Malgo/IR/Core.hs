@@ -62,11 +62,23 @@ data Exp a = Atom (Atom a)
 
 instance HasCType a => HasCType (Exp a) where
   cTypeOf (Atom x) = cTypeOf x
-  cTypeOf (Call f xs) = go (cTypeOf f) xs
-    where go (_ :-> t) []       = t
-          go (_ :-> t) (_:rest) = go t rest
-          go AnyT _             = AnyT
-          go _ _                = bug Unreachable
+  cTypeOf (Call f xs) = returnType (cTypeOf f) xs
+  cTypeOf (PrimCall _ t xs) = returnType t xs
+  cTypeOf (ArrayRead a _) = case cTypeOf a of
+    ArrayT t -> t
+    _        -> bug Unreachable
+  cTypeOf (ArrayWrite _ _ _) = PackT "Tuple0" []
+  cTypeOf (Let _ e) = cTypeOf e
+  cTypeOf (Match _ [] (_, e)) = cTypeOf e
+  cTypeOf (Match _ (Unpack _ _ e : _) _) = cTypeOf e
+  cTypeOf Undefined = AnyT
+
+returnType :: CType -> [a] -> CType
+returnType (_ :-> t) []       = t
+returnType (_ :-> t) (_:rest) = returnType t rest
+returnType AnyT _             = AnyT
+returnType _ _                = bug Unreachable
+
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
 -}
@@ -84,6 +96,12 @@ data Obj a = Fun [a] (Exp a)
     | Pack Con [Atom a]
     | Array a a
     deriving stock (Eq, Show, Functor)
+
+instance HasCType a => HasCType (Obj a) where
+  cTypeOf (Fun xs e) = foldr (:->) (cTypeOf e) (map cTypeOf xs)
+  cTypeOf (Pap f xs) = returnType (cTypeOf f) xs
+  cTypeOf (Pack (Con name _) xs) = PackT name (map cTypeOf xs)
+  cTypeOf (Array a _) = ArrayT (cTypeOf a)
 
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
