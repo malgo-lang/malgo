@@ -38,7 +38,7 @@ Constructors  C ::= <tag n>
 -}
 type Tag = Text
 
-data Con = Con Tag Int
+data Con = Con Tag [CType]
     deriving stock (Eq, Show)
 
 {-
@@ -94,13 +94,13 @@ Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
 data Obj a = Fun [a] (Exp a)
     | Pap a [Atom a]
     | Pack Con [Atom a]
-    | Array a a
+    | Array (Atom a) (Atom a)
     deriving stock (Eq, Show, Functor)
 
 instance HasCType a => HasCType (Obj a) where
   cTypeOf (Fun xs e) = foldr (:->) (cTypeOf e) (map cTypeOf xs)
   cTypeOf (Pap f xs) = returnType (cTypeOf f) xs
-  cTypeOf (Pack (Con name _) xs) = PackT name (map cTypeOf xs)
+  cTypeOf (Pack (Con name ts) _) = PackT name ts
   cTypeOf (Array a _) = ArrayT (cTypeOf a)
 
 {-
@@ -124,12 +124,12 @@ plusInt = FUN(a b ->
 plusInt :: Obj Text
 plusInt = Fun ["a", "b"] $ Match
   (Atom (Var "a"))
-  [ Unpack (Con "Int" 1) ["x"] $ Match
+  [ Unpack (Con "Int" [IntT]) ["x"] $ Match
       (Atom (Var "b"))
-      [ Unpack (Con "Int" 1) ["y"] $ Match
+      [ Unpack (Con "Int" [IntT]) ["y"] $ Match
           (PrimCall "+" (IntT :-> IntT :-> IntT) [Var "x", Var "y"])
           []
-          ("z", Let [("r", Pack (Con "Int" 1) [Var "z"])] $ Atom (Var "r"))
+          ("z", Let [("r", Pack (Con "Int" [IntT]) [Var "z"])] $ Atom (Var "r"))
       ]
       ("_", Undefined)
   ]
@@ -158,9 +158,9 @@ fib = FUN(n ->
 fib :: Obj Text
 fib = Fun ["n"] $ Match
   (Atom (Var "n"))
-  [ Unpack (Con "Int" 1) ["n'"] $ Match
+  [ Unpack (Con "Int" [IntT]) ["n'"] $ Match
       (PrimCall "<=" (IntT :-> IntT :-> PackT "Bool" []) [Var "n'", Unboxed (Int 1)])
-      [ Unpack (Con "False" 0) [] $ Let [("v1", Pack (Con "Int" 1) [Unboxed (Int 1)])] $ Match
+      [ Unpack (Con "False" []) [] $ Let [("v1", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $ Match
         (Call "minusInt" [Var "n", Var "v1"])
         []
         ( "n2"
@@ -168,13 +168,13 @@ fib = Fun ["n"] $ Match
           (Call "fib" [Var "n2"])
           []
           ( "v2"
-          , Let [("v3", Pack (Con "Int" 1) [Unboxed (Int 1)])] $ Match
+          , Let [("v3", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $ Match
             (Call "minusInt" [Var "n", Var "v3"])
             []
             ("n3", Match (Call "fib" [Var "n3"]) [] ("v4", Call "plusInt" [Var "v2", Var "v4"]))
           )
         )
-      , Unpack (Con "True" 0) [] $ Let [("v5", Pack (Con "Int" 1) [Unboxed (Int 1)])] (Atom (Var "v5"))
+      , Unpack (Con "True" []) [] $ Let [("v5", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] (Atom (Var "v5"))
       ]
       ("_", Undefined)
   ]
