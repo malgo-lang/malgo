@@ -14,7 +14,7 @@ import           Language.Malgo.Monad
 import           Language.Malgo.Pass
 import           Language.Malgo.Prelude
 import           Language.Malgo.TypeRep.CType
-import           Language.Malgo.TypeRep.Type
+import           Language.Malgo.TypeRep.Type  hiding ((:->))
 
 data Desugar
 
@@ -26,10 +26,12 @@ instance Pass Desugar (S.Expr (Id Type)) (Exp (Id CType)) where
 newTmp :: MonadUniq m => CType -> m (Id CType)
 newTmp t = newId t "$d"
 
-findVar :: MonadState (IdMap Type (Id CType)) m => Id Type -> m (Id CType)
-findVar = undefined
+findVar :: (MonadFail m, MonadState (IdMap Type (Id CType)) m) => Id Type -> m (Id CType)
+findVar v = do
+  Just v' <- gets (view (at v))
+  pure v'
 
-def :: (MonadUniq f, MonadWriter (Endo (Exp (Id CType))) f) => Exp (Id CType) -> f (Atom (Id CType))
+def :: (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) => Exp (Id CType) -> m (Atom (Id CType))
 def (Atom x) = pure x
 def v = do
   x <- newTmp (cTypeOf v)
@@ -39,7 +41,7 @@ def v = do
 runDef :: Functor f => WriterT (Endo a) f a -> f a
 runDef m = uncurry (flip appEndo) <$> runWriterT m
 
-toExp :: (MonadState (IdMap Type (Id CType)) f, MonadUniq f) => S.Expr (Id Type) -> f (Exp (Id CType))
+toExp :: (MonadState (IdMap Type (Id CType)) m, MonadUniq m, MonadFail m) => S.Expr (Id Type) -> m (Exp (Id CType))
 toExp (S.Var _ x) =
   Atom . Var <$> findVar x
 toExp (S.Int _ x) =
@@ -84,12 +86,14 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
   x' <- def =<< toExp x
   match (Atom i') [(Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x'))] (\_ -> pure Undefined)
 toExp (S.Call _ f xs) = runDef $ do
-  f' <- def =<< toExp f
+  Var f' <- def =<< toExp f
   xs' <- traverse (def <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf xs'
-  let_ (Pack con xs') (PackT [con]) $ \arg -> case f' of
-    Var fun -> pure $ Call fun [Var arg]
-    _       -> bug Unreachable
+  let_ (Pack con xs') (PackT [con]) $ \arg -> pure $ Call f' [Var arg]
+-- toExp (S.Fn _ ps e) = runDef $ do
+--   let con = Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . fst) ps
+--   paramTuple <- newTmp $ PackT [con]
+--   let_ (Fun _ _) (PackT _ :-> _) $ pure . Atom . Var
 
 let_ ::
   MonadUniq m
