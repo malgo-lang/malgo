@@ -34,14 +34,6 @@ instance HasCType Unboxed where
   cTypeOf String{} = StringT
 
 {-
-Constructors  C ::= <tag n>
--}
-type Tag = Text
-
-data Con = Con Tag [CType]
-    deriving stock (Eq, Show)
-
-{-
 Expressions  e ::= a               Atom
                  | f a_1 ... a_n   Function call (arity(f) >= 1)
                  | p a_1 ... a_n   Saturated primitive operation (n >= 1)
@@ -67,7 +59,7 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf (ArrayRead a _) = case cTypeOf a of
     ArrayT t -> t
     _        -> bug Unreachable
-  cTypeOf (ArrayWrite _ _ _) = PackT "Tuple0" []
+  cTypeOf (ArrayWrite _ _ _) = PackT $ Con "Tuple0" []
   cTypeOf (Let _ e) = cTypeOf e
   cTypeOf (Match _ [] (_, e)) = cTypeOf e
   cTypeOf (Match _ (Unpack _ _ e : _) _) = cTypeOf e
@@ -98,10 +90,10 @@ data Obj a = Fun [a] (Exp a)
     deriving stock (Eq, Show, Functor)
 
 instance HasCType a => HasCType (Obj a) where
-  cTypeOf (Fun xs e) = foldr (:->) (cTypeOf e) (map cTypeOf xs)
-  cTypeOf (Pap f xs) = returnType (cTypeOf f) xs
-  cTypeOf (Pack (Con name ts) _) = PackT name ts
-  cTypeOf (Array a _) = ArrayT (cTypeOf a)
+  cTypeOf (Fun xs e)   = foldr (:->) (cTypeOf e) (map cTypeOf xs)
+  cTypeOf (Pap f xs)   = returnType (cTypeOf f) xs
+  cTypeOf (Pack con _) = PackT con
+  cTypeOf (Array a _)  = ArrayT (cTypeOf a)
 
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
@@ -159,7 +151,7 @@ fib :: Obj Text
 fib = Fun ["n"] $ Match
   (Atom (Var "n"))
   [ Unpack (Con "Int" [IntT]) ["n'"] $ Match
-      (PrimCall "<=" (IntT :-> IntT :-> PackT "Bool" []) [Var "n'", Unboxed (Int 1)])
+      (PrimCall "<=" (IntT :-> IntT :-> PackT (Con "Bool" [])) [Var "n'", Unboxed (Int 1)])
       [ Unpack (Con "False" []) [] $ Let [("v1", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $ Match
         (Call "minusInt" [Var "n", Var "v1"])
         []

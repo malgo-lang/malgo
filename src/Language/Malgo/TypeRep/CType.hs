@@ -10,7 +10,7 @@ data CType = CType :-> CType
     | FloatT
     | CharT
     | StringT
-    | PackT Text [CType]
+    | PackT Con
     | ArrayT CType
     | AnyT
     deriving stock (Eq, Show, Ord)
@@ -23,3 +23,11 @@ instance HasCType CType where
 
 instance HasCType a => HasCType (Id a) where
     cTypeOf x = cTypeOf $ x ^. idMeta
+
+{-
+Constructors  C ::= <tag n>
+-}
+type Tag = Text
+
+data Con = Con Tag [CType]
+    deriving stock (Eq, Show, Ord)
