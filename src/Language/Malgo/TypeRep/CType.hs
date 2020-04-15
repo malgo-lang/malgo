@@ -1,16 +1,18 @@
+{-# LANGUAGE OverloadedStrings  #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 module Language.Malgo.TypeRep.CType where
 
 import           Language.Malgo.Id
 import           Language.Malgo.Prelude
+-- import qualified Language.Malgo.TypeRep.Type as T
 
 data CType = CType :-> CType
     | IntT
     | FloatT
     | CharT
     | StringT
-    | PackT Con
+    | PackT [Con]
     | ArrayT CType
     | AnyT
     deriving stock (Eq, Show, Ord)

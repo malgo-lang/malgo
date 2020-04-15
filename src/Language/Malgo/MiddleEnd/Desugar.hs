@@ -43,21 +43,28 @@ toExp :: (MonadState (IdMap Type (Id CType)) f, MonadUniq f) => S.Expr (Id Type)
 toExp (S.Var _ x) =
   Atom . Var <$> findVar x
 toExp (S.Int _ x) =
-  let_ (Pack (Con "Int" [IntT]) [Unboxed (Int x)]) $ pure . Atom . Var
+  let_ (Pack con [Unboxed (Int x)]) (PackT [con]) $ pure . Atom . Var
+  where con = Con "Int" [IntT]
 toExp (S.Float _ x) =
-  let_ (Pack (Con "Float" [FloatT]) [Unboxed (Float x)]) $ pure . Atom . Var
+  let_ (Pack con [Unboxed (Float x)]) (PackT [con]) $ pure . Atom . Var
+  where con = Con "Float" [FloatT]
 toExp (S.Bool _ x) =
-  let_ (if x then Pack (Con "True" []) [] else Pack (Con "False" []) []) $ pure . Atom . Var
+  let_ (if x then Pack trueC [] else Pack falseC []) (PackT [trueC, falseC]) $ pure . Atom . Var
+  where trueC = Con "True" []
+        falseC = Con "False" []
 toExp (S.Char _ x) =
-  let_ (Pack (Con "Char" [CharT]) [Unboxed $ Char x]) $ pure . Atom . Var
+  let_ (Pack con [Unboxed $ Char x]) (PackT [con]) $ pure . Atom . Var
+  where con = Con "Char" [CharT]
 toExp (S.String _ x) =
-  let_ (Pack (Con "String" [StringT]) [Unboxed $ String x]) $ pure . Atom . Var
+  let_ (Pack con [Unboxed $ String x]) (PackT [con]) $ pure . Atom . Var
+  where con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (def <=< toExp) xs
-  let_ (Pack (Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs) vs) $ pure . Atom . Var
+  let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs
+  let_ (Pack con vs) (PackT [con]) $ pure . Atom . Var
 toExp (S.Array _ (x :| xs)) = runDef $ do
   x' <- def =<< toExp x
-  let_ (Array x' $ Unboxed (Int $ fromIntegral $ length xs + 1)) $ \arr -> do
+  let_ (Array x' $ Unboxed (Int $ fromIntegral $ length xs + 1)) (ArrayT $ cTypeOf x') $ \arr -> do
     ifor_ xs $ \i v -> do
       v' <- def =<< toExp v
       def (ArrayWrite (Var arr) (Unboxed (Int $ fromIntegral $ i + 1)) v')
@@ -79,17 +86,19 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
 toExp (S.Call _ f xs) = runDef $ do
   f' <- def =<< toExp f
   xs' <- traverse (def <=< toExp) xs
-  let_ (Pack (Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf xs') xs') $ \arg -> case f' of
+  let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf xs'
+  let_ (Pack con xs') (PackT [con]) $ \arg -> case f' of
     Var fun -> pure $ Call fun [Var arg]
     _       -> bug Unreachable
 
 let_ ::
   MonadUniq m
   => Obj (Id CType)
+  -> CType
   -> (Id CType -> WriterT (Endo (Exp (Id CType))) m (Exp (Id CType)))
   -> m (Exp (Id CType))
-let_ o body = do
-  v <- newTmp $ cTypeOf o
+let_ o otype body = do
+  v <- newTmp otype
   body' <- runDef $ body v
   pure $ Let [(v, o)] body'
 
