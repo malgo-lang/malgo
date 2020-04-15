@@ -1,6 +1,6 @@
-{-# LANGUAGE OverloadedStrings  #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
 module Language.Malgo.TypeRep.CType where
 
 import           Language.Malgo.Id
@@ -17,15 +17,6 @@ data CType = CType :-> CType
     | AnyT
     deriving stock (Eq, Show, Ord)
 
-class HasCType a where
-    cTypeOf :: a -> CType
-
-instance HasCType CType where
-    cTypeOf x = x
-
-instance HasCType a => HasCType (Id a) where
-    cTypeOf x = cTypeOf $ x ^. idMeta
-
 {-
 Constructors  C ::= <tag n>
 -}
@@ -33,3 +24,12 @@ type Tag = Text
 
 data Con = Con Tag [CType]
     deriving stock (Eq, Show, Ord)
+
+class HasCType a where
+  cTypeOf :: a -> CType
+
+instance HasCType CType where
+  cTypeOf x = x
+
+instance HasCType a => HasCType (Id a) where
+  cTypeOf x = cTypeOf $ x ^. idMeta

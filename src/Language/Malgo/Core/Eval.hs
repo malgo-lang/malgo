@@ -3,11 +3,11 @@
 {-# LANGUAGE TypeFamilies       #-}
 module Language.Malgo.Core.Eval where
 
+import qualified Data.Map               as Map
 import           Language.Malgo.Id
 import           Language.Malgo.IR.Core
 import           Language.Malgo.Monad
 import           Language.Malgo.Prelude
-import qualified Data.Map as Map
 
 data Cont a = MatchC [(Text, [a], Exp a)] (a, Exp a)
     | ApplyC [Atom a]
@@ -38,7 +38,7 @@ data Obj a = FunO [a] (Exp a)
 --   heap <- get
 --   case stack ^. at a of
 --     (Just (Var a')) -> case heap ^. at a' of
---       Just 
+--       Just
   -- case (stack ^. at a, heap ^. at a) of
   --   (Just (Var a'), _) -> pure v
   --   (_, Just v) -> pure v
