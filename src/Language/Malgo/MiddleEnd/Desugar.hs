@@ -76,6 +76,12 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
   i' <- def =<< toExp i
   x' <- def =<< toExp x
   match (Atom i') [(Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x'))] (\_ -> pure Undefined)
+toExp (S.Call _ f xs) = runDef $ do
+  f' <- def =<< toExp f
+  xs' <- traverse (def <=< toExp) xs
+  let_ (Pack (Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf xs') xs') $ \arg -> case f' of
+    Var fun -> pure $ Call fun [Var arg]
+    _       -> bug Unreachable
 
 let_ ::
   MonadUniq m
