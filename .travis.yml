@@ -23,6 +23,10 @@ matrix:
   - ghc: 8.8.2
     env: STACK_YAML="$TRAVIS_BUILD_DIR/stack.yaml"
 
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install libgc
+
 install:
   - |
     if [ -z "$STACK_YAML" ]; then
