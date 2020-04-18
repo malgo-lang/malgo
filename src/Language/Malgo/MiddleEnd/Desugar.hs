@@ -90,10 +90,19 @@ toExp (S.Call _ f xs) = runDef $ do
   xs' <- traverse (def <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf xs'
   let_ (Pack con xs') (PackT [con]) $ \arg -> pure $ Call f' [Var arg]
--- toExp (S.Fn _ ps e) = runDef $ do
---   let con = Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . fst) ps
---   paramTuple <- newTmp $ PackT [con]
---   let_ (Fun _ _) (PackT _ :-> _) $ pure . Atom . Var
+toExp (S.Fn _ ps e) = do
+  let con = Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . fst) ps
+  paramTuple <- newTmp $ PackT [con]
+
+  e' <- match (Atom $ Var paramTuple) [(con, \ps' -> do
+    zipWithM_ (\(p, _) p' -> modify (set (at p) (Just p'))) ps ps'
+    toExp e
+    )] (\_ -> pure Undefined)
+
+  let_ (Fun [paramTuple] e') (PackT [con] :-> cTypeOf e') $ pure . Atom . Var
+toExp (S.Seq _ e1 e2) = do
+  e1' <- toExp e1
+  match e1' [] (\_ -> toExp e2)
 
 let_ ::
   MonadUniq m
