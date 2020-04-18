@@ -103,6 +103,30 @@ toExp (S.Fn _ ps e) = do
 toExp (S.Seq _ e1 e2) = do
   e1' <- toExp e1
   match e1' [] (\_ -> toExp e2)
+toExp (S.Let _ (S.ValDec _ a _ v) e) = do
+  v' <- toExp v
+  match v' [] (\vId -> modify (set (at a) (Just vId)) >> toExp e)
+toExp (S.Let _ (S.ExDec _ prim _ primName) e) = do
+  case cTypeOf $ prim ^. idMeta of
+    ta :-> tb -> do
+      a <- newTmp ta
+      let funBody = PrimCall (T.pack primName) (ta :-> tb) [Var a]
+      let_ (Fun [a] funBody) (ta :-> tb) $ \prim' -> do
+        modify (set (at prim) (Just prim'))
+        toExp e
+    _ -> bug Unreachable
+toExp (S.Let _ (S.FunDec fs) e) = do
+  zipWithM_ (\f -> modify . set (at (f ^. _2)) . Just) fs =<< traverse (newTmp . cTypeOf . view (_2 . idMeta)) fs
+  fs' <- traverse ?? fs $ \(_, f, ps, _, body) -> do
+    let con = Con ("Tuple" <> T.pack (show $ length ps)) (map (cTypeOf . fst) ps)
+    paramTuple <- newTmp $ PackT [con]
+    body' <- match (Atom $ Var paramTuple) [(con, \ps' -> do
+      zipWithM_ (\(p, _) p' -> modify (set (at p) (Just p'))) ps ps'
+      toExp body)] (\_ -> pure Undefined)
+    f' <- findVar f
+    pure $ (f', Fun [paramTuple] body')
+  e' <- toExp e
+  pure $ Let fs' e'
 
 let_ ::
   MonadUniq m
