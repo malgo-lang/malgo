@@ -127,6 +127,52 @@ toExp (S.Let _ (S.FunDec fs) e) = do
     pure $ (f', Fun [paramTuple] body')
   e' <- toExp e
   pure $ Let fs' e'
+toExp (S.If _ c t f) = do
+  c' <- toExp c
+  match c' [(Con "True" [], \_ -> toExp t), (Con "False" [], \_ -> toExp f)] (\_ -> pure Undefined)
+toExp (S.BinOp _ o x y) =
+  case o of
+    S.Add -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "+" (IntT :-> IntT :-> IntT)
+    S.Sub -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "-" (IntT :-> IntT :-> IntT)
+    S.Mul -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "*" (IntT :-> IntT :-> IntT)
+    S.Div -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "/" (IntT :-> IntT :-> IntT)
+    S.Mod -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "%" (IntT :-> IntT :-> IntT)
+    S.FAdd -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "FloatT" [FloatT]) "+." (FloatT :-> FloatT :-> FloatT)
+    S.FSub -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "FloatT" [FloatT]) "-." (FloatT :-> FloatT :-> FloatT)
+    S.FMul -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "FloatT" [FloatT]) "*." (FloatT :-> FloatT :-> FloatT)
+    S.FDiv -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "FloatT" [FloatT]) "/." (FloatT :-> FloatT :-> FloatT)
+    S.Eq -> compareOpPrim "=="
+    S.Neq -> compareOpPrim "<>"
+    S.Lt -> compareOpPrim "<"
+    S.Gt -> compareOpPrim ">"
+    S.Le -> compareOpPrim "<="
+    S.Ge -> compareOpPrim ">="
+    S.And -> do
+      lexp <- toExp x
+      rexp <- toExp y
+      match lexp
+        [(Con "False" [], \_ -> Atom <$> def lexp)]
+        (\_ -> Atom <$> def rexp)
+    S.Or -> do
+      lexp <- toExp x
+      rexp <- toExp y
+      match lexp
+        [(Con "True" [], \_ -> Atom <$> def lexp)]
+        (\_ -> Atom <$> def rexp)
+  where
+    arithOpPrim lcon rcon resultCon primName primType = do
+      lexp <- toExp x
+      rexp <- toExp y
+      match lexp [(lcon, \[lval] ->
+        match rexp [(rcon, \[rval] ->
+          match (PrimCall primName primType [Var lval, Var rval]) [] $ \result ->
+            let_ (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var)]
+          (\_ -> pure Undefined))]
+        (\_ -> pure Undefined)
+    compareOpPrim primName = runDef $ do
+      lval <- def =<< toExp x
+      rval <- def =<< toExp y
+      match (PrimCall primName (cTypeOf lval :-> cTypeOf rval :-> PackT [Con "True" [], Con "False" []]) [lval, rval]) [] $ pure . Atom . Var
 
 let_ ::
   MonadUniq m
