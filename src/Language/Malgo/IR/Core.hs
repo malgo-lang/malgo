@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveFunctor      #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedLists    #-}
 {-# LANGUAGE OverloadedStrings  #-}
 module Language.Malgo.IR.Core where
 
@@ -40,7 +41,7 @@ Expressions  e ::= a               Atom
                  | a_1[a_2]        Read array
                  | a_1[a_2] <- a_3 Write array
                  | LET x = obj IN e
-                 | MATCH e WITH { alt_1; ... alt_n; x -> e } (n >= 0)
+                 | MATCH e WITH { alt_1; ... alt_n; } (n >= 0)
 -}
 data Exp a = Atom (Atom a)
     | Call a [Atom a]
@@ -48,7 +49,7 @@ data Exp a = Atom (Atom a)
     | ArrayRead (Atom a) (Atom a)
     | ArrayWrite (Atom a) (Atom a) (Atom a)
     | Let [(a, Obj a)] (Exp a)
-    | Match (Exp a) [Case a] (a, Exp a)
+    | Match (Exp a) (NonEmpty (Case a))
     | Undefined
     deriving stock (Eq, Show, Functor)
 
@@ -61,8 +62,8 @@ instance HasCType a => HasCType (Exp a) where
     _        -> bug Unreachable
   cTypeOf (ArrayWrite _ _ _) = PackT [Con "Tuple0" []]
   cTypeOf (Let _ e) = cTypeOf e
-  cTypeOf (Match _ [] (_, e)) = cTypeOf e
-  cTypeOf (Match _ (Unpack _ _ e : _) _) = cTypeOf e
+  cTypeOf (Match _ (Unpack _ _ e :| _)) = cTypeOf e
+  cTypeOf (Match _ (Bind _ e :| _)) = cTypeOf e
   cTypeOf Undefined = AnyT
 
 returnType :: CType -> [a] -> CType
@@ -73,8 +74,10 @@ returnType _ _                = bug Unreachable
 
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
+                    | BIND x -> e
 -}
 data Case a = Unpack Con [a] (Exp a)
+    | Bind a (Exp a)
     deriving stock (Eq, Show, Functor)
 
 {-
@@ -116,16 +119,11 @@ plusInt = FUN(a b ->
 plusInt :: Obj Text
 plusInt = Fun ["a", "b"] $ Match
   (Atom (Var "a"))
-  [ Unpack (Con "Int" [IntT]) ["x"] $ Match
-      (Atom (Var "b"))
-      [ Unpack (Con "Int" [IntT]) ["y"] $ Match
-          (PrimCall "+" (IntT :-> IntT :-> IntT) [Var "x", Var "y"])
-          []
-          ("z", Let [("r", Pack (Con "Int" [IntT]) [Var "z"])] $ Atom (Var "r"))
-      ]
-      ("_", Undefined)
-  ]
-  ("_", Undefined)
+  [Unpack (Con "Int" [IntT]) ["x"] $ Match
+     (Atom (Var "b"))
+     [Unpack (Con "Int" [IntT]) ["y"] $ Match
+        (PrimCall "+" (IntT :-> IntT :-> IntT) [Var "x", Var "y"])
+        [Bind "z" $ Let [("r", Pack (Con "Int" [IntT]) [Var "z"])] $ Atom (Var "r")]]]
 
 {-
 fib = FUN(n ->
@@ -154,20 +152,9 @@ fib = Fun ["n"] $ Match
       (PrimCall "<=" (IntT :-> IntT :-> PackT [Con "True" [], Con "False" []]) [Var "n'", Unboxed (Int 1)])
       [ Unpack (Con "False" []) [] $ Let [("v1", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $ Match
         (Call "minusInt" [Var "n", Var "v1"])
-        []
-        ( "n2"
-        , Match
+        [ Bind "n2" $ Match
           (Call "fib" [Var "n2"])
-          []
-          ( "v2"
-          , Let [("v3", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $ Match
+          [ Bind "v2" $ Let [("v3", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $ Match
             (Call "minusInt" [Var "n", Var "v3"])
-            []
-            ("n3", Match (Call "fib" [Var "n3"]) [] ("v4", Call "plusInt" [Var "v2", Var "v4"]))
-          )
-        )
-      , Unpack (Con "True" []) [] $ Let [("v5", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] (Atom (Var "v5"))
-      ]
-      ("_", Undefined)
-  ]
-  ("_", Undefined)
+            [Bind "n3" $ Match (Call "fib" [Var "n3"]) [Bind "v4" $ Call "plusInt" [Var "v2", Var "v4"]]]]]
+      , Unpack (Con "True" []) [] $ Let [("v5", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] (Atom (Var "v5"))]]
