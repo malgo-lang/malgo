@@ -3,11 +3,11 @@
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedLists       #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 module Language.Malgo.MiddleEnd.Desugar (Desugar) where
 
-import           Data.List.NonEmpty           (fromList)
 import qualified Data.Text                    as T
 import           Language.Malgo.Id
 import           Language.Malgo.IR.Core
@@ -37,7 +37,7 @@ def :: (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) => Exp (Id CType) ->
 def (Atom x) = pure x
 def v = do
   x <- newTmp (cTypeOf v)
-  tell $ Endo $ \e -> Match v $ fromList [Bind x e]
+  tell $ Endo $ \e -> Match v [Bind x e]
   pure (Var x)
 
 runDef :: Functor f => WriterT (Endo a) f a -> f a
@@ -77,16 +77,16 @@ toExp (S.MakeArray _ a n) = runDef $ do
   a' <- def =<< toExp a
   n' <- def =<< toExp n
   v <- newTmp $ ArrayT (cTypeOf a')
-  match (Atom n') $ fromList [(Right $ Con "Int" [IntT], \[n''] -> pure $ Let [(v, Array a' $ Var n'')] $ Atom a')]
+  match (Atom n') [(Right $ Con "Int" [IntT], \[n''] -> pure $ Let [(v, Array a' $ Var n'')] $ Atom a')]
 toExp (S.ArrayRead _ a i) = runDef $ do
   a' <- def =<< toExp a
   i' <- def =<< toExp i
-  match (Atom i') $ fromList [(Right $ Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayRead a' $ Var i''))]
+  match (Atom i') [(Right $ Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayRead a' $ Var i''))]
 toExp (S.ArrayWrite _ a i x) = runDef $ do
   a' <- def =<< toExp a
   i' <- def =<< toExp i
   x' <- def =<< toExp x
-  match (Atom i') $ fromList [(Right $ Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x'))]
+  match (Atom i') [(Right $ Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x'))]
 toExp (S.Call _ f xs) = runDef $ do
   Var f' <- def =<< toExp f
   xs' <- traverse (def <=< toExp) xs
@@ -96,17 +96,17 @@ toExp (S.Fn _ ps e) = do
   let con = Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . fst) ps
   paramTuple <- newTmp $ PackT [con]
 
-  e' <- match (Atom $ Var paramTuple) $ fromList [(Right con, \ps' -> do
+  e' <- match (Atom $ Var paramTuple) [(Right con, \ps' -> do
     zipWithM_ (\(p, _) p' -> modify (set (at p) (Just p'))) ps ps'
     toExp e)]
 
   let_ (Fun [paramTuple] e') (PackT [con] :-> cTypeOf e') $ pure . Atom . Var
 toExp (S.Seq _ e1 e2) = do
   e1' <- toExp e1
-  match e1' $ fromList [(Left (cTypeOf e1'), \_ -> toExp e2)]
+  match e1' [(Left (cTypeOf e1'), \_ -> toExp e2)]
 toExp (S.Let _ (S.ValDec _ a _ v) e) = do
   v' <- toExp v
-  match v' $ fromList [(Left (cTypeOf v'), \[vId] -> modify (set (at a) (Just vId)) >> toExp e)]
+  match v' [(Left (cTypeOf v'), \[vId] -> modify (set (at a) (Just vId)) >> toExp e)]
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) = do
   case cTypeOf $ prim ^. idMeta of
     ta :-> tb -> do
@@ -121,7 +121,7 @@ toExp (S.Let _ (S.FunDec fs) e) = do
   fs' <- traverse ?? fs $ \(_, f, ps, _, body) -> do
     let con = Con ("Tuple" <> T.pack (show $ length ps)) (map (cTypeOf . fst) ps)
     paramTuple <- newTmp $ PackT [con]
-    body' <- match (Atom $ Var paramTuple) $ fromList [(Right con, \ps' -> do
+    body' <- match (Atom $ Var paramTuple) [(Right con, \ps' -> do
       zipWithM_ (\(p, _) p' -> modify (set (at p) (Just p'))) ps ps'
       toExp body)]
     f' <- findVar f
@@ -130,7 +130,7 @@ toExp (S.Let _ (S.FunDec fs) e) = do
   pure $ Let fs' e'
 toExp (S.If _ c t f) = do
   c' <- toExp c
-  match c' $ fromList [(Right $ Con "True" [], \_ -> toExp t), (Right $ Con "False" [], \_ -> toExp f)]
+  match c' [(Right $ Con "True" [], \_ -> toExp t), (Right $ Con "False" [], \_ -> toExp f)]
 toExp (S.BinOp _ o x y) =
   case o of
     S.Add -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "+" (IntT :-> IntT :-> IntT)
@@ -151,24 +151,44 @@ toExp (S.BinOp _ o x y) =
     S.And -> do
       lexp <- toExp x
       rexp <- toExp y
-      match lexp $ fromList [(Right $ Con "False" [], \_ -> Atom <$> def lexp), (Left (cTypeOf lexp), \_ -> Atom <$> def rexp)]
+      match lexp [(Right $ Con "False" [], \_ -> Atom <$> def lexp), (Left (cTypeOf lexp), \_ -> Atom <$> def rexp)]
     S.Or -> do
       lexp <- toExp x
       rexp <- toExp y
-      match lexp $ fromList [(Right $ Con "True" [], \_ -> Atom <$> def lexp), (Left (cTypeOf lexp), \_ -> Atom <$> def rexp)]
+      match lexp [(Right $ Con "True" [], \_ -> Atom <$> def lexp), (Left (cTypeOf lexp), \_ -> Atom <$> def rexp)]
   where
     arithOpPrim lcon rcon resultCon@(Con _ [t]) primName primType = do
       lexp <- toExp x
       rexp <- toExp y
-      match lexp $ fromList [(Right lcon, \[lval] ->
-        match rexp $ fromList [(Right rcon, \[rval] ->
-          match (PrimCall primName primType [Var lval, Var rval]) $ fromList [(Left t, \[result] ->
+      match lexp [(Right lcon, \[lval] ->
+        match rexp [(Right rcon, \[rval] ->
+          match (PrimCall primName primType [Var lval, Var rval]) [(Left t, \[result] ->
             let_ (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var)])])]
     compareOpPrim primName = runDef $ do
       lval <- def =<< toExp x
       rval <- def =<< toExp y
       match (PrimCall primName (cTypeOf lval :-> cTypeOf rval :-> PackT [Con "True" [], Con "False" []]) [lval, rval])
-        $ fromList [(Left (PackT [Con "True" [], Con "False" []]), \[result] -> pure $ Atom $ Var result)]
+        [(Left (PackT [Con "True" [], Con "False" []]), \[result] -> pure $ Atom $ Var result)]
+toExp (S.Match _ e cs) = do
+  e' <- toExp e
+  cs' <- traverse ?? cs $ \(p, v) -> crushPat p $ toExp v
+  pure $ Match e' cs'
+
+crushPat :: (MonadUniq m, MonadState (IdMap Type (Id CType)) m) => S.Pat (Id Type) -> m (Exp (Id CType)) -> m (Case (Id CType))
+crushPat (S.VarP x) = \e -> do
+  x' <- newTmp $ cTypeOf $ typeOf x
+  modify $ set (at x) (Just x')
+  Bind x' <$> e
+crushPat (S.TupleP xs) = go xs []
+  where
+    go [] acc e =
+      let acc' = reverse acc
+      in Unpack (Con ("Tuple" <> T.pack (show $ length acc)) $ map cTypeOf acc') acc' <$> e
+    go (p : ps) acc e = do
+      x <- newTmp $ cTypeOf $ typeOf p
+      go ps (x : acc) $ do
+        clause <- crushPat p e
+        pure $ Match (Atom $ Var x) [clause]
 
 let_ ::
   MonadUniq m
