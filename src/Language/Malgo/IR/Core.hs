@@ -6,6 +6,7 @@
 module Language.Malgo.IR.Core where
 
 import           Language.Malgo.Prelude
+import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.CType
 
 {-
@@ -19,6 +20,7 @@ instance HasCType a => HasCType (Atom a) where
   cTypeOf (Var x)     = cTypeOf x
   cTypeOf (Unboxed x) = cTypeOf x
 
+instance Show a => Pretty (Atom a) where pPrint = pPrint . pShow
 {-
 Unboxed values  unboxed
 -}
@@ -33,6 +35,8 @@ instance HasCType Unboxed where
   cTypeOf Float{}  = FloatT
   cTypeOf Char{}   = CharT
   cTypeOf String{} = StringT
+
+instance Pretty Unboxed where pPrint = pPrint . pShow
 
 {-
 Expressions  e ::= a               Atom
@@ -67,10 +71,13 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf Undefined = AnyT
 
 returnType :: CType -> [a] -> CType
-returnType (_ :-> t) []       = t
+returnType t [] = t
+returnType (_ :-> t) [_] = t
 returnType (_ :-> t) (_:rest) = returnType t rest
-returnType AnyT _             = AnyT
-returnType _ _                = bug Unreachable
+returnType AnyT _ = AnyT
+returnType _ _ = bug Unreachable
+
+instance Show a => Pretty (Exp a) where pPrint = pPrint . pShow
 
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
@@ -79,6 +86,8 @@ Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
 data Case a = Unpack Con [a] (Exp a)
     | Bind a (Exp a)
     deriving stock (Eq, Show, Functor)
+
+instance Show a => Pretty (Case a) where pPrint = pPrint . pShow
 
 {-
 Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
@@ -92,17 +101,15 @@ data Obj a = Fun [a] (Exp a)
     | Array (Atom a) (Atom a)
     deriving stock (Eq, Show, Functor)
 
--- instance HasCType a => HasCType (Obj a) where
---   cTypeOf (Fun xs e)   = foldr (:->) (cTypeOf e) (map cTypeOf xs)
---   cTypeOf (Pap f xs)   = returnType (cTypeOf f) xs
---   cTypeOf (Pack con _) = PackT con
---   cTypeOf (Array a _)  = ArrayT (cTypeOf a)
+instance Show a => Pretty (Obj a) where pPrint = pPrint . pShow
 
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 -}
 newtype Program a = Program [(a, Obj a)]
     deriving stock (Eq, Show, Functor)
+
+instance Show a => Pretty (Program a) where pPrint = pPrint . pShow
 
 -- Examples
 

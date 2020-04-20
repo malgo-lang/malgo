@@ -21,6 +21,7 @@ import qualified Language.Malgo.Parser                as Parser
 import           Language.Malgo.FrontEnd.Rename
 import           Language.Malgo.FrontEnd.Typing.Infer
 
+import           Language.Malgo.MiddleEnd.Desugar
 import           Language.Malgo.MiddleEnd.HIRLint
 import           Language.Malgo.MiddleEnd.MIRLint
 import           Language.Malgo.MiddleEnd.TransToHIR
@@ -51,6 +52,7 @@ parseOpt = execParser $ info
        <*> switch (long "dump-type-table")
        <*> switch (long "dump-mir")
        <*> switch (long "dump-lir")
+       <*> switch (long "dump-desugar")
        )
   <*>  switch (long "debug-mode")
   <**> helper
@@ -69,6 +71,7 @@ compile = M.runMalgo $ do
   llvmir <-
     transWithDump @Rename ast
     >>= transWithDump @Typing
+    >>= (\ast -> transWithDump @Desugar ast >> pure ast)
     >>= transWithDump @TransToHIR
     >>= transWithDump @HIRLint
     >>= transWithDump @TransToMIR

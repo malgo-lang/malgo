@@ -22,7 +22,7 @@ data Desugar
 
 instance Pass Desugar (S.Expr (Id Type)) (Exp (Id CType)) where
   passName = "Desugar"
-  isDump = const False -- TODO: dumpDesugar
+  isDump = dumpDesugar
   trans e = evalStateT ?? mempty $ toExp e
 
 newTmp :: MonadUniq m => CType -> m (Id CType)

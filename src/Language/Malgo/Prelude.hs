@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# LANGUAGE ConstrainedClassMethods #-}
 {-# LANGUAGE DerivingStrategies      #-}
+{-# LANGUAGE FlexibleContexts        #-}
 {-# LANGUAGE FlexibleInstances       #-}
 {-# LANGUAGE MultiParamTypeClasses   #-}
 {-# LANGUAGE NoImplicitPrelude       #-}
@@ -74,7 +75,8 @@ import qualified Data.Set                         as Set
 import           Data.String                      (IsString (..))
 import           Data.Text                        (Text)
 import           Data.Typeable
-import           GHC.Stack                        (HasCallStack)
+import           GHC.Stack                        (CallStack, HasCallStack,
+                                                   callStack, prettyCallStack)
 import           Prelude                          hiding (log, unzip)
 import           Text.Parsec.Pos                  (SourcePos)
 import           Text.PrettyPrint.HughesPJClass   (Pretty (..), text)
@@ -114,8 +116,15 @@ ordNub = go Set.empty
   go s (x : xs) | x `Set.member` s = go s xs
                 | otherwise        = x : go (Set.insert x s) xs
 
-bug :: Exception e => e -> a
-bug e = throw (toException e)
+data Bug = Bug SomeException CallStack
+    deriving stock (Show)
+
+instance Exception Bug where
+    displayException (Bug e cStack) = displayException e ++ "\n"
+                                   ++ prettyCallStack cStack
+
+bug :: (HasCallStack, Exception e) => e -> a
+bug e = throw $ toException (Bug (toException e) callStack)
 
 -- mtlのインスタンスの追加定義
 instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where

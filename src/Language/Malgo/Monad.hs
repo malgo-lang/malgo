@@ -46,6 +46,7 @@ data Opt = Opt
     , dumpTypeTable :: Bool
     , dumpClosure   :: Bool
     , dumpLIR       :: Bool
+    , dumpDesugar   :: Bool
     , isDebugMode   :: Bool
     }
     deriving stock (Eq, Show)
