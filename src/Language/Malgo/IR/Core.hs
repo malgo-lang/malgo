@@ -5,9 +5,13 @@
 {-# LANGUAGE OverloadedStrings  #-}
 module Language.Malgo.IR.Core where
 
+import           Data.Text                    (unpack)
 import           Language.Malgo.Prelude
 import           Language.Malgo.Pretty
 import           Language.Malgo.TypeRep.CType
+import           Text.PrettyPrint.HughesPJ    (brackets, char, doubleQuotes,
+                                               nest, parens, quotes, sep, text,
+                                               vcat, ($$))
 
 {-
 Atoms  a ::= unboxed | x
@@ -20,7 +24,10 @@ instance HasCType a => HasCType (Atom a) where
   cTypeOf (Var x)     = cTypeOf x
   cTypeOf (Unboxed x) = cTypeOf x
 
-instance Show a => Pretty (Atom a) where pPrint = pPrint . pShow
+instance Pretty a => Pretty (Atom a) where
+  pPrint (Var x)     = pPrint x
+  pPrint (Unboxed x) = pPrint x
+
 {-
 Unboxed values  unboxed
 -}
@@ -36,7 +43,11 @@ instance HasCType Unboxed where
   cTypeOf Char{}   = CharT
   cTypeOf String{} = StringT
 
-instance Pretty Unboxed where pPrint = pPrint . pShow
+instance Pretty Unboxed where
+  pPrint (Int x)    = pPrint x
+  pPrint (Float x)  = pPrint x
+  pPrint (Char x)   = quotes (char x)
+  pPrint (String x) = doubleQuotes (text x)
 
 {-
 Expressions  e ::= a               Atom
@@ -71,13 +82,21 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf Undefined = AnyT
 
 returnType :: CType -> [a] -> CType
-returnType t [] = t
-returnType (_ :-> t) [_] = t
+returnType t []               = t
+returnType (_ :-> t) [_]      = t
 returnType (_ :-> t) (_:rest) = returnType t rest
-returnType AnyT _ = AnyT
-returnType _ _ = bug Unreachable
+returnType AnyT _             = AnyT
+returnType _ _                = bug Unreachable
 
-instance Show a => Pretty (Exp a) where pPrint = pPrint . pShow
+instance Pretty a => Pretty (Exp a) where
+  pPrint (Atom x)          = pPrint x
+  pPrint (Call f xs)       = parens $ pPrint f <+> sep (map pPrint xs)
+  pPrint (PrimCall p _ xs) = parens $ text (unpack p) <+> sep (map pPrint xs)
+  pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
+  pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
+  pPrint (Let xs e) = parens $ "let" <+> vcat (map (\(v, o) -> parens $ pPrint v <+> "=" <+> pPrint o) xs) $$ pPrint e
+  pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ nest 2 (vcat (toList $ fmap pPrint cs))
+  pPrint Undefined = "undefined"
 
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
@@ -87,7 +106,9 @@ data Case a = Unpack Con [a] (Exp a)
     | Bind a (Exp a)
     deriving stock (Eq, Show, Functor)
 
-instance Show a => Pretty (Case a) where pPrint = pPrint . pShow
+instance Pretty a => Pretty (Case a) where
+  pPrint (Unpack c xs e) = parens $ "unpack" <> parens (pPrint c <+> sep (map pPrint xs)) <+> "->" $$ nest 2 (pPrint e)
+  pPrint (Bind x e) = parens $ "bind" <+> pPrint x <+> "->" $$ nest 2 (pPrint e)
 
 {-
 Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
@@ -101,7 +122,11 @@ data Obj a = Fun [a] (Exp a)
     | Array (Atom a) (Atom a)
     deriving stock (Eq, Show, Functor)
 
-instance Show a => Pretty (Obj a) where pPrint = pPrint . pShow
+instance Pretty a => Pretty (Obj a) where
+  pPrint (Fun xs e) = "fun" <> parens (sep (map pPrint xs) <+> "->" <+> (pPrint e))
+  pPrint (Pap f xs) = "pap" <> parens (pPrint f <+> sep (map pPrint xs))
+  pPrint (Pack c xs) = "pack" <> parens (pPrint c <+> sep (map pPrint xs))
+  pPrint (Array a n) = "array" <> parens (pPrint a <> "," <+> pPrint n)
 
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
@@ -109,7 +134,8 @@ Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 newtype Program a = Program [(a, Obj a)]
     deriving stock (Eq, Show, Functor)
 
-instance Show a => Pretty (Program a) where pPrint = pPrint . pShow
+instance Pretty a => Pretty (Program a) where
+  pPrint (Program xs) = vcat $ map (\(f, o) -> pPrint f <+> "=" <+> pPrint o <> ";") xs
 
 -- Examples
 

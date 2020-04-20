@@ -41,7 +41,7 @@ data Id a = Id
     deriving stock (Show, Eq, Ord, Functor, Foldable)
 
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n u m) = text n <> "." <> text (show u) <> "<" <> pPrint m <> ">"
+  pPrint (Id n u _) = text n <> "." <> text (show u)
 
 instance HasType a => HasType (Id a) where
   typeOf Id { _idMeta } = typeOf _idMeta
