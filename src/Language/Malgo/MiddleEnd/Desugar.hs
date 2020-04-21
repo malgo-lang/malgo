@@ -77,7 +77,7 @@ toExp (S.MakeArray _ a n) = runDef $ do
   a' <- def =<< toExp a
   n' <- def =<< toExp n
   v <- newTmp $ ArrayT (cTypeOf a')
-  match (Atom n') [(Right $ Con "Int" [IntT], \[n''] -> pure $ Let [(v, Array a' $ Var n'')] $ Atom a')]
+  match (Atom n') [(Right $ Con "Int" [IntT], \[n''] -> pure $ Let [(v, Array a' $ Var n'')] $ Atom $ Var v)]
 toExp (S.ArrayRead _ a i) = runDef $ do
   a' <- def =<< toExp a
   i' <- def =<< toExp i
@@ -164,6 +164,7 @@ toExp (S.BinOp _ o x y) =
         match rexp [(Right rcon, \[rval] ->
           match (PrimCall primName primType [Var lval, Var rval]) [(Left t, \[result] ->
             let_ (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var)])])]
+    arithOpPrim _ _ _ _ _ = bug Unreachable
     compareOpPrim primName = runDef $ do
       lval <- def =<< toExp x
       rval <- def =<< toExp y
