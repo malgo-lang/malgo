@@ -47,28 +47,28 @@ toExp :: (MonadState (IdMap Type (Id CType)) m, MonadUniq m, MonadFail m) => S.E
 toExp (S.Var _ x) =
   Atom . Var <$> findVar x
 toExp (S.Int _ x) =
-  let_ (Pack con [Unboxed (Int x)]) (PackT [con]) $ pure . Atom . Var
+  let_ "int" (Pack con [Unboxed (Int x)]) (PackT [con]) $ pure . Atom . Var
   where con = Con "Int" [IntT]
 toExp (S.Float _ x) =
-  let_ (Pack con [Unboxed (Float x)]) (PackT [con]) $ pure . Atom . Var
+  let_ "float" (Pack con [Unboxed (Float x)]) (PackT [con]) $ pure . Atom . Var
   where con = Con "Float" [FloatT]
 toExp (S.Bool _ x) =
-  let_ (if x then Pack trueC [] else Pack falseC []) (PackT [trueC, falseC]) $ pure . Atom . Var
+  let_ "bool" (if x then Pack trueC [] else Pack falseC []) (PackT [trueC, falseC]) $ pure . Atom . Var
   where trueC = Con "True" []
         falseC = Con "False" []
 toExp (S.Char _ x) =
-  let_ (Pack con [Unboxed $ Char x]) (PackT [con]) $ pure . Atom . Var
+  let_ "char" (Pack con [Unboxed $ Char x]) (PackT [con]) $ pure . Atom . Var
   where con = Con "Char" [CharT]
 toExp (S.String _ x) =
-  let_ (Pack con [Unboxed $ String x]) (PackT [con]) $ pure . Atom . Var
+  let_ "string" (Pack con [Unboxed $ String x]) (PackT [con]) $ pure . Atom . Var
   where con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (def <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs
-  let_ (Pack con vs) (PackT [con]) $ pure . Atom . Var
+  let_ "tuple" (Pack con vs) (PackT [con]) $ pure . Atom . Var
 toExp (S.Array _ (x :| xs)) = runDef $ do
   x' <- def =<< toExp x
-  let_ (Array x' $ Unboxed (Int $ fromIntegral $ length xs + 1)) (ArrayT $ cTypeOf x') $ \arr -> do
+  let_ "array" (Array x' $ Unboxed (Int $ fromIntegral $ length xs + 1)) (ArrayT $ cTypeOf x') $ \arr -> do
     ifor_ xs $ \i v -> do
       v' <- def =<< toExp v
       def (ArrayWrite (Var arr) (Unboxed (Int $ fromIntegral $ i + 1)) v')
@@ -91,38 +91,40 @@ toExp (S.Call _ f xs) = runDef $ do
   Var f' <- def =<< toExp f
   xs' <- traverse (def <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf xs'
-  let_ (Pack con xs') (PackT [con]) $ \arg -> pure $ Call f' [Var arg]
+  let_ "args" (Pack con xs') (PackT [con]) $ \arg -> pure $ Call f' [Var arg]
 toExp (S.Fn _ ps e) = do
   let con = Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . fst) ps
   paramTuple <- newTmp $ PackT [con]
 
   e' <- match (Atom $ Var paramTuple) [(Right con, \ps' -> do
-    zipWithM_ (\(p, _) p' -> modify (set (at p) (Just p'))) ps ps'
+    zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
     toExp e)]
 
-  let_ (Fun [paramTuple] e') (PackT [con] :-> cTypeOf e') $ pure . Atom . Var
+  let_ "fn" (Fun [paramTuple] e') (PackT [con] :-> cTypeOf e') $ pure . Atom . Var
 toExp (S.Seq _ e1 e2) = do
   e1' <- toExp e1
   match e1' [(Left (cTypeOf e1'), \_ -> toExp e2)]
 toExp (S.Let _ (S.ValDec _ a _ v) e) = do
   v' <- toExp v
-  match v' [(Left (cTypeOf v'), \[vId] -> modify (set (at a) (Just vId)) >> toExp e)]
+  match v' [(Left (cTypeOf v'), \[vId] -> modify (at a ?~ vId) >> toExp e)]
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) = do
   case cTypeOf $ prim ^. idMeta of
     ta :-> tb -> do
       a <- newTmp ta
       let funBody = PrimCall (T.pack primName) (ta :-> tb) [Var a]
-      let_ (Fun [a] funBody) (ta :-> tb) $ \prim' -> do
-        modify (set (at prim) (Just prim'))
+      let_ "prim" (Fun [a] funBody) (ta :-> tb) $ \prim' -> do
+        modify (at prim ?~ prim')
         toExp e
     _ -> bug Unreachable
 toExp (S.Let _ (S.FunDec fs) e) = do
-  zipWithM_ (\f -> modify . set (at (f ^. _2)) . Just) fs =<< traverse (newTmp . cTypeOf . view (_2 . idMeta)) fs
+  traverse_ ?? fs $ \(_, f, _, _, _) -> do
+    f' <- newId (cTypeOf f) (f ^. idName)
+    modify (at f ?~ f')
   fs' <- traverse ?? fs $ \(_, f, ps, _, body) -> do
     let con = Con ("Tuple" <> T.pack (show $ length ps)) (map (cTypeOf . fst) ps)
     paramTuple <- newTmp $ PackT [con]
     body' <- match (Atom $ Var paramTuple) [(Right con, \ps' -> do
-      zipWithM_ (\(p, _) p' -> modify (set (at p) (Just p'))) ps ps'
+      zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
       toExp body)]
     f' <- findVar f
     pure $ (f', Fun [paramTuple] body')
@@ -163,7 +165,7 @@ toExp (S.BinOp _ o x y) =
       match lexp [(Right lcon, \[lval] ->
         match rexp [(Right rcon, \[rval] ->
           match (PrimCall primName primType [Var lval, Var rval]) [(Left t, \[result] ->
-            let_ (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var)])])]
+            let_ "ret" (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var)])])]
     arithOpPrim _ _ _ _ _ = bug Unreachable
     compareOpPrim primName = runDef $ do
       lval <- def =<< toExp x
@@ -178,7 +180,7 @@ toExp (S.Match _ e cs) = do
 crushPat :: (MonadUniq m, MonadState (IdMap Type (Id CType)) m) => S.Pat (Id Type) -> m (Exp (Id CType)) -> m (Case (Id CType))
 crushPat (S.VarP x) = \e -> do
   x' <- newTmp $ cTypeOf $ typeOf x
-  modify $ set (at x) (Just x')
+  modify $ at x ?~ x'
   Bind x' <$> e
 crushPat (S.TupleP xs) = go xs []
   where
@@ -193,12 +195,13 @@ crushPat (S.TupleP xs) = go xs []
 
 let_ ::
   MonadUniq m
-  => Obj (Id CType)
+  => String
+  -> Obj (Id CType)
   -> CType
   -> (Id CType -> WriterT (Endo (Exp (Id CType))) m (Exp (Id CType)))
   -> m (Exp (Id CType))
-let_ o otype body = do
-  v <- newTmp otype
+let_ name o otype body = do
+  v <- newId otype name
   body' <- runDef $ body v
   pure $ Let [(v, o)] body'
 
