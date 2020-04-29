@@ -1,34 +1,40 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NamedFieldPuns     #-}
-{-# LANGUAGE NoImplicitPrelude  #-}
-{-# LANGUAGE OverloadedStrings  #-}
-{-# LANGUAGE PatternSynonyms    #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 module Language.Malgo.TypeRep.LType where
 
-import           Language.Malgo.Id
-import           Language.Malgo.Prelude
-import           Language.Malgo.Pretty
+import qualified Data.Text.Lazy as TL
+import Language.Malgo.Id
+import Language.Malgo.Prelude
+import Language.Malgo.Pretty
+import Text.PrettyPrint.HughesPJClass
+  ( braces,
+    parens,
+    punctuate,
+    sep,
+    text,
+  )
 
-import qualified Data.Text.Lazy                 as TL
-import           Text.PrettyPrint.HughesPJClass (braces, parens, punctuate, sep,
-                                                 text)
-
-data LType = Ptr LType
-    | Bit
-    | I32
-    | I64
-    | U8
-    | U32
-    | U64
-    | F64
-    | SizeT
-    | Struct [LType]
-    | Function LType [LType]
-    | Void
-    deriving stock (Eq, Ord, Show)
+data LType
+  = Ptr LType
+  | Bit
+  | I32
+  | I64
+  | U8
+  | U32
+  | U64
+  | F64
+  | SizeT
+  | Struct [LType]
+  | Function LType [LType]
+  | Void
+  deriving stock (Eq, Ord, Show)
 
 instance Pretty LType where
-  pPrint (Ptr    t ) = pPrint t <> "*"
+  pPrint (Ptr t) = pPrint t <> "*"
   pPrint (Struct xs) = braces (sep $ punctuate "," $ map pPrint xs)
   pPrint (Function ret params) =
     parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
@@ -44,7 +50,7 @@ instance HasLType a => HasLType (Id a) where
   ltypeOf = ltypeOf . (^. idMeta)
 
 accessType :: LType -> [Int] -> LType
-accessType t           []       = t
-accessType (Ptr    t ) (_ : xs) = accessType t xs
+accessType t [] = t
+accessType (Ptr t) (_ : xs) = accessType t xs
 accessType (Struct ts) (i : xs) = accessType (ts !! i) xs
-accessType t           _        = error $ TL.unpack $ pShow t <> " is not accessable"
+accessType t _ = error $ TL.unpack $ pShow t <> " is not accessable"

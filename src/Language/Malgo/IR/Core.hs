@@ -1,52 +1,64 @@
-{-# LANGUAGE DeriveFunctor      #-}
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NoImplicitPrelude  #-}
-{-# LANGUAGE OverloadedLists    #-}
-{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 module Language.Malgo.IR.Core where
 
-import           Data.Text                    (unpack)
-import           Language.Malgo.Prelude
-import           Language.Malgo.Pretty
-import           Language.Malgo.TypeRep.CType
-import           Text.PrettyPrint.HughesPJ    (brackets, char, doubleQuotes,
-                                               nest, parens, quotes, sep, text,
-                                               vcat, ($$))
+import Data.Text (unpack)
+import Language.Malgo.Prelude
+import Language.Malgo.Pretty
+import Language.Malgo.TypeRep.CType
+import Text.PrettyPrint.HughesPJ
+  ( ($$),
+    brackets,
+    char,
+    doubleQuotes,
+    nest,
+    parens,
+    quotes,
+    sep,
+    text,
+    vcat,
+  )
 
 {-
 Atoms  a ::= unboxed | x
 -}
-data Atom a = Var a
-    | Unboxed Unboxed
-    deriving stock (Eq, Show, Functor)
+data Atom a
+  = Var a
+  | Unboxed Unboxed
+  deriving stock (Eq, Show, Functor)
 
 instance HasCType a => HasCType (Atom a) where
-  cTypeOf (Var x)     = cTypeOf x
+  cTypeOf (Var x) = cTypeOf x
   cTypeOf (Unboxed x) = cTypeOf x
 
 instance Pretty a => Pretty (Atom a) where
-  pPrint (Var x)     = pPrint x
+  pPrint (Var x) = pPrint x
   pPrint (Unboxed x) = pPrint x
 
 {-
 Unboxed values  unboxed
 -}
-data Unboxed = Int Integer
-    | Float Double
-    | Char Char
-    | String String
-    deriving stock (Eq, Show)
+data Unboxed
+  = Int Integer
+  | Float Double
+  | Char Char
+  | String String
+  deriving stock (Eq, Show)
 
 instance HasCType Unboxed where
-  cTypeOf Int{}    = IntT
-  cTypeOf Float{}  = FloatT
-  cTypeOf Char{}   = CharT
-  cTypeOf String{} = StringT
+  cTypeOf Int {} = IntT
+  cTypeOf Float {} = FloatT
+  cTypeOf Char {} = CharT
+  cTypeOf String {} = StringT
 
 instance Pretty Unboxed where
-  pPrint (Int x)    = pPrint x
-  pPrint (Float x)  = pPrint x
-  pPrint (Char x)   = quotes (char x)
+  pPrint (Int x) = pPrint x
+  pPrint (Float x) = pPrint x
+  pPrint (Char x) = quotes (char x)
   pPrint (String x) = doubleQuotes (text x)
 
 {-
@@ -58,15 +70,16 @@ Expressions  e ::= a               Atom
                  | LET x = obj IN e
                  | MATCH e WITH { alt_1; ... alt_n; } (n >= 0)
 -}
-data Exp a = Atom (Atom a)
-    | Call a [Atom a]
-    | PrimCall Text CType [Atom a]
-    | ArrayRead (Atom a) (Atom a)
-    | ArrayWrite (Atom a) (Atom a) (Atom a)
-    | Let [(a, Obj a)] (Exp a)
-    | Match (Exp a) (NonEmpty (Case a))
-    | Undefined
-    deriving stock (Eq, Show, Functor)
+data Exp a
+  = Atom (Atom a)
+  | Call a [Atom a]
+  | PrimCall Text CType [Atom a]
+  | ArrayRead (Atom a) (Atom a)
+  | ArrayWrite (Atom a) (Atom a) (Atom a)
+  | Let [(a, Obj a)] (Exp a)
+  | Match (Exp a) (NonEmpty (Case a))
+  | Undefined
+  deriving stock (Eq, Show, Functor)
 
 instance HasCType a => HasCType (Exp a) where
   cTypeOf (Atom x) = cTypeOf x
@@ -74,7 +87,7 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf (PrimCall _ t xs) = returnType t xs
   cTypeOf (ArrayRead a _) = case cTypeOf a of
     ArrayT t -> t
-    _        -> bug Unreachable
+    _ -> bug Unreachable
   cTypeOf (ArrayWrite _ _ _) = PackT [Con "Tuple0" []]
   cTypeOf (Let _ e) = cTypeOf e
   cTypeOf (Match _ (Unpack _ _ e :| _)) = cTypeOf e
@@ -82,15 +95,15 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf Undefined = AnyT
 
 returnType :: CType -> [a] -> CType
-returnType t []               = t
-returnType (_ :-> t) [_]      = t
-returnType (_ :-> t) (_:rest) = returnType t rest
-returnType AnyT _             = AnyT
-returnType _ _                = bug Unreachable
+returnType t [] = t
+returnType (_ :-> t) [_] = t
+returnType (_ :-> t) (_ : rest) = returnType t rest
+returnType AnyT _ = AnyT
+returnType _ _ = bug Unreachable
 
 instance Pretty a => Pretty (Exp a) where
-  pPrint (Atom x)          = pPrint x
-  pPrint (Call f xs)       = parens $ pPrint f <+> sep (map pPrint xs)
+  pPrint (Atom x) = pPrint x
+  pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (PrimCall p _ xs) = parens $ text (unpack p) <+> sep (map pPrint xs)
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
@@ -102,9 +115,10 @@ instance Pretty a => Pretty (Exp a) where
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
                     | BIND x -> e
 -}
-data Case a = Unpack Con [a] (Exp a)
-    | Bind a (Exp a)
-    deriving stock (Eq, Show, Functor)
+data Case a
+  = Unpack Con [a] (Exp a)
+  | Bind a (Exp a)
+  deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Case a) where
   pPrint (Unpack c xs e) = parens $ "unpack" <> parens (pPrint c <+> sep (map pPrint xs)) <+> "->" $$ nest 2 (pPrint e)
@@ -116,11 +130,12 @@ Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
                     | PACK(C a_1 ... a_n)    Saturated constructor (n >= 0)
                     | ARRAY(a, n)            Array (n > 0)
 -}
-data Obj a = Fun [a] (Exp a)
-    | Pap a [Atom a]
-    | Pack Con [Atom a]
-    | Array (Atom a) (Atom a)
-    deriving stock (Eq, Show, Functor)
+data Obj a
+  = Fun [a] (Exp a)
+  | Pap a [Atom a]
+  | Pack Con [Atom a]
+  | Array (Atom a) (Atom a)
+  deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = "fun" <> parens (sep (map pPrint xs) <+> "->" <+> (pPrint e))
@@ -132,7 +147,7 @@ instance Pretty a => Pretty (Obj a) where
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 -}
 newtype Program a = Program [(a, Obj a)]
-    deriving stock (Eq, Show, Functor)
+  deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Program a) where
   pPrint (Program xs) = vcat $ map (\(f, o) -> pPrint f <+> "=" <+> pPrint o <> ";") xs
@@ -150,13 +165,19 @@ plusInt = FUN(a b ->
   })
 -}
 plusInt :: Obj Text
-plusInt = Fun ["a", "b"] $ Match
-  (Atom (Var "a"))
-  [Unpack (Con "Int" [IntT]) ["x"] $ Match
-     (Atom (Var "b"))
-     [Unpack (Con "Int" [IntT]) ["y"] $ Match
-        (PrimCall "+" (IntT :-> IntT :-> IntT) [Var "x", Var "y"])
-        [Bind "z" $ Let [("r", Pack (Con "Int" [IntT]) [Var "z"])] $ Atom (Var "r")]]]
+plusInt =
+  Fun ["a", "b"] $
+    Match
+      (Atom (Var "a"))
+      [ Unpack (Con "Int" [IntT]) ["x"] $
+          Match
+            (Atom (Var "b"))
+            [ Unpack (Con "Int" [IntT]) ["y"] $
+                Match
+                  (PrimCall "+" (IntT :-> IntT :-> IntT) [Var "x", Var "y"])
+                  [Bind "z" $ Let [("r", Pack (Con "Int" [IntT]) [Var "z"])] $ Atom (Var "r")]
+            ]
+      ]
 
 {-
 fib = FUN(n ->
@@ -179,15 +200,25 @@ fib = FUN(n ->
   })
 -}
 fib :: Obj Text
-fib = Fun ["n"] $ Match
-  (Atom (Var "n"))
-  [ Unpack (Con "Int" [IntT]) ["n'"] $ Match
-      (PrimCall "<=" (IntT :-> IntT :-> PackT [Con "True" [], Con "False" []]) [Var "n'", Unboxed (Int 1)])
-      [ Unpack (Con "False" []) [] $ Let [("v1", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $ Match
-        (Call "minusInt" [Var "n", Var "v1"])
-        [ Bind "n2" $ Match
-          (Call "fib" [Var "n2"])
-          [ Bind "v2" $ Let [("v3", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $ Match
-            (Call "minusInt" [Var "n", Var "v3"])
-            [Bind "n3" $ Match (Call "fib" [Var "n3"]) [Bind "v4" $ Call "plusInt" [Var "v2", Var "v4"]]]]]
-      , Unpack (Con "True" []) [] $ Let [("v5", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] (Atom (Var "v5"))]]
+fib =
+  Fun ["n"] $
+    Match
+      (Atom (Var "n"))
+      [ Unpack (Con "Int" [IntT]) ["n'"] $
+          Match
+            (PrimCall "<=" (IntT :-> IntT :-> PackT [Con "True" [], Con "False" []]) [Var "n'", Unboxed (Int 1)])
+            [ Unpack (Con "False" []) [] $ Let [("v1", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $
+                Match
+                  (Call "minusInt" [Var "n", Var "v1"])
+                  [ Bind "n2" $
+                      Match
+                        (Call "fib" [Var "n2"])
+                        [ Bind "v2" $ Let [("v3", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $
+                            Match
+                              (Call "minusInt" [Var "n", Var "v3"])
+                              [Bind "n3" $ Match (Call "fib" [Var "n3"]) [Bind "v4" $ Call "plusInt" [Var "v2", Var "v4"]]]
+                        ]
+                  ],
+              Unpack (Con "True" []) [] $ Let [("v5", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] (Atom (Var "v5"))
+            ]
+      ]

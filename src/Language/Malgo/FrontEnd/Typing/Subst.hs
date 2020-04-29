@@ -1,32 +1,33 @@
-{-# LANGUAGE DerivingStrategies         #-}
-{-# LANGUAGE DerivingVia                #-}
-{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 module Language.Malgo.FrontEnd.Typing.Subst
-  ( Subst(..)
-  , Substitutable(..)
+  ( Subst (..),
+    Substitutable (..),
   )
 where
 
-import           Language.Malgo.Prelude
+import qualified Data.Map.Strict as Map
+import Data.Set ((\\))
+import qualified Data.Set as Set
+import Language.Malgo.Prelude
+import Language.Malgo.TypeRep.Type
 
-import           Language.Malgo.TypeRep.Type
-
-import qualified Data.Map.Strict             as Map
-import           Data.Set                    ((\\))
-import qualified Data.Set                    as Set
-
-newtype Subst = Subst { unwrapSubst :: Map TyVar Type }
+newtype Subst = Subst {unwrapSubst :: Map TyVar Type}
   deriving stock (Eq, Show)
   deriving newtype (Substitutable, Monoid)
 
 instance Ixed Subst
+
 instance At Subst where
   at k f (Subst m) = Subst <$> Map.alterF f k m
 
 type instance Index Subst = TyVar
+
 type instance IxValue Subst = Type
 
 instance Semigroup Subst where
@@ -41,15 +42,15 @@ instance Substitutable Scheme where
   ftv (Forall ts t) = ftv t \\ Set.fromList ts
 
 instance Substitutable Type where
-  apply s t@(TyMeta a  ) = fromMaybe t $ view (at a) s
-  apply s (  TyApp c ts) = TyApp c $ apply s ts
-  apply s (ps :-> r)     = map (apply s) ps :-> apply s r
-  apply _ Kind           = Kind
-  ftv (TyMeta a  ) = Set.singleton a
+  apply s t@(TyMeta a) = fromMaybe t $ view (at a) s
+  apply s (TyApp c ts) = TyApp c $ apply s ts
+  apply s (ps :-> r) = map (apply s) ps :-> apply s r
+  apply _ Kind = Kind
+  ftv (TyMeta a) = Set.singleton a
   ftv (TyApp _ ts) = foldMap ftv ts
-  ftv Kind         = mempty
-  ftv (ps :-> r)   = foldMap ftv ps <> ftv r
+  ftv Kind = mempty
+  ftv (ps :-> r) = foldMap ftv ps <> ftv r
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
   apply = fmap . apply
-  ftv   = foldMap ftv
+  ftv = foldMap ftv

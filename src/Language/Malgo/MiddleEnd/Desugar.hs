@@ -1,22 +1,26 @@
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE LambdaCase            #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedLists       #-}
-{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
-module Language.Malgo.MiddleEnd.Desugar (Desugar) where
 
-import qualified Data.Text                    as T
-import           Language.Malgo.Id
-import           Language.Malgo.IR.Core
-import qualified Language.Malgo.IR.Syntax     as S
-import           Language.Malgo.Monad
-import           Language.Malgo.Pass
-import           Language.Malgo.Prelude
-import           Language.Malgo.TypeRep.CType
-import           Language.Malgo.TypeRep.Type  hiding ((:->))
+module Language.Malgo.MiddleEnd.Desugar
+  ( Desugar,
+  )
+where
+
+import qualified Data.Text as T
+import Language.Malgo.IR.Core
+import qualified Language.Malgo.IR.Syntax as S
+import Language.Malgo.Id
+import Language.Malgo.Monad
+import Language.Malgo.Pass
+import Language.Malgo.Prelude
+import Language.Malgo.TypeRep.CType
+import Language.Malgo.TypeRep.Type hiding ((:->))
 
 data Desugar
 
@@ -48,20 +52,25 @@ toExp (S.Var _ x) =
   Atom . Var <$> findVar x
 toExp (S.Int _ x) =
   let_ "int" (Pack con [Unboxed (Int x)]) (PackT [con]) $ pure . Atom . Var
-  where con = Con "Int" [IntT]
+  where
+    con = Con "Int" [IntT]
 toExp (S.Float _ x) =
   let_ "float" (Pack con [Unboxed (Float x)]) (PackT [con]) $ pure . Atom . Var
-  where con = Con "Float" [FloatT]
+  where
+    con = Con "Float" [FloatT]
 toExp (S.Bool _ x) =
   let_ "bool" (if x then Pack trueC [] else Pack falseC []) (PackT [trueC, falseC]) $ pure . Atom . Var
-  where trueC = Con "True" []
-        falseC = Con "False" []
+  where
+    trueC = Con "True" []
+    falseC = Con "False" []
 toExp (S.Char _ x) =
   let_ "char" (Pack con [Unboxed $ Char x]) (PackT [con]) $ pure . Atom . Var
-  where con = Con "Char" [CharT]
+  where
+    con = Con "Char" [CharT]
 toExp (S.String _ x) =
   let_ "string" (Pack con [Unboxed $ String x]) (PackT [con]) $ pure . Atom . Var
-  where con = Con "String" [StringT]
+  where
+    con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (def <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs
@@ -95,11 +104,15 @@ toExp (S.Call _ f xs) = runDef $ do
 toExp (S.Fn _ ps e) = do
   let con = Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . fst) ps
   paramTuple <- newTmp $ PackT [con]
-
-  e' <- match (Atom $ Var paramTuple) [(Right con, \ps' -> do
-    zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
-    toExp e)]
-
+  e' <-
+    match
+      (Atom $ Var paramTuple)
+      [ ( Right con,
+          \ps' -> do
+            zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
+            toExp e
+        )
+      ]
   let_ "fn" (Fun [paramTuple] e') (PackT [con] :-> cTypeOf e') $ pure . Atom . Var
 toExp (S.Seq _ e1 e2) = do
   e1' <- toExp e1
@@ -123,9 +136,15 @@ toExp (S.Let _ (S.FunDec fs) e) = do
   fs' <- traverse ?? fs $ \(_, f, ps, _, body) -> do
     let con = Con ("Tuple" <> T.pack (show $ length ps)) (map (cTypeOf . fst) ps)
     paramTuple <- newTmp $ PackT [con]
-    body' <- match (Atom $ Var paramTuple) [(Right con, \ps' -> do
-      zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
-      toExp body)]
+    body' <-
+      match
+        (Atom $ Var paramTuple)
+        [ ( Right con,
+            \ps' -> do
+              zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
+              toExp body
+          )
+        ]
     f' <- findVar f
     pure $ (f', Fun [paramTuple] body')
   e' <- toExp e
@@ -162,15 +181,31 @@ toExp (S.BinOp _ o x y) =
     arithOpPrim lcon rcon resultCon@(Con _ [t]) primName primType = do
       lexp <- toExp x
       rexp <- toExp y
-      match lexp [(Right lcon, \[lval] ->
-        match rexp [(Right rcon, \[rval] ->
-          match (PrimCall primName primType [Var lval, Var rval]) [(Left t, \[result] ->
-            let_ "ret" (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var)])])]
+      match
+        lexp
+        [ ( Right lcon,
+            \[lval] ->
+              match
+                rexp
+                [ ( Right rcon,
+                    \[rval] ->
+                      match
+                        (PrimCall primName primType [Var lval, Var rval])
+                        [ ( Left t,
+                            \[result] ->
+                              let_ "ret" (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var
+                          )
+                        ]
+                  )
+                ]
+          )
+        ]
     arithOpPrim _ _ _ _ _ = bug Unreachable
     compareOpPrim primName = runDef $ do
       lval <- def =<< toExp x
       rval <- def =<< toExp y
-      match (PrimCall primName (cTypeOf lval :-> cTypeOf rval :-> PackT [Con "True" [], Con "False" []]) [lval, rval])
+      match
+        (PrimCall primName (cTypeOf lval :-> cTypeOf rval :-> PackT [Con "True" [], Con "False" []]) [lval, rval])
         [(Left (PackT [Con "True" [], Con "False" []]), \[result] -> pure $ Atom $ Var result)]
 toExp (S.Match _ e cs) = do
   e' <- toExp e
@@ -186,7 +221,7 @@ crushPat (S.TupleP xs) = go xs []
   where
     go [] acc e =
       let acc' = reverse acc
-      in Unpack (Con ("Tuple" <> T.pack (show $ length acc)) $ map cTypeOf acc') acc' <$> e
+       in Unpack (Con ("Tuple" <> T.pack (show $ length acc)) $ map cTypeOf acc') acc' <$> e
     go (p : ps) acc e = do
       x <- newTmp $ cTypeOf $ typeOf p
       go ps (x : acc) $ do
@@ -194,12 +229,12 @@ crushPat (S.TupleP xs) = go xs []
         pure $ Match (Atom $ Var x) [clause]
 
 let_ ::
-  MonadUniq m
-  => String
-  -> Obj (Id CType)
-  -> CType
-  -> (Id CType -> WriterT (Endo (Exp (Id CType))) m (Exp (Id CType)))
-  -> m (Exp (Id CType))
+  MonadUniq m =>
+  String ->
+  Obj (Id CType) ->
+  CType ->
+  (Id CType -> WriterT (Endo (Exp (Id CType))) m (Exp (Id CType))) ->
+  m (Exp (Id CType))
 let_ name o otype body = do
   v <- newId otype name
   body' <- runDef $ body v

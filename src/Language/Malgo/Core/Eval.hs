@@ -1,21 +1,24 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NoImplicitPrelude  #-}
-{-# LANGUAGE TypeFamilies       #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 module Language.Malgo.Core.Eval where
 
-import qualified Data.Map               as Map
-import           Language.Malgo.Id
-import           Language.Malgo.IR.Core
-import           Language.Malgo.Monad
-import           Language.Malgo.Prelude
+import qualified Data.Map as Map
+import Language.Malgo.IR.Core
+import Language.Malgo.Id
+import Language.Malgo.Monad
+import Language.Malgo.Prelude
 
-data Cont a = MatchC [(Text, [a], Exp a)] (a, Exp a)
-    | ApplyC [Atom a]
-    deriving stock (Show)
+data Cont a
+  = MatchC [(Text, [a], Exp a)] (a, Exp a)
+  | ApplyC [Atom a]
+  deriving stock (Show)
 
-data Obj a = FunO [a] (Exp a)
-    | PapO a [Atom a]
-    | PackO Text Int [Atom a]
+data Obj a
+  = FunO [a] (Exp a)
+  | PapO a [Atom a]
+  | PackO Text Int [Atom a]
 
 -- step :: (Eq a, Ord a, MonadUniq m) => (Exp a, [Cont a], Map a (Obj a)) -> m (Exp a, [Cont a], Map a (Obj a))
 -- step (Let x v e, s, h) = do
@@ -39,10 +42,10 @@ data Obj a = FunO [a] (Exp a)
 --   case stack ^. at a of
 --     (Just (Var a')) -> case heap ^. at a' of
 --       Just
-  -- case (stack ^. at a, heap ^. at a) of
-  --   (Just (Var a'), _) -> pure v
-  --   (_, Just v) -> pure v
-  --   _           -> error "unbound variable"
+-- case (stack ^. at a, heap ^. at a) of
+--   (Just (Var a'), _) -> pure v
+--   (_, Just v) -> pure v
+--   _           -> error "unbound variable"
 -- eval (Atom (Lit _)) = error "unboxed value"
 -- eval (Call (Known n) f xs) | n == length xs = do
 --   heap <- get

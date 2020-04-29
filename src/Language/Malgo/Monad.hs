@@ -1,81 +1,91 @@
-{-# LANGUAGE AllowAmbiguousTypes        #-}
-{-# LANGUAGE ConstraintKinds            #-}
-{-# LANGUAGE DefaultSignatures          #-}
-{-# LANGUAGE DerivingVia                #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE DefaultSignatures #-}
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE RankNTypes                 #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 module Language.Malgo.Monad
-  ( MalgoM(..)
-  , MalgoEnv(..)
-  , runMalgo
-  , MonadMalgo(..)
-  , Opt(..)
-  , Colog.Severity(..)
-  , getFileName
-  , viewLine
-  , malgoError
-  , MonadUniq(..)
+  ( MalgoM (..),
+    MalgoEnv (..),
+    runMalgo,
+    MonadMalgo (..),
+    Opt (..),
+    Colog.Severity (..),
+    getFileName,
+    viewLine,
+    malgoError,
+    MonadUniq (..),
   )
 where
 
-import           Language.Malgo.Prelude
-import           Language.Malgo.Pretty
-
-import           Colog                  (HasLog (..), LogAction (..), Message,
-                                         Severity (..), cfilter,
-                                         richMessageAction)
+import Colog
+  ( HasLog (..),
+    LogAction (..),
+    Message,
+    Severity (..),
+    cfilter,
+    richMessageAction,
+  )
 import qualified Colog
-import           Control.Monad.Fix
-import qualified Data.Text              as T
-import           Text.Parsec.Pos        (SourcePos, sourceLine)
-import           Text.PrettyPrint       (text, ($$))
+import Control.Monad.Fix
+import qualified Data.Text as T
+import Language.Malgo.Prelude
+import Language.Malgo.Pretty
+import Text.Parsec.Pos (SourcePos, sourceLine)
+import Text.PrettyPrint (($$), text)
 
-data Opt = Opt
-    { srcName       :: String
-    , dstName       :: String
-    , dumpParsed    :: Bool
-    , dumpRenamed   :: Bool
-    , dumpTyped     :: Bool
-    , dumpKNormal   :: Bool
-    , dumpTypeTable :: Bool
-    , dumpClosure   :: Bool
-    , dumpLIR       :: Bool
-    , dumpDesugar   :: Bool
-    , isDebugMode   :: Bool
-    }
-    deriving stock (Eq, Show)
+data Opt
+  = Opt
+      { srcName :: String,
+        dstName :: String,
+        dumpParsed :: Bool,
+        dumpRenamed :: Bool,
+        dumpTyped :: Bool,
+        dumpKNormal :: Bool,
+        dumpTypeTable :: Bool,
+        dumpClosure :: Bool,
+        dumpLIR :: Bool,
+        dumpDesugar :: Bool,
+        isDebugMode :: Bool
+      }
+  deriving stock (Eq, Show)
 
-data MalgoEnv m = MalgoEnv
-    { maOption    :: Opt
-    , maSource    :: Text
-    , maLogAction :: LogAction m Message
-    }
+data MalgoEnv m
+  = MalgoEnv
+      { maOption :: Opt,
+        maSource :: Text,
+        maLogAction :: LogAction m Message
+      }
 
-newtype UniqSupply = UniqSupply { uniqSupply :: Int }
+newtype UniqSupply = UniqSupply {uniqSupply :: Int}
 
 instance HasLog (MalgoEnv m) Message m where
   getLogAction = maLogAction
-  setLogAction newLogAction env = env { maLogAction = newLogAction }
+  setLogAction newLogAction env = env {maLogAction = newLogAction}
 
-newtype MalgoM a = MalgoM { unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT UniqSupply IO) a }
+newtype MalgoM a = MalgoM {unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT UniqSupply IO) a}
   deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState UniqSupply, MonadIO, MonadFix, MonadFail)
 
 runMalgo :: MonadIO m => MalgoM a -> Opt -> Text -> m a
-runMalgo (MalgoM m) opt source = liftIO $ evalStateT ?? (UniqSupply 0) $ runReaderT
-  m
-  MalgoEnv
-    { maOption    = opt
-    , maSource    = source
-    , maLogAction = if isDebugMode opt
-                      then richMessageAction
-                      else cfilter (\(Colog.Msg sev _ _) -> sev > Colog.Debug) richMessageAction
-    }
+runMalgo (MalgoM m) opt source =
+  liftIO $ evalStateT ?? (UniqSupply 0) $
+    runReaderT
+      m
+      MalgoEnv
+        { maOption = opt,
+          maSource = source,
+          maLogAction =
+            if isDebugMode opt
+              then richMessageAction
+              else cfilter (\(Colog.Msg sev _ _) -> sev > Colog.Debug) richMessageAction
+        }
 
 class Monad m => MonadMalgo m where
   getOpt :: m Opt
@@ -89,13 +99,16 @@ class Monad m => MonadMalgo m where
   log s t = lift $ log s t
 
 instance MonadMalgo MalgoM where
-  getOpt    = asks maOption
+  getOpt = asks maOption
   getSource = asks maSource
-  log       = Colog.log
+  log = Colog.log
 
 instance MonadMalgo m => MonadMalgo (ReaderT r m)
+
 instance MonadMalgo m => MonadMalgo (ExceptT e m)
+
 instance MonadMalgo m => MonadMalgo (StateT s m)
+
 instance MonadMalgo m => MonadMalgo (WriterT w m)
 
 getFileName :: (MonadMalgo m, IsString a) => m a
@@ -109,16 +122,16 @@ viewLine linum = do
 malgoError :: MonadMalgo m => SourcePos -> Doc -> Doc -> m a
 malgoError pos tag mes = do
   line <- viewLine (sourceLine pos)
-  errorDoc
-    $   "error("
-    <>  tag
-    <>  "):"
-    <+> mes
-    $$  "on"
-    <+> pPrint pos
-    <>  ":"
-    $$  text (T.unpack line)
-    <>  "\n"
+  errorDoc $
+    "error("
+      <> tag
+      <> "):"
+      <+> mes
+      $$ "on"
+      <+> pPrint pos
+      <> ":"
+      $$ text (T.unpack line)
+      <> "\n"
 
 class Monad m => MonadUniq m where
   getUniqSupply :: m UniqSupply
@@ -130,12 +143,15 @@ class Monad m => MonadUniq m where
 
 instance MonadUniq MalgoM where
   getUniqSupply = get
-  getUniq       = do
+  getUniq = do
     i <- uniqSupply <$> getUniqSupply
-    modify (\s -> s { uniqSupply = i + 1 })
+    modify (\s -> s {uniqSupply = i + 1})
     pure i
 
-instance MonadUniq m => MonadUniq (ReaderT r m) where
-instance MonadUniq m => MonadUniq (ExceptT e m) where
-instance MonadUniq m => MonadUniq (StateT s m) where
-instance MonadUniq m => MonadUniq (WriterT w m) where
+instance MonadUniq m => MonadUniq (ReaderT r m)
+
+instance MonadUniq m => MonadUniq (ExceptT e m)
+
+instance MonadUniq m => MonadUniq (StateT s m)
+
+instance MonadUniq m => MonadUniq (WriterT w m)
