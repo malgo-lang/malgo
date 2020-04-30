@@ -154,15 +154,15 @@ toExp (S.If _ c t f) = do
   match c' [(Right $ Con "True" [], \_ -> toExp t), (Right $ Con "False" [], \_ -> toExp f)]
 toExp (S.BinOp _ o x y) =
   case o of
-    S.Add -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "+" (IntT :-> IntT :-> IntT)
-    S.Sub -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "-" (IntT :-> IntT :-> IntT)
-    S.Mul -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "*" (IntT :-> IntT :-> IntT)
-    S.Div -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "/" (IntT :-> IntT :-> IntT)
-    S.Mod -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "IntT" [IntT]) "%" (IntT :-> IntT :-> IntT)
-    S.FAdd -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "FloatT" [FloatT]) "+." (FloatT :-> FloatT :-> FloatT)
-    S.FSub -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "FloatT" [FloatT]) "-." (FloatT :-> FloatT :-> FloatT)
-    S.FMul -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "FloatT" [FloatT]) "*." (FloatT :-> FloatT :-> FloatT)
-    S.FDiv -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "FloatT" [FloatT]) "/." (FloatT :-> FloatT :-> FloatT)
+    S.Add -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "+" (IntT :-> IntT :-> IntT)
+    S.Sub -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "-" (IntT :-> IntT :-> IntT)
+    S.Mul -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "*" (IntT :-> IntT :-> IntT)
+    S.Div -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "/" (IntT :-> IntT :-> IntT)
+    S.Mod -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "%" (IntT :-> IntT :-> IntT)
+    S.FAdd -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "+." (FloatT :-> FloatT :-> FloatT)
+    S.FSub -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "-." (FloatT :-> FloatT :-> FloatT)
+    S.FMul -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "*." (FloatT :-> FloatT :-> FloatT)
+    S.FDiv -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "/." (FloatT :-> FloatT :-> FloatT)
     S.Eq -> compareOpPrim "=="
     S.Neq -> compareOpPrim "<>"
     S.Lt -> compareOpPrim "<"
