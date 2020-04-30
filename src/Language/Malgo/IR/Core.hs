@@ -47,7 +47,7 @@ data Unboxed
   | Float Double
   | Char Char
   | String String
-  deriving stock (Eq, Show)
+  deriving stock (Eq, Ord, Show)
 
 instance HasCType Unboxed where
   cTypeOf Int {} = IntT
@@ -78,7 +78,6 @@ data Exp a
   | ArrayWrite (Atom a) (Atom a) (Atom a)
   | Let [(a, Obj a)] (Exp a)
   | Match (Exp a) (NonEmpty (Case a))
-  | Undefined
   deriving stock (Eq, Show, Functor)
 
 instance HasCType a => HasCType (Exp a) where
@@ -92,7 +91,6 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf (Let _ e) = cTypeOf e
   cTypeOf (Match _ (Unpack _ _ e :| _)) = cTypeOf e
   cTypeOf (Match _ (Bind _ e :| _)) = cTypeOf e
-  cTypeOf Undefined = AnyT
 
 returnType :: CType -> [a] -> CType
 returnType t [] = t
@@ -109,7 +107,6 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
   pPrint (Let xs e) = parens $ "let" <+> vcat (map (\(v, o) -> parens $ pPrint v <+> "=" <+> pPrint o) xs) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ nest 2 (vcat (toList $ fmap pPrint cs))
-  pPrint Undefined = "undefined"
 
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
@@ -132,25 +129,23 @@ Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
 -}
 data Obj a
   = Fun [a] (Exp a)
-  | Pap a [Atom a]
   | Pack Con [Atom a]
   | Array (Atom a) (Atom a)
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = "fun" <> parens (sep (map pPrint xs) <+> "->" <+> (pPrint e))
-  pPrint (Pap f xs) = "pap" <> parens (pPrint f <+> sep (map pPrint xs))
   pPrint (Pack c xs) = "pack" <> parens (pPrint c <+> sep (map pPrint xs))
   pPrint (Array a n) = "array" <> parens (pPrint a <> "," <+> pPrint n)
 
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 -}
-newtype Program a = Program [(a, Obj a)]
+data Program a = Program a [(a, Obj a)]
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Program a) where
-  pPrint (Program xs) = vcat $ map (\(f, o) -> pPrint f <+> "=" <+> pPrint o <> ";") xs
+  pPrint (Program _ xs) = vcat $ map (\(f, o) -> pPrint f <+> "=" <+> pPrint o <> ";") xs
 
 -- Examples
 
