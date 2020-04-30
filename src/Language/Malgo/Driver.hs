@@ -7,6 +7,7 @@
 
 module Language.Malgo.Driver
   ( parseOpt,
+    interpret,
     compile,
   )
 where
@@ -18,6 +19,7 @@ import qualified Data.Text.Lazy as TL
 import qualified LLVM.AST as L
 import Language.Malgo.BackEnd.GenLIR
 import Language.Malgo.BackEnd.GenLLVM
+import Language.Malgo.Core.Eval
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
 import qualified Language.Malgo.Lexer as Lexer
@@ -58,6 +60,21 @@ parseOpt =
       )
       (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
 
+interpret :: MonadIO m => Opt -> Text -> m Doc
+interpret = M.runMalgo $ do
+  opt <- asks maOption
+  source <- asks maSource
+  tokens <- Lexer.tokenize () (srcName opt) source
+  let ast = case Parser.parseExpr <$> tokens of
+        Left x -> error $ TL.unpack $ pShow x
+        Right x -> x
+  when (dumpParsed opt) $ dump ast
+  desugared <-
+    transWithDump @Rename ast
+      >>= transWithDump @Typing
+      >>= transWithDump @Desugar
+  pPrint <$> runEval (evalExp desugared)
+
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do
   opt <- asks maOption
@@ -70,7 +87,6 @@ compile = M.runMalgo $ do
   llvmir <-
     transWithDump @Rename ast
       >>= transWithDump @Typing
-      >>= (\ast -> transWithDump @Desugar ast >> pure ast)
       >>= transWithDump @TransToHIR
       >>= transWithDump @HIRLint
       >>= transWithDump @TransToMIR
