@@ -41,28 +41,27 @@ import Language.Malgo.Pretty
 import Text.Parsec.Pos (SourcePos, sourceLine)
 import Text.PrettyPrint (($$), text)
 
-data Opt
-  = Opt
-      { srcName :: String,
-        dstName :: String,
-        dumpParsed :: Bool,
-        dumpRenamed :: Bool,
-        dumpTyped :: Bool,
-        dumpKNormal :: Bool,
-        dumpTypeTable :: Bool,
-        dumpClosure :: Bool,
-        dumpLIR :: Bool,
-        dumpDesugar :: Bool,
-        isDebugMode :: Bool
-      }
+data Opt = Opt
+  { srcName :: String,
+    dstName :: String,
+    dumpParsed :: Bool,
+    dumpRenamed :: Bool,
+    dumpTyped :: Bool,
+    dumpKNormal :: Bool,
+    dumpTypeTable :: Bool,
+    dumpClosure :: Bool,
+    dumpLIR :: Bool,
+    dumpDesugar :: Bool,
+    isInterpretMode :: Bool,
+    isDebugMode :: Bool
+  }
   deriving stock (Eq, Show)
 
-data MalgoEnv m
-  = MalgoEnv
-      { maOption :: Opt,
-        maSource :: Text,
-        maLogAction :: LogAction m Message
-      }
+data MalgoEnv m = MalgoEnv
+  { maOption :: Opt,
+    maSource :: Text,
+    maLogAction :: LogAction m Message
+  }
 
 newtype UniqSupply = UniqSupply {uniqSupply :: Int}
 

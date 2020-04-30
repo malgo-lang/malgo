@@ -15,7 +15,14 @@ import Language.Malgo.Prelude
 main :: IO ()
 main = do
   opt <- parseOpt
-  ll <- compile opt =<< T.readFile (srcName opt)
-  let (x : xs) = TL.lines $ ppllvm ll
-  let ir = TL.unlines (x : ("source_filename = " <> TL.pack (show (srcName opt))) : xs)
-  TL.writeFile (dstName opt) ir
+  src <- T.readFile (srcName opt)
+
+  if isInterpretMode opt
+    then do
+      ret <- interpret opt src
+      print ret
+    else do
+      ll <- compile opt src
+      let (x : xs) = TL.lines $ ppllvm ll
+      let ir = TL.unlines (x : ("source_filename = " <> TL.pack (show (srcName opt))) : xs)
+      TL.writeFile (dstName opt) ir

@@ -54,6 +54,7 @@ parseOpt =
             <*> switch (long "dump-mir")
             <*> switch (long "dump-lir")
             <*> switch (long "dump-desugar")
+            <*> switch (long "interpret")
         )
           <*> switch (long "debug-mode")
           <**> helper
