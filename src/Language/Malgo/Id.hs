@@ -38,7 +38,13 @@ data Id a
         _idUniq :: Int,
         _idMeta :: a
       }
-  deriving stock (Show, Eq, Ord, Functor, Foldable)
+  deriving stock (Show, Functor, Foldable)
+
+instance Eq (Id a) where
+  Id { _idUniq = x } == Id { _idUniq = y } = x == y
+
+instance Ord (Id a) where
+  compare Id { _idUniq = x } Id { _idUniq = y } = compare x y
 
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n u _) = text n <> "." <> text (show u)
