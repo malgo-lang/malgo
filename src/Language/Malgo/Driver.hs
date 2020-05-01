@@ -74,7 +74,7 @@ interpret = M.runMalgo $ do
     transWithDump @Rename ast
       >>= transWithDump @Typing
       >>= transWithDump @Desugar
-  pPrint <$> runEval (evalExp desugared)
+  liftIO $ pPrint <$> runEval (evalExp desugared)
 
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do

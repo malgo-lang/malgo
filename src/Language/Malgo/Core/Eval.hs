@@ -10,10 +10,8 @@ module Language.Malgo.Core.Eval where
 import qualified Data.Text as T
 import Data.Vector.Mutable (IOVector)
 import qualified Data.Vector.Mutable as V
-import Debug.Trace (traceM, trace)
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
-import Language.Malgo.Monad
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
@@ -21,12 +19,12 @@ import Text.PrettyPrint.HughesPJ (parens, sep)
 
 type Name = Id CType
 
-type EvalM a = StateT Env MalgoM a
+type EvalM a = StateT Env IO a
 
 data Env = Env {varMap :: Map Name Value}
 
 data Value
-  = FunV ([Value] -> EvalM Value)
+  = FunV Int [Value] ([Value] -> EvalM Value)
   | PackV Con [Value]
   | ArrayV (IOVector Value)
   | UnboxedV Unboxed
@@ -37,7 +35,7 @@ instance Pretty Value where
   pPrint (ArrayV _) = "<array>"
   pPrint (UnboxedV x) = pPrint x
 
-runEval :: EvalM a -> MalgoM a
+runEval :: EvalM a -> IO a
 runEval = evalStateT ?? (Env mempty)
 
 defVar :: Name -> Value -> EvalM ()
@@ -53,7 +51,7 @@ lookupVar x = gets $ fromJust . (view $ at x) . varMap
 
 evalObj :: Obj Name -> EvalM Value
 evalObj (Fun ps e) = do
-  pure $ FunV $ \ps' -> do
+  pure $ FunV (length ps) [] $ \ps' -> do
     env <- get
     zipWithM_ defVar ps ps'
     e' <- evalExp e
@@ -78,9 +76,11 @@ evalAtom (Unboxed x) = pure $ UnboxedV x
 evalExp :: Exp Name -> EvalM Value
 evalExp (Atom x) = evalAtom x
 evalExp (Call f xs) = do
-  FunV f' <- lookupVar f
+  FunV n ys f' <- lookupVar f
   xs' <- traverse evalAtom xs
-  f' xs'
+  if n >= length xs + length ys
+    then f' (ys <> xs')
+    else pure $ FunV n (ys <> xs') f'
 evalExp (PrimCall prim _ xs) = do
   prim' <- lookupPrim prim
   xs' <- traverse evalAtom xs
@@ -111,10 +111,7 @@ evalMatch v (Unpack {} :| (c : cs)) = evalMatch v (c :| cs)
 evalMatch v (Bind x e :| _) = do
   defVar x v
   evalExp e
-evalMatch v cs = do
-  traceM (show $ pPrint v)
-  traceM (show $ fmap pPrint cs)
-  undefined
+evalMatch _ _ = bug Unreachable
 
 lookupPrim :: Text -> EvalM ([Value] -> EvalM Value)
 lookupPrim "+" = pure $ \case
@@ -137,7 +134,7 @@ lookupPrim "newline" = pure $ \case
   [PackV (Con "Tuple0" []) []] -> do
     liftIO $ putStrLn ""
     pure unit
-  xs -> trace (show $ pPrint xs) $ pure unit
+  _ -> bug Unreachable
 lookupPrim prim = error $ T.unpack $ "undefined primitive: " <> prim
 
 compareValue :: Value -> Value -> Ordering
