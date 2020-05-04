@@ -1,16 +1,16 @@
-; ModuleID = './examples/poly_sig.mlg'
 source_filename = "./examples/poly_sig.mlg"
+; ModuleID = './examples/poly_sig.mlg'
 
 
  
 
 
-define external ccc  i8* @id0(i8* )    {
+define external ccc  i8* @const3(i8* , i8* )    {
   ret i8* %0 
 }
 
 
-define external ccc  i8* @const3(i8* , i8* )    {
+define external ccc  i8* @id0(i8* )    {
   ret i8* %0 
 }
 

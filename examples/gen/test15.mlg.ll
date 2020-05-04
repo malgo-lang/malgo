@@ -1,17 +1,8 @@
-; ModuleID = './examples/test15.mlg'
 source_filename = "./examples/test15.mlg"
+; ModuleID = './examples/test15.mlg'
 
 
  
-
-
-define external ccc  {}* @update1({i8**, i64}* , i64 , i8* )    {
-  %4 = getelementptr  {i8**, i64}, {i8**, i64}* %0, i32 0, i32 0 
-  %5 = load  i8**, i8*** %4 
-  %6 = getelementptr  i8*, i8** %5, i64 %1 
-  store  i8* %2, i8** %6 
-  ret {}* undef 
-}
 
 
 declare external ccc  {}* @print_int(i64)    
@@ -20,6 +11,15 @@ declare external ccc  {}* @print_int(i64)
 define external ccc  {}* @print_int5(i64 )    {
   %2 =  call ccc  {}*  @print_int(i64  %0)  
   ret {}* %2 
+}
+
+
+define external ccc  {}* @update1({i8**, i64}* , i64 , i8* )    {
+  %4 = getelementptr  {i8**, i64}, {i8**, i64}* %0, i32 0, i32 0 
+  %5 = load  i8**, i8*** %4 
+  %6 = getelementptr  i8*, i8** %5, i64 %1 
+  store  i8* %2, i8** %6 
+  ret {}* undef 
 }
 
 

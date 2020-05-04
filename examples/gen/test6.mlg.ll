@@ -1,5 +1,5 @@
-; ModuleID = './examples/test6.mlg'
 source_filename = "./examples/test6.mlg"
+; ModuleID = './examples/test6.mlg'
 
 
  

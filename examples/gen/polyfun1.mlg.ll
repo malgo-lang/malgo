@@ -1,11 +1,11 @@
-; ModuleID = './examples/polyfun1.mlg'
 source_filename = "./examples/polyfun1.mlg"
+; ModuleID = './examples/polyfun1.mlg'
 
 
  
 
 
-define external ccc  i64 @$f130(i8* , i8* )    {
+define external ccc  i64 @$f95(i8* , i8* )    {
   %3 = bitcast i8* %0 to {i8* (i8*, i8*)*, i8*}* 
   %4 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %3, i32 0, i32 0 
   %5 = load  i8* (i8*, i8*)*, i8* (i8*, i8*)** %4 
@@ -17,7 +17,7 @@ define external ccc  i64 @$f130(i8* , i8* )    {
 }
 
 
-define external ccc  i8* @$f115(i8* , i8* )    {
+define external ccc  i8* @$f80(i8* , i8* )    {
   %3 = bitcast i8* %0 to {i64 (i8*, i8*)*, i8*}* 
   %4 = getelementptr  {i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* %3, i32 0, i32 0 
   %5 = load  i64 (i8*, i8*)*, i64 (i8*, i8*)** %4 
@@ -29,7 +29,7 @@ define external ccc  i8* @$f115(i8* , i8* )    {
 }
 
 
-define external ccc  i64 @$f90(i8* , i8* )    {
+define external ccc  i64 @$f55(i8* , i8* )    {
   %3 = bitcast i8* %0 to {i64 (i8*, i64)*, i8*}* 
   %4 = ptrtoint i8* %1 to i64 
   %5 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %3, i32 0, i32 0 
@@ -38,6 +38,15 @@ define external ccc  i64 @$f90(i8* , i8* )    {
   %8 = load  i8*, i8** %7 
   %9 =  call ccc  i64  %6(i8*  %8, i64  %4)  
   ret i64 %9 
+}
+
+
+declare external ccc  {}* @print_int(i64)    
+
+
+define external ccc  {}* @print_int7(i64 )    {
+  %2 =  call ccc  {}*  @print_int(i64  %0)  
+  ret {}* %2 
 }
 
 
@@ -54,15 +63,6 @@ define external ccc  i64 @succ4(i8* , i64 )    {
   store  i8* %0, i8** %7 
   %8 = add   i64 %1, 1 
   ret i64 %8 
-}
-
-
-declare external ccc  {}* @print_int(i64)    
-
-
-define external ccc  {}* @print_int7(i64 )    {
-  %2 =  call ccc  {}*  @print_int(i64  %0)  
-  ret {}* %2 
 }
 
 
@@ -99,7 +99,7 @@ define external ccc  i32 @main()    {
   %9 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i8*)*, i8*}* getelementptr inbounds ({i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i8*)*, i8*}*), i32 1) to i64))  
   %10 = bitcast i8* %9 to {i64 (i8*, i8*)*, i8*}* 
   %11 = getelementptr  {i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* %10, i32 0, i32 0 
-  store  i64 (i8*, i8*)* @$f90, i64 (i8*, i8*)** %11 
+  store  i64 (i8*, i8*)* @$f55, i64 (i8*, i8*)** %11 
   %12 = getelementptr  {i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* %10, i32 0, i32 1 
   store  i8* %8, i8** %12 
   %13 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({{i64 (i8*, i8*)*, i8*}*, i64}* getelementptr inbounds ({{i64 (i8*, i8*)*, i8*}*, i64}, {{i64 (i8*, i8*)*, i8*}*, i64}* inttoptr (i32 0 to {{i64 (i8*, i8*)*, i8*}*, i64}*), i32 1) to i64))  
@@ -145,7 +145,7 @@ end_0:
   %40 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i8* (i8*, i8*)*, i8*}* getelementptr inbounds ({i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i8* (i8*, i8*)*, i8*}*), i32 1) to i64))  
   %41 = bitcast i8* %40 to {i8* (i8*, i8*)*, i8*}* 
   %42 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %41, i32 0, i32 0 
-  store  i8* (i8*, i8*)* @$f115, i8* (i8*, i8*)** %42 
+  store  i8* (i8*, i8*)* @$f80, i8* (i8*, i8*)** %42 
   %43 = getelementptr  {i8* (i8*, i8*)*, i8*}, {i8* (i8*, i8*)*, i8*}* %41, i32 0, i32 1 
   store  i8* %39, i8** %43 
   %44 = getelementptr  {{i8* (i8*, i8*)*, i8*}*, i8*}, {{i8* (i8*, i8*)*, i8*}*, i8*}* %36, i32 0, i32 0 
@@ -164,7 +164,7 @@ end_0:
   %55 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i8*)*, i8*}* getelementptr inbounds ({i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i8*)*, i8*}*), i32 1) to i64))  
   %56 = bitcast i8* %55 to {i64 (i8*, i8*)*, i8*}* 
   %57 = getelementptr  {i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* %56, i32 0, i32 0 
-  store  i64 (i8*, i8*)* @$f130, i64 (i8*, i8*)** %57 
+  store  i64 (i8*, i8*)* @$f95, i64 (i8*, i8*)** %57 
   %58 = getelementptr  {i64 (i8*, i8*)*, i8*}, {i64 (i8*, i8*)*, i8*}* %56, i32 0, i32 1 
   store  i8* %54, i8** %58 
   %59 = getelementptr  {{i64 (i8*, i8*)*, i8*}*, i64}, {{i64 (i8*, i8*)*, i8*}*, i64}* %51, i32 0, i32 0 

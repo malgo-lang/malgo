@@ -1,26 +1,8 @@
-; ModuleID = './examples/fib_acc.mlg'
 source_filename = "./examples/fib_acc.mlg"
+; ModuleID = './examples/fib_acc.mlg'
 
 
  
-
-
-declare external ccc  {}* @print_int(i64)    
-
-
-define external ccc  {}* @print_int0(i64 )    {
-  %2 =  call ccc  {}*  @print_int(i64  %0)  
-  ret {}* %2 
-}
-
-
-declare external ccc  {}* @newline()    
-
-
-define external ccc  {}* @newline1()    {
-  %1 =  call ccc  {}*  @newline()  
-  ret {}* %1 
-}
 
 
 define external ccc  {}* @fib_loop6(i64 )    {
@@ -65,6 +47,24 @@ else_0:
 end_0:
   %9 = load  i64, i64* %5 
   ret i64 %9 
+}
+
+
+declare external ccc  {}* @newline()    
+
+
+define external ccc  {}* @newline1()    {
+  %1 =  call ccc  {}*  @newline()  
+  ret {}* %1 
+}
+
+
+declare external ccc  {}* @print_int(i64)    
+
+
+define external ccc  {}* @print_int0(i64 )    {
+  %2 =  call ccc  {}*  @print_int(i64  %0)  
+  ret {}* %2 
 }
 
 

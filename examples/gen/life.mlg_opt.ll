@@ -5,38 +5,177 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define i1 @view10(i8*, { i1*, i64 }* nocapture readonly, i64, i64) {
-  %5 = bitcast i8* %0 to i64*
-  %6 = load i64, i64* %5, align 8
-  %7 = getelementptr i8, i8* %0, i64 8
-  %8 = bitcast i8* %7 to i64*
-  %9 = load i64, i64* %8, align 8
-  %10 = tail call i8* @GC_malloc(i64 16)
-  %11 = bitcast i8* %10 to i1 (i8*, { i1*, i64 }*, i64, i64)**
-  store i1 (i8*, { i1*, i64 }*, i64, i64)* @view10, i1 (i8*, { i1*, i64 }*, i64, i64)** %11, align 8
-  %12 = getelementptr i8, i8* %10, i64 8
-  %13 = bitcast i8* %12 to i8**
-  store i8* %0, i8** %13, align 8
-  %14 = icmp sle i64 %6, %2
-  %15 = icmp sle i64 %9, %3
-  %16 = or i1 %14, %15
-  %17 = or i64 %3, %2
-  %18 = icmp slt i64 %17, 0
-  %19 = or i1 %18, %16
-  br i1 %19, label %end_0, label %else_0
+define {}* @loop44(i8*, i64) {
+  %3 = bitcast i8* %0 to { i1*, i64 }**
+  %4 = load { i1*, i64 }*, { i1*, i64 }** %3, align 8
+  %5 = getelementptr i8, i8* %0, i64 8
+  %6 = bitcast i8* %5 to { {}* (i8*, { i1*, i64 }*)*, i8* }**
+  %7 = load { {}* (i8*, { i1*, i64 }*)*, i8* }*, { {}* (i8*, { i1*, i64 }*)*, i8* }** %6, align 8
+  %8 = getelementptr i8, i8* %0, i64 16
+  %9 = bitcast i8* %8 to { {}* (i8*, { i1*, i64 }*)*, i8* }**
+  %10 = load { {}* (i8*, { i1*, i64 }*)*, i8* }*, { {}* (i8*, { i1*, i64 }*)*, i8* }** %9, align 8
+  %11 = tail call i8* @GC_malloc(i64 16)
+  %12 = bitcast i8* %11 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @loop44, {}* (i8*, i64)** %12, align 8
+  %13 = getelementptr i8, i8* %11, i64 8
+  %14 = bitcast i8* %13 to i8**
+  store i8* %0, i8** %14, align 8
+  %15 = icmp sgt i64 %1, 0
+  br i1 %15, label %then_0, label %else_0
 
-else_0:                                           ; preds = %4
-  %20 = mul i64 %6, %3
-  %21 = add i64 %20, %2
-  %22 = getelementptr { i1*, i64 }, { i1*, i64 }* %1, i64 0, i32 0
-  %23 = load i1*, i1** %22, align 8
-  %24 = getelementptr i1, i1* %23, i64 %21
-  %25 = load i1, i1* %24, align 1
-  br label %end_0
+then_0:                                           ; preds = %2, %then_0
+  %16 = phi { {}* (i8*, { i1*, i64 }*)*, i8* }* [ %33, %then_0 ], [ %10, %2 ]
+  %17 = phi { {}* (i8*, { i1*, i64 }*)*, i8* }* [ %32, %then_0 ], [ %7, %2 ]
+  %18 = phi { i1*, i64 }* [ %31, %then_0 ], [ %4, %2 ]
+  %.tr23 = phi i64 [ %30, %then_0 ], [ %1, %2 ]
+  %19 = getelementptr { {}* (i8*, { i1*, i64 }*)*, i8* }, { {}* (i8*, { i1*, i64 }*)*, i8* }* %17, i64 0, i32 0
+  %20 = load {}* (i8*, { i1*, i64 }*)*, {}* (i8*, { i1*, i64 }*)** %19, align 8
+  %21 = getelementptr { {}* (i8*, { i1*, i64 }*)*, i8* }, { {}* (i8*, { i1*, i64 }*)*, i8* }* %17, i64 0, i32 1
+  %22 = load i8*, i8** %21, align 8
+  %23 = tail call {}* %20(i8* %22, { i1*, i64 }* %18)
+  %24 = getelementptr { {}* (i8*, { i1*, i64 }*)*, i8* }, { {}* (i8*, { i1*, i64 }*)*, i8* }* %16, i64 0, i32 0
+  %25 = load {}* (i8*, { i1*, i64 }*)*, {}* (i8*, { i1*, i64 }*)** %24, align 8
+  %26 = getelementptr { {}* (i8*, { i1*, i64 }*)*, i8* }, { {}* (i8*, { i1*, i64 }*)*, i8* }* %16, i64 0, i32 1
+  %27 = load i8*, i8** %26, align 8
+  %28 = tail call {}* %25(i8* %27, { i1*, i64 }* %18)
+  %29 = tail call {}* @newline()
+  %30 = add nsw i64 %.tr23, -1
+  %31 = load { i1*, i64 }*, { i1*, i64 }** %3, align 8
+  %32 = load { {}* (i8*, { i1*, i64 }*)*, i8* }*, { {}* (i8*, { i1*, i64 }*)*, i8* }** %6, align 8
+  %33 = load { {}* (i8*, { i1*, i64 }*)*, i8* }*, { {}* (i8*, { i1*, i64 }*)*, i8* }** %9, align 8
+  %34 = tail call i8* @GC_malloc(i64 16)
+  %35 = bitcast i8* %34 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @loop44, {}* (i8*, i64)** %35, align 8
+  %36 = getelementptr i8, i8* %34, i64 8
+  %37 = bitcast i8* %36 to i8**
+  store i8* %0, i8** %37, align 8
+  %38 = icmp sgt i64 %30, 0
+  br i1 %38, label %then_0, label %else_0
 
-end_0:                                            ; preds = %4, %else_0
-  %.0 = phi i1 [ %25, %else_0 ], [ false, %4 ]
-  ret i1 %.0
+else_0:                                           ; preds = %then_0, %2
+  %39 = tail call i8* @GC_malloc(i64 0)
+  %40 = bitcast i8* %39 to {}*
+  ret {}* %40
+}
+
+define {}* @go_x42(i8*, i64) {
+  %3 = bitcast i8* %0 to i64*
+  %4 = load i64, i64* %3, align 8
+  %5 = getelementptr i8, i8* %0, i64 8
+  %6 = bitcast i8* %5 to { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }**
+  %7 = load { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }*, { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }** %6, align 8
+  %8 = getelementptr i8, i8* %0, i64 16
+  %9 = bitcast i8* %8 to { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }**
+  %10 = load { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }*, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }** %9, align 8
+  %11 = getelementptr i8, i8* %0, i64 24
+  %12 = bitcast i8* %11 to { i1*, i64 }**
+  %13 = load { i1*, i64 }*, { i1*, i64 }** %12, align 8
+  %14 = getelementptr i8, i8* %0, i64 32
+  %15 = bitcast i8* %14 to { i1*, i64 }**
+  %16 = load { i1*, i64 }*, { i1*, i64 }** %15, align 8
+  %17 = getelementptr i8, i8* %0, i64 40
+  %18 = bitcast i8* %17 to i64*
+  %19 = load i64, i64* %18, align 8
+  %20 = tail call i8* @GC_malloc(i64 16)
+  %21 = bitcast i8* %20 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @go_x42, {}* (i8*, i64)** %21, align 8
+  %22 = getelementptr i8, i8* %20, i64 8
+  %23 = bitcast i8* %22 to i8**
+  store i8* %0, i8** %23, align 8
+  %24 = icmp sgt i64 %4, %1
+  br i1 %24, label %else_0, label %then_0
+
+then_0:                                           ; preds = %else_0, %2
+  %25 = tail call i8* @GC_malloc(i64 0)
+  %26 = bitcast i8* %25 to {}*
+  ret {}* %26
+
+else_0:                                           ; preds = %2, %else_0
+  %27 = phi i64 [ %48, %else_0 ], [ %19, %2 ]
+  %28 = phi { i1*, i64 }* [ %47, %else_0 ], [ %16, %2 ]
+  %29 = phi { i1*, i64 }* [ %46, %else_0 ], [ %13, %2 ]
+  %30 = phi { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* [ %45, %else_0 ], [ %10, %2 ]
+  %31 = phi { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }* [ %44, %else_0 ], [ %7, %2 ]
+  %.tr23 = phi i64 [ %42, %else_0 ], [ %1, %2 ]
+  %32 = getelementptr { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* %30, i64 0, i32 0
+  %33 = load i1 (i8*, { i1*, i64 }*, i64, i64)*, i1 (i8*, { i1*, i64 }*, i64, i64)** %32, align 8
+  %34 = getelementptr { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* %30, i64 0, i32 1
+  %35 = load i8*, i8** %34, align 8
+  %36 = tail call i1 %33(i8* %35, { i1*, i64 }* %28, i64 %.tr23, i64 %27)
+  %37 = getelementptr { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }, { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }* %31, i64 0, i32 0
+  %38 = load {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, {}* (i8*, { i1*, i64 }*, i64, i64, i1)** %37, align 8
+  %39 = getelementptr { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }, { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }* %31, i64 0, i32 1
+  %40 = load i8*, i8** %39, align 8
+  %41 = tail call {}* %38(i8* %40, { i1*, i64 }* %29, i64 %.tr23, i64 %27, i1 %36)
+  %42 = add i64 %.tr23, 1
+  %43 = load i64, i64* %3, align 8
+  %44 = load { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }*, { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }** %6, align 8
+  %45 = load { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }*, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }** %9, align 8
+  %46 = load { i1*, i64 }*, { i1*, i64 }** %12, align 8
+  %47 = load { i1*, i64 }*, { i1*, i64 }** %15, align 8
+  %48 = load i64, i64* %18, align 8
+  %49 = tail call i8* @GC_malloc(i64 16)
+  %50 = bitcast i8* %49 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @go_x42, {}* (i8*, i64)** %50, align 8
+  %51 = getelementptr i8, i8* %49, i64 8
+  %52 = bitcast i8* %51 to i8**
+  store i8* %0, i8** %52, align 8
+  %53 = icmp sgt i64 %43, %42
+  br i1 %53, label %else_0, label %then_0
+}
+
+define {}* @go_y40(i8*, i64) {
+  %3 = bitcast i8* %0 to i64*
+  %4 = getelementptr i8, i8* %0, i64 8
+  %5 = bitcast i8* %4 to i64*
+  %6 = getelementptr i8, i8* %0, i64 16
+  %7 = getelementptr i8, i8* %0, i64 32
+  %8 = bitcast i8* %6 to <2 x i64>*
+  %9 = bitcast i8* %7 to <2 x i64>*
+  br label %tailrecurse
+
+tailrecurse:                                      ; preds = %else_0, %2
+  %.tr2 = phi i64 [ %1, %2 ], [ %34, %else_0 ]
+  %10 = load i64, i64* %3, align 8
+  %11 = load i64, i64* %5, align 8
+  %12 = load <2 x i64>, <2 x i64>* %8, align 8
+  %13 = load <2 x i64>, <2 x i64>* %9, align 8
+  %14 = tail call i8* @GC_malloc(i64 16)
+  %15 = bitcast i8* %14 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @go_y40, {}* (i8*, i64)** %15, align 8
+  %16 = getelementptr i8, i8* %14, i64 8
+  %17 = bitcast i8* %16 to i8**
+  store i8* %0, i8** %17, align 8
+  %18 = tail call i8* @GC_malloc(i64 48)
+  %19 = bitcast i8* %18 to i64*
+  store i64 %10, i64* %19, align 8
+  %20 = getelementptr i8, i8* %18, i64 8
+  %21 = bitcast i8* %20 to <2 x i64>*
+  store <2 x i64> %12, <2 x i64>* %21, align 8
+  %22 = getelementptr i8, i8* %18, i64 24
+  %23 = bitcast i8* %22 to <2 x i64>*
+  store <2 x i64> %13, <2 x i64>* %23, align 8
+  %24 = getelementptr i8, i8* %18, i64 40
+  %25 = bitcast i8* %24 to i64*
+  store i64 %.tr2, i64* %25, align 8
+  %26 = tail call i8* @GC_malloc(i64 16)
+  %27 = bitcast i8* %26 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @go_x42, {}* (i8*, i64)** %27, align 8
+  %28 = getelementptr i8, i8* %26, i64 8
+  %29 = bitcast i8* %28 to i8**
+  store i8* %18, i8** %29, align 8
+  %30 = icmp sgt i64 %11, %.tr2
+  br i1 %30, label %else_0, label %then_0
+
+then_0:                                           ; preds = %tailrecurse
+  %31 = tail call i8* @GC_malloc(i64 0)
+  %32 = bitcast i8* %31 to {}*
+  ret {}* %32
+
+else_0:                                           ; preds = %tailrecurse
+  %33 = tail call {}* @go_x42(i8* %18, i64 0)
+  %34 = add i64 %.tr2, 1
+  br label %tailrecurse
 }
 
 define {}* @update_cells37(i8*, { i1*, i64 }*) {
@@ -53,17 +192,17 @@ define {}* @update_cells37(i8*, { i1*, i64 }*) {
   store i8* %0, i8** %11, align 8
   %12 = tail call { i1*, i64 }* @copy_bool_array({ i1*, i64 }* %1)
   %13 = tail call i8* @GC_malloc(i64 48)
-  %14 = bitcast i8* %13 to { i1*, i64 }**
-  store { i1*, i64 }* %1, { i1*, i64 }** %14, align 8
-  %15 = getelementptr i8, i8* %13, i64 8
-  %16 = bitcast i8* %15 to { i1*, i64 }**
-  store { i1*, i64 }* %12, { i1*, i64 }** %16, align 8
-  %17 = getelementptr i8, i8* %13, i64 16
-  %18 = bitcast i8* %17 to <2 x i64>*
-  store <2 x i64> %4, <2 x i64>* %18, align 8
-  %19 = getelementptr i8, i8* %13, i64 32
-  %20 = bitcast i8* %19 to <2 x i64>*
-  store <2 x i64> %7, <2 x i64>* %20, align 8
+  %14 = bitcast i8* %13 to <2 x i64>*
+  store <2 x i64> %4, <2 x i64>* %14, align 8
+  %15 = getelementptr i8, i8* %13, i64 16
+  %16 = bitcast i8* %15 to <2 x i64>*
+  store <2 x i64> %7, <2 x i64>* %16, align 8
+  %17 = getelementptr i8, i8* %13, i64 32
+  %18 = bitcast i8* %17 to { i1*, i64 }**
+  store { i1*, i64 }* %1, { i1*, i64 }** %18, align 8
+  %19 = getelementptr i8, i8* %13, i64 40
+  %20 = bitcast i8* %19 to { i1*, i64 }**
+  store { i1*, i64 }* %12, { i1*, i64 }** %20, align 8
   %21 = tail call i8* @GC_malloc(i64 16)
   %22 = bitcast i8* %21 to {}* (i8*, i64)**
   store {}* (i8*, i64)* @go_y40, {}* (i8*, i64)** %22, align 8
@@ -72,97 +211,6 @@ define {}* @update_cells37(i8*, { i1*, i64 }*) {
   store i8* %13, i8** %24, align 8
   %25 = tail call {}* @go_y40(i8* %13, i64 0)
   ret {}* %25
-}
-
-; Function Attrs: norecurse nounwind readnone
-define i64 @to_int30(i1) local_unnamed_addr #0 {
-end_0:
-  %. = zext i1 %0 to i64
-  ret i64 %.
-}
-
-; Function Attrs: norecurse nounwind readnone
-define i8 @to_char22(i1) local_unnamed_addr #0 {
-end_0:
-  %. = select i1 %0, i8 35, i8 95
-  ret i8 %.
-}
-
-declare {}* @malgo_sleep(i64) local_unnamed_addr
-
-define {}* @sleep4(i64) local_unnamed_addr {
-  %2 = tail call {}* @malgo_sleep(i64 %0)
-  ret {}* %2
-}
-
-define noalias {}* @set14(i8*, { i1*, i64 }* nocapture readonly, i64, i64, i1) {
-  %6 = bitcast i8* %0 to i64*
-  %7 = load i64, i64* %6, align 8
-  %8 = tail call i8* @GC_malloc(i64 16)
-  %9 = bitcast i8* %8 to {}* (i8*, { i1*, i64 }*, i64, i64, i1)**
-  store {}* (i8*, { i1*, i64 }*, i64, i64, i1)* @set14, {}* (i8*, { i1*, i64 }*, i64, i64, i1)** %9, align 8
-  %10 = getelementptr i8, i8* %8, i64 8
-  %11 = bitcast i8* %10 to i8**
-  store i8* %0, i8** %11, align 8
-  %12 = mul i64 %7, %3
-  %13 = add i64 %12, %2
-  %14 = getelementptr { i1*, i64 }, { i1*, i64 }* %1, i64 0, i32 0
-  %15 = load i1*, i1** %14, align 8
-  %16 = getelementptr i1, i1* %15, i64 %13
-  store i1 %4, i1* %16, align 1
-  ret {}* undef
-}
-
-declare i1 @rand_bool() local_unnamed_addr
-
-define i1 @rand_bool3() local_unnamed_addr {
-  %1 = tail call i1 @rand_bool()
-  ret i1 %1
-}
-
-declare {}* @pulsar({ i1*, i64 }*) local_unnamed_addr
-
-define {}* @pulsar6({ i1*, i64 }*) local_unnamed_addr {
-  %2 = tail call {}* @pulsar({ i1*, i64 }* %0)
-  ret {}* %2
-}
-
-declare {}* @print_char(i8) local_unnamed_addr
-
-define {}* @print_char0(i8) local_unnamed_addr {
-  %2 = tail call {}* @print_char(i8 %0)
-  ret {}* %2
-}
-
-define {}* @print_cells24(i8*, { i1*, i64 }*) {
-  %3 = bitcast i8* %0 to <2 x i64>*
-  %4 = load <2 x i64>, <2 x i64>* %3, align 8
-  %5 = getelementptr i8, i8* %0, i64 16
-  %6 = bitcast i8* %5 to i64*
-  %7 = load i64, i64* %6, align 8
-  %8 = tail call i8* @GC_malloc(i64 16)
-  %9 = bitcast i8* %8 to {}* (i8*, { i1*, i64 }*)**
-  store {}* (i8*, { i1*, i64 }*)* @print_cells24, {}* (i8*, { i1*, i64 }*)** %9, align 8
-  %10 = getelementptr i8, i8* %8, i64 8
-  %11 = bitcast i8* %10 to i8**
-  store i8* %0, i8** %11, align 8
-  %12 = tail call i8* @GC_malloc(i64 32)
-  %13 = bitcast i8* %12 to { i1*, i64 }**
-  store { i1*, i64 }* %1, { i1*, i64 }** %13, align 8
-  %14 = getelementptr i8, i8* %12, i64 8
-  %15 = bitcast i8* %14 to <2 x i64>*
-  store <2 x i64> %4, <2 x i64>* %15, align 8
-  %16 = getelementptr i8, i8* %12, i64 24
-  %17 = bitcast i8* %16 to i64*
-  store i64 %7, i64* %17, align 8
-  %18 = tail call i8* @GC_malloc(i64 16)
-  %19 = bitcast i8* %18 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_y26, {}* (i8*, i64)** %19, align 8
-  %20 = getelementptr i8, i8* %18, i64 8
-  %21 = bitcast i8* %20 to i8**
-  store i8* %12, i8** %21, align 8
-  %22 = tail call {}* @go_y26(i8* %12, i64 0)
-  ret {}* %22
 }
 
 define i1 @next_state32(i8*, { i1*, i64 }*, i64, i64) {
@@ -249,64 +297,151 @@ body_0:
   ret i1 %storemerge
 }
 
-declare {}* @newline() local_unnamed_addr
-
-define {}* @newline1() local_unnamed_addr {
-  %1 = tail call {}* @newline()
-  ret {}* %1
+; Function Attrs: norecurse nounwind readnone
+define i64 @to_int30(i1) local_unnamed_addr #0 {
+end_0:
+  %. = zext i1 %0 to i64
+  ret i64 %.
 }
 
-define {}* @loop44(i8*, i64) {
-  %3 = bitcast i8* %0 to { i1*, i64 }**
-  %4 = load { i1*, i64 }*, { i1*, i64 }** %3, align 8
+define {}* @go_x28(i8*, i64) {
+  %3 = bitcast i8* %0 to i64*
+  %4 = load i64, i64* %3, align 8
   %5 = getelementptr i8, i8* %0, i64 8
-  %6 = bitcast i8* %5 to { {}* (i8*, { i1*, i64 }*)*, i8* }**
-  %7 = load { {}* (i8*, { i1*, i64 }*)*, i8* }*, { {}* (i8*, { i1*, i64 }*)*, i8* }** %6, align 8
+  %6 = bitcast i8* %5 to { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }**
+  %7 = load { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }*, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }** %6, align 8
   %8 = getelementptr i8, i8* %0, i64 16
-  %9 = bitcast i8* %8 to { {}* (i8*, { i1*, i64 }*)*, i8* }**
-  %10 = load { {}* (i8*, { i1*, i64 }*)*, i8* }*, { {}* (i8*, { i1*, i64 }*)*, i8* }** %9, align 8
+  %9 = bitcast i8* %8 to { i1*, i64 }**
+  %10 = load { i1*, i64 }*, { i1*, i64 }** %9, align 8
+  %11 = getelementptr i8, i8* %0, i64 24
+  %12 = bitcast i8* %11 to i64*
+  %13 = load i64, i64* %12, align 8
+  %14 = tail call i8* @GC_malloc(i64 16)
+  %15 = bitcast i8* %14 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @go_x28, {}* (i8*, i64)** %15, align 8
+  %16 = getelementptr i8, i8* %14, i64 8
+  %17 = bitcast i8* %16 to i8**
+  store i8* %0, i8** %17, align 8
+  %18 = icmp sgt i64 %4, %1
+  br i1 %18, label %else_0, label %then_0
+
+then_0:                                           ; preds = %else_0, %2
+  %19 = tail call i8* @GC_malloc(i64 0)
+  %20 = bitcast i8* %19 to {}*
+  ret {}* %20
+
+else_0:                                           ; preds = %2, %else_0
+  %21 = phi i64 [ %34, %else_0 ], [ %13, %2 ]
+  %22 = phi { i1*, i64 }* [ %33, %else_0 ], [ %10, %2 ]
+  %23 = phi { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* [ %32, %else_0 ], [ %7, %2 ]
+  %.tr23 = phi i64 [ %30, %else_0 ], [ %1, %2 ]
+  %24 = getelementptr { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* %23, i64 0, i32 0
+  %25 = load i1 (i8*, { i1*, i64 }*, i64, i64)*, i1 (i8*, { i1*, i64 }*, i64, i64)** %24, align 8
+  %26 = getelementptr { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* %23, i64 0, i32 1
+  %27 = load i8*, i8** %26, align 8
+  %28 = tail call i1 %25(i8* %27, { i1*, i64 }* %22, i64 %.tr23, i64 %21)
+  %..i = select i1 %28, i8 35, i8 95
+  %29 = tail call {}* @print_char(i8 %..i)
+  %30 = add i64 %.tr23, 1
+  %31 = load i64, i64* %3, align 8
+  %32 = load { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }*, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }** %6, align 8
+  %33 = load { i1*, i64 }*, { i1*, i64 }** %9, align 8
+  %34 = load i64, i64* %12, align 8
+  %35 = tail call i8* @GC_malloc(i64 16)
+  %36 = bitcast i8* %35 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @go_x28, {}* (i8*, i64)** %36, align 8
+  %37 = getelementptr i8, i8* %35, i64 8
+  %38 = bitcast i8* %37 to i8**
+  store i8* %0, i8** %38, align 8
+  %39 = icmp sgt i64 %31, %30
+  br i1 %39, label %else_0, label %then_0
+}
+
+define {}* @go_y26(i8*, i64) {
+  %3 = bitcast i8* %0 to i64*
+  %4 = getelementptr i8, i8* %0, i64 8
+  %5 = bitcast i8* %4 to i64*
+  %6 = getelementptr i8, i8* %0, i64 16
+  %7 = bitcast i8* %6 to <2 x i64>*
+  br label %tailrecurse
+
+tailrecurse:                                      ; preds = %else_0, %2
+  %.tr2 = phi i64 [ %1, %2 ], [ %30, %else_0 ]
+  %8 = load i64, i64* %3, align 8
+  %9 = load i64, i64* %5, align 8
+  %10 = load <2 x i64>, <2 x i64>* %7, align 8
   %11 = tail call i8* @GC_malloc(i64 16)
   %12 = bitcast i8* %11 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @loop44, {}* (i8*, i64)** %12, align 8
+  store {}* (i8*, i64)* @go_y26, {}* (i8*, i64)** %12, align 8
   %13 = getelementptr i8, i8* %11, i64 8
   %14 = bitcast i8* %13 to i8**
   store i8* %0, i8** %14, align 8
-  %15 = icmp sgt i64 %1, 0
-  br i1 %15, label %then_0, label %else_0
+  %15 = tail call i8* @GC_malloc(i64 32)
+  %16 = bitcast i8* %15 to i64*
+  store i64 %8, i64* %16, align 8
+  %17 = getelementptr i8, i8* %15, i64 8
+  %18 = bitcast i8* %17 to <2 x i64>*
+  store <2 x i64> %10, <2 x i64>* %18, align 8
+  %19 = getelementptr i8, i8* %15, i64 24
+  %20 = bitcast i8* %19 to i64*
+  store i64 %.tr2, i64* %20, align 8
+  %21 = tail call i8* @GC_malloc(i64 16)
+  %22 = bitcast i8* %21 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @go_x28, {}* (i8*, i64)** %22, align 8
+  %23 = getelementptr i8, i8* %21, i64 8
+  %24 = bitcast i8* %23 to i8**
+  store i8* %15, i8** %24, align 8
+  %25 = icmp sgt i64 %9, %.tr2
+  br i1 %25, label %else_0, label %then_0
 
-then_0:                                           ; preds = %2, %then_0
-  %16 = phi { {}* (i8*, { i1*, i64 }*)*, i8* }* [ %33, %then_0 ], [ %10, %2 ]
-  %17 = phi { {}* (i8*, { i1*, i64 }*)*, i8* }* [ %32, %then_0 ], [ %7, %2 ]
-  %18 = phi { i1*, i64 }* [ %31, %then_0 ], [ %4, %2 ]
-  %.tr23 = phi i64 [ %30, %then_0 ], [ %1, %2 ]
-  %19 = getelementptr { {}* (i8*, { i1*, i64 }*)*, i8* }, { {}* (i8*, { i1*, i64 }*)*, i8* }* %17, i64 0, i32 0
-  %20 = load {}* (i8*, { i1*, i64 }*)*, {}* (i8*, { i1*, i64 }*)** %19, align 8
-  %21 = getelementptr { {}* (i8*, { i1*, i64 }*)*, i8* }, { {}* (i8*, { i1*, i64 }*)*, i8* }* %17, i64 0, i32 1
-  %22 = load i8*, i8** %21, align 8
-  %23 = tail call {}* %20(i8* %22, { i1*, i64 }* %18)
-  %24 = getelementptr { {}* (i8*, { i1*, i64 }*)*, i8* }, { {}* (i8*, { i1*, i64 }*)*, i8* }* %16, i64 0, i32 0
-  %25 = load {}* (i8*, { i1*, i64 }*)*, {}* (i8*, { i1*, i64 }*)** %24, align 8
-  %26 = getelementptr { {}* (i8*, { i1*, i64 }*)*, i8* }, { {}* (i8*, { i1*, i64 }*)*, i8* }* %16, i64 0, i32 1
-  %27 = load i8*, i8** %26, align 8
-  %28 = tail call {}* %25(i8* %27, { i1*, i64 }* %18)
+then_0:                                           ; preds = %tailrecurse
+  %26 = tail call i8* @GC_malloc(i64 0)
+  %27 = bitcast i8* %26 to {}*
+  ret {}* %27
+
+else_0:                                           ; preds = %tailrecurse
+  %28 = tail call {}* @go_x28(i8* %15, i64 0)
   %29 = tail call {}* @newline()
-  %30 = add nsw i64 %.tr23, -1
-  %31 = load { i1*, i64 }*, { i1*, i64 }** %3, align 8
-  %32 = load { {}* (i8*, { i1*, i64 }*)*, i8* }*, { {}* (i8*, { i1*, i64 }*)*, i8* }** %6, align 8
-  %33 = load { {}* (i8*, { i1*, i64 }*)*, i8* }*, { {}* (i8*, { i1*, i64 }*)*, i8* }** %9, align 8
-  %34 = tail call i8* @GC_malloc(i64 16)
-  %35 = bitcast i8* %34 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @loop44, {}* (i8*, i64)** %35, align 8
-  %36 = getelementptr i8, i8* %34, i64 8
-  %37 = bitcast i8* %36 to i8**
-  store i8* %0, i8** %37, align 8
-  %38 = icmp sgt i64 %30, 0
-  br i1 %38, label %then_0, label %else_0
+  %30 = add i64 %.tr2, 1
+  br label %tailrecurse
+}
 
-else_0:                                           ; preds = %then_0, %2
-  %39 = tail call i8* @GC_malloc(i64 0)
-  %40 = bitcast i8* %39 to {}*
-  ret {}* %40
+define {}* @print_cells24(i8*, { i1*, i64 }*) {
+  %3 = bitcast i8* %0 to <2 x i64>*
+  %4 = load <2 x i64>, <2 x i64>* %3, align 8
+  %5 = getelementptr i8, i8* %0, i64 16
+  %6 = bitcast i8* %5 to i64*
+  %7 = load i64, i64* %6, align 8
+  %8 = tail call i8* @GC_malloc(i64 16)
+  %9 = bitcast i8* %8 to {}* (i8*, { i1*, i64 }*)**
+  store {}* (i8*, { i1*, i64 }*)* @print_cells24, {}* (i8*, { i1*, i64 }*)** %9, align 8
+  %10 = getelementptr i8, i8* %8, i64 8
+  %11 = bitcast i8* %10 to i8**
+  store i8* %0, i8** %11, align 8
+  %12 = tail call i8* @GC_malloc(i64 32)
+  %13 = bitcast i8* %12 to <2 x i64>*
+  store <2 x i64> %4, <2 x i64>* %13, align 8
+  %14 = getelementptr i8, i8* %12, i64 16
+  %15 = bitcast i8* %14 to i64*
+  store i64 %7, i64* %15, align 8
+  %16 = getelementptr i8, i8* %12, i64 24
+  %17 = bitcast i8* %16 to { i1*, i64 }**
+  store { i1*, i64 }* %1, { i1*, i64 }** %17, align 8
+  %18 = tail call i8* @GC_malloc(i64 16)
+  %19 = bitcast i8* %18 to {}* (i8*, i64)**
+  store {}* (i8*, i64)* @go_y26, {}* (i8*, i64)** %19, align 8
+  %20 = getelementptr i8, i8* %18, i64 8
+  %21 = bitcast i8* %20 to i8**
+  store i8* %12, i8** %21, align 8
+  %22 = tail call {}* @go_y26(i8* %12, i64 0)
+  ret {}* %22
+}
+
+; Function Attrs: norecurse nounwind readnone
+define i8 @to_char22(i1) local_unnamed_addr #0 {
+end_0:
+  %. = select i1 %0, i8 35, i8 95
+  ret i8 %.
 }
 
 define {}* @init_cells19(i8*, { i1*, i64 }* nocapture readonly, i64) {
@@ -354,226 +489,84 @@ else_0:                                           ; preds = %else_0.lr.ph, %else
   br i1 %29, label %else_0, label %then_0
 }
 
-define {}* @go_y40(i8*, i64) {
-  %3 = getelementptr i8, i8* %0, i64 16
-  %4 = getelementptr i8, i8* %0, i64 32
-  %5 = bitcast i8* %4 to i64*
-  %6 = getelementptr i8, i8* %0, i64 40
-  %7 = bitcast i8* %6 to i64*
-  %8 = bitcast i8* %0 to <2 x i64>*
-  %9 = bitcast i8* %3 to <2 x i64>*
-  br label %tailrecurse
-
-tailrecurse:                                      ; preds = %else_0, %2
-  %.tr2 = phi i64 [ %1, %2 ], [ %34, %else_0 ]
-  %10 = load <2 x i64>, <2 x i64>* %8, align 8
-  %11 = load <2 x i64>, <2 x i64>* %9, align 8
-  %12 = load i64, i64* %5, align 8
-  %13 = load i64, i64* %7, align 8
-  %14 = tail call i8* @GC_malloc(i64 16)
-  %15 = bitcast i8* %14 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_y40, {}* (i8*, i64)** %15, align 8
-  %16 = getelementptr i8, i8* %14, i64 8
-  %17 = bitcast i8* %16 to i8**
-  store i8* %0, i8** %17, align 8
-  %18 = tail call i8* @GC_malloc(i64 48)
-  %19 = bitcast i8* %18 to <2 x i64>*
-  store <2 x i64> %10, <2 x i64>* %19, align 8
-  %20 = getelementptr i8, i8* %18, i64 16
-  %21 = bitcast i8* %20 to <2 x i64>*
-  store <2 x i64> %11, <2 x i64>* %21, align 8
-  %22 = getelementptr i8, i8* %18, i64 32
-  %23 = bitcast i8* %22 to i64*
-  store i64 %12, i64* %23, align 8
-  %24 = getelementptr i8, i8* %18, i64 40
-  %25 = bitcast i8* %24 to i64*
-  store i64 %.tr2, i64* %25, align 8
-  %26 = tail call i8* @GC_malloc(i64 16)
-  %27 = bitcast i8* %26 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_x42, {}* (i8*, i64)** %27, align 8
-  %28 = getelementptr i8, i8* %26, i64 8
-  %29 = bitcast i8* %28 to i8**
-  store i8* %18, i8** %29, align 8
-  %30 = icmp sgt i64 %13, %.tr2
-  br i1 %30, label %else_0, label %then_0
-
-then_0:                                           ; preds = %tailrecurse
-  %31 = tail call i8* @GC_malloc(i64 0)
-  %32 = bitcast i8* %31 to {}*
-  ret {}* %32
-
-else_0:                                           ; preds = %tailrecurse
-  %33 = tail call {}* @go_x42(i8* %18, i64 0)
-  %34 = add i64 %.tr2, 1
-  br label %tailrecurse
+define noalias {}* @set14(i8*, { i1*, i64 }* nocapture readonly, i64, i64, i1) {
+  %6 = bitcast i8* %0 to i64*
+  %7 = load i64, i64* %6, align 8
+  %8 = tail call i8* @GC_malloc(i64 16)
+  %9 = bitcast i8* %8 to {}* (i8*, { i1*, i64 }*, i64, i64, i1)**
+  store {}* (i8*, { i1*, i64 }*, i64, i64, i1)* @set14, {}* (i8*, { i1*, i64 }*, i64, i64, i1)** %9, align 8
+  %10 = getelementptr i8, i8* %8, i64 8
+  %11 = bitcast i8* %10 to i8**
+  store i8* %0, i8** %11, align 8
+  %12 = mul i64 %7, %3
+  %13 = add i64 %12, %2
+  %14 = getelementptr { i1*, i64 }, { i1*, i64 }* %1, i64 0, i32 0
+  %15 = load i1*, i1** %14, align 8
+  %16 = getelementptr i1, i1* %15, i64 %13
+  store i1 %4, i1* %16, align 1
+  ret {}* undef
 }
 
-define {}* @go_y26(i8*, i64) {
-  %3 = getelementptr i8, i8* %0, i64 16
-  %4 = bitcast i8* %3 to i64*
-  %5 = getelementptr i8, i8* %0, i64 24
-  %6 = bitcast i8* %5 to i64*
-  %7 = bitcast i8* %0 to <2 x i64>*
-  br label %tailrecurse
+define i1 @view10(i8*, { i1*, i64 }* nocapture readonly, i64, i64) {
+  %5 = bitcast i8* %0 to i64*
+  %6 = load i64, i64* %5, align 8
+  %7 = getelementptr i8, i8* %0, i64 8
+  %8 = bitcast i8* %7 to i64*
+  %9 = load i64, i64* %8, align 8
+  %10 = tail call i8* @GC_malloc(i64 16)
+  %11 = bitcast i8* %10 to i1 (i8*, { i1*, i64 }*, i64, i64)**
+  store i1 (i8*, { i1*, i64 }*, i64, i64)* @view10, i1 (i8*, { i1*, i64 }*, i64, i64)** %11, align 8
+  %12 = getelementptr i8, i8* %10, i64 8
+  %13 = bitcast i8* %12 to i8**
+  store i8* %0, i8** %13, align 8
+  %14 = icmp sle i64 %6, %2
+  %15 = icmp sle i64 %9, %3
+  %16 = or i1 %14, %15
+  %17 = or i64 %3, %2
+  %18 = icmp slt i64 %17, 0
+  %19 = or i1 %18, %16
+  br i1 %19, label %end_0, label %else_0
 
-tailrecurse:                                      ; preds = %else_0, %2
-  %.tr2 = phi i64 [ %1, %2 ], [ %30, %else_0 ]
-  %8 = load <2 x i64>, <2 x i64>* %7, align 8
-  %9 = load i64, i64* %4, align 8
-  %10 = load i64, i64* %6, align 8
-  %11 = tail call i8* @GC_malloc(i64 16)
-  %12 = bitcast i8* %11 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_y26, {}* (i8*, i64)** %12, align 8
-  %13 = getelementptr i8, i8* %11, i64 8
-  %14 = bitcast i8* %13 to i8**
-  store i8* %0, i8** %14, align 8
-  %15 = tail call i8* @GC_malloc(i64 32)
-  %16 = bitcast i8* %15 to <2 x i64>*
-  store <2 x i64> %8, <2 x i64>* %16, align 8
-  %17 = getelementptr i8, i8* %15, i64 16
-  %18 = bitcast i8* %17 to i64*
-  store i64 %9, i64* %18, align 8
-  %19 = getelementptr i8, i8* %15, i64 24
-  %20 = bitcast i8* %19 to i64*
-  store i64 %.tr2, i64* %20, align 8
-  %21 = tail call i8* @GC_malloc(i64 16)
-  %22 = bitcast i8* %21 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_x28, {}* (i8*, i64)** %22, align 8
-  %23 = getelementptr i8, i8* %21, i64 8
-  %24 = bitcast i8* %23 to i8**
-  store i8* %15, i8** %24, align 8
-  %25 = icmp sgt i64 %10, %.tr2
-  br i1 %25, label %else_0, label %then_0
+else_0:                                           ; preds = %4
+  %20 = mul i64 %6, %3
+  %21 = add i64 %20, %2
+  %22 = getelementptr { i1*, i64 }, { i1*, i64 }* %1, i64 0, i32 0
+  %23 = load i1*, i1** %22, align 8
+  %24 = getelementptr i1, i1* %23, i64 %21
+  %25 = load i1, i1* %24, align 1
+  br label %end_0
 
-then_0:                                           ; preds = %tailrecurse
-  %26 = tail call i8* @GC_malloc(i64 0)
-  %27 = bitcast i8* %26 to {}*
-  ret {}* %27
-
-else_0:                                           ; preds = %tailrecurse
-  %28 = tail call {}* @go_x28(i8* %15, i64 0)
-  %29 = tail call {}* @newline()
-  %30 = add i64 %.tr2, 1
-  br label %tailrecurse
+end_0:                                            ; preds = %4, %else_0
+  %.0 = phi i1 [ %25, %else_0 ], [ false, %4 ]
+  ret i1 %.0
 }
 
-define {}* @go_x42(i8*, i64) {
-  %3 = bitcast i8* %0 to { i1*, i64 }**
-  %4 = load { i1*, i64 }*, { i1*, i64 }** %3, align 8
-  %5 = getelementptr i8, i8* %0, i64 8
-  %6 = bitcast i8* %5 to { i1*, i64 }**
-  %7 = load { i1*, i64 }*, { i1*, i64 }** %6, align 8
-  %8 = getelementptr i8, i8* %0, i64 16
-  %9 = bitcast i8* %8 to { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }**
-  %10 = load { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }*, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }** %9, align 8
-  %11 = getelementptr i8, i8* %0, i64 24
-  %12 = bitcast i8* %11 to { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }**
-  %13 = load { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }*, { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }** %12, align 8
-  %14 = getelementptr i8, i8* %0, i64 32
-  %15 = bitcast i8* %14 to i64*
-  %16 = load i64, i64* %15, align 8
-  %17 = getelementptr i8, i8* %0, i64 40
-  %18 = bitcast i8* %17 to i64*
-  %19 = load i64, i64* %18, align 8
-  %20 = tail call i8* @GC_malloc(i64 16)
-  %21 = bitcast i8* %20 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_x42, {}* (i8*, i64)** %21, align 8
-  %22 = getelementptr i8, i8* %20, i64 8
-  %23 = bitcast i8* %22 to i8**
-  store i8* %0, i8** %23, align 8
-  %24 = icmp sgt i64 %16, %1
-  br i1 %24, label %else_0, label %then_0
+declare {}* @pulsar({ i1*, i64 }*) local_unnamed_addr
 
-then_0:                                           ; preds = %else_0, %2
-  %25 = tail call i8* @GC_malloc(i64 0)
-  %26 = bitcast i8* %25 to {}*
-  ret {}* %26
-
-else_0:                                           ; preds = %2, %else_0
-  %27 = phi i64 [ %48, %else_0 ], [ %19, %2 ]
-  %28 = phi { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }* [ %46, %else_0 ], [ %13, %2 ]
-  %29 = phi { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* [ %45, %else_0 ], [ %10, %2 ]
-  %30 = phi { i1*, i64 }* [ %44, %else_0 ], [ %7, %2 ]
-  %31 = phi { i1*, i64 }* [ %43, %else_0 ], [ %4, %2 ]
-  %.tr23 = phi i64 [ %42, %else_0 ], [ %1, %2 ]
-  %32 = getelementptr { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* %29, i64 0, i32 0
-  %33 = load i1 (i8*, { i1*, i64 }*, i64, i64)*, i1 (i8*, { i1*, i64 }*, i64, i64)** %32, align 8
-  %34 = getelementptr { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* %29, i64 0, i32 1
-  %35 = load i8*, i8** %34, align 8
-  %36 = tail call i1 %33(i8* %35, { i1*, i64 }* %30, i64 %.tr23, i64 %27)
-  %37 = getelementptr { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }, { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }* %28, i64 0, i32 0
-  %38 = load {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, {}* (i8*, { i1*, i64 }*, i64, i64, i1)** %37, align 8
-  %39 = getelementptr { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }, { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }* %28, i64 0, i32 1
-  %40 = load i8*, i8** %39, align 8
-  %41 = tail call {}* %38(i8* %40, { i1*, i64 }* %31, i64 %.tr23, i64 %27, i1 %36)
-  %42 = add i64 %.tr23, 1
-  %43 = load { i1*, i64 }*, { i1*, i64 }** %3, align 8
-  %44 = load { i1*, i64 }*, { i1*, i64 }** %6, align 8
-  %45 = load { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }*, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }** %9, align 8
-  %46 = load { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }*, { {}* (i8*, { i1*, i64 }*, i64, i64, i1)*, i8* }** %12, align 8
-  %47 = load i64, i64* %15, align 8
-  %48 = load i64, i64* %18, align 8
-  %49 = tail call i8* @GC_malloc(i64 16)
-  %50 = bitcast i8* %49 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_x42, {}* (i8*, i64)** %50, align 8
-  %51 = getelementptr i8, i8* %49, i64 8
-  %52 = bitcast i8* %51 to i8**
-  store i8* %0, i8** %52, align 8
-  %53 = icmp sgt i64 %47, %42
-  br i1 %53, label %else_0, label %then_0
+define {}* @pulsar6({ i1*, i64 }*) local_unnamed_addr {
+  %2 = tail call {}* @pulsar({ i1*, i64 }* %0)
+  ret {}* %2
 }
 
-define {}* @go_x28(i8*, i64) {
-  %3 = bitcast i8* %0 to { i1*, i64 }**
-  %4 = load { i1*, i64 }*, { i1*, i64 }** %3, align 8
-  %5 = getelementptr i8, i8* %0, i64 8
-  %6 = bitcast i8* %5 to { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }**
-  %7 = load { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }*, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }** %6, align 8
-  %8 = getelementptr i8, i8* %0, i64 16
-  %9 = bitcast i8* %8 to i64*
-  %10 = load i64, i64* %9, align 8
-  %11 = getelementptr i8, i8* %0, i64 24
-  %12 = bitcast i8* %11 to i64*
-  %13 = load i64, i64* %12, align 8
-  %14 = tail call i8* @GC_malloc(i64 16)
-  %15 = bitcast i8* %14 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_x28, {}* (i8*, i64)** %15, align 8
-  %16 = getelementptr i8, i8* %14, i64 8
-  %17 = bitcast i8* %16 to i8**
-  store i8* %0, i8** %17, align 8
-  %18 = icmp sgt i64 %10, %1
-  br i1 %18, label %else_0, label %then_0
+declare { i1*, i64 }* @copy_bool_array({ i1*, i64 }*) local_unnamed_addr
 
-then_0:                                           ; preds = %else_0, %2
-  %19 = tail call i8* @GC_malloc(i64 0)
-  %20 = bitcast i8* %19 to {}*
-  ret {}* %20
+define { i1*, i64 }* @copy_bool_array5({ i1*, i64 }*) local_unnamed_addr {
+  %2 = tail call { i1*, i64 }* @copy_bool_array({ i1*, i64 }* %0)
+  ret { i1*, i64 }* %2
+}
 
-else_0:                                           ; preds = %2, %else_0
-  %21 = phi i64 [ %34, %else_0 ], [ %13, %2 ]
-  %22 = phi { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* [ %32, %else_0 ], [ %7, %2 ]
-  %23 = phi { i1*, i64 }* [ %31, %else_0 ], [ %4, %2 ]
-  %.tr23 = phi i64 [ %30, %else_0 ], [ %1, %2 ]
-  %24 = getelementptr { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* %22, i64 0, i32 0
-  %25 = load i1 (i8*, { i1*, i64 }*, i64, i64)*, i1 (i8*, { i1*, i64 }*, i64, i64)** %24, align 8
-  %26 = getelementptr { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }* %22, i64 0, i32 1
-  %27 = load i8*, i8** %26, align 8
-  %28 = tail call i1 %25(i8* %27, { i1*, i64 }* %23, i64 %.tr23, i64 %21)
-  %..i = select i1 %28, i8 35, i8 95
-  %29 = tail call {}* @print_char(i8 %..i)
-  %30 = add i64 %.tr23, 1
-  %31 = load { i1*, i64 }*, { i1*, i64 }** %3, align 8
-  %32 = load { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }*, { i1 (i8*, { i1*, i64 }*, i64, i64)*, i8* }** %6, align 8
-  %33 = load i64, i64* %9, align 8
-  %34 = load i64, i64* %12, align 8
-  %35 = tail call i8* @GC_malloc(i64 16)
-  %36 = bitcast i8* %35 to {}* (i8*, i64)**
-  store {}* (i8*, i64)* @go_x28, {}* (i8*, i64)** %36, align 8
-  %37 = getelementptr i8, i8* %35, i64 8
-  %38 = bitcast i8* %37 to i8**
-  store i8* %0, i8** %38, align 8
-  %39 = icmp sgt i64 %33, %30
-  br i1 %39, label %else_0, label %then_0
+declare {}* @malgo_sleep(i64) local_unnamed_addr
+
+define {}* @sleep4(i64) local_unnamed_addr {
+  %2 = tail call {}* @malgo_sleep(i64 %0)
+  ret {}* %2
+}
+
+declare i1 @rand_bool() local_unnamed_addr
+
+define i1 @rand_bool3() local_unnamed_addr {
+  %1 = tail call i1 @rand_bool()
+  ret i1 %1
 }
 
 declare {}* @gen_seed() local_unnamed_addr
@@ -583,11 +576,18 @@ define {}* @gen_seed2() local_unnamed_addr {
   ret {}* %1
 }
 
-declare { i1*, i64 }* @copy_bool_array({ i1*, i64 }*) local_unnamed_addr
+declare {}* @newline() local_unnamed_addr
 
-define { i1*, i64 }* @copy_bool_array5({ i1*, i64 }*) local_unnamed_addr {
-  %2 = tail call { i1*, i64 }* @copy_bool_array({ i1*, i64 }* %0)
-  ret { i1*, i64 }* %2
+define {}* @newline1() local_unnamed_addr {
+  %1 = tail call {}* @newline()
+  ret {}* %1
+}
+
+declare {}* @print_char(i8) local_unnamed_addr
+
+define {}* @print_char0(i8) local_unnamed_addr {
+  %2 = tail call {}* @print_char(i8 %0)
+  ret {}* %2
 }
 
 declare void @GC_init() local_unnamed_addr
@@ -653,11 +653,11 @@ end_0:                                            ; preds = %body_0.body_0_crit_
   %33 = bitcast i8* %32 to i8**
   store i8* %28, i8** %33, align 8
   %34 = tail call i8* @GC_malloc(i64 24)
-  %35 = bitcast i8* %34 to i8**
-  store i8* %18, i8** %35, align 8
-  %36 = getelementptr i8, i8* %34, i64 8
-  %37 = bitcast i8* %36 to <2 x i64>*
-  store <2 x i64> <i64 50, i64 20>, <2 x i64>* %37, align 8
+  %35 = bitcast i8* %34 to <2 x i64>*
+  store <2 x i64> <i64 50, i64 20>, <2 x i64>* %35, align 8
+  %36 = getelementptr i8, i8* %34, i64 16
+  %37 = bitcast i8* %36 to i8**
+  store i8* %18, i8** %37, align 8
   %38 = tail call i8* @GC_malloc(i64 16)
   %39 = bitcast i8* %38 to {}* (i8*, { i1*, i64 }*)**
   store {}* (i8*, { i1*, i64 }*)* @print_cells24, {}* (i8*, { i1*, i64 }*)** %39, align 8
@@ -674,14 +674,14 @@ end_0:                                            ; preds = %body_0.body_0_crit_
   %47 = bitcast i8* %46 to i8**
   store i8* %42, i8** %47, align 8
   %48 = tail call i8* @GC_malloc(i64 32)
-  %49 = bitcast i8* %48 to i8**
-  store i8* %44, i8** %49, align 8
-  %50 = getelementptr i8, i8* %48, i64 8
+  %49 = bitcast i8* %48 to <2 x i64>*
+  store <2 x i64> <i64 50, i64 20>, <2 x i64>* %49, align 8
+  %50 = getelementptr i8, i8* %48, i64 16
   %51 = bitcast i8* %50 to i8**
   store i8* %24, i8** %51, align 8
-  %52 = getelementptr i8, i8* %48, i64 16
-  %53 = bitcast i8* %52 to <2 x i64>*
-  store <2 x i64> <i64 50, i64 20>, <2 x i64>* %53, align 8
+  %52 = getelementptr i8, i8* %48, i64 24
+  %53 = bitcast i8* %52 to i8**
+  store i8* %44, i8** %53, align 8
   %54 = tail call i8* @GC_malloc(i64 16)
   %55 = bitcast i8* %54 to {}* (i8*, { i1*, i64 }*)**
   store {}* (i8*, { i1*, i64 }*)* @update_cells37, {}* (i8*, { i1*, i64 }*)** %55, align 8

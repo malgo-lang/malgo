@@ -5,26 +5,17 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 declare i8* @GC_malloc(i64) local_unnamed_addr
 
-define { i64 (i8*, i64)*, i8* }* @k1(i8*, i64) {
+define i64 @"$lambda19"(i8*, i64) {
   %3 = bitcast i8* %0 to i64*
   %4 = load i64, i64* %3, align 8
   %5 = tail call i8* @GC_malloc(i64 16)
-  %6 = bitcast i8* %5 to { i64 (i8*, i64)*, i8* }* (i8*, i64)**
-  store { i64 (i8*, i64)*, i8* }* (i8*, i64)* @k1, { i64 (i8*, i64)*, i8* }* (i8*, i64)** %6, align 8
+  %6 = bitcast i8* %5 to i64 (i8*, i64)**
+  store i64 (i8*, i64)* @"$lambda19", i64 (i8*, i64)** %6, align 8
   %7 = getelementptr i8, i8* %5, i64 8
   %8 = bitcast i8* %7 to i8**
   store i8* %0, i8** %8, align 8
-  %9 = tail call i8* @GC_malloc(i64 8)
-  %10 = bitcast i8* %9 to i64*
-  store i64 %4, i64* %10, align 8
-  %11 = tail call i8* @GC_malloc(i64 16)
-  %12 = bitcast i8* %11 to { i64 (i8*, i64)*, i8* }*
-  %13 = bitcast i8* %11 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda43", i64 (i8*, i64)** %13, align 8
-  %14 = getelementptr i8, i8* %11, i64 8
-  %15 = bitcast i8* %14 to i8**
-  store i8* %9, i8** %15, align 8
-  ret { i64 (i8*, i64)*, i8* }* %12
+  %9 = add i64 %4, %1
+  ret i64 %9
 }
 
 define i64 @f4(i8*, i64, i64) {
@@ -49,17 +40,26 @@ define i64 @f4(i8*, i64, i64) {
   ret i64 %19
 }
 
-define i64 @"$lambda43"(i8*, i64) {
+define { i64 (i8*, i64)*, i8* }* @k1(i8*, i64) {
   %3 = bitcast i8* %0 to i64*
   %4 = load i64, i64* %3, align 8
   %5 = tail call i8* @GC_malloc(i64 16)
-  %6 = bitcast i8* %5 to i64 (i8*, i64)**
-  store i64 (i8*, i64)* @"$lambda43", i64 (i8*, i64)** %6, align 8
+  %6 = bitcast i8* %5 to { i64 (i8*, i64)*, i8* }* (i8*, i64)**
+  store { i64 (i8*, i64)*, i8* }* (i8*, i64)* @k1, { i64 (i8*, i64)*, i8* }* (i8*, i64)** %6, align 8
   %7 = getelementptr i8, i8* %5, i64 8
   %8 = bitcast i8* %7 to i8**
   store i8* %0, i8** %8, align 8
-  %9 = add i64 %4, %1
-  ret i64 %9
+  %9 = tail call i8* @GC_malloc(i64 8)
+  %10 = bitcast i8* %9 to i64*
+  store i64 %4, i64* %10, align 8
+  %11 = tail call i8* @GC_malloc(i64 16)
+  %12 = bitcast i8* %11 to { i64 (i8*, i64)*, i8* }*
+  %13 = bitcast i8* %11 to i64 (i8*, i64)**
+  store i64 (i8*, i64)* @"$lambda19", i64 (i8*, i64)** %13, align 8
+  %14 = getelementptr i8, i8* %11, i64 8
+  %15 = bitcast i8* %14 to i8**
+  store i8* %9, i8** %15, align 8
+  ret { i64 (i8*, i64)*, i8* }* %12
 }
 
 declare void @GC_init() local_unnamed_addr

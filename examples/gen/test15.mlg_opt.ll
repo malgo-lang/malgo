@@ -3,6 +3,13 @@ source_filename = "./examples/test15.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
+declare {}* @print_int(i64) local_unnamed_addr
+
+define {}* @print_int5(i64) local_unnamed_addr {
+  %2 = tail call {}* @print_int(i64 %0)
+  ret {}* %2
+}
+
 ; Function Attrs: norecurse nounwind
 define noalias {}* @update1({ i8**, i64 }* nocapture readonly, i64, i8*) local_unnamed_addr #0 {
   %4 = getelementptr { i8**, i64 }, { i8**, i64 }* %0, i64 0, i32 0
@@ -10,13 +17,6 @@ define noalias {}* @update1({ i8**, i64 }* nocapture readonly, i64, i8*) local_u
   %6 = getelementptr i8*, i8** %5, i64 %1
   store i8* %2, i8** %6, align 8
   ret {}* undef
-}
-
-declare {}* @print_int(i64) local_unnamed_addr
-
-define {}* @print_int5(i64) local_unnamed_addr {
-  %2 = tail call {}* @print_int(i64 %0)
-  ret {}* %2
 }
 
 declare void @GC_init() local_unnamed_addr

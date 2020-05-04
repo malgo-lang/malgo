@@ -1,20 +1,24 @@
-; ModuleID = './examples/map.mlg'
 source_filename = "./examples/map.mlg"
+; ModuleID = './examples/map.mlg'
 
 
  
 
 
-declare external ccc  {}* @print_int(i64)    
-
-
-define external ccc  {}* @print_int0(i64 )    {
-  %2 =  call ccc  {}*  @print_int(i64  %0)  
-  ret {}* %2 
-}
-
-
 declare external ccc  i8* @GC_malloc(i64)    
+
+
+define external ccc  i64 @add426(i8* , i64 )    {
+  %3 = bitcast i8* %0 to {}* 
+  %4 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
+  %5 = bitcast i8* %4 to {i64 (i8*, i64)*, i8*}* 
+  %6 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %5, i32 0, i32 0 
+  store  i64 (i8*, i64)* @add426, i64 (i8*, i64)** %6 
+  %7 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %5, i32 0, i32 1 
+  store  i8* %0, i8** %7 
+  %8 = add   i64 %1, 42 
+  ret i64 %8 
+}
 
 
 define external ccc  {i64, i64}* @map1({i64 (i8*, i64)*, i8*}* , {i64, i64}* )    {
@@ -42,16 +46,12 @@ define external ccc  {i64, i64}* @map1({i64 (i8*, i64)*, i8*}* , {i64, i64}* )  
 }
 
 
-define external ccc  i64 @add426(i8* , i64 )    {
-  %3 = bitcast i8* %0 to {}* 
-  %4 =  call ccc  i8*  @GC_malloc(i64  ptrtoint ({i64 (i8*, i64)*, i8*}* getelementptr inbounds ({i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* inttoptr (i32 0 to {i64 (i8*, i64)*, i8*}*), i32 1) to i64))  
-  %5 = bitcast i8* %4 to {i64 (i8*, i64)*, i8*}* 
-  %6 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %5, i32 0, i32 0 
-  store  i64 (i8*, i64)* @add426, i64 (i8*, i64)** %6 
-  %7 = getelementptr  {i64 (i8*, i64)*, i8*}, {i64 (i8*, i64)*, i8*}* %5, i32 0, i32 1 
-  store  i8* %0, i8** %7 
-  %8 = add   i64 %1, 42 
-  ret i64 %8 
+declare external ccc  {}* @print_int(i64)    
+
+
+define external ccc  {}* @print_int0(i64 )    {
+  %2 =  call ccc  {}*  @print_int(i64  %0)  
+  ret {}* %2 
 }
 
 

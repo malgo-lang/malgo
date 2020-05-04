@@ -3,20 +3,6 @@ source_filename = "./examples/fib_acc.mlg"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.15.0"
 
-declare {}* @print_int(i64) local_unnamed_addr
-
-define {}* @print_int0(i64) local_unnamed_addr {
-  %2 = tail call {}* @print_int(i64 %0)
-  ret {}* %2
-}
-
-declare {}* @newline() local_unnamed_addr
-
-define {}* @newline1() local_unnamed_addr {
-  %1 = tail call {}* @newline()
-  ret {}* %1
-}
-
 define {}* @fib_loop6(i64) local_unnamed_addr {
   %2 = icmp slt i64 %0, 1
   br i1 %2, label %then_0, label %else_0.i.preheader
@@ -64,6 +50,20 @@ else_0:                                           ; preds = %3, %else_0
 end_0:                                            ; preds = %else_0, %3
   %.tr2.lcssa = phi i64 [ %1, %3 ], [ %.tr36, %else_0 ]
   ret i64 %.tr2.lcssa
+}
+
+declare {}* @newline() local_unnamed_addr
+
+define {}* @newline1() local_unnamed_addr {
+  %1 = tail call {}* @newline()
+  ret {}* %1
+}
+
+declare {}* @print_int(i64) local_unnamed_addr
+
+define {}* @print_int0(i64) local_unnamed_addr {
+  %2 = tail call {}* @print_int(i64 %0)
+  ret {}* %2
 }
 
 declare void @GC_init() local_unnamed_addr
