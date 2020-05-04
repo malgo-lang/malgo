@@ -1,12 +1,13 @@
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.Eval where
 
+import qualified Data.Map as Map
 import qualified Data.Text as T
 import Data.Vector.Mutable (IOVector)
 import qualified Data.Vector.Mutable as V
@@ -36,10 +37,10 @@ instance Pretty Value where
   pPrint (UnboxedV x) = pPrint x
 
 runEval :: EvalM a -> IO a
-runEval = evalStateT ?? (Env mempty)
+runEval = evalStateT ?? Env mempty
 
 defVar :: Name -> Value -> EvalM ()
-defVar x v = modify (\e -> e {varMap = varMap e & at x ?~ v})
+defVar x v = modify (\e -> e {varMap = Map.insert x v (varMap e)})
 
 loadDef :: Name -> Obj Name -> EvalM ()
 loadDef x o = do
@@ -47,10 +48,10 @@ loadDef x o = do
   defVar x o'
 
 lookupVar :: Name -> EvalM Value
-lookupVar x = gets $ fromJust . (view $ at x) . varMap
+lookupVar x = gets $ fromJust . Map.lookup x . varMap
 
 evalObj :: Obj Name -> EvalM Value
-evalObj (Fun ps e) = do
+evalObj (Fun ps e) =
   pure $ FunV (length ps) [] $ \ps' -> do
     env <- get
     zipWithM_ defVar ps ps'

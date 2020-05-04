@@ -16,13 +16,8 @@ main :: IO ()
 main = do
   opt <- parseOpt
   src <- T.readFile (srcName opt)
-
   if isInterpretMode opt
-    then do
-      ret <- interpret opt src
-      print ret
+    then void $ interpret opt src
     else do
       ll <- compile opt src
-      let (x : xs) = TL.lines $ ppllvm ll
-      let ir = TL.unlines (x : ("source_filename = " <> TL.pack (show (srcName opt))) : xs)
-      TL.writeFile (dstName opt) ir
+      TL.writeFile (dstName opt) $ TL.unlines $ "source_filename = " <> TL.pack (show (srcName opt)) : TL.lines (ppllvm ll)

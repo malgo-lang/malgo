@@ -16,10 +16,12 @@ import qualified Data.ByteString.Short as B
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
+import Debug.Trace (traceM)
 import qualified LLVM.AST as L
 import Language.Malgo.BackEnd.GenLIR
 import Language.Malgo.BackEnd.GenLLVM
 import Language.Malgo.Core.Eval
+import Language.Malgo.Core.LambdaLift
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
 import qualified Language.Malgo.Lexer as Lexer
@@ -74,6 +76,8 @@ interpret = M.runMalgo $ do
     transWithDump @Rename ast
       >>= transWithDump @Typing
       >>= transWithDump @Desugar
+  llifted <- trans @LambdaLift desugared
+  traceM $ show $ pPrint llifted
   liftIO $ pPrint <$> runEval (evalExp desugared)
 
 compile :: MonadIO m => Opt -> Text -> m L.Module
