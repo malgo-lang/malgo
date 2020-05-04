@@ -127,6 +127,9 @@ lookupPrim "+" = pure $ \case
 lookupPrim "-" = pure $ \case
   [UnboxedV (Int x'), UnboxedV (Int y')] -> pure $ UnboxedV (Int $ x' - y')
   _ -> bug Unreachable
+lookupPrim "<" = pure $ \case
+  [x, y] -> pure $ boolToValue $ compareValue x y == LT
+  _ -> bug Unreachable
 lookupPrim "<=" = pure $ \case
   [x, y] ->
     let order = compareValue x y
