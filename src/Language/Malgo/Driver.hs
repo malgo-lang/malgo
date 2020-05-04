@@ -23,6 +23,7 @@ import Language.Malgo.Core.Eval
 import Language.Malgo.Core.LambdaLift
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
+import Language.Malgo.IR.Syntax
 import qualified Language.Malgo.Lexer as Lexer
 import Language.Malgo.MiddleEnd.Desugar
 import Language.Malgo.MiddleEnd.HIRLint
@@ -63,8 +64,8 @@ parseOpt =
       )
       (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
 
-interpret :: MonadIO m => Opt -> Text -> m Value
-interpret = M.runMalgo $ do
+readAndParse :: MalgoM (Expr String)
+readAndParse = do
   opt <- asks maOption
   source <- asks maSource
   tokens <- Lexer.tokenize () (srcName opt) source
@@ -72,8 +73,13 @@ interpret = M.runMalgo $ do
         Left x -> error $ TL.unpack $ pShow x
         Right x -> x
   when (dumpParsed opt) $ dump ast
+  pure ast
+
+interpret :: MonadIO m => Opt -> Text -> m Value
+interpret = M.runMalgo $ do
   desugared <-
-    transWithDump @Rename ast
+    readAndParse
+      >>= transWithDump @Rename
       >>= transWithDump @Typing
       >>= transWithDump @Desugar
       >>= transWithDump @LambdaLift
@@ -82,14 +88,9 @@ interpret = M.runMalgo $ do
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do
   opt <- asks maOption
-  source <- asks maSource
-  tokens <- Lexer.tokenize () (srcName opt) source
-  let ast = case Parser.parseExpr <$> tokens of
-        Left x -> error $ TL.unpack $ pShow x
-        Right x -> x
-  when (dumpParsed opt) $ dump ast
   llvmir <-
-    transWithDump @Rename ast
+    readAndParse
+      >>= transWithDump @Rename
       >>= transWithDump @Typing
       >>= transWithDump @TransToHIR
       >>= transWithDump @HIRLint
