@@ -36,6 +36,12 @@ instance Pretty Value where
   pPrint (ArrayV _) = "<array>"
   pPrint (UnboxedV x) = pPrint x
 
+evalProgram :: Program Name -> EvalM Value
+evalProgram (Program mainId ds) = do
+  traverse_ (uncurry loadDef) ds
+  FunV _ _ mainFun <- lookupVar mainId
+  mainFun []
+
 runEval :: EvalM a -> IO a
 runEval = evalStateT ?? Env mempty
 

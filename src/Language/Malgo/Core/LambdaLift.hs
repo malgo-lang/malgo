@@ -22,7 +22,7 @@ data LambdaLift
 
 instance Pass LambdaLift (Exp (Id CType)) (Program (Id CType)) where
   passName = "lambda lift"
-  isDump _ = False
+  isDump = dumpLambdaLift
   trans e = do
     (mainExpr, ds) <- runStateT (llift e) mempty
     mainId <- newId (PackT [Con "Tuple0" []] :-> cTypeOf mainExpr) "$main"

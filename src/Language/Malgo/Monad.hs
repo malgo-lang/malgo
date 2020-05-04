@@ -52,6 +52,7 @@ data Opt = Opt
     dumpClosure :: Bool,
     dumpLIR :: Bool,
     dumpDesugar :: Bool,
+    dumpLambdaLift :: Bool,
     isInterpretMode :: Bool,
     isDebugMode :: Bool
   }

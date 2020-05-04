@@ -16,7 +16,6 @@ import qualified Data.ByteString.Short as B
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
-import Debug.Trace (traceM)
 import qualified LLVM.AST as L
 import Language.Malgo.BackEnd.GenLIR
 import Language.Malgo.BackEnd.GenLLVM
@@ -56,6 +55,7 @@ parseOpt =
             <*> switch (long "dump-mir")
             <*> switch (long "dump-lir")
             <*> switch (long "dump-desugar")
+            <*> switch (long "dump-lambdalift")
             <*> switch (long "interpret")
         )
           <*> switch (long "debug-mode")
@@ -63,7 +63,7 @@ parseOpt =
       )
       (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
 
-interpret :: MonadIO m => Opt -> Text -> m Doc
+interpret :: MonadIO m => Opt -> Text -> m Value
 interpret = M.runMalgo $ do
   opt <- asks maOption
   source <- asks maSource
@@ -76,9 +76,8 @@ interpret = M.runMalgo $ do
     transWithDump @Rename ast
       >>= transWithDump @Typing
       >>= transWithDump @Desugar
-  llifted <- trans @LambdaLift desugared
-  traceM $ show $ pPrint llifted
-  liftIO $ pPrint <$> runEval (evalExp desugared)
+      >>= transWithDump @LambdaLift
+  liftIO $ runEval $ evalProgram desugared
 
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do
