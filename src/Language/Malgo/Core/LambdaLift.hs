@@ -36,28 +36,22 @@ llift ::
   Exp (Id CType) ->
   f (Exp (Id CType))
 llift (Let ds e) =
-  Let
-    <$> traverse
-      ( rtraverse $ \case
-          o@(Fun as body) -> do
-            let fvs = toList $ freevars o
-            if null fvs
-              then Fun as <$> llift body
-              else do
-                newFun <- def (fvs <> as) =<< llift body
-                pure $ Fun as (Call newFun $ map Var fvs)
-          o -> pure o
-      )
-      ds
-    <*> llift e
+  Let <$> traverse aux ds <*> llift e
+  where
+    aux = rtraverse $ \case
+      o@(Fun as body) -> do
+        let fvs = toList $ freevars o
+        if null fvs
+          then Fun as <$> llift body
+          else do
+            newFun <- def (fvs <> as) =<< llift body
+            pure $ Fun as (Call newFun $ map Var fvs)
+      o -> pure o
 llift (Match e cs) =
-  Match <$> llift e
-    <*> traverse
-      ( \case
-          Unpack con ps body -> Unpack con ps <$> llift body
-          Bind x body -> Bind x <$> llift body
-      )
-      cs
+  Match <$> llift e <*> traverse aux cs
+  where
+    aux (Unpack con ps body) = Unpack con ps <$> llift body
+    aux (Bind x body) = Bind x <$> llift body
 llift e = pure e
 
 def ::
