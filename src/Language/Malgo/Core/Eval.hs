@@ -53,8 +53,12 @@ loadDef x o = do
   o' <- evalObj o
   defVar x o'
 
-lookupVar :: Name -> EvalM Value
-lookupVar x = gets $ fromJust . Map.lookup x . varMap
+lookupVar :: HasCallStack => Name -> EvalM Value
+lookupVar x = do
+  x' <- gets $ Map.lookup x . varMap
+  case x' of
+    Just x'' -> pure x''
+    Nothing -> error $ show $ pPrint x <> " is not defined"
 
 evalObj :: Obj Name -> EvalM Value
 evalObj (Fun ps e) =
