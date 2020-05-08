@@ -29,9 +29,6 @@ instance Pass Desugar (S.Expr (Id Type)) (Exp (Id CType)) where
   isDump = dumpDesugar
   trans e = evalStateT ?? mempty $ toExp e
 
-newTmp :: MonadUniq m => CType -> m (Id CType)
-newTmp t = newId t "$d"
-
 findVar :: (MonadFail m, MonadState (IdMap Type (Id CType)) m) => Id Type -> m (Id CType)
 findVar v = do
   Just v' <- gets (view (at v))
@@ -40,7 +37,7 @@ findVar v = do
 def :: (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) => Exp (Id CType) -> m (Atom (Id CType))
 def (Atom x) = pure x
 def v = do
-  x <- newTmp (cTypeOf v)
+  x <- newId (cTypeOf v) "$d"
   tell $ Endo $ \e -> Match v [Bind x e]
   pure (Var x)
 
@@ -85,7 +82,7 @@ toExp (S.Array _ (x :| xs)) = runDef $ do
 toExp (S.MakeArray _ a n) = runDef $ do
   a' <- def =<< toExp a
   n' <- def =<< toExp n
-  v <- newTmp $ ArrayT (cTypeOf a')
+  v <- newId (ArrayT (cTypeOf a')) "array"
   match (Atom n') [(Right $ Con "Int" [IntT], \[n''] -> pure $ Let [(v, Array a' $ Var n'')] $ Atom $ Var v)]
 toExp (S.ArrayRead _ a i) = runDef $ do
   a' <- def =<< toExp a
@@ -103,7 +100,7 @@ toExp (S.Call _ f xs) = runDef $ do
   let_ "args" (Pack con xs') (PackT [con]) $ \arg -> pure $ Call f' [Var arg]
 toExp (S.Fn _ ps e) = do
   let con = Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . fst) ps
-  paramTuple <- newTmp $ PackT [con]
+  paramTuple <- newId (PackT [con]) "param"
   e' <-
     match
       (Atom $ Var paramTuple)
@@ -116,14 +113,14 @@ toExp (S.Fn _ ps e) = do
   let_ "fn" (Fun [paramTuple] e') (PackT [con] :-> cTypeOf e') $ pure . Atom . Var
 toExp (S.Seq _ e1 e2) = do
   e1' <- toExp e1
-  match e1' [(Left (cTypeOf e1'), \_ -> toExp e2)]
+  match e1' [(Left ("hole", cTypeOf e1'), \_ -> toExp e2)]
 toExp (S.Let _ (S.ValDec _ a _ v) e) = do
   v' <- toExp v
-  match v' [(Left (cTypeOf v'), \[vId] -> modify (at a ?~ vId) >> toExp e)]
-toExp (S.Let _ (S.ExDec _ prim _ primName) e) = do
+  match v' [(Left (a ^. idName, cTypeOf v'), \[vId] -> modify (at a ?~ vId) >> toExp e)]
+toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
   case cTypeOf $ prim ^. idMeta of
     ta :-> tb -> do
-      a <- newTmp ta
+      a <- newId ta "param"
       let funBody = PrimCall (T.pack primName) (ta :-> tb) [Var a]
       let_ "prim" (Fun [a] funBody) (ta :-> tb) $ \prim' -> do
         modify (at prim ?~ prim')
@@ -135,7 +132,7 @@ toExp (S.Let _ (S.FunDec fs) e) = do
     modify (at f ?~ f')
   fs' <- traverse ?? fs $ \(_, f, ps, _, body) -> do
     let con = Con ("Tuple" <> T.pack (show $ length ps)) (map (cTypeOf . fst) ps)
-    paramTuple <- newTmp $ PackT [con]
+    paramTuple <- newId (PackT [con]) "param"
     body' <-
       match
         (Atom $ Var paramTuple)
@@ -146,7 +143,7 @@ toExp (S.Let _ (S.FunDec fs) e) = do
           )
         ]
     f' <- findVar f
-    pure $ (f', Fun [paramTuple] body')
+    pure (f', Fun [paramTuple] body')
   e' <- toExp e
   pure $ Let fs' e'
 toExp (S.If _ c t f) = do
@@ -172,11 +169,11 @@ toExp (S.BinOp _ o x y) =
     S.And -> do
       lexp <- toExp x
       rexp <- toExp y
-      match lexp [(Right $ Con "False" [], \_ -> Atom <$> def lexp), (Left (cTypeOf lexp), \_ -> Atom <$> def rexp)]
+      match lexp [(Right $ Con "False" [], \_ -> Atom <$> def lexp), (Left ("lexp", cTypeOf lexp), \_ -> Atom <$> def rexp)]
     S.Or -> do
       lexp <- toExp x
       rexp <- toExp y
-      match lexp [(Right $ Con "True" [], \_ -> Atom <$> def lexp), (Left (cTypeOf lexp), \_ -> Atom <$> def rexp)]
+      match lexp [(Right $ Con "True" [], \_ -> Atom <$> def lexp), (Left ("lexp", cTypeOf lexp), \_ -> Atom <$> def rexp)]
   where
     arithOpPrim lcon rcon resultCon@(Con _ [t]) primName primType = do
       lexp <- toExp x
@@ -191,7 +188,7 @@ toExp (S.BinOp _ o x y) =
                     \[rval] ->
                       match
                         (PrimCall primName primType [Var lval, Var rval])
-                        [ ( Left t,
+                        [ ( Left ("result", t),
                             \[result] ->
                               let_ "ret" (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var
                           )
@@ -206,7 +203,7 @@ toExp (S.BinOp _ o x y) =
       rval <- def =<< toExp y
       match
         (PrimCall primName (cTypeOf lval :-> cTypeOf rval :-> PackT [Con "True" [], Con "False" []]) [lval, rval])
-        [(Left (PackT [Con "True" [], Con "False" []]), \[result] -> pure $ Atom $ Var result)]
+        [(Left ("cmp", PackT [Con "True" [], Con "False" []]), \[result] -> pure $ Atom $ Var result)]
 toExp (S.Match _ e cs) = do
   e' <- toExp e
   cs' <- traverse ?? cs $ \(p, v) -> crushPat p $ toExp v
@@ -214,7 +211,7 @@ toExp (S.Match _ e cs) = do
 
 crushPat :: (MonadUniq m, MonadState (IdMap Type (Id CType)) m) => S.Pat (Id Type) -> m (Exp (Id CType)) -> m (Case (Id CType))
 crushPat (S.VarP x) = \e -> do
-  x' <- newTmp $ cTypeOf $ typeOf x
+  x' <- newId (cTypeOf $ typeOf x) (x ^. idName)
   modify $ at x ?~ x'
   Bind x' <$> e
 crushPat (S.TupleP xs) = go xs []
@@ -223,7 +220,7 @@ crushPat (S.TupleP xs) = go xs []
       let acc' = reverse acc
        in Unpack (Con ("Tuple" <> T.pack (show $ length acc)) $ map cTypeOf acc') acc' <$> e
     go (p : ps) acc e = do
-      x <- newTmp $ cTypeOf $ typeOf p
+      x <- newId (cTypeOf $ typeOf p) "p"
       go ps (x : acc) $ do
         clause <- crushPat p e
         pure $ Match (Atom $ Var x) [clause]
@@ -240,15 +237,15 @@ let_ name o otype body = do
   body' <- runDef $ body v
   pure $ Let [(v, o)] body'
 
-match :: MonadUniq f => Exp (Id CType) -> NonEmpty (Either CType Con, [Id CType] -> WriterT (Endo (Exp (Id CType))) f (Exp (Id CType))) -> f (Exp (Id CType))
+match :: MonadUniq f => Exp (Id CType) -> NonEmpty (Either (String, CType) Con, [Id CType] -> WriterT (Endo (Exp (Id CType))) f (Exp (Id CType))) -> f (Exp (Id CType))
 match e ps = do
   cs' <- traverse ?? ps $ \case
     (Right con@(Con _ ts), body) -> do
-      vs <- traverse newTmp ts
+      vs <- traverse (newId ?? "p") ts
       body' <- runDef $ body vs
       pure $ Unpack con vs body'
-    (Left ty, body) -> do
-      x' <- newTmp ty
+    (Left (name, ty), body) -> do
+      x' <- newId ty name
       body' <- runDef $ body [x']
       pure $ Bind x' body'
   pure $ Match e cs'

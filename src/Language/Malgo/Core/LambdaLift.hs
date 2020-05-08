@@ -1,8 +1,8 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.LambdaLift
@@ -38,15 +38,15 @@ llift ::
 llift (Let ds e) =
   Let <$> traverse aux ds <*> llift e
   where
-    aux = rtraverse $ \case
+    aux (n, v) = case v of
       o@(Fun as body) -> do
         let fvs = toList $ freevars o
         if null fvs
-          then Fun as <$> llift body
+          then (n,) <$> (Fun as <$> llift body)
           else do
-            newFun <- def (fvs <> as) =<< llift body
-            pure $ Fun as (Call newFun $ map Var fvs)
-      o -> pure o
+            newFun <- def (n ^. idName) (fvs <> as) =<< llift body
+            pure (n, Fun as (Call newFun $ map Var fvs))
+      o -> pure (n, o)
 llift (Match e cs) =
   Match <$> llift e <*> traverse aux cs
   where
@@ -58,10 +58,11 @@ def ::
   ( MonadUniq m,
     MonadState (Map (Id CType) (Obj (Id CType))) m
   ) =>
+  String ->
   [Id CType] ->
   Exp (Id CType) ->
   m (Id CType)
-def xs e = do
-  f <- newId (foldr ((:->) . cTypeOf) (cTypeOf e) xs) "$lambda"
+def name xs e = do
+  f <- newId (foldr ((:->) . cTypeOf) (cTypeOf e) xs) ("$" <> name)
   modify $ Map.insert f (Fun xs e)
   pure f
