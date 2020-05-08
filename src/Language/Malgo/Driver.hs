@@ -20,7 +20,9 @@ import qualified LLVM.AST as L
 import Language.Malgo.BackEnd.GenLIR
 import Language.Malgo.BackEnd.GenLLVM
 import Language.Malgo.Core.Eval
+import Language.Malgo.Core.Flat
 import Language.Malgo.Core.LambdaLift
+import Language.Malgo.Core.Optimize
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
 import Language.Malgo.IR.Syntax
@@ -82,6 +84,8 @@ interpret = M.runMalgo $ do
       >>= transWithDump @Rename
       >>= transWithDump @Typing
       >>= transWithDump @Desugar
+      >>= transWithDump @Flat
+      >>= transWithDump @Optimize
       >>= transWithDump @LambdaLift
   liftIO $ runEval $ evalProgram desugared
 

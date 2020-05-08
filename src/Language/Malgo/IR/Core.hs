@@ -18,7 +18,6 @@ import Text.PrettyPrint.HughesPJ
     brackets,
     char,
     doubleQuotes,
-    nest,
     parens,
     quotes,
     sep,
@@ -116,7 +115,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
   pPrint (Let xs e) = parens $ "let" <+> vcat (map (\(v, o) -> parens $ pPrint v <+> "=" <+> pPrint o) xs) $$ pPrint e
-  pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ nest 2 (vcat (toList $ fmap pPrint cs))
+  pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
 
 instance Ord a => HasFreeVar (Exp a) a where
   freevars (Atom x) = freevars x
@@ -137,8 +136,8 @@ data Case a
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Case a) where
-  pPrint (Unpack c xs e) = parens $ "unpack" <> parens (pPrint c <+> sep (map pPrint xs)) <+> "->" $$ nest 2 (pPrint e)
-  pPrint (Bind x e) = parens $ "bind" <+> pPrint x <+> "->" $$ nest 2 (pPrint e)
+  pPrint (Unpack c xs e) = parens $ "unpack" <> parens (pPrint c <+> sep (map pPrint xs)) <+> "->" $$ pPrint e
+  pPrint (Bind x e) = parens $ "bind" <+> pPrint x <+> "->" $$ pPrint e
 
 instance Ord a => HasFreeVar (Case a) a where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
@@ -157,7 +156,7 @@ data Obj a
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Obj a) where
-  pPrint (Fun xs e) = "fun" <> parens (sep (map pPrint xs) <+> "->" $$ nest 2 (pPrint e))
+  pPrint (Fun xs e) = "fun" <> parens (sep (map pPrint xs <> ["->" <+> pPrint e]))
   pPrint (Pack c xs) = "pack" <> parens (pPrint c <+> sep (map pPrint xs))
   pPrint (Array a n) = "array" <> parens (pPrint a <> "," <+> pPrint n)
 

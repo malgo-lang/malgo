@@ -4,7 +4,7 @@ cabal-version: 1.24
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bd4e7b193fea2cc4d2c24aa5cc7a818701e35ae481471c0f65fe809c9cb30543
+-- hash: 0e8705c5208d24447adf3ebdc7761f2a641f14e6a15497778ea5305659054b65
 
 name:           malgo
 version:        1.0.0.0
@@ -36,7 +36,9 @@ library
       Language.Malgo.BackEnd.GenLLVM
       Language.Malgo.BackEnd.LIRBuilder
       Language.Malgo.Core.Eval
+      Language.Malgo.Core.Flat
       Language.Malgo.Core.LambdaLift
+      Language.Malgo.Core.Optimize
       Language.Malgo.Driver
       Language.Malgo.FrontEnd.Rename
       Language.Malgo.FrontEnd.Typing.Constraint
