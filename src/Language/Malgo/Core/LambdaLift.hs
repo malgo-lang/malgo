@@ -40,12 +40,14 @@ llift (Let ds e) =
   where
     aux (n, v) = case v of
       o@(Fun as body) -> do
-        let fvs = toList $ freevars o
-        if null fvs
-          then (n,) <$> (Fun as <$> llift body)
-          else do
-            newFun <- def (n ^. idName) (fvs <> as) =<< llift body
-            pure (n, Fun as (Call newFun $ map Var fvs))
+        let fvs = toList $ sans n (freevars o)
+        -- if null fvs
+        --   then (n,) <$> (Fun as <$> llift body)
+        --   else do
+        newFun <- newId (foldr ((:->) . cTypeOf) (cTypeOf body) (fvs <> as)) ("$" <> (n ^. idName))
+        body' <- Let [(n, Fun as (Call newFun $ map Var fvs))] <$> llift body
+        modify $ Map.insert newFun (Fun (fvs <> as) body')
+        pure (n, Fun as (Call newFun $ map Var fvs))
       o -> pure (n, o)
 llift (Match e cs) =
   Match <$> llift e <*> traverse aux cs
@@ -53,16 +55,3 @@ llift (Match e cs) =
     aux (Unpack con ps body) = Unpack con ps <$> llift body
     aux (Bind x body) = Bind x <$> llift body
 llift e = pure e
-
-def ::
-  ( MonadUniq m,
-    MonadState (Map (Id CType) (Obj (Id CType))) m
-  ) =>
-  String ->
-  [Id CType] ->
-  Exp (Id CType) ->
-  m (Id CType)
-def name xs e = do
-  f <- newId (foldr ((:->) . cTypeOf) (cTypeOf e) xs) ("$" <> name)
-  modify $ Map.insert f (Fun xs e)
-  pure f
