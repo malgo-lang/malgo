@@ -82,6 +82,7 @@ Expressions  e ::= a               Atom
 data Exp a
   = Atom (Atom a)
   | Call a [Atom a]
+  | CallDirect a [Atom a]
   | PrimCall Text CType [Atom a]
   | ArrayRead (Atom a) (Atom a)
   | ArrayWrite (Atom a) (Atom a) (Atom a)
@@ -92,6 +93,7 @@ data Exp a
 instance HasCType a => HasCType (Exp a) where
   cTypeOf (Atom x) = cTypeOf x
   cTypeOf (Call f xs) = returnType (cTypeOf f) xs
+  cTypeOf (CallDirect f xs) = returnType (cTypeOf f) xs
   cTypeOf (PrimCall _ t xs) = returnType t xs
   cTypeOf (ArrayRead a _) = case cTypeOf a of
     ArrayT t -> t
@@ -111,6 +113,7 @@ returnType _ _ = bug Unreachable
 instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
+  pPrint (CallDirect f xs) = parens $ "#" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (PrimCall p _ xs) = parens $ text (unpack p) <+> sep (map pPrint xs)
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
@@ -120,6 +123,7 @@ instance Pretty a => Pretty (Exp a) where
 instance Ord a => HasFreeVar (Exp a) a where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = foldMap freevars xs <> setOf id f
+  freevars (CallDirect _ xs) = foldMap freevars xs
   freevars (PrimCall _ _ xs) = foldMap freevars xs
   freevars (ArrayRead a b) = freevars a <> freevars b
   freevars (ArrayWrite a b c) = freevars a <> freevars b <> freevars c
@@ -173,43 +177,3 @@ data Program a = Program a [(a, Obj a)]
 
 instance Pretty a => Pretty (Program a) where
   pPrint (Program _ xs) = vcat $ map (\(f, o) -> pPrint f <+> "=" <+> pPrint o <> ";") xs
--- Examples
-
--- plusInt :: Obj Text
--- plusInt =
---   Fun ["a", "b"] $
---     Match
---       (Atom (Var "a"))
---       [ Unpack (Con "Int" [IntT]) ["x"] $
---           Match
---             (Atom (Var "b"))
---             [ Unpack (Con "Int" [IntT]) ["y"] $
---                 Match
---                   (PrimCall "+" (IntT :-> IntT :-> IntT) [Var "x", Var "y"])
---                   [Bind "z" $ Let [("r", Pack (Con "Int" [IntT]) [Var "z"])] $ Atom (Var "r")]
---             ]
---       ]
-
--- fib :: Obj Text
--- fib =
---   Fun ["n"] $
---     Match
---       (Atom (Var "n"))
---       [ Unpack (Con "Int" [IntT]) ["n'"] $
---           Match
---             (PrimCall "<=" (IntT :-> IntT :-> PackT [Con "True" [], Con "False" []]) [Var "n'", Unboxed (Int 1)])
---             [ Unpack (Con "False" []) [] $ Let [("v1", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $
---                 Match
---                   (Call "minusInt" [Var "n", Var "v1"])
---                   [ Bind "n2" $
---                       Match
---                         (Call "fib" [Var "n2"])
---                         [ Bind "v2" $ Let [("v3", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] $
---                             Match
---                               (Call "minusInt" [Var "n", Var "v3"])
---                               [Bind "n3" $ Match (Call "fib" [Var "n3"]) [Bind "v4" $ Call "plusInt" [Var "v2", Var "v4"]]]
---                         ]
---                   ],
---               Unpack (Con "True" []) [] $ Let [("v5", Pack (Con "Int" [IntT]) [Unboxed (Int 1)])] (Atom (Var "v5"))
---             ]
---       ]

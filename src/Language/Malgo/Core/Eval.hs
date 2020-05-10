@@ -92,6 +92,12 @@ evalExp (Call f xs) = do
   if n >= length xs + length ys
     then f' (ys <> xs')
     else pure $ FunV n (ys <> xs') f'
+evalExp (CallDirect f xs) = do
+  FunV n ys f' <- lookupVar f
+  xs' <- traverse evalAtom xs
+  if n >= length xs + length ys
+    then f' (ys <> xs')
+    else pure $ FunV n (ys <> xs') f'
 evalExp (PrimCall prim _ xs) = do
   prim' <- lookupPrim prim
   xs' <- traverse evalAtom xs
