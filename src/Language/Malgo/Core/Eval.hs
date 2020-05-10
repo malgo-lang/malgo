@@ -22,7 +22,7 @@ type Name = Id CType
 
 type EvalM a = StateT Env IO a
 
-data Env = Env {varMap :: Map Name Value}
+newtype Env = Env {varMap :: Map Name Value}
 
 data Value
   = FunV Int [Value] ([Value] -> EvalM Value)

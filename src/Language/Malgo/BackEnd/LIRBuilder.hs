@@ -97,7 +97,7 @@ newtype ExprBuilderT m a = ExprBuilderT {unExprBuilderT :: ReaderT ExprEnv (Stat
 
 runExprBuilderT :: MonadUniq m => ExprEnv -> ExprBuilderT m (Id LType) -> m (Block (Id LType))
 runExprBuilderT env (ExprBuilderT m) =
-  evalStateT ?? (ExprState mempty mempty) $ runReaderT ?? env $ do
+  evalStateT ?? ExprState mempty mempty $ runReaderT ?? env $ do
     value <- m
     ExprState {partialBlockInsns} <- get
     pure $ Block {insns = toList partialBlockInsns, value = value}

@@ -28,7 +28,7 @@ data TransToMIR
 instance Pass TransToMIR (H.Expr (Id Type)) (Program (Id Type)) where
   passName = "TransToMIR"
   isDump = dumpClosure
-  trans e = evalStateT ?? mempty $ runReaderT ?? (Env [] []) $ do
+  trans e = evalStateT ?? mempty $ runReaderT ?? Env [] [] $ do
     e' <- transExpr e
     fs <- gets toList
     pure (Program fs e')
