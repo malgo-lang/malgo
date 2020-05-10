@@ -39,13 +39,12 @@ llift (Let ds e) =
   Let <$> traverse aux ds <*> llift e
   where
     aux (n, v) = case v of
+      o@(Fun _ Call {}) -> pure (n, o)
+      o@(Fun _ PrimCall {}) -> pure (n, o)
       o@(Fun as body) -> do
         let fvs = toList $ freevars o
-        if null fvs
-          then (n,) <$> (Fun as <$> llift body)
-          else do
-            newFun <- def (n ^. idName) (fvs <> as) =<< llift body
-            pure (n, Fun as (Call newFun $ map Var fvs))
+        newFun <- def (n ^. idName) (fvs <> as) =<< llift body
+        pure (n, Fun as (Call newFun $ map Var $ fvs <> as))
       o -> pure (n, o)
 llift (Match e cs) =
   Match <$> llift e <*> traverse aux cs
