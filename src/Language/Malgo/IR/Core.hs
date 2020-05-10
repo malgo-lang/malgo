@@ -114,7 +114,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "#" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (PrimCall p _ xs) = parens $ text (unpack p) <+> sep (map pPrint xs)
+  pPrint (PrimCall p _ xs) = parens $ text (unpack p) <> "#" <+> sep (map pPrint xs)
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
   pPrint (Let xs e) = parens $ "let" <+> vcat (map (\(v, o) -> parens $ pPrint v <+> "=" <+> pPrint o) xs) $$ pPrint e
