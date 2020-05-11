@@ -16,6 +16,7 @@ import qualified Data.ByteString.Short as B
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
+import Debug.Trace (traceM)
 import qualified LLVM.AST as L
 import Language.Malgo.BackEnd.GenLIR
 import Language.Malgo.BackEnd.GenLLVM
@@ -25,6 +26,7 @@ import Language.Malgo.Core.LambdaLift
 import Language.Malgo.Core.Optimize
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
+import Language.Malgo.IR.Core (atom)
 import Language.Malgo.IR.Syntax
 import qualified Language.Malgo.Lexer as Lexer
 import Language.Malgo.MiddleEnd.Desugar

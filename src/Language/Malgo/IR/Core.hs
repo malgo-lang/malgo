@@ -2,6 +2,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -29,26 +30,6 @@ class HasFreeVar e a | e -> a where
   freevars :: e -> Set a
 
 {-
-Atoms  a ::= unboxed | x
--}
-data Atom a
-  = Var a
-  | Unboxed Unboxed
-  deriving stock (Eq, Show, Functor)
-
-instance HasCType a => HasCType (Atom a) where
-  cTypeOf (Var x) = cTypeOf x
-  cTypeOf (Unboxed x) = cTypeOf x
-
-instance Pretty a => Pretty (Atom a) where
-  pPrint (Var x) = pPrint x
-  pPrint (Unboxed x) = pPrint x
-
-instance Ord a => HasFreeVar (Atom a) a where
-  freevars (Var x) = setOf id x
-  freevars Unboxed {} = mempty
-
-{-
 Unboxed values  unboxed
 -}
 data Unboxed
@@ -69,6 +50,32 @@ instance Pretty Unboxed where
   pPrint (Float x) = pPrint x
   pPrint (Char x) = quotes (char x)
   pPrint (String x) = doubleQuotes (text x)
+
+{-
+Atoms  a ::= unboxed | x
+-}
+data Atom a
+  = Var a
+  | Unboxed Unboxed
+  deriving stock (Eq, Show, Functor)
+
+instance HasCType a => HasCType (Atom a) where
+  cTypeOf (Var x) = cTypeOf x
+  cTypeOf (Unboxed x) = cTypeOf x
+
+instance Pretty a => Pretty (Atom a) where
+  pPrint (Var x) = pPrint x
+  pPrint (Unboxed x) = pPrint x
+
+instance Ord a => HasFreeVar (Atom a) a where
+  freevars (Var x) = setOf id x
+  freevars Unboxed {} = mempty
+
+class HasAtom f where
+  atom :: Traversal' (f a) (Atom a)
+
+instance HasAtom Atom where
+  atom = id
 
 {-
 Expressions  e ::= a               Atom
@@ -130,6 +137,17 @@ instance Ord a => HasFreeVar (Exp a) a where
   freevars (Let xs e) = foldr (sans . view _1) (freevars e <> foldMap (freevars . view _2) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
 
+instance HasAtom Exp where
+  atom f = \case
+    Atom x -> Atom <$> f x
+    Call x xs -> Call x <$> traverse f xs
+    CallDirect x xs -> CallDirect x <$> traverse f xs
+    PrimCall p t xs -> PrimCall p t <$> traverse f xs
+    ArrayRead a b -> ArrayRead <$> f a <*> f b
+    ArrayWrite a b c -> ArrayWrite <$> f a <*> f b <*> f c
+    Let xs e -> Let <$> traverse (rtraverse (atom f)) xs <*> atom f e
+    Match e cs -> Match <$> atom f e <*> traverse (atom f) cs
+
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
                     | BIND x -> e
@@ -146,6 +164,11 @@ instance Pretty a => Pretty (Case a) where
 instance Ord a => HasFreeVar (Case a) a where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
   freevars (Bind x e) = sans x $ freevars e
+
+instance HasAtom Case where
+  atom f = \case
+    Unpack con xs e -> Unpack con xs <$> atom f e
+    Bind a e -> Bind a <$> atom f e
 
 {-
 Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
@@ -168,6 +191,12 @@ instance Ord a => HasFreeVar (Obj a) a where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ xs) = foldMap freevars xs
   freevars (Array a n) = freevars a <> freevars n
+
+instance HasAtom Obj where
+  atom f = \case
+    Fun xs e -> Fun xs <$> atom f e
+    Pack con xs -> Pack con <$> traverse (atom f) xs
+    Array a n -> Array <$> atom f a <*> atom f n
 
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
