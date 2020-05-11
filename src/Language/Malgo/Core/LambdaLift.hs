@@ -44,11 +44,11 @@ llift ::
   ) =>
   Exp (Id CType) ->
   f (Exp (Id CType))
-llift (Call f xs) = do
+llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `elem` ks
     then pure $ CallDirect f xs
-    else pure $ Call f xs
+    else pure $ Call (Var f) xs
 llift (Let ds e) = do
   ds' <- catMaybes <$> traverse aux ds
   case ds' of

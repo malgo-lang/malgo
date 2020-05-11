@@ -25,18 +25,18 @@ instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
   isDump = dumpDesugar
   trans e = evalStateT ?? mempty $ optCallInline e >>= optVarBind
 
-replace :: (Functor f, Eq a) => a -> a -> f a -> f a
-replace x x' = fmap (\v -> if v == x then x' else v)
+type InlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
+
+replaceOf :: Eq b => ASetter s t b b -> b -> b -> s -> t
+replaceOf l x x' = over l (\v -> if v == x then x' else v)
 
 optCallInline ::
-  MonadState
-    (IdMap CType ([Id CType] -> Exp (Id CType)))
-    f =>
+  MonadState InlineMap f =>
   Exp (Id CType) ->
   f (Exp (Id CType))
-optCallInline (Call f xs) | all isVar xs = do
+optCallInline (Call (Var f) xs) | all isVar xs = do
   f' <- lookupInline f
-  pure $ f' (map (\case Var v' -> v'; Unboxed {} -> bug Unreachable) xs)
+  pure $ f' xs
   where
     isVar Var {} = True
     isVar _ = False
@@ -53,23 +53,22 @@ optCallInline (Let ds e) = do
   Let ds' <$> optCallInline e
   where
     go [] [] v = v
-    go (p : ps) (p' : ps') v = replace p p' (go ps ps' v)
+    go (p : ps) (p' : ps') v = replaceOf atom (Var p) p' (go ps ps' v)
     go _ _ _ = bug Unreachable
 optCallInline e = pure e
 
 lookupInline ::
-  ( MonadState (IdMap CType ([Id CType] -> Exp (Id CType))) m
-  ) =>
+  MonadState InlineMap m =>
   Id CType ->
-  m ([Id CType] -> Exp (Id CType))
+  m ([Atom (Id CType)] -> Exp (Id CType))
 lookupInline f = do
   f' <- gets (view (at f))
   pure $ case f' of
-    Just inline -> inline :: [Id CType] -> Exp (Id CType)
-    Nothing -> Call f . map Var
+    Just inline -> inline
+    Nothing -> Call (Var f)
 
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
-optVarBind (Match (Atom (Var x)) (Bind x' e :| [])) = replace x' x <$> optVarBind e
+optVarBind (Match (Atom (Var x)) (Bind x' e :| [])) = replaceOf mapped x' x <$> optVarBind e
 optVarBind (Let ds e) = Let <$> traverse (rtraverse (appObj optVarBind)) ds <*> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverse (appCase optVarBind) cs
 optVarBind e = pure e

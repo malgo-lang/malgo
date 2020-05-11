@@ -94,7 +94,7 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
   x' <- def =<< toExp x
   match (Atom i') [(Right $ Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x'))]
 toExp (S.Call _ f xs) = runDef $ do
-  Var f' <- def =<< toExp f
+  f' <- def =<< toExp f
   xs' <- traverse (def <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf xs'
   let_ "args" (Pack con xs') (PackT [con]) $ \arg -> pure $ Call f' [Var arg]

@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -88,7 +87,7 @@ Expressions  e ::= a               Atom
 -}
 data Exp a
   = Atom (Atom a)
-  | Call a [Atom a]
+  | Call (Atom a) [Atom a]
   | CallDirect a [Atom a]
   | PrimCall Text CType [Atom a]
   | ArrayRead (Atom a) (Atom a)
@@ -129,7 +128,7 @@ instance Pretty a => Pretty (Exp a) where
 
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
-  freevars (Call f xs) = foldMap freevars xs <> setOf id f
+  freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
   freevars (PrimCall _ _ xs) = foldMap freevars xs
   freevars (ArrayRead a b) = freevars a <> freevars b

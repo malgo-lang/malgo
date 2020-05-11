@@ -86,12 +86,14 @@ evalAtom (Unboxed x) = pure $ UnboxedV x
 
 evalExp :: Exp Name -> EvalM Value
 evalExp (Atom x) = evalAtom x
-evalExp (Call f xs) = do
+evalExp (Call (Var f) xs) = do
   FunV n ys f' <- lookupVar f
   xs' <- traverse evalAtom xs
   if n >= length xs + length ys
     then f' (ys <> xs')
     else pure $ FunV n (ys <> xs') f'
+evalExp (Call v _) =
+  error $ show (pPrint v) <> " is not callable"
 evalExp (CallDirect f xs) = do
   FunV _ _ f' <- lookupVar f
   xs' <- traverse evalAtom xs
