@@ -26,8 +26,8 @@ import Text.PrettyPrint.HughesPJ
     vcat,
   )
 
-class HasFreeVar e a | e -> a where
-  freevars :: e -> Set a
+class HasFreeVar f where
+  freevars :: Ord a => f a -> Set a
 
 {-
 Unboxed values  unboxed
@@ -67,7 +67,7 @@ instance Pretty a => Pretty (Atom a) where
   pPrint (Var x) = pPrint x
   pPrint (Unboxed x) = pPrint x
 
-instance Ord a => HasFreeVar (Atom a) a where
+instance HasFreeVar Atom where
   freevars (Var x) = setOf id x
   freevars Unboxed {} = mempty
 
@@ -127,7 +127,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Let xs e) = parens $ "let" <+> vcat (map (\(v, o) -> parens $ pPrint v <+> "=" <+> pPrint o) xs) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
 
-instance Ord a => HasFreeVar (Exp a) a where
+instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = foldMap freevars xs <> setOf id f
   freevars (CallDirect _ xs) = foldMap freevars xs
@@ -161,7 +161,7 @@ instance Pretty a => Pretty (Case a) where
   pPrint (Unpack c xs e) = parens $ "unpack" <> parens (pPrint c <+> sep (map pPrint xs)) <+> "->" $$ pPrint e
   pPrint (Bind x e) = parens $ "bind" <+> pPrint x <+> "->" $$ pPrint e
 
-instance Ord a => HasFreeVar (Case a) a where
+instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
   freevars (Bind x e) = sans x $ freevars e
 
@@ -187,7 +187,7 @@ instance Pretty a => Pretty (Obj a) where
   pPrint (Pack c xs) = "pack" <> parens (pPrint c <+> sep (map pPrint xs))
   pPrint (Array a n) = "array" <> parens (pPrint a <> "," <+> pPrint n)
 
-instance Ord a => HasFreeVar (Obj a) a where
+instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ xs) = foldMap freevars xs
   freevars (Array a n) = freevars a <> freevars n
