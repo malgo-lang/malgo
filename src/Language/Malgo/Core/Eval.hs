@@ -93,11 +93,9 @@ evalExp (Call f xs) = do
     then f' (ys <> xs')
     else pure $ FunV n (ys <> xs') f'
 evalExp (CallDirect f xs) = do
-  FunV n ys f' <- lookupVar f
+  FunV _ _ f' <- lookupVar f
   xs' <- traverse evalAtom xs
-  if n >= length xs + length ys
-    then f' (ys <> xs')
-    else pure $ FunV n (ys <> xs') f'
+  f' xs'
 evalExp (PrimCall prim _ xs) = do
   prim' <- lookupPrim prim
   xs' <- traverse evalAtom xs
@@ -145,9 +143,22 @@ lookupPrim "<=" = pure $ \case
     let order = compareValue x y
      in pure $ boolToValue $ order == LT || order == EQ
   _ -> bug Unreachable
+lookupPrim "==" = pure $ \case
+  [x, y] ->
+    let order = compareValue x y
+     in pure $ boolToValue $ order == EQ
+  _ -> bug Unreachable
 lookupPrim "print_int" = pure $ \case
   [PackV (Con "Tuple1" [PackT [Con "Int" [IntT]]]) [PackV (Con "Int" [IntT]) [UnboxedV (Int x)]]] -> do
     liftIO $ putStr $ show x
+    pure unit
+  _ -> bug Unreachable
+lookupPrim "print_bool" = pure $ \case
+  [PackV (Con "Tuple1" _) [PackV (Con "True" _) _]] -> do
+    liftIO $ putStr "true"
+    pure unit
+  [PackV (Con "Tuple1" _) [PackV (Con "False" _) _]] -> do
+    liftIO $ putStr "false"
     pure unit
   _ -> bug Unreachable
 lookupPrim "newline" = pure $ \case
