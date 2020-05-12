@@ -27,31 +27,26 @@ instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
 
 type InlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
 
-replaceOf :: Eq b => ASetter s t b b -> b -> b -> s -> t
+replaceOf :: Eq a => ASetter' s a -> a -> a -> s -> s
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
 
 optCallInline ::
   MonadState InlineMap f =>
   Exp (Id CType) ->
   f (Exp (Id CType))
-optCallInline (Call (Var f) xs) | all isVar xs = do
-  f' <- lookupInline f
-  pure $ f' xs
-  where
-    isVar Var {} = True
-    isVar _ = False
+optCallInline (Call (Var f) xs) = lookupInline f <*> pure xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverse (appCase optCallInline) cs
 optCallInline (Let ds e) = do
   ds' <- traverse (rtraverse (appObj optCallInline)) ds
-  traverse_ ?? ds' $ \case
-    (f, o@(Fun ps v)) ->
+  traverse_ checkInlineable ds'
+  Let ds' <$> optCallInline e
+  where
+    checkInlineable (f, o@(Fun ps v)) =
       when (null $ freevars o)
         $ modify
         $ at f ?~ (\ps' -> go ps ps' v)
-    _ -> pure ()
-  Let ds' <$> optCallInline e
-  where
+    checkInlineable _ = pure ()
     go [] [] v = v
     go (p : ps) (p' : ps') v = replaceOf atom (Var p) p' (go ps ps' v)
     go _ _ _ = bug Unreachable
@@ -73,18 +68,10 @@ optVarBind (Let ds e) = Let <$> traverse (rtraverse (appObj optVarBind)) ds <*> 
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverse (appCase optVarBind) cs
 optVarBind e = pure e
 
-appObj ::
-  Applicative f =>
-  (Exp a -> f (Exp a)) ->
-  Obj a ->
-  f (Obj a)
+appObj :: Traversal' (Obj a) (Exp a)
 appObj f (Fun ps e) = Fun ps <$> f e
 appObj _ o = pure o
 
-appCase ::
-  Functor f =>
-  (Exp a -> f (Exp a)) ->
-  Case a ->
-  f (Case a)
+appCase :: Traversal' (Case a) (Exp a)
 appCase f (Unpack con ps e) = Unpack con ps <$> f e
 appCase f (Bind x e) = Bind x <$> f e
