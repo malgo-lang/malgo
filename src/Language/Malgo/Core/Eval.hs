@@ -61,9 +61,11 @@ lookupVar x = do
     Nothing -> error $ show $ pPrint x <> " is not defined"
 
 evalObj :: Obj Name -> EvalM Value
-evalObj (Fun ps e) =
+evalObj (Fun ps e) = do
+  Env {varMap = capture} <- get
   pure $ FunV (length ps) [] $ \ps' -> do
     env <- get
+    modify $ const $ env {varMap = capture <> varMap env}
     zipWithM_ defVar ps ps'
     e' <- evalExp e
     put env
