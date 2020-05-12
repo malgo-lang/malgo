@@ -120,7 +120,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "#" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (PrimCall p _ xs) = parens $ text (unpack p) <> "#" <+> sep (map pPrint xs)
+  pPrint (PrimCall p _ xs) = parens $ "@" <+> text (unpack p) <+> sep (map pPrint xs)
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
   pPrint (Let xs e) = parens $ "let" <+> vcat (map (\(v, o) -> parens $ pPrint v <+> "=" <+> pPrint o) xs) $$ pPrint e
@@ -157,8 +157,8 @@ data Case a
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Case a) where
-  pPrint (Unpack c xs e) = parens $ "unpack" <> parens (pPrint c <+> sep (map pPrint xs)) <+> "->" $$ pPrint e
-  pPrint (Bind x e) = parens $ "bind" <+> pPrint x <+> "->" $$ pPrint e
+  pPrint (Unpack c xs e) = parens $ sep ["unpack", parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
+  pPrint (Bind x e) = parens $ sep ["bind", pPrint x, pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
