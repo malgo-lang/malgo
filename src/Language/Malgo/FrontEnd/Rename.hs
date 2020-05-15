@@ -119,7 +119,7 @@ renameClause ::
   m (Pat (Id ()), Expr (Id ()))
 renameClause pos (p, e) = runContT (renamePat p) $ \p' -> (p',) <$> renameExpr e
   where
-    renamePat (VarP x) = ContT $ \k -> withKnowns var [x] $ VarP <$> getId pos var x >>= k
+    renamePat (VarP x) = ContT $ \k -> withKnowns var [x] $ k . VarP =<< getId pos var x
     renamePat (TupleP ps) = TupleP <$> mapM renamePat ps
 
 renameSType ::
