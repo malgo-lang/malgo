@@ -3,6 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.LambdaLift
@@ -56,8 +57,9 @@ llift (Let ds e) = do
     _ -> Let ds' <$> llift e
   where
     aux (n, v) = case v of
-      o@(Fun _ Call {}) -> pure $ Just (n, o)
+      Fun xs call@Call {} -> Just . (n,) . Fun xs <$> llift call
       o@(Fun _ PrimCall {}) -> pure $ Just (n, o)
+      o@(Fun _ CallDirect {}) -> pure $ Just (n, o)
       (Fun as body) -> do
         backup <- get
         ks <- use knowns
