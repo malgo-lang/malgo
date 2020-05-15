@@ -1,9 +1,9 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Language.Malgo.Core.Optimize
@@ -11,6 +11,7 @@ module Language.Malgo.Core.Optimize
   )
 where
 
+import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Monad
@@ -23,7 +24,7 @@ data Optimize
 instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
   passName = "optimize"
   isDump = dumpDesugar
-  trans e = evalStateT ?? mempty $ optCallInline e >>= optVarBind
+  trans e = evalStateT ?? mempty $ optCallInline e >>= lift . trans @Flat >>= optVarBind
 
 type InlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
 
@@ -67,11 +68,3 @@ optVarBind (Match (Atom (Var x)) (Bind x' e :| [])) = replaceOf mapped x' x <$> 
 optVarBind (Let ds e) = Let <$> traverse (rtraverse (appObj optVarBind)) ds <*> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverse (appCase optVarBind) cs
 optVarBind e = pure e
-
-appObj :: Traversal' (Obj a) (Exp a)
-appObj f (Fun ps e) = Fun ps <$> f e
-appObj _ o = pure o
-
-appCase :: Traversal' (Case a) (Exp a)
-appCase f (Unpack con ps e) = Unpack con ps <$> f e
-appCase f (Bind x e) = Bind x <$> f e
