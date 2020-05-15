@@ -119,11 +119,11 @@ returnType _ _ = bug Unreachable
 instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
-  pPrint (CallDirect f xs) = parens $ "#" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (PrimCall p _ xs) = parens $ "@" <+> text (unpack p) <+> sep (map pPrint xs)
+  pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (PrimCall p _ xs) = parens $ "prim" <+> text (unpack p) <+> sep (map pPrint xs)
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
-  pPrint (Let xs e) = parens $ "let" <+> vcat (map (\(v, o) -> parens $ pPrint v <+> "=" <+> pPrint o) xs) $$ pPrint e
+  pPrint (Let xs e) = parens $ "let" <+> parens (vcat (map (\(v, o) -> parens $ pPrint v <+> pPrint o) xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
 
 instance HasFreeVar Exp where
@@ -157,8 +157,8 @@ data Case a
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Case a) where
-  pPrint (Unpack c xs e) = parens $ sep ["unpack", parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
-  pPrint (Bind x e) = parens $ sep ["bind", pPrint x, pPrint e]
+  pPrint (Unpack c xs e) = parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
+  pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
@@ -182,9 +182,9 @@ data Obj a
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Obj a) where
-  pPrint (Fun xs e) = "fun" <> parens (sep (map pPrint xs <> ["->" <+> pPrint e]))
-  pPrint (Pack c xs) = "pack" <> parens (pPrint c <+> sep (map pPrint xs))
-  pPrint (Array a n) = "array" <> parens (pPrint a <> "," <+> pPrint n)
+  pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
+  pPrint (Pack c xs) = parens $ sep $ ["pack", pPrint c] <> map pPrint xs
+  pPrint (Array a n) = parens $ sep ["array", pPrint a, pPrint n]
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -204,4 +204,17 @@ data Program a = Program a [(a, Obj a)]
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Program a) where
-  pPrint (Program _ xs) = vcat $ map (\(f, o) -> pPrint f <+> "=" <+> pPrint o <> ";") xs
+  pPrint (Program mainId xs) =
+    parens ("entry" <+> pPrint mainId)
+      $$ vcat (map (\(f, o) -> parens $ "define" <+> pPrint f $$ pPrint o) xs)
+
+appObj :: Traversal' (Obj a) (Exp a)
+appObj f (Fun ps e) = Fun ps <$> f e
+appObj _ o = pure o
+
+appCase :: Traversal' (Case a) (Exp a)
+appCase f (Unpack con ps e) = Unpack con ps <$> f e
+appCase f (Bind x e) = Bind x <$> f e
+
+appProgram :: Traversal' (Program a) (Exp a)
+appProgram f (Program m xs) = Program m <$> traverse (rtraverse (appObj f)) xs
