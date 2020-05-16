@@ -1,4 +1,3 @@
-{-# LANGUAGE ConstrainedClassMethods #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}

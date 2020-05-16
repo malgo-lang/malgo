@@ -1,6 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -22,7 +23,11 @@ type Name = Id CType
 
 type EvalM a = StateT Env IO a
 
-newtype Env = Env {varMap :: Map Name Value}
+data Env
+  = Env
+      { varMap :: Map Name Value,
+        funMap :: Map Name ([Value] -> EvalM Value)
+      }
 
 data Value
   = FunV ([Value] -> EvalM Value)
@@ -37,16 +42,26 @@ instance Pretty Value where
   pPrint (UnboxedV x) = pPrint x
 
 evalProgram :: Program Name -> EvalM Value
-evalProgram (Program mainId ds) = do
-  traverse_ (uncurry loadDef) ds
-  FunV mainFun <- lookupVar mainId
-  mainFun []
+evalProgram Program {topBinds, mainExp, topFuncs} = do
+  traverse_ (uncurry loadFun) topFuncs
+  traverse_ (uncurry loadDef) topBinds
+  evalExp mainExp
 
 runEval :: EvalM a -> IO a
-runEval = evalStateT ?? Env mempty
+runEval = evalStateT ?? Env mempty mempty
 
 defVar :: Name -> Value -> EvalM ()
 defVar x v = modify (\e -> e {varMap = Map.insert x v (varMap e)})
+
+loadFun :: MonadState Env m => Name -> ([Name], Exp Name) -> m ()
+loadFun x (ps, e) = do
+  let fun ps' = do
+        env <- get
+        zipWithM_ defVar ps ps'
+        e' <- evalExp e
+        put env
+        pure e'
+  modify (\env -> env {funMap = Map.insert x fun (funMap env)})
 
 loadDef :: Name -> Obj Name -> EvalM ()
 loadDef x o = do
@@ -56,6 +71,13 @@ loadDef x o = do
 lookupVar :: HasCallStack => Name -> EvalM Value
 lookupVar x = do
   x' <- gets $ Map.lookup x . varMap
+  case x' of
+    Just x'' -> pure x''
+    Nothing -> error $ show $ pPrint x <> " is not defined"
+
+lookupFun :: HasCallStack => MonadState Env m => Name -> m ([Value] -> EvalM Value)
+lookupFun x = do
+  x' <- gets $ Map.lookup x . funMap
   case x' of
     Just x'' -> pure x''
     Nothing -> error $ show $ pPrint x <> " is not defined"
@@ -95,7 +117,7 @@ evalExp (Call (Var f) xs) = do
 evalExp (Call v _) =
   error $ show (pPrint v) <> " is not callable"
 evalExp (CallDirect f xs) = do
-  FunV f' <- lookupVar f
+  f' <- lookupFun f
   xs' <- traverse evalAtom xs
   f' xs'
 evalExp (PrimCall prim _ xs) = do

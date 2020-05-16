@@ -2,6 +2,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -197,13 +198,18 @@ instance HasAtom Obj where
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 -}
-data Program a = Program a [(a, Obj a)]
+data Program a
+  = Program
+      { topBinds :: [(a, Obj a)], -- ^ main内で初期化される値
+        mainExp :: Exp a,
+        topFuncs :: [(a, ([a], Exp a))] -- ^ トップレベル関数
+      }
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Program a) where
-  pPrint (Program mainId xs) =
-    parens ("entry" <+> pPrint mainId)
-      $$ vcat (map (\(f, o) -> parens $ "define" <+> pPrint f $$ pPrint o) xs)
+  pPrint Program {topBinds, mainExp, topFuncs} =
+    parens ("entry" $$ sep (map pPrint topBinds) $$ pPrint mainExp)
+      $$ vcat (map (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e) topFuncs)
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f (Fun ps e) = Fun ps <$> f e
@@ -214,4 +220,4 @@ appCase f (Unpack con ps e) = Unpack con ps <$> f e
 appCase f (Bind x e) = Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram f (Program m xs) = Program m <$> traverse (rtraverse (appObj f)) xs
+appProgram f Program {topBinds, mainExp, topFuncs} = Program <$> traverse (rtraverse (appObj f)) topBinds <*> f mainExp <*> traverse (rtraverse (rtraverse f)) topFuncs

@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
@@ -24,19 +25,21 @@ data LambdaLift
 
 data Env
   = Env
-      { _toplevels :: Map (Id CType) (Obj (Id CType)),
+      { _binds :: Map (Id CType) (Obj (Id CType)),
+        _funcs :: Map (Id CType) ([Id CType], Exp (Id CType)),
         _knowns :: Set (Id CType)
       }
 
 makeLenses ''Env
 
+-- TODO: Program -> ProgramのLambdaLiftを実装
+
 instance Pass LambdaLift (Exp (Id CType)) (Program (Id CType)) where
   passName = "lambda lift"
   isDump = dumpLambdaLift
   trans e = do
-    (mainExpr, Env {_toplevels = ds}) <- runStateT (llift e) $ Env mempty mempty
-    mainId <- newId ([] :-> cTypeOf mainExpr) "$main"
-    pure $ Program mainId ((mainId, Fun [] mainExpr) : Map.assocs ds)
+    (mainExpr, Env {_binds, _funcs}) <- runStateT (llift e) $ Env mempty mempty mempty
+    pure $ Program (Map.assocs _binds) mainExpr (Map.assocs _funcs)
 
 llift ::
   ( MonadUniq f,
@@ -65,7 +68,7 @@ llift (Let ds e) = do
         -- nがknownだと仮定してlambda liftする
         knowns <>= Set.singleton n
         body' <- llift body
-        toplevels %= Map.insert n (Fun as body')
+        funcs %= Map.insert n (as, body')
         e' <- llift e
         -- (Fun as body')の自由変数がknownsとnを除いてなく、e'の自由変数にnが含まれないならnはknown
         let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
@@ -93,5 +96,5 @@ def ::
   m (Id CType)
 def name xs e = do
   f <- newId (map cTypeOf xs :-> cTypeOf e) ("$" <> name)
-  toplevels %= Map.insert f (Fun xs e)
+  funcs %= Map.insert f (xs, e)
   pure f
