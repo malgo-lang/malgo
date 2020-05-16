@@ -25,7 +25,7 @@ type EvalM a = StateT Env IO a
 newtype Env = Env {varMap :: Map Name Value}
 
 data Value
-  = FunV Int [Value] ([Value] -> EvalM Value)
+  = FunV ([Value] -> EvalM Value)
   | PackV Con [Value]
   | ArrayV (IOVector Value)
   | UnboxedV Unboxed
@@ -39,7 +39,7 @@ instance Pretty Value where
 evalProgram :: Program Name -> EvalM Value
 evalProgram (Program mainId ds) = do
   traverse_ (uncurry loadDef) ds
-  FunV _ _ mainFun <- lookupVar mainId
+  FunV mainFun <- lookupVar mainId
   mainFun []
 
 runEval :: EvalM a -> IO a
@@ -63,7 +63,7 @@ lookupVar x = do
 evalObj :: Obj Name -> EvalM Value
 evalObj (Fun ps e) = do
   Env {varMap = capture} <- get
-  pure $ FunV (length ps) [] $ \ps' -> do
+  pure $ FunV $ \ps' -> do
     env <- get
     modify $ const $ env {varMap = capture <> varMap env}
     zipWithM_ defVar ps ps'
@@ -89,24 +89,13 @@ evalAtom (Unboxed x) = pure $ UnboxedV x
 evalExp :: Exp Name -> EvalM Value
 evalExp (Atom x) = evalAtom x
 evalExp (Call (Var f) xs) = do
-  FunV n ys f' <- lookupVar f
+  FunV f' <- lookupVar f
   xs' <- traverse evalAtom xs
-  apply n f' $ ys <> xs'
-  where
-    apply n fun args =
-      case n `compare` length args of
-        LT -> do
-          let (argsInit, argsTail) = splitAt n args
-          FunV n' ys' fun' <- fun argsInit
-          apply n' fun' (ys' <> argsTail)
-        EQ ->
-          fun args
-        GT ->
-          pure $ FunV n args fun
+  f' xs'
 evalExp (Call v _) =
   error $ show (pPrint v) <> " is not callable"
 evalExp (CallDirect f xs) = do
-  FunV _ _ f' <- lookupVar f
+  FunV f' <- lookupVar f
   xs' <- traverse evalAtom xs
   f' xs'
 evalExp (PrimCall prim _ xs) = do
@@ -162,20 +151,20 @@ lookupPrim "==" = pure $ \case
      in pure $ boolToValue $ order == EQ
   _ -> bug Unreachable
 lookupPrim "print_int" = pure $ \case
-  [PackV (Con "Tuple1" [PackT [Con "Int" [IntT]]]) [PackV (Con "Int" [IntT]) [UnboxedV (Int x)]]] -> do
+  [PackV (Con "Int" [IntT]) [UnboxedV (Int x)]] -> do
     liftIO $ putStr $ show x
     pure unit
   _ -> bug Unreachable
 lookupPrim "print_bool" = pure $ \case
-  [PackV (Con "Tuple1" _) [PackV (Con "True" _) _]] -> do
+  [PackV (Con "True" _) _] -> do
     liftIO $ putStr "true"
     pure unit
-  [PackV (Con "Tuple1" _) [PackV (Con "False" _) _]] -> do
+  [PackV (Con "False" _) _] -> do
     liftIO $ putStr "false"
     pure unit
   _ -> bug Unreachable
 lookupPrim "newline" = pure $ \case
-  [PackV (Con "Tuple0" []) []] -> do
+  [] -> do
     liftIO $ putStrLn ""
     pure unit
   _ -> bug Unreachable

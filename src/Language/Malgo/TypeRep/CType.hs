@@ -18,7 +18,7 @@ import Text.PrettyPrint.HughesPJ
   )
 
 data CType
-  = CType :-> CType
+  = [CType] :-> CType
   | IntT
   | FloatT
   | CharT
@@ -29,8 +29,7 @@ data CType
   deriving stock (Eq, Show, Ord)
 
 instance Pretty CType where
-  pPrint (a@(_ :-> _) :-> b) = parens (pPrint a) <+> "->" <+> pPrint b
-  pPrint (a :-> b) = pPrint a <+> "->" <+> pPrint b
+  pPrint (a :-> b) = parens (sep $ map pPrint a) <+> "->" <+> pPrint b
   pPrint IntT = "Int#"
   pPrint FloatT = "Float#"
   pPrint CharT = "Char#"
@@ -69,5 +68,5 @@ instance HasCType T.Type where
   cTypeOf (T.TyApp T.ArrayC [x]) = ArrayT (cTypeOf x)
   cTypeOf (T.TyApp _ _) = bug Unreachable
   cTypeOf (T.TyMeta _) = AnyT
-  cTypeOf (ps T.:-> r) = PackT [Con ("Tuple" <> pack (show $ length ps)) (map cTypeOf ps)] :-> cTypeOf r
+  cTypeOf (ps T.:-> r) = map cTypeOf ps :-> cTypeOf r
   cTypeOf T.Kind = AnyT

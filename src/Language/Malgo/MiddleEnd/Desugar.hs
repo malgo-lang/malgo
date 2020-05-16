@@ -96,21 +96,13 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
 toExp (S.Call _ f xs) = runDef $ do
   f' <- def =<< toExp f
   xs' <- traverse (def <=< toExp) xs
-  let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf xs'
-  let_ "args" (Pack con xs') (PackT [con]) $ \arg -> pure $ Call f' [Var arg]
+  pure $ Call f' xs'
 toExp (S.Fn _ ps e) = do
-  let con = Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . fst) ps
-  paramTuple <- newId (PackT [con]) "param"
-  e' <-
-    match
-      (Atom $ Var paramTuple)
-      [ ( Right con,
-          \ps' -> do
-            zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
-            toExp e
-        )
-      ]
-  let_ "fn" (Fun [paramTuple] e') (PackT [con] :-> cTypeOf e') $ pure . Atom . Var
+  ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
+  e' <- do
+    zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
+    toExp e
+  let_ "fn" (Fun ps' e') (map cTypeOf ps' :-> cTypeOf e') $ pure . Atom . Var
 toExp (S.Seq _ e1 e2) = do
   e1' <- toExp e1
   match e1' [(Left ("hole", cTypeOf e1'), \_ -> toExp e2)]
@@ -120,9 +112,8 @@ toExp (S.Let _ (S.ValDec _ a _ v) e) = do
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
   case cTypeOf $ prim ^. idMeta of
     ta :-> tb -> do
-      a <- newId ta "param"
-      let funBody = PrimCall (T.pack primName) (ta :-> tb) [Var a]
-      let_ "prim" (Fun [a] funBody) (ta :-> tb) $ \prim' -> do
+      ps <- traverse (newId ?? "a") ta
+      let_ "prim" (Fun ps (PrimCall (T.pack primName) (ta :-> tb) (map Var ps))) (ta :-> tb) $ \prim' -> do
         modify (at prim ?~ prim')
         toExp e
     _ -> bug Unreachable
@@ -131,19 +122,12 @@ toExp (S.Let _ (S.FunDec fs) e) = do
     f' <- newId (cTypeOf f) (f ^. idName)
     modify (at f ?~ f')
   fs' <- traverse ?? fs $ \(_, f, ps, _, body) -> do
-    let con = Con ("Tuple" <> T.pack (show $ length ps)) (map (cTypeOf . fst) ps)
-    paramTuple <- newId (PackT [con]) "param"
-    body' <-
-      match
-        (Atom $ Var paramTuple)
-        [ ( Right con,
-            \ps' -> do
-              zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
-              toExp body
-          )
-        ]
+    ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
+    body' <- do
+      zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
+      toExp body
     f' <- findVar f
-    pure (f', Fun [paramTuple] body')
+    pure (f', Fun ps' body')
   e' <- toExp e
   pure $ Let fs' e'
 toExp (S.If _ c t f) = do
@@ -151,15 +135,15 @@ toExp (S.If _ c t f) = do
   match c' [(Right $ Con "True" [], \_ -> toExp t), (Right $ Con "False" [], \_ -> toExp f)]
 toExp (S.BinOp _ o x y) =
   case o of
-    S.Add -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "+" (IntT :-> IntT :-> IntT)
-    S.Sub -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "-" (IntT :-> IntT :-> IntT)
-    S.Mul -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "*" (IntT :-> IntT :-> IntT)
-    S.Div -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "/" (IntT :-> IntT :-> IntT)
-    S.Mod -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "%" (IntT :-> IntT :-> IntT)
-    S.FAdd -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "+." (FloatT :-> FloatT :-> FloatT)
-    S.FSub -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "-." (FloatT :-> FloatT :-> FloatT)
-    S.FMul -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "*." (FloatT :-> FloatT :-> FloatT)
-    S.FDiv -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "/." (FloatT :-> FloatT :-> FloatT)
+    S.Add -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "+" ([IntT, IntT] :-> IntT)
+    S.Sub -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "-" ([IntT, IntT] :-> IntT)
+    S.Mul -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "*" ([IntT, IntT] :-> IntT)
+    S.Div -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "/" ([IntT, IntT] :-> IntT)
+    S.Mod -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "%" ([IntT, IntT] :-> IntT)
+    S.FAdd -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "+." ([FloatT, FloatT] :-> FloatT)
+    S.FSub -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "-." ([FloatT, FloatT] :-> FloatT)
+    S.FMul -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "*." ([FloatT, FloatT] :-> FloatT)
+    S.FDiv -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "/." ([FloatT, FloatT] :-> FloatT)
     S.Eq -> compareOpPrim "=="
     S.Neq -> compareOpPrim "<>"
     S.Lt -> compareOpPrim "<"
@@ -202,7 +186,7 @@ toExp (S.BinOp _ o x y) =
       lval <- def =<< toExp x
       rval <- def =<< toExp y
       match
-        (PrimCall primName (cTypeOf lval :-> cTypeOf rval :-> PackT [Con "True" [], Con "False" []]) [lval, rval])
+        (PrimCall primName ([cTypeOf lval, cTypeOf rval] :-> PackT [Con "True" [], Con "False" []]) [lval, rval])
         [(Left ("cmp", PackT [Con "True" [], Con "False" []]), \[result] -> pure $ Atom $ Var result)]
 toExp (S.Match _ e cs) = do
   e' <- toExp e

@@ -35,9 +35,8 @@ instance Pass LambdaLift (Exp (Id CType)) (Program (Id CType)) where
   isDump = dumpLambdaLift
   trans e = do
     (mainExpr, Env {_toplevels = ds}) <- runStateT (llift e) $ Env mempty mempty
-    mainId <- newId (PackT [Con "Tuple0" []] :-> cTypeOf mainExpr) "$main"
-    hole <- newId (PackT [Con "Tuple0" []]) "$hole"
-    pure $ Program mainId ((mainId, Fun [hole] mainExpr) : Map.assocs ds)
+    mainId <- newId ([] :-> cTypeOf mainExpr) "$main"
+    pure $ Program mainId ((mainId, Fun [] mainExpr) : Map.assocs ds)
 
 llift ::
   ( MonadUniq f,
@@ -93,6 +92,6 @@ def ::
   Exp (Id CType) ->
   m (Id CType)
 def name xs e = do
-  f <- newId (foldr ((:->) . cTypeOf) (cTypeOf e) xs) ("$" <> name)
+  f <- newId (map cTypeOf xs :-> cTypeOf e) ("$" <> name)
   toplevels %= Map.insert f (Fun xs e)
   pure f

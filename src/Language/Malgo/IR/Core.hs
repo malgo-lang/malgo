@@ -98,9 +98,9 @@ data Exp a
 
 instance HasCType a => HasCType (Exp a) where
   cTypeOf (Atom x) = cTypeOf x
-  cTypeOf (Call f xs) = returnType (cTypeOf f) xs
-  cTypeOf (CallDirect f xs) = returnType (cTypeOf f) xs
-  cTypeOf (PrimCall _ t xs) = returnType t xs
+  cTypeOf (Call f _) = returnType (cTypeOf f)
+  cTypeOf (CallDirect f _) = returnType (cTypeOf f)
+  cTypeOf (PrimCall _ t _) = returnType t
   cTypeOf (ArrayRead a _) = case cTypeOf a of
     ArrayT t -> t
     _ -> bug Unreachable
@@ -109,12 +109,9 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf (Match _ (Unpack _ _ e :| _)) = cTypeOf e
   cTypeOf (Match _ (Bind _ e :| _)) = cTypeOf e
 
-returnType :: CType -> [a] -> CType
-returnType t [] = t
-returnType (_ :-> t) [_] = t
-returnType (_ :-> t) (_ : rest) = returnType t rest
-returnType AnyT _ = AnyT
-returnType _ _ = bug Unreachable
+returnType :: CType -> CType
+returnType (_ :-> t) = t
+returnType _ = bug Unreachable
 
 instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
