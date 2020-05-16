@@ -91,9 +91,18 @@ evalExp (Atom x) = evalAtom x
 evalExp (Call (Var f) xs) = do
   FunV n ys f' <- lookupVar f
   xs' <- traverse evalAtom xs
-  if n >= length xs + length ys
-    then f' (ys <> xs')
-    else pure $ FunV n (ys <> xs') f'
+  apply n f' $ ys <> xs'
+  where
+    apply n fun args =
+      case n `compare` length args of
+        LT -> do
+          let (argsInit, argsTail) = splitAt n args
+          FunV n' ys' fun' <- fun argsInit
+          apply n' fun' (ys' <> argsTail)
+        EQ ->
+          fun args
+        GT ->
+          pure $ FunV n args fun
 evalExp (Call v _) =
   error $ show (pPrint v) <> " is not callable"
 evalExp (CallDirect f xs) = do
