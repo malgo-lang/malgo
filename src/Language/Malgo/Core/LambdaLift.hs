@@ -30,7 +30,7 @@ data Env
         _knowns :: Set (Id CType)
       }
 
-makeLenses ''Env
+makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
 
 -- TODO: Program -> ProgramのLambdaLiftを実装
 
