@@ -9,6 +9,7 @@
 module Language.Malgo.Core.Eval where
 
 import qualified Data.Map as Map
+import qualified Data.Set as Set
 import qualified Data.Text as T
 import Data.Vector.Mutable (IOVector)
 import qualified Data.Vector.Mutable as V
@@ -31,7 +32,7 @@ data Env
 
 data Value
   = FunV ([Value] -> EvalM Value)
-  | PackV Con [Value]
+  | PackV Int [Value]
   | ArrayV (IOVector Value)
   | UnboxedV Unboxed
 
@@ -64,9 +65,30 @@ loadFun x (ps, e) = do
   modify (\env -> env {funMap = Map.insert x fun (funMap env)})
 
 loadDef :: Name -> Obj Name -> EvalM ()
-loadDef x o = do
-  o' <- evalObj o
-  defVar x o'
+loadDef x (Fun ps e) = do
+  Env {varMap = capture} <- get
+  defVar x $ FunV $ \ps' -> do
+    env <- get
+    modify $ const $ env {varMap = capture <> varMap env}
+    zipWithM_ defVar ps ps'
+    e' <- evalExp e
+    put env
+    pure e'
+loadDef x (Pack con xs) =
+  case cTypeOf x of
+    PackT union -> do
+      let tag = Set.findIndex con union
+      xs' <- traverse evalAtom xs
+      defVar x $ PackV tag xs'
+    _ -> bug Unreachable
+loadDef x (Array a n) = do
+  a' <- evalAtom a
+  n' <- evalAtom n
+  case n' of
+    UnboxedV (Int n'') -> do
+      arr <- liftIO $ V.replicate (fromIntegral n'') a'
+      defVar x $ ArrayV arr
+    _ -> bug Unreachable
 
 lookupVar :: HasCallStack => Name -> EvalM Value
 lookupVar x = do
@@ -81,28 +103,6 @@ lookupFun x = do
   case x' of
     Just x'' -> pure x''
     Nothing -> error $ show $ pPrint x <> " is not defined"
-
-evalObj :: Obj Name -> EvalM Value
-evalObj (Fun ps e) = do
-  Env {varMap = capture} <- get
-  pure $ FunV $ \ps' -> do
-    env <- get
-    modify $ const $ env {varMap = capture <> varMap env}
-    zipWithM_ defVar ps ps'
-    e' <- evalExp e
-    put env
-    pure e'
-evalObj (Pack con xs) = do
-  xs' <- traverse evalAtom xs
-  pure $ PackV con xs'
-evalObj (Array a n) = do
-  a' <- evalAtom a
-  n' <- evalAtom n
-  case n' of
-    UnboxedV (Int n'') -> do
-      arr <- liftIO $ V.replicate (fromIntegral n'') a'
-      pure $ ArrayV arr
-    _ -> bug Unreachable
 
 evalAtom :: Atom Name -> EvalM Value
 evalAtom (Var x) = lookupVar x
@@ -139,18 +139,22 @@ evalExp (Let xs e) = do
   evalExp e
 evalExp (Match e cs) = do
   e' <- evalExp e
-  evalMatch e' cs
+  evalMatch (cTypeOf e) e' cs
 
-evalMatch :: Value -> NonEmpty (Case Name) -> EvalM Value
-evalMatch (PackV con1 xs) (Unpack con2 ys e :| _)
-  | con1 == con2 = do
-    zipWithM_ defVar ys xs
-    evalExp e
-evalMatch v (Unpack {} :| (c : cs)) = evalMatch v (c :| cs)
-evalMatch v (Bind x e :| _) = do
+evalMatch :: CType -> Value -> NonEmpty (Case Name) -> EvalM Value
+evalMatch _ v (Bind x e :| _) = do
   defVar x v
   evalExp e
-evalMatch _ _ = bug Unreachable
+evalMatch (PackT union) (PackV tag xs) (Unpack con ys e :| rest) = do
+  let tag' = Set.findIndex con union
+  if tag == tag'
+    then do
+      zipWithM_ defVar ys xs
+      evalExp e
+    else case rest of
+      (c : cs) -> evalMatch (PackT union) (PackV tag xs) (c :| cs)
+      _ -> bug Unreachable
+evalMatch _ _ _ = bug Unreachable
 
 lookupPrim :: Text -> EvalM ([Value] -> EvalM Value)
 lookupPrim "+" = pure $ \case
@@ -173,17 +177,12 @@ lookupPrim "==" = pure $ \case
      in pure $ boolToValue $ order == EQ
   _ -> bug Unreachable
 lookupPrim "print_int" = pure $ \case
-  [PackV (Con "Int" [IntT]) [UnboxedV (Int x)]] -> do
+  [PackV 0 [UnboxedV (Int x)]] -> do
     liftIO $ putStr $ show x
     pure unit
   _ -> bug Unreachable
 lookupPrim "print_bool" = pure $ \case
-  [PackV (Con "True" _) _] -> do
-    liftIO $ putStr "true"
-    pure unit
-  [PackV (Con "False" _) _] -> do
-    liftIO $ putStr "false"
-    pure unit
+  [x] -> ifThenElse x (liftIO $ putStr "true") (liftIO $ putStr "false") >> pure unit
   _ -> bug Unreachable
 lookupPrim "newline" = pure $ \case
   [] -> do
@@ -191,6 +190,14 @@ lookupPrim "newline" = pure $ \case
     pure unit
   _ -> bug Unreachable
 lookupPrim prim = error $ T.unpack $ "undefined primitive: " <> prim
+
+ifThenElse :: Value -> p -> p -> p
+ifThenElse c t f =
+  case (c, boolToValue True) of
+    (PackV b _, PackV true _)
+      | b == true -> t
+      | otherwise -> f
+    _ -> bug Unreachable
 
 compareValue :: Value -> Value -> Ordering
 compareValue (UnboxedV x) (UnboxedV y) = compare x y
@@ -205,8 +212,8 @@ compareValue (PackV con1 xs) (PackV con2 ys)
 compareValue _ _ = bug Unreachable
 
 boolToValue :: Bool -> Value
-boolToValue True = PackV (Con "True" []) []
-boolToValue False = PackV (Con "False" []) []
+boolToValue True = PackV (Set.findIndex (Con "True" []) $ Set.fromList [Con "True" [], Con "False" []]) []
+boolToValue False = PackV (Set.findIndex (Con "False" []) $ Set.fromList [Con "True" [], Con "False" []]) []
 
 unit :: Value
-unit = PackV (Con "Tuple0" []) []
+unit = PackV 0 []

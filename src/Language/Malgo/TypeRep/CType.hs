@@ -1,4 +1,5 @@
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -23,7 +24,7 @@ data CType
   | FloatT
   | CharT
   | StringT
-  | PackT [Con]
+  | PackT (Set Con)
   | ArrayT CType
   | AnyT
   deriving stock (Eq, Show, Ord)
@@ -34,7 +35,7 @@ instance Pretty CType where
   pPrint FloatT = "Float#"
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
-  pPrint (PackT ts) = braces $ sep (map pPrint ts)
+  pPrint (PackT ts) = braces $ sep (map pPrint $ toList ts)
   pPrint (ArrayT t) = brackets $ pPrint t
   pPrint AnyT = "Any"
 
