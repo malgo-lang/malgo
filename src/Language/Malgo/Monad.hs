@@ -36,6 +36,7 @@ import Colog
 import qualified Colog
 import Control.Monad.Fix
 import qualified Data.Text as T
+import LLVM.IRBuilder (IRBuilderT, ModuleBuilderT)
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.Parsec.Pos (SourcePos, sourceLine)
@@ -157,3 +158,7 @@ instance MonadUniq m => MonadUniq (ExceptT e m)
 instance MonadUniq m => MonadUniq (StateT s m)
 
 instance MonadUniq m => MonadUniq (WriterT w m)
+
+instance MonadUniq m => MonadUniq (ModuleBuilderT m)
+
+instance MonadUniq m => MonadUniq (IRBuilderT m)
