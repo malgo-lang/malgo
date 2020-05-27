@@ -19,5 +19,6 @@ main = do
   if isInterpretMode opt
     then void $ interpret opt src
     else do
-      ll <- compile opt src
+      -- ll <- compile opt src
+      ll <- compileCore opt src
       TL.writeFile (dstName opt) $ TL.unlines $ "source_filename = " <> TL.pack (show (srcName opt)) : TL.lines (ppllvm ll)

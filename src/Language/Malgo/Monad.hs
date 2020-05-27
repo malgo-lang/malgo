@@ -41,6 +41,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.Parsec.Pos (SourcePos, sourceLine)
 import Text.PrettyPrint (($$), text)
+import qualified Control.Monad.Trans.State.Lazy as Lazy
 
 data Opt
   = Opt
@@ -73,12 +74,12 @@ instance HasLog (MalgoEnv m) Message m where
   getLogAction = maLogAction
   setLogAction newLogAction env = env {maLogAction = newLogAction}
 
-newtype MalgoM a = MalgoM {unMalgoM :: ReaderT (MalgoEnv MalgoM) (StateT UniqSupply IO) a}
+newtype MalgoM a = MalgoM {unMalgoM :: ReaderT (MalgoEnv MalgoM) (Lazy.StateT UniqSupply IO) a}
   deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState UniqSupply, MonadIO, MonadFix, MonadFail)
 
 runMalgo :: MonadIO m => MalgoM a -> Opt -> Text -> m a
 runMalgo (MalgoM m) opt source =
-  liftIO $ evalStateT ?? UniqSupply 0 $
+  liftIO $ Lazy.evalStateT ?? UniqSupply 0 $
     runReaderT
       m
       MalgoEnv
@@ -156,6 +157,8 @@ instance MonadUniq m => MonadUniq (ReaderT r m)
 instance MonadUniq m => MonadUniq (ExceptT e m)
 
 instance MonadUniq m => MonadUniq (StateT s m)
+
+instance MonadUniq m => MonadUniq (Lazy.StateT s m)
 
 instance MonadUniq m => MonadUniq (WriterT w m)
 

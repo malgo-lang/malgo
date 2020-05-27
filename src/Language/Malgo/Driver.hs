@@ -9,6 +9,7 @@ module Language.Malgo.Driver
   ( parseOpt,
     interpret,
     compile,
+    compileCore,
   )
 where
 
@@ -19,6 +20,7 @@ import qualified Data.Text.Lazy as TL
 import qualified LLVM.AST as L
 import Language.Malgo.BackEnd.GenLIR
 import Language.Malgo.BackEnd.GenLLVM
+import Language.Malgo.Core.CodeGen
 import Language.Malgo.Core.Eval
 import Language.Malgo.Core.Flat
 import Language.Malgo.Core.LambdaLift
@@ -88,6 +90,25 @@ interpret = M.runMalgo $ do
       >>= transWithDump @Optimize
       >>= transWithDump @LambdaLift
   liftIO $ runEval $ evalProgram desugared
+
+compileCore :: MonadIO m => Opt -> Text -> m L.Module
+compileCore = M.runMalgo $ do
+  opt <- asks maOption
+  llvmir <-
+    readAndParse
+      >>= transWithDump @Rename
+      >>= transWithDump @Typing
+      >>= transWithDump @Desugar
+      >>= transWithDump @Flat
+      >>= transWithDump @Optimize
+      >>= transWithDump @LambdaLift
+      >>= trans @CodeGen
+  pure $
+    L.defaultModule
+      { L.moduleName = fromString $ srcName opt,
+        L.moduleSourceFileName = B.toShort $ T.encodeUtf8 $ T.pack $ srcName opt,
+        L.moduleDefinitions = llvmir
+      }
 
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do
