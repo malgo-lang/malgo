@@ -196,11 +196,17 @@ genExp (ArrayWrite a i v) k = do
   store addr 0 vOpr
   k (ConstantOperand (Undef (ptr i64)))
 genExp (Let xs e) k = do
-  env <- mconcat <$> traverse (uncurry genObj) xs
+  env <- fromList . mconcat <$> traverse prepare xs
+  env' <- local (env <>) $ mconcat <$> traverse (uncurry genObj) xs
   -- env <- mfix $ \env' ->
   --   local (env' <>) $
   --     mconcat <$> traverse (uncurry genObj) xs
-  local (env <>) $ genExp e k
+  local (env' <>) $ genExp e k
+  where
+    prepare (name, Fun ps body) = do
+      opr <- mallocType (StructureType False [ptr i8, ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False])
+      pure [(name, opr)]
+    prepare _ = pure []
 genExp (Match e cs) k = genExp e $ \eOpr ->
   case cTypeOf e of
     PackT union -> mdo
@@ -291,7 +297,7 @@ genObj funName (Fun ps e) = do
     fvOpr <- findVar fv
     capAddr <- gep capture [int32 0, int32 $ fromIntegral i]
     store capAddr 0 fvOpr
-  closAddr <- mallocType closType
+  closAddr <- findVar funName
   closCapAddr <- gep closAddr [int32 0, int32 0]
   store closCapAddr 0 =<< bitcast capture (ptr i8)
   closFunAddr <- gep closAddr [int32 0, int32 1]
@@ -302,7 +308,7 @@ genObj funName (Fun ps e) = do
     capType = StructureType False (map (convType . cTypeOf) fvs)
     psTypes = ptr i8 : map (convType . cTypeOf) ps
     retType = convType $ cTypeOf e
-    closType = StructureType False [ptr i8, ptr $ FunctionType retType psTypes False]
+-- closType = StructureType False [ptr i8, ptr $ FunctionType retType psTypes False]
 genObj name@(cTypeOf -> PackT cs) (Pack con@(Con _ ts) xs) = do
   addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
   let tag = fromIntegral $ Set.findIndex con cs
