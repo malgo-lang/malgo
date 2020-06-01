@@ -76,7 +76,9 @@ convType IntT = i64
 convType FloatT = LT.double
 convType CharT = i8
 convType StringT = ptr i8
-convType (PackT cs) = ptr (StructureType False [i64, LT.VectorType (maximum . (1 :) $ sizeofCon <$> toList cs) i8])
+convType (PackT cs) =
+  let size = maximum $ sizeofCon <$> toList cs
+   in ptr (StructureType False [i64, if size == 0 then StructureType False [] else LT.VectorType size i8])
 convType (ArrayT ty) = ptr $ convType ty
 convType AnyT = ptr i64
 
@@ -194,13 +196,10 @@ genExp (ArrayWrite a i v) k = do
   vOpr <- genAtom v
   addr <- gep aOpr [iOpr]
   store addr 0 vOpr
-  k (ConstantOperand (Undef (ptr i64)))
+  k (ConstantOperand (Undef (ptr $ StructureType False [i64, StructureType False []])))
 genExp (Let xs e) k = do
   env <- fromList . mconcat <$> traverse prepare xs
   env' <- local (env <>) $ mconcat <$> traverse (uncurry genObj) xs
-  -- env <- mfix $ \env' ->
-  --   local (env' <>) $
-  --     mconcat <$> traverse (uncurry genObj) xs
   local (env' <>) $ genExp e k
   where
     prepare (name, Fun ps body) = do
@@ -216,7 +215,7 @@ genExp (Match e cs) k = genExp e $ \eOpr ->
         (l : _) -> pure l
         _ -> do
           l <- block
-          k (ConstantOperand $ Undef $ convType $ cTypeOf (Match e cs))
+          unreachable
           pure l
       switchBlock <- block
       tagOpr <- (load ?? 0) =<< gep eOpr [int32 0, int32 0]
@@ -323,6 +322,7 @@ genObj _ Pack {} = bug Unreachable
 genObj x (Core.Array a n) = do
   sizeOpr <- mul (sizeof $ convType $ cTypeOf a) =<< genAtom n
   valueOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ cTypeOf a)
+  -- TODO:動的に初期化
   pure $ fromList [(x, valueOpr)]
 
 genCon :: Set Con -> Con -> (Int, Type)
