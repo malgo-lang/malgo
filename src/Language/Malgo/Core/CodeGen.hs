@@ -328,7 +328,7 @@ genObj x (Core.Array a n) = mdo
   store iPtr 0 (int64 0)
   br condLabel
   -- cond: i < n;
-  condLabel <- block `named` "cond"
+  condLabel <- block
   iOpr <- load iPtr 0
   cond <- icmp IP.SLT iOpr =<< genAtom n
   condBr cond bodyLabel endLabel
