@@ -28,7 +28,7 @@ import qualified LLVM.AST
 import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
 import LLVM.AST.FloatingPointPredicate ()
-import LLVM.AST.IntegerPredicate ()
+import qualified LLVM.AST.IntegerPredicate as IP
 import LLVM.AST.Operand (Operand (..))
 import LLVM.AST.Type hiding (double, void)
 import qualified LLVM.AST.Type as LT
@@ -319,10 +319,28 @@ genObj name@(cTypeOf -> PackT cs) (Pack con@(Con _ ts) xs) = do
   addr' <- bitcast addr (convType $ PackT cs)
   pure $ fromList [(name, addr')]
 genObj _ Pack {} = bug Unreachable
-genObj x (Core.Array a n) = do
+genObj x (Core.Array a n) = mdo
   sizeOpr <- mul (sizeof $ convType $ cTypeOf a) =<< genAtom n
   valueOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ cTypeOf a)
-  -- TODO:動的に初期化
+
+  -- for (i64 i = 0;
+  iPtr <- alloca i64 Nothing 0
+  store iPtr 0 (int64 0)
+  br condLabel
+  -- cond: i < n;
+  condLabel <- block `named` "cond"
+  iOpr <- load iPtr 0
+  cond <- icmp IP.SLT iOpr =<< genAtom n
+  condBr cond bodyLabel endLabel
+  -- body: valueOpr[iOpr] <- genAtom a
+  bodyLabel <- block
+  iOpr' <- load iPtr 0
+  addr <- gep valueOpr [iOpr']
+  store addr 0 =<< genAtom a
+  store iPtr 0 =<< add iOpr (int64 1)
+  br condLabel
+  endLabel <- block
+
   pure $ fromList [(x, valueOpr)]
 
 genCon :: Set Con -> Con -> (Int, Type)
