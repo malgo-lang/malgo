@@ -11,6 +11,7 @@ module Language.Malgo.IR.Core where
 
 import Data.Set.Lens
 import Data.Text (unpack)
+import Language.Malgo.IR.Op
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
@@ -91,6 +92,7 @@ data Exp a
   | Call (Atom a) [Atom a]
   | CallDirect a [Atom a]
   | PrimCall Text CType [Atom a]
+  | BinOp Op (Atom a) (Atom a)
   | ArrayRead (Atom a) (Atom a)
   | ArrayWrite (Atom a) (Atom a) (Atom a)
   | Let [(a, Obj a)] (Exp a)
@@ -102,6 +104,27 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf (Call f _) = returnType (cTypeOf f)
   cTypeOf (CallDirect f _) = returnType (cTypeOf f)
   cTypeOf (PrimCall _ t _) = returnType t
+  cTypeOf (BinOp o _ _) =
+    case o of
+      Add -> IntT
+      Sub -> IntT
+      Mul -> IntT
+      Div -> IntT
+      Mod -> IntT
+      FAdd -> FloatT
+      FSub -> FloatT
+      FMul -> FloatT
+      FDiv -> FloatT
+      Eq -> boolT
+      Neq -> boolT
+      Lt -> boolT
+      Gt -> boolT
+      Le -> boolT
+      Ge -> boolT
+      And -> boolT
+      Or -> boolT
+    where
+      boolT = PackT [Con "True" [], Con "False" []]
   cTypeOf (ArrayRead a _) = case cTypeOf a of
     ArrayT t -> t
     _ -> bug Unreachable
@@ -119,6 +142,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (PrimCall p _ xs) = parens $ "prim" <+> text (unpack p) <+> sep (map pPrint xs)
+  pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
   pPrint (Let xs e) = parens $ "let" <+> parens (vcat (map (\(v, o) -> parens $ pPrint v <+> pPrint o) xs)) $$ pPrint e
@@ -129,6 +153,7 @@ instance HasFreeVar Exp where
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
   freevars (PrimCall _ _ xs) = foldMap freevars xs
+  freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (ArrayRead a b) = freevars a <> freevars b
   freevars (ArrayWrite a b c) = freevars a <> freevars b <> freevars c
   freevars (Let xs e) = foldr (sans . view _1) (freevars e <> foldMap (freevars . view _2) xs) xs
@@ -140,6 +165,7 @@ instance HasAtom Exp where
     Call x xs -> Call x <$> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
     PrimCall p t xs -> PrimCall p t <$> traverse f xs
+    BinOp o x y -> BinOp o <$> f x <*> f y
     ArrayRead a b -> ArrayRead <$> f a <*> f b
     ArrayWrite a b c -> ArrayWrite <$> f a <*> f b <*> f c
     Let xs e -> Let <$> traverse (rtraverse (atom f)) xs <*> atom f e
@@ -200,9 +226,11 @@ Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 -}
 data Program a
   = Program
-      { topBinds :: [(a, Obj a)], -- ^ main内で初期化される値
+      { -- | main内で初期化される値
+        topBinds :: [(a, Obj a)],
         mainExp :: Exp a,
-        topFuncs :: [(a, ([a], Exp a))] -- ^ トップレベル関数
+        -- | トップレベル関数
+        topFuncs :: [(a, ([a], Exp a))]
       }
   deriving stock (Eq, Show, Functor)
 
