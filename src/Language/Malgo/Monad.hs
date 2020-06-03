@@ -57,7 +57,8 @@ data Opt
         dumpDesugar :: Bool,
         dumpLambdaLift :: Bool,
         isInterpretMode :: Bool,
-        isDebugMode :: Bool
+        isDebugMode :: Bool,
+        isCoreMode :: Bool
       }
   deriving stock (Eq, Show)
 

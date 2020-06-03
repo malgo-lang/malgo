@@ -62,8 +62,9 @@ parseOpt =
             <*> switch (long "dump-desugar")
             <*> switch (long "dump-lambdalift")
             <*> switch (long "interpret")
+            <*> switch (long "debug-mode")
         )
-          <*> switch (long "debug-mode")
+          <*> switch (long "core-mode")
           <**> helper
       )
       (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
