@@ -4,6 +4,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 
@@ -133,23 +134,23 @@ toExp (S.Let _ (S.FunDec fs) e) = do
 toExp (S.If _ c t f) = do
   c' <- toExp c
   match c' [(Right $ Con "True" [], \_ -> toExp t), (Right $ Con "False" [], \_ -> toExp f)]
-toExp (S.BinOp _ o x y) =
-  case o of
-    S.Add -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "+" ([IntT, IntT] :-> IntT)
-    S.Sub -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "-" ([IntT, IntT] :-> IntT)
-    S.Mul -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "*" ([IntT, IntT] :-> IntT)
-    S.Div -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "/" ([IntT, IntT] :-> IntT)
-    S.Mod -> arithOpPrim (Con "Int" [IntT]) (Con "Int" [IntT]) (Con "Int" [IntT]) "%" ([IntT, IntT] :-> IntT)
-    S.FAdd -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "+." ([FloatT, FloatT] :-> FloatT)
-    S.FSub -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "-." ([FloatT, FloatT] :-> FloatT)
-    S.FMul -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "*." ([FloatT, FloatT] :-> FloatT)
-    S.FDiv -> arithOpPrim (Con "Float" [FloatT]) (Con "Float" [FloatT]) (Con "Float" [FloatT]) "/." ([FloatT, FloatT] :-> FloatT)
-    S.Eq -> compareOpPrim "=="
-    S.Neq -> compareOpPrim "<>"
-    S.Lt -> compareOpPrim "<"
-    S.Gt -> compareOpPrim ">"
-    S.Le -> compareOpPrim "<="
-    S.Ge -> compareOpPrim ">="
+toExp (S.BinOp _ opr x y) =
+  case opr of
+    S.Add -> arithOp (Con "Int" [IntT])
+    S.Sub -> arithOp (Con "Int" [IntT])
+    S.Mul -> arithOp (Con "Int" [IntT])
+    S.Div -> arithOp (Con "Int" [IntT])
+    S.Mod -> arithOp (Con "Int" [IntT])
+    S.FAdd -> arithOp (Con "Float" [FloatT])
+    S.FSub -> arithOp (Con "Float" [FloatT])
+    S.FMul -> arithOp (Con "Float" [FloatT])
+    S.FDiv -> arithOp (Con "Float" [FloatT])
+    S.Eq -> equalOp
+    S.Neq -> equalOp
+    S.Lt -> compareOp
+    S.Gt -> compareOp
+    S.Le -> compareOp
+    S.Ge -> compareOp
     S.And -> do
       lexp <- toExp x
       rexp <- toExp y
@@ -159,35 +160,46 @@ toExp (S.BinOp _ o x y) =
       rexp <- toExp y
       match lexp [(Right $ Con "True" [], \_ -> Atom <$> def lexp), (Left ("lexp", cTypeOf lexp), \_ -> Atom <$> def rexp)]
   where
-    arithOpPrim lcon rcon resultCon@(Con _ [t]) primName primType = do
+    arithOp con = do
       lexp <- toExp x
       rexp <- toExp y
       match
         lexp
-        [ ( Right lcon,
+        [ ( Right con,
             \[lval] ->
               match
                 rexp
-                [ ( Right rcon,
-                    \[rval] ->
-                      match
-                        (PrimCall primName primType [Var lval, Var rval])
-                        [ ( Left ("result", t),
-                            \[result] ->
-                              let_ "ret" (Pack resultCon [Var result]) (PackT [resultCon]) $ pure . Atom . Var
-                          )
-                        ]
+                [ ( Right con,
+                    \[rval] -> runDef $ do
+                      result <- def $ BinOp opr (Var lval) (Var rval)
+                      let_ "ret" (Pack con [result]) (PackT [con]) $ pure . Atom . Var
                   )
                 ]
           )
         ]
-    arithOpPrim _ _ _ _ _ = bug Unreachable
-    compareOpPrim primName = runDef $ do
+    compareOp = do
+      lexp <- toExp x
+      rexp <- toExp y
+      case cTypeOf lexp of
+        PackT (toList -> [con])
+          | con == Con "Int" [IntT] || con == Con "Float" [FloatT] ->
+            match
+              lexp
+              [ ( Right con,
+                  \[lval] ->
+                    match
+                      rexp
+                      [ ( Right con,
+                          \[rval] -> pure (BinOp opr (Var lval) (Var rval))
+                        )
+                      ]
+                )
+              ]
+        _ -> bug Unreachable
+    equalOp = runDef $ do
       lval <- def =<< toExp x
       rval <- def =<< toExp y
-      match
-        (PrimCall primName ([cTypeOf lval, cTypeOf rval] :-> PackT [Con "True" [], Con "False" []]) [lval, rval])
-        [(Left ("cmp", PackT [Con "True" [], Con "False" []]), \[result] -> pure $ Atom $ Var result)]
+      Atom <$> def (BinOp opr lval rval)
 toExp (S.Match _ e cs) = do
   e' <- toExp e
   cs' <- traverse ?? cs $ \(p, v) -> crushPat p $ toExp v
