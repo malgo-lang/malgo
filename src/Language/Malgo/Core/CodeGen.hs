@@ -402,9 +402,9 @@ genObj x (Core.Array a n) = mdo
   pure $ fromList [(x, valueOpr)]
 
 genCon :: Set Con -> Con -> (Int, Type)
-genCon cs con@(Con _ ts) =
-  let idx = Set.findIndex con cs
-   in (idx, StructureType False (map convType ts))
+genCon cs con@(Con _ ts)
+  | con `elem` cs = (Set.findIndex con cs, StructureType False (map convType ts))
+  | otherwise = bug Unreachable
 
 sizeof :: Type -> Operand
 sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64
