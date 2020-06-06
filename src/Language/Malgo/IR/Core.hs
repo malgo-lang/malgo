@@ -162,7 +162,7 @@ instance HasFreeVar Exp where
 instance HasAtom Exp where
   atom f = \case
     Atom x -> Atom <$> f x
-    Call x xs -> Call x <$> traverse f xs
+    Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
     PrimCall p t xs -> PrimCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
