@@ -116,7 +116,7 @@ define external ccc  i32 @main()    {
   %18 = load  i1 (i8*, i64)*, i1 (i8*, i64)** %17 
   %19 = getelementptr  {i1 (i8*, i64)*, i8*}, {i1 (i8*, i64)*, i8*}* %14, i32 0, i32 1 
   %20 = load  i8*, i8** %19 
-  %21 =  call ccc  i1  %18(i8*  %20, i64  34)  
+  %21 =  call ccc  i1  %18(i8*  %20, i64  4)  
   %22 =  call ccc  {}*  @print_bool5(i1  %21)  
   ret i32 0 
 }

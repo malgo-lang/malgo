@@ -122,7 +122,7 @@ define i32 @main() local_unnamed_addr {
   %11 = getelementptr i8, i8* %9, i64 8
   %12 = bitcast i8* %11 to i8**
   store i8* %7, i8** %12, align 8
-  %13 = tail call i1 @odd2(i8* %7, i64 34)
+  %13 = tail call i1 @odd2(i8* %7, i64 4)
   %14 = tail call {}* @print_bool(i1 %13)
   ret i32 0
 }
