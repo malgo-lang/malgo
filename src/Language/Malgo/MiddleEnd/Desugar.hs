@@ -45,6 +45,13 @@ def v = do
 runDef :: Functor f => WriterT (Endo a) f a -> f a
 runDef m = uncurry (flip appEndo) <$> runWriterT m
 
+boolValue :: MonadUniq m => Bool -> m (Exp (Id CType))
+boolValue x =
+  let_ "bool" (if x then Pack trueC [] else Pack falseC []) (PackT [trueC, falseC]) $ pure . Atom . Var
+  where
+    trueC = Con "True" []
+    falseC = Con "False" []
+
 toExp :: (MonadState (IdMap Type (Id CType)) m, MonadUniq m, MonadFail m) => S.Expr (Id Type) -> m (Exp (Id CType))
 toExp (S.Var _ x) =
   Atom . Var <$> findVar x
@@ -56,11 +63,7 @@ toExp (S.Float _ x) =
   let_ "float" (Pack con [Unboxed (Float x)]) (PackT [con]) $ pure . Atom . Var
   where
     con = Con "Float" [FloatT]
-toExp (S.Bool _ x) =
-  let_ "bool" (if x then Pack trueC [] else Pack falseC []) (PackT [trueC, falseC]) $ pure . Atom . Var
-  where
-    trueC = Con "True" []
-    falseC = Con "False" []
+toExp (S.Bool _ x) = boolValue x
 toExp (S.Char _ x) =
   let_ "char" (Pack con [Unboxed $ Char x]) (PackT [con]) $ pure . Atom . Var
   where
@@ -233,7 +236,11 @@ let_ name o otype body = do
   body' <- runDef $ body v
   pure $ Let [(v, o)] body'
 
-match :: MonadUniq f => Exp (Id CType) -> NonEmpty (Either (String, CType) Con, [Id CType] -> WriterT (Endo (Exp (Id CType))) f (Exp (Id CType))) -> f (Exp (Id CType))
+match ::
+  MonadUniq f =>
+  Exp (Id CType) ->
+  NonEmpty (Either (String, CType) Con, [Id CType] -> WriterT (Endo (Exp (Id CType))) f (Exp (Id CType))) ->
+  f (Exp (Id CType))
 match e ps = do
   cs' <- traverse ?? ps $ \case
     (Right con@(Con _ ts), body) -> do
