@@ -14,6 +14,7 @@ import qualified Data.Text as T
 import Data.Vector.Mutable (IOVector)
 import qualified Data.Vector.Mutable as V
 import Language.Malgo.IR.Core
+import Language.Malgo.IR.Op
 import Language.Malgo.Id
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
@@ -124,6 +125,7 @@ evalExp (PrimCall prim _ xs) = do
   prim' <- lookupPrim prim
   xs' <- traverse evalAtom xs
   prim' xs'
+evalExp (BinOp o x y) = evalOp o <$> evalAtom x <*> evalAtom y
 evalExp (ArrayRead a i) = do
   ArrayV vec <- evalAtom a
   UnboxedV (Int idx) <- evalAtom i
@@ -140,6 +142,24 @@ evalExp (Let xs e) = do
 evalExp (Match e cs) = do
   e' <- evalExp e
   evalMatch (cTypeOf e) e' cs
+
+evalOp :: Op -> Value -> Value -> Value
+evalOp Add (UnboxedV (Int x)) (UnboxedV (Int y)) = UnboxedV $ Int $ x + y
+evalOp Sub (UnboxedV (Int x)) (UnboxedV (Int y)) = UnboxedV $ Int $ x - y
+evalOp Mul (UnboxedV (Int x)) (UnboxedV (Int y)) = UnboxedV $ Int $ x * y
+evalOp Div (UnboxedV (Int x)) (UnboxedV (Int y)) = UnboxedV $ Int $ x `div` y
+evalOp Mod (UnboxedV (Int x)) (UnboxedV (Int y)) = UnboxedV $ Int $ x `mod` y
+evalOp FAdd (UnboxedV (Float x)) (UnboxedV (Float y)) = UnboxedV $ Float $ x + y
+evalOp FSub (UnboxedV (Float x)) (UnboxedV (Float y)) = UnboxedV $ Float $ x - y
+evalOp FMul (UnboxedV (Float x)) (UnboxedV (Float y)) = UnboxedV $ Float $ x * y
+evalOp FDiv (UnboxedV (Float x)) (UnboxedV (Float y)) = UnboxedV $ Float $ x / y
+evalOp Eq x y = boolToValue $ compareValue x y == EQ
+evalOp Neq x y = boolToValue $ compareValue x y /= EQ
+evalOp Lt x y = boolToValue $ compareValue x y == LT
+evalOp Le x y = boolToValue $ compareValue x y == LT || compareValue x y == EQ
+evalOp Gt x y = boolToValue $ compareValue x y == GT
+evalOp Ge x y = boolToValue $ compareValue x y == GT || compareValue x y == EQ
+evalOp _ _ _ = bug Unreachable
 
 evalMatch :: CType -> Value -> NonEmpty (Case Name) -> EvalM Value
 evalMatch _ v (Bind x e :| _) = do
