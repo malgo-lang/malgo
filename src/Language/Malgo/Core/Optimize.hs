@@ -24,6 +24,7 @@ data Optimize
 instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
   passName = "optimize"
   isDump = dumpDesugar
+  -- trans e = pure e
   trans e = evalStateT ?? mempty $ optCallInline e >>= lift . trans @Flat >>= optVarBind
 
 type InlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
