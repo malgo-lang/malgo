@@ -69,14 +69,17 @@ llift (Let ds e) = do
         knowns <>= Set.singleton n
         body' <- llift body
         funcs %= Map.insert n (as, body')
+        backup' <- get
         e' <- llift e
         -- (Fun as body')の自由変数がknownsとnを除いてなく、e'の自由変数にnが含まれないならnはknown
         let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
         if null (sans n fvs) && n `notElem` freevars e'
-          then pure Nothing
+          then put backup' >> pure Nothing
           else do
             put backup
-            newFun <- def (n ^. idName) (toList fvs <> as) =<< llift body
+            body' <- llift body
+            let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
+            newFun <- def (n ^. idName) (toList fvs <> as) body'
             pure $ Just (n, Fun as (CallDirect newFun $ map Var $ toList fvs <> as))
       o -> pure $ Just (n, o)
 llift (Match e cs) =
