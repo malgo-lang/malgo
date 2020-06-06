@@ -342,7 +342,7 @@ genObj ::
   Obj (Id CType) ->
   m OprMap
 genObj funName (Fun ps e) = do
-  name <- freshName "closure"
+  name <- toName <$> newId () "closure"
   func <- function name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug Unreachable
     (rawCapture : ps') -> do
