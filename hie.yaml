@@ -1,8 +1,8 @@
 cradle:
-  cabal:
+  stack:
     - path: "./app/Main.hs"
       component: "malgo:exe:malgo"
     - path: "./src"
-      component: "lib:malgo"
+      component: "malgo:lib"
     - path: "./test"
       component: "malgo:malgo-test"
