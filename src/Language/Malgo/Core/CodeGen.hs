@@ -27,7 +27,7 @@ import GHC.Exts (fromList)
 import qualified LLVM.AST
 import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
-import LLVM.AST.FloatingPointPredicate ()
+import qualified LLVM.AST.FloatingPointPredicate as FP
 import qualified LLVM.AST.IntegerPredicate as IP
 import LLVM.AST.Operand (Operand (..))
 import LLVM.AST.Type hiding (double, void)
@@ -35,6 +35,7 @@ import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed ()
 import LLVM.IRBuilder
 import Language.Malgo.IR.Core as Core
+import qualified Language.Malgo.IR.Op as Op
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
@@ -186,6 +187,66 @@ genExp (PrimCall name (ps :-> r) xs) k = do
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
 genExp (PrimCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
+genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
+  where
+    genOp Op.Add = add
+    genOp Op.Sub = sub
+    genOp Op.Mul = mul
+    genOp Op.Div = sdiv
+    genOp Op.Mod = srem
+    genOp Op.FAdd = fadd
+    genOp Op.FSub = fsub
+    genOp Op.FMul = fmul
+    genOp Op.FDiv = fdiv
+    genOp Op.Eq = \x' y' ->
+      i1ToBool =<< case cTypeOf x of
+        IntT -> icmp IP.EQ x' y'
+        CharT -> icmp IP.EQ x' y'
+        StringT -> icmp IP.EQ x' y'
+        PackT _ -> icmp IP.EQ x' y'
+        ArrayT _ -> icmp IP.EQ x' y'
+        FloatT -> fcmp FP.OEQ x' y'
+        _ -> bug Unreachable
+    genOp Op.Neq = \x' y' ->
+      i1ToBool =<< case cTypeOf x of
+        IntT -> icmp IP.NE x' y'
+        FloatT -> fcmp FP.ONE x' y'
+        CharT -> icmp IP.NE x' y'
+        StringT -> icmp IP.NE x' y'
+        PackT _ -> icmp IP.NE x' y'
+        ArrayT _ -> icmp IP.NE x' y'
+        _ -> bug Unreachable
+    genOp Op.Lt = \x' y' ->
+      i1ToBool =<< case cTypeOf x of
+        IntT -> icmp IP.SLT x' y'
+        FloatT -> fcmp FP.OLT x' y'
+        CharT -> icmp IP.ULT x' y'
+        _ -> bug Unreachable
+    genOp Op.Le = \x' y' ->
+      i1ToBool =<< case cTypeOf x of
+        IntT -> icmp IP.SLE x' y'
+        FloatT -> fcmp FP.OLE x' y'
+        CharT -> icmp IP.ULE x' y'
+        _ -> bug Unreachable
+    genOp Op.Gt = \x' y' ->
+      i1ToBool =<< case cTypeOf x of
+        IntT -> icmp IP.SGT x' y'
+        FloatT -> fcmp FP.OGT x' y'
+        CharT -> icmp IP.UGT x' y'
+        _ -> bug Unreachable
+    genOp Op.Ge = \x' y' ->
+      i1ToBool =<< case cTypeOf x of
+        IntT -> icmp IP.SGE x' y'
+        FloatT -> fcmp FP.OGE x' y'
+        CharT -> icmp IP.UGE x' y'
+        _ -> bug Unreachable
+    genOp _ = bug Unreachable
+    i1ToBool i1opr = do
+      boolVal <- mallocType (StructureType False [i64, StructureType False []])
+      tag <- zext i1opr i64
+      tagAddr <- gep boolVal [int32 0, int32 0]
+      store tagAddr 0 tag
+      pure boolVal
 genExp (ArrayRead a i) k = do
   aOpr <- genAtom a
   iOpr <- genAtom i
@@ -307,7 +368,6 @@ genObj funName (Fun ps e) = do
     capType = StructureType False (map (convType . cTypeOf) fvs)
     psTypes = ptr i8 : map (convType . cTypeOf) ps
     retType = convType $ cTypeOf e
--- closType = StructureType False [ptr i8, ptr $ FunctionType retType psTypes False]
 genObj name@(cTypeOf -> PackT cs) (Pack con@(Con _ ts) xs) = do
   addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
   let tag = fromIntegral $ Set.findIndex con cs
@@ -322,7 +382,6 @@ genObj _ Pack {} = bug Unreachable
 genObj x (Core.Array a n) = mdo
   sizeOpr <- mul (sizeof $ convType $ cTypeOf a) =<< genAtom n
   valueOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ cTypeOf a)
-
   -- for (i64 i = 0;
   iPtr <- alloca i64 Nothing 0
   store iPtr 0 (int64 0)
@@ -340,7 +399,6 @@ genObj x (Core.Array a n) = mdo
   store iPtr 0 =<< add iOpr (int64 1)
   br condLabel
   endLabel <- block
-
   pure $ fromList [(x, valueOpr)]
 
 genCon :: Set Con -> Con -> (Int, Type)
