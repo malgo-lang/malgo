@@ -24,6 +24,7 @@ import Language.Malgo.Core.CodeGen
 import Language.Malgo.Core.Eval
 import Language.Malgo.Core.Flat
 import Language.Malgo.Core.LambdaLift
+import Language.Malgo.Core.Lint
 import Language.Malgo.Core.Optimize
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
@@ -87,8 +88,11 @@ interpret = M.runMalgo $ do
       >>= transWithDump @Rename
       >>= transWithDump @Typing
       >>= transWithDump @Desugar
+      >>= trans @LintExp
       >>= transWithDump @Flat
+      >>= trans @LintExp
       >>= transWithDump @Optimize
+      >>= trans @LintExp
       >>= transWithDump @LambdaLift
   liftIO $ runEval $ evalProgram desugared
 
@@ -100,8 +104,11 @@ compileCore = M.runMalgo $ do
       >>= transWithDump @Rename
       >>= transWithDump @Typing
       >>= transWithDump @Desugar
+      >>= trans @LintExp
       >>= transWithDump @Flat
+      >>= trans @LintExp
       >>= transWithDump @Optimize
+      >>= trans @LintExp
       >>= transWithDump @LambdaLift
       >>= trans @CodeGen
   pure $
