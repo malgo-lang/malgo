@@ -41,6 +41,7 @@ module Language.Malgo.Prelude
     foldMapA,
     (<<$>>),
     ordNub,
+    replaceOf,
     bug,
     Unreachable (..),
   )
@@ -128,6 +129,9 @@ ordNub = go Set.empty
     go s (x : xs)
       | x `Set.member` s = go s xs
       | otherwise = x : go (Set.insert x s) xs
+
+replaceOf :: Eq a => ASetter' s a -> a -> a -> s -> s
+replaceOf l x x' = over l (\v -> if v == x then x' else v)
 
 data Bug = Bug SomeException CallStack
   deriving stock (Show)

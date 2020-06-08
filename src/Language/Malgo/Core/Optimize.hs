@@ -28,9 +28,6 @@ instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
 
 type InlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
 
-replaceOf :: Eq a => ASetter' s a -> a -> a -> s -> s
-replaceOf l x x' = over l (\v -> if v == x then x' else v)
-
 optCallInline ::
   MonadState InlineMap f =>
   Exp (Id CType) ->
