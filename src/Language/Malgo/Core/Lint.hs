@@ -40,7 +40,8 @@ match ::
     HasCType b,
     MonadMalgo f,
     Pretty a,
-    Pretty b
+    Pretty b,
+    HasCallStack
   ) =>
   a ->
   b ->
@@ -48,8 +49,8 @@ match ::
 match x y
   | cTypeOf x == cTypeOf y = pure ()
   | otherwise =
-    log Error $ fromString $ render $
-      "\ntype mismatch:"
+    errorDoc $
+      "type mismatch:"
         $$ (pPrint x <> ":" <> pPrint (cTypeOf x))
         $$ (pPrint y <> ":" <> pPrint (cTypeOf y))
 
@@ -75,7 +76,7 @@ lintExp (CallDirect f xs) = do
 lintExp (PrimCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
-lintExp PrimCall {} = log Error "\nprimitive must be a function"
+lintExp PrimCall {} = error "primitive must be a function"
 lintExp (BinOp o x y) = do
   lintAtom x
   lintAtom y
@@ -95,20 +96,20 @@ lintExp (BinOp o x y) = do
     Le -> match x y
     Gt -> match x y
     Ge -> match x y
-    _ -> log Error "\nAnd and Or is not supported"
+    _ -> error "And and Or is not supported"
 lintExp (ArrayRead a i) = do
   lintAtom a
   lintAtom i
   case cTypeOf a of
     ArrayT _ -> match IntT i
-    _ -> log Error $ fromString $ render $ "\n" <> pPrint a <+> "must be a array"
+    _ -> errorDoc $ pPrint a <+> "must be a array"
 lintExp (ArrayWrite a i v) = do
   lintAtom a
   lintAtom i
   lintAtom v
   case cTypeOf a of
     ArrayT t -> match IntT i >> match t v
-    _ -> log Error $ fromString $ render $ "\n" <> pPrint a <+> "must be a array"
+    _ -> errorDoc $ pPrint a <+> "must be a array"
 lintExp (Let ds e) =
   local (map fst ds <>) $ do
     traverse_ (lintObj . snd) ds
