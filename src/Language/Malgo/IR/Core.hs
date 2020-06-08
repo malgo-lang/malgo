@@ -6,6 +6,7 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.IR.Core where
 
@@ -101,9 +102,30 @@ data Exp a
 
 instance HasCType a => HasCType (Exp a) where
   cTypeOf (Atom x) = cTypeOf x
-  cTypeOf (Call f _) = returnType (cTypeOf f)
-  cTypeOf (CallDirect f _) = returnType (cTypeOf f)
-  cTypeOf (PrimCall _ t _) = returnType t
+  cTypeOf (Call f xs) =
+    case cTypeOf f of
+      ps :-> r -> go ps (map cTypeOf xs) r
+      _ -> bug Unreachable
+    where
+      go [] [] v = v
+      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
+      go _ _ _ = bug Unreachable
+  cTypeOf (CallDirect f xs) =
+    case cTypeOf f of
+      ps :-> r -> go ps (map cTypeOf xs) r
+      _ -> bug Unreachable
+    where
+      go [] [] v = v
+      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
+      go _ _ _ = bug Unreachable
+  cTypeOf (PrimCall _ t xs) =
+    case t of
+      ps :-> r -> go ps (map cTypeOf xs) r
+      _ -> bug Unreachable
+    where
+      go [] [] v = v
+      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
+      go _ _ _ = bug Unreachable
   cTypeOf (BinOp o _ _) =
     case o of
       Add -> IntT

@@ -81,7 +81,7 @@ convType (PackT cs) =
   let size = maximum $ sizeofCon <$> toList cs
    in ptr (StructureType False [i64, if size == 0 then StructureType False [] else LT.VectorType size i8])
 convType (ArrayT ty) = ptr $ convType ty
-convType AnyT = ptr i64
+convType VarT {} = ptr i64
 
 sizeofCon :: Num a => Con -> a
 sizeofCon (Con _ ts) = sum $ map sizeofCType ts
@@ -94,7 +94,7 @@ sizeofCType CharT = 1
 sizeofCType StringT = 8
 sizeofCType (PackT _) = 8
 sizeofCType (ArrayT _) = 8
-sizeofCType AnyT = 8
+sizeofCType VarT {} = 8
 
 findVar :: MonadReader OprMap m => Id CType -> m Operand
 findVar x = do

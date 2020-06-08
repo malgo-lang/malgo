@@ -5,6 +5,7 @@
 
 module Language.Malgo.TypeRep.CType where
 
+import Data.Set (fromList)
 import Data.Text (pack, unpack)
 import Language.Malgo.Id
 import Language.Malgo.Prelude
@@ -26,7 +27,7 @@ data CType
   | StringT
   | PackT (Set Con)
   | ArrayT CType
-  | AnyT
+  | VarT Int
   deriving stock (Eq, Show, Ord)
 
 instance Pretty CType where
@@ -37,7 +38,7 @@ instance Pretty CType where
   pPrint StringT = "String#"
   pPrint (PackT ts) = braces $ sep (map pPrint $ toList ts)
   pPrint (ArrayT t) = brackets $ pPrint t
-  pPrint AnyT = "Any"
+  pPrint (VarT i) = pPrint i
 
 {-
 Constructors  C ::= <tag n>
@@ -68,6 +69,16 @@ instance HasCType T.Type where
   cTypeOf (T.TyApp T.TupleC xs) = PackT [Con ("Tuple" <> pack (show $ length xs)) (map cTypeOf xs)]
   cTypeOf (T.TyApp T.ArrayC [x]) = ArrayT (cTypeOf x)
   cTypeOf (T.TyApp _ _) = bug Unreachable
-  cTypeOf (T.TyMeta _) = AnyT
+  cTypeOf (T.TyMeta i) = VarT i
   cTypeOf (ps T.:-> r) = map cTypeOf ps :-> cTypeOf r
-  cTypeOf T.Kind = AnyT
+  cTypeOf T.Kind = VarT (-1)
+
+tyVar :: Applicative f => (CType -> f CType) -> CType -> f CType
+tyVar f (ps :-> r) = (:->) <$> traverse (tyVar f) ps <*> tyVar f r
+tyVar f (PackT cs) = PackT . fromList <$> traverse (tyVar' f) (toList cs)
+tyVar f (ArrayT t) = ArrayT <$> tyVar f t
+tyVar f (VarT x) = f (VarT x)
+tyVar _ t = pure t
+
+tyVar' :: Applicative f => (CType -> f CType) -> Con -> f Con
+tyVar' f (Con tag ts) = Con tag <$> traverse (tyVar f) ts
