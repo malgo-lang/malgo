@@ -51,8 +51,8 @@ match x y
   | otherwise =
     errorDoc $
       "type mismatch:"
-        $$ (pPrint x <> ":" <> pPrint (cTypeOf x))
-        $$ (pPrint y <> ":" <> pPrint (cTypeOf y))
+        $$ pPrint x
+        $$ pPrint y
 
 lintExp ::
   ( MonadReader [Id a] m,
