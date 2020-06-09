@@ -18,6 +18,7 @@ import Text.PrettyPrint.HughesPJ
     sep,
     text,
   )
+import Text.PrettyPrint (punctuate)
 
 data CType
   = [CType] :-> CType
@@ -36,7 +37,7 @@ instance Pretty CType where
   pPrint FloatT = "Float#"
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
-  pPrint (PackT ts) = braces $ sep (map pPrint $ toList ts)
+  pPrint (PackT cs) = braces $ sep (map pPrint $ toList cs)
   pPrint (ArrayT t) = brackets $ pPrint t
   pPrint (VarT i) = pPrint i
 
@@ -49,7 +50,7 @@ data Con = Con Tag [CType]
   deriving stock (Eq, Show, Ord)
 
 instance Pretty Con where
-  pPrint (Con tag xs) = "<" <> text (unpack tag) <+> sep (map pPrint xs) <> ">"
+  pPrint (Con tag xs) = "<" <> text (unpack tag) <+> sep (punctuate "," (map pPrint xs)) <> ">"
 
 class HasCType a where
   cTypeOf :: a -> CType
