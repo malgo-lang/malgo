@@ -3,6 +3,22 @@
 # testcasesがコンパイルできるかチェック
 mkdir ./tmp
 stack build
-ls ./testcases | grep mlg | xargs -I{} sh -c 'echo {} && stack exec malgo -- --core-mode ./testcases/{} -o ./tmp/{}.ll && clang -lgc ./examples/corelib.c ./tmp/{}.ll -o ./tmp/{}.out && ./tmp/{}.out || exit 255' && rm ./tmp/*.ll && rm ./tmp/*.out
 
-ls ./testcases/bug | grep mlg | xargs -I{} sh -c 'echo {} && stack exec malgo -- --core-mode ./testcases/bug/{} -o ./tmp/{}.ll && clang -lgc ./examples/corelib.c ./tmp/{}.ll -o ./tmp/{}.out && ./tmp/{}.out'
+for file in `ls ./testcases | grep mlg`; do
+  echo -e "\n=== $file ==="
+  stack exec malgo -- --core-mode ./testcases/$file -o ./tmp/$file.ll && \
+  clang -lgc ./examples/corelib.c ./tmp/$file.ll -o ./tmp/$file.out && \
+  ./tmp/$file.out && \
+  rm ./tmp/$file.ll && \
+  rm ./tmp/$file.out || `echo 'FAIL!!' && exit 255`
+  echo 'SUCCESS!!'
+done
+
+for file in `ls ./testcases/bug | grep mlg`; do
+  echo -e "\n=== $file ==="
+  stack exec malgo -- --core-mode ./testcases/bug/$file -o ./tmp/$file.ll && \
+  clang -lgc ./examples/corelib.c ./tmp/$file.ll -o ./tmp/$file.out && \
+  ./tmp/$file.out && \
+  rm ./tmp/$file.ll && \
+  rm ./tmp/$file.out || echo "FAIL!!"
+done
