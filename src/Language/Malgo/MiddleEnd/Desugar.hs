@@ -20,6 +20,7 @@ import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
 import Language.Malgo.Prelude
+import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
 import Language.Malgo.TypeRep.Type hiding ((:->))
 
@@ -35,12 +36,24 @@ findVar v = do
   Just v' <- gets (view (at v))
   pure v'
 
-def :: (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) => Exp (Id CType) -> m (Atom (Id CType))
-def (Atom x) = pure x
-def v = do
-  x <- newId (cTypeOf v) "$d"
+def :: (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) => CType -> Exp (Id CType) -> m (Atom (Id CType))
+def ty (Atom a) =
+  if cTypeOf a == ty
+    then pure a
+    else do
+      x <- newId ty "$d"
+      tell $ Endo $ \e -> Match (Atom a) [Bind x e]
+      pure (Var x)
+def ty v = do
+  x <- newId ty "$d"
   tell $ Endo $ \e -> Match v [Bind x e]
   pure (Var x)
+
+def' ::
+  (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) =>
+  Exp (Id CType) ->
+  m (Atom (Id CType))
+def' e = def (cTypeOf e) e
 
 runDef :: Functor f => WriterT (Endo a) f a -> f a
 runDef m = uncurry (flip appEndo) <$> runWriterT m
@@ -73,34 +86,34 @@ toExp (S.String _ x) =
   where
     con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
-  vs <- traverse (def <=< toExp) xs
+  vs <- traverse (def' <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs
   let_ "tuple" (Pack con vs) (PackT [con]) $ pure . Atom . Var
 toExp (S.Array _ (x :| xs)) = runDef $ do
-  x' <- def =<< toExp x
+  x' <- def' =<< toExp x
   let_ "array" (Array x' $ Unboxed (Int $ fromIntegral $ length xs + 1)) (ArrayT $ cTypeOf x') $ \arr -> do
     ifor_ xs $ \i v -> do
-      v' <- def =<< toExp v
-      def (ArrayWrite (Var arr) (Unboxed (Int $ fromIntegral $ i + 1)) v')
+      v' <- def (cTypeOf x') =<< toExp v
+      def' (ArrayWrite (Var arr) (Unboxed (Int $ fromIntegral $ i + 1)) v')
     pure $ Atom $ Var arr
 toExp (S.MakeArray _ a n) = runDef $ do
-  a' <- def =<< toExp a
-  n' <- def =<< toExp n
-  v <- newId (ArrayT (cTypeOf a')) "array"
-  match (Atom n') [(Right $ Con "Int" [IntT], \[n''] -> pure $ Let [(v, Array a' $ Var n'')] $ Atom $ Var v)]
+  a' <- def' =<< toExp a
+  n' <- def' =<< toExp n
+  destruct (Atom n') (Con "Int" [IntT]) $ \[n''] -> let_ "array" (Array a' $ Var n'') (ArrayT (cTypeOf a')) $ pure . Atom . Var
 toExp (S.ArrayRead _ a i) = runDef $ do
-  a' <- def =<< toExp a
-  i' <- def =<< toExp i
-  match (Atom i') [(Right $ Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayRead a' $ Var i''))]
+  a' <- def' =<< toExp a
+  i' <- def' =<< toExp i
+  destruct (Atom i') (Con "Int" [IntT]) $ \[i''] -> Atom <$> def' (ArrayRead a' $ Var i'')
 toExp (S.ArrayWrite _ a i x) = runDef $ do
-  a' <- def =<< toExp a
-  i' <- def =<< toExp i
-  x' <- def =<< toExp x
-  match (Atom i') [(Right $ Con "Int" [IntT], \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x'))]
+  a' <- def' =<< toExp a
+  i' <- def' =<< toExp i
+  x' <- def' =<< toExp x
+  destruct (Atom i') (Con "Int" [IntT]) $ \[i''] -> Atom <$> def' (ArrayWrite a' (Var i'') x')
 toExp (S.Call _ f xs) = runDef $ do
-  f' <- def =<< toExp f
-  xs' <- traverse (def <=< toExp) xs
-  pure $ Call f' xs'
+  f' <- def' =<< toExp f
+  case cTypeOf f' of
+    ps :-> _ -> Call f' <$> zipWithM (\x p -> def p =<< toExp x) xs ps
+    _ -> errorDoc $ pPrint f <+> "is not callable"
 toExp (S.Fn _ ps e) = do
   ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
   e' <- do
@@ -109,10 +122,10 @@ toExp (S.Fn _ ps e) = do
   let_ "fn" (Fun ps' e') (map cTypeOf ps' :-> cTypeOf e') $ pure . Atom . Var
 toExp (S.Seq _ e1 e2) = do
   e1' <- toExp e1
-  match e1' [(Left ("hole", cTypeOf e1'), \_ -> toExp e2)]
+  bind e1' "hole" (cTypeOf e1') $ \_ -> toExp e2
 toExp (S.Let _ (S.ValDec _ a _ v) e) = do
   v' <- toExp v
-  match v' [(Left (a ^. idName, cTypeOf v'), \[vId] -> modify (at a ?~ vId) >> toExp e)]
+  bind v' (a ^. idName) (cTypeOf v') $ \vId -> modify (at a ?~ vId) >> toExp e
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
   case cTypeOf $ prim ^. idMeta of
     ta :-> tb -> do
@@ -136,7 +149,9 @@ toExp (S.Let _ (S.FunDec fs) e) = do
   pure $ Let fs' e'
 toExp (S.If _ c t f) = do
   c' <- toExp c
-  match c' [(Right $ Con "True" [], \_ -> toExp t), (Right $ Con "False" [], \_ -> toExp f)]
+  t' <- Unpack (Con "True" []) [] <$> toExp t
+  f' <- Unpack (Con "False" []) [] <$> toExp f
+  pure $ Match c' (t' :| [f'])
 toExp (S.BinOp _ opr x y) =
   case opr of
     S.Add -> arithOp (Con "Int" [IntT])
@@ -154,55 +169,40 @@ toExp (S.BinOp _ opr x y) =
     S.Gt -> compareOp
     S.Le -> compareOp
     S.Ge -> compareOp
-    S.And -> do
+    S.And -> runDef $ do
       lexp <- toExp x
       rexp <- toExp y
-      match lexp [(Right $ Con "False" [], \_ -> Atom <$> def lexp), (Left ("lexp", cTypeOf lexp), \_ -> Atom <$> def rexp)]
-    S.Or -> do
+      whenFalse <- Unpack (Con "False" []) [] . Atom <$> def' lexp
+      whenTrue <- Bind <$> newId (cTypeOf lexp) "lexp" <*> (Atom <$> def' rexp)
+      pure $ Match lexp (whenFalse :| [whenTrue])
+    S.Or -> runDef $ do
       lexp <- toExp x
       rexp <- toExp y
-      match lexp [(Right $ Con "True" [], \_ -> Atom <$> def lexp), (Left ("lexp", cTypeOf lexp), \_ -> Atom <$> def rexp)]
+      whenTrue <- Unpack (Con "True" []) [] . Atom <$> def' lexp
+      whenFalse <- Bind <$> newId (cTypeOf lexp) "lexp" <*> (Atom <$> def' rexp)
+      pure $ Match lexp (whenTrue :| [whenFalse])
   where
     arithOp con = do
       lexp <- toExp x
       rexp <- toExp y
-      match
-        lexp
-        [ ( Right con,
-            \[lval] ->
-              match
-                rexp
-                [ ( Right con,
-                    \[rval] -> runDef $ do
-                      result <- def $ BinOp opr (Var lval) (Var rval)
-                      let_ "ret" (Pack con [result]) (PackT [con]) $ pure . Atom . Var
-                  )
-                ]
-          )
-        ]
+      destruct lexp con $ \[lval] ->
+        destruct rexp con $ \[rval] -> do
+          result <- def' $ BinOp opr (Var lval) (Var rval)
+          let_ "ret" (Pack con [result]) (PackT [con]) $ pure . Atom . Var
     compareOp = do
       lexp <- toExp x
       rexp <- toExp y
       case cTypeOf lexp of
         PackT (toList -> [con])
           | con == Con "Int" [IntT] || con == Con "Float" [FloatT] ->
-            match
-              lexp
-              [ ( Right con,
-                  \[lval] ->
-                    match
-                      rexp
-                      [ ( Right con,
-                          \[rval] -> pure (BinOp opr (Var lval) (Var rval))
-                        )
-                      ]
-                )
-              ]
+            destruct lexp con $ \[lval] ->
+              destruct rexp con $ \[rval] ->
+                pure $ BinOp opr (Var lval) (Var rval)
         _ -> bug Unreachable
     equalOp = runDef $ do
-      lval <- def =<< toExp x
-      rval <- def =<< toExp y
-      Atom <$> def (BinOp opr lval rval)
+      lval <- def' =<< toExp x
+      rval <- def' =<< toExp y
+      Atom <$> def' (BinOp opr lval rval)
 toExp (S.Match _ e cs) = do
   e' <- toExp e
   cs' <- traverse ?? cs $ \(p, v) -> crushPat p $ toExp v
@@ -236,19 +236,27 @@ let_ name o otype body = do
   body' <- runDef $ body v
   pure $ Let [(v, o)] body'
 
-match ::
-  MonadUniq f =>
+destruct ::
+  MonadUniq m =>
   Exp (Id CType) ->
-  NonEmpty (Either (String, CType) Con, [Id CType] -> WriterT (Endo (Exp (Id CType))) f (Exp (Id CType))) ->
-  f (Exp (Id CType))
-match e ps = do
-  cs' <- traverse ?? ps $ \case
-    (Right con@(Con _ ts), body) -> do
-      vs <- traverse (newId ?? "p") ts
-      body' <- runDef $ body vs
-      pure $ Unpack con vs body'
-    (Left (name, ty), body) -> do
-      x' <- newId ty name
-      body' <- runDef $ body [x']
-      pure $ Bind x' body'
-  pure $ Match e cs'
+  Con ->
+  ( [Id CType] ->
+    WriterT (Endo (Exp (Id CType))) m (Exp (Id CType))
+  ) ->
+  m (Exp (Id CType))
+destruct e con@(Con _ ts) body = do
+  vs <- traverse (newId ?? "$p") ts
+  body' <- runDef $ body vs
+  pure $ Match e (Unpack con vs body' :| [])
+
+bind ::
+  MonadUniq m =>
+  Exp (Id a) ->
+  String ->
+  a ->
+  (Id a -> WriterT (Endo (Exp (Id a))) m (Exp (Id a))) ->
+  m (Exp (Id a))
+bind e name ty body = do
+  x' <- newId ty name
+  body' <- runDef $ body x'
+  pure $ Match e (Bind x' body' :| [])
