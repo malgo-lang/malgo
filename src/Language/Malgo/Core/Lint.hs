@@ -66,13 +66,15 @@ lintExp (Atom x) = lintAtom x
 lintExp (Call f xs) = do
   lintAtom f
   traverse_ lintAtom xs
-  let ps :-> _ = cTypeOf f
-  zipWithM_ match ps xs
+  case cTypeOf f of
+    ps :-> _ -> zipWithM_ match ps xs
+    _ -> errorDoc $ pPrint f <+> "is not callable"
 lintExp (CallDirect f xs) = do
   defined f
   traverse_ lintAtom xs
-  let ps :-> _ = cTypeOf f
-  zipWithM_ match ps xs
+  case cTypeOf f of
+    ps :-> _ -> zipWithM_ match ps xs
+    _ -> errorDoc $ pPrint f <+> "is not callable"
 lintExp (PrimCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
@@ -110,6 +112,8 @@ lintExp (ArrayWrite a i v) = do
   case cTypeOf a of
     ArrayT t -> match IntT i >> match t v
     _ -> errorDoc $ pPrint a <+> "must be a array"
+lintExp (Cast _ x) =
+  lintAtom x
 lintExp (Let ds e) =
   local (map fst ds <>) $ do
     traverse_ (lintObj . snd) ds
