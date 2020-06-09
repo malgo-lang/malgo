@@ -4,6 +4,7 @@
 
 module Main where
 
+import Control.Exception (catch, displayException)
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.IO as TL
@@ -11,15 +12,20 @@ import LLVM.Pretty (ppllvm)
 import Language.Malgo.Driver
 import Language.Malgo.Monad
 import Language.Malgo.Prelude
+import System.Exit (exitFailure)
+import System.IO (hPutStr, stderr)
 
 main :: IO ()
-main = do
-  opt <- parseOpt
-  src <- T.readFile (srcName opt)
-  if isInterpretMode opt
-    then
-      void $ interpret opt src
-    else do
-      ll <- (if isCoreMode opt then compileCore else compile) opt src
-      TL.writeFile (dstName opt) $ "source_filename = " <> TL.pack (show (srcName opt)) <> "\n" <> ppllvm ll
-      
+main =
+  ( do
+      opt <- parseOpt
+      src <- T.readFile (srcName opt)
+      if isInterpretMode opt
+        then void $ interpret opt src
+        else do
+          ll <- (if isCoreMode opt then compileCore else compile) opt src
+          TL.writeFile (dstName opt) $ "source_filename = " <> TL.pack (show (srcName opt)) <> "\n" <> ppllvm ll
+  )
+    `catch` \e -> do
+      hPutStr stderr (displayException (e :: Bug))
+      exitFailure

@@ -42,6 +42,7 @@ module Language.Malgo.Prelude
     (<<$>>),
     ordNub,
     replaceOf,
+    Bug,
     bug,
     Unreachable (..),
   )
