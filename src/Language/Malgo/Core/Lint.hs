@@ -112,7 +112,7 @@ lintExp (ArrayWrite a i v) = do
   case cTypeOf a of
     ArrayT t -> match IntT i >> match t v
     _ -> errorDoc $ pPrint a <+> "must be a array"
--- lintExp (Cast _ x) = lintAtom x
+lintExp (Cast _ x) = lintAtom x
 lintExp (Let ds e) =
   local (map fst ds <>) $ do
     traverse_ (lintObj . snd) ds
