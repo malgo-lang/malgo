@@ -96,7 +96,7 @@ data Exp a
   | BinOp Op (Atom a) (Atom a)
   | ArrayRead (Atom a) (Atom a)
   | ArrayWrite (Atom a) (Atom a) (Atom a)
-  | Cast CType (Atom a)
+  -- | Cast CType (Atom a)
   | Let [(a, Obj a)] (Exp a)
   | Match (Exp a) (NonEmpty (Case a))
   deriving stock (Eq, Show, Functor)
@@ -152,7 +152,7 @@ instance HasCType a => HasCType (Exp a) where
     ArrayT t -> t
     _ -> bug Unreachable
   cTypeOf ArrayWrite {} = PackT [Con "Tuple0" []]
-  cTypeOf (Cast ty _) = ty
+  -- cTypeOf (Cast ty _) = ty
   cTypeOf (Let _ e) = cTypeOf e
   cTypeOf (Match _ (Unpack _ _ e :| _)) = cTypeOf e
   cTypeOf (Match _ (Bind _ e :| _)) = cTypeOf e
@@ -169,7 +169,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
-  pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
+  -- pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) = parens $ "let" <+> parens (vcat (map (\(v, o) -> parens $ pPrint v <+> pPrint o) xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
 
@@ -181,7 +181,7 @@ instance HasFreeVar Exp where
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (ArrayRead a b) = freevars a <> freevars b
   freevars (ArrayWrite a b c) = freevars a <> freevars b <> freevars c
-  freevars (Cast _ x) = freevars x
+  -- freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . view _1) (freevars e <> foldMap (freevars . view _2) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
 
@@ -194,7 +194,7 @@ instance HasAtom Exp where
     BinOp o x y -> BinOp o <$> f x <*> f y
     ArrayRead a b -> ArrayRead <$> f a <*> f b
     ArrayWrite a b c -> ArrayWrite <$> f a <*> f b <*> f c
-    Cast ty x -> Cast ty <$> f x
+    -- Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverse (rtraverse (atom f)) xs <*> atom f e
     Match e cs -> Match <$> atom f e <*> traverse (atom f) cs
 
