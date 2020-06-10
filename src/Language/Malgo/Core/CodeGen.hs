@@ -307,7 +307,9 @@ genUnpack scrutinee cs k = \case
   Unpack con vs e -> do
     label <- block
     let (tag, conType) = genCon cs con
-    payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
+    addr <- bitcast scrutinee (ptr $ StructureType False [i64, conType]) 
+    payloadAddr <- gep addr [int32 0, int32 1]
+    -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
     env <- fmap mconcat $ ifor vs $ \i v -> do
       vOpr <- (load ?? 0) =<< gep payloadAddr [int32 0, int32 $ fromIntegral i]
       pure $ fromList [(v, vOpr)]
@@ -375,7 +377,8 @@ genObj name@(cTypeOf -> PackT cs) (Pack _ con@(Con _ ts) xs) = do
   store tagAddr 0 (int64 tag)
   ifor_ xs $ \i x -> do
     xAddr <- gep addr [int32 0, int32 1, int32 $ fromIntegral i]
-    store xAddr 0 =<< genAtom x
+    xOpr <- genAtom x
+    store xAddr 0 xOpr
   addr' <- bitcast addr (convType $ PackT cs)
   pure $ fromList [(name, addr')]
 genObj _ Pack {} = bug Unreachable
