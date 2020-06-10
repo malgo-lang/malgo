@@ -65,3 +65,17 @@ Unit* newline(Unit* unused) {
   puts("");
   return new_Unit();
 }
+
+typedef struct {
+  int64_t tag;
+  struct {
+    Bool* fst;
+    Bool* snd;
+  } payload;
+} Tuple2Bool;
+
+Unit* print_tuple2bool(Tuple2Bool* x) {
+  print_bool(x->payload.fst);
+  print_bool(x->payload.snd);
+  return new_Unit();
+}
