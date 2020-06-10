@@ -1,6 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -42,13 +41,26 @@ def v = do
   tell $ Endo $ \e -> Match v [Bind x e]
   pure (Var x)
 
+cast ::
+  (MonadUniq f, MonadWriter (Endo (Exp (Id CType))) f) =>
+  CType ->
+  Atom (Id CType) ->
+  f (Atom (Id CType))
+cast ty v
+  | ty == cTypeOf v = pure v
+  | otherwise = do
+    x <- newId ty "$cast"
+    tell $ Endo $ \e -> Match (Cast ty v) [Bind x e]
+    pure (Var x)
+
 runDef :: Functor f => WriterT (Endo a) f a -> f a
 runDef m = uncurry (flip appEndo) <$> runWriterT m
 
 boolValue :: MonadUniq m => Bool -> m (Exp (Id CType))
 boolValue x =
-  let_ "bool" (if x then Pack trueC [] else Pack falseC []) (PackT [trueC, falseC]) $ pure . Atom . Var
+  let_ "bool" (if x then Pack boolType trueC [] else Pack boolType falseC []) (PackT [trueC, falseC]) $ pure . Atom . Var
   where
+    boolType = PackT [trueC, falseC]
     trueC = Con "True" []
     falseC = Con "False" []
 
@@ -56,26 +68,26 @@ toExp :: (MonadState (IdMap Type (Id CType)) m, MonadUniq m, MonadFail m) => S.E
 toExp (S.Var _ x) =
   Atom . Var <$> findVar x
 toExp (S.Int _ x) =
-  let_ "int" (Pack con [Unboxed (Int x)]) (PackT [con]) $ pure . Atom . Var
+  let_ "int" (Pack (PackT [con]) con [Unboxed (Int x)]) (PackT [con]) $ pure . Atom . Var
   where
     con = Con "Int" [IntT]
 toExp (S.Float _ x) =
-  let_ "float" (Pack con [Unboxed (Float x)]) (PackT [con]) $ pure . Atom . Var
+  let_ "float" (Pack (PackT [con]) con [Unboxed (Float x)]) (PackT [con]) $ pure . Atom . Var
   where
     con = Con "Float" [FloatT]
 toExp (S.Bool _ x) = boolValue x
 toExp (S.Char _ x) =
-  let_ "char" (Pack con [Unboxed $ Char x]) (PackT [con]) $ pure . Atom . Var
+  let_ "char" (Pack (PackT [con]) con [Unboxed $ Char x]) (PackT [con]) $ pure . Atom . Var
   where
     con = Con "Char" [CharT]
 toExp (S.String _ x) =
-  let_ "string" (Pack con [Unboxed $ String x]) (PackT [con]) $ pure . Atom . Var
+  let_ "string" (Pack (PackT [con]) con [Unboxed $ String x]) (PackT [con]) $ pure . Atom . Var
   where
     con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (def <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs
-  let_ "tuple" (Pack con vs) (PackT [con]) $ pure . Atom . Var
+  let_ "tuple" (Pack (PackT [con]) con vs) (PackT [con]) $ pure . Atom . Var
 toExp (S.Array _ (x :| xs)) = runDef $ do
   x' <- def =<< toExp x
   let_ "array" (Array x' $ Unboxed (Int $ fromIntegral $ length xs + 1)) (ArrayT $ cTypeOf x') $ \arr -> do
@@ -98,7 +110,9 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
   destruct (Atom i') (Con "Int" [IntT]) $ \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x')
 toExp (S.Call _ f xs) = runDef $ do
   f' <- def =<< toExp f
-  Call f' <$> traverse (def <=< toExp) xs
+  case cTypeOf f' of
+    ps :-> _ -> Call f' <$> zipWithM (\x p -> cast p =<< def =<< toExp x) xs ps
+    _ -> bug Unreachable
 toExp (S.Fn _ ps e) = do
   ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
   e' <- do
@@ -108,9 +122,9 @@ toExp (S.Fn _ ps e) = do
 toExp (S.Seq _ e1 e2) = do
   e1' <- toExp e1
   bind e1' "hole" (cTypeOf e1') $ \_ -> toExp e2
-toExp (S.Let _ (S.ValDec _ a _ v) e) = do
-  v' <- toExp v
-  bind v' (a ^. idName) (cTypeOf v') $ \vId -> modify (at a ?~ vId) >> toExp e
+toExp (S.Let _ (S.ValDec _ a _ v) e) = runDef $ do
+  v' <- cast (cTypeOf a) =<< def =<< toExp v
+  bind (Atom v') (a ^. idName) (cTypeOf a) $ \vId -> modify (at a ?~ vId) >> toExp e
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
   case cTypeOf $ prim ^. idMeta of
     ta :-> tb -> do
@@ -123,11 +137,11 @@ toExp (S.Let _ (S.FunDec fs) e) = do
   traverse_ ?? fs $ \(_, f, _, _, _) -> do
     f' <- newId (cTypeOf f) (f ^. idName)
     modify (at f ?~ f')
-  fs' <- traverse ?? fs $ \(_, f, ps, _, body) -> do
+  fs' <- traverse ?? fs $ \(_, f@(cTypeOf -> _ :-> r), ps, _, body) -> do
     ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
     body' <- do
       zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
-      toExp body
+      runDef $ Atom <$> (cast r =<< def =<< toExp body)
     f' <- findVar f
     pure (f', Fun ps' body')
   e' <- toExp e
@@ -173,7 +187,7 @@ toExp (S.BinOp _ opr x y) =
       destruct lexp con $ \[lval] ->
         destruct rexp con $ \[rval] -> do
           result <- def $ BinOp opr (Var lval) (Var rval)
-          let_ "ret" (Pack con [result]) (PackT [con]) $ pure . Atom . Var
+          let_ "ret" (Pack (PackT [con]) con [result]) (PackT [con]) $ pure . Atom . Var
     compareOp = do
       lexp <- toExp x
       rexp <- toExp y

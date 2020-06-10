@@ -131,7 +131,7 @@ lintObj ::
   m ()
 lintObj (Fun params body) =
   local (params <>) $ lintExp body
-lintObj (Pack _ xs) = traverse_ lintAtom xs
+lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Array a n) = lintAtom a >> lintAtom n >> match IntT n
 
 lintCase ::

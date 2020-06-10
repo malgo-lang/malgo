@@ -10,7 +10,7 @@ for file in `ls ./testcases | grep mlg`; do
   clang -lgc ./examples/lib.c ./tmp/$file.ll -o ./tmp/$file.out && \
   ./tmp/$file.out && \
   rm ./tmp/$file.ll && \
-  rm ./tmp/$file.out || `echo "FAIL!!" && exit 255`
+  rm ./tmp/$file.out || exit 255
   echo 'SUCCESS!!'
 done
 

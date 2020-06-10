@@ -215,6 +215,10 @@ instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
   freevars (Bind x e) = sans x $ freevars e
 
+instance HasCType a => HasCType (Case a) where
+  cTypeOf (Unpack _ _ e) = cTypeOf e
+  cTypeOf (Bind _ e) = cTypeOf e
+
 instance HasAtom Case where
   atom f = \case
     Unpack con xs e -> Unpack con xs <$> atom f e
@@ -228,24 +232,29 @@ Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
 -}
 data Obj a
   = Fun [a] (Exp a)
-  | Pack Con [Atom a]
+  | Pack CType Con [Atom a]
   | Array (Atom a) (Atom a)
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack c xs) = parens $ sep $ ["pack", pPrint c] <> map pPrint xs
+  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) <+> ":" <+> pPrint ty
   pPrint (Array a n) = parens $ sep ["array", pPrint a, pPrint n]
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
-  freevars (Pack _ xs) = foldMap freevars xs
+  freevars (Pack _ _ xs) = foldMap freevars xs
   freevars (Array a n) = freevars a <> freevars n
+
+instance HasCType a => HasCType (Obj a) where
+  cTypeOf (Fun xs e) = map cTypeOf xs :-> cTypeOf e
+  cTypeOf (Pack t _ _) = t
+  cTypeOf (Array a _) = ArrayT $ cTypeOf a
 
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> atom f e
-    Pack con xs -> Pack con <$> traverse (atom f) xs
+    Pack ty con xs -> Pack ty con <$> traverse (atom f) xs
     Array a n -> Array <$> atom f a <*> atom f n
 
 {-

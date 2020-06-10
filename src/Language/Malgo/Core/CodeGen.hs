@@ -368,7 +368,7 @@ genObj funName (Fun ps e) = do
     capType = StructureType False (map (convType . cTypeOf) fvs)
     psTypes = ptr i8 : map (convType . cTypeOf) ps
     retType = convType $ cTypeOf e
-genObj name@(cTypeOf -> PackT cs) (Pack con@(Con _ ts) xs) = do
+genObj name@(cTypeOf -> PackT cs) (Pack _ con@(Con _ ts) xs) = do
   addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
   let tag = fromIntegral $ Set.findIndex con cs
   tagAddr <- gep addr [int32 0, int32 0]

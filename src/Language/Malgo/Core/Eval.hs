@@ -75,7 +75,7 @@ loadDef x (Fun ps e) = do
     e' <- evalExp e
     put env
     pure e'
-loadDef x (Pack con xs) =
+loadDef x (Pack _ con xs) =
   case cTypeOf x of
     PackT union -> do
       let tag = Set.findIndex con union
