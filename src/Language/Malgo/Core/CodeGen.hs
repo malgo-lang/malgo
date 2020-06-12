@@ -42,6 +42,7 @@ import Language.Malgo.Pass
 import Language.Malgo.Prelude hiding (from, index, op, to)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as CType
+import Text.PrettyPrint (($$), nest)
 
 data CodeGen
 
@@ -284,6 +285,8 @@ genExp (Match e cs) k = genExp e $ \eOpr ->
     _ -> case cs of
       (Bind x body :| _) -> local (at x ?~ eOpr) $ genExp body k
       _ -> bug Unreachable
+genExp (Cast ty x) _ =
+  errorDoc $ "cast is not implemented:" $$ nest 1 ("cast" <+> pPrint x $$ "to" <+> pPrint ty)
 
 genUnpack ::
   ( MonadReader OprMap m,
