@@ -68,6 +68,8 @@ instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
         -- traverse_ loadDef topBinds
         genExp mainExp $ \_ -> ret (int32 0)
 
+-- TODO: 変数のMapとknown関数のMapを分割する
+-- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 type OprMap = IdMap CType Operand
 
 type PrimMap = Map Text Operand
