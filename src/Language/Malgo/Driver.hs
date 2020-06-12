@@ -64,8 +64,9 @@ parseOpt =
             <*> switch (long "dump-lambdalift")
             <*> switch (long "interpret")
             <*> switch (long "debug-mode")
+            <*> switch (long "core-mode")
         )
-          <*> switch (long "core-mode")
+          <*> switch (long "no-opt")
           <**> helper
       )
       (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
@@ -107,8 +108,7 @@ compileCore = M.runMalgo $ do
       >>= trans @LintExp
       >>= transWithDump @Flat
       >>= trans @LintExp
-      >>= transWithDump @Optimize
-      >>= trans @LintExp
+      >>= (if noOptimize opt then pure else transWithDump @Optimize >=> trans @LintExp)
       >>= transWithDump @LambdaLift
       >>= trans @CodeGen
   pure $

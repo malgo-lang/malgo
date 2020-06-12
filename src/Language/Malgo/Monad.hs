@@ -58,7 +58,8 @@ data Opt
         dumpLambdaLift :: Bool,
         isInterpretMode :: Bool,
         isDebugMode :: Bool,
-        isCoreMode :: Bool
+        isCoreMode :: Bool,
+        noOptimize :: Bool
       }
   deriving stock (Eq, Show)
 
