@@ -71,9 +71,10 @@ llift (Let ds e) = do
         funcs %= Map.insert n (as, body')
         backup' <- get
         e' <- llift e
-        -- (Fun as body')の自由変数がknownsとnを除いてなく、e'の自由変数にnが含まれないならnはknown
+        -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
+        -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
         let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
-        if null (sans n fvs) && n `notElem` freevars e'
+        if null fvs && n `notElem` freevars e'
           then put backup' >> pure Nothing
           else do
             put backup

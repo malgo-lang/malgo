@@ -170,7 +170,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
-  pPrint (Let xs e) = parens $ "let" <+> parens (vcat (map (\(v, o) -> parens $ pPrint v <+> pPrint o) xs)) $$ pPrint e
+  pPrint (Let xs e) = parens $ "let" $$ parens (vcat (map (\(v, o) -> parens $ pPrint v $$ pPrint o) xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
 
 instance HasFreeVar Exp where
