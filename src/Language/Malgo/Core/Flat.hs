@@ -1,3 +1,4 @@
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -20,7 +21,7 @@ data Flat
 
 instance Pass Flat (Exp (Id CType)) (Exp (Id CType)) where
   passName = "flat"
-  isDump = dumpDesugar
+  isDump = dumpFlat
   trans e = uncurry (flip appEndo) <$> runWriterT (flatExp e)
 
 flatExp :: Monad m => Exp a -> WriterT (Endo (Exp a)) m (Exp a)

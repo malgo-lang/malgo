@@ -28,6 +28,7 @@ import Language.Malgo.Core.Lint
 import Language.Malgo.Core.Optimize
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
+import Language.Malgo.IR.Core (appProgram)
 import Language.Malgo.IR.Syntax
 import qualified Language.Malgo.Lexer as Lexer
 import Language.Malgo.MiddleEnd.Desugar
@@ -62,6 +63,7 @@ parseOpt =
             <*> switch (long "dump-lir")
             <*> switch (long "dump-desugar")
             <*> switch (long "dump-lambdalift")
+            <*> switch (long "dump-flat")
             <*> switch (long "interpret")
             <*> switch (long "debug-mode")
             <*> switch (long "core-mode")
@@ -108,8 +110,9 @@ compileCore = M.runMalgo $ do
       >>= trans @LintExp
       >>= transWithDump @Flat
       >>= trans @LintExp
-      >>= (if noOptimize opt then pure else transWithDump @Optimize >=> trans @LintExp)
+      >>= (if noOptimize opt then pure else transWithDump @Optimize >=> transWithDump @Flat >=> trans @LintExp)
       >>= transWithDump @LambdaLift
+      >>= appProgram (trans @Flat)
       >>= trans @CodeGen
   pure $
     L.defaultModule

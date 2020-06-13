@@ -56,6 +56,7 @@ data Opt
         dumpLIR :: Bool,
         dumpDesugar :: Bool,
         dumpLambdaLift :: Bool,
+        dumpFlat :: Bool,
         isInterpretMode :: Bool,
         isDebugMode :: Bool,
         isCoreMode :: Bool,
