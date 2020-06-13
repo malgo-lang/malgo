@@ -19,8 +19,10 @@ import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
 import Language.Malgo.Prelude
+import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
 import Language.Malgo.TypeRep.Type hiding ((:->))
+import Text.PrettyPrint (($$))
 
 data Desugar
 
@@ -198,10 +200,37 @@ toExp (S.BinOp _ opr x y) =
               destruct rexp con $ \[rval] ->
                 pure $ BinOp opr (Var lval) (Var rval)
         _ -> bug Unreachable
-    equalOp = runDef $ do
-      lval <- def =<< toExp x
-      rval <- def =<< toExp y
-      Atom <$> def (BinOp opr lval rval)
+    equalOp = do
+      lexp <- toExp x
+      rexp <- toExp y
+      case cTypeOf lexp of
+        PackT [Con "Int" [IntT]] ->
+          destruct lexp (Con "Int" [IntT]) $ \[lval] ->
+            destruct rexp (Con "Int" [IntT]) $ \[rval] ->
+              pure $ BinOp opr (Var lval) (Var rval)
+        PackT [Con "Float" [FloatT]] ->
+          destruct lexp (Con "Float" [FloatT]) $ \[lval] ->
+            destruct rexp (Con "Float" [FloatT]) $ \[rval] ->
+              pure $ BinOp opr (Var lval) (Var rval)
+        PackT [Con "Char" [CharT]] ->
+          destruct lexp (Con "Char" [CharT]) $ \[lval] ->
+            destruct rexp (Con "Char" [CharT]) $ \[rval] ->
+              pure $ BinOp opr (Var lval) (Var rval)
+        PackT [Con "False" [], Con "True" []] -> runDef $ do
+          lval <- def lexp
+          rval <- def rexp
+          -- lval == rval
+          -- -> if lval then (if rval then true else false) else (if rval then false else true)
+          -- -> if lval then rval else (if rval then false else true)
+          -- -> if lval then rval else (if rval then lval else true)
+          let whenTrue = Unpack (Con "True" []) [] (Atom rval)
+          whenFalse <- do
+            lvalHole <- newId (cTypeOf lval) "lval"
+            rvalHole <- newId (cTypeOf rval) "rval"
+            whenFalse' <- boolValue True
+            pure $ Bind lvalHole $ Match (Atom rval) (Unpack (Con "True" []) [] (Atom lval) :| [Bind rvalHole whenFalse'])
+          pure $ Match (Atom lval) (whenTrue :| [whenFalse])
+        _ -> errorDoc $ "not implemented:" <+> pPrint opr $$ pPrint lexp $$ pPrint rexp
 toExp (S.Match _ e cs) = do
   e' <- toExp e
   cs' <- traverse ?? cs $ \(p, v) -> crushPat p $ toExp v
