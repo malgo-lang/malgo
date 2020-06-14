@@ -1,8 +1,5 @@
 let fun id(x) = x in
 let fun addOne(x) = x + 1 in
 let val funRef = array(addOne, 1) in
-let val f = fn (x) => fn (y) => {x, array(y, 1)} in
-let val v = id(id) in
-let val g = f(1) in
 let extern print_int : Int -> {} = "print_int" in
 funRef.(0) <- id; print_int(funRef.(0)(1))

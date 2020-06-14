@@ -1,0 +1,7 @@
+let val cells = [true, true, true]
+    fun sub(xs, i) = xs.(i)
+    fun view(cells: [Bool], x: Int): Bool =
+      if x < 0
+      then false
+      else sub(cells, x) in
+view(cells, 0)
