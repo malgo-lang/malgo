@@ -287,8 +287,9 @@ genExp (Match e cs) k = genExp e $ \eOpr ->
     _ -> case cs of
       (Bind x body :| _) -> local (at x ?~ eOpr) $ genExp body k
       _ -> bug Unreachable
-genExp (Cast ty x) _ =
-  errorDoc $ "cast is not implemented:" $$ nest 1 ("cast" <+> pPrint x $$ "to" <+> pPrint ty)
+genExp (Cast ty x) k = do
+  xOpr <- genAtom x
+  k =<< bitcast xOpr (convType ty)
 
 genUnpack ::
   ( MonadReader OprMap m,
