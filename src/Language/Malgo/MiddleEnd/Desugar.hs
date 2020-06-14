@@ -108,8 +108,11 @@ toExp (S.ArrayRead _ a i) = runDef $ do
 toExp (S.ArrayWrite _ a i x) = runDef $ do
   a' <- def =<< toExp a
   i' <- def =<< toExp i
-  x' <- def =<< toExp x
-  destruct (Atom i') (Con "Int" [IntT]) $ \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x')
+  case cTypeOf a' of
+    ArrayT ty -> do
+      x' <- cast ty =<< def =<< toExp x
+      destruct (Atom i') (Con "Int" [IntT]) $ \[i''] -> Atom <$> def (ArrayWrite a' (Var i'') x')
+    _ -> bug Unreachable
 toExp (S.Call _ f xs) = runDef $ do
   f' <- def =<< toExp f
   case cTypeOf f' of
