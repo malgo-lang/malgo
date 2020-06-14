@@ -42,7 +42,6 @@ import Language.Malgo.Pass
 import Language.Malgo.Prelude hiding (from, index, op, to)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as CType
-import Text.PrettyPrint (($$), nest)
 
 data CodeGen
 
@@ -84,7 +83,7 @@ convType (PackT cs) =
   let size = maximum $ sizeofCon <$> toList cs
    in ptr (StructureType False [i64, if size == 0 then StructureType False [] else LT.VectorType size i8])
 convType (ArrayT ty) = ptr $ convType ty
-convType VarT {} = ptr i64
+convType VarT {} = ptr i8
 
 sizeofCon :: Num a => Con -> a
 sizeofCon (Con _ ts) = sum $ map sizeofCType ts
@@ -270,7 +269,10 @@ genExp (Let xs e) k = do
       opr <- mallocType (StructureType False [ptr i8, ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False])
       pure [(name, opr)]
     prepare _ = pure []
-genExp (Match e cs) k = genExp e $ \eOpr ->
+genExp (Match e cs) k = genExp e $ \eOpr -> do
+  -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
+  -- TODO: genExpが正しい型の値を継続に渡すように変更する
+  eOpr <- bitcast eOpr (convType $ cTypeOf e)
   case cTypeOf e of
     PackT union -> mdo
       br switchBlock
