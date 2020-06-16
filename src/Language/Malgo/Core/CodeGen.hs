@@ -62,9 +62,11 @@ instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
               (f, ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f))
     runReaderT ?? (funcEnv :: OprMap) $ Lazy.evalStateT ?? (mempty :: PrimMap) $ do
       traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
-      void $ function "main" [] LT.i32 $ \_ ->
+      void $ function "main" [] LT.i32 $ \_ -> do
         -- -- topBindsを初期化
         -- traverse_ loadDef topBinds
+        gcInit <- findExt "GC_init" [] LT.void
+        void $ call gcInit []
         genExp mainExp $ \_ -> ret (int32 0)
 
 -- TODO: 変数のMapとknown関数のMapを分割する
