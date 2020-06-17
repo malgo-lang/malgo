@@ -12,6 +12,7 @@
 
 module Language.Malgo.Core.CodeGen
   ( CodeGen,
+    CodeGenExp,
   )
 where
 
@@ -45,6 +46,8 @@ import Language.Malgo.TypeRep.CType as CType
 
 data CodeGen
 
+data CodeGenExp
+
 instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
   passName = "GenLLVM"
   isDump _ = False
@@ -68,6 +71,21 @@ instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
         gcInit <- findExt "GC_init" [] LT.void
         void $ call gcInit []
         genExp mainExp $ \_ -> ret (int32 0)
+
+instance Pass CodeGenExp (Exp (Id CType)) [LLVM.AST.Definition] where
+  passName = "CodeGenExp"
+  isDump _ = False
+  trans e = execModuleBuilderT emptyModuleBuilder
+    $ runReaderT ?? mempty
+    $ Lazy.evalStateT ?? mempty
+    $ void
+    $ function "main" [] LT.i32
+    $ \_ -> do
+      -- -- topBindsを初期化
+      -- traverse_ loadDef topBinds
+      gcInit <- findExt "GC_init" [] LT.void
+      void $ call gcInit []
+      genExp e $ \_ -> ret (int32 0)
 
 -- TODO: 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -317,7 +335,7 @@ genUnpack scrutinee cs k = \case
   Unpack con vs e -> do
     label <- block
     let (tag, conType) = genCon cs con
-    addr <- bitcast scrutinee (ptr $ StructureType False [i64, conType]) 
+    addr <- bitcast scrutinee (ptr $ StructureType False [i64, conType])
     payloadAddr <- gep addr [int32 0, int32 1]
     -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
     env <- fmap mconcat $ ifor vs $ \i v -> do
@@ -354,7 +372,7 @@ genObj ::
   Obj (Id CType) ->
   m OprMap
 genObj funName (Fun ps e) = do
-  name <- toName <$> newId () "closure"
+  name <- toName <$> newId () (funName ^. idName <> "_closure")
   func <- function name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug Unreachable
     (rawCapture : ps') -> do

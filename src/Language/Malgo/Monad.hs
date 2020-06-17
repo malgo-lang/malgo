@@ -60,6 +60,7 @@ data Opt
         isInterpretMode :: Bool,
         isDebugMode :: Bool,
         isCoreMode :: Bool,
+        applyLambdaLift :: Bool,
         noOptimize :: Bool
       }
   deriving stock (Eq, Show)

@@ -67,6 +67,7 @@ parseOpt =
             <*> switch (long "interpret")
             <*> switch (long "debug-mode")
             <*> switch (long "core-mode")
+            <*> flag True False (long "no-lambdalift")
         )
           <*> switch (long "no-opt")
           <**> helper
@@ -111,9 +112,10 @@ compileCore = M.runMalgo $ do
       >>= transWithDump @Flat
       >>= trans @LintExp
       >>= (if noOptimize opt then pure else transWithDump @Optimize >=> transWithDump @Flat >=> trans @LintExp)
-      >>= transWithDump @LambdaLift
-      >>= appProgram (trans @Flat)
-      >>= trans @CodeGen
+      >>= ( if applyLambdaLift opt
+              then transWithDump @LambdaLift >=> appProgram (trans @Flat) >=> trans @CodeGen
+              else trans @CodeGenExp
+          )
   pure $
     L.defaultModule
       { L.moduleName = fromString $ srcName opt,
