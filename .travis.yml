@@ -25,14 +25,17 @@ matrix:
   - ghc: 8.8.2
     env: STACK_YAML="$TRAVIS_BUILD_DIR/stack.yaml"
 
-before_install:
-  - echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main" | sudo tee -a /etc/apt/sources.list
-  - echo "deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main" | sudo tee -a /etc/apt/sources.list
+# before_install:
+  # - echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main" | sudo tee -a /etc/apt/sources.list
+  # - echo "deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main" | sudo tee -a /etc/apt/sources.list
   # - sudo apt-get update
   # - sudo apt-get -y install libgc-dev llvm-9-dev --allow-unauthenticated
 
 addons:
   apt:
+    sources:
+      - sourceline: deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main
+      - sourceline: deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main
     update: true
     packages:
       - libgc-dev
