@@ -6,7 +6,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
@@ -22,6 +21,7 @@ import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import Data.Char (ord)
 import Data.Either (partitionEithers)
+import qualified Data.IntMap as IntMap
 import Data.Map ()
 import qualified Data.Set as Set
 import qualified Data.Text as T
@@ -52,32 +52,61 @@ data CodeGenExp
 instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
   passName = "GenLLVM"
   isDump _ = False
-  trans Program {topBinds = _, mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
-    -- -- topBindsとtopFuncsのOprMapを作成
-    -- bindEnv <-
-    --   fmap fromList
-    --     $ traverse ?? topBinds
-    --     $ \(x, _) ->
-    --       (x,) <$> global (toName x) (convType $ cTypeOf x) (C.Undef (convType $ cTypeOf x))
+  trans Program {topBinds, mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
+    -- topBindsとtopFuncsのOprMapを作成
+    bindEnv <-
+      fmap fromList
+        $ traverse ?? topBinds
+        $ \(x, _) -> do
+          emitDefn $ LLVM.AST.GlobalDefinition LLVM.AST.globalVariableDefaults
+          pure (x, ConstantOperand $ C.GlobalReference (ptr (convType $ cTypeOf x)) (toName x))
     let funcEnv =
           fromList
             $ map ?? topFuncs
             $ \(f, (ps, e)) ->
               (f, ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f))
-    runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv}) $ Lazy.evalStateT ?? (mempty :: PrimMap) $ do
+    runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv, _globalMap = bindEnv}) $ Lazy.evalStateT ?? (mempty :: PrimMap) $ do
       traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
       void $ function "main" [] LT.i32 $ \_ -> do
-        -- -- topBindsを初期化
-        -- traverse_ loadDef topBinds
+        -- topBindsを初期化
+        loadTopBinds topBinds
         gcInit <- findExt "GC_init" [] LT.void
         void $ call gcInit []
         genExp mainExp $ \_ -> ret (int32 0)
+
+loadTopBinds ::
+  ( MonadState PrimMap m,
+    MonadModuleBuilder m,
+    MonadIRBuilder m,
+    MonadReader OprMap m,
+    MonadUniq m,
+    MonadFail m,
+    MonadFix m
+  ) =>
+  [(Id CType, Obj (Id CType))] ->
+  m ()
+loadTopBinds xs = do
+  traverse_ prepare xs
+  env <- mconcat <$> traverse (uncurry genObj) xs
+  OprMap {_globalMap} <- ask
+  for_ (IntMap.toAscList $ unwrapIdMap env) $ \(i, opr) ->
+    case unwrapIdMap _globalMap ^? ix i of
+      Just globalAddr -> store globalAddr 0 opr
+      Nothing -> bug Unreachable
+  where
+    prepare (name, Fun ps body) = do
+      opr <- mallocType (StructureType False [ptr i8, ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False])
+      OprMap {_globalMap} <- ask
+      case _globalMap ^. at name of
+        Just globalAddr -> store globalAddr 0 opr
+        Nothing -> error $ show $ pPrint name <> " is not found"
+    prepare _ = pure ()
 
 instance Pass CodeGenExp (Exp (Id CType)) [LLVM.AST.Definition] where
   passName = "CodeGenExp"
   isDump _ = False
   trans e = execModuleBuilderT emptyModuleBuilder
-    $ runReaderT ?? OprMap mempty mempty
+    $ runReaderT ?? OprMap mempty mempty mempty
     $ Lazy.evalStateT ?? mempty
     $ void
     $ function "main" [] LT.i32
@@ -93,7 +122,8 @@ instance Pass CodeGenExp (Exp (Id CType)) [LLVM.AST.Definition] where
 data OprMap
   = OprMap
       { _valueMap :: IdMap CType Operand,
-        _funcMap :: IdMap CType Operand
+        _funcMap :: IdMap CType Operand,
+        _globalMap :: IdMap CType Operand
       }
 
 valueMap :: Lens' OprMap (IdMap CType Operand)
@@ -129,12 +159,14 @@ sizeofCType (PackT _) = 8
 sizeofCType (ArrayT _) = 8
 sizeofCType VarT {} = 8
 
-findVar :: MonadReader OprMap m => Id CType -> m Operand
+findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id CType -> m Operand
 findVar x = do
-  OprMap {_valueMap = valueMap} <- ask
+  OprMap {_valueMap = valueMap, _globalMap = globalMap} <- ask
   case valueMap ^. at x of
     Just x' -> pure x'
-    Nothing -> error $ show $ pPrint x <> " is not found"
+    Nothing -> case globalMap ^. at x of
+      Just globalX -> load globalX 0
+      Nothing -> error $ show $ pPrint x <> " is not found"
 
 findFun :: MonadReader OprMap m => Id CType -> m Operand
 findFun x = do
@@ -365,7 +397,8 @@ genUnpack scrutinee cs k = \case
 genAtom ::
   ( MonadReader OprMap m,
     MonadUniq m,
-    MonadModuleBuilder m
+    MonadModuleBuilder m,
+    MonadIRBuilder m
   ) =>
   Atom (Id CType) ->
   m Operand
