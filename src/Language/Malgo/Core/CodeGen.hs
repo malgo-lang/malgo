@@ -231,6 +231,7 @@ genFunc name params body = function funcName llvmParams retty $ \args ->
     llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ fromString $ x ^. idName)) params
     retty = convType (cTypeOf body)
 
+-- genUnpackでコード生成しつつラベルを返すため、CPSにしている
 genExp ::
   ( MonadReader OprMap m,
     MonadUniq m,
