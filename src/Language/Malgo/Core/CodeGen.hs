@@ -6,6 +6,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
@@ -63,7 +64,7 @@ instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
             $ map ?? topFuncs
             $ \(f, (ps, e)) ->
               (f, ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f))
-    runReaderT ?? (funcEnv :: OprMap) $ Lazy.evalStateT ?? (mempty :: PrimMap) $ do
+    runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv}) $ Lazy.evalStateT ?? (mempty :: PrimMap) $ do
       traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
       void $ function "main" [] LT.i32 $ \_ -> do
         -- -- topBindsを初期化
@@ -76,7 +77,7 @@ instance Pass CodeGenExp (Exp (Id CType)) [LLVM.AST.Definition] where
   passName = "CodeGenExp"
   isDump _ = False
   trans e = execModuleBuilderT emptyModuleBuilder
-    $ runReaderT ?? mempty
+    $ runReaderT ?? OprMap mempty mempty
     $ Lazy.evalStateT ?? mempty
     $ void
     $ function "main" [] LT.i32
@@ -87,9 +88,19 @@ instance Pass CodeGenExp (Exp (Id CType)) [LLVM.AST.Definition] where
       void $ call gcInit []
       genExp e $ \_ -> ret (int32 0)
 
--- TODO: 変数のMapとknown関数のMapを分割する
+-- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
-type OprMap = IdMap CType Operand
+data OprMap
+  = OprMap
+      { _valueMap :: IdMap CType Operand,
+        _funcMap :: IdMap CType Operand
+      }
+
+valueMap :: Lens' OprMap (IdMap CType Operand)
+valueMap = lens _valueMap (\s a -> s {_valueMap = a})
+
+-- funcMap :: Lens' OprMap (IdMap CType Operand)
+-- funcMap = lens _funcMap (\s a -> s {_funcMap = a})
 
 type PrimMap = Map Text Operand
 
@@ -120,8 +131,15 @@ sizeofCType VarT {} = 8
 
 findVar :: MonadReader OprMap m => Id CType -> m Operand
 findVar x = do
-  env <- ask
-  case env ^. at x of
+  OprMap {_valueMap = valueMap} <- ask
+  case valueMap ^. at x of
+    Just x' -> pure x'
+    Nothing -> error $ show $ pPrint x <> " is not found"
+
+findFun :: MonadReader OprMap m => Id CType -> m Operand
+findFun x = do
+  OprMap {_funcMap = funcMap} <- ask
+  case funcMap ^. at x of
     Just x' -> pure x'
     Nothing -> error $ show $ pPrint x <> " is not found"
 
@@ -175,7 +193,7 @@ genFunc ::
   Exp (Id CType) ->
   m Operand
 genFunc name params body = function funcName llvmParams retty $ \args ->
-  local (fromList (zip params args) <>) $ genExp body ret
+  local (over valueMap (fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
     llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ fromString $ x ^. idName)) params
@@ -201,7 +219,7 @@ genExp (Call f xs) k = do
   funcOpr <- (load ?? 0) =<< gep fOpr [int32 0, int32 1]
   k =<< call funcOpr (map (,[]) $ captureOpr : xsOprs)
 genExp (CallDirect f xs) k = do
-  fOpr <- findVar f
+  fOpr <- findFun f
   xsOprs <- traverse genAtom xs
   k =<< call fOpr (map (,[]) xsOprs)
 genExp (PrimCall name (ps :-> r) xs) k = do
@@ -282,8 +300,8 @@ genExp (ArrayWrite a i v) k = do
   k (ConstantOperand (Undef (ptr $ StructureType False [i64, StructureType False []])))
 genExp (Let xs e) k = do
   env <- fromList . mconcat <$> traverse prepare xs
-  env' <- local (env <>) $ mconcat <$> traverse (uncurry genObj) xs
-  local (env' <>) $ genExp e k
+  env' <- local (over valueMap (env <>)) $ mconcat <$> traverse (uncurry genObj) xs
+  local (over valueMap (env' <>)) $ genExp e k
   where
     prepare (name, Fun ps body) = do
       opr <- mallocType (StructureType False [ptr i8, ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False])
@@ -307,7 +325,7 @@ genExp (Match e cs) k = genExp e $ \eOpr -> do
       tagOpr <- (load ?? 0) =<< gep eOpr [int32 0, int32 0]
       switch tagOpr defaultLabel $ map (\(i, l) -> (C.Int 64 $ fromIntegral i, l)) labels
     _ -> case cs of
-      (Bind x body :| _) -> local (at x ?~ eOpr) $ genExp body k
+      (Bind x body :| _) -> local (over valueMap (at x ?~ eOpr)) $ genExp body k
       _ -> bug Unreachable
 genExp (Cast ty x) k = do
   xOpr <- genAtom x
@@ -330,7 +348,7 @@ genUnpack ::
 genUnpack scrutinee cs k = \case
   Bind x e -> do
     label <- block
-    void $ local (at x ?~ scrutinee) $ genExp e k
+    void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
     pure $ Left label
   Unpack con vs e -> do
     label <- block
@@ -341,7 +359,7 @@ genUnpack scrutinee cs k = \case
     env <- fmap mconcat $ ifor vs $ \i v -> do
       vOpr <- (load ?? 0) =<< gep payloadAddr [int32 0, int32 $ fromIntegral i]
       pure $ fromList [(v, vOpr)]
-    void $ local (env <>) $ genExp e k
+    void $ local (over valueMap (env <>)) $ genExp e k
     pure $ Right (tag, label)
 
 genAtom ::
@@ -370,7 +388,7 @@ genObj ::
   ) =>
   Id CType ->
   Obj (Id CType) ->
-  m OprMap
+  m (IdMap CType Operand)
 genObj funName (Fun ps e) = do
   name <- toName <$> newId () (funName ^. idName <> "_closure")
   func <- function name (map (,NoParameterName) psTypes) retType $ \case
@@ -381,7 +399,7 @@ genObj funName (Fun ps e) = do
         capAddr <- gep capture [int32 0, int32 $ fromIntegral i]
         (fv,) <$> load capAddr 0
       let env' = fromList $ zip ps ps'
-      local ((env <> env') <>) $ genExp e ret
+      local (over valueMap ((env <> env') <>)) $ genExp e ret
   capture <- mallocType capType
   ifor_ fvs $ \i fv -> do
     fvOpr <- findVar fv
