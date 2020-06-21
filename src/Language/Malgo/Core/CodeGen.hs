@@ -163,7 +163,7 @@ findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id CType -> m Operand
 findVar x = do
   OprMap {_valueMap = valueMap, _globalMap = globalMap} <- ask
   case valueMap ^. at x of
-    Just x' -> pure x'
+    Just x -> pure x
     Nothing -> case globalMap ^. at x of
       Just globalX -> load globalX 0
       Nothing -> error $ show $ pPrint x <> " is not found"
@@ -172,14 +172,14 @@ findFun :: MonadReader OprMap m => Id CType -> m Operand
 findFun x = do
   OprMap {_funcMap = funcMap} <- ask
   case funcMap ^. at x of
-    Just x' -> pure x'
+    Just x -> pure x
     Nothing -> error $ show $ pPrint x <> " is not found"
 
 findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => Text -> [Type] -> Type -> m Operand
 findExt x ps r = do
   env <- get
   case env ^. at x of
-    Just x' -> pure x'
+    Just x -> pure x
     Nothing -> do
       opr <- extern (LLVM.AST.mkName $ T.unpack x) ps r
       modify (at x ?~ opr)
@@ -333,8 +333,8 @@ genExp (ArrayWrite a i v) k = do
   k (ConstantOperand (Undef (ptr $ StructureType False [i64, StructureType False []])))
 genExp (Let xs e) k = do
   env <- fromList . mconcat <$> traverse prepare xs
-  env' <- local (over valueMap (env <>)) $ mconcat <$> traverse (uncurry genObj) xs
-  local (over valueMap (env' <>)) $ genExp e k
+  env <- local (over valueMap (env <>)) $ mconcat <$> traverse (uncurry genObj) xs
+  local (over valueMap (env <>)) $ genExp e k
   where
     prepare (name, Fun ps body) = do
       opr <- mallocType (StructureType False [ptr i8, ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False])
@@ -459,8 +459,8 @@ genObj name@(cTypeOf -> PackT cs) (Pack _ con@(Con _ ts) xs) = do
     xAddr <- gep addr [int32 0, int32 1, int32 $ fromIntegral i]
     xOpr <- genAtom x
     store xAddr 0 xOpr
-  addr' <- bitcast addr (convType $ PackT cs)
-  pure $ fromList [(name, addr')]
+  addr <- bitcast addr (convType $ PackT cs)
+  pure $ fromList [(name, addr)]
 genObj _ Pack {} = bug Unreachable
 genObj x (Core.Array a n) = mdo
   sizeOpr <- mul (sizeof $ convType $ cTypeOf a) =<< genAtom n
