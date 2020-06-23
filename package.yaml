@@ -46,6 +46,8 @@ ghc-options:
   - -Wno-name-shadowing
   - -j4
   - +RTS -A128m -n2m -qg -RTS
+  - -fwrite-ide-info
+  - -hiedir=.hie
 
 default-extensions:
   - StrictData
