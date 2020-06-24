@@ -143,7 +143,7 @@ convType StringT = ptr i8
 convType (PackT cs) =
   let size = maximum $ sizeofCon <$> toList cs
    in ptr (StructureType False [i64, if size == 0 then StructureType False [] else LT.VectorType size i8])
-convType (ArrayT ty) = ptr $ convType ty
+convType (ArrayT ty) = ptr $ StructureType False [ptr $ convType ty, i64]
 convType VarT {} = ptr i8
 
 sizeofCon :: Num a => Con -> a
@@ -323,12 +323,14 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
 genExp (ArrayRead a i) k = do
   aOpr <- genAtom a
   iOpr <- genAtom i
-  k =<< (load ?? 0) =<< gep aOpr [iOpr]
+  arrOpr <- (load ?? 0) =<< gep aOpr [int32 0, int32 0]
+  k =<< (load ?? 0) =<< gep arrOpr [iOpr]
 genExp (ArrayWrite a i v) k = do
   aOpr <- genAtom a
   iOpr <- genAtom i
   vOpr <- genAtom v
-  addr <- gep aOpr [iOpr]
+  arrOpr <- (load ?? 0) =<< gep aOpr [int32 0, int32 0]
+  addr <- gep arrOpr [iOpr]
   store addr 0 vOpr
   k (ConstantOperand (Undef (ptr $ StructureType False [i64, StructureType False []])))
 genExp (Let xs e) k = do
@@ -464,7 +466,7 @@ genObj name@(cTypeOf -> PackT cs) (Pack _ con@(Con _ ts) xs) = do
 genObj _ Pack {} = bug Unreachable
 genObj x (Core.Array a n) = mdo
   sizeOpr <- mul (sizeof $ convType $ cTypeOf a) =<< genAtom n
-  valueOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ cTypeOf a)
+  arrayOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ cTypeOf a)
   -- for (i64 i = 0;
   iPtr <- alloca i64 Nothing 0
   store iPtr 0 (int64 0)
@@ -477,12 +479,18 @@ genObj x (Core.Array a n) = mdo
   -- body: valueOpr[iOpr] <- genAtom a
   bodyLabel <- block
   iOpr' <- load iPtr 0
-  addr <- gep valueOpr [iOpr']
+  addr <- gep arrayOpr [iOpr']
   store addr 0 =<< genAtom a
   store iPtr 0 =<< add iOpr (int64 1)
   br condLabel
   endLabel <- block
-  pure $ fromList [(x, valueOpr)]
+  -- return array struct
+  structOpr <- mallocType (StructureType False [ptr $ convType $ cTypeOf a, i64])
+  arrayAddr <- gep structOpr [int32 0, int32 0]
+  store arrayAddr 0 arrayOpr
+  sizeAddr <- gep structOpr [int32 0, int32 1]
+  store sizeAddr 0 =<< genAtom n
+  pure $ fromList [(x, structOpr)]
 
 genCon :: Set Con -> Con -> (Int, Type)
 genCon cs con@(Con _ ts)
