@@ -126,18 +126,19 @@ toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
       toExp e
     _ -> bug Unreachable
 toExp (S.Let _ (S.FunDec fs) e) = do
-  traverse_ ?? fs $ \(_, f, _, _, _) -> do
+  for_ fs $ \(_, f, _, _, _) -> do
     f' <- newId (cTypeOf f) (f ^. idName)
     modify (at f ?~ f')
-  fs <- traverse ?? fs $ \(_, f@(cTypeOf -> _ :-> r), ps, _, body) -> do
-    ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
-    body <- runDef $ do
-      zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
-      Atom <$> (cast r =<< bind =<< toExp body)
-    f <- findVar f
-    pure (f, Fun ps' body)
-  e' <- toExp e
-  pure $ Let fs e'
+  Let <$> traverse toFun fs <*> toExp e
+  where
+    toFun (_, f@(cTypeOf -> _ :-> r), ps, _, body) = do
+      ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
+      body <- runDef $ do
+        zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
+        Atom <$> (cast r =<< bind =<< toExp body)
+      f <- findVar f
+      pure (f, Fun ps' body)
+    toFun _ = bug Unreachable
 toExp (S.If _ c t f) = do
   c <- toExp c
   t <- Unpack (Con "True" []) [] <$> toExp t
