@@ -4,7 +4,17 @@ let extern gen_seed: () -> {} = "gen_seed" in
 let extern rand_bool : () -> Bool = "rand_bool" in
 let extern sleep : Int -> {} = "malgo_sleep" in
 let extern copy_bool_array : [Bool] -> [Bool] = "copy_bool_array" in
-let extern pulsar : [Bool] -> {} = "pulsar" in
+let fun pulsar(cells: [Bool]) =
+  cells.(11 * 50 + 23) <- true;
+  cells.(11 * 50 + 23) <- true;
+  cells.(12 * 50 + 23) <- true;
+  cells.(13 * 50 + 23) <- true;
+
+  cells.(12 * 50 + 25) <- true;
+
+  cells.(11 * 50 + 27) <- true;
+  cells.(12 * 50 + 27) <- true;
+  cells.(13 * 50 + 27) <- true in
 
 let val x_width : Int = 50 in
 let val y_width : Int = 20 in
