@@ -76,8 +76,8 @@ toExpr (S.Match _ s cs) =
   runDef $ Match <$> toVar s <*> mapM (\(p, e) -> crushPat p =<< toExpr e) cs
 
 crushPat :: MonadUniq m => S.Pat (Id Type) -> Expr (Id Type) -> m (Pat (Id Type), Expr (Id Type))
-crushPat (S.VarP x) e = pure (VarP x, e)
-crushPat (S.TupleP xs) e = go xs [] e
+crushPat (S.VarP _ x) e = pure (VarP x, e)
+crushPat (S.TupleP _ xs) e = go xs [] e
   where
     go [] acc e = pure (TupleP $ reverse acc, e)
     go (p : ps) acc e = do

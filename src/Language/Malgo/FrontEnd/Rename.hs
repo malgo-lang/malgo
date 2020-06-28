@@ -110,17 +110,16 @@ renameExpr (Let pos0 (ExDec pos1 name typ orig) e) =
 renameExpr (If pos c t f) = If pos <$> renameExpr c <*> renameExpr t <*> renameExpr f
 renameExpr (BinOp pos op x y) = BinOp pos op <$> renameExpr x <*> renameExpr y
 renameExpr (Match pos scrutinee clauses) =
-  Match pos <$> renameExpr scrutinee <*> mapM (renameClause pos) clauses
+  Match pos <$> renameExpr scrutinee <*> mapM renameClause clauses
 
 renameClause ::
   (MonadMalgo m, MonadUniq m, MonadReader Known m) =>
-  SourcePos ->
   (Pat String, Expr String) ->
   m (Pat (Id ()), Expr (Id ()))
-renameClause pos (p, e) = runContT (renamePat p) $ \p' -> (p',) <$> renameExpr e
+renameClause (p, e) = runContT (renamePat p) $ \p' -> (p',) <$> renameExpr e
   where
-    renamePat (VarP x) = ContT $ \k -> withKnowns var [x] $ k . VarP =<< getId pos var x
-    renamePat (TupleP ps) = TupleP <$> mapM renamePat ps
+    renamePat (VarP pos x) = ContT $ \k -> withKnowns var [x] $ k . VarP pos =<< getId pos var x
+    renamePat (TupleP pos ps) = TupleP pos <$> mapM renamePat ps
 
 renameSType ::
   (MonadMalgo m, MonadReader Known m, MonadUniq m) =>

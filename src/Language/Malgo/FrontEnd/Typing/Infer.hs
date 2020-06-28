@@ -196,7 +196,7 @@ typingExpr (BinOp pos op x y) = do
 typingExpr (Match pos scrutinee clauses) = do
   ty1 <- typingExpr scrutinee
   let (pats, exprs) = unzip clauses
-  mapM_ (typingPat pos ty1) pats
+  mapM_ (typingPat ty1) pats
   t :| ts <- mapM typingExpr exprs
   addCs pos $ map (t :~) ts
   pure t
@@ -207,15 +207,14 @@ typingPat ::
     MonadUniq m,
     MonadMalgo m
   ) =>
-  SourcePos ->
   Type ->
   Pat (Id ()) ->
   WriterT [WithPos] m ()
-typingPat _ ty (VarP x) = defineVar x (Forall [] ty)
-typingPat pos ty (TupleP ps) = do
+typingPat ty (VarP _ x) = defineVar x (Forall [] ty)
+typingPat ty (TupleP pos ps) = do
   vs <- replicateM (length ps) newTyMeta
   addCs pos [ty :~ TyApp TupleC vs]
-  zipWithM_ (typingPat pos) vs ps
+  zipWithM_ typingPat vs ps
 
 isValue :: Expr a -> Bool
 isValue Var {} = True

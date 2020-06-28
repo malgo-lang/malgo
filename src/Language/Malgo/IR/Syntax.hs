@@ -105,17 +105,17 @@ instance Pretty a => Pretty (Expr a) where
 
 -- | パターン
 data Pat a
-  = VarP a
-  | TupleP [Pat a]
+  = VarP SourcePos a
+  | TupleP SourcePos [Pat a]
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Pat a) where
-  pPrint (VarP x) = pPrint x
-  pPrint (TupleP xs) = braces $ sep $ punctuate "," $ map pPrint xs
+  pPrint (VarP _ x) = pPrint x
+  pPrint (TupleP _ xs) = braces $ sep $ punctuate "," $ map pPrint xs
 
 instance HasType a => HasType (Pat a) where
-  typeOf (VarP x) = typeOf x
-  typeOf (TupleP xs) = TyApp TupleC $ map typeOf xs
+  typeOf (VarP _ x) = typeOf x
+  typeOf (TupleP _ xs) = TyApp TupleC $ map typeOf xs
 
 -- | 変数定義、関数定義、外部関数定義
 data Decl a

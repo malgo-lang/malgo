@@ -169,8 +169,8 @@ exp: exp '+' exp { BinOp (_sourcePos $2) Add $1 $3 }
 clauses : clauses '|' pat '=>' exp { ($3, $5) : $1 }
         | pat '=>' exp { [($1, $3)] }
 
-pat : id { VarP (_id . _tag $ $1) }
-    | '{' tuple_pat '}' { TupleP $ reverse $2 }
+pat : id { VarP (_sourcePos $1) (_id . _tag $ $1) }
+    | '{' tuple_pat '}' { TupleP (_sourcePos $1) $ reverse $2 }
 
 tuple_pat : tuple_pat ',' pat { $3 : $1 }
           | pat { [$1] }

@@ -98,14 +98,14 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
   i <- bind =<< toExp i
   case cTypeOf a of
     ArrayT ty -> do
-      x <- cast ty =<< bind =<< toExp x
+      x <- cast ty =<< toExp x
       [i] <- destruct (Atom i) $ Con "Int" [IntT]
       Atom <$> bind (ArrayWrite a i x)
     _ -> bug Unreachable
 toExp (S.Call _ f xs) = runDef $ do
   f <- bind =<< toExp f
   case cTypeOf f of
-    ps :-> _ -> Call f <$> zipWithM (\x p -> cast p =<< bind =<< toExp x) xs ps
+    ps :-> _ -> Call f <$> zipWithM (\x p -> cast p =<< toExp x) xs ps
     _ -> bug Unreachable
 toExp (S.Fn _ ps e) = runDef $ do
   ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
@@ -117,7 +117,7 @@ toExp (S.Seq _ e1 e2) = runDef $ do
   _ <- bind =<< toExp e1
   toExp e2
 toExp (S.Let _ (S.ValDec _ a _ v) e) = runDef $ do
-  Var v <- cast (cTypeOf a) =<< bind =<< toExp v
+  Var v <- cast (cTypeOf a) =<< toExp v
   modify $ at a ?~ v
   toExp e
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
@@ -140,7 +140,7 @@ toExp (S.Let _ (S.FunDec fs) e) = do
       ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
       body <- runDef $ do
         zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
-        Atom <$> (cast r =<< bind =<< toExp body)
+        Atom <$> (cast r =<< toExp body)
       f <- findVar f
       pure (f, Fun ps' body)
     toFun _ = bug Unreachable
@@ -233,12 +233,16 @@ toExp (S.Match _ e cs) = do
   cs <- traverse (\(p, v) -> crushPat p $ toExp v) cs
   pure $ Match e cs
 
-crushPat :: (MonadUniq m, MonadState (IdMap Type (Id CType)) m) => S.Pat (Id Type) -> m (Exp (Id CType)) -> m (Case (Id CType))
-crushPat (S.VarP x) = \e -> do
+crushPat ::
+  (MonadUniq m, MonadState (IdMap Type (Id CType)) m) =>
+  S.Pat (Id Type) ->
+  m (Exp (Id CType)) ->
+  m (Case (Id CType))
+crushPat (S.VarP _ x) = \e -> do
   x' <- newId (cTypeOf $ typeOf x) (x ^. idName)
   modify $ at x ?~ x'
   Bind x' <$> e
-crushPat (S.TupleP xs) = go xs []
+crushPat (S.TupleP _ xs) = go xs []
   where
     go [] acc e = do
       acc <- pure $ reverse acc
@@ -279,11 +283,12 @@ bind v = do
 cast ::
   (MonadUniq f, MonadWriter (Endo (Exp (Id CType))) f) =>
   CType ->
-  Atom (Id CType) ->
+  Exp (Id CType) ->
   f (Atom (Id CType))
-cast ty v
-  | ty == cTypeOf v = pure v
+cast ty e
+  | ty == cTypeOf e = bind e
   | otherwise = do
+    v <- bind e
     x <- newId ty "$cast"
     tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
