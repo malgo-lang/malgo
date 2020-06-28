@@ -21,6 +21,7 @@ import Language.Malgo.IR.Op as Export
 import Language.Malgo.Prelude hiding (ix, op)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.Type
+import Text.Parsec.Pos (initialPos)
 import Text.PrettyPrint.HughesPJClass
   ( ($+$),
     braces,
@@ -98,7 +99,7 @@ instance HasType a => HasType (Expr a) where
     _ -> error "(typeOf arr) should match (TyArray xs)"
   typeOf ArrayWrite {} = TyApp TupleC []
   typeOf (Call fn as) = case typeOf fn of
-    ps :-> ret -> apply (fold $ solve $ zipWith (:~) (map typeOf as) ps) ret
+    ps :-> ret -> apply (fold $ solve $ map (WithPos ?? initialPos "<dummy>") $ zipWith (:~) (map typeOf as) ps) ret
     _ -> error "(typeOf fn) should match (TyFun _ ty)"
   typeOf (Let _ _ e) = typeOf e
   typeOf (LetRec _ e) = typeOf e

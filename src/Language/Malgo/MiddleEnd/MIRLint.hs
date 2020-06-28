@@ -22,6 +22,7 @@ import Language.Malgo.Pass
 import Language.Malgo.Prelude hiding (ix)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.Type
+import Text.Parsec.Pos (initialPos)
 import Text.PrettyPrint.HughesPJClass (($+$))
 
 data MIRLint
@@ -73,7 +74,7 @@ checkCall f xs = case typeOf f of
   ps :-> _ -> do
     ps' <- mapM (instantiate . generalize mempty) ps
     xs' <- mapM (instantiate . generalize mempty . typeOf) xs
-    case solve (zipWith (:~) ps' xs') of
+    case solve $ map (WithPos ?? initialPos "<dummy>") $ zipWith (:~) ps' xs' of
       Right _ -> pure ()
       Left err -> errorDoc $ ("type mismatch:" <+> pPrint f <+> "and" <+> pPrint xs) $+$ err
   _ -> errorDoc $ pPrint f <+> "is not function"
@@ -103,7 +104,7 @@ lintExpr (CallClosure f xs) = do
   checkCall f xs
 lintExpr (Let n v e) = do
   notDefinedVar n
-  case solve [typeOf n :~ typeOf v] of
+  case solve [WithPos (typeOf n :~ typeOf v) $ initialPos "<dummy>"] of
     Right _ -> pure ()
     Left err -> errorDoc $ ("type mismatch:" <+> pPrint n <+> "and" <+> pPrint v) $+$ err
   local (\env -> env {variables = n : variables env}) (lintExpr v >> lintExpr e)

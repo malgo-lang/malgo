@@ -22,6 +22,7 @@ import Language.Malgo.Prelude hiding (ix, op)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type
+import Text.Parsec (SourcePos)
 
 data Typing
 
@@ -52,7 +53,7 @@ letVar ::
   Env ->
   Id () ->
   Type ->
-  [Constraint] ->
+  [WithPos] ->
   m ()
 letVar env var ty cs =
   case solve cs of
@@ -73,9 +74,10 @@ lookupVar x = do
 
 addCs ::
   (MonadState Env m, MonadMalgo m) =>
+  SourcePos ->
   [Constraint] ->
-  WriterT [Constraint] m ()
-addCs = tell
+  WriterT [WithPos] m ()
+addCs pos = tell . map (WithPos ?? pos)
 
 typingExpr ::
   ( MonadState (IdMap () (Id Scheme)) m,
@@ -83,7 +85,7 @@ typingExpr ::
     MonadMalgo m
   ) =>
   Expr (Id ()) ->
-  WriterT [Constraint] m Type
+  WriterT [WithPos] m Type
 typingExpr (Var _ x) = lookupVar x
 typingExpr Int {} = pure intTy
 typingExpr Float {} = pure floatTy
@@ -91,33 +93,33 @@ typingExpr Bool {} = pure boolTy
 typingExpr Char {} = pure charTy
 typingExpr String {} = pure stringTy
 typingExpr (Tuple _ xs) = tupleTy <$> mapM typingExpr xs
-typingExpr (Array _ xs) = do
+typingExpr (Array pos xs) = do
   ts <- mapM typingExpr xs
   ty <- newTyMeta
-  addCs (toList $ fmap (ty :~) ts)
+  addCs pos (toList $ fmap (ty :~) ts)
   pure $ arrayTy ty
-typingExpr (MakeArray _ initNode sizeNode) = do
+typingExpr (MakeArray pos initNode sizeNode) = do
   initTy <- typingExpr initNode
   sizeTy <- typingExpr sizeNode
-  addCs [TyApp IntC [] :~ sizeTy]
+  addCs pos [TyApp IntC [] :~ sizeTy]
   pure $ arrayTy initTy
-typingExpr (ArrayRead _ arr ix) = do
+typingExpr (ArrayRead pos arr ix) = do
   arrTy <- typingExpr arr
   resultTy <- newTyMeta
   ixTy <- typingExpr ix
-  addCs [TyApp ArrayC [resultTy] :~ arrTy, ixTy :~ intTy]
+  addCs pos [TyApp ArrayC [resultTy] :~ arrTy, ixTy :~ intTy]
   pure resultTy
-typingExpr (ArrayWrite _ arr ix val) = do
+typingExpr (ArrayWrite pos arr ix val) = do
   arrTy <- typingExpr arr
   ixTy <- typingExpr ix
   valTy <- typingExpr val
-  addCs [ixTy :~ TyApp IntC [], arrTy :~ TyApp ArrayC [valTy]]
+  addCs pos [ixTy :~ TyApp IntC [], arrTy :~ TyApp ArrayC [valTy]]
   pure $ tupleTy []
-typingExpr (Call _ fn args) = do
+typingExpr (Call pos fn args) = do
   fnTy <- typingExpr fn
   argTypes <- mapM typingExpr args
   retTy <- newTyMeta
-  addCs [argTypes :-> retTy :~ fnTy]
+  addCs pos [argTypes :-> retTy :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = do
   paramTypes <-
@@ -129,12 +131,12 @@ typingExpr (Fn _ params body) = do
   retType <- typingExpr body
   pure $ paramTypes :-> retType
 typingExpr (Seq _ e1 e2) = typingExpr e1 >> typingExpr e2
-typingExpr (Let _ (ValDec _ name mtyp val) body) = do
+typingExpr (Let _ (ValDec pos name mtyp val) body) = do
   env <- get
   valType <- typingExpr val
   (_, cs) <- listen $ for_ mtyp $ \typ -> do
     typ' <- evalStateT (toType typ) mempty
-    addCs [valType :~ typ']
+    addCs pos [valType :~ typ']
   -- value restriction
   if isValue val then letVar env name valType cs else defineVar name (Forall [] valType)
   typingExpr body
@@ -146,7 +148,7 @@ typingExpr (Let _ (ExDec _ name typ _) body) = do
 typingExpr (Let _ (FunDec fs) e) = do
   env <- get
   for_ fs $ \(_, f, _, _, _) -> defineVar f . Forall [] =<< newTyMeta
-  for_ fs $ \(_, f, params, mretType, body) -> do
+  for_ fs $ \(pos, f, params, mretType, body) -> do
     (paramTypes, s) <-
       runStateT ?? mempty $
         traverse
@@ -157,21 +159,21 @@ typingExpr (Let _ (FunDec fs) e) = do
     (t, cs0) <- listen $ typingExpr body
     tv <- lookupVar f
     let cs1 = [tv :~ paramTypes :-> retType, t :~ retType]
-    addCs cs1
-    letVar env f tv $ cs1 <> cs0
+    addCs pos cs1
+    letVar env f tv $ (map (WithPos ?? pos) cs1) <> cs0
   typingExpr e
-typingExpr (If _ c t f) = do
+typingExpr (If pos c t f) = do
   ct <- typingExpr c
   tt <- typingExpr t
   ft <- typingExpr f
-  addCs [ct :~ boolTy, tt :~ ft]
+  addCs pos [ct :~ boolTy, tt :~ ft]
   pure ft
-typingExpr (BinOp _ op x y) = do
+typingExpr (BinOp pos op x y) = do
   opType <- typingOp op
   xt <- typingExpr x
   yt <- typingExpr y
   resultType <- newTyMeta
-  addCs [opType :~ [xt, yt] :-> resultType]
+  addCs pos [opType :~ [xt, yt] :-> resultType]
   pure resultType
   where
     typingOp Add = pure $ [intTy, intTy] :-> intTy
@@ -191,27 +193,29 @@ typingExpr (BinOp _ op x y) = do
     typingOp Ge = newTyMeta >>= \a -> pure $ [a, a] :-> boolTy
     typingOp And = pure $ [boolTy, boolTy] :-> boolTy
     typingOp Or = pure $ [boolTy, boolTy] :-> boolTy
-typingExpr (Match _ scrutinee clauses) = do
+typingExpr (Match pos scrutinee clauses) = do
   ty1 <- typingExpr scrutinee
   let (pats, exprs) = unzip clauses
-  mapM_ (typingPat ty1) pats
+  mapM_ (typingPat pos ty1) pats
   t :| ts <- mapM typingExpr exprs
-  addCs $ map (t :~) ts
+  addCs pos $ map (t :~) ts
   pure t
 
+-- TODO: add SourcePos field to Pat
 typingPat ::
   ( MonadState (IdMap () (Id Scheme)) m,
     MonadUniq m,
     MonadMalgo m
   ) =>
+  SourcePos ->
   Type ->
   Pat (Id ()) ->
-  WriterT [Constraint] m ()
-typingPat ty (VarP x) = defineVar x (Forall [] ty)
-typingPat ty (TupleP ps) = do
+  WriterT [WithPos] m ()
+typingPat _ ty (VarP x) = defineVar x (Forall [] ty)
+typingPat pos ty (TupleP ps) = do
   vs <- replicateM (length ps) newTyMeta
-  addCs [ty :~ TyApp TupleC vs]
-  zipWithM_ typingPat vs ps
+  addCs pos [ty :~ TyApp TupleC vs]
+  zipWithM_ (typingPat pos) vs ps
 
 isValue :: Expr a -> Bool
 isValue Var {} = True
