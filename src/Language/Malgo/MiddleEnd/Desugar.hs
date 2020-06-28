@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -12,6 +11,7 @@ module Language.Malgo.MiddleEnd.Desugar
   )
 where
 
+import qualified Data.Set as Set (fromList, singleton, toList)
 import qualified Data.Text as T
 import Language.Malgo.IR.Core
 import qualified Language.Malgo.IR.Syntax as S
@@ -41,9 +41,9 @@ runDef m = uncurry (flip appEndo) <$> runWriterT m
 
 boolValue :: MonadUniq m => Bool -> m (Exp (Id CType))
 boolValue x =
-  runDef $ fmap Atom $ let_ (PackT [trueC, falseC]) $ if x then Pack boolType trueC [] else Pack boolType falseC []
+  runDef $ fmap Atom $ let_ boolType $ if x then Pack boolType trueC [] else Pack boolType falseC []
   where
-    boolType = PackT [trueC, falseC]
+    boolType = PackT $ Set.fromList [trueC, falseC]
     trueC = Con "True" []
     falseC = Con "False" []
 
@@ -51,26 +51,31 @@ toExp :: (MonadState (IdMap Type (Id CType)) m, MonadUniq m, MonadFail m) => S.E
 toExp (S.Var _ x) =
   Atom . Var <$> findVar x
 toExp (S.Int _ x) =
-  runDef $ fmap Atom $ let_ (PackT [con]) $ Pack (PackT [con]) con [Unboxed $ Int x]
+  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Int x]
   where
+    ty = PackT $ Set.singleton con
     con = Con "Int" [IntT]
 toExp (S.Float _ x) =
-  runDef $ fmap Atom $ let_ (PackT [con]) $ Pack (PackT [con]) con [Unboxed $ Float x]
+  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Float x]
   where
+    ty = PackT $ Set.singleton con
     con = Con "Float" [FloatT]
 toExp (S.Bool _ x) = boolValue x
 toExp (S.Char _ x) =
-  runDef $ fmap Atom $ let_ (PackT [con]) $ Pack (PackT [con]) con [Unboxed $ Char x]
+  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Char x]
   where
+    ty = PackT $ Set.singleton con
     con = Con "Char" [CharT]
 toExp (S.String _ x) =
-  runDef $ fmap Atom $ let_ (PackT [con]) $ Pack (PackT [con]) con [Unboxed $ String x]
+  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String x]
   where
+    ty = PackT $ Set.singleton con
     con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (bind <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs
-  runDef $ fmap Atom $ let_ (PackT [con]) $ Pack (PackT [con]) con vs
+  let ty = PackT $ Set.singleton con
+  runDef $ fmap Atom $ let_ ty $ Pack ty con vs
 toExp (S.Array _ (x :| xs)) = runDef $ do
   x <- bind =<< toExp x
   arr <- let_ (ArrayT $ cTypeOf x) $ Array x $ Unboxed $ Int $ fromIntegral $ length xs + 1
@@ -180,7 +185,8 @@ toExp (S.BinOp _ opr x y) =
       [lval] <- destruct lexp con
       [rval] <- destruct rexp con
       result <- bind $ BinOp opr lval rval
-      Atom <$> let_ (PackT [con]) (Pack (PackT [con]) con [result])
+      let ty = PackT $ Set.singleton con
+      Atom <$> let_ ty (Pack ty con [result])
     compareOp = runDef $ do
       lexp <- toExp x
       rexp <- toExp y
@@ -195,19 +201,19 @@ toExp (S.BinOp _ opr x y) =
       lexp <- toExp x
       rexp <- toExp y
       case cTypeOf lexp of
-        PackT [Con "Int" [IntT]] -> runDef $ do
+        PackT (Set.toList -> [Con "Int" [IntT]]) -> runDef $ do
           [lval] <- destruct lexp (Con "Int" [IntT])
           [rval] <- destruct rexp (Con "Int" [IntT])
           pure $ BinOp opr lval rval
-        PackT [Con "Float" [FloatT]] -> runDef $ do
+        PackT (Set.toList -> [Con "Float" [FloatT]]) -> runDef $ do
           [lval] <- destruct lexp (Con "Float" [FloatT])
           [rval] <- destruct rexp (Con "Float" [FloatT])
           pure $ BinOp opr lval rval
-        PackT [Con "Char" [CharT]] -> runDef $ do
+        PackT (Set.toList -> [Con "Char" [CharT]]) -> runDef $ do
           [lval] <- destruct lexp (Con "Char" [CharT])
           [rval] <- destruct rexp (Con "Char" [CharT])
           pure $ BinOp opr lval rval
-        PackT [Con "False" [], Con "True" []] -> runDef $ do
+        PackT (Set.toList -> [Con "False" [], Con "True" []]) -> runDef $ do
           lval <- bind lexp
           rval <- bind rexp
           -- lval == rval
@@ -241,7 +247,7 @@ crushPat (S.TupleP xs) = go xs []
       x <- newId (cTypeOf $ typeOf p) "p"
       go ps (x : acc) $ do
         clause <- crushPat p e
-        pure $ Match (Atom $ Var x) [clause]
+        pure $ Match (Atom $ Var x) (clause :| [])
 
 let_ ::
   (MonadUniq m, MonadWriter (Endo (Exp (Id a))) m) =>
@@ -267,7 +273,7 @@ bind :: (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) => Exp (Id CType) -
 bind (Atom a) = pure a
 bind v = do
   x <- newId (cTypeOf v) "$d"
-  tell $ Endo $ \e -> Match v [Bind x e]
+  tell $ Endo $ \e -> Match v (Bind x e :| [])
   pure (Var x)
 
 cast ::
@@ -279,5 +285,5 @@ cast ty v
   | ty == cTypeOf v = pure v
   | otherwise = do
     x <- newId ty "$cast"
-    tell $ Endo $ \e -> Match (Cast ty v) [Bind x e]
+    tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
