@@ -147,11 +147,11 @@ instance HasCType a => HasCType (Exp a) where
       And -> boolT
       Or -> boolT
     where
-      boolT = PackT [Con "True" [], Con "False" []]
+      boolT = SumT [Con "True" [], Con "False" []]
   cTypeOf (ArrayRead a _) = case cTypeOf a of
     ArrayT t -> t
     _ -> bug Unreachable
-  cTypeOf ArrayWrite {} = PackT [Con "Tuple0" []]
+  cTypeOf ArrayWrite {} = SumT [Con "Tuple0" []]
   cTypeOf (Cast ty _) = ty
   cTypeOf (Let _ e) = cTypeOf e
   cTypeOf (Match _ (Unpack _ _ e :| _)) = cTypeOf e

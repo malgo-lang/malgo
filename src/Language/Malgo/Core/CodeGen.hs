@@ -140,7 +140,7 @@ convType IntT = i64
 convType FloatT = LT.double
 convType CharT = i8
 convType StringT = ptr i8
-convType (PackT cs) =
+convType (SumT cs) =
   let size = maximum $ sizeofCon <$> toList cs
    in ptr (StructureType False [i64, if size == 0 then StructureType False [] else LT.VectorType size i8])
 convType (ArrayT ty) = ptr $ StructureType False [ptr $ convType ty, i64]
@@ -155,7 +155,7 @@ sizeofCType IntT = 8
 sizeofCType FloatT = 8
 sizeofCType CharT = 1
 sizeofCType StringT = 8
-sizeofCType (PackT _) = 8
+sizeofCType (SumT _) = 8
 sizeofCType (ArrayT _) = 8
 sizeofCType VarT {} = 8
 
@@ -276,7 +276,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         IntT -> icmp IP.EQ x' y'
         CharT -> icmp IP.EQ x' y'
         StringT -> icmp IP.EQ x' y'
-        PackT _ -> icmp IP.EQ x' y'
+        SumT _ -> icmp IP.EQ x' y'
         ArrayT _ -> icmp IP.EQ x' y'
         FloatT -> fcmp FP.OEQ x' y'
         _ -> bug Unreachable
@@ -286,7 +286,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         FloatT -> fcmp FP.ONE x' y'
         CharT -> icmp IP.NE x' y'
         StringT -> icmp IP.NE x' y'
-        PackT _ -> icmp IP.NE x' y'
+        SumT _ -> icmp IP.NE x' y'
         ArrayT _ -> icmp IP.NE x' y'
         _ -> bug Unreachable
     genOp Op.Lt = \x' y' ->
@@ -347,7 +347,7 @@ genExp (Match e cs) k = genExp e $ \eOpr -> do
   -- TODO: genExpが正しい型の値を継続に渡すように変更する
   eOpr <- bitcast eOpr (convType $ cTypeOf e)
   case cTypeOf e of
-    PackT union -> mdo
+    SumT union -> mdo
       br switchBlock
       (defs, labels) <- partitionEithers . toList <$> traverse (genUnpack eOpr union k) cs
       defaultLabel <- case defs of
@@ -452,7 +452,7 @@ genObj funName (Fun ps e) = do
     capType = StructureType False (map (convType . cTypeOf) fvs)
     psTypes = ptr i8 : map (convType . cTypeOf) ps
     retType = convType $ cTypeOf e
-genObj name@(cTypeOf -> PackT cs) (Pack _ con@(Con _ ts) xs) = do
+genObj name@(cTypeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
   addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
   let tag = fromIntegral $ Set.findIndex con cs
   tagAddr <- gep addr [int32 0, int32 0]
@@ -461,7 +461,7 @@ genObj name@(cTypeOf -> PackT cs) (Pack _ con@(Con _ ts) xs) = do
     xAddr <- gep addr [int32 0, int32 1, int32 $ fromIntegral i]
     xOpr <- genAtom x
     store xAddr 0 xOpr
-  addr <- bitcast addr (convType $ PackT cs)
+  addr <- bitcast addr (convType $ SumT cs)
   pure $ fromList [(name, addr)]
 genObj _ Pack {} = bug Unreachable
 genObj x (Core.Array a n) = mdo

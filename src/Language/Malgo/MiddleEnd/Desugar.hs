@@ -43,7 +43,7 @@ boolValue :: MonadUniq m => Bool -> m (Exp (Id CType))
 boolValue x =
   runDef $ fmap Atom $ let_ boolType $ if x then Pack boolType trueC [] else Pack boolType falseC []
   where
-    boolType = PackT $ Set.fromList [trueC, falseC]
+    boolType = SumT $ Set.fromList [trueC, falseC]
     trueC = Con "True" []
     falseC = Con "False" []
 
@@ -53,28 +53,28 @@ toExp (S.Var _ x) =
 toExp (S.Int _ x) =
   runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Int x]
   where
-    ty = PackT $ Set.singleton con
+    ty = SumT $ Set.singleton con
     con = Con "Int" [IntT]
 toExp (S.Float _ x) =
   runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Float x]
   where
-    ty = PackT $ Set.singleton con
+    ty = SumT $ Set.singleton con
     con = Con "Float" [FloatT]
 toExp (S.Bool _ x) = boolValue x
 toExp (S.Char _ x) =
   runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Char x]
   where
-    ty = PackT $ Set.singleton con
+    ty = SumT $ Set.singleton con
     con = Con "Char" [CharT]
 toExp (S.String _ x) =
   runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String x]
   where
-    ty = PackT $ Set.singleton con
+    ty = SumT $ Set.singleton con
     con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (bind <=< toExp) xs
   let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs
-  let ty = PackT $ Set.singleton con
+  let ty = SumT $ Set.singleton con
   runDef $ fmap Atom $ let_ ty $ Pack ty con vs
 toExp (S.Array _ (x :| xs)) = runDef $ do
   x <- bind =<< toExp x
@@ -185,13 +185,13 @@ toExp (S.BinOp _ opr x y) =
       [lval] <- destruct lexp con
       [rval] <- destruct rexp con
       result <- bind $ BinOp opr lval rval
-      let ty = PackT $ Set.singleton con
+      let ty = SumT $ Set.singleton con
       Atom <$> let_ ty (Pack ty con [result])
     compareOp = runDef $ do
       lexp <- toExp x
       rexp <- toExp y
       case cTypeOf lexp of
-        PackT (toList -> [con])
+        SumT (toList -> [con])
           | con == Con "Int" [IntT] || con == Con "Float" [FloatT] -> do
             [lval] <- destruct lexp con
             [rval] <- destruct rexp con
@@ -201,19 +201,19 @@ toExp (S.BinOp _ opr x y) =
       lexp <- toExp x
       rexp <- toExp y
       case cTypeOf lexp of
-        PackT (Set.toList -> [Con "Int" [IntT]]) -> runDef $ do
+        SumT (Set.toList -> [Con "Int" [IntT]]) -> runDef $ do
           [lval] <- destruct lexp (Con "Int" [IntT])
           [rval] <- destruct rexp (Con "Int" [IntT])
           pure $ BinOp opr lval rval
-        PackT (Set.toList -> [Con "Float" [FloatT]]) -> runDef $ do
+        SumT (Set.toList -> [Con "Float" [FloatT]]) -> runDef $ do
           [lval] <- destruct lexp (Con "Float" [FloatT])
           [rval] <- destruct rexp (Con "Float" [FloatT])
           pure $ BinOp opr lval rval
-        PackT (Set.toList -> [Con "Char" [CharT]]) -> runDef $ do
+        SumT (Set.toList -> [Con "Char" [CharT]]) -> runDef $ do
           [lval] <- destruct lexp (Con "Char" [CharT])
           [rval] <- destruct rexp (Con "Char" [CharT])
           pure $ BinOp opr lval rval
-        PackT (Set.toList -> [Con "False" [], Con "True" []]) -> runDef $ do
+        SumT (Set.toList -> [Con "False" [], Con "True" []]) -> runDef $ do
           lval <- bind lexp
           rval <- bind rexp
           -- lval == rval

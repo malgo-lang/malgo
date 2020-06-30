@@ -77,7 +77,7 @@ loadDef x (Fun ps e) = do
     pure e'
 loadDef x (Pack _ con xs) =
   case cTypeOf x of
-    PackT union -> do
+    SumT union -> do
       let tag = Set.findIndex con union
       xs' <- traverse evalAtom xs
       defVar x $ PackV tag xs'
@@ -125,6 +125,7 @@ evalExp (PrimCall prim _ xs) = do
   prim' <- lookupPrim prim
   xs' <- traverse evalAtom xs
   prim' xs'
+evalExp (Cast _ x) = evalAtom x
 evalExp (BinOp o x y) = evalOp o <$> evalAtom x <*> evalAtom y
 evalExp (ArrayRead a i) = do
   ArrayV vec <- evalAtom a
@@ -165,14 +166,14 @@ evalMatch :: CType -> Value -> NonEmpty (Case Name) -> EvalM Value
 evalMatch _ v (Bind x e :| _) = do
   defVar x v
   evalExp e
-evalMatch (PackT union) (PackV tag xs) (Unpack con ys e :| rest) = do
+evalMatch (SumT union) (PackV tag xs) (Unpack con ys e :| rest) = do
   let tag' = Set.findIndex con union
   if tag == tag'
     then do
       zipWithM_ defVar ys xs
       evalExp e
     else case rest of
-      (c : cs) -> evalMatch (PackT union) (PackV tag xs) (c :| cs)
+      (c : cs) -> evalMatch (SumT union) (PackV tag xs) (c :| cs)
       _ -> bug Unreachable
 evalMatch _ _ _ = bug Unreachable
 
