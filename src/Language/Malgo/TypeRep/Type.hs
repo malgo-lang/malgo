@@ -18,6 +18,7 @@ data Type
   = TyApp TyCon [Type]
   | TyMeta TyVar
   | [Type] :-> Type
+  | Kind
   deriving stock (Eq, Show, Ord)
 
 infixl 6 :->
@@ -40,6 +41,7 @@ instance Pretty Type where
   pPrint (TyApp c ts) = pPrint c <> parens (sep $ punctuate "," $ map pPrint ts)
   pPrint (TyMeta v) = pPrint v
   pPrint (params :-> ret) = parens (sep $ punctuate "," $ map pPrint params) <> "->" <> pPrint ret
+  pPrint Kind = "*"
 
 instance Pretty TyCon where
   pPrint IntC = "Int"

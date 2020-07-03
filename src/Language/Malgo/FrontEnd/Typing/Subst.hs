@@ -44,8 +44,10 @@ instance Substitutable Type where
   apply s t@(TyMeta a) = fromMaybe t $ view (at a) s
   apply s (TyApp c ts) = TyApp c $ apply s ts
   apply s (ps :-> r) = map (apply s) ps :-> apply s r
+  apply _ Kind = Kind
   ftv (TyMeta a) = Set.singleton a
   ftv (TyApp _ ts) = foldMap ftv ts
+  ftv Kind = mempty
   ftv (ps :-> r) = foldMap ftv ps <> ftv r
 
 instance (Functor f, Foldable f, Substitutable a) => Substitutable (f a) where
