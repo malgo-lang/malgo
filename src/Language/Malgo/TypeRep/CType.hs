@@ -72,7 +72,6 @@ instance HasCType T.Type where
   cTypeOf (T.TyApp _ _) = bug Unreachable
   cTypeOf (T.TyMeta i) = VarT i
   cTypeOf (ps T.:-> r) = map cTypeOf ps :-> cTypeOf r
-  cTypeOf T.Kind = VarT (-1)
 
 tyVar :: Applicative f => (CType -> f CType) -> CType -> f CType
 tyVar f (ps :-> r) = (:->) <$> traverse (tyVar f) ps <*> tyVar f r

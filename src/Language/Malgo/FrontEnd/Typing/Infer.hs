@@ -37,7 +37,7 @@ instance Pass Typing (Expr (Id ())) (Expr (Id Type)) where
         env <- get
         opt <- getOpt
         when (dumpTypeTable opt) $ dump (toList env)
-        pure $ fmap (\x -> maybe (x & idMeta .~ Kind) (fmap removeExplictForall) (env ^. at x)) e
+        pure $ fmap (\x -> maybe (x & idMeta .~ TyMeta (-1)) (fmap removeExplictForall) (env ^. at x)) e
       Left doc -> errorDoc doc
 
 type Env = IdMap () (Id Scheme)

@@ -5,7 +5,7 @@
 
 module Language.Malgo.FrontEnd.Typing.Constraint
   ( Constraint (..),
-    WithPos(..),
+    WithPos (..),
     solve,
     instantiate,
   )
@@ -51,9 +51,6 @@ instantiate (Forall vs t) = do
   pure $ apply (Subst $ Map.fromList $ zip vs ts) t
 
 unify :: SourcePos -> Type -> Type -> Either Doc Subst
-unify _ Kind Kind = pure mempty
-unify pos Kind t = Left $ "mismatch level" <+> pPrint Kind <+> "," <+> pPrint t $$ "on:" <+> pPrint pos
-unify pos t Kind = Left $ "mismatch level" <+> pPrint Kind <+> "," <+> pPrint t $$ "on:" <+> pPrint pos
 unify pos (TyMeta a) t = bind pos a t
 unify pos t (TyMeta a) = bind pos a t
 unify pos (TyApp c1 ts1) (TyApp c2 ts2)
