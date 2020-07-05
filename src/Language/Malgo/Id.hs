@@ -39,10 +39,10 @@ data Id a
   deriving stock (Show, Functor, Foldable)
 
 instance Eq (Id a) where
-  Id { _idUniq = x } == Id { _idUniq = y } = x == y
+  Id {_idUniq = x} == Id {_idUniq = y} = x == y
 
 instance Ord (Id a) where
-  compare Id { _idUniq = x } Id { _idUniq = y } = compare x y
+  compare Id {_idUniq = x} Id {_idUniq = y} = compare x y
 
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n u m) = text n <> "." <> text (show u) <> ":" <> pPrint m

@@ -35,13 +35,13 @@ import Colog
   )
 import qualified Colog
 import Control.Monad.Fix
+import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.Text as T
 import LLVM.IRBuilder (IRBuilderT, ModuleBuilderT)
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.Parsec.Pos (SourcePos, sourceLine)
 import Text.PrettyPrint (($$), text)
-import qualified Control.Monad.Trans.State.Lazy as Lazy
 
 data Opt
   = Opt
