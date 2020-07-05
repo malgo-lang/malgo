@@ -17,7 +17,6 @@ module Language.Malgo.Monad
     runMalgo,
     MonadMalgo (..),
     Opt (..),
-    Colog.Severity (..),
     getFileName,
     viewLine,
     malgoError,
@@ -25,61 +24,47 @@ module Language.Malgo.Monad
   )
 where
 
-import Colog
-  ( HasLog (..),
-    LogAction (..),
-    Message,
-    Severity (..),
-    cfilter,
-    richMessageAction,
-  )
-import qualified Colog
 import Control.Monad.Fix
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.Text as T
+import qualified Data.Text.IO as T
 import LLVM.IRBuilder (IRBuilderT, ModuleBuilderT)
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
+import System.IO (stderr)
 import Text.Parsec.Pos (SourcePos, sourceLine)
 import Text.PrettyPrint (($$), text)
 
-data Opt
-  = Opt
-      { srcName :: String,
-        dstName :: String,
-        dumpParsed :: Bool,
-        dumpRenamed :: Bool,
-        dumpTyped :: Bool,
-        dumpKNormal :: Bool,
-        dumpTypeTable :: Bool,
-        dumpClosure :: Bool,
-        dumpLIR :: Bool,
-        dumpDesugar :: Bool,
-        dumpLambdaLift :: Bool,
-        dumpFlat :: Bool,
-        isInterpretMode :: Bool,
-        isDebugMode :: Bool,
-        isCoreMode :: Bool,
-        applyLambdaLift :: Bool,
-        noOptimize :: Bool
-      }
+data Opt = Opt
+  { srcName :: String,
+    dstName :: String,
+    dumpParsed :: Bool,
+    dumpRenamed :: Bool,
+    dumpTyped :: Bool,
+    dumpKNormal :: Bool,
+    dumpTypeTable :: Bool,
+    dumpClosure :: Bool,
+    dumpLIR :: Bool,
+    dumpDesugar :: Bool,
+    dumpLambdaLift :: Bool,
+    dumpFlat :: Bool,
+    isInterpretMode :: Bool,
+    isDebugMode :: Bool,
+    isCoreMode :: Bool,
+    applyLambdaLift :: Bool,
+    noOptimize :: Bool
+  }
   deriving stock (Eq, Show)
 
-data MalgoEnv m
-  = MalgoEnv
-      { maOption :: Opt,
-        maSource :: Text,
-        maLogAction :: LogAction m Message
-      }
+data MalgoEnv = MalgoEnv
+  { maOption :: Opt,
+    maSource :: Text
+  }
 
 newtype UniqSupply = UniqSupply {uniqSupply :: Int}
 
-instance HasLog (MalgoEnv m) Message m where
-  getLogAction = maLogAction
-  setLogAction newLogAction env = env {maLogAction = newLogAction}
-
-newtype MalgoM a = MalgoM {unMalgoM :: ReaderT (MalgoEnv MalgoM) (Lazy.StateT UniqSupply IO) a}
-  deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader (MalgoEnv MalgoM), MonadState UniqSupply, MonadIO, MonadFix, MonadFail)
+newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv (Lazy.StateT UniqSupply IO) a}
+  deriving newtype (Functor, Applicative, Alternative, Monad, MonadReader MalgoEnv, MonadState UniqSupply, MonadIO, MonadFix, MonadFail)
 
 runMalgo :: MonadIO m => MalgoM a -> Opt -> Text -> m a
 runMalgo (MalgoM m) opt source =
@@ -88,11 +73,7 @@ runMalgo (MalgoM m) opt source =
       m
       MalgoEnv
         { maOption = opt,
-          maSource = source,
-          maLogAction =
-            if isDebugMode opt
-              then richMessageAction
-              else cfilter (\(Colog.Msg sev _ _) -> sev > Colog.Debug) richMessageAction
+          maSource = source
         }
 
 class Monad m => MonadMalgo m where
@@ -102,22 +83,22 @@ class Monad m => MonadMalgo m where
   getSource :: m Text
   default getSource :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => m Text
   getSource = lift getSource
-  log :: Severity -> Text -> m ()
-  default log :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => Severity -> Text -> m ()
-  log s t = lift $ log s t
+  printLog :: Text -> m ()
+  default printLog :: MonadIO m => Text -> m ()
+  printLog = liftIO . T.hPutStrLn stderr
 
 instance MonadMalgo MalgoM where
   getOpt = asks maOption
   getSource = asks maSource
-  log = Colog.log
+  printLog = liftIO . T.hPutStrLn stderr
 
-instance MonadMalgo m => MonadMalgo (ReaderT r m)
+instance (MonadIO m, MonadMalgo m) => MonadMalgo (ReaderT r m)
 
-instance MonadMalgo m => MonadMalgo (ExceptT e m)
+instance (MonadIO m, MonadMalgo m) => MonadMalgo (ExceptT e m)
 
-instance MonadMalgo m => MonadMalgo (StateT s m)
+instance (MonadIO m, MonadMalgo m) => MonadMalgo (StateT s m)
 
-instance MonadMalgo m => MonadMalgo (WriterT w m)
+instance (MonadIO m, MonadMalgo m) => MonadMalgo (WriterT w m)
 
 getFileName :: (MonadMalgo m, IsString a) => m a
 getFileName = fromString . srcName <$> getOpt

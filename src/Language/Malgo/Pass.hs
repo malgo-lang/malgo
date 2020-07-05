@@ -26,14 +26,14 @@ dump :: (MonadMalgo m, Show a, MonadIO m, Pretty a) => a -> m ()
 dump x = do
   opt <- getOpt
   if isDebugMode opt
-    then log Debug $ "\n" <> TL.toStrict (pShow x)
-    else log Info $ "\n" <> T.pack (renderStyle (style {lineLength = maxBound}) (pPrint x))
+    then printLog $ TL.toStrict (pShow x)
+    else printLog $ T.pack (renderStyle (style {lineLength = maxBound}) (pPrint x))
 
 transWithDump :: forall p s t. (Pass p s t, Show t, Pretty t) => s -> MalgoM t
 transWithDump s = do
   opt <- asks maOption
   t <- trans @p s
   when (isDump @p opt) $ do
-    log Info $ "dump " <> passName @p
+    printLog $ "dump " <> passName @p
     dump t
   pure t
