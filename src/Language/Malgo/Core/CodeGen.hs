@@ -19,22 +19,27 @@ where
 import Control.Monad.Cont
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
+import qualified Data.ByteString as B
 import Data.Char (ord)
 import Data.Either (partitionEithers)
 import qualified Data.IntMap as IntMap
 import Data.Map ()
 import qualified Data.Set as Set
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
 import GHC.Exts (fromList)
 import qualified LLVM.AST
+import LLVM.AST (Definition (..), Name, mkName)
 import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
+import LLVM.AST.Global
 import qualified LLVM.AST.FloatingPointPredicate as FP
 import qualified LLVM.AST.IntegerPredicate as IP
+import LLVM.AST.Linkage (Linkage (External))
 import LLVM.AST.Operand (Operand (..))
 import LLVM.AST.Type hiding (double, void)
 import qualified LLVM.AST.Type as LT
-import LLVM.AST.Typed ()
+import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder
 import Language.Malgo.IR.Core as Core
 import qualified Language.Malgo.IR.Op as Op
@@ -119,12 +124,11 @@ instance Pass CodeGenExp (Exp (Id CType)) [LLVM.AST.Definition] where
 
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
-data OprMap
-  = OprMap
-      { _valueMap :: IdMap CType Operand,
-        _funcMap :: IdMap CType Operand,
-        _globalMap :: IdMap CType Operand
-      }
+data OprMap = OprMap
+  { _valueMap :: IdMap CType Operand,
+    _funcMap :: IdMap CType Operand,
+    _globalMap :: IdMap CType Operand
+  }
 
 valueMap :: Lens' OprMap (IdMap CType Operand)
 valueMap = lens _valueMap (\s a -> s {_valueMap = a})
@@ -411,7 +415,26 @@ genAtom (Unboxed (Core.Float x)) = pure $ double x
 genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x
 genAtom (Unboxed (Core.String x)) = do
   i <- getUniq
-  ConstantOperand <$> globalStringPtr x (LLVM.AST.mkName $ "str" <> show i)
+  ConstantOperand <$> globalTextPtr (T.pack x) (mkName $ "str" <> show i)
+
+globalTextPtr :: MonadModuleBuilder m => Text -> Name -> m C.Constant
+globalTextPtr str nm = do
+  let bytes = map toInteger $ B.unpack $ T.encodeUtf8 str
+      llvmVals = map (C.Int 8) (bytes ++ [0])
+      char = IntegerType 8
+      charArray = C.Array char llvmVals
+      ty = LLVM.AST.Typed.typeOf charArray
+  emitDefn $
+    GlobalDefinition
+      globalVariableDefaults
+        { name = nm,
+          LLVM.AST.Global.type' = ty,
+          linkage = External,
+          isConstant = True,
+          initializer = Just charArray,
+          unnamedAddr = Just GlobalAddr
+        }
+  pure $ C.GetElementPtr True (C.GlobalReference (ptr ty) nm) [(C.Int 32 0), (C.Int 32 0)]
 
 genObj ::
   ( MonadReader OprMap m,
