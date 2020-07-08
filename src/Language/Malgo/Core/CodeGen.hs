@@ -19,14 +19,14 @@ where
 import Control.Monad.Cont
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
-import qualified Data.ByteString as B
+import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString.Builder as B
 import Data.Char (ord)
 import Data.Either (partitionEithers)
 import qualified Data.IntMap as IntMap
 import Data.Map ()
 import qualified Data.Set as Set
 import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
 import GHC.Exts (fromList)
 import qualified LLVM.AST
 import LLVM.AST (Definition (..), Name, mkName)
@@ -40,7 +40,7 @@ import LLVM.AST.Operand (Operand (..))
 import LLVM.AST.Type hiding (double, void)
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
-import LLVM.IRBuilder
+import LLVM.IRBuilder hiding (globalStringPtr)
 import Language.Malgo.IR.Core as Core
 import qualified Language.Malgo.IR.Op as Op
 import Language.Malgo.Id
@@ -415,12 +415,12 @@ genAtom (Unboxed (Core.Float x)) = pure $ double x
 genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x
 genAtom (Unboxed (Core.String x)) = do
   i <- getUniq
-  ConstantOperand <$> globalTextPtr (T.pack x) (mkName $ "str" <> show i)
+  ConstantOperand <$> globalStringPtr x (mkName $ "str" <> show i)
 
-globalTextPtr :: MonadModuleBuilder m => Text -> Name -> m C.Constant
-globalTextPtr str nm = do
-  let bytes = map toInteger $ B.unpack $ T.encodeUtf8 str
-      llvmVals = map (C.Int 8) (bytes ++ [0])
+globalStringPtr :: MonadModuleBuilder m => String -> Name -> m C.Constant
+globalStringPtr str nm = do
+  let utf8Vals = map toInteger $ B.unpack $ B.toLazyByteString $ B.stringUtf8 str 
+      llvmVals = map (C.Int 8) (utf8Vals ++ [0])
       char = IntegerType 8
       charArray = C.Array char llvmVals
       ty = LLVM.AST.Typed.typeOf charArray
