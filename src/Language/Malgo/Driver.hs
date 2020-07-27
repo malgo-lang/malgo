@@ -9,7 +9,6 @@ module Language.Malgo.Driver
   ( parseOpt,
     interpret,
     compile,
-    compileCore,
   )
 where
 
@@ -18,8 +17,6 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
 import qualified LLVM.AST as L
-import Language.Malgo.BackEnd.GenLIR
-import Language.Malgo.BackEnd.GenLLVM
 import Language.Malgo.Core.CodeGen
 import Language.Malgo.Core.Eval
 import Language.Malgo.Core.Flat
@@ -32,10 +29,6 @@ import Language.Malgo.IR.Core (appProgram)
 import Language.Malgo.IR.Syntax
 import qualified Language.Malgo.Lexer as Lexer
 import Language.Malgo.MiddleEnd.Desugar
-import Language.Malgo.MiddleEnd.HIRLint
-import Language.Malgo.MiddleEnd.MIRLint
-import Language.Malgo.MiddleEnd.TransToHIR
-import Language.Malgo.MiddleEnd.TransToMIR
 import Language.Malgo.Monad as M
 import qualified Language.Malgo.Parser as Parser
 import Language.Malgo.Pass
@@ -57,16 +50,12 @@ parseOpt =
             <*> switch (long "dump-parsed")
             <*> switch (long "dump-renamed")
             <*> switch (long "dump-typed")
-            <*> switch (long "dump-hir")
             <*> switch (long "dump-type-table")
-            <*> switch (long "dump-mir")
-            <*> switch (long "dump-lir")
             <*> switch (long "dump-desugar")
             <*> switch (long "dump-lambdalift")
             <*> switch (long "dump-flat")
             <*> switch (long "interpret")
             <*> switch (long "debug-mode")
-            <*> switch (long "core-mode")
             <*> flag True False (long "no-lambdalift")
         )
           <*> switch (long "no-opt")
@@ -100,8 +89,8 @@ interpret = M.runMalgo $ do
       >>= transWithDump @LambdaLift
   liftIO $ runEval $ evalProgram desugared
 
-compileCore :: MonadIO m => Opt -> Text -> m L.Module
-compileCore = M.runMalgo $ do
+compile :: MonadIO m => Opt -> Text -> m L.Module
+compile = M.runMalgo $ do
   opt <- asks maOption
   llvmir <-
     readAndParse
@@ -116,26 +105,6 @@ compileCore = M.runMalgo $ do
               then transWithDump @LambdaLift >=> appProgram (trans @Flat) >=> trans @CodeGen
               else trans @CodeGenExp
           )
-  pure $
-    L.defaultModule
-      { L.moduleName = fromString $ srcName opt,
-        L.moduleSourceFileName = B.toShort $ T.encodeUtf8 $ T.pack $ srcName opt,
-        L.moduleDefinitions = llvmir
-      }
-
-compile :: MonadIO m => Opt -> Text -> m L.Module
-compile = M.runMalgo $ do
-  opt <- asks maOption
-  llvmir <-
-    readAndParse
-      >>= transWithDump @Rename
-      >>= transWithDump @Typing
-      >>= transWithDump @TransToHIR
-      >>= transWithDump @HIRLint
-      >>= transWithDump @TransToMIR
-      >>= transWithDump @MIRLint
-      >>= transWithDump @GenLIR
-      >>= trans @GenLLVM
   pure $
     L.defaultModule
       { L.moduleName = fromString $ srcName opt,

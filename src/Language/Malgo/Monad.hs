@@ -41,16 +41,12 @@ data Opt = Opt
     dumpParsed :: Bool,
     dumpRenamed :: Bool,
     dumpTyped :: Bool,
-    dumpKNormal :: Bool,
     dumpTypeTable :: Bool,
-    dumpClosure :: Bool,
-    dumpLIR :: Bool,
     dumpDesugar :: Bool,
     dumpLambdaLift :: Bool,
     dumpFlat :: Bool,
     isInterpretMode :: Bool,
     isDebugMode :: Bool,
-    isCoreMode :: Bool,
     applyLambdaLift :: Bool,
     noOptimize :: Bool
   }

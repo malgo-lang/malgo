@@ -26,8 +26,7 @@ main =
       if isInterpretMode opt
         then void $ interpret opt src
         else do
-          ll <- (if isCoreMode opt then compileCore else compile) opt src
-          -- TL.writeFile (dstName opt) (ppllvm ll)
+          ll <- compile opt src
           withContext $ \ctx -> do
             llvm <- withModuleFromAST ctx ll moduleLLVMAssembly
             BS.writeFile (dstName opt) llvm
