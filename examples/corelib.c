@@ -1,7 +1,10 @@
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdint.h>
 #include <gc.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
 
 typedef struct {
   int64_t tag;
@@ -78,4 +81,28 @@ Unit* print_tuple2bool(Tuple2Bool* x) {
   print_bool(x->payload.fst);
   print_bool(x->payload.snd);
   return new_Unit();
+}
+
+Unit* malgo_sleep(Int* sec) {
+  sleep(sec->payload);
+  return new_Unit();
+}
+
+Unit* gen_seed(Unit* unused) {
+  srand((unsigned) time(NULL));
+  return new_Unit();
+}
+
+typedef struct {
+  int64_t tag;
+  char payload;
+} Char;
+
+Unit* print_char(Char* c) {
+  printf("%c", c->payload);
+  return new_Unit();
+}
+
+Bool* rand_bool(Unit* unused) {
+  return new_Bool((bool)(rand() % 2));
 }

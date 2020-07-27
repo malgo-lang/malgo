@@ -3,7 +3,6 @@ let extern newline : () -> {} = "newline" in
 let extern gen_seed: () -> {} = "gen_seed" in
 let extern rand_bool : () -> Bool = "rand_bool" in
 let extern sleep : Int -> {} = "malgo_sleep" in
-let extern copy_bool_array : [Bool] -> [Bool] = "copy_bool_array" in
 let fun pulsar(cells: [Bool]) =
   cells.(11 * 50 + 23) <- true;
   cells.(11 * 50 + 23) <- true;
@@ -59,8 +58,16 @@ let fun next_state(cells: [Bool], x: Int, y: Int): Bool =
   then (living.(0) == 2) || (living.(0) == 3)
   else (living.(0) == 3) in
 
+let fun copy_cells(cells: [Bool]): [Bool] =
+  let val copy = array(false, x_width * y_width) in
+  let fun go(i: Int): {} =
+    if i >= x_width * y_width
+      then {}
+      else copy.(i) <- cells.(i); go(i + 1) in
+  go(0); copy in
+  
 let fun update_cells(cells: [Bool]): {} =
-  let val copy: [Bool] = copy_bool_array(cells) in
+  let val copy: [Bool] = copy_cells(cells) in
   let fun go_y(y: Int): {} =
       let fun go_x(x: Int): {} =
         if x >= x_width
