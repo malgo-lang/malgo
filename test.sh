@@ -6,6 +6,7 @@ rm ./tmp/*
 for file in `ls ./testcases | grep mlg`; do
   echo -e "\n=== $file no opt ==="
   stack exec malgo -- --no-opt --no-lambdalift ./testcases/$file -o ./tmp/$file.ll && \
+  cat ./tmp/$file.ll && \
   clang -lgc ./examples/corelib.c ./tmp/$file.ll -o ./tmp/$file.out && \
   ./tmp/$file.out && \
   rm ./tmp/$file.ll && \
