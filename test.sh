@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # testcasesがコンパイルできるかチェック
-mkdir ./tmp
+rm ./tmp/*
 
 for file in `ls ./testcases | grep mlg`; do
   echo -e "\n=== $file no opt ==="
