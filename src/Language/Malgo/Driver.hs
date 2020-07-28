@@ -7,7 +7,6 @@
 
 module Language.Malgo.Driver
   ( parseOpt,
-    interpret,
     compile,
   )
 where
@@ -18,7 +17,6 @@ import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
 import qualified LLVM.AST as L
 import Language.Malgo.Core.CodeGen
-import Language.Malgo.Core.Eval
 import Language.Malgo.Core.Flat
 import Language.Malgo.Core.LambdaLift
 import Language.Malgo.Core.Lint
@@ -54,7 +52,6 @@ parseOpt =
             <*> switch (long "dump-desugar")
             <*> switch (long "dump-lambdalift")
             <*> switch (long "dump-flat")
-            <*> switch (long "interpret")
             <*> switch (long "debug-mode")
             <*> flag True False (long "no-lambdalift")
         )
@@ -73,21 +70,6 @@ readAndParse = do
         Right x -> x
   when (dumpParsed opt) $ dump ast
   pure ast
-
-interpret :: MonadIO m => Opt -> Text -> m Value
-interpret = M.runMalgo $ do
-  desugared <-
-    readAndParse
-      >>= transWithDump @Rename
-      >>= transWithDump @Typing
-      >>= transWithDump @Desugar
-      >>= trans @LintExp
-      >>= transWithDump @Flat
-      >>= trans @LintExp
-      >>= transWithDump @Optimize
-      >>= trans @LintExp
-      >>= transWithDump @LambdaLift
-  liftIO $ runEval $ evalProgram desugared
 
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do

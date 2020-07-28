@@ -45,7 +45,6 @@ data Opt = Opt
     dumpDesugar :: Bool,
     dumpLambdaLift :: Bool,
     dumpFlat :: Bool,
-    isInterpretMode :: Bool,
     isDebugMode :: Bool,
     applyLambdaLift :: Bool,
     noOptimize :: Bool

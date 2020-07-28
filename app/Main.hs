@@ -23,13 +23,10 @@ main =
   ( do
       opt <- parseOpt
       src <- T.readFile (srcName opt)
-      if isInterpretMode opt
-        then void $ interpret opt src
-        else do
-          ll <- compile opt src
-          withContext $ \ctx -> do
-            llvm <- withModuleFromAST ctx ll moduleLLVMAssembly
-            BS.writeFile (dstName opt) llvm
+      ll <- compile opt src
+      withContext $ \ctx -> do
+        llvm <- withModuleFromAST ctx ll moduleLLVMAssembly
+        BS.writeFile (dstName opt) llvm
   )
     `catch` \e -> do
       hPutStr stderr (displayException (e :: Bug))
