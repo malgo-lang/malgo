@@ -1,0 +1,148 @@
+cabal-version: 1.24
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: aea14a3b423ac67b99106448dcb279af458be27b28352f97d8914503ecb0a273
+
+name:           malgo
+version:        1.0.0.0
+category:       Compilers/Interpreters
+homepage:       https://github.com/takoeight0821/malgo#readme
+bug-reports:    https://github.com/takoeight0821/malgo/issues
+author:         Yuya Kono
+maintainer:     takohati0821@gmail.com
+copyright:      2017-2020 Yuya Kono
+license:        BSD3
+license-file:   LICENSE
+build-type:     Custom
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/takoeight0821/malgo
+
+custom-setup
+  setup-depends:
+      Cabal
+    , base
+    , hpack
+
+library
+  exposed-modules:
+      Language.Malgo.Core.CodeGen
+      Language.Malgo.Core.Flat
+      Language.Malgo.Core.LambdaLift
+      Language.Malgo.Core.Lint
+      Language.Malgo.Core.Optimize
+      Language.Malgo.Driver
+      Language.Malgo.FrontEnd.Rename
+      Language.Malgo.FrontEnd.Typing.Constraint
+      Language.Malgo.FrontEnd.Typing.Infer
+      Language.Malgo.FrontEnd.Typing.Subst
+      Language.Malgo.Id
+      Language.Malgo.IR.Core
+      Language.Malgo.IR.Op
+      Language.Malgo.IR.Syntax
+      Language.Malgo.Lexer
+      Language.Malgo.MiddleEnd.Desugar
+      Language.Malgo.Monad
+      Language.Malgo.Parser
+      Language.Malgo.Pass
+      Language.Malgo.Prelude
+      Language.Malgo.Pretty
+      Language.Malgo.Token
+      Language.Malgo.TypeRep.CType
+      Language.Malgo.TypeRep.SType
+      Language.Malgo.TypeRep.Type
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      src
+  default-extensions: StrictData
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
+  build-tools:
+      happy
+  build-depends:
+      array
+    , base
+    , bytestring
+    , containers
+    , dlist
+    , lens
+    , llvm-hs
+    , llvm-hs-pure
+    , mtl
+    , optparse-applicative
+    , parsec
+    , pretty
+    , pretty-simple
+    , text
+    , transformers
+    , vector
+  default-language: Haskell2010
+
+executable malgo
+  main-is: Main.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      app
+  default-extensions: StrictData
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
+  build-tools:
+      happy
+  build-depends:
+      array
+    , base
+    , bytestring
+    , containers
+    , dlist
+    , lens
+    , llvm-hs
+    , llvm-hs-pretty
+    , llvm-hs-pure
+    , malgo
+    , mtl
+    , optparse-applicative
+    , parsec
+    , pretty
+    , pretty-simple
+    , text
+    , transformers
+    , vector
+  default-language: Haskell2010
+
+test-suite malgo-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      test
+  default-extensions: StrictData
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
+  build-tools:
+      happy
+  build-depends:
+      array
+    , base
+    , bytestring
+    , containers
+    , dlist
+    , hspec
+    , lens
+    , llvm-hs
+    , llvm-hs-pure
+    , malgo
+    , mtl
+    , optparse-applicative
+    , parsec
+    , pretty
+    , pretty-simple
+    , text
+    , transformers
+    , vector
+  default-language: Haskell2010

@@ -37,7 +37,6 @@ before_install:
  - unset CC
  - env
  - PATH=/opt/ghc/bin:/opt/ghc-ppa-tools/bin:$PATH
- - PKGNAME='llvm-hs'
  - export LD_LIBRARY_PATH=$HOME/llvm-build-${LLVM_VER}/lib:$LD_LIBRARY_PATH
  - export PATH=$HOME/llvm-build-${LLVM_VER}/bin:$PATH
  - mkdir -p $HOME/bin
