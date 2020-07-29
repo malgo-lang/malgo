@@ -53,6 +53,26 @@ data Expr a
   | Match SourcePos (Expr a) (NonEmpty (Pat a, Expr a))
   deriving stock (Eq, Show, Functor)
 
+-- | 変数定義、関数定義、外部関数定義
+data Decl a
+  = FunDec
+      [ ( SourcePos,
+          a,
+          [(a, Maybe (SType a))],
+          Maybe (SType a),
+          Expr a
+        )
+      ]
+  | ValDec SourcePos a (Maybe (SType a)) (Expr a)
+  | ExDec SourcePos a (SType a) String
+  deriving stock (Eq, Show, Functor)
+
+-- | パターン
+data Pat a
+  = VarP SourcePos a
+  | TupleP SourcePos [Pat a]
+  deriving stock (Eq, Show, Functor)
+
 -- | Exprからソースコード上の位置情報を取り出すための補助関数
 position :: Expr t -> SourcePos
 position (Var i _) = i
@@ -103,12 +123,6 @@ instance Pretty a => Pretty (Expr a) where
     where
       pPrintClause (p, e) = pPrint p <+> "=>" <+> pPrint e
 
--- | パターン
-data Pat a
-  = VarP SourcePos a
-  | TupleP SourcePos [Pat a]
-  deriving stock (Eq, Show, Functor)
-
 instance Pretty a => Pretty (Pat a) where
   pPrint (VarP _ x) = pPrint x
   pPrint (TupleP _ xs) = braces $ sep $ punctuate "," $ map pPrint xs
@@ -116,20 +130,6 @@ instance Pretty a => Pretty (Pat a) where
 instance HasType a => HasType (Pat a) where
   typeOf (VarP _ x) = typeOf x
   typeOf (TupleP _ xs) = TyApp TupleC $ map typeOf xs
-
--- | 変数定義、関数定義、外部関数定義
-data Decl a
-  = FunDec
-      [ ( SourcePos,
-          a,
-          [(a, Maybe (SType a))],
-          Maybe (SType a),
-          Expr a
-        )
-      ]
-  | ValDec SourcePos a (Maybe (SType a)) (Expr a)
-  | ExDec SourcePos a (SType a) String
-  deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Decl a) where
   pPrint (FunDec fs) = sep $ map pp fs
