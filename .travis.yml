@@ -35,6 +35,7 @@ addons:
 
 install:
   - |
+    llvm-config --version
     # install stack
     curl -sSL https://get.haskellstack.org/ | sh
 
