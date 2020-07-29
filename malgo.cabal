@@ -4,7 +4,7 @@ cabal-version: 1.24
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aea14a3b423ac67b99106448dcb279af458be27b28352f97d8914503ecb0a273
+-- hash: 2572d013bfbab30b337a212fb879a1ddb7b03363dc3cdd11a4f67a9f0895a56b
 
 name:           malgo
 version:        1.0.0.0
@@ -72,7 +72,7 @@ library
     , containers
     , dlist
     , lens
-    , llvm-hs
+    , llvm-hs-pretty
     , llvm-hs-pure
     , mtl
     , optparse-applicative
@@ -101,7 +101,6 @@ executable malgo
     , containers
     , dlist
     , lens
-    , llvm-hs
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
@@ -134,7 +133,7 @@ test-suite malgo-test
     , dlist
     , hspec
     , lens
-    , llvm-hs
+    , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
     , mtl

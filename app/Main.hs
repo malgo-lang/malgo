@@ -5,18 +5,14 @@
 module Main where
 
 import Control.Exception (catch, displayException)
-import qualified Data.ByteString as BS
 import qualified Data.Text.IO as T
-import LLVM.Context
-import LLVM.Module
+import qualified Data.Text.Lazy.IO as TL
+import LLVM.Pretty (ppllvm)
 import Language.Malgo.Driver
 import Language.Malgo.Monad
 import Language.Malgo.Prelude
 import System.Exit (exitFailure)
 import System.IO (hPutStr, stderr)
-
--- import LLVM.Pretty (ppllvm)
--- import qualified Data.Text.Lazy.IO as TL
 
 main :: IO ()
 main =
@@ -24,9 +20,7 @@ main =
       opt <- parseOpt
       src <- T.readFile (srcName opt)
       ll <- compile opt src
-      withContext $ \ctx -> do
-        llvm <- withModuleFromAST ctx ll moduleLLVMAssembly
-        BS.writeFile (dstName opt) llvm
+      TL.writeFile (dstName opt) (ppllvm ll)
   )
     `catch` \e -> do
       hPutStr stderr (displayException (e :: Bug))
