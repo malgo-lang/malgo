@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -20,13 +21,13 @@ import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type
 import Text.Parsec.Pos (SourcePos)
 import Text.PrettyPrint.HughesPJClass
-  ( ($+$),
-    braces,
+  ( braces,
     brackets,
     doubleQuotes,
     parens,
     punctuate,
     quotes,
+    ($+$),
     sep,
   )
 
@@ -123,6 +124,44 @@ instance Pretty a => Pretty (Expr a) where
     where
       pPrintClause (p, e) = pPrint p <+> "=>" <+> pPrint e
 
+instance HasType a => HasType (Expr a) where
+  typeOf (Var _ x) = typeOf x
+  typeOf (Int _ _) = intTy
+  typeOf (Float _ _) = floatTy
+  typeOf (Bool _ _) = boolTy
+  typeOf (Char _ _) = charTy
+  typeOf (String _ _) = stringTy
+  typeOf (Tuple _ xs) = tupleTy $ map typeOf xs
+  typeOf (Array _ (x :| _)) = arrayTy $ typeOf x
+  typeOf (MakeArray _ x _) = arrayTy $ typeOf x
+  typeOf (ArrayRead _ (typeOf -> TyApp ArrayC [t]) _) = t
+  typeOf ArrayRead {} = bug Unreachable
+  typeOf (ArrayWrite _ _ _ _) = tupleTy []
+  typeOf (Call _ (typeOf -> _ :-> t) _) = t
+  typeOf (Call _ _ _) = bug Unreachable
+  typeOf (Fn _ _ e) = typeOf e
+  typeOf (Seq _ _ e) = typeOf e
+  typeOf (Let _ _ e) = typeOf e
+  typeOf (If _ _ e _) = typeOf e
+  typeOf (BinOp _ Add _ _) = intTy
+  typeOf (BinOp _ Sub _ _) = intTy
+  typeOf (BinOp _ Mul _ _) = intTy
+  typeOf (BinOp _ Div _ _) = intTy
+  typeOf (BinOp _ Mod _ _) = intTy
+  typeOf (BinOp _ FAdd _ _) = floatTy
+  typeOf (BinOp _ FSub _ _) = floatTy
+  typeOf (BinOp _ FMul _ _) = floatTy
+  typeOf (BinOp _ FDiv _ _) = floatTy
+  typeOf (BinOp _ Eq _ _) = boolTy
+  typeOf (BinOp _ Neq _ _) = boolTy
+  typeOf (BinOp _ Lt _ _) = boolTy
+  typeOf (BinOp _ Gt _ _) = boolTy
+  typeOf (BinOp _ Le _ _) = boolTy
+  typeOf (BinOp _ Ge _ _) = boolTy
+  typeOf (BinOp _ And _ _) = boolTy
+  typeOf (BinOp _ Or _ _) = boolTy
+  typeOf (Match _ _ ((_, e) :| _)) = typeOf e
+
 instance Pretty a => Pretty (Pat a) where
   pPrint (VarP _ x) = pPrint x
   pPrint (TupleP _ xs) = braces $ sep $ punctuate "," $ map pPrint xs
@@ -139,8 +178,8 @@ instance Pretty a => Pretty (Decl a) where
           "fun"
             <+> ( parens
                     . sep
-                    $ pPrint name
-                      : map (\(n, t) -> pPrint n <> maybe mempty ((":" <>) . pPrint) t) params
+                    $ pPrint name :
+                    map (\(n, t) -> pPrint n <> maybe mempty ((":" <>) . pPrint) t) params
                 )
             <> maybe mempty ((":" <>) . pPrint) ret
             $+$ pPrint body
