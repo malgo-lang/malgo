@@ -8,15 +8,9 @@ maintainer: "takohati0821@gmail.com"
 copyright: "2017-2020 Yuya Kono"
 
 extra-source-files:
-  README.md
+  - README.md
 
-build-type: Custom
-
-custom-setup:
-  dependencies:
-    - base
-    - Cabal
-    - hpack
+build-type: Simple
 
 dependencies:
   - array
@@ -39,7 +33,6 @@ dependencies:
 ghc-options:
   - -Wall
   - -Wcompat
-  - -Wincomplete-record-updates
   - -Wincomplete-uni-patterns
   - -Wmissing-deriving-strategies
   - -Wno-name-shadowing
