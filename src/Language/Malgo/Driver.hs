@@ -54,8 +54,9 @@ parseOpt =
             <*> switch (long "dump-flat")
             <*> switch (long "debug-mode")
             <*> flag True False (long "no-lambdalift")
+            <*> switch (long "no-opt")
+            <*> fmap read (strOption (long "inline" <> value "10"))
         )
-          <*> switch (long "no-opt")
           <**> helper
       )
       (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")

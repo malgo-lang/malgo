@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -17,14 +18,14 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
 import Text.PrettyPrint.HughesPJ
-  ( ($$),
-    brackets,
+  ( brackets,
     char,
     doubleQuotes,
     parens,
     quotes,
     sep,
     text,
+    ($$),
     vcat,
   )
 
@@ -59,7 +60,7 @@ Atoms  a ::= unboxed | x
 data Atom a
   = Var a
   | Unboxed Unboxed
-  deriving stock (Eq, Show, Functor)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasCType a => HasCType (Atom a) where
   cTypeOf (Var x) = cTypeOf x
@@ -99,7 +100,7 @@ data Exp a
   | Cast CType (Atom a)
   | Let [(a, Obj a)] (Exp a)
   | Match (Exp a) (NonEmpty (Case a))
-  deriving stock (Eq, Show, Functor)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasCType a => HasCType (Exp a) where
   cTypeOf (Atom x) = cTypeOf x
@@ -205,7 +206,7 @@ Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
 data Case a
   = Unpack Con [a] (Exp a)
   | Bind a (Exp a)
-  deriving stock (Eq, Show, Functor)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Case a) where
   pPrint (Unpack c xs e) = parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
@@ -234,7 +235,7 @@ data Obj a
   = Fun [a] (Exp a)
   | Pack CType Con [Atom a]
   | Array (Atom a) (Atom a)
-  deriving stock (Eq, Show, Functor)
+  deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
@@ -260,14 +261,13 @@ instance HasAtom Obj where
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 -}
-data Program a
-  = Program
-      { -- | main内で初期化される値
-        topBinds :: [(a, Obj a)],
-        mainExp :: Exp a,
-        -- | トップレベル関数
-        topFuncs :: [(a, ([a], Exp a))]
-      }
+data Program a = Program
+  { -- | main内で初期化される値
+    topBinds :: [(a, Obj a)],
+    mainExp :: Exp a,
+    -- | トップレベル関数
+    topFuncs :: [(a, ([a], Exp a))]
+  }
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Program a) where

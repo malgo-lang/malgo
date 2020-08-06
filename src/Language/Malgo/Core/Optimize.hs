@@ -24,12 +24,25 @@ data Optimize
 instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
   passName = "optimize"
   isDump = dumpDesugar
-  trans e = evalStateT ?? mempty $ optCallInline e >>= lift . trans @Flat >>= optVarBind
+  trans e = times 10 ?? e $ \e -> do
+    e <- evalStateT ?? mempty $ optCallInline e
+    e <- trans @Flat e
+    optVarBind e
+    where
+      times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
+      times n f e =
+        if n <= 0
+          then pure e
+          else do
+            e' <- f e
+            if e == e'
+              then pure e
+              else times (n - 1) f =<< f e
 
 type InlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
 
 optCallInline ::
-  MonadState InlineMap f =>
+  (MonadState InlineMap f, MonadMalgo f) =>
   Exp (Id CType) ->
   f (Exp (Id CType))
 optCallInline (Call (Var f) xs) = lookupInline f <*> pure xs
@@ -40,10 +53,11 @@ optCallInline (Let ds e) = do
   traverse_ checkInlineable ds'
   Let ds' <$> optCallInline e
   where
-    checkInlineable (f, o@(Fun ps v)) =
-      when (null $ freevars o)
-        $ modify
-        $ at f ?~ (\ps' -> go ps ps' v)
+    checkInlineable (f, Fun ps v) = do
+      opt <- getOpt
+      when (length v <= inlineSize opt) $
+        modify $
+          at f ?~ (\ps' -> go ps ps' v)
     checkInlineable _ = pure ()
     go [] [] v = v
     go (p : ps) (p' : ps') v = replaceOf atom (Var p) p' (go ps ps' v)

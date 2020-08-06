@@ -47,7 +47,8 @@ data Opt = Opt
     dumpFlat :: Bool,
     isDebugMode :: Bool,
     applyLambdaLift :: Bool,
-    noOptimize :: Bool
+    noOptimize :: Bool,
+    inlineSize :: Int
   }
   deriving stock (Eq, Show)
 
