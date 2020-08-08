@@ -24,10 +24,13 @@ data Optimize
 instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
   passName = "optimize"
   isDump = dumpDesugar
-  trans e = times 10 ?? e $ \e -> do
-    e <- evalStateT ?? mempty $ optCallInline e
-    e <- trans @Flat e
-    optVarBind e
+  trans =
+    times 10 $
+      optVarBind
+        >=> (flip runReaderT mempty . optPackInline)
+        >=> removeUnusedLet
+        >=> (flip evalStateT mempty . optCallInline)
+        >=> trans @Flat
     where
       times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
       times n f e =
@@ -36,16 +39,16 @@ instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
           else do
             e' <- f e
             if e == e'
-              then pure e
-              else times (n - 1) f =<< f e
+              then pure e'
+              else times (n - 1) f e'
 
-type InlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
+type CallInlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
 
 optCallInline ::
-  (MonadState InlineMap f, MonadMalgo f) =>
+  (MonadState CallInlineMap f, MonadMalgo f) =>
   Exp (Id CType) ->
   f (Exp (Id CType))
-optCallInline (Call (Var f) xs) = lookupInline f <*> pure xs
+optCallInline (Call (Var f) xs) = lookupCallInline f <*> pure xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverse (appCase optCallInline) cs
 optCallInline (Let ds e) = do
@@ -55,27 +58,61 @@ optCallInline (Let ds e) = do
   where
     checkInlineable (f, Fun ps v) = do
       opt <- getOpt
+      -- 変数の数がinlineSize以下ならインライン展開する
       when (length v <= inlineSize opt) $
         modify $
           at f ?~ (\ps' -> go ps ps' v)
     checkInlineable _ = pure ()
+    -- FunをHaskell上の関数に変換する
     go [] [] v = v
     go (p : ps) (p' : ps') v = replaceOf atom (Var p) p' (go ps ps' v)
     go _ _ _ = bug Unreachable
 optCallInline e = pure e
 
-lookupInline ::
-  MonadState InlineMap m =>
+lookupCallInline ::
+  MonadState CallInlineMap m =>
   Id CType ->
   m ([Atom (Id CType)] -> Exp (Id CType))
-lookupInline f = do
+lookupCallInline f = do
   f' <- gets (view (at f))
   pure $ case f' of
     Just inline -> inline
     Nothing -> Call (Var f)
 
+type PackInlineMap = IdMap CType (Con, [Atom (Id CType)])
+
+optPackInline :: MonadReader PackInlineMap m => Exp (Id CType) -> m (Exp (Id CType))
+optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
+  body' <- optPackInline body
+  mPack <- view (at v)
+  case mPack of
+    Just (con', as) | con == con' -> pure $ build xs as body'
+    _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []
+  where
+    build [] [] body = body
+    build (x : xs) (a : as) body = Match (Atom a) $ Bind x (build xs as body) :| []
+optPackInline (Match v cs) = Match <$> optPackInline v <*> traverse (appCase optPackInline) cs
+optPackInline (Let ds e) = do
+  ds' <- traverse (rtraverse (appObj optPackInline)) ds
+  local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
+  where
+    toPackInlineMap (v, Pack _ con as) = mempty & at v ?~ (con, as)
+    toPackInlineMap _ = mempty
+optPackInline e = pure e
+
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
-optVarBind (Match (Atom (Var x)) (Bind x' e :| [])) = replaceOf mapped x' x <$> optVarBind e
+optVarBind (Match (Atom a) (Bind x e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind (Let ds e) = Let <$> traverse (rtraverse (appObj optVarBind)) ds <*> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverse (appCase optVarBind) cs
 optVarBind e = pure e
+
+removeUnusedLet :: (Monad f, Ord a) => Exp a -> f (Exp a)
+removeUnusedLet (Let ds e) = do
+  ds' <- traverse (rtraverse (appObj removeUnusedLet)) ds
+  let fvs = freevars e <> mconcat (map (freevars . snd) ds')
+  let ds'' = filter (\(v, _) -> v `elem` fvs) ds'
+  if null ds''
+    then removeUnusedLet e
+    else Let ds'' <$> removeUnusedLet e
+removeUnusedLet (Match v cs) = Match <$> removeUnusedLet v <*> traverse (appCase removeUnusedLet) cs
+removeUnusedLet e = pure e
