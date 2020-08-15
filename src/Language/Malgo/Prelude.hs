@@ -44,6 +44,7 @@ module Language.Malgo.Prelude
     replaceOf,
     Bug,
     bug,
+    localState,
     Unreachable (..),
   )
 where
@@ -144,6 +145,15 @@ instance Exception Bug where
 
 bug :: (HasCallStack, Exception e) => e -> a
 bug e = throw $ toException (Bug (toException e) callStack)
+
+localState :: MonadState s m => m a -> m (a, s)
+localState action = do
+  backup <- get
+  result <- action
+  state <- get
+  put backup
+  pure (result, state)
+
 
 -- mtlのインスタンスの追加定義
 instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where

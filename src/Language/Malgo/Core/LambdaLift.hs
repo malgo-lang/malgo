@@ -59,6 +59,7 @@ llift (Let ds e) = do
     _ -> Let ds' <$> llift e
   where
     aux (n, v) = case v of
+      -- すでにクロージャになっているものはそのまま返す
       Fun xs call@Call {} -> Just . (n,) . Fun xs <$> llift call
       o@(Fun _ PrimCall {}) -> pure $ Just (n, o)
       o@(Fun _ CallDirect {}) -> pure $ Just (n, o)
@@ -69,13 +70,12 @@ llift (Let ds e) = do
         knowns <>= Set.singleton n
         body' <- llift body
         funcs %= Map.insert n (as, body')
-        backup' <- get
-        e' <- llift e
+        (e', _) <- localState $ llift e
         -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
         -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
         let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
         if null fvs && n `notElem` freevars e'
-          then put backup' >> pure Nothing
+          then pure Nothing
           else do
             put backup
             body' <- llift body
@@ -84,10 +84,7 @@ llift (Let ds e) = do
             pure $ Just (n, Fun as (CallDirect newFun $ map Var $ toList fvs <> as))
       o -> pure $ Just (n, o)
 llift (Match e cs) =
-  Match <$> llift e <*> traverse aux cs
-  where
-    aux (Unpack con ps body) = Unpack con ps <$> llift body
-    aux (Bind x body) = Bind x <$> llift body
+  Match <$> llift e <*> traverse (appCase llift) cs
 llift e = pure e
 
 def ::
