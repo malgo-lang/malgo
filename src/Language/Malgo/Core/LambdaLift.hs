@@ -5,6 +5,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.LambdaLift
@@ -14,6 +15,7 @@ where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Monad
@@ -23,12 +25,11 @@ import Language.Malgo.TypeRep.CType
 
 data LambdaLift
 
-data Env
-  = Env
-      { _binds :: Map (Id CType) (Obj (Id CType)),
-        _funcs :: Map (Id CType) ([Id CType], Exp (Id CType)),
-        _knowns :: Set (Id CType)
-      }
+data Env = Env
+  { _binds :: Map (Id CType) (Obj (Id CType)),
+    _funcs :: Map (Id CType) ([Id CType], Exp (Id CType)),
+    _knowns :: Set (Id CType)
+  }
 
 makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
 
@@ -36,10 +37,9 @@ makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
 
 instance Pass LambdaLift (Exp (Id CType)) (Program (Id CType)) where
   passName = "lambda lift"
-  isDump = dumpLambdaLift
   trans e = do
     (mainExpr, Env {_binds, _funcs}) <- runStateT (llift e) $ Env mempty mempty mempty
-    pure $ Program (Map.assocs _binds) mainExpr (Map.assocs _funcs)
+    appProgram (trans @Flat) $ Program (Map.assocs _binds) mainExpr (Map.assocs _funcs)
 
 llift ::
   ( MonadUniq f,

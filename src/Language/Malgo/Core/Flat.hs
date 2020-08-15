@@ -11,7 +11,6 @@ where
 
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
-import Language.Malgo.Monad
 import Language.Malgo.Pass
 import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.CType
@@ -20,7 +19,6 @@ data Flat
 
 instance Pass Flat (Exp (Id CType)) (Exp (Id CType)) where
   passName = "flat"
-  isDump = dumpFlat
   trans e = uncurry (flip appEndo) <$> runWriterT (flatExp e)
 
 flatExp :: Monad m => Exp a -> WriterT (Endo (Exp a)) m (Exp a)

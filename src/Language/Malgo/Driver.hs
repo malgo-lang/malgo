@@ -17,7 +17,6 @@ import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
 import qualified LLVM.AST as L
 import Language.Malgo.Core.CodeGen
-import Language.Malgo.Core.Flat
 import Language.Malgo.Core.LambdaLift
 import Language.Malgo.Core.Lint
 import Language.Malgo.Core.Optimize
@@ -77,15 +76,16 @@ compile = M.runMalgo $ do
   opt <- asks maOption
   llvmir <-
     readAndParse
-      >>= transWithDump @Rename
-      >>= transWithDump @Typing
-      >>= transWithDump @Desugar
+      >>= transWithDump @Rename (dumpRenamed opt)
+      >>= transWithDump @Typing (dumpTyped opt)
+      >>= transWithDump @Desugar (dumpDesugar opt)
       >>= trans @LintExp
-      >>= transWithDump @Flat
-      >>= trans @LintExp
-      >>= (if noOptimize opt then pure else transWithDump @Optimize >=> transWithDump @Flat >=> trans @LintExp)
+      >>= transWithDump @Optimize (dumpDesugar opt)
       >>= ( if applyLambdaLift opt
-              then transWithDump @LambdaLift >=> appProgram (trans @Flat) >=> trans @CodeGen
+              then
+                transWithDump @LambdaLift (dumpLambdaLift opt)
+                  >=> appProgram (transWithDump @Optimize (dumpLambdaLift opt))
+                  >=> trans @CodeGen
               else trans @CodeGenExp
           )
   pure $

@@ -36,7 +36,6 @@ data Rename
 
 instance Pass Rename (Expr String) (Expr (Id ())) where
   passName = "Rename"
-  isDump = dumpRenamed
   trans s = runReaderT (renameExpr s) $ Known mempty mempty
 
 withKnowns ::

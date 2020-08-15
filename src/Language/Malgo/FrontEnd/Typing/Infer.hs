@@ -28,7 +28,6 @@ data Typing
 
 instance Pass Typing (Expr (Id ())) (Expr (Id Type)) where
   passName = "Typing"
-  isDump = dumpTyped
   trans e = evalStateT ?? mempty $ do
     (_, cs) <- runWriterT (typingExpr e)
     case solve cs of

@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
@@ -13,6 +14,7 @@ where
 
 import qualified Data.Set as Set (fromList, singleton, toList)
 import qualified Data.Text as T
+import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import qualified Language.Malgo.IR.Syntax as S
 import Language.Malgo.Id
@@ -28,8 +30,7 @@ data Desugar
 
 instance Pass Desugar (S.Expr (Id Type)) (Exp (Id CType)) where
   passName = "Desugar"
-  isDump = dumpDesugar
-  trans e = evalStateT ?? mempty $ toExp e
+  trans e = trans @Flat =<< evalStateT (toExp e) mempty
 
 findVar :: (MonadFail m, MonadState (IdMap Type (Id CType)) m) => Id Type -> m (Id CType)
 findVar v = do
@@ -125,8 +126,9 @@ toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
     ta :-> tb -> runDef $ do
       ps <- traverse (newId ?? "a") ta
       Var prim' <-
-        let_ (ta :-> tb) $ Fun ps $
-          PrimCall (T.pack primName) (ta :-> tb) (map Var ps)
+        let_ (ta :-> tb) $
+          Fun ps $
+            PrimCall (T.pack primName) (ta :-> tb) (map Var ps)
       modify $ at prim ?~ prim'
       toExp e
     _ -> bug Unreachable

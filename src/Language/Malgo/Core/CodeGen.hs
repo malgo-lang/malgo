@@ -56,7 +56,6 @@ data CodeGenExp
 
 instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
   passName = "GenLLVM"
-  isDump _ = False
   trans Program {topBinds, mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
     -- topBindsとtopFuncsのOprMapを作成
     bindEnv <-
@@ -109,7 +108,6 @@ loadTopBinds xs = do
 
 instance Pass CodeGenExp (Exp (Id CType)) [LLVM.AST.Definition] where
   passName = "CodeGenExp"
-  isDump _ = False
   trans e = execModuleBuilderT emptyModuleBuilder
     $ runReaderT ?? OprMap mempty mempty mempty
     $ Lazy.evalStateT ?? mempty

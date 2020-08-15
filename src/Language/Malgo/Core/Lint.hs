@@ -25,7 +25,6 @@ data LintExp
 
 instance Pass LintExp (Exp (Id CType)) (Exp (Id CType)) where
   passName = "Exp Lint"
-  isDump _ = False
   trans e = do
     runReaderT (lintExp e) []
     pure e
