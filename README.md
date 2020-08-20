@@ -22,7 +22,7 @@ $ cabal install
 
 ```sh
 $ malgo examples/hello.mlg -o hello.ll
-$ clang hello.ll examples/lib.c -lgc
+$ clang hello.ll examples/corelib.c -lgc
 $ ./a.out
 Hello, world
 ```
