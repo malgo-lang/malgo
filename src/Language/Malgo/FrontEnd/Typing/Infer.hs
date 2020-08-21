@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -121,40 +122,36 @@ typingExpr (Call pos fn args) = do
   addCs pos [argTypes :-> retTy :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = do
-  paramTypes <-
-    evalStateT ?? mempty $
-      traverse
-        (\(_, t) -> fromMaybe <$> newTyMeta <*> traverse toType t)
-        params
-  zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
+  (paramIds, paramTypes) <- sTypeScope (mapAndUnzipM (rtraverse toType') params)
+  zipWithM_ (\p t -> defineVar p $ Forall [] t) paramIds paramTypes
   retType <- typingExpr body
   pure $ paramTypes :-> retType
 typingExpr (Seq _ e1 e2) = typingExpr e1 >> typingExpr e2
 typingExpr (Let _ (ValDec pos name mtyp val) body) = do
   env <- get
   valType <- typingExpr val
-  (_, cs) <- listen $ for_ mtyp $ \typ -> do
-    typ' <- evalStateT (toType typ) mempty
-    addCs pos [valType :~ typ']
+  (_, cs) <- listen $
+    for_ mtyp $ \typ -> do
+      typ' <- sTypeScope (toType typ)
+      addCs pos [valType :~ typ']
   -- value restriction
   if isValue val then letVar env name valType cs else defineVar name (Forall [] valType)
   typingExpr body
 typingExpr (Let _ (ExDec _ name typ _) body) = do
   env <- get
-  typ' <- evalStateT (toType typ) mempty
+  typ' <- sTypeScope (toType typ)
   letVar env name typ' []
   typingExpr body
 typingExpr (Let _ (FunDec fs) e) = do
   env <- get
   for_ fs $ \(_, f, _, _, _) -> defineVar f . Forall [] =<< newTyMeta
   for_ fs $ \(pos, f, params, mretType, body) -> do
-    (paramTypes, s) <-
-      runStateT ?? mempty $
-        traverse
-          (\(_, t) -> fromMaybe <$> newTyMeta <*> traverse toType t)
-          params
-    retType <- fromMaybe <$> newTyMeta <*> evalStateT (mapM toType mretType) s
-    zipWithM_ (\(p, _) t -> defineVar p $ Forall [] t) params paramTypes
+    (retType, (paramIds, paramTypes)) <-
+      sTypeScope $
+        (,)
+          <$> toType' mretType
+          <*> mapAndUnzipM (rtraverse toType') params
+    zipWithM_ (\p t -> defineVar p $ Forall [] t) paramIds paramTypes
     (t, cs0) <- listen $ typingExpr body
     tv <- lookupVar f
     let cs1 = [tv :~ paramTypes :-> retType, t :~ retType]
@@ -226,7 +223,15 @@ isValue Fn {} = True
 isValue (Tuple _ xs) = all isValue xs
 isValue _ = False
 
-toType :: MonadUniq m => SType (Id ()) -> StateT (Map (Id ()) Type) m Type
+type STypeVarEnv = Map (Id ()) Type
+
+sTypeScope :: Monad m => StateT STypeVarEnv m a -> m a
+sTypeScope m = evalStateT m mempty
+
+toType' :: MonadUniq m => Maybe (SType (Id ())) -> StateT STypeVarEnv m Type
+toType' mt = liftM2 fromMaybe newTyMeta $ traverse toType mt
+
+toType :: MonadUniq m => SType (Id ()) -> StateT STypeVarEnv m Type
 toType (TyVar x) = do
   kvs <- get
   (fromMaybe ?? kvs ^. at x) <$> do
