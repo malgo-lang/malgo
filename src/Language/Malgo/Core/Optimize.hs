@@ -63,13 +63,12 @@ optCallInline (Let ds e) = do
       opt <- getOpt
       -- 変数の数がinlineSize以下ならインライン展開する
       when (length v <= inlineSize opt) $
-        modify $
-          at f ?~ (\ps' -> go ps ps' v)
+        modify $ at f ?~ makeTemplate ps v
     checkInlineable _ = pure ()
     -- FunをHaskell上の関数に変換する
-    go [] [] v = v
-    go (p : ps) (p' : ps') v = replaceOf atom (Var p) p' (go ps ps' v)
-    go _ _ _ = bug Unreachable
+    makeTemplate [] v [] = v
+    makeTemplate (p : ps) v (p' : ps') = replaceOf atom (Var p) p' (makeTemplate ps v ps')
+    makeTemplate _ _ _ = bug Unreachable
 optCallInline e = pure e
 
 lookupCallInline ::
