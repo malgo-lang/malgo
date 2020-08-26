@@ -12,15 +12,14 @@
 
 module Language.Malgo.Core.CodeGen
   ( CodeGen,
-    CodeGenExp,
   )
 where
 
 import Control.Monad.Cont
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
-import qualified Data.ByteString.Lazy as B
 import qualified Data.ByteString.Builder as B
+import qualified Data.ByteString.Lazy as B
 import Data.Char (ord)
 import Data.Either (partitionEithers)
 import qualified Data.IntMap as IntMap
@@ -28,12 +27,12 @@ import Data.Map ()
 import qualified Data.Set as Set
 import qualified Data.Text as T
 import GHC.Exts (fromList)
-import qualified LLVM.AST
 import LLVM.AST (Definition (..), Name, mkName)
+import qualified LLVM.AST
 import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
-import LLVM.AST.Global
 import qualified LLVM.AST.FloatingPointPredicate as FP
+import LLVM.AST.Global
 import qualified LLVM.AST.IntegerPredicate as IP
 import LLVM.AST.Linkage (Linkage (External))
 import LLVM.AST.Operand (Operand (..))
@@ -52,31 +51,31 @@ import Language.Malgo.TypeRep.CType as CType
 
 data CodeGen
 
-data CodeGenExp
-
 instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
   passName = "GenLLVM"
   trans Program {topBinds, mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
     -- topBindsとtopFuncsのOprMapを作成
     bindEnv <-
-      fmap fromList
-        $ traverse ?? topBinds
-        $ \(x, _) -> do
-          emitDefn $ LLVM.AST.GlobalDefinition LLVM.AST.globalVariableDefaults
-          pure (x, ConstantOperand $ C.GlobalReference (ptr (convType $ cTypeOf x)) (toName x))
+      fmap fromList $
+        traverse ?? topBinds $
+          \(x, _) -> do
+            emitDefn $ LLVM.AST.GlobalDefinition LLVM.AST.globalVariableDefaults
+            pure (x, ConstantOperand $ C.GlobalReference (ptr (convType $ cTypeOf x)) (toName x))
     let funcEnv =
-          fromList
-            $ map ?? topFuncs
-            $ \(f, (ps, e)) ->
-              (f, ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f))
-    runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv, _globalMap = bindEnv}) $ Lazy.evalStateT ?? (mempty :: PrimMap) $ do
-      traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
-      void $ function "main" [] LT.i32 $ \_ -> do
-        -- topBindsを初期化
-        loadTopBinds topBinds
-        gcInit <- findExt "GC_init" [] LT.void
-        void $ call gcInit []
-        genExp mainExp $ \_ -> ret (int32 0)
+          fromList $
+            map ?? topFuncs $
+              \(f, (ps, e)) ->
+                (f, ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f))
+    runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv, _globalMap = bindEnv}) $
+      Lazy.evalStateT ?? (mempty :: PrimMap) $ do
+        traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
+        void $
+          function "main" [] LT.i32 $ \_ -> do
+            -- topBindsを初期化
+            loadTopBinds topBinds
+            gcInit <- findExt "GC_init" [] LT.void
+            void $ call gcInit []
+            genExp mainExp $ \_ -> ret (int32 0)
 
 loadTopBinds ::
   ( MonadState PrimMap m,
@@ -105,20 +104,6 @@ loadTopBinds xs = do
         Just globalAddr -> store globalAddr 0 opr
         Nothing -> error $ show $ pPrint name <> " is not found"
     prepare _ = pure ()
-
-instance Pass CodeGenExp (Exp (Id CType)) [LLVM.AST.Definition] where
-  passName = "CodeGenExp"
-  trans e = execModuleBuilderT emptyModuleBuilder
-    $ runReaderT ?? OprMap mempty mempty mempty
-    $ Lazy.evalStateT ?? mempty
-    $ void
-    $ function "main" [] LT.i32
-    $ \_ -> do
-      -- -- topBindsを初期化
-      -- traverse_ loadDef topBinds
-      gcInit <- findExt "GC_init" [] LT.void
-      void $ call gcInit []
-      genExp e $ \_ -> ret (int32 0)
 
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -393,9 +378,10 @@ genUnpack scrutinee cs k = \case
     addr <- bitcast scrutinee (ptr $ StructureType False [i64, conType])
     payloadAddr <- gep addr [int32 0, int32 1]
     -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
-    env <- fmap mconcat $ ifor vs $ \i v -> do
-      vOpr <- (load ?? 0) =<< gep payloadAddr [int32 0, int32 $ fromIntegral i]
-      pure $ fromList [(v, vOpr)]
+    env <- fmap mconcat $
+      ifor vs $ \i v -> do
+        vOpr <- (load ?? 0) =<< gep payloadAddr [int32 0, int32 $ fromIntegral i]
+        pure $ fromList [(v, vOpr)]
     void $ local (over valueMap (env <>)) $ genExp e k
     pure $ Right (tag, label)
 
@@ -417,7 +403,7 @@ genAtom (Unboxed (Core.String x)) = do
 
 globalStringPtr :: MonadModuleBuilder m => String -> Name -> m C.Constant
 globalStringPtr str nm = do
-  let utf8Vals = map toInteger $ B.unpack $ B.toLazyByteString $ B.stringUtf8 str 
+  let utf8Vals = map toInteger $ B.unpack $ B.toLazyByteString $ B.stringUtf8 str
       llvmVals = map (C.Int 8) (utf8Vals ++ [0])
       char = IntegerType 8
       charArray = C.Array char llvmVals
@@ -452,9 +438,10 @@ genObj funName (Fun ps e) = do
     [] -> bug Unreachable
     (rawCapture : ps') -> do
       capture <- bitcast rawCapture (ptr capType)
-      env <- fmap fromList $ ifor fvs $ \i fv -> do
-        capAddr <- gep capture [int32 0, int32 $ fromIntegral i]
-        (fv,) <$> load capAddr 0
+      env <- fmap fromList $
+        ifor fvs $ \i fv -> do
+          capAddr <- gep capture [int32 0, int32 $ fromIntegral i]
+          (fv,) <$> load capAddr 0
       let env' = fromList $ zip ps ps'
       local (over valueMap ((env <> env') <>)) $ genExp e ret
   capture <- mallocType capType

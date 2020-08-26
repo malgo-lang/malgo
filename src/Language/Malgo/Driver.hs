@@ -81,14 +81,14 @@ compile = M.runMalgo $ do
       >>= transWithDump @Desugar (dumpDesugar opt)
       >>= trans @LintExp
       >>= transWithDump @Optimize (dumpDesugar opt)
+      >>= pure . Program mempty mempty
       >>= ( if applyLambdaLift opt
               then
-                pure . Program mempty mempty
-                  >=> transWithDump @LambdaLift (dumpLambdaLift opt)
+                transWithDump @LambdaLift (dumpLambdaLift opt)
                   >=> appProgram (transWithDump @Optimize (dumpLambdaLift opt))
-                  >=> trans @CodeGen
-              else trans @CodeGenExp
+              else pure
           )
+      >>= trans @CodeGen
   pure $
     L.defaultModule
       { L.moduleName = fromString $ srcName opt,
