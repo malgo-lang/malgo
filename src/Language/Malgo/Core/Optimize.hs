@@ -61,18 +61,21 @@ optCallInline (Let ds e) = do
   ds' <- traverse (rtraverse (appObj optCallInline)) ds
   traverse_ checkInlineable ds'
   Let ds' <$> optCallInline e
-  where
-    checkInlineable (f, Fun ps v) = do
-      opt <- getOpt
-      -- 変数の数がinlineSize以下ならインライン展開する
-      when (length v <= inlineSize opt) $
-        modify $ at f ?~ makeTemplate ps v
-    checkInlineable _ = pure ()
-    -- FunをHaskell上の関数に変換する
-    makeTemplate [] v [] = v
-    makeTemplate (p : ps) v (p' : ps') = replaceOf atom (Var p) p' (makeTemplate ps v ps')
-    makeTemplate _ _ _ = bug Unreachable
 optCallInline e = pure e
+
+checkInlineable :: (MonadMalgo m, MonadState CallInlineMap m) => (Id CType, Obj (Id CType)) -> m ()
+checkInlineable (f, Fun ps v) = do
+  opt <- getOpt
+  -- 変数の数がinlineSize以下ならインライン展開する
+  when (length v <= inlineSize opt) $
+    modify $ at f ?~ makeTemplate ps v
+checkInlineable _ = pure ()
+
+-- FunをHaskell上の関数に変換する
+makeTemplate :: (Eq a, HasAtom f) => [a] -> f a -> [Atom a] -> f a
+makeTemplate [] v [] = v
+makeTemplate (p : ps) v (p' : ps') = replaceOf atom (Var p) p' (makeTemplate ps v ps')
+makeTemplate _ _ _ = bug Unreachable
 
 lookupCallInline ::
   MonadState CallInlineMap m =>
@@ -94,8 +97,8 @@ optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []
   where
-    build [] [] body = body
     build (x : xs) (a : as) body = Match (Atom a) $ Bind x (build xs as body) :| []
+    build _ _ body = body
 optPackInline (Match v cs) = Match <$> optPackInline v <*> traverse (appCase optPackInline) cs
 optPackInline (Let ds e) = do
   ds' <- traverse (rtraverse (appObj optPackInline)) ds

@@ -22,7 +22,7 @@ import Language.Malgo.Core.Lint
 import Language.Malgo.Core.Optimize
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
-import Language.Malgo.IR.Core (appProgram)
+import Language.Malgo.IR.Core (Program (..), appProgram)
 import Language.Malgo.IR.Syntax
 import qualified Language.Malgo.Lexer as Lexer
 import Language.Malgo.MiddleEnd.Desugar
@@ -83,7 +83,8 @@ compile = M.runMalgo $ do
       >>= transWithDump @Optimize (dumpDesugar opt)
       >>= ( if applyLambdaLift opt
               then
-                transWithDump @LambdaLift (dumpLambdaLift opt)
+                pure . Program mempty mempty
+                  >=> transWithDump @LambdaLift (dumpLambdaLift opt)
                   >=> appProgram (transWithDump @Optimize (dumpLambdaLift opt))
                   >=> trans @CodeGen
               else trans @CodeGenExp

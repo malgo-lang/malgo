@@ -25,8 +25,8 @@ import Text.PrettyPrint.HughesPJ
     quotes,
     sep,
     text,
-    ($$),
     vcat,
+    ($$),
   )
 
 class HasFreeVar f where
@@ -264,9 +264,9 @@ Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 data Program a = Program
   { -- | main内で初期化される値
     topBinds :: [(a, Obj a)],
-    mainExp :: Exp a,
     -- | トップレベル関数
-    topFuncs :: [(a, ([a], Exp a))]
+    topFuncs :: [(a, ([a], Exp a))],
+    mainExp :: Exp a
   }
   deriving stock (Eq, Show, Functor)
 
@@ -284,4 +284,4 @@ appCase f (Unpack con ps e) = Unpack con ps <$> f e
 appCase f (Bind x e) = Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram f Program {topBinds, mainExp, topFuncs} = Program <$> traverse (rtraverse (appObj f)) topBinds <*> f mainExp <*> traverse (rtraverse (rtraverse f)) topFuncs
+appProgram f Program {topBinds, mainExp, topFuncs} = Program <$> traverse (rtraverse (appObj f)) topBinds <*> traverse (rtraverse (rtraverse f)) topFuncs <*> f mainExp

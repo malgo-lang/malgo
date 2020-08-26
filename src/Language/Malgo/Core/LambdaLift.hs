@@ -33,13 +33,24 @@ data Env = Env
 
 makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
 
--- TODO: Program -> ProgramのLambdaLiftを実装
-
-instance Pass LambdaLift (Exp (Id CType)) (Program (Id CType)) where
+instance Pass LambdaLift (Program (Id CType)) (Program (Id CType)) where
   passName = "lambda lift"
-  trans e = do
-    (mainExpr, Env {_binds, _funcs}) <- runStateT (llift e) $ Env mempty mempty mempty
-    appProgram (trans @Flat) $ Program (Map.assocs _binds) mainExpr (Map.assocs _funcs)
+  trans Program {topBinds, mainExp, topFuncs} = evalStateT
+    ?? Env
+      { _binds = Map.fromList topBinds,
+        _funcs = mempty,
+        _knowns = Set.fromList $ map fst topFuncs
+      }
+    $ do
+      topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
+      modify $ \env ->
+        env
+          { _funcs = _funcs env <> Map.fromList topFuncs,
+            _knowns = _knowns env <> Set.fromList (Map.keys $ _funcs env)
+          }
+      mainExp <- llift mainExp
+      Env {_binds, _funcs} <- get
+      lift $ appProgram (trans @Flat) $ Program (Map.assocs _binds) (Map.assocs _funcs) mainExp
 
 llift ::
   ( MonadUniq f,
