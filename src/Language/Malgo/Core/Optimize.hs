@@ -23,17 +23,20 @@ data Optimize
 
 instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
   passName = "optimize"
-  trans e = do
+  trans expr = do
     opt <- asks maOption
     if noOptimize opt
-      then pure e
+      then pure expr
       else
-        times 10 ?? e $
-          optVarBind
-            >=> (flip runReaderT mempty . optPackInline)
-            >=> removeUnusedLet
-            >=> (flip evalStateT mempty . optCallInline)
-            >=> trans @Flat
+        trans @Flat
+          =<< times
+            10
+            ( optVarBind
+                >=> (flip runReaderT mempty . optPackInline)
+                >=> removeUnusedLet
+                >=> (flip evalStateT mempty . optCallInline)
+            )
+            expr
     where
       times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
       times n f e =
