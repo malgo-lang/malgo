@@ -19,11 +19,13 @@ dependencies:
   - containers
   - dlist
   - lens
-  - llvm-hs-pure
   - llvm-hs-pretty
+  - llvm-hs-pure
+  - megaparsec
   - mtl
   - optparse-applicative
   - parsec
+  - parser-combinators
   - pretty
   - pretty-simple
   - text
@@ -51,9 +53,17 @@ library:
   source-dirs: src
 
 executables:
+  griff:
+    main: Main.hs
+    source-dirs: app/griff
+    ghc-options:
+      - -threaded
+    dependencies:
+      - malgo
+      - llvm-hs-pretty
   malgo:
     main: Main.hs
-    source-dirs: app
+    source-dirs: app/malgo
     ghc-options:
       - -threaded
     dependencies:

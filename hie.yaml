@@ -7,8 +7,10 @@ cradle:
   #   - path: "./test"
   #     component: "malgo:malgo-test"
   cabal:
-    - path: "./app/Main.hs"
+    - path: "./app/malgo/Main.hs"
       component: "malgo:exe:malgo"
+    - path: "./app/griff/Main.hs"
+      component: "malgo:exe:griff"
     - path: "./src" 
       component: "lib:malgo"
     - path: "./test"

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 30d79eea283741a84df3f9d0f8401e6389a4b84fe582c23582adaacfbf32c378
+-- hash: 23fa2b79381a233322904aafc9bd0249301c5308b360f1baca451eb2be84e0ed
 
 name:           malgo
 version:        1.0.0.0
@@ -26,6 +26,10 @@ source-repository head
 
 library
   exposed-modules:
+      Language.Griff.Extension
+      Language.Griff.Parser
+      Language.Griff.Syntax
+      Language.Griff.Type
       Language.Malgo.Core.CodeGen
       Language.Malgo.Core.Flat
       Language.Malgo.Core.LambdaLift
@@ -68,9 +72,11 @@ library
     , lens
     , llvm-hs-pretty
     , llvm-hs-pure
+    , megaparsec
     , mtl
     , optparse-applicative
     , parsec
+    , parser-combinators
     , pretty
     , pretty-simple
     , text
@@ -78,12 +84,12 @@ library
     , vector
   default-language: Haskell2010
 
-executable malgo
+executable griff
   main-is: Main.hs
   other-modules:
       Paths_malgo
   hs-source-dirs:
-      app
+      app/griff
   default-extensions: StrictData
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
   build-tools:
@@ -98,9 +104,43 @@ executable malgo
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
+    , megaparsec
     , mtl
     , optparse-applicative
     , parsec
+    , parser-combinators
+    , pretty
+    , pretty-simple
+    , text
+    , transformers
+    , vector
+  default-language: Haskell2010
+
+executable malgo
+  main-is: Main.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      app/malgo
+  default-extensions: StrictData
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
+  build-tools:
+      happy
+  build-depends:
+      array
+    , base
+    , bytestring
+    , containers
+    , dlist
+    , lens
+    , llvm-hs-pretty
+    , llvm-hs-pure
+    , malgo
+    , megaparsec
+    , mtl
+    , optparse-applicative
+    , parsec
+    , parser-combinators
     , pretty
     , pretty-simple
     , text
@@ -130,9 +170,11 @@ test-suite malgo-test
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
+    , megaparsec
     , mtl
     , optparse-applicative
     , parsec
+    , parser-combinators
     , pretty
     , pretty-simple
     , text

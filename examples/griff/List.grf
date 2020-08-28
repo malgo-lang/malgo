@@ -1,0 +1,21 @@
+data Int = Int# Int64#;
+
+infixl 6 (+#);
+(+#) = {x y -> add_i64# (x, y)};
+
+infixl 0 (|>);
+(|>) = {x f -> f x};
+
+data List a = Nil | Cons a (List a);
+ 
+map f xs = xs |> { Nil -> Nil
+                 | Cons x xs -> Cons (f x) (map f xs)
+                 };
+map' f = { Nil -> Nil
+         | Cons x xs -> Cons (f x) (map f xs)
+         };
+
+sum = { Nil -> Int# 0#
+      | Cons (Int# x) xs ->
+          sum xs |> {Int# s -> Int# (x +# s)}
+      };
