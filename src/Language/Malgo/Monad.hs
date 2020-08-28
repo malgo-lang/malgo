@@ -21,6 +21,9 @@ module Language.Malgo.Monad
     viewLine,
     malgoError,
     MonadUniq (..),
+    UniqSupply(..),
+    UniqT(..),
+    runUniqT,
   )
 where
 
@@ -33,7 +36,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import System.IO (stderr)
 import Text.Parsec.Pos (SourcePos, sourceLine)
-import Text.PrettyPrint (($$), text)
+import Text.PrettyPrint (text, ($$))
 
 data Opt = Opt
   { srcName :: String,
@@ -64,13 +67,14 @@ newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv (Lazy.StateT UniqSupply 
 
 runMalgo :: MonadIO m => MalgoM a -> Opt -> Text -> m a
 runMalgo (MalgoM m) opt source =
-  liftIO $ Lazy.evalStateT ?? UniqSupply 0 $
-    runReaderT
-      m
-      MalgoEnv
-        { maOption = opt,
-          maSource = source
-        }
+  liftIO $
+    Lazy.evalStateT ?? UniqSupply 0 $
+      runReaderT
+        m
+        MalgoEnv
+          { maOption = opt,
+            maSource = source
+          }
 
 class Monad m => MonadMalgo m where
   getOpt :: m Opt
@@ -131,6 +135,19 @@ instance MonadUniq MalgoM where
   getUniq = do
     i <- uniqSupply <$> getUniqSupply
     modify (\s -> s {uniqSupply = i + 1})
+    pure i
+
+newtype UniqT m a = UniqT {unUniqT :: StateT UniqSupply m a}
+  deriving newtype (Functor, Applicative, Monad, MonadTrans, MonadFix, MonadFail)
+
+runUniqT :: UniqT m a -> UniqSupply -> m (a, UniqSupply)
+runUniqT (UniqT m) = runStateT m
+
+instance Monad m => MonadUniq (UniqT m) where
+  getUniqSupply = UniqT get
+  getUniq = do
+    i <- uniqSupply <$> getUniqSupply
+    UniqT $ modify (\s -> s {uniqSupply = i + 1})
     pure i
 
 instance MonadUniq m => MonadUniq (ReaderT r m)

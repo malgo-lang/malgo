@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 23fa2b79381a233322904aafc9bd0249301c5308b360f1baca451eb2be84e0ed
+-- hash: 4a66a2e8dcc65c9f23286d1b581254141bda085924f28f4750c9880905634b5a
 
 name:           malgo
 version:        1.0.0.0
@@ -28,6 +28,8 @@ library
   exposed-modules:
       Language.Griff.Extension
       Language.Griff.Parser
+      Language.Griff.Rename
+      Language.Griff.RnEnv
       Language.Griff.Syntax
       Language.Griff.Type
       Language.Malgo.Core.CodeGen
@@ -70,6 +72,7 @@ library
     , containers
     , dlist
     , lens
+    , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , megaparsec
@@ -101,6 +104,7 @@ executable griff
     , containers
     , dlist
     , lens
+    , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
@@ -133,6 +137,7 @@ executable malgo
     , containers
     , dlist
     , lens
+    , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
@@ -167,6 +172,7 @@ test-suite malgo-test
     , dlist
     , hspec
     , lens
+    , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo

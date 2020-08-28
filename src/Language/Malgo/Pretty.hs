@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
@@ -7,6 +8,7 @@ module Language.Malgo.Pretty
     (<+>),
     pShow,
     errorDoc,
+    errorOn,
   )
 where
 
@@ -32,3 +34,6 @@ instance Pretty TL.Text where
 
 errorDoc :: HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ P.render x
+
+errorOn :: (HasCallStack, Pretty a) => a -> Doc -> b
+errorOn pos x = errorDoc $ "error on" <+> pPrint pos <> ":" P.$+$ P.nest 2 x

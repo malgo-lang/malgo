@@ -19,13 +19,15 @@ import Control.Monad.Cont
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.ByteString.Builder as B
-import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString.Lazy as BL
+import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
 import Data.Either (partitionEithers)
 import qualified Data.IntMap as IntMap
 import Data.Map ()
 import qualified Data.Set as Set
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
 import GHC.Exts (fromList)
 import LLVM.AST (Definition (..), Name, mkName)
 import qualified LLVM.AST
@@ -197,7 +199,7 @@ mallocType ::
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
 toName :: Id a -> LLVM.AST.Name
-toName x = LLVM.AST.mkName $ x ^. idName <> show (x ^. idUniq)
+toName x = LLVM.AST.mkName $ T.unpack (x ^. idName) <> show (x ^. idUniq)
 
 genFunc ::
   ( MonadModuleBuilder m,
@@ -215,7 +217,7 @@ genFunc name params body = function funcName llvmParams retty $ \args ->
   local (over valueMap (fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
-    llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ fromString $ x ^. idName)) params
+    llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ T.encodeUtf8 $ x ^. idName)) params
     retty = convType (cTypeOf body)
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている
@@ -403,7 +405,7 @@ genAtom (Unboxed (Core.String x)) = do
 
 globalStringPtr :: MonadModuleBuilder m => String -> Name -> m C.Constant
 globalStringPtr str nm = do
-  let utf8Vals = map toInteger $ B.unpack $ B.toLazyByteString $ B.stringUtf8 str
+  let utf8Vals = map toInteger $ BL.unpack $ B.toLazyByteString $ B.stringUtf8 str
       llvmVals = map (C.Int 8) (utf8Vals ++ [0])
       char = IntegerType 8
       charArray = C.Array char llvmVals

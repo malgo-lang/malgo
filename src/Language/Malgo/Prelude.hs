@@ -92,6 +92,7 @@ import GHC.Stack
     prettyCallStack,
   )
 import Text.Parsec.Pos (SourcePos)
+import qualified Text.Megaparsec.Pos as Megaparsec
 import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
 import Prelude hiding (log, unzip)
 
@@ -190,4 +191,7 @@ instance Exception Unreachable
 
 -- Pretty SourcePos
 instance Pretty SourcePos where
+  pPrint = text . show
+
+instance Pretty Megaparsec.SourcePos where
   pPrint = text . show

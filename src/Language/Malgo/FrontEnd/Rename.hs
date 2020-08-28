@@ -24,24 +24,23 @@ import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Text.Parsec.Pos (SourcePos)
 
-data Known
-  = Known
-      { _var :: Map String (Id ()),
-        _tyVar :: Map String (Id ())
-      }
+data Known = Known
+  { _var :: Map Text (Id ()),
+    _tyVar :: Map Text (Id ())
+  }
 
 makeLenses ''Known
 
 data Rename
 
-instance Pass Rename (Expr String) (Expr (Id ())) where
+instance Pass Rename (Expr Text) (Expr (Id ())) where
   passName = "Rename"
   trans s = runReaderT (renameExpr s) $ Known mempty mempty
 
 withKnowns ::
   (MonadUniq m, MonadReader Known m) =>
-  ASetter' Known (Map String (Id ())) ->
-  [String] ->
+  ASetter' Known (Map Text (Id ())) ->
+  [Text] ->
   m a ->
   m a
 withKnowns lens ks m = do
@@ -51,8 +50,8 @@ withKnowns lens ks m = do
 getId ::
   (MonadReader s m, MonadMalgo m) =>
   SourcePos ->
-  Getting (Map String (Id ())) s (Map String (Id ())) ->
-  String ->
+  Getting (Map Text (Id ())) s (Map Text (Id ())) ->
+  Text ->
   m (Id ())
 getId pos lens name = do
   k <- view lens
@@ -60,7 +59,7 @@ getId pos lens name = do
     Just x -> pure x
     Nothing -> malgoError pos "rename" $ pPrint name <+> "is not defined"
 
-renameExpr :: (MonadMalgo m, MonadUniq m, MonadReader Known m) => Expr String -> m (Expr (Id ()))
+renameExpr :: (MonadMalgo m, MonadUniq m, MonadReader Known m) => Expr Text -> m (Expr (Id ()))
 renameExpr (Var pos name) = Var pos <$> getId pos var name
 renameExpr (Int pos x) = pure $ Int pos x
 renameExpr (Float pos x) = pure $ Float pos x
@@ -82,30 +81,30 @@ renameExpr (Call pos fn args) = Call pos <$> renameExpr fn <*> mapM renameExpr a
 renameExpr (Seq pos e1 e2) = Seq pos <$> renameExpr e1 <*> renameExpr e2
 renameExpr (Let pos0 (ValDec pos1 name typ val) e) = do
   val' <- renameExpr val
-  withKnowns var [name]
-    $ withKnowns tyVar (ordNub $ concat $ maybeToList $ fmap toList typ)
-    $ Let pos0
-      <$> (ValDec pos1 <$> getId pos1 var name <*> mapM (renameSType pos1) typ <*> pure val')
-      <*> renameExpr e
+  withKnowns var [name] $
+    withKnowns tyVar (ordNub $ concat $ maybeToList $ fmap toList typ) $
+      Let pos0
+        <$> (ValDec pos1 <$> getId pos1 var name <*> mapM (renameSType pos1) typ <*> pure val')
+        <*> renameExpr e
 renameExpr (Let pos0 (FunDec fs) e) = withKnowns var (map (view _2) fs) $ do
   fs' <- mapM renameFunDec fs
   Let pos0 (FunDec fs') <$> renameExpr e
   where
     renameFunDec (pos, fn, params, retty, body) = do
       fn' <- getId pos var fn
-      withKnowns var (map fst params)
-        $ withKnowns tyVar (ordNub $ concatMap toList $ mapMaybe snd params)
-        $ do
-          params' <- mapM (bitraverse (getId pos var) (mapM (renameSType pos))) params
-          body' <- renameExpr body
-          retty' <- mapM (renameSType pos) retty
-          pure (pos, fn', params', retty', body')
+      withKnowns var (map fst params) $
+        withKnowns tyVar (ordNub $ concatMap toList $ mapMaybe snd params) $
+          do
+            params' <- mapM (bitraverse (getId pos var) (mapM (renameSType pos))) params
+            body' <- renameExpr body
+            retty' <- mapM (renameSType pos) retty
+            pure (pos, fn', params', retty', body')
 renameExpr (Let pos0 (ExDec pos1 name typ orig) e) =
-  withKnowns var [name]
-    $ withKnowns tyVar (ordNub $ toList typ)
-    $ Let pos0
-      <$> (ExDec pos1 <$> getId pos1 var name <*> renameSType pos1 typ <*> pure orig)
-      <*> renameExpr e
+  withKnowns var [name] $
+    withKnowns tyVar (ordNub $ toList typ) $
+      Let pos0
+        <$> (ExDec pos1 <$> getId pos1 var name <*> renameSType pos1 typ <*> pure orig)
+        <*> renameExpr e
 renameExpr (If pos c t f) = If pos <$> renameExpr c <*> renameExpr t <*> renameExpr f
 renameExpr (BinOp pos op x y) = BinOp pos op <$> renameExpr x <*> renameExpr y
 renameExpr (Match pos scrutinee clauses) =
@@ -113,7 +112,7 @@ renameExpr (Match pos scrutinee clauses) =
 
 renameClause ::
   (MonadMalgo m, MonadUniq m, MonadReader Known m) =>
-  (Pat String, Expr String) ->
+  (Pat Text, Expr Text) ->
   m (Pat (Id ()), Expr (Id ()))
 renameClause (p, e) = runContT (renamePat p) $ \p' -> (p',) <$> renameExpr e
   where
@@ -123,7 +122,7 @@ renameClause (p, e) = runContT (renamePat p) $ \p' -> (p',) <$> renameExpr e
 renameSType ::
   (MonadMalgo m, MonadReader Known m, MonadUniq m) =>
   SourcePos ->
-  SType String ->
+  SType Text ->
   m (SType (Id ()))
 renameSType pos (TyVar x) = TyVar <$> getId pos tyVar x
 renameSType _ TyInt = pure TyInt

@@ -68,7 +68,7 @@ toExp (S.Char _ x) =
     ty = SumT $ Set.singleton con
     con = Con "Char" [CharT]
 toExp (S.String _ x) =
-  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String x]
+  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String $ T.unpack x]
   where
     ty = SumT $ Set.singleton con
     con = Con "String" [StringT]
@@ -128,7 +128,7 @@ toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
       Var prim' <-
         let_ (ta :-> tb) $
           Fun ps $
-            PrimCall (T.pack primName) (ta :-> tb) (map Var ps)
+            PrimCall primName (ta :-> tb) (map Var ps)
       modify $ at prim ?~ prim'
       toExp e
     _ -> bug Unreachable
