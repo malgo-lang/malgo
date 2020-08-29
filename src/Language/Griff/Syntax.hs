@@ -15,6 +15,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import qualified Text.PrettyPrint.HughesPJ as P
 import Text.PrettyPrint.HughesPJClass (prettyNormal)
+import qualified Data.Set as Set
 
 -- Unboxed literal
 
@@ -170,6 +171,14 @@ instance (Pretty (XTId x)) => Pretty (Type x) where
   pPrintPrec l d (TyArr _ t1 t2) = P.maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple _ ts) = P.parens $ P.sep $ P.punctuate "," $ map pPrint ts
   pPrintPrec _ _ (TyLazy _ t) = P.braces $ pPrint t
+
+getTyVars :: Ord (XTId x) => Type x -> Set (XTId x)
+getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
+getTyVars (TyVar _ v) = Set.singleton v
+getTyVars TyCon {} = mempty
+getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
+getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
+getTyVars (TyLazy _ t) = getTyVars t
 
 -----------------
 -- Declaration --

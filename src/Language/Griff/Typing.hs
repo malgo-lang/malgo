@@ -14,6 +14,8 @@ module Language.Griff.Typing where
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
+import qualified Data.Text.Lazy as TL
+import Debug.Trace (traceM)
 import Language.Griff.Extension
 import Language.Griff.RnEnv as R
 import Language.Griff.Syntax hiding (Type (..))
@@ -27,8 +29,6 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
-import Debug.Trace (traceM, traceShowM)
-import qualified Data.Text.Lazy as TL
 
 ---------------------------
 -- Read and Write MetaTv --
@@ -143,12 +143,15 @@ tcDecls ds = do
   -- DataDefの処理（相互再帰的）
   let dataDefs = collectDataDef ds
   (env, dataDefs') <- tcDataDefs dataDefs
-  traceM $ TL.unpack $ pShow env
-  -- Forignの処理
-  -- ScSigの処理
-  -- ScDefの処理（相互再帰的）
-  -- Infixの処理
-  pure dataDefs'
+  local (env <>) $ do
+    let forigns = collectForign ds
+    (env, forigns') <- tcForigns forigns
+    traceM $ TL.unpack $ pShow env
+    -- Forignの処理
+    -- ScSigの処理
+    -- ScDefの処理（相互再帰的）
+    -- Infixの処理
+    pure $ dataDefs' <> forigns'
 
 collectDataDef :: [Decl x] -> [Decl x]
 collectDataDef = filter (\case DataDef {} -> True; _ -> False)
@@ -201,6 +204,23 @@ tcDataDefs ds = do
     buildType pos name params (arg : args) = do
       arg' <- transType $ tcType arg
       TyArr arg' <$> buildType pos name params args
+
+tcForigns :: (MonadUniq m, MonadReader TcEnv m, MonadIO m) => [Decl (Griff 'Rename)] -> m (TcEnv, [Decl (Griff 'TypeCheck)])
+tcForigns ds = fmap (first mconcat) $
+  mapAndUnzipM ?? ds $ \case
+    Forign pos name ty -> do
+      let tyVars = Set.toList $ getTyVars ty
+      tyVars' <- traverse (const $ TyMeta <$> newMetaTv Star) tyVars
+      local (over T.typeEnv (Map.fromList (zip tyVars tyVars') <>)) $ do
+        scheme@(Forall _ ty') <- generalize mempty =<< transType (tcType ty)
+        pure
+          ( TcEnv
+              { T._varEnv = Map.fromList [(name, scheme)],
+                T._typeEnv = mempty
+              },
+            Forign (WithType pos ty') name (tcType ty)
+          )
+    _ -> bug Unreachable
 
 -- coercion
 tcType :: S.Type (Griff 'Rename) -> S.Type (Griff 'TypeCheck)

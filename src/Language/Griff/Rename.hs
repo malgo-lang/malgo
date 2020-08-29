@@ -1,24 +1,25 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Rename where
 
 import Data.List.Predicate (allUnique)
 import qualified Data.Map as Map
+import qualified Data.Set as Set
+import Language.Griff.Extension
+import Language.Griff.RnEnv
+import Language.Griff.Syntax
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
-import Language.Griff.RnEnv
-import Language.Griff.Syntax
-import Language.Griff.Extension
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
@@ -66,13 +67,21 @@ rnDecl (ScDef pos name params expr) = do
   params' <- traverse (newId ()) params
   local (over varEnv (Map.fromList (zip params params') <>)) $
     ScDef pos <$> lookupVarName pos name <*> pure params' <*> rnExp expr
-rnDecl (ScSig pos name typ) = ScSig pos <$> lookupVarName pos name <*> rnType typ
+rnDecl (ScSig pos name typ) = do
+  let tyVars = Set.toList $ getTyVars typ
+  tyVars' <- traverse (newId ()) tyVars
+  local (over typeEnv (Map.fromList (zip tyVars tyVars') <>)) $
+    ScSig pos <$> lookupVarName pos name <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
   params' <- traverse (newId ()) params
   local (over typeEnv (Map.fromList (zip params params') <>)) $
     DataDef pos <$> lookupTypeName pos name <*> pure params' <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
-rnDecl (Forign pos name typ) = Forign (pos, name) <$> lookupVarName pos name <*> rnType typ
+rnDecl (Forign pos name typ) = do
+  let tyVars = Set.toList $ getTyVars typ
+  tyVars' <- traverse (newId ()) tyVars
+  local (over typeEnv (Map.fromList (zip tyVars tyVars') <>)) $
+    Forign (pos, name) <$> lookupVarName pos name <*> rnType typ
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m) => Exp (Griff 'Parse) -> m (Exp (Griff 'Rename))

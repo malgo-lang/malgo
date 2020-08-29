@@ -94,7 +94,7 @@ pFun =
       Fn <$> getSourcePos
         <*> ( Clause <$> getSourcePos
                 <*> (try (some pPat <* pOperator "->") <|> pure [])
-                <*> pExp
+                <*> pExpInFn
             )
           `sepBy` pOperator "|"
 
@@ -121,11 +121,17 @@ pTuple = label "tuple" $
       xs <- pExp `sepBy` pOperator ","
       pure $ Tuple s (x : xs)
 
+pUnit :: Parser (Exp (Griff 'Parse))
+pUnit = between (symbol "(") (symbol ")") $ do
+  s <- getSourcePos
+  pure $ Tuple s []
+
 pSingleExp' :: Parser (Exp (Griff 'Parse))
 pSingleExp' =
   Unboxed <$> getSourcePos <*> pUnboxed
     <|> pVariable
     <|> pConstructor
+    <|> try pUnit
     <|> try pTuple
     <|> pFun
     <|> between (symbol "(") (symbol ")") pExp
@@ -154,10 +160,26 @@ pOpApp = makeExprParser pTerm opTable
             op <- operator
             pure $ \l r -> OpApp s op l r
         ]
+        -- ,[ InfixR $ do
+        --     s <- getSourcePos
+        --     pOperator ";"
+        --     pure $ \l r -> Apply s (Fn s [Clause s [VarP s "_"] r]) l
+        -- ]
       ]
 
 pExp :: Parser (Exp (Griff 'Parse))
 pExp = pOpApp
+
+pExpInFn :: Parser (Exp (Griff 'Parse))
+pExpInFn =
+  makeExprParser
+    pExp
+    [ [ InfixR $ do
+          s <- getSourcePos
+          pOperator ";"
+          pure $ \l r -> Apply s (Fn s [Clause s [VarP s "_"] r]) l
+      ]
+    ]
 
 pTyVar :: Parser (Type (Griff 'Parse))
 pTyVar = label "type variable" $ TyVar <$> getSourcePos <*> lowerIdent
@@ -175,12 +197,17 @@ pTyTuple = between (symbol "(") (symbol ")") $ do
   xs <- pType `sepBy` pOperator ","
   pure $ TyTuple s (x : xs)
 
+pTyUnit :: Parser (Type (Griff 'Parse))
+pTyUnit = between (symbol "(") (symbol ")") $ do
+  s <- getSourcePos
+  pure $ TyTuple s []
+
 pTyLazy :: Parser (Type (Griff 'Parse))
 pTyLazy = between (symbol "{") (symbol "}") $ do
   TyLazy <$> getSourcePos <*> pType
 
 pSingleType :: Parser (Type (Griff 'Parse))
-pSingleType = pTyVar <|> pTyCon <|> pTyLazy <|> try pTyTuple <|> between (symbol "(") (symbol ")") pType
+pSingleType = pTyVar <|> pTyCon <|> pTyLazy <|> try pTyUnit <|> try pTyTuple <|> between (symbol "(") (symbol ")") pType
 
 pTyApp :: Parser (Type (Griff 'Parse))
 pTyApp = TyApp <$> getSourcePos <*> pSingleType <*> some pSingleType
@@ -210,7 +237,7 @@ pScDef =
 pScSig :: Parser (Decl (Griff 'Parse))
 pScSig =
   label "toplevel function signature" $
-    ScSig <$> getSourcePos <*> lowerIdent <* pOperator "::" <*> pType
+    ScSig <$> getSourcePos <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator) <* pOperator "::" <*> pType
 
 pDataDef :: Parser (Decl (Griff 'Parse))
 pDataDef = label "toplevel type definition" $ do
