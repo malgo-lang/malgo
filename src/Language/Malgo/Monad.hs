@@ -138,7 +138,7 @@ instance MonadUniq MalgoM where
     pure i
 
 newtype UniqT m a = UniqT {unUniqT :: StateT UniqSupply m a}
-  deriving newtype (Functor, Applicative, Monad, MonadTrans, MonadFix, MonadFail)
+  deriving newtype (Functor, Applicative, Monad, MonadTrans, MonadFix, MonadFail, MonadIO)
 
 runUniqT :: UniqT m a -> UniqSupply -> m (a, UniqSupply)
 runUniqT (UniqT m) = runStateT m

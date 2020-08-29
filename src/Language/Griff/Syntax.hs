@@ -14,6 +14,7 @@ import qualified Language.Griff.Type as T
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import qualified Text.PrettyPrint.HughesPJ as P
+import Text.PrettyPrint.HughesPJClass (prettyNormal)
 
 -- Unboxed literal
 
@@ -188,8 +189,8 @@ deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Sho
 instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Decl x) where
   pPrint (ScDef _ f xs e) = P.sep [pPrint f <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ pPrint e]
   pPrint (ScSig _ f t) = pPrint f <+> "::" <+> pPrint t
-  pPrint (DataDef _ d xs cs) = P.sep ["data" <+> pPrint d <+> P.sep (map pPrint xs) <+> "=", foldl1 (\a b -> P.sep [a, "|" <+> b]) $ map pprConDef cs]
+  pPrint (DataDef _ d xs cs) = P.sep ["data" <+> pPrint d <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ foldl1 (\a b -> P.sep [a, "|" <+> b]) $ map pprConDef cs]
     where
-      pprConDef (con, ts) = pPrint con <+> P.sep (map pPrint ts)
+      pprConDef (con, ts) = pPrint con <+> P.sep (map (pPrintPrec prettyNormal 12) ts)
   pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
   pPrint (Forign _ x t) = "forign import" <+> pPrint x <+> "::" <+> pPrint t

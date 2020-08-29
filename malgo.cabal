@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4a66a2e8dcc65c9f23286d1b581254141bda085924f28f4750c9880905634b5a
+-- hash: c729b71c8d6b628a6aa4c20fcb0bcac89f0cf2aedb2655ffdefd69bfe13e4d74
 
 name:           malgo
 version:        1.0.0.0
@@ -31,7 +31,9 @@ library
       Language.Griff.Rename
       Language.Griff.RnEnv
       Language.Griff.Syntax
+      Language.Griff.TcEnv
       Language.Griff.Type
+      Language.Griff.Typing
       Language.Malgo.Core.CodeGen
       Language.Malgo.Core.Flat
       Language.Malgo.Core.LambdaLift

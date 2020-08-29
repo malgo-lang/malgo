@@ -222,7 +222,7 @@ pDataDef = label "toplevel type definition" $ do
   ts <- pConDef `sepBy` pOperator "|"
   pure $ DataDef s d xs ts
   where
-    pConDef = (,) <$> upperIdent <*> many pType
+    pConDef = (,) <$> upperIdent <*> many pSingleType
 
 pInfix :: Parser (Decl (Griff 'Parse))
 pInfix = label "infix declaration" $ do

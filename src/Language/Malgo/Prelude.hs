@@ -42,6 +42,10 @@ module Language.Malgo.Prelude
     (<<$>>),
     ordNub,
     replaceOf,
+    IORef,
+    newIORef,
+    readIORef,
+    writeIORef,
     Bug,
     bug,
     localState,
@@ -76,6 +80,8 @@ import Data.Bifunctor
 import Data.Bitraversable
 import Data.Coerce
 import Data.Foldable
+import Data.IORef (IORef)
+import qualified Data.IORef as I
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Map (Map)
 import Data.Maybe
@@ -91,8 +97,8 @@ import GHC.Stack
     callStack,
     prettyCallStack,
   )
-import Text.Parsec.Pos (SourcePos)
 import qualified Text.Megaparsec.Pos as Megaparsec
+import Text.Parsec.Pos (SourcePos)
 import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
 import Prelude hiding (log, unzip)
 
@@ -136,6 +142,15 @@ ordNub = go Set.empty
 replaceOf :: Eq a => ASetter' s a -> a -> a -> s -> s
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
 
+newIORef :: MonadIO m => a -> m (IORef a)
+newIORef a = liftIO $ I.newIORef a
+
+readIORef :: MonadIO m => IORef a -> m a
+readIORef r = liftIO $ I.readIORef r
+
+writeIORef :: MonadIO m => IORef a -> a -> m ()
+writeIORef r v = liftIO $ I.writeIORef r v
+
 data Bug = Bug SomeException CallStack
   deriving stock (Show)
 
@@ -154,7 +169,6 @@ localState action = do
   state <- get
   put backup
   pure (result, state)
-
 
 -- mtlのインスタンスの追加定義
 instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where

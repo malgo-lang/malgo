@@ -4,13 +4,13 @@
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+
 module Language.Griff.Type where
 
 import Language.Malgo.Id
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import qualified Text.PrettyPrint.HughesPJ as P
-import Data.IORef (IORef)
 
 ----------------------
 -- Kind and HasKind --

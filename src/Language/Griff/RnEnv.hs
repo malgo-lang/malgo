@@ -8,14 +8,18 @@
 module Language.Griff.RnEnv where
 
 import qualified Data.Map as Map
+import Language.Griff.Extension (Assoc, Griff, GriffPhase (Parse, Rename), XId, XTId)
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Prelude
-import Language.Griff.Extension (Assoc, Griff, GriffPhase (Parse, Rename), XId)
 
 type PsId = XId (Griff 'Parse)
 
+type PsTId = XTId (Griff 'Parse)
+
 type RnId = XId (Griff 'Rename)
+
+type RnTId = XTId (Griff 'Rename)
 
 newtype RnState = RnState {_infixInfo :: Map RnId (Assoc, Int)}
   deriving stock (Show)
@@ -25,7 +29,7 @@ makeLenses ''RnState
 
 data RnEnv = RnEnv
   { _varEnv :: Map PsId RnId,
-    _typeEnv :: Map PsId RnId
+    _typeEnv :: Map PsTId RnTId
   }
   deriving stock (Show)
 
@@ -45,8 +49,7 @@ genRnEnv = do
   -- generate RnId of primitive functions and operetors
   add_i32 <- newId () "add_i32#"
   add_i64 <- newId () "add_i64#"
-  -- generate RnId of primitive types
-  bool_t <- newId () "Bool#"
+  -- generate RnTId of primitive types
   int32_t <- newId () "Int32#"
   int64_t <- newId () "Int64#"
   float_t <- newId () "Float#"
@@ -62,8 +65,7 @@ genRnEnv = do
             ],
         _typeEnv =
           Map.fromList
-            [ ("Bool#", bool_t),
-              ("Int32#", int32_t),
+            [ ("Int32#", int32_t),
               ("Int64#", int64_t),
               ("Float#", float_t),
               ("Double#", double_t),
