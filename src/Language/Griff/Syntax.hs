@@ -19,17 +19,27 @@ import qualified Data.Set as Set
 
 -- Unboxed literal
 
-data Unboxed = Bool Bool | Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
+data Unboxed = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
   deriving stock (Show, Eq, Ord)
 
 instance Pretty Unboxed where
-  pPrint (Bool b) = if b then "True#" else "False#"
   pPrint (Int32 i) = P.int (fromIntegral i) <> "#"
   pPrint (Int64 i) = P.int (fromIntegral i) <> "L#"
   pPrint (Float f) = P.float f <> "F#"
   pPrint (Double d) = P.double d <> "#"
   pPrint (Char c) = P.quotes (P.char c) <> "#"
   pPrint (String s) = P.doubleQuotes (P.text s) <> "#"
+
+instance HasType Unboxed where
+  typeOf = lens getter setter
+    where
+      getter Int32{} = T.TyPrim T.Int32T
+      getter Int64{} = T.TyPrim T.Int64T
+      getter Float{} = T.TyPrim T.FloatT
+      getter Double{} = T.TyPrim T.DoubleT
+      getter Char{} = T.TyPrim T.CharT
+      getter String{} = T.TyPrim T.StringT
+      setter u _ = u
 
 -- Expression
 
@@ -65,27 +75,14 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Force _ x) = pPrintPrec l 11 x <> "!"
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Exp x) where
-  typeOf = lens getter setter
-    where
-      getter (Var x _) = view typeOf x
-      getter (Con x _) = view typeOf x
-      getter (Unboxed x _) = view typeOf x
-      getter (Apply x _ _) = view typeOf x
-      getter (OpApp x _ _ _) = view typeOf x
-      getter (Fn x _) = view typeOf x
-      getter (Tuple x _) = view typeOf x
-      getter (Force x _) = view typeOf x
-      setter (Var x v) t = Var (set typeOf t x) v
-      setter (Con x c) t = Con (set typeOf t x) c
-      setter (Unboxed x u) t
-        | view typeOf x == t = Unboxed x u
-        | otherwise = errorDoc $ "Panic!" <+> "typeOf" <+> P.parens (pPrint u) <+> "is not" <+> pPrint t
-      setter (Apply x e1 e2) t = Apply (set typeOf t x) (set typeOf t e1) (set typeOf t e2)
-      setter (OpApp x op e1 e2) t = OpApp (set typeOf t x) op (set typeOf t e1) (set typeOf t e2)
-      setter (Fn x cs) t = Fn (set typeOf t x) (map (set typeOf t) cs)
-      setter (Tuple x es) (T.TyTuple ts) = Tuple (set typeOf (T.TyTuple ts) x) (zipWith (set typeOf) ts es)
-      setter Tuple {} t = errorDoc $ "Panic!" <+> pPrint t <+> "is not a tuple"
-      setter (Force x e) t = Force (set typeOf t x) (set typeOf t e)
+  typeOf f (Var x v) = typeOf f x <&> \x' -> Var x' v
+  typeOf f (Con x c) = typeOf f x <&> \x' -> Con x' c
+  typeOf f (Unboxed x u) = typeOf f x <&> \x' -> Unboxed x' u
+  typeOf f (Apply x e1 e2) = typeOf f x <&> \x' -> Apply x' e1 e2
+  typeOf f (OpApp x op e1 e2) = typeOf f x <&> \x' -> OpApp x' op e1 e2
+  typeOf f (Fn x cs) = typeOf f x <&> \x' -> Fn x' cs
+  typeOf f (Tuple x es) = typeOf f x <&> \x' -> Tuple x' es  
+  typeOf f (Force x e) = typeOf f x <&> \x' -> Force x' e
 
 ------------
 -- Clause --

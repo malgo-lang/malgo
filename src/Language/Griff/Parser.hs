@@ -74,8 +74,6 @@ pUnboxed =
       <|> Int64 <$> try (lexeme $ L.decimal <* string' "L#")
       <|> Char <$> lexeme (between (char '\'') (char '\'') L.charLiteral <* char '#')
       <|> String <$> lexeme (char '"' *> manyTill L.charLiteral (char '"') <* char '#')
-      <|> Bool <$> try (lexeme (symbol "False#" >> notFollowedBy identLetter >> pure False))
-      <|> Bool <$> try (lexeme (symbol "True#" >> notFollowedBy identLetter >> pure True))
 
 pVariable :: Parser (Exp (Griff 'Parse))
 pVariable =
@@ -93,7 +91,7 @@ pFun =
     between (symbol "{") (symbol "}") $
       Fn <$> getSourcePos
         <*> ( Clause <$> getSourcePos
-                <*> (try (some pPat <* pOperator "->") <|> pure [])
+                <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
                 <*> pExpInFn
             )
           `sepBy` pOperator "|"
@@ -160,11 +158,6 @@ pOpApp = makeExprParser pTerm opTable
             op <- operator
             pure $ \l r -> OpApp s op l r
         ]
-        -- ,[ InfixR $ do
-        --     s <- getSourcePos
-        --     pOperator ";"
-        --     pure $ \l r -> Apply s (Fn s [Clause s [VarP s "_"] r]) l
-        -- ]
       ]
 
 pExp :: Parser (Exp (Griff 'Parse))

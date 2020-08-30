@@ -20,7 +20,7 @@ data Kind = Star | KArr Kind Kind
   deriving stock (Eq, Ord, Show)
 
 class HasKind a where
-  kind :: a -> Kind
+  kind :: HasCallStack => a -> Kind
 
 instance HasKind a => HasKind (Id a) where
   kind = kind . view idMeta
@@ -96,7 +96,7 @@ instance Show MetaTv where
   show (MetaTv u _ _) = "_" <> show u
 
 instance Pretty MetaTv where
-  pPrint (MetaTv u _ _) = "_" <> pPrint u
+  pPrint (MetaTv u _ _) = "$_" <> pPrint u
 
 instance HasKind MetaTv where
   kind (MetaTv _ k _) = k

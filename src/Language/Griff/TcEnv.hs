@@ -16,15 +16,16 @@ import Language.Malgo.Prelude
 
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,
-    _typeEnv :: Map RnTId Type
+    _typeEnv :: Map RnTId Type,
+    _rnEnv :: RnEnv
   }
   deriving stock (Show)
 
 instance Semigroup TcEnv where
-  TcEnv v1 t1 <> TcEnv v2 t2 = TcEnv (v1 <> v2) (t1 <> t2)
+  TcEnv v1 t1 r1 <> TcEnv v2 t2 r2 = TcEnv (v1 <> v2) (t1 <> t2) (r1 <> r2)
 
 instance Monoid TcEnv where
-  mempty = TcEnv mempty mempty
+  mempty = TcEnv mempty mempty mempty
 
 makeLenses ''TcEnv
 
@@ -55,5 +56,6 @@ genTcEnv rnEnv = do
               (float_t, TyPrim FloatT),
               (double_t, TyPrim DoubleT),
               (string_t, TyPrim StringT)
-            ]
+            ],
+        _rnEnv = rnEnv
       }

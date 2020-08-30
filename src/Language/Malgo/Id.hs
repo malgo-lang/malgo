@@ -46,7 +46,7 @@ instance Ord (Id a) where
   compare Id {_idUniq = x} Id {_idUniq = y} = compare x y
 
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n u m) = text (T.unpack n) <> "." <> text (show u) <> ":" <> pPrint m
+  pPrint (Id n u _) = text (T.unpack n) <> "." <> text (show u)
 
 instance HasType a => HasType (Id a) where
   typeOf Id {_idMeta} = typeOf _idMeta
