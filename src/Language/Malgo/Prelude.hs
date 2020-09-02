@@ -208,4 +208,4 @@ instance Pretty SourcePos where
   pPrint = text . show
 
 instance Pretty Megaparsec.SourcePos where
-  pPrint = text . show
+  pPrint = text . Megaparsec.sourcePosPretty
