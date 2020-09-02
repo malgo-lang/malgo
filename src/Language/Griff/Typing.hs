@@ -9,7 +9,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Typing where
+module Language.Griff.Typing (typeCheck) where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
@@ -184,26 +184,12 @@ collectScSig = filter (\case ScSig {} -> True; _ -> False)
 collectScDef :: [Decl x] -> [Decl x]
 collectScDef = filter (\case ScDef {} -> True; _ -> False)
 
-collectInfix :: [Decl x] -> [Decl x]
-collectInfix = filter (\case Infix {} -> True; _ -> False)
-
 lookupType :: (MonadReader TcEnv m) => SourcePos -> RnTId -> m Type
 lookupType pos name = do
   mtype <- Map.lookup name <$> view T.typeEnv
   case mtype of
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
     Just typ -> pure typ
-
-lookupType' :: (MonadReader TcEnv m) => SourcePos -> Text -> m Type
-lookupType' pos name = do
-  mname <- Map.lookup name <$> view (T.rnEnv . R.typeEnv)
-  case mname of
-    Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
-    Just name' -> do
-      mtype <- Map.lookup name' <$> view T.typeEnv
-      case mtype of
-        Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
-        Just typ -> pure typ
 
 lookupVar :: (MonadReader TcEnv m) => SourcePos -> RnId -> m Scheme
 lookupVar pos name = do
@@ -212,33 +198,20 @@ lookupVar pos name = do
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
     Just scheme -> pure scheme
 
-lookupVar' :: (MonadReader TcEnv m) => SourcePos -> Text -> m Scheme
-lookupVar' pos name = do
-  mname <- Map.lookup name <$> view (T.rnEnv . R.varEnv)
-  case mname of
-    Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
-    Just name' -> do
-      mscheme <- Map.lookup name' <$> view T.varEnv
-      case mscheme of
-        Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
-        Just scheme -> pure scheme
-
 tcDataDefs :: (MonadUniq m, MonadReader TcEnv m, MonadIO m) => [Decl (Griff 'Rename)] -> m (TcEnv, [Decl (Griff 'TypeCheck)])
 tcDataDefs ds = do
-  dataEnv <- fmap mconcat $
-    traverse ?? ds $ \case
-      DataDef _ name params _ -> do
-        con <- newId (kindof params) (name ^. idName)
-        pure $ Map.singleton name (TyCon con)
-      _ -> bug Unreachable
+  dataEnv <- foldMapA ?? ds $ \case
+    DataDef _ name params _ -> do
+      con <- newId (kindof params) (name ^. idName)
+      pure $ Map.singleton name (TyCon con)
+    _ -> bug Unreachable
   (conEnvs, ds') <- local (over T.typeEnv (dataEnv <>)) $
     mapAndUnzipM ?? ds $ \case
       DataDef pos name params cons -> do
-        paramsEnv <- fmap mconcat $ traverse (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
+        paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
         local (over T.typeEnv (paramsEnv <>)) $ do
-          conEnv <- fmap mconcat $
-            traverse ?? cons $ \(con, args) ->
-              Map.singleton con <$> (generalize mempty =<< buildType pos name params args)
+          conEnv <- foldMapA ?? cons $ \(con, args) ->
+            Map.singleton con <$> (generalize mempty =<< buildType pos name params args)
           pure (conEnv, DataDef pos name params $ map (\(con, args) -> (con, map tcType args)) cons)
       _ -> bug Unreachable
   pure $
@@ -299,22 +272,21 @@ tcScSigs ds = fmap (first mconcat) $
 tcScDefs :: (MonadUniq m, MonadIO m, MonadReader TcEnv m) => [Decl (Griff 'Rename)] -> m (TcEnv, [Decl (Griff 'TypeCheck)])
 tcScDefs ds = do
   -- ScSigの無いScDefの型を仮定
-  env <-
-    traverse ?? ds $ \case
-      ScDef _ name _ _ -> do
-        mscheme <- Map.lookup name <$> view T.varEnv
-        case mscheme of
-          Nothing -> Map.singleton name . Forall [] . TyMeta <$> newMetaTv Star
-          Just _ -> pure mempty
-      _ -> bug Unreachable
-  local (over T.varEnv (mconcat env <>)) $ do
+  env <- foldMapA ?? ds $ \case
+    ScDef _ name _ _ -> do
+      mscheme <- Map.lookup name <$> view T.varEnv
+      case mscheme of
+        Nothing -> Map.singleton name . Forall [] . TyMeta <$> newMetaTv Star
+        Just _ -> pure mempty
+    _ -> bug Unreachable
+  local (over T.varEnv (env <>)) $ do
     (nts, defs) <- mapAndUnzipM ?? ds $ \case
       ScDef pos name params expr -> do
-        paramTypes <- traverse (const $ newMetaTv Star) params
-        local (over T.varEnv (Map.fromList (zip params (map (Forall [] . TyMeta) paramTypes)) <>)) $ do
+        paramTypes <- traverse (const $ TyMeta <$> newMetaTv Star) params
+        local (over T.varEnv (Map.fromList (zip params (map (Forall []) paramTypes)) <>)) $ do
           expr' <- tcExpr expr
           ty <- instantiate =<< lookupVar pos name
-          unify pos ty (foldr TyArr (view typeOf expr') $ map TyMeta paramTypes)
+          unify pos ty (foldr TyArr (view typeOf expr') paramTypes)
           pure ((name, ty), ScDef (WithType pos ty) name params expr')
       _ -> bug Unreachable
     nts' <- traverse (rtraverse (generalize mempty <=< zonkType)) nts
