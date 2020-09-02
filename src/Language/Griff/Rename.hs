@@ -10,6 +10,8 @@
 
 module Language.Griff.Rename where
 
+import Data.List (intersect)
+import Data.List.Extra (disjoint)
 import Data.List.Predicate (allUnique)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
@@ -132,15 +134,23 @@ rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 -- トップレベル識別子を列挙
 toplevelIdents :: [Decl (Griff 'Parse)] -> ([Text], [Text])
-toplevelIdents ds = (ordNub $ concatMap f ds, ordNub $ concatMap g ds)
+toplevelIdents ds = go ([], [], []) ds & \(sigs, vars, types) -> (ordNub $ sigs <> vars, types)
   where
-    f (ScDef _ x _ _) = [x]
-    f (ScSig _ x _) = [x]
-    f (DataDef _ _ _ xs) = map fst xs
-    f (Forign _ x _) = [x]
-    f _ = []
-    g (DataDef _ x _ _) = [x]
-    g _ = []
+    go result [] = result
+    go (sigs, vars, types) (ScDef pos x _ _ : rest)
+      | x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | otherwise = go (sigs, x : vars, types) rest
+    go (sigs, vars, types) (ScSig pos x _ : rest)
+      | x `elem` sigs = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | otherwise = go (x : sigs, vars, types) rest
+    go (sigs, vars, types) (DataDef pos x _ xs : rest)
+      | x `elem` types = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | disjoint (map fst xs) (sigs <> vars) = go (sigs, map fst xs <> vars, x : types) rest
+      | otherwise = errorOn pos $ "Duplicate name(s):" <+> P.sep (P.punctuate "," $ map (P.quotes . pPrint) (intersect (map fst xs) (sigs <> vars)))
+    go (sigs, vars, types) (Forign pos x _ : rest)
+      | x `elem` sigs || x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | otherwise = go (sigs, x : vars, types) rest
+    go result (_ : rest) = go result rest
 
 -- infix宣言をMapに変換
 infixDecls :: MonadReader RnEnv m => [Decl (Griff 'Parse)] -> m (Map RnId (Assoc, Int))

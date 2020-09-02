@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c729b71c8d6b628a6aa4c20fcb0bcac89f0cf2aedb2655ffdefd69bfe13e4d74
+-- hash: 9b722b82150bcd75eb9862ed3d517453eecb8ea5b26f83020517d10b25060f77
 
 name:           malgo
 version:        1.0.0.0
@@ -73,6 +73,7 @@ library
     , bytestring
     , containers
     , dlist
+    , extra
     , lens
     , list-predicate
     , llvm-hs-pretty
@@ -105,6 +106,7 @@ executable griff
     , bytestring
     , containers
     , dlist
+    , extra
     , lens
     , list-predicate
     , llvm-hs-pretty
@@ -138,6 +140,7 @@ executable malgo
     , bytestring
     , containers
     , dlist
+    , extra
     , lens
     , list-predicate
     , llvm-hs-pretty
@@ -172,6 +175,7 @@ test-suite malgo-test
     , bytestring
     , containers
     , dlist
+    , extra
     , hspec
     , lens
     , list-predicate
