@@ -8,7 +8,7 @@ infixr 0 (<|);
 
 data Bool = False | True;
 
-if :: Bool -> a -> a -> a;
+if :: Bool -> {a} -> {a} -> a;
 if c t f = c |> { True -> t!
                 | False -> f!
                 };

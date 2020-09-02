@@ -107,23 +107,21 @@ unify :: MonadIO m => SourcePos -> Type -> Type -> m ()
 unify pos t1 t2 = do
   t1' <- zonkType t1
   t2' <- zonkType t2
-  unify' pos t1' t2'
-
-unify' :: (HasCallStack, MonadIO m) => SourcePos -> Type -> Type -> m ()
-unify' _ (TyMeta tv1) (TyMeta tv2) | tv1 == tv2 = pure ()
-unify' pos (TyMeta tv) t = unifyMeta pos tv t
-unify' pos t (TyMeta tv) = unifyMeta pos tv t
-unify' pos (TyApp t11 t12) (TyApp t21 t22) = do
-  unify' pos t11 t21
-  unify' pos t12 t22
-unify' pos (TyArr t11 t12) (TyArr t21 t22) = do
-  unify' pos t11 t21
-  unify' pos t12 t22
-unify' pos (TyTuple ts1) (TyTuple ts2) = zipWithM_ (unify' pos) ts1 ts2
-unify' pos (TyLazy t1) (TyLazy t2) = unify' pos t1 t2
-unify' pos t1 t2
-  | t1 == t2 = pure ()
-  | otherwise = errorOn pos $ "Type mismatch:" <+> P.vcat [pPrint t1, pPrint t2]
+  (t1', t2') & \case
+    (TyMeta tv1, TyMeta tv2) | tv1 == tv2 -> pure ()
+    (TyMeta tv, t) -> unifyMeta pos tv t
+    (t, TyMeta tv) -> unifyMeta pos tv t
+    (TyApp t11 t12, TyApp t21 t22) -> do
+      unify pos t11 t21
+      unify pos t12 t22
+    (TyArr t11 t12, TyArr t21 t22) -> do
+      unify pos t11 t21
+      unify pos t12 t22
+    (TyTuple ts1, TyTuple ts2) -> zipWithM_ (unify pos) ts1 ts2
+    (TyLazy t1, TyLazy t2) -> unify pos t1 t2
+    (t1, t2)
+      | t1 == t2 -> pure ()
+      | otherwise -> errorOn pos $ "Type mismatch:" <+> P.vcat [pPrint t1, pPrint t2]
 
 unifyMeta :: (HasCallStack, MonadIO m) => SourcePos -> MetaTv -> Type -> m ()
 unifyMeta pos tv t2
@@ -131,7 +129,7 @@ unifyMeta pos tv t2
   | otherwise = do
     mt1 <- readMetaTv tv
     case mt1 of
-      Just t1 -> unify' pos t1 t2
+      Just t1 -> unify pos t1 t2
       Nothing -> do
         if tv `elem` metaTvs t2
           then errorOn pos $ "Occurs check" <+> P.quotes (pPrint tv) <+> "for" <+> pPrint t2
