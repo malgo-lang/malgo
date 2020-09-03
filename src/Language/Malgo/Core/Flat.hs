@@ -22,7 +22,7 @@ instance Pass Flat (Exp (Id CType)) (Exp (Id CType)) where
   trans e = runFlat (flatExp e)
 
 runFlat :: Monad m => WriterT (Endo r) m r -> m r
-runFlat = liftM (uncurry (flip appEndo)) . runWriterT
+runFlat = fmap (uncurry (flip appEndo)) . runWriterT
 
 flatExp :: Monad m => Exp a -> WriterT (Endo (Exp a)) m (Exp a)
 flatExp (Let ds e) = do

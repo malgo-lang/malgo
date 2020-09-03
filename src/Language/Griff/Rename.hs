@@ -1,10 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -116,7 +113,7 @@ rnClause (Clause pos ps e) = do
   let vars = concatMap patVars ps
 
   -- varsに重複がないことを確認
-  when (not $ allUnique vars) $
+  unless (allUnique vars) $
     errorOn pos "Same variables occurs in a pattern"
 
   vars' <- traverse (newId ()) vars
@@ -146,7 +143,7 @@ toplevelIdents ds = go ([], [], []) ds & \(sigs, vars, types) -> (ordNub $ sigs 
     go (sigs, vars, types) (DataDef pos x _ xs : rest)
       | x `elem` types = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | disjoint (map fst xs) (sigs <> vars) = go (sigs, map fst xs <> vars, x : types) rest
-      | otherwise = errorOn pos $ "Duplicate name(s):" <+> P.sep (P.punctuate "," $ map (P.quotes . pPrint) (intersect (map fst xs) (sigs <> vars)))
+      | otherwise = errorOn pos $ "Duplicate name(s):" <+> P.sep (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` (sigs <> vars)))
     go (sigs, vars, types) (Forign pos x _ : rest)
       | x `elem` sigs || x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | otherwise = go (sigs, x : vars, types) rest

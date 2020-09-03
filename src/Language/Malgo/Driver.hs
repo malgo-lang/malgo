@@ -74,21 +74,22 @@ readAndParse = do
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do
   opt <- asks maOption
-  llvmir <-
-    readAndParse
-      >>= transWithDump @Rename (dumpRenamed opt)
-      >>= transWithDump @Typing (dumpTyped opt)
-      >>= transWithDump @Desugar (dumpDesugar opt)
-      >>= trans @LintExp
-      >>= transWithDump @Optimize (dumpDesugar opt)
-      >>= pure . Program mempty mempty
-      >>= ( if applyLambdaLift opt
-              then
-                transWithDump @LambdaLift (dumpLambdaLift opt)
-                  >=> appProgram (transWithDump @Optimize (dumpLambdaLift opt))
-              else pure
+  program <-
+    Program mempty mempty
+      <$> ( readAndParse
+              >>= transWithDump @Rename (dumpRenamed opt)
+              >>= transWithDump @Typing (dumpTyped opt)
+              >>= transWithDump @Desugar (dumpDesugar opt)
+              >>= trans @LintExp
+              >>= transWithDump @Optimize (dumpDesugar opt)
           )
-      >>= trans @CodeGen
+  llvmir <-
+    if applyLambdaLift opt
+      then
+        transWithDump @LambdaLift (dumpLambdaLift opt) program
+          >>= appProgram (transWithDump @Optimize (dumpLambdaLift opt))
+          >>= trans @CodeGen
+      else trans @CodeGen program
   pure $
     L.defaultModule
       { L.moduleName = fromString $ srcName opt,

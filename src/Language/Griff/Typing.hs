@@ -2,10 +2,8 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -18,7 +16,6 @@ import Language.Griff.Extension
 import Language.Griff.RnEnv as R
 import Language.Griff.Syntax hiding (Type (..))
 import qualified Language.Griff.Syntax as S
-import Language.Griff.TcEnv
 import Language.Griff.TcEnv as T
 import Language.Griff.Type
 import Language.Malgo.Id
@@ -165,7 +162,7 @@ tcDecls ds = do
           varEnv <- traverse zonkScheme =<< view T.varEnv
           typeEnv <- traverse zonkType =<< view T.typeEnv
           rnEnv <- view T.rnEnv
-          pure $
+          pure
             ( dataDefs' <> forigns' <> scSigs' <> scDefs',
               TcEnv {T._varEnv = varEnv, T._typeEnv = typeEnv, T._rnEnv = rnEnv}
             )
@@ -210,9 +207,9 @@ tcDataDefs ds = do
         local (over T.typeEnv (paramsEnv <>)) $ do
           conEnv <- foldMapA ?? cons $ \(con, args) ->
             Map.singleton con <$> (generalize mempty =<< buildType pos name params args)
-          pure (conEnv, DataDef pos name params $ map (\(con, args) -> (con, map tcType args)) cons)
+          pure (conEnv, DataDef pos name params $ map (second (map tcType)) cons)
       _ -> bug Unreachable
-  pure $
+  pure
     ( TcEnv
         { T._typeEnv = dataEnv,
           T._varEnv = mconcat conEnvs,
@@ -340,7 +337,7 @@ tcExpr (Fn pos cs) = do
   cs' <- traverse tcClause cs
   case cs' of
     (c' : cs') -> do
-      traverse_ (unify pos (view typeOf c')) (map (view typeOf) cs')
+      traverse_ (unify pos (view typeOf c') . view typeOf) cs'
       pure $ Fn (WithType pos (view typeOf c')) (c' : cs')
     _ -> bug Unreachable
 tcExpr (Tuple pos es) = do
@@ -357,7 +354,7 @@ tcClause (Clause pos patterns expr) = do
   (env, patterns') <- tcPatterns patterns
   local (env <>) $ do
     expr' <- tcExpr expr
-    let ty = foldr TyArr (view typeOf expr') (map (view typeOf) patterns')
+    let ty = foldr (TyArr . view typeOf) (view typeOf expr') patterns'
     pure $ Clause (WithType pos ty) patterns' expr'
 
 tcPatterns :: (MonadUniq m, MonadIO m, MonadReader TcEnv m) => [Pat (Griff 'Rename)] -> m (TcEnv, [Pat (Griff 'TypeCheck)])
@@ -378,7 +375,7 @@ tcPatterns ps = fmap (first mconcat) $
       local (env <>) $ do
         conType <- instantiate =<< lookupVar pos con
         ty <- TyMeta <$> newMetaTv Star
-        unify pos conType (foldr TyArr ty (map (view typeOf) pats'))
+        unify pos conType (foldr (TyArr . view typeOf) ty pats')
         pure (env, ConP (WithType pos ty) con pats')
     UnboxedP pos unboxed -> do
-      pure $ (mempty, UnboxedP (WithType pos (view typeOf unboxed)) unboxed)
+      pure (mempty, UnboxedP (WithType pos (view typeOf unboxed)) unboxed)

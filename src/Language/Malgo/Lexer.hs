@@ -103,7 +103,7 @@ lexer pos =
       [("(", LPAREN), (")", RPAREN), ("[", LBRACK), ("]", RBRACK), ("{", LBRACE), ("}", RBRACE)]
     <|> try (valueToken Tok.float FLOAT)
     <|> valueToken Tok.natural INT
-    <|> valueToken (\t -> lookAhead upper >> Tok.identifier t >>= pure . T.pack) LID
+    <|> valueToken (\t -> T.pack <$> (lookAhead upper >> Tok.identifier t)) LID
     <|> valueToken (Tok.identifier >=> pure . T.pack) ID
     <|> valueToken Tok.charLiteral CHAR
     <|> valueToken (Tok.stringLiteral >=> pure . T.pack) STRING

@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 -- | Malgoの抽象構文木の定義
@@ -27,8 +27,8 @@ import Text.PrettyPrint.HughesPJClass
     parens,
     punctuate,
     quotes,
-    ($+$),
     sep,
+    ($+$),
   )
 
 -- | 式。
@@ -136,9 +136,9 @@ instance HasType a => HasType (Expr a) where
   typeOf (MakeArray _ x _) = arrayTy $ typeOf x
   typeOf (ArrayRead _ (typeOf -> TyApp ArrayC [t]) _) = t
   typeOf ArrayRead {} = bug Unreachable
-  typeOf (ArrayWrite _ _ _ _) = tupleTy []
+  typeOf ArrayWrite {} = tupleTy []
   typeOf (Call _ (typeOf -> _ :-> t) _) = t
-  typeOf (Call _ _ _) = bug Unreachable
+  typeOf Call {} = bug Unreachable
   typeOf (Fn _ _ e) = typeOf e
   typeOf (Seq _ _ e) = typeOf e
   typeOf (Let _ _ e) = typeOf e

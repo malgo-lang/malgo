@@ -419,7 +419,7 @@ globalStringPtr str nm = do
           initializer = Just charArray,
           unnamedAddr = Just GlobalAddr
         }
-  pure $ C.GetElementPtr True (C.GlobalReference (ptr ty) nm) [(C.Int 32 0), (C.Int 32 0)]
+  pure $ C.GetElementPtr True (C.GlobalReference (ptr ty) nm) [C.Int 32 0, C.Int 32 0]
 
 genObj ::
   ( MonadReader OprMap m,

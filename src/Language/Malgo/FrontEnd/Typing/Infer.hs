@@ -2,7 +2,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -156,7 +155,7 @@ typingExpr (Let _ (FunDec fs) e) = do
     tv <- lookupVar f
     let cs1 = [tv :~ paramTypes :-> retType, t :~ retType]
     addCs pos cs1
-    letVar env f tv $ (map (WithPos ?? pos) cs1) <> cs0
+    letVar env f tv $ map (WithPos ?? pos) cs1 <> cs0
   typingExpr e
 typingExpr (If pos c t f) = do
   ct <- typingExpr c
