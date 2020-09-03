@@ -32,7 +32,7 @@ instance Pass Desugar (S.Expr (Id Type)) (Exp (Id CType)) where
   passName = "Desugar"
   trans e = trans @Flat =<< evalStateT (toExp e) mempty
 
-findVar :: (MonadFail m, MonadState (IdMap Type (Id CType)) m) => Id Type -> m (Id CType)
+findVar :: (MonadFail m, MonadState (Map (Id Type) (Id CType)) m) => Id Type -> m (Id CType)
 findVar v = do
   Just v <- gets (view (at v))
   pure v
@@ -48,7 +48,7 @@ boolValue x =
     trueC = Con "True" []
     falseC = Con "False" []
 
-toExp :: (MonadState (IdMap Type (Id CType)) m, MonadUniq m, MonadFail m) => S.Expr (Id Type) -> m (Exp (Id CType))
+toExp :: (MonadState (Map (Id Type) (Id CType)) m, MonadUniq m, MonadFail m) => S.Expr (Id Type) -> m (Exp (Id CType))
 toExp (S.Var _ x) =
   Atom . Var <$> findVar x
 toExp (S.Int _ x) =
@@ -236,7 +236,7 @@ toExp (S.Match _ e cs) = do
   pure $ Match e cs
 
 crushPat ::
-  (MonadUniq m, MonadState (IdMap Type (Id CType)) m) =>
+  (MonadUniq m, MonadState (Map (Id Type) (Id CType)) m) =>
   S.Pat (Id Type) ->
   m (Exp (Id CType)) ->
   m (Case (Id CType))

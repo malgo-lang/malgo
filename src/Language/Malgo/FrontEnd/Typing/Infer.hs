@@ -40,7 +40,7 @@ instance Pass Typing (Expr (Id ())) (Expr (Id Type)) where
         pure $ fmap (\x -> maybe (x & idMeta .~ TyMeta (-1)) (fmap removeExplictForall) (env ^. at x)) e
       Left doc -> errorDoc doc
 
-type Env = IdMap () (Id Scheme)
+type Env = Map (Id ()) (Id Scheme)
 
 newTyMeta :: MonadUniq m => m Type
 newTyMeta = TyMeta <$> getUniq
@@ -80,7 +80,7 @@ addCs ::
 addCs pos = tell . map (WithPos ?? pos)
 
 typingExpr ::
-  ( MonadState (IdMap () (Id Scheme)) m,
+  ( MonadState Env m,
     MonadUniq m,
     MonadMalgo m
   ) =>
@@ -197,9 +197,8 @@ typingExpr (Match pos scrutinee clauses) = do
   addCs pos $ map (t :~) ts
   pure t
 
--- TODO: add SourcePos field to Pat
 typingPat ::
-  ( MonadState (IdMap () (Id Scheme)) m,
+  ( MonadState Env m,
     MonadUniq m,
     MonadMalgo m
   ) =>

@@ -48,7 +48,7 @@ instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
               then pure e'
               else times (n - 1) f e'
 
-type CallInlineMap = IdMap CType ([Atom (Id CType)] -> Exp (Id CType))
+type CallInlineMap = Map (Id CType) ([Atom (Id CType)] -> Exp (Id CType))
 
 optCallInline ::
   (MonadState CallInlineMap f, MonadMalgo f) =>
@@ -87,7 +87,7 @@ lookupCallInline f = do
     Just inline -> inline
     Nothing -> Call (Var f)
 
-type PackInlineMap = IdMap CType (Con, [Atom (Id CType)])
+type PackInlineMap = Map (Id CType) (Con, [Atom (Id CType)])
 
 optPackInline :: MonadReader PackInlineMap m => Exp (Id CType) -> m (Exp (Id CType))
 optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do

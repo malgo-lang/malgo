@@ -23,8 +23,7 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
 import Data.Either (partitionEithers)
-import qualified Data.IntMap as IntMap
-import Data.Map ()
+import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
@@ -94,8 +93,8 @@ loadTopBinds xs = do
   traverse_ prepare xs
   env <- mconcat <$> traverse (uncurry genObj) xs
   OprMap {_globalMap} <- ask
-  for_ (IntMap.toAscList $ unwrapIdMap env) $ \(i, opr) ->
-    case unwrapIdMap _globalMap ^? ix i of
+  for_ (Map.toAscList env) $ \(i, opr) ->
+    case _globalMap ^? ix i of
       Just globalAddr -> store globalAddr 0 opr
       Nothing -> bug Unreachable
   where
@@ -110,12 +109,12 @@ loadTopBinds xs = do
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data OprMap = OprMap
-  { _valueMap :: IdMap CType Operand,
-    _funcMap :: IdMap CType Operand,
-    _globalMap :: IdMap CType Operand
+  { _valueMap :: Map (Id CType) Operand,
+    _funcMap :: Map (Id CType) Operand,
+    _globalMap :: Map (Id CType) Operand
   }
 
-valueMap :: Lens' OprMap (IdMap CType Operand)
+valueMap :: Lens' OprMap (Map (Id CType) Operand)
 valueMap = lens _valueMap (\s a -> s {_valueMap = a})
 
 -- funcMap :: Lens' OprMap (IdMap CType Operand)
@@ -433,7 +432,7 @@ genObj ::
   ) =>
   Id CType ->
   Obj (Id CType) ->
-  m (IdMap CType Operand)
+  m (Map (Id CType) Operand)
 genObj funName (Fun ps e) = do
   name <- toName <$> newId () (funName ^. idName <> "_closure")
   func <- function name (map (,NoParameterName) psTypes) retType $ \case
