@@ -23,11 +23,11 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
 import Data.Either (partitionEithers)
+import Data.List.Extra (mconcatMap)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import GHC.Exts (fromList)
 import LLVM.AST (Definition (..), Name, mkName)
 import qualified LLVM.AST
 import LLVM.AST.Constant (Constant (..))
@@ -57,16 +57,18 @@ instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
   trans Program {topBinds, mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
     -- topBindsとtopFuncsのOprMapを作成
     bindEnv <-
-      fmap fromList $
-        traverse ?? topBinds $
-          \(x, _) -> do
-            emitDefn $ LLVM.AST.GlobalDefinition LLVM.AST.globalVariableDefaults
-            pure (x, ConstantOperand $ C.GlobalReference (ptr (convType $ cTypeOf x)) (toName x))
+      foldMapA ?? topBinds $
+        \(x, _) -> do
+          emitDefn $ LLVM.AST.GlobalDefinition LLVM.AST.globalVariableDefaults
+          pure $
+            Map.singleton x $
+              ConstantOperand $ C.GlobalReference (ptr (convType $ cTypeOf x)) (toName x)
     let funcEnv =
-          fromList $
-            map ?? topFuncs $
-              \(f, (ps, e)) ->
-                (f, ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f))
+          mconcatMap
+            ?? topFuncs
+            $ \(f, (ps, e)) ->
+              Map.singleton f $
+                ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f)
     runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv, _globalMap = bindEnv}) $
       Lazy.evalStateT ?? (mempty :: PrimMap) $ do
         traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
@@ -213,7 +215,7 @@ genFunc ::
   Exp (Id CType) ->
   m Operand
 genFunc name params body = function funcName llvmParams retty $ \args ->
-  local (over valueMap (fromList (zip params args) <>)) $ genExp body ret
+  local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
     llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ T.encodeUtf8 $ x ^. idName)) params
@@ -235,9 +237,9 @@ genExp ::
 genExp (Atom x) k = k =<< genAtom x
 genExp (Call f xs) k = do
   fOpr <- genAtom f
+  captureOpr <- gepAndLoad fOpr [int32 0, int32 0]
+  funcOpr <- gepAndLoad fOpr [int32 0, int32 1]
   xsOprs <- traverse genAtom xs
-  captureOpr <- (load ?? 0) =<< gep fOpr [int32 0, int32 0]
-  funcOpr <- (load ?? 0) =<< gep fOpr [int32 0, int32 1]
   k =<< call funcOpr (map (,[]) $ captureOpr : xsOprs)
 genExp (CallDirect f xs) k = do
   fOpr <- findFun f
@@ -304,32 +306,35 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     genOp _ = bug Unreachable
     i1ToBool i1opr = do
       boolVal <- mallocType (StructureType False [i64, StructureType False []])
-      tag <- zext i1opr i64
-      tagAddr <- gep boolVal [int32 0, int32 0]
-      store tagAddr 0 tag
+      gepAndStore boolVal [int32 0, int32 0] =<< zext i1opr i64
       pure boolVal
 genExp (ArrayRead a i) k = do
   aOpr <- genAtom a
   iOpr <- genAtom i
-  arrOpr <- (load ?? 0) =<< gep aOpr [int32 0, int32 0]
-  k =<< (load ?? 0) =<< gep arrOpr [iOpr]
+  arrOpr <- gepAndLoad aOpr [int32 0, int32 0]
+  k =<< gepAndLoad arrOpr [iOpr]
 genExp (ArrayWrite a i v) k = do
   aOpr <- genAtom a
   iOpr <- genAtom i
   vOpr <- genAtom v
-  arrOpr <- (load ?? 0) =<< gep aOpr [int32 0, int32 0]
-  addr <- gep arrOpr [iOpr]
-  store addr 0 vOpr
+  arrOpr <- gepAndLoad aOpr [int32 0, int32 0]
+  gepAndStore arrOpr [iOpr] vOpr
   k (ConstantOperand (Undef (ptr $ StructureType False [i64, StructureType False []])))
 genExp (Let xs e) k = do
-  env <- fromList . mconcat <$> traverse prepare xs
+  env <- foldMapA prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse (uncurry genObj) xs
   local (over valueMap (env <>)) $ genExp e k
   where
-    prepare (name, Fun ps body) = do
-      opr <- mallocType (StructureType False [ptr i8, ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False])
-      pure [(name, opr)]
-    prepare _ = pure []
+    prepare (name, Fun ps body) =
+      Map.singleton name
+        <$> mallocType
+          ( StructureType
+              False
+              [ ptr i8,
+                ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False
+              ]
+          )
+    prepare _ = pure mempty
 genExp (Match e cs) k = genExp e $ \eOpr -> do
   -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
   -- TODO: genExpが正しい型の値を継続に渡すように変更する
@@ -345,7 +350,7 @@ genExp (Match e cs) k = genExp e $ \eOpr -> do
           unreachable
           pure l
       switchBlock <- block
-      tagOpr <- (load ?? 0) =<< gep eOpr [int32 0, int32 0]
+      tagOpr <- gepAndLoad eOpr [int32 0, int32 0]
       switch tagOpr defaultLabel $ map (\(i, l) -> (C.Int 64 $ fromIntegral i, l)) labels
     _ -> case cs of
       (Bind x body :| _) -> local (over valueMap (at x ?~ eOpr)) $ genExp body k
@@ -379,10 +384,9 @@ genUnpack scrutinee cs k = \case
     addr <- bitcast scrutinee (ptr $ StructureType False [i64, conType])
     payloadAddr <- gep addr [int32 0, int32 1]
     -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
-    env <- fmap mconcat $
-      ifor vs $ \i v -> do
-        vOpr <- (load ?? 0) =<< gep payloadAddr [int32 0, int32 $ fromIntegral i]
-        pure $ fromList [(v, vOpr)]
+    env <- ifoldMapA ?? vs $ \i v -> do
+      vOpr <- gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
+      pure $ Map.singleton v vOpr
     void $ local (over valueMap (env <>)) $ genExp e k
     pure $ Right (tag, label)
 
@@ -401,6 +405,88 @@ genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x
 genAtom (Unboxed (Core.String x)) = do
   i <- getUniq
   ConstantOperand <$> globalStringPtr x (mkName $ "str" <> show i)
+
+genObj ::
+  ( MonadReader OprMap m,
+    MonadModuleBuilder m,
+    MonadIRBuilder m,
+    MonadState PrimMap m,
+    MonadUniq m,
+    MonadFail m,
+    MonadFix m
+  ) =>
+  Id CType ->
+  Obj (Id CType) ->
+  m (Map (Id CType) Operand)
+genObj funName (Fun ps e) = do
+  name <- toName <$> newId () (funName ^. idName <> "_closure")
+  func <- function name (map (,NoParameterName) psTypes) retType $ \case
+    [] -> bug Unreachable
+    (rawCapture : ps') -> do
+      capture <- bitcast rawCapture (ptr capType)
+      env <- ifoldMapA ?? fvs $ \i fv ->
+        Map.singleton fv <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
+      let env' = Map.fromList $ zip ps ps'
+      local (over valueMap ((env <> env') <>)) $ genExp e ret
+  capture <- mallocType capType
+  ifor_ fvs $ \i fv -> do
+    fvOpr <- findVar fv
+    gepAndStore capture [int32 0, int32 $ fromIntegral i] fvOpr
+  closAddr <- findVar funName
+  gepAndStore closAddr [int32 0, int32 0] =<< bitcast capture (ptr i8)
+  gepAndStore closAddr [int32 0, int32 1] func
+  pure $ Map.singleton funName closAddr
+  where
+    fvs = toList $ freevars (Fun ps e)
+    capType = StructureType False (map (convType . cTypeOf) fvs)
+    psTypes = ptr i8 : map (convType . cTypeOf) ps
+    retType = convType $ cTypeOf e
+genObj name@(cTypeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
+  addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
+  let tag = fromIntegral $ Set.findIndex con cs
+  gepAndStore addr [int32 0, int32 0] (int64 tag)
+  ifor_ xs $ \i x -> do
+    xOpr <- genAtom x
+    gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] xOpr
+  addr <- bitcast addr (convType $ SumT cs)
+  pure $ Map.singleton name addr
+genObj _ Pack {} = bug Unreachable
+genObj x (Core.Array a n) = mdo
+  sizeOpr <- mul (sizeof $ convType $ cTypeOf a) =<< genAtom n
+  arrayOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ cTypeOf a)
+  -- for (i64 i = 0;
+  iPtr <- alloca i64 Nothing 0
+  store iPtr 0 (int64 0)
+  br condLabel
+  -- cond: i < n;
+  condLabel <- block
+  iOpr <- load iPtr 0
+  cond <- icmp IP.SLT iOpr =<< genAtom n
+  condBr cond bodyLabel endLabel
+  -- body: valueOpr[iOpr] <- genAtom a
+  bodyLabel <- block
+  iOpr' <- load iPtr 0
+  gepAndStore arrayOpr [iOpr'] =<< genAtom a
+  store iPtr 0 =<< add iOpr (int64 1)
+  br condLabel
+  endLabel <- block
+  -- return array struct
+  structOpr <- mallocType (StructureType False [ptr $ convType $ cTypeOf a, i64])
+  gepAndStore structOpr [int32 0, int32 0] arrayOpr
+  gepAndStore structOpr [int32 0, int32 1] =<< genAtom n
+  pure $ Map.singleton x structOpr
+
+genCon :: Set Con -> Con -> (Int, Type)
+genCon cs con@(Con _ ts)
+  | con `elem` cs = (Set.findIndex con cs, StructureType False (map convType ts))
+  | otherwise = bug Unreachable
+
+sizeof :: Type -> Operand
+sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64
+  where
+    ptrType = LT.ptr ty
+    nullPtr = C.IntToPtr (C.Int 32 0) ptrType
+    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 globalStringPtr :: MonadModuleBuilder m => String -> Name -> m C.Constant
 globalStringPtr str nm = do
@@ -421,94 +507,8 @@ globalStringPtr str nm = do
         }
   pure $ C.GetElementPtr True (C.GlobalReference (ptr ty) nm) [C.Int 32 0, C.Int 32 0]
 
-genObj ::
-  ( MonadReader OprMap m,
-    MonadModuleBuilder m,
-    MonadIRBuilder m,
-    MonadState PrimMap m,
-    MonadUniq m,
-    MonadFail m,
-    MonadFix m
-  ) =>
-  Id CType ->
-  Obj (Id CType) ->
-  m (Map (Id CType) Operand)
-genObj funName (Fun ps e) = do
-  name <- toName <$> newId () (funName ^. idName <> "_closure")
-  func <- function name (map (,NoParameterName) psTypes) retType $ \case
-    [] -> bug Unreachable
-    (rawCapture : ps') -> do
-      capture <- bitcast rawCapture (ptr capType)
-      env <- fmap fromList $
-        ifor fvs $ \i fv -> do
-          capAddr <- gep capture [int32 0, int32 $ fromIntegral i]
-          (fv,) <$> load capAddr 0
-      let env' = fromList $ zip ps ps'
-      local (over valueMap ((env <> env') <>)) $ genExp e ret
-  capture <- mallocType capType
-  ifor_ fvs $ \i fv -> do
-    fvOpr <- findVar fv
-    capAddr <- gep capture [int32 0, int32 $ fromIntegral i]
-    store capAddr 0 fvOpr
-  closAddr <- findVar funName
-  closCapAddr <- gep closAddr [int32 0, int32 0]
-  store closCapAddr 0 =<< bitcast capture (ptr i8)
-  closFunAddr <- gep closAddr [int32 0, int32 1]
-  store closFunAddr 0 func
-  pure $ fromList [(funName, closAddr)]
-  where
-    fvs = toList $ freevars (Fun ps e)
-    capType = StructureType False (map (convType . cTypeOf) fvs)
-    psTypes = ptr i8 : map (convType . cTypeOf) ps
-    retType = convType $ cTypeOf e
-genObj name@(cTypeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
-  addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
-  let tag = fromIntegral $ Set.findIndex con cs
-  tagAddr <- gep addr [int32 0, int32 0]
-  store tagAddr 0 (int64 tag)
-  ifor_ xs $ \i x -> do
-    xAddr <- gep addr [int32 0, int32 1, int32 $ fromIntegral i]
-    xOpr <- genAtom x
-    store xAddr 0 xOpr
-  addr <- bitcast addr (convType $ SumT cs)
-  pure $ fromList [(name, addr)]
-genObj _ Pack {} = bug Unreachable
-genObj x (Core.Array a n) = mdo
-  sizeOpr <- mul (sizeof $ convType $ cTypeOf a) =<< genAtom n
-  arrayOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ cTypeOf a)
-  -- for (i64 i = 0;
-  iPtr <- alloca i64 Nothing 0
-  store iPtr 0 (int64 0)
-  br condLabel
-  -- cond: i < n;
-  condLabel <- block
-  iOpr <- load iPtr 0
-  cond <- icmp IP.SLT iOpr =<< genAtom n
-  condBr cond bodyLabel endLabel
-  -- body: valueOpr[iOpr] <- genAtom a
-  bodyLabel <- block
-  iOpr' <- load iPtr 0
-  addr <- gep arrayOpr [iOpr']
-  store addr 0 =<< genAtom a
-  store iPtr 0 =<< add iOpr (int64 1)
-  br condLabel
-  endLabel <- block
-  -- return array struct
-  structOpr <- mallocType (StructureType False [ptr $ convType $ cTypeOf a, i64])
-  arrayAddr <- gep structOpr [int32 0, int32 0]
-  store arrayAddr 0 arrayOpr
-  sizeAddr <- gep structOpr [int32 0, int32 1]
-  store sizeAddr 0 =<< genAtom n
-  pure $ fromList [(x, structOpr)]
+gepAndLoad :: (MonadIRBuilder m, MonadModuleBuilder m) => Operand -> [Operand] -> m Operand
+gepAndLoad opr addrs = join $ load <$> gep opr addrs <*> pure 0
 
-genCon :: Set Con -> Con -> (Int, Type)
-genCon cs con@(Con _ ts)
-  | con `elem` cs = (Set.findIndex con cs, StructureType False (map convType ts))
-  | otherwise = bug Unreachable
-
-sizeof :: Type -> Operand
-sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64
-  where
-    ptrType = LT.ptr ty
-    nullPtr = C.IntToPtr (C.Int 32 0) ptrType
-    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
+gepAndStore :: (MonadIRBuilder m, MonadModuleBuilder m) => Operand -> [Operand] -> Operand -> m ()
+gepAndStore opr addrs val = join $ store <$> gep opr addrs <*> pure 0 <*> pure val

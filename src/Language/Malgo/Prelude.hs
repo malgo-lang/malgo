@@ -39,6 +39,7 @@ module Language.Malgo.Prelude
     rtraverse,
     asumMap,
     foldMapA,
+    ifoldMapA,
     (<<$>>),
     ordNub,
     replaceOf,
@@ -124,6 +125,10 @@ asumMap = coerce (foldMap :: (a -> Alt m b) -> f a -> Alt m b)
 foldMapA :: forall b m f a. (Semigroup b, Monoid b, Applicative m, Foldable f) => (a -> m b) -> f a -> m b
 foldMapA = coerce (foldMap :: (a -> Ap m b) -> f a -> Ap m b)
 {-# INLINE foldMapA #-}
+
+ifoldMapA :: forall i b m f a. (Semigroup b, Monoid b, Applicative m, FoldableWithIndex i f) => (i -> a -> m b) -> f a -> m b
+ifoldMapA = coerce (ifoldMap :: (i -> a -> Ap m b) -> f a -> Ap m b)
+{-# INLINE ifoldMapA #-}
 
 infixl 4 <<$>>
 
