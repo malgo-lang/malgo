@@ -67,7 +67,7 @@ zonkType t = pure t
 generalize :: (MonadIO m, MonadUniq m) => TcEnv -> Type -> m Scheme
 generalize env t = do
   fvs <- toList <$> freeMetaTvs env t
-  as <- traverse (\tv -> newId (kind tv) (T.pack $ show tv)) fvs
+  as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) (zip fvs ['a' ..])
   zipWithM_ writeMetaTv fvs (map TyVar as)
   Forall as <$> zonkType t
 
@@ -158,6 +158,8 @@ tcDecls ds = do
       let scSigs = collectScSig ds
       (env, scSigs') <- tcScSigs scSigs
 
+      -- TODO: 呼び出し関係でトポロジカルソートする
+      -- FIXME: 型注釈のない多相関数は正しく推論できないことがある
       -- ScDefの処理（相互再帰的）
       local (env <>) $ do
         let scDefs = collectScDef ds
@@ -208,29 +210,19 @@ tcDataDefs ds = do
   (conEnvs, ds') <- local (over T.typeEnv (dataEnv <>)) $
     mapAndUnzipM ?? ds $ \case
       DataDef pos name params cons -> do
-        cons' <- traverse ?? cons $ \(con, args) -> do
+        (dataTypes, cons') <- mapAndUnzipM ?? cons $ \(con, args) -> do
           paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
           local (over T.typeEnv (paramsEnv <>)) $ do
             (dataType, conType) <- buildType pos name params args
             pure (dataType, (con, conType))
-        let dataTypes = map fst cons'
         traverse_ (unify pos (head dataTypes)) (tail dataTypes)
-        fvs <-
-          toList . mconcat
-            <$> traverse
-              ( freeMetaTvs mempty
-                  <=< zonkType . view (_2 . _2)
-              )
-              cons'
-        as <- traverse (\tv -> newId (kind tv) (T.pack $ show tv)) fvs
+        fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
+        as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
         zipWithM_ writeMetaTv fvs (map TyVar as)
-        let conEnv =
-              foldMap
-                ( \(_, (con, conType)) ->
-                    Map.singleton con (Forall as conType)
-                )
-                cons'
-        pure (conEnv, DataDef pos name params $ map (second (map tcType)) cons)
+        pure
+          ( foldMap (\(con, conType) -> Map.singleton con (Forall as conType)) cons',
+            DataDef pos name params $ map (second (map tcType)) cons
+          )
       _ -> bug Unreachable
   pure
     ( TcEnv
@@ -337,10 +329,10 @@ transType (S.TyLazy _ t) = TyLazy <$> transType t
 
 tcExpr :: (MonadReader TcEnv m, MonadUniq m, MonadIO m) => Exp (Griff 'Rename) -> m (Exp (Griff 'TypeCheck))
 tcExpr (Var pos v) = do
-  v' <- lookupVar pos v
+  v' <- instantiate =<< lookupVar pos v
   pure $ Var (WithType pos $ view typeOf v') v
 tcExpr (Con pos c) = do
-  c' <- lookupVar pos c
+  c' <- instantiate =<< lookupVar pos c
   pure $ Con (WithType pos $ view typeOf c') c
 tcExpr (Unboxed pos u) =
   pure $ Unboxed (WithType pos $ view typeOf u) u
