@@ -63,37 +63,31 @@ llift (Call (Var f) xs) = do
   if f `elem` ks
     then pure $ CallDirect f xs
     else pure $ Call (Var f) xs
-llift (Let ds e) = do
-  ds' <- catMaybes <$> traverse aux ds
-  case ds' of
-    [] -> llift e
-    _ -> Let ds' <$> llift e
-  where
-    aux (n, v) = case v of
-      -- すでにクロージャになっているものはそのまま返す
-      Fun xs call@Call {} -> Just . (n,) . Fun xs <$> llift call
-      o@(Fun _ PrimCall {}) -> pure $ Just (n, o)
-      o@(Fun _ CallDirect {}) -> pure $ Just (n, o)
-      (Fun as body) -> do
-        backup <- get
-        ks <- use knowns
-        -- nがknownだと仮定してlambda liftする
-        knowns <>= Set.singleton n
-        body' <- llift body
-        funcs %= Map.insert n (as, body')
-        (e', _) <- localState $ llift e
-        -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
-        -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
-        let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
-        if null fvs && n `notElem` freevars e'
-          then pure Nothing
-          else do
-            put backup
-            body' <- llift body
-            let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
-            newFun <- def (n ^. idName) (toList fvs <> as) body'
-            pure $ Just (n, Fun as (CallDirect newFun $ map Var $ toList fvs <> as))
-      o -> pure $ Just (n, o)
+llift (Let [(n, Fun xs call@Call {})] e) = do
+  call' <- llift call
+  Let [(n, Fun xs call')] <$> llift e
+llift (Let [(n, o@(Fun _ PrimCall {}))] e) = Let [(n, o)] <$> llift e
+llift (Let [(n, o@(Fun _ CallDirect {}))] e) = Let [(n, o)] <$> llift e
+llift (Let [(n, Fun as body)] e) = do
+  backup <- get
+  ks <- use knowns
+  -- nがknownだと仮定してlambda liftする
+  knowns <>= Set.singleton n
+  body' <- llift body
+  funcs %= Map.insert n (as, body')
+  (e', _) <- localState $ llift e
+  -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
+  -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
+  let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
+  if null fvs && n `notElem` freevars e'
+    then llift e
+    else do
+      put backup
+      body' <- llift body
+      let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
+      newFun <- def (n ^. idName) (toList fvs <> as) body'
+      Let [(n, Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
+llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) =
   Match <$> llift e <*> traverse (appCase llift) cs
 llift e = pure e
