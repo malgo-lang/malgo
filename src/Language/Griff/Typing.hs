@@ -7,11 +7,12 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Typing (typeCheck) where
+module Language.Griff.Typing (typeCheck, transType) where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
+import Data.Tuple.Extra (dupe)
 import Language.Griff.Extension
 import Language.Griff.RnEnv as R
 import Language.Griff.Syntax hiding (Type (..))
@@ -48,7 +49,11 @@ zonkScheme :: MonadIO f => Scheme -> f Scheme
 zonkScheme (Forall as t) = Forall as <$> zonkType t
 
 zonkType :: MonadIO f => Type -> f Type
-zonkType (TyMeta tv) = fromMaybe (TyMeta tv) <$> readMetaTv tv
+zonkType (TyMeta tv) = do
+  mty <- readMetaTv tv
+  case mty of
+    Just ty -> zonkType ty
+    Nothing -> pure $ TyMeta tv
 zonkType (TyApp t1 t2) = TyApp <$> zonkType t1 <*> zonkType t2
 zonkType (TyArr t1 t2) = TyArr <$> zonkType t1 <*> zonkType t2
 zonkType (TyTuple ts) = TyTuple <$> traverse zonkType ts
@@ -86,7 +91,7 @@ metaTvsScheme (Forall _ t) = metaTvs t
 instantiate :: (MonadUniq m, MonadIO m) => Scheme -> m Type
 instantiate (Forall as t) = do
   vs <- traverse (\a -> TyMeta <$> newMetaTv (kind a)) as
-  pure $ applySubst (Map.fromList $ zip as vs) t
+  applySubst (Map.fromList $ zip as vs) <$> zonkType t
 
 applySubst :: Map TyVar Type -> Type -> Type
 applySubst subst (TyVar v) = fromMaybe (TyVar v) $ Map.lookup v subst
@@ -100,7 +105,7 @@ applySubst _ t = t
 -- Unification --
 -----------------
 
-unify :: MonadIO m => SourcePos -> Type -> Type -> m ()
+unify :: (HasCallStack, MonadIO m) => SourcePos -> Type -> Type -> m ()
 unify pos t1 t2 = do
   t1' <- zonkType t1
   t2' <- zonkType t2
@@ -203,11 +208,29 @@ tcDataDefs ds = do
   (conEnvs, ds') <- local (over T.typeEnv (dataEnv <>)) $
     mapAndUnzipM ?? ds $ \case
       DataDef pos name params cons -> do
-        paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
-        local (over T.typeEnv (paramsEnv <>)) $ do
-          conEnv <- foldMapA ?? cons $ \(con, args) ->
-            Map.singleton con <$> (generalize mempty =<< buildType pos name params args)
-          pure (conEnv, DataDef pos name params $ map (second (map tcType)) cons)
+        cons' <- traverse ?? cons $ \(con, args) -> do
+          paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
+          local (over T.typeEnv (paramsEnv <>)) $ do
+            (dataType, conType) <- buildType pos name params args
+            pure (dataType, (con, conType))
+        let dataTypes = map fst cons'
+        traverse_ (unify pos (head dataTypes)) (tail dataTypes)
+        fvs <-
+          toList . mconcat
+            <$> traverse
+              ( freeMetaTvs mempty
+                  <=< zonkType . view (_2 . _2)
+              )
+              cons'
+        as <- traverse (\tv -> newId (kind tv) (T.pack $ show tv)) fvs
+        zipWithM_ writeMetaTv fvs (map TyVar as)
+        let conEnv =
+              foldMap
+                ( \(_, (con, conType)) ->
+                    Map.singleton con (Forall as conType)
+                )
+                cons'
+        pure (conEnv, DataDef pos name params $ map (second (map tcType)) cons)
       _ -> bug Unreachable
   pure
     ( TcEnv
@@ -223,10 +246,11 @@ tcDataDefs ds = do
     buildType pos name params [] = do
       name' <- lookupType pos name
       params' <- traverse (lookupType pos) params
-      pure $ foldr (flip TyApp) name' params'
+      pure $ dupe $ foldr (flip TyApp) name' params'
     buildType pos name params (arg : args) = do
       arg' <- transType $ tcType arg
-      TyArr arg' <$> buildType pos name params args
+      (dataType, ret) <- buildType pos name params args
+      pure (dataType, TyArr arg' ret)
 
 tcForigns :: (MonadUniq m, MonadReader TcEnv m, MonadIO m) => [Decl (Griff 'Rename)] -> m (TcEnv, [Decl (Griff 'TypeCheck)])
 tcForigns ds = fmap (first mconcat) $
