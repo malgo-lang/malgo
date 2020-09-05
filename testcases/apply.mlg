@@ -1,0 +1,4 @@
+let fun apply(f, x) = f(x)
+    and addOne(x) = x + 1
+    and more(x) = apply(addOne, x)
+in more(1)
