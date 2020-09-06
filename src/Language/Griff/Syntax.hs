@@ -84,6 +84,16 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
   typeOf f (Tuple x es) = typeOf f x <&> \x' -> Tuple x' es  
   typeOf f (Force x e) = typeOf f x <&> \x' -> Force x' e
 
+freevars :: Ord (XId x) => Exp x -> Set (XId x)
+freevars (Var _ v) = Set.singleton v
+freevars (Con _ _) = Set.empty
+freevars (Unboxed _ _) = Set.empty
+freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
+freevars (OpApp _ op e1 e2) = Set.insert op $ freevars e1 <> freevars e2
+freevars (Fn _ cs) = mconcat $ map freevarsClause cs
+freevars (Tuple _ es) = mconcat $ map freevars es
+freevars (Force _ e) = freevars e
+
 ------------
 -- Clause --
 ------------
@@ -109,6 +119,9 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
              in (t1 : pts', et')
           splitTyArr [] t = ([], t)
           splitTyArr _ t = ([], t)
+
+freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
+freevarsClause (Clause _ pats e) = freevars e Set.\\ mconcat (map bindVars pats)
 
 -------------
 -- Pattern --
@@ -144,6 +157,11 @@ instance (ForallPatX HasType x) => HasType (Pat x) where
       setter (UnboxedP x u) t
         | view typeOf x == t = UnboxedP x u
         | otherwise = errorDoc $ "Panic!" <+> "typeOf" <+> P.parens (pPrint u) <+> "is not" <+> pPrint t
+
+bindVars :: Ord (XId x) => Pat x -> Set (XId x)
+bindVars (VarP _ x) = Set.singleton x
+bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
+bindVars UnboxedP{} = Set.empty
 
 ----------
 -- Type --
