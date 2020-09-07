@@ -225,12 +225,7 @@ tcForigns ds = fmap (first mconcat) $
     local (over T.typeEnv (Map.fromList (zip tyVars tyVars') <>)) $ do
       scheme@(Forall _ ty') <- generalize mempty =<< transType (tcType ty)
       pure
-        ( TcEnv
-            { T._varEnv = Map.fromList [(name, scheme)],
-              T._typeEnv = mempty,
-              T._tyConEnv = mempty,
-              T._rnEnv = mempty
-            },
+        ( mempty & T.varEnv .~ Map.fromList [(name, scheme)],
           Forign (WithType pos ty') name (tcType ty)
         )
 
@@ -242,12 +237,7 @@ tcScSigs ds = fmap (first mconcat) $
     local (over T.typeEnv (Map.fromList (zip tyVars tyVars') <>)) $ do
       scheme <- generalize mempty =<< transType (tcType ty)
       pure
-        ( TcEnv
-            { T._varEnv = Map.singleton name scheme,
-              T._typeEnv = mempty,
-              T._tyConEnv = mempty,
-              T._rnEnv = mempty
-            },
+        ( mempty & T.varEnv .~ Map.singleton name scheme,
           ScSig pos name (tcType ty)
         )
 
@@ -272,12 +262,7 @@ tcScDefs ds = do
   zipWithM_ writeMetaTv fvs (map TyVar as)
   nts' <- traverse (rtraverse (fmap (Forall as) . zonkType)) nts
   pure
-    ( TcEnv
-        { T._varEnv = Map.fromList nts',
-          T._typeEnv = mempty,
-          T._tyConEnv = mempty,
-          T._rnEnv = mempty
-        },
+    ( mempty & T.varEnv .~ Map.fromList nts',
       defs
     )
 
@@ -350,12 +335,7 @@ tcPatterns ps = fmap (first mconcat) $
     VarP x v -> do
       vscheme@(Forall _ ty) <- Forall [] . TyMeta <$> newMetaTv Star
       pure
-        ( TcEnv
-            { T._varEnv = Map.singleton v vscheme,
-              T._typeEnv = mempty,
-              T._tyConEnv = mempty,
-              T._rnEnv = mempty
-            },
+        ( mempty & T.varEnv .~ Map.singleton v vscheme,
           VarP (WithType x ty) v
         )
     ConP pos con pats -> do
