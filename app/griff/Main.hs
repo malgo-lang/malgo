@@ -41,3 +41,4 @@ main = do
       liftIO $ putStrLn "=== TYPE CHECK ==="
       (_, env) <- typeCheck rnEnv ds'
       liftIO $ print $ pPrint $ Map.toList $ view T.varEnv env
+      liftIO $ print $ pPrint $ map (over (_2 . _2) Map.toList) $ Map.toList $ view T.tyConEnv env

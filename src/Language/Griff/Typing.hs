@@ -162,10 +162,11 @@ tcDecls ds = do
           local (mconcat env <>) $ do
             varEnv <- traverse zonkScheme =<< view T.varEnv
             typeEnv <- traverse zonkType =<< view T.typeEnv
+            tyConEnv <- traverse (rtraverse (traverse zonkType)) =<< view T.tyConEnv
             rnEnv <- view T.rnEnv
             pure
               ( dataDefs' <> forigns' <> scSigs' <> mconcat scDefs',
-                TcEnv {T._varEnv = varEnv, T._typeEnv = typeEnv, T._rnEnv = rnEnv}
+                TcEnv {T._varEnv = varEnv, T._typeEnv = typeEnv, T._tyConEnv = tyConEnv, T._rnEnv = rnEnv}
               )
 
 lookupType :: (MonadReader TcEnv m) => SourcePos -> RnTId -> m Type
@@ -199,17 +200,11 @@ tcDataDefs ds = do
       as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
       zipWithM_ writeMetaTv fvs (map TyVar as)
       pure
-        ( foldMap (\(con, conType) -> Map.singleton con (Forall as conType)) cons',
+        ( mempty & T.varEnv .~ foldMap (\(con, conType) -> Map.singleton con (Forall as conType)) cons'
+            & T.tyConEnv .~ Map.singleton name (as, Map.fromList cons'),
           DataDef pos name params $ map (second (map tcType)) cons
         )
-  pure
-    ( TcEnv
-        { T._typeEnv = dataEnv,
-          T._varEnv = mconcat conEnvs,
-          T._rnEnv = mempty
-        },
-      ds'
-    )
+  pure (mconcat conEnvs & T.typeEnv .~ dataEnv, ds')
   where
     kindof [] = Star
     kindof (_ : xs) = KArr Star (kindof xs)
@@ -233,6 +228,7 @@ tcForigns ds = fmap (first mconcat) $
         ( TcEnv
             { T._varEnv = Map.fromList [(name, scheme)],
               T._typeEnv = mempty,
+              T._tyConEnv = mempty,
               T._rnEnv = mempty
             },
           Forign (WithType pos ty') name (tcType ty)
@@ -249,6 +245,7 @@ tcScSigs ds = fmap (first mconcat) $
         ( TcEnv
             { T._varEnv = Map.singleton name scheme,
               T._typeEnv = mempty,
+              T._tyConEnv = mempty,
               T._rnEnv = mempty
             },
           ScSig pos name (tcType ty)
@@ -278,6 +275,7 @@ tcScDefs ds = do
     ( TcEnv
         { T._varEnv = Map.fromList nts',
           T._typeEnv = mempty,
+          T._tyConEnv = mempty,
           T._rnEnv = mempty
         },
       defs
@@ -355,6 +353,7 @@ tcPatterns ps = fmap (first mconcat) $
         ( TcEnv
             { T._varEnv = Map.singleton v vscheme,
               T._typeEnv = mempty,
+              T._tyConEnv = mempty,
               T._rnEnv = mempty
             },
           VarP (WithType x ty) v
