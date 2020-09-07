@@ -10,10 +10,10 @@ infixl 0 (|>);
 data List a = Nil | Cons a (List a);
 
 map f xs = xs |> { Nil -> Nil
-                 | (Cons x xs) -> Cons (f x) (map f xs)
+                 | (Cons x xs) -> Cons (f x) (map' f xs)
                  };
 map' f = { Nil -> Nil
-         | (Cons x xs) -> Cons (f x) (map' f xs)
+         | (Cons x xs) -> Cons (f x) (map f xs)
          };
 
 sum = { Nil -> Int# 0L#
