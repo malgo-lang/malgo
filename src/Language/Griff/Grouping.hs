@@ -1,6 +1,11 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Grouping where
@@ -12,16 +17,49 @@ import Language.Griff.Syntax
 import Language.Malgo.Id
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
+import qualified Text.PrettyPrint.HughesPJClass as P
 
 data BindGroup x = BindGroup
-  { _scDefs :: [[(XScDef x, XId x, [XId x], Exp x)]],
-    _scSigs :: [(XScSig x, XId x, Type x)],
-    _dataDefs :: [(XDataDef x, XTId x, [XTId x], [(XId x, [Type x])])],
-    _infixs :: [(XInfix x, Assoc, Int, XId x)],
-    _forigns :: [(XForign x, XId x, Type x)]
+  { _scDefs :: [[ScDef x]],
+    _scSigs :: [ScSig x],
+    _dataDefs :: [DataDef x],
+    _infixs :: [Infix x],
+    _forigns :: [Forign x]
   }
 
+type ScDef x = (XScDef x, XId x, [XId x], Exp x)
+
+type ScSig x = (XScSig x, XId x, Type x)
+
+type DataDef x = (XDataDef x, XTId x, [XTId x], [(XId x, [Type x])])
+
+type Infix x = (XInfix x, Assoc, Int, XId x)
+
+type Forign x = (XForign x, XId x, Type x)
+
 makeLenses ''BindGroup
+
+deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindGroup x)
+
+deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Show (BindGroup x)
+
+instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
+  pPrint (BindGroup {_scDefs, _scSigs, _dataDefs, _infixs, _forigns}) =
+    P.sep
+      ( P.punctuate ";" $
+          map prettyDataDef _dataDefs
+            <> map prettyInfix _infixs
+            <> map prettyForign _forigns
+            <> map prettyScSig _scSigs
+            <> concatMap (map prettyScDef) _scDefs
+      )
+    where
+      prettyDataDef (_, d, xs, cs) = P.sep ["data" <+> pPrint d <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ foldl1 (\a b -> P.sep [a, "|" <+> b]) $ map pprConDef cs]
+      pprConDef (con, ts) = pPrint con <+> P.sep (map (pPrintPrec P.prettyNormal 12) ts)
+      prettyInfix (_, a, o, x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
+      prettyForign (_, x, t) = "forign import" <+> pPrint x <+> "::" <+> pPrint t
+      prettyScSig (_, f, t) = pPrint f <+> "::" <+> pPrint t
+      prettyScDef (_, f, xs, e) = P.sep [pPrint f <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ pPrint e]
 
 makeBindGroup :: (Pretty a, Ord (XId x), XId x ~ Id a) => [Decl x] -> BindGroup x
 makeBindGroup ds =
