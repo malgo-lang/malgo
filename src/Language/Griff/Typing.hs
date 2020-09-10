@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Typing (typeCheck, transType) where
+module Language.Griff.Typing (typeCheck, transType, applySubst) where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
@@ -138,12 +138,12 @@ unifyMeta pos tv t2
           then errorOn pos $ "Occurs check" <+> P.quotes (pPrint tv) <+> "for" <+> pPrint t2
           else writeMetaTv tv t2
 
-typeCheck :: (MonadUniq m, MonadIO m) => RnEnv -> [Decl (Griff 'Rename)] -> m (BindGroup (Griff 'TypeCheck), TcEnv)
+typeCheck :: (MonadUniq m, MonadIO m, MonadFail m) => RnEnv -> [Decl (Griff 'Rename)] -> m (BindGroup (Griff 'TypeCheck), TcEnv)
 typeCheck rnEnv ds = do
   tcEnv <- genTcEnv rnEnv
   runReaderT (tcDecls ds) tcEnv
 
-tcDecls :: (MonadUniq m, MonadReader TcEnv m, MonadIO m) => [Decl (Griff 'Rename)] -> m (BindGroup (Griff 'TypeCheck), TcEnv)
+tcDecls :: (MonadUniq m, MonadReader TcEnv m, MonadIO m, MonadFail m) => [Decl (Griff 'Rename)] -> m (BindGroup (Griff 'TypeCheck), TcEnv)
 tcDecls ds = do
   let bindGroup = makeBindGroup ds
   (env, dataDefs') <- tcDataDefs (bindGroup ^. dataDefs)
@@ -163,7 +163,7 @@ tcDecls ds = do
             env <-
               ask >>= T.varEnv (traverse zonkScheme)
                 >>= T.typeEnv (traverse zonkType)
-                >>= T.tyConEnv (traverse (rtraverse (traverse zonkType)))
+                >>= T.tyConEnv (traverse $ rtraverse $ traverse $ rtraverse zonkType)
             pure
               ( BindGroup
                   { _dataDefs = dataDefs',
@@ -189,7 +189,7 @@ lookupVar pos name = do
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
     Just scheme -> pure scheme
 
-tcDataDefs :: (MonadReader TcEnv m, MonadIO m, MonadUniq m) => [DataDef (Griff 'Rename)] -> m (TcEnv, [DataDef (Griff 'TypeCheck)])
+tcDataDefs :: (MonadReader TcEnv m, MonadIO m, MonadUniq m, MonadFail m) => [DataDef (Griff 'Rename)] -> m (TcEnv, [DataDef (Griff 'TypeCheck)])
 tcDataDefs ds = do
   dataEnv <- foldMapA ?? ds $ \(_, name, params, _) -> do
     con <- newId (kindof params) (name ^. idName)
@@ -202,12 +202,13 @@ tcDataDefs ds = do
           (dataType, conType) <- buildType pos name params args
           pure (dataType, (con, conType))
       traverse_ (unify pos (head dataTypes)) (tail dataTypes)
+      Just (TyCon dataName) <- Map.lookup name <$> view T.typeEnv
       fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
       as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
       zipWithM_ writeMetaTv fvs (map TyVar as)
       pure
         ( mempty & T.varEnv .~ foldMap (\(con, conType) -> Map.singleton con (Forall as conType)) cons'
-            & T.tyConEnv .~ Map.singleton name (as, Map.fromList cons'),
+            & T.tyConEnv .~ Map.singleton dataName (as, cons'),
           (pos, name, params, map (second (map tcType)) cons)
         )
   pure (mconcat conEnvs & T.typeEnv .~ dataEnv, ds')

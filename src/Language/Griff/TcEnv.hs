@@ -11,13 +11,14 @@ import qualified Data.Map as Map
 import Language.Griff.RnEnv (RnEnv, RnId, RnTId)
 import qualified Language.Griff.RnEnv as R
 import Language.Griff.Type
+import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Prelude
 
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,
     _typeEnv :: Map RnTId Type,
-    _tyConEnv :: Map RnTId ([TyVar], Map RnId Type),
+    _tyConEnv :: Map (Id Kind) ([TyVar], [(RnId, Type)]),
     _rnEnv :: RnEnv
   }
   deriving stock (Show)

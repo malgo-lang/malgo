@@ -8,6 +8,7 @@ import Language.Griff.Parser (pTopLevel)
 import Language.Griff.Rename (rename)
 import Language.Griff.RnEnv
 import Language.Griff.Typing (typeCheck)
+import Language.Griff.Desugar (desugar)
 import Language.Malgo.Monad
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
@@ -39,7 +40,11 @@ main = do
       liftIO $ print $ pPrint $ bindGroup ^. scDefs
 
       liftIO $ putStrLn "=== TYPE CHECK ==="
-      (ds, env) <- typeCheck rnEnv ds'
-      liftIO $ print $ pPrint $ Map.toList $ view T.varEnv env
-      liftIO $ print $ pPrint $ map (over (_2 . _2) Map.toList) $ Map.toList $ view T.tyConEnv env
-      liftIO $ print $ pPrint ds
+      (bg, tcEnv) <- typeCheck rnEnv ds'
+      liftIO $ print $ pPrint $ Map.toList $ view T.varEnv tcEnv
+      liftIO $ print $ pPrint $ Map.toList $ view T.tyConEnv tcEnv
+      liftIO $ print $ pPrint bg
+
+      liftIO $ putStrLn "=== DESUGAR ==="
+      core <- desugar tcEnv bg
+      liftIO $ print $ pPrint core

@@ -130,6 +130,7 @@ convType IntT = i64
 convType FloatT = LT.double
 convType CharT = i8
 convType StringT = ptr i8
+convType DataT {} = ptr i8
 convType (SumT cs) =
   let size = maximum $ sizeofCon <$> toList cs
    in ptr (StructureType False [i64, if size == 0 then StructureType False [] else LT.VectorType size i8])
@@ -145,6 +146,7 @@ sizeofCType IntT = 8
 sizeofCType FloatT = 8
 sizeofCType CharT = 1
 sizeofCType StringT = 8
+sizeofCType DataT {} = 8
 sizeofCType (SumT _) = 8
 sizeofCType (ArrayT _) = 8
 sizeofCType VarT {} = 8

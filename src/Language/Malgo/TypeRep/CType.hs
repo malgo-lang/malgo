@@ -26,6 +26,7 @@ data CType
   | FloatT
   | CharT
   | StringT
+  | DataT Text [CType]
   | SumT (Set Con)
   | ArrayT CType
   | VarT Int
@@ -37,6 +38,7 @@ instance Pretty CType where
   pPrint FloatT = "Float#"
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
+  pPrint (DataT n ts) = parens $ pPrint n <+> sep (map pPrint ts)
   pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
   pPrint (ArrayT t) = brackets $ pPrint t
   pPrint (VarT i) = pPrint i
@@ -75,6 +77,7 @@ instance HasCType T.Type where
 
 tyVar :: Applicative f => (CType -> f CType) -> CType -> f CType
 tyVar f (ps :-> r) = (:->) <$> traverse (tyVar f) ps <*> tyVar f r
+tyVar f (DataT n ts) = DataT n <$> traverse (tyVar f) ts
 tyVar f (SumT cs) = SumT . fromList <$> traverse (tyVar' f) (toList cs)
 tyVar f (ArrayT t) = ArrayT <$> tyVar f t
 tyVar f (VarT x) = f (VarT x)
