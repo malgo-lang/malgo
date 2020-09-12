@@ -28,6 +28,7 @@ import Text.PrettyPrint.HughesPJ
     vcat,
     ($$),
   )
+import qualified Text.PrettyPrint.HughesPJ as P
 
 class HasFreeVar f where
   freevars :: Ord a => f a -> Set a
@@ -107,7 +108,7 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf (Call f xs) =
     case cTypeOf f of
       ps :-> r -> go ps (map cTypeOf xs) r
-      _ -> bug Unreachable
+      _ -> errorDoc $ "Invalid type:" <+> P.quotes (pPrint $ cTypeOf f)
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)

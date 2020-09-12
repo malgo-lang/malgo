@@ -55,7 +55,7 @@ instance Pretty Con where
   pPrint (Con tag xs) = "<" <> text (unpack tag) <+> sep (punctuate "," (map pPrint xs)) <> ">"
 
 class HasCType a where
-  cTypeOf :: a -> CType
+  cTypeOf :: HasCallStack => a -> CType
 
 instance HasCType CType where
   cTypeOf x = x

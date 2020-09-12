@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Typing (typeCheck, transType, applySubst) where
+module Language.Griff.Typing (typeCheck, transType, applySubst, readMetaTv, zonkType) where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
@@ -312,7 +312,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   retType <- TyMeta <$> newMetaTv Star
   unify pos opType (TyArr (view typeOf e1') $ TyArr (view typeOf e2') retType)
   pure $ OpApp (WithType x retType) op e1' e2'
-tcExpr (Fn pos cs) = do
+tcExpr (Fn pos cs) = do -- TODO: lazy valueを正しく型付けする
   cs' <- traverse tcClause cs
   case cs' of
     (c' : cs') -> do

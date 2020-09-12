@@ -1,3 +1,4 @@
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -42,6 +43,7 @@ main = do
       liftIO $ putStrLn "=== TYPE CHECK ==="
       (bg, tcEnv) <- typeCheck rnEnv ds'
       liftIO $ print $ pPrint $ Map.toList $ view T.varEnv tcEnv
+      liftIO $ print $ Map.toList $ view T.typeEnv tcEnv
       liftIO $ print $ pPrint $ Map.toList $ view T.tyConEnv tcEnv
       liftIO $ print $ pPrint bg
 

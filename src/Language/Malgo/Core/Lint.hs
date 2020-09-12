@@ -28,7 +28,7 @@ instance Pass LintExp (Exp (Id CType)) (Exp (Id CType)) where
   trans e = do
     runReaderT (lintExp e) []
     pure e
-
+  
 defined :: (MonadReader [Id a] m, Pretty a) => Id a -> m ()
 defined x = do
   env <- ask
