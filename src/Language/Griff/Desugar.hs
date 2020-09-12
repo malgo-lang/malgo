@@ -27,7 +27,6 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as C
 import qualified Text.PrettyPrint.HughesPJ as P
-import Control.Exception (assert)
 
 data DesugarEnv = DesugarEnv
   { _varEnv :: Map (Id ()) (Id CType),
@@ -103,6 +102,18 @@ dcScDefs ds = do
   local (env <>) $ (env,) <$> traverse dcScDef ds
 
 dcScDef :: (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f) => ScDef (Griff 'TypeCheck) -> f (Id CType, Obj (Id CType))
+dcScDef (WithType pos _, name, [], expr) = do
+  typ <- Typing.zonkType $ expr ^. typeOf
+  case typ of
+    GT.TyArr {} -> dc
+    GT.TyLazy {} -> dc
+    _ -> errorOn pos $ "Invalid Toplevel Declaration:" <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
+  where
+    dc = do
+      name' <- lookupName name
+      expr' <- dcExp expr
+      fun <- curryFun [] expr'
+      pure (name', fun)
 dcScDef (x, name, params, expr) = do
   (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view typeOf x)
   params' <- traverse ?? zip params paramTypes $ \(pId, pType) ->
@@ -111,7 +122,6 @@ dcScDef (x, name, params, expr) = do
     expr' <- dcExp expr
     fun <- curryFun params' expr'
     name' <- lookupName name
-    assert (cTypeOf name' == cTypeOf fun) $ pure ()
     pure (name', fun)
 
 dcForign :: (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) => Forign (Griff 'TypeCheck) -> f (DesugarEnv, (Id CType, Obj (Id CType)))
@@ -185,7 +195,12 @@ dcExp (G.OpApp _ op x y) = runDef $ do
   y' <- bind =<< dcExp y
   e1 <- bind (Call (C.Var op') [x'])
   pure $ Call e1 [y']
-dcExp (G.Fn _ cs) = do -- TODO: lazy valueの変換を追加
+dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
+  e' <- dcExp e
+  typ <- dcType (x ^. typeOf)
+  Atom <$> let_ typ (Fun [] e')
+dcExp (G.Fn _ cs) = do
+  -- TODO: lazy valueの変換を追加
   (funcBuilder, ps) <- genFuncBuilder cs
   cases <- genCases cs
   funcBuilder $
@@ -376,7 +391,7 @@ cast ty e
     tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (C.Var x)
 
-curryFun :: MonadUniq m => [Id CType] -> C.Exp (Id CType) -> m (Obj (Id CType))
+curryFun :: (HasCallStack, MonadUniq m) => [Id CType] -> C.Exp (Id CType) -> m (Obj (Id CType))
 curryFun [] (Let [(v1, fun)] (Atom (C.Var v2))) | v1 == v2 = pure fun
 curryFun [] e = errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
 curryFun [x] e = pure $ Fun [x] e

@@ -1,3 +1,9 @@
 infixl 0 (|>);
 (|>) :: a -> (a -> b) -> b;
 (|>) x f = f x;
+
+data Bool = True | False;
+
+if = {True t _ -> t! | False _ f -> f!};
+
+main = {if True {False} {True}};

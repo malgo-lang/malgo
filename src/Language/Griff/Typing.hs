@@ -157,9 +157,8 @@ tcDecls ds = do
       local (env <>) $ do
         env <- mconcat <$> traverse prepareTcScDefs (bindGroup ^. scDefs)
         local (over T.varEnv (env <>)) $ do
-          (env, scDefs') <- mapAndUnzipM tcScDefs (bindGroup ^. scDefs)
-
-          local (mconcat env <>) $ do
+          (env, scDefs') <- tcScDefGroup (bindGroup ^. scDefs)
+          local (env <>) $ do
             env <-
               ask >>= T.varEnv (traverse zonkScheme)
                 >>= T.typeEnv (traverse zonkType)
@@ -255,6 +254,14 @@ prepareTcScDefs ds = foldMapA ?? ds $ \(_, name, _, _) -> do
     Nothing -> Map.singleton name . Forall [] . TyMeta <$> newMetaTv Star
     Just _ -> pure mempty
 
+tcScDefGroup :: (MonadReader TcEnv f, MonadUniq f, MonadIO f) => [[ScDef (Griff 'Rename)]] -> f (TcEnv, [[ScDef (Griff 'TypeCheck)]])
+tcScDefGroup [] = pure (mempty, [])
+tcScDefGroup (ds : dss) = do
+  (env, ds') <- tcScDefs ds
+  local (env <>) $ do
+    (env, dss') <- tcScDefGroup dss
+    pure (env <> env, ds' : dss')
+
 tcScDefs :: (MonadReader TcEnv m, MonadUniq m, MonadIO m) => [ScDef (Griff 'Rename)] -> m (TcEnv, [ScDef (Griff 'TypeCheck)])
 tcScDefs ds = do
   (nts, defs) <- mapAndUnzipM ?? ds $ \(pos, name, params, expr) -> do
@@ -292,7 +299,8 @@ transType (S.TyLazy _ t) = TyLazy <$> transType t
 
 tcExpr :: (MonadReader TcEnv m, MonadUniq m, MonadIO m) => Exp (Griff 'Rename) -> m (Exp (Griff 'TypeCheck))
 tcExpr (Var pos v) = do
-  v' <- instantiate =<< lookupVar pos v
+  scheme <- lookupVar pos v
+  v' <- instantiate scheme
   pure $ Var (WithType pos $ view typeOf v') v
 tcExpr (Con pos c) = do
   c' <- instantiate =<< lookupVar pos c
@@ -312,7 +320,11 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   retType <- TyMeta <$> newMetaTv Star
   unify pos opType (TyArr (view typeOf e1') $ TyArr (view typeOf e2') retType)
   pure $ OpApp (WithType x retType) op e1' e2'
-tcExpr (Fn pos cs) = do -- TODO: lazy valueを正しく型付けする
+tcExpr (Fn pos (Clause x [] e : _)) = do
+  e' <- tcExpr e
+  pure $ Fn (WithType pos (TyLazy $ e' ^. typeOf)) (Clause (WithType x (TyLazy $ e' ^. typeOf)) [] e' : [])
+tcExpr (Fn pos cs) = do
+  -- TODO: lazy valueを正しく型付けする
   cs' <- traverse tcClause cs
   case cs' of
     (c' : cs') -> do
