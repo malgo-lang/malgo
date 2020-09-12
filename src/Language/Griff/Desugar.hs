@@ -145,9 +145,9 @@ dcDataDef (_, name, _, cons) = do
       Just (GT.TyCon name') <- Map.lookup name <$> view (tcEnv . Tc.typeEnv)
       Just (_, conMap) <- Map.lookup name' <$> view (tcEnv . Tc.tyConEnv)
       typ <- dcType $ fromJust $ List.lookup conName conMap
-      conName' <- newId typ (conName ^. idName)
       case typ of
         paramTypes :-> retType -> do
+          conName' <- newId typ (conName ^. idName)
           ps <- traverse (\t -> newId t "$p") paramTypes
           unfoldedType <- unfoldType $ snd $ splitTyArr (fromJust $ List.lookup conName conMap)
           obj <-
@@ -159,6 +159,7 @@ dcDataDef (_, name, _, cons) = do
                 )
           pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj))
         _ -> do
+          conName' <- newId ([] :-> typ) (conName ^. idName)
           unfoldedType <- unfoldType $ fromJust $ List.lookup conName conMap
           obj <- fmap (Fun []) $
             runDef $ do
