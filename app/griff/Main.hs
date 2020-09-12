@@ -1,23 +1,26 @@
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Main where
 
+import qualified Data.Map as Map
 import qualified Data.Text.IO as T
+import Language.Griff.Desugar (desugar)
+import Language.Griff.Grouping
 import Language.Griff.Parser (pTopLevel)
 import Language.Griff.Rename (rename)
 import Language.Griff.RnEnv
+import qualified Language.Griff.TcEnv as T
 import Language.Griff.Typing (typeCheck)
-import Language.Griff.Desugar (desugar)
+import Language.Malgo.Core.Flat (flat)
+import Language.Malgo.Core.Optimize (optimize)
+import Language.Malgo.Core.Lint (lint)
 import Language.Malgo.Monad
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.Megaparsec (errorBundlePretty, parse)
 import qualified Text.PrettyPrint as P
-import qualified Data.Map as Map
-import qualified Language.Griff.TcEnv as T
-import Language.Griff.Grouping
 
 main :: IO ()
 main = do
@@ -49,4 +52,7 @@ main = do
 
       liftIO $ putStrLn "=== DESUGAR ==="
       core <- desugar tcEnv bg
-      liftIO $ print $ pPrint core
+      liftIO $ print $ pPrint $ flat core
+      liftIO $ putStrLn "=== OPTIMIZE ==="
+      let coreOpt = optimize 30 core
+      liftIO $ print $ pPrint $ flat coreOpt

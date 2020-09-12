@@ -5,7 +5,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.Flat
-  ( Flat,
+  ( Flat, flat
   )
 where
 
@@ -19,7 +19,10 @@ data Flat
 
 instance Pass Flat (Exp (Id CType)) (Exp (Id CType)) where
   passName = "flat"
-  trans e = runFlat (flatExp e)
+  trans e = pure $ flat e
+
+flat :: Exp a -> Exp a
+flat e = runIdentity $ runFlat (flatExp e)
 
 runFlat :: Monad m => WriterT (Endo r) m r -> m r
 runFlat = fmap (uncurry (flip appEndo)) . runWriterT

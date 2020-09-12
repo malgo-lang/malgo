@@ -101,6 +101,7 @@ data Exp a
   | Cast CType (Atom a)
   | Let [(a, Obj a)] (Exp a)
   | Match (Exp a) (NonEmpty (Case a))
+  | Error CType
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasCType a => HasCType (Exp a) where
@@ -158,6 +159,7 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf (Let _ e) = cTypeOf e
   cTypeOf (Match _ (Unpack _ _ e :| _)) = cTypeOf e
   cTypeOf (Match _ (Bind _ e :| _)) = cTypeOf e
+  cTypeOf (Error t) = t
 
 returnType :: CType -> CType
 returnType (_ :-> t) = t
@@ -174,6 +176,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) = parens $ "let" $$ parens (vcat (map (\(v, o) -> parens $ pPrint v $$ pPrint o) xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
+  pPrint (Error _) = "ERROR"
 
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
@@ -186,6 +189,7 @@ instance HasFreeVar Exp where
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . view _1) (freevars e <> foldMap (freevars . view _2) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
+  freevars (Error _) = mempty
 
 instance HasAtom Exp where
   atom f = \case
@@ -199,6 +203,7 @@ instance HasAtom Exp where
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverse (rtraverse (atom f)) xs <*> atom f e
     Match e cs -> Match <$> atom f e <*> traverse (atom f) cs
+    Error t -> pure (Error t)
 
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)

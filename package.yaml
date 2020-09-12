@@ -40,6 +40,7 @@ ghc-options:
   - -Wincomplete-uni-patterns
   - -Wmissing-deriving-strategies
   - -Wno-name-shadowing
+  - -frefinement-level-hole-fits=10
   - -j4
   - +RTS -A128m -n2m -qg -RTS
   - -fwrite-ide-info

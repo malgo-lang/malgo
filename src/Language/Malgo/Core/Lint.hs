@@ -2,22 +2,23 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.Lint
   ( LintExp,
+    lint,
   )
 where
 
 import Language.Malgo.IR.Core
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
-import Language.Malgo.Monad
 import Language.Malgo.Pass
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
-import Text.PrettyPrint (($$), render)
+import Text.PrettyPrint (render, ($$))
 
 data LintExp
 
@@ -26,9 +27,12 @@ data LintExp
 instance Pass LintExp (Exp (Id CType)) (Exp (Id CType)) where
   passName = "Exp Lint"
   trans e = do
-    runReaderT (lintExp e) []
+    lint e
     pure e
-  
+
+lint :: (Monad m, Pretty a, HasCType a) => Exp (Id a) -> m ()
+lint e = runReaderT (lintExp e) []
+
 defined :: (MonadReader [Id a] m, Pretty a) => Id a -> m ()
 defined x = do
   env <- ask
@@ -37,7 +41,7 @@ defined x = do
 match ::
   ( HasCType a,
     HasCType b,
-    MonadMalgo f,
+    Monad f,
     Pretty a,
     Pretty b,
     HasCallStack
@@ -45,18 +49,23 @@ match ::
   a ->
   b ->
   f ()
+match (cTypeOf -> ps0 :-> r0) (cTypeOf -> ps1 :-> r1) = do
+  zipWithM_ match ps0 ps1
+  match r0 r1
+match (cTypeOf -> DataT {}) (cTypeOf -> VarT {}) = pure ()
+match (cTypeOf -> VarT {}) (cTypeOf -> DataT {}) = pure ()
+match (cTypeOf -> VarT {}) (cTypeOf -> VarT {}) = pure ()
 match x y
   | cTypeOf x == cTypeOf y = pure ()
   | otherwise =
     errorDoc $
       "type mismatch:"
-        $$ pPrint x
-        $$ pPrint y
+        $$ (pPrint x <+> ":" <+> pPrint (cTypeOf x))
+        $$ (pPrint y <+> ":" <+> pPrint (cTypeOf y))
 
 lintExp ::
   ( MonadReader [Id a] m,
     Pretty a,
-    MonadMalgo m,
     HasCType a
   ) =>
   Exp (Id a) ->
@@ -66,13 +75,13 @@ lintExp (Call f xs) = do
   lintAtom f
   traverse_ lintAtom xs
   case cTypeOf f of
-    ps :-> _ -> zipWithM_ match ps xs
+    ps :-> r -> match f (map cTypeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> errorDoc $ pPrint f <+> "is not callable"
 lintExp (CallDirect f xs) = do
   defined f
   traverse_ lintAtom xs
   case cTypeOf f of
-    ps :-> _ -> zipWithM_ match ps xs
+    ps :-> r -> match f (map cTypeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> errorDoc $ pPrint f <+> "is not callable"
 lintExp (PrimCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
@@ -123,7 +132,6 @@ lintExp (Match e cs) = do
 lintObj ::
   ( MonadReader [Id a] m,
     Pretty a,
-    MonadMalgo m,
     HasCType a
   ) =>
   Obj (Id a) ->
@@ -136,7 +144,6 @@ lintObj (Array a n) = lintAtom a >> lintAtom n >> match IntT n
 lintCase ::
   ( MonadReader [Id a] m,
     Pretty a,
-    MonadMalgo m,
     HasCType a
   ) =>
   Case (Id a) ->

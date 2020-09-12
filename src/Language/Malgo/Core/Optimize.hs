@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Language.Malgo.Core.Optimize
-  ( Optimize,
+  ( Optimize, optimize
   )
 where
 
@@ -27,31 +27,35 @@ instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
     opt <- asks maOption
     if noOptimize opt
       then pure expr
-      else
-        trans @Flat
-          =<< times
-            10
-            ( optVarBind
-                >=> (flip runReaderT mempty . optPackInline)
-                >=> removeUnusedLet
-                >=> (flip evalStateT mempty . optCallInline)
-            )
-            expr
-    where
-      times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
-      times n f e =
-        if n <= 0
-          then pure e
-          else do
-            e' <- f e
-            if e == e'
-              then pure e'
-              else times (n - 1) f e'
+      else trans @Flat (optimize (inlineSize opt) expr)
+
+times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
+times n f e =
+  if n <= 0
+    then pure e
+    else do
+      e' <- f e
+      if e == e'
+        then pure e'
+        else times (n - 1) f e'
+
+optimize :: Int -> Exp (Id CType) -> Exp (Id CType)
+optimize level expr = runReader ?? level $ do
+  fmap flat $
+    times
+      10
+      ( optVarBind
+          >=> (flip runReaderT mempty . optPackInline)
+          >=> removeUnusedLet
+          >=> (flip evalStateT mempty . optCallInline)
+          >=> pure . flat
+      )
+      expr
 
 type CallInlineMap = Map (Id CType) ([Atom (Id CType)] -> Exp (Id CType))
 
 optCallInline ::
-  (MonadState CallInlineMap f, MonadMalgo f) =>
+  (MonadState CallInlineMap f, MonadReader Int f) =>
   Exp (Id CType) ->
   f (Exp (Id CType))
 optCallInline (Call (Var f) xs) = lookupCallInline f <*> pure xs
@@ -63,11 +67,11 @@ optCallInline (Let ds e) = do
   Let ds' <$> optCallInline e
 optCallInline e = pure e
 
-checkInlineable :: (MonadMalgo m, MonadState CallInlineMap m) => (Id CType, Obj (Id CType)) -> m ()
+checkInlineable :: (MonadState CallInlineMap m, MonadReader Int m) => (Id CType, Obj (Id CType)) -> m ()
 checkInlineable (f, Fun ps v) = do
-  opt <- getOpt
+  level <- ask
   -- 変数の数がinlineSize以下ならインライン展開する
-  when (length v <= inlineSize opt) $
+  when (length v <= level) $
     modify $ at f ?~ makeTemplate ps v
 checkInlineable _ = pure ()
 

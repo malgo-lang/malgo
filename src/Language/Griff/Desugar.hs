@@ -1,14 +1,18 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Desugar where
 
 import qualified Data.List as List
+import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
@@ -199,21 +203,13 @@ dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
   e' <- dcExp e
   typ <- dcType (x ^. typeOf)
   Atom <$> let_ typ (Fun [] e')
-dcExp (G.Fn _ cs) = do
-  -- TODO: lazy valueの変換を追加
-  (funcBuilder, ps) <- genFuncBuilder cs
-  cases <- genCases cs
-  funcBuilder $
-    runDef $ do
-      case ps of
-        [(ty, p)] -> do
-          p' <- join $ cast <$> unfoldType ty <*> pure (Atom p)
-          pure $ Match (Atom p') cases
-        ps -> do
-          let con = C.Con ("Tuple" <> T.pack (show $ length ps)) $ map (cTypeOf . snd) ps
-          let ty = SumT $ Set.singleton con
-          args <- let_ ty (Pack ty con $ map snd ps)
-          pure $ Match (Atom args) cases
+dcExp (G.Fn _ cs@(Clause _ ps e : _)) = do
+  ps' <- traverse (\p -> join $ newId <$> dcType (p ^. typeOf) <*> pure "$p") ps
+  typ <- dcType (e ^. typeOf)
+  (pss, es) <- fmap (first List.transpose) $ mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) $ List.sort cs
+  body <- match ps' pss es (Error typ)
+  obj <- curryFun ps' body
+  runDef $ Atom <$> let_ (cTypeOf obj) obj
 dcExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dcExp) es
   let con = C.Con ("Tuple" <> T.pack (show $ length es)) $ map cTypeOf es'
@@ -224,59 +220,45 @@ dcExp (G.Force _ e) = runDef $ do
   e' <- bind =<< dcExp e
   pure $ Call e' []
 
-genFuncBuilder ::
-  (MonadIO m, MonadUniq m) =>
-  [Clause (Griff 'TypeCheck)] ->
-  m
-    ( m (C.Exp (Id CType)) -> m (C.Exp (Id CType)),
-      [(GT.Type, Atom (Id CType))]
-    )
-genFuncBuilder [] = bug Unreachable
-genFuncBuilder (c : _) = do
-  (paramTypes, _) <- splitTyArr <$> Typing.zonkType (c ^. typeOf)
-  paramTypes' <- traverse dcType paramTypes
-  ps <- traverse (\p -> newId p "$p") paramTypes'
-  let funcBuilder genBody = do
-        obj <- curryFun ps =<< genBody
-        typ <- dcType =<< Typing.zonkType (view typeOf c)
-        runDef $ Atom <$> let_ typ obj
-  pure (funcBuilder, zip paramTypes $ map C.Var ps)
-
-genCases :: (MonadUniq m, MonadIO m, MonadReader DesugarEnv m, MonadFail m) => [Clause (Griff 'TypeCheck)] -> m (NonEmpty (Case (Id CType)))
-genCases [] = error "Empty cases"
-genCases (c : cs) = do
-  c' <- c & \(Clause _ ps e) -> crushPat ps (dcExp e)
-  cs' <- traverse (\(Clause _ ps e) -> crushPat ps (dcExp e)) cs
-  pure (c' :| cs')
-
-crushPat :: (MonadUniq m, MonadIO m, MonadReader DesugarEnv m, MonadFail m) => [Pat (Griff 'TypeCheck)] -> m (C.Exp (Id CType)) -> m (Case (Id CType))
-crushPat (x : xs@(_ : _)) = go (x : xs) []
+match :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m, MonadUniq m) => [Id CType] -> [[Pat (Griff 'TypeCheck)]] -> [m (C.Exp (Id CType))] -> C.Exp (Id CType) -> m (C.Exp (Id CType))
+match (u : us) (ps : pss) es err
+  -- Variable Rule
+  | all (\case VarP {} -> True; _ -> False) ps =
+    match us pss (zipWith (\(VarP _ v) e -> local (over varEnv (Map.insert v u)) e) ps es) err
+  -- Constructor Rule
+  | otherwise = do
+    -- 型からコンストラクタの集合を求める
+    cs <- constructors =<< Typing.zonkType (head ps ^. typeOf)
+    -- 各コンストラクタごとにC.Caseを生成する関数を生成する
+    cases <- traverse genCase cs
+    pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList cases
   where
-    go [] acc e = do
-      acc <- pure $ reverse acc
-      Unpack (C.Con ("Tuple" <> T.pack (show $ length acc)) $ map cTypeOf acc) acc <$> e
-    go (p : ps) acc e = do
-      x <- join $ newId <$> dcType (p ^. typeOf) <*> pure "$p"
-      go ps (x : acc) $ do
-        clause <- crushPat [p] e
-        expr <- runDef $ Atom <$> (join $ cast <$> unfoldType (p ^. typeOf) <*> pure (Atom $ C.Var x))
-        pure $ Match expr (clause :| [])
-crushPat [VarP x v] = \e -> do
-  v' <- join $ newId <$> dcType (x ^. typeOf) <*> pure (v ^. idName)
-  local (varEnv %~ Map.insert v v') $ Bind v' <$> e
-crushPat [ConP _ con ps] = go ps []
-  where
-    go [] acc e = do
-      acc <- pure $ reverse acc
-      paramTypes <- traverse (dcType . view typeOf) ps
-      let con' = C.Con (T.pack $ show $ pPrint con) paramTypes
-      Unpack con' acc <$> e
-    go (p : ps) acc e = do
-      x <- join $ newId <$> dcType (p ^. typeOf) <*> pure "$p"
-      go ps (x : acc) $ do
-        clause <- crushPat [p] e
-        expr <- runDef $ Atom <$> (join $ cast <$> unfoldType (p ^. typeOf) <*> pure (Atom $ C.Var x))
-        pure $ Match expr (clause :| [])
+    constructors (GT.TyApp t1 t2) = do
+      let (con, ts) = splitCon t1 t2
+      Just (as, conMap) <- view (tcEnv . Tc.tyConEnv . at con)
+      let conMap' = over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
+      traverse ?? conMap' $ \(conName, conType) -> do
+        paramTypes <- traverse dcType (fst $ splitTyArr conType)
+        let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
+        params <- traverse (newId ?? "$p") paramTypes
+        pure (conName, ccon, params)
+    constructors (GT.TyCon con) | kind con == Star = do
+      Just ([], conMap) <- view (tcEnv . Tc.tyConEnv . at con)
+      traverse ?? conMap $ \(conName, _) -> do
+        let ccon = C.Con (T.pack $ show $ pPrint conName) []
+        pure (conName, ccon, [])
+    constructors t = errorDoc $ "Not valid type: " <+> pPrint t
+    genCase (gcon, ccon, params) = do
+      let (pss', es') = unzip $ group gcon (List.transpose (ps : pss)) es
+      Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
+    group gcon pss' es = mapMaybe (aux gcon) (zip pss' es)
+    aux gcon (ConP _ gcon' ps : pss, e)
+      | gcon == gcon' = Just (ps <> pss, e)
+      | otherwise = Nothing
+    aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
+match [] [] (e : _) _ = e
+match _ [] _ err = pure err
+match _ _ _ _ = bug Unreachable
 
 dcType :: (HasCallStack, MonadIO m) => GT.Type -> m CType
 dcType (GT.TyApp t1 t2) = do

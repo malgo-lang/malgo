@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 38b8d1d51aaa313914902cedaccee1ec9a9de06da90f8074cbf2b33f1887ebde
+-- hash: da3abc4085dc66cac3f7fe4e5975985f49b19643fbd9c4ac790e7c39e8e4eeab
 
 name:           malgo
 version:        1.0.0.0
@@ -66,7 +66,7 @@ library
   hs-source-dirs:
       src
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=10 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
   build-tools:
       happy
   build-depends:
@@ -99,7 +99,7 @@ executable griff
   hs-source-dirs:
       app/griff
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=10 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
   build-tools:
       happy
   build-depends:
@@ -133,7 +133,7 @@ executable malgo
   hs-source-dirs:
       app/malgo
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=10 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
   build-tools:
       happy
   build-depends:
@@ -168,7 +168,7 @@ test-suite malgo-test
   hs-source-dirs:
       test
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=10 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
   build-tools:
       happy
   build-depends:

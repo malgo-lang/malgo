@@ -8,6 +8,7 @@
 module Language.Griff.Syntax where
 
 import Data.Int (Int32, Int64)
+import qualified Data.Set as Set
 import Language.Griff.Extension
 import Language.Griff.Type (HasType (..))
 import qualified Language.Griff.Type as T
@@ -15,7 +16,6 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import qualified Text.PrettyPrint.HughesPJ as P
 import Text.PrettyPrint.HughesPJClass (prettyNormal)
-import qualified Data.Set as Set
 
 -- Unboxed literal
 
@@ -33,12 +33,12 @@ instance Pretty Unboxed where
 instance HasType Unboxed where
   typeOf = lens getter setter
     where
-      getter Int32{} = T.TyPrim T.Int32T
-      getter Int64{} = T.TyPrim T.Int64T
-      getter Float{} = T.TyPrim T.FloatT
-      getter Double{} = T.TyPrim T.DoubleT
-      getter Char{} = T.TyPrim T.CharT
-      getter String{} = T.TyPrim T.StringT
+      getter Int32 {} = T.TyPrim T.Int32T
+      getter Int64 {} = T.TyPrim T.Int64T
+      getter Float {} = T.TyPrim T.FloatT
+      getter Double {} = T.TyPrim T.DoubleT
+      getter Char {} = T.TyPrim T.CharT
+      getter String {} = T.TyPrim T.StringT
       setter u _ = u
 
 -- Expression
@@ -81,7 +81,7 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
   typeOf f (Apply x e1 e2) = typeOf f x <&> \x' -> Apply x' e1 e2
   typeOf f (OpApp x op e1 e2) = typeOf f x <&> \x' -> OpApp x' op e1 e2
   typeOf f (Fn x cs) = typeOf f x <&> \x' -> Fn x' cs
-  typeOf f (Tuple x es) = typeOf f x <&> \x' -> Tuple x' es  
+  typeOf f (Tuple x es) = typeOf f x <&> \x' -> Tuple x' es
   typeOf f (Force x e) = typeOf f x <&> \x' -> Force x' e
 
 freevars :: Ord (XId x) => Exp x -> Set (XId x)
@@ -103,6 +103,9 @@ data Clause x = Clause (XClause x) [Pat x] (Exp x)
 deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Eq (XId x)) => Eq (Clause x)
 
 deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Show x, Show (XId x)) => Show (Clause x)
+
+instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x) => Ord (Clause x) where
+  (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
   pPrint (Clause _ pats e) = P.sep (map pPrint pats) <+> "->" <+> pPrint e
@@ -136,6 +139,8 @@ deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)
 
 deriving stock instance (ForallPatX Show x, Show (XId x)) => Show (Pat x)
 
+deriving stock instance (ForallPatX Ord x, Ord (XId x)) => Ord (Pat x)
+
 instance (Pretty (XId x)) => Pretty (Pat x) where
   pPrintPrec _ _ (VarP _ i) = pPrint i
   pPrintPrec _ _ (ConP _ i []) = pPrint i
@@ -161,7 +166,7 @@ instance (ForallPatX HasType x) => HasType (Pat x) where
 bindVars :: Ord (XId x) => Pat x -> Set (XId x)
 bindVars (VarP _ x) = Set.singleton x
 bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
-bindVars UnboxedP{} = Set.empty
+bindVars UnboxedP {} = Set.empty
 
 ----------
 -- Type --
