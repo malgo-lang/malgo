@@ -228,11 +228,13 @@ match (u : us) (ps : pss) es err
     match us pss (zipWith (\(VarP _ v) e -> local (over varEnv (Map.insert v u)) e) ps es) err
   -- Constructor Rule
   | otherwise = do
+    patType <- Typing.zonkType (head ps ^. typeOf)
     -- 型からコンストラクタの集合を求める
-    cs <- constructors =<< Typing.zonkType (head ps ^. typeOf)
+    cs <- constructors patType
     -- 各コンストラクタごとにC.Caseを生成する関数を生成する
     cases <- traverse genCase cs
-    pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList cases
+    unfoldedType <- unfoldType patType
+    pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
   where
     constructors (GT.TyApp t1 t2) = do
       let (con, ts) = splitCon t1 t2
