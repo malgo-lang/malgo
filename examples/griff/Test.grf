@@ -2,6 +2,10 @@ infixl 0 (|>);
 (|>) :: a -> (a -> b) -> b;
 (|>) x f = f x;
 
+data RGB = Red | Green | Blue;
+
+rTob = {Red -> Blue | a -> a};
+
 data Bool = True | False;
 
 if = {True t _ -> t! | False _ f -> f!};
@@ -14,3 +18,4 @@ data Int = Int# Int64#;
 main = {
   Int# 1L# |> {(Int# i) -> print_int i}
 }
+
