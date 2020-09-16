@@ -71,6 +71,8 @@ compile = do
       liftIO $ hPutStrLn stderr "=== OPTIMIZE ==="
       let coreOpt = optimize 10 core
       liftIO $ hPrint stderr $ pPrint $ flat coreOpt
+      -- TODO: 最適化するか否かをフラグで指定できるように変更
+      -- optimizeにバグがある
       llvmir <- codeGen (Program {topBinds = [], topFuncs = [], mainExp = flat core})
       let mod =
             L.defaultModule

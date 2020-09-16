@@ -32,6 +32,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as C
 import qualified Text.PrettyPrint.HughesPJ as P
+import Control.Exception (assert)
 
 data DesugarEnv = DesugarEnv
   { _varEnv :: Map (Id ()) (Id CType),
@@ -200,6 +201,9 @@ dcExp (G.Apply _ f x) = runDef $ do
   f' <- bind =<< dcExp f
   case cTypeOf f' of
     [xType] :-> _ -> do
+      -- Note: [Cast Argument Type]
+      --   x の型と f の引数の型は必ずしも一致しない
+      --   適切な型にcastする必要がある
       x' <- cast xType =<< dcExp x
       pure $ Call f' [x']
     _ -> bug Unreachable
@@ -207,6 +211,7 @@ dcExp (G.OpApp _ op x y) = runDef $ do
   op' <- lookupName op
   case cTypeOf op' of
     [xType] :-> ([yType] :-> _) -> do
+      -- Ref: [Cast Argument Type]
       x' <- cast xType =<< dcExp x
       y' <- cast yType =<< dcExp y
       e1 <- bind (Call (C.Var op') [x'])
@@ -232,14 +237,34 @@ dcExp (G.Force _ e) = runDef $ do
   e' <- bind =<< dcExp e
   pure $ Call e' []
 
+-- TODO: The Implementation of Functional Programming Languages
+-- を元にコメントを追加
 match :: HasCallStack => (MonadReader DesugarEnv m, MonadFail m, MonadIO m, MonadUniq m) => [Id CType] -> [[Pat (Griff 'TypeCheck)]] -> [m (C.Exp (Id CType))] -> C.Exp (Id CType) -> m (C.Exp (Id CType))
 match (u : us) (ps : pss) es err
   -- Variable Rule
   | all (\case VarP {} -> True; _ -> False) ps =
-    match us pss (zipWith (\(VarP x v) e -> runDef $ do
-      ty' <- dcType =<< Typing.zonkType (x ^. typeOf)
-      C.Var u' <- cast ty' (Atom $ C.Var u)
-      local (over varEnv (Map.insert v u')) $ lift e) ps es) err
+    {- Note: How to implement the Variable Rule?
+        There are two version of (old) implementations.
+        I believe that the Original impl is correct.
+        But I'm not sure if this is correct.
+        So, the `assert` is inserted in code.
+        If I'm wrong, this `assert` is going to fail one day.
+    -} 
+    -- -- Cast version
+    -- match us pss (zipWith (\(VarP x v) e -> runDef $ do
+    --   ty' <- dcType =<< Typing.zonkType (x ^. typeOf)
+    --   C.Var u' <- cast ty' (Atom $ C.Var u)
+    --   local (over varEnv (Map.insert v u')) $ lift e) ps es) err
+    -- -- Original
+    -- match us pss (zipWith (\(VarP _ v) e -> do
+    --   local (over varEnv (Map.insert v u)) e) ps es) err
+    -- -- Check Type version
+    match us pss (zipWith (\(VarP x v) e -> do
+      patTy <- dcType =<< Typing.zonkType (x ^. typeOf)
+      -- if this assert fail, there are some bug about polymorphic type
+      -- Ref: How to implement the Variable Rule?
+      assert (patTy == cTypeOf u) $ pure ()
+      local (over varEnv (Map.insert v u)) e) ps es) err
   -- Constructor Rule
   | otherwise = do
     patType <- Typing.zonkType (head ps ^. typeOf)
