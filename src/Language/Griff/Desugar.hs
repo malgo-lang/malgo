@@ -25,6 +25,7 @@ import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
 import qualified Language.Griff.Typing as Typing
 import Language.Malgo.IR.Core as C
+import Language.Malgo.IR.Op
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Prelude
@@ -48,30 +49,33 @@ makeLenses ''DesugarEnv
 
 desugar :: (MonadUniq m, MonadFail m, MonadIO m) => TcEnv -> BindGroup (Griff 'TypeCheck) -> m (C.Exp (Id CType))
 desugar tcEnv ds = do
-  dcEnv <- genDcEnv tcEnv
-  runReaderT (dcBindGroup ds) dcEnv
+  (dcEnv, prims) <- genPrimitive tcEnv
+  Let prims <$> runReaderT (dcBindGroup ds) dcEnv
 
-genDcEnv :: (MonadIO m, MonadUniq m) => TcEnv -> m DesugarEnv
-genDcEnv env = do
-  -- let add_i32 = fromJust $ Map.lookup "add_i32#" (view (Tc.rnEnv . Rn.varEnv) tcEnv)
-  -- let Forall _ add_i32_type = fromJust $ Map.lookup add_i32 (view Tc.varEnv tcEnv)
-  -- add_i32' <- join $ newId <$> dcType add_i32_type <*> pure "add_i32#"
+genPrimitive :: (MonadUniq m, MonadIO m, MonadFail m) => TcEnv -> m (DesugarEnv, [(Id CType, Obj (Id CType))])
+genPrimitive env =
+  do
+    let add_i64 = fromJust $ Map.lookup "add_i64#" (view (Tc.rnEnv . Rn.varEnv) env)
+    let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
+    add_i64' <- join $ newId <$> dcType add_i64_type <*> pure "add_i64#"
+    add_i64_param <- newId (SumT $ Set.singleton (C.Con "Tuple2" [IntT, IntT])) "$p"
+    add_i64_fun <- fmap (Fun [add_i64_param]) $
+      runDef $ do
+        [x, y] <- destruct (Atom $ C.Var add_i64_param) (C.Con "Tuple2" [IntT, IntT])
+        pure $ BinOp Add x y
 
-  let add_i64 = fromJust $ Map.lookup "add_i64#" (view (Tc.rnEnv . Rn.varEnv) env)
-  let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
-  add_i64' <- join $ newId <$> dcType add_i64_type <*> pure "add_i64#"
+    let newEnv =
+          mempty & varEnv
+            .~ Map.fromList
+              [(add_i64, add_i64')]
+              & tcEnv
+            .~ env
 
-  pure $
-    mempty & varEnv
-      .~ Map.fromList
-        [ -- (add_i32, add_i32'),
-          (add_i64, add_i64')
-        ]
-        & tcEnv
-      .~ env
+    pure (newEnv, [(add_i64', add_i64_fun)])
 
 dcBindGroup :: (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) => BindGroup (Griff 'TypeCheck) -> m (C.Exp (Id CType))
 dcBindGroup bg = do
+  -- TODO: primitive functionのexternを生成する
   (env, dataDefs') <- first mconcat <$> mapAndUnzipM dcDataDef (bg ^. dataDefs)
   local (env <>) $ do
     (env, forigns') <- first mconcat <$> mapAndUnzipM dcForign (bg ^. forigns)
@@ -221,7 +225,7 @@ dcExp (G.Force _ e) = runDef $ do
   e' <- bind =<< dcExp e
   pure $ Call e' []
 
-match :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m, MonadUniq m) => [Id CType] -> [[Pat (Griff 'TypeCheck)]] -> [m (C.Exp (Id CType))] -> C.Exp (Id CType) -> m (C.Exp (Id CType))
+match :: HasCallStack => (MonadReader DesugarEnv m, MonadFail m, MonadIO m, MonadUniq m) => [Id CType] -> [[Pat (Griff 'TypeCheck)]] -> [m (C.Exp (Id CType))] -> C.Exp (Id CType) -> m (C.Exp (Id CType))
 match (u : us) (ps : pss) es err
   -- Variable Rule
   | all (\case VarP {} -> True; _ -> False) ps =
@@ -253,7 +257,7 @@ match (u : us) (ps : pss) es err
     constructors t = errorDoc $ "Not valid type: " <+> pPrint t
     genCase (gcon, ccon, params) = do
       let (pss', es') = unzip $ group gcon (List.transpose (ps : pss)) es
-      Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
+      Unpack ccon params <$> match (params <> (u:us)) (List.transpose pss') es' err
     group gcon pss' es = mapMaybe (aux gcon) (zip pss' es)
     aux gcon (ConP _ gcon' ps : pss, e)
       | gcon == gcon' = Just (ps <> pss, e)
