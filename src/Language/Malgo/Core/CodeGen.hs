@@ -12,6 +12,7 @@
 
 module Language.Malgo.Core.CodeGen
   ( CodeGen,
+    codeGen,
   )
 where
 
@@ -29,7 +30,6 @@ import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import LLVM.AST (Definition (..), Name, mkName)
-import qualified LLVM.AST
 import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
 import qualified LLVM.AST.FloatingPointPredicate as FP
@@ -54,31 +54,35 @@ data CodeGen
 
 instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
   passName = "GenLLVM"
-  trans Program {topBinds, mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
-    -- topBindsとtopFuncsのOprMapを作成
-    bindEnv <-
-      foldMapA ?? topBinds $
-        \(x, _) -> do
-          emitDefn $ LLVM.AST.GlobalDefinition LLVM.AST.globalVariableDefaults
-          pure $
-            Map.singleton x $
-              ConstantOperand $ C.GlobalReference (ptr (convType $ cTypeOf x)) (toName x)
-    let funcEnv =
-          mconcatMap
-            ?? topFuncs
-            $ \(f, (ps, e)) ->
-              Map.singleton f $
-                ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f)
-    runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv, _globalMap = bindEnv}) $
-      Lazy.evalStateT ?? (mempty :: PrimMap) $ do
-        traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
-        void $
-          function "main" [] LT.i32 $ \_ -> do
-            -- topBindsを初期化
-            loadTopBinds topBinds
-            gcInit <- findExt "GC_init" [] LT.void
-            void $ call gcInit []
-            genExp mainExp $ \_ -> ret (int32 0)
+  trans = codeGen
+
+codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id CType) -> m [Definition]
+codeGen Program {topBinds, mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
+  -- topBindsとtopFuncsのOprMapを作成
+  bindEnv <-
+    foldMapA ?? topBinds $
+      \(x, _) -> do
+        error "Code generation for topBinds is not implemented"
+        -- emitDefn $ LLVM.AST.GlobalDefinition LLVM.AST.globalVariableDefaults
+        pure $
+          Map.singleton x $
+            ConstantOperand $ C.GlobalReference (ptr (convType $ cTypeOf x)) (toName x)
+  let funcEnv =
+        mconcatMap
+          ?? topFuncs
+          $ \(f, (ps, e)) ->
+            Map.singleton f $
+              ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f)
+  runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv, _globalMap = bindEnv}) $
+    Lazy.evalStateT ?? (mempty :: PrimMap) $ do
+      traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
+      void $
+        function "main" [] LT.i32 $ \_ -> do
+          -- topBindsを初期化
+          loadTopBinds topBinds
+          gcInit <- findExt "GC_init" [] LT.void
+          void $ call gcInit []
+          genExp mainExp $ \_ -> ret (int32 0)
 
 loadTopBinds ::
   ( MonadState PrimMap m,
@@ -204,6 +208,7 @@ mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 toName :: Id a -> LLVM.AST.Name
 toName x = LLVM.AST.mkName $ T.unpack (x ^. idName) <> show (x ^. idUniq)
 
+-- generate code for a 'known' function
 genFunc ::
   ( MonadModuleBuilder m,
     MonadReader OprMap m,
@@ -360,6 +365,7 @@ genExp (Match e cs) k = genExp e $ \eOpr -> do
 genExp (Cast ty x) k = do
   xOpr <- genAtom x
   k =<< bitcast xOpr (convType ty)
+genExp (Error _) _ = unreachable
 
 genUnpack ::
   ( MonadReader OprMap m,
@@ -445,7 +451,7 @@ genObj funName (Fun ps e) = do
     retType = convType $ cTypeOf e
 genObj name@(cTypeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
   addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
-  let tag = fromIntegral $ Set.findIndex con cs
+  let tag = fromIntegral $ findIndex con cs
   gepAndStore addr [int32 0, int32 0] (int64 tag)
   ifor_ xs $ \i x -> do
     xOpr <- genAtom x
@@ -480,8 +486,14 @@ genObj x (Core.Array a n) = mdo
 
 genCon :: Set Con -> Con -> (Int, Type)
 genCon cs con@(Con _ ts)
-  | con `elem` cs = (Set.findIndex con cs, StructureType False (map convType ts))
+  | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
   | otherwise = bug Unreachable
+
+findIndex :: (HasCallStack, Ord a, Pretty a) => a -> Set a -> Int
+findIndex con cs =
+  case Set.lookupIndex con cs of
+    Just i -> i
+    Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
 
 sizeof :: Type -> Operand
 sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64

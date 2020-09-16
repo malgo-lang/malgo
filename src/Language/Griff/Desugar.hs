@@ -75,7 +75,6 @@ genPrimitive env =
 
 dcBindGroup :: (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) => BindGroup (Griff 'TypeCheck) -> m (C.Exp (Id CType))
 dcBindGroup bg = do
-  -- TODO: primitive functionのexternを生成する
   (env, dataDefs') <- first mconcat <$> mapAndUnzipM dcDataDef (bg ^. dataDefs)
   local (env <>) $ do
     (env, forigns') <- first mconcat <$> mapAndUnzipM dcForign (bg ^. forigns)
@@ -148,27 +147,30 @@ dcDataDef (_, name, _, cons) = do
     mapAndUnzipM ?? cons $ \(conName, _) -> do
       Just (GT.TyCon name') <- Map.lookup name <$> view (tcEnv . Tc.typeEnv)
       Just (_, conMap) <- Map.lookup name' <$> view (tcEnv . Tc.tyConEnv)
-      typ <- dcType $ fromJust $ List.lookup conName conMap
-      case typ of
-        paramTypes :-> retType -> do
+      let (paramTypes, retType) = splitTyArr $ fromJust $ List.lookup conName conMap
+      paramTypes' <- traverse dcType paramTypes
+      retType' <- dcType retType
+      case paramTypes' of
+        [] -> do
+          conName' <- newId ([] :-> retType') (conName ^. idName)
+          unfoldedType <- unfoldType $ fromJust $ List.lookup conName conMap
+          obj <- fmap (Fun []) $
+            runDef $ do
+              packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) []) []
+              pure $ Cast retType' packed
+          pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj))
+        _ -> do
+          typ <- dcType $ fromJust $ List.lookup conName conMap
           conName' <- newId typ (conName ^. idName)
-          ps <- traverse (\t -> newId t "$p") paramTypes
+          ps <- traverse (\t -> newId t "$p") paramTypes'
           unfoldedType <- unfoldType $ snd $ splitTyArr (fromJust $ List.lookup conName conMap)
           obj <-
             curryFun ps
               =<< runDef
                 ( do
-                    packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) paramTypes) $ map C.Var ps
-                    pure $ Cast retType packed
+                    packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) paramTypes') $ map C.Var ps
+                    pure $ Cast retType' packed
                 )
-          pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj))
-        _ -> do
-          conName' <- newId ([] :-> typ) (conName ^. idName)
-          unfoldedType <- unfoldType $ fromJust $ List.lookup conName conMap
-          obj <- fmap (Fun []) $
-            runDef $ do
-              packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) []) []
-              pure $ Cast typ packed
           pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj))
 
 dcExp :: (HasCallStack, MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) => G.Exp (Griff 'TypeCheck) -> m (C.Exp (Id CType))
@@ -251,20 +253,22 @@ match (u : us) (ps : pss) es err
         pure (conName, ccon, params)
     constructors (GT.TyCon con) | kind con == Star = do
       Just ([], conMap) <- view (tcEnv . Tc.tyConEnv . at con)
-      traverse ?? conMap $ \(conName, _) -> do
-        let ccon = C.Con (T.pack $ show $ pPrint conName) []
-        pure (conName, ccon, [])
+      traverse ?? conMap $ \(conName, conType) -> do
+        paramTypes <- traverse dcType (fst $ splitTyArr conType)
+        let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
+        params <- traverse (newId ?? "$p") paramTypes
+        pure (conName, ccon, params)
     constructors t = errorDoc $ "Not valid type: " <+> pPrint t
     genCase (gcon, ccon, params) = do
       let (pss', es') = unzip $ group gcon (List.transpose (ps : pss)) es
-      Unpack ccon params <$> match (params <> (u:us)) (List.transpose pss') es' err
+      Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
     group gcon pss' es = mapMaybe (aux gcon) (zip pss' es)
     aux gcon (ConP _ gcon' ps : pss, e)
       | gcon == gcon' = Just (ps <> pss, e)
       | otherwise = Nothing
     aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
 match [] [] (e : _) _ = e
-match _ [] _ err = pure err
+match _ [] [] err = pure err
 match _ _ _ _ = bug Unreachable
 
 dcType :: (HasCallStack, MonadIO m) => GT.Type -> m CType

@@ -20,3 +20,5 @@ sum = { Nil -> Int# 0L#
       | (Cons (Int# x) xs) ->
           sum xs |> {(Int# s) -> Int# (x +# s)}
       };
+
+main = {sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil))}
