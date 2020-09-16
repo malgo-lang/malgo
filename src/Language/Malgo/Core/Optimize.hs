@@ -71,7 +71,7 @@ checkInlineable :: (MonadState CallInlineMap m, MonadReader Int m) => (Id CType,
 checkInlineable (f, Fun ps v) = do
   level <- ask
   -- 変数の数がinlineSize以下ならインライン展開する
-  when (length v <= level) $
+  when (length v <= level || f `notElem` freevars v) $
     modify $ at f ?~ makeTemplate ps v
 checkInlineable _ = pure ()
 
