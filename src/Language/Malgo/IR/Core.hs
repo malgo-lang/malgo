@@ -270,7 +270,7 @@ Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 data Program a = Program
   { -- | main内で初期化される値
     topBinds :: [(a, Obj a)],
-    -- | トップレベル関数
+    -- | トップレベル関数。topBinds以外の自由変数を持たない
     topFuncs :: [(a, ([a], Exp a))],
     mainExp :: Exp a
   }

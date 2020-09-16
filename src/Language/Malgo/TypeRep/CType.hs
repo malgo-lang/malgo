@@ -20,6 +20,10 @@ import Text.PrettyPrint.HughesPJ
     text,
   )
 
+-- TODO: クロージャを表す型を追加
+-- ClosureT [CType] CType
+-- あるいはknown関数を表す型
+-- FuncT [CType] CType
 data CType
   = [CType] :-> CType
   | IntT
