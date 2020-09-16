@@ -198,14 +198,19 @@ dcExp (G.Unboxed _ u) = pure $
       G.String x -> C.String x
 dcExp (G.Apply _ f x) = runDef $ do
   f' <- bind =<< dcExp f
-  x' <- bind =<< dcExp x
-  pure $ Call f' [x']
+  case cTypeOf f' of
+    [xType] :-> _ -> do
+      x' <- cast xType =<< dcExp x
+      pure $ Call f' [x']
+    _ -> bug Unreachable
 dcExp (G.OpApp _ op x y) = runDef $ do
   op' <- lookupName op
-  x' <- bind =<< dcExp x
-  y' <- bind =<< dcExp y
-  e1 <- bind (Call (C.Var op') [x'])
-  pure $ Call e1 [y']
+  case cTypeOf op' of
+    [xType] :-> ([yType] :-> _) -> do
+      x' <- cast xType =<< dcExp x
+      y' <- cast yType =<< dcExp y
+      e1 <- bind (Call (C.Var op') [x'])
+      pure $ Call e1 [y']
 dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
   e' <- dcExp e
   typ <- dcType (x ^. typeOf)
@@ -231,7 +236,10 @@ match :: HasCallStack => (MonadReader DesugarEnv m, MonadFail m, MonadIO m, Mona
 match (u : us) (ps : pss) es err
   -- Variable Rule
   | all (\case VarP {} -> True; _ -> False) ps =
-    match us pss (zipWith (\(VarP _ v) e -> local (over varEnv (Map.insert v u)) e) ps es) err
+    match us pss (zipWith (\(VarP x v) e -> runDef $ do
+      ty' <- dcType =<< Typing.zonkType (x ^. typeOf)
+      C.Var u' <- cast ty' (Atom $ C.Var u)
+      local (over varEnv (Map.insert v u')) $ lift e) ps es) err
   -- Constructor Rule
   | otherwise = do
     patType <- Typing.zonkType (head ps ^. typeOf)

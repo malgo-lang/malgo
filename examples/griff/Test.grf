@@ -6,4 +6,11 @@ data Bool = True | False;
 
 if = {True t _ -> t! | False _ f -> f!};
 
-main = {if True {False} {True}};
+forign import print_int :: Int64# -> ();
+
+data Int = Int# Int64#;
+
+-- main = {if True {False} {True}};
+main = {
+  Int# 1L# |> {(Int# i) -> print_int i}
+}

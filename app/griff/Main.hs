@@ -28,6 +28,7 @@ import System.Exit (exitFailure)
 import System.IO (hPrint, hPutStr, hPutStrLn, stderr)
 import Text.Megaparsec (errorBundlePretty, parse)
 import qualified Text.PrettyPrint as P
+import Language.Malgo.Core.Lint (lint)
 
 main :: IO ()
 main =
@@ -66,10 +67,11 @@ compile = do
       liftIO $ hPutStrLn stderr "=== DESUGAR ==="
       core <- desugar tcEnv bg
       liftIO $ hPrint stderr $ pPrint $ flat core
+      lint core
       liftIO $ hPutStrLn stderr "=== OPTIMIZE ==="
       let coreOpt = optimize 10 core
       liftIO $ hPrint stderr $ pPrint $ flat coreOpt
-      llvmir <- codeGen (Program {topBinds = [], topFuncs = [], mainExp = coreOpt})
+      llvmir <- codeGen (Program {topBinds = [], topFuncs = [], mainExp = flat core})
       let mod =
             L.defaultModule
               { L.moduleName = "<stdin>",
