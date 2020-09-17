@@ -244,7 +244,7 @@ match (u : us) (ps : pss) es err
   -- Variable Rule
   | all (\case VarP {} -> True; _ -> False) ps =
     {- Note: How to implement the Variable Rule?
-        There are two version of (old) implementations.
+        There are two (old) implementations.
         I believe that the Original impl is correct.
         But I'm not sure if this is correct.
         So, the `assert` is inserted in code.
