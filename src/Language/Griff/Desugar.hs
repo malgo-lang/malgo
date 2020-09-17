@@ -11,6 +11,7 @@
 
 module Language.Griff.Desugar where
 
+import Control.Exception (assert)
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
@@ -32,7 +33,6 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as C
 import qualified Text.PrettyPrint.HughesPJ as P
-import Control.Exception (assert)
 
 data DesugarEnv = DesugarEnv
   { _varEnv :: Map (Id ()) (Id CType),
@@ -223,7 +223,7 @@ dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
 dcExp (G.Fn _ cs@(Clause _ ps e : _)) = do
   ps' <- traverse (\p -> join $ newId <$> dcType (p ^. typeOf) <*> pure "$p") ps
   typ <- dcType (e ^. typeOf)
-  (pss, es) <- fmap (first List.transpose) $ mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) $ List.sort cs
+  (pss, es) <- fmap (first List.transpose) $ mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
   runDef $ Atom <$> let_ (cTypeOf obj) obj
@@ -249,7 +249,7 @@ match (u : us) (ps : pss) es err
         But I'm not sure if this is correct.
         So, the `assert` is inserted in code.
         If I'm wrong, this `assert` is going to fail one day.
-    -} 
+    -}
     -- -- Cast version
     -- match us pss (zipWith (\(VarP x v) e -> runDef $ do
     --   ty' <- dcType =<< Typing.zonkType (x ^. typeOf)
@@ -259,14 +259,23 @@ match (u : us) (ps : pss) es err
     -- match us pss (zipWith (\(VarP _ v) e -> do
     --   local (over varEnv (Map.insert v u)) e) ps es) err
     -- -- Check Type version
-    match us pss (zipWith (\(VarP x v) e -> do
-      patTy <- dcType =<< Typing.zonkType (x ^. typeOf)
-      -- if this assert fail, there are some bug about polymorphic type
-      -- Ref: How to implement the Variable Rule?
-      assert (patTy == cTypeOf u) $ pure ()
-      local (over varEnv (Map.insert v u)) e) ps es) err
+    match
+      us
+      pss
+      ( zipWith
+          ( \(VarP x v) e -> do
+              patTy <- dcType =<< Typing.zonkType (x ^. typeOf)
+              -- if this assert fail, there are some bug about polymorphic type
+              -- Ref: How to implement the Variable Rule?
+              assert (patTy == cTypeOf u) $ pure ()
+              local (over varEnv (Map.insert v u)) e
+          )
+          ps
+          es
+      )
+      err
   -- Constructor Rule
-  | otherwise = do
+  | all (\case ConP {} -> True; _ -> False) ps = do
     patType <- Typing.zonkType (head ps ^. typeOf)
     -- 型からコンストラクタの集合を求める
     cs <- constructors patType
@@ -274,6 +283,10 @@ match (u : us) (ps : pss) es err
     cases <- traverse genCase cs
     unfoldedType <- unfoldType patType
     pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
+  -- The Mixture Rule
+  | otherwise =
+    match (u : us) (List.transpose [head $ List.transpose (ps : pss)]) [head es]
+      =<< match (u : us) (List.transpose $ tail $ List.transpose (ps : pss)) (tail es) err
   where
     constructors (GT.TyApp t1 t2) = do
       let (con, ts) = splitCon t1 t2
