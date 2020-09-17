@@ -121,19 +121,22 @@ instance Pretty PrimT where
 -------------------
 
 class HasType a where
-  typeOf :: Lens' a Type
+  toType :: Getter a Type
 
 instance HasType Type where
-  typeOf = id
+  toType = id
 
 instance HasType Scheme where
-  typeOf f (Forall vs t) = Forall vs <$> typeOf f t
+  toType f (Forall vs t) = Forall vs <$> toType f t
 
 instance HasType a => HasType (Id a) where
-  typeOf f = idMeta (typeOf f)
+  toType f = idMeta (toType f)
 
 data WithType a = WithType a Type
   deriving stock (Eq, Show, Ord, Functor, Foldable)
 
+instance Pretty a => Pretty (WithType a) where
+  pPrint (WithType a t) = pPrint a <> ":" <> pPrint t
+
 instance HasType (WithType a) where
-  typeOf f (WithType a t) = WithType a <$> typeOf f t
+  toType f (WithType a t) = WithType a <$> toType f t

@@ -269,7 +269,7 @@ tcScDefs ds = do
     local (over T.varEnv (Map.fromList (zip params (map (Forall []) paramTypes)) <>)) $ do
       expr' <- tcExpr expr
       ty <- instantiate =<< lookupVar pos name
-      unify pos ty (foldr TyArr (view typeOf expr') paramTypes)
+      unify pos ty (foldr TyArr (expr' ^. toType) paramTypes)
       pure ((name, ty), (WithType pos ty, name, params, expr'))
   fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) nts
   as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
@@ -301,43 +301,43 @@ tcExpr :: (MonadReader TcEnv m, MonadUniq m, MonadIO m) => Exp (Griff 'Rename) -
 tcExpr (Var pos v) = do
   scheme <- lookupVar pos v
   v' <- instantiate scheme
-  pure $ Var (WithType pos $ view typeOf v') v
+  pure $ Var (WithType pos $ v' ^. toType) v
 tcExpr (Con pos c) = do
   c' <- instantiate =<< lookupVar pos c
-  pure $ Con (WithType pos $ view typeOf c') c
+  pure $ Con (WithType pos $ c' ^. toType) c
 tcExpr (Unboxed pos u) =
-  pure $ Unboxed (WithType pos $ view typeOf u) u
+  pure $ Unboxed (WithType pos $ u ^. toType) u
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
   retType <- TyMeta <$> newMetaTv Star
-  unify pos (view typeOf f') (TyArr (view typeOf x') retType)
+  unify pos (f' ^. toType) (TyArr (x' ^. toType) retType)
   pure $ Apply (WithType pos retType) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
   e2' <- tcExpr e2
   opType <- instantiate =<< lookupVar pos op
   retType <- TyMeta <$> newMetaTv Star
-  unify pos opType (TyArr (view typeOf e1') $ TyArr (view typeOf e2') retType)
+  unify pos opType (TyArr (e1' ^. toType) $ TyArr (e2' ^. toType) retType)
   pure $ OpApp (WithType x retType) op e1' e2'
 tcExpr (Fn pos (Clause x [] e : _)) = do
   e' <- tcExpr e
-  pure $ Fn (WithType pos (TyLazy $ e' ^. typeOf)) (Clause (WithType x (TyLazy $ e' ^. typeOf)) [] e' : [])
+  pure $ Fn (WithType pos (TyLazy $ e' ^. toType)) (Clause (WithType x (TyLazy $ e' ^. toType)) [] e' : [])
 tcExpr (Fn pos cs) = do
   -- TODO: lazy valueを正しく型付けする
   cs' <- traverse tcClause cs
   case cs' of
     (c' : cs') -> do
-      traverse_ (unify pos (view typeOf c') . view typeOf) cs'
-      pure $ Fn (WithType pos (view typeOf c')) (c' : cs')
+      traverse_ (unify pos (c' ^. toType) . view toType) cs'
+      pure $ Fn (WithType pos (c' ^. toType)) (c' : cs')
     _ -> bug Unreachable
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
-  pure $ Tuple (WithType pos (TyTuple (map (view typeOf) es'))) es'
+  pure $ Tuple (WithType pos (TyTuple (map (view toType) es'))) es'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
   ty <- TyMeta <$> newMetaTv Star
-  unify pos (TyLazy ty) (view typeOf e')
+  unify pos (TyLazy ty) (e' ^. toType)
   pure $ Force (WithType pos ty) e'
 
 tcClause :: (MonadReader TcEnv m, MonadIO m, MonadUniq m) => Clause (Griff 'Rename) -> m (Clause (Griff 'TypeCheck))
@@ -345,7 +345,7 @@ tcClause (Clause pos patterns expr) = do
   (env, patterns') <- tcPatterns patterns
   local (env <>) $ do
     expr' <- tcExpr expr
-    let ty = foldr (TyArr . view typeOf) (view typeOf expr') patterns'
+    let ty = foldr (TyArr . view toType) (expr' ^. toType) patterns'
     pure $ Clause (WithType pos ty) patterns' expr'
 
 tcPatterns :: (MonadUniq m, MonadIO m, MonadReader TcEnv m) => [Pat (Griff 'Rename)] -> m (TcEnv, [Pat (Griff 'TypeCheck)])
@@ -362,7 +362,7 @@ tcPatterns ps = fmap (first mconcat) $
       local (env <>) $ do
         conType <- instantiate =<< lookupVar pos con
         ty <- TyMeta <$> newMetaTv Star
-        unify pos conType (foldr (TyArr . view typeOf) ty pats')
+        unify pos conType (foldr (TyArr . view toType) ty pats')
         pure (env, ConP (WithType pos ty) con pats')
     UnboxedP pos unboxed -> do
-      pure (mempty, UnboxedP (WithType pos (view typeOf unboxed)) unboxed)
+      pure (mempty, UnboxedP (WithType pos (unboxed ^. toType)) unboxed)

@@ -1,5 +1,7 @@
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -31,15 +33,13 @@ instance Pretty Unboxed where
   pPrint (String s) = P.doubleQuotes (P.text s) <> "#"
 
 instance HasType Unboxed where
-  typeOf = lens getter setter
-    where
-      getter Int32 {} = T.TyPrim T.Int32T
-      getter Int64 {} = T.TyPrim T.Int64T
-      getter Float {} = T.TyPrim T.FloatT
-      getter Double {} = T.TyPrim T.DoubleT
-      getter Char {} = T.TyPrim T.CharT
-      getter String {} = T.TyPrim T.StringT
-      setter u _ = u
+  toType = to $ \case
+    Int32 {} -> T.TyPrim T.Int32T
+    Int64 {} -> T.TyPrim T.Int64T
+    Float {} -> T.TyPrim T.FloatT
+    Double {} -> T.TyPrim T.DoubleT
+    Char {} -> T.TyPrim T.CharT
+    String {} -> T.TyPrim T.StringT
 
 -- Expression
 
@@ -75,14 +75,14 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Force _ x) = pPrintPrec l 11 x <> "!"
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Exp x) where
-  typeOf f (Var x v) = typeOf f x <&> \x' -> Var x' v
-  typeOf f (Con x c) = typeOf f x <&> \x' -> Con x' c
-  typeOf f (Unboxed x u) = typeOf f x <&> \x' -> Unboxed x' u
-  typeOf f (Apply x e1 e2) = typeOf f x <&> \x' -> Apply x' e1 e2
-  typeOf f (OpApp x op e1 e2) = typeOf f x <&> \x' -> OpApp x' op e1 e2
-  typeOf f (Fn x cs) = typeOf f x <&> \x' -> Fn x' cs
-  typeOf f (Tuple x es) = typeOf f x <&> \x' -> Tuple x' es
-  typeOf f (Force x e) = typeOf f x <&> \x' -> Force x' e
+  toType f (Var x v) = toType f x <&> \x' -> Var x' v
+  toType f (Con x c) = toType f x <&> \x' -> Con x' c
+  toType f (Unboxed x u) = toType f x <&> \x' -> Unboxed x' u
+  toType f (Apply x e1 e2) = toType f x <&> \x' -> Apply x' e1 e2
+  toType f (OpApp x op e1 e2) = toType f x <&> \x' -> OpApp x' op e1 e2
+  toType f (Fn x cs) = toType f x <&> \x' -> Fn x' cs
+  toType f (Tuple x es) = toType f x <&> \x' -> Tuple x' es
+  toType f (Force x e) = toType f x <&> \x' -> Force x' e
 
 freevars :: Ord (XId x) => Exp x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
@@ -111,17 +111,7 @@ instance (Pretty (XId x)) => Pretty (Clause x) where
   pPrint (Clause _ pats e) = P.sep (map pPrint pats) <+> "->" <+> pPrint e
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Clause x) where
-  typeOf = lens getter setter
-    where
-      getter (Clause x _ _) = view typeOf x
-      setter (Clause x ps e) t = Clause (set typeOf t x) (zipWith (set typeOf) pts ps) (set typeOf et e)
-        where
-          (pts, et) = splitTyArr ps t
-          splitTyArr (_ : ps') (T.TyArr t1 t2) =
-            let (pts', et') = splitTyArr ps' t2
-             in (t1 : pts', et')
-          splitTyArr [] t = ([], t)
-          splitTyArr _ t = ([], t)
+  toType f (Clause x ps e) = toType f x <&> \x' -> Clause x' ps e
 
 freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
 freevarsClause (Clause _ pats e) = freevars e Set.\\ mconcat (map bindVars pats)
@@ -148,20 +138,9 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
   pPrintPrec _ _ (UnboxedP _ u) = pPrint u
 
 instance (ForallPatX HasType x) => HasType (Pat x) where
-  typeOf = lens getter setter
-    where
-      getter (VarP x _) = view typeOf x
-      getter (ConP x _ _) = view typeOf x
-      getter (UnboxedP x _) = view typeOf x
-      setter (VarP x v) t = VarP (set typeOf t x) v
-      setter (ConP x c ps) t = ConP (set typeOf t x) c (zipWith (set typeOf) pts ps)
-        where
-          pts = go t []
-          go (T.TyApp t1 t2) acc = go t1 (t2 : acc)
-          go _ acc = acc
-      setter (UnboxedP x u) t
-        | view typeOf x == t = UnboxedP x u
-        | otherwise = errorDoc $ "Panic!" <+> "typeOf" <+> P.parens (pPrint u) <+> "is not" <+> pPrint t
+  toType f (VarP x v) = toType f x <&> \x' -> VarP x' v
+  toType f (ConP x c ps) = toType f x <&> \x' -> ConP x' c ps
+  toType f (UnboxedP x u) = toType f x <&> \x' -> UnboxedP x' u
 
 bindVars :: Ord (XId x) => Pat x -> Set (XId x)
 bindVars (VarP _ x) = Set.singleton x

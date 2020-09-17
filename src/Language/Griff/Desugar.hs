@@ -111,7 +111,7 @@ dcScDefs ds = do
 
 dcScDef :: (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f) => ScDef (Griff 'TypeCheck) -> f (Id CType, Obj (Id CType))
 dcScDef (WithType pos _, name, [], expr) = do
-  typ <- Typing.zonkType $ expr ^. typeOf
+  typ <- Typing.zonkType $ expr ^. toType
   case typ of
     GT.TyArr {} -> dc
     GT.TyLazy {} -> dc
@@ -123,7 +123,7 @@ dcScDef (WithType pos _, name, [], expr) = do
       fun <- curryFun [] expr'
       pure (name', fun)
 dcScDef (x, name, params, expr) = do
-  (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view typeOf x)
+  (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view toType x)
   params' <- traverse ?? zip params paramTypes $ \(pId, pType) ->
     join $ newId <$> dcType pType <*> pure (pId ^. idName)
   local (over varEnv (Map.fromList (zip params params') <>)) $ do
@@ -134,11 +134,11 @@ dcScDef (x, name, params, expr) = do
 
 dcForign :: (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) => Forign (Griff 'TypeCheck) -> f (DesugarEnv, (Id CType, Obj (Id CType)))
 dcForign (x@(WithType (_, primName) _), name, _) = do
-  name' <- join $ newId <$> dcType (x ^. typeOf) <*> pure (name ^. idName)
-  (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view typeOf x)
+  name' <- join $ newId <$> dcType (x ^. toType) <*> pure (name ^. idName)
+  (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view toType x)
   params <- traverse ?? paramTypes $ \paramType -> do
     join $ newId <$> dcType paramType <*> pure "$p"
-  primType <- dcType (view typeOf x)
+  primType <- dcType (view toType x)
   fun <- curryFun params $ C.PrimCall primName primType (map C.Var params)
   pure (mempty & varEnv .~ Map.singleton name name', (name', fun))
 
@@ -177,7 +177,7 @@ dcDataDef (_, name, _, cons) = do
 dcExp :: (HasCallStack, MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) => G.Exp (Griff 'TypeCheck) -> m (C.Exp (Id CType))
 dcExp (G.Var x name) = do
   name' <- lookupName name
-  typ <- Typing.zonkType (view typeOf x)
+  typ <- Typing.zonkType (view toType x)
   case (typ, cTypeOf name') of
     (GT.TyLazy {}, [] :-> _) -> pure $ Atom $ C.Var name'
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> P.quotes (pPrint $ cTypeOf name')
@@ -218,11 +218,11 @@ dcExp (G.OpApp _ op x y) = runDef $ do
       pure $ Call e1 [y']
 dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
   e' <- dcExp e
-  typ <- dcType (x ^. typeOf)
+  typ <- dcType (x ^. toType)
   Atom <$> let_ typ (Fun [] e')
 dcExp (G.Fn _ cs@(Clause _ ps e : _)) = do
-  ps' <- traverse (\p -> join $ newId <$> dcType (p ^. typeOf) <*> pure "$p") ps
-  typ <- dcType (e ^. typeOf)
+  ps' <- traverse (\p -> join $ newId <$> dcType (p ^. toType) <*> pure "$p") ps
+  typ <- dcType (e ^. toType)
   (pss, es) <- fmap (first List.transpose) $ mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
@@ -252,7 +252,7 @@ match (u : us) (ps : pss) es err
     -}
     -- -- Cast version
     -- match us pss (zipWith (\(VarP x v) e -> runDef $ do
-    --   ty' <- dcType =<< Typing.zonkType (x ^. typeOf)
+    --   ty' <- dcType =<< Typing.zonkType (x ^. toType)
     --   C.Var u' <- cast ty' (Atom $ C.Var u)
     --   local (over varEnv (Map.insert v u')) $ lift e) ps es) err
     -- -- Original
@@ -264,7 +264,7 @@ match (u : us) (ps : pss) es err
       pss
       ( zipWith
           ( \(VarP x v) e -> do
-              patTy <- dcType =<< Typing.zonkType (x ^. typeOf)
+              patTy <- dcType =<< Typing.zonkType (x ^. toType)
               -- if this assert fail, there are some bug about polymorphic type
               -- Ref: How to implement the Variable Rule?
               assert (patTy == cTypeOf u) $ pure ()
@@ -276,7 +276,7 @@ match (u : us) (ps : pss) es err
       err
   -- Constructor Rule
   | all (\case ConP {} -> True; _ -> False) ps = do
-    patType <- Typing.zonkType (head ps ^. typeOf)
+    patType <- Typing.zonkType (head ps ^. toType)
     -- 型からコンストラクタの集合を求める
     cs <- constructors patType
     -- 各コンストラクタごとにC.Caseを生成する関数を生成する
