@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -29,6 +30,8 @@ import Text.PrettyPrint.HughesPJ
     ($$),
   )
 import qualified Text.PrettyPrint.HughesPJ as P
+import Language.Malgo.Monad (MonadUniq)
+import Language.Malgo.Id
 
 class HasFreeVar f where
   freevars :: Ord a => f a -> Set a
@@ -289,3 +292,46 @@ appCase f (Bind x e) = Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {mainExp, topFuncs} = Program <$> traverse (rtraverse (rtraverse f)) topFuncs <*> f mainExp
+
+runDef :: Functor f => WriterT (Endo a) f a -> f a
+runDef m = uncurry (flip appEndo) <$> runWriterT m
+
+let_ ::
+  (MonadUniq m, MonadWriter (Endo (Exp (Id a))) m) =>
+  a ->
+  Obj (Id a) ->
+  m (Atom (Id a))
+let_ otype obj = do
+  x <- newId otype "$let"
+  tell $ Endo $ \e -> Let [(x, obj)] e
+  pure (Var x)
+
+destruct ::
+  (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) =>
+  Exp (Id CType) ->
+  Con ->
+  m [Atom (Id CType)]
+destruct val con@(Con _ ts) = do
+  vs <- traverse (newId ?? "$p") ts
+  tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
+  pure $ map Var vs
+
+bind :: (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) => Exp (Id CType) -> m (Atom (Id CType))
+bind (Atom a) = pure a
+bind v = do
+  x <- newId (cTypeOf v) "$d"
+  tell $ Endo $ \e -> Match v (Bind x e :| [])
+  pure (Var x)
+
+cast ::
+  (MonadUniq f, MonadWriter (Endo (Exp (Id CType))) f) =>
+  CType ->
+  Exp (Id CType) ->
+  f (Atom (Id CType))
+cast ty e
+  | ty == cTypeOf e = bind e
+  | otherwise = do
+    v <- bind e
+    x <- newId ty "$cast"
+    tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
+    pure (Var x)

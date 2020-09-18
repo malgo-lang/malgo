@@ -51,6 +51,7 @@ optimize level expr = runReaderT ?? level $ do
           >=> (flip runReaderT mempty . optPackInline)
           >=> removeUnusedLet
           >=> (flip evalStateT mempty . optCallInline)
+          >=> optCast
           >=> pure . flat
       )
       expr
@@ -126,3 +127,21 @@ removeUnusedLet (Let ds e) = do
     else Let ds'' <$> removeUnusedLet e
 removeUnusedLet (Match v cs) = Match <$> removeUnusedLet v <*> traverse (appCase removeUnusedLet) cs
 removeUnusedLet e = pure e
+
+optCast :: MonadUniq f => Exp (Id CType) -> f (Exp (Id CType))
+optCast e@(Cast (pts' :-> rt') (Var f)) = do
+  case cTypeOf f of
+    pts :-> _
+      | length pts' == length pts -> do
+        f' <- newId (pts' :-> rt') "$cast_opt"
+        ps' <- traverse (newId ?? "$p") pts'
+        v' <- runDef $ do
+          ps <- zipWithM cast pts $ map (Atom . Var) ps'
+          r <- bind (Call (Var f) ps)
+          pure $ Cast rt' r
+        pure (Let [(f', Fun ps' v')] (Atom $ Var f'))
+      | otherwise -> bug Unreachable
+    _ -> pure e
+optCast (Match v cs) = Match <$> optCast v <*> traverse (appCase optCast) cs
+optCast (Let ds e) = Let <$> traverse (rtraverse (appObj optCast)) ds <*> optCast e
+optCast e = pure e
