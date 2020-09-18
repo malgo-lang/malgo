@@ -1,0 +1,12 @@
+infixl 0 (|>);
+(|>) :: a -> (a -> b) -> b;
+(|>) x f = f x;
+
+forign import print_int :: Int64# -> ();
+
+data Int = Int# Int64#;
+
+infixl 6 (+#);
+(+#) = {x y -> add_i64# (x, y)};
+
+main = { Int# 1L# |> {(Int# i) -> print_int i} };

@@ -26,8 +26,7 @@ import Language.Malgo.TypeRep.CType
 data LambdaLift
 
 data Env = Env
-  { _binds :: Map (Id CType) (Obj (Id CType)),
-    _funcs :: Map (Id CType) ([Id CType], Exp (Id CType)),
+  { _funcs :: Map (Id CType) ([Id CType], Exp (Id CType)),
     _knowns :: Set (Id CType)
   }
 
@@ -35,9 +34,9 @@ makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
 
 instance Pass LambdaLift (Program (Id CType)) (Program (Id CType)) where
   passName = "lambda lift"
-  trans Program {topBinds, mainExp, topFuncs} = evalStateT
+  trans Program {mainExp, topFuncs} = evalStateT
     ?? Env
-      { _binds = Map.fromList topBinds,
+      { 
         _funcs = mempty,
         _knowns = Set.fromList $ map fst topFuncs
       }
@@ -49,8 +48,8 @@ instance Pass LambdaLift (Program (Id CType)) (Program (Id CType)) where
             _knowns = _knowns env <> Set.fromList (Map.keys $ _funcs env)
           }
       mainExp <- llift mainExp
-      Env {_binds, _funcs} <- get
-      lift $ appProgram (trans @Flat) $ Program (Map.assocs _binds) (Map.assocs _funcs) mainExp
+      Env {_funcs} <- get
+      lift $ appProgram (trans @Flat) $ Program (Map.assocs _funcs) mainExp
 
 llift ::
   ( MonadUniq f,

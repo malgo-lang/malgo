@@ -57,67 +57,28 @@ instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
   trans = codeGen
 
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id CType) -> m [Definition]
-codeGen Program {topBinds, mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
-  -- topBindsとtopFuncsのOprMapを作成
-  bindEnv <-
-    foldMapA ?? topBinds $
-      \(x, _) -> do
-        error "Code generation for topBinds is not implemented"
-        -- emitDefn $ LLVM.AST.GlobalDefinition LLVM.AST.globalVariableDefaults
-        pure $
-          Map.singleton x $
-            ConstantOperand $ C.GlobalReference (ptr (convType $ cTypeOf x)) (toName x)
+codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
+  -- topFuncsのOprMapを作成
   let funcEnv =
         mconcatMap
           ?? topFuncs
           $ \(f, (ps, e)) ->
             Map.singleton f $
               ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f)
-  runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv, _globalMap = bindEnv}) $
+  runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv}) $
     Lazy.evalStateT ?? (mempty :: PrimMap) $ do
       traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
       void $
         function "main" [] LT.i32 $ \_ -> do
-          -- topBindsを初期化
-          loadTopBinds topBinds
           gcInit <- findExt "GC_init" [] LT.void
           void $ call gcInit []
           genExp mainExp $ \_ -> ret (int32 0)
-
-loadTopBinds ::
-  ( MonadState PrimMap m,
-    MonadModuleBuilder m,
-    MonadIRBuilder m,
-    MonadReader OprMap m,
-    MonadUniq m,
-    MonadFail m,
-    MonadFix m
-  ) =>
-  [(Id CType, Obj (Id CType))] ->
-  m ()
-loadTopBinds xs = do
-  traverse_ prepare xs
-  env <- mconcat <$> traverse (uncurry genObj) xs
-  OprMap {_globalMap} <- ask
-  for_ (Map.toAscList env) $ \(i, opr) ->
-    case _globalMap ^? ix i of
-      Just globalAddr -> store globalAddr 0 opr
-      Nothing -> bug Unreachable
-  where
-    prepare (name, Fun ps body) = do
-      opr <- mallocType (StructureType False [ptr i8, ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False])
-      OprMap {_globalMap} <- ask
-      case _globalMap ^. at name of
-        Just globalAddr -> store globalAddr 0 opr
-        Nothing -> error $ show $ pPrint name <> " is not found"
-    prepare _ = pure ()
 
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data OprMap = OprMap
   { _valueMap :: Map (Id CType) Operand,
-    _funcMap :: Map (Id CType) Operand,
-    _globalMap :: Map (Id CType) Operand
+    _funcMap :: Map (Id CType) Operand
   }
 
 valueMap :: Lens' OprMap (Map (Id CType) Operand)
@@ -157,12 +118,10 @@ sizeofCType VarT {} = 8
 
 findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id CType -> m Operand
 findVar x = do
-  OprMap {_valueMap = valueMap, _globalMap = globalMap} <- ask
+  OprMap {_valueMap = valueMap} <- ask
   case valueMap ^. at x of
     Just x -> pure x
-    Nothing -> case globalMap ^. at x of
-      Just globalX -> load globalX 0
-      Nothing -> error $ show $ pPrint x <> " is not found"
+    Nothing -> error $ show $ pPrint x <> " is not found"
 
 findFun :: MonadReader OprMap m => Id CType -> m Operand
 findFun x = do

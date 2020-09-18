@@ -268,17 +268,15 @@ instance HasAtom Obj where
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 -}
 data Program a = Program
-  { -- | main内で初期化される値
-    topBinds :: [(a, Obj a)],
-    -- | トップレベル関数。topBinds以外の自由変数を持たない
+  { -- | トップレベル関数。topBinds以外の自由変数を持たない
     topFuncs :: [(a, ([a], Exp a))],
     mainExp :: Exp a
   }
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Program a) where
-  pPrint Program {topBinds, mainExp, topFuncs} =
-    parens ("entry" $$ sep (map pPrint topBinds) $$ pPrint mainExp)
+  pPrint Program {mainExp, topFuncs} =
+    parens ("entry" $$ pPrint mainExp)
       $$ vcat (map (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e) topFuncs)
 
 appObj :: Traversal' (Obj a) (Exp a)
@@ -290,4 +288,4 @@ appCase f (Unpack con ps e) = Unpack con ps <$> f e
 appCase f (Bind x e) = Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram f Program {topBinds, mainExp, topFuncs} = Program <$> traverse (rtraverse (appObj f)) topBinds <*> traverse (rtraverse (rtraverse f)) topFuncs <*> f mainExp
+appProgram f Program {mainExp, topFuncs} = Program <$> traverse (rtraverse (rtraverse f)) topFuncs <*> f mainExp

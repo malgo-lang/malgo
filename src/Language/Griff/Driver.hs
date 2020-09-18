@@ -17,6 +17,7 @@ import qualified Language.Griff.TcEnv as T
 import Language.Griff.Typing (typeCheck)
 import Language.Malgo.Core.CodeGen (codeGen)
 import Language.Malgo.Core.Flat (flat)
+import Language.Malgo.Core.Lint (lint)
 import Language.Malgo.Core.Optimize (optimize)
 import Language.Malgo.IR.Core
 import Language.Malgo.Monad (UniqSupply (..), runUniqT)
@@ -61,13 +62,17 @@ compile opt = do
           hPutStrLn stderr "=== DESUGAR ==="
           hPrint stderr $ pPrint $ flat core
 
-      let coreOpt = if noOptimize opt then flat core else optimize (inlineSize opt) $ flat core
+      lint core
+
+      coreOpt <- if noOptimize opt then pure $ flat core else optimize (inlineSize opt) $ flat core
       when (dumpDesugar opt && not (noOptimize opt)) $
         liftIO $ do
           hPutStrLn stderr "=== OPTIMIZE ==="
           hPrint stderr $ pPrint $ coreOpt
 
-      llvmir <- codeGen (Program {topBinds = [], topFuncs = [], mainExp = flat core})
+      lint coreOpt
+
+      llvmir <- codeGen (Program {topFuncs = [], mainExp = coreOpt})
       let mod =
             L.defaultModule
               { L.moduleName = fromString $ srcName opt,

@@ -75,7 +75,7 @@ compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do
   opt <- asks maOption
   program <-
-    Program mempty mempty
+    Program mempty
       <$> ( readAndParse
               >>= transWithDump @Rename (dumpRenamed opt)
               >>= transWithDump @Typing (dumpTyped opt)

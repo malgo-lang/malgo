@@ -7,10 +7,13 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Language.Malgo.Core.Optimize
-  ( Optimize, optimize
+  ( Optimize,
+    optimize,
   )
 where
 
+import qualified Data.Map as Map
+import Language.Malgo.Core.Alpha
 import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
@@ -27,7 +30,7 @@ instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
     opt <- asks maOption
     if noOptimize opt
       then pure expr
-      else trans @Flat (optimize (inlineSize opt) expr)
+      else trans @Flat =<< optimize (inlineSize opt) expr
 
 times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
 times n f e =
@@ -39,8 +42,8 @@ times n f e =
         then pure e'
         else times (n - 1) f e'
 
-optimize :: Int -> Exp (Id CType) -> Exp (Id CType)
-optimize level expr = runReader ?? level $ do
+optimize :: MonadUniq m => Int -> Exp (Id CType) -> m (Exp (Id CType))
+optimize level expr = runReaderT ?? level $ do
   fmap flat $
     times
       10
@@ -52,13 +55,13 @@ optimize level expr = runReader ?? level $ do
       )
       expr
 
-type CallInlineMap = Map (Id CType) ([Atom (Id CType)] -> Exp (Id CType))
+type CallInlineMap = Map (Id CType) ([Id CType], Exp (Id CType))
 
 optCallInline ::
-  (MonadState CallInlineMap f, MonadReader Int f) =>
+  (MonadState CallInlineMap f, MonadReader Int f, MonadUniq f) =>
   Exp (Id CType) ->
   f (Exp (Id CType))
-optCallInline (Call (Var f) xs) = lookupCallInline f <*> pure xs
+optCallInline (Call (Var f) xs) = lookupCallInline f xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverse (appCase optCallInline) cs
 optCallInline (Let ds e) = do
@@ -71,25 +74,20 @@ checkInlineable :: (MonadState CallInlineMap m, MonadReader Int m) => (Id CType,
 checkInlineable (f, Fun ps v) = do
   level <- ask
   -- 変数の数がinlineSize以下ならインライン展開する
-  when (length v <= level || f `notElem` freevars v) $
-    modify $ at f ?~ makeTemplate ps v
+  when (length v <= level || f `notElem` freevars v) $ do
+    modify $ at f ?~ (ps, v)
 checkInlineable _ = pure ()
 
--- FunをHaskell上の関数に変換する
-makeTemplate :: (Eq a, HasAtom f) => [a] -> f a -> [Atom a] -> f a
-makeTemplate [] v [] = v
-makeTemplate (p : ps) v (p' : ps') = replaceOf atom (Var p) p' (makeTemplate ps v ps')
-makeTemplate _ _ _ = bug Unreachable
-
 lookupCallInline ::
-  MonadState CallInlineMap m =>
+  (MonadUniq m, MonadState CallInlineMap m) =>
   Id CType ->
-  m ([Atom (Id CType)] -> Exp (Id CType))
-lookupCallInline f = do
+  [Atom (Id CType)] ->
+  m (Exp (Id CType))
+lookupCallInline f as = do
   f' <- gets (view (at f))
-  pure $ case f' of
-    Just inline -> inline
-    Nothing -> Call (Var f)
+  case f' of
+    Just (ps, v) -> runAlpha (alphaExp v) (Map.fromList $ zip ps as)
+    Nothing -> pure $ Call (Var f) as
 
 type PackInlineMap = Map (Id CType) (Con, [Atom (Id CType)])
 
