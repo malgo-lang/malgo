@@ -128,6 +128,7 @@ lintExp (Let ds e) =
 lintExp (Match e cs) = do
   lintExp e
   traverse_ lintCase cs
+lintExp Error{} = pure ()
 
 lintObj ::
   ( MonadReader [Id a] m,

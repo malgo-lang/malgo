@@ -32,6 +32,9 @@ instance Pretty T.Text where
 instance Pretty TL.Text where
   pPrint = P.text . TL.unpack
 
+instance Pretty Doc where
+  pPrint = id
+
 errorDoc :: HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ P.render x
 
