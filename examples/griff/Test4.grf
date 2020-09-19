@@ -1,0 +1,19 @@
+data Int = Int# Int64#;
+
+infixl 6 (+#);
+(+#) = {x y -> add_i64# (x, y)};
+
+infixl 6 (+);
+(+) = {(Int# x) (Int# y) -> Int# (x +# y) };
+
+data List a = Nil | Cons a (List a);
+
+sum = { acc Nil -> acc 
+      | acc (Cons x xs) -> sum (acc + x) xs };
+
+forign import print_int :: Int64# -> ();
+
+main = {
+  {(Int# i) -> print_int i}
+    (sum (Int# 0L#) (Cons (Int# 1L#) (Cons (Int# 2L#) Nil)))
+  }
