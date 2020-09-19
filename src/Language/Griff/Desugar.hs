@@ -82,8 +82,8 @@ dcBindGroup bg = do
     local (env <>) $ do
       scDefs' <- dcScDefGroup (bg ^. scDefs)
       pure $
-        buildLet dataDefs' $
-          buildLet (map (: []) forigns') $
+        buildLet (mconcat dataDefs') $
+          buildLet forigns' $
             buildLet scDefs' $
               searchMain $ mconcat scDefs'
   where
@@ -107,9 +107,9 @@ dcScDefs ds = do
     Just (Forall _ fType) <- Map.lookup f <$> view (tcEnv . Tc.varEnv)
     f' <- join $ newId <$> dcType fType <*> pure (f ^. idName)
     pure $ mempty & varEnv .~ Map.singleton f f'
-  local (env <>) $ (env,) <$> traverse dcScDef ds
+  local (env <>) $ (env,) <$> foldMapA dcScDef ds
 
-dcScDef :: (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f) => ScDef (Griff 'TypeCheck) -> f (Id CType, Obj (Id CType))
+dcScDef :: (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f) => ScDef (Griff 'TypeCheck) -> f [(Id CType, Obj (Id CType))]
 dcScDef (WithType pos _, name, [], expr) = do
   typ <- Typing.zonkType $ expr ^. toType
   case typ of
@@ -120,29 +120,29 @@ dcScDef (WithType pos _, name, [], expr) = do
     dc = do
       name' <- lookupName name
       expr' <- dcExp expr
-      fun <- curryFun [] expr'
-      pure (name', fun)
+      (fun, inner) <- curryFun [] expr'
+      pure ((name', fun) : inner)
 dcScDef (x, name, params, expr) = do
   (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view toType x)
   params' <- traverse ?? zip params paramTypes $ \(pId, pType) ->
     join $ newId <$> dcType pType <*> pure (pId ^. idName)
   local (over varEnv (Map.fromList (zip params params') <>)) $ do
     expr' <- dcExp expr
-    fun <- curryFun params' expr'
+    (fun, inner) <- curryFun params' expr'
     name' <- lookupName name
-    pure (name', fun)
+    pure ((name', fun) : inner)
 
-dcForign :: (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) => Forign (Griff 'TypeCheck) -> f (DesugarEnv, (Id CType, Obj (Id CType)))
+dcForign :: (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) => Forign (Griff 'TypeCheck) -> f (DesugarEnv, [(Id CType, Obj (Id CType))])
 dcForign (x@(WithType (_, primName) _), name, _) = do
   name' <- join $ newId <$> dcType (x ^. toType) <*> pure (name ^. idName)
   (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view toType x)
   params <- traverse ?? paramTypes $ \paramType -> do
     join $ newId <$> dcType paramType <*> pure "$p"
   primType <- dcType (view toType x)
-  fun <- curryFun params $ C.PrimCall primName primType (map C.Var params)
-  pure (mempty & varEnv .~ Map.singleton name name', (name', fun))
+  (fun, inner) <- curryFun params $ C.PrimCall primName primType (map C.Var params)
+  pure (mempty & varEnv .~ Map.singleton name name', ((name', fun) : inner))
 
-dcDataDef :: (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) => DataDef (Griff 'TypeCheck) -> m (DesugarEnv, [(Id CType, Obj (Id CType))])
+dcDataDef :: (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) => DataDef (Griff 'TypeCheck) -> m (DesugarEnv, [[(Id CType, Obj (Id CType))]])
 dcDataDef (_, name, _, cons) = do
   fmap (first mconcat) $
     mapAndUnzipM ?? cons $ \(conName, _) -> do
@@ -159,20 +159,20 @@ dcDataDef (_, name, _, cons) = do
             runDef $ do
               packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) []) []
               pure $ Cast retType' packed
-          pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj))
+          pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
         _ -> do
           typ <- dcType $ fromJust $ List.lookup conName conMap
           conName' <- newId typ (conName ^. idName)
           ps <- traverse (\t -> newId t "$p") paramTypes'
           unfoldedType <- unfoldType $ snd $ splitTyArr (fromJust $ List.lookup conName conMap)
-          obj <-
+          (obj, inner) <- do
             curryFun ps
               =<< runDef
                 ( do
                     packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) paramTypes') $ map C.Var ps
                     pure $ Cast retType' packed
                 )
-          pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj))
+          pure (mempty & varEnv .~ Map.singleton conName conName', ((conName', obj) : inner))
 
 dcExp :: (HasCallStack, MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) => G.Exp (Griff 'TypeCheck) -> m (C.Exp (Id CType))
 dcExp (G.Var x name) = do
@@ -225,8 +225,9 @@ dcExp (G.Fn _ cs@(Clause _ ps e : _)) = do
   typ <- dcType (e ^. toType)
   (pss, es) <- fmap (first List.transpose) $ mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
-  obj <- curryFun ps' body
-  runDef $ Atom <$> let_ (cTypeOf obj) obj
+  (obj, inner) <- curryFun ps' body
+  v <- newId (cTypeOf obj) "$fun"
+  pure $ Let ((v, obj) : inner) $ Atom $ C.Var v
 dcExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dcExp) es
   let con = C.Con ("Tuple" <> T.pack (show $ length es)) $ map cTypeOf es'
@@ -387,26 +388,27 @@ lookupType name = do
     Just typ -> dcType typ
     Nothing -> bug Unreachable
 
-curryFun :: (HasCallStack, MonadUniq m) => [Id CType] -> C.Exp (Id CType) -> m (Obj (Id CType))
-curryFun [] (Let [(v1, fun)] (Atom (C.Var v2))) | v1 == v2 = pure fun
-curryFun [] e = errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
-curryFun [x] e = pure $ Fun [x] e
+curryFun :: (HasCallStack, MonadUniq m) => [Id CType] -> C.Exp (Id CType) -> m (Obj (Id CType), [(Id CType, Obj (Id CType))])
+curryFun [] e@(Let ds (Atom (C.Var v))) = case List.lookup v ds of
+  Just fun -> pure (fun, filter ((/= v) . fst) ds)
+  Nothing -> errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
+curryFun [x] e = pure (Fun [x] e, [])
 curryFun ps@(_ : _) e = do
   curryFun' ps []
   where
     curryFun' [x] as = do
       x' <- newId (cTypeOf x) (x ^. idName)
-      body <- runDef $ do
-        fun <- let_ (cTypeOf $ Fun ps e) (Fun ps e)
-        pure $ C.Call fun $ reverse (C.Var x' : as)
-      pure $ Fun [x'] body
+      fun <- newId (cTypeOf $ Fun ps e) "$curry"
+      body <- do
+        pure (C.Call (C.Var fun) $ reverse (C.Var x' : as))
+      pure (Fun [x'] body, [(fun, Fun ps e)])
     curryFun' (x : xs) as = do
       x' <- newId (cTypeOf x) (x ^. idName)
-      funObj <- curryFun' xs (C.Var x' : as)
+      (funObj, inner) <- curryFun' xs (C.Var x' : as)
       body <- runDef $ do
         fun <- let_ (cTypeOf funObj) funObj
         pure $ Atom fun
-      pure $ Fun [x'] body
+      pure (Fun [x'] body, inner)
 
 -- splitFoo
 

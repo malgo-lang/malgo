@@ -69,16 +69,16 @@ optCallInline (Call (Var f) xs) = lookupCallInline f xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverse (appCase optCallInline) cs
 optCallInline (Let ds e) = do
-  traverse_ checkInlineable ds
   ds' <- traverse (rtraverse (appObj optCallInline)) ds
-  Let ds' <$> optCallInline e
+  traverse_ checkInlineable ds'
+  Let <$> traverse (rtraverse (appObj optCallInline)) ds' <*> optCallInline e
 optCallInline e = pure e
 
 checkInlineable :: (MonadState CallInlineMap m, MonadReader Int m) => (Id CType, Obj (Id CType)) -> m ()
 checkInlineable (f, Fun ps v) = do
   level <- ask
   -- 変数の数がinlineSize以下ならインライン展開する
-  when (length v <= level || f `notElem` freevars v) $ do
+  when (length v <= level || f `notElem` freevars v) $
     modify $ at f ?~ (ps, v)
 checkInlineable _ = pure ()
 
