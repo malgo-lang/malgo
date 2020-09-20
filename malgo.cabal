@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 71ff2e4faf36bac62aa7d804c9aa3cffdde85301091c677701596495ed04d3f8
+-- hash: 6206342e8216f53376dac9e98df60d1267cf5a622537164341fde31d92d60673
 
 name:           malgo
 version:        1.0.0.0
@@ -69,7 +69,7 @@ library
   hs-source-dirs:
       src
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=10 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=4 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
   build-tools:
       happy
   build-depends:
@@ -102,7 +102,7 @@ executable griff
   hs-source-dirs:
       app/griff
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=10 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=4 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
   build-tools:
       happy
   build-depends:
@@ -136,7 +136,7 @@ executable malgo
   hs-source-dirs:
       app/malgo
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=10 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=4 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
   build-tools:
       happy
   build-depends:
@@ -171,7 +171,7 @@ test-suite malgo-test
   hs-source-dirs:
       test
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=10 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=4 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
   build-tools:
       happy
   build-depends:
