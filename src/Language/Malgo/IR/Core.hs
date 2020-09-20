@@ -1,7 +1,7 @@
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NamedFieldPuns #-}
@@ -15,6 +15,8 @@ module Language.Malgo.IR.Core where
 import Data.Set.Lens
 import Data.Text (unpack)
 import Language.Malgo.IR.Op
+import Language.Malgo.Id
+import Language.Malgo.Monad (MonadUniq)
 import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
@@ -30,8 +32,6 @@ import Text.PrettyPrint.HughesPJ
     ($$),
   )
 import qualified Text.PrettyPrint.HughesPJ as P
-import Language.Malgo.Monad (MonadUniq)
-import Language.Malgo.Id
 
 class HasFreeVar f where
   freevars :: Ord a => f a -> Set a
@@ -40,21 +40,27 @@ class HasFreeVar f where
 Unboxed values  unboxed
 -}
 data Unboxed
-  = Int Integer
-  | Float Double
+  = Int32 Integer
+  | Int64 Integer
+  | Float Float
+  | Double Double
   | Char Char
   | String String
   deriving stock (Eq, Ord, Show)
 
 instance HasCType Unboxed where
-  cTypeOf Int {} = IntT
+  cTypeOf Int32 {} = Int32T
+  cTypeOf Int64 {} = Int64T
   cTypeOf Float {} = FloatT
+  cTypeOf Double {} = DoubleT
   cTypeOf Char {} = CharT
   cTypeOf String {} = StringT
 
 instance Pretty Unboxed where
-  pPrint (Int x) = pPrint x
+  pPrint (Int32 x) = pPrint x
+  pPrint (Int64 x) = pPrint x
   pPrint (Float x) = pPrint x
+  pPrint (Double x) = pPrint x
   pPrint (Char x) = quotes (char x)
   pPrint (String x) = doubleQuotes (text x)
 
@@ -133,17 +139,17 @@ instance HasCType a => HasCType (Exp a) where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug Unreachable
-  cTypeOf (BinOp o _ _) =
+  cTypeOf (BinOp o x _) =
     case o of
-      Add -> IntT
-      Sub -> IntT
-      Mul -> IntT
-      Div -> IntT
-      Mod -> IntT
-      FAdd -> FloatT
-      FSub -> FloatT
-      FMul -> FloatT
-      FDiv -> FloatT
+      Add -> cTypeOf x
+      Sub -> cTypeOf x
+      Mul -> cTypeOf x
+      Div -> cTypeOf x
+      Mod -> cTypeOf x
+      FAdd -> cTypeOf x
+      FSub -> cTypeOf x
+      FMul -> cTypeOf x
+      FDiv -> cTypeOf x
       Eq -> boolT
       Neq -> boolT
       Lt -> boolT

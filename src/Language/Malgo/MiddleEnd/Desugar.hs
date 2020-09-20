@@ -49,15 +49,15 @@ toExp :: (MonadState (Map (Id Type) (Id CType)) m, MonadUniq m, MonadFail m) => 
 toExp (S.Var _ x) =
   Atom . Var <$> findVar x
 toExp (S.Int _ x) =
-  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Int x]
+  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Int64 $ fromInteger x]
   where
     ty = SumT $ Set.singleton con
-    con = Con "Int" [IntT]
+    con = Con "Int" [Int64T]
 toExp (S.Float _ x) =
-  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Float x]
+  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Double x]
   where
     ty = SumT $ Set.singleton con
-    con = Con "Float" [FloatT]
+    con = Con "Float" [DoubleT]
 toExp (S.Bool _ x) = boolValue x
 toExp (S.Char _ x) =
   runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Char x]
@@ -76,20 +76,20 @@ toExp (S.Tuple _ xs) = runDef $ do
   runDef $ fmap Atom $ let_ ty $ Pack ty con vs
 toExp (S.Array _ (x :| xs)) = runDef $ do
   x <- bind =<< toExp x
-  arr <- let_ (ArrayT $ cTypeOf x) $ Array x $ Unboxed $ Int $ fromIntegral $ length xs + 1
+  arr <- let_ (ArrayT $ cTypeOf x) $ Array x $ Unboxed $ Int64 $ fromIntegral $ length xs + 1
   ifor_ xs $ \i v -> do
     v <- bind =<< toExp v
-    bind $ ArrayWrite arr (Unboxed $ Int $ fromIntegral $ i + 1) v
+    bind $ ArrayWrite arr (Unboxed $ Int64 $ fromIntegral $ i + 1) v
   pure $ Atom arr
 toExp (S.MakeArray _ a n) = runDef $ do
   a <- bind =<< toExp a
   n <- bind =<< toExp n
-  [n] <- destruct (Atom n) $ Con "Int" [IntT]
+  [n] <- destruct (Atom n) $ Con "Int" [Int64T]
   Atom <$> let_ (ArrayT $ cTypeOf a) (Array a n)
 toExp (S.ArrayRead _ a i) = runDef $ do
   a <- bind =<< toExp a
   i <- bind =<< toExp i
-  [i] <- destruct (Atom i) $ Con "Int" [IntT]
+  [i] <- destruct (Atom i) $ Con "Int" [Int64T]
   Atom <$> bind (ArrayRead a i)
 toExp (S.ArrayWrite _ a i x) = runDef $ do
   a <- bind =<< toExp a
@@ -97,7 +97,7 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
   case cTypeOf a of
     ArrayT ty -> do
       x <- cast ty =<< toExp x
-      [i] <- destruct (Atom i) $ Con "Int" [IntT]
+      [i] <- destruct (Atom i) $ Con "Int" [Int64T]
       Atom <$> bind (ArrayWrite a i x)
     _ -> bug Unreachable
 toExp (S.Call _ f xs) = runDef $ do
@@ -150,15 +150,15 @@ toExp (S.If _ c t f) = do
   pure $ Match c (t :| [f])
 toExp (S.BinOp _ opr x y) =
   case opr of
-    S.Add -> arithOp (Con "Int" [IntT])
-    S.Sub -> arithOp (Con "Int" [IntT])
-    S.Mul -> arithOp (Con "Int" [IntT])
-    S.Div -> arithOp (Con "Int" [IntT])
-    S.Mod -> arithOp (Con "Int" [IntT])
-    S.FAdd -> arithOp (Con "Float" [FloatT])
-    S.FSub -> arithOp (Con "Float" [FloatT])
-    S.FMul -> arithOp (Con "Float" [FloatT])
-    S.FDiv -> arithOp (Con "Float" [FloatT])
+    S.Add -> arithOp (Con "Int" [Int64T])
+    S.Sub -> arithOp (Con "Int" [Int64T])
+    S.Mul -> arithOp (Con "Int" [Int64T])
+    S.Div -> arithOp (Con "Int" [Int64T])
+    S.Mod -> arithOp (Con "Int" [Int64T])
+    S.FAdd -> arithOp (Con "Float" [DoubleT])
+    S.FSub -> arithOp (Con "Float" [DoubleT])
+    S.FMul -> arithOp (Con "Float" [DoubleT])
+    S.FDiv -> arithOp (Con "Float" [DoubleT])
     S.Eq -> equalOp
     S.Neq -> equalOp
     S.Lt -> compareOp
@@ -191,7 +191,7 @@ toExp (S.BinOp _ opr x y) =
       rexp <- toExp y
       case cTypeOf lexp of
         SumT (toList -> [con])
-          | con == Con "Int" [IntT] || con == Con "Float" [FloatT] -> do
+          | con == Con "Int" [Int64T] || con == Con "Float" [DoubleT] -> do
             [lval] <- destruct lexp con
             [rval] <- destruct rexp con
             pure $ BinOp opr lval rval
@@ -200,13 +200,13 @@ toExp (S.BinOp _ opr x y) =
       lexp <- toExp x
       rexp <- toExp y
       case cTypeOf lexp of
-        SumT (Set.toList -> [Con "Int" [IntT]]) -> runDef $ do
-          [lval] <- destruct lexp (Con "Int" [IntT])
-          [rval] <- destruct rexp (Con "Int" [IntT])
+        SumT (Set.toList -> [Con "Int" [Int64T]]) -> runDef $ do
+          [lval] <- destruct lexp (Con "Int" [Int64T])
+          [rval] <- destruct rexp (Con "Int" [Int64T])
           pure $ BinOp opr lval rval
-        SumT (Set.toList -> [Con "Float" [FloatT]]) -> runDef $ do
-          [lval] <- destruct lexp (Con "Float" [FloatT])
-          [rval] <- destruct rexp (Con "Float" [FloatT])
+        SumT (Set.toList -> [Con "Float" [DoubleT]]) -> runDef $ do
+          [lval] <- destruct lexp (Con "Float" [DoubleT])
+          [rval] <- destruct rexp (Con "Float" [DoubleT])
           pure $ BinOp opr lval rval
         SumT (Set.toList -> [Con "Char" [CharT]]) -> runDef $ do
           [lval] <- destruct lexp (Con "Char" [CharT])

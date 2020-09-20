@@ -26,8 +26,10 @@ import Text.PrettyPrint.HughesPJ
 -- FuncT [CType] CType
 data CType
   = [CType] :-> CType
-  | IntT
+  | Int32T
+  | Int64T
   | FloatT
+  | DoubleT
   | CharT
   | StringT
   | DataT Text [CType]
@@ -38,8 +40,10 @@ data CType
 
 instance Pretty CType where
   pPrint (a :-> b) = parens (sep $ map pPrint a) <+> "->" <+> pPrint b
-  pPrint IntT = "Int#"
+  pPrint Int32T = "Int32#"
+  pPrint Int64T = "Int64#"
   pPrint FloatT = "Float#"
+  pPrint DoubleT = "Double#"
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
   pPrint (DataT n ts) = parens $ pPrint n <+> sep (map pPrint ts)
@@ -68,8 +72,8 @@ instance HasCType a => HasCType (Id a) where
   cTypeOf x = cTypeOf $ x ^. idMeta
 
 instance HasCType T.Type where
-  cTypeOf (T.TyApp T.IntC []) = SumT [Con "Int" [IntT]]
-  cTypeOf (T.TyApp T.FloatC []) = SumT [Con "Float" [FloatT]]
+  cTypeOf (T.TyApp T.IntC []) = SumT [Con "Int" [Int64T]]
+  cTypeOf (T.TyApp T.FloatC []) = SumT [Con "Float" [DoubleT]]
   cTypeOf (T.TyApp T.BoolC []) = SumT [Con "True" [], Con "False" []]
   cTypeOf (T.TyApp T.CharC []) = SumT [Con "Char" [CharT]]
   cTypeOf (T.TyApp T.StringC []) = SumT [Con "String" [StringT]]

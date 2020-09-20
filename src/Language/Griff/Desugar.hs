@@ -59,10 +59,10 @@ genPrimitive env =
     let add_i64 = fromJust $ Map.lookup "add_i64#" (view (Tc.rnEnv . Rn.varEnv) env)
     let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
     add_i64' <- join $ newId <$> dcType add_i64_type <*> pure "add_i64#"
-    add_i64_param <- newId (SumT $ Set.singleton (C.Con "Tuple2" [IntT, IntT])) "$p"
+    add_i64_param <- newId (SumT $ Set.singleton (C.Con "Tuple2" [C.Int64T, C.Int64T])) "$p"
     add_i64_fun <- fmap (Fun [add_i64_param]) $
       runDef $ do
-        [x, y] <- destruct (Atom $ C.Var add_i64_param) (C.Con "Tuple2" [IntT, IntT])
+        [x, y] <- destruct (Atom $ C.Var add_i64_param) (C.Con "Tuple2" [C.Int64T, C.Int64T])
         pure $ BinOp Add x y
 
     let newEnv =
@@ -192,9 +192,9 @@ dcExp (G.Unboxed _ u) = pure $
   Atom $
     C.Unboxed $ case u of
       G.Int32 _ -> error "Int32# is not implemented"
-      G.Int64 x -> C.Int $ toInteger x
+      G.Int64 x -> C.Int64 $ toInteger x
       G.Float _ -> error "Float# is not implemented"
-      G.Double x -> C.Float x
+      G.Double x -> C.Double x
       G.Char x -> C.Char x
       G.String x -> C.String x
 dcExp (G.Apply _ f x) = runDef $ do
@@ -325,9 +325,9 @@ dcType (GT.TyApp t1 t2) = do
 dcType (GT.TyVar i) = pure $ VarT $ i ^. idUniq
 dcType (GT.TyCon con) | kind con == Star = pure $ DataT (T.pack $ show $ pPrint con) []
 dcType (GT.TyPrim GT.Int32T) = error "Int32# is not implemented"
-dcType (GT.TyPrim GT.Int64T) = pure C.IntT
+dcType (GT.TyPrim GT.Int64T) = pure C.Int64T
 dcType (GT.TyPrim GT.FloatT) = error "Float# is not implemented"
-dcType (GT.TyPrim GT.DoubleT) = pure C.FloatT
+dcType (GT.TyPrim GT.DoubleT) = pure C.DoubleT
 dcType (GT.TyPrim GT.CharT) = pure C.CharT
 dcType (GT.TyPrim GT.StringT) = pure C.StringT
 dcType (GT.TyArr t1 t2) = do

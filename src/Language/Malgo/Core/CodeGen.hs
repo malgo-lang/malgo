@@ -91,8 +91,10 @@ type PrimMap = Map Text Operand
 
 convType :: CType -> Type
 convType (ps :-> r) = ptr $ StructureType False [ptr i8, ptr $ FunctionType (convType r) (ptr i8 : map convType ps) False]
-convType IntT = i64
-convType FloatT = LT.double
+convType Int32T = i32
+convType Int64T = i64
+convType FloatT = LT.float
+convType DoubleT = LT.double
 convType CharT = i8
 convType StringT = ptr i8
 convType DataT {} = ptr i8
@@ -107,8 +109,10 @@ sizeofCon (Con _ ts) = sum $ map sizeofCType ts
 
 sizeofCType :: Num a => CType -> a
 sizeofCType (_ :-> _) = 8
-sizeofCType IntT = 8
-sizeofCType FloatT = 8
+sizeofCType Int32T = 4
+sizeofCType Int64T = 8
+sizeofCType FloatT = 4
+sizeofCType DoubleT = 8
 sizeofCType CharT = 1
 sizeofCType StringT = 8
 sizeofCType DataT {} = 8
@@ -229,17 +233,21 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     genOp Op.FDiv = fdiv
     genOp Op.Eq = \x' y' ->
       i1ToBool =<< case cTypeOf x of
-        IntT -> icmp IP.EQ x' y'
+        Int32T -> icmp IP.EQ x' y'
+        Int64T -> icmp IP.EQ x' y'
+        FloatT -> fcmp FP.OEQ x' y'
+        DoubleT -> fcmp FP.OEQ x' y'
         CharT -> icmp IP.EQ x' y'
         StringT -> icmp IP.EQ x' y'
         SumT _ -> icmp IP.EQ x' y'
         ArrayT _ -> icmp IP.EQ x' y'
-        FloatT -> fcmp FP.OEQ x' y'
         _ -> bug Unreachable
     genOp Op.Neq = \x' y' ->
       i1ToBool =<< case cTypeOf x of
-        IntT -> icmp IP.NE x' y'
+        Int32T -> icmp IP.NE x' y'
+        Int64T -> icmp IP.NE x' y'
         FloatT -> fcmp FP.ONE x' y'
+        DoubleT -> fcmp FP.ONE x' y'
         CharT -> icmp IP.NE x' y'
         StringT -> icmp IP.NE x' y'
         SumT _ -> icmp IP.NE x' y'
@@ -247,26 +255,34 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         _ -> bug Unreachable
     genOp Op.Lt = \x' y' ->
       i1ToBool =<< case cTypeOf x of
-        IntT -> icmp IP.SLT x' y'
+        Int32T -> icmp IP.SLT x' y'
+        Int64T -> icmp IP.SLT x' y'
         FloatT -> fcmp FP.OLT x' y'
+        DoubleT -> fcmp FP.OLT x' y'
         CharT -> icmp IP.ULT x' y'
         _ -> bug Unreachable
     genOp Op.Le = \x' y' ->
       i1ToBool =<< case cTypeOf x of
-        IntT -> icmp IP.SLE x' y'
+        Int32T -> icmp IP.SLE x' y'
+        Int64T -> icmp IP.SLE x' y'
         FloatT -> fcmp FP.OLE x' y'
+        DoubleT -> fcmp FP.OLE x' y'
         CharT -> icmp IP.ULE x' y'
         _ -> bug Unreachable
     genOp Op.Gt = \x' y' ->
       i1ToBool =<< case cTypeOf x of
-        IntT -> icmp IP.SGT x' y'
+        Int32T -> icmp IP.SGT x' y'
+        Int64T -> icmp IP.SGT x' y'
         FloatT -> fcmp FP.OGT x' y'
+        DoubleT -> fcmp FP.OGT x' y'
         CharT -> icmp IP.UGT x' y'
         _ -> bug Unreachable
     genOp Op.Ge = \x' y' ->
       i1ToBool =<< case cTypeOf x of
-        IntT -> icmp IP.SGE x' y'
+        Int32T -> icmp IP.SGE x' y'
+        Int64T -> icmp IP.SGE x' y'
         FloatT -> fcmp FP.OGE x' y'
+        DoubleT -> fcmp FP.OGE x' y'
         CharT -> icmp IP.UGE x' y'
         _ -> bug Unreachable
     genOp _ = bug Unreachable
@@ -366,8 +382,8 @@ genAtom ::
   Atom (Id CType) ->
   m Operand
 genAtom (Var x) = findVar x
-genAtom (Unboxed (Core.Int x)) = pure $ int64 x
-genAtom (Unboxed (Core.Float x)) = pure $ double x
+genAtom (Unboxed (Core.Int64 x)) = pure $ int64 x
+genAtom (Unboxed (Core.Double x)) = pure $ double x
 genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x
 genAtom (Unboxed (Core.String x)) = do
   i <- getUniq
