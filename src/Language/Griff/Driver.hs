@@ -17,6 +17,7 @@ import qualified Language.Griff.TcEnv as T
 import Language.Griff.Typing (typeCheck)
 import Language.Malgo.Core.CodeGen (codeGen)
 import Language.Malgo.Core.Flat (flat)
+import Language.Malgo.Core.LambdaLift (lambdalift)
 import Language.Malgo.Core.Lint (lint)
 import Language.Malgo.Core.Optimize (optimize)
 import Language.Malgo.IR.Core
@@ -72,7 +73,17 @@ compile opt = do
 
       lint coreOpt
 
-      llvmir <- codeGen (Program {topFuncs = [], mainExp = coreOpt})
+      coreProg <-
+        if noOptimize opt
+          then lambdalift Program {topFuncs = [], mainExp = coreOpt}
+          else appProgram (optimize (inlineSize opt)) =<< lambdalift Program {topFuncs = [], mainExp = coreOpt}
+
+      when (dumpDesugar opt) $
+        liftIO $ do
+          hPutStrLn stderr "=== LAMBDALIFT ==="
+          hPrint stderr $ pPrint $ coreProg
+
+      llvmir <- codeGen coreProg
       let mod =
             L.defaultModule
               { L.moduleName = fromString $ srcName opt,

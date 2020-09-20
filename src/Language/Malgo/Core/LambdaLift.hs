@@ -9,7 +9,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.LambdaLift
-  ( LambdaLift,
+  ( LambdaLift, lambdalift
   )
 where
 
@@ -34,7 +34,10 @@ makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
 
 instance Pass LambdaLift (Program (Id CType)) (Program (Id CType)) where
   passName = "lambda lift"
-  trans Program {mainExp, topFuncs} = evalStateT
+  trans = lambdalift
+
+lambdalift :: MonadUniq m => Program (Id CType) -> m (Program (Id CType))
+lambdalift Program {mainExp, topFuncs} = evalStateT
     ?? Env
       { 
         _funcs = mempty,
@@ -49,7 +52,7 @@ instance Pass LambdaLift (Program (Id CType)) (Program (Id CType)) where
           }
       mainExp <- llift mainExp
       Env {_funcs} <- get
-      lift $ appProgram (trans @Flat) $ Program (Map.assocs _funcs) mainExp
+      appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
 
 llift ::
   ( MonadUniq f,
