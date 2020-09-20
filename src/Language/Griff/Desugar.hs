@@ -216,6 +216,7 @@ dcExp (G.OpApp _ op x y) = runDef $ do
       y' <- cast yType =<< dcExp y
       e1 <- bind (Call (C.Var op') [x'])
       pure $ Call e1 [y']
+    _ -> bug Unreachable
 dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
   e' <- dcExp e
   typ <- dcType (x ^. toType)
@@ -228,6 +229,7 @@ dcExp (G.Fn _ cs@(Clause _ ps e : _)) = do
   (obj, inner) <- curryFun ps' body
   v <- newId (cTypeOf obj) "$fun"
   pure $ Let ((v, obj) : inner) $ Atom $ C.Var v
+dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dcExp) es
   let con = C.Con ("Tuple" <> T.pack (show $ length es)) $ map cTypeOf es'
@@ -264,12 +266,14 @@ match (u : us) (ps : pss) es err
       us
       pss
       ( zipWith
-          ( \(VarP x v) e -> do
-              patTy <- dcType =<< Typing.zonkType (x ^. toType)
-              -- if this assert fail, there are some bug about polymorphic type
-              -- Ref: How to implement the Variable Rule?
-              assert (patTy == cTypeOf u) $ pure ()
-              local (over varEnv (Map.insert v u)) e
+          ( \case
+              VarP x v -> \e -> do
+                patTy <- dcType =<< Typing.zonkType (x ^. toType)
+                -- if this assert fail, there are some bug about polymorphic type
+                -- Ref: How to implement the Variable Rule?
+                assert (patTy == cTypeOf u) $ pure ()
+                local (over varEnv (Map.insert v u)) e
+              _ -> bug Unreachable
           )
           ps
           es
@@ -314,6 +318,7 @@ match (u : us) (ps : pss) es err
       | gcon == gcon' = Just (ps <> pss, e)
       | otherwise = Nothing
     aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
+    aux _ ([], _) = bug Unreachable
 match [] [] (e : _) _ = e
 match _ [] [] err = pure err
 match _ _ _ _ = bug Unreachable
@@ -323,7 +328,9 @@ dcType (GT.TyApp t1 t2) = do
   let (con, ts) = splitCon t1 t2
   DataT (T.pack $ show $ pPrint con) <$> traverse dcType ts
 dcType (GT.TyVar i) = pure $ VarT $ i ^. idUniq
-dcType (GT.TyCon con) | kind con == Star = pure $ DataT (T.pack $ show $ pPrint con) []
+dcType (GT.TyCon con)
+  | kind con == Star = pure $ DataT (T.pack $ show $ pPrint con) []
+  | otherwise = errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint (kind con)
 dcType (GT.TyPrim GT.Int32T) = error "Int32# is not implemented"
 dcType (GT.TyPrim GT.Int64T) = pure C.Int64T
 dcType (GT.TyPrim GT.FloatT) = error "Float# is not implemented"
@@ -392,10 +399,12 @@ curryFun :: (HasCallStack, MonadUniq m) => [Id CType] -> C.Exp (Id CType) -> m (
 curryFun [] e@(Let ds (Atom (C.Var v))) = case List.lookup v ds of
   Just fun -> pure (fun, filter ((/= v) . fst) ds)
   Nothing -> errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
+curryFun [] e = errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
 curryFun [x] e = pure (Fun [x] e, [])
 curryFun ps@(_ : _) e = do
   curryFun' ps []
   where
+    curryFun' [] _ = bug Unreachable
     curryFun' [x] as = do
       x' <- newId (cTypeOf x) (x ^. idName)
       fun <- newId (cTypeOf $ Fun ps e) "$curry"

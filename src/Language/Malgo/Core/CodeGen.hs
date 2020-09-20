@@ -16,7 +16,6 @@ module Language.Malgo.Core.CodeGen
   )
 where
 
-import Control.Monad.Cont
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.ByteString.Builder as B
@@ -382,7 +381,9 @@ genAtom ::
   Atom (Id CType) ->
   m Operand
 genAtom (Var x) = findVar x
+genAtom (Unboxed (Core.Int32 x)) = pure $ int32 x
 genAtom (Unboxed (Core.Int64 x)) = pure $ int64 x
+genAtom (Unboxed (Core.Float x)) = pure $ single x
 genAtom (Unboxed (Core.Double x)) = pure $ double x
 genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x
 genAtom (Unboxed (Core.String x)) = do
