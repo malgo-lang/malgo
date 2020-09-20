@@ -35,7 +35,7 @@ data CType
   | DataT Text [CType]
   | SumT (Set Con)
   | ArrayT CType
-  | VarT Int
+  | AnyT
   deriving stock (Eq, Show, Ord)
 
 instance Pretty CType where
@@ -49,7 +49,7 @@ instance Pretty CType where
   pPrint (DataT n ts) = parens $ pPrint n <+> sep (map pPrint ts)
   pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
   pPrint (ArrayT t) = brackets $ pPrint t
-  pPrint (VarT i) = pPrint i
+  pPrint AnyT = "*"
 
 {-
 Constructors  C ::= <tag n>
@@ -80,7 +80,7 @@ instance HasCType T.Type where
   cTypeOf (T.TyApp T.TupleC xs) = SumT [Con ("Tuple" <> pack (show $ length xs)) (map cTypeOf xs)]
   cTypeOf (T.TyApp T.ArrayC [x]) = ArrayT (cTypeOf x)
   cTypeOf (T.TyApp _ _) = bug Unreachable
-  cTypeOf (T.TyMeta i) = VarT i
+  cTypeOf T.TyMeta {} = AnyT
   cTypeOf (ps T.:-> r) = map cTypeOf ps :-> cTypeOf r
 
 tyVar :: Applicative f => (CType -> f CType) -> CType -> f CType
@@ -88,7 +88,7 @@ tyVar f (ps :-> r) = (:->) <$> traverse (tyVar f) ps <*> tyVar f r
 tyVar f (DataT n ts) = DataT n <$> traverse (tyVar f) ts
 tyVar f (SumT cs) = SumT . fromList <$> traverse (tyVar' f) (toList cs)
 tyVar f (ArrayT t) = ArrayT <$> tyVar f t
-tyVar f (VarT x) = f (VarT x)
+tyVar f AnyT = f AnyT
 tyVar _ t = pure t
 
 tyVar' :: Applicative f => (CType -> f CType) -> Con -> f Con

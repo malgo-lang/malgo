@@ -57,9 +57,9 @@ match ::
 match (cTypeOf -> ps0 :-> r0) (cTypeOf -> ps1 :-> r1) = do
   zipWithM_ match ps0 ps1
   match r0 r1
-match (cTypeOf -> DataT {}) (cTypeOf -> VarT {}) = pure ()
-match (cTypeOf -> VarT {}) (cTypeOf -> DataT {}) = pure ()
-match (cTypeOf -> VarT {}) (cTypeOf -> VarT {}) = pure ()
+match (cTypeOf -> DataT {}) (cTypeOf -> AnyT) = pure ()
+match (cTypeOf -> AnyT) (cTypeOf -> DataT {}) = pure ()
+match (cTypeOf -> AnyT) (cTypeOf -> AnyT) = pure ()
 match x y
   | cTypeOf x == cTypeOf y = pure ()
   | otherwise =

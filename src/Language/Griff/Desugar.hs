@@ -92,7 +92,7 @@ dcBindGroup bg = do
     searchMain ((bindId, Fun [] _) : _)
       | bindId ^. idName == "main" = Call (C.Var bindId) []
     searchMain (_ : xs) = searchMain xs
-    searchMain _ = C.PrimCall "mainIsNotDefined" ([] :-> VarT (-1)) []
+    searchMain _ = C.PrimCall "mainIsNotDefined" ([] :-> AnyT) []
 
 dcScDefGroup :: (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f) => [[ScDef (Griff 'TypeCheck)]] -> f [[(Id CType, Obj (Id CType))]]
 dcScDefGroup [] = pure []
@@ -327,7 +327,7 @@ dcType :: (HasCallStack, MonadIO m) => GT.Type -> m CType
 dcType (GT.TyApp t1 t2) = do
   let (con, ts) = splitCon t1 t2
   DataT (T.pack $ show $ pPrint con) <$> traverse dcType ts
-dcType (GT.TyVar i) = pure $ VarT $ i ^. idUniq
+dcType (GT.TyVar _) = pure AnyT
 dcType (GT.TyCon con)
   | kind con == Star = pure $ DataT (T.pack $ show $ pPrint con) []
   | otherwise = errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint (kind con)
