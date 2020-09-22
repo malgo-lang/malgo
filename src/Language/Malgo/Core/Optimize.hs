@@ -155,7 +155,6 @@ optCast e@(Cast (pts' :-> rt') f) = do
         pure (Let [(f', Fun ps' v')] (Atom $ Var f'))
       | otherwise -> bug Unreachable
     _ -> pure e
-optCast (Match (Cast _ v) (Bind x (Match (Cast t v') cs) :| [])) | Var x == v' = Match (Cast t v) <$> traverse (appCase optCast) cs
 optCast (Match v cs) = Match <$> optCast v <*> traverse (appCase optCast) cs
 optCast (Let ds e) = Let <$> traverse (rtraverse (appObj optCast)) ds <*> optCast e
 optCast e = pure e
