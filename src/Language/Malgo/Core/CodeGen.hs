@@ -316,26 +316,29 @@ genExp (Let xs e) k = do
               ]
           )
     prepare _ = pure mempty
-genExp (Match e cs) k = genExp e $ \eOpr -> do
+genExp (Match e (Bind x body :| _)) k = genExp e $ \eOpr -> do
+  eOpr <- bitcast eOpr (convType $ cTypeOf e)
+  local (over valueMap (at x ?~ eOpr)) (genExp body k)
+genExp (Match e cs) k = genExp e $ \eOpr -> mdo
   -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
   -- TODO: genExpが正しい型の値を継続に渡すように変更する
-  eOpr <- bitcast eOpr (convType $ cTypeOf e)
-  case cTypeOf e of
-    SumT union -> mdo
-      br switchBlock
-      (defs, labels) <- partitionEithers . toList <$> traverse (genUnpack eOpr union k) cs
-      defaultLabel <- case defs of
-        (l : _) -> pure l
-        _ -> do
-          l <- block
-          unreachable
-          pure l
-      switchBlock <- block
-      tagOpr <- gepAndLoad eOpr [int32 0, int32 0]
-      switch tagOpr defaultLabel $ map (\(i, l) -> (C.Int 64 $ fromIntegral i, l)) labels
-    _ -> case cs of
-      (Bind x body :| _) -> local (over valueMap (at x ?~ eOpr)) $ genExp body k
-      _ -> bug Unreachable
+  eOpr' <- bitcast eOpr (convType $ cTypeOf e)
+  let union = case cTypeOf e of
+        SumT x -> x
+        _ -> mempty
+  br switchBlock
+  (defs, labels) <- partitionEithers . toList <$> traverse (genUnpack eOpr' union k) cs
+  defaultLabel <- case defs of
+    (l : _) -> pure l
+    _ -> do
+      l <- block
+      unreachable
+      pure l
+  switchBlock <- block
+  tagOpr <- case cTypeOf e of
+    SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
+    _ -> pure eOpr'
+  switch tagOpr defaultLabel labels
 genExp (Cast ty x) k = do
   xOpr <- genAtom x
   k =<< bitcast xOpr (convType ty)
@@ -354,12 +357,17 @@ genUnpack ::
   Set Con ->
   (Operand -> m ()) ->
   Case (Id CType) ->
-  m (Either LLVM.AST.Name (Int, LLVM.AST.Name))
+  m (Either LLVM.AST.Name (Constant, LLVM.AST.Name))
 genUnpack scrutinee cs k = \case
   Bind x e -> do
     label <- block
     void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
     pure $ Left label
+  Switch u e -> do
+    ConstantOperand u' <- genAtom $ Unboxed u
+    label <- block
+    genExp e k
+    pure $ Right (u', label)
   Unpack con vs e -> do
     label <- block
     let (tag, conType) = genCon cs con
@@ -370,7 +378,7 @@ genUnpack scrutinee cs k = \case
       vOpr <- gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
       pure $ Map.singleton v vOpr
     void $ local (over valueMap (env <>)) $ genExp e k
-    pure $ Right (tag, label)
+    pure $ Right (C.Int 64 $ fromIntegral tag, label)
 
 genAtom ::
   ( MonadReader OprMap m,
@@ -497,8 +505,8 @@ globalStringPtr str nm = do
         }
   pure $ C.GetElementPtr True (C.GlobalReference (ptr ty) nm) [C.Int 32 0, C.Int 32 0]
 
-gepAndLoad :: (MonadIRBuilder m, MonadModuleBuilder m) => Operand -> [Operand] -> m Operand
+gepAndLoad :: (HasCallStack, MonadIRBuilder m, MonadModuleBuilder m) => Operand -> [Operand] -> m Operand
 gepAndLoad opr addrs = join $ load <$> gep opr addrs <*> pure 0
 
-gepAndStore :: (MonadIRBuilder m, MonadModuleBuilder m) => Operand -> [Operand] -> Operand -> m ()
+gepAndStore :: (HasCallStack, MonadIRBuilder m, MonadModuleBuilder m) => Operand -> [Operand] -> Operand -> m ()
 gepAndStore opr addrs val = join $ store <$> gep opr addrs <*> pure 0 <*> pure val

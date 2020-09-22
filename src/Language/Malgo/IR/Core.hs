@@ -166,8 +166,7 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf ArrayWrite {} = SumT [Con "Tuple0" []]
   cTypeOf (Cast ty _) = ty
   cTypeOf (Let _ e) = cTypeOf e
-  cTypeOf (Match _ (Unpack _ _ e :| _)) = cTypeOf e
-  cTypeOf (Match _ (Bind _ e :| _)) = cTypeOf e
+  cTypeOf (Match _ (c :| _)) = cTypeOf c
   cTypeOf (Error t) = t
 
 returnType :: CType -> CType
@@ -216,28 +215,34 @@ instance HasAtom Exp where
 
 {-
 Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
+                    | SWITCH u -> e
                     | BIND x -> e
 -}
 data Case a
   = Unpack Con [a] (Exp a)
+  | Switch Unboxed (Exp a)
   | Bind a (Exp a)
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Case a) where
   pPrint (Unpack c xs e) = parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
+  pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
+  freevars (Switch _ e) = freevars e
   freevars (Bind x e) = sans x $ freevars e
 
 instance HasCType a => HasCType (Case a) where
   cTypeOf (Unpack _ _ e) = cTypeOf e
+  cTypeOf (Switch _ e) = cTypeOf e
   cTypeOf (Bind _ e) = cTypeOf e
 
 instance HasAtom Case where
   atom f = \case
     Unpack con xs e -> Unpack con xs <$> atom f e
+    Switch u e -> Switch u <$> atom f e
     Bind a e -> Bind a <$> atom f e
 
 {-
@@ -294,6 +299,7 @@ appObj _ o = pure o
 
 appCase :: Traversal' (Case a) (Exp a)
 appCase f (Unpack con ps e) = Unpack con ps <$> f e
+appCase f (Switch u e) = Switch u <$> f e
 appCase f (Bind x e) = Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)

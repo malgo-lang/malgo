@@ -91,3 +91,4 @@ alphaCase (Bind x e) = do
   x' <- cloneId x
   local (Map.insert x $ Var x') $
     Bind x' <$> alphaExp e
+alphaCase (Switch u e) = Switch u <$> alphaExp e

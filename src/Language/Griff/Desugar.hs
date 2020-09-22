@@ -174,6 +174,14 @@ dcDataDef (_, name, _, cons) = do
                 )
           pure (mempty & varEnv .~ Map.singleton conName conName', ((conName', obj) : inner))
 
+dcUnboxed :: G.Unboxed -> C.Unboxed
+dcUnboxed (G.Int32 _) = error "Int32# is not implemented"
+dcUnboxed (G.Int64 x) = C.Int64 $ toInteger x
+dcUnboxed (G.Float _) = error "Float# is not implemented"
+dcUnboxed (G.Double x) = C.Double x
+dcUnboxed (G.Char x) = C.Char x
+dcUnboxed (G.String x) = C.String x
+
 dcExp :: (HasCallStack, MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) => G.Exp (Griff 'TypeCheck) -> m (C.Exp (Id CType))
 dcExp (G.Var x name) = do
   name' <- lookupName name
@@ -188,15 +196,7 @@ dcExp (G.Con _ name) = do
   case cTypeOf name' of
     [] :-> _ -> pure $ Call (C.Var name') []
     _ -> pure $ Atom $ C.Var name'
-dcExp (G.Unboxed _ u) = pure $
-  Atom $
-    C.Unboxed $ case u of
-      G.Int32 _ -> error "Int32# is not implemented"
-      G.Int64 x -> C.Int64 $ toInteger x
-      G.Float _ -> error "Float# is not implemented"
-      G.Double x -> C.Double x
-      G.Char x -> C.Char x
-      G.String x -> C.String x
+dcExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dcUnboxed u
 dcExp (G.Apply _ f x) = runDef $ do
   f' <- bind =<< dcExp f
   case cTypeOf f' of
@@ -288,6 +288,11 @@ match (u : us) (ps : pss) es err
     cases <- traverse genCase cs
     unfoldedType <- unfoldType patType
     pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
+  | all (\case UnboxedP {} -> True; _ -> False) ps = do
+    let cs = map (\(UnboxedP _ x) -> dcUnboxed x) ps
+    cases <- traverse ?? cs $ \c -> Switch c <$> match us pss es err
+    hole <- newId (cTypeOf u) "$_"
+    pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
   -- The Mixture Rule
   | otherwise =
     match (u : us) (List.transpose [head $ List.transpose (ps : pss)]) [head es]

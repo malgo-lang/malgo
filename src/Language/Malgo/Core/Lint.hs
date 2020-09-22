@@ -151,6 +151,7 @@ lintCase ::
   Case (Id a) ->
   m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
+lintCase (Switch _ e) = lintExp e
 lintCase (Bind x e) = local (x :) $ lintExp e
 
 lintAtom :: (MonadReader [Id a] m, MonadError Doc m, Pretty a) => Atom (Id a) -> m ()

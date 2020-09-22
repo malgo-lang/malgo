@@ -1,3 +1,5 @@
-data RGB = Red | Green | Blue;
+data RGB = R | G | B;
 
-rTob = {Red -> Blue | a -> a};
+rtob = {R -> B | a -> a};
+
+main = { rtob R }
