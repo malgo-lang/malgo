@@ -299,7 +299,7 @@ match (u : us) (ps : pss) es err
       =<< match (u : us) (List.transpose $ tail $ List.transpose (ps : pss)) (tail es) err
   where
     constructors (GT.TyApp t1 t2) = do
-      let (con, ts) = splitCon (GT.TyApp t1 t2) 
+      let (con, ts) = splitCon t1 t2
       Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
       let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
       traverse ?? conMap' $ \(conName, conType) -> do
@@ -330,7 +330,7 @@ match _ _ _ _ = bug Unreachable
 
 dcType :: (HasCallStack, MonadIO m) => GT.Type -> m CType
 dcType (GT.TyApp t1 t2) = do
-  let (con, ts) = splitCon (GT.TyApp t1 t2)
+  let (con, ts) = splitCon t1 t2
   DataT (T.pack $ show $ pPrint con) <$> traverse dcType ts
 dcType (GT.TyVar _) = pure AnyT
 dcType (GT.TyCon con)
@@ -363,7 +363,7 @@ dcXType t =
 
 unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m CType
 unfoldType (GT.TyApp t1 t2) = do
-  let (con, ts) = splitCon (GT.TyApp t1 t2)
+  let (con, ts) = splitCon t1 t2
   Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
   let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
   SumT
@@ -423,3 +423,18 @@ curryFun ps@(_ : _) e = do
         fun <- let_ (cTypeOf funObj) funObj
         pure $ Atom fun
       pure (Fun [x'] body, inner)
+
+-- splitFoo
+
+splitCon :: GT.Type -> GT.Type -> (Id Kind, [GT.Type])
+splitCon (GT.TyCon con) t = (con, [t])
+splitCon (GT.TyApp t1 t2) t3 =
+  let (dataCon, ts) = splitCon t1 t2
+   in (dataCon, ts <> [t3])
+splitCon _ _ = bug Unreachable
+
+splitTyArr :: GT.Type -> ([GT.Type], GT.Type)
+splitTyArr (GT.TyArr t1 t2) =
+  let (ps, r) = splitTyArr t2
+   in (t1 : ps, r)
+splitTyArr t = ([], t)
