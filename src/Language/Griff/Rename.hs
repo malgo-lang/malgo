@@ -24,14 +24,14 @@ import qualified Text.PrettyPrint as P
 
 lookupVarName :: MonadReader RnEnv m => SourcePos -> Text -> m RnId
 lookupVarName pos name = do
-  vm <- view varEnv
+  vm <- asks $ view varEnv
   case vm ^. at name of
     Just name' -> pure name'
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
 
 lookupTypeName :: MonadReader RnEnv m => SourcePos -> Text -> m RnId
 lookupTypeName pos name = do
-  tm <- view typeEnv
+  tm <- asks $ view typeEnv
   case tm ^. at name of
     Just name' -> pure name'
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)

@@ -160,9 +160,10 @@ tcDecls ds = do
           (env, scDefs') <- tcScDefGroup (bindGroup ^. scDefs)
           local (env <>) $ do
             env <-
-              ask >>= T.varEnv (traverse zonkScheme)
-                >>= T.typeEnv (traverse zonkType)
-                >>= T.tyConEnv (traverse $ rtraverse $ traverse $ rtraverse zonkType)
+              ask
+                >>= traverseOf (T.varEnv % traversed) zonkScheme
+                >>= traverseOf (T.typeEnv % traversed) zonkType
+                >>= traverseOf (T.tyConEnv % traversed % _2 % traversed % _2) zonkType
             pure
               ( BindGroup
                   { _dataDefs = dataDefs',
@@ -176,14 +177,14 @@ tcDecls ds = do
 
 lookupType :: (MonadReader TcEnv m) => SourcePos -> RnTId -> m Type
 lookupType pos name = do
-  mtype <- Map.lookup name <$> view T.typeEnv
+  mtype <- asks $ view $ T.typeEnv % at name
   case mtype of
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
     Just typ -> pure typ
 
 lookupVar :: (MonadReader TcEnv m) => SourcePos -> RnId -> m Scheme
 lookupVar pos name = do
-  mscheme <- Map.lookup name <$> view T.varEnv
+  mscheme <- asks $ view $ T.varEnv % at name
   case mscheme of
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
     Just scheme -> pure scheme
@@ -201,7 +202,7 @@ tcDataDefs ds = do
           (dataType, conType) <- buildType pos name params args
           pure (dataType, (con, conType))
       traverse_ (unify pos (head dataTypes)) (tail dataTypes)
-      Just (TyCon dataName) <- Map.lookup name <$> view T.typeEnv
+      Just (TyCon dataName) <- asks $ view $ T.typeEnv % at name
       fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
       as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
       zipWithM_ writeMetaTv fvs (map TyVar as)
@@ -249,7 +250,7 @@ tcScSigs ds = fmap (first mconcat) $
 
 prepareTcScDefs :: (Foldable f, MonadReader TcEnv m, MonadUniq m, MonadIO m) => f (ScDef (Griff 'Rename)) -> m (Map (Id ()) Scheme)
 prepareTcScDefs ds = foldMapA ?? ds $ \(_, name, _, _) -> do
-  mscheme <- Map.lookup name <$> view T.varEnv
+  mscheme <- asks $ view $ T.varEnv % at name
   case mscheme of
     Nothing -> Map.singleton name . Forall [] . TyMeta <$> newMetaTv Star
     Just _ -> pure mempty

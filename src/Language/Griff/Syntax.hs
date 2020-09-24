@@ -1,9 +1,9 @@
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -75,14 +75,15 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Force _ x) = pPrintPrec l 11 x <> "!"
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Exp x) where
-  toType f (Var x v) = toType f x <&> \x' -> Var x' v
-  toType f (Con x c) = toType f x <&> \x' -> Con x' c
-  toType f (Unboxed x u) = toType f x <&> \x' -> Unboxed x' u
-  toType f (Apply x e1 e2) = toType f x <&> \x' -> Apply x' e1 e2
-  toType f (OpApp x op e1 e2) = toType f x <&> \x' -> OpApp x' op e1 e2
-  toType f (Fn x cs) = toType f x <&> \x' -> Fn x' cs
-  toType f (Tuple x es) = toType f x <&> \x' -> Tuple x' es
-  toType f (Force x e) = toType f x <&> \x' -> Force x' e
+  toType = to $ \case
+    Var x _ -> x ^. toType
+    Con x _ -> x ^. toType
+    Unboxed x _ -> x ^. toType
+    Apply x _ _ -> x ^. toType
+    OpApp x _ _ _ -> x ^. toType
+    Fn x _ -> x ^. toType
+    Tuple x _ -> x ^. toType
+    Force x _ -> x ^. toType
 
 freevars :: Ord (XId x) => Exp x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
@@ -111,7 +112,7 @@ instance (Pretty (XId x)) => Pretty (Clause x) where
   pPrint (Clause _ pats e) = P.sep (map pPrint pats) <+> "->" <+> pPrint e
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Clause x) where
-  toType f (Clause x ps e) = toType f x <&> \x' -> Clause x' ps e
+  toType = to $ \(Clause x _ _) -> view toType x
 
 freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
 freevarsClause (Clause _ pats e) = freevars e Set.\\ mconcat (map bindVars pats)
@@ -138,9 +139,10 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
   pPrintPrec _ _ (UnboxedP _ u) = pPrint u
 
 instance (ForallPatX HasType x) => HasType (Pat x) where
-  toType f (VarP x v) = toType f x <&> \x' -> VarP x' v
-  toType f (ConP x c ps) = toType f x <&> \x' -> ConP x' c ps
-  toType f (UnboxedP x u) = toType f x <&> \x' -> UnboxedP x' u
+  toType = to $ \case
+    VarP x _ -> view toType x
+    ConP x _ _ -> view toType x
+    UnboxedP x _ -> view toType x
 
 bindVars :: Ord (XId x) => Pat x -> Set (XId x)
 bindVars (VarP _ x) = Set.singleton x

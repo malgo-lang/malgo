@@ -5,10 +5,12 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.Flat
-  ( Flat, flat
+  ( Flat,
+    flat,
   )
 where
 
+import Data.Functor.Identity (Identity (runIdentity))
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Pass
@@ -29,7 +31,7 @@ runFlat = fmap (uncurry (flip appEndo)) . runWriterT
 
 flatExp :: Monad m => Exp a -> WriterT (Endo (Exp a)) m (Exp a)
 flatExp (Let ds e) = do
-  ds <- traverse (rtraverse (appObj (runFlat . flatExp))) ds
+  ds <- traverseOf (traversed % _2 % appObj) (runFlat . flatExp) ds
   tell $ Endo $ \k -> Let ds k
   flatExp e
 flatExp (Match v (Unpack con ps e :| [])) = do
@@ -41,5 +43,5 @@ flatExp (Match v (Bind x e :| [])) = do
   tell $ Endo $ \k -> Match v (Bind x k :| [])
   flatExp e
 flatExp (Match e cs) =
-  Match <$> flatExp e <*> traverse (appCase (runFlat . flatExp)) cs
+  Match <$> flatExp e <*> traverseOf (traversed % appCase) (runFlat . flatExp) cs
 flatExp e = pure e

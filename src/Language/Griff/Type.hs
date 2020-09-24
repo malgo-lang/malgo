@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE EmptyDataDeriving #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -121,16 +122,16 @@ instance Pretty PrimT where
 -------------------
 
 class HasType a where
-  toType :: Getter a Type
+  toType :: Optic' A_Getter NoIx a Type
 
 instance HasType Type where
-  toType = id
+  toType = to id
 
 instance HasType Scheme where
-  toType f (Forall vs t) = Forall vs <$> toType f t
+  toType = to $ \(Forall _ t) -> t
 
 instance HasType a => HasType (Id a) where
-  toType f = idMeta (toType f)
+  toType = idMeta % toType
 
 data WithType a = WithType a Type
   deriving stock (Eq, Show, Ord, Functor, Foldable)
@@ -139,4 +140,4 @@ instance Pretty a => Pretty (WithType a) where
   pPrint (WithType a t) = pPrint a <> ":" <> pPrint t
 
 instance HasType (WithType a) where
-  toType f (WithType a t) = WithType a <$> toType f t
+  toType = to $ \(WithType _ t) -> t

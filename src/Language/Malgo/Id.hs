@@ -18,19 +18,18 @@ module Language.Malgo.Id
   )
 where
 
+import qualified Data.Text as T
 import Language.Malgo.Monad
 import Language.Malgo.Prelude hiding (toList)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.Type
 import Text.PrettyPrint.HughesPJClass (text)
-import qualified Data.Text as T
 
-data Id a
-  = Id
-      { _idName :: Text,
-        _idUniq :: Int,
-        _idMeta :: a
-      }
+data Id a = Id
+  { _idName :: Text,
+    _idUniq :: Int,
+    _idMeta :: a
+  }
   deriving stock (Show, Functor, Foldable)
 
 instance Eq (Id a) where
@@ -46,10 +45,10 @@ instance HasType a => HasType (Id a) where
   typeOf Id {_idMeta} = typeOf _idMeta
 
 idName :: Getter (Id a) Text
-idName = lens _idName (\i x -> i {_idName = x})
+idName = to _idName
 
 idUniq :: Getter (Id a) Int
-idUniq = lens _idUniq (\i x -> i {_idUniq = x})
+idUniq = to _idUniq
 
 idMeta :: Lens (Id a) (Id b) a b
 idMeta = lens _idMeta (\i x -> i {_idMeta = x})

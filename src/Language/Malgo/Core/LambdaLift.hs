@@ -52,7 +52,7 @@ lambdalift Program {mainExp, topFuncs} = evalStateT
           }
       mainExp <- llift mainExp
       Env {_funcs} <- get
-      appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
+      traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
 
 llift ::
   ( MonadUniq f,
@@ -74,9 +74,9 @@ llift (Let [(n, Fun as body)] e) = do
   backup <- get
   ks <- use knowns
   -- nがknownだと仮定してlambda liftする
-  knowns <>= Set.singleton n
+  modifying knowns $ Set.insert n
   body' <- llift body
-  funcs %= Map.insert n (as, body')
+  modifying funcs $ Map.insert n (as, body')
   (e', _) <- localState $ llift e
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
@@ -91,7 +91,7 @@ llift (Let [(n, Fun as body)] e) = do
       Let [(n, Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) =
-  Match <$> llift e <*> traverse (appCase llift) cs
+  Match <$> llift e <*> traverseOf (traversed % appCase) llift cs
 llift e = pure e
 
 def ::
@@ -104,5 +104,5 @@ def ::
   m (Id CType)
 def name xs e = do
   f <- newId (map cTypeOf xs :-> cTypeOf e) ("$" <> name)
-  funcs %= Map.insert f (xs, e)
+  modifying funcs $ Map.insert f (xs, e)
   pure f

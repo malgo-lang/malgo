@@ -56,7 +56,7 @@ desugar tcEnv ds = do
 genPrimitive :: (MonadUniq m, MonadIO m, MonadFail m) => TcEnv -> m (DesugarEnv, [(Id CType, Obj (Id CType))])
 genPrimitive env =
   do
-    let add_i64 = fromJust $ Map.lookup "add_i64#" (view (Tc.rnEnv . Rn.varEnv) env)
+    let add_i64 = fromJust $ view (Tc.rnEnv % Rn.varEnv % at "add_i64#") env
     let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
     add_i64' <- join $ newId <$> dcType add_i64_type <*> pure "add_i64#"
     add_i64_param <- newId (SumT $ Set.singleton (C.Con "Tuple2" [C.Int64T, C.Int64T])) "$p"
@@ -104,7 +104,7 @@ dcScDefGroup (ds : dss) = do
 dcScDefs :: (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f) => [ScDef (Griff 'TypeCheck)] -> f (DesugarEnv, [(Id CType, Obj (Id CType))])
 dcScDefs ds = do
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
-    Just (Forall _ fType) <- Map.lookup f <$> view (tcEnv . Tc.varEnv)
+    Just (Forall _ fType) <- asks $ view (tcEnv % Tc.varEnv % at f)
     f' <- join $ newId <$> dcType fType <*> pure (f ^. idName)
     pure $ mempty & varEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
@@ -146,8 +146,8 @@ dcDataDef :: (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) => 
 dcDataDef (_, name, _, cons) = do
   fmap (first mconcat) $
     mapAndUnzipM ?? cons $ \(conName, _) -> do
-      Just (GT.TyCon name') <- Map.lookup name <$> view (tcEnv . Tc.typeEnv)
-      Just (_, conMap) <- Map.lookup name' <$> view (tcEnv . Tc.tyConEnv)
+      Just (GT.TyCon name') <- asks $ view (tcEnv % Tc.typeEnv % at name)
+      Just (_, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at name')
       let (paramTypes, retType) = splitTyArr $ fromJust $ List.lookup conName conMap
       paramTypes' <- traverse dcType paramTypes
       retType' <- dcType retType
@@ -300,15 +300,15 @@ match (u : us) (ps : pss) es err
   where
     constructors (GT.TyApp t1 t2) = do
       let (con, ts) = splitCon t1 t2
-      Just (as, conMap) <- view (tcEnv . Tc.tyConEnv . at con)
-      let conMap' = over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
+      Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
+      let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
       traverse ?? conMap' $ \(conName, conType) -> do
         paramTypes <- traverse dcType (fst $ splitTyArr conType)
         let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
         params <- traverse (newId ?? "$p") paramTypes
         pure (conName, ccon, params)
     constructors (GT.TyCon con) | kind con == Star = do
-      Just ([], conMap) <- view (tcEnv . Tc.tyConEnv . at con)
+      Just ([], conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
       traverse ?? conMap $ \(conName, conType) -> do
         paramTypes <- traverse dcType (fst $ splitTyArr conType)
         let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
@@ -357,15 +357,15 @@ dcType (GT.TyMeta tv) = do
 
 dcXType :: (MonadReader DesugarEnv m, MonadIO m) => G.Type (Griff 'TypeCheck) -> m CType
 dcXType t =
-  view tcEnv
+  asks (view tcEnv)
     >>= runReaderT (Typing.transType t)
     >>= dcType
 
 unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m CType
 unfoldType (GT.TyApp t1 t2) = do
   let (con, ts) = splitCon t1 t2
-  Just (as, conMap) <- Map.lookup con <$> view (tcEnv . Tc.tyConEnv)
-  let conMap' = over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
+  Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
+  let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
   SumT
     . Set.fromList
     <$> traverse
@@ -374,7 +374,7 @@ unfoldType (GT.TyApp t1 t2) = do
       )
       conMap'
 unfoldType (GT.TyCon con) | kind con == Star = do
-  Just ([], conMap) <- Map.lookup con <$> view (tcEnv . Tc.tyConEnv)
+  Just ([], conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
   SumT
     . Set.fromList
     <$> traverse
@@ -388,15 +388,15 @@ unfoldType t = dcType t
 
 lookupName :: (HasCallStack, MonadReader DesugarEnv m) => Id () -> m (Id CType)
 lookupName name = do
-  env <- view varEnv
-  case Map.lookup name env of
+  mname' <- asks $ view (varEnv % at name)
+  case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint name)
 
 lookupType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => Id () -> m CType
 lookupType name = do
-  env <- view (tcEnv . Tc.typeEnv)
-  case Map.lookup name env of
+  mtyp <- asks $ view (tcEnv % Tc.typeEnv % at name)
+  case mtyp of
     Just typ -> dcType typ
     Nothing -> bug Unreachable
 

@@ -87,7 +87,7 @@ compile = M.runMalgo $ do
     if applyLambdaLift opt
       then
         transWithDump @LambdaLift (dumpLambdaLift opt) program
-          >>= appProgram (transWithDump @Optimize (dumpLambdaLift opt))
+          >>= traverseOf appProgram (transWithDump @Optimize (dumpLambdaLift opt))
           >>= trans @CodeGen
       else trans @CodeGen program
   pure $

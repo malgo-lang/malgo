@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6206342e8216f53376dac9e98df60d1267cf5a622537164341fde31d92d60673
+-- hash: e2bca9666f302c926278142f521a28eae108026ff3f70aeb455c2bc527b52c09
 
 name:           malgo
 version:        1.0.0.0
@@ -79,12 +79,12 @@ library
     , containers
     , dlist
     , extra
-    , lens
     , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , megaparsec
     , mtl
+    , optics
     , optparse-applicative
     , parsec
     , parser-combinators
@@ -112,13 +112,13 @@ executable griff
     , containers
     , dlist
     , extra
-    , lens
     , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
     , megaparsec
     , mtl
+    , optics
     , optparse-applicative
     , parsec
     , parser-combinators
@@ -146,13 +146,13 @@ executable malgo
     , containers
     , dlist
     , extra
-    , lens
     , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
     , megaparsec
     , mtl
+    , optics
     , optparse-applicative
     , parsec
     , parser-combinators
@@ -182,13 +182,13 @@ test-suite malgo-test
     , dlist
     , extra
     , hspec
-    , lens
     , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
     , megaparsec
     , mtl
+    , optics
     , optparse-applicative
     , parsec
     , parser-combinators

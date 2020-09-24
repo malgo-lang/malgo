@@ -76,7 +76,7 @@ compile opt = do
       coreProg <-
         if noOptimize opt
           then lambdalift Program {topFuncs = [], mainExp = coreOpt}
-          else appProgram (optimize (inlineSize opt)) =<< lambdalift Program {topFuncs = [], mainExp = coreOpt}
+          else traverseOf appProgram (optimize (inlineSize opt)) =<< lambdalift Program {topFuncs = [], mainExp = coreOpt}
 
       when (dumpDesugar opt) $
         liftIO $ do

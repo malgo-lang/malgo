@@ -11,7 +11,7 @@
 module Language.Malgo.Prelude
   ( module Prelude,
     module Control.Applicative,
-    module Control.Lens,
+    module Optics,
     module Control.Monad,
     module Control.Monad.IO.Class,
     module Control.Monad.Reader.Class,
@@ -41,6 +41,7 @@ module Language.Malgo.Prelude
     foldMapA,
     ifoldMapA,
     (<<$>>),
+    (??),
     ordNub,
     replaceOf,
     IORef,
@@ -56,7 +57,6 @@ where
 
 import Control.Applicative
 import Control.Exception
-import Control.Lens
 import Control.Monad
 import Control.Monad.IO.Class
 import Control.Monad.Reader.Class
@@ -98,6 +98,7 @@ import GHC.Stack
     callStack,
     prettyCallStack,
   )
+import Optics
 import qualified Text.Megaparsec.Pos as Megaparsec
 import Text.Parsec.Pos (SourcePos)
 import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
@@ -136,6 +137,11 @@ infixl 4 <<$>>
 (<<$>>) = fmap . fmap
 {-# INLINE (<<$>>) #-}
 
+infixl 1 ??
+
+(??) :: Functor f => f (a -> b) -> a -> f b
+fab ?? a = fmap ($ a) fab
+
 ordNub :: Ord a => [a] -> [a]
 ordNub = go Set.empty
   where
@@ -144,7 +150,7 @@ ordNub = go Set.empty
       | x `Set.member` s = go s xs
       | otherwise = x : go (Set.insert x s) xs
 
-replaceOf :: Eq a => ASetter' s a -> a -> a -> s -> s
+replaceOf :: (Is k A_Setter, Eq b) => Optic k is s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
 
 newIORef :: MonadIO m => a -> m (IORef a)

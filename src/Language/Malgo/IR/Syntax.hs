@@ -15,7 +15,7 @@ module Language.Malgo.IR.Syntax
 where
 
 import Language.Malgo.IR.Op as Export
-import Language.Malgo.Prelude hiding (ix, op)
+import Language.Malgo.Prelude hiding (ix)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type

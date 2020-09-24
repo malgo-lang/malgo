@@ -67,11 +67,11 @@ optCallInline ::
   f (Exp (Id CType))
 optCallInline (Call (Var f) xs) = lookupCallInline f xs
 optCallInline (Match v cs) =
-  Match <$> optCallInline v <*> traverse (appCase optCallInline) cs
+  Match <$> optCallInline v <*> traverseOf (traversed % appCase) optCallInline cs
 optCallInline (Let ds e) = do
-  ds' <- traverse (rtraverse (appObj optCallInline)) ds
+  ds' <- traverseOf (traversed % _2 % appObj) optCallInline ds
   traverse_ checkInlineable ds'
-  Let <$> traverse (rtraverse (appObj optCallInline)) ds' <*> optCallInline e
+  Let <$> traverseOf (traversed % _2 % appObj) optCallInline ds' <*> optCallInline e
 optCallInline e = pure e
 
 checkInlineable :: (MonadState CallInlineMap m, MonadReader Int m) => (Id CType, Obj (Id CType)) -> m ()
@@ -98,16 +98,16 @@ type PackInlineMap = Map (Id CType) (Con, [Atom (Id CType)])
 optPackInline :: MonadReader PackInlineMap m => Exp (Id CType) -> m (Exp (Id CType))
 optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
   body' <- optPackInline body
-  mPack <- view (at v)
+  mPack <- asks $ view (at v)
   case mPack of
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []
   where
     build (x : xs) (a : as) body = Match (Atom a) $ Bind x (build xs as body) :| []
     build _ _ body = body
-optPackInline (Match v cs) = Match <$> optPackInline v <*> traverse (appCase optPackInline) cs
+optPackInline (Match v cs) = Match <$> optPackInline v <*> traverseOf (traversed % appCase) optPackInline cs
 optPackInline (Let ds e) = do
-  ds' <- traverse (rtraverse (appObj optPackInline)) ds
+  ds' <- traverseOf (traversed % _2 % appObj) optPackInline ds
   local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
   where
     toPackInlineMap (v, Pack _ con as) = mempty & at v ?~ (con, as)
@@ -116,13 +116,13 @@ optPackInline e = pure e
 
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
 optVarBind (Match (Atom a) (Bind x e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
-optVarBind (Let ds e) = Let <$> traverse (rtraverse (appObj optVarBind)) ds <*> optVarBind e
-optVarBind (Match v cs) = Match <$> optVarBind v <*> traverse (appCase optVarBind) cs
+optVarBind (Let ds e) = Let <$> traverseOf (traversed % _2 % appObj) optVarBind ds <*> optVarBind e
+optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed % appCase) optVarBind cs
 optVarBind e = pure e
 
 removeUnusedLet :: (Monad f, Ord a) => Exp a -> f (Exp a)
 removeUnusedLet (Let ds e) = do
-  ds' <- traverse (rtraverse (appObj removeUnusedLet)) ds
+  ds' <- traverseOf (traversed % _2 % appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
   let gamma = map (\(v, o) -> (v, Set.delete v $ freevars o)) ds'
   let ds'' = filter (\(v, _) -> reachable 100 gamma v $ freevars e') ds'
@@ -138,7 +138,7 @@ removeUnusedLet (Let ds e) = do
          in if fvs == fvs'
               then False
               else reachable (limit - 1 :: Int) gamma v fvs'
-removeUnusedLet (Match v cs) = Match <$> removeUnusedLet v <*> traverse (appCase removeUnusedLet) cs
+removeUnusedLet (Match v cs) = Match <$> removeUnusedLet v <*> traverseOf (traversed % appCase) removeUnusedLet cs
 removeUnusedLet e = pure e
 
 optCast :: MonadUniq f => Exp (Id CType) -> f (Exp (Id CType))
@@ -155,6 +155,6 @@ optCast e@(Cast (pts' :-> rt') f) = do
         pure (Let [(f', Fun ps' v')] (Atom $ Var f'))
       | otherwise -> bug Unreachable
     _ -> pure e
-optCast (Match v cs) = Match <$> optCast v <*> traverse (appCase optCast) cs
-optCast (Let ds e) = Let <$> traverse (rtraverse (appObj optCast)) ds <*> optCast e
+optCast (Match v cs) = Match <$> optCast v <*> traverseOf (traversed % appCase) optCast cs
+optCast (Let ds e) = Let <$> traverseOf (traversed % _2 % appObj) optCast ds <*> optCast e
 optCast e = pure e

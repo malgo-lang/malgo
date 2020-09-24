@@ -83,13 +83,14 @@ instance HasCType T.Type where
   cTypeOf T.TyMeta {} = AnyT
   cTypeOf (ps T.:-> r) = map cTypeOf ps :-> cTypeOf r
 
-tyVar :: Applicative f => (CType -> f CType) -> CType -> f CType
-tyVar f (ps :-> r) = (:->) <$> traverse (tyVar f) ps <*> tyVar f r
-tyVar f (DataT n ts) = DataT n <$> traverse (tyVar f) ts
-tyVar f (SumT cs) = SumT . fromList <$> traverse (tyVar' f) (toList cs)
-tyVar f (ArrayT t) = ArrayT <$> tyVar f t
-tyVar f AnyT = f AnyT
-tyVar _ t = pure t
+tyVar :: Traversal CType CType CType CType
+tyVar = traversalVL $ \f t -> case t of 
+  ps :-> r -> (:->) <$> traverseOf (traversed % tyVar) f ps <*> traverseOf tyVar f r
+  DataT n ts -> DataT n <$> traverseOf (traversed % tyVar) f ts
+  SumT cs -> SumT . fromList <$> traverseOf (traversed % tyVar') f (toList cs)
+  ArrayT t -> ArrayT <$> traverseOf tyVar f t
+  AnyT -> f AnyT
+  _ -> pure t
 
-tyVar' :: Applicative f => (CType -> f CType) -> Con -> f Con
-tyVar' f (Con tag ts) = Con tag <$> traverse (tyVar f) ts
+tyVar' :: Traversal Con Con CType CType
+tyVar' = traversalVL $ \f (Con tag ts) -> Con tag <$> traverseOf (traversed % tyVar) f ts

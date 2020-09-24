@@ -12,7 +12,7 @@
 
 module Language.Malgo.IR.Core where
 
-import Data.Set.Lens
+import Data.Set.Optics
 import Data.Text (unpack)
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
@@ -81,14 +81,14 @@ instance Pretty a => Pretty (Atom a) where
   pPrint (Unboxed x) = pPrint x
 
 instance HasFreeVar Atom where
-  freevars (Var x) = setOf id x
+  freevars (Var x) = setOf equality x
   freevars Unboxed {} = mempty
 
 class HasAtom f where
   atom :: Traversal' (f a) (Atom a)
 
 instance HasAtom Atom where
-  atom = id
+  atom = castOptic equality
 
 {-
 Expressions  e ::= a               Atom
@@ -200,7 +200,7 @@ instance HasFreeVar Exp where
   freevars (Error _) = mempty
 
 instance HasAtom Exp where
-  atom f = \case
+  atom = traversalVL $ \f -> \case
     Atom x -> Atom <$> f x
     Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
@@ -209,8 +209,8 @@ instance HasAtom Exp where
     ArrayRead a b -> ArrayRead <$> f a <*> f b
     ArrayWrite a b c -> ArrayWrite <$> f a <*> f b <*> f c
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverse (rtraverse (atom f)) xs <*> atom f e
-    Match e cs -> Match <$> atom f e <*> traverse (atom f) cs
+    Let xs e -> Let <$> traverseOf (traversed % _2 % atom) f xs <*> traverseOf atom f e
+    Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed % atom) f cs
     Error t -> pure (Error t)
 
 {-
@@ -240,10 +240,10 @@ instance HasCType a => HasCType (Case a) where
   cTypeOf (Bind _ e) = cTypeOf e
 
 instance HasAtom Case where
-  atom f = \case
-    Unpack con xs e -> Unpack con xs <$> atom f e
-    Switch u e -> Switch u <$> atom f e
-    Bind a e -> Bind a <$> atom f e
+  atom = traversalVL $ \f -> \case
+    Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
+    Switch u e -> Switch u <$> traverseOf atom f e
+    Bind a e -> Bind a <$> traverseOf atom f e
 
 {-
 Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
@@ -273,10 +273,10 @@ instance HasCType a => HasCType (Obj a) where
   cTypeOf (Array a _) = ArrayT $ cTypeOf a
 
 instance HasAtom Obj where
-  atom f = \case
-    Fun xs e -> Fun xs <$> atom f e
-    Pack ty con xs -> Pack ty con <$> traverse (atom f) xs
-    Array a n -> Array <$> atom f a <*> atom f n
+  atom = traversalVL $ \f -> \case
+    Fun xs e -> Fun xs <$> traverseOf atom f e
+    Pack ty con xs -> Pack ty con <$> traverseOf (traversed % atom) f xs
+    Array a n -> Array <$> traverseOf atom f a <*> traverseOf atom f n
 
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
@@ -294,16 +294,19 @@ instance Pretty a => Pretty (Program a) where
       $$ vcat (map (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e) topFuncs)
 
 appObj :: Traversal' (Obj a) (Exp a)
-appObj f (Fun ps e) = Fun ps <$> f e
-appObj _ o = pure o
+appObj = traversalVL $ \f -> \case
+  Fun ps e -> Fun ps <$> f e
+  o -> pure o
 
 appCase :: Traversal' (Case a) (Exp a)
-appCase f (Unpack con ps e) = Unpack con ps <$> f e
-appCase f (Switch u e) = Switch u <$> f e
-appCase f (Bind x e) = Bind x <$> f e
+appCase = traversalVL $ \f -> \case
+  Unpack con ps e -> Unpack con ps <$> f e
+  Switch u e -> Switch u <$> f e
+  Bind x e -> Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram f Program {mainExp, topFuncs} = Program <$> traverse (rtraverse (rtraverse f)) topFuncs <*> f mainExp
+appProgram = traversalVL $ \f Program {mainExp, topFuncs} ->
+  Program <$> traverse (rtraverse (rtraverse f)) topFuncs <*> f mainExp
 
 runDef :: Functor f => WriterT (Endo a) f a -> f a
 runDef m = uncurry (flip appEndo) <$> runWriterT m

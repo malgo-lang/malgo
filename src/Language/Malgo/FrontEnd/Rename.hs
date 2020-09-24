@@ -19,7 +19,7 @@ import Language.Malgo.IR.Syntax
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Prelude hiding (ix, lens, op)
+import Language.Malgo.Prelude hiding (ix, lens)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Text.Parsec.Pos (SourcePos)
@@ -37,24 +37,14 @@ instance Pass Rename (Expr Text) (Expr (Id ())) where
   passName = "Rename"
   trans s = runReaderT (renameExpr s) $ Known mempty mempty
 
-withKnowns ::
-  (MonadUniq m, MonadReader Known m) =>
-  ASetter' Known (Map Text (Id ())) ->
-  [Text] ->
-  m a ->
-  m a
+withKnowns :: (MonadUniq m, MonadReader Known m, Is k A_Setter) => Optic' k is Known (Map Text (Id ())) -> [Text] -> m a -> m a
 withKnowns lens ks m = do
   vs <- mapM (newId ()) ks
   local (over lens (Map.fromList (zip ks vs) <>)) m
 
-getId ::
-  (MonadReader s m, MonadMalgo m) =>
-  SourcePos ->
-  Getting (Map Text (Id ())) s (Map Text (Id ())) ->
-  Text ->
-  m (Id ())
+getId :: (Is k A_Getter, MonadReader Known m, MonadMalgo m) => SourcePos -> Optic' k is Known (Map Text (Id ())) -> Text -> m (Id ())
 getId pos lens name = do
-  k <- view lens
+  k <- view lens <$> ask
   case view (at name) k of
     Just x -> pure x
     Nothing -> malgoError pos "rename" $ pPrint name <+> "is not defined"
