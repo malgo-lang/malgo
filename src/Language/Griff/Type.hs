@@ -123,15 +123,19 @@ instance Pretty PrimT where
 
 class HasType a where
   toType :: Optic' A_Getter NoIx a Type
+  typed :: Optic' An_AffineTraversal NoIx a Type
 
 instance HasType Type where
   toType = to id
+  typed = atraversal Right (\_ x -> x)
 
 instance HasType Scheme where
   toType = to $ \(Forall _ t) -> t
+  typed = atraversal (view $ toType % to Right) (\(Forall vs _) t -> Forall vs t)
 
 instance HasType a => HasType (Id a) where
   toType = idMeta % toType
+  typed = atraversal (view $ toType % to Right) (\n t -> n & idMeta % typed .~ t)
 
 data WithType a = WithType a Type
   deriving stock (Eq, Show, Ord, Functor, Foldable)
@@ -141,3 +145,21 @@ instance Pretty a => Pretty (WithType a) where
 
 instance HasType (WithType a) where
   toType = to $ \(WithType _ t) -> t
+  typed = atraversal (view $ toType % to Right) (\(WithType x _) t -> WithType x t)
+
+----------------
+-- split type --
+----------------
+
+splitCon :: Type -> (Id Kind, [Type])
+splitCon (TyCon con) = (con, [])
+splitCon (TyApp t1 t2) =
+  let (dataCon, ts) = splitCon t1
+   in (dataCon, ts <> [t2])
+splitCon _ = bug Unreachable
+
+splitTyArr :: Type -> ([Type], Type)
+splitTyArr (TyArr t1 t2) =
+  let (ps, r) = splitTyArr t2
+   in (t1 : ps, r)
+splitTyArr t = ([], t)

@@ -40,6 +40,7 @@ instance HasType Unboxed where
     Double {} -> T.TyPrim T.DoubleT
     Char {} -> T.TyPrim T.CharT
     String {} -> T.TyPrim T.StringT
+  typed = atraversal (\x -> Right $ x ^. toType) const
 
 -- Expression
 
@@ -84,6 +85,21 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Fn x _ -> x ^. toType
     Tuple x _ -> x ^. toType
     Force x _ -> x ^. toType
+  typed = atraversal (view $ toType % to Right) $ \case
+    Var x v -> \t -> Var (x & typed .~ t) v
+    Con x c -> \t -> Con (x & typed .~ t) c
+    Unboxed x u -> const $ Unboxed x u
+    Apply x e1 e2 -> \case
+      t@(T.TyArr t1 t2) -> Apply (x & typed .~ t2) (e1 & typed .~ t) (e2 & typed .~ t1)
+      t -> errorDoc $ "Invalid type:" <+> pPrint t
+    OpApp x op e1 e2 -> \case
+      T.TyArr t1 (T.TyArr t2 t3) -> OpApp (x & typed .~ t3) op (e1 & typed .~ t1) (e2 & typed .~ t2)
+      t -> errorDoc $ "Invalid type:" <+> pPrint t
+    Fn x cs -> \t -> Fn (x & typed .~ t) (fmap (set typed t) cs)
+    Tuple x es -> \case
+      t@(T.TyTuple ts) -> Tuple (x & typed .~ t) (zipWith (set typed) ts es)
+      t -> errorDoc $ "Invalid type:" <+> pPrint t
+    Force x e -> \t -> Force (x & typed .~ t) (e & typed .~ T.TyLazy t)
 
 freevars :: Ord (XId x) => Exp x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
@@ -113,6 +129,9 @@ instance (Pretty (XId x)) => Pretty (Clause x) where
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Clause x) where
   toType = to $ \(Clause x _ _) -> view toType x
+  typed = atraversal (view $ toType % to Right) $ \(Clause x ps e) t ->
+    let (pts, rt) = T.splitTyArr t
+     in Clause (x & typed .~ t) (zipWith (set typed) pts ps) (e & typed .~ rt)
 
 freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
 freevarsClause (Clause _ pats e) = freevars e Set.\\ mconcat (map bindVars pats)
@@ -143,6 +162,12 @@ instance (ForallPatX HasType x) => HasType (Pat x) where
     VarP x _ -> view toType x
     ConP x _ _ -> view toType x
     UnboxedP x _ -> view toType x
+  typed = atraversal (view $ toType % to Right) $ \case
+    VarP x v -> \t -> VarP (x & typed .~ t) v
+    ConP x c ps -> \t ->
+      let (_, pts) = T.splitCon t
+       in ConP (x & typed .~ t) c (zipWith (set typed) pts ps)
+    UnboxedP x u -> const (UnboxedP x u)
 
 bindVars :: Ord (XId x) => Pat x -> Set (XId x)
 bindVars (VarP _ x) = Set.singleton x

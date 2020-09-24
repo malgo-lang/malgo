@@ -164,13 +164,15 @@ tcDecls ds = do
                 >>= traverseOf (T.varEnv % traversed) zonkScheme
                 >>= traverseOf (T.typeEnv % traversed) zonkType
                 >>= traverseOf (T.tyConEnv % traversed % _2 % traversed % _2) zonkType
+            forigns'' <- traverseOf (traversed % _1 % typed) zonkType forigns'
+            scDefs'' <- traverseOf (traversed % traversed % _1 % typed) zonkType =<< traverseOf (traversed % traversed % _4 % typed) zonkType scDefs'
             pure
               ( BindGroup
                   { _dataDefs = dataDefs',
                     _infixs = [],
-                    _forigns = forigns',
+                    _forigns = forigns'',
                     _scSigs = scSigs',
-                    _scDefs = scDefs'
+                    _scDefs = scDefs''
                   },
                 env
               )
