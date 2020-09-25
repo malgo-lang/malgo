@@ -1,10 +1,10 @@
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Type where
@@ -160,4 +160,5 @@ splitTyArr :: Type -> ([Type], Type)
 splitTyArr (TyArr t1 t2) =
   let (ps, r) = splitTyArr t2
    in (t1 : ps, r)
+splitTyArr TyMeta {} = bug Unreachable
 splitTyArr t = ([], t)

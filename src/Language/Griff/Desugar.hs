@@ -217,7 +217,7 @@ dcExp (G.Fn x cs@(Clause _ ps e : _)) = do
   (pss, es) <- first List.transpose <$> mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
   (obj, inner) <- curryFun ps' body
-  v <- join $ newId <$> x ^. toType % to Typing.zonkType % to ((=<<) dcType) <*> pure "$fun"
+  v <- join $ newId <$> x ^. toType % to dcType <*> pure "$fun"
   pure $ Let ((v, obj) : inner) $ Atom $ C.Var v
 dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
@@ -245,7 +245,7 @@ match (u : us) (ps : pss) es err
     -}
     -- -- Cast version
     -- match us pss (zipWith (\(VarP x v) e -> runDef $ do
-    --   ty' <- dcType =<< Typing.zonkType (x ^. toType)
+    --   ty' <- dcType (x ^. toType)
     --   C.Var u' <- cast ty' (Atom $ C.Var u)
     --   local (over varEnv (Map.insert v u')) $ lift e) ps es) err
     -- -- Original
@@ -258,7 +258,7 @@ match (u : us) (ps : pss) es err
       ( zipWith
           ( \case
               VarP x v -> \e -> do
-                patTy <- dcType =<< Typing.zonkType (x ^. toType)
+                patTy <- dcType (x ^. toType)
                 -- if this assert fail, there are some bug about polymorphic type
                 -- Ref: How to implement the Variable Rule?
                 assert (patTy == cTypeOf u) $ pure ()
