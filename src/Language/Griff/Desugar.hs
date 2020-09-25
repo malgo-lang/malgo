@@ -66,11 +66,9 @@ genPrimitive env =
         pure $ BinOp Add x y
 
     let newEnv =
-          mempty & varEnv
-            .~ Map.fromList
-              [(add_i64, add_i64')]
-              & tcEnv
-            .~ env
+          mempty
+            & varEnv % at add_i64 ?~ add_i64'
+            & tcEnv .~ env
 
     pure (newEnv, [(add_i64', add_i64_fun)])
 
@@ -110,26 +108,17 @@ dcScDefs ds = do
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
 
 dcScDef :: (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f) => ScDef (Griff 'TypeCheck) -> f [(Id CType, Obj (Id CType))]
-dcScDef (WithType pos _, name, [], expr) = do
-  typ <- Typing.zonkType $ expr ^. toType
-  case typ of
-    GT.TyArr {} -> dc
-    GT.TyLazy {} -> dc
-    _ -> errorOn pos $ "Invalid Toplevel Declaration:" <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
-  where
-    dc = do
-      name' <- lookupName name
-      expr' <- dcExp expr
-      (fun, inner) <- curryFun [] expr'
-      pure ((name', fun) : inner)
-dcScDef (x, name, params, expr) = do
-  (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view toType x)
+dcScDef (WithType pos typ, name, params, expr) = do
+  typ <- Typing.zonkType typ
+  when (isn't GT._TyArr typ || isn't GT._TyLazy typ) $
+    errorOn pos $ "Invalid Toplevel Declaration:" <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
+  -- When typ is TyLazy{}, splitTyArr returns ([], typ).
+  (paramTypes, _) <- splitTyArr <$> Typing.zonkType typ
   params' <- traverse ?? zip params paramTypes $ \(pId, pType) ->
     join $ newId <$> dcType pType <*> pure (pId ^. idName)
   local (over varEnv (Map.fromList (zip params params') <>)) $ do
-    expr' <- dcExp expr
-    (fun, inner) <- curryFun params' expr'
     name' <- lookupName name
+    (fun, inner) <- curryFun params' =<< dcExp expr
     pure ((name', fun) : inner)
 
 dcForign :: (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) => Forign (Griff 'TypeCheck) -> f (DesugarEnv, [(Id CType, Obj (Id CType))])
@@ -301,10 +290,19 @@ match (u : us) (ps : pss) es err
     hole <- newId (cTypeOf u) "$_"
     pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
   -- The Mixture Rule
-  | otherwise =
-    match (u : us) (List.transpose [head $ List.transpose (ps : pss)]) [head es]
-      =<< match (u : us) (List.transpose $ tail $ List.transpose (ps : pss)) (tail es) err
+  | otherwise = do
+    let ((ps', ps''), (pss', pss''), (es', es'')) = partition ps pss es
+    match (u : us) (ps' : pss') es' =<< match (u : us) (ps'' : pss'') es'' err
   where
+    partition ps@(VarP {} : _) pss es =
+      let (ps', ps'') = span (\case VarP {} -> True; _ -> False) ps
+       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
+    partition ps@(ConP {} : _) pss es =
+      let (ps', ps'') = span (\case ConP {} -> True; _ -> False) ps
+       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
+    partition ps@(UnboxedP {} : _) pss es =
+      let (ps', ps'') = span (\case UnboxedP {} -> True; _ -> False) ps
+       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
     constructors t
       | case t of GT.TyApp {} -> False; GT.TyCon {} -> False; _ -> True = errorDoc $ "Not valid type: " <+> pPrint t
       | otherwise = do
