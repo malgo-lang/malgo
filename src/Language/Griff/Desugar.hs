@@ -289,7 +289,13 @@ match (u : us) (ps : pss) es err
     unfoldedType <- unfoldType patType
     pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
   | all (\case UnboxedP {} -> True; _ -> False) ps = do
-    let cs = map (\(UnboxedP _ x) -> dcUnboxed x) ps
+    let cs =
+          map
+            ( \case
+                UnboxedP _ x -> dcUnboxed x
+                _ -> bug Unreachable
+            )
+            ps
     cases <- traverse ?? cs $ \c -> Switch c <$> match us pss es err
     hole <- newId (cTypeOf u) "$_"
     pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
@@ -298,23 +304,18 @@ match (u : us) (ps : pss) es err
     match (u : us) (List.transpose [head $ List.transpose (ps : pss)]) [head es]
       =<< match (u : us) (List.transpose $ tail $ List.transpose (ps : pss)) (tail es) err
   where
-    constructors (GT.TyApp t1 t2) = do
-      let (con, ts) = splitCon t1 t2
-      Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
-      let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
-      traverse ?? conMap' $ \(conName, conType) -> do
-        paramTypes <- traverse dcType (fst $ splitTyArr conType)
-        let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
-        params <- traverse (newId ?? "$p") paramTypes
-        pure (conName, ccon, params)
-    constructors (GT.TyCon con) | kind con == Star = do
-      Just ([], conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
-      traverse ?? conMap $ \(conName, conType) -> do
-        paramTypes <- traverse dcType (fst $ splitTyArr conType)
-        let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
-        params <- traverse (newId ?? "$p") paramTypes
-        pure (conName, ccon, params)
-    constructors t = errorDoc $ "Not valid type: " <+> pPrint t
+    constructors t
+      | case t of GT.TyApp {} -> False; GT.TyCon {} -> False; _ -> True = errorDoc $ "Not valid type: " <+> pPrint t
+      | otherwise = do
+        let (con, ts) = splitCon t
+        Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
+        let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
+        traverse (uncurry buildConInfo) conMap'
+    buildConInfo conName conType = do
+      paramTypes <- traverse dcType (fst $ splitTyArr conType)
+      let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
+      params <- traverse (newId ?? "$p") paramTypes
+      pure (conName, ccon, params)
     genCase (gcon, ccon, params) = do
       let (pss', es') = unzip $ group gcon (List.transpose (ps : pss)) es
       Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
@@ -329,8 +330,8 @@ match _ [] [] err = pure err
 match _ _ _ _ = bug Unreachable
 
 dcType :: (HasCallStack, MonadIO m) => GT.Type -> m CType
-dcType (GT.TyApp t1 t2) = do
-  let (con, ts) = splitCon t1 t2
+dcType t@GT.TyApp {} = do
+  let (con, ts) = splitCon t
   DataT (T.pack $ show $ pPrint con) <$> traverse dcType ts
 dcType (GT.TyVar _) = pure AnyT
 dcType (GT.TyCon con)
@@ -362,8 +363,8 @@ dcXType t =
     >>= dcType
 
 unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m CType
-unfoldType (GT.TyApp t1 t2) = do
-  let (con, ts) = splitCon t1 t2
+unfoldType t@GT.TyApp {} = do
+  let (con, ts) = splitCon t
   Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
   let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
   SumT
@@ -406,15 +407,14 @@ curryFun [] e@(Let ds (Atom (C.Var v))) = case List.lookup v ds of
   Nothing -> errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
 curryFun [] e = errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
 curryFun [x] e = pure (Fun [x] e, [])
-curryFun ps@(_ : _) e = do
+curryFun ps@(_ : _) e =
   curryFun' ps []
   where
     curryFun' [] _ = bug Unreachable
     curryFun' [x] as = do
       x' <- newId (cTypeOf x) (x ^. idName)
       fun <- newId (cTypeOf $ Fun ps e) "$curry"
-      body <- do
-        pure (C.Call (C.Var fun) $ reverse (C.Var x' : as))
+      let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
       pure (Fun [x'] body, [(fun, Fun ps e)])
     curryFun' (x : xs) as = do
       x' <- newId (cTypeOf x) (x ^. idName)
@@ -423,18 +423,3 @@ curryFun ps@(_ : _) e = do
         fun <- let_ (cTypeOf funObj) funObj
         pure $ Atom fun
       pure (Fun [x'] body, inner)
-
--- splitFoo
-
-splitCon :: GT.Type -> GT.Type -> (Id Kind, [GT.Type])
-splitCon (GT.TyCon con) t = (con, [t])
-splitCon (GT.TyApp t1 t2) t3 =
-  let (dataCon, ts) = splitCon t1 t2
-   in (dataCon, ts <> [t3])
-splitCon _ _ = bug Unreachable
-
-splitTyArr :: GT.Type -> ([GT.Type], GT.Type)
-splitTyArr (GT.TyArr t1 t2) =
-  let (ps, r) = splitTyArr t2
-   in (t1 : ps, r)
-splitTyArr t = ([], t)

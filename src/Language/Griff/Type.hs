@@ -141,3 +141,20 @@ instance Pretty a => Pretty (WithType a) where
 
 instance HasType (WithType a) where
   toType = to $ \(WithType _ t) -> t
+
+----------------
+-- split Type --
+----------------
+
+splitCon :: Type -> (Id Kind, [Type])
+splitCon (TyCon con) = (con, [])
+splitCon (TyApp t1 t2) =
+  let (dataCon, ts) = splitCon t1
+   in (dataCon, ts <> [t2])
+splitCon _ = bug Unreachable
+
+splitTyArr :: Type -> ([Type], Type)
+splitTyArr (TyArr t1 t2) =
+  let (ps, r) = splitTyArr t2
+   in (t1 : ps, r)
+splitTyArr t = ([], t)
