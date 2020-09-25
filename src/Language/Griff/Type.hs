@@ -1,3 +1,4 @@
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -46,39 +47,6 @@ instance HasKind Scheme where
 instance Pretty Scheme where
   pPrint (Forall vs t) = "forall" <+> P.sep (map pPrint vs) <> "." <+> pPrint t
 
-data Type
-  = TyApp Type Type
-  | TyVar TyVar
-  | TyCon (Id Kind)
-  | TyPrim PrimT
-  | TyArr Type Type
-  | TyTuple [Type]
-  | TyLazy Type
-  | TyMeta MetaTv
-  deriving stock (Eq, Show, Ord)
-
-instance HasKind Type where
-  kind (TyApp t _) = case kind t of
-    (KArr _ k) -> k
-    _ -> error "invalid kind"
-  kind (TyVar t) = kind t
-  kind (TyCon c) = kind c
-  kind (TyPrim _) = Star
-  kind (TyArr _ _) = Star
-  kind (TyTuple _) = Star
-  kind (TyLazy _) = Star
-  kind (TyMeta tv) = kind tv
-
-instance Pretty Type where
-  pPrintPrec l d (TyApp t1 t2) = P.maybeParens (d > 10) $ P.sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
-  pPrintPrec _ _ (TyVar v) = pPrint v
-  pPrintPrec _ _ (TyCon c) = pPrint c
-  pPrintPrec _ _ (TyPrim p) = pPrint p
-  pPrintPrec l d (TyArr t1 t2) = P.maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec _ _ (TyTuple ts) = P.parens $ P.sep $ P.punctuate "," $ map pPrint ts
-  pPrintPrec _ _ (TyLazy t) = P.braces $ pPrint t
-  pPrintPrec _ _ (TyMeta tv) = pPrint tv
-
 -------------------
 -- Type variable --
 -------------------
@@ -116,6 +84,41 @@ instance Pretty PrimT where
   pPrint DoubleT = "Double#"
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
+
+data Type
+  = TyApp Type Type
+  | TyVar TyVar
+  | TyCon (Id Kind)
+  | TyPrim PrimT
+  | TyArr Type Type
+  | TyTuple [Type]
+  | TyLazy Type
+  | TyMeta MetaTv
+  deriving stock (Eq, Show, Ord)
+
+makePrisms ''Type
+
+instance HasKind Type where
+  kind (TyApp t _) = case kind t of
+    (KArr _ k) -> k
+    _ -> error "invalid kind"
+  kind (TyVar t) = kind t
+  kind (TyCon c) = kind c
+  kind (TyPrim _) = Star
+  kind (TyArr _ _) = Star
+  kind (TyTuple _) = Star
+  kind (TyLazy _) = Star
+  kind (TyMeta tv) = kind tv
+
+instance Pretty Type where
+  pPrintPrec l d (TyApp t1 t2) = P.maybeParens (d > 10) $ P.sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+  pPrintPrec _ _ (TyVar v) = pPrint v
+  pPrintPrec _ _ (TyCon c) = pPrint c
+  pPrintPrec _ _ (TyPrim p) = pPrint p
+  pPrintPrec l d (TyArr t1 t2) = P.maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
+  pPrintPrec _ _ (TyTuple ts) = P.parens $ P.sep $ P.punctuate "," $ map pPrint ts
+  pPrintPrec _ _ (TyLazy t) = P.braces $ pPrint t
+  pPrintPrec _ _ (TyMeta tv) = pPrint tv
 
 -------------------
 -- HasType class --
