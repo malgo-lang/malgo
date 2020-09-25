@@ -65,7 +65,7 @@ instance Show MetaTv where
   show (MetaTv u _ _) = "_" <> show u
 
 instance Pretty MetaTv where
-  pPrint (MetaTv u _ _) = "$_" <> pPrint u
+  pPrint (MetaTv u _ _) = "'" <> pPrint u
 
 instance HasKind MetaTv where
   kind (MetaTv _ k _) = k
