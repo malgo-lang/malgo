@@ -325,7 +325,6 @@ tcExpr (Fn pos (Clause x [] e : _)) = do
   e' <- tcExpr e
   pure $ Fn (WithType pos (TyLazy $ e' ^. toType)) [Clause (WithType x (TyLazy $ e' ^. toType)) [] e']
 tcExpr (Fn pos cs) = do
-  -- TODO: lazy valueを正しく型付けする
   cs' <- traverse tcClause cs
   case cs' of
     (c' : cs') -> do
