@@ -27,39 +27,6 @@ import Language.Malgo.Pretty
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
----------------------------
--- Read and Write MetaTv --
----------------------------
-
-newMetaTv :: (MonadUniq f, MonadIO f) => Kind -> f MetaTv
-newMetaTv k = MetaTv <$> getUniq <*> pure k <*> newIORef Nothing
-
-readMetaTv :: MonadIO m => MetaTv -> m (Maybe Type)
-readMetaTv (MetaTv _ _ ref) = readIORef ref
-
-writeMetaTv :: MonadIO m => MetaTv -> Type -> m ()
-writeMetaTv (MetaTv _ k ref) t
-  | k == kind t = writeIORef ref (Just t)
-  | otherwise = errorDoc $ "Panic!" <+> "Kind of" <+> pPrint t <+> "is not" <+> pPrint k
-
--------------
--- Zonking --
--------------
-
-zonkScheme :: MonadIO f => Scheme -> f Scheme
-zonkScheme (Forall as t) = Forall as <$> zonkType t
-
-zonkType :: MonadIO f => Type -> f Type
-zonkType (TyMeta tv) = do
-  mty <- readMetaTv tv
-  case mty of
-    Just ty -> zonkType ty
-    Nothing -> pure $ TyMeta tv
-zonkType (TyApp t1 t2) = TyApp <$> zonkType t1 <*> zonkType t2
-zonkType (TyArr t1 t2) = TyArr <$> zonkType t1 <*> zonkType t2
-zonkType (TyTuple ts) = TyTuple <$> traverse zonkType ts
-zonkType (TyLazy t) = TyLazy <$> zonkType t
-zonkType t = pure t
 
 --------------------------------
 -- Generalize and Instantiate --

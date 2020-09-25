@@ -113,7 +113,7 @@ dcScDef (WithType pos typ, name, params, expr) = do
   when (isn't GT._TyArr typ && isn't GT._TyLazy typ) $
     errorOn pos $ "Invalid Toplevel Declaration:" <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
   -- When typ is TyLazy{}, splitTyArr returns ([], typ).
-  (paramTypes, _) <- splitTyArr <$> Typing.zonkType typ
+  (paramTypes, _) <- splitTyArr typ
   params' <- traverse ?? zip params paramTypes $ \(pId, pType) ->
     join $ newId <$> dcType pType <*> pure (pId ^. idName)
   local (over varEnv (Map.fromList (zip params params') <>)) $ do
@@ -124,7 +124,7 @@ dcScDef (WithType pos typ, name, params, expr) = do
 dcForign :: (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) => Forign (Griff 'TypeCheck) -> f (DesugarEnv, [(Id CType, Obj (Id CType))])
 dcForign (x@(WithType (_, primName) _), name, _) = do
   name' <- join $ newId <$> dcType (x ^. toType) <*> pure (name ^. idName)
-  (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view toType x)
+  (paramTypes, _) <- splitTyArr (x ^. toType)
   params <- traverse ?? paramTypes $ \paramType ->
     join $ newId <$> dcType paramType <*> pure "$p"
   primType <- dcType (view toType x)
@@ -137,7 +137,7 @@ dcDataDef (_, name, _, cons) =
     mapAndUnzipM ?? cons $ \(conName, _) -> do
       Just (GT.TyCon name') <- asks $ view (tcEnv % Tc.typeEnv % at name)
       Just (_, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at name')
-      let (paramTypes, retType) = splitTyArr $ fromJust $ List.lookup conName conMap
+      (paramTypes, retType) <- splitTyArr $ fromJust $ List.lookup conName conMap
       paramTypes' <- traverse dcType paramTypes
       retType' <- dcType retType
       case paramTypes' of
@@ -153,7 +153,7 @@ dcDataDef (_, name, _, cons) =
           typ <- dcType $ fromJust $ List.lookup conName conMap
           conName' <- newId typ (conName ^. idName)
           ps <- traverse (newId ?? "$p") paramTypes'
-          unfoldedType <- unfoldType $ snd $ splitTyArr (fromJust $ List.lookup conName conMap)
+          unfoldedType <- unfoldType . snd =<< splitTyArr (fromJust $ List.lookup conName conMap)
           (obj, inner) <-
             curryFun ps
               =<< runDef
@@ -310,7 +310,7 @@ match (u : us) (ps : pss) es err
         conMap <- lookupConMap con ts
         traverse (uncurry buildConInfo) conMap
     buildConInfo conName conType = do
-      paramTypes <- traverse dcType (fst $ splitTyArr conType)
+      paramTypes <- traverse dcType . fst =<< splitTyArr conType
       let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
       params <- traverse (newId ?? "$p") paramTypes
       pure (conName, ccon, params)
@@ -373,7 +373,7 @@ unfoldType t@GT.TyApp {} = do
     . Set.fromList
     <$> traverse
       ( \(conName, conType) ->
-          C.Con (T.pack $ show $ pPrint conName) <$> traverse dcType (fst $ splitTyArr conType)
+          C.Con (T.pack $ show $ pPrint conName) <$> (traverse dcType . fst =<< splitTyArr conType)
       )
       conMap
 unfoldType (GT.TyCon con) | kind con == Star = do
@@ -382,7 +382,7 @@ unfoldType (GT.TyCon con) | kind con == Star = do
     . Set.fromList
     <$> traverse
       ( \(conName, conType) ->
-          C.Con (T.pack $ show $ pPrint conName) <$> traverse dcType (fst $ splitTyArr conType)
+          C.Con (T.pack $ show $ pPrint conName) <$> (traverse dcType . fst =<< splitTyArr conType)
       )
       conMap
 unfoldType t = dcType t
