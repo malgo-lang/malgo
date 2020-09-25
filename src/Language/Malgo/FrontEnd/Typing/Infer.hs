@@ -18,7 +18,7 @@ import Language.Malgo.IR.Syntax
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Prelude hiding (ix, op)
+import Language.Malgo.Prelude hiding (ix)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type

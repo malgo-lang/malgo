@@ -45,7 +45,7 @@ import qualified Language.Malgo.IR.Op as Op
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Prelude hiding (from, index, op, to)
+import Language.Malgo.Prelude hiding (to)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as CType
 
