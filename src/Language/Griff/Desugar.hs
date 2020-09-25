@@ -210,14 +210,14 @@ dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
   e' <- dcExp e
   typ <- dcType (x ^. toType)
   Atom <$> let_ typ (Fun [] e')
-dcExp (G.Fn _ cs@(Clause _ ps e : _)) = do
+dcExp (G.Fn x cs@(Clause _ ps e : _)) = do
   ps' <- traverse (\p -> join $ newId <$> dcType (p ^. toType) <*> pure "$p") ps
   typ <- dcType (e ^. toType)
   -- destruct Clauses
   (pss, es) <- first List.transpose <$> mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
   (obj, inner) <- curryFun ps' body
-  v <- newId (cTypeOf obj) "$fun"
+  v <- join $ newId <$> x ^. toType % to Typing.zonkType % to ((=<<) dcType) <*> pure "$fun"
   pure $ Let ((v, obj) : inner) $ Atom $ C.Var v
 dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
