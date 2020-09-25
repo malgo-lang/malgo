@@ -110,7 +110,7 @@ dcScDefs ds = do
 dcScDef :: (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f) => ScDef (Griff 'TypeCheck) -> f [(Id CType, Obj (Id CType))]
 dcScDef (WithType pos typ, name, params, expr) = do
   typ <- Typing.zonkType typ
-  when (isn't GT._TyArr typ || isn't GT._TyLazy typ) $
+  when (isn't GT._TyArr typ && isn't GT._TyLazy typ) $
     errorOn pos $ "Invalid Toplevel Declaration:" <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
   -- When typ is TyLazy{}, splitTyArr returns ([], typ).
   (paramTypes, _) <- splitTyArr <$> Typing.zonkType typ
