@@ -69,7 +69,7 @@ compile opt = do
       when (dumpDesugar opt && not (noOptimize opt)) $
         liftIO $ do
           hPutStrLn stderr "=== OPTIMIZE ==="
-          hPrint stderr $ pPrint $ coreOpt
+          hPrint stderr $ pPrint coreOpt
 
       lint coreOpt
 
@@ -81,7 +81,7 @@ compile opt = do
       when (dumpDesugar opt) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
-          hPrint stderr $ pPrint $ coreProg
+          hPrint stderr $ pPrint coreProg
 
       llvmir <- codeGen coreProg
       let mod =

@@ -136,14 +136,14 @@ dcForign :: (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) => Forign (Griff 
 dcForign (x@(WithType (_, primName) _), name, _) = do
   name' <- join $ newId <$> dcType (x ^. toType) <*> pure (name ^. idName)
   (paramTypes, _) <- splitTyArr <$> Typing.zonkType (view toType x)
-  params <- traverse ?? paramTypes $ \paramType -> do
+  params <- traverse ?? paramTypes $ \paramType ->
     join $ newId <$> dcType paramType <*> pure "$p"
   primType <- dcType (view toType x)
   (fun, inner) <- curryFun params $ C.PrimCall primName primType (map C.Var params)
-  pure (mempty & varEnv .~ Map.singleton name name', ((name', fun) : inner))
+  pure (mempty & varEnv .~ Map.singleton name name', (name', fun) : inner)
 
 dcDataDef :: (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) => DataDef (Griff 'TypeCheck) -> m (DesugarEnv, [[(Id CType, Obj (Id CType))]])
-dcDataDef (_, name, _, cons) = do
+dcDataDef (_, name, _, cons) =
   fmap (first mconcat) $
     mapAndUnzipM ?? cons $ \(conName, _) -> do
       Just (GT.TyCon name') <- asks $ view (tcEnv % Tc.typeEnv % at name)
@@ -163,16 +163,16 @@ dcDataDef (_, name, _, cons) = do
         _ -> do
           typ <- dcType $ fromJust $ List.lookup conName conMap
           conName' <- newId typ (conName ^. idName)
-          ps <- traverse (\t -> newId t "$p") paramTypes'
+          ps <- traverse (newId ?? "$p") paramTypes'
           unfoldedType <- unfoldType $ snd $ splitTyArr (fromJust $ List.lookup conName conMap)
-          (obj, inner) <- do
+          (obj, inner) <-
             curryFun ps
               =<< runDef
                 ( do
                     packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) paramTypes') $ map C.Var ps
                     pure $ Cast retType' packed
                 )
-          pure (mempty & varEnv .~ Map.singleton conName conName', ((conName', obj) : inner))
+          pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj) : inner)
 
 dcUnboxed :: G.Unboxed -> C.Unboxed
 dcUnboxed (G.Int32 _) = error "Int32# is not implemented"
@@ -224,7 +224,8 @@ dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
 dcExp (G.Fn _ cs@(Clause _ ps e : _)) = do
   ps' <- traverse (\p -> join $ newId <$> dcType (p ^. toType) <*> pure "$p") ps
   typ <- dcType (e ^. toType)
-  (pss, es) <- fmap (first List.transpose) $ mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
+  -- destruct Clauses
+  (pss, es) <- first List.transpose <$> mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
   (obj, inner) <- curryFun ps' body
   v <- newId (cTypeOf obj) "$fun"
@@ -308,9 +309,8 @@ match (u : us) (ps : pss) es err
       | case t of GT.TyApp {} -> False; GT.TyCon {} -> False; _ -> True = errorDoc $ "Not valid type: " <+> pPrint t
       | otherwise = do
         let (con, ts) = splitCon t
-        Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
-        let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
-        traverse (uncurry buildConInfo) conMap'
+        conMap <- lookupConMap con ts
+        traverse (uncurry buildConInfo) conMap
     buildConInfo conName conType = do
       paramTypes <- traverse dcType (fst $ splitTyArr conType)
       let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
@@ -362,18 +362,22 @@ dcXType t =
     >>= runReaderT (Typing.transType t)
     >>= dcType
 
+lookupConMap :: (MonadReader DesugarEnv m, MonadFail m) => Id Kind -> [GT.Type] -> m [(Id (), GT.Type)]
+lookupConMap con ts = do
+  Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
+  pure $ over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
+
 unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m CType
 unfoldType t@GT.TyApp {} = do
   let (con, ts) = splitCon t
-  Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
-  let conMap' = over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
+  conMap <- lookupConMap con ts
   SumT
     . Set.fromList
     <$> traverse
       ( \(conName, conType) ->
           C.Con (T.pack $ show $ pPrint conName) <$> traverse dcType (fst $ splitTyArr conType)
       )
-      conMap'
+      conMap
 unfoldType (GT.TyCon con) | kind con == Star = do
   Just ([], conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
   SumT

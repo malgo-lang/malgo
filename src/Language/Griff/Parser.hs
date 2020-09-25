@@ -13,6 +13,7 @@ import Language.Malgo.Prelude hiding (many, some)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
+import Data.Functor (($>))
 
 type Parser = Parsec Void Text
 
@@ -196,7 +197,7 @@ pTyUnit = between (symbol "(") (symbol ")") $ do
   pure $ TyTuple s []
 
 pTyLazy :: Parser (Type (Griff 'Parse))
-pTyLazy = between (symbol "{") (symbol "}") $ do
+pTyLazy = between (symbol "{") (symbol "}") $
   TyLazy <$> getSourcePos <*> pType
 
 pSingleType :: Parser (Type (Griff 'Parse))
@@ -247,7 +248,7 @@ pDataDef = label "toplevel type definition" $ do
 pInfix :: Parser (Decl (Griff 'Parse))
 pInfix = label "infix declaration" $ do
   s <- getSourcePos
-  a <- try (pKeyword "infixl" *> pure LeftA) <|> try (pKeyword "infixr" *> pure RightA) <|> (pKeyword "infix" *> pure NeutralA)
+  a <- try (pKeyword "infixl" $> LeftA) <|> try (pKeyword "infixr" $> RightA) <|> (pKeyword "infix" $> NeutralA)
   i <- lexeme L.decimal
   x <- between (symbol "(") (symbol ")") operator
   pure $ Infix s a i x
@@ -259,8 +260,7 @@ pForign = label "forign import" $ do
   pKeyword "import"
   x <- lowerIdent
   pOperator "::"
-  t <- pType
-  pure $ Forign s x t
+  Forign s x <$> pType
 
 pDecl :: Parser (Decl (Griff 'Parse))
 pDecl = pDataDef <|> pInfix <|> pForign <|> try pScSig <|> pScDef

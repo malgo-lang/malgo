@@ -44,7 +44,7 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindG
 deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Show (BindGroup x)
 
 instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
-  pPrint (BindGroup {_scDefs, _scSigs, _dataDefs, _infixs, _forigns}) =
+  pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _infixs, _forigns} =
     P.sep
       ( P.punctuate ";" $
           map prettyDataDef _dataDefs
@@ -81,7 +81,7 @@ makeBindGroup ds =
     infixDef _ = Nothing
     forign (Forign x n t) = Just (x, n, t)
     forign _ = Nothing
-    splitScDef sccs ds = map (\ns -> mapMaybe (\n -> find (\d -> n == d ^. _2) ds) ns) sccs
+    splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
 adjacents :: (Pretty a, Ord (XId x), XId x ~ Id a) => (XScDef x, Id a, [Id a], Exp x) -> (Id a, Int, [Int])
 adjacents (_, f, ps, e) = (f, f ^. idUniq, map (view idUniq) $ toList $ freevars e Set.\\ Set.insert f (Set.fromList ps))
@@ -89,5 +89,5 @@ adjacents (_, f, ps, e) = (f, f ^. idUniq, map (view idUniq) $ toList $ freevars
 makeSCC :: (Pretty a, Ord (XId x), XId x ~ Id a) => [(XScDef x, Id a, [Id a], Exp x)] -> [[Id a]]
 makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'
   where
-    vertices = map (view _2) $ map adjacents ds
-    adjacents' = map (\(l, v, vs) -> (l, v, filter (`elem` vertices) vs)) $ map adjacents ds
+    vertices = map (view _2 . adjacents) ds
+    adjacents' = map ((\(l, v, vs) -> (l, v, filter (`elem` vertices) vs)) . adjacents) ds

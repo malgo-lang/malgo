@@ -3,7 +3,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PartialTypeSignatures #-}
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 
@@ -46,18 +45,19 @@ times n f e =
         else times (n - 1) f e'
 
 optimize :: MonadUniq m => Int -> Exp (Id CType) -> m (Exp (Id CType))
-optimize level expr = runReaderT ?? level $ do
-  fmap flat $
-    times
-      10
-      ( optVarBind
-          >=> (flip runReaderT mempty . optPackInline)
-          >=> removeUnusedLet
-          >=> (flip evalStateT mempty . optCallInline)
-          >=> optCast
-          >=> pure . flat
-      )
-      expr
+optimize level expr =
+  runReaderT ?? level $
+    flat
+      <$> times
+        10
+        ( optVarBind
+            >=> (flip runReaderT mempty . optPackInline)
+            >=> removeUnusedLet
+            >=> (flip evalStateT mempty . optCallInline)
+            >=> optCast
+            >=> pure . flat
+        )
+        expr
 
 type CallInlineMap = Map (Id CType) ([Id CType], Exp (Id CType))
 
@@ -134,15 +134,13 @@ removeUnusedLet (Let ds e) = do
       | limit <= 0 = undefined
       | v `elem` fvs = True
       | otherwise =
-        let fvs' = fvs <> mconcat (catMaybes $ map (\x -> List.lookup x gamma) $ Set.toList fvs)
-         in if fvs == fvs'
-              then False
-              else reachable (limit - 1 :: Int) gamma v fvs'
+        let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ Set.toList fvs)
+         in fvs /= fvs' && reachable (limit - 1 :: Int) gamma v fvs'
 removeUnusedLet (Match v cs) = Match <$> removeUnusedLet v <*> traverseOf (traversed % appCase) removeUnusedLet cs
 removeUnusedLet e = pure e
 
 optCast :: MonadUniq f => Exp (Id CType) -> f (Exp (Id CType))
-optCast e@(Cast (pts' :-> rt') f) = do
+optCast e@(Cast (pts' :-> rt') f) =
   case cTypeOf f of
     pts :-> _
       | length pts' == length pts -> do

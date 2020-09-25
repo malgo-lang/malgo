@@ -1,6 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.Alpha (alphaProgram, alphaExp, runAlpha) where
@@ -15,7 +14,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.CType
 
 runAlpha :: ReaderT AlphaEnv m a -> AlphaEnv -> m a
-runAlpha m env = runReaderT m env
+runAlpha = runReaderT
 
 type AlphaEnv = Map (Id CType) (Atom (Id CType))
 
@@ -37,7 +36,7 @@ lookupId n = do
     _ -> bug Unreachable
 
 alphaProgram :: (MonadUniq f, MonadReader AlphaEnv f) => Program (Id CType) -> f (Program (Id CType))
-alphaProgram (Program {topFuncs, mainExp}) = do
+alphaProgram Program {topFuncs, mainExp} = do
   newFuncIds <- foldMapA ?? topFuncs $ \(n, _) -> Map.singleton n <$> (Var <$> cloneId n)
   local (newFuncIds <>) $ do
     topFuncs' <- traverse alphaFunc topFuncs
@@ -65,7 +64,7 @@ alphaExp (Let ds e) = do
   env <- foldMapA ?? ds $ \(n, _) -> Map.singleton n . Var <$> cloneId n
   local (env <>) $
     Let <$> traverse (bitraverse lookupId alphaObj) ds <*> alphaExp e
-alphaExp (Match e cs) = do
+alphaExp (Match e cs) =
   Match <$> alphaExp e <*> traverse alphaCase cs
 alphaExp e@Error {} = pure e
 
