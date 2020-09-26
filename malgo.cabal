@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e2bca9666f302c926278142f521a28eae108026ff3f70aeb455c2bc527b52c09
+-- hash: a16ec33ebefc03833d340452c0e7e740c1a9519122f6dbe84ea36bb169526a64
 
 name:           malgo
 version:        1.0.0.0
@@ -69,7 +69,7 @@ library
   hs-source-dirs:
       src
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=4 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-tools:
       happy
   build-depends:
@@ -102,7 +102,7 @@ executable griff
   hs-source-dirs:
       app/griff
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=4 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-tools:
       happy
   build-depends:
@@ -136,7 +136,7 @@ executable malgo
   hs-source-dirs:
       app/malgo
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=4 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-tools:
       happy
   build-depends:
@@ -171,7 +171,7 @@ test-suite malgo-test
   hs-source-dirs:
       test
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -frefinement-level-hole-fits=4 -j4 +RTS -A128m -n2m -qg -RTS -fwrite-ide-info -hiedir=.hie
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-tools:
       happy
   build-depends:
