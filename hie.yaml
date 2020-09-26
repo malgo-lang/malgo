@@ -1,19 +1,20 @@
 cradle:
-  stack:
-    - path: "./app/malgo/Main.hs"
-      component: "malgo:exe:malgo"
-    - path: "./app/griff/Main.hs"
-      component: "malgo:exe:griff"
-    - path: "./src"
-      component: "malgo:lib"
-    - path: "./test"
-      component: "malgo:malgo-test"
-  # cabal:
+  # stack:
   #   - path: "./app/malgo/Main.hs"
   #     component: "malgo:exe:malgo"
   #   - path: "./app/griff/Main.hs"
   #     component: "malgo:exe:griff"
-  #   - path: "./src" 
-  #     component: "lib:malgo"
+  #   - path: "./src"
+  #     component: "malgo:lib"
   #   - path: "./test"
   #     component: "malgo:malgo-test"
+  # Works on ghc 8.8.4
+  cabal:
+    - path: "./app/malgo/Main.hs"
+      component: "malgo:exe:malgo"
+    - path: "./app/griff/Main.hs"
+      component: "malgo:exe:griff"
+    - path: "./src" 
+      component: "lib:malgo"
+    - path: "./test"
+      component: "malgo:malgo-test"
