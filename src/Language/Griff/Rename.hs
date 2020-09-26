@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -48,8 +49,8 @@ rnDecls :: (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) => [Decl (Gr
 rnDecls ds = do
   -- RnEnvの生成
   let (varNames, typeNames) = toplevelIdents ds
-  vm <- mconcat <$> traverse (\v -> Map.singleton v <$> newId () v) varNames
-  tm <- mconcat <$> traverse (\v -> Map.singleton v <$> newId () v) typeNames
+  vm <- foldMapA (\v -> Map.singleton v <$> newId () v) varNames
+  tm <- foldMapA (\v -> Map.singleton v <$> newId () v) typeNames
   let rnEnv = RnEnv vm tm
   -- RnStateの生成
   --   定義されていない識別子に対するInfixはエラー
@@ -151,12 +152,11 @@ toplevelIdents ds = go ([], [], []) ds & \(sigs, vars, types) -> (ordNub $ sigs 
 
 -- infix宣言をMapに変換
 infixDecls :: MonadReader RnEnv m => [Decl (Griff 'Parse)] -> m (Map RnId (Assoc, Int))
-infixDecls ds = mconcat <$> traverse f ds
-  where
-    f (Infix pos assoc order name) = do
-      name' <- lookupVarName pos name
-      pure $ Map.singleton name' (assoc, order)
-    f _ = pure mempty
+infixDecls ds = foldMapA ?? ds $ \case
+  (Infix pos assoc order name) -> do
+    name' <- lookupVarName pos name
+    pure $ Map.singleton name' (assoc, order)
+  _ -> pure mempty
 
 mkOpApp :: SourcePos -> (Assoc, Int) -> RnId -> Exp (Griff 'Rename) -> Exp (Griff 'Rename) -> Exp (Griff 'Rename)
 -- (e11 op1 e12) op2 e2

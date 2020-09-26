@@ -1,3 +1,4 @@
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -70,6 +71,8 @@ instance Pretty MetaTv where
 
 instance HasKind MetaTv where
   kind (MetaTv _ k _) = k
+
+type MonadMetaTv m = (MonadUniq m, MonadIO m)
 
 ---------------------------
 -- Read and Write MetaTv --
@@ -161,15 +164,19 @@ instance Pretty Type where
 
 class HasType a where
   toType :: Optic' A_Getter NoIx a Type
+  overType :: MonadMetaTv m => (Type -> m Type) -> a -> m a
 
 instance HasType Type where
   toType = to id
+  overType = id
 
 instance HasType Scheme where
   toType = to $ \(Forall _ t) -> t
+  overType f (Forall vs t) = Forall vs <$> f t
 
 instance HasType a => HasType (Id a) where
   toType = idMeta % toType
+  overType f n = traverseOf idMeta (overType f) n
 
 data WithType a = WithType a Type
   deriving stock (Eq, Show, Ord, Functor, Foldable)
@@ -179,6 +186,7 @@ instance Pretty a => Pretty (WithType a) where
 
 instance HasType (WithType a) where
   toType = to $ \(WithType _ t) -> t
+  overType f (WithType x t) = WithType x <$> f t
 
 ----------------
 -- split Type --
@@ -191,13 +199,9 @@ splitCon (TyApp t1 t2) =
    in (dataCon, ts <> [t2])
 splitCon _ = bug Unreachable
 
-splitTyArr :: MonadIO m => Type -> m ([Type], Type)
-splitTyArr (TyArr t1 t2) = do
-  (ps, r) <- splitTyArr t2
-  pure (t1 : ps, r)
-splitTyArr (TyMeta tv) = do
-  mt <- readMetaTv tv
-  case mt of
-    Just t -> splitTyArr t
-    Nothing -> bug Unreachable
-splitTyArr t = pure ([], t)
+splitTyArr :: Type -> ([Type], Type)
+splitTyArr (TyArr t1 t2) =
+  let (ps, r) = splitTyArr t2
+   in (t1 : ps, r)
+splitTyArr (TyMeta _) = bug Unreachable
+splitTyArr t = ([], t)

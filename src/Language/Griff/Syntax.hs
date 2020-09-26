@@ -40,6 +40,7 @@ instance HasType Unboxed where
     Double {} -> T.TyPrim T.DoubleT
     Char {} -> T.TyPrim T.CharT
     String {} -> T.TyPrim T.StringT
+  overType _ = pure
 
 -- Expression
 
@@ -84,6 +85,15 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Fn x _ -> x ^. toType
     Tuple x _ -> x ^. toType
     Force x _ -> x ^. toType
+  overType f = \case
+    Var x v -> Var <$> overType f x <*> pure v
+    Con x c -> Con <$> overType f x <*> pure c
+    Unboxed x u -> Unboxed <$> overType f x <*> overType f u
+    Apply x e1 e2 -> Apply <$> overType f x <*> overType f e1 <*> overType f e2
+    OpApp x op e1 e2 -> OpApp <$> overType f x <*> pure op <*> overType f e1 <*> overType f e2
+    Fn x cs -> Fn <$> overType f x <*> traverse (overType f) cs
+    Tuple x es -> Tuple <$> overType f x <*> traverse (overType f) es
+    Force x e -> Force <$> overType f x <*> overType f e
 
 freevars :: Ord (XId x) => Exp x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
@@ -113,6 +123,7 @@ instance (Pretty (XId x)) => Pretty (Clause x) where
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Clause x) where
   toType = to $ \(Clause x _ _) -> view toType x
+  overType f (Clause x ps e) = Clause <$> overType f x <*> traverse (overType f) ps <*> overType f e
 
 freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
 freevarsClause (Clause _ pats e) = freevars e Set.\\ mconcat (map bindVars pats)
@@ -143,6 +154,10 @@ instance (ForallPatX HasType x) => HasType (Pat x) where
     VarP x _ -> view toType x
     ConP x _ _ -> view toType x
     UnboxedP x _ -> view toType x
+  overType f = \case
+    VarP x v -> VarP <$> overType f x <*> pure v
+    ConP x c ps -> ConP <$> overType f x <*> pure c <*> traverse (overType f) ps
+    UnboxedP x u -> UnboxedP <$> overType f x <*> overType f u
 
 bindVars :: Ord (XId x) => Pat x -> Set (XId x)
 bindVars (VarP _ x) = Set.singleton x
