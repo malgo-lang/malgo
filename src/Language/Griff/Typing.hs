@@ -12,7 +12,6 @@ module Language.Griff.Typing (typeCheck, transType, applySubst, readMetaTv, zonk
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
-import Data.Tuple.Extra (dupe)
 import Language.Griff.Extension
 import Language.Griff.Grouping
 import Language.Griff.RnEnv as R
@@ -26,7 +25,6 @@ import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
-
 
 --------------------------------
 -- Generalize and Instantiate --
@@ -160,38 +158,36 @@ lookupVar pos name = do
 
 tcDataDefs :: (MonadReader TcEnv m, MonadIO m, MonadUniq m, MonadFail m) => [DataDef (Griff 'Rename)] -> m (TcEnv, [DataDef (Griff 'TypeCheck)])
 tcDataDefs ds = do
-  dataEnv <- foldMapA ?? ds $ \(_, name, params, _) -> do
-    con <- newId (kindof params) (name ^. idName)
-    pure $ Map.singleton name (TyCon con)
-  (conEnvs, ds') <- local (over T.typeEnv (dataEnv <>)) $
-    mapAndUnzipM ?? ds $ \(pos, name, params, cons) -> do
-      (dataTypes, cons') <- mapAndUnzipM ?? cons $ \(con, args) -> do
-        paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
-        local (over T.typeEnv (paramsEnv <>)) $ do
-          (dataType, conType) <- buildType pos name params args
-          pure (dataType, (con, conType))
-      traverse_ (unify pos (head dataTypes)) (tail dataTypes)
-      Just (TyCon dataName) <- asks $ view $ T.typeEnv % at name
-      fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
-      as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
-      zipWithM_ writeMetaTv fvs (map TyVar as)
-      pure
-        ( mempty & T.varEnv .~ foldMap (\(con, conType) -> Map.singleton con (Forall as conType)) cons'
-            & T.tyConEnv .~ Map.singleton dataName (as, cons'),
-          (pos, name, params, map (second (map tcType)) cons)
-        )
-  pure (mconcat conEnvs & T.typeEnv .~ dataEnv, ds')
+  -- すべての型コンストラクタに対応するTyConを生成する
+  dataEnv <- foldMapA ?? ds $ \(_, name, params, _) ->
+    Map.singleton name . TyCon <$> newId (kindof params) (name ^. idName)
+  local (over T.typeEnv (dataEnv <>)) $ do
+    -- 値コンストラクタに対する処理
+    (conEnvs, ds') <- mapAndUnzipM ?? ds $ \(pos, name, params, cons) -> do
+      paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
+      local (over T.typeEnv (paramsEnv <>)) $ do
+        cons' <- traverseOf (traversed % _2) ?? cons $ \args -> do
+          -- 値コンストラクタの型を構築
+          name' <- lookupType pos name
+          params' <- traverse (lookupType pos) params
+          args' <- traverse (transType . tcType) args
+          pure $ foldr TyArr (foldr (flip TyApp) name' params') args'
+
+        -- generate type variables
+        fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
+        as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
+        zipWithM_ writeMetaTv fvs (map TyVar as)
+
+        Just (TyCon dataName) <- asks $ view $ T.typeEnv % at name
+        pure
+          ( mempty & T.varEnv .~ foldMap (\(con, conType) -> Map.singleton con (Forall as conType)) cons'
+              & T.tyConEnv .~ Map.singleton dataName (as, cons'),
+            (pos, name, params, map (second (map tcType)) cons)
+          )
+    pure (mconcat conEnvs & T.typeEnv .~ dataEnv, ds')
   where
     kindof [] = Star
     kindof (_ : xs) = KArr Star (kindof xs)
-    buildType pos name params [] = do
-      name' <- lookupType pos name
-      params' <- traverse (lookupType pos) params
-      pure $ dupe $ foldr (flip TyApp) name' params'
-    buildType pos name params (arg : args) = do
-      arg' <- transType $ tcType arg
-      (dataType, ret) <- buildType pos name params args
-      pure (dataType, TyArr arg' ret)
 
 tcForigns :: (MonadUniq m, MonadIO m, MonadReader TcEnv m) => [Forign (Griff 'Rename)] -> m (TcEnv, [Forign (Griff 'TypeCheck)])
 tcForigns ds = fmap (first mconcat) $
