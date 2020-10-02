@@ -135,8 +135,9 @@ dcDataDef (_, name, _, cons) =
   fmap (first mconcat) $
     mapAndUnzipM ?? cons $ \(conName, _) -> do
       Just (GT.TyCon name') <- asks $ view (tcEnv % Tc.typeEnv % at name)
-      Just (_, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at name')
-      let (paramTypes, retType) = splitTyArr $ fromJust $ List.lookup conName conMap
+      conMap <- lookupConMap name' []
+      let Just conType = List.lookup conName conMap
+      let (paramTypes, retType) = splitTyArr conType
       paramTypes' <- traverse dcType paramTypes
       retType' <- dcType retType
       case paramTypes' of
@@ -149,10 +150,9 @@ dcDataDef (_, name, _, cons) =
               pure $ Cast retType' packed
           pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
         _ -> do
-          typ <- dcType $ fromJust $ List.lookup conName conMap
-          conName' <- newId typ (conName ^. idName)
+          conName' <- join $ newId <$> dcType conType <*> pure (conName ^. idName)
           ps <- traverse (newId ?? "$p") paramTypes'
-          unfoldedType <- unfoldType $ snd $ splitTyArr $ fromJust $ List.lookup conName conMap
+          unfoldedType <- unfoldType retType
           (obj, inner) <-
             curryFun ps
               =<< runDef
@@ -375,7 +375,7 @@ unfoldType t@GT.TyApp {} = do
       )
       conMap
 unfoldType (GT.TyCon con) | kind con == Star = do
-  Just ([], conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
+  conMap <- lookupConMap con []
   SumT
     . Set.fromList
     <$> traverse
