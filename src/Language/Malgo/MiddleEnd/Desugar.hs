@@ -71,7 +71,7 @@ toExp (S.String _ x) =
     con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (bind <=< toExp) xs
-  let con = Con ("Tuple" <> T.pack (show $ length xs)) $ map cTypeOf vs
+  let con = Con ("Tuple" <> length xs ^. toText) $ map cTypeOf vs
   let ty = SumT $ Set.singleton con
   runDef $ fmap Atom $ let_ ty $ Pack ty con vs
 toExp (S.Array _ (x :| xs)) = runDef $ do
@@ -245,7 +245,7 @@ crushPat (S.TupleP _ xs) = go xs []
   where
     go [] acc e = do
       acc <- pure $ reverse acc
-      Unpack (Con ("Tuple" <> T.pack (show $ length acc)) $ map cTypeOf acc) acc <$> e
+      Unpack (Con ("Tuple" <> length acc ^. toText) $ map cTypeOf acc) acc <$> e
     go (p : ps) acc e = do
       x <- newId (cTypeOf $ typeOf p) "p"
       go ps (x : acc) $ do

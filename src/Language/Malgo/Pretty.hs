@@ -1,5 +1,5 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -9,6 +9,9 @@ module Language.Malgo.Pretty
     pShow,
     errorDoc,
     errorOn,
+    pretty,
+    rendered,
+    toText,
   )
 where
 
@@ -18,6 +21,7 @@ import Language.Malgo.Prelude
 import Text.Pretty.Simple (pShow)
 import Text.PrettyPrint.HughesPJClass (Doc, Pretty (..))
 import qualified Text.PrettyPrint.HughesPJClass as P
+import Data.Text.Optics
 import qualified Prelude
 
 -- change operator precedence
@@ -34,6 +38,15 @@ instance Pretty TL.Text where
 
 instance Pretty Doc where
   pPrint = id
+
+pretty :: Pretty a => Getter a Doc
+pretty = to pPrint
+
+rendered :: IsText a => Getter Doc a
+rendered = to P.render % packed
+
+toText :: (Pretty t, IsText a) => Getter t a
+toText = pretty % rendered
 
 errorDoc :: HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ P.render x

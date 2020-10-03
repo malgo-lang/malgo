@@ -16,7 +16,6 @@ import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import qualified Data.Text as T
 import Language.Griff.Extension
 import Language.Griff.Grouping
 import qualified Language.Griff.RnEnv as Rn
@@ -146,7 +145,7 @@ dcDataDef (_, name, _, cons) =
           unfoldedType <- unfoldType $ fromJust $ List.lookup conName conMap
           obj <- fmap (Fun []) $
             runDef $ do
-              packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) []) []
+              packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (conName ^. toText) []) []
               pure $ Cast retType' packed
           pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
         _ -> do
@@ -157,7 +156,7 @@ dcDataDef (_, name, _, cons) =
             curryFun ps
               =<< runDef
                 ( do
-                    packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (T.pack $ show $ pPrint conName) paramTypes') $ map C.Var ps
+                    packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps
                     pure $ Cast retType' packed
                 )
           pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj) : inner)
@@ -220,7 +219,7 @@ dcExp (G.Fn x cs@(Clause _ ps e : _)) = do
 dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dcExp) es
-  let con = C.Con ("Tuple" <> T.pack (show $ length es)) $ map cTypeOf es'
+  let con = C.Con ("Tuple" <> length es ^. toText) $ map cTypeOf es'
   let ty = SumT $ Set.singleton con
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
@@ -309,7 +308,7 @@ match (u : us) (ps : pss) es err
         traverse (uncurry buildConInfo) conMap
     buildConInfo conName conType = do
       paramTypes <- traverse dcType $ fst $ splitTyArr conType
-      let ccon = C.Con (T.pack $ show $ pPrint conName) paramTypes
+      let ccon = C.Con (conName ^. toText) paramTypes
       params <- traverse (newId ?? "$p") paramTypes
       pure (conName, ccon, params)
     genCase (gcon, ccon, params) = do
@@ -328,10 +327,10 @@ match _ _ _ _ = bug Unreachable
 dcType :: (HasCallStack, MonadIO m) => GT.Type -> m CType
 dcType t@GT.TyApp {} = do
   let (con, ts) = splitCon t
-  DataT (T.pack $ show $ pPrint con) <$> traverse dcType ts
+  DataT (con ^. toText) <$> traverse dcType ts
 dcType (GT.TyVar _) = pure AnyT
 dcType (GT.TyCon con)
-  | kind con == Star = pure $ DataT (T.pack $ show $ pPrint con) []
+  | kind con == Star = pure $ DataT (con ^. toText) []
   | otherwise = errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint (kind con)
 dcType (GT.TyPrim GT.Int32T) = error "Int32# is not implemented"
 dcType (GT.TyPrim GT.Int64T) = pure C.Int64T
@@ -344,7 +343,7 @@ dcType (GT.TyArr t1 t2) = do
   t2' <- dcType t2
   pure $ [t1'] :-> t2'
 dcType (GT.TyTuple ts) =
-  SumT . Set.singleton . C.Con ("Tuple" <> T.pack (show $ length ts)) <$> traverse dcType ts
+  SumT . Set.singleton . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dcType ts
 dcType (GT.TyLazy t) = ([] :->) <$> dcType t
 dcType (GT.TyMeta tv) = do
   mtype <- Typing.readMetaTv tv
@@ -371,7 +370,7 @@ unfoldType t@GT.TyApp {} = do
     . Set.fromList
     <$> traverse
       ( \(conName, conType) ->
-          C.Con (T.pack $ show $ pPrint conName) <$> (traverse dcType $ fst $ splitTyArr conType)
+          C.Con (conName ^. toText) <$> (traverse dcType $ fst $ splitTyArr conType)
       )
       conMap
 unfoldType (GT.TyCon con) | kind con == Star = do
@@ -380,7 +379,7 @@ unfoldType (GT.TyCon con) | kind con == Star = do
     . Set.fromList
     <$> traverse
       ( \(conName, conType) ->
-          C.Con (T.pack $ show $ pPrint conName) <$> (traverse dcType $ fst $ splitTyArr conType)
+          C.Con (conName ^. toText) <$> (traverse dcType $ fst $ splitTyArr conType)
       )
       conMap
 unfoldType t = dcType t
