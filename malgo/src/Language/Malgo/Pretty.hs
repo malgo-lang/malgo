@@ -15,9 +15,6 @@ module Language.Malgo.Pretty
   )
 where
 
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as TL
-import Data.Text.Optics
 import Koriel.Prelude
 import Text.Pretty.Simple (pShow)
 import Text.PrettyPrint.HughesPJClass (Doc, Pretty (..))
@@ -30,22 +27,16 @@ infixl 9 <+>
 (<+>) :: Doc -> Doc -> Doc
 (<+>) = (P.<+>)
 
-instance Pretty T.Text where
-  pPrint = P.text . T.unpack
-
-instance Pretty TL.Text where
-  pPrint = P.text . TL.unpack
-
 instance Pretty Doc where
   pPrint = id
 
 pretty :: Pretty a => Getter a Doc
 pretty = to pPrint
 
-rendered :: IsText a => Getter Doc a
-rendered = to P.render % packed
+rendered :: Getter Doc String
+rendered = to P.render
 
-toText :: (Pretty t, IsText a) => Getter t a
+toText :: Pretty a => Getter a String
 toText = pretty % rendered
 
 errorDoc :: HasCallStack => Doc -> a

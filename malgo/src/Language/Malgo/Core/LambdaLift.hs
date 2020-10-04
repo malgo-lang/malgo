@@ -98,7 +98,7 @@ def ::
   ( MonadUniq m,
     MonadState Env m
   ) =>
-  Text ->
+  String ->
   [Id CType] ->
   Exp (Id CType) ->
   m (Id CType)

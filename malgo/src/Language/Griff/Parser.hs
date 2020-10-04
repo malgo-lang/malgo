@@ -6,7 +6,6 @@ module Language.Griff.Parser where
 
 import Control.Monad.Combinators.Expr
 import Data.Functor (($>))
-import qualified Data.Text as T
 import Data.Void
 import Koriel.Prelude hiding (many, some)
 import Language.Griff.Extension
@@ -46,23 +45,23 @@ reserved = void $ choice $ map (try . pKeyword) ["data", "infixl", "infixr", "in
 reservedOp :: Parser ()
 reservedOp = void $ choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
 
-lowerIdent :: Parser Text
+lowerIdent :: Parser String
 lowerIdent = label "lower identifier" $
   lexeme $ do
     notFollowedBy reserved
-    T.pack <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
+    (:) <$> (lowerChar <|> char '_') <*> many identLetter
 
-upperIdent :: Parser Text
+upperIdent :: Parser String
 upperIdent = label "upper identifier" $
   lexeme $ do
     notFollowedBy reserved
-    T.pack <$> ((:) <$> upperChar <*> many identLetter)
+    (:) <$> upperChar <*> many identLetter
 
-operator :: Parser Text
+operator :: Parser String
 operator = label "operator" $
   lexeme $ do
     notFollowedBy reservedOp
-    T.pack <$> some opLetter
+    some opLetter
 
 -- parser
 

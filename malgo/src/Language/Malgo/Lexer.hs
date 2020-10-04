@@ -10,7 +10,6 @@ module Language.Malgo.Lexer
   )
 where
 
-import qualified Data.Text as T
 import Koriel.Prelude hiding (EQ, GT, LT)
 import Language.Malgo.Token
 import Text.Parsec hiding (many, (<|>))
@@ -103,10 +102,10 @@ lexer pos =
       [("(", LPAREN), (")", RPAREN), ("[", LBRACK), ("]", RBRACK), ("{", LBRACE), ("}", RBRACE)]
     <|> try (valueToken Tok.float FLOAT)
     <|> valueToken Tok.natural INT
-    <|> valueToken (\t -> T.pack <$> (lookAhead upper >> Tok.identifier t)) LID
-    <|> valueToken (Tok.identifier >=> pure . T.pack) ID
+    <|> valueToken (\t -> lookAhead upper >> Tok.identifier t) LID
+    <|> valueToken (Tok.identifier >=> pure) ID
     <|> valueToken Tok.charLiteral CHAR
-    <|> valueToken (Tok.stringLiteral >=> pure . T.pack) STRING
+    <|> valueToken (Tok.stringLiteral >=> pure) STRING
   where
     simpleToken eatToken (s, t) = eatToken tokenParser s >> pure (Token (pos, t))
     valueToken scanToken builder = scanToken tokenParser >>= \v -> pure (Token (pos, builder v))

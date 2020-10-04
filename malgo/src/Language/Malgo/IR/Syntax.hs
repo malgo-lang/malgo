@@ -39,7 +39,7 @@ data Expr a
   | Float SourcePos Double
   | Bool SourcePos Bool
   | Char SourcePos Char
-  | String SourcePos Text
+  | String SourcePos String
   | Tuple SourcePos [Expr a]
   | Array SourcePos (NonEmpty (Expr a))
   | MakeArray SourcePos (Expr a) (Expr a)
@@ -65,7 +65,7 @@ data Decl a
         )
       ]
   | ValDec SourcePos a (Maybe (SType a)) (Expr a)
-  | ExDec SourcePos a (SType a) Text
+  | ExDec SourcePos a (SType a) String
   deriving stock (Eq, Show, Functor)
 
 -- | パターン

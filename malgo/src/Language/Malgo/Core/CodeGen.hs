@@ -26,9 +26,8 @@ import Data.Either (partitionEithers)
 import Data.List.Extra (mconcatMap)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
-import Koriel.Prelude hiding (to)
+import Data.String.Conversions
+import Koriel.Prelude
 import LLVM.AST (Definition (..), Name, mkName)
 import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
@@ -86,7 +85,7 @@ valueMap = lens _valueMap (\s a -> s {_valueMap = a})
 -- funcMap :: Lens' OprMap (IdMap CType Operand)
 -- funcMap = lens _funcMap (\s a -> s {_funcMap = a})
 
-type PrimMap = Map Text Operand
+type PrimMap = Map String Operand
 
 convType :: CType -> Type
 convType (ps :-> r) = ptr $ StructureType False [ptr i8, ptr $ FunctionType (convType r) (ptr i8 : map convType ps) False]
@@ -133,13 +132,13 @@ findFun x = do
     Just x -> pure x
     Nothing -> error $ show $ pPrint x <> " is not found"
 
-findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => Text -> [Type] -> Type -> m Operand
+findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [Type] -> Type -> m Operand
 findExt x ps r = do
   env <- get
   case env ^. at x of
     Just x -> pure x
     Nothing -> do
-      opr <- extern (LLVM.AST.mkName $ T.unpack x) ps r
+      opr <- extern (LLVM.AST.mkName x) ps r
       modify (at x ?~ opr)
       pure opr
 
@@ -168,7 +167,7 @@ mallocType ::
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
 toName :: Id a -> LLVM.AST.Name
-toName x = LLVM.AST.mkName $ T.unpack (x ^. idName) <> show (x ^. idUniq)
+toName x = LLVM.AST.mkName $ x ^. idName <> show (x ^. idUniq)
 
 -- generate code for a 'known' function
 genFunc ::
@@ -187,7 +186,7 @@ genFunc name params body = function funcName llvmParams retty $ \args ->
   local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
-    llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ T.encodeUtf8 $ x ^. idName)) params
+    llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ x ^. idName)) params
     retty = convType (cTypeOf body)
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている

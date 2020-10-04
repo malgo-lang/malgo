@@ -11,7 +11,6 @@ module Language.Griff.Typing (typeCheck, transType, applySubst, readMetaTv, zonk
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import qualified Data.Text as T
 import Koriel.Prelude
 import Language.Griff.Extension
 import Language.Griff.Grouping
@@ -33,7 +32,7 @@ import qualified Text.PrettyPrint as P
 generalize :: (MonadIO m, MonadUniq m) => TcEnv -> Type -> m Scheme
 generalize env t = do
   fvs <- toList <$> freeMetaTvs env t
-  as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) (zip fvs ['a' ..])
+  as <- traverse (\(tv, nameChar) -> newId (kind tv) $ nameChar : []) (zip fvs ['a' ..])
   zipWithM_ writeMetaTv fvs (map TyVar as)
   Forall as <$> zonkType t
 
@@ -175,7 +174,7 @@ tcDataDefs ds = do
 
         -- generate type variables
         fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
-        as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
+        as <- traverse (\(tv, nameChar) -> newId (kind tv) $ nameChar : []) $ zip fvs ['a' ..]
         zipWithM_ writeMetaTv fvs (map TyVar as)
 
         Just (TyCon dataName) <- asks $ view $ T.typeEnv % at name
@@ -238,7 +237,7 @@ tcScDefs ds = do
       unify pos ty (foldr TyArr (expr' ^. toType) paramTypes)
       pure ((name, ty), (WithType pos ty, name, params, expr'))
   fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) nts
-  as <- traverse (\(tv, nameChar) -> newId (kind tv) $ T.singleton nameChar) $ zip fvs ['a' ..]
+  as <- traverse (\(tv, nameChar) -> newId (kind tv) $ nameChar : []) $ zip fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
   nts' <- traverse (rtraverse (fmap (Forall as) . zonkType)) nts
   pure

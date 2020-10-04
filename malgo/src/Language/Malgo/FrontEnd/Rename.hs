@@ -25,31 +25,31 @@ import Language.Malgo.TypeRep.SType
 import Text.Parsec.Pos (SourcePos)
 
 data Known = Known
-  { _var :: Map Text (Id ()),
-    _tyVar :: Map Text (Id ())
+  { _var :: Map String (Id ()),
+    _tyVar :: Map String (Id ())
   }
 
 makeLenses ''Known
 
 data Rename
 
-instance Pass Rename (Expr Text) (Expr (Id ())) where
+instance Pass Rename (Expr String) (Expr (Id ())) where
   passName = "Rename"
   trans s = runReaderT (renameExpr s) $ Known mempty mempty
 
-withKnowns :: (MonadUniq m, MonadReader Known m, Is k A_Setter) => Optic' k is Known (Map Text (Id ())) -> [Text] -> m a -> m a
+withKnowns :: (MonadUniq m, MonadReader Known m, Is k A_Setter) => Optic' k is Known (Map String (Id ())) -> [String] -> m a -> m a
 withKnowns lens ks m = do
   vs <- mapM (newId ()) ks
   local (over lens (Map.fromList (zip ks vs) <>)) m
 
-getId :: (Is k A_Getter, MonadReader Known m, MonadMalgo m) => SourcePos -> Optic' k is Known (Map Text (Id ())) -> Text -> m (Id ())
+getId :: (Is k A_Getter, MonadReader Known m, MonadMalgo m) => SourcePos -> Optic' k is Known (Map String (Id ())) -> String -> m (Id ())
 getId pos lens name = do
   k <- view lens <$> ask
   case view (at name) k of
     Just x -> pure x
     Nothing -> malgoError pos "rename" $ pPrint name <+> "is not defined"
 
-renameExpr :: (MonadMalgo m, MonadUniq m, MonadReader Known m) => Expr Text -> m (Expr (Id ()))
+renameExpr :: (MonadMalgo m, MonadUniq m, MonadReader Known m) => Expr String -> m (Expr (Id ()))
 renameExpr (Var pos name) = Var pos <$> getId pos var name
 renameExpr (Int pos x) = pure $ Int pos x
 renameExpr (Float pos x) = pure $ Float pos x
@@ -102,7 +102,7 @@ renameExpr (Match pos scrutinee clauses) =
 
 renameClause ::
   (MonadMalgo m, MonadUniq m, MonadReader Known m) =>
-  (Pat Text, Expr Text) ->
+  (Pat String, Expr String) ->
   m (Pat (Id ()), Expr (Id ()))
 renameClause (p, e) = runContT (renamePat p) $ \p' -> (p',) <$> renameExpr e
   where
@@ -112,7 +112,7 @@ renameClause (p, e) = runContT (renamePat p) $ \p' -> (p',) <$> renameExpr e
 renameSType ::
   (MonadMalgo m, MonadReader Known m, MonadUniq m) =>
   SourcePos ->
-  SType Text ->
+  SType String ->
   m (SType (Id ()))
 renameSType pos (TyVar x) = TyVar <$> getId pos tyVar x
 renameSType _ TyInt = pure TyInt

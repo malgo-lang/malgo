@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 41e721c039a950393af5a373c9be374597c13efdcd3a21bf83174308310df463
+-- hash: 8cebf611c883a9d237503c8bffb11f5da464d2ec802b70d1bf2d881093000d47
 
 name:           malgo
 version:        1.0.0.0
@@ -88,6 +88,7 @@ library
     , parser-combinators
     , pretty
     , pretty-simple
+    , string-conversions
     , text
     , transformers
     , vector
@@ -123,6 +124,7 @@ executable griff
     , parser-combinators
     , pretty
     , pretty-simple
+    , string-conversions
     , text
     , transformers
     , vector
@@ -158,6 +160,7 @@ executable malgo
     , parser-combinators
     , pretty
     , pretty-simple
+    , string-conversions
     , text
     , transformers
     , vector
@@ -195,6 +198,7 @@ test-suite malgo-test
     , parser-combinators
     , pretty
     , pretty-simple
+    , string-conversions
     , text
     , transformers
     , vector

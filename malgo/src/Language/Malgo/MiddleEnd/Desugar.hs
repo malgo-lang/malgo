@@ -13,7 +13,6 @@ module Language.Malgo.MiddleEnd.Desugar
 where
 
 import qualified Data.Set as Set (fromList, singleton, toList)
-import qualified Data.Text as T
 import Koriel.Prelude
 import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
@@ -65,7 +64,7 @@ toExp (S.Char _ x) =
     ty = SumT $ Set.singleton con
     con = Con "Char" [CharT]
 toExp (S.String _ x) =
-  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String $ T.unpack x]
+  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String x]
   where
     ty = SumT $ Set.singleton con
     con = Con "String" [StringT]

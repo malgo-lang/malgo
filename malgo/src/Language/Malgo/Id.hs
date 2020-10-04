@@ -18,7 +18,6 @@ module Language.Malgo.Id
   )
 where
 
-import qualified Data.Text as T
 import Koriel.Prelude hiding (toList)
 import Language.Malgo.Monad
 import Language.Malgo.Pretty
@@ -26,7 +25,7 @@ import Language.Malgo.TypeRep.Type
 import Text.PrettyPrint.HughesPJClass (text)
 
 data Id a = Id
-  { _idName :: Text,
+  { _idName :: String,
     _idUniq :: Int,
     _idMeta :: a
   }
@@ -39,12 +38,12 @@ instance Ord (Id a) where
   compare Id {_idUniq = x} Id {_idUniq = y} = compare x y
 
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n u _) = text (T.unpack n) <> "." <> text (show u)
+  pPrint (Id n u _) = text n <> "." <> text (show u)
 
 instance HasType a => HasType (Id a) where
   typeOf Id {_idMeta} = typeOf _idMeta
 
-idName :: Getter (Id a) Text
+idName :: Getter (Id a) String
 idName = to _idName
 
 idUniq :: Getter (Id a) Int
@@ -53,5 +52,5 @@ idUniq = to _idUniq
 idMeta :: Lens (Id a) (Id b) a b
 idMeta = lens _idMeta (\i x -> i {_idMeta = x})
 
-newId :: MonadUniq f => a -> Text -> f (Id a)
+newId :: MonadUniq f => a -> String -> f (Id a)
 newId m n = Id n <$> getUniq <*> pure m

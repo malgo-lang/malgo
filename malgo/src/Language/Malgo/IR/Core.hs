@@ -13,7 +13,6 @@
 module Language.Malgo.IR.Core where
 
 import Data.Set.Optics
-import Data.Text (unpack)
 import Koriel.Prelude
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
@@ -103,7 +102,7 @@ data Exp a
   = Atom (Atom a)
   | Call (Atom a) [Atom a]
   | CallDirect a [Atom a]
-  | PrimCall Text CType [Atom a]
+  | PrimCall String CType [Atom a]
   | BinOp Op (Atom a) (Atom a)
   | ArrayRead (Atom a) (Atom a)
   | ArrayWrite (Atom a) (Atom a) (Atom a)
@@ -177,7 +176,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (PrimCall p _ xs) = parens $ "prim" <+> text (unpack p) <+> sep (map pPrint xs)
+  pPrint (PrimCall p _ xs) = parens $ "prim" <+> text p <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c

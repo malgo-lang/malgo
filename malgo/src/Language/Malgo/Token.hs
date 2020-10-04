@@ -11,7 +11,6 @@ module Language.Malgo.Token
   )
 where
 
-import qualified Data.Text as T
 import Koriel.Prelude
 import Language.Malgo.Pretty
 import Text.Parsec.Pos (SourcePos)
@@ -66,10 +65,10 @@ data Tag
   | MATCH
   | WITH
   | ID
-      { _id :: Text
+      { _id :: String
       }
   | LID
-      { _lid :: Text
+      { _lid :: String
       }
   | INT
       { _int :: Integer
@@ -84,7 +83,7 @@ data Tag
       { _char :: Char
       }
   | STRING
-      { _str :: Text
+      { _str :: String
       }
   | TY_INT
   | TY_FLOAT
@@ -154,8 +153,8 @@ instance Pretty Tag where
   pPrint DARROW = "=>"
   pPrint MATCH = "match"
   pPrint WITH = "with"
-  pPrint (ID x) = P.text $ T.unpack x
-  pPrint (LID x) = P.text $ T.unpack x
+  pPrint (ID x) = P.text x
+  pPrint (LID x) = P.text x
   pPrint (INT x) = P.integer x
   pPrint (FLOAT x) = P.double x
   pPrint (BOOL x) = pPrint x

@@ -60,7 +60,7 @@ parseOpt =
       )
       (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
 
-readAndParse :: MalgoM (Expr Text)
+readAndParse :: MalgoM (Expr String)
 readAndParse = do
   opt <- asks maOption
   source <- asks maSource

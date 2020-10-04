@@ -23,14 +23,14 @@ import Language.Malgo.Pretty
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
-lookupVarName :: MonadReader RnEnv m => SourcePos -> Text -> m RnId
+lookupVarName :: MonadReader RnEnv m => SourcePos -> String -> m RnId
 lookupVarName pos name = do
   vm <- asks $ view varEnv
   case vm ^. at name of
     Just name' -> pure name'
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
 
-lookupTypeName :: MonadReader RnEnv m => SourcePos -> Text -> m RnId
+lookupTypeName :: MonadReader RnEnv m => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
   tm <- asks $ view typeEnv
   case tm ^. at name of
@@ -131,7 +131,7 @@ rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 -- トップレベル識別子を列挙
-toplevelIdents :: [Decl (Griff 'Parse)] -> ([Text], [Text])
+toplevelIdents :: [Decl (Griff 'Parse)] -> ([String], [String])
 toplevelIdents ds = go ([], [], []) ds & \(sigs, vars, types) -> (ordNub $ sigs <> vars, types)
   where
     go result [] = result

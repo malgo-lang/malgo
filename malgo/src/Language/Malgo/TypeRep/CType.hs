@@ -6,7 +6,6 @@
 module Language.Malgo.TypeRep.CType where
 
 import Data.Set (fromList)
-import Data.Text (pack, unpack)
 import Koriel.Prelude
 import Language.Malgo.Id
 import Language.Malgo.Pretty
@@ -32,7 +31,7 @@ data CType
   | DoubleT
   | CharT
   | StringT
-  | DataT Text [CType]
+  | DataT String [CType]
   | SumT (Set Con)
   | ArrayT CType
   | AnyT
@@ -54,13 +53,13 @@ instance Pretty CType where
 {-
 Constructors  C ::= <tag n>
 -}
-type Tag = Text
+type Tag = String
 
 data Con = Con Tag [CType]
   deriving stock (Eq, Show, Ord)
 
 instance Pretty Con where
-  pPrint (Con tag xs) = "<" <> text (unpack tag) <+> sep (punctuate "," (map pPrint xs)) <> ">"
+  pPrint (Con tag xs) = "<" <> text tag <+> sep (punctuate "," (map pPrint xs)) <> ">"
 
 class HasCType a where
   cTypeOf :: HasCallStack => a -> CType
@@ -77,7 +76,7 @@ instance HasCType T.Type where
   cTypeOf (T.TyApp T.BoolC []) = SumT [Con "True" [], Con "False" []]
   cTypeOf (T.TyApp T.CharC []) = SumT [Con "Char" [CharT]]
   cTypeOf (T.TyApp T.StringC []) = SumT [Con "String" [StringT]]
-  cTypeOf (T.TyApp T.TupleC xs) = SumT [Con ("Tuple" <> pack (show $ length xs)) (map cTypeOf xs)]
+  cTypeOf (T.TyApp T.TupleC xs) = SumT [Con ("Tuple" <> show (length xs)) (map cTypeOf xs)]
   cTypeOf (T.TyApp T.ArrayC [x]) = ArrayT (cTypeOf x)
   cTypeOf (T.TyApp _ _) = bug Unreachable
   cTypeOf T.TyMeta {} = AnyT
