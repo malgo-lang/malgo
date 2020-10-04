@@ -30,10 +30,10 @@ install:
     cabal --version
     cabal new-update
     cabal install hspec-discover
-    cabal new-build --enable-tests --enable-benchmarks
+    cabal new-build all --enable-tests --enable-benchmarks
 
 script:
   - |
-    cabal new-test --enable-tests
+    cabal new-test all --enable-tests
     ./test.sh
     ./test_griff.sh
