@@ -9,7 +9,7 @@ import Prelude hiding (EQ, LT, GT)
 import Language.Malgo.Token
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.IR.Syntax
-import Language.Malgo.Pretty
+import Koriel.Pretty
 import Text.PrettyPrint.HughesPJ (text, hang)
 import Data.String
 import Data.Text (Text)

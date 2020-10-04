@@ -19,10 +19,9 @@ module Language.Malgo.Id
 where
 
 import Koriel.Prelude hiding (toList)
+import Koriel.Pretty
 import Language.Malgo.Monad
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.Type
-import Text.PrettyPrint.HughesPJClass (text)
 
 data Id a = Id
   { _idName :: String,

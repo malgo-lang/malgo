@@ -5,7 +5,7 @@
 module Language.Malgo.IR.Op where
 
 import Koriel.Prelude
-import Language.Malgo.Pretty
+import Koriel.Pretty
 
 data Op
   = Add

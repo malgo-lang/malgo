@@ -32,11 +32,16 @@ import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Koriel.Prelude
-import LLVM.IRBuilder (IRBuilderT, ModuleBuilderT)
-import Language.Malgo.Pretty
+import Koriel.Pretty
+import LLVM.IRBuilder
+  ( IRBuilderT,
+    ModuleBuilderT,
+  )
 import System.IO (stderr)
-import Text.Parsec.Pos (SourcePos, sourceLine)
-import Text.PrettyPrint (text, ($$))
+import Text.Parsec.Pos
+  ( SourcePos,
+    sourceLine,
+  )
 
 data Opt = Opt
   { srcName :: String,
@@ -71,10 +76,7 @@ runMalgo (MalgoM m) opt source =
     Lazy.evalStateT ?? UniqSupply 0 $
       runReaderT
         m
-        MalgoEnv
-          { maOption = opt,
-            maSource = source
-          }
+        MalgoEnv {maOption = opt, maSource = source}
 
 class Monad m => MonadMalgo m where
   getOpt :: m Opt

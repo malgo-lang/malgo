@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8cebf611c883a9d237503c8bffb11f5da464d2ec802b70d1bf2d881093000d47
+-- hash: 9548ab5b07474d414b1cee3def2f6b22aa46eb80d0fbd74ed9bdcc706e061185
 
 name:           malgo
 version:        1.0.0.0
@@ -56,7 +56,6 @@ library
       Language.Malgo.Monad
       Language.Malgo.Parser
       Language.Malgo.Pass
-      Language.Malgo.Pretty
       Language.Malgo.Token
       Language.Malgo.TypeRep.CType
       Language.Malgo.TypeRep.SType
@@ -66,7 +65,7 @@ library
   hs-source-dirs:
       src
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS
   build-tools:
       happy
   build-depends:
@@ -101,7 +100,7 @@ executable griff
   hs-source-dirs:
       app/griff
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-tools:
       happy
   build-depends:
@@ -137,7 +136,7 @@ executable malgo
   hs-source-dirs:
       app/malgo
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-tools:
       happy
   build-depends:
@@ -174,7 +173,7 @@ test-suite malgo-test
   hs-source-dirs:
       test
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS
   build-tools:
       happy
   build-depends:

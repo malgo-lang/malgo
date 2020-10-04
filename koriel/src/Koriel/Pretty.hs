@@ -3,7 +3,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Language.Malgo.Pretty
+module Koriel.Pretty
   ( module Text.PrettyPrint.HughesPJClass,
     (<+>),
     pShow,
@@ -17,7 +17,7 @@ where
 
 import Koriel.Prelude
 import Text.Pretty.Simple (pShow)
-import Text.PrettyPrint.HughesPJClass (Doc, Pretty (..))
+import Text.PrettyPrint.HughesPJClass hiding (char, double, first, float, int, integer, (<+>), (<>)) -- (Doc, Pretty (..))
 import qualified Text.PrettyPrint.HughesPJClass as P
 import qualified Prelude
 

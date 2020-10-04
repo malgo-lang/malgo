@@ -15,12 +15,19 @@ where
 
 import Control.Monad.Cont
 import qualified Data.Map as Map
-import Koriel.Prelude hiding (ix, lens)
+import Koriel.Prelude hiding
+  ( ix,
+    lens,
+  )
+import Koriel.Pretty
 import Language.Malgo.IR.Syntax
+  ( Decl (ExDec, FunDec, ValDec),
+    Expr (..),
+    Pat (..),
+  )
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Text.Parsec.Pos (SourcePos)
 
@@ -37,12 +44,22 @@ instance Pass Rename (Expr String) (Expr (Id ())) where
   passName = "Rename"
   trans s = runReaderT (renameExpr s) $ Known mempty mempty
 
-withKnowns :: (MonadUniq m, MonadReader Known m, Is k A_Setter) => Optic' k is Known (Map String (Id ())) -> [String] -> m a -> m a
+withKnowns ::
+  (MonadUniq m, MonadReader Known m, Is k A_Setter) =>
+  Optic' k is Known (Map String (Id ())) ->
+  [String] ->
+  m a ->
+  m a
 withKnowns lens ks m = do
   vs <- mapM (newId ()) ks
   local (over lens (Map.fromList (zip ks vs) <>)) m
 
-getId :: (Is k A_Getter, MonadReader Known m, MonadMalgo m) => SourcePos -> Optic' k is Known (Map String (Id ())) -> String -> m (Id ())
+getId ::
+  (Is k A_Getter, MonadReader Known m, MonadMalgo m) =>
+  SourcePos ->
+  Optic' k is Known (Map String (Id ())) ->
+  String ->
+  m (Id ())
 getId pos lens name = do
   k <- view lens <$> ask
   case view (at name) k of

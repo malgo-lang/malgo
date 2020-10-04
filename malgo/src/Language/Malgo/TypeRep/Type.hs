@@ -5,8 +5,7 @@
 module Language.Malgo.TypeRep.Type where
 
 import Koriel.Prelude
-import Language.Malgo.Pretty
-import Text.PrettyPrint.HughesPJClass (braces, parens, punctuate, sep)
+import Koriel.Pretty
 
 type TyVar = Int
 

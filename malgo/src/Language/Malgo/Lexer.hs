@@ -10,15 +10,23 @@ module Language.Malgo.Lexer
   )
 where
 
-import Koriel.Prelude hiding (EQ, GT, LT)
+import Koriel.Prelude hiding
+  ( EQ,
+    GT,
+    LT,
+  )
 import Language.Malgo.Token
-import Text.Parsec hiding (many, (<|>))
+import Text.Parsec hiding
+  ( many,
+    (<|>),
+  )
 import Text.Parsec.Pos ()
 import qualified Text.Parsec.Token as Tok
 
 tokenize :: Stream s m Char => u -> SourceName -> s -> m (Either ParseError [Token])
 tokenize =
-  runParserT (Tok.whiteSpace tokenParser >> many (getPosition >>= lexer) >>= \toks -> eof >> pure toks)
+  runParserT
+    (Tok.whiteSpace tokenParser >> many (getPosition >>= lexer) >>= \toks -> eof >> pure toks)
 
 tokenParser :: Stream s m Char => Tok.GenTokenParser s u m
 tokenParser =

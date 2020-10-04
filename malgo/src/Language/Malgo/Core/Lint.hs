@@ -14,13 +14,12 @@ where
 
 import Control.Monad.Except
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Malgo.IR.Core
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
 import Language.Malgo.Pass
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
-import Text.PrettyPrint (($$))
 
 data LintExp
 
@@ -35,8 +34,8 @@ instance Pass LintExp (Exp (Id CType)) (Exp (Id CType)) where
 lint :: (Monad m, HasCType a, Pretty a) => Exp (Id a) -> m ()
 lint e =
   runExceptT (runReaderT (lintExp e) []) >>= \case
-    Left e -> errorDoc e
-    Right e -> pure e
+    Left err -> errorDoc err
+    Right e' -> pure e'
 
 defined :: (MonadReader (t a) m, Foldable t, Eq a, MonadError Doc m, Pretty a) => a -> m ()
 defined x = do
@@ -44,13 +43,7 @@ defined x = do
   unless (x `elem` env) $ throwError $ pPrint x <> " is not defined"
 
 match ::
-  ( HasCType a,
-    HasCType b,
-    MonadError Doc f,
-    Pretty a,
-    Pretty b,
-    HasCallStack
-  ) =>
+  (HasCType a, HasCType b, MonadError Doc f, Pretty a, Pretty b, HasCallStack) =>
   a ->
   b ->
   f ()
@@ -61,7 +54,8 @@ match (cTypeOf -> DataT {}) (cTypeOf -> AnyT) = pure ()
 match (cTypeOf -> AnyT) (cTypeOf -> DataT {}) = pure ()
 match (cTypeOf -> AnyT) (cTypeOf -> AnyT) = pure ()
 match x y
-  | cTypeOf x == cTypeOf y = pure ()
+  | cTypeOf x == cTypeOf y =
+    pure ()
   | otherwise =
     throwError $
       "type mismatch:"
@@ -95,10 +89,14 @@ lintExp (BinOp o x y) = do
     Mul -> (match Int64T x >> match Int64T y) `catchError` const (match Int64T x >> match Int64T y)
     Div -> (match Int64T x >> match Int64T y) `catchError` const (match Int64T x >> match Int64T y)
     Mod -> (match Int64T x >> match Int64T y) `catchError` const (match Int64T x >> match Int64T y)
-    FAdd -> (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
-    FSub -> (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
-    FMul -> (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
-    FDiv -> (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
+    FAdd ->
+      (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
+    FSub ->
+      (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
+    FMul ->
+      (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
+    FDiv ->
+      (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
     Eq -> match x y
     Neq -> match x y
     Lt -> match x y
@@ -120,36 +118,20 @@ lintExp (ArrayWrite a i v) = do
     ArrayT t -> match Int64T i >> match t v
     _ -> throwError $ pPrint a <+> "must be a array"
 lintExp (Cast _ x) = lintAtom x
-lintExp (Let ds e) =
-  local (map fst ds <>) $ do
-    traverse_ (lintObj . snd) ds
-    lintExp e
+lintExp (Let ds e) = local (map fst ds <>) $ do
+  traverse_ (lintObj . snd) ds
+  lintExp e
 lintExp (Match e cs) = do
   lintExp e
   traverse_ lintCase cs
 lintExp Error {} = pure ()
 
-lintObj ::
-  ( MonadReader [Id a] m,
-    MonadError Doc m,
-    Pretty a,
-    HasCType a
-  ) =>
-  Obj (Id a) ->
-  m ()
-lintObj (Fun params body) =
-  local (params <>) $ lintExp body
+lintObj :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasCType a) => Obj (Id a) -> m ()
+lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Array a n) = lintAtom a >> lintAtom n >> match Int64T n
 
-lintCase ::
-  ( MonadReader [Id a] m,
-    MonadError Doc m,
-    Pretty a,
-    HasCType a
-  ) =>
-  Case (Id a) ->
-  m ()
+lintCase :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasCType a) => Case (Id a) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase (Switch _ e) = lintExp e
 lintCase (Bind x e) = local (x :) $ lintExp e

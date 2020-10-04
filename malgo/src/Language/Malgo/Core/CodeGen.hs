@@ -9,6 +9,7 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.Core.CodeGen
   ( CodeGen,
@@ -28,7 +29,12 @@ import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.String.Conversions
 import Koriel.Prelude
-import LLVM.AST (Definition (..), Name, mkName)
+import Koriel.Pretty
+import LLVM.AST
+  ( Definition (..),
+    Name,
+    mkName,
+  )
 import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
 import qualified LLVM.AST.FloatingPointPredicate as FP
@@ -36,7 +42,10 @@ import LLVM.AST.Global
 import qualified LLVM.AST.IntegerPredicate as IP
 import LLVM.AST.Linkage (Linkage (External))
 import LLVM.AST.Operand (Operand (..))
-import LLVM.AST.Type hiding (double, void)
+import LLVM.AST.Type hiding
+  ( double,
+    void,
+  )
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr)
@@ -45,7 +54,6 @@ import qualified Language.Malgo.IR.Op as Op
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as CType
 
 data CodeGen
@@ -57,20 +65,23 @@ instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id CType) -> m [Definition]
 codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
   -- topFuncsのOprMapを作成
-  let funcEnv =
-        mconcatMap
-          ?? topFuncs
-          $ \(f, (ps, e)) ->
-            Map.singleton f $
-              ConstantOperand $ GlobalReference (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False) (toName f)
-  runReaderT ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv}) $
-    Lazy.evalStateT ?? (mempty :: PrimMap) $ do
-      traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
-      void $
-        function "main" [] LT.i32 $ \_ -> do
-          gcInit <- findExt "GC_init" [] LT.void
-          void $ call gcInit []
-          genExp mainExp $ \_ -> ret (int32 0)
+  let funcEnv = mconcatMap ?? topFuncs $ \(f, (ps, e)) ->
+        Map.singleton f $
+          ConstantOperand $
+            GlobalReference
+              (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False)
+              (toName f)
+  runReaderT
+    ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv})
+    $ Lazy.evalStateT
+      ?? (mempty :: PrimMap)
+      $ do
+        traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
+        void $
+          function "main" [] LT.i32 $ \_ -> do
+            gcInit <- findExt "GC_init" [] LT.void
+            void $ call gcInit []
+            genExp mainExp $ \_ -> ret (int32 0)
 
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -88,7 +99,9 @@ valueMap = lens _valueMap (\s a -> s {_valueMap = a})
 type PrimMap = Map String Operand
 
 convType :: CType -> Type
-convType (ps :-> r) = ptr $ StructureType False [ptr i8, ptr $ FunctionType (convType r) (ptr i8 : map convType ps) False]
+convType (ps :-> r) =
+  ptr $
+    StructureType False [ptr i8, ptr $ FunctionType (convType r) (ptr i8 : map convType ps) False]
 convType Int32T = i32
 convType Int64T = i64
 convType FloatT = LT.float
@@ -98,7 +111,11 @@ convType StringT = ptr i8
 convType DataT {} = ptr i8
 convType (SumT cs) =
   let size = maximum $ sizeofCon <$> toList cs
-   in ptr (StructureType False [i64, if size == 0 then StructureType False [] else LT.VectorType size i8])
+   in ptr
+        ( StructureType
+            False
+            [i64, if size == 0 then StructureType False [] else LT.VectorType size i8]
+        )
 convType (ArrayT ty) = ptr $ StructureType False [ptr $ convType ty, i64]
 convType AnyT = ptr i8
 
@@ -143,10 +160,7 @@ findExt x ps r = do
       pure opr
 
 mallocBytes ::
-  ( MonadState PrimMap m,
-    MonadModuleBuilder m,
-    MonadIRBuilder m
-  ) =>
+  (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) =>
   Operand ->
   Maybe Type ->
   m Operand
@@ -157,13 +171,7 @@ mallocBytes bytesOpr maybeType = do
     Just t -> bitcast ptrOpr t
     Nothing -> pure ptrOpr
 
-mallocType ::
-  ( MonadState PrimMap m,
-    MonadModuleBuilder m,
-    MonadIRBuilder m
-  ) =>
-  Type ->
-  m Operand
+mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => Type -> m Operand
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
 toName :: Id a -> LLVM.AST.Name
@@ -182,11 +190,14 @@ genFunc ::
   [Id CType] ->
   Exp (Id CType) ->
   m Operand
-genFunc name params body = function funcName llvmParams retty $ \args ->
-  local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
+genFunc name params body = function funcName llvmParams retty $
+  \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
-    llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ x ^. idName)) params
+    llvmParams =
+      map
+        (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ x ^. idName))
+        params
     retty = convType (cTypeOf body)
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている
@@ -380,11 +391,7 @@ genUnpack scrutinee cs k = \case
     pure $ Right (C.Int 64 $ fromIntegral tag, label)
 
 genAtom ::
-  ( MonadReader OprMap m,
-    MonadUniq m,
-    MonadModuleBuilder m,
-    MonadIRBuilder m
-  ) =>
+  (MonadReader OprMap m, MonadUniq m, MonadModuleBuilder m, MonadIRBuilder m) =>
   Atom (Id CType) ->
   m Operand
 genAtom (Var x) = findVar x
@@ -473,10 +480,9 @@ genCon cs con@(Con _ ts)
   | otherwise = bug Unreachable
 
 findIndex :: (HasCallStack, Ord a, Pretty a) => a -> Set a -> Int
-findIndex con cs =
-  case Set.lookupIndex con cs of
-    Just i -> i
-    Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
+findIndex con cs = case Set.lookupIndex con cs of
+  Just i -> i
+  Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
 
 sizeof :: Type -> Operand
 sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64
@@ -504,8 +510,17 @@ globalStringPtr str nm = do
         }
   pure $ C.GetElementPtr True (C.GlobalReference (ptr ty) nm) [C.Int 32 0, C.Int 32 0]
 
-gepAndLoad :: (HasCallStack, MonadIRBuilder m, MonadModuleBuilder m) => Operand -> [Operand] -> m Operand
+gepAndLoad ::
+  (HasCallStack, MonadIRBuilder m, MonadModuleBuilder m) =>
+  Operand ->
+  [Operand] ->
+  m Operand
 gepAndLoad opr addrs = join $ load <$> gep opr addrs <*> pure 0
 
-gepAndStore :: (HasCallStack, MonadIRBuilder m, MonadModuleBuilder m) => Operand -> [Operand] -> Operand -> m ()
+gepAndStore ::
+  (HasCallStack, MonadIRBuilder m, MonadModuleBuilder m) =>
+  Operand ->
+  [Operand] ->
+  Operand ->
+  m ()
 gepAndStore opr addrs val = join $ store <$> gep opr addrs <*> pure 0 <*> pure val

@@ -14,12 +14,12 @@ import Data.List.Predicate (allUnique)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.RnEnv
 import Language.Griff.Syntax
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Pretty
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
@@ -38,14 +38,14 @@ lookupTypeName pos name = do
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
 
 rename :: MonadUniq m => RnState -> RnEnv -> [Decl (Griff 'Parse)] -> m [Decl (Griff 'Rename)]
-rename rnState rnEnv ds =
-  evalStateT ?? rnState $
-    runReaderT ?? rnEnv $
-      rnDecls ds
+rename rnState rnEnv ds = evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
 
 -- renamer
 
-rnDecls :: (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) => [Decl (Griff 'Parse)] -> m [Decl (Griff 'Rename)]
+rnDecls ::
+  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) =>
+  [Decl (Griff 'Parse)] ->
+  m [Decl (Griff 'Rename)]
 rnDecls ds = do
   -- RnEnvの生成
   let (varNames, typeNames) = toplevelIdents ds
@@ -62,29 +62,45 @@ rnDecls ds = do
 
 -- Declで定義されるトップレベル識別子はすでにRnEnvに正しく登録されているとする
 -- infix宣言はすでに解釈されRnStateに登録されているとする
-rnDecl :: (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) => Decl (Griff 'Parse) -> m (Decl (Griff 'Rename))
+rnDecl ::
+  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) =>
+  Decl (Griff 'Parse) ->
+  m (Decl (Griff 'Rename))
 rnDecl (ScDef pos name params expr) = do
   params' <- traverse (newId ()) params
   local (over varEnv (Map.fromList (zip params params') <>)) $
-    ScDef pos <$> lookupVarName pos name <*> pure params' <*> rnExp expr
+    ScDef pos
+      <$> lookupVarName pos name
+      <*> pure params'
+      <*> rnExp expr
 rnDecl (ScSig pos name typ) = do
   let tyVars = Set.toList $ getTyVars typ
   tyVars' <- traverse (newId ()) tyVars
   local (over typeEnv (Map.fromList (zip tyVars tyVars') <>)) $
-    ScSig pos <$> lookupVarName pos name <*> rnType typ
+    ScSig pos
+      <$> lookupVarName pos name
+      <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
   params' <- traverse (newId ()) params
   local (over typeEnv (Map.fromList (zip params params') <>)) $
-    DataDef pos <$> lookupTypeName pos name <*> pure params' <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
+    DataDef pos
+      <$> lookupTypeName pos name
+      <*> pure params'
+      <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
 rnDecl (Forign pos name typ) = do
   let tyVars = Set.toList $ getTyVars typ
   tyVars' <- traverse (newId ()) tyVars
   local (over typeEnv (Map.fromList (zip tyVars tyVars') <>)) $
-    Forign (pos, name) <$> lookupVarName pos name <*> rnType typ
+    Forign (pos, name)
+      <$> lookupVarName pos name
+      <*> rnType typ
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
-rnExp :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m) => Exp (Griff 'Parse) -> m (Exp (Griff 'Rename))
+rnExp ::
+  (MonadReader RnEnv m, MonadState RnState m, MonadUniq m) =>
+  Exp (Griff 'Parse) ->
+  m (Exp (Griff 'Rename))
 rnExp (Var pos name) = Var pos <$> lookupVarName pos name
 rnExp (Con pos name) = Con pos <$> lookupVarName pos name
 rnExp (Unboxed pos val) = pure $ Unboxed pos val
@@ -93,8 +109,8 @@ rnExp (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
   e1' <- rnExp e1
   e2' <- rnExp e2
-  fixity <- Map.lookup op' <$> use infixInfo
-  case fixity of
+  mfixity <- Map.lookup op' <$> use infixInfo
+  case mfixity of
     Just fixity -> pure $ mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> P.quotes (pPrint op)
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
@@ -109,14 +125,14 @@ rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyLazy pos t) = TyLazy pos <$> rnType t
 
-rnClause :: (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) => Clause (Griff 'Parse) -> m (Clause (Griff 'Rename))
+rnClause ::
+  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) =>
+  Clause (Griff 'Parse) ->
+  m (Clause (Griff 'Rename))
 rnClause (Clause pos ps e) = do
   let vars = concatMap patVars ps
-
   -- varsに重複がないことを確認
-  unless (allUnique vars) $
-    errorOn pos "Same variables occurs in a pattern"
-
+  unless (allUnique vars) $ errorOn pos "Same variables occurs in a pattern"
   vars' <- traverse (newId ()) vars
   let vm = Map.fromList $ zip vars vars'
   local (over varEnv (vm <>)) $ Clause pos <$> traverse rnPat ps <*> rnExp e
@@ -144,7 +160,11 @@ toplevelIdents ds = go ([], [], []) ds & \(sigs, vars, types) -> (ordNub $ sigs 
     go (sigs, vars, types) (DataDef pos x _ xs : rest)
       | x `elem` types = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | disjoint (map fst xs) (sigs <> vars) = go (sigs, map fst xs <> vars, x : types) rest
-      | otherwise = errorOn pos $ "Duplicate name(s):" <+> P.sep (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` (sigs <> vars)))
+      | otherwise =
+        errorOn pos $
+          "Duplicate name(s):"
+            <+> P.sep
+              (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` (sigs <> vars)))
     go (sigs, vars, types) (Forign pos x _ : rest)
       | x `elem` sigs || x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | otherwise = go (sigs, x : vars, types) rest
@@ -158,7 +178,13 @@ infixDecls ds = foldMapA ?? ds $ \case
     pure $ Map.singleton name' (assoc, order)
   _ -> pure mempty
 
-mkOpApp :: SourcePos -> (Assoc, Int) -> RnId -> Exp (Griff 'Rename) -> Exp (Griff 'Rename) -> Exp (Griff 'Rename)
+mkOpApp ::
+  SourcePos ->
+  (Assoc, Int) ->
+  RnId ->
+  Exp (Griff 'Rename) ->
+  Exp (Griff 'Rename) ->
+  Exp (Griff 'Rename)
 -- (e11 op1 e12) op2 e2
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
@@ -166,7 +192,9 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
       "Precedence parsing error:"
         P.$+$ P.nest
           2
-          ( "cannot mix" <+> P.quotes (pPrint op1) <+> P.brackets (pPrint fix1)
+          ( "cannot mix"
+              <+> P.quotes (pPrint op1)
+              <+> P.brackets (pPrint fix1)
               <+> "and"
               <+> P.quotes (pPrint op2)
               <+> P.brackets (pPrint fix2)
@@ -178,14 +206,13 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = OpApp (pos, fix) op e1 e2
 
 compareFixity :: (Assoc, Int) -> (Assoc, Int) -> (Bool, Bool)
-compareFixity (assoc1, prec1) (assoc2, prec2) =
-  case prec1 `compare` prec2 of
-    GT -> left
-    LT -> right
-    EQ -> case (assoc1, assoc2) of
-      (RightA, RightA) -> right
-      (LeftA, LeftA) -> left
-      _ -> error_please
+compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of
+  GT -> left
+  LT -> right
+  EQ -> case (assoc1, assoc2) of
+    (RightA, RightA) -> right
+    (LeftA, LeftA) -> left
+    _ -> error_please
   where
     right = (False, True)
     left = (False, False)

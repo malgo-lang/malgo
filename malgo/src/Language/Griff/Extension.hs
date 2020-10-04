@@ -10,9 +10,9 @@ module Language.Griff.Extension where
 import Data.Kind (Constraint)
 import qualified Data.Kind as K
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Griff.Type
 import Language.Malgo.Id
-import Language.Malgo.Pretty
 import Text.Megaparsec.Pos (SourcePos)
 
 data Assoc = LeftA | RightA | NeutralA
@@ -42,7 +42,16 @@ type family XTuple x
 
 type family XForce x
 
-type ForallExpX (c :: K.Type -> Constraint) x = (c (XVar x), c (XCon x), c (XUnboxed x), c (XApply x), c (XOpApp x), c (XFn x), c (XTuple x), c (XForce x))
+type ForallExpX (c :: K.Type -> Constraint) x =
+  ( c (XVar x),
+    c (XCon x),
+    c (XUnboxed x),
+    c (XApply x),
+    c (XOpApp x),
+    c (XFn x),
+    c (XTuple x),
+    c (XForce x)
+  )
 
 -- Clause Extensions
 type family XClause x
@@ -73,7 +82,8 @@ type family XTyTuple x
 
 type family XTyLazy x
 
-type ForallTypeX (c :: K.Type -> Constraint) x = (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyLazy x))
+type ForallTypeX (c :: K.Type -> Constraint) x =
+  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyLazy x))
 
 -- Decl Extensions
 type family XScDef x
@@ -86,7 +96,17 @@ type family XInfix x
 
 type family XForign x
 
-type ForallDeclX (c :: K.Type -> Constraint) x = (c (XScDef x), c (XScSig x), c (XDataDef x), c (XInfix x), c (XForign x), ForallExpX c x, ForallClauseX c x, ForallPatX c x, ForallTypeX c x)
+type ForallDeclX (c :: K.Type -> Constraint) x =
+  ( c (XScDef x),
+    c (XScSig x),
+    c (XDataDef x),
+    c (XInfix x),
+    c (XForign x),
+    ForallExpX c x,
+    ForallClauseX c x,
+    ForallPatX c x,
+    ForallTypeX c x
+  )
 
 -- Phase and type instance
 data GriffPhase = Parse | Rename | TypeCheck

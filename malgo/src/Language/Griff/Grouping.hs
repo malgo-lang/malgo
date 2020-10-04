@@ -7,16 +7,17 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Griff.Grouping where
 
 import Data.Graph
 import qualified Data.Set as Set
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.Syntax
 import Language.Malgo.Id
-import Language.Malgo.Pretty
 import qualified Text.PrettyPrint.HughesPJClass as P
 
 data BindGroup x = BindGroup
@@ -54,12 +55,17 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
             <> concatMap (map prettyScDef) _scDefs
       )
     where
-      prettyDataDef (_, d, xs, cs) = P.sep ["data" <+> pPrint d <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ foldl1 (\a b -> P.sep [a, "|" <+> b]) $ map pprConDef cs]
+      prettyDataDef (_, d, xs, cs) =
+        P.sep
+          [ "data" <+> pPrint d <+> P.sep (map pPrint xs) <+> "=",
+            P.nest 2 $ foldl1 (\a b -> P.sep [a, "|" <+> b]) $ map pprConDef cs
+          ]
       pprConDef (con, ts) = pPrint con <+> P.sep (map (pPrintPrec P.prettyNormal 12) ts)
       prettyInfix (_, a, o, x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
       prettyForign (_, x, t) = "forign import" <+> pPrint x <+> "::" <+> pPrint t
       prettyScSig (_, f, t) = pPrint f <+> "::" <+> pPrint t
-      prettyScDef (_, f, xs, e) = P.sep [pPrint f <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ pPrint e]
+      prettyScDef (_, f, xs, e) =
+        P.sep [pPrint f <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ pPrint e]
 
 makeBindGroup :: (Pretty a, Ord (XId x), XId x ~ Id a) => [Decl x] -> BindGroup x
 makeBindGroup ds =
@@ -83,8 +89,12 @@ makeBindGroup ds =
     forign _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
-adjacents :: (Pretty a, Ord (XId x), XId x ~ Id a) => (XScDef x, Id a, [Id a], Exp x) -> (Id a, Int, [Int])
-adjacents (_, f, ps, e) = (f, f ^. idUniq, map (view idUniq) $ toList $ freevars e Set.\\ Set.insert f (Set.fromList ps))
+adjacents ::
+  (Pretty a, Ord (XId x), XId x ~ Id a) =>
+  (XScDef x, Id a, [Id a], Exp x) ->
+  (Id a, Int, [Int])
+adjacents (_, f, ps, e) =
+  (f, f ^. idUniq, map (view idUniq) $ toList $ freevars e Set.\\ Set.insert f (Set.fromList ps))
 
 makeSCC :: (Pretty a, Ord (XId x), XId x ~ Id a) => [(XScDef x, Id a, [Id a], Exp x)] -> [[Id a]]
 makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'

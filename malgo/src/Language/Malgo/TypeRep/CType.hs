@@ -1,4 +1,5 @@
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -7,17 +8,9 @@ module Language.Malgo.TypeRep.CType where
 
 import Data.Set (fromList)
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Malgo.Id
-import Language.Malgo.Pretty
 import qualified Language.Malgo.TypeRep.Type as T
-import Text.PrettyPrint (punctuate)
-import Text.PrettyPrint.HughesPJ
-  ( braces,
-    brackets,
-    parens,
-    sep,
-    text,
-  )
 
 -- TODO: クロージャを表す型を追加
 -- ClosureT [CType] CType
@@ -83,13 +76,13 @@ instance HasCType T.Type where
   cTypeOf (ps T.:-> r) = map cTypeOf ps :-> cTypeOf r
 
 tyVar :: Traversal CType CType CType CType
-tyVar = traversalVL $ \f t -> case t of
+tyVar = traversalVL $ \f -> \case
   ps :-> r -> (:->) <$> traverseOf (traversed % tyVar) f ps <*> traverseOf tyVar f r
   DataT n ts -> DataT n <$> traverseOf (traversed % tyVar) f ts
   SumT cs -> SumT . fromList <$> traverseOf (traversed % tyVar') f (toList cs)
   ArrayT t -> ArrayT <$> traverseOf tyVar f t
   AnyT -> f AnyT
-  _ -> pure t
+  t -> pure t
 
 tyVar' :: Traversal Con Con CType CType
 tyVar' = traversalVL $ \f (Con tag ts) -> Con tag <$> traverseOf (traversed % tyVar) f ts

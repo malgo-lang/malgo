@@ -7,7 +7,10 @@ module Language.Griff.Parser where
 import Control.Monad.Combinators.Expr
 import Data.Functor (($>))
 import Data.Void
-import Koriel.Prelude hiding (many, some)
+import Koriel.Prelude hiding
+  ( many,
+    some,
+  )
 import Language.Griff.Extension
 import Language.Griff.Syntax
 import Text.Megaparsec
@@ -40,7 +43,8 @@ pOperator :: Text -> Parser ()
 pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
 
 reserved :: Parser ()
-reserved = void $ choice $ map (try . pKeyword) ["data", "infixl", "infixr", "infix", "forign", "import"]
+reserved =
+  void $ choice $ map (try . pKeyword) ["data", "infixl", "infixr", "infix", "forign", "import"]
 
 reservedOp :: Parser ()
 reservedOp = void $ choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
@@ -68,56 +72,64 @@ operator = label "operator" $
 pUnboxed :: Parser Unboxed
 pUnboxed =
   label "unboxed literal" $
-    Double <$> try (lexeme $ L.float <* char '#')
-      <|> Float <$> try (lexeme $ L.float <* string' "F#")
-      <|> Int32 <$> try (lexeme $ L.decimal <* char '#')
-      <|> Int64 <$> try (lexeme $ L.decimal <* string' "L#")
-      <|> Char <$> lexeme (between (char '\'') (char '\'') L.charLiteral <* char '#')
-      <|> String <$> lexeme (char '"' *> manyTill L.charLiteral (char '"') <* char '#')
+    Double
+      <$> try (lexeme $ L.float <* char '#')
+      <|> Float
+      <$> try (lexeme $ L.float <* string' "F#")
+      <|> Int32
+      <$> try (lexeme $ L.decimal <* char '#')
+      <|> Int64
+      <$> try (lexeme $ L.decimal <* string' "L#")
+      <|> Char
+      <$> lexeme (between (char '\'') (char '\'') L.charLiteral <* char '#')
+      <|> String
+      <$> lexeme (char '"' *> manyTill L.charLiteral (char '"') <* char '#')
 
 pVariable :: Parser (Exp (Griff 'Parse))
-pVariable =
-  label "variable" $
-    Var <$> getSourcePos <*> lowerIdent
+pVariable = label "variable" $ Var <$> getSourcePos <*> lowerIdent
 
 pConstructor :: Parser (Exp (Griff 'Parse))
-pConstructor =
-  label "constructor" $
-    Con <$> getSourcePos <*> upperIdent
+pConstructor = label "constructor" $ Con <$> getSourcePos <*> upperIdent
 
 pFun :: Parser (Exp (Griff 'Parse))
 pFun =
   label "function literal" $
     between (symbol "{") (symbol "}") $
-      Fn <$> getSourcePos
-        <*> ( Clause <$> getSourcePos
+      Fn
+        <$> getSourcePos
+        <*> ( Clause
+                <$> getSourcePos
                 <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
                 <*> pExpInFn
             )
-          `sepBy` pOperator "|"
+        `sepBy` pOperator "|"
 
 pSinglePat :: Parser (Pat (Griff 'Parse))
 pSinglePat =
-  VarP <$> getSourcePos <*> lowerIdent
-    <|> ConP <$> getSourcePos <*> upperIdent <*> pure []
-    <|> UnboxedP <$> getSourcePos <*> pUnboxed
+  VarP
+    <$> getSourcePos
+    <*> lowerIdent
+    <|> ConP
+    <$> getSourcePos
+    <*> upperIdent
+    <*> pure []
+    <|> UnboxedP
+    <$> getSourcePos
+    <*> pUnboxed
     <|> between (symbol "(") (symbol ")") pPat
 
 pPat :: Parser (Pat (Griff 'Parse))
 pPat =
-  label "pattern" $
-    try (ConP <$> getSourcePos <*> upperIdent <*> some pSinglePat)
-      <|> pSinglePat
+  label "pattern" $ try (ConP <$> getSourcePos <*> upperIdent <*> some pSinglePat) <|> pSinglePat
 
 pTuple :: Parser (Exp (Griff 'Parse))
 pTuple = label "tuple" $
-  between (symbol "(") (symbol ")") $
-    do
-      s <- getSourcePos
-      x <- pExp
-      pOperator ","
-      xs <- pExp `sepBy` pOperator ","
-      pure $ Tuple s (x : xs)
+  between (symbol "(") (symbol ")") $ do
+    s <- getSourcePos
+    x <- pExp
+    pOperator ","
+    xs <- pExp `sepBy` pOperator ","
+    pure $ Tuple s (x : xs)
 
 pUnit :: Parser (Exp (Griff 'Parse))
 pUnit = between (symbol "(") (symbol ")") $ do
@@ -126,7 +138,9 @@ pUnit = between (symbol "(") (symbol ")") $ do
 
 pSingleExp' :: Parser (Exp (Griff 'Parse))
 pSingleExp' =
-  Unboxed <$> getSourcePos <*> pUnboxed
+  Unboxed
+    <$> getSourcePos
+    <*> pUnboxed
     <|> pVariable
     <|> pConstructor
     <|> try pUnit
@@ -135,9 +149,7 @@ pSingleExp' =
     <|> between (symbol "(") (symbol ")") pExp
 
 pSingleExp :: Parser (Exp (Griff 'Parse))
-pSingleExp =
-  try (Force <$> getSourcePos <*> pSingleExp' <* pOperator "!")
-    <|> pSingleExp'
+pSingleExp = try (Force <$> getSourcePos <*> pSingleExp' <* pOperator "!") <|> pSingleExp'
 
 pApply :: Parser (Exp (Griff 'Parse))
 pApply = do
@@ -178,9 +190,7 @@ pTyVar :: Parser (Type (Griff 'Parse))
 pTyVar = label "type variable" $ TyVar <$> getSourcePos <*> lowerIdent
 
 pTyCon :: Parser (Type (Griff 'Parse))
-pTyCon =
-  label "type constructor" $
-    TyCon <$> getSourcePos <*> upperIdent
+pTyCon = label "type constructor" $ TyCon <$> getSourcePos <*> upperIdent
 
 pTyTuple :: Parser (Type (Griff 'Parse))
 pTyTuple = between (symbol "(") (symbol ")") $ do
@@ -196,12 +206,16 @@ pTyUnit = between (symbol "(") (symbol ")") $ do
   pure $ TyTuple s []
 
 pTyLazy :: Parser (Type (Griff 'Parse))
-pTyLazy =
-  between (symbol "{") (symbol "}") $
-    TyLazy <$> getSourcePos <*> pType
+pTyLazy = between (symbol "{") (symbol "}") $ TyLazy <$> getSourcePos <*> pType
 
 pSingleType :: Parser (Type (Griff 'Parse))
-pSingleType = pTyVar <|> pTyCon <|> pTyLazy <|> try pTyUnit <|> try pTyTuple <|> between (symbol "(") (symbol ")") pType
+pSingleType =
+  pTyVar
+    <|> pTyCon
+    <|> pTyLazy
+    <|> try pTyUnit
+    <|> try pTyTuple
+    <|> between (symbol "(") (symbol ")") pType
 
 pTyApp :: Parser (Type (Griff 'Parse))
 pTyApp = TyApp <$> getSourcePos <*> pSingleType <*> some pSingleType
@@ -226,12 +240,21 @@ pType = try pTyArr <|> pTyTerm
 pScDef :: Parser (Decl (Griff 'Parse))
 pScDef =
   label "toplevel function definition" $
-    ScDef <$> getSourcePos <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator) <*> many lowerIdent <* pOperator "=" <*> pExp
+    ScDef
+      <$> getSourcePos
+      <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
+      <*> many lowerIdent
+      <* pOperator "="
+      <*> pExp
 
 pScSig :: Parser (Decl (Griff 'Parse))
 pScSig =
   label "toplevel function signature" $
-    ScSig <$> getSourcePos <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator) <* pOperator "::" <*> pType
+    ScSig
+      <$> getSourcePos
+      <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
+      <* pOperator "::"
+      <*> pType
 
 pDataDef :: Parser (Decl (Griff 'Parse))
 pDataDef = label "toplevel type definition" $ do
@@ -248,7 +271,10 @@ pDataDef = label "toplevel type definition" $ do
 pInfix :: Parser (Decl (Griff 'Parse))
 pInfix = label "infix declaration" $ do
   s <- getSourcePos
-  a <- try (pKeyword "infixl" $> LeftA) <|> try (pKeyword "infixr" $> RightA) <|> (pKeyword "infix" $> NeutralA)
+  a <-
+    try (pKeyword "infixl" $> LeftA)
+      <|> try (pKeyword "infixr" $> RightA)
+      <|> (pKeyword "infix" $> NeutralA)
   i <- lexeme L.decimal
   x <- between (symbol "(") (symbol ")") operator
   pure $ Infix s a i x

@@ -9,7 +9,13 @@ module Language.Griff.RnEnv where
 
 import qualified Data.Map as Map
 import Koriel.Prelude
-import Language.Griff.Extension (Assoc, Griff, GriffPhase (Parse, Rename), XId, XTId)
+import Language.Griff.Extension
+  ( Assoc,
+    Griff,
+    GriffPhase (Parse, Rename),
+    XId,
+    XTId,
+  )
 import Language.Malgo.Id
 import Language.Malgo.Monad
 
@@ -58,11 +64,7 @@ genRnEnv = do
   string_t <- newId () "String#"
   pure $
     RnEnv
-      { _varEnv =
-          Map.fromList
-            [ ("add_i32#", add_i32),
-              ("add_i64#", add_i64)
-            ],
+      { _varEnv = Map.fromList [("add_i32#", add_i32), ("add_i64#", add_i64)],
         _typeEnv =
           Map.fromList
             [ ("Int32#", int32_t),

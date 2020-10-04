@@ -7,6 +7,7 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.Core.LambdaLift
   ( LambdaLift,
@@ -38,12 +39,8 @@ instance Pass LambdaLift (Program (Id CType)) (Program (Id CType)) where
   trans = lambdalift
 
 lambdalift :: MonadUniq m => Program (Id CType) -> m (Program (Id CType))
-lambdalift Program {mainExp, topFuncs} = evalStateT
-  ?? Env
-    { _funcs = mempty,
-      _knowns = Set.fromList $ map fst topFuncs
-    }
-  $ do
+lambdalift Program {mainExp, topFuncs} =
+  evalStateT ?? Env {_funcs = mempty, _knowns = Set.fromList $ map fst topFuncs} $ do
     topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
     modify $ \env ->
       env
@@ -54,17 +51,10 @@ lambdalift Program {mainExp, topFuncs} = evalStateT
     Env {_funcs} <- get
     traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
 
-llift ::
-  ( MonadUniq f,
-    MonadState Env f
-  ) =>
-  Exp (Id CType) ->
-  f (Exp (Id CType))
+llift :: (MonadUniq f, MonadState Env f) => Exp (Id CType) -> f (Exp (Id CType))
 llift (Call (Var f) xs) = do
   ks <- use knowns
-  if f `elem` ks
-    then pure $ CallDirect f xs
-    else pure $ Call (Var f) xs
+  if f `elem` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
 llift (Let [(n, Fun xs call@Call {})] e) = do
   call' <- llift call
   Let [(n, Fun xs call')] <$> llift e
@@ -90,18 +80,10 @@ llift (Let [(n, Fun as body)] e) = do
       newFun <- def (n ^. idName) (toList fvs <> as) body'
       Let [(n, Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
-llift (Match e cs) =
-  Match <$> llift e <*> traverseOf (traversed % appCase) llift cs
+llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed % appCase) llift cs
 llift e = pure e
 
-def ::
-  ( MonadUniq m,
-    MonadState Env m
-  ) =>
-  String ->
-  [Id CType] ->
-  Exp (Id CType) ->
-  m (Id CType)
+def :: (MonadUniq m, MonadState Env m) => String -> [Id CType] -> Exp (Id CType) -> m (Id CType)
 def name xs e = do
   f <- newId (map cTypeOf xs :-> cTypeOf e) ("$" <> name)
   modifying funcs $ Map.insert f (xs, e)

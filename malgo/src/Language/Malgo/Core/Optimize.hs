@@ -5,6 +5,7 @@
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.Core.Optimize
   ( Optimize,
@@ -30,9 +31,7 @@ instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
   passName = "optimize"
   trans expr = do
     opt <- asks maOption
-    if noOptimize opt
-      then pure expr
-      else trans @Flat =<< optimize (inlineSize opt) expr
+    if noOptimize opt then pure expr else trans @Flat =<< optimize (inlineSize opt) expr
 
 times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
 times n f e =
@@ -40,14 +39,13 @@ times n f e =
     then pure e
     else do
       e' <- f e
-      if e == e'
-        then pure e'
-        else times (n - 1) f e'
+      if e == e' then pure e' else times (n - 1) f e'
 
 optimize :: MonadUniq m => Int -> Exp (Id CType) -> m (Exp (Id CType))
 optimize level expr =
-  runReaderT ?? level $
-    flat
+  runReaderT
+    ?? level
+    $ flat
       <$> times
         10
         ( optVarBind
@@ -55,7 +53,8 @@ optimize level expr =
             >=> removeUnusedLet
             >=> (flip evalStateT mempty . optCallInline)
             >=> optCast
-            >=> pure . flat
+            >=> pure
+              . flat
         )
         expr
 
@@ -74,12 +73,14 @@ optCallInline (Let ds e) = do
   Let <$> traverseOf (traversed % _2 % appObj) optCallInline ds' <*> optCallInline e
 optCallInline e = pure e
 
-checkInlineable :: (MonadState CallInlineMap m, MonadReader Int m) => (Id CType, Obj (Id CType)) -> m ()
+checkInlineable ::
+  (MonadState CallInlineMap m, MonadReader Int m) =>
+  (Id CType, Obj (Id CType)) ->
+  m ()
 checkInlineable (f, Fun ps v) = do
   level <- ask
   -- 変数の数がinlineSize以下ならインライン展開する
-  when (length v <= level || f `notElem` freevars v) $
-    modify $ at f ?~ (ps, v)
+  when (length v <= level || f `notElem` freevars v) $ modify $ at f ?~ (ps, v)
 checkInlineable _ = pure ()
 
 lookupCallInline ::
@@ -105,7 +106,8 @@ optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
   where
     build (x : xs) (a : as) body = Match (Atom a) $ Bind x (build xs as body) :| []
     build _ _ body = body
-optPackInline (Match v cs) = Match <$> optPackInline v <*> traverseOf (traversed % appCase) optPackInline cs
+optPackInline (Match v cs) =
+  Match <$> optPackInline v <*> traverseOf (traversed % appCase) optPackInline cs
 optPackInline (Let ds e) = do
   ds' <- traverseOf (traversed % _2 % appObj) optPackInline ds
   local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
@@ -126,33 +128,33 @@ removeUnusedLet (Let ds e) = do
   e' <- removeUnusedLet e
   let gamma = map (\(v, o) -> (v, Set.delete v $ freevars o)) ds'
   let ds'' = filter (\(v, _) -> reachable 100 gamma v $ freevars e') ds'
-  if null ds''
-    then pure e'
-    else pure $ Let ds'' e'
+  if null ds'' then pure e' else pure $ Let ds'' e'
   where
     reachable limit gamma v fvs
-      | limit <= 0 = undefined
-      | v `elem` fvs = True
+      | limit <= 0 =
+        undefined
+      | v `elem` fvs =
+        True
       | otherwise =
         let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ Set.toList fvs)
          in fvs /= fvs' && reachable (limit - 1 :: Int) gamma v fvs'
-removeUnusedLet (Match v cs) = Match <$> removeUnusedLet v <*> traverseOf (traversed % appCase) removeUnusedLet cs
+removeUnusedLet (Match v cs) =
+  Match <$> removeUnusedLet v <*> traverseOf (traversed % appCase) removeUnusedLet cs
 removeUnusedLet e = pure e
 
 optCast :: MonadUniq f => Exp (Id CType) -> f (Exp (Id CType))
-optCast e@(Cast (pts' :-> rt') f) =
-  case cTypeOf f of
-    pts :-> _
-      | length pts' == length pts -> do
-        f' <- newId (pts' :-> rt') "$cast_opt"
-        ps' <- traverse (newId ?? "$p") pts'
-        v' <- runDef $ do
-          ps <- zipWithM cast pts $ map (Atom . Var) ps'
-          r <- bind (Call f ps)
-          pure $ Cast rt' r
-        pure (Let [(f', Fun ps' v')] (Atom $ Var f'))
-      | otherwise -> bug Unreachable
-    _ -> pure e
+optCast e@(Cast (pts' :-> rt') f) = case cTypeOf f of
+  pts :-> _
+    | length pts' == length pts -> do
+      f' <- newId (pts' :-> rt') "$cast_opt"
+      ps' <- traverse (newId ?? "$p") pts'
+      v' <- runDef $ do
+        ps <- zipWithM cast pts $ map (Atom . Var) ps'
+        r <- bind (Call f ps)
+        pure $ Cast rt' r
+      pure (Let [(f', Fun ps' v')] (Atom $ Var f'))
+    | otherwise -> bug Unreachable
+  _ -> pure e
 optCast (Match v cs) = Match <$> optCast v <*> traverseOf (traversed % appCase) optCast cs
 optCast (Let ds e) = Let <$> traverseOf (traversed % _2 % appObj) optCast ds <*> optCast e
 optCast e = pure e

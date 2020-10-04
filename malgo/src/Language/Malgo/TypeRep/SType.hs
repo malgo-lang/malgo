@@ -7,14 +7,7 @@
 module Language.Malgo.TypeRep.SType where
 
 import Koriel.Prelude
-import Language.Malgo.Pretty
-import Text.PrettyPrint.HughesPJClass
-  ( braces,
-    brackets,
-    parens,
-    punctuate,
-    sep,
-  )
+import Koriel.Pretty
 
 data SType a
   = TyVar a

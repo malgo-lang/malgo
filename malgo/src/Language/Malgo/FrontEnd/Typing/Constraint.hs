@@ -13,12 +13,11 @@ where
 
 import qualified Data.Map as Map
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Malgo.FrontEnd.Typing.Subst
 import Language.Malgo.Monad
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.Type
 import Text.Parsec.Pos (SourcePos)
-import Text.PrettyPrint (($$))
 
 infixl 5 :~
 
@@ -54,11 +53,15 @@ unify :: SourcePos -> Type -> Type -> Either Doc Subst
 unify pos (TyMeta a) t = bind pos a t
 unify pos t (TyMeta a) = bind pos a t
 unify pos (TyApp c1 ts1) (TyApp c2 ts2)
-  | c1 == c2 = unifyMany pos ts1 ts2 ts1 ts2
-  | otherwise = Left $ "mismatch constructor" <+> pPrint c1 <> "," <+> pPrint c2 $$ "on:" <+> pPrint pos
+  | c1 == c2 =
+    unifyMany pos ts1 ts2 ts1 ts2
+  | otherwise =
+    Left $ "mismatch constructor" <+> pPrint c1 <> "," <+> pPrint c2 $$ "on:" <+> pPrint pos
 unify pos (ps0 :-> r0) (ps1 :-> r1) = unifyMany pos ps0 ps1 (r0 : ps0) (r1 : ps1)
-unify pos t1@(TyApp _ _) t2@(_ :-> _) = Left $ "mismatch type" <+> pPrint t1 <> "," <+> pPrint t2 $$ "on:" <+> pPrint pos
-unify pos t1@(_ :-> _) t2@(TyApp _ _) = Left $ "mismatch type" <+> pPrint t1 <> "," <+> pPrint t2 $$ "on:" <+> pPrint pos
+unify pos t1@(TyApp _ _) t2@(_ :-> _) =
+  Left $ "mismatch type" <+> pPrint t1 <> "," <+> pPrint t2 $$ "on:" <+> pPrint pos
+unify pos t1@(_ :-> _) t2@(TyApp _ _) =
+  Left $ "mismatch type" <+> pPrint t1 <> "," <+> pPrint t2 $$ "on:" <+> pPrint pos
 
 unifyMany :: SourcePos -> [Type] -> [Type] -> [Type] -> [Type] -> Either Doc Subst
 unifyMany _ _ _ [] [] = pure mempty
@@ -66,7 +69,8 @@ unifyMany pos t1 t2 (x : xs) (y : ys) = do
   s1 <- unify pos x y
   s2 <- unifyMany pos t1 t2 (apply s1 xs) (apply s1 ys)
   pure $ s2 <> s1
-unifyMany pos t1 t2 _ _ = Left $ "mismatch length" <+> pPrint t1 <> "," <+> pPrint t2 $$ "on:" <+> pPrint pos
+unifyMany pos t1 t2 _ _ =
+  Left $ "mismatch length" <+> pPrint t1 <> "," <+> pPrint t2 $$ "on:" <+> pPrint pos
 
 bind :: SourcePos -> TyVar -> Type -> Either Doc Subst
 bind pos a t

@@ -14,22 +14,11 @@ module Language.Malgo.IR.Core where
 
 import Data.Set.Optics
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
 import Language.Malgo.Monad (MonadUniq)
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
-import Text.PrettyPrint.HughesPJ
-  ( brackets,
-    char,
-    doubleQuotes,
-    parens,
-    quotes,
-    sep,
-    text,
-    vcat,
-    ($$),
-  )
 import qualified Text.PrettyPrint.HughesPJ as P
 
 class HasFreeVar f where
@@ -60,7 +49,7 @@ instance Pretty Unboxed where
   pPrint (Int64 x) = pPrint x
   pPrint (Float x) = pPrint x
   pPrint (Double x) = pPrint x
-  pPrint (Char x) = quotes (char x)
+  pPrint (Char x) = quotes (pPrint x)
   pPrint (String x) = doubleQuotes (text x)
 
 {-
@@ -114,49 +103,45 @@ data Exp a
 
 instance HasCType a => HasCType (Exp a) where
   cTypeOf (Atom x) = cTypeOf x
-  cTypeOf (Call f xs) =
-    case cTypeOf f of
-      ps :-> r -> go ps (map cTypeOf xs) r
-      _ -> errorDoc $ "Invalid type:" <+> P.quotes (pPrint $ cTypeOf f)
+  cTypeOf (Call f xs) = case cTypeOf f of
+    ps :-> r -> go ps (map cTypeOf xs) r
+    _ -> errorDoc $ "Invalid type:" <+> P.quotes (pPrint $ cTypeOf f)
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug Unreachable
-  cTypeOf (CallDirect f xs) =
-    case cTypeOf f of
-      ps :-> r -> go ps (map cTypeOf xs) r
-      _ -> bug Unreachable
+  cTypeOf (CallDirect f xs) = case cTypeOf f of
+    ps :-> r -> go ps (map cTypeOf xs) r
+    _ -> bug Unreachable
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug Unreachable
-  cTypeOf (PrimCall _ t xs) =
-    case t of
-      ps :-> r -> go ps (map cTypeOf xs) r
-      _ -> bug Unreachable
+  cTypeOf (PrimCall _ t xs) = case t of
+    ps :-> r -> go ps (map cTypeOf xs) r
+    _ -> bug Unreachable
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug Unreachable
-  cTypeOf (BinOp o x _) =
-    case o of
-      Add -> cTypeOf x
-      Sub -> cTypeOf x
-      Mul -> cTypeOf x
-      Div -> cTypeOf x
-      Mod -> cTypeOf x
-      FAdd -> cTypeOf x
-      FSub -> cTypeOf x
-      FMul -> cTypeOf x
-      FDiv -> cTypeOf x
-      Eq -> boolT
-      Neq -> boolT
-      Lt -> boolT
-      Gt -> boolT
-      Le -> boolT
-      Ge -> boolT
-      And -> boolT
-      Or -> boolT
+  cTypeOf (BinOp o x _) = case o of
+    Add -> cTypeOf x
+    Sub -> cTypeOf x
+    Mul -> cTypeOf x
+    Div -> cTypeOf x
+    Mod -> cTypeOf x
+    FAdd -> cTypeOf x
+    FSub -> cTypeOf x
+    FMul -> cTypeOf x
+    FDiv -> cTypeOf x
+    Eq -> boolT
+    Neq -> boolT
+    Lt -> boolT
+    Gt -> boolT
+    Le -> boolT
+    Ge -> boolT
+    And -> boolT
+    Or -> boolT
     where
       boolT = SumT [Con "True" [], Con "False" []]
   cTypeOf (ArrayRead a _) = case cTypeOf a of
@@ -181,7 +166,8 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
-  pPrint (Let xs e) = parens $ "let" $$ parens (vcat (map (\(v, o) -> parens $ pPrint v $$ pPrint o) xs)) $$ pPrint e
+  pPrint (Let xs e) =
+    parens $ "let" $$ parens (vcat (map (\(v, o) -> parens $ pPrint v $$ pPrint o) xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
   pPrint (Error _) = "ERROR"
 
@@ -224,7 +210,8 @@ data Case a
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Case a) where
-  pPrint (Unpack c xs e) = parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
+  pPrint (Unpack c xs e) =
+    parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
@@ -290,7 +277,11 @@ data Program a = Program
 instance Pretty a => Pretty (Program a) where
   pPrint Program {mainExp, topFuncs} =
     parens ("entry" $$ pPrint mainExp)
-      $$ vcat (map (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e) topFuncs)
+      $$ vcat
+        ( map
+            (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e)
+            topFuncs
+        )
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj = traversalVL $ \f -> \case
@@ -310,11 +301,7 @@ appProgram = traversalVL $ \f Program {mainExp, topFuncs} ->
 runDef :: Functor f => WriterT (Endo a) f a -> f a
 runDef m = uncurry (flip appEndo) <$> runWriterT m
 
-let_ ::
-  (MonadUniq m, MonadWriter (Endo (Exp (Id a))) m) =>
-  a ->
-  Obj (Id a) ->
-  m (Atom (Id a))
+let_ :: (MonadUniq m, MonadWriter (Endo (Exp (Id a))) m) => a -> Obj (Id a) -> m (Atom (Id a))
 let_ otype obj = do
   x <- newId otype "$let"
   tell $ Endo $ \e -> Let [(x, obj)] e
@@ -330,7 +317,10 @@ destruct val con@(Con _ ts) = do
   tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
   pure $ map Var vs
 
-bind :: (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) => Exp (Id CType) -> m (Atom (Id CType))
+bind ::
+  (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) =>
+  Exp (Id CType) ->
+  m (Atom (Id CType))
 bind (Atom a) = pure a
 bind v = do
   x <- newId (cTypeOf v) "$d"

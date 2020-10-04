@@ -11,9 +11,12 @@
 module Language.Griff.Type where
 
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Malgo.Id
-import Language.Malgo.Monad (MonadUniq, getUniq)
-import Language.Malgo.Pretty
+import Language.Malgo.Monad
+  ( MonadUniq,
+    getUniq,
+  )
 import qualified Text.PrettyPrint.HughesPJ as P
 
 ----------------------
@@ -34,7 +37,8 @@ instance HasKind Kind where
 
 instance Pretty Kind where
   pPrintPrec _ _ Star = "*"
-  pPrintPrec l d (KArr k1 k2) = P.maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
+  pPrintPrec l d (KArr k1 k2) =
+    P.maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
 
 ----------
 -- Type --
@@ -149,11 +153,13 @@ instance HasKind Type where
   kind (TyMeta tv) = kind tv
 
 instance Pretty Type where
-  pPrintPrec l d (TyApp t1 t2) = P.maybeParens (d > 10) $ P.sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+  pPrintPrec l d (TyApp t1 t2) =
+    P.maybeParens (d > 10) $ P.sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVar v) = pPrint v
   pPrintPrec _ _ (TyCon c) = pPrint c
   pPrintPrec _ _ (TyPrim p) = pPrint p
-  pPrintPrec l d (TyArr t1 t2) = P.maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
+  pPrintPrec l d (TyArr t1 t2) =
+    P.maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple ts) = P.parens $ P.sep $ P.punctuate "," $ map pPrint ts
   pPrintPrec _ _ (TyLazy t) = P.braces $ pPrint t
   pPrintPrec _ _ (TyMeta tv) = pPrint tv
@@ -194,14 +200,10 @@ instance HasType (WithType a) where
 
 splitCon :: Type -> (Id Kind, [Type])
 splitCon (TyCon con) = (con, [])
-splitCon (TyApp t1 t2) =
-  let (dataCon, ts) = splitCon t1
-   in (dataCon, ts <> [t2])
+splitCon (TyApp t1 t2) = let (dataCon, ts) = splitCon t1 in (dataCon, ts <> [t2])
 splitCon _ = bug Unreachable
 
 splitTyArr :: Type -> ([Type], Type)
-splitTyArr (TyArr t1 t2) =
-  let (ps, r) = splitTyArr t2
-   in (t1 : ps, r)
+splitTyArr (TyArr t1 t2) = let (ps, r) = splitTyArr t2 in (t1 : ps, r)
 splitTyArr (TyMeta _) = bug Unreachable
 splitTyArr t = ([], t)

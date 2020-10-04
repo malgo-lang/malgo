@@ -16,6 +16,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
 import Koriel.Prelude
+import Koriel.Pretty
 import qualified LLVM.AST as L
 import Language.Malgo.Core.CodeGen
 import Language.Malgo.Core.LambdaLift
@@ -23,14 +24,16 @@ import Language.Malgo.Core.Lint
 import Language.Malgo.Core.Optimize
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
-import Language.Malgo.IR.Core (Program (..), appProgram)
+import Language.Malgo.IR.Core
+  ( Program (..),
+    appProgram,
+  )
 import Language.Malgo.IR.Syntax
 import qualified Language.Malgo.Lexer as Lexer
 import Language.Malgo.MiddleEnd.Desugar
 import Language.Malgo.Monad as M
 import qualified Language.Malgo.Parser as Parser
 import Language.Malgo.Pass
-import Language.Malgo.Pretty
 import Options.Applicative
 
 parseOpt :: IO Opt

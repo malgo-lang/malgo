@@ -15,21 +15,11 @@ module Language.Malgo.IR.Syntax
 where
 
 import Koriel.Prelude hiding (ix)
+import Koriel.Pretty
 import Language.Malgo.IR.Op as Export
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type
 import Text.Parsec.Pos (SourcePos)
-import Text.PrettyPrint.HughesPJClass
-  ( braces,
-    brackets,
-    doubleQuotes,
-    parens,
-    punctuate,
-    quotes,
-    sep,
-    ($+$),
-  )
 
 -- | 式。
 -- 型変数aは識別子の型を表す。ParserはExpr Stringを生成する。

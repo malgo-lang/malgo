@@ -13,13 +13,13 @@ where
 
 import Data.Set ((\\))
 import Koriel.Prelude hiding (ix)
+import Koriel.Pretty
 import Language.Malgo.FrontEnd.Typing.Constraint
 import Language.Malgo.FrontEnd.Typing.Subst
 import Language.Malgo.IR.Syntax
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type
 import Text.Parsec (SourcePos)
@@ -36,7 +36,10 @@ instance Pass Typing (Expr (Id ())) (Expr (Id Type)) where
         env <- get
         opt <- getOpt
         when (dumpTypeTable opt) $ dump (toList env)
-        pure $ fmap (\x -> maybe (x & idMeta .~ TyMeta (-1)) (fmap removeExplictForall) (env ^. at x)) e
+        pure $
+          fmap
+            (\x -> maybe (x & idMeta .~ TyMeta (-1)) (fmap removeExplictForall) (env ^. at x))
+            e
       Left doc -> errorDoc doc
 
 type Env = Map (Id ()) (Id Scheme)
@@ -47,19 +50,12 @@ newTyMeta = TyMeta <$> getUniq
 generalize :: Env -> Type -> Scheme
 generalize env t = Forall (toList $ ftv t \\ ftv env) t
 
-letVar ::
-  MonadState Env m =>
-  Env ->
-  Id () ->
-  Type ->
-  [WithPos] ->
-  m ()
-letVar env var ty cs =
-  case solve cs of
-    Right subst -> do
-      defineVar var $ generalize (apply subst env) (apply subst ty)
-      modify (apply subst)
-    Left doc -> errorDoc doc
+letVar :: MonadState Env m => Env -> Id () -> Type -> [WithPos] -> m ()
+letVar env var ty cs = case solve cs of
+  Right subst -> do
+    defineVar var $ generalize (apply subst env) (apply subst ty)
+    modify (apply subst)
+  Left doc -> errorDoc doc
 
 defineVar :: MonadState Env m => Id () -> Scheme -> m ()
 defineVar x t = modify (at x ?~ (x & idMeta .~ t))
@@ -71,18 +67,11 @@ lookupVar x = do
     Just x' -> instantiate $ x' ^. idMeta
     Nothing -> bug Unreachable
 
-addCs ::
-  (MonadState Env m, MonadMalgo m) =>
-  SourcePos ->
-  [Constraint] ->
-  WriterT [WithPos] m ()
+addCs :: (MonadState Env m, MonadMalgo m) => SourcePos -> [Constraint] -> WriterT [WithPos] m ()
 addCs pos = tell . map (WithPos ?? pos)
 
 typingExpr ::
-  ( MonadState Env m,
-    MonadUniq m,
-    MonadMalgo m
-  ) =>
+  (MonadState Env m, MonadUniq m, MonadMalgo m) =>
   Expr (Id ()) ->
   WriterT [WithPos] m Type
 typingExpr (Var _ x) = lookupVar x
@@ -146,10 +135,7 @@ typingExpr (Let _ (FunDec fs) e) = do
   for_ fs $ \(_, f, _, _, _) -> defineVar f . Forall [] =<< newTyMeta
   for_ fs $ \(pos, f, params, mretType, body) -> do
     (retType, (paramIds, paramTypes)) <-
-      sTypeScope $
-        (,)
-          <$> toType' mretType
-          <*> mapAndUnzipM (rtraverse toType') params
+      sTypeScope $ (,) <$> toType' mretType <*> mapAndUnzipM (rtraverse toType') params
     zipWithM_ (\p t -> defineVar p $ Forall [] t) paramIds paramTypes
     (t, cs0) <- listen $ typingExpr body
     tv <- lookupVar f
@@ -197,10 +183,7 @@ typingExpr (Match pos scrutinee clauses) = do
   pure t
 
 typingPat ::
-  ( MonadState Env m,
-    MonadUniq m,
-    MonadMalgo m
-  ) =>
+  (MonadState Env m, MonadUniq m, MonadMalgo m) =>
   Type ->
   Pat (Id ()) ->
   WriterT [WithPos] m ()

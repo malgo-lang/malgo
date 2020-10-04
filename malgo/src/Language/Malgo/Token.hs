@@ -12,7 +12,7 @@ module Language.Malgo.Token
 where
 
 import Koriel.Prelude
-import Language.Malgo.Pretty
+import Koriel.Pretty
 import Text.Parsec.Pos (SourcePos)
 import qualified Text.PrettyPrint.HughesPJClass as P
 

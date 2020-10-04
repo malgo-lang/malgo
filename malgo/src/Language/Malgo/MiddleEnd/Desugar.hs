@@ -6,24 +6,28 @@
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.MiddleEnd.Desugar
   ( Desugar,
   )
 where
 
-import qualified Data.Set as Set (fromList, singleton, toList)
+import qualified Data.Set as Set
+  ( fromList,
+    singleton,
+    toList,
+  )
 import Koriel.Prelude
+import Koriel.Pretty
 import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import qualified Language.Malgo.IR.Syntax as S
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
 import Language.Malgo.TypeRep.Type hiding ((:->))
-import Text.PrettyPrint (($$))
 
 data Desugar
 
@@ -38,33 +42,36 @@ findVar v = do
 
 boolValue :: MonadUniq m => Bool -> m (Exp (Id CType))
 boolValue x =
-  runDef $ fmap Atom $ let_ boolType $ if x then Pack boolType trueC [] else Pack boolType falseC []
+  runDef $
+    fmap Atom $
+      let_ boolType $
+        if x
+          then Pack boolType trueC []
+          else Pack boolType falseC []
   where
     boolType = SumT $ Set.fromList [trueC, falseC]
     trueC = Con "True" []
     falseC = Con "False" []
 
-toExp :: (MonadState (Map (Id Type) (Id CType)) m, MonadUniq m, MonadFail m) => S.Expr (Id Type) -> m (Exp (Id CType))
-toExp (S.Var _ x) =
-  Atom . Var <$> findVar x
-toExp (S.Int _ x) =
-  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Int64 $ fromInteger x]
+toExp ::
+  (MonadState (Map (Id Type) (Id CType)) m, MonadUniq m, MonadFail m) =>
+  S.Expr (Id Type) ->
+  m (Exp (Id CType))
+toExp (S.Var _ x) = Atom . Var <$> findVar x
+toExp (S.Int _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Int64 $ fromInteger x]
   where
     ty = SumT $ Set.singleton con
     con = Con "Int" [Int64T]
-toExp (S.Float _ x) =
-  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Double x]
+toExp (S.Float _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Double x]
   where
     ty = SumT $ Set.singleton con
     con = Con "Float" [DoubleT]
 toExp (S.Bool _ x) = boolValue x
-toExp (S.Char _ x) =
-  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Char x]
+toExp (S.Char _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Char x]
   where
     ty = SumT $ Set.singleton con
     con = Con "Char" [CharT]
-toExp (S.String _ x) =
-  runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String x]
+toExp (S.String _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String x]
   where
     ty = SumT $ Set.singleton con
     con = Con "String" [StringT]
@@ -117,17 +124,13 @@ toExp (S.Let _ (S.ValDec _ a _ v) e) = runDef $ do
   Var v <- cast (cTypeOf a) =<< toExp v
   modify $ at a ?~ v
   toExp e
-toExp (S.Let _ (S.ExDec _ prim _ primName) e) =
-  case cTypeOf $ prim ^. idMeta of
-    ta :-> tb -> runDef $ do
-      ps <- traverse (newId ?? "a") ta
-      Var prim' <-
-        let_ (ta :-> tb) $
-          Fun ps $
-            PrimCall primName (ta :-> tb) (map Var ps)
-      modify $ at prim ?~ prim'
-      toExp e
-    _ -> bug Unreachable
+toExp (S.Let _ (S.ExDec _ prim _ primName) e) = case cTypeOf $ prim ^. idMeta of
+  ta :-> tb -> runDef $ do
+    ps <- traverse (newId ?? "a") ta
+    Var prim' <- let_ (ta :-> tb) $ Fun ps $ PrimCall primName (ta :-> tb) (map Var ps)
+    modify $ at prim ?~ prim'
+    toExp e
+  _ -> bug Unreachable
 toExp (S.Let _ (S.FunDec fs) e) = do
   for_ fs $ \(_, f, _, _, _) -> do
     f' <- newId (cTypeOf f) (f ^. idName)
@@ -147,35 +150,34 @@ toExp (S.If _ c t f) = do
   t <- Unpack (Con "True" []) [] <$> toExp t
   f <- Unpack (Con "False" []) [] <$> toExp f
   pure $ Match c (t :| [f])
-toExp (S.BinOp _ opr x y) =
-  case opr of
-    S.Add -> arithOp (Con "Int" [Int64T])
-    S.Sub -> arithOp (Con "Int" [Int64T])
-    S.Mul -> arithOp (Con "Int" [Int64T])
-    S.Div -> arithOp (Con "Int" [Int64T])
-    S.Mod -> arithOp (Con "Int" [Int64T])
-    S.FAdd -> arithOp (Con "Float" [DoubleT])
-    S.FSub -> arithOp (Con "Float" [DoubleT])
-    S.FMul -> arithOp (Con "Float" [DoubleT])
-    S.FDiv -> arithOp (Con "Float" [DoubleT])
-    S.Eq -> equalOp
-    S.Neq -> equalOp
-    S.Lt -> compareOp
-    S.Gt -> compareOp
-    S.Le -> compareOp
-    S.Ge -> compareOp
-    S.And -> runDef $ do
-      lexp <- toExp x
-      rexp <- toExp y
-      whenFalse <- Unpack (Con "False" []) [] . Atom <$> bind lexp
-      whenTrue <- Bind <$> newId (cTypeOf lexp) "lexp" <*> (Atom <$> bind rexp)
-      pure $ Match lexp (whenFalse :| [whenTrue])
-    S.Or -> runDef $ do
-      lexp <- toExp x
-      rexp <- toExp y
-      whenTrue <- Unpack (Con "True" []) [] . Atom <$> bind lexp
-      whenFalse <- Bind <$> newId (cTypeOf lexp) "lexp" <*> (Atom <$> bind rexp)
-      pure $ Match lexp (whenTrue :| [whenFalse])
+toExp (S.BinOp _ opr x y) = case opr of
+  S.Add -> arithOp (Con "Int" [Int64T])
+  S.Sub -> arithOp (Con "Int" [Int64T])
+  S.Mul -> arithOp (Con "Int" [Int64T])
+  S.Div -> arithOp (Con "Int" [Int64T])
+  S.Mod -> arithOp (Con "Int" [Int64T])
+  S.FAdd -> arithOp (Con "Float" [DoubleT])
+  S.FSub -> arithOp (Con "Float" [DoubleT])
+  S.FMul -> arithOp (Con "Float" [DoubleT])
+  S.FDiv -> arithOp (Con "Float" [DoubleT])
+  S.Eq -> equalOp
+  S.Neq -> equalOp
+  S.Lt -> compareOp
+  S.Gt -> compareOp
+  S.Le -> compareOp
+  S.Ge -> compareOp
+  S.And -> runDef $ do
+    lexp <- toExp x
+    rexp <- toExp y
+    whenFalse <- Unpack (Con "False" []) [] . Atom <$> bind lexp
+    whenTrue <- Bind <$> newId (cTypeOf lexp) "lexp" <*> (Atom <$> bind rexp)
+    pure $ Match lexp (whenFalse :| [whenTrue])
+  S.Or -> runDef $ do
+    lexp <- toExp x
+    rexp <- toExp y
+    whenTrue <- Unpack (Con "True" []) [] . Atom <$> bind lexp
+    whenFalse <- Bind <$> newId (cTypeOf lexp) "lexp" <*> (Atom <$> bind rexp)
+    pure $ Match lexp (whenTrue :| [whenFalse])
   where
     arithOp con = runDef $ do
       lexp <- toExp x
@@ -189,11 +191,10 @@ toExp (S.BinOp _ opr x y) =
       lexp <- toExp x
       rexp <- toExp y
       case cTypeOf lexp of
-        SumT (toList -> [con])
-          | con == Con "Int" [Int64T] || con == Con "Float" [DoubleT] -> do
-            [lval] <- destruct lexp con
-            [rval] <- destruct rexp con
-            pure $ BinOp opr lval rval
+        SumT (toList -> [con]) | con == Con "Int" [Int64T] || con == Con "Float" [DoubleT] -> do
+          [lval] <- destruct lexp con
+          [rval] <- destruct rexp con
+          pure $ BinOp opr lval rval
         _ -> bug Unreachable
     equalOp = do
       lexp <- toExp x
@@ -223,7 +224,11 @@ toExp (S.BinOp _ opr x y) =
             lvalHole <- newId (cTypeOf lval) "lval"
             rvalHole <- newId (cTypeOf rval) "rval"
             whenFalse <- boolValue True
-            pure $ Bind lvalHole $ Match (Atom rval) (Unpack (Con "True" []) [] (Atom lval) :| [Bind rvalHole whenFalse])
+            pure $
+              Bind lvalHole $
+                Match
+                  (Atom rval)
+                  (Unpack (Con "True" []) [] (Atom lval) :| [Bind rvalHole whenFalse])
           pure $ Match (Atom lval) (whenTrue :| [whenFalse])
         _ -> errorDoc $ "not implemented:" <+> pPrint opr $$ pPrint lexp $$ pPrint rexp
 toExp (S.Match _ e cs) = do
