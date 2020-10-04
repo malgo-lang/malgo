@@ -1,5 +1,5 @@
-name: malgo
-version: 1.0.0.0
+name: griff
+version: 0.1.0.0
 category: Compilers/Interpreters
 github: takoeight0821/malgo
 license: BSD3
@@ -10,13 +10,13 @@ copyright: "2017-2020 Yuya Kono"
 build-type: Simple
 
 dependencies:
-  - koriel
   - array
   - base
   - bytestring
   - containers
   - dlist
   - extra
+  - koriel
   - list-predicate
   - llvm-hs-pretty
   - llvm-hs-pure
@@ -28,6 +28,7 @@ dependencies:
   - parser-combinators
   - pretty
   - pretty-simple
+  - string-conversions
   - text
   - transformers
   - vector
@@ -37,33 +38,22 @@ ghc-options:
   - -Wcompat
   - -Wincomplete-uni-patterns
   - -Wmissing-deriving-strategies
-  # - -Wno-name-shadowing
+  - -Wno-name-shadowing
   - -j4
   - +RTS -A128m -n2m -qg -RTS
 
 default-extensions:
   - StrictData
 
-build-tools:
-  - happy
-
 library:
   source-dirs: src
 
 executables:
-  malgo:
+  griff:
     main: Main.hs
     source-dirs: app/
     ghc-options:
       - -threaded
     dependencies:
-      - malgo
+      - griff
       - llvm-hs-pretty
-
-tests:
-  malgo-test:
-    main: Spec.hs
-    source-dirs: test
-    dependencies:
-      - malgo
-      - hspec

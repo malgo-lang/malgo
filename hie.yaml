@@ -10,14 +10,16 @@ cradle:
   #     component: "malgo:malgo-test"
   # Works on ghc 8.8.4
   cabal:
-    - path: "./malgo/app/malgo/Main.hs"
+    - path: "./malgo/app/Main.hs"
       component: "malgo:exe:malgo"
-    - path: "./malgo/app/griff/Main.hs"
-      component: "malgo:exe:griff"
     - path: "./malgo/src" 
       component: "lib:malgo"
     - path: "./malgo/test"
       component: "malgo:malgo-test"
+    - path: "./griff/app/Main.hs"
+      component: "griff:exe:griff"
+    - path: "./griff/src" 
+      component: "lib:griff"
     - path: "./koriel/src"
       component: "lib:koriel"
     

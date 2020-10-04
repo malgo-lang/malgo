@@ -1,0 +1,101 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 4ce0390e4b0041ca35be3cb4219f2b2b6323fbf412956b47e557241bc5dc6b55
+
+name:           griff
+version:        0.1.0.0
+category:       Compilers/Interpreters
+homepage:       https://github.com/takoeight0821/malgo#readme
+bug-reports:    https://github.com/takoeight0821/malgo/issues
+author:         Yuya Kono
+maintainer:     takohati0821@gmail.com
+copyright:      2017-2020 Yuya Kono
+license:        BSD3
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/takoeight0821/malgo
+
+library
+  exposed-modules:
+      Language.Griff.Desugar
+      Language.Griff.Driver
+      Language.Griff.Extension
+      Language.Griff.Grouping
+      Language.Griff.Option
+      Language.Griff.Parser
+      Language.Griff.Rename
+      Language.Griff.RnEnv
+      Language.Griff.Syntax
+      Language.Griff.TcEnv
+      Language.Griff.Type
+      Language.Griff.Typing
+  other-modules:
+      Paths_griff
+  hs-source-dirs:
+      src
+  default-extensions: StrictData
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
+  build-depends:
+      array
+    , base
+    , bytestring
+    , containers
+    , dlist
+    , extra
+    , koriel
+    , list-predicate
+    , llvm-hs-pretty
+    , llvm-hs-pure
+    , megaparsec
+    , mtl
+    , optics
+    , optparse-applicative
+    , parsec
+    , parser-combinators
+    , pretty
+    , pretty-simple
+    , string-conversions
+    , text
+    , transformers
+    , vector
+  default-language: Haskell2010
+
+executable griff
+  main-is: Main.hs
+  other-modules:
+      Paths_griff
+  hs-source-dirs:
+      app/
+  default-extensions: StrictData
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
+  build-depends:
+      array
+    , base
+    , bytestring
+    , containers
+    , dlist
+    , extra
+    , griff
+    , koriel
+    , list-predicate
+    , llvm-hs-pretty
+    , llvm-hs-pure
+    , megaparsec
+    , mtl
+    , optics
+    , optparse-applicative
+    , parsec
+    , parser-combinators
+    , pretty
+    , pretty-simple
+    , string-conversions
+    , text
+    , transformers
+    , vector
+  default-language: Haskell2010

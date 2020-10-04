@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a84912970225a688244f847b116cbf1eaf0ae1df714b64658840027cf0458196
+-- hash: 286b8975744cb7dac0104568cec7e3a02b9c99062f945921f1003548f5ada230
 
 name:           malgo
 version:        1.0.0.0
@@ -24,18 +24,6 @@ source-repository head
 
 library
   exposed-modules:
-      Language.Griff.Desugar
-      Language.Griff.Driver
-      Language.Griff.Extension
-      Language.Griff.Grouping
-      Language.Griff.Option
-      Language.Griff.Parser
-      Language.Griff.Rename
-      Language.Griff.RnEnv
-      Language.Griff.Syntax
-      Language.Griff.TcEnv
-      Language.Griff.Type
-      Language.Griff.Typing
       Language.Malgo.Driver
       Language.Malgo.FrontEnd.Rename
       Language.Malgo.FrontEnd.Typing.Constraint
@@ -81,47 +69,12 @@ library
     , vector
   default-language: Haskell2010
 
-executable griff
-  main-is: Main.hs
-  other-modules:
-      Paths_malgo
-  hs-source-dirs:
-      app/griff
-  default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS -threaded
-  build-tools:
-      happy
-  build-depends:
-      array
-    , base
-    , bytestring
-    , containers
-    , dlist
-    , extra
-    , koriel
-    , list-predicate
-    , llvm-hs-pretty
-    , llvm-hs-pure
-    , malgo
-    , megaparsec
-    , mtl
-    , optics
-    , optparse-applicative
-    , parsec
-    , parser-combinators
-    , pretty
-    , pretty-simple
-    , text
-    , transformers
-    , vector
-  default-language: Haskell2010
-
 executable malgo
   main-is: Main.hs
   other-modules:
       Paths_malgo
   hs-source-dirs:
-      app/malgo
+      app/
   default-extensions: StrictData
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-tools:
