@@ -8,7 +8,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Language.Malgo.Prelude
+module Koriel.Prelude
   ( module Prelude,
     module Control.Applicative,
     module Optics,

@@ -7,10 +7,10 @@ module Main where
 import Control.Exception (catch, displayException)
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
+import Koriel.Prelude
 import LLVM.Pretty (ppllvm)
 import Language.Malgo.Driver
 import Language.Malgo.Monad
-import Language.Malgo.Prelude
 import System.Exit (exitFailure)
 import System.IO (hPutStr, stderr)
 

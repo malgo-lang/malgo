@@ -9,9 +9,9 @@ module Language.Griff.Extension where
 
 import Data.Kind (Constraint)
 import qualified Data.Kind as K
+import Koriel.Prelude
 import Language.Griff.Type
 import Language.Malgo.Id
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.Megaparsec.Pos (SourcePos)
 

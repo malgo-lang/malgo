@@ -14,13 +14,13 @@ where
 
 import qualified Data.Set as Set (fromList, singleton, toList)
 import qualified Data.Text as T
+import Koriel.Prelude
 import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import qualified Language.Malgo.IR.Syntax as S
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
 import Language.Malgo.TypeRep.Type hiding ((:->))

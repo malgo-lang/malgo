@@ -7,10 +7,10 @@ module Language.Malgo.Core.Alpha (alphaProgram, alphaExp, runAlpha) where
 -- α変換
 
 import qualified Data.Map as Map
+import Koriel.Prelude
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Monad (MonadUniq)
-import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.CType
 
 runAlpha :: ReaderT AlphaEnv m a -> AlphaEnv -> m a

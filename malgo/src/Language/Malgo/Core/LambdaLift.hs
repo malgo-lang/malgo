@@ -9,18 +9,19 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.LambdaLift
-  ( LambdaLift, lambdalift
+  ( LambdaLift,
+    lambdalift,
   )
 where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.Prelude
 import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.CType
 
 data LambdaLift
@@ -38,21 +39,20 @@ instance Pass LambdaLift (Program (Id CType)) (Program (Id CType)) where
 
 lambdalift :: MonadUniq m => Program (Id CType) -> m (Program (Id CType))
 lambdalift Program {mainExp, topFuncs} = evalStateT
-    ?? Env
-      { 
-        _funcs = mempty,
-        _knowns = Set.fromList $ map fst topFuncs
-      }
-    $ do
-      topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
-      modify $ \env ->
-        env
-          { _funcs = _funcs env <> Map.fromList topFuncs,
-            _knowns = _knowns env <> Set.fromList (Map.keys $ _funcs env)
-          }
-      mainExp <- llift mainExp
-      Env {_funcs} <- get
-      traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
+  ?? Env
+    { _funcs = mempty,
+      _knowns = Set.fromList $ map fst topFuncs
+    }
+  $ do
+    topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
+    modify $ \env ->
+      env
+        { _funcs = _funcs env <> Map.fromList topFuncs,
+          _knowns = _knowns env <> Set.fromList (Map.keys $ _funcs env)
+        }
+    mainExp <- llift mainExp
+    Env {_funcs} <- get
+    traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
 
 llift ::
   ( MonadUniq f,

@@ -4,7 +4,7 @@
 
 module Language.Malgo.IR.Op where
 
-import Language.Malgo.Prelude
+import Koriel.Prelude
 import Language.Malgo.Pretty
 
 data Op

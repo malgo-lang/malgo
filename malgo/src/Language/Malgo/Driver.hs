@@ -15,6 +15,7 @@ import qualified Data.ByteString.Short as B
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
+import Koriel.Prelude
 import qualified LLVM.AST as L
 import Language.Malgo.Core.CodeGen
 import Language.Malgo.Core.LambdaLift
@@ -29,7 +30,6 @@ import Language.Malgo.MiddleEnd.Desugar
 import Language.Malgo.Monad as M
 import qualified Language.Malgo.Parser as Parser
 import Language.Malgo.Pass
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Options.Applicative
 

@@ -14,8 +14,8 @@ module Language.Malgo.IR.Syntax
   )
 where
 
+import Koriel.Prelude hiding (ix)
 import Language.Malgo.IR.Op as Export
-import Language.Malgo.Prelude hiding (ix)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type

@@ -12,8 +12,8 @@ module Language.Malgo.Pass where
 
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
+import Koriel.Prelude
 import Language.Malgo.Monad
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.PrettyPrint.HughesPJClass (Style (..), renderStyle, style)
 

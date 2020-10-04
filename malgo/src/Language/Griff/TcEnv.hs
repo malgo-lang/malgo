@@ -8,12 +8,12 @@
 module Language.Griff.TcEnv where
 
 import qualified Data.Map as Map
+import Koriel.Prelude
 import Language.Griff.RnEnv (RnEnv, RnId, RnTId)
 import qualified Language.Griff.RnEnv as R
 import Language.Griff.Type
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Prelude
 
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,

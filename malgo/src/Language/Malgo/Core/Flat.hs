@@ -11,10 +11,10 @@ module Language.Malgo.Core.Flat
 where
 
 import Data.Functor.Identity (Identity (runIdentity))
+import Koriel.Prelude
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Pass
-import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.CType
 
 data Flat

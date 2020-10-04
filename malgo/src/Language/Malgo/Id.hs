@@ -19,8 +19,8 @@ module Language.Malgo.Id
 where
 
 import qualified Data.Text as T
+import Koriel.Prelude hiding (toList)
 import Language.Malgo.Monad
-import Language.Malgo.Prelude hiding (toList)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.Type
 import Text.PrettyPrint.HughesPJClass (text)

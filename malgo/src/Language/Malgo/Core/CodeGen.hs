@@ -28,6 +28,7 @@ import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import Koriel.Prelude hiding (to)
 import LLVM.AST (Definition (..), Name, mkName)
 import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
@@ -45,7 +46,6 @@ import qualified Language.Malgo.IR.Op as Op
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Prelude hiding (to)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as CType
 

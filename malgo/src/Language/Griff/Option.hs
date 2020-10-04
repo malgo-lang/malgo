@@ -3,7 +3,7 @@
 
 module Language.Griff.Option where
 
-import Language.Malgo.Prelude
+import Koriel.Prelude
 import Options.Applicative
 
 data Opt = Opt

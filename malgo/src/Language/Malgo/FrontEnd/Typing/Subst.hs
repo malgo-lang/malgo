@@ -13,7 +13,7 @@ where
 import qualified Data.Map.Strict as Map
 import Data.Set ((\\))
 import qualified Data.Set as Set
-import Language.Malgo.Prelude
+import Koriel.Prelude
 import Language.Malgo.TypeRep.Type
 
 newtype Subst = Subst {unwrapSubst :: Map TyVar Type}

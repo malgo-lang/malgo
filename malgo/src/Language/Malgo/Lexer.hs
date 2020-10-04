@@ -11,7 +11,7 @@ module Language.Malgo.Lexer
 where
 
 import qualified Data.Text as T
-import Language.Malgo.Prelude hiding (EQ, GT, LT)
+import Koriel.Prelude hiding (EQ, GT, LT)
 import Language.Malgo.Token
 import Text.Parsec hiding (many, (<|>))
 import Text.Parsec.Pos ()

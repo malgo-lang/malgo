@@ -15,13 +15,13 @@ where
 import qualified Data.List as List
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.Prelude
 import Language.Malgo.Core.Alpha
 import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.CType
 
 data Optimize

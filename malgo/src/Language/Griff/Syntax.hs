@@ -11,10 +11,10 @@ module Language.Griff.Syntax where
 
 import Data.Int (Int32, Int64)
 import qualified Data.Set as Set
+import Koriel.Prelude
 import Language.Griff.Extension
 import Language.Griff.Type (HasType (..))
 import qualified Language.Griff.Type as T
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import qualified Text.PrettyPrint.HughesPJ as P
 import Text.PrettyPrint.HughesPJClass (prettyNormal)

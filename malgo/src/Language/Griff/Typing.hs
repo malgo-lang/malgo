@@ -12,6 +12,7 @@ module Language.Griff.Typing (typeCheck, transType, applySubst, readMetaTv, zonk
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
+import Koriel.Prelude
 import Language.Griff.Extension
 import Language.Griff.Grouping
 import Language.Griff.RnEnv as R
@@ -21,7 +22,6 @@ import Language.Griff.TcEnv as T
 import Language.Griff.Type
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P

@@ -6,7 +6,7 @@
 
 module Language.Malgo.TypeRep.SType where
 
-import Language.Malgo.Prelude
+import Koriel.Prelude
 import Language.Malgo.Pretty
 import Text.PrettyPrint.HughesPJClass
   ( braces,

@@ -12,10 +12,10 @@ module Language.Griff.Grouping where
 
 import Data.Graph
 import qualified Data.Set as Set
+import Koriel.Prelude
 import Language.Griff.Extension
 import Language.Griff.Syntax
 import Language.Malgo.Id
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import qualified Text.PrettyPrint.HughesPJClass as P
 

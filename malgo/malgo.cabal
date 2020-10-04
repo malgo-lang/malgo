@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c03c090a959fecdb6caf0eb8aebf42b543698c8d3469482881d29b3d57a601c2
+-- hash: 41e721c039a950393af5a373c9be374597c13efdcd3a21bf83174308310df463
 
 name:           malgo
 version:        1.0.0.0
@@ -56,7 +56,6 @@ library
       Language.Malgo.Monad
       Language.Malgo.Parser
       Language.Malgo.Pass
-      Language.Malgo.Prelude
       Language.Malgo.Pretty
       Language.Malgo.Token
       Language.Malgo.TypeRep.CType
@@ -77,6 +76,7 @@ library
     , containers
     , dlist
     , extra
+    , koriel
     , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
@@ -110,6 +110,7 @@ executable griff
     , containers
     , dlist
     , extra
+    , koriel
     , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
@@ -144,6 +145,7 @@ executable malgo
     , containers
     , dlist
     , extra
+    , koriel
     , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
@@ -180,6 +182,7 @@ test-suite malgo-test
     , dlist
     , extra
     , hspec
+    , koriel
     , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure

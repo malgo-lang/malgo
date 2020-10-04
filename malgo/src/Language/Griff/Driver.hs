@@ -6,6 +6,7 @@ module Language.Griff.Driver where
 import qualified Data.Map as Map
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
+import Koriel.Prelude
 import qualified LLVM.AST as L
 import LLVM.Pretty (ppllvm)
 import Language.Griff.Desugar (desugar)
@@ -22,7 +23,6 @@ import Language.Malgo.Core.Lint (lint)
 import Language.Malgo.Core.Optimize (optimize)
 import Language.Malgo.IR.Core
 import Language.Malgo.Monad (UniqSupply (..), runUniqT)
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import System.IO (hPrint, hPutStrLn, stderr)
 import Text.Megaparsec (errorBundlePretty, parse)

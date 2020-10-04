@@ -13,11 +13,11 @@ module Language.Malgo.Core.Lint
 where
 
 import Control.Monad.Except
+import Koriel.Prelude
 import Language.Malgo.IR.Core
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
 import Language.Malgo.Pass
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
 import Text.PrettyPrint (($$))

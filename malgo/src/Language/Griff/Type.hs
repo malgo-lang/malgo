@@ -10,9 +10,9 @@
 
 module Language.Griff.Type where
 
+import Koriel.Prelude
 import Language.Malgo.Id
 import Language.Malgo.Monad (MonadUniq, getUniq)
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import qualified Text.PrettyPrint.HughesPJ as P
 

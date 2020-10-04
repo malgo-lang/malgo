@@ -14,10 +14,10 @@ module Language.Malgo.IR.Core where
 
 import Data.Set.Optics
 import Data.Text (unpack)
+import Koriel.Prelude
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
 import Language.Malgo.Monad (MonadUniq)
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType
 import Text.PrettyPrint.HughesPJ

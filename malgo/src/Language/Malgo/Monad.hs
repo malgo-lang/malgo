@@ -21,8 +21,8 @@ module Language.Malgo.Monad
     viewLine,
     malgoError,
     MonadUniq (..),
-    UniqSupply(..),
-    UniqT(..),
+    UniqSupply (..),
+    UniqT (..),
     runUniqT,
   )
 where
@@ -31,8 +31,8 @@ import Control.Monad.Fix
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
+import Koriel.Prelude
 import LLVM.IRBuilder (IRBuilderT, ModuleBuilderT)
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import System.IO (stderr)
 import Text.Parsec.Pos (SourcePos, sourceLine)

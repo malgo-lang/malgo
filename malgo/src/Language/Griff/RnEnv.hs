@@ -8,10 +8,10 @@
 module Language.Griff.RnEnv where
 
 import qualified Data.Map as Map
+import Koriel.Prelude
 import Language.Griff.Extension (Assoc, Griff, GriffPhase (Parse, Rename), XId, XTId)
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Prelude
 
 type PsId = XId (Griff 'Parse)
 

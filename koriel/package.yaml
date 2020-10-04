@@ -1,4 +1,4 @@
-name: malgo
+name: koriel
 version: 1.0.0.0
 category: Compilers/Interpreters
 github: takoeight0821/malgo
@@ -10,7 +10,6 @@ copyright: "2017-2020 Yuya Kono"
 build-type: Simple
 
 dependencies:
-  - koriel
   - array
   - base
   - bytestring
@@ -44,34 +43,5 @@ ghc-options:
 default-extensions:
   - StrictData
 
-build-tools:
-  - happy
-
 library:
   source-dirs: src
-
-executables:
-  griff:
-    main: Main.hs
-    source-dirs: app/griff
-    ghc-options:
-      - -threaded
-    dependencies:
-      - malgo
-      - llvm-hs-pretty
-  malgo:
-    main: Main.hs
-    source-dirs: app/malgo
-    ghc-options:
-      - -threaded
-    dependencies:
-      - malgo
-      - llvm-hs-pretty
-
-tests:
-  malgo-test:
-    main: Spec.hs
-    source-dirs: test
-    dependencies:
-      - malgo
-      - hspec

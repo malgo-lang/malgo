@@ -5,15 +5,15 @@
 module Language.Griff.Parser where
 
 import Control.Monad.Combinators.Expr
+import Data.Functor (($>))
 import qualified Data.Text as T
 import Data.Void
+import Koriel.Prelude hiding (many, some)
 import Language.Griff.Extension
 import Language.Griff.Syntax
-import Language.Malgo.Prelude hiding (many, some)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
-import Data.Functor (($>))
 
 type Parser = Parsec Void Text
 
@@ -197,8 +197,9 @@ pTyUnit = between (symbol "(") (symbol ")") $ do
   pure $ TyTuple s []
 
 pTyLazy :: Parser (Type (Griff 'Parse))
-pTyLazy = between (symbol "{") (symbol "}") $
-  TyLazy <$> getSourcePos <*> pType
+pTyLazy =
+  between (symbol "{") (symbol "}") $
+    TyLazy <$> getSourcePos <*> pType
 
 pSingleType :: Parser (Type (Griff 'Parse))
 pSingleType = pTyVar <|> pTyCon <|> pTyLazy <|> try pTyUnit <|> try pTyTuple <|> between (symbol "(") (symbol ")") pType

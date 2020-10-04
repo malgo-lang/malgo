@@ -17,11 +17,11 @@ where
 
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
-import Language.Malgo.Prelude
+import Data.Text.Optics
+import Koriel.Prelude
 import Text.Pretty.Simple (pShow)
 import Text.PrettyPrint.HughesPJClass (Doc, Pretty (..))
 import qualified Text.PrettyPrint.HughesPJClass as P
-import Data.Text.Optics
 import qualified Prelude
 
 -- change operator precedence

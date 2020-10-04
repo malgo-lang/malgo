@@ -16,6 +16,7 @@ import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.Prelude
 import Language.Griff.Extension
 import Language.Griff.Grouping
 import qualified Language.Griff.RnEnv as Rn
@@ -28,7 +29,6 @@ import Language.Malgo.IR.Core as C
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.CType as C
 import qualified Text.PrettyPrint.HughesPJ as P

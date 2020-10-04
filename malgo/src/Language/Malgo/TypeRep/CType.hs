@@ -7,8 +7,8 @@ module Language.Malgo.TypeRep.CType where
 
 import Data.Set (fromList)
 import Data.Text (pack, unpack)
+import Koriel.Prelude
 import Language.Malgo.Id
-import Language.Malgo.Prelude
 import Language.Malgo.Pretty
 import qualified Language.Malgo.TypeRep.Type as T
 import Text.PrettyPrint (punctuate)
@@ -84,7 +84,7 @@ instance HasCType T.Type where
   cTypeOf (ps T.:-> r) = map cTypeOf ps :-> cTypeOf r
 
 tyVar :: Traversal CType CType CType CType
-tyVar = traversalVL $ \f t -> case t of 
+tyVar = traversalVL $ \f t -> case t of
   ps :-> r -> (:->) <$> traverseOf (traversed % tyVar) f ps <*> traverseOf tyVar f r
   DataT n ts -> DataT n <$> traverseOf (traversed % tyVar) f ts
   SumT cs -> SumT . fromList <$> traverseOf (traversed % tyVar') f (toList cs)

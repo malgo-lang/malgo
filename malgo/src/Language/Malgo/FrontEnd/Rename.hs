@@ -15,11 +15,11 @@ where
 
 import Control.Monad.Cont
 import qualified Data.Map as Map
+import Koriel.Prelude hiding (ix, lens)
 import Language.Malgo.IR.Syntax
 import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.Pass
-import Language.Malgo.Prelude hiding (ix, lens)
 import Language.Malgo.Pretty
 import Language.Malgo.TypeRep.SType
 import Text.Parsec.Pos (SourcePos)
