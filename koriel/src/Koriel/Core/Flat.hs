@@ -5,14 +5,14 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-module Language.Malgo.Core.Flat
+module Koriel.Core.Flat
   ( flat,
   )
 where
 
 import Data.Functor.Identity (Identity (runIdentity))
 import Koriel.Prelude
-import Language.Malgo.IR.Core
+import Koriel.Core.Core
 
 flat :: Exp a -> Exp a
 flat e = runIdentity $ runFlat (flatExp e)

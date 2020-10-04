@@ -9,7 +9,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-module Language.Malgo.Core.LambdaLift
+module Koriel.Core.LambdaLift
   ( lambdalift,
   )
 where
@@ -19,9 +19,9 @@ import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Language.Malgo.Core.Flat
-import Language.Malgo.IR.Core
-import Language.Malgo.TypeRep.CType
+import Koriel.Core.Flat
+import Koriel.Core.Core
+import Koriel.Core.CType
 
 data Env = Env
   { _funcs :: Map (Id CType) ([Id CType], Exp (Id CType)),

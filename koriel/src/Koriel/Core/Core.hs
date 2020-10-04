@@ -10,15 +10,15 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-module Language.Malgo.IR.Core where
+module Koriel.Core.Core where
 
 import Data.Set.Optics
+import Koriel.Core.Op
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import Language.Malgo.IR.Op
-import Language.Malgo.TypeRep.CType
+import Koriel.Core.CType
 import qualified Text.PrettyPrint.HughesPJ as P
 
 class HasFreeVar f where

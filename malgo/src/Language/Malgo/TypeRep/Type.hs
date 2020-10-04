@@ -1,10 +1,13 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.TypeRep.Type where
 
+import Koriel.Core.CType hiding ((:->))
+import qualified Koriel.Core.CType as C
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -50,6 +53,18 @@ instance Pretty TyCon where
   pPrint StringC = "String"
   pPrint TupleC = "Tuple"
   pPrint ArrayC = "Array"
+
+instance HasCType Type where
+  cTypeOf (TyApp IntC []) = SumT [Con "Int" [Int64T]]
+  cTypeOf (TyApp FloatC []) = SumT [Con "Float" [DoubleT]]
+  cTypeOf (TyApp BoolC []) = SumT [Con "True" [], Con "False" []]
+  cTypeOf (TyApp CharC []) = SumT [Con "Char" [CharT]]
+  cTypeOf (TyApp StringC []) = SumT [Con "String" [StringT]]
+  cTypeOf (TyApp TupleC xs) = SumT [Con ("Tuple" <> show (length xs)) (map cTypeOf xs)]
+  cTypeOf (TyApp ArrayC [x]) = ArrayT (cTypeOf x)
+  cTypeOf (TyApp _ _) = bug Unreachable
+  cTypeOf TyMeta {} = AnyT
+  cTypeOf (ps :-> r) = map cTypeOf ps C.:-> cTypeOf r
 
 class HasType a where
   typeOf :: a -> Type

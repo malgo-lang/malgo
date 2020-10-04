@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cfe0005cf2e3957fda3438ca29158ff8e67237e6066ce9fd0406229e8e7e6ddb
+-- hash: a84912970225a688244f847b116cbf1eaf0ae1df714b64658840027cf0458196
 
 name:           malgo
 version:        1.0.0.0
@@ -36,26 +36,17 @@ library
       Language.Griff.TcEnv
       Language.Griff.Type
       Language.Griff.Typing
-      Language.Malgo.Core.Alpha
-      Language.Malgo.Core.CodeGen
-      Language.Malgo.Core.Flat
-      Language.Malgo.Core.LambdaLift
-      Language.Malgo.Core.Lint
-      Language.Malgo.Core.Optimize
       Language.Malgo.Driver
       Language.Malgo.FrontEnd.Rename
       Language.Malgo.FrontEnd.Typing.Constraint
       Language.Malgo.FrontEnd.Typing.Infer
       Language.Malgo.FrontEnd.Typing.Subst
-      Language.Malgo.IR.Core
-      Language.Malgo.IR.Op
       Language.Malgo.IR.Syntax
       Language.Malgo.Lexer
       Language.Malgo.MiddleEnd.Desugar
       Language.Malgo.Monad
       Language.Malgo.Parser
       Language.Malgo.Token
-      Language.Malgo.TypeRep.CType
       Language.Malgo.TypeRep.SType
       Language.Malgo.TypeRep.Type
   other-modules:
@@ -85,7 +76,6 @@ library
     , parser-combinators
     , pretty
     , pretty-simple
-    , string-conversions
     , text
     , transformers
     , vector
@@ -121,7 +111,6 @@ executable griff
     , parser-combinators
     , pretty
     , pretty-simple
-    , string-conversions
     , text
     , transformers
     , vector
@@ -157,7 +146,6 @@ executable malgo
     , parser-combinators
     , pretty
     , pretty-simple
-    , string-conversions
     , text
     , transformers
     , vector
@@ -195,7 +183,6 @@ test-suite malgo-test
     , parser-combinators
     , pretty
     , pretty-simple
-    , string-conversions
     , text
     , transformers
     , vector

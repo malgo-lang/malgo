@@ -11,7 +11,7 @@
 {-# LANGUAGE ViewPatterns #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-module Language.Malgo.Core.CodeGen
+module Koriel.Core.CodeGen
   ( codeGen,
   )
 where
@@ -27,6 +27,7 @@ import Data.List.Extra (mconcatMap)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.String.Conversions
+import qualified Koriel.Core.Op as Op
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
@@ -50,9 +51,8 @@ import LLVM.AST.Type hiding
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr)
-import Language.Malgo.IR.Core as Core
-import qualified Language.Malgo.IR.Op as Op
-import Language.Malgo.TypeRep.CType as CType
+import Koriel.Core.Core as Core
+import Koriel.Core.CType as CType
 
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id CType) -> m [Definition]
 codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do

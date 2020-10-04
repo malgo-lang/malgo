@@ -18,13 +18,13 @@ import qualified Data.Text.Lazy as TL
 import Koriel.Prelude
 import Koriel.Pretty
 import qualified LLVM.AST as L
-import Language.Malgo.Core.CodeGen
-import Language.Malgo.Core.LambdaLift
-import Language.Malgo.Core.Lint
-import Language.Malgo.Core.Optimize
+import Koriel.Core.CodeGen
+import Koriel.Core.LambdaLift
+import Koriel.Core.Lint
+import Koriel.Core.Optimize
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
-import Language.Malgo.IR.Core
+import Koriel.Core.Core
   ( Program (..),
     appProgram,
   )

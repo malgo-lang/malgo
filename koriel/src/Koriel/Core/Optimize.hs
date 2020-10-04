@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-module Language.Malgo.Core.Optimize
+module Koriel.Core.Optimize
   ( optimize,
   )
 where
@@ -18,10 +18,10 @@ import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Language.Malgo.Core.Alpha
-import Language.Malgo.Core.Flat
-import Language.Malgo.IR.Core
-import Language.Malgo.TypeRep.CType
+import Koriel.Core.Alpha
+import Koriel.Core.Flat
+import Koriel.Core.Core
+import Koriel.Core.CType
 
 times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
 times n f e =

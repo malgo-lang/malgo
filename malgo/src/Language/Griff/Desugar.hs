@@ -17,6 +17,7 @@ import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.Core.Op
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
@@ -29,9 +30,8 @@ import Language.Griff.TcEnv (TcEnv)
 import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
 import qualified Language.Griff.Typing as Typing
-import Language.Malgo.IR.Core as C
-import Language.Malgo.IR.Op
-import Language.Malgo.TypeRep.CType as C
+import Koriel.Core.Core as C
+import Koriel.Core.CType as C
 import qualified Text.PrettyPrint.HughesPJ as P
 
 data DesugarEnv = DesugarEnv

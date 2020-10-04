@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ed912eaa1a9864e82e8b0be8d2ddf35bdae5bc5faf7aa78f22b26251a1beba9a
+-- hash: e7b7a203f945d441b68eb414ca31adc87b441bfdbb11ff06692b59a6691fecb1
 
 name:           koriel
 version:        1.0.0.0
@@ -23,6 +23,15 @@ source-repository head
 
 library
   exposed-modules:
+      Koriel.Core.Alpha
+      Koriel.Core.CodeGen
+      Koriel.Core.Core
+      Koriel.Core.CType
+      Koriel.Core.Flat
+      Koriel.Core.LambdaLift
+      Koriel.Core.Lint
+      Koriel.Core.Op
+      Koriel.Core.Optimize
       Koriel.Id
       Koriel.MonadUniq
       Koriel.Prelude
@@ -51,6 +60,7 @@ library
     , parser-combinators
     , pretty
     , pretty-simple
+    , string-conversions
     , text
     , transformers
     , vector

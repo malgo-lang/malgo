@@ -4,13 +4,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.TypeRep.CType where
+module Koriel.Core.CType where
 
 import Data.Set (fromList)
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
-import qualified Language.Malgo.TypeRep.Type as T
 
 -- TODO: クロージャを表す型を追加
 -- ClosureT [CType] CType
@@ -62,18 +61,6 @@ instance HasCType CType where
 
 instance HasCType a => HasCType (Id a) where
   cTypeOf x = cTypeOf $ x ^. idMeta
-
-instance HasCType T.Type where
-  cTypeOf (T.TyApp T.IntC []) = SumT [Con "Int" [Int64T]]
-  cTypeOf (T.TyApp T.FloatC []) = SumT [Con "Float" [DoubleT]]
-  cTypeOf (T.TyApp T.BoolC []) = SumT [Con "True" [], Con "False" []]
-  cTypeOf (T.TyApp T.CharC []) = SumT [Con "Char" [CharT]]
-  cTypeOf (T.TyApp T.StringC []) = SumT [Con "String" [StringT]]
-  cTypeOf (T.TyApp T.TupleC xs) = SumT [Con ("Tuple" <> show (length xs)) (map cTypeOf xs)]
-  cTypeOf (T.TyApp T.ArrayC [x]) = ArrayT (cTypeOf x)
-  cTypeOf (T.TyApp _ _) = bug Unreachable
-  cTypeOf T.TyMeta {} = AnyT
-  cTypeOf (ps T.:-> r) = map cTypeOf ps :-> cTypeOf r
 
 tyVar :: Traversal CType CType CType CType
 tyVar = traversalVL $ \f -> \case

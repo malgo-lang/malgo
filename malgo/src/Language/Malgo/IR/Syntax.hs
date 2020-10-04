@@ -14,9 +14,9 @@ module Language.Malgo.IR.Syntax
   )
 where
 
+import Koriel.Core.Op as Export
 import Koriel.Prelude hiding (ix)
 import Koriel.Pretty
-import Language.Malgo.IR.Op as Export
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type
 import Text.Parsec.Pos (SourcePos)

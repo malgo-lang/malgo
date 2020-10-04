@@ -2,7 +2,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.Core.Alpha
+module Koriel.Core.Alpha
   ( alphaProgram,
     alphaExp,
     runAlpha,
@@ -15,8 +15,8 @@ import qualified Data.Map as Map
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Language.Malgo.IR.Core
-import Language.Malgo.TypeRep.CType
+import Koriel.Core.Core
+import Koriel.Core.CType
 
 runAlpha :: ReaderT AlphaEnv m a -> AlphaEnv -> m a
 runAlpha = runReaderT

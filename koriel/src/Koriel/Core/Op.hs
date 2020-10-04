@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.IR.Op where
+module Koriel.Core.Op where
 
 import Koriel.Prelude
 import Koriel.Pretty

@@ -21,12 +21,12 @@ import Language.Griff.RnEnv
   )
 import qualified Language.Griff.TcEnv as T
 import Language.Griff.Typing (typeCheck)
-import Language.Malgo.Core.CodeGen (codeGen)
-import Language.Malgo.Core.Flat (flat)
-import Language.Malgo.Core.LambdaLift (lambdalift)
-import Language.Malgo.Core.Lint (lint)
-import Language.Malgo.Core.Optimize (optimize)
-import Language.Malgo.IR.Core
+import Koriel.Core.CodeGen (codeGen)
+import Koriel.Core.Flat (flat)
+import Koriel.Core.LambdaLift (lambdalift)
+import Koriel.Core.Lint (lint)
+import Koriel.Core.Optimize (optimize)
+import Koriel.Core.Core
 import System.IO
   ( hPrint,
     hPutStrLn,

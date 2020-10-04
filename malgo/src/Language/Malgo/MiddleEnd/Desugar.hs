@@ -22,10 +22,10 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import Language.Malgo.Core.Flat
-import Language.Malgo.IR.Core
+import Koriel.Core.Flat
+import Koriel.Core.Core
 import qualified Language.Malgo.IR.Syntax as S
-import Language.Malgo.TypeRep.CType
+import Koriel.Core.CType
 import Language.Malgo.TypeRep.Type hiding ((:->))
 
 desugar :: (MonadUniq f, MonadFail f) => S.Expr (Id Type) -> f (Exp (Id CType))

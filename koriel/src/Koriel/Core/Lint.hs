@@ -6,18 +6,18 @@
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.Core.Lint
+module Koriel.Core.Lint
   ( lint,
   )
 where
 
 import Control.Monad.Except
+import Koriel.Core.Op
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
-import Language.Malgo.IR.Core
-import Language.Malgo.IR.Op
-import Language.Malgo.TypeRep.CType
+import Koriel.Core.Core
+import Koriel.Core.CType
 
 lint :: (Monad m, HasCType a, Pretty a) => Exp (Id a) -> m ()
 lint e =
