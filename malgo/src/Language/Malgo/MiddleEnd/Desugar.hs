@@ -9,7 +9,7 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.MiddleEnd.Desugar
-  ( Desugar,
+  ( desugar,
   )
 where
 
@@ -25,15 +25,11 @@ import Language.Malgo.IR.Core
 import qualified Language.Malgo.IR.Syntax as S
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Pass
 import Language.Malgo.TypeRep.CType
 import Language.Malgo.TypeRep.Type hiding ((:->))
 
-data Desugar
-
-instance Pass Desugar (S.Expr (Id Type)) (Exp (Id CType)) where
-  passName = "Desugar"
-  trans e = trans @Flat =<< evalStateT (toExp e) mempty
+desugar :: (MonadUniq f, MonadFail f) => S.Expr (Id Type) -> f (Exp (Id CType))
+desugar e = flat <$> evalStateT (toExp e) mempty
 
 findVar :: (MonadFail m, MonadState (Map (Id Type) (Id CType)) m) => Id Type -> m (Id CType)
 findVar v = do

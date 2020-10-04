@@ -33,8 +33,8 @@ import qualified Language.Malgo.Lexer as Lexer
 import Language.Malgo.MiddleEnd.Desugar
 import Language.Malgo.Monad as M
 import qualified Language.Malgo.Parser as Parser
-import Language.Malgo.Pass
 import Options.Applicative
+import System.IO (hPrint, stderr)
 
 parseOpt :: IO Opt
 parseOpt =
@@ -71,8 +71,14 @@ readAndParse = do
   let ast = case Parser.parseExpr <$> tokens of
         Left x -> error $ TL.unpack $ pShow x
         Right x -> x
-  when (dumpParsed opt) $ dump ast
+  when (dumpParsed opt) $ liftIO $ hPrint stderr $ pPrint ast
   pure ast
+
+withDump :: (MonadIO m, Pretty b) => Bool -> (t -> m b) -> t -> m b
+withDump isDump m a = do
+  a' <- m a
+  when isDump $ liftIO $ hPrint stderr $ pPrint a'
+  pure a'
 
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do
@@ -80,19 +86,19 @@ compile = M.runMalgo $ do
   program <-
     Program mempty
       <$> ( readAndParse
-              >>= transWithDump @Rename (dumpRenamed opt)
-              >>= transWithDump @Typing (dumpTyped opt)
-              >>= transWithDump @Desugar (dumpDesugar opt)
-              >>= trans @LintExp
-              >>= transWithDump @Optimize (dumpDesugar opt)
+              >>= withDump (dumpRenamed opt) rename
+              >>= withDump (dumpTyped opt) typing
+              >>= withDump (dumpDesugar opt) desugar
+              >>= (\e -> lint e >> pure e)
+              >>= withDump (dumpDesugar opt) (optimize (inlineSize opt))
           )
   llvmir <-
     if applyLambdaLift opt
       then
-        transWithDump @LambdaLift (dumpLambdaLift opt) program
-          >>= traverseOf appProgram (transWithDump @Optimize (dumpLambdaLift opt))
-          >>= trans @CodeGen
-      else trans @CodeGen program
+        withDump (dumpLambdaLift opt) lambdalift program
+          >>= traverseOf appProgram (withDump (dumpLambdaLift opt) (optimize (inlineSize opt)))
+          >>= codeGen
+      else codeGen program
   pure $
     L.defaultModule
       { L.moduleName = fromString $ srcName opt,

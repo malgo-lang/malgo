@@ -10,8 +10,7 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.Core.LambdaLift
-  ( LambdaLift,
-    lambdalift,
+  ( lambdalift,
   )
 where
 
@@ -22,10 +21,7 @@ import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Pass
 import Language.Malgo.TypeRep.CType
-
-data LambdaLift
 
 data Env = Env
   { _funcs :: Map (Id CType) ([Id CType], Exp (Id CType)),
@@ -33,10 +29,6 @@ data Env = Env
   }
 
 makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
-
-instance Pass LambdaLift (Program (Id CType)) (Program (Id CType)) where
-  passName = "lambda lift"
-  trans = lambdalift
 
 lambdalift :: MonadUniq m => Program (Id CType) -> m (Program (Id CType))
 lambdalift Program {mainExp, topFuncs} =

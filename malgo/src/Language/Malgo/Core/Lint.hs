@@ -7,8 +7,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Core.Lint
-  ( LintExp,
-    lint,
+  ( lint,
   )
 where
 
@@ -18,18 +17,7 @@ import Koriel.Pretty
 import Language.Malgo.IR.Core
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
-import Language.Malgo.Pass
 import Language.Malgo.TypeRep.CType
-
-data LintExp
-
--- Core.Expのtype checkを行うPass
-
-instance Pass LintExp (Exp (Id CType)) (Exp (Id CType)) where
-  passName = "Exp Lint"
-  trans e = do
-    lint e
-    pure e
 
 lint :: (Monad m, HasCType a, Pretty a) => Exp (Id a) -> m ()
 lint e =

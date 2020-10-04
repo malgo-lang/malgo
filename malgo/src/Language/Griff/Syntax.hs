@@ -9,10 +9,7 @@
 
 module Language.Griff.Syntax where
 
-import Data.Int
-  ( Int32,
-    Int64,
-  )
+import Data.Int (Int32, Int64)
 import qualified Data.Set as Set
 import Koriel.Prelude
 import Koriel.Pretty

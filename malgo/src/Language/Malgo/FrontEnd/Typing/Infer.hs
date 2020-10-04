@@ -6,7 +6,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.FrontEnd.Typing.Infer
-  ( Typing,
+  ( typing,
     generalize,
   )
 where
@@ -19,28 +19,25 @@ import Language.Malgo.FrontEnd.Typing.Subst
 import Language.Malgo.IR.Syntax
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Pass
 import Language.Malgo.TypeRep.SType
 import Language.Malgo.TypeRep.Type
+import System.IO (hPrint, stderr)
 import Text.Parsec (SourcePos)
 
-data Typing
-
-instance Pass Typing (Expr (Id ())) (Expr (Id Type)) where
-  passName = "Typing"
-  trans e = evalStateT ?? mempty $ do
-    (_, cs) <- runWriterT (typingExpr e)
-    case solve cs of
-      Right subst -> do
-        modify (apply subst)
-        env <- get
-        opt <- getOpt
-        when (dumpTypeTable opt) $ dump (toList env)
-        pure $
-          fmap
-            (\x -> maybe (x & idMeta .~ TyMeta (-1)) (fmap removeExplictForall) (env ^. at x))
-            e
-      Left doc -> errorDoc doc
+typing :: (MonadMalgo m, MonadIO m, MonadUniq m) => Expr (Id ()) -> m (Expr (Id Type))
+typing e = evalStateT ?? mempty $ do
+  (_, cs) <- runWriterT (typingExpr e)
+  case solve cs of
+    Right subst -> do
+      modify (apply subst)
+      env <- get
+      opt <- getOpt
+      when (dumpTypeTable opt) $ liftIO $ hPrint stderr $ pPrint (toList env)
+      pure $
+        fmap
+          (\x -> maybe (x & idMeta .~ TyMeta (-1)) (fmap removeExplictForall) (env ^. at x))
+          e
+    Left doc -> errorDoc doc
 
 type Env = Map (Id ()) (Id Scheme)
 

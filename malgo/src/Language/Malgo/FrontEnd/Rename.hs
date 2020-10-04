@@ -9,7 +9,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.FrontEnd.Rename
-  ( Rename,
+  ( rename,
   )
 where
 
@@ -21,13 +21,8 @@ import Koriel.Prelude hiding
   )
 import Koriel.Pretty
 import Language.Malgo.IR.Syntax
-  ( Decl (ExDec, FunDec, ValDec),
-    Expr (..),
-    Pat (..),
-  )
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Pass
 import Language.Malgo.TypeRep.SType
 import Text.Parsec.Pos (SourcePos)
 
@@ -38,11 +33,8 @@ data Known = Known
 
 makeLenses ''Known
 
-data Rename
-
-instance Pass Rename (Expr String) (Expr (Id ())) where
-  passName = "Rename"
-  trans s = runReaderT (renameExpr s) $ Known mempty mempty
+rename :: (MonadIO m, MonadMalgo m, MonadUniq m) => Expr String -> m (Expr (Id ()))
+rename s = runReaderT (renameExpr s) $ Known mempty mempty
 
 withKnowns ::
   (MonadUniq m, MonadReader Known m, Is k A_Setter) =>

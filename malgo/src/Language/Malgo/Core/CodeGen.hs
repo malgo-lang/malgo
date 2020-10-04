@@ -12,8 +12,7 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.Core.CodeGen
-  ( CodeGen,
-    codeGen,
+  ( codeGen,
   )
 where
 
@@ -53,14 +52,7 @@ import Language.Malgo.IR.Core as Core
 import qualified Language.Malgo.IR.Op as Op
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Pass
 import Language.Malgo.TypeRep.CType as CType
-
-data CodeGen
-
-instance Pass CodeGen (Program (Id CType)) [LLVM.AST.Definition] where
-  passName = "GenLLVM"
-  trans = codeGen
 
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id CType) -> m [Definition]
 codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do

@@ -8,8 +8,7 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Malgo.Core.Optimize
-  ( Optimize,
-    optimize,
+  ( optimize,
   )
 where
 
@@ -22,16 +21,7 @@ import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
 import Language.Malgo.Monad
-import Language.Malgo.Pass
 import Language.Malgo.TypeRep.CType
-
-data Optimize
-
-instance Pass Optimize (Exp (Id CType)) (Exp (Id CType)) where
-  passName = "optimize"
-  trans expr = do
-    opt <- asks maOption
-    if noOptimize opt then pure expr else trans @Flat =<< optimize (inlineSize opt) expr
 
 times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
 times n f e =
