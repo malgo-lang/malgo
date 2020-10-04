@@ -1,9 +1,11 @@
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.TypeRep.Type where
 
+import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
 
@@ -54,6 +56,9 @@ class HasType a where
 
 instance HasType Type where
   typeOf = id
+
+instance HasType a => HasType (Id a) where
+  typeOf n = n ^. idMeta % to typeOf
 
 comparable :: Type -> Bool
 comparable (TyApp IntC []) = True

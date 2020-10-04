@@ -7,9 +7,9 @@
 module Language.Malgo.TypeRep.CType where
 
 import Data.Set (fromList)
+import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
-import Language.Malgo.Id
 import qualified Language.Malgo.TypeRep.Type as T
 
 -- TODO: クロージャを表す型を追加

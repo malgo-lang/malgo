@@ -9,10 +9,10 @@ module Language.Griff.Extension where
 
 import Data.Kind (Constraint)
 import qualified Data.Kind as K
+import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.Griff.Type
-import Language.Malgo.Id
 import Text.Megaparsec.Pos (SourcePos)
 
 data Assoc = LeftA | RightA | NeutralA

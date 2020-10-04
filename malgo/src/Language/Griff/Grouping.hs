@@ -13,11 +13,11 @@ module Language.Griff.Grouping where
 
 import Data.Graph
 import qualified Data.Set as Set
+import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.Syntax
-import Language.Malgo.Id
 import qualified Text.PrettyPrint.HughesPJClass as P
 
 data BindGroup x = BindGroup

@@ -13,11 +13,11 @@
 module Language.Malgo.IR.Core where
 
 import Data.Set.Optics
+import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.Malgo.IR.Op
-import Language.Malgo.Id
 import Language.Malgo.TypeRep.CType
 import qualified Text.PrettyPrint.HughesPJ as P
 

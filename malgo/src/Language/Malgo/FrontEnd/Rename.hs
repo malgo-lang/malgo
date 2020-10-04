@@ -15,6 +15,7 @@ where
 
 import Control.Monad.Cont
 import qualified Data.Map as Map
+import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude hiding
   ( ix,
@@ -22,7 +23,6 @@ import Koriel.Prelude hiding
   )
 import Koriel.Pretty
 import Language.Malgo.IR.Syntax
-import Language.Malgo.Id
 import Language.Malgo.Monad
 import Language.Malgo.TypeRep.SType
 import Text.Parsec.Pos (SourcePos)

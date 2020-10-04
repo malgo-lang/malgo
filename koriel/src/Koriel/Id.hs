@@ -9,7 +9,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-module Language.Malgo.Id
+module Koriel.Id
   ( Id,
     idName,
     idUniq,
@@ -21,7 +21,6 @@ where
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty
-import Language.Malgo.TypeRep.Type
 
 data Id a = Id
   { _idName :: String,
@@ -38,9 +37,6 @@ instance Ord (Id a) where
 
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n u _) = text n <> "." <> text (show u)
-
-instance HasType a => HasType (Id a) where
-  typeOf Id {_idMeta} = typeOf _idMeta
 
 idName :: Getter (Id a) String
 idName = to _idName

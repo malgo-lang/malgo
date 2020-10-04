@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 099b53934a583fd2c5009950ceb5f4dd998ae9417ef7ad077ec2617a23e44edb
+-- hash: ed912eaa1a9864e82e8b0be8d2ddf35bdae5bc5faf7aa78f22b26251a1beba9a
 
 name:           koriel
 version:        1.0.0.0
@@ -23,6 +23,7 @@ source-repository head
 
 library
   exposed-modules:
+      Koriel.Id
       Koriel.MonadUniq
       Koriel.Prelude
       Koriel.Pretty
