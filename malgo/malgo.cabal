@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 286b8975744cb7dac0104568cec7e3a02b9c99062f945921f1003548f5ada230
+-- hash: fa22c7a3a1d4292fb3e2561d6a5993cb90f88491b0f93ced35d890b7fc24657e
 
 name:           malgo
 version:        1.0.0.0
@@ -15,7 +15,6 @@ author:         Yuya Kono
 maintainer:     takohati0821@gmail.com
 copyright:      2017-2020 Yuya Kono
 license:        BSD3
-license-file:   LICENSE
 build-type:     Simple
 
 source-repository head
@@ -50,18 +49,11 @@ library
     , base
     , bytestring
     , containers
-    , dlist
-    , extra
     , koriel
-    , list-predicate
-    , llvm-hs-pretty
     , llvm-hs-pure
-    , megaparsec
     , mtl
-    , optics
     , optparse-applicative
     , parsec
-    , parser-combinators
     , pretty
     , pretty-simple
     , text
@@ -84,19 +76,13 @@ executable malgo
     , base
     , bytestring
     , containers
-    , dlist
-    , extra
     , koriel
-    , list-predicate
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
-    , megaparsec
     , mtl
-    , optics
     , optparse-applicative
     , parsec
-    , parser-combinators
     , pretty
     , pretty-simple
     , text
@@ -120,20 +106,13 @@ test-suite malgo-test
     , base
     , bytestring
     , containers
-    , dlist
-    , extra
     , hspec
     , koriel
-    , list-predicate
-    , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
-    , megaparsec
     , mtl
-    , optics
     , optparse-applicative
     , parsec
-    , parser-combinators
     , pretty
     , pretty-simple
     , text

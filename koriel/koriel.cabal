@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e7b7a203f945d441b68eb414ca31adc87b441bfdbb11ff06692b59a6691fecb1
+-- hash: 3973e0999cb87e85161e75de216922e84ccde3602de0427c212bb05c007300a5
 
 name:           koriel
 version:        1.0.0.0
@@ -43,25 +43,18 @@ library
   default-extensions: StrictData
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
-      array
-    , base
+      base
     , bytestring
     , containers
-    , dlist
     , extra
-    , list-predicate
-    , llvm-hs-pretty
     , llvm-hs-pure
     , megaparsec
     , mtl
     , optics
-    , optparse-applicative
     , parsec
-    , parser-combinators
     , pretty
     , pretty-simple
     , string-conversions
     , text
     , transformers
-    , vector
   default-language: Haskell2010

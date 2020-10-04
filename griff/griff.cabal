@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4ce0390e4b0041ca35be3cb4219f2b2b6323fbf412956b47e557241bc5dc6b55
+-- hash: 502d2e579c3fd3088bcb0d9d04dce5f51d846a75a0644e1292c47698b216baac
 
 name:           griff
 version:        0.1.0.0
@@ -46,7 +46,6 @@ library
     , base
     , bytestring
     , containers
-    , dlist
     , extra
     , koriel
     , list-predicate
@@ -54,13 +53,11 @@ library
     , llvm-hs-pure
     , megaparsec
     , mtl
-    , optics
     , optparse-applicative
     , parsec
     , parser-combinators
     , pretty
     , pretty-simple
-    , string-conversions
     , text
     , transformers
     , vector
@@ -79,7 +76,6 @@ executable griff
     , base
     , bytestring
     , containers
-    , dlist
     , extra
     , griff
     , koriel
@@ -88,13 +84,11 @@ executable griff
     , llvm-hs-pure
     , megaparsec
     , mtl
-    , optics
     , optparse-applicative
     , parsec
     , parser-combinators
     , pretty
     , pretty-simple
-    , string-conversions
     , text
     , transformers
     , vector
