@@ -12,10 +12,10 @@ module Language.Malgo.FrontEnd.Typing.Constraint
 where
 
 import qualified Data.Map as Map
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.Malgo.FrontEnd.Typing.Subst
-import Language.Malgo.Monad
 import Language.Malgo.TypeRep.Type
 import Text.Parsec.Pos (SourcePos)
 

@@ -27,6 +27,7 @@ import Data.List.Extra (mconcatMap)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.String.Conversions
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import LLVM.AST
@@ -51,7 +52,6 @@ import LLVM.IRBuilder hiding (globalStringPtr)
 import Language.Malgo.IR.Core as Core
 import qualified Language.Malgo.IR.Op as Op
 import Language.Malgo.Id
-import Language.Malgo.Monad
 import Language.Malgo.TypeRep.CType as CType
 
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id CType) -> m [Definition]

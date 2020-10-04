@@ -13,13 +13,13 @@ import Data.List.Extra (disjoint)
 import Data.List.Predicate (allUnique)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.RnEnv
 import Language.Griff.Syntax
 import Language.Malgo.Id
-import Language.Malgo.Monad
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 

@@ -18,9 +18,9 @@ module Language.Malgo.Id
   )
 where
 
+import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty
-import Language.Malgo.Monad
 import Language.Malgo.TypeRep.Type
 
 data Id a = Id

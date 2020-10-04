@@ -6,6 +6,7 @@ module Language.Griff.Driver where
 import qualified Data.Map as Map
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import qualified LLVM.AST as L
@@ -26,10 +27,6 @@ import Language.Malgo.Core.LambdaLift (lambdalift)
 import Language.Malgo.Core.Lint (lint)
 import Language.Malgo.Core.Optimize (optimize)
 import Language.Malgo.IR.Core
-import Language.Malgo.Monad
-  ( UniqSupply (..),
-    runUniqT,
-  )
 import System.IO
   ( hPrint,
     hPutStrLn,

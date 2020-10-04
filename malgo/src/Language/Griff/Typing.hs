@@ -19,6 +19,7 @@ where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
@@ -29,7 +30,6 @@ import qualified Language.Griff.Syntax as S
 import Language.Griff.TcEnv as T
 import Language.Griff.Type
 import Language.Malgo.Id
-import Language.Malgo.Monad
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 

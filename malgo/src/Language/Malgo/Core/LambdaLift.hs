@@ -16,11 +16,11 @@ where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Language.Malgo.Core.Flat
 import Language.Malgo.IR.Core
 import Language.Malgo.Id
-import Language.Malgo.Monad
 import Language.Malgo.TypeRep.CType
 
 data Env = Env

@@ -12,6 +12,7 @@ module Language.Malgo.FrontEnd.Typing.Infer
 where
 
 import Data.Set ((\\))
+import Koriel.MonadUniq
 import Koriel.Prelude hiding (ix)
 import Koriel.Pretty
 import Language.Malgo.FrontEnd.Typing.Constraint

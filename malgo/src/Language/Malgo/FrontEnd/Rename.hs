@@ -15,6 +15,7 @@ where
 
 import Control.Monad.Cont
 import qualified Data.Map as Map
+import Koriel.MonadUniq
 import Koriel.Prelude hiding
   ( ix,
     lens,

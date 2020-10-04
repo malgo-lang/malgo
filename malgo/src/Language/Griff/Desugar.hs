@@ -17,6 +17,7 @@ import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
@@ -30,7 +31,6 @@ import qualified Language.Griff.Typing as Typing
 import Language.Malgo.IR.Core as C
 import Language.Malgo.IR.Op
 import Language.Malgo.Id
-import Language.Malgo.Monad
 import Language.Malgo.TypeRep.CType as C
 import qualified Text.PrettyPrint.HughesPJ as P
 
