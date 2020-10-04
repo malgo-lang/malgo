@@ -15,7 +15,7 @@ A toy pragramming language.
 ```sh
 $ git clone https://github.com/takoeight0821/malgo
 $ cd malgo
-$ cabal install
+$ stack install
 ```
 
 ## Usage

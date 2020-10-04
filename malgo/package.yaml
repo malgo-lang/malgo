@@ -7,9 +7,6 @@ author: "Yuya Kono"
 maintainer: "takohati0821@gmail.com"
 copyright: "2017-2020 Yuya Kono"
 
-extra-source-files:
-  - README.md
-
 build-type: Simple
 
 dependencies:
@@ -40,11 +37,8 @@ ghc-options:
   - -Wincomplete-uni-patterns
   - -Wmissing-deriving-strategies
   - -Wno-name-shadowing
-  # - -frefinement-level-hole-fits=4
   - -j4
   - +RTS -A128m -n2m -qg -RTS
-  # - -fwrite-ide-info
-  # - -hiedir=.hie
 
 default-extensions:
   - StrictData
