@@ -17,25 +17,26 @@ import qualified Data.Set as Set
     singleton,
     toList,
   )
+import Koriel.Core.Core
+import Koriel.Core.Flat
+import Koriel.Core.Type hiding (Type, typeOf)
+import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import Koriel.Core.Flat
-import Koriel.Core.Core
 import qualified Language.Malgo.IR.Syntax as S
-import Koriel.Core.CType
 import Language.Malgo.TypeRep.Type hiding ((:->))
 
-desugar :: (MonadUniq f, MonadFail f) => S.Expr (Id Type) -> f (Exp (Id CType))
+desugar :: (MonadUniq f, MonadFail f) => S.Expr (Id Type) -> f (Exp (Id C.Type))
 desugar e = flat <$> evalStateT (toExp e) mempty
 
-findVar :: (MonadFail m, MonadState (Map (Id Type) (Id CType)) m) => Id Type -> m (Id CType)
+findVar :: (MonadFail m, MonadState (Map (Id Type) (Id C.Type)) m) => Id Type -> m (Id C.Type)
 findVar v = do
   Just v <- gets (view (at v))
   pure v
 
-boolValue :: MonadUniq m => Bool -> m (Exp (Id CType))
+boolValue :: MonadUniq m => Bool -> m (Exp (Id C.Type))
 boolValue x =
   runDef $
     fmap Atom $
@@ -49,9 +50,9 @@ boolValue x =
     falseC = Con "False" []
 
 toExp ::
-  (MonadState (Map (Id Type) (Id CType)) m, MonadUniq m, MonadFail m) =>
+  (MonadState (Map (Id Type) (Id C.Type)) m, MonadUniq m, MonadFail m) =>
   S.Expr (Id Type) ->
-  m (Exp (Id CType))
+  m (Exp (Id C.Type))
 toExp (S.Var _ x) = Atom . Var <$> findVar x
 toExp (S.Int _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Int64 $ fromInteger x]
   where
@@ -72,12 +73,12 @@ toExp (S.String _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Str
     con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (bind <=< toExp) xs
-  let con = Con ("Tuple" <> length xs ^. toText) $ map cTypeOf vs
+  let con = Con ("Tuple" <> length xs ^. toText) $ map C.typeOf vs
   let ty = SumT $ Set.singleton con
   runDef $ fmap Atom $ let_ ty $ Pack ty con vs
 toExp (S.Array _ (x :| xs)) = runDef $ do
   x <- bind =<< toExp x
-  arr <- let_ (ArrayT $ cTypeOf x) $ Array x $ Unboxed $ Int64 $ fromIntegral $ length xs + 1
+  arr <- let_ (ArrayT $ C.typeOf x) $ Array x $ Unboxed $ Int64 $ fromIntegral $ length xs + 1
   ifor_ xs $ \i v -> do
     v <- bind =<< toExp v
     bind $ ArrayWrite arr (Unboxed $ Int64 $ fromIntegral $ i + 1) v
@@ -86,7 +87,7 @@ toExp (S.MakeArray _ a n) = runDef $ do
   a <- bind =<< toExp a
   n <- bind =<< toExp n
   [n] <- destruct (Atom n) $ Con "Int" [Int64T]
-  Atom <$> let_ (ArrayT $ cTypeOf a) (Array a n)
+  Atom <$> let_ (ArrayT $ C.typeOf a) (Array a n)
 toExp (S.ArrayRead _ a i) = runDef $ do
   a <- bind =<< toExp a
   i <- bind =<< toExp i
@@ -95,7 +96,7 @@ toExp (S.ArrayRead _ a i) = runDef $ do
 toExp (S.ArrayWrite _ a i x) = runDef $ do
   a <- bind =<< toExp a
   i <- bind =<< toExp i
-  case cTypeOf a of
+  case C.typeOf a of
     ArrayT ty -> do
       x <- cast ty =<< toExp x
       [i] <- destruct (Atom i) $ Con "Int" [Int64T]
@@ -103,23 +104,23 @@ toExp (S.ArrayWrite _ a i x) = runDef $ do
     _ -> bug Unreachable
 toExp (S.Call _ f xs) = runDef $ do
   f <- bind =<< toExp f
-  case cTypeOf f of
+  case C.typeOf f of
     ps :-> _ -> Call f <$> zipWithM (\x p -> cast p =<< toExp x) xs ps
     _ -> bug Unreachable
 toExp (S.Fn _ ps e) = runDef $ do
-  ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
+  ps' <- traverse ((\p -> newId (C.typeOf p) (p ^. idName)) . fst) ps
   e <- do
     zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
     toExp e
-  Atom <$> let_ (map cTypeOf ps' :-> cTypeOf e) (Fun ps' e)
+  Atom <$> let_ (map C.typeOf ps' :-> C.typeOf e) (Fun ps' e)
 toExp (S.Seq _ e1 e2) = runDef $ do
   _ <- bind =<< toExp e1
   toExp e2
 toExp (S.Let _ (S.ValDec _ a _ v) e) = runDef $ do
-  Var v <- cast (cTypeOf a) =<< toExp v
+  Var v <- cast (C.typeOf a) =<< toExp v
   modify $ at a ?~ v
   toExp e
-toExp (S.Let _ (S.ExDec _ prim _ primName) e) = case cTypeOf $ prim ^. idMeta of
+toExp (S.Let _ (S.ExDec _ prim _ primName) e) = case C.typeOf $ prim ^. idMeta of
   ta :-> tb -> runDef $ do
     ps <- traverse (newId ?? "a") ta
     Var prim' <- let_ (ta :-> tb) $ Fun ps $ PrimCall primName (ta :-> tb) (map Var ps)
@@ -128,12 +129,12 @@ toExp (S.Let _ (S.ExDec _ prim _ primName) e) = case cTypeOf $ prim ^. idMeta of
   _ -> bug Unreachable
 toExp (S.Let _ (S.FunDec fs) e) = do
   for_ fs $ \(_, f, _, _, _) -> do
-    f' <- newId (cTypeOf f) (f ^. idName)
+    f' <- newId (C.typeOf f) (f ^. idName)
     modify (at f ?~ f')
   Let <$> traverse toFun fs <*> toExp e
   where
-    toFun (_, f@(cTypeOf -> _ :-> r), ps, _, body) = do
-      ps' <- traverse ((\p -> newId (cTypeOf p) (p ^. idName)) . fst) ps
+    toFun (_, f@(C.typeOf -> _ :-> r), ps, _, body) = do
+      ps' <- traverse ((\p -> newId (C.typeOf p) (p ^. idName)) . fst) ps
       body <- runDef $ do
         zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
         Atom <$> (cast r =<< toExp body)
@@ -165,13 +166,13 @@ toExp (S.BinOp _ opr x y) = case opr of
     lexp <- toExp x
     rexp <- toExp y
     whenFalse <- Unpack (Con "False" []) [] . Atom <$> bind lexp
-    whenTrue <- Bind <$> newId (cTypeOf lexp) "lexp" <*> (Atom <$> bind rexp)
+    whenTrue <- Bind <$> newId (C.typeOf lexp) "lexp" <*> (Atom <$> bind rexp)
     pure $ Match lexp (whenFalse :| [whenTrue])
   S.Or -> runDef $ do
     lexp <- toExp x
     rexp <- toExp y
     whenTrue <- Unpack (Con "True" []) [] . Atom <$> bind lexp
-    whenFalse <- Bind <$> newId (cTypeOf lexp) "lexp" <*> (Atom <$> bind rexp)
+    whenFalse <- Bind <$> newId (C.typeOf lexp) "lexp" <*> (Atom <$> bind rexp)
     pure $ Match lexp (whenTrue :| [whenFalse])
   where
     arithOp con = runDef $ do
@@ -185,7 +186,7 @@ toExp (S.BinOp _ opr x y) = case opr of
     compareOp = runDef $ do
       lexp <- toExp x
       rexp <- toExp y
-      case cTypeOf lexp of
+      case C.typeOf lexp of
         SumT (toList -> [con]) | con == Con "Int" [Int64T] || con == Con "Float" [DoubleT] -> do
           [lval] <- destruct lexp con
           [rval] <- destruct rexp con
@@ -194,7 +195,7 @@ toExp (S.BinOp _ opr x y) = case opr of
     equalOp = do
       lexp <- toExp x
       rexp <- toExp y
-      case cTypeOf lexp of
+      case C.typeOf lexp of
         SumT (Set.toList -> [Con "Int" [Int64T]]) -> runDef $ do
           [lval] <- destruct lexp (Con "Int" [Int64T])
           [rval] <- destruct rexp (Con "Int" [Int64T])
@@ -216,8 +217,8 @@ toExp (S.BinOp _ opr x y) = case opr of
           -- -> if lval then rval else (if rval then lval else true)
           let whenTrue = Unpack (Con "True" []) [] (Atom rval)
           whenFalse <- do
-            lvalHole <- newId (cTypeOf lval) "lval"
-            rvalHole <- newId (cTypeOf rval) "rval"
+            lvalHole <- newId (C.typeOf lval) "lval"
+            rvalHole <- newId (C.typeOf rval) "rval"
             whenFalse <- boolValue True
             pure $
               Bind lvalHole $
@@ -232,21 +233,21 @@ toExp (S.Match _ e cs) = do
   pure $ Match e cs
 
 crushPat ::
-  (MonadUniq m, MonadState (Map (Id Type) (Id CType)) m) =>
+  (MonadUniq m, MonadState (Map (Id Type) (Id C.Type)) m) =>
   S.Pat (Id Type) ->
-  m (Exp (Id CType)) ->
-  m (Case (Id CType))
+  m (Exp (Id C.Type)) ->
+  m (Case (Id C.Type))
 crushPat (S.VarP _ x) = \e -> do
-  x' <- newId (cTypeOf $ typeOf x) (x ^. idName)
+  x' <- newId (C.typeOf $ typeOf x) (x ^. idName)
   modify $ at x ?~ x'
   Bind x' <$> e
 crushPat (S.TupleP _ xs) = go xs []
   where
     go [] acc e = do
       acc <- pure $ reverse acc
-      Unpack (Con ("Tuple" <> length acc ^. toText) $ map cTypeOf acc) acc <$> e
+      Unpack (Con ("Tuple" <> length acc ^. toText) $ map C.typeOf acc) acc <$> e
     go (p : ps) acc e = do
-      x <- newId (cTypeOf $ typeOf p) "p"
+      x <- newId (C.typeOf $ typeOf p) "p"
       go ps (x : acc) $ do
         clause <- crushPat p e
         pure $ Match (Atom $ Var x) (clause :| [])

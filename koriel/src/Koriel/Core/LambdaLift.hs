@@ -16,21 +16,21 @@ where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.Core.Core
+import Koriel.Core.Flat
+import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Koriel.Core.Flat
-import Koriel.Core.Core
-import Koriel.Core.CType
 
 data Env = Env
-  { _funcs :: Map (Id CType) ([Id CType], Exp (Id CType)),
-    _knowns :: Set (Id CType)
+  { _funcs :: Map (Id Type) ([Id Type], Exp (Id Type)),
+    _knowns :: Set (Id Type)
   }
 
 makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
 
-lambdalift :: MonadUniq m => Program (Id CType) -> m (Program (Id CType))
+lambdalift :: MonadUniq m => Program (Id Type) -> m (Program (Id Type))
 lambdalift Program {mainExp, topFuncs} =
   evalStateT ?? Env {_funcs = mempty, _knowns = Set.fromList $ map fst topFuncs} $ do
     topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
@@ -43,7 +43,7 @@ lambdalift Program {mainExp, topFuncs} =
     Env {_funcs} <- get
     traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
 
-llift :: (MonadUniq f, MonadState Env f) => Exp (Id CType) -> f (Exp (Id CType))
+llift :: (MonadUniq f, MonadState Env f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `elem` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
@@ -75,8 +75,8 @@ llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed % appCase) llift cs
 llift e = pure e
 
-def :: (MonadUniq m, MonadState Env m) => String -> [Id CType] -> Exp (Id CType) -> m (Id CType)
+def :: (MonadUniq m, MonadState Env m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
-  f <- newId (map cTypeOf xs :-> cTypeOf e) ("$" <> name)
+  f <- newId (map typeOf xs :-> typeOf e) ("$" <> name)
   modifying funcs $ Map.insert f (xs, e)
   pure f

@@ -5,8 +5,8 @@
 
 module Language.Malgo.TypeRep.Type where
 
-import Koriel.Core.CType hiding ((:->))
-import qualified Koriel.Core.CType as C
+import Koriel.Core.Type hiding (HasType (..), Type, (:->))
+import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -53,17 +53,17 @@ instance Pretty TyCon where
   pPrint TupleC = "Tuple"
   pPrint ArrayC = "Array"
 
-instance HasCType Type where
-  cTypeOf (TyApp IntC []) = SumT [Con "Int" [Int64T]]
-  cTypeOf (TyApp FloatC []) = SumT [Con "Float" [DoubleT]]
-  cTypeOf (TyApp BoolC []) = SumT [Con "True" [], Con "False" []]
-  cTypeOf (TyApp CharC []) = SumT [Con "Char" [CharT]]
-  cTypeOf (TyApp StringC []) = SumT [Con "String" [StringT]]
-  cTypeOf (TyApp TupleC xs) = SumT [Con ("Tuple" <> show (length xs)) (map cTypeOf xs)]
-  cTypeOf (TyApp ArrayC [x]) = ArrayT (cTypeOf x)
-  cTypeOf (TyApp _ _) = bug Unreachable
-  cTypeOf TyMeta {} = AnyT
-  cTypeOf (ps :-> r) = map cTypeOf ps C.:-> cTypeOf r
+instance C.HasType Type where
+  typeOf (TyApp IntC []) = SumT [Con "Int" [Int64T]]
+  typeOf (TyApp FloatC []) = SumT [Con "Float" [DoubleT]]
+  typeOf (TyApp BoolC []) = SumT [Con "True" [], Con "False" []]
+  typeOf (TyApp CharC []) = SumT [Con "Char" [CharT]]
+  typeOf (TyApp StringC []) = SumT [Con "String" [StringT]]
+  typeOf (TyApp TupleC xs) = SumT [Con ("Tuple" <> show (length xs)) (map C.typeOf xs)]
+  typeOf (TyApp ArrayC [x]) = ArrayT (C.typeOf x)
+  typeOf (TyApp _ _) = bug Unreachable
+  typeOf TyMeta {} = AnyT
+  typeOf (ps :-> r) = map C.typeOf ps C.:-> C.typeOf r
 
 class HasType a where
   typeOf :: a -> Type

@@ -14,8 +14,8 @@
 module Koriel.Core.Core where
 
 import Data.Set.Optics
-import Koriel.Core.CType
 import Koriel.Core.Op
+import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
@@ -37,13 +37,13 @@ data Unboxed
   | String String
   deriving stock (Eq, Ord, Show)
 
-instance HasCType Unboxed where
-  cTypeOf Int32 {} = Int32T
-  cTypeOf Int64 {} = Int64T
-  cTypeOf Float {} = FloatT
-  cTypeOf Double {} = DoubleT
-  cTypeOf Char {} = CharT
-  cTypeOf String {} = StringT
+instance HasType Unboxed where
+  typeOf Int32 {} = Int32T
+  typeOf Int64 {} = Int64T
+  typeOf Float {} = FloatT
+  typeOf Double {} = DoubleT
+  typeOf Char {} = CharT
+  typeOf String {} = StringT
 
 instance Pretty Unboxed where
   pPrint (Int32 x) = pPrint x
@@ -61,9 +61,9 @@ data Atom a
   | Unboxed Unboxed
   deriving stock (Eq, Show, Functor, Foldable)
 
-instance HasCType a => HasCType (Atom a) where
-  cTypeOf (Var x) = cTypeOf x
-  cTypeOf (Unboxed x) = cTypeOf x
+instance HasType a => HasType (Atom a) where
+  typeOf (Var x) = typeOf x
+  typeOf (Unboxed x) = typeOf x
 
 instance Pretty a => Pretty (Atom a) where
   pPrint (Var x) = pPrint x
@@ -92,49 +92,49 @@ data Exp a
   = Atom (Atom a)
   | Call (Atom a) [Atom a]
   | CallDirect a [Atom a]
-  | PrimCall String CType [Atom a]
+  | PrimCall String Type [Atom a]
   | BinOp Op (Atom a) (Atom a)
   | ArrayRead (Atom a) (Atom a)
   | ArrayWrite (Atom a) (Atom a) (Atom a)
-  | Cast CType (Atom a)
+  | Cast Type (Atom a)
   | Let [(a, Obj a)] (Exp a)
   | Match (Exp a) (NonEmpty (Case a))
-  | Error CType
+  | Error Type
   deriving stock (Eq, Show, Functor, Foldable)
 
-instance HasCType a => HasCType (Exp a) where
-  cTypeOf (Atom x) = cTypeOf x
-  cTypeOf (Call f xs) = case cTypeOf f of
-    ps :-> r -> go ps (map cTypeOf xs) r
-    _ -> errorDoc $ "Invalid type:" <+> P.quotes (pPrint $ cTypeOf f)
+instance HasType a => HasType (Exp a) where
+  typeOf (Atom x) = typeOf x
+  typeOf (Call f xs) = case typeOf f of
+    ps :-> r -> go ps (map typeOf xs) r
+    _ -> errorDoc $ "Invalid type:" <+> P.quotes (pPrint $ typeOf f)
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug Unreachable
-  cTypeOf (CallDirect f xs) = case cTypeOf f of
-    ps :-> r -> go ps (map cTypeOf xs) r
+  typeOf (CallDirect f xs) = case typeOf f of
+    ps :-> r -> go ps (map typeOf xs) r
     _ -> bug Unreachable
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug Unreachable
-  cTypeOf (PrimCall _ t xs) = case t of
-    ps :-> r -> go ps (map cTypeOf xs) r
+  typeOf (PrimCall _ t xs) = case t of
+    ps :-> r -> go ps (map typeOf xs) r
     _ -> bug Unreachable
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug Unreachable
-  cTypeOf (BinOp o x _) = case o of
-    Add -> cTypeOf x
-    Sub -> cTypeOf x
-    Mul -> cTypeOf x
-    Div -> cTypeOf x
-    Mod -> cTypeOf x
-    FAdd -> cTypeOf x
-    FSub -> cTypeOf x
-    FMul -> cTypeOf x
-    FDiv -> cTypeOf x
+  typeOf (BinOp o x _) = case o of
+    Add -> typeOf x
+    Sub -> typeOf x
+    Mul -> typeOf x
+    Div -> typeOf x
+    Mod -> typeOf x
+    FAdd -> typeOf x
+    FSub -> typeOf x
+    FMul -> typeOf x
+    FDiv -> typeOf x
     Eq -> boolT
     Neq -> boolT
     Lt -> boolT
@@ -145,14 +145,14 @@ instance HasCType a => HasCType (Exp a) where
     Or -> boolT
     where
       boolT = SumT [Con "True" [], Con "False" []]
-  cTypeOf (ArrayRead a _) = case cTypeOf a of
+  typeOf (ArrayRead a _) = case typeOf a of
     ArrayT t -> t
     _ -> bug Unreachable
-  cTypeOf ArrayWrite {} = SumT [Con "Tuple0" []]
-  cTypeOf (Cast ty _) = ty
-  cTypeOf (Let _ e) = cTypeOf e
-  cTypeOf (Match _ (c :| _)) = cTypeOf c
-  cTypeOf (Error t) = t
+  typeOf ArrayWrite {} = SumT [Con "Tuple0" []]
+  typeOf (Cast ty _) = ty
+  typeOf (Let _ e) = typeOf e
+  typeOf (Match _ (c :| _)) = typeOf c
+  typeOf (Error t) = t
 
 instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
@@ -217,10 +217,10 @@ instance HasFreeVar Case where
   freevars (Switch _ e) = freevars e
   freevars (Bind x e) = sans x $ freevars e
 
-instance HasCType a => HasCType (Case a) where
-  cTypeOf (Unpack _ _ e) = cTypeOf e
-  cTypeOf (Switch _ e) = cTypeOf e
-  cTypeOf (Bind _ e) = cTypeOf e
+instance HasType a => HasType (Case a) where
+  typeOf (Unpack _ _ e) = typeOf e
+  typeOf (Switch _ e) = typeOf e
+  typeOf (Bind _ e) = typeOf e
 
 instance HasAtom Case where
   atom = traversalVL $ \f -> \case
@@ -236,7 +236,7 @@ Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
 -}
 data Obj a
   = Fun [a] (Exp a)
-  | Pack CType Con [Atom a]
+  | Pack Type Con [Atom a]
   | Array (Atom a) (Atom a)
   deriving stock (Eq, Show, Functor, Foldable)
 
@@ -250,10 +250,10 @@ instance HasFreeVar Obj where
   freevars (Pack _ _ xs) = foldMap freevars xs
   freevars (Array a n) = freevars a <> freevars n
 
-instance HasCType a => HasCType (Obj a) where
-  cTypeOf (Fun xs e) = map cTypeOf xs :-> cTypeOf e
-  cTypeOf (Pack t _ _) = t
-  cTypeOf (Array a _) = ArrayT $ cTypeOf a
+instance HasType a => HasType (Obj a) where
+  typeOf (Fun xs e) = map typeOf xs :-> typeOf e
+  typeOf (Pack t _ _) = t
+  typeOf (Array a _) = ArrayT $ typeOf a
 
 instance HasAtom Obj where
   atom = traversalVL $ \f -> \case
@@ -295,34 +295,34 @@ appProgram :: Traversal' (Program a) (Exp a)
 appProgram = traversalVL $ \f Program {mainExp, topFuncs} ->
   Program <$> traverseOf (traversed % _2 % _2) f topFuncs <*> f mainExp
 
-newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id CType))) m a}
+newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadUniq, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
-runDef :: Functor f => DefBuilderT f (Exp (Id CType)) -> f (Exp (Id CType))
+runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
 
-let_ :: MonadUniq m => CType -> Obj (Id CType) -> DefBuilderT m (Atom (Id CType))
+let_ :: MonadUniq m => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
   x <- newId otype "$let"
   DefBuilderT $ tell $ Endo $ \e -> Let [(x, obj)] e
   pure (Var x)
 
-destruct :: MonadUniq m => Exp (Id CType) -> Con -> DefBuilderT m [Atom (Id CType)]
+destruct :: MonadUniq m => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
 destruct val con@(Con _ ts) = do
   vs <- traverse (newId ?? "$p") ts
   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
   pure $ map Var vs
 
-bind :: MonadUniq m => Exp (Id CType) -> DefBuilderT m (Atom (Id CType))
+bind :: MonadUniq m => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
-  x <- newId (cTypeOf v) "$d"
+  x <- newId (typeOf v) "$d"
   DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
   pure (Var x)
 
-cast :: MonadUniq m => CType -> Exp (Id CType) -> DefBuilderT m (Atom (Id CType))
+cast :: MonadUniq m => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 cast ty e
-  | ty == cTypeOf e = bind e
+  | ty == typeOf e = bind e
   | otherwise = do
     v <- bind e
     x <- newId ty "$cast"

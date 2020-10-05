@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Koriel.Core.CType where
+module Koriel.Core.Type where
 
 import Data.Set (fromList)
 import Koriel.Id
@@ -12,24 +12,24 @@ import Koriel.Prelude
 import Koriel.Pretty
 
 -- TODO: クロージャを表す型を追加
--- ClosureT [CType] CType
+-- ClosureT [Type] Type
 -- あるいはknown関数を表す型
--- FuncT [CType] CType
-data CType
-  = [CType] :-> CType
+-- FuncT [Type] Type
+data Type
+  = [Type] :-> Type
   | Int32T
   | Int64T
   | FloatT
   | DoubleT
   | CharT
   | StringT
-  | DataT String [CType]
+  | DataT String [Type]
   | SumT (Set Con)
-  | ArrayT CType
+  | ArrayT Type
   | AnyT
   deriving stock (Eq, Show, Ord)
 
-instance Pretty CType where
+instance Pretty Type where
   pPrint (a :-> b) = parens (sep $ map pPrint a) <+> "->" <+> pPrint b
   pPrint Int32T = "Int32#"
   pPrint Int64T = "Int64#"
@@ -47,22 +47,22 @@ Constructors  C ::= <tag n>
 -}
 type Tag = String
 
-data Con = Con Tag [CType]
+data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord)
 
 instance Pretty Con where
   pPrint (Con tag xs) = "<" <> text tag <+> sep (punctuate "," (map pPrint xs)) <> ">"
 
-class HasCType a where
-  cTypeOf :: HasCallStack => a -> CType
+class HasType a where
+  typeOf :: HasCallStack => a -> Type
 
-instance HasCType CType where
-  cTypeOf x = x
+instance HasType Type where
+  typeOf x = x
 
-instance HasCType a => HasCType (Id a) where
-  cTypeOf x = cTypeOf $ x ^. idMeta
+instance HasType a => HasType (Id a) where
+  typeOf x = typeOf $ x ^. idMeta
 
-tyVar :: Traversal CType CType CType CType
+tyVar :: Traversal' Type Type
 tyVar = traversalVL $ \f -> \case
   ps :-> r -> (:->) <$> traverseOf (traversed % tyVar) f ps <*> traverseOf tyVar f r
   DataT n ts -> DataT n <$> traverseOf (traversed % tyVar) f ts
@@ -71,5 +71,5 @@ tyVar = traversalVL $ \f -> \case
   AnyT -> f AnyT
   t -> pure t
 
-tyVar' :: Traversal Con Con CType CType
+tyVar' :: Traversal' Con Type
 tyVar' = traversalVL $ \f (Con tag ts) -> Con tag <$> traverseOf (traversed % tyVar) f ts

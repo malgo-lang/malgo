@@ -12,28 +12,28 @@ where
 -- α変換
 
 import qualified Data.Map as Map
+import Koriel.Core.Core
+import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Koriel.Core.Core
-import Koriel.Core.CType
 
 runAlpha :: ReaderT AlphaEnv m a -> AlphaEnv -> m a
 runAlpha = runReaderT
 
-type AlphaEnv = Map (Id CType) (Atom (Id CType))
+type AlphaEnv = Map (Id Type) (Atom (Id Type))
 
 cloneId :: MonadUniq f => Id a -> f (Id a)
 cloneId n = newId (n ^. idMeta) (n ^. idName)
 
-lookupVar :: (HasCallStack, MonadReader AlphaEnv m) => Id CType -> m (Atom (Id CType))
+lookupVar :: (HasCallStack, MonadReader AlphaEnv m) => Id Type -> m (Atom (Id Type))
 lookupVar n = do
   env <- ask
   case Map.lookup n env of
     Just n' -> pure n'
     Nothing -> pure (Var n)
 
-lookupId :: MonadReader AlphaEnv m => Id CType -> m (Id CType)
+lookupId :: MonadReader AlphaEnv m => Id Type -> m (Id Type)
 lookupId n = do
   n' <- lookupVar n
   case n' of
@@ -42,8 +42,8 @@ lookupId n = do
 
 alphaProgram ::
   (MonadUniq f, MonadReader AlphaEnv f) =>
-  Program (Id CType) ->
-  f (Program (Id CType))
+  Program (Id Type) ->
+  f (Program (Id Type))
 alphaProgram Program {topFuncs, mainExp} = do
   newFuncIds <- foldMapA ?? topFuncs $ \(n, _) -> Map.singleton n <$> (Var <$> cloneId n)
   local (newFuncIds <>) $ do
@@ -53,8 +53,8 @@ alphaProgram Program {topFuncs, mainExp} = do
 
 alphaFunc ::
   (MonadUniq m, MonadReader AlphaEnv m) =>
-  (Id CType, ([Id CType], Exp (Id CType))) ->
-  m (Id CType, ([Id CType], Exp (Id CType)))
+  (Id Type, ([Id Type], Exp (Id Type))) ->
+  m (Id Type, ([Id Type], Exp (Id Type)))
 alphaFunc (f, (ps, e)) = do
   ps' <- traverse cloneId ps
   local (Map.fromList (zip ps (map Var ps')) <>) $ do
@@ -62,7 +62,7 @@ alphaFunc (f, (ps, e)) = do
     f' <- lookupId f
     pure (f', (ps', e'))
 
-alphaExp :: (MonadReader AlphaEnv f, MonadUniq f) => Exp (Id CType) -> f (Exp (Id CType))
+alphaExp :: (MonadReader AlphaEnv f, MonadUniq f) => Exp (Id Type) -> f (Exp (Id Type))
 alphaExp (Atom a) = Atom <$> alphaAtom a
 alphaExp (Call f xs) = Call <$> alphaAtom f <*> traverse alphaAtom xs
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
@@ -78,18 +78,18 @@ alphaExp (Let ds e) = do
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
 alphaExp e@Error {} = pure e
 
-alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id CType) -> f (Atom (Id CType))
+alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x
 alphaAtom a@Unboxed {} = pure a
 
-alphaObj :: (MonadUniq m, MonadReader AlphaEnv m) => Obj (Id CType) -> m (Obj (Id CType))
+alphaObj :: (MonadUniq m, MonadReader AlphaEnv m) => Obj (Id Type) -> m (Obj (Id Type))
 alphaObj (Fun ps e) = do
   ps' <- traverse cloneId ps
   local (Map.fromList (zip ps $ map Var ps') <>) $ Fun ps' <$> alphaExp e
 alphaObj (Pack t c xs) = Pack t c <$> traverse alphaAtom xs
 alphaObj (Array val size) = Array <$> alphaAtom val <*> alphaAtom size
 
-alphaCase :: (MonadUniq m, MonadReader AlphaEnv m) => Case (Id CType) -> m (Case (Id CType))
+alphaCase :: (MonadUniq m, MonadReader AlphaEnv m) => Case (Id Type) -> m (Case (Id Type))
 alphaCase (Unpack c ps e) = do
   ps' <- traverse cloneId ps
   local (Map.fromList (zip ps $ map Var ps') <>) $ Unpack c ps' <$> alphaExp e

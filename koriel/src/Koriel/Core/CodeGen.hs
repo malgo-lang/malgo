@@ -27,7 +27,9 @@ import Data.List.Extra (mconcatMap)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.String.Conversions
+import Koriel.Core.Core as Core
 import qualified Koriel.Core.Op as Op
+import Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
@@ -51,17 +53,15 @@ import LLVM.AST.Type hiding
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr)
-import Koriel.Core.Core as Core
-import Koriel.Core.CType as CType
 
-codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id CType) -> m [Definition]
+codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id C.Type) -> m [Definition]
 codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
   -- topFuncsのOprMapを作成
   let funcEnv = mconcatMap ?? topFuncs $ \(f, (ps, e)) ->
         Map.singleton f $
           ConstantOperand $
             GlobalReference
-              (ptr $ FunctionType (convType $ cTypeOf e) (map (convType . cTypeOf) ps) False)
+              (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
               (toName f)
   runReaderT
     ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv})
@@ -78,19 +78,19 @@ codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data OprMap = OprMap
-  { _valueMap :: Map (Id CType) Operand,
-    _funcMap :: Map (Id CType) Operand
+  { _valueMap :: Map (Id C.Type) Operand,
+    _funcMap :: Map (Id C.Type) Operand
   }
 
-valueMap :: Lens' OprMap (Map (Id CType) Operand)
+valueMap :: Lens' OprMap (Map (Id C.Type) Operand)
 valueMap = lens _valueMap (\s a -> s {_valueMap = a})
 
--- funcMap :: Lens' OprMap (IdMap CType Operand)
+-- funcMap :: Lens' OprMap (IdMap C.Type Operand)
 -- funcMap = lens _funcMap (\s a -> s {_funcMap = a})
 
 type PrimMap = Map String Operand
 
-convType :: CType -> Type
+convType :: C.Type -> LT.Type
 convType (ps :-> r) =
   ptr $
     StructureType False [ptr i8, ptr $ FunctionType (convType r) (ptr i8 : map convType ps) False]
@@ -112,36 +112,36 @@ convType (ArrayT ty) = ptr $ StructureType False [ptr $ convType ty, i64]
 convType AnyT = ptr i8
 
 sizeofCon :: Num a => Con -> a
-sizeofCon (Con _ ts) = sum $ map sizeofCType ts
+sizeofCon (Con _ ts) = sum $ map sizeofType ts
 
-sizeofCType :: Num a => CType -> a
-sizeofCType (_ :-> _) = 8
-sizeofCType Int32T = 4
-sizeofCType Int64T = 8
-sizeofCType FloatT = 4
-sizeofCType DoubleT = 8
-sizeofCType CharT = 1
-sizeofCType StringT = 8
-sizeofCType DataT {} = 8
-sizeofCType (SumT _) = 8
-sizeofCType (ArrayT _) = 8
-sizeofCType AnyT = 8
+sizeofType :: Num a => C.Type -> a
+sizeofType (_ :-> _) = 8
+sizeofType Int32T = 4
+sizeofType Int64T = 8
+sizeofType FloatT = 4
+sizeofType DoubleT = 8
+sizeofType CharT = 1
+sizeofType StringT = 8
+sizeofType DataT {} = 8
+sizeofType (SumT _) = 8
+sizeofType (ArrayT _) = 8
+sizeofType AnyT = 8
 
-findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id CType -> m Operand
+findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id C.Type -> m Operand
 findVar x = do
   OprMap {_valueMap = valueMap} <- ask
   case valueMap ^. at x of
     Just x -> pure x
     Nothing -> error $ show $ pPrint x <> " is not found"
 
-findFun :: MonadReader OprMap m => Id CType -> m Operand
+findFun :: MonadReader OprMap m => Id C.Type -> m Operand
 findFun x = do
   OprMap {_funcMap = funcMap} <- ask
   case funcMap ^. at x of
     Just x -> pure x
     Nothing -> error $ show $ pPrint x <> " is not found"
 
-findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [Type] -> Type -> m Operand
+findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r = do
   env <- get
   case env ^. at x of
@@ -154,7 +154,7 @@ findExt x ps r = do
 mallocBytes ::
   (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) =>
   Operand ->
-  Maybe Type ->
+  Maybe LT.Type ->
   m Operand
 mallocBytes bytesOpr maybeType = do
   gcMalloc <- findExt "GC_malloc" [i64] (ptr i8)
@@ -163,7 +163,7 @@ mallocBytes bytesOpr maybeType = do
     Just t -> bitcast ptrOpr t
     Nothing -> pure ptrOpr
 
-mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => Type -> m Operand
+mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m Operand
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
 toName :: Id a -> LLVM.AST.Name
@@ -178,9 +178,9 @@ genFunc ::
     MonadFix m,
     MonadFail m
   ) =>
-  Id CType ->
-  [Id CType] ->
-  Exp (Id CType) ->
+  Id C.Type ->
+  [Id C.Type] ->
+  Exp (Id C.Type) ->
   m Operand
 genFunc name params body = function funcName llvmParams retty $
   \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
@@ -190,7 +190,7 @@ genFunc name params body = function funcName llvmParams retty $
       map
         (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ x ^. idName))
         params
-    retty = convType (cTypeOf body)
+    retty = convType (C.typeOf body)
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている
 genExp ::
@@ -202,7 +202,7 @@ genExp ::
     MonadFail m,
     MonadFix m
   ) =>
-  Exp (Id CType) ->
+  Exp (Id C.Type) ->
   (Operand -> m ()) ->
   m ()
 genExp (Atom x) k = k =<< genAtom x
@@ -233,7 +233,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     genOp Op.FMul = fmul
     genOp Op.FDiv = fdiv
     genOp Op.Eq = \x' y' ->
-      i1ToBool =<< case cTypeOf x of
+      i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.EQ x' y'
         Int64T -> icmp IP.EQ x' y'
         FloatT -> fcmp FP.OEQ x' y'
@@ -244,7 +244,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         ArrayT _ -> icmp IP.EQ x' y'
         _ -> bug Unreachable
     genOp Op.Neq = \x' y' ->
-      i1ToBool =<< case cTypeOf x of
+      i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.NE x' y'
         Int64T -> icmp IP.NE x' y'
         FloatT -> fcmp FP.ONE x' y'
@@ -255,7 +255,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         ArrayT _ -> icmp IP.NE x' y'
         _ -> bug Unreachable
     genOp Op.Lt = \x' y' ->
-      i1ToBool =<< case cTypeOf x of
+      i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.SLT x' y'
         Int64T -> icmp IP.SLT x' y'
         FloatT -> fcmp FP.OLT x' y'
@@ -263,7 +263,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         CharT -> icmp IP.ULT x' y'
         _ -> bug Unreachable
     genOp Op.Le = \x' y' ->
-      i1ToBool =<< case cTypeOf x of
+      i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.SLE x' y'
         Int64T -> icmp IP.SLE x' y'
         FloatT -> fcmp FP.OLE x' y'
@@ -271,7 +271,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         CharT -> icmp IP.ULE x' y'
         _ -> bug Unreachable
     genOp Op.Gt = \x' y' ->
-      i1ToBool =<< case cTypeOf x of
+      i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.SGT x' y'
         Int64T -> icmp IP.SGT x' y'
         FloatT -> fcmp FP.OGT x' y'
@@ -279,7 +279,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         CharT -> icmp IP.UGT x' y'
         _ -> bug Unreachable
     genOp Op.Ge = \x' y' ->
-      i1ToBool =<< case cTypeOf x of
+      i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.SGE x' y'
         Int64T -> icmp IP.SGE x' y'
         FloatT -> fcmp FP.OGE x' y'
@@ -314,18 +314,18 @@ genExp (Let xs e) k = do
           ( StructureType
               False
               [ ptr i8,
-                ptr $ FunctionType (convType $ cTypeOf body) (ptr i8 : map (convType . cTypeOf) ps) False
+                ptr $ FunctionType (convType $ C.typeOf body) (ptr i8 : map (convType . C.typeOf) ps) False
               ]
           )
     prepare _ = pure mempty
 genExp (Match e (Bind x body :| _)) k = genExp e $ \eOpr -> do
-  eOpr <- bitcast eOpr (convType $ cTypeOf e)
+  eOpr <- bitcast eOpr (convType $ C.typeOf e)
   local (over valueMap (at x ?~ eOpr)) (genExp body k)
 genExp (Match e cs) k = genExp e $ \eOpr -> mdo
   -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
   -- TODO: genExpが正しい型の値を継続に渡すように変更する
-  eOpr' <- bitcast eOpr (convType $ cTypeOf e)
-  let union = case cTypeOf e of
+  eOpr' <- bitcast eOpr (convType $ C.typeOf e)
+  let union = case C.typeOf e of
         SumT x -> x
         _ -> mempty
   br switchBlock
@@ -337,7 +337,7 @@ genExp (Match e cs) k = genExp e $ \eOpr -> mdo
       unreachable
       pure l
   switchBlock <- block
-  tagOpr <- case cTypeOf e of
+  tagOpr <- case C.typeOf e of
     SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
     _ -> pure eOpr'
   switch tagOpr defaultLabel labels
@@ -358,7 +358,7 @@ genUnpack ::
   Operand ->
   Set Con ->
   (Operand -> m ()) ->
-  Case (Id CType) ->
+  Case (Id C.Type) ->
   m (Either LLVM.AST.Name (Constant, LLVM.AST.Name))
 genUnpack scrutinee cs k = \case
   Bind x e -> do
@@ -384,7 +384,7 @@ genUnpack scrutinee cs k = \case
 
 genAtom ::
   (MonadReader OprMap m, MonadUniq m, MonadModuleBuilder m, MonadIRBuilder m) =>
-  Atom (Id CType) ->
+  Atom (Id C.Type) ->
   m Operand
 genAtom (Var x) = findVar x
 genAtom (Unboxed (Core.Int32 x)) = pure $ int32 x
@@ -405,9 +405,9 @@ genObj ::
     MonadFail m,
     MonadFix m
   ) =>
-  Id CType ->
-  Obj (Id CType) ->
-  m (Map (Id CType) Operand)
+  Id C.Type ->
+  Obj (Id C.Type) ->
+  m (Map (Id C.Type) Operand)
 genObj funName (Fun ps e) = do
   name <- toName <$> newId () (funName ^. idName <> "_closure")
   func <- function name (map (,NoParameterName) psTypes) retType $ \case
@@ -428,10 +428,10 @@ genObj funName (Fun ps e) = do
   pure $ Map.singleton funName closAddr
   where
     fvs = toList $ freevars (Fun ps e)
-    capType = StructureType False (map (convType . cTypeOf) fvs)
-    psTypes = ptr i8 : map (convType . cTypeOf) ps
-    retType = convType $ cTypeOf e
-genObj name@(cTypeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
+    capType = StructureType False (map (convType . C.typeOf) fvs)
+    psTypes = ptr i8 : map (convType . C.typeOf) ps
+    retType = convType $ C.typeOf e
+genObj name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
   addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
   let tag = fromIntegral $ findIndex con cs
   gepAndStore addr [int32 0, int32 0] (int64 tag)
@@ -442,8 +442,8 @@ genObj name@(cTypeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
   pure $ Map.singleton name addr
 genObj _ Pack {} = bug Unreachable
 genObj x (Core.Array a n) = mdo
-  sizeOpr <- mul (sizeof $ convType $ cTypeOf a) =<< genAtom n
-  arrayOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ cTypeOf a)
+  sizeOpr <- mul (sizeof $ convType $ C.typeOf a) =<< genAtom n
+  arrayOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ C.typeOf a)
   -- for (i64 i = 0;
   iPtr <- alloca i64 Nothing 0
   store iPtr 0 (int64 0)
@@ -461,12 +461,12 @@ genObj x (Core.Array a n) = mdo
   br condLabel
   endLabel <- block
   -- return array struct
-  structOpr <- mallocType (StructureType False [ptr $ convType $ cTypeOf a, i64])
+  structOpr <- mallocType (StructureType False [ptr $ convType $ C.typeOf a, i64])
   gepAndStore structOpr [int32 0, int32 0] arrayOpr
   gepAndStore structOpr [int32 0, int32 1] =<< genAtom n
   pure $ Map.singleton x structOpr
 
-genCon :: Set Con -> Con -> (Int, Type)
+genCon :: Set Con -> Con -> (Int, LT.Type)
 genCon cs con@(Con _ ts)
   | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
   | otherwise = bug Unreachable
@@ -476,7 +476,7 @@ findIndex con cs = case Set.lookupIndex con cs of
   Just i -> i
   Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
 
-sizeof :: Type -> Operand
+sizeof :: LT.Type -> Operand
 sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64
   where
     ptrType = LT.ptr ty

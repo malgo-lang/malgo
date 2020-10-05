@@ -14,13 +14,13 @@ where
 import qualified Data.List as List
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Koriel.Core.Alpha
+import Koriel.Core.Core
+import Koriel.Core.Flat
+import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Koriel.Core.Alpha
-import Koriel.Core.Flat
-import Koriel.Core.Core
-import Koriel.Core.CType
 
 times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
 times n f e =
@@ -30,7 +30,7 @@ times n f e =
       e' <- f e
       if e == e' then pure e' else times (n - 1) f e'
 
-optimize :: MonadUniq m => Int -> Exp (Id CType) -> m (Exp (Id CType))
+optimize :: MonadUniq m => Int -> Exp (Id Type) -> m (Exp (Id Type))
 optimize level expr =
   runReaderT
     ?? level
@@ -47,12 +47,12 @@ optimize level expr =
         )
         expr
 
-type CallInlineMap = Map (Id CType) ([Id CType], Exp (Id CType))
+type CallInlineMap = Map (Id Type) ([Id Type], Exp (Id Type))
 
 optCallInline ::
   (MonadState CallInlineMap f, MonadReader Int f, MonadUniq f) =>
-  Exp (Id CType) ->
-  f (Exp (Id CType))
+  Exp (Id Type) ->
+  f (Exp (Id Type))
 optCallInline (Call (Var f) xs) = lookupCallInline f xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverseOf (traversed % appCase) optCallInline cs
@@ -64,7 +64,7 @@ optCallInline e = pure e
 
 checkInlineable ::
   (MonadState CallInlineMap m, MonadReader Int m) =>
-  (Id CType, Obj (Id CType)) ->
+  (Id Type, Obj (Id Type)) ->
   m ()
 checkInlineable (f, Fun ps v) = do
   level <- ask
@@ -74,18 +74,18 @@ checkInlineable _ = pure ()
 
 lookupCallInline ::
   (MonadUniq m, MonadState CallInlineMap m) =>
-  Id CType ->
-  [Atom (Id CType)] ->
-  m (Exp (Id CType))
+  Id Type ->
+  [Atom (Id Type)] ->
+  m (Exp (Id Type))
 lookupCallInline f as = do
   f' <- gets (view (at f))
   case f' of
     Just (ps, v) -> runAlpha (alphaExp v) (Map.fromList $ zip ps as)
     Nothing -> pure $ Call (Var f) as
 
-type PackInlineMap = Map (Id CType) (Con, [Atom (Id CType)])
+type PackInlineMap = Map (Id Type) (Con, [Atom (Id Type)])
 
-optPackInline :: MonadReader PackInlineMap m => Exp (Id CType) -> m (Exp (Id CType))
+optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
 optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
   body' <- optPackInline body
   mPack <- asks $ view (at v)
@@ -131,8 +131,8 @@ removeUnusedLet (Match v cs) =
   Match <$> removeUnusedLet v <*> traverseOf (traversed % appCase) removeUnusedLet cs
 removeUnusedLet e = pure e
 
-optCast :: MonadUniq f => Exp (Id CType) -> f (Exp (Id CType))
-optCast e@(Cast (pts' :-> rt') f) = case cTypeOf f of
+optCast :: MonadUniq f => Exp (Id Type) -> f (Exp (Id Type))
+optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
   pts :-> _
     | length pts' == length pts -> do
       f' <- newId (pts' :-> rt') "$cast_opt"

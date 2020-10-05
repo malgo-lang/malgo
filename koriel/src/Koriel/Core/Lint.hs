@@ -12,14 +12,14 @@ module Koriel.Core.Lint
 where
 
 import Control.Monad.Except
+import Koriel.Core.Core
 import Koriel.Core.Op
+import Koriel.Core.Type
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
-import Koriel.Core.Core
-import Koriel.Core.CType
 
-lint :: (Monad m, HasCType a, Pretty a) => Exp (Id a) -> m ()
+lint :: (Monad m, HasType a, Pretty a) => Exp (Id a) -> m ()
 lint e =
   runExceptT (runReaderT (lintExp e) []) >>= \case
     Left err -> errorDoc err
@@ -31,38 +31,38 @@ defined x = do
   unless (x `elem` env) $ throwError $ pPrint x <> " is not defined"
 
 match ::
-  (HasCType a, HasCType b, MonadError Doc f, Pretty a, Pretty b, HasCallStack) =>
+  (HasType a, HasType b, MonadError Doc f, Pretty a, Pretty b, HasCallStack) =>
   a ->
   b ->
   f ()
-match (cTypeOf -> ps0 :-> r0) (cTypeOf -> ps1 :-> r1) = do
+match (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) = do
   zipWithM_ match ps0 ps1
   match r0 r1
-match (cTypeOf -> DataT {}) (cTypeOf -> AnyT) = pure ()
-match (cTypeOf -> AnyT) (cTypeOf -> DataT {}) = pure ()
-match (cTypeOf -> AnyT) (cTypeOf -> AnyT) = pure ()
+match (typeOf -> DataT {}) (typeOf -> AnyT) = pure ()
+match (typeOf -> AnyT) (typeOf -> DataT {}) = pure ()
+match (typeOf -> AnyT) (typeOf -> AnyT) = pure ()
 match x y
-  | cTypeOf x == cTypeOf y =
+  | typeOf x == typeOf y =
     pure ()
   | otherwise =
     throwError $
       "type mismatch:"
-        $$ (pPrint x <+> ":" <+> pPrint (cTypeOf x))
-        $$ (pPrint y <+> ":" <+> pPrint (cTypeOf y))
+        $$ (pPrint x <+> ":" <+> pPrint (typeOf x))
+        $$ (pPrint y <+> ":" <+> pPrint (typeOf y))
 
-lintExp :: (MonadReader [Id a] m, HasCType a, Pretty a, MonadError Doc m) => Exp (Id a) -> m ()
+lintExp :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m) => Exp (Id a) -> m ()
 lintExp (Atom x) = lintAtom x
 lintExp (Call f xs) = do
   lintAtom f
   traverse_ lintAtom xs
-  case cTypeOf f of
-    ps :-> r -> match f (map cTypeOf xs :-> r) >> zipWithM_ match ps xs
+  case typeOf f of
+    ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> throwError $ pPrint f <+> "is not callable"
 lintExp (CallDirect f xs) = do
   defined f
   traverse_ lintAtom xs
-  case cTypeOf f of
-    ps :-> r -> match f (map cTypeOf xs :-> r) >> zipWithM_ match ps xs
+  case typeOf f of
+    ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> throwError $ pPrint f <+> "is not callable"
 lintExp (PrimCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
@@ -95,14 +95,14 @@ lintExp (BinOp o x y) = do
 lintExp (ArrayRead a i) = do
   lintAtom a
   lintAtom i
-  case cTypeOf a of
+  case typeOf a of
     ArrayT _ -> match Int64T i
     _ -> throwError $ pPrint a <+> "must be a array"
 lintExp (ArrayWrite a i v) = do
   lintAtom a
   lintAtom i
   lintAtom v
-  case cTypeOf a of
+  case typeOf a of
     ArrayT t -> match Int64T i >> match t v
     _ -> throwError $ pPrint a <+> "must be a array"
 lintExp (Cast _ x) = lintAtom x
@@ -114,12 +114,12 @@ lintExp (Match e cs) = do
   traverse_ lintCase cs
 lintExp Error {} = pure ()
 
-lintObj :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasCType a) => Obj (Id a) -> m ()
+lintObj :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasType a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Array a n) = lintAtom a >> lintAtom n >> match Int64T n
 
-lintCase :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasCType a) => Case (Id a) -> m ()
+lintCase :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasType a) => Case (Id a) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase (Switch _ e) = lintExp e
 lintCase (Bind x e) = local (x :) $ lintExp e
