@@ -266,7 +266,7 @@ tcScDefs ds = do
   fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) nts
   as <- traverse (\(tv, nameChar) -> newId (kind tv) $ nameChar : []) $ zip fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
-  nts' <- traverse (rtraverse (fmap (Forall as) . zonkType)) nts
+  nts' <- traverseOf (traversed % _2) (fmap (Forall as) . zonkType) nts
   pure (mempty & T.varEnv .~ Map.fromList nts', defs)
 
 -- coercion

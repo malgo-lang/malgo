@@ -75,13 +75,6 @@ instance HasType Type where
 instance HasType a => HasType (Id a) where
   typeOf n = n ^. idMeta % to typeOf
 
-comparable :: Type -> Bool
-comparable (TyApp IntC []) = True
-comparable (TyApp FloatC []) = True
-comparable (TyApp BoolC []) = True
-comparable (TyApp CharC []) = True
-comparable _ = False
-
 removeExplictForall :: Scheme -> Type
 removeExplictForall (Forall _ t) = t
 

@@ -35,8 +35,6 @@ module Koriel.Prelude
     module Data.Text,
     module GHC.Stack,
     unzip,
-    ltraverse,
-    rtraverse,
     asumMap,
     foldMapA,
     ifoldMapA,
@@ -108,15 +106,6 @@ import Prelude hiding (log, unzip)
 unzip :: Functor f => f (a, b) -> (f a, f b)
 unzip xs = (fst <$> xs, snd <$> xs)
 {-# INLINE unzip #-}
-
--- | bitraverseの部分適用
-ltraverse :: (Bitraversable t, Applicative f) => (a -> f c) -> t a d -> f (t c d)
-ltraverse f = bitraverse f pure
-{-# INLINE ltraverse #-}
-
-rtraverse :: (Bitraversable t, Applicative f) => (b -> f c) -> t a b -> f (t a c)
-rtraverse = bitraverse pure
-{-# INLINE rtraverse #-}
 
 -- | Alternative version of @asum@.
 asumMap :: forall b m f a. (Foldable f, Alternative m) => (a -> m b) -> f a -> m b

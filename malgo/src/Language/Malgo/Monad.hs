@@ -17,7 +17,6 @@ module Language.Malgo.Monad
     runMalgo,
     MonadMalgo (..),
     Opt (..),
-    getFileName,
     viewLine,
     malgoError,
   )
@@ -86,9 +85,6 @@ instance (MonadIO m, MonadMalgo m) => MonadMalgo (ExceptT e m)
 instance (MonadIO m, MonadMalgo m) => MonadMalgo (StateT s m)
 
 instance (MonadIO m, MonadMalgo m) => MonadMalgo (WriterT w m)
-
-getFileName :: (MonadMalgo m, IsString a) => m a
-getFileName = fromString . srcName <$> getOpt
 
 viewLine :: MonadMalgo m => Int -> m Text
 viewLine linum = do

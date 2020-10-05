@@ -427,9 +427,6 @@ dcType (GT.TyMeta tv) = do
     Just t -> dcType t
     Nothing -> error "TyMeta must be removed"
 
-dcXType :: (MonadReader DesugarEnv m, MonadIO m) => G.Type (Griff 'TypeCheck) -> m CType
-dcXType t = asks (view tcEnv) >>= runReaderT (Typing.transType t) >>= dcType
-
 lookupConMap ::
   (MonadReader DesugarEnv m, MonadFail m) =>
   Id Kind ->
@@ -469,13 +466,6 @@ lookupName name = do
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint name)
-
-lookupType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => Id () -> m CType
-lookupType name = do
-  mtyp <- asks $ view (tcEnv % Tc.typeEnv % at name)
-  case mtyp of
-    Just typ -> dcType typ
-    Nothing -> bug Unreachable
 
 curryFun ::
   (HasCallStack, MonadUniq m) =>

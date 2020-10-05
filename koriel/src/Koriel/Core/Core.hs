@@ -153,10 +153,6 @@ instance HasCType a => HasCType (Exp a) where
   cTypeOf (Match _ (c :| _)) = cTypeOf c
   cTypeOf (Error t) = t
 
-returnType :: CType -> CType
-returnType (_ :-> t) = t
-returnType _ = bug Unreachable
-
 instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
@@ -296,7 +292,7 @@ appCase = traversalVL $ \f -> \case
 
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram = traversalVL $ \f Program {mainExp, topFuncs} ->
-  Program <$> traverse (rtraverse (rtraverse f)) topFuncs <*> f mainExp
+  Program <$> traverseOf (traversed % _2 % _2) f topFuncs <*> f mainExp
 
 runDef :: Functor f => WriterT (Endo a) f a -> f a
 runDef m = uncurry (flip appEndo) <$> runWriterT m

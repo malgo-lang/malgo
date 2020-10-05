@@ -108,7 +108,7 @@ typingExpr (Call pos fn args) = do
   addCs pos [argTypes :-> retTy :~ fnTy]
   pure retTy
 typingExpr (Fn _ params body) = do
-  (paramIds, paramTypes) <- sTypeScope (mapAndUnzipM (rtraverse toType') params)
+  (paramIds, paramTypes) <- sTypeScope (mapAndUnzipM (traverseOf _2 toType') params)
   zipWithM_ (\p t -> defineVar p $ Forall [] t) paramIds paramTypes
   retType <- typingExpr body
   pure $ paramTypes :-> retType
@@ -133,7 +133,7 @@ typingExpr (Let _ (FunDec fs) e) = do
   for_ fs $ \(_, f, _, _, _) -> defineVar f . Forall [] =<< newTyMeta
   for_ fs $ \(pos, f, params, mretType, body) -> do
     (retType, (paramIds, paramTypes)) <-
-      sTypeScope $ (,) <$> toType' mretType <*> mapAndUnzipM (rtraverse toType') params
+      sTypeScope $ (,) <$> toType' mretType <*> mapAndUnzipM (traverseOf _2 toType') params
     zipWithM_ (\p t -> defineVar p $ Forall [] t) paramIds paramTypes
     (t, cs0) <- listen $ typingExpr body
     tv <- lookupVar f
