@@ -444,7 +444,7 @@ unfoldType t@GT.TyApp {} = do
     . Set.fromList
     <$> traverse
       ( \(conName, conType) ->
-          C.Con (conName ^. toText) <$> (traverse dcType $ fst $ splitTyArr conType)
+          C.Con (conName ^. toText) <$> traverse dcType (fst $ splitTyArr conType)
       )
       conMap
 unfoldType (GT.TyCon con) | kind con == Star = do
@@ -453,7 +453,7 @@ unfoldType (GT.TyCon con) | kind con == Star = do
     . Set.fromList
     <$> traverse
       ( \(conName, conType) ->
-          C.Con (conName ^. toText) <$> (traverse dcType $ fst $ splitTyArr conType)
+          C.Con (conName ^. toText) <$> traverse dcType (fst $ splitTyArr conType)
       )
       conMap
 unfoldType t = dcType t
