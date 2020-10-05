@@ -3,6 +3,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedLists #-}
@@ -13,12 +14,12 @@
 module Koriel.Core.Core where
 
 import Data.Set.Optics
+import Koriel.Core.CType
 import Koriel.Core.Op
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import Koriel.Core.CType
 import qualified Text.PrettyPrint.HughesPJ as P
 
 class HasFreeVar f where
@@ -294,44 +295,36 @@ appProgram :: Traversal' (Program a) (Exp a)
 appProgram = traversalVL $ \f Program {mainExp, topFuncs} ->
   Program <$> traverseOf (traversed % _2 % _2) f topFuncs <*> f mainExp
 
-runDef :: Functor f => WriterT (Endo a) f a -> f a
-runDef m = uncurry (flip appEndo) <$> runWriterT m
+newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id CType))) m a}
+  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadUniq, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
-let_ :: (MonadUniq m, MonadWriter (Endo (Exp (Id a))) m) => a -> Obj (Id a) -> m (Atom (Id a))
+runDef :: Functor f => DefBuilderT f (Exp (Id CType)) -> f (Exp (Id CType))
+runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
+
+let_ :: MonadUniq m => CType -> Obj (Id CType) -> DefBuilderT m (Atom (Id CType))
 let_ otype obj = do
   x <- newId otype "$let"
-  tell $ Endo $ \e -> Let [(x, obj)] e
+  DefBuilderT $ tell $ Endo $ \e -> Let [(x, obj)] e
   pure (Var x)
 
-destruct ::
-  (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) =>
-  Exp (Id CType) ->
-  Con ->
-  m [Atom (Id CType)]
+destruct :: MonadUniq m => Exp (Id CType) -> Con -> DefBuilderT m [Atom (Id CType)]
 destruct val con@(Con _ ts) = do
   vs <- traverse (newId ?? "$p") ts
-  tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
   pure $ map Var vs
 
-bind ::
-  (MonadUniq m, MonadWriter (Endo (Exp (Id CType))) m) =>
-  Exp (Id CType) ->
-  m (Atom (Id CType))
+bind :: MonadUniq m => Exp (Id CType) -> DefBuilderT m (Atom (Id CType))
 bind (Atom a) = pure a
 bind v = do
   x <- newId (cTypeOf v) "$d"
-  tell $ Endo $ \e -> Match v (Bind x e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
   pure (Var x)
 
-cast ::
-  (MonadUniq f, MonadWriter (Endo (Exp (Id CType))) f) =>
-  CType ->
-  Exp (Id CType) ->
-  f (Atom (Id CType))
+cast :: MonadUniq m => CType -> Exp (Id CType) -> DefBuilderT m (Atom (Id CType))
 cast ty e
   | ty == cTypeOf e = bind e
   | otherwise = do
     v <- bind e
     x <- newId ty "$cast"
-    tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
+    DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
