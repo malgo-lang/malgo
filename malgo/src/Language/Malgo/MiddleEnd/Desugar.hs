@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -12,10 +13,6 @@ module Language.Malgo.MiddleEnd.Desugar
   )
 where
 
-import qualified Data.Set as Set
-  ( singleton,
-    toList,
-  )
 import Koriel.Core.Core
 import Koriel.Core.Flat
 import Koriel.Core.Type hiding (Type, typeOf)
@@ -42,28 +39,28 @@ toExp ::
 toExp (S.Var _ x) = Atom . Var <$> findVar x
 toExp (S.Int _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Int64 $ fromInteger x]
   where
-    ty = SumT $ Set.singleton con
+    ty = SumT [con]
     con = Con "Int" [Int64T]
 toExp (S.Float _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Double x]
   where
-    ty = SumT $ Set.singleton con
+    ty = SumT [con]
     con = Con "Float" [DoubleT]
 toExp (S.Bool _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Bool x]
   where
-    ty = SumT $ Set.singleton con
+    ty = SumT [con]
     con = Con "Bool" [BoolT]
 toExp (S.Char _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Char x]
   where
-    ty = SumT $ Set.singleton con
+    ty = SumT [con]
     con = Con "Char" [CharT]
 toExp (S.String _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ String x]
   where
-    ty = SumT $ Set.singleton con
+    ty = SumT [con]
     con = Con "String" [StringT]
 toExp (S.Tuple _ xs) = runDef $ do
   vs <- traverse (bind <=< toExp) xs
   let con = Con ("Tuple" <> length xs ^. toText) $ map C.typeOf vs
-  let ty = SumT $ Set.singleton con
+  let ty = SumT [con]
   runDef $ fmap Atom $ let_ ty $ Pack ty con vs
 toExp (S.Array _ (x :| xs)) = runDef $ do
   x <- bind =<< toExp x
@@ -136,69 +133,16 @@ toExp (S.If _ c t f) = runDef $ do
   t <- Switch (Bool True) <$> toExp t
   f <- Switch (Bool False) <$> toExp f
   pure $ Match (Atom c') (t :| [f])
-toExp (S.BinOp _ opr x y) = case opr of
-  S.Add -> arithOp (Con "Int" [Int64T])
-  S.Sub -> arithOp (Con "Int" [Int64T])
-  S.Mul -> arithOp (Con "Int" [Int64T])
-  S.Div -> arithOp (Con "Int" [Int64T])
-  S.Mod -> arithOp (Con "Int" [Int64T])
-  S.FAdd -> arithOp (Con "Float" [DoubleT])
-  S.FSub -> arithOp (Con "Float" [DoubleT])
-  S.FMul -> arithOp (Con "Float" [DoubleT])
-  S.FDiv -> arithOp (Con "Float" [DoubleT])
-  S.Eq -> equalOp
-  S.Neq -> equalOp
-  S.Lt -> compareOp
-  S.Gt -> compareOp
-  S.Le -> compareOp
-  S.Ge -> compareOp
-  S.And -> arithOp (Con "Bool" [BoolT])
-  S.Or -> arithOp (Con "Bool" [BoolT])
-  where
-    arithOp con = runDef $ do
-      lexp <- toExp x
-      rexp <- toExp y
-      [lval] <- destruct lexp con
-      [rval] <- destruct rexp con
-      result <- bind $ BinOp opr lval rval
-      let ty = SumT $ Set.singleton con
-      Atom <$> let_ ty (Pack ty con [result])
-    compareOp = runDef $ do
-      lexp <- toExp x
-      rexp <- toExp y
-      result <-
-        bind =<< case C.typeOf lexp of
-          SumT (toList -> [con]) | con == Con "Int" [Int64T] || con == Con "Float" [DoubleT] -> do
-            [lval] <- destruct lexp con
-            [rval] <- destruct rexp con
-            pure $ BinOp opr lval rval
-          _ -> bug Unreachable
-      let ty = SumT $ Set.singleton (Con "Bool" [BoolT])
-      Atom <$> let_ ty (Pack ty (Con "Bool" [BoolT]) [result])
-    equalOp = runDef $ do
-      lexp <- toExp x
-      rexp <- toExp y
-      result <-
-        bind =<< case C.typeOf lexp of
-          SumT (Set.toList -> [Con "Int" [Int64T]]) -> do
-            [lval] <- destruct lexp (Con "Int" [Int64T])
-            [rval] <- destruct rexp (Con "Int" [Int64T])
-            pure $ BinOp opr lval rval
-          SumT (Set.toList -> [Con "Float" [DoubleT]]) -> do
-            [lval] <- destruct lexp (Con "Float" [DoubleT])
-            [rval] <- destruct rexp (Con "Float" [DoubleT])
-            pure $ BinOp opr lval rval
-          SumT (Set.toList -> [Con "Char" [CharT]]) -> do
-            [lval] <- destruct lexp (Con "Char" [CharT])
-            [rval] <- destruct rexp (Con "Char" [CharT])
-            pure $ BinOp opr lval rval
-          SumT (Set.toList -> [Con "Bool" [BoolT]]) -> do
-            [lval] <- destruct lexp (Con "Bool" [BoolT])
-            [rval] <- destruct rexp (Con "Bool" [BoolT])
-            pure $ BinOp opr lval rval
-          _ -> errorDoc $ "not implemented:" <+> pPrint opr $$ pPrint lexp $$ pPrint rexp
-      let ty = SumT $ Set.singleton (Con "Bool" [BoolT])
-      Atom <$> let_ ty (Pack ty (Con "Bool" [BoolT]) [result])
+toExp e@(S.BinOp _ opr x y) = runDef $ do
+  let SumT (toList -> [xCon]) = C.typeOf $ typeOf x
+  let SumT (toList -> [yCon]) = C.typeOf $ typeOf y
+  lexp <- toExp x
+  rexp <- toExp y
+  [lval] <- destruct lexp xCon
+  [rval] <- destruct rexp yCon
+  result <- bind $ BinOp opr lval rval
+  let retType@(SumT (toList -> [rCon])) = C.typeOf $ typeOf e
+  Atom <$> let_ retType (Pack retType rCon [result])
 toExp (S.Match _ e cs) = do
   e <- toExp e
   cs <- traverse (\(p, v) -> crushPat p $ toExp v) cs
