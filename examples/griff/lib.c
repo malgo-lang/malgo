@@ -17,3 +17,13 @@ Unit* print_int(int64_t i) {
     printf("%lld", i);
     return new_Unit();
 }
+
+Unit* newline(Unit* unused) {
+  puts("");
+  return new_Unit();
+}
+
+Unit* print_string(char* x) {
+  printf("%s", x);
+  return new_Unit();
+}

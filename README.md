@@ -1,8 +1,8 @@
-# Malgo
+# KaGaMi
 
 [![Build Status](https://travis-ci.org/takoeight0821/malgo.svg?branch=master)](https://travis-ci.org/takoeight0821/malgo)
 
-A toy pragramming language.
+TODO: A short description of KaGaMi project.
 
 ## Requirement
 
@@ -13,8 +13,8 @@ A toy pragramming language.
 ## Installation
 
 ```sh
-$ git clone https://github.com/takoeight0821/malgo
-$ cd malgo
+$ git clone https://github.com/takoeight0821/kagami
+$ cd kagami
 $ stack install
 ```
 
@@ -23,6 +23,11 @@ $ stack install
 ```sh
 $ malgo examples/hello.mlg -o hello.ll
 $ clang hello.ll examples/corelib.c -lgc
+$ ./a.out
+Hello, world
+
+$ griff examples/griff/Hello.grf -o Hello.ll
+$ clang Hello.ll examples/griff/lib.c -lgc
 $ ./a.out
 Hello, world
 ```

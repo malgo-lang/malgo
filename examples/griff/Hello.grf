@@ -1,0 +1,14 @@
+forign import print_string :: String# -> ();
+forign import newline :: () -> ();
+
+data String = String# String#;
+
+putStrLn :: String -> ();
+putStrLn = { (String# str) ->
+  print_string str;
+  newline ()
+};
+
+main = {
+  putStrLn (String# "Hello, world"#)
+};
