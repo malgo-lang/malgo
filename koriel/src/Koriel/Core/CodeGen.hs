@@ -102,6 +102,7 @@ convType FloatT = LT.float
 convType DoubleT = LT.double
 convType CharT = i8
 convType StringT = ptr i8
+convType BoolT = i8
 convType DataT {} = ptr i8
 convType (SumT cs) =
   let size = maximum $ sizeofCon <$> toList cs
@@ -124,6 +125,7 @@ sizeofType FloatT = 4
 sizeofType DoubleT = 8
 sizeofType CharT = 1
 sizeofType StringT = 8
+sizeofType BoolT = 1
 sizeofType DataT {} = 8
 sizeofType (SumT _) = 8
 sizeofType (ArrayT _) = 8
@@ -242,6 +244,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         DoubleT -> fcmp FP.OEQ x' y'
         CharT -> icmp IP.EQ x' y'
         StringT -> icmp IP.EQ x' y'
+        BoolT -> icmp IP.EQ x' y'
         SumT _ -> icmp IP.EQ x' y'
         ArrayT _ -> icmp IP.EQ x' y'
         _ -> bug Unreachable
@@ -253,6 +256,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         DoubleT -> fcmp FP.ONE x' y'
         CharT -> icmp IP.NE x' y'
         StringT -> icmp IP.NE x' y'
+        BoolT -> icmp IP.NE x' y'
         SumT _ -> icmp IP.NE x' y'
         ArrayT _ -> icmp IP.NE x' y'
         _ -> bug Unreachable
@@ -288,11 +292,12 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         DoubleT -> fcmp FP.OGE x' y'
         CharT -> icmp IP.UGE x' y'
         _ -> bug Unreachable
-    genOp _ = bug Unreachable
+    genOp Op.And = \x' y' -> do
+      LLVM.IRBuilder.and x' y'
+    genOp Op.Or = \x' y' -> do
+      LLVM.IRBuilder.or x' y'
     i1ToBool i1opr = do
-      boolVal <- mallocType (StructureType False [i64, StructureType False []])
-      gepAndStore boolVal [int32 0, int32 0] =<< zext i1opr i64
-      pure boolVal
+      zext i1opr i8
 genExp (ArrayRead a i) k = do
   aOpr <- genAtom a
   iOpr <- genAtom i
@@ -345,7 +350,8 @@ genExp (Cast ty x) k = do
 genExp (Error _) _ = unreachable
 
 genCase ::
-  ( MonadReader OprMap m,
+  ( HasCallStack,
+    MonadReader OprMap m,
     MonadUniq m,
     MonadModuleBuilder m,
     MonadState PrimMap m,
@@ -393,6 +399,8 @@ genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x
 genAtom (Unboxed (Core.String x)) = do
   i <- getUniq
   ConstantOperand <$> globalStringPtr x (mkName $ "str" <> show i)
+genAtom (Unboxed (Core.Bool True)) = pure $ int8 1
+genAtom (Unboxed (Core.Bool False)) = pure $ int8 0
 
 genObj ::
   ( MonadReader OprMap m,
@@ -468,10 +476,10 @@ genObj x (Core.Array a n) = mdo
   gepAndStore structOpr [int32 0, int32 1] =<< genAtom n
   pure $ Map.singleton x structOpr
 
-genCon :: Set Con -> Con -> (Int, LT.Type)
+genCon :: HasCallStack => Set Con -> Con -> (Int, LT.Type)
 genCon cs con@(Con _ ts)
   | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
-  | otherwise = bug Unreachable
+  | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
 
 findIndex :: (HasCallStack, Ord a, Pretty a) => a -> Set a -> Int
 findIndex con cs = case Set.lookupIndex con cs of

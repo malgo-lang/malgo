@@ -13,8 +13,7 @@ module Language.Malgo.MiddleEnd.Desugar
 where
 
 import qualified Data.Set as Set
-  ( fromList,
-    singleton,
+  ( singleton,
     toList,
   )
 import Koriel.Core.Core
@@ -36,19 +35,6 @@ findVar v = do
   Just v <- gets (view (at v))
   pure v
 
-boolValue :: MonadUniq m => Bool -> m (Exp (Id C.Type))
-boolValue x =
-  runDef $
-    fmap Atom $
-      let_ boolType $
-        if x
-          then Pack boolType trueC []
-          else Pack boolType falseC []
-  where
-    boolType = SumT $ Set.fromList [trueC, falseC]
-    trueC = Con "True" []
-    falseC = Con "False" []
-
 toExp ::
   (MonadState (Map (Id Type) (Id C.Type)) m, MonadUniq m, MonadFail m) =>
   S.Expr (Id Type) ->
@@ -62,7 +48,10 @@ toExp (S.Float _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Doub
   where
     ty = SumT $ Set.singleton con
     con = Con "Float" [DoubleT]
-toExp (S.Bool _ x) = boolValue x
+toExp (S.Bool _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Bool x]
+  where
+    ty = SumT $ Set.singleton con
+    con = Con "Bool" [BoolT]
 toExp (S.Char _ x) = runDef $ fmap Atom $ let_ ty $ Pack ty con [Unboxed $ Char x]
   where
     ty = SumT $ Set.singleton con
@@ -141,11 +130,12 @@ toExp (S.Let _ (S.FunDec fs) e) = do
       f <- findVar f
       pure (f, Fun ps' body)
     toFun _ = bug Unreachable
-toExp (S.If _ c t f) = do
+toExp (S.If _ c t f) = runDef $ do
   c <- toExp c
-  t <- Unpack (Con "True" []) [] <$> toExp t
-  f <- Unpack (Con "False" []) [] <$> toExp f
-  pure $ Match c (t :| [f])
+  [c'] <- destruct c (Con "Bool" [BoolT])
+  t <- Switch (Bool True) <$> toExp t
+  f <- Switch (Bool False) <$> toExp f
+  pure $ Match (Atom c') (t :| [f])
 toExp (S.BinOp _ opr x y) = case opr of
   S.Add -> arithOp (Con "Int" [Int64T])
   S.Sub -> arithOp (Con "Int" [Int64T])
@@ -162,18 +152,8 @@ toExp (S.BinOp _ opr x y) = case opr of
   S.Gt -> compareOp
   S.Le -> compareOp
   S.Ge -> compareOp
-  S.And -> runDef $ do
-    lexp <- toExp x
-    rexp <- toExp y
-    whenFalse <- Unpack (Con "False" []) [] . Atom <$> bind lexp
-    whenTrue <- Bind <$> newId (C.typeOf lexp) "lexp" <*> (Atom <$> bind rexp)
-    pure $ Match lexp (whenFalse :| [whenTrue])
-  S.Or -> runDef $ do
-    lexp <- toExp x
-    rexp <- toExp y
-    whenTrue <- Unpack (Con "True" []) [] . Atom <$> bind lexp
-    whenFalse <- Bind <$> newId (C.typeOf lexp) "lexp" <*> (Atom <$> bind rexp)
-    pure $ Match lexp (whenTrue :| [whenFalse])
+  S.And -> arithOp (Con "Bool" [BoolT])
+  S.Or -> arithOp (Con "Bool" [BoolT])
   where
     arithOp con = runDef $ do
       lexp <- toExp x
@@ -186,47 +166,39 @@ toExp (S.BinOp _ opr x y) = case opr of
     compareOp = runDef $ do
       lexp <- toExp x
       rexp <- toExp y
-      case C.typeOf lexp of
-        SumT (toList -> [con]) | con == Con "Int" [Int64T] || con == Con "Float" [DoubleT] -> do
-          [lval] <- destruct lexp con
-          [rval] <- destruct rexp con
-          pure $ BinOp opr lval rval
-        _ -> bug Unreachable
-    equalOp = do
+      result <-
+        bind =<< case C.typeOf lexp of
+          SumT (toList -> [con]) | con == Con "Int" [Int64T] || con == Con "Float" [DoubleT] -> do
+            [lval] <- destruct lexp con
+            [rval] <- destruct rexp con
+            pure $ BinOp opr lval rval
+          _ -> bug Unreachable
+      let ty = SumT $ Set.singleton (Con "Bool" [BoolT])
+      Atom <$> let_ ty (Pack ty (Con "Bool" [BoolT]) [result])
+    equalOp = runDef $ do
       lexp <- toExp x
       rexp <- toExp y
-      case C.typeOf lexp of
-        SumT (Set.toList -> [Con "Int" [Int64T]]) -> runDef $ do
-          [lval] <- destruct lexp (Con "Int" [Int64T])
-          [rval] <- destruct rexp (Con "Int" [Int64T])
-          pure $ BinOp opr lval rval
-        SumT (Set.toList -> [Con "Float" [DoubleT]]) -> runDef $ do
-          [lval] <- destruct lexp (Con "Float" [DoubleT])
-          [rval] <- destruct rexp (Con "Float" [DoubleT])
-          pure $ BinOp opr lval rval
-        SumT (Set.toList -> [Con "Char" [CharT]]) -> runDef $ do
-          [lval] <- destruct lexp (Con "Char" [CharT])
-          [rval] <- destruct rexp (Con "Char" [CharT])
-          pure $ BinOp opr lval rval
-        SumT (Set.toList -> [Con "False" [], Con "True" []]) -> runDef $ do
-          lval <- bind lexp
-          rval <- bind rexp
-          -- lval == rval
-          -- -> if lval then (if rval then true else false) else (if rval then false else true)
-          -- -> if lval then rval else (if rval then false else true)
-          -- -> if lval then rval else (if rval then lval else true)
-          let whenTrue = Unpack (Con "True" []) [] (Atom rval)
-          whenFalse <- do
-            lvalHole <- newId (C.typeOf lval) "lval"
-            rvalHole <- newId (C.typeOf rval) "rval"
-            whenFalse <- boolValue True
-            pure $
-              Bind lvalHole $
-                Match
-                  (Atom rval)
-                  (Unpack (Con "True" []) [] (Atom lval) :| [Bind rvalHole whenFalse])
-          pure $ Match (Atom lval) (whenTrue :| [whenFalse])
-        _ -> errorDoc $ "not implemented:" <+> pPrint opr $$ pPrint lexp $$ pPrint rexp
+      result <-
+        bind =<< case C.typeOf lexp of
+          SumT (Set.toList -> [Con "Int" [Int64T]]) -> do
+            [lval] <- destruct lexp (Con "Int" [Int64T])
+            [rval] <- destruct rexp (Con "Int" [Int64T])
+            pure $ BinOp opr lval rval
+          SumT (Set.toList -> [Con "Float" [DoubleT]]) -> do
+            [lval] <- destruct lexp (Con "Float" [DoubleT])
+            [rval] <- destruct rexp (Con "Float" [DoubleT])
+            pure $ BinOp opr lval rval
+          SumT (Set.toList -> [Con "Char" [CharT]]) -> do
+            [lval] <- destruct lexp (Con "Char" [CharT])
+            [rval] <- destruct rexp (Con "Char" [CharT])
+            pure $ BinOp opr lval rval
+          SumT (Set.toList -> [Con "Bool" [BoolT]]) -> do
+            [lval] <- destruct lexp (Con "Bool" [BoolT])
+            [rval] <- destruct rexp (Con "Bool" [BoolT])
+            pure $ BinOp opr lval rval
+          _ -> errorDoc $ "not implemented:" <+> pPrint opr $$ pPrint lexp $$ pPrint rexp
+      let ty = SumT $ Set.singleton (Con "Bool" [BoolT])
+      Atom <$> let_ ty (Pack ty (Con "Bool" [BoolT]) [result])
 toExp (S.Match _ e cs) = do
   e <- toExp e
   cs <- traverse (\(p, v) -> crushPat p $ toExp v) cs

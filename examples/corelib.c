@@ -31,12 +31,13 @@ Int* new_Int(int64_t x) {
 
 typedef struct {
   int64_t tag;
-  struct {} payload;
+  int8_t payload;
 } Bool;
 
 Bool* new_Bool(bool x) {
   Bool* val = GC_MALLOC(sizeof(Bool));
-  val->tag = x;
+  val->tag = 0;
+  val->payload = x;
   return val;
 }
 
@@ -51,7 +52,7 @@ Unit* print_int(Int* x) {
 }
 
 Unit* print_bool(Bool* x) {
-  if (x->tag) {
+  if (x->payload) {
     printf("true");
   } else {
     printf("false");

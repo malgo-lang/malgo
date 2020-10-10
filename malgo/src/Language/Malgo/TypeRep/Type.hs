@@ -56,7 +56,7 @@ instance Pretty TyCon where
 instance C.HasType Type where
   typeOf (TyApp IntC []) = SumT [Con "Int" [Int64T]]
   typeOf (TyApp FloatC []) = SumT [Con "Float" [DoubleT]]
-  typeOf (TyApp BoolC []) = SumT [Con "True" [], Con "False" []]
+  typeOf (TyApp BoolC []) = SumT [Con "Bool" [BoolT]]
   typeOf (TyApp CharC []) = SumT [Con "Char" [CharT]]
   typeOf (TyApp StringC []) = SumT [Con "String" [StringT]]
   typeOf (TyApp TupleC xs) = SumT [Con ("Tuple" <> show (length xs)) (map C.typeOf xs)]

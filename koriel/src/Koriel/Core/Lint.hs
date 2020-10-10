@@ -91,7 +91,8 @@ lintExp (BinOp o x y) = do
     Le -> match x y
     Gt -> match x y
     Ge -> match x y
-    _ -> throwError "And and Or is not supported"
+    And -> match x BoolT >> match y BoolT
+    Or -> match x BoolT >> match y BoolT
 lintExp (ArrayRead a i) = do
   lintAtom a
   lintAtom i

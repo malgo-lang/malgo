@@ -35,6 +35,7 @@ data Type
   | DoubleT
   | CharT
   | StringT
+  | BoolT
   | DataT String [Type]
   | SumT (Set Con)
   | ArrayT Type
@@ -51,6 +52,7 @@ instance Pretty Type where
   pPrint DoubleT = "Double#"
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
+  pPrint BoolT = "Bool#"
   pPrint (DataT n ts) = parens $ pPrint n <+> sep (map pPrint ts)
   pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
   pPrint (ArrayT t) = brackets $ pPrint t

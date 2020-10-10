@@ -39,6 +39,7 @@ data Unboxed
   | Double Double
   | Char Char
   | String String
+  | Bool Bool
   deriving stock (Eq, Ord, Show)
 
 instance HasType Unboxed where
@@ -48,6 +49,7 @@ instance HasType Unboxed where
   typeOf Double {} = DoubleT
   typeOf Char {} = CharT
   typeOf String {} = StringT
+  typeOf Bool {} = BoolT
 
 instance Pretty Unboxed where
   pPrint (Int32 x) = pPrint x
@@ -56,6 +58,8 @@ instance Pretty Unboxed where
   pPrint (Double x) = pPrint x
   pPrint (Char x) = quotes (pPrint x)
   pPrint (String x) = doubleQuotes (text x)
+  pPrint (Bool True) = "True#"
+  pPrint (Bool False) = "False#"
 
 {-
 Atoms  a ::= unboxed | x
@@ -148,7 +152,7 @@ instance HasType a => HasType (Exp a) where
     And -> boolT
     Or -> boolT
     where
-      boolT = SumT [Con "True" [], Con "False" []]
+      boolT = BoolT
   typeOf (ArrayRead a _) = case typeOf a of
     ArrayT t -> t
     _ -> bug Unreachable
