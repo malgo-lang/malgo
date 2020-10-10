@@ -11,9 +11,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
+{-|
+malgoとgriffの共通中間表現。
+A正規形に近い。
+-}
 module Koriel.Core.Core where
 
-import Data.Set.Optics
+import qualified Data.Set as Set
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
@@ -70,7 +74,7 @@ instance Pretty a => Pretty (Atom a) where
   pPrint (Unboxed x) = pPrint x
 
 instance HasFreeVar Atom where
-  freevars (Var x) = setOf equality x
+  freevars (Var x) = Set.singleton x
   freevars Unboxed {} = mempty
 
 class HasAtom f where

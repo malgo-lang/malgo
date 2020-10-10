@@ -11,6 +11,8 @@
 {-# LANGUAGE ViewPatterns #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
+-- |
+-- LLVM IRの生成
 module Koriel.Core.CodeGen
   ( codeGen,
   )
@@ -23,7 +25,7 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
 import Data.Either (partitionEithers)
-import Data.List.Extra (mconcatMap)
+import Data.List.Extra (headDef, mconcatMap)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.String.Conversions
@@ -325,17 +327,13 @@ genExp (Match e cs) k = genExp e $ \eOpr -> mdo
   -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
   -- TODO: genExpが正しい型の値を継続に渡すように変更する
   eOpr' <- bitcast eOpr (convType $ C.typeOf e)
-  let union = case C.typeOf e of
-        SumT x -> x
-        _ -> mempty
   br switchBlock
-  (defs, labels) <- partitionEithers . toList <$> traverse (genUnpack eOpr' union k) cs
-  defaultLabel <- case defs of
-    (l : _) -> pure l
-    _ -> do
-      l <- block
-      unreachable
-      pure l
+  -- 各ケースのコードとラベルを生成する
+  -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+  (defs, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (case C.typeOf e of SumT x -> x; _ -> mempty) k) cs
+  -- defsの先頭を取り出し、switchのデフォルトケースとする
+  -- defsが空の場合、デフォルトケースはunreachableにジャンプする
+  defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defs
   switchBlock <- block
   tagOpr <- case C.typeOf e of
     SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
@@ -346,7 +344,7 @@ genExp (Cast ty x) k = do
   k =<< bitcast xOpr (convType ty)
 genExp (Error _) _ = unreachable
 
-genUnpack ::
+genCase ::
   ( MonadReader OprMap m,
     MonadUniq m,
     MonadModuleBuilder m,
@@ -360,7 +358,7 @@ genUnpack ::
   (Operand -> m ()) ->
   Case (Id C.Type) ->
   m (Either LLVM.AST.Name (Constant, LLVM.AST.Name))
-genUnpack scrutinee cs k = \case
+genCase scrutinee cs k = \case
   Bind x e -> do
     label <- block
     void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
