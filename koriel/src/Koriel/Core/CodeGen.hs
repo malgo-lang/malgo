@@ -330,7 +330,7 @@ genExp (Match e cs) k = genExp e $ \eOpr -> mdo
   br switchBlock
   -- 各ケースのコードとラベルを生成する
   -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-  (defs, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (case C.typeOf e of SumT x -> x; _ -> mempty) k) cs
+  (defs, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (fromMaybe mempty $ e ^? to C.typeOf % _SumT) k) cs
   -- defsの先頭を取り出し、switchのデフォルトケースとする
   -- defsが空の場合、デフォルトケースはunreachableにジャンプする
   defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defs
@@ -407,15 +407,18 @@ genObj ::
   Obj (Id C.Type) ->
   m (Map (Id C.Type) Operand)
 genObj funName (Fun ps e) = do
+  -- クロージャの元になる関数を生成する
   name <- toName <$> newId () (funName ^. idName <> "_closure")
   func <- function name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug Unreachable
     (rawCapture : ps') -> do
+      -- キャプチャした変数が詰まっている構造体を展開する
       capture <- bitcast rawCapture (ptr capType)
       env <- ifoldMapA ?? fvs $ \i fv ->
         Map.singleton fv <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
       let env' = Map.fromList $ zip ps ps'
       local (over valueMap ((env <> env') <>)) $ genExp e ret
+  -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType
   ifor_ fvs $ \i fv -> do
     fvOpr <- findVar fv
@@ -426,6 +429,7 @@ genObj funName (Fun ps e) = do
   pure $ Map.singleton funName closAddr
   where
     fvs = toList $ freevars (Fun ps e)
+    -- キャプチャされる変数を詰める構造体の型
     capType = StructureType False (map (convType . C.typeOf) fvs)
     psTypes = ptr i8 : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
