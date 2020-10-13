@@ -1,8 +1,21 @@
 # KaGaMi
 
-[![Build Status](https://travis-ci.org/takoeight0821/malgo.svg?branch=master)](https://travis-ci.org/takoeight0821/malgo)
+[![Build Status](https://travis-ci.org/takoeight0821/kagami.svg?branch=master)](https://travis-ci.org/takoeight0821/kagami)
 
-TODO: A short description of KaGaMi project.
+Kagami is a collection of toy programming language implementaions and toolchain.
+
+## Koriel
+
+Some utilities for Kagami and the implementation of the Core internal representation.
+
+## Malgo
+
+A simple functional programming language inspired by MinCaml and Tiger.
+
+## Griff
+
+A functional programming language.
+Its syntax is based on Haskell.
 
 ## Requirement
 
