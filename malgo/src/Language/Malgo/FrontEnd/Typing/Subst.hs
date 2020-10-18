@@ -23,7 +23,7 @@ newtype Subst = Subst {unwrapSubst :: Map TyVar Type}
 instance Ixed Subst
 
 instance At Subst where
-  at k = lensVL $ \f (Subst m) -> Subst <$> Map.alterF f k m
+  at k f (Subst m) = Subst <$> Map.alterF f k m
 
 type instance Index Subst = TyVar
 

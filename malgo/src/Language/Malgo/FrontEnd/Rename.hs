@@ -37,22 +37,12 @@ makeLenses ''Known
 rename :: (MonadIO m, MonadMalgo m, MonadUniq m) => Expr String -> m (Expr (Id ()))
 rename s = runReaderT (renameExpr s) $ Known mempty mempty
 
-withKnowns ::
-  (MonadUniq m, MonadReader Known m, Is k A_Setter) =>
-  Optic' k is Known (Map String (Id ())) ->
-  [String] ->
-  m a ->
-  m a
+withKnowns :: (MonadUniq m, MonadReader s m) => ASetter' s (Map String (Id ())) -> [String] -> m a -> m a
 withKnowns lens ks m = do
   vs <- mapM (newId ()) ks
   local (over lens (Map.fromList (zip ks vs) <>)) m
 
-getId ::
-  (Is k A_Getter, MonadReader Known m, MonadMalgo m) =>
-  SourcePos ->
-  Optic' k is Known (Map String (Id ())) ->
-  String ->
-  m (Id ())
+getId :: (MonadReader Known m, MonadMalgo m) => SourcePos -> Getting (Map String (Id ())) Known (Map String (Id ())) -> String -> m (Id ())
 getId pos lens name = do
   k <- view lens <$> ask
   case view (at name) k of
@@ -106,7 +96,7 @@ renameExpr (Let pos0 (ExDec pos1 name typ orig) e) =
         <$> (ExDec pos1 <$> getId pos1 var name <*> renameSType pos1 typ <*> pure orig)
         <*> renameExpr e
 renameExpr (If pos c t f) = If pos <$> renameExpr c <*> renameExpr t <*> renameExpr f
-renameExpr (BinOp pos op x y) = BinOp pos op <$> renameExpr x <*> renameExpr y
+renameExpr (BinOp pos o x y) = BinOp pos o <$> renameExpr x <*> renameExpr y
 renameExpr (Match pos scrutinee clauses) =
   Match pos <$> renameExpr scrutinee <*> mapM renameClause clauses
 

@@ -147,8 +147,8 @@ typingExpr (If pos c t f) = do
   ft <- typingExpr f
   addCs pos [ct :~ boolTy, tt :~ ft]
   pure ft
-typingExpr (BinOp pos op x y) = do
-  opType <- typingOp op
+typingExpr (BinOp pos o x y) = do
+  opType <- typingOp o
   xt <- typingExpr x
   yt <- typingExpr y
   resultType <- newTyMeta

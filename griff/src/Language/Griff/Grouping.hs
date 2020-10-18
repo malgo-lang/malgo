@@ -38,7 +38,20 @@ type Infix x = (XInfix x, Assoc, Int, XId x)
 
 type Forign x = (XForign x, XId x, Type x)
 
-makeLenses ''BindGroup
+scDefs :: Lens' (BindGroup x) [[ScDef x]]
+scDefs = lens _scDefs (\e x -> e { _scDefs = x })
+
+scSigs :: Lens' (BindGroup x) [ScSig x]
+scSigs = lens _scSigs (\e x -> e { _scSigs = x })
+
+dataDefs :: Lens' (BindGroup x) [DataDef x]
+dataDefs = lens _dataDefs (\e x -> e { _dataDefs = x })
+
+infixs :: Lens' (BindGroup x) [Infix x]
+infixs = lens _infixs (\e x -> e { _infixs = x })
+
+forigns :: Lens' (BindGroup x) [Forign x]
+forigns = lens _forigns (\e x -> e { _forigns = x })
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindGroup x)
 

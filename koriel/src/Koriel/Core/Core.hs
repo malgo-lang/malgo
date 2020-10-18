@@ -11,10 +11,9 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-{-|
-malgoとgriffの共通中間表現。
-A正規形に近い。
--}
+-- |
+-- malgoとgriffの共通中間表現。
+-- A正規形に近い。
 module Koriel.Core.Core where
 
 import qualified Data.Set as Set
@@ -85,7 +84,7 @@ class HasAtom f where
   atom :: Traversal' (f a) (Atom a)
 
 instance HasAtom Atom where
-  atom = castOptic equality
+  atom = id
 
 {-
 Expressions  e ::= a               Atom
@@ -190,7 +189,7 @@ instance HasFreeVar Exp where
   freevars (Error _) = mempty
 
 instance HasAtom Exp where
-  atom = traversalVL $ \f -> \case
+  atom f = \case
     Atom x -> Atom <$> f x
     Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
@@ -199,8 +198,8 @@ instance HasAtom Exp where
     ArrayRead a b -> ArrayRead <$> f a <*> f b
     ArrayWrite a b c -> ArrayWrite <$> f a <*> f b <*> f c
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverseOf (traversed % _2 % atom) f xs <*> traverseOf atom f e
-    Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed % atom) f cs
+    Let xs e -> Let <$> traverseOf (traversed . _2 . atom) f xs <*> traverseOf atom f e
+    Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
 
 {-
@@ -231,7 +230,7 @@ instance HasType a => HasType (Case a) where
   typeOf (Bind _ e) = typeOf e
 
 instance HasAtom Case where
-  atom = traversalVL $ \f -> \case
+  atom f = \case
     Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
     Switch u e -> Switch u <$> traverseOf atom f e
     Bind a e -> Bind a <$> traverseOf atom f e
@@ -264,9 +263,9 @@ instance HasType a => HasType (Obj a) where
   typeOf (Array a _) = ArrayT $ typeOf a
 
 instance HasAtom Obj where
-  atom = traversalVL $ \f -> \case
+  atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
-    Pack ty con xs -> Pack ty con <$> traverseOf (traversed % atom) f xs
+    Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
     Array a n -> Array <$> traverseOf atom f a <*> traverseOf atom f n
 
 {-
@@ -289,19 +288,19 @@ instance Pretty a => Pretty (Program a) where
         )
 
 appObj :: Traversal' (Obj a) (Exp a)
-appObj = traversalVL $ \f -> \case
+appObj f = \case
   Fun ps e -> Fun ps <$> f e
   o -> pure o
 
 appCase :: Traversal' (Case a) (Exp a)
-appCase = traversalVL $ \f -> \case
+appCase f = \case
   Unpack con ps e -> Unpack con ps <$> f e
   Switch u e -> Switch u <$> f e
   Bind x e -> Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram = traversalVL $ \f Program {mainExp, topFuncs} ->
-  Program <$> traverseOf (traversed % _2 % _2) f topFuncs <*> f mainExp
+appProgram f Program {mainExp, topFuncs} =
+  Program <$> traverseOf (traversed . _2 . _2) f topFuncs <*> f mainExp
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadUniq, MonadIO, MonadTrans, MonadState s, MonadReader r)

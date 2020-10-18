@@ -42,7 +42,12 @@ data Type
   | AnyT
   deriving stock (Eq, Show, Ord)
 
-makePrisms ''Type
+_SumT :: Traversal' Type (Set Con)
+_SumT f (SumT cs) = SumT <$> f cs
+_SumT f (ts :-> t) = (:->) <$> traverse (_SumT f) ts <*> _SumT f t
+_SumT f (DataT name ts) = DataT name <$> traverse (_SumT f) ts
+_SumT f (ArrayT t) = ArrayT <$> _SumT f t
+_SumT _ t = pure t
 
 instance Pretty Type where
   pPrint (a :-> b) = parens (sep $ map pPrint a) <+> "->" <+> pPrint b
@@ -68,13 +73,13 @@ instance HasType a => HasType (Id a) where
   typeOf x = typeOf $ x ^. idMeta
 
 tyVar :: Traversal' Type Type
-tyVar = traversalVL $ \f -> \case
-  ps :-> r -> (:->) <$> traverseOf (traversed % tyVar) f ps <*> traverseOf tyVar f r
-  DataT n ts -> DataT n <$> traverseOf (traversed % tyVar) f ts
-  SumT cs -> SumT . fromList <$> traverseOf (traversed % tyVar') f (toList cs)
+tyVar f = \case
+  ps :-> r -> (:->) <$> traverseOf (traversed . tyVar) f ps <*> traverseOf tyVar f r
+  DataT n ts -> DataT n <$> traverseOf (traversed . tyVar) f ts
+  SumT cs -> SumT . fromList <$> traverseOf (traversed . tyVar') f (toList cs)
   ArrayT t -> ArrayT <$> traverseOf tyVar f t
   AnyT -> f AnyT
   t -> pure t
 
 tyVar' :: Traversal' Con Type
-tyVar' = traversalVL $ \f (Con tag ts) -> Con tag <$> traverseOf (traversed % tyVar) f ts
+tyVar' f (Con tag ts) = Con tag <$> traverseOf (traversed . tyVar) f ts

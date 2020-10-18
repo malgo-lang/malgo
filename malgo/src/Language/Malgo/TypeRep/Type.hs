@@ -72,7 +72,7 @@ instance HasType Type where
   typeOf = id
 
 instance HasType a => HasType (Id a) where
-  typeOf n = n ^. idMeta % to typeOf
+  typeOf n = n ^. idMeta . to typeOf
 
 removeExplictForall :: Scheme -> Type
 removeExplictForall (Forall _ t) = t

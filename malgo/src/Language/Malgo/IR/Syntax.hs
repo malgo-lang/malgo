@@ -105,7 +105,7 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Seq _ e1 e2) = parens $ "seq" <+> (pPrint e1 $+$ pPrint e2)
   pPrint (Let _ decl body) = parens $ "let" <+> pPrint decl $+$ pPrint body
   pPrint (If _ c t f) = parens $ "if" <+> pPrint c $+$ pPrint t $+$ pPrint f
-  pPrint (BinOp _ op x y) = parens $ sep [pPrint op, pPrint x, pPrint y]
+  pPrint (BinOp _ o x y) = parens $ sep [pPrint o, pPrint x, pPrint y]
   pPrint (Match _ s cs) =
     parens $
       "match" <+> pPrint s

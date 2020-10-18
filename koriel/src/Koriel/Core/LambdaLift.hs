@@ -28,7 +28,11 @@ data Env = Env
     _knowns :: Set (Id Type)
   }
 
-makeLensesFor [("_funcs", "funcs"), ("_knowns", "knowns")] ''Env
+funcs :: Lens' Env (Map (Id Type) ([Id Type], Exp (Id Type)))
+funcs = lens _funcs (\e x -> e { _funcs = x })
+
+knowns :: Lens' Env (Set (Id Type))
+knowns = lens _knowns (\e x -> e { _knowns = x })
 
 lambdalift :: MonadUniq m => Program (Id Type) -> m (Program (Id Type))
 lambdalift Program {mainExp, topFuncs} =
@@ -72,7 +76,7 @@ llift (Let [(n, Fun as body)] e) = do
       newFun <- def (n ^. idName) (toList fvs <> as) body'
       Let [(n, Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
-llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed % appCase) llift cs
+llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
 
 def :: (MonadUniq m, MonadState Env m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)

@@ -31,7 +31,8 @@ newtype RnState = RnState {_infixInfo :: Map RnId (Assoc, Int)}
   deriving stock (Show)
   deriving newtype (Semigroup, Monoid)
 
-makeLenses ''RnState
+infixInfo :: Lens' RnState (Map RnId (Assoc, Int))
+infixInfo = lens _infixInfo (\s x -> s { _infixInfo = x})
 
 data RnEnv = RnEnv
   { _varEnv :: Map PsId RnId,
@@ -45,7 +46,11 @@ instance Semigroup RnEnv where
 instance Monoid RnEnv where
   mempty = RnEnv mempty mempty
 
-makeLenses ''RnEnv
+varEnv :: Lens' RnEnv (Map PsId RnId)
+varEnv = lens _varEnv (\e x -> e { _varEnv = x})
+
+typeEnv :: Lens' RnEnv (Map PsTId RnTId)
+typeEnv = lens _typeEnv (\e x -> e { _typeEnv = x})
 
 genRnState :: Monad m => m RnState
 genRnState = pure $ RnState mempty

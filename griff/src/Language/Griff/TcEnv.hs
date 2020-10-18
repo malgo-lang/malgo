@@ -34,7 +34,17 @@ instance Semigroup TcEnv where
 instance Monoid TcEnv where
   mempty = TcEnv mempty mempty mempty mempty
 
-makeLenses ''TcEnv
+varEnv :: Lens' TcEnv (Map RnId Scheme)
+varEnv = lens _varEnv (\e x -> e {_varEnv = x})
+
+typeEnv :: Lens' TcEnv (Map RnTId Type)
+typeEnv = lens _typeEnv (\e x -> e {_typeEnv = x})
+
+tyConEnv :: Lens' TcEnv (Map (Id Kind) ([TyVar], [(RnId, Type)]))
+tyConEnv = lens _tyConEnv (\e x -> e {_tyConEnv = x})
+
+rnEnv :: Lens' TcEnv RnEnv
+rnEnv = lens _rnEnv (\e x -> e {_rnEnv = x})
 
 genTcEnv :: MonadUniq m => RnEnv -> m TcEnv
 genTcEnv rnEnv = do

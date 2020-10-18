@@ -37,7 +37,7 @@ rendered :: Getter Doc String
 rendered = to P.render
 
 toText :: Pretty a => Getter a String
-toText = pretty % rendered
+toText = pretty . rendered
 
 errorDoc :: HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ P.render x

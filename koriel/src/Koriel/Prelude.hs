@@ -11,7 +11,7 @@
 module Koriel.Prelude
   ( module Prelude,
     module Control.Applicative,
-    module Optics,
+    module Control.Lens,
     module Control.Monad,
     module Control.Monad.IO.Class,
     module Control.Monad.Reader.Class,
@@ -39,7 +39,6 @@ module Koriel.Prelude
     foldMapA,
     ifoldMapA,
     (<<$>>),
-    (??),
     ordNub,
     replaceOf,
     IORef,
@@ -96,7 +95,7 @@ import GHC.Stack
     callStack,
     prettyCallStack,
   )
-import Optics
+import Control.Lens
 import qualified Text.Megaparsec.Pos as Megaparsec
 import Text.Parsec.Pos (SourcePos)
 import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
@@ -116,8 +115,8 @@ foldMapA :: forall b m f a. (Semigroup b, Monoid b, Applicative m, Foldable f) =
 foldMapA = coerce (foldMap :: (a -> Ap m b) -> f a -> Ap m b)
 {-# INLINE foldMapA #-}
 
-ifoldMapA :: forall i b m f a. (Semigroup b, Monoid b, Applicative m, FoldableWithIndex i f) => (i -> a -> m b) -> f a -> m b
-ifoldMapA = coerce (ifoldMap :: (i -> a -> Ap m b) -> f a -> Ap m b)
+ifoldMapA :: forall b m a. (Semigroup b, Monoid b, Applicative m) => (Int -> a -> m b) -> [a] -> m b
+ifoldMapA = coerce (ifoldMap :: (Int -> a -> Ap m b) -> [a] -> Ap m b)
 {-# INLINE ifoldMapA #-}
 
 infixl 4 <<$>>
@@ -125,11 +124,6 @@ infixl 4 <<$>>
 (<<$>>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
 (<<$>>) = fmap . fmap
 {-# INLINE (<<$>>) #-}
-
-infixl 1 ??
-
-(??) :: Functor f => f (a -> b) -> a -> f b
-fab ?? a = fmap ($ a) fab
 
 ordNub :: Ord a => [a] -> [a]
 ordNub = go Set.empty
@@ -139,7 +133,7 @@ ordNub = go Set.empty
       | x `Set.member` s = go s xs
       | otherwise = x : go (Set.insert x s) xs
 
-replaceOf :: (Is k A_Setter, Eq b) => Optic k is s t b b -> b -> b -> s -> t
+replaceOf :: Eq b => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
 
 newIORef :: MonadIO m => a -> m (IORef a)

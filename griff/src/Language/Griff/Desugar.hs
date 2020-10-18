@@ -47,7 +47,11 @@ instance Semigroup DesugarEnv where
 instance Monoid DesugarEnv where
   mempty = DesugarEnv mempty mempty
 
-makeLenses ''DesugarEnv
+varEnv :: Lens' DesugarEnv (Map (Id ()) (Id C.Type))
+varEnv = lens _varEnv (\e x -> e {_varEnv = x})
+
+tcEnv :: Lens' DesugarEnv TcEnv
+tcEnv = lens _tcEnv (\e x -> e {_tcEnv = x})
 
 desugar ::
   (MonadUniq m, MonadFail m, MonadIO m) =>
@@ -63,7 +67,7 @@ genPrimitive ::
   TcEnv ->
   m (DesugarEnv, [(Id C.Type, Obj (Id C.Type))])
 genPrimitive env = do
-  let add_i64 = fromJust $ view (Tc.rnEnv % Rn.varEnv % at "add_i64#") env
+  let add_i64 = fromJust $ view (Tc.rnEnv . Rn.varEnv . at "add_i64#") env
   let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
   add_i64' <- join $ newId <$> dcType add_i64_type <*> pure "add_i64#"
   add_i64_param <- newId (SumT $ Set.singleton (C.Con "Tuple2" [C.Int64T, C.Int64T])) "$p"
@@ -71,7 +75,7 @@ genPrimitive env = do
     runDef $ do
       [x, y] <- destruct (Atom $ C.Var add_i64_param) (C.Con "Tuple2" [C.Int64T, C.Int64T])
       pure $ BinOp Add x y
-  let newEnv = mempty & varEnv % at add_i64 ?~ add_i64' & tcEnv .~ env
+  let newEnv = mempty & varEnv . at add_i64 ?~ add_i64' & tcEnv .~ env
   pure (newEnv, [(add_i64', add_i64_fun)])
 
 dcBindGroup ::
@@ -113,7 +117,7 @@ dcScDefs ::
   f (DesugarEnv, [(Id C.Type, Obj (Id C.Type))])
 dcScDefs ds = do
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
-    Just (Forall _ fType) <- asks $ view (tcEnv % Tc.varEnv % at f)
+    Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
     f' <- join $ newId <$> dcType fType <*> pure (f ^. idName)
     pure $ mempty & varEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
@@ -154,7 +158,7 @@ dcDataDef ::
   m (DesugarEnv, [[(Id C.Type, Obj (Id C.Type))]])
 dcDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
-    Just (GT.TyCon name') <- asks $ view (tcEnv % Tc.typeEnv % at name)
+    Just (GT.TyCon name') <- asks $ view (tcEnv . Tc.typeEnv . at name)
     conMap <- lookupConMap name' []
     let Just conType = List.lookup conName conMap
     let (paramTypes, retType) = splitTyArr conType
@@ -243,7 +247,7 @@ dcExp (G.Fn x cs@(Clause _ ps e : _)) = do
   (pss, es) <- first List.transpose <$> mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
   (obj, inner) <- curryFun ps' body
-  v <- join $ newId <$> x ^. toType % to dcType <*> pure "$fun"
+  v <- join $ newId <$> x ^. toType . to dcType <*> pure "$fun"
   pure $ Let ((v, obj) : inner) $ Atom $ C.Var v
 dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
@@ -434,8 +438,8 @@ lookupConMap ::
   [GT.Type] ->
   m [(Id (), GT.Type)]
 lookupConMap con ts = do
-  Just (as, conMap) <- asks $ view (tcEnv % Tc.tyConEnv % at con)
-  pure $ over (mapped % _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
+  Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
+  pure $ over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
 
 unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t@GT.TyApp {} = do
@@ -463,7 +467,7 @@ unfoldType t = dcType t
 
 lookupName :: (HasCallStack, MonadReader DesugarEnv m) => Id () -> m (Id C.Type)
 lookupName name = do
-  mname' <- asks $ view (varEnv % at name)
+  mname' <- asks $ view (varEnv . at name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint name)

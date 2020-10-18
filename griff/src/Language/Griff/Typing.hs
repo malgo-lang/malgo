@@ -137,13 +137,13 @@ tcDecls ds = do
           local (env <>) $ do
             env <-
               ask
-                >>= traverseOf (T.varEnv % traversed) zonkScheme
-                >>= traverseOf (T.typeEnv % traversed) zonkType
-                >>= traverseOf (T.tyConEnv % traversed % _2 % traversed % _2) zonkType
-            forigns'' <- traverseOf (traversed % _1) (overType zonkType) forigns'
+                >>= traverseOf (T.varEnv . traversed) zonkScheme
+                >>= traverseOf (T.typeEnv . traversed) zonkType
+                >>= traverseOf (T.tyConEnv . traversed . _2 . traversed . _2) zonkType
+            forigns'' <- traverseOf (traversed . _1) (overType zonkType) forigns'
             scDefs'' <-
-              traverseOf (traversed % traversed % _1) (overType zonkType)
-                =<< traverseOf (traversed % traversed % _4) (overType zonkType) scDefs'
+              traverseOf (traversed . traversed . _1) (overType zonkType)
+                =<< traverseOf (traversed . traversed . _4) (overType zonkType) scDefs'
             pure
               ( BindGroup
                   { _dataDefs = dataDefs',
@@ -157,14 +157,14 @@ tcDecls ds = do
 
 lookupType :: (MonadReader TcEnv m) => SourcePos -> RnTId -> m Type
 lookupType pos name = do
-  mtype <- asks $ view $ T.typeEnv % at name
+  mtype <- asks $ view $ T.typeEnv . at name
   case mtype of
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
     Just typ -> pure typ
 
 lookupVar :: (MonadReader TcEnv m) => SourcePos -> RnId -> m Scheme
 lookupVar pos name = do
-  mscheme <- asks $ view $ T.varEnv % at name
+  mscheme <- asks $ view $ T.varEnv . at name
   case mscheme of
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
     Just scheme -> pure scheme
@@ -182,7 +182,7 @@ tcDataDefs ds = do
     (conEnvs, ds') <- mapAndUnzipM ?? ds $ \(pos, name, params, cons) -> do
       paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
       local (over T.typeEnv (paramsEnv <>)) $ do
-        cons' <- traverseOf (traversed % _2) ?? cons $ \args -> do
+        cons' <- traverseOf (traversed . _2) ?? cons $ \args -> do
           -- 値コンストラクタの型を構築
           name' <- lookupType pos name
           params' <- traverse (lookupType pos) params
@@ -192,7 +192,7 @@ tcDataDefs ds = do
         fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
         as <- traverse (\(tv, nameChar) -> newId (kind tv) [nameChar]) $ zip fvs ['a' ..]
         zipWithM_ writeMetaTv fvs (map TyVar as)
-        Just (TyCon dataName) <- asks $ view $ T.typeEnv % at name
+        Just (TyCon dataName) <- asks $ view $ T.typeEnv . at name
         pure
           ( mempty
               & T.varEnv
@@ -235,7 +235,7 @@ prepareTcScDefs ::
   f (ScDef (Griff 'Rename)) ->
   m (Map (Id ()) Scheme)
 prepareTcScDefs ds = foldMapA ?? ds $ \(_, name, _, _) -> do
-  mscheme <- asks $ view $ T.varEnv % at name
+  mscheme <- asks $ view $ T.varEnv . at name
   case mscheme of
     Nothing -> Map.singleton name . Forall [] . TyMeta <$> newMetaTv Star
     Just _ -> pure mempty
@@ -266,7 +266,7 @@ tcScDefs ds = do
   fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) nts
   as <- traverse (\(tv, nameChar) -> newId (kind tv) [nameChar]) $ zip fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
-  nts' <- traverseOf (traversed % _2) (fmap (Forall as) . zonkType) nts
+  nts' <- traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
   pure (mempty & T.varEnv .~ Map.fromList nts', defs)
 
 -- coercion

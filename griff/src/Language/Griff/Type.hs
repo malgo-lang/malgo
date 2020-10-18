@@ -4,6 +4,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -135,7 +136,15 @@ data Type
   | TyMeta MetaTv
   deriving stock (Eq, Show, Ord)
 
-makePrisms ''Type
+_TyArr :: Prism' Type (Type, Type)
+_TyArr = prism' (uncurry TyArr) $ \case
+  TyArr t1 t2 -> Just (t1, t2)
+  _ -> Nothing
+
+_TyLazy :: Prism' Type Type
+_TyLazy = prism' TyLazy $ \case
+  TyLazy t -> Just t
+  _ -> Nothing
 
 instance HasKind Type where
   kind (TyApp t _) = case kind t of
@@ -166,7 +175,7 @@ instance Pretty Type where
 -------------------
 
 class HasType a where
-  toType :: Optic' A_Getter NoIx a Type
+  toType :: Getter a Type
   overType :: MonadMetaTv m => (Type -> m Type) -> a -> m a
 
 instance HasType Type where
@@ -178,7 +187,7 @@ instance HasType Scheme where
   overType f (Forall vs t) = Forall vs <$> f t
 
 instance HasType a => HasType (Id a) where
-  toType = idMeta % toType
+  toType = idMeta . toType
   overType f n = traverseOf idMeta (overType f) n
 
 data WithType a = WithType a Type
