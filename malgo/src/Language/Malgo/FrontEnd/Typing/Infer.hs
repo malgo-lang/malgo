@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -56,7 +57,7 @@ letVar env var ty cs = case solve cs of
   Left doc -> errorDoc doc
 
 defineVar :: MonadState Env m => Id () -> Scheme -> m ()
-defineVar x t = modify (at x ?~ (x & idMeta .~ t))
+defineVar x t = at x ?= (x & idMeta .~ t)
 
 lookupVar :: (MonadState Env f, MonadUniq f) => Id () -> f Type
 lookupVar x = do
@@ -212,11 +213,10 @@ toType' mt = liftM2 fromMaybe newTyMeta $ traverse toType mt
 
 toType :: MonadUniq m => SType (Id ()) -> StateT STypeVarEnv m Type
 toType (TyVar x) = do
-  kvs <- get
-  (fromMaybe ?? kvs ^. at x) <$> do
-    t <- newTyMeta
-    modify (at x ?~ t)
-    pure t
+  use (at x)
+    >>= \case
+      Nothing -> (at x <?=) =<< newTyMeta
+      Just t -> pure t
 toType TyInt = pure intTy
 toType TyFloat = pure floatTy
 toType TyBool = pure boolTy

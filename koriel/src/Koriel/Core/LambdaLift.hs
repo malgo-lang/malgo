@@ -29,20 +29,17 @@ data Env = Env
   }
 
 funcs :: Lens' Env (Map (Id Type) ([Id Type], Exp (Id Type)))
-funcs = lens _funcs (\e x -> e { _funcs = x })
+funcs = lens _funcs (\e x -> e {_funcs = x})
 
 knowns :: Lens' Env (Set (Id Type))
-knowns = lens _knowns (\e x -> e { _knowns = x })
+knowns = lens _knowns (\e x -> e {_knowns = x})
 
 lambdalift :: MonadUniq m => Program (Id Type) -> m (Program (Id Type))
 lambdalift Program {mainExp, topFuncs} =
   evalStateT ?? Env {_funcs = mempty, _knowns = Set.fromList $ map fst topFuncs} $ do
     topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
-    modify $ \env ->
-      env
-        { _funcs = _funcs env <> Map.fromList topFuncs,
-          _knowns = _knowns env <> Set.fromList (Map.keys $ _funcs env)
-        }
+    funcs <>= Map.fromList topFuncs
+    knowns <>= Set.fromList (map fst topFuncs)
     mainExp <- llift mainExp
     Env {_funcs} <- get
     traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
@@ -60,9 +57,9 @@ llift (Let [(n, Fun as body)] e) = do
   backup <- get
   ks <- use knowns
   -- nがknownだと仮定してlambda liftする
-  modifying knowns $ Set.insert n
+  knowns . at n ?= ()
   body' <- llift body
-  modifying funcs $ Map.insert n (as, body')
+  funcs . at n ?= (as, body')
   (e', _) <- localState $ llift e
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
@@ -82,5 +79,5 @@ llift e = pure e
 def :: (MonadUniq m, MonadState Env m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
   f <- newId (map typeOf xs :-> typeOf e) ("$" <> name)
-  modifying funcs $ Map.insert f (xs, e)
+  funcs . at f ?= (xs, e)
   pure f

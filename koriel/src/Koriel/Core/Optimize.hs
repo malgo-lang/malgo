@@ -69,7 +69,7 @@ checkInlineable ::
 checkInlineable (f, Fun ps v) = do
   level <- ask
   -- 変数の数がinlineSize以下ならインライン展開する
-  when (length v <= level || f `notElem` freevars v) $ modify $ at f ?~ (ps, v)
+  when (length v <= level || f `notElem` freevars v) $ at f ?= (ps, v)
 checkInlineable _ = pure ()
 
 lookupCallInline ::

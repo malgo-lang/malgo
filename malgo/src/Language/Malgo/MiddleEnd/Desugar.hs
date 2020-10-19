@@ -96,7 +96,7 @@ toExp (S.Call _ f xs) = runDef $ do
 toExp (S.Fn _ ps e) = runDef $ do
   ps' <- traverse ((\p -> newId (C.typeOf p) (p ^. idName)) . fst) ps
   e <- do
-    zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
+    zipWithM_ (\(p, _) p' -> at p ?= p') ps ps'
     toExp e
   Atom <$> let_ (map C.typeOf ps' :-> C.typeOf e) (Fun ps' e)
 toExp (S.Seq _ e1 e2) = runDef $ do
@@ -104,25 +104,24 @@ toExp (S.Seq _ e1 e2) = runDef $ do
   toExp e2
 toExp (S.Let _ (S.ValDec _ a _ v) e) = runDef $ do
   Var v <- cast (C.typeOf a) =<< toExp v
-  modify $ at a ?~ v
+  at a ?= v
   toExp e
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) = case C.typeOf $ prim ^. idMeta of
   ta :-> tb -> runDef $ do
     ps <- traverse (newId ?? "a") ta
     Var prim' <- let_ (ta :-> tb) $ Fun ps $ PrimCall primName (ta :-> tb) (map Var ps)
-    modify $ at prim ?~ prim'
+    at prim ?= prim'
     toExp e
   _ -> bug Unreachable
 toExp (S.Let _ (S.FunDec fs) e) = do
-  for_ fs $ \(_, f, _, _, _) -> do
-    f' <- newId (C.typeOf f) (f ^. idName)
-    modify (at f ?~ f')
+  for_ fs $ \(_, f, _, _, _) ->
+    (at f ?=) =<< newId (C.typeOf f) (f ^. idName)
   Let <$> traverse toFun fs <*> toExp e
   where
     toFun (_, f@(C.typeOf -> _ :-> r), ps, _, body) = do
       ps' <- traverse ((\p -> newId (C.typeOf p) (p ^. idName)) . fst) ps
       body <- runDef $ do
-        zipWithM_ (\(p, _) p' -> modify (at p ?~ p')) ps ps'
+        zipWithM_ (\(p, _) p' -> at p ?= p') ps ps'
         Atom <$> (cast r =<< toExp body)
       f <- findVar f
       pure (f, Fun ps' body)
@@ -154,8 +153,7 @@ crushPat ::
   m (Exp (Id C.Type)) ->
   m (Case (Id C.Type))
 crushPat (S.VarP _ x) = \e -> do
-  x' <- newId (C.typeOf $ typeOf x) (x ^. idName)
-  modify $ at x ?~ x'
+  x' <- (at x <?=) =<< newId (C.typeOf $ typeOf x) (x ^. idName)
   Bind x' <$> e
 crushPat (S.TupleP _ xs) = go xs []
   where

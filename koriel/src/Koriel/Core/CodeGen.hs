@@ -145,15 +145,14 @@ findFun x = do
     Just x -> pure x
     Nothing -> error $ show $ pPrint x <> " is not found"
 
+-- まだ生成していない外部関数を呼び出そうとしたら、externする
+-- すでにexternしている場合は、そのOperandを返す
+-- 同じ名前を2回externできないため
 findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r = do
-  env <- get
-  case env ^. at x of
+  use (at x) >>= \case
     Just x -> pure x
-    Nothing -> do
-      opr <- extern (LLVM.AST.mkName x) ps r
-      modify (at x ?~ opr)
-      pure opr
+    Nothing -> (at x <?=) =<< extern (LLVM.AST.mkName x) ps r
 
 mallocBytes ::
   (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) =>
