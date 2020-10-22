@@ -109,7 +109,7 @@ toExp (S.Let _ (S.ValDec _ a _ v) e) = runDef $ do
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) = case C.typeOf $ prim ^. idMeta of
   ta :-> tb -> runDef $ do
     ps <- traverse (newId ?? "a") ta
-    Var prim' <- let_ (ta :-> tb) $ Fun ps $ PrimCall primName (ta :-> tb) (map Var ps)
+    Var prim' <- let_ (ta :-> tb) $ Fun ps $ ExtCall primName (ta :-> tb) (map Var ps)
     at prim ?= prim'
     toExp e
   _ -> bug Unreachable

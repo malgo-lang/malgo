@@ -219,11 +219,11 @@ genExp (CallDirect f xs) k = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
   k =<< call fOpr (map (,[]) xsOprs)
-genExp (PrimCall name (ps :-> r) xs) k = do
+genExp (ExtCall name (ps :-> r) xs) k = do
   primOpr <- findExt name (map convType ps) (convType r)
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
-genExp (PrimCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
+genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
 genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add

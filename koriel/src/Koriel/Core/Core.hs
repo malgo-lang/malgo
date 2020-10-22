@@ -99,7 +99,7 @@ data Exp a
   = Atom (Atom a)
   | Call (Atom a) [Atom a]
   | CallDirect a [Atom a]
-  | PrimCall String Type [Atom a]
+  | ExtCall String Type [Atom a]
   | BinOp Op (Atom a) (Atom a)
   | ArrayRead (Atom a) (Atom a)
   | ArrayWrite (Atom a) (Atom a) (Atom a)
@@ -125,7 +125,7 @@ instance HasType a => HasType (Exp a) where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug Unreachable
-  typeOf (PrimCall _ t xs) = case t of
+  typeOf (ExtCall _ t xs) = case t of
     ps :-> r -> go ps (map typeOf xs) r
     _ -> bug Unreachable
     where
@@ -165,7 +165,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (PrimCall p _ xs) = parens $ "prim" <+> text p <+> sep (map pPrint xs)
+  pPrint (ExtCall p _ xs) = parens $ "external" <+> text p <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
   pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
@@ -179,7 +179,7 @@ instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
-  freevars (PrimCall _ _ xs) = foldMap freevars xs
+  freevars (ExtCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (ArrayRead a b) = freevars a <> freevars b
   freevars (ArrayWrite a b c) = freevars a <> freevars b <> freevars c
@@ -193,7 +193,7 @@ instance HasAtom Exp where
     Atom x -> Atom <$> f x
     Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
-    PrimCall p t xs -> PrimCall p t <$> traverse f xs
+    ExtCall p t xs -> ExtCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     ArrayRead a b -> ArrayRead <$> f a <*> f b
     ArrayWrite a b c -> ArrayWrite <$> f a <*> f b <*> f c

@@ -51,7 +51,7 @@ llift (Call (Var f) xs) = do
 llift (Let [(n, Fun xs call@Call {})] e) = do
   call' <- llift call
   Let [(n, Fun xs call')] <$> llift e
-llift (Let [(n, o@(Fun _ PrimCall {}))] e) = Let [(n, o)] <$> llift e
+llift (Let [(n, o@(Fun _ ExtCall {}))] e) = Let [(n, o)] <$> llift e
 llift (Let [(n, o@(Fun _ CallDirect {}))] e) = Let [(n, o)] <$> llift e
 llift (Let [(n, Fun as body)] e) = do
   backup <- get

@@ -99,7 +99,7 @@ dcBindGroup bg = do
     buildLet (x : xs) e = Let x (buildLet xs e)
     searchMain ((bindId, Fun [] _) : _) | bindId ^. idName == "main" = Call (C.Var bindId) []
     searchMain (_ : xs) = searchMain xs
-    searchMain _ = C.PrimCall "mainIsNotDefined" ([] :-> AnyT) []
+    searchMain _ = C.ExtCall "mainIsNotDefined" ([] :-> AnyT) []
 
 dcScDefGroup ::
   (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f) =>
@@ -149,7 +149,7 @@ dcForign (x@(WithType (_, primName) _), name, _) = do
   let (paramTypes, _) = splitTyArr (x ^. toType)
   params <- traverse ?? paramTypes $ \paramType -> join $ newId <$> dcType paramType <*> pure "$p"
   primType <- dcType (view toType x)
-  (fun, inner) <- curryFun params $ C.PrimCall primName primType (map C.Var params)
+  (fun, inner) <- curryFun params $ C.ExtCall primName primType (map C.Var params)
   pure (mempty & varEnv .~ Map.singleton name name', (name', fun) : inner)
 
 dcDataDef ::
