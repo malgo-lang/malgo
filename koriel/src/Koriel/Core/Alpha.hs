@@ -63,20 +63,12 @@ alphaFunc (f, (ps, e)) = do
     pure (f', (ps', e'))
 
 alphaExp :: (MonadReader AlphaEnv f, MonadUniq f) => Exp (Id Type) -> f (Exp (Id Type))
-alphaExp (Atom a) = Atom <$> alphaAtom a
-alphaExp (Call f xs) = Call <$> alphaAtom f <*> traverse alphaAtom xs
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
-alphaExp (ExtCall f t xs) = ExtCall f t <$> traverse alphaAtom xs
-alphaExp (BinOp op e1 e2) = BinOp op <$> alphaAtom e1 <*> alphaAtom e2
-alphaExp (ArrayRead arr idx) = ArrayRead <$> alphaAtom arr <*> alphaAtom idx
-alphaExp (ArrayWrite arr idx val) =
-  ArrayWrite <$> alphaAtom arr <*> alphaAtom idx <*> alphaAtom val
-alphaExp (Cast t e) = Cast t <$> alphaAtom e
 alphaExp (Let ds e) = do
   env <- foldMapA ?? ds $ \(n, _) -> Map.singleton n . Var <$> cloneId n
   local (env <>) $ Let <$> traverse (bitraverse lookupId alphaObj) ds <*> alphaExp e
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
-alphaExp e@Error {} = pure e
+alphaExp e = traverseOf atom alphaAtom e
 
 alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x
@@ -86,8 +78,7 @@ alphaObj :: (MonadUniq m, MonadReader AlphaEnv m) => Obj (Id Type) -> m (Obj (Id
 alphaObj (Fun ps e) = do
   ps' <- traverse cloneId ps
   local (Map.fromList (zip ps $ map Var ps') <>) $ Fun ps' <$> alphaExp e
-alphaObj (Pack t c xs) = Pack t c <$> traverse alphaAtom xs
-alphaObj (Array val size) = Array <$> alphaAtom val <*> alphaAtom size
+alphaObj o = traverseOf atom alphaAtom o
 
 alphaCase :: (MonadUniq m, MonadReader AlphaEnv m) => Case (Id Type) -> m (Case (Id Type))
 alphaCase (Unpack c ps e) = do
