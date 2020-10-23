@@ -42,12 +42,10 @@ data Type
   | AnyT
   deriving stock (Eq, Show, Ord)
 
-_SumT :: Traversal' Type (Set Con)
-_SumT f (SumT cs) = SumT <$> f cs
-_SumT f (ts :-> t) = (:->) <$> traverse (_SumT f) ts <*> _SumT f t
-_SumT f (DataT name ts) = DataT name <$> traverse (_SumT f) ts
-_SumT f (ArrayT t) = ArrayT <$> _SumT f t
-_SumT _ t = pure t
+_SumT :: Prism' Type (Set Con)
+_SumT = prism' SumT $ \case
+  SumT sc -> Just sc
+  _ -> Nothing
 
 instance Pretty Type where
   pPrint (a :-> b) = parens (sep $ map pPrint a) <+> "->" <+> pPrint b

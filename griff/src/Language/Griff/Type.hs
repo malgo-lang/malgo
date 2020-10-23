@@ -136,6 +136,16 @@ data Type
   | TyMeta MetaTv
   deriving stock (Eq, Show, Ord)
 
+_TyApp :: Prism' Type (Type, Type)
+_TyApp = prism' (uncurry TyApp) $ \case
+  TyApp t1 t2 -> Just (t1, t2)
+  _ -> Nothing
+
+_TyCon :: Prism' Type (Id Kind)
+_TyCon = prism' TyCon $ \case
+  TyCon c -> Just c
+  _ -> Nothing
+
 _TyArr :: Prism' Type (Type, Type)
 _TyArr = prism' (uncurry TyArr) $ \case
   TyArr t1 t2 -> Just (t1, t2)

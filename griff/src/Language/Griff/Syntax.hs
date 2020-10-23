@@ -17,6 +17,7 @@ import Language.Griff.Extension
 import Language.Griff.Type (HasType (..))
 import qualified Language.Griff.Type as T
 import qualified Text.PrettyPrint.HughesPJ as P
+import Data.Tuple.Extra (uncurry3)
 
 -- Unboxed literal
 
@@ -159,6 +160,21 @@ instance (ForallPatX HasType x) => HasType (Pat x) where
     VarP x v -> VarP <$> overType f x <*> pure v
     ConP x c ps -> ConP <$> overType f x <*> pure c <*> traverse (overType f) ps
     UnboxedP x u -> UnboxedP <$> overType f x <*> overType f u
+
+_VarP :: Prism' (Pat x) (XVarP x, XId x)
+_VarP = prism' (uncurry VarP) $ \case
+  VarP x v -> Just (x, v)
+  _ -> Nothing
+
+_ConP :: Prism' (Pat x) (XConP x, XId x, [Pat x])
+_ConP = prism' (uncurry3 ConP) $ \case
+  ConP x c ps -> Just (x, c, ps)
+  _ -> Nothing
+
+_UnboxedP :: Prism' (Pat x) (XUnboxedP x, Unboxed)
+_UnboxedP = prism' (uncurry UnboxedP) $ \case
+  UnboxedP x u -> Just (x, u)
+  _ -> Nothing
 
 bindVars :: Ord (XId x) => Pat x -> Set (XId x)
 bindVars (VarP _ x) = Set.singleton x

@@ -69,7 +69,7 @@ genPrimitive ::
 genPrimitive env = do
   let add_i64 = fromJust $ view (Tc.rnEnv . Rn.varEnv . at "add_i64#") env
   let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
-  add_i64' <- join $ newId <$> dcType add_i64_type <*> pure "add_i64#"
+  add_i64' <- newVar "add_i64#" add_i64_type
   add_i64_param <- newId (SumT $ Set.singleton (C.Con "Tuple2" [C.Int64T, C.Int64T])) "$p"
   add_i64_fun <- fmap (Fun [add_i64_param]) $
     runDef $ do
@@ -118,7 +118,7 @@ dcScDefs ::
 dcScDefs ds = do
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
     Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
-    f' <- join $ newId <$> dcType fType <*> pure (f ^. idName)
+    f' <- newVar (f ^. idName) fType
     pure $ mempty & varEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
 
@@ -127,14 +127,13 @@ dcScDef ::
   ScDef (Griff 'TypeCheck) ->
   f [(Id C.Type, Obj (Id C.Type))]
 dcScDef (WithType pos typ, name, params, expr) = do
-  when (isn't GT._TyArr typ && isn't GT._TyLazy typ) $
+  unless (has GT._TyArr typ || has GT._TyLazy typ) $
     errorOn pos $
       "Invalid Toplevel Declaration:"
         <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
   -- When typ is TyLazy{}, splitTyArr returns ([], typ).
   let (paramTypes, _) = splitTyArr typ
-  params' <- traverse ?? zip params paramTypes $ \(pId, pType) ->
-    join $ newId <$> dcType pType <*> pure (pId ^. idName)
+  params' <- zipWithM (newVar . view idName) params paramTypes
   local (over varEnv (Map.fromList (zip params params') <>)) $ do
     name' <- lookupName name
     (fun, inner) <- curryFun params' =<< dcExp expr
@@ -145,9 +144,9 @@ dcForign ::
   Forign (Griff 'TypeCheck) ->
   f (DesugarEnv, [(Id C.Type, Obj (Id C.Type))])
 dcForign (x@(WithType (_, primName) _), name, _) = do
-  name' <- join $ newId <$> dcType (x ^. toType) <*> pure (name ^. idName)
+  name' <- newVar (name ^. idName) (x ^. toType)
   let (paramTypes, _) = splitTyArr (x ^. toType)
-  params <- traverse ?? paramTypes $ \paramType -> join $ newId <$> dcType paramType <*> pure "$p"
+  params <- traverse (newVar "$p") paramTypes
   primType <- dcType (view toType x)
   (fun, inner) <- curryFun params $ C.ExtCall primName primType (map C.Var params)
   pure (mempty & varEnv .~ Map.singleton name name', (name', fun) : inner)
@@ -160,7 +159,7 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
     Just (GT.TyCon name') <- asks $ view (tcEnv . Tc.typeEnv . at name)
     conMap <- lookupConMap name' []
-    let Just conType = List.lookup conName conMap
+    let conType = fromJust $ List.lookup conName conMap
     let (paramTypes, retType) = splitTyArr conType
     paramTypes' <- traverse dcType paramTypes
     retType' <- dcType retType
@@ -174,20 +173,16 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
             pure $ Cast retType' packed
         pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
       _ -> do
-        conName' <- join $ newId <$> dcType conType <*> pure (conName ^. idName)
+        conName' <- newVar (conName ^. idName) conType
         ps <- traverse (newId ?? "$p") paramTypes'
         unfoldedType <- unfoldType retType
         (obj, inner) <-
           curryFun ps
             =<< runDef
-              ( do
-                  packed <-
-                    let_ unfoldedType $
-                      Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $
-                        map
-                          C.Var
-                          ps
-                  pure $ Cast retType' packed
+              ( Cast retType'
+                  <$> let_
+                    unfoldedType
+                    (Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps)
               )
         pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj) : inner)
 
@@ -241,13 +236,13 @@ dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
   typ <- dcType (x ^. toType)
   Atom <$> let_ typ (Fun [] e')
 dcExp (G.Fn x cs@(Clause _ ps e : _)) = do
-  ps' <- traverse (\p -> join $ newId <$> dcType (p ^. toType) <*> pure "$p") ps
+  ps' <- traverse (\p -> newVar "$p" $ p ^. toType) ps
   typ <- dcType (e ^. toType)
   -- destruct Clauses
   (pss, es) <- first List.transpose <$> mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
   (obj, inner) <- curryFun ps' body
-  v <- join $ newId <$> x ^. toType . to dcType <*> pure "$fun"
+  v <- newVar "$fun" $ x ^. toType
   pure $ Let ((v, obj) : inner) $ Atom $ C.Var v
 dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
@@ -271,13 +266,8 @@ match ::
   C.Exp (Id C.Type) ->
   m (C.Exp (Id C.Type))
 match (u : us) (ps : pss) es err
-  | -- Variable Rule
-    all
-      ( \case
-          VarP {} -> True
-          _ -> False
-      )
-      ps =
+  -- Variable Rule
+  | all (has _VarP) ps =
     {- Note: How to implement the Variable Rule?
         There are two (old) implementations.
         I believe that the Original impl is correct.
@@ -311,96 +301,60 @@ match (u : us) (ps : pss) es err
           es
       )
       err
-  | -- Constructor Rule
-    all
-      ( \case
-          ConP {} -> True
-          _ -> False
-      )
-      ps =
-    do
-      let patType = head ps ^. toType
-      -- 型からコンストラクタの集合を求める
-      cs <- constructors patType
-      -- 各コンストラクタごとにC.Caseを生成する関数を生成する
-      cases <- traverse genCase cs
-      unfoldedType <- unfoldType patType
-      pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
-  | all
-      ( \case
-          UnboxedP {} -> True
-          _ -> False
-      )
-      ps =
-    do
-      let cs =
-            map
-              ( \case
-                  UnboxedP _ x -> dcUnboxed x
-                  _ -> bug Unreachable
-              )
-              ps
-      cases <- traverse ?? cs $ \c -> Switch c <$> match us pss es err
-      hole <- newId (C.typeOf u) "$_"
-      pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
-  | -- The Mixture Rule
-    otherwise =
-    do
-      let ((ps', ps''), (pss', pss''), (es', es'')) = partition ps pss es
-      match (u : us) (ps' : pss') es' =<< match (u : us) (ps'' : pss'') es'' err
-  where
-    partition ps@(VarP {} : _) pss es =
-      let (ps', ps'') =
-            span
-              ( \case
-                  VarP {} -> True
-                  _ -> False
-              )
-              ps
-       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-    partition ps@(ConP {} : _) pss es =
-      let (ps', ps'') =
-            span
-              ( \case
-                  ConP {} -> True
-                  _ -> False
-              )
-              ps
-       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-    partition ps@(UnboxedP {} : _) pss es =
-      let (ps', ps'') =
-            span
-              ( \case
-                  UnboxedP {} -> True
-                  _ -> False
-              )
-              ps
-       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-    constructors t
-      | case t of
-          GT.TyApp {} -> False
-          GT.TyCon {} -> False
-          _ -> True =
-        errorDoc $ "Not valid type: " <+> pPrint t
-      | otherwise =
-        do
-          let (con, ts) = splitCon t
-          conMap <- lookupConMap con ts
-          traverse (uncurry buildConInfo) conMap
-    buildConInfo conName conType = do
+  -- Constructor Rule
+  | all (has _ConP) ps = do
+    let patType = head ps ^. toType
+    unless (has _TyApp patType || has _TyCon patType) $
+      errorDoc $ "Not valid type:" <+> pPrint patType
+    -- 型からコンストラクタの集合を求める
+    let (con, ts) = splitCon patType
+    conMap <- lookupConMap con ts
+    cs <- for conMap $ \(conName, conType) -> do
       paramTypes <- traverse dcType $ fst $ splitTyArr conType
       let ccon = C.Con (conName ^. toText) paramTypes
       params <- traverse (newId ?? "$p") paramTypes
       pure (conName, ccon, params)
-    genCase (gcon, ccon, params) = do
+    -- 各コンストラクタごとにC.Caseを生成する
+    cases <- for cs $ \(gcon, ccon, params) -> do
       let (pss', es') = unzip $ group gcon (List.transpose (ps : pss)) es
       Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
+    unfoldedType <- unfoldType patType
+    pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
+  | all (has _UnboxedP) ps = do
+    let cs =
+          map
+            ( \case
+                UnboxedP _ x -> dcUnboxed x
+                _ -> bug Unreachable
+            )
+            ps
+    cases <- traverse (\c -> Switch c <$> match us pss es err) cs
+    hole <- newId (C.typeOf u) "$_"
+    pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
+  -- The Mixture Rule
+  | otherwise =
+    do
+      let ((ps', ps''), (pss', pss''), (es', es'')) = partition ps pss es
+      match (u : us) (ps' : pss') es' =<< match (u : us) (ps'' : pss'') es'' err
+  where
+    -- Mixture Rule以外にマッチするようにパターン列を分解
+    partition [] _ _ = bug Unreachable
+    partition ps@(VarP {} : _) pss es =
+      let (ps', ps'') = span (has _VarP) ps
+       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
+    partition ps@(ConP {} : _) pss es =
+      let (ps', ps'') = span (has _ConP) ps
+       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
+    partition ps@(UnboxedP {} : _) pss es =
+      let (ps', ps'') = span (has _UnboxedP) ps
+       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
     group gcon pss' es = mapMaybe (aux gcon) (zip pss' es)
-    aux gcon (ConP _ gcon' ps : pss, e)
-      | gcon == gcon' = Just (ps <> pss, e)
-      | otherwise = Nothing
-    aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
-    aux _ ([], _) = bug Unreachable
+      where
+        aux gcon (ConP _ gcon' ps : pss, e)
+          | gcon == gcon' = Just (ps <> pss, e)
+          | otherwise = Nothing
+        aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
+        aux _ ([], _) = bug Unreachable
 match [] [] (e : _) _ = e
 match _ [] [] err = pure err
 match _ _ _ _ = bug Unreachable
@@ -432,15 +386,6 @@ dcType (GT.TyMeta tv) = do
     Just t -> dcType t
     Nothing -> error "TyMeta must be removed"
 
-lookupConMap ::
-  (MonadReader DesugarEnv m, MonadFail m) =>
-  Id Kind ->
-  [GT.Type] ->
-  m [(Id (), GT.Type)]
-lookupConMap con ts = do
-  Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
-  pure $ over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
-
 unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t@GT.TyApp {} = do
   let (con, ts) = splitCon t
@@ -471,6 +416,18 @@ lookupName name = do
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint name)
+
+newVar :: (MonadUniq m, MonadIO m) => String -> GT.Type -> m (Id C.Type)
+newVar name typ = join $ newId <$> dcType typ <*> pure name
+
+lookupConMap ::
+  (MonadReader DesugarEnv m, MonadFail m) =>
+  Id Kind ->
+  [GT.Type] ->
+  m [(Id (), GT.Type)]
+lookupConMap con ts = do
+  Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
+  pure $ over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
 
 curryFun ::
   (HasCallStack, MonadUniq m) =>

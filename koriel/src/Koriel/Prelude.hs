@@ -27,12 +27,13 @@ module Koriel.Prelude
     module Data.Coerce,
     module Data.Foldable,
     module Data.List.NonEmpty,
-    module Data.Maybe,
     module Data.Map,
+    module Data.Maybe,
     module Data.Monoid,
     module Data.Set,
     module Data.String,
     module Data.Text,
+    module Data.Traversable,
     module GHC.Stack,
     unzip,
     asumMap,
@@ -54,6 +55,7 @@ where
 
 import Control.Applicative
 import Control.Exception
+import Control.Lens
 import Control.Monad
 import Control.Monad.IO.Class
 import Control.Monad.Reader.Class
@@ -88,6 +90,7 @@ import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.String (IsString (..))
 import Data.Text (Text)
+import Data.Traversable
 import Data.Typeable
 import GHC.Stack
   ( CallStack,
@@ -95,7 +98,6 @@ import GHC.Stack
     callStack,
     prettyCallStack,
   )
-import Control.Lens
 import qualified Text.Megaparsec.Pos as Megaparsec
 import Text.Parsec.Pos (SourcePos)
 import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
