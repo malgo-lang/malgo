@@ -35,12 +35,12 @@ $ stack install
 
 ```sh
 $ malgo examples/hello.mlg -o hello.ll
-$ clang hello.ll examples/corelib.c -lgc
+$ clang hello.ll runtime/malgo/rts.c -lgc
 $ ./a.out
 Hello, world
 
 $ griff examples/griff/Hello.grf -o Hello.ll
-$ clang Hello.ll examples/griff/lib.c -lgc
+$ clang Hello.ll runtime/griff/rts.c -lgc
 $ ./a.out
 Hello, world
 ```
