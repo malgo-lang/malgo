@@ -139,6 +139,10 @@ dcScDef (WithType pos typ, name, params, expr) = do
     (fun, inner) <- curryFun params' =<< dcExp expr
     pure ((name', fun) : inner)
 
+-- TODO: Griffのforeignでvoid型をあつかえるようにする #13
+-- 1. Griffの型とCの型の相互変換を定義する
+-- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
+-- 3. 2.の関数を使ってdcForeignを書き換える
 dcForeign ::
   (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) =>
   Foreign (Griff 'TypeCheck) ->
@@ -163,6 +167,7 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
     let (paramTypes, retType) = splitTyArr conType
     paramTypes' <- traverse dcType paramTypes
     retType' <- dcType retType
+    -- TODO: ここのcaseを一つに統合できないか考える
     case paramTypes' of
       [] -> do
         conName' <- newId ([] :-> retType') (conName ^. idName)
