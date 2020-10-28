@@ -109,7 +109,7 @@ convType (SumT cs) =
    in ptr
         ( StructureType
             False
-            [i64, if size == 0 then StructureType False [] else LT.VectorType size i8]
+            [i8, if size == 0 then StructureType False [] else LT.VectorType size i8]
         )
 convType (ArrayT ty) = ptr $ StructureType False [ptr $ convType ty, i64]
 convType AnyT = ptr i8
@@ -308,7 +308,7 @@ genExp (ArrayWrite a i v) k = do
   vOpr <- genAtom v
   arrOpr <- gepAndLoad aOpr [int32 0, int32 0]
   gepAndStore arrOpr [iOpr] vOpr
-  k (ConstantOperand (Undef (ptr $ StructureType False [i64, StructureType False []])))
+  k (ConstantOperand (Undef (ptr $ StructureType False [i8, StructureType False []])))
 genExp (Let xs e) k = do
   env <- foldMapA prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse (uncurry genObj) xs
@@ -376,14 +376,14 @@ genCase scrutinee cs k = \case
   Unpack con vs e -> do
     label <- block
     let (tag, conType) = genCon cs con
-    addr <- bitcast scrutinee (ptr $ StructureType False [i64, conType])
+    addr <- bitcast scrutinee (ptr $ StructureType False [i8, conType])
     payloadAddr <- gep addr [int32 0, int32 1]
     -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
     env <- ifoldMapA ?? vs $ \i v -> do
       vOpr <- gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
       pure $ Map.singleton v vOpr
     void $ local (over valueMap (env <>)) $ genExp e k
-    pure $ Right (C.Int 64 $ fromIntegral tag, label)
+    pure $ Right (C.Int 8 $ fromIntegral tag, label)
 
 genAtom ::
   (MonadReader OprMap m, MonadUniq m, MonadModuleBuilder m, MonadIRBuilder m) =>
@@ -441,9 +441,9 @@ genObj funName (Fun ps e) = do
     psTypes = ptr i8 : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
 genObj name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
-  addr <- mallocType (StructureType False [i64, StructureType False $ map convType ts])
+  addr <- mallocType (StructureType False [i8, StructureType False $ map convType ts])
   let tag = fromIntegral $ findIndex con cs
-  gepAndStore addr [int32 0, int32 0] (int64 tag)
+  gepAndStore addr [int32 0, int32 0] (int8 tag)
   ifor_ xs $ \i x -> do
     xOpr <- genAtom x
     gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] xOpr
