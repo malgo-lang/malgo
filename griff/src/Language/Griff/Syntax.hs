@@ -224,7 +224,7 @@ data Decl x
   | ScSig (XScSig x) (XId x) (Type x)
   | DataDef (XDataDef x) (XTId x) [XTId x] [(XId x, [Type x])]
   | Infix (XInfix x) Assoc Int (XId x)
-  | Forign (XForign x) (XId x) (Type x)
+  | Foreign (XForeign x) (XId x) (Type x)
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (Decl x)
 
@@ -241,4 +241,4 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Decl x) where
     where
       pprConDef (con, ts) = pPrint con <+> P.sep (map (pPrintPrec prettyNormal 12) ts)
   pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
-  pPrint (Forign _ x t) = "forign import" <+> pPrint x <+> "::" <+> pPrint t
+  pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t

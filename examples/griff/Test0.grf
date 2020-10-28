@@ -2,7 +2,7 @@ infixl 0 (|>);
 (|>) :: a -> (a -> b) -> b;
 (|>) x f = f x;
 
-forign import print_int :: Int64# -> ();
+foreign import print_int :: Int64# -> ();
 
 data Int = Int# Int64#;
 

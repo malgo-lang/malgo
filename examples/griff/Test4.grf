@@ -11,7 +11,7 @@ data List a = Nil | Cons a (List a);
 sum = { acc Nil -> acc 
       | acc (Cons x xs) -> sum (acc + x) xs };
 
-forign import print_int :: Int64# -> ();
+foreign import print_int :: Int64# -> ();
 
 main = {
   {(Int# i) -> print_int i}

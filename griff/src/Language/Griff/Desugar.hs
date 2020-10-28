@@ -85,12 +85,12 @@ dcBindGroup ::
 dcBindGroup bg = do
   (env, dataDefs') <- first mconcat <$> mapAndUnzipM dcDataDef (bg ^. dataDefs)
   local (env <>) $ do
-    (env, forigns') <- first mconcat <$> mapAndUnzipM dcForign (bg ^. forigns)
+    (env, foreigns') <- first mconcat <$> mapAndUnzipM dcForeign (bg ^. foreigns)
     local (env <>) $ do
       scDefs' <- dcScDefGroup (bg ^. scDefs)
       pure $
         buildLet (mconcat dataDefs') $
-          buildLet forigns' $
+          buildLet foreigns' $
             buildLet scDefs' $
               searchMain $
                 mconcat scDefs'
@@ -139,11 +139,11 @@ dcScDef (WithType pos typ, name, params, expr) = do
     (fun, inner) <- curryFun params' =<< dcExp expr
     pure ((name', fun) : inner)
 
-dcForign ::
+dcForeign ::
   (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) =>
-  Forign (Griff 'TypeCheck) ->
+  Foreign (Griff 'TypeCheck) ->
   f (DesugarEnv, [(Id C.Type, Obj (Id C.Type))])
-dcForign (x@(WithType (_, primName) _), name, _) = do
+dcForeign (x@(WithType (_, primName) _), name, _) = do
   name' <- newVar (name ^. idName) (x ^. toType)
   let (paramTypes, _) = splitTyArr (x ^. toType)
   params <- traverse (newVar "$p") paramTypes

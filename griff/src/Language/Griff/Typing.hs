@@ -127,7 +127,7 @@ tcDecls ds = do
   let bindGroup = makeBindGroup ds
   (env, dataDefs') <- tcDataDefs (bindGroup ^. dataDefs)
   local (env <>) $ do
-    (env, forigns') <- tcForigns (bindGroup ^. forigns)
+    (env, foreigns') <- tcForeigns (bindGroup ^. foreigns)
     local (env <>) $ do
       (env, scSigs') <- tcScSigs (bindGroup ^. scSigs)
       local (env <>) $ do
@@ -140,7 +140,7 @@ tcDecls ds = do
                 >>= traverseOf (T.varEnv . traversed) zonkScheme
                 >>= traverseOf (T.typeEnv . traversed) zonkType
                 >>= traverseOf (T.tyConEnv . traversed . _2 . traversed . _2) zonkType
-            forigns'' <- traverseOf (traversed . _1) (overType zonkType) forigns'
+            foreigns'' <- traverseOf (traversed . _1) (overType zonkType) foreigns'
             scDefs'' <-
               traverseOf (traversed . traversed . _1) (overType zonkType)
                 =<< traverseOf (traversed . traversed . _4) (overType zonkType) scDefs'
@@ -148,7 +148,7 @@ tcDecls ds = do
               ( BindGroup
                   { _dataDefs = dataDefs',
                     _infixs = [],
-                    _forigns = forigns'',
+                    _foreigns = foreigns'',
                     _scSigs = scSigs',
                     _scDefs = scDefs''
                   },
@@ -206,11 +206,11 @@ tcDataDefs ds = do
     kindof [] = Star
     kindof (_ : xs) = KArr Star (kindof xs)
 
-tcForigns ::
+tcForeigns ::
   (MonadUniq m, MonadIO m, MonadReader TcEnv m) =>
-  [Forign (Griff 'Rename)] ->
-  m (TcEnv, [Forign (Griff 'TypeCheck)])
-tcForigns ds = fmap (first mconcat) $
+  [Foreign (Griff 'Rename)] ->
+  m (TcEnv, [Foreign (Griff 'TypeCheck)])
+tcForeigns ds = fmap (first mconcat) $
   mapAndUnzipM ?? ds $ \(pos, name, ty) -> do
     let tyVars = Set.toList $ getTyVars ty
     tyVars' <- traverse (const $ TyMeta <$> newMetaTv Star) tyVars

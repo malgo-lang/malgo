@@ -25,7 +25,7 @@ data BindGroup x = BindGroup
     _scSigs :: [ScSig x],
     _dataDefs :: [DataDef x],
     _infixs :: [Infix x],
-    _forigns :: [Forign x]
+    _foreigns :: [Foreign x]
   }
 
 type ScDef x = (XScDef x, XId x, [XId x], Exp x)
@@ -36,7 +36,7 @@ type DataDef x = (XDataDef x, XTId x, [XTId x], [(XId x, [Type x])])
 
 type Infix x = (XInfix x, Assoc, Int, XId x)
 
-type Forign x = (XForign x, XId x, Type x)
+type Foreign x = (XForeign x, XId x, Type x)
 
 scDefs :: Lens' (BindGroup x) [[ScDef x]]
 scDefs = lens _scDefs (\e x -> e { _scDefs = x })
@@ -50,20 +50,20 @@ dataDefs = lens _dataDefs (\e x -> e { _dataDefs = x })
 infixs :: Lens' (BindGroup x) [Infix x]
 infixs = lens _infixs (\e x -> e { _infixs = x })
 
-forigns :: Lens' (BindGroup x) [Forign x]
-forigns = lens _forigns (\e x -> e { _forigns = x })
+foreigns :: Lens' (BindGroup x) [Foreign x]
+foreigns = lens _foreigns (\e x -> e { _foreigns = x })
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindGroup x)
 
 deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Show (BindGroup x)
 
 instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
-  pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _infixs, _forigns} =
+  pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _infixs, _foreigns} =
     P.sep
       ( P.punctuate ";" $
           map prettyDataDef _dataDefs
             <> map prettyInfix _infixs
-            <> map prettyForign _forigns
+            <> map prettyForeign _foreigns
             <> map prettyScSig _scSigs
             <> concatMap (map prettyScDef) _scDefs
       )
@@ -75,7 +75,7 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
           ]
       pprConDef (con, ts) = pPrint con <+> P.sep (map (pPrintPrec P.prettyNormal 12) ts)
       prettyInfix (_, a, o, x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
-      prettyForign (_, x, t) = "forign import" <+> pPrint x <+> "::" <+> pPrint t
+      prettyForeign (_, x, t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
       prettyScSig (_, f, t) = pPrint f <+> "::" <+> pPrint t
       prettyScDef (_, f, xs, e) =
         P.sep [pPrint f <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ pPrint e]
@@ -87,7 +87,7 @@ makeBindGroup ds =
       _scSigs = mapMaybe scSig ds,
       _dataDefs = mapMaybe dataDef ds,
       _infixs = mapMaybe infixDef ds,
-      _forigns = mapMaybe forign ds
+      _foreigns = mapMaybe foreignDef ds
     }
   where
     scDef (ScDef x f ps e) = Just (x, f, ps, e)
@@ -98,8 +98,8 @@ makeBindGroup ds =
     dataDef _ = Nothing
     infixDef (Infix x a o n) = Just (x, a, o, n)
     infixDef _ = Nothing
-    forign (Forign x n t) = Just (x, n, t)
-    forign _ = Nothing
+    foreignDef (Foreign x n t) = Just (x, n, t)
+    foreignDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
 adjacents ::

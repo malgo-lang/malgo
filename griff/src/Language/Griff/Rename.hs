@@ -88,11 +88,11 @@ rnDecl (DataDef pos name params cs) = do
       <*> pure params'
       <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
-rnDecl (Forign pos name typ) = do
+rnDecl (Foreign pos name typ) = do
   let tyVars = Set.toList $ getTyVars typ
   tyVars' <- traverse (newId ()) tyVars
   local (over typeEnv (Map.fromList (zip tyVars tyVars') <>)) $
-    Forign (pos, name)
+    Foreign (pos, name)
       <$> lookupVarName pos name
       <*> rnType typ
 
@@ -165,7 +165,7 @@ toplevelIdents ds = go ([], [], []) ds & \(sigs, vars, types) -> (ordNub $ sigs 
           "Duplicate name(s):"
             <+> P.sep
               (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` (sigs <> vars)))
-    go (sigs, vars, types) (Forign pos x _ : rest)
+    go (sigs, vars, types) (Foreign pos x _ : rest)
       | x `elem` sigs || x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | otherwise = go (sigs, x : vars, types) rest
     go result (_ : rest) = go result rest

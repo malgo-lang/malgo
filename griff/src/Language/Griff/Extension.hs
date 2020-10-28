@@ -94,14 +94,14 @@ type family XDataDef x
 
 type family XInfix x
 
-type family XForign x
+type family XForeign x
 
 type ForallDeclX (c :: K.Type -> Constraint) x =
   ( c (XScDef x),
     c (XScSig x),
     c (XDataDef x),
     c (XInfix x),
-    c (XForign x),
+    c (XForeign x),
     ForallExpX c x,
     ForallClauseX c x,
     ForallPatX c x,
@@ -223,8 +223,8 @@ type instance XDataDef (Griff _) = SourcePos
 
 type instance XInfix (Griff _) = SourcePos
 
-type instance XForign (Griff 'Parse) = SourcePos
+type instance XForeign (Griff 'Parse) = SourcePos
 
-type instance XForign (Griff 'Rename) = (SourcePos, String)
+type instance XForeign (Griff 'Rename) = (SourcePos, String)
 
-type instance XForign (Griff 'TypeCheck) = WithType (SourcePos, String)
+type instance XForeign (Griff 'TypeCheck) = WithType (SourcePos, String)

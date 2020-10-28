@@ -44,7 +44,7 @@ pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
 
 reserved :: Parser ()
 reserved =
-  void $ choice $ map (try . pKeyword) ["data", "infixl", "infixr", "infix", "forign", "import"]
+  void $ choice $ map (try . pKeyword) ["data", "infixl", "infixr", "infix", "foreign", "import"]
 
 reservedOp :: Parser ()
 reservedOp = void $ choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
@@ -279,17 +279,17 @@ pInfix = label "infix declaration" $ do
   x <- between (symbol "(") (symbol ")") operator
   pure $ Infix s a i x
 
-pForign :: Parser (Decl (Griff 'Parse))
-pForign = label "forign import" $ do
+pForeign :: Parser (Decl (Griff 'Parse))
+pForeign = label "foreign import" $ do
   s <- getSourcePos
-  pKeyword "forign"
+  pKeyword "foreign"
   pKeyword "import"
   x <- lowerIdent
   pOperator "::"
-  Forign s x <$> pType
+  Foreign s x <$> pType
 
 pDecl :: Parser (Decl (Griff 'Parse))
-pDecl = pDataDef <|> pInfix <|> pForign <|> try pScSig <|> pScDef
+pDecl = pDataDef <|> pInfix <|> pForeign <|> try pScSig <|> pScDef
 
 pTopLevel :: Parser [Decl (Griff 'Parse)]
 pTopLevel = pDecl `sepEndBy` pOperator ";" <* eof

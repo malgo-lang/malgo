@@ -1,5 +1,5 @@
-forign import print_string :: String# -> ();
-forign import newline :: () -> ();
+foreign import print_string :: String# -> ();
+foreign import newline :: () -> ();
 
 data String = String# String#;
 
