@@ -26,6 +26,7 @@ addons:
 
 install:
   - |
+    clang --version
     ghc --version
     cabal --version
     cabal new-update
