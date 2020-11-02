@@ -7,23 +7,19 @@ typedef struct {
   struct {} payload;
 } Unit;
 
-Unit* new_Unit(void) {
-  Unit* val = GC_MALLOC(sizeof(Unit));
-  val->tag = 0;
-  return val;
-}
+const Unit unit = {0, {}};
 
-Unit* print_int(int64_t i) {
+const Unit* print_int(int64_t i) {
     printf("%lld", i);
-    return new_Unit();
+    return &unit;
 }
 
-Unit* newline(Unit* unused) {
+const Unit* newline(Unit* __attribute__((unused)) unused) {
   puts("");
-  return new_Unit();
+  return &unit;
 }
 
-Unit* print_string(char* x) {
+const Unit* print_string(char* x) {
   printf("%s", x);
-  return new_Unit();
+  return &unit;
 }
