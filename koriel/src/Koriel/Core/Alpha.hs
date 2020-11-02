@@ -24,7 +24,7 @@ runAlpha = runReaderT
 type AlphaEnv = Map (Id Type) (Atom (Id Type))
 
 cloneId :: MonadUniq f => Id a -> f (Id a)
-cloneId n = newId (n ^. idMeta) (n ^. idName)
+cloneId n = newId (n ^. idName) (n ^. idMeta)
 
 lookupVar :: (HasCallStack, MonadReader AlphaEnv m) => Id Type -> m (Atom (Id Type))
 lookupVar n = do

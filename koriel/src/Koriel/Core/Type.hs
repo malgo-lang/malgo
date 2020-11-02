@@ -48,7 +48,7 @@ _SumT = prism' SumT $ \case
   _ -> Nothing
 
 instance Pretty Type where
-  pPrint (a :-> b) = parens (sep $ map pPrint a) <+> "->" <+> pPrint b
+  pPrint (a :-> b) = brackets (sep $ punctuate "," $ map pPrint a) <+> "->" <+> pPrint b
   pPrint Int32T = "Int32#"
   pPrint Int64T = "Int64#"
   pPrint FloatT = "Float#"

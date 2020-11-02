@@ -135,8 +135,8 @@ optCast :: MonadUniq f => Exp (Id Type) -> f (Exp (Id Type))
 optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
   pts :-> _
     | length pts' == length pts -> do
-      f' <- newId (pts' :-> rt') "$cast_opt"
-      ps' <- traverse (newId ?? "$p") pts'
+      f' <- newId "$cast_opt" (pts' :-> rt')
+      ps' <- traverse (newId "$p") pts'
       v' <- runDef $ do
         ps <- zipWithM cast pts $ map (Atom . Var) ps'
         r <- bind (Call f ps)

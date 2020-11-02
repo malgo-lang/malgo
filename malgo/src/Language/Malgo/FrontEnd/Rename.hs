@@ -39,7 +39,7 @@ rename s = runReaderT (renameExpr s) $ Known mempty mempty
 
 withKnowns :: (MonadUniq m, MonadReader s m) => ASetter' s (Map String (Id ())) -> [String] -> m a -> m a
 withKnowns lens ks m = do
-  vs <- mapM (newId ()) ks
+  vs <- mapM (newId ?? ()) ks
   local (over lens (Map.fromList (zip ks vs) <>)) m
 
 getId :: (MonadReader Known m, MonadMalgo m) => SourcePos -> Getting (Map String (Id ())) Known (Map String (Id ())) -> String -> m (Id ())

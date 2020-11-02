@@ -40,7 +40,7 @@ import qualified Text.PrettyPrint as P
 generalize :: (MonadIO m, MonadUniq m) => TcEnv -> Type -> m Scheme
 generalize env t = do
   fvs <- toList <$> freeMetaTvs env t
-  as <- traverse (\(tv, nameChar) -> newId (kind tv) [nameChar]) (zip fvs ['a' ..])
+  as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) (zip fvs ['a' ..])
   zipWithM_ writeMetaTv fvs (map TyVar as)
   Forall as <$> zonkType t
 
@@ -176,7 +176,7 @@ tcDataDefs ::
 tcDataDefs ds = do
   -- すべての型コンストラクタに対応するTyConを生成する
   dataEnv <- foldMapA ?? ds $ \(_, name, params, _) ->
-    Map.singleton name . TyCon <$> newId (kindof params) (name ^. idName)
+    Map.singleton name . TyCon <$> newId (name ^. idName) (kindof params) 
   local (over T.typeEnv (dataEnv <>)) $ do
     -- 値コンストラクタに対する処理
     (conEnvs, ds') <- mapAndUnzipM ?? ds $ \(pos, name, params, cons) -> do
@@ -190,7 +190,7 @@ tcDataDefs ds = do
           pure $ foldr TyArr (foldr (flip TyApp) name' params') args'
         -- generate type variables
         fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
-        as <- traverse (\(tv, nameChar) -> newId (kind tv) [nameChar]) $ zip fvs ['a' ..]
+        as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) $ zip fvs ['a' ..]
         zipWithM_ writeMetaTv fvs (map TyVar as)
         Just (TyCon dataName) <- asks $ view $ T.typeEnv . at name
         pure
@@ -264,7 +264,7 @@ tcScDefs ds = do
       unify pos ty (foldr TyArr (expr' ^. toType) paramTypes)
       pure ((name, ty), (WithType pos ty, name, params, expr'))
   fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) nts
-  as <- traverse (\(tv, nameChar) -> newId (kind tv) [nameChar]) $ zip fvs ['a' ..]
+  as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) $ zip fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
   nts' <- traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
   pure (mempty & T.varEnv .~ Map.fromList nts', defs)

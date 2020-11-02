@@ -94,7 +94,7 @@ toExp (S.Call _ f xs) = runDef $ do
     ps :-> _ -> Call f <$> zipWithM (\x p -> cast p =<< toExp x) xs ps
     _ -> bug Unreachable
 toExp (S.Fn _ ps e) = runDef $ do
-  ps' <- traverse ((\p -> newId (C.typeOf p) (p ^. idName)) . fst) ps
+  ps' <- traverse ((\p -> newId (p ^. idName) (C.typeOf p)) . fst) ps
   e <- do
     zipWithM_ (\(p, _) p' -> at p ?= p') ps ps'
     toExp e
@@ -108,18 +108,18 @@ toExp (S.Let _ (S.ValDec _ a _ v) e) = runDef $ do
   toExp e
 toExp (S.Let _ (S.ExDec _ prim _ primName) e) = case C.typeOf $ prim ^. idMeta of
   ta :-> tb -> runDef $ do
-    ps <- traverse (newId ?? "a") ta
+    ps <- traverse (newId "a") ta
     Var prim' <- let_ (ta :-> tb) $ Fun ps $ ExtCall primName (ta :-> tb) (map Var ps)
     at prim ?= prim'
     toExp e
   _ -> bug Unreachable
 toExp (S.Let _ (S.FunDec fs) e) = do
   for_ fs $ \(_, f, _, _, _) ->
-    (at f ?=) =<< newId (C.typeOf f) (f ^. idName)
+    (at f ?=) =<< newId (f ^. idName) (C.typeOf f)
   Let <$> traverse toFun fs <*> toExp e
   where
     toFun (_, f@(C.typeOf -> _ :-> r), ps, _, body) = do
-      ps' <- traverse ((\p -> newId (C.typeOf p) (p ^. idName)) . fst) ps
+      ps' <- traverse ((\p -> newId (p ^. idName) (C.typeOf p)) . fst) ps
       body <- runDef $ do
         zipWithM_ (\(p, _) p' -> at p ?= p') ps ps'
         Atom <$> (cast r =<< toExp body)
@@ -153,7 +153,7 @@ crushPat ::
   m (Exp (Id C.Type)) ->
   m (Case (Id C.Type))
 crushPat (S.VarP _ x) = \e -> do
-  x' <- (at x <?=) =<< newId (C.typeOf $ typeOf x) (x ^. idName)
+  x' <- (at x <?=) =<< newId (x ^. idName) (C.typeOf $ typeOf x)
   Bind x' <$> e
 crushPat (S.TupleP _ xs) = go xs []
   where
@@ -161,7 +161,7 @@ crushPat (S.TupleP _ xs) = go xs []
       acc <- pure $ reverse acc
       Unpack (Con ("Tuple" <> length acc ^. toText) $ map C.typeOf acc) acc <$> e
     go (p : ps) acc e = do
-      x <- newId (C.typeOf $ typeOf p) "p"
+      x <- newId "p" (C.typeOf $ typeOf p)
       go ps (x : acc) $ do
         clause <- crushPat p e
         pure $ Match (Atom $ Var x) (clause :| [])

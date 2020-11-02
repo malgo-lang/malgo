@@ -69,8 +69,8 @@ genPrimitive ::
 genPrimitive env = do
   let add_i64 = fromJust $ view (Tc.rnEnv . Rn.varEnv . at "add_i64#") env
   let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
-  add_i64' <- newVar "add_i64#" add_i64_type
-  add_i64_param <- newId (SumT $ Set.singleton (C.Con "Tuple2" [C.Int64T, C.Int64T])) "$p"
+  add_i64' <- newId "add_i64#" =<< dcType add_i64_type
+  add_i64_param <- newId "$p" $ SumT $ Set.singleton (C.Con "Tuple2" [C.Int64T, C.Int64T])
   add_i64_fun <- fmap (Fun [add_i64_param]) $
     runDef $ do
       [x, y] <- destruct (Atom $ C.Var add_i64_param) (C.Con "Tuple2" [C.Int64T, C.Int64T])
@@ -118,7 +118,7 @@ dcScDefs ::
 dcScDefs ds = do
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
     Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
-    f' <- newVar (f ^. idName) fType
+    f' <- newGlobalId (f ^. idName) =<< dcType fType
     pure $ mempty & varEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
 
@@ -133,7 +133,7 @@ dcScDef (WithType pos typ, name, params, expr) = do
         <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
   -- When typ is TyLazy{}, splitTyArr returns ([], typ).
   let (paramTypes, _) = splitTyArr typ
-  params' <- zipWithM (newVar . view idName) params paramTypes
+  params' <- zipWithM (newId . view idName) params =<< traverse dcType paramTypes
   local (over varEnv (Map.fromList (zip params params') <>)) $ do
     name' <- lookupName name
     (fun, inner) <- curryFun params' =<< dcExp expr
@@ -148,9 +148,9 @@ dcForeign ::
   Foreign (Griff 'TypeCheck) ->
   f (DesugarEnv, [(Id C.Type, Obj (Id C.Type))])
 dcForeign (x@(WithType (_, primName) _), name, _) = do
-  name' <- newVar (name ^. idName) (x ^. toType)
+  name' <- newId (name ^. idName) =<< dcType (x ^. toType)
   let (paramTypes, _) = splitTyArr (x ^. toType)
-  params <- traverse (newVar "$p") paramTypes
+  params <- traverse (newId "$p" <=< dcType) paramTypes
   primType <- dcType (view toType x)
   (fun, inner) <- curryFun params $ C.ExtCall primName primType (map C.Var params)
   pure (mempty & varEnv .~ Map.singleton name name', (name', fun) : inner)
@@ -170,25 +170,21 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
     -- TODO: ここのcaseを一つに統合できないか考える
     case paramTypes' of
       [] -> do
-        conName' <- newId ([] :-> retType') (conName ^. idName)
+        conName' <- newId (conName ^. idName) ([] :-> retType')
         unfoldedType <- unfoldType $ fromJust $ List.lookup conName conMap
-        obj <- fmap (Fun []) $
-          runDef $ do
-            packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (conName ^. toText) []) []
-            pure $ Cast retType' packed
+        expr <- runDef $ do
+          packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (conName ^. toText) []) []
+          pure $ Cast retType' packed
+        let obj = Fun [] expr
         pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
       _ -> do
-        conName' <- newVar (conName ^. idName) conType
-        ps <- traverse (newId ?? "$p") paramTypes'
+        conName' <- newId (conName ^. idName) $ foldr (\a b -> [a] :-> b) retType' paramTypes'
+        ps <- traverse (newId "$p") paramTypes'
         unfoldedType <- unfoldType retType
-        (obj, inner) <-
-          curryFun ps
-            =<< runDef
-              ( Cast retType'
-                  <$> let_
-                    unfoldedType
-                    (Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps)
-              )
+        expr <- runDef $ do
+          packed <- let_ unfoldedType (Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps)
+          pure $ Cast retType' packed
+        (obj, inner) <- curryFun ps expr
         pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj) : inner)
 
 dcUnboxed :: G.Unboxed -> C.Unboxed
@@ -241,13 +237,13 @@ dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
   typ <- dcType (x ^. toType)
   Atom <$> let_ typ (Fun [] e')
 dcExp (G.Fn x cs@(Clause _ ps e : _)) = do
-  ps' <- traverse (\p -> newVar "$p" $ p ^. toType) ps
+  ps' <- traverse (\p -> newId "$p" =<< dcType (p ^. toType)) ps
   typ <- dcType (e ^. toType)
   -- destruct Clauses
   (pss, es) <- first List.transpose <$> mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
   body <- match ps' pss es (Error typ)
   (obj, inner) <- curryFun ps' body
-  v <- newVar "$fun" $ x ^. toType
+  v <- newId "$fun" =<< dcType (x ^. toType)
   pure $ Let ((v, obj) : inner) $ Atom $ C.Var v
 dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
@@ -317,7 +313,7 @@ match (u : us) (ps : pss) es err
     cs <- for conMap $ \(conName, conType) -> do
       paramTypes <- traverse dcType $ fst $ splitTyArr conType
       let ccon = C.Con (conName ^. toText) paramTypes
-      params <- traverse (newId ?? "$p") paramTypes
+      params <- traverse (newId "$p") paramTypes
       pure (conName, ccon, params)
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for cs $ \(gcon, ccon, params) -> do
@@ -334,7 +330,7 @@ match (u : us) (ps : pss) es err
             )
             ps
     cases <- traverse (\c -> Switch c <$> match us pss es err) cs
-    hole <- newId (C.typeOf u) "$_"
+    hole <- newId "$_" (C.typeOf u)
     pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
   -- The Mixture Rule
   | otherwise =
@@ -422,9 +418,6 @@ lookupName name = do
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint name)
 
-newVar :: (MonadUniq m, MonadIO m) => String -> GT.Type -> m (Id C.Type)
-newVar name typ = join $ newId <$> dcType typ <*> pure name
-
 lookupConMap ::
   (MonadReader DesugarEnv m, MonadFail m) =>
   Id Kind ->
@@ -448,12 +441,12 @@ curryFun ps@(_ : _) e = curryFun' ps []
   where
     curryFun' [] _ = bug Unreachable
     curryFun' [x] as = do
-      x' <- newId (C.typeOf x) (x ^. idName)
-      fun <- newId (C.typeOf $ Fun ps e) "$curry"
+      x' <- newId (x ^. idName) (C.typeOf x)
+      fun <- newId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
       pure (Fun [x'] body, [(fun, Fun ps e)])
     curryFun' (x : xs) as = do
-      x' <- newId (C.typeOf x) (x ^. idName)
+      x' <- newId (x ^. idName) (C.typeOf x)
       (funObj, inner) <- curryFun' xs (C.Var x' : as)
       body <- runDef $ do
         fun <- let_ (C.typeOf funObj) funObj

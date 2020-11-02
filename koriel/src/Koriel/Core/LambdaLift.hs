@@ -78,6 +78,6 @@ llift e = pure e
 
 def :: (MonadUniq m, MonadState Env m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
-  f <- newId (map typeOf xs :-> typeOf e) ("$" <> name)
+  f <- newId ("$" <> name) (map typeOf xs :-> typeOf e) 
   funcs . at f ?= (xs, e)
   pure f

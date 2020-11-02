@@ -169,8 +169,8 @@ mallocBytes bytesOpr maybeType = do
 mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m Operand
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
-toName :: Id a -> LLVM.AST.Name
-toName x = LLVM.AST.mkName $ x ^. idName <> show (x ^. idUniq)
+toName :: Pretty a => Id a -> LLVM.AST.Name
+toName x = LLVM.AST.mkName $ show $ pPrint x
 
 -- generate code for a 'known' function
 genFunc ::
@@ -415,7 +415,7 @@ genObj ::
   m (Map (Id C.Type) Operand)
 genObj funName (Fun ps e) = do
   -- クロージャの元になる関数を生成する
-  name <- toName <$> newId () (funName ^. idName <> "_closure")
+  name <- toName <$> newId (funName ^. idName <> "_closure") ()
   func <- function name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug Unreachable
     (rawCapture : ps') -> do

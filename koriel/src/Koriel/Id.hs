@@ -14,6 +14,7 @@ module Koriel.Id
     idUniq,
     idMeta,
     newId,
+    newGlobalId,
   )
 where
 
@@ -24,7 +25,8 @@ import Koriel.Pretty
 data Id a = Id
   { _idName :: String,
     _idUniq :: Int,
-    _idMeta :: a
+    _idMeta :: a,
+    _idIsGlobal :: Bool
   }
   deriving stock (Show, Functor, Foldable)
 
@@ -35,7 +37,8 @@ instance Ord (Id a) where
   compare Id {_idUniq = x} Id {_idUniq = y} = compare x y
 
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n u _) = text n <> "." <> text (show u)
+  pPrint (Id n _ _ True) = text n
+  pPrint (Id n u _ False) = text n <> "." <> text (show u)
 
 idName :: Getter (Id a) String
 idName = to _idName
@@ -46,5 +49,8 @@ idUniq = to _idUniq
 idMeta :: Lens (Id a) (Id b) a b
 idMeta = lens _idMeta (\i x -> i {_idMeta = x})
 
-newId :: MonadUniq f => a -> String -> f (Id a)
-newId m n = Id n <$> getUniq <*> pure m
+newId :: MonadUniq f =>  String -> a -> f (Id a)
+newId n m = Id n <$> getUniq <*> pure m <*> pure False
+
+newGlobalId :: MonadUniq f => String -> a -> f (Id a)
+newGlobalId n m = Id n <$> getUniq <*> pure m <*> pure True
