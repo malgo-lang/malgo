@@ -127,7 +127,7 @@ dcScDef ::
   ScDef (Griff 'TypeCheck) ->
   f [(Id C.Type, Obj (Id C.Type))]
 dcScDef (WithType pos typ, name, params, expr) = do
-  unless (has GT._TyArr typ || has GT._TyLazy typ) $
+  unless (GT._TyArr `has` typ || GT._TyLazy `has` typ) $
     errorOn pos $
       "Invalid Toplevel Declaration:"
         <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
@@ -302,7 +302,7 @@ match (u : us) (ps : pss) es err
   -- Constructor Rule
   | all (has _ConP) ps = do
     let patType = head ps ^. toType
-    unless (has _TyApp patType || has _TyCon patType) $
+    unless (_TyApp `has` patType || _TyCon `has` patType) $
       errorDoc $ "Not valid type:" <+> pPrint patType
     -- 型からコンストラクタの集合を求める
     let (con, ts) = splitCon patType
@@ -386,7 +386,7 @@ dcType (GT.TyMeta tv) = do
 
 unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t | GT._TyApp `has` t
-                 || (GT._TyCon `has` t && t ^? GT._TyCon . to kind == Just Star) =
+                 || t ^? GT._TyCon . to kind == Just Star =
   do
     let (con, ts) = splitCon t
     conMap <- lookupConMap con ts
