@@ -161,31 +161,28 @@ dcDataDef ::
   m (DesugarEnv, [[(Id C.Type, Obj (Id C.Type))]])
 dcDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
+    -- lookup constructor infomations
     Just (GT.TyCon name') <- asks $ view (tcEnv . Tc.typeEnv . at name)
     conMap <- lookupConMap name' []
     let conType = fromJust $ List.lookup conName conMap
+
+    -- desugar conType
     let (paramTypes, retType) = splitTyArr conType
     paramTypes' <- traverse dcType paramTypes
     retType' <- dcType retType
-    -- TODO: ここのcaseを一つに統合できないか考える
-    case paramTypes' of
-      [] -> do
-        conName' <- newId (conName ^. idName) ([] :-> retType')
-        unfoldedType <- unfoldType $ fromJust $ List.lookup conName conMap
-        expr <- runDef $ do
-          packed <- let_ unfoldedType $ Pack unfoldedType (C.Con (conName ^. toText) []) []
-          pure $ Cast retType' packed
-        let obj = Fun [] expr
-        pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
-      _ -> do
-        conName' <- newId (conName ^. idName) $ foldr (\a b -> [a] :-> b) retType' paramTypes'
-        ps <- traverse (newId "$p") paramTypes'
-        unfoldedType <- unfoldType retType
-        expr <- runDef $ do
-          packed <- let_ unfoldedType (Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps)
-          pure $ Cast retType' packed
-        (obj, inner) <- curryFun ps expr
-        pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj) : inner)
+
+    -- generate constructor code
+    conName' <- newId (conName ^. idName) $ buildConType paramTypes' retType'
+    ps <- traverse (newId "$p") paramTypes'
+    expr <- runDef $ do
+      unfoldedType <- unfoldType retType
+      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps)
+      pure $ Cast retType' packed
+    (obj, inner) <- curryFun ps expr
+    pure (mempty & varEnv .~ Map.singleton conName conName', (conName', obj) : inner)
+  where
+    buildConType [] retType = [] :-> retType
+    buildConType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
 
 dcUnboxed :: G.Unboxed -> C.Unboxed
 dcUnboxed (G.Int32 _) = error "Int32# is not implemented"
@@ -292,7 +289,7 @@ match (u : us) (ps : pss) es err
           ( \case
               VarP x v -> \e -> do
                 patTy <- dcType (x ^. toType)
-                -- if this assert fail, there are some bug about polymorphic type
+                -- If this assert fail, there are some bug about polymorphic type.
                 -- Ref: How to implement the Variable Rule?
                 assert (patTy == C.typeOf u) $ pure ()
                 local (over varEnv (Map.insert v u)) e
@@ -388,25 +385,17 @@ dcType (GT.TyMeta tv) = do
     Nothing -> error "TyMeta must be removed"
 
 unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
-unfoldType t@GT.TyApp {} = do
-  let (con, ts) = splitCon t
-  conMap <- lookupConMap con ts
-  SumT
-    . Set.fromList
-    <$> traverse
-      ( \(conName, conType) ->
-          C.Con (conName ^. toText) <$> traverse dcType (fst $ splitTyArr conType)
-      )
-      conMap
-unfoldType (GT.TyCon con) | kind con == Star = do
-  conMap <- lookupConMap con []
-  SumT
-    . Set.fromList
-    <$> traverse
-      ( \(conName, conType) ->
-          C.Con (conName ^. toText) <$> traverse dcType (fst $ splitTyArr conType)
-      )
-      conMap
+unfoldType t | GT._TyApp `has` t
+                 || (GT._TyCon `has` t && t ^? GT._TyCon . to kind == Just Star) =
+  do
+    let (con, ts) = splitCon t
+    conMap <- lookupConMap con ts
+    SumT
+      <$> foldMapA
+        ( \(conName, conType) ->
+            Set.singleton . C.Con (conName ^. toText) <$> traverse dcType (fst $ splitTyArr conType)
+        )
+        conMap
 unfoldType t = dcType t
 
 -- Desugar Monad
@@ -435,7 +424,7 @@ curryFun ::
 curryFun [] e@(Let ds (Atom (C.Var v))) = case List.lookup v ds of
   Just fun -> pure (fun, filter ((/= v) . fst) ds)
   Nothing -> errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
-curryFun [] e = errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
+curryFun [] e = pure (Fun [] e, [])
 curryFun [x] e = pure (Fun [x] e, [])
 curryFun ps@(_ : _) e = curryFun' ps []
   where
