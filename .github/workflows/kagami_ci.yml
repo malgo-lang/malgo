@@ -32,7 +32,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        apt-get install -y libgc-dev
+        sudo apt-get install -y libgc-dev
         cabal update
         cabal install hspec-discover
         export PATH=~/.cabal/bin:$PATH
