@@ -1,6 +1,7 @@
 #include <gc.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 typedef struct {
   int64_t tag;
@@ -10,7 +11,7 @@ typedef struct {
 const Unit unit = {0, {}};
 
 const Unit* print_int(int64_t i) {
-    printf("%lld", i);
+    printf("%" PRId64, i);
     return &unit;
 }
 

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 // type defintions
 
@@ -71,7 +72,7 @@ typedef struct
 // print
 Unit *print_int(Int *x)
 {
-  printf("%lld", x->payload);
+  printf("%" PRId64, x->payload);
   return new_Unit();
 }
 
