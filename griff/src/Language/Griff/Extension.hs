@@ -113,6 +113,7 @@ data GriffPhase = Parse | Rename | TypeCheck
 
 data Griff (p :: GriffPhase)
 
+-- Id
 type family GriffId (p :: GriffPhase) where
   GriffId 'Parse = String
   GriffId 'Rename = Id ()
@@ -122,6 +123,14 @@ type family GriffTId (p :: GriffPhase) where
   GriffTId 'Parse = String
   GriffTId 'Rename = Id ()
   GriffTId 'TypeCheck = Id ()
+
+type PsId = XId (Griff 'Parse)
+type RnId = XId (Griff 'Rename)
+type TcId = XId (Griff 'TypeCheck)
+
+type PsTId = XTId (Griff 'Parse)
+type RnTId = XTId (Griff 'Rename)
+type TcTId = XTId (Griff 'TypeCheck)
 
 type instance XVar (Griff 'Parse) = SourcePos
 

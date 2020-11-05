@@ -12,20 +12,6 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Language.Griff.Extension
-  ( Assoc,
-    Griff,
-    GriffPhase (Parse, Rename),
-    XId,
-    XTId,
-  )
-
-type PsId = XId (Griff 'Parse)
-
-type PsTId = XTId (Griff 'Parse)
-
-type RnId = XId (Griff 'Rename)
-
-type RnTId = XTId (Griff 'Rename)
 
 newtype RnState = RnState {_infixInfo :: Map RnId (Assoc, Int)}
   deriving stock (Show)

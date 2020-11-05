@@ -12,10 +12,9 @@ import qualified Data.Map as Map
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Language.Griff.Extension
 import Language.Griff.RnEnv
   ( RnEnv,
-    RnId,
-    RnTId,
   )
 import qualified Language.Griff.RnEnv as R
 import Language.Griff.Type
@@ -23,7 +22,7 @@ import Language.Griff.Type
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,
     _typeEnv :: Map RnTId Type,
-    _tyConEnv :: Map (Id Kind) ([TyVar], [(RnId, Type)]),
+    _tyConEnv :: Map TyCon ([TyVar], [(RnId, Type)]),
     _rnEnv :: RnEnv
   }
   deriving stock (Show)
@@ -40,7 +39,7 @@ varEnv = lens _varEnv (\e x -> e {_varEnv = x})
 typeEnv :: Lens' TcEnv (Map RnTId Type)
 typeEnv = lens _typeEnv (\e x -> e {_typeEnv = x})
 
-tyConEnv :: Lens' TcEnv (Map (Id Kind) ([TyVar], [(RnId, Type)]))
+tyConEnv :: Lens' TcEnv (Map TyCon ([TyVar], [(RnId, Type)]))
 tyConEnv = lens _tyConEnv (\e x -> e {_tyConEnv = x})
 
 rnEnv :: Lens' TcEnv RnEnv

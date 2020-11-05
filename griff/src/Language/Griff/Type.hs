@@ -55,8 +55,6 @@ instance Pretty Scheme where
 -- Type variable --
 -------------------
 
-type TyVar = Id Kind
-
 data MetaTv = MetaTv Int Kind (IORef (Maybe Type))
 
 instance Eq MetaTv where
@@ -125,10 +123,13 @@ instance Pretty PrimT where
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
 
+type TyVar = Id Kind
+type TyCon = Id Kind
+
 data Type
   = TyApp Type Type
   | TyVar TyVar
-  | TyCon (Id Kind)
+  | TyCon TyCon
   | TyPrim PrimT
   | TyArr Type Type
   | TyTuple [Type]
@@ -141,7 +142,7 @@ _TyApp = prism' (uncurry TyApp) $ \case
   TyApp t1 t2 -> Just (t1, t2)
   _ -> Nothing
 
-_TyCon :: Prism' Type (Id Kind)
+_TyCon :: Prism' Type TyCon
 _TyCon = prism' TyCon $ \case
   TyCon c -> Just c
   _ -> Nothing
@@ -214,7 +215,7 @@ instance HasType (WithType a) where
 -- split Type --
 ----------------
 
-splitCon :: Type -> (Id Kind, [Type])
+splitCon :: Type -> (TyCon, [Type])
 splitCon (TyCon con) = (con, [])
 splitCon (TyApp t1 t2) = let (dataCon, ts) = splitCon t1 in (dataCon, ts <> [t2])
 splitCon _ = bug Unreachable
