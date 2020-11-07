@@ -9,7 +9,6 @@
 module Language.Griff.TcEnv where
 
 import qualified Data.Map as Map
-import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Language.Griff.Extension

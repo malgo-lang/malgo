@@ -80,7 +80,7 @@ lookupCallInline ::
 lookupCallInline f as = do
   f' <- gets (view (at f))
   case f' of
-    Just (ps, v) -> runAlpha (alphaExp v) (Map.fromList $ zip ps as)
+    Just (ps, v) -> alpha v (Map.fromList $ zip ps as)
     Nothing -> pure $ Call (Var f) as
 
 type PackInlineMap = Map (Id Type) (Con, [Atom (Id Type)])

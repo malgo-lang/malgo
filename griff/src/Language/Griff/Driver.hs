@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Driver where
+module Language.Griff.Driver (compile) where
 
 import qualified Data.Map as Map
 import qualified Data.Text.IO as T

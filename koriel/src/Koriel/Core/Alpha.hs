@@ -3,9 +3,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Koriel.Core.Alpha
-  ( alphaProgram,
-    alphaExp,
-    runAlpha,
+  ( alpha,
   )
 where
 
@@ -17,6 +15,9 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+
+alpha :: MonadUniq m => Exp (Id Type) -> AlphaEnv -> m (Exp (Id Type))
+alpha = runAlpha . alphaExp
 
 runAlpha :: ReaderT AlphaEnv m a -> AlphaEnv -> m a
 runAlpha = runReaderT
@@ -39,28 +40,6 @@ lookupId n = do
   case n' of
     Var i -> pure i
     _ -> bug Unreachable
-
-alphaProgram ::
-  (MonadUniq f, MonadReader AlphaEnv f) =>
-  Program (Id Type) ->
-  f (Program (Id Type))
-alphaProgram Program {topFuncs, mainExp} = do
-  newFuncIds <- foldMapA ?? topFuncs $ \(n, _) -> Map.singleton n <$> (Var <$> cloneId n)
-  local (newFuncIds <>) $ do
-    topFuncs' <- traverse alphaFunc topFuncs
-    mainExp' <- alphaExp mainExp
-    pure $ Program {topFuncs = topFuncs', mainExp = mainExp'}
-
-alphaFunc ::
-  (MonadUniq m, MonadReader AlphaEnv m) =>
-  (Id Type, ([Id Type], Exp (Id Type))) ->
-  m (Id Type, ([Id Type], Exp (Id Type)))
-alphaFunc (f, (ps, e)) = do
-  ps' <- traverse cloneId ps
-  local (Map.fromList (zip ps (map Var ps')) <>) $ do
-    e' <- alphaExp e
-    f' <- lookupId f
-    pure (f', (ps', e'))
 
 alphaExp :: (MonadReader AlphaEnv f, MonadUniq f) => Exp (Id Type) -> f (Exp (Id Type))
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
@@ -88,3 +67,25 @@ alphaCase (Bind x e) = do
   x' <- cloneId x
   local (Map.insert x $ Var x') $ Bind x' <$> alphaExp e
 alphaCase (Switch u e) = Switch u <$> alphaExp e
+
+-- alphaProgram ::
+--   (MonadUniq f, MonadReader AlphaEnv f) =>
+--   Program (Id Type) ->
+--   f (Program (Id Type))
+-- alphaProgram Program {topFuncs, mainExp} = do
+--   newFuncIds <- foldMapA ?? topFuncs $ \(n, _) -> Map.singleton n <$> (Var <$> cloneId n)
+--   local (newFuncIds <>) $ do
+--     topFuncs' <- traverse alphaFunc topFuncs
+--     mainExp' <- alphaExp mainExp
+--     pure $ Program {topFuncs = topFuncs', mainExp = mainExp'}
+
+-- alphaFunc ::
+--   (MonadUniq m, MonadReader AlphaEnv m) =>
+--   (Id Type, ([Id Type], Exp (Id Type))) ->
+--   m (Id Type, ([Id Type], Exp (Id Type)))
+-- alphaFunc (f, (ps, e)) = do
+--   ps' <- traverse cloneId ps
+--   local (Map.fromList (zip ps (map Var ps')) <>) $ do
+--     e' <- alphaExp e
+--     f' <- lookupId f
+--     pure (f', (ps', e'))
