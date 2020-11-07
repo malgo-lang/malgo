@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -291,5 +292,12 @@ pForeign = label "foreign import" $ do
 pDecl :: Parser (Decl (Griff 'Parse))
 pDecl = pDataDef <|> pInfix <|> pForeign <|> try pScSig <|> pScDef
 
-pTopLevel :: Parser [Decl (Griff 'Parse)]
-pTopLevel = pDecl `sepEndBy` pOperator ";" <* eof
+pPackageName :: Parser String
+pPackageName = some $ identLetter <|> char '.'
+
+pTopLevel :: Parser (String, [Decl (Griff 'Parse)])
+pTopLevel = do
+  pKeyword "package"
+  x <- pPackageName
+  pOperator ";"
+  (x,) <$> pDecl `sepEndBy` pOperator ";" <* eof

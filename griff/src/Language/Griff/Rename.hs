@@ -55,7 +55,7 @@ rnDecls ds = do
   -- RnStateの生成
   --   定義されていない識別子に対するInfixはエラー
   local (rnEnv <>) $ do
-    rnState <- RnState <$> infixDecls ds
+    rnState <- RnState <$> infixDecls ds <*> use packageName
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     put rnState
     traverse rnDecl ds

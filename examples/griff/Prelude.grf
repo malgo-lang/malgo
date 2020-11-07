@@ -1,3 +1,5 @@
+package prelude;
+
 infixl 0 (|>);
 (|>) :: a -> (a -> b) -> b;
 (|>) = {x f -> f x};

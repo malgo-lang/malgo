@@ -41,15 +41,16 @@ import qualified Text.PrettyPrint.HughesPJ as P
 compile :: Opt -> IO ()
 compile opt = do
   src <- T.readFile (srcName opt)
-  ds <- case parse pTopLevel (srcName opt) src of
+  (packageName, ds) <- case parse pTopLevel (srcName opt) src of
     Right ds -> pure ds
     Left err -> error $ errorBundlePretty err
   when (dumpParsed opt) $ do
     hPutStrLn stderr "=== PARSE ==="
+    hPrint stderr $ "package" <+> P.text packageName
     hPrint stderr $ P.sep $ P.punctuate ";" $ map pPrint ds
   void $
     runUniqT ?? UniqSupply 0 $ do
-      rnState <- genRnState
+      rnState <- genRnState packageName
       rnEnv <- genRnEnv
       ds' <- rename rnState rnEnv ds
       when (dumpRenamed opt) $

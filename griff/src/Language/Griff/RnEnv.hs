@@ -13,12 +13,18 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Language.Griff.Extension
 
-newtype RnState = RnState {_infixInfo :: Map RnId (Assoc, Int)}
+data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _packageName :: String }
   deriving stock (Show)
-  deriving newtype (Semigroup, Monoid)
+
+instance Semigroup RnState where
+  RnState i1 p1 <> RnState i2 p2 | p1 == p2 = RnState (i1 <> i2) p1
+    | otherwise = error "package name mismatch"
 
 infixInfo :: Lens' RnState (Map RnId (Assoc, Int))
 infixInfo = lens _infixInfo (\s x -> s { _infixInfo = x})
+
+packageName :: Getter RnState String
+packageName = to _packageName
 
 data RnEnv = RnEnv
   { _varEnv :: Map PsId RnId,
@@ -38,8 +44,8 @@ varEnv = lens _varEnv (\e x -> e { _varEnv = x})
 typeEnv :: Lens' RnEnv (Map PsTId RnTId)
 typeEnv = lens _typeEnv (\e x -> e { _typeEnv = x})
 
-genRnState :: Monad m => m RnState
-genRnState = pure $ RnState mempty
+genRnState :: Monad m => String -> m RnState
+genRnState name = pure $ RnState mempty name
 
 genRnEnv :: MonadUniq m => m RnEnv
 genRnEnv = do
