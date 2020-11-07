@@ -118,6 +118,9 @@ newtype Package = Package String
   deriving stock (Eq, Show, Ord)
   deriving newtype (Pretty)
 
+_Package :: Lens' Package String
+_Package = lens (\(Package s) -> s) (\_ s -> Package s)
+
 -- Id
 type family GriffId (p :: GriffPhase) where
   GriffId 'Parse = String

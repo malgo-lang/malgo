@@ -28,3 +28,5 @@ putStrLn = { (String# str) ->
   print_string str;
   newline ()
 };
+
+main = { putStrLn (String# "hello"#) }

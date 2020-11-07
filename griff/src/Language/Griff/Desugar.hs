@@ -91,31 +91,31 @@ dcBindGroup bg = do
   local (env <>) $ do
     (env, foreigns') <- first mconcat <$> mapAndUnzipM dcForeign (bg ^. foreigns)
     local (env <>) $ do
-      scDefs' <- dcScDefGroup (bg ^. scDefs)
+      (env, scDefs') <- dcScDefGroup (bg ^. scDefs)
 #ifdef DEBUG
       traceShowM . pPrint . Map.toList =<< view varEnv
 #endif
-      pure $
-        buildLet (mconcat dataDefs') $
-          buildLet foreigns' $
-            buildLet scDefs' $
-              searchMain $
-                mconcat scDefs'
+      pure $ buildLet (mconcat dataDefs') $
+        buildLet foreigns' $
+          buildLet scDefs' $
+            searchMain $ Map.toList $ env ^. varEnv
   where
     buildLet [] e = e
     buildLet (x : xs) e = Let x (buildLet xs e)
-    searchMain ((bindId, Fun [] _) : _) | bindId ^. idName == "main" = Call (C.Var bindId) []
+    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsGlobal = Call (C.Var coreId) []
     searchMain (_ : xs) = searchMain xs
     searchMain _ = C.ExtCall "mainIsNotDefined" ([] :-> AnyT) []
 
 dcScDefGroup ::
   (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f) =>
   [[ScDef (Griff 'TypeCheck)]] ->
-  f [[(Id C.Type, Obj (Id C.Type))]]
-dcScDefGroup [] = pure []
+  f (DesugarEnv, [[(Id C.Type, Obj (Id C.Type))]])
+dcScDefGroup [] = (, []) <$> ask
 dcScDefGroup (ds : dss) = do
   (env, ds') <- dcScDefs ds
-  local (env <>) $ (ds' :) <$> dcScDefGroup dss
+  local (env <>) $ do
+    (env, dss') <- dcScDefGroup dss
+    pure (env, ds' : dss')
 
 -- 相互再帰的なグループをdesugar
 dcScDefs ::
@@ -125,7 +125,7 @@ dcScDefs ::
 dcScDefs ds = do
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
     Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
-    f' <- newGlobalId (f ^. idName) =<< dcType fType
+    f' <- newGlobalId (f ^. idMeta . _Package <> "." <> f ^. idName) =<< dcType fType
     pure $ mempty & varEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
 

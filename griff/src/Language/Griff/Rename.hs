@@ -29,6 +29,9 @@ rename rnState rnEnv ds = evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls 
 resolveName :: (MonadUniq m, MonadState RnState m) => String -> m (Id Package)
 resolveName name = newId name =<< use package
 
+resolveGlobalName :: (MonadUniq m, MonadState RnState m) => String -> m (Id Package)
+resolveGlobalName name = newGlobalId name =<< use package
+
 lookupVarName :: MonadReader RnEnv m => SourcePos -> String -> m RnId
 lookupVarName pos name = do
   vm <- asks $ view varEnv
@@ -51,8 +54,8 @@ rnDecls ::
 rnDecls ds = do
   -- RnEnvの生成
   let (varNames, typeNames) = toplevelIdents ds
-  vm <- foldMapA (\v -> Map.singleton v <$> resolveName v) varNames
-  tm <- foldMapA (\v -> Map.singleton v <$> resolveName v) typeNames
+  vm <- foldMapA (\v -> Map.singleton v <$> resolveGlobalName v) varNames
+  tm <- foldMapA (\v -> Map.singleton v <$> resolveGlobalName v) typeNames
   let rnEnv = RnEnv vm tm
   -- RnStateの生成
   --   定義されていない識別子に対するInfixはエラー
