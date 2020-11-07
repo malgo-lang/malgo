@@ -23,6 +23,12 @@ import Language.Griff.Syntax
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
+rename :: MonadUniq m => RnState -> RnEnv -> [Decl (Griff 'Parse)] -> m [Decl (Griff 'Rename)]
+rename rnState rnEnv ds = evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
+
+resolveName :: (MonadUniq m, MonadState RnState m) => String -> m (Id Package)
+resolveName name = newId name =<< use package
+
 lookupVarName :: MonadReader RnEnv m => SourcePos -> String -> m RnId
 lookupVarName pos name = do
   vm <- asks $ view varEnv
@@ -36,10 +42,6 @@ lookupTypeName pos name = do
   case tm ^. at name of
     Just name' -> pure name'
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
-
-rename :: MonadUniq m => RnState -> RnEnv -> [Decl (Griff 'Parse)] -> m [Decl (Griff 'Rename)]
-rename rnState rnEnv ds = evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
-
 -- renamer
 
 rnDecls ::
@@ -49,13 +51,13 @@ rnDecls ::
 rnDecls ds = do
   -- RnEnvの生成
   let (varNames, typeNames) = toplevelIdents ds
-  vm <- foldMapA (\v -> Map.singleton v <$> newId v ()) varNames
-  tm <- foldMapA (\v -> Map.singleton v <$> newId v ()) typeNames
+  vm <- foldMapA (\v -> Map.singleton v <$> resolveName v) varNames
+  tm <- foldMapA (\v -> Map.singleton v <$> resolveName v) typeNames
   let rnEnv = RnEnv vm tm
   -- RnStateの生成
   --   定義されていない識別子に対するInfixはエラー
   local (rnEnv <>) $ do
-    rnState <- RnState <$> infixDecls ds <*> use packageName
+    rnState <- RnState <$> infixDecls ds <*> use package
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     put rnState
     traverse rnDecl ds
@@ -67,7 +69,7 @@ rnDecl ::
   Decl (Griff 'Parse) ->
   m (Decl (Griff 'Rename))
 rnDecl (ScDef pos name params expr) = do
-  params' <- traverse (newId ?? ()) params
+  params' <- traverse resolveName params
   local (over varEnv (Map.fromList (zip params params') <>)) $
     ScDef pos
       <$> lookupVarName pos name
@@ -75,13 +77,13 @@ rnDecl (ScDef pos name params expr) = do
       <*> rnExp expr
 rnDecl (ScSig pos name typ) = do
   let tyVars = Set.toList $ getTyVars typ
-  tyVars' <- traverse (newId ?? ()) tyVars
+  tyVars' <- traverse resolveName tyVars
   local (over typeEnv (Map.fromList (zip tyVars tyVars') <>)) $
     ScSig pos
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
-  params' <- traverse (newId ?? ()) params
+  params' <- traverse resolveName params
   local (over typeEnv (Map.fromList (zip params params') <>)) $
     DataDef pos
       <$> lookupTypeName pos name
@@ -90,7 +92,7 @@ rnDecl (DataDef pos name params cs) = do
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
 rnDecl (Foreign pos name typ) = do
   let tyVars = Set.toList $ getTyVars typ
-  tyVars' <- traverse (newId ?? ()) tyVars
+  tyVars' <- traverse resolveName tyVars
   local (over typeEnv (Map.fromList (zip tyVars tyVars') <>)) $
     Foreign (pos, name)
       <$> lookupVarName pos name
@@ -133,7 +135,7 @@ rnClause (Clause pos ps e) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   unless (allUnique vars) $ errorOn pos "Same variables occurs in a pattern"
-  vars' <- traverse (newId ?? ()) vars
+  vars' <- traverse resolveName vars
   let vm = Map.fromList $ zip vars vars'
   local (over varEnv (vm <>)) $ Clause pos <$> traverse rnPat ps <*> rnExp e
   where

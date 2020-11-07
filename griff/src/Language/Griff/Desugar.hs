@@ -8,6 +8,7 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Griff.Desugar where
@@ -34,9 +35,12 @@ import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
 import qualified Language.Griff.Typing as Typing
 import qualified Text.PrettyPrint.HughesPJ as P
+#ifdef DEBUG
+import Debug.Trace (traceShowM)
+#endif
 
 data DesugarEnv = DesugarEnv
-  { _varEnv :: Map (Id ()) (Id C.Type),
+  { _varEnv :: Map TcId (Id C.Type),
     _tcEnv :: TcEnv
   }
   deriving stock (Show)
@@ -47,7 +51,7 @@ instance Semigroup DesugarEnv where
 instance Monoid DesugarEnv where
   mempty = DesugarEnv mempty mempty
 
-varEnv :: Lens' DesugarEnv (Map (Id ()) (Id C.Type))
+varEnv :: Lens' DesugarEnv (Map TcId (Id C.Type))
 varEnv = lens _varEnv (\e x -> e {_varEnv = x})
 
 tcEnv :: Lens' DesugarEnv TcEnv
@@ -88,6 +92,9 @@ dcBindGroup bg = do
     (env, foreigns') <- first mconcat <$> mapAndUnzipM dcForeign (bg ^. foreigns)
     local (env <>) $ do
       scDefs' <- dcScDefGroup (bg ^. scDefs)
+#ifdef DEBUG
+      traceShowM . pPrint . Map.toList =<< view varEnv
+#endif
       pure $
         buildLet (mconcat dataDefs') $
           buildLet foreigns' $
@@ -400,7 +407,7 @@ unfoldType t = dcType t
 
 -- Desugar Monad
 
-lookupName :: (HasCallStack, MonadReader DesugarEnv m) => Id () -> m (Id C.Type)
+lookupName :: (HasCallStack, MonadReader DesugarEnv m) => TcId -> m (Id C.Type)
 lookupName name = do
   mname' <- asks $ view (varEnv . at name)
   case mname' of
@@ -411,11 +418,12 @@ lookupConMap ::
   (MonadReader DesugarEnv m, MonadFail m) =>
   Id Kind ->
   [GT.Type] ->
-  m [(Id (), GT.Type)]
+  m [(TcTId, GT.Type)]
 lookupConMap con ts = do
   Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
   pure $ over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
 
+-- innerをbodyの中に入れられないか？
 curryFun ::
   (HasCallStack, MonadUniq m) =>
   [Id C.Type] ->

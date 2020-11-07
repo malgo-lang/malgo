@@ -233,7 +233,7 @@ tcScSigs ds = fmap (first mconcat) $
 prepareTcScDefs ::
   (Foldable f, MonadReader TcEnv m, MonadUniq m, MonadIO m) =>
   f (ScDef (Griff 'Rename)) ->
-  m (Map (Id ()) Scheme)
+  m (Map RnId Scheme)
 prepareTcScDefs ds = foldMapA ?? ds $ \(_, name, _, _) -> do
   mscheme <- asks $ view $ T.varEnv . at name
   case mscheme of

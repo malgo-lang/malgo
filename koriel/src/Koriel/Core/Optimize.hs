@@ -111,19 +111,20 @@ optVarBind (Let ds e) = Let <$> traverseOf (traversed . _2 . appObj) optVarBind 
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e
 
-removeUnusedLet :: (Monad f, Ord a) => Exp a -> f (Exp a)
+removeUnusedLet :: Monad f => Exp (Id a) -> f (Exp (Id a))
 removeUnusedLet (Let ds e) = do
   ds' <- traverseOf (traversed . _2 . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
   let gamma = map (\(v, o) -> (v, Set.delete v $ freevars o)) ds'
   let ds'' = filter (\(v, _) -> reachable 100 gamma v $ freevars e') ds'
-  if null ds'' then pure e' else pure $ Let ds'' e'
+  if null ds'' then pure e' else pure $ Let ds' e'
   where
     reachable limit gamma v fvs
       | limit <= 0 =
         undefined
-      | v `elem` fvs =
-        True
+      -- 相互再帰する関数との相互作用で何かがバグる
+      | v ^. idIsGlobal = True
+      | v `elem` fvs = True
       | otherwise =
         let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ Set.toList fvs)
          in fvs /= fvs' && reachable (limit - 1 :: Int) gamma v fvs'

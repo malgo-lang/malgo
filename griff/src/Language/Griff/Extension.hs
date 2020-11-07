@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -113,16 +114,20 @@ data GriffPhase = Parse | Rename | TypeCheck
 
 data Griff (p :: GriffPhase)
 
+newtype Package = Package String
+  deriving stock (Eq, Show, Ord)
+  deriving newtype (Pretty)
+
 -- Id
 type family GriffId (p :: GriffPhase) where
   GriffId 'Parse = String
-  GriffId 'Rename = Id ()
-  GriffId 'TypeCheck = Id ()
+  GriffId 'Rename = Id Package
+  GriffId 'TypeCheck = Id Package
 
 type family GriffTId (p :: GriffPhase) where
   GriffTId 'Parse = String
-  GriffTId 'Rename = Id ()
-  GriffTId 'TypeCheck = Id ()
+  GriffTId 'Rename = Id Package
+  GriffTId 'TypeCheck = Id Package
 
 type PsId = XId (Griff 'Parse)
 
