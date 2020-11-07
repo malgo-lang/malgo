@@ -37,7 +37,8 @@ optimize level expr =
     $ flat
       <$> times
         10
-        ( optVarBind
+        ( pure
+            >=> optVarBind
             >=> (flip runReaderT mempty . optPackInline)
             >=> removeUnusedLet
             >=> (flip evalStateT mempty . optCallInline)
@@ -59,7 +60,7 @@ optCallInline (Match v cs) =
 optCallInline (Let ds e) = do
   ds' <- traverseOf (traversed . _2 . appObj) optCallInline ds
   traverse_ checkInlineable ds'
-  Let <$> traverseOf (traversed . _2 . appObj) optCallInline ds' <*> optCallInline e
+  Let ds' <$> optCallInline e
 optCallInline e = pure e
 
 checkInlineable ::
