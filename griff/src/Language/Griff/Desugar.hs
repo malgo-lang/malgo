@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -7,7 +8,6 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Language.Griff.Desugar where
@@ -34,6 +34,7 @@ import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
 import qualified Language.Griff.Typing as Typing
 import qualified Text.PrettyPrint.HughesPJ as P
+
 #ifdef DEBUG
 import Debug.Trace (traceShowM)
 #endif
@@ -60,21 +61,27 @@ desugar ::
   (MonadUniq m, MonadFail m, MonadIO m) =>
   TcEnv ->
   BindGroup (Griff 'TypeCheck) ->
-  m (C.Exp (Id C.Type))
+  m (Program (Id C.Type))
 desugar tcEnv ds = do
   (dcEnv, prims) <- genPrimitive tcEnv
-  Let prims <$> runReaderT (dcBindGroup ds) dcEnv
+  (dcEnv', ds') <- runReaderT (dcBindGroup ds) dcEnv
+  pure $ Program (prims <> ds') $ searchMain $ Map.toList $ view varEnv dcEnv'
+  where
+    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsGlobal = CallDirect coreId []
+    searchMain (_ : xs) = searchMain xs
+    searchMain _ = C.ExtCall "mainIsNotDefined" ([] :-> AnyT) []
 
 genPrimitive ::
   (MonadUniq m, MonadIO m, MonadFail m) =>
   TcEnv ->
-  m (DesugarEnv, [(Id C.Type, Obj (Id C.Type))])
+  m (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 genPrimitive env = do
+  uniq <- getUniq
   let add_i64 = fromJust $ view (Tc.rnEnv . Rn.varEnv . at "add_i64#") env
   let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
-  add_i64' <- newId "add_i64#" =<< dcType add_i64_type
+  add_i64' <- newGlobalId ("add_i64#" <> show uniq) =<< dcType add_i64_type
   add_i64_param <- newId "$p" $ SumT $ Set.singleton (C.Con "Tuple2" [C.Int64T, C.Int64T])
-  add_i64_fun <- fmap (Fun [add_i64_param]) $
+  add_i64_fun <- fmap ([add_i64_param],) $
     runDef $ do
       [x, y] <- destruct (Atom $ C.Var add_i64_param) (C.Con "Tuple2" [C.Int64T, C.Int64T])
       pure $ BinOp Add x y
@@ -84,7 +91,7 @@ genPrimitive env = do
 dcBindGroup ::
   (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) =>
   BindGroup (Griff 'TypeCheck) ->
-  m (C.Exp (Id C.Type))
+  m (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dcBindGroup bg = do
   (env, dataDefs') <- first mconcat <$> mapAndUnzipM dcDataDef (bg ^. dataDefs)
   local (env <>) $ do
@@ -94,22 +101,13 @@ dcBindGroup bg = do
 #ifdef DEBUG
       traceShowM . pPrint . Map.toList =<< view varEnv
 #endif
-      pure $ buildLet (mconcat dataDefs') $
-        buildLet foreigns' $
-          buildLet scDefs' $
-            searchMain $ Map.toList $ env ^. varEnv
-  where
-    buildLet [] e = e
-    buildLet (x : xs) e = Let x (buildLet xs e)
-    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsGlobal = Call (C.Var coreId) []
-    searchMain (_ : xs) = searchMain xs
-    searchMain _ = C.ExtCall "mainIsNotDefined" ([] :-> AnyT) []
+      pure $ (env,) $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
 dcScDefGroup ::
   (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f) =>
   [[ScDef (Griff 'TypeCheck)]] ->
-  f (DesugarEnv, [[(Id C.Type, Obj (Id C.Type))]])
-dcScDefGroup [] = (, []) <$> ask
+  f (DesugarEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
+dcScDefGroup [] = (,[]) <$> ask
 dcScDefGroup (ds : dss) = do
   (env, ds') <- dcScDefs ds
   local (env <>) $ do
@@ -120,7 +118,7 @@ dcScDefGroup (ds : dss) = do
 dcScDefs ::
   (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f) =>
   [ScDef (Griff 'TypeCheck)] ->
-  f (DesugarEnv, [(Id C.Type, Obj (Id C.Type))])
+  f (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dcScDefs ds = do
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
     Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
@@ -131,7 +129,7 @@ dcScDefs ds = do
 dcScDef ::
   (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f) =>
   ScDef (Griff 'TypeCheck) ->
-  f [(Id C.Type, Obj (Id C.Type))]
+  f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dcScDef (WithType pos typ, name, params, expr) = do
   unless (GT._TyArr `has` typ || GT._TyLazy `has` typ) $
     errorOn pos $
@@ -139,7 +137,7 @@ dcScDef (WithType pos typ, name, params, expr) = do
         <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
   -- When typ is TyLazy{}, splitTyArr returns ([], typ).
   let (paramTypes, _) = splitTyArr typ
-  params' <- zipWithM (newId . view idName) params =<< traverse dcType paramTypes
+  params' <- zipWithM newCoreId params =<< traverse dcType paramTypes
   local (over varEnv (Map.fromList (zip params params') <>)) $ do
     name' <- lookupName name
     fun <- curryFun params' =<< dcExp expr
@@ -152,9 +150,9 @@ dcScDef (WithType pos typ, name, params, expr) = do
 dcForeign ::
   (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) =>
   Foreign (Griff 'TypeCheck) ->
-  f (DesugarEnv, [(Id C.Type, Obj (Id C.Type))])
+  f (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dcForeign (x@(WithType (_, primName) _), name, _) = do
-  name' <- newId (name ^. idName) =<< dcType (x ^. toType)
+  name' <- newCoreId name =<< dcType (x ^. toType)
   let (paramTypes, _) = splitTyArr (x ^. toType)
   params <- traverse (newId "$p" <=< dcType) paramTypes
   primType <- dcType (view toType x)
@@ -164,7 +162,7 @@ dcForeign (x@(WithType (_, primName) _), name, _) = do
 dcDataDef ::
   (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) =>
   DataDef (Griff 'TypeCheck) ->
-  m (DesugarEnv, [[(Id C.Type, Obj (Id C.Type))]])
+  m (DesugarEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
 dcDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
     -- lookup constructor infomations
@@ -178,7 +176,7 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
     retType' <- dcType retType
 
     -- generate constructor code
-    conName' <- newId (conName ^. idName) $ buildConType paramTypes' retType'
+    conName' <- newCoreId conName $ buildConType paramTypes' retType'
     ps <- traverse (newId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
@@ -205,15 +203,29 @@ dcExp ::
 dcExp (G.Var x name) = do
   name' <- lookupName name
   case (x ^. toType, C.typeOf name') of
-    (GT.TyLazy {}, [] :-> _) -> pure $ Atom $ C.Var name'
+    -- TyLazyの型を検査
+    (GT.TyLazy {}, [] :-> _) -> pure ()
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> P.quotes (pPrint $ C.typeOf name')
-    (_, [] :-> _) -> pure $ Call (C.Var name') []
-    _ -> pure $ Atom $ C.Var name'
+    (_, [] :-> _) -> errorDoc $ "Invlalid type:" <+> P.quotes (pPrint name)
+    _ -> pure ()
+  if name' ^. idIsGlobal
+    then do
+      clsId <- newId "$gblcls" (C.typeOf name')
+      ps <- case C.typeOf name' of
+        pts :-> _ -> traverse (newId "$p") pts
+        _ -> bug Unreachable
+      pure $ Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+    else pure $ Atom $ C.Var name'
 dcExp (G.Con _ name) = do
   name' <- lookupName name
   case C.typeOf name' of
-    [] :-> _ -> pure $ Call (C.Var name') []
-    _ -> pure $ Atom $ C.Var name'
+    -- コンストラクタは全部global
+    [] :-> _ -> pure $ CallDirect name' []
+    pts :-> _ -> do
+      clsId <- newId "$concls" (C.typeOf name')
+      ps <- traverse (newId "$p") pts
+      pure $ Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+    _ -> bug Unreachable
 dcExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dcUnboxed u
 dcExp (G.Apply _ f x) = runDef $ do
   f' <- bind =<< dcExp f
@@ -232,7 +244,10 @@ dcExp (G.OpApp _ op x y) = runDef $ do
       -- Ref: [Cast Argument Type]
       x' <- cast xType =<< dcExp x
       y' <- cast yType =<< dcExp y
-      e1 <- bind (Call (C.Var op') [x'])
+      e1 <-
+        if op' ^. idIsGlobal
+          then bind (CallDirect op' [x'])
+          else bind (Call (C.Var op') [x'])
       pure $ Call e1 [y']
     _ -> bug Unreachable
 dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
@@ -247,7 +262,7 @@ dcExp (G.Fn x cs@(Clause _ ps e : _)) = do
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
   v <- newId "$fun" =<< dcType (x ^. toType)
-  pure $ Let [(v, obj)] $ Atom $ C.Var v
+  pure $ Let [(v, uncurry Fun obj)] $ Atom $ C.Var v
 dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dcExp) es
@@ -422,18 +437,23 @@ lookupConMap con ts = do
   Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
   pure $ over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
 
+newCoreId :: MonadUniq m => Id Package -> C.Type -> m (Id C.Type)
+newCoreId griffId coreType = do
+  coreId <- newId (griffId ^. idMeta . _Package <> "." <> griffId ^. idName) coreType
+  pure $ coreId & idIsGlobal .~ griffId ^. idIsGlobal
+
 -- innerをbodyの中に入れられないか？
 curryFun ::
   (HasCallStack, MonadUniq m) =>
   [Id C.Type] ->
   C.Exp (Id C.Type) ->
   -- m (Obj (Id C.Type), [(Id C.Type, Obj (Id C.Type))])
-  m (Obj (Id C.Type))
+  m ([Id C.Type], C.Exp (Id C.Type))
 curryFun [] e@(Let ds (Atom (C.Var v))) = case List.lookup v ds of
-  Just fun | not $ any ((/= v) . fst) ds -> pure fun
+  Just (Fun ps e) | not $ any ((/= v) . fst) ds -> pure (ps, e)
   _ -> errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
-curryFun [] e = pure (Fun [] e)
-curryFun [x] e = pure (Fun [x] e)
+curryFun [] e = pure ([], e)
+curryFun [x] e = pure ([x], e)
 curryFun ps@(_ : _) e = curryFun' ps []
   where
     curryFun' [] _ = bug Unreachable
@@ -441,11 +461,12 @@ curryFun ps@(_ : _) e = curryFun' ps []
       x' <- newId (x ^. idName) (C.typeOf x)
       fun <- newId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
-      pure (Fun [x'] $ Let [(fun, Fun ps e)] body)
+      pure ([x'], Let [(fun, Fun ps e)] body)
     curryFun' (x : xs) as = do
       x' <- newId (x ^. idName) (C.typeOf x)
-      funObj <- curryFun' xs (C.Var x' : as)
+      fun <- curryFun' xs (C.Var x' : as)
+      let funObj = uncurry Fun fun
       body <- runDef $ do
         fun <- let_ (C.typeOf funObj) funObj
         pure $ Atom fun
-      pure (Fun [x'] body)
+      pure ([x'], body)

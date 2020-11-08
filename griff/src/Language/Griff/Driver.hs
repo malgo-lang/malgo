@@ -6,6 +6,12 @@ module Language.Griff.Driver (compile) where
 import qualified Data.Map as Map
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
+import Koriel.Core.CodeGen (codeGen)
+import Koriel.Core.Core
+import Koriel.Core.Flat (flat)
+import Koriel.Core.LambdaLift (lambdalift)
+import Koriel.Core.Lint (lintProgram, runLint)
+import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
@@ -21,12 +27,6 @@ import Language.Griff.RnEnv
   )
 import qualified Language.Griff.TcEnv as T
 import Language.Griff.Typing (typeCheck)
-import Koriel.Core.CodeGen (codeGen)
-import Koriel.Core.Flat (flat)
-import Koriel.Core.LambdaLift (lambdalift)
-import Koriel.Core.Lint (lint)
-import Koriel.Core.Optimize (optimize)
-import Koriel.Core.Core
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -69,20 +69,20 @@ compile opt = do
       when (dumpDesugar opt) $
         liftIO $ do
           hPutStrLn stderr "=== DESUGAR ==="
-          hPrint stderr $ pPrint $ flat core
-      lint core
-      coreOpt <- if noOptimize opt then pure $ flat core else optimize (inlineSize opt) $ flat core
+          hPrint stderr . pPrint =<< appProgram (pure . flat) core
+      runLint $ lintProgram core
+      coreOpt <- if noOptimize opt then appProgram (pure . flat) core else optimizeProgram (inlineSize opt) core
       when (dumpDesugar opt && not (noOptimize opt)) $
         liftIO $ do
           hPutStrLn stderr "=== OPTIMIZE ==="
           hPrint stderr $ pPrint coreOpt
-      lint coreOpt
+      runLint $ lintProgram coreOpt
       coreProg <-
         if noOptimize opt
-          then lambdalift Program {topFuncs = [], mainExp = coreOpt}
+          then lambdalift coreOpt
           else
-            traverseOf appProgram (optimize (inlineSize opt))
-              =<< lambdalift Program {topFuncs = [], mainExp = coreOpt}
+            optimizeProgram (inlineSize opt)
+              =<< lambdalift coreOpt
       when (dumpDesugar opt) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
