@@ -35,7 +35,7 @@ jobs:
     - name: Install dependencies
       run: |
         cabal update
-        cabal install hspec-discover
+        cabal install hspec-discover --overwrite-policy=always
         export PATH=~/.cabal/bin:$PATH
         cabal build koriel --only-dependencies --enable-tests --enable-benchmarks
 
