@@ -6,6 +6,7 @@ Griffは、静的型付けの関数プログラミング言語です。Haskell�
 
 Griffで書かれたHello, worldの例です。
 
+Hello.grf
 ```
 package hello; -- package名の宣言
 
@@ -29,8 +30,15 @@ main = {
 };
 ```
 
-末尾に`#`がつく値や型は、ポインタを介さない生の値表現を表します。
-将来のアップデートでポインタを介した値のリテラルを追加する予定です。
+Hello.grfは以下のようにコンパイル、実行します。
+コンパイルにはlibgcが必要です。
+
+```sh
+$ griffc Hello.grf -o Hello.o
+$ clang -lgc Hello.o runtime/griff/rts.c
+$ ./a.out
+Hello, world
+```
 
 ## 関数リテラルとパターンマッチ
 
