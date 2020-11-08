@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -8,6 +9,7 @@
 
 module Koriel.Core.Optimize
   ( optimize,
+    optimizeProgram,
   )
 where
 
@@ -48,6 +50,27 @@ optimize level expr =
         )
         expr
 
+optimizeExpr :: (MonadReader Int f, MonadUniq f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
+optimizeExpr state expr =
+  flat
+    <$> times
+      10
+      ( pure
+          >=> optVarBind
+          >=> (flip runReaderT mempty . optPackInline)
+          >=> removeUnusedLet
+          >=> (flip evalStateT state . optCallInline)
+          >=> optCast
+          >=> pure
+            . flat
+      )
+      expr
+
+optimizeProgram :: MonadUniq m => Int -> Program (Id Type) -> m (Program (Id Type))
+optimizeProgram level prog@(Program fs _) = runReaderT ?? level $ do
+  state <- execStateT (traverse (checkInlineable . over _2 (uncurry Fun)) fs) mempty
+  appProgram (optimizeExpr state) prog
+
 type CallInlineMap = Map (Id Type) ([Id Type], Exp (Id Type))
 
 optCallInline ::
@@ -55,6 +78,10 @@ optCallInline ::
   Exp (Id Type) ->
   f (Exp (Id Type))
 optCallInline (Call (Var f) xs) = lookupCallInline f xs
+-- CallDirectをインライン展開するとコードサイズが爆発する事がある。要調査
+-- また、CallDirectをインライン展開して
+-- `traverseOf appProgram (optimize (inlineSize opt))`を適用するとコードが壊れる。要調査
+-- optCallInline (CallDirect f xs) = lookupCallInline f xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
 optCallInline (Let ds e) = do
