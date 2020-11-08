@@ -4,7 +4,6 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -431,7 +430,7 @@ curryFun ::
   -- m (Obj (Id C.Type), [(Id C.Type, Obj (Id C.Type))])
   m (Obj (Id C.Type))
 curryFun [] e@(Let ds (Atom (C.Var v))) = case List.lookup v ds of
-  Just fun | null $ filter ((/= v) . fst) ds -> pure fun
+  Just fun | not $ any ((/= v) . fst) ds -> pure fun
   _ -> errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
 curryFun [] e = pure (Fun [] e)
 curryFun [x] e = pure (Fun [x] e)

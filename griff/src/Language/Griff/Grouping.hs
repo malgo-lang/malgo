@@ -3,7 +3,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -46,9 +45,6 @@ scSigs = lens _scSigs (\e x -> e { _scSigs = x })
 
 dataDefs :: Lens' (BindGroup x) [DataDef x]
 dataDefs = lens _dataDefs (\e x -> e { _dataDefs = x })
-
-infixs :: Lens' (BindGroup x) [Infix x]
-infixs = lens _infixs (\e x -> e { _infixs = x })
 
 foreigns :: Lens' (BindGroup x) [Foreign x]
 foreigns = lens _foreigns (\e x -> e { _foreigns = x })

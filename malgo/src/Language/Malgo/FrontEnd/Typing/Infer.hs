@@ -212,7 +212,7 @@ toType' :: MonadUniq m => Maybe (SType (Id ())) -> StateT STypeVarEnv m Type
 toType' mt = liftM2 fromMaybe newTyMeta $ traverse toType mt
 
 toType :: MonadUniq m => SType (Id ()) -> StateT STypeVarEnv m Type
-toType (TyVar x) = do
+toType (TyVar x) =
   use (at x)
     >>= \case
       Nothing -> (at x <?=) =<< newTyMeta

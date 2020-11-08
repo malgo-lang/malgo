@@ -149,7 +149,7 @@ findFun x = do
 -- すでにexternしている場合は、そのOperandを返す
 -- 同じ名前を2回externできないため
 findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [LT.Type] -> LT.Type -> m Operand
-findExt x ps r = do
+findExt x ps r =
   use (at x) >>= \case
     Just x -> pure x
     Nothing -> (at x <?=) =<< extern (LLVM.AST.mkName x) ps r
@@ -291,11 +291,11 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         DoubleT -> fcmp FP.OGE x' y'
         CharT -> icmp IP.UGE x' y'
         _ -> bug Unreachable
-    genOp Op.And = \x' y' -> do
-      LLVM.IRBuilder.and x' y'
-    genOp Op.Or = \x' y' -> do
-      LLVM.IRBuilder.or x' y'
-    i1ToBool i1opr = do
+    genOp Op.And = 
+      LLVM.IRBuilder.and
+    genOp Op.Or =
+      LLVM.IRBuilder.or
+    i1ToBool i1opr =
       zext i1opr i8
 genExp (ArrayRead a i) k = do
   aOpr <- genAtom a
