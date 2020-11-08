@@ -8,6 +8,8 @@
 
 module Koriel.Core.Lint
   ( lint,
+    runLint,
+    lintProgram,
   )
 where
 
@@ -18,6 +20,12 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
+
+runLint :: Monad m => ReaderT [a] (ExceptT Doc m) b -> m b
+runLint m =
+  runExceptT (runReaderT m []) >>= \case
+    Left err -> errorDoc err
+    Right e' -> pure e'
 
 lint :: (Monad m, HasType a, Pretty a) => Exp (Id a) -> m ()
 lint e =
@@ -128,3 +136,10 @@ lintCase (Bind x e) = local (x :) $ lintExp e
 lintAtom :: (MonadReader [Id a] m, MonadError Doc m, Pretty a) => Atom (Id a) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pure ()
+
+lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m) => Program (Id a) -> m ()
+lintProgram (Program funcs e) = do
+  let fs = map (view _1) funcs
+  local (fs <>) $ do
+    traverse_ (\(_, (ps, body)) -> local (ps <>) $ lintExp body) funcs
+    lintExp e
