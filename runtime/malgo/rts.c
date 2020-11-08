@@ -13,7 +13,7 @@
 // :: {}
 typedef struct
 {
-  int64_t tag;
+  uint8_t tag;
   struct
   {
   } payload;
@@ -29,21 +29,21 @@ Unit *new_Unit(void)
 // :: Int
 typedef struct
 {
-  int64_t tag;
+  uint8_t tag;
   int64_t payload;
 } Int;
 
 // :: Float
 typedef struct
 {
-  int64_t tag;
+  uint8_t tag;
   double payload;
 } Float;
 
 // :: Bool
 typedef struct
 {
-  int64_t tag;
+  uint8_t tag;
   int8_t payload;
 } Bool;
 
@@ -58,14 +58,14 @@ Bool *new_Bool(bool x)
 // :: String
 typedef struct
 {
-  int64_t tag;
+  uint8_t tag;
   char *payload;
 } String;
 
 // :: Char
 typedef struct
 {
-  int64_t tag;
+  uint8_t tag;
   char payload;
 } Char;
 

@@ -4,7 +4,7 @@
 #include <inttypes.h>
 
 typedef struct {
-  int64_t tag;
+  uint8_t tag;
   struct {} payload;
 } Unit;
 
