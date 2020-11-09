@@ -78,10 +78,14 @@ compile opt = do
           hPrint stderr $ pPrint coreOpt
       runLint $ lintProgram coreOpt
       coreLL <- if noLambdaLift opt then pure coreOpt else lambdalift coreOpt
-      coreLLOpt <- if noOptimize opt then pure coreLL else optimizeProgram (inlineSize opt) coreLL
       when (dumpDesugar opt && not (noLambdaLift opt)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
+          hPrint stderr $ pPrint coreLL
+      coreLLOpt <- if noOptimize opt then pure coreLL else optimizeProgram (inlineSize opt) coreLL
+      when (dumpDesugar opt && not (noLambdaLift opt) && not (noOptimize opt)) $
+        liftIO $ do
+          hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint coreLLOpt
       llvmir <- codeGen coreLLOpt
       liftIO $
