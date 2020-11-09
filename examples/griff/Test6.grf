@@ -4,4 +4,8 @@ data RGB = R | G | B;
 
 rtob = {R -> B};
 
-main = { rtob R }
+foreign import print_string :: String# -> ();
+
+main = { {B -> print_string "OK"# | _ -> print_string "WRONG"# } (rtob R) }
+
+-- Expected: OK

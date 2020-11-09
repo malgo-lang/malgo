@@ -12,3 +12,5 @@ infixl 6 (+#);
 (+#) = {x y -> add_i64# (x, y)};
 
 main = { Int# 1L# |> {(Int# i) -> print_int i} };
+
+-- Expected: 1

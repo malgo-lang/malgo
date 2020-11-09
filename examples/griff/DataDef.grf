@@ -2,4 +2,8 @@ package dataDef;
 data Int = Int# Int64#;
 data List a = Nil | Cons a (List a);
 
-main = { Int# 1L# }
+foreign import print_int :: Int64# -> ();
+
+main = { {(Int# x) -> print_int x} (Int# 1L#) }
+
+-- Expected: 1

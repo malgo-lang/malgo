@@ -28,3 +28,5 @@ main = {
     sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil))
       |> {(Int# i) -> print_int i}
     }
+
+-- Expected: 3
