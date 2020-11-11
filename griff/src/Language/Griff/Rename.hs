@@ -6,6 +6,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
+-- | 名前解決
 module Language.Griff.Rename where
 
 import Data.List (intersect)

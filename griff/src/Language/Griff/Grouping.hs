@@ -8,6 +8,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
+-- | トップレベルの宣言を、依存関係に基づいて分割する
 module Language.Griff.Grouping where
 
 import Data.Graph

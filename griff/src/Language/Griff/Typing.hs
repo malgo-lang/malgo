@@ -8,6 +8,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
+-- | 型検査
 module Language.Griff.Typing
   ( typeCheck,
     transType,
@@ -37,6 +38,7 @@ import qualified Text.PrettyPrint as P
 -- Generalize and Instantiate --
 --------------------------------
 
+-- 型内の自由変数を取り出し、抽象化する
 generalize :: (MonadIO m, MonadUniq m) => TcEnv -> Type -> m Scheme
 generalize env t = do
   fvs <- toList <$> freeMetaTvs env t
@@ -61,6 +63,7 @@ metaTvs _ = mempty
 metaTvsScheme :: Scheme -> Set MetaTv
 metaTvsScheme (Forall _ t) = metaTvs t
 
+-- 型を具体化する
 instantiate :: (MonadUniq m, MonadIO m) => Scheme -> m Type
 instantiate (Forall as t) = do
   vs <- traverse (\a -> TyMeta <$> newMetaTv (kind a)) as
@@ -78,6 +81,7 @@ applySubst _ t = t
 -- Unification --
 -----------------
 
+-- 型を単一化する
 unify :: (HasCallStack, MonadIO m) => SourcePos -> Type -> Type -> m ()
 unify pos t1 t2 = do
   t1' <- zonkType t1
@@ -110,6 +114,12 @@ unifyMeta pos tv t2
           then errorOn pos $ "Occurs check" <+> P.quotes (pPrint tv) <+> "for" <+> pPrint t2
           else writeMetaTv tv t2
 
+----------------
+-- Type Check --
+----------------
+
+-- 型検査を行う。
+-- BindGroupへの変換もここで行う。
 typeCheck ::
   (MonadUniq m, MonadIO m, MonadFail m) =>
   RnEnv ->
@@ -131,10 +141,12 @@ tcDecls ds = do
     local (env <>) $ do
       (env, scSigs') <- tcScSigs (bindGroup ^. scSigs)
       local (env <>) $ do
+        -- 再帰的な参照に対応するため、ScDefで定義されている変数の暫定的な型を環境に登録する。
         env <- mconcat <$> traverse prepareTcScDefs (bindGroup ^. scDefs)
         local (over T.varEnv (env <>)) $ do
           (env, scDefs') <- tcScDefGroup (bindGroup ^. scDefs)
           local (env <>) $ do
+            -- すべてのメタ変数をzonkする
             env <-
               ask
                 >>= traverseOf (T.varEnv . traversed) zonkScheme
@@ -235,6 +247,7 @@ prepareTcScDefs ::
   f (ScDef (Griff 'Rename)) ->
   m (Map RnId Scheme)
 prepareTcScDefs ds = foldMapA ?? ds $ \(_, name, _, _) -> do
+  -- ScSigによる型注釈がないScDefの暫定的な型を生成する
   mscheme <- asks $ view $ T.varEnv . at name
   case mscheme of
     Nothing -> Map.singleton name . Forall [] . TyMeta <$> newMetaTv Star
@@ -263,13 +276,14 @@ tcScDefs ds = do
       ty <- instantiate =<< lookupVar pos name
       unify pos ty (foldr TyArr (expr' ^. toType) paramTypes)
       pure ((name, ty), (WithType pos ty, name, params, expr'))
+  -- 型を抽象化して型環境に登録する
   fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) nts
   as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) $ zip fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
   nts' <- traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
   pure (mempty & T.varEnv .~ Map.fromList nts', defs)
 
--- coercion
+-- 型のASTの型を変える (coercion)
 tcType :: S.Type (Griff 'Rename) -> S.Type (Griff 'TypeCheck)
 tcType (S.TyApp pos t ts) = S.TyApp pos (tcType t) (map tcType ts)
 tcType (S.TyVar pos v) = S.TyVar pos v
@@ -278,6 +292,7 @@ tcType (S.TyArr pos t1 t2) = S.TyArr pos (tcType t1) (tcType t2)
 tcType (S.TyTuple pos ts) = S.TyTuple pos $ map tcType ts
 tcType (S.TyLazy pos t) = S.TyLazy pos $ tcType t
 
+-- 型のASTから型を表す値へ変換する
 transType :: (Applicative f, MonadReader TcEnv f) => S.Type (Griff 'TypeCheck) -> f Type
 transType (S.TyApp _ t ts) = foldr (flip TyApp) <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
@@ -286,6 +301,8 @@ transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyTuple <$> traverse transType ts
 transType (S.TyLazy _ t) = TyLazy <$> transType t
 
+-- 式の型検査
+-- 求めた型を各ASTノードにメタ情報として付与する
 tcExpr ::
   (MonadReader TcEnv m, MonadUniq m, MonadIO m) =>
   Exp (Griff 'Rename) ->
