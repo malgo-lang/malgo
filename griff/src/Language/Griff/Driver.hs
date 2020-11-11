@@ -36,6 +36,9 @@ import Text.Megaparsec
   ( errorBundlePretty,
   )
 import qualified Text.PrettyPrint.HughesPJ as P
+import LLVM.Context (withContext)
+import qualified Data.ByteString as BS
+import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 
 compile :: Opt -> IO ()
 compile opt = do
@@ -87,11 +90,22 @@ compile opt = do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
       llvmir <- codeGen coreLLOpt
-      liftIO $
-        TL.writeFile (dstName opt) $
-          ppllvm
-            L.defaultModule
-              { L.moduleName = fromString $ srcName opt,
-                L.moduleSourceFileName = fromString $ srcName opt,
-                L.moduleDefinitions = llvmir
-              }
+
+      let llvmModule = 
+                L.defaultModule
+                  { L.moduleName = fromString $ srcName opt,
+                    L.moduleSourceFileName = fromString $ srcName opt,
+                    L.moduleDefinitions = llvmir
+                  }
+      if viaBinding opt
+        then liftIO $ withContext $ \ctx -> do
+          BS.writeFile (dstName opt) =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+        else
+          liftIO $
+            TL.writeFile (dstName opt) $
+              ppllvm
+                L.defaultModule
+                  { L.moduleName = fromString $ srcName opt,
+                    L.moduleSourceFileName = fromString $ srcName opt,
+                    L.moduleDefinitions = llvmir
+                  }

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 84e330b6289b6ad87f20850b6e02e4e23b020834d2554d5eafa8d7405f0a0f5b
+-- hash: 96c20ac938316f90fcc8abd83cecacb948fb9c3272f7b710c0b62f6c007bd6c6
 
 name:           griff
 version:        0.1.0.0
@@ -49,6 +49,7 @@ library
     , extra
     , koriel
     , list-predicate
+    , llvm-hs
     , llvm-hs-pretty
     , llvm-hs-pure
     , megaparsec
@@ -80,6 +81,7 @@ executable griffc
     , griff
     , koriel
     , list-predicate
+    , llvm-hs
     , llvm-hs-pretty
     , llvm-hs-pure
     , megaparsec

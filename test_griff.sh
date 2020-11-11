@@ -46,3 +46,14 @@ for file in `ls ./examples/griff`; do
   test "$($TESTDIR/$file.out)" = "$(cat ./examples/griff/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
   echo 'SUCCESS!!'
 done
+
+echo '=== via llvm-hs ==='
+for file in `ls ./examples/griff`; do
+  echo $file;
+  cat ./examples/griff/$file | grep -q '^-- Expected: ' || exit 255
+  cabal exec griffc -- --via-binding ./examples/griff/$file -o $TESTDIR/$file.ll || exit 255
+  clang $(pkg-config bdw-gc --libs --cflags) ./runtime/griff/rts.c $TESTDIR/$file.ll -o $TESTDIR/$file.out || exit 255
+  $TESTDIR/$file.out || exit 255
+  test "$($TESTDIR/$file.out)" = "$(cat ./examples/griff/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
+  echo 'SUCCESS!!'
+done

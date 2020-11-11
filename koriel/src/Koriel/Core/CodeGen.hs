@@ -393,6 +393,7 @@ genAtom ::
 genAtom (Var x) = findVar x
 genAtom (Unboxed (Core.Int32 x)) = pure $ int32 x
 genAtom (Unboxed (Core.Int64 x)) = pure $ int64 x
+-- Ref: https://github.com/llvm-hs/llvm-hs/issues/4
 genAtom (Unboxed (Core.Float x)) = pure $ ConstantOperand $ C.BitCast (C.Int 32 $ toInteger $ castFloatToWord32 x) LT.float
 genAtom (Unboxed (Core.Double x)) = pure $ ConstantOperand $ C.BitCast (C.Int 64 $ toInteger $ castDoubleToWord64 x) LT.double
 genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x

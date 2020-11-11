@@ -15,7 +15,8 @@ data Opt = Opt
     dumpDesugar :: Bool,
     noOptimize :: Bool,
     noLambdaLift :: Bool,
-    inlineSize :: Int
+    inlineSize :: Int,
+    viaBinding :: Bool
   }
   deriving stock (Eq, Show)
 
@@ -37,6 +38,7 @@ parseOpt =
             <*> switch (long "no-lambdalift")
             <*> switch (long "no-opt")
             <*> fmap read (strOption (long "inline" <> value "10"))
+            <*> switch (long "via-binding")
         )
           <**> helper
       )
