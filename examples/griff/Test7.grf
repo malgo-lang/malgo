@@ -1,0 +1,8 @@
+package test7;
+
+foreign import print_int32 :: Int32# -> ();
+foreign import print_int64 :: Int64# -> ();
+
+main = { print_int32 42#; print_int64 32L# };
+
+-- Expected: 4232

@@ -1,0 +1,8 @@
+package test8;
+
+foreign import print_float :: Float# -> ();
+foreign import print_double :: Double# -> ();
+
+main = { print_float 3.14F#; print_double 1.732# };
+
+-- Expected: 3.1400001.732000

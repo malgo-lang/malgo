@@ -55,6 +55,7 @@ import LLVM.AST.Type hiding
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr)
+import GHC.Float (castDoubleToWord64, castFloatToWord32)
 
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id C.Type) -> m [Definition]
 codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
@@ -392,8 +393,8 @@ genAtom ::
 genAtom (Var x) = findVar x
 genAtom (Unboxed (Core.Int32 x)) = pure $ int32 x
 genAtom (Unboxed (Core.Int64 x)) = pure $ int64 x
-genAtom (Unboxed (Core.Float x)) = pure $ single x
-genAtom (Unboxed (Core.Double x)) = pure $ double x
+genAtom (Unboxed (Core.Float x)) = pure $ ConstantOperand $ C.BitCast (C.Int 32 $ toInteger $ castFloatToWord32 x) LT.float
+genAtom (Unboxed (Core.Double x)) = pure $ ConstantOperand $ C.BitCast (C.Int 64 $ toInteger $ castDoubleToWord64 x) LT.double
 genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x
 genAtom (Unboxed (Core.String x)) = do
   i <- getUniq

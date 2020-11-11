@@ -201,11 +201,10 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
     buildConType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
 
 -- Unboxedの脱糖衣
--- TODO: Int32#, Float#の実装
 dcUnboxed :: G.Unboxed -> C.Unboxed
-dcUnboxed (G.Int32 _) = error "Int32# is not implemented"
+dcUnboxed (G.Int32 x) = C.Int32 $ toInteger x
 dcUnboxed (G.Int64 x) = C.Int64 $ toInteger x
-dcUnboxed (G.Float _) = error "Float# is not implemented"
+dcUnboxed (G.Float x) = C.Float x
 dcUnboxed (G.Double x) = C.Double x
 dcUnboxed (G.Char x) = C.Char x
 dcUnboxed (G.String x) = C.String x
@@ -427,9 +426,9 @@ dcType (GT.TyVar _) = pure AnyT
 dcType (GT.TyCon con)
   | kind con == Star = pure $ DataT (con ^. toText) []
   | otherwise = errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint (kind con)
-dcType (GT.TyPrim GT.Int32T) = error "Int32# is not implemented"
+dcType (GT.TyPrim GT.Int32T) = pure C.Int32T 
 dcType (GT.TyPrim GT.Int64T) = pure C.Int64T
-dcType (GT.TyPrim GT.FloatT) = error "Float# is not implemented"
+dcType (GT.TyPrim GT.FloatT) = pure C.FloatT
 dcType (GT.TyPrim GT.DoubleT) = pure C.DoubleT
 dcType (GT.TyPrim GT.CharT) = pure C.CharT
 dcType (GT.TyPrim GT.StringT) = pure C.StringT
