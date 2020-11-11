@@ -3,7 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Parser where
+module Language.Griff.Parser (parseGriff) where
 
 import Control.Monad.Combinators.Expr
 import Data.Functor (($>))
@@ -20,55 +20,80 @@ import qualified Text.Megaparsec.Char.Lexer as L
 
 type Parser = Parsec Void Text
 
--- conbinators
+parseGriff :: String -> Text -> Either (ParseErrorBundle Text Void) (String, [Decl (Griff 'Parse)])
+parseGriff srcName src = parse pTopLevel srcName src
 
-sc :: Parser ()
-sc = L.space space1 (L.skipLineComment "--") (L.skipBlockCommentNested "{-" "-}")
+-- entry point
+pTopLevel :: Parser (String, [Decl (Griff 'Parse)])
+pTopLevel = do
+  pKeyword "package"
+  x <- pPackageName
+  pOperator ";"
+  (x,) <$> pDecl `sepEndBy` pOperator ";" <* eof
 
-lexeme :: Parser a -> Parser a
-lexeme = L.lexeme sc
+-- package name
+pPackageName :: Parser String
+pPackageName = some $ identLetter <|> char '.'
 
-symbol :: Text -> Parser Text
-symbol = L.symbol sc
+-- toplevel declaration
+pDecl :: Parser (Decl (Griff 'Parse))
+pDecl = pDataDef <|> pInfix <|> pForeign <|> try pScSig <|> pScDef
 
-identLetter :: Parser Char
-identLetter = alphaNumChar <|> oneOf ("_#'" :: String)
+pDataDef :: Parser (Decl (Griff 'Parse))
+pDataDef = label "toplevel type definition" $ do
+  s <- getSourcePos
+  void $ pKeyword "data"
+  d <- upperIdent
+  xs <- many lowerIdent
+  void $ pOperator "="
+  ts <- pConDef `sepBy` pOperator "|"
+  pure $ DataDef s d xs ts
+  where
+    pConDef = (,) <$> upperIdent <*> many pSingleType
 
-opLetter :: Parser Char
-opLetter = oneOf ("+-*/%=><:;|&!#" :: String)
+pInfix :: Parser (Decl (Griff 'Parse))
+pInfix = label "infix declaration" $ do
+  s <- getSourcePos
+  a <-
+    try (pKeyword "infixl" $> LeftA)
+      <|> try (pKeyword "infixr" $> RightA)
+      <|> (pKeyword "infix" $> NeutralA)
+  i <- lexeme L.decimal
+  x <- between (symbol "(") (symbol ")") operator
+  pure $ Infix s a i x
 
-pKeyword :: Text -> Parser ()
-pKeyword keyword = void $ lexeme (string keyword <* notFollowedBy identLetter)
+pForeign :: Parser (Decl (Griff 'Parse))
+pForeign = label "foreign import" $ do
+  s <- getSourcePos
+  pKeyword "foreign"
+  pKeyword "import"
+  x <- lowerIdent
+  pOperator "::"
+  Foreign s x <$> pType
 
-pOperator :: Text -> Parser ()
-pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
+pScSig :: Parser (Decl (Griff 'Parse))
+pScSig =
+  label "toplevel function signature" $
+    ScSig
+      <$> getSourcePos
+      <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
+      <* pOperator "::"
+      <*> pType
 
-reserved :: Parser ()
-reserved =
-  void $ choice $ map (try . pKeyword) ["data", "infixl", "infixr", "infix", "foreign", "import"]
+pScDef :: Parser (Decl (Griff 'Parse))
+pScDef =
+  label "toplevel function definition" $
+    ScDef
+      <$> getSourcePos
+      <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
+      <*> many lowerIdent
+      <* pOperator "="
+      <*> pExp
 
-reservedOp :: Parser ()
-reservedOp = void $ choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
+-- Expressions
 
-lowerIdent :: Parser String
-lowerIdent = label "lower identifier" $
-  lexeme $ do
-    notFollowedBy reserved
-    (:) <$> (lowerChar <|> char '_') <*> many identLetter
-
-upperIdent :: Parser String
-upperIdent = label "upper identifier" $
-  lexeme $ do
-    notFollowedBy reserved
-    (:) <$> upperChar <*> many identLetter
-
-operator :: Parser String
-operator = label "operator" $
-  lexeme $ do
-    notFollowedBy reservedOp
-    some opLetter
-
--- parser
+pExp :: Parser (Exp (Griff 'Parse))
+pExp = pOpApp
 
 pUnboxed :: Parser Unboxed
 pUnboxed =
@@ -104,6 +129,17 @@ pFun =
                 <*> pExpInFn
             )
         `sepBy` pOperator "|"
+
+pExpInFn :: Parser (Exp (Griff 'Parse))
+pExpInFn =
+  makeExprParser
+    pExp
+    [ [ InfixR $ do
+          s <- getSourcePos
+          pOperator ";"
+          pure $ \l r -> Apply s (Fn s [Clause s [VarP s "_"] r]) l
+      ]
+    ]
 
 pSinglePat :: Parser (Pat (Griff 'Parse))
 pSinglePat =
@@ -173,19 +209,10 @@ pOpApp = makeExprParser pTerm opTable
         ]
       ]
 
-pExp :: Parser (Exp (Griff 'Parse))
-pExp = pOpApp
+-- Types
 
-pExpInFn :: Parser (Exp (Griff 'Parse))
-pExpInFn =
-  makeExprParser
-    pExp
-    [ [ InfixR $ do
-          s <- getSourcePos
-          pOperator ";"
-          pure $ \l r -> Apply s (Fn s [Clause s [VarP s "_"] r]) l
-      ]
-    ]
+pType :: Parser (Type (Griff 'Parse))
+pType = try pTyArr <|> pTyTerm
 
 pTyVar :: Parser (Type (Griff 'Parse))
 pTyVar = label "type variable" $ TyVar <$> getSourcePos <*> lowerIdent
@@ -235,69 +262,50 @@ pTyArr = makeExprParser pTyTerm opTable
         ]
       ]
 
-pType :: Parser (Type (Griff 'Parse))
-pType = try pTyArr <|> pTyTerm
+-- combinators
 
-pScDef :: Parser (Decl (Griff 'Parse))
-pScDef =
-  label "toplevel function definition" $
-    ScDef
-      <$> getSourcePos
-      <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
-      <*> many lowerIdent
-      <* pOperator "="
-      <*> pExp
+sc :: Parser ()
+sc = L.space space1 (L.skipLineComment "--") (L.skipBlockCommentNested "{-" "-}")
 
-pScSig :: Parser (Decl (Griff 'Parse))
-pScSig =
-  label "toplevel function signature" $
-    ScSig
-      <$> getSourcePos
-      <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
-      <* pOperator "::"
-      <*> pType
+lexeme :: Parser a -> Parser a
+lexeme = L.lexeme sc
 
-pDataDef :: Parser (Decl (Griff 'Parse))
-pDataDef = label "toplevel type definition" $ do
-  s <- getSourcePos
-  void $ pKeyword "data"
-  d <- upperIdent
-  xs <- many lowerIdent
-  void $ pOperator "="
-  ts <- pConDef `sepBy` pOperator "|"
-  pure $ DataDef s d xs ts
-  where
-    pConDef = (,) <$> upperIdent <*> many pSingleType
+symbol :: Text -> Parser Text
+symbol = L.symbol sc
 
-pInfix :: Parser (Decl (Griff 'Parse))
-pInfix = label "infix declaration" $ do
-  s <- getSourcePos
-  a <-
-    try (pKeyword "infixl" $> LeftA)
-      <|> try (pKeyword "infixr" $> RightA)
-      <|> (pKeyword "infix" $> NeutralA)
-  i <- lexeme L.decimal
-  x <- between (symbol "(") (symbol ")") operator
-  pure $ Infix s a i x
+identLetter :: Parser Char
+identLetter = alphaNumChar <|> oneOf ("_#'" :: String)
 
-pForeign :: Parser (Decl (Griff 'Parse))
-pForeign = label "foreign import" $ do
-  s <- getSourcePos
-  pKeyword "foreign"
-  pKeyword "import"
-  x <- lowerIdent
-  pOperator "::"
-  Foreign s x <$> pType
+opLetter :: Parser Char
+opLetter = oneOf ("+-*/%=><:;|&!#" :: String)
 
-pDecl :: Parser (Decl (Griff 'Parse))
-pDecl = pDataDef <|> pInfix <|> pForeign <|> try pScSig <|> pScDef
+pKeyword :: Text -> Parser ()
+pKeyword keyword = void $ lexeme (string keyword <* notFollowedBy identLetter)
 
-pPackageName :: Parser String
-pPackageName = some $ identLetter <|> char '.'
+pOperator :: Text -> Parser ()
+pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
 
-pTopLevel :: Parser (String, [Decl (Griff 'Parse)])
-pTopLevel = do
-  pKeyword "package"
-  x <- pPackageName
-  pOperator ";"
-  (x,) <$> pDecl `sepEndBy` pOperator ";" <* eof
+reserved :: Parser ()
+reserved =
+  void $ choice $ map (try . pKeyword) ["data", "infixl", "infixr", "infix", "foreign", "import"]
+
+reservedOp :: Parser ()
+reservedOp = void $ choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
+
+lowerIdent :: Parser String
+lowerIdent = label "lower identifier" $
+  lexeme $ do
+    notFollowedBy reserved
+    (:) <$> (lowerChar <|> char '_') <*> many identLetter
+
+upperIdent :: Parser String
+upperIdent = label "upper identifier" $
+  lexeme $ do
+    notFollowedBy reserved
+    (:) <$> upperChar <*> many identLetter
+
+operator :: Parser String
+operator = label "operator" $
+  lexeme $ do
+    notFollowedBy reservedOp
+    some opLetter

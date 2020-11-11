@@ -19,7 +19,7 @@ import qualified LLVM.AST as L
 import LLVM.Pretty (ppllvm)
 import Language.Griff.Desugar (desugar)
 import Language.Griff.Option
-import Language.Griff.Parser (pTopLevel)
+import Language.Griff.Parser (parseGriff)
 import Language.Griff.Rename (rename)
 import Language.Griff.RnEnv
   ( genRnEnv,
@@ -34,14 +34,13 @@ import System.IO
   )
 import Text.Megaparsec
   ( errorBundlePretty,
-    parse,
   )
 import qualified Text.PrettyPrint.HughesPJ as P
 
 compile :: Opt -> IO ()
 compile opt = do
   src <- T.readFile (srcName opt)
-  (packageName, ds) <- case parse pTopLevel (srcName opt) src of
+  (packageName, ds) <- case parseGriff (srcName opt) src of
     Right ds -> pure ds
     Left err -> error $ errorBundlePretty err
   when (dumpParsed opt) $ do
@@ -69,24 +68,24 @@ compile opt = do
       when (dumpDesugar opt) $
         liftIO $ do
           hPutStrLn stderr "=== DESUGAR ==="
-          hPrint stderr . pPrint =<< appProgram (pure . flat) core
+          hPrint stderr $ pPrint $ over appProgram flat core
       runLint $ lintProgram core
-      coreOpt <- if noOptimize opt then appProgram (pure . flat) core else optimizeProgram (inlineSize opt) core
+      coreOpt <- if noOptimize opt then pure core else optimizeProgram (inlineSize opt) core
       when (dumpDesugar opt && not (noOptimize opt)) $
         liftIO $ do
           hPutStrLn stderr "=== OPTIMIZE ==="
-          hPrint stderr $ pPrint coreOpt
+          hPrint stderr $ pPrint $ over appProgram flat coreOpt
       runLint $ lintProgram coreOpt
       coreLL <- if noLambdaLift opt then pure coreOpt else lambdalift coreOpt
       when (dumpDesugar opt && not (noLambdaLift opt)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
-          hPrint stderr $ pPrint coreLL
+          hPrint stderr $ pPrint $ over appProgram flat coreLL
       coreLLOpt <- if noOptimize opt then pure coreLL else optimizeProgram (inlineSize opt) coreLL
       when (dumpDesugar opt && not (noLambdaLift opt) && not (noOptimize opt)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
-          hPrint stderr $ pPrint coreLLOpt
+          hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
       llvmir <- codeGen coreLLOpt
       liftIO $
         TL.writeFile (dstName opt) $
