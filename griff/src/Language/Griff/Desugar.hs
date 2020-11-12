@@ -76,23 +76,34 @@ desugar tcEnv ds = do
     searchMain _ = C.ExtCall "mainIsNotDefined" ([] :-> AnyT) []
 
 -- 組み込み関数のCoreの生成
--- add_i64# : Int64#の和
 genPrimitive ::
   (MonadUniq m, MonadIO m, MonadFail m) =>
   TcEnv ->
   m (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 genPrimitive env = do
-  let add_i64 = fromJust $ view (Tc.rnEnv . Rn.varEnv . at "add_i64#") env
-  let Forall _ add_i64_type = fromJust $ Map.lookup add_i64 (view Tc.varEnv env)
-  add_i64_uniq <- getUniq
-  add_i64' <- newGlobalId ("add_i64#" <> show add_i64_uniq) =<< dcType add_i64_type
-  add_i64_param <- newId "$p" $ SumT $ Set.singleton (C.Con "Tuple2" [C.Int64T, C.Int64T])
-  add_i64_fun <- fmap ([add_i64_param],) $
-    runDef $ do
-      [x, y] <- destruct (Atom $ C.Var add_i64_param) (C.Con "Tuple2" [C.Int64T, C.Int64T])
+  execStateT ?? (DesugarEnv mempty env, []) $ do
+    -- add_i32# : Int32#の和
+    prim "add_i32#" $ \param -> do
+      [x, y] <- destruct (Atom $ C.Var param) (C.Con "Tuple2" [C.Int32T, C.Int32T])
       pure $ BinOp Add x y
-  let newEnv = mempty & varEnv . at add_i64 ?~ add_i64' & tcEnv .~ env
-  pure (newEnv, [(add_i64', add_i64_fun)])
+    -- add_i64# : Int64#の和
+    prim "add_i64#" $ \param -> do
+      [x, y] <- destruct (Atom $ C.Var param) (C.Con "Tuple2" [C.Int64T, C.Int64T])
+      pure $ BinOp Add x y
+  where
+    prim name code = do
+      nameId <- fromJust <$> use (_1 . tcEnv . Tc.rnEnv . Rn.varEnv . at name)
+      Forall _ nameType <- fromJust <$> use (_1 . tcEnv . Tc.varEnv . at nameId)
+      uniq <- getUniq
+      nameId' <- newGlobalId (name <> show uniq) =<< dcType nameType
+      fun <- case C.typeOf nameId' of
+        -- プリミティブ関数は必ず一引数
+        [paramType] :-> _ -> do
+          param <- newId "$p" paramType
+          fmap ([param],) $ runDef (code param)
+        _ -> bug Unreachable
+      _2 %= ((nameId', fun):)
+      _1 . varEnv . at nameId ?= nameId'
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
