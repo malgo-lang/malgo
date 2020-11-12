@@ -57,6 +57,7 @@ parseOpt =
             <*> flag True False (long "no-lambdalift")
             <*> switch (long "no-opt")
             <*> fmap read (strOption (long "inline" <> value "10"))
+            <*> switch (long "via-binding")
         )
           <**> helper
       )

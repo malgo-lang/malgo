@@ -3,6 +3,7 @@
 
 module Language.Griff.Driver (compile) where
 
+import qualified Data.ByteString as BS
 import qualified Data.Map as Map
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
@@ -16,6 +17,8 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import qualified LLVM.AST as L
+import LLVM.Context (withContext)
+import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
 import Language.Griff.Desugar (desugar)
 import Language.Griff.Option
@@ -36,9 +39,6 @@ import Text.Megaparsec
   ( errorBundlePretty,
   )
 import qualified Text.PrettyPrint.HughesPJ as P
-import LLVM.Context (withContext)
-import qualified Data.ByteString as BS
-import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 
 compile :: Opt -> IO ()
 compile opt = do
@@ -91,21 +91,17 @@ compile opt = do
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
       llvmir <- codeGen coreLLOpt
 
-      let llvmModule = 
-                L.defaultModule
-                  { L.moduleName = fromString $ srcName opt,
-                    L.moduleSourceFileName = fromString $ srcName opt,
-                    L.moduleDefinitions = llvmir
-                  }
+      let llvmModule =
+            L.defaultModule
+              { L.moduleName = fromString $ srcName opt,
+                L.moduleSourceFileName = fromString $ srcName opt,
+                L.moduleDefinitions = llvmir
+              }
       if viaBinding opt
-        then liftIO $ withContext $ \ctx -> do
-          BS.writeFile (dstName opt) =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+        then liftIO $
+          withContext $ \ctx ->
+            BS.writeFile (dstName opt) =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
         else
           liftIO $
             TL.writeFile (dstName opt) $
-              ppllvm
-                L.defaultModule
-                  { L.moduleName = fromString $ srcName opt,
-                    L.moduleSourceFileName = fromString $ srcName opt,
-                    L.moduleDefinitions = llvmir
-                  }
+              ppllvm llvmModule

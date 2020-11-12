@@ -45,7 +45,8 @@ data Opt = Opt
     isDebugMode :: Bool,
     applyLambdaLift :: Bool,
     noOptimize :: Bool,
-    inlineSize :: Int
+    inlineSize :: Int,
+    viaBinding :: Bool
   }
   deriving stock (Eq, Show)
 

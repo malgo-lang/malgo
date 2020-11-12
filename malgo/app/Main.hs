@@ -13,6 +13,9 @@ import Language.Malgo.Driver
 import Language.Malgo.Monad
 import System.Exit (exitFailure)
 import System.IO (hPutStr, stderr)
+import qualified Data.ByteString as BS
+import LLVM.Context (withContext)
+import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 
 main :: IO ()
 main =
@@ -20,7 +23,10 @@ main =
       opt <- parseOpt
       src <- T.readFile (srcName opt)
       ll <- compile opt src
-      TL.writeFile (dstName opt) (ppllvm ll)
+      if viaBinding opt
+        then withContext $ \ctx ->
+          BS.writeFile (dstName opt) =<< withModuleFromAST ctx ll moduleLLVMAssembly
+        else TL.writeFile (dstName opt) (ppllvm ll)
   )
     `catch` \e -> do
       hPutStr stderr (displayException (e :: Bug))

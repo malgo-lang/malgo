@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9af74203f34d2a48c89abd05139bb008c89f3248cf9cf12d04c3e0da957e7e9d
+-- hash: 22e5db59ce77c597e4cb3f602623bacdcdee2204aabf9afbcbef4b6f5720c4d3
 
 name:           malgo
 version:        1.0.0.0
@@ -50,6 +50,7 @@ library
     , bytestring
     , containers
     , koriel
+    , llvm-hs
     , llvm-hs-pure
     , mtl
     , optparse-applicative
@@ -77,6 +78,7 @@ executable malgoc
     , bytestring
     , containers
     , koriel
+    , llvm-hs
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
@@ -108,6 +110,7 @@ test-suite malgo-test
     , containers
     , hspec
     , koriel
+    , llvm-hs
     , llvm-hs-pure
     , malgo
     , mtl

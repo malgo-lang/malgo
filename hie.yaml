@@ -11,13 +11,13 @@ cradle:
   # Works on ghc 8.8.4
   cabal:
     - path: "./malgo/app/Main.hs"
-      component: "malgo:exe:malgo"
+      component: "malgo:exe:malgoc"
     - path: "./malgo/src" 
       component: "lib:malgo"
     - path: "./malgo/test"
       component: "malgo:malgo-test"
     - path: "./griff/app/Main.hs"
-      component: "griff:exe:griff"
+      component: "griff:exe:griffc"
     - path: "./griff/src" 
       component: "lib:griff"
     - path: "./koriel/src"
