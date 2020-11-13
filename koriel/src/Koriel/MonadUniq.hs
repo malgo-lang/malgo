@@ -11,6 +11,7 @@ import qualified Control.Monad.Trans.State.Lazy as Lazy
 import Koriel.Prelude
 import LLVM.IRBuilder.Module (ModuleBuilderT)
 import LLVM.IRBuilder.Monad (IRBuilderT)
+import Control.Monad.Identity (IdentityT)
 
 class Monad m => MonadUniq m where
   getUniqSupply :: m UniqSupply
@@ -34,6 +35,8 @@ instance Monad m => MonadUniq (UniqT m) where
     i <- uniqSupply <$> getUniqSupply
     UniqT $ modify (\s -> s {uniqSupply = i + 1})
     pure i
+
+instance MonadUniq m => MonadUniq (IdentityT m)
 
 instance MonadUniq m => MonadUniq (ReaderT r m)
 
