@@ -1,12 +1,14 @@
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Parser (parseGriff) where
+module Language.Griff.Parser where
 
 import Control.Monad.Combinators.Expr
 import Data.Functor (($>))
+import qualified Data.Set as Set
 import Data.Void
 import Koriel.Prelude hiding
   ( many,
@@ -98,18 +100,32 @@ pExp = pOpApp
 pUnboxed :: Parser Unboxed
 pUnboxed =
   label "unboxed literal" $
-    Double
-      <$> try (lexeme $ L.float <* char '#')
-      <|> Float
-      <$> try (lexeme $ L.float <* string' "F#")
-      <|> Int32
-      <$> try (lexeme $ L.decimal <* char '#')
-      <|> Int64
-      <$> try (lexeme $ L.decimal <* string' "L#")
-      <|> Char
-      <$> lexeme (between (char '\'') (char '\'') L.charLiteral <* char '#')
-      <|> String
-      <$> lexeme (char '"' *> manyTill L.charLiteral (char '"') <* char '#')
+    try (Double <$> lexeme (L.float <* char '#'))
+      <|> try (Float <$> lexeme (L.float <* string' "F#"))
+      <|> try (Int32 <$> lexeme (L.decimal <* char '#'))
+      <|> try (Int64 <$> lexeme (L.decimal <* string' "L#"))
+      <|> try
+        ( lexeme do
+            x <- L.float <* notFollowedBy (char '#')
+            registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show (x :: Double) <> "'\nMaybe you forgot '#'(Double#) or 'F#'(Float#)")
+            pure undefined
+        )
+      <|> try
+        ( lexeme do
+            x <- L.decimal <* notFollowedBy (string "L#")
+            registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show (x :: Int) <> "'\nMaybe you forgot '#'(Int32#) or 'L#'(Int64#)")
+            pure undefined
+        )
+      <|> try (lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#')))
+      <|> lexeme do
+        x <- between (char '\'') (char '\'') L.charLiteral <* notFollowedBy (char '#')
+        registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show x <> "'\nMaybe you forgot '#'")
+        pure undefined
+      <|> try (lexeme (String <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
+      <|> lexeme do
+        x <- char '"' *> manyTill L.charLiteral (char '"') <* notFollowedBy (char '#')
+        registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show x <> "'\nMaybe you forgot '#'")
+        pure undefined
 
 pVariable :: Parser (Exp (Griff 'Parse))
 pVariable = label "variable" $ Var <$> getSourcePos <*> lowerIdent
@@ -277,7 +293,7 @@ identLetter :: Parser Char
 identLetter = alphaNumChar <|> oneOf ("_#'" :: String)
 
 opLetter :: Parser Char
-opLetter = oneOf ("+-*/%=><:;|&!#" :: String)
+opLetter = oneOf ("+-*/%=><:;|&!#." :: String)
 
 pKeyword :: Text -> Parser ()
 pKeyword keyword = void $ lexeme (string keyword <* notFollowedBy identLetter)
