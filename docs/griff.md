@@ -8,7 +8,7 @@ Griffで書かれたHello, worldの例です。
 
 Hello.grf
 ```
-package hello; -- package名の宣言
+module hello; -- module名の宣言
 
 -- 外部関数のインポート
 foreign import print_string :: String# -> ();
