@@ -4,6 +4,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
@@ -18,6 +19,7 @@ module Language.Griff.Typing
   )
 where
 
+import Control.Monad.Identity
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Id
@@ -45,6 +47,13 @@ generalize env t = do
   as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) (zip fvs ['a' ..])
   zipWithM_ writeMetaTv fvs (map TyVar as)
   Forall as <$> zonkType t
+
+generalizeMutRecs :: (MonadIO m, MonadUniq m) => TcEnv -> [(TcId, Type)] -> m ([Id Kind], [(TcId, Scheme)])
+generalizeMutRecs env nts = do
+  fvs <- toList . mconcat <$> traverse (freeMetaTvs env <=< zonkType . view _2) nts
+  as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) (zip fvs ['a' ..])
+  zipWithM_ writeMetaTv fvs (map TyVar as)
+  (as,) <$> traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
 
 freeMetaTvs :: MonadIO m => TcEnv -> Type -> m (Set MetaTv)
 freeMetaTvs env t = do
@@ -188,7 +197,7 @@ tcDataDefs ::
 tcDataDefs ds = do
   -- すべての型コンストラクタに対応するTyConを生成する
   dataEnv <- foldMapA ?? ds $ \(_, name, params, _) ->
-    Map.singleton name . TyCon <$> newId (name ^. idName) (kindof params) 
+    Map.singleton name . TyCon <$> newId (name ^. idName) (kindof params)
   local (over T.typeEnv (dataEnv <>)) $ do
     -- 値コンストラクタに対する処理
     (conEnvs, ds') <- mapAndUnzipM ?? ds $ \(pos, name, params, cons) -> do
@@ -201,14 +210,12 @@ tcDataDefs ds = do
           args' <- traverse (transType . tcType) args
           pure $ foldr TyArr (foldr (flip TyApp) name' params') args'
         -- generate type variables
-        fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) cons'
-        as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) $ zip fvs ['a' ..]
-        zipWithM_ writeMetaTv fvs (map TyVar as)
+        (as, cons'') <- generalizeMutRecs mempty cons'
         Just (TyCon dataName) <- asks $ view $ T.typeEnv . at name
         pure
           ( mempty
               & T.varEnv
-              .~ foldMap (\(con, conType) -> Map.singleton con (Forall as conType)) cons'
+              .~ Map.fromList cons''
               & T.tyConEnv
               .~ Map.singleton dataName (as, cons'),
             (pos, name, params, map (second (map tcType)) cons)
@@ -277,10 +284,7 @@ tcScDefs ds = do
       unify pos ty (foldr TyArr (expr' ^. toType) paramTypes)
       pure ((name, ty), (WithType pos ty, name, params, expr'))
   -- 型を抽象化して型環境に登録する
-  fvs <- Set.toList . mconcat <$> traverse (freeMetaTvs mempty <=< zonkType . view _2) nts
-  as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) $ zip fvs ['a' ..]
-  zipWithM_ writeMetaTv fvs (map TyVar as)
-  nts' <- traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
+  (_, nts') <- generalizeMutRecs mempty nts
   pure (mempty & T.varEnv .~ Map.fromList nts', defs)
 
 -- 型のASTの型を変える (coercion)
