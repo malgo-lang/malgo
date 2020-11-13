@@ -34,12 +34,12 @@ $ stack install
 ## Usage
 
 ```sh
-$ malgo examples/hello.mlg -o hello.ll
+$ malgoic examples/hello.mlg -o hello.ll
 $ clang hello.ll runtime/malgo/rts.c -lgc
 $ ./a.out
 Hello, world
 
-$ griff examples/griff/Hello.grf -o Hello.ll
+$ griffc examples/griff/Hello.grf -o Hello.ll
 $ clang Hello.ll runtime/griff/rts.c -lgc
 $ ./a.out
 Hello, world
