@@ -114,23 +114,23 @@ data GriffPhase = Parse | Rename | TypeCheck
 
 data Griff (p :: GriffPhase)
 
-newtype Package = Package String
+newtype Module = Module String
   deriving stock (Eq, Show, Ord)
   deriving newtype (Pretty)
 
-_Package :: Lens' Package String
-_Package = lens (\(Package s) -> s) (\_ s -> Package s)
+_Module :: Lens' Module String
+_Module = lens (\(Module s) -> s) (\_ s -> Module s)
 
 -- Id
 type family GriffId (p :: GriffPhase) where
   GriffId 'Parse = String
-  GriffId 'Rename = Id Package
-  GriffId 'TypeCheck = Id Package
+  GriffId 'Rename = Id Module
+  GriffId 'TypeCheck = Id Module
 
 type family GriffTId (p :: GriffPhase) where
   GriffTId 'Parse = String
-  GriffTId 'Rename = Id Package
-  GriffTId 'TypeCheck = Id Package
+  GriffTId 'Rename = Id Module
+  GriffTId 'TypeCheck = Id Module
 
 type PsId = XId (Griff 'Parse)
 

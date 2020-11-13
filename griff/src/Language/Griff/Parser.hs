@@ -21,19 +21,19 @@ import qualified Text.Megaparsec.Char.Lexer as L
 type Parser = Parsec Void Text
 
 parseGriff :: String -> Text -> Either (ParseErrorBundle Text Void) (String, [Decl (Griff 'Parse)])
-parseGriff srcName src = parse pTopLevel srcName src
+parseGriff = parse pTopLevel
 
 -- entry point
 pTopLevel :: Parser (String, [Decl (Griff 'Parse)])
 pTopLevel = do
-  pKeyword "package"
-  x <- pPackageName
+  pKeyword "module"
+  x <- pModuleName
   pOperator ";"
   (x,) <$> pDecl `sepEndBy` pOperator ";" <* eof
 
--- package name
-pPackageName :: Parser String
-pPackageName = some $ identLetter <|> char '.'
+-- module name
+pModuleName :: Parser String
+pModuleName = some $ identLetter <|> char '.'
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Griff 'Parse))
@@ -287,7 +287,7 @@ pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
 
 reserved :: Parser ()
 reserved =
-  void $ choice $ map (try . pKeyword) ["data", "infixl", "infixr", "infix", "foreign", "import"]
+  void $ choice $ map (try . pKeyword) ["module", "data", "infixl", "infixr", "infix", "foreign", "import"]
 
 reservedOp :: Parser ()
 reservedOp = void $ choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]

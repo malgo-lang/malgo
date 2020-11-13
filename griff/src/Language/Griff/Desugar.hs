@@ -42,8 +42,10 @@ import Debug.Trace (traceShowM)
 
 -- 脱糖衣処理の環境
 data DesugarEnv = DesugarEnv
-  { _varEnv :: Map TcId (Id C.Type), -- ^ Griff -> Coreの名前環境
-    _tcEnv :: TcEnv -- ^ 型環境
+  { -- | Griff -> Coreの名前環境
+    _varEnv :: Map TcId (Id C.Type),
+    -- | 型環境
+    _tcEnv :: TcEnv
   }
   deriving stock (Show)
 
@@ -80,7 +82,7 @@ genPrimitive ::
   (MonadUniq m, MonadIO m, MonadFail m) =>
   TcEnv ->
   m (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
-genPrimitive env = do
+genPrimitive env =
   execStateT ?? (DesugarEnv mempty env, []) $ do
     -- add_i32# : Int32#の和
     prim "add_i32#" $ \param -> do
@@ -96,14 +98,14 @@ genPrimitive env = do
       Forall _ nameType <- fromJust <$> use (_1 . tcEnv . Tc.varEnv . at nameId)
       uniq <- getUniq
       nameId' <- newGlobalId (name <> show uniq) =<< dcType nameType
-      fun <- case C.typeOf nameId' of
+      _1 . varEnv . at nameId ?= nameId'
+      case C.typeOf nameId' of
         -- プリミティブ関数は必ず一引数
         [paramType] :-> _ -> do
           param <- newId "$p" paramType
-          fmap ([param],) $ runDef (code param)
+          fun <- runDef (code param)
+          _2 %= ((nameId', ([param], fun)) :)
         _ -> bug Unreachable
-      _2 %= ((nameId', fun):)
-      _1 . varEnv . at nameId ?= nameId'
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
@@ -143,7 +145,7 @@ dcScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
     Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
-    f' <- newGlobalId (f ^. idMeta . _Package <> "." <> f ^. idName) =<< dcType fType
+    f' <- newGlobalId (f ^. idMeta . _Module <> "." <> f ^. idName) =<< dcType fType
     pure $ mempty & varEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
 
@@ -437,7 +439,7 @@ dcType (GT.TyVar _) = pure AnyT
 dcType (GT.TyCon con)
   | kind con == Star = pure $ DataT (con ^. toText) []
   | otherwise = errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint (kind con)
-dcType (GT.TyPrim GT.Int32T) = pure C.Int32T 
+dcType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dcType (GT.TyPrim GT.Int64T) = pure C.Int64T
 dcType (GT.TyPrim GT.FloatT) = pure C.FloatT
 dcType (GT.TyPrim GT.DoubleT) = pure C.DoubleT
@@ -489,9 +491,9 @@ lookupConMap con ts = do
   Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
   pure $ over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
 
-newCoreId :: MonadUniq m => Id Package -> C.Type -> m (Id C.Type)
+newCoreId :: MonadUniq m => TcId -> C.Type -> m (Id C.Type)
 newCoreId griffId coreType = do
-  coreId <- newId (griffId ^. idMeta . _Package <> "." <> griffId ^. idName) coreType
+  coreId <- newId (griffId ^. idMeta . _Module <> "." <> griffId ^. idName) coreType
   pure $ coreId & idIsGlobal .~ griffId ^. idIsGlobal
 
 -- 関数をカリー化する

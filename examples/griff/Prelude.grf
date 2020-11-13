@@ -1,4 +1,4 @@
-package prelude;
+module prelude;
 
 infixl 0 (|>);
 (|>) :: a -> (a -> b) -> b;

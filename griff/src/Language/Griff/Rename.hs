@@ -27,11 +27,11 @@ import qualified Text.PrettyPrint as P
 rename :: MonadUniq m => RnState -> RnEnv -> [Decl (Griff 'Parse)] -> m [Decl (Griff 'Rename)]
 rename rnState rnEnv ds = evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
 
-resolveName :: (MonadUniq m, MonadState RnState m) => String -> m (Id Package)
-resolveName name = newId name =<< use package
+resolveName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
+resolveName name = newId name =<< use moduleName
 
-resolveGlobalName :: (MonadUniq m, MonadState RnState m) => String -> m (Id Package)
-resolveGlobalName name = newGlobalId name =<< use package
+resolveGlobalName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
+resolveGlobalName name = newGlobalId name =<< use moduleName
 
 lookupVarName :: MonadReader RnEnv m => SourcePos -> String -> m RnId
 lookupVarName pos name = do
@@ -61,7 +61,7 @@ rnDecls ds = do
   -- RnStateの生成
   --   定義されていない識別子に対するInfixはエラー
   local (rnEnv <>) $ do
-    rnState <- RnState <$> infixDecls ds <*> use package
+    rnState <- RnState <$> infixDecls ds <*> use moduleName
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     put rnState
     traverse rnDecl ds
