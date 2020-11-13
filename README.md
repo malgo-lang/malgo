@@ -1,6 +1,6 @@
 # KaGaMi
 
-[![Build Status](https://travis-ci.org/takoeight0821/kagami.svg?branch=master)](https://travis-ci.org/takoeight0821/kagami)
+[![Kagami CI](https://github.com/takoeight0821/kagami/workflows/Kagami%20CI/badge.svg)](https://github.com/takoeight0821/kagami/actions?query=workflow%3A%22Kagami+CI%22)
 
 Kagami is a collection of toy programming language implementaions and toolchain.
 
