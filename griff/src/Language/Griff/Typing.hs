@@ -151,7 +151,7 @@ tcDecls ds = do
       (env, scSigs') <- tcScSigs (bindGroup ^. scSigs)
       local (env <>) $ do
         -- 再帰的な参照に対応するため、ScDefで定義されている変数の暫定的な型を環境に登録する。
-        env <- mconcat <$> traverse prepareTcScDefs (bindGroup ^. scDefs)
+        env <- foldMapA prepareTcScDefs (bindGroup ^. scDefs)
         local (over T.varEnv (env <>)) $ do
           (env, scDefs') <- tcScDefGroup (bindGroup ^. scDefs)
           local (env <>) $ do
@@ -268,8 +268,8 @@ tcScDefGroup [] = pure (mempty, [])
 tcScDefGroup (ds : dss) = do
   (env, ds') <- tcScDefs ds
   local (env <>) $ do
-    (env, dss') <- tcScDefGroup dss
-    pure (env <> env, ds' : dss')
+    (env', dss') <- tcScDefGroup dss
+    pure (env <> env', ds' : dss')
 
 tcScDefs ::
   (MonadReader TcEnv m, MonadUniq m, MonadIO m) =>

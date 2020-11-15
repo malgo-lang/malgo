@@ -29,7 +29,7 @@ import Language.Griff.RnEnv
     genRnState,
   )
 import qualified Language.Griff.TcEnv as T
-import Language.Griff.Typing (typeCheck)
+import Language.Griff.Typing.Infer (typeCheck)
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -59,7 +59,7 @@ compile opt = do
         liftIO $ do
           hPutStrLn stderr "=== RENAME ==="
           hPrint stderr $ P.sep $ P.punctuate ";" $ map pPrint ds'
-      (bg, tcEnv) <- typeCheck rnEnv ds'
+      (tcEnv, bg) <- typeCheck rnEnv ds'
       when (dumpTyped opt) $
         liftIO $ do
           hPutStrLn stderr "=== TYPE CHECK ==="

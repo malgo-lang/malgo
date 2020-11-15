@@ -28,7 +28,7 @@ data RnEnv = RnEnv
   { _varEnv :: Map PsId RnId,
     _typeEnv :: Map PsTId RnTId
   }
-  deriving stock (Show)
+  deriving stock (Show, Eq)
 
 instance Semigroup RnEnv where
   RnEnv v1 t1 <> RnEnv v2 t2 = RnEnv (v1 <> v2) (t1 <> t2)

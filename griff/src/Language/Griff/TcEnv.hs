@@ -22,7 +22,7 @@ data TcEnv = TcEnv
     _tyConEnv :: Map TyCon ([TyVar], [(RnId, Type)]),
     _rnEnv :: RnEnv
   }
-  deriving stock (Show)
+  deriving stock (Show, Eq)
 
 instance Semigroup TcEnv where
   TcEnv v1 t1 c1 r1 <> TcEnv v2 t2 c2 r2 = TcEnv (v1 <> v2) (t1 <> t2) (c1 <> c2) (r1 <> r2)
