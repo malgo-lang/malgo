@@ -33,7 +33,7 @@ import Language.Griff.Syntax as G
 import Language.Griff.TcEnv (TcEnv)
 import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
-import qualified Language.Griff.Typing as Typing
+import Language.Griff.Typing.Infer (applySubst)
 import qualified Text.PrettyPrint.HughesPJ as P
 
 #ifdef DEBUG
@@ -453,7 +453,7 @@ dcType (GT.TyTuple ts) =
   SumT . Set.singleton . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dcType ts
 dcType (GT.TyLazy t) = ([] :->) <$> dcType t
 dcType (GT.TyMeta tv) = do
-  mtype <- Typing.readMetaTv tv
+  mtype <- GT.readMetaTv tv
   case mtype of
     Just t -> dcType t
     Nothing -> error "TyMeta must be removed"
@@ -489,7 +489,7 @@ lookupConMap ::
   m [(TcTId, GT.Type)]
 lookupConMap con ts = do
   Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
-  pure $ over (mapped . _2) (Typing.applySubst $ Map.fromList $ zip as ts) conMap
+  pure $ over (mapped . _2) (applySubst $ Map.fromList $ zip as ts) conMap
 
 newCoreId :: MonadUniq m => TcId -> C.Type -> m (Id C.Type)
 newCoreId griffId coreType = do
