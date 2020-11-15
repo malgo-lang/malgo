@@ -46,6 +46,7 @@ lookupTypeName pos name = do
   case tm ^. at name of
     Just name' -> pure name'
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
+
 -- renamer
 
 rnDecls ::
@@ -135,13 +136,13 @@ rnClause ::
   (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) =>
   Clause (Griff 'Parse) ->
   m (Clause (Griff 'Rename))
-rnClause (Clause pos ps e) = do
+rnClause (Clause pos ps es) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   unless (allUnique vars) $ errorOn pos "Same variables occurs in a pattern"
   vars' <- traverse resolveName vars
   let vm = Map.fromList $ zip vars vars'
-  local (over varEnv (vm <>)) $ Clause pos <$> traverse rnPat ps <*> rnExp e
+  local (over varEnv (vm <>)) $ Clause pos <$> traverse rnPat ps <*> traverse rnExp es
   where
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs

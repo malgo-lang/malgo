@@ -181,12 +181,12 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   retType <- TyMeta <$> newMetaTv Star
   tell [eqCons pos opType (TyArr (e1' ^. toType) $ TyArr (e2' ^. toType) retType)]
   pure $ OpApp (WithType x retType) op e1' e2'
-tcExpr (Fn pos (Clause x [] e : _)) = do
-  e' <- tcExpr e
+tcExpr (Fn pos (Clause x [] es : _)) = do
+  es' <- traverse tcExpr es
   pure $
     Fn
-      (WithType pos (TyLazy $ e' ^. toType))
-      [Clause (WithType x (TyLazy $ e' ^. toType)) [] e']
+      (WithType pos (TyLazy $ last es' ^. toType))
+      [Clause (WithType x (TyLazy $ last es' ^. toType)) [] es']
 tcExpr (Fn pos cs) = do
   cs' <- traverse tcClause cs
   case cs' of
@@ -204,11 +204,11 @@ tcExpr (Force pos e) = do
   pure $ Force (WithType pos ty) e'
 
 tcClause :: (MonadReader TcEnv m, MonadIO m, MonadUniq m) => Clause (Griff 'Rename) -> WriterT [WithPos] m (Clause (Griff 'TypeCheck))
-tcClause (Clause pos pats e) = do
+tcClause (Clause pos pats es) = do
   (pats', env) <- tcPatterns pats
   local (env <>) do
-    e' <- tcExpr e
-    pure $ Clause (WithType pos (foldr (TyArr . view toType) (e' ^. toType) pats')) pats' e'
+    es' <- traverse tcExpr es
+    pure $ Clause (WithType pos (foldr (TyArr . view toType) (last es' ^. toType) pats')) pats' es'
 
 tcPatterns :: (MonadReader TcEnv m, MonadIO m, MonadUniq m) => [Pat (Griff 'Rename)] -> WriterT [WithPos] m ([Pat (Griff 'TypeCheck)], TcEnv)
 tcPatterns pats = fmap (second mconcat) $

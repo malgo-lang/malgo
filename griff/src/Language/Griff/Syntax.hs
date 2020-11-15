@@ -11,13 +11,13 @@ module Language.Griff.Syntax where
 
 import Data.Int (Int32, Int64)
 import qualified Data.Set as Set
+import Data.Tuple.Extra (uncurry3)
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.Type (HasType (..))
 import qualified Language.Griff.Type as T
 import qualified Text.PrettyPrint.HughesPJ as P
-import Data.Tuple.Extra (uncurry3)
 
 -- Unboxed literal
 
@@ -109,7 +109,8 @@ freevars (Force _ e) = freevars e
 -- Clause --
 ------------
 
-data Clause x = Clause (XClause x) [Pat x] (Exp x)
+-- [Exp x]は、末尾へのアクセスが速いものに変えたほうが良いかも
+data Clause x = Clause (XClause x) [Pat x] [Exp x]
 
 deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Eq (XId x)) => Eq (Clause x)
 
@@ -124,10 +125,10 @@ instance (Pretty (XId x)) => Pretty (Clause x) where
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Clause x) where
   toType = to $ \(Clause x _ _) -> view toType x
   overType f (Clause x ps e) =
-    Clause <$> overType f x <*> traverse (overType f) ps <*> overType f e
+    Clause <$> overType f x <*> traverse (overType f) ps <*> traverse (overType f) e
 
 freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
-freevarsClause (Clause _ pats e) = freevars e Set.\\ mconcat (map bindVars pats)
+freevarsClause (Clause _ pats es) = foldMap freevars es Set.\\ mconcat (map bindVars pats)
 
 -------------
 -- Pattern --

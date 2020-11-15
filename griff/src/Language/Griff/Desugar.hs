@@ -1,3 +1,4 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -288,20 +289,28 @@ dcExp (G.OpApp _ op x y) = runDef $ do
           else bind (Call (C.Var op') [x'])
       pure $ Call e1 [y']
     _ -> bug Unreachable
-dcExp (G.Fn x (Clause _ [] e : _)) = runDef $ do
+dcExp (G.Fn x (Clause _ [] es : _)) = do
   -- lazy valueの脱糖衣
-  e' <- dcExp e
+  es' <- traverse dcExp es
   typ <- dcType (x ^. toType)
-  Atom <$> let_ typ (Fun [] e')
-dcExp (G.Fn x cs@(Clause _ ps e : _)) = do
+  runDef do
+    fun <- let_ typ . Fun [] =<< runDef (joinSeqExpr es')
+    pure $ Atom fun
+dcExp (G.Fn x cs@(Clause _ ps es : _)) = do
   ps' <- traverse (\p -> newId "$p" =<< dcType (p ^. toType)) ps
-  typ <- dcType (e ^. toType)
+  typ <- dcType (last es ^. toType)
   -- destruct Clauses
   -- 各節のパターン列を行列に見立て、転置してmatchにわたし、パターンを分解する
   -- 例えば、{ f Nil -> f empty | f (Cons x xs) -> f x }の場合は、
   -- [ [f, Nil], [f, Cons x xs] ] に見立て、
   -- [ [f, f], [Nil, Cons x xs] ] に転置する
-  (pss, es) <- first List.transpose <$> mapAndUnzipM (\(Clause _ ps e) -> pure (ps, dcExp e)) cs
+  (pss, es) <-
+    first List.transpose
+      <$> mapAndUnzipM
+        ( \(Clause _ ps es) ->
+            pure (ps, runDef $ joinSeqExpr =<< traverse dcExp es)
+        )
+        cs
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
   v <- newId "$fun" =<< dcType (x ^. toType)
@@ -523,3 +532,10 @@ curryFun ps@(_ : _) e = curryFun' ps []
         fun <- let_ (C.typeOf funObj) funObj
         pure $ Atom fun
       pure ([x'], body)
+
+joinSeqExpr :: MonadUniq m => [C.Exp (Id C.Type)] -> DefBuilderT m (C.Exp (Id C.Type))
+joinSeqExpr [] = bug Unreachable -- TODO: ほんとにunreachable?
+joinSeqExpr [e] = pure e
+joinSeqExpr (e : es) = do
+  _ <- bind e
+  joinSeqExpr es
