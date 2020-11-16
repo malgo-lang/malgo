@@ -54,9 +54,9 @@ data Exp x
   | Tuple (XTuple x) [Exp x]
   | Force (XForce x) (Exp x)
 
-deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, Eq (XId x)) => Eq (Exp x)
+deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Exp x)
 
-deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, Show (XId x)) => Show (Exp x)
+deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, Show (XId x)) => Show (Exp x)
 
 instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec _ _ (Var _ i) = pPrint i
@@ -109,18 +109,42 @@ freevars (Force _ e) = freevars e
 -- Clause --
 ------------
 
+data Stmt x
+  = Let (XLet x) (XId x) (Exp x)
+  | NoBind (XNoBind x) (Exp x)
+
+deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Stmt x)
+
+deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, Show (XId x)) => Show (Stmt x)
+
+instance Pretty (XId x) => Pretty (Stmt x) where
+  pPrint (Let _ v e) = "let" <+> pPrint v <+> "=" <+> pPrint e
+  pPrint (NoBind _ e) = pPrint e
+
+instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Stmt x) where
+  toType = to $ \case
+    Let _ _ e -> view toType e
+    NoBind _ e -> view toType e
+  overType f = \case
+    Let x v e -> Let x v <$> overType f e
+    NoBind x e -> NoBind x <$> overType f e
+
+freevarsStmt :: Ord (XId x) => Stmt x -> Set (XId x)
+freevarsStmt (Let _ x e) = Set.delete x $ freevars e
+freevarsStmt (NoBind _ e) = freevars e
+
 -- [Exp x]は、末尾へのアクセスが速いものに変えたほうが良いかも
-data Clause x = Clause (XClause x) [Pat x] [Exp x]
+data Clause x = Clause (XClause x) [Pat x] [Stmt x]
 
-deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Eq (XId x)) => Eq (Clause x)
+deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Clause x)
 
-deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Show x, Show (XId x)) => Show (Clause x)
+deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Show x, ForallStmtX Show x, Show (XId x)) => Show (Clause x)
 
-instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x) => Ord (Clause x) where
+instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x, ForallStmtX Ord x) => Ord (Clause x) where
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
-  pPrint (Clause _ pats e) = P.sep (map pPrint pats) <+> "->" <+> pPrint e
+  pPrint (Clause _ pats e) = P.sep (map pPrint pats) <+> "->" <+> sep (punctuate ";" $ map pPrint e)
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Clause x) where
   toType = to $ \(Clause x _ _) -> view toType x
@@ -128,7 +152,7 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Clause <$> overType f x <*> traverse (overType f) ps <*> traverse (overType f) e
 
 freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
-freevarsClause (Clause _ pats es) = foldMap freevars es Set.\\ mconcat (map bindVars pats)
+freevarsClause (Clause _ pats es) = foldMap freevarsStmt es Set.\\ mconcat (map bindVars pats)
 
 -------------
 -- Pattern --

@@ -1,3 +1,4 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -74,6 +75,12 @@ rnDecl ::
   Decl (Griff 'Parse) ->
   m (Decl (Griff 'Rename))
 rnDecl (ScDef pos name params expr) = do
+  -- Desugarの都合上の制約
+  -- Ref: Language.Griff.Desugar.curryFun
+  case (params, expr) of
+    ([], Fn{}) -> pure ()
+    ([], _) -> errorOn pos "Toplevel definition must be `x = {...}` or `f x ... = ...`"
+    _ -> pure ()
   params' <- traverse resolveName params
   local (over varEnv (Map.fromList (zip params params') <>)) $
     ScDef pos
@@ -136,13 +143,13 @@ rnClause ::
   (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) =>
   Clause (Griff 'Parse) ->
   m (Clause (Griff 'Rename))
-rnClause (Clause pos ps es) = do
+rnClause (Clause pos ps ss) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   unless (allUnique vars) $ errorOn pos "Same variables occurs in a pattern"
   vars' <- traverse resolveName vars
   let vm = Map.fromList $ zip vars vars'
-  local (over varEnv (vm <>)) $ Clause pos <$> traverse rnPat ps <*> traverse rnExp es
+  local (over varEnv (vm <>)) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss
   where
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
@@ -152,6 +159,19 @@ rnPat :: MonadReader RnEnv m => Pat (Griff 'Parse) -> m (Pat (Griff 'Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
+
+rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m) => [Stmt (Griff 'Parse)] -> m [Stmt (Griff 'Rename)]
+rnStmts [] = pure []
+rnStmts (NoBind x e : ss) = do
+  e' <- rnExp e
+  ss' <- rnStmts ss
+  pure $ NoBind x e' : ss'
+rnStmts (Let x v e : ss) = do
+  e' <- rnExp e
+  v' <- resolveName v
+  local (over varEnv (Map.insert v v')) do
+    ss' <- rnStmts ss
+    pure $ Let x v' e' : ss'
 
 -- トップレベル識別子を列挙
 toplevelIdents :: [Decl (Griff 'Parse)] -> ([String], [String])

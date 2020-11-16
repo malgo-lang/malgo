@@ -19,6 +19,7 @@ import Language.Griff.Syntax
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
+import qualified Data.Text as Text
 
 type Parser = Parsec Void Text
 
@@ -28,7 +29,7 @@ parseGriff = parse pTopLevel
 -- entry point
 pTopLevel :: Parser (String, [Decl (Griff 'Parse)])
 pTopLevel = do
-  pKeyword "module"
+  void $ pKeyword "module"
   x <- pModuleName
   pOperator ";"
   (x,) <$> pDecl `sepEndBy` pOperator ";" <* eof
@@ -67,8 +68,8 @@ pInfix = label "infix declaration" $ do
 pForeign :: Parser (Decl (Griff 'Parse))
 pForeign = label "foreign import" $ do
   s <- getSourcePos
-  pKeyword "foreign"
-  pKeyword "import"
+  void $ pKeyword "foreign"
+  void $ pKeyword "import"
   x <- lowerIdent
   pOperator "::"
   Foreign s x <$> pType
@@ -127,11 +128,18 @@ pUnboxed =
         registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show x <> "'\nMaybe you forgot '#'")
         pure undefined
 
+notReserved :: Parser (Exp (Griff 'Parse))
+notReserved = do
+  word <- reserved
+  fancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> Text.unpack word <> "'\nThis is a reserved keyword")
+
 pVariable :: Parser (Exp (Griff 'Parse))
-pVariable = label "variable" $ Var <$> getSourcePos <*> lowerIdent
+pVariable = label "variable" do
+  notReserved <|> Var <$> getSourcePos <*> lowerIdent
 
 pConstructor :: Parser (Exp (Griff 'Parse))
-pConstructor = label "constructor" $ Con <$> getSourcePos <*> upperIdent
+pConstructor = label "constructor" do
+  notReserved <|> Con <$> getSourcePos <*> upperIdent
 
 pFun :: Parser (Exp (Griff 'Parse))
 pFun =
@@ -142,12 +150,26 @@ pFun =
         <*> ( Clause
                 <$> getSourcePos
                 <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
-                <*> pExpInFn
+                <*> pStmts
             )
         `sepBy` pOperator "|"
 
-pExpInFn :: Parser [Exp (Griff 'Parse)]
-pExpInFn = pExp `sepEndBy` pOperator ";"
+pStmts :: Parser [Stmt (Griff 'Parse)]
+pStmts = pStmt `sepEndBy` pOperator ";"
+
+pStmt :: Parser (Stmt (Griff 'Parse))
+pStmt = try pLet <|> pNoBind
+
+pLet :: Parser (Stmt (Griff 'Parse))
+pLet = do
+  void $ pKeyword "let"
+  pos <- getSourcePos
+  v <- lowerIdent
+  pOperator "="
+  Let pos v <$> pExp
+
+pNoBind :: Parser (Stmt (Griff 'Parse))
+pNoBind = NoBind <$> getSourcePos <*> pExp
 
 pSinglePat :: Parser (Pat (Griff 'Parse))
 pSinglePat =
@@ -278,15 +300,15 @@ identLetter = alphaNumChar <|> oneOf ("_#'" :: String)
 opLetter :: Parser Char
 opLetter = oneOf ("+-*/%=><:;|&!#." :: String)
 
-pKeyword :: Text -> Parser ()
-pKeyword keyword = void $ lexeme (string keyword <* notFollowedBy identLetter)
+pKeyword :: Text -> Parser Text
+pKeyword keyword = lexeme (string keyword <* notFollowedBy identLetter)
 
 pOperator :: Text -> Parser ()
 pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
 
-reserved :: Parser ()
+reserved :: Parser Text
 reserved =
-  void $ choice $ map (try . pKeyword) ["module", "data", "infixl", "infixr", "infix", "foreign", "import"]
+  choice $ map (try . pKeyword) ["module", "data", "infixl", "infixr", "infix", "foreign", "import", "let"]
 
 reservedOp :: Parser ()
 reservedOp = void $ choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]

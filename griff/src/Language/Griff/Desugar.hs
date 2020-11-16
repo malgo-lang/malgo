@@ -207,7 +207,9 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
       unfoldedType <- unfoldType retType
       packed <- let_ unfoldedType (Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
-    obj <- curryFun ps expr
+    obj <- case ps of
+      [] -> pure ([], expr)
+      _ -> curryFun ps expr
     pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
@@ -250,7 +252,7 @@ dcExp (G.Var x name) = do
       ps <- case C.typeOf name' of
         pts :-> _ -> traverse (newId "$p") pts
         _ -> bug Unreachable
-      pure $ Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+      pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     else pure $ Atom $ C.Var name'
 dcExp (G.Con _ name) = do
   name' <- lookupName name
@@ -263,7 +265,7 @@ dcExp (G.Con _ name) = do
     pts :-> _ -> do
       clsId <- newId "$concls" (C.typeOf name')
       ps <- traverse (newId "$p") pts
-      pure $ Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+      pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     _ -> bug Unreachable
 dcExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dcUnboxed u
 dcExp (G.Apply _ f x) = runDef $ do
@@ -289,12 +291,12 @@ dcExp (G.OpApp _ op x y) = runDef $ do
           else bind (Call (C.Var op') [x'])
       pure $ Call e1 [y']
     _ -> bug Unreachable
-dcExp (G.Fn x (Clause _ [] es : _)) = do
+dcExp (G.Fn x (Clause _ [] ss : _)) = do
   -- lazy valueの脱糖衣
-  es' <- traverse dcExp es
+  ss' <- dcStmts ss
   typ <- dcType (x ^. toType)
   runDef do
-    fun <- let_ typ . Fun [] =<< runDef (joinSeqExpr es')
+    fun <- let_ typ $ Fun [] ss'
     pure $ Atom fun
 dcExp (G.Fn x cs@(Clause _ ps es : _)) = do
   ps' <- traverse (\p -> newId "$p" =<< dcType (p ^. toType)) ps
@@ -308,13 +310,13 @@ dcExp (G.Fn x cs@(Clause _ ps es : _)) = do
     first List.transpose
       <$> mapAndUnzipM
         ( \(Clause _ ps es) ->
-            pure (ps, runDef $ joinSeqExpr =<< traverse dcExp es)
+            pure (ps, dcStmts es)
         )
         cs
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
   v <- newId "$fun" =<< dcType (x ^. toType)
-  pure $ Let [(v, uncurry Fun obj)] $ Atom $ C.Var v
+  pure $ C.Let [(v, uncurry Fun obj)] $ Atom $ C.Var v
 dcExp (G.Fn _ []) = bug Unreachable
 dcExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dcExp) es
@@ -326,6 +328,20 @@ dcExp (G.Force _ e) = runDef $ do
   -- lazy valueは0引数関数に変換されるので、その評価は0引数関数の呼び出しになる
   e' <- bind =<< dcExp e
   pure $ Call e' []
+
+dcStmts :: (MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) => [Stmt (Griff 'TypeCheck)] -> m (C.Exp (Id C.Type))
+dcStmts [] = bug Unreachable
+dcStmts [NoBind _ e] = dcExp e
+dcStmts [G.Let _ _ e] = dcExp e
+dcStmts (NoBind _ e : ss) = runDef $ do
+  _ <- bind =<< dcExp e
+  dcStmts ss
+dcStmts (G.Let _ v e : ss) = do
+  e' <- dcExp e
+  v' <- newId ("$let_" <> v ^. idName) (C.typeOf e')
+  local (over varEnv $ Map.insert v v') do
+    ss' <- dcStmts ss
+    pure $ Match e' (Bind v' ss' :| [])
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加
@@ -511,10 +527,18 @@ curryFun ::
   [Id C.Type] ->
   C.Exp (Id C.Type) ->
   m ([Id C.Type], C.Exp (Id C.Type))
-curryFun [] e@(Let ds (Atom (C.Var v))) = case List.lookup v ds of
+-- FIXME: curryFun [] e の正しい処理は、eの型に応じて引数リストpsを生成し、(ps, (apply e ps))を返す
+-- そのためには、Coreの項に明示的な型の適用を追加する必要がある
+-- curryFun [] e =
+--   case C.typeOf e of
+--     pts :-> _ -> do
+--       ps <- traverse (newId "$p") pts
+--       curryFun ps =<< runDef (Call <$> bind e <*> pure (map C.Var ps))
+--     t -> errorDoc $ "Invalid type:" <+> P.quotes (pPrint t)
+curryFun [] e@(C.Let ds (Atom (C.Var v))) = case List.lookup v ds of
   Just (Fun ps e) | not $ any ((/= v) . fst) ds -> pure (ps, e)
   _ -> errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
-curryFun [] e = pure ([], e)
+curryFun [] e = errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
 curryFun [x] e = pure ([x], e)
 curryFun ps@(_ : _) e = curryFun' ps []
   where
@@ -523,7 +547,7 @@ curryFun ps@(_ : _) e = curryFun' ps []
       x' <- newId (x ^. idName) (C.typeOf x)
       fun <- newId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
-      pure ([x'], Let [(fun, Fun ps e)] body)
+      pure ([x'], C.Let [(fun, Fun ps e)] body)
     curryFun' (x : xs) as = do
       x' <- newId (x ^. idName) (C.typeOf x)
       fun <- curryFun' xs (C.Var x' : as)
@@ -532,10 +556,3 @@ curryFun ps@(_ : _) e = curryFun' ps []
         fun <- let_ (C.typeOf funObj) funObj
         pure $ Atom fun
       pure ([x'], body)
-
-joinSeqExpr :: MonadUniq m => [C.Exp (Id C.Type)] -> DefBuilderT m (C.Exp (Id C.Type))
-joinSeqExpr [] = bug Unreachable -- TODO: ほんとにunreachable?
-joinSeqExpr [e] = pure e
-joinSeqExpr (e : es) = do
-  _ <- bind e
-  joinSeqExpr es

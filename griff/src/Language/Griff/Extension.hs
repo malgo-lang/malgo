@@ -1,7 +1,7 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -59,6 +59,14 @@ type family XClause x
 
 type ForallClauseX (c :: K.Type -> Constraint) x = c (XClause x)
 
+-- Stmt Extensions
+
+type family XLet x
+
+type family XNoBind x
+
+type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XNoBind x))
+
 -- Pat Extensions
 type family XVarP x
 
@@ -105,6 +113,7 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
     c (XForeign x),
     ForallExpX c x,
     ForallClauseX c x,
+    ForallStmtX c x,
     ForallPatX c x,
     ForallTypeX c x
   )
@@ -199,6 +208,10 @@ type instance XClause (Griff 'Parse) = SourcePos
 type instance XClause (Griff 'Rename) = SourcePos
 
 type instance XClause (Griff 'TypeCheck) = WithType SourcePos
+
+type instance XLet (Griff _) = SourcePos
+
+type instance XNoBind (Griff _) = SourcePos
 
 type instance XVarP (Griff 'Parse) = SourcePos
 
