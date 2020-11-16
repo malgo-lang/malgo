@@ -149,15 +149,6 @@ pFun =
 pExpInFn :: Parser [Exp (Griff 'Parse)]
 pExpInFn = pExp `sepEndBy` pOperator ";"
 
--- makeExprParser
---   pExp
---   [ [ InfixR $ do
---         s <- getSourcePos
---         pOperator ";"
---         pure $ \l r -> Apply s (Fn s [Clause s [VarP s "_"] r]) l
---     ]
---   ]
-
 pSinglePat :: Parser (Pat (Griff 'Parse))
 pSinglePat =
   VarP <$> getSourcePos <*> lowerIdent
