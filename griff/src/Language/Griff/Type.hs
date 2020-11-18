@@ -54,22 +54,30 @@ instance Pretty Scheme where
 -- Type variable --
 -------------------
 
-data MetaTv = MetaTv Int Kind (IORef (Maybe Type))
+data MetaTv = MetaTv Int Kind String (IORef (Maybe Type))
+
+isRigit :: MetaTv -> Bool
+isRigit (MetaTv _ _ "" _) = False
+isRigit _ = True
+
+rigitName :: MetaTv -> String
+rigitName (MetaTv _ _ n _) = n
 
 instance Eq MetaTv where
-  (MetaTv u1 _ _) == (MetaTv u2 _ _) = u1 == u2
+  (MetaTv u1 _ _ _) == (MetaTv u2 _ _ _) = u1 == u2
 
 instance Ord MetaTv where
-  (MetaTv u1 _ _) `compare` (MetaTv u2 _ _) = u1 `compare` u2
+  (MetaTv u1 _ _ _) `compare` (MetaTv u2 _ _ _) = u1 `compare` u2
 
 instance Show MetaTv where
-  show (MetaTv u _ _) = "_" <> show u
+  show (MetaTv u _ _ _) = "_" <> show u
 
 instance Pretty MetaTv where
-  pPrint (MetaTv u _ _) = "'" <> pPrint u
+  pPrint (MetaTv u _ [] _) = "'" <> pPrint u
+  pPrint (MetaTv _ _ rigitName _) = P.text rigitName
 
 instance HasKind MetaTv where
-  kind (MetaTv _ k _) = k
+  kind (MetaTv _ k _ _) = k
 
 type MonadMetaTv m = (MonadUniq m, MonadIO m)
 
@@ -77,14 +85,14 @@ type MonadMetaTv m = (MonadUniq m, MonadIO m)
 -- Read and Write MetaTv --
 ---------------------------
 
-newMetaTv :: (MonadUniq f, MonadIO f) => Kind -> f MetaTv
-newMetaTv k = MetaTv <$> getUniq <*> pure k <*> newIORef Nothing
+newMetaTv :: (MonadUniq f, MonadIO f) => Kind -> String -> f MetaTv
+newMetaTv k rigitName = MetaTv <$> getUniq <*> pure k <*> pure rigitName <*> newIORef Nothing
 
 readMetaTv :: MonadIO m => MetaTv -> m (Maybe Type)
-readMetaTv (MetaTv _ _ ref) = readIORef ref
+readMetaTv (MetaTv _ _ _ ref) = readIORef ref
 
 writeMetaTv :: MonadIO m => MetaTv -> Type -> m ()
-writeMetaTv (MetaTv _ k ref) t
+writeMetaTv (MetaTv _ k _ ref) t
   | k == kind t = writeIORef ref (Just t)
   | otherwise = errorDoc $ "Panic!" <+> "Kind of" <+> pPrint t <+> "is not" <+> pPrint k
 
