@@ -3,7 +3,7 @@ module testDot;
 data Int64 = Int64# Int64#;
 
 infixr 9 (.);
-(.) :: (a -> b) -> (b -> c) -> (a -> c);
+(.) :: (b -> c) -> (a -> b) -> (a -> c);
 (.) = {f g -> {x -> f (g x)}};
 
 succ = {(Int64# x) -> (Int64# (add_i64# (x, 1L#)))};

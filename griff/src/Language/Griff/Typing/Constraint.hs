@@ -30,8 +30,15 @@ solve = solveLoop 5000
 solveLoop :: MonadIO m => Int -> [WithPos] -> m ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
-solveLoop n (WithPos (TyMeta a1 :~ TyMeta a2) _ : cs)
+solveLoop n (WithPos (TyMeta a1 :~ TyMeta a2) pos : cs)
   | a1 == a2 = solveLoop (n - 1) cs
+  | (isRigit a1 && isRigit a2) && (rigitName a1 /= rigitName a2) = errorOn pos $ "Type mismatch:" <+> P.vcat [pPrint a1, pPrint a2]
+  | isRigit a1 = do
+    bind pos a2 (TyMeta a1)
+    solveLoop (n - 1) =<< zonkConstraints cs
+  | isRigit a2 = do
+    bind pos a1 (TyMeta a2)
+    solveLoop (n - 1) =<< zonkConstraints cs
 solveLoop n (WithPos (TyMeta a :~ t) pos : cs) = do
   bind pos a t
   solveLoop (n - 1) =<< zonkConstraints cs

@@ -72,7 +72,7 @@ tcDataDefs ds = do
     Map.singleton name . TyCon <$> newId (name ^. idName) (kindof params)
   local (over T.typeEnv (dataEnv <>)) do
     (ds', conEnvs) <- mapAndUnzipM ?? ds $ \(pos, name, params, cons) -> do
-      paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star) params
+      paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star "") params
       local (over T.typeEnv (paramsEnv <>)) do
         cons' <- traverseOf (traversed . _2) ?? cons $ \args -> do
           -- 値コンストラクタの型を構築
@@ -104,7 +104,7 @@ tcForeigns ::
   m ([Foreign (Griff 'TypeCheck)], TcEnv)
 tcForeigns ds = fmap (second mconcat) $
   mapAndUnzipM ?? ds $ \(pos, name, ty) -> do
-    tyVars <- traverse (\tyVar -> (tyVar,) . TyMeta <$> newMetaTv Star) $ Set.toList $ getTyVars ty
+    tyVars <- traverse (\tyVar -> (tyVar,) . TyMeta <$> newMetaTv Star (show $ pPrint tyVar)) $ Set.toList $ getTyVars ty
     local (over T.typeEnv (Map.fromList tyVars <>)) do
       scheme@(Forall _ ty') <- generalize mempty =<< transType ty
       pure ((WithType pos ty', name, tcType ty), mempty & T.varEnv .~ Map.fromList [(name, scheme)])
@@ -115,7 +115,7 @@ tcScSigs ::
   m ([ScSig (Griff 'TypeCheck)], TcEnv)
 tcScSigs ds = fmap (second mconcat) $
   mapAndUnzipM ?? ds $ \(pos, name, ty) -> do
-    tyVars <- traverse (\tyVar -> (tyVar,) . TyMeta <$> newMetaTv Star) $ Set.toList $ getTyVars ty
+    tyVars <- traverse (\tyVar -> (tyVar,) . TyMeta <$> newMetaTv Star (show $ pPrint tyVar)) $ Set.toList $ getTyVars ty
     local (over T.typeEnv (Map.fromList tyVars <>)) do
       scheme <- generalize mempty =<< transType ty
       pure ((pos, name, tcType ty), mempty & T.varEnv .~ Map.singleton name scheme)
@@ -128,7 +128,7 @@ prepareTcScDefs ::
 prepareTcScDefs ds = foldMapA ?? ds $ \(_, name, _, _) -> do
   mscheme <- view $ T.varEnv . at name
   case mscheme of
-    Nothing -> Map.singleton name . Forall [] . TyMeta <$> newMetaTv Star
+    Nothing -> Map.singleton name . Forall [] . TyMeta <$> newMetaTv Star ""
     Just _ -> pure mempty
 
 tcScDefGroup ::
@@ -148,10 +148,10 @@ tcScDefs ::
   m ([ScDef (Griff 'TypeCheck)], TcEnv)
 tcScDefs ds = do
   (ds', nts) <- mapAndUnzipM ?? ds $ \(pos, name, params, expr) -> do
-    paramTypes <- traverse (const $ TyMeta <$> newMetaTv Star) params
+    paramTypes <- traverse (const $ TyMeta <$> newMetaTv Star "") params
     local (over T.varEnv (Map.fromList (zip params (map (Forall []) paramTypes)) <>)) do
       (expr', wanted) <- runWriterT (tcExpr expr)
-      ty <- instantiate =<< lookupVar pos name
+      ty <- instantiate True =<< lookupVar pos name
       solve $ eqCons pos ty (foldr TyArr (expr' ^. toType) paramTypes) : wanted
       pure ((WithType pos ty, name, params, expr'), (name, ty))
   (_, nts') <- generalizeMutRecs mempty nts
@@ -162,23 +162,23 @@ tcExpr ::
   Exp (Griff 'Rename) ->
   WriterT [WithPos] m (Exp (Griff 'TypeCheck))
 tcExpr (Var pos v) = do
-  vType <- instantiate =<< lookupVar pos v
+  vType <- instantiate False =<< lookupVar pos v
   pure $ Var (WithType pos vType) v
 tcExpr (Con pos c) = do
-  cType <- instantiate =<< lookupVar pos c
+  cType <- instantiate False =<< lookupVar pos c
   pure $ Con (WithType pos cType) c
 tcExpr (Unboxed pos u) = pure $ Unboxed (WithType pos $ u ^. toType) u
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
-  retType <- TyMeta <$> newMetaTv Star
+  retType <- TyMeta <$> newMetaTv Star ""
   tell [eqCons pos (f' ^. toType) (TyArr (x' ^. toType) retType)]
   pure $ Apply (WithType pos retType) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
   e2' <- tcExpr e2
-  opType <- instantiate =<< lookupVar pos op
-  retType <- TyMeta <$> newMetaTv Star
+  opType <- instantiate False =<< lookupVar pos op
+  retType <- TyMeta <$> newMetaTv Star ""
   tell [eqCons pos opType (TyArr (e1' ^. toType) $ TyArr (e2' ^. toType) retType)]
   pure $ OpApp (WithType x retType) op e1' e2'
 tcExpr (Fn pos (Clause x [] ss : _)) = do
@@ -199,7 +199,7 @@ tcExpr (Tuple pos es) = do
   pure $ Tuple (WithType pos (TyTuple (map (view toType) es'))) es'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
-  ty <- TyMeta <$> newMetaTv Star
+  ty <- TyMeta <$> newMetaTv Star ""
   tell [eqCons pos (TyLazy ty) (e' ^. toType)]
   pure $ Force (WithType pos ty) e'
 
@@ -230,13 +230,13 @@ tcPatterns :: (MonadReader TcEnv m, MonadIO m, MonadUniq m) => [Pat (Griff 'Rena
 tcPatterns pats = fmap (second mconcat) $
   mapAndUnzipM ?? pats $ \case
     VarP x v -> do
-      vscheme@(Forall _ ty) <- Forall [] . TyMeta <$> newMetaTv Star
+      vscheme@(Forall _ ty) <- Forall [] . TyMeta <$> newMetaTv Star ""
       pure (VarP (WithType x ty) v, mempty & T.varEnv .~ Map.singleton v vscheme)
     ConP pos con pats -> do
       (pats', env) <- tcPatterns pats
       local (env <>) $ do
-        conType <- instantiate =<< lookupVar pos con
-        ty <- TyMeta <$> newMetaTv Star
+        conType <- instantiate False =<< lookupVar pos con
+        ty <- TyMeta <$> newMetaTv Star ""
         tell [eqCons pos conType (foldr (TyArr . view toType) ty pats')]
         pure (ConP (WithType pos ty) con pats', env)
     UnboxedP pos unboxed -> do
@@ -317,9 +317,9 @@ metaTvsScheme :: Scheme -> Set MetaTv
 metaTvsScheme (Forall _ t) = metaTvs t
 
 -- 型を具体化する
-instantiate :: (MonadUniq m, MonadIO m) => Scheme -> m Type
-instantiate (Forall as t) = do
-  vs <- traverse (\a -> TyMeta <$> newMetaTv (kind a)) as
+instantiate :: (MonadUniq m, MonadIO m) => Bool -> Scheme -> m Type
+instantiate isRigit (Forall as t) = do
+  vs <- traverse (\a -> TyMeta <$> newMetaTv (kind a) (if isRigit then show $ pPrint a else "")) as
   applySubst (Map.fromList $ zip as vs) <$> zonkType t
 
 applySubst :: Map TyVar Type -> Type -> Type
