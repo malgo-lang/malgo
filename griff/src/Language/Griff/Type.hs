@@ -54,14 +54,19 @@ instance Pretty Scheme where
 -- Type variable --
 -------------------
 
-data MetaTv = MetaTv Int Kind String (IORef (Maybe Type))
+data MetaTv = MetaTv
+  { _metaTvUniq :: Int,
+    _metaTvKind :: Kind,
+    _metaTvRigidName :: String,
+    _metaTvTypeRef :: IORef (Maybe Type)
+  }
 
-isRigit :: MetaTv -> Bool
-isRigit (MetaTv _ _ "" _) = False
-isRigit _ = True
+isRigid :: MetaTv -> Bool
+isRigid MetaTv {_metaTvRigidName = ""} = False
+isRigid _ = True
 
-rigitName :: MetaTv -> String
-rigitName (MetaTv _ _ n _) = n
+rigidName :: MetaTv -> String
+rigidName MetaTv {_metaTvRigidName = n} = n
 
 instance Eq MetaTv where
   (MetaTv u1 _ _ _) == (MetaTv u2 _ _ _) = u1 == u2
@@ -131,6 +136,7 @@ instance Pretty PrimT where
   pPrint StringT = "String#"
 
 type TyVar = Id Kind
+
 type TyCon = Id Kind
 
 data Type

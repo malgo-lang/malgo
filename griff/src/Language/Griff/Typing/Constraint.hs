@@ -27,24 +27,34 @@ eqCons pos t1 t2 = WithPos (t1 :~ t2) pos
 solve :: MonadIO m => [WithPos] -> m ()
 solve = solveLoop 5000
 
+unifyErrorMessage :: (Pretty a1, Pretty a2) => a1 -> a2 -> Doc
+unifyErrorMessage t1 t2 = "Couldn't match type" <+> quotes (pPrint t1) <+> "with" <+> quotes (pPrint t2)
+
 solveLoop :: MonadIO m => Int -> [WithPos] -> m ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (WithPos (TyMeta a1 :~ TyMeta a2) pos : cs)
   | a1 == a2 = solveLoop (n - 1) cs
-  | (isRigit a1 && isRigit a2) && (rigitName a1 /= rigitName a2) = errorOn pos $ "Type mismatch:" <+> P.vcat [pPrint a1, pPrint a2]
-  | isRigit a1 = do
+  | (isRigid a1 && isRigid a2) && (rigidName a1 /= rigidName a2) =
+    errorOn pos $
+      unifyErrorMessage a1 a2
+        $+$ quotes (pPrint a1) <+> "and" <+> quotes (pPrint a2) <+> "are rigid type variables"
+  | isRigid a1 = do
     bind pos a2 (TyMeta a1)
     solveLoop (n - 1) =<< zonkConstraints cs
-  | isRigit a2 = do
+  | isRigid a2 = do
     bind pos a1 (TyMeta a2)
     solveLoop (n - 1) =<< zonkConstraints cs
-solveLoop n (WithPos (TyMeta a :~ t) pos : cs) = do
-  bind pos a t
-  solveLoop (n - 1) =<< zonkConstraints cs
-solveLoop n (WithPos (t :~ TyMeta a) pos : cs) = do
-  bind pos a t
-  solveLoop (n - 1) =<< zonkConstraints cs
+solveLoop n (WithPos (TyMeta a :~ t) pos : cs)
+  | isRigid a = bug Unreachable
+  | otherwise = do
+    bind pos a t
+    solveLoop (n - 1) =<< zonkConstraints cs
+solveLoop n (WithPos (t :~ TyMeta a) pos : cs)
+  | isRigid a = bug Unreachable
+  | otherwise = do
+    bind pos a t
+    solveLoop (n - 1) =<< zonkConstraints cs
 solveLoop n (WithPos (TyApp t11 t12 :~ TyApp t21 t22) pos : cs) =
   solveLoop (n - 1) $ WithPos (t11 :~ t21) pos : WithPos (t12 :~ t22) pos : cs
 solveLoop n (WithPos (TyArr t11 t12 :~ TyArr t21 t22) pos : cs) =
@@ -55,7 +65,7 @@ solveLoop n (WithPos (TyLazy t1 :~ TyLazy t2) pos : cs) =
   solveLoop (n - 1) $ WithPos (t1 :~ t2) pos : cs
 solveLoop n (WithPos (t1 :~ t2) pos : cs)
   | t1 == t2 = solveLoop (n - 1) cs
-  | otherwise = errorOn pos $ "Type mismatch:" <+> P.vcat [pPrint t1, pPrint t2]
+  | otherwise = errorOn pos $ unifyErrorMessage t1 t2
 
 metaTvs :: Type -> Set MetaTv
 metaTvs (TyApp t1 t2) = metaTvs t1 <> metaTvs t2
