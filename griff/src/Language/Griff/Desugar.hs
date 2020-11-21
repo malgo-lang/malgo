@@ -19,6 +19,7 @@ import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.Core as C
 import Koriel.Core.Op
 import Koriel.Core.Type hiding (Type)
@@ -29,12 +30,14 @@ import Koriel.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.Grouping
+import Language.Griff.Option
 import qualified Language.Griff.RnEnv as Rn
 import Language.Griff.Syntax as G
 import Language.Griff.TcEnv (TcEnv)
 import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
 import Language.Griff.Typing.Infer (applySubst)
+import System.FilePath.Lens (extension)
 import qualified Text.PrettyPrint.HughesPJ as P
 
 #ifdef DEBUG
@@ -65,12 +68,15 @@ tcEnv = lens _tcEnv (\e x -> e {_tcEnv = x})
 -- | GriffからCoreへの変換
 desugar ::
   (MonadUniq m, MonadFail m, MonadIO m) =>
+  Opt ->
   TcEnv ->
   BindGroup (Griff 'TypeCheck) ->
   m (Program (Id C.Type))
-desugar tcEnv ds = do
+desugar opt tcEnv ds = do
   (dcEnv, prims) <- genPrimitive tcEnv
   (dcEnv', ds') <- runReaderT (dcBindGroup ds) dcEnv
+  -- generate interface file
+  liftIO $ TL.writeFile (dstName opt & extension .~ ".grfi") (pShow $ Map.filterWithKey (\k _ -> k ^. idIsGlobal) $ view varEnv dcEnv')
   pure $ Program (prims <> ds') $ searchMain $ Map.toList $ view varEnv dcEnv'
   where
     -- エントリーポイントとなるmain関数を検索する
@@ -146,7 +152,7 @@ dcScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
     Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
-    f' <- newGlobalId (f ^. idMeta . _Module <> "." <> f ^. idName) =<< dcType fType
+    f' <- newCoreId f =<< dcType fType
     pure $ mempty & varEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
 
@@ -516,10 +522,10 @@ lookupConMap con ts = do
   Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
   pure $ over (mapped . _2) (applySubst $ Map.fromList $ zip as ts) conMap
 
-newCoreId :: MonadUniq m => TcId -> C.Type -> m (Id C.Type)
-newCoreId griffId coreType = do
-  coreId <- newId (griffId ^. idMeta . _Module <> "." <> griffId ^. idName) coreType
-  pure $ coreId & idIsGlobal .~ griffId ^. idIsGlobal
+newCoreId :: MonadUniq f => Id ModuleName -> a -> f (Id a)
+newCoreId griffId coreType =
+  newId (griffId ^. idMeta . _Module <> "." <> griffId ^. idName) coreType
+    <&> idIsGlobal .~ griffId ^. idIsGlobal
 
 -- 関数をカリー化する
 curryFun ::

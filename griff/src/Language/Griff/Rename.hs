@@ -25,8 +25,10 @@ import Language.Griff.Syntax
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
-rename :: MonadUniq m => RnState -> RnEnv -> [Decl (Griff 'Parse)] -> m [Decl (Griff 'Rename)]
-rename rnState rnEnv ds = evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
+rename :: MonadUniq m => RnEnv -> Module (Griff 'Parse) -> m [Decl (Griff 'Rename)]
+rename rnEnv (Module modName ds) = do
+  rnState <- genRnState modName
+  evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
 
 resolveName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
 resolveName name = newId name =<< use moduleName
@@ -78,7 +80,7 @@ rnDecl (ScDef pos name params expr) = do
   -- Desugarの都合上の制約
   -- Ref: Language.Griff.Desugar.curryFun
   case (params, expr) of
-    ([], Fn{}) -> pure ()
+    ([], Fn {}) -> pure ()
     ([], _) -> errorOn pos "Toplevel definition must be `x = {...}` or `f x ... = ...`"
     _ -> pure ()
   params' <- traverse resolveName params

@@ -24,10 +24,7 @@ import Language.Griff.Desugar (desugar)
 import Language.Griff.Option
 import Language.Griff.Parser (parseGriff)
 import Language.Griff.Rename (rename)
-import Language.Griff.RnEnv
-  ( genRnEnv,
-    genRnState,
-  )
+import Language.Griff.RnEnv (genRnEnv)
 import qualified Language.Griff.TcEnv as T
 import Language.Griff.Typing.Infer (typeCheck)
 import System.IO
@@ -39,7 +36,6 @@ import Text.Megaparsec
   ( errorBundlePretty,
   )
 import qualified Text.PrettyPrint.HughesPJ as P
-import Language.Griff.Syntax (Module(..))
 
 compile :: Opt -> IO ()
 compile opt = do
@@ -52,9 +48,8 @@ compile opt = do
     hPrint stderr $ pPrint moduleAst
   void $
     runUniqT ?? UniqSupply 0 $ do
-      rnState <- genRnState (_moduleName moduleAst)
       rnEnv <- genRnEnv
-      ds' <- rename rnState rnEnv (_moduleDecls moduleAst)
+      ds' <- rename rnEnv moduleAst
       when (dumpRenamed opt) $
         liftIO $ do
           hPutStrLn stderr "=== RENAME ==="
@@ -67,7 +62,7 @@ compile opt = do
           hPrint stderr $ Map.toList $ view T.typeEnv tcEnv
           hPrint stderr $ pPrint $ Map.toList $ view T.tyConEnv tcEnv
           hPrint stderr $ pPrint bg
-      core <- desugar tcEnv bg
+      core <- desugar opt tcEnv bg
       when (dumpDesugar opt) $
         liftIO $ do
           hPutStrLn stderr "=== DESUGAR ==="
