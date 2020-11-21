@@ -8,26 +8,26 @@ Griffで書かれたHello, worldの例です。
 
 Hello.grf
 ```
-module hello; -- module名の宣言
+module hello = { -- module名の宣言
+  -- 外部関数のインポート
+  foreign import print_string :: String# -> ();
+  foreign import newline :: () -> ();
 
--- 外部関数のインポート
-foreign import print_string :: String# -> ();
-foreign import newline :: () -> ();
+  -- 型と値コンストラクタの定義
+  data String = String# String#;
 
--- 型と値コンストラクタの定義
-data String = String# String#;
+  -- 関数定義
+  putStrLn :: String -> ();
+  putStrLn = { (String# str) ->
+    print_string str;
+    newline ()
+  };
 
--- 関数定義
-putStrLn :: String -> ();
-putStrLn = { (String# str) ->
-  print_string str;
-  newline ()
-};
-
--- main関数の定義
-main = {
-  putStrLn (String# "Hello, world"#)
-};
+  -- main関数の定義
+  main = {
+    putStrLn (String# "Hello, world"#)
+  };
+}
 ```
 
 Hello.grfは以下のようにコンパイル、実行します。
