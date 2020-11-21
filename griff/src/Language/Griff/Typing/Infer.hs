@@ -218,7 +218,7 @@ tcStmts (NoBind pos e : ss) = do
   pure $ NoBind pos e' : ss'
 tcStmts (Let pos v e : ss) = do
   env <- ask
-  (e', wanted) <- listen $ tcExpr e 
+  (e', wanted) <- listen $ tcExpr e
   solve wanted
   -- FIXME: value restriction
   vScheme <- generalize env (e' ^. toType)
@@ -227,20 +227,40 @@ tcStmts (Let pos v e : ss) = do
     pure $ Let pos v e' : ss'
 
 tcPatterns :: (MonadReader TcEnv m, MonadIO m, MonadUniq m) => [Pat (Griff 'Rename)] -> WriterT [WithPos] m ([Pat (Griff 'TypeCheck)], TcEnv)
-tcPatterns pats = fmap (second mconcat) $
-  mapAndUnzipM ?? pats $ \case
-    VarP x v -> do
-      vscheme@(Forall _ ty) <- Forall [] . TyMeta <$> newMetaTv Star ""
-      pure (VarP (WithType x ty) v, mempty & T.varEnv .~ Map.singleton v vscheme)
-    ConP pos con pats -> do
-      (pats', env) <- tcPatterns pats
-      local (env <>) $ do
-        conType <- instantiate False =<< lookupVar pos con
-        ty <- TyMeta <$> newMetaTv Star ""
-        tell [eqCons pos conType (foldr (TyArr . view toType) ty pats')]
-        pure (ConP (WithType pos ty) con pats', env)
-    UnboxedP pos unboxed -> do
-      pure (UnboxedP (WithType pos (unboxed ^. toType)) unboxed, mempty)
+tcPatterns [] = pure ([], mempty)
+tcPatterns (VarP x v : ps) = do
+  vscheme@(Forall _ ty) <- Forall [] . TyMeta <$> newMetaTv Star ""
+  (ps', env) <- tcPatterns ps
+  pure (VarP (WithType x ty) v : ps', env & T.varEnv %~ Map.insert v vscheme)
+tcPatterns (ConP pos con pats : ps) = do
+  conType <- instantiate False =<< lookupVar pos con
+  let (conParams, _) = splitTyArr conType
+  -- if length conParams == length pats
+  --   then do
+  --     (pats', env) <- tcPatterns pats
+  --     local (env <>) $ do
+  --       ty <- TyMeta <$> newMetaTv Star ""
+  --       tell [eqCons pos conType (foldr (TyArr . view toType) ty pats')]
+  --       (ps', env') <- tcPatterns ps
+  --       pure (ConP (WithType pos ty) con pats' : ps', env' <> env)
+  --   else do
+  -- コンストラクタの型に基づくASTの組み換え
+  -- 足りない分を後続のパターン列から補充
+  let (morePats, restPs) = splitAt (length conParams - length pats) ps
+  -- 足りない分（morePats）を補充した残り（restPs）が空でなければ、
+  -- 2引数以上の関数での文法エラー
+  if not (null morePats) && not (null restPs)
+    then errorOn pos "Invalid Pattern: You may need to put parentheses"
+    else pure ()
+  (pats', env) <- tcPatterns (pats <> morePats)
+  local (env <>) $ do
+    ty <- TyMeta <$> newMetaTv Star ""
+    tell [eqCons pos conType (foldr (TyArr . view toType) ty pats')]
+    (ps', env') <- tcPatterns restPs
+    pure (ConP (WithType pos ty) con pats' : ps', env' <> env)
+tcPatterns (UnboxedP pos unboxed : cs) = do
+  (ps, env') <- tcPatterns cs
+  pure (UnboxedP (WithType pos (unboxed ^. toType)) unboxed : ps, env')
 
 -----------------------------------
 -- Translate Type representation --
@@ -266,14 +286,14 @@ tcType (S.TyLazy pos t) = S.TyLazy pos $ tcType t
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupType :: (MonadReader TcEnv m) => SourcePos -> RnTId -> m Type
+lookupType :: (HasCallStack, MonadReader TcEnv m) => SourcePos -> RnTId -> m Type
 lookupType pos name = do
   mtype <- asks $ view $ T.typeEnv . at name
   case mtype of
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just typ -> pure typ
 
-lookupVar :: (MonadReader TcEnv m) => SourcePos -> RnId -> m Scheme
+lookupVar :: (HasCallStack, MonadReader TcEnv m) => SourcePos -> RnId -> m Scheme
 lookupVar pos name = do
   mscheme <- asks $ view $ T.varEnv . at name
   case mscheme of

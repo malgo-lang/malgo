@@ -1,0 +1,25 @@
+module testPatSynRecon = {
+  data Int = Int# Int64#;
+  
+  infixl 6 (+#);
+  (+#) = {x y -> add_i64# (x, y)};
+  
+  infixl 0 (|>);
+  (|>) :: a -> (a -> b) -> b;
+  (|>) = {x f -> f x};
+  
+  data List a = Nil | Cons a (List a);
+
+  sum = { Cons (Int# x) xs ->
+            sum xs |> {(Int# s) -> Int# (x +# s)}
+        | Nil -> Int# 0L#
+        };
+  
+  foreign import print_int :: Int64# -> ();
+  
+  main = {
+      sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil))
+        |> {(Int# i) -> print_int i}
+      }
+}
+-- Expected: 3

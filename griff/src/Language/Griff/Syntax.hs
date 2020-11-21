@@ -65,7 +65,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l d (Apply _ e1 e2) =
     P.maybeParens (d > 10) $ P.sep [pPrintPrec l 10 e1, pPrintPrec l 11 e2]
   pPrintPrec l d (OpApp _ o e1 e2) =
-    P.maybeParens (d > 10) $ P.sep [pPrintPrec l 11 e1, pPrintPrec l 10 o, pPrintPrec l 11 e2]
+    P.maybeParens (d > 10) $ P.sep [pPrintPrec l 11 e1, pPrintPrec l 10 o <+> pPrintPrec l 11 e2]
   pPrintPrec l _ (Fn _ cs) =
     P.braces $
       P.space
@@ -144,7 +144,8 @@ instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), For
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
-  pPrint (Clause _ pats e) = P.sep (map pPrint pats) <+> "->" <+> sep (punctuate ";" $ map pPrint e)
+  pPrintPrec _ _ (Clause _ [] e) = sep (punctuate ";" $ map pPrint e)
+  pPrintPrec l _ (Clause _ ps e) = sep [P.sep (map (pPrintPrec l 11) ps) <+> "->", sep (punctuate ";" $ map pPrint e)]
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Clause x) where
   toType = to $ \(Clause x _ _) -> view toType x

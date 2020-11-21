@@ -17,8 +17,14 @@ infixl 5 :~
 data Constraint = Type :~ Type
   deriving stock (Eq, Show)
 
+instance Pretty Constraint where
+  pPrint (t1 :~ t2) = pPrint t1 <+> "~" <+> pPrint t2
+
 data WithPos = WithPos Constraint SourcePos
   deriving stock (Eq, Show)
+
+instance Pretty WithPos where
+  pPrint (WithPos c pos) = pPrint pos <> ":" <> pPrint c
 
 eqCons :: SourcePos -> Type -> Type -> WithPos
 eqCons pos t1 t2 = WithPos (t1 :~ t2) pos
@@ -28,7 +34,7 @@ solve :: MonadIO m => [WithPos] -> m ()
 solve = solveLoop 5000
 
 unifyErrorMessage :: (Pretty a1, Pretty a2) => a1 -> a2 -> Doc
-unifyErrorMessage t1 t2 = "Couldn't match type" <+> quotes (pPrint t1) <+> "with" <+> quotes (pPrint t2)
+unifyErrorMessage t1 t2 = "Couldn't match type" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
 
 solveLoop :: MonadIO m => Int -> [WithPos] -> m ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
