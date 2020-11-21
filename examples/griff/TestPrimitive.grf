@@ -1,11 +1,10 @@
-module testPrimitive;
+module testPrimitive = {
+  foreign import print_int32 :: Int32# -> ();
+  foreign import print_int64 :: Int64# -> ();
 
-foreign import print_int32 :: Int32# -> ();
-foreign import print_int64 :: Int64# -> ();
-
-main = {
-  print_int32 (add_i32# (1#, 2#));
-  print_int64 (add_i64# (1L#, 2L#))
+  main = {
+    print_int32 (add_i32# (1#, 2#));
+    print_int64 (add_i64# (1L#, 2L#))
+  }
 }
-
 -- Expected: 33

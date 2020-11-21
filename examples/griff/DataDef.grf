@@ -1,9 +1,9 @@
-module dataDef;
-data Int = Int# Int64#;
-data List a = Nil | Cons a (List a);
+module dataDef = {
+  data Int = Int# Int64#;
+  data List a = Nil | Cons a (List a);
 
-foreign import print_int :: Int64# -> ();
+  foreign import print_int :: Int64# -> ();
 
-main = { {(Int# x) -> print_int x} (Int# 1L#) }
-
+  main = { {(Int# x) -> print_int x} (Int# 1L#) }
+}
 -- Expected: 1

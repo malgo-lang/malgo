@@ -39,22 +39,22 @@ import Text.Megaparsec
   ( errorBundlePretty,
   )
 import qualified Text.PrettyPrint.HughesPJ as P
+import Language.Griff.Syntax (Module(..))
 
 compile :: Opt -> IO ()
 compile opt = do
   src <- T.readFile (srcName opt)
-  (packageName, ds) <- case parseGriff (srcName opt) src of
-    Right ds -> pure ds
+  moduleAst <- case parseGriff (srcName opt) src of
+    Right x -> pure x
     Left err -> error $ errorBundlePretty err
   when (dumpParsed opt) $ do
     hPutStrLn stderr "=== PARSE ==="
-    hPrint stderr $ "package" <+> P.text packageName
-    hPrint stderr $ P.sep $ P.punctuate ";" $ map pPrint ds
+    hPrint stderr $ pPrint moduleAst
   void $
     runUniqT ?? UniqSupply 0 $ do
-      rnState <- genRnState packageName
+      rnState <- genRnState (_moduleName moduleAst)
       rnEnv <- genRnEnv
-      ds' <- rename rnState rnEnv ds
+      ds' <- rename rnState rnEnv (_moduleDecls moduleAst)
       when (dumpRenamed opt) $
         liftIO $ do
           hPutStrLn stderr "=== RENAME ==="

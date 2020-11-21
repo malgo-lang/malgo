@@ -1,34 +1,33 @@
-module prelude;
+module prelude = {
+  infixl 0 (|>);
+  (|>) :: a -> (a -> b) -> b;
+  (|>) = {x f -> f x};
 
-infixl 0 (|>);
-(|>) :: a -> (a -> b) -> b;
-(|>) = {x f -> f x};
+  infixr 0 (<|);
+  (<|) :: (a -> b) -> a -> b;
+  (<|) = {f x -> f x};
 
-infixr 0 (<|);
-(<|) :: (a -> b) -> a -> b;
-(<|) = {f x -> f x};
+  data Bool = False | True;
 
-data Bool = False | True;
+  if :: Bool -> {a} -> {a} -> a;
+  if c t f = c |> { True -> t!
+                  | False -> f!
+                  };
+  if' = { True t _ -> t!
+        | False _ f -> f!
+        };
 
-if :: Bool -> {a} -> {a} -> a;
-if c t f = c |> { True -> t!
-                | False -> f!
-                };
-if' = { True t _ -> t!
-      | False _ f -> f!
-      };
+  foreign import print_string :: String# -> ();
+  foreign import newline :: () -> ();
 
-foreign import print_string :: String# -> ();
-foreign import newline :: () -> ();
+  data String = String# String#;
 
-data String = String# String#;
+  putStrLn :: String -> ();
+  putStrLn = { (String# str) ->
+    print_string str;
+    newline ()
+  };
 
-putStrLn :: String -> ();
-putStrLn = { (String# str) ->
-  print_string str;
-  newline ()
-};
-
-main = { putStrLn (String# "hello"#) }
-
+  main = { putStrLn (String# "hello"#) }
+}
 -- Expected: hello

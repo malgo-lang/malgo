@@ -1,32 +1,32 @@
-module list;
-data Int = Int# Int64#;
-
-infixl 6 (+#);
-(+#) = {x y -> add_i64# (x, y)};
-
-infixl 0 (|>);
-(|>) :: a -> (a -> b) -> b;
-(|>) = {x f -> f x};
-
-data List a = Nil | Cons a (List a);
-
-map f xs = xs |> { Nil -> Nil
-                 | (Cons x xs) -> Cons (f x) (map' f xs)
-                 };
-map' f = { Nil -> Nil
-         | (Cons x xs) -> Cons (f x) (map f xs)
-         };
-
-sum = { Nil -> Int# 0L#
-      | (Cons (Int# x) xs) ->
-          sum xs |> {(Int# s) -> Int# (x +# s)}
-      };
-
-foreign import print_int :: Int64# -> ();
-
-main = {
-    sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil))
-      |> {(Int# i) -> print_int i}
-    }
-
+module list = {
+  data Int = Int# Int64#;
+  
+  infixl 6 (+#);
+  (+#) = {x y -> add_i64# (x, y)};
+  
+  infixl 0 (|>);
+  (|>) :: a -> (a -> b) -> b;
+  (|>) = {x f -> f x};
+  
+  data List a = Nil | Cons a (List a);
+  
+  map f xs = xs |> { Nil -> Nil
+                   | (Cons x xs) -> Cons (f x) (map' f xs)
+                   };
+  map' f = { Nil -> Nil
+           | (Cons x xs) -> Cons (f x) (map f xs)
+           };
+  
+  sum = { Nil -> Int# 0L#
+        | (Cons (Int# x) xs) ->
+            sum xs |> {(Int# s) -> Int# (x +# s)}
+        };
+  
+  foreign import print_int :: Int64# -> ();
+  
+  main = {
+      sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil))
+        |> {(Int# i) -> print_int i}
+      }
+}
 -- Expected: 3

@@ -11,7 +11,7 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Language.Griff.Extension
 
-data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: Module}
+data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: ModuleName}
   deriving stock (Show)
 
 instance Semigroup RnState where
@@ -21,7 +21,7 @@ instance Semigroup RnState where
 infixInfo :: Lens' RnState (Map RnId (Assoc, Int))
 infixInfo = lens _infixInfo (\s x -> s { _infixInfo = x})
 
-moduleName :: Getter RnState Module
+moduleName :: Getter RnState ModuleName
 moduleName = to _moduleName
 
 data RnEnv = RnEnv
@@ -42,21 +42,21 @@ varEnv = lens _varEnv (\e x -> e { _varEnv = x})
 typeEnv :: Lens' RnEnv (Map PsTId RnTId)
 typeEnv = lens _typeEnv (\e x -> e { _typeEnv = x})
 
-genRnState :: Monad m => String -> m RnState
-genRnState name = pure $ RnState mempty $ Module name
+genRnState :: Monad m => ModuleName -> m RnState
+genRnState (ModuleName name) = pure $ RnState mempty $ ModuleName name
 
 genRnEnv :: MonadUniq m => m RnEnv
 genRnEnv = do
   -- generate RnId of primitive functions and operetors
-  add_i32 <- newId "add_i32#" $ Module ""
-  add_i64 <- newId "add_i64#" $ Module ""
+  add_i32 <- newId "add_i32#" $ ModuleName ""
+  add_i64 <- newId "add_i64#" $ ModuleName ""
   -- generate RnTId of primitive types
-  int32_t <- newId "Int32#" $ Module ""
-  int64_t <- newId "Int64#" $ Module ""
-  float_t <- newId "Float#" $ Module ""
-  double_t <- newId "Double#" $ Module ""
-  char_t <- newId "Char#" $ Module ""
-  string_t <- newId "String#" $ Module ""
+  int32_t <- newId "Int32#" $ ModuleName ""
+  int64_t <- newId "Int64#" $ ModuleName ""
+  float_t <- newId "Float#" $ ModuleName ""
+  double_t <- newId "Double#" $ ModuleName ""
+  char_t <- newId "Char#" $ ModuleName ""
+  string_t <- newId "String#" $ ModuleName ""
   pure $
     RnEnv
       { _varEnv = Map.fromList [("add_i32#", add_i32), ("add_i64#", add_i64)],

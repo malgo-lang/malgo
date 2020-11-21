@@ -1,19 +1,18 @@
-module test3;
+module test3 = {
+  data Tag = A | B;
+  data List a = Nil | Cons a (List a);
 
-data Tag = A | B;
-data List a = Nil | Cons a (List a);
+  infixl 0 (|>);
+  (|>) :: a -> (a -> b) -> b;
+  (|>) = {x f -> f x};
 
-infixl 0 (|>);
-(|>) :: a -> (a -> b) -> b;
-(|>) = {x f -> f x};
+  foreign import print_string :: String# -> ();
 
-foreign import print_string :: String# -> ();
-
-main = { 
-  Cons A (Cons B Nil) |> {
-      (Cons A (Cons B Nil)) -> print_string "OK"#
-    | _ -> print_string "WRONG"#
+  main = { 
+    Cons A (Cons B Nil) |> {
+        (Cons A (Cons B Nil)) -> print_string "OK"#
+      | _ -> print_string "WRONG"#
+      }
     }
-  }
-
+}
 -- Expected: OK

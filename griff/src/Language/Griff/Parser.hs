@@ -9,6 +9,7 @@ module Language.Griff.Parser where
 import Control.Monad.Combinators.Expr
 import Data.Functor (($>))
 import qualified Data.Set as Set
+import qualified Data.Text as Text
 import Data.Void
 import Koriel.Prelude hiding
   ( many,
@@ -19,24 +20,24 @@ import Language.Griff.Syntax
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
-import qualified Data.Text as Text
 
 type Parser = Parsec Void Text
 
-parseGriff :: String -> Text -> Either (ParseErrorBundle Text Void) (String, [Decl (Griff 'Parse)])
-parseGriff = parse pTopLevel
+parseGriff :: String -> Text -> Either (ParseErrorBundle Text Void) (Module (Griff 'Parse))
+parseGriff = parse (pModule <* eof)
 
 -- entry point
-pTopLevel :: Parser (String, [Decl (Griff 'Parse)])
-pTopLevel = do
+pModule :: Parser (Module (Griff 'Parse))
+pModule = do
   void $ pKeyword "module"
   x <- pModuleName
-  pOperator ";"
-  (x,) <$> pDecl `sepEndBy` pOperator ";" <* eof
+  pOperator "="
+  ds <- between (symbol "{") (symbol "}") $ pDecl `sepEndBy` pOperator ";"
+  pure $ Module {_moduleName = ModuleName x, _moduleDecls = ds}
 
 -- module name
 pModuleName :: Parser String
-pModuleName = some $ identLetter <|> char '.'
+pModuleName = lexeme $ some $ identLetter <|> char '.'
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Griff 'Parse))

@@ -1,16 +1,15 @@
-module test0;
-
-infixl 0 (|>);
-(|>) :: a -> (a -> b) -> b;
-(|>) x f = f x;
-
-foreign import print_int :: Int64# -> ();
-
-data Int = Int# Int64#;
-
-infixl 6 (+#);
-(+#) = {x y -> add_i64# (x, y)};
-
-main = { Int# 1L# |> {(Int# i) -> print_int i} };
-
+module test0 = {
+  infixl 0 (|>);
+  (|>) :: a -> (a -> b) -> b;
+  (|>) x f = f x;
+  
+  foreign import print_int :: Int64# -> ();
+  
+  data Int = Int# Int64#;
+  
+  infixl 6 (+#);
+  (+#) = {x y -> add_i64# (x, y)};
+  
+  main = { Int# 1L# |> {(Int# i) -> print_int i} };
+}
 -- Expected: 1

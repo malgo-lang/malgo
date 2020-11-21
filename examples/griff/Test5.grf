@@ -1,11 +1,10 @@
-module test5;
+module test5 = {
+  foreign import print_int :: Int64# -> ();
 
-foreign import print_int :: Int64# -> ();
-
-main = {
-  { 0L# -> print_int 1L#
-  | 1L# -> print_int 1L#
-  | _ -> print_int 0L# } 0L#
-  }
-
+  main = {
+    { 0L# -> print_int 1L#
+    | 1L# -> print_int 1L#
+    | _ -> print_int 0L# } 0L#
+    }
+}
 -- Expected: 1

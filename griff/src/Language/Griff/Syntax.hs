@@ -267,3 +267,18 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Decl x) where
       pprConDef (con, ts) = pPrint con <+> P.sep (map (pPrintPrec prettyNormal 12) ts)
   pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
   pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
+
+------------
+-- Module --
+------------
+
+data Module x = Module {_moduleName :: ModuleName, _moduleDecls :: [Decl x]}
+
+deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (Module x)
+
+deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Show (Module x)
+
+instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Module x) where
+  pPrint (Module name ds) =
+    "module" <+> pPrint name <> ";"
+      $$ hsep (map (\d -> pPrint d <> ";") ds)
