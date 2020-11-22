@@ -11,7 +11,7 @@ import Data.Functor (($>))
 import qualified Data.Set as Set
 import qualified Data.Text as Text
 import Data.Void
-import Koriel.Prelude hiding
+import Language.Griff.Prelude hiding
   ( many,
     some,
   )

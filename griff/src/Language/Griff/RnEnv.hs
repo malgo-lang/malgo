@@ -8,7 +8,7 @@ module Language.Griff.RnEnv where
 import qualified Data.Map as Map
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
+import Language.Griff.Prelude
 import Language.Griff.Extension
 
 data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: ModuleName}

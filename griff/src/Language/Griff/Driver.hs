@@ -14,14 +14,13 @@ import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lintProgram, runLint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.MonadUniq
-import Koriel.Prelude
+import Language.Griff.Prelude
 import Koriel.Pretty
 import qualified LLVM.AST as L
 import LLVM.Context (withContext)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
 import Language.Griff.Desugar (desugar)
-import Language.Griff.Option
 import Language.Griff.Parser (parseGriff)
 import Language.Griff.Rename (rename)
 import Language.Griff.RnEnv (genRnEnv)
@@ -47,7 +46,7 @@ compile opt = do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint moduleAst
   void $
-    runUniqT ?? UniqSupply 0 $ do
+    runReaderT ?? opt $ unGriffM $ runUniqT ?? UniqSupply 0 $ do
       rnEnv <- genRnEnv
       ds' <- rename rnEnv moduleAst
       when (dumpRenamed opt) $

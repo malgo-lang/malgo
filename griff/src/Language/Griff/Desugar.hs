@@ -26,11 +26,10 @@ import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
+import Language.Griff.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.Grouping
-import Language.Griff.Option
 import qualified Language.Griff.RnEnv as Rn
 import Language.Griff.Syntax as G
 import Language.Griff.TcEnv (TcEnv)
@@ -67,7 +66,7 @@ tcEnv = lens _tcEnv (\e x -> e {_tcEnv = x})
 
 -- | GriffからCoreへの変換
 desugar ::
-  (MonadUniq m, MonadFail m, MonadIO m) =>
+  (MonadUniq m, MonadFail m, MonadIO m, MonadGriff m) =>
   Opt ->
   TcEnv ->
   BindGroup (Griff 'TypeCheck) ->
@@ -117,7 +116,7 @@ genPrimitive env =
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dcBindGroup ::
-  (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) =>
+  (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m, MonadGriff m) =>
   BindGroup (Griff 'TypeCheck) ->
   m (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dcBindGroup bg = do
@@ -133,7 +132,7 @@ dcBindGroup bg = do
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dcScDefGroup ::
-  (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f) =>
+  (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
   [[ScDef (Griff 'TypeCheck)]] ->
   f (DesugarEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
 dcScDefGroup [] = (,[]) <$> ask
@@ -145,7 +144,7 @@ dcScDefGroup (ds : dss) = do
 
 -- 相互再帰的なグループをdesugar
 dcScDefs ::
-  (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f) =>
+  (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
   [ScDef (Griff 'TypeCheck)] ->
   f (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dcScDefs ds = do
@@ -157,7 +156,7 @@ dcScDefs ds = do
   local (env <>) $ (env,) <$> foldMapA dcScDef ds
 
 dcScDef ::
-  (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f) =>
+  (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f, MonadGriff f) =>
   ScDef (Griff 'TypeCheck) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dcScDef (WithType pos typ, name, params, expr) = do

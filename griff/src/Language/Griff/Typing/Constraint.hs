@@ -5,7 +5,7 @@
 module Language.Griff.Typing.Constraint (Constraint (..), WithPos (..), eqCons, solve) where
 
 import qualified Data.Set as Set
-import Koriel.Prelude
+import Language.Griff.Prelude
 import Koriel.Pretty
 import qualified Koriel.Pretty as P
 import Language.Griff.Type
@@ -30,13 +30,13 @@ eqCons :: SourcePos -> Type -> Type -> WithPos
 eqCons pos t1 t2 = WithPos (t1 :~ t2) pos
 
 -- Constraint Solver
-solve :: MonadIO m => [WithPos] -> m ()
+solve :: (MonadIO m, MonadGriff m) => [WithPos] -> m ()
 solve = solveLoop 5000
 
 unifyErrorMessage :: (Pretty a1, Pretty a2) => a1 -> a2 -> Doc
 unifyErrorMessage t1 t2 = "Couldn't match type" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
 
-solveLoop :: MonadIO m => Int -> [WithPos] -> m ()
+solveLoop :: (MonadIO m, MonadGriff m) => Int -> [WithPos] -> m ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (WithPos (TyMeta a1 :~ TyMeta a2) pos : cs)
@@ -81,7 +81,7 @@ metaTvs (TyLazy t) = metaTvs t
 metaTvs (TyMeta tv) = Set.singleton tv
 metaTvs _ = mempty
 
-bind :: (MonadIO m, Pretty a) => a -> MetaTv -> Type -> m ()
+bind :: (MonadGriff m, MonadIO m) => SourcePos -> MetaTv -> Type -> m ()
 bind pos tv t2
   | kind tv /= kind t2 = errorOn pos $ "Kind mismatch:" <+> vcat [quotes $ pPrint tv, pPrint t2]
   | otherwise = do

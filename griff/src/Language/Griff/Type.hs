@@ -12,7 +12,7 @@ module Language.Griff.Type where
 
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
+import Language.Griff.Prelude
 import Koriel.Pretty
 import qualified Text.PrettyPrint.HughesPJ as P
 

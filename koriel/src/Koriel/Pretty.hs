@@ -8,7 +8,6 @@ module Koriel.Pretty
     (<+>),
     pShow,
     errorDoc,
-    errorOn,
     pretty,
     rendered,
     toText,
@@ -41,6 +40,3 @@ toText = pretty . rendered
 
 errorDoc :: HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ P.render x
-
-errorOn :: (HasCallStack, Pretty a) => a -> Doc -> b
-errorOn pos x = errorDoc $ "error on" <+> pPrint pos <> ":" P.$+$ P.nest 2 x

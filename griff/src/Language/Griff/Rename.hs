@@ -17,15 +17,15 @@ import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
+import Language.Griff.Prelude
 import Language.Griff.RnEnv
 import Language.Griff.Syntax
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
-rename :: MonadUniq m => RnEnv -> Module (Griff 'Parse) -> m [Decl (Griff 'Rename)]
+rename :: (MonadUniq m, MonadGriff m, MonadIO m) => RnEnv -> Module (Griff 'Parse) -> m [Decl (Griff 'Rename)]
 rename rnEnv (Module modName ds) = do
   rnState <- genRnState modName
   evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
@@ -36,14 +36,14 @@ resolveName name = newId name =<< use moduleName
 resolveGlobalName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
 resolveGlobalName name = newGlobalId name =<< use moduleName
 
-lookupVarName :: MonadReader RnEnv m => SourcePos -> String -> m RnId
+lookupVarName :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => SourcePos -> String -> m RnId
 lookupVarName pos name = do
   vm <- asks $ view varEnv
   case vm ^. at name of
     Just name' -> pure name'
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
 
-lookupTypeName :: MonadReader RnEnv m => SourcePos -> String -> m RnId
+lookupTypeName :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
   tm <- asks $ view typeEnv
   case tm ^. at name of
@@ -53,12 +53,12 @@ lookupTypeName pos name = do
 -- renamer
 
 rnDecls ::
-  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) =>
+  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m, MonadGriff m, MonadIO m) =>
   [Decl (Griff 'Parse)] ->
   m [Decl (Griff 'Rename)]
 rnDecls ds = do
   -- RnEnvの生成
-  let (varNames, typeNames) = toplevelIdents ds
+  (varNames, typeNames) <- toplevelIdents ds
   vm <- foldMapA (\v -> Map.singleton v <$> resolveGlobalName v) varNames
   tm <- foldMapA (\v -> Map.singleton v <$> resolveGlobalName v) typeNames
   let rnEnv = RnEnv vm tm
@@ -73,7 +73,7 @@ rnDecls ds = do
 -- Declで定義されるトップレベル識別子はすでにRnEnvに正しく登録されているとする
 -- infix宣言はすでに解釈されRnStateに登録されているとする
 rnDecl ::
-  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) =>
+  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m, MonadGriff m, MonadIO m) =>
   Decl (Griff 'Parse) ->
   m (Decl (Griff 'Rename))
 rnDecl (ScDef pos name params expr) = do
@@ -114,7 +114,7 @@ rnDecl (Foreign pos name typ) = do
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
-  (MonadReader RnEnv m, MonadState RnState m, MonadUniq m) =>
+  (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadGriff m, MonadIO m) =>
   Exp (Griff 'Parse) ->
   m (Exp (Griff 'Rename))
 rnExp (Var pos name) = Var pos <$> lookupVarName pos name
@@ -127,13 +127,13 @@ rnExp (OpApp pos op e1 e2) = do
   e2' <- rnExp e2
   mfixity <- Map.lookup op' <$> use infixInfo
   case mfixity of
-    Just fixity -> pure $ mkOpApp pos fixity op' e1' e2'
+    Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> P.quotes (pPrint op)
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
 rnExp (Force pos e) = Force pos <$> rnExp e
 
-rnType :: MonadReader RnEnv m => Type (Griff 'Parse) -> m (Type (Griff 'Rename))
+rnType :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => Type (Griff 'Parse) -> m (Type (Griff 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
 rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
 rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
@@ -142,7 +142,7 @@ rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyLazy pos t) = TyLazy pos <$> rnType t
 
 rnClause ::
-  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m) =>
+  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m, MonadGriff m, MonadIO m) =>
   Clause (Griff 'Parse) ->
   m (Clause (Griff 'Rename))
 rnClause (Clause pos ps ss) = do
@@ -157,12 +157,12 @@ rnClause (Clause pos ps ss) = do
     patVars (ConP _ _ xs) = concatMap patVars xs
     patVars UnboxedP {} = []
 
-rnPat :: MonadReader RnEnv m => Pat (Griff 'Parse) -> m (Pat (Griff 'Rename))
+rnPat :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => Pat (Griff 'Parse) -> m (Pat (Griff 'Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
-rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m) => [Stmt (Griff 'Parse)] -> m [Stmt (Griff 'Rename)]
+rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadGriff m, MonadIO m) => [Stmt (Griff 'Parse)] -> m [Stmt (Griff 'Rename)]
 rnStmts [] = pure []
 rnStmts (NoBind x e : ss) = do
   e' <- rnExp e
@@ -176,10 +176,12 @@ rnStmts (Let x v e : ss) = do
     pure $ Let x v' e' : ss'
 
 -- トップレベル識別子を列挙
-toplevelIdents :: [Decl (Griff 'Parse)] -> ([String], [String])
-toplevelIdents ds = go ([], [], []) ds & \(sigs, vars, types) -> (ordNub $ sigs <> vars, types)
+toplevelIdents :: (MonadGriff m, MonadIO m) => [Decl (Griff 'Parse)] -> m ([String], [String])
+toplevelIdents ds = do
+  (sigs, vars, types) <- go ([], [], []) ds
+  pure (ordNub $ sigs <> vars, types)
   where
-    go result [] = result
+    go result [] = pure result
     go (sigs, vars, types) (ScDef pos x _ _ : rest)
       | x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | otherwise = go (sigs, x : vars, types) rest
@@ -200,7 +202,7 @@ toplevelIdents ds = go ([], [], []) ds & \(sigs, vars, types) -> (ordNub $ sigs 
     go result (_ : rest) = go result rest
 
 -- infix宣言をMapに変換
-infixDecls :: MonadReader RnEnv m => [Decl (Griff 'Parse)] -> m (Map RnId (Assoc, Int))
+infixDecls :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => [Decl (Griff 'Parse)] -> m (Map RnId (Assoc, Int))
 infixDecls ds = foldMapA ?? ds $ \case
   (Infix pos assoc order name) -> do
     name' <- lookupVarName pos name
@@ -208,12 +210,13 @@ infixDecls ds = foldMapA ?? ds $ \case
   _ -> pure mempty
 
 mkOpApp ::
+  (MonadGriff m, MonadIO m) =>
   SourcePos ->
   (Assoc, Int) ->
   RnId ->
   Exp (Griff 'Rename) ->
   Exp (Griff 'Rename) ->
-  Exp (Griff 'Rename)
+  m (Exp (Griff 'Rename))
 -- (e11 op1 e12) op2 e2
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
@@ -229,10 +232,10 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
               <+> P.brackets (pPrint fix2)
               <+> "in the same infix expression"
           )
-  | associate_right = OpApp (pos1, fix1) op1 e11 (OpApp (pos2, fix2) op2 e12 e2)
+  | associate_right = pure $ OpApp (pos1, fix1) op1 e11 (OpApp (pos2, fix2) op2 e12 e2)
   where
     (nofix_error, associate_right) = compareFixity fix1 fix2
-mkOpApp pos fix op e1 e2 = OpApp (pos, fix) op e1 e2
+mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 compareFixity :: (Assoc, Int) -> (Assoc, Int) -> (Bool, Bool)
 compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of

@@ -11,7 +11,7 @@ module Language.Griff.Extension where
 import Data.Kind (Constraint)
 import qualified Data.Kind as K
 import Koriel.Id
-import Koriel.Prelude
+import Language.Griff.Prelude
 import Koriel.Pretty
 import Language.Griff.Type
 import Text.Megaparsec.Pos (SourcePos)
