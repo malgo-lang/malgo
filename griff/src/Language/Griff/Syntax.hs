@@ -282,4 +282,4 @@ deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Sho
 instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Module x) where
   pPrint (Module name ds) =
     "module" <+> pPrint name <> ";"
-      $$ hsep (map (\d -> pPrint d <> ";") ds)
+      $$ sep (map (\d -> pPrint d <> ";") ds)

@@ -11,11 +11,11 @@ import Data.Functor (($>))
 import qualified Data.Set as Set
 import qualified Data.Text as Text
 import Data.Void
+import Language.Griff.Extension
 import Language.Griff.Prelude hiding
   ( many,
     some,
   )
-import Language.Griff.Extension
 import Language.Griff.Syntax
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -31,7 +31,7 @@ pModule :: Parser (Module (Griff 'Parse))
 pModule = do
   void $ pKeyword "module"
   x <- pModuleName
-  pOperator "="
+  void $ pOperator "="
   ds <- between (symbol "{") (symbol "}") $ pDecl `sepEndBy` pOperator ";"
   pure $ Module {_moduleName = ModuleName x, _moduleDecls = ds}
 
@@ -72,7 +72,7 @@ pForeign = label "foreign import" $ do
   void $ pKeyword "foreign"
   void $ pKeyword "import"
   x <- lowerIdent
-  pOperator "::"
+  void $ pOperator "::"
   Foreign s x <$> pType
 
 pScSig :: Parser (Decl (Griff 'Parse))
@@ -129,18 +129,15 @@ pUnboxed =
         registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show x <> "'\nMaybe you forgot '#'")
         pure undefined
 
-notReserved :: Parser (Exp (Griff 'Parse))
-notReserved = do
-  word <- reserved
-  fancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> Text.unpack word <> "'\nThis is a reserved keyword")
-
 pVariable :: Parser (Exp (Griff 'Parse))
-pVariable = label "variable" do
-  notReserved <|> Var <$> getSourcePos <*> lowerIdent
+pVariable =
+  label "variable" $
+    Var <$> getSourcePos <*> lowerIdent
 
 pConstructor :: Parser (Exp (Griff 'Parse))
-pConstructor = label "constructor" do
-  notReserved <|> Con <$> getSourcePos <*> upperIdent
+pConstructor =
+  label "constructor" $
+    Con <$> getSourcePos <*> upperIdent
 
 pFun :: Parser (Exp (Griff 'Parse))
 pFun =
@@ -166,7 +163,7 @@ pLet = do
   void $ pKeyword "let"
   pos <- getSourcePos
   v <- lowerIdent
-  pOperator "="
+  void $ pOperator "="
   Let pos v <$> pExp
 
 pNoBind :: Parser (Stmt (Griff 'Parse))
@@ -188,7 +185,7 @@ pTuple = label "tuple" $
   between (symbol "(") (symbol ")") $ do
     s <- getSourcePos
     x <- pExp
-    pOperator ","
+    void $ pOperator ","
     xs <- pExp `sepBy` pOperator ","
     pure $ Tuple s (x : xs)
 
@@ -246,7 +243,7 @@ pTyTuple :: Parser (Type (Griff 'Parse))
 pTyTuple = between (symbol "(") (symbol ")") $ do
   s <- getSourcePos
   x <- pType
-  pOperator ","
+  void $ pOperator ","
   xs <- pType `sepBy` pOperator ","
   pure $ TyTuple s (x : xs)
 
@@ -304,30 +301,38 @@ opLetter = oneOf ("+-*/%=><:;|&!#." :: String)
 pKeyword :: Text -> Parser Text
 pKeyword keyword = lexeme (string keyword <* notFollowedBy identLetter)
 
-pOperator :: Text -> Parser ()
-pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
+pOperator :: Text -> Parser Text
+pOperator op = lexeme (string op <* notFollowedBy opLetter)
 
 reserved :: Parser Text
-reserved =
-  choice $ map (try . pKeyword) ["module", "data", "infixl", "infixr", "infix", "foreign", "import", "let"]
+reserved = choice $ map (try . pKeyword) ["module", "data", "infixl", "infixr", "infix", "foreign", "import", "let"]
 
-reservedOp :: Parser ()
-reservedOp = void $ choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
+reservedOp :: Parser Text
+reservedOp = choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
 
 lowerIdent :: Parser String
-lowerIdent = label "lower identifier" $
-  lexeme $ do
-    notFollowedBy reserved
-    (:) <$> (lowerChar <|> char '_') <*> many identLetter
+lowerIdent =
+  label "lower identifier" $
+    lexeme do
+      notFollowedBy reserved <|> notReserved
+      (:) <$> (lowerChar <|> char '_') <*> many identLetter
 
 upperIdent :: Parser String
-upperIdent = label "upper identifier" $
-  lexeme $ do
-    notFollowedBy reserved
-    (:) <$> upperChar <*> many identLetter
+upperIdent =
+  label "upper identifier" $
+    lexeme do
+      notFollowedBy reserved <|> notReserved
+      (:) <$> upperChar <*> many identLetter
 
 operator :: Parser String
-operator = label "operator" $
-  lexeme $ do
-    notFollowedBy reservedOp
-    some opLetter
+operator =
+  label "operator" $
+    lexeme do
+      notFollowedBy reservedOp
+      some opLetter
+
+notReserved :: Parser a
+notReserved = do
+  word <- lookAhead reserved
+  registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> Text.unpack word <> "'\nThis is a reserved keyword")
+  pure undefined
