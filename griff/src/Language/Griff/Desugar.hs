@@ -19,7 +19,6 @@ import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.Core as C
 import Koriel.Core.Op
 import Koriel.Core.Type hiding (Type)
@@ -27,9 +26,9 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Language.Griff.DesugarEnv
 import Language.Griff.Extension
 import Language.Griff.Grouping
-import Language.Griff.Interface
 import Language.Griff.Prelude
 import qualified Language.Griff.RnEnv as Rn
 import Language.Griff.Syntax as G
@@ -37,9 +36,7 @@ import Language.Griff.TcEnv (TcEnv)
 import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
 import Language.Griff.Typing.Infer (applySubst)
-import System.IO (stderr)
 import qualified Text.PrettyPrint.HughesPJ as P
-import Language.Griff.DesugarEnv
 
 #ifdef DEBUG
 import Debug.Trace (traceShowM)
@@ -48,20 +45,13 @@ import Debug.Trace (traceShowM)
 -- | GriffからCoreへの変換
 desugar ::
   (MonadUniq m, MonadFail m, MonadIO m, MonadGriff m) =>
-  Opt ->
   TcEnv ->
-  ModuleName ->
   BindGroup (Griff 'TypeCheck) ->
-  m (Program (Id C.Type))
-desugar opt tcEnv modName ds = do
-  (dcEnv, prims) <- genPrimitive tcEnv
-  (dcEnv', ds') <- runReaderT (dcBindGroup ds) dcEnv
-  -- generate interface file
-  serializeIdentMap $ dcEnv' ^. varEnv
-  when (debugMode opt) $ do
-    identMap <- deserializeIdentMap modName
-    liftIO $ TL.hPutStrLn stderr $ pShow identMap
-  pure $ Program (prims <> ds') $ searchMain $ Map.toList $ view varEnv dcEnv'
+  m (DesugarEnv, Program (Id C.Type))
+desugar tcEnv ds = do
+  (dsEnv, prims) <- genPrimitive tcEnv
+  (dsEnv', ds') <- runReaderT (dsBindGroup ds) dsEnv
+  pure (dsEnv', Program (prims <> ds') $ searchMain $ Map.toList $ view varEnv dsEnv')
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsGlobal = CallDirect coreId []
@@ -88,7 +78,7 @@ genPrimitive env =
       nameId <- fromJust <$> use (_1 . tcEnv . Tc.rnEnv . Rn.varEnv . at name)
       Forall _ nameType <- fromJust <$> use (_1 . tcEnv . Tc.varEnv . at nameId)
       uniq <- getUniq
-      nameId' <- newGlobalId (name <> show uniq) =<< dcType nameType
+      nameId' <- newGlobalId (name <> show uniq) =<< dsType nameType
       _1 . varEnv . at nameId ?= nameId'
       case C.typeOf nameId' of
         -- プリミティブ関数は必ず一引数
@@ -100,51 +90,51 @@ genPrimitive env =
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
-dcBindGroup ::
+dsBindGroup ::
   (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m, MonadGriff m) =>
   BindGroup (Griff 'TypeCheck) ->
   m (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
-dcBindGroup bg = do
-  (env, dataDefs') <- first mconcat <$> mapAndUnzipM dcDataDef (bg ^. dataDefs)
+dsBindGroup bg = do
+  (env, dataDefs') <- first mconcat <$> mapAndUnzipM dsDataDef (bg ^. dataDefs)
   local (env <>) $ do
-    (env, foreigns') <- first mconcat <$> mapAndUnzipM dcForeign (bg ^. foreigns)
+    (env, foreigns') <- first mconcat <$> mapAndUnzipM dsForeign (bg ^. foreigns)
     local (env <>) $ do
-      (env, scDefs') <- dcScDefGroup (bg ^. scDefs)
+      (env, scDefs') <- dsScDefGroup (bg ^. scDefs)
 #ifdef DEBUG
       traceShowM . pPrint . Map.toList =<< view varEnv
 #endif
       pure $ (env,) $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
-dcScDefGroup ::
+dsScDefGroup ::
   (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
   [[ScDef (Griff 'TypeCheck)]] ->
   f (DesugarEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
-dcScDefGroup [] = (,[]) <$> ask
-dcScDefGroup (ds : dss) = do
-  (env, ds') <- dcScDefs ds
+dsScDefGroup [] = (,[]) <$> ask
+dsScDefGroup (ds : dss) = do
+  (env, ds') <- dsScDefs ds
   local (env <>) $ do
-    (env, dss') <- dcScDefGroup dss
+    (env, dss') <- dsScDefGroup dss
     pure (env, ds' : dss')
 
 -- 相互再帰的なグループをdesugar
-dcScDefs ::
+dsScDefs ::
   (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
   [ScDef (Griff 'TypeCheck)] ->
   f (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
-dcScDefs ds = do
+dsScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
     Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
-    f' <- newCoreId f =<< dcType fType
+    f' <- newCoreId f =<< dsType fType
     pure $ mempty & varEnv .~ Map.singleton f f'
-  local (env <>) $ (env,) <$> foldMapA dcScDef ds
+  local (env <>) $ (env,) <$> foldMapA dsScDef ds
 
-dcScDef ::
+dsScDef ::
   (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f, MonadGriff f) =>
   ScDef (Griff 'TypeCheck) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
-dcScDef (WithType pos typ, name, params, expr) = do
+dsScDef (WithType pos typ, name, params, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   unless (GT._TyArr `has` typ || GT._TyLazy `has` typ) $
     errorOn pos $
@@ -152,33 +142,33 @@ dcScDef (WithType pos typ, name, params, expr) = do
         <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
   -- When typ is TyLazy{}, splitTyArr returns ([], typ).
   let (paramTypes, _) = splitTyArr typ
-  params' <- zipWithM newCoreId params =<< traverse dcType paramTypes
+  params' <- zipWithM newCoreId params =<< traverse dsType paramTypes
   local (over varEnv (Map.fromList (zip params params') <>)) $ do
     name' <- lookupName name
-    fun <- curryFun params' =<< dcExp expr
+    fun <- curryFun params' =<< dsExp expr
     pure [(name', fun)]
 
 -- TODO: Griffのforeignでvoid型をあつかえるようにする #13
 -- 1. Griffの型とCの型の相互変換を定義する
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
--- 3. 2.の関数を使ってdcForeignを書き換える
-dcForeign ::
+-- 3. 2.の関数を使ってdsForeignを書き換える
+dsForeign ::
   (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) =>
   Foreign (Griff 'TypeCheck) ->
   f (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
-dcForeign (x@(WithType (_, primName) _), name, _) = do
-  name' <- newCoreId name =<< dcType (x ^. toType)
+dsForeign (x@(WithType (_, primName) _), name, _) = do
+  name' <- newCoreId name =<< dsType (x ^. toType)
   let (paramTypes, _) = splitTyArr (x ^. toType)
-  params <- traverse (newId "$p" <=< dcType) paramTypes
-  primType <- dcType (view toType x)
+  params <- traverse (newId "$p" <=< dsType) paramTypes
+  primType <- dsType (view toType x)
   fun <- curryFun params $ C.ExtCall primName primType (map C.Var params)
   pure (mempty & varEnv .~ Map.singleton name name', [(name', fun)])
 
-dcDataDef ::
+dsDataDef ::
   (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) =>
   DataDef (Griff 'TypeCheck) ->
   m (DesugarEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
-dcDataDef (_, name, _, cons) = fmap (first mconcat) $
+dsDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
     -- lookup constructor infomations
     Just (GT.TyCon name') <- asks $ view (tcEnv . Tc.typeEnv . at name)
@@ -187,11 +177,11 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
 
     -- desugar conType
     let (paramTypes, retType) = splitTyArr conType
-    paramTypes' <- traverse dcType paramTypes
-    retType' <- dcType retType
+    paramTypes' <- traverse dsType paramTypes
+    retType' <- dsType retType
 
     -- generate constructor code
-    conName' <- newCoreId conName $ buildConType paramTypes' retType'
+    conName' <- newCoreId conName $ buildsonType paramTypes' retType'
     ps <- traverse (newId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
@@ -203,30 +193,30 @@ dcDataDef (_, name, _, cons) = fmap (first mconcat) $
     pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
-    buildConType [] retType = [] :-> retType
-    buildConType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
+    buildsonType [] retType = [] :-> retType
+    buildsonType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
 
 -- Unboxedの脱糖衣
-dcUnboxed :: G.Unboxed -> C.Unboxed
-dcUnboxed (G.Int32 x) = C.Int32 $ toInteger x
-dcUnboxed (G.Int64 x) = C.Int64 $ toInteger x
-dcUnboxed (G.Float x) = C.Float x
-dcUnboxed (G.Double x) = C.Double x
-dcUnboxed (G.Char x) = C.Char x
-dcUnboxed (G.String x) = C.String x
+dsUnboxed :: G.Unboxed -> C.Unboxed
+dsUnboxed (G.Int32 x) = C.Int32 $ toInteger x
+dsUnboxed (G.Int64 x) = C.Int64 $ toInteger x
+dsUnboxed (G.Float x) = C.Float x
+dsUnboxed (G.Double x) = C.Double x
+dsUnboxed (G.Char x) = C.Char x
+dsUnboxed (G.String x) = C.String x
 
-dcExp ::
+dsExp ::
   (HasCallStack, MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) =>
   G.Exp (Griff 'TypeCheck) ->
   m (C.Exp (Id C.Type))
-dcExp (G.Var x name) = do
+dsExp (G.Var x name) = do
   name' <- lookupName name
   -- Griffでの型とCoreでの型に矛盾がないかを検査
   -- Note: [0 argument]
   --   Core上で0引数関数で表現されるGriffの値は以下の二つ。
   --    1. {a}型の値（TyLazy）
   --    2. 引数のない値コンストラクタ
-  --   このうち、2.は「0引数関数の呼び出し」の形でのみ出現する（dcExp G.Conの節参照）
+  --   このうち、2.は「0引数関数の呼び出し」の形でのみ出現する（dsExp G.Conの節参照）
   --   よって、ここではxがTyLazyのときのみname'が0引数関数になるはずである。
   case (x ^. toType, C.typeOf name') of
     -- TyLazyの型を検査
@@ -244,7 +234,7 @@ dcExp (G.Var x name) = do
         _ -> bug Unreachable
       pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     else pure $ Atom $ C.Var name'
-dcExp (G.Con _ name) = do
+dsExp (G.Con _ name) = do
   name' <- lookupName name
   case C.typeOf name' of
     -- 値コンストラクタ名は全部global。
@@ -257,40 +247,40 @@ dcExp (G.Con _ name) = do
       ps <- traverse (newId "$p") pts
       pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     _ -> bug Unreachable
-dcExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dcUnboxed u
-dcExp (G.Apply _ f x) = runDef $ do
-  f' <- bind =<< dcExp f
+dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
+dsExp (G.Apply _ f x) = runDef $ do
+  f' <- bind =<< dsExp f
   case C.typeOf f' of
     [xType] :-> _ -> do
       -- Note: [Cast Argument Type]
       --   x の型と f の引数の型は必ずしも一致しない
       --   適切な型にcastする必要がある
-      x' <- cast xType =<< dcExp x
+      x' <- cast xType =<< dsExp x
       pure $ Call f' [x']
     _ -> bug Unreachable
-dcExp (G.OpApp _ op x y) = runDef $ do
+dsExp (G.OpApp _ op x y) = runDef $ do
   op' <- lookupName op
   case C.typeOf op' of
     [xType] :-> ([yType] :-> _) -> do
       -- Ref: [Cast Argument Type]
-      x' <- cast xType =<< dcExp x
-      y' <- cast yType =<< dcExp y
+      x' <- cast xType =<< dsExp x
+      y' <- cast yType =<< dsExp y
       e1 <-
         if op' ^. idIsGlobal
           then bind (CallDirect op' [x'])
           else bind (Call (C.Var op') [x'])
       pure $ Call e1 [y']
     _ -> bug Unreachable
-dcExp (G.Fn x (Clause _ [] ss : _)) = do
+dsExp (G.Fn x (Clause _ [] ss : _)) = do
   -- lazy valueの脱糖衣
-  ss' <- dcStmts ss
-  typ <- dcType (x ^. toType)
+  ss' <- dsStmts ss
+  typ <- dsType (x ^. toType)
   runDef do
     fun <- let_ typ $ Fun [] ss'
     pure $ Atom fun
-dcExp (G.Fn x cs@(Clause _ ps es : _)) = do
-  ps' <- traverse (\p -> newId "$p" =<< dcType (p ^. toType)) ps
-  typ <- dcType (last es ^. toType)
+dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
+  ps' <- traverse (\p -> newId "$p" =<< dsType (p ^. toType)) ps
+  typ <- dsType (last es ^. toType)
   -- destruct Clauses
   -- 各節のパターン列を行列に見立て、転置してmatchにわたし、パターンを分解する
   -- 例えば、{ f Nil -> f empty | f (Cons x xs) -> f x }の場合は、
@@ -300,37 +290,37 @@ dcExp (G.Fn x cs@(Clause _ ps es : _)) = do
     first List.transpose
       <$> mapAndUnzipM
         ( \(Clause _ ps es) ->
-            pure (ps, dcStmts es)
+            pure (ps, dsStmts es)
         )
         cs
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
-  v <- newId "$fun" =<< dcType (x ^. toType)
+  v <- newId "$fun" =<< dsType (x ^. toType)
   pure $ C.Let [(v, uncurry Fun obj)] $ Atom $ C.Var v
-dcExp (G.Fn _ []) = bug Unreachable
-dcExp (G.Tuple _ es) = runDef $ do
-  es' <- traverse (bind <=< dcExp) es
+dsExp (G.Fn _ []) = bug Unreachable
+dsExp (G.Tuple _ es) = runDef $ do
+  es' <- traverse (bind <=< dsExp) es
   let con = C.Con ("Tuple" <> length es ^. toText) $ map C.typeOf es'
   let ty = SumT $ Set.singleton con
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
-dcExp (G.Force _ e) = runDef $ do
+dsExp (G.Force _ e) = runDef $ do
   -- lazy valueは0引数関数に変換されるので、その評価は0引数関数の呼び出しになる
-  e' <- bind =<< dcExp e
+  e' <- bind =<< dsExp e
   pure $ Call e' []
 
-dcStmts :: (MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) => [Stmt (Griff 'TypeCheck)] -> m (C.Exp (Id C.Type))
-dcStmts [] = bug Unreachable
-dcStmts [NoBind _ e] = dcExp e
-dcStmts [G.Let _ _ e] = dcExp e
-dcStmts (NoBind _ e : ss) = runDef $ do
-  _ <- bind =<< dcExp e
-  dcStmts ss
-dcStmts (G.Let _ v e : ss) = do
-  e' <- dcExp e
+dsStmts :: (MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) => [Stmt (Griff 'TypeCheck)] -> m (C.Exp (Id C.Type))
+dsStmts [] = bug Unreachable
+dsStmts [NoBind _ e] = dsExp e
+dsStmts [G.Let _ _ e] = dsExp e
+dsStmts (NoBind _ e : ss) = runDef $ do
+  _ <- bind =<< dsExp e
+  dsStmts ss
+dsStmts (G.Let _ v e : ss) = do
+  e' <- dsExp e
   v' <- newId ("$let_" <> v ^. idName) (C.typeOf e')
   local (over varEnv $ Map.insert v v') do
-    ss' <- dcStmts ss
+    ss' <- dsStmts ss
     pure $ Match e' (Bind v' ss' :| [])
 
 -- TODO: The Implementation of Functional Programming Languages
@@ -358,7 +348,7 @@ match (u : us) (ps : pss) es err
     -}
     -- -- Cast version
     -- match us pss (zipWith (\(VarP x v) e -> runDef $ do
-    --   ty' <- dcType (x ^. toType)
+    --   ty' <- dsType (x ^. toType)
     --   C.Var u' <- cast ty' (Atom $ C.Var u)
     --   local (over varEnv (Map.insert v u')) $ lift e) ps es) err
     -- -- Original
@@ -372,7 +362,7 @@ match (u : us) (ps : pss) es err
           ( \case
               -- 変数パターンvについて、式中に現れるすべてのvをパターンマッチ対象のuで置き換える
               VarP x v -> \e -> do
-                patTy <- dcType (x ^. toType)
+                patTy <- dsType (x ^. toType)
                 -- If this assert fail, there are some bug about polymorphic type.
                 -- Ref: How to implement the Variable Rule?
                 assert (patTy == C.typeOf u) $ pure ()
@@ -394,7 +384,7 @@ match (u : us) (ps : pss) es err
     conMap <- lookupConMap con ts
     -- TODO: csとcasesのdoを結合
     cs <- for conMap $ \(conName, conType) -> do
-      paramTypes <- traverse dcType $ fst $ splitTyArr conType
+      paramTypes <- traverse dsType $ fst $ splitTyArr conType
       let ccon = C.Con (conName ^. toText) paramTypes
       params <- traverse (newId "$p") paramTypes
       pure (conName, ccon, params)
@@ -409,7 +399,7 @@ match (u : us) (ps : pss) es err
     let cs =
           map
             ( \case
-                UnboxedP _ x -> dcUnboxed x
+                UnboxedP _ x -> dsUnboxed x
                 _ -> bug Unreachable
             )
             ps
@@ -446,31 +436,31 @@ match _ [] [] err = pure err
 match _ _ _ _ = bug Unreachable
 
 -- Griffの型をCoreの型に変換する
-dcType :: (HasCallStack, MonadIO m) => GT.Type -> m C.Type
-dcType t@GT.TyApp {} = do
+dsType :: (HasCallStack, MonadIO m) => GT.Type -> m C.Type
+dsType t@GT.TyApp {} = do
   let (con, ts) = splitCon t
-  DataT (con ^. toText) <$> traverse dcType ts
-dcType (GT.TyVar _) = pure AnyT
-dcType (GT.TyCon con)
+  DataT (con ^. toText) <$> traverse dsType ts
+dsType (GT.TyVar _) = pure AnyT
+dsType (GT.TyCon con)
   | kind con == Star = pure $ DataT (con ^. toText) []
   | otherwise = errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint (kind con)
-dcType (GT.TyPrim GT.Int32T) = pure C.Int32T
-dcType (GT.TyPrim GT.Int64T) = pure C.Int64T
-dcType (GT.TyPrim GT.FloatT) = pure C.FloatT
-dcType (GT.TyPrim GT.DoubleT) = pure C.DoubleT
-dcType (GT.TyPrim GT.CharT) = pure C.CharT
-dcType (GT.TyPrim GT.StringT) = pure C.StringT
-dcType (GT.TyArr t1 t2) = do
-  t1' <- dcType t1
-  t2' <- dcType t2
+dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
+dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
+dsType (GT.TyPrim GT.FloatT) = pure C.FloatT
+dsType (GT.TyPrim GT.DoubleT) = pure C.DoubleT
+dsType (GT.TyPrim GT.CharT) = pure C.CharT
+dsType (GT.TyPrim GT.StringT) = pure C.StringT
+dsType (GT.TyArr t1 t2) = do
+  t1' <- dsType t1
+  t2' <- dsType t2
   pure $ [t1'] :-> t2'
-dcType (GT.TyTuple ts) =
-  SumT . Set.singleton . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dcType ts
-dcType (GT.TyLazy t) = ([] :->) <$> dcType t
-dcType (GT.TyMeta tv) = do
+dsType (GT.TyTuple ts) =
+  SumT . Set.singleton . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dsType ts
+dsType (GT.TyLazy t) = ([] :->) <$> dsType t
+dsType (GT.TyMeta tv) = do
   mtype <- GT.readMetaTv tv
   case mtype of
-    Just t -> dcType t
+    Just t -> dsType t
     Nothing -> error "TyMeta must be removed"
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
@@ -483,10 +473,10 @@ unfoldType t | GT._TyApp `has` t
     SumT
       <$> foldMapA
         ( \(conName, conType) ->
-            Set.singleton . C.Con (conName ^. toText) <$> traverse dcType (fst $ splitTyArr conType)
+            Set.singleton . C.Con (conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
         )
         conMap
-unfoldType t = dcType t
+unfoldType t = dsType t
 
 -- Desugar Monad
 
