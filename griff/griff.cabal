@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 89144a5eb5aa23c8f9b299ff6772f2a084dfac4d1cc3b55f399ccc40c9234e56
+-- hash: f6c65970a5f3c0608a9b3bc9b49013eb8af73ba5a85e2261e9ce145eadaefe79
 
 name:           griff
 version:        0.1.0.0
@@ -61,6 +61,7 @@ library
     , parser-combinators
     , pretty
     , pretty-simple
+    , store
     , text
     , transformers
     , vector
@@ -94,6 +95,7 @@ executable griffc
     , parser-combinators
     , pretty
     , pretty-simple
+    , store
     , text
     , transformers
     , vector

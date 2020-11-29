@@ -68,7 +68,8 @@ data Opt = Opt
     noOptimize :: Bool,
     noLambdaLift :: Bool,
     inlineSize :: Int,
-    viaBinding :: Bool
+    viaBinding :: Bool,
+    debugMode :: Bool
   }
   deriving stock (Eq, Show)
 
@@ -92,6 +93,7 @@ parseOpt = do
               <*> switch (long "no-opt")
               <*> fmap read (strOption (long "inline" <> value "10"))
               <*> switch (long "via-binding")
+              <*> switch (long "debug-mode")
           )
             <**> helper
         )

@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedLists #-}
@@ -7,6 +9,7 @@
 module Koriel.Core.Type where
 
 import Data.Set (fromList)
+import Data.Store
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -17,7 +20,8 @@ Constructors  C ::= <tag n>
 type Tag = String
 
 data Con = Con Tag [Type]
-  deriving stock (Eq, Show, Ord)
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving anyclass (Store)
 
 instance Pretty Con where
   pPrint (Con tag xs) = "<" <> text tag <+> sep (punctuate "," (map pPrint xs)) <> ">"
@@ -39,7 +43,8 @@ data Type
   | SumT (Set Con)
   | ArrayT Type
   | AnyT
-  deriving stock (Eq, Show, Ord)
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving anyclass (Store)
 
 _SumT :: Prism' Type (Set Con)
 _SumT = prism' SumT $ \case

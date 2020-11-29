@@ -15,10 +15,12 @@
 module Language.Griff.Desugar (desugar) where
 
 import Control.Exception (assert)
+import qualified Data.ByteString as BS
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Data.Store (decodeIO, encode)
 import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.Core as C
 import Koriel.Core.Op
@@ -26,10 +28,10 @@ import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
-import Language.Griff.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.Grouping
+import Language.Griff.Prelude
 import qualified Language.Griff.RnEnv as Rn
 import Language.Griff.Syntax as G
 import Language.Griff.TcEnv (TcEnv)
@@ -37,6 +39,7 @@ import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
 import Language.Griff.Typing.Infer (applySubst)
 import System.FilePath.Lens (extension)
+import System.IO (stderr)
 import qualified Text.PrettyPrint.HughesPJ as P
 
 #ifdef DEBUG
@@ -64,6 +67,17 @@ varEnv = lens _varEnv (\e x -> e {_varEnv = x})
 tcEnv :: Lens' DesugarEnv TcEnv
 tcEnv = lens _tcEnv (\e x -> e {_tcEnv = x})
 
+serializeIdentMap :: (MonadIO m) => Opt -> Map (Id ModuleName) (Id C.Type) -> m ()
+serializeIdentMap opt dcVarEnv = do
+  liftIO $
+    BS.writeFile (dstName opt & extension .~ ".grfi") $
+      encode $ Map.filterWithKey (\k _ -> k ^. idIsGlobal) dcVarEnv
+
+deserializeIdentMap :: (MonadIO m) => Opt -> m (Map (Id ModuleName) (Id C.Type))
+deserializeIdentMap opt = liftIO $ do
+  message <- BS.readFile (dstName opt & extension .~ ".grfi")
+  decodeIO message
+
 -- | GriffからCoreへの変換
 desugar ::
   (MonadUniq m, MonadFail m, MonadIO m, MonadGriff m) =>
@@ -75,7 +89,10 @@ desugar opt tcEnv ds = do
   (dcEnv, prims) <- genPrimitive tcEnv
   (dcEnv', ds') <- runReaderT (dcBindGroup ds) dcEnv
   -- generate interface file
-  liftIO $ TL.writeFile (dstName opt & extension .~ ".grfi") (pShow $ Map.filterWithKey (\k _ -> k ^. idIsGlobal) $ view varEnv dcEnv')
+  serializeIdentMap opt $ dcEnv' ^. varEnv
+  when (debugMode opt) $ do
+    identMap <- deserializeIdentMap opt
+    liftIO $ TL.hPutStrLn stderr $ pShow identMap
   pure $ Program (prims <> ds') $ searchMain $ Map.toList $ view varEnv dcEnv'
   where
     -- エントリーポイントとなるmain関数を検索する

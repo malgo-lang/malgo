@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -15,6 +16,7 @@ import Language.Griff.Prelude
 import Koriel.Pretty
 import Language.Griff.Type
 import Text.Megaparsec.Pos (SourcePos)
+import Data.Store
 
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show)
@@ -124,8 +126,10 @@ data GriffPhase = Parse | Rename | TypeCheck
 data Griff (p :: GriffPhase)
 
 newtype ModuleName = ModuleName String
-  deriving stock (Eq, Show, Ord)
+  deriving stock (Eq, Show, Ord, Generic)
   deriving newtype (Pretty)
+
+instance Store ModuleName
 
 _Module :: Lens' ModuleName String
 _Module = lens (\(ModuleName s) -> s) (\_ s -> ModuleName s)

@@ -34,6 +34,7 @@ module Koriel.Prelude
     module Data.String,
     module Data.Text,
     module Data.Traversable,
+    module GHC.Generics,
     module GHC.Stack,
     unzip,
     asumMap,
@@ -92,6 +93,7 @@ import Data.String (IsString (..))
 import Data.Text (Text)
 import Data.Traversable
 import Data.Typeable
+import GHC.Generics (Generic)
 import GHC.Stack
   ( CallStack,
     HasCallStack,
