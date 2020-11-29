@@ -27,7 +27,7 @@ runLint m =
     Left err -> errorDoc err
     Right e' -> pure e'
 
-lint :: (Monad m, HasType a, Pretty a) => Exp (Id a) -> m ()
+lint :: (Monad m, HasType a, Pretty a, Eq a) => Exp (Id a) -> m ()
 lint e =
   runExceptT (runReaderT (lintExp e) []) >>= \case
     Left err -> errorDoc err
@@ -58,7 +58,7 @@ match x y
         $$ (pPrint x <+> ":" <+> pPrint (typeOf x))
         $$ (pPrint y <+> ":" <+> pPrint (typeOf y))
 
-lintExp :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m) => Exp (Id a) -> m ()
+lintExp :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m, Eq a) => Exp (Id a) -> m ()
 lintExp (Atom x) = lintAtom x
 lintExp (Call f xs) = do
   lintAtom f
@@ -123,21 +123,21 @@ lintExp (Match e cs) = do
   traverse_ lintCase cs
 lintExp Error {} = pure ()
 
-lintObj :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasType a) => Obj (Id a) -> m ()
+lintObj :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Array a n) = lintAtom a >> lintAtom n >> match Int64T n
 
-lintCase :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasType a) => Case (Id a) -> m ()
+lintCase :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase (Switch _ e) = lintExp e
 lintCase (Bind x e) = local (x :) $ lintExp e
 
-lintAtom :: (MonadReader [Id a] m, MonadError Doc m, Pretty a) => Atom (Id a) -> m ()
+lintAtom :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, Eq a) => Atom (Id a) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pure ()
 
-lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m) => Program (Id a) -> m ()
+lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m, Eq a) => Program (Id a) -> m ()
 lintProgram (Program funcs e) = do
   let fs = map (view _1) funcs
   local (fs <>) $ do

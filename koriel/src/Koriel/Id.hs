@@ -36,13 +36,7 @@ data Id a = Id
     _idMeta :: a,
     _idIsGlobal :: Bool
   }
-  deriving stock (Show, Read, Functor, Foldable, Generic)
-
-instance Eq (Id a) where
-  Id {_idUniq = x} == Id {_idUniq = y} = x == y
-
-instance Ord (Id a) where
-  compare Id {_idUniq = x} Id {_idUniq = y} = compare x y
+  deriving stock (Show, Read, Eq, Ord, Functor, Foldable, Generic)
 
 instance Store a => Store (Id a) where
 

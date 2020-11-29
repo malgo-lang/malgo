@@ -138,7 +138,7 @@ optVarBind (Let ds e) = Let <$> traverseOf (traversed . _2 . appObj) optVarBind 
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e
 
-removeUnusedLet :: Monad f => Exp (Id a) -> f (Exp (Id a))
+removeUnusedLet :: (Monad f, Ord a) => Exp (Id a) -> f (Exp (Id a))
 removeUnusedLet (Let ds e) = do
   ds' <- traverseOf (traversed . _2 . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
