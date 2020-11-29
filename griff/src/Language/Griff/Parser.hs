@@ -41,7 +41,7 @@ pModuleName = lexeme $ some $ identLetter <|> char '.'
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Griff 'Parse))
-pDecl = pDataDef <|> pInfix <|> pForeign <|> try pScSig <|> pScDef
+pDecl = pDataDef <|> pInfix <|> pForeign <|> pImport <|> try pScSig <|> pScDef
 
 pDataDef :: Parser (Decl (Griff 'Parse))
 pDataDef = label "toplevel type definition" $ do
@@ -74,6 +74,12 @@ pForeign = label "foreign import" $ do
   x <- lowerIdent
   void $ pOperator "::"
   Foreign s x <$> pType
+
+pImport :: Parser (Decl (Griff 'Parse))
+pImport = label "import" $ do
+  s <- getSourcePos
+  void $ pKeyword "import"
+  Import s . ModuleName <$> pModuleName
 
 pScSig :: Parser (Decl (Griff 'Parse))
 pScSig =

@@ -24,6 +24,9 @@ import Language.Griff.RnEnv
 import Language.Griff.Syntax
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
+import qualified Data.Text.Lazy.IO as TL
+import System.IO (stderr)
+import Language.Griff.Interface
 
 rename :: (MonadUniq m, MonadGriff m, MonadIO m) => RnEnv -> Module (Griff 'Parse) -> m [Decl (Griff 'Rename)]
 rename rnEnv (Module modName ds) = do
@@ -111,6 +114,12 @@ rnDecl (Foreign pos name typ) = do
     Foreign (pos, name)
       <$> lookupVarName pos name
       <*> rnType typ
+rnDecl (Import pos modName) = do
+  -- identMap <- deserializeIdentMap modName
+  -- opt <- getOpt
+  -- when (debugMode opt) $ do
+  --   liftIO $ TL.hPutStrLn stderr $ pShow identMap
+  pure $ Import pos modName
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
@@ -199,6 +208,11 @@ toplevelIdents ds = do
     go (sigs, vars, types) (Foreign pos x _ : rest)
       | x `elem` sigs || x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | otherwise = go (sigs, x : vars, types) rest
+    go (sigs, vars, types) (Import pos modName : rest) = do
+      identMap <- deserializeIdentMap modName
+      case identMap of
+        Nothing -> errorOn pos $ "Module interface file is not found:" <+> P.quotes (pPrint modName)
+        Just _ -> undefined
     go result (_ : rest) = go result rest
 
 -- infix宣言をMapに変換

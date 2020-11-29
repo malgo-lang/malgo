@@ -1,4 +1,4 @@
-module prelude = {
+module Prelude = {
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;
   (|>) = {x f -> f x};

@@ -107,12 +107,15 @@ type family XInfix x
 
 type family XForeign x
 
+type family XImport x
+
 type ForallDeclX (c :: K.Type -> Constraint) x =
   ( c (XScDef x),
     c (XScSig x),
     c (XDataDef x),
     c (XInfix x),
     c (XForeign x),
+    c (XImport x),
     ForallExpX c x,
     ForallClauseX c x,
     ForallStmtX c x,
@@ -266,3 +269,5 @@ type instance XForeign (Griff 'Parse) = SourcePos
 type instance XForeign (Griff 'Rename) = (SourcePos, String)
 
 type instance XForeign (Griff 'TypeCheck) = WithType (SourcePos, String)
+
+type instance XImport (Griff _) = SourcePos

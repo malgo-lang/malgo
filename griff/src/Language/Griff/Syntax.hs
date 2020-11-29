@@ -12,9 +12,9 @@ module Language.Griff.Syntax where
 import Data.Int (Int32, Int64)
 import qualified Data.Set as Set
 import Data.Tuple.Extra (uncurry3)
-import Language.Griff.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
+import Language.Griff.Prelude
 import Language.Griff.Type (HasType (..))
 import qualified Language.Griff.Type as T
 import qualified Text.PrettyPrint.HughesPJ as P
@@ -251,6 +251,7 @@ data Decl x
   | DataDef (XDataDef x) (XTId x) [XTId x] [(XId x, [Type x])]
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
+  | Import (XImport x) ModuleName
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (Decl x)
 
@@ -268,6 +269,7 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Decl x) where
       pprConDef (con, ts) = pPrint con <+> P.sep (map (pPrintPrec prettyNormal 12) ts)
   pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
   pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
+  pPrint (Import _ name) = "import" <+> pPrint name
 
 ------------
 -- Module --

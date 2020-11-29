@@ -35,6 +35,7 @@ import Text.Megaparsec
   ( errorBundlePretty,
   )
 import qualified Text.PrettyPrint.HughesPJ as P
+import qualified Language.Griff.Syntax as Syntax
 
 compile :: Opt -> IO ()
 compile opt = do
@@ -61,7 +62,7 @@ compile opt = do
           hPrint stderr $ Map.toList $ view T.typeEnv tcEnv
           hPrint stderr $ pPrint $ Map.toList $ view T.tyConEnv tcEnv
           hPrint stderr $ pPrint bg
-      core <- desugar opt tcEnv bg
+      core <- desugar opt tcEnv (Syntax._moduleName moduleAst) bg
       when (dumpDesugar opt) $
         liftIO $ do
           hPutStrLn stderr "=== DESUGAR ==="
