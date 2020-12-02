@@ -38,7 +38,7 @@ viewLine linum = do
   s <- liftIO $ readFile srcFileName
   pure $ lines s !! (linum - 1)
 
-errorOn :: (MonadGriff m, MonadIO m) => SourcePos -> Doc -> m a
+errorOn :: (HasCallStack, MonadGriff m, MonadIO m) => SourcePos -> Doc -> m a
 errorOn pos x = do
   line <- viewLine (unPos $ sourceLine pos)
   errorDoc $
