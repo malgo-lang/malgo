@@ -2,12 +2,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Typing.Constraint (Constraint (..), WithPos (..), eqCons, solve) where
+module Language.Griff.Constraint (Constraint (..), WithPos (..), eqCons, solve) where
 
 import qualified Data.Set as Set
-import Language.Griff.Prelude
 import Koriel.Pretty
 import qualified Koriel.Pretty as P
+import Language.Griff.Prelude
 import Language.Griff.Type
 import Text.Megaparsec.Pos (SourcePos)
 

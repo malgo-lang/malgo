@@ -26,16 +26,16 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.DesugarEnv
+import Language.Griff.DsEnv
 import Language.Griff.Extension
 import Language.Griff.Grouping
+import Language.Griff.Infer (applySubst)
 import Language.Griff.Prelude
 import qualified Language.Griff.RnEnv as Rn
 import Language.Griff.Syntax as G
 import Language.Griff.TcEnv (TcEnv)
 import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
-import Language.Griff.Typing.Infer (applySubst)
 import qualified Text.PrettyPrint.HughesPJ as P
 
 #ifdef DEBUG
@@ -47,7 +47,7 @@ desugar ::
   (MonadUniq m, MonadFail m, MonadIO m, MonadGriff m) =>
   TcEnv ->
   BindGroup (Griff 'TypeCheck) ->
-  m (DesugarEnv, Program (Id C.Type))
+  m (DsEnv, Program (Id C.Type))
 desugar tcEnv ds = do
   (dsEnv, prims) <- genPrimitive tcEnv
   (dsEnv', ds') <- runReaderT (dsBindGroup ds) dsEnv
@@ -62,9 +62,9 @@ desugar tcEnv ds = do
 genPrimitive ::
   (MonadUniq m, MonadIO m, MonadFail m) =>
   TcEnv ->
-  m (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
+  m (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 genPrimitive env =
-  execStateT ?? (DesugarEnv mempty env, []) $ do
+  execStateT ?? (DsEnv mempty env, []) $ do
     -- add_i32# : Int32#の和
     prim "add_i32#" $ \param -> do
       [x, y] <- destruct (Atom $ C.Var param) (C.Con "Tuple2" [C.Int32T, C.Int32T])
@@ -91,9 +91,9 @@ genPrimitive env =
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m, MonadGriff m) =>
+  (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m, MonadGriff m) =>
   BindGroup (Griff 'TypeCheck) ->
-  m (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
+  m (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsBindGroup bg = do
   (env, dataDefs') <- first mconcat <$> mapAndUnzipM dsDataDef (bg ^. dataDefs)
   local (env <>) $ do
@@ -107,9 +107,9 @@ dsBindGroup bg = do
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
-  (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
+  (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
   [[ScDef (Griff 'TypeCheck)]] ->
-  f (DesugarEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
+  f (DsEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
 dsScDefGroup [] = (,[]) <$> ask
 dsScDefGroup (ds : dss) = do
   (env, ds') <- dsScDefs ds
@@ -119,9 +119,9 @@ dsScDefGroup (ds : dss) = do
 
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
-  (MonadUniq f, MonadReader DesugarEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
+  (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
   [ScDef (Griff 'TypeCheck)] ->
-  f (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
+  f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
@@ -131,7 +131,7 @@ dsScDefs ds = do
   local (env <>) $ (env,) <$> foldMapA dsScDef ds
 
 dsScDef ::
-  (MonadUniq f, MonadReader DesugarEnv f, MonadIO f, MonadFail f, MonadGriff f) =>
+  (MonadUniq f, MonadReader DsEnv f, MonadIO f, MonadFail f, MonadGriff f) =>
   ScDef (Griff 'TypeCheck) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (WithType pos typ, name, params, expr) = do
@@ -153,9 +153,9 @@ dsScDef (WithType pos typ, name, params, expr) = do
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (MonadReader DesugarEnv f, MonadUniq f, MonadIO f) =>
+  (MonadReader DsEnv f, MonadUniq f, MonadIO f) =>
   Foreign (Griff 'TypeCheck) ->
-  f (DesugarEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
+  f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsForeign (x@(WithType (_, primName) _), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. toType)
   let (paramTypes, _) = splitTyArr (x ^. toType)
@@ -165,9 +165,9 @@ dsForeign (x@(WithType (_, primName) _), name, _) = do
   pure (mempty & varEnv .~ Map.singleton name name', [(name', fun)])
 
 dsDataDef ::
-  (MonadUniq m, MonadReader DesugarEnv m, MonadFail m, MonadIO m) =>
+  (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
   DataDef (Griff 'TypeCheck) ->
-  m (DesugarEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
+  m (DsEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
 dsDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
     -- lookup constructor infomations
@@ -206,7 +206,7 @@ dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
 dsExp ::
-  (HasCallStack, MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) =>
+  (HasCallStack, MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
   G.Exp (Griff 'TypeCheck) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var x name) = do
@@ -309,7 +309,7 @@ dsExp (G.Force _ e) = runDef $ do
   e' <- bind =<< dsExp e
   pure $ Call e' []
 
-dsStmts :: (MonadUniq m, MonadReader DesugarEnv m, MonadIO m, MonadFail m) => [Stmt (Griff 'TypeCheck)] -> m (C.Exp (Id C.Type))
+dsStmts :: (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) => [Stmt (Griff 'TypeCheck)] -> m (C.Exp (Id C.Type))
 dsStmts [] = bug Unreachable
 dsStmts [NoBind _ e] = dsExp e
 dsStmts [G.Let _ _ e] = dsExp e
@@ -329,7 +329,7 @@ dsStmts (G.Let _ v e : ss) = do
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
   HasCallStack =>
-  (MonadReader DesugarEnv m, MonadFail m, MonadIO m, MonadUniq m) =>
+  (MonadReader DsEnv m, MonadFail m, MonadIO m, MonadUniq m) =>
   [Id C.Type] ->
   [[Pat (Griff 'TypeCheck)]] ->
   [m (C.Exp (Id C.Type))] ->
@@ -464,7 +464,7 @@ dsType (GT.TyMeta tv) = do
     Nothing -> error "TyMeta must be removed"
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
-unfoldType :: (MonadReader DesugarEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
+unfoldType :: (MonadReader DsEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t | GT._TyApp `has` t
                  || t ^? GT._TyCon . to kind == Just Star =
   do
@@ -480,7 +480,7 @@ unfoldType t = dsType t
 
 -- Desugar Monad
 
-lookupName :: (HasCallStack, MonadReader DesugarEnv m) => TcId -> m (Id C.Type)
+lookupName :: (HasCallStack, MonadReader DsEnv m) => TcId -> m (Id C.Type)
 lookupName name = do
   mname' <- asks $ view (varEnv . at name)
   case mname' of
@@ -488,7 +488,7 @@ lookupName name = do
     Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint name)
 
 lookupConMap ::
-  (MonadReader DesugarEnv m, MonadFail m) =>
+  (MonadReader DsEnv m, MonadFail m) =>
   Id Kind ->
   [GT.Type] ->
   m [(TcId, GT.Type)]

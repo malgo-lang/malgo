@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0f43845322b004dc131e0505870b092035bea11930db2360e56e4ab07b4cfaba
+-- hash: 79bc2d039c21d049dfaaa02314572a5c2b2a0327fd417ba5137abb023780bcea
 
 name:           griff
 version:        0.1.0.0
@@ -23,11 +23,13 @@ source-repository head
 
 library
   exposed-modules:
+      Language.Griff.Constraint
       Language.Griff.Desugar
-      Language.Griff.DesugarEnv
       Language.Griff.Driver
+      Language.Griff.DsEnv
       Language.Griff.Extension
       Language.Griff.Grouping
+      Language.Griff.Infer
       Language.Griff.Interface
       Language.Griff.Parser
       Language.Griff.Prelude
@@ -36,8 +38,6 @@ library
       Language.Griff.Syntax
       Language.Griff.TcEnv
       Language.Griff.Type
-      Language.Griff.Typing.Constraint
-      Language.Griff.Typing.Infer
   other-modules:
       Paths_griff
   hs-source-dirs:

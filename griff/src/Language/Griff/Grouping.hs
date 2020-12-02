@@ -14,9 +14,9 @@ module Language.Griff.Grouping where
 import Data.Graph
 import qualified Data.Set as Set
 import Koriel.Id
-import Language.Griff.Prelude
 import Koriel.Pretty
 import Language.Griff.Extension
+import Language.Griff.Prelude
 import Language.Griff.Syntax
 import qualified Text.PrettyPrint.HughesPJClass as P
 
@@ -39,16 +39,16 @@ type Infix x = (XInfix x, Assoc, Int, XId x)
 type Foreign x = (XForeign x, XId x, Type x)
 
 scDefs :: Lens' (BindGroup x) [[ScDef x]]
-scDefs = lens _scDefs (\e x -> e { _scDefs = x })
+scDefs = lens _scDefs (\e x -> e {_scDefs = x})
 
 scSigs :: Lens' (BindGroup x) [ScSig x]
-scSigs = lens _scSigs (\e x -> e { _scSigs = x })
+scSigs = lens _scSigs (\e x -> e {_scSigs = x})
 
 dataDefs :: Lens' (BindGroup x) [DataDef x]
-dataDefs = lens _dataDefs (\e x -> e { _dataDefs = x })
+dataDefs = lens _dataDefs (\e x -> e {_dataDefs = x})
 
 foreigns :: Lens' (BindGroup x) [Foreign x]
-foreigns = lens _foreigns (\e x -> e { _foreigns = x })
+foreigns = lens _foreigns (\e x -> e {_foreigns = x})
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindGroup x)
 

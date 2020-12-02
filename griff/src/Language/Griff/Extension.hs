@@ -1,6 +1,6 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -11,12 +11,12 @@ module Language.Griff.Extension where
 
 import Data.Kind (Constraint)
 import qualified Data.Kind as K
+import Data.Store
 import Koriel.Id
-import Language.Griff.Prelude
 import Koriel.Pretty
+import Language.Griff.Prelude
 import Language.Griff.Type
 import Text.Megaparsec.Pos (SourcePos)
-import Data.Store
 
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show)

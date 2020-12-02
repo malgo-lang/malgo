@@ -7,13 +7,14 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Typing.Infer where
+module Language.Griff.Infer where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Language.Griff.Constraint
 import Language.Griff.Extension
 import Language.Griff.Grouping
 import Language.Griff.Prelude
@@ -23,7 +24,6 @@ import qualified Language.Griff.Syntax as S
 import Language.Griff.TcEnv
 import qualified Language.Griff.TcEnv as T
 import Language.Griff.Type
-import Language.Griff.Typing.Constraint
 import Text.Megaparsec (SourcePos)
 
 typeCheck :: (MonadUniq m, MonadIO m, MonadGriff m) => RnEnv -> [Decl (Griff 'Rename)] -> m (TcEnv, BindGroup (Griff 'TypeCheck))

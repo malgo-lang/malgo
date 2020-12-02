@@ -20,13 +20,14 @@ import LLVM.Context (withContext)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
 import Language.Griff.Desugar (desugar)
-import Language.Griff.Interface (loadInterface, storeInterface, buildInterface, prettyInterface)
+import Language.Griff.Infer (typeCheck)
+import Language.Griff.Interface (buildInterface, loadInterface, prettyInterface, storeInterface)
 import Language.Griff.Parser (parseGriff)
 import Language.Griff.Prelude
 import Language.Griff.Rename (rename)
 import Language.Griff.RnEnv (genRnEnv)
+import qualified Language.Griff.Syntax as Syntax
 import qualified Language.Griff.TcEnv as T
-import Language.Griff.Typing.Infer (typeCheck)
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -36,7 +37,6 @@ import Text.Megaparsec
   ( errorBundlePretty,
   )
 import qualified Text.PrettyPrint.HughesPJ as P
-import qualified Language.Griff.Syntax as Syntax
 
 compile :: Opt -> IO ()
 compile opt = do
@@ -71,7 +71,7 @@ compile opt = do
               hPutStrLn stderr "=== DESUGAR ==="
               hPrint stderr $ pPrint $ over appProgram flat core
           let inf = buildInterface dsEnv
-          storeInterface inf 
+          storeInterface inf
           when (debugMode opt) $ do
             Just inf <- loadInterface (Syntax._moduleName moduleAst)
             liftIO $ do

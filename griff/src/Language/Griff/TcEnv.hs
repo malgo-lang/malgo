@@ -8,8 +8,8 @@ module Language.Griff.TcEnv where
 
 import qualified Data.Map as Map
 import Koriel.MonadUniq
-import Language.Griff.Prelude
 import Language.Griff.Extension
+import Language.Griff.Prelude
 import Language.Griff.RnEnv
   ( RnEnv,
   )

@@ -8,18 +8,19 @@ module Language.Griff.RnEnv where
 import qualified Data.Map as Map
 import Koriel.Id
 import Koriel.MonadUniq
-import Language.Griff.Prelude
 import Language.Griff.Extension
+import Language.Griff.Prelude
 
 data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: ModuleName}
   deriving stock (Show)
 
 instance Semigroup RnState where
-  RnState i1 p1 <> RnState i2 p2 | p1 == p2 = RnState (i1 <> i2) p1
+  RnState i1 p1 <> RnState i2 p2
+    | p1 == p2 = RnState (i1 <> i2) p1
     | otherwise = error "package name mismatch"
 
 infixInfo :: Lens' RnState (Map RnId (Assoc, Int))
-infixInfo = lens _infixInfo (\s x -> s { _infixInfo = x})
+infixInfo = lens _infixInfo (\s x -> s {_infixInfo = x})
 
 moduleName :: Getter RnState ModuleName
 moduleName = to _moduleName
@@ -37,10 +38,10 @@ instance Monoid RnEnv where
   mempty = RnEnv mempty mempty
 
 varEnv :: Lens' RnEnv (Map PsId RnId)
-varEnv = lens _varEnv (\e x -> e { _varEnv = x})
+varEnv = lens _varEnv (\e x -> e {_varEnv = x})
 
 typeEnv :: Lens' RnEnv (Map PsTId RnTId)
-typeEnv = lens _typeEnv (\e x -> e { _typeEnv = x})
+typeEnv = lens _typeEnv (\e x -> e {_typeEnv = x})
 
 genRnState :: Monad m => ModuleName -> m RnState
 genRnState (ModuleName name) = pure $ RnState mempty $ ModuleName name

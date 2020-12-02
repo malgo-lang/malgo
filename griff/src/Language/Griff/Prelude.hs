@@ -17,14 +17,14 @@ module Language.Griff.Prelude
 where
 
 import Control.Monad.Fix (MonadFix)
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import Options.Applicative
 import System.FilePath.Lens
 import Text.Megaparsec.Pos (SourcePos (sourceLine), unPos)
-import Koriel.MonadUniq
 
-newtype GriffM a = GriffM { unGriffM :: ReaderT Opt IO a }
+newtype GriffM a = GriffM {unGriffM :: ReaderT Opt IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadFix, MonadFail)
 
 class Monad m => MonadGriff m where
