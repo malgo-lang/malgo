@@ -15,18 +15,18 @@ import Data.List.Extra (disjoint)
 import Data.List.Predicate (allUnique)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import qualified Data.Text.Lazy.IO as TL
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Griff.Extension
+import Language.Griff.Interface
 import Language.Griff.Prelude
 import Language.Griff.RnEnv
 import Language.Griff.Syntax
+import System.IO (stderr)
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
-import qualified Data.Text.Lazy.IO as TL
-import System.IO (stderr)
-import Language.Griff.Interface
 
 rename :: (MonadUniq m, MonadGriff m, MonadIO m) => RnEnv -> Module (Griff 'Parse) -> m [Decl (Griff 'Rename)]
 rename rnEnv (Module modName ds) = do
@@ -209,10 +209,14 @@ toplevelIdents ds = do
       | x `elem` sigs || x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | otherwise = go (sigs, x : vars, types) rest
     go (sigs, vars, types) (Import pos modName : rest) = do
-      identMap <- deserializeIdentMap modName
+      identMap <- loadInterface modName
       case identMap of
         Nothing -> errorOn pos $ "Module interface file is not found:" <+> P.quotes (pPrint modName)
-        Just _ -> undefined
+        Just x -> do
+          opt <- getOpt
+          when (debugMode opt) $
+            liftIO $ TL.hPutStrLn stderr $ pShow x
+          go (sigs, vars, types) rest
     go result (_ : rest) = go result rest
 
 -- infix宣言をMapに変換

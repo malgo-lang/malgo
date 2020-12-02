@@ -491,7 +491,7 @@ lookupConMap ::
   (MonadReader DesugarEnv m, MonadFail m) =>
   Id Kind ->
   [GT.Type] ->
-  m [(TcTId, GT.Type)]
+  m [(TcId, GT.Type)]
 lookupConMap con ts = do
   Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
   pure $ over (mapped . _2) (applySubst $ Map.fromList $ zip as ts) conMap

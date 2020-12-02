@@ -1,6 +1,8 @@
 {-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -10,10 +12,11 @@
 
 module Language.Griff.Type where
 
+import Data.Store
 import Koriel.Id
 import Koriel.MonadUniq
-import Language.Griff.Prelude
 import Koriel.Pretty
+import Language.Griff.Prelude
 import qualified Text.PrettyPrint.HughesPJ as P
 
 ----------------------
@@ -21,7 +24,8 @@ import qualified Text.PrettyPrint.HughesPJ as P
 ----------------------
 
 data Kind = Star | KArr Kind Kind
-  deriving stock (Eq, Ord, Show)
+  deriving stock (Eq, Ord, Show, Generic)
+  deriving anyclass (Store)
 
 class HasKind a where
   kind :: HasCallStack => a -> Kind
@@ -42,7 +46,8 @@ instance Pretty Kind where
 ----------
 
 data Scheme = Forall [TyVar] Type
-  deriving stock (Eq, Show, Ord)
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving anyclass (Store)
 
 instance HasKind Scheme where
   kind (Forall _ t) = kind t
@@ -83,6 +88,11 @@ instance Pretty MetaTv where
 
 instance HasKind MetaTv where
   kind (MetaTv _ k _ _) = k
+
+instance Store MetaTv where
+  size = error "Store MetaTv"
+  poke _ = error "Store MetaTv"
+  peek = error "Store MetaTv"
 
 type MonadMetaTv m = (MonadUniq m, MonadIO m)
 
@@ -125,7 +135,8 @@ zonkType t = pure t
 ---------------------
 
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
-  deriving stock (Eq, Show, Ord)
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving anyclass (Store)
 
 instance Pretty PrimT where
   pPrint Int32T = "Int32#"
@@ -148,7 +159,8 @@ data Type
   | TyTuple [Type]
   | TyLazy Type
   | TyMeta MetaTv
-  deriving stock (Eq, Show, Ord)
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving anyclass (Store)
 
 _TyApp :: Prism' Type (Type, Type)
 _TyApp = prism' (uncurry TyApp) $ \case
