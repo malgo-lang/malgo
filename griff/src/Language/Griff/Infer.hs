@@ -45,8 +45,7 @@ tcBindGroup bindGroup = do
           local (env <>) do
             env <-
               ask >>= traverseOf (T.varEnv . traversed) zonkScheme
-                >>= traverseOf (T.typeEnv . traversed) zonkType
-                >>= traverseOf (T.tyConEnv . traversed . _2 . traversed . _2) zonkType
+                >>= traverseOf (T.typeEnv . traversed . overTypeDef) zonkType
             foreigns'' <- traverseOf (traversed . _1) (overType zonkType) foreigns'
             scDefs'' <-
               traverseOf (traversed . traversed . _1) (overType zonkType)
@@ -68,11 +67,10 @@ tcDataDefs ::
   m ([DataDef (Griff 'TypeCheck)], TcEnv)
 tcDataDefs ds = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを生成する
-  dataEnv <- foldMapA ?? ds $ \(_, name, params, _) ->
-    Map.singleton name . TyCon <$> newId (name ^. idName) (kindof params)
+  dataEnv <- foldMapA ?? ds $ \(_, name, params, _) -> Map.singleton name . simpleTypeDef . TyCon <$> newId (name ^. idName) (kindof params)
   local (over T.typeEnv (dataEnv <>)) do
     (ds', conEnvs) <- mapAndUnzipM ?? ds $ \(pos, name, params, cons) -> do
-      paramsEnv <- foldMapA (\p -> Map.singleton p . TyMeta <$> newMetaTv Star "") params
+      paramsEnv <- foldMapA ?? params $ \p -> Map.singleton p . simpleTypeDef . TyMeta <$> newMetaTv Star ""
       local (over T.typeEnv (paramsEnv <>)) do
         cons' <- traverseOf (traversed . _2) ?? cons $ \args -> do
           -- 値コンストラクタの型を構築
@@ -81,19 +79,14 @@ tcDataDefs ds = do
           args' <- traverse transType args
           pure $ foldr TyArr (foldr (flip TyApp) name' params') args'
         (as, cons'') <- generalizeMutRecs mempty cons'
-        dataName <-
-          view (T.typeEnv . at name) >>= \case
-            Just (TyCon dataName) -> pure dataName
-            _ -> bug Unreachable
         pure
           ( (pos, name, params, map (second (map tcType)) cons),
-            mempty
-              & T.varEnv
-              .~ Map.fromList cons''
-              & T.tyConEnv
-              .~ Map.singleton dataName (as, cons')
+            Endo $
+              (T.varEnv <>~ Map.fromList cons'')
+                . (T.typeEnv . at name . _Just . qualVars .~ as)
+                . (T.typeEnv . at name . _Just . union .~ cons')
           )
-    pure (ds', mconcat conEnvs & T.typeEnv .~ dataEnv)
+    pure (ds', appEndo (mconcat conEnvs) (mempty & T.typeEnv .~ dataEnv))
   where
     kindof [] = Star
     kindof (_ : xs) = KArr Star (kindof xs)
@@ -104,7 +97,7 @@ tcForeigns ::
   m ([Foreign (Griff 'TypeCheck)], TcEnv)
 tcForeigns ds = fmap (second mconcat) $
   mapAndUnzipM ?? ds $ \(pos, name, ty) -> do
-    tyVars <- traverse (\tyVar -> (tyVar,) . TyMeta <$> newMetaTv Star (show $ pPrint tyVar)) $ Set.toList $ getTyVars ty
+    tyVars <- traverse (\tyVar -> (tyVar,) . simpleTypeDef . TyMeta <$> newMetaTv Star (show $ pPrint tyVar)) $ Set.toList $ getTyVars ty
     local (over T.typeEnv (Map.fromList tyVars <>)) do
       scheme@(Forall _ ty') <- generalize mempty =<< transType ty
       pure ((WithType pos ty', name, tcType ty), mempty & T.varEnv .~ Map.fromList [(name, scheme)])
@@ -115,7 +108,7 @@ tcScSigs ::
   m ([ScSig (Griff 'TypeCheck)], TcEnv)
 tcScSigs ds = fmap (second mconcat) $
   mapAndUnzipM ?? ds $ \(pos, name, ty) -> do
-    tyVars <- traverse (\tyVar -> (tyVar,) . TyMeta <$> newMetaTv Star (show $ pPrint tyVar)) $ Set.toList $ getTyVars ty
+    tyVars <- traverse (\tyVar -> (tyVar,) . simpleTypeDef . TyMeta <$> newMetaTv Star (show $ pPrint tyVar)) $ Set.toList $ getTyVars ty
     local (over T.typeEnv (Map.fromList tyVars <>)) do
       scheme <- generalize mempty =<< transType ty
       pure ((pos, name, tcType ty), mempty & T.varEnv .~ Map.singleton name scheme)
@@ -279,14 +272,14 @@ tcType (S.TyLazy pos t) = S.TyLazy pos $ tcType t
 
 lookupType :: (HasCallStack, MonadReader TcEnv m, MonadGriff m, MonadIO m) => SourcePos -> RnTId -> m Type
 lookupType pos name = do
-  mtype <- asks $ view $ T.typeEnv . at name
+  mtype <- preview $ T.typeEnv . at name . _Just . constructor
   case mtype of
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just typ -> pure typ
 
 lookupVar :: (HasCallStack, MonadReader TcEnv m, MonadGriff m, MonadIO m) => SourcePos -> RnId -> m Scheme
 lookupVar pos name = do
-  mscheme <- asks $ view $ T.varEnv . at name
+  mscheme <- view $ T.varEnv . at name
   case mscheme of
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just scheme -> pure scheme

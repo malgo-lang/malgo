@@ -25,7 +25,7 @@ import System.FilePath.Lens
 
 data Interface = Interface
   { _signatureMap :: Map RnId GT.Scheme, -- from TcEnv
-    _typeDefMap :: Map RnId TypeDef, -- from TcEnv
+    _typeDefMap :: Map RnId TcEnv.TypeDef, -- from TcEnv
     _resolvedIdentMap :: Map PsId RnId, -- from DsEnv
     _coreIdentMap :: Map RnId (Id C.Type) -- from DsEnv
   }
@@ -35,7 +35,7 @@ data Interface = Interface
 signatureMap :: Lens' Interface (Map RnId GT.Scheme)
 signatureMap = lens _signatureMap (\i x -> i {_signatureMap = x})
 
-typeDefMap :: Lens' Interface (Map RnId TypeDef)
+typeDefMap :: Lens' Interface (Map RnId TcEnv.TypeDef)
 typeDefMap = lens _typeDefMap (\i x -> i {_typeDefMap = x})
 
 resolvedIdentMap :: Lens' Interface (Map PsId RnId)
@@ -43,13 +43,6 @@ resolvedIdentMap = lens _resolvedIdentMap (\i x -> i {_resolvedIdentMap = x})
 
 coreIdentMap :: Lens' Interface (Map RnId (Id C.Type))
 coreIdentMap = lens _coreIdentMap (\i x -> i {_coreIdentMap = x})
-
-data TypeDef = TypeDef {_constructor :: GT.Type, _qualVars :: [GT.TyVar], _union :: [(RnId, GT.Type)]}
-  deriving stock (Show, Generic)
-  deriving anyclass (Store)
-
-instance Pretty TypeDef where
-  pPrint (TypeDef c q u) = pPrint (c, q, u)
 
 prettyInterface :: Interface -> Doc
 prettyInterface i =
@@ -62,19 +55,12 @@ prettyInterface i =
 buildInterface :: DsEnv -> Interface
 buildInterface dsEnv = execState ?? Interface mempty mempty mempty mempty $ do
   ifor_ (dsEnv ^. DsEnv.varEnv) $ \tcId coreId -> do
-    resolvedIdentMap %= Map.insert (tcId ^. idName) tcId
-    coreIdentMap %= Map.insert tcId coreId
+    resolvedIdentMap . at (tcId ^. idName) ?= tcId
+    coreIdentMap . at tcId ?= coreId
   ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.varEnv) $ \rnId scheme ->
-    signatureMap %= Map.insert rnId scheme
-  ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.typeEnv) $ \rnId typeRep ->
-    modifying typeDefMap $
-      Map.insert rnId $
-        case typeRep of
-          GT.TyCon tyCon ->
-            case Map.lookup tyCon $ dsEnv ^. DsEnv.tcEnv . TcEnv.tyConEnv of
-              Just (ps, u) -> TypeDef typeRep ps u
-              Nothing -> TypeDef typeRep [] []
-          _ -> TypeDef typeRep [] []
+    signatureMap . at rnId ?= scheme
+  ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.typeEnv) $ \rnId typeDef ->
+    typeDefMap . at rnId ?= typeDef
 
 storeInterface :: (MonadIO m, MonadGriff m) => Interface -> m ()
 storeInterface interface = do

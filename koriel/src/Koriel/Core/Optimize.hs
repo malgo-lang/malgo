@@ -115,7 +115,7 @@ type PackInlineMap = Map (Id Type) (Con, [Atom (Id Type)])
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
 optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
   body' <- optPackInline body
-  mPack <- asks $ view (at v)
+  mPack <- view (at v)
   case mPack of
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []

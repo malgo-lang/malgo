@@ -41,14 +41,14 @@ resolveGlobalName name = newGlobalId name =<< use moduleName
 
 lookupVarName :: (HasCallStack, MonadReader RnEnv m, MonadGriff m, MonadIO m) => SourcePos -> String -> m RnId
 lookupVarName pos name = do
-  vm <- asks $ view varEnv
+  vm <- view varEnv
   case vm ^. at name of
     Just name' -> pure name'
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
 
 lookupTypeName :: (HasCallStack, MonadReader RnEnv m, MonadGriff m, MonadIO m) => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
-  tm <- asks $ view typeEnv
+  tm <- view typeEnv
   case tm ^. at name of
     Just name' -> pure name'
     Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)

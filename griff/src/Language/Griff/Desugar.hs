@@ -125,7 +125,7 @@ dsScDefs ::
 dsScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
   env <- foldMapA ?? ds $ \(_, f, _, _) -> do
-    Just (Forall _ fType) <- asks $ view (tcEnv . Tc.varEnv . at f)
+    Just (Forall _ fType) <- view (tcEnv . Tc.varEnv . at f)
     f' <- newCoreId f =<< dsType fType
     pure $ mempty & varEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dsScDef ds
@@ -171,7 +171,7 @@ dsDataDef ::
 dsDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
     -- lookup constructor infomations
-    Just (GT.TyCon name') <- asks $ view (tcEnv . Tc.typeEnv . at name)
+    Just (GT.TyCon name') <- preview (tcEnv . Tc.typeEnv . at name . _Just . Tc.constructor)
     conMap <- lookupConMap name' []
     let conType = fromJust $ List.lookup conName conMap
 
@@ -482,7 +482,7 @@ unfoldType t = dsType t
 
 lookupName :: (HasCallStack, MonadReader DsEnv m) => TcId -> m (Id C.Type)
 lookupName name = do
-  mname' <- asks $ view (varEnv . at name)
+  mname' <- view (varEnv . at name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint name)
@@ -493,8 +493,11 @@ lookupConMap ::
   [GT.Type] ->
   m [(TcId, GT.Type)]
 lookupConMap con ts = do
-  Just (as, conMap) <- asks $ view (tcEnv . Tc.tyConEnv . at con)
-  pure $ over (mapped . _2) (applySubst $ Map.fromList $ zip as ts) conMap
+  typeEnv <- view (tcEnv . Tc.typeEnv)
+  case List.find (\Tc.TypeDef {Tc._constructor = t} -> t == GT.TyCon con) (Map.elems typeEnv) of
+    Just Tc.TypeDef {Tc._qualVars = as, Tc._union = conMap} ->
+      pure $ over (mapped . _2) (applySubst $ Map.fromList $ zip as ts) conMap
+    Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint con)
 
 newCoreId :: MonadUniq f => Id ModuleName -> a -> f (Id a)
 newCoreId griffId coreType =

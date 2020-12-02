@@ -1,4 +1,6 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -7,7 +9,9 @@
 module Language.Griff.TcEnv where
 
 import qualified Data.Map as Map
+import Data.Store
 import Koriel.MonadUniq
+import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.Prelude
 import Language.Griff.RnEnv
@@ -18,29 +22,51 @@ import Language.Griff.Type
 
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,
-    _typeEnv :: Map RnTId Type,
-    _tyConEnv :: Map TyCon ([TyVar], [(RnId, Type)]),
+    _typeEnv :: Map RnTId TypeDef,
+    -- _tyConEnv :: Map TyCon ([TyVar], [(RnId, Type)]),
     _rnEnv :: RnEnv
   }
   deriving stock (Show, Eq)
 
 instance Semigroup TcEnv where
-  TcEnv v1 t1 c1 r1 <> TcEnv v2 t2 c2 r2 = TcEnv (v1 <> v2) (t1 <> t2) (c1 <> c2) (r1 <> r2)
+  TcEnv v1 t1 r1 <> TcEnv v2 t2 r2 = TcEnv (v1 <> v2) (t1 <> t2) (r1 <> r2)
 
 instance Monoid TcEnv where
-  mempty = TcEnv mempty mempty mempty mempty
+  mempty = TcEnv mempty mempty mempty
+
+data TypeDef = TypeDef {_constructor :: Type, _qualVars :: [TyVar], _union :: [(RnId, Type)]}
+  deriving stock (Show, Eq, Generic)
+  deriving anyclass (Store)
+
+instance Pretty TypeDef where
+  pPrint (TypeDef c q u) = pPrint (c, q, u)
 
 varEnv :: Lens' TcEnv (Map RnId Scheme)
 varEnv = lens _varEnv (\e x -> e {_varEnv = x})
 
-typeEnv :: Lens' TcEnv (Map RnTId Type)
+typeEnv :: Lens' TcEnv (Map RnTId TypeDef)
 typeEnv = lens _typeEnv (\e x -> e {_typeEnv = x})
 
-tyConEnv :: Lens' TcEnv (Map TyCon ([TyVar], [(RnId, Type)]))
-tyConEnv = lens _tyConEnv (\e x -> e {_tyConEnv = x})
+-- tyConEnv :: Lens' TcEnv (Map TyCon ([TyVar], [(RnId, Type)]))
+-- tyConEnv = lens _tyConEnv (\e x -> e {_tyConEnv = x})
 
 rnEnv :: Lens' TcEnv RnEnv
 rnEnv = lens _rnEnv (\e x -> e {_rnEnv = x})
+
+constructor :: Lens' TypeDef Type
+constructor = lens _constructor (\e x -> e {_constructor = x})
+
+qualVars :: Lens' TypeDef [TyVar]
+qualVars = lens _qualVars (\e x -> e {_qualVars = x})
+
+union :: Lens' TypeDef [(RnId, Type)]
+union = lens _union (\e x -> e {_union = x})
+
+simpleTypeDef :: Type -> TypeDef
+simpleTypeDef x = TypeDef x [] []
+
+overTypeDef :: Monad f => (Type -> f Type) -> TypeDef -> f TypeDef
+overTypeDef f = traverseOf constructor f <=< traverseOf (union . traversed . _2) f
 
 genTcEnv :: MonadUniq m => RnEnv -> m TcEnv
 genTcEnv rnEnv = do
@@ -66,12 +92,11 @@ genTcEnv rnEnv = do
             ],
         _typeEnv =
           Map.fromList
-            [ (int32_t, TyPrim Int32T),
-              (int64_t, TyPrim Int64T),
-              (float_t, TyPrim FloatT),
-              (double_t, TyPrim DoubleT),
-              (string_t, TyPrim StringT)
+            [ (int32_t, TypeDef (TyPrim Int32T) [] []),
+              (int64_t, TypeDef (TyPrim Int64T) [] []),
+              (float_t, TypeDef (TyPrim FloatT) [] []),
+              (double_t, TypeDef (TyPrim DoubleT) [] []),
+              (string_t, TypeDef (TyPrim StringT) [] [])
             ],
-        _tyConEnv = mempty,
         _rnEnv = rnEnv
       }

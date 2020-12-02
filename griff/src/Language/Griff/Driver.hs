@@ -63,7 +63,6 @@ compile opt = do
               hPutStrLn stderr "=== TYPE CHECK ==="
               hPrint stderr $ pPrint $ Map.toList $ view T.varEnv tcEnv
               hPrint stderr $ Map.toList $ view T.typeEnv tcEnv
-              hPrint stderr $ pPrint $ Map.toList $ view T.tyConEnv tcEnv
               hPrint stderr $ pPrint bg
           (dsEnv, core) <- desugar tcEnv bg
           when (dumpDesugar opt) $
