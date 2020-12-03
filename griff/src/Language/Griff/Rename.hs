@@ -15,7 +15,6 @@ import Data.List.Extra (disjoint)
 import Data.List.Predicate (allUnique)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import qualified Data.Text.Lazy.IO as TL
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -24,7 +23,7 @@ import Language.Griff.Interface
 import Language.Griff.Prelude
 import Language.Griff.RnEnv
 import Language.Griff.Syntax
-import System.IO (stderr)
+import System.IO (hPrint, stderr)
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
@@ -44,14 +43,14 @@ lookupVarName pos name = do
   vm <- view varEnv
   case vm ^. at name of
     Just name' -> pure name'
-    Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
+    Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (text name)
 
 lookupTypeName :: (HasCallStack, MonadReader RnEnv m, MonadGriff m, MonadIO m) => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
   tm <- view typeEnv
   case tm ^. at name of
     Just name' -> pure name'
-    Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (pPrint name)
+    Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (text name)
 
 -- renamer
 
@@ -61,10 +60,7 @@ rnDecls ::
   m [Decl (Griff 'Rename)]
 rnDecls ds = do
   -- RnEnvの生成
-  (varNames, typeNames) <- toplevelIdents ds
-  vm <- foldMapA (\v -> Map.singleton v <$> resolveGlobalName v) varNames
-  tm <- foldMapA (\v -> Map.singleton v <$> resolveGlobalName v) typeNames
-  let rnEnv = RnEnv vm tm
+  rnEnv <- genToplevelEnv ds
   -- RnStateの生成
   --   定義されていない識別子に対するInfixはエラー
   local (rnEnv <>) $ do
@@ -115,10 +111,6 @@ rnDecl (Foreign pos name typ) = do
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (Import pos modName) = do
-  -- identMap <- deserializeIdentMap modName
-  -- opt <- getOpt
-  -- when (debugMode opt) $ do
-  --   liftIO $ TL.hPutStrLn stderr $ pShow identMap
   pure $ Import pos modName
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
@@ -184,40 +176,42 @@ rnStmts (Let x v e : ss) = do
     ss' <- rnStmts ss
     pure $ Let x v' e' : ss'
 
--- トップレベル識別子を列挙
-toplevelIdents :: (MonadGriff m, MonadIO m) => [Decl (Griff 'Parse)] -> m ([String], [String])
-toplevelIdents ds = do
-  (sigs, vars, types) <- go ([], [], []) ds
-  pure (ordNub $ sigs <> vars, types)
+genToplevelEnv :: (MonadGriff m, MonadIO m, MonadUniq m, MonadState RnState m) => [Decl (Griff 'Parse)] -> m RnEnv
+genToplevelEnv = go mempty
   where
-    go result [] = pure result
-    go (sigs, vars, types) (ScDef pos x _ _ : rest)
-      | x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
-      | otherwise = go (sigs, x : vars, types) rest
-    go (sigs, vars, types) (ScSig pos x _ : rest)
-      | x `elem` sigs = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
-      | otherwise = go (x : sigs, vars, types) rest
-    go (sigs, vars, types) (DataDef pos x _ xs : rest)
-      | x `elem` types = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
-      | disjoint (map fst xs) (sigs <> vars) = go (sigs, map fst xs <> vars, x : types) rest
+    go env [] = pure env
+    go env (ScDef pos x _ _ : rest)
+      | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | otherwise = do
+        x' <- resolveGlobalName x
+        go (env & varEnv . at x ?~ x') rest
+    go env (ScSig {} : rest) = go env rest
+    go env (DataDef pos x _ xs : rest)
+      | x `elem` Map.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | disjoint (map fst xs) (Map.keys (env ^. varEnv)) = do
+        x' <- resolveGlobalName x
+        xs' <- traverse (resolveName . fst) xs
+        go (env & varEnv <>~ Map.fromList (zip (map fst xs) xs') & typeEnv . at x ?~ x') rest
       | otherwise =
         errorOn pos $
           "Duplicate name(s):"
             <+> P.sep
-              (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` (sigs <> vars)))
-    go (sigs, vars, types) (Foreign pos x _ : rest)
-      | x `elem` sigs || x `elem` vars = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
-      | otherwise = go (sigs, x : vars, types) rest
-    go (sigs, vars, types) (Import pos modName : rest) = do
-      identMap <- loadInterface modName
-      case identMap of
+              (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` (Map.keys (env ^. varEnv))))
+    go env (Foreign pos x _ : rest)
+      | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | otherwise = do
+        x' <- resolveGlobalName x
+        go (env & varEnv . at x ?~ x') rest
+    go env (Import pos modName : rest) = do
+      mIdentMap <- loadInterface modName
+      case mIdentMap of
         Nothing -> errorOn pos $ "Module interface file is not found:" <+> P.quotes (pPrint modName)
-        Just x -> do
+        Just identMap -> do
           opt <- getOpt
           when (debugMode opt) $
-            liftIO $ TL.hPutStrLn stderr $ pShow x
-          go (sigs, vars, types) rest
-    go result (_ : rest) = go result rest
+            liftIO $ hPrint stderr $ prettyInterface identMap
+          go (env & varEnv <>~ identMap ^. resolvedVarIdentMap & typeEnv <>~ identMap ^. resolvedTypeIdentMap) rest
+    go env (Infix {} : rest) = go env rest
 
 -- infix宣言をMapに変換
 infixDecls :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => [Decl (Griff 'Parse)] -> m (Map RnId (Assoc, Int))

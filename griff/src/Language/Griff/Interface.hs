@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -12,6 +13,7 @@ import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
 import qualified Data.Map as Map
 import Data.Store
+import Generics.Deriving.Monoid (mappenddefault, memptydefault)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -26,11 +28,18 @@ import System.FilePath.Lens
 data Interface = Interface
   { _signatureMap :: Map RnId GT.Scheme, -- from TcEnv
     _typeDefMap :: Map RnId TcEnv.TypeDef, -- from TcEnv
-    _resolvedIdentMap :: Map PsId RnId, -- from DsEnv
+    _resolvedVarIdentMap :: Map PsId RnId, -- from DsEnv
+    _resolvedTypeIdentMap :: Map PsId RnId, -- from TcEnv
     _coreIdentMap :: Map RnId (Id C.Type) -- from DsEnv
   }
   deriving stock (Show, Generic)
   deriving anyclass (Store)
+
+instance Semigroup Interface where
+  (<>) = mappenddefault
+
+instance Monoid Interface where
+  mempty = memptydefault
 
 signatureMap :: Lens' Interface (Map RnId GT.Scheme)
 signatureMap = lens _signatureMap (\i x -> i {_signatureMap = x})
@@ -38,8 +47,11 @@ signatureMap = lens _signatureMap (\i x -> i {_signatureMap = x})
 typeDefMap :: Lens' Interface (Map RnId TcEnv.TypeDef)
 typeDefMap = lens _typeDefMap (\i x -> i {_typeDefMap = x})
 
-resolvedIdentMap :: Lens' Interface (Map PsId RnId)
-resolvedIdentMap = lens _resolvedIdentMap (\i x -> i {_resolvedIdentMap = x})
+resolvedVarIdentMap :: Lens' Interface (Map PsId RnId)
+resolvedVarIdentMap = lens _resolvedVarIdentMap (\i x -> i {_resolvedVarIdentMap = x})
+
+resolvedTypeIdentMap :: Lens' Interface (Map PsId RnId)
+resolvedTypeIdentMap = lens _resolvedTypeIdentMap (\i x -> i {_resolvedTypeIdentMap = x})
 
 coreIdentMap :: Lens' Interface (Map RnId (Id C.Type))
 coreIdentMap = lens _coreIdentMap (\i x -> i {_coreIdentMap = x})
@@ -49,17 +61,19 @@ prettyInterface i =
   "Interface"
     $$ nest 2 (sep ["signatureMap =", nest 2 $ pPrint $ Map.toList (i ^. signatureMap)])
     $$ nest 2 (sep ["typeDefMap =", nest 2 $ pPrint $ Map.toList (i ^. typeDefMap)])
-    $$ nest 2 (sep ["resolvedIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedIdentMap)])
+    $$ nest 2 (sep ["resolvedVarIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedVarIdentMap)])
+    $$ nest 2 (sep ["resolvedTypeIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedTypeIdentMap)])
     $$ nest 2 (sep ["coreIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. coreIdentMap)])
 
 buildInterface :: DsEnv -> Interface
-buildInterface dsEnv = execState ?? Interface mempty mempty mempty mempty $ do
+buildInterface dsEnv = execState ?? Interface mempty mempty mempty mempty mempty $ do
   ifor_ (dsEnv ^. DsEnv.varEnv) $ \tcId coreId -> do
-    resolvedIdentMap . at (tcId ^. idName) ?= tcId
+    resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
     coreIdentMap . at tcId ?= coreId
   ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.varEnv) $ \rnId scheme ->
     signatureMap . at rnId ?= scheme
-  ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.typeEnv) $ \rnId typeDef ->
+  ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.typeEnv) $ \rnId typeDef -> do
+    resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
     typeDefMap . at rnId ?= typeDef
 
 storeInterface :: (MonadIO m, MonadGriff m) => Interface -> m ()

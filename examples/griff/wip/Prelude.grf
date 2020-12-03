@@ -1,0 +1,31 @@
+module Prelude = {
+  infixl 0 (|>);
+  (|>) :: a -> (a -> b) -> b;
+  (|>) = {x f -> f x};
+
+  infixr 0 (<|);
+  (<|) :: (a -> b) -> a -> b;
+  (<|) = {f x -> f x};
+
+  data Bool = False | True;
+
+  if :: Bool -> {a} -> {a} -> a;
+  if c t f = c |> { True -> t!
+                  | False -> f!
+                  };
+  if' = { True t _ -> t!
+        | False _ f -> f!
+        };
+
+  foreign import print_string :: String# -> ();
+  foreign import newline :: () -> ();
+
+  data String = String# String#;
+
+  putStrLn :: String -> ();
+  putStrLn = { (String# str) ->
+    print_string str;
+    newline ()
+  };
+}
+-- Expected: hello

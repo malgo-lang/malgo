@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3240a0be2315da1bf974725902e125f8769042104453b3d42ef928c2b16263cd
+-- hash: cd46483881cbfa71c4ba98d5981dece05ed0fd75b745ce68aebc5d3da973d36a
 
 name:           griff
 version:        0.1.0.0
@@ -50,6 +50,7 @@ library
     , bytestring
     , containers
     , extra
+    , generic-deriving
     , koriel
     , lens
     , list-predicate
@@ -83,6 +84,7 @@ executable griffc
     , bytestring
     , containers
     , extra
+    , generic-deriving
     , griff
     , koriel
     , lens
