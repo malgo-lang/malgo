@@ -23,7 +23,6 @@ import Language.Griff.Type
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,
     _typeEnv :: Map RnTId TypeDef,
-    -- _tyConEnv :: Map TyCon ([TyVar], [(RnId, Type)]),
     _rnEnv :: RnEnv
   }
   deriving stock (Show, Eq)
@@ -46,9 +45,6 @@ varEnv = lens _varEnv (\e x -> e {_varEnv = x})
 
 typeEnv :: Lens' TcEnv (Map RnTId TypeDef)
 typeEnv = lens _typeEnv (\e x -> e {_typeEnv = x})
-
--- tyConEnv :: Lens' TcEnv (Map TyCon ([TyVar], [(RnId, Type)]))
--- tyConEnv = lens _tyConEnv (\e x -> e {_tyConEnv = x})
 
 rnEnv :: Lens' TcEnv RnEnv
 rnEnv = lens _rnEnv (\e x -> e {_rnEnv = x})

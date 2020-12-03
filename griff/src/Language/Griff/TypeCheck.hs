@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Infer where
+module Language.Griff.TypeCheck where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set

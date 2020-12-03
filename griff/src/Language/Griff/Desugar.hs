@@ -29,13 +29,13 @@ import Koriel.Pretty
 import Language.Griff.DsEnv
 import Language.Griff.Extension
 import Language.Griff.Grouping
-import Language.Griff.Infer (applySubst)
 import Language.Griff.Prelude
 import qualified Language.Griff.RnEnv as Rn
 import Language.Griff.Syntax as G
 import Language.Griff.TcEnv (TcEnv)
 import qualified Language.Griff.TcEnv as Tc
 import Language.Griff.Type as GT
+import Language.Griff.TypeCheck (applySubst)
 import qualified Text.PrettyPrint.HughesPJ as P
 
 #ifdef DEBUG

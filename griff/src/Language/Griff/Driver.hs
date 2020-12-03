@@ -20,7 +20,6 @@ import LLVM.Context (withContext)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
 import Language.Griff.Desugar (desugar)
-import Language.Griff.Infer (typeCheck)
 import Language.Griff.Interface (buildInterface, loadInterface, prettyInterface, storeInterface)
 import Language.Griff.Parser (parseGriff)
 import Language.Griff.Prelude
@@ -28,6 +27,7 @@ import Language.Griff.Rename (rename)
 import Language.Griff.RnEnv (genRnEnv)
 import qualified Language.Griff.Syntax as Syntax
 import qualified Language.Griff.TcEnv as T
+import Language.Griff.TypeCheck (typeCheck)
 import System.IO
   ( hPrint,
     hPutStrLn,
