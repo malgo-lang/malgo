@@ -4,6 +4,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TupleSections #-}
@@ -51,9 +52,10 @@ desugar ::
 desugar tcEnv ds = do
   (dsEnv, prims) <- genPrimitive tcEnv
   (dsEnv', ds') <- runReaderT (dsBindGroup ds) dsEnv
-  mainFuncDef <- mainFunc =<< runDef do
-    _ <- bind $ searchMain $ Map.toList $ view varEnv dsEnv'
-    pure (Atom $ C.Unboxed $ C.Int32 0)
+  mainFuncDef <-
+    mainFunc =<< runDef do
+      _ <- bind $ searchMain $ Map.toList $ view varEnv dsEnv'
+      pure (Atom $ C.Unboxed $ C.Int32 0)
   pure (dsEnv', Program (mainFuncDef : prims <> ds'))
   where
     -- エントリーポイントとなるmain関数を検索する
@@ -393,10 +395,20 @@ match (u : us) (ps : pss) es err
       pure (conName, ccon, params)
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for cs $ \(gcon, ccon, params) -> do
+      -- パターン行列（未転置）
       let (pss', es') = unzip $ group gcon (List.transpose (ps : pss)) es
       Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
     unfoldedType <- unfoldType patType
     pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
+  -- パターンの先頭がすべてタプルのとき
+  | all (has _TupleP) ps = do
+    let patType = head ps ^. toType
+    SumT [con@(C.Con _ ts)] <- dsType patType
+    params <- traverse (newId "$p") ts
+    cases <- do
+      let (pss', es') = unzip $ groupTuple (List.transpose (ps : pss)) es
+      (:| []) . Unpack con params <$> match (params <> us) (List.transpose pss') es' err
+    pure $ Match (Atom $ C.Var u) cases
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) ps = do
     let cs =
@@ -407,6 +419,8 @@ match (u : us) (ps : pss) es err
             )
             ps
     cases <- traverse (\c -> Switch c <$> match us pss es err) cs
+    -- `_ -> err` のパターンはerrに簡約されているので、
+    -- ここで新たに$_を生成し、Bindパターンを生成する必要がある
     hole <- newId "$_" (C.typeOf u)
     pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
   -- The Mixture Rule
@@ -414,7 +428,8 @@ match (u : us) (ps : pss) es err
   | otherwise =
     do
       let ((ps', ps''), (pss', pss''), (es', es'')) = partition ps pss es
-      match (u : us) (ps' : pss') es' =<< match (u : us) (ps'' : pss'') es'' err
+      err' <- match (u : us) (ps'' : pss'') es'' err
+      match (u : us) (ps' : pss') es' err'
   where
     -- Mixture Rule以外にマッチするようにパターン列を分解
     partition [] _ _ = bug Unreachable
@@ -424,9 +439,13 @@ match (u : us) (ps : pss) es err
     partition ps@(ConP {} : _) pss es =
       let (ps', ps'') = span (has _ConP) ps
        in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
+    partition ps@(TupleP {} : _) pss es =
+      let (ps', ps'') = span (has _TupleP) ps
+       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
     partition ps@(UnboxedP {} : _) pss es =
       let (ps', ps'') = span (has _UnboxedP) ps
        in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
+    -- コンストラクタgconの引数部のパターンpsを展開したパターン行列を生成する
     group gcon pss' es = mapMaybe (aux gcon) (zip pss' es)
       where
         aux gcon (ConP _ gcon' ps : pss, e)
@@ -434,9 +453,15 @@ match (u : us) (ps : pss) es err
           | otherwise = Nothing
         aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
         aux _ ([], _) = bug Unreachable
+    groupTuple pss' es = zipWith aux pss' es
+      where
+        aux (TupleP _ ps : pss) e = (ps <> pss, e)
+        aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
+        aux [] _ = bug Unreachable
 match [] [] (e : _) _ = e
 match _ [] [] err = pure err
-match _ _ _ _ = bug Unreachable
+match u pss es err = do
+  errorDoc $ "match" <+> pPrint u <+> pPrint pss <+> pPrint (length es) <+> pPrint err
 
 -- Griffの型をCoreの型に変換する
 dsType :: (HasCallStack, MonadIO m) => GT.Type -> m C.Type

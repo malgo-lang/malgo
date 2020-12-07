@@ -162,6 +162,7 @@ freevarsClause (Clause _ pats es) = foldMap freevarsStmt es Set.\\ mconcat (map 
 data Pat x
   = VarP (XVarP x) (XId x)
   | ConP (XConP x) (XId x) [Pat x]
+  | TupleP (XTupleP x) [Pat x]
   | UnboxedP (XUnboxedP x) Unboxed
 
 deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)
@@ -175,16 +176,20 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
   pPrintPrec _ _ (ConP _ i []) = pPrint i
   pPrintPrec l d (ConP _ i ps) =
     P.maybeParens (d > 10) $ pPrint i <+> P.sep (map (pPrintPrec l 11) ps)
+  pPrintPrec _ _ (TupleP _ ps) =
+    parens $ sep $ punctuate "," $ map pPrint ps
   pPrintPrec _ _ (UnboxedP _ u) = pPrint u
 
 instance (ForallPatX HasType x) => HasType (Pat x) where
   toType = to $ \case
     VarP x _ -> view toType x
     ConP x _ _ -> view toType x
+    TupleP x _ -> view toType x
     UnboxedP x _ -> view toType x
   overType f = \case
     VarP x v -> VarP <$> overType f x <*> pure v
     ConP x c ps -> ConP <$> overType f x <*> pure c <*> traverse (overType f) ps
+    TupleP x ps -> TupleP <$> overType f x <*> traverse (overType f) ps
     UnboxedP x u -> UnboxedP <$> overType f x <*> overType f u
 
 _VarP :: Prism' (Pat x) (XVarP x, XId x)
@@ -197,6 +202,11 @@ _ConP = prism' (uncurry3 ConP) $ \case
   ConP x c ps -> Just (x, c, ps)
   _ -> Nothing
 
+_TupleP :: Prism' (Pat x) (XTupleP x, [Pat x])
+_TupleP = prism' (uncurry TupleP) $ \case
+  TupleP x ps -> Just (x, ps)
+  _ -> Nothing
+
 _UnboxedP :: Prism' (Pat x) (XUnboxedP x, Unboxed)
 _UnboxedP = prism' (uncurry UnboxedP) $ \case
   UnboxedP x u -> Just (x, u)
@@ -205,6 +215,7 @@ _UnboxedP = prism' (uncurry UnboxedP) $ \case
 bindVars :: Ord (XId x) => Pat x -> Set (XId x)
 bindVars (VarP _ x) = Set.singleton x
 bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
+bindVars (TupleP _ ps) = mconcat $ map bindVars ps
 bindVars UnboxedP {} = Set.empty
 
 ----------

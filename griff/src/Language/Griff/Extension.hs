@@ -74,9 +74,11 @@ type family XVarP x
 
 type family XConP x
 
+type family XTupleP x
+
 type family XUnboxedP x
 
-type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XUnboxedP x))
+type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XUnboxedP x))
 
 -- Type Extensions
 type family XTId x
@@ -231,6 +233,12 @@ type instance XConP (Griff 'Parse) = SourcePos
 type instance XConP (Griff 'Rename) = SourcePos
 
 type instance XConP (Griff 'TypeCheck) = WithType SourcePos
+
+type instance XTupleP (Griff 'Parse) = SourcePos
+
+type instance XTupleP (Griff 'Rename) = SourcePos
+
+type instance XTupleP (Griff 'TypeCheck) = WithType SourcePos
 
 type instance XUnboxedP (Griff 'Parse) = SourcePos
 

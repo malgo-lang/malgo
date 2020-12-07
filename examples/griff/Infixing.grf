@@ -1,0 +1,28 @@
+module Infixing = {
+    data Int = Int# Int64#;
+
+    add = {(Int# x, Int# y) -> Int# (add_i64# (x, y))};
+
+    infixl 3 (<\);
+    (<\) = {x f -> {y -> f (x, y)}};
+
+    infixl 3 (\>);
+    (\>) = {f y -> f y};
+
+    infixr 3 (</);
+    (</) = {x f -> f x};
+
+    infixr 3 (/>);
+    (/>) = {f y -> {x -> f (x, y)}};
+
+    foreign import print_int :: Int64# -> ();
+
+    printInt = {Int# x -> print_int x};
+
+    main = {
+        printInt (Int# 1L# <\add\> Int# 2L#);
+        printInt (Int# 1L# </add/> Int# 2L#);
+    };
+}
+
+-- Expected: 33

@@ -242,6 +242,11 @@ tcPatterns (ConP pos con pats : ps) = do
     tell [eqCons pos conType (foldr (TyArr . view toType) ty pats')]
     (ps', env') <- tcPatterns restPs
     pure (ConP (WithType pos ty) con pats' : ps', env' <> env)
+tcPatterns (TupleP pos pats : ps) = do
+  (pats', env) <- tcPatterns pats
+  local (env <>) do
+    (ps', env') <- tcPatterns ps
+    pure (TupleP (WithType pos (TyTuple $ map (view toType) pats')) pats' : ps', env <> env')
 tcPatterns (UnboxedP pos unboxed : cs) = do
   (ps, env') <- tcPatterns cs
   pure (UnboxedP (WithType pos (unboxed ^. toType)) unboxed : ps, env')

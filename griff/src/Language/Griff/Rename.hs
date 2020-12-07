@@ -156,11 +156,13 @@ rnClause (Clause pos ps ss) = do
   where
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
+    patVars (TupleP _ xs) = concatMap patVars xs
     patVars UnboxedP {} = []
 
 rnPat :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => Pat (Griff 'Parse) -> m (Pat (Griff 'Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
+rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadGriff m, MonadIO m) => [Stmt (Griff 'Parse)] -> m [Stmt (Griff 'Rename)]
@@ -196,7 +198,7 @@ genToplevelEnv = go mempty
         errorOn pos $
           "Duplicate name(s):"
             <+> P.sep
-              (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` (Map.keys (env ^. varEnv))))
+              (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` Map.keys (env ^. varEnv)))
     go env (Foreign pos x _ : rest)
       | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | otherwise = do

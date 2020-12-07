@@ -180,6 +180,17 @@ pSinglePat =
   VarP <$> getSourcePos <*> lowerIdent
     <|> ConP <$> getSourcePos <*> upperIdent <*> pure []
     <|> UnboxedP <$> getSourcePos <*> pUnboxed
+    <|> try
+      ( between
+          (symbol "(")
+          (symbol ")")
+          ( TupleP <$> getSourcePos <*> do
+              x <- pPat
+              void $ pOperator ","
+              xs <- pPat `sepBy` pOperator ","
+              pure $ x : xs
+          )
+      )
     <|> between (symbol "(") (symbol ")") pPat
 
 pPat :: Parser (Pat (Griff 'Parse))
@@ -302,7 +313,7 @@ identLetter :: Parser Char
 identLetter = alphaNumChar <|> oneOf ("_#'" :: String)
 
 opLetter :: Parser Char
-opLetter = oneOf ("+-*/%=><:;|&!#." :: String)
+opLetter = oneOf ("+-*/\\%=><:;|&!#." :: String)
 
 pKeyword :: Text -> Parser Text
 pKeyword keyword = lexeme (string keyword <* notFollowedBy identLetter)
