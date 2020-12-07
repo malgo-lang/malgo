@@ -1,3 +1,4 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -14,19 +15,25 @@ import qualified Data.ByteString.Short as B
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
-import Koriel.Prelude
-import Koriel.Pretty
-import qualified LLVM.AST as L
 import Koriel.Core.CodeGen
+import Koriel.Core.Core
+  ( Atom (..),
+    Exp (..),
+    Program (..),
+    Unboxed (..),
+    appProgram,
+    bind,
+    mainFunc,
+    runDef,
+  )
 import Koriel.Core.LambdaLift
 import Koriel.Core.Lint
 import Koriel.Core.Optimize
+import Koriel.Prelude
+import Koriel.Pretty
+import qualified LLVM.AST as L
 import Language.Malgo.FrontEnd.Rename
 import Language.Malgo.FrontEnd.Typing.Infer
-import Koriel.Core.Core
-  ( Program (..),
-    appProgram,
-  )
 import Language.Malgo.IR.Syntax
 import qualified Language.Malgo.Lexer as Lexer
 import Language.Malgo.MiddleEnd.Desugar
@@ -83,15 +90,18 @@ withDump isDump m a = do
 compile :: MonadIO m => Opt -> Text -> m L.Module
 compile = M.runMalgo $ do
   opt <- asks maOption
-  program <-
-    Program mempty
-      <$> ( readAndParse
-              >>= withDump (dumpRenamed opt) rename
-              >>= withDump (dumpTyped opt) typing
-              >>= withDump (dumpDesugar opt) desugar
-              >>= (\e -> lint e >> pure e)
-              >>= withDump (dumpDesugar opt) (optimize (inlineSize opt))
-          )
+  expr <-
+    readAndParse
+      >>= withDump (dumpRenamed opt) rename
+      >>= withDump (dumpTyped opt) typing
+      >>= withDump (dumpDesugar opt) desugar
+      >>= (\e -> lint e >> pure e)
+      >>= withDump (dumpDesugar opt) (optimize (inlineSize opt))
+  malgoMainFunc <-
+    mainFunc =<< runDef do
+      _ <- bind expr
+      pure (Atom $ Unboxed $ Int32 0)
+  let program = Program [malgoMainFunc]
   llvmir <-
     if applyLambdaLift opt
       then

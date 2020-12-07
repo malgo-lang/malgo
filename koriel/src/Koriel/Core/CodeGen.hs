@@ -29,6 +29,7 @@ import Data.List.Extra (headDef, mconcatMap)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.String.Conversions
+import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Core as Core
 import qualified Koriel.Core.Op as Op
 import Koriel.Core.Type as C
@@ -55,10 +56,9 @@ import LLVM.AST.Type hiding
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr)
-import GHC.Float (castDoubleToWord64, castFloatToWord32)
 
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id C.Type) -> m [Definition]
-codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
+codeGen Program {topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
   -- topFuncsのOprMapを作成
   let funcEnv = mconcatMap ?? topFuncs $ \(f, (ps, e)) ->
         Map.singleton f $
@@ -72,11 +72,12 @@ codeGen Program {mainExp, topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
       ?? (mempty :: PrimMap)
       $ do
         traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
-        void $
-          function "main" [] LT.i32 $ \_ -> do
-            gcInit <- findExt "GC_init" [] LT.void
-            void $ call gcInit []
-            genExp mainExp $ \_ -> ret (int32 0)
+
+-- void $
+--   function "main" [] LT.i32 $ \_ -> do
+--     gcInit <- findExt "GC_init" [] LT.void
+--     void $ call gcInit []
+--     genExp mainExp $ \_ -> ret (int32 0)
 
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -114,6 +115,7 @@ convType (SumT cs) =
         )
 convType (ArrayT ty) = ptr $ StructureType False [ptr $ convType ty, i64]
 convType AnyT = ptr i8
+convType VoidT = LT.void
 
 sizeofCon :: Num a => Con -> a
 sizeofCon (Con _ ts) = sum $ map sizeofType ts
@@ -131,6 +133,7 @@ sizeofType DataT {} = 8
 sizeofType (SumT _) = 8
 sizeofType (ArrayT _) = 8
 sizeofType AnyT = 8
+sizeofType VoidT = 0
 
 findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id C.Type -> m Operand
 findVar x = do
@@ -292,7 +295,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         DoubleT -> fcmp FP.OGE x' y'
         CharT -> icmp IP.UGE x' y'
         _ -> bug Unreachable
-    genOp Op.And = 
+    genOp Op.And =
       LLVM.IRBuilder.and
     genOp Op.Or =
       LLVM.IRBuilder.or
@@ -325,10 +328,13 @@ genExp (Let xs e) k = do
               ]
           )
     prepare _ = pure mempty
+genExp (Match e (Bind _ body :| _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
 genExp (Match e (Bind x body :| _)) k = genExp e $ \eOpr -> do
   eOpr <- bitcast eOpr (convType $ C.typeOf e)
   local (over valueMap (at x ?~ eOpr)) (genExp body k)
-genExp (Match e cs) k = genExp e $ \eOpr -> mdo
+genExp (Match e cs) k
+  | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
+  | otherwise = genExp e $ \eOpr -> mdo
   -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
   -- TODO: genExpが正しい型の値を継続に渡すように変更する
   eOpr' <- bitcast eOpr (convType $ C.typeOf e)

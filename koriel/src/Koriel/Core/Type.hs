@@ -43,6 +43,7 @@ data Type
   | SumT (Set Con)
   | ArrayT Type
   | AnyT
+  | VoidT
   deriving stock (Eq, Show, Ord, Generic)
   deriving anyclass (Store)
 
@@ -64,6 +65,7 @@ instance Pretty Type where
   pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
   pPrint (ArrayT t) = brackets $ pPrint t
   pPrint AnyT = "*"
+  pPrint VoidT = "Void"
 
 class HasType a where
   typeOf :: HasCallStack => a -> Type

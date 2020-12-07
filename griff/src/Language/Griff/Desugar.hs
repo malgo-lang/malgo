@@ -51,7 +51,10 @@ desugar ::
 desugar tcEnv ds = do
   (dsEnv, prims) <- genPrimitive tcEnv
   (dsEnv', ds') <- runReaderT (dsBindGroup ds) dsEnv
-  pure (dsEnv', Program (prims <> ds') $ searchMain $ Map.toList $ view varEnv dsEnv')
+  mainFuncDef <- mainFunc =<< runDef do
+    _ <- bind $ searchMain $ Map.toList $ view varEnv dsEnv'
+    pure (Atom $ C.Unboxed $ C.Int32 0)
+  pure (dsEnv', Program (mainFuncDef : prims <> ds'))
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsGlobal = CallDirect coreId []

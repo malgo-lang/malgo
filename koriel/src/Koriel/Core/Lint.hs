@@ -138,8 +138,7 @@ lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pure ()
 
 lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m, Eq a) => Program (Id a) -> m ()
-lintProgram (Program funcs e) = do
+lintProgram (Program funcs) = do
   let fs = map (view _1) funcs
-  local (fs <>) $ do
+  local (fs <>) $
     traverse_ (\(_, (ps, body)) -> local (ps <>) $ lintExp body) funcs
-    lintExp e

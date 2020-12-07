@@ -271,21 +271,18 @@ instance HasAtom Obj where
 {-
 Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
 -}
-data Program a = Program
+newtype Program a = Program
   { -- | トップレベル関数。topBinds以外の自由変数を持たない
-    topFuncs :: [(a, ([a], Exp a))],
-    mainExp :: Exp a
+    topFuncs :: [(a, ([a], Exp a))]
   }
   deriving stock (Eq, Show, Functor)
 
 instance Pretty a => Pretty (Program a) where
-  pPrint Program {mainExp, topFuncs} =
-    parens ("entry" $$ pPrint mainExp)
-      $$ vcat
-        ( map
-            (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e)
-            topFuncs
-        )
+  pPrint Program {topFuncs} =
+    vcat $
+      map
+        (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e)
+        topFuncs
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
@@ -299,8 +296,8 @@ appCase f = \case
   Bind x e -> Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram f Program {mainExp, topFuncs} =
-  Program <$> traverseOf (traversed . _2 . _2) f topFuncs <*> f mainExp
+appProgram f Program {topFuncs} =
+  Program <$> traverseOf (traversed . _2 . _2) f topFuncs
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadUniq, MonadIO, MonadTrans, MonadState s, MonadReader r)
@@ -310,7 +307,7 @@ runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
 
 let_ :: MonadUniq m => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
-  x <- newId "$let" otype 
+  x <- newId "$let" otype
   DefBuilderT $ tell $ Endo $ \e -> Let [(x, obj)] e
   pure (Var x)
 
@@ -332,6 +329,15 @@ cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
     v <- bind e
-    x <- newId "$cast" ty 
+    x <- newId "$cast" ty
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
+
+mainFunc :: (MonadUniq m) => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc e = do
+  mainFuncId <- newGlobalId "main" ([] :-> Int32T)
+  mainFuncBody <- runDef $ do
+    _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
+    pure e
+  pure (mainFuncId, ([], mainFuncBody))
+  

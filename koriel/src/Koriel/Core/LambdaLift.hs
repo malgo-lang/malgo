@@ -33,14 +33,13 @@ knowns :: Lens' Env (Set (Id Type))
 knowns = lens _knowns (\e x -> e {_knowns = x})
 
 lambdalift :: MonadUniq m => Program (Id Type) -> m (Program (Id Type))
-lambdalift Program {mainExp, topFuncs} =
+lambdalift Program {topFuncs} =
   evalStateT ?? Env {_funcs = mempty, _knowns = Set.fromList $ map fst topFuncs} $ do
     topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
     funcs <>= Map.fromList topFuncs
     knowns <>= Set.fromList (map fst topFuncs)
-    mainExp <- llift mainExp
     Env {_funcs} <- get
-    traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs) mainExp
+    traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs)
 
 llift :: (MonadUniq f, MonadState Env f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do

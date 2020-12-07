@@ -66,7 +66,7 @@ optimizeExpr state expr =
       expr
 
 optimizeProgram :: MonadUniq m => Int -> Program (Id Type) -> m (Program (Id Type))
-optimizeProgram level prog@(Program fs _) = runReaderT ?? level $ do
+optimizeProgram level prog@(Program fs) = runReaderT ?? level $ do
   state <- execStateT (traverse (checkInlineable . over _2 (uncurry Fun)) fs) mempty
   appProgram (optimizeExpr state) prog
 
