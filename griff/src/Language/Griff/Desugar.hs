@@ -15,7 +15,6 @@
 -- | GriffをKoriel.Coreに変換（脱糖衣）する
 module Language.Griff.Desugar (desugar) where
 
-import Control.Exception (assert)
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
@@ -343,41 +342,17 @@ match ::
 match (u : us) (ps : pss) es err
   -- Variable Rule
   -- パターンの先頭がすべて変数のとき
-  | all (has _VarP) ps =
-    {- Note: How to implement the Variable Rule?
-        There are two (old) implementations.
-        I believe that the Original impl is correct.
-        But I'm not sure if this is correct.
-        So, the `assert` is inserted in code.
-        If I'm wrong, this `assert` is going to fail one day.
-    -}
-    -- -- Cast version
-    -- match us pss (zipWith (\(VarP x v) e -> runDef $ do
-    --   ty' <- dsType (x ^. toType)
-    --   C.Var u' <- cast ty' (Atom $ C.Var u)
-    --   local (over varEnv (Map.insert v u')) $ lift e) ps es) err
-    -- -- Original
-    -- match us pss (zipWith (\(VarP _ v) e -> do
-    --   local (over varEnv (Map.insert v u)) e) ps es) err
-    -- -- Check Type version
-    match
-      us
-      pss
-      ( zipWith
-          ( \case
-              -- 変数パターンvについて、式中に現れるすべてのvをパターンマッチ対象のuで置き換える
-              VarP x v -> \e -> do
-                patTy <- dsType (x ^. toType)
-                -- If this assert fail, there are some bug about polymorphic type.
-                -- Ref: How to implement the Variable Rule?
-                assert (patTy == C.typeOf u) $ pure ()
-                local (over varEnv (Map.insert v u)) e
-              _ -> bug Unreachable
-          )
-          ps
-          es
-      )
-      err
+  | all (has _VarP) ps = do
+    -- 変数パターンvについて、式中に現れるすべてのvをパターンマッチ対象のuで置き換える
+    let es' =
+          zipWith
+            ( \case
+                (VarP _ v) -> local (over varEnv (Map.insert v u))
+                _ -> bug Unreachable
+            )
+            ps
+            es
+    match us pss es' err
   -- Constructor Rule
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) ps = do
@@ -387,16 +362,13 @@ match (u : us) (ps : pss) es err
     -- 型からコンストラクタの集合を求める
     let (con, ts) = splitCon patType
     conMap <- lookupConMap con ts
-    -- TODO: csとcasesのdoを結合
-    cs <- for conMap $ \(conName, conType) -> do
+    -- 各コンストラクタごとにC.Caseを生成する
+    cases <- for conMap $ \(conName, conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
       let ccon = C.Con (conName ^. toText) paramTypes
       params <- traverse (newId "$p") paramTypes
-      pure (conName, ccon, params)
-    -- 各コンストラクタごとにC.Caseを生成する
-    cases <- for cs $ \(gcon, ccon, params) -> do
       -- パターン行列（未転置）
-      let (pss', es') = unzip $ group gcon (List.transpose (ps : pss)) es
+      let (pss', es') = unzip $ group conName (List.transpose (ps : pss)) es
       Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
     unfoldedType <- unfoldType patType
     pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
@@ -419,8 +391,8 @@ match (u : us) (ps : pss) es err
             )
             ps
     cases <- traverse (\c -> Switch c <$> match us pss es err) cs
-    -- `_ -> err` のパターンはerrに簡約されているので、
-    -- ここで新たに$_を生成し、Bindパターンを生成する必要がある
+    -- パターンの網羅性を保証するため、
+    -- `_ -> err` を追加する
     hole <- newId "$_" (C.typeOf u)
     pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
   -- The Mixture Rule
