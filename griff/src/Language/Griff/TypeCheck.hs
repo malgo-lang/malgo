@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.TypeCheck where
+module Language.Griff.TypeCheck (typeCheck, applySubst) where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
@@ -26,6 +26,7 @@ import qualified Language.Griff.TcEnv as T
 import Language.Griff.Type
 import Text.Megaparsec (SourcePos)
 
+-- Entry point
 typeCheck :: (MonadUniq m, MonadIO m, MonadGriff m) => RnEnv -> [Decl (Griff 'Rename)] -> m (TcEnv, BindGroup (Griff 'TypeCheck))
 typeCheck rnEnv ds = do
   tcEnv <- genTcEnv rnEnv
@@ -57,7 +58,8 @@ tcBindGroup bindGroup = do
                     _infixs = [],
                     _foreigns = foreigns'',
                     _scSigs = scSigs',
-                    _scDefs = scDefs''
+                    _scDefs = scDefs'',
+                    _imports = undefined
                   }
               )
 

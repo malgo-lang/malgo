@@ -25,7 +25,8 @@ data BindGroup x = BindGroup
     _scSigs :: [ScSig x],
     _dataDefs :: [DataDef x],
     _infixs :: [Infix x],
-    _foreigns :: [Foreign x]
+    _foreigns :: [Foreign x],
+    _imports :: [Import x]
   }
 
 type ScDef x = (XScDef x, XId x, [XId x], Exp x)
@@ -38,6 +39,8 @@ type Infix x = (XInfix x, Assoc, Int, XId x)
 
 type Foreign x = (XForeign x, XId x, Type x)
 
+type Import x = (XImport x, ModuleName)
+
 scDefs :: Lens' (BindGroup x) [[ScDef x]]
 scDefs = lens _scDefs (\e x -> e {_scDefs = x})
 
@@ -49,6 +52,9 @@ dataDefs = lens _dataDefs (\e x -> e {_dataDefs = x})
 
 foreigns :: Lens' (BindGroup x) [Foreign x]
 foreigns = lens _foreigns (\e x -> e {_foreigns = x})
+
+imports :: Lens' (BindGroup x) [Import x]
+imports = lens _imports (\e x -> e {_imports = x})
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindGroup x)
 
@@ -84,7 +90,8 @@ makeBindGroup ds =
       _scSigs = mapMaybe scSig ds,
       _dataDefs = mapMaybe dataDef ds,
       _infixs = mapMaybe infixDef ds,
-      _foreigns = mapMaybe foreignDef ds
+      _foreigns = mapMaybe foreignDef ds,
+      _imports = mapMaybe importDef ds
     }
   where
     scDef (ScDef x f ps e) = Just (x, f, ps, e)
@@ -97,6 +104,8 @@ makeBindGroup ds =
     infixDef _ = Nothing
     foreignDef (Foreign x n t) = Just (x, n, t)
     foreignDef _ = Nothing
+    importDef (Import x m) = Just (x, m)
+    importDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
 adjacents ::
