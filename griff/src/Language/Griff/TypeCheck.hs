@@ -17,6 +17,7 @@ import Koriel.Pretty
 import Language.Griff.Constraint
 import Language.Griff.Extension
 import Language.Griff.Grouping
+import Language.Griff.Interface
 import Language.Griff.Prelude
 import Language.Griff.RnEnv (RnEnv)
 import Language.Griff.Syntax hiding (Type (..))
@@ -34,39 +35,51 @@ typeCheck rnEnv ds = do
 
 tcBindGroup :: (MonadUniq m, MonadReader TcEnv m, MonadIO m, MonadGriff m) => BindGroup (Griff 'Rename) -> m (TcEnv, BindGroup (Griff 'TypeCheck))
 tcBindGroup bindGroup = do
-  (dataDefs', env) <- tcDataDefs $ bindGroup ^. dataDefs
-  local (env <>) do
-    (foreigns', env) <- tcForeigns $ bindGroup ^. foreigns
-    local (env <>) do
-      (scSigs', env) <- tcScSigs $ bindGroup ^. scSigs
+  (imports', updater) <- tcImports $ bindGroup ^. imports
+  local updater do
+    (dataDefs', updater) <- tcDataDefs $ bindGroup ^. dataDefs
+    local updater do
+      (foreigns', env) <- tcForeigns $ bindGroup ^. foreigns
       local (env <>) do
-        env <- foldMapA prepareTcScDefs $ bindGroup ^. scDefs
-        local (over T.varEnv (env <>)) do
-          (scDefs', env) <- tcScDefGroup $ bindGroup ^. scDefs
-          local (env <>) do
-            env <-
-              ask >>= traverseOf (T.varEnv . traversed) zonkScheme
-                >>= traverseOf (T.typeEnv . traversed . overTypeDef) zonkType
-            foreigns'' <- traverseOf (traversed . _1) (overType zonkType) foreigns'
-            scDefs'' <-
-              traverseOf (traversed . traversed . _1) (overType zonkType)
-                =<< traverseOf (traversed . traversed . _4) (overType zonkType) scDefs'
-            pure
-              ( env,
-                BindGroup
-                  { _dataDefs = dataDefs',
-                    _infixs = [],
-                    _foreigns = foreigns'',
-                    _scSigs = scSigs',
-                    _scDefs = scDefs'',
-                    _imports = undefined
-                  }
-              )
+        (scSigs', env) <- tcScSigs $ bindGroup ^. scSigs
+        local (env <>) do
+          env <- foldMapA prepareTcScDefs $ bindGroup ^. scDefs
+          local (over T.varEnv (env <>)) do
+            (scDefs', env) <- tcScDefGroup $ bindGroup ^. scDefs
+            local (env <>) do
+              env <-
+                ask >>= traverseOf (T.varEnv . traversed) zonkScheme
+                  >>= traverseOf (T.typeEnv . traversed . overTypeDef) zonkType
+              foreigns'' <- traverseOf (traversed . _1) (overType zonkType) foreigns'
+              scDefs'' <-
+                traverseOf (traversed . traversed . _1) (overType zonkType)
+                  =<< traverseOf (traversed . traversed . _4) (overType zonkType) scDefs'
+              pure
+                ( env,
+                  BindGroup
+                    { _dataDefs = dataDefs',
+                      _infixs = [],
+                      _foreigns = foreigns'',
+                      _scSigs = scSigs',
+                      _scDefs = scDefs'',
+                      _imports = imports'
+                    }
+                )
+
+tcImports :: (MonadGriff f, MonadIO f) => [Import (Griff 'Rename)] -> f ([Import (Griff 'TypeCheck)], TcEnv -> TcEnv)
+tcImports ds = second (appEndo . mconcat) <$> mapAndUnzipM tcImport ds
+  where
+    tcImport (pos, modName) = do
+      mInterface <- loadInterface modName
+      case mInterface of
+        Nothing -> errorOn pos $ "Module interface file is not found:" <+> quotes (pPrint modName)
+        Just interface -> do
+          pure ((pos, modName), Endo $ (varEnv <>~ interface ^. signatureMap) . (typeEnv <>~ interface ^. typeDefMap))
 
 tcDataDefs ::
   (MonadReader TcEnv m, MonadIO m, MonadUniq m, MonadGriff m) =>
   [DataDef (Griff 'Rename)] ->
-  m ([DataDef (Griff 'TypeCheck)], TcEnv)
+  m ([DataDef (Griff 'TypeCheck)], TcEnv -> TcEnv)
 tcDataDefs ds = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを生成する
   dataEnv <- foldMapA ?? ds $ \(_, name, params, _) -> Map.singleton name . simpleTypeDef . TyCon <$> newId (name ^. idName) (kindof params)
@@ -88,7 +101,7 @@ tcDataDefs ds = do
                 . (T.typeEnv . at name . _Just . qualVars .~ as)
                 . (T.typeEnv . at name . _Just . union .~ cons')
           )
-    pure (ds', appEndo (mconcat conEnvs) (mempty & T.typeEnv .~ dataEnv))
+    pure (ds', appEndo (mconcat conEnvs) . (T.typeEnv <>~ dataEnv))
   where
     kindof [] = Star
     kindof (_ : xs) = KArr Star (kindof xs)
