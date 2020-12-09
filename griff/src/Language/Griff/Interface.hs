@@ -21,6 +21,8 @@ import Language.Griff.DsEnv (DsEnv)
 import qualified Language.Griff.DsEnv as DsEnv
 import Language.Griff.Extension
 import Language.Griff.Prelude
+import Language.Griff.RnEnv (RnState)
+import qualified Language.Griff.RnEnv as RnState
 import qualified Language.Griff.TcEnv as TcEnv
 import qualified Language.Griff.Type as GT
 import System.FilePath.Lens
@@ -30,7 +32,8 @@ data Interface = Interface
     _typeDefMap :: Map RnId TcEnv.TypeDef, -- from TcEnv
     _resolvedVarIdentMap :: Map PsId RnId, -- from DsEnv
     _resolvedTypeIdentMap :: Map PsId RnId, -- from TcEnv
-    _coreIdentMap :: Map RnId (Id C.Type) -- from DsEnv
+    _coreIdentMap :: Map RnId (Id C.Type), -- from DsEnv
+    _infixMap :: Map RnId (Assoc, Int) -- from RnEnv
   }
   deriving stock (Show, Generic)
   deriving anyclass (Store)
@@ -56,6 +59,9 @@ resolvedTypeIdentMap = lens _resolvedTypeIdentMap (\i x -> i {_resolvedTypeIdent
 coreIdentMap :: Lens' Interface (Map RnId (Id C.Type))
 coreIdentMap = lens _coreIdentMap (\i x -> i {_coreIdentMap = x})
 
+infixMap :: Lens' Interface (Map RnId (Assoc, Int))
+infixMap = lens _infixMap (\i x -> i {_infixMap = x})
+
 prettyInterface :: Interface -> Doc
 prettyInterface i =
   "Interface"
@@ -65,8 +71,8 @@ prettyInterface i =
     $$ nest 2 (sep ["resolvedTypeIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedTypeIdentMap)])
     $$ nest 2 (sep ["coreIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. coreIdentMap)])
 
-buildInterface :: DsEnv -> Interface
-buildInterface dsEnv = execState ?? Interface mempty mempty mempty mempty mempty $ do
+buildInterface :: RnState -> DsEnv -> Interface
+buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
   ifor_ (dsEnv ^. DsEnv.varEnv) $ \tcId coreId -> do
     resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
     coreIdentMap . at tcId ?= coreId
@@ -83,13 +89,14 @@ storeInterface interface = do
     BS.writeFile (dstName opt & extension .~ ".grfi") $
       encode interface
 
-loadInterface :: (MonadGriff m, MonadIO m) => ModuleName -> m (Maybe Interface)
+loadInterface :: (MonadGriff m, MonadIO m) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
   opt <- getOpt
-  message <- liftIO $ safeReadFile (srcName opt & basename .~ modName & extension .~ ".grfi")
+  message <- liftIO $ safeReadFile (dstName opt & basename .~ modName & extension .~ ".grfi")
   case message of
-    Just x -> Just <$> liftIO (decodeIO x)
-    Nothing -> pure Nothing
+    Just x -> liftIO (decodeIO x)
+    Nothing ->
+      errorDoc $ "Module interface file is not found:" <+> quotes (pPrint modName)
   where
     safeReadFile filename = fmap Just (BS.readFile filename) `catch` handler
     handler :: IOException -> IO (Maybe ByteString)

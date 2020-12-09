@@ -1,0 +1,9 @@
+module HelloImport = {
+  import Prelude;
+  main = {
+    putStr (String# "hello"#);
+    putStrLn |> { f -> f (String# " world"#) };
+  };
+}
+
+-- Expected: hello world

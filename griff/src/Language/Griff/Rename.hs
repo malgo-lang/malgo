@@ -27,10 +27,10 @@ import System.IO (hPrint, stderr)
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P
 
-rename :: (MonadUniq m, MonadGriff m, MonadIO m) => RnEnv -> Module (Griff 'Parse) -> m [Decl (Griff 'Rename)]
+rename :: (MonadUniq m, MonadGriff m, MonadIO m) => RnEnv -> Module (Griff 'Parse) -> m ([Decl (Griff 'Rename)], RnState)
 rename rnEnv (Module modName ds) = do
   rnState <- genRnState modName
-  evalStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
+  runStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
 
 resolveName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
 resolveName name = newId name =<< use moduleName
@@ -111,6 +111,8 @@ rnDecl (Foreign pos name typ) = do
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (Import pos modName) = do
+  interface <- loadInterface modName
+  infixInfo <>= interface ^. infixMap
   pure $ Import pos modName
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
@@ -188,31 +190,28 @@ genToplevelEnv = go mempty
         x' <- resolveGlobalName x
         go (env & varEnv . at x ?~ x') rest
     go env (ScSig {} : rest) = go env rest
-    go env (DataDef pos x _ xs : rest)
+    go env (DataDef pos x _ cs : rest)
       | x `elem` Map.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
-      | disjoint (map fst xs) (Map.keys (env ^. varEnv)) = do
+      | disjoint (map fst cs) (Map.keys (env ^. varEnv)) = do
         x' <- resolveGlobalName x
-        xs' <- traverse (resolveName . fst) xs
-        go (env & varEnv <>~ Map.fromList (zip (map fst xs) xs') & typeEnv . at x ?~ x') rest
+        xs' <- traverse (resolveGlobalName . fst) cs
+        go (env & varEnv <>~ Map.fromList (zip (map fst cs) xs') & typeEnv . at x ?~ x') rest
       | otherwise =
         errorOn pos $
           "Duplicate name(s):"
             <+> P.sep
-              (P.punctuate "," $ map (P.quotes . pPrint) (map fst xs `intersect` Map.keys (env ^. varEnv)))
+              (P.punctuate "," $ map (P.quotes . pPrint) (map fst cs `intersect` Map.keys (env ^. varEnv)))
     go env (Foreign pos x _ : rest)
       | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
       | otherwise = do
         x' <- resolveGlobalName x
         go (env & varEnv . at x ?~ x') rest
-    go env (Import pos modName : rest) = do
-      mIdentMap <- loadInterface modName
-      case mIdentMap of
-        Nothing -> errorOn pos $ "Module interface file is not found:" <+> P.quotes (pPrint modName)
-        Just identMap -> do
-          opt <- getOpt
-          when (debugMode opt) $
-            liftIO $ hPrint stderr $ prettyInterface identMap
-          go (env & varEnv <>~ identMap ^. resolvedVarIdentMap & typeEnv <>~ identMap ^. resolvedTypeIdentMap) rest
+    go env (Import _ modName : rest) = do
+      interface <- loadInterface modName
+      opt <- getOpt
+      when (debugMode opt) $
+        liftIO $ hPrint stderr $ prettyInterface interface
+      go (env & varEnv <>~ interface ^. resolvedVarIdentMap & typeEnv <>~ interface ^. resolvedTypeIdentMap) rest
     go env (Infix {} : rest) = go env rest
 
 -- infix宣言をMapに変換

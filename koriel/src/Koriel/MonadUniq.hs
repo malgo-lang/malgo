@@ -12,6 +12,7 @@ import Koriel.Prelude
 import LLVM.IRBuilder.Module (ModuleBuilderT)
 import LLVM.IRBuilder.Monad (IRBuilderT)
 import Control.Monad.Identity (IdentityT)
+import Control.Monad.Cont
 
 class Monad m => MonadUniq m where
   getUniqSupply :: m UniqSupply
@@ -47,6 +48,8 @@ instance MonadUniq m => MonadUniq (StateT s m)
 instance MonadUniq m => MonadUniq (Lazy.StateT s m)
 
 instance MonadUniq m => MonadUniq (WriterT w m)
+
+instance MonadUniq m => MonadUniq (ContT r m)
 
 instance MonadUniq m => MonadUniq (ModuleBuilderT m)
 

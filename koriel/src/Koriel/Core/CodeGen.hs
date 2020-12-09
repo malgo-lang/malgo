@@ -47,7 +47,7 @@ import qualified LLVM.AST.Constant as C
 import qualified LLVM.AST.FloatingPointPredicate as FP
 import LLVM.AST.Global
 import qualified LLVM.AST.IntegerPredicate as IP
-import LLVM.AST.Linkage (Linkage (External))
+import LLVM.AST.Linkage (Linkage (External, Internal))
 import LLVM.AST.Operand (Operand (..))
 import LLVM.AST.Type hiding
   ( double,
@@ -72,12 +72,6 @@ codeGen Program {topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
       ?? (mempty :: PrimMap)
       $ do
         traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
-
--- void $
---   function "main" [] LT.i32 $ \_ -> do
---     gcInit <- findExt "GC_init" [] LT.void
---     void $ call gcInit []
---     genExp mainExp $ \_ -> ret (int32 0)
 
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -142,12 +136,15 @@ findVar x = do
     Just x -> pure x
     Nothing -> error $ show $ pPrint x <> " is not found"
 
-findFun :: MonadReader OprMap m => Id C.Type -> m Operand
+findFun :: (MonadReader OprMap m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
   OprMap {_funcMap = funcMap} <- ask
   case funcMap ^. at x of
     Just x -> pure x
-    Nothing -> error $ show $ pPrint x <> " is not found"
+    Nothing ->
+      case C.typeOf x of
+        ps :-> r -> findExt (show $ pPrint x) (map convType ps) (convType r)
+        _ -> error $ show $ pPrint x <> " is not found"
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
@@ -189,8 +186,11 @@ genFunc ::
   [Id C.Type] ->
   Exp (Id C.Type) ->
   m Operand
-genFunc name params body = function funcName llvmParams retty $
-  \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
+genFunc name params body
+  | name ^. idIsGlobal =
+    function funcName llvmParams retty $ \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
+  | otherwise = 
+    internalFunction funcName llvmParams retty $ \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
     llvmParams =
@@ -335,21 +335,21 @@ genExp (Match e (Bind x body :| _)) k = genExp e $ \eOpr -> do
 genExp (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = genExp e $ \eOpr -> mdo
-  -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
-  -- TODO: genExpが正しい型の値を継続に渡すように変更する
-  eOpr' <- bitcast eOpr (convType $ C.typeOf e)
-  br switchBlock
-  -- 各ケースのコードとラベルを生成する
-  -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-  (defs, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (fromMaybe mempty $ e ^? to C.typeOf . _SumT) k) cs
-  -- defsの先頭を取り出し、switchのデフォルトケースとする
-  -- defsが空の場合、デフォルトケースはunreachableにジャンプする
-  defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defs
-  switchBlock <- block
-  tagOpr <- case C.typeOf e of
-    SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
-    _ -> pure eOpr'
-  switch tagOpr defaultLabel labels
+    -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
+    -- TODO: genExpが正しい型の値を継続に渡すように変更する
+    eOpr' <- bitcast eOpr (convType $ C.typeOf e)
+    br switchBlock
+    -- 各ケースのコードとラベルを生成する
+    -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+    (defs, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (fromMaybe mempty $ e ^? to C.typeOf . _SumT) k) cs
+    -- defsの先頭を取り出し、switchのデフォルトケースとする
+    -- defsが空の場合、デフォルトケースはunreachableにジャンプする
+    defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defs
+    switchBlock <- block
+    tagOpr <- case C.typeOf e of
+      SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
+      _ -> pure eOpr'
+    switch tagOpr defaultLabel labels
 genExp (Cast ty x) k = do
   xOpr <- genAtom x
   k =<< bitcast xOpr (convType ty)
@@ -424,7 +424,7 @@ genObj ::
 genObj funName (Fun ps e) = do
   -- クロージャの元になる関数を生成する
   name <- toName <$> newId (funName ^. idName <> "_closure") ()
-  func <- function name (map (,NoParameterName) psTypes) retType $ \case
+  func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug Unreachable
     (rawCapture : ps') -> do
       -- キャプチャした変数が詰まっている構造体を展開する
@@ -533,3 +533,35 @@ gepAndStore ::
   Operand ->
   m ()
 gepAndStore opr addrs val = join $ store <$> gep opr addrs <*> pure 0 <*> pure val
+
+internalFunction ::
+  MonadModuleBuilder m =>
+  -- | Function name
+  Name ->
+  -- | Parameter types and name suggestions
+  [(LT.Type, ParameterName)] ->
+  -- | Return type
+  LT.Type ->
+  -- | Function body builder
+  ([Operand] -> IRBuilderT m ()) ->
+  m Operand
+internalFunction label argtys retty body = do
+  let tys = fst <$> argtys
+  (paramNames, blocks) <- runIRBuilderT emptyIRBuilder $ do
+    paramNames <- forM argtys $ \(_, paramName) -> case paramName of
+      NoParameterName -> fresh
+      ParameterName p -> fresh `named` p
+    body $ zipWith LocalReference tys paramNames
+    return paramNames
+  let def =
+        GlobalDefinition
+          functionDefaults
+            { name = label,
+              linkage = Internal,
+              parameters = (zipWith (\ty nm -> Parameter ty nm []) tys paramNames, False),
+              returnType = retty,
+              basicBlocks = blocks
+            }
+      funty = ptr $ FunctionType retty (fst <$> argtys) False
+  emitDefn def
+  pure $ ConstantOperand $ C.GlobalReference funty label

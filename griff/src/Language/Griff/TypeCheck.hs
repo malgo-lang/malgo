@@ -70,11 +70,8 @@ tcImports :: (MonadGriff f, MonadIO f) => [Import (Griff 'Rename)] -> f ([Import
 tcImports ds = second (appEndo . mconcat) <$> mapAndUnzipM tcImport ds
   where
     tcImport (pos, modName) = do
-      mInterface <- loadInterface modName
-      case mInterface of
-        Nothing -> errorOn pos $ "Module interface file is not found:" <+> quotes (pPrint modName)
-        Just interface -> do
-          pure ((pos, modName), Endo $ (varEnv <>~ interface ^. signatureMap) . (typeEnv <>~ interface ^. typeDefMap))
+      interface <- loadInterface modName
+      pure ((pos, modName), Endo $ (varEnv <>~ interface ^. signatureMap) . (typeEnv <>~ interface ^. typeDefMap))
 
 tcDataDefs ::
   (MonadReader TcEnv m, MonadIO m, MonadUniq m, MonadGriff m) =>

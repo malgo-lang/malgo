@@ -67,7 +67,6 @@ lintExp (Call f xs) = do
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> throwError $ pPrint f <+> "is not callable"
 lintExp (CallDirect f xs) = do
-  defined f
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs

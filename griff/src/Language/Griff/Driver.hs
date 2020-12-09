@@ -25,6 +25,7 @@ import Language.Griff.Parser (parseGriff)
 import Language.Griff.Prelude
 import Language.Griff.Rename (rename)
 import Language.Griff.RnEnv (genRnEnv)
+import qualified Language.Griff.RnEnv as RnState
 import qualified Language.Griff.Syntax as Syntax
 import qualified Language.Griff.TcEnv as T
 import Language.Griff.TypeCheck (typeCheck)
@@ -52,7 +53,7 @@ compile opt = do
       unGriffM $
         runUniqT ?? UniqSupply 0 $ do
           rnEnv <- genRnEnv
-          ds' <- rename rnEnv moduleAst
+          (ds', rnState) <- rename rnEnv moduleAst
           when (dumpRenamed opt) $
             liftIO $ do
               hPutStrLn stderr "=== RENAME ==="
@@ -64,15 +65,15 @@ compile opt = do
               hPrint stderr $ pPrint $ Map.toList $ view T.varEnv tcEnv
               hPrint stderr $ Map.toList $ view T.typeEnv tcEnv
               hPrint stderr $ pPrint bg
-          (dsEnv, core) <- desugar tcEnv bg
+          (dsEnv, core) <- desugar (rnState ^. RnState.moduleName) tcEnv bg
           when (dumpDesugar opt) $
             liftIO $ do
               hPutStrLn stderr "=== DESUGAR ==="
               hPrint stderr $ pPrint $ over appProgram flat core
-          let inf = buildInterface dsEnv
+          let inf = buildInterface rnState dsEnv
           storeInterface inf
           when (debugMode opt) $ do
-            Just inf <- loadInterface (Syntax._moduleName moduleAst)
+            inf <- loadInterface (Syntax._moduleName moduleAst)
             liftIO $ do
               hPutStrLn stderr "=== INTERFACE ==="
               hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ prettyInterface inf

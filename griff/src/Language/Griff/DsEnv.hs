@@ -1,18 +1,22 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.DsEnv where
 
 import qualified Koriel.Core.Type as C
 import Koriel.Id
+import Koriel.Pretty
 import Language.Griff.Extension
 import Language.Griff.Prelude
 import Language.Griff.TcEnv (TcEnv)
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
-  { -- | Griff -> Coreの名前環境
+  { -- モジュール名
+    _moduleName :: ModuleName,
+    -- | Griff -> Coreの名前環境
     _varEnv :: Map TcId (Id C.Type),
     -- | 型環境
     _tcEnv :: TcEnv
@@ -20,10 +24,17 @@ data DsEnv = DsEnv
   deriving stock (Show)
 
 instance Semigroup DsEnv where
-  DsEnv v1 t1 <> DsEnv v2 t2 = DsEnv (v1 <> v2) (t1 <> t2)
+  DsEnv m1 v1 t1 <> DsEnv m2 v2 t2
+    | m1 == ModuleName "$Undefined" = DsEnv m2 (v1 <> v2) (t1 <> t2)
+    | m2 == ModuleName "$Undefined" = DsEnv m1 (v1 <> v2) (t1 <> t2)
+    | m1 == m2 = DsEnv m1 (v1 <> v2) (t1 <> t2)
+    | otherwise = errorDoc (pPrint m1 <+> "/=" <+> pPrint m2)
 
 instance Monoid DsEnv where
-  mempty = DsEnv mempty mempty
+  mempty = DsEnv (ModuleName "$Undefined") mempty mempty
+
+moduleName :: Lens' DsEnv ModuleName
+moduleName = lens _moduleName (\e x -> e {_moduleName = x})
 
 varEnv :: Lens' DsEnv (Map TcId (Id C.Type))
 varEnv = lens _varEnv (\e x -> e {_varEnv = x})

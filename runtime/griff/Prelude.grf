@@ -22,12 +22,12 @@ module Prelude = {
 
   data String = String# String#;
 
+  putStr :: String -> ();
+  putStr = { (String# str) -> print_string str };
+  
   putStrLn :: String -> ();
   putStrLn = { (String# str) ->
     print_string str;
     newline ()
   };
-
-  main = { putStrLn (String# "hello"#) }
 }
--- Expected: hello

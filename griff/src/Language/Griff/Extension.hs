@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -19,7 +20,8 @@ import Language.Griff.Type
 import Text.Megaparsec.Pos (SourcePos)
 
 data Assoc = LeftA | RightA | NeutralA
-  deriving stock (Eq, Show)
+  deriving stock (Eq, Show, Generic)
+  deriving anyclass (Store)
 
 instance Pretty Assoc where
   pPrint LeftA = "l"
