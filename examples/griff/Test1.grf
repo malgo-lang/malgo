@@ -1,7 +1,7 @@
 module test1 = {
   data Bool = True | False;
   
-  if = {True t _ -> t! | False _ f -> f!};
+  if = {True t _ -> !t | False _ f -> !f};
   
   foreign import print_string :: String# -> ();
   

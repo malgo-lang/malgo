@@ -10,11 +10,12 @@ module Prelude = {
   data Bool = False | True;
 
   if :: Bool -> {a} -> {a} -> a;
-  if c t f = c |> { True -> t!
-                  | False -> f!
+  if c t f = c |> { True -> !t
+                  | False -> !f
                   };
-  if' = { True t _ -> t!
-        | False _ f -> f!
+
+  if' = { True t _ -> !t
+        | False _ f -> !f
         };
 
   foreign import print_string :: String# -> ();
@@ -24,7 +25,7 @@ module Prelude = {
 
   putStr :: String -> ();
   putStr = { (String# str) -> print_string str };
-  
+
   putStrLn :: String -> ();
   putStrLn = { (String# str) ->
     print_string str;
