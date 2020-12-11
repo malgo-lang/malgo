@@ -3,13 +3,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.RnEnv where
+module Language.Griff.Rename.RnEnv where
 
 import qualified Data.Map as Map
 import Koriel.Id
 import Koriel.MonadUniq
-import Language.Griff.Extension
 import Language.Griff.Prelude
+import Language.Griff.Syntax.Extension
 
 data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: ModuleName}
   deriving stock (Show)

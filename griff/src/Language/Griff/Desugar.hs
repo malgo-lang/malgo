@@ -27,17 +27,17 @@ import Koriel.Id hiding (newGlobalId, newId)
 import qualified Koriel.Id as Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.DsEnv
-import Language.Griff.Extension
-import Language.Griff.Grouping
+import Language.Griff.Desugar.DsEnv
 import Language.Griff.Interface
 import Language.Griff.Prelude
-import qualified Language.Griff.RnEnv as Rn
+import qualified Language.Griff.Rename.RnEnv as Rn
 import Language.Griff.Syntax as G
-import Language.Griff.TcEnv (TcEnv)
-import qualified Language.Griff.TcEnv as Tc
+import Language.Griff.Syntax.Extension
+import Language.Griff.Syntax.Grouping
 import Language.Griff.Type as GT
 import Language.Griff.TypeCheck (applySubst)
+import Language.Griff.TypeCheck.TcEnv (TcEnv)
+import qualified Language.Griff.TypeCheck.TcEnv as Tc
 import qualified Text.PrettyPrint.HughesPJ as P
 
 -- | GriffからCoreへの変換

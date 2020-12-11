@@ -18,11 +18,11 @@ import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.Extension
 import Language.Griff.Interface
 import Language.Griff.Prelude
-import Language.Griff.RnEnv
+import Language.Griff.Rename.RnEnv
 import Language.Griff.Syntax
+import Language.Griff.Syntax.Extension
 import System.IO (hPrint, stderr)
 import Text.Megaparsec.Pos (SourcePos)
 import qualified Text.PrettyPrint as P

@@ -33,10 +33,12 @@ lint e =
     Left err -> errorDoc err
     Right e' -> pure e'
 
-defined :: (MonadReader (t a) m, Foldable t, Eq a, MonadError Doc m, Pretty a) => a -> m ()
-defined x = do
-  env <- ask
-  unless (x `elem` env) $ throwError $ pPrint x <> " is not defined"
+defined :: (MonadReader [Id a] f, Eq a, MonadError Doc f, Pretty a) => Id a -> f ()
+defined x
+  | x ^. idIsGlobal = pure ()
+  | otherwise = do
+    env <- ask
+    unless (x `elem` env) $ throwError $ pPrint x <> " is not defined"
 
 match ::
   (HasType a, HasType b, MonadError Doc f, Pretty a, Pretty b, HasCallStack) =>
@@ -67,6 +69,7 @@ lintExp (Call f xs) = do
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> throwError $ pPrint f <+> "is not callable"
 lintExp (CallDirect f xs) = do
+  defined f
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs

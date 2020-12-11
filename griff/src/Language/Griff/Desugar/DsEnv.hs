@@ -3,14 +3,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.DsEnv where
+module Language.Griff.Desugar.DsEnv where
 
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import Language.Griff.Extension
 import Language.Griff.Prelude
-import Language.Griff.TcEnv (TcEnv)
+import Language.Griff.Syntax.Extension
+import Language.Griff.TypeCheck.TcEnv (TcEnv)
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv

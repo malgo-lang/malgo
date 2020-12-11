@@ -14,17 +14,17 @@ import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.Constraint
-import Language.Griff.Extension
-import Language.Griff.Grouping
 import Language.Griff.Interface
 import Language.Griff.Prelude
-import Language.Griff.RnEnv (RnEnv)
+import Language.Griff.Rename.RnEnv (RnEnv)
 import Language.Griff.Syntax hiding (Type (..))
 import qualified Language.Griff.Syntax as S
-import Language.Griff.TcEnv
-import qualified Language.Griff.TcEnv as T
+import Language.Griff.Syntax.Extension
+import Language.Griff.Syntax.Grouping
 import Language.Griff.Type
+import Language.Griff.TypeCheck.Constraint
+import Language.Griff.TypeCheck.TcEnv
+import qualified Language.Griff.TypeCheck.TcEnv as T
 import Text.Megaparsec (SourcePos)
 
 -- Entry point

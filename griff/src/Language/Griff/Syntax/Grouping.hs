@@ -9,15 +9,15 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 -- | トップレベルの宣言を、依存関係に基づいて分割する
-module Language.Griff.Grouping where
+module Language.Griff.Syntax.Grouping where
 
 import Data.Graph
 import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.Pretty
-import Language.Griff.Extension
 import Language.Griff.Prelude
 import Language.Griff.Syntax
+import Language.Griff.Syntax.Extension
 import qualified Text.PrettyPrint.HughesPJClass as P
 
 data BindGroup x = BindGroup

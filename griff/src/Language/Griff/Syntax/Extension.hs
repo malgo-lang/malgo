@@ -1,6 +1,6 @@
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -8,7 +8,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Extension where
+module Language.Griff.Syntax.Extension where
 
 import Data.Kind (Constraint)
 import qualified Data.Kind as K

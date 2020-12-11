@@ -6,18 +6,18 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-module Language.Griff.TcEnv where
+module Language.Griff.TypeCheck.TcEnv where
 
 import qualified Data.Map as Map
 import Data.Store
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.Extension
 import Language.Griff.Prelude
-import Language.Griff.RnEnv
+import Language.Griff.Rename.RnEnv
   ( RnEnv,
   )
-import qualified Language.Griff.RnEnv as R
+import qualified Language.Griff.Rename.RnEnv as R
+import Language.Griff.Syntax.Extension
 import Language.Griff.Type
 
 data TcEnv = TcEnv

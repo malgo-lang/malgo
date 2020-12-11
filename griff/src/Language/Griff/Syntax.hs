@@ -13,8 +13,8 @@ import Data.Int (Int32, Int64)
 import qualified Data.Set as Set
 import Data.Tuple.Extra (uncurry3)
 import Koriel.Pretty
-import Language.Griff.Extension
 import Language.Griff.Prelude
+import Language.Griff.Syntax.Extension
 import Language.Griff.Type (HasType (..))
 import qualified Language.Griff.Type as T
 import qualified Text.PrettyPrint.HughesPJ as P

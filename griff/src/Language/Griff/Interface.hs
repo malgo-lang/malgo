@@ -17,14 +17,14 @@ import Generics.Deriving.Monoid (mappenddefault, memptydefault)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import Language.Griff.DsEnv (DsEnv)
-import qualified Language.Griff.DsEnv as DsEnv
-import Language.Griff.Extension
+import Language.Griff.Desugar.DsEnv (DsEnv)
+import qualified Language.Griff.Desugar.DsEnv as DsEnv
 import Language.Griff.Prelude
-import Language.Griff.RnEnv (RnState)
-import qualified Language.Griff.RnEnv as RnState
-import qualified Language.Griff.TcEnv as TcEnv
+import Language.Griff.Rename.RnEnv (RnState)
+import qualified Language.Griff.Rename.RnEnv as RnState
+import Language.Griff.Syntax.Extension
 import qualified Language.Griff.Type as GT
+import qualified Language.Griff.TypeCheck.TcEnv as TcEnv
 import System.FilePath.Lens
 
 data Interface = Interface

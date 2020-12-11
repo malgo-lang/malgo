@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Constraint (Constraint (..), WithPos (..), eqCons, solve) where
+module Language.Griff.TypeCheck.Constraint (Constraint (..), WithPos (..), eqCons, solve) where
 
 import qualified Data.Set as Set
 import Koriel.Pretty

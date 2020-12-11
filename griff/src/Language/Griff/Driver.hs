@@ -24,11 +24,11 @@ import Language.Griff.Interface (buildInterface, loadInterface, prettyInterface,
 import Language.Griff.Parser (parseGriff)
 import Language.Griff.Prelude
 import Language.Griff.Rename (rename)
-import Language.Griff.RnEnv (genRnEnv)
-import qualified Language.Griff.RnEnv as RnState
+import Language.Griff.Rename.RnEnv (genRnEnv)
+import qualified Language.Griff.Rename.RnEnv as RnState
 import qualified Language.Griff.Syntax as Syntax
-import qualified Language.Griff.TcEnv as T
 import Language.Griff.TypeCheck (typeCheck)
+import qualified Language.Griff.TypeCheck.TcEnv as T
 import System.IO
   ( hPrint,
     hPutStrLn,
