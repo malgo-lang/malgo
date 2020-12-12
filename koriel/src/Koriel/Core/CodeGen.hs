@@ -148,7 +148,6 @@ findFun x = do
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
--- 同じ名前を2回externできないため
 findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
   use (at x) >>= \case
@@ -189,7 +188,7 @@ genFunc ::
 genFunc name params body
   | name ^. idIsGlobal =
     function funcName llvmParams retty $ \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
-  | otherwise = 
+  | otherwise =
     internalFunction funcName llvmParams retty $ \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name

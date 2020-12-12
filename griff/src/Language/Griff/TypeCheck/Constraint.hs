@@ -6,7 +6,6 @@ module Language.Griff.TypeCheck.Constraint (Constraint (..), WithPos (..), eqCon
 
 import qualified Data.Set as Set
 import Koriel.Pretty
-import qualified Koriel.Pretty as P
 import Language.Griff.Prelude
 import Language.Griff.Type
 import Text.Megaparsec.Pos (SourcePos)
@@ -90,7 +89,7 @@ bind pos tv t2
       Just _ -> errorOn pos "Internal Error"
       Nothing -> do
         if tv `elem` metaTvs t2
-          then errorOn pos $ "Occurs check" <+> P.quotes (pPrint tv) <+> "for" <+> pPrint t2
+          then errorOn pos $ "Occurs check" <+> quotes (pPrint tv) <+> "for" <+> pPrint t2
           else writeMetaTv tv t2
 
 zonkConstraints :: (Traversable t, MonadIO f) => t WithPos -> f (t WithPos)

@@ -25,7 +25,6 @@ import Language.Griff.Syntax
 import Language.Griff.Syntax.Extension
 import System.IO (hPrint, stderr)
 import Text.Megaparsec.Pos (SourcePos)
-import qualified Text.PrettyPrint as P
 
 rename :: (MonadUniq m, MonadGriff m, MonadIO m) => RnEnv -> Module (Griff 'Parse) -> m ([Decl (Griff 'Rename)], RnState)
 rename rnEnv (Module modName ds) = do
@@ -43,14 +42,14 @@ lookupVarName pos name = do
   vm <- view varEnv
   case vm ^. at name of
     Just name' -> pure name'
-    Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (text name)
+    Nothing -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 lookupTypeName :: (HasCallStack, MonadReader RnEnv m, MonadGriff m, MonadIO m) => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
   tm <- view typeEnv
   case tm ^. at name of
     Just name' -> pure name'
-    Nothing -> errorOn pos $ "Not in scope:" <+> P.quotes (text name)
+    Nothing -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 -- renamer
 
@@ -131,7 +130,7 @@ rnExp (OpApp pos op e1 e2) = do
   mfixity <- Map.lookup op' <$> use infixInfo
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
-    Nothing -> errorOn pos $ "No infix declaration:" <+> P.quotes (pPrint op)
+    Nothing -> errorOn pos $ "No infix declaration:" <+> quotes (pPrint op)
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
 rnExp (Force pos e) = Force pos <$> rnExp e
@@ -185,13 +184,13 @@ genToplevelEnv = go mempty
   where
     go env [] = pure env
     go env (ScDef pos x _ _ : rest)
-      | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | otherwise = do
         x' <- resolveGlobalName x
         go (env & varEnv . at x ?~ x') rest
     go env (ScSig {} : rest) = go env rest
     go env (DataDef pos x _ cs : rest)
-      | x `elem` Map.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | x `elem` Map.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | disjoint (map fst cs) (Map.keys (env ^. varEnv)) = do
         x' <- resolveGlobalName x
         xs' <- traverse (resolveGlobalName . fst) cs
@@ -199,10 +198,10 @@ genToplevelEnv = go mempty
       | otherwise =
         errorOn pos $
           "Duplicate name(s):"
-            <+> P.sep
-              (P.punctuate "," $ map (P.quotes . pPrint) (map fst cs `intersect` Map.keys (env ^. varEnv)))
+            <+> sep
+              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` Map.keys (env ^. varEnv)))
     go env (Foreign pos x _ : rest)
-      | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> P.quotes (pPrint x)
+      | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | otherwise = do
         x' <- resolveGlobalName x
         go (env & varEnv . at x ?~ x') rest
@@ -235,14 +234,14 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
     errorOn pos1 $
       "Precedence parsing error:"
-        P.$+$ P.nest
+        $+$ nest
           2
           ( "cannot mix"
-              <+> P.quotes (pPrint op1)
-              <+> P.brackets (pPrint fix1)
+              <+> quotes (pPrint op1)
+              <+> brackets (pPrint fix1)
               <+> "and"
-              <+> P.quotes (pPrint op2)
-              <+> P.brackets (pPrint fix2)
+              <+> quotes (pPrint op2)
+              <+> brackets (pPrint fix2)
               <+> "in the same infix expression"
           )
   | associate_right = pure $ OpApp (pos1, fix1) op1 e11 (OpApp (pos2, fix2) op2 e12 e2)

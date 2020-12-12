@@ -17,7 +17,6 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Griff.Prelude
-import qualified Text.PrettyPrint.HughesPJ as P
 
 ----------------------
 -- Kind and HasKind --
@@ -39,7 +38,7 @@ instance HasKind Kind where
 instance Pretty Kind where
   pPrintPrec _ _ Star = "*"
   pPrintPrec l d (KArr k1 k2) =
-    P.maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
+    maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
 
 ----------
 -- Type --
@@ -53,7 +52,7 @@ instance HasKind Scheme where
   kind (Forall _ t) = kind t
 
 instance Pretty Scheme where
-  pPrint (Forall vs t) = "forall" <+> P.sep (map pPrint vs) <> "." <+> pPrint t
+  pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
 
 -------------------
 -- Type variable --
@@ -84,7 +83,7 @@ instance Show MetaTv where
 
 instance Pretty MetaTv where
   pPrint (MetaTv u _ [] _) = "'" <> pPrint u
-  pPrint (MetaTv _ _ rigitName _) = P.text rigitName
+  pPrint (MetaTv _ _ rigidName _) = text rigidName
 
 instance HasKind MetaTv where
   kind (MetaTv _ k _ _) = k
@@ -196,14 +195,14 @@ instance HasKind Type where
 
 instance Pretty Type where
   pPrintPrec l d (TyApp t1 t2) =
-    P.maybeParens (d > 10) $ P.sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+    maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVar v) = pPrint v
   pPrintPrec _ _ (TyCon c) = pPrint c
   pPrintPrec _ _ (TyPrim p) = pPrint p
   pPrintPrec l d (TyArr t1 t2) =
-    P.maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec _ _ (TyTuple ts) = P.parens $ P.sep $ P.punctuate "," $ map pPrint ts
-  pPrintPrec _ _ (TyLazy t) = P.braces $ pPrint t
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
+  pPrintPrec _ _ (TyTuple ts) = parens $ sep $ punctuate "," $ map pPrint ts
+  pPrintPrec _ _ (TyLazy t) = braces $ pPrint t
   pPrintPrec _ _ (TyMeta tv) = pPrint tv
 
 -------------------

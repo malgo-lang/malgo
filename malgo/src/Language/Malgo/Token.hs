@@ -14,7 +14,6 @@ where
 import Koriel.Prelude
 import Koriel.Pretty
 import Text.Parsec.Pos (SourcePos)
-import qualified Text.PrettyPrint.HughesPJClass as P
 
 data Tag
   = LET
@@ -103,7 +102,7 @@ _tag :: Token -> Tag
 _tag (Token a) = snd a
 
 instance Pretty Token where
-  pPrint (Token (p, t)) = pPrint p P.$+$ pPrint t
+  pPrint (Token (p, t)) = pPrint p $+$ pPrint t
 
 instance Pretty Tag where
   pPrint LET = "let"
@@ -153,10 +152,10 @@ instance Pretty Tag where
   pPrint DARROW = "=>"
   pPrint MATCH = "match"
   pPrint WITH = "with"
-  pPrint (ID x) = P.text x
-  pPrint (LID x) = P.text x
-  pPrint (INT x) = P.integer x
-  pPrint (FLOAT x) = P.double x
+  pPrint (ID x) = text x
+  pPrint (LID x) = text x
+  pPrint (INT x) = pPrint x
+  pPrint (FLOAT x) = pPrint x
   pPrint (BOOL x) = pPrint x
   pPrint (CHAR x) = pPrint x
   pPrint (STRING x) = pPrint x

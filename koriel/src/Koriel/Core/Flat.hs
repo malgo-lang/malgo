@@ -10,8 +10,8 @@ module Koriel.Core.Flat
   )
 where
 
-import Koriel.Prelude
 import Koriel.Core.Core
+import Koriel.Prelude
 
 flat :: Exp a -> Exp a
 flat e = runIdentity $ runFlat (flatExp e)

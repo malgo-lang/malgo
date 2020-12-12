@@ -37,7 +37,6 @@ import System.IO
 import Text.Megaparsec
   ( errorBundlePretty,
   )
-import qualified Text.PrettyPrint.HughesPJ as P
 
 compile :: Opt -> IO ()
 compile opt = do
@@ -57,7 +56,7 @@ compile opt = do
           when (dumpRenamed opt) $
             liftIO $ do
               hPutStrLn stderr "=== RENAME ==="
-              hPrint stderr $ P.sep $ P.punctuate ";" $ map pPrint ds'
+              hPrint stderr $ sep $ punctuate ";" $ map pPrint ds'
           (tcEnv, bg) <- typeCheck rnEnv ds'
           when (dumpTyped opt) $
             liftIO $ do

@@ -18,7 +18,6 @@ import Koriel.Pretty
 import Language.Griff.Prelude
 import Language.Griff.Syntax
 import Language.Griff.Syntax.Extension
-import qualified Text.PrettyPrint.HughesPJClass as P
 
 data BindGroup x = BindGroup
   { _scDefs :: [[ScDef x]],
@@ -62,26 +61,25 @@ deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Sho
 
 instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
   pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _infixs, _foreigns} =
-    P.sep
-      ( P.punctuate ";" $
-          map prettyDataDef _dataDefs
-            <> map prettyInfix _infixs
-            <> map prettyForeign _foreigns
-            <> map prettyScSig _scSigs
-            <> concatMap (map prettyScDef) _scDefs
-      )
+    sep $
+      punctuate ";" $
+        map prettyDataDef _dataDefs
+          <> map prettyInfix _infixs
+          <> map prettyForeign _foreigns
+          <> map prettyScSig _scSigs
+          <> concatMap (map prettyScDef) _scDefs
     where
       prettyDataDef (_, d, xs, cs) =
-        P.sep
-          [ "data" <+> pPrint d <+> P.sep (map pPrint xs) <+> "=",
-            P.nest 2 $ foldl1 (\a b -> P.sep [a, "|" <+> b]) $ map pprConDef cs
+        sep
+          [ "data" <+> pPrint d <+> sep (map pPrint xs) <+> "=",
+            nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
           ]
-      pprConDef (con, ts) = pPrint con <+> P.sep (map (pPrintPrec P.prettyNormal 12) ts)
+      pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
       prettyInfix (_, a, o, x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
       prettyForeign (_, x, t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
       prettyScSig (_, f, t) = pPrint f <+> "::" <+> pPrint t
       prettyScDef (_, f, xs, e) =
-        P.sep [pPrint f <+> P.sep (map pPrint xs) <+> "=", P.nest 2 $ pPrint e]
+        sep [pPrint f <+> sep (map pPrint xs) <+> "=", nest 2 $ pPrint e]
 
 makeBindGroup :: (Pretty a, Ord (XId x), XId x ~ Id a) => [Decl x] -> BindGroup x
 makeBindGroup ds =

@@ -1,5 +1,5 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -21,14 +21,10 @@ module Koriel.Id
   )
 where
 
+import Data.Store (Store)
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty
-import Data.Store (Store)
-
-#ifdef DEBUG
-import qualified Text.PrettyPrint as P
-#endif
 
 data Id a = Id
   { _idName :: String,
@@ -38,7 +34,7 @@ data Id a = Id
   }
   deriving stock (Show, Read, Eq, Ord, Functor, Foldable, Generic)
 
-instance Store a => Store (Id a) where
+instance Store a => Store (Id a)
 
 #ifndef DEBUG
 instance Pretty a => Pretty (Id a) where
@@ -46,8 +42,8 @@ instance Pretty a => Pretty (Id a) where
   pPrint (Id n u _ False) = text n <> "." <> text (show u)
 #else
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n _ m True) = text n <> P.braces (pPrint m)
-  pPrint (Id n u m False) = text n <> "." <> text (show u) <> P.braces (pPrint m)
+  pPrint (Id n _ m True) = text n <> braces (pPrint m)
+  pPrint (Id n u m False) = text n <> "." <> text (show u) <> braces (pPrint m)
 #endif
 
 idName :: Getter (Id a) String

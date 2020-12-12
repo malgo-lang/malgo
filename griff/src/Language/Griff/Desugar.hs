@@ -38,7 +38,6 @@ import Language.Griff.Type as GT
 import Language.Griff.TypeCheck (applySubst)
 import Language.Griff.TypeCheck.TcEnv (TcEnv)
 import qualified Language.Griff.TypeCheck.TcEnv as Tc
-import qualified Text.PrettyPrint.HughesPJ as P
 
 -- | GriffからCoreへの変換
 desugar ::
@@ -150,7 +149,7 @@ dsScDef (WithType pos typ, name, params, expr) = do
   unless (GT._TyArr `has` typ || GT._TyLazy `has` typ) $
     errorOn pos $
       "Invalid Toplevel Declaration:"
-        <+> P.quotes (pPrint name <+> ":" <+> pPrint typ)
+        <+> quotes (pPrint name <+> ":" <+> pPrint typ)
   -- When typ is TyLazy{}, splitTyArr returns ([], typ).
   let (paramTypes, _) = splitTyArr typ
   params' <- zipWithM newCoreId params =<< traverse dsType paramTypes
@@ -232,8 +231,8 @@ dsExp (G.Var x name) = do
   case (x ^. toType, C.typeOf name') of
     -- TyLazyの型を検査
     (GT.TyLazy {}, [] :-> _) -> pure ()
-    (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> P.quotes (pPrint $ C.typeOf name')
-    (_, [] :-> _) -> errorDoc $ "Invlalid type:" <+> P.quotes (pPrint name)
+    (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
+    (_, [] :-> _) -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
     _ -> pure ()
   if name' ^. idIsGlobal
     then do
@@ -492,7 +491,7 @@ lookupName name = do
   mname' <- view (varEnv . at name)
   case mname' of
     Just name' -> pure name'
-    Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint name)
+    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
 
 lookupConMap ::
   (MonadReader DsEnv m, MonadFail m) =>
@@ -504,7 +503,7 @@ lookupConMap con ts = do
   case List.find (\Tc.TypeDef {Tc._constructor = t} -> t == GT.TyCon con) (Map.elems typeEnv) of
     Just Tc.TypeDef {Tc._qualVars = as, Tc._union = conMap} ->
       pure $ over (mapped . _2) (applySubst $ Map.fromList $ zip as ts) conMap
-    Nothing -> errorDoc $ "Not in scope:" <+> P.quotes (pPrint con)
+    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
 
 newTmpId :: (MonadReader DsEnv m, MonadUniq m) => String -> a -> m (Id a)
 newTmpId name typ = do
@@ -527,16 +526,10 @@ curryFun ::
   m ([Id C.Type], C.Exp (Id C.Type))
 -- FIXME: curryFun [] e の正しい処理は、eの型に応じて引数リストpsを生成し、(ps, (apply e ps))を返す
 -- そのためには、Coreの項に明示的な型の適用を追加する必要がある
--- curryFun [] e =
---   case C.typeOf e of
---     pts :-> _ -> do
---       ps <- traverse (newId "$p") pts
---       curryFun ps =<< runDef (Call <$> bind e <*> pure (map C.Var ps))
---     t -> errorDoc $ "Invalid type:" <+> P.quotes (pPrint t)
 curryFun [] e@(C.Let ds (Atom (C.Var v))) = case List.lookup v ds of
   Just (Fun ps e) | not $ any ((/= v) . fst) ds -> pure (ps, e)
-  _ -> errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
-curryFun [] e = errorDoc $ "Invalid expression:" <+> P.quotes (pPrint e)
+  _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
+curryFun [] e = errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
 curryFun [x] e = pure ([x], e)
 curryFun ps@(_ : _) e = curryFun' ps []
   where

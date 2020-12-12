@@ -23,7 +23,6 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import qualified Text.PrettyPrint.HughesPJ as P
 
 class HasFreeVar f where
   freevars :: Ord a => f a -> Set a
@@ -113,7 +112,7 @@ instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
     ps :-> r -> go ps (map typeOf xs) r
-    _ -> errorDoc $ "Invalid type:" <+> P.quotes (pPrint $ typeOf f)
+    _ -> errorDoc $ "Invalid type:" <+> quotes (pPrint $ typeOf f)
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
@@ -340,4 +339,3 @@ mainFunc e = do
     _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
     pure e
   pure (mainFuncId, ([], mainFuncBody))
-  

@@ -6,13 +6,13 @@
 
 module Koriel.MonadUniq where
 
+import Control.Monad.Cont
 import Control.Monad.Fix (MonadFix)
+import Control.Monad.Identity (IdentityT)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import Koriel.Prelude
 import LLVM.IRBuilder.Module (ModuleBuilderT)
 import LLVM.IRBuilder.Monad (IRBuilderT)
-import Control.Monad.Identity (IdentityT)
-import Control.Monad.Cont
 
 class Monad m => MonadUniq m where
   getUniqSupply :: m UniqSupply
