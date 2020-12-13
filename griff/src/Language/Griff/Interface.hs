@@ -1,3 +1,4 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -73,14 +74,17 @@ prettyInterface i =
 
 buildInterface :: RnState -> DsEnv -> Interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
-  ifor_ (dsEnv ^. DsEnv.varEnv) $ \tcId coreId -> do
-    resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
-    coreIdentMap . at tcId ?= coreId
+  ifor_ (dsEnv ^. DsEnv.varEnv) $ \tcId coreId ->
+    when (tcId ^. idIsGlobal) do
+      resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
+      coreIdentMap . at tcId ?= coreId
   ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.varEnv) $ \rnId scheme ->
-    signatureMap . at rnId ?= scheme
+    when (rnId ^. idIsGlobal) do
+      signatureMap . at rnId ?= scheme
   ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.typeEnv) $ \rnId typeDef -> do
-    resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
-    typeDefMap . at rnId ?= typeDef
+    when (rnId ^. idIsGlobal) do
+      resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
+      typeDefMap . at rnId ?= typeDef
 
 storeInterface :: (MonadIO m, MonadGriff m) => Interface -> m ()
 storeInterface interface = do
