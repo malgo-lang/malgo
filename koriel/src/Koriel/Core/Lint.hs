@@ -35,7 +35,7 @@ lint e =
 
 defined :: (MonadReader [Id a] f, Eq a, MonadError Doc f, Pretty a) => Id a -> f ()
 defined x
-  | x ^. idIsGlobal = pure ()
+  | x ^. idIsExternal = pure ()
   | otherwise = do
     env <- ask
     unless (x `elem` env) $ throwError $ pPrint x <> " is not defined"

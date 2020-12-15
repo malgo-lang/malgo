@@ -32,10 +32,15 @@ rename rnEnv (Module modName ds) = do
   runStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
 
 resolveName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
-resolveName name = newId name =<< use moduleName
+resolveName name = do
+  modName <- use moduleName
+  newLocalId name modName
 
 resolveGlobalName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
 resolveGlobalName name = newGlobalId name =<< use moduleName
+
+resolveTopLevelName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
+resolveTopLevelName name = newTopLevelId name =<< use moduleName
 
 lookupVarName :: (HasCallStack, MonadReader RnEnv m, MonadGriff m, MonadIO m) => SourcePos -> String -> m RnId
 lookupVarName pos name = do
@@ -203,7 +208,7 @@ genToplevelEnv = go mempty
     go env (Foreign pos x _ : rest)
       | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | otherwise = do
-        x' <- resolveGlobalName x
+        x' <- resolveTopLevelName x
         go (env & varEnv . at x ?~ x') rest
     go env (Import _ modName : rest) = do
       interface <- loadInterface modName

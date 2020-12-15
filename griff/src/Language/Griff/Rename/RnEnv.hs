@@ -49,15 +49,15 @@ genRnState (ModuleName name) = pure $ RnState mempty $ ModuleName name
 genRnEnv :: MonadUniq m => m RnEnv
 genRnEnv = do
   -- generate RnId of primitive functions and operetors
-  add_i32 <- newId "add_i32#" $ ModuleName ""
-  add_i64 <- newId "add_i64#" $ ModuleName ""
+  add_i32 <- newTopLevelId "add_i32#" $ ModuleName ""
+  add_i64 <- newTopLevelId "add_i64#" $ ModuleName ""
   -- generate RnTId of primitive types
-  int32_t <- newId "Int32#" $ ModuleName ""
-  int64_t <- newId "Int64#" $ ModuleName ""
-  float_t <- newId "Float#" $ ModuleName ""
-  double_t <- newId "Double#" $ ModuleName ""
-  char_t <- newId "Char#" $ ModuleName ""
-  string_t <- newId "String#" $ ModuleName ""
+  int32_t <- newTopLevelId "Int32#" $ ModuleName ""
+  int64_t <- newTopLevelId "Int64#" $ ModuleName ""
+  float_t <- newTopLevelId "Float#" $ ModuleName ""
+  double_t <- newTopLevelId "Double#" $ ModuleName ""
+  char_t <- newTopLevelId "Char#" $ ModuleName ""
+  string_t <- newTopLevelId "String#" $ ModuleName ""
   pure $
     RnEnv
       { _varEnv = Map.fromList [("add_i32#", add_i32), ("add_i64#", add_i64)],

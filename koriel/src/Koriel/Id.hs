@@ -15,9 +15,12 @@ module Koriel.Id
     idName,
     idUniq,
     idMeta,
-    idIsGlobal,
+    idIsTopLevel,
+    idIsExternal,
     newId,
     newGlobalId,
+    newLocalId,
+    newTopLevelId,
   )
 where
 
@@ -30,7 +33,8 @@ data Id a = Id
   { _idName :: String,
     _idUniq :: Int,
     _idMeta :: a,
-    _idIsGlobal :: Bool
+    _idIsTopLevel :: Bool,
+    _idIsExternal :: Bool
   }
   deriving stock (Show, Read, Eq, Ord, Functor, Foldable, Generic)
 
@@ -38,12 +42,12 @@ instance Store a => Store (Id a)
 
 #ifndef DEBUG
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n _ _ True) = text n
-  pPrint (Id n u _ False) = text n <> "." <> text (show u)
+  pPrint (Id n _ _ _ True) = text n
+  pPrint (Id n u _ _ False) = text n <> "." <> text (show u)
 #else
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n _ m True) = text n <> braces (pPrint m)
-  pPrint (Id n u m False) = text n <> "." <> text (show u) <> braces (pPrint m)
+  pPrint (Id n _ m _ True) = text n <> braces (pPrint m)
+  pPrint (Id n u m _ False) = text n <> "." <> text (show u) <> braces (pPrint m)
 #endif
 
 idName :: Getter (Id a) String
@@ -55,11 +59,20 @@ idUniq = to _idUniq
 idMeta :: Lens (Id a) (Id b) a b
 idMeta = lens _idMeta (\i x -> i {_idMeta = x})
 
-idIsGlobal :: Lens' (Id a) Bool
-idIsGlobal = lens _idIsGlobal (\i x -> i {_idIsGlobal = x})
+idIsTopLevel :: Lens (Id a) (Id a) Bool Bool
+idIsTopLevel = lens _idIsTopLevel (\i x -> i {_idIsTopLevel = x})
 
-newId :: MonadUniq f => String -> a -> f (Id a)
-newId n m = Id n <$> getUniq <*> pure m <*> pure False
+idIsExternal :: Lens' (Id a) Bool
+idIsExternal = lens _idIsExternal (\i x -> i {_idIsExternal = x})
+
+newId :: MonadUniq f => String -> a -> Bool -> Bool -> f (Id a)
+newId n m t e = Id n <$> getUniq <*> pure m <*> pure t <*> pure e
+
+newLocalId :: MonadUniq f => String -> a -> f (Id a)
+newLocalId n m = Id n <$> getUniq <*> pure m <*> pure False <*> pure False
+
+newTopLevelId :: MonadUniq f => String -> a -> f (Id a)
+newTopLevelId n m = Id n <$> getUniq <*> pure m <*> pure True <*> pure False
 
 newGlobalId :: MonadUniq f => String -> a -> f (Id a)
-newGlobalId n m = Id n <$> getUniq <*> pure m <*> pure True
+newGlobalId n m = Id n <$> getUniq <*> pure m <*> pure True <*> pure True

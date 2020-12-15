@@ -75,14 +75,14 @@ prettyInterface i =
 buildInterface :: RnState -> DsEnv -> Interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
   ifor_ (dsEnv ^. DsEnv.varEnv) $ \tcId coreId ->
-    when (tcId ^. idIsGlobal) do
+    when (tcId ^. idIsExternal) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
       coreIdentMap . at tcId ?= coreId
   ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.varEnv) $ \rnId scheme ->
-    when (rnId ^. idIsGlobal) do
+    when (rnId ^. idIsExternal) do
       signatureMap . at rnId ?= scheme
   ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.typeEnv) $ \rnId typeDef -> do
-    when (rnId ^. idIsGlobal) do
+    when (rnId ^. idIsExternal) do
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
 

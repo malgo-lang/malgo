@@ -79,7 +79,7 @@ tcDataDefs ::
   m ([DataDef (Griff 'TypeCheck)], TcEnv -> TcEnv)
 tcDataDefs ds = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを生成する
-  dataEnv <- foldMapA ?? ds $ \(_, name, params, _) -> Map.singleton name . simpleTypeDef . TyCon <$> newId (name ^. idName) (kindof params)
+  dataEnv <- foldMapA ?? ds $ \(_, name, params, _) -> Map.singleton name . simpleTypeDef . TyCon <$> newGlobalId (name ^. idName) (kindof params)
   local (over T.typeEnv (dataEnv <>)) do
     (ds', conEnvs) <- mapAndUnzipM ?? ds $ \(pos, name, params, cons) -> do
       paramsEnv <- foldMapA ?? params $ \p -> Map.singleton p . simpleTypeDef . TyMeta <$> newMetaTv Star ""
@@ -309,14 +309,14 @@ lookupVar pos name = do
 generalize :: (MonadIO m, MonadUniq m) => TcEnv -> Type -> m Scheme
 generalize env t = do
   fvs <- toList <$> freeMetaTvs env t
-  as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) (zip fvs ['a' ..])
+  as <- traverse (\(tv, nameChar) -> newLocalId [nameChar] (kind tv)) (zip fvs ['a' ..])
   zipWithM_ writeMetaTv fvs (map TyVar as)
   Forall as <$> zonkType t
 
 generalizeMutRecs :: (MonadIO m, MonadUniq m) => TcEnv -> [(TcId, Type)] -> m ([Id Kind], [(TcId, Scheme)])
 generalizeMutRecs env nts = do
   fvs <- toList . mconcat <$> traverse (freeMetaTvs env <=< zonkType . view _2) nts
-  as <- traverse (\(tv, nameChar) -> newId [nameChar] (kind tv)) (zip fvs ['a' ..])
+  as <- traverse (\(tv, nameChar) -> newLocalId [nameChar] (kind tv)) (zip fvs ['a' ..])
   zipWithM_ writeMetaTv fvs (map TyVar as)
   (as,) <$> traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
 

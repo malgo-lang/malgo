@@ -59,7 +59,7 @@ desugar modName tcEnv ds = do
     Nothing -> pure (dsEnv', Program (prims <> ds'))
   where
     -- エントリーポイントとなるmain関数を検索する
-    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsGlobal = Just $ CallDirect coreId []
+    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsExternal = Just $ CallDirect coreId []
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
 
@@ -83,13 +83,12 @@ genPrimitive modName env =
     prim name code = do
       nameId <- fromJust <$> use (_1 . tcEnv . Tc.rnEnv . Rn.varEnv . at name)
       Forall _ nameType <- fromJust <$> use (_1 . tcEnv . Tc.varEnv . at nameId)
-      uniq <- getUniq
-      nameId' <- fmap (idIsGlobal .~ True) $ newQualifiedCoreId modName (name <> show uniq) =<< dsType nameType
+      nameId' <- Id.newTopLevelId name =<< dsType nameType
       _1 . varEnv . at nameId ?= nameId'
       case C.typeOf nameId' of
         -- プリミティブ関数は必ず一引数
         [paramType] :-> _ -> do
-          param <- newQualifiedCoreId modName "$p" paramType
+          param <- newLocalId "$p" paramType
           fun <- runDef (code param)
           _2 %= ((nameId', ([param], fun)) :)
         _ -> bug Unreachable
@@ -169,7 +168,7 @@ dsForeign ::
 dsForeign (x@(WithType (_, primName) _), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. toType)
   let (paramTypes, _) = splitTyArr (x ^. toType)
-  params <- traverse (newTmpId "$p" <=< dsType) paramTypes
+  params <- traverse (newLocalId "$p" <=< dsType) paramTypes
   primType <- dsType (view toType x)
   fun <- curryFun params $ C.ExtCall primName primType (map C.Var params)
   pure (mempty & varEnv .~ Map.singleton name name', [(name', fun)])
@@ -192,7 +191,7 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
 
     -- generate constructor code
     conName' <- newCoreId conName $ buildsonType paramTypes' retType'
-    ps <- traverse (newTmpId "$p") paramTypes'
+    ps <- traverse (newLocalId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
       packed <- let_ unfoldedType (Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps)
@@ -234,13 +233,13 @@ dsExp (G.Var x name) = do
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _) -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
     _ -> pure ()
-  if name' ^. idIsGlobal
+  if name' ^. idIsTopLevel
     then do
-      -- name（name'）がグローバルなとき、name'に対応する適切な値（クロージャ）は存在しない。
+      -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
       -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
-      clsId <- newTmpId "$gblcls" (C.typeOf name')
+      clsId <- newLocalId "$gblcls" (C.typeOf name')
       ps <- case C.typeOf name' of
-        pts :-> _ -> traverse (newTmpId "$p") pts
+        pts :-> _ -> traverse (newLocalId "$p") pts
         _ -> bug Unreachable
       pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     else pure $ Atom $ C.Var name'
@@ -253,8 +252,8 @@ dsExp (G.Con _ name) = do
     -- グローバルな関数と同様に、引数のある値コンストラクタも、
     -- 値が必要になったときに都度クロージャを生成する。
     pts :-> _ -> do
-      clsId <- newTmpId "$concls" (C.typeOf name')
-      ps <- traverse (newTmpId "$p") pts
+      clsId <- newLocalId "$concls" (C.typeOf name')
+      ps <- traverse (newLocalId "$p") pts
       pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     _ -> bug Unreachable
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
@@ -276,7 +275,7 @@ dsExp (G.OpApp _ op x y) = runDef $ do
       x' <- cast xType =<< dsExp x
       y' <- cast yType =<< dsExp y
       e1 <-
-        if op' ^. idIsGlobal
+        if op' ^. idIsTopLevel
           then bind (CallDirect op' [x'])
           else bind (Call (C.Var op') [x'])
       pure $ Call e1 [y']
@@ -289,7 +288,7 @@ dsExp (G.Fn x (Clause _ [] ss : _)) = do
     fun <- let_ typ $ Fun [] ss'
     pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
-  ps' <- traverse (\p -> newTmpId "$p" =<< dsType (p ^. toType)) ps
+  ps' <- traverse (\p -> newLocalId "$p" =<< dsType (p ^. toType)) ps
   typ <- dsType (last es ^. toType)
   -- destruct Clauses
   -- 各節のパターン列を行列に見立て、転置してmatchにわたし、パターンを分解する
@@ -305,7 +304,7 @@ dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
         cs
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
-  v <- newTmpId "$fun" =<< dsType (x ^. toType)
+  v <- newLocalId "$fun" =<< dsType (x ^. toType)
   pure $ C.Let [(v, uncurry Fun obj)] $ Atom $ C.Var v
 dsExp (G.Fn _ []) = bug Unreachable
 dsExp (G.Tuple _ es) = runDef $ do
@@ -328,7 +327,7 @@ dsStmts (NoBind _ e : ss) = runDef $ do
   dsStmts ss
 dsStmts (G.Let _ v e : ss) = do
   e' <- dsExp e
-  v' <- newTmpId ("$let_" <> v ^. idName) (C.typeOf e')
+  v' <- newLocalId ("$let_" <> v ^. idName) (C.typeOf e')
   local (over varEnv $ Map.insert v v') do
     ss' <- dsStmts ss
     pure $ Match e' (Bind v' ss' :| [])
@@ -372,7 +371,7 @@ match (u : us) (ps : pss) es err
     cases <- for conMap $ \(conName, conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
       let ccon = C.Con (conName ^. toText) paramTypes
-      params <- traverse (newTmpId "$p") paramTypes
+      params <- traverse (newLocalId "$p") paramTypes
       -- パターン行列（未転置）
       let (pss', es') = unzip $ group conName (List.transpose (ps : pss)) es
       Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
@@ -382,7 +381,7 @@ match (u : us) (ps : pss) es err
   | all (has _TupleP) ps = do
     let patType = head ps ^. toType
     SumT [con@(C.Con _ ts)] <- dsType patType
-    params <- traverse (newTmpId "$p") ts
+    params <- traverse (newLocalId "$p") ts
     cases <- do
       let (pss', es') = unzip $ groupTuple (List.transpose (ps : pss)) es
       (:| []) . Unpack con params <$> match (params <> us) (List.transpose pss') es' err
@@ -399,7 +398,7 @@ match (u : us) (ps : pss) es err
     cases <- traverse (\c -> Switch c <$> match us pss es err) cs
     -- パターンの網羅性を保証するため、
     -- `_ -> err` を追加する
-    hole <- newTmpId "$_" (C.typeOf u)
+    hole <- newLocalId "$_" (C.typeOf u)
     pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
@@ -505,18 +504,9 @@ lookupConMap con ts = do
       pure $ over (mapped . _2) (applySubst $ Map.fromList $ zip as ts) conMap
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
 
-newTmpId :: (MonadReader DsEnv m, MonadUniq m) => String -> a -> m (Id a)
-newTmpId name typ = do
-  modName <- view moduleName
-  Id.newId (modName ^. _Module <> "." <> name) typ
-
-newQualifiedCoreId :: (MonadUniq f) => ModuleName -> String -> a -> f (Id a)
-newQualifiedCoreId modName name = Id.newId (modName ^. _Module <> "." <> name)
-
 newCoreId :: MonadUniq f => Id ModuleName -> a -> f (Id a)
 newCoreId griffId coreType =
-  Id.newId (griffId ^. idMeta . _Module <> "." <> griffId ^. idName) coreType
-    <&> idIsGlobal .~ griffId ^. idIsGlobal
+  Id.newId (griffId ^. idMeta . _Module <> "." <> griffId ^. idName) coreType (griffId ^. idIsTopLevel) (griffId ^. idIsExternal)
 
 -- 関数をカリー化する
 curryFun ::
@@ -535,12 +525,12 @@ curryFun ps@(_ : _) e = curryFun' ps []
   where
     curryFun' [] _ = bug Unreachable
     curryFun' [x] as = do
-      x' <- newTmpId (x ^. idName) (C.typeOf x)
-      fun <- newTmpId "$curry" (C.typeOf $ Fun ps e)
+      x' <- newLocalId (x ^. idName) (C.typeOf x)
+      fun <- newLocalId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
       pure ([x'], C.Let [(fun, Fun ps e)] body)
     curryFun' (x : xs) as = do
-      x' <- newTmpId (x ^. idName) (C.typeOf x)
+      x' <- newLocalId (x ^. idName) (C.typeOf x)
       fun <- curryFun' xs (C.Var x' : as)
       let funObj = uncurry Fun fun
       body <- runDef $ do

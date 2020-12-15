@@ -186,7 +186,7 @@ genFunc ::
   Exp (Id C.Type) ->
   m Operand
 genFunc name params body
-  | name ^. idIsGlobal =
+  | name ^. idIsExternal =
     function funcName llvmParams retty $ \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
   | otherwise =
     internalFunction funcName llvmParams retty $ \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
@@ -422,7 +422,7 @@ genObj ::
   m (Map (Id C.Type) Operand)
 genObj funName (Fun ps e) = do
   -- クロージャの元になる関数を生成する
-  name <- toName <$> newId (funName ^. idName <> "_closure") ()
+  name <- toName <$> newTopLevelId (funName ^. idName <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug Unreachable
     (rawCapture : ps') -> do

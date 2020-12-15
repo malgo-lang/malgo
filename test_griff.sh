@@ -52,7 +52,7 @@ for file in `ls ./examples/griff | grep '\.grf$'`; do
   OUTFILE=$TESTDIR/${file/.grf/.out}
   cat ./examples/griff/$file | grep -q '^-- Expected: ' || exit 255
   cabal exec griffc -- ./examples/griff/$file -o $LLFILE || exit 255
-  clang $(pkg-config bdw-gc --libs --cflags) ./runtime/griff/rts.c $TESTDIR/Prelude.ll $LLFILE -o $OUTFILE || exit 255
+  clang -O2 $(pkg-config bdw-gc --libs --cflags) ./runtime/griff/rts.c $TESTDIR/Prelude.ll $LLFILE -o $OUTFILE || exit 255
   $OUTFILE || exit 255
   test "$($OUTFILE)" = "$(cat ./examples/griff/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
   echo ""
@@ -65,7 +65,7 @@ for file in `ls ./examples/griff | grep '\.grf$'`; do
   OUTFILE=$TESTDIR/${file/.grf/.out}
   cat ./examples/griff/$file | grep -q '^-- Expected: ' || exit 255
   cabal exec griffc -- --via-binding ./examples/griff/$file -o $LLFILE || exit 255
-  clang $(pkg-config bdw-gc --libs --cflags) ./runtime/griff/rts.c $TESTDIR/Prelude.ll $LLFILE -o $OUTFILE || exit 255
+  clang -O2 $(pkg-config bdw-gc --libs --cflags) ./runtime/griff/rts.c $TESTDIR/Prelude.ll $LLFILE -o $OUTFILE || exit 255
   $OUTFILE || exit 255
   test "$($OUTFILE)" = "$(cat ./examples/griff/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
   echo ""

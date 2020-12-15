@@ -306,20 +306,20 @@ runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
 
 let_ :: MonadUniq m => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
-  x <- newId "$let" otype
+  x <- newLocalId "$let" otype
   DefBuilderT $ tell $ Endo $ \e -> Let [(x, obj)] e
   pure (Var x)
 
 destruct :: MonadUniq m => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
 destruct val con@(Con _ ts) = do
-  vs <- traverse (newId "$p") ts
+  vs <- traverse (newLocalId "$p") ts
   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
   pure $ map Var vs
 
 bind :: MonadUniq m => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
-  x <- newId "$d" (typeOf v)
+  x <- newLocalId "$d" (typeOf v)
   DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
   pure (Var x)
 
@@ -328,7 +328,7 @@ cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
     v <- bind e
-    x <- newId "$cast" ty
+    x <- newLocalId "$cast" ty
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
