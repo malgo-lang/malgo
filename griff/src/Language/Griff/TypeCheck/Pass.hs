@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.TypeCheck (typeCheck, applySubst) where
+module Language.Griff.TypeCheck.Pass (typeCheck, applySubst) where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set

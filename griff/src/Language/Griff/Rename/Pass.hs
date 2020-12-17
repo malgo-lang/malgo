@@ -8,7 +8,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 -- | 名前解決
-module Language.Griff.Rename where
+module Language.Griff.Rename.Pass where
 
 import Data.List (intersect)
 import Data.List.Extra (disjoint)

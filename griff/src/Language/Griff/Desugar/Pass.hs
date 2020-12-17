@@ -13,7 +13,7 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 -- | GriffをKoriel.Coreに変換（脱糖衣）する
-module Language.Griff.Desugar (desugar) where
+module Language.Griff.Desugar.Pass (desugar) where
 
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
@@ -35,7 +35,7 @@ import Language.Griff.Syntax as G
 import Language.Griff.Syntax.Extension
 import Language.Griff.Syntax.Grouping
 import Language.Griff.Type as GT
-import Language.Griff.TypeCheck (applySubst)
+import Language.Griff.TypeCheck.Pass (applySubst)
 import Language.Griff.TypeCheck.TcEnv (TcEnv)
 import qualified Language.Griff.TypeCheck.TcEnv as Tc
 
@@ -506,7 +506,10 @@ lookupConMap con ts = do
 
 newCoreId :: MonadUniq f => Id ModuleName -> a -> f (Id a)
 newCoreId griffId coreType =
-  Id.newId (griffId ^. idMeta . _Module <> "." <> griffId ^. idName) coreType (griffId ^. idIsTopLevel) (griffId ^. idIsExternal)
+  Id.newId (toCoreName griffId) coreType (griffId ^. idIsTopLevel) (griffId ^. idIsExternal)
+
+toCoreName :: Id ModuleName -> String
+toCoreName griffId = griffId ^. idMeta . _Module <> "." <> griffId ^. idName
 
 -- 関数をカリー化する
 curryFun ::

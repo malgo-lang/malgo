@@ -19,15 +19,15 @@ import qualified LLVM.AST as L
 import LLVM.Context (withContext)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
-import Language.Griff.Desugar (desugar)
+import Language.Griff.Desugar.Pass (desugar)
 import Language.Griff.Interface (buildInterface, loadInterface, prettyInterface, storeInterface)
 import Language.Griff.Parser (parseGriff)
 import Language.Griff.Prelude
-import Language.Griff.Rename (rename)
+import Language.Griff.Rename.Pass (rename)
 import Language.Griff.Rename.RnEnv (genRnEnv)
 import qualified Language.Griff.Rename.RnEnv as RnState
 import qualified Language.Griff.Syntax as Syntax
-import Language.Griff.TypeCheck (typeCheck)
+import Language.Griff.TypeCheck.Pass (typeCheck)
 import qualified Language.Griff.TypeCheck.TcEnv as T
 import System.IO
   ( hPrint,
