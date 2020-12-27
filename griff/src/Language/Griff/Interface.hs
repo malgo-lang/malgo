@@ -4,6 +4,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Interface where
@@ -45,23 +46,7 @@ instance Semigroup Interface where
 instance Monoid Interface where
   mempty = memptydefault
 
-signatureMap :: Lens' Interface (Map RnId GT.Scheme)
-signatureMap = lens _signatureMap (\i x -> i {_signatureMap = x})
-
-typeDefMap :: Lens' Interface (Map RnId TcEnv.TypeDef)
-typeDefMap = lens _typeDefMap (\i x -> i {_typeDefMap = x})
-
-resolvedVarIdentMap :: Lens' Interface (Map PsId RnId)
-resolvedVarIdentMap = lens _resolvedVarIdentMap (\i x -> i {_resolvedVarIdentMap = x})
-
-resolvedTypeIdentMap :: Lens' Interface (Map PsId RnId)
-resolvedTypeIdentMap = lens _resolvedTypeIdentMap (\i x -> i {_resolvedTypeIdentMap = x})
-
-coreIdentMap :: Lens' Interface (Map RnId (Id C.Type))
-coreIdentMap = lens _coreIdentMap (\i x -> i {_coreIdentMap = x})
-
-infixMap :: Lens' Interface (Map RnId (Assoc, Int))
-infixMap = lens _infixMap (\i x -> i {_infixMap = x})
+makeLenses ''Interface
 
 prettyInterface :: Interface -> Doc
 prettyInterface i =

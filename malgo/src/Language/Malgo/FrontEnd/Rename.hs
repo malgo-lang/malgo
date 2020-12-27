@@ -44,7 +44,7 @@ withKnowns lens ks m = do
 
 getId :: (MonadReader Known m, MonadMalgo m) => SourcePos -> Getting (Map String (Id ())) Known (Map String (Id ())) -> String -> m (Id ())
 getId pos lens name = do
-  k <- view lens <$> ask
+  k <- view lens
   case view (at name) k of
     Just x -> pure x
     Nothing -> malgoError pos "rename" $ pPrint name <+> "is not defined"

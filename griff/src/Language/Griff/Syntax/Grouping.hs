@@ -3,6 +3,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -40,20 +41,7 @@ type Foreign x = (XForeign x, XId x, Type x)
 
 type Import x = (XImport x, ModuleName)
 
-scDefs :: Lens' (BindGroup x) [[ScDef x]]
-scDefs = lens _scDefs (\e x -> e {_scDefs = x})
-
-scSigs :: Lens' (BindGroup x) [ScSig x]
-scSigs = lens _scSigs (\e x -> e {_scSigs = x})
-
-dataDefs :: Lens' (BindGroup x) [DataDef x]
-dataDefs = lens _dataDefs (\e x -> e {_dataDefs = x})
-
-foreigns :: Lens' (BindGroup x) [Foreign x]
-foreigns = lens _foreigns (\e x -> e {_foreigns = x})
-
-imports :: Lens' (BindGroup x) [Import x]
-imports = lens _imports (\e x -> e {_imports = x})
+makeLenses ''BindGroup
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindGroup x)
 

@@ -6,6 +6,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuantifiedConstraints #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
@@ -50,20 +51,7 @@ instance Pretty a => Pretty (Id a) where
   pPrint (Id n u m _ False) = text n <> "." <> text (show u) <> braces (pPrint m)
 #endif
 
-idName :: Getter (Id a) String
-idName = to _idName
-
-idUniq :: Getter (Id a) Int
-idUniq = to _idUniq
-
-idMeta :: Lens (Id a) (Id b) a b
-idMeta = lens _idMeta (\i x -> i {_idMeta = x})
-
-idIsTopLevel :: Lens (Id a) (Id a) Bool Bool
-idIsTopLevel = lens _idIsTopLevel (\i x -> i {_idIsTopLevel = x})
-
-idIsExternal :: Lens' (Id a) Bool
-idIsExternal = lens _idIsExternal (\i x -> i {_idIsExternal = x})
+makeLenses ''Id
 
 newId :: MonadUniq f => String -> a -> Bool -> Bool -> f (Id a)
 newId n m t e = Id n <$> getUniq <*> pure m <*> pure t <*> pure e

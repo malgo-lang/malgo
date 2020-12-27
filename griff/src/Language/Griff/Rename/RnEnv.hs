@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Rename.RnEnv where
@@ -19,11 +20,7 @@ instance Semigroup RnState where
     | p1 == p2 = RnState (i1 <> i2) p1
     | otherwise = error "package name mismatch"
 
-infixInfo :: Lens' RnState (Map RnId (Assoc, Int))
-infixInfo = lens _infixInfo (\s x -> s {_infixInfo = x})
-
-moduleName :: Getter RnState ModuleName
-moduleName = to _moduleName
+makeLenses ''RnState
 
 data RnEnv = RnEnv
   { _varEnv :: Map PsId RnId,
@@ -37,11 +34,7 @@ instance Semigroup RnEnv where
 instance Monoid RnEnv where
   mempty = RnEnv mempty mempty
 
-varEnv :: Lens' RnEnv (Map PsId RnId)
-varEnv = lens _varEnv (\e x -> e {_varEnv = x})
-
-typeEnv :: Lens' RnEnv (Map PsTId RnTId)
-typeEnv = lens _typeEnv (\e x -> e {_typeEnv = x})
+makeLenses ''RnEnv
 
 genRnState :: Monad m => ModuleName -> m RnState
 genRnState (ModuleName name) = pure $ RnState mempty $ ModuleName name
@@ -49,15 +42,16 @@ genRnState (ModuleName name) = pure $ RnState mempty $ ModuleName name
 genRnEnv :: MonadUniq m => m RnEnv
 genRnEnv = do
   -- generate RnId of primitive functions and operetors
-  add_i32 <- newTopLevelId "add_i32#" $ ModuleName ""
-  add_i64 <- newTopLevelId "add_i64#" $ ModuleName ""
+  add_i32 <- newTopLevelId "add_i32#" $ ModuleName "Builtin"
+  add_i64 <- newTopLevelId "add_i64#" $ ModuleName "Builtin"
+
   -- generate RnTId of primitive types
-  int32_t <- newTopLevelId "Int32#" $ ModuleName ""
-  int64_t <- newTopLevelId "Int64#" $ ModuleName ""
-  float_t <- newTopLevelId "Float#" $ ModuleName ""
-  double_t <- newTopLevelId "Double#" $ ModuleName ""
-  char_t <- newTopLevelId "Char#" $ ModuleName ""
-  string_t <- newTopLevelId "String#" $ ModuleName ""
+  int32_t <- newTopLevelId "Int32#" $ ModuleName "Builtin"
+  int64_t <- newTopLevelId "Int64#" $ ModuleName "Builtin"
+  float_t <- newTopLevelId "Float#" $ ModuleName "Builtin"
+  double_t <- newTopLevelId "Double#" $ ModuleName "Builtin"
+  char_t <- newTopLevelId "Char#" $ ModuleName "Builtin"
+  string_t <- newTopLevelId "String#" $ ModuleName "Builtin"
   pure $
     RnEnv
       { _varEnv = Map.fromList [("add_i32#", add_i32), ("add_i64#", add_i64)],

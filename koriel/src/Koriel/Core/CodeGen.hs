@@ -6,6 +6,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
@@ -57,6 +58,17 @@ import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr)
 
+type PrimMap = Map String Operand
+
+-- 変数のMapとknown関数のMapを分割する
+-- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
+data OprMap = OprMap
+  { _valueMap :: Map (Id C.Type) Operand,
+    _funcMap :: Map (Id C.Type) Operand
+  }
+
+makeLenses ''OprMap
+
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id C.Type) -> m [Definition]
 codeGen Program {topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
   -- topFuncsのOprMapを作成
@@ -72,21 +84,6 @@ codeGen Program {topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
       ?? (mempty :: PrimMap)
       $ do
         traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
-
--- 変数のMapとknown関数のMapを分割する
--- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
-data OprMap = OprMap
-  { _valueMap :: Map (Id C.Type) Operand,
-    _funcMap :: Map (Id C.Type) Operand
-  }
-
-valueMap :: Lens' OprMap (Map (Id C.Type) Operand)
-valueMap = lens _valueMap (\s a -> s {_valueMap = a})
-
--- funcMap :: Lens' OprMap (IdMap C.Type Operand)
--- funcMap = lens _funcMap (\s a -> s {_funcMap = a})
-
-type PrimMap = Map String Operand
 
 convType :: C.Type -> LT.Type
 convType (ps :-> r) =
@@ -131,16 +128,16 @@ sizeofType VoidT = 0
 
 findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id C.Type -> m Operand
 findVar x = do
-  OprMap {_valueMap = valueMap} <- ask
-  case valueMap ^. at x of
-    Just x -> pure x
+  mopr <- view $ valueMap . at x
+  case mopr of
+    Just opr -> pure opr
     Nothing -> error $ show $ pPrint x <> " is not found"
 
 findFun :: (MonadReader OprMap m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
-  OprMap {_funcMap = funcMap} <- ask
-  case funcMap ^. at x of
-    Just x -> pure x
+  mopr <- view $ funcMap . at x
+  case mopr of
+    Just opr -> pure opr
     Nothing ->
       case C.typeOf x of
         ps :-> r -> findExt (show $ pPrint x) (map convType ps) (convType r)

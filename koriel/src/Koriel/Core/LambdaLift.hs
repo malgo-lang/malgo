@@ -3,6 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
@@ -26,11 +27,7 @@ data Env = Env
     _knowns :: Set (Id Type)
   }
 
-funcs :: Lens' Env (Map (Id Type) ([Id Type], Exp (Id Type)))
-funcs = lens _funcs (\e x -> e {_funcs = x})
-
-knowns :: Lens' Env (Set (Id Type))
-knowns = lens _knowns (\e x -> e {_knowns = x})
+makeLenses ''Env
 
 lambdalift :: MonadUniq m => Program (Id Type) -> m (Program (Id Type))
 lambdalift Program {topFuncs} =
@@ -75,6 +72,6 @@ llift e = pure e
 
 def :: (MonadUniq m, MonadState Env m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
-  f <- newTopLevelId ("$" <> name) (map typeOf xs :-> typeOf e)
+  f <- newTopLevelId ("$raw_" <> name) (map typeOf xs :-> typeOf e)
   funcs . at f ?= (xs, e)
   pure f

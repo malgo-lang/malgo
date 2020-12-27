@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Desugar.DsEnv where
@@ -33,11 +34,4 @@ instance Semigroup DsEnv where
 instance Monoid DsEnv where
   mempty = DsEnv (ModuleName "$Undefined") mempty mempty
 
-moduleName :: Lens' DsEnv ModuleName
-moduleName = lens _moduleName (\e x -> e {_moduleName = x})
-
-varEnv :: Lens' DsEnv (Map TcId (Id C.Type))
-varEnv = lens _varEnv (\e x -> e {_varEnv = x})
-
-tcEnv :: Lens' DsEnv TcEnv
-tcEnv = lens _tcEnv (\e x -> e {_tcEnv = x})
+makeLenses ''DsEnv

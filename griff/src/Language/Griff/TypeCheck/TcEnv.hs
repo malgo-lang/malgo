@@ -3,6 +3,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
@@ -40,23 +41,9 @@ data TypeDef = TypeDef {_constructor :: Type, _qualVars :: [TyVar], _union :: [(
 instance Pretty TypeDef where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
 
-varEnv :: Lens' TcEnv (Map RnId Scheme)
-varEnv = lens _varEnv (\e x -> e {_varEnv = x})
+makeLenses ''TcEnv
 
-typeEnv :: Lens' TcEnv (Map RnTId TypeDef)
-typeEnv = lens _typeEnv (\e x -> e {_typeEnv = x})
-
-rnEnv :: Lens' TcEnv RnEnv
-rnEnv = lens _rnEnv (\e x -> e {_rnEnv = x})
-
-constructor :: Lens' TypeDef Type
-constructor = lens _constructor (\e x -> e {_constructor = x})
-
-qualVars :: Lens' TypeDef [TyVar]
-qualVars = lens _qualVars (\e x -> e {_qualVars = x})
-
-union :: Lens' TypeDef [(RnId, Type)]
-union = lens _union (\e x -> e {_union = x})
+makeLenses ''TypeDef
 
 simpleTypeDef :: Type -> TypeDef
 simpleTypeDef x = TypeDef x [] []
