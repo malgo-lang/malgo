@@ -83,7 +83,7 @@ genPrimitive modName env =
     prim name code = do
       nameId <- fromJust <$> use (_1 . tcEnv . Tc.rnEnv . Rn.varEnv . at name)
       Forall _ nameType <- fromJust <$> use (_1 . tcEnv . Tc.varEnv . at nameId)
-      nameId' <- Id.newTopLevelId name =<< dsType nameType
+      nameId' <- newCoreId nameId =<< dsType nameType
       _1 . varEnv . at nameId ?= nameId'
       case C.typeOf nameId' of
         -- プリミティブ関数は必ず一引数
