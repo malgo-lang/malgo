@@ -4,19 +4,6 @@
 
 Kagami is a collection of toy programming language implementaions and toolchain.
 
-## Koriel
-
-Some utilities for Kagami and the implementation of the Core internal representation.
-
-## Malgo
-
-A simple functional programming language inspired by MinCaml and Tiger.
-
-## Griff
-
-A functional programming language.
-Its syntax is based on Haskell.
-
 ## Requirement
 
 * [stack](https://docs.haskellstack.org/en/stable/README/)
@@ -43,4 +30,27 @@ $ griffc examples/griff/Hello.grf -o Hello.ll
 $ clang Hello.ll runtime/griff/rts.c -lgc
 $ ./a.out
 Hello, world
+```
+
+## Koriel
+
+Some utilities for Kagami and the implementation of the Core internal representation.
+
+## Malgo
+
+A simple functional programming language inspired by MinCaml and Tiger.
+
+## Griff
+
+A functional programming language.
+Its syntax is based on Haskell.
+
+### Primitives
+
+```
+data Int32 = Int32# Int32#
+data Int64 = Int64# Int64#
+
+add_i32# :: (Int32#, Int32#) -> Int32#
+add_i64# :: (Int64#, Int64#) -> Int64#
 ```
