@@ -57,7 +57,7 @@ compile opt = do
             liftIO $ do
               hPutStrLn stderr "=== RENAME ==="
               hPrint stderr $ sep $ punctuate ";" $ map pPrint ds'
-          (tcEnv, bg) <- typeCheck rnEnv ds'
+          (bg, tcEnv) <- typeCheck rnEnv ds'
           when (dumpTyped opt) $
             liftIO $ do
               hPutStrLn stderr "=== TYPE CHECK ==="
