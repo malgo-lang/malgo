@@ -93,8 +93,6 @@ instance Store MetaTv where
   poke _ = error "Store MetaTv"
   peek = error "Store MetaTv"
 
-type MonadMetaTv m = (MonadUniq m, MonadIO m)
-
 ---------------------------
 -- Read and Write MetaTv --
 ---------------------------
@@ -211,7 +209,7 @@ instance Pretty Type where
 
 class HasType a where
   toType :: Getter a Type
-  overType :: MonadMetaTv m => (Type -> m Type) -> a -> m a
+  overType :: (MonadIO m, MonadUniq m) => (Type -> m Type) -> a -> m a
 
 instance HasType Type where
   toType = to id
