@@ -47,7 +47,7 @@ module Koriel.Prelude
     newIORef,
     readIORef,
     writeIORef,
-    Bug,
+    Bug (..),
     bug,
     localState,
     Unreachable (..),
@@ -149,13 +149,19 @@ readIORef r = liftIO $ I.readIORef r
 writeIORef :: MonadIO m => IORef a -> a -> m ()
 writeIORef r v = liftIO $ I.writeIORef r v
 
+-- Unreachable
+data Unreachable = Unreachable
+  deriving stock (Show, Typeable)
+
+instance Exception Unreachable
+
 data Bug = Bug SomeException CallStack
   deriving stock (Show)
 
 instance Exception Bug where
   displayException (Bug e cStack) =
-    displayException e ++ "\n"
-      ++ prettyCallStack cStack
+    "internal error [" <> displayException e <> "]\n"
+      <> prettyCallStack cStack
 
 bug :: (HasCallStack, Exception e) => e -> a
 bug e = throw $ toException (Bug (toException e) callStack)
@@ -194,12 +200,6 @@ instance (Monoid w, MonadState s m) => MonadState s (WriterT w m) where
   {-# INLINE get #-}
   {-# INLINE put #-}
   {-# INLINE state #-}
-
--- Unreachable
-data Unreachable = Unreachable
-  deriving stock (Show, Typeable)
-
-instance Exception Unreachable
 
 -- Pretty SourcePos
 instance Pretty SourcePos where
