@@ -3,4 +3,8 @@ packages: malgo/
           griff/
 
 package *
-  ghc-options: -fno-ignore-asserts
+  ghc-options:
+    -fno-ignore-asserts
+    -fwrite-ide-info 
+    -optcxx -std=c++11
+    -haddock
