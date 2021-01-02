@@ -81,6 +81,10 @@ readAndParse = do
   when (dumpParsed opt) $ liftIO $ hPrint stderr $ pPrint ast
   pure ast
 
+-- |
+-- dumpHoge系のフラグによるダンプ出力を行うコンビネータ
+--
+-- m a のアクションの返り値をpPrintしてstderrに吐く
 withDump :: (MonadIO m, Pretty b) => Bool -> (t -> m b) -> t -> m b
 withDump isDump m a = do
   a' <- m a

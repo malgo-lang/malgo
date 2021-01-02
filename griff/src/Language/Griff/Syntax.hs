@@ -72,7 +72,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
           (\a b -> sep [a, nest (-2) $ "|" <+> b])
           (map (pPrintPrec l 0) cs)
   pPrintPrec _ _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pPrint xs
-  pPrintPrec l _ (Force _ x) = pPrintPrec l 11 x <> "!"
+  pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Exp x) where
   toType = to $ \case

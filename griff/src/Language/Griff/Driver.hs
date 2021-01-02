@@ -1,10 +1,10 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Driver (compile) where
 
 import qualified Data.ByteString as BS
-import qualified Data.Map as Map
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.CodeGen (codeGen)
@@ -20,7 +20,7 @@ import LLVM.Context (withContext)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
 import Language.Griff.Desugar.Pass (desugar)
-import Language.Griff.Interface (buildInterface, loadInterface, prettyInterface, storeInterface)
+import Language.Griff.Interface (buildInterface, loadInterface, storeInterface)
 import Language.Griff.Parser (parseGriff)
 import Language.Griff.Prelude
 import Language.Griff.Rename.Pass (rename)
@@ -28,7 +28,6 @@ import Language.Griff.Rename.RnEnv (genRnEnv)
 import qualified Language.Griff.Rename.RnEnv as RnState
 import qualified Language.Griff.Syntax as Syntax
 import Language.Griff.TypeCheck.Pass (typeCheck)
-import qualified Language.Griff.TypeCheck.TcEnv as T
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -37,6 +36,24 @@ import System.IO
 import Text.Megaparsec
   ( errorBundlePretty,
   )
+
+-- |
+-- dumpHoge系のフラグによるダンプ出力を行うコンビネータ
+--
+-- 引数 m のアクションの返り値をpPrintしてstderrに吐く
+withDump ::
+  (MonadIO m, Pretty a) =>
+  -- | dumpHoge系のフラグの値
+  Bool ->
+  String ->
+  m a ->
+  m a
+withDump isDump label m = do
+  result <- m
+  when isDump $ liftIO do
+    hPutStrLn stderr label
+    hPrint stderr $ pPrint result
+  pure result
 
 compile :: Opt -> IO ()
 compile opt = do
@@ -52,30 +69,16 @@ compile opt = do
       unGriffM $
         runUniqT ?? UniqSupply 0 $ do
           rnEnv <- genRnEnv
-          (ds', rnState) <- rename rnEnv moduleAst
-          when (dumpRenamed opt) $
-            liftIO $ do
-              hPutStrLn stderr "=== RENAME ==="
-              hPrint stderr $ sep $ punctuate ";" $ map pPrint ds'
-          (bg, tcEnv) <- typeCheck rnEnv ds'
-          when (dumpTyped opt) $
-            liftIO $ do
-              hPutStrLn stderr "=== TYPE CHECK ==="
-              hPrint stderr $ pPrint $ Map.toList $ view T.varEnv tcEnv
-              hPrint stderr $ Map.toList $ view T.typeEnv tcEnv
-              hPrint stderr $ pPrint bg
-          (dsEnv, core) <- desugar (rnState ^. RnState.moduleName) tcEnv bg
-          when (dumpDesugar opt) $
-            liftIO $ do
-              hPutStrLn stderr "=== DESUGAR ==="
-              hPrint stderr $ pPrint $ over appProgram flat core
+          (ds', rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv moduleAst
+          (bg, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv ds'
+          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (rnState ^. RnState.moduleName) tcEnv bg
           let inf = buildInterface rnState dsEnv
           storeInterface inf
           when (debugMode opt) $ do
             inf <- loadInterface (Syntax._moduleName moduleAst)
             liftIO $ do
               hPutStrLn stderr "=== INTERFACE ==="
-              hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ prettyInterface inf
+              hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
           runLint $ lintProgram core
           coreOpt <- if noOptimize opt then pure core else optimizeProgram (inlineSize opt) core
           when (dumpDesugar opt && not (noOptimize opt)) $

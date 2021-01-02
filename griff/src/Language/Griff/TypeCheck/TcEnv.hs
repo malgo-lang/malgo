@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -33,6 +34,17 @@ instance Semigroup TcEnv where
 
 instance Monoid TcEnv where
   mempty = TcEnv mempty mempty mempty
+
+instance Pretty TcEnv where
+  pPrint TcEnv {_varEnv, _typeEnv, _rnEnv} =
+    "TcEnv"
+      <+> braces
+        ( sep
+            [ "_varEnv" <+> "=" <+> pPrint (Map.toList _varEnv),
+              "_typeEnv" <+> "=" <+> pPrint (Map.toList _typeEnv),
+              "_rnEnv" <+> "=" <+> pPrint _rnEnv
+            ]
+        )
 
 data TypeDef = TypeDef {_constructor :: Type, _qualVars :: [TyVar], _union :: [(RnId, Type)]}
   deriving stock (Show, Eq, Generic)

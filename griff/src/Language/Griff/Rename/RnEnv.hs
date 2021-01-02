@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -7,8 +8,10 @@
 module Language.Griff.Rename.RnEnv where
 
 import qualified Data.Map as Map
+import qualified Data.Text.Lazy as TL
 import Koriel.Id
 import Koriel.MonadUniq
+import Koriel.Pretty
 import Language.Griff.Prelude
 import Language.Griff.Syntax.Extension
 
@@ -19,6 +22,8 @@ instance Semigroup RnState where
   RnState i1 p1 <> RnState i2 p2
     | p1 == p2 = RnState (i1 <> i2) p1
     | otherwise = error "package name mismatch"
+
+instance Pretty RnState where pPrint = text . TL.unpack . pShow
 
 makeLenses ''RnState
 
@@ -33,6 +38,16 @@ instance Semigroup RnEnv where
 
 instance Monoid RnEnv where
   mempty = RnEnv mempty mempty
+
+instance Pretty RnEnv where
+  pPrint RnEnv {_varEnv, _typeEnv} =
+    "RnEnv"
+      <+> braces
+        ( sep
+            [ "_varEnv" <+> "=" <+> pPrint (Map.toList _varEnv),
+              "_typeEnv" <+> "=" <+> pPrint (Map.toList _typeEnv)
+            ]
+        )
 
 makeLenses ''RnEnv
 

@@ -1,11 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Desugar.DsEnv where
 
+import qualified Data.Map as Map
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -33,5 +35,16 @@ instance Semigroup DsEnv where
 
 instance Monoid DsEnv where
   mempty = DsEnv (ModuleName "$Undefined") mempty mempty
+
+instance Pretty DsEnv where
+  pPrint DsEnv {_moduleName, _varEnv, _tcEnv} =
+    "DsEnv"
+      <+> braces
+        ( sep
+            [ "_moduleName" <+> "=" <+> pPrint _moduleName,
+              "_varEnv" <+> "=" <+> pPrint (Map.toList _varEnv),
+              "_tcEnv" <+> "=" <+> pPrint _tcEnv
+            ]
+        )
 
 makeLenses ''DsEnv

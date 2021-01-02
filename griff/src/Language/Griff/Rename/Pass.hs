@@ -214,7 +214,7 @@ genToplevelEnv = go mempty
       interface <- loadInterface modName
       opt <- getOpt
       when (debugMode opt) $
-        liftIO $ hPrint stderr $ prettyInterface interface
+        liftIO $ hPrint stderr $ pPrint interface
       go (env & varEnv <>~ interface ^. resolvedVarIdentMap & typeEnv <>~ interface ^. resolvedTypeIdentMap) rest
     go env (Infix {} : rest) = go env rest
 

@@ -48,14 +48,14 @@ instance Monoid Interface where
 
 makeLenses ''Interface
 
-prettyInterface :: Interface -> Doc
-prettyInterface i =
-  "Interface"
-    $$ nest 2 (sep ["signatureMap =", nest 2 $ pPrint $ Map.toList (i ^. signatureMap)])
-    $$ nest 2 (sep ["typeDefMap =", nest 2 $ pPrint $ Map.toList (i ^. typeDefMap)])
-    $$ nest 2 (sep ["resolvedVarIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedVarIdentMap)])
-    $$ nest 2 (sep ["resolvedTypeIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedTypeIdentMap)])
-    $$ nest 2 (sep ["coreIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. coreIdentMap)])
+instance Pretty Interface where
+  pPrint i =
+    "Interface"
+      $$ nest 2 (sep ["signatureMap =", nest 2 $ pPrint $ Map.toList (i ^. signatureMap)])
+      $$ nest 2 (sep ["typeDefMap =", nest 2 $ pPrint $ Map.toList (i ^. typeDefMap)])
+      $$ nest 2 (sep ["resolvedVarIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedVarIdentMap)])
+      $$ nest 2 (sep ["resolvedTypeIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedTypeIdentMap)])
+      $$ nest 2 (sep ["coreIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. coreIdentMap)])
 
 buildInterface :: RnState -> DsEnv -> Interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
