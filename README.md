@@ -21,7 +21,7 @@ $ stack install
 ## Usage
 
 ```sh
-$ malgoic examples/hello.mlg -o hello.ll
+$ malgoc examples/hello.mlg -o hello.ll
 $ clang hello.ll runtime/malgo/rts.c -lgc
 $ ./a.out
 Hello, world
