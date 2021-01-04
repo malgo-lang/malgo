@@ -14,41 +14,24 @@ jobs:
     steps:
     - name: Install packages
       run: |
-        sudo add-apt-repository -y ppa:hvr/ghc
         sudo apt-get update
         sudo apt-get install -y libgc-dev llvm-9-dev
     - uses: actions/checkout@v2
-    - uses: actions/setup-haskell@v1.1.3
+    - uses: haskell/actions/setup@v1
       with:
         ghc-version: '8.10.2'
-        cabal-version: '3.4.0.0'
-
-    - name: Cache
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-cabal
-      with:
-        path: |
-          ~/.cabal
-          dist-newstyle
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.cabal') }}-${{ hashFiles('**/cabal.project') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+        enable-stack: true
+        stack-version: 'latest'
 
     - name: Install dependencies
       run: |
-        cabal update
-        cabal install hspec-discover --overwrite-policy=always
-        export PATH=~/.cabal/bin:$PATH
-        cabal build koriel --only-dependencies --enable-tests --enable-benchmarks
+        stack install hspec-discover --overwrite-policy=always
+        export PATH=~/.stack/bin:$PATH
 
     - name: Build
       run: |
-        cabal build --enable-tests --enable-benchmarks all
+        stack build
     - name: Run tests
       run: |
-        cabal test all
         ./test_malgo.sh
         ./test_griff.sh
