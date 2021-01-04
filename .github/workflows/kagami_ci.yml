@@ -25,7 +25,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        stack install hspec-discover --overwrite-policy=always
+        stack install hspec-discover
         export PATH=~/.stack/bin:$PATH
 
     - name: Build
