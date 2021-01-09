@@ -40,7 +40,7 @@ solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (WithPos (TyMeta a1 :~ TyMeta a2) pos : cs)
   | a1 == a2 = solveLoop (n - 1) cs
-  | (isRigid a1 && isRigid a2) && (rigidName a1 /= rigidName a2) =
+  | isRigid a1 && isRigid a2 && rigidName a1 /= rigidName a2 =
     errorOn pos $
       unifyErrorMessage a1 a2
         $+$ quotes (pPrint a1) <+> "and" <+> quotes (pPrint a2) <+> "are rigid type variables"

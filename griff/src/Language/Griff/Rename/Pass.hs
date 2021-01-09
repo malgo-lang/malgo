@@ -156,8 +156,7 @@ rnClause (Clause pos ps ss) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   unless (allUnique vars) $ errorOn pos "Same variables occurs in a pattern"
-  vars' <- traverse resolveName vars
-  let vm = Map.fromList $ zip vars vars'
+  vm <- Map.fromList . zip vars <$> traverse resolveName vars
   local (over varEnv (vm <>)) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss
   where
     patVars (VarP _ x) = [x]

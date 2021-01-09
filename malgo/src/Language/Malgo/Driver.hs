@@ -21,7 +21,6 @@ import Koriel.Core.Core
     Exp (..),
     Program (..),
     Unboxed (..),
-    appProgram,
     bind,
     mainFunc,
     runDef,
@@ -100,17 +99,16 @@ compile = M.runMalgo $ do
       >>= withDump (dumpTyped opt) typing
       >>= withDump (dumpDesugar opt) desugar
       >>= (\e -> lint e >> pure e)
-      >>= withDump (dumpDesugar opt) (optimize (inlineSize opt))
   malgoMainFunc <-
     mainFunc =<< runDef do
       _ <- bind expr
       pure (Atom $ Unboxed $ Int32 0)
-  let program = Program [malgoMainFunc]
+  program <- optimizeProgram (inlineSize opt) $ Program [malgoMainFunc]
   llvmir <-
     if applyLambdaLift opt
       then
         withDump (dumpLambdaLift opt) lambdalift program
-          >>= traverseOf appProgram (withDump (dumpLambdaLift opt) (optimize (inlineSize opt)))
+          >>= withDump (dumpLambdaLift opt) (optimizeProgram (inlineSize opt))
           >>= codeGen
       else codeGen program
   pure $

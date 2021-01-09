@@ -4,7 +4,7 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Parser where
+module Language.Griff.Parser (parseGriff) where
 
 import Control.Monad.Combinators.Expr
 import Data.Functor (($>))
@@ -23,6 +23,9 @@ import qualified Text.Megaparsec.Char.Lexer as L
 
 type Parser = Parsec Void Text
 
+-- | パーサー
+--
+-- ファイル1つにつきモジュール1つ
 parseGriff :: String -> Text -> Either (ParseErrorBundle Text Void) (Module (Griff 'Parse))
 parseGriff = parse (pModule <* eof)
 

@@ -1,3 +1,4 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -7,11 +8,11 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Koriel.Core.Optimize
-  ( optimize,
-    optimizeProgram,
+  ( optimizeProgram,
   )
 where
 
+import Control.Monad.Except
 import qualified Data.List as List
 import qualified Data.Map as Map
 import qualified Data.Set as Set
@@ -23,52 +24,40 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 
-times :: (Monad m, Eq (t a), Foldable t) => Int -> (t a -> m (t a)) -> t a -> m (t a)
-times n f e =
-  if n <= 0
-    then pure e
-    else do
-      e' <- f e
-      if e == e' then pure e' else times (n - 1) f e'
+-- | Apply a monadic function n times.
+times :: Monad m => Int -> (t -> m t) -> t -> m t
+times 0 _ x = pure x
+times n f x
+  | n > 0 = times (n - 1) f =<< f x
+  | otherwise = bug Unreachable
 
-optimize :: MonadUniq m => Int -> Exp (Id Type) -> m (Exp (Id Type))
-optimize level expr =
-  runReaderT
-    ?? level
-    $ flat
-      <$> times
-        10
-        ( pure
-            >=> optVarBind
-            >=> (flip runReaderT mempty . optPackInline)
-            >=> removeUnusedLet
-            >=> (flip evalStateT mempty . optCallInline)
-            >=> optCast
-            >=> pure
-              . flat
-        )
-        expr
-
-optimizeExpr :: (MonadReader Int f, MonadUniq f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
-optimizeExpr state expr =
-  flat
-    <$> times
-      10
-      ( pure
-          >=> optVarBind
-          >=> (flip runReaderT mempty . optPackInline)
-          >=> removeUnusedLet
-          >=> (flip evalStateT state . optCallInline)
-          >=> optCast
-          >=> pure
-            . flat
-      )
-      expr
-
-optimizeProgram :: MonadUniq m => Int -> Program (Id Type) -> m (Program (Id Type))
+-- | 最適化を行う関数
+--
+-- * 自明な変数の付け替えの簡約 (optVarBind)
+-- * 値コンストラクタを含む関数のインライン展開 (optPackInline, optCallInline)
+-- * 不要なlet式の削除 (removeUnusedLet)
+optimizeProgram ::
+  MonadUniq m =>
+  -- | インライン展開する関数のサイズ
+  Int ->
+  Program (Id Type) ->
+  m (Program (Id Type))
 optimizeProgram level prog@(Program fs) = runReaderT ?? level $ do
   state <- execStateT (traverse (checkInlineable . over _2 (uncurry Fun)) fs) mempty
   appProgram (optimizeExpr state) prog
+
+optimizeExpr :: (MonadReader Int f, MonadUniq f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
+optimizeExpr state = 10 `times` opt
+  where
+    opt =
+      pure
+        >=> optVarBind
+        >=> (flip runReaderT mempty . optPackInline)
+        >=> removeUnusedLet
+        >=> (flip evalStateT state . optCallInline)
+        -- >=> optCast
+        >=> pure
+          . flat
 
 type CallInlineMap = Map (Id Type) ([Id Type], Exp (Id Type))
 
@@ -142,36 +131,40 @@ removeUnusedLet :: (Monad f, Ord a) => Exp (Id a) -> f (Exp (Id a))
 removeUnusedLet (Let ds e) = do
   ds' <- traverseOf (traversed . _2 . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
+  -- 定義vから到達可能でかつvで定義されていない変数すべての集合のマップ
   let gamma = map (\(v, o) -> (v, Set.delete v $ freevars o)) ds'
-  let ds'' = filter (\(v, _) -> reachable 100 gamma v $ freevars e') ds'
-  if null ds'' then pure e' else pure $ Let ds' e'
+  if any (\(v, _) -> reachable 100 gamma v $ freevars e') ds' then pure $ Let ds' e' else pure e'
   where
+    reachable :: Ord a => Int -> [(Id a, Set (Id a))] -> Id a -> Set (Id a) -> Bool
     reachable limit gamma v fvs
-      | limit <= 0 =
-        undefined
-      -- 相互再帰する関数との相互作用で何かがバグる
+      -- limit回試行してわからなければ安全側に倒してTrue
+      | limit <= 0 = True
       | v ^. idIsTopLevel = True
       | v `elem` fvs = True
       | otherwise =
+        -- fvsの要素fvについて、gamma[fv]をfvsに加える
+        -- fvsに変化がなければ、vはどこからも参照されていない
         let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ Set.toList fvs)
-         in fvs /= fvs' && reachable (limit - 1 :: Int) gamma v fvs'
+         in fvs /= fvs' && reachable limit gamma v fvs'
 removeUnusedLet (Match v cs) =
   Match <$> removeUnusedLet v <*> traverseOf (traversed . appCase) removeUnusedLet cs
 removeUnusedLet e = pure e
 
-optCast :: MonadUniq f => Exp (Id Type) -> f (Exp (Id Type))
-optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
-  pts :-> _
-    | length pts' == length pts -> do
-      f' <- newLocalId "$cast_opt" (pts' :-> rt')
-      ps' <- traverse (newLocalId "$p") pts'
-      v' <- runDef $ do
-        ps <- zipWithM cast pts $ map (Atom . Var) ps'
-        r <- bind (Call f ps)
-        pure $ Cast rt' r
-      pure (Let [(f', Fun ps' v')] (Atom $ Var f'))
-    | otherwise -> bug Unreachable
-  _ -> pure e
-optCast (Match v cs) = Match <$> optCast v <*> traverseOf (traversed . appCase) optCast cs
-optCast (Let ds e) = Let <$> traverseOf (traversed . _2 . appObj) optCast ds <*> optCast e
-optCast e = pure e
+-- 効果がはっきりしないので一旦コメントアウト
+-- TODO: ベンチマーク
+-- optCast :: MonadUniq f => Exp (Id Type) -> f (Exp (Id Type))
+-- optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
+--   pts :-> _
+--     | length pts' == length pts -> do
+--       f' <- newLocalId "$cast_opt" (pts' :-> rt')
+--       ps' <- traverse (newLocalId "$p") pts'
+--       v' <- runDef do
+--         ps <- zipWithM cast pts $ map (Atom . Var) ps'
+--         r <- bind (Call f ps)
+--         pure $ Cast rt' r
+--       pure (Let [(f', Fun ps' v')] (Atom $ Var f'))
+--     | otherwise -> bug Unreachable
+--   _ -> pure e
+-- optCast (Match v cs) = Match <$> optCast v <*> traverseOf (traversed . appCase) optCast cs
+-- optCast (Let ds e) = Let <$> traverseOf (traversed . _2 . appObj) optCast ds <*> optCast e
+-- optCast e = pure e

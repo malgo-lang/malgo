@@ -386,7 +386,7 @@ genCase scrutinee cs k = \case
       vOpr <- gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
       pure $ Map.singleton v vOpr
     void $ local (over valueMap (env <>)) $ genExp e k
-    pure $ Right (C.Int 8 $ fromIntegral tag, label)
+    pure $ Right (C.Int 8 tag, label)
 
 genAtom ::
   (MonadReader OprMap m, MonadUniq m, MonadModuleBuilder m, MonadIRBuilder m) =>
@@ -427,8 +427,7 @@ genObj funName (Fun ps e) = do
       capture <- bitcast rawCapture (ptr capType)
       env <- ifoldMapA ?? fvs $ \i fv ->
         Map.singleton fv <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
-      let env' = Map.fromList $ zip ps ps'
-      local (over valueMap ((env <> env') <>)) $ genExp e ret
+      local (over valueMap ((env <> Map.fromList (zip ps ps')) <>)) $ genExp e ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType
   ifor_ fvs $ \i fv -> do
@@ -446,13 +445,13 @@ genObj funName (Fun ps e) = do
     retType = convType $ C.typeOf e
 genObj name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
   addr <- mallocType (StructureType False [i8, StructureType False $ map convType ts])
-  let tag = fromIntegral $ findIndex con cs
-  gepAndStore addr [int32 0, int32 0] (int8 tag)
-  ifor_ xs $ \i x -> do
-    xOpr <- genAtom x
-    gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] xOpr
-  addr <- bitcast addr (convType $ SumT cs)
-  pure $ Map.singleton name addr
+  -- タグの書き込み
+  gepAndStore addr [int32 0, int32 0] (int8 $ findIndex con cs)
+  -- 引数の書き込み
+  ifor_ xs $ \i x ->
+    gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
+  -- nameの型にキャスト
+  Map.singleton name <$> bitcast addr (convType $ SumT cs)
 genObj _ Pack {} = bug Unreachable
 genObj x (Core.Array a n) = mdo
   sizeOpr <- mul (sizeof $ convType $ C.typeOf a) =<< genAtom n
@@ -479,14 +478,14 @@ genObj x (Core.Array a n) = mdo
   gepAndStore structOpr [int32 0, int32 1] =<< genAtom n
   pure $ Map.singleton x structOpr
 
-genCon :: HasCallStack => Set Con -> Con -> (Int, LT.Type)
+genCon :: HasCallStack => Set Con -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
   | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
   | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
 
-findIndex :: (HasCallStack, Ord a, Pretty a) => a -> Set a -> Int
+findIndex :: (HasCallStack, Ord a, Pretty a) => a -> Set a -> Integer
 findIndex con cs = case Set.lookupIndex con cs of
-  Just i -> i
+  Just i -> fromIntegral i
   Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
 
 sizeof :: LT.Type -> Operand
@@ -544,9 +543,9 @@ internalFunction ::
 internalFunction label argtys retty body = do
   let tys = fst <$> argtys
   (paramNames, blocks) <- runIRBuilderT emptyIRBuilder $ do
-    paramNames <- forM argtys $ \(_, paramName) -> case paramName of
-      NoParameterName -> fresh
-      ParameterName p -> fresh `named` p
+    paramNames <- for argtys $ \case
+      (_, NoParameterName) -> fresh
+      (_, ParameterName p) -> fresh `named` p
     body $ zipWith LocalReference tys paramNames
     return paramNames
   let def =

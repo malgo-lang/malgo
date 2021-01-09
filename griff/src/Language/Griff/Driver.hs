@@ -55,6 +55,7 @@ withDump isDump label m = do
     hPrint stderr $ pPrint result
   pure result
 
+-- | .grfから.llへのコンパイル
 compile :: Opt -> IO ()
 compile opt = do
   src <- T.readFile (srcName opt)

@@ -25,11 +25,10 @@ import Koriel.Prelude
 import Koriel.Pretty
 
 class HasFreeVar f where
+  -- | free variables
   freevars :: Ord a => f a -> Set a
 
-{-
-Unboxed values  unboxed
--}
+-- | unboxed values
 data Unboxed
   = Int32 Integer
   | Int64 Integer
@@ -59,12 +58,12 @@ instance Pretty Unboxed where
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 
-{-
-Atoms  a ::= unboxed | x
--}
+-- | atoms
 data Atom a
-  = Var a
-  | Unboxed Unboxed
+  = -- | variable
+    Var a
+  | -- | literal of unboxed values
+    Unboxed Unboxed
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasType a => HasType (Atom a) where
@@ -85,27 +84,30 @@ class HasAtom f where
 instance HasAtom Atom where
   atom = id
 
-{-
-Expressions  e ::= a               Atom
-                 | f a_1 ... a_n   Function call (arity(f) >= 1)
-                 | p a_1 ... a_n   Saturated primitive operation (n >= 1)
-                 | a_1[a_2]        Read array
-                 | a_1[a_2] <- a_3 Write array
-                 | LET x = obj IN e
-                 | MATCH e WITH { alt_1; ... alt_n; } (n >= 0)
--}
+-- | expressions
 data Exp a
-  = Atom (Atom a)
-  | Call (Atom a) [Atom a]
-  | CallDirect a [Atom a]
-  | ExtCall String Type [Atom a]
-  | BinOp Op (Atom a) (Atom a)
-  | ArrayRead (Atom a) (Atom a)
-  | ArrayWrite (Atom a) (Atom a) (Atom a)
-  | Cast Type (Atom a)
-  | Let [(a, Obj a)] (Exp a)
-  | Match (Exp a) (NonEmpty (Case a))
-  | Error Type
+  = -- | atom (variables and literals)
+    Atom (Atom a)
+  | -- | application of closure
+    Call (Atom a) [Atom a]
+  | -- | application of function (not closure)
+    CallDirect a [Atom a]
+  | -- | application of external function
+    ExtCall String Type [Atom a]
+  | -- | binary operation
+    BinOp Op (Atom a) (Atom a)
+  | -- | read the array element
+    ArrayRead (Atom a) (Atom a)
+  | -- | assign the value to the array element
+    ArrayWrite (Atom a) (Atom a) (Atom a)
+  | -- | type casting
+    Cast Type (Atom a)
+  | -- | definition of local variables
+    Let [(a, Obj a)] (Exp a)
+  | -- | pattern matching
+    Match (Exp a) (NonEmpty (Case a))
+  | -- | raise an internal error
+    Error Type
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasType a => HasType (Exp a) where
@@ -201,15 +203,14 @@ instance HasAtom Exp where
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
 
-{-
-Alternatives  alt ::= UNPACK(C x_1 ... x_n) -> e  (n >= 0)
-                    | SWITCH u -> e
-                    | BIND x -> e
--}
+-- | alternatives
 data Case a
-  = Unpack Con [a] (Exp a)
-  | Switch Unboxed (Exp a)
-  | Bind a (Exp a)
+  = -- | constructor pattern
+    Unpack Con [a] (Exp a)
+  | -- | unboxed value pattern
+    Switch Unboxed (Exp a)
+  | -- | variable pattern
+    Bind a (Exp a)
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Case a) where
@@ -234,16 +235,14 @@ instance HasAtom Case where
     Switch u e -> Switch u <$> traverseOf atom f e
     Bind a e -> Bind a <$> traverseOf atom f e
 
-{-
-Heap objects  obj ::= FUN(x_1 ... x_n -> e)  Function (arity = n >= 1)
-                    | PAP(f a_1 ... a_n)     Partial application (f is always a FUN with arity(f) > n >= 1)
-                    | PACK(C a_1 ... a_n)    Saturated constructor (n >= 0)
-                    | ARRAY(a, n)            Array (n > 0)
--}
+-- | heap objects
 data Obj a
-  = Fun [a] (Exp a)
-  | Pack Type Con [Atom a]
-  | Array (Atom a) (Atom a)
+  = -- | function (arity >= 1)
+    Fun [a] (Exp a)
+  | -- | saturated constructor (arity >= 0)
+    Pack Type Con [Atom a]
+  | -- | array (dim >= 0)
+    Array (Atom a) (Atom a)
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Obj a) where
@@ -267,12 +266,9 @@ instance HasAtom Obj where
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
     Array a n -> Array <$> traverseOf atom f a <*> traverseOf atom f n
 
-{-
-Programs  prog ::= f_1 = obj_1; ...; f_n = obj_n
--}
+-- | toplevel function definitions
 newtype Program a = Program
-  { -- | トップレベル関数。topBinds以外の自由変数を持たない
-    topFuncs :: [(a, ([a], Exp a))]
+  { topFuncs :: [(a, ([a], Exp a))]
   }
   deriving stock (Eq, Show, Functor)
 

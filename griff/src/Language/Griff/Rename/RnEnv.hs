@@ -18,11 +18,6 @@ import Language.Griff.Syntax.Extension
 data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: ModuleName}
   deriving stock (Show)
 
-instance Semigroup RnState where
-  RnState i1 p1 <> RnState i2 p2
-    | p1 == p2 = RnState (i1 <> i2) p1
-    | otherwise = error "package name mismatch"
-
 instance Pretty RnState where pPrint = text . TL.unpack . pShow
 
 makeLenses ''RnState
