@@ -24,8 +24,7 @@ import Language.Griff.Interface (buildInterface, loadInterface, storeInterface)
 import Language.Griff.Parser (parseGriff)
 import Language.Griff.Prelude
 import Language.Griff.Rename.Pass (rename)
-import Language.Griff.Rename.RnEnv (genRnEnv)
-import qualified Language.Griff.Rename.RnEnv as RnState
+import qualified Language.Griff.Rename.RnEnv as RnEnv
 import qualified Language.Griff.Syntax as Syntax
 import Language.Griff.TypeCheck.Pass (typeCheck)
 import System.IO
@@ -59,24 +58,24 @@ withDump isDump label m = do
 compile :: Opt -> IO ()
 compile opt = do
   src <- T.readFile (srcName opt)
-  moduleAst <- case parseGriff (srcName opt) src of
+  parsedAst <- case parseGriff (srcName opt) src of
     Right x -> pure x
     Left err -> error $ errorBundlePretty err
   when (dumpParsed opt) $ do
     hPutStrLn stderr "=== PARSE ==="
-    hPrint stderr $ pPrint moduleAst
+    hPrint stderr $ pPrint parsedAst
   void $
     runReaderT ?? opt $
       unGriffM $
         runUniqT ?? UniqSupply 0 $ do
-          rnEnv <- genRnEnv
-          (ds', rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv moduleAst
-          (bg, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv ds'
-          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (rnState ^. RnState.moduleName) tcEnv bg
+          rnEnv <- RnEnv.genBuiltinRnEnv
+          (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
+          (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
+          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv typedAst
           let inf = buildInterface rnState dsEnv
           storeInterface inf
           when (debugMode opt) $ do
-            inf <- loadInterface (Syntax._moduleName moduleAst)
+            inf <- loadInterface (Syntax._moduleName typedAst)
             liftIO $ do
               hPutStrLn stderr "=== INTERFACE ==="
               hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf

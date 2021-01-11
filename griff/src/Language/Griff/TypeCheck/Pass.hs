@@ -20,17 +20,17 @@ import Language.Griff.Rename.RnEnv (RnEnv)
 import Language.Griff.Syntax hiding (Type (..))
 import qualified Language.Griff.Syntax as S
 import Language.Griff.Syntax.Extension
-import Language.Griff.Syntax.Grouping
 import Language.Griff.Type
 import Language.Griff.TypeCheck.Constraint
 import Language.Griff.TypeCheck.TcEnv
 import Text.Megaparsec (SourcePos)
 
 -- Entry point
-typeCheck :: (MonadUniq m, MonadIO m, MonadGriff m) => RnEnv -> [Decl (Griff 'Rename)] -> m (BindGroup (Griff 'TypeCheck), TcEnv)
-typeCheck rnEnv ds = do
+typeCheck :: (MonadUniq m, MonadIO m, MonadGriff m) => RnEnv -> Module (Griff 'Rename) -> m (Module (Griff 'TypeCheck), TcEnv)
+typeCheck rnEnv (Module name bg) = do
   tcEnv <- genTcEnv rnEnv
-  runStateT (tcBindGroup $ makeBindGroup ds) tcEnv
+  (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
+  pure (Module name bg', tcEnv')
 
 tcBindGroup :: (MonadUniq m, MonadState TcEnv m, MonadIO m, MonadGriff m) => BindGroup (Griff 'Rename) -> m (BindGroup (Griff 'TypeCheck))
 tcBindGroup bindGroup = do

@@ -46,11 +46,8 @@ instance Pretty RnEnv where
 
 makeLenses ''RnEnv
 
-genRnState :: Monad m => ModuleName -> m RnState
-genRnState (ModuleName name) = pure $ RnState mempty $ ModuleName name
-
-genRnEnv :: MonadUniq m => m RnEnv
-genRnEnv = do
+genBuiltinRnEnv :: MonadUniq m => m RnEnv
+genBuiltinRnEnv = do
   -- generate RnId of primitive functions and operetors
   add_i32 <- newTopLevelId "add_i32#" $ ModuleName "Builtin"
   add_i64 <- newTopLevelId "add_i64#" $ ModuleName "Builtin"

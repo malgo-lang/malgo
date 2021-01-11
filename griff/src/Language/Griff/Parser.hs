@@ -36,7 +36,7 @@ pModule = do
   x <- pModuleName
   void $ pOperator "="
   ds <- between (symbol "{") (symbol "}") $ pDecl `sepEndBy` pOperator ";"
-  pure $ Module {_moduleName = ModuleName x, _moduleDecls = ds}
+  pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ds}
 
 -- module name
 pModuleName :: Parser String

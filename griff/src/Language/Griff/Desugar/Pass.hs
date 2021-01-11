@@ -33,7 +33,6 @@ import Language.Griff.Prelude
 import qualified Language.Griff.Rename.RnEnv as Rn
 import Language.Griff.Syntax as G
 import Language.Griff.Syntax.Extension
-import Language.Griff.Syntax.Grouping
 import Language.Griff.Type as GT
 import Language.Griff.TypeCheck.Pass (applySubst)
 import Language.Griff.TypeCheck.TcEnv (TcEnv)
@@ -42,11 +41,10 @@ import qualified Language.Griff.TypeCheck.TcEnv as Tc
 -- | GriffからCoreへの変換
 desugar ::
   (MonadUniq m, MonadFail m, MonadIO m, MonadGriff m) =>
-  ModuleName ->
   TcEnv ->
-  BindGroup (Griff 'TypeCheck) ->
+  Module (Griff 'TypeCheck) ->
   m (DsEnv, Program (Id C.Type))
-desugar modName tcEnv ds = do
+desugar tcEnv (Module modName ds) = do
   (dsEnv, prims) <- genPrimitive modName tcEnv
   (dsEnv', ds') <- runReaderT (dsBindGroup ds) dsEnv
   case searchMain (Map.toList $ view varEnv dsEnv') of

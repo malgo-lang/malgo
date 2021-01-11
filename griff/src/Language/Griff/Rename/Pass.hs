@@ -26,10 +26,10 @@ import Language.Griff.Syntax.Extension
 import System.IO (hPrint, stderr)
 import Text.Megaparsec.Pos (SourcePos)
 
-rename :: (MonadUniq m, MonadGriff m, MonadIO m) => RnEnv -> Module (Griff 'Parse) -> m ([Decl (Griff 'Rename)], RnState)
-rename rnEnv (Module modName ds) = do
-  rnState <- genRnState modName
-  runStateT ?? rnState $ runReaderT ?? rnEnv $ rnDecls ds
+rename :: (MonadUniq m, MonadGriff m, MonadIO m) => RnEnv -> Module (Griff 'Parse) -> m (Module (Griff 'Rename), RnState)
+rename builtinEnv (Module modName ds) = do
+  (ds', rnState) <- runStateT ?? RnState mempty modName $ runReaderT ?? builtinEnv $ rnDecls ds
+  pure (Module modName $ makeBindGroup ds', rnState)
 
 resolveName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
 resolveName name = do

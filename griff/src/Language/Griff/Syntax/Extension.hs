@@ -127,6 +127,9 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
     ForallTypeX c x
   )
 
+-- Module Extensions
+type family XModule x
+
 -- Phase and type instance
 data GriffPhase = Parse | Rename | TypeCheck
 
