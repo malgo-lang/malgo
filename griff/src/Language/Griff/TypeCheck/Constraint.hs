@@ -82,7 +82,7 @@ metaTvs _ = mempty
 
 bind :: (MonadGriff m, MonadIO m) => SourcePos -> MetaTv -> Type -> m ()
 bind pos tv t2
-  | kind tv /= kind t2 = errorOn pos $ "Kind mismatch:" <+> vcat [quotes $ pPrint tv, pPrint t2]
+  | kind tv /= kind t2 = errorOn pos $ "Kind mismatch:" <+> vcat [quotes (pPrint tv) <> ":" <> pPrint (kind tv), pPrint t2 <> ":" <> pPrint (kind t2)]
   | otherwise = do
     mt1 <- readMetaTv tv
     case mt1 of
