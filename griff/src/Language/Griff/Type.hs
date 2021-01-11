@@ -8,6 +8,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Type where
@@ -22,7 +23,15 @@ import Language.Griff.Prelude
 -- Kind and HasKind --
 ----------------------
 
-data Kind = Star | KArr Kind Kind
+pattern Star :: Kind
+pattern Star = Type Boxed
+
+-- | Definition of `kind`
+data Kind
+  = -- | a kind
+    Type Rep
+  | -- | kind arrow (* -> *, * is a kind)
+    KArr Kind Kind
   deriving stock (Eq, Ord, Show, Generic)
   deriving anyclass (Store)
 
@@ -36,9 +45,18 @@ instance HasKind Kind where
   kind = id
 
 instance Pretty Kind where
-  pPrintPrec _ _ Star = "*"
+  pPrintPrec _ _ (Type rep) = pPrint rep
   pPrintPrec l d (KArr k1 k2) =
     maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
+
+-- | Runtime representation
+data Rep
+  = -- | Boxed value
+    Boxed
+  deriving stock (Eq, Ord, Show, Generic)
+  deriving anyclass (Store)
+
+instance Pretty Rep where pPrint rep = text $ show rep
 
 ----------
 -- Type --
@@ -185,10 +203,10 @@ instance HasKind Type where
     _ -> error "invalid kind"
   kind (TyVar t) = kind t
   kind (TyCon c) = kind c
-  kind (TyPrim _) = Star
-  kind (TyArr _ _) = Star
-  kind (TyTuple _) = Star
-  kind (TyLazy _) = Star
+  kind (TyPrim _) = Type Boxed -- FIXME: 適切なRepを定義する
+  kind (TyArr _ _) = Type Boxed
+  kind (TyTuple _) = Type Boxed
+  kind (TyLazy _) = Type Boxed
   kind (TyMeta tv) = kind tv
 
 instance Pretty Type where
