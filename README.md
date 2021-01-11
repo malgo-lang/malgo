@@ -54,3 +54,28 @@ data Int64 = Int64# Int64#
 add_i32# :: (Int32#, Int32#) -> Int32#
 add_i64# :: (Int64#, Int64#) -> Int64#
 ```
+
+# Future works
+
+* More and More Documents!!
+
+* Rich build tool like go, cargo, cabal
+
+* Griff
+  + Add two kind (Type, Unboxed) to type system
+    - Fix #14
+  + Literals for Boxed types (Int32, Int64, Float, Double, Char, String)
+  + Mutable (unboxed | boxed) polymorphic array (in Koriel, Array)
+  + More rich standard library
+  + ML like module system 
+  + Overloaded Literals
+* Malgo
+  + Refactoring
+  + Type definition syntax
+  + Unboxed literals
+  + ML like module system
+* Koriel
+  + Rename Core -> Koriel
+  + Syntax and Parser
+    - Ref #9
+  + Support overloaded function based on SumT
