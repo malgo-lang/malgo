@@ -2,9 +2,6 @@ packages: malgo/
           koriel/
           griff/
 
-package *
+package llvm-hs
   ghc-options:
-    -fno-ignore-asserts
-    -fwrite-ide-info 
     -optcxx -std=c++11
-    -haddock
