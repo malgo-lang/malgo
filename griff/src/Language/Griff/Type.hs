@@ -53,10 +53,46 @@ instance Pretty Kind where
 data Rep
   = -- | Boxed value
     Boxed
+  | -- | Int32#
+    Int32Rep
+  | -- | Int64#
+    Int64Rep
+  | -- | Float#
+    FloatRep
+  | -- | Double#
+    DoubleRep
+  | -- | Char#
+    CharRep
+  | -- | String#
+    StringRep
   deriving stock (Eq, Ord, Show, Generic)
   deriving anyclass (Store)
 
 instance Pretty Rep where pPrint rep = text $ show rep
+
+---------------------
+-- Primitive Types --
+---------------------
+
+data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving anyclass (Store)
+
+instance Pretty PrimT where
+  pPrint Int32T = "Int32#"
+  pPrint Int64T = "Int64#"
+  pPrint FloatT = "Float#"
+  pPrint DoubleT = "Double#"
+  pPrint CharT = "Char#"
+  pPrint StringT = "String#"
+
+instance HasKind PrimT where
+  kind Int32T = Type Int32Rep
+  kind Int64T = Type Int64Rep 
+  kind FloatT = Type FloatRep 
+  kind DoubleT = Type DoubleRep 
+  kind CharT = Type CharRep 
+  kind StringT = Type StringRep 
 
 ----------
 -- Type --
@@ -71,6 +107,66 @@ instance HasKind Scheme where
 
 instance Pretty Scheme where
   pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
+
+type TyVar = Id Kind
+
+type TyCon = Id Kind
+
+data Type
+  = TyApp Type Type
+  | TyVar TyVar
+  | TyCon TyCon
+  | TyPrim PrimT
+  | TyArr Type Type
+  | TyTuple [Type]
+  | TyLazy Type
+  | TyMeta MetaTv
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving anyclass (Store)
+
+_TyApp :: Prism' Type (Type, Type)
+_TyApp = prism' (uncurry TyApp) $ \case
+  TyApp t1 t2 -> Just (t1, t2)
+  _ -> Nothing
+
+_TyCon :: Prism' Type TyCon
+_TyCon = prism' TyCon $ \case
+  TyCon c -> Just c
+  _ -> Nothing
+
+_TyArr :: Prism' Type (Type, Type)
+_TyArr = prism' (uncurry TyArr) $ \case
+  TyArr t1 t2 -> Just (t1, t2)
+  _ -> Nothing
+
+_TyLazy :: Prism' Type Type
+_TyLazy = prism' TyLazy $ \case
+  TyLazy t -> Just t
+  _ -> Nothing
+
+instance HasKind Type where
+  kind (TyApp t _) = case kind t of
+    (KArr _ k) -> k
+    _ -> error "invalid kind"
+  kind (TyVar t) = kind t
+  kind (TyCon c) = kind c
+  kind (TyPrim p) = kind p -- FIXME: 適切なRepを定義する
+  kind (TyArr _ _) = Type Boxed
+  kind (TyTuple _) = Type Boxed
+  kind (TyLazy _) = Type Boxed
+  kind (TyMeta tv) = kind tv
+
+instance Pretty Type where
+  pPrintPrec l d (TyApp t1 t2) =
+    maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+  pPrintPrec _ _ (TyVar v) = pPrint v
+  pPrintPrec _ _ (TyCon c) = pPrint c
+  pPrintPrec _ _ (TyPrim p) = pPrint p
+  pPrintPrec l d (TyArr t1 t2) =
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
+  pPrintPrec _ _ (TyTuple ts) = parens $ sep $ punctuate "," $ map pPrint ts
+  pPrintPrec _ _ (TyLazy t) = braces $ pPrint t
+  pPrintPrec _ _ (TyMeta tv) = pPrint tv
 
 -------------------
 -- Type variable --
@@ -144,82 +240,6 @@ zonkType (TyArr t1 t2) = TyArr <$> zonkType t1 <*> zonkType t2
 zonkType (TyTuple ts) = TyTuple <$> traverse zonkType ts
 zonkType (TyLazy t) = TyLazy <$> zonkType t
 zonkType t = pure t
-
----------------------
--- Primitive Types --
----------------------
-
-data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
-  deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
-
-instance Pretty PrimT where
-  pPrint Int32T = "Int32#"
-  pPrint Int64T = "Int64#"
-  pPrint FloatT = "Float#"
-  pPrint DoubleT = "Double#"
-  pPrint CharT = "Char#"
-  pPrint StringT = "String#"
-
-type TyVar = Id Kind
-
-type TyCon = Id Kind
-
-data Type
-  = TyApp Type Type
-  | TyVar TyVar
-  | TyCon TyCon
-  | TyPrim PrimT
-  | TyArr Type Type
-  | TyTuple [Type]
-  | TyLazy Type
-  | TyMeta MetaTv
-  deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
-
-_TyApp :: Prism' Type (Type, Type)
-_TyApp = prism' (uncurry TyApp) $ \case
-  TyApp t1 t2 -> Just (t1, t2)
-  _ -> Nothing
-
-_TyCon :: Prism' Type TyCon
-_TyCon = prism' TyCon $ \case
-  TyCon c -> Just c
-  _ -> Nothing
-
-_TyArr :: Prism' Type (Type, Type)
-_TyArr = prism' (uncurry TyArr) $ \case
-  TyArr t1 t2 -> Just (t1, t2)
-  _ -> Nothing
-
-_TyLazy :: Prism' Type Type
-_TyLazy = prism' TyLazy $ \case
-  TyLazy t -> Just t
-  _ -> Nothing
-
-instance HasKind Type where
-  kind (TyApp t _) = case kind t of
-    (KArr _ k) -> k
-    _ -> error "invalid kind"
-  kind (TyVar t) = kind t
-  kind (TyCon c) = kind c
-  kind (TyPrim _) = Type Boxed -- FIXME: 適切なRepを定義する
-  kind (TyArr _ _) = Type Boxed
-  kind (TyTuple _) = Type Boxed
-  kind (TyLazy _) = Type Boxed
-  kind (TyMeta tv) = kind tv
-
-instance Pretty Type where
-  pPrintPrec l d (TyApp t1 t2) =
-    maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
-  pPrintPrec _ _ (TyVar v) = pPrint v
-  pPrintPrec _ _ (TyCon c) = pPrint c
-  pPrintPrec _ _ (TyPrim p) = pPrint p
-  pPrintPrec l d (TyArr t1 t2) =
-    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec _ _ (TyTuple ts) = parens $ sep $ punctuate "," $ map pPrint ts
-  pPrintPrec _ _ (TyLazy t) = braces $ pPrint t
-  pPrintPrec _ _ (TyMeta tv) = pPrint tv
 
 -------------------
 -- HasType class --
