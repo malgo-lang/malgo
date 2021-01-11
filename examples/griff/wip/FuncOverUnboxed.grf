@@ -1,0 +1,13 @@
+module FuncOverUnboxed {
+  foreign import print_int :: Int64# -> ();
+
+  f = { 0L# -> print_int 1L#
+      | 1L# -> print_int 1L#
+      | _ -> print_int 0L#
+      };
+
+  main = {
+    f 0L#
+    }
+}
+-- Expected: 1
