@@ -62,8 +62,7 @@ add_i64# :: (Int64#, Int64#) -> Int64#
 * Rich build tool like go, cargo, cabal
 
 * Griff
-  + Add two kind (Type, Unboxed) to type system
-    - Fix #14
+  + Type inference for functions as `Int32# -> Int32#`
   + Literals for Boxed types (Int32, Int64, Float, Double, Char, String)
   + Mutable (unboxed | boxed) polymorphic array (in Koriel, Array)
   + More rich standard library

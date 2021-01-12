@@ -7,7 +7,9 @@
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Griff.Type where
@@ -22,110 +24,52 @@ import Language.Griff.Prelude
 -- Kind and HasKind --
 ----------------------
 
-data Kind = Star | KArr Kind Kind
+pattern Star :: Kind
+pattern Star = Type Boxed
+
+-- | Definition of `kind`
+data Kind
+  = -- | a kind
+    Type Rep
+  | -- | kind arrow (* -> *, * is a kind)
+    KArr Kind Kind
   deriving stock (Eq, Ord, Show, Generic)
   deriving anyclass (Store)
 
 class HasKind a where
-  kind :: HasCallStack => a -> Kind
+  kind :: (HasCallStack, MonadIO m) => a -> m (Maybe Kind)
 
 instance HasKind a => HasKind (Id a) where
   kind = kind . view idMeta
 
 instance HasKind Kind where
-  kind = id
+  kind = pure . Just
 
 instance Pretty Kind where
-  pPrintPrec _ _ Star = "*"
+  pPrintPrec _ _ (Type rep) = pPrint rep
   pPrintPrec l d (KArr k1 k2) =
     maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
 
-----------
--- Type --
-----------
-
-data Scheme = Forall [TyVar] Type
-  deriving stock (Eq, Show, Ord, Generic)
+-- | Runtime representation
+data Rep
+  = -- | Boxed value
+    Boxed
+  | -- | Int32#
+    Int32Rep
+  | -- | Int64#
+    Int64Rep
+  | -- | Float#
+    FloatRep
+  | -- | Double#
+    DoubleRep
+  | -- | Char#
+    CharRep
+  | -- | String#
+    StringRep
+  deriving stock (Eq, Ord, Show, Generic)
   deriving anyclass (Store)
 
-instance HasKind Scheme where
-  kind (Forall _ t) = kind t
-
-instance Pretty Scheme where
-  pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
-
--------------------
--- Type variable --
--------------------
-
-data MetaTv = MetaTv
-  { _metaTvUniq :: Int,
-    _metaTvKind :: Kind,
-    _metaTvRigidName :: String,
-    _metaTvTypeRef :: IORef (Maybe Type)
-  }
-
-isRigid :: MetaTv -> Bool
-isRigid MetaTv {_metaTvRigidName = ""} = False
-isRigid _ = True
-
-rigidName :: MetaTv -> String
-rigidName MetaTv {_metaTvRigidName = n} = n
-
-instance Eq MetaTv where
-  (MetaTv u1 _ _ _) == (MetaTv u2 _ _ _) = u1 == u2
-
-instance Ord MetaTv where
-  (MetaTv u1 _ _ _) `compare` (MetaTv u2 _ _ _) = u1 `compare` u2
-
-instance Show MetaTv where
-  show (MetaTv u _ _ _) = "_" <> show u
-
-instance Pretty MetaTv where
-  pPrint (MetaTv u _ [] _) = "'" <> pPrint u
-  pPrint (MetaTv _ _ rigidName _) = text rigidName
-
-instance HasKind MetaTv where
-  kind (MetaTv _ k _ _) = k
-
-instance Store MetaTv where
-  size = error "Store MetaTv"
-  poke _ = error "Store MetaTv"
-  peek = error "Store MetaTv"
-
----------------------------
--- Read and Write MetaTv --
----------------------------
-
-newMetaTv :: (MonadUniq f, MonadIO f) => Kind -> String -> f MetaTv
-newMetaTv k rigitName = MetaTv <$> getUniq <*> pure k <*> pure rigitName <*> newIORef Nothing
-
-readMetaTv :: MonadIO m => MetaTv -> m (Maybe Type)
-readMetaTv (MetaTv _ _ _ ref) = readIORef ref
-
-writeMetaTv :: MonadIO m => MetaTv -> Type -> m ()
-writeMetaTv (MetaTv _ k _ ref) t
-  | k == kind t = writeIORef ref (Just t)
-  | otherwise = errorDoc $ "Panic!" <+> "Kind of" <+> pPrint t <+> "is not" <+> pPrint k
-
--------------
--- Zonking --
--------------
-
-zonkScheme :: MonadIO f => Scheme -> f Scheme
-zonkScheme (Forall as t) = Forall as <$> zonkType t
-
-zonkType :: MonadIO f => Type -> f Type
-zonkType (TyMeta tv) = do
-  mty <- readMetaTv tv
-  case mty of
-    Just ty -> zonkType ty
-    Nothing -> pure $ TyMeta tv
-zonkType (TyApp t1 t2) = TyApp <$> zonkType t1 <*> zonkType t2
-zonkType (TyArr t1 t2) = TyArr <$> zonkType t1 <*> zonkType t2
-zonkType (TyTuple ts) = TyTuple <$> traverse zonkType ts
-zonkType (TyLazy t) = TyLazy <$> zonkType t
-zonkType t = pure t
+instance Pretty Rep where pPrint rep = text $ show rep
 
 ---------------------
 -- Primitive Types --
@@ -142,6 +86,28 @@ instance Pretty PrimT where
   pPrint DoubleT = "Double#"
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
+
+instance HasKind PrimT where
+  kind Int32T = pure $ Just $ Type Int32Rep
+  kind Int64T = pure $ Just $ Type Int64Rep
+  kind FloatT = pure $ Just $ Type FloatRep
+  kind DoubleT = pure $ Just $ Type DoubleRep
+  kind CharT = pure $ Just $ Type CharRep
+  kind StringT = pure $ Just $ Type StringRep
+
+----------
+-- Type --
+----------
+
+data Scheme = Forall [TyVar] Type
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving anyclass (Store)
+
+instance HasKind Scheme where
+  kind (Forall _ t) = kind t
+
+instance Pretty Scheme where
+  pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
 
 type TyVar = Id Kind
 
@@ -180,15 +146,17 @@ _TyLazy = prism' TyLazy $ \case
   _ -> Nothing
 
 instance HasKind Type where
-  kind (TyApp t _) = case kind t of
-    (KArr _ k) -> k
-    _ -> error "invalid kind"
+  kind (TyApp t _) = do
+    mk <- kind t
+    case mk of
+      Just (KArr _ k) -> pure $ Just k
+      _ -> error "invalid kind" -- TODO: 位置情報を元にした親切なエラーメッセージ
   kind (TyVar t) = kind t
   kind (TyCon c) = kind c
-  kind (TyPrim _) = Star
-  kind (TyArr _ _) = Star
-  kind (TyTuple _) = Star
-  kind (TyLazy _) = Star
+  kind (TyPrim p) = kind p
+  kind (TyArr _ _) = pure $ Just $ Type Boxed
+  kind (TyTuple _) = pure $ Just $ Type Boxed
+  kind (TyLazy _) = pure $ Just $ Type Boxed
   kind (TyMeta tv) = kind tv
 
 instance Pretty Type where
@@ -202,6 +170,89 @@ instance Pretty Type where
   pPrintPrec _ _ (TyTuple ts) = parens $ sep $ punctuate "," $ map pPrint ts
   pPrintPrec _ _ (TyLazy t) = braces $ pPrint t
   pPrintPrec _ _ (TyMeta tv) = pPrint tv
+
+-------------------
+-- Type variable --
+-------------------
+
+data MetaTv = MetaTv
+  { _metaTvUniq :: Int,
+    _metaTvKind :: IORef (Maybe Kind),
+    _metaTvRigidName :: String,
+    _metaTvTypeRef :: IORef (Maybe Type)
+  }
+
+isRigid :: MetaTv -> Bool
+isRigid MetaTv {_metaTvRigidName = ""} = False
+isRigid _ = True
+
+rigidName :: MetaTv -> String
+rigidName MetaTv {_metaTvRigidName = n} = n
+
+instance Eq MetaTv where
+  (MetaTv u1 _ _ _) == (MetaTv u2 _ _ _) = u1 == u2
+
+instance Ord MetaTv where
+  (MetaTv u1 _ _ _) `compare` (MetaTv u2 _ _ _) = u1 `compare` u2
+
+instance Show MetaTv where
+  show (MetaTv u _ _ _) = "_" <> show u
+
+instance Pretty MetaTv where
+  pPrint (MetaTv u _ [] _) = "'" <> pPrint u
+  pPrint (MetaTv _ _ rigidName _) = text rigidName
+
+instance HasKind MetaTv where
+  kind MetaTv {_metaTvKind} = readIORef _metaTvKind
+
+instance Store MetaTv where
+  size = error "Store MetaTv"
+  poke _ = error "Store MetaTv"
+  peek = error "Store MetaTv"
+
+---------------------------
+-- Read and Write MetaTv --
+---------------------------
+
+newMetaTv :: (MonadUniq f, MonadIO f) => Maybe Kind -> String -> f MetaTv
+newMetaTv k rigitName = MetaTv <$> getUniq <*> newIORef k <*> pure rigitName <*> newIORef Nothing
+
+readMetaTv :: MonadIO m => MetaTv -> m (Maybe Type)
+readMetaTv (MetaTv _ _ _ ref) = readIORef ref
+
+writeMetaTv :: (HasCallStack, MonadIO m) => MetaTv -> Type -> m ()
+writeMetaTv tv@(MetaTv _ kindRef _ typeRef) t = do
+  mktv <- kind tv
+  mkt <- kind t
+  -- occurs checkが必要？
+  case (mktv, mkt) of
+    (Just ktv, Just kt)
+      | ktv == kt -> writeIORef typeRef (Just t)
+      | otherwise -> errorDoc $ "Panic!" <+> "Kind of" <+> pPrint t <+> "is not" <+> pPrint ktv
+    (Just _, Nothing) -> case t of
+      TyMeta tv' -> writeMetaTv tv' (TyMeta tv)
+      _ -> bug Unreachable
+    (Nothing, Just kt) -> writeIORef kindRef (Just kt) >> writeIORef typeRef (Just t)
+    (Nothing, Nothing) -> writeIORef typeRef (Just t)
+
+-------------
+-- Zonking --
+-------------
+
+zonkScheme :: MonadIO f => Scheme -> f Scheme
+zonkScheme (Forall as t) = Forall as <$> zonkType t
+
+zonkType :: MonadIO f => Type -> f Type
+zonkType (TyMeta tv) = do
+  mty <- readMetaTv tv
+  case mty of
+    Just ty -> zonkType ty
+    Nothing -> pure $ TyMeta tv
+zonkType (TyApp t1 t2) = TyApp <$> zonkType t1 <*> zonkType t2
+zonkType (TyArr t1 t2) = TyArr <$> zonkType t1 <*> zonkType t2
+zonkType (TyTuple ts) = TyTuple <$> traverse zonkType ts
+zonkType (TyLazy t) = TyLazy <$> zonkType t
+zonkType t = pure t
 
 -------------------
 -- HasType class --
