@@ -74,4 +74,4 @@ add_i64# :: (Int64#, Int64#) -> Int64#
   + Rename Core -> Koriel
   + Syntax and Parser
     - Ref #9
-  + Support overloaded function based on SumT
+  + Support overloaded function
