@@ -65,32 +65,23 @@ overTypeDef f = traverseOf constructor f <=< traverseOf (union . traversed . _2)
 
 genTcEnv :: MonadUniq m => RnEnv -> m TcEnv
 genTcEnv rnEnv = do
-  -- lookup RnId of primitive functions and operetors
-  let add_i32 = fromJust $ Map.lookup "add_i32#" (view R.varEnv rnEnv)
-  let add_i64 = fromJust $ Map.lookup "add_i64#" (view R.varEnv rnEnv)
   -- lookup RnTId of primitive types
   let int32_t = fromJust $ Map.lookup "Int32#" (view R.typeEnv rnEnv)
   let int64_t = fromJust $ Map.lookup "Int64#" (view R.typeEnv rnEnv)
   let float_t = fromJust $ Map.lookup "Float#" (view R.typeEnv rnEnv)
   let double_t = fromJust $ Map.lookup "Double#" (view R.typeEnv rnEnv)
+  let char_t = fromJust $ Map.lookup "Char#" (view R.typeEnv rnEnv)
   let string_t = fromJust $ Map.lookup "String#" (view R.typeEnv rnEnv)
   pure $
     TcEnv
-      { _varEnv =
-          Map.fromList
-            [ ( add_i32,
-                Forall [] (TyTuple [TyPrim Int32T, TyPrim Int32T] `TyArr` TyPrim Int32T)
-              ),
-              ( add_i64,
-                Forall [] (TyTuple [TyPrim Int64T, TyPrim Int64T] `TyArr` TyPrim Int64T)
-              )
-            ],
+      { _varEnv = mempty,
         _typeEnv =
           Map.fromList
             [ (int32_t, TypeDef (TyPrim Int32T) [] []),
               (int64_t, TypeDef (TyPrim Int64T) [] []),
               (float_t, TypeDef (TyPrim FloatT) [] []),
               (double_t, TypeDef (TyPrim DoubleT) [] []),
+              (char_t, TypeDef (TyPrim CharT) [] []),
               (string_t, TypeDef (TyPrim StringT) [] [])
             ],
         _rnEnv = rnEnv
