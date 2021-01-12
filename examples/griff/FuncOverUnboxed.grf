@@ -1,4 +1,4 @@
-module FuncOverUnboxed {
+module FuncOverUnboxed = {
   foreign import print_int :: Int64# -> ();
 
   f = { 0L# -> print_int 1L#

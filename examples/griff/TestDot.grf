@@ -1,11 +1,11 @@
 module testDot = {
-  data Int64 = Int64# Int64#;
-
+  import Builtin;
+  
   infixr 9 (.);
   (.) :: (b -> c) -> (a -> b) -> (a -> c);
   (.) = {f g -> {x -> f (g x)}};
 
-  succ = {(Int64# x) -> (Int64# (add_i64# (x, 1L#)))};
+  succ = {(Int64# x) -> (Int64# (add_Int64# x 1L#))};
 
   foreign import print_int64 :: Int64# -> ();
 

@@ -1,15 +1,15 @@
 module test0 = {
+  import Builtin;
+
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;
   (|>) x f = f x;
   
   foreign import print_int :: Int64# -> ();
   
-  data Int = Int# Int64#;
-  
   infixl 6 (+#);
-  (+#) = {x y -> add_i64# (x, y)};
+  (+#) = {x y -> add_Int64# x y};
   
-  main = { Int# 1L# |> {(Int# i) -> print_int i} };
+  main = { Int64# 1L# |> {(Int64# i) -> print_int i} };
 }
 -- Expected: 1

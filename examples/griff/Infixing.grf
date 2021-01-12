@@ -1,7 +1,7 @@
 module Infixing = {
-    data Int = Int# Int64#;
+    import Builtin;
 
-    add = {(Int# x, Int# y) -> Int# (add_i64# (x, y))};
+    add = {(Int64# x, Int64# y) -> Int64# (add_Int64# x y)};
 
     infixl 3 (<\);
     (<\) = {x f -> {y -> f (x, y)}};
@@ -17,11 +17,11 @@ module Infixing = {
 
     foreign import print_int :: Int64# -> ();
 
-    printInt = {Int# x -> print_int x};
+    printInt = {Int64# x -> print_int x};
 
     main = {
-        printInt (Int# 1L# <\add\> Int# 2L#);
-        printInt (Int# 1L# </add/> Int# 2L#);
+        printInt (Int64# 1L# <\add\> Int64# 2L#);
+        printInt (Int64# 1L# </add/> Int64# 2L#);
     };
 }
 

@@ -1,11 +1,11 @@
 module test4 = {
-  data Int = Int# Int64#;
+  import Builtin;
 
   infixl 6 (+#);
-  (+#) = {x y -> add_i64# (x, y)};
+  (+#) = {x y -> add_Int64# x y};
 
   infixl 6 (+);
-  (+) = {(Int# x) (Int# y) -> Int# (x +# y) };
+  (+) = {(Int64# x) (Int64# y) -> Int64# (x +# y) };
 
   data List a = Nil | Cons a (List a);
 
@@ -15,8 +15,8 @@ module test4 = {
   foreign import print_int :: Int64# -> ();
 
   main = {
-    {(Int# i) -> print_int i}
-      (sum (Int# 0L#) (Cons (Int# 1L#) (Cons (Int# 2L#) Nil)))
+    {(Int64# i) -> print_int i}
+      (sum (Int64# 0L#) (Cons (Int64# 1L#) (Cons (Int64# 2L#) Nil)))
     }
 }
 -- Expected: 3
