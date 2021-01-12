@@ -57,8 +57,6 @@ add_i64# :: (Int64#, Int64#) -> Int64#
 
 # Future works
 
-* More and More Documents!!
-
 * Rich build tool like go, cargo, cabal
 
 * Griff
