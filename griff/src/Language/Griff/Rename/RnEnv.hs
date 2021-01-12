@@ -48,10 +48,6 @@ makeLenses ''RnEnv
 
 genBuiltinRnEnv :: MonadUniq m => m RnEnv
 genBuiltinRnEnv = do
-  -- generate RnId of primitive functions and operetors
-  add_i32 <- newTopLevelId "add_i32#" $ ModuleName "Builtin"
-  add_i64 <- newTopLevelId "add_i64#" $ ModuleName "Builtin"
-
   -- generate RnTId of primitive types
   int32_t <- newTopLevelId "Int32#" $ ModuleName "Builtin"
   int64_t <- newTopLevelId "Int64#" $ ModuleName "Builtin"
@@ -61,7 +57,7 @@ genBuiltinRnEnv = do
   string_t <- newTopLevelId "String#" $ ModuleName "Builtin"
   pure $
     RnEnv
-      { _varEnv = Map.fromList [("add_i32#", add_i32), ("add_i64#", add_i64)],
+      { _varEnv = mempty,
         _typeEnv =
           Map.fromList
             [ ("Int32#", int32_t),

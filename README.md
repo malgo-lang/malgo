@@ -45,16 +45,6 @@ A simple functional programming language inspired by MinCaml and Tiger.
 A functional programming language.
 Its syntax is based on Haskell.
 
-### Primitives
-
-```
-data Int32 = Int32# Int32#
-data Int64 = Int64# Int64#
-
-add_i32# :: (Int32#, Int32#) -> Int32#
-add_i64# :: (Int64#, Int64#) -> Int64#
-```
-
 # Future works
 
 * Rich build tool like go, cargo, cabal
