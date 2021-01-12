@@ -50,6 +50,7 @@ Its syntax is based on Haskell.
 * Rich build tool like go, cargo, cabal
 
 * Griff
+  + Import Builtin.grf implicity
   + Literals for Boxed types (Int32, Int64, Float, Double, Char, String)
   + Mutable (unboxed | boxed) polymorphic array (in Koriel, Array)
   + More rich standard library
