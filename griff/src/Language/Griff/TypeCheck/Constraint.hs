@@ -81,16 +81,19 @@ metaTvs (TyMeta tv) = Set.singleton tv
 metaTvs _ = mempty
 
 bind :: (MonadGriff m, MonadIO m) => SourcePos -> MetaTv -> Type -> m ()
-bind pos tv t2
-  | kind tv /= kind t2 = errorOn pos $ "Kind mismatch:" <+> vcat [quotes (pPrint tv) <> ":" <> pPrint (kind tv), pPrint t2 <> ":" <> pPrint (kind t2)]
-  | otherwise = do
-    mt1 <- readMetaTv tv
-    case mt1 of
-      Just _ -> errorOn pos "Internal Error"
-      Nothing -> do
-        if tv `elem` metaTvs t2
-          then errorOn pos $ "Occurs check" <+> quotes (pPrint tv) <+> "for" <+> pPrint t2
-          else writeMetaTv tv t2
+bind pos tv t2 = do
+  mktv <- kind tv
+  mkt2 <- kind t2
+  case (mktv, mkt2) of
+    (Just ktv, Just kt2) | ktv /= kt2 -> errorOn pos $ "Kind mismatch:" <+> vcat [quotes (pPrint tv) <> ":" <> pPrint ktv, pPrint t2 <> ":" <> pPrint kt2]
+    _ -> do
+      mt1 <- readMetaTv tv
+      case mt1 of
+        Just _ -> errorOn pos "Internal Error"
+        Nothing -> do
+          if tv `elem` metaTvs t2
+            then errorOn pos $ "Occurs check" <+> quotes (pPrint tv) <+> "for" <+> pPrint t2
+            else writeMetaTv tv t2
 
 zonkConstraints :: (Traversable t, MonadIO f) => t WithPos -> f (t WithPos)
 zonkConstraints = traverse zonkConstraint

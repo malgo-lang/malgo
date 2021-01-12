@@ -444,9 +444,13 @@ dsType t@GT.TyApp {} = do
   let (con, ts) = splitCon t
   DataT (con ^. toText) <$> traverse dsType ts
 dsType (GT.TyVar _) = pure AnyT
-dsType (GT.TyCon con)
-  | kind con == Star = pure $ DataT (con ^. toText) []
-  | otherwise = errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint (kind con)
+dsType (GT.TyCon con) = do
+  mkcon <- kind con
+  case mkcon of
+    Just kcon | kcon == Star -> pure $ DataT (con ^. toText) []
+
+              | otherwise -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
+    _ -> bug Unreachable
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
 dsType (GT.TyPrim GT.FloatT) = pure C.FloatT
@@ -468,17 +472,19 @@ dsType (GT.TyMeta tv) = do
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: (MonadReader DsEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
-unfoldType t | GT._TyApp `has` t
-                 || t ^? GT._TyCon . to kind == Just Star =
-  do
-    let (con, ts) = splitCon t
-    conMap <- lookupConMap con ts
-    SumT
-      <$> foldMapA
-        ( \(conName, conType) ->
-            Set.singleton . C.Con (conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
-        )
-        conMap
+unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
+  mkt <- kind t
+  case mkt of
+    Just Star -> do
+      let (con, ts) = splitCon t
+      conMap <- lookupConMap con ts
+      SumT
+        <$> foldMapA
+          ( \(conName, conType) ->
+              Set.singleton . C.Con (conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
+          )
+          conMap
+    _ -> dsType t
 unfoldType t = dsType t
 
 -- Desugar Monad

@@ -7,6 +7,7 @@
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -36,13 +37,13 @@ data Kind
   deriving anyclass (Store)
 
 class HasKind a where
-  kind :: HasCallStack => a -> Kind
+  kind :: (HasCallStack, MonadIO m) => a -> m (Maybe Kind)
 
 instance HasKind a => HasKind (Id a) where
   kind = kind . view idMeta
 
 instance HasKind Kind where
-  kind = id
+  kind = pure . Just
 
 instance Pretty Kind where
   pPrintPrec _ _ (Type rep) = pPrint rep
@@ -87,12 +88,12 @@ instance Pretty PrimT where
   pPrint StringT = "String#"
 
 instance HasKind PrimT where
-  kind Int32T = Type Int32Rep
-  kind Int64T = Type Int64Rep 
-  kind FloatT = Type FloatRep 
-  kind DoubleT = Type DoubleRep 
-  kind CharT = Type CharRep 
-  kind StringT = Type StringRep 
+  kind Int32T = pure $ Just $ Type Int32Rep
+  kind Int64T = pure $ Just $ Type Int64Rep
+  kind FloatT = pure $ Just $ Type FloatRep
+  kind DoubleT = pure $ Just $ Type DoubleRep
+  kind CharT = pure $ Just $ Type CharRep
+  kind StringT = pure $ Just $ Type StringRep
 
 ----------
 -- Type --
@@ -145,15 +146,17 @@ _TyLazy = prism' TyLazy $ \case
   _ -> Nothing
 
 instance HasKind Type where
-  kind (TyApp t _) = case kind t of
-    (KArr _ k) -> k
-    _ -> error "invalid kind"
+  kind (TyApp t _) = do
+    mk <- kind t
+    case mk of
+      Just (KArr _ k) -> pure $ Just k
+      _ -> error "invalid kind" -- TODO: 位置情報を元にした親切なエラーメッセージ
   kind (TyVar t) = kind t
   kind (TyCon c) = kind c
-  kind (TyPrim p) = kind p -- FIXME: 適切なRepを定義する
-  kind (TyArr _ _) = Type Boxed
-  kind (TyTuple _) = Type Boxed
-  kind (TyLazy _) = Type Boxed
+  kind (TyPrim p) = kind p
+  kind (TyArr _ _) = pure $ Just $ Type Boxed
+  kind (TyTuple _) = pure $ Just $ Type Boxed
+  kind (TyLazy _) = pure $ Just $ Type Boxed
   kind (TyMeta tv) = kind tv
 
 instance Pretty Type where
@@ -174,7 +177,7 @@ instance Pretty Type where
 
 data MetaTv = MetaTv
   { _metaTvUniq :: Int,
-    _metaTvKind :: Kind,
+    _metaTvKind :: IORef (Maybe Kind),
     _metaTvRigidName :: String,
     _metaTvTypeRef :: IORef (Maybe Type)
   }
@@ -200,7 +203,7 @@ instance Pretty MetaTv where
   pPrint (MetaTv _ _ rigidName _) = text rigidName
 
 instance HasKind MetaTv where
-  kind (MetaTv _ k _ _) = k
+  kind MetaTv {_metaTvKind} = readIORef _metaTvKind
 
 instance Store MetaTv where
   size = error "Store MetaTv"
@@ -211,16 +214,26 @@ instance Store MetaTv where
 -- Read and Write MetaTv --
 ---------------------------
 
-newMetaTv :: (MonadUniq f, MonadIO f) => Kind -> String -> f MetaTv
-newMetaTv k rigitName = MetaTv <$> getUniq <*> pure k <*> pure rigitName <*> newIORef Nothing
+newMetaTv :: (MonadUniq f, MonadIO f) => Maybe Kind -> String -> f MetaTv
+newMetaTv k rigitName = MetaTv <$> getUniq <*> newIORef k <*> pure rigitName <*> newIORef Nothing
 
 readMetaTv :: MonadIO m => MetaTv -> m (Maybe Type)
 readMetaTv (MetaTv _ _ _ ref) = readIORef ref
 
-writeMetaTv :: MonadIO m => MetaTv -> Type -> m ()
-writeMetaTv (MetaTv _ k _ ref) t
-  | k == kind t = writeIORef ref (Just t)
-  | otherwise = errorDoc $ "Panic!" <+> "Kind of" <+> pPrint t <+> "is not" <+> pPrint k
+writeMetaTv :: (HasCallStack, MonadIO m) => MetaTv -> Type -> m ()
+writeMetaTv tv@(MetaTv _ kindRef _ typeRef) t = do
+  mktv <- kind tv
+  mkt <- kind t
+  -- occurs checkが必要？
+  case (mktv, mkt) of
+    (Just ktv, Just kt)
+      | ktv == kt -> writeIORef typeRef (Just t)
+      | otherwise -> errorDoc $ "Panic!" <+> "Kind of" <+> pPrint t <+> "is not" <+> pPrint ktv
+    (Just _, Nothing) -> case t of
+      TyMeta tv' -> writeMetaTv tv' (TyMeta tv)
+      _ -> bug Unreachable
+    (Nothing, Just kt) -> writeIORef kindRef (Just kt) >> writeIORef typeRef (Just t)
+    (Nothing, Nothing) -> writeIORef typeRef (Just t)
 
 -------------
 -- Zonking --

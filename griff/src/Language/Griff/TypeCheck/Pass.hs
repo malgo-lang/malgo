@@ -77,7 +77,7 @@ tcDataDefs ds = do
     typeEnv . at name <~ Just . simpleTypeDef . TyCon <$> newGlobalId (name ^. idName) (kindof params)
   for ds $ \(pos, name, params, cons) -> do
     for_ params $ \p ->
-      typeEnv . at p <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Star ""
+      typeEnv . at p <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Nothing ""
     cons' <- forOf (traversed . _2) cons $ \args -> do
       -- 値コンストラクタの型を構築
       name' <- lookupType pos name
@@ -89,6 +89,7 @@ tcDataDefs ds = do
     typeEnv . at name %= (_Just . qualVars .~ as) . (_Just . union .~ cons')
     pure (pos, name, params, map (second (map tcType)) cons)
   where
+    -- 型コンストラクタの引数は必ず a :: Type Boxed
     kindof [] = Star
     kindof (_ : xs) = KArr Star (kindof xs)
 
@@ -99,7 +100,7 @@ tcForeigns ::
 tcForeigns ds =
   for ds $ \(pos, name, ty) -> do
     for_ (Set.toList $ getTyVars ty) $ \tyVar ->
-      typeEnv . at tyVar <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Star (show $ pPrint tyVar)
+      typeEnv . at tyVar <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Nothing (show $ pPrint tyVar)
     scheme@(Forall _ ty') <- generalize mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (WithType pos ty', name, tcType ty)
@@ -111,7 +112,7 @@ tcScSigs ::
 tcScSigs ds =
   for ds $ \(pos, name, ty) -> do
     for_ (Set.toList $ getTyVars ty) $ \tyVar ->
-      typeEnv . at tyVar <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Star (show $ pPrint tyVar)
+      typeEnv . at tyVar <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Nothing (show $ pPrint tyVar)
     scheme <- generalize mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (pos, name, tcType ty)
@@ -124,7 +125,7 @@ prepareTcScDefs ::
 prepareTcScDefs ds = for_ ds $ \(_, name, _, _) -> do
   mscheme <- use $ varEnv . at name
   case mscheme of
-    Nothing -> varEnv . at name <~ Just . Forall [] . TyMeta <$> newMetaTv Star ""
+    Nothing -> varEnv . at name <~ Just . Forall [] . TyMeta <$> newMetaTv Nothing ""
     Just _ -> pure mempty
 
 tcScDefGroup ::
@@ -139,7 +140,7 @@ tcScDefs ::
   m [ScDef (Griff 'TypeCheck)]
 tcScDefs ds = do
   (ds', nts) <- mapAndUnzipM ?? ds $ \(pos, name, params, expr) -> do
-    paramTypes <- traverse (const $ TyMeta <$> newMetaTv Star "") params
+    paramTypes <- traverse (const $ TyMeta <$> newMetaTv Nothing "") params
     varEnv <>= Map.fromList (zip params (map (Forall []) paramTypes))
     (expr', wanted) <- runWriterT (tcExpr expr)
     ty <- instantiate True =<< lookupVar pos name
@@ -165,7 +166,7 @@ tcExpr (Unboxed pos u) = pure $ Unboxed (WithType pos $ u ^. toType) u
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
-  retType <- TyMeta <$> newMetaTv Star ""
+  retType <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos (f' ^. toType) (TyArr (x' ^. toType) retType)]
   pure $ Apply (WithType pos retType) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
@@ -173,7 +174,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e2' <- tcExpr e2
   opScheme <- lookupVar pos op
   opType <- instantiate False opScheme
-  retType <- TyMeta <$> newMetaTv Star ""
+  retType <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos opType (TyArr (e1' ^. toType) $ TyArr (e2' ^. toType) retType)]
   pure $ OpApp (WithType x retType) op e1' e2'
 tcExpr (Fn pos (Clause x [] ss : _)) = do
@@ -194,7 +195,7 @@ tcExpr (Tuple pos es) = do
   pure $ Tuple (WithType pos (TyTuple (map (view toType) es'))) es'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
-  ty <- TyMeta <$> newMetaTv Star ""
+  ty <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos (TyLazy ty) (e' ^. toType)]
   pure $ Force (WithType pos ty) e'
 
@@ -223,7 +224,7 @@ tcStmts (Let pos v e : ss) = do
 tcPatterns :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadGriff m) => [Pat (Griff 'Rename)] -> WriterT [WithPos] m [Pat (Griff 'TypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
-  ty <- TyMeta <$> newMetaTv Star ""
+  ty <- TyMeta <$> newMetaTv Nothing ""
   varEnv . at v ?= Forall [] ty
   ps' <- tcPatterns ps
   pure (VarP (WithType x ty) v : ps')
@@ -238,7 +239,7 @@ tcPatterns (ConP pos con pats : ps) = do
   when (not (null morePats) && not (null restPs)) $
     errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
-  ty <- TyMeta <$> newMetaTv Star ""
+  ty <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos conType (foldr (TyArr . view toType) ty pats')]
   ps' <- tcPatterns restPs
   pure (ConP (WithType pos ty) con pats' : ps')
@@ -296,14 +297,14 @@ lookupVar pos name = do
 generalize :: (MonadIO m, MonadUniq m) => TcEnv -> Type -> m Scheme
 generalize env t = do
   fvs <- toList <$> freeMetaTvs env t
-  as <- zipWithM (\tv nameChar -> newLocalId [nameChar] (kind tv)) fvs ['a' ..]
+  as <- zipWithM (\tv nameChar -> do k <- fromMaybe Star <$> readIORef (_metaTvKind tv); newLocalId [nameChar] k) fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
   Forall as <$> zonkType t
 
 generalizeMutRecs :: (MonadIO m, MonadUniq m) => TcEnv -> [(TcId, Type)] -> m ([Id Kind], [(TcId, Scheme)])
 generalizeMutRecs env nts = do
   fvs <- toList . mconcat <$> traverse (freeMetaTvs env <=< zonkType . view _2) nts
-  as <- zipWithM (\tv nameChar -> newLocalId [nameChar] (kind tv)) fvs ['a' ..]
+  as <- zipWithM (\tv nameChar -> do k <- fromMaybe Star <$> readIORef (_metaTvKind tv); newLocalId [nameChar] k) fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
   (as,) <$> traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
 
@@ -327,7 +328,9 @@ metaTvsScheme (Forall _ t) = metaTvs t
 -- 型を具体化する
 instantiate :: (MonadUniq m, MonadIO m) => Bool -> Scheme -> m Type
 instantiate isRigid (Forall as t) = do
-  vs <- traverse (\a -> TyMeta <$> newMetaTv (kind a) (if isRigid then show $ pPrint a else "")) as
+  vs <- traverse (\a -> do
+    mka <- kind a
+    TyMeta <$> newMetaTv mka (if isRigid then show $ pPrint a else "")) as
   applySubst (Map.fromList $ zip as vs) <$> zonkType t
 
 applySubst :: Map TyVar Type -> Type -> Type
