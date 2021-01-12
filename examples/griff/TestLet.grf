@@ -1,17 +1,17 @@
 module testLet = {
-  foreign import print_int32 :: Int32# -> ();
+  import Builtin;
 
-  data Int32 = Int32# Int32#;
+  foreign import print_int32 :: Int32# -> ();
 
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;
   (|>) = {x f -> f x};
 
   main = {
-    let x = add_i32# (1#, 2#);
+    let x = add_Int32# 1# 2#;
     print_int32 x;
 
-    let x = Int32# (add_i32# (1#, 2#));
+    let x = Int32# (add_Int32# 1# 2#);
     let printInt32 = {(Int32# x) -> print_int32 x};
     printInt32 x;
   }

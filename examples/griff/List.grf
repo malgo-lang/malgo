@@ -1,8 +1,8 @@
 module list = {
-  data Int = Int# Int64#;
-  
+  import Builtin; 
+
   infixl 6 (+#);
-  (+#) = {x y -> add_i64# (x, y)};
+  (+#) = {x y -> add_Int64# x y};
   
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;
@@ -17,16 +17,16 @@ module list = {
            | (Cons x xs) -> Cons (f x) (map f xs)
            };
   
-  sum = { Nil -> Int# 0L#
-        | (Cons (Int# x) xs) ->
-            sum xs |> {(Int# s) -> Int# (x +# s)}
+  sum = { Nil -> Int64# 0L#
+        | (Cons (Int64# x) xs) ->
+            sum xs |> {(Int64# s) -> Int64# (x +# s)}
         };
   
   foreign import print_int :: Int64# -> ();
   
   main = {
-      sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil))
-        |> {(Int# i) -> print_int i}
+      sum (Cons (Int64# 1L#) (Cons (Int64# 2L#) Nil))
+        |> {(Int64# i) -> print_int i}
       }
 }
 -- Expected: 3

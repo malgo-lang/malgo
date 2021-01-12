@@ -20,7 +20,6 @@ import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Core.Core as C
-import Koriel.Core.Op
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
 import Koriel.Id hiding (newGlobalId, newId)
@@ -30,7 +29,6 @@ import Koriel.Pretty
 import Language.Griff.Desugar.DsEnv
 import Language.Griff.Interface
 import Language.Griff.Prelude
-import qualified Language.Griff.Rename.RnEnv as Rn
 import Language.Griff.Syntax as G
 import Language.Griff.Syntax.Extension
 import Language.Griff.Type as GT
@@ -45,51 +43,20 @@ desugar ::
   Module (Griff 'TypeCheck) ->
   m (DsEnv, Program (Id C.Type))
 desugar tcEnv (Module modName ds) = do
-  (dsEnv, prims) <- genPrimitive modName tcEnv
-  (dsEnv', ds') <- runReaderT (dsBindGroup ds) dsEnv
+  (dsEnv', ds') <- runReaderT (dsBindGroup ds) (DsEnv modName mempty tcEnv)
   case searchMain (Map.toList $ view varEnv dsEnv') of
     Just mainCall -> do
       mainFuncDef <-
         mainFunc =<< runDef do
           _ <- bind mainCall
           pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv', Program (mainFuncDef : prims <> ds'))
-    Nothing -> pure (dsEnv', Program (prims <> ds'))
+      pure (dsEnv', Program (mainFuncDef : ds'))
+    Nothing -> pure (dsEnv', Program ds')
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsExternal = Just $ CallDirect coreId []
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
-
--- 組み込み関数のCoreの生成
-genPrimitive ::
-  (MonadUniq m, MonadIO m, MonadFail m) =>
-  ModuleName ->
-  TcEnv ->
-  m (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
-genPrimitive modName env =
-  execStateT ?? (DsEnv modName mempty env, []) $ do
-    -- add_i32# : Int32#の和
-    prim "add_i32#" $ \param -> do
-      [x, y] <- destruct (Atom $ C.Var param) (C.Con "Tuple2" [C.Int32T, C.Int32T])
-      pure $ BinOp Add x y
-    -- add_i64# : Int64#の和
-    prim "add_i64#" $ \param -> do
-      [x, y] <- destruct (Atom $ C.Var param) (C.Con "Tuple2" [C.Int64T, C.Int64T])
-      pure $ BinOp Add x y
-  where
-    prim name code = do
-      nameId <- fromJust <$> use (_1 . tcEnv . Tc.rnEnv . Rn.varEnv . at name)
-      Forall _ nameType <- fromJust <$> use (_1 . tcEnv . Tc.varEnv . at nameId)
-      nameId' <- newCoreId nameId =<< dsType nameType
-      _1 . varEnv . at nameId ?= nameId'
-      case C.typeOf nameId' of
-        -- プリミティブ関数は必ず一引数
-        [paramType] :-> _ -> do
-          param <- newLocalId "$p" paramType
-          fun <- runDef (code param)
-          _2 %= ((nameId', ([param], fun)) :)
-        _ -> bug Unreachable
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
@@ -165,10 +132,11 @@ dsForeign ::
   f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsForeign (x@(WithType (_, primName) _), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. toType)
-  let (paramTypes, _) = splitTyArr (x ^. toType)
-  params <- traverse (newLocalId "$p" <=< dsType) paramTypes
-  primType <- dsType (view toType x)
-  fun <- curryFun params $ C.ExtCall primName primType (map C.Var params)
+  let (paramTypes, retType) = splitTyArr (x ^. toType)
+  paramTypes' <- traverse dsType paramTypes
+  retType <- dsType retType
+  params <- traverse (newLocalId "$p") paramTypes'
+  fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
   pure (mempty & varEnv .~ Map.singleton name name', [(name', fun)])
 
 dsDataDef ::

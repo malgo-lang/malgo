@@ -1,4 +1,6 @@
 module Prelude = {
+  import Builtin;
+
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;
   (|>) = {x f -> f x};
@@ -20,8 +22,6 @@ module Prelude = {
 
   foreign import print_string :: String# -> ();
   foreign import newline :: () -> ();
-
-  data String = String# String#;
 
   putStr :: String -> ();
   putStr = { (String# str) -> print_string str };
