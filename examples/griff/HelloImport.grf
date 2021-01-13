@@ -1,4 +1,5 @@
 module HelloImport = {
+  import Builtin;
   import Prelude;
   main = {
     putStr (String# "hello"#);
