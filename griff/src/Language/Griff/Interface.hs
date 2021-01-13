@@ -59,15 +59,16 @@ instance Pretty Interface where
 
 buildInterface :: RnState -> DsEnv -> Interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
+  let modName = rnState ^. RnState.moduleName
   ifor_ (dsEnv ^. DsEnv.varEnv) $ \tcId coreId ->
-    when (tcId ^. idIsExternal) do
+    when (tcId ^. idIsExternal && tcId ^. idMeta == modName) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
       coreIdentMap . at tcId ?= coreId
   ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.varEnv) $ \rnId scheme ->
-    when (rnId ^. idIsExternal) do
+    when (rnId ^. idIsExternal && rnId ^. idMeta == modName) do
       signatureMap . at rnId ?= scheme
   ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.typeEnv) $ \rnId typeDef -> do
-    when (rnId ^. idIsExternal) do
+    when (rnId ^. idIsExternal && rnId ^. idMeta == modName) do
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
