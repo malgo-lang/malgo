@@ -283,6 +283,7 @@ dsExp (G.Force _ e) = runDef $ do
   -- lazy valueは0引数関数に変換されるので、その評価は0引数関数の呼び出しになる
   e' <- bind =<< dsExp e
   pure $ Call e' []
+dsExp (G.Parens _ e) = dsExp e
 
 dsStmts :: (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) => [Stmt (Griff 'TypeCheck)] -> m (C.Exp (Id C.Type))
 dsStmts [] = bug Unreachable

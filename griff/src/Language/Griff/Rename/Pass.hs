@@ -155,6 +155,7 @@ rnExp (OpApp pos op e1 e2) = do
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
 rnExp (Force pos e) = Force pos <$> rnExp e
+rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 rnType :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => Type (Griff 'Parse) -> m (Type (Griff 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts

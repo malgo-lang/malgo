@@ -198,6 +198,9 @@ tcExpr (Force pos e) = do
   ty <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos (TyLazy ty) (e' ^. toType)]
   pure $ Force (WithType pos ty) e'
+tcExpr (Parens pos e) = do
+  e' <- tcExpr e
+  pure $ Parens (WithType pos (e' ^. toType)) e'
 
 tcClause :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadGriff m) => Clause (Griff 'Rename) -> WriterT [WithPos] m (Clause (Griff 'TypeCheck))
 tcClause (Clause pos pats ss) = do
