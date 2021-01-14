@@ -222,7 +222,7 @@ pSingleExp' =
     <|> try pUnit
     <|> try pTuple
     <|> pFun
-    <|> between (symbol "(") (symbol ")") pExp
+    <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
 
 pSingleExp :: Parser (Exp (Griff 'Parse))
 pSingleExp = try (Force <$> getSourcePos <* pOperator "!" <*> pSingleExp') <|> pSingleExp'

@@ -1,0 +1,30 @@
+module TestArithDouble = {
+  import Builtin;
+  import Prelude;
+
+  -- operators for Double#
+  neg = { x -> sub_Double# 0.0# x };
+
+  infixl 7 (*);
+  (*) = {x y -> mul_Double# x y};
+
+  mul = {x y -> mul_Double# x y};
+
+  infixl 6 (+);
+  (+) = {x y -> add_Double# x y};
+
+  add = {x y -> add_Double# x y};
+
+  show = {x -> String# (showDouble# x)};
+
+  traceShowId = { x -> putStrLn (show x); x };
+
+  f :: Double# -> Double#;
+  f = {x -> (x + 0.0#) * x};
+
+  main = {
+    putStrLn (show (f 0.5#))
+  };
+}
+
+-- Expected: 0.250000

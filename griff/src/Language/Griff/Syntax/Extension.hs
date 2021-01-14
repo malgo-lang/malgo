@@ -47,6 +47,8 @@ type family XTuple x
 
 type family XForce x
 
+type family XParens x
+
 type ForallExpX (c :: K.Type -> Constraint) x =
   ( c (XVar x),
     c (XCon x),
@@ -55,7 +57,8 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XOpApp x),
     c (XFn x),
     c (XTuple x),
-    c (XForce x)
+    c (XForce x),
+    c (XParens x)
   )
 
 -- Clause Extensions
@@ -216,6 +219,12 @@ type instance XForce (Griff 'Parse) = SourcePos
 type instance XForce (Griff 'Rename) = SourcePos
 
 type instance XForce (Griff 'TypeCheck) = WithType SourcePos
+
+type instance XParens (Griff 'Parse) = SourcePos
+
+type instance XParens (Griff 'Rename) = SourcePos
+
+type instance XParens (Griff 'TypeCheck) = WithType SourcePos
 
 type instance XClause (Griff 'Parse) = SourcePos
 

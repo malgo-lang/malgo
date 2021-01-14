@@ -57,6 +57,7 @@ data Exp x
   | Fn (XFn x) [Clause x]
   | Tuple (XTuple x) [Exp x]
   | Force (XForce x) (Exp x)
+  | Parens (XParens x) (Exp x)
 
 deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Exp x)
 
@@ -78,6 +79,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
           (map (pPrintPrec l 0) cs)
   pPrintPrec _ _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pPrint xs
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
+  pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
 instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Exp x) where
   toType = to $ \case
@@ -89,6 +91,7 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Fn x _ -> x ^. toType
     Tuple x _ -> x ^. toType
     Force x _ -> x ^. toType
+    Parens x _ -> x ^. toType
   overType f = \case
     Var x v -> Var <$> overType f x <*> pure v
     Con x c -> Con <$> overType f x <*> pure c
@@ -98,6 +101,7 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Fn x cs -> Fn <$> overType f x <*> traverse (overType f) cs
     Tuple x es -> Tuple <$> overType f x <*> traverse (overType f) es
     Force x e -> Force <$> overType f x <*> overType f e
+    Parens x e -> Parens <$> overType f x <*> overType f e
 
 freevars :: Ord (XId x) => Exp x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
@@ -108,6 +112,7 @@ freevars (OpApp _ op e1 e2) = Set.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = mconcat $ map freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Force _ e) = freevars e
+freevars (Parens _ e) = freevars e
 
 ------------
 -- Clause --
