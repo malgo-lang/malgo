@@ -30,7 +30,7 @@ eqCons pos t1 t2 = WithPos (t1 :~ t2) pos
 
 -- Constraint Solver
 solve :: (MonadIO m, MonadGriff m) => [WithPos] -> m ()
-solve = solveLoop 5000
+solve cs = solveLoop 5000 =<< zonkConstraints cs
 
 unifyErrorMessage :: (Pretty a1, Pretty a2) => a1 -> a2 -> Doc
 unifyErrorMessage t1 t2 = "Couldn't match type" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
@@ -89,7 +89,7 @@ bind pos tv t2 = do
     _ -> do
       mt1 <- readMetaTv tv
       case mt1 of
-        Just _ -> errorOn pos "Internal Error"
+        Just t1 -> errorOn pos $ "Internal Error:" <+> quotes (pPrint tv) <+> "is already bound to" <+> quotes (pPrint t1)
         Nothing -> do
           if tv `elem` metaTvs t2
             then errorOn pos $ "Occurs check" <+> quotes (pPrint tv) <+> "for" <+> pPrint t2

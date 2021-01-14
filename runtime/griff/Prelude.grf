@@ -9,16 +9,13 @@ module Prelude = {
   (<|) :: (a -> b) -> a -> b;
   (<|) = {f x -> f x};
 
-  data Bool = False | True;
-
   if :: Bool -> {a} -> {a} -> a;
-  if c t f = c |> { True -> !t
-                  | False -> !f
-                  };
+  if = { True t _ -> !t
+       | False _ f -> !f
+       };
 
-  if' = { True t _ -> !t
-        | False _ f -> !f
-        };
+  unless :: Bool -> a -> {a} -> a;
+  unless c tValue f = if c {tValue} f;
 
   foreign import print_string :: String# -> ();
   foreign import newline :: () -> ();
@@ -30,5 +27,9 @@ module Prelude = {
   putStrLn = { (String# str) ->
     print_string str;
     newline ()
+  };
+
+  appendString = { (String# s1) (String# s2) ->
+    String# (appendString# s1 s2)
   };
 }
