@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <string.h>
 
+// Arithmetic operators
 int32_t add_i32(int32_t x, int32_t y) {
   return x + y;
 }
@@ -65,6 +67,31 @@ float div_float(float x, float y) {
 
 double div_double(double x, double y) {
   return x / y;
+}
+
+// Comparison operators
+int32_t ge_double(double x, double y) {
+  return x >= y;
+}
+
+// String operators
+char* append_string(char* s1, char* s2) {
+  char* new = GC_MALLOC(sizeof(char) * strlen(s1) * strlen(s2) + 1);
+  strcpy(new, s1);
+  strcat(new, s2);
+  return new;
+}
+
+char* show_double(double d) {
+  size_t size = 4;
+  char* new = GC_MALLOC(sizeof(char) * size);
+  int writed = -1;
+  while (writed < 0 || writed >= size) {
+    size++;
+    new = GC_REALLOC(new, sizeof(char) * size);
+    writed = snprintf(new, size, "%lf", d);
+  }
+  return new;
 }
 
 typedef struct {

@@ -5,6 +5,7 @@ module Builtin = {
   data Double = Double# Double#;
   data Char = Char# Char#;
   data String = String# String#;
+  data Bool = False | True;
 
   foreign import add_i32 :: Int32# -> Int32# -> Int32#;
   add_Int32# = { x y -> add_i32 x y };
@@ -53,4 +54,17 @@ module Builtin = {
 
   foreign import div_double :: Double# -> Double# -> Double#;
   div_Double# = { x y -> div_double x y };
+
+  isTrue# :: Int32# -> Bool;
+  isTrue# = { 1# -> True
+            | _  -> False };
+
+  foreign import ge_double :: Double# -> Double# -> Int32#;
+  ge_Double# = {x y -> ge_double x y};
+
+  foreign import append_string :: String# -> String# -> String#;
+  appendString# = {str1 str2 -> append_string str1 str2};
+
+  foreign import show_double :: Double# -> String#;
+  showDouble# = {d -> show_double d};
 }
