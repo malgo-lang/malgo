@@ -13,6 +13,8 @@ module Language.Griff.Prelude
     errorOn,
     Opt (..),
     parseOpt,
+    getPackagePathes,
+    getPackagePath
   )
 where
 
@@ -21,6 +23,8 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import Options.Applicative
+import System.Directory (XdgDirectory (..), getXdgDirectory)
+import System.FilePath ((</>), takeDirectory)
 import System.FilePath.Lens
 import Text.Megaparsec.Pos (SourcePos (sourceLine), unPos)
 
@@ -59,8 +63,8 @@ instance MonadGriff m => MonadGriff (WriterT w m)
 instance MonadGriff m => MonadGriff (UniqT m)
 
 data Opt = Opt
-  { srcName :: String,
-    dstName :: String,
+  { srcName :: FilePath,
+    dstName :: FilePath,
     dumpParsed :: Bool,
     dumpRenamed :: Bool,
     dumpTyped :: Bool,
@@ -69,7 +73,8 @@ data Opt = Opt
     noLambdaLift :: Bool,
     inlineSize :: Int,
     viaBinding :: Bool,
-    debugMode :: Bool
+    debugMode :: Bool,
+    modulePaths :: [FilePath]
   }
   deriving stock (Eq, Show)
 
@@ -94,6 +99,7 @@ parseOpt = do
               <*> fmap read (strOption (long "inline" <> value "10"))
               <*> switch (long "via-binding")
               <*> switch (long "debug-mode")
+              <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
           )
             <**> helper
         )
@@ -101,3 +107,13 @@ parseOpt = do
   if null (dstName opt)
     then pure opt {dstName = srcName opt & extension .~ ".ll"}
     else pure opt
+
+getPackagePathes :: (MonadGriff m, MonadIO m) => m [FilePath]
+getPackagePathes = do
+  opt <- getOpt
+  basePath <- getPackagePath "base"
+  pure $ takeDirectory (dstName opt) : modulePaths opt <> [basePath]
+
+getPackagePath :: MonadIO m => FilePath -> m FilePath
+getPackagePath packageName =
+  liftIO $ getXdgDirectory XdgData ("griff" </> packageName)

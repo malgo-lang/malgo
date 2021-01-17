@@ -27,6 +27,7 @@ import qualified Language.Griff.Rename.RnEnv as RnState
 import Language.Griff.Syntax.Extension
 import qualified Language.Griff.Type as GT
 import qualified Language.Griff.TypeCheck.TcEnv as TcEnv
+import System.FilePath ((</>))
 import System.FilePath.Lens
 
 data Interface = Interface
@@ -79,15 +80,17 @@ storeInterface interface = do
     BS.writeFile (dstName opt & extension .~ ".grfi") $
       encode interface
 
-loadInterface :: (MonadGriff m, MonadIO m) => ModuleName -> m Interface
+loadInterface :: (HasCallStack, MonadGriff m, MonadIO m) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
-  opt <- getOpt
-  message <- liftIO $ safeReadFile (dstName opt & basename .~ modName & extension .~ ".grfi")
+  modPaths <- getPackagePathes
+  message <- liftIO $ findAndReadFile modPaths (modName <> ".grfi")
   case message of
     Just x -> liftIO (decodeIO x)
     Nothing ->
       errorDoc $ "Module interface file is not found:" <+> quotes (pPrint modName)
   where
-    safeReadFile filename = fmap Just (BS.readFile filename) `catch` handler
+    findAndReadFile :: [FilePath] -> FilePath -> IO (Maybe ByteString)
+    findAndReadFile modPaths modFile = asum <$> traverse (\path -> safeReadFile (path </> modFile)) modPaths
+    safeReadFile filename = (Just <$> BS.readFile filename) `catch` handler
     handler :: IOException -> IO (Maybe ByteString)
     handler _ = pure Nothing
