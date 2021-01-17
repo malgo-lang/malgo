@@ -19,6 +19,9 @@ import Language.Griff.Prelude
 import Language.Griff.Type
 import Text.Megaparsec.Pos (SourcePos)
 
+data Unboxed
+data Boxed
+
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show, Generic)
   deriving anyclass (Store)

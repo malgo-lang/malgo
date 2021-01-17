@@ -108,7 +108,7 @@ pScDef =
 pExp :: Parser (Exp (Griff 'Parse))
 pExp = pOpApp
 
-pUnboxed :: Parser Unboxed
+pUnboxed :: Parser (Literal Unboxed)
 pUnboxed =
   label "unboxed literal" $
     try (Double <$> lexeme (L.float <* char '#'))

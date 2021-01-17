@@ -23,20 +23,19 @@ import Language.Griff.Syntax.Extension
 import Language.Griff.Type (HasType (..))
 import qualified Language.Griff.Type as T
 
--- Unboxed literal
-
-data Unboxed = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
+-- | Unboxed and literal
+data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
   deriving stock (Show, Eq, Ord)
 
-instance Pretty Unboxed where
-  pPrint (Int32 i) = pPrint (toInteger i) <> "#"
-  pPrint (Int64 i) = pPrint (toInteger i) <> "L#"
-  pPrint (Float f) = pPrint f <> "F#"
-  pPrint (Double d) = pPrint d <> "#"
-  pPrint (Char c) = quotes (pPrint c) <> "#"
-  pPrint (String s) = doubleQuotes (text s) <> "#"
+instance Pretty (Literal x) where
+  pPrint (Int32 i) = pPrint (toInteger i)
+  pPrint (Int64 i) = pPrint (toInteger i) <> "L"
+  pPrint (Float f) = pPrint f <> "F"
+  pPrint (Double d) = pPrint d
+  pPrint (Char c) = quotes (pPrint c)
+  pPrint (String s) = doubleQuotes (text s)
 
-instance HasType Unboxed where
+instance HasType (Literal x) where
   toType = to $ \case
     Int32 {} -> T.TyPrim T.Int32T
     Int64 {} -> T.TyPrim T.Int64T
@@ -51,7 +50,7 @@ instance HasType Unboxed where
 data Exp x
   = Var (XVar x) (XId x)
   | Con (XCon x) (XId x)
-  | Unboxed (XUnboxed x) Unboxed
+  | Unboxed (XUnboxed x) (Literal Unboxed)
   | Apply (XApply x) (Exp x) (Exp x)
   | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
   | Fn (XFn x) [Clause x]
@@ -66,7 +65,7 @@ deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Sho
 instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec _ _ (Var _ i) = pPrint i
   pPrintPrec _ _ (Con _ c) = pPrint c
-  pPrintPrec _ _ (Unboxed _ u) = pPrint u
+  pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
   pPrintPrec l d (Apply _ e1 e2) =
     maybeParens (d > 10) $ sep [pPrintPrec l 10 e1, pPrintPrec l 11 e2]
   pPrintPrec l d (OpApp _ o e1 e2) =
@@ -172,7 +171,7 @@ data Pat x
   = VarP (XVarP x) (XId x)
   | ConP (XConP x) (XId x) [Pat x]
   | TupleP (XTupleP x) [Pat x]
-  | UnboxedP (XUnboxedP x) Unboxed
+  | UnboxedP (XUnboxedP x) (Literal Unboxed)
 
 deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)
 
@@ -216,7 +215,7 @@ _TupleP = prism' (uncurry TupleP) $ \case
   TupleP x ps -> Just (x, ps)
   _ -> Nothing
 
-_UnboxedP :: Prism' (Pat x) (XUnboxedP x, Unboxed)
+_UnboxedP :: Prism' (Pat x) (XUnboxedP x, Literal Unboxed)
 _UnboxedP = prism' (uncurry UnboxedP) $ \case
   UnboxedP x u -> Just (x, u)
   _ -> Nothing

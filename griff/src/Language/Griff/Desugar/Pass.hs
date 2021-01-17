@@ -30,7 +30,7 @@ import Language.Griff.Desugar.DsEnv
 import Language.Griff.Interface
 import Language.Griff.Prelude
 import Language.Griff.Syntax as G
-import Language.Griff.Syntax.Extension
+import Language.Griff.Syntax.Extension as G
 import Language.Griff.Type as GT
 import Language.Griff.TypeCheck.Pass (applySubst)
 import Language.Griff.TypeCheck.TcEnv (TcEnv)
@@ -172,7 +172,7 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
     buildsonType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
 
 -- Unboxedの脱糖衣
-dsUnboxed :: G.Unboxed -> C.Unboxed
+dsUnboxed :: Literal G.Unboxed -> C.Unboxed
 dsUnboxed (G.Int32 x) = C.Int32 $ toInteger x
 dsUnboxed (G.Int64 x) = C.Int64 $ toInteger x
 dsUnboxed (G.Float x) = C.Float x
