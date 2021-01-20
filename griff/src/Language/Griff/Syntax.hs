@@ -45,12 +45,16 @@ instance HasType (Literal x) where
     String {} -> T.TyPrim T.StringT
   overType _ = pure
 
+toUnboxed :: Literal Boxed -> Literal Unboxed
+toUnboxed = coerce
+
 -- Expression
 
 data Exp x
   = Var (XVar x) (XId x)
   | Con (XCon x) (XId x)
   | Unboxed (XUnboxed x) (Literal Unboxed)
+  | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Exp x) (Exp x)
   | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
   | Fn (XFn x) [Clause x]
@@ -66,6 +70,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec _ _ (Var _ i) = pPrint i
   pPrintPrec _ _ (Con _ c) = pPrint c
   pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
+  pPrintPrec _ _ (Boxed _ lit) = pPrint lit
   pPrintPrec l d (Apply _ e1 e2) =
     maybeParens (d > 10) $ sep [pPrintPrec l 10 e1, pPrintPrec l 11 e2]
   pPrintPrec l d (OpApp _ o e1 e2) =
@@ -85,6 +90,7 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Var x _ -> x ^. toType
     Con x _ -> x ^. toType
     Unboxed x _ -> x ^. toType
+    Boxed x _ -> x ^. toType
     Apply x _ _ -> x ^. toType
     OpApp x _ _ _ -> x ^. toType
     Fn x _ -> x ^. toType
@@ -95,6 +101,7 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Var x v -> Var <$> overType f x <*> pure v
     Con x c -> Con <$> overType f x <*> pure c
     Unboxed x u -> Unboxed <$> overType f x <*> overType f u
+    Boxed x b -> Boxed <$> overType f x <*> overType f b
     Apply x e1 e2 -> Apply <$> overType f x <*> overType f e1 <*> overType f e2
     OpApp x op e1 e2 -> OpApp <$> overType f x <*> pure op <*> overType f e1 <*> overType f e2
     Fn x cs -> Fn <$> overType f x <*> traverse (overType f) cs
@@ -106,6 +113,7 @@ freevars :: Ord (XId x) => Exp x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
 freevars (Con _ _) = Set.empty
 freevars (Unboxed _ _) = Set.empty
+freevars (Boxed _ _) = Set.empty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = Set.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = mconcat $ map freevarsClause cs

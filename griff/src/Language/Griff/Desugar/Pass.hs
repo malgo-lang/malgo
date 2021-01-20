@@ -156,7 +156,7 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
     retType' <- dsType retType
 
     -- generate constructor code
-    conName' <- newCoreId conName $ buildsonType paramTypes' retType'
+    conName' <- newCoreId conName $ buildConType paramTypes' retType'
     ps <- traverse (newLocalId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
@@ -168,8 +168,8 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
     pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
-    buildsonType [] retType = [] :-> retType
-    buildsonType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
+    buildConType [] retType = [] :-> retType
+    buildConType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
 
 -- Unboxedの脱糖衣
 dsUnboxed :: Literal G.Unboxed -> C.Unboxed
@@ -223,6 +223,7 @@ dsExp (G.Con _ name) = do
       pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     _ -> bug Unreachable
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
+dsExp (G.Boxed _ _) = bug Unreachable -- RenameでApplyに変形されている
 dsExp (G.Apply _ f x) = runDef $ do
   f' <- bind =<< dsExp f
   case C.typeOf f' of

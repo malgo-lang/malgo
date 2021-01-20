@@ -1,4 +1,5 @@
 module Builtin = {
+  -- Primitive Types
   data Int32 = Int32# Int32#;
   data Int64 = Int64# Int64#;
   data Float = Float# Float#;
@@ -7,52 +8,104 @@ module Builtin = {
   data String = String# String#;
   data Bool = False | True;
 
+  -- Boxing functions
+  int32# :: Int32# -> Int32;
+  int32# = { x -> Int32# x };
+
+  int64# :: Int64# -> Int64;
+  int64# = { x -> Int64# x };
+
+  float# :: Float# -> Float;
+  float# = { x -> Float# x };
+
+  double# :: Double# -> Double;
+  double# = { x -> Double# x };
+
+  char# :: Char# -> Char;
+  char# = { x -> Char# x };
+  
+  string# :: String# -> String;
+  string# = { x -> String# x };
+
+  -- Arithmetic operators
   foreign import add_i32 :: Int32# -> Int32# -> Int32#;
+
+  add_Int32# :: Int32# -> Int32# -> Int32#;
   add_Int32# = { x y -> add_i32 x y };
 
   foreign import add_i64 :: Int64# -> Int64# -> Int64#;
+
+  add_Int64# :: Int64# -> Int64# -> Int64#;
   add_Int64# = { x y -> add_i64 x y };
 
   foreign import add_float :: Float# -> Float# -> Float#;
+
+  add_Float# :: Float# -> Float# -> Float#;
   add_Float# = { x y -> add_float x y };
 
   foreign import add_double :: Double# -> Double# -> Double#;
+
+  add_Double# :: Double# -> Double# -> Double#;
   add_Double# = { x y -> add_double x y };
 
   foreign import sub_i32 :: Int32# -> Int32# -> Int32#;
+
+  sub_Int32# :: Int32# -> Int32# -> Int32#;
   sub_Int32# = { x y -> sub_i32 x y };
 
   foreign import sub_i64 :: Int64# -> Int64# -> Int64#;
+
+  sub_Int64# :: Int64# -> Int64# -> Int64#;
   sub_Int64# = { x y -> sub_i64 x y };
 
   foreign import sub_float :: Float# -> Float# -> Float#;
+
+  sub_Float# :: Float# -> Float# -> Float#;
   sub_Float# = { x y -> sub_float x y };
 
   foreign import sub_double :: Double# -> Double# -> Double#;
+
+  sub_Double# :: Double# -> Double# -> Double#;
   sub_Double# = { x y -> sub_double x y };
 
   foreign import mul_i32 :: Int32# -> Int32# -> Int32#;
+
+  mul_Int32# :: Int32# -> Int32# -> Int32#; 
   mul_Int32# = { x y -> mul_i32 x y };
 
   foreign import mul_i64 :: Int64# -> Int64# -> Int64#;
+
+  mul_Int64# :: Int64# -> Int64# -> Int64#;
   mul_Int64# = { x y -> mul_i64 x y };
 
   foreign import mul_float :: Float# -> Float# -> Float#;
+
+  mul_Float# :: Float# -> Float# -> Float#; 
   mul_Float# = { x y -> mul_float x y };
 
   foreign import mul_double :: Double# -> Double# -> Double#;
+
+  mul_Double# :: Double# -> Double# -> Double#;
   mul_Double# = { x y -> mul_double x y };
 
   foreign import div_i32 :: Int32# -> Int32# -> Int32#;
+
+  div_Int32# :: Int32# -> Int32# -> Int32#;
   div_Int32# = { x y -> div_i32 x y };
 
   foreign import div_i64 :: Int64# -> Int64# -> Int64#;
+
+  div_Int64# :: Int64# -> Int64# -> Int64#;
   div_Int64# = { x y -> div_i64 x y };
 
   foreign import div_float :: Float# -> Float# -> Float#;
+
+  div_Float# :: Float# -> Float# -> Float#;
   div_Float# = { x y -> div_float x y };
 
   foreign import div_double :: Double# -> Double# -> Double#;
+
+  div_Double# :: Double# -> Double# -> Double#;
   div_Double# = { x y -> div_double x y };
 
   isTrue# :: Int32# -> Bool;

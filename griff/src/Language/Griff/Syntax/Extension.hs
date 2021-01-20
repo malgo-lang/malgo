@@ -40,6 +40,8 @@ type family XCon x
 
 type family XUnboxed x
 
+type family XBoxed x
+
 type family XApply x
 
 type family XOpApp x
@@ -56,6 +58,7 @@ type ForallExpX (c :: K.Type -> Constraint) x =
   ( c (XVar x),
     c (XCon x),
     c (XUnboxed x),
+    c (XBoxed x),
     c (XApply x),
     c (XOpApp x),
     c (XFn x),
@@ -192,6 +195,12 @@ type instance XUnboxed (Griff 'Parse) = SourcePos
 type instance XUnboxed (Griff 'Rename) = SourcePos
 
 type instance XUnboxed (Griff 'TypeCheck) = WithType SourcePos
+
+type instance XBoxed (Griff 'Parse) = SourcePos
+
+type instance XBoxed (Griff 'Rename) = SourcePos
+
+type instance XBoxed (Griff 'TypeCheck) = WithType SourcePos
 
 type instance XApply (Griff 'Parse) = SourcePos
 

@@ -89,7 +89,7 @@ for file in `ls ./examples/griff | grep '\.grf$'`; do
 
   cabal exec griffc -- --via-binding -M $TESTDIR/libs ./examples/griff/$file -o $LLFILE || exit 255
 
-  clang -O2 $(pkg-config bdw-gc --libs --cflags) ./runtime/griff/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
+  clang -O2 -flto $(pkg-config bdw-gc --libs --cflags) ./runtime/griff/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
 
   $OUTFILE || exit 255
 

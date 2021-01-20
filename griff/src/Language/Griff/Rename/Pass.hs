@@ -143,6 +143,9 @@ rnExp ::
 rnExp (Var pos name) = Var pos <$> lookupVarName pos name
 rnExp (Con pos name) = Con pos <$> lookupVarName pos name
 rnExp (Unboxed pos val) = pure $ Unboxed pos val
+rnExp (Boxed pos val) = do
+  f <- lookupBox pos val
+  pure $ Apply pos f (Unboxed pos $ toUnboxed val)
 rnExp (Apply pos e1 e2) = Apply pos <$> rnExp e1 <*> rnExp e2
 rnExp (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
@@ -156,6 +159,14 @@ rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
 rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (Parens pos e) = Parens pos <$> rnExp e
+
+lookupBox :: (MonadReader RnEnv f, MonadGriff f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Griff 'Rename))
+lookupBox pos Int32{} = Var pos <$> lookupVarName pos "int32#"
+lookupBox pos Int64{} = Var pos <$> lookupVarName pos "int64#"
+lookupBox pos Float{} = Var pos <$> lookupVarName pos "float#"
+lookupBox pos Double{} = Var pos <$> lookupVarName pos "double#"
+lookupBox pos Char{} = Var pos <$> lookupVarName pos "char#"
+lookupBox pos String{} = Var pos <$> lookupVarName pos "string#"
 
 rnType :: (MonadReader RnEnv m, MonadGriff m, MonadIO m) => Type (Griff 'Parse) -> m (Type (Griff 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
