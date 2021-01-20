@@ -14,3 +14,6 @@ cp runtime/griff/Prelude.grf $LIB_PATH/Prelude.grf
 
 cabal exec griffc -- --via-binding $LIB_PATH/Builtin.grf
 cabal exec griffc -- --via-binding $LIB_PATH/Prelude.grf
+
+clang -S -emit-llvm -O2 $LIB_PATH/Builtin.ll -o $LIB_PATH/Builtin.ll
+clang -S -emit-llvm -O2 $LIB_PATH/Prelude.ll -o $LIB_PATH/Prelude.ll

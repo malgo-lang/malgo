@@ -163,6 +163,7 @@ tcExpr (Con pos c) = do
   cType <- instantiate False =<< lookupVar pos c
   pure $ Con (WithType pos cType) c
 tcExpr (Unboxed pos u) = pure $ Unboxed (WithType pos $ u ^. toType) u
+tcExpr (S.Boxed _ _) = bug Unreachable -- RenameでApplyに変形されている
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x

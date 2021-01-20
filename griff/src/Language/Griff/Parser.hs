@@ -108,35 +108,25 @@ pScDef =
 pExp :: Parser (Exp (Griff 'Parse))
 pExp = pOpApp
 
-pUnboxed :: Parser Unboxed
+pBoxed :: Parser (Literal Boxed)
+pBoxed =
+  label "boxed literal" $
+    try (Double <$> lexeme L.float)
+      <|> try (Float <$> lexeme (L.float <* string' "F"))
+      <|> try (Int32 <$> lexeme L.decimal)
+      <|> try (Int64 <$> lexeme (L.decimal <* string' "L"))
+      <|> try (lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral))
+      <|> try (lexeme (String <$> (char '"' *> manyTill L.charLiteral (char '"'))))
+
+pUnboxed :: Parser (Literal Unboxed)
 pUnboxed =
   label "unboxed literal" $
     try (Double <$> lexeme (L.float <* char '#'))
       <|> try (Float <$> lexeme (L.float <* string' "F#"))
       <|> try (Int32 <$> lexeme (L.decimal <* char '#'))
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L#"))
-      <|> try
-        ( lexeme do
-            x <- L.float <* notFollowedBy (char '#')
-            registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show (x :: Double) <> "'\nMaybe you forgot '#'(Double#) or 'F#'(Float#)")
-            pure undefined
-        )
-      <|> try
-        ( lexeme do
-            x <- L.decimal <* notFollowedBy (string "L#")
-            registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show (x :: Int) <> "'\nMaybe you forgot '#'(Int32#) or 'L#'(Int64#)")
-            pure undefined
-        )
       <|> try (lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#')))
-      <|> lexeme do
-        x <- between (char '\'') (char '\'') L.charLiteral <* notFollowedBy (char '#')
-        registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show x <> "'\nMaybe you forgot '#'")
-        pure undefined
       <|> try (lexeme (String <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
-      <|> lexeme do
-        x <- char '"' *> manyTill L.charLiteral (char '"') <* notFollowedBy (char '#')
-        registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> show x <> "'\nMaybe you forgot '#'")
-        pure undefined
 
 pVariable :: Parser (Exp (Griff 'Parse))
 pVariable =
@@ -216,7 +206,8 @@ pUnit = between (symbol "(") (symbol ")") $ do
 
 pSingleExp' :: Parser (Exp (Griff 'Parse))
 pSingleExp' =
-  Unboxed <$> getSourcePos <*> pUnboxed
+  try (Unboxed <$> getSourcePos <*> pUnboxed)
+    <|> try (Boxed <$> getSourcePos <*> pBoxed)
     <|> pVariable
     <|> pConstructor
     <|> try pUnit

@@ -1,0 +1,20 @@
+module hello = {
+  foreign import print_string :: String# -> ();
+  foreign import newline :: () -> ();
+
+  data String = String# String#;
+
+  putStrLn :: String -> ();
+  putStrLn = { (String# str) ->
+    print_string str;
+    newline ()
+  };
+
+  string# :: String# -> String;
+  string# = { x -> String# x };
+
+  main = {
+    putStrLn "Hello, world" 
+  };
+}
+-- Expected: Hello, world
