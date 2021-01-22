@@ -51,12 +51,12 @@ solveLoop n (WithPos (TyMeta a1 :~ TyMeta a2) pos : cs)
     bind pos a1 (TyMeta a2)
     solveLoop (n - 1) =<< zonkConstraints cs
 solveLoop n (WithPos (TyMeta a :~ t) pos : cs)
-  | isRigid a = bug Unreachable
+  | isRigid a = errorOn pos $ unifyErrorMessage a t $+$ quotes (pPrint a) <+> "is a rigid type variable"
   | otherwise = do
     bind pos a t
     solveLoop (n - 1) =<< zonkConstraints cs
 solveLoop n (WithPos (t :~ TyMeta a) pos : cs)
-  | isRigid a = bug Unreachable
+  | isRigid a = errorOn pos $ unifyErrorMessage a t $+$ quotes (pPrint a) <+> "is a rigid type variable"
   | otherwise = do
     bind pos a t
     solveLoop (n - 1) =<< zonkConstraints cs
