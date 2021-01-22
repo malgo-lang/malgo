@@ -111,10 +111,10 @@ pExp = pOpApp
 pBoxed :: Parser (Literal Boxed)
 pBoxed =
   label "boxed literal" $
-    try (Double <$> lexeme L.float)
-      <|> try (Float <$> lexeme (L.float <* string' "F"))
-      <|> try (Int32 <$> lexeme L.decimal)
+    try (Float <$> lexeme (L.float <* string' "F"))
+      <|> try (Double <$> lexeme L.float)
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L"))
+      <|> try (Int32 <$> lexeme L.decimal)
       <|> try (lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral))
       <|> try (lexeme (String <$> (char '"' *> manyTill L.charLiteral (char '"'))))
 
