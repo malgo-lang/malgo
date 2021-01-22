@@ -263,7 +263,17 @@ tcPatterns (UnboxedP pos unboxed : cs) = do
 -----------------------------------
 
 transType :: (MonadState TcEnv m, MonadIO m, MonadGriff m) => S.Type (Griff 'Rename) -> m Type
-transType (S.TyApp _ t ts) = foldr (flip TyApp) <$> transType t <*> traverse transType ts
+transType (S.TyApp pos t ts) = do
+  rnEnv <- use TcEnv.rnEnv
+  let ptr_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Ptr#" (view R.typeEnv rnEnv)
+  case t of
+    S.TyCon _ c | c == ptr_t ->
+      case ts of
+        [t] -> do
+          t' <- transType t
+          pure $ TyPtr t'
+        _ -> errorOn pos "Invalid type arguments for Ptr#"
+    _ -> foldr (flip TyApp) <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = do
   rnEnv <- use TcEnv.rnEnv
@@ -337,17 +347,6 @@ freeMetaTvs env t = do
   t' <- zonkType t
   pure $ metaTvs t' Set.\\ foldMap metaTvsScheme env'
 
-metaTvs :: Type -> Set MetaTv
-metaTvs (TyApp t1 t2) = metaTvs t1 <> metaTvs t2
-metaTvs (TyArr t1 t2) = metaTvs t1 <> metaTvs t2
-metaTvs (TyTuple ts) = mconcat $ map metaTvs ts
-metaTvs (TyLazy t) = metaTvs t
-metaTvs (TyMeta tv) = Set.singleton tv
-metaTvs _ = mempty
-
-metaTvsScheme :: Scheme -> Set MetaTv
-metaTvsScheme (Forall _ t) = metaTvs t
-
 -- 型を具体化する
 instantiate :: (MonadUniq m, MonadIO m) => Bool -> Scheme -> m Type
 instantiate isRigid (Forall as t) = do
@@ -366,4 +365,5 @@ applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t
 applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
 applySubst subst (TyTuple ts) = TyTuple $ map (applySubst subst) ts
 applySubst subst (TyLazy t) = TyLazy $ applySubst subst t
+applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
 applySubst _ t = t

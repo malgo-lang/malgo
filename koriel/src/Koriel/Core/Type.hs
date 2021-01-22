@@ -42,6 +42,7 @@ data Type
   | DataT String [Type]
   | SumT (Set Con)
   | ArrayT Type
+  | PtrT Type
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic)
@@ -64,6 +65,7 @@ instance Pretty Type where
   pPrint (DataT n ts) = parens $ pPrint n <+> sep (map pPrint ts)
   pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
   pPrint (ArrayT t) = brackets $ pPrint t
+  pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
   pPrint AnyT = "*"
   pPrint VoidT = "Void"
 

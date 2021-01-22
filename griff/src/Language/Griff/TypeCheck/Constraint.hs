@@ -68,17 +68,11 @@ solveLoop n (WithPos (TyTuple ts1 :~ TyTuple ts2) pos : cs) =
   solveLoop (n - 1) $ zipWith (\t1 t2 -> WithPos (t1 :~ t2) pos) ts1 ts2 <> cs
 solveLoop n (WithPos (TyLazy t1 :~ TyLazy t2) pos : cs) =
   solveLoop (n - 1) $ WithPos (t1 :~ t2) pos : cs
+solveLoop n (WithPos (TyPtr t1 :~ TyPtr t2) pos : cs) =
+  solveLoop (n - 1) $ WithPos (t1 :~ t2) pos : cs
 solveLoop n (WithPos (t1 :~ t2) pos : cs)
   | t1 == t2 = solveLoop (n - 1) cs
   | otherwise = errorOn pos $ unifyErrorMessage t1 t2
-
-metaTvs :: Type -> Set MetaTv
-metaTvs (TyApp t1 t2) = metaTvs t1 <> metaTvs t2
-metaTvs (TyArr t1 t2) = metaTvs t1 <> metaTvs t2
-metaTvs (TyTuple ts) = mconcat $ map metaTvs ts
-metaTvs (TyLazy t) = metaTvs t
-metaTvs (TyMeta tv) = Set.singleton tv
-metaTvs _ = mempty
 
 bind :: (MonadGriff m, MonadIO m) => SourcePos -> MetaTv -> Type -> m ()
 bind pos tv t2 = do

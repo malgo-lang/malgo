@@ -434,6 +434,7 @@ dsType (GT.TyArr t1 t2) = do
 dsType (GT.TyTuple ts) =
   SumT . Set.singleton . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dsType ts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
+dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyMeta tv) = do
   mtype <- GT.readMetaTv tv
   case mtype of

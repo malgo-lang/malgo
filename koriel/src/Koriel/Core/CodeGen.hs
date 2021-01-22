@@ -105,6 +105,7 @@ convType (SumT cs) =
             [i8, if size == 0 then StructureType False [] else LT.VectorType size i8]
         )
 convType (ArrayT ty) = ptr $ StructureType False [ptr $ convType ty, i64]
+convType (PtrT ty) = ptr $ convType ty
 convType AnyT = ptr i8
 convType VoidT = LT.void
 
@@ -123,6 +124,7 @@ sizeofType BoolT = 1
 sizeofType DataT {} = 8
 sizeofType (SumT _) = 8
 sizeofType (ArrayT _) = 8
+sizeofType (PtrT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
