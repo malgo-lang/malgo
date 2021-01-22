@@ -1,3 +1,4 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
@@ -21,80 +22,88 @@ import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
 
-runLint :: Monad m => ReaderT [a] (ExceptT Doc m) b -> m b
-runLint m =
-  runExceptT (runReaderT m []) >>= \case
-    Left err -> errorDoc err
-    Right e' -> pure e'
+runLint :: Monad m => ReaderT [a] m b -> m b
+runLint m = runReaderT m []
 
 lint :: (Monad m, HasType a, Pretty a, Eq a) => Exp (Id a) -> m ()
 lint e =
-  runExceptT (runReaderT (lintExp e) []) >>= \case
-    Left err -> errorDoc err
-    Right e' -> pure e'
+  runReaderT (lintExp e) []
 
-defined :: (MonadReader [Id a] f, Eq a, MonadError Doc f, Pretty a) => Id a -> f ()
+defined :: (MonadReader (t (Id a)) f, Foldable t, Eq a, Pretty a) => Id a -> f ()
 defined x
   | x ^. idIsExternal = pure ()
   | otherwise = do
     env <- ask
-    unless (x `elem` env) $ throwError $ pPrint x <> " is not defined"
+    unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
 
-match ::
-  (HasType a, HasType b, MonadError Doc f, Pretty a, Pretty b, HasCallStack) =>
-  a ->
-  b ->
-  f ()
-match (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) = do
-  zipWithM_ match ps0 ps1
-  match r0 r1
-match (typeOf -> DataT {}) (typeOf -> AnyT) = pure ()
-match (typeOf -> AnyT) (typeOf -> DataT {}) = pure ()
-match (typeOf -> AnyT) (typeOf -> AnyT) = pure ()
+isMatch :: (HasType a, HasType b) => a -> b -> Bool
+isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
+  and (zipWith isMatch ps0 ps1) && isMatch r0 r1
+isMatch (typeOf -> DataT {}) (typeOf -> AnyT) = True
+isMatch (typeOf -> AnyT) (typeOf -> DataT {}) = True
+isMatch (typeOf -> AnyT) (typeOf -> AnyT) = True
+isMatch x y
+  | typeOf x == typeOf y = True
+  | otherwise = False
+
+match :: (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> f ()
 match x y
-  | typeOf x == typeOf y =
-    pure ()
+  | isMatch x y = pure ()
   | otherwise =
-    throwError $
+    errorDoc $
       "type mismatch:"
-        $$ (pPrint x <+> ":" <+> pPrint (typeOf x))
-        $$ (pPrint y <+> ":" <+> pPrint (typeOf y))
+        $$ pPrint x <> ":" <> pPrint (typeOf x)
+        $$ pPrint y <> ":" <> pPrint (typeOf y)
 
-lintExp :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m, Eq a) => Exp (Id a) -> m ()
+lintExp :: (MonadReader [Id a] m, HasType a, Eq a, Pretty a) => Exp (Id a) -> m ()
 lintExp (Atom x) = lintAtom x
 lintExp (Call f xs) = do
   lintAtom f
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
-    _ -> throwError $ pPrint f <+> "is not callable"
+    _ -> errorDoc $ pPrint f <+> "is not callable"
 lintExp (CallDirect f xs) = do
   defined f
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
-    _ -> throwError $ pPrint f <+> "is not callable"
+    _ -> errorDoc $ pPrint f <+> "is not callable"
 lintExp (ExtCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
-lintExp ExtCall {} = throwError "primitive must be a function"
+lintExp ExtCall {} = error "primitive must be a function"
 lintExp (BinOp o x y) = do
   lintAtom x
   lintAtom y
   case o of
-    Add -> (match Int32T x >> match Int32T y) `catchError` const (match Int64T x >> match Int64T y)
-    Sub -> (match Int64T x >> match Int64T y) `catchError` const (match Int64T x >> match Int64T y)
-    Mul -> (match Int64T x >> match Int64T y) `catchError` const (match Int64T x >> match Int64T y)
-    Div -> (match Int64T x >> match Int64T y) `catchError` const (match Int64T x >> match Int64T y)
-    Mod -> (match Int64T x >> match Int64T y) `catchError` const (match Int64T x >> match Int64T y)
-    FAdd ->
-      (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
-    FSub ->
-      (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
-    FMul ->
-      (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
-    FDiv ->
-      (match FloatT x >> match FloatT y) `catchError` const (match DoubleT x >> match DoubleT y)
+    Add | isMatch x Int32T -> match x y
+        | isMatch x Int64T -> match x y
+        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    Sub | isMatch x Int32T -> match x y
+        | isMatch x Int64T -> match x y
+        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    Mul | isMatch x Int32T -> match x y 
+        | isMatch x Int64T -> match x y
+        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    Div | isMatch x Int32T -> match x y 
+        | isMatch x Int64T -> match x y
+        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    Mod | isMatch x Int32T -> match x y
+        | isMatch x Int64T -> match x y
+        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    FAdd | isMatch x FloatT -> match x y
+         | isMatch x DoubleT -> match x y
+         | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+    FSub | isMatch x FloatT -> match x y
+         | isMatch x DoubleT -> match x y
+         | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+    FMul | isMatch x FloatT -> match x y
+         | isMatch x DoubleT -> match x y
+         | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+    FDiv | isMatch x FloatT -> match x y
+         | isMatch x DoubleT -> match x y
+         | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
     Eq -> match x y
     Neq -> match x y
     Lt -> match x y
@@ -108,14 +117,14 @@ lintExp (ArrayRead a i) = do
   lintAtom i
   case typeOf a of
     ArrayT _ -> match Int64T i
-    _ -> throwError $ pPrint a <+> "must be a array"
+    _ -> errorDoc $ pPrint a <+> "must be a array"
 lintExp (ArrayWrite a i v) = do
   lintAtom a
   lintAtom i
   lintAtom v
   case typeOf a of
     ArrayT t -> match Int64T i >> match t v
-    _ -> throwError $ pPrint a <+> "must be a array"
+    _ -> errorDoc $ pPrint a <+> "must be a array"
 lintExp (Cast _ x) = lintAtom x
 lintExp (Let ds e) = local (map fst ds <>) $ do
   traverse_ (lintObj . snd) ds
@@ -125,22 +134,24 @@ lintExp (Match e cs) = do
   traverse_ lintCase cs
 lintExp Error {} = pure ()
 
-lintObj :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
+lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Array a n) = lintAtom a >> lintAtom n >> match Int64T n
 
-lintCase :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
+lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase (Switch _ e) = lintExp e
 lintCase (Bind x e) = local (x :) $ lintExp e
 
-lintAtom :: (MonadReader [Id a] m, MonadError Doc m, Pretty a, Eq a) => Atom (Id a) -> m ()
+lintAtom :: (MonadReader [Id a] m, Pretty a, Eq a) => Atom (Id a) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pure ()
 
-lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, MonadError Doc m, Eq a) => Program (Id a) -> m ()
+lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, Eq a) => Program (Id a) -> m ()
 lintProgram (Program funcs) = do
   let fs = map (view _1) funcs
   local (fs <>) $
-    traverse_ (\(_, (ps, body)) -> local (ps <>) $ lintExp body) funcs
+    traverse_ ?? funcs $ \(f, (ps, body)) -> local (ps <>) do
+      match f (map typeOf ps :-> typeOf body)
+      lintExp body
