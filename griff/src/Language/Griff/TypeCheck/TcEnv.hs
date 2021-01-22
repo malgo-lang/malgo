@@ -15,13 +15,9 @@ import Data.Store
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Griff.Prelude
-import Language.Griff.Rename.RnEnv
-  ( RnEnv,
-  )
-import qualified Language.Griff.Rename.RnEnv as R
+import Language.Griff.Rename.RnEnv (RnEnv)
 import Language.Griff.Syntax.Extension
 import Language.Griff.Type
-import Koriel.Id
 
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,
@@ -65,25 +61,10 @@ overTypeDef :: Monad f => (Type -> f Type) -> TypeDef -> f TypeDef
 overTypeDef f = traverseOf constructor f <=< traverseOf (union . traversed . _2) f
 
 genTcEnv :: MonadUniq m => RnEnv -> m TcEnv
-genTcEnv rnEnv = do
-  -- lookup RnTId of primitive types
-  let int32_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Int32#" (view R.typeEnv rnEnv)
-  let int64_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Int64#" (view R.typeEnv rnEnv)
-  let float_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Float#" (view R.typeEnv rnEnv)
-  let double_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Double#" (view R.typeEnv rnEnv)
-  let char_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Char#" (view R.typeEnv rnEnv)
-  let string_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "String#" (view R.typeEnv rnEnv)
+genTcEnv rnEnv =
   pure $
     TcEnv
       { _varEnv = mempty,
-        _typeEnv =
-          Map.fromList
-            [ (int32_t, TypeDef (TyPrim Int32T) [] []),
-              (int64_t, TypeDef (TyPrim Int64T) [] []),
-              (float_t, TypeDef (TyPrim FloatT) [] []),
-              (double_t, TypeDef (TyPrim DoubleT) [] []),
-              (char_t, TypeDef (TyPrim CharT) [] []),
-              (string_t, TypeDef (TyPrim StringT) [] [])
-            ],
+        _typeEnv = mempty,
         _rnEnv = rnEnv
       }

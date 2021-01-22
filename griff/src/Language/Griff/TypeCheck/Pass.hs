@@ -2,6 +2,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -17,12 +18,14 @@ import Koriel.Pretty
 import Language.Griff.Interface
 import Language.Griff.Prelude
 import Language.Griff.Rename.RnEnv (RnEnv)
+import qualified Language.Griff.Rename.RnEnv as R
 import Language.Griff.Syntax hiding (Type (..))
 import qualified Language.Griff.Syntax as S
 import Language.Griff.Syntax.Extension
 import Language.Griff.Type
 import Language.Griff.TypeCheck.Constraint
-import Language.Griff.TypeCheck.TcEnv
+import Language.Griff.TypeCheck.TcEnv hiding (rnEnv)
+import qualified Language.Griff.TypeCheck.TcEnv as TcEnv
 import Text.Megaparsec (SourcePos)
 
 -- Entry point
@@ -262,7 +265,23 @@ tcPatterns (UnboxedP pos unboxed : cs) = do
 transType :: (MonadState TcEnv m, MonadIO m, MonadGriff m) => S.Type (Griff 'Rename) -> m Type
 transType (S.TyApp _ t ts) = foldr (flip TyApp) <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
-transType (S.TyCon pos c) = lookupType pos c
+transType (S.TyCon pos c) = do
+  rnEnv <- use TcEnv.rnEnv
+  -- lookup RnTId of primitive types
+  let int32_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Int32#" (view R.typeEnv rnEnv)
+  let int64_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Int64#" (view R.typeEnv rnEnv)
+  let float_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Float#" (view R.typeEnv rnEnv)
+  let double_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Double#" (view R.typeEnv rnEnv)
+  let char_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Char#" (view R.typeEnv rnEnv)
+  let string_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "String#" (view R.typeEnv rnEnv)
+  if
+      | c == int32_t -> pure $ TyPrim Int32T
+      | c == int64_t -> pure $ TyPrim Int64T
+      | c == float_t -> pure $ TyPrim FloatT
+      | c == double_t -> pure $ TyPrim DoubleT
+      | c == char_t -> pure $ TyPrim CharT
+      | c == string_t -> pure $ TyPrim StringT
+      | otherwise -> lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyTuple <$> traverse transType ts
 transType (S.TyLazy _ t) = TyLazy <$> transType t
@@ -332,9 +351,13 @@ metaTvsScheme (Forall _ t) = metaTvs t
 -- 型を具体化する
 instantiate :: (MonadUniq m, MonadIO m) => Bool -> Scheme -> m Type
 instantiate isRigid (Forall as t) = do
-  vs <- traverse (\a -> do
-    mka <- kind a
-    TyMeta <$> newMetaTv mka (if isRigid then show $ pPrint a else "")) as
+  vs <-
+    traverse
+      ( \a -> do
+          mka <- kind a
+          TyMeta <$> newMetaTv mka (if isRigid then show $ pPrint a else "")
+      )
+      as
   applySubst (Map.fromList $ zip as vs) <$> zonkType t
 
 applySubst :: Map TyVar Type -> Type -> Type
