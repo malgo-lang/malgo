@@ -4,7 +4,6 @@
 
 module Language.Malgo.TypeCheck.Constraint (Constraint (..), WithPos (..), eqCons, solve) where
 
-import qualified Data.Set as Set
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Type

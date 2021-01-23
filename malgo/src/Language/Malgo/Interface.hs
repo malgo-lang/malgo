@@ -77,13 +77,13 @@ storeInterface :: (MonadIO m, MonadMalgo m) => Interface -> m ()
 storeInterface interface = do
   opt <- getOpt
   liftIO $
-    BS.writeFile (dstName opt & extension .~ ".grfi") $
+    BS.writeFile (dstName opt & extension .~ ".mlgi") $
       encode interface
 
 loadInterface :: (HasCallStack, MonadMalgo m, MonadIO m) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
   modPaths <- getPackagePathes
-  message <- liftIO $ findAndReadFile modPaths (modName <> ".grfi")
+  message <- liftIO $ findAndReadFile modPaths (modName <> ".mlgi")
   case message of
     Just x -> liftIO (decodeIO x)
     Nothing ->

@@ -15,12 +15,10 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Language.Malgo.Desugar.Pass (desugar) where
 
-import Control.Exception (assert)
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import Debug.Trace (traceShowM)
 import Koriel.Core.Core as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
