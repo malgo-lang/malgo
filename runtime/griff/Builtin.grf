@@ -112,8 +112,15 @@ module Builtin = {
   isTrue# = { 1# -> True
             | _  -> False };
 
+  foreign import ge_int64 :: Int64# -> Int64# -> Int32#;
+
+  ge_Int64# :: Int64# -> Int64# -> Int32#;
+  ge_Int64# = { x y -> ge_int64 x y };
+
   foreign import ge_double :: Double# -> Double# -> Int32#;
-  ge_Double# = {x y -> ge_double x y};
+
+  ge_Double# :: Double# -> Double# -> Int32#; 
+  ge_Double# = { x y -> ge_double x y };
 
   foreign import append_string :: String# -> String# -> String#;
   appendString# = {str1 str2 -> append_string str1 str2};

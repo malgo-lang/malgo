@@ -15,10 +15,12 @@
 -- | GriffをKoriel.Coreに変換（脱糖衣）する
 module Language.Griff.Desugar.Pass (desugar) where
 
+import Control.Exception (assert)
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Debug.Trace (traceShowM)
 import Koriel.Core.Core as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
@@ -224,7 +226,7 @@ dsExp (G.Con _ name) = do
     _ -> bug Unreachable
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
 dsExp (G.Boxed _ _) = bug Unreachable -- RenameでApplyに変形されている
-dsExp (G.Apply _ f x) = runDef $ do
+dsExp (G.Apply info f x) = runDef $ do
   f' <- bind =<< dsExp f
   case C.typeOf f' of
     [xType] :-> _ -> do
@@ -232,9 +234,9 @@ dsExp (G.Apply _ f x) = runDef $ do
       --   x の型と f の引数の型は必ずしも一致しない
       --   適切な型にcastする必要がある
       x' <- cast xType =<< dsExp x
-      pure $ Call f' [x']
+      Cast <$> dsType (info ^. toType) <*> bind (Call f' [x'])
     _ -> bug Unreachable
-dsExp (G.OpApp _ op x y) = runDef $ do
+dsExp (G.OpApp info op x y) = runDef $ do
   op' <- lookupName op
   case C.typeOf op' of
     [xType] :-> ([yType] :-> _) -> do
@@ -245,7 +247,7 @@ dsExp (G.OpApp _ op x y) = runDef $ do
         if op' ^. idIsTopLevel
           then bind (CallDirect op' [x'])
           else bind (Call (C.Var op') [x'])
-      pure $ Call e1 [y']
+      Cast <$> dsType (info ^. toType) <*> bind (Call e1 [y'])
     _ -> bug Unreachable
 dsExp (G.Fn x (Clause _ [] ss : _)) = do
   -- lazy valueの脱糖衣
@@ -417,9 +419,9 @@ dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
   mkcon <- kind con
   case mkcon of
-    Just kcon | kcon == Star -> pure $ DataT (con ^. toText) []
-
-              | otherwise -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
+    Just kcon
+      | kcon == Star -> pure $ DataT (con ^. toText) []
+      | otherwise -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
     _ -> bug Unreachable
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
@@ -434,6 +436,7 @@ dsType (GT.TyArr t1 t2) = do
 dsType (GT.TyTuple ts) =
   SumT . Set.singleton . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dsType ts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
+dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyMeta tv) = do
   mtype <- GT.readMetaTv tv
   case mtype of

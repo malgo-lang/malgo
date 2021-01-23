@@ -14,6 +14,7 @@
 
 module Language.Griff.Type where
 
+import qualified Data.Set as Set
 import Data.Store
 import Koriel.Id
 import Koriel.MonadUniq
@@ -121,6 +122,7 @@ data Type
   | TyArr Type Type
   | TyTuple [Type]
   | TyLazy Type
+  | TyPtr Type
   | TyMeta MetaTv
   deriving stock (Eq, Show, Ord, Generic)
   deriving anyclass (Store)
@@ -157,6 +159,7 @@ instance HasKind Type where
   kind (TyArr _ _) = pure $ Just $ Type Boxed
   kind (TyTuple _) = pure $ Just $ Type Boxed
   kind (TyLazy _) = pure $ Just $ Type Boxed
+  kind (TyPtr _) = pure $ Just $ Type Boxed
   kind (TyMeta tv) = kind tv
 
 instance Pretty Type where
@@ -169,6 +172,7 @@ instance Pretty Type where
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple ts) = parens $ sep $ punctuate "," $ map pPrint ts
   pPrintPrec _ _ (TyLazy t) = braces $ pPrint t
+  pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec _ _ (TyMeta tv) = pPrint tv
 
 -------------------
@@ -200,7 +204,7 @@ instance Show MetaTv where
 
 instance Pretty MetaTv where
   pPrint (MetaTv u _ [] _) = "'" <> pPrint u
-  pPrint (MetaTv _ _ rigidName _) = text rigidName
+  pPrint (MetaTv _ _ rigidName _) = "'" <> text rigidName
 
 instance HasKind MetaTv where
   kind MetaTv {_metaTvKind} = readIORef _metaTvKind
@@ -215,7 +219,7 @@ instance Store MetaTv where
 ---------------------------
 
 newMetaTv :: (MonadUniq f, MonadIO f) => Maybe Kind -> String -> f MetaTv
-newMetaTv k rigitName = MetaTv <$> getUniq <*> newIORef k <*> pure rigitName <*> newIORef Nothing
+newMetaTv k rigidName = MetaTv <$> getUniq <*> newIORef k <*> pure rigidName <*> newIORef Nothing
 
 readMetaTv :: MonadIO m => MetaTv -> m (Maybe Type)
 readMetaTv (MetaTv _ _ _ ref) = readIORef ref
@@ -235,6 +239,18 @@ writeMetaTv tv@(MetaTv _ kindRef _ typeRef) t = do
     (Nothing, Just kt) -> writeIORef kindRef (Just kt) >> writeIORef typeRef (Just t)
     (Nothing, Nothing) -> writeIORef typeRef (Just t)
 
+metaTvs :: Type -> Set MetaTv
+metaTvs (TyApp t1 t2) = metaTvs t1 <> metaTvs t2
+metaTvs (TyArr t1 t2) = metaTvs t1 <> metaTvs t2
+metaTvs (TyTuple ts) = mconcat $ map metaTvs ts
+metaTvs (TyLazy t) = metaTvs t
+metaTvs (TyPtr t) = metaTvs t
+metaTvs (TyMeta tv) = Set.singleton tv
+metaTvs _ = mempty
+
+metaTvsScheme :: Scheme -> Set MetaTv
+metaTvsScheme (Forall _ t) = metaTvs t
+
 -------------
 -- Zonking --
 -------------
@@ -252,6 +268,7 @@ zonkType (TyApp t1 t2) = TyApp <$> zonkType t1 <*> zonkType t2
 zonkType (TyArr t1 t2) = TyArr <$> zonkType t1 <*> zonkType t2
 zonkType (TyTuple ts) = TyTuple <$> traverse zonkType ts
 zonkType (TyLazy t) = TyLazy <$> zonkType t
+zonkType (TyPtr t) = TyPtr <$> zonkType t
 zonkType t = pure t
 
 -------------------

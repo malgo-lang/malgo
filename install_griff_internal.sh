@@ -17,3 +17,4 @@ cabal exec griffc -- --via-binding $LIB_PATH/Prelude.grf
 
 clang -S -emit-llvm -O2 $LIB_PATH/Builtin.ll -o $LIB_PATH/Builtin.ll
 clang -S -emit-llvm -O2 $LIB_PATH/Prelude.ll -o $LIB_PATH/Prelude.ll
+clang $(pkg-config bdw-gc --cflags) -S -emit-llvm -O2 $LIB_PATH/rts.c -o $LIB_PATH/rts.ll

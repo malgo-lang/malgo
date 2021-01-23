@@ -67,6 +67,7 @@ genBuiltinRnEnv = do
   double_t <- newTopLevelId "Double#" $ ModuleName "Builtin"
   char_t <- newTopLevelId "Char#" $ ModuleName "Builtin"
   string_t <- newTopLevelId "String#" $ ModuleName "Builtin"
+  ptr_t <- newTopLevelId "Ptr#" $ ModuleName "Builtin"
   pure $
     RnEnv
       { _varEnv = mempty,
@@ -77,6 +78,7 @@ genBuiltinRnEnv = do
               ("Float#", [float_t]),
               ("Double#", [double_t]),
               ("Char#", [char_t]),
-              ("String#", [string_t])
+              ("String#", [string_t]),
+              ("Ptr#", [ptr_t])
             ]
       }
