@@ -23,15 +23,9 @@ jobs:
         enable-stack: true
         stack-version: 'latest'
 
-    - name: Install dependencies
-      run: |
-        stack install hspec-discover
-        export PATH=~/.stack/bin:$PATH
-
     - name: Build
       run: |
-        stack build
+        cabal build all
     - name: Run tests
       run: |
-        ./test_malgo_stack.sh
-        ./test_griff_stack.sh
+        ./test_malgo.sh
