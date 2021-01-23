@@ -12,7 +12,7 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 -- |
--- malgoとgriffの共通中間表現。
+-- malgoの共通中間表現。
 -- A正規形に近い。
 module Koriel.Core.Core where
 

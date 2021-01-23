@@ -1,3 +1,0 @@
-let extern print_bool : Bool -> {} = "print_bool"
-    extern newline : () -> {} = "newline"
-in print_bool(true || false); newline(); print_bool(true && false); newline()

@@ -1,5 +1,0 @@
-let type Unit = {}
-    type UU = Unit -> Unit
-    fun id_unit (x:Unit) : Unit = x
-    val f : UU = id_unit
-in f {}

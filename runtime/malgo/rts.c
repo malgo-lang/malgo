@@ -1,16 +1,123 @@
 #include <gc.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
 #include <inttypes.h>
+#include <string.h>
 
-// type defintions
+// Arithmetic operators
+int32_t add_i32(int32_t x, int32_t y)
+{
+  return x + y;
+}
 
-// :: {}
+int64_t add_i64(int64_t x, int64_t y)
+{
+  return x + y;
+}
+
+float add_float(float x, float y)
+{
+  return x + y;
+}
+
+double add_double(double x, double y)
+{
+  return x + y;
+}
+
+int32_t sub_i32(int32_t x, int32_t y)
+{
+  return x - y;
+}
+
+int64_t sub_i64(int64_t x, int64_t y)
+{
+  return x - y;
+}
+
+float sub_float(float x, float y)
+{
+  return x - y;
+}
+
+double sub_double(double x, double y)
+{
+  return x - y;
+}
+
+int32_t mul_i32(int32_t x, int32_t y)
+{
+  return x * y;
+}
+
+int64_t mul_i64(int64_t x, int64_t y)
+{
+  return x * y;
+}
+
+float mul_float(float x, float y)
+{
+  return x * y;
+}
+
+double mul_double(double x, double y)
+{
+  return x * y;
+}
+
+int32_t div_i32(int32_t x, int32_t y)
+{
+  return x / y;
+}
+
+int64_t div_i64(int64_t x, int64_t y)
+{
+  return x / y;
+}
+
+float div_float(float x, float y)
+{
+  return x / y;
+}
+
+double div_double(double x, double y)
+{
+  return x / y;
+}
+
+// Comparison operators
+int32_t ge_int64(int64_t x, int64_t y)
+{
+  return x >= y;
+}
+int32_t ge_double(double x, double y)
+{
+  return x >= y;
+}
+
+// String operators
+char *append_string(char *s1, char *s2)
+{
+  char *new = GC_MALLOC(sizeof(char) * strlen(s1) * strlen(s2) + 1);
+  strcpy(new, s1);
+  strcat(new, s2);
+  return new;
+}
+
+char *show_double(double d)
+{
+  size_t size = 4;
+  char *new = GC_MALLOC(sizeof(char) * size);
+  int writed = -1;
+  while (writed < 0 || writed >= size)
+  {
+    size++;
+    new = GC_REALLOC(new, sizeof(char) * size);
+    writed = snprintf(new, size, "%lf", d);
+  }
+  return new;
+}
+
 typedef struct
 {
   uint8_t tag;
@@ -19,140 +126,72 @@ typedef struct
   } payload;
 } Unit;
 
-Unit *new_Unit(void)
+const Unit unit = {0, {}};
+
+const Unit *print_int(int64_t i)
 {
-  Unit *val = GC_MALLOC(sizeof(Unit));
-  val->tag = 0;
-  return val;
+  printf("%" PRId64, i);
+  return &unit;
 }
 
-// :: Int
-typedef struct
+const Unit *print_int32(int32_t i)
 {
-  uint8_t tag;
-  int64_t payload;
-} Int;
-
-// :: Float
-typedef struct
-{
-  uint8_t tag;
-  double payload;
-} Float;
-
-// :: Bool
-typedef struct
-{
-  uint8_t tag;
-  int8_t payload;
-} Bool;
-
-Bool *new_Bool(bool x)
-{
-  Bool *val = GC_MALLOC(sizeof(Bool));
-  val->tag = 0;
-  val->payload = x;
-  return val;
+  printf("%" PRId32, i);
+  return &unit;
 }
 
-// :: String
-typedef struct
+const Unit *print_int64(int64_t i)
 {
-  uint8_t tag;
-  char *payload;
-} String;
-
-// :: Char
-typedef struct
-{
-  uint8_t tag;
-  char payload;
-} Char;
-
-// print
-Unit *print_int(Int *x)
-{
-  printf("%" PRId64, x->payload);
-  return new_Unit();
+  printf("%" PRId64, i);
+  return &unit;
 }
 
-Unit *print_float(Float *x)
+const Unit *print_float(float f)
 {
-  printf("%lf", x->payload);
-  return new_Unit();
+  printf("%f", f);
+  return &unit;
 }
 
-Unit *print_bool(Bool *x)
+const Unit *print_double(double d)
 {
-  if (x->payload)
-  {
-    printf("true");
-  }
-  else
-  {
-    printf("false");
-  }
-  return new_Unit();
+  printf("%lf", d);
+  return &unit;
 }
 
-Unit *print_char(Char *c)
-{
-  printf("%c", c->payload);
-  return new_Unit();
-}
-
-Unit *print(String *x)
-{
-  printf("%s", x->payload);
-  return new_Unit();
-}
-
-Unit *println(String *x)
-{
-  printf("%s\n", x->payload);
-  return new_Unit();
-}
-
-Unit *newline(Unit *unused)
+const Unit *newline(Unit *__attribute__((unused)) unused)
 {
   puts("");
-  return new_Unit();
+  return &unit;
 }
 
-// string operations
-String *concat(String *s1, String *s2)
+const Unit *print_string(char *x)
 {
-  String *s3 = GC_MALLOC(sizeof(String));
-  s3->tag = 0;
-  s3->payload = GC_MALLOC(sizeof(char) * (strlen(s1->payload) + strlen(s2->payload) + 1));
-  strcat(s3->payload, s1->payload);
-  strcat(s3->payload, s2->payload);
-  return s3;
+  printf("%s", x);
+  return &unit;
 }
 
-String *substring(String* s, Int* from, Int* until) {
-  String* result = GC_MALLOC(sizeof(String));
-  result->tag = 0;
-  result->payload = GC_MALLOC(sizeof(char) * (until->payload - from->payload + 1));
-  strncpy(result->payload, s->payload + from->payload, until->payload - from->payload);
-  return result;
-}
-
-// sleep
-Unit *malgo_sleep(Int *sec)
+void *unsafe_cast(void *x)
 {
-  sleep(sec->payload);
-  return new_Unit();
+  return x;
 }
 
-// random
-Unit *gen_seed(Unit *unused)
+void **new_vector(int64_t len, void *init)
 {
-  srand((unsigned)time(NULL));
-  return new_Unit();
+  void **ptr = GC_MALLOC(sizeof(void *) * len);
+  for (int64_t i = 0; i < len; i++)
+  {
+    ptr[i] = init;
+  }
+  return ptr;
 }
 
-Bool *rand_bool(Unit *unused)
+void *read_vector(int64_t index, void **ptr)
 {
-  return new_Bool((bool)(rand() % 2));
+  return ptr[index];
+}
+
+const Unit *write_vector(int64_t index, void **ptr, void *val)
+{
+  ptr[index] = val;
+  return &unit;
 }

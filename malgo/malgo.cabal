@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 22e5db59ce77c597e4cb3f602623bacdcdee2204aabf9afbcbef4b6f5720c4d3
+-- hash: 73610c00580d40f371652786de16d4fab6ba76d0d15689111f7f87c515eedf11
 
 name:           malgo
 version:        1.0.0.0
@@ -13,7 +13,7 @@ homepage:       https://github.com/takoeight0821/malgo#readme
 bug-reports:    https://github.com/takoeight0821/malgo/issues
 author:         Yuya Kono
 maintainer:     takohati0821@gmail.com
-copyright:      2017-2020 Yuya Kono
+copyright:      2017-2021 Yuya Kono
 license:        BSD3
 build-type:     Simple
 
@@ -23,40 +23,49 @@ source-repository head
 
 library
   exposed-modules:
-      Language.Malgo.Driver
-      Language.Malgo.FrontEnd.Rename
-      Language.Malgo.FrontEnd.Typing.Constraint
-      Language.Malgo.FrontEnd.Typing.Infer
-      Language.Malgo.FrontEnd.Typing.Subst
-      Language.Malgo.IR.Syntax
-      Language.Malgo.Lexer
-      Language.Malgo.MiddleEnd.Desugar
-      Language.Malgo.Monad
-      Language.Malgo.Parser
-      Language.Malgo.Token
-      Language.Malgo.TypeRep.SType
-      Language.Malgo.TypeRep.Type
+      Language.Griff.Desugar.DsEnv
+      Language.Griff.Desugar.Pass
+      Language.Griff.Driver
+      Language.Griff.Interface
+      Language.Griff.Parser
+      Language.Griff.Prelude
+      Language.Griff.Rename.Pass
+      Language.Griff.Rename.RnEnv
+      Language.Griff.Syntax
+      Language.Griff.Syntax.Extension
+      Language.Griff.Type
+      Language.Griff.TypeCheck.Constraint
+      Language.Griff.TypeCheck.Pass
+      Language.Griff.TypeCheck.TcEnv
   other-modules:
       Paths_malgo
   hs-source-dirs:
       src
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS
-  build-tools:
-      happy
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
       array
     , base
     , bytestring
     , containers
+    , directory
+    , extra
+    , filepath
+    , generic-deriving
     , koriel
+    , lens
+    , list-predicate
     , llvm-hs
+    , llvm-hs-pretty
     , llvm-hs-pure
+    , megaparsec
     , mtl
     , optparse-applicative
     , parsec
+    , parser-combinators
     , pretty
     , pretty-simple
+    , store
     , text
     , transformers
     , vector
@@ -69,55 +78,31 @@ executable malgoc
   hs-source-dirs:
       app/
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS -threaded
-  build-tools:
-      happy
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-depends:
       array
     , base
     , bytestring
     , containers
+    , directory
+    , extra
+    , filepath
+    , generic-deriving
     , koriel
+    , lens
+    , list-predicate
     , llvm-hs
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
+    , megaparsec
     , mtl
     , optparse-applicative
     , parsec
+    , parser-combinators
     , pretty
     , pretty-simple
-    , text
-    , transformers
-    , vector
-  default-language: Haskell2010
-
-test-suite malgo-test
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  other-modules:
-      Paths_malgo
-  hs-source-dirs:
-      test
-  default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS
-  build-tools:
-      happy
-  build-depends:
-      array
-    , base
-    , bytestring
-    , containers
-    , hspec
-    , koriel
-    , llvm-hs
-    , llvm-hs-pure
-    , malgo
-    , mtl
-    , optparse-applicative
-    , parsec
-    , pretty
-    , pretty-simple
+    , store
     , text
     , transformers
     , vector
