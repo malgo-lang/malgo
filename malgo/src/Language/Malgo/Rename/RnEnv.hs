@@ -5,15 +5,15 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Rename.RnEnv where
+module Language.Malgo.Rename.RnEnv where
 
 import qualified Data.Map as Map
 import qualified Data.Text.Lazy as TL
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.Prelude
-import Language.Griff.Syntax.Extension
+import Language.Malgo.Prelude
+import Language.Malgo.Syntax.Extension
 
 data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: ModuleName}
   deriving stock (Show)

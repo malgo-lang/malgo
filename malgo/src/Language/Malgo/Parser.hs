@@ -4,19 +4,19 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Parser (parseGriff) where
+module Language.Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
 import Data.Functor (($>))
 import qualified Data.Set as Set
 import qualified Data.Text as Text
 import Data.Void
-import Language.Griff.Prelude hiding
+import Language.Malgo.Prelude hiding
   ( many,
     some,
   )
-import Language.Griff.Syntax
-import Language.Griff.Syntax.Extension
+import Language.Malgo.Syntax
+import Language.Malgo.Syntax.Extension
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
@@ -26,11 +26,11 @@ type Parser = Parsec Void Text
 -- | パーサー
 --
 -- ファイル1つにつきモジュール1つ
-parseGriff :: String -> Text -> Either (ParseErrorBundle Text Void) (Module (Griff 'Parse))
-parseGriff = parse (pModule <* eof)
+parseMalgo :: String -> Text -> Either (ParseErrorBundle Text Void) (Module (Malgo 'Parse))
+parseMalgo = parse (pModule <* eof)
 
 -- entry point
-pModule :: Parser (Module (Griff 'Parse))
+pModule :: Parser (Module (Malgo 'Parse))
 pModule = do
   void $ pKeyword "module"
   x <- pModuleName
@@ -43,10 +43,10 @@ pModuleName :: Parser String
 pModuleName = lexeme $ some $ identLetter <|> char '.'
 
 -- toplevel declaration
-pDecl :: Parser (Decl (Griff 'Parse))
+pDecl :: Parser (Decl (Malgo 'Parse))
 pDecl = pDataDef <|> pInfix <|> pForeign <|> pImport <|> try pScSig <|> pScDef
 
-pDataDef :: Parser (Decl (Griff 'Parse))
+pDataDef :: Parser (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" $ do
   s <- getSourcePos
   void $ pKeyword "data"
@@ -58,7 +58,7 @@ pDataDef = label "toplevel type definition" $ do
   where
     pConDef = (,) <$> upperIdent <*> many pSingleType
 
-pInfix :: Parser (Decl (Griff 'Parse))
+pInfix :: Parser (Decl (Malgo 'Parse))
 pInfix = label "infix declaration" $ do
   s <- getSourcePos
   a <-
@@ -69,7 +69,7 @@ pInfix = label "infix declaration" $ do
   x <- between (symbol "(") (symbol ")") operator
   pure $ Infix s a i x
 
-pForeign :: Parser (Decl (Griff 'Parse))
+pForeign :: Parser (Decl (Malgo 'Parse))
 pForeign = label "foreign import" $ do
   s <- getSourcePos
   void $ pKeyword "foreign"
@@ -78,13 +78,13 @@ pForeign = label "foreign import" $ do
   void $ pOperator "::"
   Foreign s x <$> pType
 
-pImport :: Parser (Decl (Griff 'Parse))
+pImport :: Parser (Decl (Malgo 'Parse))
 pImport = label "import" $ do
   s <- getSourcePos
   void $ pKeyword "import"
   Import s . ModuleName <$> pModuleName
 
-pScSig :: Parser (Decl (Griff 'Parse))
+pScSig :: Parser (Decl (Malgo 'Parse))
 pScSig =
   label "toplevel function signature" $
     ScSig
@@ -93,7 +93,7 @@ pScSig =
       <* pOperator "::"
       <*> pType
 
-pScDef :: Parser (Decl (Griff 'Parse))
+pScDef :: Parser (Decl (Malgo 'Parse))
 pScDef =
   label "toplevel function definition" $
     ScDef
@@ -105,7 +105,7 @@ pScDef =
 
 -- Expressions
 
-pExp :: Parser (Exp (Griff 'Parse))
+pExp :: Parser (Exp (Malgo 'Parse))
 pExp = pOpApp
 
 pBoxed :: Parser (Literal Boxed)
@@ -128,17 +128,17 @@ pUnboxed =
       <|> try (lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#')))
       <|> try (lexeme (String <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
 
-pVariable :: Parser (Exp (Griff 'Parse))
+pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
   label "variable" $
     Var <$> getSourcePos <*> lowerIdent
 
-pConstructor :: Parser (Exp (Griff 'Parse))
+pConstructor :: Parser (Exp (Malgo 'Parse))
 pConstructor =
   label "constructor" $
     Con <$> getSourcePos <*> upperIdent
 
-pFun :: Parser (Exp (Griff 'Parse))
+pFun :: Parser (Exp (Malgo 'Parse))
 pFun =
   label "function literal" $
     between (symbol "{") (symbol "}") $
@@ -151,13 +151,13 @@ pFun =
             )
         `sepBy` pOperator "|"
 
-pStmts :: Parser [Stmt (Griff 'Parse)]
+pStmts :: Parser [Stmt (Malgo 'Parse)]
 pStmts = pStmt `sepEndBy` pOperator ";"
 
-pStmt :: Parser (Stmt (Griff 'Parse))
+pStmt :: Parser (Stmt (Malgo 'Parse))
 pStmt = try pLet <|> pNoBind
 
-pLet :: Parser (Stmt (Griff 'Parse))
+pLet :: Parser (Stmt (Malgo 'Parse))
 pLet = do
   void $ pKeyword "let"
   pos <- getSourcePos
@@ -165,10 +165,10 @@ pLet = do
   void $ pOperator "="
   Let pos v <$> pExp
 
-pNoBind :: Parser (Stmt (Griff 'Parse))
+pNoBind :: Parser (Stmt (Malgo 'Parse))
 pNoBind = NoBind <$> getSourcePos <*> pExp
 
-pSinglePat :: Parser (Pat (Griff 'Parse))
+pSinglePat :: Parser (Pat (Malgo 'Parse))
 pSinglePat =
   VarP <$> getSourcePos <*> lowerIdent
     <|> ConP <$> getSourcePos <*> upperIdent <*> pure []
@@ -186,11 +186,11 @@ pSinglePat =
       )
     <|> between (symbol "(") (symbol ")") pPat
 
-pPat :: Parser (Pat (Griff 'Parse))
+pPat :: Parser (Pat (Malgo 'Parse))
 pPat =
   label "pattern" $ try (ConP <$> getSourcePos <*> upperIdent <*> some pSinglePat) <|> pSinglePat
 
-pTuple :: Parser (Exp (Griff 'Parse))
+pTuple :: Parser (Exp (Malgo 'Parse))
 pTuple = label "tuple" $
   between (symbol "(") (symbol ")") $ do
     s <- getSourcePos
@@ -199,12 +199,12 @@ pTuple = label "tuple" $
     xs <- pExp `sepBy` pOperator ","
     pure $ Tuple s (x : xs)
 
-pUnit :: Parser (Exp (Griff 'Parse))
+pUnit :: Parser (Exp (Malgo 'Parse))
 pUnit = between (symbol "(") (symbol ")") $ do
   s <- getSourcePos
   pure $ Tuple s []
 
-pSingleExp' :: Parser (Exp (Griff 'Parse))
+pSingleExp' :: Parser (Exp (Malgo 'Parse))
 pSingleExp' =
   try (Unboxed <$> getSourcePos <*> pUnboxed)
     <|> try (Boxed <$> getSourcePos <*> pBoxed)
@@ -215,20 +215,20 @@ pSingleExp' =
     <|> pFun
     <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
 
-pSingleExp :: Parser (Exp (Griff 'Parse))
+pSingleExp :: Parser (Exp (Malgo 'Parse))
 pSingleExp = try (Force <$> getSourcePos <* pOperator "!" <*> pSingleExp') <|> pSingleExp'
 
-pApply :: Parser (Exp (Griff 'Parse))
+pApply :: Parser (Exp (Malgo 'Parse))
 pApply = do
   s <- getSourcePos
   f <- pSingleExp
   xs <- some pSingleExp
   pure $ foldl (Apply s) f xs
 
-pTerm :: Parser (Exp (Griff 'Parse))
+pTerm :: Parser (Exp (Malgo 'Parse))
 pTerm = try pApply <|> pSingleExp
 
-pOpApp :: Parser (Exp (Griff 'Parse))
+pOpApp :: Parser (Exp (Malgo 'Parse))
 pOpApp = makeExprParser pTerm opTable
   where
     opTable =
@@ -241,16 +241,16 @@ pOpApp = makeExprParser pTerm opTable
 
 -- Types
 
-pType :: Parser (Type (Griff 'Parse))
+pType :: Parser (Type (Malgo 'Parse))
 pType = try pTyArr <|> pTyTerm
 
-pTyVar :: Parser (Type (Griff 'Parse))
+pTyVar :: Parser (Type (Malgo 'Parse))
 pTyVar = label "type variable" $ TyVar <$> getSourcePos <*> lowerIdent
 
-pTyCon :: Parser (Type (Griff 'Parse))
+pTyCon :: Parser (Type (Malgo 'Parse))
 pTyCon = label "type constructor" $ TyCon <$> getSourcePos <*> upperIdent
 
-pTyTuple :: Parser (Type (Griff 'Parse))
+pTyTuple :: Parser (Type (Malgo 'Parse))
 pTyTuple = between (symbol "(") (symbol ")") $ do
   s <- getSourcePos
   x <- pType
@@ -258,15 +258,15 @@ pTyTuple = between (symbol "(") (symbol ")") $ do
   xs <- pType `sepBy` pOperator ","
   pure $ TyTuple s (x : xs)
 
-pTyUnit :: Parser (Type (Griff 'Parse))
+pTyUnit :: Parser (Type (Malgo 'Parse))
 pTyUnit = between (symbol "(") (symbol ")") $ do
   s <- getSourcePos
   pure $ TyTuple s []
 
-pTyLazy :: Parser (Type (Griff 'Parse))
+pTyLazy :: Parser (Type (Malgo 'Parse))
 pTyLazy = between (symbol "{") (symbol "}") $ TyLazy <$> getSourcePos <*> pType
 
-pSingleType :: Parser (Type (Griff 'Parse))
+pSingleType :: Parser (Type (Malgo 'Parse))
 pSingleType =
   pTyVar
     <|> pTyCon
@@ -275,13 +275,13 @@ pSingleType =
     <|> try pTyTuple
     <|> between (symbol "(") (symbol ")") pType
 
-pTyApp :: Parser (Type (Griff 'Parse))
+pTyApp :: Parser (Type (Malgo 'Parse))
 pTyApp = TyApp <$> getSourcePos <*> pSingleType <*> some pSingleType
 
-pTyTerm :: Parser (Type (Griff 'Parse))
+pTyTerm :: Parser (Type (Malgo 'Parse))
 pTyTerm = try pTyApp <|> pSingleType
 
-pTyArr :: Parser (Type (Griff 'Parse))
+pTyArr :: Parser (Type (Malgo 'Parse))
 pTyArr = makeExprParser pTyTerm opTable
   where
     opTable =

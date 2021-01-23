@@ -4,8 +4,8 @@
 module Main where
 
 import Control.Exception (catch, displayException)
-import Language.Griff.Driver (compile)
-import Language.Griff.Prelude
+import Language.Malgo.Driver (compile)
+import Language.Malgo.Prelude
 import System.Exit (exitFailure)
 import System.IO (hPutStr, stderr)
 

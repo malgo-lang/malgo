@@ -12,8 +12,8 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
--- | GriffをKoriel.Coreに変換（脱糖衣）する
-module Language.Griff.Desugar.Pass (desugar) where
+-- | MalgoをKoriel.Coreに変換（脱糖衣）する
+module Language.Malgo.Desugar.Pass (desugar) where
 
 import Control.Exception (assert)
 import qualified Data.List as List
@@ -28,21 +28,21 @@ import Koriel.Id hiding (newGlobalId, newId)
 import qualified Koriel.Id as Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.Desugar.DsEnv
-import Language.Griff.Interface
-import Language.Griff.Prelude
-import Language.Griff.Syntax as G
-import Language.Griff.Syntax.Extension as G
-import Language.Griff.Type as GT
-import Language.Griff.TypeCheck.Pass (applySubst)
-import Language.Griff.TypeCheck.TcEnv (TcEnv)
-import qualified Language.Griff.TypeCheck.TcEnv as Tc
+import Language.Malgo.Desugar.DsEnv
+import Language.Malgo.Interface
+import Language.Malgo.Prelude
+import Language.Malgo.Syntax as G
+import Language.Malgo.Syntax.Extension as G
+import Language.Malgo.Type as GT
+import Language.Malgo.TypeCheck.Pass (applySubst)
+import Language.Malgo.TypeCheck.TcEnv (TcEnv)
+import qualified Language.Malgo.TypeCheck.TcEnv as Tc
 
--- | GriffからCoreへの変換
+-- | MalgoからCoreへの変換
 desugar ::
-  (MonadUniq m, MonadFail m, MonadIO m, MonadGriff m) =>
+  (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m) =>
   TcEnv ->
-  Module (Griff 'TypeCheck) ->
+  Module (Malgo 'TypeCheck) ->
   m (DsEnv, Program (Id C.Type))
 desugar tcEnv (Module modName ds) = do
   (dsEnv', ds') <- runReaderT (dsBindGroup ds) (DsEnv modName mempty tcEnv)
@@ -63,8 +63,8 @@ desugar tcEnv (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m, MonadGriff m) =>
-  BindGroup (Griff 'TypeCheck) ->
+  (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m, MonadMalgo m) =>
+  BindGroup (Malgo 'TypeCheck) ->
   m (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsBindGroup bg = do
   env <- foldMapA dsImport (bg ^. imports)
@@ -76,15 +76,15 @@ dsBindGroup bg = do
         (env, scDefs') <- dsScDefGroup (bg ^. scDefs)
         pure $ (env,) $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
-dsImport :: (MonadGriff m, MonadIO m) => Import (Griff 'TypeCheck) -> m DsEnv
+dsImport :: (MonadMalgo m, MonadIO m) => Import (Malgo 'TypeCheck) -> m DsEnv
 dsImport (_, modName) = do
   interface <- loadInterface modName
   pure $ mempty & varEnv <>~ interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
-  (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
-  [[ScDef (Griff 'TypeCheck)]] ->
+  (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadMalgo f) =>
+  [[ScDef (Malgo 'TypeCheck)]] ->
   f (DsEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
 dsScDefGroup [] = (,[]) <$> ask
 dsScDefGroup (ds : dss) = do
@@ -95,8 +95,8 @@ dsScDefGroup (ds : dss) = do
 
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
-  (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadGriff f) =>
-  [ScDef (Griff 'TypeCheck)] ->
+  (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadMalgo f) =>
+  [ScDef (Malgo 'TypeCheck)] ->
   f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
@@ -107,8 +107,8 @@ dsScDefs ds = do
   local (env <>) $ (env,) <$> foldMapA dsScDef ds
 
 dsScDef ::
-  (MonadUniq f, MonadReader DsEnv f, MonadIO f, MonadFail f, MonadGriff f) =>
-  ScDef (Griff 'TypeCheck) ->
+  (MonadUniq f, MonadReader DsEnv f, MonadIO f, MonadFail f, MonadMalgo f) =>
+  ScDef (Malgo 'TypeCheck) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (WithType pos typ, name, params, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
@@ -124,13 +124,13 @@ dsScDef (WithType pos typ, name, params, expr) = do
     fun <- curryFun params' =<< dsExp expr
     pure [(name', fun)]
 
--- TODO: Griffのforeignでvoid型をあつかえるようにする #13
--- 1. Griffの型とCの型の相互変換を定義する
+-- TODO: Malgoのforeignでvoid型をあつかえるようにする #13
+-- 1. Malgoの型とCの型の相互変換を定義する
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
   (MonadReader DsEnv f, MonadUniq f, MonadIO f) =>
-  Foreign (Griff 'TypeCheck) ->
+  Foreign (Malgo 'TypeCheck) ->
   f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsForeign (x@(WithType (_, primName) _), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. toType)
@@ -143,7 +143,7 @@ dsForeign (x@(WithType (_, primName) _), name, _) = do
 
 dsDataDef ::
   (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
-  DataDef (Griff 'TypeCheck) ->
+  DataDef (Malgo 'TypeCheck) ->
   m (DsEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
 dsDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
@@ -184,13 +184,13 @@ dsUnboxed (G.String x) = C.String x
 
 dsExp ::
   (HasCallStack, MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
-  G.Exp (Griff 'TypeCheck) ->
+  G.Exp (Malgo 'TypeCheck) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var x name) = do
   name' <- lookupName name
-  -- Griffでの型とCoreでの型に矛盾がないかを検査
+  -- Malgoでの型とCoreでの型に矛盾がないかを検査
   -- Note: [0 argument]
-  --   Core上で0引数関数で表現されるGriffの値は以下の二つ。
+  --   Core上で0引数関数で表現されるMalgoの値は以下の二つ。
   --    1. {a}型の値（TyLazy）
   --    2. 引数のない値コンストラクタ
   --   このうち、2.は「0引数関数の呼び出し」の形でのみ出現する（dsExp G.Conの節参照）
@@ -288,7 +288,7 @@ dsExp (G.Force _ e) = runDef $ do
   pure $ Call e' []
 dsExp (G.Parens _ e) = dsExp e
 
-dsStmts :: (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) => [Stmt (Griff 'TypeCheck)] -> m (C.Exp (Id C.Type))
+dsStmts :: (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) => [Stmt (Malgo 'TypeCheck)] -> m (C.Exp (Id C.Type))
 dsStmts [] = bug Unreachable
 dsStmts [NoBind _ e] = dsExp e
 dsStmts [G.Let _ _ e] = dsExp e
@@ -310,7 +310,7 @@ match ::
   HasCallStack =>
   (MonadReader DsEnv m, MonadFail m, MonadIO m, MonadUniq m) =>
   [Id C.Type] ->
-  [[Pat (Griff 'TypeCheck)]] ->
+  [[Pat (Malgo 'TypeCheck)]] ->
   [m (C.Exp (Id C.Type))] ->
   C.Exp (Id C.Type) ->
   m (C.Exp (Id C.Type))
@@ -410,7 +410,7 @@ match _ [] [] err = pure err
 match u pss es err = do
   errorDoc $ "match" <+> pPrint u <+> pPrint pss <+> pPrint (length es) <+> pPrint err
 
--- Griffの型をCoreの型に変換する
+-- Malgoの型をCoreの型に変換する
 dsType :: (HasCallStack, MonadIO m) => GT.Type -> m C.Type
 dsType t@GT.TyApp {} = do
   let (con, ts) = splitCon t

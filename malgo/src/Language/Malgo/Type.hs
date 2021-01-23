@@ -12,14 +12,14 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Type where
+module Language.Malgo.Type where
 
 import qualified Data.Set as Set
 import Data.Store
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.Prelude
+import Language.Malgo.Prelude
 
 ----------------------
 -- Kind and HasKind --

@@ -8,16 +8,16 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-module Language.Griff.TypeCheck.TcEnv where
+module Language.Malgo.TypeCheck.TcEnv where
 
 import qualified Data.Map as Map
 import Data.Store
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.Prelude
-import Language.Griff.Rename.RnEnv (RnEnv)
-import Language.Griff.Syntax.Extension
-import Language.Griff.Type
+import Language.Malgo.Prelude
+import Language.Malgo.Rename.RnEnv (RnEnv)
+import Language.Malgo.Syntax.Extension
+import Language.Malgo.Type
 
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,

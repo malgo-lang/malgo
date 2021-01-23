@@ -6,10 +6,10 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Prelude
+module Language.Malgo.Prelude
   ( module Koriel.Prelude,
-    MonadGriff (..),
-    GriffM (..),
+    MonadMalgo (..),
+    MalgoM (..),
     errorOn,
     Opt (..),
     parseOpt,
@@ -28,39 +28,39 @@ import System.FilePath ((</>), takeDirectory)
 import System.FilePath.Lens
 import Text.Megaparsec.Pos (SourcePos (sourceLine), unPos)
 
-newtype GriffM a = GriffM {unGriffM :: ReaderT Opt IO a}
+newtype MalgoM a = MalgoM {unMalgoM :: ReaderT Opt IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadFix, MonadFail)
 
-class Monad m => MonadGriff m where
+class Monad m => MonadMalgo m where
   getOpt :: m Opt
-  default getOpt :: (MonadTrans t, MonadGriff m1, m ~ t m1) => m Opt
+  default getOpt :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => m Opt
   getOpt = lift getOpt
 
-viewLine :: (MonadGriff m, MonadIO m) => Int -> m String
+viewLine :: (MonadMalgo m, MonadIO m) => Int -> m String
 viewLine linum = do
   srcFileName <- srcName <$> getOpt
   s <- liftIO $ readFile srcFileName
   pure $ lines s !! (linum - 1)
 
-errorOn :: (HasCallStack, MonadGriff m, MonadIO m) => SourcePos -> Doc -> m a
+errorOn :: (HasCallStack, MonadMalgo m, MonadIO m) => SourcePos -> Doc -> m a
 errorOn pos x = do
   line <- viewLine (unPos $ sourceLine pos)
   errorDoc $
     "error on" <+> pPrint pos <> ":" $+$ nest 2 x
       $+$ pPrint (unPos $ sourceLine pos) <+> text line
 
-instance MonadGriff GriffM where
-  getOpt = GriffM ask
+instance MonadMalgo MalgoM where
+  getOpt = MalgoM ask
 
-instance MonadGriff m => MonadGriff (ReaderT r m)
+instance MonadMalgo m => MonadMalgo (ReaderT r m)
 
-instance MonadGriff m => MonadGriff (ExceptT e m)
+instance MonadMalgo m => MonadMalgo (ExceptT e m)
 
-instance MonadGriff m => MonadGriff (StateT s m)
+instance MonadMalgo m => MonadMalgo (StateT s m)
 
-instance MonadGriff m => MonadGriff (WriterT w m)
+instance MonadMalgo m => MonadMalgo (WriterT w m)
 
-instance MonadGriff m => MonadGriff (UniqT m)
+instance MonadMalgo m => MonadMalgo (UniqT m)
 
 data Opt = Opt
   { srcName :: FilePath,
@@ -108,7 +108,7 @@ parseOpt = do
     then pure opt {dstName = srcName opt & extension .~ ".ll"}
     else pure opt
 
-getPackagePathes :: (MonadGriff m, MonadIO m) => m [FilePath]
+getPackagePathes :: (MonadMalgo m, MonadIO m) => m [FilePath]
 getPackagePathes = do
   opt <- getOpt
   basePath <- getPackagePath "base"

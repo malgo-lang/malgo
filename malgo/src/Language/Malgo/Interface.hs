@@ -7,7 +7,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Interface where
+module Language.Malgo.Interface where
 
 import Control.Exception (IOException, catch)
 import Control.Monad.State (execState)
@@ -19,14 +19,14 @@ import Generics.Deriving.Monoid (mappenddefault, memptydefault)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import Language.Griff.Desugar.DsEnv (DsEnv)
-import qualified Language.Griff.Desugar.DsEnv as DsEnv
-import Language.Griff.Prelude
-import Language.Griff.Rename.RnEnv (RnState)
-import qualified Language.Griff.Rename.RnEnv as RnState
-import Language.Griff.Syntax.Extension
-import qualified Language.Griff.Type as GT
-import qualified Language.Griff.TypeCheck.TcEnv as TcEnv
+import Language.Malgo.Desugar.DsEnv (DsEnv)
+import qualified Language.Malgo.Desugar.DsEnv as DsEnv
+import Language.Malgo.Prelude
+import Language.Malgo.Rename.RnEnv (RnState)
+import qualified Language.Malgo.Rename.RnEnv as RnState
+import Language.Malgo.Syntax.Extension
+import qualified Language.Malgo.Type as GT
+import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
 import System.FilePath ((</>))
 import System.FilePath.Lens
 
@@ -73,14 +73,14 @@ buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempt
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
-storeInterface :: (MonadIO m, MonadGriff m) => Interface -> m ()
+storeInterface :: (MonadIO m, MonadMalgo m) => Interface -> m ()
 storeInterface interface = do
   opt <- getOpt
   liftIO $
     BS.writeFile (dstName opt & extension .~ ".grfi") $
       encode interface
 
-loadInterface :: (HasCallStack, MonadGriff m, MonadIO m) => ModuleName -> m Interface
+loadInterface :: (HasCallStack, MonadMalgo m, MonadIO m) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
   modPaths <- getPackagePathes
   message <- liftIO $ findAndReadFile modPaths (modName <> ".grfi")

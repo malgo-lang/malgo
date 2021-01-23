@@ -10,7 +10,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Syntax where
+module Language.Malgo.Syntax where
 
 import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.Int (Int32, Int64)
@@ -18,10 +18,10 @@ import qualified Data.Set as Set
 import Data.Tuple.Extra (uncurry3)
 import Koriel.Id
 import Koriel.Pretty
-import Language.Griff.Prelude
-import Language.Griff.Syntax.Extension
-import Language.Griff.Type (HasType (..))
-import qualified Language.Griff.Type as T
+import Language.Malgo.Prelude
+import Language.Malgo.Syntax.Extension
+import Language.Malgo.Type (HasType (..))
+import qualified Language.Malgo.Type as T
 
 -- | Unboxed and literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
@@ -313,11 +313,11 @@ instance (Pretty (XId x), Pretty (XTId x), Pretty (XModule x)) => Pretty (Module
     "module" <+> pPrint name $$ pPrint defs
 
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
-type instance XModule (Griff 'Parse) = [Decl (Griff 'Parse)]
+type instance XModule (Malgo 'Parse) = [Decl (Malgo 'Parse)]
 
-type instance XModule (Griff 'Rename) = BindGroup (Griff 'Rename)
+type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 
-type instance XModule (Griff 'TypeCheck) = BindGroup (Griff 'TypeCheck)
+type instance XModule (Malgo 'TypeCheck) = BindGroup (Malgo 'TypeCheck)
 
 ----------------
 -- Bind group --

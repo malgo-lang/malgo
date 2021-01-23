@@ -2,12 +2,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.TypeCheck.Constraint (Constraint (..), WithPos (..), eqCons, solve) where
+module Language.Malgo.TypeCheck.Constraint (Constraint (..), WithPos (..), eqCons, solve) where
 
 import qualified Data.Set as Set
 import Koriel.Pretty
-import Language.Griff.Prelude
-import Language.Griff.Type
+import Language.Malgo.Prelude
+import Language.Malgo.Type
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Definition of Constraint
@@ -29,13 +29,13 @@ eqCons :: SourcePos -> Type -> Type -> WithPos
 eqCons pos t1 t2 = WithPos (t1 :~ t2) pos
 
 -- Constraint Solver
-solve :: (MonadIO m, MonadGriff m) => [WithPos] -> m ()
+solve :: (MonadIO m, MonadMalgo m) => [WithPos] -> m ()
 solve cs = solveLoop 5000 =<< zonkConstraints cs
 
 unifyErrorMessage :: (Pretty a1, Pretty a2) => a1 -> a2 -> Doc
 unifyErrorMessage t1 t2 = "Couldn't match type" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
 
-solveLoop :: (MonadIO m, MonadGriff m) => Int -> [WithPos] -> m ()
+solveLoop :: (MonadIO m, MonadMalgo m) => Int -> [WithPos] -> m ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (WithPos (TyMeta a1 :~ TyMeta a2) pos : cs)
@@ -74,7 +74,7 @@ solveLoop n (WithPos (t1 :~ t2) pos : cs)
   | t1 == t2 = solveLoop (n - 1) cs
   | otherwise = errorOn pos $ unifyErrorMessage t1 t2
 
-bind :: (MonadGriff m, MonadIO m) => SourcePos -> MetaTv -> Type -> m ()
+bind :: (MonadMalgo m, MonadIO m) => SourcePos -> MetaTv -> Type -> m ()
 bind pos tv t2 = do
   mktv <- kind tv
   mkt2 <- kind t2

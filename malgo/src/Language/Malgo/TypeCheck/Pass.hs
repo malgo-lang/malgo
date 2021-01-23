@@ -8,34 +8,34 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.TypeCheck.Pass (typeCheck, applySubst) where
+module Language.Malgo.TypeCheck.Pass (typeCheck, applySubst) where
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Griff.Interface
-import Language.Griff.Prelude
-import Language.Griff.Rename.RnEnv (RnEnv)
-import qualified Language.Griff.Rename.RnEnv as R
-import Language.Griff.Syntax hiding (Type (..))
-import qualified Language.Griff.Syntax as S
-import Language.Griff.Syntax.Extension
-import Language.Griff.Type
-import Language.Griff.TypeCheck.Constraint
-import Language.Griff.TypeCheck.TcEnv hiding (rnEnv)
-import qualified Language.Griff.TypeCheck.TcEnv as TcEnv
+import Language.Malgo.Interface
+import Language.Malgo.Prelude
+import Language.Malgo.Rename.RnEnv (RnEnv)
+import qualified Language.Malgo.Rename.RnEnv as R
+import Language.Malgo.Syntax hiding (Type (..))
+import qualified Language.Malgo.Syntax as S
+import Language.Malgo.Syntax.Extension
+import Language.Malgo.Type
+import Language.Malgo.TypeCheck.Constraint
+import Language.Malgo.TypeCheck.TcEnv hiding (rnEnv)
+import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
 import Text.Megaparsec (SourcePos)
 
 -- Entry point
-typeCheck :: (MonadUniq m, MonadIO m, MonadGriff m) => RnEnv -> Module (Griff 'Rename) -> m (Module (Griff 'TypeCheck), TcEnv)
+typeCheck :: (MonadUniq m, MonadIO m, MonadMalgo m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) = do
   tcEnv <- genTcEnv rnEnv
   (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
   pure (Module name bg', tcEnv')
 
-tcBindGroup :: (MonadUniq m, MonadState TcEnv m, MonadIO m, MonadGriff m) => BindGroup (Griff 'Rename) -> m (BindGroup (Griff 'TypeCheck))
+tcBindGroup :: (MonadUniq m, MonadState TcEnv m, MonadIO m, MonadMalgo m) => BindGroup (Malgo 'Rename) -> m (BindGroup (Malgo 'TypeCheck))
 tcBindGroup bindGroup = do
   imports' <- tcImports $ bindGroup ^. imports
   dataDefs' <- tcDataDefs $ bindGroup ^. dataDefs
@@ -61,7 +61,7 @@ tcBindGroup bindGroup = do
         _imports = imports'
       }
 
-tcImports :: (MonadState TcEnv f, MonadGriff f, MonadIO f) => [Import (Griff 'Rename)] -> f [Import (Griff 'TypeCheck)]
+tcImports :: (MonadState TcEnv f, MonadMalgo f, MonadIO f) => [Import (Malgo 'Rename)] -> f [Import (Malgo 'TypeCheck)]
 tcImports = traverse tcImport
   where
     tcImport (pos, modName) = do
@@ -71,9 +71,9 @@ tcImports = traverse tcImport
       pure (pos, modName)
 
 tcDataDefs ::
-  (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadGriff m) =>
-  [DataDef (Griff 'Rename)] ->
-  m [DataDef (Griff 'TypeCheck)]
+  (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadMalgo m) =>
+  [DataDef (Malgo 'Rename)] ->
+  m [DataDef (Malgo 'TypeCheck)]
 tcDataDefs ds = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ ds $ \(_, name, params, _) ->
@@ -97,9 +97,9 @@ tcDataDefs ds = do
     kindof (_ : xs) = KArr Star (kindof xs)
 
 tcForeigns ::
-  (MonadUniq m, MonadIO m, MonadState TcEnv m, MonadGriff m) =>
-  [Foreign (Griff 'Rename)] ->
-  m [Foreign (Griff 'TypeCheck)]
+  (MonadUniq m, MonadIO m, MonadState TcEnv m, MonadMalgo m) =>
+  [Foreign (Malgo 'Rename)] ->
+  m [Foreign (Malgo 'TypeCheck)]
 tcForeigns ds =
   for ds $ \(pos, name, ty) -> do
     for_ (Set.toList $ getTyVars ty) $ \tyVar ->
@@ -109,9 +109,9 @@ tcForeigns ds =
     pure (WithType pos ty', name, tcType ty)
 
 tcScSigs ::
-  (MonadUniq m, MonadIO m, MonadState TcEnv m, MonadGriff m) =>
-  [ScSig (Griff 'Rename)] ->
-  m [ScSig (Griff 'TypeCheck)]
+  (MonadUniq m, MonadIO m, MonadState TcEnv m, MonadMalgo m) =>
+  [ScSig (Malgo 'Rename)] ->
+  m [ScSig (Malgo 'TypeCheck)]
 tcScSigs ds =
   for ds $ \(pos, name, ty) -> do
     for_ (Set.toList $ getTyVars ty) $ \tyVar ->
@@ -123,7 +123,7 @@ tcScSigs ds =
 -- ScSigによる型注釈がないScDefの暫定的な型を生成する
 prepareTcScDefs ::
   (MonadState TcEnv m, MonadUniq m, MonadIO m) =>
-  [ScDef (Griff 'Rename)] ->
+  [ScDef (Malgo 'Rename)] ->
   m ()
 prepareTcScDefs ds = for_ ds $ \(_, name, _, _) -> do
   mscheme <- use $ varEnv . at name
@@ -132,15 +132,15 @@ prepareTcScDefs ds = for_ ds $ \(_, name, _, _) -> do
     Just _ -> pure mempty
 
 tcScDefGroup ::
-  (MonadState TcEnv f, MonadUniq f, MonadIO f, MonadGriff f) =>
-  [[ScDef (Griff 'Rename)]] ->
-  f [[ScDef (Griff 'TypeCheck)]]
+  (MonadState TcEnv f, MonadUniq f, MonadIO f, MonadMalgo f) =>
+  [[ScDef (Malgo 'Rename)]] ->
+  f [[ScDef (Malgo 'TypeCheck)]]
 tcScDefGroup = traverse tcScDefs
 
 tcScDefs ::
-  (MonadState TcEnv m, MonadUniq m, MonadIO m, MonadGriff m) =>
-  [ScDef (Griff 'Rename)] ->
-  m [ScDef (Griff 'TypeCheck)]
+  (MonadState TcEnv m, MonadUniq m, MonadIO m, MonadMalgo m) =>
+  [ScDef (Malgo 'Rename)] ->
+  m [ScDef (Malgo 'TypeCheck)]
 tcScDefs ds = do
   (ds', nts) <- mapAndUnzipM ?? ds $ \(pos, name, params, expr) -> do
     paramTypes <- traverse (const $ TyMeta <$> newMetaTv Nothing "") params
@@ -156,9 +156,9 @@ tcScDefs ds = do
   pure ds'
 
 tcExpr ::
-  (MonadState TcEnv m, MonadUniq m, MonadIO m, MonadGriff m) =>
-  Exp (Griff 'Rename) ->
-  WriterT [WithPos] m (Exp (Griff 'TypeCheck))
+  (MonadState TcEnv m, MonadUniq m, MonadIO m, MonadMalgo m) =>
+  Exp (Malgo 'Rename) ->
+  WriterT [WithPos] m (Exp (Malgo 'TypeCheck))
 tcExpr (Var pos v) = do
   vType <- instantiate False =<< lookupVar pos v
   pure $ Var (WithType pos vType) v
@@ -206,13 +206,13 @@ tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (WithType pos (e' ^. toType)) e'
 
-tcClause :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadGriff m) => Clause (Griff 'Rename) -> WriterT [WithPos] m (Clause (Griff 'TypeCheck))
+tcClause :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadMalgo m) => Clause (Malgo 'Rename) -> WriterT [WithPos] m (Clause (Malgo 'TypeCheck))
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
   pure $ Clause (WithType pos (foldr (TyArr . view toType) (last ss' ^. toType) pats')) pats' ss'
 
-tcStmts :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadGriff m) => [Stmt (Griff 'Rename)] -> WriterT [WithPos] m [Stmt (Griff 'TypeCheck)]
+tcStmts :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadMalgo m) => [Stmt (Malgo 'Rename)] -> WriterT [WithPos] m [Stmt (Malgo 'TypeCheck)]
 tcStmts [] = pure []
 tcStmts (NoBind pos e : ss) = do
   e' <- tcExpr e
@@ -228,7 +228,7 @@ tcStmts (Let pos v e : ss) = do
   ss' <- tcStmts ss
   pure $ Let pos v e' : ss'
 
-tcPatterns :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadGriff m) => [Pat (Griff 'Rename)] -> WriterT [WithPos] m [Pat (Griff 'TypeCheck)]
+tcPatterns :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadMalgo m) => [Pat (Malgo 'Rename)] -> WriterT [WithPos] m [Pat (Malgo 'TypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- TyMeta <$> newMetaTv Nothing ""
@@ -262,7 +262,7 @@ tcPatterns (UnboxedP pos unboxed : cs) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadState TcEnv m, MonadIO m, MonadGriff m) => S.Type (Griff 'Rename) -> m Type
+transType :: (MonadState TcEnv m, MonadIO m, MonadMalgo m) => S.Type (Malgo 'Rename) -> m Type
 transType (S.TyApp pos t ts) = do
   rnEnv <- use TcEnv.rnEnv
   let ptr_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Ptr#" (view R.typeEnv rnEnv)
@@ -296,7 +296,7 @@ transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyTuple <$> traverse transType ts
 transType (S.TyLazy _ t) = TyLazy <$> transType t
 
-tcType :: S.Type (Griff 'Rename) -> S.Type (Griff 'TypeCheck)
+tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'TypeCheck)
 tcType (S.TyApp pos t ts) = S.TyApp pos (tcType t) (map tcType ts)
 tcType (S.TyVar pos v) = S.TyVar pos v
 tcType (S.TyCon pos c) = S.TyCon pos c
@@ -308,14 +308,14 @@ tcType (S.TyLazy pos t) = S.TyLazy pos $ tcType t
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupType :: (HasCallStack, MonadState TcEnv m, MonadGriff m, MonadIO m) => SourcePos -> RnTId -> m Type
+lookupType :: (HasCallStack, MonadState TcEnv m, MonadMalgo m, MonadIO m) => SourcePos -> RnTId -> m Type
 lookupType pos name = do
   mtype <- preuse $ typeEnv . at name . _Just . constructor
   case mtype of
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just typ -> pure typ
 
-lookupVar :: (HasCallStack, MonadState TcEnv m, MonadGriff m, MonadIO m) => SourcePos -> RnId -> m Scheme
+lookupVar :: (HasCallStack, MonadState TcEnv m, MonadMalgo m, MonadIO m) => SourcePos -> RnId -> m Scheme
 lookupVar pos name = do
   mscheme <- use $ varEnv . at name
   case mscheme of

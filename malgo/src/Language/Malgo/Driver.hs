@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Driver (compile) where
+module Language.Malgo.Driver (compile) where
 
 import qualified Data.ByteString as BS
 import qualified Data.Text.IO as T
@@ -19,14 +19,14 @@ import qualified LLVM.AST as L
 import LLVM.Context (withContext)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
-import Language.Griff.Desugar.Pass (desugar)
-import Language.Griff.Interface (buildInterface, loadInterface, storeInterface)
-import Language.Griff.Parser (parseGriff)
-import Language.Griff.Prelude
-import Language.Griff.Rename.Pass (rename)
-import qualified Language.Griff.Rename.RnEnv as RnEnv
-import qualified Language.Griff.Syntax as Syntax
-import Language.Griff.TypeCheck.Pass (typeCheck)
+import Language.Malgo.Desugar.Pass (desugar)
+import Language.Malgo.Interface (buildInterface, loadInterface, storeInterface)
+import Language.Malgo.Parser (parseMalgo)
+import Language.Malgo.Prelude
+import Language.Malgo.Rename.Pass (rename)
+import qualified Language.Malgo.Rename.RnEnv as RnEnv
+import qualified Language.Malgo.Syntax as Syntax
+import Language.Malgo.TypeCheck.Pass (typeCheck)
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -58,7 +58,7 @@ withDump isDump label m = do
 compile :: Opt -> IO ()
 compile opt = do
   src <- T.readFile (srcName opt)
-  parsedAst <- case parseGriff (srcName opt) src of
+  parsedAst <- case parseMalgo (srcName opt) src of
     Right x -> pure x
     Left err -> error $ errorBundlePretty err
   when (dumpParsed opt) $ do
@@ -66,7 +66,7 @@ compile opt = do
     hPrint stderr $ pPrint parsedAst
   void $
     runReaderT ?? opt $
-      unGriffM $
+      unMalgoM $
         runUniqT ?? UniqSupply 0 $ do
           rnEnv <- RnEnv.genBuiltinRnEnv
           (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst

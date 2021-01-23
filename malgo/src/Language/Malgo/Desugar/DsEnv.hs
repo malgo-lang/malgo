@@ -5,21 +5,21 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Griff.Desugar.DsEnv where
+module Language.Malgo.Desugar.DsEnv where
 
 import qualified Data.Map as Map
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import Language.Griff.Prelude
-import Language.Griff.Syntax.Extension
-import Language.Griff.TypeCheck.TcEnv (TcEnv)
+import Language.Malgo.Prelude
+import Language.Malgo.Syntax.Extension
+import Language.Malgo.TypeCheck.TcEnv (TcEnv)
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
   { -- モジュール名
     _moduleName :: ModuleName,
-    -- | Griff -> Coreの名前環境
+    -- | Malgo -> Coreの名前環境
     _varEnv :: Map TcId (Id C.Type),
     -- | 型環境
     _tcEnv :: TcEnv
