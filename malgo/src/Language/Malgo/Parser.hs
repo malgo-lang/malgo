@@ -149,10 +149,10 @@ pFun =
                 <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
                 <*> pStmts
             )
-        `sepBy` pOperator "|"
+        `sepBy1` pOperator "|"
 
 pStmts :: Parser [Stmt (Malgo 'Parse)]
-pStmts = pStmt `sepEndBy` pOperator ";"
+pStmts = pStmt `sepBy1` pOperator ";"
 
 pStmt :: Parser (Stmt (Malgo 'Parse))
 pStmt = try pLet <|> pNoBind

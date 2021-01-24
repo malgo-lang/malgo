@@ -21,7 +21,7 @@ module Cast = {
     let x = 1;
     let x' = unsafe_cast x;
     let x'' = castToInt32 x;
-    x |> { Int32# i -> print_int32 i };
+    x |> { Int32# i -> print_int32 i }
   };
 }
 

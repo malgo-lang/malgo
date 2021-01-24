@@ -2,7 +2,7 @@ module TestLetUnboxed = {
   foreign import print_string :: String# -> ();
   main = {
     let f = {let y = {a -> ()} ()};
-    print_string "PASS"#;
+    print_string "PASS"#
   };
 }
 
