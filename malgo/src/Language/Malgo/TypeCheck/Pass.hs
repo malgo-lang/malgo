@@ -50,7 +50,7 @@ tcBindGroup bindGroup = do
   foreigns'' <- traverseOf (traversed . _1) (overType zonkType) foreigns'
   scDefs'' <-
     traverseOf (traversed . traversed . _1) (overType zonkType)
-      =<< traverseOf (traversed . traversed . _4) (overType zonkType) scDefs'
+      =<< traverseOf (traversed . traversed . _3) (overType zonkType) scDefs'
   pure
     BindGroup
       { _dataDefs = dataDefs',
@@ -125,7 +125,7 @@ prepareTcScDefs ::
   (MonadState TcEnv m, MonadUniq m, MonadIO m) =>
   [ScDef (Malgo 'Rename)] ->
   m ()
-prepareTcScDefs ds = for_ ds $ \(_, name, _, _) -> do
+prepareTcScDefs ds = for_ ds $ \(_, name, _) -> do
   mscheme <- use $ varEnv . at name
   case mscheme of
     Nothing -> varEnv . at name <~ Just . Forall [] . TyMeta <$> newMetaTv Nothing ""
@@ -142,13 +142,11 @@ tcScDefs ::
   [ScDef (Malgo 'Rename)] ->
   m [ScDef (Malgo 'TypeCheck)]
 tcScDefs ds = do
-  (ds', nts) <- mapAndUnzipM ?? ds $ \(pos, name, params, expr) -> do
-    paramTypes <- traverse (const $ TyMeta <$> newMetaTv Nothing "") params
-    varEnv <>= Map.fromList (zip params (map (Forall []) paramTypes))
+  (ds', nts) <- mapAndUnzipM ?? ds $ \(pos, name, expr) -> do
     (expr', wanted) <- runWriterT (tcExpr expr)
     ty <- instantiate True =<< lookupVar pos name
-    solve $ eqCons pos ty (foldr TyArr (expr' ^. toType) paramTypes) : wanted
-    pure ((WithType pos ty, name, params, expr'), (name, ty))
+    solve $ eqCons pos ty (expr' ^. toType) : wanted
+    pure ((WithType pos ty, name, expr'), (name, ty))
   (_, nts') <- generalizeMutRecs mempty nts
   varEnv %= (Map.fromList nts' <>)
   -- prepareTcScDefsで定義されたvarEnvを更新したい

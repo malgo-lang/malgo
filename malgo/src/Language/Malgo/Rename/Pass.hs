@@ -91,20 +91,7 @@ rnDecl ::
   (MonadUniq m, MonadReader RnEnv m, MonadState RnState m, MonadMalgo m, MonadIO m) =>
   Decl (Malgo 'Parse) ->
   m (Decl (Malgo 'Rename))
-rnDecl (ScDef pos name params expr) = do
-  -- Desugarの都合上の制約
-  -- Ref: Language.Malgo.Desugar.curryFun
-  case (params, expr) of
-    ([], Fn {}) -> pure ()
-    ([], _) -> errorOn pos "Toplevel definition must be `x = {...}` or `f x ... = ...`"
-    _ -> pure ()
-  modName <- use moduleName
-  params' <- traverse (resolveName modName) params
-  local (appendRnEnv varEnv (zip params params')) $
-    ScDef pos
-      <$> lookupVarName pos name
-      <*> pure params'
-      <*> rnExp expr
+rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExp expr
 rnDecl (ScSig pos name typ) = do
   let tyVars = Set.toList $ getTyVars typ
   modName <- use moduleName
@@ -219,7 +206,7 @@ genToplevelEnv ds = do
   go modName mempty ds
   where
     go _ env [] = pure env
-    go modName env (ScDef pos x _ _ : rest)
+    go modName env (ScDef pos x _ : rest)
       | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | otherwise = do
         x' <- resolveGlobalName modName x

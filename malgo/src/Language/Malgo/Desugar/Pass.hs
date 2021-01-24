@@ -98,7 +98,7 @@ dsScDefs ::
   f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
-  env <- foldMapA ?? ds $ \(_, f, _, _) -> do
+  env <- foldMapA ?? ds $ \(_, f, _) -> do
     Just (Forall _ fType) <- view (tcEnv . Tc.varEnv . at f)
     f' <- newCoreId f =<< dsType fType
     pure $ mempty & varEnv .~ Map.singleton f f'
@@ -108,19 +108,15 @@ dsScDef ::
   (MonadUniq f, MonadReader DsEnv f, MonadIO f, MonadFail f, MonadMalgo f) =>
   ScDef (Malgo 'TypeCheck) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
-dsScDef (WithType pos typ, name, params, expr) = do
+dsScDef (WithType pos typ, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   unless (GT._TyArr `has` typ || GT._TyLazy `has` typ) $
     errorOn pos $
       "Invalid Toplevel Declaration:"
         <+> quotes (pPrint name <+> ":" <+> pPrint typ)
-  -- When typ is TyLazy{}, splitTyArr returns ([], typ).
-  let (paramTypes, _) = splitTyArr typ
-  params' <- zipWithM newCoreId params =<< traverse dsType paramTypes
-  local (over varEnv (Map.fromList (zip params params') <>)) $ do
-    name' <- lookupName name
-    fun <- curryFun params' =<< dsExp expr
-    pure [(name', fun)]
+  name' <- lookupName name
+  fun <- curryFun [] =<< dsExp expr
+  pure [(name', fun)]
 
 -- TODO: Malgoのforeignでvoid型をあつかえるようにする #13
 -- 1. Malgoの型とCの型の相互変換を定義する

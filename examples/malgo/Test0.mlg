@@ -3,7 +3,7 @@ module test0 = {
 
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;
-  (|>) x f = f x;
+  (|>) = { x f -> f x };
   
   foreign import print_int :: Int64# -> ();
   
