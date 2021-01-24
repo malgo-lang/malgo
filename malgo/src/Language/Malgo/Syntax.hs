@@ -273,7 +273,7 @@ getTyVars (TyLazy _ t) = getTyVars t
 -----------------
 
 data Decl x
-  = ScDef (XScDef x) (XId x) [XId x] (Exp x)
+  = ScDef (XScDef x) (XId x) (Exp x)
   | ScSig (XScSig x) (XId x) (Type x)
   | DataDef (XDataDef x) (XTId x) [XTId x] [(XId x, [Type x])]
   | Infix (XInfix x) Assoc Int (XId x)
@@ -285,7 +285,7 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (Decl 
 deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Show (Decl x)
 
 instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Decl x) where
-  pPrint (ScDef _ f xs e) = sep [pPrint f <+> sep (map pPrint xs) <+> "=", nest 2 $ pPrint e]
+  pPrint (ScDef _ f e) = sep [pPrint f <+> "=", nest 2 $ pPrint e]
   pPrint (ScSig _ f t) = pPrint f <+> "::" <+> pPrint t
   pPrint (DataDef _ d xs cs) =
     sep
@@ -333,7 +333,7 @@ data BindGroup x = BindGroup
     _imports :: [Import x]
   }
 
-type ScDef x = (XScDef x, XId x, [XId x], Exp x)
+type ScDef x = (XScDef x, XId x, Exp x)
 
 type ScSig x = (XScSig x, XId x, Type x)
 
@@ -370,10 +370,10 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
       prettyInfix (_, a, o, x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
       prettyForeign (_, x, t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
       prettyScSig (_, f, t) = pPrint f <+> "::" <+> pPrint t
-      prettyScDef (_, f, xs, e) =
-        sep [pPrint f <+> sep (map pPrint xs) <+> "=", nest 2 $ pPrint e]
+      prettyScDef (_, f, e) =
+        sep [pPrint f <+> "=", pPrint e]
 
-makeBindGroup :: (Pretty a, Ord (XId x), XId x ~ Id a) => [Decl x] -> BindGroup x
+makeBindGroup :: (Pretty a, Ord (XId x), XId x ~ Id a, Ord (XScDef x)) => [Decl x] -> BindGroup x
 makeBindGroup ds =
   BindGroup
     { _scDefs = splitScDef (makeSCC $ mapMaybe scDef ds) (mapMaybe scDef ds),
@@ -384,7 +384,7 @@ makeBindGroup ds =
       _imports = mapMaybe importDef ds
     }
   where
-    scDef (ScDef x f ps e) = Just (x, f, ps, e)
+    scDef (ScDef x f e) = Just (x, f, e)
     scDef _ = Nothing
     scSig (ScSig x f t) = Just (x, f, t)
     scSig _ = Nothing
@@ -398,14 +398,11 @@ makeBindGroup ds =
     importDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
-adjacents ::
-  (Pretty a, Ord (XId x), XId x ~ Id a) =>
-  (XScDef x, Id a, [Id a], Exp x) ->
-  (Id a, Int, [Int])
-adjacents (_, f, ps, e) =
-  (f, f ^. idUniq, map (view idUniq) $ toList $ freevars e Set.\\ Set.insert f (Set.fromList ps))
+adjacents :: (Ord a, Ord (XId x), XId x ~ Id a1) => (a, XId x, Exp x) -> (XId x, Int, [Int])
+adjacents (_, f, e) =
+  (f, f ^. idUniq, map (view idUniq) $ toList $ Set.delete f (freevars e))
 
-makeSCC :: (Pretty a, Ord (XId x), XId x ~ Id a) => [(XScDef x, Id a, [Id a], Exp x)] -> [[Id a]]
+makeSCC :: (Ord (XId x), XId x ~ Id a1, Ord a) => [(a, XId x, Exp x)] -> [[XId x]]
 makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'
   where
     vertices = map (view _2 . adjacents) ds

@@ -65,7 +65,7 @@ module Prelude = {
        };
 
   unless :: Bool -> a -> {a} -> a;
-  unless c tValue f = if c {tValue} f;
+  unless = { c tValue f -> if c {tValue} f };
 
   foreign import print_string :: String# -> ();
   foreign import newline :: () -> ();
