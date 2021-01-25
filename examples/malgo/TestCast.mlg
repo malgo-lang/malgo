@@ -15,7 +15,7 @@ module TestCast = {
 
   main = {
     printInt32 (unsafe_cast (read_vector 2L# (new_vector 10L# (unsafe_cast 5))))
-  }
+  };
 } 
 
 -- Expected: 5

@@ -5,6 +5,6 @@ module test2 = {
   
   foreign import print_string :: String# -> ();
   
-  main = { {B -> print_string "OK"# | _ -> print_string "WRONG"# } (rtob R) }
+  main = { {B -> print_string "OK"# | _ -> print_string "WRONG"# } (rtob R) };
 }
 -- Expected: OK

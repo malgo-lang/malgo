@@ -35,7 +35,7 @@ pModule = do
   void $ pKeyword "module"
   x <- pModuleName
   void $ pOperator "="
-  ds <- between (symbol "{") (symbol "}") $ pDecl `sepEndBy` pOperator ";"
+  ds <- between (symbol "{") (symbol "}") $ pDecl `endBy` pOperator ";"
   pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ds}
 
 -- module name
