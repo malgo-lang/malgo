@@ -17,6 +17,6 @@ module test4 = {
   main = {
     {(Int64# i) -> print_int i}
       (sum (Int64# 0L#) (Cons (Int64# 1L#) (Cons (Int64# 2L#) Nil)))
-    }
+    };
 }
 -- Expected: 3

@@ -4,6 +4,6 @@ module dataDef = {
 
   foreign import print_int :: Int64# -> ();
 
-  main = { {(Int# x) -> print_int x} (Int# 1L#) }
+  main = { {(Int# x) -> print_int x} (Int# 1L#) };
 }
 -- Expected: 1

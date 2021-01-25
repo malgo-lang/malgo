@@ -11,6 +11,6 @@ module testDot = {
 
   printInt64 = {(Int64# x) -> print_int64 x};
 
-  main = { printInt64 ((succ . succ) (Int64# 0L#)) }
+  main = { printInt64 ((succ . succ) (Int64# 0L#)) };
 }
 -- Expected: 2

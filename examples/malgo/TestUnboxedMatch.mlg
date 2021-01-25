@@ -5,6 +5,6 @@ module TestUnboxedMatch = {
     { 0L# -> print_int 1L#
     | 1L# -> print_int 1L#
     | _ -> print_int 0L# } 0L#
-    }
+    };
 }
 -- Expected: 1

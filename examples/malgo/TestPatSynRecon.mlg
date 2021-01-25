@@ -20,6 +20,6 @@ module testPatSynRecon = {
   main = {
       sum (Cons (Int64# 1L#) (Cons (Int64# 2L#) Nil))
         |> {(Int64# i) -> print_int i}
-      }
+      };
 }
 -- Expected: 3

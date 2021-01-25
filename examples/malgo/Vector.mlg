@@ -43,7 +43,7 @@ module Vector = {
     let val = readVector 2L vec;
     val |> { Nothing -> putStrLn "ERROR"
            | Just (Int32# x) -> print_int32 x }
-  }
+  };
 } 
 
 -- Expected: 5
