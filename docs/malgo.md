@@ -105,6 +105,6 @@ main :: {()}
 main = {
   let x = Int32# (add_Int32# 1# 2#);
   let printInt32 = {(Int32# x) -> print_int32 x};
-  printInt32 x;
+  printInt32 x
 }
 ```
