@@ -39,8 +39,6 @@ defined x
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
   and (zipWith isMatch ps0 ps1) && isMatch r0 r1
-isMatch (typeOf -> DataT {}) (typeOf -> AnyT) = True
-isMatch (typeOf -> AnyT) (typeOf -> DataT {}) = True
 isMatch (typeOf -> AnyT) (typeOf -> AnyT) = True
 isMatch x y
   | typeOf x == typeOf y = True

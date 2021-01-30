@@ -96,7 +96,6 @@ convType DoubleT = LT.double
 convType CharT = i8
 convType StringT = ptr i8
 convType BoolT = i8
-convType DataT {} = ptr i8
 convType (SumT cs) =
   let size = maximum $ sizeofCon <$> toList cs
    in ptr
@@ -121,7 +120,6 @@ sizeofType DoubleT = 8
 sizeofType CharT = 1
 sizeofType StringT = 8
 sizeofType BoolT = 1
-sizeofType DataT {} = 8
 sizeofType (SumT _) = 8
 sizeofType (ArrayT _) = 8
 sizeofType (PtrT _) = 8

@@ -406,15 +406,13 @@ match u pss es err = do
 
 -- Malgoの型をCoreの型に変換する
 dsType :: (HasCallStack, MonadIO m) => GT.Type -> m C.Type
-dsType t@GT.TyApp {} = do
-  let (con, ts) = splitCon t
-  DataT (con ^. toText) <$> traverse dsType ts
+dsType GT.TyApp {} = pure AnyT
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
   mkcon <- kind con
   case mkcon of
     Just kcon
-      | kcon == Star -> pure $ DataT (con ^. toText) []
+      | kcon == Star -> pure AnyT
       | otherwise -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
     _ -> bug Unreachable
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
