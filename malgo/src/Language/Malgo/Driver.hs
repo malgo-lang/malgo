@@ -8,11 +8,11 @@ import qualified Data.ByteString as BS
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.CodeGen (codeGen)
-import Koriel.Core.Core
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lintProgram, runLint)
 import Koriel.Core.Optimize (optimizeProgram)
+import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
 import qualified LLVM.AST as L

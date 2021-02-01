@@ -19,7 +19,7 @@ import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import Koriel.Core.Core as C
+import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
 import Koriel.Id hiding (newGlobalId, newId)
