@@ -14,7 +14,7 @@
 -- |
 -- malgoの共通中間表現。
 -- A正規形に近い。
-module Koriel.Core.Core where
+module Koriel.Core.Syntax where
 
 import qualified Data.Set as Set
 import Koriel.Core.Op

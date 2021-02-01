@@ -17,8 +17,8 @@ import qualified Data.List as List
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Core.Alpha
-import Koriel.Core.Core
 import Koriel.Core.Flat
+import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq

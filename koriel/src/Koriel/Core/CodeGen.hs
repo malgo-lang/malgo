@@ -31,8 +31,8 @@ import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.String.Conversions
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
-import Koriel.Core.Core as Core
 import qualified Koriel.Core.Op as Op
+import Koriel.Core.Syntax
 import Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
@@ -43,7 +43,6 @@ import LLVM.AST
     Name,
     mkName,
   )
-import LLVM.AST.Constant (Constant (..))
 import qualified LLVM.AST.Constant as C
 import qualified LLVM.AST.FloatingPointPredicate as FP
 import LLVM.AST.Global
@@ -75,7 +74,7 @@ codeGen Program {topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
   let funcEnv = mconcatMap ?? topFuncs $ \(f, (ps, e)) ->
         Map.singleton f $
           ConstantOperand $
-            GlobalReference
+            C.GlobalReference
               (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
               (toName f)
   runReaderT
@@ -308,7 +307,7 @@ genExp (ArrayWrite a i v) k = do
   vOpr <- genAtom v
   arrOpr <- gepAndLoad aOpr [int32 0, int32 0]
   gepAndStore arrOpr [iOpr] vOpr
-  k (ConstantOperand (Undef (ptr $ StructureType False [i8, StructureType False []])))
+  k (ConstantOperand (C.Undef (ptr $ StructureType False [i8, StructureType False []])))
 genExp (Let xs e) k = do
   env <- foldMapA prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse (uncurry genObj) xs
@@ -365,7 +364,7 @@ genCase ::
   Set Con ->
   (Operand -> m ()) ->
   Case (Id C.Type) ->
-  m (Either LLVM.AST.Name (Constant, LLVM.AST.Name))
+  m (Either LLVM.AST.Name (C.Constant, LLVM.AST.Name))
 genCase scrutinee cs k = \case
   Bind x e -> do
     label <- block
@@ -393,17 +392,17 @@ genAtom ::
   Atom (Id C.Type) ->
   m Operand
 genAtom (Var x) = findVar x
-genAtom (Unboxed (Core.Int32 x)) = pure $ int32 x
-genAtom (Unboxed (Core.Int64 x)) = pure $ int64 x
+genAtom (Unboxed (Int32 x)) = pure $ int32 x
+genAtom (Unboxed (Int64 x)) = pure $ int64 x
 -- Ref: https://github.com/llvm-hs/llvm-hs/issues/4
-genAtom (Unboxed (Core.Float x)) = pure $ ConstantOperand $ C.BitCast (C.Int 32 $ toInteger $ castFloatToWord32 x) LT.float
-genAtom (Unboxed (Core.Double x)) = pure $ ConstantOperand $ C.BitCast (C.Int 64 $ toInteger $ castDoubleToWord64 x) LT.double
-genAtom (Unboxed (Core.Char x)) = pure $ int8 $ toInteger $ ord x
-genAtom (Unboxed (Core.String x)) = do
+genAtom (Unboxed (Float x)) = pure $ ConstantOperand $ C.BitCast (C.Int 32 $ toInteger $ castFloatToWord32 x) LT.float
+genAtom (Unboxed (Double x)) = pure $ ConstantOperand $ C.BitCast (C.Int 64 $ toInteger $ castDoubleToWord64 x) LT.double
+genAtom (Unboxed (Char x)) = pure $ int8 $ toInteger $ ord x
+genAtom (Unboxed (String x)) = do
   i <- getUniq
   ConstantOperand <$> globalStringPtr x (mkName $ "str" <> show i)
-genAtom (Unboxed (Core.Bool True)) = pure $ int8 1
-genAtom (Unboxed (Core.Bool False)) = pure $ int8 0
+genAtom (Unboxed (Bool True)) = pure $ int8 1
+genAtom (Unboxed (Bool False)) = pure $ int8 0
 
 genObj ::
   ( MonadReader OprMap m,
@@ -453,7 +452,7 @@ genObj name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
   -- nameの型にキャスト
   Map.singleton name <$> bitcast addr (convType $ SumT cs)
 genObj _ Pack {} = bug Unreachable
-genObj x (Core.Array a n) = mdo
+genObj x (Array a n) = mdo
   sizeOpr <- mul (sizeof $ convType $ C.typeOf a) =<< genAtom n
   arrayOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ C.typeOf a)
   -- for (i64 i = 0;
