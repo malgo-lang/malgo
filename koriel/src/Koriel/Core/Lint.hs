@@ -119,19 +119,6 @@ lintExp (BinOp o x y) = do
     Ge -> match x y
     And -> match x BoolT >> match y BoolT
     Or -> match x BoolT >> match y BoolT
-lintExp (ArrayRead a i) = do
-  lintAtom a
-  lintAtom i
-  case typeOf a of
-    ArrayT _ -> match Int64T i
-    _ -> errorDoc $ pPrint a <+> "must be a array"
-lintExp (ArrayWrite a i v) = do
-  lintAtom a
-  lintAtom i
-  lintAtom v
-  case typeOf a of
-    ArrayT t -> match Int64T i >> match t v
-    _ -> errorDoc $ pPrint a <+> "must be a array"
 lintExp (Cast _ x) = lintAtom x
 lintExp (Let ds e) = local (map fst ds <>) $ do
   traverse_ (lintObj . snd) ds
@@ -144,7 +131,6 @@ lintExp Error {} = pure ()
 lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
-lintObj (Array a n) = lintAtom a >> lintAtom n >> match Int64T n
 
 lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e

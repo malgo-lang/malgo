@@ -96,10 +96,6 @@ data Exp a
     ExtCall String Type [Atom a]
   | -- | binary operation
     BinOp Op (Atom a) (Atom a)
-  | -- | read the array element
-    ArrayRead (Atom a) (Atom a)
-  | -- | assign the value to the array element
-    ArrayWrite (Atom a) (Atom a) (Atom a)
   | -- | type casting
     Cast Type (Atom a)
   | -- | definition of local variables
@@ -153,10 +149,6 @@ instance HasType a => HasType (Exp a) where
     Or -> boolT
     where
       boolT = BoolT
-  typeOf (ArrayRead a _) = case typeOf a of
-    ArrayT t -> t
-    _ -> bug Unreachable
-  typeOf ArrayWrite {} = SumT [Con "Tuple0" []]
   typeOf (Cast ty _) = ty
   typeOf (Let _ e) = typeOf e
   typeOf (Match _ (c :| _)) = typeOf c
@@ -168,8 +160,6 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (ExtCall p _ xs) = parens $ "external" <+> text p <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
-  pPrint (ArrayRead a b) = pPrint a <> brackets (pPrint b)
-  pPrint (ArrayWrite a b c) = parens $ pPrint a <> brackets (pPrint b) <+> "<-" <+> pPrint c
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map (\(v, o) -> parens $ pPrint v $$ pPrint o) xs)) $$ pPrint e
@@ -182,8 +172,6 @@ instance HasFreeVar Exp where
   freevars (CallDirect _ xs) = foldMap freevars xs
   freevars (ExtCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
-  freevars (ArrayRead a b) = freevars a <> freevars b
-  freevars (ArrayWrite a b c) = freevars a <> freevars b <> freevars c
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . view _1) (freevars e <> foldMap (freevars . view _2) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
@@ -196,8 +184,6 @@ instance HasAtom Exp where
     CallDirect x xs -> CallDirect x <$> traverse f xs
     ExtCall p t xs -> ExtCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
-    ArrayRead a b -> ArrayRead <$> f a <*> f b
-    ArrayWrite a b c -> ArrayWrite <$> f a <*> f b <*> f c
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . _2 . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
@@ -241,30 +227,24 @@ data Obj a
     Fun [a] (Exp a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
-  | -- | array (dim >= 0)
-    Array (Atom a) (Atom a)
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) <+> ":" <+> pPrint ty
-  pPrint (Array a n) = parens $ sep ["array", pPrint a, pPrint n]
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
-  freevars (Array a n) = freevars a <> freevars n
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
   typeOf (Pack t _ _) = t
-  typeOf (Array a _) = ArrayT $ typeOf a
 
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
-    Array a n -> Array <$> traverseOf atom f a <*> traverseOf atom f n
 
 -- | toplevel function definitions
 newtype Program a = Program

@@ -102,7 +102,6 @@ convType (SumT cs) =
             False
             [i8, if size == 0 then StructureType False [] else LT.VectorType size i8]
         )
-convType (ArrayT ty) = ptr $ StructureType False [ptr $ convType ty, i64]
 convType (PtrT ty) = ptr $ convType ty
 convType AnyT = ptr i8
 convType VoidT = LT.void
@@ -120,7 +119,6 @@ sizeofType CharT = 1
 sizeofType StringT = 8
 sizeofType BoolT = 1
 sizeofType (SumT _) = 8
-sizeofType (ArrayT _) = 8
 sizeofType (PtrT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
@@ -244,7 +242,6 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         StringT -> icmp IP.EQ x' y'
         BoolT -> icmp IP.EQ x' y'
         SumT _ -> icmp IP.EQ x' y'
-        ArrayT _ -> icmp IP.EQ x' y'
         _ -> bug Unreachable
     genOp Op.Neq = \x' y' ->
       i1ToBool =<< case C.typeOf x of
@@ -256,7 +253,6 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         StringT -> icmp IP.NE x' y'
         BoolT -> icmp IP.NE x' y'
         SumT _ -> icmp IP.NE x' y'
-        ArrayT _ -> icmp IP.NE x' y'
         _ -> bug Unreachable
     genOp Op.Lt = \x' y' ->
       i1ToBool =<< case C.typeOf x of
@@ -296,18 +292,6 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
       LLVM.IRBuilder.or
     i1ToBool i1opr =
       zext i1opr i8
-genExp (ArrayRead a i) k = do
-  aOpr <- genAtom a
-  iOpr <- genAtom i
-  arrOpr <- gepAndLoad aOpr [int32 0, int32 0]
-  k =<< gepAndLoad arrOpr [iOpr]
-genExp (ArrayWrite a i v) k = do
-  aOpr <- genAtom a
-  iOpr <- genAtom i
-  vOpr <- genAtom v
-  arrOpr <- gepAndLoad aOpr [int32 0, int32 0]
-  gepAndStore arrOpr [iOpr] vOpr
-  k (ConstantOperand (C.Undef (ptr $ StructureType False [i8, StructureType False []])))
 genExp (Let xs e) k = do
   env <- foldMapA prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse (uncurry genObj) xs
@@ -452,30 +436,6 @@ genObj name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
   -- nameの型にキャスト
   Map.singleton name <$> bitcast addr (convType $ SumT cs)
 genObj _ Pack {} = bug Unreachable
-genObj x (Array a n) = mdo
-  sizeOpr <- mul (sizeof $ convType $ C.typeOf a) =<< genAtom n
-  arrayOpr <- mallocBytes sizeOpr (Just $ ptr $ convType $ C.typeOf a)
-  -- for (i64 i = 0;
-  iPtr <- alloca i64 Nothing 0
-  store iPtr 0 (int64 0)
-  br condLabel
-  -- cond: i < n;
-  condLabel <- block
-  iOpr <- load iPtr 0
-  cond <- icmp IP.SLT iOpr =<< genAtom n
-  condBr cond bodyLabel endLabel
-  -- body: valueOpr[iOpr] <- genAtom a
-  bodyLabel <- block
-  iOpr' <- load iPtr 0
-  gepAndStore arrayOpr [iOpr'] =<< genAtom a
-  store iPtr 0 =<< add iOpr (int64 1)
-  br condLabel
-  endLabel <- block
-  -- return array struct
-  structOpr <- mallocType (StructureType False [ptr $ convType $ C.typeOf a, i64])
-  gepAndStore structOpr [int32 0, int32 0] arrayOpr
-  gepAndStore structOpr [int32 0, int32 1] =<< genAtom n
-  pure $ Map.singleton x structOpr
 
 genCon :: HasCallStack => Set Con -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
