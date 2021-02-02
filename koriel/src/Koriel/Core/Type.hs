@@ -40,7 +40,6 @@ data Type
   | StringT
   | BoolT
   | SumT (Set Con)
-  | ArrayT Type
   | PtrT Type
   | AnyT
   | VoidT
@@ -62,7 +61,6 @@ instance Pretty Type where
   pPrint StringT = "String#"
   pPrint BoolT = "Bool#"
   pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
-  pPrint (ArrayT t) = brackets $ pPrint t
   pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
   pPrint AnyT = "*"
   pPrint VoidT = "Void"
@@ -80,7 +78,6 @@ tyVar :: Traversal' Type Type
 tyVar f = \case
   ps :-> r -> (:->) <$> traverseOf (traversed . tyVar) f ps <*> traverseOf tyVar f r
   SumT cs -> SumT . fromList <$> traverseOf (traversed . tyVar') f (toList cs)
-  ArrayT t -> ArrayT <$> traverseOf tyVar f t
   AnyT -> f AnyT
   t -> pure t
 
