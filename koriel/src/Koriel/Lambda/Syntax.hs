@@ -5,6 +5,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeFamilyDependencies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -14,6 +15,10 @@ import Data.Int (Int32, Int64)
 import Data.Kind (Constraint)
 import Koriel.Id (Id)
 import Koriel.Prelude
+
+data Stmt x
+  = DefVar (XDefVar x) (XId x) (Exp x)
+  | DefType (XDefType x) (XId x) (Type x)
 
 data Exp x
   = -- | 即値
@@ -79,6 +84,8 @@ data KStar x = KBox | KInt32 | KInt64 | KFloat | KDouble | KChar | KString
 ---------------
 
 -- Eq
+deriving stock instance (Eq (XId x), ForallStmtX Eq x, ForallExpX Eq x, ForallTypeX Eq x, ForallKindX Eq x) => Eq (Stmt x)
+
 deriving stock instance (Eq (XId x), ForallExpX Eq x, ForallTypeX Eq x, ForallKindX Eq x) => Eq (Exp x)
 
 deriving stock instance (Eq (XId x), ForallTypeX Eq x, ForallKindX Eq x) => Eq (Type x)
@@ -86,6 +93,8 @@ deriving stock instance (Eq (XId x), ForallTypeX Eq x, ForallKindX Eq x) => Eq (
 deriving stock instance (ForallKindX Eq x) => Eq (Kind x)
 
 -- Ord
+deriving stock instance (Ord (XId x), ForallStmtX Ord x, ForallExpX Ord x, ForallTypeX Ord x, ForallKindX Ord x) => Ord (Stmt x)
+
 deriving stock instance (Ord (XId x), ForallExpX Ord x, ForallTypeX Ord x, ForallKindX Ord x) => Ord (Exp x)
 
 deriving stock instance (Ord (XId x), ForallTypeX Ord x, ForallKindX Ord x) => Ord (Type x)
@@ -93,6 +102,8 @@ deriving stock instance (Ord (XId x), ForallTypeX Ord x, ForallKindX Ord x) => O
 deriving stock instance (ForallKindX Ord x) => Ord (Kind x)
 
 -- Show
+deriving stock instance (Show (XId x), ForallStmtX Show x, ForallExpX Show x, ForallTypeX Show x, ForallKindX Show x) => Show (Stmt x)
+
 deriving stock instance (Show (XId x), ForallExpX Show x, ForallTypeX Show x, ForallKindX Show x) => Show (Exp x)
 
 deriving stock instance (Show (XId x), ForallTypeX Show x, ForallKindX Show x) => Show (Type x)
@@ -100,6 +111,8 @@ deriving stock instance (Show (XId x), ForallTypeX Show x, ForallKindX Show x) =
 deriving stock instance (ForallKindX Show x) => Show (Kind x)
 
 -- Generic
+deriving stock instance (Generic (XId x), ForallStmtX Generic x, ForallExpX Generic x, ForallTypeX Generic x, ForallKindX Generic x) => Generic (Stmt x)
+
 deriving stock instance (Generic (XId x), ForallExpX Generic x, ForallTypeX Generic x, ForallKindX Generic x) => Generic (Exp x)
 
 deriving stock instance (Generic (XId x), ForallTypeX Generic x, ForallKindX Generic x) => Generic (Type x)
@@ -114,15 +127,26 @@ data Koriel (p :: Phase)
 
 data Phase = Raw | Rename | TypeCheck
 
-type family XId x where
-  XId (Koriel 'Raw) = String
-  XId (Koriel 'Rename) = Id ()
-  XId (Koriel 'TypeCheck) = Id (Type (Koriel 'TypeCheck))
+type family XId x = r | r -> x
+
+type instance XId (Koriel 'Raw) = String
+
+type instance XId (Koriel 'Rename) = Id ()
+
+type instance XId (Koriel 'TypeCheck) = Id (Type (Koriel 'TypeCheck))
 
 type family SimpleX x where
   SimpleX (Koriel 'Raw) = ()
   SimpleX (Koriel 'Rename) = ()
   SimpleX (Koriel 'TypeCheck) = ()
+
+type family XDefVar x where
+  XDefVar x = SimpleX x
+
+type family XDefType x where
+  XDefType x = SimpleX x
+
+type ForallStmtX c x = (c (XDefVar x), c (XDefType x)) :: Constraint
 
 type family XAtom x where
   XAtom x = SimpleX x
