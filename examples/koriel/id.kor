@@ -1,0 +1,4 @@
+(defvar `id` (tlam `A` Box
+  (lam `x` `A` `x`)))
+(defvar `main` (lam `_` `Unit`
+  ([`id` `Int32`] (`boxInt32` (int32 42)))))
