@@ -105,11 +105,7 @@ pTApp :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Kor
 pTApp = brackets $ TApp () <$> pExp <*> pType
 
 pTag :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
-pTag = parens do
-  _ <- symbol "tag"
-  label <- pId
-  value <- pExp
-  Tag () label value <$> pType
+pTag = between (symbol "<") (symbol ">") $ Tag () <$> pId <*> pExp <*> pType
 
 pCase :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
 pCase = parens do
@@ -118,8 +114,7 @@ pCase = parens do
 
 pRecord :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
 pRecord =
-  try (braces $ Record () <$> some (parens $ (,) <$> pId <*> pExp))
-    <|> braces (pure $ Record () [])
+  braces $ Record () <$> many (parens $ (,) <$> pId <*> pExp)
 
 pProj :: (MonadParsec e s f, IsString (Tokens s), Token s ~ Char) => f (Exp (Koriel 'Raw))
 pProj = parens do
@@ -134,6 +129,9 @@ pType =
     <|> try pTyVar
     <|> try pTyArr
     <|> try pTyAll
+    <|> try pTyAbs
+    <|> try pTyRecord
+    <|> pTyVariant
 
 pTyAtom :: (MonadParsec e s f, IsString (Tokens s), Token s ~ Char) => f (TyAtom x)
 pTyAtom =
@@ -156,6 +154,21 @@ pTyAll :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Type (K
 pTyAll = parens do
   _ <- symbol "forall"
   TyAll () <$> pId <*> pKind <*> pType
+
+pTyAbs :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Type (Koriel 'Raw))
+pTyAbs = parens do
+  _ <- symbol "lam"
+  TyAbs () <$> pId <*> pKind <*> pType
+
+pTyApp :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Type (Koriel 'Raw))
+pTyApp = parens do
+  TyApp () <$> pType <*> pType
+
+pTyRecord :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Type (Koriel 'Raw))
+pTyRecord = braces $ TyRecord () <$> many (parens $ (,) <$> pId <*> pType)
+
+pTyVariant :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Type (Koriel 'Raw))
+pTyVariant = between (symbol "<") (symbol ">") $ TyVariant () <$> many (parens $ (,) <$> pId <*> pType)
 
 -- Kind
 
