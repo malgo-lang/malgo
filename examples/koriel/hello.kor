@@ -1,0 +1,8 @@
+(deftype `String` Box <(`String#` String)>) 
+
+(defvar `putStrLn` (-> `String` {})
+  (lam `str` `String`
+    (case `str`
+      (<`String#` `str'`> 
+        (let `_` {} (`print_string` `str'`)
+          (`newline` {}))))))
