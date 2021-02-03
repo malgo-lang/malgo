@@ -50,12 +50,14 @@ pExp =
     <|> try pApp
     <|> try pLet
     <|> try pLetRec
-    <|> try pTLam
-    <|> try pTApp
     <|> try pTag
     <|> try pCase
     <|> try pRecord
-    <|> pProj
+    <|> try pProj
+    <|> try pIn
+    <|> try pOut
+    <|> try pTLam
+    <|> pTApp
 
 pAtom :: (MonadParsec e s f, Token s ~ Char, IsString (Tokens s)) => f (Exp (Koriel 'Raw))
 pAtom =
@@ -106,9 +108,19 @@ pLetRec = parens do
   _ <- symbol "letrec"
   LetRec () <$> parens (many (parens $ (,,) <$> pId <*> pType <*> pExp)) <*> pExp
 
+pIn :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
+pIn = parens do
+  _ <- symbol "in"
+  In () <$> pType <*> pExp
+
+pOut :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
+pOut = parens do
+  _ <- symbol "out"
+  Out () <$> pType <*> pExp
+
 pTLam :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
 pTLam = parens do
-  _ <- symbol "tlam"
+  _ <- symbol "Lam"
   x <- pId
   k <- pKind
   TLam () x k <$> pExp
@@ -150,6 +162,7 @@ pType =
     <|> try pTyArr
     <|> try pTyAll
     <|> try pTyAbs
+    <|> try pTyApp
     <|> try pTyRecord
     <|> pTyVariant
 
@@ -172,7 +185,7 @@ pTyArr = parens do
 
 pTyAll :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Type (Koriel 'Raw))
 pTyAll = parens do
-  _ <- symbol "forall"
+  _ <- symbol "all"
   TyAll () <$> pId <*> pKind <*> pType
 
 pTyAbs :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Type (Koriel 'Raw))
