@@ -17,8 +17,8 @@ import Koriel.Id (Id)
 import Koriel.Prelude
 
 data Stmt x
-  = DefVar (XDefVar x) (XId x) (Exp x)
-  | DefType (XDefType x) (XId x) (Type x)
+  = DefVar (XDefVar x) (XId x) (Type x) (Exp x)
+  | DefType (XDefType x) (XId x) (Kind x) (Type x)
 
 data Exp x
   = -- | 即値
@@ -29,6 +29,11 @@ data Exp x
     Lam (XLam x) (XId x) (Type x) (Exp x)
   | -- | 関数適用
     App (XApp x) (Exp x) (Exp x)
+  | -- | 変数束縛
+    --   Let _ x t e1 e2 = App _ (Lam _ x t e1) e2
+    Let (XLet x) (XId x) (Type x) (Exp x) (Exp x)
+  | -- | 相互再帰関数束縛
+    LetRec (XLetRec x) [(XId x, Type x, Exp x)] (Exp x)
   | -- | 型抽象
     TLam (XTLam x) (XId x) (Kind x) (Exp x)
   | -- | 型適用
@@ -159,6 +164,12 @@ type family XLam x where
 
 type family XApp x where
   XApp x = SimpleX x
+
+type family XLet x where
+  XLet x = SimpleX x
+
+type family XLetRec x where
+  XLetRec x = SimpleX x
 
 type family XTLam x where
   XTLam x = SimpleX x

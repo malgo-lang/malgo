@@ -12,8 +12,8 @@ module Koriel.Lambda.Parser where
 import qualified Data.Text.IO as T
 import Data.Void
 import Koriel.Lambda.Syntax
-import Koriel.Prelude hiding (many, some)
-import Text.Megaparsec
+import Koriel.Prelude
+import Text.Megaparsec hiding (many, some)
 import Text.Megaparsec.Char (char, space1)
 import qualified Text.Megaparsec.Char.Lexer as L
 
@@ -34,12 +34,12 @@ pStmt = try pDefVar <|> pDefType
 pDefVar :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Stmt (Koriel 'Raw))
 pDefVar = parens do
   _ <- symbol "defvar"
-  DefVar () <$> pId <*> pExp
+  DefVar () <$> pId <*> pType <*> pExp
 
 pDefType :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Stmt (Koriel 'Raw))
 pDefType = parens do
   _ <- symbol "deftype"
-  DefType () <$> pId <*> pType
+  DefType () <$> pId <*> pKind <*> pType
 
 -- Exp
 pExp :: (MonadParsec e s f, Token s ~ Char, IsString (Tokens s)) => f (Exp (Koriel 'Raw))
@@ -48,6 +48,8 @@ pExp =
     <|> try pVar
     <|> try pLam
     <|> try pApp
+    <|> try pLet
+    <|> try pLetRec
     <|> try pTLam
     <|> try pTApp
     <|> try pTag
@@ -94,6 +96,16 @@ pLam = parens do
 pApp :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
 pApp = parens $ App () <$> pExp <*> pExp
 
+pLet :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
+pLet = parens do
+  _ <- symbol "let"
+  Let () <$> pId <*> pType <*> pExp <*> pExp
+
+pLetRec :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
+pLetRec = parens do
+  _ <- symbol "letrec"
+  LetRec () <$> parens (many (parens $ (,,) <$> pId <*> pType <*> pExp)) <*> pExp
+
 pTLam :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
 pTLam = parens do
   _ <- symbol "tlam"
@@ -110,7 +122,15 @@ pTag = between (symbol "<") (symbol ">") $ Tag () <$> pId <*> pExp <*> pType
 pCase :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
 pCase = parens do
   _ <- symbol "case"
-  Case () <$> pExp <*> parens (some (parens $ (,,) <$> pId <*> pId <*> pExp))
+  Case () <$> pExp <*> parens (some pClause)
+  where
+    pClause = do
+      _ <- symbol "<"
+      tag <- pId
+      var <- pId
+      _ <- symbol ">"
+      exp <- pExp
+      pure (tag, var, exp)
 
 pRecord :: (MonadParsec e s m, IsString (Tokens s), Token s ~ Char) => m (Exp (Koriel 'Raw))
 pRecord =
