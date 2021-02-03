@@ -1,4 +1,5 @@
-(defvar `id` (tlam `A` Box
+(defvar `id` (all `A` Box (-> `A` `A`)) (Lam `A` Box
   (lam `x` `A` `x`)))
-(defvar `main` (lam `_` `Unit`
+
+(defvar `main` (-> {} {}) (lam `_` `Unit`
   ([`id` `Int32`] (`boxInt32` (int32 42)))))

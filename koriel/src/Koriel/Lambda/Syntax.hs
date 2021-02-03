@@ -17,8 +17,32 @@ import Koriel.Id (Id)
 import Koriel.Prelude
 
 data Stmt x
-  = DefVar (XDefVar x) (XId x) (Type x) (Exp x)
-  | DefType (XDefType x) (XId x) (Kind x) (Type x)
+  = -- | variable definition (may recursive)
+    DefVar (XDefVar x) (XId x) (Type x) (Exp x)
+  | -- | type definition (may recursive)
+    --   introduce a new recursive type
+    --   Ref: Recursive type
+    DefType (XDefType x) (XId x) (Kind x) (Type x)
+
+{- Note: Recursive type
+deftype introduce a new recursive type.
+
+for example,
+  (deftype `List` (-> Box Box)
+    (lam `a` Box <(nil {}) (cons (-> `a` (-> (`List` `a`) (`List` `a`))))>))
+means
+  List = lam a:*. rec L:*->*. <nil: {}, cons: a -> L a -> L a>
+                  ~~~~~~~~~~~
+                  Just for explanation
+
+  (in (`List` `X`) <`nil` {} <(nil {}) (cons (-> `X` (-> (`List` `X`) (`List` `X`))))>)
+means
+  fold [List X] <nil = {}> as <nil: {}, cons: X -> List X -> List X> : List X
+
+  (out (`List` `X`) (`iota` 5))
+means
+  unfold [List X] (iota 5) : <nil: {}, cons: X -> List X -> List X>
+-}
 
 data Exp x
   = -- | 即値
@@ -34,10 +58,6 @@ data Exp x
     Let (XLet x) (XId x) (Type x) (Exp x) (Exp x)
   | -- | 相互再帰関数束縛
     LetRec (XLetRec x) [(XId x, Type x, Exp x)] (Exp x)
-  | -- | 型抽象
-    TLam (XTLam x) (XId x) (Kind x) (Exp x)
-  | -- | 型適用
-    TApp (XTApp x) (Exp x) (Type x)
   | -- | タグ付きの値
     Tag (XTag x) (XId x) (Exp x) (Type x)
   | -- | 場合分け [(タグ, 束縛変数, 式)]
@@ -46,6 +66,14 @@ data Exp x
     Record (XRecord x) [(XId x, Exp x)]
   | -- | フィールドアクセス
     Proj (XProj x) (Exp x) (XId x)
+  | -- | 再帰型の畳み込み
+    In (XIn x) (Type x) (Exp x)
+  | -- | 再帰型の展開
+    Out (XOut x) (Type x) (Exp x)
+  | -- | 型抽象
+    TLam (XTLam x) (XId x) (Kind x) (Exp x)
+  | -- | 型適用
+    TApp (XTApp x) (Exp x) (Type x)
 
 data Atom x
   = Int32 Int32
@@ -171,12 +199,6 @@ type family XLet x where
 type family XLetRec x where
   XLetRec x = SimpleX x
 
-type family XTLam x where
-  XTLam x = SimpleX x
-
-type family XTApp x where
-  XTApp x = SimpleX x
-
 type family XTag x where
   XTag x = SimpleX x
 
@@ -189,7 +211,19 @@ type family XRecord x where
 type family XProj x where
   XProj x = SimpleX x
 
-type ForallExpX c x = (c (XAtom x), c (XVar x), c (XLam x), c (XApp x), c (XTLam x), c (XTApp x), c (XTag x), c (XCase x), c (XRecord x), c (XProj x)) :: Constraint
+type family XIn x where
+  XIn x = SimpleX x
+
+type family XOut x where
+  XOut x = SimpleX x
+
+type family XTLam x where
+  XTLam x = SimpleX x
+
+type family XTApp x where
+  XTApp x = SimpleX x
+
+type ForallExpX c x = (c (XAtom x), c (XVar x), c (XLam x), c (XApp x), c (XTag x), c (XCase x), c (XRecord x), c (XProj x), c (XIn x), c (XOut x), c (XTLam x), c (XTApp x)) :: Constraint
 
 type family XTyAtom x where
   XTyAtom x = SimpleX x
