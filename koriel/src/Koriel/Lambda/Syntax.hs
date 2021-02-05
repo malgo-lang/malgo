@@ -24,26 +24,6 @@ data Stmt x
     --   Ref: Recursive type
     DefType (XDefType x) (XId x) (Kind x) (Type x)
 
-{- Note: Recursive type
-deftype introduce a new recursive type.
-
-for example,
-  (deftype `List` (-> Box Box)
-    (lam `a` Box <(nil {}) (cons (-> `a` (-> (`List` `a`) (`List` `a`))))>))
-means
-  List = lam a:*. rec L:*->*. <nil: {}, cons: a -> L a -> L a>
-                  ~~~~~~~~~~~
-                  Just for explanation
-
-  (in (`List` `X`) <`nil` {} <(nil {}) (cons (-> `X` (-> (`List` `X`) (`List` `X`))))>)
-means
-  fold [List X] <nil = {}> as <nil: {}, cons: X -> List X -> List X> : List X
-
-  (out (`List` `X`) (`iota` 5))
-means
-  unfold [List X] (iota 5) : <nil: {}, cons: X -> List X -> List X>
--}
-
 data Exp x
   = -- | 即値
     Atom (XAtom x) (Atom x)
@@ -111,6 +91,42 @@ data Kind x
 
 data KStar x = KBox | KInt32 | KInt64 | KFloat | KDouble | KChar | KString
   deriving stock (Eq, Ord, Show, Generic)
+
+-- Note: Recursive type
+-- Author: @takoeight0821
+--
+-- deftype introduce a new recursive type.
+--
+-- For example,
+--   (deftype `List` (-> Box Box)
+--     (lam `a` Box <(nil {}) (cons (-> `a` (-> (`List` `a`) (`List` `a`))))>))
+--   => List = lam a:*. rec L:*->*. <nil: {}, cons: a -> L a -> L a>
+--
+--   (in (`List` `X`) <`nil` {} <(nil {}) (cons (-> `X` (-> (`List` `X`) (`List` `X`))))>)
+--   => fold [List X] <nil = {}> as <nil: {}, cons: X -> List X -> List X> : List X
+--
+--   (out (`List` `X`) (`iota` 5))
+--   => unfold [List X] (iota 5) : <nil: {}, cons: X -> List X -> List X>
+--
+-- About recursive type, there are two design choices.
+--
+-- 1. Add 'rec' and 'TyRec (XTyRec x) (XId x) ...'.
+-- 2. Encode recursive types into Korie.Lambda's type system.
+--    (ref: https://www.seas.upenn.edu/~sweirich/types/archive/1999-2003/msg00138.html)
+--
+-- In both designs, some primitive must be added to `Exp x`.
+-- 1. unfold and fold. ref: Types and Programming Language
+-- 2. Perhaps lift.
+--    lift is a function that lifts the function X -> Y to F[X] -> F[Y].
+--    (F[X] is a type that recursive type X expanded one step)
+--    (ref: https://cs.stackexchange.com/questions/68751/recursive-type-encoding-on-system-f-and-other-pure-type-systems)
+--    I have never implemented method 2. So, I do not know whether this method is correct.
+--    There is room for consideration.
+--
+-- I chosen 1 but my design has a restriction.
+-- Allow recursive types to be declared only with 'deftype'.
+-- I think this restriction simplifies the design of typechecker.
+-- And, fold primitive name is 'in' and unfold primitive name is 'out' because name collision occurs on 'Fold'.
 
 ---------------
 -- Instances --
