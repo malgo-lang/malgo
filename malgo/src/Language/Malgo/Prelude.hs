@@ -116,4 +116,4 @@ getPackagePathes = do
 
 getPackagePath :: MonadIO m => FilePath -> m FilePath
 getPackagePath packageName =
-  liftIO $ getXdgDirectory XdgData ("griff" </> packageName)
+  liftIO $ getXdgDirectory XdgData ("malgo" </> packageName)
