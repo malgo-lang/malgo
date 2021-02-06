@@ -41,15 +41,11 @@ data Id a = Id
 
 instance Store a => Store (Id a)
 
-#ifndef DEBUG
-instance Pretty a => Pretty (Id a) where
-  pPrint (Id n _ _ _ True) = text n
-  pPrint (Id n u _ _ False) = text n <> "." <> text (show u)
-#else
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n _ m _ True) = text n <> braces (pPrint m)
   pPrint (Id n u m _ False) = text n <> "." <> text (show u) <> braces (pPrint m)
-#endif
+
+deriving instance ToJSoN (Id a)
 
 makeLenses ''Id
 
