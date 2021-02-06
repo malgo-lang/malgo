@@ -27,13 +27,13 @@ module Prelude = {
   sub_Double :: Double -> Double -> Double;
   sub_Double = { (Double# x) (Double# y) -> Double# (sub_Double# x y) };
 
-  mul_Int32 :: Int32 -> Int32 -> Int32; 
+  mul_Int32 :: Int32 -> Int32 -> Int32;
   mul_Int32 = { (Int32# x) (Int32# y) -> Int32# (mul_Int32# x y) };
 
   mul_Int64 :: Int64 -> Int64 -> Int64;
   mul_Int64 = { (Int64# x) (Int64# y) -> Int64# (mul_Int64# x y) };
 
-  mul_Float :: Float -> Float -> Float; 
+  mul_Float :: Float -> Float -> Float;
   mul_Float = { (Float# x) (Float# y) -> Float# (mul_Float# x y) };
 
   mul_Double :: Double -> Double -> Double;

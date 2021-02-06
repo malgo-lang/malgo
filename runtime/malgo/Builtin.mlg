@@ -23,7 +23,7 @@ module Builtin = {
 
   char# :: Char# -> Char;
   char# = { x -> Char# x };
-  
+
   string# :: String# -> String;
   string# = { x -> String# x };
 
@@ -70,7 +70,7 @@ module Builtin = {
 
   foreign import mul_i32 :: Int32# -> Int32# -> Int32#;
 
-  mul_Int32# :: Int32# -> Int32# -> Int32#; 
+  mul_Int32# :: Int32# -> Int32# -> Int32#;
   mul_Int32# = { x y -> mul_i32 x y };
 
   foreign import mul_i64 :: Int64# -> Int64# -> Int64#;
@@ -80,7 +80,7 @@ module Builtin = {
 
   foreign import mul_float :: Float# -> Float# -> Float#;
 
-  mul_Float# :: Float# -> Float# -> Float#; 
+  mul_Float# :: Float# -> Float# -> Float#;
   mul_Float# = { x y -> mul_float x y };
 
   foreign import mul_double :: Double# -> Double# -> Double#;
@@ -119,7 +119,7 @@ module Builtin = {
 
   foreign import ge_double :: Double# -> Double# -> Int32#;
 
-  ge_Double# :: Double# -> Double# -> Int32#; 
+  ge_Double# :: Double# -> Double# -> Int32#;
   ge_Double# = { x y -> ge_double x y };
 
   foreign import append_string :: String# -> String# -> String#;
