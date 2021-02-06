@@ -99,7 +99,6 @@ pScDef =
     ScDef
       <$> getSourcePos
       <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
-      -- <*> many lowerIdent
       <* pOperator "="
       <*> pExp
 

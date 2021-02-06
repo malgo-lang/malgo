@@ -39,9 +39,7 @@ data Type
   | CharT
   | StringT
   | BoolT
-  | DataT String [Type]
   | SumT (Set Con)
-  | ArrayT Type
   | PtrT Type
   | AnyT
   | VoidT
@@ -62,9 +60,7 @@ instance Pretty Type where
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
   pPrint BoolT = "Bool#"
-  pPrint (DataT n ts) = parens $ pPrint n <+> sep (map pPrint ts)
   pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
-  pPrint (ArrayT t) = brackets $ pPrint t
   pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
   pPrint AnyT = "*"
   pPrint VoidT = "Void"
@@ -81,9 +77,7 @@ instance HasType a => HasType (Id a) where
 tyVar :: Traversal' Type Type
 tyVar f = \case
   ps :-> r -> (:->) <$> traverseOf (traversed . tyVar) f ps <*> traverseOf tyVar f r
-  DataT n ts -> DataT n <$> traverseOf (traversed . tyVar) f ts
   SumT cs -> SumT . fromList <$> traverseOf (traversed . tyVar') f (toList cs)
-  ArrayT t -> ArrayT <$> traverseOf tyVar f t
   AnyT -> f AnyT
   t -> pure t
 

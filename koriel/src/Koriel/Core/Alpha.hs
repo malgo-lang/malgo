@@ -9,7 +9,7 @@ where
 -- α変換
 
 import qualified Data.Map as Map
-import Koriel.Core.Core
+import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
