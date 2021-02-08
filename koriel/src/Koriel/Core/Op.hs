@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -6,6 +7,7 @@ module Koriel.Core.Op where
 
 import Koriel.Prelude
 import Koriel.Pretty
+import Data.Aeson
 
 data Op
   = Add
@@ -25,7 +27,7 @@ data Op
   | Ge
   | And
   | Or
-  deriving stock (Eq, Show)
+  deriving stock (Eq, Show, Generic)
 
 instance Pretty Op where
   pPrint Add = "+"
@@ -45,3 +47,7 @@ instance Pretty Op where
   pPrint Ge = ">="
   pPrint And = "&&"
   pPrint Or = "||"
+
+instance ToJSON Op
+
+instance FromJSON Op

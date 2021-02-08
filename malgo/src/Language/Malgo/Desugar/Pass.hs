@@ -203,7 +203,7 @@ dsExp (G.Var x name) = do
       ps <- case C.typeOf name' of
         pts :-> _ -> traverse (newLocalId "$p") pts
         _ -> bug Unreachable
-      pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+      pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     else pure $ Atom $ C.Var name'
 dsExp (G.Con _ name) = do
   name' <- lookupName name
@@ -216,7 +216,7 @@ dsExp (G.Con _ name) = do
     pts :-> _ -> do
       clsId <- newLocalId "$concls" (C.typeOf name')
       ps <- traverse (newLocalId "$p") pts
-      pure $ C.Let [(clsId, Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+      pure $ C.Let [C.LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     _ -> bug Unreachable
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
 dsExp (G.Boxed _ _) = bug Unreachable -- RenameでApplyに変形されている
@@ -268,7 +268,7 @@ dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
   v <- newLocalId "$fun" =<< dsType (x ^. toType)
-  pure $ C.Let [(v, uncurry Fun obj)] $ Atom $ C.Var v
+  pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
 dsExp (G.Fn _ []) = bug Unreachable
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
@@ -488,9 +488,7 @@ curryFun ::
   m ([Id C.Type], C.Exp (Id C.Type))
 -- FIXME: curryFun [] e の正しい処理は、eの型に応じて引数リストpsを生成し、(ps, (apply e ps))を返す
 -- そのためには、Coreの項に明示的な型の適用を追加する必要がある
-curryFun [] e@(C.Let ds (Atom (C.Var v))) = case List.lookup v ds of
-  Just (Fun ps e) | not $ any ((/= v) . fst) ds -> pure (ps, e)
-  _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
+curryFun [] (C.Let [LocalDef v (Fun ps e)] (Atom (C.Var v'))) | v == v' = pure (ps, e)
 curryFun [] e = errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
 curryFun [x] e = pure ([x], e)
 curryFun ps@(_ : _) e = curryFun' ps []
@@ -500,7 +498,7 @@ curryFun ps@(_ : _) e = curryFun' ps []
       x' <- newLocalId (x ^. idName) (C.typeOf x)
       fun <- newLocalId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
-      pure ([x'], C.Let [(fun, Fun ps e)] body)
+      pure ([x'], C.Let [C.LocalDef fun $ Fun ps e] body)
     curryFun' (x : xs) as = do
       x' <- newLocalId (x ^. idName) (C.typeOf x)
       fun <- curryFun' xs (C.Var x' : as)

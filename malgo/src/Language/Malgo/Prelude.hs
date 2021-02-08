@@ -69,6 +69,7 @@ data Opt = Opt
     dumpRenamed :: Bool,
     dumpTyped :: Bool,
     dumpDesugar :: Bool,
+    genCoreJSON :: Bool,
     noOptimize :: Bool,
     noLambdaLift :: Bool,
     inlineSize :: Int,
@@ -94,6 +95,7 @@ parseOpt = do
               <*> switch (long "dump-renamed")
               <*> switch (long "dump-typed")
               <*> switch (long "dump-desugar")
+              <*> switch (long "gen-core-json")
               <*> switch (long "no-lambdalift")
               <*> switch (long "no-opt")
               <*> fmap read (strOption (long "inline" <> value "10"))
