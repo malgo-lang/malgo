@@ -57,7 +57,7 @@ import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr)
 
-type PrimMap = Map String Operand
+type PrimMap = Map Name Operand
 
 -- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -137,16 +137,16 @@ findFun x = do
     Just opr -> pure opr
     Nothing ->
       case C.typeOf x of
-        ps :-> r -> findExt (show $ pPrint x) (map convType ps) (convType r)
+        ps :-> r -> findExt (toName x) (map convType ps) (convType r)
         _ -> error $ show $ pPrint x <> " is not found"
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
-findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => String -> [LT.Type] -> LT.Type -> m Operand
+findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
   use (at x) >>= \case
     Just x -> pure x
-    Nothing -> (at x <?=) =<< extern (LLVM.AST.mkName x) ps r
+    Nothing -> (at x <?=) =<< extern x ps r
 
 mallocBytes ::
   (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) =>
@@ -164,7 +164,7 @@ mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => 
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
 toName :: Pretty a => Id a -> LLVM.AST.Name
-toName x = LLVM.AST.mkName $ show $ pPrint x
+toName x = LLVM.AST.mkName $ x ^. idName <> if x ^. idIsExternal then "" else show (x ^. idUniq)
 
 -- generate code for a 'known' function
 genFunc ::
@@ -217,7 +217,7 @@ genExp (CallDirect f xs) k = do
   xsOprs <- traverse genAtom xs
   k =<< call fOpr (map (,[]) xsOprs)
 genExp (ExtCall name (ps :-> r) xs) k = do
-  primOpr <- findExt name (map convType ps) (convType r)
+  primOpr <- findExt (LLVM.AST.mkName name) (map convType ps) (convType r)
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
 genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
@@ -294,10 +294,10 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
       zext i1opr i8
 genExp (Let xs e) k = do
   env <- foldMapA prepare xs
-  env <- local (over valueMap (env <>)) $ mconcat <$> traverse (uncurry genObj) xs
+  env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
   local (over valueMap (env <>)) $ genExp e k
   where
-    prepare (name, Fun ps body) =
+    prepare (LocalDef name (Fun ps body)) =
       Map.singleton name
         <$> mallocType
           ( StructureType
@@ -388,7 +388,7 @@ genAtom (Unboxed (String x)) = do
 genAtom (Unboxed (Bool True)) = pure $ int8 1
 genAtom (Unboxed (Bool False)) = pure $ int8 0
 
-genObj ::
+genLocalDef ::
   ( MonadReader OprMap m,
     MonadModuleBuilder m,
     MonadIRBuilder m,
@@ -397,10 +397,9 @@ genObj ::
     MonadFail m,
     MonadFix m
   ) =>
-  Id C.Type ->
-  Obj (Id C.Type) ->
+  LocalDef (Id C.Type) ->
   m (Map (Id C.Type) Operand)
-genObj funName (Fun ps e) = do
+genLocalDef (LocalDef funName (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
   name <- toName <$> newTopLevelId (funName ^. idName <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
@@ -426,7 +425,7 @@ genObj funName (Fun ps e) = do
     capType = StructureType False (map (convType . C.typeOf) fvs)
     psTypes = ptr i8 : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
-genObj name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
+genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = do
   addr <- mallocType (StructureType False [i8, StructureType False $ map convType ts])
   -- タグの書き込み
   gepAndStore addr [int32 0, int32 0] (int8 $ findIndex con cs)
@@ -435,7 +434,7 @@ genObj name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs) = do
     gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
   Map.singleton name <$> bitcast addr (convType $ SumT cs)
-genObj _ Pack {} = bug Unreachable
+genLocalDef (LocalDef _ Pack {}) = bug Unreachable
 
 genCon :: HasCallStack => Set Con -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)

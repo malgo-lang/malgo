@@ -4,9 +4,12 @@
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuantifiedConstraints #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
@@ -25,9 +28,10 @@ module Koriel.Id
   )
 where
 
+import Data.Aeson
 import Data.Store (Store)
 import Koriel.MonadUniq
-import Koriel.Prelude hiding (toList)
+import Koriel.Prelude hiding (toList, (.=))
 import Koriel.Pretty
 
 data Id a = Id
@@ -41,15 +45,26 @@ data Id a = Id
 
 instance Store a => Store (Id a)
 
-#ifndef DEBUG
-instance Pretty a => Pretty (Id a) where
-  pPrint (Id n _ _ _ True) = text n
-  pPrint (Id n u _ _ False) = text n <> "." <> text (show u)
-#else
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n _ m _ True) = text n <> braces (pPrint m)
   pPrint (Id n u m _ False) = text n <> "." <> text (show u) <> braces (pPrint m)
-#endif
+
+instance ToJSON a => ToJSON (Id a) where
+  toJSON Id {_idName, _idUniq, _idMeta, _idIsTopLevel, _idIsExternal} =
+    object
+      [ "type" .= ("Id" :: String),
+        "name" .= _idName,
+        "uniq" .= _idUniq,
+        "meta" .= toJSON _idMeta,
+        "is_toplevel" .= _idIsTopLevel,
+        "is_external" .= _idIsExternal
+      ]
+
+instance FromJSON a => FromJSON (Id a) where
+  parseJSON = withObject "Id" $ \v -> do
+    withText "type" (guard . (== "Id")) =<< v .: "type"
+    meta <- parseJSON =<< v .: "meta"
+    Id <$> v .: "name" <*> v .: "uniq" <*> pure meta <*> v .: "is_toplevel" <*> v .: "is_external"
 
 makeLenses ''Id
 

@@ -1,10 +1,12 @@
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -16,12 +18,14 @@
 -- A正規形に近い。
 module Koriel.Core.Syntax where
 
+import Data.Aeson hiding (Bool, Error, String)
+import Data.Aeson.Types (prependFailure, unexpected)
 import qualified Data.Set as Set
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
+import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty
 
 class HasFreeVar f where
@@ -37,7 +41,7 @@ data Unboxed
   | Char Char
   | String String
   | Bool Bool
-  deriving stock (Eq, Ord, Show)
+  deriving stock (Eq, Ord, Show, Generic)
 
 instance HasType Unboxed where
   typeOf Int32 {} = Int32T
@@ -58,13 +62,35 @@ instance Pretty Unboxed where
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 
+instance ToJSON Unboxed where
+  toJSON (Int32 i) = object [("type", "Int32"), "value" .= i]
+  toJSON (Int64 i) = object [("type", "Int64"), "value" .= i]
+  toJSON (Float f) = object [("type", "Float"), "value" .= f]
+  toJSON (Double f) = object [("type", "Double"), "value" .= f]
+  toJSON (Char c) = object [("type", "Char"), "value" .= c]
+  toJSON (String s) = object [("type", "String"), "value" .= s]
+  toJSON (Bool b) = object [("type", "Bool"), "value" .= b]
+
+instance FromJSON Unboxed where
+  parseJSON = withObject "Unboxed" $ \v -> do
+    ty <- v .: "type"
+    if
+        | ty == ("Int32" :: String) -> Int32 <$> v .: "value"
+        | ty == "Int64" -> Int64 <$> v .: "value"
+        | ty == "Float" -> Float <$> v .: "value"
+        | ty == "Double" -> Double <$> v .: "value"
+        | ty == "Char" -> Char <$> v .: "value"
+        | ty == "String" -> String <$> v .: "value"
+        | ty == "Bool" -> Bool <$> v .: "value"
+        | otherwise -> prependFailure "parsing Unboxed failed, " (unexpected $ Object v)
+
 -- | atoms
 data Atom a
   = -- | variable
     Var a
   | -- | literal of unboxed values
     Unboxed Unboxed
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable, Generic)
 
 instance HasType a => HasType (Atom a) where
   typeOf (Var x) = typeOf x
@@ -73,6 +99,18 @@ instance HasType a => HasType (Atom a) where
 instance Pretty a => Pretty (Atom a) where
   pPrint (Var x) = pPrint x
   pPrint (Unboxed x) = pPrint x
+
+instance ToJSON a => ToJSON (Atom a) where
+  toJSON (Var x) = object [("type", "Var"), "variable" .= x]
+  toJSON (Unboxed x) = object [("type", "Unboxed"), "unboxed" .= x]
+
+instance FromJSON a => FromJSON (Atom a) where
+  parseJSON = withObject "Atom" $ \v -> do
+    ty <- v .: "type"
+    if
+        | ty == ("Var" :: String) -> Var <$> v .: "variable"
+        | ty == "Unboxed" -> Unboxed <$> v .: "unboxed"
+        | otherwise -> prependFailure "parsing Atom failed, " (unexpected $ Object v)
 
 instance HasFreeVar Atom where
   freevars (Var x) = Set.singleton x
@@ -83,6 +121,25 @@ class HasAtom f where
 
 instance HasAtom Atom where
   atom = id
+
+data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
+  deriving stock (Eq, Show, Functor, Foldable, Generic)
+
+localDefVar :: Lens' (LocalDef a) a
+localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
+
+localDefObj :: Lens' (LocalDef a) (Obj a)
+localDefObj = lens _localDefObj (\l o -> l {_localDefObj = o})
+
+instance ToJSON a => ToJSON (LocalDef a) where
+  toJSON (LocalDef x o) = object [("type", "LocalDef"), "variable" .= x, "object" .= o]
+
+instance FromJSON a => FromJSON (LocalDef a) where
+  parseJSON = withObject "LocalDef" $ \v -> do
+    ty <- v .: "type"
+    if ty == ("LocalDef" :: String)
+      then LocalDef <$> v .: "variable" <*> v .: "object"
+      else prependFailure "parsing LocalDef failed, " (unexpected $ Object v)
 
 -- | expressions
 data Exp a
@@ -99,12 +156,12 @@ data Exp a
   | -- | type casting
     Cast Type (Atom a)
   | -- | definition of local variables
-    Let [(a, Obj a)] (Exp a)
+    Let [LocalDef a] (Exp a)
   | -- | pattern matching
     Match (Exp a) (NonEmpty (Case a))
   | -- | raise an internal error
     Error Type
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable, Generic)
 
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
@@ -158,13 +215,39 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (ExtCall p _ xs) = parens $ "external" <+> text p <+> sep (map pPrint xs)
+  pPrint (ExtCall p t xs) = parens $ "external" <+> text p <> braces (pPrint t) <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) =
-    parens $ "let" $$ parens (vcat (map (\(v, o) -> parens $ pPrint v $$ pPrint o) xs)) $$ pPrint e
+    parens $ "let" $$ parens (vcat (map (\(LocalDef v o) -> parens $ pPrint v $$ pPrint o) xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
   pPrint (Error _) = "ERROR"
+
+instance ToJSON a => ToJSON (Exp a) where
+  toJSON (Atom x) = object [("type", "Atom"), "atom" .= x]
+  toJSON (Call f xs) = object [("type", "Call"), "func" .= f, "args" .= xs]
+  toJSON (CallDirect f xs) = object [("type", "CallDirect"), "func" .= f, "args" .= xs]
+  toJSON (ExtCall p t xs) = object [("type", "ExtCall"), "ext_func" .= p, "func_type" .= t, "args" .= xs]
+  toJSON (BinOp o x y) = object [("type", "BinOp"), "op" .= o, "left" .= x, "right" .= y]
+  toJSON (Cast ty x) = object [("type", "Cast"), "as_type" .= ty, "value" .= x]
+  toJSON (Let xs e) = object [("type", "Let"), "definitions" .= xs, "expr" .= e]
+  toJSON (Match v cs) = object [("type", "Match"), "scrutinee" .= v, "clauses" .= cs]
+  toJSON (Error t) = object [("type", "Error"), "error_type" .= t]
+
+instance FromJSON a => FromJSON (Exp a) where
+  parseJSON = withObject "Exp" $ \v -> do
+    ty <- v .: "type"
+    if
+        | ty == ("Atom" :: String) -> Atom <$> v .: "atom"
+        | ty == "Call" -> Call <$> v .: "func" <*> v .: "args"
+        | ty == "CallDirect" -> CallDirect <$> v .: "func" <*> v .: "args"
+        | ty == "ExtCall" -> ExtCall <$> v .: "ext_func" <*> v .: "func_type" <*> v .: "args"
+        | ty == "BinOp" -> BinOp <$> v .: "op" <*> v .: "left" <*> v .: "right"
+        | ty == "Cast" -> Cast <$> v .: "as_type" <*> v .: "value"
+        | ty == "Let" -> Let <$> v .: "definitions" <*> v .: "expr"
+        | ty == "Match" -> Match <$> v .: "scrutinee" <*> v .: "clauses"
+        | ty == "Error" -> Error <$> v .: "error_type"
+        | otherwise -> prependFailure "parsing Exp failed, " (unexpected $ Object v)
 
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
@@ -173,7 +256,7 @@ instance HasFreeVar Exp where
   freevars (ExtCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
-  freevars (Let xs e) = foldr (sans . view _1) (freevars e <> foldMap (freevars . view _2) xs) xs
+  freevars (Let xs e) = foldr (sans . view localDefVar) (freevars e <> foldMap (freevars . view localDefObj) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
   freevars (Error _) = mempty
 
@@ -185,7 +268,7 @@ instance HasAtom Exp where
     ExtCall p t xs -> ExtCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverseOf (traversed . _2 . atom) f xs <*> traverseOf atom f e
+    Let xs e -> Let <$> traverseOf (traversed . localDefObj . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
 
@@ -197,7 +280,12 @@ data Case a
     Switch Unboxed (Exp a)
   | -- | variable pattern
     Bind a (Exp a)
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable, Generic)
+
+instance HasType a => HasType (Case a) where
+  typeOf (Unpack _ _ e) = typeOf e
+  typeOf (Switch _ e) = typeOf e
+  typeOf (Bind _ e) = typeOf e
 
 instance Pretty a => Pretty (Case a) where
   pPrint (Unpack c xs e) =
@@ -205,15 +293,24 @@ instance Pretty a => Pretty (Case a) where
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
+instance ToJSON a => ToJSON (Case a) where
+  toJSON (Unpack con vs e) = object [("type", "Unpack"), "con" .= con, "bindings" .= vs, "expr" .= e]
+  toJSON (Switch unboxed e) = object [("type", "Switch"), "value" .= unboxed, "expr" .= e]
+  toJSON (Bind x e) = object [("type", "Bind"), "binding" .= x, "expr" .= e]
+
+instance FromJSON a => FromJSON (Case a) where
+  parseJSON = withObject "Case" $ \v -> do
+    ty <- v .: "type"
+    if
+        | ty == ("Unpack" :: String) -> Unpack <$> v .: "con" <*> v .: "bindings" <*> v .: "expr"
+        | ty == "Switch" -> Switch <$> v .: "value" <*> v .: "expr"
+        | ty == "Bind" -> Bind <$> v .: "binding" <*> v .: "expr"
+        | otherwise -> prependFailure "parsing Case failed, " (unexpected $ Object v)
+
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
   freevars (Switch _ e) = freevars e
   freevars (Bind x e) = sans x $ freevars e
-
-instance HasType a => HasType (Case a) where
-  typeOf (Unpack _ _ e) = typeOf e
-  typeOf (Switch _ e) = typeOf e
-  typeOf (Bind _ e) = typeOf e
 
 instance HasAtom Case where
   atom f = \case
@@ -227,19 +324,31 @@ data Obj a
     Fun [a] (Exp a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
-  deriving stock (Eq, Show, Functor, Foldable)
+  deriving stock (Eq, Show, Functor, Foldable, Generic)
+
+instance HasType a => HasType (Obj a) where
+  typeOf (Fun xs e) = map typeOf xs :-> typeOf e
+  typeOf (Pack t _ _) = t
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) <+> ":" <+> pPrint ty
 
+instance ToJSON a => ToJSON (Obj a) where
+  toJSON (Fun ps e) = object [("type", "Fun"), "params" .= ps, "expr" .= e]
+  toJSON (Pack ty con as) = object [("type", "Pack"), "pack_to" .= ty, "con" .= con, "args" .= as]
+
+instance FromJSON a => FromJSON (Obj a) where
+  parseJSON = withObject "Obj" $ \v -> do
+    ty <- v .: "type"
+    if
+        | ty == ("Fun" :: String) -> Fun <$> v .: "params" <*> v .: "expr"
+        | ty == "Pack" -> Pack <$> v .: "pack_to" <*> v .: "con" <*> v .: "args"
+        | otherwise -> prependFailure "parsing Obj failed, " (unexpected $ Object v)
+
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
-
-instance HasType a => HasType (Obj a) where
-  typeOf (Fun xs e) = map typeOf xs :-> typeOf e
-  typeOf (Pack t _ _) = t
 
 instance HasAtom Obj where
   atom f = \case
@@ -250,7 +359,7 @@ instance HasAtom Obj where
 newtype Program a = Program
   { topFuncs :: [(a, ([a], Exp a))]
   }
-  deriving stock (Eq, Show, Functor)
+  deriving stock (Eq, Show, Functor, Generic)
 
 instance Pretty a => Pretty (Program a) where
   pPrint Program {topFuncs} =
@@ -258,6 +367,19 @@ instance Pretty a => Pretty (Program a) where
       map
         (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e)
         topFuncs
+
+instance ToJSON a => ToJSON (Program a) where
+  toJSON (Program ds) = toJSON $ map toJSON' ds
+    where
+      toJSON' (x, (ps, e)) = object ["name" .= x, "params" .= ps, "expr" .= e]
+
+instance FromJSON a => FromJSON (Program a) where
+  parseJSON = withArray "Program" $ \v -> do
+    let v' = toList v
+    Program <$> traverse parseJSON' v'
+    where
+      parseJSON' = withObject "topFuncs" $ \v -> do
+        (,) <$> v .: "name" <*> ((,) <$> v .: "params" <*> v .: "expr")
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
@@ -283,7 +405,7 @@ runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
 let_ :: MonadUniq m => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
   x <- newLocalId "$let" otype
-  DefBuilderT $ tell $ Endo $ \e -> Let [(x, obj)] e
+  DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
   pure (Var x)
 
 destruct :: MonadUniq m => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]

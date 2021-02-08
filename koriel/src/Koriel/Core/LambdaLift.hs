@@ -42,12 +42,12 @@ llift :: (MonadUniq f, MonadState Env f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `elem` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
-llift (Let [(n, Fun xs call@Call {})] e) = do
+llift (Let [LocalDef n (Fun xs call@Call {})] e) = do
   call' <- llift call
-  Let [(n, Fun xs call')] <$> llift e
-llift (Let [(n, o@(Fun _ ExtCall {}))] e) = Let [(n, o)] <$> llift e
-llift (Let [(n, o@(Fun _ CallDirect {}))] e) = Let [(n, o)] <$> llift e
-llift (Let [(n, Fun as body)] e) = do
+  Let [LocalDef n (Fun xs call')] <$> llift e
+llift (Let [LocalDef n o@(Fun _ ExtCall {})] e) = Let [LocalDef n o] <$> llift e
+llift (Let [LocalDef n o@(Fun _ CallDirect {})] e) = Let [LocalDef n o] <$> llift e
+llift (Let [LocalDef n (Fun as body)] e) = do
   backup <- get
   ks <- use knowns
   -- nがknownだと仮定してlambda liftする
@@ -65,7 +65,7 @@ llift (Let [(n, Fun as body)] e) = do
       body' <- llift body
       let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
       newFun <- def (n ^. idName) (toList fvs <> as) body'
-      Let [(n, Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
+      Let [LocalDef n (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e

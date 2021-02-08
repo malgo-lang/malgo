@@ -120,8 +120,8 @@ lintExp (BinOp o x y) = do
     And -> match x BoolT >> match y BoolT
     Or -> match x BoolT >> match y BoolT
 lintExp (Cast _ x) = lintAtom x
-lintExp (Let ds e) = local (map fst ds <>) $ do
-  traverse_ (lintObj . snd) ds
+lintExp (Let ds e) = local (map (view localDefVar) ds <>) $ do
+  traverse_ (lintObj . view localDefObj) ds
   lintExp e
 lintExp (Match e cs) = do
   lintExp e
