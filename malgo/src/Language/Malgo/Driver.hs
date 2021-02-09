@@ -58,8 +58,10 @@ withDump isDump label m = do
   pure result
 
 -- | .mlgから.llへのコンパイル
-compile :: Opt -> IO ()
-compile opt = do
+-- maybe rawOpt.srcName == "", rawOpt.dstName == ""
+compile :: FilePath -> FilePath -> Opt -> IO ()
+compile src dst rawOpt = do
+  let opt = rawOpt {srcName = src, dstName = dst}
   src <- T.readFile (srcName opt)
   parsedAst <- case parseMalgo (srcName opt) src of
     Right x -> pure x
