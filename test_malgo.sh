@@ -6,11 +6,9 @@ mkdir $TESTDIR/libs
 
 BUILD=cabal
 
-set -x
-
-eval "$BUILD exec malgoc -- compile --via-binding ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs || exit 255"
-eval "$BUILD exec malgoc -- compile --via-binding ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs || exit 255"
-clang $(pkg-config bdw-gc --cflags) -Wall -Wextra -O2 -S -emit-llvm ./runtime/malgo/rts.c -o $TESTDIR/libs/rts.ll || exit 255
+eval "$BUILD exec malgoc -- to-ll --via-binding ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll || exit 255"
+eval "$BUILD exec malgoc -- to-ll --via-binding ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll || exit 255"
+cp ./runtime/malgo/rts.c $TESTDIR/libs/rts.c
 
 echo '=== no opt no lambdalift ==='
 for file in `ls ./examples/malgo | grep '\.mlg$'`; do
@@ -19,9 +17,9 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- compile --no-opt --no-lambdalift -M $TESTDIR/libs ./examples/malgo/$file -o $TESTDIR || exit 255"
+  eval "$BUILD exec malgoc -- to-ll --force --no-opt --no-lambdalift ./examples/malgo/$file -o $LLFILE || exit 255"
 
-  clang $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.ll $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
+  clang $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
 
   test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
 done
@@ -33,9 +31,9 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- compile --no-opt -M $TESTDIR/libs ./examples/malgo/$file -o $TESTDIR || exit 255"
+  eval "$BUILD exec malgoc -- to-ll --force --no-opt ./examples/malgo/$file -o $LLFILE || exit 255"
 
-  clang $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.ll $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
+  clang $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
 
   test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
 done
@@ -47,9 +45,9 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- compile --no-lambdalift -M $TESTDIR/libs ./examples/malgo/$file -o $TESTDIR || exit 255"
+  eval "$BUILD exec malgoc -- to-ll --force --no-lambdalift ./examples/malgo/$file -o $LLFILE || exit 255"
 
-  clang $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.ll $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
+  clang $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
 
   test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
 done
@@ -61,9 +59,9 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- compile -M $TESTDIR/libs ./examples/malgo/$file -o $TESTDIR || exit 255"
+  eval "$BUILD exec malgoc -- to-ll --force ./examples/malgo/$file -o $LLFILE || exit 255"
 
-  clang -O2 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.ll $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
+  clang -O2 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
 
   test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
 done
@@ -75,9 +73,9 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- compile --via-binding --gen-core-json -M $TESTDIR/libs ./examples/malgo/$file -o $TESTDIR || exit 255"
+  eval "$BUILD exec malgoc -- to-ll --force --via-binding --gen-core-json ./examples/malgo/$file -o $LLFILE || exit 255"
 
-  clang -O2 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.ll $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
+  clang -O2 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
 
   test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')" || exit 255
 done
