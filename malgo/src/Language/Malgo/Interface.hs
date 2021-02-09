@@ -82,7 +82,7 @@ storeInterface interface = do
 
 loadInterface :: (HasCallStack, MonadMalgo m, MonadIO m) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
-  modPaths <- getPackagePathes
+  modPaths <- modulePaths <$> getOpt
   message <- liftIO $ findAndReadFile modPaths (modName <> ".mlgi")
   case message of
     Just x -> liftIO (decodeIO x)

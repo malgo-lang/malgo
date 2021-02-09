@@ -13,8 +13,6 @@ module Language.Malgo.Prelude
     errorOn,
     Opt (..),
     defaultOpt,
-    getPackagePathes,
-    getPackagePath,
   )
 where
 
@@ -22,8 +20,7 @@ import Control.Monad.Fix (MonadFix)
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import System.Directory (XdgDirectory (..), getXdgDirectory)
-import System.FilePath (takeDirectory, (</>), (-<.>))
+import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (sourceLine), unPos)
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT Opt IO a}
@@ -73,7 +70,8 @@ data Opt = Opt
     inlineSize :: Int,
     viaBinding :: Bool,
     debugMode :: Bool,
-    modulePaths :: [FilePath]
+    modulePaths :: [FilePath],
+    forceRebuild :: Bool
   }
   deriving stock (Eq, Show)
 
@@ -92,15 +90,6 @@ defaultOpt src =
       inlineSize = 10,
       viaBinding = False,
       debugMode = False,
-      modulePaths = []
+      modulePaths = [],
+      forceRebuild = False
     }
-
-getPackagePathes :: (MonadMalgo m, MonadIO m) => m [FilePath]
-getPackagePathes = do
-  opt <- getOpt
-  basePath <- getPackagePath "base"
-  pure $ takeDirectory (dstName opt) : modulePaths opt <> [basePath]
-
-getPackagePath :: MonadIO m => FilePath -> m FilePath
-getPackagePath packageName =
-  liftIO $ getXdgDirectory XdgData ("malgo" </> packageName)

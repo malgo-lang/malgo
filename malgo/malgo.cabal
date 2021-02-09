@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 71917a4702eeb37c2600228b08b5c2bdd9ebb7b48cc1e3218433a7741ea7215f
+-- hash: 2f3b3bbd2a2dbd8c0d5da9adf9433d2f74fa750261a86bfa18c6d76a4d914cca
 
 name:           malgo
 version:        1.0.0.0
@@ -75,6 +75,7 @@ library
 executable malgoc
   main-is: Main.hs
   other-modules:
+      Runner
       Paths_malgo
   hs-source-dirs:
       app/
