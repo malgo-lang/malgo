@@ -29,4 +29,6 @@ jobs:
         cabal build all
     - name: Run tests
       run: |
+        mkdir -p $HOME/.local/share/malgo/base
+        ./install_malgo_internal.sh
         ./test_malgo.sh

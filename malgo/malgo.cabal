@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: dfced394de9d5378a8071396a3c3e2c1c5df9890183751252d4c788c6eb03d91
+-- hash: 2f3b3bbd2a2dbd8c0d5da9adf9433d2f74fa750261a86bfa18c6d76a4d914cca
 
 name:           malgo
 version:        1.0.0.0
@@ -75,6 +75,7 @@ library
 executable malgoc
   main-is: Main.hs
   other-modules:
+      Runner
       Paths_malgo
   hs-source-dirs:
       app/
@@ -104,6 +105,7 @@ executable malgoc
     , parser-combinators
     , pretty
     , pretty-simple
+    , shake
     , store
     , text
     , transformers

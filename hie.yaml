@@ -7,10 +7,9 @@ cradle:
   #   - path: "./koriel/src"
   #     component: "koriel:lib"
   cabal:
-    - path: "./malgo/app/Main.hs"
+    - path: "./malgo/app/"
       component: "malgo:exe:malgoc"
-    - path: "./malgo/src" 
+    - path: "./malgo/src"
       component: "lib:malgo"
     - path: "./koriel/src"
       component: "lib:koriel"
-    

@@ -12,9 +12,7 @@ module Language.Malgo.Prelude
     MalgoM (..),
     errorOn,
     Opt (..),
-    parseOpt,
-    getPackagePathes,
-    getPackagePath
+    defaultOpt,
   )
 where
 
@@ -22,10 +20,7 @@ import Control.Monad.Fix (MonadFix)
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import Options.Applicative
-import System.Directory (XdgDirectory (..), getXdgDirectory)
-import System.FilePath ((</>), takeDirectory)
-import System.FilePath.Lens
+import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (sourceLine), unPos)
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT Opt IO a}
@@ -75,47 +70,26 @@ data Opt = Opt
     inlineSize :: Int,
     viaBinding :: Bool,
     debugMode :: Bool,
-    modulePaths :: [FilePath]
+    modulePaths :: [FilePath],
+    forceRebuild :: Bool
   }
   deriving stock (Eq, Show)
 
-parseOpt :: IO Opt
-parseOpt = do
-  opt <-
-    execParser $
-      info
-        ( ( Opt
-              <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
-              <*> strOption
-                ( long "output" <> short 'o' <> metavar "OUTPUT" <> value ""
-                    <> help
-                      "Write LLVM IR to OUTPUT"
-                )
-              <*> switch (long "dump-parsed")
-              <*> switch (long "dump-renamed")
-              <*> switch (long "dump-typed")
-              <*> switch (long "dump-desugar")
-              <*> switch (long "gen-core-json")
-              <*> switch (long "no-lambdalift")
-              <*> switch (long "no-opt")
-              <*> fmap read (strOption (long "inline" <> value "10"))
-              <*> switch (long "via-binding")
-              <*> switch (long "debug-mode")
-              <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
-          )
-            <**> helper
-        )
-        (fullDesc <> progDesc "griff" <> header "griff - a programming language")
-  if null (dstName opt)
-    then pure opt {dstName = srcName opt & extension .~ ".ll"}
-    else pure opt
-
-getPackagePathes :: (MonadMalgo m, MonadIO m) => m [FilePath]
-getPackagePathes = do
-  opt <- getOpt
-  basePath <- getPackagePath "base"
-  pure $ takeDirectory (dstName opt) : modulePaths opt <> [basePath]
-
-getPackagePath :: MonadIO m => FilePath -> m FilePath
-getPackagePath packageName =
-  liftIO $ getXdgDirectory XdgData ("malgo" </> packageName)
+defaultOpt :: FilePath -> Opt
+defaultOpt src =
+  Opt
+    { srcName = src,
+      dstName = src -<.> "ll",
+      dumpParsed = False,
+      dumpRenamed = False,
+      dumpTyped = False,
+      dumpDesugar = False,
+      genCoreJSON = False,
+      noOptimize = False,
+      noLambdaLift = False,
+      inlineSize = 10,
+      viaBinding = False,
+      debugMode = False,
+      modulePaths = [],
+      forceRebuild = False
+    }

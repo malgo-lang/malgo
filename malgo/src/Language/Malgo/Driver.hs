@@ -1,8 +1,9 @@
 {-# LANGUAGE BlockArguments #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.Driver (compile) where
+module Language.Malgo.Driver (compile, compileFromAST) where
 
 import Data.Aeson (FromJSON, ToJSON, eitherDecode, encode)
 import qualified Data.ByteString as BS
@@ -28,6 +29,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.Pass (rename)
 import qualified Language.Malgo.Rename.RnEnv as RnEnv
 import qualified Language.Malgo.Syntax as Syntax
+import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeCheck.Pass (typeCheck)
 import System.FilePath.Lens (extension)
 import System.IO
@@ -57,16 +59,8 @@ withDump isDump label m = do
     hPrint stderr $ pPrint result
   pure result
 
--- | .mlgから.llへのコンパイル
-compile :: Opt -> IO ()
-compile opt = do
-  src <- T.readFile (srcName opt)
-  parsedAst <- case parseMalgo (srcName opt) src of
-    Right x -> pure x
-    Left err -> error $ errorBundlePretty err
-  when (dumpParsed opt) $ do
-    hPutStrLn stderr "=== PARSE ==="
-    hPrint stderr $ pPrint parsedAst
+compileFromAST :: Syntax.Module (Malgo 'Parse) -> Opt -> IO ()
+compileFromAST parsedAst opt =
   void $
     runReaderT ?? opt $
       unMalgoM $
@@ -118,6 +112,18 @@ compile opt = do
               liftIO $
                 TL.writeFile (dstName opt) $
                   ppllvm llvmModule
+
+-- | .mlgから.llへのコンパイル
+compile :: Opt -> IO ()
+compile opt = do
+  src <- T.readFile (srcName opt)
+  parsedAst <- case parseMalgo (srcName opt) src of
+    Right x -> pure x
+    Left err -> error $ errorBundlePretty err
+  when (dumpParsed opt) $ do
+    hPutStrLn stderr "=== PARSE ==="
+    hPrint stderr $ pPrint parsedAst
+  compileFromAST parsedAst opt
 
 storeCoreJSON :: (MonadMalgo m, MonadIO m, ToJSON a, FromJSON a) => a -> m ()
 storeCoreJSON core = do
