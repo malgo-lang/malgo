@@ -29,4 +29,5 @@ jobs:
         cabal build all
     - name: Run tests
       run: |
+        ./install_malgo_internal.sh
         ./test_malgo.sh
