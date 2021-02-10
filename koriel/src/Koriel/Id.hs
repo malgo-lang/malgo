@@ -29,7 +29,7 @@ module Koriel.Id
 where
 
 import Data.Aeson
-import Data.Store (Store)
+import Data.Binary (Binary)
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList, (.=))
 import Koriel.Pretty
@@ -43,7 +43,7 @@ data Id a = Id
   }
   deriving stock (Show, Read, Eq, Ord, Functor, Foldable, Generic)
 
-instance Store a => Store (Id a)
+instance Binary a => Binary (Id a)
 
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n _ m _ True) = text n <> braces (pPrint m)

@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE LambdaCase #-}
@@ -11,8 +10,8 @@ module Koriel.Core.Type where
 
 import Data.Aeson
 import Data.Aeson.Types (prependFailure, unexpected)
+import Data.Binary (Binary)
 import Data.Set (fromList)
-import Data.Store
 import Koriel.Id
 import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty
@@ -24,7 +23,8 @@ type Tag = String
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
+
+instance Binary Con
 
 instance Pretty Con where
   pPrint (Con tag xs) = "<" <> text tag <+> sep (punctuate "," (map pPrint xs)) <> ">"
@@ -57,7 +57,8 @@ data Type
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
+
+instance Binary Type
 
 _SumT :: Prism' Type (Set Con)
 _SumT = prism' SumT $ \case

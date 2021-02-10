@@ -1,5 +1,4 @@
 {-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
@@ -9,12 +8,10 @@
 
 module Language.Malgo.Interface where
 
-import Control.Exception (IOException, catch)
 import Control.Monad.State (execState)
-import Data.ByteString (ByteString)
-import qualified Data.ByteString as BS
+import Data.Binary (Binary, decodeFileOrFail, encodeFile)
+import Data.Binary.Get (ByteOffset)
 import qualified Data.Map as Map
-import Data.Store
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -26,8 +23,7 @@ import qualified Language.Malgo.Rename.RnEnv as RnState
 import Language.Malgo.Syntax.Extension
 import qualified Language.Malgo.Type as GT
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
-import System.FilePath ((</>))
-import System.FilePath.Lens
+import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
   { _signatureMap :: Map RnId GT.Scheme, -- from TcEnv
@@ -38,7 +34,8 @@ data Interface = Interface
     _infixMap :: Map RnId (Assoc, Int) -- from RnEnv
   }
   deriving stock (Show, Generic)
-  deriving anyclass (Store)
+
+instance Binary Interface
 
 makeLenses ''Interface
 
@@ -69,21 +66,15 @@ buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempt
 storeInterface :: (MonadIO m, MonadMalgo m) => Interface -> m ()
 storeInterface interface = do
   opt <- getOpt
-  liftIO $
-    BS.writeFile (dstName opt & extension .~ ".mlgi") $
-      encode interface
+  liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
 
 loadInterface :: (HasCallStack, MonadMalgo m, MonadIO m) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
   modPaths <- modulePaths <$> getOpt
   message <- liftIO $ findAndReadFile modPaths (modName <> ".mlgi")
   case message of
-    Just x -> liftIO (decodeIO x)
-    Nothing ->
-      errorDoc $ "Module interface file is not found:" <+> quotes (pPrint modName)
+    Right x -> pure x
+    Left (_, errorMessage) -> error errorMessage
   where
-    findAndReadFile :: [FilePath] -> FilePath -> IO (Maybe ByteString)
-    findAndReadFile modPaths modFile = asum <$> traverse (\path -> safeReadFile (path </> modFile)) modPaths
-    safeReadFile filename = (Just <$> BS.readFile filename) `catch` handler
-    handler :: IOException -> IO (Maybe ByteString)
-    handler _ = pure Nothing
+    findAndReadFile :: [FilePath] -> FilePath -> IO (Either (ByteOffset, String) Interface)
+    findAndReadFile modPaths modFile = asumMap (\path -> decodeFileOrFail (path </> modFile)) modPaths

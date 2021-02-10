@@ -6,8 +6,8 @@ mkdir $TESTDIR/libs
 
 BUILD=cabal
 
-eval "$BUILD exec malgoc -- to-ll --via-binding ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll || exit 255"
-eval "$BUILD exec malgoc -- to-ll --via-binding ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll || exit 255"
+eval "$BUILD exec malgoc -- to-ll --force --via-binding ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll || exit 255"
+eval "$BUILD exec malgoc -- to-ll --force --via-binding ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll || exit 255"
 cp ./runtime/malgo/rts.c $TESTDIR/libs/rts.c
 
 echo '=== no opt no lambdalift ==='

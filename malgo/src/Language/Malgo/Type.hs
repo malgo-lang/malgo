@@ -1,5 +1,4 @@
 {-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -14,8 +13,8 @@
 
 module Language.Malgo.Type where
 
+import Data.Binary (Binary (..))
 import qualified Data.Set as Set
-import Data.Store
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -35,7 +34,8 @@ data Kind
   | -- | kind arrow (* -> *, * is a kind)
     KArr Kind Kind
   deriving stock (Eq, Ord, Show, Generic)
-  deriving anyclass (Store)
+
+instance Binary Kind
 
 class HasKind a where
   kind :: (HasCallStack, MonadIO m) => a -> m (Maybe Kind)
@@ -68,7 +68,8 @@ data Rep
   | -- | String#
     StringRep
   deriving stock (Eq, Ord, Show, Generic)
-  deriving anyclass (Store)
+
+instance Binary Rep
 
 instance Pretty Rep where pPrint rep = text $ show rep
 
@@ -78,7 +79,8 @@ instance Pretty Rep where pPrint rep = text $ show rep
 
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
+
+instance Binary PrimT
 
 instance Pretty PrimT where
   pPrint Int32T = "Int32#"
@@ -102,7 +104,8 @@ instance HasKind PrimT where
 
 data Scheme = Forall [TyVar] Type
   deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
+
+instance Binary Scheme
 
 instance HasKind Scheme where
   kind (Forall _ t) = kind t
@@ -125,7 +128,8 @@ data Type
   | TyPtr Type
   | TyMeta MetaTv
   deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
+
+instance Binary Type
 
 _TyApp :: Prism' Type (Type, Type)
 _TyApp = prism' (uncurry TyApp) $ \case
@@ -209,10 +213,9 @@ instance Pretty MetaTv where
 instance HasKind MetaTv where
   kind MetaTv {_metaTvKind} = readIORef _metaTvKind
 
-instance Store MetaTv where
-  size = error "Store MetaTv"
-  poke _ = error "Store MetaTv"
-  peek = error "Store MetaTv"
+instance Binary MetaTv where
+  put _ = error "Binary MetaTv"
+  get = error "Binary MetaTv"
 
 ---------------------------
 -- Read and Write MetaTv --

@@ -1,6 +1,5 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -10,9 +9,9 @@
 
 module Language.Malgo.Syntax.Extension where
 
+import Data.Binary (Binary)
 import Data.Kind (Constraint)
 import qualified Data.Kind as K
-import Data.Store
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
@@ -20,11 +19,13 @@ import Language.Malgo.Type
 import Text.Megaparsec.Pos (SourcePos)
 
 data Unboxed
+
 data Boxed
 
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show, Generic)
-  deriving anyclass (Store)
+
+instance Binary Assoc
 
 instance Pretty Assoc where
   pPrint LeftA = "l"
@@ -148,7 +149,7 @@ newtype ModuleName = ModuleName String
   deriving stock (Eq, Show, Ord, Generic)
   deriving newtype (Pretty)
 
-instance Store ModuleName
+instance Binary ModuleName
 
 _Module :: Lens' ModuleName String
 _Module = lens (\(ModuleName s) -> s) (\_ s -> ModuleName s)

@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NamedFieldPuns #-}
@@ -10,8 +9,8 @@
 
 module Language.Malgo.TypeCheck.TcEnv where
 
+import Data.Binary (Binary)
 import qualified Data.Map as Map
-import Data.Store
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
@@ -45,7 +44,8 @@ instance Pretty TcEnv where
 
 data TypeDef = TypeDef {_constructor :: Type, _qualVars :: [TyVar], _union :: [(RnId, Type)]}
   deriving stock (Show, Eq, Generic)
-  deriving anyclass (Store)
+
+instance Binary TypeDef
 
 instance Pretty TypeDef where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
