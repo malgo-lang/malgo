@@ -6,7 +6,6 @@
 module Koriel.Pretty
   ( module Text.PrettyPrint.HughesPJClass,
     (<+>),
-    pShow,
     errorDoc,
     pretty,
     rendered,
@@ -15,7 +14,6 @@ module Koriel.Pretty
 where
 
 import Koriel.Prelude
-import Text.Pretty.Simple (pShow)
 import Text.PrettyPrint.HughesPJClass hiding (char, double, first, float, int, integer, (<+>), (<>)) -- (Doc, Pretty (..))
 import qualified Text.PrettyPrint.HughesPJClass as P
 import qualified Prelude

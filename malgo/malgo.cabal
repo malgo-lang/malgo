@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2f3b3bbd2a2dbd8c0d5da9adf9433d2f74fa750261a86bfa18c6d76a4d914cca
+-- hash: a2c661f3c0636cbedceca67f9a0f6b1a5569b993fe655b031c4bfc2fcfc6f79f
 
 name:           malgo
 version:        1.0.0.0
@@ -45,31 +45,25 @@ library
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
       aeson
-    , array
     , base
     , bytestring
     , containers
     , directory
     , extra
     , filepath
-    , generic-deriving
     , koriel
     , lens
-    , list-predicate
     , llvm-hs
     , llvm-hs-pretty
     , llvm-hs-pure
     , megaparsec
     , mtl
     , optparse-applicative
-    , parsec
     , parser-combinators
     , pretty
-    , pretty-simple
     , store
     , text
     , transformers
-    , vector
   default-language: Haskell2010
 
 executable malgoc
@@ -83,17 +77,14 @@ executable malgoc
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-depends:
       aeson
-    , array
     , base
     , bytestring
     , containers
     , directory
     , extra
     , filepath
-    , generic-deriving
     , koriel
     , lens
-    , list-predicate
     , llvm-hs
     , llvm-hs-pretty
     , llvm-hs-pure
@@ -101,13 +92,10 @@ executable malgoc
     , megaparsec
     , mtl
     , optparse-applicative
-    , parsec
     , parser-combinators
     , pretty
-    , pretty-simple
     , shake
     , store
     , text
     , transformers
-    , vector
   default-language: Haskell2010

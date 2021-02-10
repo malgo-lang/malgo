@@ -11,8 +11,7 @@
 module Language.Malgo.Rename.Pass where
 
 import Data.List (intersect)
-import Data.List.Extra (disjoint)
-import Data.List.Predicate (allUnique)
+import Data.List.Extra (disjoint, anySame)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Id
@@ -170,7 +169,7 @@ rnClause ::
 rnClause (Clause pos ps ss) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
-  unless (allUnique vars) $ errorOn pos "Same variables occurs in a pattern"
+  when (anySame vars) $ errorOn pos "Same variables occurs in a pattern"
   modName <- use moduleName
   vm <- zip vars <$> traverse (resolveName modName) vars
   local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss

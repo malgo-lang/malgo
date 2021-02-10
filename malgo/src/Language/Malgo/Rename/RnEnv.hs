@@ -8,7 +8,6 @@
 module Language.Malgo.Rename.RnEnv where
 
 import qualified Data.Map as Map
-import qualified Data.Text.Lazy as TL
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -18,7 +17,15 @@ import Language.Malgo.Syntax.Extension
 data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: ModuleName}
   deriving stock (Show)
 
-instance Pretty RnState where pPrint = text . TL.unpack . pShow
+instance Pretty RnState where
+  pPrint RnState {_infixInfo, _moduleName} =
+    "RnState"
+      <+> braces
+        ( sep
+            [ "_infixInfo" <+> "=" <+> pPrint (Map.toList _infixInfo),
+              "_moduleName" <+> "=" <+> pPrint _moduleName
+            ]
+        )
 
 makeLenses ''RnState
 

@@ -15,7 +15,6 @@ import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
 import qualified Data.Map as Map
 import Data.Store
-import Generics.Deriving.Monoid (mappenddefault, memptydefault)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -40,12 +39,6 @@ data Interface = Interface
   }
   deriving stock (Show, Generic)
   deriving anyclass (Store)
-
-instance Semigroup Interface where
-  (<>) = mappenddefault
-
-instance Monoid Interface where
-  mempty = memptydefault
 
 makeLenses ''Interface
 
