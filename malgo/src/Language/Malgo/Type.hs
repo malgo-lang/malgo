@@ -24,9 +24,6 @@ import Language.Malgo.Prelude
 -- Kind and HasKind --
 ----------------------
 
-pattern Star :: Kind
-pattern Star = Type Boxed
-
 -- | Definition of `kind`
 data Kind
   = -- | a kind
@@ -54,7 +51,7 @@ instance Pretty Kind where
 -- | Runtime representation
 data Rep
   = -- | Boxed value
-    Boxed
+    BoxedRep
   | -- | Int32#
     Int32Rep
   | -- | Int64#
@@ -160,10 +157,10 @@ instance HasKind Type where
   kind (TyVar t) = kind t
   kind (TyCon c) = kind c
   kind (TyPrim p) = kind p
-  kind (TyArr _ _) = pure $ Just $ Type Boxed
-  kind (TyTuple _) = pure $ Just $ Type Boxed
-  kind (TyLazy _) = pure $ Just $ Type Boxed
-  kind (TyPtr _) = pure $ Just $ Type Boxed
+  kind (TyArr _ _) = pure $ Just $ Type BoxedRep
+  kind (TyTuple _) = pure $ Just $ Type BoxedRep
+  kind (TyLazy _) = pure $ Just $ Type BoxedRep
+  kind (TyPtr _) = pure $ Just $ Type BoxedRep
   kind (TyMeta tv) = kind tv
 
 instance Pretty Type where

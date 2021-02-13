@@ -92,9 +92,9 @@ tcDataDefs ds = do
     typeEnv . at name %= (_Just . qualVars .~ as) . (_Just . union .~ cons')
     pure (pos, name, params, map (second (map tcType)) cons)
   where
-    -- 型コンストラクタの引数は必ず a :: Type Boxed
-    kindof [] = Star
-    kindof (_ : xs) = KArr Star (kindof xs)
+    -- 型コンストラクタの引数は必ず a :: Type BoxedRep
+    kindof [] = Type BoxedRep
+    kindof (_ : xs) = KArr (Type BoxedRep) (kindof xs)
 
 tcForeigns ::
   (MonadUniq m, MonadIO m, MonadState TcEnv m, MonadMalgo m) =>
@@ -328,14 +328,14 @@ lookupVar pos name = do
 generalize :: (MonadIO m, MonadUniq m) => TcEnv -> Type -> m Scheme
 generalize env t = do
   fvs <- toList <$> freeMetaTvs env t
-  as <- zipWithM (\tv nameChar -> do k <- fromMaybe Star <$> readIORef (_metaTvKind tv); newLocalId [nameChar] k) fvs ['a' ..]
+  as <- zipWithM (\tv nameChar -> do k <- fromMaybe (Type BoxedRep) <$> readIORef (_metaTvKind tv); newLocalId [nameChar] k) fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
   Forall as <$> zonkType t
 
 generalizeMutRecs :: (MonadIO m, MonadUniq m) => TcEnv -> [(TcId, Type)] -> m ([Id Kind], [(TcId, Scheme)])
 generalizeMutRecs env nts = do
   fvs <- toList . mconcat <$> traverse (freeMetaTvs env <=< zonkType . view _2) nts
-  as <- zipWithM (\tv nameChar -> do k <- fromMaybe Star <$> readIORef (_metaTvKind tv); newLocalId [nameChar] k) fvs ['a' ..]
+  as <- zipWithM (\tv nameChar -> do k <- fromMaybe (Type BoxedRep) <$> readIORef (_metaTvKind tv); newLocalId [nameChar] k) fvs ['a' ..]
   zipWithM_ writeMetaTv fvs (map TyVar as)
   (as,) <$> traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
 

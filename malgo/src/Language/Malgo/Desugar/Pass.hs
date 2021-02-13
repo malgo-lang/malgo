@@ -43,15 +43,15 @@ desugar ::
   Module (Malgo 'TypeCheck) ->
   m (DsEnv, Program (Id C.Type))
 desugar tcEnv (Module modName ds) = do
-  (dsEnv', ds') <- runReaderT (dsBindGroup ds) (DsEnv modName mempty tcEnv)
-  case searchMain (Map.toList $ view varEnv dsEnv') of
+  (dsEnv, ds') <- runReaderT (dsBindGroup ds) (DsEnv modName mempty tcEnv)
+  case searchMain (Map.toList $ view varEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
         mainFunc =<< runDef do
           _ <- bind mainCall
           pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv', Program (mainFuncDef : ds'))
-    Nothing -> pure (dsEnv', Program ds')
+      pure (dsEnv, Program (mainFuncDef : ds'))
+    Nothing -> pure (dsEnv, Program ds')
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsExternal = Just $ CallDirect coreId []
@@ -411,9 +411,8 @@ dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
   mkcon <- kind con
   case mkcon of
-    Just kcon
-      | kcon == Star -> pure AnyT
-      | otherwise -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
+    Just (Type BoxedRep) -> pure AnyT
+    Just kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
     _ -> bug Unreachable
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
@@ -440,7 +439,7 @@ unfoldType :: (MonadReader DsEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Ty
 unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
   mkt <- kind t
   case mkt of
-    Just Star -> do
+    Just (Type BoxedRep) -> do
       let (con, ts) = splitCon t
       conMap <- lookupConMap con ts
       SumT
