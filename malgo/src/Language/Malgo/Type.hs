@@ -279,10 +279,6 @@ class HasType a where
   toType :: Getter a Type
   overType :: (MonadIO m, MonadUniq m) => (Type -> m Type) -> a -> m a
 
-instance HasType Type where
-  toType = to id
-  overType = id
-
 instance HasType Scheme where
   toType = to $ \(Forall _ t) -> t
   overType f (Forall vs t) = Forall vs <$> f t
