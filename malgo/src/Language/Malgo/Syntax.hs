@@ -1,27 +1,34 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Syntax where
 
+import Data.Functor (($>))
 import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.Int (Int32, Int64)
 import qualified Data.Set as Set
 import Data.Tuple.Extra (uncurry3)
 import Koriel.Id
 import Koriel.Pretty
+import qualified Language.Malgo.KindF as U
 import Language.Malgo.Prelude
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.Type (HasType (..))
 import qualified Language.Malgo.Type as T
+import qualified Language.Malgo.TypeF as U
+import qualified Language.Malgo.Unify as U
 
 -- | Unboxed and literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
@@ -44,6 +51,17 @@ instance HasType (Literal x) where
     Char {} -> T.TyPrim T.CharT
     String {} -> T.TyPrim T.StringT
   overType _ = pure
+
+instance U.HasType U.UType (Literal x) where
+  typeOf Int32 {} = U.UTerm (U.TyPrim T.Int32T)
+  typeOf Int64 {} = U.UTerm (U.TyPrim T.Int64T)
+  typeOf Float {} = U.UTerm (U.TyPrim T.FloatT)
+  typeOf Double {} = U.UTerm (U.TyPrim T.DoubleT)
+  typeOf Char {} = U.UTerm (U.TyPrim T.CharT)
+  typeOf String {} = U.UTerm (U.TyPrim T.StringT)
+
+instance U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Literal x) where
+  walkOn f v = f (U.typeOf v) $> v
 
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce
@@ -109,6 +127,43 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Force x e -> Force <$> overType f x <*> overType f e
     Parens x e -> Parens <$> overType f x <*> overType f e
 
+instance
+  ( ForallExpX (U.HasType U.UType) x,
+    ForallClauseX (U.HasType U.UType) x,
+    ForallPatX (U.HasType U.UType) x
+  ) =>
+  U.HasType U.UType (Exp x)
+  where
+  typeOf (Var x _) = U.typeOf x
+  typeOf (Con x _) = U.typeOf x
+  typeOf (Unboxed x _) = U.typeOf x
+  typeOf (Boxed x _) = U.typeOf x
+  typeOf (Apply x _ _) = U.typeOf x
+  typeOf (OpApp x _ _ _) = U.typeOf x
+  typeOf (Fn x _) = U.typeOf x
+  typeOf (Tuple x _) = U.typeOf x
+  typeOf (Force x _) = U.typeOf x
+  typeOf (Parens x _) = U.typeOf x
+
+instance
+  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
+    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
+    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ) =>
+  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Exp x)
+  where
+  walkOn f = \case
+    Var x v -> Var <$> U.walkOn f x <*> pure v
+    Con x c -> Con <$> U.walkOn f x <*> pure c
+    Unboxed x u -> Unboxed <$> U.walkOn f x <*> U.walkOn f u
+    Boxed x b -> Boxed <$> U.walkOn f x <*> U.walkOn f b
+    Apply x e1 e2 -> Apply <$> U.walkOn f x <*> U.walkOn f e1 <*> U.walkOn f e2
+    OpApp x op e1 e2 -> OpApp <$> U.walkOn f x <*> pure op <*> U.walkOn f e1 <*> U.walkOn f e2
+    Fn x cs -> Fn <$> U.walkOn f x <*> traverse (U.walkOn f) cs
+    Tuple x es -> Tuple <$> U.walkOn f x <*> traverse (U.walkOn f) es
+    Force x e -> Force <$> U.walkOn f x <*> U.walkOn f e
+    Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
+
 freevars :: Ord (XId x) => Exp x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
 freevars (Con _ _) = Set.empty
@@ -145,6 +200,27 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
     Let x v e -> Let x v <$> overType f e
     NoBind x e -> NoBind x <$> overType f e
 
+instance
+  ( ForallExpX (U.HasType U.UType) x,
+    ForallClauseX (U.HasType U.UType) x,
+    ForallPatX (U.HasType U.UType) x
+  ) =>
+  U.HasType U.UType (Stmt x)
+  where
+  typeOf (Let _ _ e) = U.typeOf e
+  typeOf (NoBind _ e) = U.typeOf e
+
+instance
+  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
+    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
+    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ) =>
+  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Stmt x)
+  where
+  walkOn f = \case
+    Let x v e -> Let x v <$> U.walkOn f e
+    NoBind x e -> NoBind x <$> U.walkOn f e
+
 freevarsStmt :: Ord (XId x) => Stmt x -> Set (XId x)
 freevarsStmt (Let _ x e) = Set.delete x $ freevars e
 freevarsStmt (NoBind _ e) = freevars e
@@ -167,6 +243,24 @@ instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =
   toType = to $ \(Clause x _ _) -> view toType x
   overType f (Clause x ps e) =
     Clause <$> overType f x <*> traverse (overType f) ps <*> traverse (overType f) e
+
+instance
+  ( ForallExpX (U.HasType U.UType) x,
+    ForallClauseX (U.HasType U.UType) x,
+    ForallPatX (U.HasType U.UType) x
+  ) =>
+  U.HasType U.UType (Clause x)
+  where
+  typeOf (Clause x _ _) = U.typeOf x
+
+instance
+  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
+    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
+    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ) =>
+  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Clause x)
+  where
+  walkOn f (Clause x ps e) = Clause <$> U.walkOn f x <*> traverse (U.walkOn f) ps <*> traverse (U.walkOn f) e
 
 freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
 freevarsClause (Clause _ pats es) = foldMap freevarsStmt es Set.\\ mconcat (map bindVars pats)
@@ -207,6 +301,31 @@ instance (ForallPatX HasType x) => HasType (Pat x) where
     ConP x c ps -> ConP <$> overType f x <*> pure c <*> traverse (overType f) ps
     TupleP x ps -> TupleP <$> overType f x <*> traverse (overType f) ps
     UnboxedP x u -> UnboxedP <$> overType f x <*> overType f u
+
+instance
+  ( ForallExpX (U.HasType U.UType) x,
+    ForallClauseX (U.HasType U.UType) x,
+    ForallPatX (U.HasType U.UType) x
+  ) =>
+  U.HasType U.UType (Pat x)
+  where
+  typeOf (VarP x _) = U.typeOf x
+  typeOf (ConP x _ _) = U.typeOf x
+  typeOf (TupleP x _) = U.typeOf x
+  typeOf (UnboxedP x _) = U.typeOf x
+
+instance
+  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
+    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
+    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ) =>
+  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Pat x)
+  where
+  walkOn f = \case
+    VarP x v -> VarP <$> U.walkOn f x <*> pure v
+    ConP x c ps -> ConP <$> U.walkOn f x <*> pure c <*> traverse (U.walkOn f) ps
+    TupleP x ps -> TupleP <$> U.walkOn f x <*> traverse (U.walkOn f) ps
+    UnboxedP x u -> UnboxedP <$> U.walkOn f x <*> U.walkOn f u
 
 _VarP :: Prism' (Pat x) (XVarP x, XId x)
 _VarP = prism' (uncurry VarP) $ \case
@@ -318,6 +437,8 @@ type instance XModule (Malgo 'Parse) = [Decl (Malgo 'Parse)]
 type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 
 type instance XModule (Malgo 'TypeCheck) = BindGroup (Malgo 'TypeCheck)
+
+type instance XModule (Malgo 'NewTypeCheck) = BindGroup (Malgo 'NewTypeCheck)
 
 ----------------
 -- Bind group --

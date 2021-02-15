@@ -16,7 +16,47 @@ import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Type
+import qualified Language.Malgo.TypeF as U
 import Text.Megaparsec.Pos (SourcePos)
+
+-- Phase and type instance
+data MalgoPhase = Parse | Rename | TypeCheck | NewTypeCheck
+
+data Malgo (p :: MalgoPhase)
+
+newtype ModuleName = ModuleName String
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving newtype (Pretty)
+
+instance Binary ModuleName
+
+_Module :: Lens' ModuleName String
+_Module = lens (\(ModuleName s) -> s) (\_ s -> ModuleName s)
+
+-- Id
+type family MalgoId (p :: MalgoPhase) where
+  MalgoId 'Parse = String
+  MalgoId 'Rename = Id ModuleName
+  MalgoId 'TypeCheck = Id ModuleName
+  MalgoId 'NewTypeCheck = Id ModuleName
+
+type family MalgoTId (p :: MalgoPhase) where
+  MalgoTId 'Parse = String
+  MalgoTId 'Rename = Id ModuleName
+  MalgoTId 'TypeCheck = Id ModuleName
+  MalgoTId 'NewTypeCheck = Id ModuleName
+
+type PsId = XId (Malgo 'Parse)
+
+type RnId = XId (Malgo 'Rename)
+
+type TcId = XId (Malgo 'TypeCheck)
+
+type PsTId = XTId (Malgo 'Parse)
+
+type RnTId = XTId (Malgo 'Rename)
+
+type TcTId = XTId (Malgo 'TypeCheck)
 
 data Unboxed
 
@@ -41,6 +81,7 @@ type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = SourcePos
   SimpleX 'Rename = SourcePos
   SimpleX 'TypeCheck = WithType SourcePos
+  SimpleX 'NewTypeCheck = U.WithUType SourcePos
 
 type family XVar x where
   XVar (Malgo x) = SimpleX x
@@ -61,6 +102,7 @@ type family XOpApp x where
   XOpApp (Malgo 'Parse) = SourcePos
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'TypeCheck) = WithType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, (Assoc, Int))
 
 type family XFn x where
   XFn (Malgo x) = SimpleX x
@@ -160,6 +202,7 @@ type family XForeign x where
   XForeign (Malgo 'Parse) = SourcePos
   XForeign (Malgo 'Rename) = (SourcePos, String)
   XForeign (Malgo 'TypeCheck) = WithType (SourcePos, String)
+  XForeign (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, String)
 
 type family XImport x where
   XImport (Malgo _) = SourcePos
@@ -180,40 +223,3 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
 
 -- Module Extensions
 type family XModule x
-
--- Phase and type instance
-data MalgoPhase = Parse | Rename | TypeCheck
-
-data Malgo (p :: MalgoPhase)
-
-newtype ModuleName = ModuleName String
-  deriving stock (Eq, Show, Ord, Generic)
-  deriving newtype (Pretty)
-
-instance Binary ModuleName
-
-_Module :: Lens' ModuleName String
-_Module = lens (\(ModuleName s) -> s) (\_ s -> ModuleName s)
-
--- Id
-type family MalgoId (p :: MalgoPhase) where
-  MalgoId 'Parse = String
-  MalgoId 'Rename = Id ModuleName
-  MalgoId 'TypeCheck = Id ModuleName
-
-type family MalgoTId (p :: MalgoPhase) where
-  MalgoTId 'Parse = String
-  MalgoTId 'Rename = Id ModuleName
-  MalgoTId 'TypeCheck = Id ModuleName
-
-type PsId = XId (Malgo 'Parse)
-
-type RnId = XId (Malgo 'Rename)
-
-type TcId = XId (Malgo 'TypeCheck)
-
-type PsTId = XTId (Malgo 'Parse)
-
-type RnTId = XTId (Malgo 'Rename)
-
-type TcTId = XTId (Malgo 'TypeCheck)

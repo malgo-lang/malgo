@@ -98,7 +98,10 @@ instance Unifiable KindF KindVar where
 type KindMap = Map KindVar (UTerm KindF KindVar)
 
 newtype KindUnifyT m a = KindUnifyT {unKindUnifyT :: StateT KindMap m a}
-  deriving newtype (Functor, Applicative, Monad, MonadTrans, MonadState KindMap, MonadUniq)
+  deriving newtype (Functor, Applicative, Monad, MonadTrans, MonadState KindMap, MonadUniq, MonadMalgo, MonadIO)
+
+runKindUnifyT :: Monad m => KindUnifyT m a -> m a
+runKindUnifyT (KindUnifyT m) = evalStateT m mempty
 
 instance (Monad m, MonadUniq m) => MonadBind KindF KindVar (KindUnifyT m) where
   lookupVar v = Map.lookup v <$> get

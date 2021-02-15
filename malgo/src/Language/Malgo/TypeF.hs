@@ -128,9 +128,9 @@ instance HasKind Kind Type where
   kindOf (Fix (TyPtr _)) = Fix $ Type BoxedRep
 
 instance HasUTerm KindF KindVar UType where
-  walkOn f (UVar v) = do
-    k <- f (typeVarId v ^. idMeta)
-    pure $ UVar v {typeVarId = typeVarId v & idMeta .~ k}
+  walkOn f (UVar v) =
+    f (typeVarId v ^. idMeta) <&> \k ->
+      UVar v {typeVarId = typeVarId v & idMeta .~ k}
   walkOn f (UTerm t) = UTerm <$> traverse (walkOn f) t
 
 instance (Pretty k, Eq k) => Unifiable (TypeF k) (TypeVar k) where
@@ -153,13 +153,16 @@ instance (Pretty k, Eq k) => Unifiable (TypeF k) (TypeVar k) where
 type TypeMap = Map (TypeVar UKind) (UTerm (TypeF UKind) (TypeVar UKind))
 
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap (KindUnifyT m) a}
-  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadUniq)
+  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadUniq, MonadMalgo, MonadIO)
 
 instance MonadTrans TypeUnifyT where
   lift m = TypeUnifyT $ lift $ lift m
 
 liftKindUnifyT :: Monad m => KindUnifyT m a -> TypeUnifyT m a
 liftKindUnifyT m = TypeUnifyT $ lift m
+
+runTypeUnifyT :: Monad m => TypeUnifyT m a -> KindUnifyT m a
+runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
 instance (Monad m, MonadUniq m) => MonadBind (TypeF UKind) (TypeVar UKind) (TypeUnifyT m) where
   lookupVar v = Map.lookup v <$> get
@@ -181,3 +184,15 @@ instance HasType (UTerm (TypeF k) (TypeVar k)) (UTerm (TypeF k) (TypeVar k)) whe
 
 instance HasType (Fix (TypeF k)) (Fix (TypeF k)) where
   typeOf = id
+
+data WithUType a = WithUType a UType
+  deriving stock (Eq, Show, Ord, Functor, Foldable)
+
+instance Pretty a => Pretty (WithUType a) where
+  pPrint (WithUType a t) = pPrint a <> ":" <> pPrint t
+
+instance HasType UType (WithUType a) where
+  typeOf (WithUType _ t) = t
+
+instance HasUTerm (TypeF UKind) (TypeVar UKind) (WithUType a) where
+  walkOn f (WithUType x t) = WithUType x <$> f t

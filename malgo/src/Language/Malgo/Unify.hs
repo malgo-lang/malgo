@@ -1,6 +1,8 @@
+{-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -8,10 +10,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Unify where
 
+import Control.Monad.Cont (ContT)
+import Control.Monad.Identity (IdentityT)
+import qualified Control.Monad.State.Lazy as Lazy
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
 import qualified Data.Set as Set
@@ -72,7 +78,7 @@ instance (Pretty v, Pretty1 t) => Pretty (UScheme t v) where
   pPrintPrec l _ (UScheme as t) = "forall" <+> sep (map (pPrintPrec l 0) as) <> "." <+> pPrintPrec l 0 t
 
 class HasUTerm t v a | a -> v, a -> t where
-  walkOn :: MonadBind t v m => (UTerm t v -> m (UTerm t v)) -> a -> m a
+  walkOn :: Traversal' a (UTerm t v)
 
 ----------------
 -- Constraint --
@@ -104,15 +110,35 @@ class Var t v | v -> t, t -> v where
 class Unifiable t v | t -> v where
   unify :: Pretty x => x -> t (UTerm t v) -> t (UTerm t v) -> [WithMeta x t v]
 
-class Monad m => MonadBind t v m | m t -> v, v m -> t where
+class Monad m => MonadBind t v m | v -> t, t -> v where
   lookupVar :: v -> m (Maybe (UTerm t v))
+  default lookupVar :: (MonadTrans tr, MonadBind t v m1, m ~ tr m1) => v -> m (Maybe (UTerm t v))
+  lookupVar v = lift (lookupVar v)
   freshVar :: m v
+  default freshVar :: (MonadTrans tr, MonadBind t v m1, m ~ tr m1) => m v
+  freshVar = lift freshVar
   newVar :: Pretty x => x -> UTerm t v -> m v
   newVar x t = do
     v <- freshVar
     bindVar x v t
     pure v
   bindVar :: Pretty x => x -> v -> UTerm t v -> m ()
+  default bindVar :: (MonadTrans tr, MonadBind t v m1, m ~ tr m1, Pretty x) => x -> v -> UTerm t v -> m ()
+  bindVar x v t = lift (bindVar x v t)
+
+instance MonadBind t v m => MonadBind t v (IdentityT m)
+
+instance MonadBind t v m => MonadBind t v (ReaderT r m)
+
+instance MonadBind t v m => MonadBind t v (ExceptT e m)
+
+instance MonadBind t v m => MonadBind t v (StateT s m)
+
+instance MonadBind t v m => MonadBind t v (Lazy.StateT s m)
+
+instance MonadBind t v m => MonadBind t v (WriterT w m)
+
+instance MonadBind t v m => MonadBind t v (ContT r m)
 
 generalizeUTerm ::
   (Pretty x, Ord v, Foldable t, Var t v, MonadBind t v m, Traversable t) =>
