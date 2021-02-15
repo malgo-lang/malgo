@@ -261,16 +261,13 @@ tcPatterns (UnboxedP pos unboxed : cs) = do
 -----------------------------------
 
 transType :: (MonadState TcEnv m, MonadIO m, MonadMalgo m) => S.Type (Malgo 'Rename) -> m Type
-transType (S.TyApp pos t ts) = do
+transType (S.TyApp _ t ts) = do
   rnEnv <- use TcEnv.rnEnv
   let ptr_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Ptr#" (view R.typeEnv rnEnv)
-  case t of
-    S.TyCon _ c | c == ptr_t ->
-      case ts of
-        [t] -> do
-          t' <- transType t
-          pure $ TyPtr t'
-        _ -> errorOn pos "Invalid type arguments for Ptr#"
+  case (t, ts) of
+    (S.TyCon _ c, [t]) | c == ptr_t -> do
+      t' <- transType t
+      pure $ TyPtr t'
     _ -> foldr (flip TyApp) <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = do
