@@ -31,6 +31,7 @@ import qualified Language.Malgo.Rename.RnEnv as RnEnv
 import qualified Language.Malgo.Syntax as Syntax
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeCheck.Pass (typeCheck)
+import qualified Language.Malgo.NewTypeCheck.Pass as NewTypeCheck
 import System.FilePath.Lens (extension)
 import System.IO
   ( hPrint,
@@ -68,6 +69,7 @@ compileFromAST parsedAst opt =
           rnEnv <- RnEnv.genBuiltinRnEnv
           (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
           (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
+          _ <- withDump (dumpTyped opt) "=== NEW TYPE CHECK ===" $ NewTypeCheck.typeCheck rnEnv renamedAst
           (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv typedAst
           let inf = buildInterface rnState dsEnv
           storeInterface inf

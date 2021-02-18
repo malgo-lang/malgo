@@ -28,6 +28,7 @@ import Language.Malgo.KindF
 import Language.Malgo.Prelude
 import Language.Malgo.Type (PrimT (..))
 import Language.Malgo.Unify
+import Debug.Trace (traceShowM)
 
 ----------
 -- Type --
@@ -170,6 +171,7 @@ instance (Monad m, MonadUniq m) => MonadBind (TypeF UKind) (TypeVar UKind) (Type
     kind <- liftKindUnifyT freshVar
     TypeVar <$> newLocalId "t" (UVar kind) <*> pure ""
   bindVar x v t = do
+    traceShowM $ "bindVar" <+> pPrint v <+> pPrint t
     occursCheck x v t
     liftKindUnifyT $ solve [WithMeta x $ kindOf v :~ kindOf t]
     modify (Map.insert v t)
