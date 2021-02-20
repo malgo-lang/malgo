@@ -3,6 +3,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -118,3 +119,10 @@ instance HasKind UKind UKind where
 
 instance HasKind Kind Kind where
   kindOf = id
+
+bindUnknownToBoxed :: MonadBind KindF KindVar m => UTerm KindF KindVar -> m (UTerm KindF KindVar)
+bindUnknownToBoxed term = do
+  zonkedTerm <- zonkUTerm term
+  let fvs = freevars zonkedTerm
+  traverse_ (\fv -> bindVar () fv (UTerm $ Type BoxedRep)) fvs
+  zonkUTerm zonkedTerm

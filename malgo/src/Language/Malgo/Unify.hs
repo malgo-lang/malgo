@@ -24,7 +24,6 @@ import qualified Data.Set as Set
 import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Debug.Trace (traceShowM)
 
 -----------
 -- UTerm --
@@ -72,17 +71,22 @@ occursCheck x v t =
     then errorWithMeta x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     else pure ()
 
+class HasUTerm t v a where
+  walkOn :: Traversal' a (UTerm t v)
+
+instance HasUTerm t v (UTerm t v) where
+  walkOn = id
+
 data UScheme t v = UScheme [Fix t] (UTerm t v)
   deriving stock (Eq, Ord, Show, Generic)
 
 instance (Pretty v, Pretty1 t) => Pretty (UScheme t v) where
   pPrintPrec l _ (UScheme as t) = "forall" <+> sep (map (pPrintPrec l 0) as) <> "." <+> pPrintPrec l 0 t
 
-instance HasUTerm t v (UScheme t v) where
-  walkOn f (UScheme vs t) = UScheme vs <$> f t
-
-class HasUTerm t v a | a -> v, a -> t where
-  walkOn :: Traversal' a (UTerm t v)
+instance (Traversable t, HasUTerm t v (UTerm t v)) => HasUTerm t v (UScheme t v) where
+  walkOn f (UScheme vs t) = UScheme <$> traverse (walkOn' f) vs <*> f t
+    where
+      walkOn' f v = fromMaybe v . freeze <$> walkOn f (unfreeze v `asTypeOf` t)
 
 ----------------
 -- Constraint --
@@ -158,39 +162,42 @@ generalizeUTerm ::
   UTerm t v ->
   m (UScheme t v)
 generalizeUTerm x bound term = do
-  {-
+  -- {-
   let fvs = Set.toList $ unboundFreevars bound term
   as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ unfreeze a) fvs as
   UScheme as <$> zonkUTerm term
-  -- -}
-  -- {-
+
+-- -}
+{-
   zonkedTerm <- zonkUTerm term
   let fvs = Set.toList $ unboundFreevars bound zonkedTerm
   as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ unfreeze a) fvs as
   UScheme as <$> zonkUTerm zonkedTerm
-  -- -}
+
+-- -}
 
 unboundFreevars :: (Ord v, Foldable t) => Set v -> UTerm t v -> Set v
 unboundFreevars bound t = freevars t Set.\\ bound
 
 generalizeUTermMutRecs :: (Pretty x, Ord v, Foldable t, Var t v, MonadBind t v m, Traversable t, Pretty v, Pretty1 t) => x -> Set v -> [UTerm t v] -> m ([Fix t], [UScheme t v])
 generalizeUTermMutRecs x bound terms = do
-   {-
-  traceShowM $ pPrint terms
+  -- {-
   let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms
   as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ unfreeze a) fvs as
   (as,) <$> traverse (fmap (UScheme as) . zonkUTerm) terms
-  -- -}
-  -- {-
+
+-- -}
+{-
   zonkedTerms <- traverse zonkUTerm terms
   let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ unfreeze a) fvs as
   (as,) <$> traverse (fmap (UScheme as) . zonkUTerm) zonkedTerms
-  -- -}
+
+-- -}
 
 instantiateUTerm :: (Pretty x, Var t v, MonadBind t v m, Eq v, Eq1 t, Traversable t) => x -> Bool -> UScheme t v -> m (UTerm t v)
 instantiateUTerm _ isRigid (UScheme as t) = do
@@ -219,10 +226,13 @@ solve ::
     MonadBind t v m,
     Traversable t,
     Pretty1 t,
-    Unifiable t v, Eq v) =>
+    Unifiable t v,
+    Eq v
+  ) =>
   [WithMeta x t v] ->
   m ()
-solve = solveLoop 5000
+solve cs = do
+  solveLoop 5000 cs
 
 solveLoop ::
   ( Var t v,
@@ -231,7 +241,9 @@ solveLoop ::
     MonadBind t v m,
     Traversable t,
     Pretty1 t,
-    Unifiable t v, Eq v) =>
+    Unifiable t v,
+    Eq v
+  ) =>
   Int ->
   [WithMeta x t v] ->
   m ()
@@ -265,7 +277,6 @@ solveLoop n (WithMeta x (UTerm t :~ UVar v) : cs)
     solveLoop (n - 1) =<< traverse zonkConstraint cs
 solveLoop n (WithMeta x (UTerm t1 :~ UTerm t2) : cs) = do
   let cs' = unify x t1 t2
-  traceShowM $ pPrint $ cs' <> cs
   solveLoop (n - 1) $ cs' <> cs
 
 zonkConstraint :: (Applicative f, MonadBind t v f, Traversable t) => WithMeta x t v -> f (WithMeta x t v)
@@ -273,7 +284,10 @@ zonkConstraint (WithMeta m (x :~ y)) =
   WithMeta m <$> ((:~) <$> zonkUTerm x <*> zonkUTerm y)
 
 zonkUTerm :: (MonadBind t v f, Traversable t, Applicative f) => UTerm t v -> f (UTerm t v)
-zonkUTerm (UVar v) = fromMaybe (UVar v) <$> lookupVar v
+zonkUTerm (UVar v) = do
+  mterm <- lookupVar v
+  mterm <- traverse zonkUTerm mterm
+  pure $ fromMaybe (UVar v) mterm
 zonkUTerm (UTerm t) = UTerm <$> traverse zonkUTerm t
 
 errorWithMeta :: (HasCallStack, Pretty x) => x -> Doc -> a

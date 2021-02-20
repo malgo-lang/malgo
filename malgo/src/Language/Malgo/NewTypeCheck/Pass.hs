@@ -21,7 +21,6 @@ module Language.Malgo.NewTypeCheck.Pass (typeCheck) where
 import Data.Fix
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import Debug.Trace (traceM, traceShowId, traceShowM)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -96,15 +95,17 @@ lookupType pos name = do
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just typ -> pure typ
 
-typeCheck :: (MonadUniq m, MonadMalgo m, MonadIO (TypeUnifyT m)) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'NewTypeCheck), TcEnv)
+typeCheck :: (MonadUniq m, MonadMalgo m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'NewTypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) = runKindUnifyT $
   runTypeUnifyT $ do
     let tcEnv = TcEnv mempty mempty rnEnv
     (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
-    zonkedTcEnv <- walkOn zonkUTerm tcEnv'
+    zonkedTcEnv <-
+      walkOn @(TypeF UKind) @(TypeVar UKind) (walkOn @KindF @KindVar (liftKindUnifyT . zonkUTerm))
+        =<< walkOn @(TypeF UKind) @(TypeVar UKind) zonkUTerm tcEnv'
     pure (Module name bg', zonkedTcEnv)
 
-tcBindGroup :: (MonadBind (TypeF UKind) (TypeVar UKind) m, MonadState TcEnv m, MonadUniq m, MonadMalgo m, MonadIO m) => BindGroup (Malgo 'Rename) -> m (BindGroup (Malgo 'NewTypeCheck))
+tcBindGroup :: (MonadIO m, MonadUniq m, MonadMalgo m) => BindGroup (Malgo 'Rename) -> StateT TcEnv (TypeUnifyT m) (BindGroup (Malgo 'NewTypeCheck))
 tcBindGroup bindGroup = do
   imports' <- tcImports $ bindGroup ^. imports
   dataDefs' <- tcDataDefs $ bindGroup ^. dataDefs
@@ -125,20 +126,21 @@ tcBindGroup bindGroup = do
 tcImports :: Applicative m => [Import (Malgo 'Rename)] -> m [Import (Malgo 'NewTypeCheck)]
 tcImports _ = pure []
 
-tcDataDefs :: (MonadBind (TypeF UKind) (TypeVar UKind) m, MonadState TcEnv m, MonadUniq m, MonadMalgo m, MonadIO m) => [DataDef (Malgo 'Rename)] -> m [DataDef (Malgo 'NewTypeCheck)]
+tcDataDefs :: (MonadIO m, MonadUniq m, MonadMalgo m) => [DataDef (Malgo 'Rename)] -> StateT TcEnv (TypeUnifyT m) [DataDef (Malgo 'NewTypeCheck)]
 tcDataDefs ds = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ ds $ \(_, name, params, _) -> do
     tyCon <- UTerm . TyCon <$> newGlobalId (name ^. idName) (buildTyConKind params)
     typeEnv . at name .= Just (TypeDef tyCon [] [])
   for ds $ \(pos, name, params, valueCons) -> do
-    for_ params $ \p -> do
-      p' <- UVar <$> freshVar @(TypeF UKind)
-      typeEnv . at p .= Just (TypeDef p' [] [])
+    name' <- lookupType pos name
+    params' <- traverse (const $ UVar <$> freshVar) params
+    lift $ liftKindUnifyT $ solve [WithMeta pos $ foldr ((\l r -> UTerm $ KArr l r) . kindOf) (UTerm $ Type BoxedRep) params' :~ kindOf name']
+    zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     valueCons' <- forOf (traversed . _2) valueCons $ \args -> do
       -- 値コンストラクタの型を構築
-      name' <- lookupType pos name
-      params' <- traverse (lookupType pos) params
+      -- name' <- lookupType pos name
+      -- params' <- traverse (lookupType pos) params
       args' <- traverse transType args
       pure $ foldr (\l r -> UTerm $ TyArr l r) (foldr (\l r -> UTerm $ TyApp r l) name' params') args'
     let valueConsNames = map fst valueCons'
@@ -189,28 +191,17 @@ tcScDefGroup = traverse tcScDefs
 tcScDefs :: (MonadBind (TypeF UKind) (TypeVar UKind) m, MonadState TcEnv m, MonadMalgo m, MonadIO m) => [ScDef (Malgo 'Rename)] -> m [ScDef (Malgo 'NewTypeCheck)]
 tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
-  liftIO $ putStrLn "START DEBUG: tcScDefs"
   (ds', nts) <- mapAndUnzipM ?? ds $ \(pos, name, expr) -> do
-    liftIO $ putStrLn "START DEBUG: inner"
-    liftIO $ print $ "name = " <> pPrint name
     (expr', wanted) <- runWriterT (tcExpr expr)
     ty <- instantiateUTerm pos True =<< lookupVar pos name
-    liftIO $ print $ "ty = " <> pPrint ty
     let constraints = WithMeta pos (ty :~ typeOf expr') : wanted
-    liftIO $ print $ "constraints = " <> pPrint constraints
     solve constraints
-    liftIO $ putStrLn "END DEBUG: inner"
     pure ((WithUType pos ty, name, expr'), (name, ty))
   let names = map fst nts
-  liftIO $ print $ "names = " <> pPrint names
   let types = map snd nts
-  liftIO $ print $ "types = " <> pPrint types
   zonkedTypes <- traverse zonkUTerm types
-  liftIO $ print $ "zonkedTypes = " <> pPrint zonkedTypes
-  (_, types') <- generalizeUTermMutRecs pos mempty types
-  liftIO $ print $ "types' = " <> pPrint types'
+  (_, types') <- generalizeUTermMutRecs pos mempty zonkedTypes
   varEnv %= (Map.fromList (zip names types') <>)
-  liftIO $ putStrLn "END DEBUG: tcScDefs"
   pure ds'
 
 tcExpr :: (MonadBind (TypeF UKind) (TypeVar UKind) m, MonadState TcEnv m, MonadMalgo m, MonadIO m) => Exp (Malgo 'Rename) -> WriterT [WithMeta SourcePos (TypeF UKind) (TypeVar UKind)] m (Exp (Malgo 'NewTypeCheck))

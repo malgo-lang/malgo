@@ -28,7 +28,6 @@ import Language.Malgo.KindF
 import Language.Malgo.Prelude
 import Language.Malgo.Type (PrimT (..))
 import Language.Malgo.Unify
-import Debug.Trace (traceShowM)
 
 ----------
 -- Type --
@@ -132,7 +131,15 @@ instance HasUTerm KindF KindVar UType where
   walkOn f (UVar v) =
     f (typeVarId v ^. idMeta) <&> \k ->
       UVar v {typeVarId = typeVarId v & idMeta .~ k}
-  walkOn f (UTerm t) = UTerm <$> traverse (walkOn f) t
+  walkOn f (UTerm t) =
+    UTerm <$> case t of
+      TyVar v ->
+        f (v ^. idMeta) <&> \k ->
+          TyVar (v & idMeta .~ k)
+      TyCon c ->
+        f (c ^. idMeta) <&> \k ->
+          TyCon (c & idMeta .~ k)
+      _ -> traverse (walkOn f) t
 
 instance (Pretty k, Eq k) => Unifiable (TypeF k) (TypeVar k) where
   unify x (TyApp t11 t12) (TyApp t21 t22) = [WithMeta x (t11 :~ t21), WithMeta x (t12 :~ t22)]
@@ -165,13 +172,12 @@ liftKindUnifyT m = TypeUnifyT $ lift m
 runTypeUnifyT :: Monad m => TypeUnifyT m a -> KindUnifyT m a
 runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
-instance (Monad m, MonadUniq m) => MonadBind (TypeF UKind) (TypeVar UKind) (TypeUnifyT m) where
+instance (Monad m, MonadUniq m, MonadIO m) => MonadBind (TypeF UKind) (TypeVar UKind) (TypeUnifyT m) where
   lookupVar v = Map.lookup v <$> get
   freshVar = do
     kind <- liftKindUnifyT freshVar
     TypeVar <$> newLocalId "t" (UVar kind) <*> pure ""
   bindVar x v t = do
-    traceShowM $ "bindVar" <+> pPrint v <+> pPrint t
     occursCheck x v t
     liftKindUnifyT $ solve [WithMeta x $ kindOf v :~ kindOf t]
     modify (Map.insert v t)

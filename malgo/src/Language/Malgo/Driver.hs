@@ -60,7 +60,7 @@ withDump isDump label m = do
     hPrint stderr $ pPrint result
   pure result
 
-compileFromAST :: Syntax.Module (Malgo 'Parse) -> Opt -> IO ()
+compileFromAST :: HasCallStack => Syntax.Module (Malgo 'Parse) -> Opt -> IO ()
 compileFromAST parsedAst opt =
   void $
     runReaderT ?? opt $
@@ -68,8 +68,8 @@ compileFromAST parsedAst opt =
         runUniqT ?? UniqSupply 0 $ do
           rnEnv <- RnEnv.genBuiltinRnEnv
           (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-          (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
           _ <- withDump (dumpTyped opt) "=== NEW TYPE CHECK ===" $ NewTypeCheck.typeCheck rnEnv renamedAst
+          (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
           (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv typedAst
           let inf = buildInterface rnState dsEnv
           storeInterface inf
