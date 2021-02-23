@@ -16,7 +16,7 @@ import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.Type
+import Language.Malgo.TypeRep.IORef
 
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,

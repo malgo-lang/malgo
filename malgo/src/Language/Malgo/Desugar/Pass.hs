@@ -31,10 +31,11 @@ import Language.Malgo.Interface
 import Language.Malgo.Prelude
 import Language.Malgo.Syntax as G
 import Language.Malgo.Syntax.Extension as G
-import Language.Malgo.Type as GT
 import Language.Malgo.TypeCheck.Pass (applySubst)
 import Language.Malgo.TypeCheck.TcEnv (TcEnv)
 import qualified Language.Malgo.TypeCheck.TcEnv as Tc
+import Language.Malgo.TypeRep.IORef as GT
+import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
 desugar ::

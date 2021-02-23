@@ -25,9 +25,10 @@ import Koriel.Pretty
 import qualified Language.Malgo.KindF as U
 import Language.Malgo.Prelude
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.Type (HasType (..))
-import qualified Language.Malgo.Type as T
 import qualified Language.Malgo.TypeF as U
+import Language.Malgo.TypeRep.IORef (HasType (..))
+import qualified Language.Malgo.TypeRep.IORef as T
+import qualified Language.Malgo.TypeRep.Static as T
 import qualified Language.Malgo.Unify as U
 
 -- | Unboxed and literal

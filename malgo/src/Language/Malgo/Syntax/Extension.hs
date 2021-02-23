@@ -15,8 +15,8 @@ import qualified Data.Kind as K
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.Type
 import qualified Language.Malgo.TypeF as U
+import Language.Malgo.TypeRep.IORef
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Phase and type instance

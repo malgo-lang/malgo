@@ -11,7 +11,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.Type where
+module Language.Malgo.TypeRep.IORef where
 
 import Data.Binary (Binary (..))
 import qualified Data.Set as Set
@@ -19,6 +19,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
+import Language.Malgo.TypeRep.Static (PrimT(..))
 
 ----------------------
 -- Kind and HasKind --
@@ -73,19 +74,6 @@ instance Pretty Rep where pPrint rep = text $ show rep
 ---------------------
 -- Primitive Types --
 ---------------------
-
-data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
-  deriving stock (Eq, Show, Ord, Generic)
-
-instance Binary PrimT
-
-instance Pretty PrimT where
-  pPrint Int32T = "Int32#"
-  pPrint Int64T = "Int64#"
-  pPrint FloatT = "Float#"
-  pPrint DoubleT = "Double#"
-  pPrint CharT = "Char#"
-  pPrint StringT = "String#"
 
 instance HasKind PrimT where
   kind Int32T = pure $ Just $ Type Int32Rep

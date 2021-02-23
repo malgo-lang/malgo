@@ -4,20 +4,19 @@ module TestNewTypeChecker = {
 
   data String = String# String#;
 
-  putStrLn :: String -> ();
+  putStr :: String -> ();
+  putStr = { (String# str) ->
+    print_string str
+  };
+
   putStrLn = { (String# str) ->
     print_string str;
     newline ()
   };
 
-  putStrLn' = { (String# str) ->
-    print_string str;
-    newline ()
-  };
-
   main = {
-    putStrLn (String# "Hello, "#)
-    -- putStrLn' (String# "world"#)
+    putStr (String# "Hello, "#);
+    putStrLn (String# "world"#)
   };
 }
 -- Expected: Hello, world

@@ -6,7 +6,7 @@ module Language.Malgo.TypeCheck.Constraint (Constraint (..), WithPos (..), eqCon
 
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.Type
+import Language.Malgo.TypeRep.IORef
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Definition of Constraint

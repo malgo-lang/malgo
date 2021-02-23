@@ -31,8 +31,8 @@ import qualified Language.Malgo.Rename.RnEnv as R
 import Language.Malgo.Syntax hiding (Type (..), freevars)
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.Type (PrimT (..))
 import Language.Malgo.TypeF
+import Language.Malgo.TypeRep.Static (PrimT (..))
 import Language.Malgo.Unify hiding (lookupVar)
 import Text.Megaparsec (SourcePos)
 

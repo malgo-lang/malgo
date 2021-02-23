@@ -26,7 +26,7 @@ import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.KindF
 import Language.Malgo.Prelude
-import Language.Malgo.Type (PrimT (..))
+import Language.Malgo.TypeRep.Static (PrimT (..))
 import Language.Malgo.Unify
 
 ----------

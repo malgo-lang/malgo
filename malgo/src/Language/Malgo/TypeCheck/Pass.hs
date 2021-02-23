@@ -22,10 +22,11 @@ import qualified Language.Malgo.Rename.RnEnv as R
 import Language.Malgo.Syntax hiding (Type (..))
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.Type
 import Language.Malgo.TypeCheck.Constraint
 import Language.Malgo.TypeCheck.TcEnv hiding (rnEnv)
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
+import Language.Malgo.TypeRep.IORef
+import Language.Malgo.TypeRep.Static
 import Text.Megaparsec (SourcePos)
 
 -- Entry point

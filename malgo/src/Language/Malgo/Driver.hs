@@ -24,6 +24,7 @@ import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
 import Language.Malgo.Desugar.Pass (desugar)
 import Language.Malgo.Interface (buildInterface, loadInterface, storeInterface)
+import qualified Language.Malgo.NewTypeCheck.Pass as NewTypeCheck
 import Language.Malgo.Parser (parseMalgo)
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.Pass (rename)
@@ -31,7 +32,6 @@ import qualified Language.Malgo.Rename.RnEnv as RnEnv
 import qualified Language.Malgo.Syntax as Syntax
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeCheck.Pass (typeCheck)
-import qualified Language.Malgo.NewTypeCheck.Pass as NewTypeCheck
 import System.FilePath.Lens (extension)
 import System.IO
   ( hPrint,
@@ -68,7 +68,8 @@ compileFromAST parsedAst opt =
         runUniqT ?? UniqSupply 0 $ do
           rnEnv <- RnEnv.genBuiltinRnEnv
           (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-          _ <- withDump (dumpTyped opt) "=== NEW TYPE CHECK ===" $ NewTypeCheck.typeCheck rnEnv renamedAst
+          when (debugMode opt) do
+            void $ withDump (dumpTyped opt) "=== NEW TYPE CHECK ===" $ NewTypeCheck.typeCheck rnEnv renamedAst
           (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
           (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv typedAst
           let inf = buildInterface rnState dsEnv

@@ -21,8 +21,8 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnState)
 import qualified Language.Malgo.Rename.RnEnv as RnState
 import Language.Malgo.Syntax.Extension
-import qualified Language.Malgo.Type as GT
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
+import qualified Language.Malgo.TypeRep.IORef as GT
 import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
