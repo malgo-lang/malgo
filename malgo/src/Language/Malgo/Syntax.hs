@@ -22,13 +22,12 @@ import qualified Data.Set as Set
 import Data.Tuple.Extra (uncurry3)
 import Koriel.Id
 import Koriel.Pretty
-import qualified Language.Malgo.KindF as U
 import Language.Malgo.Prelude
 import Language.Malgo.Syntax.Extension
-import qualified Language.Malgo.TypeF as U
 import Language.Malgo.TypeRep.IORef (HasType (..))
 import qualified Language.Malgo.TypeRep.IORef as T
 import qualified Language.Malgo.TypeRep.Static as T
+import qualified Language.Malgo.TypeRep.UTerm as U
 import qualified Language.Malgo.Unify as U
 
 -- | Unboxed and literal

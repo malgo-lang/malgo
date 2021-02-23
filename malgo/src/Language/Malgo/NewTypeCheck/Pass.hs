@@ -24,15 +24,14 @@ import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Malgo.KindF
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import qualified Language.Malgo.Rename.RnEnv as R
 import Language.Malgo.Syntax hiding (Type (..), freevars)
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeF
 import Language.Malgo.TypeRep.Static (PrimT (..))
+import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.Unify hiding (lookupVar)
 import Text.Megaparsec (SourcePos)
 

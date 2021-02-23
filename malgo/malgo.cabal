@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b14cbf765c50575af33b1110fdac779f17d7d7e9decc80767132b948c0309484
+-- hash: 0a72346edc465e15acd5e1f733dea6584e38c6d336ae7a6510e70663d512b622
 
 name:           malgo
 version:        1.0.0.0
@@ -27,7 +27,6 @@ library
       Language.Malgo.Desugar.Pass
       Language.Malgo.Driver
       Language.Malgo.Interface
-      Language.Malgo.KindF
       Language.Malgo.NewTypeCheck.Pass
       Language.Malgo.Parser
       Language.Malgo.Prelude
@@ -38,9 +37,9 @@ library
       Language.Malgo.TypeCheck.Constraint
       Language.Malgo.TypeCheck.Pass
       Language.Malgo.TypeCheck.TcEnv
-      Language.Malgo.TypeF
       Language.Malgo.TypeRep.IORef
       Language.Malgo.TypeRep.Static
+      Language.Malgo.TypeRep.UTerm
       Language.Malgo.Unify
   other-modules:
       Paths_malgo
