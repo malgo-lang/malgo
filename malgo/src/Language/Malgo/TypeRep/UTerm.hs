@@ -27,13 +27,13 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsKind (fromKind, safeToKind), IsType (safeToType), PrimT (..), Rep (..))
+import Language.Malgo.TypeRep.Static (IsKind (fromKind, safeToKind), IsScheme, IsType (safeToType), PrimT (..), Rep (..))
 import qualified Language.Malgo.TypeRep.Static as S
 import Language.Malgo.Unify
 
-----------------------
--- Kind and HasKind --
-----------------------
+----------
+-- Kind --
+----------
 
 -- | Definition of `kind`
 data KindF a
@@ -262,6 +262,64 @@ instance (Pretty k, Eq k) => Unifiable (TypeF k) (TypeVar k) where
   unify x (TyPtr t1) (TyPtr t2) = [WithMeta x (t1 :~ t2)]
   unify x t1 t2 = errorWithMeta x $ unifyErrorMessage t1 t2
 
+freezeKind :: Fix (TypeF UKind) -> Maybe (Fix (TypeF Kind))
+freezeKind (Fix t) =
+  Fix
+    <$> case t of
+      TyApp t1 t2 -> TyApp <$> freezeKind t1 <*> freezeKind t2
+      TyVar v -> TyVar <$> traverseOf idMeta freeze v
+      TyCon c -> TyCon <$> traverseOf idMeta freeze c
+      TyPrim p -> pure $ TyPrim p
+      TyArr t1 t2 -> TyArr <$> freezeKind t1 <*> freezeKind t2
+      TyTuple ts -> TyTuple <$> traverse freezeKind ts
+      TyLazy t -> TyLazy <$> freezeKind t
+      TyPtr t -> TyPtr <$> freezeKind t
+
+unfreezeKind :: Fix (TypeF Kind) -> Fix (TypeF UKind)
+unfreezeKind (Fix t) =
+  Fix $
+    case t of
+      TyApp t1 t2 -> TyApp (unfreezeKind t1) (unfreezeKind t2)
+      TyVar v -> TyVar $ over idMeta unfreeze v
+      TyCon c -> TyCon $ over idMeta unfreeze c
+      TyPrim p -> TyPrim p
+      TyArr t1 t2 -> TyArr (unfreezeKind t1) (unfreezeKind t2)
+      TyTuple ts -> TyTuple $ map unfreezeKind ts
+      TyLazy t -> TyLazy $ unfreezeKind t
+      TyPtr t -> TyPtr $ unfreezeKind t
+
+freezeKind' :: UTerm (TypeF UKind) (TypeVar UKind) -> Maybe (UTerm (TypeF Kind) (TypeVar Kind))
+freezeKind' (UVar v) = UVar <$> traverseOf (typeVarIdLens . idMeta) freeze v
+  where
+    typeVarIdLens = lens typeVarId (\v x -> v {typeVarId = x})
+freezeKind' (UTerm t) =
+  UTerm
+    <$> case t of
+      TyApp t1 t2 -> TyApp <$> freezeKind' t1 <*> freezeKind' t2
+      TyVar v -> TyVar <$> traverseOf idMeta freeze v
+      TyCon c -> TyCon <$> traverseOf idMeta freeze c
+      TyPrim p -> pure $ TyPrim p
+      TyArr t1 t2 -> TyArr <$> freezeKind' t1 <*> freezeKind' t2
+      TyTuple ts -> TyTuple <$> traverse freezeKind' ts
+      TyLazy t -> TyLazy <$> freezeKind' t
+      TyPtr t -> TyPtr <$> freezeKind' t
+
+unfreezeKind' :: UTerm (TypeF Kind) (TypeVar Kind) -> UTerm (TypeF UKind) (TypeVar UKind)
+unfreezeKind' (UVar v) = UVar (over (typeVarIdLens . idMeta) unfreeze v)
+  where
+    typeVarIdLens = lens typeVarId (\v x -> v {typeVarId = x})
+unfreezeKind' (UTerm t) =
+  UTerm $
+    case t of
+      TyApp t1 t2 -> TyApp (unfreezeKind' t1) (unfreezeKind' t2)
+      TyVar v -> TyVar $ over idMeta unfreeze v
+      TyCon c -> TyCon $ over idMeta unfreeze c
+      TyPrim p -> TyPrim p
+      TyArr t1 t2 -> TyArr (unfreezeKind' t1) (unfreezeKind' t2)
+      TyTuple ts -> TyTuple $ map unfreezeKind' ts
+      TyLazy t -> TyLazy $ unfreezeKind' t
+      TyPtr t -> TyPtr $ unfreezeKind' t
+
 type TypeMap = Map (TypeVar UKind) (UTerm (TypeF UKind) (TypeVar UKind))
 
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap (KindUnifyT m) a}
@@ -292,6 +350,15 @@ newtype TypeScheme k = TypeScheme {unwrapTypeScheme :: UScheme (TypeF k) (TypeVa
 
 instance HasUTerm (TypeF k) (TypeVar k) (TypeScheme k) where
   walkOn f (TypeScheme u) = TypeScheme <$> walkOn f u
+
+instance IsKind k => IsScheme (TypeScheme k) where
+  safeToScheme (TypeScheme (UScheme vs t)) = do
+    vs' <- for vs $ \(Fix t) -> case t of
+      TyVar v -> Just $ over idMeta S.toKind v
+      _ -> Nothing
+    t' <- safeToType =<< freeze t
+    Just $ S.Forall vs' t'
+  fromScheme (S.Forall vs t) = TypeScheme $ UScheme (map (Fix . TyVar . over idMeta S.fromKind) vs) (unfreeze $ S.fromType t)
 
 class HasType t a | a -> t where
   typeOf :: a -> t
