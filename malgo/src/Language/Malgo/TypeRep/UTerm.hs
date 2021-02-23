@@ -27,34 +27,13 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (PrimT (..))
+import Language.Malgo.TypeRep.Static (IsKind (fromKind, safeToKind), IsType (safeToType), PrimT (..), Rep (..))
+import qualified Language.Malgo.TypeRep.Static as S
 import Language.Malgo.Unify
 
 ----------------------
 -- Kind and HasKind --
 ----------------------
-
--- | Runtime representation
-data Rep
-  = -- | Boxed value
-    BoxedRep
-  | -- | Int32#
-    Int32Rep
-  | -- | Int64#
-    Int64Rep
-  | -- | Float#
-    FloatRep
-  | -- | Double#
-    DoubleRep
-  | -- | Char#
-    CharRep
-  | -- | String#
-    StringRep
-  deriving stock (Eq, Ord, Show, Generic)
-
-instance Binary Rep
-
-instance Pretty Rep where pPrint rep = text $ show rep
 
 -- | Definition of `kind`
 data KindF a
@@ -77,6 +56,12 @@ instance Pretty1 KindF where
 
 instance Pretty a => Pretty (KindF a) where
   pPrintPrec l d k = liftPPrintPrec pPrintPrec l d k
+
+instance IsKind a => IsKind (KindF a) where
+  safeToKind (Type rep) = Just $ S.TYPE rep
+  safeToKind (KArr k1 k2) = S.KArr <$> safeToKind k1 <*> safeToKind k2
+  fromKind (S.TYPE rep) = Type rep
+  fromKind (S.KArr k1 k2) = KArr (fromKind k1) (fromKind k2)
 
 newtype KindVar = KindVar (Id ())
   deriving newtype (Eq, Ord, Show, Pretty)
@@ -167,6 +152,24 @@ instance Pretty k => Pretty1 (TypeF k) where
 
 instance (Pretty k, Pretty v) => Pretty (TypeF k v) where
   pPrintPrec l d t = liftPPrintPrec pPrintPrec l d t
+
+instance (IsKind k, IsType a) => IsType (TypeF k a) where
+  safeToType (TyApp t1 t2) = S.TyApp <$> S.safeToType t1 <*> S.safeToType t2
+  safeToType (TyVar v) = S.TyVar <$> traverseOf idMeta S.safeToKind v
+  safeToType (TyCon c) = S.TyCon <$> traverseOf idMeta S.safeToKind c
+  safeToType (TyPrim p) = Just $ S.TyPrim p
+  safeToType (TyArr t1 t2) = S.TyArr <$> S.safeToType t1 <*> S.safeToType t2
+  safeToType (TyTuple ts) = S.TyTuple <$> traverse S.safeToType ts
+  safeToType (TyLazy t) = S.TyLazy <$> S.safeToType t
+  safeToType (TyPtr t) = S.TyPtr <$> S.safeToType t
+  fromType (S.TyApp t1 t2) = TyApp (S.fromType t1) (S.fromType t2)
+  fromType (S.TyVar v) = TyVar (over idMeta (\k -> k ^. re S._Kind) v)
+  fromType (S.TyCon c) = TyCon (over idMeta (\k -> k ^. re S._Kind) c)
+  fromType (S.TyPrim p) = TyPrim p
+  fromType (S.TyArr t1 t2) = TyArr (S.fromType t1) (S.fromType t2)
+  fromType (S.TyTuple ts) = TyTuple (map S.fromType ts)
+  fromType (S.TyLazy t) = TyLazy (S.fromType t)
+  fromType (S.TyPtr t) = TyPtr (S.fromType t)
 
 data TypeVar k = TypeVar
   { typeVarId :: Id k,
@@ -283,7 +286,12 @@ instance (Monad m, MonadUniq m, MonadIO m) => MonadBind (TypeF UKind) (TypeVar U
     liftKindUnifyT $ solve [WithMeta x $ kindOf v :~ kindOf t]
     modify (Map.insert v t)
 
-type TypeScheme k = UScheme (TypeF k) (TypeVar k)
+newtype TypeScheme k = TypeScheme {unwrapTypeScheme :: UScheme (TypeF k) (TypeVar k)}
+  deriving stock (Eq, Ord, Show, Generic)
+  deriving newtype (Pretty)
+
+instance HasUTerm (TypeF k) (TypeVar k) (TypeScheme k) where
+  walkOn f (TypeScheme u) = TypeScheme <$> walkOn f u
 
 class HasType t a | a -> t where
   typeOf :: a -> t

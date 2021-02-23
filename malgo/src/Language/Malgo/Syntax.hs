@@ -26,7 +26,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.IORef (HasType (..))
 import qualified Language.Malgo.TypeRep.IORef as T
-import qualified Language.Malgo.TypeRep.Static as T
+import qualified Language.Malgo.TypeRep.Static as S
 import qualified Language.Malgo.TypeRep.UTerm as U
 import qualified Language.Malgo.Unify as U
 
@@ -44,21 +44,21 @@ instance Pretty (Literal x) where
 
 instance HasType (Literal x) where
   toType = to $ \case
-    Int32 {} -> T.TyPrim T.Int32T
-    Int64 {} -> T.TyPrim T.Int64T
-    Float {} -> T.TyPrim T.FloatT
-    Double {} -> T.TyPrim T.DoubleT
-    Char {} -> T.TyPrim T.CharT
-    String {} -> T.TyPrim T.StringT
+    Int32 {} -> T.TyPrim S.Int32T
+    Int64 {} -> T.TyPrim S.Int64T
+    Float {} -> T.TyPrim S.FloatT
+    Double {} -> T.TyPrim S.DoubleT
+    Char {} -> T.TyPrim S.CharT
+    String {} -> T.TyPrim S.StringT
   overType _ = pure
 
 instance U.HasType U.UType (Literal x) where
-  typeOf Int32 {} = U.UTerm (U.TyPrim T.Int32T)
-  typeOf Int64 {} = U.UTerm (U.TyPrim T.Int64T)
-  typeOf Float {} = U.UTerm (U.TyPrim T.FloatT)
-  typeOf Double {} = U.UTerm (U.TyPrim T.DoubleT)
-  typeOf Char {} = U.UTerm (U.TyPrim T.CharT)
-  typeOf String {} = U.UTerm (U.TyPrim T.StringT)
+  typeOf Int32 {} = U.UTerm (U.TyPrim S.Int32T)
+  typeOf Int64 {} = U.UTerm (U.TyPrim S.Int64T)
+  typeOf Float {} = U.UTerm (U.TyPrim S.FloatT)
+  typeOf Double {} = U.UTerm (U.TyPrim S.DoubleT)
+  typeOf Char {} = U.UTerm (U.TyPrim S.CharT)
+  typeOf String {} = U.UTerm (U.TyPrim S.StringT)
 
 instance U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Literal x) where
   walkOn f v = f (U.typeOf v) $> v

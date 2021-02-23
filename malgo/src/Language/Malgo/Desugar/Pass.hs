@@ -35,7 +35,7 @@ import Language.Malgo.TypeCheck.Pass (applySubst)
 import Language.Malgo.TypeCheck.TcEnv (TcEnv)
 import qualified Language.Malgo.TypeCheck.TcEnv as Tc
 import Language.Malgo.TypeRep.IORef as GT
-import Language.Malgo.TypeRep.Static as GT
+import Language.Malgo.TypeRep.Static as GT (PrimT (..), Rep (..))
 
 -- | MalgoからCoreへの変換
 desugar ::

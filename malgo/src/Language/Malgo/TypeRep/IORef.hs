@@ -19,7 +19,8 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (PrimT(..))
+import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..))
+import qualified Language.Malgo.TypeRep.Static as S
 
 ----------------------
 -- Kind and HasKind --
@@ -49,27 +50,13 @@ instance Pretty Kind where
   pPrintPrec l d (KArr k1 k2) =
     maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
 
--- | Runtime representation
-data Rep
-  = -- | Boxed value
-    BoxedRep
-  | -- | Int32#
-    Int32Rep
-  | -- | Int64#
-    Int64Rep
-  | -- | Float#
-    FloatRep
-  | -- | Double#
-    DoubleRep
-  | -- | Char#
-    CharRep
-  | -- | String#
-    StringRep
-  deriving stock (Eq, Ord, Show, Generic)
-
-instance Binary Rep
-
-instance Pretty Rep where pPrint rep = text $ show rep
+instance S.IsKind Kind where
+  _Kind = prism fromStatic (Right . toStatic)
+    where
+      fromStatic (S.TYPE rep) = Type rep
+      fromStatic (S.KArr k1 k2) = KArr (fromStatic k1) (fromStatic k2)
+      toStatic (Type rep) = S.TYPE rep
+      toStatic (KArr k1 k2) = S.KArr (toStatic k1) (toStatic k2)
 
 ---------------------
 -- Primitive Types --
@@ -97,6 +84,10 @@ instance HasKind Scheme where
 
 instance Pretty Scheme where
   pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
+
+instance S.IsScheme Scheme where
+  safeToScheme (Forall vs t) = S.Forall <$> traverse (traverseOf idMeta S.safeToKind) vs <*> S.safeToType t
+  fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromKind) vs) (S.fromType t)
 
 type TyVar = Id Kind
 
@@ -163,6 +154,25 @@ instance Pretty Type where
   pPrintPrec _ _ (TyLazy t) = braces $ pPrint t
   pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec _ _ (TyMeta tv) = pPrint tv
+
+instance S.IsType Type where
+  safeToType (TyApp t1 t2) = S.TyApp <$> S.safeToType t1 <*> S.safeToType t2
+  safeToType (TyVar v) = S.TyVar <$> traverseOf idMeta S.safeToKind v
+  safeToType (TyCon c) = S.TyCon <$> traverseOf idMeta S.safeToKind c
+  safeToType (TyPrim p) = Just $ S.TyPrim p
+  safeToType (TyArr t1 t2) = S.TyArr <$> S.safeToType t1 <*> S.safeToType t2
+  safeToType (TyTuple ts) = S.TyTuple <$> traverse S.safeToType ts
+  safeToType (TyLazy t) = S.TyLazy <$> S.safeToType t
+  safeToType (TyPtr t) = S.TyPtr <$> S.safeToType t
+  safeToType TyMeta {} = Nothing
+  fromType (S.TyApp t1 t2) = TyApp (S.fromType t1) (S.fromType t2)
+  fromType (S.TyVar v) = TyVar (over idMeta (\k -> k ^. re S._Kind) v)
+  fromType (S.TyCon c) = TyCon (over idMeta (\k -> k ^. re S._Kind) c)
+  fromType (S.TyPrim p) = TyPrim p
+  fromType (S.TyArr t1 t2) = TyArr (S.fromType t1) (S.fromType t2)
+  fromType (S.TyTuple ts) = TyTuple (map S.fromType ts)
+  fromType (S.TyLazy t) = TyLazy (S.fromType t)
+  fromType (S.TyPtr t) = TyPtr (S.fromType t)
 
 -------------------
 -- Type variable --

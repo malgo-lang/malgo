@@ -26,7 +26,7 @@ import Language.Malgo.TypeCheck.Constraint
 import Language.Malgo.TypeCheck.TcEnv hiding (rnEnv)
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
 import Language.Malgo.TypeRep.IORef
-import Language.Malgo.TypeRep.Static
+import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..))
 import Text.Megaparsec (SourcePos)
 
 -- Entry point
