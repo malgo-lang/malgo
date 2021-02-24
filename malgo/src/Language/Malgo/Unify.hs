@@ -24,6 +24,7 @@ import qualified Data.Set as Set
 import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
+import Language.Malgo.TypeRep.Static (IsKind (..), IsType (..))
 
 -----------
 -- UTerm --
@@ -54,6 +55,16 @@ instance (Pretty v, Pretty1 t) => Pretty (UTerm t v) where
   pPrintPrec _ _ (UVar v) = pPrint v
   pPrintPrec l d (UTerm t) = liftPPrintPrec pPrintPrec l d t
 
+instance IsKind (t (UTerm t v)) => IsKind (UTerm t v) where
+  safeToKind (UVar _) = Nothing
+  safeToKind (UTerm t) = safeToKind t
+  fromKind k = UTerm $ fromKind k
+
+instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
+  safeToType (UVar _) = Nothing
+  safeToType (UTerm t) = safeToType t
+  fromType t = UTerm $ fromType t
+
 freeze :: Traversable t => UTerm t v -> Maybe (Fix t)
 freeze (UVar _) = Nothing
 freeze (UTerm t) = Fix <$> traverse freeze t
@@ -77,17 +88,6 @@ class HasUTerm t v a where
 instance HasUTerm t v (UTerm t v) where
   walkOn = id
 
-data UScheme t v = UScheme [Fix t] (UTerm t v)
-  deriving stock (Eq, Ord, Show, Generic)
-
-instance (Pretty v, Pretty1 t) => Pretty (UScheme t v) where
-  pPrintPrec l _ (UScheme as t) = "forall" <+> sep (map (pPrintPrec l 0) as) <> "." <+> pPrintPrec l 0 t
-
-instance (Traversable t, HasUTerm t v (UTerm t v)) => HasUTerm t v (UScheme t v) where
-  walkOn f (UScheme vs t) = UScheme <$> traverse (walkOn' f) vs <*> f t
-    where
-      walkOn' f v = fromMaybe v . freeze <$> walkOn f (unfreeze v `asTypeOf` t)
-
 ----------------
 -- Constraint --
 ----------------
@@ -110,12 +110,10 @@ instance (Pretty v, Pretty1 t) => Pretty (WithMeta x t v) where
 -- Variable --
 --------------
 
-class Var t v | v -> t, t -> v where
+class Var v where
   rigidName :: Lens' v String
   isRigid :: v -> Bool
   isRigid v = not $ null $ v ^. rigidName
-  toRigidName :: Fix t -> String
-  toBound :: MonadBind t v m => v -> String -> m (Fix t)
 
 ---------------
 -- Unifiable --
@@ -154,73 +152,12 @@ instance MonadBind t v m => MonadBind t v (WriterT w m)
 
 instance MonadBind t v m => MonadBind t v (ContT r m)
 
-generalizeUTerm ::
-  (Pretty x, Ord v, Foldable t, Var t v, MonadBind t v m, Traversable t) =>
-  x ->
-  -- | bounded variables
-  Set v ->
-  UTerm t v ->
-  m (UScheme t v)
-generalizeUTerm x bound term = do
-  -- {-
-  let fvs = Set.toList $ unboundFreevars bound term
-  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ unfreeze a) fvs as
-  UScheme as <$> zonkUTerm term
-
--- -}
-{-
-  zonkedTerm <- zonkUTerm term
-  let fvs = Set.toList $ unboundFreevars bound zonkedTerm
-  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ unfreeze a) fvs as
-  UScheme as <$> zonkUTerm zonkedTerm
-
--- -}
-
-unboundFreevars :: (Ord v, Foldable t) => Set v -> UTerm t v -> Set v
-unboundFreevars bound t = freevars t Set.\\ bound
-
-generalizeUTermMutRecs :: (Pretty x, Ord v, Foldable t, Var t v, MonadBind t v m, Traversable t, Pretty v, Pretty1 t) => x -> Set v -> [UTerm t v] -> m ([Fix t], [UScheme t v])
-generalizeUTermMutRecs x bound terms = do
-  -- {-
-  let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms
-  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ unfreeze a) fvs as
-  (as,) <$> traverse (fmap (UScheme as) . zonkUTerm) terms
-
--- -}
-{-
-  zonkedTerms <- traverse zonkUTerm terms
-  let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
-  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ unfreeze a) fvs as
-  (as,) <$> traverse (fmap (UScheme as) . zonkUTerm) zonkedTerms
-
--- -}
-
-instantiateUTerm :: (Pretty x, Var t v, MonadBind t v m, Eq v, Eq1 t, Traversable t) => x -> Bool -> UScheme t v -> m (UTerm t v)
-instantiateUTerm _ isRigid (UScheme as t) = do
-  vs <- traverse ?? as $ \a -> do
-    v <- freshVar
-    if isRigid
-      then pure $ UVar $ v & rigidName .~ toRigidName a
-      else pure $ UVar v
-  replace (zip as vs) t
-  where
-    replace [] t = pure t
-    replace ((a, v) : avs) t
-      | unfreeze a == t = replace avs v
-      | otherwise = case t of
-        UVar _ -> replace avs t
-        UTerm t' -> replace avs . UTerm =<< traverse (replace [(a, v)]) t'
-
 ------------
 -- Solver --
 ------------
 
 solve ::
-  ( Var t v,
+  ( Var v,
     Pretty x,
     Pretty v,
     MonadBind t v m,
@@ -235,7 +172,7 @@ solve cs = do
   solveLoop 5000 cs
 
 solveLoop ::
-  ( Var t v,
+  ( Var v,
     Pretty x,
     Pretty v,
     MonadBind t v m,

@@ -9,6 +9,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.TypeRep.IORef where
@@ -19,7 +20,8 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..))
+import {-# SOURCE #-} Language.Malgo.Syntax.Extension (ModuleName)
+import Language.Malgo.TypeRep.Static (IsTypeDef, PrimT (..), Rep (..))
 import qualified Language.Malgo.TypeRep.Static as S
 
 ----------------------
@@ -211,6 +213,25 @@ instance HasKind MetaTv where
 instance Binary MetaTv where
   put _ = error "Binary MetaTv"
   get = error "Binary MetaTv"
+
+-- | Definition of type constructor
+data TypeDef = TypeDef {_constructor :: Type, _qualVars :: [TyVar], _union :: [(Id ModuleName, Type)]}
+  deriving stock (Show, Eq, Generic)
+
+instance Binary TypeDef
+
+instance Pretty TypeDef where
+  pPrint (TypeDef c q u) = pPrint (c, q, u)
+
+instance IsTypeDef TypeDef where
+  safeToTypeDef TypeDef {_constructor, _qualVars, _union} =
+    S.TypeDef <$> S.safeToType _constructor
+      <*> traverse (idMeta S.safeToKind) _qualVars
+      <*> traverse (_2 S.safeToType) _union
+  fromTypeDef S.TypeDef {S._typeConstructor, S._typeParameters, S._valueConstructors} =
+    TypeDef (S.fromType _typeConstructor) (map (over idMeta S.fromKind) _typeParameters) (map (over _2 S.fromType) _valueConstructors)
+
+makeLenses ''TypeDef
 
 ---------------------------
 -- Read and Write MetaTv --

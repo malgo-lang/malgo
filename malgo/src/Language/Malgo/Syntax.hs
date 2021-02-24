@@ -24,8 +24,7 @@ import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.IORef (HasType (..))
-import qualified Language.Malgo.TypeRep.IORef as T
+import qualified Language.Malgo.TypeRep.IORef as I
 import qualified Language.Malgo.TypeRep.Static as S
 import qualified Language.Malgo.TypeRep.UTerm as U
 import qualified Language.Malgo.Unify as U
@@ -42,14 +41,14 @@ instance Pretty (Literal x) where
   pPrint (Char c) = quotes (pPrint c)
   pPrint (String s) = doubleQuotes (text s)
 
-instance HasType (Literal x) where
+instance I.HasType (Literal x) where
   toType = to $ \case
-    Int32 {} -> T.TyPrim S.Int32T
-    Int64 {} -> T.TyPrim S.Int64T
-    Float {} -> T.TyPrim S.FloatT
-    Double {} -> T.TyPrim S.DoubleT
-    Char {} -> T.TyPrim S.CharT
-    String {} -> T.TyPrim S.StringT
+    Int32 {} -> I.TyPrim S.Int32T
+    Int64 {} -> I.TyPrim S.Int64T
+    Float {} -> I.TyPrim S.FloatT
+    Double {} -> I.TyPrim S.DoubleT
+    Char {} -> I.TyPrim S.CharT
+    String {} -> I.TyPrim S.StringT
   overType _ = pure
 
 instance U.HasType U.UType (Literal x) where
@@ -59,6 +58,14 @@ instance U.HasType U.UType (Literal x) where
   typeOf Double {} = U.UTerm (U.TyPrim S.DoubleT)
   typeOf Char {} = U.UTerm (U.TyPrim S.CharT)
   typeOf String {} = U.UTerm (U.TyPrim S.StringT)
+
+instance S.HasType (Literal x) where
+  typeOf Int32 {} = S.TyPrim S.Int32T
+  typeOf Int64 {} = S.TyPrim S.Int64T
+  typeOf Float {} = S.TyPrim S.FloatT
+  typeOf Double {} = S.TyPrim S.DoubleT
+  typeOf Char {} = S.TyPrim S.CharT
+  typeOf String {} = S.TyPrim S.StringT
 
 instance U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Literal x) where
   walkOn f v = f (U.typeOf v) $> v
@@ -103,29 +110,29 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
-instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Exp x) where
+instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasType x) => I.HasType (Exp x) where
   toType = to $ \case
-    Var x _ -> x ^. toType
-    Con x _ -> x ^. toType
-    Unboxed x _ -> x ^. toType
-    Boxed x _ -> x ^. toType
-    Apply x _ _ -> x ^. toType
-    OpApp x _ _ _ -> x ^. toType
-    Fn x _ -> x ^. toType
-    Tuple x _ -> x ^. toType
-    Force x _ -> x ^. toType
-    Parens x _ -> x ^. toType
+    Var x _ -> x ^. I.toType
+    Con x _ -> x ^. I.toType
+    Unboxed x _ -> x ^. I.toType
+    Boxed x _ -> x ^. I.toType
+    Apply x _ _ -> x ^. I.toType
+    OpApp x _ _ _ -> x ^. I.toType
+    Fn x _ -> x ^. I.toType
+    Tuple x _ -> x ^. I.toType
+    Force x _ -> x ^. I.toType
+    Parens x _ -> x ^. I.toType
   overType f = \case
-    Var x v -> Var <$> overType f x <*> pure v
-    Con x c -> Con <$> overType f x <*> pure c
-    Unboxed x u -> Unboxed <$> overType f x <*> overType f u
-    Boxed x b -> Boxed <$> overType f x <*> overType f b
-    Apply x e1 e2 -> Apply <$> overType f x <*> overType f e1 <*> overType f e2
-    OpApp x op e1 e2 -> OpApp <$> overType f x <*> pure op <*> overType f e1 <*> overType f e2
-    Fn x cs -> Fn <$> overType f x <*> traverse (overType f) cs
-    Tuple x es -> Tuple <$> overType f x <*> traverse (overType f) es
-    Force x e -> Force <$> overType f x <*> overType f e
-    Parens x e -> Parens <$> overType f x <*> overType f e
+    Var x v -> Var <$> I.overType f x <*> pure v
+    Con x c -> Con <$> I.overType f x <*> pure c
+    Unboxed x u -> Unboxed <$> I.overType f x <*> I.overType f u
+    Boxed x b -> Boxed <$> I.overType f x <*> I.overType f b
+    Apply x e1 e2 -> Apply <$> I.overType f x <*> I.overType f e1 <*> I.overType f e2
+    OpApp x op e1 e2 -> OpApp <$> I.overType f x <*> pure op <*> I.overType f e1 <*> I.overType f e2
+    Fn x cs -> Fn <$> I.overType f x <*> traverse (I.overType f) cs
+    Tuple x es -> Tuple <$> I.overType f x <*> traverse (I.overType f) es
+    Force x e -> Force <$> I.overType f x <*> I.overType f e
+    Parens x e -> Parens <$> I.overType f x <*> I.overType f e
 
 instance
   ( ForallExpX (U.HasType U.UType) x,
@@ -144,6 +151,24 @@ instance
   typeOf (Tuple x _) = U.typeOf x
   typeOf (Force x _) = U.typeOf x
   typeOf (Parens x _) = U.typeOf x
+
+instance
+  ( ForallExpX S.HasType x,
+    ForallClauseX S.HasType x,
+    ForallPatX S.HasType x
+  ) =>
+  S.HasType (Exp x)
+  where
+  typeOf (Var x _) = S.typeOf x
+  typeOf (Con x _) = S.typeOf x
+  typeOf (Unboxed x _) = S.typeOf x
+  typeOf (Boxed x _) = S.typeOf x
+  typeOf (Apply x _ _) = S.typeOf x
+  typeOf (OpApp x _ _ _) = S.typeOf x
+  typeOf (Fn x _) = S.typeOf x
+  typeOf (Tuple x _) = S.typeOf x
+  typeOf (Force x _) = S.typeOf x
+  typeOf (Parens x _) = S.typeOf x
 
 instance
   ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
@@ -192,13 +217,13 @@ instance Pretty (XId x) => Pretty (Stmt x) where
   pPrint (Let _ v e) = "let" <+> pPrint v <+> "=" <+> pPrint e
   pPrint (NoBind _ e) = pPrint e
 
-instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Stmt x) where
+instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasType x) => I.HasType (Stmt x) where
   toType = to $ \case
-    Let _ _ e -> view toType e
-    NoBind _ e -> view toType e
+    Let _ _ e -> view I.toType e
+    NoBind _ e -> view I.toType e
   overType f = \case
-    Let x v e -> Let x v <$> overType f e
-    NoBind x e -> NoBind x <$> overType f e
+    Let x v e -> Let x v <$> I.overType f e
+    NoBind x e -> NoBind x <$> I.overType f e
 
 instance
   ( ForallExpX (U.HasType U.UType) x,
@@ -209,6 +234,16 @@ instance
   where
   typeOf (Let _ _ e) = U.typeOf e
   typeOf (NoBind _ e) = U.typeOf e
+
+instance
+  ( ForallExpX S.HasType x,
+    ForallClauseX S.HasType x,
+    ForallPatX S.HasType x
+  ) =>
+  S.HasType (Stmt x)
+  where
+  typeOf (Let _ _ e) = S.typeOf e
+  typeOf (NoBind _ e) = S.typeOf e
 
 instance
   ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
@@ -239,10 +274,10 @@ instance (Pretty (XId x)) => Pretty (Clause x) where
   pPrintPrec _ _ (Clause _ [] e) = sep (punctuate ";" $ map pPrint e)
   pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", sep (punctuate ";" $ map pPrint e)]
 
-instance (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) => HasType (Clause x) where
-  toType = to $ \(Clause x _ _) -> view toType x
+instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasType x) => I.HasType (Clause x) where
+  toType = to $ \(Clause x _ _) -> view I.toType x
   overType f (Clause x ps e) =
-    Clause <$> overType f x <*> traverse (overType f) ps <*> traverse (overType f) e
+    Clause <$> I.overType f x <*> traverse (I.overType f) ps <*> traverse (I.overType f) e
 
 instance
   ( ForallExpX (U.HasType U.UType) x,
@@ -252,6 +287,15 @@ instance
   U.HasType U.UType (Clause x)
   where
   typeOf (Clause x _ _) = U.typeOf x
+
+instance
+  ( ForallExpX S.HasType x,
+    ForallClauseX S.HasType x,
+    ForallPatX S.HasType x
+  ) =>
+  S.HasType (Clause x)
+  where
+  typeOf (Clause x _ _) = S.typeOf x
 
 instance
   ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
@@ -290,17 +334,17 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
     parens $ sep $ punctuate "," $ map pPrint ps
   pPrintPrec _ _ (UnboxedP _ u) = pPrint u
 
-instance (ForallPatX HasType x) => HasType (Pat x) where
+instance (ForallPatX I.HasType x) => I.HasType (Pat x) where
   toType = to $ \case
-    VarP x _ -> view toType x
-    ConP x _ _ -> view toType x
-    TupleP x _ -> view toType x
-    UnboxedP x _ -> view toType x
+    VarP x _ -> view I.toType x
+    ConP x _ _ -> view I.toType x
+    TupleP x _ -> view I.toType x
+    UnboxedP x _ -> view I.toType x
   overType f = \case
-    VarP x v -> VarP <$> overType f x <*> pure v
-    ConP x c ps -> ConP <$> overType f x <*> pure c <*> traverse (overType f) ps
-    TupleP x ps -> TupleP <$> overType f x <*> traverse (overType f) ps
-    UnboxedP x u -> UnboxedP <$> overType f x <*> overType f u
+    VarP x v -> VarP <$> I.overType f x <*> pure v
+    ConP x c ps -> ConP <$> I.overType f x <*> pure c <*> traverse (I.overType f) ps
+    TupleP x ps -> TupleP <$> I.overType f x <*> traverse (I.overType f) ps
+    UnboxedP x u -> UnboxedP <$> I.overType f x <*> I.overType f u
 
 instance
   ( ForallExpX (U.HasType U.UType) x,
@@ -313,6 +357,18 @@ instance
   typeOf (ConP x _ _) = U.typeOf x
   typeOf (TupleP x _) = U.typeOf x
   typeOf (UnboxedP x _) = U.typeOf x
+
+instance
+  ( ForallExpX S.HasType x,
+    ForallClauseX S.HasType x,
+    ForallPatX S.HasType x
+  ) =>
+  S.HasType (Pat x)
+  where
+  typeOf (VarP x _) = S.typeOf x
+  typeOf (ConP x _ _) = S.typeOf x
+  typeOf (TupleP x _) = S.typeOf x
+  typeOf (UnboxedP x _) = S.typeOf x
 
 instance
   ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
@@ -439,6 +495,8 @@ type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 type instance XModule (Malgo 'TypeCheck) = BindGroup (Malgo 'TypeCheck)
 
 type instance XModule (Malgo 'NewTypeCheck) = BindGroup (Malgo 'NewTypeCheck)
+
+type instance XModule (Malgo 'Refine) = BindGroup (Malgo 'Refine)
 
 ----------------
 -- Bind group --

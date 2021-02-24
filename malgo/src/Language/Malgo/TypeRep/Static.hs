@@ -18,6 +18,7 @@ import qualified Data.Map as Map
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
+import {-# SOURCE #-} Language.Malgo.Syntax.Extension (ModuleName)
 
 --------------------------------
 -- Common tag representations --
@@ -196,6 +197,12 @@ instance HasType Type where
 
 -- | Universally quantified type
 data Scheme = Forall [Id Kind] Type
+  deriving stock (Show, Generic)
+
+instance Binary Scheme
+
+instance Pretty Scheme where
+  pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
 
 makePrisms ''Scheme
 
@@ -225,6 +232,32 @@ instance Pretty a => Pretty (WithType a) where
 
 instance HasType (WithType a) where
   typeOf (WithType _ t) = t
+
+-- | Definition of Type constructor
+data TypeDef = TypeDef
+  { _typeConstructor :: Type,
+    _typeParameters :: [Id Kind],
+    _valueConstructors :: [(Id ModuleName, Type)]
+  }
+  deriving stock (Show, Generic)
+
+instance Binary TypeDef
+
+instance Pretty TypeDef where
+  pPrint (TypeDef c q u) = pPrint (c, q, u)
+
+makeLenses ''TypeDef
+
+class IsTypeDef a where
+  _TypeDef :: Prism' a TypeDef
+  _TypeDef = prism' fromTypeDef safeToTypeDef
+  safeToTypeDef :: a -> Maybe TypeDef
+  safeToTypeDef a = a ^? _TypeDef
+  toTypeDef :: a -> TypeDef
+  toTypeDef a = fromJust $ safeToTypeDef a
+  fromTypeDef :: TypeDef -> a
+  fromTypeDef a = a ^. re _TypeDef
+  {-# MINIMAL _TypeDef | (safeToTypeDef, fromTypeDef) #-}
 
 ---------------
 -- Utilities --

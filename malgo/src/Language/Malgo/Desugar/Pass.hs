@@ -31,21 +31,18 @@ import Language.Malgo.Interface
 import Language.Malgo.Prelude
 import Language.Malgo.Syntax as G
 import Language.Malgo.Syntax.Extension as G
-import Language.Malgo.TypeCheck.Pass (applySubst)
 import Language.Malgo.TypeCheck.TcEnv (TcEnv)
-import qualified Language.Malgo.TypeCheck.TcEnv as Tc
-import Language.Malgo.TypeRep.IORef as GT
-import Language.Malgo.TypeRep.Static as GT (PrimT (..), Rep (..))
+import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
 desugar ::
   (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m) =>
   TcEnv ->
-  Module (Malgo 'TypeCheck) ->
+  Module (Malgo 'Refine) ->
   m (DsEnv, Program (Id C.Type))
 desugar tcEnv (Module modName ds) = do
-  (dsEnv, ds') <- runReaderT (dsBindGroup ds) (DsEnv modName mempty tcEnv)
-  case searchMain (Map.toList $ view varEnv dsEnv) of
+  (dsEnv, ds') <- runReaderT (dsBindGroup ds) (makeDsEnvFromIORef modName tcEnv)
+  case searchMain (Map.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
         mainFunc =<< runDef do
@@ -63,7 +60,7 @@ desugar tcEnv (Module modName ds) = do
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
   (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m, MonadMalgo m) =>
-  BindGroup (Malgo 'TypeCheck) ->
+  BindGroup (Malgo 'Refine) ->
   m (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsBindGroup bg = do
   env <- foldMapA dsImport (bg ^. imports)
@@ -75,15 +72,15 @@ dsBindGroup bg = do
         (env, scDefs') <- dsScDefGroup (bg ^. scDefs)
         pure $ (env,) $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
-dsImport :: (MonadMalgo m, MonadIO m) => Import (Malgo 'TypeCheck) -> m DsEnv
+dsImport :: (MonadMalgo m, MonadIO m) => Import (Malgo 'Refine) -> m DsEnv
 dsImport (_, modName) = do
   interface <- loadInterface modName
-  pure $ mempty & varEnv <>~ interface ^. coreIdentMap
+  pure $ mempty & nameEnv <>~ interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
   (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadMalgo f) =>
-  [[ScDef (Malgo 'TypeCheck)]] ->
+  [[ScDef (Malgo 'Refine)]] ->
   f (DsEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
 dsScDefGroup [] = (,[]) <$> ask
 dsScDefGroup (ds : dss) = do
@@ -95,23 +92,23 @@ dsScDefGroup (ds : dss) = do
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
   (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadMalgo f) =>
-  [ScDef (Malgo 'TypeCheck)] ->
+  [ScDef (Malgo 'Refine)] ->
   f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
   env <- foldMapA ?? ds $ \(_, f, _) -> do
-    Just (Forall _ fType) <- view (tcEnv . Tc.varEnv . at f)
+    Just (Forall _ fType) <- view (varTypeEnv . at f)
     f' <- newCoreId f =<< dsType fType
-    pure $ mempty & varEnv .~ Map.singleton f f'
+    pure $ mempty & nameEnv .~ Map.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dsScDef ds
 
 dsScDef ::
   (MonadUniq f, MonadReader DsEnv f, MonadIO f, MonadFail f, MonadMalgo f) =>
-  ScDef (Malgo 'TypeCheck) ->
+  ScDef (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (WithType pos typ, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
-  unless (GT._TyArr `has` typ || GT._TyLazy `has` typ) $
+  unless (_TyArr `has` typ || _TyLazy `has` typ) $
     errorOn pos $
       "Invalid Toplevel Declaration:"
         <+> quotes (pPrint name <+> ":" <+> pPrint typ)
@@ -125,26 +122,26 @@ dsScDef (WithType pos typ, name, expr) = do
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
   (MonadReader DsEnv f, MonadUniq f, MonadIO f) =>
-  Foreign (Malgo 'TypeCheck) ->
+  Foreign (Malgo 'Refine) ->
   f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsForeign (x@(WithType (_, primName) _), name, _) = do
-  name' <- newCoreId name =<< dsType (x ^. toType)
-  let (paramTypes, retType) = splitTyArr (x ^. toType)
+  name' <- newCoreId name =<< dsType (GT.typeOf x)
+  let (paramTypes, retType) = splitTyArr (GT.typeOf x)
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
   params <- traverse (newLocalId "$p") paramTypes'
   fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
-  pure (mempty & varEnv .~ Map.singleton name name', [(name', fun)])
+  pure (mempty & nameEnv .~ Map.singleton name name', [(name', fun)])
 
 dsDataDef ::
   (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
-  DataDef (Malgo 'TypeCheck) ->
+  DataDef (Malgo 'Refine) ->
   m (DsEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
 dsDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
     -- lookup constructor infomations
-    Just (GT.TyCon name') <- preview (tcEnv . Tc.typeEnv . at name . _Just . Tc.constructor)
-    conMap <- lookupConMap name' []
+    Just (GT.TyCon name') <- preview (typeDefEnv . at name . _Just . typeConstructor)
+    conMap <- lookupConMap (over idMeta fromKind name') []
     let conType = fromJust $ List.lookup conName conMap
 
     -- desugar conType
@@ -162,7 +159,7 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
     obj <- case ps of
       [] -> pure ([], expr)
       _ -> curryFun ps expr
-    pure (mempty & varEnv .~ Map.singleton conName conName', [(conName', obj)])
+    pure (mempty & nameEnv .~ Map.singleton conName conName', [(conName', obj)])
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
     buildConType [] retType = [] :-> retType
@@ -179,7 +176,7 @@ dsUnboxed (G.String x) = C.String x
 
 dsExp ::
   (HasCallStack, MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
-  G.Exp (Malgo 'TypeCheck) ->
+  G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var x name) = do
   name' <- lookupName name
@@ -190,7 +187,7 @@ dsExp (G.Var x name) = do
   --    2. 引数のない値コンストラクタ
   --   このうち、2.は「0引数関数の呼び出し」の形でのみ出現する（dsExp G.Conの節参照）
   --   よって、ここではxがTyLazyのときのみname'が0引数関数になるはずである。
-  case (x ^. toType, C.typeOf name') of
+  case (GT.typeOf x, C.typeOf name') of
     -- TyLazyの型を検査
     (GT.TyLazy {}, [] :-> _) -> pure ()
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
@@ -229,7 +226,7 @@ dsExp (G.Apply info f x) = runDef $ do
       --   x の型と f の引数の型は必ずしも一致しない
       --   適切な型にcastする必要がある
       x' <- cast xType =<< dsExp x
-      Cast <$> dsType (info ^. toType) <*> bind (Call f' [x'])
+      Cast <$> dsType (GT.typeOf info) <*> bind (Call f' [x'])
     _ -> bug Unreachable
 dsExp (G.OpApp info op x y) = runDef $ do
   op' <- lookupName op
@@ -242,18 +239,18 @@ dsExp (G.OpApp info op x y) = runDef $ do
         if op' ^. idIsTopLevel
           then bind (CallDirect op' [x'])
           else bind (Call (C.Var op') [x'])
-      Cast <$> dsType (info ^. toType) <*> bind (Call e1 [y'])
+      Cast <$> dsType (GT.typeOf info) <*> bind (Call e1 [y'])
     _ -> bug Unreachable
 dsExp (G.Fn x (Clause _ [] ss : _)) = do
   -- lazy valueの脱糖衣
   ss' <- dsStmts ss
-  typ <- dsType (x ^. toType)
+  typ <- dsType (GT.typeOf x)
   runDef do
     fun <- let_ typ $ Fun [] ss'
     pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
-  ps' <- traverse (\p -> newLocalId "$p" =<< dsType (p ^. toType)) ps
-  typ <- dsType (last es ^. toType)
+  ps' <- traverse (\p -> newLocalId "$p" =<< dsType (GT.typeOf p)) ps
+  typ <- dsType (GT.typeOf $ last es)
   -- destruct Clauses
   -- 各節のパターン列を行列に見立て、転置してmatchにわたし、パターンを分解する
   -- 例えば、{ f Nil -> f empty | f (Cons x xs) -> f x }の場合は、
@@ -268,7 +265,7 @@ dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
         cs
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
-  v <- newLocalId "$fun" =<< dsType (x ^. toType)
+  v <- newLocalId "$fun" =<< dsType (GT.typeOf x)
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
 dsExp (G.Fn _ []) = bug Unreachable
 dsExp (G.Tuple _ es) = runDef $ do
@@ -283,7 +280,7 @@ dsExp (G.Force _ e) = runDef $ do
   pure $ Call e' []
 dsExp (G.Parens _ e) = dsExp e
 
-dsStmts :: (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) => [Stmt (Malgo 'TypeCheck)] -> m (C.Exp (Id C.Type))
+dsStmts :: (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) => [Stmt (Malgo 'Refine)] -> m (C.Exp (Id C.Type))
 dsStmts [] = bug Unreachable
 dsStmts [NoBind _ e] = dsExp e
 dsStmts [G.Let _ _ e] = dsExp e
@@ -293,7 +290,7 @@ dsStmts (NoBind _ e : ss) = runDef $ do
 dsStmts (G.Let _ v e : ss) = do
   e' <- dsExp e
   v' <- newLocalId ("$let_" <> v ^. idName) (C.typeOf e')
-  local (over varEnv $ Map.insert v v') do
+  local (over nameEnv $ Map.insert v v') do
     ss' <- dsStmts ss
     pure $ Match e' (Bind v' ss' :| [])
 
@@ -305,7 +302,7 @@ match ::
   HasCallStack =>
   (MonadReader DsEnv m, MonadFail m, MonadIO m, MonadUniq m) =>
   [Id C.Type] ->
-  [[Pat (Malgo 'TypeCheck)]] ->
+  [[Pat (Malgo 'Refine)]] ->
   [m (C.Exp (Id C.Type))] ->
   C.Exp (Id C.Type) ->
   m (C.Exp (Id C.Type))
@@ -317,7 +314,7 @@ match (u : us) (ps : pss) es err
     let es' =
           zipWith
             ( \case
-                (VarP _ v) -> local (over varEnv (Map.insert v u))
+                (VarP _ v) -> local (over nameEnv (Map.insert v u))
                 _ -> bug Unreachable
             )
             ps
@@ -326,7 +323,7 @@ match (u : us) (ps : pss) es err
   -- Constructor Rule
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) ps = do
-    let patType = head ps ^. toType
+    let patType = GT.typeOf $ head ps
     unless (_TyApp `has` patType || _TyCon `has` patType) $
       errorDoc $ "Not valid type:" <+> pPrint patType
     -- 型からコンストラクタの集合を求める
@@ -344,7 +341,7 @@ match (u : us) (ps : pss) es err
     pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) ps = do
-    let patType = head ps ^. toType
+    let patType = GT.typeOf $ head ps
     SumT [con@(C.Con _ ts)] <- dsType patType
     params <- traverse (newLocalId "$p") ts
     cases <- do
@@ -406,15 +403,13 @@ match u pss es err = do
   errorDoc $ "match" <+> pPrint u <+> pPrint pss <+> pPrint (length es) <+> pPrint err
 
 -- Malgoの型をCoreの型に変換する
-dsType :: (HasCallStack, MonadIO m) => GT.Type -> m C.Type
+dsType :: Monad m => GT.Type -> m C.Type
 dsType GT.TyApp {} = pure AnyT
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
-  mkcon <- kind con
-  case mkcon of
-    Just (Type BoxedRep) -> pure AnyT
-    Just kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
-    _ -> bug Unreachable
+  case con ^. idMeta of
+    TYPE BoxedRep -> pure AnyT
+    kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
 dsType (GT.TyPrim GT.FloatT) = pure C.FloatT
@@ -429,18 +424,12 @@ dsType (GT.TyTuple ts) =
   SumT . Set.singleton . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dsType ts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
 dsType (GT.TyPtr t) = PtrT <$> dsType t
-dsType (GT.TyMeta tv) = do
-  mtype <- GT.readMetaTv tv
-  case mtype of
-    Just t -> dsType t
-    Nothing -> error "TyMeta must be removed"
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: (MonadReader DsEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
-  mkt <- kind t
-  case mkt of
-    Just (Type BoxedRep) -> do
+  case kindOf t of
+    TYPE BoxedRep -> do
       let (con, ts) = splitCon t
       conMap <- lookupConMap con ts
       SumT
@@ -456,7 +445,7 @@ unfoldType t = dsType t
 
 lookupName :: (HasCallStack, MonadReader DsEnv m) => TcId -> m (Id C.Type)
 lookupName name = do
-  mname' <- view (varEnv . at name)
+  mname' <- view (nameEnv . at name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
@@ -467,10 +456,10 @@ lookupConMap ::
   [GT.Type] ->
   m [(TcId, GT.Type)]
 lookupConMap con ts = do
-  typeEnv <- view (tcEnv . Tc.typeEnv)
-  case List.find (\Tc.TypeDef {Tc._constructor = t} -> t == GT.TyCon con) (Map.elems typeEnv) of
-    Just Tc.TypeDef {Tc._qualVars = as, Tc._union = conMap} ->
-      pure $ over (mapped . _2) (applySubst $ Map.fromList $ zip as ts) conMap
+  typeEnv <- view typeDefEnv
+  case List.find (\TypeDef {_typeConstructor = t} -> t == GT.TyCon con) (Map.elems typeEnv) of
+    Just TypeDef {_typeParameters = as, _valueConstructors = conMap} ->
+      pure $ over (mapped . _2) (GT.applySubst $ Map.fromList $ zip as ts) conMap
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
 
 newCoreId :: MonadUniq f => Id ModuleName -> a -> f (Id a)

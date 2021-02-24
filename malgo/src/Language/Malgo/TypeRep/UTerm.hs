@@ -13,6 +13,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
@@ -23,6 +24,7 @@ import Data.Binary (Binary)
 import Data.Deriving
 import Data.Fix
 import qualified Data.Map as Map
+import qualified Data.Set as Set
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -70,11 +72,9 @@ type UKind = UTerm KindF KindVar
 
 type Kind = Fix KindF
 
-instance Var KindF KindVar where
+instance Var KindVar where
   isRigid _ = False
   rigidName = lens (const "") const
-  toRigidName = const ""
-  toBound _ _ = pure $ Fix $ Type BoxedRep
 
 instance Unifiable KindF KindVar where
   unify x (Type rep1) (Type rep2)
@@ -181,18 +181,10 @@ instance Pretty k => Pretty (TypeVar k) where
   pPrint TypeVar {typeVarId = v, typeVarRigidName = ""} = pPrint v
   pPrint TypeVar {typeVarRigidName = name} = "'" <> text name
 
-instance Pretty k => Var (TypeF k) (TypeVar k) where
+instance Pretty k => Var (TypeVar k) where
   isRigid TypeVar {typeVarRigidName = ""} = False
   isRigid _ = True
   rigidName = lens typeVarRigidName (\v n -> v {typeVarRigidName = n})
-  toRigidName (Fix v) = show $ pPrint v
-  toBound TypeVar {typeVarId, typeVarRigidName} hint
-    | null typeVarRigidName = do
-      TypeVar v _ <- freshVar @(TypeF k)
-      pure $ Fix $ TyVar (v & idName .~ hint & idMeta .~ typeVarId ^. idMeta)
-    | otherwise = do
-      TypeVar v _ <- freshVar @(TypeF k)
-      pure $ Fix $ TyVar (v & idName .~ typeVarRigidName & idMeta .~ typeVarId ^. idMeta)
 
 instance HasKind k (TypeVar k) where
   kindOf v = typeVarId v ^. idMeta
@@ -344,21 +336,80 @@ instance (Monad m, MonadUniq m, MonadIO m) => MonadBind (TypeF UKind) (TypeVar U
     liftKindUnifyT $ solve [WithMeta x $ kindOf v :~ kindOf t]
     modify (Map.insert v t)
 
-newtype TypeScheme k = TypeScheme {unwrapTypeScheme :: UScheme (TypeF k) (TypeVar k)}
+data Scheme k = Forall [Id k] (UTerm (TypeF k) (TypeVar k))
   deriving stock (Eq, Ord, Show, Generic)
-  deriving newtype (Pretty)
 
-instance HasUTerm (TypeF k) (TypeVar k) (TypeScheme k) where
-  walkOn f (TypeScheme u) = TypeScheme <$> walkOn f u
+instance Pretty k => Pretty (Scheme k) where
+  pPrintPrec l _ (Forall vs t) = "forall" <+> sep (map (pPrintPrec l 0) vs) <> "." <+> pPrintPrec l 0 t
 
-instance IsKind k => IsScheme (TypeScheme k) where
-  safeToScheme (TypeScheme (UScheme vs t)) = do
-    vs' <- for vs $ \(Fix t) -> case t of
-      TyVar v -> Just $ over idMeta S.toKind v
-      _ -> Nothing
+instance HasUTerm (TypeF k) (TypeVar k) (Scheme k) where
+  walkOn f (Forall vs t) = Forall vs <$> walkOn f t
+
+instance HasUTerm KindF KindVar (Scheme UKind) where
+  walkOn f (Forall vs t) = Forall <$> traverse (idMeta f) vs <*> walkOn f t
+
+instance IsKind k => IsScheme (Scheme k) where
+  safeToScheme (Forall vs t) = do
+    let vs' = map (over idMeta S.toKind) vs
     t' <- safeToType =<< freeze t
     Just $ S.Forall vs' t'
-  fromScheme (S.Forall vs t) = TypeScheme $ UScheme (map (Fix . TyVar . over idMeta S.fromKind) vs) (unfreeze $ S.fromType t)
+  fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromKind) vs) (unfreeze $ S.fromType t)
+
+generalize :: (MonadUniq m, MonadBind (TypeF k) (TypeVar k) m, Pretty x, Ord k) => x -> Set (TypeVar k) -> UTerm (TypeF k) (TypeVar k) -> m (Scheme k)
+generalize x bound term = do
+  let fvs = Set.toList $ unboundFreevars bound term
+  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
+  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
+  Forall as <$> zonkUTerm term
+
+{-
+  zonkedTerm <- zonkUTerm term
+  let fvs = Set.toList $ unboundFreevars bound zonkedTerm
+  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
+  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
+  Forall as <$> zonkUTerm zonkedTerm
+
+-}
+
+toBound :: MonadUniq m => TypeVar k -> [Char] -> m (Id k)
+toBound TypeVar {typeVarId, typeVarRigidName} hint
+  | null typeVarRigidName = newLocalId hint (typeVarId ^. idMeta)
+  | otherwise = newLocalId typeVarRigidName (typeVarId ^. idMeta)
+
+unboundFreevars :: (Ord v, Foldable t) => Set v -> UTerm t v -> Set v
+unboundFreevars bound t = freevars t Set.\\ bound
+
+generalizeMutRecs :: (MonadUniq m, MonadBind (TypeF k) (TypeVar k) m, Pretty x, Ord k) => x -> Set (TypeVar k) -> [UTerm (TypeF k) (TypeVar k)] -> m ([Id k], [UTerm (TypeF k) (TypeVar k)])
+generalizeMutRecs x bound terms = do
+  let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms
+  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
+  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
+  (as,) <$> traverse zonkUTerm terms
+
+{-
+  zonkedTerms <- traverse zonkUTerm terms
+  let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
+  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
+  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
+  (as,) <$> traverse zonkUTerm zonkedTerms
+-}
+
+instantiate :: (MonadBind t (TypeVar k) m, Pretty k, Eq k) => Bool -> Scheme k -> m (UTerm (TypeF k) (TypeVar k))
+instantiate isRigid (Forall as t) = do
+  vs <- traverse ?? as $ \a -> do
+    v <- freshVar
+    if isRigid
+      then pure $ UVar $ v & rigidName .~ toRigidName a
+      else pure $ UVar v
+  replace (zip as vs) t
+  where
+    replace [] t = pure t
+    replace ((a, v) : avs) (UTerm (TyVar t))
+      | a == t = replace avs v
+    replace ((a, v) : avs) t = case t of
+      UVar _ -> replace avs t
+      UTerm t' -> replace avs . UTerm =<< traverse (replace [(a, v)]) t'
+    toRigidName = view idName
 
 class HasType t a | a -> t where
   typeOf :: a -> t

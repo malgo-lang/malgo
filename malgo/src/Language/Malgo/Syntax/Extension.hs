@@ -16,11 +16,12 @@ import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.IORef
+import qualified Language.Malgo.TypeRep.Static as S
 import qualified Language.Malgo.TypeRep.UTerm as U
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Phase and type instance
-data MalgoPhase = Parse | Rename | TypeCheck | NewTypeCheck
+data MalgoPhase = Parse | Rename | TypeCheck | NewTypeCheck | Refine
 
 data Malgo (p :: MalgoPhase)
 
@@ -39,12 +40,14 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Rename = Id ModuleName
   MalgoId 'TypeCheck = Id ModuleName
   MalgoId 'NewTypeCheck = Id ModuleName
+  MalgoId 'Refine = Id ModuleName
 
 type family MalgoTId (p :: MalgoPhase) where
   MalgoTId 'Parse = String
   MalgoTId 'Rename = Id ModuleName
   MalgoTId 'TypeCheck = Id ModuleName
   MalgoTId 'NewTypeCheck = Id ModuleName
+  MalgoTId 'Refine = Id ModuleName
 
 type PsId = XId (Malgo 'Parse)
 
@@ -82,6 +85,7 @@ type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Rename = SourcePos
   SimpleX 'TypeCheck = WithType SourcePos
   SimpleX 'NewTypeCheck = U.WithUType SourcePos
+  SimpleX 'Refine = S.WithType SourcePos
 
 type family XVar x where
   XVar (Malgo x) = SimpleX x
@@ -103,6 +107,7 @@ type family XOpApp x where
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'TypeCheck) = WithType (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'Refine) = S.WithType (SourcePos, (Assoc, Int))
 
 type family XFn x where
   XFn (Malgo x) = SimpleX x
@@ -203,6 +208,7 @@ type family XForeign x where
   XForeign (Malgo 'Rename) = (SourcePos, String)
   XForeign (Malgo 'TypeCheck) = WithType (SourcePos, String)
   XForeign (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, String)
+  XForeign (Malgo 'Refine) = S.WithType (SourcePos, String)
 
 type family XImport x where
   XImport (Malgo _) = SourcePos

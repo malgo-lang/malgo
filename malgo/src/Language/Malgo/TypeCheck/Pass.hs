@@ -26,7 +26,7 @@ import Language.Malgo.TypeCheck.Constraint
 import Language.Malgo.TypeCheck.TcEnv hiding (rnEnv)
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
 import Language.Malgo.TypeRep.IORef
-import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..))
+import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..), IsScheme (fromScheme), IsTypeDef (fromTypeDef))
 import Text.Megaparsec (SourcePos)
 
 -- Entry point
@@ -67,8 +67,8 @@ tcImports = traverse tcImport
   where
     tcImport (pos, modName) = do
       interface <- loadInterface modName
-      varEnv <>= interface ^. signatureMap
-      typeEnv <>= interface ^. typeDefMap
+      varEnv <>= fmap fromScheme (interface ^. signatureMap)
+      typeEnv <>= fmap fromTypeDef (interface ^. typeDefMap)
       pure (pos, modName)
 
 tcDataDefs ::
