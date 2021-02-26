@@ -21,6 +21,7 @@ import qualified Control.Monad.State.Lazy as Lazy
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
 import qualified Data.Set as Set
+import Data.Void
 import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
@@ -88,6 +89,12 @@ class HasUTerm t v a where
 instance HasUTerm t v (UTerm t v) where
   walkOn = id
 
+instance HasUTerm t v x => HasUTerm t v (With x a) where
+  walkOn f (With x a) = With <$> walkOn f x <*> pure a
+
+instance HasUTerm t v Void where
+  walkOn _ x = absurd x
+
 ----------------
 -- Constraint --
 ----------------
@@ -100,11 +107,7 @@ data Constraint t v = UTerm t v :~ UTerm t v
 instance (Pretty v, Pretty1 t) => Pretty (Constraint t v) where
   pPrint (t1 :~ t2) = pPrint t1 <+> "~" <+> pPrint t2
 
-data WithMeta x t v = WithMeta x (Constraint t v)
-  deriving stock (Eq, Ord, Show, Generic)
-
-instance (Pretty v, Pretty1 t) => Pretty (WithMeta x t v) where
-  pPrint (WithMeta _ c) = pPrint c
+type WithMeta x t v = With x (Constraint t v)
 
 --------------
 -- Variable --
@@ -120,7 +123,7 @@ class Var v where
 ---------------
 
 class Unifiable t v | t -> v where
-  unify :: Pretty x => x -> t (UTerm t v) -> t (UTerm t v) -> [WithMeta x t v]
+  unify :: (HasCallStack, Pretty x) => x -> t (UTerm t v) -> t (UTerm t v) -> [WithMeta x t v]
 
 class Monad m => MonadBind t v m | v -> t, t -> v where
   lookupVar :: v -> m (Maybe (UTerm t v))
@@ -186,7 +189,7 @@ solveLoop ::
   m ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
-solveLoop n (WithMeta x (UVar v1 :~ UVar v2) : cs)
+solveLoop n (With x (UVar v1 :~ UVar v2) : cs)
   | v1 == v2 = solveLoop (n - 1) cs
   | isRigid v1 && isRigid v2 && v1 ^. rigidName /= v2 ^. rigidName =
     errorWithMeta x $
@@ -202,23 +205,23 @@ solveLoop n (WithMeta x (UVar v1 :~ UVar v2) : cs)
   | otherwise = do
     bindVar x v1 (UVar v2)
     solveLoop (n - 1) =<< traverse zonkConstraint cs -- -}
-solveLoop n (WithMeta x (UVar v :~ UTerm t) : cs)
+solveLoop n (With x (UVar v :~ UTerm t) : cs)
   | isRigid v = errorWithMeta x $ unifyErrorMessage v (UTerm t) $+$ quotes (pPrint v) <+> "is a rigid variable"
   | otherwise = do
     bindVar x v (UTerm t)
     solveLoop (n - 1) =<< traverse zonkConstraint cs
-solveLoop n (WithMeta x (UTerm t :~ UVar v) : cs)
+solveLoop n (With x (UTerm t :~ UVar v) : cs)
   | isRigid v = errorWithMeta x $ unifyErrorMessage v (UTerm t) $+$ quotes (pPrint v) <+> "is a rigid variable"
   | otherwise = do
     bindVar x v (UTerm t)
     solveLoop (n - 1) =<< traverse zonkConstraint cs
-solveLoop n (WithMeta x (UTerm t1 :~ UTerm t2) : cs) = do
+solveLoop n (With x (UTerm t1 :~ UTerm t2) : cs) = do
   let cs' = unify x t1 t2
   solveLoop (n - 1) $ cs' <> cs
 
 zonkConstraint :: (Applicative f, MonadBind t v f, Traversable t) => WithMeta x t v -> f (WithMeta x t v)
-zonkConstraint (WithMeta m (x :~ y)) =
-  WithMeta m <$> ((:~) <$> zonkUTerm x <*> zonkUTerm y)
+zonkConstraint (With m (x :~ y)) =
+  With m <$> ((:~) <$> zonkUTerm x <*> zonkUTerm y)
 
 zonkUTerm :: (MonadBind t v f, Traversable t, Applicative f) => UTerm t v -> f (UTerm t v)
 zonkUTerm (UVar v) = do

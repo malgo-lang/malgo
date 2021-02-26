@@ -12,6 +12,7 @@ module Language.Malgo.Syntax.Extension where
 import Data.Binary (Binary)
 import Data.Kind (Constraint)
 import qualified Data.Kind as K
+import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
@@ -97,7 +98,8 @@ type family XUnboxed x where
   XUnboxed (Malgo x) = SimpleX x
 
 type family XBoxed x where
-  XBoxed (Malgo x) = SimpleX x
+  XBoxed (Malgo 'Parse) = SourcePos
+  XBoxed (Malgo _) = Void
 
 type family XApply x where
   XApply (Malgo x) = SimpleX x
@@ -107,7 +109,7 @@ type family XOpApp x where
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'TypeCheck) = WithType (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, (Assoc, Int))
-  XOpApp (Malgo 'Refine) = S.WithType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
   XFn (Malgo x) = SimpleX x

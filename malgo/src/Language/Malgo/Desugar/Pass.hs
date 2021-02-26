@@ -29,19 +29,15 @@ import Koriel.Pretty
 import Language.Malgo.Desugar.DsEnv
 import Language.Malgo.Interface
 import Language.Malgo.Prelude
+import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax as G
 import Language.Malgo.Syntax.Extension as G
-import Language.Malgo.TypeCheck.TcEnv (TcEnv)
 import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
-desugar ::
-  (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m) =>
-  TcEnv ->
-  Module (Malgo 'Refine) ->
-  m (DsEnv, Program (Id C.Type))
-desugar tcEnv (Module modName ds) = do
-  (dsEnv, ds') <- runReaderT (dsBindGroup ds) (makeDsEnvFromIORef modName tcEnv)
+desugar :: (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m, IsScheme a1, IsTypeDef a2, XModule x ~ BindGroup (Malgo 'Refine)) => Map (Id ModuleName) a1 -> Map (Id ModuleName) a2 -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
+desugar varEnv typeEnv rnEnv (Module modName ds) = do
+  (dsEnv, ds') <- runReaderT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
   case searchMain (Map.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
@@ -106,7 +102,7 @@ dsScDef ::
   (MonadUniq f, MonadReader DsEnv f, MonadIO f, MonadFail f, MonadMalgo f) =>
   ScDef (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
-dsScDef (WithType pos typ, name, expr) = do
+dsScDef (With typ pos, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   unless (_TyArr `has` typ || _TyLazy `has` typ) $
     errorOn pos $
@@ -124,7 +120,7 @@ dsForeign ::
   (MonadReader DsEnv f, MonadUniq f, MonadIO f) =>
   Foreign (Malgo 'Refine) ->
   f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
-dsForeign (x@(WithType (_, primName) _), name, _) = do
+dsForeign (x@(With _ (_, primName)), name, _) = do
   name' <- newCoreId name =<< dsType (GT.typeOf x)
   let (paramTypes, retType) = splitTyArr (GT.typeOf x)
   paramTypes' <- traverse dsType paramTypes
@@ -217,7 +213,6 @@ dsExp (G.Con _ name) = do
       pure $ C.Let [C.LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
     _ -> bug Unreachable
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
-dsExp (G.Boxed _ _) = bug Unreachable -- RenameでApplyに変形されている
 dsExp (G.Apply info f x) = runDef $ do
   f' <- bind =<< dsExp f
   case C.typeOf f' of
@@ -227,19 +222,6 @@ dsExp (G.Apply info f x) = runDef $ do
       --   適切な型にcastする必要がある
       x' <- cast xType =<< dsExp x
       Cast <$> dsType (GT.typeOf info) <*> bind (Call f' [x'])
-    _ -> bug Unreachable
-dsExp (G.OpApp info op x y) = runDef $ do
-  op' <- lookupName op
-  case C.typeOf op' of
-    [xType] :-> ([yType] :-> _) -> do
-      -- Ref: [Cast Argument Type]
-      x' <- cast xType =<< dsExp x
-      y' <- cast yType =<< dsExp y
-      e1 <-
-        if op' ^. idIsTopLevel
-          then bind (CallDirect op' [x'])
-          else bind (Call (C.Var op') [x'])
-      Cast <$> dsType (GT.typeOf info) <*> bind (Call e1 [y'])
     _ -> bug Unreachable
 dsExp (G.Fn x (Clause _ [] ss : _)) = do
   -- lazy valueの脱糖衣

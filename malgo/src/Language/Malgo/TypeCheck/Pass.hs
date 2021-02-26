@@ -26,7 +26,7 @@ import Language.Malgo.TypeCheck.Constraint
 import Language.Malgo.TypeCheck.TcEnv hiding (rnEnv)
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
 import Language.Malgo.TypeRep.IORef
-import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..), IsScheme (fromScheme), IsTypeDef (fromTypeDef))
+import Language.Malgo.TypeRep.Static (IsScheme (fromScheme), IsTypeDef (fromTypeDef), PrimT (..), Rep (..))
 import Text.Megaparsec (SourcePos)
 
 -- Entry point
@@ -55,7 +55,6 @@ tcBindGroup bindGroup = do
   pure
     BindGroup
       { _dataDefs = dataDefs',
-        _infixs = [],
         _foreigns = foreigns'',
         _scSigs = scSigs',
         _scDefs = scDefs'',
@@ -107,7 +106,7 @@ tcForeigns ds =
       typeEnv . at tyVar <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Nothing (show $ pPrint tyVar)
     scheme@(Forall _ ty') <- generalize mempty =<< transType ty
     varEnv . at name ?= scheme
-    pure (WithType pos ty', name, tcType ty)
+    pure (With ty' pos, name, tcType ty)
 
 tcScSigs ::
   (MonadUniq m, MonadIO m, MonadState TcEnv m, MonadMalgo m) =>
@@ -147,7 +146,7 @@ tcScDefs ds = do
     (expr', wanted) <- runWriterT (tcExpr expr)
     ty <- instantiate True =<< lookupVar pos name
     solve $ eqCons pos ty (expr' ^. toType) : wanted
-    pure ((WithType pos ty, name, expr'), (name, ty))
+    pure ((With ty pos, name, expr'), (name, ty))
   (_, nts') <- generalizeMutRecs mempty nts
   varEnv %= (Map.fromList nts' <>)
   -- prepareTcScDefsで定義されたvarEnvを更新したい
@@ -160,18 +159,17 @@ tcExpr ::
   WriterT [WithPos] m (Exp (Malgo 'TypeCheck))
 tcExpr (Var pos v) = do
   vType <- instantiate False =<< lookupVar pos v
-  pure $ Var (WithType pos vType) v
+  pure $ Var (With vType pos) v
 tcExpr (Con pos c) = do
   cType <- instantiate False =<< lookupVar pos c
-  pure $ Con (WithType pos cType) c
-tcExpr (Unboxed pos u) = pure $ Unboxed (WithType pos $ u ^. toType) u
-tcExpr (S.Boxed _ _) = bug Unreachable -- RenameでApplyに変形されている
+  pure $ Con (With cType pos) c
+tcExpr (Unboxed pos u) = pure $ Unboxed (With (u ^. toType) pos) u
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
   retType <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos (f' ^. toType) (TyArr (x' ^. toType) retType)]
-  pure $ Apply (WithType pos retType) f' x'
+  pure $ Apply (With retType pos) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
   e2' <- tcExpr e2
@@ -179,37 +177,37 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   opType <- instantiate False opScheme
   retType <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos opType (TyArr (e1' ^. toType) $ TyArr (e2' ^. toType) retType)]
-  pure $ OpApp (WithType x retType) op e1' e2'
+  pure $ OpApp (With retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] ss : _)) = do
   ss' <- tcStmts ss
   pure $
     Fn
-      (WithType pos (TyLazy $ last ss' ^. toType))
-      [Clause (WithType x (TyLazy $ last ss' ^. toType)) [] ss']
+      (With (TyLazy $ last ss' ^. toType) pos)
+      [Clause (With (TyLazy $ last ss' ^. toType) x) [] ss']
 tcExpr (Fn pos cs) = do
   cs' <- traverse tcClause cs
   case cs' of
     (c' : cs') -> do
       tell $ map (eqCons pos (c' ^. toType) . view toType) cs'
-      pure $ Fn (WithType pos (c' ^. toType)) (c' : cs')
+      pure $ Fn (With (c' ^. toType) pos) (c' : cs')
     _ -> bug Unreachable
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
-  pure $ Tuple (WithType pos (TyTuple (map (view toType) es'))) es'
+  pure $ Tuple (With (TyTuple (map (view toType) es')) pos) es'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
   ty <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos (TyLazy ty) (e' ^. toType)]
-  pure $ Force (WithType pos ty) e'
+  pure $ Force (With ty pos) e'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
-  pure $ Parens (WithType pos (e' ^. toType)) e'
+  pure $ Parens (With (e' ^. toType) pos) e'
 
 tcClause :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadMalgo m) => Clause (Malgo 'Rename) -> WriterT [WithPos] m (Clause (Malgo 'TypeCheck))
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
-  pure $ Clause (WithType pos (foldr (TyArr . view toType) (last ss' ^. toType) pats')) pats' ss'
+  pure $ Clause (With (foldr (TyArr . view toType) (last ss' ^. toType) pats') pos) pats' ss'
 
 tcStmts :: (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadMalgo m) => [Stmt (Malgo 'Rename)] -> WriterT [WithPos] m [Stmt (Malgo 'TypeCheck)]
 tcStmts [] = pure []
@@ -233,7 +231,7 @@ tcPatterns (VarP x v : ps) = do
   ty <- TyMeta <$> newMetaTv Nothing ""
   varEnv . at v ?= Forall [] ty
   ps' <- tcPatterns ps
-  pure (VarP (WithType x ty) v : ps')
+  pure (VarP (With ty x) v : ps')
 tcPatterns (ConP pos con pats : ps) = do
   conType <- instantiate False =<< lookupVar pos con
   let (conParams, _) = splitTyArr conType
@@ -248,14 +246,14 @@ tcPatterns (ConP pos con pats : ps) = do
   ty <- TyMeta <$> newMetaTv Nothing ""
   tell [eqCons pos conType (foldr (TyArr . view toType) ty pats')]
   ps' <- tcPatterns restPs
-  pure (ConP (WithType pos ty) con pats' : ps')
+  pure (ConP (With ty pos) con pats' : ps')
 tcPatterns (TupleP pos pats : ps) = do
   pats' <- tcPatterns pats
   ps' <- tcPatterns ps
-  pure (TupleP (WithType pos (TyTuple $ map (view toType) pats')) pats' : ps')
+  pure (TupleP (With (TyTuple $ map (view toType) pats') pos) pats' : ps')
 tcPatterns (UnboxedP pos unboxed : cs) = do
   ps <- tcPatterns cs
-  pure (UnboxedP (WithType pos (unboxed ^. toType)) unboxed : ps)
+  pure (UnboxedP (With (unboxed ^. toType) pos) unboxed : ps)
 
 -----------------------------------
 -- Translate Type representation --

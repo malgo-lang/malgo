@@ -5,6 +5,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -16,6 +17,7 @@ module Language.Malgo.TypeRep.IORef where
 
 import Data.Binary (Binary (..))
 import qualified Data.Set as Set
+import Data.Void
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -306,15 +308,19 @@ instance HasType a => HasType (Id a) where
   toType = idMeta . toType
   overType f n = traverseOf idMeta (overType f) n
 
-data WithType a = WithType a Type
-  deriving stock (Eq, Show, Ord, Functor, Foldable)
+instance HasType Type where
+  toType = to id
+  overType = id
 
-instance Pretty a => Pretty (WithType a) where
-  pPrint (WithType a t) = pPrint a <> ":" <> pPrint t
+instance HasType Void where
+  toType _ x = absurd x
+  overType _ x = absurd x
 
-instance HasType (WithType a) where
-  toType = to $ \(WithType _ t) -> t
-  overType f (WithType x t) = WithType x <$> f t
+type WithType a = With Type a
+
+instance HasType t => HasType (With t a) where
+  toType = ann . toType
+  overType f (With t x) = With <$> overType f t <*> pure x
 
 ----------------
 -- split Type --

@@ -507,7 +507,6 @@ data BindGroup x = BindGroup
     _scDefs :: [[ScDef x]],
     _scSigs :: [ScSig x],
     _dataDefs :: [DataDef x],
-    _infixs :: [Infix x],
     _foreigns :: [Foreign x],
     _imports :: [Import x]
   }
@@ -517,8 +516,6 @@ type ScDef x = (XScDef x, XId x, Exp x)
 type ScSig x = (XScSig x, XId x, Type x)
 
 type DataDef x = (XDataDef x, XTId x, [XTId x], [(XId x, [Type x])])
-
-type Infix x = (XInfix x, Assoc, Int, XId x)
 
 type Foreign x = (XForeign x, XId x, Type x)
 
@@ -531,11 +528,10 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindG
 deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Show (BindGroup x)
 
 instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
-  pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _infixs, _foreigns} =
+  pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _foreigns} =
     sep $
       punctuate ";" $
         map prettyDataDef _dataDefs
-          <> map prettyInfix _infixs
           <> map prettyForeign _foreigns
           <> map prettyScSig _scSigs
           <> concatMap (map prettyScDef) _scDefs
@@ -546,7 +542,6 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
             nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
           ]
       pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
-      prettyInfix (_, a, o, x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
       prettyForeign (_, x, t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
       prettyScSig (_, f, t) = pPrint f <+> "::" <+> pPrint t
       prettyScDef (_, f, e) =
@@ -558,7 +553,6 @@ makeBindGroup ds =
     { _scDefs = splitScDef (makeSCC $ mapMaybe scDef ds) (mapMaybe scDef ds),
       _scSigs = mapMaybe scSig ds,
       _dataDefs = mapMaybe dataDef ds,
-      _infixs = mapMaybe infixDef ds,
       _foreigns = mapMaybe foreignDef ds,
       _imports = mapMaybe importDef ds
     }
@@ -569,8 +563,6 @@ makeBindGroup ds =
     scSig _ = Nothing
     dataDef (DataDef x t ps cons) = Just (x, t, ps, cons)
     dataDef _ = Nothing
-    infixDef (Infix x a o n) = Just (x, a, o, n)
-    infixDef _ = Nothing
     foreignDef (Foreign x n t) = Just (x, n, t)
     foreignDef _ = Nothing
     importDef (Import x m) = Just (x, m)

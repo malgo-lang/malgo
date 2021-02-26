@@ -15,9 +15,10 @@ module Language.Malgo.TypeRep.Static where
 import Data.Binary (Binary)
 import Data.Fix
 import qualified Data.Map as Map
+import Data.Void
 import Koriel.Id
-import Koriel.Prelude
 import Koriel.Pretty
+import Language.Malgo.Prelude
 import {-# SOURCE #-} Language.Malgo.Syntax.Extension (ModuleName)
 
 --------------------------------
@@ -195,6 +196,9 @@ class HasType a where
 instance HasType Type where
   typeOf = id
 
+instance HasType Void where
+  typeOf x = absurd x
+
 -- | Universally quantified type
 data Scheme = Forall [Id Kind] Type
   deriving stock (Show, Generic)
@@ -212,7 +216,7 @@ class IsScheme a where
   _Scheme = prism' fromScheme safeToScheme
   safeToScheme :: a -> Maybe Scheme
   safeToScheme a = a ^? _Scheme
-  toScheme :: a -> Scheme
+  toScheme :: HasCallStack => a -> Scheme
   toScheme a = fromJust $ safeToScheme a
   fromScheme :: Scheme -> a
   fromScheme a = a ^. re _Scheme
@@ -224,14 +228,10 @@ instance IsScheme Scheme where
   toScheme = id
 
 -- | Types qualified with `Type`
-data WithType a = WithType a Type
-  deriving stock (Eq, Ord, Show, Functor, Foldable, Traversable, Generic)
+type WithType a = With Type a
 
-instance Pretty a => Pretty (WithType a) where
-  pPrint (WithType a t) = pPrint a <> ":" <> pPrint t
-
-instance HasType (WithType a) where
-  typeOf (WithType _ t) = t
+instance HasType t => HasType (With t a) where
+  typeOf (With t _) = typeOf t
 
 -- | Definition of Type constructor
 data TypeDef = TypeDef
