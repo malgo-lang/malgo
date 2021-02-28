@@ -17,8 +17,8 @@ import qualified Data.List as List
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Core.Alpha
-import Koriel.Core.Core
 import Koriel.Core.Flat
+import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
@@ -43,7 +43,7 @@ optimizeProgram ::
   Program (Id Type) ->
   m (Program (Id Type))
 optimizeProgram level prog@(Program fs) = runReaderT ?? level $ do
-  state <- execStateT (traverse (checkInlineable . over _2 (uncurry Fun)) fs) mempty
+  state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) fs) mempty
   appProgram (optimizeExpr state) prog
 
 optimizeExpr :: (MonadReader Int f, MonadUniq f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
@@ -73,16 +73,16 @@ optCallInline (Call (Var f) xs) = lookupCallInline f xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
 optCallInline (Let ds e) = do
-  ds' <- traverseOf (traversed . _2 . appObj) optCallInline ds
+  ds' <- traverseOf (traversed . localDefObj . appObj) optCallInline ds
   traverse_ checkInlineable ds'
   Let ds' <$> optCallInline e
 optCallInline e = pure e
 
 checkInlineable ::
   (MonadState CallInlineMap m, MonadReader Int m) =>
-  (Id Type, Obj (Id Type)) ->
+  LocalDef (Id Type) ->
   m ()
-checkInlineable (f, Fun ps v) = do
+checkInlineable (LocalDef f (Fun ps v)) = do
   level <- ask
   -- 変数の数がinlineSize以下ならインライン展開する
   when (length v <= level || f `notElem` freevars v) $ at f ?= (ps, v)
@@ -114,26 +114,26 @@ optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
 optPackInline (Match v cs) =
   Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
 optPackInline (Let ds e) = do
-  ds' <- traverseOf (traversed . _2 . appObj) optPackInline ds
+  ds' <- traverseOf (traversed . localDefObj . appObj) optPackInline ds
   local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
   where
-    toPackInlineMap (v, Pack _ con as) = mempty & at v ?~ (con, as)
+    toPackInlineMap (LocalDef v (Pack _ con as)) = mempty & at v ?~ (con, as)
     toPackInlineMap _ = mempty
 optPackInline e = pure e
 
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
 optVarBind (Match (Atom a) (Bind x e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
-optVarBind (Let ds e) = Let <$> traverseOf (traversed . _2 . appObj) optVarBind ds <*> optVarBind e
+optVarBind (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optVarBind ds <*> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e
 
 removeUnusedLet :: (Monad f, Ord a) => Exp (Id a) -> f (Exp (Id a))
 removeUnusedLet (Let ds e) = do
-  ds' <- traverseOf (traversed . _2 . appObj) removeUnusedLet ds
+  ds' <- traverseOf (traversed . localDefObj . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
   -- 定義vから到達可能でかつvで定義されていない変数すべての集合のマップ
-  let gamma = map (\(v, o) -> (v, Set.delete v $ freevars o)) ds'
-  if any (\(v, _) -> reachable 100 gamma v $ freevars e') ds' then pure $ Let ds' e' else pure e'
+  let gamma = map (\(LocalDef v o) -> (v, Set.delete v $ freevars o)) ds'
+  if any (\(LocalDef v _) -> reachable 100 gamma v $ freevars e') ds' then pure $ Let ds' e' else pure e'
   where
     reachable :: Ord a => Int -> [(Id a, Set (Id a))] -> Id a -> Set (Id a) -> Bool
     reachable limit gamma v fvs

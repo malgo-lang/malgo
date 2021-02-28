@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8f8d5a2d08a132ca037d7e6300dcf5be91aab3600b52d8a0ad8a49119e940dbb
+-- hash: 354e06e4d8ff7ec7852c6f0d3289c56e1579f9e9cb13a7cc4de90461da3cd2b2
 
 name:           koriel
 version:        1.0.0.0
@@ -25,14 +25,16 @@ library
   exposed-modules:
       Koriel.Core.Alpha
       Koriel.Core.CodeGen
-      Koriel.Core.Core
       Koriel.Core.Flat
       Koriel.Core.LambdaLift
       Koriel.Core.Lint
       Koriel.Core.Op
       Koriel.Core.Optimize
+      Koriel.Core.Syntax
       Koriel.Core.Type
       Koriel.Id
+      Koriel.Lambda.Parser
+      Koriel.Lambda.Syntax
       Koriel.MonadUniq
       Koriel.Prelude
       Koriel.Pretty
@@ -43,19 +45,19 @@ library
   default-extensions: StrictData
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
-      base
+      aeson
+    , base
+    , binary
     , bytestring
     , containers
+    , data-fix
     , extra
     , lens
     , llvm-hs-pretty
     , llvm-hs-pure
     , megaparsec
     , mtl
-    , parsec
     , pretty
-    , pretty-simple
-    , store
     , string-conversions
     , text
     , transformers

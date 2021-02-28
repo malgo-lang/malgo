@@ -1,0 +1,125 @@
+module DesignSketch = {
+  -- Nested module
+  -- `import as`
+  -- Semicolonless declarations
+  import Data.List as List
+
+  -- Constant definition
+  -- Single colon
+  maxLength : Int
+  maxLength = 50
+
+  -- Value definition
+  -- `sum [50, 49, 50, 50, 48]` is evaluated only 1 time when the program is executed.
+  sumScore = sum [50,49,50,50,50,48]
+
+  -- Continuation-based IO
+  foreign import print_string : String# -> (() -> IOAnswer) -> IOAnswer
+
+  putStrLn : String -> (() -> IOAnswer) -> IOAnswer
+  putStrLn = { (String# str) k ->
+    print_string str k
+  }
+
+  -- ..Or Effects?
+
+  -- Records and Int type
+  type Person = { name: String, age: Int }
+  type Student = { name: String, age: Int, grade: Int }
+
+  hello : (a : { name: String | _ }) -> ()
+  hello = { x ->
+    -- string interpolation
+    putStrLn $"Hello, {x.name}"
+  } 
+
+  -- `with` module
+  -- モジュールのネストを考えるとあまり賢くない？
+  -- open moduleが必要になりそう
+  data List a = Nil | Cons a (List a)
+  with {
+    length = { self ->
+      {- some code for calculate list length -}
+    }
+    push = { x self -> Cons x self }
+    pop = { self ->
+      case self
+        { Nil -> error "..." 
+        | Cons x xs -> (x, xs)
+        }
+    }
+    reverse = ...
+  }
+  {-
+  module List = {
+    data List a = Nil | Cons a (List a)
+    length : List a -> Int
+    length = { self -> ... }
+    push : a -> List a -> List a
+    push = { x self -> Cons x self }
+    ...
+  } 
+  import List (List(..))
+  -}
+  
+  useList = {
+    let xs = List.reverse [1, 2, 3]
+    assert $ (xs |> List.push x |> List.length) == 4
+  }
+
+  -- interface (type class in Haskell, trait in Rust, interface in Idris)
+  interface Functor f = {
+    map : (a -> b) -> f a -> f b
+  }
+
+  -- implementation of interface
+  impl Functor List = {
+    map = { f xs -> List.map f xs }
+  }
+
+  useFunctor : Functor f => (a -> b) -> f a -> f b
+  useFunctor = { f xs ->
+    Functor.map f xs -- モジュールFunctorを導入せず、map f xsにするべきかも
+  }
+
+  module Monad = {
+    interface Monad m = {
+      bind : m a -> (a -> m b) -> m b
+      return : a -> m a 
+    }
+  }
+
+  import Monad -- モジュールを導入しないとこうなるけど、冗長？そんなことはない？なさそう
+
+  impl Monad List = {
+    bind = { xs f -> List.concatMap f xs }
+    return = { x -> Cons x Nil }
+  }
+
+  -- computation expression
+  useMonad : List Int
+  useMonad = Monad { 
+    -- Monad.bind [1, 2, 3] { a -> Monad.return (a + 1) }
+    let! a = [1, 2, 3]
+    return (a + 1)
+  }
+
+  useMonad' : Monad m => m a -> (a -> m b) -> m ()
+  useMonad' = Monad { xs f ->
+    let! x = xs
+    do! f x
+  }
+
+  interface Map m = {
+    -- associated type
+    type key
+    type val
+    find : Ord key => Key -> m -> val
+  }
+
+  impl Map (List (k, a)) = {
+    type key = k
+    type val = a
+    find = List.find
+  }
+}

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 22e5db59ce77c597e4cb3f602623bacdcdee2204aabf9afbcbef4b6f5720c4d3
+-- hash: b7d8209c0c507a3672691d1c95d4e8be30d61613f1b3d38c3ceb765f60951058
 
 name:           malgo
 version:        1.0.0.0
@@ -13,7 +13,7 @@ homepage:       https://github.com/takoeight0821/malgo#readme
 bug-reports:    https://github.com/takoeight0821/malgo/issues
 author:         Yuya Kono
 maintainer:     takohati0821@gmail.com
-copyright:      2017-2020 Yuya Kono
+copyright:      2017-2021 Yuya Kono
 license:        BSD3
 build-type:     Simple
 
@@ -23,102 +23,89 @@ source-repository head
 
 library
   exposed-modules:
+      Language.Malgo.Desugar.DsEnv
+      Language.Malgo.Desugar.Pass
       Language.Malgo.Driver
-      Language.Malgo.FrontEnd.Rename
-      Language.Malgo.FrontEnd.Typing.Constraint
-      Language.Malgo.FrontEnd.Typing.Infer
-      Language.Malgo.FrontEnd.Typing.Subst
-      Language.Malgo.IR.Syntax
-      Language.Malgo.Lexer
-      Language.Malgo.MiddleEnd.Desugar
-      Language.Malgo.Monad
+      Language.Malgo.Interface
+      Language.Malgo.NewTypeCheck.Pass
+      Language.Malgo.NewTypeCheck.TcEnv
       Language.Malgo.Parser
-      Language.Malgo.Token
-      Language.Malgo.TypeRep.SType
-      Language.Malgo.TypeRep.Type
+      Language.Malgo.Prelude
+      Language.Malgo.Refine.Pass
+      Language.Malgo.Rename.Pass
+      Language.Malgo.Rename.RnEnv
+      Language.Malgo.Syntax
+      Language.Malgo.Syntax.Extension
+      Language.Malgo.TypeCheck.Constraint
+      Language.Malgo.TypeCheck.Pass
+      Language.Malgo.TypeCheck.TcEnv
+      Language.Malgo.TypeRep.IORef
+      Language.Malgo.TypeRep.Static
+      Language.Malgo.TypeRep.UTerm
+      Language.Malgo.Unify
   other-modules:
       Paths_malgo
   hs-source-dirs:
       src
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS
-  build-tools:
-      happy
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
-      array
+      aeson
     , base
+    , binary
     , bytestring
     , containers
+    , data-fix
+    , deriving-compat
+    , directory
+    , extra
+    , filepath
     , koriel
+    , lens
     , llvm-hs
+    , llvm-hs-pretty
     , llvm-hs-pure
+    , megaparsec
     , mtl
     , optparse-applicative
-    , parsec
+    , parser-combinators
     , pretty
-    , pretty-simple
     , text
     , transformers
-    , vector
   default-language: Haskell2010
 
 executable malgoc
   main-is: Main.hs
   other-modules:
+      Runner
       Paths_malgo
   hs-source-dirs:
       app/
   default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS -threaded
-  build-tools:
-      happy
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-depends:
-      array
+      aeson
     , base
+    , binary
     , bytestring
     , containers
+    , data-fix
+    , deriving-compat
+    , directory
+    , extra
+    , filepath
     , koriel
+    , lens
     , llvm-hs
     , llvm-hs-pretty
     , llvm-hs-pure
     , malgo
+    , megaparsec
     , mtl
     , optparse-applicative
-    , parsec
+    , parser-combinators
     , pretty
-    , pretty-simple
+    , shake
     , text
     , transformers
-    , vector
-  default-language: Haskell2010
-
-test-suite malgo-test
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  other-modules:
-      Paths_malgo
-  hs-source-dirs:
-      test
-  default-extensions: StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -j4 +RTS -A128m -n2m -qg -RTS
-  build-tools:
-      happy
-  build-depends:
-      array
-    , base
-    , bytestring
-    , containers
-    , hspec
-    , koriel
-    , llvm-hs
-    , llvm-hs-pure
-    , malgo
-    , mtl
-    , optparse-applicative
-    , parsec
-    , pretty
-    , pretty-simple
-    , text
-    , transformers
-    , vector
   default-language: Haskell2010

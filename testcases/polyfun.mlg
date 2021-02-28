@@ -1,5 +1,0 @@
-let fun id(x) = x in
-let fun addOne(x) = x + 1 in
-let val funRef = array(addOne, 1) in
-let extern print_int : Int -> {} = "print_int" in
-funRef.(0) <- id; print_int(funRef.(0)(1))

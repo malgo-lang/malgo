@@ -1,9 +1,0 @@
-let val x_width = 10
-    val y_width = 10
-    val cells = [true, true, true]
-    fun sub(xs, i) = xs.(i)
-    fun view(cells: [Bool], x: Int, y: Int): Bool =
-      if (x >= x_width) || (y >= y_width) || (x < 0) || (y < 0)
-      then false
-      else sub(cells, y * x_width + x) in
-view(cells, 0, 0)

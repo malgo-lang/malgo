@@ -9,7 +9,7 @@ where
 -- α変換
 
 import qualified Data.Map as Map
-import Koriel.Core.Core
+import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
@@ -33,7 +33,7 @@ lookupVar n = do
     Just n' -> pure n'
     Nothing -> pure (Var n)
 
-lookupId :: (HasCallStack, MonadReader AlphaEnv m) => Id Type -> m (Id Type)
+lookupId :: (MonadReader AlphaEnv m) => Id Type -> m (Id Type)
 lookupId n = do
   n' <- lookupVar n
   case n' of
@@ -43,14 +43,17 @@ lookupId n = do
 alphaExp :: (MonadReader AlphaEnv f, MonadUniq f) => Exp (Id Type) -> f (Exp (Id Type))
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
 alphaExp (Let ds e) = do
-  env <- foldMapA ?? ds $ \(n, _) -> Map.singleton n . Var <$> cloneId n
-  local (env <>) $ Let <$> traverse (bitraverse lookupId alphaObj) ds <*> alphaExp e
+  env <- foldMapA ?? ds $ \(LocalDef n _) -> Map.singleton n . Var <$> cloneId n
+  local (env <>) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
 alphaExp e = traverseOf atom alphaAtom e
 
 alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x
 alphaAtom a@Unboxed {} = pure a
+
+alphaLocalDef :: (MonadReader AlphaEnv f, MonadUniq f) => LocalDef (Id Type) -> f (LocalDef (Id Type))
+alphaLocalDef (LocalDef x o) = LocalDef <$> lookupId x <*> alphaObj o
 
 alphaObj :: (MonadUniq m, MonadReader AlphaEnv m) => Obj (Id Type) -> m (Obj (Id Type))
 alphaObj (Fun ps e) = do

@@ -1,17 +1,19 @@
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Koriel.Core.Type where
 
+import Data.Aeson
+import Data.Aeson.Types (prependFailure, unexpected)
+import Data.Binary (Binary)
 import Data.Set (fromList)
-import Data.Store
 import Koriel.Id
-import Koriel.Prelude
+import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty
 
 {-
@@ -21,10 +23,21 @@ type Tag = String
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
+
+instance Binary Con
 
 instance Pretty Con where
   pPrint (Con tag xs) = "<" <> text tag <+> sep (punctuate "," (map pPrint xs)) <> ">"
+
+instance ToJSON Con where
+  toJSON (Con tag ts) = object [("type", "Con"), "tag" .= tag, "params" .= ts]
+
+instance FromJSON Con where
+  parseJSON = withObject "Con" $ \v -> do
+    ty <- v .: "type"
+    if ty == ("Con" :: String)
+      then Con <$> v .: "tag" <*> v .: "params"
+      else prependFailure "parsing Con failed, " (unexpected $ Object v)
 
 -- TODO: クロージャを表す型を追加
 -- ClosureT [Type] Type
@@ -39,14 +52,13 @@ data Type
   | CharT
   | StringT
   | BoolT
-  | DataT String [Type]
   | SumT (Set Con)
-  | ArrayT Type
   | PtrT Type
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic)
-  deriving anyclass (Store)
+
+instance Binary Type
 
 _SumT :: Prism' Type (Set Con)
 _SumT = prism' SumT $ \case
@@ -62,15 +74,45 @@ instance Pretty Type where
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
   pPrint BoolT = "Bool#"
-  pPrint (DataT n ts) = parens $ pPrint n <+> sep (map pPrint ts)
   pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
-  pPrint (ArrayT t) = brackets $ pPrint t
   pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
   pPrint AnyT = "*"
   pPrint VoidT = "Void"
 
+instance ToJSON Type where
+  toJSON (ps :-> r) = object [("type", "FunT"), "params" .= ps, "result" .= r]
+  toJSON Int32T = object [("type", "Int32T")]
+  toJSON Int64T = object [("type", "Int64T")]
+  toJSON FloatT = object [("type", "FloatT")]
+  toJSON DoubleT = object [("type", "DoubleT")]
+  toJSON CharT = object [("type", "CharT")]
+  toJSON StringT = object [("type", "StringT")]
+  toJSON BoolT = object [("type", "BoolT")]
+  toJSON (SumT cs) = object [("type", "SumT"), "con_set" .= cs]
+  toJSON (PtrT t) = object [("type", "PtrT"), "ptr_to" .= t]
+  toJSON AnyT = object [("type", "AnyT")]
+  toJSON VoidT = object [("type", "VoidT")]
+
+instance FromJSON Type where
+  parseJSON = withObject "Type" $ \v -> do
+    ty <- v .: "type"
+    if
+        | ty == ("FunT" :: String) -> (:->) <$> v .: "params" <*> v .: "result"
+        | ty == "Int32T" -> pure Int32T
+        | ty == "Int64T" -> pure Int64T
+        | ty == "FloatT" -> pure FloatT
+        | ty == "DoubleT" -> pure DoubleT
+        | ty == "CharT" -> pure CharT
+        | ty == "StringT" -> pure StringT
+        | ty == "BoolT" -> pure BoolT
+        | ty == "SumT" -> SumT <$> v .: "con_set"
+        | ty == "PtrT" -> PtrT <$> v .: "ptr_to"
+        | ty == "AnyT" -> pure AnyT
+        | ty == "VoidT" -> pure VoidT
+        | otherwise -> prependFailure "parsing Type failed, " (unexpected $ Object v)
+
 class HasType a where
-  typeOf :: HasCallStack => a -> Type
+  typeOf :: a -> Type
 
 instance HasType Type where
   typeOf x = x
@@ -81,9 +123,7 @@ instance HasType a => HasType (Id a) where
 tyVar :: Traversal' Type Type
 tyVar f = \case
   ps :-> r -> (:->) <$> traverseOf (traversed . tyVar) f ps <*> traverseOf tyVar f r
-  DataT n ts -> DataT n <$> traverseOf (traversed . tyVar) f ts
   SumT cs -> SumT . fromList <$> traverseOf (traversed . tyVar') f (toList cs)
-  ArrayT t -> ArrayT <$> traverseOf tyVar f t
   AnyT -> f AnyT
   t -> pure t
 

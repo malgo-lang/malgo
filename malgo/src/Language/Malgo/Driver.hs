@@ -1,119 +1,144 @@
 {-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.Driver
-  ( parseOpt,
-    compile,
-  )
-where
+module Language.Malgo.Driver (compile, compileFromAST) where
 
-import qualified Data.ByteString.Short as B
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
-import qualified Data.Text.Lazy as TL
-import Koriel.Core.CodeGen
-import Koriel.Core.Core
-  ( Atom (..),
-    Exp (..),
-    Program (..),
-    Unboxed (..),
-    bind,
-    mainFunc,
-    runDef,
-  )
-import Koriel.Core.LambdaLift
-import Koriel.Core.Lint
-import Koriel.Core.Optimize
-import Koriel.Prelude
+import Data.Aeson (FromJSON, ToJSON, eitherDecode, encode)
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Lazy as BL
+import qualified Data.Text.IO as T
+import qualified Data.Text.Lazy.IO as TL
+import Koriel.Core.CodeGen (codeGen)
+import Koriel.Core.Flat (flat)
+import Koriel.Core.LambdaLift (lambdalift)
+import Koriel.Core.Lint (lintProgram, runLint)
+import Koriel.Core.Optimize (optimizeProgram)
+import Koriel.Core.Syntax
+import Koriel.MonadUniq
 import Koriel.Pretty
 import qualified LLVM.AST as L
-import Language.Malgo.FrontEnd.Rename
-import Language.Malgo.FrontEnd.Typing.Infer
-import Language.Malgo.IR.Syntax
-import qualified Language.Malgo.Lexer as Lexer
-import Language.Malgo.MiddleEnd.Desugar
-import Language.Malgo.Monad as M
-import qualified Language.Malgo.Parser as Parser
-import Options.Applicative
-import System.IO (hPrint, stderr)
-
-parseOpt :: IO Opt
-parseOpt =
-  execParser $
-    info
-      ( ( Opt
-            <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
-            <*> strOption
-              ( long "output" <> short 'o' <> metavar "OUTPUT" <> value "out.ll"
-                  <> help
-                    "Write LLVM IR to OUTPUT"
-              )
-            <*> switch (long "dump-parsed")
-            <*> switch (long "dump-renamed")
-            <*> switch (long "dump-typed")
-            <*> switch (long "dump-type-table")
-            <*> switch (long "dump-desugar")
-            <*> switch (long "dump-lambdalift")
-            <*> switch (long "dump-flat")
-            <*> switch (long "debug-mode")
-            <*> flag True False (long "no-lambdalift")
-            <*> switch (long "no-opt")
-            <*> fmap read (strOption (long "inline" <> value "10"))
-            <*> switch (long "via-binding")
-        )
-          <**> helper
-      )
-      (fullDesc <> progDesc "malgo" <> header "malgo - a toy programming language")
-
-readAndParse :: MalgoM (Expr String)
-readAndParse = do
-  opt <- asks maOption
-  source <- asks maSource
-  tokens <- Lexer.tokenize () (srcName opt) source
-  let ast = case Parser.parseExpr <$> tokens of
-        Left x -> error $ TL.unpack $ pShow x
-        Right x -> x
-  when (dumpParsed opt) $ liftIO $ hPrint stderr $ pPrint ast
-  pure ast
+import LLVM.Context (withContext)
+import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
+import LLVM.Pretty (ppllvm)
+import Language.Malgo.Desugar.Pass (desugar)
+import Language.Malgo.Interface (buildInterface, loadInterface, storeInterface)
+import qualified Language.Malgo.NewTypeCheck.Pass as NewTypeCheck
+import qualified Language.Malgo.NewTypeCheck.TcEnv as NewTcEnv
+import Language.Malgo.Parser (parseMalgo)
+import Language.Malgo.Prelude
+import Language.Malgo.Refine.Pass (refine)
+import Language.Malgo.Rename.Pass (rename)
+import qualified Language.Malgo.Rename.RnEnv as RnEnv
+import qualified Language.Malgo.Syntax as Syntax
+import Language.Malgo.Syntax.Extension
+-- import Language.Malgo.TypeCheck.Pass (typeCheck)
+-- import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
+import System.FilePath.Lens (extension)
+import System.IO
+  ( hPrint,
+    hPutStrLn,
+    stderr,
+  )
+import Text.Megaparsec
+  ( errorBundlePretty,
+  )
 
 -- |
 -- dumpHoge系のフラグによるダンプ出力を行うコンビネータ
 --
--- m a のアクションの返り値をpPrintしてstderrに吐く
-withDump :: (MonadIO m, Pretty b) => Bool -> (t -> m b) -> t -> m b
-withDump isDump m a = do
-  a' <- m a
-  when isDump $ liftIO $ hPrint stderr $ pPrint a'
-  pure a'
+-- 引数 m のアクションの返り値をpPrintしてstderrに吐く
+withDump ::
+  (MonadIO m, Pretty a) =>
+  -- | dumpHoge系のフラグの値
+  Bool ->
+  String ->
+  m a ->
+  m a
+withDump isDump label m = do
+  result <- m
+  when isDump $ liftIO do
+    hPutStrLn stderr label
+    hPrint stderr $ pPrint result
+  pure result
 
-compile :: MonadIO m => Opt -> Text -> m L.Module
-compile = M.runMalgo $ do
-  opt <- asks maOption
-  expr <-
-    readAndParse
-      >>= withDump (dumpRenamed opt) rename
-      >>= withDump (dumpTyped opt) typing
-      >>= withDump (dumpDesugar opt) desugar
-      >>= (\e -> lint e >> pure e)
-  malgoMainFunc <-
-    mainFunc =<< runDef do
-      _ <- bind expr
-      pure (Atom $ Unboxed $ Int32 0)
-  program <- optimizeProgram (inlineSize opt) $ Program [malgoMainFunc]
-  llvmir <-
-    if applyLambdaLift opt
-      then
-        withDump (dumpLambdaLift opt) lambdalift program
-          >>= withDump (dumpLambdaLift opt) (optimizeProgram (inlineSize opt))
-          >>= codeGen
-      else codeGen program
-  pure $
-    L.defaultModule
-      { L.moduleName = fromString $ srcName opt,
-        L.moduleSourceFileName = B.toShort $ T.encodeUtf8 $ T.pack $ srcName opt,
-        L.moduleDefinitions = llvmir
-      }
+compileFromAST :: Syntax.Module (Malgo 'Parse) -> Opt -> IO ()
+compileFromAST parsedAst opt =
+  void $
+    runReaderT ?? opt $
+      unMalgoM $
+        runUniqT ?? UniqSupply 0 $ do
+          rnEnv <- RnEnv.genBuiltinRnEnv
+          (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
+          (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ NewTypeCheck.typeCheck rnEnv renamedAst
+          refinedAst <- refine typedAst
+          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. NewTcEnv.varEnv) (tcEnv ^. NewTcEnv.typeEnv) (tcEnv ^. NewTcEnv.rnEnv) refinedAst
+          -- (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
+          -- refinedAst <- refine typedAst
+          -- (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. TcEnv.varEnv) (tcEnv ^. TcEnv.typeEnv) (tcEnv ^. TcEnv.rnEnv) refinedAst
+          let inf = buildInterface rnState dsEnv
+          storeInterface inf
+          when (debugMode opt) $ do
+            inf <- loadInterface (Syntax._moduleName typedAst)
+            liftIO $ do
+              hPutStrLn stderr "=== INTERFACE ==="
+              hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
+          runLint $ lintProgram core
+          coreOpt <- if noOptimize opt then pure core else optimizeProgram (inlineSize opt) core
+          when (dumpDesugar opt && not (noOptimize opt)) $
+            liftIO $ do
+              hPutStrLn stderr "=== OPTIMIZE ==="
+              hPrint stderr $ pPrint $ over appProgram flat coreOpt
+          runLint $ lintProgram coreOpt
+          coreLL <- if noLambdaLift opt then pure coreOpt else lambdalift coreOpt
+          when (dumpDesugar opt && not (noLambdaLift opt)) $
+            liftIO $ do
+              hPutStrLn stderr "=== LAMBDALIFT ==="
+              hPrint stderr $ pPrint $ over appProgram flat coreLL
+          coreLLOpt <- if noOptimize opt then pure coreLL else optimizeProgram (inlineSize opt) coreLL
+          when (dumpDesugar opt && not (noLambdaLift opt) && not (noOptimize opt)) $
+            liftIO $ do
+              hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
+              hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
+
+          when (genCoreJSON opt) $ storeCoreJSON coreLLOpt
+
+          llvmir <- codeGen coreLLOpt
+
+          let llvmModule =
+                L.defaultModule
+                  { L.moduleName = fromString $ srcName opt,
+                    L.moduleSourceFileName = fromString $ srcName opt,
+                    L.moduleDefinitions = llvmir
+                  }
+          if viaBinding opt
+            then liftIO $
+              withContext $ \ctx ->
+                BS.writeFile (dstName opt) =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+            else
+              liftIO $
+                TL.writeFile (dstName opt) $
+                  ppllvm llvmModule
+
+-- | .mlgから.llへのコンパイル
+compile :: Opt -> IO ()
+compile opt = do
+  src <- T.readFile (srcName opt)
+  parsedAst <- case parseMalgo (srcName opt) src of
+    Right x -> pure x
+    Left err -> error $ errorBundlePretty err
+  when (dumpParsed opt) $ do
+    hPutStrLn stderr "=== PARSE ==="
+    hPrint stderr $ pPrint parsedAst
+  compileFromAST parsedAst opt
+
+storeCoreJSON :: (MonadMalgo m, MonadIO m, ToJSON a, FromJSON a) => a -> m ()
+storeCoreJSON core = do
+  opt <- getOpt
+  let json = encode core
+  let decoded = eitherDecode json
+  case decoded of
+    Left err -> error err
+    Right x -> (x `asTypeOf` core) `seq` pure ()
+  liftIO $ BL.writeFile (dstName opt & extension .~ ".json") json

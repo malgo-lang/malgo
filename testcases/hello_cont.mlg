@@ -1,4 +1,0 @@
-let extern println : String -> {} = "println" in
-let fun println_k(str : String, k : {} -> {}) : {} = k(println(str)) in
-let fun id(x) = x in
-println_k("hello, world", id)

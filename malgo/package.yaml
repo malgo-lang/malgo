@@ -1,44 +1,49 @@
 name: malgo
-version: 0.1.0.0
+version: 1.0.0.0
 category: Compilers/Interpreters
 github: takoeight0821/malgo
 license: BSD3
 author: "Yuya Kono"
 maintainer: "takohati0821@gmail.com"
-copyright: "2017-2020 Yuya Kono"
+copyright: "2017-2021 Yuya Kono"
 
 build-type: Simple
 
 dependencies:
-  - array
+  - aeson
   - base
   - bytestring
+  - deriving-compat
+  - binary
   - containers
+  - directory
+  - data-fix
+  - filepath
+  - extra
   - koriel
-  - llvm-hs-pure
+  - lens
   - llvm-hs
+  - llvm-hs-pretty
+  - llvm-hs-pure
+  - megaparsec
   - mtl
   - optparse-applicative
-  - parsec
+  - parser-combinators
   - pretty
-  - pretty-simple
   - text
   - transformers
-  - vector
 
 ghc-options:
   - -Wall
   - -Wcompat
   - -Wincomplete-uni-patterns
   - -Wmissing-deriving-strategies
+  - -Wno-name-shadowing
   - -j4
   - +RTS -A128m -n2m -qg -RTS
 
 default-extensions:
   - StrictData
-
-build-tools:
-  - happy
 
 library:
   source-dirs: src
@@ -52,11 +57,4 @@ executables:
     dependencies:
       - malgo
       - llvm-hs-pretty
-
-tests:
-  malgo-test:
-    main: Spec.hs
-    source-dirs: test
-    dependencies:
-      - malgo
-      - hspec
+      - shake

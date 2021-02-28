@@ -101,7 +101,6 @@ import GHC.Stack
     prettyCallStack,
   )
 import qualified Text.Megaparsec.Pos as Megaparsec
-import Text.Parsec.Pos (SourcePos)
 import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
 import Prelude hiding (log, unzip)
 
@@ -202,8 +201,5 @@ instance (Monoid w, MonadState s m) => MonadState s (WriterT w m) where
   {-# INLINE state #-}
 
 -- Pretty SourcePos
-instance Pretty SourcePos where
-  pPrint = text . show
-
 instance Pretty Megaparsec.SourcePos where
   pPrint = text . Megaparsec.sourcePosPretty

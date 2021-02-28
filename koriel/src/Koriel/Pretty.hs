@@ -5,8 +5,8 @@
 
 module Koriel.Pretty
   ( module Text.PrettyPrint.HughesPJClass,
+    Pretty1 (..),
     (<+>),
-    pShow,
     errorDoc,
     pretty,
     rendered,
@@ -14,9 +14,9 @@ module Koriel.Pretty
   )
 where
 
+import Data.Fix
 import Koriel.Prelude
-import Text.Pretty.Simple (pShow)
-import Text.PrettyPrint.HughesPJClass hiding (char, double, first, float, int, integer, (<+>), (<>)) -- (Doc, Pretty (..))
+import Text.PrettyPrint.HughesPJClass hiding (char, double, first, float, int, integer, (<+>), (<>))
 import qualified Text.PrettyPrint.HughesPJClass as P
 import qualified Prelude
 
@@ -40,3 +40,9 @@ toText = pretty . rendered
 
 errorDoc :: HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ P.render x
+
+class Pretty1 f where
+  liftPPrintPrec :: (PrettyLevel -> Rational -> a -> Doc) -> PrettyLevel -> Rational -> f a -> Doc
+
+instance Pretty1 f => Pretty (Fix f) where
+  pPrintPrec l d (Fix f) = liftPPrintPrec pPrintPrec l d f

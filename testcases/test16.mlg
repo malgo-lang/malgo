@@ -1,7 +1,0 @@
-let fun id(x) = x in
-let val a = {id, id} in
-let val b = id(a) in
-let val c = match b with | {x, y} => x in
-let val d = c(1) in
-let extern print_int : Int -> {} = "print_int" in
-print_int(d)

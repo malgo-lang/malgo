@@ -1,6 +1,0 @@
-let extern print_int : Int -> {} = "print_int" in
-let extern newline : () -> {} = "newline" in
-let val a : [Int] = array(0, 10) in
-let val a1 : Int = a.(1) in
-let val a2 : Int = a.(2) <- 42; a.(2) in
-print_int(a1); newline(); print_int(a2); newline()

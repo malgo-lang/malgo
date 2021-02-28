@@ -1,0 +1,85 @@
+module Prelude = {
+  import Builtin;
+
+  -- Arithmetic operators
+
+  add_Int32 :: Int32 -> Int32 -> Int32;
+  add_Int32 = { (Int32# x) (Int32# y) -> Int32# (add_Int32# x y) };
+
+  add_Int64 :: Int64 -> Int64 -> Int64;
+  add_Int64 = { (Int64# x) (Int64# y) -> Int64# (add_Int64# x y) };
+
+  add_Float :: Float -> Float -> Float;
+  add_Float = { (Float# x) (Float# y) -> Float# (add_Float# x y) };
+
+  add_Double :: Double -> Double -> Double;
+  add_Double = { (Double# x) (Double# y) -> Double# (add_Double# x y) };
+
+  sub_Int32 :: Int32 -> Int32 -> Int32;
+  sub_Int32 = { (Int32# x) (Int32# y) -> Int32# (sub_Int32# x y) };
+
+  sub_Int64 :: Int64 -> Int64 -> Int64;
+  sub_Int64 = { (Int64# x) (Int64# y) -> Int64# (sub_Int64# x y) };
+
+  sub_Float :: Float -> Float -> Float;
+  sub_Float = { (Float# x) (Float# y) -> Float# (sub_Float# x y) };
+
+  sub_Double :: Double -> Double -> Double;
+  sub_Double = { (Double# x) (Double# y) -> Double# (sub_Double# x y) };
+
+  mul_Int32 :: Int32 -> Int32 -> Int32;
+  mul_Int32 = { (Int32# x) (Int32# y) -> Int32# (mul_Int32# x y) };
+
+  mul_Int64 :: Int64 -> Int64 -> Int64;
+  mul_Int64 = { (Int64# x) (Int64# y) -> Int64# (mul_Int64# x y) };
+
+  mul_Float :: Float -> Float -> Float;
+  mul_Float = { (Float# x) (Float# y) -> Float# (mul_Float# x y) };
+
+  mul_Double :: Double -> Double -> Double;
+  mul_Double = { (Double# x) (Double# y) -> Double# (mul_Double# x y) };
+
+  div_Int32 :: Int32 -> Int32 -> Int32;
+  div_Int32 = { (Int32# x) (Int32# y) -> Int32# (div_Int32# x y) };
+
+  div_Int64 :: Int64 -> Int64 -> Int64;
+  div_Int64 = { (Int64# x) (Int64# y) -> Int64# (div_Int64# x y) };
+
+  div_Float :: Float -> Float -> Float;
+  div_Float = { (Float# x) (Float# y) -> Float# (div_Float# x y) };
+
+  div_Double :: Double -> Double -> Double;
+  div_Double = { (Double# x) (Double# y) -> Double# (div_Double# x y) };
+
+  infixl 0 (|>);
+  (|>) :: a -> (a -> b) -> b;
+  (|>) = {x f -> f x};
+
+  infixr 0 (<|);
+  (<|) :: (a -> b) -> a -> b;
+  (<|) = {f x -> f x};
+
+  if :: Bool -> {a} -> {a} -> a;
+  if = { True t _ -> !t
+       | False _ f -> !f
+       };
+
+  unless :: Bool -> a -> {a} -> a;
+  unless = { c tValue f -> if c {tValue} f };
+
+  foreign import print_string :: String# -> ();
+  foreign import newline :: () -> ();
+
+  putStr :: String -> ();
+  putStr = { (String# str) -> print_string str };
+
+  putStrLn :: String -> ();
+  putStrLn = { (String# str) ->
+    print_string str;
+    newline ()
+  };
+
+  appendString = { (String# s1) (String# s2) ->
+    String# (appendString# s1 s2)
+  };
+}

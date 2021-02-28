@@ -15,8 +15,8 @@ module Koriel.Core.Lint
 where
 
 import Control.Monad.Except
-import Koriel.Core.Core
 import Koriel.Core.Op
+import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.Prelude
@@ -39,8 +39,6 @@ defined x
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
   and (zipWith isMatch ps0 ps1) && isMatch r0 r1
-isMatch (typeOf -> DataT {}) (typeOf -> AnyT) = True
-isMatch (typeOf -> AnyT) (typeOf -> DataT {}) = True
 isMatch (typeOf -> AnyT) (typeOf -> AnyT) = True
 isMatch x y
   | typeOf x == typeOf y = True
@@ -77,33 +75,42 @@ lintExp (BinOp o x y) = do
   lintAtom x
   lintAtom y
   case o of
-    Add | isMatch x Int32T -> match x y
-        | isMatch x Int64T -> match x y
-        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    Sub | isMatch x Int32T -> match x y
-        | isMatch x Int64T -> match x y
-        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    Mul | isMatch x Int32T -> match x y 
-        | isMatch x Int64T -> match x y
-        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    Div | isMatch x Int32T -> match x y 
-        | isMatch x Int64T -> match x y
-        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    Mod | isMatch x Int32T -> match x y
-        | isMatch x Int64T -> match x y
-        | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    FAdd | isMatch x FloatT -> match x y
-         | isMatch x DoubleT -> match x y
-         | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
-    FSub | isMatch x FloatT -> match x y
-         | isMatch x DoubleT -> match x y
-         | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
-    FMul | isMatch x FloatT -> match x y
-         | isMatch x DoubleT -> match x y
-         | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
-    FDiv | isMatch x FloatT -> match x y
-         | isMatch x DoubleT -> match x y
-         | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+    Add
+      | isMatch x Int32T -> match x y
+      | isMatch x Int64T -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    Sub
+      | isMatch x Int32T -> match x y
+      | isMatch x Int64T -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    Mul
+      | isMatch x Int32T -> match x y
+      | isMatch x Int64T -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    Div
+      | isMatch x Int32T -> match x y
+      | isMatch x Int64T -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    Mod
+      | isMatch x Int32T -> match x y
+      | isMatch x Int64T -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+    FAdd
+      | isMatch x FloatT -> match x y
+      | isMatch x DoubleT -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+    FSub
+      | isMatch x FloatT -> match x y
+      | isMatch x DoubleT -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+    FMul
+      | isMatch x FloatT -> match x y
+      | isMatch x DoubleT -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+    FDiv
+      | isMatch x FloatT -> match x y
+      | isMatch x DoubleT -> match x y
+      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
     Eq -> match x y
     Neq -> match x y
     Lt -> match x y
@@ -112,22 +119,9 @@ lintExp (BinOp o x y) = do
     Ge -> match x y
     And -> match x BoolT >> match y BoolT
     Or -> match x BoolT >> match y BoolT
-lintExp (ArrayRead a i) = do
-  lintAtom a
-  lintAtom i
-  case typeOf a of
-    ArrayT _ -> match Int64T i
-    _ -> errorDoc $ pPrint a <+> "must be a array"
-lintExp (ArrayWrite a i v) = do
-  lintAtom a
-  lintAtom i
-  lintAtom v
-  case typeOf a of
-    ArrayT t -> match Int64T i >> match t v
-    _ -> errorDoc $ pPrint a <+> "must be a array"
 lintExp (Cast _ x) = lintAtom x
-lintExp (Let ds e) = local (map fst ds <>) $ do
-  traverse_ (lintObj . snd) ds
+lintExp (Let ds e) = local (map (view localDefVar) ds <>) $ do
+  traverse_ (lintObj . view localDefObj) ds
   lintExp e
 lintExp (Match e cs) = do
   lintExp e
@@ -137,7 +131,6 @@ lintExp Error {} = pure ()
 lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
-lintObj (Array a n) = lintAtom a >> lintAtom n >> match Int64T n
 
 lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e

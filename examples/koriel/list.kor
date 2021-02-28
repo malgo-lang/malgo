@@ -1,0 +1,13 @@
+(deftype `List` (-> Box Box)
+  (lam `a` Box <(`nil` {}) (`cons` {(`hd` `a`) (`tl` (`List` `a`))})>))
+
+(defvar `nil` (all `a` Box (`List` `a`))
+  (Lam `a` Box (in (`List` `a`)
+    <`nil` {}
+      <(`nil` {}) (`cons` {(`hd` `a`) (`tl` (`List` `a`))})>>)))
+
+(defvar `cons` (all `a` Box (-> `a` (-> (`List` `a`) (`List` `a`))))
+  (Lam `a` Box (lam `x` `a` (lam `xs` (`List` `a`)
+    (in (`List` `a`)
+      <`cons` {(`hd` `x`) (`tl` `xs`)}
+        <(`nil` {}) (`cons` {(`hd` `a`) (`tl` (`List` `a`))})>>)))))

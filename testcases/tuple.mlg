@@ -1,7 +1,0 @@
-let val p : {Int, String} = {42, " is the answer"} in
-let extern print_int : Int -> {} = "print_int" in
-let extern println : String -> {} = "println" in
-let extern newline : () -> {} = "newline" in
-let fun fst_int(p : {Int, String}) : Int = match p with | { x, y } => x in
-let fun snd_str(p : {Int, String}) : String = match p with | { x, y } => y in
-print_int(fst_int(p)); println(snd_str(p))

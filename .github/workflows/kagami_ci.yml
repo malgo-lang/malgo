@@ -2,9 +2,9 @@ name: Kagami CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ '*' ]
   pull_request:
-    branches: [ master ]
+    branches: [ '*' ]
 
 jobs:
   build:
@@ -20,18 +20,15 @@ jobs:
     - uses: haskell/actions/setup@v1
       with:
         ghc-version: '8.10.2'
-        enable-stack: true
-        stack-version: 'latest'
-
-    - name: Install dependencies
-      run: |
-        stack install hspec-discover
-        export PATH=~/.stack/bin:$PATH
+        cabal-version: '3.2.0.0'
+        # enable-stack: true
+        # stack-version: 'latest'
 
     - name: Build
       run: |
-        stack build
+        cabal build all
     - name: Run tests
       run: |
-        ./test_malgo_stack.sh
-        ./test_griff_stack.sh
+        mkdir -p $HOME/.local/share/malgo/base
+        ./install_malgo_internal.sh
+        ./test_malgo.sh
