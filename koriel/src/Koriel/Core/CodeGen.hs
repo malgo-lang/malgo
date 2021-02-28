@@ -335,8 +335,7 @@ genExp (Cast ty x) k = do
 genExp (Error _) _ = unreachable
 
 genCase ::
-  ( HasCallStack,
-    MonadReader OprMap m,
+  ( MonadReader OprMap m,
     MonadUniq m,
     MonadModuleBuilder m,
     MonadState PrimMap m,
@@ -436,12 +435,12 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = d
   Map.singleton name <$> bitcast addr (convType $ SumT cs)
 genLocalDef (LocalDef _ Pack {}) = bug Unreachable
 
-genCon :: HasCallStack => Set Con -> Con -> (Integer, LT.Type)
+genCon :: Set Con -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
   | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
   | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
 
-findIndex :: (HasCallStack, Ord a, Pretty a) => a -> Set a -> Integer
+findIndex :: (Ord a, Pretty a) => a -> Set a -> Integer
 findIndex con cs = case Set.lookupIndex con cs of
   Just i -> fromIntegral i
   Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
@@ -473,14 +472,14 @@ globalStringPtr str nm = do
   pure $ C.GetElementPtr True (C.GlobalReference (ptr ty) nm) [C.Int 32 0, C.Int 32 0]
 
 gepAndLoad ::
-  (HasCallStack, MonadIRBuilder m, MonadModuleBuilder m) =>
+  (MonadIRBuilder m, MonadModuleBuilder m) =>
   Operand ->
   [Operand] ->
   m Operand
 gepAndLoad opr addrs = join $ load <$> gep opr addrs <*> pure 0
 
 gepAndStore ::
-  (HasCallStack, MonadIRBuilder m, MonadModuleBuilder m) =>
+  (MonadIRBuilder m, MonadModuleBuilder m) =>
   Operand ->
   [Operand] ->
   Operand ->

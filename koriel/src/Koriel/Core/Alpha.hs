@@ -33,7 +33,7 @@ lookupVar n = do
     Just n' -> pure n'
     Nothing -> pure (Var n)
 
-lookupId :: (HasCallStack, MonadReader AlphaEnv m) => Id Type -> m (Id Type)
+lookupId :: (MonadReader AlphaEnv m) => Id Type -> m (Id Type)
 lookupId n = do
   n' <- lookupVar n
   case n' of

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5e885954d05eb7c8aba177467736b892d8da7fbb34c30ce0a3a4ffecefad9368
+-- hash: b7d8209c0c507a3672691d1c95d4e8be30d61613f1b3d38c3ceb765f60951058
 
 name:           malgo
 version:        1.0.0.0
@@ -27,16 +27,22 @@ library
       Language.Malgo.Desugar.Pass
       Language.Malgo.Driver
       Language.Malgo.Interface
+      Language.Malgo.NewTypeCheck.Pass
+      Language.Malgo.NewTypeCheck.TcEnv
       Language.Malgo.Parser
       Language.Malgo.Prelude
+      Language.Malgo.Refine.Pass
       Language.Malgo.Rename.Pass
       Language.Malgo.Rename.RnEnv
       Language.Malgo.Syntax
       Language.Malgo.Syntax.Extension
-      Language.Malgo.Type
       Language.Malgo.TypeCheck.Constraint
       Language.Malgo.TypeCheck.Pass
       Language.Malgo.TypeCheck.TcEnv
+      Language.Malgo.TypeRep.IORef
+      Language.Malgo.TypeRep.Static
+      Language.Malgo.TypeRep.UTerm
+      Language.Malgo.Unify
   other-modules:
       Paths_malgo
   hs-source-dirs:
@@ -49,6 +55,8 @@ library
     , binary
     , bytestring
     , containers
+    , data-fix
+    , deriving-compat
     , directory
     , extra
     , filepath
@@ -81,6 +89,8 @@ executable malgoc
     , binary
     , bytestring
     , containers
+    , data-fix
+    , deriving-compat
     , directory
     , extra
     , filepath

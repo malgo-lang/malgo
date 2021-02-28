@@ -9,7 +9,7 @@
 module Main where
 
 import Development.Shake.FilePath ((</>))
-import Language.Malgo.Prelude
+import Language.Malgo.Prelude hiding (value)
 import Options.Applicative
 import Runner
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory)

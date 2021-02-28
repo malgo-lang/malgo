@@ -53,14 +53,14 @@ lookupQualifiedTypeName pos modName name = do
     Just name -> pure name
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint modName <> "." <> text name)
 
-lookupVarName :: (HasCallStack, MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> String -> m RnId
+lookupVarName :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> String -> m RnId
 lookupVarName pos name = do
   vm <- view varEnv
   case vm ^. at name of
     Just (name:_) -> pure name
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
-lookupTypeName :: (HasCallStack, MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> String -> m RnId
+lookupTypeName :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
   tm <- view typeEnv
   case tm ^. at name of

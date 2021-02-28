@@ -9,14 +9,13 @@
 
 module Language.Malgo.TypeCheck.TcEnv where
 
-import Data.Binary (Binary)
 import qualified Data.Map as Map
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.Type
+import Language.Malgo.TypeRep.IORef
 
 data TcEnv = TcEnv
   { _varEnv :: Map RnId Scheme,
@@ -42,17 +41,7 @@ instance Pretty TcEnv where
             ]
         )
 
-data TypeDef = TypeDef {_constructor :: Type, _qualVars :: [TyVar], _union :: [(RnId, Type)]}
-  deriving stock (Show, Eq, Generic)
-
-instance Binary TypeDef
-
-instance Pretty TypeDef where
-  pPrint (TypeDef c q u) = pPrint (c, q, u)
-
 makeLenses ''TcEnv
-
-makeLenses ''TypeDef
 
 simpleTypeDef :: Type -> TypeDef
 simpleTypeDef x = TypeDef x [] []

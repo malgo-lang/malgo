@@ -5,20 +5,26 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Language.Malgo.Type where
+module Language.Malgo.TypeRep.IORef where
 
 import Data.Binary (Binary (..))
 import qualified Data.Set as Set
+import Data.Void
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
+import {-# SOURCE #-} Language.Malgo.Syntax.Extension (ModuleName)
+import Language.Malgo.TypeRep.Static (IsTypeDef, PrimT (..), Rep (..))
+import qualified Language.Malgo.TypeRep.Static as S
 
 ----------------------
 -- Kind and HasKind --
@@ -35,7 +41,7 @@ data Kind
 instance Binary Kind
 
 class HasKind a where
-  kind :: (HasCallStack, MonadIO m) => a -> m (Maybe Kind)
+  kind :: (MonadIO m) => a -> m (Maybe Kind)
 
 instance HasKind a => HasKind (Id a) where
   kind = kind . view idMeta
@@ -48,44 +54,17 @@ instance Pretty Kind where
   pPrintPrec l d (KArr k1 k2) =
     maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
 
--- | Runtime representation
-data Rep
-  = -- | Boxed value
-    BoxedRep
-  | -- | Int32#
-    Int32Rep
-  | -- | Int64#
-    Int64Rep
-  | -- | Float#
-    FloatRep
-  | -- | Double#
-    DoubleRep
-  | -- | Char#
-    CharRep
-  | -- | String#
-    StringRep
-  deriving stock (Eq, Ord, Show, Generic)
-
-instance Binary Rep
-
-instance Pretty Rep where pPrint rep = text $ show rep
+instance S.IsKind Kind where
+  _Kind = prism fromStatic (Right . toStatic)
+    where
+      fromStatic (S.TYPE rep) = Type rep
+      fromStatic (S.KArr k1 k2) = KArr (fromStatic k1) (fromStatic k2)
+      toStatic (Type rep) = S.TYPE rep
+      toStatic (KArr k1 k2) = S.KArr (toStatic k1) (toStatic k2)
 
 ---------------------
 -- Primitive Types --
 ---------------------
-
-data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
-  deriving stock (Eq, Show, Ord, Generic)
-
-instance Binary PrimT
-
-instance Pretty PrimT where
-  pPrint Int32T = "Int32#"
-  pPrint Int64T = "Int64#"
-  pPrint FloatT = "Float#"
-  pPrint DoubleT = "Double#"
-  pPrint CharT = "Char#"
-  pPrint StringT = "String#"
 
 instance HasKind PrimT where
   kind Int32T = pure $ Just $ Type Int32Rep
@@ -109,6 +88,10 @@ instance HasKind Scheme where
 
 instance Pretty Scheme where
   pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
+
+instance S.IsScheme Scheme where
+  safeToScheme (Forall vs t) = S.Forall <$> traverse (traverseOf idMeta S.safeToKind) vs <*> S.safeToType t
+  fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromKind) vs) (S.fromType t)
 
 type TyVar = Id Kind
 
@@ -176,6 +159,25 @@ instance Pretty Type where
   pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec _ _ (TyMeta tv) = pPrint tv
 
+instance S.IsType Type where
+  safeToType (TyApp t1 t2) = S.TyApp <$> S.safeToType t1 <*> S.safeToType t2
+  safeToType (TyVar v) = S.TyVar <$> traverseOf idMeta S.safeToKind v
+  safeToType (TyCon c) = S.TyCon <$> traverseOf idMeta S.safeToKind c
+  safeToType (TyPrim p) = Just $ S.TyPrim p
+  safeToType (TyArr t1 t2) = S.TyArr <$> S.safeToType t1 <*> S.safeToType t2
+  safeToType (TyTuple ts) = S.TyTuple <$> traverse S.safeToType ts
+  safeToType (TyLazy t) = S.TyLazy <$> S.safeToType t
+  safeToType (TyPtr t) = S.TyPtr <$> S.safeToType t
+  safeToType TyMeta {} = Nothing
+  fromType (S.TyApp t1 t2) = TyApp (S.fromType t1) (S.fromType t2)
+  fromType (S.TyVar v) = TyVar (over idMeta (\k -> k ^. re S._Kind) v)
+  fromType (S.TyCon c) = TyCon (over idMeta (\k -> k ^. re S._Kind) c)
+  fromType (S.TyPrim p) = TyPrim p
+  fromType (S.TyArr t1 t2) = TyArr (S.fromType t1) (S.fromType t2)
+  fromType (S.TyTuple ts) = TyTuple (map S.fromType ts)
+  fromType (S.TyLazy t) = TyLazy (S.fromType t)
+  fromType (S.TyPtr t) = TyPtr (S.fromType t)
+
 -------------------
 -- Type variable --
 -------------------
@@ -214,6 +216,25 @@ instance Binary MetaTv where
   put _ = error "Binary MetaTv"
   get = error "Binary MetaTv"
 
+-- | Definition of type constructor
+data TypeDef = TypeDef {_constructor :: Type, _qualVars :: [TyVar], _union :: [(Id ModuleName, Type)]}
+  deriving stock (Show, Eq, Generic)
+
+instance Binary TypeDef
+
+instance Pretty TypeDef where
+  pPrint (TypeDef c q u) = pPrint (c, q, u)
+
+instance IsTypeDef TypeDef where
+  safeToTypeDef TypeDef {_constructor, _qualVars, _union} =
+    S.TypeDef <$> S.safeToType _constructor
+      <*> traverse (idMeta S.safeToKind) _qualVars
+      <*> traverse (_2 S.safeToType) _union
+  fromTypeDef S.TypeDef {S._typeConstructor, S._typeParameters, S._valueConstructors} =
+    TypeDef (S.fromType _typeConstructor) (map (over idMeta S.fromKind) _typeParameters) (map (over _2 S.fromType) _valueConstructors)
+
+makeLenses ''TypeDef
+
 ---------------------------
 -- Read and Write MetaTv --
 ---------------------------
@@ -224,7 +245,7 @@ newMetaTv k rigidName = MetaTv <$> getUniq <*> newIORef k <*> pure rigidName <*>
 readMetaTv :: MonadIO m => MetaTv -> m (Maybe Type)
 readMetaTv (MetaTv _ _ _ ref) = readIORef ref
 
-writeMetaTv :: (HasCallStack, MonadIO m) => MetaTv -> Type -> m ()
+writeMetaTv :: (MonadIO m) => MetaTv -> Type -> m ()
 writeMetaTv tv@(MetaTv _ kindRef _ typeRef) t = do
   mktv <- kind tv
   mkt <- kind t
@@ -279,10 +300,6 @@ class HasType a where
   toType :: Getter a Type
   overType :: (MonadIO m, MonadUniq m) => (Type -> m Type) -> a -> m a
 
-instance HasType Type where
-  toType = to id
-  overType = id
-
 instance HasType Scheme where
   toType = to $ \(Forall _ t) -> t
   overType f (Forall vs t) = Forall vs <$> f t
@@ -291,15 +308,19 @@ instance HasType a => HasType (Id a) where
   toType = idMeta . toType
   overType f n = traverseOf idMeta (overType f) n
 
-data WithType a = WithType a Type
-  deriving stock (Eq, Show, Ord, Functor, Foldable)
+instance HasType Type where
+  toType = to id
+  overType = id
 
-instance Pretty a => Pretty (WithType a) where
-  pPrint (WithType a t) = pPrint a <> ":" <> pPrint t
+instance HasType Void where
+  toType _ x = absurd x
+  overType _ x = absurd x
 
-instance HasType (WithType a) where
-  toType = to $ \(WithType _ t) -> t
-  overType f (WithType x t) = WithType x <$> f t
+type WithType a = With Type a
+
+instance HasType t => HasType (With t a) where
+  toType = ann . toType
+  overType f (With t x) = With <$> overType f t <*> pure x
 
 ----------------
 -- split Type --

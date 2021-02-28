@@ -12,136 +12,17 @@ module Language.Malgo.Syntax.Extension where
 import Data.Binary (Binary)
 import Data.Kind (Constraint)
 import qualified Data.Kind as K
+import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.Type
+import Language.Malgo.TypeRep.IORef
+import qualified Language.Malgo.TypeRep.Static as S
+import qualified Language.Malgo.TypeRep.UTerm as U
 import Text.Megaparsec.Pos (SourcePos)
 
-data Unboxed
-
-data Boxed
-
-data Assoc = LeftA | RightA | NeutralA
-  deriving stock (Eq, Show, Generic)
-
-instance Binary Assoc
-
-instance Pretty Assoc where
-  pPrint LeftA = "l"
-  pPrint RightA = "r"
-  pPrint NeutralA = ""
-
-type family XId x
-
--- Exp Extensions
-type family XVar x
-
-type family XCon x
-
-type family XUnboxed x
-
-type family XBoxed x
-
-type family XApply x
-
-type family XOpApp x
-
-type family XFn x
-
-type family XTuple x
-
-type family XForce x
-
-type family XParens x
-
-type ForallExpX (c :: K.Type -> Constraint) x =
-  ( c (XVar x),
-    c (XCon x),
-    c (XUnboxed x),
-    c (XBoxed x),
-    c (XApply x),
-    c (XOpApp x),
-    c (XFn x),
-    c (XTuple x),
-    c (XForce x),
-    c (XParens x)
-  )
-
--- Clause Extensions
-type family XClause x
-
-type ForallClauseX (c :: K.Type -> Constraint) x = c (XClause x)
-
--- Stmt Extensions
-
-type family XLet x
-
-type family XNoBind x
-
-type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XNoBind x))
-
--- Pat Extensions
-type family XVarP x
-
-type family XConP x
-
-type family XTupleP x
-
-type family XUnboxedP x
-
-type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XUnboxedP x))
-
--- Type Extensions
-type family XTId x
-
-type family XTyApp x
-
-type family XTyVar x
-
-type family XTyCon x
-
-type family XTyArr x
-
-type family XTyTuple x
-
-type family XTyLazy x
-
-type ForallTypeX (c :: K.Type -> Constraint) x =
-  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyLazy x))
-
--- Decl Extensions
-type family XScDef x
-
-type family XScSig x
-
-type family XDataDef x
-
-type family XInfix x
-
-type family XForeign x
-
-type family XImport x
-
-type ForallDeclX (c :: K.Type -> Constraint) x =
-  ( c (XScDef x),
-    c (XScSig x),
-    c (XDataDef x),
-    c (XInfix x),
-    c (XForeign x),
-    c (XImport x),
-    ForallExpX c x,
-    ForallClauseX c x,
-    ForallStmtX c x,
-    ForallPatX c x,
-    ForallTypeX c x
-  )
-
--- Module Extensions
-type family XModule x
-
 -- Phase and type instance
-data MalgoPhase = Parse | Rename | TypeCheck
+data MalgoPhase = Parse | Rename | TypeCheck | NewTypeCheck | Refine
 
 data Malgo (p :: MalgoPhase)
 
@@ -159,11 +40,15 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = String
   MalgoId 'Rename = Id ModuleName
   MalgoId 'TypeCheck = Id ModuleName
+  MalgoId 'NewTypeCheck = Id ModuleName
+  MalgoId 'Refine = Id ModuleName
 
 type family MalgoTId (p :: MalgoPhase) where
   MalgoTId 'Parse = String
   MalgoTId 'Rename = Id ModuleName
   MalgoTId 'TypeCheck = Id ModuleName
+  MalgoTId 'NewTypeCheck = Id ModuleName
+  MalgoTId 'Refine = Id ModuleName
 
 type PsId = XId (Malgo 'Parse)
 
@@ -177,132 +62,172 @@ type RnTId = XTId (Malgo 'Rename)
 
 type TcTId = XTId (Malgo 'TypeCheck)
 
-type instance XVar (Malgo 'Parse) = SourcePos
+data Unboxed
 
-type instance XVar (Malgo 'Rename) = SourcePos
+data Boxed
 
-type instance XVar (Malgo 'TypeCheck) = WithType SourcePos
+data Assoc = LeftA | RightA | NeutralA
+  deriving stock (Eq, Show, Generic)
 
-type instance XCon (Malgo 'Parse) = SourcePos
+instance Binary Assoc
 
-type instance XCon (Malgo 'Rename) = SourcePos
+instance Pretty Assoc where
+  pPrint LeftA = "l"
+  pPrint RightA = "r"
+  pPrint NeutralA = ""
 
-type instance XCon (Malgo 'TypeCheck) = WithType SourcePos
+type family XId x where
+  XId (Malgo p) = MalgoId p
 
-type instance XId (Malgo p) = MalgoId p
+-- Exp Extensions
 
-type instance XUnboxed (Malgo 'Parse) = SourcePos
+type family SimpleX (x :: MalgoPhase) where
+  SimpleX 'Parse = SourcePos
+  SimpleX 'Rename = SourcePos
+  SimpleX 'TypeCheck = WithType SourcePos
+  SimpleX 'NewTypeCheck = U.WithUType SourcePos
+  SimpleX 'Refine = S.WithType SourcePos
 
-type instance XUnboxed (Malgo 'Rename) = SourcePos
+type family XVar x where
+  XVar (Malgo x) = SimpleX x
 
-type instance XUnboxed (Malgo 'TypeCheck) = WithType SourcePos
+type family XCon x where
+  XCon (Malgo x) = SimpleX x
 
-type instance XBoxed (Malgo 'Parse) = SourcePos
+type family XUnboxed x where
+  XUnboxed (Malgo x) = SimpleX x
 
-type instance XBoxed (Malgo 'Rename) = SourcePos
+type family XBoxed x where
+  XBoxed (Malgo 'Parse) = SourcePos
+  XBoxed (Malgo _) = Void
 
-type instance XBoxed (Malgo 'TypeCheck) = WithType SourcePos
+type family XApply x where
+  XApply (Malgo x) = SimpleX x
 
-type instance XApply (Malgo 'Parse) = SourcePos
+type family XOpApp x where
+  XOpApp (Malgo 'Parse) = SourcePos
+  XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'TypeCheck) = WithType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'Refine) = Void
 
-type instance XApply (Malgo 'Rename) = SourcePos
+type family XFn x where
+  XFn (Malgo x) = SimpleX x
 
-type instance XApply (Malgo 'TypeCheck) = WithType SourcePos
+type family XTuple x where
+  XTuple (Malgo x) = SimpleX x
 
-type instance XOpApp (Malgo 'Parse) = SourcePos
+type family XForce x where
+  XForce (Malgo x) = SimpleX x
 
-type instance XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
+type family XParens x where
+  XParens (Malgo x) = SimpleX x
 
-type instance XOpApp (Malgo 'TypeCheck) = WithType (SourcePos, (Assoc, Int))
+type ForallExpX (c :: K.Type -> Constraint) x =
+  ( c (XVar x),
+    c (XCon x),
+    c (XUnboxed x),
+    c (XBoxed x),
+    c (XApply x),
+    c (XOpApp x),
+    c (XFn x),
+    c (XTuple x),
+    c (XForce x),
+    c (XParens x)
+  )
 
-type instance XFn (Malgo 'Parse) = SourcePos
+-- Clause Extensions
+type family XClause x where
+  XClause (Malgo x) = SimpleX x
 
-type instance XFn (Malgo 'Rename) = SourcePos
+type ForallClauseX (c :: K.Type -> Constraint) x = c (XClause x)
 
-type instance XFn (Malgo 'TypeCheck) = WithType SourcePos
+-- Stmt Extensions
 
-type instance XTuple (Malgo 'Parse) = SourcePos
+type family XLet x where
+  XLet (Malgo _) = SourcePos
 
-type instance XTuple (Malgo 'Rename) = SourcePos
+type family XNoBind x where
+  XNoBind (Malgo _) = SourcePos
 
-type instance XTuple (Malgo 'TypeCheck) = WithType SourcePos
+type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XNoBind x))
 
-type instance XForce (Malgo 'Parse) = SourcePos
+-- Pat Extensions
+type family XVarP x where
+  XVarP (Malgo x) = SimpleX x
 
-type instance XForce (Malgo 'Rename) = SourcePos
+type family XConP x where
+  XConP (Malgo x) = SimpleX x
 
-type instance XForce (Malgo 'TypeCheck) = WithType SourcePos
+type family XTupleP x where
+  XTupleP (Malgo x) = SimpleX x
 
-type instance XParens (Malgo 'Parse) = SourcePos
-
-type instance XParens (Malgo 'Rename) = SourcePos
-
-type instance XParens (Malgo 'TypeCheck) = WithType SourcePos
-
-type instance XClause (Malgo 'Parse) = SourcePos
-
-type instance XClause (Malgo 'Rename) = SourcePos
-
-type instance XClause (Malgo 'TypeCheck) = WithType SourcePos
-
-type instance XLet (Malgo _) = SourcePos
-
-type instance XNoBind (Malgo _) = SourcePos
-
-type instance XVarP (Malgo 'Parse) = SourcePos
-
-type instance XVarP (Malgo 'Rename) = SourcePos
-
-type instance XVarP (Malgo 'TypeCheck) = WithType SourcePos
-
-type instance XConP (Malgo 'Parse) = SourcePos
-
-type instance XConP (Malgo 'Rename) = SourcePos
-
-type instance XConP (Malgo 'TypeCheck) = WithType SourcePos
-
-type instance XTupleP (Malgo 'Parse) = SourcePos
-
-type instance XTupleP (Malgo 'Rename) = SourcePos
-
-type instance XTupleP (Malgo 'TypeCheck) = WithType SourcePos
-
-type instance XUnboxedP (Malgo 'Parse) = SourcePos
-
-type instance XUnboxedP (Malgo 'Rename) = SourcePos
-
-type instance XUnboxedP (Malgo 'TypeCheck) = WithType SourcePos
-
-type instance XTId (Malgo p) = MalgoTId p
-
-type instance XTyApp (Malgo _) = SourcePos
-
-type instance XTyVar (Malgo _) = SourcePos
-
-type instance XTyCon (Malgo _) = SourcePos
-
-type instance XTyArr (Malgo _) = SourcePos
-
-type instance XTyTuple (Malgo _) = SourcePos
-
-type instance XTyLazy (Malgo _) = SourcePos
-
-type instance XScDef (Malgo 'Parse) = SourcePos
-
-type instance XScDef (Malgo 'Rename) = SourcePos
-
-type instance XScDef (Malgo 'TypeCheck) = WithType SourcePos
-
-type instance XScSig (Malgo _) = SourcePos
-
-type instance XDataDef (Malgo _) = SourcePos
-
-type instance XInfix (Malgo _) = SourcePos
-
-type instance XForeign (Malgo 'Parse) = SourcePos
-
-type instance XForeign (Malgo 'Rename) = (SourcePos, String)
-
-type instance XForeign (Malgo 'TypeCheck) = WithType (SourcePos, String)
-
-type instance XImport (Malgo _) = SourcePos
+type family XUnboxedP x where
+  XUnboxedP (Malgo x) = SimpleX x
+
+type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XUnboxedP x))
+
+-- Type Extensions
+type family XTId x where
+  XTId (Malgo x) = MalgoTId x
+
+type family XTyApp x where
+  XTyApp (Malgo _) = SourcePos
+
+type family XTyVar x where
+  XTyVar (Malgo _) = SourcePos
+
+type family XTyCon x where
+  XTyCon (Malgo _) = SourcePos
+
+type family XTyArr x where
+  XTyArr (Malgo _) = SourcePos
+
+type family XTyTuple x where
+  XTyTuple (Malgo _) = SourcePos
+
+type family XTyLazy x where
+  XTyLazy (Malgo _) = SourcePos
+
+type ForallTypeX (c :: K.Type -> Constraint) x =
+  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyLazy x))
+
+-- Decl Extensions
+type family XScDef x where
+  XScDef (Malgo x) = SimpleX x
+
+type family XScSig x where
+  XScSig (Malgo _) = SourcePos
+
+type family XDataDef x where
+  XDataDef (Malgo _) = SourcePos
+
+type family XInfix x where
+  XInfix (Malgo _) = SourcePos
+
+type family XForeign x where
+  XForeign (Malgo 'Parse) = SourcePos
+  XForeign (Malgo 'Rename) = (SourcePos, String)
+  XForeign (Malgo 'TypeCheck) = WithType (SourcePos, String)
+  XForeign (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, String)
+  XForeign (Malgo 'Refine) = S.WithType (SourcePos, String)
+
+type family XImport x where
+  XImport (Malgo _) = SourcePos
+
+type ForallDeclX (c :: K.Type -> Constraint) x =
+  ( c (XScDef x),
+    c (XScSig x),
+    c (XDataDef x),
+    c (XInfix x),
+    c (XForeign x),
+    c (XImport x),
+    ForallExpX c x,
+    ForallClauseX c x,
+    ForallStmtX c x,
+    ForallPatX c x,
+    ForallTypeX c x
+  )
+
+-- Module Extensions
+type family XModule x

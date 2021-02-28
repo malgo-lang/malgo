@@ -21,15 +21,14 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnState)
 import qualified Language.Malgo.Rename.RnEnv as RnState
 import Language.Malgo.Syntax.Extension
-import qualified Language.Malgo.Type as GT
-import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
+import qualified Language.Malgo.TypeRep.Static as GT
 import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
-  { _signatureMap :: Map RnId GT.Scheme, -- from TcEnv
-    _typeDefMap :: Map RnId TcEnv.TypeDef, -- from TcEnv
+  { _signatureMap :: Map RnId GT.Scheme, -- from TypeRep.Static
+    _typeDefMap :: Map RnId GT.TypeDef, -- from TypeRep.Static
     _resolvedVarIdentMap :: Map PsId RnId, -- from DsEnv
-    _resolvedTypeIdentMap :: Map PsId RnId, -- from TcEnv
+    _resolvedTypeIdentMap :: Map PsId RnId, -- from DsEnv
     _coreIdentMap :: Map RnId (Id C.Type), -- from DsEnv
     _infixMap :: Map RnId (Assoc, Int) -- from RnEnv
   }
@@ -51,14 +50,14 @@ instance Pretty Interface where
 buildInterface :: RnState -> DsEnv -> Interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
   let modName = rnState ^. RnState.moduleName
-  ifor_ (dsEnv ^. DsEnv.varEnv) $ \tcId coreId ->
+  ifor_ (dsEnv ^. DsEnv.nameEnv) $ \tcId coreId ->
     when (tcId ^. idIsExternal && tcId ^. idMeta == modName) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
       coreIdentMap . at tcId ?= coreId
-  ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.varEnv) $ \rnId scheme ->
-    when (rnId ^. idIsExternal && rnId ^. idMeta == modName) do
-      signatureMap . at rnId ?= scheme
-  ifor_ (dsEnv ^. DsEnv.tcEnv . TcEnv.typeEnv) $ \rnId typeDef -> do
+  ifor_ (dsEnv ^. DsEnv.varTypeEnv) $ \tcId scheme ->
+    when (tcId ^. idIsExternal && tcId ^. idMeta == modName) do
+      signatureMap . at tcId ?= scheme
+  ifor_ (dsEnv ^. DsEnv.typeDefEnv) $ \rnId typeDef -> do
     when (rnId ^. idIsExternal && rnId ^. idMeta == modName) do
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
@@ -68,7 +67,7 @@ storeInterface interface = do
   opt <- getOpt
   liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
 
-loadInterface :: (HasCallStack, MonadMalgo m, MonadIO m) => ModuleName -> m Interface
+loadInterface :: (MonadMalgo m, MonadIO m) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
   modPaths <- modulePaths <$> getOpt
   message <- liftIO $ findAndReadFile modPaths (modName <> ".mlgi")

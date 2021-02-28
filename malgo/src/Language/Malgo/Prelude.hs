@@ -1,8 +1,10 @@
 {-# LANGUAGE DefaultSignatures #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -13,6 +15,9 @@ module Language.Malgo.Prelude
     errorOn,
     Opt (..),
     defaultOpt,
+    With (..),
+    ann,
+    value,
   )
 where
 
@@ -93,3 +98,11 @@ defaultOpt src =
       modulePaths = [],
       forceRebuild = False
     }
+
+data With x v = With {_ann :: x, _value :: v}
+  deriving stock (Eq, Ord, Bounded, Read, Show, Generic)
+
+makeLenses ''With
+
+instance (Pretty x, Pretty v) => Pretty (With x v) where
+  pPrintPrec l _ (With x v) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)
