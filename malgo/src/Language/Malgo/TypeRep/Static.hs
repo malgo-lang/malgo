@@ -216,7 +216,7 @@ class IsScheme a where
   _Scheme = prism' fromScheme safeToScheme
   safeToScheme :: a -> Maybe Scheme
   safeToScheme a = a ^? _Scheme
-  toScheme :: HasCallStack => a -> Scheme
+  toScheme :: a -> Scheme
   toScheme a = fromJust $ safeToScheme a
   fromScheme :: Scheme -> a
   fromScheme a = a ^. re _Scheme

@@ -13,12 +13,9 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# OPTIONS_GHC -Wno-unused-imports #-}
-{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
 module Language.Malgo.NewTypeCheck.Pass (typeCheck) where
 
-import Data.Fix
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Koriel.Id
@@ -32,7 +29,7 @@ import qualified Language.Malgo.Rename.RnEnv as R
 import Language.Malgo.Syntax hiding (Type (..), freevars)
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static (IsKind (fromKind, safeToKind), IsType (fromType, safeToType), IsTypeDef (safeToTypeDef), PrimT (..), Rep (..))
+import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..))
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.Unify hiding (lookupVar)

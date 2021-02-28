@@ -302,14 +302,14 @@ tcType (S.TyLazy pos t) = S.TyLazy pos $ tcType t
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupType :: (HasCallStack, MonadState TcEnv m, MonadMalgo m, MonadIO m) => SourcePos -> RnTId -> m Type
+lookupType :: (MonadState TcEnv m, MonadMalgo m, MonadIO m) => SourcePos -> RnTId -> m Type
 lookupType pos name = do
   mtype <- preuse $ typeEnv . at name . _Just . constructor
   case mtype of
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just typ -> pure typ
 
-lookupVar :: (HasCallStack, MonadState TcEnv m, MonadMalgo m, MonadIO m) => SourcePos -> RnId -> m Scheme
+lookupVar :: (MonadState TcEnv m, MonadMalgo m, MonadIO m) => SourcePos -> RnId -> m Scheme
 lookupVar pos name = do
   mscheme <- use $ varEnv . at name
   case mscheme of

@@ -123,7 +123,7 @@ class Var v where
 ---------------
 
 class Unifiable t v | t -> v where
-  unify :: (HasCallStack, Pretty x) => x -> t (UTerm t v) -> t (UTerm t v) -> [WithMeta x t v]
+  unify :: (Pretty x) => x -> t (UTerm t v) -> t (UTerm t v) -> [WithMeta x t v]
 
 class Monad m => MonadBind t v m | v -> t, t -> v where
   lookupVar :: v -> m (Maybe (UTerm t v))

@@ -171,7 +171,7 @@ dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
 dsExp ::
-  (HasCallStack, MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
+  (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var x name) = do
@@ -281,7 +281,6 @@ dsStmts (G.Let _ v e : ss) = do
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  HasCallStack =>
   (MonadReader DsEnv m, MonadFail m, MonadIO m, MonadUniq m) =>
   [Id C.Type] ->
   [[Pat (Malgo 'Refine)]] ->
@@ -425,7 +424,7 @@ unfoldType t = dsType t
 
 -- Desugar Monad
 
-lookupName :: (HasCallStack, MonadReader DsEnv m) => TcId -> m (Id C.Type)
+lookupName :: (MonadReader DsEnv m) => TcId -> m (Id C.Type)
 lookupName name = do
   mname' <- view (nameEnv . at name)
   case mname' of
@@ -453,7 +452,7 @@ toCoreName griffId = griffId ^. idMeta . _Module <> "." <> griffId ^. idName
 
 -- 関数をカリー化する
 curryFun ::
-  (HasCallStack, MonadUniq m, MonadReader DsEnv m) =>
+  (MonadUniq m, MonadReader DsEnv m) =>
   [Id C.Type] ->
   C.Exp (Id C.Type) ->
   m ([Id C.Type], C.Exp (Id C.Type))

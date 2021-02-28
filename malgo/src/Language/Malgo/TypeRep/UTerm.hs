@@ -17,7 +17,6 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Language.Malgo.TypeRep.UTerm where
 
@@ -94,7 +93,7 @@ newtype KindUnifyT m a = KindUnifyT {unKindUnifyT :: StateT KindMap m a}
 runKindUnifyT :: Monad m => KindUnifyT m a -> m a
 runKindUnifyT (KindUnifyT m) = evalStateT m mempty
 
-instance (Monad m, MonadUniq m) => MonadBind KindF KindVar (KindUnifyT m) where
+instance (MonadUniq m) => MonadBind KindF KindVar (KindUnifyT m) where
   lookupVar v = Map.lookup v <$> get
   freshVar = KindVar <$> newLocalId "k" ()
   bindVar x v k = do

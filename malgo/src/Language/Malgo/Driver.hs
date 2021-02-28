@@ -63,7 +63,7 @@ withDump isDump label m = do
     hPrint stderr $ pPrint result
   pure result
 
-compileFromAST :: HasCallStack => Syntax.Module (Malgo 'Parse) -> Opt -> IO ()
+compileFromAST :: Syntax.Module (Malgo 'Parse) -> Opt -> IO ()
 compileFromAST parsedAst opt =
   void $
     runReaderT ?? opt $

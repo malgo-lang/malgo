@@ -112,7 +112,7 @@ instance FromJSON Type where
         | otherwise -> prependFailure "parsing Type failed, " (unexpected $ Object v)
 
 class HasType a where
-  typeOf :: HasCallStack => a -> Type
+  typeOf :: a -> Type
 
 instance HasType Type where
   typeOf x = x

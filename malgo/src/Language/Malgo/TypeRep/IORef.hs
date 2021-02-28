@@ -41,7 +41,7 @@ data Kind
 instance Binary Kind
 
 class HasKind a where
-  kind :: (HasCallStack, MonadIO m) => a -> m (Maybe Kind)
+  kind :: (MonadIO m) => a -> m (Maybe Kind)
 
 instance HasKind a => HasKind (Id a) where
   kind = kind . view idMeta
@@ -245,7 +245,7 @@ newMetaTv k rigidName = MetaTv <$> getUniq <*> newIORef k <*> pure rigidName <*>
 readMetaTv :: MonadIO m => MetaTv -> m (Maybe Type)
 readMetaTv (MetaTv _ _ _ ref) = readIORef ref
 
-writeMetaTv :: (HasCallStack, MonadIO m) => MetaTv -> Type -> m ()
+writeMetaTv :: (MonadIO m) => MetaTv -> Type -> m ()
 writeMetaTv tv@(MetaTv _ kindRef _ typeRef) t = do
   mktv <- kind tv
   mkt <- kind t
