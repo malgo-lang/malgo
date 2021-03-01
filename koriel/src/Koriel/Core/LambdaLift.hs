@@ -13,8 +13,8 @@ module Koriel.Core.LambdaLift
   )
 where
 
-import qualified Data.Map as Map
-import qualified Data.Set as Set
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.HashSet as HashSet
 import Koriel.Core.Flat
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -23,20 +23,20 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 
 data Env = Env
-  { _funcs :: Map (Id Type) ([Id Type], Exp (Id Type)),
-    _knowns :: Set (Id Type)
+  { _funcs :: HashMap (Id Type) ([Id Type], Exp (Id Type)),
+    _knowns :: HashSet (Id Type)
   }
 
 makeLenses ''Env
 
 lambdalift :: MonadUniq m => Program (Id Type) -> m (Program (Id Type))
 lambdalift Program {topFuncs} =
-  evalStateT ?? Env {_funcs = mempty, _knowns = Set.fromList $ map fst topFuncs} $ do
+  evalStateT ?? Env {_funcs = mempty, _knowns = HashSet.fromList $ map fst topFuncs} $ do
     topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
-    funcs <>= Map.fromList topFuncs
-    knowns <>= Set.fromList (map fst topFuncs)
+    funcs <>= HashMap.fromList topFuncs
+    knowns <>= HashSet.fromList (map fst topFuncs)
     Env {_funcs} <- get
-    traverseOf appProgram (pure . flat) $ Program (Map.assocs _funcs)
+    traverseOf appProgram (pure . flat) $ Program (HashMap.toList _funcs)
 
 llift :: (MonadUniq f, MonadState Env f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
@@ -57,13 +57,13 @@ llift (Let [LocalDef n (Fun as body)] e) = do
   (e', _) <- localState $ llift e
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
-  let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
+  let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
   if null fvs && n `notElem` freevars e'
     then llift e
     else do
       put backup
       body' <- llift body
-      let fvs = freevars body' Set.\\ (ks <> Set.fromList as)
+      let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
       newFun <- def (n ^. idName) (toList fvs <> as) body'
       Let [LocalDef n (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
