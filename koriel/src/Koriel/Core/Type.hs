@@ -71,7 +71,7 @@ instance Pretty Type where
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
   pPrint BoolT = "Bool#"
-  pPrint (SumT cs) = braces $ sep (map pPrint $ toList cs)
+  pPrint (SumT cs) = braces $ sep (map pPrint cs)
   pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
   pPrint AnyT = "*"
   pPrint VoidT = "Void"

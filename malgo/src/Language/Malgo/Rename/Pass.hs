@@ -10,10 +10,10 @@
 -- | 名前解決
 module Language.Malgo.Rename.Pass where
 
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.HashSet as HashSet
 import Data.List (intersect)
-import Data.List.Extra (disjoint, anySame)
-import qualified Data.Map as Map
-import qualified Data.Set as Set
+import Data.List.Extra (anySame, disjoint)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -57,14 +57,14 @@ lookupVarName :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> 
 lookupVarName pos name = do
   vm <- view varEnv
   case vm ^. at name of
-    Just (name:_) -> pure name
+    Just (name : _) -> pure name
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 lookupTypeName :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
   tm <- view typeEnv
   case tm ^. at name of
-    Just (name:_) -> pure name
+    Just (name : _) -> pure name
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 -- renamer
@@ -92,7 +92,7 @@ rnDecl ::
   m (Decl (Malgo 'Rename))
 rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExp expr
 rnDecl (ScSig pos name typ) = do
-  let tyVars = Set.toList $ getTyVars typ
+  let tyVars = HashSet.toList $ getTyVars typ
   modName <- use moduleName
   tyVars' <- traverse (resolveName modName) tyVars
   local (appendRnEnv typeEnv (zip tyVars tyVars')) $
@@ -109,7 +109,7 @@ rnDecl (DataDef pos name params cs) = do
       <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
 rnDecl (Foreign pos name typ) = do
-  let tyVars = Set.toList $ getTyVars typ
+  let tyVars = HashSet.toList $ getTyVars typ
   modName <- use moduleName
   tyVars' <- traverse (resolveName modName) tyVars
   local (appendRnEnv typeEnv (zip tyVars tyVars')) $
@@ -137,7 +137,7 @@ rnExp (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
   e1' <- rnExp e1
   e2' <- rnExp e2
-  mfixity <- Map.lookup op' <$> use infixInfo
+  mfixity <- HashMap.lookup op' <$> use infixInfo
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> quotes (pPrint op)
@@ -147,12 +147,12 @@ rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 lookupBox :: (MonadReader RnEnv f, MonadMalgo f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
-lookupBox pos Int32{} = Var pos <$> lookupVarName pos "int32#"
-lookupBox pos Int64{} = Var pos <$> lookupVarName pos "int64#"
-lookupBox pos Float{} = Var pos <$> lookupVarName pos "float#"
-lookupBox pos Double{} = Var pos <$> lookupVarName pos "double#"
-lookupBox pos Char{} = Var pos <$> lookupVarName pos "char#"
-lookupBox pos String{} = Var pos <$> lookupVarName pos "string#"
+lookupBox pos Int32 {} = Var pos <$> lookupVarName pos "int32#"
+lookupBox pos Int64 {} = Var pos <$> lookupVarName pos "int64#"
+lookupBox pos Float {} = Var pos <$> lookupVarName pos "float#"
+lookupBox pos Double {} = Var pos <$> lookupVarName pos "double#"
+lookupBox pos Char {} = Var pos <$> lookupVarName pos "char#"
+lookupBox pos String {} = Var pos <$> lookupVarName pos "string#"
 
 rnType :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => Type (Malgo 'Parse) -> m (Type (Malgo 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
@@ -206,14 +206,14 @@ genToplevelEnv ds = do
   where
     go _ env [] = pure env
     go modName env (ScDef pos x _ : rest)
-      | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+      | x `elem` HashMap.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | otherwise = do
         x' <- resolveGlobalName modName x
         go modName (appendRnEnv varEnv [(x, x')] env) rest
     go modName env (ScSig {} : rest) = go modName env rest
     go modName env (DataDef pos x _ cs : rest)
-      | x `elem` Map.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      | disjoint (map fst cs) (Map.keys (env ^. varEnv)) = do
+      | x `elem` HashMap.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+      | disjoint (map fst cs) (HashMap.keys (env ^. varEnv)) = do
         x' <- resolveGlobalName modName x
         xs' <- traverse (resolveGlobalName modName . fst) cs
         -- go modName (env & varEnv <>~ Map.fromList (zip (map fst cs) xs') & typeEnv . at x ?~ x') rest
@@ -222,9 +222,9 @@ genToplevelEnv ds = do
         errorOn pos $
           "Duplicate name(s):"
             <+> sep
-              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` Map.keys (env ^. varEnv)))
+              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. varEnv)))
     go modName env (Foreign pos x _ : rest)
-      | x `elem` Map.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+      | x `elem` HashMap.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | otherwise = do
         x' <- resolveTopLevelName modName x
         go modName (appendRnEnv varEnv [(x, x')] env) rest
@@ -235,18 +235,18 @@ genToplevelEnv ds = do
         liftIO $ hPrint stderr $ pPrint interface
       go
         modName
-        ( appendRnEnv varEnv (Map.toList $ interface ^. resolvedVarIdentMap) $
-            appendRnEnv typeEnv (Map.toList $ interface ^. resolvedTypeIdentMap) env
+        ( appendRnEnv varEnv (HashMap.toList $ interface ^. resolvedVarIdentMap) $
+            appendRnEnv typeEnv (HashMap.toList $ interface ^. resolvedTypeIdentMap) env
         )
         rest
     go modName env (Infix {} : rest) = go modName env rest
 
 -- infix宣言をMapに変換
-infixDecls :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (Map RnId (Assoc, Int))
+infixDecls :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))
 infixDecls ds = foldMapA ?? ds $ \case
   (Infix pos assoc order name) -> do
     name' <- lookupVarName pos name
-    pure $ Map.singleton name' (assoc, order)
+    pure $ HashMap.singleton name' (assoc, order)
   _ -> pure mempty
 
 mkOpApp ::

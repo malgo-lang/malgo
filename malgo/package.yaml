@@ -12,14 +12,16 @@ build-type: Simple
 dependencies:
   - aeson
   - base
-  - bytestring
-  - deriving-compat
   - binary
+  - binary-instances
+  - bytestring
   - containers
-  - directory
   - data-fix
-  - filepath
+  - deriving-compat
+  - directory
   - extra
+  - filepath
+  - hashable
   - koriel
   - lens
   - llvm-hs
@@ -32,6 +34,7 @@ dependencies:
   - pretty
   - text
   - transformers
+  - unordered-containers
 
 ghc-options:
   - -Wall

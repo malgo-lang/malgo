@@ -7,7 +7,7 @@
 
 module Language.Malgo.Desugar.DsEnv where
 
-import qualified Data.Map as Map
+import qualified Data.HashMap.Strict as HashMap
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -23,10 +23,10 @@ data DsEnv = DsEnv
   { -- モジュール名
     _moduleName :: ModuleName,
     -- | Malgo -> Coreの名前環境
-    _nameEnv :: Map TcId (Id C.Type),
+    _nameEnv :: HashMap TcId (Id C.Type),
     -- | 型環境
-    _varTypeEnv :: Map TcId Scheme,
-    _typeDefEnv :: Map TcId TypeDef,
+    _varTypeEnv :: HashMap TcId Scheme,
+    _typeDefEnv :: HashMap TcId TypeDef,
     _rnEnv :: RnEnv
   }
   deriving stock (Show)
@@ -47,9 +47,9 @@ instance Pretty DsEnv where
       <+> braces
         ( sep
             [ "_moduleName" <+> "=" <+> pPrint _moduleName,
-              "_nameEnv" <+> "=" <+> pPrint (Map.toList _nameEnv),
-              "_varTypeEnv" <+> "=" <+> pPrint (Map.toList _varTypeEnv),
-              "_typeDefEnv" <+> "=" <+> pPrint (Map.toList _typeDefEnv),
+              "_nameEnv" <+> "=" <+> pPrint (HashMap.toList _nameEnv),
+              "_varTypeEnv" <+> "=" <+> pPrint (HashMap.toList _varTypeEnv),
+              "_typeDefEnv" <+> "=" <+> pPrint (HashMap.toList _typeDefEnv),
               "_rnEnv" <+> "=" <+> pPrint _rnEnv
             ]
         )
@@ -76,7 +76,7 @@ makeDsEnvFromUTerm modName tcEnv =
       _rnEnv = tcEnv ^. UTerm.rnEnv
     }
 
-makeDsEnv :: (IsScheme a1, IsTypeDef a2) => ModuleName -> Map (Id ModuleName) a1 -> Map (Id ModuleName) a2 -> RnEnv -> DsEnv
+makeDsEnv :: (IsScheme a1, IsTypeDef a2) => ModuleName -> HashMap (Id ModuleName) a1 -> HashMap (Id ModuleName) a2 -> RnEnv -> DsEnv
 makeDsEnv modName varEnv typeEnv rnEnv =
   DsEnv
     { _moduleName = modName,

@@ -7,14 +7,14 @@
 
 module Language.Malgo.Rename.RnEnv where
 
-import qualified Data.Map as Map
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Syntax.Extension
 
-data RnState = RnState {_infixInfo :: Map RnId (Assoc, Int), _moduleName :: ModuleName}
+data RnState = RnState {_infixInfo :: HashMap RnId (Assoc, Int), _moduleName :: ModuleName}
   deriving stock (Show)
 
 instance Pretty RnState where
@@ -22,7 +22,7 @@ instance Pretty RnState where
     "RnState"
       <+> braces
         ( sep
-            [ "_infixInfo" <+> "=" <+> pPrint (Map.toList _infixInfo),
+            [ "_infixInfo" <+> "=" <+> pPrint (HashMap.toList _infixInfo),
               "_moduleName" <+> "=" <+> pPrint _moduleName
             ]
         )
@@ -30,15 +30,15 @@ instance Pretty RnState where
 makeLenses ''RnState
 
 data RnEnv = RnEnv
-  { _varEnv :: Map PsId [RnId],
-    _typeEnv :: Map PsTId [RnTId]
+  { _varEnv :: HashMap PsId [RnId],
+    _typeEnv :: HashMap PsTId [RnTId]
   }
   deriving stock (Show, Eq)
 
 instance Semigroup RnEnv where
   RnEnv v1 t1 <> RnEnv v2 t2 = RnEnv (append v1 v2) (append t1 t2)
     where
-      append v1 v2 = Map.foldrWithKey (\k ns -> Map.alter (f ns) k) v2 v1
+      append v1 v2 = HashMap.foldrWithKey (\k ns -> HashMap.alter (f ns) k) v2 v1
       f ns1 Nothing = Just ns1
       f ns1 (Just ns2) = Just (ns1 <> ns2)
 
@@ -50,18 +50,18 @@ instance Pretty RnEnv where
     "RnEnv"
       <+> braces
         ( sep
-            [ "_varEnv" <+> "=" <+> pPrint (Map.toList _varEnv),
-              "_typeEnv" <+> "=" <+> pPrint (Map.toList _typeEnv)
+            [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
+              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv)
             ]
         )
 
 makeLenses ''RnEnv
 
-appendRnEnv :: ASetter' RnEnv (Map PsId [RnId]) -> [(PsId, RnId)] -> RnEnv -> RnEnv
+appendRnEnv :: ASetter' RnEnv (HashMap PsId [RnId]) -> [(PsId, RnId)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)
   where
     go [] e = e
-    go ((n, n') : xs) e = go xs $ Map.alter (f n') n e
+    go ((n, n') : xs) e = go xs $ HashMap.alter (f n') n e
     f n' Nothing = Just [n']
     f n' (Just ns) = Just (n' : ns)
 
@@ -79,7 +79,7 @@ genBuiltinRnEnv = do
     RnEnv
       { _varEnv = mempty,
         _typeEnv =
-          Map.fromList
+          HashMap.fromList
             [ ("Int32#", [int32_t]),
               ("Int64#", [int64_t]),
               ("Float#", [float_t]),

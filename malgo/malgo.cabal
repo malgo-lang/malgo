@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b7d8209c0c507a3672691d1c95d4e8be30d61613f1b3d38c3ceb765f60951058
+-- hash: 2b573ab068e285d9cca3dcd85643482a3cf43e6147158f155087fc79515a1369
 
 name:           malgo
 version:        1.0.0.0
@@ -53,6 +53,7 @@ library
       aeson
     , base
     , binary
+    , binary-instances
     , bytestring
     , containers
     , data-fix
@@ -60,6 +61,7 @@ library
     , directory
     , extra
     , filepath
+    , hashable
     , koriel
     , lens
     , llvm-hs
@@ -72,6 +74,7 @@ library
     , pretty
     , text
     , transformers
+    , unordered-containers
   default-language: Haskell2010
 
 executable malgoc
@@ -87,6 +90,7 @@ executable malgoc
       aeson
     , base
     , binary
+    , binary-instances
     , bytestring
     , containers
     , data-fix
@@ -94,6 +98,7 @@ executable malgoc
     , directory
     , extra
     , filepath
+    , hashable
     , koriel
     , lens
     , llvm-hs
@@ -108,4 +113,5 @@ executable malgoc
     , shake
     , text
     , transformers
+    , unordered-containers
   default-language: Haskell2010

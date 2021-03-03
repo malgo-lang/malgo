@@ -16,7 +16,8 @@
 module Language.Malgo.TypeRep.IORef where
 
 import Data.Binary (Binary (..))
-import qualified Data.Set as Set
+import qualified Data.HashSet as HashSet
+import Data.Hashable (Hashable (hashWithSalt))
 import Data.Void
 import Koriel.Id
 import Koriel.MonadUniq
@@ -189,6 +190,9 @@ data MetaTv = MetaTv
     _metaTvTypeRef :: IORef (Maybe Type)
   }
 
+instance Hashable MetaTv where
+  hashWithSalt salt MetaTv {_metaTvUniq} = hashWithSalt salt _metaTvUniq
+
 isRigid :: MetaTv -> Bool
 isRigid MetaTv {_metaTvRigidName = ""} = False
 isRigid _ = True
@@ -260,16 +264,16 @@ writeMetaTv tv@(MetaTv _ kindRef _ typeRef) t = do
     (Nothing, Just kt) -> writeIORef kindRef (Just kt) >> writeIORef typeRef (Just t)
     (Nothing, Nothing) -> writeIORef typeRef (Just t)
 
-metaTvs :: Type -> Set MetaTv
+metaTvs :: Type -> HashSet MetaTv
 metaTvs (TyApp t1 t2) = metaTvs t1 <> metaTvs t2
 metaTvs (TyArr t1 t2) = metaTvs t1 <> metaTvs t2
 metaTvs (TyTuple ts) = mconcat $ map metaTvs ts
 metaTvs (TyLazy t) = metaTvs t
 metaTvs (TyPtr t) = metaTvs t
-metaTvs (TyMeta tv) = Set.singleton tv
+metaTvs (TyMeta tv) = HashSet.singleton tv
 metaTvs _ = mempty
 
-metaTvsScheme :: Scheme -> Set MetaTv
+metaTvsScheme :: Scheme -> HashSet MetaTv
 metaTvsScheme (Forall _ t) = metaTvs t
 
 -------------

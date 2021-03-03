@@ -17,8 +17,8 @@ module Language.Malgo.Syntax where
 
 import Data.Functor (($>))
 import Data.Graph (flattenSCC, stronglyConnComp)
+import qualified Data.HashSet as HashSet
 import Data.Int (Int32, Int64)
-import qualified Data.Set as Set
 import Data.Tuple.Extra (uncurry3)
 import Koriel.Id
 import Koriel.Pretty
@@ -189,13 +189,13 @@ instance
     Force x e -> Force <$> U.walkOn f x <*> U.walkOn f e
     Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
 
-freevars :: Ord (XId x) => Exp x -> Set (XId x)
-freevars (Var _ v) = Set.singleton v
-freevars (Con _ _) = Set.empty
-freevars (Unboxed _ _) = Set.empty
-freevars (Boxed _ _) = Set.empty
+freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
+freevars (Var _ v) = HashSet.singleton v
+freevars (Con _ _) = mempty
+freevars (Unboxed _ _) = mempty
+freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
-freevars (OpApp _ op e1 e2) = Set.insert op $ freevars e1 <> freevars e2
+freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = mconcat $ map freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Force _ e) = freevars e
@@ -256,8 +256,8 @@ instance
     Let x v e -> Let x v <$> U.walkOn f e
     NoBind x e -> NoBind x <$> U.walkOn f e
 
-freevarsStmt :: Ord (XId x) => Stmt x -> Set (XId x)
-freevarsStmt (Let _ x e) = Set.delete x $ freevars e
+freevarsStmt :: (Eq (XId x), Hashable (XId x)) => Stmt x -> HashSet (XId x)
+freevarsStmt (Let _ x e) = HashSet.delete x $ freevars e
 freevarsStmt (NoBind _ e) = freevars e
 
 -- [Exp x]は、末尾へのアクセスが速いものに変えたほうが良いかも
@@ -306,8 +306,8 @@ instance
   where
   walkOn f (Clause x ps e) = Clause <$> U.walkOn f x <*> traverse (U.walkOn f) ps <*> traverse (U.walkOn f) e
 
-freevarsClause :: Ord (XId x) => Clause x -> Set (XId x)
-freevarsClause (Clause _ pats es) = foldMap freevarsStmt es Set.\\ mconcat (map bindVars pats)
+freevarsClause :: (Eq (XId x), Hashable (XId x)) => Clause x -> HashSet (XId x)
+freevarsClause (Clause _ pats es) = HashSet.difference (foldMap freevarsStmt es) (mconcat (map bindVars pats))
 
 -------------
 -- Pattern --
@@ -403,11 +403,11 @@ _UnboxedP = prism' (uncurry UnboxedP) $ \case
   UnboxedP x u -> Just (x, u)
   _ -> Nothing
 
-bindVars :: Ord (XId x) => Pat x -> Set (XId x)
-bindVars (VarP _ x) = Set.singleton x
+bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
+bindVars (VarP _ x) = HashSet.singleton x
 bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
 bindVars (TupleP _ ps) = mconcat $ map bindVars ps
-bindVars UnboxedP {} = Set.empty
+bindVars UnboxedP {} = mempty
 
 ----------
 -- Type --
@@ -435,9 +435,9 @@ instance (Pretty (XTId x)) => Pretty (Type x) where
   pPrintPrec _ _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pPrint ts
   pPrintPrec _ _ (TyLazy _ t) = braces $ pPrint t
 
-getTyVars :: Ord (XTId x) => Type x -> Set (XTId x)
+getTyVars :: (Eq (XTId x), Hashable (XTId x)) => Type x -> HashSet (XTId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = Set.singleton v
+getTyVars (TyVar _ v) = HashSet.singleton v
 getTyVars TyCon {} = mempty
 getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
@@ -547,7 +547,7 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
       prettyScDef (_, f, e) =
         sep [pPrint f <+> "=", pPrint e]
 
-makeBindGroup :: (Pretty a, Ord (XId x), XId x ~ Id a, Ord (XScDef x)) => [Decl x] -> BindGroup x
+makeBindGroup :: (Pretty a, XId x ~ Id a, Ord (XScDef x), Eq a) => [Decl x] -> BindGroup x
 makeBindGroup ds =
   BindGroup
     { _scDefs = splitScDef (makeSCC $ mapMaybe scDef ds) (mapMaybe scDef ds),
@@ -569,11 +569,11 @@ makeBindGroup ds =
     importDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
-adjacents :: (Ord a, Ord (XId x), XId x ~ Id a1) => (a, XId x, Exp x) -> (XId x, Int, [Int])
+adjacents :: (Eq a1, XId x ~ Id a1) => (a, XId x, Exp x) -> (XId x, Int, [Int])
 adjacents (_, f, e) =
-  (f, f ^. idUniq, map (view idUniq) $ toList $ Set.delete f (freevars e))
+  (f, f ^. idUniq, map (view idUniq) $ toList $ HashSet.delete f (freevars e))
 
-makeSCC :: (Ord (XId x), XId x ~ Id a1, Ord a) => [(a, XId x, Exp x)] -> [[XId x]]
+makeSCC :: (Eq a1, XId x ~ Id a1, Ord a) => [(a, XId x, Exp x)] -> [[XId x]]
 makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'
   where
     vertices = map (view _2 . adjacents) ds

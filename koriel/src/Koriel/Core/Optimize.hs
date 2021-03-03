@@ -127,7 +127,7 @@ optVarBind (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) op
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e
 
-removeUnusedLet :: (Monad f, Ord a) => Exp (Id a) -> f (Exp (Id a))
+removeUnusedLet :: (Monad f, Eq a) => Exp (Id a) -> f (Exp (Id a))
 removeUnusedLet (Let ds e) = do
   ds' <- traverseOf (traversed . localDefObj . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
@@ -135,7 +135,7 @@ removeUnusedLet (Let ds e) = do
   let gamma = map (\(LocalDef v o) -> (v, HashSet.delete v $ freevars o)) ds'
   if any (\(LocalDef v _) -> reachable 100 gamma v $ freevars e') ds' then pure $ Let ds' e' else pure e'
   where
-    reachable :: Ord a => Int -> [(Id a, HashSet (Id a))] -> Id a -> HashSet (Id a) -> Bool
+    reachable :: Eq a => Int -> [(Id a, HashSet (Id a))] -> Id a -> HashSet (Id a) -> Bool
     reachable limit gamma v fvs
       -- limit回試行してわからなければ安全側に倒してTrue
       | limit <= 0 = True

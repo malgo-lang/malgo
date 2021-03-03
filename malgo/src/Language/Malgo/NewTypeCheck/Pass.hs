@@ -16,8 +16,9 @@
 
 module Language.Malgo.NewTypeCheck.Pass (typeCheck) where
 
-import qualified Data.Map as Map
-import qualified Data.Set as Set
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.HashSet as HashSet
+import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -118,7 +119,7 @@ tcDataDefs ds = do
     let valueConsTypes = map snd valueCons'
     (as, valueConsTypes') <- generalizeMutRecs pos mempty valueConsTypes
     let valueCons'' = zip valueConsNames valueConsTypes'
-    varEnv <>= Map.fromList (map (over _2 (Forall as)) valueCons'')
+    varEnv <>= HashMap.fromList (map (over _2 (Forall as)) valueCons'')
     typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons'')
     pure (pos, name, params, map (second (map tcType)) valueCons)
   where
@@ -128,7 +129,7 @@ tcDataDefs ds = do
 tcForeigns :: (MonadMalgo m, MonadState TcEnv m, MonadBind (TypeF UKind) (TypeVar UKind) m, MonadIO m, MonadUniq m) => [Foreign (Malgo 'Rename)] -> m [Foreign (Malgo 'NewTypeCheck)]
 tcForeigns ds =
   for ds $ \(pos, name, ty) -> do
-    for_ (Set.toList $ getTyVars ty) $ \tyVar -> do
+    for_ (HashSet.toList $ getTyVars ty) $ \tyVar -> do
       tv <- freshVar
       let tyVar' = UVar $ tv {typeVarRigidName = show $ pPrint tyVar}
       typeEnv . at tyVar ?= TypeDef tyVar' [] []
@@ -139,7 +140,7 @@ tcForeigns ds =
 tcScSigs :: (MonadMalgo m, MonadBind (TypeF UKind) (TypeVar UKind) m, MonadState TcEnv m, MonadIO m, MonadUniq m) => [ScSig (Malgo 'Rename)] -> m [ScSig (Malgo 'NewTypeCheck)]
 tcScSigs ds =
   for ds $ \(pos, name, ty) -> do
-    for_ (Set.toList $ getTyVars ty) $ \tyVar -> do
+    for_ (HashSet.toList $ getTyVars ty) $ \tyVar -> do
       tv <- freshVar
       let tyVar' = UVar $ tv {typeVarRigidName = show $ pPrint tyVar}
       typeEnv . at tyVar ?= TypeDef tyVar' [] []
@@ -172,7 +173,7 @@ tcScDefs ds@((pos, _, _) : _) = do
   let types = map snd nts
   zonkedTypes <- traverse zonkUTerm types
   (as, types') <- generalizeMutRecs pos mempty zonkedTypes
-  varEnv %= (Map.fromList (zip names $ map (Forall as) types') <>)
+  varEnv %= (HashMap.fromList (zip names $ map (Forall as) types') <>)
   pure ds'
 
 tcExpr :: (MonadBind (TypeF UKind) (TypeVar UKind) m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Exp (Malgo 'Rename) -> WriterT [WithMeta SourcePos (TypeF UKind) (TypeVar UKind)] m (Exp (Malgo 'NewTypeCheck))
@@ -267,7 +268,7 @@ tcStmt :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind (TypeF UKind) 
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   env <- use varEnv
-  envSet <- traverse (zonkUTerm . (\(Forall _ t) -> t)) (Map.elems env)
+  envSet <- traverse (zonkUTerm . (\(Forall _ t) -> t)) (HashMap.elems env)
   (e', wanted) <- listen $ tcExpr e
   solve wanted
   -- FIXME: value restriction
@@ -282,7 +283,7 @@ tcStmt (Let pos v e) = do
 transType :: (MonadMalgo m, MonadState TcEnv m, MonadIO m) => S.Type (Malgo 'Rename) -> m UType
 transType (S.TyApp _ t ts) = do
   rnEnv <- use rnEnv
-  let ptr_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Ptr#" (view R.typeEnv rnEnv)
+  let ptr_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Ptr#") rnEnv
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
@@ -292,12 +293,12 @@ transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = do
   rnEnv <- use rnEnv
   -- lookup RnTId of primitive types
-  let int32_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Int32#" (view R.typeEnv rnEnv)
-  let int64_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Int64#" (view R.typeEnv rnEnv)
-  let float_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Float#" (view R.typeEnv rnEnv)
-  let double_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Double#" (view R.typeEnv rnEnv)
-  let char_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Char#" (view R.typeEnv rnEnv)
-  let string_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "String#" (view R.typeEnv rnEnv)
+  let int32_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Int32#") rnEnv
+  let int64_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Int64#") rnEnv
+  let float_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Float#") rnEnv
+  let double_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Double#") rnEnv
+  let char_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Char#") rnEnv
+  let string_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "String#") rnEnv
   if
       | c == int32_t -> pure $ UTerm $ TyPrim Int32T
       | c == int64_t -> pure $ UTerm $ TyPrim Int64T

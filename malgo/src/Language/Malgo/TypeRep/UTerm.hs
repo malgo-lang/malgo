@@ -23,9 +23,9 @@ module Language.Malgo.TypeRep.UTerm where
 import Data.Binary (Binary)
 import Data.Deriving
 import Data.Fix
+import qualified Data.HashSet as HashSet
 import qualified Data.List as List
-import qualified Data.Map as Map
-import qualified Data.Set as Set
+import Data.Maybe (fromMaybe)
 import Data.Void
 import Koriel.Id
 import Koriel.MonadUniq
@@ -68,7 +68,7 @@ instance IsKind a => IsKind (KindF a) where
   fromKind (S.KArr k1 k2) = KArr (fromKind k1) (fromKind k2)
 
 newtype KindVar = KindVar (Id ())
-  deriving newtype (Eq, Ord, Show, Pretty)
+  deriving newtype (Eq, Ord, Show, Pretty, Hashable)
 
 type UKind = UTerm KindF KindVar
 
@@ -85,7 +85,7 @@ instance Unifiable KindF KindVar where
   unify x (KArr l1 r1) (KArr l2 r2) = [With x (l1 :~ l2), With x (r1 :~ r2)]
   unify x k1 k2 = errorWithMeta x $ unifyErrorMessage k1 k2
 
-type KindMap = Map KindVar (UTerm KindF KindVar)
+type KindMap = HashMap KindVar (UTerm KindF KindVar)
 
 newtype KindUnifyT m a = KindUnifyT {unKindUnifyT :: StateT KindMap m a}
   deriving newtype (Functor, Applicative, Monad, MonadTrans, MonadState KindMap, MonadUniq, MonadMalgo, MonadIO)
@@ -94,11 +94,11 @@ runKindUnifyT :: Monad m => KindUnifyT m a -> m a
 runKindUnifyT (KindUnifyT m) = evalStateT m mempty
 
 instance (MonadUniq m) => MonadBind KindF KindVar (KindUnifyT m) where
-  lookupVar v = Map.lookup v <$> get
+  lookupVar v = view (at v) <$> get
   freshVar = KindVar <$> newLocalId "k" ()
   bindVar x v k = do
     occursCheck x v k
-    modify (Map.insert v k)
+    at v ?= k
 
 class HasKind k t | t -> k where
   kindOf :: t -> k
@@ -180,7 +180,9 @@ data TypeVar k = TypeVar
   { typeVarId :: Id k,
     typeVarRigidName :: String
   }
-  deriving stock (Eq, Ord, Show)
+  deriving stock (Eq, Ord, Show, Generic)
+
+instance Hashable (TypeVar k)
 
 instance Pretty k => Pretty (TypeVar k) where
   pPrint TypeVar {typeVarId = v, typeVarRigidName = ""} = "'" <> pPrint v
@@ -317,7 +319,7 @@ unfreezeKind' (UTerm t) =
       TyLazy t -> TyLazy $ unfreezeKind' t
       TyPtr t -> TyPtr $ unfreezeKind' t
 
-type TypeMap = Map (TypeVar UKind) (UTerm (TypeF UKind) (TypeVar UKind))
+type TypeMap = HashMap (TypeVar UKind) (UTerm (TypeF UKind) (TypeVar UKind))
 
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap (KindUnifyT m) a}
   deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadUniq, MonadMalgo, MonadIO)
@@ -332,14 +334,14 @@ runTypeUnifyT :: Monad m => TypeUnifyT m a -> KindUnifyT m a
 runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
 instance (Monad m, MonadUniq m, MonadIO m) => MonadBind (TypeF UKind) (TypeVar UKind) (TypeUnifyT m) where
-  lookupVar v = Map.lookup v <$> get
+  lookupVar v = view (at v) <$> get
   freshVar = do
     kind <- liftKindUnifyT freshVar
     TypeVar <$> newLocalId "t" (UVar kind) <*> pure ""
   bindVar x v t = do
     occursCheck x v t
     liftKindUnifyT $ solve [With x $ kindOf v :~ kindOf t]
-    modify (Map.insert v t)
+    at v ?= t
 
 data Scheme k = Forall [Id k] (UTerm (TypeF k) (TypeVar k))
   deriving stock (Eq, Ord, Show, Generic)
@@ -360,7 +362,7 @@ instance IsKind k => IsScheme (Scheme k) where
     Just $ S.Forall vs' t'
   fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromKind) vs) (unfreeze $ S.fromType t)
 
-generalize :: (MonadUniq m, MonadBind (TypeF k) (TypeVar k) m, Pretty x, Ord k) => x -> Set (TypeVar k) -> UTerm (TypeF k) (TypeVar k) -> m (Scheme k)
+generalize :: (MonadUniq m, MonadBind (TypeF k) (TypeVar k) m, Pretty x, Ord k) => x -> HashSet (TypeVar k) -> UTerm (TypeF k) (TypeVar k) -> m (Scheme k)
 generalize x bound term = do
   {-
   let fvs = Set.toList $ unboundFreevars bound term
@@ -369,7 +371,7 @@ generalize x bound term = do
   Forall as <$> zonkUTerm term
   -}
   zonkedTerm <- zonkUTerm term
-  let fvs = Set.toList $ unboundFreevars bound zonkedTerm
+  let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
   as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
   Forall as <$> zonkUTerm zonkedTerm
@@ -379,10 +381,10 @@ toBound TypeVar {typeVarId, typeVarRigidName} hint
   | null typeVarRigidName = newLocalId hint (typeVarId ^. idMeta)
   | otherwise = newLocalId typeVarRigidName (typeVarId ^. idMeta)
 
-unboundFreevars :: (Ord v, Foldable t) => Set v -> UTerm t v -> Set v
-unboundFreevars bound t = freevars t Set.\\ bound
+unboundFreevars :: (Eq v, Foldable t, Hashable v) => HashSet v -> UTerm t v -> HashSet v
+unboundFreevars bound t = HashSet.difference (freevars t) bound
 
-generalizeMutRecs :: (MonadUniq m, MonadBind (TypeF k) (TypeVar k) m, Pretty x, Ord k) => x -> Set (TypeVar k) -> [UTerm (TypeF k) (TypeVar k)] -> m ([Id k], [UTerm (TypeF k) (TypeVar k)])
+generalizeMutRecs :: (MonadUniq m, MonadBind (TypeF k) (TypeVar k) m, Pretty x, Ord k) => x -> HashSet (TypeVar k) -> [UTerm (TypeF k) (TypeVar k)] -> m ([Id k], [UTerm (TypeF k) (TypeVar k)])
 generalizeMutRecs x bound terms = do
   {-
   let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms
@@ -391,7 +393,7 @@ generalizeMutRecs x bound terms = do
   (as,) <$> traverse zonkUTerm terms
   -}
   zonkedTerms <- traverse zonkUTerm terms
-  let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
+  let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
   (as,) <$> traverse zonkUTerm zonkedTerms

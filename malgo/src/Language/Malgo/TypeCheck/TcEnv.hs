@@ -9,17 +9,17 @@
 
 module Language.Malgo.TypeCheck.TcEnv where
 
-import qualified Data.Map as Map
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.IORef
+import qualified Data.HashMap.Strict as HashMap
 
 data TcEnv = TcEnv
-  { _varEnv :: Map RnId Scheme,
-    _typeEnv :: Map RnTId TypeDef,
+  { _varEnv :: HashMap RnId Scheme,
+    _typeEnv :: HashMap RnTId TypeDef,
     _rnEnv :: RnEnv
   }
   deriving stock (Show, Eq)
@@ -35,8 +35,8 @@ instance Pretty TcEnv where
     "TcEnv"
       <+> braces
         ( sep
-            [ "_varEnv" <+> "=" <+> pPrint (Map.toList _varEnv),
-              "_typeEnv" <+> "=" <+> pPrint (Map.toList _typeEnv),
+            [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
+              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
               "_rnEnv" <+> "=" <+> pPrint _rnEnv
             ]
         )

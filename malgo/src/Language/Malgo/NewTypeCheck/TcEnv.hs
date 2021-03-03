@@ -16,7 +16,7 @@
 
 module Language.Malgo.NewTypeCheck.TcEnv (TcEnv (..), varEnv, typeEnv, rnEnv, TypeDef (..), typeConstructor, typeParameters, valueConstructors) where
 
-import qualified Data.Map as Map
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
@@ -28,8 +28,8 @@ import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.Unify hiding (lookupVar)
 
 data TcEnv = TcEnv
-  { _varEnv :: Map RnId (Scheme UKind),
-    _typeEnv :: Map RnTId TypeDef,
+  { _varEnv :: HashMap RnId (Scheme UKind),
+    _typeEnv :: HashMap RnTId TypeDef,
     _rnEnv :: RnEnv
   }
 
@@ -38,8 +38,8 @@ instance Pretty TcEnv where
     "TcEnv"
       <+> braces
         ( sep
-            [ "_varEnv" <+> "=" <+> pPrint (Map.toList _varEnv),
-              "_typeEnv" <+> "=" <+> pPrint (Map.toList _typeEnv),
+            [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
+              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
               "_rnEnv" <+> "=" <+> pPrint _rnEnv
             ]
         )
