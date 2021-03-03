@@ -20,6 +20,7 @@ import Control.Monad.Identity (IdentityT)
 import qualified Control.Monad.State.Lazy as Lazy
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.Maybe (fromMaybe)
 import Data.Void
@@ -83,6 +84,14 @@ occursCheck x v t =
   if HashSet.member v (freevars t)
     then errorWithMeta x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     else pure ()
+
+equiv :: (Eq v, Hashable v, Unifiable t v) => UTerm t v -> UTerm t v -> Maybe (HashMap v v)
+equiv (UVar v1) (UVar v2)
+  | v1 == v2 = Just mempty
+  | otherwise = Just $ HashMap.singleton v1 v2
+equiv (UTerm t1) (UTerm t2) =
+  mconcat <$> traverse (\With {_value = u1 :~ u2} -> equiv u1 u2) (unify () t1 t2)
+equiv _ _ = Nothing
 
 class HasUTerm t v a where
   walkOn :: Traversal' a (UTerm t v)
