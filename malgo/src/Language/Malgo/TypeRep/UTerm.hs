@@ -74,10 +74,6 @@ type UKind = UTerm KindF KindVar
 
 type Kind = Fix KindF
 
-instance Var KindVar where
-  isRigid _ = False
-  rigidName = lens (const "") const
-
 instance Unifiable KindF KindVar where
   unify x (Type rep1) (Type rep2)
     | rep1 == rep2 = []
@@ -187,11 +183,6 @@ instance Hashable (TypeVar k)
 instance Pretty k => Pretty (TypeVar k) where
   pPrint TypeVar {typeVarId = v, typeVarRigidName = ""} = "'" <> pPrint v
   pPrint TypeVar {typeVarRigidName = name} = "'" <> text name
-
-instance Pretty k => Var (TypeVar k) where
-  isRigid TypeVar {typeVarRigidName = ""} = False
-  isRigid _ = True
-  rigidName = lens typeVarRigidName (\v n -> v {typeVarRigidName = n})
 
 instance HasKind k (TypeVar k) where
   kindOf v = typeVarId v ^. idMeta
@@ -398,14 +389,10 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
   (as,) <$> traverse zonkUTerm zonkedTerms
 
-instantiate :: (MonadBind (TypeF k) (TypeVar k) m, Pretty k, Eq k) => Bool -> Scheme k -> m (UTerm (TypeF k) (TypeVar k))
-instantiate isRigid (Forall as t) = do
-  vs <- traverse ?? as $ \a -> do
-    v <- freshVar
-    if isRigid
-      then pure $ UVar $ v & rigidName .~ toRigidName a
-      else pure $ UVar v
-  replace (zip as vs) t
+instantiate :: (MonadBind (TypeF k) (TypeVar k) m, Pretty k, Eq k) => Scheme k -> m (UTerm (TypeF k) (TypeVar k))
+instantiate (Forall as t) = do
+  avs <- traverse ?? as $ \a -> (a,) . UVar <$> freshVar
+  replace avs t
   where
     replace _ t@UVar {} = pure t
     replace kvs (UTerm t) = case t of
@@ -417,7 +404,6 @@ instantiate isRigid (Forall as t) = do
       TyTuple ts -> fmap UTerm $ TyTuple <$> traverse (replace kvs) ts
       TyLazy t -> fmap UTerm $ TyLazy <$> replace kvs t
       TyPtr t -> fmap UTerm $ TyPtr <$> replace kvs t
-    toRigidName = view idName
 
 class HasType t a where
   typeOf :: a -> t
@@ -435,6 +421,3 @@ type WithUType a = With UType a
 
 instance HasType rep t => HasType rep (With t a) where
   typeOf (With t _) = typeOf t
-
--- instance HasUTerm (TypeF UKind) (TypeVar UKind) (WithUType a) where
---   walkOn f (With x t) = With <$> f x <*> pure t

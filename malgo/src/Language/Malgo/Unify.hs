@@ -119,15 +119,6 @@ instance (Pretty v, Pretty1 t) => Pretty (Constraint t v) where
 
 type WithMeta x t v = With x (Constraint t v)
 
---------------
--- Variable --
---------------
-
-class Var v where
-  rigidName :: Lens' v String
-  isRigid :: v -> Bool
-  isRigid v = not $ null $ v ^. rigidName
-
 ---------------
 -- Unifiable --
 ---------------
@@ -170,8 +161,7 @@ instance MonadBind t v m => MonadBind t v (ContT r m)
 ------------
 
 solve ::
-  ( Var v,
-    Pretty x,
+  ( Pretty x,
     Pretty v,
     MonadBind t v m,
     Traversable t,
@@ -185,8 +175,7 @@ solve cs = do
   solveLoop 5000 cs
 
 solveLoop ::
-  ( Var v,
-    Pretty x,
+  ( Pretty x,
     Pretty v,
     MonadBind t v m,
     Traversable t,
@@ -201,30 +190,15 @@ solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (UVar v1 :~ UVar v2) : cs)
   | v1 == v2 = solveLoop (n - 1) cs
-  | isRigid v1 && isRigid v2 && v1 ^. rigidName /= v2 ^. rigidName =
-    errorWithMeta x $
-      unifyErrorMessage v1 v2
-        $+$ quotes (pPrint v1) <+> "and" <+> quotes (pPrint v2) <+> "are rigid variable"
-  | isRigid v1 = do
-    bindVar x v2 (UVar v1)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs
-  | isRigid v2 = do
-    bindVar x v1 (UVar v2)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs
-  {-  | otherwise = errorWithMeta x $ unifyErrorMessage v1 v2 -- -}
   | otherwise = do
     bindVar x v1 (UVar v2)
     solveLoop (n - 1) =<< traverse zonkConstraint cs -- -}
-solveLoop n (With x (UVar v :~ UTerm t) : cs)
-  | isRigid v = errorWithMeta x $ unifyErrorMessage v (UTerm t) $+$ quotes (pPrint v) <+> "is a rigid variable"
-  | otherwise = do
-    bindVar x v (UTerm t)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs
-solveLoop n (With x (UTerm t :~ UVar v) : cs)
-  | isRigid v = errorWithMeta x $ unifyErrorMessage v (UTerm t) $+$ quotes (pPrint v) <+> "is a rigid variable"
-  | otherwise = do
-    bindVar x v (UTerm t)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs
+solveLoop n (With x (UVar v :~ UTerm t) : cs) = do
+  bindVar x v (UTerm t)
+  solveLoop (n - 1) =<< traverse zonkConstraint cs
+solveLoop n (With x (UTerm t :~ UVar v) : cs) = do
+  bindVar x v (UTerm t)
+  solveLoop (n - 1) =<< traverse zonkConstraint cs
 solveLoop n (With x (UTerm t1 :~ UTerm t2) : cs) = do
   let cs' = unify x t1 t2
   solveLoop (n - 1) $ cs' <> cs

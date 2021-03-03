@@ -166,7 +166,7 @@ tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- for ds $ \(pos, name, expr) -> do
     (expr', wanted) <- runWriterT (tcExpr expr)
-    ty <- instantiate False =<< lookupVar pos name
+    ty <- instantiate =<< lookupVar pos name
     let constraints = With pos (ty :~ typeOf expr') : wanted
     solve constraints
     pure (With (typeOf expr') pos, name, expr')
@@ -183,8 +183,8 @@ tcScDefs ds@((pos, _, _) : _) = do
       -- No explicit signature
       Forall [] (UVar _) -> varEnv . at name ?= inferredScheme
       _ -> do
-        declaredType <- instantiate False declaredScheme
-        inferedType <- instantiate False inferredScheme
+        declaredType <- instantiate declaredScheme
+        inferedType <- instantiate inferredScheme
         case equiv declaredType inferedType of
           Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
           Just subst
@@ -194,10 +194,10 @@ tcScDefs ds@((pos, _, _) : _) = do
 
 tcExpr :: (MonadBind (TypeF UKind) (TypeVar UKind) m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Exp (Malgo 'Rename) -> WriterT [WithMeta SourcePos (TypeF UKind) (TypeVar UKind)] m (Exp (Malgo 'NewTypeCheck))
 tcExpr (Var pos v) = do
-  vType <- instantiate False =<< lookupVar pos v
+  vType <- instantiate =<< lookupVar pos v
   pure $ Var (With vType pos) v
 tcExpr (Con pos c) = do
-  cType <- instantiate False =<< lookupVar pos c
+  cType <- instantiate =<< lookupVar pos c
   pure $ Con (With cType pos) c
 tcExpr (Unboxed pos u) = pure $ Unboxed (With (typeOf u) pos) u
 tcExpr (Apply pos f x) = do
@@ -210,7 +210,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
   e2' <- tcExpr e2
   opScheme <- lookupVar pos op
-  opType <- instantiate False opScheme
+  opType <- instantiate opScheme
   retType <- UVar <$> freshVar
   tell [With pos $ opType :~ UTerm (TyArr (typeOf e1') $ UTerm $ TyArr (typeOf e2') retType)]
   pure $ OpApp (With retType x) op e1' e2'
@@ -250,7 +250,7 @@ tcPatterns (VarP x v : ps) = do
   ps' <- tcPatterns ps
   pure $ VarP (With ty x) v : ps'
 tcPatterns (ConP pos con pats : ps) = do
-  conType <- instantiate False =<< lookupVar pos con
+  conType <- instantiate =<< lookupVar pos con
   let (conParams, _) = splitTyArr conType
   -- コンストラクタの型に基づくASTの組み換え
   -- 足りない分を後続のパターン列から補充
