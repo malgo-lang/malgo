@@ -20,7 +20,8 @@ import Control.Monad.Identity (IdentityT)
 import qualified Control.Monad.State.Lazy as Lazy
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
-import qualified Data.Set as Set
+import qualified Data.HashSet as HashSet
+import Data.Maybe (fromMaybe)
 import Data.Void
 import GHC.Generics (Generic1)
 import Koriel.Pretty
@@ -73,13 +74,13 @@ freeze (UTerm t) = Fix <$> traverse freeze t
 unfreeze :: Functor t => Fix t -> UTerm t v
 unfreeze = UTerm . fmap unfreeze . unFix
 
-freevars :: (Ord a, Foldable t) => UTerm t a -> Set a
-freevars (UVar v) = Set.singleton v
+freevars :: (Eq a, Foldable t, Hashable a) => UTerm t a -> HashSet a
+freevars (UVar v) = HashSet.singleton v
 freevars (UTerm t) = foldMap freevars t
 
-occursCheck :: (Ord a, Foldable t, Pretty x, Pretty a, Pretty1 t, Applicative f) => x -> a -> UTerm t a -> f ()
+occursCheck :: (Eq a, Foldable t, Pretty x, Pretty a, Pretty1 t, Applicative f, Hashable a) => x -> a -> UTerm t a -> f ()
 occursCheck x v t =
-  if Set.member v (freevars t)
+  if HashSet.member v (freevars t)
     then errorWithMeta x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     else pure ()
 

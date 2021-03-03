@@ -11,7 +11,8 @@ module Language.Malgo.Interface where
 import Control.Monad.State (execState)
 import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
-import qualified Data.Map as Map
+import Data.Binary.Instances.UnorderedContainers ()
+import qualified Data.HashMap.Strict as HashMap
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -25,12 +26,12 @@ import qualified Language.Malgo.TypeRep.Static as GT
 import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
-  { _signatureMap :: Map RnId GT.Scheme, -- from TypeRep.Static
-    _typeDefMap :: Map RnId GT.TypeDef, -- from TypeRep.Static
-    _resolvedVarIdentMap :: Map PsId RnId, -- from DsEnv
-    _resolvedTypeIdentMap :: Map PsId RnId, -- from DsEnv
-    _coreIdentMap :: Map RnId (Id C.Type), -- from DsEnv
-    _infixMap :: Map RnId (Assoc, Int) -- from RnEnv
+  { _signatureMap :: HashMap RnId GT.Scheme, -- from TypeRep.Static
+    _typeDefMap :: HashMap RnId GT.TypeDef, -- from TypeRep.Static
+    _resolvedVarIdentMap :: HashMap PsId RnId, -- from DsEnv
+    _resolvedTypeIdentMap :: HashMap PsId RnId, -- from DsEnv
+    _coreIdentMap :: HashMap RnId (Id C.Type), -- from DsEnv
+    _infixMap :: HashMap RnId (Assoc, Int) -- from RnEnv
   }
   deriving stock (Show, Generic)
 
@@ -41,11 +42,11 @@ makeLenses ''Interface
 instance Pretty Interface where
   pPrint i =
     "Interface"
-      $$ nest 2 (sep ["signatureMap =", nest 2 $ pPrint $ Map.toList (i ^. signatureMap)])
-      $$ nest 2 (sep ["typeDefMap =", nest 2 $ pPrint $ Map.toList (i ^. typeDefMap)])
-      $$ nest 2 (sep ["resolvedVarIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedVarIdentMap)])
-      $$ nest 2 (sep ["resolvedTypeIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. resolvedTypeIdentMap)])
-      $$ nest 2 (sep ["coreIdentMap =", nest 2 $ pPrint $ Map.toList (i ^. coreIdentMap)])
+      $$ nest 2 (sep ["signatureMap =", nest 2 $ pPrint $ HashMap.toList (i ^. signatureMap)])
+      $$ nest 2 (sep ["typeDefMap =", nest 2 $ pPrint $ HashMap.toList (i ^. typeDefMap)])
+      $$ nest 2 (sep ["resolvedVarIdentMap =", nest 2 $ pPrint $ HashMap.toList (i ^. resolvedVarIdentMap)])
+      $$ nest 2 (sep ["resolvedTypeIdentMap =", nest 2 $ pPrint $ HashMap.toList (i ^. resolvedTypeIdentMap)])
+      $$ nest 2 (sep ["coreIdentMap =", nest 2 $ pPrint $ HashMap.toList (i ^. coreIdentMap)])
 
 buildInterface :: RnState -> DsEnv -> Interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do

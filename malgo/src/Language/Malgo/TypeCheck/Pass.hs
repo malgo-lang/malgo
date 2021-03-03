@@ -10,8 +10,9 @@
 
 module Language.Malgo.TypeCheck.Pass (typeCheck, applySubst) where
 
-import qualified Data.Map as Map
-import qualified Data.Set as Set
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.HashSet as HashSet
+import Data.Maybe (fromJust, fromMaybe)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -88,7 +89,7 @@ tcDataDefs ds = do
       args' <- traverse transType args
       pure $ foldr TyArr (foldr (flip TyApp) name' params') args'
     (as, cons'') <- generalizeMutRecs mempty cons'
-    varEnv <>= Map.fromList cons''
+    varEnv <>= HashMap.fromList cons''
     typeEnv . at name %= (_Just . qualVars .~ as) . (_Just . union .~ cons')
     pure (pos, name, params, map (second (map tcType)) cons)
   where
@@ -102,7 +103,7 @@ tcForeigns ::
   m [Foreign (Malgo 'TypeCheck)]
 tcForeigns ds =
   for ds $ \(pos, name, ty) -> do
-    for_ (Set.toList $ getTyVars ty) $ \tyVar ->
+    for_ (HashSet.toList $ getTyVars ty) $ \tyVar ->
       typeEnv . at tyVar <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Nothing (show $ pPrint tyVar)
     scheme@(Forall _ ty') <- generalize mempty =<< transType ty
     varEnv . at name ?= scheme
@@ -114,7 +115,7 @@ tcScSigs ::
   m [ScSig (Malgo 'TypeCheck)]
 tcScSigs ds =
   for ds $ \(pos, name, ty) -> do
-    for_ (Set.toList $ getTyVars ty) $ \tyVar ->
+    for_ (HashSet.toList $ getTyVars ty) $ \tyVar ->
       typeEnv . at tyVar <~ Just . simpleTypeDef . TyMeta <$> newMetaTv Nothing (show $ pPrint tyVar)
     scheme <- generalize mempty =<< transType ty
     varEnv . at name ?= scheme
@@ -148,7 +149,7 @@ tcScDefs ds = do
     solve $ eqCons pos ty (expr' ^. toType) : wanted
     pure ((With ty pos, name, expr'), (name, ty))
   (_, nts') <- generalizeMutRecs mempty nts
-  varEnv %= (Map.fromList nts' <>)
+  varEnv %= (HashMap.fromList nts' <>)
   -- prepareTcScDefsで定義されたvarEnvを更新したい
   -- varEnv <>= Map.fromList nts' では定義が更新されない
   pure ds'
@@ -262,7 +263,7 @@ tcPatterns (UnboxedP pos unboxed : cs) = do
 transType :: (MonadState TcEnv m, MonadIO m, MonadMalgo m) => S.Type (Malgo 'Rename) -> m Type
 transType (S.TyApp _ t ts) = do
   rnEnv <- use TcEnv.rnEnv
-  let ptr_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Ptr#" (view R.typeEnv rnEnv)
+  let ptr_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Ptr#") rnEnv
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
@@ -272,12 +273,12 @@ transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = do
   rnEnv <- use TcEnv.rnEnv
   -- lookup RnTId of primitive types
-  let int32_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Int32#" (view R.typeEnv rnEnv)
-  let int64_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Int64#" (view R.typeEnv rnEnv)
-  let float_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Float#" (view R.typeEnv rnEnv)
-  let double_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Double#" (view R.typeEnv rnEnv)
-  let char_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "Char#" (view R.typeEnv rnEnv)
-  let string_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< Map.lookup "String#" (view R.typeEnv rnEnv)
+  let int32_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Int32#") rnEnv
+  let int64_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Int64#") rnEnv
+  let float_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Float#") rnEnv
+  let double_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Double#") rnEnv
+  let char_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Char#") rnEnv
+  let string_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "String#") rnEnv
   if
       | c == int32_t -> pure $ TyPrim Int32T
       | c == int64_t -> pure $ TyPrim Int64T
@@ -335,11 +336,11 @@ generalizeMutRecs env nts = do
   zipWithM_ writeMetaTv fvs (map TyVar as)
   (as,) <$> traverseOf (traversed . _2) (fmap (Forall as) . zonkType) nts
 
-freeMetaTvs :: MonadIO m => TcEnv -> Type -> m (Set MetaTv)
+freeMetaTvs :: MonadIO m => TcEnv -> Type -> m (HashSet MetaTv)
 freeMetaTvs env t = do
   env' <- traverse zonkScheme (view varEnv env)
   t' <- zonkType t
-  pure $ metaTvs t' Set.\\ foldMap metaTvsScheme env'
+  pure $ HashSet.difference (metaTvs t') (foldMap metaTvsScheme env')
 
 -- 型を具体化する
 instantiate :: (MonadUniq m, MonadIO m) => Bool -> Scheme -> m Type
@@ -351,10 +352,10 @@ instantiate isRigid (Forall as t) = do
           TyMeta <$> newMetaTv mka (if isRigid then show $ pPrint a else "")
       )
       as
-  applySubst (Map.fromList $ zip as vs) <$> zonkType t
+  applySubst (HashMap.fromList $ zip as vs) <$> zonkType t
 
-applySubst :: Map TyVar Type -> Type -> Type
-applySubst subst (TyVar v) = fromMaybe (TyVar v) $ Map.lookup v subst
+applySubst :: HashMap TyVar Type -> Type -> Type
+applySubst subst (TyVar v) = fromMaybe (TyVar v) $ HashMap.lookup v subst
 applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t2)
 applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
 applySubst subst (TyTuple ts) = TyTuple $ map (applySubst subst) ts

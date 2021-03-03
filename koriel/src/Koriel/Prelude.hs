@@ -26,22 +26,22 @@ module Koriel.Prelude
     module Data.Bitraversable,
     module Data.Coerce,
     module Data.Foldable,
+    module Data.HashMap.Strict,
+    module Data.HashSet,
+    module Data.Hashable,
     module Data.List.NonEmpty,
-    module Data.Map,
-    module Data.Maybe,
     module Data.Monoid,
-    module Data.Set,
     module Data.String,
     module Data.Text,
     module Data.Traversable,
     module GHC.Generics,
     module GHC.Stack,
+    module Witherable,
     unzip,
     asumMap,
     foldMapA,
     ifoldMapA,
     (<<$>>),
-    ordNub,
     replaceOf,
     IORef,
     newIORef,
@@ -81,14 +81,13 @@ import Data.Bifunctor
 import Data.Bitraversable
 import Data.Coerce
 import Data.Foldable
+import Data.HashMap.Strict (HashMap)
+import Data.HashSet (HashSet)
+import Data.Hashable (Hashable)
 import Data.IORef (IORef)
 import qualified Data.IORef as I
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.Map (Map)
-import Data.Maybe
 import Data.Monoid
-import Data.Set (Set)
-import qualified Data.Set as Set
 import Data.String (IsString (..))
 import Data.Text (Text)
 import Data.Traversable
@@ -102,7 +101,8 @@ import GHC.Stack
   )
 import qualified Text.Megaparsec.Pos as Megaparsec
 import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
-import Prelude hiding (log, unzip)
+import Witherable
+import Prelude hiding (filter, log, unzip)
 
 -- | unzip :: [(a, b)] -> ([a], [b]) の一般化
 unzip :: Functor f => f (a, b) -> (f a, f b)
@@ -127,14 +127,6 @@ infixl 4 <<$>>
 (<<$>>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
 (<<$>>) = fmap . fmap
 {-# INLINE (<<$>>) #-}
-
-ordNub :: Ord a => [a] -> [a]
-ordNub = go Set.empty
-  where
-    go _ [] = []
-    go s (x : xs)
-      | x `Set.member` s = go s xs
-      | otherwise = x : go (Set.insert x s) xs
 
 replaceOf :: Eq b => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)

@@ -11,6 +11,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 -- |
 -- LLVM IRの生成
@@ -26,9 +27,10 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
 import Data.Either (partitionEithers)
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.List as List
 import Data.List.Extra (headDef, mconcatMap)
-import qualified Data.Map as Map
-import qualified Data.Set as Set
+import Data.Maybe (fromMaybe)
 import Data.String.Conversions
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import qualified Koriel.Core.Op as Op
@@ -57,13 +59,15 @@ import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr)
 
-type PrimMap = Map Name Operand
+instance Hashable Name
 
--- 変数のMapとknown関数のMapを分割する
+type PrimMap = HashMap Name Operand
+
+-- 変数のHashMapとknown関数のHashMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data OprMap = OprMap
-  { _valueMap :: Map (Id C.Type) Operand,
-    _funcMap :: Map (Id C.Type) Operand
+  { _valueHashMap :: HashMap (Id C.Type) Operand,
+    _funcHashMap :: HashMap (Id C.Type) Operand
   }
 
 makeLenses ''OprMap
@@ -72,13 +76,13 @@ codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id C.Type) -> m [D
 codeGen Program {topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
   -- topFuncsのOprMapを作成
   let funcEnv = mconcatMap ?? topFuncs $ \(f, (ps, e)) ->
-        Map.singleton f $
+        HashMap.singleton f $
           ConstantOperand $
             C.GlobalReference
               (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
               (toName f)
   runReaderT
-    ?? (OprMap {_valueMap = mempty, _funcMap = funcEnv})
+    ?? (OprMap {_valueHashMap = mempty, _funcHashMap = funcEnv})
     $ Lazy.evalStateT
       ?? (mempty :: PrimMap)
       $ do
@@ -125,14 +129,14 @@ sizeofType VoidT = 0
 
 findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id C.Type -> m Operand
 findVar x = do
-  mopr <- view $ valueMap . at x
+  mopr <- view $ valueHashMap . at x
   case mopr of
     Just opr -> pure opr
     Nothing -> error $ show $ pPrint x <> " is not found"
 
 findFun :: (MonadReader OprMap m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
-  mopr <- view $ funcMap . at x
+  mopr <- view $ funcHashMap . at x
   case mopr of
     Just opr -> pure opr
     Nothing ->
@@ -181,9 +185,9 @@ genFunc ::
   m Operand
 genFunc name params body
   | name ^. idIsExternal =
-    function funcName llvmParams retty $ \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
+    function funcName llvmParams retty $ \args -> local (over valueHashMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   | otherwise =
-    internalFunction funcName llvmParams retty $ \args -> local (over valueMap (Map.fromList (zip params args) <>)) $ genExp body ret
+    internalFunction funcName llvmParams retty $ \args -> local (over valueHashMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
     llvmParams =
@@ -294,11 +298,11 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
       zext i1opr i8
 genExp (Let xs e) k = do
   env <- foldMapA prepare xs
-  env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
-  local (over valueMap (env <>)) $ genExp e k
+  env <- local (over valueHashMap (env <>)) $ mconcat <$> traverse genLocalDef xs
+  local (over valueHashMap (env <>)) $ genExp e k
   where
     prepare (LocalDef name (Fun ps body)) =
-      Map.singleton name
+      HashMap.singleton name
         <$> mallocType
           ( StructureType
               False
@@ -310,7 +314,7 @@ genExp (Let xs e) k = do
 genExp (Match e (Bind _ body :| _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
 genExp (Match e (Bind x body :| _)) k = genExp e $ \eOpr -> do
   eOpr <- bitcast eOpr (convType $ C.typeOf e)
-  local (over valueMap (at x ?~ eOpr)) (genExp body k)
+  local (over valueHashMap (at x ?~ eOpr)) (genExp body k)
 genExp (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = genExp e $ \eOpr -> mdo
@@ -344,14 +348,14 @@ genCase ::
     MonadFix m
   ) =>
   Operand ->
-  Set Con ->
+  [Con] ->
   (Operand -> m ()) ->
   Case (Id C.Type) ->
   m (Either LLVM.AST.Name (C.Constant, LLVM.AST.Name))
 genCase scrutinee cs k = \case
   Bind x e -> do
     label <- block
-    void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
+    void $ local (over valueHashMap $ at x ?~ scrutinee) $ genExp e k
     pure $ Left label
   Switch u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
@@ -366,8 +370,8 @@ genCase scrutinee cs k = \case
     -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
     env <- ifoldMapA ?? vs $ \i v -> do
       vOpr <- gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
-      pure $ Map.singleton v vOpr
-    void $ local (over valueMap (env <>)) $ genExp e k
+      pure $ HashMap.singleton v vOpr
+    void $ local (over valueHashMap (env <>)) $ genExp e k
     pure $ Right (C.Int 8 tag, label)
 
 genAtom ::
@@ -397,7 +401,7 @@ genLocalDef ::
     MonadFix m
   ) =>
   LocalDef (Id C.Type) ->
-  m (Map (Id C.Type) Operand)
+  m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
   name <- toName <$> newTopLevelId (funName ^. idName <> "_closure") ()
@@ -407,8 +411,8 @@ genLocalDef (LocalDef funName (Fun ps e)) = do
       -- キャプチャした変数が詰まっている構造体を展開する
       capture <- bitcast rawCapture (ptr capType)
       env <- ifoldMapA ?? fvs $ \i fv ->
-        Map.singleton fv <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
-      local (over valueMap ((env <> Map.fromList (zip ps ps')) <>)) $ genExp e ret
+        HashMap.singleton fv <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
+      local (over valueHashMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExp e ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType
   ifor_ fvs $ \i fv -> do
@@ -417,7 +421,7 @@ genLocalDef (LocalDef funName (Fun ps e)) = do
   closAddr <- findVar funName
   gepAndStore closAddr [int32 0, int32 0] =<< bitcast capture (ptr i8)
   gepAndStore closAddr [int32 0, int32 1] func
-  pure $ Map.singleton funName closAddr
+  pure $ HashMap.singleton funName closAddr
   where
     fvs = toList $ freevars (Fun ps e)
     -- キャプチャされる変数を詰める構造体の型
@@ -432,18 +436,18 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = d
   ifor_ xs $ \i x ->
     gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
-  Map.singleton name <$> bitcast addr (convType $ SumT cs)
+  HashMap.singleton name <$> bitcast addr (convType $ SumT cs)
 genLocalDef (LocalDef _ Pack {}) = bug Unreachable
 
-genCon :: Set Con -> Con -> (Integer, LT.Type)
+genCon :: [Con] -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
   | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
-  | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
+  | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
 
-findIndex :: (Ord a, Pretty a) => a -> Set a -> Integer
-findIndex con cs = case Set.lookupIndex con cs of
+findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
+findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
-  Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint (Set.toList cs)
+  Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
 
 sizeof :: LT.Type -> Operand
 sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64

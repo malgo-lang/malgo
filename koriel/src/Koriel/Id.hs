@@ -30,6 +30,7 @@ where
 
 import Data.Aeson
 import Data.Binary (Binary)
+import Data.Hashable (Hashable (hashWithSalt))
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList, (.=))
 import Koriel.Pretty
@@ -42,6 +43,10 @@ data Id a = Id
     _idIsExternal :: Bool
   }
   deriving stock (Show, Read, Eq, Ord, Functor, Foldable, Generic)
+
+-- TODO: calculate hash from idUniq
+instance Hashable (Id a) where
+  hashWithSalt salt Id {_idUniq} = hashWithSalt salt _idUniq
 
 instance Binary a => Binary (Id a)
 

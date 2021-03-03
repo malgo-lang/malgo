@@ -6,6 +6,7 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -15,10 +16,10 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Language.Malgo.Desugar.Pass (desugar) where
 
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
-import qualified Data.Map as Map
-import qualified Data.Set as Set
+import Data.Maybe (fromJust)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
@@ -35,10 +36,10 @@ import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
-desugar :: (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m, IsScheme a1, IsTypeDef a2, XModule x ~ BindGroup (Malgo 'Refine)) => Map (Id ModuleName) a1 -> Map (Id ModuleName) a2 -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
+desugar :: (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m, IsScheme a1, IsTypeDef a2, XModule x ~ BindGroup (Malgo 'Refine)) => HashMap (Id ModuleName) a1 -> HashMap (Id ModuleName) a2 -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
 desugar varEnv typeEnv rnEnv (Module modName ds) = do
   (dsEnv, ds') <- runReaderT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
-  case searchMain (Map.toList $ view nameEnv dsEnv) of
+  case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
         mainFunc =<< runDef do
@@ -95,7 +96,7 @@ dsScDefs ds = do
   env <- foldMapA ?? ds $ \(_, f, _) -> do
     Just (Forall _ fType) <- view (varTypeEnv . at f)
     f' <- newCoreId f =<< dsType fType
-    pure $ mempty & nameEnv .~ Map.singleton f f'
+    pure $ mempty & nameEnv .~ HashMap.singleton f f'
   local (env <>) $ (env,) <$> foldMapA dsScDef ds
 
 dsScDef ::
@@ -127,7 +128,7 @@ dsForeign (x@(With _ (_, primName)), name, _) = do
   retType <- dsType retType
   params <- traverse (newLocalId "$p") paramTypes'
   fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
-  pure (mempty & nameEnv .~ Map.singleton name name', [(name', fun)])
+  pure (mempty & nameEnv .~ HashMap.singleton name name', [(name', fun)])
 
 dsDataDef ::
   (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
@@ -137,8 +138,8 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
     -- lookup constructor infomations
     Just (GT.TyCon name') <- preview (typeDefEnv . at name . _Just . typeConstructor)
-    conMap <- lookupConMap (over idMeta fromKind name') []
-    let conType = fromJust $ List.lookup conName conMap
+    vcs <- lookupValueConstructors (over idMeta fromKind name') []
+    let conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType
     let (paramTypes, retType) = splitTyArr conType
@@ -155,7 +156,7 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
     obj <- case ps of
       [] -> pure ([], expr)
       _ -> curryFun ps expr
-    pure (mempty & nameEnv .~ Map.singleton conName conName', [(conName', obj)])
+    pure (mempty & nameEnv .~ HashMap.singleton conName conName', [(conName', obj)])
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
     buildConType [] retType = [] :-> retType
@@ -253,7 +254,7 @@ dsExp (G.Fn _ []) = bug Unreachable
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
   let con = C.Con ("Tuple" <> length es ^. toText) $ map C.typeOf es'
-  let ty = SumT $ Set.singleton con
+  let ty = SumT [con]
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
 dsExp (G.Force _ e) = runDef $ do
@@ -272,7 +273,7 @@ dsStmts (NoBind _ e : ss) = runDef $ do
 dsStmts (G.Let _ v e : ss) = do
   e' <- dsExp e
   v' <- newLocalId ("$let_" <> v ^. idName) (C.typeOf e')
-  local (over nameEnv $ Map.insert v v') do
+  local (over nameEnv $ HashMap.insert v v') do
     ss' <- dsStmts ss
     pure $ Match e' (Bind v' ss' :| [])
 
@@ -295,7 +296,7 @@ match (u : us) (ps : pss) es err
     let es' =
           zipWith
             ( \case
-                (VarP _ v) -> local (over nameEnv (Map.insert v u))
+                (VarP _ v) -> local (over nameEnv (HashMap.insert v u))
                 _ -> bug Unreachable
             )
             ps
@@ -309,9 +310,9 @@ match (u : us) (ps : pss) es err
       errorDoc $ "Not valid type:" <+> pPrint patType
     -- 型からコンストラクタの集合を求める
     let (con, ts) = splitCon patType
-    conMap <- lookupConMap con ts
+    vcs <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
-    cases <- for conMap $ \(conName, conType) -> do
+    cases <- for vcs $ \(conName, conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
       let ccon = C.Con (conName ^. toText) paramTypes
       params <- traverse (newLocalId "$p") paramTypes
@@ -402,7 +403,7 @@ dsType (GT.TyArr t1 t2) = do
   t2' <- dsType t2
   pure $ [t1'] :-> t2'
 dsType (GT.TyTuple ts) =
-  SumT . Set.singleton . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dsType ts
+  SumT . pure . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dsType ts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
 dsType (GT.TyPtr t) = PtrT <$> dsType t
 
@@ -412,13 +413,13 @@ unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
   case kindOf t of
     TYPE BoxedRep -> do
       let (con, ts) = splitCon t
-      conMap <- lookupConMap con ts
+      vcs <- lookupValueConstructors con ts
       SumT
-        <$> foldMapA
+        <$> traverse
           ( \(conName, conType) ->
-              Set.singleton . C.Con (conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
+              C.Con (conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
           )
-          conMap
+          vcs
     _ -> dsType t
 unfoldType t = dsType t
 
@@ -431,16 +432,16 @@ lookupName name = do
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
 
-lookupConMap ::
+lookupValueConstructors ::
   (MonadReader DsEnv m, MonadFail m) =>
   Id Kind ->
   [GT.Type] ->
   m [(TcId, GT.Type)]
-lookupConMap con ts = do
+lookupValueConstructors con ts = do
   typeEnv <- view typeDefEnv
-  case List.find (\TypeDef {_typeConstructor = t} -> t == GT.TyCon con) (Map.elems typeEnv) of
-    Just TypeDef {_typeParameters = as, _valueConstructors = conMap} ->
-      pure $ over (mapped . _2) (GT.applySubst $ Map.fromList $ zip as ts) conMap
+  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con) (HashMap.elems typeEnv) of
+    Just TypeDef {..} ->
+      pure $ over (mapped . _2) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
 
 newCoreId :: MonadUniq f => Id ModuleName -> a -> f (Id a)

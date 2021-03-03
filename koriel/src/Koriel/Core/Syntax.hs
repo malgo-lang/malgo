@@ -20,7 +20,7 @@ module Koriel.Core.Syntax where
 
 import Data.Aeson hiding (Bool, Error, String)
 import Data.Aeson.Types (prependFailure, unexpected)
-import qualified Data.Set as Set
+import qualified Data.HashSet as HashSet
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
@@ -30,7 +30,7 @@ import Koriel.Pretty
 
 class HasFreeVar f where
   -- | free variables
-  freevars :: Ord a => f a -> Set a
+  freevars :: (Eq a, Hashable a) => f a -> HashSet a
 
 -- | unboxed values
 data Unboxed
@@ -113,7 +113,7 @@ instance FromJSON a => FromJSON (Atom a) where
         | otherwise -> prependFailure "parsing Atom failed, " (unexpected $ Object v)
 
 instance HasFreeVar Atom where
-  freevars (Var x) = Set.singleton x
+  freevars (Var x) = HashSet.singleton x
   freevars Unboxed {} = mempty
 
 class HasAtom f where

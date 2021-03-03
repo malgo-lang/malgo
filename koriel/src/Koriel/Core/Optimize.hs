@@ -13,9 +13,9 @@ module Koriel.Core.Optimize
 where
 
 import Control.Monad.Except
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.HashSet as HashSet
 import qualified Data.List as List
-import qualified Data.Map as Map
-import qualified Data.Set as Set
 import Koriel.Core.Alpha
 import Koriel.Core.Flat
 import Koriel.Core.Syntax
@@ -59,7 +59,7 @@ optimizeExpr state = 10 `times` opt
         >=> pure
           . flat
 
-type CallInlineMap = Map (Id Type) ([Id Type], Exp (Id Type))
+type CallInlineMap = HashMap (Id Type) ([Id Type], Exp (Id Type))
 
 optCallInline ::
   (MonadState CallInlineMap f, MonadReader Int f, MonadUniq f) =>
@@ -96,10 +96,10 @@ lookupCallInline ::
 lookupCallInline f as = do
   f' <- gets (view (at f))
   case f' of
-    Just (ps, v) -> alpha v (Map.fromList $ zip ps as)
+    Just (ps, v) -> alpha v (HashMap.fromList $ zip ps as)
     Nothing -> pure $ Call (Var f) as
 
-type PackInlineMap = Map (Id Type) (Con, [Atom (Id Type)])
+type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
 optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
@@ -127,15 +127,15 @@ optVarBind (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) op
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e
 
-removeUnusedLet :: (Monad f, Ord a) => Exp (Id a) -> f (Exp (Id a))
+removeUnusedLet :: (Monad f, Eq a) => Exp (Id a) -> f (Exp (Id a))
 removeUnusedLet (Let ds e) = do
   ds' <- traverseOf (traversed . localDefObj . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
   -- 定義vから到達可能でかつvで定義されていない変数すべての集合のマップ
-  let gamma = map (\(LocalDef v o) -> (v, Set.delete v $ freevars o)) ds'
+  let gamma = map (\(LocalDef v o) -> (v, HashSet.delete v $ freevars o)) ds'
   if any (\(LocalDef v _) -> reachable 100 gamma v $ freevars e') ds' then pure $ Let ds' e' else pure e'
   where
-    reachable :: Ord a => Int -> [(Id a, Set (Id a))] -> Id a -> Set (Id a) -> Bool
+    reachable :: Eq a => Int -> [(Id a, HashSet (Id a))] -> Id a -> HashSet (Id a) -> Bool
     reachable limit gamma v fvs
       -- limit回試行してわからなければ安全側に倒してTrue
       | limit <= 0 = True
@@ -144,7 +144,7 @@ removeUnusedLet (Let ds e) = do
       | otherwise =
         -- fvsの要素fvについて、gamma[fv]をfvsに加える
         -- fvsに変化がなければ、vはどこからも参照されていない
-        let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ Set.toList fvs)
+        let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
          in fvs /= fvs' && reachable limit gamma v fvs'
 removeUnusedLet (Match v cs) =
   Match <$> removeUnusedLet v <*> traverseOf (traversed . appCase) removeUnusedLet cs

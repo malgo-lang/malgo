@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 354e06e4d8ff7ec7852c6f0d3289c56e1579f9e9cb13a7cc4de90461da3cd2b2
+-- hash: 2accfaa0e0272684dabe4329841dc373859174d5062321e1569adeaa0f8b8db0
 
 name:           koriel
 version:        1.0.0.0
@@ -49,9 +49,9 @@ library
     , base
     , binary
     , bytestring
-    , containers
     , data-fix
     , extra
+    , hashable
     , lens
     , llvm-hs-pretty
     , llvm-hs-pure
@@ -61,4 +61,6 @@ library
     , string-conversions
     , text
     , transformers
+    , unordered-containers
+    , witherable
   default-language: Haskell2010

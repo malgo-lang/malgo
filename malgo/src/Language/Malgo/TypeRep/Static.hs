@@ -14,7 +14,7 @@ module Language.Malgo.TypeRep.Static where
 
 import Data.Binary (Binary)
 import Data.Fix
-import qualified Data.Map as Map
+import Data.Maybe (fromJust, fromMaybe)
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
@@ -272,9 +272,9 @@ splitTyArr :: Type -> ([Type], Type)
 splitTyArr (TyArr t1 t2) = over _1 (t1 :) $ splitTyArr t2
 splitTyArr t = ([], t)
 
-applySubst :: Map (Id Kind) Type -> Type -> Type
+applySubst :: HashMap (Id Kind) Type -> Type -> Type
 applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t2)
-applySubst subst (TyVar v) = fromMaybe (TyVar v) $ Map.lookup v subst
+applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v
 applySubst _ (TyCon c) = TyCon c
 applySubst _ (TyPrim p) = TyPrim p
 applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
