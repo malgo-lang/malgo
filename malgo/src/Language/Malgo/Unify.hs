@@ -20,6 +20,7 @@ import Control.Monad.Identity (IdentityT)
 import qualified Control.Monad.State.Lazy as Lazy
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.Maybe (fromMaybe)
 import Data.Void
@@ -84,6 +85,14 @@ occursCheck x v t =
     then errorWithMeta x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     else pure ()
 
+equiv :: (Eq v, Hashable v, Unifiable t v) => UTerm t v -> UTerm t v -> Maybe (HashMap v v)
+equiv (UVar v1) (UVar v2)
+  | v1 == v2 = Just mempty
+  | otherwise = Just $ HashMap.singleton v1 v2
+equiv (UTerm t1) (UTerm t2) =
+  mconcat <$> traverse (\With {_value = u1 :~ u2} -> equiv u1 u2) (unify () t1 t2)
+equiv _ _ = Nothing
+
 class HasUTerm t v a where
   walkOn :: Traversal' a (UTerm t v)
 
@@ -109,15 +118,6 @@ instance (Pretty v, Pretty1 t) => Pretty (Constraint t v) where
   pPrint (t1 :~ t2) = pPrint t1 <+> "~" <+> pPrint t2
 
 type WithMeta x t v = With x (Constraint t v)
-
---------------
--- Variable --
---------------
-
-class Var v where
-  rigidName :: Lens' v String
-  isRigid :: v -> Bool
-  isRigid v = not $ null $ v ^. rigidName
 
 ---------------
 -- Unifiable --
@@ -161,8 +161,7 @@ instance MonadBind t v m => MonadBind t v (ContT r m)
 ------------
 
 solve ::
-  ( Var v,
-    Pretty x,
+  ( Pretty x,
     Pretty v,
     MonadBind t v m,
     Traversable t,
@@ -176,8 +175,7 @@ solve cs = do
   solveLoop 5000 cs
 
 solveLoop ::
-  ( Var v,
-    Pretty x,
+  ( Pretty x,
     Pretty v,
     MonadBind t v m,
     Traversable t,
@@ -192,30 +190,15 @@ solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (UVar v1 :~ UVar v2) : cs)
   | v1 == v2 = solveLoop (n - 1) cs
-  | isRigid v1 && isRigid v2 && v1 ^. rigidName /= v2 ^. rigidName =
-    errorWithMeta x $
-      unifyErrorMessage v1 v2
-        $+$ quotes (pPrint v1) <+> "and" <+> quotes (pPrint v2) <+> "are rigid variable"
-  | isRigid v1 = do
-    bindVar x v2 (UVar v1)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs
-  | isRigid v2 = do
-    bindVar x v1 (UVar v2)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs
-  {-  | otherwise = errorWithMeta x $ unifyErrorMessage v1 v2 -- -}
   | otherwise = do
     bindVar x v1 (UVar v2)
     solveLoop (n - 1) =<< traverse zonkConstraint cs -- -}
-solveLoop n (With x (UVar v :~ UTerm t) : cs)
-  | isRigid v = errorWithMeta x $ unifyErrorMessage v (UTerm t) $+$ quotes (pPrint v) <+> "is a rigid variable"
-  | otherwise = do
-    bindVar x v (UTerm t)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs
-solveLoop n (With x (UTerm t :~ UVar v) : cs)
-  | isRigid v = errorWithMeta x $ unifyErrorMessage v (UTerm t) $+$ quotes (pPrint v) <+> "is a rigid variable"
-  | otherwise = do
-    bindVar x v (UTerm t)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs
+solveLoop n (With x (UVar v :~ UTerm t) : cs) = do
+  bindVar x v (UTerm t)
+  solveLoop (n - 1) =<< traverse zonkConstraint cs
+solveLoop n (With x (UTerm t :~ UVar v) : cs) = do
+  bindVar x v (UTerm t)
+  solveLoop (n - 1) =<< traverse zonkConstraint cs
 solveLoop n (With x (UTerm t1 :~ UTerm t2) : cs) = do
   let cs' = unify x t1 t2
   solveLoop (n - 1) $ cs' <> cs
