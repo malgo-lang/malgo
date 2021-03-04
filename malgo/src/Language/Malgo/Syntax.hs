@@ -135,22 +135,19 @@ instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasTyp
     Parens x e -> Parens <$> I.overType f x <*> I.overType f e
 
 instance
-  ( ForallExpX (U.HasType U.UType) x,
-    ForallClauseX (U.HasType U.UType) x,
-    ForallPatX (U.HasType U.UType) x
-  ) =>
+  ForallExpX U.WithUType x =>
   U.HasType U.UType (Exp x)
   where
-  typeOf (Var x _) = U.typeOf x
-  typeOf (Con x _) = U.typeOf x
-  typeOf (Unboxed x _) = U.typeOf x
-  typeOf (Boxed x _) = U.typeOf x
-  typeOf (Apply x _ _) = U.typeOf x
-  typeOf (OpApp x _ _ _) = U.typeOf x
-  typeOf (Fn x _) = U.typeOf x
-  typeOf (Tuple x _) = U.typeOf x
-  typeOf (Force x _) = U.typeOf x
-  typeOf (Parens x _) = U.typeOf x
+  typeOf (Var x _) = x ^. U.withUType
+  typeOf (Con x _) = x ^. U.withUType
+  typeOf (Unboxed x _) = x ^. U.withUType
+  typeOf (Boxed x _) = x ^. U.withUType
+  typeOf (Apply x _ _) = x ^. U.withUType
+  typeOf (OpApp x _ _ _) = x ^. U.withUType
+  typeOf (Fn x _) = x ^. U.withUType
+  typeOf (Tuple x _) = x ^. U.withUType
+  typeOf (Force x _) = x ^. U.withUType
+  typeOf (Parens x _) = x ^. U.withUType
 
 instance
   ForallExpX S.WithType x =>
@@ -223,10 +220,7 @@ instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasTyp
     NoBind x e -> NoBind x <$> I.overType f e
 
 instance
-  ( ForallExpX (U.HasType U.UType) x,
-    ForallClauseX (U.HasType U.UType) x,
-    ForallPatX (U.HasType U.UType) x
-  ) =>
+  ForallExpX U.WithUType x =>
   U.HasType U.UType (Stmt x)
   where
   typeOf (Let _ _ e) = U.typeOf e
@@ -274,13 +268,10 @@ instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasTyp
     Clause <$> I.overType f x <*> traverse (I.overType f) ps <*> traverse (I.overType f) e
 
 instance
-  ( ForallExpX (U.HasType U.UType) x,
-    ForallClauseX (U.HasType U.UType) x,
-    ForallPatX (U.HasType U.UType) x
-  ) =>
+  ForallClauseX U.WithUType x =>
   U.HasType U.UType (Clause x)
   where
-  typeOf (Clause x _ _) = U.typeOf x
+  typeOf (Clause x _ _) = x ^. U.withUType
 
 instance
   ForallClauseX S.WithType x =>
@@ -338,16 +329,13 @@ instance (ForallPatX I.HasType x) => I.HasType (Pat x) where
     UnboxedP x u -> UnboxedP <$> I.overType f x <*> I.overType f u
 
 instance
-  ( ForallExpX (U.HasType U.UType) x,
-    ForallClauseX (U.HasType U.UType) x,
-    ForallPatX (U.HasType U.UType) x
-  ) =>
+  ForallPatX U.WithUType x =>
   U.HasType U.UType (Pat x)
   where
-  typeOf (VarP x _) = U.typeOf x
-  typeOf (ConP x _ _) = U.typeOf x
-  typeOf (TupleP x _) = U.typeOf x
-  typeOf (UnboxedP x _) = U.typeOf x
+  typeOf (VarP x _) = x ^. U.withUType
+  typeOf (ConP x _ _) = x ^. U.withUType
+  typeOf (TupleP x _) = x ^. U.withUType
+  typeOf (UnboxedP x _) = x ^. U.withUType
 
 instance
   ForallPatX S.WithType x =>

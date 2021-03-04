@@ -85,7 +85,7 @@ type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = SourcePos
   SimpleX 'Rename = SourcePos
   SimpleX 'TypeCheck = WithType SourcePos
-  SimpleX 'NewTypeCheck = U.WithUType SourcePos
+  SimpleX 'NewTypeCheck = With U.UType SourcePos
   SimpleX 'Refine = With S.Type SourcePos
 
 type family XVar x where
@@ -108,7 +108,7 @@ type family XOpApp x where
   XOpApp (Malgo 'Parse) = SourcePos
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'TypeCheck) = WithType (SourcePos, (Assoc, Int))
-  XOpApp (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'NewTypeCheck) = With U.UType (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -209,7 +209,7 @@ type family XForeign x where
   XForeign (Malgo 'Parse) = SourcePos
   XForeign (Malgo 'Rename) = (SourcePos, String)
   XForeign (Malgo 'TypeCheck) = WithType (SourcePos, String)
-  XForeign (Malgo 'NewTypeCheck) = U.WithUType (SourcePos, String)
+  XForeign (Malgo 'NewTypeCheck) = With U.UType (SourcePos, String)
   XForeign (Malgo 'Refine) = With S.Type (SourcePos, String)
 
 type family XImport x where

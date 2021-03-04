@@ -155,7 +155,7 @@ instance (Monad m, MonadUniq m, MonadIO m) => MonadBind TypeF TypeVar (TypeUnify
     TypeVar <$> newLocalId "t" (UTerm $ TYPE $ UVar kind)
   bindVar x v t = do
     occursCheck x v t
-    let cs = [With x $ v ^. typeVar . idMeta :~ (kindOf t `asTypeOf` t)]
+    let cs = [With x $ v ^. typeVar . idMeta :~ (typeOf t `asTypeOf` t)]
     solve cs
     at v ?= t
 
@@ -192,7 +192,7 @@ generalize x bound term = do
 toBound :: (MonadUniq m, MonadBind TypeF TypeVar m, Pretty x) => x -> TypeVar -> [Char] -> m (Id Type)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
-  case freeze $ kindOf tvType `asTypeOf` tvType of
+  case freeze $ typeOf tvType `asTypeOf` tvType of
     Just kind -> newLocalId hint kind
     Nothing -> errorDoc $ pPrint tvType
 
@@ -276,25 +276,19 @@ instantiate (Forall as t) = do
       TyRep -> pure $ UTerm TyRep
       Rep rep -> pure $ UTerm $ Rep rep
 
-class HasKind t a where
-  kindOf :: a -> t
-
 class HasType t a where
   typeOf :: a -> t
 
 instance HasType UType UType where
-  typeOf = id
-
-instance HasKind UType UType where
-  kindOf (UVar v) = v ^. typeVar . idMeta
-  kindOf (UTerm t) = case t of
-    TyApp t1 _ -> case kindOf t1 of
+  typeOf (UVar v) = v ^. typeVar . idMeta
+  typeOf (UTerm t) = case t of
+    TyApp t1 _ -> case typeOf t1 of
       UTerm (TyArr _ k) -> k
       _ -> error "invalid kind"
     TyVar v -> v ^. idMeta
     TyCon c -> c ^. idMeta
     TyPrim p -> S.fromType (S.typeOf p)
-    TyArr _ t2 -> kindOf t2
+    TyArr _ t2 -> typeOf t2
     TyTuple _ -> UTerm $ TYPE (UTerm $ Rep BoxedRep)
     TyLazy _ -> UTerm $ TYPE (UTerm $ Rep BoxedRep)
     TyPtr _ -> UTerm $ TYPE (UTerm $ Rep BoxedRep)
@@ -308,7 +302,11 @@ instance HasType Type Type where
 instance HasType t Void where
   typeOf = absurd
 
-type WithUType a = With UType a
+class WithUType a where
+  withUType :: Lens' a UType
 
-instance HasType rep t => HasType rep (With t a) where
-  typeOf (With t _) = typeOf t
+instance WithUType (With UType a) where
+  withUType f (With t a) = (`With` a) <$> f t
+
+instance WithUType Void where
+  withUType _ a = absurd a

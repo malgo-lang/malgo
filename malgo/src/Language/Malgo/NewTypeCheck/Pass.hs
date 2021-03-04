@@ -107,7 +107,7 @@ tcDataDefs ds = do
   for ds $ \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar) params
-    let cs = [With pos $ foldr ((\l r -> UTerm $ TyArr l r) . kindOf) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) params' :~ kindOf name']
+    let cs = [With pos $ foldr ((\l r -> UTerm $ TyArr l r) . typeOf) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) params' :~ typeOf name']
     solve cs
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     valueCons' <- forOf (traversed . _2) valueCons $ \args -> do
