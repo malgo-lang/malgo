@@ -30,6 +30,7 @@ where
 
 import Data.Aeson
 import Data.Binary (Binary)
+import Data.Deriving
 import Data.Hashable (Hashable (hashWithSalt))
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList, (.=))
@@ -42,7 +43,11 @@ data Id a = Id
     _idIsTopLevel :: Bool,
     _idIsExternal :: Bool
   }
-  deriving stock (Show, Read, Eq, Ord, Functor, Foldable, Generic)
+  deriving stock (Show, Read, Eq, Ord, Functor, Foldable, Traversable, Generic)
+
+deriveEq1 ''Id
+deriveOrd1 ''Id
+deriveShow1 ''Id
 
 -- TODO: calculate hash from idUniq
 instance Hashable (Id a) where
@@ -53,6 +58,10 @@ instance Binary a => Binary (Id a)
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n _ m _ True) = text n <> braces (pPrint m)
   pPrint (Id n u m _ False) = text n <> "." <> text (show u) <> braces (pPrint m)
+
+instance Pretty1 Id where
+  liftPPrintPrec ppr l d (Id n _ m _ True) = text n <> braces (ppr l d m)
+  liftPPrintPrec ppr l d (Id n u m _ False) = text n <> "." <> text (show u) <> braces (ppr l d m)
 
 instance ToJSON a => ToJSON (Id a) where
   toJSON Id {_idName, _idUniq, _idMeta, _idIsTopLevel, _idIsExternal} =

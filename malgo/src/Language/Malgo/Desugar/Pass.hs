@@ -385,7 +385,7 @@ match u pss es err = do
   errorDoc $ "match" <+> pPrint u <+> pPrint pss <+> pPrint (length es) <+> pPrint err
 
 -- Malgoの型をCoreの型に変換する
-dsType :: HasCallStack => Monad m => GT.Type -> m C.Type
+dsType :: Monad m => GT.Type -> m C.Type
 dsType GT.TyApp {} = pure AnyT
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do

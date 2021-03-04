@@ -91,8 +91,11 @@ equiv _ _ = Nothing
 class HasUTerm t v a where
   walkOn :: Traversal' a (UTerm t v)
 
-instance HasUTerm t v (UTerm t v) where
+instance (Traversable t, HasUTerm t v v) => HasUTerm t v (UTerm t v) where
   walkOn = id
+
+-- walkOn f (UVar v) = f =<< (UVar <$> walkOn f v)
+-- walkOn f (UTerm t) = f =<< (UTerm <$> traverse (walkOn f) t)
 
 instance HasUTerm t v x => HasUTerm t v (With x a) where
   walkOn f (With x a) = With <$> walkOn f x <*> pure a
@@ -119,7 +122,7 @@ type WithMeta x t v = With x (Constraint t v)
 ---------------
 
 class Unifiable t v | t -> v where
-  unify :: (Pretty x) => x -> t (UTerm t v) -> t (UTerm t v) -> [WithMeta x t v]
+  unify :: Pretty x => x -> t (UTerm t v) -> t (UTerm t v) -> [WithMeta x t v]
 
 class Monad m => MonadBind t v m | v -> t, t -> v where
   lookupVar :: v -> m (Maybe (UTerm t v))

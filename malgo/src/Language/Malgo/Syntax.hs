@@ -67,7 +67,7 @@ instance S.HasType (Literal x) where
   typeOf Char {} = S.TyPrim S.CharT
   typeOf String {} = S.TyPrim S.StringT
 
-instance U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Literal x) where
+instance U.HasUTerm U.TypeF U.TypeVar (Literal x) where
   walkOn f v = f (U.typeOf v) $> v
 
 toUnboxed :: Literal Boxed -> Literal Unboxed
@@ -168,11 +168,11 @@ instance
   typeOf (Parens x _) = x ^. S.withType
 
 instance
-  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallClauseX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallPatX (U.HasUTerm U.TypeF U.TypeVar) x
   ) =>
-  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Exp x)
+  U.HasUTerm U.TypeF U.TypeVar (Exp x)
   where
   walkOn f = \case
     Var x v -> Var <$> U.walkOn f x <*> pure v
@@ -240,11 +240,11 @@ instance
   typeOf (NoBind _ e) = S.typeOf e
 
 instance
-  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallClauseX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallPatX (U.HasUTerm U.TypeF U.TypeVar) x
   ) =>
-  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Stmt x)
+  U.HasUTerm U.TypeF U.TypeVar (Stmt x)
   where
   walkOn f = \case
     Let x v e -> Let x v <$> U.walkOn f e
@@ -289,11 +289,11 @@ instance
   typeOf (Clause x _ _) = x ^. S.withType
 
 instance
-  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallClauseX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallPatX (U.HasUTerm U.TypeF U.TypeVar) x
   ) =>
-  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Clause x)
+  U.HasUTerm U.TypeF U.TypeVar (Clause x)
   where
   walkOn f (Clause x ps e) = Clause <$> U.walkOn f x <*> traverse (U.walkOn f) ps <*> traverse (U.walkOn f) e
 
@@ -359,11 +359,11 @@ instance
   typeOf (UnboxedP x _) = x ^. S.withType
 
 instance
-  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallClauseX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallPatX (U.HasUTerm U.TypeF U.TypeVar) x
   ) =>
-  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Pat x)
+  U.HasUTerm U.TypeF U.TypeVar (Pat x)
   where
   walkOn f = \case
     VarP x v -> VarP <$> U.walkOn f x <*> pure v
