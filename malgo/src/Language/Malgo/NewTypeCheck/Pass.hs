@@ -62,15 +62,15 @@ typeCheck rnEnv (Module name bg) = runKindUnifyT $
     (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
     zonkedBg <-
       pure bg'
-        >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonkUTerm >=> walkOn @KindF @KindVar (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
-        >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @(TypeF UKind) @(TypeVar UKind) $ zonkUTerm >=> walkOn @KindF @KindVar (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
-        >>= traverseOf (foreigns . traversed . _1 . ann) (zonkUTerm >=> walkOn @KindF @KindVar (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
+        >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonkUTerm >=> walkOn (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
+        >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @(TypeF UKind) $ zonkUTerm >=> walkOn (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
+        >>= traverseOf (foreigns . traversed . _1 . ann) (zonkUTerm >=> walkOn (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
     zonkedTcEnv <-
       pure tcEnv'
-        >>= traverseOf (varEnv . traversed) (walkOn @(TypeF UKind) @(TypeVar UKind) zonkUTerm >=> walkOn @KindF @KindVar (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
-        >>= traverseOf (typeEnv . traversed . typeConstructor) (walkOn @(TypeF UKind) @(TypeVar UKind) zonkUTerm >=> walkOn @KindF @KindVar (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
+        >>= traverseOf (varEnv . traversed) (walkOn @(TypeF UKind) zonkUTerm >=> walkOn (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
+        >>= traverseOf (typeEnv . traversed . typeConstructor) (walkOn @(TypeF UKind) zonkUTerm >=> walkOn (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
         >>= traverseOf (typeEnv . traversed . typeParameters . traversed . idMeta) (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed))
-        >>= traverseOf (typeEnv . traversed . valueConstructors . traversed . _2) (walkOn @(TypeF UKind) @(TypeVar UKind) zonkUTerm >=> walkOn @KindF @KindVar (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
+        >>= traverseOf (typeEnv . traversed . valueConstructors . traversed . _2) (walkOn @(TypeF UKind) zonkUTerm >=> walkOn (liftKindUnifyT . (zonkUTerm >=> bindUnknownToBoxed)))
     pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup :: (MonadIO m, MonadUniq m, MonadMalgo m) => BindGroup (Malgo 'Rename) -> StateT TcEnv (TypeUnifyT m) (BindGroup (Malgo 'NewTypeCheck))
@@ -132,8 +132,7 @@ tcForeigns ds =
   for ds $ \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) $ \tyVar -> do
       tv <- freshVar
-      let tyVar' = UVar $ tv {typeVarRigidName = show $ pPrint tyVar}
-      typeEnv . at tyVar ?= TypeDef tyVar' [] []
+      typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme@(Forall _ ty') <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (With ty' pos, name, tcType ty)
@@ -143,8 +142,7 @@ tcScSigs ds =
   for ds $ \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) $ \tyVar -> do
       tv <- freshVar
-      let tyVar' = UVar $ tv {typeVarRigidName = show $ pPrint tyVar}
-      typeEnv . at tyVar ?= TypeDef tyVar' [] []
+      typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (pos, name, tcType ty)

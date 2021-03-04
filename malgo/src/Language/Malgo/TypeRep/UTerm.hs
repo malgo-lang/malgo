@@ -67,8 +67,10 @@ instance IsKind a => IsKind (KindF a) where
   fromKind (S.TYPE rep) = Type rep
   fromKind (S.KArr k1 k2) = KArr (fromKind k1) (fromKind k2)
 
-newtype KindVar = KindVar (Id ())
+newtype KindVar = KindVar {_kindVar :: Id ()}
   deriving newtype (Eq, Ord, Show, Pretty, Hashable)
+
+makeLenses ''KindVar
 
 type UKind = UTerm KindF KindVar
 
@@ -172,20 +174,16 @@ instance (IsKind k, IsType a) => IsType (TypeF k a) where
 instance (IsKind k, IsType v) => S.HasType (TypeF k v) where
   typeOf = S.toType
 
-data TypeVar k = TypeVar
-  { typeVarId :: Id k,
-    typeVarRigidName :: String
-  }
-  deriving stock (Eq, Ord, Show, Generic)
+newtype TypeVar k = TypeVar {_typeVar :: Id k}
+  deriving newtype (Eq, Ord, Show, Generic, Hashable)
 
-instance Hashable (TypeVar k)
+makeLenses ''TypeVar
 
 instance Pretty k => Pretty (TypeVar k) where
-  pPrint TypeVar {typeVarId = v, typeVarRigidName = ""} = "'" <> pPrint v
-  pPrint TypeVar {typeVarRigidName = name} = "'" <> text name
+  pPrint (TypeVar v) = "'" <> pPrint v
 
 instance HasKind k (TypeVar k) where
-  kindOf v = typeVarId v ^. idMeta
+  kindOf v = v ^. typeVar . idMeta
 
 instance HasKind Kind PrimT where
   kindOf Int32T = Fix $ Type Int32Rep
@@ -196,7 +194,7 @@ instance HasKind Kind PrimT where
   kindOf StringT = Fix $ Type StringRep
 
 instance HasKind UKind UType where
-  kindOf (UVar v) = typeVarId v ^. idMeta
+  kindOf (UVar v) = v ^. typeVar . idMeta
   kindOf (UTerm t) = case t of
     TyApp t1 _ -> case kindOf t1 of
       UTerm (KArr _ k) -> k
@@ -223,8 +221,8 @@ instance HasKind Kind Type where
 
 instance HasUTerm KindF KindVar UType where
   walkOn f (UVar v) =
-    f (typeVarId v ^. idMeta) <&> \k ->
-      UVar v {typeVarId = typeVarId v & idMeta .~ k}
+    f (v ^. typeVar . idMeta) <&> \k ->
+      UVar (v & typeVar . idMeta .~ k)
   walkOn f (UTerm t) =
     UTerm <$> case t of
       TyVar v ->
@@ -279,9 +277,7 @@ unfreezeKind (Fix t) =
       TyPtr t -> TyPtr $ unfreezeKind t
 
 freezeKind' :: UTerm (TypeF UKind) (TypeVar UKind) -> Maybe (UTerm (TypeF Kind) (TypeVar Kind))
-freezeKind' (UVar v) = UVar <$> traverseOf (typeVarIdLens . idMeta) freeze v
-  where
-    typeVarIdLens = lens typeVarId (\v x -> v {typeVarId = x})
+freezeKind' (UVar v) = UVar <$> traverseOf (typeVar . idMeta) freeze v
 freezeKind' (UTerm t) =
   UTerm
     <$> case t of
@@ -295,9 +291,7 @@ freezeKind' (UTerm t) =
       TyPtr t -> TyPtr <$> freezeKind' t
 
 unfreezeKind' :: UTerm (TypeF Kind) (TypeVar Kind) -> UTerm (TypeF UKind) (TypeVar UKind)
-unfreezeKind' (UVar v) = UVar (over (typeVarIdLens . idMeta) unfreeze v)
-  where
-    typeVarIdLens = lens typeVarId (\v x -> v {typeVarId = x})
+unfreezeKind' (UVar v) = UVar (over (typeVar . idMeta) unfreeze v)
 unfreezeKind' (UTerm t) =
   UTerm $
     case t of
@@ -328,7 +322,7 @@ instance (Monad m, MonadUniq m, MonadIO m) => MonadBind (TypeF UKind) (TypeVar U
   lookupVar v = view (at v) <$> get
   freshVar = do
     kind <- liftKindUnifyT freshVar
-    TypeVar <$> newLocalId "t" (UVar kind) <*> pure ""
+    TypeVar <$> newLocalId "t" (UVar kind)
   bindVar x v t = do
     occursCheck x v t
     liftKindUnifyT $ solve [With x $ kindOf v :~ kindOf t]
@@ -368,9 +362,7 @@ generalize x bound term = do
   Forall as <$> zonkUTerm zonkedTerm
 
 toBound :: MonadUniq m => TypeVar k -> [Char] -> m (Id k)
-toBound TypeVar {typeVarId, typeVarRigidName} hint
-  | null typeVarRigidName = newLocalId hint (typeVarId ^. idMeta)
-  | otherwise = newLocalId typeVarRigidName (typeVarId ^. idMeta)
+toBound tv hint = newLocalId hint (tv ^. typeVar . idMeta)
 
 unboundFreevars :: (Eq v, Foldable t, Hashable v) => HashSet v -> UTerm t v -> HashSet v
 unboundFreevars bound t = HashSet.difference (freevars t) bound
