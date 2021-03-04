@@ -122,8 +122,8 @@ dsForeign ::
   Foreign (Malgo 'Refine) ->
   f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
 dsForeign (x@(With _ (_, primName)), name, _) = do
-  name' <- newCoreId name =<< dsType (GT.typeOf x)
-  let (paramTypes, retType) = splitTyArr (GT.typeOf x)
+  name' <- newCoreId name =<< dsType (x ^. GT.withType)
+  let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
   params <- traverse (newLocalId "$p") paramTypes'
@@ -138,7 +138,7 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
   mapAndUnzipM ?? cons $ \(conName, _) -> do
     -- lookup constructor infomations
     Just (GT.TyCon name') <- preview (typeDefEnv . at name . _Just . typeConstructor)
-    vcs <- lookupValueConstructors (over idMeta fromKind name') []
+    vcs <- lookupValueConstructors (over idMeta fromType name') []
     let conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType
@@ -184,7 +184,7 @@ dsExp (G.Var x name) = do
   --    2. 引数のない値コンストラクタ
   --   このうち、2.は「0引数関数の呼び出し」の形でのみ出現する（dsExp G.Conの節参照）
   --   よって、ここではxがTyLazyのときのみname'が0引数関数になるはずである。
-  case (GT.typeOf x, C.typeOf name') of
+  case (x ^. GT.withType, C.typeOf name') of
     -- TyLazyの型を検査
     (GT.TyLazy {}, [] :-> _) -> pure ()
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
@@ -222,12 +222,12 @@ dsExp (G.Apply info f x) = runDef $ do
       --   x の型と f の引数の型は必ずしも一致しない
       --   適切な型にcastする必要がある
       x' <- cast xType =<< dsExp x
-      Cast <$> dsType (GT.typeOf info) <*> bind (Call f' [x'])
+      Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
     _ -> bug Unreachable
 dsExp (G.Fn x (Clause _ [] ss : _)) = do
   -- lazy valueの脱糖衣
   ss' <- dsStmts ss
-  typ <- dsType (GT.typeOf x)
+  typ <- dsType (x ^. GT.withType)
   runDef do
     fun <- let_ typ $ Fun [] ss'
     pure $ Atom fun
@@ -248,7 +248,7 @@ dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
         cs
   body <- match ps' pss es (Error typ)
   obj <- curryFun ps' body
-  v <- newLocalId "$fun" =<< dsType (GT.typeOf x)
+  v <- newLocalId "$fun" =<< dsType (x ^. GT.withType)
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
 dsExp (G.Fn _ []) = bug Unreachable
 dsExp (G.Tuple _ es) = runDef $ do
@@ -385,12 +385,12 @@ match u pss es err = do
   errorDoc $ "match" <+> pPrint u <+> pPrint pss <+> pPrint (length es) <+> pPrint err
 
 -- Malgoの型をCoreの型に変換する
-dsType :: Monad m => GT.Type -> m C.Type
+dsType :: HasCallStack => Monad m => GT.Type -> m C.Type
 dsType GT.TyApp {} = pure AnyT
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
   case con ^. idMeta of
-    TYPE BoxedRep -> pure AnyT
+    TYPE (Rep BoxedRep) -> pure AnyT
     kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
@@ -406,12 +406,13 @@ dsType (GT.TyTuple ts) =
   SumT . pure . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dsType ts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
 dsType (GT.TyPtr t) = PtrT <$> dsType t
+dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: (MonadReader DsEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
-  case kindOf t of
-    TYPE BoxedRep -> do
+  case GT.typeOf t of
+    TYPE (Rep BoxedRep) -> do
       let (con, ts) = splitCon t
       vcs <- lookupValueConstructors con ts
       SumT
@@ -434,7 +435,7 @@ lookupName name = do
 
 lookupValueConstructors ::
   (MonadReader DsEnv m, MonadFail m) =>
-  Id Kind ->
+  Id GT.Type ->
   [GT.Type] ->
   m [(TcId, GT.Type)]
 lookupValueConstructors con ts = do

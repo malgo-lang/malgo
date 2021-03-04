@@ -27,7 +27,7 @@ import Data.Void
 import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsKind (..), IsType (..))
+import Language.Malgo.TypeRep.Static (IsType (..))
 
 -----------
 -- UTerm --
@@ -57,11 +57,6 @@ deriving stock instance (Generic1 t, Generic v) => Generic (UTerm t v)
 instance (Pretty v, Pretty1 t) => Pretty (UTerm t v) where
   pPrintPrec _ _ (UVar v) = pPrint v
   pPrintPrec l d (UTerm t) = liftPPrintPrec pPrintPrec l d t
-
-instance IsKind (t (UTerm t v)) => IsKind (UTerm t v) where
-  safeToKind (UVar _) = Nothing
-  safeToKind (UTerm t) = safeToKind t
-  fromKind k = UTerm $ fromKind k
 
 instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
   safeToType (UVar _) = Nothing

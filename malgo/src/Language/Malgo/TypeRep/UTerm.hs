@@ -31,7 +31,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsKind (fromKind, safeToKind), IsScheme, IsType (safeToType), PrimT (..), Rep (..))
+import Language.Malgo.TypeRep.Static (IsScheme, IsType (safeToType), PrimT (..), Rep (..))
 import qualified Language.Malgo.TypeRep.Static as S
 import Language.Malgo.Unify
 
@@ -61,11 +61,12 @@ instance Pretty1 KindF where
 instance Pretty a => Pretty (KindF a) where
   pPrintPrec l d k = liftPPrintPrec pPrintPrec l d k
 
-instance IsKind a => IsKind (KindF a) where
-  safeToKind (Type rep) = Just $ S.TYPE rep
-  safeToKind (KArr k1 k2) = S.KArr <$> safeToKind k1 <*> safeToKind k2
-  fromKind (S.TYPE rep) = Type rep
-  fromKind (S.KArr k1 k2) = KArr (fromKind k1) (fromKind k2)
+instance IsType a => IsType (KindF a) where
+  safeToType (Type rep) = Just $ S.TYPE (S.Rep rep)
+  safeToType (KArr k1 k2) = S.TyArr <$> safeToType k1 <*> safeToType k2
+  fromType (S.TYPE (S.Rep rep)) = Type rep
+  fromType (S.TyArr k1 k2) = KArr (S.fromType k1) (S.fromType k2)
+  fromType _ = error "invalid static type"
 
 newtype KindVar = KindVar {_kindVar :: Id ()}
   deriving newtype (Eq, Ord, Show, Pretty, Hashable)
@@ -153,26 +154,27 @@ instance Pretty k => Pretty1 (TypeF k) where
 instance (Pretty k, Pretty v) => Pretty (TypeF k v) where
   pPrintPrec l d t = liftPPrintPrec pPrintPrec l d t
 
-instance (IsKind k, IsType a) => IsType (TypeF k a) where
+instance (IsType k, IsType a) => IsType (TypeF k a) where
   safeToType (TyApp t1 t2) = S.TyApp <$> S.safeToType t1 <*> S.safeToType t2
-  safeToType (TyVar v) = S.TyVar <$> traverseOf idMeta S.safeToKind v
-  safeToType (TyCon c) = S.TyCon <$> traverseOf idMeta S.safeToKind c
+  safeToType (TyVar v) = S.TyVar <$> traverseOf idMeta S.safeToType v
+  safeToType (TyCon c) = S.TyCon <$> traverseOf idMeta S.safeToType c
   safeToType (TyPrim p) = Just $ S.TyPrim p
   safeToType (TyArr t1 t2) = S.TyArr <$> S.safeToType t1 <*> S.safeToType t2
   safeToType (TyTuple ts) = S.TyTuple <$> traverse S.safeToType ts
   safeToType (TyLazy t) = S.TyLazy <$> S.safeToType t
   safeToType (TyPtr t) = S.TyPtr <$> S.safeToType t
   fromType (S.TyApp t1 t2) = TyApp (S.fromType t1) (S.fromType t2)
-  fromType (S.TyVar v) = TyVar (over idMeta (\k -> k ^. re S._Kind) v)
-  fromType (S.TyCon c) = TyCon (over idMeta (\k -> k ^. re S._Kind) c)
+  fromType (S.TyVar v) = TyVar (over idMeta (\k -> k ^. re S._Type) v)
+  fromType (S.TyCon c) = TyCon (over idMeta (\k -> k ^. re S._Type) c)
   fromType (S.TyPrim p) = TyPrim p
   fromType (S.TyArr t1 t2) = TyArr (S.fromType t1) (S.fromType t2)
   fromType (S.TyTuple ts) = TyTuple (map S.fromType ts)
   fromType (S.TyLazy t) = TyLazy (S.fromType t)
   fromType (S.TyPtr t) = TyPtr (S.fromType t)
+  fromType _ = error "invalid static type"
 
-instance (IsKind k, IsType v) => S.HasType (TypeF k v) where
-  typeOf = S.toType
+instance (IsType k, IsType v) => S.HasType (TypeF k v) where
+  typeOf = S.typeOf . S.toType
 
 newtype TypeVar k = TypeVar {_typeVar :: Id k}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
@@ -340,12 +342,12 @@ instance HasUTerm (TypeF k) (TypeVar k) (Scheme k) where
 instance HasUTerm KindF KindVar (Scheme UKind) where
   walkOn f (Forall vs t) = Forall <$> traverse (idMeta f) vs <*> walkOn f t
 
-instance IsKind k => IsScheme (Scheme k) where
+instance IsType k => IsScheme (Scheme k) where
   safeToScheme (Forall vs t) = do
-    let vs' = map (over idMeta S.toKind) vs
+    let vs' = map (over idMeta S.toType) vs
     t' <- safeToType =<< freeze t
     Just $ S.Forall vs' t'
-  fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromKind) vs) (unfreeze $ S.fromType t)
+  fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromType) vs) (unfreeze $ S.fromType t)
 
 generalize :: (MonadUniq m, MonadBind (TypeF k) (TypeVar k) m, Pretty x, Ord k) => x -> HashSet (TypeVar k) -> UTerm (TypeF k) (TypeVar k) -> m (Scheme k)
 generalize x bound term = do

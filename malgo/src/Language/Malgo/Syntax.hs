@@ -153,22 +153,19 @@ instance
   typeOf (Parens x _) = U.typeOf x
 
 instance
-  ( ForallExpX S.HasType x,
-    ForallClauseX S.HasType x,
-    ForallPatX S.HasType x
-  ) =>
+  ForallExpX S.WithType x =>
   S.HasType (Exp x)
   where
-  typeOf (Var x _) = S.typeOf x
-  typeOf (Con x _) = S.typeOf x
-  typeOf (Unboxed x _) = S.typeOf x
-  typeOf (Boxed x _) = S.typeOf x
-  typeOf (Apply x _ _) = S.typeOf x
-  typeOf (OpApp x _ _ _) = S.typeOf x
-  typeOf (Fn x _) = S.typeOf x
-  typeOf (Tuple x _) = S.typeOf x
-  typeOf (Force x _) = S.typeOf x
-  typeOf (Parens x _) = S.typeOf x
+  typeOf (Var x _) = x ^. S.withType
+  typeOf (Con x _) = x ^. S.withType
+  typeOf (Unboxed x _) = x ^. S.withType
+  typeOf (Boxed x _) = x ^. S.withType
+  typeOf (Apply x _ _) = x ^. S.withType
+  typeOf (OpApp x _ _ _) = x ^. S.withType
+  typeOf (Fn x _) = x ^. S.withType
+  typeOf (Tuple x _) = x ^. S.withType
+  typeOf (Force x _) = x ^. S.withType
+  typeOf (Parens x _) = x ^. S.withType
 
 instance
   ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
@@ -236,10 +233,7 @@ instance
   typeOf (NoBind _ e) = U.typeOf e
 
 instance
-  ( ForallExpX S.HasType x,
-    ForallClauseX S.HasType x,
-    ForallPatX S.HasType x
-  ) =>
+  ForallExpX S.WithType x =>
   S.HasType (Stmt x)
   where
   typeOf (Let _ _ e) = S.typeOf e
@@ -289,13 +283,10 @@ instance
   typeOf (Clause x _ _) = U.typeOf x
 
 instance
-  ( ForallExpX S.HasType x,
-    ForallClauseX S.HasType x,
-    ForallPatX S.HasType x
-  ) =>
+  ForallClauseX S.WithType x =>
   S.HasType (Clause x)
   where
-  typeOf (Clause x _ _) = S.typeOf x
+  typeOf (Clause x _ _) = x ^. S.withType
 
 instance
   ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
@@ -359,16 +350,13 @@ instance
   typeOf (UnboxedP x _) = U.typeOf x
 
 instance
-  ( ForallExpX S.HasType x,
-    ForallClauseX S.HasType x,
-    ForallPatX S.HasType x
-  ) =>
+  ForallPatX S.WithType x =>
   S.HasType (Pat x)
   where
-  typeOf (VarP x _) = S.typeOf x
-  typeOf (ConP x _ _) = S.typeOf x
-  typeOf (TupleP x _) = S.typeOf x
-  typeOf (UnboxedP x _) = S.typeOf x
+  typeOf (VarP x _) = x ^. S.withType
+  typeOf (ConP x _ _) = x ^. S.withType
+  typeOf (TupleP x _) = x ^. S.withType
+  typeOf (UnboxedP x _) = x ^. S.withType
 
 instance
   ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
