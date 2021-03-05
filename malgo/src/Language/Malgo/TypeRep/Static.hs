@@ -4,6 +4,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -69,66 +70,14 @@ instance Pretty PrimT where
 -- Static representations --
 ----------------------------
 
---- | Definition of `Kind`
-data Kind
-  = -- | a kind
-    TYPE Rep
-  | -- | kind arrow
-    KArr Kind Kind
-  deriving stock (Eq, Ord, Show, Generic)
-  deriving anyclass (Binary)
-
-makePrisms ''Kind
-
-instance Pretty Kind where
-  pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
-  pPrintPrec l d (KArr k1 k2) =
-    maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
-
--- | Types that can be translated to `Kind`
-class IsKind a where
-  _Kind :: Prism' a Kind
-  _Kind = prism' fromKind safeToKind
-  safeToKind :: a -> Maybe Kind
-  safeToKind a = a ^? _Kind
-  toKind :: a -> Kind
-  toKind a = fromJust $ safeToKind a
-  fromKind :: Kind -> a
-  fromKind a = a ^. re _Kind
-  {-# MINIMAL _Kind | (safeToKind, fromKind) #-}
-
-instance IsKind Kind where
-  _Kind = prism id Right
-  safeToKind = Just
-  toKind = id
-
-instance IsKind (t (Fix t)) => IsKind (Fix t) where
-  safeToKind (Fix a) = safeToKind a
-  fromKind k = Fix (fromKind k)
-
--- | Types that have a `Kind`
-class HasKind a where
-  kindOf :: a -> Kind
-
-instance HasKind Kind where
-  kindOf = id
-
-instance HasKind PrimT where
-  kindOf Int32T = TYPE Int32Rep
-  kindOf Int64T = TYPE Int64Rep
-  kindOf FloatT = TYPE FloatRep
-  kindOf DoubleT = TYPE DoubleRep
-  kindOf CharT = TYPE CharRep
-  kindOf StringT = TYPE StringRep
-
 -- | Definition of `Type`
 data Type
   = -- | application of type constructor
     TyApp Type Type
   | -- | type variable
-    TyVar (Id Kind)
+    TyVar (Id Type)
   | -- | type constructor
-    TyCon (Id Kind)
+    TyCon (Id Type)
   | -- | primitive types
     TyPrim PrimT
   | -- | function type
@@ -139,6 +88,12 @@ data Type
     TyLazy Type
   | -- | pointer type
     TyPtr Type
+  | -- | kind
+    TYPE Type
+  | -- | type of runtime representation tags
+    TyRep
+  | -- | runtime representation tag
+    Rep Rep
   deriving stock (Eq, Ord, Show, Generic)
   deriving anyclass (Binary)
 
@@ -155,18 +110,9 @@ instance Pretty Type where
   pPrintPrec l _ (TyTuple ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
   pPrintPrec l _ (TyLazy t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
-
-instance HasKind Type where
-  kindOf (TyApp t1 _) = case kindOf t1 of
-    KArr _ k -> k
-    _ -> error "invalid kind"
-  kindOf (TyVar v) = v ^. idMeta
-  kindOf (TyCon c) = c ^. idMeta
-  kindOf (TyPrim p) = kindOf p
-  kindOf TyArr {} = TYPE BoxedRep
-  kindOf TyTuple {} = TYPE BoxedRep
-  kindOf TyLazy {} = TYPE BoxedRep
-  kindOf TyPtr {} = TYPE BoxedRep
+  pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
+  pPrintPrec _ _ TyRep = "#Rep"
+  pPrintPrec l _ (Rep rep) = pPrintPrec l 0 rep
 
 -- | Types that can be translated to `Type`
 class IsType a where
@@ -193,14 +139,34 @@ instance IsType (t (Fix t)) => IsType (Fix t) where
 class HasType a where
   typeOf :: a -> Type
 
+instance HasType PrimT where
+  typeOf Int32T = TYPE (Rep Int32Rep)
+  typeOf Int64T = TYPE (Rep Int64Rep)
+  typeOf FloatT = TYPE (Rep FloatRep)
+  typeOf DoubleT = TYPE (Rep DoubleRep)
+  typeOf CharT = TYPE (Rep CharRep)
+  typeOf StringT = TYPE (Rep StringRep)
+
 instance HasType Type where
-  typeOf = id
+  typeOf (TyApp t1 _) = case typeOf t1 of
+    TyArr _ k -> k
+    _ -> error "invalid kind"
+  typeOf (TyVar v) = v ^. idMeta
+  typeOf (TyCon c) = c ^. idMeta
+  typeOf (TyPrim p) = typeOf p
+  typeOf (TyArr _ t2) = typeOf t2
+  typeOf (TyTuple _) = TYPE (Rep BoxedRep)
+  typeOf (TyLazy _) = TYPE (Rep BoxedRep)
+  typeOf (TyPtr _) = TYPE (Rep BoxedRep)
+  typeOf (TYPE rep) = TYPE rep -- Type :: Type
+  typeOf TyRep = TyRep -- Rep :: Rep
+  typeOf (Rep _) = TyRep
 
 instance HasType Void where
   typeOf x = absurd x
 
 -- | Universally quantified type
-data Scheme = Forall [Id Kind] Type
+data Scheme = Forall [Id Type] Type
   deriving stock (Show, Generic)
 
 instance Binary Scheme
@@ -228,15 +194,19 @@ instance IsScheme Scheme where
   toScheme = id
 
 -- | Types qualified with `Type`
-type WithType a = With Type a
+class WithType a where
+  withType :: Lens' a Type
 
-instance HasType t => HasType (With t a) where
-  typeOf (With t _) = typeOf t
+instance WithType (With Type a) where
+  withType = ann
+
+instance WithType Void where
+  withType _ a = absurd a
 
 -- | Definition of Type constructor
 data TypeDef = TypeDef
   { _typeConstructor :: Type,
-    _typeParameters :: [Id Kind],
+    _typeParameters :: [Id Type],
     _valueConstructors :: [(Id ModuleName, Type)]
   }
   deriving stock (Show, Generic)
@@ -263,7 +233,7 @@ class IsTypeDef a where
 -- Utilities --
 ---------------
 
-splitCon :: Type -> (Id Kind, [Type])
+splitCon :: Type -> (Id Type, [Type])
 splitCon (TyCon con) = (con, [])
 splitCon (TyApp t1 t2) = over _2 (<> [t2]) $ splitCon t1
 splitCon _ = bug Unreachable
@@ -272,7 +242,7 @@ splitTyArr :: Type -> ([Type], Type)
 splitTyArr (TyArr t1 t2) = over _1 (t1 :) $ splitTyArr t2
 splitTyArr t = ([], t)
 
-applySubst :: HashMap (Id Kind) Type -> Type -> Type
+applySubst :: HashMap (Id Type) Type -> Type -> Type
 applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t2)
 applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v
 applySubst _ (TyCon c) = TyCon c
@@ -281,3 +251,6 @@ applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t
 applySubst subst (TyTuple ts) = TyTuple $ map (applySubst subst) ts
 applySubst subst (TyLazy t) = TyLazy $ applySubst subst t
 applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
+applySubst subst (TYPE rep) = TYPE $ applySubst subst rep
+applySubst _ TyRep = TyRep
+applySubst _ (Rep rep) = Rep rep

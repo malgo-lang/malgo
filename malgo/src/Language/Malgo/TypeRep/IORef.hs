@@ -55,13 +55,14 @@ instance Pretty Kind where
   pPrintPrec l d (KArr k1 k2) =
     maybeParens (d > 10) $ pPrintPrec l 11 k1 <+> "->" <+> pPrintPrec l 10 k2
 
-instance S.IsKind Kind where
-  _Kind = prism fromStatic (Right . toStatic)
+instance S.IsType Kind where
+  _Type = prism fromStatic (Right . toStatic)
     where
-      fromStatic (S.TYPE rep) = Type rep
-      fromStatic (S.KArr k1 k2) = KArr (fromStatic k1) (fromStatic k2)
-      toStatic (Type rep) = S.TYPE rep
-      toStatic (KArr k1 k2) = S.KArr (toStatic k1) (toStatic k2)
+      fromStatic (S.TYPE (S.Rep rep)) = Type rep
+      fromStatic (S.TyArr k1 k2) = KArr (fromStatic k1) (fromStatic k2)
+      fromStatic _ = error "invalid static type"
+      toStatic (Type rep) = S.TYPE (S.Rep rep)
+      toStatic (KArr k1 k2) = S.TyArr (toStatic k1) (toStatic k2)
 
 ---------------------
 -- Primitive Types --
@@ -91,8 +92,8 @@ instance Pretty Scheme where
   pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
 
 instance S.IsScheme Scheme where
-  safeToScheme (Forall vs t) = S.Forall <$> traverse (traverseOf idMeta S.safeToKind) vs <*> S.safeToType t
-  fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromKind) vs) (S.fromType t)
+  safeToScheme (Forall vs t) = S.Forall <$> traverse (traverseOf idMeta S.safeToType) vs <*> S.safeToType t
+  fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromType) vs) (S.fromType t)
 
 type TyVar = Id Kind
 
@@ -162,8 +163,8 @@ instance Pretty Type where
 
 instance S.IsType Type where
   safeToType (TyApp t1 t2) = S.TyApp <$> S.safeToType t1 <*> S.safeToType t2
-  safeToType (TyVar v) = S.TyVar <$> traverseOf idMeta S.safeToKind v
-  safeToType (TyCon c) = S.TyCon <$> traverseOf idMeta S.safeToKind c
+  safeToType (TyVar v) = S.TyVar <$> traverseOf idMeta S.safeToType v
+  safeToType (TyCon c) = S.TyCon <$> traverseOf idMeta S.safeToType c
   safeToType (TyPrim p) = Just $ S.TyPrim p
   safeToType (TyArr t1 t2) = S.TyArr <$> S.safeToType t1 <*> S.safeToType t2
   safeToType (TyTuple ts) = S.TyTuple <$> traverse S.safeToType ts
@@ -171,13 +172,14 @@ instance S.IsType Type where
   safeToType (TyPtr t) = S.TyPtr <$> S.safeToType t
   safeToType TyMeta {} = Nothing
   fromType (S.TyApp t1 t2) = TyApp (S.fromType t1) (S.fromType t2)
-  fromType (S.TyVar v) = TyVar (over idMeta (\k -> k ^. re S._Kind) v)
-  fromType (S.TyCon c) = TyCon (over idMeta (\k -> k ^. re S._Kind) c)
+  fromType (S.TyVar v) = TyVar (over idMeta (\k -> k ^. re S._Type) v)
+  fromType (S.TyCon c) = TyCon (over idMeta (\k -> k ^. re S._Type) c)
   fromType (S.TyPrim p) = TyPrim p
   fromType (S.TyArr t1 t2) = TyArr (S.fromType t1) (S.fromType t2)
   fromType (S.TyTuple ts) = TyTuple (map S.fromType ts)
   fromType (S.TyLazy t) = TyLazy (S.fromType t)
   fromType (S.TyPtr t) = TyPtr (S.fromType t)
+  fromType _ = error "invalid static type"
 
 -------------------
 -- Type variable --
@@ -232,10 +234,10 @@ instance Pretty TypeDef where
 instance IsTypeDef TypeDef where
   safeToTypeDef TypeDef {_constructor, _qualVars, _union} =
     S.TypeDef <$> S.safeToType _constructor
-      <*> traverse (idMeta S.safeToKind) _qualVars
+      <*> traverse (idMeta S.safeToType) _qualVars
       <*> traverse (_2 S.safeToType) _union
   fromTypeDef S.TypeDef {S._typeConstructor, S._typeParameters, S._valueConstructors} =
-    TypeDef (S.fromType _typeConstructor) (map (over idMeta S.fromKind) _typeParameters) (map (over _2 S.fromType) _valueConstructors)
+    TypeDef (S.fromType _typeConstructor) (map (over idMeta S.fromType) _typeParameters) (map (over _2 S.fromType) _valueConstructors)
 
 makeLenses ''TypeDef
 

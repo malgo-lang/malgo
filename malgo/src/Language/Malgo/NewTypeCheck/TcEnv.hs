@@ -22,13 +22,13 @@ import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static (IsKind (fromKind, safeToKind), IsType (fromType, safeToType), IsTypeDef (safeToTypeDef))
+import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), IsTypeDef (safeToTypeDef))
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.Unify hiding (lookupVar)
 
 data TcEnv = TcEnv
-  { _varEnv :: HashMap RnId (Scheme UKind),
+  { _varEnv :: HashMap RnId Scheme,
     _typeEnv :: HashMap RnTId TypeDef,
     _rnEnv :: RnEnv
   }
@@ -44,7 +44,7 @@ instance Pretty TcEnv where
             ]
         )
 
-instance HasUTerm (TypeF UKind) (TypeVar UKind) TcEnv where
+instance HasUTerm TypeF TypeVar TcEnv where
   walkOn f TcEnv {_varEnv, _typeEnv, _rnEnv} =
     TcEnv <$> traverseOf (traversed . walkOn) f _varEnv
       <*> traverseOf (traversed . walkOn) f _typeEnv
@@ -52,14 +52,14 @@ instance HasUTerm (TypeF UKind) (TypeVar UKind) TcEnv where
 
 data TypeDef = TypeDef
   { _typeConstructor :: UType,
-    _typeParameters :: [Id UKind],
+    _typeParameters :: [Id UType],
     _valueConstructors :: [(RnId, UType)]
   }
 
 instance Pretty TypeDef where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
 
-instance HasUTerm (TypeF UKind) (TypeVar UKind) TypeDef where
+instance HasUTerm TypeF TypeVar TypeDef where
   walkOn f TypeDef {_typeConstructor, _typeParameters, _valueConstructors} =
     TypeDef <$> f _typeConstructor
       <*> pure _typeParameters
@@ -68,9 +68,9 @@ instance HasUTerm (TypeF UKind) (TypeVar UKind) TypeDef where
 instance IsTypeDef TypeDef where
   safeToTypeDef TypeDef {_typeConstructor, _typeParameters, _valueConstructors} =
     Static.TypeDef
-      <$> safeToType _typeConstructor <*> traverse (idMeta safeToKind) _typeParameters <*> traverse (_2 safeToType) _valueConstructors
+      <$> safeToType _typeConstructor <*> traverse (idMeta safeToType) _typeParameters <*> traverse (_2 safeToType) _valueConstructors
   fromTypeDef Static.TypeDef {Static._typeConstructor, Static._typeParameters, Static._valueConstructors} =
-    TypeDef (fromType _typeConstructor) (map (over idMeta fromKind) _typeParameters) (map (over _2 fromType) _valueConstructors)
+    TypeDef (fromType _typeConstructor) (map (over idMeta fromType) _typeParameters) (map (over _2 fromType) _valueConstructors)
 
 makeLenses ''TcEnv
 makeLenses ''TypeDef

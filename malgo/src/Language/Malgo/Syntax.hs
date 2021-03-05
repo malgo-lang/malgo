@@ -67,7 +67,7 @@ instance S.HasType (Literal x) where
   typeOf Char {} = S.TyPrim S.CharT
   typeOf String {} = S.TyPrim S.StringT
 
-instance U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Literal x) where
+instance U.HasUTerm U.TypeF U.TypeVar (Literal x) where
   walkOn f v = f (U.typeOf v) $> v
 
 toUnboxed :: Literal Boxed -> Literal Unboxed
@@ -135,47 +135,41 @@ instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasTyp
     Parens x e -> Parens <$> I.overType f x <*> I.overType f e
 
 instance
-  ( ForallExpX (U.HasType U.UType) x,
-    ForallClauseX (U.HasType U.UType) x,
-    ForallPatX (U.HasType U.UType) x
-  ) =>
+  ForallExpX U.WithUType x =>
   U.HasType U.UType (Exp x)
   where
-  typeOf (Var x _) = U.typeOf x
-  typeOf (Con x _) = U.typeOf x
-  typeOf (Unboxed x _) = U.typeOf x
-  typeOf (Boxed x _) = U.typeOf x
-  typeOf (Apply x _ _) = U.typeOf x
-  typeOf (OpApp x _ _ _) = U.typeOf x
-  typeOf (Fn x _) = U.typeOf x
-  typeOf (Tuple x _) = U.typeOf x
-  typeOf (Force x _) = U.typeOf x
-  typeOf (Parens x _) = U.typeOf x
+  typeOf (Var x _) = x ^. U.withUType
+  typeOf (Con x _) = x ^. U.withUType
+  typeOf (Unboxed x _) = x ^. U.withUType
+  typeOf (Boxed x _) = x ^. U.withUType
+  typeOf (Apply x _ _) = x ^. U.withUType
+  typeOf (OpApp x _ _ _) = x ^. U.withUType
+  typeOf (Fn x _) = x ^. U.withUType
+  typeOf (Tuple x _) = x ^. U.withUType
+  typeOf (Force x _) = x ^. U.withUType
+  typeOf (Parens x _) = x ^. U.withUType
 
 instance
-  ( ForallExpX S.HasType x,
-    ForallClauseX S.HasType x,
-    ForallPatX S.HasType x
-  ) =>
+  ForallExpX S.WithType x =>
   S.HasType (Exp x)
   where
-  typeOf (Var x _) = S.typeOf x
-  typeOf (Con x _) = S.typeOf x
-  typeOf (Unboxed x _) = S.typeOf x
-  typeOf (Boxed x _) = S.typeOf x
-  typeOf (Apply x _ _) = S.typeOf x
-  typeOf (OpApp x _ _ _) = S.typeOf x
-  typeOf (Fn x _) = S.typeOf x
-  typeOf (Tuple x _) = S.typeOf x
-  typeOf (Force x _) = S.typeOf x
-  typeOf (Parens x _) = S.typeOf x
+  typeOf (Var x _) = x ^. S.withType
+  typeOf (Con x _) = x ^. S.withType
+  typeOf (Unboxed x _) = x ^. S.withType
+  typeOf (Boxed x _) = x ^. S.withType
+  typeOf (Apply x _ _) = x ^. S.withType
+  typeOf (OpApp x _ _ _) = x ^. S.withType
+  typeOf (Fn x _) = x ^. S.withType
+  typeOf (Tuple x _) = x ^. S.withType
+  typeOf (Force x _) = x ^. S.withType
+  typeOf (Parens x _) = x ^. S.withType
 
 instance
-  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallClauseX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallPatX (U.HasUTerm U.TypeF U.TypeVar) x
   ) =>
-  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Exp x)
+  U.HasUTerm U.TypeF U.TypeVar (Exp x)
   where
   walkOn f = \case
     Var x v -> Var <$> U.walkOn f x <*> pure v
@@ -226,31 +220,25 @@ instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasTyp
     NoBind x e -> NoBind x <$> I.overType f e
 
 instance
-  ( ForallExpX (U.HasType U.UType) x,
-    ForallClauseX (U.HasType U.UType) x,
-    ForallPatX (U.HasType U.UType) x
-  ) =>
+  ForallExpX U.WithUType x =>
   U.HasType U.UType (Stmt x)
   where
   typeOf (Let _ _ e) = U.typeOf e
   typeOf (NoBind _ e) = U.typeOf e
 
 instance
-  ( ForallExpX S.HasType x,
-    ForallClauseX S.HasType x,
-    ForallPatX S.HasType x
-  ) =>
+  ForallExpX S.WithType x =>
   S.HasType (Stmt x)
   where
   typeOf (Let _ _ e) = S.typeOf e
   typeOf (NoBind _ e) = S.typeOf e
 
 instance
-  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallClauseX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallPatX (U.HasUTerm U.TypeF U.TypeVar) x
   ) =>
-  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Stmt x)
+  U.HasUTerm U.TypeF U.TypeVar (Stmt x)
   where
   walkOn f = \case
     Let x v e -> Let x v <$> U.walkOn f e
@@ -280,29 +268,23 @@ instance (ForallExpX I.HasType x, ForallClauseX I.HasType x, ForallPatX I.HasTyp
     Clause <$> I.overType f x <*> traverse (I.overType f) ps <*> traverse (I.overType f) e
 
 instance
-  ( ForallExpX (U.HasType U.UType) x,
-    ForallClauseX (U.HasType U.UType) x,
-    ForallPatX (U.HasType U.UType) x
-  ) =>
+  ForallClauseX U.WithUType x =>
   U.HasType U.UType (Clause x)
   where
-  typeOf (Clause x _ _) = U.typeOf x
+  typeOf (Clause x _ _) = x ^. U.withUType
 
 instance
-  ( ForallExpX S.HasType x,
-    ForallClauseX S.HasType x,
-    ForallPatX S.HasType x
-  ) =>
+  ForallClauseX S.WithType x =>
   S.HasType (Clause x)
   where
-  typeOf (Clause x _ _) = S.typeOf x
+  typeOf (Clause x _ _) = x ^. S.withType
 
 instance
-  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallClauseX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallPatX (U.HasUTerm U.TypeF U.TypeVar) x
   ) =>
-  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Clause x)
+  U.HasUTerm U.TypeF U.TypeVar (Clause x)
   where
   walkOn f (Clause x ps e) = Clause <$> U.walkOn f x <*> traverse (U.walkOn f) ps <*> traverse (U.walkOn f) e
 
@@ -347,35 +329,29 @@ instance (ForallPatX I.HasType x) => I.HasType (Pat x) where
     UnboxedP x u -> UnboxedP <$> I.overType f x <*> I.overType f u
 
 instance
-  ( ForallExpX (U.HasType U.UType) x,
-    ForallClauseX (U.HasType U.UType) x,
-    ForallPatX (U.HasType U.UType) x
-  ) =>
+  ForallPatX U.WithUType x =>
   U.HasType U.UType (Pat x)
   where
-  typeOf (VarP x _) = U.typeOf x
-  typeOf (ConP x _ _) = U.typeOf x
-  typeOf (TupleP x _) = U.typeOf x
-  typeOf (UnboxedP x _) = U.typeOf x
+  typeOf (VarP x _) = x ^. U.withUType
+  typeOf (ConP x _ _) = x ^. U.withUType
+  typeOf (TupleP x _) = x ^. U.withUType
+  typeOf (UnboxedP x _) = x ^. U.withUType
 
 instance
-  ( ForallExpX S.HasType x,
-    ForallClauseX S.HasType x,
-    ForallPatX S.HasType x
-  ) =>
+  ForallPatX S.WithType x =>
   S.HasType (Pat x)
   where
-  typeOf (VarP x _) = S.typeOf x
-  typeOf (ConP x _ _) = S.typeOf x
-  typeOf (TupleP x _) = S.typeOf x
-  typeOf (UnboxedP x _) = S.typeOf x
+  typeOf (VarP x _) = x ^. S.withType
+  typeOf (ConP x _ _) = x ^. S.withType
+  typeOf (TupleP x _) = x ^. S.withType
+  typeOf (UnboxedP x _) = x ^. S.withType
 
 instance
-  ( ForallExpX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallClauseX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x,
-    ForallPatX (U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind)) x
+  ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallClauseX (U.HasUTerm U.TypeF U.TypeVar) x,
+    ForallPatX (U.HasUTerm U.TypeF U.TypeVar) x
   ) =>
-  U.HasUTerm (U.TypeF U.UKind) (U.TypeVar U.UKind) (Pat x)
+  U.HasUTerm U.TypeF U.TypeVar (Pat x)
   where
   walkOn f = \case
     VarP x v -> VarP <$> U.walkOn f x <*> pure v
