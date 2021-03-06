@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -38,8 +39,14 @@ rendered = to P.render
 toText :: Pretty a => Getter a String
 toText = pretty . rendered
 
-errorDoc :: HasCallStack => Doc -> a
+errorDoc ::
+#ifdef DEBUG
+  HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ P.render x
+#else
+  Doc -> a
+errorDoc x = Prelude.errorWithoutStackTrace $ P.render x
+#endif
 
 class Pretty1 f where
   liftPPrintPrec :: (PrettyLevel -> Rational -> a -> Doc) -> PrettyLevel -> Rational -> f a -> Doc

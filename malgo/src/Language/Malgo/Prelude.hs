@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -42,7 +43,11 @@ viewLine linum = do
   s <- liftIO $ readFile srcFileName
   pure $ lines s !! (linum - 1)
 
+#ifdef DEBUG
 errorOn :: (HasCallStack, MonadMalgo m, MonadIO m) => SourcePos -> Doc -> m a
+#else
+errorOn :: (MonadMalgo m, MonadIO m) => SourcePos -> Doc -> m a
+#endif
 errorOn pos x = do
   line <- viewLine (unPos $ sourceLine pos)
   errorDoc $

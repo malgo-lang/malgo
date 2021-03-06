@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
@@ -212,11 +213,13 @@ zonkUTerm (UVar v) = do
   pure $ fromMaybe (UVar v) mterm
 zonkUTerm (UTerm t) = UTerm <$> traverse zonkUTerm t
 
+#ifdef DEBUG
 errorWithMeta :: (HasCallStack, Pretty x) => x -> Doc -> a
+#else
+errorWithMeta :: Pretty x => x -> Doc -> a
+#endif
 errorWithMeta meta msg =
-  errorDoc $
-    "error:" $+$ nest 2 msg
-      $$ "info:" <+> pPrint meta
+  errorDoc $ "error:" $+$ nest 2 msg $$ "info:" <+> pPrint meta
 
 unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
 unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
