@@ -102,7 +102,7 @@ makePrisms ''Type
 instance Pretty Type where
   pPrintPrec l d (TyApp t1 t2) =
     maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
-  pPrintPrec l _ (TyVar v) = pPrintPrec l 0 v
+  pPrintPrec _ _ (TyVar v) = pprIdName v
   pPrintPrec l _ (TyCon c) = pPrintPrec l 0 c
   pPrintPrec l _ (TyPrim p) = pPrintPrec l 0 p
   pPrintPrec l d (TyArr t1 t2) =
@@ -172,7 +172,7 @@ data Scheme = Forall [Id Type] Type
 instance Binary Scheme
 
 instance Pretty Scheme where
-  pPrint (Forall vs t) = "forall" <+> sep (map pPrint vs) <> "." <+> pPrint t
+  pPrint (Forall vs t) = "forall" <+> sep (map pprIdName vs) <> "." <+> pPrint t
 
 makePrisms ''Scheme
 
