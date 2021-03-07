@@ -1,0 +1,27 @@
+module Fib = {
+  import Builtin;
+  import Prelude;
+
+  foreign import newline :: () -> ();
+
+  infix 4 (<=);
+  (<=) = { (Int32# x) (Int32# y) -> isTrue# (ge_Int32# y x) };
+
+  infixl 6 (+);
+  (+) = { x y -> add_Int32 x y };
+
+  infixl 6 (-);
+  (-) = { x y -> sub_Int32 x y };
+
+  fib = { n ->
+    if (n <= 1)
+      { 1 }
+      { fib (n - 1) + fib (n - 2) }
+  };
+
+  main = {
+    print_Int32 (fib 5)
+  };
+}
+
+-- Expected: 8

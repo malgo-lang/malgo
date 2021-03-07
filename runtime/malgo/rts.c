@@ -86,10 +86,16 @@ double div_double(double x, double y)
 }
 
 // Comparison operators
+int32_t ge_int32(int32_t x, int32_t y)
+{
+  return x >= y;
+}
+
 int32_t ge_int64(int64_t x, int64_t y)
 {
   return x >= y;
 }
+
 int32_t ge_double(double x, double y)
 {
   return x >= y;

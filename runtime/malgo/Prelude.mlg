@@ -70,6 +70,9 @@ module Prelude = {
   foreign import print_string :: String# -> ();
   foreign import newline :: () -> ();
 
+  foreign import print_int32 :: Int32# -> ();
+  foreign import print_int64 :: Int64# -> ();
+
   putStr :: String -> ();
   putStr = { (String# str) -> print_string str };
 
@@ -78,6 +81,12 @@ module Prelude = {
     print_string str;
     newline ()
   };
+
+  print_Int32 :: Int32 -> ();
+  print_Int32 = { Int32# i -> print_int32 i };
+
+  print_Int64 :: Int64 -> ();
+  print_Int64 = { Int64# i -> print_int64 i };
 
   appendString = { (String# s1) (String# s2) ->
     String# (appendString# s1 s2)

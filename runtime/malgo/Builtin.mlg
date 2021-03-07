@@ -112,6 +112,11 @@ module Builtin = {
   isTrue# = { 1# -> True
             | _  -> False };
 
+  foreign import ge_int32 :: Int32# -> Int32# -> Int32#;
+
+  ge_Int32# :: Int32# -> Int32# -> Int32#;
+  ge_Int32# = { x y -> ge_int32 x y };
+
   foreign import ge_int64 :: Int64# -> Int64# -> Int32#;
 
   ge_Int64# :: Int64# -> Int64# -> Int32#;
