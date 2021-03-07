@@ -25,6 +25,7 @@ module Koriel.Id
     newGlobalId,
     newLocalId,
     newTopLevelId,
+    pprIdName,
   )
 where
 
@@ -55,22 +56,25 @@ instance Hashable (Id a) where
 
 instance Binary a => Binary (Id a)
 
+pprIdName :: Id a -> Doc
+pprIdName Id {_idName} = text _idName
+
 #ifdef DEBUG
 instance Pretty a => Pretty (Id a) where
   pPrint (Id n _ m _ True) = text n <> braces (pPrint m)
-  pPrint (Id n u m _ False) = text n <> "." <> text (show u) <> braces (pPrint m)
+  pPrint (Id n u m _ False) = text n <> "_" <> text (show u) <> braces (pPrint m)
 
 instance Pretty1 Id where
   liftPPrintPrec ppr l d (Id n _ m _ True) = text n <> braces (ppr l d m)
-  liftPPrintPrec ppr l d (Id n u m _ False) = text n <> "." <> text (show u) <> braces (ppr l d m)
+  liftPPrintPrec ppr l d (Id n u m _ False) = text n <> "_" <> text (show u) <> braces (ppr l d m)
 #else
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n _ _ _ True) = text n
-  pPrint (Id n u _ _ False) = text n <> "." <> text (show u)
+  pPrint Id {_idName, _idUniq, _idIsExternal = False} = text _idName <> "_" <> pPrint _idUniq
+  pPrint Id {_idName, _idIsExternal = True} = text _idName
 
 instance Pretty1 Id where
-  liftPPrintPrec _ _ _ (Id n _ _ _ True) = text n
-  liftPPrintPrec _ _ _ (Id n u _ _ False) = text n <> "." <> text (show u)
+  liftPPrintPrec _ _ _ Id {_idName, _idUniq, _idIsExternal = False} = text _idName <> "_" <> pPrint _idUniq
+  liftPPrintPrec _ _ _ Id {_idName, _idIsExternal = True} = text _idName
 #endif
 
 instance ToJSON a => ToJSON (Id a) where

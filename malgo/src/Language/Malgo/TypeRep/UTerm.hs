@@ -64,7 +64,7 @@ type Type = Fix TypeF
 instance Pretty1 TypeF where
   liftPPrintPrec ppr l d (TyApp t1 t2) =
     maybeParens (d > 10) $ sep [ppr l 10 t1, ppr l 11 t2]
-  liftPPrintPrec ppr l d (TyVar v) = liftPPrintPrec ppr l d v
+  liftPPrintPrec _ _ _ (TyVar v) = pprIdName v
   liftPPrintPrec ppr l d (TyCon c) = liftPPrintPrec ppr l d c
   liftPPrintPrec _ _ _ (TyPrim p) = pPrint p
   liftPPrintPrec ppr l d (TyArr t1 t2) =
@@ -163,7 +163,7 @@ data Scheme = Forall [Id Type] (UTerm TypeF TypeVar)
   deriving stock (Eq, Ord, Show, Generic)
 
 instance Pretty Scheme where
-  pPrintPrec l _ (Forall vs t) = "forall" <+> sep (map (pPrintPrec l 0) vs) <> "." <+> pPrintPrec l 0 t
+  pPrintPrec l _ (Forall vs t) = "forall" <+> sep (map pprIdName vs) <> "." <+> pPrintPrec l 0 t
 
 instance HasUTerm TypeF TypeVar Scheme where
   walkOn f (Forall vs t) = Forall vs <$> walkOn f t
