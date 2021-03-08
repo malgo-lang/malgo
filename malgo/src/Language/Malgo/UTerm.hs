@@ -11,6 +11,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -18,12 +19,14 @@ module Language.Malgo.UTerm where
 
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.Void
 import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.Static (IsType (..))
+import Language.Malgo.Unify
 
 -----------
 -- UTerm --
@@ -66,10 +69,6 @@ freeze (UTerm t) = Fix <$> traverse freeze t
 unfreeze :: Functor t => Fix t -> UTerm t v
 unfreeze = UTerm . fmap unfreeze . unFix
 
-freevars :: (Eq a, Foldable t, Hashable a) => UTerm t a -> HashSet a
-freevars (UVar v) = HashSet.singleton v
-freevars (UTerm t) = foldMap freevars t
-
 class HasUTerm t v a where
   walkOn :: Traversal' a (UTerm t v)
 
@@ -81,3 +80,19 @@ instance HasUTerm t v x => HasUTerm t v (With x a) where
 
 instance HasUTerm t v Void where
   walkOn _ x = absurd x
+
+instance (Eq v, Hashable v, Unifiable1 t, Eq1 t, Pretty v, Pretty1 t) => Unifiable (UTerm t v) where
+  type Var (UTerm t v) = v
+  unify _ (UVar v1) (UVar v2)
+    | v1 == v2 = (mempty, [])
+    | otherwise = (HashMap.singleton v1 (UVar v2), [])
+  unify _ (UVar v) (UTerm t) = (HashMap.singleton v (UTerm t), [])
+  unify _ (UTerm t) (UVar v) = (HashMap.singleton v (UTerm t), [])
+  unify x (UTerm t1) (UTerm t2) = liftUnify unify x t1 t2
+  equiv (UVar v1) (UVar v2)
+    | v1 == v2 = Just mempty
+    | otherwise = Just $ HashMap.singleton v1 v2
+  equiv (UTerm t1) (UTerm t2) = liftEquiv equiv t1 t2
+  equiv _ _ = Nothing
+  freevars (UVar v) = HashSet.singleton v
+  freevars (UTerm t) = liftFreevars freevars t
