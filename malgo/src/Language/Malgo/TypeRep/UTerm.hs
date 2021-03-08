@@ -32,6 +32,7 @@ import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.Static (IsScheme, IsType (safeToType), PrimT (..), Rep (..))
 import qualified Language.Malgo.TypeRep.Static as S
+import Language.Malgo.UTerm
 import Language.Malgo.Unify
 
 ----------

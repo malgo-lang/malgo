@@ -25,7 +25,7 @@ import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), IsTypeDef (safeToTypeDef))
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
-import Language.Malgo.Unify hiding (lookupVar)
+import Language.Malgo.UTerm
 
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId Scheme,
