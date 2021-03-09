@@ -191,7 +191,7 @@ tcScDefs ds@((pos, _, _) : _) = do
             | otherwise -> varEnv . at name ?= declaredScheme
   pure ds
 
-tcExpr :: (MonadBind UType m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Exp (Malgo 'Rename) -> WriterT [WithMeta SourcePos UType] m (Exp (Malgo 'NewTypeCheck))
+tcExpr :: (MonadBind UType m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Exp (Malgo 'Rename) -> WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'NewTypeCheck))
 tcExpr (Var pos v) = do
   vType <- instantiate =<< lookupVar pos v
   pure $ Var (With vType pos) v
@@ -235,13 +235,13 @@ tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (With (typeOf e') pos) e'
 
-tcClause :: (MonadBind UType m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Clause (Malgo 'Rename) -> WriterT [WithMeta SourcePos UType] m (Clause (Malgo 'NewTypeCheck))
+tcClause :: (MonadBind UType m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Clause (Malgo 'Rename) -> WriterT [With SourcePos (Constraint UType)] m (Clause (Malgo 'NewTypeCheck))
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
   pure $ Clause (With (foldr (\l r -> UTerm $ TyArr (typeOf l) r) (typeOf $ last ss') pats') pos) pats' ss'
 
-tcPatterns :: (MonadBind UType m, MonadState TcEnv m, MonadIO m, MonadMalgo m) => [Pat (Malgo 'Rename)] -> WriterT [WithMeta SourcePos UType] m [Pat (Malgo 'NewTypeCheck)]
+tcPatterns :: (MonadBind UType m, MonadState TcEnv m, MonadIO m, MonadMalgo m) => [Pat (Malgo 'Rename)] -> WriterT [With SourcePos (Constraint UType)] m [Pat (Malgo 'NewTypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- UVar <$> freshVar @UType
@@ -276,10 +276,10 @@ splitTyArr (UVar _) = bug Unreachable
 splitTyArr (UTerm (TyArr t1 t2)) = let (ps, r) = splitTyArr t2 in (t1 : ps, r)
 splitTyArr t = ([], t)
 
-tcStmts :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind UType m, MonadUniq m) => [Stmt (Malgo 'Rename)] -> WriterT [WithMeta SourcePos UType] m [Stmt (Malgo 'NewTypeCheck)]
+tcStmts :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind UType m, MonadUniq m) => [Stmt (Malgo 'Rename)] -> WriterT [With SourcePos (Constraint UType)] m [Stmt (Malgo 'NewTypeCheck)]
 tcStmts = traverse tcStmt
 
-tcStmt :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind UType m, MonadUniq m) => Stmt (Malgo 'Rename) -> WriterT [WithMeta SourcePos UType] m (Stmt (Malgo 'NewTypeCheck))
+tcStmt :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind UType m, MonadUniq m) => Stmt (Malgo 'Rename) -> WriterT [With SourcePos (Constraint UType)] m (Stmt (Malgo 'NewTypeCheck))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   env <- use varEnv

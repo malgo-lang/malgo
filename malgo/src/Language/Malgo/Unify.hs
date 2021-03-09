@@ -39,22 +39,20 @@ data Constraint t = t :~ t
 instance (Pretty t) => Pretty (Constraint t) where
   pPrint (t1 :~ t2) = pPrint t1 <+> "~" <+> pPrint t2
 
-type WithMeta x t = With x (Constraint t)
-
 ---------------
 -- Unifiable --
 ---------------
 
 class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
   type Var t
-  unify :: Pretty x => x -> t -> t -> (HashMap (Var t) t, [WithMeta x t])
+  unify :: Pretty x => x -> t -> t -> (HashMap (Var t) t, [With x (Constraint t)])
   equiv :: t -> t -> Maybe (HashMap (Var t) (Var t))
   freevars :: t -> HashSet (Var t)
   occursCheck :: (Eq (Var t), Hashable (Var t)) => Var t -> t -> Bool
   occursCheck v t = HashSet.member v (freevars t)
 
 class Unifiable1 t where
-  liftUnify :: (Pretty x, Unifiable a) => (x -> a -> a -> (HashMap (Var a) a, [WithMeta x a])) -> x -> t a -> t a -> (HashMap (Var a) a, [WithMeta x a])
+  liftUnify :: (Pretty x, Unifiable a) => (x -> a -> a -> (HashMap (Var a) a, [With x (Constraint a)])) -> x -> t a -> t a -> (HashMap (Var a) a, [With x (Constraint a)])
   liftEquiv :: Unifiable a => (a -> a -> Maybe (HashMap (Var a) (Var a))) -> t a -> t a -> Maybe (HashMap (Var a) (Var a))
   liftFreevars :: Unifiable a => (a -> HashSet (Var a)) -> t a -> HashSet (Var a)
   liftOccursCheck :: Unifiable a => (Var a -> a -> Bool) -> Var a -> t a -> Bool
@@ -101,7 +99,7 @@ solve ::
     MonadBind t m,
     Unifiable t
   ) =>
-  [WithMeta x t] ->
+  [With x (Constraint t)] ->
   m ()
 solve = solveLoop 5000
 
@@ -111,7 +109,7 @@ solveLoop ::
     Unifiable t
   ) =>
   Int ->
-  [WithMeta x t] ->
+  [With x (Constraint t)] ->
   m ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
@@ -120,7 +118,7 @@ solveLoop n (With x (t1 :~ t2) : cs) = do
   ifor_ binds $ \var term -> bindVar x var term
   solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
-zonkConstraint :: (Applicative f, MonadBind t f) => WithMeta x t -> f (WithMeta x t)
+zonkConstraint :: (Applicative f, MonadBind t f) => With x (Constraint t) -> f (With x (Constraint t))
 zonkConstraint (With m (x :~ y)) =
   With m <$> ((:~) <$> zonk x <*> zonk y)
 
@@ -130,4 +128,3 @@ errorWithMeta meta msg =
 
 unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
 unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
-
