@@ -31,7 +31,7 @@ module DesignSketch = {
   hello = { x ->
     -- string interpolation
     putStrLn $"Hello, {x.name}"
-  } 
+  }
 
   -- `with` module
   -- モジュールのネストを考えるとあまり賢くない？
@@ -44,13 +44,13 @@ module DesignSketch = {
     push = { x self -> Cons x self }
     pop = { self ->
       case self
-        { Nil -> error "..." 
+        { Nil -> error "..."
         | Cons x xs -> (x, xs)
         }
     }
     reverse = ...
   }
-  {-
+  {- above code desugared to
   module List = {
     data List a = Nil | Cons a (List a)
     length : List a -> Int
@@ -58,10 +58,10 @@ module DesignSketch = {
     push : a -> List a -> List a
     push = { x self -> Cons x self }
     ...
-  } 
-  import List (List(..))
+  }
+  import List (List(..)) -- TODO: OCamlにおけるmodule { type t = ... }ってどう扱う？
   -}
-  
+
   useList = {
     let xs = List.reverse [1, 2, 3]
     assert $ (xs |> List.push x |> List.length) == 4
@@ -82,10 +82,30 @@ module DesignSketch = {
     Functor.map f xs -- モジュールFunctorを導入せず、map f xsにするべきかも
   }
 
+  -- Can I implement interface as sugar syntax of ∃x. t
+  type SimplePackage = forsome x. { a : x, f : x -> x }
+
+  packInt64 : forsome x. { a : x, f : x -> x }
+  packInt64 = pack (SimplePackage Int64) {a = 0, f = {x -> succ x}}
+
+  usePackInt64 : Int64
+  usePackInt64 = {
+    let pack (SimplePackage x) {a = a, f = f} = packInt64
+    f (f (f a))
+  }
+
+  -- こういうことが素朴にはできない?
+  -- 存在型についてもう少し調べないと
+  useSimplePackage : (forsome x. { a : x, f : x -> x }) -> ???
+  useSimplePackage = { pkg ->
+    let pack (SimplePackage x) {a = a, f = f} = pkg
+    f (f (f a))
+  }
+
   module Monad = {
     interface Monad m = {
       bind : m a -> (a -> m b) -> m b
-      return : a -> m a 
+      return : a -> m a
     }
   }
 
@@ -98,7 +118,7 @@ module DesignSketch = {
 
   -- computation expression
   useMonad : List Int
-  useMonad = Monad { 
+  useMonad = Monad {
     -- Monad.bind [1, 2, 3] { a -> Monad.return (a + 1) }
     let! a = [1, 2, 3]
     return (a + 1)
