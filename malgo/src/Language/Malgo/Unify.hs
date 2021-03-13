@@ -1,3 +1,4 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -9,8 +10,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -19,90 +23,9 @@ module Language.Malgo.Unify where
 import Control.Monad.Cont (ContT)
 import Control.Monad.Identity (IdentityT)
 import qualified Control.Monad.State.Lazy as Lazy
-import Data.Fix
-import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
-import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
-import Data.Maybe (fromMaybe)
-import Data.Void
-import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsType (..))
-
------------
--- UTerm --
------------
-
-data UTerm t v where
-  UVar :: v -> UTerm t v
-  UTerm :: t (UTerm t v) -> UTerm t v
-
-instance (Eq v, Eq1 t) => Eq (UTerm t v) where
-  (UVar v1) == (UVar v2) = v1 == v2
-  (UTerm t1) == (UTerm t2) = liftEq (==) t1 t2
-  _ == _ = False
-
-instance (Ord v, Ord1 t) => Ord (UTerm t v) where
-  compare (UVar v1) (UVar v2) = compare v1 v2
-  compare (UTerm t1) (UTerm t2) = liftCompare compare t1 t2
-  compare UVar {} UTerm {} = LT
-  compare UTerm {} UVar {} = GT
-
-instance (Show v, Show1 t) => Show (UTerm t v) where
-  showsPrec d (UVar v) = showParen (d >= 11) $ showString "UVar " . showsPrec 11 v
-  showsPrec d (UTerm t) = showParen (d >= 11) $ showString "UTerm " . liftShowsPrec showsPrec showList 11 t
-
-deriving stock instance (Generic1 t, Generic v) => Generic (UTerm t v)
-
-instance (Pretty v, Pretty1 t) => Pretty (UTerm t v) where
-  pPrintPrec _ _ (UVar v) = pPrint v
-  pPrintPrec l d (UTerm t) = liftPPrintPrec pPrintPrec l d t
-
-instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
-  safeToType (UVar _) = Nothing
-  safeToType (UTerm t) = safeToType t
-  fromType t = UTerm $ fromType t
-
-freeze :: Traversable t => UTerm t v -> Maybe (Fix t)
-freeze (UVar _) = Nothing
-freeze (UTerm t) = Fix <$> traverse freeze t
-
-unfreeze :: Functor t => Fix t -> UTerm t v
-unfreeze = UTerm . fmap unfreeze . unFix
-
-freevars :: (Eq a, Foldable t, Hashable a) => UTerm t a -> HashSet a
-freevars (UVar v) = HashSet.singleton v
-freevars (UTerm t) = foldMap freevars t
-
-occursCheck :: (Eq a, Foldable t, Pretty x, Pretty a, Pretty1 t, Applicative f, Hashable a) => x -> a -> UTerm t a -> f ()
-occursCheck x v t =
-  if HashSet.member v (freevars t)
-    then errorWithMeta x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    else pure ()
-
-equiv :: (Eq v, Hashable v, Unifiable t v) => UTerm t v -> UTerm t v -> Maybe (HashMap v v)
-equiv (UVar v1) (UVar v2)
-  | v1 == v2 = Just mempty
-  | otherwise = Just $ HashMap.singleton v1 v2
-equiv (UTerm t1) (UTerm t2) =
-  mconcat <$> traverse (\With {_value = u1 :~ u2} -> equiv u1 u2) (unify () t1 t2)
-equiv _ _ = Nothing
-
-class HasUTerm t v a where
-  walkOn :: Traversal' a (UTerm t v)
-
-instance (Traversable t, HasUTerm t v v) => HasUTerm t v (UTerm t v) where
-  walkOn = id
-
--- walkOn f (UVar v) = f =<< (UVar <$> walkOn f v)
--- walkOn f (UTerm t) = f =<< (UTerm <$> traverse (walkOn f) t)
-
-instance HasUTerm t v x => HasUTerm t v (With x a) where
-  walkOn f (With x a) = With <$> walkOn f x <*> pure a
-
-instance HasUTerm t v Void where
-  walkOn _ x = absurd x
 
 ----------------
 -- Constraint --
@@ -110,50 +33,62 @@ instance HasUTerm t v Void where
 
 infixl 5 :~
 
-data Constraint t v = UTerm t v :~ UTerm t v
+data Constraint t = t :~ t
   deriving stock (Eq, Ord, Show, Generic)
 
-instance (Pretty v, Pretty1 t) => Pretty (Constraint t v) where
+instance (Pretty t) => Pretty (Constraint t) where
   pPrint (t1 :~ t2) = pPrint t1 <+> "~" <+> pPrint t2
-
-type WithMeta x t v = With x (Constraint t v)
 
 ---------------
 -- Unifiable --
 ---------------
 
-class Unifiable t v | t -> v where
-  unify :: Pretty x => x -> t (UTerm t v) -> t (UTerm t v) -> [WithMeta x t v]
+class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
+  type Var t
+  unify :: Pretty x => x -> t -> t -> (HashMap (Var t) t, [With x (Constraint t)])
+  equiv :: t -> t -> Maybe (HashMap (Var t) (Var t))
+  freevars :: t -> HashSet (Var t)
+  occursCheck :: (Eq (Var t), Hashable (Var t)) => Var t -> t -> Bool
+  occursCheck v t = HashSet.member v (freevars t)
 
-class Monad m => MonadBind t v m | v -> t, t -> v where
-  lookupVar :: v -> m (Maybe (UTerm t v))
-  default lookupVar :: (MonadTrans tr, MonadBind t v m1, m ~ tr m1) => v -> m (Maybe (UTerm t v))
+class Unifiable1 t where
+  liftUnify :: (Pretty x, Unifiable a) => (x -> a -> a -> (HashMap (Var a) a, [With x (Constraint a)])) -> x -> t a -> t a -> (HashMap (Var a) a, [With x (Constraint a)])
+  liftEquiv :: Unifiable a => (a -> a -> Maybe (HashMap (Var a) (Var a))) -> t a -> t a -> Maybe (HashMap (Var a) (Var a))
+  liftFreevars :: Unifiable a => (a -> HashSet (Var a)) -> t a -> HashSet (Var a)
+  liftOccursCheck :: Unifiable a => (Var a -> a -> Bool) -> Var a -> t a -> Bool
+
+class Monad m => MonadBind t m where
+  lookupVar :: Var t -> m (Maybe t)
+  default lookupVar :: (MonadTrans tr, MonadBind t m1, m ~ tr m1) => Var t -> m (Maybe t)
   lookupVar v = lift (lookupVar v)
-  freshVar :: m v
-  default freshVar :: (MonadTrans tr, MonadBind t v m1, m ~ tr m1) => m v
-  freshVar = lift freshVar
-  newVar :: Pretty x => x -> UTerm t v -> m v
+  freshVar :: m (Var t)
+  default freshVar :: (MonadTrans tr, MonadBind t m1, m ~ tr m1) => m (Var t)
+  freshVar = lift (freshVar @t)
+  newVar :: Pretty x => x -> t -> m (Var t)
   newVar x t = do
-    v <- freshVar
+    v <- freshVar @t
     bindVar x v t
     pure v
-  bindVar :: Pretty x => x -> v -> UTerm t v -> m ()
-  default bindVar :: (MonadTrans tr, MonadBind t v m1, m ~ tr m1, Pretty x) => x -> v -> UTerm t v -> m ()
+  bindVar :: Pretty x => x -> Var t -> t -> m ()
+  default bindVar :: (MonadTrans tr, MonadBind t m1, m ~ tr m1, Pretty x) => x -> Var t -> t -> m ()
   bindVar x v t = lift (bindVar x v t)
+  zonk :: t -> m t
+  default zonk :: (MonadTrans tr, MonadBind t m1, m ~ tr m1) => t -> m t
+  zonk t = lift (zonk t)
 
-instance MonadBind t v m => MonadBind t v (IdentityT m)
+instance MonadBind t m => MonadBind t (IdentityT m)
 
-instance MonadBind t v m => MonadBind t v (ReaderT r m)
+instance MonadBind t m => MonadBind t (ReaderT r m)
 
-instance MonadBind t v m => MonadBind t v (ExceptT e m)
+instance MonadBind t m => MonadBind t (ExceptT e m)
 
-instance MonadBind t v m => MonadBind t v (StateT s m)
+instance MonadBind t m => MonadBind t (StateT s m)
 
-instance MonadBind t v m => MonadBind t v (Lazy.StateT s m)
+instance MonadBind t m => MonadBind t (Lazy.StateT s m)
 
-instance MonadBind t v m => MonadBind t v (WriterT w m)
+instance MonadBind t m => MonadBind t (WriterT w m)
 
-instance MonadBind t v m => MonadBind t v (ContT r m)
+instance MonadBind t m => MonadBind t (ContT r m)
 
 ------------
 -- Solver --
@@ -161,63 +96,33 @@ instance MonadBind t v m => MonadBind t v (ContT r m)
 
 solve ::
   ( Pretty x,
-    Pretty v,
-    MonadBind t v m,
-    Traversable t,
-    Pretty1 t,
-    Unifiable t v,
-    Eq v
+    MonadBind t m,
+    Unifiable t
   ) =>
-  [WithMeta x t v] ->
+  [With x (Constraint t)] ->
   m ()
-solve cs = do
-  solveLoop 5000 cs
+solve = solveLoop 5000
 
 solveLoop ::
   ( Pretty x,
-    Pretty v,
-    MonadBind t v m,
-    Traversable t,
-    Pretty1 t,
-    Unifiable t v,
-    Eq v
+    MonadBind t m,
+    Unifiable t
   ) =>
   Int ->
-  [WithMeta x t v] ->
+  [With x (Constraint t)] ->
   m ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
-solveLoop n (With x (UVar v1 :~ UVar v2) : cs)
-  | v1 == v2 = solveLoop (n - 1) cs
-  | otherwise = do
-    bindVar x v1 (UVar v2)
-    solveLoop (n - 1) =<< traverse zonkConstraint cs -- -}
-solveLoop n (With x (UVar v :~ UTerm t) : cs) = do
-  bindVar x v (UTerm t)
-  solveLoop (n - 1) =<< traverse zonkConstraint cs
-solveLoop n (With x (UTerm t :~ UVar v) : cs) = do
-  bindVar x v (UTerm t)
-  solveLoop (n - 1) =<< traverse zonkConstraint cs
-solveLoop n (With x (UTerm t1 :~ UTerm t2) : cs) = do
-  let cs' = unify x t1 t2
-  solveLoop (n - 1) $ cs' <> cs
+solveLoop n (With x (t1 :~ t2) : cs) = do
+  let (binds, cs') = unify x t1 t2
+  ifor_ binds $ \var term -> bindVar x var term
+  solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
-zonkConstraint :: (Applicative f, MonadBind t v f, Traversable t) => WithMeta x t v -> f (WithMeta x t v)
+zonkConstraint :: (Applicative f, MonadBind t f) => With x (Constraint t) -> f (With x (Constraint t))
 zonkConstraint (With m (x :~ y)) =
-  With m <$> ((:~) <$> zonkUTerm x <*> zonkUTerm y)
+  With m <$> ((:~) <$> zonk x <*> zonk y)
 
-zonkUTerm :: (MonadBind t v f, Traversable t, Applicative f) => UTerm t v -> f (UTerm t v)
-zonkUTerm (UVar v) = do
-  mterm <- lookupVar v
-  mterm <- traverse zonkUTerm mterm
-  pure $ fromMaybe (UVar v) mterm
-zonkUTerm (UTerm t) = UTerm <$> traverse zonkUTerm t
-
-#ifdef DEBUG
-errorWithMeta :: (HasCallStack, Pretty x) => x -> Doc -> a
-#else
 errorWithMeta :: Pretty x => x -> Doc -> a
-#endif
 errorWithMeta meta msg =
   errorDoc $ "error:" $+$ nest 2 msg $$ "info:" <+> pPrint meta
 

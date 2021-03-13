@@ -34,6 +34,7 @@ import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..))
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
+import Language.Malgo.UTerm
 import Language.Malgo.Unify hiding (lookupVar)
 import Text.Megaparsec (SourcePos)
 
@@ -62,14 +63,14 @@ typeCheck rnEnv (Module name bg) =
     (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
     zonkedBg <-
       pure bg'
-        >>= traverseOf (scDefs . traversed . traversed . _1 . ann) zonkUTerm
-        >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @TypeF zonkUTerm)
-        >>= traverseOf (foreigns . traversed . _1 . ann) zonkUTerm
+        >>= traverseOf (scDefs . traversed . traversed . _1 . ann) zonk
+        >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @TypeF @TypeVar zonk)
+        >>= traverseOf (foreigns . traversed . _1 . ann) zonk
     zonkedTcEnv <-
       pure tcEnv'
-        >>= traverseOf (varEnv . traversed) (walkOn @TypeF zonkUTerm)
-        >>= traverseOf (typeEnv . traversed . typeConstructor) (walkOn @TypeF zonkUTerm)
-        >>= traverseOf (typeEnv . traversed . valueConstructors . traversed . _2) (walkOn @TypeF zonkUTerm)
+        >>= traverseOf (varEnv . traversed) (walkOn @TypeF @TypeVar zonk)
+        >>= traverseOf (typeEnv . traversed . typeConstructor) (walkOn @TypeF @TypeVar zonk)
+        >>= traverseOf (typeEnv . traversed . valueConstructors . traversed . _2) (walkOn @TypeF @TypeVar zonk)
     pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup :: (MonadIO m, MonadUniq m, MonadMalgo m) => BindGroup (Malgo 'Rename) -> StateT TcEnv (TypeUnifyT m) (BindGroup (Malgo 'NewTypeCheck))
@@ -106,7 +107,7 @@ tcDataDefs ds = do
     typeEnv . at name .= Just (TypeDef tyCon [] [])
   for ds $ \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
-    params' <- traverse (const $ UVar <$> freshVar) params
+    params' <- traverse (const $ UVar <$> freshVar @UType) params
     let cs = [With pos $ foldr ((\l r -> UTerm $ TyArr l r) . typeOf) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) params' :~ typeOf name']
     solve cs
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
@@ -127,39 +128,39 @@ tcDataDefs ds = do
     buildTyConKind [] = UTerm $ TYPE $ UTerm $ Rep BoxedRep
     buildTyConKind (_ : xs) = UTerm $ TyArr (UTerm $ TYPE $ UTerm $ Rep BoxedRep) (buildTyConKind xs)
 
-tcForeigns :: (MonadMalgo m, MonadState TcEnv m, MonadBind TypeF TypeVar m, MonadIO m, MonadUniq m) => [Foreign (Malgo 'Rename)] -> m [Foreign (Malgo 'NewTypeCheck)]
+tcForeigns :: (MonadMalgo m, MonadState TcEnv m, MonadBind UType m, MonadIO m, MonadUniq m) => [Foreign (Malgo 'Rename)] -> m [Foreign (Malgo 'NewTypeCheck)]
 tcForeigns ds =
   for ds $ \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) $ \tyVar -> do
-      tv <- freshVar
+      tv <- freshVar @UType
       typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme@(Forall _ ty') <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (With ty' pos, name, tcType ty)
 
-tcScSigs :: (MonadMalgo m, MonadBind TypeF TypeVar m, MonadState TcEnv m, MonadIO m, MonadUniq m) => [ScSig (Malgo 'Rename)] -> m [ScSig (Malgo 'NewTypeCheck)]
+tcScSigs :: (MonadMalgo m, MonadBind UType m, MonadState TcEnv m, MonadIO m, MonadUniq m) => [ScSig (Malgo 'Rename)] -> m [ScSig (Malgo 'NewTypeCheck)]
 tcScSigs ds =
   for ds $ \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) $ \tyVar -> do
-      tv <- freshVar
+      tv <- freshVar @UType
       typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (pos, name, tcType ty)
 
-prepareTcScDefs :: (MonadState TcEnv m, MonadBind TypeF TypeVar m) => [ScDef (Malgo 'Rename)] -> m ()
+prepareTcScDefs :: (MonadState TcEnv m, MonadBind UType m) => [ScDef (Malgo 'Rename)] -> m ()
 prepareTcScDefs = traverse_ \(_, name, _) -> do
   mscheme <- use $ varEnv . at name
   case mscheme of
     Nothing -> do
-      ty <- Forall [] . UVar <$> freshVar
+      ty <- Forall [] . UVar <$> freshVar @UType
       varEnv . at name ?= ty
     Just _ -> pure ()
 
-tcScDefGroup :: (MonadBind TypeF TypeVar m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => [[ScDef (Malgo 'Rename)]] -> m [[ScDef (Malgo 'NewTypeCheck)]]
+tcScDefGroup :: (MonadBind UType m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => [[ScDef (Malgo 'Rename)]] -> m [[ScDef (Malgo 'NewTypeCheck)]]
 tcScDefGroup = traverse tcScDefs
 
-tcScDefs :: (MonadBind TypeF TypeVar m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => [ScDef (Malgo 'Rename)] -> m [ScDef (Malgo 'NewTypeCheck)]
+tcScDefs :: (MonadBind UType m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => [ScDef (Malgo 'Rename)] -> m [ScDef (Malgo 'NewTypeCheck)]
 tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- for ds $ \(pos, name, expr) -> do
@@ -169,7 +170,7 @@ tcScDefs ds@((pos, _, _) : _) = do
     solve constraints
     pure (With (typeOf expr') pos, name, expr')
   ds <- for ds $ \(pos, name, expr) -> do
-    pos <- traverseOf ann zonkUTerm pos
+    pos <- traverseOf ann zonk pos
     pure (pos, name, expr)
   let types = map (view (_1 . ann)) ds
   (as, types') <- generalizeMutRecs pos mempty types
@@ -190,7 +191,7 @@ tcScDefs ds@((pos, _, _) : _) = do
             | otherwise -> varEnv . at name ?= declaredScheme
   pure ds
 
-tcExpr :: (MonadBind TypeF TypeVar m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Exp (Malgo 'Rename) -> WriterT [WithMeta SourcePos TypeF TypeVar] m (Exp (Malgo 'NewTypeCheck))
+tcExpr :: (MonadBind UType m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Exp (Malgo 'Rename) -> WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'NewTypeCheck))
 tcExpr (Var pos v) = do
   vType <- instantiate =<< lookupVar pos v
   pure $ Var (With vType pos) v
@@ -201,7 +202,7 @@ tcExpr (Unboxed pos u) = pure $ Unboxed (With (typeOf u) pos) u
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
-  retType <- UVar <$> freshVar
+  retType <- UVar <$> freshVar @UType
   tell [With pos $ typeOf f' :~ UTerm (TyArr (typeOf x') retType)]
   pure $ Apply (With retType pos) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
@@ -209,7 +210,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e2' <- tcExpr e2
   opScheme <- lookupVar pos op
   opType <- instantiate opScheme
-  retType <- UVar <$> freshVar
+  retType <- UVar <$> freshVar @UType
   tell [With pos $ opType :~ UTerm (TyArr (typeOf e1') $ UTerm $ TyArr (typeOf e2') retType)]
   pure $ OpApp (With retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] ss : _)) = do
@@ -227,23 +228,23 @@ tcExpr (Tuple pos es) = do
   pure $ Tuple (With (UTerm $ TyTuple (map typeOf es')) pos) es'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
-  ty <- UVar <$> freshVar
+  ty <- UVar <$> freshVar @UType
   tell [With pos $ UTerm (TyLazy ty) :~ typeOf e']
   pure $ Force (With ty pos) e'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (With (typeOf e') pos) e'
 
-tcClause :: (MonadBind TypeF TypeVar m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Clause (Malgo 'Rename) -> WriterT [WithMeta SourcePos TypeF TypeVar] m (Clause (Malgo 'NewTypeCheck))
+tcClause :: (MonadBind UType m, MonadState TcEnv m, MonadMalgo m, MonadIO m, MonadUniq m) => Clause (Malgo 'Rename) -> WriterT [With SourcePos (Constraint UType)] m (Clause (Malgo 'NewTypeCheck))
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
   pure $ Clause (With (foldr (\l r -> UTerm $ TyArr (typeOf l) r) (typeOf $ last ss') pats') pos) pats' ss'
 
-tcPatterns :: (MonadBind TypeF TypeVar m, MonadState TcEnv m, MonadIO m, MonadMalgo m) => [Pat (Malgo 'Rename)] -> WriterT [WithMeta SourcePos TypeF TypeVar] m [Pat (Malgo 'NewTypeCheck)]
+tcPatterns :: (MonadBind UType m, MonadState TcEnv m, MonadIO m, MonadMalgo m) => [Pat (Malgo 'Rename)] -> WriterT [With SourcePos (Constraint UType)] m [Pat (Malgo 'NewTypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
-  ty <- UVar <$> freshVar
+  ty <- UVar <$> freshVar @UType
   varEnv . at v ?= Forall [] ty
   ps' <- tcPatterns ps
   pure $ VarP (With ty x) v : ps'
@@ -258,7 +259,7 @@ tcPatterns (ConP pos con pats : ps) = do
   when (not (null morePats) && not (null restPs)) $
     errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
-  ty <- UVar <$> freshVar
+  ty <- UVar <$> freshVar @UType
   tell [With pos $ conType :~ foldr (\l r -> UTerm $ TyArr (typeOf l) r) ty pats']
   ps' <- tcPatterns restPs
   pure (ConP (With ty pos) con pats' : ps')
@@ -275,14 +276,14 @@ splitTyArr (UVar _) = bug Unreachable
 splitTyArr (UTerm (TyArr t1 t2)) = let (ps, r) = splitTyArr t2 in (t1 : ps, r)
 splitTyArr t = ([], t)
 
-tcStmts :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind TypeF TypeVar m, MonadUniq m) => [Stmt (Malgo 'Rename)] -> WriterT [WithMeta SourcePos TypeF TypeVar] m [Stmt (Malgo 'NewTypeCheck)]
+tcStmts :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind UType m, MonadUniq m) => [Stmt (Malgo 'Rename)] -> WriterT [With SourcePos (Constraint UType)] m [Stmt (Malgo 'NewTypeCheck)]
 tcStmts = traverse tcStmt
 
-tcStmt :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind TypeF TypeVar m, MonadUniq m) => Stmt (Malgo 'Rename) -> WriterT [WithMeta SourcePos TypeF TypeVar] m (Stmt (Malgo 'NewTypeCheck))
+tcStmt :: (MonadIO m, MonadMalgo m, MonadState TcEnv m, MonadBind UType m, MonadUniq m) => Stmt (Malgo 'Rename) -> WriterT [With SourcePos (Constraint UType)] m (Stmt (Malgo 'NewTypeCheck))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   env <- use varEnv
-  envSet <- traverse (zonkUTerm . (\(Forall _ t) -> t)) (HashMap.elems env)
+  envSet <- traverse (zonk . (\(Forall _ t) -> t)) (HashMap.elems env)
   (e', wanted) <- listen $ tcExpr e
   solve wanted
   -- FIXME: value restriction

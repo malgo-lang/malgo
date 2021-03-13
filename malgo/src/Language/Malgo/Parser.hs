@@ -315,7 +315,22 @@ pOperator :: Text -> Parser Text
 pOperator op = lexeme (string op <* notFollowedBy opLetter)
 
 reserved :: Parser Text
-reserved = choice $ map (try . pKeyword) ["module", "data", "infixl", "infixr", "infix", "foreign", "import", "let"]
+reserved =
+  choice $
+    map
+      (try . pKeyword)
+      [ "data",
+        "exists",
+        "forall",
+        "foreign",
+        "import",
+        "infix",
+        "infixl",
+        "infixr",
+        "let",
+        "type",
+        "module"
+      ]
 
 reservedOp :: Parser Text
 reservedOp = choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]

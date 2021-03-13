@@ -15,6 +15,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -22,6 +23,7 @@ module Language.Malgo.TypeRep.UTerm where
 
 import Data.Deriving
 import Data.Fix
+import Data.Functor.Classes (Eq1)
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
 import Data.Maybe (fromMaybe)
@@ -32,6 +34,7 @@ import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.TypeRep.Static (IsScheme, IsType (safeToType), PrimT (..), Rep (..))
 import qualified Language.Malgo.TypeRep.Static as S
+import Language.Malgo.UTerm
 import Language.Malgo.Unify
 
 ----------
@@ -117,25 +120,33 @@ instance HasUTerm TypeF TypeVar TypeVar where
 instance Pretty TypeVar where
   pPrint (TypeVar v) = "'" <> pPrint v
 
-instance Unifiable TypeF TypeVar where
-  unify x (TyApp t11 t12) (TyApp t21 t22) = [With x (t11 :~ t21), With x (t12 :~ t22)]
-  unify x (TyVar v1) (TyVar v2)
-    | v1 == v2 = []
-    | otherwise = errorWithMeta x $ unifyErrorMessage v1 v2
-  unify x (TyCon c1) (TyCon c2)
-    | c1 == c2 = []
-    | otherwise = errorWithMeta x $ unifyErrorMessage c1 c2
-  unify x (TyPrim p1) (TyPrim p2)
-    | p1 == p2 = []
-    | otherwise = errorWithMeta x $ unifyErrorMessage p1 p2
-  unify x (TyArr l1 r1) (TyArr l2 r2) = [With x (l1 :~ l2), With x (r1 :~ r2)]
-  unify x (TyTuple ts1) (TyTuple ts2) = map (With x) $ zipWith (:~) ts1 ts2
-  unify x (TyLazy t1) (TyLazy t2) = [With x (t1 :~ t2)]
-  unify x (TyPtr t1) (TyPtr t2) = [With x (t1 :~ t2)]
-  unify x (TYPE rep1) (TYPE rep2) = [With x (rep1 :~ rep2)]
-  unify _ TyRep TyRep = []
-  unify _ (Rep rep1) (Rep rep2) | rep1 == rep2 = []
-  unify x t1 t2 = errorWithMeta x $ unifyErrorMessage t1 t2
+instance Unifiable1 TypeF where
+  liftUnify _ x (TyApp t11 t12) (TyApp t21 t22) = (mempty, [With x $ t11 :~ t21, With x $ t12 :~ t22])
+  liftUnify _ _ (TyVar v1) (TyVar v2) | v1 == v2 = (mempty, [])
+  liftUnify _ _ (TyCon c1) (TyCon c2) | c1 == c2 = (mempty, [])
+  liftUnify _ _ (TyPrim p1) (TyPrim p2) | p1 == p2 = (mempty, [])
+  liftUnify _ x (TyArr l1 r1) (TyArr l2 r2) = (mempty, [With x $ l1 :~ l2, With x $ r1 :~ r2])
+  liftUnify _ x (TyTuple ts1) (TyTuple ts2) = (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) ts1 ts2)
+  liftUnify _ x (TyLazy t1) (TyLazy t2) = (mempty, [With x $ t1 :~ t2])
+  liftUnify _ x (TyPtr t1) (TyPtr t2) = (mempty, [With x $ t1 :~ t2])
+  liftUnify _ x (TYPE rep1) (TYPE rep2) = (mempty, [With x $ rep1 :~ rep2])
+  liftUnify _ _ TyRep TyRep = (mempty, [])
+  liftUnify _ _ (Rep rep1) (Rep rep2) | rep1 == rep2 = (mempty, [])
+  liftUnify _ x t1 t2 = errorWithMeta x $ unifyErrorMessage t1 t2
+  liftEquiv equiv (TyApp t11 t12) (TyApp t21 t22) = (<>) <$> equiv t11 t21 <*> equiv t12 t22
+  liftEquiv _ (TyVar v1) (TyVar v2) | v1 == v2 = Just mempty
+  liftEquiv _ (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
+  liftEquiv _ (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
+  liftEquiv equiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
+  liftEquiv equiv (TyTuple ts1) (TyTuple ts2) = mconcat <$> zipWithM equiv ts1 ts2
+  liftEquiv equiv (TyLazy t1) (TyLazy t2) = equiv t1 t2
+  liftEquiv equiv (TyPtr t1) (TyPtr t2) = equiv t1 t2
+  liftEquiv equiv (TYPE rep1) (TYPE rep2) = equiv rep1 rep2
+  liftEquiv _ TyRep TyRep = Just mempty
+  liftEquiv _ (Rep rep1) (Rep rep2) | rep1 == rep2 = Just mempty
+  liftEquiv _ _ _ = Nothing
+  liftFreevars freevars = foldMap freevars
+  liftOccursCheck occursCheck v t = or $ fmap (occursCheck v) t
 
 type TypeMap = HashMap TypeVar UType
 
@@ -148,16 +159,21 @@ instance MonadTrans TypeUnifyT where
 runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
 runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
-instance (Monad m, MonadUniq m, MonadIO m) => MonadBind TypeF TypeVar (TypeUnifyT m) where
+instance (Monad m, MonadUniq m, MonadIO m) => MonadBind (UTerm TypeF TypeVar) (TypeUnifyT m) where
   lookupVar v = view (at v) <$> get
   freshVar = do
     kind <- TypeVar <$> newLocalId "k" (UTerm TyRep)
     TypeVar <$> newLocalId "t" (UTerm $ TYPE $ UVar kind)
   bindVar x v t = do
-    occursCheck x v t
+    when (occursCheck v t) $ errorWithMeta x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     let cs = [With x $ v ^. typeVar . idMeta :~ (typeOf t `asTypeOf` t)]
     solve cs
     at v ?= t
+  zonk (UVar v) = do
+    mterm <- lookupVar v
+    mterm <- traverse zonk mterm
+    pure $ fromMaybe (UVar v) mterm
+  zonk (UTerm t) = UTerm <$> traverse zonk t
 
 data Scheme = Forall [Id Type] (UTerm TypeF TypeVar)
   deriving stock (Eq, Ord, Show, Generic)
@@ -175,7 +191,7 @@ instance IsScheme Scheme where
     Just $ S.Forall vs' t'
   fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromType) vs) (unfreeze $ S.fromType t)
 
-generalize :: (MonadUniq m, MonadBind TypeF TypeVar m, Pretty x) => x -> HashSet TypeVar -> UTerm TypeF TypeVar -> m Scheme
+generalize :: (MonadUniq m, MonadBind UType m, Pretty x) => x -> HashSet TypeVar -> UType -> m Scheme
 generalize x bound term = do
   {-
   let fvs = Set.toList $ unboundFreevars bound term
@@ -183,27 +199,27 @@ generalize x bound term = do
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
   Forall as <$> zonkUTerm term
   -}
-  zonkedTerm <- zonkUTerm term
+  zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs $ map (over idMeta unfreeze) as
-  Forall as <$> zonkUTerm zonkedTerm
+  Forall as <$> zonk zonkedTerm
 
-toBound :: (MonadUniq m, MonadBind TypeF TypeVar m, Pretty x) => x -> TypeVar -> [Char] -> m (Id Type)
+toBound :: (MonadUniq m, MonadBind UType m, Pretty x) => x -> TypeVar -> [Char] -> m (Id Type)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   case freeze $ typeOf tvType `asTypeOf` tvType of
     Just kind -> newLocalId hint kind
     Nothing -> errorDoc $ pPrint tvType
 
-defaultToBoxed :: (Applicative m, MonadBind TypeF TypeVar m, Pretty x) => x -> UType -> m UType
+defaultToBoxed :: (Applicative m, MonadBind UType m, Pretty x) => x -> UType -> m UType
 defaultToBoxed x (UVar v)
   | typeOf @(UTerm _ TypeVar) (v ^. typeVar . idMeta) == UTerm TyRep = do
     bindVar x v (UTerm $ Rep BoxedRep)
     pure (UTerm $ Rep BoxedRep)
   | otherwise = do
     _ <- defaultToBoxed x (typeOf $ v ^. typeVar . idMeta)
-    UVar <$> traverseOf (typeVar . idMeta) zonkUTerm v
+    UVar <$> traverseOf (typeVar . idMeta) zonk v
 defaultToBoxed x (UTerm t) = do
   t <- defaultToBoxed' t
   pure $ UTerm t
@@ -240,10 +256,10 @@ defaultToBoxed x (UTerm t) = do
     defaultToBoxed' TyRep = pure TyRep
     defaultToBoxed' (Rep rep) = pure $ Rep rep
 
-unboundFreevars :: (Eq v, Foldable t, Hashable v) => HashSet v -> UTerm t v -> HashSet v
+unboundFreevars :: (Eq v, Foldable t, Hashable v, Unifiable1 t, Eq1 t, Pretty v, Pretty1 t) => HashSet v -> UTerm t v -> HashSet v
 unboundFreevars bound t = HashSet.difference (freevars t) bound
 
-generalizeMutRecs :: (MonadUniq m, MonadBind TypeF TypeVar m, Pretty x) => x -> HashSet TypeVar -> [UTerm TypeF TypeVar] -> m ([Id Type], [UTerm TypeF TypeVar])
+generalizeMutRecs :: (MonadUniq m, MonadBind UType m, Pretty x) => x -> HashSet TypeVar -> [UType] -> m ([Id Type], [UType])
 generalizeMutRecs x bound terms = do
   {-
   let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms
@@ -251,15 +267,15 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
   (as,) <$> traverse zonkUTerm terms
   -}
-  zonkedTerms <- traverse zonkUTerm terms
+  zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs $ map (over idMeta unfreeze) as
-  (as,) <$> traverse zonkUTerm zonkedTerms
+  (as,) <$> traverse zonk zonkedTerms
 
-instantiate :: (MonadBind TypeF TypeVar m) => Scheme -> m (UTerm TypeF TypeVar)
+instantiate :: (MonadBind UType m) => Scheme -> m UType
 instantiate (Forall as t) = do
-  avs <- traverse ?? as $ \a -> (over idMeta unfreeze a,) . UVar <$> freshVar
+  avs <- traverse ?? as $ \a -> (over idMeta unfreeze a,) . UVar <$> freshVar @UType
   replace avs t
   where
     replace _ t@UVar {} = pure t
@@ -276,7 +292,7 @@ instantiate (Forall as t) = do
       TyRep -> pure $ UTerm TyRep
       Rep rep -> pure $ UTerm $ Rep rep
 
-class HasType t a where
+class HasType t a | a -> t where
   typeOf :: a -> t
 
 instance HasType UType UType where
@@ -299,7 +315,7 @@ instance HasType UType UType where
 instance HasType Type Type where
   typeOf = id
 
-instance HasType t Void where
+instance HasType UType Void where
   typeOf = absurd
 
 class WithUType a where

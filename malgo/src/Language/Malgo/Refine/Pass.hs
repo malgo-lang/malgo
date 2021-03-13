@@ -60,10 +60,10 @@ type TypeChecked t x =
   ) ::
     Constraint
 
-refine :: (TypeChecked t x, Monad m, Show t) => Module x -> m (Module (Malgo 'Refine))
+refine :: (TypeChecked t x, Monad m) => Module x -> m (Module (Malgo 'Refine))
 refine Module {_moduleName, _moduleDefinition} = Module _moduleName <$> refineBindGroup _moduleDefinition
 
-refineBindGroup :: forall t x m. (TypeChecked t x, Monad m, Show t) => BindGroup x -> m (BindGroup (Malgo 'Refine))
+refineBindGroup :: forall t x m. (TypeChecked t x, Monad m) => BindGroup x -> m (BindGroup (Malgo 'Refine))
 refineBindGroup BindGroup {_scDefs, _scSigs, _dataDefs, _foreigns, _imports} =
   BindGroup
     <$> traverse (traverse refineScDef) _scDefs
@@ -72,10 +72,10 @@ refineBindGroup BindGroup {_scDefs, _scSigs, _dataDefs, _foreigns, _imports} =
     <*> traverse refineForeign _foreigns
     <*> traverse (refineImport @t @x) _imports
 
-refineScDef :: (TypeChecked t x, Monad m, Show t) => ScDef x -> m (ScDef (Malgo 'Refine))
+refineScDef :: (TypeChecked t x, Monad m) => ScDef x -> m (ScDef (Malgo 'Refine))
 refineScDef (x, name, expr) = (over ann toType x,name,) <$> refineExp expr
 
-refineExp :: (TypeChecked t x, Monad m, Show t) => Exp x -> m (Exp (Malgo 'Refine))
+refineExp :: (TypeChecked t x, Monad m) => Exp x -> m (Exp (Malgo 'Refine))
 refineExp (Var x v) = pure $ Var (over ann toType x) v
 refineExp (Con x c) = pure $ Con (over ann toType x) c
 refineExp (Unboxed x u) = pure $ Unboxed (over ann toType x) u
@@ -93,10 +93,10 @@ refineExp (Tuple x es) = Tuple (over ann toType x) <$> traverse refineExp es
 refineExp (Force x e) = Force (over ann toType x) <$> refineExp e
 refineExp (Parens _ e) = refineExp e
 
-refineClause :: (TypeChecked t x, Monad m, Show t) => Clause x -> m (Clause (Malgo 'Refine))
+refineClause :: (TypeChecked t x, Monad m) => Clause x -> m (Clause (Malgo 'Refine))
 refineClause (Clause x ps es) = Clause (over ann toType x) <$> traverse refinePat ps <*> traverse refineStmt es
 
-refineStmt :: (TypeChecked t x, Monad m, Show t) => Stmt x -> m (Stmt (Malgo 'Refine))
+refineStmt :: (TypeChecked t x, Monad m) => Stmt x -> m (Stmt (Malgo 'Refine))
 refineStmt (Let x v e) = Let x v <$> refineExp e
 refineStmt (NoBind x e) = NoBind x <$> refineExp e
 

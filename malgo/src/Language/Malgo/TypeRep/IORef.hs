@@ -322,8 +322,6 @@ instance HasType Void where
   toType _ x = absurd x
   overType _ x = absurd x
 
-type WithType a = With Type a
-
 instance HasType t => HasType (With t a) where
   toType = ann . toType
   overType f (With t x) = With <$> overType f t <*> pure x

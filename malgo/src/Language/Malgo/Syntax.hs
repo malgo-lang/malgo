@@ -27,7 +27,7 @@ import Language.Malgo.Syntax.Extension
 import qualified Language.Malgo.TypeRep.IORef as I
 import qualified Language.Malgo.TypeRep.Static as S
 import qualified Language.Malgo.TypeRep.UTerm as U
-import qualified Language.Malgo.Unify as U
+import qualified Language.Malgo.UTerm as U
 
 -- | Unboxed and literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
