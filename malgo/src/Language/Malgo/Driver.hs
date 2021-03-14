@@ -24,8 +24,6 @@ import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.Pretty (ppllvm)
 import Language.Malgo.Desugar.Pass (desugar)
 import Language.Malgo.Interface (buildInterface, loadInterface, storeInterface)
-import qualified Language.Malgo.NewTypeCheck.Pass as NewTypeCheck
-import qualified Language.Malgo.NewTypeCheck.TcEnv as NewTcEnv
 import Language.Malgo.Parser (parseMalgo)
 import Language.Malgo.Prelude
 import Language.Malgo.Refine.Pass (refine)
@@ -33,6 +31,8 @@ import Language.Malgo.Rename.Pass (rename)
 import qualified Language.Malgo.Rename.RnEnv as RnEnv
 import qualified Language.Malgo.Syntax as Syntax
 import Language.Malgo.Syntax.Extension
+import qualified Language.Malgo.TypeCheck.Pass as TypeCheck
+import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
 -- import Language.Malgo.TypeCheck.Pass (typeCheck)
 -- import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
 import System.FilePath.Lens (extension)
@@ -71,9 +71,9 @@ compileFromAST parsedAst opt =
         runUniqT ?? UniqSupply 0 $ do
           rnEnv <- RnEnv.genBuiltinRnEnv
           (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-          (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ NewTypeCheck.typeCheck rnEnv renamedAst
+          (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
           refinedAst <- refine typedAst
-          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. NewTcEnv.varEnv) (tcEnv ^. NewTcEnv.typeEnv) (tcEnv ^. NewTcEnv.rnEnv) refinedAst
+          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. TcEnv.varEnv) (tcEnv ^. TcEnv.typeEnv) (tcEnv ^. TcEnv.rnEnv) refinedAst
           -- (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
           -- refinedAst <- refine typedAst
           -- (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. TcEnv.varEnv) (tcEnv ^. TcEnv.typeEnv) (tcEnv ^. TcEnv.rnEnv) refinedAst

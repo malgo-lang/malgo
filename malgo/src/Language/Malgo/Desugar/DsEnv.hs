@@ -11,7 +11,6 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import qualified Language.Malgo.NewTypeCheck.TcEnv as UTerm
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax.Extension
@@ -54,16 +53,6 @@ instance Pretty DsEnv where
         )
 
 makeLenses ''DsEnv
-
-makeDsEnvFromUTerm :: ModuleName -> UTerm.TcEnv -> DsEnv
-makeDsEnvFromUTerm modName tcEnv =
-  DsEnv
-    { _moduleName = modName,
-      _nameEnv = mempty,
-      _varTypeEnv = fmap toScheme $ tcEnv ^. UTerm.varEnv,
-      _typeDefEnv = fmap toTypeDef $ tcEnv ^. UTerm.typeEnv,
-      _rnEnv = tcEnv ^. UTerm.rnEnv
-    }
 
 makeDsEnv :: (IsScheme a1, IsTypeDef a2) => ModuleName -> HashMap (Id ModuleName) a1 -> HashMap (Id ModuleName) a2 -> RnEnv -> DsEnv
 makeDsEnv modName varEnv typeEnv rnEnv =
