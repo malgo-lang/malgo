@@ -426,7 +426,7 @@ unfoldType t = dsType t
 
 -- Desugar Monad
 
-lookupName :: (MonadReader DsEnv m) => TcId -> m (Id C.Type)
+lookupName :: (MonadReader DsEnv m) => Id ModuleName -> m (Id C.Type)
 lookupName name = do
   mname' <- view (nameEnv . at name)
   case mname' of
@@ -437,7 +437,7 @@ lookupValueConstructors ::
   (MonadReader DsEnv m, MonadFail m) =>
   Id GT.Type ->
   [GT.Type] ->
-  m [(TcId, GT.Type)]
+  m [(Id ModuleName, GT.Type)]
 lookupValueConstructors con ts = do
   typeEnv <- view typeDefEnv
   case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con) (HashMap.elems typeEnv) of

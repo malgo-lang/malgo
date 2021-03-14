@@ -16,13 +16,12 @@ import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import qualified Language.Malgo.TypeRep.IORef as I
 import qualified Language.Malgo.TypeRep.Static as S
 import qualified Language.Malgo.TypeRep.UTerm as U
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Phase and type instance
-data MalgoPhase = Parse | Rename | TypeCheck | NewTypeCheck | Refine
+data MalgoPhase = Parse | Rename | NewTypeCheck | Refine
 
 data Malgo (p :: MalgoPhase)
 
@@ -39,14 +38,12 @@ _Module = lens (\(ModuleName s) -> s) (\_ s -> ModuleName s)
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = String
   MalgoId 'Rename = Id ModuleName
-  MalgoId 'TypeCheck = Id ModuleName
   MalgoId 'NewTypeCheck = Id ModuleName
   MalgoId 'Refine = Id ModuleName
 
 type family MalgoTId (p :: MalgoPhase) where
   MalgoTId 'Parse = String
   MalgoTId 'Rename = Id ModuleName
-  MalgoTId 'TypeCheck = Id ModuleName
   MalgoTId 'NewTypeCheck = Id ModuleName
   MalgoTId 'Refine = Id ModuleName
 
@@ -54,13 +51,9 @@ type PsId = XId (Malgo 'Parse)
 
 type RnId = XId (Malgo 'Rename)
 
-type TcId = XId (Malgo 'TypeCheck)
-
 type PsTId = XTId (Malgo 'Parse)
 
 type RnTId = XTId (Malgo 'Rename)
-
-type TcTId = XTId (Malgo 'TypeCheck)
 
 data Unboxed
 
@@ -84,7 +77,6 @@ type family XId x where
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = SourcePos
   SimpleX 'Rename = SourcePos
-  SimpleX 'TypeCheck = With I.Type SourcePos
   SimpleX 'NewTypeCheck = With U.UType SourcePos
   SimpleX 'Refine = With S.Type SourcePos
 
@@ -107,7 +99,6 @@ type family XApply x where
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SourcePos
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
-  XOpApp (Malgo 'TypeCheck) = With I.Type (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'NewTypeCheck) = With U.UType (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'Refine) = Void
 
@@ -211,7 +202,6 @@ type family XInfix x where
 type family XForeign x where
   XForeign (Malgo 'Parse) = SourcePos
   XForeign (Malgo 'Rename) = (SourcePos, String)
-  XForeign (Malgo 'TypeCheck) = With I.Type (SourcePos, String)
   XForeign (Malgo 'NewTypeCheck) = With U.UType (SourcePos, String)
   XForeign (Malgo 'Refine) = With S.Type (SourcePos, String)
 
