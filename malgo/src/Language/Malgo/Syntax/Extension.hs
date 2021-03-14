@@ -202,6 +202,9 @@ type family XScSig x where
 type family XDataDef x where
   XDataDef (Malgo _) = SourcePos
 
+type family XTypeSynonym x where
+  XTypeSynonym (Malgo _) = SourcePos
+
 type family XInfix x where
   XInfix (Malgo _) = SourcePos
 
@@ -219,6 +222,7 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
   ( c (XScDef x),
     c (XScSig x),
     c (XDataDef x),
+    c (XTypeSynonym x),
     c (XInfix x),
     c (XForeign x),
     c (XImport x),

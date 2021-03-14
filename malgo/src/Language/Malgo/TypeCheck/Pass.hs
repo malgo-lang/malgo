@@ -40,7 +40,7 @@ typeCheck rnEnv (Module name bg) = do
 tcBindGroup :: (MonadUniq m, MonadState TcEnv m, MonadIO m, MonadMalgo m) => BindGroup (Malgo 'Rename) -> m (BindGroup (Malgo 'TypeCheck))
 tcBindGroup bindGroup = do
   imports' <- tcImports $ bindGroup ^. imports
-  dataDefs' <- tcDataDefs $ bindGroup ^. dataDefs
+  (typeSynonyms', dataDefs') <- tcTypeDefinitions (bindGroup ^. typeSynonyms) (bindGroup ^. dataDefs)
   foreigns' <- tcForeigns $ bindGroup ^. foreigns
   scSigs' <- tcScSigs $ bindGroup ^. scSigs
   traverse_ prepareTcScDefs $ bindGroup ^. scDefs
@@ -56,6 +56,7 @@ tcBindGroup bindGroup = do
   pure
     BindGroup
       { _dataDefs = dataDefs',
+        _typeSynonyms = typeSynonyms',
         _foreigns = foreigns'',
         _scSigs = scSigs',
         _scDefs = scDefs'',
@@ -70,6 +71,8 @@ tcImports = traverse tcImport
       varEnv <>= fmap fromScheme (interface ^. signatureMap)
       typeEnv <>= fmap fromTypeDef (interface ^. typeDefMap)
       pure (pos, modName)
+
+tcTypeDefinitions typeSynonyms dataDefs = undefined
 
 tcDataDefs ::
   (MonadState TcEnv m, MonadIO m, MonadUniq m, MonadMalgo m) =>

@@ -107,6 +107,13 @@ rnDecl (DataDef pos name params cs) = do
       <$> lookupTypeName pos name
       <*> pure params'
       <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
+rnDecl (TypeSynonym pos name params typ) = do
+  modName <- use moduleName
+  params' <- traverse (resolveName modName) params
+  local (appendRnEnv typeEnv (zip params params')) $
+    TypeSynonym pos <$> lookupTypeName pos name
+      <*> pure params'
+      <*> rnType typ
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
 rnDecl (Foreign pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
@@ -216,13 +223,17 @@ genToplevelEnv ds = do
       | disjoint (map fst cs) (HashMap.keys (env ^. varEnv)) = do
         x' <- resolveGlobalName modName x
         xs' <- traverse (resolveGlobalName modName . fst) cs
-        -- go modName (env & varEnv <>~ Map.fromList (zip (map fst cs) xs') & typeEnv . at x ?~ x') rest
         go modName (appendRnEnv varEnv (zip (map fst cs) xs') $ appendRnEnv typeEnv [(x, x')] env) rest
       | otherwise =
         errorOn pos $
           "Duplicate name(s):"
             <+> sep
               (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. varEnv)))
+    go modName env (TypeSynonym pos x _ _ : rest)
+      | x `elem` HashMap.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+      | otherwise = do
+        x' <- resolveGlobalName modName x
+        go modName (appendRnEnv typeEnv [(x, x')] env) rest
     go modName env (Foreign pos x _ : rest)
       | x `elem` HashMap.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | otherwise = do

@@ -1,0 +1,20 @@
+module TypeSynonym = {
+  import Builtin;
+  import Prelude;
+
+  -- TODO: Support parametized type synonyms
+  -- type MyTuple a = (a, a);
+
+  type MyTuple = (MyString, MyString);
+
+  type MyString = String;
+
+  hello :: { MyTuple };
+  hello = { ("hello", "world") };
+
+  main :: { () };
+  main = {
+    !hello |> { (h, w) -> putStr h; putStr " "; putStrLn w }
+  };
+}
+-- Expected: hello world
