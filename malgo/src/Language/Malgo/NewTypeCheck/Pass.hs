@@ -76,7 +76,8 @@ typeCheck rnEnv (Module name bg) =
 tcBindGroup :: (MonadIO m, MonadUniq m, MonadMalgo m) => BindGroup (Malgo 'Rename) -> StateT TcEnv (TypeUnifyT m) (BindGroup (Malgo 'NewTypeCheck))
 tcBindGroup bindGroup = do
   imports' <- tcImports $ bindGroup ^. imports
-  dataDefs' <- tcDataDefs $ bindGroup ^. dataDefs
+  (typeSynonyms', dataDefs') <- tcTypeDefinitions (bindGroup ^. typeSynonyms) (bindGroup ^. dataDefs)
+  -- dataDefs' <- tcDataDefs $ bindGroup ^. dataDefs
   foreigns' <- tcForeigns $ bindGroup ^. foreigns
   scSigs' <- tcScSigs $ bindGroup ^. scSigs
   traverse_ prepareTcScDefs $ bindGroup ^. scDefs
@@ -84,6 +85,7 @@ tcBindGroup bindGroup = do
   pure
     BindGroup
       { _dataDefs = dataDefs',
+        _typeSynonyms = typeSynonyms',
         _foreigns = foreigns',
         _scSigs = scSigs',
         _scDefs = scDefs',
@@ -99,12 +101,43 @@ tcImports = traverse tcImport
       typeEnv <>= fmap Static.fromTypeDef (interface ^. typeDefMap)
       pure (pos, modName)
 
-tcDataDefs :: (MonadIO m, MonadUniq m, MonadMalgo m) => [DataDef (Malgo 'Rename)] -> StateT TcEnv (TypeUnifyT m) [DataDef (Malgo 'NewTypeCheck)]
-tcDataDefs ds = do
+tcTypeDefinitions :: (MonadIO m, MonadUniq m, MonadMalgo m) => [TypeSynonym (Malgo 'Rename)] -> [DataDef (Malgo 'Rename)] -> StateT TcEnv (TypeUnifyT m) ([TypeSynonym (Malgo 'NewTypeCheck)], [DataDef (Malgo 'NewTypeCheck)])
+tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
-  for_ ds $ \(_, name, params, _) -> do
+  for_ typeSynonyms $ \(x, name, params, _) -> do
+    tyCon <- UVar <$> freshVar @UType
+    solve [With x $ typeOf tyCon :~ buildTyConKind params]
+    typeEnv . at name .= Just (TypeDef tyCon [] [])
+  for_ dataDefs $ \(_, name, params, _) -> do
     tyCon <- UTerm . TyCon <$> newGlobalId (name ^. idName) (buildTyConKind params)
     typeEnv . at name .= Just (TypeDef tyCon [] [])
+  (,) <$> tcTypeSynonyms typeSynonyms
+    <*> tcDataDefs dataDefs
+  where
+    -- TODO: ほんとはpolymorphicな値を返さないといけないと思う
+    buildTyConKind [] = UTerm $ TYPE $ UTerm $ Rep BoxedRep
+    buildTyConKind (_ : xs) = UTerm $ TyArr (UTerm $ TYPE $ UTerm $ Rep BoxedRep) (buildTyConKind xs)
+
+tcTypeSynonyms :: (MonadIO m, MonadUniq m, MonadMalgo m) => [TypeSynonym (Malgo 'Rename)] -> StateT TcEnv (TypeUnifyT m) [TypeSynonym (Malgo 'NewTypeCheck)]
+tcTypeSynonyms ds =
+  for ds $ \(pos, name, params, typ) -> do
+    unless (null params) do
+      errorOn pos $
+        "Parametized type synonym is not supported"
+          $+$ "TODO: add type operator and fix TyTyple and TyLazy's kinding"
+    name' <- lookupType pos name
+    params' <- traverse (const $ UVar <$> freshVar @UType) params
+    let cs = [With pos $ foldr ((\l r -> UTerm $ TyArr l r) . typeOf) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) params' :~ typeOf name']
+    solve cs
+    zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
+    let typ' = tcType typ
+    transedTyp <- transType typ
+    solve [With pos $ foldr (\l r -> UTerm $ TyApp r l) name' params' :~ transedTyp]
+    pure (pos, name, params, typ')
+
+tcDataDefs :: (MonadIO m, MonadUniq m, MonadMalgo m) => [DataDef (Malgo 'Rename)] -> StateT TcEnv (TypeUnifyT m) [DataDef (Malgo 'NewTypeCheck)]
+tcDataDefs ds = do
+  bindedTypeVars <- HashSet.unions . map (freevars . view typeConstructor) . HashMap.elems <$> use typeEnv
   for ds $ \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar @UType) params
@@ -119,14 +152,11 @@ tcDataDefs ds = do
       pure $ foldr (\l r -> UTerm $ TyArr l r) (foldr (\l r -> UTerm $ TyApp r l) name' params') args'
     let valueConsNames = map fst valueCons'
     let valueConsTypes = map snd valueCons'
-    (as, valueConsTypes') <- generalizeMutRecs pos mempty valueConsTypes
+    (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
     let valueCons'' = zip valueConsNames valueConsTypes'
     varEnv <>= HashMap.fromList (map (over _2 (Forall as)) valueCons'')
     typeEnv . at name %= (_Just . typeParameters .~ map (over idMeta unfreeze) as) . (_Just . valueConstructors .~ valueCons'')
     pure (pos, name, params, map (second (map tcType)) valueCons)
-  where
-    buildTyConKind [] = UTerm $ TYPE $ UTerm $ Rep BoxedRep
-    buildTyConKind (_ : xs) = UTerm $ TyArr (UTerm $ TYPE $ UTerm $ Rep BoxedRep) (buildTyConKind xs)
 
 tcForeigns :: (MonadMalgo m, MonadState TcEnv m, MonadBind UType m, MonadIO m, MonadUniq m) => [Foreign (Malgo 'Rename)] -> m [Foreign (Malgo 'NewTypeCheck)]
 tcForeigns ds =

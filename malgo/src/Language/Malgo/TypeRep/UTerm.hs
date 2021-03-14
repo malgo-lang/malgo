@@ -162,8 +162,9 @@ runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 instance (Monad m, MonadUniq m, MonadIO m) => MonadBind (UTerm TypeF TypeVar) (TypeUnifyT m) where
   lookupVar v = view (at v) <$> get
   freshVar = do
-    kind <- TypeVar <$> newLocalId "k" (UTerm TyRep)
-    TypeVar <$> newLocalId "t" (UTerm $ TYPE $ UVar kind)
+    rep <- TypeVar <$> newLocalId "r" (UTerm TyRep)
+    kind <- TypeVar <$> newLocalId "k" (UTerm $ TYPE $ UVar rep)
+    TypeVar <$> newLocalId "t" (UVar kind)
   bindVar x v t = do
     when (occursCheck v t) $ errorWithMeta x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     let cs = [With x $ v ^. typeVar . idMeta :~ (typeOf t `asTypeOf` t)]

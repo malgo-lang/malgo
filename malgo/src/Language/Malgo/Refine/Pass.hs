@@ -5,6 +5,7 @@
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
@@ -33,6 +34,7 @@ type TypeChecked t x =
     XScDef x ~ With t SourcePos,
     XScSig x ~ SourcePos,
     XDataDef x ~ SourcePos,
+    XTypeSynonym x ~ SourcePos,
     XForeign x ~ With t (SourcePos, String),
     XImport x ~ SourcePos,
     XVar x ~ With t SourcePos,
@@ -64,11 +66,12 @@ refine :: (TypeChecked t x, Monad m) => Module x -> m (Module (Malgo 'Refine))
 refine Module {_moduleName, _moduleDefinition} = Module _moduleName <$> refineBindGroup _moduleDefinition
 
 refineBindGroup :: forall t x m. (TypeChecked t x, Monad m) => BindGroup x -> m (BindGroup (Malgo 'Refine))
-refineBindGroup BindGroup {_scDefs, _scSigs, _dataDefs, _foreigns, _imports} =
+refineBindGroup BindGroup {..} =
   BindGroup
     <$> traverse (traverse refineScDef) _scDefs
     <*> traverse refineScSig _scSigs
     <*> traverse refineDataDef _dataDefs
+    <*> traverse refineTypeSynonym _typeSynonyms
     <*> traverse refineForeign _foreigns
     <*> traverse (refineImport @t @x) _imports
 
@@ -119,6 +122,9 @@ refineType (Syn.TyLazy x t) = Syn.TyLazy x <$> refineType t
 
 refineDataDef :: (TypeChecked t x, Applicative m) => DataDef x -> m (DataDef (Malgo 'Refine))
 refineDataDef (x, name, ps, cons) = (x,name,ps,) <$> traverse (_2 $ traverse refineType) cons
+
+refineTypeSynonym :: (TypeChecked t x, Applicative m) => TypeSynonym x -> m (TypeSynonym (Malgo 'Refine))
+refineTypeSynonym (x, name, ps, typ) = (x,name,ps,) <$> refineType typ
 
 refineForeign :: (TypeChecked t x, Applicative m) => Foreign x -> m (Foreign (Malgo 'Refine))
 refineForeign (x, name, ty) = (over ann toType x,name,) <$> refineType ty

@@ -122,7 +122,11 @@ zonkConstraint :: (Applicative f, MonadBind t f) => With x (Constraint t) -> f (
 zonkConstraint (With m (x :~ y)) =
   With m <$> ((:~) <$> zonk x <*> zonk y)
 
-errorWithMeta :: Pretty x => x -> Doc -> a
+errorWithMeta ::
+#ifdef DEBUG
+  HasCallStack =>
+#endif
+  Pretty x => x -> Doc -> a
 errorWithMeta meta msg =
   errorDoc $ "error:" $+$ nest 2 msg $$ "info:" <+> pPrint meta
 

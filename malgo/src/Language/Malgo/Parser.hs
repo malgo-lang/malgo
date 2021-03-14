@@ -44,7 +44,7 @@ pModuleName = lexeme $ some $ identLetter <|> char '.'
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
-pDecl = pDataDef <|> pInfix <|> pForeign <|> pImport <|> try pScSig <|> pScDef
+pDecl = pDataDef <|> pTypeSynonym <|> pInfix <|> pForeign <|> pImport <|> try pScSig <|> pScDef
 
 pDataDef :: Parser (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" $ do
@@ -57,6 +57,15 @@ pDataDef = label "toplevel type definition" $ do
   pure $ DataDef s d xs ts
   where
     pConDef = (,) <$> upperIdent <*> many pSingleType
+
+pTypeSynonym :: Parser (Decl (Malgo 'Parse))
+pTypeSynonym = label "toplevel type synonym" do
+  s <- getSourcePos
+  void $ pKeyword "type"
+  d <- upperIdent
+  xs <- many lowerIdent
+  void $ pOperator "="
+  TypeSynonym s d xs <$> pType
 
 pInfix :: Parser (Decl (Malgo 'Parse))
 pInfix = label "infix declaration" $ do

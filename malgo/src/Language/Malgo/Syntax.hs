@@ -427,6 +427,7 @@ data Decl x
   = ScDef (XScDef x) (XId x) (Exp x)
   | ScSig (XScSig x) (XId x) (Type x)
   | DataDef (XDataDef x) (XTId x) [XTId x] [(XId x, [Type x])]
+  | TypeSynonym (XTypeSynonym x) (XTId x) [XTId x] (Type x)
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
   | Import (XImport x) ModuleName
@@ -445,6 +446,11 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Decl x) where
       ]
     where
       pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
+  pPrint (TypeSynonym _ t xs t') =
+    sep
+      [ "type" <+> pPrint t <+> sep (map pPrint xs) <+> "=",
+        pPrint t'
+      ]
   pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
   pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
   pPrint (Import _ name) = "import" <+> pPrint name
@@ -483,6 +489,7 @@ data BindGroup x = BindGroup
     _scDefs :: [[ScDef x]],
     _scSigs :: [ScSig x],
     _dataDefs :: [DataDef x],
+    _typeSynonyms :: [TypeSynonym x],
     _foreigns :: [Foreign x],
     _imports :: [Import x]
   }
@@ -492,6 +499,8 @@ type ScDef x = (XScDef x, XId x, Exp x)
 type ScSig x = (XScSig x, XId x, Type x)
 
 type DataDef x = (XDataDef x, XTId x, [XTId x], [(XId x, [Type x])])
+
+type TypeSynonym x = (XTypeSynonym x, XTId x, [XTId x], Type x)
 
 type Foreign x = (XForeign x, XId x, Type x)
 
@@ -529,6 +538,7 @@ makeBindGroup ds =
     { _scDefs = splitScDef (makeSCC $ mapMaybe scDef ds) (mapMaybe scDef ds),
       _scSigs = mapMaybe scSig ds,
       _dataDefs = mapMaybe dataDef ds,
+      _typeSynonyms = mapMaybe typeSynonym ds,
       _foreigns = mapMaybe foreignDef ds,
       _imports = mapMaybe importDef ds
     }
@@ -539,6 +549,8 @@ makeBindGroup ds =
     scSig _ = Nothing
     dataDef (DataDef x t ps cons) = Just (x, t, ps, cons)
     dataDef _ = Nothing
+    typeSynonym (TypeSynonym x t ps t') = Just (x, t, ps, t')
+    typeSynonym _ = Nothing
     foreignDef (Foreign x n t) = Just (x, n, t)
     foreignDef _ = Nothing
     importDef (Import x m) = Just (x, m)
