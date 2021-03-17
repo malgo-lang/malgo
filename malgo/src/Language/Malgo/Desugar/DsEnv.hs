@@ -11,11 +11,9 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import qualified Language.Malgo.NewTypeCheck.TcEnv as UTerm
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax.Extension
-import qualified Language.Malgo.TypeCheck.TcEnv as IORef
 import Language.Malgo.TypeRep.Static
 
 -- 脱糖衣処理の環境
@@ -23,10 +21,10 @@ data DsEnv = DsEnv
   { -- モジュール名
     _moduleName :: ModuleName,
     -- | Malgo -> Coreの名前環境
-    _nameEnv :: HashMap TcId (Id C.Type),
+    _nameEnv :: HashMap (Id ModuleName) (Id C.Type),
     -- | 型環境
-    _varTypeEnv :: HashMap TcId Scheme,
-    _typeDefEnv :: HashMap TcId TypeDef,
+    _varTypeEnv :: HashMap (Id ModuleName) Scheme,
+    _typeDefEnv :: HashMap (Id ModuleName) TypeDef,
     _rnEnv :: RnEnv
   }
   deriving stock (Show)
@@ -55,26 +53,6 @@ instance Pretty DsEnv where
         )
 
 makeLenses ''DsEnv
-
-makeDsEnvFromIORef :: ModuleName -> IORef.TcEnv -> DsEnv
-makeDsEnvFromIORef modName tcEnv =
-  DsEnv
-    { _moduleName = modName,
-      _nameEnv = mempty,
-      _varTypeEnv = fmap toScheme $ tcEnv ^. IORef.varEnv,
-      _typeDefEnv = fmap toTypeDef $ tcEnv ^. IORef.typeEnv,
-      _rnEnv = tcEnv ^. IORef.rnEnv
-    }
-
-makeDsEnvFromUTerm :: ModuleName -> UTerm.TcEnv -> DsEnv
-makeDsEnvFromUTerm modName tcEnv =
-  DsEnv
-    { _moduleName = modName,
-      _nameEnv = mempty,
-      _varTypeEnv = fmap toScheme $ tcEnv ^. UTerm.varEnv,
-      _typeDefEnv = fmap toTypeDef $ tcEnv ^. UTerm.typeEnv,
-      _rnEnv = tcEnv ^. UTerm.rnEnv
-    }
 
 makeDsEnv :: (IsScheme a1, IsTypeDef a2) => ModuleName -> HashMap (Id ModuleName) a1 -> HashMap (Id ModuleName) a2 -> RnEnv -> DsEnv
 makeDsEnv modName varEnv typeEnv rnEnv =

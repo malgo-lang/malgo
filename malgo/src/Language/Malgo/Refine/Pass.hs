@@ -17,50 +17,47 @@
 module Language.Malgo.Refine.Pass where
 
 import Data.Kind (Constraint)
-import Data.Void
-import Koriel.Id
 import Language.Malgo.Prelude
 import Language.Malgo.Syntax hiding (TyArr)
 import qualified Language.Malgo.Syntax as Syn
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.Static
-import Text.Megaparsec (SourcePos)
 
-type TypeChecked t x =
-  ( IsType t,
-    XId x ~ Id ModuleName,
-    XTId x ~ Id ModuleName,
-    XModule x ~ BindGroup x,
-    XScDef x ~ With t SourcePos,
-    XScSig x ~ SourcePos,
-    XDataDef x ~ SourcePos,
-    XTypeSynonym x ~ SourcePos,
-    XForeign x ~ With t (SourcePos, String),
-    XImport x ~ SourcePos,
-    XVar x ~ With t SourcePos,
-    XCon x ~ With t SourcePos,
-    XUnboxed x ~ With t SourcePos,
-    XBoxed x ~ Void,
-    XApply x ~ With t SourcePos,
-    XOpApp x ~ With t (SourcePos, (Assoc, Int)),
-    XFn x ~ With t SourcePos,
-    XTuple x ~ With t SourcePos,
-    XForce x ~ With t SourcePos,
-    XClause x ~ With t SourcePos,
-    XLet x ~ SourcePos,
-    XNoBind x ~ SourcePos,
-    XVarP x ~ With t SourcePos,
-    XConP x ~ With t SourcePos,
-    XTupleP x ~ With t SourcePos,
-    XUnboxedP x ~ With t SourcePos,
-    XTyApp x ~ SourcePos,
-    XTyVar x ~ SourcePos,
-    XTyCon x ~ SourcePos,
-    XTyArr x ~ SourcePos,
-    XTyTuple x ~ SourcePos,
-    XTyLazy x ~ SourcePos
-  ) ::
-    Constraint
+type TypeChecked t x = (x ~ Malgo 'NewTypeCheck) :: Constraint
+  -- ( IsType t,
+  --   XId x ~ Id ModuleName,
+  --   XTId x ~ Id ModuleName,
+  --   XModule x ~ BindGroup x,
+  --   XScDef x ~ With t SourcePos,
+  --   XScSig x ~ SourcePos,
+  --   XDataDef x ~ SourcePos,
+  --   XTypeSynonym x ~ SourcePos,
+  --   XForeign x ~ With t (SourcePos, String),
+  --   XImport x ~ SourcePos,
+  --   XVar x ~ With t SourcePos,
+  --   XCon x ~ With t SourcePos,
+  --   XUnboxed x ~ With t SourcePos,
+  --   XBoxed x ~ Void,
+  --   XApply x ~ With t SourcePos,
+  --   XOpApp x ~ With t (SourcePos, (Assoc, Int)),
+  --   XFn x ~ With t SourcePos,
+  --   XTuple x ~ With t SourcePos,
+  --   XForce x ~ With t SourcePos,
+  --   XClause x ~ With t SourcePos,
+  --   XLet x ~ SourcePos,
+  --   XNoBind x ~ SourcePos,
+  --   XVarP x ~ With t SourcePos,
+  --   XConP x ~ With t SourcePos,
+  --   XTupleP x ~ With t SourcePos,
+  --   XUnboxedP x ~ With t SourcePos,
+  --   XTyApp x ~ SourcePos,
+  --   XTyVar x ~ SourcePos,
+  --   XTyCon x ~ SourcePos,
+  --   XTyArr x ~ SourcePos,
+  --   XTyTuple x ~ SourcePos,
+  --   XTyLazy x ~ SourcePos
+  -- ) ::
+  --   Constraint
 
 refine :: (TypeChecked t x, Monad m) => Module x -> m (Module (Malgo 'Refine))
 refine Module {_moduleName, _moduleDefinition} = Module _moduleName <$> refineBindGroup _moduleDefinition
@@ -82,7 +79,6 @@ refineExp :: (TypeChecked t x, Monad m) => Exp x -> m (Exp (Malgo 'Refine))
 refineExp (Var x v) = pure $ Var (over ann toType x) v
 refineExp (Con x c) = pure $ Con (over ann toType x) c
 refineExp (Unboxed x u) = pure $ Unboxed (over ann toType x) u
-refineExp (Boxed x _) = absurd x
 refineExp (Apply x e1 e2) = Apply (over ann toType x) <$> refineExp e1 <*> refineExp e2
 refineExp (OpApp x op e1 e2) = do
   let x' = over ann toType $ over value (view _1) x

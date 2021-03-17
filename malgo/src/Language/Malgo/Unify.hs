@@ -18,6 +18,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
+-- | Unification library
 module Language.Malgo.Unify where
 
 import Control.Monad.Cont (ContT)
@@ -33,6 +34,8 @@ import Language.Malgo.Prelude
 
 infixl 5 :~
 
+-- | Constraint
+-- a :~ b means 'a ~ b'
 data Constraint t = t :~ t
   deriving stock (Eq, Ord, Show, Generic)
 
@@ -43,35 +46,43 @@ instance (Pretty t) => Pretty (Constraint t) where
 -- Unifiable --
 ---------------
 
+-- | Unifiable value
 class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
+  -- | Representation of variable
   type Var t
+
+  -- | Unify two terms and generate substituation and new constraints
   unify :: Pretty x => x -> t -> t -> (HashMap (Var t) t, [With x (Constraint t)])
+
+  -- | Check alpha-equivalence
   equiv :: t -> t -> Maybe (HashMap (Var t) (Var t))
+
+  -- | Free variables
   freevars :: t -> HashSet (Var t)
+
+  -- | Occurs check
   occursCheck :: (Eq (Var t), Hashable (Var t)) => Var t -> t -> Bool
   occursCheck v t = HashSet.member v (freevars t)
 
+-- | Lifted version of Unifiable
 class Unifiable1 t where
   liftUnify :: (Pretty x, Unifiable a) => (x -> a -> a -> (HashMap (Var a) a, [With x (Constraint a)])) -> x -> t a -> t a -> (HashMap (Var a) a, [With x (Constraint a)])
   liftEquiv :: Unifiable a => (a -> a -> Maybe (HashMap (Var a) (Var a))) -> t a -> t a -> Maybe (HashMap (Var a) (Var a))
   liftFreevars :: Unifiable a => (a -> HashSet (Var a)) -> t a -> HashSet (Var a)
   liftOccursCheck :: Unifiable a => (Var a -> a -> Bool) -> Var a -> t a -> Bool
 
-class Monad m => MonadBind t m where
+class (Monad m, Unifiable t) => MonadBind t m where
   lookupVar :: Var t -> m (Maybe t)
   default lookupVar :: (MonadTrans tr, MonadBind t m1, m ~ tr m1) => Var t -> m (Maybe t)
   lookupVar v = lift (lookupVar v)
   freshVar :: m (Var t)
   default freshVar :: (MonadTrans tr, MonadBind t m1, m ~ tr m1) => m (Var t)
   freshVar = lift (freshVar @t)
-  newVar :: Pretty x => x -> t -> m (Var t)
-  newVar x t = do
-    v <- freshVar @t
-    bindVar x v t
-    pure v
   bindVar :: Pretty x => x -> Var t -> t -> m ()
   default bindVar :: (MonadTrans tr, MonadBind t m1, m ~ tr m1, Pretty x) => x -> Var t -> t -> m ()
   bindVar x v t = lift (bindVar x v t)
+
+  -- Apply all substituation
   zonk :: t -> m t
   default zonk :: (MonadTrans tr, MonadBind t m1, m ~ tr m1) => t -> m t
   zonk t = lift (zonk t)
@@ -118,9 +129,8 @@ solveLoop n (With x (t1 :~ t2) : cs) = do
   ifor_ binds $ \var term -> bindVar x var term
   solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
-zonkConstraint :: (Applicative f, MonadBind t f) => With x (Constraint t) -> f (With x (Constraint t))
-zonkConstraint (With m (x :~ y)) =
-  With m <$> ((:~) <$> zonk x <*> zonk y)
+zonkConstraint :: (MonadBind t f) => With x (Constraint t) -> f (With x (Constraint t))
+zonkConstraint (With m (x :~ y)) = With m <$> ((:~) <$> zonk x <*> zonk y)
 
 errorWithMeta ::
 #ifdef DEBUG

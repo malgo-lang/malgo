@@ -1,34 +1,47 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE Strict #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
-module Language.Malgo.TypeCheck.TcEnv where
+module Language.Malgo.TypeCheck.TcEnv
+  ( TcEnv (..),
+    varEnv,
+    typeEnv,
+    rnEnv,
+    TypeDef (..),
+    typeConstructor,
+    typeParameters,
+    valueConstructors,
+  )
+where
 
-import Koriel.MonadUniq
+import qualified Data.HashMap.Strict as HashMap
+import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.IORef
-import qualified Data.HashMap.Strict as HashMap
+import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), IsTypeDef (safeToTypeDef))
+import qualified Language.Malgo.TypeRep.Static as Static
+import Language.Malgo.TypeRep.UTerm
+import Language.Malgo.UTerm
 
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId Scheme,
     _typeEnv :: HashMap RnTId TypeDef,
     _rnEnv :: RnEnv
   }
-  deriving stock (Show, Eq)
-
-instance Semigroup TcEnv where
-  TcEnv v1 t1 r1 <> TcEnv v2 t2 r2 = TcEnv (v1 <> v2) (t1 <> t2) (r1 <> r2)
-
-instance Monoid TcEnv where
-  mempty = TcEnv mempty mempty mempty
 
 instance Pretty TcEnv where
   pPrint TcEnv {_varEnv, _typeEnv, _rnEnv} =
@@ -41,19 +54,33 @@ instance Pretty TcEnv where
             ]
         )
 
+instance HasUTerm TypeF TypeVar TcEnv where
+  walkOn f TcEnv {_varEnv, _typeEnv, _rnEnv} =
+    TcEnv <$> traverseOf (traversed . walkOn) f _varEnv
+      <*> traverseOf (traversed . walkOn) f _typeEnv
+      <*> pure _rnEnv
+
+data TypeDef = TypeDef
+  { _typeConstructor :: UType,
+    _typeParameters :: [Id UType],
+    _valueConstructors :: [(RnId, UType)]
+  }
+
+instance Pretty TypeDef where
+  pPrint (TypeDef c q u) = pPrint (c, q, u)
+
+instance HasUTerm TypeF TypeVar TypeDef where
+  walkOn f TypeDef {_typeConstructor, _typeParameters, _valueConstructors} =
+    TypeDef <$> f _typeConstructor
+      <*> pure _typeParameters
+      <*> traverseOf (traversed . _2 . walkOn) f _valueConstructors
+
+instance IsTypeDef TypeDef where
+  safeToTypeDef TypeDef {_typeConstructor, _typeParameters, _valueConstructors} =
+    Static.TypeDef
+      <$> safeToType _typeConstructor <*> traverse (idMeta safeToType) _typeParameters <*> traverse (_2 safeToType) _valueConstructors
+  fromTypeDef Static.TypeDef {Static._typeConstructor, Static._typeParameters, Static._valueConstructors} =
+    TypeDef (fromType _typeConstructor) (map (over idMeta fromType) _typeParameters) (map (over _2 fromType) _valueConstructors)
+
 makeLenses ''TcEnv
-
-simpleTypeDef :: Type -> TypeDef
-simpleTypeDef x = TypeDef x [] []
-
-overTypeDef :: Monad f => (Type -> f Type) -> TypeDef -> f TypeDef
-overTypeDef f = traverseOf constructor f <=< traverseOf (union . traversed . _2) f
-
-genTcEnv :: MonadUniq m => RnEnv -> m TcEnv
-genTcEnv rnEnv =
-  pure $
-    TcEnv
-      { _varEnv = mempty,
-        _typeEnv = mempty,
-        _rnEnv = rnEnv
-      }
+makeLenses ''TypeDef
