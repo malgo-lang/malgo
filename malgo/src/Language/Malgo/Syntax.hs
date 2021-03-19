@@ -414,7 +414,7 @@ type instance XModule (Malgo 'Parse) = [Decl (Malgo 'Parse)]
 
 type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 
-type instance XModule (Malgo 'NewTypeCheck) = BindGroup (Malgo 'NewTypeCheck)
+type instance XModule (Malgo 'TypeCheck) = BindGroup (Malgo 'TypeCheck)
 
 type instance XModule (Malgo 'Refine) = BindGroup (Malgo 'Refine)
 

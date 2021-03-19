@@ -21,7 +21,7 @@ import qualified Language.Malgo.TypeRep.UTerm as U
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Phase and type instance
-data MalgoPhase = Parse | Rename | NewTypeCheck | Refine
+data MalgoPhase = Parse | Rename | TypeCheck | Refine
 
 data Malgo (p :: MalgoPhase)
 
@@ -38,13 +38,13 @@ _Module = lens (\(ModuleName s) -> s) (\_ s -> ModuleName s)
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = String
   MalgoId 'Rename = Id ModuleName
-  MalgoId 'NewTypeCheck = Id ModuleName
+  MalgoId 'TypeCheck = Id ModuleName
   MalgoId 'Refine = Id ModuleName
 
 type family MalgoTId (p :: MalgoPhase) where
   MalgoTId 'Parse = String
   MalgoTId 'Rename = Id ModuleName
-  MalgoTId 'NewTypeCheck = Id ModuleName
+  MalgoTId 'TypeCheck = Id ModuleName
   MalgoTId 'Refine = Id ModuleName
 
 type PsId = XId (Malgo 'Parse)
@@ -77,7 +77,7 @@ type family XId x where
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = SourcePos
   SimpleX 'Rename = SourcePos
-  SimpleX 'NewTypeCheck = With U.UType SourcePos
+  SimpleX 'TypeCheck = With U.UType SourcePos
   SimpleX 'Refine = With S.Type SourcePos
 
 type family XVar x where
@@ -99,7 +99,7 @@ type family XApply x where
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SourcePos
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
-  XOpApp (Malgo 'NewTypeCheck) = With U.UType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'TypeCheck) = With U.UType (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -202,7 +202,7 @@ type family XInfix x where
 type family XForeign x where
   XForeign (Malgo 'Parse) = SourcePos
   XForeign (Malgo 'Rename) = (SourcePos, String)
-  XForeign (Malgo 'NewTypeCheck) = With U.UType (SourcePos, String)
+  XForeign (Malgo 'TypeCheck) = With U.UType (SourcePos, String)
   XForeign (Malgo 'Refine) = With S.Type (SourcePos, String)
 
 type family XImport x where
