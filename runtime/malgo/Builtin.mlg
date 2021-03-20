@@ -112,6 +112,26 @@ module Builtin = {
   isTrue# = { 1# -> True
             | _  -> False };
 
+  foreign import le_int32 :: Int32# -> Int32# -> Int32#;
+
+  le_Int32# :: Int32# -> Int32# -> Int32#;
+  le_Int32# = { x y -> le_int32 x y };
+
+  foreign import le_int64 :: Int64# -> Int64# -> Int32#;
+
+  le_Int64# :: Int64# -> Int64# -> Int32#;
+  le_Int64# = { x y -> le_int64 x y };
+
+  foreign import le_float :: Float# -> Float# -> Int32#;
+
+  le_Float# :: Float# -> Float# -> Int32#;
+  le_Float# = { x y -> le_float x y };
+
+  foreign import le_double :: Double# -> Double# -> Int32#;
+
+  le_Double# :: Double# -> Double# -> Int32#;
+  le_Double# = { x y -> le_double x y };
+
   foreign import ge_int32 :: Int32# -> Int32# -> Int32#;
 
   ge_Int32# :: Int32# -> Int32# -> Int32#;
@@ -121,6 +141,11 @@ module Builtin = {
 
   ge_Int64# :: Int64# -> Int64# -> Int32#;
   ge_Int64# = { x y -> ge_int64 x y };
+
+  foreign import ge_float :: Float# -> Float# -> Int32#;
+
+  ge_Float# :: Float# -> Float# -> Int32#;
+  ge_Float# = { x y -> ge_float x y };
 
   foreign import ge_double :: Double# -> Double# -> Int32#;
 
