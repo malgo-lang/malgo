@@ -75,9 +75,18 @@ genBuiltinRnEnv = do
   char_t <- newTopLevelId "Char#" $ ModuleName "Builtin"
   string_t <- newTopLevelId "String#" $ ModuleName "Builtin"
   ptr_t <- newTopLevelId "Ptr#" $ ModuleName "Builtin"
+
+  -- generate RnId of primitive functions
+  add_i32 <- newTopLevelId "add_Int32#" $ ModuleName "Builtin"
+  add_i64 <- newTopLevelId "add_Int64#" $ ModuleName "Builtin"
+
   pure $
     RnEnv
-      { _varEnv = mempty,
+      { _varEnv =
+          HashMap.fromList
+            [ ("add_Int32#", [add_i32]),
+              ("add_Int64#", [add_i64])
+            ],
         _typeEnv =
           HashMap.fromList
             [ ("Int32#", [int32_t]),

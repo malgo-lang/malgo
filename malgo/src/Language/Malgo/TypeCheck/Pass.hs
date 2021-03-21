@@ -31,7 +31,7 @@ import Language.Malgo.Syntax hiding (Type (..), freevars)
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeCheck.TcEnv
-import Language.Malgo.TypeRep.Static (PrimT (..), Rep (..))
+import Language.Malgo.TypeRep.Static (Rep (..))
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.UTerm
@@ -59,7 +59,7 @@ lookupType pos name = do
 typeCheck :: (MonadUniq m, MonadMalgo m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) =
   runTypeUnifyT $ do
-    let tcEnv = TcEnv mempty mempty rnEnv
+    tcEnv <- genTcEnv rnEnv
     (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
     zonkedBg <-
       pure bg'
@@ -335,23 +335,7 @@ transType (S.TyApp _ t ts) = do
       pure $ UTerm $ TyPtr t'
     _ -> foldr (\l r -> UTerm $ TyApp r l) <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
-transType (S.TyCon pos c) = do
-  rnEnv <- use rnEnv
-  -- lookup RnTId of primitive types
-  let int32_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Int32#") rnEnv
-  let int64_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Int64#") rnEnv
-  let float_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Float#") rnEnv
-  let double_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Double#") rnEnv
-  let char_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Char#") rnEnv
-  let string_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "String#") rnEnv
-  if
-      | c == int32_t -> pure $ UTerm $ TyPrim Int32T
-      | c == int64_t -> pure $ UTerm $ TyPrim Int64T
-      | c == float_t -> pure $ UTerm $ TyPrim FloatT
-      | c == double_t -> pure $ UTerm $ TyPrim DoubleT
-      | c == char_t -> pure $ UTerm $ TyPrim CharT
-      | c == string_t -> pure $ UTerm $ TyPrim StringT
-      | otherwise -> lookupType pos c
+transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = UTerm <$> (TyArr <$> transType t1 <*> transType t2)
 transType (S.TyTuple _ ts) = UTerm <$> (TyTuple <$> traverse transType ts)
 transType (S.TyLazy _ t) = UTerm <$> (TyLazy <$> transType t)
