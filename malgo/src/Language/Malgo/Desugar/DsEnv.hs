@@ -13,7 +13,6 @@ import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
-import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.Static
 
 -- 脱糖衣処理の環境

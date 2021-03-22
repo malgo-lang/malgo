@@ -8,6 +8,7 @@ module Runner where
 import qualified Data.Text.IO as T
 import Development.Shake
 import Development.Shake.FilePath
+import Koriel.Id (ModuleName (ModuleName))
 import qualified Language.Malgo.Driver as Driver
 import Language.Malgo.Parser (parseMalgo)
 import Language.Malgo.Prelude hiding ((<.>))

@@ -25,15 +25,6 @@ data MalgoPhase = Parse | Rename | TypeCheck | Refine
 
 data Malgo (p :: MalgoPhase)
 
-newtype ModuleName = ModuleName String
-  deriving stock (Eq, Show, Ord, Generic)
-  deriving newtype (Pretty)
-
-instance Binary ModuleName
-
-_Module :: Lens' ModuleName String
-_Module = lens (\(ModuleName s) -> s) (\_ s -> ModuleName s)
-
 -- Id
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = String

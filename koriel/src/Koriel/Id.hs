@@ -3,6 +3,7 @@
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -15,7 +16,9 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
 module Koriel.Id
-  ( Id,
+  ( ModuleName (..),
+    _Module,
+    Id,
     idName,
     idUniq,
     idMeta,
@@ -36,6 +39,15 @@ import Data.Hashable (Hashable (hashWithSalt))
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList, (.=))
 import Koriel.Pretty
+
+newtype ModuleName = ModuleName String
+  deriving stock (Eq, Show, Ord, Generic)
+  deriving newtype (Pretty)
+
+instance Binary ModuleName
+
+_Module :: Lens' ModuleName String
+_Module = lens (\(ModuleName s) -> s) (\_ s -> ModuleName s)
 
 data Id a = Id
   { _idName :: String,

@@ -20,7 +20,6 @@ import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import {-# SOURCE #-} Language.Malgo.Syntax.Extension (ModuleName)
 
 --------------------------------
 -- Common tag representations --
