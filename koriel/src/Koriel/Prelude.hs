@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -49,6 +50,7 @@ module Koriel.Prelude
     writeIORef,
     Bug (..),
     bug,
+    undefined,
     localState,
     Unreachable (..),
   )
@@ -92,6 +94,7 @@ import Data.String (IsString (..))
 import Data.Text (Text)
 import Data.Traversable
 import Data.Typeable
+import GHC.Exts (RuntimeRep, TYPE)
 import GHC.Generics (Generic)
 import GHC.Stack
   ( CallStack,
@@ -102,7 +105,8 @@ import GHC.Stack
 import qualified Text.Megaparsec.Pos as Megaparsec
 import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
 import Witherable
-import Prelude hiding (filter, log, unzip)
+import Prelude hiding (filter, log, undefined, unzip)
+import qualified Prelude
 
 -- | unzip :: [(a, b)] -> ([a], [b]) の一般化
 unzip :: Functor f => f (a, b) -> (f a, f b)
@@ -164,6 +168,10 @@ localState action = do
   state <- get
   put backup
   pure (result, state)
+
+undefined :: forall (r :: RuntimeRep). forall (a :: TYPE r). HasCallStack => a
+undefined = Prelude.undefined
+{-# WARNING undefined "'undefined' function remains in code" #-}
 
 -- mtlのインスタンスの追加定義
 instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
