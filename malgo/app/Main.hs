@@ -40,7 +40,6 @@ toLLOpt =
       <*> switch (long "dump-renamed")
       <*> switch (long "dump-typed")
       <*> switch (long "dump-desugar")
-      <*> switch (long "gen-core-json")
       <*> switch (long "no-lambdalift")
       <*> switch (long "no-opt")
       <*> fmap read (strOption (long "inline" <> value "10"))

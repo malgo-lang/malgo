@@ -9,8 +9,6 @@
 
 module Koriel.Core.Type where
 
-import Data.Aeson
-import Data.Aeson.Types (prependFailure, unexpected)
 import Data.Binary (Binary)
 import Koriel.Id
 import Koriel.Prelude hiding ((.=))
@@ -28,16 +26,6 @@ instance Binary Con
 
 instance Pretty Con where
   pPrint (Con tag xs) = "<" <> text tag <+> sep (punctuate "," (map pPrint xs)) <> ">"
-
-instance ToJSON Con where
-  toJSON (Con tag ts) = object [("type", "Con"), "tag" .= tag, "params" .= ts]
-
-instance FromJSON Con where
-  parseJSON = withObject "Con" $ \v -> do
-    ty <- v .: "type"
-    if ty == ("Con" :: String)
-      then Con <$> v .: "tag" <*> v .: "params"
-      else prependFailure "parsing Con failed, " (unexpected $ Object v)
 
 -- TODO: クロージャを表す型を追加
 -- ClosureT [Type] Type
@@ -75,38 +63,6 @@ instance Pretty Type where
   pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
   pPrint AnyT = "*"
   pPrint VoidT = "Void"
-
-instance ToJSON Type where
-  toJSON (ps :-> r) = object [("type", "FunT"), "params" .= ps, "result" .= r]
-  toJSON Int32T = object [("type", "Int32T")]
-  toJSON Int64T = object [("type", "Int64T")]
-  toJSON FloatT = object [("type", "FloatT")]
-  toJSON DoubleT = object [("type", "DoubleT")]
-  toJSON CharT = object [("type", "CharT")]
-  toJSON StringT = object [("type", "StringT")]
-  toJSON BoolT = object [("type", "BoolT")]
-  toJSON (SumT cs) = object [("type", "SumT"), "con_set" .= cs]
-  toJSON (PtrT t) = object [("type", "PtrT"), "ptr_to" .= t]
-  toJSON AnyT = object [("type", "AnyT")]
-  toJSON VoidT = object [("type", "VoidT")]
-
-instance FromJSON Type where
-  parseJSON = withObject "Type" $ \v -> do
-    ty <- v .: "type"
-    if
-        | ty == ("FunT" :: String) -> (:->) <$> v .: "params" <*> v .: "result"
-        | ty == "Int32T" -> pure Int32T
-        | ty == "Int64T" -> pure Int64T
-        | ty == "FloatT" -> pure FloatT
-        | ty == "DoubleT" -> pure DoubleT
-        | ty == "CharT" -> pure CharT
-        | ty == "StringT" -> pure StringT
-        | ty == "BoolT" -> pure BoolT
-        | ty == "SumT" -> SumT <$> v .: "con_set"
-        | ty == "PtrT" -> PtrT <$> v .: "ptr_to"
-        | ty == "AnyT" -> pure AnyT
-        | ty == "VoidT" -> pure VoidT
-        | otherwise -> prependFailure "parsing Type failed, " (unexpected $ Object v)
 
 class HasType a where
   typeOf :: a -> Type

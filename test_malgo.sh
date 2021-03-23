@@ -73,7 +73,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- to-ll --force --via-binding --gen-core-json ./examples/malgo/$file -o $LLFILE || exit 255"
+  eval "$BUILD exec malgoc -- to-ll --force --via-binding ./examples/malgo/$file -o $LLFILE || exit 255"
 
   clang -O2 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
 

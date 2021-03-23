@@ -32,7 +32,6 @@ module Koriel.Id
   )
 where
 
-import Data.Aeson
 import Data.Binary (Binary)
 import Data.Deriving
 import Data.Hashable (Hashable (hashWithSalt))
@@ -88,23 +87,6 @@ instance Pretty1 Id where
   liftPPrintPrec _ _ _ Id {_idName, _idUniq, _idIsExternal = False} = text _idName <> "_" <> pPrint _idUniq
   liftPPrintPrec _ _ _ Id {_idName, _idIsExternal = True} = text _idName
 #endif
-
-instance ToJSON a => ToJSON (Id a) where
-  toJSON Id {_idName, _idUniq, _idMeta, _idIsTopLevel, _idIsExternal} =
-    object
-      [ "type" .= ("Id" :: String),
-        "name" .= _idName,
-        "uniq" .= _idUniq,
-        "meta" .= toJSON _idMeta,
-        "is_toplevel" .= _idIsTopLevel,
-        "is_external" .= _idIsExternal
-      ]
-
-instance FromJSON a => FromJSON (Id a) where
-  parseJSON = withObject "Id" $ \v -> do
-    withText "type" (guard . (== "Id")) =<< v .: "type"
-    meta <- parseJSON =<< v .: "meta"
-    Id <$> v .: "name" <*> v .: "uniq" <*> pure meta <*> v .: "is_toplevel" <*> v .: "is_external"
 
 makeLenses ''Id
 

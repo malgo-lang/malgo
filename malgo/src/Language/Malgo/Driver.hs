@@ -5,9 +5,7 @@
 
 module Language.Malgo.Driver (compile, compileFromAST) where
 
-import Data.Aeson (FromJSON, ToJSON, eitherDecode, encode)
 import qualified Data.ByteString as BS
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.CodeGen (codeGen)
@@ -35,7 +33,6 @@ import qualified Language.Malgo.TypeCheck.Pass as TypeCheck
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
 -- import Language.Malgo.TypeCheck.Pass (typeCheck)
 -- import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
-import System.FilePath.Lens (extension)
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -102,8 +99,6 @@ compileFromAST parsedAst opt =
               hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
               hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
 
-          when (genCoreJSON opt) $ storeCoreJSON coreLLOpt
-
           llvmir <- codeGen coreLLOpt
 
           let llvmModule =
@@ -132,13 +127,3 @@ compile opt = do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
   compileFromAST parsedAst opt
-
-storeCoreJSON :: (MonadMalgo m, MonadIO m, ToJSON a, FromJSON a) => a -> m ()
-storeCoreJSON core = do
-  opt <- getOpt
-  let json = encode core
-  let decoded = eitherDecode json
-  case decoded of
-    Left err -> error err
-    Right x -> (x `asTypeOf` core) `seq` pure ()
-  liftIO $ BL.writeFile (dstName opt & extension .~ ".json") json
