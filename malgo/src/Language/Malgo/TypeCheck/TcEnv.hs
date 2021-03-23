@@ -27,6 +27,7 @@ module Language.Malgo.TypeCheck.TcEnv
   )
 where
 
+import Control.Arrow ((>>>))
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
@@ -87,12 +88,12 @@ instance IsTypeDef TypeDef where
 
 genTcEnv :: Applicative f => RnEnv -> f TcEnv
 genTcEnv rnEnv = do
-  let int32_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Int32#") rnEnv
-  let int64_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Int64#") rnEnv
-  let float_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Float#") rnEnv
-  let double_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Double#") rnEnv
-  let char_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "Char#") rnEnv
-  let string_t = fromJust $ find ((== ModuleName "Builtin") . view idMeta) =<< view (R.typeEnv . at "String#") rnEnv
+  let int32_t = fromJust $ findBuiltinType "Int32#" rnEnv
+  let int64_t = fromJust $ findBuiltinType "Int64#" rnEnv
+  let float_t = fromJust $ findBuiltinType "Float#" rnEnv
+  let double_t = fromJust $ findBuiltinType "Double#" rnEnv
+  let char_t = fromJust $ findBuiltinType "Char#" rnEnv
+  let string_t = fromJust $ findBuiltinType "String#" rnEnv
   pure $
     TcEnv
       { _varEnv = mempty,
@@ -107,6 +108,11 @@ genTcEnv rnEnv = do
             ],
         _rnEnv = rnEnv
       }
+
+findBuiltinType :: String -> RnEnv -> Maybe (Id ())
+findBuiltinType x rnEnv = do
+  ids <- view (R.typeEnv . at x) rnEnv
+  find (view idSort >>> \case WiredIn (ModuleName "Builtin") -> True; _ -> False) ids
 
 makeLenses ''TcEnv
 makeLenses ''TypeDef

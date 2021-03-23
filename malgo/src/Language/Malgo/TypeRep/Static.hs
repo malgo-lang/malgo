@@ -206,7 +206,7 @@ instance WithType Void where
 data TypeDef = TypeDef
   { _typeConstructor :: Type,
     _typeParameters :: [Id Type],
-    _valueConstructors :: [(Id ModuleName, Type)]
+    _valueConstructors :: [(Id (), Type)]
   }
   deriving stock (Show, Generic)
 

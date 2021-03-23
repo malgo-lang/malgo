@@ -1,14 +1,12 @@
 module TestCast = {
   import Builtin;
   import Prelude;
-  
+
   foreign import unsafe_cast :: a -> b;
 
   foreign import new_vector :: Int64# -> Ptr# Char# -> Ptr# (Ptr# Char#);
 
   foreign import read_vector :: Int64# -> Ptr# (Ptr# Char#) -> Ptr# Char#;
-
-  foreign import print_int32 :: Int32# -> ();
 
   printInt32 :: Int32 -> ();
   printInt32 = { Int32# x -> print_int32 x };
@@ -16,6 +14,6 @@ module TestCast = {
   main = {
     printInt32 (unsafe_cast (read_vector 2L# (new_vector 10L# (unsafe_cast 5))))
   };
-} 
+}
 
 -- Expected: 5

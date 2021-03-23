@@ -2,8 +2,6 @@ module Fib = {
   import Builtin;
   import Prelude;
 
-  foreign import newline :: () -> ();
-
   infix 4 (<=);
   (<=) = { (Int32# x) (Int32# y) -> isTrue# (ge_Int32# y x) };
 

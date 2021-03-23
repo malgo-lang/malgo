@@ -4,6 +4,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
@@ -43,8 +44,8 @@ optimizeProgram ::
   Int ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram level prog@(Program fs) = runReaderT ?? level $ do
-  state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) fs) mempty
+optimizeProgram level prog@Program {..} = runReaderT ?? level $ do
+  state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) _topFuncs) mempty
   appProgram (optimizeExpr state) prog
 
 optimizeExpr :: (MonadReader Int f, MonadUniq f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
@@ -141,7 +142,7 @@ removeUnusedLet (Let ds e) = do
     reachable limit gamma v fvs
       -- limit回試行してわからなければ安全側に倒してTrue
       | limit <= 0 = True
-      | v ^. idIsTopLevel = True
+      | idIsExternal v = True
       | v `elem` fvs = True
       | otherwise =
         -- fvsの要素fvについて、gamma[fv]をfvsに加える

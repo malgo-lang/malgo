@@ -68,17 +68,17 @@ appendRnEnv lens newEnv = over lens (go newEnv)
 genBuiltinRnEnv :: MonadUniq m => m RnEnv
 genBuiltinRnEnv = do
   -- generate RnTId of primitive types
-  int32_t <- newTopLevelId "Int32#" $ ModuleName "Builtin"
-  int64_t <- newTopLevelId "Int64#" $ ModuleName "Builtin"
-  float_t <- newTopLevelId "Float#" $ ModuleName "Builtin"
-  double_t <- newTopLevelId "Double#" $ ModuleName "Builtin"
-  char_t <- newTopLevelId "Char#" $ ModuleName "Builtin"
-  string_t <- newTopLevelId "String#" $ ModuleName "Builtin"
-  ptr_t <- newTopLevelId "Ptr#" $ ModuleName "Builtin"
+  int32_t <- newId "Int32#" () $ WiredIn $ ModuleName "Builtin"
+  int64_t <- newId "Int64#" () $ WiredIn $ ModuleName "Builtin"
+  float_t <- newId "Float#" () $ WiredIn $ ModuleName "Builtin"
+  double_t <- newId "Double#" () $ WiredIn $ ModuleName "Builtin"
+  char_t <- newId "Char#" () $ WiredIn $ ModuleName "Builtin"
+  string_t <- newId "String#" () $ WiredIn $ ModuleName "Builtin"
+  ptr_t <- newId "Ptr#" () $ WiredIn $ ModuleName "Builtin"
 
   -- generate RnId of primitive functions
-  add_i32 <- newTopLevelId "add_Int32#" $ ModuleName "Builtin"
-  add_i64 <- newTopLevelId "add_Int64#" $ ModuleName "Builtin"
+  add_i32 <- newId "add_Int32#" () $ WiredIn $ ModuleName "Builtin"
+  add_i64 <- newId "add_Int64#" () $ WiredIn $ ModuleName "Builtin"
 
   pure $
     RnEnv

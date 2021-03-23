@@ -28,15 +28,15 @@ data Malgo (p :: MalgoPhase)
 -- Id
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = String
-  MalgoId 'Rename = Id ModuleName
-  MalgoId 'TypeCheck = Id ModuleName
-  MalgoId 'Refine = Id ModuleName
+  MalgoId 'Rename = Id ()
+  MalgoId 'TypeCheck = Id ()
+  MalgoId 'Refine = Id ()
 
 type family MalgoTId (p :: MalgoPhase) where
   MalgoTId 'Parse = String
-  MalgoTId 'Rename = Id ModuleName
-  MalgoTId 'TypeCheck = Id ModuleName
-  MalgoTId 'Refine = Id ModuleName
+  MalgoTId 'Rename = Id ()
+  MalgoTId 'TypeCheck = Id ()
+  MalgoTId 'Refine = Id ()
 
 type PsId = XId (Malgo 'Parse)
 

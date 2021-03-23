@@ -23,9 +23,6 @@ runAlpha = runReaderT
 
 type AlphaEnv = HashMap (Id Type) (Atom (Id Type))
 
-cloneId :: MonadUniq f => Id a -> f (Id a)
-cloneId n = newLocalId (n ^. idName) (n ^. idMeta)
-
 lookupVar :: MonadReader AlphaEnv m => Id Type -> m (Atom (Id Type))
 lookupVar n = do
   env <- ask

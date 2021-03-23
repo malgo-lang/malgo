@@ -24,7 +24,6 @@ import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
 import Koriel.Id hiding (newGlobalId, newId)
-import qualified Koriel.Id as Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Desugar.DsEnv
@@ -36,7 +35,7 @@ import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
-desugar :: (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m, IsScheme a1, IsTypeDef a2, XModule x ~ BindGroup (Malgo 'Refine)) => HashMap (Id ModuleName) a1 -> HashMap (Id ModuleName) a2 -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
+desugar :: (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m, IsScheme a1, IsTypeDef a2, XModule x ~ BindGroup (Malgo 'Refine)) => HashMap RnId a1 -> HashMap RnTId a2 -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
 desugar varEnv typeEnv rnEnv (Module modName ds) = do
   (dsEnv, ds') <- runReaderT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
@@ -45,11 +44,11 @@ desugar varEnv typeEnv rnEnv (Module modName ds) = do
         mainFunc =<< runDef do
           _ <- bind mainCall
           pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv, Program (mainFuncDef : ds'))
-    Nothing -> pure (dsEnv, Program ds')
+      pure (dsEnv, Program modName (mainFuncDef : ds'))
+    Nothing -> pure (dsEnv, Program modName ds')
   where
     -- エントリーポイントとなるmain関数を検索する
-    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsExternal = Just $ CallDirect coreId []
+    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId []
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
 
@@ -190,7 +189,7 @@ dsExp (G.Var x name) = do
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _) -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
     _ -> pure ()
-  if name' ^. idIsTopLevel
+  if idIsExternal name'
     then do
       -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
       -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
@@ -426,7 +425,7 @@ unfoldType t = dsType t
 
 -- Desugar Monad
 
-lookupName :: (MonadReader DsEnv m) => Id ModuleName -> m (Id C.Type)
+lookupName :: (MonadReader DsEnv m) => RnId -> m (Id C.Type)
 lookupName name = do
   mname' <- view (nameEnv . at name)
   case mname' of
@@ -437,7 +436,7 @@ lookupValueConstructors ::
   (MonadReader DsEnv m, MonadFail m) =>
   Id GT.Type ->
   [GT.Type] ->
-  m [(Id ModuleName, GT.Type)]
+  m [(RnId, GT.Type)]
 lookupValueConstructors con ts = do
   typeEnv <- view typeDefEnv
   case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con) (HashMap.elems typeEnv) of
@@ -445,12 +444,8 @@ lookupValueConstructors con ts = do
       pure $ over (mapped . _2) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
 
-newCoreId :: MonadUniq f => Id ModuleName -> a -> f (Id a)
-newCoreId griffId coreType =
-  Id.newId (toCoreName griffId) coreType (griffId ^. idIsTopLevel) (griffId ^. idIsExternal)
-
-toCoreName :: Id ModuleName -> String
-toCoreName griffId = griffId ^. idMeta . _Module <> "." <> griffId ^. idName
+newCoreId :: MonadUniq f => RnId -> C.Type -> f (Id C.Type)
+newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::

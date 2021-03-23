@@ -15,8 +15,6 @@ module Cast = {
   castMaybe :: Maybe a -> b;
   castMaybe = { x -> unsafe_cast x };
 
-  foreign import print_int32 :: Int32# -> ();
-
   main = {
     let x = 1;
     let x' = unsafe_cast x;

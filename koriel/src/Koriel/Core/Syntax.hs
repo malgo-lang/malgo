@@ -10,6 +10,8 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
@@ -258,17 +260,20 @@ instance HasAtom Obj where
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
 
 -- | toplevel function definitions
-newtype Program a = Program
-  { topFuncs :: [(a, ([a], Exp a))]
+data Program a = Program
+  { _moduleName :: ModuleName,
+    _topFuncs :: [(a, ([a], Exp a))]
   }
   deriving stock (Eq, Show, Functor, Generic)
 
+makeLenses ''Program
+
 instance Pretty a => Pretty (Program a) where
-  pPrint Program {topFuncs} =
+  pPrint Program {..} =
     vcat $
       map
         (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e)
-        topFuncs
+        _topFuncs
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
@@ -282,8 +287,8 @@ appCase f = \case
   Bind x e -> Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram f Program {topFuncs} =
-  Program <$> traverseOf (traversed . _2 . _2) f topFuncs
+appProgram f Program {_moduleName, _topFuncs} =
+  Program _moduleName <$> traverseOf (traversed . _2 . _2) f _topFuncs
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadUniq, MonadIO, MonadTrans, MonadState s, MonadReader r)
@@ -319,9 +324,9 @@ cast ty e
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
-mainFunc :: (MonadUniq m) => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc :: MonadUniq m => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
 mainFunc e = do
-  mainFuncId <- newGlobalId "main" ([] :-> Int32T)
+  mainFuncId <- newId "main" ([] :-> Int32T) $ WiredIn (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
     _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
     pure e
