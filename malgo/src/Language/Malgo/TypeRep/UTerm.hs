@@ -276,7 +276,11 @@ generalizeMutRecs x bound terms = do
 
 instantiate :: (MonadBind UType m) => Scheme -> m UType
 instantiate (Forall as t) = do
-  avs <- traverse ?? as $ \a -> (over idMeta unfreeze a,) . UVar <$> freshVar @UType
+  avs <- traverse ?? as $ \a -> do
+    let a' = over idMeta unfreeze a
+    v <- UVar <$> freshVar @UType
+    solve [With () $ a' ^. idMeta :~ typeOf v]
+    pure (a', v)
   replace avs t
   where
     replace _ t@UVar {} = pure t
