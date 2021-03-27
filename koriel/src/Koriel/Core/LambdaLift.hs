@@ -3,6 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -30,15 +31,16 @@ data Env = Env
 makeLenses ''Env
 
 lambdalift :: MonadUniq m => Program (Id Type) -> m (Program (Id Type))
-lambdalift Program {topFuncs} =
-  evalStateT ?? Env {_funcs = mempty, _knowns = HashSet.fromList $ map fst topFuncs} $ do
-    topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
-    funcs <>= HashMap.fromList topFuncs
-    knowns <>= HashSet.fromList (map fst topFuncs)
-    Env {_funcs} <- get
-    traverseOf appProgram (pure . flat) $ Program (HashMap.toList _funcs)
+lambdalift Program {..} =
+  runReaderT ?? _moduleName $
+    evalStateT ?? Env {_funcs = mempty, _knowns = HashSet.fromList $ map fst _topFuncs} $ do
+      topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) _topFuncs
+      funcs <>= HashMap.fromList topFuncs
+      knowns <>= HashSet.fromList (map fst topFuncs)
+      Env {_funcs} <- get
+      traverseOf appProgram (pure . flat) $ Program _moduleName (HashMap.toList _funcs)
 
-llift :: (MonadUniq f, MonadState Env f) => Exp (Id Type) -> f (Exp (Id Type))
+llift :: (MonadUniq f, MonadState Env f, MonadReader ModuleName f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `elem` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
@@ -70,8 +72,8 @@ llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
 
-def :: (MonadUniq m, MonadState Env m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
+def :: (MonadUniq m, MonadState Env m, MonadReader ModuleName m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
-  f <- newTopLevelId ("$raw_" <> name) (map typeOf xs :-> typeOf e)
+  f <- newLocalId ("$raw_" <> name) (map typeOf xs :-> typeOf e)
   funcs . at f ?= (xs, e)
   pure f

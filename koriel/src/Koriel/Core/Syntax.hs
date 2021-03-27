@@ -10,6 +10,8 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
@@ -18,8 +20,6 @@
 -- A正規形に近い。
 module Koriel.Core.Syntax where
 
-import Data.Aeson hiding (Bool, Error, String)
-import Data.Aeson.Types (prependFailure, unexpected)
 import qualified Data.HashSet as HashSet
 import Koriel.Core.Op
 import Koriel.Core.Type
@@ -62,28 +62,6 @@ instance Pretty Unboxed where
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 
-instance ToJSON Unboxed where
-  toJSON (Int32 i) = object [("type", "Int32"), "value" .= i]
-  toJSON (Int64 i) = object [("type", "Int64"), "value" .= i]
-  toJSON (Float f) = object [("type", "Float"), "value" .= f]
-  toJSON (Double f) = object [("type", "Double"), "value" .= f]
-  toJSON (Char c) = object [("type", "Char"), "value" .= c]
-  toJSON (String s) = object [("type", "String"), "value" .= s]
-  toJSON (Bool b) = object [("type", "Bool"), "value" .= b]
-
-instance FromJSON Unboxed where
-  parseJSON = withObject "Unboxed" $ \v -> do
-    ty <- v .: "type"
-    if
-        | ty == ("Int32" :: String) -> Int32 <$> v .: "value"
-        | ty == "Int64" -> Int64 <$> v .: "value"
-        | ty == "Float" -> Float <$> v .: "value"
-        | ty == "Double" -> Double <$> v .: "value"
-        | ty == "Char" -> Char <$> v .: "value"
-        | ty == "String" -> String <$> v .: "value"
-        | ty == "Bool" -> Bool <$> v .: "value"
-        | otherwise -> prependFailure "parsing Unboxed failed, " (unexpected $ Object v)
-
 -- | atoms
 data Atom a
   = -- | variable
@@ -99,18 +77,6 @@ instance HasType a => HasType (Atom a) where
 instance Pretty a => Pretty (Atom a) where
   pPrint (Var x) = pPrint x
   pPrint (Unboxed x) = pPrint x
-
-instance ToJSON a => ToJSON (Atom a) where
-  toJSON (Var x) = object [("type", "Var"), "variable" .= x]
-  toJSON (Unboxed x) = object [("type", "Unboxed"), "unboxed" .= x]
-
-instance FromJSON a => FromJSON (Atom a) where
-  parseJSON = withObject "Atom" $ \v -> do
-    ty <- v .: "type"
-    if
-        | ty == ("Var" :: String) -> Var <$> v .: "variable"
-        | ty == "Unboxed" -> Unboxed <$> v .: "unboxed"
-        | otherwise -> prependFailure "parsing Atom failed, " (unexpected $ Object v)
 
 instance HasFreeVar Atom where
   freevars (Var x) = HashSet.singleton x
@@ -130,16 +96,6 @@ localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
 
 localDefObj :: Lens' (LocalDef a) (Obj a)
 localDefObj = lens _localDefObj (\l o -> l {_localDefObj = o})
-
-instance ToJSON a => ToJSON (LocalDef a) where
-  toJSON (LocalDef x o) = object [("type", "LocalDef"), "variable" .= x, "object" .= o]
-
-instance FromJSON a => FromJSON (LocalDef a) where
-  parseJSON = withObject "LocalDef" $ \v -> do
-    ty <- v .: "type"
-    if ty == ("LocalDef" :: String)
-      then LocalDef <$> v .: "variable" <*> v .: "object"
-      else prependFailure "parsing LocalDef failed, " (unexpected $ Object v)
 
 -- | expressions
 data Exp a
@@ -223,32 +179,6 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
   pPrint (Error _) = "ERROR"
 
-instance ToJSON a => ToJSON (Exp a) where
-  toJSON (Atom x) = object [("type", "Atom"), "atom" .= x]
-  toJSON (Call f xs) = object [("type", "Call"), "func" .= f, "args" .= xs]
-  toJSON (CallDirect f xs) = object [("type", "CallDirect"), "func" .= f, "args" .= xs]
-  toJSON (ExtCall p t xs) = object [("type", "ExtCall"), "ext_func" .= p, "func_type" .= t, "args" .= xs]
-  toJSON (BinOp o x y) = object [("type", "BinOp"), "op" .= o, "left" .= x, "right" .= y]
-  toJSON (Cast ty x) = object [("type", "Cast"), "as_type" .= ty, "value" .= x]
-  toJSON (Let xs e) = object [("type", "Let"), "definitions" .= xs, "expr" .= e]
-  toJSON (Match v cs) = object [("type", "Match"), "scrutinee" .= v, "clauses" .= cs]
-  toJSON (Error t) = object [("type", "Error"), "error_type" .= t]
-
-instance FromJSON a => FromJSON (Exp a) where
-  parseJSON = withObject "Exp" $ \v -> do
-    ty <- v .: "type"
-    if
-        | ty == ("Atom" :: String) -> Atom <$> v .: "atom"
-        | ty == "Call" -> Call <$> v .: "func" <*> v .: "args"
-        | ty == "CallDirect" -> CallDirect <$> v .: "func" <*> v .: "args"
-        | ty == "ExtCall" -> ExtCall <$> v .: "ext_func" <*> v .: "func_type" <*> v .: "args"
-        | ty == "BinOp" -> BinOp <$> v .: "op" <*> v .: "left" <*> v .: "right"
-        | ty == "Cast" -> Cast <$> v .: "as_type" <*> v .: "value"
-        | ty == "Let" -> Let <$> v .: "definitions" <*> v .: "expr"
-        | ty == "Match" -> Match <$> v .: "scrutinee" <*> v .: "clauses"
-        | ty == "Error" -> Error <$> v .: "error_type"
-        | otherwise -> prependFailure "parsing Exp failed, " (unexpected $ Object v)
-
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
@@ -293,20 +223,6 @@ instance Pretty a => Pretty (Case a) where
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
-instance ToJSON a => ToJSON (Case a) where
-  toJSON (Unpack con vs e) = object [("type", "Unpack"), "con" .= con, "bindings" .= vs, "expr" .= e]
-  toJSON (Switch unboxed e) = object [("type", "Switch"), "value" .= unboxed, "expr" .= e]
-  toJSON (Bind x e) = object [("type", "Bind"), "binding" .= x, "expr" .= e]
-
-instance FromJSON a => FromJSON (Case a) where
-  parseJSON = withObject "Case" $ \v -> do
-    ty <- v .: "type"
-    if
-        | ty == ("Unpack" :: String) -> Unpack <$> v .: "con" <*> v .: "bindings" <*> v .: "expr"
-        | ty == "Switch" -> Switch <$> v .: "value" <*> v .: "expr"
-        | ty == "Bind" -> Bind <$> v .: "binding" <*> v .: "expr"
-        | otherwise -> prependFailure "parsing Case failed, " (unexpected $ Object v)
-
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
   freevars (Switch _ e) = freevars e
@@ -334,18 +250,6 @@ instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) <+> ":" <+> pPrint ty
 
-instance ToJSON a => ToJSON (Obj a) where
-  toJSON (Fun ps e) = object [("type", "Fun"), "params" .= ps, "expr" .= e]
-  toJSON (Pack ty con as) = object [("type", "Pack"), "pack_to" .= ty, "con" .= con, "args" .= as]
-
-instance FromJSON a => FromJSON (Obj a) where
-  parseJSON = withObject "Obj" $ \v -> do
-    ty <- v .: "type"
-    if
-        | ty == ("Fun" :: String) -> Fun <$> v .: "params" <*> v .: "expr"
-        | ty == "Pack" -> Pack <$> v .: "pack_to" <*> v .: "con" <*> v .: "args"
-        | otherwise -> prependFailure "parsing Obj failed, " (unexpected $ Object v)
-
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
@@ -356,30 +260,20 @@ instance HasAtom Obj where
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
 
 -- | toplevel function definitions
-newtype Program a = Program
-  { topFuncs :: [(a, ([a], Exp a))]
+data Program a = Program
+  { _moduleName :: ModuleName,
+    _topFuncs :: [(a, ([a], Exp a))]
   }
   deriving stock (Eq, Show, Functor, Generic)
 
+makeLenses ''Program
+
 instance Pretty a => Pretty (Program a) where
-  pPrint Program {topFuncs} =
+  pPrint Program {..} =
     vcat $
       map
         (\(f, (ps, e)) -> parens $ "define" <+> pPrint f <+> parens (sep $ map pPrint ps) $$ pPrint e)
-        topFuncs
-
-instance ToJSON a => ToJSON (Program a) where
-  toJSON (Program ds) = toJSON $ map toJSON' ds
-    where
-      toJSON' (x, (ps, e)) = object ["name" .= x, "params" .= ps, "expr" .= e]
-
-instance FromJSON a => FromJSON (Program a) where
-  parseJSON = withArray "Program" $ \v -> do
-    let v' = toList v
-    Program <$> traverse parseJSON' v'
-    where
-      parseJSON' = withObject "topFuncs" $ \v -> do
-        (,) <$> v .: "name" <*> ((,) <$> v .: "params" <*> v .: "expr")
+        _topFuncs
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
@@ -393,8 +287,8 @@ appCase f = \case
   Bind x e -> Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram f Program {topFuncs} =
-  Program <$> traverseOf (traversed . _2 . _2) f topFuncs
+appProgram f Program {_moduleName, _topFuncs} =
+  Program _moduleName <$> traverseOf (traversed . _2 . _2) f _topFuncs
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadUniq, MonadIO, MonadTrans, MonadState s, MonadReader r)
@@ -430,9 +324,9 @@ cast ty e
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
-mainFunc :: (MonadUniq m) => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc :: MonadUniq m => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
 mainFunc e = do
-  mainFuncId <- newGlobalId "main" ([] :-> Int32T)
+  mainFuncId <- newId "main" ([] :-> Int32T) $ WiredIn (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
     _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
     pure e

@@ -4,6 +4,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
@@ -35,15 +36,16 @@ times n f x
 --
 -- * 自明な変数の付け替えの簡約 (optVarBind)
 -- * 値コンストラクタを含む関数のインライン展開 (optPackInline, optCallInline)
--- * 不要なlet式の削除 (removeUnusedLet)
+-- * 不要なletの削除 (removeUnusedLet)
+-- * 無意味なcastの削除（optIdCast）
 optimizeProgram ::
   MonadUniq m =>
   -- | インライン展開する関数のサイズ
   Int ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram level prog@(Program fs) = runReaderT ?? level $ do
-  state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) fs) mempty
+optimizeProgram level prog@Program {..} = runReaderT ?? level $ do
+  state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) _topFuncs) mempty
   appProgram (optimizeExpr state) prog
 
 optimizeExpr :: (MonadReader Int f, MonadUniq f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
@@ -55,6 +57,7 @@ optimizeExpr state = 10 `times` opt
         >=> (flip runReaderT mempty . optPackInline)
         >=> removeUnusedLet
         >=> (flip evalStateT state . optCallInline)
+        >=> optIdCast
         -- >=> optCast
         >=> pure
           . flat
@@ -139,7 +142,7 @@ removeUnusedLet (Let ds e) = do
     reachable limit gamma v fvs
       -- limit回試行してわからなければ安全側に倒してTrue
       | limit <= 0 = True
-      | v ^. idIsTopLevel = True
+      | idIsExternal v = True
       | v `elem` fvs = True
       | otherwise =
         -- fvsの要素fvについて、gamma[fv]をfvsに加える
@@ -149,6 +152,12 @@ removeUnusedLet (Let ds e) = do
 removeUnusedLet (Match v cs) =
   Match <$> removeUnusedLet v <*> traverseOf (traversed . appCase) removeUnusedLet cs
 removeUnusedLet e = pure e
+
+optIdCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
+optIdCast (Cast t e) | typeOf e == t = pure (Atom e)
+optIdCast (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optIdCast ds <*> optIdCast e
+optIdCast (Match v cs) = Match <$> optIdCast v <*> traverseOf (traversed . appCase) optIdCast cs
+optIdCast e = pure e
 
 -- 効果がはっきりしないので一旦コメントアウト
 -- TODO: ベンチマーク
@@ -162,9 +171,9 @@ removeUnusedLet e = pure e
 --         ps <- zipWithM cast pts $ map (Atom . Var) ps'
 --         r <- bind (Call f ps)
 --         pure $ Cast rt' r
---       pure (Let [(f', Fun ps' v')] (Atom $ Var f'))
+--       pure (Let [LocalDef f' $ Fun ps' v'] (Atom $ Var f'))
 --     | otherwise -> bug Unreachable
 --   _ -> pure e
 -- optCast (Match v cs) = Match <$> optCast v <*> traverseOf (traversed . appCase) optCast cs
--- optCast (Let ds e) = Let <$> traverseOf (traversed . _2 . appObj) optCast ds <*> optCast e
+-- optCast (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optCast ds <*> optCast e
 -- optCast e = pure e

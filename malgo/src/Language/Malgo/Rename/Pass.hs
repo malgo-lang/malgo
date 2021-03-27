@@ -30,28 +30,11 @@ rename builtinEnv (Module modName ds) = do
   (ds', rnState) <- runStateT ?? RnState mempty modName $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
-resolveName :: (MonadUniq m, MonadState RnState m) => ModuleName -> String -> m RnId
-resolveName modName name = newLocalId name modName
+resolveName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
+resolveName name = newLocalId name ()
 
 resolveGlobalName :: (MonadUniq m, MonadState RnState m) => ModuleName -> String -> m RnId
-resolveGlobalName modName name = newGlobalId name modName
-
-resolveTopLevelName :: (MonadUniq m, MonadState RnState m) => ModuleName -> String -> m RnId
-resolveTopLevelName modName name = newTopLevelId name modName
-
-lookupQualifiedVarName :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> ModuleName -> String -> m (Id ModuleName)
-lookupQualifiedVarName pos modName name = do
-  vm <- view varEnv
-  case find ((== modName) . view idMeta) =<< vm ^. at name of
-    Just name -> pure name
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint modName <> "." <> text name)
-
-lookupQualifiedTypeName :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> ModuleName -> String -> m (Id ModuleName)
-lookupQualifiedTypeName pos modName name = do
-  vm <- view typeEnv
-  case find ((== modName) . view idMeta) =<< vm ^. at name of
-    Just name -> pure name
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint modName <> "." <> text name)
+resolveGlobalName modName name = newGlobalId name () modName
 
 lookupVarName :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => SourcePos -> String -> m RnId
 lookupVarName pos name = do
@@ -93,23 +76,20 @@ rnDecl ::
 rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExp expr
 rnDecl (ScSig pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
-  modName <- use moduleName
-  tyVars' <- traverse (resolveName modName) tyVars
+  tyVars' <- traverse resolveName tyVars
   local (appendRnEnv typeEnv (zip tyVars tyVars')) $
     ScSig pos
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
-  modName <- use moduleName
-  params' <- traverse (resolveName modName) params
+  params' <- traverse resolveName params
   local (appendRnEnv typeEnv (zip params params')) $
     DataDef pos
       <$> lookupTypeName pos name
       <*> pure params'
       <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (TypeSynonym pos name params typ) = do
-  modName <- use moduleName
-  params' <- traverse (resolveName modName) params
+  params' <- traverse resolveName params
   local (appendRnEnv typeEnv (zip params params')) $
     TypeSynonym pos <$> lookupTypeName pos name
       <*> pure params'
@@ -117,8 +97,7 @@ rnDecl (TypeSynonym pos name params typ) = do
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
 rnDecl (Foreign pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
-  modName <- use moduleName
-  tyVars' <- traverse (resolveName modName) tyVars
+  tyVars' <- traverse resolveName tyVars
   local (appendRnEnv typeEnv (zip tyVars tyVars')) $
     Foreign (pos, name)
       <$> lookupVarName pos name
@@ -177,8 +156,7 @@ rnClause (Clause pos ps ss) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   when (anySame vars) $ errorOn pos "Same variables occurs in a pattern"
-  modName <- use moduleName
-  vm <- zip vars <$> traverse (resolveName modName) vars
+  vm <- zip vars <$> traverse resolveName vars
   local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss
   where
     patVars (VarP _ x) = [x]
@@ -200,8 +178,7 @@ rnStmts (NoBind x e : ss) = do
   pure $ NoBind x e' : ss'
 rnStmts (Let x v e : ss) = do
   e' <- rnExp e
-  modName <- use moduleName
-  v' <- resolveName modName v
+  v' <- resolveName v
   local (appendRnEnv varEnv [(v, v')]) do
     ss' <- rnStmts ss
     pure $ Let x v' e' : ss'
@@ -237,7 +214,7 @@ genToplevelEnv ds = do
     go modName env (Foreign pos x _ : rest)
       | x `elem` HashMap.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       | otherwise = do
-        x' <- resolveTopLevelName modName x
+        x' <- newGlobalId x () modName
         go modName (appendRnEnv varEnv [(x, x')] env) rest
     go modName env (Import _ modName' : rest) = do
       interface <- loadInterface modName'

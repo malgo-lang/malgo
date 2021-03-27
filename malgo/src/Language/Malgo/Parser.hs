@@ -11,6 +11,7 @@ import Data.Functor (($>))
 import qualified Data.Set as Set
 import qualified Data.Text as Text
 import Data.Void
+import Koriel.Id (ModuleName (ModuleName))
 import Language.Malgo.Prelude hiding
   ( many,
     some,

@@ -24,7 +24,6 @@ import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
 import Koriel.Id hiding (newGlobalId, newId)
-import qualified Koriel.Id as Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Desugar.DsEnv
@@ -36,71 +35,63 @@ import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
-desugar :: (MonadUniq m, MonadFail m, MonadIO m, MonadMalgo m, IsScheme a1, IsTypeDef a2, XModule x ~ BindGroup (Malgo 'Refine)) => HashMap (Id ModuleName) a1 -> HashMap (Id ModuleName) a2 -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
+desugar :: (MonadUniq m, MonadIO m, MonadMalgo m, IsScheme a1, IsTypeDef a2, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m) => HashMap RnId a1 -> HashMap RnTId a2 -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
 desugar varEnv typeEnv rnEnv (Module modName ds) = do
-  (dsEnv, ds') <- runReaderT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
+  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
         mainFunc =<< runDef do
           _ <- bind mainCall
           pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv, Program (mainFuncDef : ds'))
-    Nothing -> pure (dsEnv, Program ds')
+      pure (dsEnv, Program modName (mainFuncDef : ds'))
+    Nothing -> pure (dsEnv, Program modName ds')
   where
     -- エントリーポイントとなるmain関数を検索する
-    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idIsExternal = Just $ CallDirect coreId []
+    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId []
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m, MonadMalgo m) =>
+  (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadMalgo m, MonadFail m) =>
   BindGroup (Malgo 'Refine) ->
-  m (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
+  m [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsBindGroup bg = do
-  env <- foldMapA dsImport (bg ^. imports)
-  local (env <>) do
-    (env, dataDefs') <- first mconcat <$> mapAndUnzipM dsDataDef (bg ^. dataDefs)
-    local (env <>) do
-      (env, foreigns') <- first mconcat <$> mapAndUnzipM dsForeign (bg ^. foreigns)
-      local (env <>) do
-        (env, scDefs') <- dsScDefGroup (bg ^. scDefs)
-        pure $ (env,) $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
+  traverse_ dsImport (bg ^. imports)
+  dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
+  foreigns' <- traverse dsForeign (bg ^. foreigns)
+  scDefs' <- dsScDefGroup (bg ^. scDefs)
+  pure $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
-dsImport :: (MonadMalgo m, MonadIO m) => Import (Malgo 'Refine) -> m DsEnv
+dsImport :: (MonadMalgo m, MonadState DsEnv m, MonadIO m) => Import (Malgo 'Refine) -> m ()
 dsImport (_, modName) = do
   interface <- loadInterface modName
-  pure $ mempty & nameEnv <>~ interface ^. coreIdentMap
+  nameEnv <>= interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
-  (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadMalgo f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadIO f, MonadMalgo f, MonadFail f) =>
   [[ScDef (Malgo 'Refine)]] ->
-  f (DsEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
-dsScDefGroup [] = (,[]) <$> ask
-dsScDefGroup (ds : dss) = do
-  (env, ds') <- dsScDefs ds
-  local (env <>) $ do
-    (env, dss') <- dsScDefGroup dss
-    pure (env, ds' : dss')
+  f [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
+dsScDefGroup = traverse dsScDefs
 
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
-  (MonadUniq f, MonadReader DsEnv f, MonadFail f, MonadIO f, MonadMalgo f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadIO f, MonadMalgo f, MonadFail f) =>
   [ScDef (Malgo 'Refine)] ->
-  f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
+  f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
-  env <- foldMapA ?? ds $ \(_, f, _) -> do
-    Just (Forall _ fType) <- view (varTypeEnv . at f)
+  for_ ds $ \(_, f, _) -> do
+    Just (Forall _ fType) <- use (varTypeEnv . at f)
     f' <- newCoreId f =<< dsType fType
-    pure $ mempty & nameEnv .~ HashMap.singleton f f'
-  local (env <>) $ (env,) <$> foldMapA dsScDef ds
+    nameEnv . at f ?= f'
+  foldMapA dsScDef ds
 
 dsScDef ::
-  (MonadUniq f, MonadReader DsEnv f, MonadIO f, MonadFail f, MonadMalgo f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadIO f, MonadMalgo f, MonadFail f) =>
   ScDef (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (With typ pos, name, expr) = do
@@ -118,9 +109,9 @@ dsScDef (With typ pos, name, expr) = do
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (MonadReader DsEnv f, MonadUniq f, MonadIO f) =>
+  (MonadState DsEnv f, MonadUniq f, MonadIO f) =>
   Foreign (Malgo 'Refine) ->
-  f (DsEnv, [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))])
+  f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsForeign (x@(With _ (_, primName)), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. GT.withType)
   let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
@@ -128,16 +119,17 @@ dsForeign (x@(With _ (_, primName)), name, _) = do
   retType <- dsType retType
   params <- traverse (newLocalId "$p") paramTypes'
   fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
-  pure (mempty & nameEnv .~ HashMap.singleton name name', [(name', fun)])
+  nameEnv . at name ?= name'
+  pure [(name', fun)]
 
 dsDataDef ::
-  (MonadUniq m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
+  (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadFail m) =>
   DataDef (Malgo 'Refine) ->
-  m (DsEnv, [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]])
-dsDataDef (_, name, _, cons) = fmap (first mconcat) $
-  mapAndUnzipM ?? cons $ \(conName, _) -> do
+  m [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
+dsDataDef (_, name, _, cons) =
+  for cons $ \(conName, _) -> do
     -- lookup constructor infomations
-    Just (GT.TyCon name') <- preview (typeDefEnv . at name . _Just . typeConstructor)
+    Just (GT.TyCon name') <- preuse (typeDefEnv . at name . _Just . typeConstructor)
     vcs <- lookupValueConstructors (over idMeta fromType name') []
     let conType = fromJust $ List.lookup conName vcs
 
@@ -156,7 +148,8 @@ dsDataDef (_, name, _, cons) = fmap (first mconcat) $
     obj <- case ps of
       [] -> pure ([], expr)
       _ -> curryFun ps expr
-    pure (mempty & nameEnv .~ HashMap.singleton conName conName', [(conName', obj)])
+    nameEnv . at conName ?= conName'
+    pure [(conName', obj)]
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
     buildConType [] retType = [] :-> retType
@@ -172,7 +165,7 @@ dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
 dsExp ::
-  (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
+  (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadFail m) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var x name) = do
@@ -190,7 +183,7 @@ dsExp (G.Var x name) = do
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _) -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
     _ -> pure ()
-  if name' ^. idIsTopLevel
+  if idIsExternal name'
     then do
       -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
       -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
@@ -263,7 +256,7 @@ dsExp (G.Force _ e) = runDef $ do
   pure $ Call e' []
 dsExp (G.Parens _ e) = dsExp e
 
-dsStmts :: (MonadUniq m, MonadReader DsEnv m, MonadIO m, MonadFail m) => [Stmt (Malgo 'Refine)] -> m (C.Exp (Id C.Type))
+dsStmts :: (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadFail m) => [Stmt (Malgo 'Refine)] -> m (C.Exp (Id C.Type))
 dsStmts [] = bug Unreachable
 dsStmts [NoBind _ e] = dsExp e
 dsStmts [G.Let _ _ e] = dsExp e
@@ -273,16 +266,16 @@ dsStmts (NoBind _ e : ss) = runDef $ do
 dsStmts (G.Let _ v e : ss) = do
   e' <- dsExp e
   v' <- newLocalId ("$let_" <> v ^. idName) (C.typeOf e')
-  local (over nameEnv $ HashMap.insert v v') do
-    ss' <- dsStmts ss
-    pure $ Match e' (Bind v' ss' :| [])
+  nameEnv . at v ?= v'
+  ss' <- dsStmts ss
+  pure $ Match e' (Bind v' ss' :| [])
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  (MonadReader DsEnv m, MonadFail m, MonadIO m, MonadUniq m) =>
+  (MonadState DsEnv m, MonadIO m, MonadUniq m, MonadFail m) =>
   [Id C.Type] ->
   [[Pat (Malgo 'Refine)]] ->
   [m (C.Exp (Id C.Type))] ->
@@ -296,7 +289,7 @@ match (u : us) (ps : pss) es err
     let es' =
           zipWith
             ( \case
-                (VarP _ v) -> local (over nameEnv (HashMap.insert v u))
+                (VarP _ v) -> \e -> nameEnv . at v ?= u >> e
                 _ -> bug Unreachable
             )
             ps
@@ -409,7 +402,7 @@ dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
-unfoldType :: (MonadReader DsEnv m, MonadFail m, MonadIO m) => GT.Type -> m C.Type
+unfoldType :: (MonadState DsEnv m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
   case GT.typeOf t of
     TYPE (Rep BoxedRep) -> do
@@ -426,35 +419,31 @@ unfoldType t = dsType t
 
 -- Desugar Monad
 
-lookupName :: (MonadReader DsEnv m) => Id ModuleName -> m (Id C.Type)
+lookupName :: MonadState DsEnv m => RnId -> m (Id C.Type)
 lookupName name = do
-  mname' <- view (nameEnv . at name)
+  mname' <- use (nameEnv . at name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
 
 lookupValueConstructors ::
-  (MonadReader DsEnv m, MonadFail m) =>
+  MonadState DsEnv m =>
   Id GT.Type ->
   [GT.Type] ->
-  m [(Id ModuleName, GT.Type)]
+  m [(RnId, GT.Type)]
 lookupValueConstructors con ts = do
-  typeEnv <- view typeDefEnv
+  typeEnv <- use typeDefEnv
   case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->
       pure $ over (mapped . _2) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
 
-newCoreId :: MonadUniq f => Id ModuleName -> a -> f (Id a)
-newCoreId griffId coreType =
-  Id.newId (toCoreName griffId) coreType (griffId ^. idIsTopLevel) (griffId ^. idIsExternal)
-
-toCoreName :: Id ModuleName -> String
-toCoreName griffId = griffId ^. idMeta . _Module <> "." <> griffId ^. idName
+newCoreId :: MonadUniq f => RnId -> C.Type -> f (Id C.Type)
+newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::
-  (MonadUniq m, MonadReader DsEnv m) =>
+  (MonadUniq m, MonadState DsEnv m) =>
   [Id C.Type] ->
   C.Exp (Id C.Type) ->
   m ([Id C.Type], C.Exp (Id C.Type))

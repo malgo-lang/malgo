@@ -7,7 +7,6 @@ module Koriel.Core.Op where
 
 import Koriel.Prelude
 import Koriel.Pretty
-import Data.Aeson
 
 data Op
   = Add
@@ -47,7 +46,3 @@ instance Pretty Op where
   pPrint Ge = ">="
   pPrint And = "&&"
   pPrint Or = "||"
-
-instance ToJSON Op
-
-instance FromJSON Op

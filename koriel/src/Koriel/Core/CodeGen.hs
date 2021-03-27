@@ -4,6 +4,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -73,9 +74,9 @@ data OprMap = OprMap
 makeLenses ''OprMap
 
 codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id C.Type) -> m [Definition]
-codeGen Program {topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
+codeGen Program {..} = execModuleBuilderT emptyModuleBuilder $ do
   -- topFuncsのOprMapを作成
-  let funcEnv = mconcatMap ?? topFuncs $ \(f, (ps, e)) ->
+  let funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
         HashMap.singleton f $
           ConstantOperand $
             C.GlobalReference
@@ -86,7 +87,7 @@ codeGen Program {topFuncs} = execModuleBuilderT emptyModuleBuilder $ do
     $ Lazy.evalStateT
       ?? (mempty :: PrimMap)
       $ do
-        traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
+        traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
 
 convType :: C.Type -> LT.Type
 convType (ps :-> r) =
@@ -168,7 +169,10 @@ mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => 
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
 toName :: Pretty a => Id a -> LLVM.AST.Name
-toName x = LLVM.AST.mkName $ x ^. idName <> if x ^. idIsExternal then "" else show (x ^. idUniq)
+toName Id {_idName, _idSort = Koriel.Id.External (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> _idName
+toName Id {_idName = "main", _idSort = Koriel.Id.WiredIn (ModuleName "Builtin")} = LLVM.AST.mkName "main"
+toName Id {_idName, _idSort = Koriel.Id.WiredIn (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> _idName
+toName Id {_idName, _idUniq, _idSort = Koriel.Id.Internal} = LLVM.AST.mkName $ _idName <> "_" <> show _idUniq
 
 -- generate code for a 'known' function
 genFunc ::
@@ -184,7 +188,7 @@ genFunc ::
   Exp (Id C.Type) ->
   m Operand
 genFunc name params body
-  | name ^. idIsExternal =
+  | idIsExternal name || idIsWiredIn name =
     function funcName llvmParams retty $ \args -> local (over valueHashMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   | otherwise =
     internalFunction funcName llvmParams retty $ \args -> local (over valueHashMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
@@ -404,7 +408,7 @@ genLocalDef ::
   m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
-  name <- toName <$> newTopLevelId (funName ^. idName <> "_closure") ()
+  name <- toName <$> newLocalId (funName ^. idName <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug Unreachable
     (rawCapture : ps') -> do
@@ -468,7 +472,7 @@ globalStringPtr str nm = do
       globalVariableDefaults
         { name = nm,
           LLVM.AST.Global.type' = ty,
-          linkage = External,
+          linkage = LLVM.AST.Linkage.External,
           isConstant = True,
           initializer = Just charArray,
           unnamedAddr = Just GlobalAddr
@@ -513,7 +517,7 @@ internalFunction label argtys retty body = do
         GlobalDefinition
           functionDefaults
             { name = label,
-              linkage = Internal,
+              linkage = LLVM.AST.Linkage.Internal,
               parameters = (zipWith (\ty nm -> Parameter ty nm []) tys paramNames, False),
               returnType = retty,
               basicBlocks = blocks

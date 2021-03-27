@@ -23,14 +23,18 @@ module Language.Malgo.TypeCheck.TcEnv
     typeConstructor,
     typeParameters,
     valueConstructors,
+    genTcEnv,
   )
 where
 
+import Control.Arrow ((>>>))
 import qualified Data.HashMap.Strict as HashMap
+import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
+import qualified Language.Malgo.Rename.RnEnv as R
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), IsTypeDef (safeToTypeDef))
 import qualified Language.Malgo.TypeRep.Static as Static
@@ -81,6 +85,34 @@ instance IsTypeDef TypeDef where
       <$> safeToType _typeConstructor <*> traverse (idMeta safeToType) _typeParameters <*> traverse (_2 safeToType) _valueConstructors
   fromTypeDef Static.TypeDef {Static._typeConstructor, Static._typeParameters, Static._valueConstructors} =
     TypeDef (fromType _typeConstructor) (map (over idMeta fromType) _typeParameters) (map (over _2 fromType) _valueConstructors)
+
+genTcEnv :: Applicative f => RnEnv -> f TcEnv
+genTcEnv rnEnv = do
+  let int32_t = fromJust $ findBuiltinType "Int32#" rnEnv
+  let int64_t = fromJust $ findBuiltinType "Int64#" rnEnv
+  let float_t = fromJust $ findBuiltinType "Float#" rnEnv
+  let double_t = fromJust $ findBuiltinType "Double#" rnEnv
+  let char_t = fromJust $ findBuiltinType "Char#" rnEnv
+  let string_t = fromJust $ findBuiltinType "String#" rnEnv
+  pure $
+    TcEnv
+      { _varEnv = mempty,
+        _typeEnv =
+          HashMap.fromList
+            [ (int32_t, TypeDef (UTerm $ TyPrim Static.Int32T) [] []),
+              (int64_t, TypeDef (UTerm $ TyPrim Static.Int64T) [] []),
+              (float_t, TypeDef (UTerm $ TyPrim Static.FloatT) [] []),
+              (double_t, TypeDef (UTerm $ TyPrim Static.DoubleT) [] []),
+              (char_t, TypeDef (UTerm $ TyPrim Static.CharT) [] []),
+              (string_t, TypeDef (UTerm $ TyPrim Static.StringT) [] [])
+            ],
+        _rnEnv = rnEnv
+      }
+
+findBuiltinType :: String -> RnEnv -> Maybe (Id ())
+findBuiltinType x rnEnv = do
+  ids <- view (R.typeEnv . at x) rnEnv
+  find (view idSort >>> \case WiredIn (ModuleName "Builtin") -> True; _ -> False) ids
 
 makeLenses ''TcEnv
 makeLenses ''TypeDef

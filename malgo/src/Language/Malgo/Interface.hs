@@ -52,14 +52,14 @@ buildInterface :: RnState -> DsEnv -> Interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
   let modName = rnState ^. RnState.moduleName
   ifor_ (dsEnv ^. DsEnv.nameEnv) $ \tcId coreId ->
-    when (tcId ^. idIsExternal && tcId ^. idMeta == modName) do
+    when (tcId ^. idSort == External modName) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
       coreIdentMap . at tcId ?= coreId
   ifor_ (dsEnv ^. DsEnv.varTypeEnv) $ \tcId scheme ->
-    when (tcId ^. idIsExternal && tcId ^. idMeta == modName) do
+    when (tcId ^. idSort == External modName) do
       signatureMap . at tcId ?= scheme
   ifor_ (dsEnv ^. DsEnv.typeDefEnv) $ \rnId typeDef -> do
-    when (rnId ^. idIsExternal && rnId ^. idMeta == modName) do
+    when (rnId ^. idSort == External modName) do
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
 

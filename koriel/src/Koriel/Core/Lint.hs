@@ -4,6 +4,7 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -31,7 +32,7 @@ lint e =
 
 defined :: (MonadReader (t (Id a)) f, Foldable t, Eq a, Pretty a) => Id a -> f ()
 defined x
-  | x ^. idIsExternal = pure ()
+  | idIsExternal x = pure ()
   | otherwise = do
     env <- ask
     unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
@@ -142,9 +143,9 @@ lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pure ()
 
 lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, Eq a) => Program (Id a) -> m ()
-lintProgram (Program funcs) = do
-  let fs = map (view _1) funcs
+lintProgram Program {..} = do
+  let fs = map (view _1) _topFuncs
   local (fs <>) $
-    traverse_ ?? funcs $ \(f, (ps, body)) -> local (ps <>) do
+    traverse_ ?? _topFuncs $ \(f, (ps, body)) -> local (ps <>) do
       match f (map typeOf ps :-> typeOf body)
       lintExp body
