@@ -7,6 +7,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -167,7 +168,8 @@ instance (Monad m, MonadUniq m, MonadIO m) => MonadBind (UTerm TypeF TypeVar) (T
     TypeVar <$> newLocalId "t" (UVar kind)
   bindVar x v t = do
     when (occursCheck v t) $ errorWithMeta x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    let cs = [With x $ v ^. typeVar . idMeta :~ (typeOf t `asTypeOf` t)]
+    tKind <- typeOf t
+    let cs = [With x $ v ^. typeVar . idMeta :~ tKind]
     solve cs
     at v ?= t
   zonk (UVar v) = do
@@ -209,18 +211,19 @@ generalize x bound term = do
 toBound :: (MonadUniq m, MonadBind UType m, Pretty x) => x -> TypeVar -> [Char] -> m (Id Type)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
-  case freeze $ typeOf tvType `asTypeOf` tvType of
+  tvKind <- typeOf tvType
+  case freeze tvKind of
     Just kind -> newLocalId hint kind
     Nothing -> errorDoc $ pPrint tvType
 
 defaultToBoxed :: (Applicative m, MonadBind UType m, Pretty x) => x -> UType -> m UType
-defaultToBoxed x (UVar v)
-  | typeOf @(UTerm _ TypeVar) (v ^. typeVar . idMeta) == UTerm TyRep = do
-    bindVar x v (UTerm $ Rep BoxedRep)
-    pure (UTerm $ Rep BoxedRep)
-  | otherwise = do
-    _ <- defaultToBoxed x (typeOf $ v ^. typeVar . idMeta)
-    UVar <$> traverseOf (typeVar . idMeta) zonk v
+defaultToBoxed x (UVar v) = do
+  vKind <- typeOf $ v ^. typeVar . idMeta
+  case vKind of
+    UTerm TyRep -> bindVar x v (UTerm $ Rep BoxedRep) >> pure (UTerm $ Rep BoxedRep)
+    _ -> do
+      void $ defaultToBoxed x =<< typeOf (v ^. typeVar . idMeta)
+      UVar <$> traverseOf (typeVar . idMeta) zonk v
 defaultToBoxed x (UTerm t) = do
   t <- defaultToBoxed' t
   pure $ UTerm t
@@ -279,7 +282,8 @@ instantiate (Forall as t) = do
   avs <- traverse ?? as $ \a -> do
     let a' = over idMeta unfreeze a
     v <- UVar <$> freshVar @UType
-    solve [With () $ a' ^. idMeta :~ typeOf v]
+    vKind <- typeOf v
+    solve [With () $ a' ^. idMeta :~ vKind]
     pure (a', v)
   replace avs t
   where
@@ -297,30 +301,28 @@ instantiate (Forall as t) = do
       TyRep -> pure $ UTerm TyRep
       Rep rep -> pure $ UTerm $ Rep rep
 
-class HasType t a | a -> t where
-  typeOf :: a -> t
+class HasType a where
+  typeOf :: Monad m => a -> m UType
 
-instance HasType UType UType where
-  typeOf (UVar v) = v ^. typeVar . idMeta
+instance HasType UType where
+  typeOf (UVar v) = pure $ v ^. typeVar . idMeta
   typeOf (UTerm t) = case t of
-    TyApp t1 _ -> case typeOf t1 of
-      UTerm (TyArr _ k) -> k
-      _ -> error "invalid kind"
-    TyVar v -> v ^. idMeta
-    TyCon c -> c ^. idMeta
-    TyPrim p -> S.fromType (S.typeOf p)
+    TyApp t1 _ -> do
+      typeOf t1 >>= \case
+        UTerm (TyArr _ k) -> pure k
+        _ -> error "invalid kind"
+    TyVar v -> pure $ v ^. idMeta
+    TyCon c -> pure $ c ^. idMeta
+    TyPrim p -> S.fromType <$> S.typeOf p
     TyArr _ t2 -> typeOf t2
-    TyTuple _ -> UTerm $ TYPE (UTerm $ Rep BoxedRep)
-    TyLazy _ -> UTerm $ TYPE (UTerm $ Rep BoxedRep)
-    TyPtr _ -> UTerm $ TYPE (UTerm $ Rep BoxedRep)
-    TYPE rep -> UTerm $ TYPE rep
-    TyRep -> UTerm TyRep
-    Rep _ -> UTerm TyRep
+    TyTuple _ -> pure $ UTerm $ TYPE (UTerm $ Rep BoxedRep)
+    TyLazy _ -> pure $ UTerm $ TYPE (UTerm $ Rep BoxedRep)
+    TyPtr _ -> pure $ UTerm $ TYPE (UTerm $ Rep BoxedRep)
+    TYPE rep -> pure $ UTerm $ TYPE rep
+    TyRep -> pure $ UTerm TyRep
+    Rep _ -> pure $ UTerm TyRep
 
-instance HasType Type Type where
-  typeOf = id
-
-instance HasType UType Void where
+instance HasType Void where
   typeOf = absurd
 
 class WithUType a where

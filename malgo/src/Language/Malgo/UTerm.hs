@@ -70,7 +70,7 @@ unfreeze :: Functor t => Fix t -> UTerm t v
 unfreeze = UTerm . fmap unfreeze . unFix
 
 class HasUTerm t v a where
-  walkOn :: Traversal' a (UTerm t v)
+  walkOn :: Monad f => (UTerm t v -> f (UTerm t v)) -> a -> f a
 
 instance (Traversable t, HasUTerm t v v) => HasUTerm t v (UTerm t v) where
   walkOn = id

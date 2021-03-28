@@ -225,8 +225,8 @@ dsExp (G.Fn x (Clause _ [] ss : _)) = do
     fun <- let_ typ $ Fun [] ss'
     pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
-  ps' <- traverse (\p -> newLocalId "$p" =<< dsType (GT.typeOf p)) ps
-  typ <- dsType (GT.typeOf $ last es)
+  ps' <- traverse (\p -> newLocalId "$p" =<< dsType =<< GT.typeOf p) ps
+  typ <- dsType =<< GT.typeOf (last es)
   -- destruct Clauses
   -- 各節のパターン列を行列に見立て、転置してmatchにわたし、パターンを分解する
   -- 例えば、{ f Nil -> f empty | f (Cons x xs) -> f x }の場合は、
@@ -298,7 +298,7 @@ match (u : us) (ps : pss) es err
   -- Constructor Rule
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) ps = do
-    let patType = GT.typeOf $ head ps
+    patType <- GT.typeOf $ head ps
     unless (_TyApp `has` patType || _TyCon `has` patType) $
       errorDoc $ "Not valid type:" <+> pPrint patType
     -- 型からコンストラクタの集合を求める
@@ -316,7 +316,7 @@ match (u : us) (ps : pss) es err
     pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) ps = do
-    let patType = GT.typeOf $ head ps
+    patType <- GT.typeOf $ head ps
     SumT [con@(C.Con _ ts)] <- dsType patType
     params <- traverse (newLocalId "$p") ts
     cases <- do
@@ -404,7 +404,7 @@ dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: (MonadState DsEnv m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
-  case GT.typeOf t of
+  GT.typeOf t >>= \case
     TYPE (Rep BoxedRep) -> do
       let (con, ts) = splitCon t
       vcs <- lookupValueConstructors con ts

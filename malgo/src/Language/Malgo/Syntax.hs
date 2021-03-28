@@ -15,7 +15,6 @@
 
 module Language.Malgo.Syntax where
 
-import Data.Functor (($>))
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Data.Int (Int32, Int64)
@@ -40,24 +39,24 @@ instance Pretty (Literal x) where
   pPrint (Char c) = quotes (pPrint c)
   pPrint (String s) = doubleQuotes (text s)
 
-instance U.HasType U.UType (Literal x) where
-  typeOf Int32 {} = U.UTerm (U.TyPrim S.Int32T)
-  typeOf Int64 {} = U.UTerm (U.TyPrim S.Int64T)
-  typeOf Float {} = U.UTerm (U.TyPrim S.FloatT)
-  typeOf Double {} = U.UTerm (U.TyPrim S.DoubleT)
-  typeOf Char {} = U.UTerm (U.TyPrim S.CharT)
-  typeOf String {} = U.UTerm (U.TyPrim S.StringT)
+instance U.HasType (Literal x) where
+  typeOf Int32 {} = pure $ U.UTerm (U.TyPrim S.Int32T)
+  typeOf Int64 {} = pure $ U.UTerm (U.TyPrim S.Int64T)
+  typeOf Float {} = pure $ U.UTerm (U.TyPrim S.FloatT)
+  typeOf Double {} = pure $ U.UTerm (U.TyPrim S.DoubleT)
+  typeOf Char {} = pure $ U.UTerm (U.TyPrim S.CharT)
+  typeOf String {} = pure $ U.UTerm (U.TyPrim S.StringT)
 
 instance S.HasType (Literal x) where
-  typeOf Int32 {} = S.TyPrim S.Int32T
-  typeOf Int64 {} = S.TyPrim S.Int64T
-  typeOf Float {} = S.TyPrim S.FloatT
-  typeOf Double {} = S.TyPrim S.DoubleT
-  typeOf Char {} = S.TyPrim S.CharT
-  typeOf String {} = S.TyPrim S.StringT
+  typeOf Int32 {} = pure $ S.TyPrim S.Int32T
+  typeOf Int64 {} = pure $ S.TyPrim S.Int64T
+  typeOf Float {} = pure $ S.TyPrim S.FloatT
+  typeOf Double {} = pure $ S.TyPrim S.DoubleT
+  typeOf Char {} = pure $ S.TyPrim S.CharT
+  typeOf String {} = pure $ S.TyPrim S.StringT
 
 instance U.HasUTerm U.TypeF U.TypeVar (Literal x) where
-  walkOn f v = f (U.typeOf v) $> v
+  walkOn f v = (U.typeOf v >>= f) >> pure v
 
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce
@@ -101,33 +100,33 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
 
 instance
   ForallExpX U.WithUType x =>
-  U.HasType U.UType (Exp x)
+  U.HasType (Exp x)
   where
-  typeOf (Var x _) = x ^. U.withUType
-  typeOf (Con x _) = x ^. U.withUType
-  typeOf (Unboxed x _) = x ^. U.withUType
-  typeOf (Boxed x _) = x ^. U.withUType
-  typeOf (Apply x _ _) = x ^. U.withUType
-  typeOf (OpApp x _ _ _) = x ^. U.withUType
-  typeOf (Fn x _) = x ^. U.withUType
-  typeOf (Tuple x _) = x ^. U.withUType
-  typeOf (Force x _) = x ^. U.withUType
-  typeOf (Parens x _) = x ^. U.withUType
+  typeOf (Var x _) = pure $ x ^. U.withUType
+  typeOf (Con x _) = pure $ x ^. U.withUType
+  typeOf (Unboxed x _) = pure $ x ^. U.withUType
+  typeOf (Boxed x _) = pure $ x ^. U.withUType
+  typeOf (Apply x _ _) = pure $ x ^. U.withUType
+  typeOf (OpApp x _ _ _) = pure $ x ^. U.withUType
+  typeOf (Fn x _) = pure $ x ^. U.withUType
+  typeOf (Tuple x _) = pure $ x ^. U.withUType
+  typeOf (Force x _) = pure $ x ^. U.withUType
+  typeOf (Parens x _) = pure $ x ^. U.withUType
 
 instance
   ForallExpX S.WithType x =>
   S.HasType (Exp x)
   where
-  typeOf (Var x _) = x ^. S.withType
-  typeOf (Con x _) = x ^. S.withType
-  typeOf (Unboxed x _) = x ^. S.withType
-  typeOf (Boxed x _) = x ^. S.withType
-  typeOf (Apply x _ _) = x ^. S.withType
-  typeOf (OpApp x _ _ _) = x ^. S.withType
-  typeOf (Fn x _) = x ^. S.withType
-  typeOf (Tuple x _) = x ^. S.withType
-  typeOf (Force x _) = x ^. S.withType
-  typeOf (Parens x _) = x ^. S.withType
+  typeOf (Var x _) = pure $ x ^. S.withType
+  typeOf (Con x _) = pure $ x ^. S.withType
+  typeOf (Unboxed x _) =pure $  x ^. S.withType
+  typeOf (Boxed x _) = pure $ x ^. S.withType
+  typeOf (Apply x _ _) = pure $ x ^. S.withType
+  typeOf (OpApp x _ _ _) = pure $ x ^. S.withType
+  typeOf (Fn x _) = pure $ x ^. S.withType
+  typeOf (Tuple x _) = pure $ x ^. S.withType
+  typeOf (Force x _) = pure $ x ^. S.withType
+  typeOf (Parens x _) = pure $ x ^. S.withType
 
 instance
   ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
@@ -178,7 +177,7 @@ instance Pretty (XId x) => Pretty (Stmt x) where
 
 instance
   ForallExpX U.WithUType x =>
-  U.HasType U.UType (Stmt x)
+  U.HasType (Stmt x)
   where
   typeOf (Let _ _ e) = U.typeOf e
   typeOf (NoBind _ e) = U.typeOf e
@@ -221,15 +220,15 @@ instance (Pretty (XId x)) => Pretty (Clause x) where
 
 instance
   ForallClauseX U.WithUType x =>
-  U.HasType U.UType (Clause x)
+  U.HasType (Clause x)
   where
-  typeOf (Clause x _ _) = x ^. U.withUType
+  typeOf (Clause x _ _) = pure $ x ^. U.withUType
 
 instance
   ForallClauseX S.WithType x =>
   S.HasType (Clause x)
   where
-  typeOf (Clause x _ _) = x ^. S.withType
+  typeOf (Clause x _ _) = pure $ x ^. S.withType
 
 instance
   ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,
@@ -270,21 +269,21 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
 
 instance
   ForallPatX U.WithUType x =>
-  U.HasType U.UType (Pat x)
+  U.HasType (Pat x)
   where
-  typeOf (VarP x _) = x ^. U.withUType
-  typeOf (ConP x _ _) = x ^. U.withUType
-  typeOf (TupleP x _) = x ^. U.withUType
-  typeOf (UnboxedP x _) = x ^. U.withUType
+  typeOf (VarP x _) = pure $ x ^. U.withUType
+  typeOf (ConP x _ _) = pure $ x ^. U.withUType
+  typeOf (TupleP x _) = pure $ x ^. U.withUType
+  typeOf (UnboxedP x _) = pure $ x ^. U.withUType
 
 instance
   ForallPatX S.WithType x =>
   S.HasType (Pat x)
   where
-  typeOf (VarP x _) = x ^. S.withType
-  typeOf (ConP x _ _) = x ^. S.withType
-  typeOf (TupleP x _) = x ^. S.withType
-  typeOf (UnboxedP x _) = x ^. S.withType
+  typeOf (VarP x _) = pure $ x ^. S.withType
+  typeOf (ConP x _ _) = pure $ x ^. S.withType
+  typeOf (TupleP x _) = pure $ x ^. S.withType
+  typeOf (UnboxedP x _) = pure $ x ^. S.withType
 
 instance
   ( ForallExpX (U.HasUTerm U.TypeF U.TypeVar) x,

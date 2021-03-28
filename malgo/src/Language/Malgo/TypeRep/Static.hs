@@ -136,30 +136,31 @@ instance IsType (t (Fix t)) => IsType (Fix t) where
 
 -- | Types that have a `Type`
 class HasType a where
-  typeOf :: a -> Type
+  typeOf :: Monad m => a -> m Type
 
 instance HasType PrimT where
-  typeOf Int32T = TYPE (Rep Int32Rep)
-  typeOf Int64T = TYPE (Rep Int64Rep)
-  typeOf FloatT = TYPE (Rep FloatRep)
-  typeOf DoubleT = TYPE (Rep DoubleRep)
-  typeOf CharT = TYPE (Rep CharRep)
-  typeOf StringT = TYPE (Rep StringRep)
+  typeOf Int32T = pure $ TYPE (Rep Int32Rep)
+  typeOf Int64T = pure $ TYPE (Rep Int64Rep)
+  typeOf FloatT = pure $ TYPE (Rep FloatRep)
+  typeOf DoubleT = pure $ TYPE (Rep DoubleRep)
+  typeOf CharT = pure $ TYPE (Rep CharRep)
+  typeOf StringT = pure $ TYPE (Rep StringRep)
 
 instance HasType Type where
-  typeOf (TyApp t1 _) = case typeOf t1 of
-    TyArr _ k -> k
-    _ -> error "invalid kind"
-  typeOf (TyVar v) = v ^. idMeta
-  typeOf (TyCon c) = c ^. idMeta
+  typeOf (TyApp t1 _) =
+    typeOf t1 >>= \case
+      TyArr _ k -> pure k
+      _ -> error "invalid kind"
+  typeOf (TyVar v) = pure $ v ^. idMeta
+  typeOf (TyCon c) = pure $ c ^. idMeta
   typeOf (TyPrim p) = typeOf p
   typeOf (TyArr _ t2) = typeOf t2
-  typeOf (TyTuple _) = TYPE (Rep BoxedRep)
-  typeOf (TyLazy _) = TYPE (Rep BoxedRep)
-  typeOf (TyPtr _) = TYPE (Rep BoxedRep)
-  typeOf (TYPE rep) = TYPE rep -- Type :: Type
-  typeOf TyRep = TyRep -- Rep :: Rep
-  typeOf (Rep _) = TyRep
+  typeOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
+  typeOf (TyLazy _) = pure $ TYPE (Rep BoxedRep)
+  typeOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
+  typeOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
+  typeOf TyRep = pure TyRep -- Rep :: Rep
+  typeOf (Rep _) = pure TyRep
 
 instance HasType Void where
   typeOf x = absurd x
