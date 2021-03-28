@@ -129,7 +129,8 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms $ \(x, name, params, _) -> do
     tyCon <- UVar <$> freshVar @UType
-    solve [With x $ typeOf tyCon :~ buildTyConKind params]
+    tyConKind <- typeOf tyCon
+    solve [With x $ tyConKind :~ buildTyConKind params]
     typeEnv . at name .= Just (TypeDef tyCon [] [])
   for_ dataDefs $ \(_, name, params, _) -> do
     tyCon <- UTerm . TyCon <$> newIdOnName (buildTyConKind params) name
@@ -157,7 +158,9 @@ tcTypeSynonyms ds =
           $+$ "TODO: add type operator and fix TyTyple and TyLazy's kinding"
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar @UType) params
-    let cs = [With pos $ foldr ((\l r -> UTerm $ TyArr l r) . typeOf) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) params' :~ typeOf name']
+    nameKind <- typeOf name'
+    paramKinds <- traverse typeOf params'
+    let cs = [With pos $ foldr (\l r -> UTerm $ TyArr l r) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) paramKinds :~ nameKind]
     solve cs
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     let typ' = tcType typ
@@ -179,7 +182,9 @@ tcDataDefs ds = do
   for ds $ \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar @UType) params
-    let cs = [With pos $ foldr ((\l r -> UTerm $ TyArr l r) . typeOf) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) params' :~ typeOf name']
+    nameKind <- typeOf name'
+    paramKinds <- traverse typeOf params'
+    let cs = [With pos $ foldr (\l r -> UTerm $ TyArr l r) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) paramKinds :~ nameKind]
     solve cs
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     valueCons' <- forOf (traversed . _2) valueCons $ \args -> do
@@ -265,10 +270,11 @@ tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- for ds $ \(pos, name, expr) -> do
     (expr', wanted) <- runWriterT (tcExpr expr)
-    ty <- instantiate =<< lookupVar pos name
-    let constraints = With pos (ty :~ typeOf expr') : wanted
+    nameType <- instantiate =<< lookupVar pos name
+    exprType <- typeOf expr'
+    let constraints = With pos (nameType :~ exprType) : wanted
     solve constraints
-    pure (With (typeOf expr') pos, name, expr')
+    pure (With exprType pos, name, expr')
   ds <- for ds $ \(pos, name, expr) -> do
     pos <- traverseOf ann zonk pos
     pure (pos, name, expr)
@@ -306,12 +312,16 @@ tcExpr (Var pos v) = do
 tcExpr (Con pos c) = do
   cType <- instantiate =<< lookupVar pos c
   pure $ Con (With cType pos) c
-tcExpr (Unboxed pos u) = pure $ Unboxed (With (typeOf u) pos) u
+tcExpr (Unboxed pos u) = do
+  uType <- typeOf u
+  pure $ Unboxed (With uType pos) u
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
   retType <- UVar <$> freshVar @UType
-  tell [With pos $ typeOf f' :~ UTerm (TyArr (typeOf x') retType)]
+  fType <- typeOf f'
+  xType <- typeOf x'
+  tell [With pos $ fType :~ UTerm (TyArr xType retType)]
   pure $ Apply (With retType pos) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
@@ -319,29 +329,38 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   opScheme <- lookupVar pos op
   opType <- instantiate opScheme
   retType <- UVar <$> freshVar @UType
-  tell [With pos $ opType :~ UTerm (TyArr (typeOf e1') $ UTerm $ TyArr (typeOf e2') retType)]
+  e1Type <- typeOf e1'
+  e2Type <- typeOf e2'
+  tell [With pos $ opType :~ UTerm (TyArr e1Type $ UTerm $ TyArr e2Type retType)]
   pure $ OpApp (With retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] ss : _)) = do
   ss' <- tcStmts ss
-  pure $ Fn (With (UTerm $ TyLazy $ typeOf $ last ss') pos) [Clause (With (UTerm $ TyLazy $ typeOf $ last ss') x) [] ss']
+  ssType <- typeOf $ last ss'
+  pure $ Fn (With (UTerm $ TyLazy ssType) pos) [Clause (With (UTerm $ TyLazy ssType) x) [] ss']
 tcExpr (Fn pos cs) = do
   cs' <- traverse tcClause cs
   case cs' of
     (c' : cs') -> do
-      tell $ map (\c -> With pos $ typeOf c' :~ typeOf c) cs'
-      pure $ Fn (With (typeOf c') pos) (c' : cs')
+      c'Type <- typeOf c'
+      for_ cs' $ \c -> do
+        cType <- typeOf c
+        tell [With pos $ c'Type :~ cType]
+      pure $ Fn (With c'Type pos) (c' : cs')
     _ -> bug Unreachable
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
-  pure $ Tuple (With (UTerm $ TyTuple (map typeOf es')) pos) es'
+  esType <- UTerm . TyTuple <$> traverse typeOf es'
+  pure $ Tuple (With esType pos) es'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
   ty <- UVar <$> freshVar @UType
-  tell [With pos $ UTerm (TyLazy ty) :~ typeOf e']
+  eType <- typeOf e'
+  tell [With pos $ UTerm (TyLazy ty) :~ eType]
   pure $ Force (With ty pos) e'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
-  pure $ Parens (With (typeOf e') pos) e'
+  eType <- typeOf e'
+  pure $ Parens (With eType pos) e'
 
 tcClause ::
   ( MonadBind UType m,
@@ -355,7 +374,9 @@ tcClause ::
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
-  pure $ Clause (With (foldr (\l r -> UTerm $ TyArr (typeOf l) r) (typeOf $ last ss') pats') pos) pats' ss'
+  ssType <- typeOf $ last ss'
+  patTypes <- traverse typeOf pats'
+  pure $ Clause (With (foldr (\l r -> UTerm $ TyArr l r) ssType patTypes) pos) pats' ss'
 
 tcPatterns ::
   ( MonadBind UType m,
@@ -383,16 +404,19 @@ tcPatterns (ConP pos con pats : ps) = do
     errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
   ty <- UVar <$> freshVar @UType
-  tell [With pos $ conType :~ foldr (\l r -> UTerm $ TyArr (typeOf l) r) ty pats']
+  patTypes <- traverse typeOf pats'
+  tell [With pos $ conType :~ foldr (\l r -> UTerm $ TyArr l r) ty patTypes]
   ps' <- tcPatterns restPs
   pure (ConP (With ty pos) con pats' : ps')
 tcPatterns (TupleP pos pats : ps) = do
   pats' <- tcPatterns pats
   ps' <- tcPatterns ps
-  pure $ TupleP (With (UTerm $ TyTuple $ map typeOf pats') pos) pats' : ps'
+  patTypes <- traverse typeOf pats'
+  pure $ TupleP (With (UTerm $ TyTuple patTypes) pos) pats' : ps'
 tcPatterns (UnboxedP pos unboxed : ps) = do
   ps' <- tcPatterns ps
-  pure $ UnboxedP (With (typeOf unboxed) pos) unboxed : ps'
+  unboxedType <- typeOf unboxed
+  pure $ UnboxedP (With unboxedType pos) unboxed : ps'
 
 splitTyArr :: UType -> ([UType], UType)
 splitTyArr (UVar _) = bug Unreachable
@@ -426,7 +450,7 @@ tcStmt (Let pos v e) = do
   (e', wanted) <- listen $ tcExpr e
   solve wanted
   -- FIXME: value restriction
-  vScheme <- generalize pos (mconcat $ map freevars envSet) (typeOf e')
+  vScheme <- generalize pos (mconcat $ map freevars envSet) =<< typeOf e'
   varEnv . at v ?= vScheme
   pure $ Let pos v e'
 

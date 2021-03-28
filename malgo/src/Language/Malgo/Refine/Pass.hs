@@ -50,8 +50,8 @@ refineExp (OpApp x op e1 e2) = do
   let x' = over ann toType $ over value (view _1) x
   e1' <- refineExp e1
   e2' <- refineExp e2
-  let applyType = TyArr (typeOf e2') (x' ^. ann)
-  let opType = TyArr (typeOf e1') applyType
+  applyType <- TyArr <$> typeOf e2' <*> pure (x' ^. ann)
+  opType <- TyArr <$> typeOf e1' <*> pure applyType
   pure $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) op) e1') e2'
 refineExp (Fn x cs) = Fn (over ann toType x) <$> traverse refineClause cs
 refineExp (Tuple x es) = Tuple (over ann toType x) <$> traverse refineExp es
