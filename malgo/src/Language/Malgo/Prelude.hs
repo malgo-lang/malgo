@@ -32,21 +32,21 @@ import Text.Megaparsec.Pos (SourcePos (sourceLine), unPos)
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT Opt IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadFix, MonadFail)
 
-class Monad m => MonadMalgo m where
+class MonadIO m => MonadMalgo m where
   getOpt :: m Opt
   default getOpt :: (MonadTrans t, MonadMalgo m1, m ~ t m1) => m Opt
   getOpt = lift getOpt
 
-viewLine :: (MonadMalgo m, MonadIO m) => Int -> m String
+viewLine :: MonadMalgo m => Int -> m String
 viewLine linum = do
   srcFileName <- srcName <$> getOpt
   s <- liftIO $ readFile srcFileName
   pure $ lines s !! (linum - 1)
 
 #ifdef DEBUG
-errorOn :: (HasCallStack, MonadMalgo m, MonadIO m) => SourcePos -> Doc -> m a
+errorOn :: (HasCallStack, MonadMalgo m) => SourcePos -> Doc -> m a
 #else
-errorOn :: (MonadMalgo m, MonadIO m) => SourcePos -> Doc -> m a
+errorOn :: MonadMalgo m => SourcePos -> Doc -> m a
 #endif
 errorOn pos x = do
   line <- viewLine (unPos $ sourceLine pos)

@@ -84,10 +84,10 @@ instance HasUTerm t v Void where
 instance (Eq v, Hashable v, Unifiable1 t, Eq1 t, Pretty v, Pretty1 t) => Unifiable (UTerm t v) where
   type Var (UTerm t v) = v
   unify _ (UVar v1) (UVar v2)
-    | v1 == v2 = (mempty, [])
-    | otherwise = (HashMap.singleton v1 (UVar v2), [])
-  unify _ (UVar v) (UTerm t) = (HashMap.singleton v (UTerm t), [])
-  unify _ (UTerm t) (UVar v) = (HashMap.singleton v (UTerm t), [])
+    | v1 == v2 = pure (mempty, [])
+    | otherwise = pure (HashMap.singleton v1 (UVar v2), [])
+  unify _ (UVar v) (UTerm t) = pure (HashMap.singleton v (UTerm t), [])
+  unify _ (UTerm t) (UVar v) = pure (HashMap.singleton v (UTerm t), [])
   unify x (UTerm t1) (UTerm t2) = liftUnify unify x t1 t2
   equiv (UVar v1) (UVar v2)
     | v1 == v2 = Just mempty
