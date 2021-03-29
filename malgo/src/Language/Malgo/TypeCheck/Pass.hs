@@ -146,7 +146,8 @@ tcTypeSynonyms ::
   ( MonadBind UType f,
     MonadState TcEnv f,
     MonadIO f,
-    MonadMalgo f
+    MonadMalgo f,
+    MonadUniq f
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'TypeCheck)]
@@ -458,15 +459,24 @@ tcStmt (Let pos v e) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadMalgo m, MonadState TcEnv m, MonadIO m) => S.Type (Malgo 'Rename) -> m UType
-transType (S.TyApp _ t ts) = do
+transType :: (MonadMalgo m, MonadState TcEnv m, MonadIO m, MonadUniq m, MonadBind UType m) => S.Type (Malgo 'Rename) -> m UType
+transType (S.TyApp pos t ts) = do
   rnEnv <- use rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
+      t'Kind <- typeOf t'
+      rep <- UVar . TypeVar <$> newLocalId "r" (UTerm TyRep)
+      solve [With pos $ t'Kind :~ UTerm (TYPE rep)]
       pure $ UTerm $ TyPtr t'
-    _ -> foldr (\l r -> UTerm $ TyApp r l) <$> transType t <*> traverse transType ts
+    _ -> do
+      t' <- transType t
+      ts' <- traverse transType ts
+      t'Kind <- typeOf t'
+      ts'Kinds <- traverse typeOf ts'
+      solve [With pos $ foldr (\l r -> UTerm $ TyArr l r) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) ts'Kinds :~ t'Kind]
+      foldr (\l r -> UTerm $ TyApp r l) <$> transType t <*> traverse transType ts
   where
     findBuiltinType :: String -> RnEnv -> Maybe (Id ())
     findBuiltinType x rnEnv = do
