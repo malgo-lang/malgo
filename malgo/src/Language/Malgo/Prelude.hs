@@ -52,7 +52,7 @@ errorOn pos x = do
   line <- viewLine (unPos $ sourceLine pos)
   errorDoc $
     "error on" <+> pPrint pos <> ":" $+$ nest 2 x
-      $+$ pPrint (unPos $ sourceLine pos) <+> text line
+      $+$ pPrint (unPos $ sourceLine pos) <+> "|" <+> text line
 
 instance MonadMalgo MalgoM where
   getOpt = MalgoM ask
