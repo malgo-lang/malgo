@@ -146,7 +146,8 @@ tcTypeSynonyms ::
   ( MonadBind UType f,
     MonadState TcEnv f,
     MonadIO f,
-    MonadMalgo f
+    MonadMalgo f,
+    MonadUniq f
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'TypeCheck)]
@@ -211,13 +212,13 @@ tcForeigns ::
   [Foreign (Malgo 'Rename)] ->
   m [Foreign (Malgo 'TypeCheck)]
 tcForeigns ds =
-  for ds $ \(pos, name, ty) -> do
+  for ds $ \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) $ \tyVar -> do
       tv <- freshVar @UType
       typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme@(Forall _ ty') <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
-    pure (With ty' pos, name, tcType ty)
+    pure (With ty' (pos, raw), name, tcType ty)
 
 tcScSigs ::
   ( MonadMalgo m,
@@ -270,7 +271,7 @@ tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- for ds $ \(pos, name, expr) -> do
     (expr', wanted) <- runWriterT (tcExpr expr)
-    nameType <- instantiate =<< lookupVar pos name
+    nameType <- instantiate pos =<< lookupVar pos name
     exprType <- typeOf expr'
     let constraints = With pos (nameType :~ exprType) : wanted
     solve constraints
@@ -288,8 +289,8 @@ tcScDefs ds@((pos, _, _) : _) = do
       -- No explicit signature
       Forall [] (UVar _) -> varEnv . at name ?= inferredScheme
       _ -> do
-        declaredType <- instantiate declaredScheme
-        inferedType <- instantiate inferredScheme
+        declaredType <- instantiate (pos ^. value) declaredScheme
+        inferedType <- instantiate (pos ^. value) inferredScheme
         case equiv declaredType inferedType of
           Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
           Just subst
@@ -307,10 +308,10 @@ tcExpr ::
   Exp (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'TypeCheck))
 tcExpr (Var pos v) = do
-  vType <- instantiate =<< lookupVar pos v
+  vType <- instantiate pos =<< lookupVar pos v
   pure $ Var (With vType pos) v
 tcExpr (Con pos c) = do
-  cType <- instantiate =<< lookupVar pos c
+  cType <- instantiate pos =<< lookupVar pos c
   pure $ Con (With cType pos) c
 tcExpr (Unboxed pos u) = do
   uType <- typeOf u
@@ -327,7 +328,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
   e2' <- tcExpr e2
   opScheme <- lookupVar pos op
-  opType <- instantiate opScheme
+  opType <- instantiate pos opScheme
   retType <- UVar <$> freshVar @UType
   e1Type <- typeOf e1'
   e2Type <- typeOf e2'
@@ -393,7 +394,7 @@ tcPatterns (VarP x v : ps) = do
   ps' <- tcPatterns ps
   pure $ VarP (With ty x) v : ps'
 tcPatterns (ConP pos con pats : ps) = do
-  conType <- instantiate =<< lookupVar pos con
+  conType <- instantiate pos =<< lookupVar pos con
   let (conParams, _) = splitTyArr conType
   -- コンストラクタの型に基づくASTの組み換え
   -- 足りない分を後続のパターン列から補充
@@ -458,15 +459,24 @@ tcStmt (Let pos v e) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadMalgo m, MonadState TcEnv m, MonadIO m) => S.Type (Malgo 'Rename) -> m UType
-transType (S.TyApp _ t ts) = do
+transType :: (MonadMalgo m, MonadState TcEnv m, MonadIO m, MonadUniq m, MonadBind UType m) => S.Type (Malgo 'Rename) -> m UType
+transType (S.TyApp pos t ts) = do
   rnEnv <- use rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
+      t'Kind <- typeOf t'
+      rep <- UVar . TypeVar <$> newLocalId "r" (UTerm TyRep)
+      solve [With pos $ t'Kind :~ UTerm (TYPE rep)]
       pure $ UTerm $ TyPtr t'
-    _ -> foldr (\l r -> UTerm $ TyApp r l) <$> transType t <*> traverse transType ts
+    _ -> do
+      t' <- transType t
+      ts' <- traverse transType ts
+      t'Kind <- typeOf t'
+      ts'Kinds <- traverse typeOf ts'
+      solve [With pos $ foldr (\l r -> UTerm $ TyArr l r) (UTerm $ TYPE $ UTerm $ Rep BoxedRep) ts'Kinds :~ t'Kind]
+      foldr (\l r -> UTerm $ TyApp r l) <$> transType t <*> traverse transType ts
   where
     findBuiltinType :: String -> RnEnv -> Maybe (Id ())
     findBuiltinType x rnEnv = do
