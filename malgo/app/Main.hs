@@ -1,9 +1,4 @@
 {-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Main where
