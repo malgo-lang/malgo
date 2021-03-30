@@ -36,7 +36,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import qualified Language.Malgo.Rename.RnEnv as R
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), IsTypeDef (safeToTypeDef))
+import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), IsTypeDef (safeToTypeDef), TypeF)
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.UTerm
@@ -99,12 +99,12 @@ genTcEnv rnEnv = do
       { _varEnv = mempty,
         _typeEnv =
           HashMap.fromList
-            [ (int32_t, TypeDef (UTerm $ TyPrim Static.Int32T) [] []),
-              (int64_t, TypeDef (UTerm $ TyPrim Static.Int64T) [] []),
-              (float_t, TypeDef (UTerm $ TyPrim Static.FloatT) [] []),
-              (double_t, TypeDef (UTerm $ TyPrim Static.DoubleT) [] []),
-              (char_t, TypeDef (UTerm $ TyPrim Static.CharT) [] []),
-              (string_t, TypeDef (UTerm $ TyPrim Static.StringT) [] [])
+            [ (int32_t, TypeDef (TyPrim Static.Int32T) [] []),
+              (int64_t, TypeDef (TyPrim Static.Int64T) [] []),
+              (float_t, TypeDef (TyPrim Static.FloatT) [] []),
+              (double_t, TypeDef (TyPrim Static.DoubleT) [] []),
+              (char_t, TypeDef (TyPrim Static.CharT) [] []),
+              (string_t, TypeDef (TyPrim Static.StringT) [] [])
             ],
         _rnEnv = rnEnv
       }

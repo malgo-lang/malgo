@@ -6,6 +6,7 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -13,6 +14,7 @@ module Language.Malgo.TypeRep.Static where
 
 import Data.Binary (Binary)
 import Data.Fix
+import Data.Functor.Foldable.TH (makeBaseFunctor)
 import Data.Maybe (fromJust, fromMaybe)
 import Data.Void
 import Koriel.Id
@@ -95,6 +97,7 @@ data Type
   deriving anyclass (Binary)
 
 makePrisms ''Type
+makeBaseFunctor ''Type
 
 instance Pretty Type where
   pPrintPrec l d (TyApp t1 t2) =
