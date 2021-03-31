@@ -365,8 +365,7 @@ operator =
       notFollowedBy reservedOp
       some opLetter
 
-notReserved :: Parser a
+notReserved :: Parser ()
 notReserved = do
   word <- lookAhead reserved
   registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> Text.unpack word <> "'\nThis is a reserved keyword")
-  pure undefined
