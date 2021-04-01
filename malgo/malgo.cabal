@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: be9c60bfb6c757cded0bb186c929a612a2317d65887fc1793e9fc55a0a46699a
+-- hash: ebe97112eaa95fc9eee65d3aeecbd8326dc9a181cd65128e42942d6a23442bc3
 
 name:           malgo
 version:        1.0.0.0
@@ -68,6 +68,7 @@ library
     , optparse-applicative
     , parser-combinators
     , pretty
+    , recursion-schemes
     , text
     , transformers
     , unordered-containers
@@ -105,6 +106,7 @@ executable malgoc
     , optparse-applicative
     , parser-combinators
     , pretty
+    , recursion-schemes
     , shake
     , text
     , transformers

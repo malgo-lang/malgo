@@ -8,10 +8,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Language.Malgo.Desugar.Pass (desugar) where
