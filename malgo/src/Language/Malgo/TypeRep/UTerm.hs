@@ -49,23 +49,20 @@ type UType = UTerm TypeF TypeVar
 
 type Type = Fix TypeF
 
-instance Pretty1 TypeF where
-  liftPPrintPrec ppr l d (TyAppF t1 t2) =
-    maybeParens (d > 10) $ sep [ppr l 10 t1, ppr l 11 t2]
-  liftPPrintPrec _ _ _ (TyVarF v) = pprIdName v
-  liftPPrintPrec ppr l d (TyConF c) = liftPPrintPrec ppr l d c
-  liftPPrintPrec _ _ _ (TyPrimF p) = pPrint p
-  liftPPrintPrec ppr l d (TyArrF t1 t2) =
-    maybeParens (d > 10) $ ppr l 11 t1 <+> "->" <+> ppr l 10 t2
-  liftPPrintPrec ppr l _ (TyTupleF ts) = parens $ sep $ punctuate "," $ map (ppr l 0) ts
-  liftPPrintPrec ppr l _ (TyLazyF t) = braces $ ppr l 0 t
-  liftPPrintPrec ppr l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", ppr l 11 t]
-  liftPPrintPrec ppr l _ (TYPEF rep) = "TYPE" <+> ppr l 0 rep
-  liftPPrintPrec _ _ _ TyRepF = "#Rep"
-  liftPPrintPrec _ l _ (RepF rep) = pPrintPrec l 0 rep
-
-instance Pretty a => Pretty (TypeF a) where
-  pPrintPrec l d t = liftPPrintPrec pPrintPrec l d t
+instance Pretty t => Pretty (TypeF t) where
+  pPrintPrec l d (TyAppF t1 t2) =
+    maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+  pPrintPrec _ _ (TyVarF v) = pprIdName v
+  pPrintPrec l d (TyConF c) = pPrintPrec l d c
+  pPrintPrec _ _ (TyPrimF p) = pPrint p
+  pPrintPrec l d (TyArrF t1 t2) =
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
+  pPrintPrec l _ (TyTupleF ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec l _ (TyLazyF t) = braces $ pPrintPrec l 0 t
+  pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
+  pPrintPrec l _ (TYPEF rep) = "TYPE" <+> pPrintPrec l 0 rep
+  pPrintPrec _ _ TyRepF = "#Rep"
+  pPrintPrec l _ (RepF rep) = pPrintPrec l 0 rep
 
 instance (IsType a) => IsType (TypeF a) where
   safeToType (TyAppF t1 t2) = S.TyApp <$> S.safeToType t1 <*> S.safeToType t2
