@@ -8,6 +8,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -17,6 +18,7 @@ module Language.Malgo.Syntax where
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Data.Int (Int32, Int64)
+import qualified Data.Text as Text
 import Data.Tuple.Extra (uncurry3)
 import Koriel.Id
 import Koriel.Pretty
@@ -71,6 +73,7 @@ data Exp x
   | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
   | Fn (XFn x) [Clause x]
   | Tuple (XTuple x) [Exp x]
+  | Record (XRecord x) [(Text, Exp x)]
   | Force (XForce x) (Exp x)
   | Parens (XParens x) (Exp x)
 
@@ -93,7 +96,8 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
         <> foldl1
           (\a b -> sep [a, nest (-2) $ "|" <+> b])
           (map (pPrintPrec l 0) cs)
-  pPrintPrec _ _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pPrint xs
+  pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
+  pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> text (Text.unpack k) <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
@@ -109,6 +113,7 @@ instance
   typeOf (OpApp x _ _ _) = pure $ x ^. U.withUType
   typeOf (Fn x _) = pure $ x ^. U.withUType
   typeOf (Tuple x _) = pure $ x ^. U.withUType
+  typeOf (Record x _) = pure $ x ^. U.withUType
   typeOf (Force x _) = pure $ x ^. U.withUType
   typeOf (Parens x _) = pure $ x ^. U.withUType
 
@@ -118,12 +123,13 @@ instance
   where
   typeOf (Var x _) = pure $ x ^. S.withType
   typeOf (Con x _) = pure $ x ^. S.withType
-  typeOf (Unboxed x _) =pure $  x ^. S.withType
+  typeOf (Unboxed x _) = pure $ x ^. S.withType
   typeOf (Boxed x _) = pure $ x ^. S.withType
   typeOf (Apply x _ _) = pure $ x ^. S.withType
   typeOf (OpApp x _ _ _) = pure $ x ^. S.withType
   typeOf (Fn x _) = pure $ x ^. S.withType
   typeOf (Tuple x _) = pure $ x ^. S.withType
+  typeOf (Record x _) = pure $ x ^. S.withType
   typeOf (Force x _) = pure $ x ^. S.withType
   typeOf (Parens x _) = pure $ x ^. S.withType
 
@@ -143,6 +149,7 @@ instance
     OpApp x op e1 e2 -> OpApp <$> U.walkOn f x <*> pure op <*> U.walkOn f e1 <*> U.walkOn f e2
     Fn x cs -> Fn <$> U.walkOn f x <*> traverse (U.walkOn f) cs
     Tuple x es -> Tuple <$> U.walkOn f x <*> traverse (U.walkOn f) es
+    Record x kvs -> Record <$> U.walkOn f x <*> traverse (\(k, v) -> (k,) <$> U.walkOn f v) kvs
     Force x e -> Force <$> U.walkOn f x <*> U.walkOn f e
     Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
 
@@ -155,6 +162,7 @@ freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = mconcat $ map freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
+freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (Force _ e) = freevars e
 freevars (Parens _ e) = freevars e
 

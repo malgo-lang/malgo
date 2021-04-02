@@ -15,7 +15,10 @@ module Language.Malgo.TypeRep.Static where
 import Data.Binary (Binary)
 import Data.Fix
 import Data.Functor.Foldable.TH (makeBaseFunctor)
+import Data.Map.Strict (Map)
+import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust, fromMaybe)
+import qualified Data.Text as Text
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
@@ -69,27 +72,37 @@ instance Pretty PrimT where
 -- Static representations --
 ----------------------------
 
+type Kind = Type
+
 -- | Definition of `Type`
 data Type
-  = -- | application of type constructor
+  = -- type level operator
+
+    -- | application of type constructor
     TyApp Type Type
   | -- | type variable
-    TyVar (Id Type)
+    TyVar (Id Kind)
   | -- | type constructor
-    TyCon (Id Type)
-  | -- | primitive types
+    TyCon (Id Kind)
+  | -- primitive type constructor
+
+    -- | primitive types
     TyPrim PrimT
   | -- | function type
     TyArr Type Type
   | -- | tuple type
     TyTuple [Type]
+  | -- record type
+    TyRecord (Map Text Type)
   | -- | lazy type
     TyLazy Type
   | -- | pointer type
     TyPtr Type
-  | -- | kind
+  | -- kind constructor
+
+    -- | star
     TYPE Type
-  | -- | type of runtime representation tags
+  | -- | kind of runtime representation tags
     TyRep
   | -- | runtime representation tag
     Rep Rep
@@ -108,6 +121,7 @@ instance Pretty Type where
   pPrintPrec l d (TyArr t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec l _ (TyTuple ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> text (Text.unpack k) <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec l _ (TyLazy t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
@@ -157,6 +171,7 @@ instance HasType Type where
   typeOf (TyPrim p) = typeOf p
   typeOf (TyArr _ t2) = typeOf t2
   typeOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
+  typeOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
   typeOf (TyLazy _) = pure $ TYPE (Rep BoxedRep)
   typeOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
   typeOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
@@ -250,6 +265,7 @@ applySubst _ (TyCon c) = TyCon c
 applySubst _ (TyPrim p) = TyPrim p
 applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
 applySubst subst (TyTuple ts) = TyTuple $ map (applySubst subst) ts
+applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
 applySubst subst (TyLazy t) = TyLazy $ applySubst subst t
 applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
 applySubst subst (TYPE rep) = TYPE $ applySubst subst rep

@@ -98,6 +98,9 @@ type family XFn x where
 type family XTuple x where
   XTuple (Malgo x) = SimpleX x
 
+type family XRecord x where
+  XRecord (Malgo x) = SimpleX x
+
 type family XForce x where
   XForce (Malgo x) = SimpleX x
 
@@ -113,6 +116,7 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XOpApp x),
     c (XFn x),
     c (XTuple x),
+    c (XRecord x),
     c (XForce x),
     c (XParens x)
   )
