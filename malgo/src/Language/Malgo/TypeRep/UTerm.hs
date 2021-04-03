@@ -25,7 +25,9 @@ import Data.Deriving
 import Data.Fix
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
+import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe)
+import qualified Data.Text as Text
 import Data.Void
 import Koriel.Id
 import Koriel.MonadUniq
@@ -58,6 +60,7 @@ instance Pretty t => Pretty (TypeF t) where
   pPrintPrec l d (TyArrF t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec l _ (TyTupleF ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> text (Text.unpack k) <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec l _ (TyLazyF t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec l _ (TYPEF rep) = "TYPE" <+> pPrintPrec l 0 rep
@@ -71,6 +74,7 @@ instance (IsType a) => IsType (TypeF a) where
   safeToType (TyPrimF p) = Just $ S.TyPrim p
   safeToType (TyArrF t1 t2) = S.TyArr <$> S.safeToType t1 <*> S.safeToType t2
   safeToType (TyTupleF ts) = S.TyTuple <$> traverse S.safeToType ts
+  safeToType (TyRecordF kvs) = S.TyRecord <$> traverse S.safeToType kvs
   safeToType (TyLazyF t) = S.TyLazy <$> S.safeToType t
   safeToType (TyPtrF t) = S.TyPtr <$> S.safeToType t
   safeToType (TYPEF rep) = S.TYPE <$> S.safeToType rep
@@ -82,6 +86,7 @@ instance (IsType a) => IsType (TypeF a) where
   fromType (S.TyPrim p) = TyPrimF p
   fromType (S.TyArr t1 t2) = TyArrF (S.fromType t1) (S.fromType t2)
   fromType (S.TyTuple ts) = TyTupleF (map S.fromType ts)
+  fromType (S.TyRecord kvs) = TyRecordF (fmap S.fromType kvs)
   fromType (S.TyLazy t) = TyLazyF (S.fromType t)
   fromType (S.TyPtr t) = TyPtrF (S.fromType t)
   fromType (S.TYPE rep) = TYPEF $ S.fromType rep
@@ -229,6 +234,9 @@ defaultToBoxed x (UTerm t) = do
     defaultToBoxed' (TyTupleF ts) = do
       ts <- traverse (defaultToBoxed x) ts
       pure $ TyTupleF ts
+    defaultToBoxed' (TyRecordF kvs) = do
+      kvs <- traverse (defaultToBoxed x) kvs
+      pure $ TyRecordF kvs
     defaultToBoxed' (TyLazyF t) = do
       t <- defaultToBoxed x t
       pure $ TyLazyF t
@@ -276,6 +284,7 @@ instantiate x (Forall as t) = do
       TyPrimF _ -> pure $ UTerm t
       TyArrF t1 t2 -> fmap UTerm $ TyArrF <$> replace kvs t1 <*> replace kvs t2
       TyTupleF ts -> fmap UTerm $ TyTupleF <$> traverse (replace kvs) ts
+      TyRecordF kts -> fmap UTerm $ TyRecordF <$> traverse (replace kvs) kts
       TyLazyF t -> fmap UTerm $ TyLazyF <$> replace kvs t
       TyPtrF t -> fmap UTerm $ TyPtrF <$> replace kvs t
       TYPEF rep -> fmap UTerm $ TYPEF <$> replace kvs rep
@@ -297,6 +306,7 @@ instance HasType UType where
     TyPrimF p -> S.fromType <$> S.typeOf p
     TyArrF _ t2 -> typeOf t2
     TyTupleF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
+    TyRecordF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyLazyF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyPtrF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TYPEF rep -> pure $ UTerm $ TYPEF rep

@@ -66,6 +66,9 @@ compileFromAST parsedAst opt =
     runReaderT ?? opt $
       unMalgoM $
         runUniqT ?? UniqSupply 0 $ do
+          when (dumpParsed opt) $ liftIO do
+            hPutStrLn stderr "=== PARSED ==="
+            hPrint stderr $ pPrint parsedAst
           rnEnv <- RnEnv.genBuiltinRnEnv
           (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
           (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst

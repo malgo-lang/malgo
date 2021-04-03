@@ -257,6 +257,7 @@ data Pat x
   = VarP (XVarP x) (XId x)
   | ConP (XConP x) (XId x) [Pat x]
   | TupleP (XTupleP x) [Pat x]
+  | RecordP (XRecordP x) [(Text, Pat x)]
   | UnboxedP (XUnboxedP x) (Literal Unboxed)
 
 deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)
@@ -272,6 +273,8 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
     maybeParens (d > 10) $ pPrint i <+> sep (map (pPrintPrec l 11) ps)
   pPrintPrec _ _ (TupleP _ ps) =
     parens $ sep $ punctuate "," $ map pPrint ps
+  pPrintPrec l _ (RecordP _ kps) =
+    braces $ sep $ punctuate "," $ map (\(k, p) -> text (Text.unpack k) <> ":" <+> pPrintPrec l 0 p) kps
   pPrintPrec _ _ (UnboxedP _ u) = pPrint u
 
 instance
@@ -281,6 +284,7 @@ instance
   typeOf (VarP x _) = pure $ x ^. U.withUType
   typeOf (ConP x _ _) = pure $ x ^. U.withUType
   typeOf (TupleP x _) = pure $ x ^. U.withUType
+  typeOf (RecordP x _) = pure $ x ^. U.withUType
   typeOf (UnboxedP x _) = pure $ x ^. U.withUType
 
 instance
@@ -290,6 +294,7 @@ instance
   typeOf (VarP x _) = pure $ x ^. S.withType
   typeOf (ConP x _ _) = pure $ x ^. S.withType
   typeOf (TupleP x _) = pure $ x ^. S.withType
+  typeOf (RecordP x _) = pure $ x ^. S.withType
   typeOf (UnboxedP x _) = pure $ x ^. S.withType
 
 instance
@@ -303,6 +308,7 @@ instance
     VarP x v -> VarP <$> U.walkOn f x <*> pure v
     ConP x c ps -> ConP <$> U.walkOn f x <*> pure c <*> traverse (U.walkOn f) ps
     TupleP x ps -> TupleP <$> U.walkOn f x <*> traverse (U.walkOn f) ps
+    RecordP x kps -> RecordP <$> U.walkOn f x <*> traverse (bitraverse pure (U.walkOn f)) kps
     UnboxedP x u -> UnboxedP <$> U.walkOn f x <*> U.walkOn f u
 
 _VarP :: Prism' (Pat x) (XVarP x, XId x)
@@ -329,6 +335,7 @@ bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
 bindVars (VarP _ x) = HashSet.singleton x
 bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
 bindVars (TupleP _ ps) = mconcat $ map bindVars ps
+bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
 bindVars UnboxedP {} = mempty
 
 ----------
@@ -341,6 +348,7 @@ data Type x
   | TyCon (XTyCon x) (XTId x)
   | TyArr (XTyArr x) (Type x) (Type x)
   | TyTuple (XTyTuple x) [Type x]
+  | TyRecord (XTyRecord x) [(Text, Type x)]
   | TyLazy (XTyLazy x) (Type x)
 
 deriving stock instance (ForallTypeX Eq x, Eq (XTId x)) => Eq (Type x)
@@ -355,6 +363,7 @@ instance (Pretty (XTId x)) => Pretty (Type x) where
   pPrintPrec l d (TyArr _ t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pPrint ts
+  pPrintPrec l _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> text (Text.unpack k) <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec _ _ (TyLazy _ t) = braces $ pPrint t
 
 getTyVars :: (Eq (XTId x), Hashable (XTId x)) => Type x -> HashSet (XTId x)
@@ -363,6 +372,7 @@ getTyVars (TyVar _ v) = HashSet.singleton v
 getTyVars TyCon {} = mempty
 getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
+getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
 getTyVars (TyLazy _ t) = getTyVars t
 
 -----------------
