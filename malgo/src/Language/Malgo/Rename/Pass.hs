@@ -127,6 +127,7 @@ rnExp (OpApp pos op e1 e2) = do
     Nothing -> errorOn pos $ "No infix declaration:" <+> quotes (pPrint op)
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
+rnExp (Record pos kvs) = Record pos <$> traverse (bitraverse pure rnExp) kvs
 rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
@@ -144,6 +145,7 @@ rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
 rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
 rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
+rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse pure rnType) kts
 rnType (TyLazy pos t) = TyLazy pos <$> rnType t
 
 rnClause ::
@@ -160,12 +162,14 @@ rnClause (Clause pos ps ss) = do
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
     patVars (TupleP _ xs) = concatMap patVars xs
+    patVars (RecordP _ kvs) = concatMap (patVars . snd) kvs
     patVars UnboxedP {} = []
 
 rnPat :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => Pat (Malgo 'Parse) -> m (Pat (Malgo 'Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
+rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse pure rnPat) kvs
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadMalgo m, MonadIO m) => [Stmt (Malgo 'Parse)] -> m [Stmt (Malgo 'Rename)]
