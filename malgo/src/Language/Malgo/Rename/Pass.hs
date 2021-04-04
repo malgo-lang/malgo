@@ -30,10 +30,10 @@ rename builtinEnv (Module modName ds) = do
   (ds', rnState) <- runStateT ?? RnState mempty modName $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
-resolveName :: (MonadUniq m, MonadState RnState m) => String -> m RnId
+resolveName :: MonadUniq m => String -> m RnId
 resolveName name = newLocalId name ()
 
-resolveGlobalName :: (MonadUniq m, MonadState RnState m) => ModuleName -> String -> m RnId
+resolveGlobalName :: MonadUniq m => ModuleName -> String -> m RnId
 resolveGlobalName modName name = newGlobalId name () modName
 
 lookupVarName :: (MonadReader RnEnv m, MonadMalgo m) => SourcePos -> String -> m RnId
@@ -48,6 +48,12 @@ lookupTypeName pos name = do
     Just (name : _) -> pure name
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
+lookupFieldName :: (MonadReader RnEnv m, MonadMalgo m) => SourcePos -> String -> m RnId
+lookupFieldName pos name = do
+  view (fieldEnv . at name) >>= \case
+    Just (name : _) -> pure name
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
+
 -- renamer
 
 rnDecls ::
@@ -55,8 +61,9 @@ rnDecls ::
   [Decl (Malgo 'Parse)] ->
   m [Decl (Malgo 'Rename)]
 rnDecls ds = do
+  modName <- use moduleName
   -- RnEnvの生成
-  rnEnv <- genToplevelEnv ds
+  rnEnv <- genToplevelEnv modName ds
   -- RnStateの生成
   --   定義されていない識別子に対するInfixはエラー
   local (rnEnv <>) $ do
@@ -127,8 +134,9 @@ rnExp (OpApp pos op e1 e2) = do
     Nothing -> errorOn pos $ "No infix declaration:" <+> quotes (pPrint op)
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
-rnExp (Record pos kvs) = Record pos <$> traverse (bitraverse pure rnExp) kvs
+rnExp (Record pos kvs) = Record pos <$> traverse (bitraverse (lookupFieldName pos) rnExp) kvs
 rnExp (Force pos e) = Force pos <$> rnExp e
+rnExp (Access pos l) = Access pos <$> lookupFieldName pos l
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 lookupBox :: (MonadReader RnEnv f, MonadMalgo f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
@@ -145,7 +153,7 @@ rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
 rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
 rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
-rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse pure rnType) kts
+rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldName pos) rnType) kts
 rnType (TyLazy pos t) = TyLazy pos <$> rnType t
 
 rnClause ::
@@ -169,7 +177,7 @@ rnPat :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => Pat (Malgo 'Parse) ->
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
-rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse pure rnPat) kvs
+rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (lookupFieldName pos) rnPat) kvs
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadMalgo m, MonadIO m) => [Stmt (Malgo 'Parse)] -> m [Stmt (Malgo 'Rename)]
@@ -184,52 +192,6 @@ rnStmts (Let x v e : ss) = do
   local (appendRnEnv varEnv [(v, v')]) do
     ss' <- rnStmts ss
     pure $ Let x v' e' : ss'
-
-genToplevelEnv :: (MonadMalgo m, MonadIO m, MonadUniq m, MonadState RnState m) => [Decl (Malgo 'Parse)] -> m RnEnv
-genToplevelEnv ds = do
-  modName <- use moduleName
-  go modName mempty ds
-  where
-    go _ env [] = pure env
-    go modName env (ScDef pos x _ : rest)
-      | x `elem` HashMap.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      | otherwise = do
-        x' <- resolveGlobalName modName x
-        go modName (appendRnEnv varEnv [(x, x')] env) rest
-    go modName env (ScSig {} : rest) = go modName env rest
-    go modName env (DataDef pos x _ cs : rest)
-      | x `elem` HashMap.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      | disjoint (map fst cs) (HashMap.keys (env ^. varEnv)) = do
-        x' <- resolveGlobalName modName x
-        xs' <- traverse (resolveGlobalName modName . fst) cs
-        go modName (appendRnEnv varEnv (zip (map fst cs) xs') $ appendRnEnv typeEnv [(x, x')] env) rest
-      | otherwise =
-        errorOn pos $
-          "Duplicate name(s):"
-            <+> sep
-              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. varEnv)))
-    go modName env (TypeSynonym pos x _ _ : rest)
-      | x `elem` HashMap.keys (env ^. typeEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      | otherwise = do
-        x' <- resolveGlobalName modName x
-        go modName (appendRnEnv typeEnv [(x, x')] env) rest
-    go modName env (Foreign pos x _ : rest)
-      | x `elem` HashMap.keys (env ^. varEnv) = errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      | otherwise = do
-        x' <- newGlobalId x () modName
-        go modName (appendRnEnv varEnv [(x, x')] env) rest
-    go modName env (Import _ modName' : rest) = do
-      interface <- loadInterface modName'
-      opt <- getOpt
-      when (debugMode opt) $
-        liftIO $ hPrint stderr $ pPrint interface
-      go
-        modName
-        ( appendRnEnv varEnv (HashMap.toList $ interface ^. resolvedVarIdentMap) $
-            appendRnEnv typeEnv (HashMap.toList $ interface ^. resolvedTypeIdentMap) env
-        )
-        rest
-    go modName env (Infix {} : rest) = go modName env rest
 
 -- infix宣言をMapに変換
 infixDecls :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))
@@ -280,3 +242,68 @@ compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of
     right = (False, True)
     left = (False, False)
     error_please = (True, False)
+
+genToplevelEnv :: (MonadMalgo f, MonadUniq f) => ModuleName -> [Decl (Malgo 'Parse)] -> f RnEnv
+genToplevelEnv modName ds = do
+  execStateT (traverse aux ds) mempty
+  where
+    aux (ScDef pos x _) = do
+      env <- use varEnv
+      when (x `elem` HashMap.keys env) do
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+      x' <- resolveGlobalName modName x
+      modify $ appendRnEnv varEnv [(x, x')]
+    aux ScSig {} = pure ()
+    aux (DataDef pos x _ cs) = do
+      env <- get
+      when (x `elem` HashMap.keys (env ^. typeEnv)) do
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+      unless (disjoint (map fst cs) (HashMap.keys (env ^. varEnv))) do
+        errorOn pos $
+          "Duplicate name(s):"
+            <+> sep
+              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. varEnv)))
+      x' <- resolveGlobalName modName x
+      xs' <- traverse (resolveGlobalName modName . fst) cs
+      modify $ appendRnEnv varEnv (zip (map fst cs) xs')
+      modify $ appendRnEnv typeEnv [(x, x')]
+      traverse_ (traverse_ genFieldEnv . snd) cs
+    aux (TypeSynonym pos x _ t) = do
+      env <- get
+      when (x `elem` HashMap.keys (env ^. typeEnv)) do
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+      x' <- resolveGlobalName modName x
+      modify $ appendRnEnv typeEnv [(x, x')]
+      genFieldEnv t
+    aux (Foreign pos x _) = do
+      env <- get
+      when (x `elem` HashMap.keys (env ^. varEnv)) do
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+      x' <- newGlobalId x () modName
+      modify $ appendRnEnv varEnv [(x, x')]
+    aux (Import _ modName') = do
+      interface <- loadInterface modName'
+      opt <- getOpt
+      when (debugMode opt) $
+        liftIO $ hPrint stderr $ pPrint interface
+      modify $ appendRnEnv varEnv (HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv typeEnv (HashMap.toList $ interface ^. resolvedTypeIdentMap)
+    aux Infix {} = pure ()
+    genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
+    genFieldEnv (TyVar _ _) = pure ()
+    genFieldEnv (TyCon _ _) = pure ()
+    genFieldEnv (TyArr _ t1 t2) = genFieldEnv t1 >> genFieldEnv t2
+    genFieldEnv (TyTuple _ ts) = traverse_ genFieldEnv ts
+    genFieldEnv (TyRecord pos kts) = do
+      let ks = map fst kts
+      let ts = map snd kts
+      traverse_ genFieldEnv ts
+      env <- get
+      unless (disjoint ks (HashMap.keys (env ^. fieldEnv))) do
+        errorOn pos $
+          "Duplicate name:"
+            <+> sep
+              (punctuate "," $ map (quotes . text) (ks `intersect` HashMap.keys (env ^. fieldEnv)))
+      ks' <- traverse (resolveGlobalName modName) ks
+      zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, k')]) ks ks'
+    genFieldEnv (TyLazy _ t) = genFieldEnv t

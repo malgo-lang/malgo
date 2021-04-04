@@ -186,7 +186,7 @@ pRecordP = between (symbol "{") (symbol "}") do
       label <- lowerIdent
       void $ pOperator ":"
       value <- pPat
-      pure (Text.pack label, value)
+      pure (label, value)
 
 pSinglePat :: Parser (Pat (Malgo 'Parse))
 pSinglePat =
@@ -235,7 +235,13 @@ pRecord = between (symbol "{") (symbol "}") do
       label <- lowerIdent
       void $ pOperator ":"
       value <- pExp
-      pure (Text.pack label, value)
+      pure (label, value)
+
+pAccess :: Parser (Exp (Malgo 'Parse))
+pAccess = do
+  s <- getSourcePos
+  l <- char '#' >> lowerIdent
+  pure $ Access s l
 
 pSingleExp' :: Parser (Exp (Malgo 'Parse))
 pSingleExp' =
@@ -247,6 +253,7 @@ pSingleExp' =
     <|> try pTuple
     <|> try pRecord
     <|> pFun
+    <|> pAccess
     <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
 
 pSingleExp :: Parser (Exp (Malgo 'Parse))
@@ -307,7 +314,7 @@ pTyRecord = between (symbol "{") (symbol "}") do
       label <- lowerIdent
       void $ pOperator ":"
       value <- pType
-      pure (Text.pack label, value)
+      pure (label, value)
 
 pTyLazy :: Parser (Type (Malgo 'Parse))
 pTyLazy = between (symbol "{") (symbol "}") $ TyLazy <$> getSourcePos <*> pType

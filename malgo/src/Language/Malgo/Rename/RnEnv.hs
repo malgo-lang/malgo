@@ -31,19 +31,20 @@ makeLenses ''RnState
 
 data RnEnv = RnEnv
   { _varEnv :: HashMap PsId [RnId],
-    _typeEnv :: HashMap PsTId [RnTId]
+    _typeEnv :: HashMap PsTId [RnTId],
+    _fieldEnv :: HashMap PsId [RnId]
   }
   deriving stock (Show, Eq)
 
 instance Semigroup RnEnv where
-  RnEnv v1 t1 <> RnEnv v2 t2 = RnEnv (append v1 v2) (append t1 t2)
+  RnEnv v1 t1 f1 <> RnEnv v2 t2 f2 = RnEnv (append v1 v2) (append t1 t2) (append f1 f2)
     where
       append v1 v2 = HashMap.foldrWithKey (\k ns -> HashMap.alter (f ns) k) v2 v1
       f ns1 Nothing = Just ns1
       f ns1 (Just ns2) = Just (ns1 <> ns2)
 
 instance Monoid RnEnv where
-  mempty = RnEnv mempty mempty
+  mempty = RnEnv mempty mempty mempty
 
 instance Pretty RnEnv where
   pPrint RnEnv {_varEnv, _typeEnv} =
@@ -96,5 +97,6 @@ genBuiltinRnEnv = do
               ("Char#", [char_t]),
               ("String#", [string_t]),
               ("Ptr#", [ptr_t])
-            ]
+            ],
+        _fieldEnv = HashMap.empty
       }

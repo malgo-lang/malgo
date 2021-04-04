@@ -1,0 +1,17 @@
+module RecordTest = {
+  import Builtin;
+  import Prelude;
+
+  type A = { a: Int32, b: Int64 };
+
+  data B = B A;
+
+  data C a = C { x: a };
+
+  f = { p -> #a p };
+
+  g = { B p -> #a p };
+
+  h = { C p -> #x p };
+
+}

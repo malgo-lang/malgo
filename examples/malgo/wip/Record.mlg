@@ -5,10 +5,10 @@ module Record = {
   type Person = { name: String, age: Int32 };
 
   personAge = { { age: age } -> age };
-  personAge' = { p -> p.age };
+  personAge' = { p -> #age p };
 
   main = {
-    printInt32 (personAge {name: "Hoge", age: 42})
+    print_Int32 (personAge {name: "Hoge", age: 42})
   };
 }
 
