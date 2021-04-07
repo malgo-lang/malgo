@@ -74,18 +74,6 @@ instance Pretty PrimT where
 
 type Kind = Type
 
--- | Definition of Type constructor
-data TyAbs ty
-  = Abs (Id ty) (TyAbs ty)
-  | Type ty
-  deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
-
-instance Binary ty => Binary (TyAbs ty)
-
-instance Pretty ty => Pretty (TyAbs ty) where
-  pPrint (Abs x t) = braces $ pPrint x <+> "->" <+> pPrint t
-  pPrint (Type t) = pPrint t
-
 -- | Definition of `Type`
 data Type
   = -- type level operator
@@ -96,7 +84,6 @@ data Type
     TyVar (Id Kind)
   | -- | type constructor
     TyCon (Id Kind)
-  | TyAbs (TyAbs Type)
   | -- primitive type constructor
 
     -- | primitive types
@@ -130,7 +117,6 @@ instance Pretty Type where
     maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVar v) = pprIdName v
   pPrintPrec l _ (TyCon c) = pPrintPrec l 0 c
-  pPrintPrec l _ (TyAbs a) = pPrintPrec l 0 a
   pPrintPrec l _ (TyPrim p) = pPrintPrec l 0 p
   pPrintPrec l d (TyArr t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
@@ -167,10 +153,6 @@ instance IsType (t (Fix t)) => IsType (Fix t) where
 class HasType a where
   typeOf :: Monad m => a -> m Type
 
--- HasType (Id a)は混乱を生む
--- instance IsType a => HasType (Id a) where
---   typeOf x = pure $ toType $ x ^. idMeta
-
 instance HasType PrimT where
   typeOf Int32T = pure $ TYPE (Rep Int32Rep)
   typeOf Int64T = pure $ TYPE (Rep Int64Rep)
@@ -179,13 +161,6 @@ instance HasType PrimT where
   typeOf CharT = pure $ TYPE (Rep CharRep)
   typeOf StringT = pure $ TYPE (Rep StringRep)
 
-instance (HasType ty) => HasType (TyAbs ty) where
-  typeOf (Abs x t) = do
-    xKind <- typeOf $ x ^. idMeta
-    tKind <- typeOf t
-    pure $ TyArr xKind tKind
-  typeOf (Type t) = typeOf t
-
 instance HasType Type where
   typeOf (TyApp t1 _) =
     typeOf t1 >>= \case
@@ -193,7 +168,6 @@ instance HasType Type where
       _ -> error "invalid kind"
   typeOf (TyVar v) = pure $ v ^. idMeta
   typeOf (TyCon c) = pure $ c ^. idMeta
-  typeOf (TyAbs a) = typeOf a
   typeOf (TyPrim p) = typeOf p
   typeOf (TyArr _ t2) = typeOf t2
   typeOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
@@ -245,18 +219,31 @@ instance WithType (With Type a) where
 instance WithType Void where
   withType _ a = absurd a
 
-data TypeDef ty = TypeDef
-  { _definedType :: TyAbs ty,
-    _valueConstructors :: [(Id (), ty)]
+-- | Definition of Type constructor
+data TypeDef = TypeDef
+  { _typeConstructor :: Type,
+    _typeParameters :: [Id Type],
+    _valueConstructors :: [(Id (), Type)]
   }
   deriving stock (Show, Generic)
 
-instance Binary ty => Binary (TypeDef ty)
+instance Binary TypeDef
 
-instance Pretty ty => Pretty (TypeDef ty) where
-  pPrint (TypeDef t v) = pPrint (t, v)
+instance Pretty TypeDef where
+  pPrint (TypeDef c q u) = pPrint (c, q, u)
 
 makeLenses ''TypeDef
+
+class IsTypeDef a where
+  _TypeDef :: Prism' a TypeDef
+  _TypeDef = prism' fromTypeDef safeToTypeDef
+  safeToTypeDef :: a -> Maybe TypeDef
+  safeToTypeDef a = a ^? _TypeDef
+  toTypeDef :: a -> TypeDef
+  toTypeDef a = fromJust $ safeToTypeDef a
+  fromTypeDef :: TypeDef -> a
+  fromTypeDef a = a ^. re _TypeDef
+  {-# MINIMAL _TypeDef | (safeToTypeDef, fromTypeDef) #-}
 
 ---------------
 -- Utilities --
@@ -275,10 +262,6 @@ applySubst :: HashMap (Id Type) Type -> Type -> Type
 applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t2)
 applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v
 applySubst _ (TyCon c) = TyCon c
-applySubst subst (TyAbs abs) = TyAbs $ applySubstAbs abs
-  where
-    applySubstAbs (Abs x t) = Abs x $ applySubstAbs t
-    applySubstAbs (Type t) = Type $ applySubst subst t
 applySubst _ (TyPrim p) = TyPrim p
 applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
 applySubst subst (TyTuple ts) = TyTuple $ map (applySubst subst) ts
