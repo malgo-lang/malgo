@@ -153,33 +153,39 @@ instance IsType (t (Fix t)) => IsType (Fix t) where
 class HasType a where
   typeOf :: Monad m => a -> m Type
 
-instance HasType PrimT where
-  typeOf Int32T = pure $ TYPE (Rep Int32Rep)
-  typeOf Int64T = pure $ TYPE (Rep Int64Rep)
-  typeOf FloatT = pure $ TYPE (Rep FloatRep)
-  typeOf DoubleT = pure $ TYPE (Rep DoubleRep)
-  typeOf CharT = pure $ TYPE (Rep CharRep)
-  typeOf StringT = pure $ TYPE (Rep StringRep)
+class HasKind a where
+  kindOf :: Monad m => a -> m Kind
 
-instance HasType Type where
-  typeOf (TyApp t1 _) =
-    typeOf t1 >>= \case
+instance HasKind PrimT where
+  kindOf Int32T = pure $ TYPE (Rep Int32Rep)
+  kindOf Int64T = pure $ TYPE (Rep Int64Rep)
+  kindOf FloatT = pure $ TYPE (Rep FloatRep)
+  kindOf DoubleT = pure $ TYPE (Rep DoubleRep)
+  kindOf CharT = pure $ TYPE (Rep CharRep)
+  kindOf StringT = pure $ TYPE (Rep StringRep)
+
+instance HasKind Type where
+  kindOf (TyApp t1 _) =
+    kindOf t1 >>= \case
       TyArr _ k -> pure k
       _ -> error "invalid kind"
-  typeOf (TyVar v) = pure $ v ^. idMeta
-  typeOf (TyCon c) = pure $ c ^. idMeta
-  typeOf (TyPrim p) = typeOf p
-  typeOf (TyArr _ t2) = typeOf t2
-  typeOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
-  typeOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
-  typeOf (TyLazy _) = pure $ TYPE (Rep BoxedRep)
-  typeOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
-  typeOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
-  typeOf TyRep = pure TyRep -- Rep :: Rep
-  typeOf (Rep _) = pure TyRep
+  kindOf (TyVar v) = pure $ v ^. idMeta
+  kindOf (TyCon c) = pure $ c ^. idMeta
+  kindOf (TyPrim p) = kindOf p
+  kindOf (TyArr _ t2) = kindOf t2
+  kindOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
+  kindOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
+  kindOf (TyLazy _) = pure $ TYPE (Rep BoxedRep)
+  kindOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
+  kindOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
+  kindOf TyRep = pure TyRep -- Rep :: Rep
+  kindOf (Rep _) = pure TyRep
 
 instance HasType Void where
   typeOf x = absurd x
+
+instance HasKind Void where
+  kindOf x = absurd x
 
 -- | Universally quantified type
 data Scheme = Forall [Id Type] Type

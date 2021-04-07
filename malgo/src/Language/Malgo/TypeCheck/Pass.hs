@@ -112,7 +112,7 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(x, name, params, _) -> do
     tyCon <- UVar <$> freshVar @UType
-    tyConKind <- typeOf tyCon
+    tyConKind <- kindOf tyCon
     solve [With x $ tyConKind :~ buildTyConKind params]
     typeEnv . at name .= Just (TypeDef tyCon [] [])
   for_ dataDefs \(_, name, params, _) -> do
@@ -141,8 +141,8 @@ tcTypeSynonyms ds =
           $+$ "TODO: add type operator and fix TyTyple and TyLazy's kinding"
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar @UType) params
-    nameKind <- typeOf name'
-    paramKinds <- traverse typeOf params'
+    nameKind <- kindOf name'
+    paramKinds <- traverse kindOf params'
     solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) paramKinds :~ nameKind]
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     transedTyp <- transType typ
@@ -162,8 +162,8 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar @UType) params
-    nameKind <- typeOf name'
-    paramKinds <- traverse typeOf params'
+    nameKind <- kindOf name'
+    paramKinds <- traverse kindOf params'
     solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) paramKinds :~ nameKind]
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
@@ -431,15 +431,15 @@ transType (S.TyApp pos t ts) = do
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
-      t'Kind <- typeOf t'
+      t'Kind <- kindOf t'
       rep <- UVar . TypeVar <$> newLocalId "r" TyRep
       solve [With pos $ t'Kind :~ TYPE rep]
       pure $ TyPtr t'
     _ -> do
       t' <- transType t
       ts' <- traverse transType ts
-      t'Kind <- typeOf t'
-      ts'Kinds <- traverse typeOf ts'
+      t'Kind <- kindOf t'
+      ts'Kinds <- traverse kindOf ts'
       solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) ts'Kinds :~ t'Kind]
       foldr (flip TyApp) <$> transType t <*> traverse transType ts
   where

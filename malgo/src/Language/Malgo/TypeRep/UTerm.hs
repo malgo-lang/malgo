@@ -94,9 +94,6 @@ instance (IsType a) => IsType (TypeF a) where
   fromType S.TyRep = TyRepF
   fromType (S.Rep rep) = RepF rep
 
-instance IsType a => S.HasType (TypeF a) where
-  typeOf = S.typeOf . S.toType
-
 newtype TypeVar = TypeVar {_typeVar :: Id UType}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
 
@@ -155,7 +152,7 @@ instance (Monad m, MonadUniq m, MonadMalgo m) => MonadBind (UTerm TypeF TypeVar)
     TypeVar <$> newLocalId "t" (UVar kind)
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    tKind <- typeOf t
+    tKind <- kindOf t
     let cs = [With x $ v ^. typeVar . idMeta :~ tKind]
     solve cs
     at v ?= t
@@ -198,18 +195,18 @@ generalize x bound term = do
 toBound :: (MonadUniq m, MonadBind UType m) => SourcePos -> TypeVar -> [Char] -> m (Id Type)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
-  tvKind <- typeOf tvType
+  tvKind <- kindOf tvType
   case freeze tvKind of
     Just kind -> newLocalId hint kind
     Nothing -> errorDoc $ pPrint tvType
 
 defaultToBoxed :: (Applicative m, MonadBind UType m) => SourcePos -> UType -> m UType
 defaultToBoxed x (UVar v) = do
-  vKind <- typeOf $ v ^. typeVar . idMeta
+  vKind <- kindOf $ v ^. typeVar . idMeta
   case vKind of
     UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
     _ -> do
-      void $ defaultToBoxed x =<< typeOf (v ^. typeVar . idMeta)
+      void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
       UVar <$> traverseOf (typeVar . idMeta) zonk v
 defaultToBoxed x (UTerm t) = do
   t <- defaultToBoxed' t
@@ -272,7 +269,7 @@ instantiate x (Forall as t) = do
   avs <- traverse ?? as $ \a -> do
     let a' = over idMeta unfreeze a
     v <- UVar <$> freshVar @UType
-    vKind <- typeOf v
+    vKind <- kindOf v
     solve [With x $ a' ^. idMeta :~ vKind]
     pure (a', v)
   replace avs t
@@ -295,17 +292,20 @@ instantiate x (Forall as t) = do
 class HasType a where
   typeOf :: Monad m => a -> m UType
 
-instance HasType UType where
-  typeOf (UVar v) = pure $ v ^. typeVar . idMeta
-  typeOf (UTerm t) = case t of
+class HasKind a where
+  kindOf :: Monad m => a -> m UType
+
+instance HasKind UType where
+  kindOf (UVar v) = pure $ v ^. typeVar . idMeta
+  kindOf (UTerm t) = case t of
     TyAppF t1 _ -> do
-      typeOf t1 >>= \case
+      kindOf t1 >>= \case
         UTerm (TyArrF _ k) -> pure k
         _ -> error "invalid kind"
     TyVarF v -> pure $ v ^. idMeta
     TyConF c -> pure $ c ^. idMeta
-    TyPrimF p -> S.fromType <$> S.typeOf p
-    TyArrF _ t2 -> typeOf t2
+    TyPrimF p -> S.fromType <$> S.kindOf p
+    TyArrF _ t2 -> kindOf t2
     TyTupleF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyRecordF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyLazyF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
@@ -316,6 +316,9 @@ instance HasType UType where
 
 instance HasType Void where
   typeOf = absurd
+
+instance HasKind Void where
+  kindOf = absurd
 
 class WithUType a where
   withUType :: Lens' a UType

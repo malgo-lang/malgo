@@ -402,7 +402,7 @@ dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: (MonadState DsEnv m, MonadIO m) => GT.Type -> m C.Type
 unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
-  GT.typeOf t >>= \case
+  GT.kindOf t >>= \case
     TYPE (Rep BoxedRep) -> do
       let (con, ts) = splitCon t
       vcs <- lookupValueConstructors con ts
