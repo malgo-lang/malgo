@@ -46,7 +46,7 @@ class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
   type Var t
 
   -- | Unify two terms and generate substituation and new constraints
-  unify :: MonadMalgo m => SourcePos -> t -> t -> m (HashMap (Var t) t, [With SourcePos (Constraint t)])
+  unify :: (MonadBind t m, MonadMalgo m) => SourcePos -> t -> t -> m (HashMap (Var t) t, [With SourcePos (Constraint t)])
 
   -- | Check alpha-equivalence
   equiv :: t -> t -> Maybe (HashMap (Var t) (Var t))
@@ -60,7 +60,7 @@ class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
 
 -- | Lifted version of Unifiable
 class Unifiable1 t where
-  liftUnify :: (MonadMalgo m, Unifiable a) => (SourcePos -> a -> a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])) -> SourcePos -> t a -> t a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])
+  liftUnify :: (MonadBind a m, MonadMalgo m, Unifiable a) => (SourcePos -> a -> a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])) -> SourcePos -> t a -> t a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])
   liftEquiv :: Unifiable a => (a -> a -> Maybe (HashMap (Var a) (Var a))) -> t a -> t a -> Maybe (HashMap (Var a) (Var a))
   liftFreevars :: Unifiable a => (a -> HashSet (Var a)) -> t a -> HashSet (Var a)
   liftOccursCheck :: Unifiable a => (Var a -> a -> Bool) -> Var a -> t a -> Bool

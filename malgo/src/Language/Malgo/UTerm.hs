@@ -21,7 +21,6 @@ import Data.Void
 import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsType (..))
 import Language.Malgo.Unify
 
 -----------
@@ -52,11 +51,6 @@ deriving stock instance (Generic1 t, Generic v) => Generic (UTerm t v)
 instance (Pretty v, Pretty (t (UTerm t v))) => Pretty (UTerm t v) where
   pPrintPrec _ _ (UVar v) = pPrint v
   pPrintPrec l d (UTerm t) = pPrintPrec l d t
-
-instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
-  safeToType (UVar _) = Nothing
-  safeToType (UTerm t) = safeToType t
-  fromType t = UTerm $ fromType t
 
 freeze :: Traversable t => UTerm t v -> Maybe (Fix t)
 freeze (UVar _) = Nothing

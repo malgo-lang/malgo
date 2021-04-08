@@ -22,6 +22,7 @@
 module Language.Malgo.TypeRep.UTerm where
 
 import Data.Deriving
+import Data.Functor.Foldable
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
@@ -32,7 +33,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), TypeF (..), Scheme (Forall))
+import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), Scheme (Forall), TypeF (..))
 import qualified Language.Malgo.TypeRep.Static as S
 import Language.Malgo.UTerm
 import Language.Malgo.Unify
@@ -65,30 +66,8 @@ instance Pretty t => Pretty (TypeF t) where
   pPrintPrec l _ (RepF rep) = pPrintPrec l 0 rep
 
 instance (IsType a) => IsType (TypeF a) where
-  safeToType (TyAppF t1 t2) = S.TyApp <$> S.safeToType t1 <*> S.safeToType t2
-  safeToType (TyVarF v) = S.TyVar <$> traverseOf idMeta S.safeToType v
-  safeToType (TyConF c) = S.TyCon <$> traverseOf idMeta S.safeToType c
-  safeToType (TyPrimF p) = Just $ S.TyPrim p
-  safeToType (TyArrF t1 t2) = S.TyArr <$> S.safeToType t1 <*> S.safeToType t2
-  safeToType (TyTupleF ts) = S.TyTuple <$> traverse S.safeToType ts
-  safeToType (TyRecordF kvs) = S.TyRecord <$> traverse S.safeToType kvs
-  safeToType (TyLazyF t) = S.TyLazy <$> S.safeToType t
-  safeToType (TyPtrF t) = S.TyPtr <$> S.safeToType t
-  safeToType (TYPEF rep) = S.TYPE <$> S.safeToType rep
-  safeToType TyRepF = Just S.TyRep
-  safeToType (RepF rep) = Just $ S.Rep rep
-  fromType (S.TyApp t1 t2) = TyAppF (S.fromType t1) (S.fromType t2)
-  fromType (S.TyVar v) = TyVarF (over idMeta (\k -> k ^. re S._Type) v)
-  fromType (S.TyCon c) = TyConF (over idMeta (\k -> k ^. re S._Type) c)
-  fromType (S.TyPrim p) = TyPrimF p
-  fromType (S.TyArr t1 t2) = TyArrF (S.fromType t1) (S.fromType t2)
-  fromType (S.TyTuple ts) = TyTupleF (map S.fromType ts)
-  fromType (S.TyRecord kvs) = TyRecordF (fmap S.fromType kvs)
-  fromType (S.TyLazy t) = TyLazyF (S.fromType t)
-  fromType (S.TyPtr t) = TyPtrF (S.fromType t)
-  fromType (S.TYPE rep) = TYPEF $ S.fromType rep
-  fromType S.TyRep = TyRepF
-  fromType (S.Rep rep) = RepF rep
+  safeToType = fmap embed . traverse safeToType
+  fromType = fmap fromType . project
 
 newtype TypeVar = TypeVar {_typeVar :: Id UType}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)

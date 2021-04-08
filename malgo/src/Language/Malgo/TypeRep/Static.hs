@@ -23,6 +23,7 @@ import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
+import Language.Malgo.UTerm
 
 --------------------------------
 -- Common tag representations --
@@ -148,6 +149,11 @@ instance IsType Type where
 instance IsType (t (Fix t)) => IsType (Fix t) where
   safeToType (Fix t) = safeToType t
   fromType t = Fix $ fromType t
+
+instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
+  safeToType (UVar _) = Nothing
+  safeToType (UTerm t) = safeToType t
+  fromType t = UTerm $ fromType t
 
 -- | Types that have a `Type`
 class HasType a where
