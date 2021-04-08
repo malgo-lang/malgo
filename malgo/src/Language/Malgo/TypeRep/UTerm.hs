@@ -22,7 +22,6 @@
 module Language.Malgo.TypeRep.UTerm where
 
 import Data.Deriving
-import Data.Fix
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
@@ -33,7 +32,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsScheme, IsType (fromType, safeToType), Rep (..), TypeF (..))
+import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), TypeF (..), Scheme (Forall))
 import qualified Language.Malgo.TypeRep.Static as S
 import Language.Malgo.UTerm
 import Language.Malgo.Unify
@@ -48,8 +47,6 @@ deriveOrd1 ''TypeF
 deriveShow1 ''TypeF
 
 type UType = UTerm TypeF TypeVar
-
-type Type = Fix TypeF
 
 instance Pretty t => Pretty (TypeF t) where
   pPrintPrec l d (TyAppF t1 t2) =
@@ -161,23 +158,7 @@ instance (Monad m, MonadUniq m, MonadMalgo m) => MonadBind (UTerm TypeF TypeVar)
     pure $ fromMaybe (UVar v) mterm
   zonk (UTerm t) = UTerm <$> traverse zonk t
 
-data Scheme = Forall [Id Type] (UTerm TypeF TypeVar)
-  deriving stock (Eq, Ord, Show, Generic)
-
-instance Pretty Scheme where
-  pPrintPrec l _ (Forall vs t) = "forall" <+> sep (map pprIdName vs) <> "." <+> pPrintPrec l 0 t
-
-instance HasUTerm TypeF TypeVar Scheme where
-  walkOn f (Forall vs t) = Forall vs <$> walkOn f t
-
-instance IsScheme Scheme where
-  safeToScheme (Forall vs t) = do
-    let vs' = map (over idMeta S.toType) vs
-    t' <- safeToType =<< freeze t
-    Just $ S.Forall vs' t'
-  fromScheme (S.Forall vs t) = Forall (map (over idMeta S.fromType) vs) (unfreeze $ S.fromType t)
-
-generalize :: (MonadUniq m, MonadBind UType m) => SourcePos -> HashSet TypeVar -> UType -> m Scheme
+generalize :: (MonadUniq m, MonadBind UType m) => SourcePos -> HashSet TypeVar -> UType -> m (Scheme UType)
 generalize x bound term = do
   {-
   let fvs = Set.toList $ unboundFreevars bound term
@@ -188,16 +169,14 @@ generalize x bound term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs $ map (over idMeta unfreeze) as
+  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   Forall as <$> zonk zonkedTerm
 
-toBound :: (MonadUniq m, MonadBind UType m) => SourcePos -> TypeVar -> [Char] -> m (Id Type)
+toBound :: (MonadUniq m, MonadBind UType m) => SourcePos -> TypeVar -> [Char] -> m (Id UType)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   tvKind <- kindOf tvType
-  case freeze tvKind of
-    Just kind -> newLocalId hint kind
-    Nothing -> errorDoc $ pPrint tvType
+  newLocalId hint tvKind
 
 defaultToBoxed :: (Applicative m, MonadBind UType m) => SourcePos -> UType -> m UType
 defaultToBoxed x (UVar v) = do
@@ -249,7 +228,7 @@ defaultToBoxed x (UTerm t) = do
 unboundFreevars :: Unifiable t => HashSet (Var t) -> t -> HashSet (Var t)
 unboundFreevars bound t = HashSet.difference (freevars t) bound
 
-generalizeMutRecs :: (MonadUniq m, MonadBind UType m) => SourcePos -> HashSet TypeVar -> [UType] -> m ([Id Type], [UType])
+generalizeMutRecs :: (MonadUniq m, MonadBind UType m) => SourcePos -> HashSet TypeVar -> [UType] -> m ([Id UType], [UType])
 generalizeMutRecs x bound terms = do
   {-
   let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms
@@ -260,17 +239,16 @@ generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs $ map (over idMeta unfreeze) as
+  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-instantiate :: (MonadBind UType m) => SourcePos -> Scheme -> m UType
+instantiate :: (MonadBind UType m) => SourcePos -> Scheme UType -> m UType
 instantiate x (Forall as t) = do
   avs <- traverse ?? as $ \a -> do
-    let a' = over idMeta unfreeze a
     v <- UVar <$> freshVar @UType
     vKind <- kindOf v
-    solve [With x $ a' ^. idMeta :~ vKind]
-    pure (a', v)
+    solve [With x $ a ^. idMeta :~ vKind]
+    pure (a, v)
   replace avs t
   where
     replace _ t@UVar {} = pure t

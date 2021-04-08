@@ -25,7 +25,7 @@ import qualified Language.Malgo.TypeRep.Static as GT
 import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
-  { _signatureMap :: HashMap RnId GT.Scheme, -- from TypeRep.Static
+  { _signatureMap :: HashMap RnId (GT.Scheme GT.Type), -- from TypeRep.Static
     _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type), -- from TypeRep.Static
     _resolvedVarIdentMap :: HashMap PsId RnId, -- from DsEnv
     _resolvedTypeIdentMap :: HashMap PsId RnId, -- from DsEnv

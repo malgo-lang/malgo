@@ -23,7 +23,7 @@ data DsEnv = DsEnv
     -- | Malgo -> Coreの名前環境
     _nameEnv :: HashMap RnId (Id C.Type),
     -- | 型環境
-    _varTypeEnv :: HashMap RnId Scheme,
+    _varTypeEnv :: HashMap RnId (Scheme Type),
     _typeDefEnv :: HashMap RnTId (TypeDef Type),
     _rnEnv :: RnEnv
   }
@@ -55,9 +55,8 @@ instance Pretty DsEnv where
 makeLenses ''DsEnv
 
 makeDsEnv ::
-  IsScheme a =>
   ModuleName ->
-  HashMap (Id ()) a ->
+  HashMap (Id ()) (Scheme Type) ->
   HashMap (Id ()) (TypeDef Type) ->
   RnEnv ->
   DsEnv
@@ -65,7 +64,7 @@ makeDsEnv modName varEnv typeEnv rnEnv =
   DsEnv
     { _moduleName = modName,
       _nameEnv = mempty,
-      _varTypeEnv = fmap toScheme varEnv,
+      _varTypeEnv = varEnv,
       _typeDefEnv = typeEnv,
       _rnEnv = rnEnv
     }

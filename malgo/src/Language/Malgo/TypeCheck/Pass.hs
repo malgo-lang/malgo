@@ -28,7 +28,7 @@ import Language.Malgo.Syntax hiding (Type (..), freevars)
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeCheck.TcEnv
-import Language.Malgo.TypeRep.Static (Rep (..), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors)
+import Language.Malgo.TypeRep.Static (Rep (..), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors, Scheme (Forall))
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.UTerm
@@ -39,7 +39,7 @@ import Text.Megaparsec (SourcePos)
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupVar :: (MonadState TcEnv m, MonadMalgo m) => SourcePos -> RnId -> m Scheme
+lookupVar :: (MonadState TcEnv m, MonadMalgo m) => SourcePos -> RnId -> m (Scheme UType)
 lookupVar pos name =
   use (varEnv . at name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
@@ -63,7 +63,7 @@ typeCheck rnEnv (Module name bg) =
         >>= traverseOf (foreigns . traversed . _1 . ann) zonk
     zonkedTcEnv <-
       pure tcEnv'
-        >>= traverseOf (varEnv . traversed) (walkOn @TypeF @TypeVar zonk)
+        >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
         >>= traverseOf (typeEnv . traversed . typeConstructor) (walkOn @TypeF @TypeVar zonk)
         >>= traverseOf (typeEnv . traversed . valueConstructors . traversed . _2) (walkOn @TypeF @TypeVar zonk)
     pure (Module name zonkedBg, zonkedTcEnv)
@@ -95,7 +95,7 @@ tcImports = traverse tcImport
   where
     tcImport (pos, modName) = do
       interface <- loadInterface modName
-      varEnv <>= fmap Static.fromScheme (interface ^. signatureMap)
+      varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
       typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
       pure (pos, modName)
 
@@ -178,7 +178,7 @@ tcDataDefs ds = do
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
     let valueCons' = zip valueConsNames valueConsTypes'
     varEnv <>= HashMap.fromList (map (over _2 (Forall as)) valueCons')
-    typeEnv . at name %= (_Just . typeParameters .~ map (over idMeta unfreeze) as) . (_Just . valueConstructors .~ valueCons')
+    typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
 tcForeigns ::

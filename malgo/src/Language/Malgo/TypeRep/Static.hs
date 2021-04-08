@@ -188,32 +188,15 @@ instance HasKind Void where
   kindOf x = absurd x
 
 -- | Universally quantified type
-data Scheme = Forall [Id Type] Type
-  deriving stock (Show, Generic)
+data Scheme ty = Forall [Id ty] ty
+  deriving stock (Show, Generic, Functor, Foldable, Traversable)
 
-instance Binary Scheme
+instance Binary ty => Binary (Scheme ty)
 
-instance Pretty Scheme where
+instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall vs t) = "forall" <+> sep (map pprIdName vs) <> "." <+> pPrint t
 
 makePrisms ''Scheme
-
--- | Types that can be translated to `Scheme`
-class IsScheme a where
-  _Scheme :: Prism' a Scheme
-  _Scheme = prism' fromScheme safeToScheme
-  safeToScheme :: a -> Maybe Scheme
-  safeToScheme a = a ^? _Scheme
-  toScheme :: a -> Scheme
-  toScheme a = fromJust $ safeToScheme a
-  fromScheme :: Scheme -> a
-  fromScheme a = a ^. re _Scheme
-  {-# MINIMAL _Scheme | (safeToScheme, fromScheme) #-}
-
-instance IsScheme Scheme where
-  _Scheme = prism id Right
-  safeToScheme = Just
-  toScheme = id
 
 -- | Types qualified with `Type`
 class WithType a where

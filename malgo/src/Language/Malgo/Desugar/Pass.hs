@@ -33,7 +33,7 @@ import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
-desugar :: (MonadUniq m, MonadIO m, MonadMalgo m, IsScheme a1, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m) => HashMap RnId a1 -> HashMap RnTId (TypeDef GT.Type) -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
+desugar :: (MonadUniq m, MonadIO m, MonadMalgo m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m) => HashMap RnId (Scheme GT.Type) -> HashMap RnTId (TypeDef GT.Type) -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
 desugar varEnv typeEnv rnEnv (Module modName ds) = do
   (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
