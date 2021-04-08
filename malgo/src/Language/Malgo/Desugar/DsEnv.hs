@@ -24,7 +24,7 @@ data DsEnv = DsEnv
     _nameEnv :: HashMap RnId (Id C.Type),
     -- | 型環境
     _varTypeEnv :: HashMap RnId Scheme,
-    _typeDefEnv :: HashMap RnTId TypeDef,
+    _typeDefEnv :: HashMap RnTId (TypeDef Type),
     _rnEnv :: RnEnv
   }
   deriving stock (Show)
@@ -54,12 +54,18 @@ instance Pretty DsEnv where
 
 makeLenses ''DsEnv
 
-makeDsEnv :: (IsScheme a1, IsTypeDef a2) => ModuleName -> HashMap RnId a1 -> HashMap RnTId a2 -> RnEnv -> DsEnv
+makeDsEnv ::
+  IsScheme a =>
+  ModuleName ->
+  HashMap (Id ()) a ->
+  HashMap (Id ()) (TypeDef Type) ->
+  RnEnv ->
+  DsEnv
 makeDsEnv modName varEnv typeEnv rnEnv =
   DsEnv
     { _moduleName = modName,
       _nameEnv = mempty,
       _varTypeEnv = fmap toScheme varEnv,
-      _typeDefEnv = fmap toTypeDef typeEnv,
+      _typeDefEnv = typeEnv,
       _rnEnv = rnEnv
     }

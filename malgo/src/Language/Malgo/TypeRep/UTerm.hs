@@ -33,9 +33,8 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsScheme, IsType (fromType, safeToType), IsTypeDef, Rep (..), TypeF (..))
+import Language.Malgo.TypeRep.Static (IsScheme, IsType (fromType, safeToType), Rep (..), TypeF (..))
 import qualified Language.Malgo.TypeRep.Static as S
-import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.UTerm
 import Language.Malgo.Unify
 import Text.Megaparsec (SourcePos)
@@ -361,28 +360,3 @@ pattern TyRep = UTerm TyRepF
 
 pattern Rep :: Rep -> UTerm TypeF v
 pattern Rep rep = UTerm (RepF rep)
-
--- Type constructor
-data TypeDef = TypeDef
-  { _typeConstructor :: UType,
-    _typeParameters :: [Id UType],
-    _valueConstructors :: [(Id (), UType)]
-  }
-
-makeLenses ''TypeDef
-
-instance Pretty TypeDef where
-  pPrint (TypeDef c q u) = pPrint (c, q, u)
-
-instance HasUTerm TypeF TypeVar TypeDef where
-  walkOn f TypeDef {_typeConstructor, _typeParameters, _valueConstructors} =
-    TypeDef <$> f _typeConstructor
-      <*> pure _typeParameters
-      <*> traverseOf (traversed . _2 . walkOn) f _valueConstructors
-
-instance IsTypeDef TypeDef where
-  safeToTypeDef TypeDef {_typeConstructor, _typeParameters, _valueConstructors} =
-    Static.TypeDef
-      <$> safeToType _typeConstructor <*> traverse (idMeta safeToType) _typeParameters <*> traverse (_2 safeToType) _valueConstructors
-  fromTypeDef Static.TypeDef {Static._typeConstructor, Static._typeParameters, Static._valueConstructors} =
-    TypeDef (fromType _typeConstructor) (map (over idMeta fromType) _typeParameters) (map (over _2 fromType) _valueConstructors)

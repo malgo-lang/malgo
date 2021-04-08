@@ -28,7 +28,7 @@ import Language.Malgo.Syntax hiding (Type (..), freevars)
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeCheck.TcEnv
-import Language.Malgo.TypeRep.Static (Rep (..), TypeF)
+import Language.Malgo.TypeRep.Static (Rep (..), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors)
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.UTerm
@@ -96,7 +96,7 @@ tcImports = traverse tcImport
     tcImport (pos, modName) = do
       interface <- loadInterface modName
       varEnv <>= fmap Static.fromScheme (interface ^. signatureMap)
-      typeEnv <>= fmap Static.fromTypeDef (interface ^. typeDefMap)
+      typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
       pure (pos, modName)
 
 tcTypeDefinitions ::

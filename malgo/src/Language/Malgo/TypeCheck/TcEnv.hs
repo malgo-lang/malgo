@@ -32,14 +32,14 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import qualified Language.Malgo.Rename.RnEnv as R
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static (TypeF)
+import Language.Malgo.TypeRep.Static (TypeF, TypeDef(..))
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.UTerm
 
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId Scheme,
-    _typeEnv :: HashMap RnTId TypeDef,
+    _typeEnv :: HashMap RnTId (TypeDef UType),
     _rnEnv :: RnEnv
   }
 
@@ -59,7 +59,7 @@ instance Pretty TcEnv where
 instance HasUTerm TypeF TypeVar TcEnv where
   walkOn f TcEnv {_varEnv, _typeEnv, _rnEnv} =
     TcEnv <$> traverseOf (traversed . walkOn) f _varEnv
-      <*> traverseOf (traversed . walkOn) f _typeEnv
+      <*> traverseOf (traversed . traversed . walkOn) f _typeEnv
       <*> pure _rnEnv
 
 genTcEnv :: Applicative f => RnEnv -> f TcEnv

@@ -6,6 +6,7 @@
 module Language.Malgo.Driver (compile, compileFromAST) where
 
 import qualified Data.ByteString as BS
+import Data.Maybe (fromJust)
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.CodeGen (codeGen)
@@ -31,8 +32,7 @@ import qualified Language.Malgo.Syntax as Syntax
 import Language.Malgo.Syntax.Extension
 import qualified Language.Malgo.TypeCheck.Pass as TypeCheck
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
--- import Language.Malgo.TypeCheck.Pass (typeCheck)
--- import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
+import qualified Language.Malgo.TypeRep.Static as Static
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -73,7 +73,8 @@ compileFromAST parsedAst opt =
           (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
           (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
           refinedAst <- refine typedAst
-          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. TcEnv.varEnv) (tcEnv ^. TcEnv.typeEnv) (tcEnv ^. TcEnv.rnEnv) refinedAst
+          let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
+          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. TcEnv.varEnv) typeEnv (tcEnv ^. TcEnv.rnEnv) refinedAst
           -- (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
           -- refinedAst <- refine typedAst
           -- (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. TcEnv.varEnv) (tcEnv ^. TcEnv.typeEnv) (tcEnv ^. TcEnv.rnEnv) refinedAst

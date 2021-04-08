@@ -226,30 +226,19 @@ instance WithType Void where
   withType _ a = absurd a
 
 -- | Definition of Type constructor
-data TypeDef = TypeDef
-  { _typeConstructor :: Type,
-    _typeParameters :: [Id Type],
-    _valueConstructors :: [(Id (), Type)]
+data TypeDef ty = TypeDef
+  { _typeConstructor :: ty,
+    _typeParameters :: [Id ty],
+    _valueConstructors :: [(Id (), ty)]
   }
-  deriving stock (Show, Generic)
+  deriving stock (Show, Generic, Functor, Foldable, Traversable)
 
-instance Binary TypeDef
+instance Binary ty => Binary (TypeDef ty)
 
-instance Pretty TypeDef where
+instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
 
 makeLenses ''TypeDef
-
-class IsTypeDef a where
-  _TypeDef :: Prism' a TypeDef
-  _TypeDef = prism' fromTypeDef safeToTypeDef
-  safeToTypeDef :: a -> Maybe TypeDef
-  safeToTypeDef a = a ^? _TypeDef
-  toTypeDef :: a -> TypeDef
-  toTypeDef a = fromJust $ safeToTypeDef a
-  fromTypeDef :: TypeDef -> a
-  fromTypeDef a = a ^. re _TypeDef
-  {-# MINIMAL _TypeDef | (safeToTypeDef, fromTypeDef) #-}
 
 ---------------
 -- Utilities --
