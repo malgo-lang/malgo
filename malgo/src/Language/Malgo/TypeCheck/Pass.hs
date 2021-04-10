@@ -28,7 +28,7 @@ import Language.Malgo.Syntax hiding (Type (..), freevars)
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeCheck.TcEnv
-import Language.Malgo.TypeRep.Static (Rep (..), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors, Scheme (Forall))
+import Language.Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors)
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.UTerm
@@ -64,8 +64,7 @@ typeCheck rnEnv (Module name bg) =
     zonkedTcEnv <-
       pure tcEnv'
         >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
-        >>= traverseOf (typeEnv . traversed . typeConstructor) (walkOn @TypeF @TypeVar zonk)
-        >>= traverseOf (typeEnv . traversed . valueConstructors . traversed . _2) (walkOn @TypeF @TypeVar zonk)
+        >>= traverseOf (typeEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
     pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
@@ -176,8 +175,8 @@ tcDataDefs ds = do
     -- let valueConsNames = map fst valueCons'
     -- let valueConsTypes = map snd valueCons'
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
-    let valueCons' = zip valueConsNames valueConsTypes'
-    varEnv <>= HashMap.fromList (map (over _2 (Forall as)) valueCons')
+    let valueCons' = zip valueConsNames $ map (Forall as) valueConsTypes'
+    varEnv <>= HashMap.fromList valueCons'
     typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
 

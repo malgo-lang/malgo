@@ -218,7 +218,7 @@ instance WithType Void where
 data TypeDef ty = TypeDef
   { _typeConstructor :: ty,
     _typeParameters :: [Id ty],
-    _valueConstructors :: [(Id (), ty)]
+    _valueConstructors :: [(Id (), Scheme ty)]
   }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
 

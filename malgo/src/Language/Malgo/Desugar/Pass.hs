@@ -129,7 +129,7 @@ dsDataDef (_, name, _, cons) =
     -- lookup constructor infomations
     Just (GT.TyCon name') <- preuse (typeDefEnv . at name . _Just . typeConstructor)
     vcs <- lookupValueConstructors (over idMeta fromType name') []
-    let conType = fromJust $ List.lookup conName vcs
+    let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType
     let (paramTypes, retType) = splitTyArr conType
@@ -303,7 +303,7 @@ match (u : us) (ps : pss) es err
     let (con, ts) = splitCon patType
     vcs <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
-    cases <- for vcs $ \(conName, conType) -> do
+    cases <- for vcs $ \(conName, Forall _ conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
       let ccon = C.Con (conName ^. toText) paramTypes
       params <- traverse (newLocalId "$p") paramTypes
@@ -408,7 +408,7 @@ unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
       vcs <- lookupValueConstructors con ts
       SumT
         <$> traverse
-          ( \(conName, conType) ->
+          ( \(conName, Forall _ conType) ->
               C.Con (conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
           )
           vcs
@@ -428,12 +428,12 @@ lookupValueConstructors ::
   MonadState DsEnv m =>
   Id GT.Type ->
   [GT.Type] ->
-  m [(RnId, GT.Type)]
+  m [(RnId, Scheme GT.Type)]
 lookupValueConstructors con ts = do
   typeEnv <- use typeDefEnv
   case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->
-      pure $ over (mapped . _2) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
+      pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
 
 newCoreId :: MonadUniq f => RnId -> C.Type -> f (Id C.Type)
