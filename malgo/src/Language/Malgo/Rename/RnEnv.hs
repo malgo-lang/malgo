@@ -63,8 +63,7 @@ appendRnEnv lens newEnv = over lens (go newEnv)
   where
     go [] e = e
     go ((n, n') : xs) e = go xs $ HashMap.alter (f n') n e
-    f n' Nothing = Just [n']
-    f n' (Just ns) = Just (n' : ns)
+    f n' ns = Just $ (n':) $ concat ns
 
 genBuiltinRnEnv :: MonadUniq m => m RnEnv
 genBuiltinRnEnv = do
