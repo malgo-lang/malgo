@@ -27,7 +27,6 @@ import qualified Data.HashSet as HashSet
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe)
-import qualified Data.Text as Text
 import Data.Void
 import Koriel.Id
 import Koriel.MonadUniq
@@ -58,7 +57,7 @@ instance Pretty t => Pretty (TypeF t) where
   pPrintPrec l d (TyArrF t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec l _ (TyTupleF ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
-  pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> text (Text.unpack k) <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
+  pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec l _ (TyLazyF t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec l _ (TYPEF rep) = "TYPE" <+> pPrintPrec l 0 rep
@@ -87,6 +86,8 @@ instance Unifiable1 TypeF where
   liftUnify _ _ (TyPrimF p1) (TyPrimF p2) | p1 == p2 = pure (mempty, [])
   liftUnify _ x (TyArrF l1 r1) (TyArrF l2 r2) = pure (mempty, [With x $ l1 :~ l2, With x $ r1 :~ r2])
   liftUnify _ x (TyTupleF ts1) (TyTupleF ts2) = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) ts1 ts2)
+  liftUnify _ x (TyRecordF kts1) (TyRecordF kts2)
+    | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
   liftUnify _ x (TyLazyF t1) (TyLazyF t2) = pure (mempty, [With x $ t1 :~ t2])
   liftUnify _ x (TyPtrF t1) (TyPtrF t2) = pure (mempty, [With x $ t1 :~ t2])
   liftUnify _ x (TYPEF rep1) (TYPEF rep2) = pure (mempty, [With x $ rep1 :~ rep2])
@@ -302,6 +303,9 @@ pattern TyArr t1 t2 = UTerm (TyArrF t1 t2)
 
 pattern TyTuple :: [UTerm TypeF v] -> UTerm TypeF v
 pattern TyTuple ts = UTerm (TyTupleF ts)
+
+pattern TyRecord :: Map.Map (Id ()) (UTerm TypeF v) -> UTerm TypeF v
+pattern TyRecord kts = UTerm (TyRecordF kts)
 
 pattern TyLazy :: UTerm TypeF v -> UTerm TypeF v
 pattern TyLazy t = UTerm (TyLazyF t)

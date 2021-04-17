@@ -1,5 +1,7 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
@@ -7,6 +9,7 @@
 {-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TupleSections #-}
@@ -18,6 +21,7 @@ module Language.Malgo.TypeCheck.TcEnv
   ( TcEnv (..),
     varEnv,
     typeEnv,
+    fieldEnv,
     rnEnv,
     genTcEnv,
   )
@@ -32,7 +36,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import qualified Language.Malgo.Rename.RnEnv as R
 import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static (TypeF, TypeDef(..), Scheme)
+import Language.Malgo.TypeRep.Static (Scheme, TypeDef (..), TypeF)
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.UTerm
@@ -40,26 +44,30 @@ import Language.Malgo.UTerm
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId (Scheme UType),
     _typeEnv :: HashMap RnTId (TypeDef UType),
+    _fieldEnv :: HashMap RnId (Scheme UType),
     _rnEnv :: RnEnv
   }
+  deriving stock (Show)
 
 makeLenses ''TcEnv
 
 instance Pretty TcEnv where
-  pPrint TcEnv {_varEnv, _typeEnv, _rnEnv} =
+  pPrint TcEnv {..} =
     "TcEnv"
       <+> braces
         ( sep
             [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
               "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
+              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv),
               "_rnEnv" <+> "=" <+> pPrint _rnEnv
             ]
         )
 
 instance HasUTerm TypeF TypeVar TcEnv where
-  walkOn f TcEnv {_varEnv, _typeEnv, _rnEnv} =
+  walkOn f TcEnv {..} =
     TcEnv <$> traverseOf (traversed . traversed . walkOn) f _varEnv
       <*> traverseOf (traversed . traversed . walkOn) f _typeEnv
+      <*> traverseOf (traversed . traversed . walkOn) f _fieldEnv
       <*> pure _rnEnv
 
 genTcEnv :: Applicative f => RnEnv -> f TcEnv
@@ -82,6 +90,7 @@ genTcEnv rnEnv = do
               (char_t, TypeDef (TyPrim Static.CharT) [] []),
               (string_t, TypeDef (TyPrim Static.StringT) [] [])
             ],
+        _fieldEnv = mempty,
         _rnEnv = rnEnv
       }
 
@@ -89,4 +98,3 @@ findBuiltinType :: String -> RnEnv -> Maybe (Id ())
 findBuiltinType x rnEnv = do
   ids <- view (R.typeEnv . at x) rnEnv
   find (view idSort >>> \case WiredIn (ModuleName "Builtin") -> True; _ -> False) ids
-

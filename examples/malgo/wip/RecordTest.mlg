@@ -6,12 +6,19 @@ module RecordTest = {
 
   data B = B A;
 
-  data C a = C { x: a };
+  -- TODO: parametarized type synonym
+  -- type C a = { x: a, y: a };
+
+  -- これはとりあえず後回し
+  -- #x = { D' x -> x } になる
+  -- 細かい文法設計はOCamlを参考にする？
+  -- FIXME: これをTypeCheckで弾く
+  -- data D a = D { x: a };
 
   f = { p -> #a p };
 
   g = { B p -> #a p };
 
-  h = { C p -> #x p };
+  -- h = { p -> #x p };
 
 }

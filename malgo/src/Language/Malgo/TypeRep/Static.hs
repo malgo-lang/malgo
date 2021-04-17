@@ -18,7 +18,6 @@ import Data.Functor.Foldable.TH (makeBaseFunctor)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust, fromMaybe)
-import qualified Data.Text as Text
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
@@ -94,7 +93,7 @@ data Type
   | -- | tuple type
     TyTuple [Type]
   | -- record type
-    TyRecord (Map Text Type)
+    TyRecord (Map (Id ()) Type)
   | -- | lazy type
     TyLazy Type
   | -- | pointer type
@@ -122,7 +121,7 @@ instance Pretty Type where
   pPrintPrec l d (TyArr t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec l _ (TyTuple ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
-  pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> text (Text.unpack k) <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
+  pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec l _ (TyLazy t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep

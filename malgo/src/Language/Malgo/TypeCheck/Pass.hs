@@ -16,7 +16,9 @@ import Control.Arrow ((>>>))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.List.Extra (anySame)
+import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
+import Debug.Trace (traceShowM)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -50,6 +52,14 @@ lookupType pos name =
   preuse (typeEnv . at name . _Just . typeConstructor) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just typ -> pure typ
+
+lookupRecordType :: (MonadState TcEnv m, MonadMalgo m) => SourcePos -> [RnId] -> m (Scheme UType)
+lookupRecordType pos fields = do
+  traceShowM . pPrint =<< get
+  env <- use fieldEnv
+  case asumMap (`HashMap.lookup` env) fields of
+    Nothing -> errorOn pos $ "Not in scope:" <+> (fields & map pPrint & punctuate " or" & sep)
+    Just scheme -> pure scheme
 
 typeCheck :: (MonadUniq m, MonadMalgo m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) =
@@ -146,7 +156,15 @@ tcTypeSynonyms ds =
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     transedTyp <- transType typ
     solve [With pos $ foldr (flip TyApp) name' params' :~ transedTyp]
+    updateFieldEnv (tcType typ) [] transedTyp
     pure (pos, name, params, tcType typ)
+
+updateFieldEnv :: (MonadState TcEnv f) => S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
+updateFieldEnv (S.TyRecord _ kts) params typ = do
+  let scheme = Forall params typ
+  for_ kts \(label, _) -> do
+    fieldEnv . at label ?= scheme
+updateFieldEnv _ _ _ = pure ()
 
 tcDataDefs ::
   ( MonadState TcEnv m,
@@ -320,12 +338,26 @@ tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
   esType <- TyTuple <$> traverse typeOf es'
   pure $ Tuple (With esType pos) es'
+tcExpr (Record pos kvs) = do
+  kvs' <- traverse (bitraverse pure tcExpr) kvs
+  recordType <- instantiate pos =<< lookupRecordType pos (map fst kvs)
+  kvsType <- TyRecord . Map.fromList <$> traverse (bitraverse pure typeOf) kvs'
+  tell [With pos $ recordType :~ kvsType]
+  pure $ Record (With recordType pos) kvs'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
   ty <- UVar <$> freshVar @UType
   eType <- typeOf e'
   tell [With pos $ TyLazy ty :~ eType]
   pure $ Force (With ty pos) e'
+tcExpr (Access pos label) = do
+  recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
+  retType <- UVar <$> freshVar @UType
+  case recordType of
+    TyRecord kts -> do
+      tell [With pos $ recordType :~ TyRecord (Map.insert label retType kts)]
+      pure $ Access (With (TyArr recordType retType) pos) label
+    _ -> errorOn pos $ pPrint recordType <+> "is not record type"
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   eType <- typeOf e'
@@ -450,6 +482,7 @@ transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyTuple <$> traverse transType ts
+transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
 transType (S.TyLazy _ t) = TyLazy <$> transType t
 
 tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'TypeCheck)
@@ -458,4 +491,5 @@ tcType (S.TyVar pos v) = S.TyVar pos v
 tcType (S.TyCon pos c) = S.TyCon pos c
 tcType (S.TyArr pos t1 t2) = S.TyArr pos (tcType t1) (tcType t2)
 tcType (S.TyTuple pos ts) = S.TyTuple pos $ map tcType ts
+tcType (S.TyRecord pos kts) = S.TyRecord pos $ over (mapped . _2) tcType kts
 tcType (S.TyLazy pos t) = S.TyLazy pos $ tcType t
