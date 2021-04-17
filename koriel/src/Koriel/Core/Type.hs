@@ -17,7 +17,16 @@ import Koriel.Pretty
 {-
 Constructors  C ::= <tag n>
 -}
-type Tag = String
+data Tag
+  = Data String
+  | Tuple
+  deriving stock (Eq, Show, Ord, Generic)
+
+instance Binary Tag
+
+instance Pretty Tag where
+  pPrint (Data name) = text name
+  pPrint Tuple = "[tuple]"
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic)
@@ -25,7 +34,7 @@ data Con = Con Tag [Type]
 instance Binary Con
 
 instance Pretty Con where
-  pPrint (Con tag xs) = "<" <> text tag <+> sep (punctuate "," (map pPrint xs)) <> ">"
+  pPrint (Con tag xs) = "<" <> pPrint tag <+> sep (punctuate "," (map pPrint xs)) <> ">"
 
 -- TODO: クロージャを表す型を追加
 -- ClosureT [Type] Type

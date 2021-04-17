@@ -141,7 +141,7 @@ dsDataDef (_, name, _, cons) =
     ps <- traverse (newLocalId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
-      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (conName ^. toText) paramTypes') $ map C.Var ps)
+      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ conName ^. toText) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
     obj <- case ps of
       [] -> pure ([], expr)
@@ -244,7 +244,7 @@ dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
 dsExp (G.Fn _ []) = bug Unreachable
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
-  let con = C.Con ("Tuple" <> length es ^. toText) $ map C.typeOf es'
+  let con = C.Con C.Tuple $ map C.typeOf es'
   let ty = SumT [con]
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
@@ -305,7 +305,7 @@ match (u : us) (ps : pss) es err
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for vcs $ \(conName, Forall _ conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
-      let ccon = C.Con (conName ^. toText) paramTypes
+      let ccon = C.Con (Data $ conName ^. toText) paramTypes
       params <- traverse (newLocalId "$p") paramTypes
       -- パターン行列（未転置）
       let (pss', es') = unzip $ group conName (List.transpose (ps : pss)) es
@@ -394,7 +394,7 @@ dsType (GT.TyArr t1 t2) = do
   t2' <- dsType t2
   pure $ [t1'] :-> t2'
 dsType (GT.TyTuple ts) =
-  SumT . pure . C.Con ("Tuple" <> length ts ^. toText) <$> traverse dsType ts
+  SumT . pure . C.Con C.Tuple <$> traverse dsType ts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
 dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
@@ -409,7 +409,7 @@ unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
       SumT
         <$> traverse
           ( \(conName, Forall _ conType) ->
-              C.Con (conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
+              C.Con (Data $ conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
           )
           vcs
     _ -> dsType t
