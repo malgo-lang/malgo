@@ -2,6 +2,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -25,22 +26,23 @@ data DsEnv = DsEnv
     -- | 型環境
     _varTypeEnv :: HashMap RnId (Scheme Type),
     _typeDefEnv :: HashMap RnTId (TypeDef Type),
+    _fieldEnv :: HashMap RnId (Scheme Type),
     _rnEnv :: RnEnv
   }
   deriving stock (Show)
 
 instance Semigroup DsEnv where
-  DsEnv m1 n1 v1 t1 r1 <> DsEnv m2 n2 v2 t2 r2
-    | m1 == ModuleName "$Undefined" = DsEnv m2 (n1 <> n2) (v1 <> v2) (t1 <> t2) (r1 <> r2)
-    | m2 == ModuleName "$Undefined" = DsEnv m1 (n1 <> n2) (v1 <> v2) (t1 <> t2) (r1 <> r2)
-    | m1 == m2 = DsEnv m1 (n1 <> n2) (v1 <> v2) (t1 <> t2) (r1 <> r2)
+  DsEnv m1 n1 v1 t1 f1 r1 <> DsEnv m2 n2 v2 t2 f2 r2
+    | m1 == ModuleName "$Undefined" = DsEnv m2 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
+    | m2 == ModuleName "$Undefined" = DsEnv m1 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
+    | m1 == m2 = DsEnv m1 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
     | otherwise = errorDoc (pPrint m1 <+> "/=" <+> pPrint m2)
 
 instance Monoid DsEnv where
-  mempty = DsEnv (ModuleName "$Undefined") mempty mempty mempty mempty
+  mempty = DsEnv (ModuleName "$Undefined") mempty mempty mempty mempty mempty
 
 instance Pretty DsEnv where
-  pPrint DsEnv {_moduleName, _nameEnv, _varTypeEnv, _typeDefEnv, _rnEnv} =
+  pPrint DsEnv {..} =
     "DsEnv"
       <+> braces
         ( sep
@@ -48,6 +50,7 @@ instance Pretty DsEnv where
               "_nameEnv" <+> "=" <+> pPrint (HashMap.toList _nameEnv),
               "_varTypeEnv" <+> "=" <+> pPrint (HashMap.toList _varTypeEnv),
               "_typeDefEnv" <+> "=" <+> pPrint (HashMap.toList _typeDefEnv),
+              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv),
               "_rnEnv" <+> "=" <+> pPrint _rnEnv
             ]
         )
@@ -58,13 +61,15 @@ makeDsEnv ::
   ModuleName ->
   HashMap (Id ()) (Scheme Type) ->
   HashMap (Id ()) (TypeDef Type) ->
+  HashMap (Id ()) (Scheme Type) ->
   RnEnv ->
   DsEnv
-makeDsEnv modName varEnv typeEnv rnEnv =
+makeDsEnv modName varEnv typeEnv fieldEnv rnEnv =
   DsEnv
     { _moduleName = modName,
       _nameEnv = mempty,
       _varTypeEnv = varEnv,
       _typeDefEnv = typeEnv,
+      _fieldEnv = fieldEnv,
       _rnEnv = rnEnv
     }

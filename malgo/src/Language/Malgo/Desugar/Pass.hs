@@ -17,6 +17,7 @@ module Language.Malgo.Desugar.Pass (desugar) where
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
+import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
@@ -33,9 +34,16 @@ import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
-desugar :: (MonadUniq m, MonadIO m, MonadMalgo m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m) => HashMap RnId (Scheme GT.Type) -> HashMap RnTId (TypeDef GT.Type) -> RnEnv -> Module x -> m (DsEnv, Program (Id C.Type))
-desugar varEnv typeEnv rnEnv (Module modName ds) = do
-  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
+desugar ::
+  (MonadUniq m, MonadIO m, MonadMalgo m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m) =>
+  HashMap RnId (Scheme GT.Type) ->
+  HashMap RnTId (TypeDef GT.Type) ->
+  HashMap RnId (Scheme GT.Type) ->
+  RnEnv ->
+  Module x ->
+  m (DsEnv, Program (Id C.Type))
+desugar varEnv typeEnv fieldEnv rnEnv (Module modName ds) = do
+  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv fieldEnv rnEnv)
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
@@ -248,10 +256,33 @@ dsExp (G.Tuple _ es) = runDef $ do
   let ty = SumT [con]
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
+dsExp (G.Record x kvs) = runDef $ do
+  kvs' <- traverseOf (traversed . _2) (bind <=< dsExp) kvs
+  GT.TyRecord recordType <- pure $ x ^. GT.withType
+  kts <- Map.toList <$> traverse dsType recordType
+  let con = C.Con C.Tuple $ map snd kts
+  let ty = SumT [con]
+  let vs' = sortRecordField (map fst kts) kvs'
+  tuple <- let_ ty $ Pack ty con vs'
+  pure $ Atom tuple
+  where
+    sortRecordField [] _ = []
+    sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
 dsExp (G.Force _ e) = runDef $ do
   -- lazy valueは0引数関数に変換されるので、その評価は0引数関数の呼び出しになる
   e' <- bind =<< dsExp e
   pure $ Call e' []
+dsExp (G.Access x label) = runDef $ do
+  GT.TyArr (GT.TyRecord recordType) _ <- pure $ x ^. GT.withType
+  kts <- Map.toList <$> traverse dsType recordType
+  p <- newLocalId "$p" =<< dsType (GT.TyRecord recordType)
+  obj <-
+    Fun [p] <$> runDef do
+      let con = C.Con C.Tuple $ map snd kts
+      tuple <- destruct (Atom (C.Var p)) con
+      pure $ Atom $ tuple !! fromJust (List.elemIndex label (map fst kts))
+  accessType <- dsType (x ^. GT.withType)
+  Atom <$> let_ accessType obj
 dsExp (G.Parens _ e) = dsExp e
 
 dsStmts :: (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadFail m) => [Stmt (Malgo 'Refine)] -> m (C.Exp (Id C.Type))
@@ -354,6 +385,7 @@ match (u : us) (ps : pss) es err
     partition ps@(TupleP {} : _) pss es =
       let (ps', ps'') = span (has _TupleP) ps
        in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
+    partition (RecordP {} : _) pss es = undefined
     partition ps@(UnboxedP {} : _) pss es =
       let (ps', ps'') = span (has _UnboxedP) ps
        in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
@@ -395,6 +427,8 @@ dsType (GT.TyArr t1 t2) = do
   pure $ [t1'] :-> t2'
 dsType (GT.TyTuple ts) =
   SumT . pure . C.Con C.Tuple <$> traverse dsType ts
+dsType (GT.TyRecord kts) =
+  SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
 dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t

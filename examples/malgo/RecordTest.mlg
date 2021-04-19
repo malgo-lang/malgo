@@ -2,7 +2,7 @@ module RecordTest = {
   import Builtin;
   import Prelude;
 
-  type A = { a: Int32, b: Int64 };
+  type A = { a: Int32, b: Int32 };
 
   data B = B A;
 
@@ -21,4 +21,10 @@ module RecordTest = {
 
   -- h = { p -> #x p };
 
+  main = {
+    let x = { a: 32, b: 10 };
+    print_Int32 (add_Int32 (f x) (#b x))
+  };
 }
+
+-- Expected: 42

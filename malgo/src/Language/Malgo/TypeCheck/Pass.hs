@@ -18,7 +18,6 @@ import qualified Data.HashSet as HashSet
 import Data.List.Extra (anySame)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
-import Debug.Trace (traceShowM)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -55,7 +54,6 @@ lookupType pos name =
 
 lookupRecordType :: (MonadState TcEnv m, MonadMalgo m) => SourcePos -> [RnId] -> m (Scheme UType)
 lookupRecordType pos fields = do
-  traceShowM . pPrint =<< get
   env <- use fieldEnv
   case asumMap (`HashMap.lookup` env) fields of
     Nothing -> errorOn pos $ "Not in scope:" <+> (fields & map pPrint & punctuate " or" & sep)
