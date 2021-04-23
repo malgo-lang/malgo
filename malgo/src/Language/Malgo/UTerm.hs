@@ -21,7 +21,6 @@ import Data.Void
 import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsType (..))
 import Language.Malgo.Unify
 
 -----------
@@ -49,14 +48,9 @@ instance (Show v, Show1 t) => Show (UTerm t v) where
 
 deriving stock instance (Generic1 t, Generic v) => Generic (UTerm t v)
 
-instance (Pretty v, Pretty1 t) => Pretty (UTerm t v) where
+instance (Pretty v, Pretty (t (UTerm t v))) => Pretty (UTerm t v) where
   pPrintPrec _ _ (UVar v) = pPrint v
-  pPrintPrec l d (UTerm t) = liftPPrintPrec pPrintPrec l d t
-
-instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
-  safeToType (UVar _) = Nothing
-  safeToType (UTerm t) = safeToType t
-  fromType t = UTerm $ fromType t
+  pPrintPrec l d (UTerm t) = pPrintPrec l d t
 
 freeze :: Traversable t => UTerm t v -> Maybe (Fix t)
 freeze (UVar _) = Nothing
@@ -77,7 +71,7 @@ instance HasUTerm t v x => HasUTerm t v (With x a) where
 instance HasUTerm t v Void where
   walkOn _ x = absurd x
 
-instance (Eq v, Hashable v, Unifiable1 t, Eq1 t, Pretty v, Pretty1 t) => Unifiable (UTerm t v) where
+instance (Eq v, Hashable v, Unifiable1 t, Eq1 t, Pretty v, Pretty (t (UTerm t v))) => Unifiable (UTerm t v) where
   type Var (UTerm t v) = v
   unify _ (UVar v1) (UVar v2)
     | v1 == v2 = pure (mempty, [])

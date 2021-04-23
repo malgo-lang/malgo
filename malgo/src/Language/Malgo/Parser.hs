@@ -176,6 +176,18 @@ pLet = do
 pNoBind :: Parser (Stmt (Malgo 'Parse))
 pNoBind = NoBind <$> getSourcePos <*> pExp
 
+pRecordP :: Parser (Pat (Malgo 'Parse))
+pRecordP = between (symbol "{") (symbol "}") do
+  s <- getSourcePos
+  kvs <- pRecordPEntry `sepBy1` pOperator ","
+  pure $ RecordP s kvs
+  where
+    pRecordPEntry = do
+      label <- lowerIdent
+      void $ pOperator ":"
+      value <- pPat
+      pure (label, value)
+
 pSinglePat :: Parser (Pat (Malgo 'Parse))
 pSinglePat =
   VarP <$> getSourcePos <*> lowerIdent
@@ -192,6 +204,7 @@ pSinglePat =
               pure $ x : xs
           )
       )
+    <|> pRecordP
     <|> between (symbol "(") (symbol ")") pPat
 
 pPat :: Parser (Pat (Malgo 'Parse))
@@ -212,6 +225,24 @@ pUnit = between (symbol "(") (symbol ")") $ do
   s <- getSourcePos
   pure $ Tuple s []
 
+pRecord :: Parser (Exp (Malgo 'Parse))
+pRecord = between (symbol "{") (symbol "}") do
+  s <- getSourcePos
+  kvs <- pRecordEntry `sepBy1` pOperator ","
+  pure $ Record s kvs
+  where
+    pRecordEntry = do
+      label <- lowerIdent
+      void $ pOperator ":"
+      value <- pExp
+      pure (label, value)
+
+pAccess :: Parser (Exp (Malgo 'Parse))
+pAccess = do
+  s <- getSourcePos
+  l <- char '#' >> lowerIdent
+  pure $ Access s l
+
 pSingleExp' :: Parser (Exp (Malgo 'Parse))
 pSingleExp' =
   try (Unboxed <$> getSourcePos <*> pUnboxed)
@@ -220,7 +251,9 @@ pSingleExp' =
     <|> pConstructor
     <|> try pUnit
     <|> try pTuple
+    <|> try pRecord
     <|> pFun
+    <|> pAccess
     <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
 
 pSingleExp :: Parser (Exp (Malgo 'Parse))
@@ -271,6 +304,18 @@ pTyUnit = between (symbol "(") (symbol ")") $ do
   s <- getSourcePos
   pure $ TyTuple s []
 
+pTyRecord :: Parser (Type (Malgo 'Parse))
+pTyRecord = between (symbol "{") (symbol "}") do
+  s <- getSourcePos
+  kvs <- pTyRecordEntry `sepBy1` pOperator ","
+  pure $ TyRecord s kvs
+  where
+    pTyRecordEntry = do
+      label <- lowerIdent
+      void $ pOperator ":"
+      value <- pType
+      pure (label, value)
+
 pTyLazy :: Parser (Type (Malgo 'Parse))
 pTyLazy = between (symbol "{") (symbol "}") $ TyLazy <$> getSourcePos <*> pType
 
@@ -278,9 +323,10 @@ pSingleType :: Parser (Type (Malgo 'Parse))
 pSingleType =
   pTyVar
     <|> pTyCon
-    <|> pTyLazy
     <|> try pTyUnit
     <|> try pTyTuple
+    <|> try pTyRecord
+    <|> pTyLazy
     <|> between (symbol "(") (symbol ")") pType
 
 pTyApp :: Parser (Type (Malgo 'Parse))

@@ -16,6 +16,7 @@ import Control.Arrow ((>>>))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.List.Extra (anySame)
+import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.MonadUniq
@@ -28,7 +29,7 @@ import Language.Malgo.Syntax hiding (Type (..), freevars)
 import qualified Language.Malgo.Syntax as S
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeCheck.TcEnv
-import Language.Malgo.TypeRep.Static (Rep (..), TypeF)
+import Language.Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors)
 import qualified Language.Malgo.TypeRep.Static as Static
 import Language.Malgo.TypeRep.UTerm
 import Language.Malgo.UTerm
@@ -39,7 +40,7 @@ import Text.Megaparsec (SourcePos)
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupVar :: (MonadState TcEnv m, MonadMalgo m) => SourcePos -> RnId -> m Scheme
+lookupVar :: (MonadState TcEnv m, MonadMalgo m) => SourcePos -> RnId -> m (Scheme UType)
 lookupVar pos name =
   use (varEnv . at name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
@@ -50,6 +51,13 @@ lookupType pos name =
   preuse (typeEnv . at name . _Just . typeConstructor) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just typ -> pure typ
+
+lookupRecordType :: (MonadState TcEnv m, MonadMalgo m) => SourcePos -> [RnId] -> m (Scheme UType)
+lookupRecordType pos fields = do
+  env <- use fieldEnv
+  case asumMap (`HashMap.lookup` env) fields of
+    Nothing -> errorOn pos $ "Not in scope:" <+> (fields & map pPrint & punctuate " or" & sep)
+    Just scheme -> pure scheme
 
 typeCheck :: (MonadUniq m, MonadMalgo m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) =
@@ -63,9 +71,8 @@ typeCheck rnEnv (Module name bg) =
         >>= traverseOf (foreigns . traversed . _1 . ann) zonk
     zonkedTcEnv <-
       pure tcEnv'
-        >>= traverseOf (varEnv . traversed) (walkOn @TypeF @TypeVar zonk)
-        >>= traverseOf (typeEnv . traversed . typeConstructor) (walkOn @TypeF @TypeVar zonk)
-        >>= traverseOf (typeEnv . traversed . valueConstructors . traversed . _2) (walkOn @TypeF @TypeVar zonk)
+        >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
+        >>= traverseOf (typeEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
     pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
@@ -95,8 +102,8 @@ tcImports = traverse tcImport
   where
     tcImport (pos, modName) = do
       interface <- loadInterface modName
-      varEnv <>= fmap Static.fromScheme (interface ^. signatureMap)
-      typeEnv <>= fmap Static.fromTypeDef (interface ^. typeDefMap)
+      varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
+      typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
       pure (pos, modName)
 
 tcTypeDefinitions ::
@@ -112,7 +119,7 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(x, name, params, _) -> do
     tyCon <- UVar <$> freshVar @UType
-    tyConKind <- typeOf tyCon
+    tyConKind <- kindOf tyCon
     solve [With x $ tyConKind :~ buildTyConKind params]
     typeEnv . at name .= Just (TypeDef tyCon [] [])
   for_ dataDefs \(_, name, params, _) -> do
@@ -141,13 +148,21 @@ tcTypeSynonyms ds =
           $+$ "TODO: add type operator and fix TyTyple and TyLazy's kinding"
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar @UType) params
-    nameKind <- typeOf name'
-    paramKinds <- traverse typeOf params'
+    nameKind <- kindOf name'
+    paramKinds <- traverse kindOf params'
     solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) paramKinds :~ nameKind]
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     transedTyp <- transType typ
     solve [With pos $ foldr (flip TyApp) name' params' :~ transedTyp]
+    updateFieldEnv (tcType typ) [] transedTyp
     pure (pos, name, params, tcType typ)
+
+updateFieldEnv :: (MonadState TcEnv f) => S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
+updateFieldEnv (S.TyRecord _ kts) params typ = do
+  let scheme = Forall params typ
+  for_ kts \(label, _) -> do
+    fieldEnv . at label ?= scheme
+updateFieldEnv _ _ _ = pure ()
 
 tcDataDefs ::
   ( MonadState TcEnv m,
@@ -162,8 +177,8 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar @UType) params
-    nameKind <- typeOf name'
-    paramKinds <- traverse typeOf params'
+    nameKind <- kindOf name'
+    paramKinds <- traverse kindOf params'
     solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) paramKinds :~ nameKind]
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
@@ -176,9 +191,9 @@ tcDataDefs ds = do
     -- let valueConsNames = map fst valueCons'
     -- let valueConsTypes = map snd valueCons'
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
-    let valueCons' = zip valueConsNames valueConsTypes'
-    varEnv <>= HashMap.fromList (map (over _2 (Forall as)) valueCons')
-    typeEnv . at name %= (_Just . typeParameters .~ map (over idMeta unfreeze) as) . (_Just . valueConstructors .~ valueCons')
+    let valueCons' = zip valueConsNames $ map (Forall as) valueConsTypes'
+    varEnv <>= HashMap.fromList valueCons'
+    typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
 tcForeigns ::
@@ -321,12 +336,26 @@ tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
   esType <- TyTuple <$> traverse typeOf es'
   pure $ Tuple (With esType pos) es'
+tcExpr (Record pos kvs) = do
+  kvs' <- traverse (bitraverse pure tcExpr) kvs
+  recordType <- instantiate pos =<< lookupRecordType pos (map fst kvs)
+  kvsType <- TyRecord . Map.fromList <$> traverse (bitraverse pure typeOf) kvs'
+  tell [With pos $ recordType :~ kvsType]
+  pure $ Record (With recordType pos) kvs'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
   ty <- UVar <$> freshVar @UType
   eType <- typeOf e'
   tell [With pos $ TyLazy ty :~ eType]
   pure $ Force (With ty pos) e'
+tcExpr (Access pos label) = do
+  recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
+  retType <- UVar <$> freshVar @UType
+  case recordType of
+    TyRecord kts -> do
+      tell [With pos $ recordType :~ TyRecord (Map.insert label retType kts)]
+      pure $ Access (With (TyArr recordType retType) pos) label
+    _ -> errorOn pos $ pPrint recordType <+> "is not record type"
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   eType <- typeOf e'
@@ -431,15 +460,15 @@ transType (S.TyApp pos t ts) = do
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
-      t'Kind <- typeOf t'
+      t'Kind <- kindOf t'
       rep <- UVar . TypeVar <$> newLocalId "r" TyRep
       solve [With pos $ t'Kind :~ TYPE rep]
       pure $ TyPtr t'
     _ -> do
       t' <- transType t
       ts' <- traverse transType ts
-      t'Kind <- typeOf t'
-      ts'Kinds <- traverse typeOf ts'
+      t'Kind <- kindOf t'
+      ts'Kinds <- traverse kindOf ts'
       solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) ts'Kinds :~ t'Kind]
       foldr (flip TyApp) <$> transType t <*> traverse transType ts
   where
@@ -451,6 +480,7 @@ transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyTuple <$> traverse transType ts
+transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
 transType (S.TyLazy _ t) = TyLazy <$> transType t
 
 tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'TypeCheck)
@@ -459,4 +489,5 @@ tcType (S.TyVar pos v) = S.TyVar pos v
 tcType (S.TyCon pos c) = S.TyCon pos c
 tcType (S.TyArr pos t1 t2) = S.TyArr pos (tcType t1) (tcType t2)
 tcType (S.TyTuple pos ts) = S.TyTuple pos $ map tcType ts
+tcType (S.TyRecord pos kts) = S.TyRecord pos $ over (mapped . _2) tcType kts
 tcType (S.TyLazy pos t) = S.TyLazy pos $ tcType t

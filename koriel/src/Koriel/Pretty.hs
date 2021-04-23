@@ -1,12 +1,11 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
+{-# LANGUAGE UndecidableInstances #-}
 module Koriel.Pretty
   ( module Text.PrettyPrint.HughesPJClass,
-    Pretty1 (..),
     (<+>),
     errorDoc,
     pretty,
@@ -48,8 +47,5 @@ errorDoc x = Prelude.error $ P.render x
 errorDoc x = Prelude.errorWithoutStackTrace $ P.render x
 #endif
 
-class Pretty1 f where
-  liftPPrintPrec :: (PrettyLevel -> Rational -> a -> Doc) -> PrettyLevel -> Rational -> f a -> Doc
-
-instance Pretty1 f => Pretty (Fix f) where
-  pPrintPrec l d (Fix f) = liftPPrintPrec pPrintPrec l d f
+instance Pretty (f (Fix f)) => Pretty (Fix f) where
+  pPrintPrec l d (Fix f) = pPrintPrec l d f

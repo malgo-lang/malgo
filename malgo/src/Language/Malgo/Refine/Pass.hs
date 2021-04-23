@@ -53,7 +53,9 @@ refineExp (OpApp x op e1 e2) = do
   pure $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) op) e1') e2'
 refineExp (Fn x cs) = Fn (over ann toType x) <$> traverse refineClause cs
 refineExp (Tuple x es) = Tuple (over ann toType x) <$> traverse refineExp es
+refineExp (Record x kvs) = Record (over ann toType x) <$> traverseOf (traversed . _2) refineExp kvs
 refineExp (Force x e) = Force (over ann toType x) <$> refineExp e
+refineExp (Access x label) = pure $ Access (over ann toType x) label
 refineExp (Parens _ e) = refineExp e
 
 refineClause :: (TypeChecked t x, Monad m) => Clause x -> m (Clause (Malgo 'Refine))
@@ -67,6 +69,7 @@ refinePat :: (TypeChecked t x, Applicative m) => Pat x -> m (Pat (Malgo 'Refine)
 refinePat (VarP x v) = pure $ VarP (over ann toType x) v
 refinePat (ConP x c ps) = ConP (over ann toType x) c <$> traverse refinePat ps
 refinePat (TupleP x ps) = TupleP (over ann toType x) <$> traverse refinePat ps
+refinePat (RecordP x kps) = RecordP (over ann toType x) <$> traverseOf (traversed . _2) refinePat kps
 refinePat (UnboxedP x u) = pure $ UnboxedP (over ann toType x) u
 
 refineScSig :: (TypeChecked t x, Applicative m) => ScSig x -> m (ScSig (Malgo 'Refine))
@@ -78,6 +81,7 @@ refineType (Syn.TyVar x v) = pure $ Syn.TyVar x v
 refineType (Syn.TyCon x v) = pure $ Syn.TyCon x v
 refineType (Syn.TyArr x t1 t2) = Syn.TyArr x <$> refineType t1 <*> refineType t2
 refineType (Syn.TyTuple x ts) = Syn.TyTuple x <$> traverse refineType ts
+refineType (Syn.TyRecord x kts) = Syn.TyRecord x <$> traverseOf (traversed . _2) refineType kts
 refineType (Syn.TyLazy x t) = Syn.TyLazy x <$> refineType t
 
 refineDataDef :: (TypeChecked t x, Applicative m) => DataDef x -> m (DataDef (Malgo 'Refine))

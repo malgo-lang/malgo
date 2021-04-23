@@ -6,6 +6,7 @@
 module Language.Malgo.Driver (compile, compileFromAST) where
 
 import qualified Data.ByteString as BS
+import Data.Maybe (fromJust)
 import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.CodeGen (codeGen)
@@ -31,8 +32,7 @@ import qualified Language.Malgo.Syntax as Syntax
 import Language.Malgo.Syntax.Extension
 import qualified Language.Malgo.TypeCheck.Pass as TypeCheck
 import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
--- import Language.Malgo.TypeCheck.Pass (typeCheck)
--- import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
+import qualified Language.Malgo.TypeRep.Static as Static
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -66,14 +66,17 @@ compileFromAST parsedAst opt =
     runReaderT ?? opt $
       unMalgoM $
         runUniqT ?? UniqSupply 0 $ do
+          when (dumpParsed opt) $ liftIO do
+            hPutStrLn stderr "=== PARSED ==="
+            hPrint stderr $ pPrint parsedAst
           rnEnv <- RnEnv.genBuiltinRnEnv
           (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
           (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
           refinedAst <- refine typedAst
-          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. TcEnv.varEnv) (tcEnv ^. TcEnv.typeEnv) (tcEnv ^. TcEnv.rnEnv) refinedAst
-          -- (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ typeCheck rnEnv renamedAst
-          -- refinedAst <- refine typedAst
-          -- (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar (tcEnv ^. TcEnv.varEnv) (tcEnv ^. TcEnv.typeEnv) (tcEnv ^. TcEnv.rnEnv) refinedAst
+          let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
+          let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
+          let fieldEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.fieldEnv
+          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv fieldEnv (tcEnv ^. TcEnv.rnEnv) refinedAst
           let inf = buildInterface rnState dsEnv
           storeInterface inf
           when (debugMode opt) $ do

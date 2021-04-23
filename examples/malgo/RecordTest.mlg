@@ -1,0 +1,30 @@
+module RecordTest = {
+  import Builtin;
+  import Prelude;
+
+  type A = { a: Int32, b: Int32 };
+
+  data B = B A;
+
+  -- TODO: parametarized type synonym
+  -- type C a = { x: a, y: a };
+
+  -- これはとりあえず後回し
+  -- #x = { D' x -> x } になる
+  -- 細かい文法設計はOCamlを参考にする？
+  -- FIXME: これをTypeCheckで弾く
+  -- data D a = D { x: a };
+
+  f = { p -> #a p };
+
+  g = { B p -> #a p };
+
+  -- h = { p -> #x p };
+
+  main = {
+    let x = { a: 32, b: 10 };
+    print_Int32 (add_Int32 (f x) (#b x))
+  };
+}
+
+-- Expected: 42

@@ -107,11 +107,6 @@ instance Pretty a => Pretty (Id a) where
   pPrint (Id n _ m (WiredIn modName)) = pPrint modName <> "." <> text n <> pPrintMeta pPrint m
   pPrint (Id n u m Internal) = text n <> "_" <> text (show u) <> pPrintMeta pPrint m
 
-instance Pretty1 Id where
-  liftPPrintPrec ppr l d (Id n _ m (External modName)) = pPrint modName <> "." <> text n <> pPrintMeta (ppr l d) m
-  liftPPrintPrec ppr l d (Id n _ m (WiredIn modName)) = pPrint modName <> "." <> text n <> pPrintMeta (ppr l d) m
-  liftPPrintPrec ppr l d (Id n u m Internal) = text n <> "_" <> text (show u) <> pPrintMeta (ppr l d) m
-
 makeLenses ''Id
 
 newId :: MonadUniq f => String -> a -> IdSort -> f (Id a)

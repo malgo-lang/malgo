@@ -98,8 +98,14 @@ type family XFn x where
 type family XTuple x where
   XTuple (Malgo x) = SimpleX x
 
+type family XRecord x where
+  XRecord (Malgo x) = SimpleX x
+
 type family XForce x where
   XForce (Malgo x) = SimpleX x
+
+type family XAccess x where
+  XAccess (Malgo x) = SimpleX x
 
 type family XParens x where
   XParens (Malgo x) = SimpleX x
@@ -113,7 +119,9 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XOpApp x),
     c (XFn x),
     c (XTuple x),
+    c (XRecord x),
     c (XForce x),
+    c (XAccess x),
     c (XParens x)
   )
 
@@ -143,10 +151,13 @@ type family XConP x where
 type family XTupleP x where
   XTupleP (Malgo x) = SimpleX x
 
+type family XRecordP x where
+  XRecordP (Malgo x) = SimpleX x
+
 type family XUnboxedP x where
   XUnboxedP (Malgo x) = SimpleX x
 
-type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XUnboxedP x))
+type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XUnboxedP x))
 
 -- Type Extensions
 type family XTId x where
@@ -167,11 +178,14 @@ type family XTyArr x where
 type family XTyTuple x where
   XTyTuple (Malgo _) = SourcePos
 
+type family XTyRecord x where
+  XTyRecord (Malgo _) = SourcePos
+
 type family XTyLazy x where
   XTyLazy (Malgo _) = SourcePos
 
 type ForallTypeX (c :: K.Type -> Constraint) x =
-  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyLazy x))
+  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyLazy x))
 
 -- Decl Extensions
 type family XScDef x where

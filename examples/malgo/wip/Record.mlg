@@ -1,0 +1,15 @@
+module Record = {
+  import Builtin;
+  import Prelude;
+
+  type Person = { name: String, age: Int32 };
+
+  personAge = { { age: age } -> age };
+  personAge' = { p -> #age p };
+
+  main = {
+    print_Int32 (personAge {name: "Hoge", age: 42})
+  };
+}
+
+-- Expected: 42
