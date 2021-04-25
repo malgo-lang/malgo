@@ -112,7 +112,7 @@ instance Unifiable1 TypeF where
 type TypeMap = HashMap TypeVar UType
 
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
-  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadUniq, MonadMalgo, MonadIO)
+  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadUniq, MonadMalgo, MonadIO, MonadFail)
 
 instance MonadTrans TypeUnifyT where
   lift m = TypeUnifyT $ lift m

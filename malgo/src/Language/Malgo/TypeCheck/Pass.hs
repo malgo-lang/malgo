@@ -59,7 +59,7 @@ lookupRecordType pos fields = do
     Nothing -> errorOn pos $ "Not in scope:" <+> (fields & map pPrint & punctuate " or" & sep)
     Just scheme -> pure scheme
 
-typeCheck :: (MonadUniq m, MonadMalgo m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
+typeCheck :: (MonadUniq m, MonadMalgo m, MonadFail m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) =
   runTypeUnifyT $ do
     tcEnv <- genTcEnv rnEnv
@@ -79,7 +79,8 @@ tcBindGroup ::
   ( MonadMalgo m,
     MonadState TcEnv m,
     MonadBind UType m,
-    MonadUniq m
+    MonadUniq m,
+    MonadFail m
   ) =>
   BindGroup (Malgo 'Rename) ->
   m (BindGroup (Malgo 'TypeCheck))
@@ -242,7 +243,8 @@ tcScDefGroup ::
   ( MonadBind UType m,
     MonadState TcEnv m,
     MonadMalgo m,
-    MonadUniq m
+    MonadUniq m,
+    MonadFail m
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
   m [[ScDef (Malgo 'TypeCheck)]]
@@ -252,7 +254,8 @@ tcScDefs ::
   ( MonadBind UType m,
     MonadState TcEnv m,
     MonadMalgo m,
-    MonadUniq m
+    MonadUniq m,
+    MonadFail m
   ) =>
   [ScDef (Malgo 'Rename)] ->
   m [ScDef (Malgo 'TypeCheck)]
@@ -288,7 +291,8 @@ tcExpr ::
   ( MonadBind UType m,
     MonadState TcEnv m,
     MonadMalgo m,
-    MonadUniq m
+    MonadUniq m,
+    MonadFail m
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'TypeCheck))
@@ -365,7 +369,8 @@ tcClause ::
   ( MonadBind UType m,
     MonadState TcEnv m,
     MonadMalgo m,
-    MonadUniq m
+    MonadUniq m,
+    MonadFail m
   ) =>
   Clause (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Clause (Malgo 'TypeCheck))
@@ -379,7 +384,8 @@ tcClause (Clause pos pats ss) = do
 tcPatterns ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadMalgo m
+    MonadMalgo m,
+    MonadFail m
   ) =>
   [Pat (Malgo 'Rename)] ->
   WriterT [With SourcePos (Constraint UType)] m [Pat (Malgo 'TypeCheck)]
@@ -410,6 +416,16 @@ tcPatterns (TupleP pos pats : ps) = do
   ps' <- tcPatterns ps
   patTypes <- traverse typeOf pats'
   pure $ TupleP (With (TyTuple patTypes) pos) pats' : ps'
+tcPatterns (RecordP pos kps : ps) = do
+  kps' <- traverseOf (traversed . _2) (\x -> head <$> tcPatterns [x]) kps
+  ps' <- tcPatterns ps
+
+  recordType@(TyRecord recordKts) <- instantiate pos =<< lookupRecordType pos (map fst kps)
+  patternKts <- Map.fromList <$> traverseOf (traversed . _2) typeOf kps'
+  let patternType = TyRecord $ patternKts <> recordKts
+
+  tell [With pos $ recordType :~ patternType]
+  pure $ RecordP (With patternType pos) kps' : ps'
 tcPatterns (UnboxedP pos unboxed : ps) = do
   ps' <- tcPatterns ps
   unboxedType <- typeOf unboxed
@@ -424,7 +440,8 @@ tcStmts ::
   ( MonadMalgo m,
     MonadState TcEnv m,
     MonadBind UType m,
-    MonadUniq m
+    MonadUniq m,
+    MonadFail m
   ) =>
   [Stmt (Malgo 'Rename)] ->
   WriterT [With SourcePos (Constraint UType)] m [Stmt (Malgo 'TypeCheck)]
@@ -434,7 +451,8 @@ tcStmt ::
   ( MonadMalgo m,
     MonadState TcEnv m,
     MonadBind UType m,
-    MonadUniq m
+    MonadUniq m,
+    MonadFail m
   ) =>
   Stmt (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Stmt (Malgo 'TypeCheck))
