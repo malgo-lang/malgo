@@ -235,10 +235,6 @@ dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
   ps' <- traverse (\p -> newLocalId "$p" =<< dsType =<< GT.typeOf p) ps
   typ <- dsType =<< GT.typeOf (last es)
   -- destruct Clauses
-  -- 各節のパターン列を行列に見立て、転置してmatchにわたし、パターンを分解する
-  -- 例えば、{ f Nil -> f empty | f (Cons x xs) -> f x }の場合は、
-  -- [ [f, Nil], [f, Cons x xs] ] に見立て、
-  -- [ [f, f], [Nil, Cons x xs] ] に転置する
   (pss, es) <-
     mapAndUnzipM
       ( \(Clause _ ps es) ->

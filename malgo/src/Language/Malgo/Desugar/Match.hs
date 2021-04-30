@@ -56,15 +56,14 @@ tailCol :: PatMatrix -> PatMatrix
 tailCol PatMatrix {innerList = []} = PatMatrix []
 tailCol PatMatrix {innerList = _ : xs} = PatMatrix xs
 
-consCol :: [Pat (Malgo 'Refine)] -> PatMatrix -> PatMatrix
-consCol ps PatMatrix {..} = PatMatrix (ps : innerList)
+-- consCol :: [Pat (Malgo 'Refine)] -> PatMatrix -> PatMatrix
+-- consCol ps PatMatrix {..} = PatMatrix (ps : innerList)
 
 splitCol :: PatMatrix -> (Maybe [Pat (Malgo 'Refine)], PatMatrix)
 splitCol mat = (headCol mat, tailCol mat)
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  HasCallStack =>
   (MonadState DsEnv m, MonadIO m, MonadUniq m, MonadFail m) =>
   -- | マッチ対象
   [Id Core.Type] ->
@@ -75,103 +74,112 @@ match ::
   -- | fail
   Core.Exp (Id Core.Type) ->
   m (Core.Exp (Id Core.Type))
-match (u : us) (splitCol -> (Just ps, pss)) es err
+match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- Variable Rule
   -- パターンの先頭がすべて変数のとき
-  | all (has _VarP) ps = do
-    -- 変数パターンvについて、式中に現れるすべてのvをパターンマッチ対象のuで置き換える
-    let es' =
-          zipWith
-            ( \case
-                (VarP _ v) -> \e -> nameEnv . at v ?= u >> e
-                _ -> bug Unreachable
-            )
-            ps
-            es
-    match us pss es' err
+  | all (has _VarP) heads = do
+    -- 変数パターンvについて、式中に現れるすべてのvをscrutineeで置き換える
+    match
+      restScrutinee
+      tails
+      ( zipWith
+          ( \case
+              (VarP _ v) -> \e -> nameEnv . at v ?= scrutinee >> e
+              _ -> bug Unreachable
+          )
+          heads
+          es
+      )
+      err
   -- Constructor Rule
   -- パターンの先頭がすべて値コンストラクタのとき
-  | all (has _ConP) ps = do
-    patType <- Malgo.typeOf $ head ps
-    unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
-      errorDoc $ "Not valid type:" <+> pPrint patType
+  | all (has _ConP) heads = do
+    patType <- Malgo.typeOf $ head heads
+    -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
+    --  errorDoc $ "Not valid type:" <+> pPrint patType
     -- 型からコンストラクタの集合を求める
     let (con, ts) = Malgo.splitCon patType
-    vcs <- lookupValueConstructors con ts
+    valueConstructors <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
-    cases <- for vcs \(conName, Forall _ conType) -> do
+    cases <- for valueConstructors \(conName, Forall _ conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
-      let ccon = Core.Con (Data $ conName ^. toText) paramTypes
+      let coreCon = Core.Con (Data $ conName ^. toText) paramTypes
       params <- traverse (newLocalId "$p") paramTypes
-      let (pss', es') = group conName (consCol ps pss) es
-      Unpack ccon params <$> match (params <> us) pss' es' err
+      let (pat', es') = group conName pat es
+      Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
     unfoldedType <- unfoldType patType
-    pure $ Match (Cast unfoldedType $ Core.Var u) $ NonEmpty.fromList cases
+    pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
   -- パターンの先頭がすべてレコードのとき
-  | all (has _RecordP) ps = do
-    patType <- Malgo.typeOf $ head ps
-    SumT [con@(Core.Con _ ts)] <- dsType patType
+  | all (has _RecordP) heads = do
+    patType <- Malgo.typeOf $ head heads
+    SumT [Core.Con _ _] <- dsType patType
     undefined
   -- パターンの先頭がすべてタプルのとき
-  | all (has _TupleP) ps = do
-    patType <- Malgo.typeOf $ head ps
+  | all (has _TupleP) heads = do
+    patType <- Malgo.typeOf $ head heads
     SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
     params <- traverse (newLocalId "$p") ts
     cases <- do
-      let (pss', es') = groupTuple (consCol ps pss) es
-      (:| []) . Unpack con params <$> match (params <> us) pss' es' err
-    pure $ Match (Atom $ Core.Var u) cases
+      let (pat', es') = groupTuple pat es
+      -- NonEmpty.singleton = (:| [])
+      (:| []) . Unpack con params <$> match (params <> restScrutinee) pat' es' err
+    pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてunboxedな値のとき
-  | all (has _UnboxedP) ps = do
+  | all (has _UnboxedP) heads = do
     let cs =
           map
             ( \case
                 UnboxedP _ x -> dsUnboxed x
                 _ -> bug Unreachable
             )
-            ps
-    cases <- traverse (\c -> Switch c <$> match us pss es err) cs
+            heads
+    cases <- traverse (\c -> Switch c <$> match restScrutinee tails es err) cs
     -- パターンの網羅性を保証するため、
     -- `_ -> err` を追加する
-    hole <- newLocalId "$_" (Core.typeOf u)
-    pure $ Match (Atom $ Core.Var u) $ NonEmpty.fromList (cases <> [Core.Bind hole err])
+    hole <- newLocalId "$_" (Core.typeOf scrutinee)
+    pure $ Match (Atom $ Core.Var scrutinee) $ NonEmpty.fromList (cases <> [Core.Bind hole err])
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
   | otherwise =
     do
-      let ((ps', ps''), (pss', pss''), (es', es'')) = partition ps pss es
-      err' <- match (u : us) (consCol ps'' pss'') es'' err
-      match (u : us) (consCol ps' pss') es' err'
+      let ((pat', pat''), (es', es'')) = partition pat es
+      err' <- match (scrutinee : restScrutinee) pat'' es'' err
+      match (scrutinee : restScrutinee) pat' es' err'
 match [] (PatMatrix []) (e : _) _ = e
 match _ (PatMatrix []) [] err = pure err
-match us pss es err = do
-  errorDoc $ "match" <+> pPrint us <+> pPrint pss <+> pPrint (length es) <+> pPrint err
+match scrutinees pat es err = do
+  errorDoc $ "match" <+> pPrint scrutinees <+> pPrint pat <+> pPrint (length es) <+> pPrint err
 
 -- Mixture Rule以外にマッチするようにパターン列を分解
+-- [ [Cons A xs]
+-- , [Cons x xs]
+-- , [Nil] ]
+-- ->
+-- ( [ [Cons A xs]
+--   , [Cons x xs] ]
+-- , [ [Nil] ])
 partition ::
-  [Pat (Malgo 'Refine)] ->
   PatMatrix ->
   [m (Core.Exp (Id Core.Type))] ->
-  ( ([Pat (Malgo 'Refine)], [Pat (Malgo 'Refine)]),
-    (PatMatrix, PatMatrix),
+  ( (PatMatrix, PatMatrix),
     ([m (Core.Exp (Id Core.Type))], [m (Core.Exp (Id Core.Type))])
   )
-partition [] _ _ = bug Unreachable
-partition ps@(VarP {} : _) (PatMatrix pss) es =
-  let (ps', ps'') = span (has _VarP) ps
-   in ((ps', ps''), bimap PatMatrix PatMatrix $ unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-partition ps@(ConP {} : _) (PatMatrix pss) es =
-  let (ps', ps'') = span (has _ConP) ps
-   in ((ps', ps''), bimap PatMatrix PatMatrix $ unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-partition ps@(TupleP {} : _) (PatMatrix pss) es =
-  let (ps', ps'') = span (has _TupleP) ps
-   in ((ps', ps''), bimap PatMatrix PatMatrix $ unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-partition ps@(RecordP {} : _) (PatMatrix pss) es =
-  let (ps', ps'') = span (has _RecordP) ps
-   in ((ps', ps''), bimap PatMatrix PatMatrix $ unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-partition ps@(UnboxedP {} : _) (PatMatrix pss) es =
-  let (ps', ps'') = span (has _UnboxedP) ps
-   in ((ps', ps''), bimap PatMatrix PatMatrix $ unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
+partition (splitCol -> (Just heads@(VarP {} : _), PatMatrix tails)) es =
+  let (heads', heads'') = span (has _VarP) heads
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+partition (splitCol -> (Just heads@(ConP {} : _), PatMatrix tails)) es =
+  let (heads', heads'') = span (has _ConP) heads
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+partition (splitCol -> (Just heads@(TupleP {} : _), PatMatrix tails)) es =
+  let (heads', heads'') = span (has _TupleP) heads
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+partition (splitCol -> (Just heads@(RecordP {} : _), PatMatrix tails)) es =
+  let (heads', heads'') = span (has _RecordP) heads
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+partition (splitCol -> (Just heads@(UnboxedP {} : _), PatMatrix tails)) es =
+  let (heads', heads'') = span (has _UnboxedP) heads
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+partition _ _ = bug Unreachable
 
 -- コンストラクタgconの引数部のパターンpsを展開したパターン行列を生成する
 group ::
