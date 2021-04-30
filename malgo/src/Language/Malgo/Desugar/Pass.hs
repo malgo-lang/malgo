@@ -240,13 +240,12 @@ dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
   -- [ [f, Nil], [f, Cons x xs] ] に見立て、
   -- [ [f, f], [Nil, Cons x xs] ] に転置する
   (pss, es) <-
-    first List.transpose
-      <$> mapAndUnzipM
-        ( \(Clause _ ps es) ->
-            pure (ps, dsStmts es)
-        )
-        cs
-  body <- match ps' pss es (Error typ)
+    mapAndUnzipM
+      ( \(Clause _ ps es) ->
+          pure (ps, dsStmts es)
+      )
+      cs
+  body <- match ps' (patMatrix pss) es (Error typ)
   obj <- curryFun ps' body
   v <- newLocalId "$fun" =<< dsType (x ^. GT.withType)
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
