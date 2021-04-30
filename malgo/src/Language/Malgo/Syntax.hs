@@ -18,7 +18,6 @@ module Language.Malgo.Syntax where
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Data.Int (Int32, Int64)
-import Data.Tuple.Extra (uncurry3)
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
@@ -316,32 +315,14 @@ instance
     RecordP x kps -> RecordP <$> U.walkOn f x <*> traverse (bitraverse pure (U.walkOn f)) kps
     UnboxedP x u -> UnboxedP <$> U.walkOn f x <*> U.walkOn f u
 
-_VarP :: Prism' (Pat x) (XVarP x, XId x)
-_VarP = prism' (uncurry VarP) $ \case
-  VarP x v -> Just (x, v)
-  _ -> Nothing
-
-_ConP :: Prism' (Pat x) (XConP x, XId x, [Pat x])
-_ConP = prism' (uncurry3 ConP) $ \case
-  ConP x c ps -> Just (x, c, ps)
-  _ -> Nothing
-
-_TupleP :: Prism' (Pat x) (XTupleP x, [Pat x])
-_TupleP = prism' (uncurry TupleP) $ \case
-  TupleP x ps -> Just (x, ps)
-  _ -> Nothing
-
-_UnboxedP :: Prism' (Pat x) (XUnboxedP x, Literal Unboxed)
-_UnboxedP = prism' (uncurry UnboxedP) $ \case
-  UnboxedP x u -> Just (x, u)
-  _ -> Nothing
-
 bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
 bindVars (VarP _ x) = HashSet.singleton x
 bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
 bindVars (TupleP _ ps) = mconcat $ map bindVars ps
 bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
 bindVars UnboxedP {} = mempty
+
+makePrisms ''Pat
 
 ----------
 -- Type --

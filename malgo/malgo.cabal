@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ebe97112eaa95fc9eee65d3aeecbd8326dc9a181cd65128e42942d6a23442bc3
+-- hash: 9edd0bb956d3a2afd0637896c69645c591d356b86a9c0afb7fcf13add76bb33c
 
 name:           malgo
 version:        1.0.0.0
@@ -24,7 +24,10 @@ source-repository head
 library
   exposed-modules:
       Language.Malgo.Desugar.DsEnv
+      Language.Malgo.Desugar.Match
       Language.Malgo.Desugar.Pass
+      Language.Malgo.Desugar.Type
+      Language.Malgo.Desugar.Unboxed
       Language.Malgo.Driver
       Language.Malgo.Interface
       Language.Malgo.Parser

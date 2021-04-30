@@ -16,7 +16,6 @@ module Language.Malgo.Desugar.Pass (desugar) where
 
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
-import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
 import Koriel.Core.Syntax as C
@@ -26,6 +25,8 @@ import Koriel.Id hiding (newGlobalId, newId)
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Language.Malgo.Desugar.DsEnv
+import Language.Malgo.Desugar.Match
+import Language.Malgo.Desugar.Type
 import Language.Malgo.Interface
 import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
@@ -299,156 +300,6 @@ dsStmts (G.Let _ v e : ss) = do
   ss' <- dsStmts ss
   pure $ Match e' (Bind v' ss' :| [])
 
--- TODO: The Implementation of Functional Programming Languages
--- を元にコメントを追加
-
--- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
-match ::
-  (MonadState DsEnv m, MonadIO m, MonadUniq m, MonadFail m) =>
-  [Id C.Type] ->
-  [[Pat (Malgo 'Refine)]] ->
-  [m (C.Exp (Id C.Type))] ->
-  C.Exp (Id C.Type) ->
-  m (C.Exp (Id C.Type))
-match (u : us) (ps : pss) es err
-  -- Variable Rule
-  -- パターンの先頭がすべて変数のとき
-  | all (has _VarP) ps = do
-    -- 変数パターンvについて、式中に現れるすべてのvをパターンマッチ対象のuで置き換える
-    let es' =
-          zipWith
-            ( \case
-                (VarP _ v) -> \e -> nameEnv . at v ?= u >> e
-                _ -> bug Unreachable
-            )
-            ps
-            es
-    match us pss es' err
-  -- Constructor Rule
-  -- パターンの先頭がすべて値コンストラクタのとき
-  | all (has _ConP) ps = do
-    patType <- GT.typeOf $ head ps
-    unless (_TyApp `has` patType || _TyCon `has` patType) $
-      errorDoc $ "Not valid type:" <+> pPrint patType
-    -- 型からコンストラクタの集合を求める
-    let (con, ts) = splitCon patType
-    vcs <- lookupValueConstructors con ts
-    -- 各コンストラクタごとにC.Caseを生成する
-    cases <- for vcs $ \(conName, Forall _ conType) -> do
-      paramTypes <- traverse dsType $ fst $ splitTyArr conType
-      let ccon = C.Con (Data $ conName ^. toText) paramTypes
-      params <- traverse (newLocalId "$p") paramTypes
-      -- パターン行列（未転置）
-      let (pss', es') = unzip $ group conName (List.transpose (ps : pss)) es
-      Unpack ccon params <$> match (params <> us) (List.transpose pss') es' err
-    unfoldedType <- unfoldType patType
-    pure $ Match (Cast unfoldedType $ C.Var u) $ NonEmpty.fromList cases
-  -- パターンの先頭がすべてタプルのとき
-  | all (has _TupleP) ps = do
-    patType <- GT.typeOf $ head ps
-    SumT [con@(C.Con _ ts)] <- dsType patType
-    params <- traverse (newLocalId "$p") ts
-    cases <- do
-      let (pss', es') = unzip $ groupTuple (List.transpose (ps : pss)) es
-      (:| []) . Unpack con params <$> match (params <> us) (List.transpose pss') es' err
-    pure $ Match (Atom $ C.Var u) cases
-  -- パターンの先頭がすべてunboxedな値のとき
-  | all (has _UnboxedP) ps = do
-    let cs =
-          map
-            ( \case
-                UnboxedP _ x -> dsUnboxed x
-                _ -> bug Unreachable
-            )
-            ps
-    cases <- traverse (\c -> Switch c <$> match us pss es err) cs
-    -- パターンの網羅性を保証するため、
-    -- `_ -> err` を追加する
-    hole <- newLocalId "$_" (C.typeOf u)
-    pure $ Match (Atom $ C.Var u) $ NonEmpty.fromList (cases <> [C.Bind hole err])
-  -- The Mixture Rule
-  -- 複数種類のパターンが混ざっているとき
-  | otherwise =
-    do
-      let ((ps', ps''), (pss', pss''), (es', es'')) = partition ps pss es
-      err' <- match (u : us) (ps'' : pss'') es'' err
-      match (u : us) (ps' : pss') es' err'
-  where
-    -- Mixture Rule以外にマッチするようにパターン列を分解
-    partition [] _ _ = bug Unreachable
-    partition ps@(VarP {} : _) pss es =
-      let (ps', ps'') = span (has _VarP) ps
-       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-    partition ps@(ConP {} : _) pss es =
-      let (ps', ps'') = span (has _ConP) ps
-       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-    partition ps@(TupleP {} : _) pss es =
-      let (ps', ps'') = span (has _TupleP) ps
-       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-    partition (RecordP {} : _) pss es = undefined
-    partition ps@(UnboxedP {} : _) pss es =
-      let (ps', ps'') = span (has _UnboxedP) ps
-       in ((ps', ps''), unzip $ map (splitAt (length ps')) pss, splitAt (length ps') es)
-    -- コンストラクタgconの引数部のパターンpsを展開したパターン行列を生成する
-    group gcon pss' es = mapMaybe (aux gcon) (zip pss' es)
-      where
-        aux gcon (ConP _ gcon' ps : pss, e)
-          | gcon == gcon' = Just (ps <> pss, e)
-          | otherwise = Nothing
-        aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
-        aux _ ([], _) = bug Unreachable
-    groupTuple pss' es = zipWith aux pss' es
-      where
-        aux (TupleP _ ps : pss) e = (ps <> pss, e)
-        aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
-        aux [] _ = bug Unreachable
-match [] [] (e : _) _ = e
-match _ [] [] err = pure err
-match u pss es err = do
-  errorDoc $ "match" <+> pPrint u <+> pPrint pss <+> pPrint (length es) <+> pPrint err
-
--- Malgoの型をCoreの型に変換する
-dsType :: Monad m => GT.Type -> m C.Type
-dsType GT.TyApp {} = pure AnyT
-dsType (GT.TyVar _) = pure AnyT
-dsType (GT.TyCon con) = do
-  case con ^. idMeta of
-    TYPE (Rep BoxedRep) -> pure AnyT
-    kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
-dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
-dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
-dsType (GT.TyPrim GT.FloatT) = pure C.FloatT
-dsType (GT.TyPrim GT.DoubleT) = pure C.DoubleT
-dsType (GT.TyPrim GT.CharT) = pure C.CharT
-dsType (GT.TyPrim GT.StringT) = pure C.StringT
-dsType (GT.TyArr t1 t2) = do
-  t1' <- dsType t1
-  t2' <- dsType t2
-  pure $ [t1'] :-> t2'
-dsType (GT.TyTuple ts) =
-  SumT . pure . C.Con C.Tuple <$> traverse dsType ts
-dsType (GT.TyRecord kts) =
-  SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
-dsType (GT.TyLazy t) = ([] :->) <$> dsType t
-dsType (GT.TyPtr t) = PtrT <$> dsType t
-dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
-
--- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
-unfoldType :: (MonadState DsEnv m, MonadIO m) => GT.Type -> m C.Type
-unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
-  GT.kindOf t >>= \case
-    TYPE (Rep BoxedRep) -> do
-      let (con, ts) = splitCon t
-      vcs <- lookupValueConstructors con ts
-      SumT
-        <$> traverse
-          ( \(conName, Forall _ conType) ->
-              C.Con (Data $ conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
-          )
-          vcs
-    _ -> dsType t
-unfoldType t = dsType t
-
 -- Desugar Monad
 
 lookupName :: MonadState DsEnv m => RnId -> m (Id C.Type)
@@ -457,18 +308,6 @@ lookupName name = do
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
-
-lookupValueConstructors ::
-  MonadState DsEnv m =>
-  Id GT.Type ->
-  [GT.Type] ->
-  m [(RnId, Scheme GT.Type)]
-lookupValueConstructors con ts = do
-  typeEnv <- use typeDefEnv
-  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con) (HashMap.elems typeEnv) of
-    Just TypeDef {..} ->
-      pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
-    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
 
 newCoreId :: MonadUniq f => RnId -> C.Type -> f (Id C.Type)
 newCoreId griffId coreType = newIdOnName coreType griffId
