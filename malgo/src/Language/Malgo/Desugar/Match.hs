@@ -10,10 +10,12 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 -- | パターンマッチのコンパイル
+{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
+import qualified Data.Map.Strict as Map
 import Koriel.Core.Syntax
 import qualified Koriel.Core.Syntax as Core
 import Koriel.Core.Type
@@ -112,8 +114,13 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
     patType <- Malgo.typeOf $ head heads
-    SumT [Core.Con _ _] <- dsType patType
-    undefined
+    SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
+    params <- traverse (newLocalId "$p") ts
+    cases <- do
+      (pat', es') <- groupRecord pat es
+      -- NonEmpty.singleton = (:| [])
+      (:| []) . Unpack con params <$> match (params <> restScrutinee) pat' es' err
+    pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
     patType <- Malgo.typeOf $ head heads
@@ -196,8 +203,24 @@ group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ 
     aux _ ([], _) = bug Unreachable
 
 groupTuple :: PatMatrix -> [m (Core.Exp (Id Core.Type))] -> (PatMatrix, [m (Core.Exp (Id Core.Type))])
-groupTuple (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux (List.transpose pss) es
+groupTuple (PatMatrix pss) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = bug Unreachable
+
+groupRecord :: (MonadUniq m) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
+groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
+  where
+    aux (RecordP x ps : pss) e = do
+      ps' <- extendRecordP x ps
+      pure (ps' <> pss, e)
+    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
+    aux [] _ = bug Unreachable
+    extendRecordP (With (Malgo.TyRecord ktsMap) pos) ps = do
+      let kts = Map.toList ktsMap
+      for kts \(key, ty) ->
+        case List.lookup key ps of
+          Nothing -> VarP (With ty pos) <$> newLocalId "$_p" ()
+          Just p -> pure p
+    extendRecordP _ _ = bug Unreachable
