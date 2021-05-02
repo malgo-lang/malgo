@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -9,6 +10,7 @@
 module Language.Malgo.Desugar.DsEnv where
 
 import qualified Data.HashMap.Strict as HashMap
+import qualified Data.List as List
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -16,6 +18,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.Static
+import qualified Language.Malgo.TypeRep.Static as GT
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
@@ -73,3 +76,15 @@ makeDsEnv modName varEnv typeEnv fieldEnv rnEnv =
       _fieldEnv = fieldEnv,
       _rnEnv = rnEnv
     }
+
+lookupValueConstructors ::
+  MonadState DsEnv m =>
+  Id GT.Type ->
+  [GT.Type] ->
+  m [(RnId, Scheme GT.Type)]
+lookupValueConstructors con ts = do
+  typeEnv <- use typeDefEnv
+  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con) (HashMap.elems typeEnv) of
+    Just TypeDef {..} ->
+      pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
+    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
