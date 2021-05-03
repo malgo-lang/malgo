@@ -5,12 +5,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 -- | パターンマッチのコンパイル
-{-# LANGUAGE TypeFamilies #-}
 module Language.Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
 import qualified Data.List as List
