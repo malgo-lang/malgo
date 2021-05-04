@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 48a285f28bc941c806d7890903ce56c19f6cd578a13b434f225a1832c0fecf2a
+-- hash: 1cbe17dc40b31cc945fca339116f0f0cbbc057f24422ec7756940715465a8052
 
 name:           malgo
 version:        1.0.0.0
@@ -63,8 +63,6 @@ library
     , hashable
     , koriel
     , lens
-    , llvm-hs
-    , llvm-hs-pure
     , megaparsec
     , mtl
     , optparse-applicative
@@ -99,8 +97,6 @@ executable malgoc
     , hashable
     , koriel
     , lens
-    , llvm-hs
-    , llvm-hs-pure
     , malgo
     , megaparsec
     , mtl

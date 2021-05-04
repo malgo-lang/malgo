@@ -5,7 +5,6 @@
 
 module Language.Malgo.Driver (compile, compileFromAST) where
 
-import qualified Data.ByteString as BS
 import Data.Maybe (fromJust)
 import qualified Data.Text.IO as T
 import Koriel.Core.CodeGen (codeGen)
@@ -16,9 +15,6 @@ import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
-import qualified LLVM.AST as L
-import LLVM.Context (withContext)
-import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import Language.Malgo.Desugar.Pass (desugar)
 import Language.Malgo.Interface (buildInterface, loadInterface, storeInterface)
 import Language.Malgo.Parser (parseMalgo)
@@ -101,17 +97,7 @@ compileFromAST parsedAst opt =
                 hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
                 hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
 
-            llvmir <- codeGen coreLLOpt
-
-            let llvmModule =
-                  L.defaultModule
-                    { L.moduleName = fromString $ srcName opt,
-                      L.moduleSourceFileName = fromString $ srcName opt,
-                      L.moduleDefinitions = llvmir
-                    }
-            liftIO $
-              withContext $ \ctx ->
-                BS.writeFile (dstName opt) =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+            codeGen (srcName opt) (dstName opt) coreLLOpt
 
 -- | .mlgから.llへのコンパイル
 compile :: Opt -> IO ()
