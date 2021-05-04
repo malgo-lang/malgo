@@ -24,7 +24,6 @@ dependencies:
   - koriel
   - lens
   - llvm-hs
-  - llvm-hs-pretty
   - llvm-hs-pure
   - megaparsec
   - mtl
@@ -59,5 +58,4 @@ executables:
       - -threaded
     dependencies:
       - malgo
-      - llvm-hs-pretty
       - shake

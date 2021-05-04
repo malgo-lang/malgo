@@ -38,7 +38,6 @@ toLLOpt =
       <*> switch (long "no-lambdalift")
       <*> switch (long "no-opt")
       <*> fmap read (strOption (long "inline" <> value "10"))
-      <*> switch (long "via-binding")
       <*> switch (long "debug-mode")
       <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
       <*> switch (long "force")
