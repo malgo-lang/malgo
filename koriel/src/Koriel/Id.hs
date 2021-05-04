@@ -44,16 +44,13 @@ import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList, (.=))
 import Koriel.Pretty
 
--- TODO: IdSortに求められる性質
--- 1. Idが外のモジュールから参照できるか否か（Interface）
--- 1. 関数がLLVMレベルで外のファイルから見えるか（internalか否か）（CodeGen）
--- 1. Idがモジュール名で修飾されているかいなか（mkName, mainFunc）
--- 1. LLVMレベルでトップレベルで宣言されているか否か
--- これらを整理する必要がある。
 data IdSort
-  = External ModuleName
-  | WiredIn ModuleName
-  | Internal
+  = -- | 外部から参照可能な識別子
+    External ModuleName
+  | -- | 処理系が使う識別子
+    WiredIn ModuleName
+  | -- | モジュール内に閉じた識別子
+    Internal
   deriving stock (Eq, Show, Ord, Generic)
 
 instance Binary IdSort

@@ -8,7 +8,7 @@ module Runner where
 import qualified Data.Text.IO as T
 import Development.Shake
 import Development.Shake.FilePath
-import Koriel.Id (ModuleName (ModuleName))
+import Koriel.Id (_ModuleName)
 import qualified Language.Malgo.Driver as Driver
 import Language.Malgo.Parser (parseMalgo)
 import Language.Malgo.Prelude hiding ((<.>))
@@ -62,12 +62,10 @@ buildUnderModulePaths opt = do
     liftIO $
       concat
         <$> traverse (\path -> map (path </>) <$> getDirectoryFilesIO path ["*.mlg"]) (modulePaths opt)
-  traverse_ ?? mlgFiles $ \mlgFile -> do
+  for_ mlgFiles \mlgFile -> do
     mlgToLLShake' ((defaultOpt mlgFile) {dstName = shakeFiles sopt </> "build" </> takeFileName mlgFile -<.> "ll"})
 
 resolveDepends :: Monad m => Module (Malgo 'Parse) -> m [FilePath]
 resolveDepends Module {_moduleDefinition = ds} = do
-  let needModuleNames = mapMaybe ?? ds $ \case
-        Import _ (ModuleName modName) -> Just modName
-        _ -> Nothing
+  let needModuleNames = mapMaybe (preview $ _Import . _2 . _ModuleName) ds
   pure $ map (\needModuleName -> normaliseEx $ ".malgo-work/build" </> needModuleName <.> "mlgi") needModuleNames
