@@ -7,12 +7,14 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
+{-# LANGUAGE DeriveDataTypeable #-}
 module Koriel.Core.Type where
 
 import Data.Binary (Binary)
 import Koriel.Id
 import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty
+import Data.Data (Data, Typeable)
 
 {-
 Constructors  C ::= <tag n>
@@ -20,7 +22,7 @@ Constructors  C ::= <tag n>
 data Tag
   = Data String
   | Tuple
-  deriving stock (Eq, Show, Ord, Generic)
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary Tag
 
@@ -29,7 +31,7 @@ instance Pretty Tag where
   pPrint Tuple = "[tuple]"
 
 data Con = Con Tag [Type]
-  deriving stock (Eq, Show, Ord, Generic)
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary Con
 
@@ -53,7 +55,7 @@ data Type
   | PtrT Type
   | AnyT
   | VoidT
-  deriving stock (Eq, Show, Ord, Generic)
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary Type
 

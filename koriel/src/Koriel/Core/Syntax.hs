@@ -18,6 +18,7 @@
 -- |
 -- malgoの共通中間表現。
 -- A正規形に近い。
+{-# LANGUAGE DeriveDataTypeable #-}
 module Koriel.Core.Syntax where
 
 import qualified Data.HashSet as HashSet
@@ -27,6 +28,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty
+import Data.Data (Data, Typeable)
 
 class HasFreeVar f where
   -- | free variables
@@ -41,7 +43,7 @@ data Unboxed
   | Char Char
   | String String
   | Bool Bool
-  deriving stock (Eq, Ord, Show, Generic)
+  deriving stock (Eq, Ord, Show, Generic, Data, Typeable)
 
 instance HasType Unboxed where
   typeOf Int32 {} = Int32T
@@ -68,7 +70,7 @@ data Atom a
     Var a
   | -- | literal of unboxed values
     Unboxed Unboxed
-  deriving stock (Eq, Show, Functor, Foldable, Generic)
+  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 instance HasType a => HasType (Atom a) where
   typeOf (Var x) = typeOf x
@@ -89,7 +91,10 @@ instance HasAtom Atom where
   atom = id
 
 data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
-  deriving stock (Eq, Show, Functor, Foldable, Generic)
+  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+
+instance Pretty a => Pretty (LocalDef a) where
+  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
 
 localDefVar :: Lens' (LocalDef a) a
 localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
@@ -117,7 +122,9 @@ data Exp a
     Match (Exp a) (NonEmpty (Case a))
   | -- | raise an internal error
     Error Type
-  deriving stock (Eq, Show, Functor, Foldable, Generic)
+  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+
+instance Data a => Plated (Exp a)
 
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
@@ -175,7 +182,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) =
-    parens $ "let" $$ parens (vcat (map (\(LocalDef v o) -> parens $ pPrint v $$ pPrint o) xs)) $$ pPrint e
+    parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
   pPrint (Error _) = "ERROR"
 
@@ -210,7 +217,7 @@ data Case a
     Switch Unboxed (Exp a)
   | -- | variable pattern
     Bind a (Exp a)
-  deriving stock (Eq, Show, Functor, Foldable, Generic)
+  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 instance HasType a => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
@@ -240,7 +247,7 @@ data Obj a
     Fun [a] (Exp a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
-  deriving stock (Eq, Show, Functor, Foldable, Generic)
+  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e

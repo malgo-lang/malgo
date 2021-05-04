@@ -11,7 +11,6 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
-{-# OPTIONS_GHC -Wno-name-shadowing #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 -- |
@@ -137,16 +136,14 @@ sizeofType AnyT = 8
 sizeofType VoidT = 0
 
 findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id C.Type -> m Operand
-findVar x = do
-  mopr <- view $ valueHashMap . at x
-  case mopr of
+findVar x =
+  view (valueHashMap . at x) >>= \case
     Just opr -> pure opr
     Nothing -> error $ show $ pPrint x <> " is not found"
 
 findFun :: (MonadReader OprMap m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
-  mopr <- view $ funcHashMap . at x
-  case mopr of
+  view (funcHashMap . at x) >>= \case
     Just opr -> pure opr
     Nothing ->
       case C.typeOf x of
@@ -492,7 +489,9 @@ gepAndLoad ::
   Operand ->
   [Operand] ->
   m Operand
-gepAndLoad opr addrs = join $ load <$> gep opr addrs <*> pure 0
+gepAndLoad opr addrs = do
+  addr <- gep opr addrs
+  load addr 0
 
 gepAndStore ::
   (MonadIRBuilder m, MonadModuleBuilder m) =>
@@ -500,7 +499,9 @@ gepAndStore ::
   [Operand] ->
   Operand ->
   m ()
-gepAndStore opr addrs val = join $ store <$> gep opr addrs <*> pure 0 <*> pure val
+gepAndStore opr addrs val = do
+  addr <- gep opr addrs
+  store addr 0 val
 
 internalFunction ::
   MonadModuleBuilder m =>

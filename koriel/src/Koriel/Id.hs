@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingVia #-}
@@ -38,6 +39,7 @@ module Koriel.Id
 where
 
 import Data.Binary (Binary)
+import Data.Data (Data, Typeable)
 import Data.Deriving
 import Data.Hashable (Hashable (hashWithSalt))
 import Koriel.MonadUniq
@@ -51,7 +53,7 @@ data IdSort
     WiredIn ModuleName
   | -- | モジュール内に閉じた識別子
     Internal
-  deriving stock (Eq, Show, Ord, Generic)
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary IdSort
 
@@ -61,7 +63,7 @@ instance Pretty IdSort where
   pPrint Internal = "Internal"
 
 newtype ModuleName = ModuleName String
-  deriving stock (Eq, Show, Ord, Generic)
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Pretty ModuleName where
   pPrint (ModuleName modName) = text modName
@@ -76,7 +78,7 @@ data Id a = Id
     _idMeta :: a,
     _idSort :: IdSort
   }
-  deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic)
+  deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
 
 deriveEq1 ''Id
 deriveOrd1 ''Id
