@@ -11,7 +11,6 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
-{-# OPTIONS_GHC -Wno-name-shadowing #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 -- |
@@ -23,6 +22,7 @@ where
 
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
+import qualified Data.ByteString as BS
 import qualified Data.ByteString.Builder as B
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
@@ -43,7 +43,9 @@ import Koriel.Prelude
 import Koriel.Pretty
 import LLVM.AST
   ( Definition (..),
+    Module (..),
     Name,
+    defaultModule,
     mkName,
   )
 import qualified LLVM.AST.Constant as C
@@ -58,7 +60,9 @@ import LLVM.AST.Type hiding
   )
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
+import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr)
+import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 
 instance Hashable Name
 
@@ -73,21 +77,24 @@ data OprMap = OprMap
 
 makeLenses ''OprMap
 
-codeGen :: (MonadUniq m, MonadFix m, MonadFail m) => Program (Id C.Type) -> m [Definition]
-codeGen Program {..} = execModuleBuilderT emptyModuleBuilder $ do
-  -- topFuncsのOprMapを作成
-  let funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
-        HashMap.singleton f $
-          ConstantOperand $
-            C.GlobalReference
-              (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
-              (toName f)
-  runReaderT
-    ?? (OprMap {_valueHashMap = mempty, _funcHashMap = funcEnv})
-    $ Lazy.evalStateT
-      ?? (mempty :: PrimMap)
-      $ do
-        traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
+codeGen :: (MonadUniq m, MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> Program (Id C.Type) -> m ()
+codeGen srcPath dstPath Program {..} = do
+  llvmir <- execModuleBuilderT emptyModuleBuilder $ do
+    -- topFuncsのOprMapを作成
+    let funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
+          HashMap.singleton f $
+            ConstantOperand $
+              C.GlobalReference
+                (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
+                (toName f)
+    runReaderT
+      ?? (OprMap {_valueHashMap = mempty, _funcHashMap = funcEnv})
+      $ Lazy.evalStateT
+        ?? (mempty :: PrimMap)
+        $ do
+          traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
+  let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
+  liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
 
 convType :: C.Type -> LT.Type
 convType (ps :-> r) =
@@ -129,16 +136,14 @@ sizeofType AnyT = 8
 sizeofType VoidT = 0
 
 findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id C.Type -> m Operand
-findVar x = do
-  mopr <- view $ valueHashMap . at x
-  case mopr of
+findVar x =
+  view (valueHashMap . at x) >>= \case
     Just opr -> pure opr
     Nothing -> error $ show $ pPrint x <> " is not found"
 
 findFun :: (MonadReader OprMap m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
-  mopr <- view $ funcHashMap . at x
-  case mopr of
+  view (funcHashMap . at x) >>= \case
     Just opr -> pure opr
     Nothing ->
       case C.typeOf x of
@@ -484,7 +489,9 @@ gepAndLoad ::
   Operand ->
   [Operand] ->
   m Operand
-gepAndLoad opr addrs = join $ load <$> gep opr addrs <*> pure 0
+gepAndLoad opr addrs = do
+  addr <- gep opr addrs
+  load addr 0
 
 gepAndStore ::
   (MonadIRBuilder m, MonadModuleBuilder m) =>
@@ -492,7 +499,9 @@ gepAndStore ::
   [Operand] ->
   Operand ->
   m ()
-gepAndStore opr addrs val = join $ store <$> gep opr addrs <*> pure 0 <*> pure val
+gepAndStore opr addrs val = do
+  addr <- gep opr addrs
+  store addr 0 val
 
 internalFunction ::
   MonadModuleBuilder m =>

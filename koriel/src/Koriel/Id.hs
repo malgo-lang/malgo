@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingVia #-}
@@ -38,23 +39,21 @@ module Koriel.Id
 where
 
 import Data.Binary (Binary)
+import Data.Data (Data, Typeable)
 import Data.Deriving
 import Data.Hashable (Hashable (hashWithSalt))
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList, (.=))
 import Koriel.Pretty
 
--- TODO: IdSortに求められる性質
--- 1. Idが外のモジュールから参照できるか否か（Interface）
--- 1. 関数がLLVMレベルで外のファイルから見えるか（internalか否か）（CodeGen）
--- 1. Idがモジュール名で修飾されているかいなか（mkName, mainFunc）
--- 1. LLVMレベルでトップレベルで宣言されているか否か
--- これらを整理する必要がある。
 data IdSort
-  = External ModuleName
-  | WiredIn ModuleName
-  | Internal
-  deriving stock (Eq, Show, Ord, Generic)
+  = -- | 外部から参照可能な識別子
+    External ModuleName
+  | -- | 処理系が使う識別子
+    WiredIn ModuleName
+  | -- | モジュール内に閉じた識別子
+    Internal
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary IdSort
 
@@ -64,7 +63,7 @@ instance Pretty IdSort where
   pPrint Internal = "Internal"
 
 newtype ModuleName = ModuleName String
-  deriving stock (Eq, Show, Ord, Generic)
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Pretty ModuleName where
   pPrint (ModuleName modName) = text modName
@@ -79,7 +78,7 @@ data Id a = Id
     _idMeta :: a,
     _idSort :: IdSort
   }
-  deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic)
+  deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
 
 deriveEq1 ''Id
 deriveOrd1 ''Id

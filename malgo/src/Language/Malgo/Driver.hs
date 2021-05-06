@@ -5,10 +5,8 @@
 
 module Language.Malgo.Driver (compile, compileFromAST) where
 
-import qualified Data.ByteString as BS
 import Data.Maybe (fromJust)
 import qualified Data.Text.IO as T
-import qualified Data.Text.Lazy.IO as TL
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
@@ -17,10 +15,6 @@ import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
-import qualified LLVM.AST as L
-import LLVM.Context (withContext)
-import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
-import LLVM.Pretty (ppllvm)
 import Language.Malgo.Desugar.Pass (desugar)
 import Language.Malgo.Interface (buildInterface, loadInterface, storeInterface)
 import Language.Malgo.Parser (parseMalgo)
@@ -65,59 +59,45 @@ compileFromAST parsedAst opt =
   void $
     runReaderT ?? opt $
       unMalgoM $
-        runUniqT ?? UniqSupply 0 $ do
-          when (dumpParsed opt) $ liftIO do
-            hPutStrLn stderr "=== PARSED ==="
-            hPrint stderr $ pPrint parsedAst
-          rnEnv <- RnEnv.genBuiltinRnEnv
-          (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-          (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
-          refinedAst <- refine typedAst
-          let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
-          let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
-          let fieldEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.fieldEnv
-          (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv fieldEnv (tcEnv ^. TcEnv.rnEnv) refinedAst
-          let inf = buildInterface rnState dsEnv
-          storeInterface inf
-          when (debugMode opt) $ do
-            inf <- loadInterface (Syntax._moduleName typedAst)
-            liftIO $ do
-              hPutStrLn stderr "=== INTERFACE ==="
-              hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
-          runLint $ lintProgram core
-          coreOpt <- if noOptimize opt then pure core else optimizeProgram (inlineSize opt) core
-          when (dumpDesugar opt && not (noOptimize opt)) $
-            liftIO $ do
-              hPutStrLn stderr "=== OPTIMIZE ==="
-              hPrint stderr $ pPrint $ over appProgram flat coreOpt
-          runLint $ lintProgram coreOpt
-          coreLL <- if noLambdaLift opt then pure coreOpt else lambdalift coreOpt
-          when (dumpDesugar opt && not (noLambdaLift opt)) $
-            liftIO $ do
-              hPutStrLn stderr "=== LAMBDALIFT ==="
-              hPrint stderr $ pPrint $ over appProgram flat coreLL
-          coreLLOpt <- if noOptimize opt then pure coreLL else optimizeProgram (inlineSize opt) coreLL
-          when (dumpDesugar opt && not (noLambdaLift opt) && not (noOptimize opt)) $
-            liftIO $ do
-              hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
-              hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
+        runUniqT ?? UniqSupply 0 $
+          do
+            when (dumpParsed opt) $ liftIO do
+              hPutStrLn stderr "=== PARSED ==="
+              hPrint stderr $ pPrint parsedAst
+            rnEnv <- RnEnv.genBuiltinRnEnv
+            (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
+            (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
+            refinedAst <- refine typedAst
+            let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
+            let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
+            let fieldEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.fieldEnv
+            (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv fieldEnv (tcEnv ^. TcEnv.rnEnv) refinedAst
+            let inf = buildInterface rnState dsEnv
+            storeInterface inf
+            when (debugMode opt) $ do
+              inf <- loadInterface (Syntax._moduleName typedAst)
+              liftIO $ do
+                hPutStrLn stderr "=== INTERFACE ==="
+                hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
+            runLint $ lintProgram core
+            coreOpt <- if noOptimize opt then pure core else optimizeProgram (inlineSize opt) core
+            when (dumpDesugar opt && not (noOptimize opt)) $
+              liftIO $ do
+                hPutStrLn stderr "=== OPTIMIZE ==="
+                hPrint stderr $ pPrint $ over appProgram flat coreOpt
+            runLint $ lintProgram coreOpt
+            coreLL <- if noLambdaLift opt then pure coreOpt else lambdalift coreOpt
+            when (dumpDesugar opt && not (noLambdaLift opt)) $
+              liftIO $ do
+                hPutStrLn stderr "=== LAMBDALIFT ==="
+                hPrint stderr $ pPrint $ over appProgram flat coreLL
+            coreLLOpt <- if noOptimize opt then pure coreLL else optimizeProgram (inlineSize opt) coreLL
+            when (dumpDesugar opt && not (noLambdaLift opt) && not (noOptimize opt)) $
+              liftIO $ do
+                hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
+                hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
 
-          llvmir <- codeGen coreLLOpt
-
-          let llvmModule =
-                L.defaultModule
-                  { L.moduleName = fromString $ srcName opt,
-                    L.moduleSourceFileName = fromString $ srcName opt,
-                    L.moduleDefinitions = llvmir
-                  }
-          if viaBinding opt
-            then liftIO $
-              withContext $ \ctx ->
-                BS.writeFile (dstName opt) =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
-            else
-              liftIO $
-                TL.writeFile (dstName opt) $
-                  ppllvm llvmModule
+            codeGen (srcName opt) (dstName opt) coreLLOpt
 
 -- | .mlgから.llへのコンパイル
 compile :: Opt -> IO ()

@@ -68,11 +68,8 @@ optCallInline ::
   (MonadState CallInlineMap f, MonadReader Int f, MonadUniq f) =>
   Exp (Id Type) ->
   f (Exp (Id Type))
-optCallInline (Call (Var f) xs) = lookupCallInline f xs
--- CallDirectをインライン展開するとコードサイズが爆発する事がある。要調査
--- また、CallDirectをインライン展開して
--- `traverseOf appProgram (optimize (inlineSize opt))`を適用するとコードが壊れる。要調査
--- optCallInline (CallDirect f xs) = lookupCallInline f xs
+optCallInline (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
+optCallInline (CallDirect f xs) = lookupCallInline CallDirect f xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
 optCallInline (Let ds e) = do
@@ -87,20 +84,21 @@ checkInlineable ::
   m ()
 checkInlineable (LocalDef f (Fun ps v)) = do
   level <- ask
-  -- 変数の数がinlineSize以下ならインライン展開する
-  when (length v <= level || f `notElem` freevars v) $ at f ?= (ps, v)
+  -- ノードの数がlevel以下ならインライン展開する
+  when (lengthOf cosmos v <= level {-  || f `notElem` freevars v -}) $ at f ?= (ps, v)
 checkInlineable _ = pure ()
 
 lookupCallInline ::
   (MonadUniq m, MonadState CallInlineMap m) =>
+  (Id Type -> [Atom (Id Type)] -> Exp (Id Type)) ->
   Id Type ->
   [Atom (Id Type)] ->
   m (Exp (Id Type))
-lookupCallInline f as = do
+lookupCallInline call f as = do
   f' <- gets (view (at f))
   case f' of
     Just (ps, v) -> alpha v (HashMap.fromList $ zip ps as)
-    Nothing -> pure $ Call (Var f) as
+    Nothing -> pure $ call f as
 
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 

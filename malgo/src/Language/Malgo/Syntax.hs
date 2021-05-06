@@ -397,6 +397,8 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Decl x) where
   pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
   pPrint (Import _ name) = "import" <+> pPrint name
 
+makePrisms ''Decl
+
 ------------
 -- Module --
 ------------

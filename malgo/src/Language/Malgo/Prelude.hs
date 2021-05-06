@@ -77,7 +77,6 @@ data Opt = Opt
     noOptimize :: Bool,
     noLambdaLift :: Bool,
     inlineSize :: Int,
-    viaBinding :: Bool,
     debugMode :: Bool,
     modulePaths :: [FilePath],
     forceRebuild :: Bool
@@ -96,7 +95,6 @@ defaultOpt src =
       noOptimize = False,
       noLambdaLift = False,
       inlineSize = 10,
-      viaBinding = False,
       debugMode = False,
       modulePaths = [],
       forceRebuild = False
