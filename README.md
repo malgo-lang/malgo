@@ -1,8 +1,6 @@
-# KaGaMi
+# malgo
 
-[![Kagami CI](https://github.com/takoeight0821/kagami/workflows/Kagami%20CI/badge.svg)](https://github.com/takoeight0821/kagami/actions?query=workflow%3A%22Kagami+CI%22)
-
-Kagami is a collection of toy programming language implementaions and toolchain.
+[![Malgo CI](https://github.com/takoeight0821/malgo/workflows/Malgo%20CI/badge.svg)](https://github.com/takoeight0821/malgo/actions?query=workflow%3A%22Malgo+CI%22)
 
 ## Requirement
 
@@ -34,7 +32,6 @@ Some utilities for Kagami and the implementation of the Core internal representa
 ## Malgo
 
 A functional programming language.
-Its syntax is based on Haskell.
 
 # Future works
 
@@ -44,7 +41,7 @@ Its syntax is based on Haskell.
   + Import Builtin.grf implicity
   + Mutable (unboxed | boxed) polymorphic array (in Koriel, Array)
   + More rich standard library
-  + ML like module system 
+  + ML like module system
   + Overloaded Literals
 * Koriel
   + Rename Core -> Koriel
