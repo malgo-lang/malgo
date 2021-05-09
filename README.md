@@ -11,8 +11,8 @@
 ## Installation
 
 ```sh
-$ git clone https://github.com/takoeight0821/kagami
-$ cd kagami
+$ git clone https://github.com/takoeight0821/malgo
+$ cd malgo
 $ stack install
 ```
 
