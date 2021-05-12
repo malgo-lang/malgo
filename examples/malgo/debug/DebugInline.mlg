@@ -1,0 +1,8 @@
+module DebugInline = {
+  import DebugInlineLib;
+
+  -- Arithmetic operators
+
+  addOne :: Int32 -> Int32;
+  addOne = { (Int32# x) -> Int32# (addOne# x) };
+}

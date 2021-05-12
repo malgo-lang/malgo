@@ -1,0 +1,10 @@
+module DebugInlineLib = {
+  -- Primitive Types
+  data Int32 = Int32# Int32#;
+
+  -- Arithmetic operators
+  foreign import add_i32 :: Int32# -> Int32# -> Int32#;
+
+  addOne# :: Int32# -> Int32#;
+  addOne# = { x -> add_i32 x 1# };
+}
