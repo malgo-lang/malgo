@@ -46,25 +46,11 @@ toLLOpt =
 
 newtype Command = ToLL Opt
 
-opts :: Parser Command
-opts =
-  subparser
-    ( command
-        "to-ll"
-        ( info
-            (ToLL <$> toLLOpt)
-            ( fullDesc
-                <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
-                <> header "malgo to LLVM Textual IR Compiler"
-            )
-        )
-    )
-
 parseCommand :: IO Command
 parseCommand = do
   command <-
     execParser
-      ( info (opts <**> helper) $
+      ( info (subparser toLL <**> helper) $
           fullDesc
             <> header "malgo programming language"
       )
@@ -73,3 +59,10 @@ parseCommand = do
       if null (dstName opt)
         then pure $ ToLL $ opt {dstName = srcName opt & extension .~ ".ll"}
         else pure command
+  where
+    toLL =
+      command "to-ll" $
+        info (ToLL <$> toLLOpt) $
+          fullDesc
+            <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
+            <> header "malgo to LLVM Textual IR Compiler"
