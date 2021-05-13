@@ -44,7 +44,7 @@ Hello, world
 
 ## Koriel
 
-Some utilities for Kagami and the implementation of the Core internal representation.
+The implementation of the internal representation.
 
 ## Malgo
 
