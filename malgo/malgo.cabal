@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1cbe17dc40b31cc945fca339116f0f0cbbc057f24422ec7756940715465a8052
+-- hash: 4e69eadadc176330af9a29e0a47257e4b60ea9b5d812d833173b7b82d39d82b6
 
 name:           malgo
 version:        1.0.0.0
@@ -47,7 +47,8 @@ library
       Paths_malgo
   hs-source-dirs:
       src
-  default-extensions: StrictData
+  default-extensions:
+      StrictData
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
       base
@@ -81,7 +82,8 @@ executable malgoc
       Paths_malgo
   hs-source-dirs:
       app/
-  default-extensions: StrictData
+  default-extensions:
+      StrictData
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-depends:
       base

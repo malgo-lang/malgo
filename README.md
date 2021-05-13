@@ -7,20 +7,37 @@
 * [stack](https://docs.haskellstack.org/en/stable/README/)
 * [bdwgc](http://www.hboehm.info/gc/)
 * [clang](https://clang.llvm.org/)
+* [llvm](https://llvm.org/)
 
 ## Installation
+
+### Installing LLVM
+#### Homebrew
+
+```sh
+$ brew install llvm-hs/llvm/llvm-9
+```
+
+#### Debian/Ubuntu
+
+```
+$ apt-get install llvm-9-dev
+```
+
+### Installing Malgo
 
 ```sh
 $ git clone https://github.com/takoeight0821/malgo
 $ cd malgo
 $ stack install
+$ ./install_malgo_internal.sh
 ```
 
 ## Usage
 
 ```sh
-$ malgoc examples/malgo/Hello.grf -o Hello.ll
-$ clang Hello.ll runtime/malgo/rts.c -lgc
+$ malgoc to-ll examples/malgo/Hello.mlg -o Hello.ll
+$ clang Hello.ll -lgc .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll runtime/malgo/rts.c
 $ ./a.out
 Hello, world
 ```

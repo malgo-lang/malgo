@@ -1,17 +1,9 @@
-module hello = {
-  foreign import print_string :: String# -> ();
-  foreign import newline :: () -> ();
-
-  data String = String# String#;
-
-  putStrLn :: String -> ();
-  putStrLn = { (String# str) ->
-    print_string str;
-    newline ()
-  };
+module Hello = {
+  import Builtin;
+  import Prelude;
 
   main = {
-    putStrLn (String# "Hello, world"#)
+    putStrLn "Hello, world"
   };
 }
 -- Expected: Hello, world
