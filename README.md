@@ -48,9 +48,9 @@ Some utilities for Kagami and the implementation of the Core internal representa
 
 ## Malgo
 
-A functional programming language.
+A statically typed functional programming language.
 
-# Future works
+# TODO
 
 * Rich build tool like go, cargo, cabal
 
