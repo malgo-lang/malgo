@@ -30,7 +30,7 @@ $ apt-get install llvm-9-dev
 $ git clone https://github.com/takoeight0821/malgo
 $ cd malgo
 $ stack install
-$ ./install_malgo_internal.sh
+$ ./scripts/install_malgo_internal.sh
 ```
 
 ## Usage
