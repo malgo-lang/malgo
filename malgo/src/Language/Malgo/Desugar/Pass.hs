@@ -34,7 +34,7 @@ import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadUniq m, MonadIO m, MonadMalgo m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m) =>
+  (MonadUniq m, MonadMalgo m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m) =>
   HashMap RnId (Scheme GT.Type) ->
   HashMap RnTId (TypeDef GT.Type) ->
   HashMap RnId (Scheme GT.Type) ->
@@ -60,7 +60,7 @@ desugar varEnv typeEnv fieldEnv rnEnv (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadMalgo m, MonadFail m) =>
+  (MonadUniq m, MonadState DsEnv m, MonadMalgo m, MonadFail m) =>
   BindGroup (Malgo 'Refine) ->
   m [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsBindGroup bg = do
@@ -70,21 +70,21 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
-dsImport :: (MonadMalgo m, MonadState DsEnv m, MonadIO m) => Import (Malgo 'Refine) -> m ()
+dsImport :: (MonadMalgo m, MonadState DsEnv m) => Import (Malgo 'Refine) -> m ()
 dsImport (_, modName) = do
   interface <- loadInterface modName
   nameEnv <>= interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
-  (MonadUniq f, MonadState DsEnv f, MonadIO f, MonadMalgo f, MonadFail f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadMalgo f, MonadFail f) =>
   [[ScDef (Malgo 'Refine)]] ->
   f [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
 dsScDefGroup = traverse dsScDefs
 
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
-  (MonadUniq f, MonadState DsEnv f, MonadIO f, MonadMalgo f, MonadFail f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadMalgo f, MonadFail f) =>
   [ScDef (Malgo 'Refine)] ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDefs ds = do
@@ -96,7 +96,7 @@ dsScDefs ds = do
   foldMapA dsScDef ds
 
 dsScDef ::
-  (MonadUniq f, MonadState DsEnv f, MonadIO f, MonadMalgo f, MonadFail f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadMalgo f, MonadFail f) =>
   ScDef (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (With typ pos, name, expr) = do
@@ -114,7 +114,7 @@ dsScDef (With typ pos, name, expr) = do
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (MonadState DsEnv f, MonadUniq f, MonadIO f) =>
+  (MonadState DsEnv f, MonadUniq f) =>
   Foreign (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsForeign (x@(With _ (_, primName)), name, _) = do
@@ -128,7 +128,7 @@ dsForeign (x@(With _ (_, primName)), name, _) = do
   pure [(name', fun)]
 
 dsDataDef ::
-  (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadFail m) =>
+  (MonadUniq m, MonadState DsEnv m, MonadFail m) =>
   DataDef (Malgo 'Refine) ->
   m [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
 dsDataDef (_, name, _, cons) =
@@ -307,7 +307,7 @@ newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::
-  (MonadUniq m, MonadState DsEnv m) =>
+  MonadUniq m =>
   [Id C.Type] ->
   C.Exp (Id C.Type) ->
   m ([Id C.Type], C.Exp (Id C.Type))

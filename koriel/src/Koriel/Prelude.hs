@@ -118,11 +118,11 @@ asumMap :: forall b m f a. (Foldable f, Alternative m) => (a -> m b) -> f a -> m
 asumMap = coerce (foldMap :: (a -> Alt m b) -> f a -> Alt m b)
 {-# INLINE asumMap #-}
 
-foldMapA :: forall b m f a. (Semigroup b, Monoid b, Applicative m, Foldable f) => (a -> m b) -> f a -> m b
+foldMapA :: forall b m f a. (Monoid b, Applicative m, Foldable f) => (a -> m b) -> f a -> m b
 foldMapA = coerce (foldMap :: (a -> Ap m b) -> f a -> Ap m b)
 {-# INLINE foldMapA #-}
 
-ifoldMapA :: forall b m a. (Semigroup b, Monoid b, Applicative m) => (Int -> a -> m b) -> [a] -> m b
+ifoldMapA :: forall b m a. (Monoid b, Applicative m) => (Int -> a -> m b) -> [a] -> m b
 ifoldMapA = coerce (ifoldMap :: (Int -> a -> Ap m b) -> [a] -> Ap m b)
 {-# INLINE ifoldMapA #-}
 
@@ -192,7 +192,7 @@ instance (Monoid w, MonadReader r m) => MonadReader r (WriterT w m) where
   {-# INLINE local #-}
   {-# INLINE reader #-}
 
-instance (Monoid w, MonadState s m) => MonadState s (WriterT w m) where
+instance MonadState s m => MonadState s (WriterT w m) where
   get = lift get
   put = lift . put
   state = lift . state

@@ -94,17 +94,13 @@ instance MonadBind t m => MonadBind t (WriterT w m)
 ------------
 
 solve ::
-  ( MonadBind t m,
-    Unifiable t
-  ) =>
+  MonadBind t m =>
   [With SourcePos (Constraint t)] ->
   m ()
 solve = solveLoop 5000
 
 solveLoop ::
-  ( MonadBind t m,
-    Unifiable t
-  ) =>
+  MonadBind t m =>
   Int ->
   [With SourcePos (Constraint t)] ->
   m ()

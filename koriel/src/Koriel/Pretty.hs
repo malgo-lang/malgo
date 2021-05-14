@@ -8,8 +8,6 @@ module Koriel.Pretty
   ( module Text.PrettyPrint.HughesPJClass,
     (<+>),
     errorDoc,
-    pretty,
-    rendered,
     toText,
   )
 where
@@ -29,14 +27,8 @@ infixl 9 <+>
 instance Pretty Doc where
   pPrint = id
 
-pretty :: Pretty a => Getter a Doc
-pretty = to pPrint
-
-rendered :: Getter Doc String
-rendered = to P.render
-
-toText :: Pretty a => Getter a String
-toText = pretty . rendered
+toText :: (Profunctor p, Contravariant f, Pretty a) => Optic' p f a String
+toText = to (P.render . pPrint)
 
 errorDoc ::
 #ifdef DEBUG

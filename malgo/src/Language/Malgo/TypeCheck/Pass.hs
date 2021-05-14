@@ -110,8 +110,7 @@ tcImports = traverse tcImport
 tcTypeDefinitions ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadUniq m,
-    MonadMalgo m
+    MonadUniq m
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
@@ -136,7 +135,6 @@ tcTypeDefinitions typeSynonyms dataDefs = do
 tcTypeSynonyms ::
   ( MonadBind UType f,
     MonadState TcEnv f,
-    MonadMalgo f,
     MonadUniq f
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
@@ -167,7 +165,6 @@ updateFieldEnv _ _ _ = pure ()
 
 tcDataDefs ::
   ( MonadState TcEnv m,
-    MonadMalgo m,
     MonadBind UType m,
     MonadUniq m
   ) =>
@@ -242,7 +239,6 @@ prepareTcScDefs = traverse_ \(_, name, _) -> do
 tcScDefGroup ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadMalgo m,
     MonadUniq m,
     MonadFail m
   ) =>
@@ -253,7 +249,6 @@ tcScDefGroup = traverse tcScDefs
 tcScDefs ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadMalgo m,
     MonadUniq m,
     MonadFail m
   ) =>
@@ -290,7 +285,6 @@ tcScDefs ds@((pos, _, _) : _) = do
 tcExpr ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadMalgo m,
     MonadUniq m,
     MonadFail m
   ) =>
@@ -368,7 +362,6 @@ tcExpr (Parens pos e) = do
 tcClause ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadMalgo m,
     MonadUniq m,
     MonadFail m
   ) =>
@@ -384,7 +377,6 @@ tcClause (Clause pos pats ss) = do
 tcPatterns ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadMalgo m,
     MonadFail m
   ) =>
   [Pat (Malgo 'Rename)] ->

@@ -67,7 +67,7 @@ storeInterface interface = do
   opt <- getOpt
   liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
 
-loadInterface :: (MonadMalgo m, MonadIO m) => ModuleName -> m Interface
+loadInterface :: MonadMalgo m => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
   modPaths <- modulePaths <$> getOpt
   message <- liftIO $ findAndReadFile modPaths (modName <> ".mlgi")

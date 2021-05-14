@@ -114,7 +114,7 @@ rnDecl (Import pos modName) = do
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
-  (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadMalgo m, MonadIO m) =>
+  (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadMalgo m) =>
   Exp (Malgo 'Parse) ->
   m (Exp (Malgo 'Rename))
 rnExp (Var pos name) = Var pos <$> lookupVarName pos name
@@ -139,7 +139,7 @@ rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (Access pos l) = Access pos <$> lookupFieldName pos l
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
-lookupBox :: (MonadReader RnEnv f, MonadMalgo f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
+lookupBox :: (MonadReader RnEnv f, MonadMalgo f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
 lookupBox pos Int32 {} = Var pos <$> lookupVarName pos "int32#"
 lookupBox pos Int64 {} = Var pos <$> lookupVarName pos "int64#"
 lookupBox pos Float {} = Var pos <$> lookupVarName pos "float#"
@@ -147,7 +147,7 @@ lookupBox pos Double {} = Var pos <$> lookupVarName pos "double#"
 lookupBox pos Char {} = Var pos <$> lookupVarName pos "char#"
 lookupBox pos String {} = Var pos <$> lookupVarName pos "string#"
 
-rnType :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => Type (Malgo 'Parse) -> m (Type (Malgo 'Rename))
+rnType :: (MonadReader RnEnv m, MonadMalgo m) => Type (Malgo 'Parse) -> m (Type (Malgo 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
 rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
 rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
@@ -157,7 +157,7 @@ rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldNa
 rnType (TyLazy pos t) = TyLazy pos <$> rnType t
 
 rnClause ::
-  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m, MonadMalgo m, MonadIO m) =>
+  (MonadUniq m, MonadReader RnEnv m, MonadState RnState m, MonadMalgo m) =>
   Clause (Malgo 'Parse) ->
   m (Clause (Malgo 'Rename))
 rnClause (Clause pos ps ss) = do
@@ -173,14 +173,14 @@ rnClause (Clause pos ps ss) = do
     patVars (RecordP _ kvs) = concatMap (patVars . snd) kvs
     patVars UnboxedP {} = []
 
-rnPat :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => Pat (Malgo 'Parse) -> m (Pat (Malgo 'Rename))
+rnPat :: (MonadReader RnEnv m, MonadMalgo m) => Pat (Malgo 'Parse) -> m (Pat (Malgo 'Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
 rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (lookupFieldName pos) rnPat) kvs
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
-rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadMalgo m, MonadIO m) => [Stmt (Malgo 'Parse)] -> m [Stmt (Malgo 'Rename)]
+rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadUniq m, MonadMalgo m) => [Stmt (Malgo 'Parse)] -> m [Stmt (Malgo 'Rename)]
 rnStmts [] = pure []
 rnStmts (NoBind x e : ss) = do
   e' <- rnExp e
@@ -194,7 +194,7 @@ rnStmts (Let x v e : ss) = do
     pure $ Let x v' e' : ss'
 
 -- infix宣言をMapに変換
-infixDecls :: (MonadReader RnEnv m, MonadMalgo m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))
+infixDecls :: (MonadReader RnEnv m, MonadMalgo m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))
 infixDecls ds =
   foldMapA ?? ds $ \case
     (Infix pos assoc order name) -> do
@@ -203,7 +203,7 @@ infixDecls ds =
     _ -> pure mempty
 
 mkOpApp ::
-  (MonadMalgo m, MonadIO m) =>
+  (MonadMalgo m) =>
   SourcePos ->
   (Assoc, Int) ->
   RnId ->

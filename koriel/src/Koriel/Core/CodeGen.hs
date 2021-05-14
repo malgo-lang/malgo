@@ -135,7 +135,7 @@ sizeofType (PtrT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
-findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id C.Type -> m Operand
+findVar :: MonadReader OprMap m => Id C.Type -> m Operand
 findVar x =
   view (valueHashMap . at x) >>= \case
     Just opr -> pure opr
@@ -173,7 +173,7 @@ mallocBytes bytesOpr maybeType = do
 mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m Operand
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
-toName :: Pretty a => Id a -> LLVM.AST.Name
+toName :: Id a -> LLVM.AST.Name
 toName Id {_idName, _idSort = Koriel.Id.External (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> _idName
 toName Id {_idName = "main", _idSort = Koriel.Id.WiredIn (ModuleName "Builtin")} = LLVM.AST.mkName "main"
 toName Id {_idName, _idSort = Koriel.Id.WiredIn (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> _idName
@@ -384,7 +384,7 @@ genCase scrutinee cs k = \case
     pure $ Right (C.Int 8 tag, label)
 
 genAtom ::
-  (MonadReader OprMap m, MonadUniq m, MonadModuleBuilder m, MonadIRBuilder m) =>
+  (MonadReader OprMap m, MonadUniq m, MonadModuleBuilder m) =>
   Atom (Id C.Type) ->
   m Operand
 genAtom (Var x) = findVar x

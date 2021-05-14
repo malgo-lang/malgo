@@ -72,7 +72,7 @@ llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
 
-def :: (MonadUniq m, MonadState Env m, MonadReader ModuleName m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
+def :: (MonadUniq m, MonadState Env m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
   f <- newLocalId ("$raw_" <> name) (map typeOf xs :-> typeOf e)
   funcs . at f ?= (xs, e)

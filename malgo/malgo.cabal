@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e339cef99e721e6795ca71300e0f2b6165c4a0683bc45e208ba91283bf6723c4
+-- hash: f3c1225abc74a95de74bf0b4a000d14ac0217dc8fc91340337d145e53c570b86
 
 name:           malgo
 version:        1.0.0.0
@@ -49,7 +49,7 @@ library
       src
   default-extensions:
       StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Widentities -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
       base
     , binary
@@ -84,7 +84,7 @@ executable malgo
       app/
   default-extensions:
       StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Widentities -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS -threaded
   build-depends:
       base
     , binary

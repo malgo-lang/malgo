@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7343d8beb0f8d68e09d6326b5211b440dd65c2fcd92650f29b8c03667d03398c
+-- hash: 8614e4f13ee67b4ae98cfdf27f91a4d20f2ea9a6c327fee9b9e019db05c6caec
 
 name:           koriel
 version:        1.0.0.0
@@ -33,8 +33,6 @@ library
       Koriel.Core.Syntax
       Koriel.Core.Type
       Koriel.Id
-      Koriel.Lambda.Parser
-      Koriel.Lambda.Syntax
       Koriel.MonadUniq
       Koriel.Prelude
       Koriel.Pretty
@@ -44,7 +42,7 @@ library
       src
   default-extensions:
       StrictData
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Widentities -Wmissing-deriving-strategies -Wno-name-shadowing -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
       base
     , binary

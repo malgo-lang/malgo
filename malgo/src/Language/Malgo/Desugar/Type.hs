@@ -42,7 +42,7 @@ dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
-unfoldType :: (MonadState DsEnv m, MonadIO m) => GT.Type -> m C.Type
+unfoldType :: MonadState DsEnv m => GT.Type -> m C.Type
 unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
   GT.kindOf t >>= \case
     TYPE (Rep BoxedRep) -> do

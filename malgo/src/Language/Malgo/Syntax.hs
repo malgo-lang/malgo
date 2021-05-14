@@ -474,7 +474,7 @@ instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
       prettyScDef (_, f, e) =
         sep [pPrint f <+> "=", pPrint e]
 
-makeBindGroup :: (Pretty a, XId x ~ Id a, Ord (XScDef x), Eq a) => [Decl x] -> BindGroup x
+makeBindGroup :: (XId x ~ Id a, Eq a) => [Decl x] -> BindGroup x
 makeBindGroup ds =
   BindGroup
     { _scDefs = splitScDef (makeSCC $ mapMaybe scDef ds) (mapMaybe scDef ds),
@@ -503,7 +503,7 @@ adjacents :: (Eq a1, XId x ~ Id a1) => (a, XId x, Exp x) -> (XId x, Int, [Int])
 adjacents (_, f, e) =
   (f, f ^. idUniq, map (view idUniq) $ toList $ HashSet.delete f (freevars e))
 
-makeSCC :: (Eq a1, XId x ~ Id a1, Ord a) => [(a, XId x, Exp x)] -> [[XId x]]
+makeSCC :: (Eq a1, XId x ~ Id a1) => [(a, XId x, Exp x)] -> [[XId x]]
 makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'
   where
     vertices = map (view _2 . adjacents) ds
