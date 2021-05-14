@@ -25,7 +25,7 @@ class Monad m => MonadUniq m where
 newtype UniqSupply = UniqSupply {uniqSupply :: Int}
 
 newtype UniqT m a = UniqT {unUniqT :: StateT UniqSupply m a}
-  deriving newtype (Functor, Applicative, Monad, Alternative, MonadTrans, MonadFix, MonadFail, MonadIO)
+  deriving newtype (Functor, Applicative, Monad, Alternative, MonadTrans, MonadFix, MonadFail, MonadIO, MonadReader r)
 
 runUniqT :: UniqT m a -> UniqSupply -> m (a, UniqSupply)
 runUniqT (UniqT m) = runStateT m

@@ -58,12 +58,18 @@ instance Pretty RnEnv where
 
 makeLenses ''RnEnv
 
+class HasRnEnv env where
+  rnEnv :: Lens' env RnEnv
+
+instance HasRnEnv RnEnv where
+  rnEnv = lens id const
+
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [RnId]) -> [(PsId, RnId)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)
   where
     go [] e = e
     go ((n, n') : xs) e = go xs $ HashMap.alter (f n') n e
-    f n' ns = Just $ (n':) $ concat ns
+    f n' ns = Just $ (n' :) $ concat ns
 
 genBuiltinRnEnv :: MonadUniq m => m RnEnv
 genBuiltinRnEnv = do

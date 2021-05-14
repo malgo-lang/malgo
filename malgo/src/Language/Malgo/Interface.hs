@@ -17,12 +17,12 @@ import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Desugar.DsEnv (DsEnv)
 import qualified Language.Malgo.Desugar.DsEnv as DsEnv
-import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnState)
 import qualified Language.Malgo.Rename.RnEnv as RnState
 import Language.Malgo.Syntax.Extension
 import qualified Language.Malgo.TypeRep.Static as GT
 import System.FilePath ((-<.>), (</>))
+import Language.Malgo.Prelude
 
 data Interface = Interface
   { _signatureMap :: HashMap RnId (GT.Scheme GT.Type), -- from TypeRep.Static
@@ -62,12 +62,12 @@ buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempt
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
-storeInterface :: (MonadIO m, MonadMalgo m) => Interface -> m ()
+storeInterface :: (MonadIO m, HasOpt env, MonadReader env m) => Interface -> m ()
 storeInterface interface = do
   opt <- getOpt
   liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
 
-loadInterface :: MonadMalgo m => ModuleName -> m Interface
+loadInterface :: (MonadIO m, HasOpt env, MonadReader env m) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
   modPaths <- modulePaths <$> getOpt
   message <- liftIO $ findAndReadFile modPaths (modName <> ".mlgi")

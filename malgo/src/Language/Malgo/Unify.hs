@@ -46,7 +46,7 @@ class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
   type Var t
 
   -- | Unify two terms and generate substituation and new constraints
-  unify :: (MonadBind t m, MonadMalgo m) => SourcePos -> t -> t -> m (HashMap (Var t) t, [With SourcePos (Constraint t)])
+  unify :: (MonadBind t m, MonadReader env m, HasOpt env, MonadIO m) => SourcePos -> t -> t -> m (HashMap (Var t) t, [With SourcePos (Constraint t)])
 
   -- | Check alpha-equivalence
   equiv :: t -> t -> Maybe (HashMap (Var t) (Var t))
@@ -60,12 +60,12 @@ class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
 
 -- | Lifted version of Unifiable
 class Unifiable1 t where
-  liftUnify :: (MonadBind a m, MonadMalgo m, Unifiable a) => (SourcePos -> a -> a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])) -> SourcePos -> t a -> t a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])
+  liftUnify :: (MonadBind a m, MonadReader env m, HasOpt env, MonadIO m, Unifiable a) => (SourcePos -> a -> a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])) -> SourcePos -> t a -> t a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])
   liftEquiv :: Unifiable a => (a -> a -> Maybe (HashMap (Var a) (Var a))) -> t a -> t a -> Maybe (HashMap (Var a) (Var a))
   liftFreevars :: Unifiable a => (a -> HashSet (Var a)) -> t a -> HashSet (Var a)
   liftOccursCheck :: Unifiable a => (Var a -> a -> Bool) -> Var a -> t a -> Bool
 
-class (MonadMalgo m, Unifiable t) => MonadBind t m where
+class (Monad m, Unifiable t) => MonadBind t m where
   lookupVar :: Var t -> m (Maybe t)
   default lookupVar :: (MonadTrans tr, MonadBind t m1, m ~ tr m1) => Var t -> m (Maybe t)
   lookupVar v = lift (lookupVar v)
@@ -94,13 +94,13 @@ instance MonadBind t m => MonadBind t (WriterT w m)
 ------------
 
 solve ::
-  MonadBind t m =>
+  (MonadBind t m, MonadReader env m, MonadIO m, HasOpt env) =>
   [With SourcePos (Constraint t)] ->
   m ()
 solve = solveLoop 5000
 
 solveLoop ::
-  MonadBind t m =>
+  (MonadBind t m, MonadReader env m, MonadIO m, HasOpt env) =>
   Int ->
   [With SourcePos (Constraint t)] ->
   m ()

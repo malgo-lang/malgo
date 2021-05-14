@@ -34,7 +34,7 @@ import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadUniq m, MonadMalgo m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m) =>
+  (MonadUniq m, MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env) =>
   HashMap RnId (Scheme GT.Type) ->
   HashMap RnTId (TypeDef GT.Type) ->
   HashMap RnId (Scheme GT.Type) ->
@@ -60,7 +60,7 @@ desugar varEnv typeEnv fieldEnv rnEnv (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadUniq m, MonadState DsEnv m, MonadMalgo m, MonadFail m) =>
+  (MonadUniq m, MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env) =>
   BindGroup (Malgo 'Refine) ->
   m [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsBindGroup bg = do
@@ -70,21 +70,21 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
-dsImport :: (MonadMalgo m, MonadState DsEnv m) => Import (Malgo 'Refine) -> m ()
+dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env) => Import (Malgo 'Refine) -> m ()
 dsImport (_, modName) = do
   interface <- loadInterface modName
   nameEnv <>= interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
-  (MonadUniq f, MonadState DsEnv f, MonadMalgo f, MonadFail f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f) =>
   [[ScDef (Malgo 'Refine)]] ->
   f [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
 dsScDefGroup = traverse dsScDefs
 
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
-  (MonadUniq f, MonadState DsEnv f, MonadMalgo f, MonadFail f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f) =>
   [ScDef (Malgo 'Refine)] ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDefs ds = do
@@ -96,7 +96,7 @@ dsScDefs ds = do
   foldMapA dsScDef ds
 
 dsScDef ::
-  (MonadUniq f, MonadState DsEnv f, MonadMalgo f, MonadFail f) =>
+  (MonadUniq f, MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f) =>
   ScDef (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (With typ pos, name, expr) = do

@@ -112,7 +112,7 @@ instance Unifiable1 TypeF where
 type TypeMap = HashMap TypeVar UType
 
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
-  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadUniq, MonadMalgo, MonadIO, MonadFail)
+  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadUniq, MonadReader r, MonadIO, MonadFail)
 
 instance MonadTrans TypeUnifyT where
   lift m = TypeUnifyT $ lift m
@@ -120,7 +120,7 @@ instance MonadTrans TypeUnifyT where
 runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
 runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
-instance (Monad m, MonadUniq m, MonadMalgo m) => MonadBind (UTerm TypeF TypeVar) (TypeUnifyT m) where
+instance (MonadUniq m, MonadIO m, MonadReader env m, HasOpt env) => MonadBind (UTerm TypeF TypeVar) (TypeUnifyT m) where
   lookupVar v = view (at v) <$> get
   freshVar = do
     rep <- TypeVar <$> newLocalId "r" (UTerm TyRepF)
@@ -222,7 +222,7 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-instantiate :: (MonadBind UType m) => SourcePos -> Scheme UType -> m UType
+instantiate :: (MonadBind UType m, MonadReader env m, MonadIO m, HasOpt env) => SourcePos -> Scheme UType -> m UType
 instantiate x (Forall as t) = do
   avs <- traverse ?? as $ \a -> do
     v <- UVar <$> freshVar @UType
