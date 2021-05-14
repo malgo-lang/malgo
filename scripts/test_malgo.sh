@@ -6,8 +6,8 @@ mkdir $TESTDIR/libs
 
 BUILD=cabal
 
-eval "$BUILD exec malgoc -- to-ll --force ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll || exit 255"
-eval "$BUILD exec malgoc -- to-ll --force ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll || exit 255"
+eval "$BUILD exec malgo -- to-ll --force ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll || exit 255"
+eval "$BUILD exec malgo -- to-ll --force ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll || exit 255"
 cp ./runtime/malgo/rts.c $TESTDIR/libs/rts.c
 
 echo '=== no opt no lambdalift ==='
@@ -18,7 +18,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- to-ll --force --no-opt --no-lambdalift ./examples/malgo/$file -o $LLFILE || exit 255"
+  eval "$BUILD exec malgo -- to-ll --force --no-opt --no-lambdalift ./examples/malgo/$file -o $LLFILE || exit 255"
 
   clang -O0 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
   clang -O3 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE || exit 255
@@ -34,7 +34,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- to-ll --force --no-opt ./examples/malgo/$file -o $LLFILE || exit 255"
+  eval "$BUILD exec malgo -- to-ll --force --no-opt ./examples/malgo/$file -o $LLFILE || exit 255"
 
   clang -O0 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
   clang -O3 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE || exit 255
@@ -50,7 +50,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- to-ll --force --no-lambdalift ./examples/malgo/$file -o $LLFILE || exit 255"
+  eval "$BUILD exec malgo -- to-ll --force --no-lambdalift ./examples/malgo/$file -o $LLFILE || exit 255"
 
   clang -O0 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
   clang -O3 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE || exit 255
@@ -66,7 +66,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: ' || exit 255
 
-  eval "$BUILD exec malgoc -- to-ll --force ./examples/malgo/$file -o $LLFILE || exit 255"
+  eval "$BUILD exec malgo -- to-ll --force ./examples/malgo/$file -o $LLFILE || exit 255"
 
   clang -O0 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
   clang -O3 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE || exit 255
