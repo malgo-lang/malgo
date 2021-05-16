@@ -5,6 +5,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
@@ -25,6 +26,13 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 
+data OptimizeEnv = OptimizeEnv {_optimizeUniqSupply :: UniqSupply, _inlineLevel :: Int}
+
+makeLenses ''OptimizeEnv
+
+instance HasUniqSupply OptimizeEnv where
+  uniqSupply = optimizeUniqSupply
+
 -- | Apply a monadic function n times.
 times :: Monad m => Int -> (t -> m t) -> t -> m t
 times 0 _ x = pure x
@@ -39,16 +47,17 @@ times n f x
 -- * 不要なletの削除 (removeUnusedLet)
 -- * 無意味なcastの削除（optIdCast）
 optimizeProgram ::
-  MonadUniq m =>
+  MonadIO m =>
+  UniqSupply ->
   -- | インライン展開する関数のサイズ
   Int ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram level prog@Program {..} = runReaderT ?? level $ do
+optimizeProgram us level prog@Program {..} = runReaderT ?? OptimizeEnv {_optimizeUniqSupply = us, _inlineLevel = level} $ do
   state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) _topFuncs) mempty
   appProgram (optimizeExpr state) prog
 
-optimizeExpr :: (MonadReader Int f, MonadUniq f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
+optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
 optimizeExpr state = 10 `times` opt
   where
     opt =
@@ -65,7 +74,7 @@ optimizeExpr state = 10 `times` opt
 type CallInlineMap = HashMap (Id Type) ([Id Type], Exp (Id Type))
 
 optCallInline ::
-  (MonadState CallInlineMap f, MonadReader Int f, MonadUniq f) =>
+  (MonadState CallInlineMap f, MonadReader OptimizeEnv f, MonadIO f) =>
   Exp (Id Type) ->
   f (Exp (Id Type))
 optCallInline (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
@@ -79,25 +88,26 @@ optCallInline (Let ds e) = do
 optCallInline e = pure e
 
 checkInlineable ::
-  (MonadState CallInlineMap m, MonadReader Int m) =>
+  (MonadState CallInlineMap m, MonadReader OptimizeEnv m) =>
   LocalDef (Id Type) ->
   m ()
 checkInlineable (LocalDef f (Fun ps v)) = do
-  level <- ask
+  level <- view inlineLevel
   -- ノードの数がlevel以下ならインライン展開する
   when (lengthOf cosmos v <= level {-  || f `notElem` freevars v -}) $ at f ?= (ps, v)
 checkInlineable _ = pure ()
 
 lookupCallInline ::
-  (MonadUniq m, MonadState CallInlineMap m) =>
+  (MonadReader OptimizeEnv m, MonadState CallInlineMap m, MonadIO m) =>
   (Id Type -> [Atom (Id Type)] -> Exp (Id Type)) ->
   Id Type ->
   [Atom (Id Type)] ->
   m (Exp (Id Type))
 lookupCallInline call f as = do
   f' <- gets (view (at f))
+  us <- view uniqSupply
   case f' of
-    Just (ps, v) -> alpha v (HashMap.fromList $ zip ps as)
+    Just (ps, v) -> alpha v AlphaEnv {_alphaUniqSupply = us, _alphaMap = HashMap.fromList $ zip ps as}
     Nothing -> pure $ call f as
 
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])

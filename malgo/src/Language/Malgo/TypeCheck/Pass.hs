@@ -59,7 +59,7 @@ lookupRecordType pos fields = do
     Nothing -> errorOn pos $ "Not in scope:" <+> (fields & map pPrint & punctuate " or" & sep)
     Just scheme -> pure scheme
 
-typeCheck :: (MonadUniq m, MonadFail m, HasOpt env, MonadReader env m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
+typeCheck :: (MonadFail m, HasOpt env, MonadReader env m, MonadIO m, HasUniqSupply env) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) =
   runTypeUnifyT $ do
     tcEnv <- genTcEnv rnEnv
@@ -78,11 +78,11 @@ typeCheck rnEnv (Module name bg) =
 tcBindGroup ::
   ( MonadState TcEnv m,
     MonadBind UType m,
-    MonadUniq m,
     MonadFail m,
     MonadIO m,
     HasOpt env,
-    MonadReader env m
+    MonadReader env m,
+    HasUniqSupply env
   ) =>
   BindGroup (Malgo 'Rename) ->
   m (BindGroup (Malgo 'TypeCheck))
@@ -114,10 +114,10 @@ tcImports = traverse tcImport
 tcTypeDefinitions ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadUniq m,
     MonadReader env m,
     MonadIO m,
-    HasOpt env
+    HasOpt env,
+    HasUniqSupply env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
@@ -142,10 +142,10 @@ tcTypeDefinitions typeSynonyms dataDefs = do
 tcTypeSynonyms ::
   ( MonadBind UType f,
     MonadState TcEnv f,
-    MonadUniq f,
     MonadIO f,
     MonadReader env f,
-    HasOpt env
+    HasOpt env,
+    HasUniqSupply env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'TypeCheck)]
@@ -176,10 +176,10 @@ updateFieldEnv _ _ _ = pure ()
 tcDataDefs ::
   ( MonadState TcEnv m,
     MonadBind UType m,
-    MonadUniq m,
     MonadReader env m,
     HasOpt env,
-    MonadIO m
+    MonadIO m,
+    HasUniqSupply env
   ) =>
   [DataDef (Malgo 'Rename)] ->
   m [DataDef (Malgo 'TypeCheck)]
@@ -210,10 +210,10 @@ tcDataDefs ds = do
 tcForeigns ::
   ( MonadState TcEnv m,
     MonadBind UType m,
-    MonadUniq m,
     MonadReader env m,
     MonadIO m,
-    HasOpt env
+    HasOpt env,
+    HasUniqSupply env
   ) =>
   [Foreign (Malgo 'Rename)] ->
   m [Foreign (Malgo 'TypeCheck)]
@@ -229,10 +229,10 @@ tcForeigns ds =
 tcScSigs ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadUniq m,
     MonadReader env m,
     MonadIO m,
-    HasOpt env
+    HasOpt env,
+    HasUniqSupply env
   ) =>
   [ScSig (Malgo 'Rename)] ->
   m [ScSig (Malgo 'TypeCheck)]
@@ -256,11 +256,11 @@ prepareTcScDefs = traverse_ \(_, name, _) -> do
 tcScDefGroup ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadUniq m,
     MonadFail m,
     MonadIO m,
     MonadReader env m,
-    HasOpt env
+    HasOpt env,
+    HasUniqSupply env
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
   m [[ScDef (Malgo 'TypeCheck)]]
@@ -269,11 +269,11 @@ tcScDefGroup = traverse tcScDefs
 tcScDefs ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadUniq m,
     MonadFail m,
     MonadIO m,
     MonadReader env m,
-    HasOpt env
+    HasOpt env,
+    HasUniqSupply env
   ) =>
   [ScDef (Malgo 'Rename)] ->
   m [ScDef (Malgo 'TypeCheck)]
@@ -308,11 +308,11 @@ tcScDefs ds@((pos, _, _) : _) = do
 tcExpr ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadUniq m,
     MonadFail m,
     MonadIO m,
     MonadReader env m,
-    HasOpt env
+    HasOpt env,
+    HasUniqSupply env
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'TypeCheck))
@@ -388,11 +388,11 @@ tcExpr (Parens pos e) = do
 tcClause ::
   ( MonadBind UType m,
     MonadState TcEnv m,
-    MonadUniq m,
     MonadFail m,
     MonadIO m,
     MonadReader env m,
-    HasOpt env
+    HasOpt env,
+    HasUniqSupply env
   ) =>
   Clause (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Clause (Malgo 'TypeCheck))
@@ -463,11 +463,11 @@ splitTyArr t = ([], t)
 tcStmts ::
   ( MonadState TcEnv m,
     MonadBind UType m,
-    MonadUniq m,
     MonadFail m,
     MonadReader env m,
     HasOpt env,
-    MonadIO m
+    MonadIO m,
+    HasUniqSupply env
   ) =>
   [Stmt (Malgo 'Rename)] ->
   WriterT [With SourcePos (Constraint UType)] m [Stmt (Malgo 'TypeCheck)]
@@ -476,11 +476,11 @@ tcStmts = traverse tcStmt
 tcStmt ::
   ( MonadState TcEnv m,
     MonadBind UType m,
-    MonadUniq m,
     MonadFail m,
     MonadReader env m,
     HasOpt env,
-    MonadIO m
+    MonadIO m,
+    HasUniqSupply env
   ) =>
   Stmt (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Stmt (Malgo 'TypeCheck))
@@ -499,7 +499,7 @@ tcStmt (Let pos v e) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadState TcEnv m, MonadUniq m, MonadBind UType m, MonadReader env m, MonadIO m, HasOpt env) => S.Type (Malgo 'Rename) -> m UType
+transType :: (MonadState TcEnv m, MonadBind UType m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env) => S.Type (Malgo 'Rename) -> m UType
 transType (S.TyApp pos t ts) = do
   rnEnv <- use rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv

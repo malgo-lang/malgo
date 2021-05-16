@@ -34,7 +34,7 @@ import Language.Malgo.TypeRep.Static as GT
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadUniq m, MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env) =>
+  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
   HashMap RnId (Scheme GT.Type) ->
   HashMap RnTId (TypeDef GT.Type) ->
   HashMap RnId (Scheme GT.Type) ->
@@ -60,7 +60,7 @@ desugar varEnv typeEnv fieldEnv rnEnv (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadUniq m, MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env) =>
+  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
   BindGroup (Malgo 'Refine) ->
   m [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsBindGroup bg = do
@@ -77,14 +77,14 @@ dsImport (_, modName) = do
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
-  (MonadUniq f, MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env) =>
   [[ScDef (Malgo 'Refine)]] ->
   f [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
 dsScDefGroup = traverse dsScDefs
 
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
-  (MonadUniq f, MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env) =>
   [ScDef (Malgo 'Refine)] ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDefs ds = do
@@ -96,7 +96,7 @@ dsScDefs ds = do
   foldMapA dsScDef ds
 
 dsScDef ::
-  (MonadUniq f, MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env) =>
   ScDef (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (With typ pos, name, expr) = do
@@ -114,7 +114,7 @@ dsScDef (With typ pos, name, expr) = do
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (MonadState DsEnv f, MonadUniq f) =>
+  (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env) =>
   Foreign (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsForeign (x@(With _ (_, primName)), name, _) = do
@@ -128,7 +128,7 @@ dsForeign (x@(With _ (_, primName)), name, _) = do
   pure [(name', fun)]
 
 dsDataDef ::
-  (MonadUniq m, MonadState DsEnv m, MonadFail m) =>
+  (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env, MonadIO m) =>
   DataDef (Malgo 'Refine) ->
   m [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
 dsDataDef (_, name, _, cons) =
@@ -170,7 +170,7 @@ dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
 dsExp ::
-  (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadFail m) =>
+  (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var x name) = do
@@ -279,7 +279,7 @@ dsExp (G.Access x label) = runDef $ do
   Atom <$> let_ accessType obj
 dsExp (G.Parens _ e) = dsExp e
 
-dsStmts :: (MonadUniq m, MonadState DsEnv m, MonadIO m, MonadFail m) => [Stmt (Malgo 'Refine)] -> m (C.Exp (Id C.Type))
+dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) => [Stmt (Malgo 'Refine)] -> m (C.Exp (Id C.Type))
 dsStmts [] = bug Unreachable
 dsStmts [NoBind _ e] = dsExp e
 dsStmts [G.Let _ _ e] = dsExp e
@@ -302,12 +302,12 @@ lookupName name = do
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
 
-newCoreId :: MonadUniq f => RnId -> C.Type -> f (Id C.Type)
+newCoreId :: (MonadReader env f, MonadIO f, HasUniqSupply env) => RnId -> C.Type -> f (Id C.Type)
 newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::
-  MonadUniq m =>
+  (MonadIO m, MonadReader env m, HasUniqSupply env) =>
   [Id C.Type] ->
   C.Exp (Id C.Type) ->
   m ([Id C.Type], C.Exp (Id C.Type))

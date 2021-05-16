@@ -6,51 +6,23 @@
 
 module Koriel.MonadUniq where
 
-import Control.Monad.Cont
-import Control.Monad.Fix (MonadFix)
-import Control.Monad.Identity (IdentityT)
-import qualified Control.Monad.Trans.State.Lazy as Lazy
 import Koriel.Prelude
-import LLVM.IRBuilder.Module (ModuleBuilderT)
-import LLVM.IRBuilder.Monad (IRBuilderT)
 
-class Monad m => MonadUniq m where
-  getUniqSupply :: m UniqSupply
-  default getUniqSupply :: (MonadTrans t, MonadUniq m1, m ~ t m1) => m UniqSupply
-  getUniqSupply = lift getUniqSupply
-  getUniq :: m Int
-  default getUniq :: (MonadTrans t, MonadUniq m1, m ~ t m1) => m Int
-  getUniq = lift getUniq
+newtype UniqSupply = UniqSupply {_uniqSupply :: IORef Int}
+  deriving stock (Eq)
 
-newtype UniqSupply = UniqSupply {uniqSupply :: Int}
+instance Show UniqSupply where
+  show _ = "UniqSupply"
 
-newtype UniqT m a = UniqT {unUniqT :: StateT UniqSupply m a}
-  deriving newtype (Functor, Applicative, Monad, Alternative, MonadTrans, MonadFix, MonadFail, MonadIO, MonadReader r)
+class HasUniqSupply env where
+  uniqSupply :: Lens' env UniqSupply
 
-runUniqT :: UniqT m a -> UniqSupply -> m (a, UniqSupply)
-runUniqT (UniqT m) = runStateT m
+instance HasUniqSupply UniqSupply where
+  uniqSupply = lens id const
 
-instance Monad m => MonadUniq (UniqT m) where
-  getUniqSupply = UniqT get
-  getUniq = do
-    i <- uniqSupply <$> getUniqSupply
-    UniqT $ modify (\s -> s {uniqSupply = i + 1})
-    pure i
-
-instance MonadUniq m => MonadUniq (IdentityT m)
-
-instance MonadUniq m => MonadUniq (ReaderT r m)
-
-instance MonadUniq m => MonadUniq (ExceptT e m)
-
-instance MonadUniq m => MonadUniq (StateT s m)
-
-instance MonadUniq m => MonadUniq (Lazy.StateT s m)
-
-instance MonadUniq m => MonadUniq (WriterT w m)
-
-instance MonadUniq m => MonadUniq (ContT r m)
-
-instance MonadUniq m => MonadUniq (ModuleBuilderT m)
-
-instance MonadUniq m => MonadUniq (IRBuilderT m)
+getUniq :: (MonadIO m, HasUniqSupply env, MonadReader env m) => m Int
+getUniq = do
+  UniqSupply us <- view uniqSupply
+  i <- readIORef us
+  modifyIORef us (+ 1)
+  pure i

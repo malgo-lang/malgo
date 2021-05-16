@@ -12,8 +12,11 @@
 module Language.Malgo.Prelude
   ( module Koriel.Prelude,
     MalgoM (..),
+    runMalgoM,
     Opt (..),
     HasOpt (..),
+    MalgoEnv (..),
+    HasMalgoEnv (..),
     getOpt,
     errorOn,
     defaultOpt,
@@ -24,13 +27,11 @@ module Language.Malgo.Prelude
 where
 
 import Control.Monad.Fix (MonadFix)
+import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (sourceLine), unPos)
-
-newtype MalgoM a = MalgoM {unMalgoM :: ReaderT Opt IO a}
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadFix, MonadReader Opt, MonadFail)
 
 data Opt = Opt
   { srcName :: FilePath,
@@ -70,6 +71,29 @@ class HasOpt env where
 
 instance HasOpt Opt where
   malgoOpt = lens id const
+
+data MalgoEnv = MalgoEnv {_malgoUniqSupply :: UniqSupply, _malgoOpt :: Opt}
+  deriving stock (Show, Eq)
+
+class HasMalgoEnv env where
+  malgoEnv :: Lens' env MalgoEnv
+
+instance HasMalgoEnv MalgoEnv where
+  malgoEnv = lens id const
+
+instance HasUniqSupply MalgoEnv where
+  uniqSupply = lens _malgoUniqSupply (\x y -> x {_malgoUniqSupply = y})
+
+instance HasOpt MalgoEnv where
+  malgoOpt = lens _malgoOpt (\x y -> x {_malgoOpt = y})
+
+newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadFix, MonadReader MalgoEnv, MonadFail)
+
+runMalgoM :: MalgoM a -> Opt -> IO a
+runMalgoM m opt = do
+  uniqSupply <- UniqSupply <$> newIORef 0
+  runReaderT (unMalgoM m) MalgoEnv {_malgoOpt = opt, _malgoUniqSupply = uniqSupply}
 
 getOpt :: (HasOpt env, MonadReader env m) => m Opt
 getOpt = view malgoOpt

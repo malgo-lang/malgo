@@ -112,7 +112,7 @@ instance Unifiable1 TypeF where
 type TypeMap = HashMap TypeVar UType
 
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
-  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadUniq, MonadReader r, MonadIO, MonadFail)
+  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadReader r, MonadIO, MonadFail)
 
 instance MonadTrans TypeUnifyT where
   lift m = TypeUnifyT $ lift m
@@ -120,7 +120,7 @@ instance MonadTrans TypeUnifyT where
 runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
 runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
-instance (MonadUniq m, MonadIO m, MonadReader env m, HasOpt env) => MonadBind (UTerm TypeF TypeVar) (TypeUnifyT m) where
+instance (MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env) => MonadBind (UTerm TypeF TypeVar) (TypeUnifyT m) where
   lookupVar v = view (at v) <$> get
   freshVar = do
     rep <- TypeVar <$> newLocalId "r" (UTerm TyRepF)
@@ -138,7 +138,7 @@ instance (MonadUniq m, MonadIO m, MonadReader env m, HasOpt env) => MonadBind (U
     pure $ fromMaybe (UVar v) mterm
   zonk (UTerm t) = UTerm <$> traverse zonk t
 
-generalize :: (MonadUniq m, MonadBind UType m) => SourcePos -> HashSet TypeVar -> UType -> m (Scheme UType)
+generalize :: (MonadBind UType m, MonadIO m, MonadReader env m, HasUniqSupply env) => SourcePos -> HashSet TypeVar -> UType -> m (Scheme UType)
 generalize x bound term = do
   {-
   let fvs = Set.toList $ unboundFreevars bound term
@@ -152,7 +152,7 @@ generalize x bound term = do
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   Forall as <$> zonk zonkedTerm
 
-toBound :: (MonadUniq m, MonadBind UType m) => SourcePos -> TypeVar -> [Char] -> m (Id UType)
+toBound :: (MonadBind UType m, MonadIO m, MonadReader env m, HasUniqSupply env) => SourcePos -> TypeVar -> [Char] -> m (Id UType)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   tvKind <- kindOf tvType
@@ -208,7 +208,7 @@ defaultToBoxed x (UTerm t) = do
 unboundFreevars :: Unifiable t => HashSet (Var t) -> t -> HashSet (Var t)
 unboundFreevars bound t = HashSet.difference (freevars t) bound
 
-generalizeMutRecs :: (MonadUniq m, MonadBind UType m) => SourcePos -> HashSet TypeVar -> [UType] -> m ([Id UType], [UType])
+generalizeMutRecs :: (MonadBind UType m, MonadIO m, MonadReader env m, HasUniqSupply env) => SourcePos -> HashSet TypeVar -> [UType] -> m ([Id UType], [UType])
 generalizeMutRecs x bound terms = do
   {-
   let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms

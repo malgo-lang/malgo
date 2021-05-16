@@ -34,16 +34,6 @@ data DsEnv = DsEnv
   }
   deriving stock (Show)
 
-instance Semigroup DsEnv where
-  DsEnv m1 n1 v1 t1 f1 r1 <> DsEnv m2 n2 v2 t2 f2 r2
-    | m1 == ModuleName "$Undefined" = DsEnv m2 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
-    | m2 == ModuleName "$Undefined" = DsEnv m1 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
-    | m1 == m2 = DsEnv m1 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
-    | otherwise = errorDoc (pPrint m1 <+> "/=" <+> pPrint m2)
-
-instance Monoid DsEnv where
-  mempty = DsEnv (ModuleName "$Undefined") mempty mempty mempty mempty mempty
-
 instance Pretty DsEnv where
   pPrint DsEnv {..} =
     "DsEnv"

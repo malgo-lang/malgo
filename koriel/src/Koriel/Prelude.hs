@@ -53,6 +53,7 @@ module Koriel.Prelude
     undefined,
     localState,
     Unreachable (..),
+    modifyIORef,
   )
 where
 
@@ -140,6 +141,9 @@ newIORef a = liftIO $ I.newIORef a
 
 readIORef :: MonadIO m => IORef a -> m a
 readIORef r = liftIO $ I.readIORef r
+
+modifyIORef :: MonadIO m => IORef a -> (a -> a) -> m ()
+modifyIORef r f = liftIO $ I.modifyIORef r f
 
 writeIORef :: MonadIO m => IORef a -> a -> m ()
 writeIORef r v = liftIO $ I.writeIORef r v

@@ -65,7 +65,7 @@ splitCol mat = (headCol mat, tailCol mat)
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  (MonadState DsEnv m, MonadIO m, MonadUniq m, MonadFail m) =>
+  (MonadState DsEnv m, MonadIO m, MonadReader env m, MonadFail m, HasUniqSupply env) =>
   -- | マッチ対象
   [Id Core.Type] ->
   -- | パターン（転置行列）
@@ -208,7 +208,7 @@ groupTuple (PatMatrix pss) es = over _1 patMatrix $ unzip $ zipWith aux pss es
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = bug Unreachable
 
-groupRecord :: (MonadUniq m) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
+groupRecord :: (MonadReader env m, MonadIO m, HasUniqSupply env) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
   where
     aux (RecordP x ps : pss) e = do
