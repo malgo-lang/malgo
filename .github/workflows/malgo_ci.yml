@@ -26,6 +26,7 @@ jobs:
     - name: Build
       run: |
         stack build --dry-run
+        cabal update
         cabal build all
     - name: Run tests
       run: |
