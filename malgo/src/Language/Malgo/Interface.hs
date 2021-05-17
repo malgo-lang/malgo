@@ -2,7 +2,6 @@
 
 module Language.Malgo.Interface where
 
-import Control.Monad.State (execState)
 import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
 import Data.Binary.Instances.UnorderedContainers ()

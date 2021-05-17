@@ -3,6 +3,7 @@ module Koriel.Core.Flat
   )
 where
 
+import Data.Monoid (Endo (..))
 import Koriel.Core.Syntax
 import Koriel.Prelude
 

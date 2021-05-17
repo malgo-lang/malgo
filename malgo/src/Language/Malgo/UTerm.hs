@@ -11,6 +11,7 @@ import Data.Void
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Unify
+import Text.Show (Show (showList, showsPrec), showParen, showString)
 
 -----------
 -- UTerm --

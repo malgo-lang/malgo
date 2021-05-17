@@ -19,10 +19,12 @@ module Language.Malgo.Prelude
 where
 
 import Control.Monad.Fix (MonadFix)
+import Data.List ((!!))
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import System.FilePath ((-<.>))
+import System.IO (readFile)
 import Text.Megaparsec.Pos (SourcePos (sourceLine), unPos)
 
 data Opt = Opt

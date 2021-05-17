@@ -6,9 +6,8 @@ module Language.Malgo.TypeRep.Static where
 import Data.Binary (Binary)
 import Data.Fix
 import Data.Functor.Foldable.TH (makeBaseFunctor)
-import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
-import Data.Maybe (fromJust, fromMaybe)
+import Data.Maybe (fromJust)
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty

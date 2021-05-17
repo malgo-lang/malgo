@@ -23,7 +23,6 @@ module Koriel.Id
 where
 
 import Data.Binary (Binary)
-import Data.Data (Data, Typeable)
 import Data.Deriving
 import Data.Hashable (Hashable (hashWithSalt))
 import Koriel.MonadUniq

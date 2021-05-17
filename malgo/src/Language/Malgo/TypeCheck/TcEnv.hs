@@ -10,7 +10,7 @@ module Language.Malgo.TypeCheck.TcEnv
   )
 where
 
-import Control.Arrow ((>>>))
+import Data.Foldable (find)
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id

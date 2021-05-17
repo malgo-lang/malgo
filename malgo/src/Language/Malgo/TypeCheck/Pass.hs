@@ -1,8 +1,8 @@
 module Language.Malgo.TypeCheck.Pass where
 
-import Control.Arrow ((>>>))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
+import Data.List (find, head, last, splitAt)
 import Data.List.Extra (anySame)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)

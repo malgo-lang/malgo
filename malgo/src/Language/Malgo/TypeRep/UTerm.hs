@@ -10,7 +10,6 @@ import Data.Functor.Foldable
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
-import Data.Maybe (fromMaybe)
 import Data.Void
 import Koriel.Id
 import Koriel.MonadUniq

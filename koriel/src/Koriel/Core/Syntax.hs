@@ -1,19 +1,19 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 -- |
 -- malgoの共通中間表現。
 -- A正規形に近い。
-{-# LANGUAGE DeriveDataTypeable #-}
 module Koriel.Core.Syntax where
 
 import qualified Data.HashSet as HashSet
+import Data.Monoid (Endo(..))
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty
-import Data.Data (Data, Typeable)
 
 class HasFreeVar f where
   -- | free variables

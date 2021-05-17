@@ -15,7 +15,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv
 import Language.Malgo.Syntax
 import Language.Malgo.Syntax.Extension
-import System.IO (hPrint, stderr)
+import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)
 
 rename :: (MonadReader env m, MonadIO m) => RnEnv -> Module (Malgo 'Parse) -> m (Module (Malgo 'Rename), RnState)

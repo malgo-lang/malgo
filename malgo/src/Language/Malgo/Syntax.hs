@@ -3,9 +3,10 @@
 
 module Language.Malgo.Syntax where
 
+import Data.Coerce (coerce)
+import Data.Foldable (find, foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
-import Data.Int (Int32, Int64)
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude

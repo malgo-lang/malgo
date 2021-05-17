@@ -1,6 +1,5 @@
 module Koriel.Core.Op where
 
-import Data.Data (Data)
 import Koriel.Prelude
 import Koriel.Pretty
 

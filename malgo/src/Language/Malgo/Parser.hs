@@ -1,7 +1,7 @@
 module Language.Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
-import Data.Functor (($>))
+import Data.Foldable (foldl)
 import qualified Data.Set as Set
 import qualified Data.Text as Text
 import Data.Void
@@ -9,6 +9,7 @@ import Koriel.Id (ModuleName (ModuleName))
 import Language.Malgo.Prelude hiding
   ( many,
     some,
+    try,
   )
 import Language.Malgo.Syntax
 import Language.Malgo.Syntax.Extension

@@ -25,7 +25,6 @@ import qualified Language.Malgo.TypeRep.Static as Static
 import System.IO
   ( hPrint,
     hPutStrLn,
-    stderr,
   )
 import Text.Megaparsec
   ( errorBundlePretty,

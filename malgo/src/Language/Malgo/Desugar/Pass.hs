@@ -22,6 +22,7 @@ import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax as G
 import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
+import Control.Monad (mapAndUnzipM)
 
 -- | MalgoからCoreへの変換
 desugar ::
@@ -222,7 +223,7 @@ dsExp (G.Fn x (Clause _ [] ss : _)) = do
     pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
   ps' <- traverse (\p -> newLocalId "$p" =<< dsType =<< GT.typeOf p) ps
-  typ <- dsType =<< GT.typeOf (last es)
+  typ <- dsType =<< GT.typeOf (List.last es)
   -- destruct Clauses
   (pss, es) <-
     mapAndUnzipM
@@ -265,7 +266,7 @@ dsExp (G.Access x label) = runDef $ do
     Fun [p] <$> runDef do
       let con = C.Con C.Tuple $ map snd kts
       tuple <- destruct (Atom (C.Var p)) con
-      pure $ Atom $ tuple !! fromJust (List.elemIndex label (map fst kts))
+      pure $ Atom $ tuple List.!! fromJust (List.elemIndex label (map fst kts))
   accessType <- dsType (x ^. GT.withType)
   Atom <$> let_ accessType obj
 dsExp (G.Parens _ e) = dsExp e

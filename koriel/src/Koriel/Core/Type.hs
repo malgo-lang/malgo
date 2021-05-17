@@ -3,7 +3,6 @@
 module Koriel.Core.Type where
 
 import Data.Binary (Binary)
-import Data.Data (Data, Typeable)
 import Koriel.Id
 import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty

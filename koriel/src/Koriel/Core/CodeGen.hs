@@ -17,11 +17,9 @@ import qualified Data.ByteString.Builder as B
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
-import Data.Either (partitionEithers)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
-import Data.List.Extra (headDef, mconcatMap)
-import Data.Maybe (fromMaybe)
+import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import qualified Koriel.Core.Op as Op

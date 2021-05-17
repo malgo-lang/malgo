@@ -5,6 +5,7 @@
 -- | Unification library
 module Language.Malgo.Unify where
 
+import Control.Monad.Except
 import qualified Data.HashSet as HashSet
 import Koriel.Pretty
 import Language.Malgo.Prelude
@@ -75,7 +76,7 @@ instance MonadBind t m => MonadBind t (ExceptT e m)
 
 instance MonadBind t m => MonadBind t (StateT s m)
 
-instance MonadBind t m => MonadBind t (WriterT w m)
+instance (Monoid w, MonadBind t m) => MonadBind t (WriterT w m)
 
 ------------
 -- Solver --

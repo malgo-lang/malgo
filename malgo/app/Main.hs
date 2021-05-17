@@ -6,6 +6,7 @@ import Options.Applicative
 import Runner
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory)
 import System.FilePath.Lens (extension)
+import Text.Read (read)
 
 main :: IO ()
 main = do
