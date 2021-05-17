@@ -1,20 +1,12 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE OverloadedLists #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 
-{-# LANGUAGE DeriveDataTypeable #-}
 module Koriel.Core.Type where
 
 import Data.Binary (Binary)
+import Data.Data (Data, Typeable)
 import Koriel.Id
 import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty
-import Data.Data (Data, Typeable)
 
 {-
 Constructors  C ::= <tag n>

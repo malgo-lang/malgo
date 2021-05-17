@@ -1,14 +1,5 @@
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.TypeRep.Static where
 
@@ -107,7 +98,8 @@ data Type
   | -- | runtime representation tag
     Rep Rep
   deriving stock (Eq, Ord, Show, Generic)
-  deriving anyclass (Binary)
+
+instance Binary Type
 
 makePrisms ''Type
 makeBaseFunctor ''Type

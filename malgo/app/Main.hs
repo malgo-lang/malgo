@@ -1,6 +1,3 @@
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 module Main where
 
 import Development.Shake.FilePath ((</>))

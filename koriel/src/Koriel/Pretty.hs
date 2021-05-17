@@ -1,9 +1,7 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-{-# LANGUAGE UndecidableInstances #-}
 module Koriel.Pretty
   ( module Text.PrettyPrint.HughesPJClass,
     (<+>),
