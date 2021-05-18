@@ -1,12 +1,5 @@
-{-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 module Koriel.Core.Op where
 
-import Data.Data (Data, Typeable)
 import Koriel.Prelude
 import Koriel.Pretty
 
@@ -28,7 +21,7 @@ data Op
   | Ge
   | And
   | Or
-  deriving stock (Eq, Show, Generic, Data, Typeable)
+  deriving stock (Eq, Show, Generic, Data)
 
 instance Pretty Op where
   pPrint Add = "+"

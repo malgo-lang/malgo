@@ -1,14 +1,3 @@
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 -- | パターンマッチのコンパイル
 module Language.Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
@@ -65,7 +54,7 @@ splitCol mat = (headCol mat, tailCol mat)
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  (MonadState DsEnv m, MonadIO m, MonadUniq m, MonadFail m) =>
+  (MonadState DsEnv m, MonadIO m, MonadReader env m, MonadFail m, HasUniqSupply env) =>
   -- | マッチ対象
   [Id Core.Type] ->
   -- | パターン（転置行列）
@@ -95,7 +84,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- Constructor Rule
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) heads = do
-    patType <- Malgo.typeOf $ head heads
+    patType <- Malgo.typeOf $ List.head heads
     -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
     --  errorDoc $ "Not valid type:" <+> pPrint patType
     -- 型からコンストラクタの集合を求める
@@ -112,7 +101,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
-    patType <- Malgo.typeOf $ head heads
+    patType <- Malgo.typeOf $ List.head heads
     SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
     params <- traverse (newLocalId "$p") ts
     cases <- do
@@ -122,7 +111,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
-    patType <- Malgo.typeOf $ head heads
+    patType <- Malgo.typeOf $ List.head heads
     SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
     params <- traverse (newLocalId "$p") ts
     cases <- do
@@ -172,19 +161,19 @@ partition ::
   )
 partition (splitCol -> (Just heads@(VarP {} : _), PatMatrix tails)) es =
   let (heads', heads'') = span (has _VarP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
 partition (splitCol -> (Just heads@(ConP {} : _), PatMatrix tails)) es =
   let (heads', heads'') = span (has _ConP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
 partition (splitCol -> (Just heads@(TupleP {} : _), PatMatrix tails)) es =
   let (heads', heads'') = span (has _TupleP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
 partition (splitCol -> (Just heads@(RecordP {} : _), PatMatrix tails)) es =
   let (heads', heads'') = span (has _RecordP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
 partition (splitCol -> (Just heads@(UnboxedP {} : _), PatMatrix tails)) es =
   let (heads', heads'') = span (has _UnboxedP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (splitAt (length heads')) tails, splitAt (length heads') es)
+   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
 partition _ _ = bug Unreachable
 
 -- コンストラクタgconの引数部のパターンpsを展開したパターン行列を生成する
@@ -208,7 +197,7 @@ groupTuple (PatMatrix pss) es = over _1 patMatrix $ unzip $ zipWith aux pss es
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = bug Unreachable
 
-groupRecord :: (MonadUniq m) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
+groupRecord :: (MonadReader env m, MonadIO m, HasUniqSupply env) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
   where
     aux (RecordP x ps : pss) e = do

@@ -1,11 +1,4 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Desugar.DsEnv where
 
@@ -15,7 +8,7 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Prelude
-import Language.Malgo.Rename.RnEnv (RnEnv)
+import Language.Malgo.Rename.RnEnv (RnEnv, HasRnEnv (rnEnv))
 import Language.Malgo.Syntax.Extension
 import Language.Malgo.TypeRep.Static
 import qualified Language.Malgo.TypeRep.Static as GT
@@ -30,19 +23,9 @@ data DsEnv = DsEnv
     _varTypeEnv :: HashMap RnId (Scheme Type),
     _typeDefEnv :: HashMap RnTId (TypeDef Type),
     _fieldEnv :: HashMap RnId (Scheme Type),
-    _rnEnv :: RnEnv
+    _desugarRnEnv :: RnEnv
   }
   deriving stock (Show)
-
-instance Semigroup DsEnv where
-  DsEnv m1 n1 v1 t1 f1 r1 <> DsEnv m2 n2 v2 t2 f2 r2
-    | m1 == ModuleName "$Undefined" = DsEnv m2 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
-    | m2 == ModuleName "$Undefined" = DsEnv m1 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
-    | m1 == m2 = DsEnv m1 (n1 <> n2) (v1 <> v2) (t1 <> t2) (f1 <> f2) (r1 <> r2)
-    | otherwise = errorDoc (pPrint m1 <+> "/=" <+> pPrint m2)
-
-instance Monoid DsEnv where
-  mempty = DsEnv (ModuleName "$Undefined") mempty mempty mempty mempty mempty
 
 instance Pretty DsEnv where
   pPrint DsEnv {..} =
@@ -54,11 +37,20 @@ instance Pretty DsEnv where
               "_varTypeEnv" <+> "=" <+> pPrint (HashMap.toList _varTypeEnv),
               "_typeDefEnv" <+> "=" <+> pPrint (HashMap.toList _typeDefEnv),
               "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv),
-              "_rnEnv" <+> "=" <+> pPrint _rnEnv
+              "_desugarRnEnv" <+> "=" <+> pPrint _desugarRnEnv
             ]
         )
 
 makeLenses ''DsEnv
+
+class HasDsEnv env where
+  dsEnv :: Lens' env DsEnv
+
+instance HasDsEnv DsEnv where
+  dsEnv = lens id const
+
+instance HasRnEnv DsEnv where
+  rnEnv = desugarRnEnv
 
 makeDsEnv ::
   ModuleName ->
@@ -74,7 +66,7 @@ makeDsEnv modName varEnv typeEnv fieldEnv rnEnv =
       _varTypeEnv = varEnv,
       _typeDefEnv = typeEnv,
       _fieldEnv = fieldEnv,
-      _rnEnv = rnEnv
+      _desugarRnEnv = rnEnv
     }
 
 lookupValueConstructors ::

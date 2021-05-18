@@ -1,13 +1,4 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Koriel.Core.LambdaLift
   ( lambdalift,
@@ -23,24 +14,24 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 
-data Env = Env
+data LambdaLiftState = LambdaLiftState
   { _funcs :: HashMap (Id Type) ([Id Type], Exp (Id Type)),
     _knowns :: HashSet (Id Type)
   }
 
-makeLenses ''Env
+makeLenses ''LambdaLiftState
 
-lambdalift :: MonadUniq m => Program (Id Type) -> m (Program (Id Type))
-lambdalift Program {..} =
-  runReaderT ?? _moduleName $
-    evalStateT ?? Env {_funcs = mempty, _knowns = HashSet.fromList $ map fst _topFuncs} $ do
+lambdalift :: MonadIO m => UniqSupply -> Program (Id Type) -> m (Program (Id Type))
+lambdalift us Program {..} =
+  runReaderT ?? us $
+    evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map fst _topFuncs} $ do
       topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) _topFuncs
       funcs <>= HashMap.fromList topFuncs
       knowns <>= HashSet.fromList (map fst topFuncs)
-      Env {_funcs} <- get
+      LambdaLiftState {_funcs} <- get
       traverseOf appProgram (pure . flat) $ Program _moduleName (HashMap.toList _funcs)
 
-llift :: (MonadUniq f, MonadState Env f, MonadReader ModuleName f) => Exp (Id Type) -> f (Exp (Id Type))
+llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader UniqSupply f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `elem` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
@@ -72,7 +63,7 @@ llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
 
-def :: (MonadUniq m, MonadState Env m, MonadReader ModuleName m) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
+def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader env m, HasUniqSupply env) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
   f <- newLocalId ("$raw_" <> name) (map typeOf xs :-> typeOf e)
   funcs . at f ?= (xs, e)

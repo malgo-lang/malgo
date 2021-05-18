@@ -1,15 +1,5 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.UTerm where
 
@@ -18,10 +8,10 @@ import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsP
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.Void
-import GHC.Generics (Generic1)
 import Koriel.Pretty
 import Language.Malgo.Prelude
 import Language.Malgo.Unify
+import Text.Show (Show (showList, showsPrec), showParen, showString)
 
 -----------
 -- UTerm --
@@ -46,7 +36,7 @@ instance (Show v, Show1 t) => Show (UTerm t v) where
   showsPrec d (UVar v) = showParen (d >= 11) $ showString "UVar " . showsPrec 11 v
   showsPrec d (UTerm t) = showParen (d >= 11) $ showString "UTerm " . liftShowsPrec showsPrec showList 11 t
 
-deriving stock instance (Generic1 t, Generic v) => Generic (UTerm t v)
+deriving stock instance Generic (UTerm t v)
 
 instance (Pretty v, Pretty (t (UTerm t v))) => Pretty (UTerm t v) where
   pPrintPrec _ _ (UVar v) = pPrint v
@@ -62,7 +52,7 @@ unfreeze = UTerm . fmap unfreeze . unFix
 class HasUTerm t v a where
   walkOn :: Monad f => (UTerm t v -> f (UTerm t v)) -> a -> f a
 
-instance (Traversable t, HasUTerm t v v) => HasUTerm t v (UTerm t v) where
+instance HasUTerm t v (UTerm t v) where
   walkOn = id
 
 instance HasUTerm t v x => HasUTerm t v (With x a) where

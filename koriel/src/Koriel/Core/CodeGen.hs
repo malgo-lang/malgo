@@ -1,16 +1,6 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE RecursiveDo #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE ViewPatterns #-}
+{-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 -- |
@@ -27,11 +17,9 @@ import qualified Data.ByteString.Builder as B
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
-import Data.Either (partitionEithers)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
-import Data.List.Extra (headDef, mconcatMap)
-import Data.Maybe (fromMaybe)
+import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import qualified Koriel.Core.Op as Op
@@ -70,15 +58,19 @@ type PrimMap = HashMap Name Operand
 
 -- 変数のHashMapとknown関数のHashMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
-data OprMap = OprMap
-  { _valueHashMap :: HashMap (Id C.Type) Operand,
+data CodeGenEnv = CodeGenEnv
+  { _codeGenUniqSupply :: UniqSupply,
+    _valueHashMap :: HashMap (Id C.Type) Operand,
     _funcHashMap :: HashMap (Id C.Type) Operand
   }
 
-makeLenses ''OprMap
+makeLenses ''CodeGenEnv
 
-codeGen :: (MonadUniq m, MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> Program (Id C.Type) -> m ()
-codeGen srcPath dstPath Program {..} = do
+instance HasUniqSupply CodeGenEnv where
+  uniqSupply = codeGenUniqSupply
+
+codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> Program (Id C.Type) -> m ()
+codeGen srcPath dstPath uniqSupply Program {..} = do
   llvmir <- execModuleBuilderT emptyModuleBuilder $ do
     -- topFuncsのOprMapを作成
     let funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
@@ -88,7 +80,7 @@ codeGen srcPath dstPath Program {..} = do
                 (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
                 (toName f)
     runReaderT
-      ?? (OprMap {_valueHashMap = mempty, _funcHashMap = funcEnv})
+      ?? CodeGenEnv {_codeGenUniqSupply = uniqSupply, _valueHashMap = mempty, _funcHashMap = funcEnv}
       $ Lazy.evalStateT
         ?? (mempty :: PrimMap)
         $ do
@@ -135,13 +127,13 @@ sizeofType (PtrT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
-findVar :: (MonadReader OprMap m, MonadIRBuilder m) => Id C.Type -> m Operand
+findVar :: MonadReader CodeGenEnv m => Id C.Type -> m Operand
 findVar x =
   view (valueHashMap . at x) >>= \case
     Just opr -> pure opr
     Nothing -> error $ show $ pPrint x <> " is not found"
 
-findFun :: (MonadReader OprMap m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
+findFun :: (MonadReader CodeGenEnv m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
   view (funcHashMap . at x) >>= \case
     Just opr -> pure opr
@@ -173,7 +165,7 @@ mallocBytes bytesOpr maybeType = do
 mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m Operand
 mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
 
-toName :: Pretty a => Id a -> LLVM.AST.Name
+toName :: Id a -> LLVM.AST.Name
 toName Id {_idName, _idSort = Koriel.Id.External (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> _idName
 toName Id {_idName = "main", _idSort = Koriel.Id.WiredIn (ModuleName "Builtin")} = LLVM.AST.mkName "main"
 toName Id {_idName, _idSort = Koriel.Id.WiredIn (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> _idName
@@ -182,11 +174,11 @@ toName Id {_idName, _idUniq, _idSort = Koriel.Id.Internal} = LLVM.AST.mkName $ _
 -- generate code for a 'known' function
 genFunc ::
   ( MonadModuleBuilder m,
-    MonadReader OprMap m,
+    MonadReader CodeGenEnv m,
     MonadState PrimMap m,
-    MonadUniq m,
     MonadFix m,
-    MonadFail m
+    MonadFail m,
+    MonadIO m
   ) =>
   Id C.Type ->
   [Id C.Type] ->
@@ -207,13 +199,13 @@ genFunc name params body
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている
 genExp ::
-  ( MonadReader OprMap m,
-    MonadUniq m,
+  ( MonadReader CodeGenEnv m,
     MonadState PrimMap m,
     MonadIRBuilder m,
     MonadModuleBuilder m,
     MonadFail m,
-    MonadFix m
+    MonadFix m,
+    MonadIO m
   ) =>
   Exp (Id C.Type) ->
   (Operand -> m ()) ->
@@ -348,13 +340,13 @@ genExp (Cast ty x) k = do
 genExp (Error _) _ = unreachable
 
 genCase ::
-  ( MonadReader OprMap m,
-    MonadUniq m,
+  ( MonadReader CodeGenEnv m,
     MonadModuleBuilder m,
     MonadState PrimMap m,
     MonadIRBuilder m,
     MonadFail m,
-    MonadFix m
+    MonadFix m,
+    MonadIO m
   ) =>
   Operand ->
   [Con] ->
@@ -384,7 +376,7 @@ genCase scrutinee cs k = \case
     pure $ Right (C.Int 8 tag, label)
 
 genAtom ::
-  (MonadReader OprMap m, MonadUniq m, MonadModuleBuilder m, MonadIRBuilder m) =>
+  (MonadReader CodeGenEnv m, MonadModuleBuilder m, MonadIO m) =>
   Atom (Id C.Type) ->
   m Operand
 genAtom (Var x) = findVar x
@@ -401,13 +393,13 @@ genAtom (Unboxed (Bool True)) = pure $ int8 1
 genAtom (Unboxed (Bool False)) = pure $ int8 0
 
 genLocalDef ::
-  ( MonadReader OprMap m,
+  ( MonadReader CodeGenEnv m,
     MonadModuleBuilder m,
     MonadIRBuilder m,
     MonadState PrimMap m,
-    MonadUniq m,
     MonadFail m,
-    MonadFix m
+    MonadFix m,
+    MonadIO m
   ) =>
   LocalDef (Id C.Type) ->
   m (HashMap (Id C.Type) Operand)

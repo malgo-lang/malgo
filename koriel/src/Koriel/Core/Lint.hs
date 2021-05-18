@@ -1,12 +1,3 @@
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 module Koriel.Core.Lint
   ( lint,
     runLint,
@@ -22,7 +13,7 @@ import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
 
-runLint :: Monad m => ReaderT [a] m b -> m b
+runLint :: ReaderT [a] m b -> m b
 runLint m = runReaderT m []
 
 lint :: (Monad m, HasType a, Pretty a, Eq a) => Exp (Id a) -> m ()

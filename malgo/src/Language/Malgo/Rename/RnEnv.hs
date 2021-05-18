@@ -1,9 +1,4 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 
 module Language.Malgo.Rename.RnEnv where
 
@@ -32,41 +27,48 @@ makeLenses ''RnState
 data RnEnv = RnEnv
   { _varEnv :: HashMap PsId [RnId],
     _typeEnv :: HashMap PsTId [RnTId],
-    _fieldEnv :: HashMap PsId [RnId]
+    _fieldEnv :: HashMap PsId [RnId],
+    _rnMalgoEnv :: MalgoEnv
   }
   deriving stock (Show, Eq)
 
-instance Semigroup RnEnv where
-  RnEnv v1 t1 f1 <> RnEnv v2 t2 f2 = RnEnv (append v1 v2) (append t1 t2) (append f1 f2)
-    where
-      append v1 v2 = HashMap.foldrWithKey (\k ns -> HashMap.alter (f ns) k) v2 v1
-      f ns1 Nothing = Just ns1
-      f ns1 (Just ns2) = Just (ns1 <> ns2)
-
-instance Monoid RnEnv where
-  mempty = RnEnv mempty mempty mempty
-
 instance Pretty RnEnv where
-  pPrint RnEnv {_varEnv, _typeEnv} =
+  pPrint RnEnv {_varEnv, _typeEnv, _fieldEnv} =
     "RnEnv"
       <+> braces
         ( sep
             [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
-              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv)
+              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
+              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv)
             ]
         )
 
 makeLenses ''RnEnv
+
+class HasRnEnv env where
+  rnEnv :: Lens' env RnEnv
+
+instance HasRnEnv RnEnv where
+  rnEnv = lens id const
+
+instance HasMalgoEnv RnEnv where
+  malgoEnv = rnMalgoEnv
+
+instance HasOpt RnEnv where
+  malgoOpt = rnMalgoEnv . malgoOpt
+
+instance HasUniqSupply RnEnv where
+  uniqSupply = rnMalgoEnv . uniqSupply
 
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [RnId]) -> [(PsId, RnId)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)
   where
     go [] e = e
     go ((n, n') : xs) e = go xs $ HashMap.alter (f n') n e
-    f n' ns = Just $ (n':) $ concat ns
+    f n' ns = Just $ (n' :) $ concat ns
 
-genBuiltinRnEnv :: MonadUniq m => m RnEnv
-genBuiltinRnEnv = do
+genBuiltinRnEnv :: (MonadReader env m, HasUniqSupply env, MonadIO m) => MalgoEnv -> m RnEnv
+genBuiltinRnEnv malgoEnv = do
   -- generate RnTId of primitive types
   int32_t <- newId "Int32#" () $ WiredIn $ ModuleName "Builtin"
   int64_t <- newId "Int64#" () $ WiredIn $ ModuleName "Builtin"
@@ -76,17 +78,9 @@ genBuiltinRnEnv = do
   string_t <- newId "String#" () $ WiredIn $ ModuleName "Builtin"
   ptr_t <- newId "Ptr#" () $ WiredIn $ ModuleName "Builtin"
 
-  -- generate RnId of primitive functions
-  add_i32 <- newId "add_Int32#" () $ WiredIn $ ModuleName "Builtin"
-  add_i64 <- newId "add_Int64#" () $ WiredIn $ ModuleName "Builtin"
-
   pure $
     RnEnv
-      { _varEnv =
-          HashMap.fromList
-            [ ("add_Int32#", [add_i32]),
-              ("add_Int64#", [add_i64])
-            ],
+      { _varEnv = mempty,
         _typeEnv =
           HashMap.fromList
             [ ("Int32#", [int32_t]),
@@ -97,5 +91,6 @@ genBuiltinRnEnv = do
               ("String#", [string_t]),
               ("Ptr#", [ptr_t])
             ],
-        _fieldEnv = HashMap.empty
+        _fieldEnv = HashMap.empty,
+        _rnMalgoEnv = malgoEnv
       }

@@ -1,5 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-
 module Language.Malgo.Desugar.Unboxed where
 
 -- Unboxedの脱糖衣

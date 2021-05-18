@@ -1,13 +1,9 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 module Koriel.Core.Flat
   ( flat,
   )
 where
 
+import Data.Monoid (Endo (..))
 import Koriel.Core.Syntax
 import Koriel.Prelude
 

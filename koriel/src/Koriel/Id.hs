@@ -1,21 +1,5 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuantifiedConstraints #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
 
 module Koriel.Id
   ( IdSort (..),
@@ -39,7 +23,6 @@ module Koriel.Id
 where
 
 import Data.Binary (Binary)
-import Data.Data (Data, Typeable)
 import Data.Deriving
 import Data.Hashable (Hashable (hashWithSalt))
 import Koriel.MonadUniq
@@ -108,22 +91,22 @@ instance Pretty a => Pretty (Id a) where
 
 makeLenses ''Id
 
-newId :: MonadUniq f => String -> a -> IdSort -> f (Id a)
+newId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> IdSort -> f (Id a)
 newId n m s = Id n <$> getUniq <*> pure m <*> pure s
 
-newLocalId :: MonadUniq f => String -> a -> f (Id a)
+newLocalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> f (Id a)
 newLocalId n m = Id n <$> getUniq <*> pure m <*> pure Internal
 
-newGlobalId :: MonadUniq f => String -> a -> ModuleName -> f (Id a)
+newGlobalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> ModuleName -> f (Id a)
 newGlobalId n m modName = Id n <$> getUniq <*> pure m <*> pure (External modName)
 
-newIdOnSort :: MonadUniq f => String -> a -> Id b -> f (Id a)
+newIdOnSort :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> Id b -> f (Id a)
 newIdOnSort name meta Id {_idSort} = newId name meta _idSort
 
-newIdOnName :: MonadUniq f => a -> Id b -> f (Id a)
+newIdOnName :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> Id b -> f (Id a)
 newIdOnName meta Id {_idName, _idSort} = newId _idName meta _idSort
 
-cloneId :: MonadUniq m => Id a -> m (Id a)
+cloneId :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Id a -> m (Id a)
 cloneId Id {..} = do
   _idUniq <- getUniq
   pure Id {_idName, _idUniq, _idMeta, _idSort}

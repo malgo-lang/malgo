@@ -30,13 +30,13 @@ $ apt-get install llvm-9-dev
 $ git clone https://github.com/takoeight0821/malgo
 $ cd malgo
 $ stack install
-$ ./install_malgo_internal.sh
+$ ./scripts/install_malgo_internal.sh
 ```
 
 ## Usage
 
 ```sh
-$ malgoc to-ll examples/malgo/Hello.mlg -o Hello.ll
+$ malgo to-ll examples/malgo/Hello.mlg -o Hello.ll
 $ clang Hello.ll -lgc .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll runtime/malgo/rts.c
 $ ./a.out
 Hello, world
@@ -44,13 +44,13 @@ Hello, world
 
 ## Koriel
 
-Some utilities for Kagami and the implementation of the Core internal representation.
+The implementation of the internal representation.
 
 ## Malgo
 
-A functional programming language.
+A statically typed functional programming language.
 
-# Future works
+# TODO
 
 * Rich build tool like go, cargo, cabal
 

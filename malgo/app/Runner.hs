@@ -1,8 +1,3 @@
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 module Runner where
 
 import qualified Data.Text.IO as T
@@ -14,6 +9,7 @@ import Language.Malgo.Parser (parseMalgo)
 import Language.Malgo.Prelude hiding ((<.>))
 import Language.Malgo.Syntax
 import Language.Malgo.Syntax.Extension
+import System.IO (putStrLn)
 import Text.Megaparsec (errorBundlePretty)
 
 runShakeRules :: FilePath -> Opt -> Rules () -> IO ()

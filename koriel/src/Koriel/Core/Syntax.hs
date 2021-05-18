@@ -1,34 +1,19 @@
-{-# LANGUAGE DeriveFoldable #-}
-{-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE OverloadedLists #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 -- |
 -- malgoの共通中間表現。
 -- A正規形に近い。
-{-# LANGUAGE DeriveDataTypeable #-}
 module Koriel.Core.Syntax where
 
 import qualified Data.HashSet as HashSet
+import Data.Monoid (Endo(..))
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude hiding ((.=))
 import Koriel.Pretty
-import Data.Data (Data, Typeable)
 
 class HasFreeVar f where
   -- | free variables
@@ -298,31 +283,31 @@ appProgram f Program {_moduleName, _topFuncs} =
   Program _moduleName <$> traverseOf (traversed . _2 . _2) f _topFuncs
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
-  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadUniq, MonadIO, MonadTrans, MonadState s, MonadReader r)
+  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
 runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
 
-let_ :: MonadUniq m => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
+let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
   x <- newLocalId "$let" otype
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
   pure (Var x)
 
-destruct :: MonadUniq m => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
+destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
 destruct val con@(Con _ ts) = do
   vs <- traverse (newLocalId "$p") ts
   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
   pure $ map Var vs
 
-bind :: MonadUniq m => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+bind :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newLocalId "$d" (typeOf v)
   DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
   pure (Var x)
 
-cast :: MonadUniq m => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+cast :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
@@ -331,7 +316,7 @@ cast ty e
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
-mainFunc :: MonadUniq m => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
 mainFunc e = do
   mainFuncId <- newId "main" ([] :-> Int32T) $ WiredIn (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
