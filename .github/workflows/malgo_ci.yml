@@ -22,7 +22,7 @@ jobs:
       with:
         path: |
           ~/.cabal
-        key: ${{ runner.os}}-build-${{ env.cache-name }}-${{ hashFiles('**/*.cabal') }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('malgo/malgo.cabal', 'koriel/koriel.cabal') }}
     - uses: haskell/actions/setup@v1
       with:
         ghc-version: '8.10.4'
