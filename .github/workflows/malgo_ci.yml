@@ -17,6 +17,11 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libgc-dev llvm-9-dev
     - uses: actions/checkout@v2
+    - name: Cache .cabal
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cabal
     - uses: haskell/actions/setup@v1
       with:
         ghc-version: '8.10.4'
