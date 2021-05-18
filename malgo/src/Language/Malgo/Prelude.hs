@@ -1,9 +1,9 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Language.Malgo.Prelude
   ( module Koriel.Prelude,
-    MalgoM (..),
     runMalgoM,
     Opt (..),
     HasOpt (..),
@@ -66,7 +66,11 @@ class HasOpt env where
 instance HasOpt Opt where
   malgoOpt = lens id const
 
-data MalgoEnv = MalgoEnv {_malgoUniqSupply :: UniqSupply, _malgoOpt :: Opt}
+data MalgoEnv = MalgoEnv
+  { _malgoUniqSupply :: UniqSupply,
+    _malgoLogFunc :: LogFunc,
+    _malgoOpt :: Opt
+  }
   deriving stock (Show, Eq)
 
 class HasMalgoEnv env where
@@ -78,16 +82,35 @@ instance HasMalgoEnv MalgoEnv where
 instance HasUniqSupply MalgoEnv where
   uniqSupply = lens _malgoUniqSupply (\x y -> x {_malgoUniqSupply = y})
 
+instance HasLogFunc MalgoEnv where
+  logFuncL = lens _malgoLogFunc (\x y -> x {_malgoLogFunc = y})
+
 instance HasOpt MalgoEnv where
   malgoOpt = lens _malgoOpt (\x y -> x {_malgoOpt = y})
 
-newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadFix, MonadReader MalgoEnv, MonadFail)
+instance Show LogFunc where
+  show _ = "LogFunc"
+
+instance Eq LogFunc where
+  _ == _ = True
+
+type MalgoM a = RIO MalgoEnv a
+
+deriving newtype instance MonadFix (RIO env)
+
+deriving newtype instance MonadFail (RIO env)
 
 runMalgoM :: MalgoM a -> Opt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
-  runReaderT (unMalgoM m) MalgoEnv {_malgoOpt = opt, _malgoUniqSupply = uniqSupply}
+
+  let isVerbose = False -- TODO: get from the command line instead
+  logOptions' <- logOptionsHandle stderr isVerbose
+  let logOptions = setLogUseTime True logOptions'
+
+  withLogFunc logOptions \lf -> do
+    let app = MalgoEnv {_malgoOpt = opt, _malgoUniqSupply = uniqSupply, _malgoLogFunc = lf}
+    runRIO app m
 
 getOpt :: (HasOpt env, MonadReader env m) => m Opt
 getOpt = view malgoOpt
