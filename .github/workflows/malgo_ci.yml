@@ -27,11 +27,8 @@ jobs:
       with:
         ghc-version: '8.10.4'
         # cabal-version: '3.2.0.0'
-        enable-stack: true
-        stack-version: 'latest'
     - name: Build
       run: |
-        stack build --dry-run
         cabal update
         cabal build all
     - name: Run tests
