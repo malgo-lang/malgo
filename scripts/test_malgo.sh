@@ -8,8 +8,8 @@ mkdir -p $TESTDIR/libs
 
 BUILD=cabal
 
-eval "$BUILD exec malgo -- to-ll --force ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
-eval "$BUILD exec malgo -- to-ll --force ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"
+eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
+eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"
 cp ./runtime/malgo/rts.c $TESTDIR/libs/rts.c
 
 echo '=== no opt no lambdalift ==='
@@ -22,7 +22,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: '
 
-  eval "$BUILD exec malgo -- to-ll --force --no-opt --no-lambdalift ./examples/malgo/$file -o $LLFILE"
+  eval "$BUILD exec malgo -- to-ll --force --no-opt --no-lambdalift -M $TESTDIR/libs ./examples/malgo/$file -o $LLFILE"
 
   clang -Wno-override-module -O0 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
   clang -Wno-override-module -O3 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
@@ -40,7 +40,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: '
 
-  eval "$BUILD exec malgo -- to-ll --force --no-opt ./examples/malgo/$file -o $LLFILE"
+  eval "$BUILD exec malgo -- to-ll --force --no-opt -M $TESTDIR/libs ./examples/malgo/$file -o $LLFILE"
 
   clang -Wno-override-module -O0 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
   clang -Wno-override-module -O3 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
@@ -58,7 +58,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: '
 
-  eval "$BUILD exec malgo -- to-ll --force --no-lambdalift ./examples/malgo/$file -o $LLFILE"
+  eval "$BUILD exec malgo -- to-ll --force --no-lambdalift -M $TESTDIR/libs ./examples/malgo/$file -o $LLFILE"
 
   clang -Wno-override-module -O0 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
   clang -Wno-override-module -O3 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
@@ -76,7 +76,7 @@ for file in `ls ./examples/malgo | grep '\.mlg$'`; do
 
   cat ./examples/malgo/$file | grep -q '^-- Expected: '
 
-  eval "$BUILD exec malgo -- to-ll --force ./examples/malgo/$file -o $LLFILE"
+  eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./examples/malgo/$file -o $LLFILE"
 
   clang -Wno-override-module -O0 $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
   clang -Wno-override-module -O3 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
