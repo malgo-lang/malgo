@@ -35,4 +35,4 @@ jobs:
       run: |
         mkdir -p $HOME/.local/share/malgo/base
         ./scripts/install_malgo_internal.sh
-        ./scripts/test_malgo.sh
+        ./scripts/test_malgo_parallel.sh
