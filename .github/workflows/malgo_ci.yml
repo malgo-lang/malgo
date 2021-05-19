@@ -22,6 +22,7 @@ jobs:
       with:
         path: |
           ~/.cabal
+          dist-newstyle
         key: ${{ runner.os }}-build-${{ hashFiles('malgo/malgo.cabal', 'koriel/koriel.cabal') }}
     - uses: haskell/actions/setup@v1
       with:
@@ -29,7 +30,6 @@ jobs:
         # cabal-version: '3.2.0.0'
     - name: Build
       run: |
-        cabal update
         cabal build all
     - name: Run tests
       run: |
