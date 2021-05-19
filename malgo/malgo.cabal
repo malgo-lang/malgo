@@ -116,7 +116,6 @@ library
 executable malgo
   main-is: Main.hs
   other-modules:
-      Runner
       Paths_malgo
   hs-source-dirs:
       app/
@@ -184,7 +183,6 @@ executable malgo
     , parser-combinators
     , pretty
     , recursion-schemes
-    , shake
     , text
     , transformers
     , unordered-containers
