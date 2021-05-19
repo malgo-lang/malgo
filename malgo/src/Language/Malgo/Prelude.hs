@@ -104,7 +104,11 @@ runMalgoM :: MalgoM a -> Opt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
 
-  let isVerbose = False -- TODO: get from the command line instead
+#ifdef DEBUG
+  let isVerbose = True -- TODO: get from the command line instead
+#else
+  let isVerbose = False
+#endif
   logOptions' <- logOptionsHandle stderr isVerbose
   let logOptions = setLogUseTime True logOptions'
 

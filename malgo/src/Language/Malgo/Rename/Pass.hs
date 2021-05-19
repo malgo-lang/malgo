@@ -18,8 +18,9 @@ import Language.Malgo.Syntax.Extension
 import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)
 
-rename :: (MonadReader env m, MonadIO m) => RnEnv -> Module (Malgo 'Parse) -> m (Module (Malgo 'Rename), RnState)
+rename :: (MonadReader env m, MonadIO m, HasLogFunc env) => RnEnv -> Module (Malgo 'Parse) -> m (Module (Malgo 'Rename), RnState)
 rename builtinEnv (Module modName ds) = do
+  logDebug "Start rename"
   (ds', rnState) <- runStateT ?? RnState mempty modName $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
@@ -236,7 +237,7 @@ compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of
     left = (False, False)
     error_please = (True, False)
 
-genToplevelEnv :: (MonadReader env f, HasOpt env, MonadIO f, HasUniqSupply env) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
+genToplevelEnv :: (MonadReader env f, HasOpt env, MonadIO f, HasUniqSupply env, HasLogFunc env) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
 genToplevelEnv modName ds builtinEnv = do
   execStateT (traverse aux ds) builtinEnv
   where

@@ -1,11 +1,14 @@
 module Main where
 
-import Development.Shake.FilePath ((</>))
+import qualified Data.Text.IO as T
+import qualified Language.Malgo.Driver as Driver
+import Language.Malgo.Parser (parseMalgo)
 import Language.Malgo.Prelude hiding (value)
 import Options.Applicative
-import Runner
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory)
+import System.FilePath ((</>))
 import System.FilePath.Lens (extension)
+import Text.Megaparsec (errorBundlePretty)
 import Text.Read (read)
 
 main :: IO ()
@@ -14,11 +17,12 @@ main = do
   case command of
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      let opt' = opt {modulePaths = modulePaths opt <> [basePath]}
-      runShakeRules ".malgo-work" opt' do
-        -- modulePaths/*.mlgをすべてコンパイル
-        buildUnderModulePaths opt'
-        mlgToLLShake opt'
+      opt <- pure $ opt {modulePaths = modulePaths opt <> [".malgo-work" </> "build", basePath]}
+      src <- T.readFile (srcName opt)
+      let parsedAst = case parseMalgo (srcName opt) src of
+            Right x -> x
+            Left err -> error $ errorBundlePretty err
+      Driver.compileFromAST parsedAst opt
 
 toLLOpt :: Parser Opt
 toLLOpt =

@@ -60,6 +60,9 @@ instance HasOpt RnEnv where
 instance HasUniqSupply RnEnv where
   uniqSupply = rnMalgoEnv . uniqSupply
 
+instance HasLogFunc RnEnv where
+  logFuncL = rnMalgoEnv . logFuncL
+
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [RnId]) -> [(PsId, RnId)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)
   where

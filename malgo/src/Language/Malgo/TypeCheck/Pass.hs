@@ -47,7 +47,7 @@ lookupRecordType pos fields = do
     Nothing -> errorOn pos $ "Not in scope:" <+> (fields & map pPrint & punctuate " or" & sep)
     Just scheme -> pure scheme
 
-typeCheck :: (MonadFail m, HasOpt env, MonadReader env m, MonadIO m, HasUniqSupply env) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
+typeCheck :: (MonadFail m, HasOpt env, MonadReader env m, MonadIO m, HasUniqSupply env, HasLogFunc env) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) =
   runTypeUnifyT $ do
     tcEnv <- genTcEnv rnEnv
@@ -70,7 +70,8 @@ tcBindGroup ::
     MonadIO m,
     HasOpt env,
     MonadReader env m,
-    HasUniqSupply env
+    HasUniqSupply env,
+    HasLogFunc env
   ) =>
   BindGroup (Malgo 'Rename) ->
   m (BindGroup (Malgo 'TypeCheck))
@@ -87,7 +88,8 @@ tcImports ::
   ( MonadState TcEnv m,
     MonadIO m,
     HasOpt env,
-    MonadReader env m
+    MonadReader env m,
+    HasLogFunc env
   ) =>
   [Import (Malgo 'Rename)] ->
   m [Import (Malgo 'TypeCheck)]

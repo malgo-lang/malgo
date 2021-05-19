@@ -11,12 +11,12 @@ import Koriel.Id
 import Koriel.Pretty
 import Language.Malgo.Desugar.DsEnv (DsEnv)
 import qualified Language.Malgo.Desugar.DsEnv as DsEnv
+import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv (RnState)
 import qualified Language.Malgo.Rename.RnEnv as RnState
 import Language.Malgo.Syntax.Extension
 import qualified Language.Malgo.TypeRep.Static as GT
 import System.FilePath ((-<.>), (</>))
-import Language.Malgo.Prelude
 
 data Interface = Interface
   { _signatureMap :: HashMap RnId (GT.Scheme GT.Type), -- from TypeRep.Static
@@ -61,9 +61,11 @@ storeInterface interface = do
   opt <- getOpt
   liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
 
-loadInterface :: (MonadIO m, HasOpt env, MonadReader env m) => ModuleName -> m Interface
+loadInterface :: (MonadIO m, HasOpt env, MonadReader env m, HasLogFunc env) => ModuleName -> m Interface
 loadInterface (ModuleName modName) = do
+  logDebug $ "load interface: " <> displayShow modName
   modPaths <- modulePaths <$> getOpt
+  logDebug $ "modPaths = " <> displayShow modPaths
   message <- liftIO $ findAndReadFile modPaths (modName <> ".mlgi")
   case message of
     Right x -> pure x

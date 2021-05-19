@@ -3,6 +3,7 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Language.Malgo.Desugar.Pass (desugar) where
 
+import Control.Monad (mapAndUnzipM)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
@@ -22,11 +23,10 @@ import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax as G
 import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
-import Control.Monad (mapAndUnzipM)
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
+  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
   HashMap RnId (Scheme GT.Type) ->
   HashMap RnTId (TypeDef GT.Type) ->
   HashMap RnId (Scheme GT.Type) ->
@@ -52,7 +52,7 @@ desugar varEnv typeEnv fieldEnv rnEnv (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
+  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
   BindGroup (Malgo 'Refine) ->
   m [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsBindGroup bg = do
@@ -62,7 +62,7 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
-dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env) => Import (Malgo 'Refine) -> m ()
+dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env, HasLogFunc env) => Import (Malgo 'Refine) -> m ()
 dsImport (_, modName) = do
   interface <- loadInterface modName
   nameEnv <>= interface ^. coreIdentMap
