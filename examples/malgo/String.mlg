@@ -1,0 +1,25 @@
+module String = {
+  import Builtin;
+  import Prelude;
+
+  foreign import malgo_string_at :: Int64# -> String# -> Char#;
+
+  at :: Int64 -> String -> Char;
+  at = { (Int64# i) (String# str) -> Char# (malgo_string_at i str) };
+
+  foreign import malgo_string_append :: String# -> String# -> String#;
+
+  append :: String -> String -> String;
+  append = { (String# first) (String# second) -> String# (malgo_string_append first second) };
+
+  foreign import print_char :: Char# -> ();
+
+  main = {
+    let str1 = "Hello";
+    let str2 = "world";
+    at 0L str1 |> { Char# c -> print_char c };
+    putStrLn <| append str1 <| append " " str2
+  };
+}
+
+-- Expected: HHello world
