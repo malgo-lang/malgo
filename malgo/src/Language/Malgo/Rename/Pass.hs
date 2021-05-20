@@ -123,13 +123,11 @@ rnExp ::
   Exp (Malgo 'Parse) ->
   m (Exp (Malgo 'Rename))
 rnExp (Var pos name) = Var pos <$> lookupVarName pos name
-rnExp (Con pos name) = Con pos <$> lookupVarName pos name
 rnExp (Unboxed pos val) = pure $ Unboxed pos val
 rnExp (Boxed pos val) = do
   f <- lookupBox pos val
   pure $ Apply pos f (Unboxed pos $ toUnboxed val)
 rnExp (ModuleAccess pos modName (Var _ name)) = Var pos <$> lookupQualifiedVarName pos modName name
-rnExp (ModuleAccess pos modName (Con _ name)) = Con pos <$> lookupQualifiedVarName pos modName name
 rnExp (ModuleAccess pos _ _) = errorOn pos "Invalid long identifier"
 rnExp (Apply pos e1 e2) = Apply pos <$> rnExp e1 <*> rnExp e2
 rnExp (OpApp pos op e1 e2) = do

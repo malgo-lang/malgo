@@ -29,7 +29,6 @@ refineScDef (x, name, expr) = (over ann toType x,name,) <$> refineExp expr
 
 refineExp :: (TypeChecked t x, Monad m) => Exp x -> m (Exp (Malgo 'Refine))
 refineExp (Var x v) = pure $ Var (over ann toType x) v
-refineExp (Con x c) = pure $ Con (over ann toType x) c
 refineExp (Unboxed x u) = pure $ Unboxed (over ann toType x) u
 refineExp (Apply x e1 e2) = Apply (over ann toType x) <$> refineExp e1 <*> refineExp e2
 refineExp (OpApp x op e1 e2) = do

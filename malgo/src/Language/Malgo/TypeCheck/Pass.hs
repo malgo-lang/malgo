@@ -312,9 +312,6 @@ tcExpr ::
 tcExpr (Var pos v) = do
   vType <- instantiate pos =<< lookupVar pos v
   pure $ Var (With vType pos) v
-tcExpr (Con pos c) = do
-  cType <- instantiate pos =<< lookupVar pos c
-  pure $ Con (With cType pos) c
 tcExpr (Unboxed pos u) = do
   uType <- typeOf u
   pure $ Unboxed (With uType pos) u

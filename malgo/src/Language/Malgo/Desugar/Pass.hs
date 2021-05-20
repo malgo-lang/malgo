@@ -23,6 +23,7 @@ import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax as G
 import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
+import qualified RIO.Char as Char
 
 -- | MalgoからCoreへの変換
 desugar ::
@@ -181,31 +182,27 @@ dsExp (G.Var x name) = do
     -- TyLazyの型を検査
     (GT.TyLazy {}, [] :-> _) -> pure ()
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
-    (_, [] :-> _) -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
+    (_, [] :-> _)
+      | isConstructor name -> pure ()
+      | otherwise -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
     _ -> pure ()
-  if idIsExternal name'
-    then do
-      -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
-      -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
-      clsId <- newLocalId "$gblcls" (C.typeOf name')
-      ps <- case C.typeOf name' of
-        pts :-> _ -> traverse (newLocalId "$p") pts
-        _ -> bug Unreachable
-      pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
-    else pure $ Atom $ C.Var name'
-dsExp (G.Con _ name) = do
-  name' <- lookupName name
   case C.typeOf name' of
-    -- 値コンストラクタ名は全部global。
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する。
-    [] :-> _ -> pure $ CallDirect name' []
-    -- グローバルな関数と同様に、引数のある値コンストラクタも、
-    -- 値が必要になったときに都度クロージャを生成する。
-    pts :-> _ -> do
-      clsId <- newLocalId "$concls" (C.typeOf name')
-      ps <- traverse (newLocalId "$p") pts
-      pure $ C.Let [C.LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
-    _ -> bug Unreachable
+    [] :-> _ | isConstructor name -> pure $ CallDirect name' []
+    _ ->
+      if idIsExternal name'
+        then do
+          -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
+          -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
+          clsId <- newLocalId "$gblcls" (C.typeOf name')
+          ps <- case C.typeOf name' of
+            pts :-> _ -> traverse (newLocalId "$p") pts
+            _ -> bug Unreachable
+          pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+        else pure $ Atom $ C.Var name'
+  where
+    isConstructor Id {_idName = x : _} = Char.isUpper x
+    isConstructor _ = False
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
 dsExp (G.Apply info f x) = runDef $ do
   f' <- bind =<< dsExp f

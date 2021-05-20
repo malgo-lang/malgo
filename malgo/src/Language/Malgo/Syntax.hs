@@ -53,7 +53,6 @@ toUnboxed = coerce
 
 data Exp x
   = Var (XVar x) (XId x)
-  | Con (XCon x) (XId x)
   | Unboxed (XUnboxed x) (Literal Unboxed)
   | Boxed (XBoxed x) (Literal Boxed)
   | ModuleAccess (XModuleAccess x) ModuleName (Exp x)
@@ -72,7 +71,6 @@ deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Sho
 
 instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec _ _ (Var _ i) = pPrint i
-  pPrintPrec _ _ (Con _ c) = pPrint c
   pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
   pPrintPrec _ _ (Boxed _ lit) = pPrint lit
   pPrintPrec _ _ (ModuleAccess _ modName i) = pPrint modName <> "." <> pPrint i
@@ -97,7 +95,6 @@ instance
   U.HasType (Exp x)
   where
   typeOf (Var x _) = pure $ x ^. U.withUType
-  typeOf (Con x _) = pure $ x ^. U.withUType
   typeOf (Unboxed x _) = pure $ x ^. U.withUType
   typeOf (Boxed x _) = pure $ x ^. U.withUType
   typeOf (ModuleAccess x _ _) = pure $ x ^. U.withUType
@@ -115,7 +112,6 @@ instance
   S.HasType (Exp x)
   where
   typeOf (Var x _) = pure $ x ^. S.withType
-  typeOf (Con x _) = pure $ x ^. S.withType
   typeOf (Unboxed x _) = pure $ x ^. S.withType
   typeOf (Boxed x _) = pure $ x ^. S.withType
   typeOf (ModuleAccess x _ _) = pure $ x ^. S.withType
@@ -137,7 +133,6 @@ instance
   where
   walkOn f = \case
     Var x v -> Var <$> U.walkOn f x <*> pure v
-    Con x c -> Con <$> U.walkOn f x <*> pure c
     Unboxed x u -> Unboxed <$> U.walkOn f x <*> U.walkOn f u
     Boxed x b -> Boxed <$> U.walkOn f x <*> U.walkOn f b
     ModuleAccess x m v -> ModuleAccess <$> U.walkOn f x <*> pure m <*> pure v
@@ -152,7 +147,6 @@ instance
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
 freevars (Var _ v) = HashSet.singleton v
-freevars (Con _ _) = mempty
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars ModuleAccess {} = mempty

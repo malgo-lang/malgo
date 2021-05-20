@@ -138,12 +138,7 @@ pUnboxed =
 pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
   label "variable" $
-    Var <$> getSourcePos <*> lowerIdent
-
-pConstructor :: Parser (Exp (Malgo 'Parse))
-pConstructor =
-  label "constructor" $
-    Con <$> getSourcePos <*> upperIdent
+    Var <$> getSourcePos <*> try (lowerIdent <|> upperIdent)
 
 pModuleAccess :: Parser (Exp (Malgo 'Parse))
 pModuleAccess =
@@ -151,8 +146,7 @@ pModuleAccess =
     s <- getSourcePos
     modName <- singleModuleName
     _ <- char '.'
-    ident <- pVariable <|> pConstructor
-    pure $ ModuleAccess s (ModuleName modName) ident
+    ModuleAccess s (ModuleName modName) <$> pVariable
 
 pFun :: Parser (Exp (Malgo 'Parse))
 pFun =
@@ -257,7 +251,6 @@ pSingleExp' =
     <|> try (Boxed <$> getSourcePos <*> pBoxed)
     <|> try pModuleAccess
     <|> pVariable
-    <|> pConstructor
     <|> try pUnit
     <|> try pTuple
     <|> try pRecord
