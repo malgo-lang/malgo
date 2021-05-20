@@ -15,6 +15,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv
 import Language.Malgo.Syntax
 import Language.Malgo.Syntax.Extension
+import qualified RIO.List as List
 import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)
 
@@ -46,6 +47,15 @@ lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m 
 lookupFieldName pos name = do
   view (fieldEnv . at name) >>= \case
     Just (name : _) -> pure name
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
+
+lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> String -> m (Id ())
+lookupQualifiedVarName pos modName name = do
+  view (varEnv . at name) >>= \case
+    Just names ->
+      case List.find (\i -> i ^. idSort == External modName || i ^. idSort == WiredIn modName) names of
+        Just name -> pure name
+        Nothing -> errorOn pos $ "Not in scope:" <+> quotes (text name) <+> "in" <+> pPrint modName
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 -- renamer
@@ -120,6 +130,9 @@ rnExp (Unboxed pos val) = pure $ Unboxed pos val
 rnExp (Boxed pos val) = do
   f <- lookupBox pos val
   pure $ Apply pos f (Unboxed pos $ toUnboxed val)
+rnExp (ModuleAccess pos modName (Var _ name)) = Var pos <$> lookupQualifiedVarName pos modName name
+rnExp (ModuleAccess pos modName (Con _ name)) = Con pos <$> lookupQualifiedVarName pos modName name
+rnExp (ModuleAccess pos _ _) = errorOn pos "Invalid long identifier"
 rnExp (Apply pos e1 e2) = Apply pos <$> rnExp e1 <*> rnExp e2
 rnExp (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
@@ -133,7 +146,7 @@ rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
 rnExp (Record pos kvs) = Record pos <$> traverse (bitraverse (lookupFieldName pos) rnExp) kvs
 rnExp (Force pos e) = Force pos <$> rnExp e
-rnExp (Access pos l) = Access pos <$> lookupFieldName pos l
+rnExp (RecordAccess pos l) = RecordAccess pos <$> lookupFieldName pos l
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))

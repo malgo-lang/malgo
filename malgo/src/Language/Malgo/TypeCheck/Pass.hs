@@ -365,13 +365,13 @@ tcExpr (Force pos e) = do
   eType <- typeOf e'
   tell [With pos $ TyLazy ty :~ eType]
   pure $ Force (With ty pos) e'
-tcExpr (Access pos label) = do
+tcExpr (RecordAccess pos label) = do
   recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
   retType <- UVar <$> freshVar @UType
   case recordType of
     TyRecord kts -> do
       tell [With pos $ recordType :~ TyRecord (Map.insert label retType kts)]
-      pure $ Access (With (TyArr recordType retType) pos) label
+      pure $ RecordAccess (With (TyArr recordType retType) pos) label
     _ -> errorOn pos $ pPrint recordType <+> "is not record type"
 tcExpr (Parens pos e) = do
   e' <- tcExpr e

@@ -43,7 +43,7 @@ refineExp (Fn x cs) = Fn (over ann toType x) <$> traverse refineClause cs
 refineExp (Tuple x es) = Tuple (over ann toType x) <$> traverse refineExp es
 refineExp (Record x kvs) = Record (over ann toType x) <$> traverseOf (traversed . _2) refineExp kvs
 refineExp (Force x e) = Force (over ann toType x) <$> refineExp e
-refineExp (Access x label) = pure $ Access (over ann toType x) label
+refineExp (RecordAccess x label) = pure $ RecordAccess (over ann toType x) label
 refineExp (Parens _ e) = refineExp e
 
 refineClause :: (TypeChecked t x, Monad m) => Clause x -> m (Clause (Malgo 'Refine))

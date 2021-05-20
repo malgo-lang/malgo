@@ -56,13 +56,14 @@ data Exp x
   | Con (XCon x) (XId x)
   | Unboxed (XUnboxed x) (Literal Unboxed)
   | Boxed (XBoxed x) (Literal Boxed)
+  | ModuleAccess (XModuleAccess x) ModuleName (Exp x)
   | Apply (XApply x) (Exp x) (Exp x)
   | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
   | Fn (XFn x) [Clause x]
   | Tuple (XTuple x) [Exp x]
   | Record (XRecord x) [(XId x, Exp x)]
   | Force (XForce x) (Exp x)
-  | Access (XAccess x) (XId x)
+  | RecordAccess (XRecordAccess x) (XId x)
   | Parens (XParens x) (Exp x)
 
 deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Exp x)
@@ -74,6 +75,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec _ _ (Con _ c) = pPrint c
   pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
   pPrintPrec _ _ (Boxed _ lit) = pPrint lit
+  pPrintPrec _ _ (ModuleAccess _ modName i) = pPrint modName <> "." <> pPrint i
   pPrintPrec l d (Apply _ e1 e2) =
     maybeParens (d > 10) $ sep [pPrintPrec l 10 e1, pPrintPrec l 11 e2]
   pPrintPrec l d (OpApp _ o e1 e2) =
@@ -87,7 +89,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
-  pPrintPrec l _ (Access _ x) = "#" <> pPrintPrec l 0 x
+  pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
 instance
@@ -98,13 +100,14 @@ instance
   typeOf (Con x _) = pure $ x ^. U.withUType
   typeOf (Unboxed x _) = pure $ x ^. U.withUType
   typeOf (Boxed x _) = pure $ x ^. U.withUType
+  typeOf (ModuleAccess x _ _) = pure $ x ^. U.withUType
   typeOf (Apply x _ _) = pure $ x ^. U.withUType
   typeOf (OpApp x _ _ _) = pure $ x ^. U.withUType
   typeOf (Fn x _) = pure $ x ^. U.withUType
   typeOf (Tuple x _) = pure $ x ^. U.withUType
   typeOf (Record x _) = pure $ x ^. U.withUType
   typeOf (Force x _) = pure $ x ^. U.withUType
-  typeOf (Access x _) = pure $ x ^. U.withUType
+  typeOf (RecordAccess x _) = pure $ x ^. U.withUType
   typeOf (Parens x _) = pure $ x ^. U.withUType
 
 instance
@@ -115,13 +118,14 @@ instance
   typeOf (Con x _) = pure $ x ^. S.withType
   typeOf (Unboxed x _) = pure $ x ^. S.withType
   typeOf (Boxed x _) = pure $ x ^. S.withType
+  typeOf (ModuleAccess x _ _) = pure $ x ^. S.withType
   typeOf (Apply x _ _) = pure $ x ^. S.withType
   typeOf (OpApp x _ _ _) = pure $ x ^. S.withType
   typeOf (Fn x _) = pure $ x ^. S.withType
   typeOf (Tuple x _) = pure $ x ^. S.withType
   typeOf (Record x _) = pure $ x ^. S.withType
   typeOf (Force x _) = pure $ x ^. S.withType
-  typeOf (Access x _) = pure $ x ^. S.withType
+  typeOf (RecordAccess x _) = pure $ x ^. S.withType
   typeOf (Parens x _) = pure $ x ^. S.withType
 
 instance
@@ -136,13 +140,14 @@ instance
     Con x c -> Con <$> U.walkOn f x <*> pure c
     Unboxed x u -> Unboxed <$> U.walkOn f x <*> U.walkOn f u
     Boxed x b -> Boxed <$> U.walkOn f x <*> U.walkOn f b
+    ModuleAccess x m v -> ModuleAccess <$> U.walkOn f x <*> pure m <*> pure v
     Apply x e1 e2 -> Apply <$> U.walkOn f x <*> U.walkOn f e1 <*> U.walkOn f e2
     OpApp x op e1 e2 -> OpApp <$> U.walkOn f x <*> pure op <*> U.walkOn f e1 <*> U.walkOn f e2
     Fn x cs -> Fn <$> U.walkOn f x <*> traverse (U.walkOn f) cs
     Tuple x es -> Tuple <$> U.walkOn f x <*> traverse (U.walkOn f) es
     Record x kvs -> Record <$> U.walkOn f x <*> traverse (\(k, v) -> (k,) <$> U.walkOn f v) kvs
     Force x e -> Force <$> U.walkOn f x <*> U.walkOn f e
-    Access x l -> Access <$> U.walkOn f x <*> pure l
+    RecordAccess x l -> RecordAccess <$> U.walkOn f x <*> pure l
     Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
@@ -150,13 +155,14 @@ freevars (Var _ v) = HashSet.singleton v
 freevars (Con _ _) = mempty
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
+freevars (ModuleAccess _ _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = mconcat $ map freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (Force _ e) = freevars e
-freevars (Access _ _) = mempty
+freevars (RecordAccess _ _) = mempty
 freevars (Parens _ e) = freevars e
 
 ------------

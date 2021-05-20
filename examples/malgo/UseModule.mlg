@@ -1,0 +1,10 @@
+module UseModule = {
+  import Builtin;
+  import Prelude;
+
+  main = {
+    Prelude.putStrLn "Hello, world!"
+  };
+}
+
+-- Expected: Hello, world!

@@ -261,7 +261,7 @@ dsExp (G.Force _ e) = runDef $ do
   -- lazy valueは0引数関数に変換されるので、その評価は0引数関数の呼び出しになる
   e' <- bind =<< dsExp e
   pure $ Call e' []
-dsExp (G.Access x label) = runDef $ do
+dsExp (G.RecordAccess x label) = runDef $ do
   GT.TyArr (GT.TyRecord recordType) _ <- pure $ x ^. GT.withType
   kts <- Map.toList <$> traverse dsType recordType
   p <- newLocalId "$p" =<< dsType (GT.TyRecord recordType)
