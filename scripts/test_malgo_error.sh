@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 TESTDIR=/tmp/malgo_test
-mkdir $TESTDIR
-mkdir $TESTDIR/libs
+mkdir -p $TESTDIR
+mkdir -p $TESTDIR/libs
 
 BUILD=cabal
 
@@ -18,4 +18,8 @@ for file in `ls ./examples/malgo/error | grep '\.mlg$'`; do
   OUTFILE=$TESTDIR/${file/.mlg/.out}
 
   eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./examples/malgo/error/$file -o $LLFILE"
+  if [ $? -eq 0 ]; then
+    echo fail
+    exit 1
+  fi
 done

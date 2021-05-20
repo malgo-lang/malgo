@@ -54,6 +54,7 @@ lookupQualifiedVarName pos modName name = do
       case List.find (\i -> i ^. idSort == External modName || i ^. idSort == WiredIn modName) names of
         Just name -> pure name
         Nothing -> errorOn pos $ "Not in scope:" <+> quotes (text name) <+> "in" <+> pPrint modName
+                                $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> text name <> "`" <+> "?"
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 -- renamer
