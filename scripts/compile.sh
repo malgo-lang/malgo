@@ -8,6 +8,8 @@ fi
 
 src_file=$(basename -- "$1")
 
+mkdir -p .malgo-work/build
+
 malgo to-ll $LIB_PATH/Builtin.mlg -o .malgo-work/build/Builtin.ll
 
 malgo to-ll $LIB_PATH/Prelude.mlg -o .malgo-work/build/Prelude.ll
