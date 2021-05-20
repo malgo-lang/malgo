@@ -16,6 +16,7 @@ import Language.Malgo.Rename.RnEnv (RnState)
 import qualified Language.Malgo.Rename.RnEnv as RnState
 import Language.Malgo.Syntax.Extension
 import qualified Language.Malgo.TypeRep.Static as GT
+import qualified RIO.Directory as Directory
 import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
@@ -61,15 +62,22 @@ storeInterface interface = do
   opt <- getOpt
   liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
 
-loadInterface :: (MonadIO m, HasOpt env, MonadReader env m, HasLogFunc env) => ModuleName -> m Interface
+loadInterface :: (MonadIO m, HasOpt env, MonadReader env m, HasLogFunc env) => ModuleName -> m (Maybe Interface)
 loadInterface (ModuleName modName) = do
   logDebug $ "load interface: " <> displayShow modName
   modPaths <- modulePaths <$> getOpt
   logDebug $ "modPaths = " <> displayShow modPaths
-  message <- liftIO $ findAndReadFile modPaths (modName <> ".mlgi")
+  message <- findAndReadFile modPaths (modName <> ".mlgi")
   case message of
-    Right x -> pure x
-    Left (_, errorMessage) -> error errorMessage
+    Right x -> pure $ Just x
+    Left (_, errorMessage) -> do
+      logDebug $ fromString errorMessage
+      pure Nothing
   where
-    findAndReadFile :: [FilePath] -> FilePath -> IO (Either (ByteOffset, String) Interface)
-    findAndReadFile modPaths modFile = asumMap (\path -> decodeFileOrFail (path </> modFile)) modPaths
+    findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, String) Interface)
+    findAndReadFile [] modFile = pure $ Left (0, render $ "module" <+> pPrint modFile <+> "is not found")
+    findAndReadFile (modPath : rest) modFile = do
+      isExistModFile <- Directory.doesFileExist (modPath </> modFile)
+      if isExistModFile
+        then liftIO $ decodeFileOrFail (modPath </> modFile)
+        else findAndReadFile rest modFile

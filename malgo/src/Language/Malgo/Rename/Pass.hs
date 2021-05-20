@@ -102,7 +102,10 @@ rnDecl (Foreign pos name typ) = do
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (Import pos modName) = do
-  interface <- loadInterface modName
+  interface <-
+    loadInterface modName >>= \case
+      Just x -> pure x
+      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   infixInfo <>= interface ^. infixMap
   pure $ Import pos modName
 
@@ -275,8 +278,11 @@ genToplevelEnv modName ds builtinEnv = do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newGlobalId x () modName
       modify $ appendRnEnv varEnv [(x, x')]
-    aux (Import _ modName') = do
-      interface <- loadInterface modName'
+    aux (Import pos modName') = do
+      interface <-
+        loadInterface modName' >>= \case
+          Just x -> pure x
+          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       opt <- getOpt
       when (debugMode opt) $
         liftIO $ hPrint stderr $ pPrint interface

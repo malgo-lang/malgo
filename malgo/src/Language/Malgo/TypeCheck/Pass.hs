@@ -96,7 +96,10 @@ tcImports ::
 tcImports = traverse tcImport
   where
     tcImport (pos, modName) = do
-      interface <- loadInterface modName
+      interface <-
+        loadInterface modName >>= \case
+          Just x -> pure x
+          Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
       varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
       typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
       pure (pos, modName)

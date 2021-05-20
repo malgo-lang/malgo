@@ -63,8 +63,11 @@ dsBindGroup bg = do
   pure $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
 dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env, HasLogFunc env) => Import (Malgo 'Refine) -> m ()
-dsImport (_, modName) = do
-  interface <- loadInterface modName
+dsImport (pos, modName) = do
+  interface <-
+    loadInterface modName >>= \case
+      Just x -> pure x
+      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   nameEnv <>= interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
