@@ -23,19 +23,9 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'TypeCheck = Id ()
   MalgoId 'Refine = Id ()
 
-type family MalgoTId (p :: MalgoPhase) where
-  MalgoTId 'Parse = String
-  MalgoTId 'Rename = Id ()
-  MalgoTId 'TypeCheck = Id ()
-  MalgoTId 'Refine = Id ()
-
 type PsId = XId (Malgo 'Parse)
 
 type RnId = XId (Malgo 'Rename)
-
-type PsTId = XTId (Malgo 'Parse)
-
-type RnTId = XTId (Malgo 'Rename)
 
 data Unboxed
 
@@ -157,9 +147,6 @@ type family XUnboxedP x where
 type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XUnboxedP x))
 
 -- Type Extensions
-type family XTId x where
-  XTId (Malgo x) = MalgoTId x
-
 type family XTyApp x where
   XTyApp (Malgo _) = SourcePos
 

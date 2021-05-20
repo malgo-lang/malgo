@@ -34,7 +34,7 @@ lookupVar pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just scheme -> pure scheme
 
-lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnTId -> m UType
+lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m UType
 lookupType pos name =
   preuse (typeEnv . at name . _Just . typeConstructor) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)

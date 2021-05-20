@@ -26,7 +26,7 @@ import Language.Malgo.UTerm
 
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId (Scheme UType),
-    _typeEnv :: HashMap RnTId (TypeDef UType),
+    _typeEnv :: HashMap RnId (TypeDef UType),
     _fieldEnv :: HashMap RnId (Scheme UType),
     _rnEnv :: RnEnv
   }

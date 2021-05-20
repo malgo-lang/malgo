@@ -28,7 +28,7 @@ import Language.Malgo.TypeRep.Static as GT
 desugar ::
   (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
   HashMap RnId (Scheme GT.Type) ->
-  HashMap RnTId (TypeDef GT.Type) ->
+  HashMap RnId (TypeDef GT.Type) ->
   HashMap RnId (Scheme GT.Type) ->
   RnEnv ->
   Module x ->
