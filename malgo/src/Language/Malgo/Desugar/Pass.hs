@@ -176,8 +176,6 @@ dsExp (G.Var x name) = do
   --   Core上で0引数関数で表現されるMalgoの値は以下の二つ。
   --    1. {a}型の値（TyLazy）
   --    2. 引数のない値コンストラクタ
-  --   このうち、2.は「0引数関数の呼び出し」の形でのみ出現する（dsExp G.Conの節参照）
-  --   よって、ここではxがTyLazyのときのみname'が0引数関数になるはずである。
   case (x ^. GT.withType, C.typeOf name') of
     -- TyLazyの型を検査
     (GT.TyLazy {}, [] :-> _) -> pure ()
@@ -187,7 +185,7 @@ dsExp (G.Var x name) = do
       | otherwise -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
     _ -> pure ()
   case C.typeOf name' of
-    -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する。
+    -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
     [] :-> _ | isConstructor name -> pure $ CallDirect name' []
     _ ->
       if idIsExternal name'

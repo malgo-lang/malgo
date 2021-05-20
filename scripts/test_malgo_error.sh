@@ -18,6 +18,4 @@ for file in `ls ./examples/malgo/error | grep '\.mlg$'`; do
   OUTFILE=$TESTDIR/${file/.mlg/.out}
 
   eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./examples/malgo/error/$file -o $LLFILE"
-
-  # clang -O2 -flto $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE || exit 255
 done
