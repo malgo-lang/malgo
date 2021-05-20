@@ -36,9 +36,8 @@ $ ./scripts/install_malgo_internal.sh
 ## Usage
 
 ```sh
-$ malgo to-ll examples/malgo/Hello.mlg -o Hello.ll
-$ clang Hello.ll -lgc .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll runtime/malgo/rts.c
-$ ./a.out
+$ ./scripts/compile.sh examples/malgo/Hello.mlg
+$ ./Hello
 Hello, world
 ```
 
