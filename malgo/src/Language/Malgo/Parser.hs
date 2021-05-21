@@ -137,16 +137,10 @@ pUnboxed =
 
 pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
-  label "variable" $
-    Var <$> getSourcePos <*> try (lowerIdent <|> upperIdent)
-
-pModuleAccess :: Parser (Exp (Malgo 'Parse))
-pModuleAccess =
-  label "long identifier" $ do
+  label "variable" $ do
     s <- getSourcePos
-    modName <- singleModuleName
-    _ <- char '.'
-    ModuleAccess s (ModuleName modName) <$> pVariable
+    try (Var s <$> fmap (Just . ModuleName) singleModuleName <* char '.' <*> (lowerIdent <|> upperIdent))
+      <|> Var s Nothing <$> (lowerIdent <|> upperIdent)
 
 pFun :: Parser (Exp (Malgo 'Parse))
 pFun =
@@ -249,7 +243,6 @@ pSingleExp' :: Parser (Exp (Malgo 'Parse))
 pSingleExp' =
   try (Unboxed <$> getSourcePos <*> pUnboxed)
     <|> try (Boxed <$> getSourcePos <*> pBoxed)
-    <|> try pModuleAccess
     <|> pVariable
     <|> try pUnit
     <|> try pTuple

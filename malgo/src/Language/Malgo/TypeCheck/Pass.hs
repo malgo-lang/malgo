@@ -309,9 +309,9 @@ tcExpr ::
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'TypeCheck))
-tcExpr (Var pos v) = do
+tcExpr (Var pos m v) = do
   vType <- instantiate pos =<< lookupVar pos v
-  pure $ Var (With vType pos) v
+  pure $ Var (With vType pos) m v
 tcExpr (Unboxed pos u) = do
   uType <- typeOf u
   pure $ Unboxed (With uType pos) u

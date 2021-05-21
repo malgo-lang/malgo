@@ -65,10 +65,6 @@ type family XBoxed x where
   XBoxed (Malgo 'Parse) = SourcePos
   XBoxed (Malgo _) = Void
 
-type family XModuleAccess x where
-  XModuleAccess (Malgo 'Parse) = SourcePos
-  XModuleAccess (Malgo _) = Void
-
 type family XApply x where
   XApply (Malgo x) = SimpleX x
 
@@ -101,7 +97,6 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XCon x),
     c (XUnboxed x),
     c (XBoxed x),
-    c (XModuleAccess x),
     c (XApply x),
     c (XOpApp x),
     c (XFn x),
