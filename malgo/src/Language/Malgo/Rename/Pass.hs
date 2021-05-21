@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 -- | 名前解決
 module Language.Malgo.Rename.Pass where
 
@@ -15,6 +13,7 @@ import Language.Malgo.Prelude
 import Language.Malgo.Rename.RnEnv
 import Language.Malgo.Syntax
 import Language.Malgo.Syntax.Extension
+import qualified RIO.List as List
 import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)
 
@@ -46,6 +45,18 @@ lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m 
 lookupFieldName pos name = do
   view (fieldEnv . at name) >>= \case
     Just (name : _) -> pure name
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
+
+lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> String -> m (Id ())
+lookupQualifiedVarName pos modName name = do
+  view (varEnv . at name) >>= \case
+    Just names ->
+      case List.find (\i -> i ^. idSort == External modName || i ^. idSort == WiredIn modName) names of
+        Just name -> pure name
+        Nothing ->
+          errorOn pos $
+            "Not in scope:" <+> quotes (text name) <+> "in" <+> pPrint modName
+              $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> text name <> "`" <+> "?"
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 -- renamer
@@ -102,7 +113,10 @@ rnDecl (Foreign pos name typ) = do
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (Import pos modName) = do
-  interface <- loadInterface modName
+  interface <-
+    loadInterface modName >>= \case
+      Just x -> pure x
+      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   infixInfo <>= interface ^. infixMap
   pure $ Import pos modName
 
@@ -111,8 +125,8 @@ rnExp ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Exp (Malgo 'Parse) ->
   m (Exp (Malgo 'Rename))
-rnExp (Var pos name) = Var pos <$> lookupVarName pos name
-rnExp (Con pos name) = Con pos <$> lookupVarName pos name
+rnExp (Var pos Nothing name) = Var pos Nothing <$> lookupVarName pos name
+rnExp (Var pos (Just modName) name) = Var pos Nothing <$> lookupQualifiedVarName pos modName name
 rnExp (Unboxed pos val) = pure $ Unboxed pos val
 rnExp (Boxed pos val) = do
   f <- lookupBox pos val
@@ -130,16 +144,16 @@ rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
 rnExp (Record pos kvs) = Record pos <$> traverse (bitraverse (lookupFieldName pos) rnExp) kvs
 rnExp (Force pos e) = Force pos <$> rnExp e
-rnExp (Access pos l) = Access pos <$> lookupFieldName pos l
+rnExp (RecordAccess pos l) = RecordAccess pos <$> lookupFieldName pos l
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
-lookupBox pos Int32 {} = Var pos <$> lookupVarName pos "int32#"
-lookupBox pos Int64 {} = Var pos <$> lookupVarName pos "int64#"
-lookupBox pos Float {} = Var pos <$> lookupVarName pos "float#"
-lookupBox pos Double {} = Var pos <$> lookupVarName pos "double#"
-lookupBox pos Char {} = Var pos <$> lookupVarName pos "char#"
-lookupBox pos String {} = Var pos <$> lookupVarName pos "string#"
+lookupBox pos Int32 {} = Var pos Nothing <$> lookupVarName pos "int32#"
+lookupBox pos Int64 {} = Var pos Nothing <$> lookupVarName pos "int64#"
+lookupBox pos Float {} = Var pos Nothing <$> lookupVarName pos "float#"
+lookupBox pos Double {} = Var pos Nothing <$> lookupVarName pos "double#"
+lookupBox pos Char {} = Var pos Nothing <$> lookupVarName pos "char#"
+lookupBox pos String {} = Var pos Nothing <$> lookupVarName pos "string#"
 
 rnType :: (MonadReader RnEnv m, MonadIO m) => Type (Malgo 'Parse) -> m (Type (Malgo 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
@@ -275,8 +289,11 @@ genToplevelEnv modName ds builtinEnv = do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newGlobalId x () modName
       modify $ appendRnEnv varEnv [(x, x')]
-    aux (Import _ modName') = do
-      interface <- loadInterface modName'
+    aux (Import pos modName') = do
+      interface <-
+        loadInterface modName' >>= \case
+          Just x -> pure x
+          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       opt <- getOpt
       when (debugMode opt) $
         liftIO $ hPrint stderr $ pPrint interface

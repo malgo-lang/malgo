@@ -21,7 +21,7 @@ data DsEnv = DsEnv
     _nameEnv :: HashMap RnId (Id C.Type),
     -- | 型環境
     _varTypeEnv :: HashMap RnId (Scheme Type),
-    _typeDefEnv :: HashMap RnTId (TypeDef Type),
+    _typeDefEnv :: HashMap RnId (TypeDef Type),
     _fieldEnv :: HashMap RnId (Scheme Type),
     _desugarRnEnv :: RnEnv
   }

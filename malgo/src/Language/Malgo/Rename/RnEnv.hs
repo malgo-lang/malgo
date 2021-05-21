@@ -26,7 +26,7 @@ makeLenses ''RnState
 
 data RnEnv = RnEnv
   { _varEnv :: HashMap PsId [RnId],
-    _typeEnv :: HashMap PsTId [RnTId],
+    _typeEnv :: HashMap PsId [RnId],
     _fieldEnv :: HashMap PsId [RnId],
     _rnMalgoEnv :: MalgoEnv
   }
@@ -72,7 +72,7 @@ appendRnEnv lens newEnv = over lens (go newEnv)
 
 genBuiltinRnEnv :: (MonadReader env m, HasUniqSupply env, MonadIO m) => MalgoEnv -> m RnEnv
 genBuiltinRnEnv malgoEnv = do
-  -- generate RnTId of primitive types
+  -- generate RnId of primitive types
   int32_t <- newId "Int32#" () $ WiredIn $ ModuleName "Builtin"
   int64_t <- newId "Int64#" () $ WiredIn $ ModuleName "Builtin"
   float_t <- newId "Float#" () $ WiredIn $ ModuleName "Builtin"

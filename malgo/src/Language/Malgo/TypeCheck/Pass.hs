@@ -34,7 +34,7 @@ lookupVar pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just scheme -> pure scheme
 
-lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnTId -> m UType
+lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m UType
 lookupType pos name =
   preuse (typeEnv . at name . _Just . typeConstructor) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
@@ -96,7 +96,10 @@ tcImports ::
 tcImports = traverse tcImport
   where
     tcImport (pos, modName) = do
-      interface <- loadInterface modName
+      interface <-
+        loadInterface modName >>= \case
+          Just x -> pure x
+          Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
       varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
       typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
       pure (pos, modName)
@@ -306,12 +309,9 @@ tcExpr ::
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'TypeCheck))
-tcExpr (Var pos v) = do
+tcExpr (Var pos m v) = do
   vType <- instantiate pos =<< lookupVar pos v
-  pure $ Var (With vType pos) v
-tcExpr (Con pos c) = do
-  cType <- instantiate pos =<< lookupVar pos c
-  pure $ Con (With cType pos) c
+  pure $ Var (With vType pos) m v
 tcExpr (Unboxed pos u) = do
   uType <- typeOf u
   pure $ Unboxed (With uType pos) u
@@ -362,13 +362,13 @@ tcExpr (Force pos e) = do
   eType <- typeOf e'
   tell [With pos $ TyLazy ty :~ eType]
   pure $ Force (With ty pos) e'
-tcExpr (Access pos label) = do
+tcExpr (RecordAccess pos label) = do
   recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
   retType <- UVar <$> freshVar @UType
   case recordType of
     TyRecord kts -> do
       tell [With pos $ recordType :~ TyRecord (Map.insert label retType kts)]
-      pure $ Access (With (TyArr recordType retType) pos) label
+      pure $ RecordAccess (With (TyArr recordType retType) pos) label
     _ -> errorOn pos $ pPrint recordType <+> "is not record type"
 tcExpr (Parens pos e) = do
   e' <- tcExpr e

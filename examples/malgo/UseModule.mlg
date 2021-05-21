@@ -1,0 +1,17 @@
+module UseModule = {
+  import Builtin;
+  import Prelude;
+
+  infixr 9 (.);
+  (.) = { f g x -> f (g x) };
+
+  succ = { x -> add_Int32 x 1 };
+
+  main = {
+    Prelude.putStrLn "Hello, world!";
+    Prelude.print_Int32 <| (succ . succ) 1
+  };
+}
+
+-- Expected: Hello, world!
+-- Expected: 3

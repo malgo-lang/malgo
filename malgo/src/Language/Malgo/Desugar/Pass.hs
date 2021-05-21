@@ -23,12 +23,13 @@ import Language.Malgo.Rename.RnEnv (RnEnv)
 import Language.Malgo.Syntax as G
 import Language.Malgo.Syntax.Extension as G
 import Language.Malgo.TypeRep.Static as GT
+import qualified RIO.Char as Char
 
 -- | MalgoからCoreへの変換
 desugar ::
   (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
   HashMap RnId (Scheme GT.Type) ->
-  HashMap RnTId (TypeDef GT.Type) ->
+  HashMap RnId (TypeDef GT.Type) ->
   HashMap RnId (Scheme GT.Type) ->
   RnEnv ->
   Module x ->
@@ -63,8 +64,11 @@ dsBindGroup bg = do
   pure $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
 dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env, HasLogFunc env) => Import (Malgo 'Refine) -> m ()
-dsImport (_, modName) = do
-  interface <- loadInterface modName
+dsImport (pos, modName) = do
+  interface <-
+    loadInterface modName >>= \case
+      Just x -> pure x
+      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   nameEnv <>= interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
@@ -165,44 +169,38 @@ dsExp ::
   (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
-dsExp (G.Var x name) = do
+dsExp (G.Var x _ name) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
   -- Note: [0 argument]
   --   Core上で0引数関数で表現されるMalgoの値は以下の二つ。
   --    1. {a}型の値（TyLazy）
   --    2. 引数のない値コンストラクタ
-  --   このうち、2.は「0引数関数の呼び出し」の形でのみ出現する（dsExp G.Conの節参照）
-  --   よって、ここではxがTyLazyのときのみname'が0引数関数になるはずである。
   case (x ^. GT.withType, C.typeOf name') of
     -- TyLazyの型を検査
     (GT.TyLazy {}, [] :-> _) -> pure ()
     (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
-    (_, [] :-> _) -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
+    (_, [] :-> _)
+      | isConstructor name -> pure ()
+      | otherwise -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
     _ -> pure ()
-  if idIsExternal name'
-    then do
-      -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
-      -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
-      clsId <- newLocalId "$gblcls" (C.typeOf name')
-      ps <- case C.typeOf name' of
-        pts :-> _ -> traverse (newLocalId "$p") pts
-        _ -> bug Unreachable
-      pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
-    else pure $ Atom $ C.Var name'
-dsExp (G.Con _ name) = do
-  name' <- lookupName name
   case C.typeOf name' of
-    -- 値コンストラクタ名は全部global。
-    -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する。
-    [] :-> _ -> pure $ CallDirect name' []
-    -- グローバルな関数と同様に、引数のある値コンストラクタも、
-    -- 値が必要になったときに都度クロージャを生成する。
-    pts :-> _ -> do
-      clsId <- newLocalId "$concls" (C.typeOf name')
-      ps <- traverse (newLocalId "$p") pts
-      pure $ C.Let [C.LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
-    _ -> bug Unreachable
+    -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
+    [] :-> _ | isConstructor name -> pure $ CallDirect name' []
+    _ ->
+      if idIsExternal name'
+        then do
+          -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
+          -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
+          clsId <- newLocalId "$gblcls" (C.typeOf name')
+          ps <- case C.typeOf name' of
+            pts :-> _ -> traverse (newLocalId "$p") pts
+            _ -> bug Unreachable
+          pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+        else pure $ Atom $ C.Var name'
+  where
+    isConstructor Id {_idName = x : _} = Char.isUpper x
+    isConstructor _ = False
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
 dsExp (G.Apply info f x) = runDef $ do
   f' <- bind =<< dsExp f
@@ -258,7 +256,7 @@ dsExp (G.Force _ e) = runDef $ do
   -- lazy valueは0引数関数に変換されるので、その評価は0引数関数の呼び出しになる
   e' <- bind =<< dsExp e
   pure $ Call e' []
-dsExp (G.Access x label) = runDef $ do
+dsExp (G.RecordAccess x label) = runDef $ do
   GT.TyArr (GT.TyRecord recordType) _ <- pure $ x ^. GT.withType
   kts <- Map.toList <$> traverse dsType recordType
   p <- newLocalId "$p" =<< dsType (GT.TyRecord recordType)

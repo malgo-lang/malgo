@@ -103,12 +103,7 @@ deriving newtype instance MonadFail (RIO env)
 runMalgoM :: MalgoM a -> Opt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
-
-#ifdef DEBUG
-  let isVerbose = True -- TODO: get from the command line instead
-#else
-  let isVerbose = False
-#endif
+  let isVerbose = debugMode opt
   logOptions' <- logOptionsHandle stderr isVerbose
   let logOptions = setLogUseTime True logOptions'
 
@@ -135,6 +130,7 @@ errorOn pos x = do
   errorDoc $
     "error on" <+> pPrint pos <> ":" $+$ nest 2 x
       $+$ pPrint (unPos $ sourceLine pos) <+> "|" <+> text line
+      $$ ""
 
 data With x v = With {_ann :: x, _value :: v}
   deriving stock (Eq, Ord, Bounded, Read, Show, Generic)

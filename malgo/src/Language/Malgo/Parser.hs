@@ -36,7 +36,10 @@ pModule = do
 
 -- module name
 pModuleName :: Parser String
-pModuleName = lexeme $ some $ identLetter <|> char '.'
+pModuleName = lexeme singleModuleName
+
+singleModuleName :: Parser String
+singleModuleName = some identLetter
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
@@ -134,13 +137,10 @@ pUnboxed =
 
 pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
-  label "variable" $
-    Var <$> getSourcePos <*> lowerIdent
-
-pConstructor :: Parser (Exp (Malgo 'Parse))
-pConstructor =
-  label "constructor" $
-    Con <$> getSourcePos <*> upperIdent
+  label "variable" $ do
+    s <- getSourcePos
+    try (Var s <$> fmap (Just . ModuleName) singleModuleName <* char '.' <*> (lowerIdent <|> upperIdent))
+      <|> Var s Nothing <$> (lowerIdent <|> upperIdent)
 
 pFun :: Parser (Exp (Malgo 'Parse))
 pFun =
@@ -233,23 +233,22 @@ pRecord = between (symbol "{") (symbol "}") do
       value <- pExp
       pure (label, value)
 
-pAccess :: Parser (Exp (Malgo 'Parse))
-pAccess = do
+pRecordAccess :: Parser (Exp (Malgo 'Parse))
+pRecordAccess = do
   s <- getSourcePos
   l <- char '#' >> lowerIdent
-  pure $ Access s l
+  pure $ RecordAccess s l
 
 pSingleExp' :: Parser (Exp (Malgo 'Parse))
 pSingleExp' =
   try (Unboxed <$> getSourcePos <*> pUnboxed)
     <|> try (Boxed <$> getSourcePos <*> pBoxed)
     <|> pVariable
-    <|> pConstructor
     <|> try pUnit
     <|> try pTuple
     <|> try pRecord
     <|> pFun
-    <|> pAccess
+    <|> pRecordAccess
     <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
 
 pSingleExp :: Parser (Exp (Malgo 'Parse))

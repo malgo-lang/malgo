@@ -52,8 +52,7 @@ toUnboxed = coerce
 -- Expression
 
 data Exp x
-  = Var (XVar x) (XId x)
-  | Con (XCon x) (XId x)
+  = Var (XVar x) (Maybe ModuleName) (XId x)
   | Unboxed (XUnboxed x) (Literal Unboxed)
   | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Exp x) (Exp x)
@@ -62,7 +61,7 @@ data Exp x
   | Tuple (XTuple x) [Exp x]
   | Record (XRecord x) [(XId x, Exp x)]
   | Force (XForce x) (Exp x)
-  | Access (XAccess x) (XId x)
+  | RecordAccess (XRecordAccess x) (XId x)
   | Parens (XParens x) (Exp x)
 
 deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Exp x)
@@ -70,8 +69,8 @@ deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, F
 deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, Show (XId x)) => Show (Exp x)
 
 instance (Pretty (XId x)) => Pretty (Exp x) where
-  pPrintPrec _ _ (Var _ i) = pPrint i
-  pPrintPrec _ _ (Con _ c) = pPrint c
+  pPrintPrec _ _ (Var _ Nothing i) = pPrint i
+  pPrintPrec _ _ (Var _ (Just x) i) = pPrint x <> "." <> pPrint i
   pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
   pPrintPrec _ _ (Boxed _ lit) = pPrint lit
   pPrintPrec l d (Apply _ e1 e2) =
@@ -87,15 +86,14 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
-  pPrintPrec l _ (Access _ x) = "#" <> pPrintPrec l 0 x
+  pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
 instance
   ForallExpX U.WithUType x =>
   U.HasType (Exp x)
   where
-  typeOf (Var x _) = pure $ x ^. U.withUType
-  typeOf (Con x _) = pure $ x ^. U.withUType
+  typeOf (Var x _ _) = pure $ x ^. U.withUType
   typeOf (Unboxed x _) = pure $ x ^. U.withUType
   typeOf (Boxed x _) = pure $ x ^. U.withUType
   typeOf (Apply x _ _) = pure $ x ^. U.withUType
@@ -104,15 +102,14 @@ instance
   typeOf (Tuple x _) = pure $ x ^. U.withUType
   typeOf (Record x _) = pure $ x ^. U.withUType
   typeOf (Force x _) = pure $ x ^. U.withUType
-  typeOf (Access x _) = pure $ x ^. U.withUType
+  typeOf (RecordAccess x _) = pure $ x ^. U.withUType
   typeOf (Parens x _) = pure $ x ^. U.withUType
 
 instance
   ForallExpX S.WithType x =>
   S.HasType (Exp x)
   where
-  typeOf (Var x _) = pure $ x ^. S.withType
-  typeOf (Con x _) = pure $ x ^. S.withType
+  typeOf (Var x _ _) = pure $ x ^. S.withType
   typeOf (Unboxed x _) = pure $ x ^. S.withType
   typeOf (Boxed x _) = pure $ x ^. S.withType
   typeOf (Apply x _ _) = pure $ x ^. S.withType
@@ -121,7 +118,7 @@ instance
   typeOf (Tuple x _) = pure $ x ^. S.withType
   typeOf (Record x _) = pure $ x ^. S.withType
   typeOf (Force x _) = pure $ x ^. S.withType
-  typeOf (Access x _) = pure $ x ^. S.withType
+  typeOf (RecordAccess x _) = pure $ x ^. S.withType
   typeOf (Parens x _) = pure $ x ^. S.withType
 
 instance
@@ -132,8 +129,7 @@ instance
   U.HasUTerm S.TypeF U.TypeVar (Exp x)
   where
   walkOn f = \case
-    Var x v -> Var <$> U.walkOn f x <*> pure v
-    Con x c -> Con <$> U.walkOn f x <*> pure c
+    Var x m v -> Var <$> U.walkOn f x <*> pure m <*> pure v
     Unboxed x u -> Unboxed <$> U.walkOn f x <*> U.walkOn f u
     Boxed x b -> Boxed <$> U.walkOn f x <*> U.walkOn f b
     Apply x e1 e2 -> Apply <$> U.walkOn f x <*> U.walkOn f e1 <*> U.walkOn f e2
@@ -142,12 +138,11 @@ instance
     Tuple x es -> Tuple <$> U.walkOn f x <*> traverse (U.walkOn f) es
     Record x kvs -> Record <$> U.walkOn f x <*> traverse (\(k, v) -> (k,) <$> U.walkOn f v) kvs
     Force x e -> Force <$> U.walkOn f x <*> U.walkOn f e
-    Access x l -> Access <$> U.walkOn f x <*> pure l
+    RecordAccess x l -> RecordAccess <$> U.walkOn f x <*> pure l
     Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
-freevars (Var _ v) = HashSet.singleton v
-freevars (Con _ _) = mempty
+freevars (Var _ _ v) = HashSet.singleton v
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
@@ -156,7 +151,7 @@ freevars (Fn _ cs) = mconcat $ map freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (Force _ e) = freevars e
-freevars (Access _ _) = mempty
+freevars (RecordAccess _ _) = mempty
 freevars (Parens _ e) = freevars e
 
 ------------
@@ -319,18 +314,18 @@ makePrisms ''Pat
 
 data Type x
   = TyApp (XTyApp x) (Type x) [Type x]
-  | TyVar (XTyVar x) (XTId x)
-  | TyCon (XTyCon x) (XTId x)
+  | TyVar (XTyVar x) (XId x)
+  | TyCon (XTyCon x) (XId x)
   | TyArr (XTyArr x) (Type x) (Type x)
   | TyTuple (XTyTuple x) [Type x]
-  | TyRecord (XTyRecord x) [(XTId x, Type x)]
+  | TyRecord (XTyRecord x) [(XId x, Type x)]
   | TyLazy (XTyLazy x) (Type x)
 
-deriving stock instance (ForallTypeX Eq x, Eq (XTId x)) => Eq (Type x)
+deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
 
-deriving stock instance (ForallTypeX Show x, Show (XTId x)) => Show (Type x)
+deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
 
-instance (Pretty (XTId x)) => Pretty (Type x) where
+instance (Pretty (XId x)) => Pretty (Type x) where
   pPrintPrec l d (TyApp _ t ts) =
     maybeParens (d > 11) $ pPrint t <+> sep (map (pPrintPrec l 12) ts)
   pPrintPrec _ _ (TyVar _ i) = pPrint i
@@ -341,7 +336,7 @@ instance (Pretty (XTId x)) => Pretty (Type x) where
   pPrintPrec l _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec _ _ (TyLazy _ t) = braces $ pPrint t
 
-getTyVars :: (Eq (XTId x), Hashable (XTId x)) => Type x -> HashSet (XTId x)
+getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
 getTyVars (TyVar _ v) = HashSet.singleton v
 getTyVars TyCon {} = mempty
@@ -357,17 +352,17 @@ getTyVars (TyLazy _ t) = getTyVars t
 data Decl x
   = ScDef (XScDef x) (XId x) (Exp x)
   | ScSig (XScSig x) (XId x) (Type x)
-  | DataDef (XDataDef x) (XTId x) [XTId x] [(XId x, [Type x])]
-  | TypeSynonym (XTypeSynonym x) (XTId x) [XTId x] (Type x)
+  | DataDef (XDataDef x) (XId x) [XId x] [(XId x, [Type x])]
+  | TypeSynonym (XTypeSynonym x) (XId x) [XId x] (Type x)
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
   | Import (XImport x) ModuleName
 
-deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (Decl x)
+deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 
-deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Show (Decl x)
+deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (Decl x)
 
-instance (Pretty (XId x), Pretty (XTId x)) => Pretty (Decl x) where
+instance (Pretty (XId x)) => Pretty (Decl x) where
   pPrint (ScDef _ f e) = sep [pPrint f <+> "=", nest 2 $ pPrint e]
   pPrint (ScSig _ f t) = pPrint f <+> "::" <+> pPrint t
   pPrint (DataDef _ d xs cs) =
@@ -394,11 +389,11 @@ makePrisms ''Decl
 
 data Module x = Module {_moduleName :: ModuleName, _moduleDefinition :: XModule x}
 
-deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x), Eq (XModule x)) => Eq (Module x)
+deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XModule x)) => Eq (Module x)
 
-deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x), Show (XModule x)) => Show (Module x)
+deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XModule x)) => Show (Module x)
 
-instance (Pretty (XId x), Pretty (XTId x), Pretty (XModule x)) => Pretty (Module x) where
+instance (Pretty (XId x), Pretty (XModule x)) => Pretty (Module x) where
   pPrint (Module name defs) =
     "module" <+> pPrint name <+> "=" $+$ braces (pPrint defs)
 
@@ -429,9 +424,9 @@ type ScDef x = (XScDef x, XId x, Exp x)
 
 type ScSig x = (XScSig x, XId x, Type x)
 
-type DataDef x = (XDataDef x, XTId x, [XTId x], [(XId x, [Type x])])
+type DataDef x = (XDataDef x, XId x, [XId x], [(XId x, [Type x])])
 
-type TypeSynonym x = (XTypeSynonym x, XTId x, [XTId x], Type x)
+type TypeSynonym x = (XTypeSynonym x, XId x, [XId x], Type x)
 
 type Foreign x = (XForeign x, XId x, Type x)
 
@@ -439,11 +434,11 @@ type Import x = (XImport x, ModuleName)
 
 makeLenses ''BindGroup
 
-deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XTId x)) => Eq (BindGroup x)
+deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (BindGroup x)
 
-deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XTId x)) => Show (BindGroup x)
+deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
 
-instance (Pretty (XId x), Pretty (XTId x)) => Pretty (BindGroup x) where
+instance (Pretty (XId x)) => Pretty (BindGroup x) where
   pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _foreigns} =
     sep $
       punctuate ";" $
