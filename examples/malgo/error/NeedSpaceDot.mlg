@@ -9,8 +9,7 @@ module NeedSpaceDot = {
 
   main = {
     Prelude.putStrLn "Hello, world!";
-    Prelude.print_Int32
-      <| (succ.succ) 1 -- Bad
-      -- Good: succ . succ <- need spaces
+    Prelude.print_Int32 <| (succ.succ) 1
+                        --  ^^^^^^^^^
   };
 }
