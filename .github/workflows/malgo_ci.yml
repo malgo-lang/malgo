@@ -23,7 +23,7 @@ jobs:
         path: |
           ~/.cabal
           dist-newstyle
-        key: ${{ runner.os }}-build-${{ hashFiles('malgo/malgo.cabal', 'koriel/koriel.cabal') }}
+        key: ${{ runner.os }}-build-${{ hashFiles('malgo/malgo.cabal', 'koriel/koriel.cabal', 'cabal.project.freeze') }}
     - uses: haskell/actions/setup@v1
       with:
         ghc-version: '8.10.4'
