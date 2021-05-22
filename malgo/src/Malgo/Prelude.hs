@@ -2,7 +2,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Language.Malgo.Prelude
+module Malgo.Prelude
   ( module Koriel.Prelude,
     runMalgoM,
     Opt (..),

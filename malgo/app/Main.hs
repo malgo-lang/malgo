@@ -1,9 +1,9 @@
 module Main where
 
 import qualified Data.Text.IO as T
-import qualified Language.Malgo.Driver as Driver
-import Language.Malgo.Parser (parseMalgo)
-import Language.Malgo.Prelude hiding (value)
+import qualified Malgo.Driver as Driver
+import Malgo.Parser (parseMalgo)
+import Malgo.Prelude hiding (value)
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory)
 import System.FilePath ((</>))

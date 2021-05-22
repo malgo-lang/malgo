@@ -1,5 +1,5 @@
 -- | パターンマッチのコンパイル
-module Language.Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
+module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
@@ -11,14 +11,14 @@ import qualified Koriel.Core.Type as Core
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Malgo.Desugar.DsEnv
-import Language.Malgo.Desugar.Type (dsType, unfoldType)
-import Language.Malgo.Desugar.Unboxed (dsUnboxed)
-import Language.Malgo.Prelude
-import Language.Malgo.Syntax
-import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static
-import qualified Language.Malgo.TypeRep.Static as Malgo
+import Malgo.Desugar.DsEnv
+import Malgo.Desugar.Type (dsType, unfoldType)
+import Malgo.Desugar.Unboxed (dsUnboxed)
+import Malgo.Prelude
+import Malgo.Syntax
+import Malgo.Syntax.Extension
+import Malgo.TypeRep.Static
+import qualified Malgo.TypeRep.Static as Malgo
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加

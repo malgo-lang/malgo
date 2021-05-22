@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Language.Malgo.UTerm where
+module Malgo.UTerm where
 
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
@@ -9,8 +9,8 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.Void
 import Koriel.Pretty
-import Language.Malgo.Prelude
-import Language.Malgo.Unify
+import Malgo.Prelude
+import Malgo.Unify
 import Text.Show (Show (showList, showsPrec), showParen, showString)
 
 -----------

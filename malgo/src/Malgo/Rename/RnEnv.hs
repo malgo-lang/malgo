@@ -1,13 +1,13 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Language.Malgo.Rename.RnEnv where
+module Malgo.Rename.RnEnv where
 
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Malgo.Prelude
-import Language.Malgo.Syntax.Extension
+import Malgo.Prelude
+import Malgo.Syntax.Extension
 
 data RnState = RnState {_infixInfo :: HashMap RnId (Assoc, Int), _moduleName :: ModuleName}
   deriving stock (Show)

@@ -1,17 +1,17 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Language.Malgo.Desugar.DsEnv where
+module Malgo.Desugar.DsEnv where
 
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import Language.Malgo.Prelude
-import Language.Malgo.Rename.RnEnv (RnEnv, HasRnEnv (rnEnv))
-import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static
-import qualified Language.Malgo.TypeRep.Static as GT
+import Malgo.Prelude
+import Malgo.Rename.RnEnv (RnEnv, HasRnEnv (rnEnv))
+import Malgo.Syntax.Extension
+import Malgo.TypeRep.Static
+import qualified Malgo.TypeRep.Static as GT
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv

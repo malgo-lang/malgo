@@ -1,4 +1,4 @@
-module Language.Malgo.TypeCheck.Pass where
+module Malgo.TypeCheck.Pass where
 
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
@@ -9,19 +9,19 @@ import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Malgo.Interface (loadInterface, signatureMap, typeDefMap)
-import Language.Malgo.Prelude
-import Language.Malgo.Rename.RnEnv (RnEnv)
-import qualified Language.Malgo.Rename.RnEnv as R
-import Language.Malgo.Syntax hiding (Type (..), freevars)
-import qualified Language.Malgo.Syntax as S
-import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeCheck.TcEnv
-import Language.Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors)
-import qualified Language.Malgo.TypeRep.Static as Static
-import Language.Malgo.TypeRep.UTerm
-import Language.Malgo.UTerm
-import Language.Malgo.Unify hiding (lookupVar)
+import Malgo.Interface (loadInterface, signatureMap, typeDefMap)
+import Malgo.Prelude
+import Malgo.Rename.RnEnv (RnEnv)
+import qualified Malgo.Rename.RnEnv as R
+import Malgo.Syntax hiding (Type (..), freevars)
+import qualified Malgo.Syntax as S
+import Malgo.Syntax.Extension
+import Malgo.TypeCheck.TcEnv
+import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors)
+import qualified Malgo.TypeRep.Static as Static
+import Malgo.TypeRep.UTerm
+import Malgo.UTerm
+import Malgo.Unify hiding (lookupVar)
 import Text.Megaparsec (SourcePos)
 
 -------------------------------
@@ -345,7 +345,7 @@ tcExpr (Fn pos cs) = do
         cType <- typeOf c
         tell [With pos $ c'Type :~ cType]
       pure $ Fn (With c'Type pos) (c' : cs')
-    _ -> bug Unreachable -- Language.Malgo.ParserはsepBy1でFnをパースする
+    _ -> bug Unreachable -- Malgo.ParserはsepBy1でFnをパースする
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
   esType <- TyTuple <$> traverse typeOf es'

@@ -1,4 +1,4 @@
-module Language.Malgo.Driver (compile, compileFromAST) where
+module Malgo.Driver (compile, compileFromAST) where
 
 import Data.Maybe (fromJust)
 import qualified Data.Text.IO as T
@@ -10,18 +10,18 @@ import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Malgo.Desugar.Pass (desugar)
-import Language.Malgo.Interface (buildInterface, loadInterface, storeInterface)
-import Language.Malgo.Parser (parseMalgo)
-import Language.Malgo.Prelude
-import Language.Malgo.Refine.Pass (refine)
-import Language.Malgo.Rename.Pass (rename)
-import qualified Language.Malgo.Rename.RnEnv as RnEnv
-import qualified Language.Malgo.Syntax as Syntax
-import Language.Malgo.Syntax.Extension
-import qualified Language.Malgo.TypeCheck.Pass as TypeCheck
-import qualified Language.Malgo.TypeCheck.TcEnv as TcEnv
-import qualified Language.Malgo.TypeRep.Static as Static
+import Malgo.Desugar.Pass (desugar)
+import Malgo.Interface (buildInterface, loadInterface, storeInterface)
+import Malgo.Parser (parseMalgo)
+import Malgo.Prelude
+import Malgo.Refine.Pass (refine)
+import Malgo.Rename.Pass (rename)
+import qualified Malgo.Rename.RnEnv as RnEnv
+import qualified Malgo.Syntax as Syntax
+import Malgo.Syntax.Extension
+import qualified Malgo.TypeCheck.Pass as TypeCheck
+import qualified Malgo.TypeCheck.TcEnv as TcEnv
+import qualified Malgo.TypeRep.Static as Static
 import System.IO
   ( hPrint,
     hPutStrLn,

@@ -35,7 +35,7 @@ https://www.stackage.org/package/rio
 
 ### Driver
 
-malgoコンパイラのエントリーポイントは`Language.Malgo.Driver.compile`である。
+malgoコンパイラのエントリーポイントは`Malgo.Driver.compile`である。
 
 ### Pass
 ### Rename
