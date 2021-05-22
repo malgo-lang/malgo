@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP #-}
 
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
-module Language.Malgo.Desugar.Pass (desugar) where
+module Malgo.Desugar.Pass (desugar) where
 
 import Control.Monad (mapAndUnzipM)
 import qualified Data.HashMap.Strict as HashMap
@@ -14,15 +14,15 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id hiding (newGlobalId, newId)
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Malgo.Desugar.DsEnv
-import Language.Malgo.Desugar.Match
-import Language.Malgo.Desugar.Type
-import Language.Malgo.Interface
-import Language.Malgo.Prelude
-import Language.Malgo.Rename.RnEnv (RnEnv)
-import Language.Malgo.Syntax as G
-import Language.Malgo.Syntax.Extension as G
-import Language.Malgo.TypeRep.Static as GT
+import Malgo.Desugar.DsEnv
+import Malgo.Desugar.Match
+import Malgo.Desugar.Type
+import Malgo.Interface
+import Malgo.Prelude
+import Malgo.Rename.RnEnv (RnEnv)
+import Malgo.Syntax as G
+import Malgo.Syntax.Extension as G
+import Malgo.TypeRep.Static as GT
 import qualified RIO.Char as Char
 
 -- | MalgoからCoreへの変換

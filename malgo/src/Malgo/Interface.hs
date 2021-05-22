@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Language.Malgo.Interface where
+module Malgo.Interface where
 
 import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
@@ -9,13 +9,13 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import Language.Malgo.Desugar.DsEnv (DsEnv)
-import qualified Language.Malgo.Desugar.DsEnv as DsEnv
-import Language.Malgo.Prelude
-import Language.Malgo.Rename.RnEnv (RnState)
-import qualified Language.Malgo.Rename.RnEnv as RnState
-import Language.Malgo.Syntax.Extension
-import qualified Language.Malgo.TypeRep.Static as GT
+import Malgo.Desugar.DsEnv (DsEnv)
+import qualified Malgo.Desugar.DsEnv as DsEnv
+import Malgo.Prelude
+import Malgo.Rename.RnEnv (RnState)
+import qualified Malgo.Rename.RnEnv as RnState
+import Malgo.Syntax.Extension
+import qualified Malgo.TypeRep.Static as GT
 import qualified RIO.Directory as Directory
 import System.FilePath ((-<.>), (</>))
 

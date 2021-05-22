@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Language.Malgo.TypeCheck.TcEnv
+module Malgo.TypeCheck.TcEnv
   ( TcEnv (..),
     varEnv,
     typeEnv,
@@ -15,14 +15,14 @@ import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Pretty
-import Language.Malgo.Prelude
-import Language.Malgo.Rename.RnEnv (RnEnv)
-import qualified Language.Malgo.Rename.RnEnv as R
-import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static (Scheme, TypeDef (..), TypeF)
-import qualified Language.Malgo.TypeRep.Static as Static
-import Language.Malgo.TypeRep.UTerm
-import Language.Malgo.UTerm
+import Malgo.Prelude
+import Malgo.Rename.RnEnv (RnEnv)
+import qualified Malgo.Rename.RnEnv as R
+import Malgo.Syntax.Extension
+import Malgo.TypeRep.Static (Scheme, TypeDef (..), TypeF)
+import qualified Malgo.TypeRep.Static as Static
+import Malgo.TypeRep.UTerm
+import Malgo.UTerm
 
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId (Scheme UType),

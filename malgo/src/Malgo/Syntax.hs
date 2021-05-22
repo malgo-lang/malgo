@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Language.Malgo.Syntax where
+module Malgo.Syntax where
 
 import Data.Coerce (coerce)
 import Data.Foldable (find, foldl1)
@@ -9,11 +9,11 @@ import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Koriel.Id
 import Koriel.Pretty
-import Language.Malgo.Prelude
-import Language.Malgo.Syntax.Extension
-import qualified Language.Malgo.TypeRep.Static as S
-import qualified Language.Malgo.TypeRep.UTerm as U
-import qualified Language.Malgo.UTerm as U
+import Malgo.Prelude
+import Malgo.Syntax.Extension
+import qualified Malgo.TypeRep.Static as S
+import qualified Malgo.TypeRep.UTerm as U
+import qualified Malgo.UTerm as U
 
 -- | Unboxed and literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String

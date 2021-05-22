@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Language.Malgo.TypeRep.Static where
+module Malgo.TypeRep.Static where
 
 import Data.Binary (Binary)
 import Data.Fix
@@ -11,8 +11,8 @@ import Data.Maybe (fromJust)
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
-import Language.Malgo.Prelude
-import Language.Malgo.UTerm
+import Malgo.Prelude
+import Malgo.UTerm
 
 --------------------------------
 -- Common tag representations --

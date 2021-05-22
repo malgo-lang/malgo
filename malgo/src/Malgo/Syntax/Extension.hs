@@ -1,4 +1,4 @@
-module Language.Malgo.Syntax.Extension where
+module Malgo.Syntax.Extension where
 
 import Data.Binary (Binary)
 import Data.Kind (Constraint)
@@ -6,9 +6,9 @@ import qualified Data.Kind as K
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
-import Language.Malgo.Prelude
-import qualified Language.Malgo.TypeRep.Static as S
-import qualified Language.Malgo.TypeRep.UTerm as U
+import Malgo.Prelude
+import qualified Malgo.TypeRep.Static as S
+import qualified Malgo.TypeRep.UTerm as U
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Phase and type instance

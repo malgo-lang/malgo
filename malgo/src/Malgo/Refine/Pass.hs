@@ -1,13 +1,13 @@
--- | Language.Malgo.Refine.Pass is the final AST-to-AST pass.
+-- | Malgo.Refine.Pass is the final AST-to-AST pass.
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
-module Language.Malgo.Refine.Pass where
+module Malgo.Refine.Pass where
 
 import Data.Kind (Constraint)
-import Language.Malgo.Prelude
-import Language.Malgo.Syntax hiding (TyArr)
-import qualified Language.Malgo.Syntax as Syn
-import Language.Malgo.Syntax.Extension
-import Language.Malgo.TypeRep.Static
+import Malgo.Prelude
+import Malgo.Syntax hiding (TyArr)
+import qualified Malgo.Syntax as Syn
+import Malgo.Syntax.Extension
+import Malgo.TypeRep.Static
 
 type TypeChecked t x = (x ~ Malgo 'TypeCheck) :: Constraint
 

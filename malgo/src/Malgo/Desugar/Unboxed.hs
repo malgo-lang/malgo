@@ -1,11 +1,11 @@
-module Language.Malgo.Desugar.Unboxed where
+module Malgo.Desugar.Unboxed where
 
 -- Unboxedの脱糖衣
 
 import Koriel.Core.Syntax as Core
-import Language.Malgo.Prelude
-import Language.Malgo.Syntax as Malgo
-import Language.Malgo.Syntax.Extension as Malgo
+import Malgo.Prelude
+import Malgo.Syntax as Malgo
+import Malgo.Syntax.Extension as Malgo
 
 dsUnboxed :: Literal Malgo.Unboxed -> Core.Unboxed
 dsUnboxed (Malgo.Int32 x) = Core.Int32 $ toInteger x

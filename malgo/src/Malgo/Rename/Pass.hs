@@ -1,5 +1,5 @@
 -- | 名前解決
-module Language.Malgo.Rename.Pass where
+module Malgo.Rename.Pass where
 
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
@@ -8,11 +8,11 @@ import Data.List.Extra (anySame, disjoint)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Malgo.Interface
-import Language.Malgo.Prelude
-import Language.Malgo.Rename.RnEnv
-import Language.Malgo.Syntax
-import Language.Malgo.Syntax.Extension
+import Malgo.Interface
+import Malgo.Prelude
+import Malgo.Rename.RnEnv
+import Malgo.Syntax
+import Malgo.Syntax.Extension
 import qualified RIO.List as List
 import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)

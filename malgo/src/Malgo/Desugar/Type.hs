@@ -1,14 +1,14 @@
-module Language.Malgo.Desugar.Type (dsType, unfoldType) where
+module Malgo.Desugar.Type (dsType, unfoldType) where
 
 import qualified Data.Map.Strict as Map
 import Koriel.Core.Type
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
-import Language.Malgo.Desugar.DsEnv
-import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static
-import qualified Language.Malgo.TypeRep.Static as GT
+import Malgo.Desugar.DsEnv
+import Malgo.Prelude
+import Malgo.TypeRep.Static
+import qualified Malgo.TypeRep.Static as GT
 
 -- Malgoの型をCoreの型に変換する
 dsType :: Monad m => GT.Type -> m C.Type

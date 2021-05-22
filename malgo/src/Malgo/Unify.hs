@@ -3,12 +3,12 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | Unification library
-module Language.Malgo.Unify where
+module Malgo.Unify where
 
 import Control.Monad.Except
 import qualified Data.HashSet as HashSet
 import Koriel.Pretty
-import Language.Malgo.Prelude
+import Malgo.Prelude
 import Text.Megaparsec (SourcePos)
 
 ----------------

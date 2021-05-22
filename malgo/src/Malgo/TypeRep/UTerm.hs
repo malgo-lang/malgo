@@ -3,7 +3,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Language.Malgo.TypeRep.UTerm where
+module Malgo.TypeRep.UTerm where
 
 import Data.Deriving
 import Data.Functor.Foldable
@@ -14,11 +14,11 @@ import Data.Void
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Language.Malgo.Prelude
-import Language.Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), Scheme (Forall), TypeF (..))
-import qualified Language.Malgo.TypeRep.Static as S
-import Language.Malgo.UTerm
-import Language.Malgo.Unify
+import Malgo.Prelude
+import Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), Scheme (Forall), TypeF (..))
+import qualified Malgo.TypeRep.Static as S
+import Malgo.UTerm
+import Malgo.Unify
 import Text.Megaparsec (SourcePos)
 
 ----------
