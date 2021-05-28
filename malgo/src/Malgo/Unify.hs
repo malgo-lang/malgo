@@ -5,7 +5,7 @@
 -- | Unification library
 module Malgo.Unify where
 
-import Control.Monad.Except
+import Control.Monad.Except (ExceptT)
 import qualified Data.HashSet as HashSet
 import Koriel.Pretty
 import Malgo.Prelude
@@ -42,7 +42,7 @@ class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
   type Var t
 
   -- | Unify two terms and generate substituation and new constraints
-  unify :: SourcePos -> t -> t -> Except UnifyError (UnifyResult t)
+  unify :: SourcePos -> t -> t -> Either UnifyError (UnifyResult t)
 
   -- | Check alpha-equivalence
   equiv :: t -> t -> Maybe (HashMap (Var t) (Var t))
@@ -56,7 +56,7 @@ class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
 
 -- | Lifted version of Unifiable
 class Unifiable1 t where
-  liftUnify :: (Unifiable a) => (SourcePos -> a -> a -> Except UnifyError (UnifyResult a)) -> SourcePos -> t a -> t a -> Except UnifyError (UnifyResult a)
+  liftUnify :: (Unifiable a) => (SourcePos -> a -> a -> Either UnifyError (UnifyResult a)) -> SourcePos -> t a -> t a -> Either UnifyError (UnifyResult a)
   liftEquiv :: Unifiable a => (a -> a -> Maybe (HashMap (Var a) (Var a))) -> t a -> t a -> Maybe (HashMap (Var a) (Var a))
   liftFreevars :: Unifiable a => (a -> HashSet (Var a)) -> t a -> HashSet (Var a)
   liftOccursCheck :: Unifiable a => (Var a -> a -> Bool) -> Var a -> t a -> Bool
@@ -103,7 +103,7 @@ solveLoop ::
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (t1 :~ t2) : cs) = do
-  (binds, cs') <- case runExcept (unify x t1 t2) of
+  (binds, cs') <- case unify x t1 t2 of
     Right x -> pure x
     Left (pos, err) -> errorOn pos err
   ifor_ binds $ \var term -> bindVar x var term

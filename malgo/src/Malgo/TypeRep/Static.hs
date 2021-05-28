@@ -125,7 +125,7 @@ class IsType a where
   _Type = prism' fromType safeToType
   safeToType :: a -> Maybe Type
   safeToType a = a ^? _Type
-  toType :: a -> Type
+  toType :: HasCallStack => a -> Type
   toType a = fromJust $ safeToType a
   fromType :: Type -> a
   fromType a = a ^. re _Type

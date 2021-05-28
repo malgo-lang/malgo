@@ -5,6 +5,7 @@
 
 module Malgo.TypeRep.UTerm where
 
+import Control.Monad.Error.Class (throwError)
 import Data.Deriving
 import Data.Functor.Foldable
 import qualified Data.HashSet as HashSet
@@ -20,7 +21,6 @@ import qualified Malgo.TypeRep.Static as S
 import Malgo.UTerm
 import Malgo.Unify
 import Text.Megaparsec (SourcePos)
-import Control.Monad.Error.Class (throwError)
 
 ----------
 -- Type --
@@ -84,6 +84,8 @@ instance Unifiable1 TypeF where
   liftEquiv _ (TyPrimF p1) (TyPrimF p2) | p1 == p2 = Just mempty
   liftEquiv equiv (TyArrF l1 r1) (TyArrF l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
   liftEquiv equiv (TyTupleF ts1) (TyTupleF ts2) = mconcat <$> zipWithM equiv ts1 ts2
+  liftEquiv equiv (TyRecordF kts1) (TyRecordF kts2)
+    | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
   liftEquiv equiv (TyLazyF t1) (TyLazyF t2) = equiv t1 t2
   liftEquiv equiv (TyPtrF t1) (TyPtrF t2) = equiv t1 t2
   liftEquiv equiv (TYPEF rep1) (TYPEF rep2) = equiv rep1 rep2
