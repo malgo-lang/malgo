@@ -39,9 +39,7 @@ refineExp (OpApp x op e1 e2) = do
   applyType <- TyArr <$> typeOf e2' <*> pure (x' ^. ann)
   opType <- TyArr <$> typeOf e1' <*> pure applyType
   pure $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) Nothing op) e1') e2'
-refineExp (Fn x cs) = do
-  traceM $ tshow $ pPrint x
-  Fn (over ann toType x) <$> traverse refineClause cs
+refineExp (Fn x cs) = Fn (over ann toType x) <$> traverse refineClause cs
 refineExp (Tuple x es) = Tuple (over ann toType x) <$> traverse refineExp es
 refineExp (Record x kvs) = Record (over ann toType x) <$> traverseOf (traversed . _2) refineExp kvs
 refineExp (Force x e) = Force (over ann toType x) <$> refineExp e
