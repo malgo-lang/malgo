@@ -149,10 +149,10 @@ tcTypeSynonyms ::
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     logDebug $ displayShow $ "Parametized type synonym:" <+> pPrint (params, typ)
-    -- unless (null params) do
-    --   errorOn pos $
-    --     "Parametized type synonym is not supported"
-    --       $+$ "TODO: add type operator and fix TyTyple and TyLazy's kinding"
+    unless (null params) do
+      errorOn pos $
+        "Parametized type synonym is not supported"
+          $+$ "TODO: add type operator and fix TyTyple and TyLazy's kinding"
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar @UType) params
     nameKind <- kindOf name'
