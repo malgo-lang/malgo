@@ -5,7 +5,7 @@
 -- | Unification library
 module Malgo.Unify where
 
-import Control.Monad.Except
+import Control.Monad.Except (ExceptT)
 import qualified Data.HashSet as HashSet
 import Koriel.Pretty
 import Malgo.Prelude
@@ -29,13 +29,20 @@ instance (Pretty t) => Pretty (Constraint t) where
 -- Unifiable --
 ---------------
 
+type UnifyResult t = (HashMap (Var t) t, [With SourcePos (Constraint t)])
+
+unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
+unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
+
+type UnifyError = (SourcePos, Doc)
+
 -- | Unifiable value
 class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
   -- | Representation of variable
   type Var t
 
   -- | Unify two terms and generate substituation and new constraints
-  unify :: (MonadBind t m, MonadReader env m, HasOpt env, MonadIO m) => SourcePos -> t -> t -> m (HashMap (Var t) t, [With SourcePos (Constraint t)])
+  unify :: SourcePos -> t -> t -> Either UnifyError (UnifyResult t)
 
   -- | Check alpha-equivalence
   equiv :: t -> t -> Maybe (HashMap (Var t) (Var t))
@@ -49,7 +56,7 @@ class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
 
 -- | Lifted version of Unifiable
 class Unifiable1 t where
-  liftUnify :: (MonadBind a m, MonadReader env m, HasOpt env, MonadIO m, Unifiable a) => (SourcePos -> a -> a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])) -> SourcePos -> t a -> t a -> m (HashMap (Var a) a, [With SourcePos (Constraint a)])
+  liftUnify :: (Unifiable a) => (SourcePos -> a -> a -> Either UnifyError (UnifyResult a)) -> SourcePos -> t a -> t a -> Either UnifyError (UnifyResult a)
   liftEquiv :: Unifiable a => (a -> a -> Maybe (HashMap (Var a) (Var a))) -> t a -> t a -> Maybe (HashMap (Var a) (Var a))
   liftFreevars :: Unifiable a => (a -> HashSet (Var a)) -> t a -> HashSet (Var a)
   liftOccursCheck :: Unifiable a => (Var a -> a -> Bool) -> Var a -> t a -> Bool
@@ -96,12 +103,11 @@ solveLoop ::
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (t1 :~ t2) : cs) = do
-  (binds, cs') <- unify x t1 t2
+  (binds, cs') <- case unify x t1 t2 of
+    Right x -> pure x
+    Left (pos, err) -> errorOn pos err
   ifor_ binds $ \var term -> bindVar x var term
   solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
 zonkConstraint :: (MonadBind t f) => With x (Constraint t) -> f (With x (Constraint t))
 zonkConstraint (With m (x :~ y)) = With m <$> ((:~) <$> zonk x <*> zonk y)
-
-unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
-unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)

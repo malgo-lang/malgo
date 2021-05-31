@@ -5,6 +5,7 @@
 
 module Malgo.TypeRep.UTerm where
 
+import Control.Monad.Error.Class (throwError)
 import Data.Deriving
 import Data.Functor.Foldable
 import qualified Data.HashSet as HashSet
@@ -76,13 +77,15 @@ instance Unifiable1 TypeF where
   liftUnify _ x (TYPEF rep1) (TYPEF rep2) = pure (mempty, [With x $ rep1 :~ rep2])
   liftUnify _ _ TyRepF TyRepF = pure (mempty, [])
   liftUnify _ _ (RepF rep1) (RepF rep2) | rep1 == rep2 = pure (mempty, [])
-  liftUnify _ x t1 t2 = errorOn x $ unifyErrorMessage t1 t2
+  liftUnify _ x t1 t2 = throwError (x, unifyErrorMessage t1 t2)
   liftEquiv equiv (TyAppF t11 t12) (TyAppF t21 t22) = (<>) <$> equiv t11 t21 <*> equiv t12 t22
   liftEquiv _ (TyVarF v1) (TyVarF v2) | v1 == v2 = Just mempty
   liftEquiv _ (TyConF c1) (TyConF c2) | c1 == c2 = Just mempty
   liftEquiv _ (TyPrimF p1) (TyPrimF p2) | p1 == p2 = Just mempty
   liftEquiv equiv (TyArrF l1 r1) (TyArrF l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
   liftEquiv equiv (TyTupleF ts1) (TyTupleF ts2) = mconcat <$> zipWithM equiv ts1 ts2
+  liftEquiv equiv (TyRecordF kts1) (TyRecordF kts2)
+    | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
   liftEquiv equiv (TyLazyF t1) (TyLazyF t2) = equiv t1 t2
   liftEquiv equiv (TyPtrF t1) (TyPtrF t2) = equiv t1 t2
   liftEquiv equiv (TYPEF rep1) (TYPEF rep2) = equiv rep1 rep2
