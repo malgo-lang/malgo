@@ -1,3 +1,6 @@
+-- Issue: Compiler crashes when defining data Either a b = Left a | Right b
+-- https://github.com/malgo-lang/malgo/issues/59
+
 module Either = {
   import Builtin;
   import Prelude;
