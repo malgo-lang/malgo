@@ -1,0 +1,13 @@
+module Either = {
+  import Builtin;
+  import Prelude;
+
+  data Either a b = Left a | Right b;
+
+  main = {
+    let x = Right 1;
+    x |> { Right y -> print_Int32 y }
+  };
+}
+
+-- Expected: 1
