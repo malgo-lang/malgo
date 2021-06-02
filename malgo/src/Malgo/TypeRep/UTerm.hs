@@ -44,6 +44,7 @@ instance Pretty t => Pretty (TypeF t) where
   pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec l _ (TyLazyF t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
+  pPrintPrec _ _ TyBottomF = "#Bottom"
   pPrintPrec l _ (TYPEF rep) = "TYPE" <+> pPrintPrec l 0 rep
   pPrintPrec _ _ TyRepF = "#Rep"
   pPrintPrec l _ (RepF rep) = pPrintPrec l 0 rep
@@ -185,6 +186,7 @@ defaultToBoxed x (UTerm t) = do
     defaultToBoxed' (TyPtrF t) = do
       t <- defaultToBoxed x t
       pure $ TyPtrF t
+    defaultToBoxed' TyBottomF = pure TyBottomF
     defaultToBoxed' (TYPEF rep) = do
       rep <- defaultToBoxed x rep
       pure $ TYPEF rep
@@ -228,6 +230,7 @@ instantiate x (Forall as t) = do
       TyRecordF kts -> fmap UTerm $ TyRecordF <$> traverse (replace kvs) kts
       TyLazyF t -> fmap UTerm $ TyLazyF <$> replace kvs t
       TyPtrF t -> fmap UTerm $ TyPtrF <$> replace kvs t
+      TyBottomF -> pure $ UTerm TyBottomF
       TYPEF rep -> fmap UTerm $ TYPEF <$> replace kvs rep
       TyRepF -> pure $ UTerm TyRepF
       RepF rep -> pure $ UTerm $ RepF rep
@@ -253,6 +256,7 @@ instance HasKind UType where
     TyRecordF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyLazyF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyPtrF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
+    TyBottomF -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TYPEF rep -> pure $ UTerm $ TYPEF rep
     TyRepF -> pure $ UTerm TyRepF
     RepF _ -> pure $ UTerm TyRepF

@@ -2,7 +2,7 @@ module Malgo.TypeCheck.Pass where
 
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
-import Data.List (find, head, last, splitAt)
+import qualified Data.List as List
 import Data.List.Extra (anySame)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
@@ -166,8 +166,8 @@ tcTypeSynonyms ds =
     updateFieldEnv (tcType typ) [] transedTyp
     pure (pos, name, params, tcType typ)
 
-buildTyApp con [] = con
-buildTyApp con (p : ps) = buildTyApp (TyApp con p) ps
+buildTyApp :: UType -> [UType] -> UType
+buildTyApp = List.foldl TyApp
 
 updateFieldEnv :: (MonadState TcEnv f) => S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
 updateFieldEnv (S.TyRecord _ kts) params typ = do
@@ -352,7 +352,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   pure $ OpApp (With retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] ss : _)) = do
   ss' <- tcStmts ss
-  ssType <- typeOf $ last ss'
+  ssType <- typeOf $ List.last ss'
   pure $ Fn (With (TyLazy ssType) pos) [Clause (With (TyLazy ssType) x) [] ss']
 tcExpr (Fn pos cs) = do
   traverse tcClause cs >>= \case
@@ -406,7 +406,7 @@ tcClause ::
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
-  ssType <- typeOf $ last ss'
+  ssType <- typeOf $ List.last ss'
   patTypes <- traverse typeOf pats'
   pure $ Clause (With (foldr TyArr ssType patTypes) pos) pats' ss'
 
@@ -431,7 +431,7 @@ tcPatterns (ConP pos con pats : ps) = do
   let (conParams, _) = splitTyArr conType
   -- コンストラクタの型に基づくASTの組み換え
   -- 足りない分を後続のパターン列から補充
-  let (morePats, restPs) = splitAt (length conParams - length pats) ps
+  let (morePats, restPs) = List.splitAt (length conParams - length pats) ps
   -- 足りない分（morePats）を補充した残り（restPs）が空でなければ、
   -- 2引数以上の関数での文法エラー
   when (not (null morePats) && not (null restPs)) $
@@ -448,7 +448,7 @@ tcPatterns (TupleP pos pats : ps) = do
   patTypes <- traverse typeOf pats'
   pure $ TupleP (With (TyTuple patTypes) pos) pats' : ps'
 tcPatterns (RecordP pos kps : ps) = do
-  kps' <- traverseOf (traversed . _2) (\x -> head <$> tcPatterns [x]) kps
+  kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
 
   recordType@(TyRecord recordKts) <- instantiate pos =<< lookupRecordType pos (map fst kps)
@@ -528,7 +528,7 @@ transType (S.TyApp pos t ts) = do
     findBuiltinType :: String -> RnEnv -> Maybe (Id ())
     findBuiltinType x rnEnv = do
       ids <- view (R.typeEnv . at x) rnEnv
-      find (view idSort >>> \case WiredIn (ModuleName "Builtin") -> True; _ -> False) ids
+      List.find (view idSort >>> \case WiredIn (ModuleName "Builtin") -> True; _ -> False) ids
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
