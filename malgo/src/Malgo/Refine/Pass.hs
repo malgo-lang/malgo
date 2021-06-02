@@ -3,7 +3,6 @@
 module Malgo.Refine.Pass where
 
 import Data.Kind (Constraint)
-import Koriel.Pretty (pPrint)
 import Malgo.Prelude
 import Malgo.Syntax hiding (TyArr)
 import qualified Malgo.Syntax as Syn

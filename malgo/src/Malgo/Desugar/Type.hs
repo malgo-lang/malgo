@@ -34,6 +34,7 @@ dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
 dsType (GT.TyPtr t) = PtrT <$> dsType t
+dsType GT.TyBottom = pure AnyT
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する

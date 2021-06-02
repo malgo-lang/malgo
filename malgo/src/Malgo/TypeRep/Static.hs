@@ -88,6 +88,8 @@ data Type
     TyLazy Type
   | -- | pointer type
     TyPtr Type
+  | -- | bottom type
+    TyBottom
   | -- kind constructor
 
     -- | star
@@ -115,6 +117,7 @@ instance Pretty Type where
   pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec l _ (TyLazy t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
+  pPrintPrec _ _ TyBottom = "#Bottom"
   pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
   pPrintPrec _ _ TyRep = "#Rep"
   pPrintPrec l _ (Rep rep) = pPrintPrec l 0 rep
@@ -141,7 +144,7 @@ instance IsType (t (Fix t)) => IsType (Fix t) where
   fromType t = Fix $ fromType t
 
 instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
-  safeToType (UVar _) = Nothing
+  safeToType (UVar _) = Just TyBottom -- TODO: return TypeVar
   safeToType (UTerm t) = safeToType t
   fromType t = UTerm $ fromType t
 
@@ -173,6 +176,7 @@ instance HasKind Type where
   kindOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
   kindOf (TyLazy _) = pure $ TYPE (Rep BoxedRep)
   kindOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
+  kindOf TyBottom = pure $ TYPE (Rep BoxedRep)
   kindOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
   kindOf TyRep = pure TyRep -- Rep :: Rep
   kindOf (Rep _) = pure TyRep
@@ -242,6 +246,7 @@ applySubst subst (TyTuple ts) = TyTuple $ map (applySubst subst) ts
 applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
 applySubst subst (TyLazy t) = TyLazy $ applySubst subst t
 applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
+applySubst _ TyBottom = TyBottom
 applySubst subst (TYPE rep) = TYPE $ applySubst subst rep
 applySubst _ TyRep = TyRep
 applySubst _ (Rep rep) = Rep rep
