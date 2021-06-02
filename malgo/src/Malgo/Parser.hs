@@ -23,7 +23,11 @@ type Parser = Parsec Void Text
 --
 -- ファイル1つにつきモジュール1つ
 parseMalgo :: String -> Text -> Either (ParseErrorBundle Text Void) (Module (Malgo 'Parse))
-parseMalgo = parse (pModule <* eof)
+parseMalgo = parse do
+  sc
+  mod <- pModule
+  eof
+  pure mod
 
 -- entry point
 pModule :: Parser (Module (Malgo 'Parse))
