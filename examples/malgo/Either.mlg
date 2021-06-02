@@ -1,19 +1,22 @@
--- Issue: Compiler crashes when defining data Either a b = Left a | Right b
--- https://github.com/malgo-lang/malgo/issues/59
-
 module Either = {
   import Builtin;
   import Prelude;
 
   data Either a b = Left a | Right b;
 
-  id :: Either String Int32 -> Either String Int32;
   id = {x -> x};
+
+  andThen = { _ (Left x) -> Left x
+            | f (Right x) -> f x };
 
   main = {
     let x = Right 1;
-    id x |> { Right y -> print_Int32 y }
+    x |> andThen { x -> Right (add_Int32 x 1) } |> andThen { y -> Right (print_Int32 y) };
+    x |> andThen { _ -> Left "error" }
+      |> andThen { x -> Right (add_Int32 x 1) }
+      |> { Left err -> putStrLn err
+         | Right x -> print_Int32 x } 
   };
 }
 
--- Expected: 1
+-- Expected: 2error
