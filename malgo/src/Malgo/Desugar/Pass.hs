@@ -124,18 +124,13 @@ dsForeign (x@(With _ (_, primName)), name, _) = do
   pure [(name', fun)]
 
 dsDataDef ::
-  (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env, MonadIO m, HasOpt env) =>
+  (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env, MonadIO m) =>
   DataDef (Malgo 'Refine) ->
   m [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
-dsDataDef (pos, name, _, cons) =
+dsDataDef (_, name, _, cons) =
   for cons $ \(conName, _) -> do
     -- lookup constructor infomations
-    Just (GT.TyCon name') <- preuse (typeDefEnv . at name . _Just . typeConstructor)
-    -- vcs <- lookupValueConstructors (over idMeta fromType name') _
-    typeEnv <- use typeDefEnv
-    vcs <- case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon (over idMeta fromType name')) (HashMap.elems typeEnv) of
-      Just TypeDef {..} -> pure _valueConstructors
-      Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name')
+    Just vcs <- preuse (typeDefEnv . at name . _Just . valueConstructors)
     let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType
