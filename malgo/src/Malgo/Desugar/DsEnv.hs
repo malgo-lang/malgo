@@ -8,7 +8,7 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (RnEnv, HasRnEnv (rnEnv))
+import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
 import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static
 import qualified Malgo.TypeRep.Static as GT
@@ -76,7 +76,8 @@ lookupValueConstructors ::
   m [(RnId, Scheme GT.Type)]
 lookupValueConstructors con ts = do
   typeEnv <- use typeDefEnv
-  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con) (HashMap.elems typeEnv) of
+  -- _valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
+  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->
       pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
