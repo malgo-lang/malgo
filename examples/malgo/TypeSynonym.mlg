@@ -12,6 +12,12 @@ module TypeSynonym = {
   hello :: { MyTuple };
   hello = { ("hello", "world") };
 
+  data T = TCon;
+  type S = T;
+
+  idOverS :: S -> T;
+  idOverS = { x -> x };
+
   main :: { () };
   main = {
     !hello |> { (h, w) -> putStr h; putStr " "; putStrLn w }
