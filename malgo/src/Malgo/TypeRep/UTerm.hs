@@ -134,7 +134,7 @@ generalize x bound term = do
   Forall as <$> zonkUTerm term
   -}
   zonkedTerm <- zonk term
-  let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
+  let fvs = List.sort $ HashSet.toList $ unboundFreevars bound zonkedTerm
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   Forall as <$> zonk zonkedTerm
@@ -143,6 +143,7 @@ toBound :: (MonadBind UType m, MonadIO m, MonadReader env m, HasUniqSupply env) 
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   tvKind <- kindOf tvType
+  -- TODO: tvが無名ならhintを、ソースコード上に現れるならその名前を優先する
   newLocalId hint tvKind
 
 defaultToBoxed :: (Applicative m, MonadBind UType m) => SourcePos -> UType -> m UType
@@ -205,7 +206,7 @@ generalizeMutRecs x bound terms = do
   (as,) <$> traverse zonkUTerm terms
   -}
   zonkedTerms <- traverse zonk terms
-  let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
+  let fvs = List.sort $ HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   (as,) <$> traverse zonk zonkedTerms

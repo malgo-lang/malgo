@@ -112,8 +112,7 @@ tcTypeDefinitions ::
     MonadReader env m,
     MonadIO m,
     HasOpt env,
-    HasUniqSupply env,
-    HasLogFunc env
+    HasUniqSupply env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
@@ -141,14 +140,12 @@ tcTypeSynonyms ::
     MonadIO f,
     MonadReader env f,
     HasOpt env,
-    HasUniqSupply env,
-    HasLogFunc env
+    HasUniqSupply env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'TypeCheck)]
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
-    logDebug $ displayShow $ "Parametized type synonym:" <+> pPrint (params, typ)
     -- unless (null params) do
     --   errorOn pos $
     --     "Parametized type synonym is not supported"
@@ -157,17 +154,18 @@ tcTypeSynonyms ds =
     params' <- traverse (const $ UVar <$> freshVar @UType) params
     nameKind <- kindOf name'
     paramKinds <- traverse kindOf params'
-    logDebug $ displayShow $ "unify" <+> parens (pPrint (foldr TyArr (TYPE $ Rep BoxedRep) paramKinds)) <+> parens (pPrint nameKind)
-    solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) paramKinds :~ nameKind]
+    solve [With pos $ buildTyArr paramKinds (TYPE $ Rep BoxedRep) :~ nameKind]
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     transedTyp <- transType typ
-    logDebug $ displayShow $ "unify" <+> parens (pPrint $ buildTyApp name' params') <+> parens (pPrint transedTyp)
     solve [With pos $ buildTyApp name' params' :~ transedTyp]
     updateFieldEnv (tcType typ) [] transedTyp
     pure (pos, name, params, tcType typ)
 
 buildTyApp :: UType -> [UType] -> UType
 buildTyApp = List.foldl TyApp
+
+buildTyArr :: [UType] -> UType -> UType
+buildTyArr ps ret = foldr TyArr ret ps
 
 updateFieldEnv :: (MonadState TcEnv f) => S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
 updateFieldEnv (S.TyRecord _ kts) params typ = do
@@ -182,8 +180,7 @@ tcDataDefs ::
     MonadReader env m,
     HasOpt env,
     MonadIO m,
-    HasUniqSupply env,
-    HasLogFunc env
+    HasUniqSupply env
   ) =>
   [DataDef (Malgo 'Rename)] ->
   m [DataDef (Malgo 'TypeCheck)]
@@ -194,7 +191,7 @@ tcDataDefs ds = do
     params' <- traverse (const $ UVar <$> freshVar @UType) params
     nameKind <- kindOf name'
     paramKinds <- traverse kindOf params'
-    solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) paramKinds :~ nameKind]
+    solve [With pos $ buildTyArr paramKinds (TYPE $ Rep BoxedRep) :~ nameKind]
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
       unzip <$> forOf (traversed . _2) valueCons \args -> do
@@ -202,9 +199,7 @@ tcDataDefs ds = do
         -- name' <- lookupType pos name
         -- params' <- traverse (lookupType pos) params
         args' <- traverse transType args
-        logDebug $ displayShow $ pPrint params'
-        logDebug $ displayShow $ pPrint $ foldr TyArr (buildTyApp name' params') args'
-        pure $ foldr TyArr (buildTyApp name' params') args'
+        pure $ buildTyArr args' (buildTyApp name' params')
     -- let valueConsNames = map fst valueCons'
     -- let valueConsTypes = map snd valueCons'
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
@@ -266,8 +261,7 @@ tcScDefGroup ::
     MonadIO m,
     MonadReader env m,
     HasOpt env,
-    HasUniqSupply env,
-    HasLogFunc env
+    HasUniqSupply env
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
   m [[ScDef (Malgo 'TypeCheck)]]
@@ -280,8 +274,7 @@ tcScDefs ::
     MonadIO m,
     MonadReader env m,
     HasOpt env,
-    HasUniqSupply env,
-    HasLogFunc env
+    HasUniqSupply env
   ) =>
   [ScDef (Malgo 'Rename)] ->
   m [ScDef (Malgo 'TypeCheck)]
@@ -306,8 +299,6 @@ tcScDefs ds@((pos, _, _) : _) = do
       _ -> do
         declaredType <- instantiate (pos ^. value) declaredScheme
         inferedType <- instantiate (pos ^. value) inferredScheme
-        logDebug $ displayShow $ "equiv:" <+> pPrint (HashMap.toList <$> equiv declaredType inferedType)
-        logDebug $ displayShow $ "unify:" <+> pPrint (first HashMap.toList <$> unify (pos ^. value) declaredType inferedType)
         case equiv declaredType inferedType of
           Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
           Just subst
@@ -408,7 +399,7 @@ tcClause (Clause pos pats ss) = do
   ss' <- tcStmts ss
   ssType <- typeOf $ List.last ss'
   patTypes <- traverse typeOf pats'
-  pure $ Clause (With (foldr TyArr ssType patTypes) pos) pats' ss'
+  pure $ Clause (With (buildTyArr patTypes ssType) pos) pats' ss'
 
 tcPatterns ::
   ( MonadBind UType m,
@@ -439,7 +430,7 @@ tcPatterns (ConP pos con pats : ps) = do
   pats' <- tcPatterns (pats <> morePats)
   ty <- UVar <$> freshVar @UType
   patTypes <- traverse typeOf pats'
-  tell [With pos $ conType :~ foldr TyArr ty patTypes]
+  tell [With pos $ conType :~ buildTyArr patTypes ty]
   ps' <- tcPatterns restPs
   pure (ConP (With ty pos) con pats' : ps')
 tcPatterns (TupleP pos pats : ps) = do
@@ -522,7 +513,7 @@ transType (S.TyApp pos t ts) = do
       ts' <- traverse transType ts
       t'Kind <- kindOf t'
       ts'Kinds <- traverse kindOf ts'
-      solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) ts'Kinds :~ t'Kind]
+      solve [With pos $ buildTyArr ts'Kinds (TYPE $ Rep BoxedRep) :~ t'Kind]
       buildTyApp <$> transType t <*> traverse transType ts
   where
     findBuiltinType :: String -> RnEnv -> Maybe (Id ())
