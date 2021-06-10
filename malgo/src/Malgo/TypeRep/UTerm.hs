@@ -213,23 +213,24 @@ instantiate x (Forall as t) = do
     vKind <- kindOf v
     solve [With x $ a ^. idMeta :~ vKind]
     pure (a, v)
-  replace avs t
-  where
-    replace _ t@UVar {} = pure t
-    replace kvs (UTerm t) = case t of
-      TyAppF t1 t2 -> fmap UTerm $ TyAppF <$> replace kvs t1 <*> replace kvs t2
-      TyVarF v -> pure $ fromMaybe (UTerm t) $ List.lookup v kvs
-      TyConF _ -> pure $ UTerm t
-      TyPrimF _ -> pure $ UTerm t
-      TyArrF t1 t2 -> fmap UTerm $ TyArrF <$> replace kvs t1 <*> replace kvs t2
-      TyTupleF _ -> pure $ UTerm t
-      TyRecordF kts -> fmap UTerm $ TyRecordF <$> traverse (replace kvs) kts
-      TyLazyF -> pure $ UTerm TyLazyF
-      TyPtrF k -> fmap UTerm $ TyPtrF <$> replace kvs k
-      TyBottomF -> pure $ UTerm TyBottomF
-      TYPEF rep -> fmap UTerm $ TYPEF <$> replace kvs rep
-      TyRepF -> pure $ UTerm TyRepF
-      RepF rep -> pure $ UTerm $ RepF rep
+  pure $ applySubst avs t
+
+applySubst :: [(Id UType, UType)] -> UType -> UType
+applySubst _ t@UVar {} = t
+applySubst subst (UTerm t) = case t of
+  TyAppF t1 t2 -> UTerm $ TyAppF (applySubst subst t1) (applySubst subst t2)
+  TyVarF v -> fromMaybe (UTerm t) $ List.lookup v subst
+  TyConF _ -> UTerm t
+  TyPrimF _ -> UTerm t
+  TyArrF t1 t2 -> UTerm $ TyArrF (applySubst subst t1) (applySubst subst t2)
+  TyTupleF _ -> UTerm t
+  TyRecordF kts -> UTerm $ TyRecordF (fmap (applySubst subst) kts)
+  TyLazyF -> UTerm TyLazyF
+  TyPtrF k -> UTerm $ TyPtrF $ applySubst subst k
+  TyBottomF -> UTerm TyBottomF
+  TYPEF rep -> UTerm $ TYPEF $ applySubst subst rep
+  TyRepF -> UTerm TyRepF
+  RepF rep -> UTerm $ RepF rep
 
 class HasType a where
   typeOf :: Monad m => a -> m UType
@@ -313,3 +314,20 @@ buildTyApp = List.foldl TyApp
 
 buildTyArr :: [UType] -> UType -> UType
 buildTyArr ps ret = foldr TyArr ret ps
+
+expandTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> Maybe UType
+expandTypeSynonym abbrEnv (TyCon con) =
+  case abbrEnv ^. at con of
+    Just ([], t) -> Just t
+    _ -> Nothing
+expandTypeSynonym abbrEnv ty@TyApp {} =
+  case abbrEnv ^. at con of
+    Nothing -> Nothing
+    Just (ps, orig) -> Just (applySubst (zip ps ts) orig)
+  where
+    (con, ts) = split ty
+    split (TyCon con) = (con, [])
+    split (TyApp t1 t2) = over _2 (<> [t2]) $ split t1
+    split _ = bug Unreachable
+expandTypeSynonym _ _ = Nothing
+

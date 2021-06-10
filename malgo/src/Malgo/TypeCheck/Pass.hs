@@ -113,17 +113,16 @@ tcTypeDefinitions ::
     MonadReader env m,
     MonadIO m,
     HasOpt env,
-    HasUniqSupply env
+    HasUniqSupply env,
+    MonadFail m
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
   m ([TypeSynonym (Malgo 'TypeCheck)], [DataDef (Malgo 'TypeCheck)])
 tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
-  for_ typeSynonyms \(x, name, params, _) -> do
-    tyCon <- UVar <$> freshVar @UType
-    tyConKind <- kindOf tyCon
-    solve [With x $ tyConKind :~ buildTyConKind params]
+  for_ typeSynonyms \(_, name, params, _) -> do
+    tyCon <- TyCon <$> newLocalId (name ^. idName) (buildTyConKind params)
     typeEnv . at name .= Just (TypeDef tyCon [] [])
   for_ dataDefs \(_, name, params, _) -> do
     tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
@@ -141,27 +140,22 @@ tcTypeSynonyms ::
     MonadIO f,
     MonadReader env f,
     HasOpt env,
-    HasUniqSupply env
+    HasUniqSupply env,
+    MonadFail f
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'TypeCheck)]
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
-    -- unless (null params) do
-    --   errorOn pos $
-    --     "Parametized type synonym is not supported"
-    --       $+$ "TODO: add type operator and fix TyTyple and TyLazy's kinding"
-    name' <- lookupType pos name
-    params' <- traverse (const $ UVar <$> freshVar @UType) params
-    nameKind <- kindOf name'
-    paramKinds <- traverse kindOf params'
-    traceM $ tshow $ pPrint [With pos $ buildTyArr paramKinds (TYPE $ Rep BoxedRep) :~ nameKind]
-    solve [With pos $ buildTyArr paramKinds (TYPE $ Rep BoxedRep) :~ nameKind]
-    zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
-    transedTyp <- transType typ
-    traceM $ tshow $ pPrint [With pos $ buildTyApp name' params' :~ transedTyp]
-    solve [With pos $ buildTyApp name' params' :~ transedTyp]
-    updateFieldEnv (tcType typ) [] transedTyp
+    TyCon con <- lookupType pos name
+
+    params' <- traverse (\p -> newLocalId (p ^. idName) (TYPE $ Rep BoxedRep)) params
+    zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
+
+    typ' <- transType typ
+    abbrEnv . at con .= Just (params', typ')
+    updateFieldEnv (tcType typ) params' typ'
+
     pure (pos, name, params, tcType typ)
 
 updateFieldEnv :: (MonadState TcEnv f) => S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
