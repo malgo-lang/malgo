@@ -34,15 +34,13 @@ type UnifyResult t = (HashMap (Var t) t, [With SourcePos (Constraint t)])
 unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
 unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
 
-type UnifyError = (SourcePos, Doc)
-
 -- | Unifiable value
 class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
   -- | Representation of variable
   type Var t
 
   -- | Unify two terms and generate substituation and new constraints
-  unify :: SourcePos -> t -> t -> Either UnifyError (UnifyResult t)
+  unify :: (HasCallStack, MonadReader env m, HasOpt env, MonadIO m) => SourcePos -> t -> t -> m (UnifyResult t)
 
   -- | Check alpha-equivalence
   equiv :: t -> t -> Maybe (HashMap (Var t) (Var t))
@@ -56,7 +54,7 @@ class (Hashable (Var t), Eq (Var t), Eq t, Pretty t) => Unifiable t where
 
 -- | Lifted version of Unifiable
 class Unifiable1 t where
-  liftUnify :: (Unifiable a) => (SourcePos -> a -> a -> Either UnifyError (UnifyResult a)) -> SourcePos -> t a -> t a -> Either UnifyError (UnifyResult a)
+  liftUnify :: (HasCallStack, MonadReader env m, HasOpt env, MonadIO m, Unifiable a) => (SourcePos -> a -> a -> m (UnifyResult a)) -> SourcePos -> t a -> t a -> m (UnifyResult a)
   liftEquiv :: Unifiable a => (a -> a -> Maybe (HashMap (Var a) (Var a))) -> t a -> t a -> Maybe (HashMap (Var a) (Var a))
   liftFreevars :: Unifiable a => (a -> HashSet (Var a)) -> t a -> HashSet (Var a)
   liftOccursCheck :: Unifiable a => (Var a -> a -> Bool) -> Var a -> t a -> Bool
@@ -90,12 +88,14 @@ instance (Monoid w, MonadBind t m) => MonadBind t (WriterT w m)
 ------------
 
 solve ::
+  HasCallStack =>
   (MonadBind t m, MonadReader env m, MonadIO m, HasOpt env) =>
   [With SourcePos (Constraint t)] ->
   m ()
 solve = solveLoop 5000
 
 solveLoop ::
+  HasCallStack =>
   (MonadBind t m, MonadReader env m, MonadIO m, HasOpt env) =>
   Int ->
   [With SourcePos (Constraint t)] ->
@@ -103,9 +103,7 @@ solveLoop ::
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (t1 :~ t2) : cs) = do
-  (binds, cs') <- case unify x t1 t2 of
-    Right x -> pure x
-    Left (pos, err) -> errorOn pos err
+  (binds, cs') <- unify x t1 t2
   ifor_ binds $ \var term -> bindVar x var term
   solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 

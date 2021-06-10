@@ -36,9 +36,9 @@ lookupVar pos name =
 
 lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m UType
 lookupType pos name =
-  preuse (typeEnv . at name . _Just . typeConstructor) >>= \case
+  preuse (typeEnv . at name . _Just) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-    Just typ -> pure typ
+    Just TypeDef {..} -> pure _typeConstructor
 
 lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> [RnId] -> m (Scheme UType)
 lookupRecordType pos fields = do
@@ -54,6 +54,7 @@ typeCheck rnEnv (Module name bg) =
     (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
     -- FIXME: 自由なUVarに適当なTyVarを束縛する
     -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
+    -- 今はTyBottomに変換している
     zonkedBg <-
       pure bg'
         >>= traverseOf (scDefs . traversed . traversed . _1 . ann) zonk
@@ -154,9 +155,11 @@ tcTypeSynonyms ds =
     params' <- traverse (const $ UVar <$> freshVar @UType) params
     nameKind <- kindOf name'
     paramKinds <- traverse kindOf params'
+    traceM $ tshow $ pPrint [With pos $ buildTyArr paramKinds (TYPE $ Rep BoxedRep) :~ nameKind]
     solve [With pos $ buildTyArr paramKinds (TYPE $ Rep BoxedRep) :~ nameKind]
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     transedTyp <- transType typ
+    traceM $ tshow $ pPrint [With pos $ buildTyApp name' params' :~ transedTyp]
     solve [With pos $ buildTyApp name' params' :~ transedTyp]
     updateFieldEnv (tcType typ) [] transedTyp
     pure (pos, name, params, tcType typ)

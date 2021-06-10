@@ -5,7 +5,6 @@
 
 module Malgo.TypeRep.UTerm where
 
-import Control.Monad.Error.Class (throwError)
 import Data.Deriving
 import Data.Functor.Foldable
 import qualified Data.HashSet as HashSet
@@ -34,7 +33,7 @@ type UType = UTerm TypeF TypeVar
 
 instance Pretty t => Pretty (TypeF t) where
   pPrintPrec l d (TyAppF t1 t2) =
-    maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+    maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVarF v) = pprIdName v
   pPrintPrec l d (TyConF c) = pPrintPrec l d c
   pPrintPrec _ _ (TyPrimF p) = pPrint p
@@ -78,7 +77,7 @@ instance Unifiable1 TypeF where
   liftUnify _ x (TYPEF rep1) (TYPEF rep2) = pure (mempty, [With x $ rep1 :~ rep2])
   liftUnify _ _ TyRepF TyRepF = pure (mempty, [])
   liftUnify _ _ (RepF rep1) (RepF rep2) | rep1 == rep2 = pure (mempty, [])
-  liftUnify _ x t1 t2 = throwError (x, unifyErrorMessage t1 t2)
+  liftUnify _ x t1 t2 = errorOn x $ unifyErrorMessage t1 t2
   liftEquiv equiv (TyAppF t11 t12) (TyAppF t21 t22) = (<>) <$> equiv t11 t21 <*> equiv t12 t22
   liftEquiv _ (TyVarF v1) (TyVarF v2) | v1 == v2 = Just mempty
   liftEquiv _ (TyConF c1) (TyConF c2) | c1 == c2 = Just mempty
