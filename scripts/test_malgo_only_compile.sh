@@ -6,8 +6,8 @@ mkdir $TESTDIR/libs
 
 BUILD=cabal
 
-eval "$BUILD exec malgo -- to-ll --force ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll || exit 255"
-eval "$BUILD exec malgo -- to-ll --force ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll || exit 255"
+eval "$BUILD exec malgo -- to-ll --force ./runtime/malgo/Builtin.mlg -M $TESTDIR/libs -o $TESTDIR/libs/Builtin.ll || exit 255"
+eval "$BUILD exec malgo -- to-ll --force ./runtime/malgo/Prelude.mlg -M $TESTDIR/libs -o $TESTDIR/libs/Prelude.ll || exit 255"
 cp ./runtime/malgo/rts.c $TESTDIR/libs/rts.c
 
 echo '=== via llvm-hs (with core json) ==='
