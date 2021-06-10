@@ -87,7 +87,7 @@ data Type
   | -- | lazy type
     TyLazy
   | -- | pointer type
-    TyPtr Kind
+    TyPtr Type
   | -- | bottom type
     TyBottom
   | -- kind constructor
@@ -116,7 +116,7 @@ instance Pretty Type where
   pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec _ _ TyLazy = "{}"
-  pPrintPrec _ _ (TyPtr _) = "Ptr#"
+  pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
   pPrintPrec _ _ TyBottom = "#Bottom"
   pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
   pPrintPrec _ _ TyRep = "#Rep"
@@ -175,7 +175,7 @@ instance HasKind Type where
   kindOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
   kindOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
   kindOf TyLazy = pure $ TYPE (Rep BoxedRep) `TyArr` TYPE (Rep BoxedRep)
-  kindOf (TyPtr k) = pure $ k `TyArr` TYPE (Rep BoxedRep)
+  kindOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
   kindOf TyBottom = pure $ TYPE (Rep BoxedRep)
   kindOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
   kindOf TyRep = pure TyRep -- Rep :: Rep
@@ -246,7 +246,7 @@ applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t
 applySubst _ (TyTuple n) = TyTuple n
 applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
 applySubst _ TyLazy = TyLazy
-applySubst subst (TyPtr k) = TyPtr $ applySubst subst k
+applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
 applySubst _ TyBottom = TyBottom
 applySubst subst (TYPE rep) = TYPE $ applySubst subst rep
 applySubst _ TyRep = TyRep

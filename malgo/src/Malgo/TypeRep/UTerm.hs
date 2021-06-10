@@ -42,7 +42,7 @@ instance Pretty t => Pretty (TypeF t) where
   pPrintPrec _ _ (TyTupleF n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec _ _ TyLazyF = "{}"
-  pPrintPrec _ _ (TyPtrF _) = "Ptr#"
+  pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec _ _ TyBottomF = "#Bottom"
   pPrintPrec l _ (TYPEF rep) = "TYPE" <+> pPrintPrec l 0 rep
   pPrintPrec _ _ TyRepF = "#Rep"
@@ -251,7 +251,7 @@ instance HasKind UType where
     TyTupleF n -> pure $ buildTyArr (replicate n $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep))
     TyRecordF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyLazyF -> pure $ UTerm (TyArrF (UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep)))
-    TyPtrF k -> pure $ UTerm (TyArrF k (UTerm $ TYPEF (UTerm $ RepF BoxedRep)))
+    TyPtrF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyBottomF -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TYPEF rep -> pure $ UTerm $ TYPEF rep
     TyRepF -> pure $ UTerm TyRepF

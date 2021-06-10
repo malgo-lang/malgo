@@ -504,7 +504,7 @@ transType (S.TyApp pos t ts) = do
       t'Kind <- kindOf t'
       rep <- UVar . TypeVar <$> newLocalId "r" TyRep
       solve [With pos $ t'Kind :~ TYPE rep]
-      pure $ TyApp (TyPtr t'Kind) t'
+      pure $ TyPtr t'
     _ -> do
       t' <- transType t
       ts' <- traverse transType ts

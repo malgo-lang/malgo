@@ -29,6 +29,7 @@ dsType (GT.TyArr t1 t2) = do
   t2' <- dsType t2
   pure $ [t1'] :-> t2'
 dsType (GT.TyTuple 0) = pure $ SumT [C.Con C.Tuple []]
+dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
 dsType GT.TyBottom = pure AnyT
@@ -37,7 +38,6 @@ dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 dsTyApp :: Monad f => [GT.Type] -> GT.Type -> f C.Type
 dsTyApp ts (GT.TyTuple _) = SumT . pure . C.Con C.Tuple <$> traverse dsType ts
 dsTyApp [t] GT.TyLazy = ([] :->) <$> dsType t
-dsTyApp [t] (GT.TyPtr _) = PtrT <$> dsType t
 dsTyApp ts (GT.TyApp t1 t2) = dsTyApp (t2 : ts) t1
 dsTyApp _ _ = pure AnyT
 
