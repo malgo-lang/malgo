@@ -164,12 +164,6 @@ tcTypeSynonyms ds =
     updateFieldEnv (tcType typ) [] transedTyp
     pure (pos, name, params, tcType typ)
 
-buildTyApp :: UType -> [UType] -> UType
-buildTyApp = List.foldl TyApp
-
-buildTyArr :: [UType] -> UType -> UType
-buildTyArr ps ret = foldr TyArr ret ps
-
 updateFieldEnv :: (MonadState TcEnv f) => S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
 updateFieldEnv (S.TyRecord _ kts) params typ = do
   let scheme = Forall params typ
@@ -359,7 +353,7 @@ tcExpr (Fn pos cs) = do
     _ -> bug Unreachable -- Malgo.ParserはsepBy1でFnをパースする
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
-  esType <- TyTuple <$> traverse typeOf es'
+  esType <- buildTyApp (TyTuple $ length es) <$> traverse typeOf es'
   pure $ Tuple (With esType pos) es'
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
@@ -440,7 +434,7 @@ tcPatterns (TupleP pos pats : ps) = do
   pats' <- tcPatterns pats
   ps' <- tcPatterns ps
   patTypes <- traverse typeOf pats'
-  pure $ TupleP (With (TyTuple patTypes) pos) pats' : ps'
+  pure $ TupleP (With (buildTyApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
 tcPatterns (RecordP pos kps : ps) = do
   kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
@@ -526,7 +520,7 @@ transType (S.TyApp pos t ts) = do
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
-transType (S.TyTuple _ ts) = TyTuple <$> traverse transType ts
+transType (S.TyTuple _ ts) = buildTyApp (TyTuple $ length ts) <$> traverse transType ts
 transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
 transType (S.TyLazy _ t) = TyLazy <$> transType t
 

@@ -81,7 +81,7 @@ data Type
   | -- | function type
     TyArr Type Type
   | -- | tuple type
-    TyTuple [Type]
+    TyTuple Int
   | -- record type
     TyRecord (Map (Id ()) Type)
   | -- | lazy type
@@ -113,7 +113,7 @@ instance Pretty Type where
   pPrintPrec l _ (TyPrim p) = pPrintPrec l 0 p
   pPrintPrec l d (TyArr t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec l _ (TyTuple ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec l _ (TyLazy t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
@@ -242,7 +242,7 @@ applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v
 applySubst _ (TyCon c) = TyCon c
 applySubst _ (TyPrim p) = TyPrim p
 applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
-applySubst subst (TyTuple ts) = TyTuple $ map (applySubst subst) ts
+applySubst _ (TyTuple n) = TyTuple n
 applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
 applySubst subst (TyLazy t) = TyLazy $ applySubst subst t
 applySubst subst (TyPtr t) = TyPtr $ applySubst subst t

@@ -39,7 +39,7 @@ instance Pretty t => Pretty (TypeF t) where
   pPrintPrec _ _ (TyPrimF p) = pPrint p
   pPrintPrec l d (TyArrF t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec l _ (TyTupleF ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec _ _ (TyTupleF n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
   pPrintPrec l _ (TyLazyF t) = braces $ pPrintPrec l 0 t
   pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
@@ -69,7 +69,7 @@ instance Unifiable1 TypeF where
   liftUnify _ _ (TyConF c1) (TyConF c2) | c1 == c2 = pure (mempty, [])
   liftUnify _ _ (TyPrimF p1) (TyPrimF p2) | p1 == p2 = pure (mempty, [])
   liftUnify _ x (TyArrF l1 r1) (TyArrF l2 r2) = pure (mempty, [With x $ l1 :~ l2, With x $ r1 :~ r2])
-  liftUnify _ x (TyTupleF ts1) (TyTupleF ts2) = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) ts1 ts2)
+  liftUnify _ _ (TyTupleF n1) (TyTupleF n2) | n1 == n2 = pure (mempty, [])
   liftUnify _ x (TyRecordF kts1) (TyRecordF kts2)
     | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
   liftUnify _ x (TyLazyF t1) (TyLazyF t2) = pure (mempty, [With x $ t1 :~ t2])
@@ -83,7 +83,7 @@ instance Unifiable1 TypeF where
   liftEquiv _ (TyConF c1) (TyConF c2) | c1 == c2 = Just mempty
   liftEquiv _ (TyPrimF p1) (TyPrimF p2) | p1 == p2 = Just mempty
   liftEquiv equiv (TyArrF l1 r1) (TyArrF l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
-  liftEquiv equiv (TyTupleF ts1) (TyTupleF ts2) = mconcat <$> zipWithM equiv ts1 ts2
+  liftEquiv _ (TyTupleF n1) (TyTupleF n2) | n1 == n2 = Just mempty
   liftEquiv equiv (TyRecordF kts1) (TyRecordF kts2)
     | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
   liftEquiv equiv (TyLazyF t1) (TyLazyF t2) = equiv t1 t2
@@ -174,9 +174,7 @@ defaultToBoxed x (UTerm t) = do
       t1 <- defaultToBoxed x t1
       t2 <- defaultToBoxed x t2
       pure $ TyArrF t1 t2
-    defaultToBoxed' (TyTupleF ts) = do
-      ts <- traverse (defaultToBoxed x) ts
-      pure $ TyTupleF ts
+    defaultToBoxed' (TyTupleF n) = pure $ TyTupleF n
     defaultToBoxed' (TyRecordF kvs) = do
       kvs <- traverse (defaultToBoxed x) kvs
       pure $ TyRecordF kvs
@@ -226,7 +224,7 @@ instantiate x (Forall as t) = do
       TyConF _ -> pure $ UTerm t
       TyPrimF _ -> pure $ UTerm t
       TyArrF t1 t2 -> fmap UTerm $ TyArrF <$> replace kvs t1 <*> replace kvs t2
-      TyTupleF ts -> fmap UTerm $ TyTupleF <$> traverse (replace kvs) ts
+      TyTupleF _ -> pure $ UTerm t
       TyRecordF kts -> fmap UTerm $ TyRecordF <$> traverse (replace kvs) kts
       TyLazyF t -> fmap UTerm $ TyLazyF <$> replace kvs t
       TyPtrF t -> fmap UTerm $ TyPtrF <$> replace kvs t
@@ -252,7 +250,7 @@ instance HasKind UType where
     TyConF c -> pure $ c ^. idMeta
     TyPrimF p -> S.fromType <$> S.kindOf p
     TyArrF _ t2 -> kindOf t2
-    TyTupleF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
+    TyTupleF n -> pure $ buildTyArr (replicate n $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep))
     TyRecordF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyLazyF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyPtrF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
@@ -291,8 +289,8 @@ pattern TyPrim p = UTerm (TyPrimF p)
 pattern TyArr :: UTerm TypeF v -> UTerm TypeF v -> UTerm TypeF v
 pattern TyArr t1 t2 = UTerm (TyArrF t1 t2)
 
-pattern TyTuple :: [UTerm TypeF v] -> UTerm TypeF v
-pattern TyTuple ts = UTerm (TyTupleF ts)
+pattern TyTuple :: Int -> UTerm TypeF v
+pattern TyTuple n = UTerm (TyTupleF n)
 
 pattern TyRecord :: Map.Map (Id ()) (UTerm TypeF v) -> UTerm TypeF v
 pattern TyRecord kts = UTerm (TyRecordF kts)
@@ -311,3 +309,9 @@ pattern TyRep = UTerm TyRepF
 
 pattern Rep :: Rep -> UTerm TypeF v
 pattern Rep rep = UTerm (RepF rep)
+
+buildTyApp :: UType -> [UType] -> UType
+buildTyApp = List.foldl TyApp
+
+buildTyArr :: [UType] -> UType -> UType
+buildTyArr ps ret = foldr TyArr ret ps

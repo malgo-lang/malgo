@@ -12,7 +12,7 @@ import qualified Malgo.TypeRep.Static as GT
 
 -- Malgoの型をCoreの型に変換する
 dsType :: Monad m => GT.Type -> m C.Type
-dsType GT.TyApp {} = pure AnyT
+dsType t@GT.TyApp {} = dsTyApp [] t
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
   case con ^. idMeta of
@@ -28,14 +28,18 @@ dsType (GT.TyArr t1 t2) = do
   t1' <- dsType t1
   t2' <- dsType t2
   pure $ [t1'] :-> t2'
-dsType (GT.TyTuple ts) =
-  SumT . pure . C.Con C.Tuple <$> traverse dsType ts
+dsType (GT.TyTuple 0) = pure $ SumT [C.Con C.Tuple []]
 dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
 dsType (GT.TyLazy t) = ([] :->) <$> dsType t
 dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType GT.TyBottom = pure AnyT
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
+
+dsTyApp :: Monad f => [GT.Type] -> GT.Type -> f C.Type
+dsTyApp ts (GT.TyApp (GT.TyTuple _) t) = SumT . pure . C.Con C.Tuple <$> traverse dsType (t : ts)
+dsTyApp ts (GT.TyApp t1 t2) = dsTyApp (t2:ts) t1
+dsTyApp _ _ = pure AnyT
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: MonadState DsEnv m => GT.Type -> m C.Type
