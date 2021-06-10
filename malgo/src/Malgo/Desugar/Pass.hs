@@ -97,8 +97,10 @@ dsScDef ::
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (With typ pos, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
-  unless (_TyArr `has` typ || _TyLazy `has` typ) $
-    errorOn pos $
+  case typ of
+    GT.TyArr _ _ -> pure ()
+    GT.TyApp GT.TyLazy _ -> pure ()
+    _ -> errorOn pos $
       "Invalid Toplevel Declaration:"
         <+> quotes (pPrint name <+> ":" <+> pPrint typ)
   name' <- lookupName name
@@ -177,8 +179,8 @@ dsExp (G.Var x _ name) = do
   --    2. 引数のない値コンストラクタ
   case (x ^. GT.withType, C.typeOf name') of
     -- TyLazyの型を検査
-    (GT.TyLazy {}, [] :-> _) -> pure ()
-    (GT.TyLazy {}, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
+    (GT.TyApp GT.TyLazy _, [] :-> _) -> pure ()
+    (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _)
       | isConstructor name -> pure ()
       | otherwise -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)

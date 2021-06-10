@@ -85,9 +85,9 @@ data Type
   | -- record type
     TyRecord (Map (Id ()) Type)
   | -- | lazy type
-    TyLazy Type
+    TyLazy
   | -- | pointer type
-    TyPtr Type
+    TyPtr Kind
   | -- | bottom type
     TyBottom
   | -- kind constructor
@@ -115,8 +115,8 @@ instance Pretty Type where
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
-  pPrintPrec l _ (TyLazy t) = braces $ pPrintPrec l 0 t
-  pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
+  pPrintPrec _ _ TyLazy = "{}"
+  pPrintPrec _ _ (TyPtr _) = "Ptr#"
   pPrintPrec _ _ TyBottom = "#Bottom"
   pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
   pPrintPrec _ _ TyRep = "#Rep"
@@ -174,8 +174,8 @@ instance HasKind Type where
   kindOf (TyArr _ t2) = kindOf t2
   kindOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
   kindOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
-  kindOf (TyLazy _) = pure $ TYPE (Rep BoxedRep)
-  kindOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
+  kindOf TyLazy = pure $ TYPE (Rep BoxedRep) `TyArr` TYPE (Rep BoxedRep)
+  kindOf (TyPtr k) = pure $ k `TyArr` TYPE (Rep BoxedRep)
   kindOf TyBottom = pure $ TYPE (Rep BoxedRep)
   kindOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
   kindOf TyRep = pure TyRep -- Rep :: Rep
@@ -209,11 +209,12 @@ instance WithType Void where
   withType _ a = absurd a
 
 -- | Definition of Type constructor
-data TypeDef ty = TypeDef
-  { _typeConstructor :: ty,
-    _typeParameters :: [Id ty],
-    _valueConstructors :: [(Id (), Scheme ty)]
-  }
+data TypeDef ty
+  = TypeDef
+      { _typeConstructor :: ty,
+        _typeParameters :: [Id ty],
+        _valueConstructors :: [(Id (), Scheme ty)]
+      }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
 
 instance Binary ty => Binary (TypeDef ty)
@@ -244,8 +245,8 @@ applySubst _ (TyPrim p) = TyPrim p
 applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
 applySubst _ (TyTuple n) = TyTuple n
 applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
-applySubst subst (TyLazy t) = TyLazy $ applySubst subst t
-applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
+applySubst _ TyLazy = TyLazy
+applySubst subst (TyPtr k) = TyPtr $ applySubst subst k
 applySubst _ TyBottom = TyBottom
 applySubst subst (TYPE rep) = TYPE $ applySubst subst rep
 applySubst _ TyRep = TyRep

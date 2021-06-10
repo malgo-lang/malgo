@@ -341,7 +341,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
 tcExpr (Fn pos (Clause x [] ss : _)) = do
   ss' <- tcStmts ss
   ssType <- typeOf $ List.last ss'
-  pure $ Fn (With (TyLazy ssType) pos) [Clause (With (TyLazy ssType) x) [] ss']
+  pure $ Fn (With (TyApp TyLazy ssType) pos) [Clause (With (TyApp TyLazy ssType) x) [] ss']
 tcExpr (Fn pos cs) = do
   traverse tcClause cs >>= \case
     (c' : cs') -> do
@@ -365,7 +365,7 @@ tcExpr (Force pos e) = do
   e' <- tcExpr e
   ty <- UVar <$> freshVar @UType
   eType <- typeOf e'
-  tell [With pos $ TyLazy ty :~ eType]
+  tell [With pos $ TyApp TyLazy ty :~ eType]
   pure $ Force (With ty pos) e'
 tcExpr (RecordAccess pos label) = do
   recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
@@ -504,7 +504,7 @@ transType (S.TyApp pos t ts) = do
       t'Kind <- kindOf t'
       rep <- UVar . TypeVar <$> newLocalId "r" TyRep
       solve [With pos $ t'Kind :~ TYPE rep]
-      pure $ TyPtr t'
+      pure $ TyApp (TyPtr t'Kind) t'
     _ -> do
       t' <- transType t
       ts' <- traverse transType ts
@@ -522,7 +522,7 @@ transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = buildTyApp (TyTuple $ length ts) <$> traverse transType ts
 transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
-transType (S.TyLazy _ t) = TyLazy <$> transType t
+transType (S.TyLazy _ t) = TyApp TyLazy <$> transType t
 
 tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'TypeCheck)
 tcType (S.TyApp pos t ts) = S.TyApp pos (tcType t) (map tcType ts)

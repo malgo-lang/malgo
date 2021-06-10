@@ -41,8 +41,8 @@ instance Pretty t => Pretty (TypeF t) where
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTupleF n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
-  pPrintPrec l _ (TyLazyF t) = braces $ pPrintPrec l 0 t
-  pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
+  pPrintPrec _ _ TyLazyF = "{}"
+  pPrintPrec _ _ (TyPtrF _) = "Ptr#"
   pPrintPrec _ _ TyBottomF = "#Bottom"
   pPrintPrec l _ (TYPEF rep) = "TYPE" <+> pPrintPrec l 0 rep
   pPrintPrec _ _ TyRepF = "#Rep"
@@ -72,7 +72,7 @@ instance Unifiable1 TypeF where
   liftUnify _ _ (TyTupleF n1) (TyTupleF n2) | n1 == n2 = pure (mempty, [])
   liftUnify _ x (TyRecordF kts1) (TyRecordF kts2)
     | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
-  liftUnify _ x (TyLazyF t1) (TyLazyF t2) = pure (mempty, [With x $ t1 :~ t2])
+  liftUnify _ _ TyLazyF TyLazyF = pure (mempty, [])
   liftUnify _ x (TyPtrF t1) (TyPtrF t2) = pure (mempty, [With x $ t1 :~ t2])
   liftUnify _ x (TYPEF rep1) (TYPEF rep2) = pure (mempty, [With x $ rep1 :~ rep2])
   liftUnify _ _ TyRepF TyRepF = pure (mempty, [])
@@ -86,7 +86,7 @@ instance Unifiable1 TypeF where
   liftEquiv _ (TyTupleF n1) (TyTupleF n2) | n1 == n2 = Just mempty
   liftEquiv equiv (TyRecordF kts1) (TyRecordF kts2)
     | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
-  liftEquiv equiv (TyLazyF t1) (TyLazyF t2) = equiv t1 t2
+  liftEquiv _ TyLazyF TyLazyF = Just mempty
   liftEquiv equiv (TyPtrF t1) (TyPtrF t2) = equiv t1 t2
   liftEquiv equiv (TYPEF rep1) (TYPEF rep2) = equiv rep1 rep2
   liftEquiv _ TyRepF TyRepF = Just mempty
@@ -178,9 +178,7 @@ defaultToBoxed x (UTerm t) = do
     defaultToBoxed' (TyRecordF kvs) = do
       kvs <- traverse (defaultToBoxed x) kvs
       pure $ TyRecordF kvs
-    defaultToBoxed' (TyLazyF t) = do
-      t <- defaultToBoxed x t
-      pure $ TyLazyF t
+    defaultToBoxed' TyLazyF = pure TyLazyF
     defaultToBoxed' (TyPtrF t) = do
       t <- defaultToBoxed x t
       pure $ TyPtrF t
@@ -226,8 +224,8 @@ instantiate x (Forall as t) = do
       TyArrF t1 t2 -> fmap UTerm $ TyArrF <$> replace kvs t1 <*> replace kvs t2
       TyTupleF _ -> pure $ UTerm t
       TyRecordF kts -> fmap UTerm $ TyRecordF <$> traverse (replace kvs) kts
-      TyLazyF t -> fmap UTerm $ TyLazyF <$> replace kvs t
-      TyPtrF t -> fmap UTerm $ TyPtrF <$> replace kvs t
+      TyLazyF -> pure $ UTerm TyLazyF
+      TyPtrF k -> fmap UTerm $ TyPtrF <$> replace kvs k
       TyBottomF -> pure $ UTerm TyBottomF
       TYPEF rep -> fmap UTerm $ TYPEF <$> replace kvs rep
       TyRepF -> pure $ UTerm TyRepF
@@ -252,8 +250,8 @@ instance HasKind UType where
     TyArrF _ t2 -> kindOf t2
     TyTupleF n -> pure $ buildTyArr (replicate n $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep))
     TyRecordF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
-    TyLazyF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
-    TyPtrF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
+    TyLazyF -> pure $ UTerm (TyArrF (UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep)))
+    TyPtrF k -> pure $ UTerm (TyArrF k (UTerm $ TYPEF (UTerm $ RepF BoxedRep)))
     TyBottomF -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TYPEF rep -> pure $ UTerm $ TYPEF rep
     TyRepF -> pure $ UTerm TyRepF
@@ -295,8 +293,8 @@ pattern TyTuple n = UTerm (TyTupleF n)
 pattern TyRecord :: Map.Map (Id ()) (UTerm TypeF v) -> UTerm TypeF v
 pattern TyRecord kts = UTerm (TyRecordF kts)
 
-pattern TyLazy :: UTerm TypeF v -> UTerm TypeF v
-pattern TyLazy t = UTerm (TyLazyF t)
+pattern TyLazy :: UTerm TypeF v
+pattern TyLazy = UTerm TyLazyF
 
 pattern TyPtr :: UTerm TypeF v -> UTerm TypeF v
 pattern TyPtr t = UTerm (TyPtrF t)
