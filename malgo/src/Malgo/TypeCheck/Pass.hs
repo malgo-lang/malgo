@@ -1,15 +1,12 @@
 module Malgo.TypeCheck.Pass where
 
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
-import qualified Data.List as List
+import qualified Data.HashMap.Strict as HashMap (mapKeys)
 import Data.List.Extra (anySame)
-import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Interface (loadInterface, signatureMap, typeDefMap)
+import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
@@ -22,6 +19,11 @@ import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
 import Malgo.UTerm
 import Malgo.Unify hiding (lookupVar)
+import qualified RIO.HashMap as HashMap
+import qualified RIO.HashSet as HashSet
+import qualified RIO.List as List
+import qualified RIO.List.Partial as List
+import qualified RIO.Map as Map
 import Text.Megaparsec (SourcePos)
 
 -------------------------------
@@ -105,6 +107,13 @@ tcImports = traverse tcImport
           Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
       varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
       typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
+      abbrEnv
+        <>= HashMap.mapKeys
+          (fmap Static.fromType)
+          ( fmap
+              (over _2 Static.fromType . over (_1 . mapped . idMeta) Static.fromType)
+              (interface ^. typeAbbrMap)
+          )
       pure (pos, modName)
 
 tcTypeDefinitions ::
@@ -122,7 +131,7 @@ tcTypeDefinitions ::
 tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(_, name, params, _) -> do
-    tyCon <- TyCon <$> newLocalId (name ^. idName) (buildTyConKind params)
+    tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
     typeEnv . at name .= Just (TypeDef tyCon [] [])
   for_ dataDefs \(_, name, params, _) -> do
     tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name

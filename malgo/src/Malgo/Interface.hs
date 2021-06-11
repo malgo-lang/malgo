@@ -22,6 +22,7 @@ import System.FilePath ((-<.>), (</>))
 data Interface = Interface
   { _signatureMap :: HashMap RnId (GT.Scheme GT.Type), -- from TypeRep.Static
     _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type), -- from TypeRep.Static
+    _typeAbbrMap :: HashMap (Id GT.Type) ([Id GT.Type], GT.Type), -- from TypeRef.Static
     _resolvedVarIdentMap :: HashMap PsId RnId, -- from DsEnv
     _resolvedTypeIdentMap :: HashMap PsId RnId, -- from DsEnv
     _coreIdentMap :: HashMap RnId (Id C.Type), -- from DsEnv
@@ -43,7 +44,8 @@ instance Pretty Interface where
       $$ nest 2 (sep ["coreIdentMap =", nest 2 $ pPrint $ HashMap.toList (i ^. coreIdentMap)])
 
 buildInterface :: RnState -> DsEnv -> Interface
-buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
+-- TODO: write abbrMap to interface
+buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
   let modName = rnState ^. RnState.moduleName
   ifor_ (dsEnv ^. DsEnv.nameEnv) $ \tcId coreId ->
     when (tcId ^. idSort == External modName) do
