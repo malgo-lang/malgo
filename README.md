@@ -1,6 +1,6 @@
 # malgo
 
-[![Malgo CI](https://github.com/takoeight0821/malgo/workflows/Malgo%20CI/badge.svg)](https://github.com/takoeight0821/malgo/actions?query=workflow%3A%22Malgo+CI%22)
+[![Malgo CI](https://github.com/malgo-lang/malgo/workflows/Malgo%20CI/badge.svg)](https://github.com/malgo-lang/malgo/actions?query=workflow%3A%22Malgo+CI%22)
 
 ## Requirement
 
@@ -27,7 +27,7 @@ $ apt-get install llvm-9-dev
 ### Installing Malgo
 
 ```sh
-$ git clone https://github.com/takoeight0821/malgo
+$ git clone https://github.com/malgo-lang/malgo
 $ cd malgo
 $ stack install
 $ ./scripts/install_malgo_internal.sh
@@ -54,8 +54,9 @@ A statically typed functional programming language.
 * Rich build tool like go, cargo, cabal
 
 * Malgo
-  + Import Builtin.grf implicity
+  + Import Builtin.mlg implicity
   + Mutable (unboxed | boxed) polymorphic array (in Koriel, Array)
+  + Row polymorphism
   + More rich standard library
   + ML like module system
   + Overloaded Literals
