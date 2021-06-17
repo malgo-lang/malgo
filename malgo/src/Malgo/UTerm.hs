@@ -9,6 +9,7 @@ import Data.Void
 import Koriel.Pretty
 import Malgo.Prelude
 import Text.Show (Show (showList, showsPrec), showParen, showString)
+import qualified RIO.HashSet as HashSet
 
 -----------
 -- UTerm --
@@ -45,6 +46,10 @@ freeze (UTerm t) = Fix <$> traverse freeze t
 
 unfreeze :: Functor t => Fix t -> UTerm t v
 unfreeze = UTerm . fmap unfreeze . unFix
+
+freevars :: (Hashable a, Foldable t, Eq a) => UTerm t a -> HashSet a
+freevars (UVar v) = HashSet.singleton v
+freevars (UTerm t) = foldMap freevars t
 
 class HasUTerm t v a where
   walkOn :: Monad f => (UTerm t v -> f (UTerm t v)) -> a -> f a
