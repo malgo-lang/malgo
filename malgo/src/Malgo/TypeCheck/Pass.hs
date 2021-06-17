@@ -322,7 +322,7 @@ tcExpr ::
     HasUniqSupply env
   ) =>
   Exp (Malgo 'Rename) ->
-  WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'TypeCheck))
+  WriterT [With SourcePos Constraint] m (Exp (Malgo 'TypeCheck))
 tcExpr (Var pos m v) = do
   vType <- instantiate pos =<< lookupVar pos v
   pure $ Var (With vType pos) m v
@@ -399,7 +399,7 @@ tcClause ::
     HasUniqSupply env
   ) =>
   Clause (Malgo 'Rename) ->
-  WriterT [With SourcePos (Constraint UType)] m (Clause (Malgo 'TypeCheck))
+  WriterT [With SourcePos Constraint] m (Clause (Malgo 'TypeCheck))
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
@@ -416,7 +416,7 @@ tcPatterns ::
     MonadReader env m
   ) =>
   [Pat (Malgo 'Rename)] ->
-  WriterT [With SourcePos (Constraint UType)] m [Pat (Malgo 'TypeCheck)]
+  WriterT [With SourcePos Constraint] m [Pat (Malgo 'TypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- UVar <$> freshVar
@@ -474,7 +474,7 @@ tcStmts ::
     HasUniqSupply env
   ) =>
   [Stmt (Malgo 'Rename)] ->
-  WriterT [With SourcePos (Constraint UType)] m [Stmt (Malgo 'TypeCheck)]
+  WriterT [With SourcePos Constraint] m [Stmt (Malgo 'TypeCheck)]
 tcStmts = traverse tcStmt
 
 tcStmt ::
@@ -487,7 +487,7 @@ tcStmt ::
     HasUniqSupply env
   ) =>
   Stmt (Malgo 'Rename) ->
-  WriterT [With SourcePos (Constraint UType)] m (Stmt (Malgo 'TypeCheck))
+  WriterT [With SourcePos Constraint] m (Stmt (Malgo 'TypeCheck))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   env <- use varEnv

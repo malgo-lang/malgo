@@ -27,17 +27,17 @@ infixl 5 :~
 
 -- | Constraint
 -- a :~ b means 'a ~ b'
-data Constraint t = t :~ t
+data Constraint = UType :~ UType
   deriving stock (Eq, Ord, Show, Generic)
 
-instance (Pretty t) => Pretty (Constraint t) where
+instance Pretty Constraint where
   pPrint (t1 :~ t2) = pPrint t1 <+> "~" <+> pPrint t2
 
 ---------------
 -- Unifiable --
 ---------------
 
-type UnifyResult = (HashMap TypeVar UType, [With SourcePos (Constraint UType)])
+type UnifyResult = (HashMap TypeVar UType, [With SourcePos Constraint])
 
 unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
 unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
@@ -144,10 +144,10 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 -- Solver --
 ------------
 
-solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => [With SourcePos (Constraint UType)] -> f ()
+solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => [With SourcePos Constraint] -> f ()
 solve = solveLoop 5000
 
-solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => Int -> [With SourcePos (Constraint UType)] -> f ()
+solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => Int -> [With SourcePos Constraint] -> f ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (t1 :~ t2) : cs) = do
@@ -158,7 +158,7 @@ solveLoop n (With x (t1 :~ t2) : cs) = do
   ifor_ binds $ \var term -> bindVar x var term
   solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
-zonkConstraint :: MonadBind f => With x (Constraint UType) -> f (With x (Constraint UType))
+zonkConstraint :: MonadBind f => With x Constraint -> f (With x Constraint)
 zonkConstraint (With m (x :~ y)) = With m <$> ((:~) <$> zonk x <*> zonk y)
 
 generalize :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> UType -> m (Scheme UType)
