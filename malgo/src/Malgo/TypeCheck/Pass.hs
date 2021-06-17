@@ -50,23 +50,27 @@ lookupRecordType pos fields = do
     Just scheme -> pure scheme
 
 typeCheck :: (MonadFail m, HasOpt env, MonadReader env m, MonadIO m, HasUniqSupply env, HasLogFunc env) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
-typeCheck rnEnv (Module name bg) =
-  runTypeUnifyT $ do
-    tcEnv <- genTcEnv rnEnv
-    (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
-    -- FIXME: 自由なUVarに適当なTyVarを束縛する
-    -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
-    -- 今はTyBottomに変換している
-    zonkedBg <-
-      pure bg'
-        >>= traverseOf (scDefs . traversed . traversed . _1 . ann) zonk
-        >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @TypeF @TypeVar zonk)
-        >>= traverseOf (foreigns . traversed . _1 . ann) zonk
-    zonkedTcEnv <-
-      pure tcEnv'
-        >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
-        >>= traverseOf (typeEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
-    pure (Module name zonkedBg, zonkedTcEnv)
+typeCheck rnEnv (Module name bg) = do
+  tcEnv <- genTcEnv rnEnv
+  evalStateT ?? tcEnv $
+    runTypeUnifyT $ do
+      put tcEnv
+      bg' <- tcBindGroup bg
+      tcEnv' <- get
+      -- FIXME: 自由なUVarに適当なTyVarを束縛する
+      -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
+      -- 今はTyBottomに変換している
+      abbrEnv <- use abbrEnv
+      zonkedBg <-
+        pure bg'
+          >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (foreigns . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+      zonkedTcEnv <-
+        pure tcEnv'
+          >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (typeEnv . traversed . traversed) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+      pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
   ( MonadState TcEnv m,
@@ -297,8 +301,10 @@ tcScDefs ds@((pos, _, _) : _) = do
       -- No explicit signature
       Forall [] (UVar _) -> varEnv . at name ?= inferredScheme
       _ -> do
-        declaredType <- instantiate (pos ^. value) declaredScheme
-        inferedType <- instantiate (pos ^. value) inferredScheme
+        -- 型同士を比較する際には型シノニムを展開する
+        abbrEnv <- use abbrEnv
+        declaredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) declaredScheme
+        inferedType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) inferredScheme
         case equiv declaredType inferedType of
           Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
           Just subst

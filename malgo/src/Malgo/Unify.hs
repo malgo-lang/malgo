@@ -10,6 +10,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
+import Malgo.TypeCheck.TcEnv (TcEnv, abbrEnv)
 import Malgo.TypeRep.Static hiding (applySubst, kindOf)
 import Malgo.TypeRep.UTerm
 import Malgo.UTerm
@@ -118,8 +119,8 @@ liftEquiv _ _ = Nothing
 liftOccursCheck :: TypeVar -> TypeF UType -> Bool
 liftOccursCheck v t = or $ fmap (occursCheck v) t
 
-instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m) => MonadBind (TypeUnifyT m) where
-  lookupVar v = view (at v) <$> get
+instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadState TcEnv m) => MonadBind (TypeUnifyT m) where
+  lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar = do
     rep <- TypeVar <$> newLocalId "r" (UTerm TyRepF)
@@ -131,7 +132,7 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m) => MonadB
     tKind <- kindOf t
     let cs = [With x $ v ^. typeVar . idMeta :~ tKind]
     solve cs
-    at v ?= t
+    TypeUnifyT $ at v ?= t
 
   zonk (UVar v) = do
     mterm <- lookupVar v
@@ -143,14 +144,17 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m) => MonadB
 -- Solver --
 ------------
 
-solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f) => [With SourcePos (Constraint UType)] -> f ()
+solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => [With SourcePos (Constraint UType)] -> f ()
 solve = solveLoop 5000
 
-solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f) => Int -> [With SourcePos (Constraint UType)] -> f ()
+solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => Int -> [With SourcePos (Constraint UType)] -> f ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (t1 :~ t2) : cs) = do
-  (binds, cs') <- unify x t1 t2
+  abbrEnv <- use abbrEnv
+  let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
+  let t2' = fromMaybe t2 (expandTypeSynonym abbrEnv t2)
+  (binds, cs') <- unify x t1' t2'
   ifor_ binds $ \var term -> bindVar x var term
   solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
@@ -239,7 +243,7 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env) => SourcePos -> Scheme UType -> m UType
+instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m) => SourcePos -> Scheme UType -> m UType
 instantiate x (Forall as t) = do
   avs <- traverse ?? as $ \a -> do
     v <- UVar <$> freshVar

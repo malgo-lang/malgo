@@ -62,7 +62,11 @@ instance Pretty TypeVar where
 type TypeMap = HashMap TypeVar UType
 
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
-  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadReader r, MonadIO, MonadFail)
+  deriving newtype (Functor, Applicative, Monad, MonadReader r, MonadIO, MonadFail)
+
+instance MonadState s m => MonadState s (TypeUnifyT m) where
+  get = TypeUnifyT $ lift get
+  put x = TypeUnifyT $ lift $ put x
 
 instance MonadTrans TypeUnifyT where
   lift m = TypeUnifyT $ lift m
@@ -170,19 +174,36 @@ buildTyApp = List.foldl TyApp
 buildTyArr :: [UType] -> UType -> UType
 buildTyArr ps ret = foldr TyArr ret ps
 
+splitTyConApp :: UType -> Maybe (Id UType, [UType])
+splitTyConApp (TyCon con) = Just (con, [])
+splitTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ splitTyConApp t1
+splitTyConApp _ = Nothing
+
 expandTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> Maybe UType
-expandTypeSynonym abbrEnv (TyCon con) =
-  case abbrEnv ^. at con of
-    Just ([], t) -> Just t
-    _ -> Nothing
-expandTypeSynonym abbrEnv ty@TyApp {} =
+expandTypeSynonym abbrEnv (splitTyConApp -> Just (con, ts)) =
   case abbrEnv ^. at con of
     Nothing -> Nothing
     Just (ps, orig) -> Just (applySubst (zip ps ts) orig)
-  where
-    (con, ts) = split ty
-    split (TyCon con) = (con, [])
-    split (TyApp t1 t2) = over _2 (<> [t2]) $ split t1
-    split _ = bug Unreachable
 expandTypeSynonym _ _ = Nothing
 
+expandAllTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> UType
+expandAllTypeSynonym _ (UVar v) = UVar v
+expandAllTypeSynonym abbrEnv (splitTyConApp -> Just (con, ts)) =
+  case abbrEnv ^. at con of
+    Nothing -> buildTyApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
+    Just (ps, orig) ->
+      -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
+      expandAllTypeSynonym abbrEnv $ applySubst (zip ps ts) $ expandAllTypeSynonym abbrEnv orig
+expandAllTypeSynonym abbrEnv (TyApp t1 t2) = TyApp (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+expandAllTypeSynonym _ t@TyVar {} = t
+expandAllTypeSynonym _ t@TyCon {} = t
+expandAllTypeSynonym _ t@TyPrim {} = t
+expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+expandAllTypeSynonym _ t@TyTuple {} = t
+expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSynonym abbrEnv) kts
+expandAllTypeSynonym _ t@TyLazy {} = t
+expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
+expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv rep
+expandAllTypeSynonym _ t@TyRep {} = t
+expandAllTypeSynonym _ t@Rep {} = t
+expandAllTypeSynonym _ UTerm {} = bug Unreachable
