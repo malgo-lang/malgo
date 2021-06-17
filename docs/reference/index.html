@@ -459,11 +459,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_unboxed型">Unboxed型</a></li>
 </ul>
 </li>
-<li><a href="#_関数とパターンマッチ">関数とパターンマッチ</a>
-<ul class="sectlevel3">
-<li><a href="#_0引数関数">0引数関数</a></li>
-</ul>
-</li>
+<li><a href="#_関数とパターンマッチ">関数とパターンマッチ</a></li>
 <li><a href="#_文法">文法</a>
 <ul class="sectlevel3">
 <li><a href="#_字句構造">字句構造</a></li>
@@ -703,9 +699,48 @@ foo = { id 1# };</code></pre>
 </div>
 <div class="sect2">
 <h3 id="_関数とパターンマッチ">関数とパターンマッチ</h3>
-<div class="sect3">
-<h4 id="_0引数関数">0引数関数</h4>
-
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>head =
+  { Nil -&gt; Nothing
+  | Cons x _ -&gt; Just x
+  };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>関数は <code>{ x y ... -&gt; expr }</code> と書きます。
+Malgoの関数は式の一つで、式が書ける所ならどこにでも（例えば関数の引数）書けます。</p>
+</div>
+<div class="paragraph">
+<p>Malgoの関数はパターンマッチも兼ねています。
+引数部には、 <code>Cons x Nil</code> や <code>{ age: n }</code> のような <strong>パターン</strong> を書くことができます。
+また、それぞれの節を <code>|</code> で区切ることで、パターンによる分岐を書くことができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>main :: { () };
+main = { ... };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Malgoプログラムのエントリーポイントとなる関数 <code>main</code> は、0引数の関数として定義します。
+（多くの関数型言語が「ユニット型を引数に取る関数」として定義するのとは異なります）</p>
+</div>
+<div class="paragraph">
+<p>0引数関数の型は <code>{a}</code> と書きます。
+0引数関数は、前置演算子 <code>!</code> によって実行します。</p>
+</div>
+<div class="paragraph">
+<p>Malgoには条件分岐のための組み込みの構文がありません。
+<code>if</code> は、パターンマッチと0引数関数を組み合わせて以下のように定義します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>if :: Bool -&gt; {a} -&gt; {a} -&gt; a;
+if = { True t _ -&gt; !t
+     | False _ f -&gt; !f
+     };</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -753,7 +788,7 @@ foo = { id 1# };</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-06-17 17:06:15 +0900
+Last updated 2021-06-17 17:26:07 +0900
 </div>
 </div>
 </body>

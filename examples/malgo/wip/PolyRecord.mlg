@@ -1,6 +1,0 @@
-module PolyRecord = {
-  type Pair a b = { fst: b, snd: a };
-
-  first :: { fst: a, snd: b } -> a;
-  first = { {fst: x} -> x };
-}
