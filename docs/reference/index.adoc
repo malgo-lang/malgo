@@ -1,0 +1,185 @@
+= プログラミング言語Malgo リファレンスマニュアル
+:toc:
+:toclevels: 4
+
+* GitHub https://github.com/malgo-lang/malgo
+
+== はじめに
+
+Malgoは、多相型、型推論、パターンマッチなどの機能を持つ静的型付き関数プログラミング言語です。
+
+== Malgoのインストール
+
+ビルド済みバイナリの配布はまだ行っていないため、ソースコードからビルドする必要があります。
+
+ビルドに必要なものは以下の通りです。
+
+* stack (https://docs.haskellstack.org/en/stable/README/)
+* llvm (https://llvm.org/)
+
+=== LLVMのインストール
+
+Homebrew
+
+----
+brew install llvm-hs/llvm/llvm-9
+----
+
+Debian/Ubuntu
+
+----
+apt-get install llvm-9-dev
+----
+
+=== Malgoのビルドとインストール
+
+----
+git clone https://github.com/malgo-lang/malgo
+cd malgo
+stack install
+./scripts/install_malgo_internal.sh
+----
+
+scripts/install_malgo_internal.sh を実行すると、$XDG_DATA_HOME/malgo/base以下に組み込みライブラリがインストールされます。
+$XDG_DATA_HOMEが定義されてない場合は、$HOME/.local/share/malgo/base以下にインストールされます。
+
+また、malgoが生成するコードはbdwgc (http://www.hboehm.info/gc/) に依存しているため、bdwgcもインストールしておく必要があります。
+
+== malgoコマンド
+
+----
+$ malgo --help
+malgo programming language
+
+Usage: malgo COMMAND
+
+Available options:
+  -h,--help                Show this help text
+
+Available commands:
+  to-ll                    Compile Malgo file (.mlg) to LLVM Textual IR (.ll)
+
+$ malgo to-ll --help
+malgo to LLVM Textual IR Compiler
+
+Usage: malgo to-ll SOURCE [-o|--output OUTPUT] [--dump-parsed] [--dump-renamed] 
+                   [--dump-typed] [--dump-desugar] [--no-opt] [--no-lambdalift] 
+                   [--inline ARG] [--debug-mode] [-M|--module-path MODULE_PATH] 
+                   [--force]
+  Compile Malgo file (.mlg) to LLVM Textual IR (.ll)
+
+Available options:
+  SOURCE                   Source file
+  -o,--output OUTPUT       Write LLVM IR to OUTPUT
+  -h,--help                Show this help text
+----
+
+Malgoのソースコード（拡張子は.mlg）をコンパイルするには、 `+malgo to-ll Source.mlg+` を実行します。
+Source.mlgと同じディレクトリに、Source.mlgi（インターフェースファイル）とSource.ll（LLVM IRファイル）が生成されます。
+
+importするモジュールのインターフェースファイルが置いてあるディレクトリを `+-M+` オプションで指定します。
+例えば、組み込みライブラリをimportしている場合は、
+$XDG_DATA_HOME/malgo/base/Builtin.mlg と $XDG_DATA_HOME/malgo/base/Prelude.mlg をコンパイルした上で、
+それらのインターフェースファイルが生成されたディレクトリを `+-M+` オプションで渡します。
+
+`+malgo to-ll+` で生成された.llファイルは、clangでコンパイルします。
+
+scripts/compile.shはこれらの処理を自動で行うスクリプトです。scripts/compile.shは作業用ディレクトリとして.malgo-workを作成します。
+
+== 言語仕様
+
+=== データ型
+
+==== 代数的データ型
+
+[source]
+----
+data Time = Time Int64;
+
+data List a = Nil | Cons a (List a);
+----
+
+Malgoの基本となるのは代数的データ型です。
+`+data 型名 型引数1 型引数2 ... 型引数n = 値コンストラクタ1 | 値コンストラクタ2 ... | 値コンストラクタm+`
+で定義します。
+
+代数的データ型の値を構築する関数を *値コンストラクタ* と呼び、通常の関数とは区別します。
+値コンストラクタは、後述する *パターンマッチ* において、パターンとして分解することができます。
+上記の例では、 `+Time :: Int64 -> Time+` や `+Cons :: a -> List a -> List a+` などが定義されています。
+
+==== 型の別名（型シノニム）
+
+[source]
+----
+type Name = String;
+
+type Pair a b = (a, b);
+----
+
+型には別名をつけることができます。
+別名の定義には `+type+` を用います。
+
+==== レコード
+
+[source]
+----
+type Person = { name: String, age: Int32 };
+
+makePerson :: String -> Int32 -> Person;
+makePerson = { name age -> { name: name, age: age } };
+
+personAge :: Person -> Int32;
+personAge = { p -> #age p };
+----
+
+レコード型は `+{ フィールド名1: 型1, フィールド名2: 型2, ... }+` と書きます。
+レコードの値も同様に `+{ フィールド名1: 値1, フィールド名2: 値2, ... }+` と書きます。
+
+レコードの各フィールドは、 `+#フィールド名 レコード値+` でアクセスします。
+`+#フィールド名+` は関数で、レコード型の使用に応じて自動的に定義されます。
+
+==== Unboxed型
+
+Malgoの型には、Boxed, Unboxedの区別が存在します。
+`+data+` で定義した代数的データ型や、レコードはすべてBoxedな型です。
+一方で、組み込みの整数型 `+Int32#+`, `+Int64#+` などの、 `+#+` で終わる組み込み型はUnboxedな型です。
+
+Boxedな型は、サイズが必ず１ワードで、多相関数の引数や返り値を含むあらゆる場所で使えます。
+
+Unboxedな型は実行時のサイズが型によって異なります。例えば、32bit符号付き整数を表す `+Int32#+` は32bitであり、
+64bit符号付き整数を表す `+Int64#+` は64bitです。Unboxedな型は、多相関数に引数として渡すことができません。
+以下のようなコードはコンパイルエラーになります。
+
+[source]
+----
+id :: a -> a;
+id = { x -> x };
+
+foo = { id 1# };
+----
+
+Unboxedな型は、それをラップしたBoxedな型がruntime/malgo/Builtin.mlgで定義されています。
+
+=== 関数とパターンマッチ
+
+==== 0引数関数
+
+=== 文法
+
+==== 字句構造
+
+==== モジュール・宣言
+
+==== 型・式
+
+==== リテラル
+
+=== FFI
+
+== 組み込みライブラリ
+
+=== Builtin
+
+=== Prelude
+
+=== RTS (Runtime System)

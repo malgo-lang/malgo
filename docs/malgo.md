@@ -1,7 +1,3 @@
-# はじめに
-この文書は、https://github.com/takoeight0821/kagami/pull/24 がマージされた後のMalgoについて解説します。
-必要なら適時、「Malgo」を「Griff」に、「.mlg」を「.grf」に読み替えてください。
-
 # プログラミング言語Malgoの解説
 
 Malgoは、多相型、型推論、カリー化、パターンマッチなどの機能を持つ静的型付き関数プログラミング言語である。
@@ -10,33 +6,31 @@ Malgoは、多相型、型推論、カリー化、パターンマッチなどの
 ```
 module Hello = {
   import Builtin;
+  import Prelude;
 
-  foreign import print_string :: String# -> ();
-  foreign import newline :: () -> ();
-
-  putStrLn :: String -> ();
-  putStrLn = { (String# str) ->
-    print_string str;
-    newline ()
-  };
-
+  main :: {()};
   main = {
-    putStrLn (String# "Hello, world!"#)
+    putStrLn "Hello, world!"
   };
 }
 ```
 
 Malgoプログラムは、モジュールと呼ばれる翻訳単位から構成される。
 モジュールは`module モジュール名 = { ... }`で宣言される。
-現在のMalgo処理系には、１ファイルにつき１つしかモジュールを宣言できない制約が存在するが、改良を予定している。
+現在のMalgo処理系には、１ファイルにつき１つしかモジュールを宣言できない制約が存在する。
 
 他のモジュールで定義された型や関数を利用するには、`import`宣言を用いる。
 `import モジュール名;`と書くと、そのモジュールで宣言された型や関数が参照できるようになる。
-上記の例では、`Builtin`モジュールで定義される`String`型を参照している。
+上記の例では、モジュール`Builtin`で定義される関数`string#`や、`Prelude`で定義される関数`putStrLn`を参照している。
 
 Malgoは、Cなどの他の言語で書かれた関数を利用するFFI機能も備えている。
 外部のオブジェクトファイルで定義された関数を利用するには、`foreign import 外部関数名 :: 型;`と書く。
-上記の例では、`Unit* print_string(char*)`と`Unit* newline(Unit*)`をインポートしている。
+以下の例では、`Unit* print_string(char*)`と`Unit* newline(Unit*)`をインポートしている。
+
+```
+foreign import print_string :: String# -> ();
+foreign import newline :: () -> ();
+```
 
 値には、boxedとunboxedの区別がある。
 型の末尾に`#`がつく値はunboxedな値であり、32bit符号付き整数や64bit浮動小数点数などの即値を表す。

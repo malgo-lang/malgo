@@ -5,6 +5,7 @@ module Record = {
   type Person = { name: String, age: Int32 };
 
   personAge = { { age: age } -> age };
+
   personAge' = { p -> #age p };
 
   main = {
