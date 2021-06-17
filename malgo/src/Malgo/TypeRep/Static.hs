@@ -81,11 +81,11 @@ data Type
   | -- | function type
     TyArr Type Type
   | -- | tuple type
-    TyTuple [Type]
+    TyTuple Int
   | -- record type
     TyRecord (Map (Id ()) Type)
   | -- | lazy type
-    TyLazy Type
+    TyLazy
   | -- | pointer type
     TyPtr Type
   | -- | bottom type
@@ -107,16 +107,16 @@ makeBaseFunctor ''Type
 
 instance Pretty Type where
   pPrintPrec l d (TyApp t1 t2) =
-    maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+    maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVar v) = pprIdName v
   pPrintPrec l _ (TyCon c) = pPrintPrec l 0 c
   pPrintPrec l _ (TyPrim p) = pPrintPrec l 0 p
   pPrintPrec l d (TyArr t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec l _ (TyTuple ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
-  pPrintPrec l _ (TyLazy t) = braces $ pPrintPrec l 0 t
-  pPrintPrec l d (TyPtr t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
+  pPrintPrec _ _ TyLazy = "{}"
+  pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
   pPrintPrec _ _ TyBottom = "#Bottom"
   pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
   pPrintPrec _ _ TyRep = "#Rep"
@@ -174,7 +174,7 @@ instance HasKind Type where
   kindOf (TyArr _ t2) = kindOf t2
   kindOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
   kindOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
-  kindOf (TyLazy _) = pure $ TYPE (Rep BoxedRep)
+  kindOf TyLazy = pure $ TYPE (Rep BoxedRep) `TyArr` TYPE (Rep BoxedRep)
   kindOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
   kindOf TyBottom = pure $ TYPE (Rep BoxedRep)
   kindOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
@@ -194,7 +194,7 @@ data Scheme ty = Forall [Id ty] ty
 instance Binary ty => Binary (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
-  pPrint (Forall vs t) = "forall" <+> sep (map pprIdName vs) <> "." <+> pPrint t
+  pPrint (Forall vs t) = "forall" <+> hsep (map pprIdName vs) <> "." <+> pPrint t
 
 makePrisms ''Scheme
 
@@ -209,11 +209,12 @@ instance WithType Void where
   withType _ a = absurd a
 
 -- | Definition of Type constructor
-data TypeDef ty = TypeDef
-  { _typeConstructor :: ty,
-    _typeParameters :: [Id ty],
-    _valueConstructors :: [(Id (), Scheme ty)]
-  }
+data TypeDef ty
+  = TypeDef
+      { _typeConstructor :: ty,
+        _typeParameters :: [Id ty],
+        _valueConstructors :: [(Id (), Scheme ty)]
+      }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
 
 instance Binary ty => Binary (TypeDef ty)
@@ -242,9 +243,9 @@ applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v
 applySubst _ (TyCon c) = TyCon c
 applySubst _ (TyPrim p) = TyPrim p
 applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
-applySubst subst (TyTuple ts) = TyTuple $ map (applySubst subst) ts
+applySubst _ (TyTuple n) = TyTuple n
 applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
-applySubst subst (TyLazy t) = TyLazy $ applySubst subst t
+applySubst _ TyLazy = TyLazy
 applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
 applySubst _ TyBottom = TyBottom
 applySubst subst (TYPE rep) = TYPE $ applySubst subst rep

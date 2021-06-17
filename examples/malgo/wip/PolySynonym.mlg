@@ -1,0 +1,5 @@
+module PolySynonym = {
+  data Either a b = Left a | Right b;
+  data Pair a b = Pair a b;
+  type Assoc a b = Pair a b;
+}

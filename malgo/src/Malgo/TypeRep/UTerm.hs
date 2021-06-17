@@ -5,22 +5,17 @@
 
 module Malgo.TypeRep.UTerm where
 
-import Control.Monad.Error.Class (throwError)
 import Data.Deriving
 import Data.Functor.Foldable
-import qualified Data.HashSet as HashSet
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
 import Data.Void
 import Koriel.Id
-import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
-import Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), Scheme (Forall), TypeF (..))
+import Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), TypeF (..))
 import qualified Malgo.TypeRep.Static as S
 import Malgo.UTerm
-import Malgo.Unify
-import Text.Megaparsec (SourcePos)
 
 ----------
 -- Type --
@@ -34,15 +29,15 @@ type UType = UTerm TypeF TypeVar
 
 instance Pretty t => Pretty (TypeF t) where
   pPrintPrec l d (TyAppF t1 t2) =
-    maybeParens (d > 10) $ sep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+    maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVarF v) = pprIdName v
   pPrintPrec l d (TyConF c) = pPrintPrec l d c
   pPrintPrec _ _ (TyPrimF p) = pPrint p
   pPrintPrec l d (TyArrF t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec l _ (TyTupleF ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec _ _ (TyTupleF n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
-  pPrintPrec l _ (TyLazyF t) = braces $ pPrintPrec l 0 t
+  pPrintPrec _ _ TyLazyF = "{}"
   pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
   pPrintPrec _ _ TyBottomF = "#Bottom"
   pPrintPrec l _ (TYPEF rep) = "TYPE" <+> pPrintPrec l 0 rep
@@ -64,42 +59,14 @@ instance HasUTerm TypeF TypeVar TypeVar where
 instance Pretty TypeVar where
   pPrint (TypeVar v) = "'" <> pPrint v
 
-instance Unifiable1 TypeF where
-  liftUnify _ x (TyAppF t11 t12) (TyAppF t21 t22) = pure (mempty, [With x $ t11 :~ t21, With x $ t12 :~ t22])
-  liftUnify _ _ (TyVarF v1) (TyVarF v2) | v1 == v2 = pure (mempty, [])
-  liftUnify _ _ (TyConF c1) (TyConF c2) | c1 == c2 = pure (mempty, [])
-  liftUnify _ _ (TyPrimF p1) (TyPrimF p2) | p1 == p2 = pure (mempty, [])
-  liftUnify _ x (TyArrF l1 r1) (TyArrF l2 r2) = pure (mempty, [With x $ l1 :~ l2, With x $ r1 :~ r2])
-  liftUnify _ x (TyTupleF ts1) (TyTupleF ts2) = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) ts1 ts2)
-  liftUnify _ x (TyRecordF kts1) (TyRecordF kts2)
-    | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
-  liftUnify _ x (TyLazyF t1) (TyLazyF t2) = pure (mempty, [With x $ t1 :~ t2])
-  liftUnify _ x (TyPtrF t1) (TyPtrF t2) = pure (mempty, [With x $ t1 :~ t2])
-  liftUnify _ x (TYPEF rep1) (TYPEF rep2) = pure (mempty, [With x $ rep1 :~ rep2])
-  liftUnify _ _ TyRepF TyRepF = pure (mempty, [])
-  liftUnify _ _ (RepF rep1) (RepF rep2) | rep1 == rep2 = pure (mempty, [])
-  liftUnify _ x t1 t2 = throwError (x, unifyErrorMessage t1 t2)
-  liftEquiv equiv (TyAppF t11 t12) (TyAppF t21 t22) = (<>) <$> equiv t11 t21 <*> equiv t12 t22
-  liftEquiv _ (TyVarF v1) (TyVarF v2) | v1 == v2 = Just mempty
-  liftEquiv _ (TyConF c1) (TyConF c2) | c1 == c2 = Just mempty
-  liftEquiv _ (TyPrimF p1) (TyPrimF p2) | p1 == p2 = Just mempty
-  liftEquiv equiv (TyArrF l1 r1) (TyArrF l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
-  liftEquiv equiv (TyTupleF ts1) (TyTupleF ts2) = mconcat <$> zipWithM equiv ts1 ts2
-  liftEquiv equiv (TyRecordF kts1) (TyRecordF kts2)
-    | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
-  liftEquiv equiv (TyLazyF t1) (TyLazyF t2) = equiv t1 t2
-  liftEquiv equiv (TyPtrF t1) (TyPtrF t2) = equiv t1 t2
-  liftEquiv equiv (TYPEF rep1) (TYPEF rep2) = equiv rep1 rep2
-  liftEquiv _ TyRepF TyRepF = Just mempty
-  liftEquiv _ (RepF rep1) (RepF rep2) | rep1 == rep2 = Just mempty
-  liftEquiv _ _ _ = Nothing
-  liftFreevars freevars = foldMap freevars
-  liftOccursCheck occursCheck v t = or $ fmap (occursCheck v) t
-
 type TypeMap = HashMap TypeVar UType
 
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
-  deriving newtype (Functor, Applicative, Monad, MonadState TypeMap, MonadReader r, MonadIO, MonadFail)
+  deriving newtype (Functor, Applicative, Monad, MonadReader r, MonadIO, MonadFail)
+
+instance MonadState s m => MonadState s (TypeUnifyT m) where
+  get = TypeUnifyT $ lift get
+  put x = TypeUnifyT $ lift $ put x
 
 instance MonadTrans TypeUnifyT where
   lift m = TypeUnifyT $ lift m
@@ -107,133 +74,22 @@ instance MonadTrans TypeUnifyT where
 runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
 runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
-instance (MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env) => MonadBind (UTerm TypeF TypeVar) (TypeUnifyT m) where
-  lookupVar v = view (at v) <$> get
-  freshVar = do
-    rep <- TypeVar <$> newLocalId "r" (UTerm TyRepF)
-    kind <- TypeVar <$> newLocalId "k" (UTerm $ TYPEF $ UVar rep)
-    TypeVar <$> newLocalId "t" (UVar kind)
-  bindVar x v t = do
-    when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    tKind <- kindOf t
-    let cs = [With x $ v ^. typeVar . idMeta :~ tKind]
-    solve cs
-    at v ?= t
-  zonk (UVar v) = do
-    mterm <- lookupVar v
-    mterm <- traverse zonk mterm
-    pure $ fromMaybe (UVar v) mterm
-  zonk (UTerm t) = UTerm <$> traverse zonk t
-
-generalize :: (MonadBind UType m, MonadIO m, MonadReader env m, HasUniqSupply env) => SourcePos -> HashSet TypeVar -> UType -> m (Scheme UType)
-generalize x bound term = do
-  {-
-  let fvs = Set.toList $ unboundFreevars bound term
-  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
-  Forall as <$> zonkUTerm term
-  -}
-  zonkedTerm <- zonk term
-  let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
-  as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
-  Forall as <$> zonk zonkedTerm
-
-toBound :: (MonadBind UType m, MonadIO m, MonadReader env m, HasUniqSupply env) => SourcePos -> TypeVar -> [Char] -> m (Id UType)
-toBound x tv hint = do
-  tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
-  tvKind <- kindOf tvType
-  newLocalId hint tvKind
-
-defaultToBoxed :: (Applicative m, MonadBind UType m) => SourcePos -> UType -> m UType
-defaultToBoxed x (UVar v) = do
-  vKind <- kindOf $ v ^. typeVar . idMeta
-  case vKind of
-    UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
-    _ -> do
-      void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
-      UVar <$> traverseOf (typeVar . idMeta) zonk v
-defaultToBoxed x (UTerm t) = do
-  t <- defaultToBoxed' t
-  pure $ UTerm t
-  where
-    defaultToBoxed' (TyAppF t1 t2) = do
-      t1 <- defaultToBoxed x t1
-      t2 <- defaultToBoxed x t2
-      pure $ TyAppF t1 t2
-    defaultToBoxed' (TyVarF v) = do
-      ty <- defaultToBoxed x $ v ^. idMeta
-      let v' = set idMeta ty v
-      pure $ TyVarF v'
-    defaultToBoxed' (TyConF c) = do
-      ty <- defaultToBoxed x $ c ^. idMeta
-      let c' = set idMeta ty c
-      pure $ TyConF c'
-    defaultToBoxed' (TyPrimF prim) = pure $ TyPrimF prim
-    defaultToBoxed' (TyArrF t1 t2) = do
-      t1 <- defaultToBoxed x t1
-      t2 <- defaultToBoxed x t2
-      pure $ TyArrF t1 t2
-    defaultToBoxed' (TyTupleF ts) = do
-      ts <- traverse (defaultToBoxed x) ts
-      pure $ TyTupleF ts
-    defaultToBoxed' (TyRecordF kvs) = do
-      kvs <- traverse (defaultToBoxed x) kvs
-      pure $ TyRecordF kvs
-    defaultToBoxed' (TyLazyF t) = do
-      t <- defaultToBoxed x t
-      pure $ TyLazyF t
-    defaultToBoxed' (TyPtrF t) = do
-      t <- defaultToBoxed x t
-      pure $ TyPtrF t
-    defaultToBoxed' TyBottomF = pure TyBottomF
-    defaultToBoxed' (TYPEF rep) = do
-      rep <- defaultToBoxed x rep
-      pure $ TYPEF rep
-    defaultToBoxed' TyRepF = pure TyRepF
-    defaultToBoxed' (RepF rep) = pure $ RepF rep
-
-unboundFreevars :: Unifiable t => HashSet (Var t) -> t -> HashSet (Var t)
-unboundFreevars bound t = HashSet.difference (freevars t) bound
-
-generalizeMutRecs :: (MonadBind UType m, MonadIO m, MonadReader env m, HasUniqSupply env) => SourcePos -> HashSet TypeVar -> [UType] -> m ([Id UType], [UType])
-generalizeMutRecs x bound terms = do
-  {-
-  let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms
-  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
-  (as,) <$> traverse zonkUTerm terms
-  -}
-  zonkedTerms <- traverse zonk terms
-  let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
-  as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
-  (as,) <$> traverse zonk zonkedTerms
-
-instantiate :: (MonadBind UType m, MonadReader env m, MonadIO m, HasOpt env) => SourcePos -> Scheme UType -> m UType
-instantiate x (Forall as t) = do
-  avs <- traverse ?? as $ \a -> do
-    v <- UVar <$> freshVar @UType
-    vKind <- kindOf v
-    solve [With x $ a ^. idMeta :~ vKind]
-    pure (a, v)
-  replace avs t
-  where
-    replace _ t@UVar {} = pure t
-    replace kvs (UTerm t) = case t of
-      TyAppF t1 t2 -> fmap UTerm $ TyAppF <$> replace kvs t1 <*> replace kvs t2
-      TyVarF v -> pure $ fromMaybe (UTerm t) $ List.lookup v kvs
-      TyConF _ -> pure $ UTerm t
-      TyPrimF _ -> pure $ UTerm t
-      TyArrF t1 t2 -> fmap UTerm $ TyArrF <$> replace kvs t1 <*> replace kvs t2
-      TyTupleF ts -> fmap UTerm $ TyTupleF <$> traverse (replace kvs) ts
-      TyRecordF kts -> fmap UTerm $ TyRecordF <$> traverse (replace kvs) kts
-      TyLazyF t -> fmap UTerm $ TyLazyF <$> replace kvs t
-      TyPtrF t -> fmap UTerm $ TyPtrF <$> replace kvs t
-      TyBottomF -> pure $ UTerm TyBottomF
-      TYPEF rep -> fmap UTerm $ TYPEF <$> replace kvs rep
-      TyRepF -> pure $ UTerm TyRepF
-      RepF rep -> pure $ UTerm $ RepF rep
+applySubst :: [(Id UType, UType)] -> UType -> UType
+applySubst _ t@UVar {} = t
+applySubst subst (UTerm t) = case t of
+  TyAppF t1 t2 -> UTerm $ TyAppF (applySubst subst t1) (applySubst subst t2)
+  TyVarF v -> fromMaybe (UTerm t) $ List.lookup v subst
+  TyConF _ -> UTerm t
+  TyPrimF _ -> UTerm t
+  TyArrF t1 t2 -> UTerm $ TyArrF (applySubst subst t1) (applySubst subst t2)
+  TyTupleF _ -> UTerm t
+  TyRecordF kts -> UTerm $ TyRecordF (fmap (applySubst subst) kts)
+  TyLazyF -> UTerm TyLazyF
+  TyPtrF k -> UTerm $ TyPtrF $ applySubst subst k
+  TyBottomF -> UTerm TyBottomF
+  TYPEF rep -> UTerm $ TYPEF $ applySubst subst rep
+  TyRepF -> UTerm TyRepF
+  RepF rep -> UTerm $ RepF rep
 
 class HasType a where
   typeOf :: Monad m => a -> m UType
@@ -252,9 +108,9 @@ instance HasKind UType where
     TyConF c -> pure $ c ^. idMeta
     TyPrimF p -> S.fromType <$> S.kindOf p
     TyArrF _ t2 -> kindOf t2
-    TyTupleF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
+    TyTupleF n -> pure $ buildTyArr (replicate n $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep))
     TyRecordF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
-    TyLazyF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
+    TyLazyF -> pure $ UTerm (TyArrF (UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep)))
     TyPtrF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TyBottomF -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
     TYPEF rep -> pure $ UTerm $ TYPEF rep
@@ -291,14 +147,14 @@ pattern TyPrim p = UTerm (TyPrimF p)
 pattern TyArr :: UTerm TypeF v -> UTerm TypeF v -> UTerm TypeF v
 pattern TyArr t1 t2 = UTerm (TyArrF t1 t2)
 
-pattern TyTuple :: [UTerm TypeF v] -> UTerm TypeF v
-pattern TyTuple ts = UTerm (TyTupleF ts)
+pattern TyTuple :: Int -> UTerm TypeF v
+pattern TyTuple n = UTerm (TyTupleF n)
 
 pattern TyRecord :: Map.Map (Id ()) (UTerm TypeF v) -> UTerm TypeF v
 pattern TyRecord kts = UTerm (TyRecordF kts)
 
-pattern TyLazy :: UTerm TypeF v -> UTerm TypeF v
-pattern TyLazy t = UTerm (TyLazyF t)
+pattern TyLazy :: UTerm TypeF v
+pattern TyLazy = UTerm TyLazyF
 
 pattern TyPtr :: UTerm TypeF v -> UTerm TypeF v
 pattern TyPtr t = UTerm (TyPtrF t)
@@ -311,3 +167,43 @@ pattern TyRep = UTerm TyRepF
 
 pattern Rep :: Rep -> UTerm TypeF v
 pattern Rep rep = UTerm (RepF rep)
+
+buildTyApp :: UType -> [UType] -> UType
+buildTyApp = List.foldl TyApp
+
+buildTyArr :: [UType] -> UType -> UType
+buildTyArr ps ret = foldr TyArr ret ps
+
+splitTyConApp :: UType -> Maybe (Id UType, [UType])
+splitTyConApp (TyCon con) = Just (con, [])
+splitTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ splitTyConApp t1
+splitTyConApp _ = Nothing
+
+expandTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> Maybe UType
+expandTypeSynonym abbrEnv (splitTyConApp -> Just (con, ts)) =
+  case abbrEnv ^. at con of
+    Nothing -> Nothing
+    Just (ps, orig) -> Just (applySubst (zip ps ts) orig)
+expandTypeSynonym _ _ = Nothing
+
+expandAllTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> UType
+expandAllTypeSynonym _ (UVar v) = UVar v
+expandAllTypeSynonym abbrEnv (splitTyConApp -> Just (con, ts)) =
+  case abbrEnv ^. at con of
+    Nothing -> buildTyApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
+    Just (ps, orig) ->
+      -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
+      expandAllTypeSynonym abbrEnv $ applySubst (zip ps ts) $ expandAllTypeSynonym abbrEnv orig
+expandAllTypeSynonym abbrEnv (TyApp t1 t2) = TyApp (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+expandAllTypeSynonym _ t@TyVar {} = t
+expandAllTypeSynonym _ t@TyCon {} = t
+expandAllTypeSynonym _ t@TyPrim {} = t
+expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+expandAllTypeSynonym _ t@TyTuple {} = t
+expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSynonym abbrEnv) kts
+expandAllTypeSynonym _ t@TyLazy {} = t
+expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
+expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv rep
+expandAllTypeSynonym _ t@TyRep {} = t
+expandAllTypeSynonym _ t@Rep {} = t
+expandAllTypeSynonym _ UTerm {} = bug Unreachable

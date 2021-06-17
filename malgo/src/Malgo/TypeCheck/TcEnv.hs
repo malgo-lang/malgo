@@ -4,6 +4,7 @@ module Malgo.TypeCheck.TcEnv
   ( TcEnv (..),
     varEnv,
     typeEnv,
+    abbrEnv,
     fieldEnv,
     rnEnv,
     genTcEnv,
@@ -27,6 +28,7 @@ import Malgo.UTerm
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId (Scheme UType),
     _typeEnv :: HashMap RnId (TypeDef UType),
+    _abbrEnv :: HashMap (Id UType) ([Id UType], UType),
     _fieldEnv :: HashMap RnId (Scheme UType),
     _rnEnv :: RnEnv
   }
@@ -41,6 +43,7 @@ instance Pretty TcEnv where
         ( sep
             [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
               "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
+              "_abbrEnv" <+> "=" <+> pPrint (HashMap.toList _abbrEnv),
               "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv),
               "_rnEnv" <+> "=" <+> pPrint _rnEnv
             ]
@@ -50,6 +53,7 @@ instance HasUTerm TypeF TypeVar TcEnv where
   walkOn f TcEnv {..} =
     TcEnv <$> traverseOf (traversed . traversed . walkOn) f _varEnv
       <*> traverseOf (traversed . traversed . walkOn) f _typeEnv
+      <*> traverseOf (traversed . traversed . walkOn) f _abbrEnv
       <*> traverseOf (traversed . traversed . walkOn) f _fieldEnv
       <*> pure _rnEnv
 
@@ -73,6 +77,7 @@ genTcEnv rnEnv = do
               (char_t, TypeDef (TyPrim Static.CharT) [] []),
               (string_t, TypeDef (TyPrim Static.StringT) [] [])
             ],
+        _abbrEnv = mempty,
         _fieldEnv = mempty,
         _rnEnv = rnEnv
       }

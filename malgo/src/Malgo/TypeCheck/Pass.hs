@@ -1,15 +1,12 @@
 module Malgo.TypeCheck.Pass where
 
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
-import qualified Data.List as List
+import qualified Data.HashMap.Strict as HashMap (mapKeys)
 import Data.List.Extra (anySame)
-import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Interface (loadInterface, signatureMap, typeDefMap)
+import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
@@ -22,6 +19,11 @@ import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
 import Malgo.UTerm
 import Malgo.Unify hiding (lookupVar)
+import qualified RIO.HashMap as HashMap
+import qualified RIO.HashSet as HashSet
+import qualified RIO.List as List
+import qualified RIO.List.Partial as List
+import qualified RIO.Map as Map
 import Text.Megaparsec (SourcePos)
 
 -------------------------------
@@ -36,9 +38,9 @@ lookupVar pos name =
 
 lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m UType
 lookupType pos name =
-  preuse (typeEnv . at name . _Just . typeConstructor) >>= \case
+  preuse (typeEnv . at name . _Just) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-    Just typ -> pure typ
+    Just TypeDef {..} -> pure _typeConstructor
 
 lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> [RnId] -> m (Scheme UType)
 lookupRecordType pos fields = do
@@ -48,26 +50,31 @@ lookupRecordType pos fields = do
     Just scheme -> pure scheme
 
 typeCheck :: (MonadFail m, HasOpt env, MonadReader env m, MonadIO m, HasUniqSupply env, HasLogFunc env) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
-typeCheck rnEnv (Module name bg) =
-  runTypeUnifyT $ do
-    tcEnv <- genTcEnv rnEnv
-    (bg', tcEnv') <- runStateT (tcBindGroup bg) tcEnv
-    -- FIXME: 自由なUVarに適当なTyVarを束縛する
-    -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
-    zonkedBg <-
-      pure bg'
-        >>= traverseOf (scDefs . traversed . traversed . _1 . ann) zonk
-        >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @TypeF @TypeVar zonk)
-        >>= traverseOf (foreigns . traversed . _1 . ann) zonk
-    zonkedTcEnv <-
-      pure tcEnv'
-        >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
-        >>= traverseOf (typeEnv . traversed . traversed) (walkOn @TypeF @TypeVar zonk)
-    pure (Module name zonkedBg, zonkedTcEnv)
+typeCheck rnEnv (Module name bg) = do
+  tcEnv <- genTcEnv rnEnv
+  evalStateT ?? tcEnv $
+    runTypeUnifyT $ do
+      put tcEnv
+      bg' <- tcBindGroup bg
+      tcEnv' <- get
+      -- FIXME: 自由なUVarに適当なTyVarを束縛する
+      -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
+      -- 今はTyBottomに変換している
+      abbrEnv <- use abbrEnv
+      zonkedBg <-
+        pure bg'
+          >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (foreigns . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+      zonkedTcEnv <-
+        pure tcEnv'
+          >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (typeEnv . traversed . traversed) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+      pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
   ( MonadState TcEnv m,
-    MonadBind UType m,
+    MonadBind m,
     MonadFail m,
     MonadIO m,
     HasOpt env,
@@ -104,26 +111,31 @@ tcImports = traverse tcImport
           Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
       varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
       typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
+      abbrEnv
+        <>= HashMap.mapKeys
+          (fmap Static.fromType)
+          ( fmap
+              (over _2 Static.fromType . over (_1 . mapped . idMeta) Static.fromType)
+              (interface ^. typeAbbrMap)
+          )
       pure (pos, modName)
 
 tcTypeDefinitions ::
-  ( MonadBind UType m,
+  ( MonadBind m,
     MonadState TcEnv m,
     MonadReader env m,
     MonadIO m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env
+    MonadFail m
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
   m ([TypeSynonym (Malgo 'TypeCheck)], [DataDef (Malgo 'TypeCheck)])
 tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
-  for_ typeSynonyms \(x, name, params, _) -> do
-    tyCon <- UVar <$> freshVar @UType
-    tyConKind <- kindOf tyCon
-    solve [With x $ tyConKind :~ buildTyConKind params]
+  for_ typeSynonyms \(_, name, params, _) -> do
+    tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
     typeEnv . at name .= Just (TypeDef tyCon [] [])
   for_ dataDefs \(_, name, params, _) -> do
     tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
@@ -136,38 +148,28 @@ tcTypeDefinitions typeSynonyms dataDefs = do
     buildTyConKind (_ : xs) = TyArr (TYPE $ Rep BoxedRep) (buildTyConKind xs)
 
 tcTypeSynonyms ::
-  ( MonadBind UType f,
+  ( MonadBind f,
     MonadState TcEnv f,
     MonadIO f,
     MonadReader env f,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env
+    MonadFail f
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'TypeCheck)]
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
-    logDebug $ displayShow $ "Parametized type synonym:" <+> pPrint (params, typ)
-    unless (null params) do
-      errorOn pos $
-        "Parametized type synonym is not supported"
-          $+$ "TODO: add type operator and fix TyTyple and TyLazy's kinding"
-    name' <- lookupType pos name
-    params' <- traverse (const $ UVar <$> freshVar @UType) params
-    nameKind <- kindOf name'
-    paramKinds <- traverse kindOf params'
-    logDebug $ displayShow $ "unify" <+> parens (pPrint (foldr TyArr (TYPE $ Rep BoxedRep) paramKinds)) <+> parens (pPrint nameKind)
-    solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) paramKinds :~ nameKind]
-    zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
-    transedTyp <- transType typ
-    logDebug $ displayShow $ "unify" <+> parens (pPrint $ buildTyApp name' params') <+> parens (pPrint transedTyp)
-    solve [With pos $ buildTyApp name' params' :~ transedTyp]
-    updateFieldEnv (tcType typ) [] transedTyp
-    pure (pos, name, params, tcType typ)
+    TyCon con <- lookupType pos name
 
-buildTyApp :: UType -> [UType] -> UType
-buildTyApp = List.foldl TyApp
+    params' <- traverse (\p -> newLocalId (p ^. idName) (TYPE $ Rep BoxedRep)) params
+    zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
+
+    typ' <- transType typ
+    abbrEnv . at con .= Just (params', typ')
+    updateFieldEnv (tcType typ) params' typ'
+
+    pure (pos, name, params, tcType typ)
 
 updateFieldEnv :: (MonadState TcEnv f) => S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
 updateFieldEnv (S.TyRecord _ kts) params typ = do
@@ -178,12 +180,11 @@ updateFieldEnv _ _ _ = pure ()
 
 tcDataDefs ::
   ( MonadState TcEnv m,
-    MonadBind UType m,
+    MonadBind m,
     MonadReader env m,
     HasOpt env,
     MonadIO m,
-    HasUniqSupply env,
-    HasLogFunc env
+    HasUniqSupply env
   ) =>
   [DataDef (Malgo 'Rename)] ->
   m [DataDef (Malgo 'TypeCheck)]
@@ -191,10 +192,10 @@ tcDataDefs ds = do
   bindedTypeVars <- HashSet.unions . map (freevars . view typeConstructor) . HashMap.elems <$> use typeEnv
   for ds \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
-    params' <- traverse (const $ UVar <$> freshVar @UType) params
+    params' <- traverse (const $ UVar <$> freshVar) params
     nameKind <- kindOf name'
     paramKinds <- traverse kindOf params'
-    solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) paramKinds :~ nameKind]
+    solve [With pos $ buildTyArr paramKinds (TYPE $ Rep BoxedRep) :~ nameKind]
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
       unzip <$> forOf (traversed . _2) valueCons \args -> do
@@ -202,9 +203,7 @@ tcDataDefs ds = do
         -- name' <- lookupType pos name
         -- params' <- traverse (lookupType pos) params
         args' <- traverse transType args
-        logDebug $ displayShow $ pPrint params'
-        logDebug $ displayShow $ pPrint $ foldr TyArr (buildTyApp name' params') args'
-        pure $ foldr TyArr (buildTyApp name' params') args'
+        pure $ buildTyArr args' (buildTyApp name' params')
     -- let valueConsNames = map fst valueCons'
     -- let valueConsTypes = map snd valueCons'
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
@@ -215,7 +214,7 @@ tcDataDefs ds = do
 
 tcForeigns ::
   ( MonadState TcEnv m,
-    MonadBind UType m,
+    MonadBind m,
     MonadReader env m,
     MonadIO m,
     HasOpt env,
@@ -226,14 +225,14 @@ tcForeigns ::
 tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar @UType
+      tv <- freshVar
       typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme@(Forall _ ty') <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (With ty' (pos, raw), name, tcType ty)
 
 tcScSigs ::
-  ( MonadBind UType m,
+  ( MonadBind m,
     MonadState TcEnv m,
     MonadReader env m,
     MonadIO m,
@@ -245,43 +244,41 @@ tcScSigs ::
 tcScSigs ds =
   for ds \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar @UType
+      tv <- freshVar
       typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (pos, name, tcType ty)
 
-prepareTcScDefs :: (MonadState TcEnv m, MonadBind UType m) => [ScDef (Malgo 'Rename)] -> m ()
+prepareTcScDefs :: (MonadState TcEnv m, MonadBind m) => [ScDef (Malgo 'Rename)] -> m ()
 prepareTcScDefs = traverse_ \(_, name, _) -> do
   use (varEnv . at name) >>= \case
     Nothing -> do
-      ty <- Forall [] . UVar <$> freshVar @UType
+      ty <- Forall [] . UVar <$> freshVar
       varEnv . at name ?= ty
     Just _ -> pure ()
 
 tcScDefGroup ::
-  ( MonadBind UType m,
+  ( MonadBind m,
     MonadState TcEnv m,
     MonadFail m,
     MonadIO m,
     MonadReader env m,
     HasOpt env,
-    HasUniqSupply env,
-    HasLogFunc env
+    HasUniqSupply env
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
   m [[ScDef (Malgo 'TypeCheck)]]
 tcScDefGroup = traverse tcScDefs
 
 tcScDefs ::
-  ( MonadBind UType m,
+  ( MonadBind m,
     MonadState TcEnv m,
     MonadFail m,
     MonadIO m,
     MonadReader env m,
     HasOpt env,
-    HasUniqSupply env,
-    HasLogFunc env
+    HasUniqSupply env
   ) =>
   [ScDef (Malgo 'Rename)] ->
   m [ScDef (Malgo 'TypeCheck)]
@@ -304,10 +301,10 @@ tcScDefs ds@((pos, _, _) : _) = do
       -- No explicit signature
       Forall [] (UVar _) -> varEnv . at name ?= inferredScheme
       _ -> do
-        declaredType <- instantiate (pos ^. value) declaredScheme
-        inferedType <- instantiate (pos ^. value) inferredScheme
-        logDebug $ displayShow $ "equiv:" <+> pPrint (HashMap.toList <$> equiv declaredType inferedType)
-        logDebug $ displayShow $ "unify:" <+> pPrint (first HashMap.toList <$> unify (pos ^. value) declaredType inferedType)
+        -- 型同士を比較する際には型シノニムを展開する
+        abbrEnv <- use abbrEnv
+        declaredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) declaredScheme
+        inferedType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) inferredScheme
         case equiv declaredType inferedType of
           Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
           Just subst
@@ -316,7 +313,7 @@ tcScDefs ds@((pos, _, _) : _) = do
   pure ds
 
 tcExpr ::
-  ( MonadBind UType m,
+  ( MonadBind m,
     MonadState TcEnv m,
     MonadFail m,
     MonadIO m,
@@ -325,7 +322,7 @@ tcExpr ::
     HasUniqSupply env
   ) =>
   Exp (Malgo 'Rename) ->
-  WriterT [With SourcePos (Constraint UType)] m (Exp (Malgo 'TypeCheck))
+  WriterT [With SourcePos Constraint] m (Exp (Malgo 'TypeCheck))
 tcExpr (Var pos m v) = do
   vType <- instantiate pos =<< lookupVar pos v
   pure $ Var (With vType pos) m v
@@ -335,7 +332,7 @@ tcExpr (Unboxed pos u) = do
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
-  retType <- UVar <$> freshVar @UType
+  retType <- UVar <$> freshVar
   fType <- typeOf f'
   xType <- typeOf x'
   tell [With pos $ fType :~ TyArr xType retType]
@@ -345,7 +342,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e2' <- tcExpr e2
   opScheme <- lookupVar pos op
   opType <- instantiate pos opScheme
-  retType <- UVar <$> freshVar @UType
+  retType <- UVar <$> freshVar
   e1Type <- typeOf e1'
   e2Type <- typeOf e2'
   tell [With pos $ opType :~ TyArr e1Type (TyArr e2Type retType)]
@@ -353,7 +350,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
 tcExpr (Fn pos (Clause x [] ss : _)) = do
   ss' <- tcStmts ss
   ssType <- typeOf $ List.last ss'
-  pure $ Fn (With (TyLazy ssType) pos) [Clause (With (TyLazy ssType) x) [] ss']
+  pure $ Fn (With (TyApp TyLazy ssType) pos) [Clause (With (TyApp TyLazy ssType) x) [] ss']
 tcExpr (Fn pos cs) = do
   traverse tcClause cs >>= \case
     (c' : cs') -> do
@@ -365,7 +362,7 @@ tcExpr (Fn pos cs) = do
     _ -> bug Unreachable -- Malgo.ParserはsepBy1でFnをパースする
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
-  esType <- TyTuple <$> traverse typeOf es'
+  esType <- buildTyApp (TyTuple $ length es) <$> traverse typeOf es'
   pure $ Tuple (With esType pos) es'
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
@@ -375,13 +372,13 @@ tcExpr (Record pos kvs) = do
   pure $ Record (With recordType pos) kvs'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
-  ty <- UVar <$> freshVar @UType
+  ty <- UVar <$> freshVar
   eType <- typeOf e'
-  tell [With pos $ TyLazy ty :~ eType]
+  tell [With pos $ TyApp TyLazy ty :~ eType]
   pure $ Force (With ty pos) e'
 tcExpr (RecordAccess pos label) = do
   recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
-  retType <- UVar <$> freshVar @UType
+  retType <- UVar <$> freshVar
   case recordType of
     TyRecord kts -> do
       tell [With pos $ recordType :~ TyRecord (Map.insert label retType kts)]
@@ -393,7 +390,7 @@ tcExpr (Parens pos e) = do
   pure $ Parens (With eType pos) e'
 
 tcClause ::
-  ( MonadBind UType m,
+  ( MonadBind m,
     MonadState TcEnv m,
     MonadFail m,
     MonadIO m,
@@ -402,16 +399,16 @@ tcClause ::
     HasUniqSupply env
   ) =>
   Clause (Malgo 'Rename) ->
-  WriterT [With SourcePos (Constraint UType)] m (Clause (Malgo 'TypeCheck))
+  WriterT [With SourcePos Constraint] m (Clause (Malgo 'TypeCheck))
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
   ssType <- typeOf $ List.last ss'
   patTypes <- traverse typeOf pats'
-  pure $ Clause (With (foldr TyArr ssType patTypes) pos) pats' ss'
+  pure $ Clause (With (buildTyArr patTypes ssType) pos) pats' ss'
 
 tcPatterns ::
-  ( MonadBind UType m,
+  ( MonadBind m,
     MonadState TcEnv m,
     MonadFail m,
     MonadIO m,
@@ -419,10 +416,10 @@ tcPatterns ::
     MonadReader env m
   ) =>
   [Pat (Malgo 'Rename)] ->
-  WriterT [With SourcePos (Constraint UType)] m [Pat (Malgo 'TypeCheck)]
+  WriterT [With SourcePos Constraint] m [Pat (Malgo 'TypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
-  ty <- UVar <$> freshVar @UType
+  ty <- UVar <$> freshVar
   varEnv . at v ?= Forall [] ty
   ps' <- tcPatterns ps
   pure $ VarP (With ty x) v : ps'
@@ -437,16 +434,16 @@ tcPatterns (ConP pos con pats : ps) = do
   when (not (null morePats) && not (null restPs)) $
     errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
-  ty <- UVar <$> freshVar @UType
+  ty <- UVar <$> freshVar
   patTypes <- traverse typeOf pats'
-  tell [With pos $ conType :~ foldr TyArr ty patTypes]
+  tell [With pos $ conType :~ buildTyArr patTypes ty]
   ps' <- tcPatterns restPs
   pure (ConP (With ty pos) con pats' : ps')
 tcPatterns (TupleP pos pats : ps) = do
   pats' <- tcPatterns pats
   ps' <- tcPatterns ps
   patTypes <- traverse typeOf pats'
-  pure $ TupleP (With (TyTuple patTypes) pos) pats' : ps'
+  pure $ TupleP (With (buildTyApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
 tcPatterns (RecordP pos kps : ps) = do
   kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
@@ -469,7 +466,7 @@ splitTyArr t = ([], t)
 
 tcStmts ::
   ( MonadState TcEnv m,
-    MonadBind UType m,
+    MonadBind m,
     MonadFail m,
     MonadReader env m,
     HasOpt env,
@@ -477,12 +474,12 @@ tcStmts ::
     HasUniqSupply env
   ) =>
   [Stmt (Malgo 'Rename)] ->
-  WriterT [With SourcePos (Constraint UType)] m [Stmt (Malgo 'TypeCheck)]
+  WriterT [With SourcePos Constraint] m [Stmt (Malgo 'TypeCheck)]
 tcStmts = traverse tcStmt
 
 tcStmt ::
   ( MonadState TcEnv m,
-    MonadBind UType m,
+    MonadBind m,
     MonadFail m,
     MonadReader env m,
     HasOpt env,
@@ -490,7 +487,7 @@ tcStmt ::
     HasUniqSupply env
   ) =>
   Stmt (Malgo 'Rename) ->
-  WriterT [With SourcePos (Constraint UType)] m (Stmt (Malgo 'TypeCheck))
+  WriterT [With SourcePos Constraint] m (Stmt (Malgo 'TypeCheck))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   env <- use varEnv
@@ -506,7 +503,7 @@ tcStmt (Let pos v e) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadState TcEnv m, MonadBind UType m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env) => S.Type (Malgo 'Rename) -> m UType
+transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env) => S.Type (Malgo 'Rename) -> m UType
 transType (S.TyApp pos t ts) = do
   rnEnv <- use rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
@@ -522,7 +519,7 @@ transType (S.TyApp pos t ts) = do
       ts' <- traverse transType ts
       t'Kind <- kindOf t'
       ts'Kinds <- traverse kindOf ts'
-      solve [With pos $ foldr TyArr (TYPE $ Rep BoxedRep) ts'Kinds :~ t'Kind]
+      solve [With pos $ buildTyArr ts'Kinds (TYPE $ Rep BoxedRep) :~ t'Kind]
       buildTyApp <$> transType t <*> traverse transType ts
   where
     findBuiltinType :: String -> RnEnv -> Maybe (Id ())
@@ -532,9 +529,9 @@ transType (S.TyApp pos t ts) = do
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
-transType (S.TyTuple _ ts) = TyTuple <$> traverse transType ts
+transType (S.TyTuple _ ts) = buildTyApp (TyTuple $ length ts) <$> traverse transType ts
 transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
-transType (S.TyLazy _ t) = TyLazy <$> transType t
+transType (S.TyLazy _ t) = TyApp TyLazy <$> transType t
 
 tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'TypeCheck)
 tcType (S.TyApp pos t ts) = S.TyApp pos (tcType t) (map tcType ts)
