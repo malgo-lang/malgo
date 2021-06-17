@@ -5,12 +5,9 @@ module Malgo.UTerm where
 
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
 import Data.Void
 import Koriel.Pretty
 import Malgo.Prelude
-import Malgo.Unify
 import Text.Show (Show (showList, showsPrec), showParen, showString)
 
 -----------
@@ -61,18 +58,3 @@ instance HasUTerm t v x => HasUTerm t v (With x a) where
 instance HasUTerm t v Void where
   walkOn _ x = absurd x
 
-instance (Eq v, Hashable v, Unifiable1 t, Eq1 t, Pretty v, Pretty (t (UTerm t v))) => Unifiable (UTerm t v) where
-  type Var (UTerm t v) = v
-  unify _ (UVar v1) (UVar v2)
-    | v1 == v2 = pure (mempty, [])
-    | otherwise = pure (HashMap.singleton v1 (UVar v2), [])
-  unify _ (UVar v) (UTerm t) = pure (HashMap.singleton v (UTerm t), [])
-  unify _ (UTerm t) (UVar v) = pure (HashMap.singleton v (UTerm t), [])
-  unify x (UTerm t1) (UTerm t2) = liftUnify unify x t1 t2
-  equiv (UVar v1) (UVar v2)
-    | v1 == v2 = Just mempty
-    | otherwise = Just $ HashMap.singleton v1 v2
-  equiv (UTerm t1) (UTerm t2) = liftEquiv equiv t1 t2
-  equiv _ _ = Nothing
-  freevars (UVar v) = HashSet.singleton v
-  freevars (UTerm t) = liftFreevars freevars t
