@@ -50,6 +50,7 @@ instance (IsType a) => IsType (TypeF a) where
 
 newtype TypeVar = TypeVar {_typeVar :: Id UType}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
+  deriving stock (Data, Typeable)
 
 makeLenses ''TypeVar
 

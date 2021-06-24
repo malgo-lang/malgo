@@ -183,48 +183,16 @@ toBound x tv hint = do
   newLocalId hint tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
-defaultToBoxed x (UVar v) = do
-  vKind <- kindOf $ v ^. typeVar . idMeta
-  case vKind of
-    UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
-    _ -> do
-      void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
-      UVar <$> traverseOf (typeVar . idMeta) zonk v
-defaultToBoxed x (UTerm t) = do
-  t <- defaultToBoxed' t
-  pure $ UTerm t
+defaultToBoxed x t = transformM go t
   where
-    defaultToBoxed' (TyAppF t1 t2) = do
-      t1 <- defaultToBoxed x t1
-      t2 <- defaultToBoxed x t2
-      pure $ TyAppF t1 t2
-    defaultToBoxed' (TyVarF v) = do
-      ty <- defaultToBoxed x $ v ^. idMeta
-      let v' = set idMeta ty v
-      pure $ TyVarF v'
-    defaultToBoxed' (TyConF c) = do
-      ty <- defaultToBoxed x $ c ^. idMeta
-      let c' = set idMeta ty c
-      pure $ TyConF c'
-    defaultToBoxed' (TyPrimF prim) = pure $ TyPrimF prim
-    defaultToBoxed' (TyArrF t1 t2) = do
-      t1 <- defaultToBoxed x t1
-      t2 <- defaultToBoxed x t2
-      pure $ TyArrF t1 t2
-    defaultToBoxed' (TyTupleF n) = pure $ TyTupleF n
-    defaultToBoxed' (TyRecordF kvs) = do
-      kvs <- traverse (defaultToBoxed x) kvs
-      pure $ TyRecordF kvs
-    defaultToBoxed' TyLazyF = pure TyLazyF
-    defaultToBoxed' (TyPtrF t) = do
-      t <- defaultToBoxed x t
-      pure $ TyPtrF t
-    defaultToBoxed' TyBottomF = pure TyBottomF
-    defaultToBoxed' (TYPEF rep) = do
-      rep <- defaultToBoxed x rep
-      pure $ TYPEF rep
-    defaultToBoxed' TyRepF = pure TyRepF
-    defaultToBoxed' (RepF rep) = pure $ RepF rep
+    go (UVar v) = do
+      vKind <- kindOf $ v ^. typeVar . idMeta
+      case vKind of
+        UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
+        _ -> do
+          void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
+          UVar <$> traverseOf (typeVar . idMeta) zonk v
+    go (UTerm t) = pure $ UTerm t
 
 unboundFreevars :: HashSet TypeVar -> UType -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound

@@ -34,7 +34,7 @@ data Rep
     CharRep
   | -- | String#
     StringRep
-  deriving stock (Eq, Ord, Show, Generic)
+  deriving stock (Eq, Ord, Show, Generic, Data)
 
 makePrisms ''Rep
 
@@ -44,7 +44,7 @@ instance Pretty Rep where pPrint rep = text $ show rep
 
 -- | Primitive Types
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
-  deriving stock (Eq, Show, Ord, Generic)
+  deriving stock (Eq, Show, Ord, Generic, Data)
 
 makePrisms ''PrimT
 
@@ -98,12 +98,18 @@ data Type
     TyRep
   | -- | runtime representation tag
     Rep Rep
-  deriving stock (Eq, Ord, Show, Generic)
+  deriving stock (Eq, Ord, Show, Generic, Data)
 
 instance Binary Type
 
 makePrisms ''Type
 makeBaseFunctor ''Type
+
+instance Plated Type
+
+deriving stock instance Data t => Data (TypeF t)
+
+instance Data t => Plated (TypeF t)
 
 instance Pretty Type where
   pPrintPrec l d (TyApp t1 t2) =
@@ -209,12 +215,11 @@ instance WithType Void where
   withType _ a = absurd a
 
 -- | Definition of Type constructor
-data TypeDef ty
-  = TypeDef
-      { _typeConstructor :: ty,
-        _typeParameters :: [Id ty],
-        _valueConstructors :: [(Id (), Scheme ty)]
-      }
+data TypeDef ty = TypeDef
+  { _typeConstructor :: ty,
+    _typeParameters :: [Id ty],
+    _valueConstructors :: [(Id (), Scheme ty)]
+  }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
 
 instance Binary ty => Binary (TypeDef ty)
