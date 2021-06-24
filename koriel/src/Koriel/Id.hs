@@ -13,12 +13,14 @@ module Koriel.Id
     newId,
     newLocalId,
     newGlobalId,
+    nameToString,
     pprIdName,
     idIsExternal,
     idIsWiredIn,
     newIdOnSort,
     newIdOnName,
     cloneId,
+    newNoNameId,
   )
 where
 
@@ -56,7 +58,7 @@ instance Binary ModuleName
 makePrisms ''ModuleName
 
 data Id a = Id
-  { _idName :: String,
+  { _idName :: Maybe String,
     _idUniq :: Int,
     _idMeta :: a,
     _idSort :: IdSort
@@ -73,8 +75,11 @@ instance Hashable (Id a) where
 
 instance Binary a => Binary (Id a)
 
+nameToString :: Maybe String -> String
+nameToString = fromMaybe "$NoName"
+
 pprIdName :: Id a -> Doc
-pprIdName Id {_idName} = text _idName
+pprIdName Id {_idName} = text $ nameToString _idName
 
 pPrintMeta :: (t -> Doc) -> t -> Doc
 
@@ -85,26 +90,29 @@ pPrintMeta _ _ = mempty
 #endif
 
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id n _ m (External modName)) = pPrint modName <> "." <> text n <> pPrintMeta pPrint m
-  pPrint (Id n _ m (WiredIn modName)) = pPrint modName <> "." <> text n <> pPrintMeta pPrint m
-  pPrint (Id n u m Internal) = text n <> "_" <> text (show u) <> pPrintMeta pPrint m
+  pPrint id@(Id _ _ m (External modName)) = pPrint modName <> "." <> pprIdName id <> pPrintMeta pPrint m
+  pPrint id@(Id _ _ m (WiredIn modName)) = pPrint modName <> "." <> pprIdName id <> pPrintMeta pPrint m
+  pPrint id@(Id _ u m Internal) = pprIdName id <> "_" <> text (show u) <> pPrintMeta pPrint m
 
 makeLenses ''Id
 
 newId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> IdSort -> f (Id a)
-newId n m s = Id n <$> getUniq <*> pure m <*> pure s
+newId n m s = Id (Just n) <$> getUniq <*> pure m <*> pure s
+
+newNoNameId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> IdSort -> f (Id a)
+newNoNameId m s = Id Nothing <$> getUniq <*> pure m <*> pure s
 
 newLocalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> f (Id a)
-newLocalId n m = Id n <$> getUniq <*> pure m <*> pure Internal
+newLocalId n m = Id (Just n) <$> getUniq <*> pure m <*> pure Internal
 
 newGlobalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> ModuleName -> f (Id a)
-newGlobalId n m modName = Id n <$> getUniq <*> pure m <*> pure (External modName)
+newGlobalId n m modName = Id (Just n) <$> getUniq <*> pure m <*> pure (External modName)
 
 newIdOnSort :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> Id b -> f (Id a)
 newIdOnSort name meta Id {_idSort} = newId name meta _idSort
 
 newIdOnName :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> Id b -> f (Id a)
-newIdOnName meta Id {_idName, _idSort} = newId _idName meta _idSort
+newIdOnName meta Id {_idName, _idSort} = Id _idName <$> getUniq <*> pure meta <*> pure _idSort
 
 cloneId :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Id a -> m (Id a)
 cloneId Id {..} = do

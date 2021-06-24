@@ -123,9 +123,9 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar = do
-    rep <- TypeVar <$> newLocalId "r" (UTerm TyRepF)
-    kind <- TypeVar <$> newLocalId "k" (UTerm $ TYPEF $ UVar rep)
-    TypeVar <$> newLocalId "t" (UVar kind)
+    rep <- TypeVar <$> newNoNameId (UTerm TyRepF) Internal
+    kind <- TypeVar <$> newNoNameId (UTerm $ TYPEF $ UVar rep) Internal
+    TypeVar <$> newNoNameId (UVar kind) Internal
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
@@ -179,8 +179,7 @@ toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => Sou
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   tvKind <- kindOf tvType
-  -- TODO: tvが無名ならhintを、ソースコード上に現れるならその名前を優先する
-  newLocalId hint tvKind
+  newLocalId (fromMaybe hint $ tv ^. typeVar . idName) tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
 defaultToBoxed x t = transformM ?? t $ \case
