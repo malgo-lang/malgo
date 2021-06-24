@@ -1,6 +1,6 @@
 module Cast = {
-  import Builtin;
-  import Prelude;
+  import Builtin.(*);
+  import Prelude.(*);
 
   foreign import unsafe_cast :: a -> b;
 

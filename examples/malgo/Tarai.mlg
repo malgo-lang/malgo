@@ -1,6 +1,6 @@
 module Tarai = {
-  import Builtin;
-  import Prelude;
+  import Builtin.(*);
+  import Prelude.(*);
 
   infix 4 (<=);
   (<=) = { (Int64# x) (Int64# y) -> isTrue# (le_Int64# x y) };

@@ -1,5 +1,5 @@
-module testDot = {
-  import Builtin;
+module TestDot = {
+  import Builtin.(*);
   
   infixr 9 (.);
   (.) :: (b -> c) -> (a -> b) -> (a -> c);

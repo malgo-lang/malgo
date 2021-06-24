@@ -1,15 +1,12 @@
 module TypeSynonym = {
-  import Builtin;
-  import Prelude;
+  import Builtin.(*);
+  import Prelude.(*);
 
-  -- TODO: Support parametized type synonyms
-  -- type MyTuple a = (a, a);
-
-  type MyTuple = (MyString, MyString);
+  type MyTuple a = (a, a);
 
   type MyString = String;
 
-  hello :: { MyTuple };
+  hello :: { MyTuple MyString };
   hello = { ("hello", "world") };
 
   data T = TCon;

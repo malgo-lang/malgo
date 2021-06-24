@@ -1,5 +1,5 @@
-module testLet = {
-  import Builtin;
+module TestLet = {
+  import Builtin.(*);
 
   foreign import print_int32 :: Int32# -> ();
 

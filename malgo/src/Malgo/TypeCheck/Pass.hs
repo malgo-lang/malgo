@@ -103,7 +103,7 @@ tcImports ::
   m [Import (Malgo 'TypeCheck)]
 tcImports = traverse tcImport
   where
-    tcImport (pos, modName) = do
+    tcImport (pos, modName, importList) = do
       interface <-
         loadInterface modName >>= \case
           Just x -> pure x
@@ -117,7 +117,7 @@ tcImports = traverse tcImport
               (over _2 Static.fromType . over (_1 . mapped . idMeta) Static.fromType)
               (interface ^. typeAbbrMap)
           )
-      pure (pos, modName)
+      pure (pos, modName, importList)
 
 tcTypeDefinitions ::
   ( MonadBind m,

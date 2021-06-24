@@ -356,7 +356,7 @@ data Decl x
   | TypeSynonym (XTypeSynonym x) (XId x) [XId x] (Type x)
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
-  | Import (XImport x) ModuleName
+  | Import (XImport x) ModuleName ImportList
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 
@@ -379,7 +379,8 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
       ]
   pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
   pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
-  pPrint (Import _ name) = "import" <+> pPrint name
+  pPrint (Import _ name All) = "import" <+> pPrint name <> "." <> parens "*"
+  pPrint (Import _ name (Selected xs)) = "import" <+> pPrint name <> "." <> parens (sep $ punctuate "," $ map pPrint xs)
 
 makePrisms ''Decl
 
@@ -430,7 +431,7 @@ type TypeSynonym x = (XTypeSynonym x, XId x, [XId x], Type x)
 
 type Foreign x = (XForeign x, XId x, Type x)
 
-type Import x = (XImport x, ModuleName)
+type Import x = (XImport x, ModuleName, ImportList)
 
 makeLenses ''BindGroup
 
@@ -479,7 +480,7 @@ makeBindGroup ds =
     typeSynonym _ = Nothing
     foreignDef (Foreign x n t) = Just (x, n, t)
     foreignDef _ = Nothing
-    importDef (Import x m) = Just (x, m)
+    importDef (Import x m ns) = Just (x, m, ns)
     importDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 

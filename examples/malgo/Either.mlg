@@ -1,6 +1,6 @@
 module Either = {
-  import Builtin;
-  import Prelude;
+  import Builtin.(*);
+  import Prelude.(*);
 
   data Either a b = Left a | Right b;
 

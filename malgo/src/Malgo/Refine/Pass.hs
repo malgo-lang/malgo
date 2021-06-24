@@ -81,4 +81,4 @@ refineForeign :: (TypeChecked t x, Applicative m) => Foreign x -> m (Foreign (Ma
 refineForeign (x, name, ty) = (over ann toType x,name,) <$> refineType ty
 
 refineImport :: (TypeChecked t x, Applicative m) => Import x -> m (Import (Malgo 'Refine))
-refineImport (x, modName) = pure (x, modName)
+refineImport (x, modName, importList) = pure (x, modName, importList)

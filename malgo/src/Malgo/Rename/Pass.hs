@@ -127,13 +127,13 @@ rnDecl (Foreign pos name typ) = do
     Foreign (pos, name)
       <$> lookupVarName pos name
       <*> rnType typ
-rnDecl (Import pos modName) = do
+rnDecl (Import pos modName importList) = do
   interface <-
     loadInterface modName >>= \case
       Just x -> pure x
       Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   infixInfo <>= interface ^. infixMap
-  pure $ Import pos modName
+  pure $ Import pos modName importList
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
@@ -304,7 +304,18 @@ genToplevelEnv modName ds builtinEnv = do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newGlobalId x () modName
       modify $ appendRnEnv varEnv [(x, With Implicit x')]
-    aux (Import pos modName') = do
+    aux (Import pos modName' All) = do
+      interface <-
+        loadInterface modName' >>= \case
+          Just x -> pure x
+          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
+      opt <- getOpt
+      when (debugMode opt) $
+        liftIO $ hPrint stderr $ pPrint interface
+      -- 全ての識別子をImplicitでimportする
+      modify $ appendRnEnv varEnv (map (over _2 $ With Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv typeEnv (map (over _2 $ With Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
+    aux (Import pos modName' (Selected implicits)) = do
       interface <-
         loadInterface modName' >>= \case
           Just x -> pure x
@@ -313,8 +324,8 @@ genToplevelEnv modName ds builtinEnv = do
       when (debugMode opt) $
         liftIO $ hPrint stderr $ pPrint interface
       -- TODO: 明示的に指定されていない識別子以外はExplicitでimportする
-      modify $ appendRnEnv varEnv (map (over _2 $ With Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv typeEnv (map (over _2 $ With Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
+      modify $ appendRnEnv varEnv (map (\(name, id) -> if name `elem` implicits then (name, With Implicit id) else (name, With Explicit id)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv typeEnv (map (\(name, id) -> if name `elem` implicits then (name, With Implicit id) else (name, With Explicit id)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pure ()
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
     genFieldEnv (TyVar _ _) = pure ()

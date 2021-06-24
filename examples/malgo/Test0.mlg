@@ -1,5 +1,5 @@
-module test0 = {
-  import Builtin;
+module Test0 = {
+  import Builtin.(*);
 
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;

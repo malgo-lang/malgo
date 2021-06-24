@@ -1,6 +1,6 @@
 module UseModule = {
-  import Builtin;
-  import Prelude;
+  import Builtin.(*);
+  import Prelude.(*);
 
   infixr 9 (.);
   (.) = { f g x -> f (g x) };

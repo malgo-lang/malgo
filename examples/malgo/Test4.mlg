@@ -1,5 +1,5 @@
-module test4 = {
-  import Builtin;
+module Test4 = {
+  import Builtin.(*);
 
   infixl 6 (+#);
   (+#) = {x y -> add_Int64# x y};

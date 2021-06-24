@@ -1,4 +1,4 @@
-module test1 = {
+module Test1 = {
   data Bool = True | False;
   
   if = {True t _ -> !t | False _ f -> !f};
