@@ -8,8 +8,8 @@ import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsP
 import Data.Void
 import Koriel.Pretty
 import Malgo.Prelude
-import Text.Show (Show (showList, showsPrec), showParen, showString)
 import qualified RIO.HashSet as HashSet
+import Text.Show (Show (showList, showsPrec), showParen, showString)
 
 -----------
 -- UTerm --
@@ -35,6 +35,10 @@ instance (Show v, Show1 t) => Show (UTerm t v) where
   showsPrec d (UTerm t) = showParen (d >= 11) $ showString "UTerm " . liftShowsPrec showsPrec showList 11 t
 
 deriving stock instance Generic (UTerm t v)
+
+deriving stock instance (Data v, Data (t (UTerm t v)), Typeable t) => Data (UTerm t v)
+
+instance (Data v, Data (t (UTerm t v)), Typeable t) => Plated (UTerm t v)
 
 instance (Pretty v, Pretty (t (UTerm t v))) => Pretty (UTerm t v) where
   pPrintPrec _ _ (UVar v) = pPrint v
@@ -62,4 +66,3 @@ instance HasUTerm t v x => HasUTerm t v (With x a) where
 
 instance HasUTerm t v Void where
   walkOn _ x = absurd x
-
