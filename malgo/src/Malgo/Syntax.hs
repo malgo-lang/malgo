@@ -379,8 +379,9 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
       ]
   pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
   pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> "::" <+> pPrint t
-  pPrint (Import _ name All) = "import" <+> pPrint name <> "." <> parens "*"
-  pPrint (Import _ name (Selected xs)) = "import" <+> pPrint name <> "." <> parens (sep $ punctuate "," $ map pPrint xs)
+  pPrint (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pPrint name
+  pPrint (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pPrint xs) <+> "=" <+> "import" <+> pPrint name
+  pPrint (Import _ name (As name')) = "module" <+> pPrint name' <+> "=" <+> "import" <+> pPrint name
 
 makePrisms ''Decl
 

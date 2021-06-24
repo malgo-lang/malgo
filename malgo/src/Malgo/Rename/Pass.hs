@@ -66,7 +66,7 @@ lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Modul
 lookupQualifiedVarName pos modName name = do
   view (varEnv . at name) >>= \case
     Just names ->
-      case List.find (\i -> i ^. value . idSort == External modName || i ^. value . idSort == WiredIn modName) names of
+      case List.find (\i -> i ^. ann == Explicit modName) names of
         Just (With _ name) -> pure name
         Nothing ->
           errorOn pos $
@@ -324,8 +324,34 @@ genToplevelEnv modName ds builtinEnv = do
       when (debugMode opt) $
         liftIO $ hPrint stderr $ pPrint interface
       -- TODO: 明示的に指定されていない識別子以外はExplicitでimportする
-      modify $ appendRnEnv varEnv (map (\(name, id) -> if name `elem` implicits then (name, With Implicit id) else (name, With Explicit id)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv typeEnv (map (\(name, id) -> if name `elem` implicits then (name, With Implicit id) else (name, With Explicit id)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
+      modify $
+        appendRnEnv
+          varEnv
+          ( map
+              ( \(name, id) ->
+                  if name `elem` implicits then (name, With Implicit id) else (name, With (Explicit modName') id)
+              )
+              $ HashMap.toList $ interface ^. resolvedVarIdentMap
+          )
+      modify $
+        appendRnEnv
+          typeEnv
+          ( map
+              ( \(name, id) ->
+                  if name `elem` implicits then (name, With Implicit id) else (name, With (Explicit modName') id)
+              )
+              $ HashMap.toList $ interface ^. resolvedTypeIdentMap
+          )
+    aux (Import pos modName' (As modNameAs)) = do
+      interface <-
+        loadInterface modName' >>= \case
+          Just x -> pure x
+          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
+      opt <- getOpt
+      when (debugMode opt) $
+        liftIO $ hPrint stderr $ pPrint interface
+      modify $ appendRnEnv varEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv typeEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pure ()
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
     genFieldEnv (TyVar _ _) = pure ()

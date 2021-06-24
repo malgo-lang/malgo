@@ -193,7 +193,7 @@ type family XForeign x where
 type family XImport x where
   XImport (Malgo _) = SourcePos
 
-data ImportList = All | Selected [PsId]
+data ImportList = All | Selected [PsId] | As ModuleName
 
 deriving stock instance Eq ImportList
 

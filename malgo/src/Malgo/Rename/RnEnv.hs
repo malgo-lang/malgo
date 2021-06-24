@@ -24,7 +24,7 @@ instance Pretty RnState where
 
 makeLenses ''RnState
 
-data Visibility = Explicit -- must be qualified
+data Visibility = Explicit ModuleName -- must be qualified
                 | Implicit
   deriving stock (Show, Eq)
 
