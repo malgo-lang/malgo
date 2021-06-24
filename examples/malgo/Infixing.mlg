@@ -1,5 +1,5 @@
 module Infixing = {
-    import Builtin;
+    module {..} = import Builtin;
 
     add = {(Int64# x, Int64# y) -> Int64# (add_Int64# x y)};
 

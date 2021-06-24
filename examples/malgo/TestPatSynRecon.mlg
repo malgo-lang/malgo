@@ -1,5 +1,5 @@
-module testPatSynRecon = {
-  import Builtin;
+module TestPatSynRecon = {
+  module {..} = import Builtin;
 
   infixl 6 (+#);
   (+#) = {x y -> add_Int64# x y};

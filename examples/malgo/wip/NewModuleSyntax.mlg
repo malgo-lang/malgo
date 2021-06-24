@@ -1,0 +1,11 @@
+module NewModuleSyntax = {
+  export (Either, Left, Right);
+
+  data Either a b = Left a | Right b;
+
+  export map;
+  map :: (a -> b) -> Either e a -> Either e a;
+  map = { _ (Left e) -> Left e
+        | f (Right x) -> Right (f x)
+  };
+}

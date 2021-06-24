@@ -64,7 +64,7 @@ dsBindGroup bg = do
   pure $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
 
 dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env, HasLogFunc env) => Import (Malgo 'Refine) -> m ()
-dsImport (pos, modName) = do
+dsImport (pos, modName, _) = do
   interface <-
     loadInterface modName >>= \case
       Just x -> pure x

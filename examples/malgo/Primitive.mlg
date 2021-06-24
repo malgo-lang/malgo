@@ -1,5 +1,5 @@
 module Primitive = {
-  import Builtin;
+  module {..} = import Builtin;
   foreign import print_int :: Int64# -> ();
   main = { print_int (add_Int64# 40L# 2L#) };
 }

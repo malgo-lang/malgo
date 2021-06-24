@@ -1,3 +1,5 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Malgo.Syntax.Extension where
 
 import Data.Binary (Binary)
@@ -190,6 +192,12 @@ type family XForeign x where
 
 type family XImport x where
   XImport (Malgo _) = SourcePos
+
+data ImportList = All | Selected [PsId] | As ModuleName
+
+deriving stock instance Eq ImportList
+
+deriving stock instance Show ImportList
 
 type ForallDeclX (c :: K.Type -> Constraint) x =
   ( c (XScDef x),

@@ -93,8 +93,15 @@ pForeign = label "foreign import" $ do
 pImport :: Parser (Decl (Malgo 'Parse))
 pImport = label "import" $ do
   s <- getSourcePos
+  void $ pKeyword "module"
+  importList <-
+    try (between (symbol "{") (symbol "}") (symbol ".." >> pure All))
+      <|> between (symbol "{") (symbol "}") (Selected <$> (lowerIdent <|> upperIdent <|> between (symbol "(") (symbol ")") operator) `sepBy` symbol ",")
+      <|> (As . ModuleName <$> pModuleName)
+  void $ pOperator "="
   void $ pKeyword "import"
-  Import s . ModuleName <$> pModuleName
+  modName <- ModuleName <$> pModuleName
+  pure $ Import s modName importList
 
 pScSig :: Parser (Decl (Malgo 'Parse))
 pScSig =

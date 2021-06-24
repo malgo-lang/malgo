@@ -1,13 +1,12 @@
 module RecordTest = {
-  import Builtin;
-  import Prelude;
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
   type A = { a: Int32, b: Int32 };
 
   data B = B A;
 
-  -- TODO: parametarized type synonym
-  -- type C a = { x: a, y: a };
+  type C a = { x: a, y: a };
 
   -- これはとりあえず後回し
   -- #x = { D' x -> x } になる

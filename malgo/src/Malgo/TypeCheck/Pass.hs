@@ -9,7 +9,6 @@ import Koriel.Pretty
 import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
-import qualified Malgo.Rename.RnEnv as R
 import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
@@ -104,7 +103,7 @@ tcImports ::
   m [Import (Malgo 'TypeCheck)]
 tcImports = traverse tcImport
   where
-    tcImport (pos, modName) = do
+    tcImport (pos, modName, importList) = do
       interface <-
         loadInterface modName >>= \case
           Just x -> pure x
@@ -118,7 +117,7 @@ tcImports = traverse tcImport
               (over _2 Static.fromType . over (_1 . mapped . idMeta) Static.fromType)
               (interface ^. typeAbbrMap)
           )
-      pure (pos, modName)
+      pure (pos, modName, importList)
 
 tcTypeDefinitions ::
   ( MonadBind m,
@@ -521,11 +520,6 @@ transType (S.TyApp pos t ts) = do
       ts'Kinds <- traverse kindOf ts'
       solve [With pos $ buildTyArr ts'Kinds (TYPE $ Rep BoxedRep) :~ t'Kind]
       buildTyApp <$> transType t <*> traverse transType ts
-  where
-    findBuiltinType :: String -> RnEnv -> Maybe (Id ())
-    findBuiltinType x rnEnv = do
-      ids <- view (R.typeEnv . at x) rnEnv
-      List.find (view idSort >>> \case WiredIn (ModuleName "Builtin") -> True; _ -> False) ids
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2

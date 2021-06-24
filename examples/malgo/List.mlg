@@ -1,5 +1,5 @@
 module List = {
-  import Builtin;
+  module {..} = import Builtin;
 
   infixl 6 (+#);
   (+#) = {x y -> add_Int64# x y};

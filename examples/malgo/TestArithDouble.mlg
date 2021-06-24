@@ -1,6 +1,6 @@
 module TestArithDouble = {
-  import Builtin;
-  import Prelude;
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
   -- operators for Double#
   neg = { x -> sub_Double# 0.0# x };

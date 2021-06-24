@@ -1,5 +1,5 @@
-module testPrimitive = {
-  import Builtin;
+module TestPrimitive = {
+  module {..} = import Builtin;
 
   foreign import print_int32 :: Int32# -> ();
   foreign import print_int64 :: Int64# -> ();

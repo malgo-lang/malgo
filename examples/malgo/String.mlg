@@ -1,6 +1,6 @@
 module String = {
-  import Builtin;
-  import Prelude;
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
   foreign import malgo_string_at :: Int64# -> String# -> Char#;
 
