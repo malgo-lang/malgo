@@ -1,0 +1,8 @@
+module TestExplicitModule = {
+  import Builtin.(*);
+  import Prelude.(putStrLn);
+
+  main = { Prelude.putStrLn "Hello, world" };
+}
+
+-- Expected: Hello, world
