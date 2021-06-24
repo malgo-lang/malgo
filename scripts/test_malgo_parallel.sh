@@ -22,16 +22,16 @@ test_nono () {
 
   echo $file
 
-  cat ./examples/malgo/$file | grep -q '^-- Expected: '
+  cat ./testcases/malgo/$file | grep -q '^-- Expected: '
 
-  eval "$BUILD exec malgo -- to-ll --force --no-opt --no-lambdalift -M $TESTDIR/libs ./examples/malgo/$file -o $LLFILE"
+  eval "$BUILD exec malgo -- to-ll --force --no-opt --no-lambdalift -M $TESTDIR/libs ./testcases/malgo/$file -o $LLFILE"
 
   clang -Wno-override-module $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$($OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 }
 
-for file in `ls ./examples/malgo | grep '\.mlg$'`; do
+for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   test_nono &
   pids+=($!)
 done
@@ -49,16 +49,16 @@ test_noopt () {
 
   echo $file
 
-  cat ./examples/malgo/$file | grep -q '^-- Expected: '
+  cat ./testcases/malgo/$file | grep -q '^-- Expected: '
 
-  eval "$BUILD exec malgo -- to-ll --force --no-opt -M $TESTDIR/libs ./examples/malgo/$file -o $LLFILE"
+  eval "$BUILD exec malgo -- to-ll --force --no-opt -M $TESTDIR/libs ./testcases/malgo/$file -o $LLFILE"
 
   clang -Wno-override-module $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$($OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 }
 
-for file in `ls ./examples/malgo | grep '\.mlg$'`; do
+for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   test_noopt &
   pids+=($!)
 done
@@ -76,16 +76,16 @@ test_nolift () {
 
   echo $file
 
-  cat ./examples/malgo/$file | grep -q '^-- Expected: '
+  cat ./testcases/malgo/$file | grep -q '^-- Expected: '
 
-  eval "$BUILD exec malgo -- to-ll --force --no-lambdalift -M $TESTDIR/libs ./examples/malgo/$file -o $LLFILE"
+  eval "$BUILD exec malgo -- to-ll --force --no-lambdalift -M $TESTDIR/libs ./testcases/malgo/$file -o $LLFILE"
 
   clang -Wno-override-module $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$($OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 }
 
-for file in `ls ./examples/malgo | grep '\.mlg$'`; do
+for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   test_nolift &
   pids+=($!)
 done
@@ -103,16 +103,16 @@ test_opt () {
 
   echo $file
 
-  cat ./examples/malgo/$file | grep -q '^-- Expected: '
+  cat ./testcases/malgo/$file | grep -q '^-- Expected: '
 
-  eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./examples/malgo/$file -o $LLFILE"
+  eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./testcases/malgo/$file -o $LLFILE"
 
   clang -Wno-override-module $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/rts.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$($OUTFILE)" = "$(cat ./examples/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$($OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 }
 
-for file in `ls ./examples/malgo | grep '\.mlg$'`; do
+for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   test_opt &
   pids+=($!)
 done
