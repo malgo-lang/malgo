@@ -24,10 +24,16 @@ instance Pretty RnState where
 
 makeLenses ''RnState
 
+data Visibility = Explicit -- must be qualified
+                | Implicit
+  deriving stock (Show, Eq)
+
+instance Pretty Visibility where pPrint = text . show
+
 data RnEnv = RnEnv
-  { _varEnv :: HashMap PsId [RnId],
-    _typeEnv :: HashMap PsId [RnId],
-    _fieldEnv :: HashMap PsId [RnId],
+  { _varEnv :: HashMap PsId [With Visibility RnId],
+    _typeEnv :: HashMap PsId [With Visibility RnId],
+    _fieldEnv :: HashMap PsId [With Visibility RnId],
     _rnMalgoEnv :: MalgoEnv
   }
   deriving stock (Show, Eq)
@@ -63,7 +69,7 @@ instance HasUniqSupply RnEnv where
 instance HasLogFunc RnEnv where
   logFuncL = rnMalgoEnv . logFuncL
 
-appendRnEnv :: ASetter' RnEnv (HashMap PsId [RnId]) -> [(PsId, RnId)] -> RnEnv -> RnEnv
+appendRnEnv :: ASetter' RnEnv (HashMap PsId [With Visibility RnId]) -> [(PsId, With Visibility RnId)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)
   where
     go [] e = e
@@ -86,13 +92,13 @@ genBuiltinRnEnv malgoEnv = do
       { _varEnv = mempty,
         _typeEnv =
           HashMap.fromList
-            [ ("Int32#", [int32_t]),
-              ("Int64#", [int64_t]),
-              ("Float#", [float_t]),
-              ("Double#", [double_t]),
-              ("Char#", [char_t]),
-              ("String#", [string_t]),
-              ("Ptr#", [ptr_t])
+            [ ("Int32#", [With Implicit int32_t]),
+              ("Int64#", [With Implicit int64_t]),
+              ("Float#", [With Implicit float_t]),
+              ("Double#", [With Implicit double_t]),
+              ("Char#", [With Implicit char_t]),
+              ("String#", [With Implicit string_t]),
+              ("Ptr#", [With Implicit ptr_t])
             ],
         _fieldEnv = HashMap.empty,
         _rnMalgoEnv = malgoEnv

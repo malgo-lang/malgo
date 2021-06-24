@@ -30,29 +30,44 @@ resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => Module
 resolveGlobalName modName name = newGlobalId name () modName
 
 lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
-lookupVarName pos name = do
+lookupVarName pos name =
   view (varEnv . at name) >>= \case
-    Just (name : _) -> pure name
+    Just names -> case List.find (\i -> i ^. ann == Implicit) names of
+      Just (With _ name) -> pure name
+      Nothing ->
+        errorOn pos $
+          "Not in scope:" <+> quotes (text name)
+            $$ "Did you mean" <+> pPrint (map (view value) names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
   view (typeEnv . at name) >>= \case
-    Just (name : _) -> pure name
+    Just names -> case List.find (\i -> i ^. ann == Implicit) names of
+      Just (With _ name) -> pure name
+      Nothing ->
+        errorOn pos $
+          "Not in scope:" <+> quotes (text name)
+            $$ "Did you mean" <+> pPrint (map (view value) names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
 lookupFieldName pos name = do
   view (fieldEnv . at name) >>= \case
-    Just (name : _) -> pure name
+    Just names -> case List.find (\i -> i ^. ann == Implicit) names of
+      Just (With _ name) -> pure name
+      Nothing ->
+        errorOn pos $
+          "Not in scope:" <+> quotes (text name)
+            $$ "Did you mean" <+> pPrint (map (view value) names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> String -> m (Id ())
 lookupQualifiedVarName pos modName name = do
   view (varEnv . at name) >>= \case
     Just names ->
-      case List.find (\i -> i ^. idSort == External modName || i ^. idSort == WiredIn modName) names of
-        Just name -> pure name
+      case List.find (\i -> i ^. value . idSort == External modName || i ^. value . idSort == WiredIn modName) names of
+        Just (With _ name) -> pure name
         Nothing ->
           errorOn pos $
             "Not in scope:" <+> quotes (text name) <+> "in" <+> pPrint modName
@@ -87,20 +102,20 @@ rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExp ex
 rnDecl (ScSig pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv typeEnv (zip tyVars tyVars')) $
+  local (appendRnEnv typeEnv (zip tyVars $ map (With Implicit) tyVars')) $
     ScSig pos
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
   params' <- traverse resolveName params
-  local (appendRnEnv typeEnv (zip params params')) $
+  local (appendRnEnv typeEnv (zip params $ map (With Implicit) params')) $
     DataDef pos
       <$> lookupTypeName pos name
       <*> pure params'
       <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (TypeSynonym pos name params typ) = do
   params' <- traverse resolveName params
-  local (appendRnEnv typeEnv (zip params params')) $
+  local (appendRnEnv typeEnv (zip params $ map (With Implicit) params')) $
     TypeSynonym pos <$> lookupTypeName pos name
       <*> pure params'
       <*> rnType typ
@@ -108,7 +123,7 @@ rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos 
 rnDecl (Foreign pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv typeEnv (zip tyVars tyVars')) $
+  local (appendRnEnv typeEnv (zip tyVars $ map (With Implicit) tyVars')) $
     Foreign (pos, name)
       <$> lookupVarName pos name
       <*> rnType typ
@@ -172,7 +187,7 @@ rnClause (Clause pos ps ss) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   when (anySame vars) $ errorOn pos "Same variables occurs in a pattern"
-  vm <- zip vars <$> traverse resolveName vars
+  vm <- zip vars . map (With Implicit) <$> traverse resolveName vars
   local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss
   where
     patVars (VarP _ x) = [x]
@@ -197,7 +212,7 @@ rnStmts (NoBind x e : ss) = do
 rnStmts (Let x v e : ss) = do
   e' <- rnExp e
   v' <- resolveName v
-  local (appendRnEnv varEnv [(v, v')]) do
+  local (appendRnEnv varEnv [(v, With Implicit v')]) do
     ss' <- rnStmts ss
     pure $ Let x v' e' : ss'
 
@@ -260,7 +275,7 @@ genToplevelEnv modName ds builtinEnv = do
       when (x `elem` HashMap.keys env) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
-      modify $ appendRnEnv varEnv [(x, x')]
+      modify $ appendRnEnv varEnv [(x, With Implicit x')]
     aux ScSig {} = pure ()
     aux (DataDef pos x _ cs) = do
       env <- get
@@ -273,22 +288,22 @@ genToplevelEnv modName ds builtinEnv = do
               (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. varEnv)))
       x' <- resolveGlobalName modName x
       xs' <- traverse (resolveGlobalName modName . fst) cs
-      modify $ appendRnEnv varEnv (zip (map fst cs) xs')
-      modify $ appendRnEnv typeEnv [(x, x')]
+      modify $ appendRnEnv varEnv (zip (map fst cs) $ map (With Implicit) xs')
+      modify $ appendRnEnv typeEnv [(x, With Implicit x')]
       traverse_ (traverse_ genFieldEnv . snd) cs
     aux (TypeSynonym pos x _ t) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. typeEnv)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
-      modify $ appendRnEnv typeEnv [(x, x')]
+      modify $ appendRnEnv typeEnv [(x, With Implicit x')]
       genFieldEnv t
     aux (Foreign pos x _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. varEnv)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newGlobalId x () modName
-      modify $ appendRnEnv varEnv [(x, x')]
+      modify $ appendRnEnv varEnv [(x, With Implicit x')]
     aux (Import pos modName') = do
       interface <-
         loadInterface modName' >>= \case
@@ -297,8 +312,9 @@ genToplevelEnv modName ds builtinEnv = do
       opt <- getOpt
       when (debugMode opt) $
         liftIO $ hPrint stderr $ pPrint interface
-      modify $ appendRnEnv varEnv (HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv typeEnv (HashMap.toList $ interface ^. resolvedTypeIdentMap)
+      -- TODO: 明示的に指定されていない識別子以外はExplicitでimportする
+      modify $ appendRnEnv varEnv (map (over _2 $ With Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv typeEnv (map (over _2 $ With Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pure ()
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
     genFieldEnv (TyVar _ _) = pure ()
@@ -316,5 +332,5 @@ genToplevelEnv modName ds builtinEnv = do
             <+> sep
               (punctuate "," $ map (quotes . text) (ks `intersect` HashMap.keys (env ^. fieldEnv)))
       ks' <- traverse (resolveGlobalName modName) ks
-      zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, k')]) ks ks'
+      zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, With Implicit k')]) ks ks'
     genFieldEnv (TyLazy _ t) = genFieldEnv t

@@ -8,6 +8,7 @@ module Malgo.TypeCheck.TcEnv
     fieldEnv,
     rnEnv,
     genTcEnv,
+    findBuiltinType,
   )
 where
 
@@ -84,5 +85,5 @@ genTcEnv rnEnv = do
 
 findBuiltinType :: String -> RnEnv -> Maybe (Id ())
 findBuiltinType x rnEnv = do
-  ids <- view (R.typeEnv . at x) rnEnv
+  ids <- map _value <$> view (R.typeEnv . at x) rnEnv
   find (view idSort >>> \case WiredIn (ModuleName "Builtin") -> True; _ -> False) ids
