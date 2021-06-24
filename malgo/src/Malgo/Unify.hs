@@ -183,16 +183,15 @@ toBound x tv hint = do
   newLocalId hint tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
-defaultToBoxed x t = transformM go t
-  where
-    go (UVar v) = do
-      vKind <- kindOf $ v ^. typeVar . idMeta
-      case vKind of
-        UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
-        _ -> do
-          void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
-          UVar <$> traverseOf (typeVar . idMeta) zonk v
-    go (UTerm t) = pure $ UTerm t
+defaultToBoxed x t = transformM ?? t $ \case
+  UVar v -> do
+    vKind <- kindOf $ v ^. typeVar . idMeta
+    case vKind of
+      UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
+      _ -> do
+        void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
+        UVar <$> traverseOf (typeVar . idMeta) zonk v
+  UTerm t -> pure $ UTerm t
 
 unboundFreevars :: HashSet TypeVar -> UType -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
