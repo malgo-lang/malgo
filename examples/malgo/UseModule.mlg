@@ -1,6 +1,7 @@
 module UseModule = {
-  import Builtin.(*);
-  import Prelude.(*);
+  module {..} = import Builtin;
+  module Prelude = import Prelude;
+  module {add_Int32, (<|)} = import Prelude;
 
   infixr 9 (.);
   (.) = { f g x -> f (g x) };

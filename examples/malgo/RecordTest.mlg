@@ -1,6 +1,6 @@
 module RecordTest = {
-  import Builtin.(*);
-  import Prelude.(*);
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
   type A = { a: Int32, b: Int32 };
 

@@ -1,6 +1,6 @@
 module TestExplicitModule = {
-  import Builtin.(*);
-  import Prelude.(putStrLn);
+  module {..} = import Builtin;
+  module Prelude = import Prelude;
 
   main = { Prelude.putStrLn "Hello, world" };
 }

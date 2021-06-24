@@ -1,6 +1,6 @@
 module TestPolySynonym = {
-  import Builtin.(*);
-  import Prelude.(*);
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
   type Fun0 a = {a};
 

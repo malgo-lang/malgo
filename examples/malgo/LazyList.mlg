@@ -1,6 +1,7 @@
 module LazyList = {
-  import Builtin.(*);
-  import Prelude.(*);
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+  
   data LazyList a = Nil | Cons a {LazyList a};
 
   nil :: {LazyList a};

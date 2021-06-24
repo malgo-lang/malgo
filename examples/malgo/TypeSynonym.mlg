@@ -1,6 +1,6 @@
 module TypeSynonym = {
-  import Builtin.(*);
-  import Prelude.(*);
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
   type MyTuple a = (a, a);
 
