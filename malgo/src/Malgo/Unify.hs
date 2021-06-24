@@ -123,9 +123,9 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar = do
-    rep <- TypeVar <$> newLocalId "r" (UTerm TyRepF)
-    kind <- TypeVar <$> newLocalId "k" (UTerm $ TYPEF $ UVar rep)
-    TypeVar <$> newLocalId "t" (UVar kind)
+    rep <- TypeVar <$> newNoNameId (UTerm TyRepF) Internal
+    kind <- TypeVar <$> newNoNameId (UTerm $ TYPEF $ UVar rep) Internal
+    TypeVar <$> newNoNameId (UVar kind) Internal
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
@@ -163,12 +163,6 @@ zonkConstraint (With m (x :~ y)) = With m <$> ((:~) <$> zonk x <*> zonk y)
 
 generalize :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> UType -> m (Scheme UType)
 generalize x bound term = do
-  {-
-  let fvs = Set.toList $ unboundFreevars bound term
-  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
-  Forall as <$> zonkUTerm term
-  -}
   zonkedTerm <- zonk term
   let fvs = List.sort $ HashSet.toList $ unboundFreevars bound zonkedTerm
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
@@ -179,64 +173,24 @@ toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => Sou
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   tvKind <- kindOf tvType
-  -- TODO: tvが無名ならhintを、ソースコード上に現れるならその名前を優先する
-  newLocalId hint tvKind
+  newLocalId (fromMaybe hint $ tv ^. typeVar . idName) tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
-defaultToBoxed x (UVar v) = do
-  vKind <- kindOf $ v ^. typeVar . idMeta
-  case vKind of
-    UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
-    _ -> do
-      void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
-      UVar <$> traverseOf (typeVar . idMeta) zonk v
-defaultToBoxed x (UTerm t) = do
-  t <- defaultToBoxed' t
-  pure $ UTerm t
-  where
-    defaultToBoxed' (TyAppF t1 t2) = do
-      t1 <- defaultToBoxed x t1
-      t2 <- defaultToBoxed x t2
-      pure $ TyAppF t1 t2
-    defaultToBoxed' (TyVarF v) = do
-      ty <- defaultToBoxed x $ v ^. idMeta
-      let v' = set idMeta ty v
-      pure $ TyVarF v'
-    defaultToBoxed' (TyConF c) = do
-      ty <- defaultToBoxed x $ c ^. idMeta
-      let c' = set idMeta ty c
-      pure $ TyConF c'
-    defaultToBoxed' (TyPrimF prim) = pure $ TyPrimF prim
-    defaultToBoxed' (TyArrF t1 t2) = do
-      t1 <- defaultToBoxed x t1
-      t2 <- defaultToBoxed x t2
-      pure $ TyArrF t1 t2
-    defaultToBoxed' (TyTupleF n) = pure $ TyTupleF n
-    defaultToBoxed' (TyRecordF kvs) = do
-      kvs <- traverse (defaultToBoxed x) kvs
-      pure $ TyRecordF kvs
-    defaultToBoxed' TyLazyF = pure TyLazyF
-    defaultToBoxed' (TyPtrF t) = do
-      t <- defaultToBoxed x t
-      pure $ TyPtrF t
-    defaultToBoxed' TyBottomF = pure TyBottomF
-    defaultToBoxed' (TYPEF rep) = do
-      rep <- defaultToBoxed x rep
-      pure $ TYPEF rep
-    defaultToBoxed' TyRepF = pure TyRepF
-    defaultToBoxed' (RepF rep) = pure $ RepF rep
+defaultToBoxed x t = transformM ?? t $ \case
+  UVar v -> do
+    vKind <- kindOf $ v ^. typeVar . idMeta
+    case vKind of
+      UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
+      _ -> do
+        void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
+        UVar <$> traverseOf (typeVar . idMeta) zonk v
+  UTerm t -> pure $ UTerm t
 
 unboundFreevars :: HashSet TypeVar -> UType -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
 
 generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> [UType] -> m ([Id UType], [UType])
 generalizeMutRecs x bound terms = do
-  {-
-  let fvs = Set.toList $ mconcat $ map (unboundFreevars bound) terms
-  as <- zipWithM toBound fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVar a) fvs as
-  (as,) <$> traverse zonkUTerm terms
-  -}
   zonkedTerms <- traverse zonk terms
   let fvs = List.sort $ HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]

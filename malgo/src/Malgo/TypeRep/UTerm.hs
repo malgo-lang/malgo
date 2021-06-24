@@ -50,6 +50,7 @@ instance (IsType a) => IsType (TypeF a) where
 
 newtype TypeVar = TypeVar {_typeVar :: Id UType}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
+  deriving stock (Data, Typeable)
 
 makeLenses ''TypeVar
 
@@ -75,21 +76,10 @@ runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
 runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
 applySubst :: [(Id UType, UType)] -> UType -> UType
-applySubst _ t@UVar {} = t
-applySubst subst (UTerm t) = case t of
-  TyAppF t1 t2 -> UTerm $ TyAppF (applySubst subst t1) (applySubst subst t2)
-  TyVarF v -> fromMaybe (UTerm t) $ List.lookup v subst
-  TyConF _ -> UTerm t
-  TyPrimF _ -> UTerm t
-  TyArrF t1 t2 -> UTerm $ TyArrF (applySubst subst t1) (applySubst subst t2)
-  TyTupleF _ -> UTerm t
-  TyRecordF kts -> UTerm $ TyRecordF (fmap (applySubst subst) kts)
-  TyLazyF -> UTerm TyLazyF
-  TyPtrF k -> UTerm $ TyPtrF $ applySubst subst k
-  TyBottomF -> UTerm TyBottomF
-  TYPEF rep -> UTerm $ TYPEF $ applySubst subst rep
-  TyRepF -> UTerm TyRepF
-  RepF rep -> UTerm $ RepF rep
+applySubst subst t =
+  transform ?? t $ \case
+    TyVar v -> fromMaybe (TyVar v) $ List.lookup v subst
+    t -> t
 
 class HasType a where
   typeOf :: Monad m => a -> m UType

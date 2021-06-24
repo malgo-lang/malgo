@@ -46,7 +46,7 @@ desugar varEnv typeEnv fieldEnv rnEnv (Module modName ds) = do
     Nothing -> pure (dsEnv, Program modName ds')
   where
     -- エントリーポイントとなるmain関数を検索する
-    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId []
+    searchMain ((griffId, coreId) : _) | griffId ^. idName == Just "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId []
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
 
@@ -200,7 +200,7 @@ dsExp (G.Var x _ name) = do
           pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
         else pure $ Atom $ C.Var name'
   where
-    isConstructor Id {_idName = x : _} = Char.isUpper x
+    isConstructor Id {_idName = Just (x : _)} = Char.isUpper x
     isConstructor _ = False
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
 dsExp (G.Apply info f x) = runDef $ do
@@ -279,7 +279,7 @@ dsStmts (NoBind _ e : ss) = runDef $ do
   dsStmts ss
 dsStmts (G.Let _ v e : ss) = do
   e' <- dsExp e
-  v' <- newLocalId ("$let_" <> v ^. idName) (C.typeOf e')
+  v' <- newLocalId ("$let_" <> nameToString (v ^. idName)) (C.typeOf e')
   nameEnv . at v ?= v'
   ss' <- dsStmts ss
   pure $ Match e' (Bind v' ss' :| [])
@@ -311,12 +311,12 @@ curryFun ps@(_ : _) e = curryFun' ps []
   where
     curryFun' [] _ = bug Unreachable
     curryFun' [x] as = do
-      x' <- newLocalId (x ^. idName) (C.typeOf x)
+      x' <- newLocalId (nameToString $ x ^. idName) (C.typeOf x)
       fun <- newLocalId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
       pure ([x'], C.Let [C.LocalDef fun $ Fun ps e] body)
     curryFun' (x : xs) as = do
-      x' <- newLocalId (x ^. idName) (C.typeOf x)
+      x' <- newLocalId (nameToString $ x ^. idName) (C.typeOf x)
       fun <- curryFun' xs (C.Var x' : as)
       let funObj = uncurry Fun fun
       body <- runDef $ do
