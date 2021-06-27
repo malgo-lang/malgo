@@ -164,7 +164,7 @@ zonkConstraint (With m (x :~ y)) = With m <$> ((:~) <$> zonk x <*> zonk y)
 generalize :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> UType -> m (Scheme UType)
 generalize x bound term = do
   zonkedTerm <- zonk term
-  let fvs = List.sort $ HashSet.toList $ unboundFreevars bound zonkedTerm
+  let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   Forall as <$> zonk zonkedTerm
@@ -192,7 +192,7 @@ unboundFreevars bound t = HashSet.difference (freevars t) bound
 generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> [UType] -> m ([Id UType], [UType])
 generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
-  let fvs = List.sort $ HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
+  let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   (as,) <$> traverse zonk zonkedTerms
