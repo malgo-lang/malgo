@@ -1,7 +1,6 @@
 module Primitive = {
   module {..} = import Builtin;
-  foreign import print_int :: Int64# -> ();
-  main = { print_int (add_Int64# 40L# 2L#) };
+  main = { printString# (toStringInt64# (addInt64# 40L# 2L#)) };
 }
 
 -- Expected: 42

@@ -22,7 +22,7 @@ module RecordTest = {
 
   main = {
     let x = { a: 32, b: 10 };
-    print_Int32 (add_Int32 (f x) (#b x))
+    printString (toStringInt32 (addInt32 (f x) (#b x)))
   };
 }
 

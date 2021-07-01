@@ -12,7 +12,7 @@ module TestPolySynonym = {
   main :: Fun0 ();
   main = {
     let x = { fst: 1, snd: "hoge" };
-    first x |> print_Int32
+    first x |> printInt32
   };
 }
 

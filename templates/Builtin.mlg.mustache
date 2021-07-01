@@ -61,61 +61,61 @@ module Builtin = {
 
   {{#compareType}}
   foreign import malgo_eq_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  eq_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  eq_{{malgoType}}# = { x y -> malgo_eq_{{cType}} x y };
-  eq_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
-  eq_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (eq_{{malgoType}}# x y) };
+  eq{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  eq{{malgoType}}# = { x y -> malgo_eq_{{cType}} x y };
+  eq{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  eq{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (eq{{malgoType}}# x y) };
 
   foreign import malgo_ne_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  ne_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  ne_{{malgoType}}# = { x y -> malgo_ne_{{cType}} x y };
-  ne_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
-  ne_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (ne_{{malgoType}}# x y) };
+  ne{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  ne{{malgoType}}# = { x y -> malgo_ne_{{cType}} x y };
+  ne{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  ne{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (ne{{malgoType}}# x y) };
 
   foreign import malgo_lt_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  lt_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  lt_{{malgoType}}# = { x y -> malgo_lt_{{cType}} x y };
-  lt_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
-  lt_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (lt_{{malgoType}}# x y) };
+  lt{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  lt{{malgoType}}# = { x y -> malgo_lt_{{cType}} x y };
+  lt{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  lt{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (lt{{malgoType}}# x y) };
 
   foreign import malgo_gt_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  gt_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  gt_{{malgoType}}# = { x y -> malgo_gt_{{cType}} x y };
-  gt_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
-  gt_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (gt_{{malgoType}}# x y) };
+  gt{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  gt{{malgoType}}# = { x y -> malgo_gt_{{cType}} x y };
+  gt{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  gt{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (gt{{malgoType}}# x y) };
 
   foreign import malgo_le_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  le_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  le_{{malgoType}}# = { x y -> malgo_le_{{cType}} x y };
-  le_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
-  le_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (le_{{malgoType}}# x y) };
+  le{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  le{{malgoType}}# = { x y -> malgo_le_{{cType}} x y };
+  le{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  le{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (le{{malgoType}}# x y) };
 
   foreign import malgo_ge_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  ge_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
-  ge_{{malgoType}}# = { x y -> malgo_ge_{{cType}} x y };
-  ge_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
-  ge_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (ge_{{malgoType}}# x y) };
+  ge{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  ge{{malgoType}}# = { x y -> malgo_ge_{{cType}} x y };
+  ge{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  ge{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (ge{{malgoType}}# x y) };
 
   {{/compareType}}
 
   foreign import malgo_string_at :: Int64# -> String# -> Char#; 
-  at_String# :: Int64# -> String# -> Char#;
-  at_String# = { i x -> malgo_string_at i x };
-  at_String :: Int64 -> String -> Char;
-  at_String = { (Int64# i) (String# x) -> Char# (at_String# i x) };
+  atString# :: Int64# -> String# -> Char#;
+  atString# = { i x -> malgo_string_at i x };
+  atString :: Int64 -> String -> Char;
+  atString = { (Int64# i) (String# x) -> Char# (atString# i x) };
 
   foreign import malgo_string_append :: String# -> String# -> String#;
-  append_String# :: String# -> String# -> String#;
-  append_String# = { x y -> malgo_string_append x y };
-  append_String :: String -> String -> String;
-  append_String = { (String# x) (String# y) -> String# (append_String# x y) };
+  appendString# :: String# -> String# -> String#;
+  appendString# = { x y -> malgo_string_append x y };
+  appendString :: String -> String -> String;
+  appendString = { (String# x) (String# y) -> String# (appendString# x y) };
 
   {{#toStringType}}
   foreign import malgo_{{cType}}_to_string :: {{malgoType}}# -> String#;
-  toString_{{malgoType}}# :: {{malgoType}}# -> String#;
-  toString_{{malgoType}}# = { x -> malgo_{{cType}}_to_string x };
-  toString_{{malgoType}} :: {{malgoType}} -> String;
-  toString_{{malgoType}} = { {{malgoType}}# x -> String# (toString_{{malgoType}}# x) };
+  toString{{malgoType}}# :: {{malgoType}}# -> String#;
+  toString{{malgoType}}# = { x -> malgo_{{cType}}_to_string x };
+  toString{{malgoType}} :: {{malgoType}} -> String;
+  toString{{malgoType}} = { {{malgoType}}# x -> String# (toString{{malgoType}}# x) };
 
   {{/toStringType}}
 

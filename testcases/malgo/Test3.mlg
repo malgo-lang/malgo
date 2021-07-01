@@ -6,12 +6,12 @@ module Test3 = {
   (|>) :: a -> (a -> b) -> b;
   (|>) = {x f -> f x};
 
-  foreign import print_string :: String# -> ();
+  foreign import malgo_print_string :: String# -> ();
 
   main = { 
     Cons A (Cons B Nil) |> {
-        (Cons A (Cons B Nil)) -> print_string "OK"#
-      | _ -> print_string "WRONG"#
+        (Cons A (Cons B Nil)) -> malgo_print_string "OK"#
+      | _ -> malgo_print_string "WRONG"#
       }
     };
 }

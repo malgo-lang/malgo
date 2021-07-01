@@ -1,9 +1,9 @@
 module FuncOverUnboxed = {
-  foreign import print_int :: Int64# -> ();
+  module { toStringInt64#, printString# } = import Builtin;
 
-  f = { 0L# -> print_int 1L#
-      | 1L# -> print_int 1L#
-      | _ -> print_int 0L#
+  f = { 0L# -> printString# (toStringInt64# 1L#)
+      | 1L# -> printString# (toStringInt64# 1L#)
+      | _ -> printString# (toStringInt64# 0L#)
       };
 
   main = {

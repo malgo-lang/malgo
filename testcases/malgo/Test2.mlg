@@ -3,8 +3,8 @@ module Test2 = {
   
   rtob = {R -> B | a -> a};
   
-  foreign import print_string :: String# -> ();
+  foreign import malgo_print_string :: String# -> ();
   
-  main = { {B -> print_string "OK"# | _ -> print_string "WRONG"# } (rtob R) };
+  main = { {B -> malgo_print_string "OK"# | _ -> malgo_print_string "WRONG"# } (rtob R) };
 }
 -- Expected: OK
