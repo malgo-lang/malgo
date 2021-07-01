@@ -16,4 +16,4 @@ malgo to-ll $LIB_PATH/Prelude.mlg -o .malgo-work/build/Prelude.ll
 
 malgo to-ll $1 -o .malgo-work/build/${src_file%.mlg}.ll
 
-clang -O3 -flto $(pkg-config --cflags --libs bdw-gc) .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll $LIB_PATH/rts.c .malgo-work/build/${src_file%.mlg}.ll -o ${src_file%.mlg}
+clang -O3 -flto -lm $(pkg-config --cflags --libs bdw-gc) .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll $LIB_PATH/runtime.c .malgo-work/build/${src_file%.mlg}.ll -o ${src_file%.mlg}
