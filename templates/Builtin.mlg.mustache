@@ -1,0 +1,136 @@
+module Builtin = {
+  -- Primitive Types
+  data Int32 = Int32# Int32#;
+  data Int64 = Int64# Int64#;
+  data Float = Float# Float#;
+  data Double = Double# Double#;
+  data Char = Char# Char#;
+  data String = String# String#;
+  data Bool = False | True;
+
+  -- Boxing functions
+  int32# :: Int32# -> Int32;
+  int32# = { x -> Int32# x };
+
+  int64# :: Int64# -> Int64;
+  int64# = { x -> Int64# x };
+
+  float# :: Float# -> Float;
+  float# = { x -> Float# x };
+
+  double# :: Double# -> Double;
+  double# = { x -> Double# x };
+
+  char# :: Char# -> Char;
+  char# = { x -> Char# x };
+
+  string# :: String# -> String;
+  string# = { x -> String# x };
+
+  -- Arithmetic operators
+  {{#magmaType}}
+  foreign import malgo_add_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> {{malgoType}}#;
+  add{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> {{malgoType}}#;
+  add{{malgoType}}# = { x y -> malgo_add_{{cType}} x y };
+  add{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> {{malgoType}};
+  add{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> {{malgoType}}# (add{{malgoType}}# x y) };
+
+  foreign import malgo_sub_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> {{malgoType}}#;
+  sub{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> {{malgoType}}#;
+  sub{{malgoType}}# = { x y -> malgo_sub_{{cType}} x y };
+  sub{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> {{malgoType}};
+  sub{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> {{malgoType}}# (sub{{malgoType}}# x y) };
+
+  foreign import malgo_mul_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> {{malgoType}}#;
+  mul{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> {{malgoType}}#;
+  mul{{malgoType}}# = { x y -> malgo_mul_{{cType}} x y };
+  mul{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> {{malgoType}};
+  mul{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> {{malgoType}}# (mul{{malgoType}}# x y) };
+
+  foreign import malgo_div_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> {{malgoType}}#;
+  div{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> {{malgoType}}#;
+  div{{malgoType}}# = { x y -> malgo_div_{{cType}} x y };
+  div{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> {{malgoType}};
+  div{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> {{malgoType}}# (div{{malgoType}}# x y) };
+
+  {{/magmaType}}
+  
+  isTrue# :: Int32# -> Bool;
+  isTrue# = { 1# -> True
+            | _  -> False };
+
+  {{#compareType}}
+  foreign import malgo_eq_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  eq_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  eq_{{malgoType}}# = { x y -> malgo_eq_{{cType}} x y };
+  eq_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  eq_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (eq_{{malgoType}}# x y) };
+
+  foreign import malgo_ne_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  ne_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  ne_{{malgoType}}# = { x y -> malgo_ne_{{cType}} x y };
+  ne_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  ne_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (ne_{{malgoType}}# x y) };
+
+  foreign import malgo_lt_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  lt_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  lt_{{malgoType}}# = { x y -> malgo_lt_{{cType}} x y };
+  lt_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  lt_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (lt_{{malgoType}}# x y) };
+
+  foreign import malgo_gt_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  gt_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  gt_{{malgoType}}# = { x y -> malgo_gt_{{cType}} x y };
+  gt_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  gt_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (gt_{{malgoType}}# x y) };
+
+  foreign import malgo_le_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  le_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  le_{{malgoType}}# = { x y -> malgo_le_{{cType}} x y };
+  le_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  le_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (le_{{malgoType}}# x y) };
+
+  foreign import malgo_ge_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  ge_{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
+  ge_{{malgoType}}# = { x y -> malgo_ge_{{cType}} x y };
+  ge_{{malgoType}} :: {{malgoType}} -> {{malgoType}} -> Bool;
+  ge_{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> isTrue# (ge_{{malgoType}}# x y) };
+
+  {{/compareType}}
+
+  foreign import malgo_string_at :: Int64# -> String# -> Char#; 
+  at_String# :: Int64# -> String# -> Char#;
+  at_String# = { i x -> malgo_string_at i x };
+  at_String :: Int64 -> String -> Char;
+  at_String = { (Int64# i) (String# x) -> Char# (at_String# i x) };
+
+  foreign import malgo_string_append :: String# -> String# -> String#;
+  append_String# :: String# -> String# -> String#;
+  append_String# = { x y -> malgo_string_append x y };
+  append_String :: String -> String -> String;
+  append_String = { (String# x) (String# y) -> String# (append_String# x y) };
+
+  {{#toStringType}}
+  foreign import malgo_{{cType}}_to_string :: {{malgoType}}# -> String#;
+  toString_{{malgoType}}# :: {{malgoType}}# -> String#;
+  toString_{{malgoType}}# = { x -> malgo_{{cType}}_to_string x };
+  toString_{{malgoType}} :: {{malgoType}} -> String;
+  toString_{{malgoType}} = { {{malgoType}}# x -> String# (toString_{{malgoType}}# x) };
+
+  {{/toStringType}}
+
+  foreign import malgo_newline :: () -> ();
+  newline = { _ -> malgo_newline () };
+
+  foreign import malgo_print_char :: Char# -> ();
+  printChar# :: Char# -> ();
+  printChar# = { x -> malgo_print_char x };
+  printChar :: Char -> ();
+  printChar = { Char# x -> printChar# x };
+
+  foreign import malgo_print_string :: String# -> ();
+  printString# :: String# -> ();
+  printString# = { x -> malgo_print_string x };
+  printString :: String -> ();
+  printString = { String# x -> printString# x };
+}
