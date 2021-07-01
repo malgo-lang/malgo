@@ -6,10 +6,20 @@ cradle:
   #     component: "malgo:lib"
   #   - path: "./koriel/src"
   #     component: "koriel:lib"
-  cabal:
-    - path: "./malgo/app/"
-      component: "malgo:exe:malgo"
-    - path: "./malgo/src"
-      component: "lib:malgo"
-    - path: "./koriel/src"
-      component: "lib:koriel"
+  multi:
+    - path: "./scripts"
+      config:
+        cradle:
+          stack:
+            component: "./scripts/generate_runtime.hs"
+    - path: "./"
+      config:
+        cradle:
+          cabal:
+            - path: "./malgo/app/"
+              component: "malgo:exe:malgo"
+            - path: "./malgo/src"
+              component: "lib:malgo"
+            - path: "./koriel/src"
+              component: "lib:koriel"
+            - path: "./runtime/malgo/templates"
