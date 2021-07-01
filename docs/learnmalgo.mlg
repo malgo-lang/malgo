@@ -1,0 +1,253 @@
+-- `--` から始まる行はコメント
+{- 複数行のコメントは `{- -}` で囲む
+  {- ネストもできる -}
+-}
+
+module LearnMalgo = {
+
+  -- Builtinモジュールの関数と型をインポート
+  module {..} = import Builtin;
+  -- Preludeモジュールの関数と型をインポート
+  module {..} = import Prelude;
+  
+  ------------------
+  -- プリミティブ型
+  ------------------
+  
+  -- 数値
+  number = {
+    3; -- 3 (32bit)
+    3L; -- 3 (64bit)
+  
+    1.5; -- 1.5 (double)
+    1.5F; -- 1.5 (float)
+  
+    -- 四則演算
+    -- 中置演算子については後述
+    addInt32 1 1; -- 2
+    subInt32 8 1; -- 7
+    mulInt32 10 2; -- 20
+    divInt32 35 5; -- 7
+    
+    divDouble 5.0 2.0 -- 2.5
+  };
+  
+  -- 真偽値
+  boolean = {
+    True; -- 真
+    False; -- 偽
+  
+    -- 論理演算
+    not True; -- False
+    not False; -- True
+  
+    -- 比較演算
+    eqInt32 1 1; -- True
+    neInt32 1 1; -- False
+    ltInt32 1 10 -- True
+  };
+  
+  -- 文字列
+  string = {
+    "This is a string.";
+  
+    -- 文字
+    'a';
+
+    -- error! ''は文字列には使えない
+    'You cant use single quotes for strings.'
+  
+    -- 文字列の連結
+    appendString "Hello " "world!"
+  };
+
+  -- タプル
+  tuple = {
+    -- タプルの要素はそれぞれ違う型でも良い
+    -- タプルの長さは固定長
+    ("malgo", 1)
+
+    -- ペア（要素数2のタプル）の要素へのアクセス
+    fst ("malgo", 1) -- "malgo"
+    snd ("malgo", 1) -- 1
+
+    -- error! fst, sndはペア以外のタプルには使えない
+    snd ("snd", "can't touch this", "foo")
+  };
+
+  -- 関数
+
+  -- 二つの引数を取るシンプルな関数
+  add = { a b -> addInt32 a b };
+
+  usingFunction = {
+    add 1 2 -- 3
+  };
+  
+  -- パターンマッチ
+  fib = { 0 -> 1
+        | 1 -> 1
+        | x -> fib (subInt32 x 1) (subInt32 x 2)
+  };
+
+  -- タプルのパターンマッチ
+  sndOfTriple = { (_, y, _) -> y };
+
+  -- 部分適用
+  addTen = add 10; -- 引数に10を足す関数
+
+  usingFunction' = {
+    addTen 5 -- 15
+  };
+
+  -- 0引数の関数
+  zero = { 0 };
+
+  usingFunction'' = {
+    -- 0引数の関数を呼ぶには、!をつける
+    !zero -- 0
+  };
+
+  -- 型シグネチャ
+
+  -- `not` は真偽値を一つ取って真偽値を返す
+  -- not :: Bool -> Bool;
+
+  -- 二引数の場合はこう書く
+  -- add :: Int32 -> Int32 -> Int32;
+
+  -- 0引数の場合はこう書く
+  -- zero :: { Int32 };
+
+  -- 関数を定義するときは、型シグネチャも書くほうが望ましい
+  double :: Int32 -> Int32;
+  double = { x -> mulInt32 x 2 };
+
+  -- 制御構文
+
+  -- if関数
+  usingIf = {
+    if (eqInt32 1 1) { "then" } { "else" }
+  };
+
+  -- ifは関数として定義されている
+  -- if :: Bool -> {a} -> {a} -> a;
+  -- if = { True t _ -> !t
+  --      | False _ f -> !f
+  --      };
+
+  -- パターンマッチ
+  command = { args ->
+    -- `x |> f`は関数`f`に関数`x`を適用する、つまり`f x`
+    args |> { "help" -> printHelp 
+            | "start" -> startProgram
+            | _ -> putStrLn "bad args"
+    }
+  };
+
+  -- データ型
+
+  -- データ型の宣言は、左辺の「型コンストラクタ」と右辺の「値コンストラクタ」からなる
+  -- 値コンストラクタは複数定義でき、`|`で区切る
+
+  data Color = Red | Blue | Green;
+
+  say :: Color -> String;
+  say = { Red -> "You are Red!"
+        | Blue -> "You are Blue!"
+        | Green -> "You are Green!"
+  };
+
+  -- フィールドを持つデータ型も宣言できる
+
+  data Point = Point Float Float;
+
+  distance :: Point -> Point -> Float;
+  distance = { (Point x y) (Point x' y') ->
+    let dx = mulFloat (subFloat x x') (subFloat x x')
+    let dy = mulFloat (subFloat y y') (subFloat y y')
+    sqrtFloat (addFloat dx dy)
+  };
+
+  -- もっと複雑なデータ型も書ける 
+
+  data Name = Mononym String
+            | FirstLastName String String
+            | FullName String String String;
+
+  -- 型パラメータを持つデータ型も書ける
+
+  data Maybe a = Nothing | Just a;
+
+  usingMaybe = {
+    Just "hello"; -- Maybe String
+    Just 1; -- Maybe Int32
+    Nothing -- Maybe a （aはどんな型でもいい）
+  };
+
+  -- `type`で型シノニムを定義できる
+
+  type Colour = Color;
+  
+  -- `data`で定義した型とは異なり、型シノニムは値コンストラクタを持たない
+  -- 元の型と完全に同じ型として扱われる
+
+  type Weight = Float;
+  type Height = Float;
+  type Point = (Float, Float);
+  getMyHeightAndWeight :: Person -> (Height, Weight);
+  findCenter :: Circle -> Point;
+  somePerson :: { Person };
+  someCircle :: { Circle };
+  distance :: Point -> Point -> Float;
+
+  usingSynonym = {
+    -- 型シノニムは元の型へ展開されるため、
+    -- 下のコードは正しくコンパイルされ、何の問題もなく動く
+    distance (getMyHeightAndWeight somePerson) (findCenter someCircle)
+  };
+
+  -- 中置演算子
+
+  -- 優先順位は`infix`で宣言する
+  -- 左結合なら`infixl`、右結合なら`infixr`
+  -- どちらでもないなら`infix`
+  -- 数字の大きいほうが優先順位が高い
+  infixl 6 (+);
+  (+) :: Int32 -> Int32 -> Int32;
+  (+) = { x y -> addInt32 x y };
+
+  infixl 7 (*);
+  (*) :: Int32 -> Int32 -> Int32;
+  (*) = { x y -> mulInt32 x y };
+
+  usingInfix = {
+    1 + 2 * 3 -- 7
+  };
+
+  -- FFI
+  
+  -- Cの型とMalgoの型の対応
+  -- int <-> Int32#
+  -- long <-> Int64#
+  -- float <-> Float#
+  -- double <-> Double#
+  -- char <-> Char#
+  -- char* <-> String#
+  foreign import abs :: Int32# -> Int32#;
+  
+  usingAbs = {
+    abs (subInt32# 0# 10#); -- 10#
+
+    -- `Int32`の値コンストラクタ`Int32#`を適用すると、#のつかない型になる
+    Int32# (abs (subInt32# 0# 10#)) -- 10
+  };
+
+  id :: a -> a;
+  id = {x -> x};
+
+  errorUnboxed = {
+    -- error! #のつく値は多相関数に渡せない
+    id 0#
+  };
+}
