@@ -124,7 +124,19 @@ module Builtin = {
   divDouble :: Double -> Double -> Double;
   divDouble = { (Double# x) (Double# y) -> Double# (divDouble# x y) };
 
-  
+
+  foreign import sqrtf :: Float# -> Float#;
+  sqrtFloat# :: Float# -> Float#;
+  sqrtFloat# = { x -> sqrtf x };
+  sqrtFloat :: Float -> Float;
+  sqrtFloat = { Float# x -> Float# (sqrtFloat# x) };
+
+  foreign import sqrt :: Double# -> Double#;
+  sqrtDouble# :: Double# -> Double#;
+  sqrtDouble# = { x -> sqrt x };
+  sqrtDouble :: Double -> Double;
+  sqrtDouble = { Double# x -> Double# (sqrtDouble# x) };
+
   isTrue# :: Int32# -> Bool;
   isTrue# = { 1# -> True
             | _  -> False };
@@ -278,7 +290,8 @@ module Builtin = {
   geDouble = { (Double# x) (Double# y) -> isTrue# (geDouble# x y) };
 
 
-  foreign import malgo_string_at :: Int64# -> String# -> Char#; 
+  -- String operators
+  foreign import malgo_string_at :: Int64# -> String# -> Char#;
   atString# :: Int64# -> String# -> Char#;
   atString# = { i x -> malgo_string_at i x };
   atString :: Int64 -> String -> Char;
@@ -315,6 +328,7 @@ module Builtin = {
   toStringDouble = { Double# x -> String# (toStringDouble# x) };
 
 
+  -- IO functions
   foreign import malgo_newline :: () -> ();
   newline = { _ -> malgo_newline () };
 
@@ -329,4 +343,11 @@ module Builtin = {
   printString# = { x -> malgo_print_string x };
   printString :: String -> ();
   printString = { String# x -> printString# x };
+
+  -- Tuple functions
+  fst :: (a, b) -> a;
+  fst = { (a, b) -> a };
+
+  snd :: (a, b) -> b;
+  snd = { (a, b) -> b };
 }

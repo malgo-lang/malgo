@@ -54,7 +54,19 @@ module Builtin = {
   div{{malgoType}} = { ({{malgoType}}# x) ({{malgoType}}# y) -> {{malgoType}}# (div{{malgoType}}# x y) };
 
   {{/magmaType}}
-  
+
+  foreign import sqrtf :: Float# -> Float#;
+  sqrtFloat# :: Float# -> Float#;
+  sqrtFloat# = { x -> sqrtf x };
+  sqrtFloat :: Float -> Float;
+  sqrtFloat = { Float# x -> Float# (sqrtFloat# x) };
+
+  foreign import sqrt :: Double# -> Double#;
+  sqrtDouble# :: Double# -> Double#;
+  sqrtDouble# = { x -> sqrt x };
+  sqrtDouble :: Double -> Double;
+  sqrtDouble = { Double# x -> Double# (sqrtDouble# x) };
+
   isTrue# :: Int32# -> Bool;
   isTrue# = { 1# -> True
             | _  -> False };
@@ -102,7 +114,8 @@ module Builtin = {
 
   {{/compareType}}
 
-  foreign import malgo_string_at :: Int64# -> String# -> Char#; 
+  -- String operators
+  foreign import malgo_string_at :: Int64# -> String# -> Char#;
   atString# :: Int64# -> String# -> Char#;
   atString# = { i x -> malgo_string_at i x };
   atString :: Int64 -> String -> Char;
@@ -123,6 +136,7 @@ module Builtin = {
 
   {{/toStringType}}
 
+  -- IO functions
   foreign import malgo_newline :: () -> ();
   newline = { _ -> malgo_newline () };
 
@@ -137,4 +151,11 @@ module Builtin = {
   printString# = { x -> malgo_print_string x };
   printString :: String -> ();
   printString = { String# x -> printString# x };
+
+  -- Tuple functions
+  fst :: (a, b) -> a;
+  fst = { (a, b) -> a };
+
+  snd :: (a, b) -> b;
+  snd = { (a, b) -> b };
 }
