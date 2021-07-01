@@ -59,6 +59,10 @@ module Builtin = {
   isTrue# = { 1# -> True
             | _  -> False };
 
+  not :: Bool -> Bool;
+  not = { True -> False
+        | False -> True };
+
   {{#compareType}}
   foreign import malgo_eq_{{cType}} :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
   eq{{malgoType}}# :: {{malgoType}}# -> {{malgoType}}# -> Int32#;
