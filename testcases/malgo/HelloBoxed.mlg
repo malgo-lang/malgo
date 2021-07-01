@@ -1,13 +1,13 @@
-module hello = {
-  foreign import print_string :: String# -> ();
-  foreign import newline :: () -> ();
+module HelloBoxed = {
+  foreign import malgo_print_string :: String# -> ();
+  foreign import malgo_newline :: () -> ();
 
   data String = String# String#;
 
   putStrLn :: String -> ();
   putStrLn = { (String# str) ->
-    print_string str;
-    newline ()
+    malgo_print_string str;
+    malgo_newline ()
   };
 
   string# :: String# -> String;

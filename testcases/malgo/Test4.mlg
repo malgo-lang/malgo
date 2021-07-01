@@ -2,7 +2,7 @@ module Test4 = {
   module {..} = import Builtin;
 
   infixl 6 (+#);
-  (+#) = {x y -> add_Int64# x y};
+  (+#) = {x y -> addInt64# x y};
 
   infixl 6 (+);
   (+) = {(Int64# x) (Int64# y) -> Int64# (x +# y) };
@@ -12,10 +12,8 @@ module Test4 = {
   sum = { acc Nil -> acc 
         | acc (Cons x xs) -> sum (acc + x) xs };
 
-  foreign import print_int :: Int64# -> ();
-
   main = {
-    {(Int64# i) -> print_int i}
+    {(Int64# i) -> printString# (toStringInt64# i) }
       (sum (Int64# 0L#) (Cons (Int64# 1L#) (Cons (Int64# 2L#) Nil)))
     };
 }

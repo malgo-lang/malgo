@@ -1,8 +1,8 @@
 module TestLetUnboxed = {
-  foreign import print_string :: String# -> ();
+  foreign import malgo_print_string :: String# -> ();
   main = {
     let f = {let y = {a -> ()} ()};
-    print_string "PASS"#
+    malgo_print_string "PASS"#
   };
 }
 

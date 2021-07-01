@@ -3,19 +3,19 @@ module TestArithDouble = {
   module {..} = import Prelude;
 
   -- operators for Double#
-  neg = { x -> sub_Double# 0.0# x };
+  neg = { x -> subDouble# 0.0# x };
 
   infixl 7 (*);
-  (*) = {x y -> mul_Double# x y};
+  (*) = {x y -> mulDouble# x y};
 
-  mul = {x y -> mul_Double# x y};
+  mul = {x y -> mulDouble# x y};
 
   infixl 6 (+);
-  (+) = {x y -> add_Double# x y};
+  (+) = {x y -> addDouble# x y};
 
-  add = {x y -> add_Double# x y};
+  add = {x y -> addDouble# x y};
 
-  show = {x -> String# (showDouble# x)};
+  show = {x -> String# (toStringDouble# x)};
 
   traceShowId = { x -> putStrLn (show x); x };
 

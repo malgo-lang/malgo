@@ -3,8 +3,8 @@ module Test1 = {
   
   if = {True t _ -> !t | False _ f -> !f};
   
-  foreign import print_string :: String# -> ();
+  foreign import malgo_print_string :: String# -> ();
   
-  main = {if True {print_string "True"#} {print_string "False"#}};
+  main = {if True {malgo_print_string "True"#} {malgo_print_string "False"#}};
 }
 -- Expected: True

@@ -5,11 +5,9 @@ module Test0 = {
   (|>) :: a -> (a -> b) -> b;
   (|>) = { x f -> f x };
   
-  foreign import print_int :: Int64# -> ();
-  
   infixl 6 (+#);
-  (+#) = {x y -> add_Int64# x y};
+  (+#) = {x y -> addInt64# x y};
   
-  main = { Int64# 1L# |> {(Int64# i) -> print_int i} };
+  main = { Int64# 1L# |> {(Int64# i) -> printString# (toStringInt64# i)} };
 }
 -- Expected: 1

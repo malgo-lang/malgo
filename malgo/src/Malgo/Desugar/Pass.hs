@@ -100,9 +100,10 @@ dsScDef (With typ pos, name, expr) = do
   case typ of
     GT.TyArr _ _ -> pure ()
     GT.TyApp GT.TyLazy _ -> pure ()
-    _ -> errorOn pos $
-      "Invalid Toplevel Declaration:"
-        <+> quotes (pPrint name <+> ":" <+> pPrint typ)
+    _ ->
+      errorOn pos $
+        "Invalid Toplevel Declaration:"
+          <+> quotes (pPrint name <+> ":" <+> pPrint typ)
   name' <- lookupName name
   fun <- curryFun [] =<< dsExp expr
   pure [(name', fun)]
@@ -183,22 +184,21 @@ dsExp (G.Var x _ name) = do
     (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _)
       | isConstructor name -> pure ()
-      | otherwise -> errorDoc $ "Invlalid type:" <+> quotes (pPrint name)
+      | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
     _ -> pure ()
   case C.typeOf name' of
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
     [] :-> _ | isConstructor name -> pure $ CallDirect name' []
-    _ ->
-      if idIsExternal name'
-        then do
-          -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
-          -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
-          clsId <- newLocalId "$gblcls" (C.typeOf name')
-          ps <- case C.typeOf name' of
-            pts :-> _ -> traverse (newLocalId "$p") pts
-            _ -> bug Unreachable
-          pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
-        else pure $ Atom $ C.Var name'
+    _
+      | idIsExternal name' -> do
+        -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
+        -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
+        clsId <- newLocalId "$gblcls" (C.typeOf name')
+        ps <- case C.typeOf name' of
+          pts :-> _ -> traverse (newLocalId "$p") pts
+          _ -> bug Unreachable
+        pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+      | otherwise -> pure $ Atom $ C.Var name'
   where
     isConstructor Id {_idName = Just (x : _)} = Char.isUpper x
     isConstructor _ = False

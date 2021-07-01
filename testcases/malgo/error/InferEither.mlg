@@ -2,8 +2,8 @@
 -- https://github.com/malgo-lang/malgo/issues/59
 
 module InferEither = {
-  import Builtin;
-  import Prelude;
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
   data Either a b = Left a | Right b;
 
@@ -16,6 +16,6 @@ module InferEither = {
   main = {
     let x = Right 1;
     -- type error (String is not Bool)
-    id1 x |> id2 |> { Right y -> print_Int32 y }
+    id1 x |> id2 |> { Right y -> printInt32 y }
   };
 }

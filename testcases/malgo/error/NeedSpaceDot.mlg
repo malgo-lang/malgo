@@ -1,0 +1,12 @@
+module NeedSpaceDot = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  succ = { x -> addInt32 x 1 };
+
+  main = {
+    Prelude.putStrLn "Hello, world!";
+    Prelude.printInt32 <| (succ.succ) 1
+                       --  ^^^^^^^^^
+  };
+}

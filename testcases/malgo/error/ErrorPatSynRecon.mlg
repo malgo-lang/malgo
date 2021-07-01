@@ -1,10 +1,10 @@
 module ErrorPatSynRecon = {
   data Int = Int# Int64#;
 
-  foreign import add_i64 :: Int64# -> Int64# -> Int64#;
+  foreign import malgo_add_i64 :: Int64# -> Int64# -> Int64#;
 
   infixl 6 (+#);
-  (+#) = {x y -> add_i64 x y};
+  (+#) = {x y -> malgo_add_i64 x y};
 
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;
@@ -20,7 +20,7 @@ module ErrorPatSynRecon = {
   foreign import print_int :: Int64# -> ();
 
   main = {
-      sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil))
-        |> {(Int# i) -> print_int i}
-      };
+    let x = sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil));
+    ()
+  };
 }
