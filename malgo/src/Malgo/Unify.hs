@@ -15,7 +15,6 @@ import Malgo.TypeRep.Static hiding (applySubst, kindOf)
 import Malgo.TypeRep.UTerm
 import Malgo.UTerm
 import qualified RIO.HashMap as HashMap
-import qualified RIO.List as List
 import qualified RIO.Map as Map
 import Text.Megaparsec (SourcePos)
 

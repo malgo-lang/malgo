@@ -1,0 +1,10 @@
+module Echo = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  main = {
+    putStr (getContents ())
+  };
+}
+
+-- Expected: Hello

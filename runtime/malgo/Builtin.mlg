@@ -344,6 +344,15 @@ module Builtin = {
   printString :: String -> ();
   printString = { String# x -> printString# x };
 
+  foreign import malgo_flush :: () -> ();
+  flush = { _ -> malgo_flush () };
+
+  foreign import malgo_get_char :: () -> Char#;
+  getChar = { _ -> Char# (malgo_get_char ()) };
+
+  foreign import malgo_get_contents :: () -> String#;
+  getContents = { _ -> String# (malgo_get_contents ()) };
+
   -- Tuple functions
   fst :: (a, b) -> a;
   fst = { (a, b) -> a };

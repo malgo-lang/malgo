@@ -8,6 +8,6 @@ fi
 
 mkdir -p $LIB_PATH
 
-cp runtime/malgo/rts.c $LIB_PATH/rts.c
+cp runtime/malgo/runtime.c $LIB_PATH/runtime.c
 cp runtime/malgo/Builtin.mlg $LIB_PATH/Builtin.mlg
 cp runtime/malgo/Prelude.mlg $LIB_PATH/Prelude.mlg

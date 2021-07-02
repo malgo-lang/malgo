@@ -28,7 +28,7 @@ test_nono () {
 
   clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$($OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 }
 
 for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
@@ -55,7 +55,7 @@ test_noopt () {
 
   clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$($OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 }
 
 for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
@@ -82,7 +82,7 @@ test_nolift () {
 
   clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$($OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 }
 
 for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
@@ -109,7 +109,7 @@ test_opt () {
 
   clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$($OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 }
 
 for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
