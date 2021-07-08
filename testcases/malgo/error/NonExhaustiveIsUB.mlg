@@ -1,0 +1,28 @@
+module NonExhaustiveIsUB = {
+  infixl 0 (|>);
+  (|>) :: a -> (a -> b) -> b;
+  (|>) = {x f -> f x};
+
+  data String = String# String#;
+
+  foreign import malgo_print_string :: String# -> ();
+
+  string# :: String# -> String;
+  string# = { x -> String# x };
+
+  data List a = Nil | Cons a (List a);
+
+  headUB :: List a -> a;
+  headUB = { (Cons x Nil) -> x };
+
+  head :: List a -> a;
+  head = { (Cons x _) -> x };
+
+  main = {
+    -- let xs = [1, 2, 3];
+    let xs = [String# "a"#, String# "b"#];
+    (headUB xs) |> { String# x -> malgo_print_string x }
+  };
+}
+
+-- Expected: 1
