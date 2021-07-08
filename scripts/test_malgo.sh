@@ -28,6 +28,8 @@ for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   clang -Wno-override-module -O3 -flto -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
 
   test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  echo 'Hello' | $OPTFILE
+  echo ''
 done
 
 echo '=== no opt ==='
