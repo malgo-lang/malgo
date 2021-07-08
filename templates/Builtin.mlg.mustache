@@ -140,7 +140,7 @@ module Builtin = {
   data List a = Nil | Cons a (List a);
 
   head :: List a -> a;
-  head = { [x] -> x };
+  head = { (Cons x _) -> x };
 
   tail :: List a -> List a;
   tail = { Cons _ xs -> xs };
