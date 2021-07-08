@@ -328,6 +328,15 @@ module Builtin = {
   toStringDouble = { Double# x -> String# (toStringDouble# x) };
 
 
+  -- List
+  data List a = Nil | Cons a (List a);
+
+  head :: List a -> a;
+  head = { [x] -> x };
+
+  tail :: List a -> List a;
+  tail = { Cons _ xs -> xs };
+
   -- IO functions
   foreign import malgo_newline :: () -> ();
   newline = { _ -> malgo_newline () };
