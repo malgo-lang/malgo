@@ -1,0 +1,13 @@
+module List = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  data List a = Nil | Cons a (List a);
+
+  head = { Cons x _ -> x };
+
+  main = {
+    let xs = [1, 2, 3];
+    putStrLn (toStringInt32 (head xs))
+  };
+}
