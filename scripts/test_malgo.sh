@@ -16,7 +16,6 @@ echo '=== no opt no lambdalift ==='
 for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   LLFILE=$TESTDIR/${file/.mlg/.ll}
   OUTFILE=$TESTDIR/${file/.mlg/.out-nono}
-  OPTFILE=$TESTDIR/${file/.mlg/.opt-nono}
 
   echo $file
 
@@ -24,11 +23,10 @@ for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
 
   eval "$BUILD exec malgo -- to-ll --force --no-opt --no-lambdalift -M $TESTDIR/libs ./testcases/malgo/$file -o $LLFILE"
 
-  clang -Wno-override-module -O0 -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
-  clang -Wno-override-module -O3 -flto -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
+  clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
-  echo 'Hello' | $OPTFILE
+  test "$(echo 'Hello' | $OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  echo 'Hello' | $OUTFILE
   echo ''
 done
 
@@ -36,7 +34,6 @@ echo '=== no opt ==='
 for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   LLFILE=$TESTDIR/${file/.mlg/.ll}
   OUTFILE=$TESTDIR/${file/.mlg/.out-noopt}
-  OPTFILE=$TESTDIR/${file/.mlg/.opt-noopt}
 
   echo $file
 
@@ -44,17 +41,15 @@ for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
 
   eval "$BUILD exec malgo -- to-ll --force --no-opt -M $TESTDIR/libs ./testcases/malgo/$file -o $LLFILE"
 
-  clang -Wno-override-module -O0 -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
-  clang -Wno-override-module -O3 -flto -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
+  clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$(echo 'Hello' | $OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 done
 
 echo '=== no lambdalift ==='
 for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   LLFILE=$TESTDIR/${file/.mlg/.ll}
   OUTFILE=$TESTDIR/${file/.mlg/.out-nolift}
-  OPTFILE=$TESTDIR/${file/.mlg/.opt-nolift}
 
   echo $file
 
@@ -62,17 +57,15 @@ for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
 
   eval "$BUILD exec malgo -- to-ll --force --no-lambdalift -M $TESTDIR/libs ./testcases/malgo/$file -o $LLFILE"
 
-  clang -Wno-override-module -O0 -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
-  clang -Wno-override-module -O3 -flto -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
+  clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$(echo 'Hello' | $OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 done
 
 echo '=== opt ==='
 for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
   LLFILE=$TESTDIR/${file/.mlg/.ll}
   OUTFILE=$TESTDIR/${file/.mlg/.out}
-  OPTFILE=$TESTDIR/${file/.mlg/.opt}
 
   echo $file
 
@@ -80,8 +73,7 @@ for file in `ls ./testcases/malgo | grep '\.mlg$'`; do
 
   eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./testcases/malgo/$file -o $LLFILE"
 
-  clang -Wno-override-module -O0 -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
-  clang -Wno-override-module -O3 -flto -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OPTFILE
+  clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
 
-  test "$(echo 'Hello' | $OPTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
+  test "$(echo 'Hello' | $OUTFILE)" = "$(cat ./testcases/malgo/$file | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"
 done
