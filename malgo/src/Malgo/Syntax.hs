@@ -60,6 +60,7 @@ data Exp x
   | Fn (XFn x) [Clause x]
   | Tuple (XTuple x) [Exp x]
   | Record (XRecord x) [(XId x, Exp x)]
+  | List (XList x) [Exp x]
   | Force (XForce x) (Exp x)
   | RecordAccess (XRecordAccess x) (XId x)
   | Parens (XParens x) (Exp x)
@@ -85,6 +86,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
           (map (pPrintPrec l 0) cs)
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
+  pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
   pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x

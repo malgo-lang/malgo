@@ -21,7 +21,7 @@ module Koriel.Prelude
 where
 
 import Control.Exception (throw)
-import Control.Lens
+import Control.Lens hiding (List)
 import Data.Coerce (coerce)
 import Data.Monoid
 import GHC.Stack (callStack, prettyCallStack)

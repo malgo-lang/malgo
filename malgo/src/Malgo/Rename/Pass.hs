@@ -323,7 +323,6 @@ genToplevelEnv modName ds builtinEnv = do
       opt <- getOpt
       when (debugMode opt) $
         liftIO $ hPrint stderr $ pPrint interface
-      -- TODO: 明示的に指定されていない識別子以外はExplicitでimportする
       modify $
         appendRnEnv
           varEnv
