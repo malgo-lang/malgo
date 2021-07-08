@@ -158,6 +158,13 @@ rnExp (OpApp pos op e1 e2) = do
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
 rnExp (Record pos kvs) = Record pos <$> traverse (bitraverse (lookupFieldName pos) rnExp) kvs
+rnExp (List pos es) = do
+  nilName <- lookupVarName pos "Nil"
+  consName <- lookupVarName pos "Cons"
+  buildListApply nilName consName <$> traverse rnExp es
+    where
+      buildListApply nilName _ [] = Var pos Nothing nilName
+      buildListApply nilName consName (x:xs) = Apply pos (Apply pos (Var pos Nothing consName) x) (buildListApply nilName consName xs)
 rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (RecordAccess pos l) = RecordAccess pos <$> lookupFieldName pos l
 rnExp (Parens pos e) = Parens pos <$> rnExp e
