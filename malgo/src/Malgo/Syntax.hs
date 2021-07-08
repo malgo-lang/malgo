@@ -248,6 +248,7 @@ data Pat x
   | ConP (XConP x) (XId x) [Pat x]
   | TupleP (XTupleP x) [Pat x]
   | RecordP (XRecordP x) [(XId x, Pat x)]
+  | ListP (XListP x) [Pat x]
   | UnboxedP (XUnboxedP x) (Literal Unboxed)
 
 deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)

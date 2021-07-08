@@ -162,9 +162,9 @@ rnExp (List pos es) = do
   nilName <- lookupVarName pos "Nil"
   consName <- lookupVarName pos "Cons"
   buildListApply nilName consName <$> traverse rnExp es
-    where
-      buildListApply nilName _ [] = Var pos Nothing nilName
-      buildListApply nilName consName (x:xs) = Apply pos (Apply pos (Var pos Nothing consName) x) (buildListApply nilName consName xs)
+  where
+    buildListApply nilName _ [] = Var pos Nothing nilName
+    buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos Nothing consName) x) (buildListApply nilName consName xs)
 rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (RecordAccess pos l) = RecordAccess pos <$> lookupFieldName pos l
 rnExp (Parens pos e) = Parens pos <$> rnExp e
@@ -201,6 +201,7 @@ rnClause (Clause pos ps ss) = do
     patVars (ConP _ _ xs) = concatMap patVars xs
     patVars (TupleP _ xs) = concatMap patVars xs
     patVars (RecordP _ kvs) = concatMap (patVars . snd) kvs
+    patVars (ListP _ xs) = concatMap patVars xs
     patVars UnboxedP {} = []
 
 rnPat :: (MonadReader RnEnv m, MonadIO m) => Pat (Malgo 'Parse) -> m (Pat (Malgo 'Rename))
@@ -208,6 +209,10 @@ rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
 rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (lookupFieldName pos) rnPat) kvs
+rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName pos "Cons" <*> traverse rnPat xs
+  where
+    buildListP nilName _ [] = ConP pos nilName []
+    buildListP nilName consName (x:xs) = ConP pos consName [x, buildListP nilName consName xs]
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => [Stmt (Malgo 'Parse)] -> m [Stmt (Malgo 'Rename)]

@@ -143,10 +143,14 @@ type family XTupleP x where
 type family XRecordP x where
   XRecordP (Malgo x) = SimpleX x
 
+type family XListP x where
+  XListP (Malgo 'Parse) = SourcePos
+  XListP (Malgo _) = Void
+
 type family XUnboxedP x where
   XUnboxedP (Malgo x) = SimpleX x
 
-type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XUnboxedP x))
+type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XListP x), c (XUnboxedP x))
 
 -- Type Extensions
 type family XTyApp x where

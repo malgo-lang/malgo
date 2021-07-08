@@ -212,6 +212,10 @@ pSinglePat =
           )
       )
     <|> pRecordP
+    <|> between
+      (symbol "[")
+      (symbol "]")
+      (ListP <$> getSourcePos <*> pPat `sepBy1` pOperator ",")
     <|> between (symbol "(") (symbol ")") pPat
 
 pPat :: Parser (Pat (Malgo 'Parse))
