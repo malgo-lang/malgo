@@ -60,6 +60,7 @@ data Exp x
   | Fn (XFn x) [Clause x]
   | Tuple (XTuple x) [Exp x]
   | Record (XRecord x) [(XId x, Exp x)]
+  | List (XList x) [Exp x]
   | Force (XForce x) (Exp x)
   | RecordAccess (XRecordAccess x) (XId x)
   | Parens (XParens x) (Exp x)
@@ -85,6 +86,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
           (map (pPrintPrec l 0) cs)
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
+  pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
   pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
@@ -101,6 +103,7 @@ instance
   typeOf (Fn x _) = pure $ x ^. U.withUType
   typeOf (Tuple x _) = pure $ x ^. U.withUType
   typeOf (Record x _) = pure $ x ^. U.withUType
+  typeOf (List x _) = pure $ x ^. U.withUType
   typeOf (Force x _) = pure $ x ^. U.withUType
   typeOf (RecordAccess x _) = pure $ x ^. U.withUType
   typeOf (Parens x _) = pure $ x ^. U.withUType
@@ -117,6 +120,7 @@ instance
   typeOf (Fn x _) = pure $ x ^. S.withType
   typeOf (Tuple x _) = pure $ x ^. S.withType
   typeOf (Record x _) = pure $ x ^. S.withType
+  typeOf (List x _) = pure $ x ^. S.withType
   typeOf (Force x _) = pure $ x ^. S.withType
   typeOf (RecordAccess x _) = pure $ x ^. S.withType
   typeOf (Parens x _) = pure $ x ^. S.withType
@@ -137,6 +141,7 @@ instance
     Fn x cs -> Fn <$> U.walkOn f x <*> traverse (U.walkOn f) cs
     Tuple x es -> Tuple <$> U.walkOn f x <*> traverse (U.walkOn f) es
     Record x kvs -> Record <$> U.walkOn f x <*> traverse (\(k, v) -> (k,) <$> U.walkOn f v) kvs
+    List x es -> List <$> U.walkOn f x <*> traverse (U.walkOn f) es
     Force x e -> Force <$> U.walkOn f x <*> U.walkOn f e
     RecordAccess x l -> RecordAccess <$> U.walkOn f x <*> pure l
     Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
@@ -150,6 +155,7 @@ freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = mconcat $ map freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
+freevars (List _ es) = mconcat $ map freevars es
 freevars (Force _ e) = freevars e
 freevars (RecordAccess _ _) = mempty
 freevars (Parens _ e) = freevars e
@@ -246,6 +252,7 @@ data Pat x
   | ConP (XConP x) (XId x) [Pat x]
   | TupleP (XTupleP x) [Pat x]
   | RecordP (XRecordP x) [(XId x, Pat x)]
+  | ListP (XListP x) [Pat x]
   | UnboxedP (XUnboxedP x) (Literal Unboxed)
 
 deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)
@@ -263,6 +270,8 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
     parens $ sep $ punctuate "," $ map pPrint ps
   pPrintPrec l _ (RecordP _ kps) =
     braces $ sep $ punctuate "," $ map (\(k, p) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 p) kps
+  pPrintPrec _ _ (ListP _ ps) =
+    brackets $ sep $ punctuate "," $ map pPrint ps
   pPrintPrec _ _ (UnboxedP _ u) = pPrint u
 
 instance
@@ -273,6 +282,7 @@ instance
   typeOf (ConP x _ _) = pure $ x ^. U.withUType
   typeOf (TupleP x _) = pure $ x ^. U.withUType
   typeOf (RecordP x _) = pure $ x ^. U.withUType
+  typeOf (ListP x _) = pure $ x ^. U.withUType
   typeOf (UnboxedP x _) = pure $ x ^. U.withUType
 
 instance
@@ -283,6 +293,7 @@ instance
   typeOf (ConP x _ _) = pure $ x ^. S.withType
   typeOf (TupleP x _) = pure $ x ^. S.withType
   typeOf (RecordP x _) = pure $ x ^. S.withType
+  typeOf (ListP x _) = pure $ x ^. S.withType
   typeOf (UnboxedP x _) = pure $ x ^. S.withType
 
 instance
@@ -297,6 +308,7 @@ instance
     ConP x c ps -> ConP <$> U.walkOn f x <*> pure c <*> traverse (U.walkOn f) ps
     TupleP x ps -> TupleP <$> U.walkOn f x <*> traverse (U.walkOn f) ps
     RecordP x kps -> RecordP <$> U.walkOn f x <*> traverse (bitraverse pure (U.walkOn f)) kps
+    ListP x ps -> ListP <$> U.walkOn f x <*> traverse (U.walkOn f) ps
     UnboxedP x u -> UnboxedP <$> U.walkOn f x <*> U.walkOn f u
 
 bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
@@ -304,6 +316,7 @@ bindVars (VarP _ x) = HashSet.singleton x
 bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
 bindVars (TupleP _ ps) = mconcat $ map bindVars ps
 bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
+bindVars (ListP _ ps) = mconcat $ map bindVars ps
 bindVars UnboxedP {} = mempty
 
 makePrisms ''Pat

@@ -1,0 +1,11 @@
+module List = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  main = {
+    let xs = [1, 2, 3];
+    putStrLn (toStringInt32 (head xs))
+  };
+}
+
+-- Expected: 1

@@ -136,6 +136,15 @@ module Builtin = {
 
   {{/toStringType}}
 
+  -- List
+  data List a = Nil | Cons a (List a);
+
+  head :: List a -> a;
+  head = { (Cons x _) -> x };
+
+  tail :: List a -> List a;
+  tail = { Cons _ xs -> xs };
+
   -- IO functions
   foreign import malgo_newline :: () -> ();
   newline = { _ -> malgo_newline () };

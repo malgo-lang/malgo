@@ -212,6 +212,10 @@ pSinglePat =
           )
       )
     <|> pRecordP
+    <|> between
+      (symbol "[")
+      (symbol "]")
+      (ListP <$> getSourcePos <*> pPat `sepBy1` pOperator ",")
     <|> between (symbol "(") (symbol ")") pPat
 
 pPat :: Parser (Pat (Malgo 'Parse))
@@ -244,6 +248,13 @@ pRecord = between (symbol "{") (symbol "}") do
       value <- pExp
       pure (label, value)
 
+pList :: Parser (Exp (Malgo 'Parse))
+pList = label "list" $
+  between (symbol "[") (symbol "]") $ do
+    s <- getSourcePos
+    xs <- pExp `sepBy1` pOperator ","
+    pure $ List s xs
+
 pRecordAccess :: Parser (Exp (Malgo 'Parse))
 pRecordAccess = do
   s <- getSourcePos
@@ -258,6 +269,8 @@ pSingleExp' =
     <|> try pUnit
     <|> try pTuple
     <|> try pRecord
+    <|> try pList
+    <|> pList
     <|> pFun
     <|> pRecordAccess
     <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
