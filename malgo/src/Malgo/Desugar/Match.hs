@@ -88,7 +88,9 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
     --  errorDoc $ "Not valid type:" <+> pPrint patType
     -- 型からコンストラクタの集合を求める
-    let (con, ts) = Malgo.splitCon patType
+    let (con, ts) = case Malgo.viewTyConApp patType of
+          Just x -> x
+          Nothing -> bug Unreachable
     valueConstructors <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for valueConstructors \(conName, Forall _ conType) -> do

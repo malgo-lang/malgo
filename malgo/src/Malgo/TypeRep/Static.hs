@@ -233,15 +233,17 @@ makeLenses ''TypeDef
 -- Utilities --
 ---------------
 
-splitCon :: Type -> (Id Type, [Type])
-splitCon (TyCon con) = (con, [])
-splitCon (TyApp t1 t2) = over _2 (<> [t2]) $ splitCon t1
-splitCon _ = bug Unreachable
+viewTyConApp :: Type -> Maybe (Id Kind, [Type])
+viewTyConApp (TyCon con) = Just (con, [])
+viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
+viewTyConApp _ = Nothing
 
+-- | split a function type into its parameter types and return type
 splitTyArr :: Type -> ([Type], Type)
 splitTyArr (TyArr t1 t2) = over _1 (t1 :) $ splitTyArr t2
 splitTyArr t = ([], t)
 
+-- | apply substitution to a type
 applySubst :: HashMap (Id Type) Type -> Type -> Type
 applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t2)
 applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v

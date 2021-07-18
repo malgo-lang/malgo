@@ -458,11 +458,6 @@ tcPatterns (UnboxedP pos unboxed : ps) = do
   unboxedType <- typeOf unboxed
   pure $ UnboxedP (With unboxedType pos) unboxed : ps'
 
-splitTyArr :: UType -> ([UType], UType)
-splitTyArr (UVar _) = bug Unreachable
-splitTyArr (TyArr t1 t2) = let (ps, r) = splitTyArr t2 in (t1 : ps, r)
-splitTyArr t = ([], t)
-
 tcStmts ::
   ( MonadState TcEnv m,
     MonadBind m,

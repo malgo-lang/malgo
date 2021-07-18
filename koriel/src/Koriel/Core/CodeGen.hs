@@ -440,12 +440,12 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = d
   HashMap.singleton name <$> bitcast addr (convType $ SumT cs)
 genLocalDef (LocalDef _ Pack {}) = bug Unreachable
 
-genCon :: HasCallStack => [Con] -> Con -> (Integer, LT.Type)
+genCon :: [Con] -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
   | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
   | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
 
-findIndex :: (HasCallStack, Pretty a, Eq a) => a -> [a] -> Integer
+findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
 findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
   Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint cs

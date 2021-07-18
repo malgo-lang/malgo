@@ -43,10 +43,9 @@ dsTyApp _ _ = pure AnyT
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: MonadState DsEnv m => GT.Type -> m C.Type
-unfoldType t | GT._TyApp `has` t || GT._TyCon `has` t = do
+unfoldType t@(viewTyConApp -> Just (con, ts)) = do
   GT.kindOf t >>= \case
     TYPE (Rep BoxedRep) -> do
-      let (con, ts) = splitCon t
       vcs <- lookupValueConstructors con ts
       SumT
         <$> traverse

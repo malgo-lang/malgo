@@ -164,13 +164,18 @@ buildTyApp = List.foldl TyApp
 buildTyArr :: [UType] -> UType -> UType
 buildTyArr ps ret = foldr TyArr ret ps
 
-splitTyConApp :: UType -> Maybe (Id UType, [UType])
-splitTyConApp (TyCon con) = Just (con, [])
-splitTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ splitTyConApp t1
-splitTyConApp _ = Nothing
+viewTyConApp :: UType -> Maybe (Id UType, [UType])
+viewTyConApp (TyCon con) = Just (con, [])
+viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
+viewTyConApp _ = Nothing
+
+splitTyArr :: UType -> ([UType], UType)
+splitTyArr (UVar _) = bug Unreachable
+splitTyArr (TyArr t1 t2) = let (ps, r) = splitTyArr t2 in (t1 : ps, r)
+splitTyArr t = ([], t)
 
 expandTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> Maybe UType
-expandTypeSynonym abbrEnv (splitTyConApp -> Just (con, ts)) =
+expandTypeSynonym abbrEnv (viewTyConApp -> Just (con, ts)) =
   case abbrEnv ^. at con of
     Nothing -> Nothing
     Just (ps, orig) -> Just (applySubst (zip ps ts) orig)
@@ -178,7 +183,7 @@ expandTypeSynonym _ _ = Nothing
 
 expandAllTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> UType
 expandAllTypeSynonym _ (UVar v) = UVar v
-expandAllTypeSynonym abbrEnv (splitTyConApp -> Just (con, ts)) =
+expandAllTypeSynonym abbrEnv (viewTyConApp -> Just (con, ts)) =
   case abbrEnv ^. at con of
     Nothing -> buildTyApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
     Just (ps, orig) ->
