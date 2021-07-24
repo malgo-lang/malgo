@@ -2,7 +2,7 @@ module HelloImport = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  main :: {()};
+  main : {()};
   main = {
     putStr (String# "hello"#);
     putStrLn |> { f -> f (String# " world"#) }

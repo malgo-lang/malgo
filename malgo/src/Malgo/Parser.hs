@@ -88,7 +88,7 @@ pForeign = label "foreign import" $ do
   void $ pKeyword "foreign"
   void $ pKeyword "import"
   x <- lowerIdent
-  void $ pOperator "::"
+  void $ pOperator ":"
   Foreign s x <$> pType
 
 pImport :: Parser (Decl (Malgo 'Parse))
@@ -110,7 +110,7 @@ pScSig =
     ScSig
       <$> getSourcePos
       <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
-      <* pOperator "::"
+      <* pOperator ":"
       <*> pType
 
 pScDef :: Parser (Decl (Malgo 'Parse))
@@ -194,7 +194,7 @@ pRecordP = between (symbol "{") (symbol "}") do
   where
     pRecordPEntry = do
       label <- lowerIdent
-      void $ pOperator ":"
+      void $ pOperator "="
       value <- pPat
       pure (label, value)
 
@@ -247,7 +247,7 @@ pRecord = between (symbol "{") (symbol "}") do
   where
     pRecordEntry = do
       label <- lowerIdent
-      void $ pOperator ":"
+      void $ pOperator "="
       value <- pExp
       pure (label, value)
 
@@ -410,7 +410,7 @@ reserved =
       ]
 
 reservedOp :: Parser Text
-reservedOp = choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
+reservedOp = choice $ map (try . pOperator) ["=", ":", "|", "->", ";", ",", "!"]
 
 lowerIdent :: Parser String
 lowerIdent =

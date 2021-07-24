@@ -2,30 +2,33 @@ module LazyList = {
   module {..} = import Builtin;
   module {..} = import Prelude;
   
-  data LazyList a = Nil | Cons a {LazyList a};
+  data LazyList a = LNil | LCons a {LazyList a};
 
-  nil :: {LazyList a};
-  nil = {Nil};
+  nil : {LazyList a};
+  nil = {LNil};
+
+  cons : a -> {LazyList a} -> {LazyList a}; 
+  cons = { x xs -> {LCons x xs} };
 
   map = { f xs -> {
       !xs |>
-        { Nil -> Nil
-        | Cons x xs -> Cons (f x) (map f xs)
+        { LNil -> LNil
+        | LCons x xs -> LCons (f x) (map f xs)
         }
     }
   };
 
   sum = { xs ->
-    !xs |> { Nil -> 0L
-           | Cons x xs -> add_Int64 x (sum xs)
+    !xs |> { LNil -> 0L
+           | LCons x xs -> addInt64 x (sum xs)
            }
   };
 
-  foreign import print_int :: Int64# -> ();
-
   main = {
-    let xs = {Cons 1L {Cons 2L nil}};
-    sum xs |> {Int64# i -> print_int i}
+    let xs = {LCons 1L {LCons 2L nil}};
+    sum (cons 1L (cons 2L nil)) 
+      |> toStringInt64
+      |> putStrLn
   };
 }
 
