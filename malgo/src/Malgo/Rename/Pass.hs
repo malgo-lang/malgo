@@ -187,6 +187,7 @@ rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldName pos) rnType) kts
 rnType (TyLazy pos t) = TyLazy pos <$> rnType t
+rnType (TyDArr pos t1 t2) = TyDArr pos <$> rnType t1 <*> rnType t2
 
 rnClause ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
@@ -391,3 +392,4 @@ genToplevelEnv modName ds builtinEnv = do
       ks' <- traverse (resolveGlobalName modName) ks
       zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, With Implicit k')]) ks ks'
     genFieldEnv (TyLazy _ t) = genFieldEnv t
+    genFieldEnv (TyDArr _ t1 t2) = genFieldEnv t1 >> genFieldEnv t2
