@@ -340,6 +340,7 @@ data Type x
   | TyTuple (XTyTuple x) [Type x]
   | TyRecord (XTyRecord x) [(XId x, Type x)]
   | TyLazy (XTyLazy x) (Type x)
+  | TyDArr (XTyDArr x) (Type x) (Type x)
 
 deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
 
@@ -358,6 +359,8 @@ pprTypePrec d (TyArr _ t1 t2) =
 pprTypePrec _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pretty ts
 pprTypePrec _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
 pprTypePrec _ (TyLazy _ t) = braces $ pretty t
+pprTypePrec d (TyDArr _ t1 t2) =
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "=>" <+> pPrintPrec l 10 t2
 
 getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
@@ -367,6 +370,7 @@ getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
 getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
 getTyVars (TyLazy _ t) = getTyVars t
+getTyVars (TyDArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 
 -----------------
 -- Declaration --
@@ -386,9 +390,15 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (Decl x)
 
 instance (Pretty (XId x)) => Pretty (Decl x) where
+<<<<<<< HEAD
   pretty (ScDef _ f e) = sep [pretty f <+> "=", nest 2 $ pretty e]
   pretty (ScSig _ f t) = pretty f <+> "::" <+> pretty t
   pretty (DataDef _ d xs cs) =
+=======
+  pPrint (ScDef _ f e) = sep [pPrint f <+> "=", nest 2 $ pPrint e]
+  pPrint (ScSig _ f t) = pPrint f <+> ":" <+> pPrint t
+  pPrint (DataDef _ d xs cs) =
+>>>>>>> 52eef0b5 (Add testcase and bug fix)
     sep
       [ "data" <+> pretty d <+> sep (map pretty xs) <+> "=",
         nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
@@ -400,11 +410,19 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
       [ "type" <+> pretty t <+> sep (map pretty xs) <+> "=",
         pretty t'
       ]
+<<<<<<< HEAD
   pretty (Infix _ a o x) = "infix" <> pretty a <+> pretty o <+> pretty x
   pretty (Foreign _ x t) = "foreign import" <+> pretty x <+> "::" <+> pretty t
   pretty (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pretty name
   pretty (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pretty xs) <+> "=" <+> "import" <+> pretty name
   pretty (Import _ name (As name')) = "module" <+> pretty name' <+> "=" <+> "import" <+> pretty name
+=======
+  pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
+  pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> ":" <+> pPrint t
+  pPrint (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pPrint name
+  pPrint (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pPrint xs) <+> "=" <+> "import" <+> pPrint name
+  pPrint (Import _ name (As name')) = "module" <+> pPrint name' <+> "=" <+> "import" <+> pPrint name
+>>>>>>> 52eef0b5 (Add testcase and bug fix)
 
 makePrisms ''Decl
 
@@ -422,8 +440,14 @@ instance (Pretty (XId x), Pretty (XModule x)) => Pretty (Module x) where
   pretty (Module name defs) =
     "module" <+> pretty name <+> "=" <> softline <> braces (pretty defs)
 
+newtype ParsedDefinitions = ParsedDefinitions [Decl (Malgo 'Parse)]
+  deriving stock (Eq, Show)
+
+instance Pretty ParsedDefinitions where
+  pPrint (ParsedDefinitions ds) = sep $ map (\x -> pPrint x <> ";") ds
+
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
-type instance XModule (Malgo 'Parse) = [Decl (Malgo 'Parse)]
+type instance XModule (Malgo 'Parse) = ParsedDefinitions
 
 type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 
@@ -477,9 +501,15 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
           [ "data" <+> pretty d <+> sep (map pretty xs) <+> "=",
             nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
           ]
+<<<<<<< HEAD
       pprConDef (con, ts) = pretty con <+> sep (map (pprTypePrec 12) ts)
       prettyForeign (_, x, t) = "foreign import" <+> pretty x <+> "::" <+> pretty t
       prettyScSig (_, f, t) = pretty f <+> "::" <+> pretty t
+=======
+      pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
+      prettyForeign (_, x, t) = "foreign import" <+> pPrint x <+> ":" <+> pPrint t
+      prettyScSig (_, f, t) = pPrint f <+> ":" <+> pPrint t
+>>>>>>> 52eef0b5 (Add testcase and bug fix)
       prettyScDef (_, f, e) =
         sep [pretty f <+> "=", pretty e]
 

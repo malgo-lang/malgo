@@ -18,7 +18,7 @@ import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)
 
 rename :: (MonadReader env m, MonadIO m, HasLogFunc env) => RnEnv -> Module (Malgo 'Parse) -> m (Module (Malgo 'Rename), RnState)
-rename builtinEnv (Module modName ds) = do
+rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   logDebug "Start rename"
   (ds', rnState) <- runStateT ?? RnState mempty modName $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)

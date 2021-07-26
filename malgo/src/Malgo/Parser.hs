@@ -37,7 +37,7 @@ pModule = do
   x <- pModuleName
   void $ pOperator "="
   ds <- between (symbol "{") (symbol "}") $ pDecl `endBy` pOperator ";"
-  pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ds}
+  pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ParsedDefinitions ds}
 
 -- module name
 pModuleName :: Parser String
@@ -361,10 +361,14 @@ pTyArr :: Parser (Type (Malgo 'Parse))
 pTyArr = makeExprParser pTyTerm opTable
   where
     opTable =
-      [ [ InfixR $ do
+      [ [ InfixR do
             s <- getSourcePos
             void $ pOperator "->"
-            pure $ \l r -> TyArr s l r
+            pure $ \l r -> TyArr s l r,
+          InfixR do
+            s <- getSourcePos
+            void $ pOperator "=>"
+            pure $ \l r -> TyDArr s l r
         ]
       ]
 
@@ -410,7 +414,7 @@ reserved =
       ]
 
 reservedOp :: Parser Text
-reservedOp = choice $ map (try . pOperator) ["=", ":", "|", "->", ";", ",", "!"]
+reservedOp = choice $ map (try . pOperator) ["=>", "=", ":", "|", "->", ";", ",", "!"]
 
 lowerIdent :: Parser String
 lowerIdent =
