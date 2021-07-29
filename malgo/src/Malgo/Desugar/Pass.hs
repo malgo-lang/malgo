@@ -24,6 +24,7 @@ import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 import Malgo.TypeRep.Static as GT
 import qualified RIO.Char as Char
+import Prettyprinter.Render.String (renderString)
 
 -- | MalgoからCoreへの変換
 desugar ::
@@ -68,7 +69,7 @@ dsImport (pos, modName, _) = do
   interface <-
     loadInterface modName >>= \case
       Just x -> pure x
-      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
+      Nothing -> errorOn pos $ "module" <+> pretty modName <+> "is not found"
   nameEnv <>= interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
@@ -103,7 +104,7 @@ dsScDef (With typ pos, name, expr) = do
     _ ->
       errorOn pos $
         "Invalid Toplevel Declaration:"
-          <+> quotes (pPrint name <+> ":" <+> pPrint typ)
+          <+> squotes (pretty name <+> ":" <+> pretty typ)
   name' <- lookupName name
   fun <- curryFun [] =<< dsExp expr
   pure [(name', fun)]
@@ -146,7 +147,7 @@ dsDataDef (_, name, _, cons) =
     ps <- traverse (newLocalId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
-      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ conName ^. toText) paramTypes') $ map C.Var ps)
+      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ renderString $ layoutCompact $ pretty conName) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
     obj <- case ps of
       [] -> pure ([], expr)
@@ -181,10 +182,10 @@ dsExp (G.Var x _ name) = do
   case (x ^. GT.withType, C.typeOf name') of
     -- TyLazyの型を検査
     (GT.TyApp GT.TyLazy _, [] :-> _) -> pure ()
-    (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
+    (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> squotes (pretty $ C.typeOf name')
     (_, [] :-> _)
       | isConstructor name -> pure ()
-      | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
+      | otherwise -> errorDoc $ "Invalid type:" <+> squotes (pretty name)
     _ -> pure ()
   case C.typeOf name' of
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
@@ -291,7 +292,7 @@ lookupName name = do
   mname' <- use (nameEnv . at name)
   case mname' of
     Just name' -> pure name'
-    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
+    Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty name)
 
 newCoreId :: (MonadReader env f, MonadIO f, HasUniqSupply env) => RnId -> C.Type -> f (Id C.Type)
 newCoreId griffId coreType = newIdOnName coreType griffId
@@ -305,7 +306,7 @@ curryFun ::
 -- FIXME: curryFun [] e の正しい処理は、eの型に応じて引数リストpsを生成し、(ps, (apply e ps))を返す
 -- そのためには、Coreの項に明示的な型の適用を追加する必要がある
 curryFun [] (C.Let [LocalDef v (Fun ps e)] (Atom (C.Var v'))) | v == v' = pure (ps, e)
-curryFun [] e = errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
+curryFun [] e = errorDoc $ "Invalid expression:" <+> squotes (pretty e)
 curryFun [x] e = pure ([x], e)
 curryFun ps@(_ : _) e = curryFun' ps []
   where

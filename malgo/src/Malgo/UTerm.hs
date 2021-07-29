@@ -41,8 +41,8 @@ deriving stock instance (Data v, Data (t (UTerm t v)), Typeable t) => Data (UTer
 instance (Data v, Data (t (UTerm t v)), Typeable t) => Plated (UTerm t v)
 
 instance (Pretty v, Pretty (t (UTerm t v))) => Pretty (UTerm t v) where
-  pPrintPrec _ _ (UVar v) = pPrint v
-  pPrintPrec l d (UTerm t) = pPrintPrec l d t
+  pretty (UVar v) = pretty v
+  pretty (UTerm t) = pretty t
 
 freeze :: Traversable t => UTerm t v -> Maybe (Fix t)
 freeze (UVar _) = Nothing
@@ -50,6 +50,10 @@ freeze (UTerm t) = Fix <$> traverse freeze t
 
 unfreeze :: Functor t => Fix t -> UTerm t v
 unfreeze = UTerm . fmap unfreeze . unFix
+
+mapUTerm :: (v -> a) -> (t (UTerm t v) -> a) -> UTerm t v -> a
+mapUTerm f _ (UVar v) = f v
+mapUTerm _ f (UTerm t) = f t
 
 freevars :: (Hashable a, Foldable t, Eq a) => UTerm t a -> HashSet a
 freevars (UVar v) = HashSet.singleton v

@@ -25,7 +25,7 @@ defined x
   | idIsExternal x = pure ()
   | otherwise = do
     env <- ask
-    unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
+    unless (x `elem` env) $ errorDoc $ pretty x <> " is not defined"
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
@@ -41,8 +41,12 @@ match x y
   | otherwise =
     errorDoc $
       "type mismatch:"
-        $$ pPrint x <> ":" <> pPrint (typeOf x)
-        $$ pPrint y <> ":" <> pPrint (typeOf y)
+        <+> align
+          ( vsep
+              [ pretty x <> ":" <> pretty (typeOf x),
+                pretty y <> ":" <> pretty (typeOf y)
+              ]
+          )
 
 lintExp :: (MonadReader [Id a] m, HasType a, Eq a, Pretty a) => Exp (Id a) -> m ()
 lintExp (Atom x) = lintAtom x
@@ -51,13 +55,13 @@ lintExp (Call f xs) = do
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
-    _ -> errorDoc $ pPrint f <+> "is not callable"
+    _ -> errorDoc $ pretty f <+> "is not callable"
 lintExp (CallDirect f xs) = do
   defined f
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
-    _ -> errorDoc $ pPrint f <+> "is not callable"
+    _ -> errorDoc $ pretty f <+> "is not callable"
 lintExp (ExtCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
@@ -69,39 +73,39 @@ lintExp (BinOp o x y) = do
     Add
       | isMatch x Int32T -> match x y
       | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [Int32T, Int64T]])
     Sub
       | isMatch x Int32T -> match x y
       | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [Int32T, Int64T]])
     Mul
       | isMatch x Int32T -> match x y
       | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [Int32T, Int64T]])
     Div
       | isMatch x Int32T -> match x y
       | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [Int32T, Int64T]])
     Mod
       | isMatch x Int32T -> match x y
       | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [Int32T, Int64T]])
     FAdd
       | isMatch x FloatT -> match x y
       | isMatch x DoubleT -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [FloatT, DoubleT]])
     FSub
       | isMatch x FloatT -> match x y
       | isMatch x DoubleT -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [FloatT, DoubleT]])
     FMul
       | isMatch x FloatT -> match x y
       | isMatch x DoubleT -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [FloatT, DoubleT]])
     FDiv
       | isMatch x FloatT -> match x y
       | isMatch x DoubleT -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
+      | otherwise -> errorDoc $ "type mismatch:" <+> align (vsep [pretty x <> ":" <> pretty (typeOf x), pretty [FloatT, DoubleT]])
     Eq -> match x y
     Neq -> match x y
     Lt -> match x y

@@ -28,16 +28,16 @@ data DsEnv = DsEnv
   deriving stock (Show)
 
 instance Pretty DsEnv where
-  pPrint DsEnv {..} =
+  pretty DsEnv {..} =
     "DsEnv"
       <+> braces
         ( sep
-            [ "_moduleName" <+> "=" <+> pPrint _moduleName,
-              "_nameEnv" <+> "=" <+> pPrint (HashMap.toList _nameEnv),
-              "_varTypeEnv" <+> "=" <+> pPrint (HashMap.toList _varTypeEnv),
-              "_typeDefEnv" <+> "=" <+> pPrint (HashMap.toList _typeDefEnv),
-              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv),
-              "_desugarRnEnv" <+> "=" <+> pPrint _desugarRnEnv
+            [ "_moduleName" <+> "=" <+> pretty _moduleName,
+              "_nameEnv" <+> "=" <+> pretty (HashMap.toList _nameEnv),
+              "_varTypeEnv" <+> "=" <+> pretty (HashMap.toList _varTypeEnv),
+              "_typeDefEnv" <+> "=" <+> pretty (HashMap.toList _typeDefEnv),
+              "_fieldEnv" <+> "=" <+> pretty (HashMap.toList _fieldEnv),
+              "_desugarRnEnv" <+> "=" <+> pretty _desugarRnEnv
             ]
         )
 
@@ -80,4 +80,4 @@ lookupValueConstructors con ts = do
   case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->
       pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
-    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
+    Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty con)

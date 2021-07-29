@@ -43,15 +43,15 @@ data IdSort
 instance Binary IdSort
 
 instance Pretty IdSort where
-  pPrint (External modName) = "External" <+> pPrint modName
-  pPrint (WiredIn modName) = "WiredIn" <+> pPrint modName
-  pPrint Internal = "Internal"
+  pretty (External modName) = "External" <+> pretty modName
+  pretty (WiredIn modName) = "WiredIn" <+> pretty modName
+  pretty Internal = "Internal"
 
 newtype ModuleName = ModuleName String
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Pretty ModuleName where
-  pPrint (ModuleName modName) = text modName
+  pretty (ModuleName modName) = pretty modName
 
 instance Binary ModuleName
 
@@ -78,21 +78,21 @@ instance Binary a => Binary (Id a)
 nameToString :: Maybe String -> String
 nameToString = fromMaybe "$NoName"
 
-pprIdName :: Id a -> Doc
-pprIdName Id {_idName} = text $ nameToString _idName
+pprIdName :: Id a -> Doc ann
+pprIdName Id {_idName} = pretty $ nameToString _idName
 
-pPrintMeta :: (t -> Doc) -> t -> Doc
+prettyMeta :: (t -> Doc ann) -> t -> Doc ann
 
 #ifdef DEBUG
-pPrintMeta ppr x = braces (ppr x)
+prettyMeta ppr x = braces (ppr x)
 #else
-pPrintMeta _ _ = mempty
+prettyMeta _ _ = mempty
 #endif
 
 instance Pretty a => Pretty (Id a) where
-  pPrint id@(Id _ _ m (External modName)) = pPrint modName <> "." <> pprIdName id <> pPrintMeta pPrint m
-  pPrint id@(Id _ _ m (WiredIn modName)) = pPrint modName <> "." <> pprIdName id <> pPrintMeta pPrint m
-  pPrint id@(Id _ u m Internal) = pprIdName id <> "_" <> text (show u) <> pPrintMeta pPrint m
+  pretty id@(Id _ _ m (External modName)) = pretty modName <> "." <> pprIdName id <> prettyMeta pretty m
+  pretty id@(Id _ _ m (WiredIn modName)) = pretty modName <> "." <> pprIdName id <> prettyMeta pretty m
+  pretty id@(Id _ u m Internal) = pprIdName id <> "_" <> pretty u <> prettyMeta pretty m
 
 makeLenses ''Id
 

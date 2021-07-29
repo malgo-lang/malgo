@@ -30,7 +30,7 @@ data Constraint = UType :~ UType
   deriving stock (Eq, Ord, Show, Generic)
 
 instance Pretty Constraint where
-  pPrint (t1 :~ t2) = pPrint t1 <+> "~" <+> pPrint t2
+  pretty (t1 :~ t2) = pretty t1 <+> "~" <+> pretty t2
 
 ---------------
 -- Unifiable --
@@ -38,8 +38,8 @@ instance Pretty Constraint where
 
 type UnifyResult = (HashMap TypeVar UType, [With SourcePos Constraint])
 
-unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
-unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
+unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc ann
+unifyErrorMessage t1 t2 = "Couldn't match" <> softline <> align (sep [pretty t1, "with" <+> pretty t2])
 
 class Monad m => MonadBind m where
   lookupVar :: TypeVar -> m (Maybe UType)
@@ -127,7 +127,7 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
     TypeVar <$> newNoNameId (UVar kind) Internal
 
   bindVar x v t = do
-    when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
+    when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
     tKind <- kindOf t
     let cs = [With x $ v ^. typeVar . idMeta :~ tKind]
     solve cs
