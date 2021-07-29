@@ -6,6 +6,7 @@ import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
 import Data.Binary.Instances.UnorderedContainers ()
 import qualified Data.HashMap.Strict as HashMap
+import Data.Text.Prettyprint.Doc.Render.String (renderString)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -35,13 +36,18 @@ instance Binary Interface
 makeLenses ''Interface
 
 instance Pretty Interface where
-  pPrint i =
-    "Interface"
-      $$ nest 2 (sep ["signatureMap =", nest 2 $ pPrint $ HashMap.toList (i ^. signatureMap)])
-      $$ nest 2 (sep ["typeDefMap =", nest 2 $ pPrint $ HashMap.toList (i ^. typeDefMap)])
-      $$ nest 2 (sep ["resolvedVarIdentMap =", nest 2 $ pPrint $ HashMap.toList (i ^. resolvedVarIdentMap)])
-      $$ nest 2 (sep ["resolvedTypeIdentMap =", nest 2 $ pPrint $ HashMap.toList (i ^. resolvedTypeIdentMap)])
-      $$ nest 2 (sep ["coreIdentMap =", nest 2 $ pPrint $ HashMap.toList (i ^. coreIdentMap)])
+  pretty i =
+    "Interface" <> line
+      <> indent
+        2
+        ( hsep
+            [ sep ["signatureMap =", nest 2 $ pretty $ HashMap.toList (i ^. signatureMap)],
+              sep ["typeDefMap =", nest 2 $ pretty $ HashMap.toList (i ^. typeDefMap)],
+              sep ["resolvedVarIdentMap =", nest 2 $ pretty $ HashMap.toList (i ^. resolvedVarIdentMap)],
+              sep ["resolvedTypeIdentMap =", nest 2 $ pretty $ HashMap.toList (i ^. resolvedTypeIdentMap)],
+              sep ["coreIdentMap =", nest 2 $ pretty $ HashMap.toList (i ^. coreIdentMap)]
+            ]
+        )
 
 buildInterface :: RnState -> DsEnv -> Interface
 -- TODO: write abbrMap to interface
@@ -77,7 +83,7 @@ loadInterface (ModuleName modName) = do
       pure Nothing
   where
     findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, String) Interface)
-    findAndReadFile [] modFile = pure $ Left (0, render $ "module" <+> pPrint modFile <+> "is not found")
+    findAndReadFile [] modFile = pure $ Left (0, renderString $ layoutSmart defaultLayoutOptions $ "module" <+> pretty modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- Directory.doesFileExist (modPath </> modFile)
       if isExistModFile

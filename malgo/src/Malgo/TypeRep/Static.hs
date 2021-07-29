@@ -40,7 +40,7 @@ makePrisms ''Rep
 
 instance Binary Rep
 
-instance Pretty Rep where pPrint rep = text $ show rep
+instance Pretty Rep where pretty rep = viaShow rep
 
 -- | Primitive Types
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
@@ -51,12 +51,12 @@ makePrisms ''PrimT
 instance Binary PrimT
 
 instance Pretty PrimT where
-  pPrint Int32T = "Int32#"
-  pPrint Int64T = "Int64#"
-  pPrint FloatT = "Float#"
-  pPrint DoubleT = "Double#"
-  pPrint CharT = "Char#"
-  pPrint StringT = "String#"
+  pretty Int32T = "Int32#"
+  pretty Int64T = "Int64#"
+  pretty FloatT = "Float#"
+  pretty DoubleT = "Double#"
+  pretty CharT = "Char#"
+  pretty StringT = "String#"
 
 ----------------------------
 -- Static representations --
@@ -112,21 +112,24 @@ deriving stock instance Data t => Data (TypeF t)
 instance Data t => Plated (TypeF t)
 
 instance Pretty Type where
-  pPrintPrec l d (TyApp t1 t2) =
-    maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
-  pPrintPrec _ _ (TyVar v) = pprIdName v
-  pPrintPrec l _ (TyCon c) = pPrintPrec l 0 c
-  pPrintPrec l _ (TyPrim p) = pPrintPrec l 0 p
-  pPrintPrec l d (TyArr t1 t2) =
-    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
-  pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
-  pPrintPrec _ _ TyLazy = "{}"
-  pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
-  pPrintPrec _ _ TyBottom = "#Bottom"
-  pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
-  pPrintPrec _ _ TyRep = "#Rep"
-  pPrintPrec l _ (Rep rep) = pPrintPrec l 0 rep
+  pretty x = pprTypePrec 0 x
+
+pprTypePrec :: Int -> Type -> Doc ann
+pprTypePrec d (TyApp t1 t2) =
+  maybeParens (d > 10) $ hsep [pprTypePrec 10 t1, pprTypePrec 11 t2]
+pprTypePrec _ (TyVar v) = pprIdName v
+pprTypePrec _ (TyCon c) = pretty c
+pprTypePrec _ (TyPrim p) = pretty p
+pprTypePrec d (TyArr t1 t2) =
+  maybeParens (d > 10) $ pprTypePrec 11 t1 <+> "->" <+> pprTypePrec 10 t2
+pprTypePrec _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
+pprTypePrec _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pprTypePrec 0 v) $ Map.toList kvs
+pprTypePrec _ TyLazy = "{}"
+pprTypePrec d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pprTypePrec 11 ty]
+pprTypePrec _ TyBottom = "#Bottom"
+pprTypePrec _ (TYPE rep) = pprTypePrec 0 rep
+pprTypePrec _ TyRep = "#Rep"
+pprTypePrec _ (Rep rep) = pretty rep
 
 -- | Types that can be translated to `Type`
 class IsType a where
@@ -200,7 +203,7 @@ data Scheme ty = Forall [Id ty] ty
 instance Binary ty => Binary (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
-  pPrint (Forall vs t) = "forall" <+> hsep (map pprIdName vs) <> "." <+> pPrint t
+  pretty (Forall vs t) = "forall" <+> hsep (map pprIdName vs) <> "." <+> pretty t
 
 makePrisms ''Scheme
 
@@ -225,7 +228,7 @@ data TypeDef ty = TypeDef
 instance Binary ty => Binary (TypeDef ty)
 
 instance Pretty ty => Pretty (TypeDef ty) where
-  pPrint (TypeDef c q u) = pPrint (c, q, u)
+  pretty (TypeDef c q u) = pretty (c, q, u)
 
 makeLenses ''TypeDef
 

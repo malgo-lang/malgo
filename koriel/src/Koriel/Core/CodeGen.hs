@@ -131,7 +131,7 @@ findVar :: MonadReader CodeGenEnv m => Id C.Type -> m Operand
 findVar x =
   view (valueHashMap . at x) >>= \case
     Just opr -> pure opr
-    Nothing -> error $ show $ pPrint x <> " is not found"
+    Nothing -> error $ show $ pretty x <> " is not found"
 
 findFun :: (MonadReader CodeGenEnv m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
@@ -140,7 +140,7 @@ findFun x = do
     Nothing ->
       case C.typeOf x of
         ps :-> r -> findExt (toName x) (map convType ps) (convType r)
-        _ -> error $ show $ pPrint x <> " is not found"
+        _ -> error $ show $ pretty x <> " is not found"
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
@@ -225,7 +225,7 @@ genExp (ExtCall name (ps :-> r) xs) k = do
   primOpr <- findExt (LLVM.AST.mkName name) (map convType ps) (convType r)
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
-genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
+genExp (ExtCall _ t _) _ = error $ show $ pretty t <> " is not fuction type"
 genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add
@@ -443,12 +443,12 @@ genLocalDef (LocalDef _ Pack {}) = bug Unreachable
 genCon :: [Con] -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
   | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
-  | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
+  | otherwise = errorDoc $ pretty con <+> "is not in" <+> pretty cs
 
 findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
 findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
-  Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
+  Nothing -> errorDoc $ pretty con <+> "is not in" <+> pretty cs
 
 sizeof :: LT.Type -> Operand
 sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64

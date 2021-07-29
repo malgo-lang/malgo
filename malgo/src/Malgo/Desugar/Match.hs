@@ -10,7 +10,7 @@ import Koriel.Core.Type
 import qualified Koriel.Core.Type as Core
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Pretty
+import Koriel.Pretty hiding (group)
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
@@ -19,6 +19,7 @@ import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static
 import qualified Malgo.TypeRep.Static as Malgo
+import Prettyprinter.Render.String (renderString)
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加
@@ -86,7 +87,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   | all (has _ConP) heads = do
     patType <- Malgo.typeOf $ List.head heads
     -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
-    --  errorDoc $ "Not valid type:" <+> pPrint patType
+    --  errorDoc ann $ "Not valid type:" <+> pretty patType
     -- 型からコンストラクタの集合を求める
     let (con, ts) = case Malgo.viewTyConApp patType of
           Just x -> x
@@ -95,7 +96,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for valueConstructors \(conName, Forall _ conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
-      let coreCon = Core.Con (Data $ conName ^. toText) paramTypes
+      let coreCon = Core.Con (Data $ renderString $ layoutCompact $ pretty conName) paramTypes
       params <- traverse (newLocalId "$p") paramTypes
       let (pat', es') = group conName pat es
       Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
@@ -145,7 +146,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
 match [] (PatMatrix []) (e : _) _ = e
 match _ (PatMatrix []) [] err = pure err
 match scrutinees pat es err = do
-  errorDoc $ "match" <+> pPrint scrutinees <+> pPrint pat <+> pPrint (length es) <+> pPrint err
+  errorDoc $ "match" <+> pretty scrutinees <+> pretty pat <+> pretty (length es) <+> pretty err
 
 -- Mixture Rule以外にマッチするようにパターン列を分解
 -- [ [Cons A xs]
@@ -189,14 +190,14 @@ group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ 
     aux gcon (ConP _ gcon' ps : pss, e)
       | gcon == gcon' = Just (ps <> pss, e)
       | otherwise = Nothing
-    aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
+    aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pretty p
     aux _ ([], _) = bug Unreachable
 
 groupTuple :: PatMatrix -> [m (Core.Exp (Id Core.Type))] -> (PatMatrix, [m (Core.Exp (Id Core.Type))])
 groupTuple (PatMatrix pss) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
-    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
+    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
     aux [] _ = bug Unreachable
 
 groupRecord :: (MonadReader env m, MonadIO m, HasUniqSupply env) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
@@ -205,7 +206,7 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
     aux (RecordP x ps : pss) e = do
       ps' <- extendRecordP x ps
       pure (ps' <> pss, e)
-    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
+    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
     aux [] _ = bug Unreachable
     extendRecordP (With (Malgo.TyRecord ktsMap) pos) ps = do
       let kts = Map.toList ktsMap

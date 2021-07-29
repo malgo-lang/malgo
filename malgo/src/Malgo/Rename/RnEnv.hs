@@ -13,12 +13,12 @@ data RnState = RnState {_infixInfo :: HashMap RnId (Assoc, Int), _moduleName :: 
   deriving stock (Show)
 
 instance Pretty RnState where
-  pPrint RnState {_infixInfo, _moduleName} =
+  pretty RnState {_infixInfo, _moduleName} =
     "RnState"
       <+> braces
         ( sep
-            [ "_infixInfo" <+> "=" <+> pPrint (HashMap.toList _infixInfo),
-              "_moduleName" <+> "=" <+> pPrint _moduleName
+            [ "_infixInfo" <+> "=" <+> pretty (HashMap.toList _infixInfo),
+              "_moduleName" <+> "=" <+> pretty _moduleName
             ]
         )
 
@@ -28,7 +28,7 @@ data Visibility = Explicit ModuleName -- must be qualified
                 | Implicit
   deriving stock (Show, Eq)
 
-instance Pretty Visibility where pPrint = text . show
+instance Pretty Visibility where pretty = viaShow 
 
 data RnEnv = RnEnv
   { _varEnv :: HashMap PsId [With Visibility RnId],
@@ -39,13 +39,13 @@ data RnEnv = RnEnv
   deriving stock (Show, Eq)
 
 instance Pretty RnEnv where
-  pPrint RnEnv {_varEnv, _typeEnv, _fieldEnv} =
+  pretty RnEnv {_varEnv, _typeEnv, _fieldEnv} =
     "RnEnv"
       <+> braces
         ( sep
-            [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
-              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
-              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv)
+            [ "_varEnv" <+> "=" <+> pretty (HashMap.toList _varEnv),
+              "_typeEnv" <+> "=" <+> pretty (HashMap.toList _typeEnv),
+              "_fieldEnv" <+> "=" <+> pretty (HashMap.toList _fieldEnv)
             ]
         )
 

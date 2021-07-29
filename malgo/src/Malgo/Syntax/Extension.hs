@@ -39,9 +39,9 @@ data Assoc = LeftA | RightA | NeutralA
 instance Binary Assoc
 
 instance Pretty Assoc where
-  pPrint LeftA = "l"
-  pPrint RightA = "r"
-  pPrint NeutralA = ""
+  pretty LeftA = "l"
+  pretty RightA = "r"
+  pretty NeutralA = ""
 
 type family XId x where
   XId (Malgo p) = MalgoId p

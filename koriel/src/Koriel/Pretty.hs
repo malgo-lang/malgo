@@ -3,8 +3,9 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Koriel.Pretty
-  ( module Text.PrettyPrint.HughesPJClass,
+  ( module Prettyprinter,
     (<+>),
+    maybeParens,
     errorDoc,
     toText,
   )
@@ -12,30 +13,32 @@ where
 
 import Data.Fix
 import Koriel.Prelude
-import Text.PrettyPrint.HughesPJClass hiding (char, double, first, float, int, integer, (<+>), (<>))
-import qualified Text.PrettyPrint.HughesPJClass as P
+import Prettyprinter hiding ((<+>))
+import qualified Prettyprinter as P
 import qualified Prelude
+import Data.Text.Prettyprint.Doc.Render.Text (renderStrict)
+import Data.Text.Prettyprint.Doc.Render.String (renderString)
 
 -- change operator precedence
 infixl 9 <+>
-
-(<+>) :: Doc -> Doc -> Doc
+(<+>) :: Doc ann -> Doc ann -> Doc ann
 (<+>) = (P.<+>)
 
-instance Pretty Doc where
-  pPrint = id
+maybeParens :: Bool -> Doc ann -> Doc ann
+maybeParens True x = parens x
+maybeParens False x = x
 
-toText :: (Profunctor p, Contravariant f, Pretty a) => Optic' p f a String
-toText = to (P.render . pPrint)
+toText :: (Profunctor p, Contravariant f, Pretty a) => Optic' p f a Text
+toText = to (renderStrict . layoutSmart defaultLayoutOptions . pretty)
 
 errorDoc ::
 #ifdef DEBUG
-  HasCallStack => Doc -> a
+  HasCallStack => Doc ann -> a
 errorDoc x = Prelude.error $ P.render x
 #else
-  Doc -> a
-errorDoc x = Prelude.errorWithoutStackTrace $ P.render x
+  Doc ann -> a
+errorDoc x = Prelude.errorWithoutStackTrace $ renderString $ layoutSmart defaultLayoutOptions x
 #endif
 
 instance Pretty (f (Fix f)) => Pretty (Fix f) where
-  pPrintPrec l d (Fix f) = pPrintPrec l d f
+  pretty (Fix f) = pretty f
