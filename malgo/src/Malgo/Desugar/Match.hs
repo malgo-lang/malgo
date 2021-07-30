@@ -90,8 +90,8 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     --  errorDoc ann $ "Not valid type:" <+> pretty patType
     -- 型からコンストラクタの集合を求める
     let (con, ts) = case Malgo.viewTyConApp patType of
-          Just x -> x
-          Nothing -> bug $ Unreachable "patType must be TyApp or TyCon"
+          Just (Malgo.TypeRep.Static.TyCon con, ts) -> (con, ts)
+          _ -> bug $ Unreachable "patType must be TyApp or TyCon"
     valueConstructors <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for valueConstructors \(conName, Forall _ conType) -> do

@@ -181,7 +181,7 @@ instance HasKind Type where
   kindOf (TyCon c) = pure $ c ^. idMeta
   kindOf (TyPrim p) = kindOf p
   kindOf (TyArr _ t2) = kindOf t2
-  kindOf (TyTuple _) = pure $ TYPE (Rep BoxedRep)
+  kindOf (TyTuple n) = pure $ buildTyArr (replicate n $ TYPE (Rep BoxedRep)) (TYPE (Rep BoxedRep))
   kindOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
   kindOf TyLazy = pure $ TYPE (Rep BoxedRep) `TyArr` TYPE (Rep BoxedRep)
   kindOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
@@ -189,6 +189,9 @@ instance HasKind Type where
   kindOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
   kindOf TyRep = pure TyRep -- Rep :: Rep
   kindOf (Rep _) = pure TyRep
+
+buildTyArr :: Foldable t => t Type -> Type -> Type
+buildTyArr ps ret = foldr TyArr ret ps
 
 instance HasType Void where
   typeOf x = absurd x
@@ -218,6 +221,7 @@ instance WithType Void where
   withType _ a = absurd a
 
 -- | Definition of Type constructor
+-- valueConstructorsのSchemeは、typeParametersで全称化されている
 data TypeDef ty = TypeDef
   { _typeConstructor :: ty,
     _typeParameters :: [Id ty],
@@ -236,8 +240,10 @@ makeLenses ''TypeDef
 -- Utilities --
 ---------------
 
-viewTyConApp :: Type -> Maybe (Id Kind, [Type])
-viewTyConApp (TyCon con) = Just (con, [])
+viewTyConApp :: Type -> Maybe (Type , [Type])
+viewTyConApp (TyCon con) = Just (TyCon con, [])
+viewTyConApp (TyTuple n) = Just (TyTuple n, [])
+viewTyConApp TyLazy = Just (TyLazy, [])
 viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
 viewTyConApp _ = Nothing
 
