@@ -222,8 +222,8 @@ dsExp (G.Fn x (Clause _ [] ss :| _)) = do
     fun <- let_ typ $ Fun [] ss'
     pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps es :| _)) = do
-  ps' <- traverse (\p -> newLocalId "$p" =<< dsType =<< GT.typeOf p) ps
-  typ <- dsType =<< GT.typeOf (NonEmpty.last es)
+  ps' <- traverse (\p -> newLocalId "$p" =<< dsType (GT.typeOf p)) ps
+  typ <- dsType (GT.typeOf (NonEmpty.last es))
   -- destruct Clauses
   (pss, es) <-
     unzip

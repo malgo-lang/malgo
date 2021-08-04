@@ -128,9 +128,7 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
-    tKind <- kindOf t
-    let cs = [With x $ v ^. typeVar . idMeta :~ tKind]
-    solve cs
+    solve [With x $ v ^. typeVar . idMeta :~ kindOf t]
     TypeUnifyT $ at v ?= t
 
   zonk (UVar v) = do
@@ -171,17 +169,17 @@ generalize x bound term = do
 toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> TypeVar -> String -> m (Id UType)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
-  tvKind <- kindOf tvType
+  let tvKind = kindOf tvType
   newLocalId (fromMaybe hint $ tv ^. typeVar . idName) tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
 defaultToBoxed x t = transformM ?? t $ \case
   UVar v -> do
-    vKind <- kindOf $ v ^. typeVar . idMeta
+    let vKind = kindOf $ v ^. typeVar . idMeta
     case vKind of
       UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
       _ -> do
-        void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
+        void $ defaultToBoxed x vKind
         UVar <$> traverseOf (typeVar . idMeta) zonk v
   UTerm t -> pure $ UTerm t
 
@@ -200,7 +198,6 @@ instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadStat
 instantiate x (Forall as t) = do
   avs <- traverse ?? as $ \a -> do
     v <- UVar <$> freshVar
-    vKind <- kindOf v
-    solve [With x $ a ^. idMeta :~ vKind]
+    solve [With x $ a ^. idMeta :~ kindOf v]
     pure (a, v)
   pure $ applySubst avs t

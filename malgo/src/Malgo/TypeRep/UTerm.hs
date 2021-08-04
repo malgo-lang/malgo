@@ -83,30 +83,28 @@ applySubst subst t =
     t -> t
 
 class HasType a where
-  typeOf :: Monad m => a -> m UType
+  typeOf :: a -> UType
 
 class HasKind a where
-  kindOf :: Monad m => a -> m UType
+  kindOf :: a -> UType
 
 instance HasKind UType where
-  kindOf (UVar v) = pure $ v ^. typeVar . idMeta
+  kindOf (UVar v) = v ^. typeVar . idMeta
   kindOf (UTerm t) = case t of
-    TyAppF t1 _ -> do
-      kindOf t1 >>= \case
-        UTerm (TyArrF _ k) -> pure k
-        _ -> error "invalid kind"
-    TyVarF v -> pure $ v ^. idMeta
-    TyConF c -> pure $ c ^. idMeta
-    TyPrimF p -> S.fromType <$> S.kindOf p
+    TyAppF (kindOf -> TyArr _ k) _ -> k
+    TyAppF _ _ -> error "invalid kind"
+    TyVarF v -> v ^. idMeta
+    TyConF c -> c ^. idMeta
+    TyPrimF p -> S.fromType $ S.kindOf p
     TyArrF _ t2 -> kindOf t2
-    TyTupleF n -> pure $ buildTyArr (replicate n $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep))
-    TyRecordF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
-    TyLazyF -> pure $ UTerm (TyArrF (UTerm $ TYPEF (UTerm $ RepF BoxedRep)) (UTerm $ TYPEF (UTerm $ RepF BoxedRep)))
-    TyPtrF _ -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
-    TyBottomF -> pure $ UTerm $ TYPEF (UTerm $ RepF BoxedRep)
-    TYPEF rep -> pure $ UTerm $ TYPEF rep
-    TyRepF -> pure $ UTerm TyRepF
-    RepF _ -> pure $ UTerm TyRepF
+    TyTupleF n -> buildTyArr (replicate n $ TYPE (Rep BoxedRep)) (TYPE (Rep BoxedRep))
+    TyRecordF _ -> TYPE (Rep BoxedRep)
+    TyLazyF -> TyArr (TYPE (Rep BoxedRep)) (TYPE (Rep BoxedRep))
+    TyPtrF _ -> TYPE (Rep BoxedRep)
+    TyBottomF -> TYPE (Rep BoxedRep)
+    TYPEF rep -> TYPE rep
+    TyRepF -> TyRep
+    RepF _ -> TyRep
 
 instance HasType Void where
   typeOf = absurd

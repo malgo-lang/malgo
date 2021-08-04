@@ -159,36 +159,34 @@ instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
 
 -- | Types that have a `Type`
 class HasType a where
-  typeOf :: Monad m => a -> m Type
+  typeOf :: a -> Type
 
 class HasKind a where
-  kindOf :: Monad m => a -> m Kind
+  kindOf :: a -> Kind
 
 instance HasKind PrimT where
-  kindOf Int32T = pure $ TYPE (Rep Int32Rep)
-  kindOf Int64T = pure $ TYPE (Rep Int64Rep)
-  kindOf FloatT = pure $ TYPE (Rep FloatRep)
-  kindOf DoubleT = pure $ TYPE (Rep DoubleRep)
-  kindOf CharT = pure $ TYPE (Rep CharRep)
-  kindOf StringT = pure $ TYPE (Rep StringRep)
+  kindOf Int32T = TYPE (Rep Int32Rep)
+  kindOf Int64T = TYPE (Rep Int64Rep)
+  kindOf FloatT = TYPE (Rep FloatRep)
+  kindOf DoubleT = TYPE (Rep DoubleRep)
+  kindOf CharT = TYPE (Rep CharRep)
+  kindOf StringT = TYPE (Rep StringRep)
 
 instance HasKind Type where
-  kindOf (TyApp t1 _) =
-    kindOf t1 >>= \case
-      TyArr _ k -> pure k
-      _ -> error "invalid kind"
-  kindOf (TyVar v) = pure $ v ^. idMeta
-  kindOf (TyCon c) = pure $ c ^. idMeta
+  kindOf (TyApp (kindOf -> TyArr _ k) _) = k
+  kindOf TyApp {} = error "invalid kind"
+  kindOf (TyVar v) = v ^. idMeta
+  kindOf (TyCon c) = c ^. idMeta
   kindOf (TyPrim p) = kindOf p
   kindOf (TyArr _ t2) = kindOf t2
-  kindOf (TyTuple n) = pure $ buildTyArr (replicate n $ TYPE (Rep BoxedRep)) (TYPE (Rep BoxedRep))
-  kindOf (TyRecord _) = pure $ TYPE (Rep BoxedRep)
-  kindOf TyLazy = pure $ TYPE (Rep BoxedRep) `TyArr` TYPE (Rep BoxedRep)
-  kindOf (TyPtr _) = pure $ TYPE (Rep BoxedRep)
-  kindOf TyBottom = pure $ TYPE (Rep BoxedRep)
-  kindOf (TYPE rep) = pure $ TYPE rep -- Type :: Type
-  kindOf TyRep = pure TyRep -- Rep :: Rep
-  kindOf (Rep _) = pure TyRep
+  kindOf (TyTuple n) = buildTyArr (replicate n $ TYPE (Rep BoxedRep)) (TYPE (Rep BoxedRep))
+  kindOf (TyRecord _) = TYPE (Rep BoxedRep)
+  kindOf TyLazy = TYPE (Rep BoxedRep) `TyArr` TYPE (Rep BoxedRep)
+  kindOf (TyPtr _) = TYPE (Rep BoxedRep)
+  kindOf TyBottom = TYPE (Rep BoxedRep)
+  kindOf (TYPE rep) = TYPE rep -- Type :: Type
+  kindOf TyRep = TyRep -- Rep :: Rep
+  kindOf (Rep _) = TyRep
 
 buildTyArr :: Foldable t => t Type -> Type -> Type
 buildTyArr ps ret = foldr TyArr ret ps
@@ -240,7 +238,7 @@ makeLenses ''TypeDef
 -- Utilities --
 ---------------
 
-viewTyConApp :: Type -> Maybe (Type , [Type])
+viewTyConApp :: Type -> Maybe (Type, [Type])
 viewTyConApp (TyCon con) = Just (TyCon con, [])
 viewTyConApp (TyTuple n) = Just (TyTuple n, [])
 viewTyConApp TyLazy = Just (TyLazy, [])

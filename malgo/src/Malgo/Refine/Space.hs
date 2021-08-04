@@ -1,12 +1,11 @@
 module Malgo.Refine.Space (Space (..), subspace) where
 
-import Extra (anyM)
+import Data.Foldable.Extra (anyM)
 import Koriel.Id (Id)
 import Malgo.Prelude hiding (Empty, subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
-import Malgo.TypeCheck.TcEnv
 import Malgo.TypeRep.Static
 import qualified RIO.HashMap as HashMap
 import qualified RIO.Map as Map
@@ -116,12 +115,12 @@ instance HasSpace Type where
   space env (viewTyConApp -> Just (TyTuple {}, ts)) = Tuple (map (space env) ts)
   space _ t@TyApp {} = Type t
   space _ TyVar {} = Empty
-  space _ TyCon {} = bug Unreachable
+  space _ TyCon {} = bug Unreachable -- `viewTyConApp (TyCon con)` returns `Just (TyCon con, [])`
   space _ t@TyPrim {} = Type t
   space _ t@TyArr {} = Type t
-  space _ TyTuple {} = bug Unreachable
+  space _ TyTuple {} = bug Unreachable --`viewTyConApp (TyTuple n)` returns `Just (TyTuple n, [])`
   space env (TyRecord kts) = Record $ over (mapped . _2) (space env) $ Map.toList kts
-  space _ TyLazy = bug Unreachable
+  space _ TyLazy = bug Unreachable -- `TyLazy` does not appear except for the 1st argument of `TyApp`
   space _ t@TyPtr {} = Type t
   space _ t@TyBottom = Type t
   space _ _ = bug Unreachable
