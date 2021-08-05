@@ -106,7 +106,7 @@ instance HasSpace Type where
   space env (viewTyConApp -> Just (TyCon con, ts)) =
     case env ^. at con of
       Just TypeDef {_valueConstructors} -> foldr (Union . space' ts) Empty _valueConstructors
-      Nothing -> bug Unreachable
+      Nothing -> bug $ Unreachable "con must be defined in env"
     where
       space' as (k, Forall ps (splitTyArr -> (ts, _))) =
         let subst = HashMap.fromList $ zip ps as
@@ -115,14 +115,14 @@ instance HasSpace Type where
   space env (viewTyConApp -> Just (TyTuple {}, ts)) = Tuple (map (space env) ts)
   space _ t@TyApp {} = Type t
   space _ TyVar {} = Empty
-  space _ TyCon {} = bug Unreachable -- `viewTyConApp (TyCon con)` returns `Just (TyCon con, [])`
+  space _ TyCon {} = bug $ Unreachable "`viewTyConApp (TyCon con)` returns `Just (TyCon con, [])`"
   space _ t@TyPrim {} = Type t
   space _ t@TyArr {} = Type t
-  space _ TyTuple {} = bug Unreachable --`viewTyConApp (TyTuple n)` returns `Just (TyTuple n, [])`
+  space _ TyTuple {} = bug $ Unreachable "`viewTyConApp (TyTuple n)` returns `Just (TyTuple n, [])`"
   space env (TyRecord kts) = Record $ over (mapped . _2) (space env) $ Map.toList kts
-  space _ TyLazy = bug Unreachable -- `TyLazy` does not appear except for the 1st argument of `TyApp`
+  space _ TyLazy = bug $ Unreachable "`TyLazy` does not appear except for the 1st argument of `TyApp`"
   space _ t@TyPtr {} = Type t
   space _ t@TyBottom = Type t
-  space _ _ = bug Unreachable
+  space _ _ = bug $ Unreachable "All patterns are covered"
 
 instance HasSpace (Pat (Malgo 'Refine))
