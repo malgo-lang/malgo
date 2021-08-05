@@ -1,13 +1,17 @@
-module Malgo.Refine.Space (Space (..), subspace) where
+module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, buildUnion, HasSpace (..)) where
 
+import Control.Monad.Extra (allM)
 import Data.Foldable.Extra (anyM)
+import Data.List (isSubsequenceOf)
 import Koriel.Id (Id)
+import Koriel.Pretty hiding (space)
 import Malgo.Prelude hiding (Empty, subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static
 import qualified RIO.HashMap as HashMap
+import qualified RIO.List as List
 import qualified RIO.Map as Map
 import System.Directory.Internal
 
@@ -25,6 +29,14 @@ data Space
     Union Space Space
   deriving stock (Eq, Show)
 
+instance Pretty Space where
+  pretty Empty = "O"
+  pretty (Type t) = "T" <> parens (pretty t)
+  pretty (Constructor con ss) = "K" <> parens (sep $ punctuate "," $ pretty con : map pretty ss)
+  pretty (Tuple ss) = "Tuple" <> parens (sep $ punctuate "," $ map pretty ss)
+  pretty (Record kss) = braces $ sep $ punctuate "," $ map (\(k, s) -> pretty k <+> "=" <+> pretty s) kss
+  pretty (Union s1 s2) = pretty s1 <+> "|" <+> pretty s2
+
 -- | whether space s1 is a subspace of space s2
 subspace :: MonadReader RefineEnv m => Space -> Space -> m Bool
 subspace s1 s2 = subtract s1 s2 >>= \s' -> pure $ s' == Empty
@@ -34,19 +46,43 @@ subspace s1 s2 = subtract s1 s2 >>= \s' -> pure $ s' == Empty
 isSubTypeOf :: Type -> Type -> Bool
 isSubTypeOf t1 t2 = t1 == t2
 
+normalize :: Space -> Space
+normalize (Union s Empty) = normalize s
+normalize (Union Empty s) = normalize s
+normalize (Constructor con ss) = Constructor con $ map normalize ss
+normalize (Tuple ss) = Tuple $ map normalize ss
+normalize (Record kss) = Record $ over (mapped . _2) normalize kss
+normalize (Union s1 s2) = Union (normalize s1) (normalize s2)
+normalize (Type t) = Type t
+normalize Empty = Empty
+
+buildUnion :: [Space] -> Space
+buildUnion [] = Empty
+buildUnion [s] = s
+buildUnion (s : ss) = Union s (buildUnion ss)
+
 -- Ref: Malgo.TypeRep.Static.viewTyConApp
 decomposable :: Type -> Bool
 decomposable (viewTyConApp -> Just (TyCon _, _)) = True
+decomposable (viewTyConApp -> Just (TyTuple _, _)) = True
+decomposable (TyRecord _) = True
 decomposable _ = False
 
 decompose :: MonadReader RefineEnv m => Type -> m Space
 decompose t@(viewTyConApp -> Just (TyCon con, ts)) = do
-  env <- ask
+  env <- view typeDefEnv
   case env ^. at con of
     Nothing -> pure $ Type t
     Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
       spaces <- traverse (constructorSpace $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
-      pure $ foldr Union Empty spaces
+      pure $ buildUnion spaces
+decompose (viewTyConApp -> Just (TyTuple _, ts)) = do
+  env <- ask
+  let ss = map (space env) ts
+  pure $ Tuple ss
+decompose (TyRecord kts) = do
+  env <- ask
+  pure $ Record $ over (mapped . _2) (space env) $ Map.toList kts
 decompose t = pure $ Type t
 
 constructorSpace :: MonadReader RefineEnv m => HashMap (Id Type) Type -> (Id (), Scheme Type) -> m Space
@@ -54,6 +90,11 @@ constructorSpace subst (con, Forall _ (splitTyArr -> (ps, _))) = do
   env <- ask
   let ss = map (space env . applySubst subst) ps
   pure $ Constructor con ss
+
+isSuperOf :: Ord a => [(a, b)] -> [(a, b)] -> Bool
+isSuperOf kts1 kts2
+  | nubOrd (map fst kts1) `isSubsequenceOf` nubOrd (map fst kts2) = True
+  | otherwise = False
 
 -- | subtraction of s1 and s2
 subtract :: MonadReader RefineEnv m => Space -> Space -> m Space
@@ -63,11 +104,22 @@ subtract (Type t1) (Type t2) | t1 `isSubTypeOf` t2 = pure Empty
 subtract (Constructor k1 ss) (Constructor k2 ws)
   | k1 == k2 = subtract' (Constructor k1) ss ws
 subtract (Tuple ss) (Tuple ws) = subtract' Tuple ss ws
-subtract (Record _) (Record _) = error "not implemented"
+subtract (Record kts1) (Record kts2)
+  | kts2 `isSuperOf` kts1 = do
+    kss <- for kts1 \(k, s1) -> do
+      case List.lookup k kts2 of
+        Nothing -> pure (k, Empty)
+        Just s2 -> (k,) <$> s1 `subtract` s2
+    isEmpty <- allM (equalEmpty . snd) kss
+    if isEmpty
+      then pure Empty
+      else pure $ Record kss
+  | otherwise = bug $ Unreachable "Record kts2 is invalid pattern"
 subtract (Union s1 s2) x = Union <$> subtract s1 x <*> subtract s2 x
 subtract x (Union s1 s2) = do
   s1' <- subtract x s1
   subtract s1' s2
+subtract (Constructor _ _) (Type _) = pure Empty -- 型検査が通っているので、kはtのコンストラクタのはず
 subtract (Type t) x | decomposable t = join $ subtract <$> decompose t <*> pure x
 subtract x (Type t) | decomposable t = subtract x =<< decompose t
 subtract a _ = pure a
@@ -118,27 +170,7 @@ class HasSpace a where
   space :: RefineEnv -> a -> Space
 
 instance HasSpace Type where
-  space env (viewTyConApp -> Just (TyCon con, ts)) =
-    case env ^. at con of
-      Just TypeDef {_valueConstructors} -> foldr (Union . space' ts) Empty _valueConstructors
-      Nothing -> bug $ Unreachable "con must be defined in env"
-    where
-      space' as (k, Forall ps (splitTyArr -> (ts, _))) =
-        let subst = HashMap.fromList $ zip ps as
-            ss = map (space env . applySubst subst) ts
-         in Constructor k ss
-  space env (viewTyConApp -> Just (TyTuple {}, ts)) = Tuple (map (space env) ts)
-  space _ t@TyApp {} = Type t
-  space _ TyVar {} = Empty
-  space _ TyCon {} = bug $ Unreachable "`viewTyConApp (TyCon con)` returns `Just (TyCon con, [])`"
-  space _ t@TyPrim {} = Type t
-  space _ t@TyArr {} = Type t
-  space _ TyTuple {} = bug $ Unreachable "`viewTyConApp (TyTuple n)` returns `Just (TyTuple n, [])`"
-  space env (TyRecord kts) = Record $ over (mapped . _2) (space env) $ Map.toList kts
-  space _ TyLazy = bug $ Unreachable "`TyLazy` does not appear except for the 1st argument of `TyApp`"
-  space _ t@TyPtr {} = Type t
-  space _ t@TyBottom = Type t
-  space _ _ = bug $ Unreachable "All patterns are covered"
+  space _ t = Type t
 
 instance HasSpace (Pat (Malgo 'Refine)) where
   space _ (VarP x _) = Type (x ^. ann)

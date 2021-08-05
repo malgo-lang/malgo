@@ -1,6 +1,7 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# OPTIONS_GHC -Wno-typed-holes #-}
 
 module Malgo.Prelude
   ( module Koriel.Prelude,
@@ -11,6 +12,7 @@ module Malgo.Prelude
     HasMalgoEnv (..),
     getOpt,
     errorOn,
+    warningOn,
     defaultOpt,
     With (..),
     ann,
@@ -105,7 +107,7 @@ runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
   let isVerbose = debugMode opt
   logOptions' <- logOptionsHandle stderr isVerbose
-  let logOptions = setLogUseTime True logOptions'
+  let logOptions = setLogVerboseFormat True $ setLogUseColor True logOptions'
 
   withLogFunc logOptions \lf -> do
     let app = MalgoEnv {_malgoOpt = opt, _malgoUniqSupply = uniqSupply, _malgoLogFunc = lf}
@@ -136,6 +138,20 @@ errorOn pos x = do
           indent (lineNum `div` 10 + 2) "|",
           pretty lineNum <+> "|" <+> pretty l,
           indent (lineNum `div` 10 + 2) "|" <> indent columnNum "^"
+        ]
+
+warningOn :: (HasLogFunc env, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m ()
+warningOn pos x = do
+  l <- viewLine (unPos $ sourceLine pos)
+  let lineNum = unPos $ sourceLine pos
+  let columnNum = unPos $ sourceColumn pos
+  logWarn $ displayShow $
+    "warning on" <+> pretty pos <> ":" <> line
+      <> vsep
+        [ x,
+          indent (length (show lineNum) + 1) "|",
+          pretty lineNum <+> "|" <+> pretty l,
+          indent (length (show lineNum) + 1) "|" <> indent columnNum "^"
         ]
 
 data With x v = With {_ann :: x, _value :: v}
