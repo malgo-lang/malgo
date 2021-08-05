@@ -34,11 +34,26 @@ subspace s1 s2 = subtract s1 s2 >>= \s' -> pure $ s' == Empty
 isSubTypeOf :: Type -> Type -> Bool
 isSubTypeOf t1 t2 = t1 == t2
 
+-- Ref: Malgo.TypeRep.Static.viewTyConApp
 decomposable :: Type -> Bool
 decomposable (viewTyConApp -> Just (TyCon _, _)) = True
+decomposable _ = False
 
 decompose :: MonadReader RefineEnv m => Type -> m Space
-decompose = undefined
+decompose t@(viewTyConApp -> Just (TyCon con, ts)) = do
+  env <- ask
+  case env ^. at con of
+    Nothing -> pure $ Type t
+    Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
+      spaces <- traverse (constructorSpace $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
+      pure $ foldr Union Empty spaces
+decompose t = pure $ Type t
+
+constructorSpace :: MonadReader RefineEnv m => HashMap (Id Type) Type -> (Id (), Scheme Type) -> m Space
+constructorSpace subst (con, Forall _ (splitTyArr -> (ps, _))) = do
+  env <- ask
+  let ss = map (space env . applySubst subst) ps
+  pure $ Constructor con ss
 
 -- | subtraction of s1 and s2
 subtract :: MonadReader RefineEnv m => Space -> Space -> m Space
