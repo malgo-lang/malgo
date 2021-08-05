@@ -14,6 +14,7 @@ import Malgo.Syntax.Extension
 import qualified Malgo.TypeRep.Static as S
 import qualified Malgo.TypeRep.UTerm as U
 import qualified Malgo.UTerm as U
+import qualified RIO.NonEmpty as NonEmpty
 
 -- | Unboxed and literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
@@ -57,7 +58,7 @@ data Exp x
   | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Exp x) (Exp x)
   | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
-  | Fn (XFn x) [Clause x]
+  | Fn (XFn x) (NonEmpty (Clause x))
   | Tuple (XTuple x) [Exp x]
   | Record (XRecord x) [(XId x, Exp x)]
   | List (XList x) [Exp x]
@@ -86,7 +87,7 @@ pprExpPrec _ (Fn _ cs) =
     space
       <> foldl1
         (\a b -> sep [a, nest (-2) $ "|" <+> b])
-        (map pretty cs)
+        (fmap pretty cs)
 pprExpPrec _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pretty xs
 pprExpPrec _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
 pprExpPrec _ (List _ xs) = brackets $ sep $ punctuate "," $ map pretty xs
@@ -155,7 +156,7 @@ freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
-freevars (Fn _ cs) = mconcat $ map freevarsClause cs
+freevars (Fn _ cs) = foldMap freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (List _ es) = mconcat $ map freevars es
@@ -209,7 +210,7 @@ freevarsStmt (Let _ x e) = HashSet.delete x $ freevars e
 freevarsStmt (NoBind _ e) = freevars e
 
 -- [Exp x]は、末尾へのアクセスが速いものに変えたほうが良いかも
-data Clause x = Clause (XClause x) [Pat x] [Stmt x]
+data Clause x = Clause (XClause x) [Pat x] (NonEmpty (Stmt x))
 
 deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Clause x)
 
@@ -219,8 +220,8 @@ instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), For
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
-  pretty (Clause _ [] e) = sep (punctuate ";" $ map pretty e)
-  pretty (Clause _ ps e) = sep [sep (map (pprPatPrec 11) ps) <+> "->", sep (punctuate ";" $ map pretty e)]
+  pretty (Clause _ [] e) = sep (punctuate ";" $ NonEmpty.toList $ fmap pretty e)
+  pretty (Clause _ ps e) = sep [sep (map (pprPatPrec 11) ps) <+> "->", sep (punctuate ";" $ NonEmpty.toList $ fmap pretty e)]
 
 instance
   ForallClauseX U.WithUType x =>

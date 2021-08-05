@@ -171,7 +171,6 @@ viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
 viewTyConApp _ = Nothing
 
 splitTyArr :: UType -> ([UType], UType)
-splitTyArr (UVar _) = bug Unreachable
 splitTyArr (TyArr t1 t2) = let (ps, r) = splitTyArr t2 in (t1 : ps, r)
 splitTyArr t = ([], t)
 
@@ -202,4 +201,4 @@ expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
 expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv rep
 expandAllTypeSynonym _ t@TyRep {} = t
 expandAllTypeSynonym _ t@Rep {} = t
-expandAllTypeSynonym _ UTerm {} = bug Unreachable
+expandAllTypeSynonym _ UTerm {} = bug $ Unreachable "All patterns are covered"

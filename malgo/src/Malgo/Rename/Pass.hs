@@ -217,18 +217,24 @@ rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName 
     buildListP nilName consName (x : xs) = ConP pos consName [x, buildListP nilName consName xs]
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
-rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => [Stmt (Malgo 'Parse)] -> m [Stmt (Malgo 'Rename)]
-rnStmts [] = pure []
-rnStmts (NoBind x e : ss) = do
+rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => NonEmpty (Stmt (Malgo 'Parse)) -> m (NonEmpty (Stmt (Malgo 'Rename)))
+rnStmts (NoBind x e :| []) = do
   e' <- rnExp e
-  ss' <- rnStmts ss
-  pure $ NoBind x e' : ss'
-rnStmts (Let x v e : ss) = do
+  pure $ NoBind x e' :| []
+rnStmts (Let x v e :| []) = do
+  e' <- rnExp e
+  v' <- resolveName v
+  pure $ Let x v' e' :| []
+rnStmts (NoBind x e :| s : ss) = do
+  e' <- rnExp e
+  s' :| ss' <- rnStmts (s :| ss)
+  pure $ NoBind x e' :| s' : ss'
+rnStmts (Let x v e :| s : ss) = do
   e' <- rnExp e
   v' <- resolveName v
   local (appendRnEnv varEnv [(v, With Implicit v')]) do
-    ss' <- rnStmts ss
-    pure $ Let x v' e' : ss'
+    s' :| ss' <- rnStmts (s :| ss)
+    pure $ Let x v' e' :| s' : ss'
 
 -- infix宣言をMapに変換
 infixDecls :: (MonadReader RnEnv m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))

@@ -34,7 +34,7 @@ subtract (Constructor k1 ss) (Constructor k2 ws)
   where
     aux _ [] [] = Empty
     aux acc (s : ss) (w : ws) = Union (Constructor k1 (acc <> [subtract s w] <> ss)) (aux (s : acc) ss ws)
-    aux _ _ _ = bug Unreachable -- length ss == length ws
+    aux _ _ _ = bug $ Unreachable "length ss == length ws"
 subtract (Tuple ss) (Tuple ws) =
   if
       | and (zipWith subspace ss ws) -> Empty
@@ -43,7 +43,7 @@ subtract (Tuple ss) (Tuple ws) =
   where
     aux _ [] [] = Empty
     aux acc (s : ss) (w : ws) = Union (Tuple (acc <> [subtract s w] <> ss)) (aux (s : acc) ss ws)
-    aux _ _ _ = bug Unreachable -- length ss == length ws
+    aux _ _ _ = bug $ Unreachable "length ss == length ws"
 subtract (Record _) (Record _) = error "not implemented"
 subtract a _ = a
 

@@ -76,7 +76,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       ( zipWith
           ( \case
               (VarP _ v) -> \e -> nameEnv . at v ?= scrutinee >> e
-              _ -> bug Unreachable
+              _ -> bug $ Unreachable "All elements of heads must be VarP"
           )
           heads
           es
@@ -91,7 +91,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     -- 型からコンストラクタの集合を求める
     let (con, ts) = case Malgo.viewTyConApp patType of
           Just x -> x
-          Nothing -> bug Unreachable
+          Nothing -> bug $ Unreachable "patType must be TyApp or TyCon"
     valueConstructors <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for valueConstructors \(conName, Forall _ conType) -> do
@@ -128,7 +128,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
           map
             ( \case
                 UnboxedP _ x -> dsUnboxed x
-                _ -> bug Unreachable
+                _ -> bug $ Unreachable "All elements of heads must be UnboxedP"
             )
             heads
     cases <- traverse (\c -> Switch c <$> match restScrutinee tails es err) cs
@@ -177,7 +177,7 @@ partition (splitCol -> (Just heads@(RecordP {} : _), PatMatrix tails)) es =
 partition (splitCol -> (Just heads@(UnboxedP {} : _), PatMatrix tails)) es =
   let (heads', heads'') = span (has _UnboxedP) heads
    in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
-partition _ _ = bug Unreachable
+partition _ _ = bug $ Unreachable "All patterns are covered"
 
 -- コンストラクタgconの引数部のパターンpsを展開したパターン行列を生成する
 group ::
@@ -191,14 +191,14 @@ group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ 
       | gcon == gcon' = Just (ps <> pss, e)
       | otherwise = Nothing
     aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pretty p
-    aux _ ([], _) = bug Unreachable
+    aux _ ([], _) = bug $ Unreachable "ps must be not empty"
 
 groupTuple :: PatMatrix -> [m (Core.Exp (Id Core.Type))] -> (PatMatrix, [m (Core.Exp (Id Core.Type))])
 groupTuple (PatMatrix pss) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
-    aux [] _ = bug Unreachable
+    aux [] _ = bug $ Unreachable "ps must be not empty"
 
 groupRecord :: (MonadReader env m, MonadIO m, HasUniqSupply env) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
@@ -207,11 +207,11 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
       ps' <- extendRecordP x ps
       pure (ps' <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
-    aux [] _ = bug Unreachable
+    aux [] _ = bug $ Unreachable "ps must be not empty"
     extendRecordP (With (Malgo.TyRecord ktsMap) pos) ps = do
       let kts = Map.toList ktsMap
       for kts \(key, ty) ->
         case List.lookup key ps of
           Nothing -> VarP (With ty pos) <$> newLocalId "$_p" ()
           Just p -> pure p
-    extendRecordP _ _ = bug Unreachable
+    extendRecordP _ _ = bug $ Unreachable "typeOf x must be TyRecord"

@@ -13,6 +13,7 @@ import Malgo.Prelude hiding
   )
 import Malgo.Syntax
 import Malgo.Syntax.Extension
+import qualified RIO.NonEmpty.Partial as NonEmpty
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
@@ -159,15 +160,17 @@ pFun =
     between (symbol "{") (symbol "}") $
       Fn
         <$> getSourcePos
-        <*> ( Clause
-                <$> getSourcePos
-                <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
-                <*> pStmts
+        <*> ( NonEmpty.fromList
+                <$> ( Clause
+                        <$> getSourcePos
+                        <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
+                        <*> pStmts
+                    )
+                `sepBy1` pOperator "|"
             )
-        `sepBy1` pOperator "|"
 
-pStmts :: Parser [Stmt (Malgo 'Parse)]
-pStmts = pStmt `sepBy1` pOperator ";"
+pStmts :: Parser (NonEmpty (Stmt (Malgo 'Parse)))
+pStmts = NonEmpty.fromList <$> pStmt `sepBy1` pOperator ";"
 
 pStmt :: Parser (Stmt (Malgo 'Parse))
 pStmt = try pLet <|> pNoBind
