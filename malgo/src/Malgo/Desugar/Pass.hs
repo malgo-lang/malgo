@@ -24,6 +24,7 @@ import Malgo.Syntax.Extension as G
 import Malgo.TypeRep.Static as GT
 import Prettyprinter.Render.String (renderString)
 import qualified RIO.Char as Char
+import qualified RIO.NonEmpty as NonEmpty
 
 -- | MalgoからCoreへの変換
 desugar ::
@@ -222,7 +223,7 @@ dsExp (G.Fn x (Clause _ [] ss :| _)) = do
     pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps es :| _)) = do
   ps' <- traverse (\p -> newLocalId "$p" =<< dsType =<< GT.typeOf p) ps
-  typ <- dsType =<< GT.typeOf (List.last es)
+  typ <- dsType =<< GT.typeOf (NonEmpty.last es)
   -- destruct Clauses
   (pss, es) <-
     unzip
@@ -270,18 +271,17 @@ dsExp (G.RecordAccess x label) = runDef $ do
   Atom <$> let_ accessType obj
 dsExp (G.Parens _ e) = dsExp e
 
-dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) => [Stmt (Malgo 'Refine)] -> m (C.Exp (Id C.Type))
-dsStmts [] = bug $ Unreachable "Stmts was parsed by sepBy1"
-dsStmts [NoBind _ e] = dsExp e
-dsStmts [G.Let _ _ e] = dsExp e
-dsStmts (NoBind _ e : ss) = runDef $ do
+dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
+dsStmts (NoBind _ e :| []) = dsExp e
+dsStmts (G.Let _ _ e :| []) = dsExp e
+dsStmts (NoBind _ e :| s : ss) = runDef $ do
   _ <- bind =<< dsExp e
-  dsStmts ss
-dsStmts (G.Let _ v e : ss) = do
+  dsStmts (s :| ss)
+dsStmts (G.Let _ v e :| s : ss) = do
   e' <- dsExp e
   v' <- newLocalId ("$let_" <> nameToString (v ^. idName)) (C.typeOf e')
   nameEnv . at v ?= v'
-  ss' <- dsStmts ss
+  ss' <- dsStmts (s :| ss)
   pure $ Match e' (Bind v' ss' :| [])
 
 -- Desugar Monad

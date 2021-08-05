@@ -23,6 +23,7 @@ import qualified RIO.HashSet as HashSet
 import qualified RIO.List as List
 import qualified RIO.List.Partial as List
 import qualified RIO.Map as Map
+import qualified RIO.NonEmpty as NonEmpty
 import Text.Megaparsec (SourcePos)
 
 -------------------------------
@@ -348,7 +349,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   pure $ OpApp (With retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] ss :| _)) = do
   ss' <- tcStmts ss
-  ssType <- typeOf $ List.last ss'
+  ssType <- typeOf $ NonEmpty.last ss'
   pure $ Fn (With (TyApp TyLazy ssType) pos) (Clause (With (TyApp TyLazy ssType) x) [] ss' :| [])
 tcExpr (Fn pos cs) = do
   traverse tcClause cs >>= \case
@@ -401,7 +402,7 @@ tcClause ::
 tcClause (Clause pos pats ss) = do
   pats' <- tcPatterns pats
   ss' <- tcStmts ss
-  ssType <- typeOf $ List.last ss'
+  ssType <- typeOf $ NonEmpty.last ss'
   patTypes <- traverse typeOf pats'
   pure $ Clause (With (buildTyArr patTypes ssType) pos) pats' ss'
 
@@ -466,8 +467,8 @@ tcStmts ::
     MonadIO m,
     HasUniqSupply env
   ) =>
-  [Stmt (Malgo 'Rename)] ->
-  WriterT [With SourcePos Constraint] m [Stmt (Malgo 'TypeCheck)]
+  NonEmpty (Stmt (Malgo 'Rename)) ->
+  WriterT [With SourcePos Constraint] m (NonEmpty (Stmt (Malgo 'TypeCheck)))
 tcStmts = traverse tcStmt
 
 tcStmt ::

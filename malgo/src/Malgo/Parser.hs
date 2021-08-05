@@ -169,8 +169,8 @@ pFun =
                 `sepBy1` pOperator "|"
             )
 
-pStmts :: Parser [Stmt (Malgo 'Parse)]
-pStmts = pStmt `sepBy1` pOperator ";"
+pStmts :: Parser (NonEmpty (Stmt (Malgo 'Parse)))
+pStmts = NonEmpty.fromList <$> pStmt `sepBy1` pOperator ";"
 
 pStmt :: Parser (Stmt (Malgo 'Parse))
 pStmt = try pLet <|> pNoBind
