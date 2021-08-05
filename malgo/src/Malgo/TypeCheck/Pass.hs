@@ -358,7 +358,7 @@ tcExpr (Fn pos cs) = do
         cType <- typeOf c
         tell [With pos $ c'Type :~ cType]
       pure $ Fn (With c'Type pos) (c' : cs')
-    _ -> bug Unreachable -- Malgo.ParserはsepBy1でFnをパースする
+    _ -> bug $ Unreachable "cs was parsed by sepBy1"
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
   esType <- buildTyApp (TyTuple $ length es) <$> traverse typeOf es'

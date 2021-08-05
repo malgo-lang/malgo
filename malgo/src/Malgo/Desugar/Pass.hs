@@ -197,7 +197,7 @@ dsExp (G.Var x _ name) = do
         clsId <- newLocalId "$gblcls" (C.typeOf name')
         ps <- case C.typeOf name' of
           pts :-> _ -> traverse (newLocalId "$p") pts
-          _ -> bug Unreachable
+          _ -> bug $ Unreachable "typeOf name' must be _ :-> _"
         pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
       | otherwise -> pure $ Atom $ C.Var name'
   where
@@ -213,7 +213,7 @@ dsExp (G.Apply info f x) = runDef $ do
       --   適切な型にcastする必要がある
       x' <- cast xType =<< dsExp x
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
-    _ -> bug Unreachable
+    _ -> bug $ Unreachable "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
 dsExp (G.Fn x (Clause _ [] ss : _)) = do
   -- lazy valueの脱糖衣
   ss' <- dsStmts ss
@@ -235,7 +235,7 @@ dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
   obj <- curryFun ps' body
   v <- newLocalId "$fun" =<< dsType (x ^. GT.withType)
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
-dsExp (G.Fn _ []) = bug Unreachable
+dsExp (G.Fn _ []) = bug $ Unreachable "cs was parsed by sepBy1"
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
   let con = C.Con C.Tuple $ map C.typeOf es'
@@ -272,7 +272,7 @@ dsExp (G.RecordAccess x label) = runDef $ do
 dsExp (G.Parens _ e) = dsExp e
 
 dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) => [Stmt (Malgo 'Refine)] -> m (C.Exp (Id C.Type))
-dsStmts [] = bug Unreachable
+dsStmts [] = bug $ Unreachable "Stmts was parsed by sepBy1"
 dsStmts [NoBind _ e] = dsExp e
 dsStmts [G.Let _ _ e] = dsExp e
 dsStmts (NoBind _ e : ss) = runDef $ do
@@ -310,7 +310,7 @@ curryFun [] e = errorDoc $ "Invalid expression:" <+> squotes (pretty e)
 curryFun [x] e = pure ([x], e)
 curryFun ps@(_ : _) e = curryFun' ps []
   where
-    curryFun' [] _ = bug Unreachable
+    curryFun' [] _ = bug $ Unreachable "Currying no-arguments function is not supported"
     curryFun' [x] as = do
       x' <- newLocalId (nameToString $ x ^. idName) (C.typeOf x)
       fun <- newLocalId "$curry" (C.typeOf $ Fun ps e)

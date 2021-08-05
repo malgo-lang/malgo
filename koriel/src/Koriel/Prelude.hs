@@ -61,7 +61,7 @@ replaceOf :: Eq b => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
 
 -- Unreachable
-data Unreachable = Unreachable
+newtype Unreachable = Unreachable { unreachableReason :: Text }
   deriving stock (Show, Typeable)
 
 instance Exception Unreachable
