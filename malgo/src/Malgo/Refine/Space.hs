@@ -140,4 +140,9 @@ instance HasSpace Type where
   space _ t@TyBottom = Type t
   space _ _ = bug $ Unreachable "All patterns are covered"
 
-instance HasSpace (Pat (Malgo 'Refine))
+instance HasSpace (Pat (Malgo 'Refine)) where
+  space _ (VarP x _) = Type (x ^. ann)
+  space env (ConP _ con ps) = Constructor con (map (space env) ps)
+  space env (TupleP _ ps) = Tuple $ map (space env) ps
+  space env (RecordP _ xps) = Record $ over (mapped . _2) (space env) xps
+  space _ (UnboxedP _ _) = Empty
