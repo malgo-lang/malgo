@@ -57,7 +57,7 @@ data Exp x
   | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Exp x) (Exp x)
   | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
-  | Fn (XFn x) [Clause x]
+  | Fn (XFn x) (NonEmpty (Clause x))
   | Tuple (XTuple x) [Exp x]
   | Record (XRecord x) [(XId x, Exp x)]
   | List (XList x) [Exp x]
@@ -86,7 +86,7 @@ pprExpPrec _ (Fn _ cs) =
     space
       <> foldl1
         (\a b -> sep [a, nest (-2) $ "|" <+> b])
-        (map pretty cs)
+        (fmap pretty cs)
 pprExpPrec _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pretty xs
 pprExpPrec _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
 pprExpPrec _ (List _ xs) = brackets $ sep $ punctuate "," $ map pretty xs
@@ -155,7 +155,7 @@ freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
-freevars (Fn _ cs) = mconcat $ map freevarsClause cs
+freevars (Fn _ cs) = foldMap freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (List _ es) = mconcat $ map freevars es

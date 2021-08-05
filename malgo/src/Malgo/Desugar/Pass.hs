@@ -3,7 +3,6 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
-import Control.Monad (mapAndUnzipM)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
@@ -23,8 +22,8 @@ import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 import Malgo.TypeRep.Static as GT
-import qualified RIO.Char as Char
 import Prettyprinter.Render.String (renderString)
+import qualified RIO.Char as Char
 
 -- | MalgoからCoreへの変換
 desugar ::
@@ -214,28 +213,28 @@ dsExp (G.Apply info f x) = runDef $ do
       x' <- cast xType =<< dsExp x
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
     _ -> bug $ Unreachable "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn x (Clause _ [] ss : _)) = do
+dsExp (G.Fn x (Clause _ [] ss :| _)) = do
   -- lazy valueの脱糖衣
   ss' <- dsStmts ss
   typ <- dsType (x ^. GT.withType)
   runDef do
     fun <- let_ typ $ Fun [] ss'
     pure $ Atom fun
-dsExp (G.Fn x cs@(Clause _ ps es : _)) = do
+dsExp (G.Fn x cs@(Clause _ ps es :| _)) = do
   ps' <- traverse (\p -> newLocalId "$p" =<< dsType =<< GT.typeOf p) ps
   typ <- dsType =<< GT.typeOf (List.last es)
   -- destruct Clauses
   (pss, es) <-
-    mapAndUnzipM
-      ( \(Clause _ ps es) ->
-          pure (ps, dsStmts es)
-      )
-      cs
-  body <- match ps' (patMatrix pss) es (Error typ)
+    unzip
+      <$> traverse
+        ( \(Clause _ ps es) ->
+            pure (ps, dsStmts es)
+        )
+        cs
+  body <- match ps' (patMatrix $ toList pss) (toList es) (Error typ)
   obj <- curryFun ps' body
   v <- newLocalId "$fun" =<< dsType (x ^. GT.withType)
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
-dsExp (G.Fn _ []) = bug $ Unreachable "cs was parsed by sepBy1"
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
   let con = C.Con C.Tuple $ map C.typeOf es'
