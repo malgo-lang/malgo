@@ -140,12 +140,20 @@ module Builtin = {
   data List a = Nil | Cons a (List a);
 
   head :: List a -> a;
-  head = { (Cons x _) -> x };
+  head = { Cons x _ -> x 
+         | _ -> exitFailure ()
+         };
 
   tail :: List a -> List a;
-  tail = { Cons _ xs -> xs };
+  tail = { Cons _ xs -> xs
+         | _ -> exitFailure ()
+         };
 
   -- IO functions
+  foreign import malgo_exit_failure :: () -> a;
+  exitFailure :: () -> a;
+  exitFailure = { _ -> malgo_exit_failure () };
+
   foreign import malgo_newline :: () -> ();
   newline = { _ -> malgo_newline () };
 

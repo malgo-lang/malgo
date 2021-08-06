@@ -99,6 +99,10 @@ char *malgo_{{cType}}_to_string({{cType}} x) {
 {{/toStringType}}
 
 // IO functions
+const MalgoUnit *malgo_exit_failure(MalgoUnit *__attribute__((unused)) unused) {
+  exit(1);
+}
+
 const MalgoUnit *malgo_newline(MalgoUnit *__attribute__((unused)) unused) {
   puts("");
   return &malgo_unit;

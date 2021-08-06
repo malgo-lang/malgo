@@ -156,6 +156,10 @@ char *malgo_double_to_string(double x) {
 }
 
 // IO functions
+const MalgoUnit *malgo_exit_failure(MalgoUnit *__attribute__((unused)) unused) {
+  exit(1);
+}
+
 const MalgoUnit *malgo_newline(MalgoUnit *__attribute__((unused)) unused) {
   puts("");
   return &malgo_unit;
