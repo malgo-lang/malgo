@@ -1,12 +1,9 @@
 module List = {
   module {..} = import Builtin;
+  module {..} = import Prelude;
 
   infixl 6 (+#);
   (+#) = {x y -> addInt64# x y};
-
-  infixl 0 (|>);
-  (|>) : a -> (a -> b) -> b;
-  (|>) = {x f -> f x};
 
   map = { f xs ->
     xs |> { Nil -> Nil
