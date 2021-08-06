@@ -187,7 +187,7 @@ rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldName pos) rnType) kts
 rnType (TyLazy pos t) = TyLazy pos <$> rnType t
-rnType (TyDArr pos t1 t2) = TyDArr pos <$> rnType t1 <*> rnType t2
+rnType (TyDArr pos _ _) = errorOn pos "not implemented"
 
 rnClause ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
