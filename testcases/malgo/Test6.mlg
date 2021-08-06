@@ -1,7 +1,7 @@
 module Test6 = {
   data RGB = R | G | B;
 
-  foreign import malgo_exit_failure :: () -> a;
+  foreign import malgo_exit_failure : () -> a;
 
   rtob = {R -> B | _ -> malgo_exit_failure () };
 
