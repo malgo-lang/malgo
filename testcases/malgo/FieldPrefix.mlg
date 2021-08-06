@@ -5,9 +5,9 @@ module FieldPrefix = {
   type Point2D = { x : Float, y : Float };
 
   print2D = { { Point2D.x = x, y = y } ->
-    printString (floatToString x);
+    printString (toStringFloat x);
     printString ", ";
-    printString (floatToString y)
+    printString (toStringFloat y)
   };
   
   type Point3D = { x : Float, y : Float, z : Float };
