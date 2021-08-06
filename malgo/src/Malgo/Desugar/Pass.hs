@@ -74,14 +74,14 @@ dsImport (pos, modName, _) = do
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env, HasLogFunc env) =>
   [[ScDef (Malgo 'Refine)]] ->
   f [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
 dsScDefGroup = traverse dsScDefs
 
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env, HasLogFunc env) =>
   [ScDef (Malgo 'Refine)] ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDefs ds = do
@@ -93,7 +93,7 @@ dsScDefs ds = do
   foldMapA dsScDef ds
 
 dsScDef ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env, HasLogFunc env) =>
   ScDef (Malgo 'Refine) ->
   f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
 dsScDef (With typ pos, name, expr) = do

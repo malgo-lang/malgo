@@ -123,22 +123,23 @@ viewLine linum = do
   pure $ lines s !! (linum - 1)
 
 #ifdef DEBUG
-errorOn :: (HasCallStack, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m a
+errorOn :: (HasCallStack, HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m a
 #else
-errorOn :: (HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m a
+errorOn :: (HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m a
 #endif
 errorOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
   let columnNum = unPos $ sourceColumn pos
-  errorDoc $
+  logError $ displayShow $
     "error on" <+> pretty pos <> ":" <> line
       <> vsep
         [ x,
-          indent (lineNum `div` 10 + 2) "|",
+          indent (length (show lineNum) + 1) "|",
           pretty lineNum <+> "|" <+> pretty l,
-          indent (lineNum `div` 10 + 2) "|" <> indent columnNum "^"
+          indent (length (show lineNum) + 1) "|" <> indent columnNum "^"
         ]
+  exitFailure
 
 warningOn :: (HasLogFunc env, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m ()
 warningOn pos x = do

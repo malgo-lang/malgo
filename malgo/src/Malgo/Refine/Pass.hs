@@ -52,7 +52,7 @@ refineExp (Fn x cs) = do
   let patSpaces = map (Space.normalize . Space.buildUnion) $ List.transpose $ NonEmpty.toList $ fmap (clauseSpace env) cs'
   exhaustive <- fmap Space.normalize <$> zipWithM Space.subtract typeSpaces patSpaces
   when (any (/= Space.Empty) exhaustive) $
-    warningOn (x ^. value) "Pattern is not exhaustive"
+    errorOn (x ^. value) "Pattern is not exhaustive"
   pure $ Fn x' cs'
   where
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps
