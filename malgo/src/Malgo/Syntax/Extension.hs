@@ -174,8 +174,12 @@ type family XTyRecord x where
 type family XTyLazy x where
   XTyLazy (Malgo _) = SourcePos
 
+type family XTyDArr x where
+  XTyDArr (Malgo 'Parse) = SourcePos
+  XTyDArr (Malgo _) = Void
+
 type ForallTypeX (c :: K.Type -> Constraint) x =
-  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyLazy x))
+  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyLazy x), c (XTyDArr x))
 
 -- Decl Extensions
 type family XScDef x where

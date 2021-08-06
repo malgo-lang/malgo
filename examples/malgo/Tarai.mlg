@@ -3,10 +3,10 @@ module Tarai = {
   module {..} = import Prelude;
 
   infix 4 (<=);
-  (<=) = { (Int64# x) (Int64# y) -> isTrue# (le_Int64# x y) };
+  (<=) = { (Int64# x) (Int64# y) -> isTrue# (leInt64# x y) };
 
   infixl 6 (-);
-  (-) = { x y -> sub_Int64 x y };
+  (-) = { x y -> subInt64 x y };
 
   tarai = { x y z ->
     if (x <= y)
@@ -15,7 +15,7 @@ module Tarai = {
   };
 
   main = {
-    print_Int64 (tarai 12L 6L 0L)
+    putStrLn (toStringInt64 (tarai 12L 6L 0L))
   };
 }
 

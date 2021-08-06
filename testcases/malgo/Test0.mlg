@@ -2,7 +2,7 @@ module Test0 = {
   module {..} = import Builtin;
 
   infixl 0 (|>);
-  (|>) :: a -> (a -> b) -> b;
+  (|>) : a -> (a -> b) -> b;
   (|>) = { x f -> f x };
   
   infixl 6 (+#);

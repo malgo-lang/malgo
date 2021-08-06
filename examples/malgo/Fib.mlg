@@ -3,13 +3,13 @@ module Fib = {
   module {..} = import Prelude;
 
   infix 4 (<=);
-  (<=) = { (Int32# x) (Int32# y) -> isTrue# (ge_Int32# y x) };
+  (<=) = { x y -> geInt32 x y };
 
   infixl 6 (+);
-  (+) = { x y -> add_Int32 x y };
+  (+) = { x y -> addInt32 x y };
 
   infixl 6 (-);
-  (-) = { x y -> sub_Int32 x y };
+  (-) = { x y -> subInt32 x y };
 
   fib = { n ->
     if (n <= 1)
@@ -18,7 +18,7 @@ module Fib = {
   };
 
   main = {
-    print_Int32 (fib 5)
+    fib 5 |> toStringInt32 |> putStrLn
   };
 }
 

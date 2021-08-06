@@ -21,7 +21,7 @@ module RecordTest = {
   -- h = { p -> #x p };
 
   main = {
-    let x = { a: 32, b: 10 };
+    let x = { a = 32, b = 10 };
     printString (toStringInt32 (addInt32 (f x) (#b x)))
   };
 }

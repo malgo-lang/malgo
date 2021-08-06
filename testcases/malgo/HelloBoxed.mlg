@@ -1,16 +1,16 @@
 module HelloBoxed = {
-  foreign import malgo_print_string :: String# -> ();
-  foreign import malgo_newline :: () -> ();
+  foreign import malgo_print_string : String# -> ();
+  foreign import malgo_newline : () -> ();
 
   data String = String# String#;
 
-  putStrLn :: String -> ();
+  putStrLn : String -> ();
   putStrLn = { (String# str) ->
     malgo_print_string str;
     malgo_newline ()
   };
 
-  string# :: String# -> String;
+  string# : String# -> String;
   string# = { x -> String# x };
 
   main = {

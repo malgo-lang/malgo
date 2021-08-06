@@ -6,12 +6,12 @@ module TestPolySynonym = {
 
   type Pair a b = { fst: b, snd: a };
 
-  first :: { fst: a, snd: b } -> a;
-  first = { {fst: x} -> x };
+  first : { fst: a, snd: b } -> a;
+  first = { {fst = x} -> x };
 
-  main :: Fun0 ();
+  main : Fun0 ();
   main = {
-    let x = { fst: 1, snd: "hoge" };
+    let x = { fst = 1, snd = "hoge" };
     first x |> printInt32
   };
 }

@@ -11,11 +11,14 @@ module Either = {
 
   main = {
     let x = Right 1;
-    x |> andThen { x -> Right (add_Int32 x 1) } |> andThen { y -> Right (print_Int32 y) };
+
+    x |> andThen { x -> Right (addInt32 x 1) }
+      |> andThen { y -> y |> toStringInt32 |> putStrLn |> Right };
+
     x |> andThen { _ -> Left "error" }
-      |> andThen { x -> Right (add_Int32 x 1) }
+      |> andThen { x -> Right (addInt32 x 1) }
       |> { Left err -> putStrLn err
-         | Right x -> print_Int32 x } 
+         | Right x -> x |> toStringInt32 |> putStrLn } 
   };
 }
 

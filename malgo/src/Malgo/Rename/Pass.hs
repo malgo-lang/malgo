@@ -18,7 +18,7 @@ import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)
 
 rename :: (MonadReader env m, MonadIO m, HasLogFunc env) => RnEnv -> Module (Malgo 'Parse) -> m (Module (Malgo 'Rename), RnState)
-rename builtinEnv (Module modName ds) = do
+rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   logDebug "Start rename"
   (ds', rnState) <- runStateT ?? RnState mempty modName $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
@@ -187,6 +187,7 @@ rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldName pos) rnType) kts
 rnType (TyLazy pos t) = TyLazy pos <$> rnType t
+rnType (TyDArr pos _ _) = errorOn pos "not implemented"
 
 rnClause ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
@@ -391,3 +392,4 @@ genToplevelEnv modName ds builtinEnv = do
       ks' <- traverse (resolveGlobalName modName) ks
       zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, With Implicit k')]) ks ks'
     genFieldEnv (TyLazy _ t) = genFieldEnv t
+    genFieldEnv (TyDArr _ t1 t2) = genFieldEnv t1 >> genFieldEnv t2

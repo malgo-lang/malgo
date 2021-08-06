@@ -37,7 +37,7 @@ pModule = do
   x <- pModuleName
   void $ pOperator "="
   ds <- between (symbol "{") (symbol "}") $ pDecl `endBy` pOperator ";"
-  pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ds}
+  pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ParsedDefinitions ds}
 
 -- module name
 pModuleName :: Parser String
@@ -88,7 +88,7 @@ pForeign = label "foreign import" $ do
   void $ pKeyword "foreign"
   void $ pKeyword "import"
   x <- lowerIdent
-  void $ pOperator "::"
+  void $ pOperator ":"
   Foreign s x <$> pType
 
 pImport :: Parser (Decl (Malgo 'Parse))
@@ -110,7 +110,7 @@ pScSig =
     ScSig
       <$> getSourcePos
       <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
-      <* pOperator "::"
+      <* pOperator ":"
       <*> pType
 
 pScDef :: Parser (Decl (Malgo 'Parse))
@@ -194,7 +194,7 @@ pRecordP = between (symbol "{") (symbol "}") do
   where
     pRecordPEntry = do
       label <- lowerIdent
-      void $ pOperator ":"
+      void $ pOperator "="
       value <- pPat
       pure (label, value)
 
@@ -247,7 +247,7 @@ pRecord = between (symbol "{") (symbol "}") do
   where
     pRecordEntry = do
       label <- lowerIdent
-      void $ pOperator ":"
+      void $ pOperator "="
       value <- pExp
       pure (label, value)
 
@@ -361,10 +361,14 @@ pTyArr :: Parser (Type (Malgo 'Parse))
 pTyArr = makeExprParser pTyTerm opTable
   where
     opTable =
-      [ [ InfixR $ do
+      [ [ InfixR do
             s <- getSourcePos
             void $ pOperator "->"
-            pure $ \l r -> TyArr s l r
+            pure $ \l r -> TyArr s l r,
+          InfixR do
+            s <- getSourcePos
+            void $ pOperator "=>"
+            pure $ \l r -> TyDArr s l r
         ]
       ]
 
@@ -410,7 +414,7 @@ reserved =
       ]
 
 reservedOp :: Parser Text
-reservedOp = choice $ map (try . pOperator) ["=", "::", "|", "->", ";", ",", "!"]
+reservedOp = choice $ map (try . pOperator) ["=>", "=", ":", "|", "->", ";", ",", "!"]
 
 lowerIdent :: Parser String
 lowerIdent =
