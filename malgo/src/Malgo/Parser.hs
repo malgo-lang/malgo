@@ -147,12 +147,18 @@ pUnboxed =
       <|> try (lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#')))
       <|> try (lexeme (String <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
 
+pWithPrefix :: Parser String -> Parser x -> Parser (WithPrefix x)
+pWithPrefix prefix body =
+  WithPrefix
+    <$> ( try (With <$> (Just <$> prefix) <* char '.' <*> body)
+            <|> With Nothing <$> body
+        )
+
 pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
   label "variable" $ do
     s <- getSourcePos
-    try (Var s <$> fmap (Just . ModuleName) singleModuleName <* char '.' <*> (lowerIdent <|> upperIdent))
-      <|> Var s Nothing <$> (lowerIdent <|> upperIdent)
+    Var s <$> pWithPrefix singleModuleName (lowerIdent <|> upperIdent)
 
 pFun :: Parser (Exp (Malgo 'Parse))
 pFun =
@@ -193,7 +199,7 @@ pRecordP = between (symbol "{") (symbol "}") do
   pure $ RecordP s kvs
   where
     pRecordPEntry = do
-      label <- lowerIdent
+      label <- pWithPrefix upperIdent lowerIdent
       void $ pOperator "="
       value <- pPat
       pure (label, value)
@@ -246,7 +252,7 @@ pRecord = between (symbol "{") (symbol "}") do
   pure $ Record s kvs
   where
     pRecordEntry = do
-      label <- lowerIdent
+      label <- pWithPrefix upperIdent lowerIdent
       void $ pOperator "="
       value <- pExp
       pure (label, value)
@@ -261,7 +267,7 @@ pList = label "list" $
 pRecordAccess :: Parser (Exp (Malgo 'Parse))
 pRecordAccess = do
   s <- getSourcePos
-  l <- char '#' >> lowerIdent
+  l <- char '#' >> pWithPrefix upperIdent lowerIdent
   pure $ RecordAccess s l
 
 pSingleExp' :: Parser (Exp (Malgo 'Parse))

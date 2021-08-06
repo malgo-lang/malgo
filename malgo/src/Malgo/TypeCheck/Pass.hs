@@ -42,10 +42,11 @@ lookupType pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
-lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> [RnId] -> m (Scheme UType)
+lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> [WithPrefix RnId] -> m (Scheme UType)
 lookupRecordType pos fields = do
   env <- use fieldEnv
-  case asumMap (`HashMap.lookup` env) fields of
+  traceShowM $ "DEBUG:" <+> pretty fields
+  case asumMap (`HashMap.lookup` env) (map removePrefix fields) of
     Nothing -> errorOn pos $ "Not in scope:" <+> (fields & map pretty & punctuate " or" & sep)
     Just scheme -> pure scheme
 
@@ -331,9 +332,9 @@ tcExpr ::
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [With SourcePos Constraint] m (Exp (Malgo 'TypeCheck))
-tcExpr (Var pos m v) = do
+tcExpr (Var pos (WithPrefix (With p v))) = do
   vType <- instantiate pos =<< lookupVar pos v
-  pure $ Var (With vType pos) m v
+  pure $ Var (With vType pos) (WithPrefix (With p v))
 tcExpr (Unboxed pos u) = do
   let uType = typeOf u
   pure $ Unboxed (With uType pos) u
@@ -367,7 +368,7 @@ tcExpr (Tuple pos es) = do
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
   recordType <- instantiate pos =<< lookupRecordType pos (map fst kvs)
-  let kvsType = TyRecord $ Map.fromList $ map (second typeOf) kvs'
+  let kvsType = TyRecord $ Map.fromList $ map (bimap removePrefix typeOf) kvs'
   tell [With pos $ recordType :~ kvsType]
   pure $ Record (With recordType pos) kvs'
 tcExpr (Force pos e) = do
@@ -380,7 +381,7 @@ tcExpr (RecordAccess pos label) = do
   retType <- UVar <$> freshVar
   case recordType of
     TyRecord kts -> do
-      tell [With pos $ recordType :~ TyRecord (Map.insert label retType kts)]
+      tell [With pos $ recordType :~ TyRecord (Map.insert (removePrefix label) retType kts)]
       pure $ RecordAccess (With (TyArr recordType retType) pos) label
     _ -> errorOn pos $ pretty recordType <+> "is not record type"
 tcExpr (Parens pos e) = do
@@ -449,7 +450,7 @@ tcPatterns (RecordP pos kps : ps) = do
   ps' <- tcPatterns ps
 
   recordType@(TyRecord recordKts) <- instantiate pos =<< lookupRecordType pos (map fst kps)
-  let patternKts = Map.fromList $ map (second typeOf) kps'
+  let patternKts = Map.fromList $ map (bimap removePrefix typeOf) kps'
   let patternType = TyRecord $ patternKts <> recordKts
 
   tell [With pos $ recordType :~ patternType]

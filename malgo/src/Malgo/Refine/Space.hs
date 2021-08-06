@@ -176,5 +176,5 @@ instance HasSpace (Pat (Malgo 'Refine)) where
   space _ (VarP x _) = Type (x ^. ann)
   space env (ConP _ con ps) = Constructor con (map (space env) ps)
   space env (TupleP _ ps) = Tuple $ map (space env) ps
-  space env (RecordP _ xps) = Record $ over (mapped . _2) (space env) xps
+  space env (RecordP _ xps) = Record $ map (bimap removePrefix (space env)) xps
   space _ (UnboxedP _ _) = Empty

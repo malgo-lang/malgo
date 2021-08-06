@@ -29,12 +29,12 @@ instance Pretty (Literal x) where
   pretty (String s) = dquotes (pretty s)
 
 instance U.HasType (Literal x) where
-  typeOf Int32 {} =  U.TyPrim S.Int32T
-  typeOf Int64 {} =  U.TyPrim S.Int64T
-  typeOf Float {} =  U.TyPrim S.FloatT
-  typeOf Double {} =  U.TyPrim S.DoubleT
-  typeOf Char {} =  U.TyPrim S.CharT
-  typeOf String {} =  U.TyPrim S.StringT
+  typeOf Int32 {} = U.TyPrim S.Int32T
+  typeOf Int64 {} = U.TyPrim S.Int64T
+  typeOf Float {} = U.TyPrim S.FloatT
+  typeOf Double {} = U.TyPrim S.DoubleT
+  typeOf Char {} = U.TyPrim S.CharT
+  typeOf String {} = U.TyPrim S.StringT
 
 instance S.HasType (Literal x) where
   typeOf Int32 {} = S.TyPrim S.Int32T
@@ -53,17 +53,17 @@ toUnboxed = coerce
 -- Expression
 
 data Exp x
-  = Var (XVar x) (Maybe ModuleName) (XId x)
+  = Var (XVar x) (WithPrefix (XId x))
   | Unboxed (XUnboxed x) (Literal Unboxed)
   | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Exp x) (Exp x)
   | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
   | Fn (XFn x) (NonEmpty (Clause x))
   | Tuple (XTuple x) [Exp x]
-  | Record (XRecord x) [(XId x, Exp x)]
+  | Record (XRecord x) [(WithPrefix (XId x), Exp x)]
   | List (XList x) [Exp x]
   | Force (XForce x) (Exp x)
-  | RecordAccess (XRecordAccess x) (XId x)
+  | RecordAccess (XRecordAccess x) (WithPrefix (XId x))
   | Parens (XParens x) (Exp x)
 
 deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Exp x)
@@ -74,8 +74,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pretty x = pprExpPrec 0 x
 
 pprExpPrec :: (Pretty (XId x)) => Int -> Exp x -> Doc ann
-pprExpPrec _ (Var _ Nothing i) = pretty i
-pprExpPrec _ (Var _ (Just x) i) = pretty x <> "." <> pretty i
+pprExpPrec _ (Var _ i) = pretty i
 pprExpPrec _ (Unboxed _ lit) = pretty lit <> "#"
 pprExpPrec _ (Boxed _ lit) = pretty lit
 pprExpPrec d (Apply _ e1 e2) =
@@ -99,24 +98,24 @@ instance
   ForallExpX U.WithUType x =>
   U.HasType (Exp x)
   where
-  typeOf (Var x _ _) =  x ^. U.withUType
-  typeOf (Unboxed x _) =  x ^. U.withUType
-  typeOf (Boxed x _) =  x ^. U.withUType
-  typeOf (Apply x _ _) =  x ^. U.withUType
-  typeOf (OpApp x _ _ _) =  x ^. U.withUType
-  typeOf (Fn x _) =  x ^. U.withUType
-  typeOf (Tuple x _) =  x ^. U.withUType
-  typeOf (Record x _) =  x ^. U.withUType
-  typeOf (List x _) =  x ^. U.withUType
-  typeOf (Force x _) =  x ^. U.withUType
-  typeOf (RecordAccess x _) =  x ^. U.withUType
-  typeOf (Parens x _) =  x ^. U.withUType
+  typeOf (Var x _) = x ^. U.withUType
+  typeOf (Unboxed x _) = x ^. U.withUType
+  typeOf (Boxed x _) = x ^. U.withUType
+  typeOf (Apply x _ _) = x ^. U.withUType
+  typeOf (OpApp x _ _ _) = x ^. U.withUType
+  typeOf (Fn x _) = x ^. U.withUType
+  typeOf (Tuple x _) = x ^. U.withUType
+  typeOf (Record x _) = x ^. U.withUType
+  typeOf (List x _) = x ^. U.withUType
+  typeOf (Force x _) = x ^. U.withUType
+  typeOf (RecordAccess x _) = x ^. U.withUType
+  typeOf (Parens x _) = x ^. U.withUType
 
 instance
   ForallExpX S.WithType x =>
   S.HasType (Exp x)
   where
-  typeOf (Var x _ _) = x ^. S.withType
+  typeOf (Var x _) = x ^. S.withType
   typeOf (Unboxed x _) = x ^. S.withType
   typeOf (Boxed x _) = x ^. S.withType
   typeOf (Apply x _ _) = x ^. S.withType
@@ -137,7 +136,7 @@ instance
   U.HasUTerm S.TypeF U.TypeVar (Exp x)
   where
   walkOn f = \case
-    Var x m v -> Var <$> U.walkOn f x <*> pure m <*> pure v
+    Var x v -> Var <$> U.walkOn f x <*> pure v
     Unboxed x u -> Unboxed <$> U.walkOn f x <*> U.walkOn f u
     Boxed x b -> Boxed <$> U.walkOn f x <*> U.walkOn f b
     Apply x e1 e2 -> Apply <$> U.walkOn f x <*> U.walkOn f e1 <*> U.walkOn f e2
@@ -151,7 +150,7 @@ instance
     Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
-freevars (Var _ _ v) = HashSet.singleton v
+freevars (Var _ (WithPrefix v)) = HashSet.singleton (v ^. value)
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
@@ -227,7 +226,7 @@ instance
   ForallClauseX U.WithUType x =>
   U.HasType (Clause x)
   where
-  typeOf (Clause x _ _) =  x ^. U.withUType
+  typeOf (Clause x _ _) = x ^. U.withUType
 
 instance
   ForallClauseX S.WithType x =>
@@ -255,7 +254,7 @@ data Pat x
   = VarP (XVarP x) (XId x)
   | ConP (XConP x) (XId x) [Pat x]
   | TupleP (XTupleP x) [Pat x]
-  | RecordP (XRecordP x) [(XId x, Pat x)]
+  | RecordP (XRecordP x) [(WithPrefix (XId x), Pat x)]
   | ListP (XListP x) [Pat x]
   | UnboxedP (XUnboxedP x) (Literal Unboxed)
 
@@ -285,12 +284,12 @@ instance
   ForallPatX U.WithUType x =>
   U.HasType (Pat x)
   where
-  typeOf (VarP x _) =  x ^. U.withUType
-  typeOf (ConP x _ _) =  x ^. U.withUType
-  typeOf (TupleP x _) =  x ^. U.withUType
-  typeOf (RecordP x _) =  x ^. U.withUType
-  typeOf (ListP x _) =  x ^. U.withUType
-  typeOf (UnboxedP x _) =  x ^. U.withUType
+  typeOf (VarP x _) = x ^. U.withUType
+  typeOf (ConP x _ _) = x ^. U.withUType
+  typeOf (TupleP x _) = x ^. U.withUType
+  typeOf (RecordP x _) = x ^. U.withUType
+  typeOf (ListP x _) = x ^. U.withUType
+  typeOf (UnboxedP x _) = x ^. U.withUType
 
 instance
   ForallPatX S.WithType x =>
@@ -360,7 +359,7 @@ pprTypePrec _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pretty ts
 pprTypePrec _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
 pprTypePrec _ (TyLazy _ t) = braces $ pretty t
 pprTypePrec d (TyDArr _ t1 t2) =
-    maybeParens (d > 10) $ pprTypePrec 11 t1 <+> "=>" <+> pprTypePrec 10 t2
+  maybeParens (d > 10) $ pprTypePrec 11 t1 <+> "=>" <+> pprTypePrec 10 t2
 
 getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)

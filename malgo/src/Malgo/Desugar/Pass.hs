@@ -172,7 +172,7 @@ dsExp ::
   (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
-dsExp (G.Var x _ name) = do
+dsExp (G.Var x (WithPrefix (With _ name))) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
   -- Note: [0 argument]
@@ -243,7 +243,7 @@ dsExp (G.Tuple _ es) = runDef $ do
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
 dsExp (G.Record x kvs) = runDef $ do
-  kvs' <- traverseOf (traversed . _2) (bind <=< dsExp) kvs
+  kvs' <- map (first removePrefix) <$> traverseOf (traversed . _2) (bind <=< dsExp) kvs
   GT.TyRecord recordType <- pure $ x ^. GT.withType
   kts <- Map.toList <$> traverse dsType recordType
   let con = C.Con C.Tuple $ map snd kts
@@ -266,7 +266,7 @@ dsExp (G.RecordAccess x label) = runDef $ do
     Fun [p] <$> runDef do
       let con = C.Con C.Tuple $ map snd kts
       tuple <- destruct (Atom (C.Var p)) con
-      pure $ Atom $ tuple List.!! fromJust (List.elemIndex label (map fst kts))
+      pure $ Atom $ tuple List.!! fromJust (List.elemIndex (removePrefix label) (map fst kts))
   accessType <- dsType (x ^. GT.withType)
   Atom <$> let_ accessType obj
 dsExp (G.Parens _ e) = dsExp e

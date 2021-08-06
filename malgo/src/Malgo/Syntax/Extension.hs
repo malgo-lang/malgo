@@ -1,3 +1,5 @@
+{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Syntax.Extension where
@@ -24,6 +26,24 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Rename = Id ()
   MalgoId 'TypeCheck = Id ()
   MalgoId 'Refine = Id ()
+
+newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: With (Maybe String) x}
+  deriving stock (Eq, Ord, Show)
+
+removePrefix :: WithPrefix a -> a
+removePrefix = view value . unwrapWithPrefix
+
+pattern NoPrefix :: x -> WithPrefix x
+pattern NoPrefix x = WithPrefix (With Nothing x)
+
+pattern Prefix :: String -> x -> WithPrefix x
+pattern Prefix p x = WithPrefix (With (Just p) x)
+
+instance Pretty x => Pretty (WithPrefix x) where
+  pretty (WithPrefix (With Nothing v)) = pretty v
+  pretty (WithPrefix (With (Just x) v)) = pretty x <> "." <> pretty v
+
+makeLenses ''WithPrefix
 
 type PsId = XId (Malgo 'Parse)
 
