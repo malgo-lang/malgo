@@ -58,7 +58,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   rnEnv <- RnEnv.genBuiltinRnEnv =<< ask
   (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
   (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
-  refinedAst <- refine typedAst
+  refinedAst <- refine tcEnv typedAst
   let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
   let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
   let fieldEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.fieldEnv

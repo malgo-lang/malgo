@@ -2,13 +2,11 @@ module List = {
   module {..} = import Builtin;
 
   infixl 6 (+#);
-  (+#) = {x y -> add_Int64# x y};
+  (+#) = {x y -> addInt64# x y};
 
   infixl 0 (|>);
   (|>) :: a -> (a -> b) -> b;
   (|>) = {x f -> f x};
-
-  data List a = Nil | Cons a (List a);
 
   map = { f xs ->
     xs |> { Nil -> Nil

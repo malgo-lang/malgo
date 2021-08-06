@@ -246,7 +246,7 @@ infixDecls ds =
     _ -> pure mempty
 
 mkOpApp ::
-  (MonadIO m, MonadReader env m, HasOpt env) =>
+  (MonadIO m, MonadReader env m, HasOpt env, HasLogFunc env) =>
   SourcePos ->
   (Assoc, Int) ->
   RnId ->

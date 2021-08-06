@@ -85,13 +85,13 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- Constructor Rule
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) heads = do
-    patType <- Malgo.typeOf $ List.head heads
+    let patType = Malgo.typeOf $ List.head heads
     -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
     --  errorDoc ann $ "Not valid type:" <+> pretty patType
     -- 型からコンストラクタの集合を求める
     let (con, ts) = case Malgo.viewTyConApp patType of
-          Just x -> x
-          Nothing -> bug $ Unreachable "patType must be TyApp or TyCon"
+          Just (Malgo.TypeRep.Static.TyCon con, ts) -> (con, ts)
+          _ -> bug $ Unreachable "patType must be TyApp or TyCon"
     valueConstructors <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for valueConstructors \(conName, Forall _ conType) -> do
@@ -104,7 +104,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
-    patType <- Malgo.typeOf $ List.head heads
+    let patType = Malgo.typeOf $ List.head heads
     SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
     params <- traverse (newLocalId "$p") ts
     cases <- do
@@ -114,7 +114,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
-    patType <- Malgo.typeOf $ List.head heads
+    let patType = Malgo.typeOf $ List.head heads
     SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
     params <- traverse (newLocalId "$p") ts
     cases <- do

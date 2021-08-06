@@ -65,7 +65,7 @@ instance MonadBind m => MonadBind (StateT s m)
 
 instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
 
-unify :: (MonadIO m, MonadReader env m, HasOpt env) => SourcePos -> UType -> UType -> m UnifyResult
+unify :: (MonadIO m, MonadReader env m, HasOpt env, HasLogFunc env) => SourcePos -> UType -> UType -> m UnifyResult
 unify _ (UVar v1) (UVar v2)
   | v1 == v2 = pure (mempty, [])
   | otherwise = pure (HashMap.singleton v1 (UVar v2), [])
@@ -83,7 +83,7 @@ equiv _ _ = Nothing
 occursCheck :: TypeVar -> UType -> Bool
 occursCheck v t = HashSet.member v (freevars t)
 
-liftUnify :: (HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> TypeF UType -> TypeF UType -> m UnifyResult
+liftUnify :: (HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> TypeF UType -> TypeF UType -> m UnifyResult
 liftUnify x (TyAppF t11 t12) (TyAppF t21 t22) = pure (mempty, [With x $ t11 :~ t21, With x $ t12 :~ t22])
 liftUnify _ (TyVarF v1) (TyVarF v2) | v1 == v2 = pure (mempty, [])
 liftUnify _ (TyConF c1) (TyConF c2) | c1 == c2 = pure (mempty, [])
@@ -118,7 +118,7 @@ liftEquiv _ _ = Nothing
 liftOccursCheck :: TypeVar -> TypeF UType -> Bool
 liftOccursCheck v t = or $ fmap (occursCheck v) t
 
-instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadState TcEnv m) => MonadBind (TypeUnifyT m) where
+instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadState TcEnv m, HasLogFunc env) => MonadBind (TypeUnifyT m) where
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar = do
@@ -128,9 +128,7 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
-    tKind <- kindOf t
-    let cs = [With x $ v ^. typeVar . idMeta :~ tKind]
-    solve cs
+    solve [With x $ v ^. typeVar . idMeta :~ kindOf t]
     TypeUnifyT $ at v ?= t
 
   zonk (UVar v) = do
@@ -143,10 +141,10 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 -- Solver --
 ------------
 
-solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => [With SourcePos Constraint] -> f ()
+solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f, HasLogFunc env) => [With SourcePos Constraint] -> f ()
 solve = solveLoop 5000
 
-solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => Int -> [With SourcePos Constraint] -> f ()
+solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f, HasLogFunc env) => Int -> [With SourcePos Constraint] -> f ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (t1 :~ t2) : cs) = do
@@ -171,17 +169,17 @@ generalize x bound term = do
 toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> TypeVar -> String -> m (Id UType)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
-  tvKind <- kindOf tvType
+  let tvKind = kindOf tvType
   newLocalId (fromMaybe hint $ tv ^. typeVar . idName) tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
 defaultToBoxed x t = transformM ?? t $ \case
   UVar v -> do
-    vKind <- kindOf $ v ^. typeVar . idMeta
+    let vKind = kindOf $ v ^. typeVar . idMeta
     case vKind of
       UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
       _ -> do
-        void $ defaultToBoxed x =<< kindOf (v ^. typeVar . idMeta)
+        void $ defaultToBoxed x vKind
         UVar <$> traverseOf (typeVar . idMeta) zonk v
   UTerm t -> pure $ UTerm t
 
@@ -196,11 +194,10 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m) => SourcePos -> Scheme UType -> m UType
+instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m, HasLogFunc env) => SourcePos -> Scheme UType -> m UType
 instantiate x (Forall as t) = do
   avs <- traverse ?? as $ \a -> do
     v <- UVar <$> freshVar
-    vKind <- kindOf v
-    solve [With x $ a ^. idMeta :~ vKind]
+    solve [With x $ a ^. idMeta :~ kindOf v]
     pure (a, v)
   pure $ applySubst avs t
