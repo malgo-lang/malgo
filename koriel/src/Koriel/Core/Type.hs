@@ -50,8 +50,6 @@ data Type
 
 instance Binary Type
 
-makePrisms ''Type
-
 instance Pretty Type where
   pretty (a :-> b) = brackets (sep $ punctuate "," $ map pretty a) <+> "->" <+> pretty b
   pretty Int32T = "Int32#"
@@ -65,6 +63,8 @@ instance Pretty Type where
   pretty (PtrT t) = parens $ "Ptr#" <+> pretty t
   pretty AnyT = "*"
   pretty VoidT = "Void"
+
+makePrisms ''Type
 
 class HasType a where
   typeOf :: a -> Type

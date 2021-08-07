@@ -163,7 +163,7 @@ mallocBytes bytesOpr maybeType = do
     Nothing -> pure ptrOpr
 
 mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m Operand
-mallocType ty = mallocBytes (sizeof ty) (Just $ ptr ty)
+mallocType ty = join $ mallocBytes <$> sizeof 64 ty <*> pure (Just $ ptr ty)
 
 toName :: Id a -> LLVM.AST.Name
 toName Id {_idName, _idSort = Koriel.Id.External (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> nameToString _idName
@@ -450,12 +450,12 @@ findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
   Nothing -> errorDoc $ pretty con <+> "is not in" <+> pretty cs
 
-sizeof :: LT.Type -> Operand
-sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64
-  where
-    ptrType = LT.ptr ty
-    nullPtr = C.IntToPtr (C.Int 32 0) ptrType
-    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
+-- sizeof :: LT.Type -> Operand
+-- sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64
+--   where
+--     ptrType = LT.ptr ty
+--     nullPtr = C.IntToPtr (C.Int 32 0) ptrType
+--     szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 globalStringPtr :: MonadModuleBuilder m => String -> Name -> m C.Constant
 globalStringPtr str nm = do
@@ -463,7 +463,9 @@ globalStringPtr str nm = do
       llvmVals = map (C.Int 8) (utf8Vals ++ [0])
       char = IntegerType 8
       charArray = C.Array char llvmVals
-      ty = LLVM.AST.Typed.typeOf charArray
+  ty <- LLVM.AST.Typed.typeOf charArray >>= \case
+    Left err -> error err
+    Right x -> pure x
   emitDefn $
     GlobalDefinition
       globalVariableDefaults
