@@ -53,13 +53,13 @@ newtype TypeVar = TypeVar {_typeVar :: Id UType}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
 
-makeLenses ''TypeVar
-
 instance HasUTerm TypeF TypeVar TypeVar where
   walkOn f (TypeVar x) = TypeVar <$> traverseOf idMeta f x
 
 instance Pretty TypeVar where
   pretty (TypeVar v) = "'" <> pretty v
+
+makeLenses ''TypeVar
 
 type TypeMap = HashMap TypeVar UType
 

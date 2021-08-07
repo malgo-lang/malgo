@@ -31,12 +31,11 @@ desugar ::
   (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
   HashMap RnId (Scheme GT.Type) ->
   HashMap RnId (TypeDef GT.Type) ->
-  HashMap RnId (Scheme GT.Type) ->
   RnEnv ->
   Module x ->
   m (DsEnv, Program (Id C.Type))
-desugar varEnv typeEnv fieldEnv rnEnv (Module modName ds) = do
-  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv fieldEnv rnEnv)
+desugar varEnv typeEnv rnEnv (Module modName ds) = do
+  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-

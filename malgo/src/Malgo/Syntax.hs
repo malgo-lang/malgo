@@ -355,8 +355,8 @@ pprTypePrec _ (TyVar _ i) = pretty i
 pprTypePrec _ (TyCon _ i) = pretty i
 pprTypePrec d (TyArr _ t1 t2) =
   maybeParens (d > 10) $ pprTypePrec 11 t1 <+> "->" <+> pprTypePrec 10 t2
-pprTypePrec _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pretty ts
-pprTypePrec _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
+pprTypePrec _ (TyTuple _ ts) = parens $ align $ sep $ punctuate "," $ map pretty ts
+pprTypePrec _ (TyRecord _ kvs) = braces $ align $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
 pprTypePrec _ (TyLazy _ t) = braces $ pretty t
 pprTypePrec d (TyDArr _ t1 t2) =
   maybeParens (d > 10) $ pprTypePrec 11 t1 <+> "=>" <+> pprTypePrec 10 t2

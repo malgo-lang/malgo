@@ -2,20 +2,22 @@ module FieldPrefix = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  type Point2D = { x : Float, y : Float };
+  type Point2D = { x : Int32, y : Int32 };
 
-  print2D = { { Point2D.x = x, y = y } ->
-    printString (toStringFloat x);
-    printString ", ";
-    printString (toStringFloat y)
-  };
-  
   type Point3D = { x : Float, y : Float, z : Float };
 
+  print2D = { { Point2D.x = x, y = y } ->
+    printString (toStringInt32 x);
+    printString ", ";
+    printString (toStringInt32 y)
+  };
+  
   zero2D : { Point2D };
-  zero2D = { { x = 0, y = 0 } };
+  zero2D = { { Point2D.x = 0, y = 0 } };
 
   main = {
     print2D !zero2D
   };
 }
+
+-- Expected: 0, 0

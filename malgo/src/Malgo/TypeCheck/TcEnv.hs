@@ -1,12 +1,14 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Malgo.TypeCheck.TcEnv
-  ( TcEnv (..),
+  ( RecordTypeName,
+    TcEnv (..),
     varEnv,
     typeEnv,
     abbrEnv,
     fieldEnv,
     rnEnv,
+    appendFieldEnv,
     genTcEnv,
     findBuiltinType,
   )
@@ -26,11 +28,13 @@ import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
 import Malgo.UTerm
 
+type RecordTypeName = String
+
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId (Scheme UType),
     _typeEnv :: HashMap RnId (TypeDef UType),
     _abbrEnv :: HashMap (Id UType) ([Id UType], UType),
-    _fieldEnv :: HashMap RnId (Scheme UType),
+    _fieldEnv :: HashMap RnId [(RecordTypeName, Scheme UType)],
     _rnEnv :: RnEnv
   }
   deriving stock (Show)
@@ -55,8 +59,15 @@ instance HasUTerm TypeF TypeVar TcEnv where
     TcEnv <$> traverseOf (traversed . traversed . walkOn) f _varEnv
       <*> traverseOf (traversed . traversed . walkOn) f _typeEnv
       <*> traverseOf (traversed . traversed . walkOn) f _abbrEnv
-      <*> traverseOf (traversed . traversed . walkOn) f _fieldEnv
+      <*> traverseOf (traversed . traversed . _2 . traversed . walkOn) f _fieldEnv
       <*> pure _rnEnv
+
+appendFieldEnv :: [(Id (), (RecordTypeName, Scheme UType))] -> TcEnv -> TcEnv
+appendFieldEnv newEnv = over fieldEnv (go newEnv)
+  where
+    go [] e = e
+    go ((n, n') : xs) e = go xs $ HashMap.alter (f n') n e
+    f n' ns = Just $ (n' :) $ concat ns
 
 genTcEnv :: Applicative f => RnEnv -> f TcEnv
 genTcEnv rnEnv = do

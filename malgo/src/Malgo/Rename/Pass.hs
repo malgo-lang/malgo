@@ -386,16 +386,10 @@ genToplevelEnv modName ds builtinEnv = do
     genFieldEnv (TyCon _ _) = pure ()
     genFieldEnv (TyArr _ t1 t2) = genFieldEnv t1 >> genFieldEnv t2
     genFieldEnv (TyTuple _ ts) = traverse_ genFieldEnv ts
-    genFieldEnv (TyRecord pos kts) = do
+    genFieldEnv (TyRecord _ kts) = do
       let ks = map fst kts
       let ts = map snd kts
       traverse_ genFieldEnv ts
-      env <- get
-      -- unless (disjoint ks (HashMap.keys (env ^. fieldEnv))) do
-      --   errorOn pos $
-      --     "Duplicate name:"
-      --       <+> sep
-      --         (punctuate "," $ map (squotes . pretty) (ks `intersect` HashMap.keys (env ^. fieldEnv)))
       ks' <- traverse (resolveGlobalName modName) ks
       zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, With Implicit k')]) ks ks'
     genFieldEnv (TyLazy _ t) = genFieldEnv t

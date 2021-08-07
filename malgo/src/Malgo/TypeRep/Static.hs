@@ -122,8 +122,8 @@ pprTypePrec _ (TyCon c) = pretty c
 pprTypePrec _ (TyPrim p) = pretty p
 pprTypePrec d (TyArr t1 t2) =
   maybeParens (d > 10) $ pprTypePrec 11 t1 <+> "->" <+> pprTypePrec 10 t2
-pprTypePrec _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
-pprTypePrec _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pprTypePrec 0 v) $ Map.toList kvs
+pprTypePrec _ (TyTuple n) = parens $ align $ sep $ replicate (max 0 (n - 1)) ","
+pprTypePrec _ (TyRecord kvs) = braces $ align $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pprTypePrec 0 v) $ Map.toList kvs
 pprTypePrec _ TyLazy = "{}"
 pprTypePrec d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pprTypePrec 11 ty]
 pprTypePrec _ TyBottom = "#Bottom"
@@ -199,7 +199,7 @@ instance HasKind Void where
 
 -- | Universally quantified type
 data Scheme ty = Forall [Id ty] ty
-  deriving stock (Show, Generic, Functor, Foldable, Traversable)
+  deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
 
 instance Binary ty => Binary (Scheme ty)
 

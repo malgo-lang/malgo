@@ -42,13 +42,19 @@ lookupType pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
+-- fieldsのすべてのフィールドを含むレコード型を検索する
+-- マッチするレコード型が複数あった場合はエラー
 lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> [WithPrefix RnId] -> m (Scheme UType)
 lookupRecordType pos fields = do
   env <- use fieldEnv
-  traceShowM $ "DEBUG:" <+> pretty fields
-  case asumMap (`HashMap.lookup` env) (map removePrefix fields) of
-    Nothing -> errorOn pos $ "Not in scope:" <+> (fields & map pretty & punctuate " or" & sep)
-    Just scheme -> pure scheme
+  let candidates = map (lookup env) fields
+  case List.foldr1 List.intersect candidates of
+    [] -> bug $ Unreachable "The existence of fields are proved on Rename pass"
+    [(_, scheme)] -> pure scheme
+    xs -> errorOn pos $ "Ambiguious record:" <+> sep (punctuate "," $ map (pretty . fst) xs)
+  where
+    lookup env (WithPrefix (With Nothing k)) = concat $ HashMap.lookup k env
+    lookup env (WithPrefix (With (Just p) k)) = filter ((== p) . fst) $ concat $ HashMap.lookup k env
 
 typeCheck :: (MonadFail m, HasOpt env, MonadReader env m, MonadIO m, HasUniqSupply env, HasLogFunc env) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) = do
@@ -170,16 +176,16 @@ tcTypeSynonyms ds =
 
     typ' <- transType typ
     abbrEnv . at con .= Just (params', typ')
-    updateFieldEnv (tcType typ) params' typ'
+    updateFieldEnv (nameToString $ name ^. idName) (tcType typ) params' typ'
 
     pure (pos, name, params, tcType typ)
 
-updateFieldEnv :: (MonadState TcEnv f) => S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
-updateFieldEnv (S.TyRecord _ kts) params typ = do
+updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'TypeCheck) -> [Id UType] -> UType -> f ()
+updateFieldEnv typeName (S.TyRecord _ kts) params typ = do
   let scheme = Forall params typ
   for_ kts \(label, _) -> do
-    fieldEnv . at label ?= scheme
-updateFieldEnv _ _ _ = pure ()
+    modify (appendFieldEnv [(label, (typeName, scheme))])
+updateFieldEnv _ _ _ _ = pure ()
 
 tcDataDefs ::
   ( MonadState TcEnv m,
@@ -367,10 +373,15 @@ tcExpr (Tuple pos es) = do
   pure $ Tuple (With esType pos) es'
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
-  recordType <- instantiate pos =<< lookupRecordType pos (map fst kvs)
   let kvsType = TyRecord $ Map.fromList $ map (bimap removePrefix typeOf) kvs'
-  tell [With pos $ recordType :~ kvsType]
-  pure $ Record (With recordType pos) kvs'
+  pure $ Record (With kvsType pos) kvs'
+-- レコードリテラルでは、レコード型をフィールド名から検索する必要はない
+-- * 存在しないフィールド名はRenameパスでエラーになる
+-- * 必ずすべてのフィールド・値ペアがある
+-- レコード型を検索するコードは↓
+-- recordType <- instantiate pos =<< lookupRecordType pos (map fst kvs)
+-- tell [With pos $ recordType :~ kvsType]
+-- pure $ Record (With recordType pos) kvs'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
   ty <- UVar <$> freshVar
