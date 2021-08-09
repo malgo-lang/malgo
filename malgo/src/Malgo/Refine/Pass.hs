@@ -34,7 +34,7 @@ refineScDef :: (TypeChecked t x, MonadReader RefineEnv m, MonadIO m) => ScDef x 
 refineScDef (x, name, expr) = (over ann toType x,name,) <$> refineExp expr
 
 refineExp :: (TypeChecked t x, MonadReader RefineEnv m, MonadIO m) => Exp x -> m (Exp (Malgo 'Refine))
-refineExp (Var x m v) = pure $ Var (over ann toType x) m v
+refineExp (Var x v) = pure $ Var (over ann toType x) v
 refineExp (Unboxed x u) = pure $ Unboxed (over ann toType x) u
 refineExp (Apply x e1 e2) = Apply (over ann toType x) <$> refineExp e1 <*> refineExp e2
 refineExp (OpApp x op e1 e2) = do
@@ -43,7 +43,7 @@ refineExp (OpApp x op e1 e2) = do
   e2' <- refineExp e2
   let applyType = TyArr (typeOf e2') (x' ^. ann)
   let opType = TyArr (typeOf e1') applyType
-  pure $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) Nothing op) e1') e2'
+  pure $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) (NoPrefix op)) e1') e2'
 refineExp (Fn x cs) = do
   let x' = over ann toType x
   cs' <- traverse refineClause cs

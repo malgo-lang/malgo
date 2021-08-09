@@ -142,8 +142,8 @@ rnExp ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Exp (Malgo 'Parse) ->
   m (Exp (Malgo 'Rename))
-rnExp (Var pos Nothing name) = Var pos Nothing <$> lookupVarName pos name
-rnExp (Var pos (Just modName) name) = Var pos Nothing <$> lookupQualifiedVarName pos modName name
+rnExp (Var pos (WithPrefix (With Nothing name))) = Var pos . NoPrefix <$> lookupVarName pos name
+rnExp (Var pos (WithPrefix (With (Just modName) name))) = Var pos . Prefix modName <$> lookupQualifiedVarName pos (ModuleName modName) name
 rnExp (Unboxed pos val) = pure $ Unboxed pos val
 rnExp (Boxed pos val) = do
   f <- lookupBox pos val
@@ -159,25 +159,32 @@ rnExp (OpApp pos op e1 e2) = do
     Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
-rnExp (Record pos kvs) = Record pos <$> traverse (bitraverse (lookupFieldName pos) rnExp) kvs
+rnExp (Record pos kvs) =
+  Record pos
+    <$> traverse
+      ( bitraverse
+          (\(WithPrefix (With p x)) -> WithPrefix . With p <$> lookupFieldName pos x)
+          rnExp
+      )
+      kvs
 rnExp (List pos es) = do
   nilName <- lookupVarName pos "Nil"
   consName <- lookupVarName pos "Cons"
   buildListApply nilName consName <$> traverse rnExp es
   where
-    buildListApply nilName _ [] = Var pos Nothing nilName
-    buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos Nothing consName) x) (buildListApply nilName consName xs)
+    buildListApply nilName _ [] = Var pos (NoPrefix nilName)
+    buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos (NoPrefix consName)) x) (buildListApply nilName consName xs)
 rnExp (Force pos e) = Force pos <$> rnExp e
-rnExp (RecordAccess pos l) = RecordAccess pos <$> lookupFieldName pos l
+rnExp (RecordAccess pos (WithPrefix (With p l))) = RecordAccess pos . WithPrefix . With p <$> lookupFieldName pos l
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
-lookupBox pos Int32 {} = Var pos Nothing <$> lookupVarName pos "int32#"
-lookupBox pos Int64 {} = Var pos Nothing <$> lookupVarName pos "int64#"
-lookupBox pos Float {} = Var pos Nothing <$> lookupVarName pos "float#"
-lookupBox pos Double {} = Var pos Nothing <$> lookupVarName pos "double#"
-lookupBox pos Char {} = Var pos Nothing <$> lookupVarName pos "char#"
-lookupBox pos String {} = Var pos Nothing <$> lookupVarName pos "string#"
+lookupBox pos Int32 {} = Var pos . NoPrefix <$> lookupVarName pos "int32#"
+lookupBox pos Int64 {} = Var pos . NoPrefix <$> lookupVarName pos "int64#"
+lookupBox pos Float {} = Var pos . NoPrefix <$> lookupVarName pos "float#"
+lookupBox pos Double {} = Var pos . NoPrefix <$> lookupVarName pos "double#"
+lookupBox pos Char {} = Var pos . NoPrefix <$> lookupVarName pos "char#"
+lookupBox pos String {} = Var pos . NoPrefix <$> lookupVarName pos "string#"
 
 rnType :: (MonadReader RnEnv m, MonadIO m) => Type (Malgo 'Parse) -> m (Type (Malgo 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
@@ -211,7 +218,7 @@ rnPat :: (MonadReader RnEnv m, MonadIO m) => Pat (Malgo 'Parse) -> m (Pat (Malgo
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
-rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (lookupFieldName pos) rnPat) kvs
+rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (\(WithPrefix (With p k)) -> WithPrefix . With p <$> lookupFieldName pos k) rnPat) kvs
 rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName pos "Cons" <*> traverse rnPat xs
   where
     buildListP nilName _ [] = ConP pos nilName []
@@ -379,16 +386,10 @@ genToplevelEnv modName ds builtinEnv = do
     genFieldEnv (TyCon _ _) = pure ()
     genFieldEnv (TyArr _ t1 t2) = genFieldEnv t1 >> genFieldEnv t2
     genFieldEnv (TyTuple _ ts) = traverse_ genFieldEnv ts
-    genFieldEnv (TyRecord pos kts) = do
+    genFieldEnv (TyRecord _ kts) = do
       let ks = map fst kts
       let ts = map snd kts
       traverse_ genFieldEnv ts
-      env <- get
-      unless (disjoint ks (HashMap.keys (env ^. fieldEnv))) do
-        errorOn pos $
-          "Duplicate name:"
-            <+> sep
-              (punctuate "," $ map (squotes . pretty) (ks `intersect` HashMap.keys (env ^. fieldEnv)))
       ks' <- traverse (resolveGlobalName modName) ks
       zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, With Implicit k')]) ks ks'
     genFieldEnv (TyLazy _ t) = genFieldEnv t

@@ -1,12 +1,13 @@
 ghc-options:
   $everything: -haddock
-  llvm-hs: -optcxx -std=c++11
+  llvm-hs: -optcxx -std=c++14
 packages:
 - koriel/
 - malgo/
 extra-deps:
-- llvm-hs-pretty-0.9.0.0@sha256:b7a5de5f3dd97893d19d2b47af1e4dd8d075a5cf57062180a912d1f3ef1def60,1671
-- witherable-0.4.1@sha256:5b4840efe20d16cab6b13fa2f39ed383703cccbc246f5b710591069fcc6884c0,2249
-- indexed-traversable-instances-0.1@sha256:3aaf97040001bbe583e29c2b9c7d41660df265e6565a0d2ac09a3ed5b8bc21be,2874
-- relude-1.0.0.1
-resolver: lts-18.0
+  - git: git@github.com:llvm-hs/llvm-hs
+    commit: 0c8795a95a8001c424af81a05b8ffacd774e76bd
+    subdirs:
+      - llvm-hs
+      - llvm-hs-pure
+resolver:  nightly-2021-08-08

@@ -39,7 +39,7 @@ instance Pretty Constraint where
 type UnifyResult = (HashMap TypeVar UType, [With SourcePos Constraint])
 
 unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc ann
-unifyErrorMessage t1 t2 = "Couldn't match" <> softline <> align (sep [pretty t1, "with" <+> pretty t2])
+unifyErrorMessage t1 t2 = "Couldn't" <+> align (sep ["match" <+> pretty t1, "with " <+> align (pretty t2)])
 
 class Monad m => MonadBind m where
   lookupVar :: TypeVar -> m (Maybe UType)

@@ -22,7 +22,6 @@ data DsEnv = DsEnv
     -- | 型環境
     _varTypeEnv :: HashMap RnId (Scheme Type),
     _typeDefEnv :: HashMap RnId (TypeDef Type),
-    _fieldEnv :: HashMap RnId (Scheme Type),
     _desugarRnEnv :: RnEnv
   }
   deriving stock (Show)
@@ -36,7 +35,6 @@ instance Pretty DsEnv where
               "_nameEnv" <+> "=" <+> pretty (HashMap.toList _nameEnv),
               "_varTypeEnv" <+> "=" <+> pretty (HashMap.toList _varTypeEnv),
               "_typeDefEnv" <+> "=" <+> pretty (HashMap.toList _typeDefEnv),
-              "_fieldEnv" <+> "=" <+> pretty (HashMap.toList _fieldEnv),
               "_desugarRnEnv" <+> "=" <+> pretty _desugarRnEnv
             ]
         )
@@ -56,16 +54,14 @@ makeDsEnv ::
   ModuleName ->
   HashMap (Id ()) (Scheme Type) ->
   HashMap (Id ()) (TypeDef Type) ->
-  HashMap (Id ()) (Scheme Type) ->
   RnEnv ->
   DsEnv
-makeDsEnv modName varEnv typeEnv fieldEnv rnEnv =
+makeDsEnv modName varEnv typeEnv rnEnv =
   DsEnv
     { _moduleName = modName,
       _nameEnv = mempty,
       _varTypeEnv = varEnv,
       _typeDefEnv = typeEnv,
-      _fieldEnv = fieldEnv,
       _desugarRnEnv = rnEnv
     }
 
