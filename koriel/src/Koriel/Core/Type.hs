@@ -19,7 +19,7 @@ instance Binary Tag
 
 instance Pretty Tag where
   pretty (Data name) = pretty name
-  pretty Tuple = "[tuple]"
+  pretty Tuple = "#tuple"
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -27,7 +27,7 @@ data Con = Con Tag [Type]
 instance Binary Con
 
 instance Pretty Con where
-  pretty (Con tag xs) = "<" <> pretty tag <+> sep (punctuate "," (map pretty xs)) <> ">"
+  pretty (Con tag xs) = parens $ hang 1 $ sep $ pretty tag : map pretty xs
 
 -- TODO: クロージャを表す型を追加
 -- ClosureT [Type] Type
@@ -51,7 +51,7 @@ data Type
 instance Binary Type
 
 instance Pretty Type where
-  pretty (a :-> b) = brackets (sep $ punctuate "," $ map pretty a) <+> "->" <+> pretty b
+  pretty (a :-> b) = parens $ hang 1 $ sep ["->", parens $ sep $ map pretty a, pretty b]
   pretty Int32T = "Int32#"
   pretty Int64T = "Int64#"
   pretty FloatT = "Float#"
@@ -59,10 +59,10 @@ instance Pretty Type where
   pretty CharT = "Char#"
   pretty StringT = "String#"
   pretty BoolT = "Bool#"
-  pretty (SumT cs) = braces $ sep (map pretty cs)
+  pretty (SumT cs) = parens $ hang 1 $ sep ("sum" : map pretty cs)
   pretty (PtrT t) = parens $ "Ptr#" <+> pretty t
-  pretty AnyT = "*"
-  pretty VoidT = "Void"
+  pretty AnyT = "Any#"
+  pretty VoidT = "Void#"
 
 makePrisms ''Type
 

@@ -46,8 +46,8 @@ instance Pretty Unboxed where
   pretty (Double x) = pretty x
   pretty (Char x) = squotes (pretty x)
   pretty (String x) = dquotes (pretty x)
-  pretty (Bool True) = "True#"
-  pretty (Bool False) = "False#"
+  pretty (Bool True) = "#true"
+  pretty (Bool False) = "#false"
 
 -- | atoms
 data Atom a
@@ -79,7 +79,7 @@ data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 instance Pretty a => Pretty (LocalDef a) where
-  pretty (LocalDef v o) = parens $ pretty v <> softline <> pretty o
+  pretty (LocalDef v o) = parens $ hang 1 $ sep [pretty v, pretty o]
 
 localDefVar :: Lens' (LocalDef a) a
 localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
@@ -161,14 +161,13 @@ instance HasType a => HasType (Exp a) where
 
 instance Pretty a => Pretty (Exp a) where
   pretty (Atom x) = pretty x
-  pretty (Call f xs) = parens $ pretty f <+> sep (map pretty xs)
-  pretty (CallDirect f xs) = parens $ "direct" <+> pretty f <+> sep (map pretty xs)
-  pretty (ExtCall p t xs) = parens $ "external" <+> pretty p <> braces (pretty t) <+> sep (map pretty xs)
-  pretty (BinOp o x y) = parens $ pretty o <+> pretty x <+> pretty y
-  pretty (Cast ty x) = parens $ "cast" <+> pretty ty <+> pretty x
-  pretty (Let xs e) =
-    parens $ "let" <> softline <> parens (vcat (map pretty xs)) <> softline <> pretty e
-  pretty (Match v cs) = parens $ "match" <+> pretty v <> softline <> vcat (toList $ fmap pretty cs)
+  pretty (Call f xs) = parens $ hang 1 $ sep $ pretty f : map pretty xs
+  pretty (CallDirect f xs) = parens $ hang 1 $ sep $ "direct" : pretty f : map pretty xs
+  pretty (ExtCall p t xs) = parens $ hang 1 $ sep $ "external" : pretty p : pretty t : map pretty xs
+  pretty (BinOp o x y) = parens $ hang 1 $ sep [pretty o, pretty x, pretty y]
+  pretty (Cast ty x) = parens $ hang 1 $ sep ["cast", pretty ty, pretty x]
+  pretty (Let xs e) = parens $ hang 1 $ "let" <+> sep [parens (align $ sep (map pretty xs)), pretty e]
+  pretty (Match v cs) = parens $ hang 1 $ "match" <+> sep [pretty v, vcat (toList $ fmap pretty cs)]
   pretty (Error _) = "ERROR"
 
 instance HasFreeVar Exp where
@@ -211,9 +210,9 @@ instance HasType a => HasType (Case a) where
 
 instance Pretty a => Pretty (Case a) where
   pretty (Unpack c xs e) =
-    parens $ sep ["unpack" <+> parens (pretty c <+> sep (map pretty xs)), pretty e]
-  pretty (Switch u e) = parens $ sep ["switch" <+> pretty u, pretty e]
-  pretty (Bind x e) = parens $ sep ["bind" <+> pretty x, pretty e]
+    parens $ hang 1 $ sep ["unpack" <+> parens (pretty c <+> sep (map pretty xs)), pretty e]
+  pretty (Switch u e) = parens $ hang 1 $ sep ["switch" <+> pretty u, pretty e]
+  pretty (Bind x e) = parens $ hang 1 $ sep ["bind" <+> pretty x, pretty e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
@@ -239,8 +238,8 @@ instance HasType a => HasType (Obj a) where
   typeOf (Pack t _ _) = t
 
 instance Pretty a => Pretty (Obj a) where
-  pretty (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pretty xs), pretty e]
-  pretty (Pack ty c xs) = parens $ sep (["pack", pretty c] <> map pretty xs) <+> ":" <+> pretty ty
+  pretty (Fun xs e) = parens $ hang 1 $ sep ["fun" <+> parens (sep $ map pretty xs), pretty e]
+  pretty (Pack ty c xs) = parens $ hang 1 $ sep (["pack", pretty ty, pretty c] <> map pretty xs)
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -264,7 +263,7 @@ instance Pretty a => Pretty (Program a) where
   pretty Program {..} =
     vcat $
       map
-        (\(f, (ps, e)) -> parens $ "define" <+> pretty f <+> parens (sep $ map pretty ps) <> softline <> pretty e)
+        (\(f, (ps, e)) -> parens $ hang 1 $ sep [sep ["define", pretty f, parens (sep $ map pretty ps)], pretty e])
         _topFuncs
 
 appObj :: Traversal' (Obj a) (Exp a)
