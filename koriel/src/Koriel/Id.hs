@@ -31,6 +31,16 @@ import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList, (.=))
 import Koriel.Pretty
 
+newtype ModuleName = ModuleName String
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
+
+instance Binary ModuleName
+
+instance Pretty ModuleName where
+  pretty (ModuleName modName) = pretty modName
+
+makePrisms ''ModuleName
+
 data IdSort
   = -- | 外部から参照可能な識別子
     External ModuleName
@@ -46,16 +56,6 @@ instance Pretty IdSort where
   pretty (External modName) = "External" <+> pretty modName
   pretty (WiredIn modName) = "WiredIn" <+> pretty modName
   pretty Internal = "Internal"
-
-newtype ModuleName = ModuleName String
-  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-instance Pretty ModuleName where
-  pretty (ModuleName modName) = pretty modName
-
-instance Binary ModuleName
-
-makePrisms ''ModuleName
 
 data Id a = Id
   { _idName :: Maybe String,
