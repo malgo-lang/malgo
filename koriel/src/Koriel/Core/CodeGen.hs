@@ -166,9 +166,8 @@ mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => 
 mallocType ty = join $ mallocBytes <$> sizeof 64 ty <*> pure (Just $ ptr ty)
 
 toName :: Id a -> LLVM.AST.Name
+toName Id {_idName = Just "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
 toName Id {_idName, _idSort = Koriel.Id.External (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> nameToString _idName
-toName Id {_idName = Just "main", _idSort = Koriel.Id.WiredIn (ModuleName "Builtin")} = LLVM.AST.mkName "main"
-toName Id {_idName, _idSort = Koriel.Id.WiredIn (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> nameToString _idName
 toName Id {_idName, _idUniq, _idSort = Koriel.Id.Internal} = LLVM.AST.mkName $ nameToString _idName <> "_" <> show _idUniq
 
 -- generate code for a 'known' function
@@ -185,7 +184,7 @@ genFunc ::
   Exp (Id C.Type) ->
   m Operand
 genFunc name params body
-  | idIsExternal name || idIsWiredIn name =
+  | idIsExternal name =
     function funcName llvmParams retty $ \args -> local (over valueHashMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   | otherwise =
     internalFunction funcName llvmParams retty $ \args -> local (over valueHashMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
@@ -463,9 +462,10 @@ globalStringPtr str nm = do
       llvmVals = map (C.Int 8) (utf8Vals ++ [0])
       char = IntegerType 8
       charArray = C.Array char llvmVals
-  ty <- LLVM.AST.Typed.typeOf charArray >>= \case
-    Left err -> error err
-    Right x -> pure x
+  ty <-
+    LLVM.AST.Typed.typeOf charArray >>= \case
+      Left err -> error err
+      Right x -> pure x
   emitDefn $
     GlobalDefinition
       globalVariableDefaults

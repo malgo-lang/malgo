@@ -317,7 +317,7 @@ cast ty e
 
 mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
 mainFunc e = do
-  mainFuncId <- newId "main" ([] :-> Int32T) $ WiredIn (ModuleName "Builtin")
+  mainFuncId <- newId "main" ([] :-> Int32T) $ External (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
     _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
     pure e
