@@ -166,9 +166,9 @@ mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => 
 mallocType ty = join $ mallocBytes <$> sizeof 64 ty <*> pure (Just $ ptr ty)
 
 toName :: Id a -> LLVM.AST.Name
-toName Id {_idName = Just "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
-toName Id {_idName, _idSort = Koriel.Id.External (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> nameToString _idName
-toName Id {_idName, _idUniq, _idSort = Koriel.Id.Internal} = LLVM.AST.mkName $ nameToString _idName <> "_" <> show _idUniq
+toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
+toName Id {_idName, _idSort = Koriel.Id.External (ModuleName mod)} = LLVM.AST.mkName $ mod <> "." <> _idName
+toName Id {_idName, _idUniq, _idSort = Koriel.Id.Internal} = LLVM.AST.mkName $ _idName <> "_" <> show _idUniq
 
 -- generate code for a 'known' function
 genFunc ::
@@ -192,7 +192,7 @@ genFunc name params body
     funcName = toName name
     llvmParams =
       map
-        (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ nameToString $ x ^. idName))
+        (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ x ^. idName))
         params
     retty = convType (C.typeOf body)
 
@@ -404,7 +404,7 @@ genLocalDef ::
   m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
-  name <- toName <$> newLocalId (nameToString (funName ^. idName) <> "_closure") ()
+  name <- toName <$> newLocalId (funName ^. idName <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug $ Unreachable "The length of internal function parameters must be 1 or more"
     (rawCapture : ps') -> do
