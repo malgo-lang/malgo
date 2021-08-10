@@ -278,7 +278,7 @@ dsStmts (NoBind _ e :| s : ss) = runDef $ do
   dsStmts (s :| ss)
 dsStmts (G.Let _ v e :| s : ss) = do
   e' <- dsExp e
-  v' <- newLocalId ("$let_" <> v ^. idName) (C.typeOf e')
+  v' <- newLocalId ("$let_" <> idToString v) (C.typeOf e')
   nameEnv . at v ?= v'
   ss' <- dsStmts (s :| ss)
   pure $ Match e' (Bind v' ss' :| [])
@@ -310,12 +310,12 @@ curryFun ps@(_ : _) e = curryFun' ps []
   where
     curryFun' [] _ = bug $ Unreachable "Currying no-arguments function is not supported"
     curryFun' [x] as = do
-      x' <- newLocalId (x ^. idName) (C.typeOf x)
+      x' <- newLocalId (idToString x) (C.typeOf x)
       fun <- newLocalId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
       pure ([x'], C.Let [C.LocalDef fun $ Fun ps e] body)
     curryFun' (x : xs) as = do
-      x' <- newLocalId (x ^. idName) (C.typeOf x)
+      x' <- newLocalId (idToString x) (C.typeOf x)
       fun <- curryFun' xs (C.Var x' : as)
       let funObj = uncurry Fun fun
       body <- runDef $ do
