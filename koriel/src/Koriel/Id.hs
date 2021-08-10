@@ -16,7 +16,6 @@ module Koriel.Id
     nameToString,
     pprIdName,
     idIsExternal,
-    idIsWiredIn,
     newIdOnSort,
     newIdOnName,
     cloneId,
@@ -42,10 +41,8 @@ instance Pretty ModuleName where
 makePrisms ''ModuleName
 
 data IdSort
-  = -- | 外部から参照可能な識別子
+  = -- | 他のモジュールから参照可能な識別子
     External ModuleName
-  | -- | 処理系が使う識別子
-    WiredIn ModuleName
   | -- | モジュール内に閉じた識別子
     Internal
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -54,7 +51,6 @@ instance Binary IdSort
 
 instance Pretty IdSort where
   pretty (External modName) = "External" <+> pretty modName
-  pretty (WiredIn modName) = "WiredIn" <+> pretty modName
   pretty Internal = "Internal"
 
 data Id a = Id
@@ -91,7 +87,6 @@ prettyMeta _ _ = mempty
 
 instance Pretty a => Pretty (Id a) where
   pretty id@(Id _ _ m (External modName)) = pretty modName <> "." <> pprIdName id <> prettyMeta pretty m
-  pretty id@(Id _ _ m (WiredIn modName)) = pretty modName <> "." <> pprIdName id <> prettyMeta pretty m
   pretty id@(Id _ u m Internal) = pprIdName id <> "_" <> pretty u <> prettyMeta pretty m
 
 makeLenses ''Id
@@ -122,7 +117,3 @@ cloneId Id {..} = do
 idIsExternal :: Id a -> Bool
 idIsExternal Id {_idSort = External _} = True
 idIsExternal _ = False
-
-idIsWiredIn :: Id a -> Bool
-idIsWiredIn Id {_idSort = WiredIn _} = True
-idIsWiredIn _ = False
