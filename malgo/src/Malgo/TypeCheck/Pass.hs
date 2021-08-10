@@ -171,7 +171,7 @@ tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     TyCon con <- lookupType pos name
 
-    params' <- traverse (\p -> newLocalId (p ^. idName) (TYPE $ Rep BoxedRep)) params
+    params' <- traverse (\p -> newLocalId (idToString p) (TYPE $ Rep BoxedRep)) params
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
 
     typ' <- transType typ

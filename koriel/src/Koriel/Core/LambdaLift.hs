@@ -57,7 +57,7 @@ llift (Let [LocalDef n (Fun as body)] e) = do
       put backup
       body' <- llift body
       let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
-      newFun <- def (n ^. idName) (toList fvs <> as) body'
+      newFun <- def (idToString n) (toList fvs <> as) body'
       Let [LocalDef n (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
