@@ -7,10 +7,10 @@ module InferEither = {
 
   data Either a b = Left a | Right b;
 
-  id1 :: Either String Int32 -> Either String Int32;
+  id1 : Either String Int32 -> Either String Int32;
   id1 = {x -> x};
 
-  id2 :: Either Bool Int32 -> Either Bool Int32;
+  id2 : Either Bool Int32 -> Either Bool Int32;
   id2 = {x -> x};
 
   main = {
