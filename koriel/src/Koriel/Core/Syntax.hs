@@ -97,6 +97,8 @@ data Exp a
     CallDirect a [Atom a]
   | -- | application of external function
     ExtCall String Type [Atom a]
+  | -- | application of llvm function
+    RawCall String Type [Atom a]
   | -- | binary operation
     BinOp Op (Atom a) (Atom a)
   | -- | type casting
@@ -134,6 +136,13 @@ instance HasType a => HasType (Exp a) where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = bug $ Unreachable "length ps == length xs"
+  typeOf (RawCall _ t xs) = case t of
+    ps :-> r -> go ps (map typeOf xs) r
+    _ -> bug $ Unreachable "t must be ps :-> r"
+    where
+      go [] [] v = v
+      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
+      go _ _ _ = bug $ Unreachable "length ps == length xs"
   typeOf (BinOp o x _) = case o of
     Add -> typeOf x
     Sub -> typeOf x
@@ -164,6 +173,7 @@ instance Pretty a => Pretty (Exp a) where
   pretty (Call f xs) = parens $ hang 1 $ sep $ pretty f : map pretty xs
   pretty (CallDirect f xs) = parens $ hang 1 $ sep $ "direct" : pretty f : map pretty xs
   pretty (ExtCall p t xs) = parens $ hang 1 $ sep $ "external" : pretty p : pretty t : map pretty xs
+  pretty (RawCall p t xs) = parens $ hang 1 $ sep $ "raw" : pretty p : pretty t : map pretty xs
   pretty (BinOp o x y) = parens $ hang 1 $ sep [pretty o, pretty x, pretty y]
   pretty (Cast ty x) = parens $ hang 1 $ sep ["cast", pretty ty, pretty x]
   pretty (Let xs e) = parens $ hang 1 $ "let" <+> sep [parens (align $ sep (map pretty xs)), pretty e]
@@ -175,6 +185,7 @@ instance HasFreeVar Exp where
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
   freevars (ExtCall _ _ xs) = foldMap freevars xs
+  freevars (RawCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . view localDefVar) (freevars e <> foldMap (freevars . view localDefObj) xs) xs
@@ -187,6 +198,7 @@ instance HasAtom Exp where
     Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
     ExtCall p t xs -> ExtCall p t <$> traverse f xs
+    RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . localDefObj . atom) f xs <*> traverseOf atom f e
@@ -262,9 +274,13 @@ makeLenses ''Program
 
 instance Pretty a => Pretty (Program a) where
   pretty Program {..} =
-    vcat $ concat [
-      ["variables:"], map (\(v, e) -> parens $ hang 1 $ sep ["define", pretty v, pretty e]) _topVars,
-      ["functions:"], map (\(f, (ps, e)) -> parens $ hang 1 $ sep [sep ["define", pretty f, parens (sep $ map pretty ps)], pretty e]) _topFuncs]
+    vcat $
+      concat
+        [ ["variables:"],
+          map (\(v, e) -> parens $ hang 1 $ sep ["define", pretty v, pretty e]) _topVars,
+          ["functions:"],
+          map (\(f, (ps, e)) -> parens $ hang 1 $ sep [sep ["define", pretty f, parens (sep $ map pretty ps)], pretty e]) _topFuncs
+        ]
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
@@ -315,10 +331,14 @@ cast ty e
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
-mainFunc e = do
+mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => ModuleName -> [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc (ModuleName mainModName) depList e = do
   mainFuncId <- newId "main" ([] :-> Int32T) $ External (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
     _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
+    traverse_ (\(ModuleName modName) -> 
+      if modName == mainModName
+         then bind $ RawCall ("koriel_load_" <> modName) ([] :-> VoidT) []
+         else bind $ ExtCall ("koriel_load_" <> modName) ([] :-> VoidT) []) depList
     pure e
   pure (mainFuncId, ([], mainFuncBody))

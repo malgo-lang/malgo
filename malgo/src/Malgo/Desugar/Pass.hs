@@ -39,16 +39,17 @@ desugar ::
   HashMap RnId (Scheme GT.Type) ->
   HashMap RnId (TypeDef GT.Type) ->
   RnEnv ->
+  [ModuleName] -> 
   Module x ->
   m (DsEnv, Program (Id C.Type))
-desugar varEnv typeEnv rnEnv (Module modName ds) = do
+desugar varEnv typeEnv rnEnv depList (Module modName ds) = do
   (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
   let varDefs = mapMaybe (preview _VarDef) ds'
   let funDefs = mapMaybe (preview _FunDef) ds'
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
-        mainFunc =<< runDef do
+        mainFunc modName depList =<< runDef do
           _ <- bind mainCall
           pure (Atom $ C.Unboxed $ C.Int32 0)
       pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs))

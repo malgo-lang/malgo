@@ -12,7 +12,7 @@ import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
-import Malgo.Interface (buildInterface, loadInterface, storeInterface)
+import Malgo.Interface (buildInterface, loadInterface, storeInterface, dependencieList)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
@@ -61,7 +61,8 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   refinedAst <- refine tcEnv typedAst
   let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
   let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
-  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv (tcEnv ^. TcEnv.rnEnv) refinedAst
+  depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
+  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv (tcEnv ^. TcEnv.rnEnv) depList refinedAst
   let inf = buildInterface rnState dsEnv
   storeInterface inf
   when (debugMode opt) $ do
@@ -86,8 +87,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     liftIO $ do
       hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
       hPrint stderr $ pretty $ over appProgram flat coreLLOpt
-
-  codeGen (srcName opt) (dstName opt) uniqSupply coreLLOpt
+  codeGen (srcName opt) (dstName opt) uniqSupply (Syntax._moduleName typedAst) coreLLOpt
 
 -- | .mlgから.llへのコンパイル
 compile :: Opt -> IO ()

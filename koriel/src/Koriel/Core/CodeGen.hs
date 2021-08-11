@@ -70,8 +70,8 @@ makeLenses ''CodeGenEnv
 instance HasUniqSupply CodeGenEnv where
   uniqSupply = codeGenUniqSupply
 
-codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> Program (Id C.Type) -> m ()
-codeGen srcPath dstPath uniqSupply Program {..} = do
+codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
+codeGen srcPath dstPath uniqSupply modName Program {..} = do
   llvmir <- execModuleBuilderT emptyModuleBuilder $ do
     -- topVarsのOprMapを作成
     let varEnv = mconcatMap ?? _topVars $ \(v, e) ->
@@ -91,7 +91,9 @@ codeGen srcPath dstPath uniqSupply Program {..} = do
         $ do
           traverse_ (uncurry genVar) _topVars
           traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
-          -- TODO: genLoadModule =<< traverse_ (uncurry genInitVar) _topVars
+          genLoadModule modName do
+            traverse_ (uncurry genInitVar) _topVars
+            retVoid
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
   liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
 
@@ -183,6 +185,27 @@ toName id = LLVM.AST.mkName $ idToString id
 genVar :: MonadModuleBuilder m => Id C.Type -> Exp (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
+genLoadModule :: MonadModuleBuilder m => ModuleName -> IRBuilderT m () -> m Operand
+genLoadModule (ModuleName modName) m = function (LLVM.AST.mkName $ "koriel_load_" <> modName) [] LT.void $ const m
+
+-- initialize toplevel variable
+genInitVar ::
+  ( MonadReader CodeGenEnv m,
+    MonadState PrimMap m,
+    MonadIRBuilder m,
+    MonadModuleBuilder m,
+    MonadFail m,
+    MonadFix m,
+    MonadIO m
+  ) =>
+  Id C.Type ->
+  Exp (Id C.Type) ->
+  m ()
+genInitVar name expr = do
+  view (globalValueMap . at name) >>= \case
+    Nothing -> error $ show $ pretty name <> " is not found"
+    Just name' -> genExp expr $ store name' 0
+
 -- generate code for a 'known' function
 genFunc ::
   ( MonadModuleBuilder m,
@@ -238,6 +261,15 @@ genExp (ExtCall name (ps :-> r) xs) k = do
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
 genExp (ExtCall _ t _) _ = error $ show $ pretty t <> " is not fuction type"
+genExp (RawCall name (ps :-> r) xs) k = do
+  let primOpr =
+        ConstantOperand $
+          C.GlobalReference
+            (ptr $ FunctionType (convType r) (map convType ps) False)
+            (LLVM.AST.mkName name)
+  xsOprs <- traverse genAtom xs
+  k =<< call primOpr (map (,[]) xsOprs)
+genExp (RawCall _ t _) _ = error $ show $ pretty t <> " is not fuction type"
 genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add

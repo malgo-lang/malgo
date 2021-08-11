@@ -9,26 +9,24 @@ import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 
-data RnState = RnState {_infixInfo :: HashMap RnId (Assoc, Int), _moduleName :: ModuleName}
+data RnState = RnState
+  { _infixInfo :: HashMap RnId (Assoc, Int),
+    _dependencies :: [ModuleName],
+    _moduleName :: ModuleName
+  }
   deriving stock (Show)
 
 instance Pretty RnState where
-  pretty RnState {_infixInfo, _moduleName} =
-    "RnState"
-      <+> braces
-        ( sep
-            [ "_infixInfo" <+> "=" <+> pretty (HashMap.toList _infixInfo),
-              "_moduleName" <+> "=" <+> pretty _moduleName
-            ]
-        )
+  pretty = viaShow
 
 makeLenses ''RnState
 
-data Visibility = Explicit ModuleName -- must be qualified
-                | Implicit
+data Visibility
+  = Explicit ModuleName -- must be qualified
+  | Implicit
   deriving stock (Show, Eq)
 
-instance Pretty Visibility where pretty = viaShow 
+instance Pretty Visibility where pretty = viaShow
 
 data RnEnv = RnEnv
   { _varEnv :: HashMap PsId [With Visibility RnId],

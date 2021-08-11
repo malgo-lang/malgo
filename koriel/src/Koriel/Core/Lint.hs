@@ -66,6 +66,10 @@ lintExp (ExtCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
 lintExp ExtCall {} = error "primitive must be a function"
+lintExp (RawCall _ (ps :-> _) xs) = do
+  traverse_ lintAtom xs
+  zipWithM_ match ps xs
+lintExp RawCall {} = error "primitive must be a function"
 lintExp (BinOp o x y) = do
   lintAtom x
   lintAtom y
