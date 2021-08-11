@@ -42,8 +42,8 @@ desugar varEnv typeEnv rnEnv (Module modName ds) = do
         mainFunc =<< runDef do
           _ <- bind mainCall
           pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv, Program modName (mainFuncDef : ds'))
-    Nothing -> pure (dsEnv, Program modName ds')
+      pure (dsEnv, Program modName [] (mainFuncDef : ds'))
+    Nothing -> pure (dsEnv, Program modName [] ds')
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId []

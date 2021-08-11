@@ -29,7 +29,8 @@ lambdalift us Program {..} =
       funcs <>= HashMap.fromList topFuncs
       knowns <>= HashSet.fromList (map fst topFuncs)
       LambdaLiftState {_funcs} <- get
-      traverseOf appProgram (pure . flat) $ Program _moduleName (HashMap.toList _funcs)
+      -- TODO: lambdalift _topVars
+      traverseOf appProgram (pure . flat) $ Program _moduleName _topVars (HashMap.toList _funcs)
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader UniqSupply f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
