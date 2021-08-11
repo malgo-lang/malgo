@@ -5,7 +5,7 @@ module Malgo.Interface where
 import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
 import Data.Binary.Instances.UnorderedContainers ()
-import qualified Data.HashMap.Strict as HashMap
+import Data.Graph
 import Data.Text.Prettyprint.Doc.Render.String (renderString)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
@@ -27,7 +27,8 @@ data Interface = Interface
     _resolvedVarIdentMap :: HashMap PsId RnId, -- from DsEnv
     _resolvedTypeIdentMap :: HashMap PsId RnId, -- from DsEnv
     _coreIdentMap :: HashMap RnId (Id C.Type), -- from DsEnv
-    _infixMap :: HashMap RnId (Assoc, Int) -- from RnEnv
+    _infixMap :: HashMap RnId (Assoc, Int), -- from RnState
+    _dependencies :: [ModuleName] -- from RnState
   }
   deriving stock (Show, Generic)
 
@@ -36,22 +37,11 @@ instance Binary Interface
 makeLenses ''Interface
 
 instance Pretty Interface where
-  pretty i =
-    "Interface" <> line
-      <> indent
-        2
-        ( hsep
-            [ sep ["signatureMap =", nest 2 $ pretty $ HashMap.toList (i ^. signatureMap)],
-              sep ["typeDefMap =", nest 2 $ pretty $ HashMap.toList (i ^. typeDefMap)],
-              sep ["resolvedVarIdentMap =", nest 2 $ pretty $ HashMap.toList (i ^. resolvedVarIdentMap)],
-              sep ["resolvedTypeIdentMap =", nest 2 $ pretty $ HashMap.toList (i ^. resolvedTypeIdentMap)],
-              sep ["coreIdentMap =", nest 2 $ pretty $ HashMap.toList (i ^. coreIdentMap)]
-            ]
-        )
+  pretty = viaShow
 
 buildInterface :: RnState -> DsEnv -> Interface
 -- TODO: write abbrMap to interface
-buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) $ do
+buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
   let modName = rnState ^. RnState.moduleName
   ifor_ (dsEnv ^. DsEnv.nameEnv) $ \tcId coreId ->
     when (tcId ^. idSort == External modName) do
@@ -89,3 +79,24 @@ loadInterface (ModuleName modName) = do
       if isExistModFile
         then liftIO $ decodeFileOrFail (modPath </> modFile)
         else findAndReadFile rest modFile
+
+dependencieList :: (MonadIO m, HasOpt env, HasLogFunc env, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]
+dependencieList modName imports = do
+  depList <- ordNub . ((modName, modName, imports) :) <$> foldMapM genDepList imports
+  let (depGraph, nodeFromVertex, _) = graphFromEdges depList
+  let topSorted = map (view _1 . nodeFromVertex) $ reverse $ topSort depGraph
+  pure topSorted
+  where
+    genDepList modName = do
+      let node = modName
+      let from = modName
+      interface <-
+        loadInterface modName >>= \case
+          Nothing -> error $ show $ pretty modName <> " is not found"
+          Just x -> pure x
+      let to = interface ^. dependencies
+      case to of
+        [] -> pure [(node, from, to)]
+        _ -> do
+          xs <- foldMapM genDepList to
+          pure $ (node, from, to) : xs

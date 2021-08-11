@@ -1,0 +1,12 @@
+module ToplevelVariable = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  one = 1;
+
+  main = {
+    printInt32 one
+  };
+}
+
+-- Expected: 1

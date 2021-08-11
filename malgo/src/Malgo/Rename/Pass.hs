@@ -8,7 +8,7 @@ import Data.List.Extra (anySame, disjoint)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Interface
+import Malgo.Interface hiding (dependencies)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv
 import Malgo.Syntax
@@ -20,7 +20,7 @@ import Text.Megaparsec.Pos (SourcePos)
 rename :: (MonadReader env m, MonadIO m, HasLogFunc env) => RnEnv -> Module (Malgo 'Parse) -> m (Module (Malgo 'Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   logDebug "Start rename"
-  (ds', rnState) <- runStateT ?? RnState mempty modName $ runReaderT ?? builtinEnv $ rnDecls ds
+  (ds', rnState) <- runStateT ?? RnState mempty [] modName $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
 resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => String -> m RnId
@@ -89,7 +89,7 @@ rnDecls ds = do
   local (const rnEnv) $ do
     -- RnStateの生成
     --   定義されていない識別子に対するInfixはエラー
-    rnState <- RnState <$> infixDecls ds <*> use moduleName
+    rnState <- RnState <$> infixDecls ds <*> pure [] <*> use moduleName
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     put rnState
     traverse rnDecl ds
@@ -135,6 +135,7 @@ rnDecl (Import pos modName importList) = do
       Just x -> pure x
       Nothing -> errorOn pos $ "module" <+> pretty modName <+> "is not found"
   infixInfo <>= interface ^. infixMap
+  dependencies <>= [modName]
   pure $ Import pos modName importList
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
