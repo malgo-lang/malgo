@@ -1,0 +1,16 @@
+module ImplEq = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  impl eqInt32 : Eq Int32 = {
+    eq = { x y -> eqInt32 x y };
+  };
+
+  main = {
+    if (#eq eqInt32 1 1)
+      { printString "true" }
+      { printString "false" }
+  };
+}
+
+-- Expected: true
