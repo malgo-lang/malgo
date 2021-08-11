@@ -1,0 +1,25 @@
+module Show = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  infixr 5 (<>);
+  (<>) : String -> String -> String;
+  (<>) = { x y -> appendString x y };
+
+  type Show a = { show : a -> String };
+
+  showInt32 : Show Int32;
+  showInt32 = { show = { x -> toStringInt32 x} };
+
+  showTuple2 : Show a -> Show b -> Show (a, b);
+  showTuple2 = { showDictA showDictB ->
+    { show = { (a, b) -> "(" <> #show showDictA a <> ", " <> #show showDictB b <> ")"  } }
+  };
+
+  print : Show a -> a -> ();
+  print = { showDict x -> printString (#show showDict x) };
+
+  main = { print (showTuple2 showInt32 showInt32) (1, 2) };
+}
+
+-- Expected: (1, 2)
