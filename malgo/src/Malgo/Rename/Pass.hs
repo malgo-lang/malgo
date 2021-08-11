@@ -137,6 +137,14 @@ rnDecl (Import pos modName importList) = do
   infixInfo <>= interface ^. infixMap
   dependencies <>= [modName]
   pure $ Import pos modName importList
+rnDecl (Impl pos name typ methods) = do
+  let tyVars = HashSet.toList $ getTyVars typ
+  tyVars' <- traverse resolveName tyVars
+  local (appendRnEnv typeEnv (zip tyVars $ map (With Implicit) tyVars')) $
+    Impl pos
+      <$> lookupVarName pos name
+      <*> rnType typ
+      <*> traverse (bitraverse (\(WithPrefix (With p x)) -> WithPrefix . With p <$> lookupFieldName pos x) rnExp) methods
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
@@ -358,7 +366,9 @@ genToplevelEnv modName ds builtinEnv = do
           varEnv
           ( map
               ( \(name, id) ->
-                  if name `elem` implicits then (name, With Implicit id) else (name, With (Explicit modName') id)
+                  if name `elem` implicits
+                    then (name, With Implicit id)
+                    else (name, With (Explicit modName') id)
               )
               $ HashMap.toList $ interface ^. resolvedVarIdentMap
           )
@@ -367,7 +377,9 @@ genToplevelEnv modName ds builtinEnv = do
           typeEnv
           ( map
               ( \(name, id) ->
-                  if name `elem` implicits then (name, With Implicit id) else (name, With (Explicit modName') id)
+                  if name `elem` implicits
+                    then (name, With Implicit id)
+                    else (name, With (Explicit modName') id)
               )
               $ HashMap.toList $ interface ^. resolvedTypeIdentMap
           )
@@ -382,6 +394,12 @@ genToplevelEnv modName ds builtinEnv = do
       modify $ appendRnEnv varEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pure ()
+    aux (Impl pos name _ _) = do
+      env <- use varEnv
+      when (name `elem` HashMap.keys env) do
+        errorOn pos $ "Duplicate name:" <+> squotes (pretty name)
+      name' <- resolveGlobalName modName name
+      modify $ appendRnEnv varEnv [(name, With Implicit name')]
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
     genFieldEnv (TyVar _ _) = pure ()
     genFieldEnv (TyCon _ _) = pure ()
