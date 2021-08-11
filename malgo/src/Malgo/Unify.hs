@@ -170,7 +170,10 @@ toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => Sou
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   let tvKind = kindOf tvType
-  newLocalId (fromMaybe hint $ tv ^. typeVar . idName) tvKind
+  let name = case tv ^. typeVar . idName of
+              x | x == noName -> hint
+                | otherwise -> x
+  newLocalId name tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
 defaultToBoxed x t = transformM ?? t $ \case

@@ -79,13 +79,13 @@ appendRnEnv lens newEnv = over lens (go newEnv)
 genBuiltinRnEnv :: (MonadReader env m, HasUniqSupply env, MonadIO m) => MalgoEnv -> m RnEnv
 genBuiltinRnEnv malgoEnv = do
   -- generate RnId of primitive types
-  int32_t <- newId "Int32#" () $ WiredIn $ ModuleName "Builtin"
-  int64_t <- newId "Int64#" () $ WiredIn $ ModuleName "Builtin"
-  float_t <- newId "Float#" () $ WiredIn $ ModuleName "Builtin"
-  double_t <- newId "Double#" () $ WiredIn $ ModuleName "Builtin"
-  char_t <- newId "Char#" () $ WiredIn $ ModuleName "Builtin"
-  string_t <- newId "String#" () $ WiredIn $ ModuleName "Builtin"
-  ptr_t <- newId "Ptr#" () $ WiredIn $ ModuleName "Builtin"
+  int32_t <- newId "Int32#" () $ External $ ModuleName "Builtin"
+  int64_t <- newId "Int64#" () $ External $ ModuleName "Builtin"
+  float_t <- newId "Float#" () $ External $ ModuleName "Builtin"
+  double_t <- newId "Double#" () $ External $ ModuleName "Builtin"
+  char_t <- newId "Char#" () $ External $ ModuleName "Builtin"
+  string_t <- newId "String#" () $ External $ ModuleName "Builtin"
+  ptr_t <- newId "Ptr#" () $ External $ ModuleName "Builtin"
 
   pure $
     RnEnv

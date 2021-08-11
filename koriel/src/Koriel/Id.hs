@@ -10,13 +10,13 @@ module Koriel.Id
     idUniq,
     idMeta,
     idSort,
+    idToString,
     newId,
     newLocalId,
     newGlobalId,
-    nameToString,
+    noName,
     pprIdName,
     idIsExternal,
-    idIsWiredIn,
     newIdOnSort,
     newIdOnName,
     cloneId,
@@ -27,15 +27,24 @@ where
 import Data.Binary (Binary)
 import Data.Deriving
 import Data.Hashable (Hashable (hashWithSalt))
+import GHC.Exts
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList, (.=))
 import Koriel.Pretty
 
+newtype ModuleName = ModuleName String
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
+
+instance Binary ModuleName
+
+instance Pretty ModuleName where
+  pretty (ModuleName modName) = pretty modName
+
+makePrisms ''ModuleName
+
 data IdSort
-  = -- | 外部から参照可能な識別子
+  = -- | 他のモジュールから参照可能な識別子
     External ModuleName
-  | -- | 処理系が使う識別子
-    WiredIn ModuleName
   | -- | モジュール内に閉じた識別子
     Internal
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -44,21 +53,10 @@ instance Binary IdSort
 
 instance Pretty IdSort where
   pretty (External modName) = "External" <+> pretty modName
-  pretty (WiredIn modName) = "WiredIn" <+> pretty modName
   pretty Internal = "Internal"
 
-newtype ModuleName = ModuleName String
-  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-instance Pretty ModuleName where
-  pretty (ModuleName modName) = pretty modName
-
-instance Binary ModuleName
-
-makePrisms ''ModuleName
-
 data Id a = Id
-  { _idName :: Maybe String,
+  { _idName :: String,
     _idUniq :: Int,
     _idMeta :: a,
     _idSort :: IdSort
@@ -75,11 +73,15 @@ instance Hashable (Id a) where
 
 instance Binary a => Binary (Id a)
 
-nameToString :: Maybe String -> String
-nameToString = fromMaybe "$NoName"
+noName :: String
+noName = "$noName"
 
 pprIdName :: Id a -> Doc ann
-pprIdName Id {_idName} = pretty $ nameToString _idName
+pprIdName Id {_idName} = pretty _idName
+
+idToString :: Id a -> String
+idToString Id {_idName, _idSort = External modName} = _idName <> "." <> coerce modName
+idToString Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> show _idUniq
 
 prettyMeta :: (t -> Doc ann) -> t -> Doc ann
 
@@ -91,22 +93,21 @@ prettyMeta _ _ = mempty
 
 instance Pretty a => Pretty (Id a) where
   pretty id@(Id _ _ m (External modName)) = pretty modName <> "." <> pprIdName id <> prettyMeta pretty m
-  pretty id@(Id _ _ m (WiredIn modName)) = pretty modName <> "." <> pprIdName id <> prettyMeta pretty m
   pretty id@(Id _ u m Internal) = pprIdName id <> "_" <> pretty u <> prettyMeta pretty m
 
 makeLenses ''Id
 
 newId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> IdSort -> f (Id a)
-newId n m s = Id (Just n) <$> getUniq <*> pure m <*> pure s
+newId n m s = Id n <$> getUniq <*> pure m <*> pure s
 
 newNoNameId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> IdSort -> f (Id a)
-newNoNameId m s = Id Nothing <$> getUniq <*> pure m <*> pure s
+newNoNameId m s = Id noName <$> getUniq <*> pure m <*> pure s
 
 newLocalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> f (Id a)
-newLocalId n m = Id (Just n) <$> getUniq <*> pure m <*> pure Internal
+newLocalId n m = Id n <$> getUniq <*> pure m <*> pure Internal
 
 newGlobalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> ModuleName -> f (Id a)
-newGlobalId n m modName = Id (Just n) <$> getUniq <*> pure m <*> pure (External modName)
+newGlobalId n m modName = Id n <$> getUniq <*> pure m <*> pure (External modName)
 
 newIdOnSort :: (MonadIO f, HasUniqSupply env, MonadReader env f) => String -> a -> Id b -> f (Id a)
 newIdOnSort name meta Id {_idSort} = newId name meta _idSort
@@ -122,7 +123,3 @@ cloneId Id {..} = do
 idIsExternal :: Id a -> Bool
 idIsExternal Id {_idSort = External _} = True
 idIsExternal _ = False
-
-idIsWiredIn :: Id a -> Bool
-idIsWiredIn Id {_idSort = WiredIn _} = True
-idIsWiredIn _ = False
