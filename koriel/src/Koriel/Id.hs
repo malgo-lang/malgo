@@ -80,7 +80,7 @@ pprIdName :: Id a -> Doc ann
 pprIdName Id {_idName} = pretty _idName
 
 idToString :: Id a -> String
-idToString Id {_idName, _idSort = External modName} = _idName <> "." <> coerce modName
+idToString Id {_idName, _idSort = External modName} = coerce modName <> "." <> _idName
 idToString Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> show _idUniq
 
 prettyMeta :: (t -> Doc ann) -> t -> Doc ann
