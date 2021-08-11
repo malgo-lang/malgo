@@ -274,7 +274,6 @@ makeLenses ''Program
 
 instance Pretty a => Pretty (Program a) where
   pretty Program {..} =
-<<<<<<< HEAD
     vcat $
       concat
         [ ["variables:"],
@@ -282,11 +281,6 @@ instance Pretty a => Pretty (Program a) where
           ["functions:"],
           map (\(f, (ps, e)) -> parens $ hang 1 $ sep [sep ["define", pretty f, parens (sep $ map pretty ps)], pretty e]) _topFuncs
         ]
-=======
-    vcat $ concat [
-      ["variables:"], map (\(v, e) -> parens $ hang 1 $ sep ["define", pretty v, pretty e]) _topVars,
-      ["functions:"], map (\(f, (ps, e)) -> parens $ hang 1 $ sep [sep ["define", pretty f, parens (sep $ map pretty ps)], pretty e]) _topFuncs]
->>>>>>> 8f0f27bff0f9b53026d2a025d77c148e558fa1d3
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
@@ -337,13 +331,8 @@ cast ty e
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
-<<<<<<< HEAD
 mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => ModuleName -> [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
 mainFunc (ModuleName mainModName) depList e = do
-=======
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
-mainFunc e = do
->>>>>>> 8f0f27bff0f9b53026d2a025d77c148e558fa1d3
   mainFuncId <- newId "main" ([] :-> Int32T) $ External (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
     _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
