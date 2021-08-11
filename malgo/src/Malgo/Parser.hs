@@ -48,7 +48,7 @@ singleModuleName = some identLetter
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
-pDecl = pDataDef <|> pTypeSynonym <|> pInfix <|> pForeign <|> pImport <|> try pScSig <|> pScDef
+pDecl = pDataDef <|> pTypeSynonym <|> pInfix <|> pForeign <|> pImport <|> pImpl <|> try pScSig <|> pScDef
 
 pDataDef :: Parser (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" $ do
@@ -103,6 +103,23 @@ pImport = label "import" $ do
   void $ pKeyword "import"
   modName <- ModuleName <$> pModuleName
   pure $ Import s modName importList
+
+pImpl :: Parser (Decl (Malgo 'Parse))
+pImpl = label "impl" do
+  s <- getSourcePos
+  void $ pKeyword "impl"
+  name <- lowerIdent
+  void $ pOperator ":"
+  typ <- pType
+  void $ pOperator "="
+  def <- between (symbol "{") (symbol "}") $ asRecordFields pImplDefEntry
+  pure $ Impl s name typ def
+  where
+    pImplDefEntry = do
+      label <- pWithPrefix upperIdent lowerIdent
+      void $ pOperator "="
+      value <- pExp
+      pure (label, value)
 
 pScSig :: Parser (Decl (Malgo 'Parse))
 pScSig =
@@ -410,6 +427,7 @@ reserved =
         "exists",
         "forall",
         "foreign",
+        "impl",
         "import",
         "infix",
         "infixl",

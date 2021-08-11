@@ -83,10 +83,9 @@ pprExpPrec d (OpApp _ o e1 e2) =
   maybeParens (d > 10) $ sep [pprExpPrec 11 e1, pretty o <+> pprExpPrec 11 e2]
 pprExpPrec _ (Fn _ cs) =
   braces $
-    space
-      <> foldl1
-        (\a b -> sep [a, nest (-2) $ "|" <+> b])
-        (fmap pretty cs)
+    foldl1
+      (\a b -> sep [a, nest (-2) $ "|" <+> b])
+      (fmap pretty cs)
 pprExpPrec _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pretty xs
 pprExpPrec _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
 pprExpPrec _ (List _ xs) = brackets $ sep $ punctuate "," $ map pretty xs
@@ -383,6 +382,7 @@ data Decl x
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
   | Import (XImport x) ModuleName ImportList
+  | Impl (XImpl x) (XId x) (Type x) [(WithPrefix (XId x), Exp x)]
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 
@@ -408,6 +408,9 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
   pretty (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pretty name
   pretty (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pretty xs) <+> "=" <+> "import" <+> pretty name
   pretty (Import _ name (As name')) = "module" <+> pretty name' <+> "=" <+> "import" <+> pretty name
+  pretty (Impl _ name typ methods) =
+    "impl" <+> pretty name <+> ":" <+> pretty typ <+> "="
+      <+> braces (sep $ map (\(label, expr) -> pretty label <+> "=" <+> pretty expr <> ";") methods)
 
 makePrisms ''Decl
 
@@ -423,13 +426,13 @@ deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XModule x)) => 
 
 instance (Pretty (XId x), Pretty (XModule x)) => Pretty (Module x) where
   pretty (Module name defs) =
-    "module" <+> pretty name <+> "=" <> softline <> braces (pretty defs)
+    "module" <+> pretty name <+> "=" <+> vsep [nest 2 (vsep ["{", pretty defs]), "}"]
 
 newtype ParsedDefinitions = ParsedDefinitions [Decl (Malgo 'Parse)]
   deriving stock (Eq, Show)
 
 instance Pretty ParsedDefinitions where
-  pretty (ParsedDefinitions ds) = sep $ map (\x -> pretty x <> ";") ds
+  pretty (ParsedDefinitions ds) = vsep $ map (\x -> pretty x <> ";") ds
 
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
 type instance XModule (Malgo 'Parse) = ParsedDefinitions

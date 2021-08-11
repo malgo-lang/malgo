@@ -36,3 +36,6 @@ errorDoc x = Prelude.error $ renderString $ layoutSmart defaultLayoutOptions x
 
 instance Pretty (f (Fix f)) => Pretty (Fix f) where
   pretty (Fix f) = pretty f
+
+instance (Pretty a, Pretty b, Pretty c, Pretty d) => Pretty (a, b, c, d) where
+  pretty (a, b, c, d) = tupled [pretty a, pretty b, pretty c, pretty d]

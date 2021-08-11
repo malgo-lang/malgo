@@ -232,6 +232,9 @@ deriving stock instance Eq ImportList
 
 deriving stock instance Show ImportList
 
+type family XImpl x where
+  XImpl (Malgo _) = SourcePos
+
 type ForallDeclX (c :: K.Type -> Constraint) x =
   ( c (XScDef x),
     c (XScSig x),
@@ -240,6 +243,7 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
     c (XInfix x),
     c (XForeign x),
     c (XImport x),
+    c (XImpl x),
     ForallExpX c x,
     ForallClauseX c x,
     ForallStmtX c x,
