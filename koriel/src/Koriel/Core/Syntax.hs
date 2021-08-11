@@ -253,6 +253,7 @@ instance HasAtom Obj where
 -- | toplevel function definitions
 data Program a = Program
   { _moduleName :: ModuleName,
+    _topVars :: [(a, Exp a)],
     _topFuncs :: [(a, ([a], Exp a))]
   }
   deriving stock (Eq, Show, Functor, Generic)
@@ -261,10 +262,9 @@ makeLenses ''Program
 
 instance Pretty a => Pretty (Program a) where
   pretty Program {..} =
-    vcat $
-      map
-        (\(f, (ps, e)) -> parens $ hang 1 $ sep [sep ["define", pretty f, parens (sep $ map pretty ps)], pretty e])
-        _topFuncs
+    vcat $ concat [
+      ["variables:"], map (\(v, e) -> parens $ hang 1 $ sep ["define", pretty v, pretty e]) _topVars,
+      ["functions:"], map (\(f, (ps, e)) -> parens $ hang 1 $ sep [sep ["define", pretty f, parens (sep $ map pretty ps)], pretty e]) _topFuncs]
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
@@ -278,8 +278,8 @@ appCase f = \case
   Bind x e -> Bind x <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
-appProgram f Program {_moduleName, _topFuncs} =
-  Program _moduleName <$> traverseOf (traversed . _2 . _2) f _topFuncs
+appProgram f Program {..} =
+  Program _moduleName <$> traverseOf (traversed . _2) f _topVars <*> traverseOf (traversed . _2 . _2) f _topFuncs
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
