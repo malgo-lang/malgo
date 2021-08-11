@@ -9,11 +9,17 @@ module Show = {
   type Show a = { show : a -> String };
 
   showInt32 : Show Int32;
-  showInt32 = { show = { x -> toStringInt32 x} };
+  showInt32 = {
+    show = { x -> toStringInt32 x};
+  };
 
   showTuple2 : Show a -> Show b -> Show (a, b);
-  showTuple2 = { showDictA showDictB ->
-    { show = { (a, b) -> "(" <> #show showDictA a <> ", " <> #show showDictB b <> ")"  } }
+  showTuple2 = {
+    showDictA showDictB -> {
+      show = { (a, b) ->
+        "(" <> #show showDictA a <> ", " <> #show showDictB b <> ")"
+      };
+    }
   };
 
   print : Show a -> a -> ();
