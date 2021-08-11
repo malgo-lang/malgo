@@ -34,7 +34,7 @@ toText = to (renderStrict . layoutSmart defaultLayoutOptions . pretty)
 errorDoc ::
 #ifdef DEBUG
   HasCallStack => Doc ann -> a
-errorDoc x = Prelude.error $ P.render x
+errorDoc x = Prelude.error $ renderString $ layoutSmart defaultLayoutOptions x
 #else
   Doc ann -> a
 errorDoc x = Prelude.errorWithoutStackTrace $ renderString $ layoutSmart defaultLayoutOptions x
