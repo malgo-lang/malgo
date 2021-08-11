@@ -60,8 +60,9 @@ type PrimMap = HashMap Name Operand
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data CodeGenEnv = CodeGenEnv
   { _codeGenUniqSupply :: UniqSupply,
-    _valueHashMap :: HashMap (Id C.Type) Operand,
-    _funcHashMap :: HashMap (Id C.Type) Operand
+    _valueMap :: HashMap (Id C.Type) Operand,
+    _globalValueMap :: HashMap (Id C.Type) Operand,
+    _funcMap :: HashMap (Id C.Type) Operand
   }
 
 makeLenses ''CodeGenEnv
@@ -72,6 +73,10 @@ instance HasUniqSupply CodeGenEnv where
 codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> Program (Id C.Type) -> m ()
 codeGen srcPath dstPath uniqSupply Program {..} = do
   llvmir <- execModuleBuilderT emptyModuleBuilder $ do
+    -- topVarsのOprMapを作成
+    let varEnv = mconcatMap ?? _topVars $ \(v, e) ->
+          HashMap.singleton v $
+            ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v)
     -- topFuncsのOprMapを作成
     let funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
           HashMap.singleton f $
@@ -80,11 +85,13 @@ codeGen srcPath dstPath uniqSupply Program {..} = do
                 (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
                 (toName f)
     runReaderT
-      ?? CodeGenEnv {_codeGenUniqSupply = uniqSupply, _valueHashMap = mempty, _funcHashMap = funcEnv}
+      ?? CodeGenEnv {_codeGenUniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv}
       $ Lazy.evalStateT
         ?? (mempty :: PrimMap)
         $ do
+          traverse_ (uncurry genVar) _topVars
           traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
+          -- TODO: genLoadModule =<< traverse_ (uncurry genInitVar) _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
   liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
 
@@ -127,15 +134,18 @@ sizeofType (PtrT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
-findVar :: MonadReader CodeGenEnv m => Id C.Type -> m Operand
+findVar :: (MonadReader CodeGenEnv m, MonadIRBuilder m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findVar x =
-  view (valueHashMap . at x) >>= \case
+  view (valueMap . at x) >>= \case
     Just opr -> pure opr
-    Nothing -> error $ show $ pretty x <> " is not found"
+    Nothing ->
+      view (globalValueMap . at x) >>= \case
+        Just opr -> load opr 0 -- global variable is a pointer to the actual value
+        Nothing -> error $ show $ pretty x <> " is not found"
 
 findFun :: (MonadReader CodeGenEnv m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
-  view (funcHashMap . at x) >>= \case
+  view (funcMap . at x) >>= \case
     Just opr -> pure opr
     Nothing ->
       case C.typeOf x of
@@ -169,6 +179,10 @@ toName :: Id a -> LLVM.AST.Name
 toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
 toName id = LLVM.AST.mkName $ idToString id
 
+-- generate code for a toplevel variable definition
+genVar :: MonadModuleBuilder m => Id C.Type -> Exp (Id C.Type) -> m Operand
+genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
+
 -- generate code for a 'known' function
 genFunc ::
   ( MonadModuleBuilder m,
@@ -184,9 +198,9 @@ genFunc ::
   m Operand
 genFunc name params body
   | idIsExternal name =
-    function funcName llvmParams retty $ \args -> local (over valueHashMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
+    function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   | otherwise =
-    internalFunction funcName llvmParams retty $ \args -> local (over valueHashMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
+    internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
     llvmParams =
@@ -297,8 +311,8 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
       zext i1opr i8
 genExp (Let xs e) k = do
   env <- foldMapA prepare xs
-  env <- local (over valueHashMap (env <>)) $ mconcat <$> traverse genLocalDef xs
-  local (over valueHashMap (env <>)) $ genExp e k
+  env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
+  local (over valueMap (env <>)) $ genExp e k
   where
     prepare (LocalDef name (Fun ps body)) =
       HashMap.singleton name
@@ -313,7 +327,7 @@ genExp (Let xs e) k = do
 genExp (Match e (Bind _ body :| _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
 genExp (Match e (Bind x body :| _)) k = genExp e $ \eOpr -> do
   eOpr <- bitcast eOpr (convType $ C.typeOf e)
-  local (over valueHashMap (at x ?~ eOpr)) (genExp body k)
+  local (over valueMap (at x ?~ eOpr)) (genExp body k)
 genExp (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = genExp e $ \eOpr -> mdo
@@ -354,7 +368,7 @@ genCase ::
 genCase scrutinee cs k = \case
   Bind x e -> do
     label <- block
-    void $ local (over valueHashMap $ at x ?~ scrutinee) $ genExp e k
+    void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
     pure $ Left label
   Switch u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
@@ -370,11 +384,11 @@ genCase scrutinee cs k = \case
     env <- ifoldMapA ?? vs $ \i v -> do
       vOpr <- gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
       pure $ HashMap.singleton v vOpr
-    void $ local (over valueHashMap (env <>)) $ genExp e k
+    void $ local (over valueMap (env <>)) $ genExp e k
     pure $ Right (C.Int 8 tag, label)
 
 genAtom ::
-  (MonadReader CodeGenEnv m, MonadModuleBuilder m, MonadIO m) =>
+  (MonadReader CodeGenEnv m, MonadModuleBuilder m, MonadIO m, MonadIRBuilder m) =>
   Atom (Id C.Type) ->
   m Operand
 genAtom (Var x) = findVar x
@@ -411,7 +425,7 @@ genLocalDef (LocalDef funName (Fun ps e)) = do
       capture <- bitcast rawCapture (ptr capType)
       env <- ifoldMapA ?? fvs $ \i fv ->
         HashMap.singleton fv <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
-      local (over valueHashMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExp e ret
+      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExp e ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType
   ifor_ fvs $ \i fv -> do
