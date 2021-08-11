@@ -6,11 +6,13 @@ module Show = {
   (<>) : String -> String -> String;
   (<>) = { x y -> appendString x y };
 
-  type Show a = { show : a -> String };
+  type Show a = {
+    show : a -> String;
+  };
 
   showInt32 : Show Int32;
   showInt32 = {
-    show = { x -> toStringInt32 x};
+    show = { x -> toStringInt32 x };
   };
 
   showTuple2 : Show a -> Show b -> Show (a, b);
