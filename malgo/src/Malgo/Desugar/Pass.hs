@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
@@ -26,6 +27,12 @@ import Prettyprinter.Render.String (renderString)
 import qualified RIO.Char as Char
 import qualified RIO.NonEmpty as NonEmpty
 
+-- | トップレベル宣言
+data Def = VarDef (Id C.Type) (C.Exp (Id C.Type))
+         | FunDef (Id C.Type) ([Id C.Type], C.Exp (Id C.Type))
+
+makePrisms ''Def
+
 -- | MalgoからCoreへの変換
 desugar ::
   (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
@@ -36,14 +43,16 @@ desugar ::
   m (DsEnv, Program (Id C.Type))
 desugar varEnv typeEnv rnEnv (Module modName ds) = do
   (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
+  let varDefs = mapMaybe (preview _VarDef) ds'
+  let funDefs = mapMaybe (preview _FunDef) ds'
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
         mainFunc =<< runDef do
           _ <- bind mainCall
           pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv, Program modName [] (mainFuncDef : ds'))
-    Nothing -> pure (dsEnv, Program modName [] ds')
+      pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs))
+    Nothing -> pure (dsEnv, Program modName varDefs funDefs)
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId []
@@ -55,7 +64,7 @@ desugar varEnv typeEnv rnEnv (Module modName ds) = do
 dsBindGroup ::
   (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
   BindGroup (Malgo 'Refine) ->
-  m [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
+  m [Def]
 dsBindGroup bg = do
   traverse_ dsImport (bg ^. imports)
   dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
@@ -73,16 +82,16 @@ dsImport (pos, modName, _) = do
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
 dsScDefGroup ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env, HasLogFunc env) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) =>
   [[ScDef (Malgo 'Refine)]] ->
-  f [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
+  f [[Def]]
 dsScDefGroup = traverse dsScDefs
 
 -- 相互再帰的なグループをdesugar
 dsScDefs ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env, HasLogFunc env) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) =>
   [ScDef (Malgo 'Refine)] ->
-  f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
+  f [Def]
 dsScDefs ds = do
   -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
@@ -91,22 +100,22 @@ dsScDefs ds = do
     nameEnv . at f ?= f'
   foldMapA dsScDef ds
 
-dsScDef ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, HasOpt env, MonadIO f, HasUniqSupply env, HasLogFunc env) =>
-  ScDef (Malgo 'Refine) ->
-  f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
-dsScDef (With typ pos, name, expr) = do
+dsScDef :: (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) => ScDef (Malgo 'Refine) -> f [Def]
+dsScDef (With typ _, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   case typ of
-    GT.TyArr _ _ -> pure ()
-    GT.TyApp GT.TyLazy _ -> pure ()
-    _ ->
-      errorOn pos $
-        "Invalid Toplevel Declaration:"
-          <+> squotes (pretty name <+> ":" <+> pretty typ)
-  name' <- lookupName name
-  fun <- curryFun [] =<< dsExp expr
-  pure [(name', fun)]
+    GT.TyArr _ _ -> dsFunDef name expr
+    GT.TyApp GT.TyLazy _ -> dsFunDef name expr
+    _ -> dsVarDef name expr
+    where
+      dsVarDef name expr = do
+        name' <- lookupName name
+        expr' <- dsExp expr
+        pure [VarDef name' expr']
+      dsFunDef name expr = do
+        name' <- lookupName name
+        fun <- curryFun [] =<< dsExp expr
+        pure [FunDef name' fun]
 
 -- TODO: Malgoのforeignでvoid型をあつかえるようにする #13
 -- 1. Malgoの型とCの型の相互変換を定義する
@@ -115,7 +124,7 @@ dsScDef (With typ pos, name, expr) = do
 dsForeign ::
   (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env) =>
   Foreign (Malgo 'Refine) ->
-  f [(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]
+  f [Def]
 dsForeign (x@(With _ (_, primName)), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. GT.withType)
   let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
@@ -124,12 +133,12 @@ dsForeign (x@(With _ (_, primName)), name, _) = do
   params <- traverse (newLocalId "$p") paramTypes'
   fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
   nameEnv . at name ?= name'
-  pure [(name', fun)]
+  pure [FunDef name' fun]
 
 dsDataDef ::
   (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env, MonadIO m) =>
   DataDef (Malgo 'Refine) ->
-  m [[(Id C.Type, ([Id C.Type], C.Exp (Id C.Type)))]]
+  m [[Def]]
 dsDataDef (_, name, _, cons) =
   for cons $ \(conName, _) -> do
     -- lookup constructor infomations
@@ -152,7 +161,7 @@ dsDataDef (_, name, _, cons) =
       [] -> pure ([], expr)
       _ -> curryFun ps expr
     nameEnv . at conName ?= conName'
-    pure [(conName', obj)]
+    pure [FunDef conName' obj]
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
     buildConType [] retType = [] :-> retType
@@ -193,11 +202,12 @@ dsExp (G.Var x (WithPrefix (With _ name))) = do
       | idIsExternal name' -> do
         -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
         -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
-        clsId <- newLocalId "$gblcls" (C.typeOf name')
-        ps <- case C.typeOf name' of
-          pts :-> _ -> traverse (newLocalId "$p") pts
-          _ -> bug $ Unreachable "typeOf name' must be _ :-> _"
-        pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+        case C.typeOf name' of
+          pts :-> _ -> do
+            clsId <- newLocalId "$gblcls" (C.typeOf name')
+            ps <- traverse (newLocalId "$p") pts
+            pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+          _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
     isConstructor Id {_idName = x : _} = Char.isUpper x
