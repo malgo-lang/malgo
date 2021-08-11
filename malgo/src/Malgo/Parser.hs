@@ -195,7 +195,7 @@ pNoBind = NoBind <$> getSourcePos <*> pExp
 pRecordP :: Parser (Pat (Malgo 'Parse))
 pRecordP = between (symbol "{") (symbol "}") do
   s <- getSourcePos
-  kvs <- pRecordPEntry `sepBy1` pOperator ","
+  kvs <- asRecordFields pRecordPEntry
   pure $ RecordP s kvs
   where
     pRecordPEntry = do
@@ -248,7 +248,7 @@ pUnit = between (symbol "(") (symbol ")") $ do
 pRecord :: Parser (Exp (Malgo 'Parse))
 pRecord = between (symbol "{") (symbol "}") do
   s <- getSourcePos
-  kvs <- pRecordEntry `sepBy1` pOperator ","
+  kvs <- asRecordFields pRecordEntry
   pure $ Record s kvs
   where
     pRecordEntry = do
@@ -335,7 +335,7 @@ pTyUnit = between (symbol "(") (symbol ")") $ do
 pTyRecord :: Parser (Type (Malgo 'Parse))
 pTyRecord = between (symbol "{") (symbol "}") do
   s <- getSourcePos
-  kvs <- pTyRecordEntry `sepBy1` pOperator ","
+  kvs <- asRecordFields pTyRecordEntry
   pure $ TyRecord s kvs
   where
     pTyRecordEntry = do
@@ -447,3 +447,9 @@ notReserved :: Parser ()
 notReserved = do
   word <- lookAhead reserved
   registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> Text.unpack word <> "'\nThis is a reserved keyword")
+
+-- { _ , _ , ... , _ } or { _ ; _ ; ... ; _ ; }
+-- `;` terminatorによる分割を先に検討して、その後`,` separatorによる分割を検討する
+-- 逆だと１要素の`,` separatorを読んでしまい、パースが失敗する
+asRecordFields :: Parser a -> Parser [a]
+asRecordFields entry = try (entry `endBy1` pOperator ";") <|> (entry `sepBy1` pOperator ",")
