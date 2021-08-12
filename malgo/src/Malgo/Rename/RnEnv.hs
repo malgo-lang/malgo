@@ -17,7 +17,15 @@ data RnState = RnState
   deriving stock (Show)
 
 instance Pretty RnState where
-  pPrint = text . show
+  pPrint RnState {_infixInfo, _dependencies, _moduleName} =
+    "RnState"
+      <+> braces
+        ( sep
+            [ sep ["_infixInfo", "=", pPrint $ HashMap.toList _infixInfo],
+              sep ["_dependencies", "=", pPrint _dependencies],
+              sep ["_moduleName", "=", pPrint _moduleName]
+            ]
+        )
 
 makeLenses ''RnState
 

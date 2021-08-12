@@ -450,7 +450,9 @@ data BindGroup x = BindGroup
     _dataDefs :: [DataDef x],
     _typeSynonyms :: [TypeSynonym x],
     _foreigns :: [Foreign x],
-    _imports :: [Import x]
+    _imports :: [Import x],
+    _classes :: [Class x],
+    _impls :: [Impl x]
   }
 
 type ScDef x = (XScDef x, XId x, Exp x)
@@ -464,6 +466,10 @@ type TypeSynonym x = (XTypeSynonym x, XId x, [XId x], Type x)
 type Foreign x = (XForeign x, XId x, Type x)
 
 type Import x = (XImport x, ModuleName, ImportList)
+
+type Class x = (XClass x, XId x, [XId x], [(XId x, Type x)])
+
+type Impl x = (XImpl x, XId x, Type x, [(XId x, Exp x)])
 
 makeLenses ''BindGroup
 
@@ -499,7 +505,9 @@ makeBindGroup ds =
       _dataDefs = mapMaybe dataDef ds,
       _typeSynonyms = mapMaybe typeSynonym ds,
       _foreigns = mapMaybe foreignDef ds,
-      _imports = mapMaybe importDef ds
+      _imports = mapMaybe importDef ds,
+      _classes = mapMaybe classDef ds,
+      _impls = mapMaybe implDef ds
     }
   where
     scDef (ScDef x f e) = Just (x, f, e)
@@ -514,6 +522,10 @@ makeBindGroup ds =
     foreignDef _ = Nothing
     importDef (Import x m ns) = Just (x, m, ns)
     importDef _ = Nothing
+    classDef (Class x n ps ms) = Just (x, n, ps, ms)
+    classDef _ = Nothing
+    implDef (Impl x n t ms) = Just (x, n, t, ms)
+    implDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
 adjacents :: (Eq a1, XId x ~ Id a1) => (a, XId x, Exp x) -> (XId x, Int, [Int])

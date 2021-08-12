@@ -29,6 +29,8 @@ refineBindGroup BindGroup {..} =
     <*> traverse refineTypeSynonym _typeSynonyms
     <*> traverse refineForeign _foreigns
     <*> traverse (refineImport @t @x) _imports
+    <*> traverse refineClass _classes
+    <*> traverse refineImpl _impls
 
 refineScDef :: (TypeChecked t x, MonadReader RefineEnv m, MonadIO m) => ScDef x -> m (ScDef (Malgo 'Refine))
 refineScDef (x, name, expr) = (over ann toType x,name,) <$> refineExp expr
@@ -99,3 +101,7 @@ refineForeign (x, name, ty) = (over ann toType x,name,) <$> refineType ty
 
 refineImport :: (TypeChecked t x, MonadReader RefineEnv m) => Import x -> m (Import (Malgo 'Refine))
 refineImport (x, modName, importList) = pure (x, modName, importList)
+
+refineClass = undefined
+
+refineImpl = undefined

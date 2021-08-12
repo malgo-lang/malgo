@@ -135,6 +135,13 @@ rnDecl (Import pos modName importList) = do
   infixInfo <>= interface ^. infixMap
   dependencies <>= [modName]
   pure $ Import pos modName importList
+rnDecl (Class pos name params methods) = do
+  params' <- traverse resolveName params
+  local (appendRnEnv typeEnv (zip params $ map (With Implicit) params')) $
+    Class pos
+      <$> lookupTypeName pos name
+      <*> pure params'
+      <*> traverse (bitraverse (lookupFieldName pos) rnType) methods
 rnDecl (Impl pos name typ methods) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
@@ -391,6 +398,13 @@ genToplevelEnv modName ds builtinEnv = do
       modify $ appendRnEnv varEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pure ()
+    aux (Class pos name _ methods) = do
+      env <- get
+      when (name `elem` HashMap.keys (env ^. typeEnv)) do
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint name)
+      name' <- resolveGlobalName modName name
+      modify $ appendRnEnv typeEnv [(name, With Implicit name')]
+      genFieldEnv $ TyRecord pos methods
     aux (Impl pos name _ _) = do
       env <- use varEnv
       when (name `elem` HashMap.keys env) do

@@ -122,11 +122,7 @@ viewLine linum = do
   s <- liftIO $ readFile srcFileName
   pure $ lines s !! (linum - 1)
 
-#ifdef DEBUG
 errorOn :: (HasCallStack, HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
-#else
-errorOn :: (HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
-#endif
 errorOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
