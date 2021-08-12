@@ -31,14 +31,8 @@ maybeParens False x = x
 toText :: (Profunctor p, Contravariant f, Pretty a) => Optic' p f a Text
 toText = to (renderStrict . layoutSmart defaultLayoutOptions . pretty)
 
-errorDoc ::
-#ifdef DEBUG
-  HasCallStack => Doc ann -> a
+errorDoc :: HasCallStack => Doc ann -> a
 errorDoc x = Prelude.error $ renderString $ layoutSmart defaultLayoutOptions x
-#else
-  Doc ann -> a
-errorDoc x = Prelude.errorWithoutStackTrace $ renderString $ layoutSmart defaultLayoutOptions x
-#endif
 
 instance Pretty (f (Fix f)) => Pretty (Fix f) where
   pretty (Fix f) = pretty f

@@ -6,8 +6,14 @@ module ToplevelVariable = {
 
   addOne = addInt32 one;
 
+  id = { x -> x };
+
+  const = { x _ -> x };
+
+  constId = const id;
+
   main = {
-    printInt32 (addOne one)
+    printInt32 (constId const (addOne one))
   };
 }
 
