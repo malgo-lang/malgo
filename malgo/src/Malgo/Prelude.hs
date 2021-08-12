@@ -137,8 +137,8 @@ errorOn pos x = do
         $$ vcat
           [ x,
             nest (length (show lineNum) + 1) "|",
-            pPrint lineNum <+> "|" <+> pPrint l,
-            nest (length (show lineNum) + 1) "|" <> nest columnNum "^"
+            pPrint lineNum <+> "|" <+> text l,
+            nest (length (show lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
   exitFailure
 
@@ -153,8 +153,8 @@ warningOn pos x = do
         $$ vcat
           [ x,
             nest (length (show lineNum) + 1) "|",
-            pPrint lineNum <+> "|" <+> pPrint l,
-            nest (length (show lineNum) + 1) "|" <> nest columnNum "^"
+            pPrint lineNum <+> "|" <+> text l,
+            nest (length (show lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
 
 data With x v = With {_ann :: x, _value :: v}
