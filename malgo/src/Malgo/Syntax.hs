@@ -374,8 +374,8 @@ data Decl x
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
   | Import (XImport x) ModuleName ImportList
-  | Class (XClass x) (XId x) [XId x] [(WithPrefix (XId x), Type x)]
-  | Impl (XImpl x) (XId x) (Type x) [(WithPrefix (XId x), Exp x)]
+  | Class (XClass x) (XId x) [XId x] [(XId x, Type x)]
+  | Impl (XImpl x) (XId x) (Type x) [(XId x, Exp x)]
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 

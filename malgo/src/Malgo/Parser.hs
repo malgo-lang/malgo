@@ -115,7 +115,7 @@ pClass = label "class" do
   pure $ Class s className classParameters def
   where
     pClassDefEntry = do
-      label <- pWithPrefix upperIdent lowerIdent
+      label <- lowerIdent
       void $ pOperator ":"
       value <- pType
       pure (label, value)
@@ -132,7 +132,7 @@ pImpl = label "impl" do
   pure $ Impl s name typ def
   where
     pImplDefEntry = do
-      label <- pWithPrefix upperIdent lowerIdent
+      label <- lowerIdent
       void $ pOperator "="
       value <- pExp
       pure (label, value)

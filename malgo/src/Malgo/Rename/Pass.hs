@@ -142,7 +142,7 @@ rnDecl (Impl pos name typ methods) = do
     Impl pos
       <$> lookupVarName pos name
       <*> rnType typ
-      <*> traverse (bitraverse (\(WithPrefix (With p x)) -> WithPrefix . With p <$> lookupFieldName pos x) rnExp) methods
+      <*> traverse (bitraverse (lookupFieldName pos) rnExp) methods
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
@@ -229,7 +229,7 @@ rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (\(WithPrefix (Wi
 rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName pos "Cons" <*> traverse rnPat xs
   where
     buildListP nilName _ [] = ConP pos nilName []
-    buildListP nilName consName (x:xs) = ConP pos consName [x, buildListP nilName consName xs]
+    buildListP nilName consName (x : xs) = ConP pos consName [x, buildListP nilName consName xs]
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => NonEmpty (Stmt (Malgo 'Parse)) -> m (NonEmpty (Stmt (Malgo 'Rename)))
