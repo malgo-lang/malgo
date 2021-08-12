@@ -7,7 +7,7 @@
 module Koriel.Core.Syntax where
 
 import qualified Data.HashSet as HashSet
-import Data.Monoid (Endo (..))
+import Data.Monoid (Endo(..))
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
@@ -40,14 +40,14 @@ instance HasType Unboxed where
   typeOf Bool {} = BoolT
 
 instance Pretty Unboxed where
-  pretty (Int32 x) = pretty x
-  pretty (Int64 x) = pretty x
-  pretty (Float x) = pretty x
-  pretty (Double x) = pretty x
-  pretty (Char x) = squotes (pretty x)
-  pretty (String x) = dquotes (pretty x)
-  pretty (Bool True) = "#true"
-  pretty (Bool False) = "#false"
+  pPrint (Int32 x) = pPrint x
+  pPrint (Int64 x) = pPrint x
+  pPrint (Float x) = pPrint x
+  pPrint (Double x) = pPrint x
+  pPrint (Char x) = quotes (pPrint x)
+  pPrint (String x) = doubleQuotes (text x)
+  pPrint (Bool True) = "True#"
+  pPrint (Bool False) = "False#"
 
 -- | atoms
 data Atom a
@@ -62,8 +62,8 @@ instance HasType a => HasType (Atom a) where
   typeOf (Unboxed x) = typeOf x
 
 instance Pretty a => Pretty (Atom a) where
-  pretty (Var x) = pretty x
-  pretty (Unboxed x) = pretty x
+  pPrint (Var x) = pPrint x
+  pPrint (Unboxed x) = pPrint x
 
 instance HasFreeVar Atom where
   freevars (Var x) = HashSet.singleton x
@@ -79,7 +79,7 @@ data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 instance Pretty a => Pretty (LocalDef a) where
-  pretty (LocalDef v o) = parens $ hang 1 $ sep [pretty v, pretty o]
+  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
 
 localDefVar :: Lens' (LocalDef a) a
 localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
@@ -117,7 +117,7 @@ instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
     ps :-> r -> go ps (map typeOf xs) r
-    _ -> errorDoc $ "Invalid type:" <+> squotes (pretty $ typeOf f)
+    _ -> errorDoc $ "Invalid type:" <+> quotes (pPrint $ typeOf f)
     where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
@@ -169,16 +169,17 @@ instance HasType a => HasType (Exp a) where
   typeOf (Error t) = t
 
 instance Pretty a => Pretty (Exp a) where
-  pretty (Atom x) = pretty x
-  pretty (Call f xs) = parens $ hang 1 $ sep $ pretty f : map pretty xs
-  pretty (CallDirect f xs) = parens $ hang 1 $ sep $ "direct" : pretty f : map pretty xs
-  pretty (ExtCall p t xs) = parens $ hang 1 $ sep $ "external" : pretty p : pretty t : map pretty xs
-  pretty (RawCall p t xs) = parens $ hang 1 $ sep $ "raw" : pretty p : pretty t : map pretty xs
-  pretty (BinOp o x y) = parens $ hang 1 $ sep [pretty o, pretty x, pretty y]
-  pretty (Cast ty x) = parens $ hang 1 $ sep ["cast", pretty ty, pretty x]
-  pretty (Let xs e) = parens $ hang 1 $ "let" <+> sep [parens (align $ sep (map pretty xs)), pretty e]
-  pretty (Match v cs) = parens $ hang 1 $ "match" <+> sep [pretty v, vcat (toList $ fmap pretty cs)]
-  pretty (Error _) = "ERROR"
+  pPrint (Atom x) = pPrint x
+  pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
+  pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
+  pPrint (ExtCall p t xs) = parens $ "external" <+> text p <+> pPrint t <+> sep (map pPrint xs)
+  pPrint (RawCall p t xs) = parens $ "raw" <+> text p <+> pPrint t <+> sep (map pPrint xs)
+  pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
+  pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
+  pPrint (Let xs e) =
+    parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
+  pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
+  pPrint (Error _) = "ERROR"
 
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
@@ -221,10 +222,10 @@ instance HasType a => HasType (Case a) where
   typeOf (Bind _ e) = typeOf e
 
 instance Pretty a => Pretty (Case a) where
-  pretty (Unpack c xs e) =
-    parens $ hang 1 $ sep ["unpack" <+> parens (pretty c <+> sep (map pretty xs)), pretty e]
-  pretty (Switch u e) = parens $ hang 1 $ sep ["switch" <+> pretty u, pretty e]
-  pretty (Bind x e) = parens $ hang 1 $ sep ["bind" <+> pretty x, pretty e]
+  pPrint (Unpack c xs e) =
+    parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
+  pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
+  pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
@@ -250,8 +251,8 @@ instance HasType a => HasType (Obj a) where
   typeOf (Pack t _ _) = t
 
 instance Pretty a => Pretty (Obj a) where
-  pretty (Fun xs e) = parens $ hang 1 $ sep ["fun" <+> parens (sep $ map pretty xs), pretty e]
-  pretty (Pack ty c xs) = parens $ hang 1 $ sep (["pack", pretty ty, pretty c] <> map pretty xs)
+  pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
+  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -273,13 +274,13 @@ data Program a = Program
 makeLenses ''Program
 
 instance Pretty a => Pretty (Program a) where
-  pretty Program {..} =
+  pPrint Program {..} =
     vcat $
       concat
         [ ["variables:"],
-          map (\(v, e) -> parens $ hang 1 $ sep ["define", pretty v, pretty e]) _topVars,
+          map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint e]) _topVars,
           ["functions:"],
-          map (\(f, (ps, e)) -> parens $ hang 1 $ sep [sep ["define", pretty f, parens (sep $ map pretty ps)], pretty e]) _topFuncs
+          map (\(f, (ps, e)) -> parens $ sep [sep ["define", pPrint f, parens (sep $ map pPrint ps)], pPrint e]) _topFuncs
         ]
 
 appObj :: Traversal' (Obj a) (Exp a)

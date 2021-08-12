@@ -29,7 +29,7 @@ import RIO hiding (ASetter, ASetter', Getting, Lens, Lens', catMaybes, filter, l
 import RIO.State
 import RIO.Writer
 import qualified Text.Megaparsec.Pos as Megaparsec
-import Prettyprinter (Pretty (..))
+import Text.PrettyPrint.HughesPJClass (Pretty (..), text)
 import Witherable
 import Prelude hiding (filter, log, undefined, unzip)
 
@@ -87,4 +87,4 @@ localState action = do
 
 -- Pretty SourcePos
 instance Pretty Megaparsec.SourcePos where
-  pretty = pretty . Megaparsec.sourcePosPretty
+  pPrint = text . Megaparsec.sourcePosPretty

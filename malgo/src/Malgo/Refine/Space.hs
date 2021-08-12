@@ -30,12 +30,12 @@ data Space
   deriving stock (Eq, Show)
 
 instance Pretty Space where
-  pretty Empty = "O"
-  pretty (Type t) = "T" <> parens (pretty t)
-  pretty (Constructor con ss) = "K" <> parens (sep $ punctuate "," $ pretty con : map pretty ss)
-  pretty (Tuple ss) = "Tuple" <> parens (sep $ punctuate "," $ map pretty ss)
-  pretty (Record kss) = braces $ sep $ punctuate "," $ map (\(k, s) -> pretty k <+> "=" <+> pretty s) kss
-  pretty (Union s1 s2) = pretty s1 <+> "|" <+> pretty s2
+  pPrint Empty = "O"
+  pPrint (Type t) = "T" <> parens (pPrint t)
+  pPrint (Constructor con ss) = "K" <> parens (sep $ punctuate "," $ pPrint con : map pPrint ss)
+  pPrint (Tuple ss) = "Tuple" <> parens (sep $ punctuate "," $ map pPrint ss)
+  pPrint (Record kss) = braces $ sep $ punctuate "," $ map (\(k, s) -> pPrint k <+> "=" <+> pPrint s) kss
+  pPrint (Union s1 s2) = pPrint s1 <+> "|" <+> pPrint s2
 
 -- | whether space s1 is a subspace of space s2
 subspace :: MonadReader RefineEnv m => Space -> Space -> m Bool

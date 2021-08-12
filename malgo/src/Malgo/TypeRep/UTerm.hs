@@ -27,23 +27,22 @@ deriveShow1 ''TypeF
 
 type UType = UTerm TypeF TypeVar
 
-instance Pretty (TypeF UType) where
-  pretty x = pprTypeFPrec 0 x
-
-pprTypeFPrec :: Int -> TypeF UType -> Doc ann
-pprTypeFPrec d (TyAppF t1 t2) = maybeParens (d > 10) $ hsep [mapUTerm pretty (pprTypeFPrec 10) t1, mapUTerm pretty (pprTypeFPrec 11) t2]
-pprTypeFPrec _ (TyVarF v) = pprIdName v
-pprTypeFPrec _ (TyConF c) = pretty c
-pprTypeFPrec _ (TyPrimF p) = pretty p
-pprTypeFPrec d (TyArrF t1 t2) = maybeParens (d > 10) $ mapUTerm pretty (pprTypeFPrec 11) t1 <+> "->" <+> mapUTerm pretty (pprTypeFPrec 10) t2
-pprTypeFPrec _ (TyTupleF n) = parens $ sep $ replicate (max 0 (n - 1)) ","
-pprTypeFPrec _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) $ Map.toList kvs
-pprTypeFPrec _ TyLazyF = "{}"
-pprTypeFPrec d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", mapUTerm pretty (pprTypeFPrec 11) t]
-pprTypeFPrec _ TyBottomF = "#Bottom"
-pprTypeFPrec _ (TYPEF rep) = "TYPE" <+> pretty rep
-pprTypeFPrec _ TyRepF = "#Rep"
-pprTypeFPrec _ (RepF rep) = pretty rep
+instance Pretty t => Pretty (TypeF t) where
+  pPrintPrec l d (TyAppF t1 t2) =
+    maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+  pPrintPrec _ _ (TyVarF v) = pprIdName v
+  pPrintPrec l d (TyConF c) = pPrintPrec l d c
+  pPrintPrec _ _ (TyPrimF p) = pPrint p
+  pPrintPrec l d (TyArrF t1 t2) =
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
+  pPrintPrec _ _ (TyTupleF n) = parens $ sep $ replicate (max 0 (n - 1)) ","
+  pPrintPrec l _ (TyRecordF kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
+  pPrintPrec _ _ TyLazyF = "{}"
+  pPrintPrec l d (TyPtrF t) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 t]
+  pPrintPrec _ _ TyBottomF = "#Bottom"
+  pPrintPrec l _ (TYPEF rep) = "TYPE" <+> pPrintPrec l 0 rep
+  pPrintPrec _ _ TyRepF = "#Rep"
+  pPrintPrec l _ (RepF rep) = pPrintPrec l 0 rep
 
 instance (IsType a) => IsType (TypeF a) where
   safeToType = fmap embed . traverse safeToType
@@ -57,7 +56,7 @@ instance HasUTerm TypeF TypeVar TypeVar where
   walkOn f (TypeVar x) = TypeVar <$> traverseOf idMeta f x
 
 instance Pretty TypeVar where
-  pretty (TypeVar v) = "'" <> pretty v
+  pPrint (TypeVar v) = "'" <> pPrint v
 
 makeLenses ''TypeVar
 

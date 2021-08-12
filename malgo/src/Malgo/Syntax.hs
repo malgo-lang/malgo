@@ -21,12 +21,12 @@ data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char 
   deriving stock (Show, Eq, Ord)
 
 instance Pretty (Literal x) where
-  pretty (Int32 i) = pretty (toInteger i)
-  pretty (Int64 i) = pretty (toInteger i) <> "L"
-  pretty (Float f) = pretty f <> "F"
-  pretty (Double d) = pretty d
-  pretty (Char c) = squotes (pretty c)
-  pretty (String s) = dquotes (pretty s)
+  pPrint (Int32 i) = pPrint (toInteger i)
+  pPrint (Int64 i) = pPrint (toInteger i) <> "L"
+  pPrint (Float f) = pPrint f <> "F"
+  pPrint (Double d) = pPrint d
+  pPrint (Char c) = quotes (pPrint c)
+  pPrint (String s) = doubleQuotes (text s)
 
 instance U.HasType (Literal x) where
   typeOf Int32 {} = U.TyPrim S.Int32T
@@ -71,28 +71,25 @@ deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, F
 deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, Show (XId x)) => Show (Exp x)
 
 instance (Pretty (XId x)) => Pretty (Exp x) where
-  pretty x = pprExpPrec 0 x
-
-pprExpPrec :: (Pretty (XId x)) => Int -> Exp x -> Doc ann
-pprExpPrec _ (Var _ i) = pretty i
-pprExpPrec _ (Unboxed _ lit) = pretty lit <> "#"
-pprExpPrec _ (Boxed _ lit) = pretty lit
-pprExpPrec d (Apply _ e1 e2) =
-  maybeParens (d > 10) $ sep [pprExpPrec 10 e1, pprExpPrec 11 e2]
-pprExpPrec d (OpApp _ o e1 e2) =
-  maybeParens (d > 10) $ sep [pprExpPrec 11 e1, pretty o <+> pprExpPrec 11 e2]
-pprExpPrec _ (Fn _ cs) =
-  braces $
-    space
-      <> foldl1
-        (\a b -> sep [a, nest (-2) $ "|" <+> b])
-        (fmap pretty cs)
-pprExpPrec _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pretty xs
-pprExpPrec _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
-pprExpPrec _ (List _ xs) = brackets $ sep $ punctuate "," $ map pretty xs
-pprExpPrec _ (Force _ x) = "!" <> pprExpPrec 11 x
-pprExpPrec _ (RecordAccess _ x) = "#" <> pretty x
-pprExpPrec _ (Parens _ x) = parens $ pretty x
+  pPrintPrec _ _ (Var _ i) = pPrint i
+  pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
+  pPrintPrec _ _ (Boxed _ lit) = pPrint lit
+  pPrintPrec l d (Apply _ e1 e2) =
+    maybeParens (d > 10) $ sep [pPrintPrec l 10 e1, pPrintPrec l 11 e2]
+  pPrintPrec l d (OpApp _ o e1 e2) =
+    maybeParens (d > 10) $ sep [pPrintPrec l 11 e1, pPrintPrec l 10 o <+> pPrintPrec l 11 e2]
+  pPrintPrec l _ (Fn _ cs) =
+    braces $
+      space
+        <> foldl1
+          (\a b -> sep [a, nest (-2) $ "|" <+> b])
+          (NonEmpty.toList $ fmap (pPrintPrec l 0) cs)
+  pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
+  pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
+  pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
+  pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
+  pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
+  pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
 instance
   ForallExpX U.WithUType x =>
@@ -176,8 +173,8 @@ deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, F
 deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, Show (XId x)) => Show (Stmt x)
 
 instance Pretty (XId x) => Pretty (Stmt x) where
-  pretty (Let _ v e) = "let" <+> pretty v <+> "=" <+> pretty e
-  pretty (NoBind _ e) = pretty e
+  pPrint (Let _ v e) = "let" <+> pPrint v <+> "=" <+> pPrint e
+  pPrint (NoBind _ e) = pPrint e
 
 instance
   ForallExpX U.WithUType x =>
@@ -219,8 +216,8 @@ instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), For
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
-  pretty (Clause _ [] e) = sep (punctuate ";" $ NonEmpty.toList $ fmap pretty e)
-  pretty (Clause _ ps e) = sep [sep (map (pprPatPrec 11) ps) <+> "->", sep (punctuate ";" $ NonEmpty.toList $ fmap pretty e)]
+  pPrintPrec _ _ (Clause _ [] e) = sep (punctuate ";" $ NonEmpty.toList $ fmap pPrint e)
+  pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", sep (punctuate ";" $ NonEmpty.toList $ fmap pPrint e)]
 
 instance
   ForallClauseX U.WithUType x =>
@@ -265,20 +262,17 @@ deriving stock instance (ForallPatX Show x, Show (XId x)) => Show (Pat x)
 deriving stock instance (ForallPatX Ord x, Ord (XId x)) => Ord (Pat x)
 
 instance (Pretty (XId x)) => Pretty (Pat x) where
-  pretty x = pprPatPrec 0 x
-
-pprPatPrec :: (Pretty (XId x)) => Int -> Pat x -> Doc ann
-pprPatPrec _ (VarP _ i) = pretty i
-pprPatPrec _ (ConP _ i []) = pretty i
-pprPatPrec d (ConP _ i ps) =
-  maybeParens (d > 10) $ pretty i <+> sep (map (pprPatPrec 11) ps)
-pprPatPrec _ (TupleP _ ps) =
-  parens $ sep $ punctuate "," $ map pretty ps
-pprPatPrec _ (RecordP _ kps) =
-  braces $ sep $ punctuate "," $ map (\(k, p) -> pretty k <> ":" <+> pretty p) kps
-pprPatPrec _ (ListP _ ps) =
-  brackets $ sep $ punctuate "," $ map pretty ps
-pprPatPrec _ (UnboxedP _ u) = pretty u
+  pPrintPrec _ _ (VarP _ i) = pPrint i
+  pPrintPrec _ _ (ConP _ i []) = pPrint i
+  pPrintPrec l d (ConP _ i ps) =
+    maybeParens (d > 10) $ pPrint i <+> sep (map (pPrintPrec l 11) ps)
+  pPrintPrec _ _ (TupleP _ ps) =
+    parens $ sep $ punctuate "," $ map pPrint ps
+  pPrintPrec l _ (RecordP _ kps) =
+    braces $ sep $ punctuate "," $ map (\(k, p) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 p) kps
+  pPrintPrec _ _ (ListP _ ps) =
+    brackets $ sep $ punctuate "," $ map pPrint ps
+  pPrintPrec _ _ (UnboxedP _ u) = pPrint u
 
 instance
   ForallPatX U.WithUType x =>
@@ -346,20 +340,17 @@ deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
 deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
 
 instance (Pretty (XId x)) => Pretty (Type x) where
-  pretty x = pprTypePrec 0 x
-
-pprTypePrec :: (Pretty (XId x)) => Int -> Type x -> Doc ann
-pprTypePrec d (TyApp _ t ts) =
-  maybeParens (d > 11) $ pretty t <+> sep (map (pprTypePrec 12) ts)
-pprTypePrec _ (TyVar _ i) = pretty i
-pprTypePrec _ (TyCon _ i) = pretty i
-pprTypePrec d (TyArr _ t1 t2) =
-  maybeParens (d > 10) $ pprTypePrec 11 t1 <+> "->" <+> pprTypePrec 10 t2
-pprTypePrec _ (TyTuple _ ts) = parens $ align $ sep $ punctuate "," $ map pretty ts
-pprTypePrec _ (TyRecord _ kvs) = braces $ align $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
-pprTypePrec _ (TyLazy _ t) = braces $ pretty t
-pprTypePrec d (TyDArr _ t1 t2) =
-  maybeParens (d > 10) $ pprTypePrec 11 t1 <+> "=>" <+> pprTypePrec 10 t2
+  pPrintPrec l d (TyApp _ t ts) =
+    maybeParens (d > 11) $ pPrint t <+> sep (map (pPrintPrec l 12) ts)
+  pPrintPrec _ _ (TyVar _ i) = pPrint i
+  pPrintPrec _ _ (TyCon _ i) = pPrint i
+  pPrintPrec l d (TyArr _ t1 t2) =
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
+  pPrintPrec _ _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pPrint ts
+  pPrintPrec l _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
+  pPrintPrec _ _ (TyLazy _ t) = braces $ pPrint t
+  pPrintPrec l d (TyDArr _ t1 t2) =
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "=>" <+> pPrintPrec l 10 t2
 
 getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
@@ -389,25 +380,25 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (Decl x)
 
 instance (Pretty (XId x)) => Pretty (Decl x) where
-  pretty (ScDef _ f e) = sep [pretty f <+> "=", nest 2 $ pretty e]
-  pretty (ScSig _ f t) = pretty f <+> ":" <+> pretty t
-  pretty (DataDef _ d xs cs) =
+  pPrint (ScDef _ f e) = sep [pPrint f <+> "=", nest 2 $ pPrint e]
+  pPrint (ScSig _ f t) = pPrint f <+> ":" <+> pPrint t
+  pPrint (DataDef _ d xs cs) =
     sep
-      [ "data" <+> pretty d <+> sep (map pretty xs) <+> "=",
+      [ "data" <+> pPrint d <+> sep (map pPrint xs) <+> "=",
         nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
       ]
     where
-      pprConDef (con, ts) = pretty con <+> sep (map (pprTypePrec 12) ts)
-  pretty (TypeSynonym _ t xs t') =
+      pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
+  pPrint (TypeSynonym _ t xs t') =
     sep
-      [ "type" <+> pretty t <+> sep (map pretty xs) <+> "=",
-        pretty t'
+      [ "type" <+> pPrint t <+> sep (map pPrint xs) <+> "=",
+        pPrint t'
       ]
-  pretty (Infix _ a o x) = "infix" <> pretty a <+> pretty o <+> pretty x
-  pretty (Foreign _ x t) = "foreign import" <+> pretty x <+> ":" <+> pretty t
-  pretty (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pretty name
-  pretty (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pretty xs) <+> "=" <+> "import" <+> pretty name
-  pretty (Import _ name (As name')) = "module" <+> pretty name' <+> "=" <+> "import" <+> pretty name
+  pPrint (Infix _ a o x) = "infix" <> pPrint a <+> pPrint o <+> pPrint x
+  pPrint (Foreign _ x t) = "foreign import" <+> pPrint x <+> ":" <+> pPrint t
+  pPrint (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pPrint name
+  pPrint (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pPrint xs) <+> "=" <+> "import" <+> pPrint name
+  pPrint (Import _ name (As name')) = "module" <+> pPrint name' <+> "=" <+> "import" <+> pPrint name
 
 makePrisms ''Decl
 
@@ -422,14 +413,14 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XModule x)) => Eq (Mo
 deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XModule x)) => Show (Module x)
 
 instance (Pretty (XId x), Pretty (XModule x)) => Pretty (Module x) where
-  pretty (Module name defs) =
-    "module" <+> pretty name <+> "=" <> softline <> braces (pretty defs)
+  pPrint (Module name defs) =
+    "module" <+> pPrint name <+> "=" $+$ braces (pPrint defs)
 
 newtype ParsedDefinitions = ParsedDefinitions [Decl (Malgo 'Parse)]
   deriving stock (Eq, Show)
 
 instance Pretty ParsedDefinitions where
-  pretty (ParsedDefinitions ds) = sep $ map (\x -> pretty x <> ";") ds
+  pPrint (ParsedDefinitions ds) = sep $ map (\x -> pPrint x <> ";") ds
 
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
 type instance XModule (Malgo 'Parse) = ParsedDefinitions
@@ -473,7 +464,7 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (BindGroup x)
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
 
 instance (Pretty (XId x)) => Pretty (BindGroup x) where
-  pretty BindGroup {_scDefs, _scSigs, _dataDefs, _foreigns} =
+  pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _foreigns} =
     sep $
       punctuate ";" $
         map prettyDataDef _dataDefs
@@ -483,14 +474,14 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
     where
       prettyDataDef (_, d, xs, cs) =
         sep
-          [ "data" <+> pretty d <+> sep (map pretty xs) <+> "=",
+          [ "data" <+> pPrint d <+> sep (map pPrint xs) <+> "=",
             nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
           ]
-      pprConDef (con, ts) = pretty con <+> sep (map (pprTypePrec 12) ts)
-      prettyForeign (_, x, t) = "foreign import" <+> pretty x <+> ":" <+> pretty t
-      prettyScSig (_, f, t) = pretty f <+> ":" <+> pretty t
+      pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
+      prettyForeign (_, x, t) = "foreign import" <+> pPrint x <+> ":" <+> pPrint t
+      prettyScSig (_, f, t) = pPrint f <+> ":" <+> pPrint t
       prettyScDef (_, f, e) =
-        sep [pretty f <+> "=", pretty e]
+        sep [pPrint f <+> "=", pPrint e]
 
 makeBindGroup :: (XId x ~ Id a, Eq a) => [Decl x] -> BindGroup x
 makeBindGroup ds =
