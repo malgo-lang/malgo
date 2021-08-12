@@ -4,9 +4,11 @@ module ToplevelVariable = {
 
   one = 1;
 
+  addOne = addInt32 one;
+
   main = {
-    printInt32 one
+    printInt32 (addOne one)
   };
 }
 
--- Expected: 1
+-- Expected: 2
