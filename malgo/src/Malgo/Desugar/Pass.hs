@@ -23,7 +23,6 @@ import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 import Malgo.TypeRep.Static as GT
-import Prettyprinter.Render.String (renderString)
 import qualified RIO.Char as Char
 import qualified RIO.NonEmpty as NonEmpty
 
@@ -79,7 +78,7 @@ dsImport (pos, modName, _) = do
   interface <-
     loadInterface modName >>= \case
       Just x -> pure x
-      Nothing -> errorOn pos $ "module" <+> pretty modName <+> "is not found"
+      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   nameEnv <>= interface ^. coreIdentMap
 
 -- 相互再帰するScDefのグループごとに脱糖衣する
@@ -157,7 +156,7 @@ dsDataDef (_, name, _, cons) =
     ps <- traverse (newLocalId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
-      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ renderString $ layoutCompact $ pretty conName) paramTypes') $ map C.Var ps)
+      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ conName ^. toText) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
     obj <- case ps of
       [] -> pure ([], expr)
@@ -192,10 +191,10 @@ dsExp (G.Var x (WithPrefix (With _ name))) = do
   case (x ^. GT.withType, C.typeOf name') of
     -- TyLazyの型を検査
     (GT.TyApp GT.TyLazy _, [] :-> _) -> pure ()
-    (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> squotes (pretty $ C.typeOf name')
+    (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _)
       | isConstructor name -> pure ()
-      | otherwise -> errorDoc $ "Invalid type:" <+> squotes (pretty name)
+      | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
     _ -> pure ()
   case C.typeOf name' of
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
@@ -302,7 +301,7 @@ lookupName name = do
   mname' <- use (nameEnv . at name)
   case mname' of
     Just name' -> pure name'
-    Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty name)
+    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
 
 newCoreId :: (MonadReader env f, MonadIO f, HasUniqSupply env) => RnId -> C.Type -> f (Id C.Type)
 newCoreId griffId coreType = newIdOnName coreType griffId
@@ -330,7 +329,7 @@ curryFun [] e = do
         f <- bind e
         pure $ C.Call f (map C.Var ps)
       curryFun ps body
-    _ -> errorDoc $ "Invalid expression:" <+> squotes (pretty e)
+    _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
 curryFun ps e = curryFun' ps []
   where
     curryFun' [] _ = bug $ Unreachable "length ps >= 1"

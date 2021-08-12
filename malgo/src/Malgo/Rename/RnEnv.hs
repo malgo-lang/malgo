@@ -17,7 +17,7 @@ data RnState = RnState
   deriving stock (Show)
 
 instance Pretty RnState where
-  pretty = viaShow
+  pPrint = text . show
 
 makeLenses ''RnState
 
@@ -26,7 +26,7 @@ data Visibility
   | Implicit
   deriving stock (Show, Eq)
 
-instance Pretty Visibility where pretty = viaShow
+instance Pretty Visibility where pPrint = text . show
 
 data RnEnv = RnEnv
   { _varEnv :: HashMap PsId [With Visibility RnId],
@@ -37,13 +37,13 @@ data RnEnv = RnEnv
   deriving stock (Show, Eq)
 
 instance Pretty RnEnv where
-  pretty RnEnv {_varEnv, _typeEnv, _fieldEnv} =
+  pPrint RnEnv {_varEnv, _typeEnv, _fieldEnv} =
     "RnEnv"
       <+> braces
         ( sep
-            [ "_varEnv" <+> "=" <+> pretty (HashMap.toList _varEnv),
-              "_typeEnv" <+> "=" <+> pretty (HashMap.toList _typeEnv),
-              "_fieldEnv" <+> "=" <+> pretty (HashMap.toList _fieldEnv)
+            [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
+              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
+              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv)
             ]
         )
 

@@ -40,8 +40,8 @@ pattern Prefix :: String -> x -> WithPrefix x
 pattern Prefix p x = WithPrefix (With (Just p) x)
 
 instance Pretty x => Pretty (WithPrefix x) where
-  pretty (WithPrefix (With Nothing v)) = pretty v
-  pretty (WithPrefix (With (Just x) v)) = pretty x <> "." <> pretty v
+  pPrint (WithPrefix (With Nothing v)) = pPrint v
+  pPrint (WithPrefix (With (Just x) v)) = pPrint x <> "." <> pPrint v
 
 makeLenses ''WithPrefix
 
@@ -59,9 +59,9 @@ data Assoc = LeftA | RightA | NeutralA
 instance Binary Assoc
 
 instance Pretty Assoc where
-  pretty LeftA = "l"
-  pretty RightA = "r"
-  pretty NeutralA = ""
+  pPrint LeftA = "l"
+  pPrint RightA = "r"
+  pPrint NeutralA = ""
 
 type family XId x where
   XId (Malgo p) = MalgoId p

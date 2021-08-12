@@ -6,7 +6,6 @@ import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Graph
-import Data.Text.Prettyprint.Doc.Render.String (renderString)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -37,7 +36,7 @@ instance Binary Interface
 makeLenses ''Interface
 
 instance Pretty Interface where
-  pretty = viaShow
+  pPrint = text . show
 
 buildInterface :: RnState -> DsEnv -> Interface
 -- TODO: write abbrMap to interface
@@ -73,7 +72,7 @@ loadInterface (ModuleName modName) = do
       pure Nothing
   where
     findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, String) Interface)
-    findAndReadFile [] modFile = pure $ Left (0, renderString $ layoutSmart defaultLayoutOptions $ "module" <+> pretty modFile <+> "is not found")
+    findAndReadFile [] modFile = pure $ Left (0, render $ "module" <+> pPrint modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
@@ -92,7 +91,7 @@ dependencieList modName imports = do
       let from = modName
       interface <-
         loadInterface modName >>= \case
-          Nothing -> error $ show $ pretty modName <> " is not found"
+          Nothing -> error $ show $ pPrint modName <> " is not found"
           Just x -> pure x
       let to = interface ^. dependencies
       case to of

@@ -42,15 +42,15 @@ data TcEnv = TcEnv
 makeLenses ''TcEnv
 
 instance Pretty TcEnv where
-  pretty TcEnv {..} =
+  pPrint TcEnv {..} =
     "TcEnv"
       <+> braces
         ( sep
-            [ "_varEnv" <+> "=" <+> pretty (HashMap.toList _varEnv),
-              "_typeEnv" <+> "=" <+> pretty (HashMap.toList _typeEnv),
-              "_abbrEnv" <+> "=" <+> pretty (HashMap.toList _abbrEnv),
-              "_fieldEnv" <+> "=" <+> pretty (HashMap.toList _fieldEnv),
-              "_rnEnv" <+> "=" <+> pretty _rnEnv
+            [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
+              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
+              "_abbrEnv" <+> "=" <+> pPrint (HashMap.toList _abbrEnv),
+              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv),
+              "_rnEnv" <+> "=" <+> pPrint _rnEnv
             ]
         )
 

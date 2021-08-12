@@ -36,9 +36,9 @@ lookupVarName pos name =
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> squotes (pretty name) <> line
-            <> "Did you mean" <+> pretty (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+          "Not in scope:" <+> quotes (text name)
+            $$ "Did you mean" <+> pPrint (map (view value) names)
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
 lookupTypeName pos name = do
@@ -47,9 +47,9 @@ lookupTypeName pos name = do
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> squotes (pretty name) <> line
-            <> "Did you mean" <+> pretty (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+          "Not in scope:" <+> quotes (text name)
+            $$ "Did you mean" <+> pPrint (map (view value) names)
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
 lookupFieldName pos name = do
@@ -58,9 +58,9 @@ lookupFieldName pos name = do
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> squotes (pretty name) <> line
-            <> "Did you mean" <+> pretty (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+          "Not in scope:" <+> quotes (text name)
+            $$ "Did you mean" <+> pPrint (map (view value) names)
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> String -> m (Id ())
 lookupQualifiedVarName pos modName name = do
@@ -70,11 +70,9 @@ lookupQualifiedVarName pos modName name = do
         Just (With _ name) -> pure name
         Nothing ->
           errorOn pos $
-            "Not in scope:" <+> squotes (pretty name) <+> "in" <+> pretty modName <> line
-              <> "Did you mean" <+> "`"
-              <> pretty modName <+> "." <+> pretty name
-              <> "`" <+> "?"
-    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+            "Not in scope:" <+> quotes (text name) <+> "in" <+> pPrint modName
+              $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> text name <> "`" <+> "?"
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
 
 -- renamer
 
@@ -133,7 +131,7 @@ rnDecl (Import pos modName importList) = do
   interface <-
     loadInterface modName >>= \case
       Just x -> pure x
-      Nothing -> errorOn pos $ "module" <+> pretty modName <+> "is not found"
+      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   infixInfo <>= interface ^. infixMap
   dependencies <>= [modName]
   pure $ Import pos modName importList
@@ -165,7 +163,7 @@ rnExp (OpApp pos op e1 e2) = do
   mfixity <- HashMap.lookup op' <$> use infixInfo
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
-    Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
+    Nothing -> errorOn pos $ "No infix declaration:" <+> quotes (pPrint op)
 rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
 rnExp (Record pos kvs) =
@@ -231,7 +229,7 @@ rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (\(WithPrefix (Wi
 rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName pos "Cons" <*> traverse rnPat xs
   where
     buildListP nilName _ [] = ConP pos nilName []
-    buildListP nilName consName (x : xs) = ConP pos consName [x, buildListP nilName consName xs]
+    buildListP nilName consName (x:xs) = ConP pos consName [x, buildListP nilName consName xs]
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => NonEmpty (Stmt (Malgo 'Parse)) -> m (NonEmpty (Stmt (Malgo 'Rename)))
@@ -275,15 +273,14 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
     errorOn pos1 $
       "Precedence parsing error:"
-        <> line
-        <> nest
+        $+$ nest
           2
           ( "cannot mix"
-              <+> squotes (pretty op1)
-              <+> brackets (pretty fix1)
+              <+> quotes (pPrint op1)
+              <+> brackets (pPrint fix1)
               <+> "and"
-              <+> squotes (pretty op2)
-              <+> brackets (pretty fix2)
+              <+> quotes (pPrint op2)
+              <+> brackets (pPrint fix2)
               <+> "in the same infix expression"
           )
   | associate_right = pure $ OpApp (pos1, fix1) op1 e11 (OpApp (pos2, fix2) op2 e12 e2)
@@ -311,19 +308,19 @@ genToplevelEnv modName ds builtinEnv = do
     aux (ScDef pos x _) = do
       env <- use varEnv
       when (x `elem` HashMap.keys env) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
       modify $ appendRnEnv varEnv [(x, With Implicit x')]
     aux ScSig {} = pure ()
     aux (DataDef pos x _ cs) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. typeEnv)) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       unless (disjoint (map fst cs) (HashMap.keys (env ^. varEnv))) do
         errorOn pos $
           "Duplicate name(s):"
             <+> sep
-              (punctuate "," $ map (squotes . pretty) (map fst cs `intersect` HashMap.keys (env ^. varEnv)))
+              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. varEnv)))
       x' <- resolveGlobalName modName x
       xs' <- traverse (resolveGlobalName modName . fst) cs
       modify $ appendRnEnv varEnv (zip (map fst cs) $ map (With Implicit) xs')
@@ -332,24 +329,24 @@ genToplevelEnv modName ds builtinEnv = do
     aux (TypeSynonym pos x _ t) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. typeEnv)) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
       modify $ appendRnEnv typeEnv [(x, With Implicit x')]
       genFieldEnv t
     aux (Foreign pos x _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. varEnv)) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newGlobalId x () modName
       modify $ appendRnEnv varEnv [(x, With Implicit x')]
     aux (Import pos modName' All) = do
       interface <-
         loadInterface modName' >>= \case
           Just x -> pure x
-          Nothing -> errorOn pos $ "module" <+> pretty modName' <+> "is not found"
+          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       opt <- getOpt
       when (debugMode opt) $
-        liftIO $ hPrint stderr $ pretty interface
+        liftIO $ hPrint stderr $ pPrint interface
       -- 全ての識別子をImplicitでimportする
       modify $ appendRnEnv varEnv (map (over _2 $ With Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ With Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
@@ -357,10 +354,10 @@ genToplevelEnv modName ds builtinEnv = do
       interface <-
         loadInterface modName' >>= \case
           Just x -> pure x
-          Nothing -> errorOn pos $ "module" <+> pretty modName' <+> "is not found"
+          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       opt <- getOpt
       when (debugMode opt) $
-        liftIO $ hPrint stderr $ pretty interface
+        liftIO $ hPrint stderr $ pPrint interface
       modify $
         appendRnEnv
           varEnv
@@ -387,10 +384,10 @@ genToplevelEnv modName ds builtinEnv = do
       interface <-
         loadInterface modName' >>= \case
           Just x -> pure x
-          Nothing -> errorOn pos $ "module" <+> pretty modName' <+> "is not found"
+          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       opt <- getOpt
       when (debugMode opt) $
-        liftIO $ hPrint stderr $ pretty interface
+        liftIO $ hPrint stderr $ pPrint interface
       modify $ appendRnEnv varEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pure ()
