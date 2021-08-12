@@ -28,8 +28,9 @@ import qualified RIO.Char as Char
 import qualified RIO.NonEmpty as NonEmpty
 
 -- | トップレベル宣言
-data Def = VarDef (Id C.Type) (C.Exp (Id C.Type))
-         | FunDef (Id C.Type) ([Id C.Type], C.Exp (Id C.Type))
+data Def
+  = VarDef (Id C.Type) (C.Exp (Id C.Type))
+  | FunDef (Id C.Type) ([Id C.Type], C.Exp (Id C.Type))
 
 makePrisms ''Def
 
@@ -39,7 +40,7 @@ desugar ::
   HashMap RnId (Scheme GT.Type) ->
   HashMap RnId (TypeDef GT.Type) ->
   RnEnv ->
-  [ModuleName] -> 
+  [ModuleName] ->
   Module x ->
   m (DsEnv, Program (Id C.Type))
 desugar varEnv typeEnv rnEnv depList (Module modName ds) = do
@@ -108,15 +109,15 @@ dsScDef (With typ _, name, expr) = do
     GT.TyArr _ _ -> dsFunDef name expr
     GT.TyApp GT.TyLazy _ -> dsFunDef name expr
     _ -> dsVarDef name expr
-    where
-      dsVarDef name expr = do
-        name' <- lookupName name
-        expr' <- dsExp expr
-        pure [VarDef name' expr']
-      dsFunDef name expr = do
-        name' <- lookupName name
-        fun <- curryFun [] =<< dsExp expr
-        pure [FunDef name' fun]
+  where
+    dsVarDef name expr = do
+      name' <- lookupName name
+      expr' <- dsExp expr
+      pure [VarDef name' expr']
+    dsFunDef name expr = do
+      name' <- lookupName name
+      fun <- curryFun [] =<< dsExp expr
+      pure [FunDef name' fun]
 
 -- TODO: Malgoのforeignでvoid型をあつかえるようにする #13
 -- 1. Malgoの型とCの型の相互変換を定義する
@@ -308,28 +309,39 @@ newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::
+  HasCallStack =>
   (MonadIO m, MonadReader env m, HasUniqSupply env) =>
+  -- | パラメータリスト
   [Id C.Type] ->
+  -- | カリー化されていない関数値
   C.Exp (Id C.Type) ->
   m ([Id C.Type], C.Exp (Id C.Type))
--- FIXME: curryFun [] e の正しい処理は、eの型に応じて引数リストpsを生成し、(ps, (apply e ps))を返す
--- そのためには、Coreの項に明示的な型の適用を追加する必要がある
-curryFun [] (C.Let [LocalDef v (Fun ps e)] (Atom (C.Var v'))) | v == v' = pure (ps, e)
-curryFun [] e = errorDoc $ "Invalid expression:" <+> squotes (pretty e)
-curryFun [x] e = pure ([x], e)
-curryFun ps@(_ : _) e = curryFun' ps []
+-- η展開
+curryFun [] e = do
+  case C.typeOf e of
+    [] :-> _ -> do
+      body <- runDef do
+        f <- bind e
+        pure $ C.Call f []
+      pure ([], body)
+    pts :-> _ -> do
+      ps <- traverse (newLocalId "$eta") pts
+      body <- runDef do
+        f <- bind e
+        pure $ C.Call f (map C.Var ps)
+      curryFun ps body
+    _ -> errorDoc $ "Invalid expression:" <+> squotes (pretty e)
+curryFun ps e = curryFun' ps []
   where
-    curryFun' [] _ = bug $ Unreachable "Currying no-arguments function is not supported"
+    curryFun' [] _ = bug $ Unreachable "length ps >= 1"
     curryFun' [x] as = do
-      x' <- newLocalId (idToString x) (C.typeOf x)
       fun <- newLocalId "$curry" (C.typeOf $ Fun ps e)
-      let body = C.Call (C.Var fun) $ reverse $ C.Var x' : as
-      pure ([x'], C.Let [C.LocalDef fun $ Fun ps e] body)
+      let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
+      pure ([x], C.Let [C.LocalDef fun $ Fun ps e] body)
     curryFun' (x : xs) as = do
-      x' <- newLocalId (idToString x) (C.typeOf x)
-      fun <- curryFun' xs (C.Var x' : as)
+      fun <- curryFun' xs (C.Var x : as)
       let funObj = uncurry Fun fun
       body <- runDef $ do
         fun <- let_ (C.typeOf funObj) funObj
         pure $ Atom fun
-      pure ([x'], body)
+      pure ([x], body)
