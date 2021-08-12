@@ -394,7 +394,7 @@ genToplevelEnv modName ds builtinEnv = do
     aux (Impl pos name _ _) = do
       env <- use varEnv
       when (name `elem` HashMap.keys env) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty name)
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint name)
       name' <- resolveGlobalName modName name
       modify $ appendRnEnv varEnv [(name, With Implicit name')]
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
