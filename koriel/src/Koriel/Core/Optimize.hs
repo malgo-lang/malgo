@@ -34,7 +34,7 @@ times n f x
 -- | 最適化を行う関数
 --
 -- * 自明な変数の付け替えの簡約 (optVarBind)
--- * 値コンストラクタを含む関数のインライン展開 (optPackInline, optCallInline)
+-- * 値コンストラクタを含む、関数のインライン展開 (optPackInline, optCallInline)
 -- * 不要なletの削除 (removeUnusedLet)
 -- * 無意味なcastの削除（optIdCast）
 optimizeProgram ::
@@ -58,9 +58,17 @@ optimizeExpr state = 10 `times` opt
         >=> removeUnusedLet
         >=> (flip evalStateT state . optCallInline)
         >=> optIdCast
+        >=> optTrivialCall
         -- >=> optCast
         >=> pure
           . flat
+
+-- (let ((f (fun () body))) (f)) = body
+optTrivialCall :: (Eq a, Applicative f) => Exp a -> f (Exp a)
+optTrivialCall (Let [LocalDef f (Fun [] body)] (Call (Var f') [])) | f == f' = optTrivialCall body
+optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optTrivialCall ds <*> optTrivialCall e
+optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
+optTrivialCall e = pure e
 
 type CallInlineMap = HashMap (Id Type) ([Id Type], Exp (Id Type))
 
