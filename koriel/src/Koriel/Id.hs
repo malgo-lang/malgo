@@ -38,7 +38,7 @@ newtype ModuleName = ModuleName String
 instance Binary ModuleName
 
 instance Pretty ModuleName where
-  pretty (ModuleName modName) = pretty modName
+  pPrint (ModuleName modName) = text modName
 
 makePrisms ''ModuleName
 
@@ -52,8 +52,8 @@ data IdSort
 instance Binary IdSort
 
 instance Pretty IdSort where
-  pretty (External modName) = "External" <+> pretty modName
-  pretty Internal = "Internal"
+  pPrint (External modName) = "External" <+> pPrint modName
+  pPrint Internal = "Internal"
 
 data Id a = Id
   { _idName :: String,
@@ -76,24 +76,24 @@ instance Binary a => Binary (Id a)
 noName :: String
 noName = "$noName"
 
-pprIdName :: Id a -> Doc ann
-pprIdName Id {_idName} = pretty _idName
+pprIdName :: Id a -> Doc
+pprIdName Id {_idName} = text _idName
 
 idToString :: Id a -> String
 idToString Id {_idName, _idSort = External modName} = coerce modName <> "." <> _idName
 idToString Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> show _idUniq
 
-prettyMeta :: (t -> Doc ann) -> t -> Doc ann
+pPrintMeta :: (t -> Doc) -> t -> Doc
 
 #ifdef DEBUG
-prettyMeta ppr x = braces (ppr x)
+pPrintMeta ppr x = braces (ppr x)
 #else
-prettyMeta _ _ = mempty
+pPrintMeta _ _ = mempty
 #endif
 
 instance Pretty a => Pretty (Id a) where
-  pretty id@(Id _ _ m (External modName)) = pretty modName <> "." <> pprIdName id <> prettyMeta pretty m
-  pretty id@(Id _ u m Internal) = pprIdName id <> "_" <> pretty u <> prettyMeta pretty m
+  pPrint id@(Id _ _ m (External modName)) = pPrint modName <> "." <> pprIdName id <> pPrintMeta pPrint m
+  pPrint id@(Id _ u m Internal) = pprIdName id <> "_" <> text (show u) <> pPrintMeta pPrint m
 
 makeLenses ''Id
 

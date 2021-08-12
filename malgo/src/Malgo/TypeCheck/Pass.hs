@@ -33,13 +33,13 @@ import Text.Megaparsec (SourcePos)
 lookupVar :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> RnId -> m (Scheme UType)
 lookupVar pos name =
   use (varEnv . at name) >>= \case
-    Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+    Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just scheme -> pure scheme
 
 lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> RnId -> m UType
 lookupType pos name =
   preuse (typeEnv . at name . _Just) >>= \case
-    Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+    Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just TypeDef {..} -> pure _typeConstructor
 
 -- fieldsのすべてのフィールドを含むレコード型を検索する
@@ -51,7 +51,7 @@ lookupRecordType pos fields = do
   case List.foldr1 List.intersect candidates of
     [] -> bug $ Unreachable "The existence of fields are proved on Rename pass"
     [(_, scheme)] -> pure scheme
-    xs -> errorOn pos $ "Ambiguious record:" <+> sep (punctuate "," $ map (pretty . fst) xs)
+    xs -> errorOn pos $ "Ambiguious record:" <+> sep (punctuate "," $ map (pPrint . fst) xs)
   where
     lookup env (WithPrefix (With Nothing k)) = concat $ HashMap.lookup k env
     lookup env (WithPrefix (With (Just p) k)) = filter ((== p) . fst) $ concat $ HashMap.lookup k env
@@ -115,7 +115,7 @@ tcImports = traverse tcImport
       interface <-
         loadInterface modName >>= \case
           Just x -> pure x
-          Nothing -> errorOn pos $ "module" <+> pretty modName <+> "is not found"
+          Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
       varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
       typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
       abbrEnv
@@ -320,9 +320,9 @@ tcScDefs ds@((pos, _, _) : _) = do
         declaredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) declaredScheme
         inferedType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) inferredScheme
         case equiv declaredType inferedType of
-          Nothing -> errorOn (pos ^. value) $ vsep ["Signature mismatch", indent 2 ("Declared:" <+> pretty declaredScheme), indent 2 ("Inferred:" <+> pretty inferredScheme)]
+          Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
           Just subst
-            | anySame $ HashMap.elems subst -> errorOn (pos ^. value) $ "Signature too general:" <> line <> nest 2 ("Declared:" <+> pretty declaredScheme) <> line <> nest 2 ("Inferred:" <+> pretty inferredScheme)
+            | anySame $ HashMap.elems subst -> errorOn (pos ^. value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
             | otherwise -> varEnv . at name ?= declaredScheme
   pure ds
 
@@ -394,7 +394,7 @@ tcExpr (RecordAccess pos label) = do
     TyRecord kts -> do
       tell [With pos $ recordType :~ TyRecord (Map.insert (removePrefix label) retType kts)]
       pure $ RecordAccess (With (TyArr recordType retType) pos) label
-    _ -> errorOn pos $ pretty recordType <+> "is not record type"
+    _ -> errorOn pos $ pPrint recordType <+> "is not record type"
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (With (typeOf e') pos) e'

@@ -18,8 +18,8 @@ data Tag
 instance Binary Tag
 
 instance Pretty Tag where
-  pretty (Data name) = pretty name
-  pretty Tuple = "#tuple"
+  pPrint (Data name) = text name
+  pPrint Tuple = "#tuple"
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -27,7 +27,7 @@ data Con = Con Tag [Type]
 instance Binary Con
 
 instance Pretty Con where
-  pretty (Con tag xs) = parens $ hang 1 $ sep $ pretty tag : map pretty xs
+  pPrint (Con tag xs) = parens $ sep $ pPrint tag : map pPrint xs
 
 -- TODO: クロージャを表す型を追加
 -- ClosureT [Type] Type
@@ -48,23 +48,23 @@ data Type
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
+makePrisms ''Type
+
 instance Binary Type
 
 instance Pretty Type where
-  pretty (a :-> b) = parens $ hang 1 $ sep ["->", parens $ sep $ map pretty a, pretty b]
-  pretty Int32T = "Int32#"
-  pretty Int64T = "Int64#"
-  pretty FloatT = "Float#"
-  pretty DoubleT = "Double#"
-  pretty CharT = "Char#"
-  pretty StringT = "String#"
-  pretty BoolT = "Bool#"
-  pretty (SumT cs) = parens $ hang 1 $ sep ("sum" : map pretty cs)
-  pretty (PtrT t) = parens $ "Ptr#" <+> pretty t
-  pretty AnyT = "Any#"
-  pretty VoidT = "Void#"
-
-makePrisms ''Type
+  pPrint (a :-> b) = brackets (sep $ punctuate "," $ map pPrint a) <+> "->" <+> pPrint b
+  pPrint Int32T = "Int32#"
+  pPrint Int64T = "Int64#"
+  pPrint FloatT = "Float#"
+  pPrint DoubleT = "Double#"
+  pPrint CharT = "Char#"
+  pPrint StringT = "String#"
+  pPrint BoolT = "Bool#"
+  pPrint (SumT cs) = parens $ sep ("sum" : map pPrint cs)
+  pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
+  pPrint AnyT = "Any#"
+  pPrint VoidT = "Void#"
 
 class HasType a where
   typeOf :: a -> Type

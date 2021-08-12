@@ -27,7 +27,7 @@ import Koriel.Prelude
 import Koriel.Pretty
 import System.FilePath ((-<.>))
 import System.IO (readFile)
-import Text.Megaparsec.Pos (SourcePos (sourceLine, sourceColumn), unPos)
+import Text.Megaparsec.Pos (SourcePos (..), unPos)
 
 data Opt = Opt
   { srcName :: FilePath,
@@ -123,37 +123,39 @@ viewLine linum = do
   pure $ lines s !! (linum - 1)
 
 #ifdef DEBUG
-errorOn :: (HasCallStack, HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m a
+errorOn :: (HasCallStack, HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
 #else
-errorOn :: (HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m a
+errorOn :: (HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
 #endif
 errorOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
   let columnNum = unPos $ sourceColumn pos
-  logError $ displayShow $
-    "error on" <+> pretty pos <> ":" <> line
-      <> vsep
-        [ x,
-          indent (length (show lineNum) + 1) "|",
-          pretty lineNum <+> "|" <+> pretty l,
-          indent (length (show lineNum) + 1) "|" <> indent columnNum "^"
-        ]
+  logError $
+    displayShow $
+      "error on" <+> pPrint pos <> ":"
+        $$ vcat
+          [ x,
+            nest (length (show lineNum) + 1) "|",
+            pPrint lineNum <+> "|" <+> pPrint l,
+            nest (length (show lineNum) + 1) "|" <> nest columnNum "^"
+          ]
   exitFailure
 
-warningOn :: (HasLogFunc env, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc ann -> m ()
+warningOn :: (HasLogFunc env, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m ()
 warningOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
   let columnNum = unPos $ sourceColumn pos
-  logWarn $ displayShow $
-    "warning on" <+> pretty pos <> ":" <> line
-      <> vsep
-        [ x,
-          indent (length (show lineNum) + 1) "|",
-          pretty lineNum <+> "|" <+> pretty l,
-          indent (length (show lineNum) + 1) "|" <> indent columnNum "^"
-        ]
+  logWarn $
+    displayShow $
+      "warning on" <+> pPrint pos <> ":"
+        $$ vcat
+          [ x,
+            nest (length (show lineNum) + 1) "|",
+            pPrint lineNum <+> "|" <+> pPrint l,
+            nest (length (show lineNum) + 1) "|" <> nest columnNum "^"
+          ]
 
 data With x v = With {_ann :: x, _value :: v}
   deriving stock (Eq, Ord, Bounded, Read, Show, Generic)
@@ -161,4 +163,4 @@ data With x v = With {_ann :: x, _value :: v}
 makeLenses ''With
 
 instance (Pretty x, Pretty v) => Pretty (With x v) where
-  pretty (With x v) = pretty v <> brackets (pretty x)
+  pPrintPrec l _ (With x v) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)

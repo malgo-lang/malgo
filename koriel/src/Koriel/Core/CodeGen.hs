@@ -143,7 +143,7 @@ findVar x =
     Nothing ->
       view (globalValueMap . at x) >>= \case
         Just opr -> load opr 0 -- global variable is a pointer to the actual value
-        Nothing -> error $ show $ pretty x <> " is not found"
+        Nothing -> error $ show $ pPrint x <> " is not found"
 
 findFun :: (MonadReader CodeGenEnv m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x = do
@@ -152,7 +152,7 @@ findFun x = do
     Nothing ->
       case C.typeOf x of
         ps :-> r -> findExt (toName x) (map convType ps) (convType r)
-        _ -> error $ show $ pretty x <> " is not found"
+        _ -> error $ show $ pPrint x <> " is not found"
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
@@ -203,7 +203,7 @@ genInitVar ::
   m ()
 genInitVar name expr = do
   view (globalValueMap . at name) >>= \case
-    Nothing -> error $ show $ pretty name <> " is not found"
+    Nothing -> error $ show $ pPrint name <+> "is not found"
     Just name' -> genExp expr $ store name' 0
 
 -- generate code for a 'known' function
@@ -260,7 +260,7 @@ genExp (ExtCall name (ps :-> r) xs) k = do
   primOpr <- findExt (LLVM.AST.mkName name) (map convType ps) (convType r)
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
-genExp (ExtCall _ t _) _ = error $ show $ pretty t <> " is not fuction type"
+genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
 genExp (RawCall name (ps :-> r) xs) k = do
   let primOpr =
         ConstantOperand $
@@ -269,7 +269,7 @@ genExp (RawCall name (ps :-> r) xs) k = do
             (LLVM.AST.mkName name)
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
-genExp (RawCall _ t _) _ = error $ show $ pretty t <> " is not fuction type"
+genExp (RawCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
 genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add
@@ -487,12 +487,12 @@ genLocalDef (LocalDef (C.typeOf -> t) Pack {}) = bug $ Unreachable $ tshow t <> 
 genCon :: [Con] -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
   | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
-  | otherwise = errorDoc $ pretty con <+> "is not in" <+> pretty cs
+  | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
 
 findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
 findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
-  Nothing -> errorDoc $ pretty con <+> "is not in" <+> pretty cs
+  Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
 
 -- sizeof :: LT.Type -> Operand
 -- sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64

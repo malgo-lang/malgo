@@ -1,7 +1,6 @@
 module Malgo.Desugar.Type (dsType, unfoldType) where
 
 import qualified Data.Map.Strict as Map
-import Data.Text.Prettyprint.Doc.Render.String (renderString)
 import Koriel.Core.Type
 import qualified Koriel.Core.Type as C
 import Koriel.Id
@@ -18,7 +17,7 @@ dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
   case con ^. idMeta of
     GT.TYPE (GT.Rep GT.BoxedRep) -> pure AnyT
-    kcon -> errorDoc $ "Invalid kind:" <+> pretty con <+> ":" <+> pretty kcon
+    kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
 dsType (GT.TyPrim GT.FloatT) = pure C.FloatT
@@ -34,7 +33,7 @@ dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
 dsType GT.TyBottom = pure AnyT
-dsType t = errorDoc $ "invalid type on dsType:" <+> pretty t
+dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 dsTyApp :: Monad f => [GT.Type] -> GT.Type -> f C.Type
 dsTyApp ts (GT.TyTuple _) = SumT . pure . C.Con C.Tuple <$> traverse dsType ts
@@ -51,7 +50,7 @@ unfoldType t@(viewTyConApp -> Just (TyCon con, ts)) = do
       SumT
         <$> traverse
           ( \(conName, Forall _ conType) ->
-              C.Con (Data $ renderString $ layoutCompact $ pretty conName) <$> traverse dsType (fst $ splitTyArr conType)
+              C.Con (Data $ conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
           )
           vcs
     _ -> dsType t
