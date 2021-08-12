@@ -382,6 +382,7 @@ data Decl x
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
   | Import (XImport x) ModuleName ImportList
+  | Class (XClass x) (XId x) [XId x] [(WithPrefix (XId x), Type x)]
   | Impl (XImpl x) (XId x) (Type x) [(WithPrefix (XId x), Exp x)]
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
@@ -408,6 +409,9 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
   pretty (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pretty name
   pretty (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pretty xs) <+> "=" <+> "import" <+> pretty name
   pretty (Import _ name (As name')) = "module" <+> pretty name' <+> "=" <+> "import" <+> pretty name
+  pretty (Class _ name params methods) =
+    "class" <+> pretty name <+> sep (map pretty params) <+> "="
+      <+> braces (sep $ map (\(label, typ) -> pretty label <+> "=" <+> pretty typ <> ";") methods)
   pretty (Impl _ name typ methods) =
     "impl" <+> pretty name <+> ":" <+> pretty typ <+> "="
       <+> braces (sep $ map (\(label, expr) -> pretty label <+> "=" <+> pretty expr <> ";") methods)

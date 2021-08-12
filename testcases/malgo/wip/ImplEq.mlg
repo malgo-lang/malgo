@@ -2,6 +2,10 @@ module ImplEq = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
+  class Eq a = {
+    eq : a -> a -> Bool;
+  };
+
   impl eqInt32 : Eq Int32 = {
     eq = { x y -> eqInt32 x y };
   };
