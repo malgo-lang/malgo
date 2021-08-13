@@ -71,7 +71,7 @@ dsBindGroup bg = do
   dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
   foreigns' <- traverse dsForeign (bg ^. foreigns)
   scDefs' <- dsScDefGroup (bg ^. scDefs)
-  pure $ mconcat $ mconcat dataDefs' <> foreigns' <> scDefs'
+  pure $ mconcat dataDefs' <> foreigns' <> scDefs'
 
 dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env, HasLogFunc env) => Import (Malgo 'Refine) -> m ()
 dsImport (pos, modName, _) = do
@@ -81,20 +81,19 @@ dsImport (pos, modName, _) = do
       Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   nameEnv <>= interface ^. coreIdentMap
 
--- 相互再帰するScDefのグループごとに脱糖衣する
+-- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::
   (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) =>
   [[ScDef (Malgo 'Refine)]] ->
-  f [[Def]]
-dsScDefGroup = traverse dsScDefs
+  f [Def]
+dsScDefGroup = dsScDefs . mconcat
 
--- 相互再帰的なグループをdesugar
 dsScDefs ::
   (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) =>
   [ScDef (Malgo 'Refine)] ->
   f [Def]
 dsScDefs ds = do
-  -- まず、このグループで宣言されているScDefの名前をすべて名前環境に登録する
+  -- まず、宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
     Just (Forall _ fType) <- use (varTypeEnv . at f)
     f' <- newCoreId f =<< dsType fType
@@ -125,7 +124,7 @@ dsScDef (With typ _, name, expr) = do
 dsForeign ::
   (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env) =>
   Foreign (Malgo 'Refine) ->
-  f [Def]
+  f Def
 dsForeign (x@(With _ (_, primName)), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. GT.withType)
   let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
@@ -134,12 +133,12 @@ dsForeign (x@(With _ (_, primName)), name, _) = do
   params <- traverse (newLocalId "$p") paramTypes'
   fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
   nameEnv . at name ?= name'
-  pure [FunDef name' fun]
+  pure (FunDef name' fun)
 
 dsDataDef ::
   (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env, MonadIO m) =>
   DataDef (Malgo 'Refine) ->
-  m [[Def]]
+  m [Def]
 dsDataDef (_, name, _, cons) =
   for cons $ \(conName, _) -> do
     -- lookup constructor infomations
@@ -162,7 +161,7 @@ dsDataDef (_, name, _, cons) =
       [] -> pure ([], expr)
       _ -> curryFun ps expr
     nameEnv . at conName ?= conName'
-    pure [FunDef conName' obj]
+    pure (FunDef conName' obj)
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
     buildConType [] retType = [] :-> retType
@@ -223,7 +222,8 @@ dsExp (G.Apply info f x) = runDef $ do
       --   適切な型にcastする必要がある
       x' <- cast xType =<< dsExp x
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
-    _ -> bug $ Unreachable "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
+    _ ->
+      bug $ Unreachable "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
 dsExp (G.Fn x (Clause _ [] ss :| _)) = do
   -- lazy valueの脱糖衣
   ss' <- dsStmts ss
@@ -296,7 +296,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
 
 -- Desugar Monad
 
-lookupName :: MonadState DsEnv m => RnId -> m (Id C.Type)
+lookupName :: HasCallStack => MonadState DsEnv m => RnId -> m (Id C.Type)
 lookupName name = do
   mname' <- use (nameEnv . at name)
   case mname' of

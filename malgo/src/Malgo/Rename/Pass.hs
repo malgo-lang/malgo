@@ -135,6 +135,21 @@ rnDecl (Import pos modName importList) = do
   infixInfo <>= interface ^. infixMap
   dependencies <>= [modName]
   pure $ Import pos modName importList
+rnDecl (Class pos name params synType) = do
+  params' <- traverse resolveName params
+  local (appendRnEnv typeEnv (zip params $ map (With Implicit) params')) $
+    Class pos
+      <$> lookupTypeName pos name
+      <*> pure params'
+      <*> rnType synType
+rnDecl (Impl pos name typ expr) = do
+  let tyVars = HashSet.toList $ getTyVars typ
+  tyVars' <- traverse resolveName tyVars
+  local (appendRnEnv typeEnv (zip tyVars $ map (With Implicit) tyVars')) $
+    Impl pos
+      <$> lookupVarName pos name
+      <*> rnType typ
+      <*> rnExp expr
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
@@ -202,7 +217,7 @@ rnClause ::
 rnClause (Clause pos ps ss) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
-  when (anySame vars) $ errorOn pos "Same variables occurs in a pattern"
+  when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (With Implicit) <$> traverse resolveName vars
   local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss
   where
@@ -221,7 +236,7 @@ rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (\(WithPrefix (Wi
 rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName pos "Cons" <*> traverse rnPat xs
   where
     buildListP nilName _ [] = ConP pos nilName []
-    buildListP nilName consName (x:xs) = ConP pos consName [x, buildListP nilName consName xs]
+    buildListP nilName consName (x : xs) = ConP pos consName [x, buildListP nilName consName xs]
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => NonEmpty (Stmt (Malgo 'Parse)) -> m (NonEmpty (Stmt (Malgo 'Rename)))
@@ -355,7 +370,9 @@ genToplevelEnv modName ds builtinEnv = do
           varEnv
           ( map
               ( \(name, id) ->
-                  if name `elem` implicits then (name, With Implicit id) else (name, With (Explicit modName') id)
+                  if name `elem` implicits
+                    then (name, With Implicit id)
+                    else (name, With (Explicit modName') id)
               )
               $ HashMap.toList $ interface ^. resolvedVarIdentMap
           )
@@ -364,7 +381,9 @@ genToplevelEnv modName ds builtinEnv = do
           typeEnv
           ( map
               ( \(name, id) ->
-                  if name `elem` implicits then (name, With Implicit id) else (name, With (Explicit modName') id)
+                  if name `elem` implicits
+                    then (name, With Implicit id)
+                    else (name, With (Explicit modName') id)
               )
               $ HashMap.toList $ interface ^. resolvedTypeIdentMap
           )
@@ -379,6 +398,19 @@ genToplevelEnv modName ds builtinEnv = do
       modify $ appendRnEnv varEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pure ()
+    aux (Class pos name _ synType) = do
+      env <- get
+      when (name `elem` HashMap.keys (env ^. typeEnv)) do
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint name)
+      name' <- resolveGlobalName modName name
+      modify $ appendRnEnv typeEnv [(name, With Implicit name')]
+      genFieldEnv synType
+    aux (Impl pos name _ _) = do
+      env <- use varEnv
+      when (name `elem` HashMap.keys env) do
+        errorOn pos $ "Duplicate name:" <+> quotes (pPrint name)
+      name' <- resolveGlobalName modName name
+      modify $ appendRnEnv varEnv [(name, With Implicit name')]
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
     genFieldEnv (TyVar _ _) = pure ()
     genFieldEnv (TyCon _ _) = pure ()

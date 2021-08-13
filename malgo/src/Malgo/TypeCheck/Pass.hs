@@ -13,7 +13,7 @@ import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv
-import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors)
+import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), typeConstructor, typeParameters, valueConstructors)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
 import Malgo.UTerm
@@ -71,12 +71,13 @@ typeCheck rnEnv (Module name bg) = do
       zonkedBg <-
         pure bg'
           >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
           >>= traverseOf (foreigns . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (impls . traversed . _4) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
       zonkedTcEnv <-
         pure tcEnv'
-          >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
-          >>= traverseOf (typeEnv . traversed . traversed) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (varEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (typeEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
       pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
@@ -93,12 +94,68 @@ tcBindGroup ::
   m (BindGroup (Malgo 'TypeCheck))
 tcBindGroup bindGroup = do
   _imports <- tcImports $ bindGroup ^. imports
-  (_typeSynonyms, _dataDefs) <- tcTypeDefinitions (bindGroup ^. typeSynonyms) (bindGroup ^. dataDefs)
+  (_typeSynonyms, _dataDefs, _classes) <- tcTypeDefinitions (bindGroup ^. typeSynonyms) (bindGroup ^. dataDefs) (bindGroup ^. classes)
   _foreigns <- tcForeigns $ bindGroup ^. foreigns
   _scSigs <- tcScSigs $ bindGroup ^. scSigs
+  traverse_ prepareTcImpls $ bindGroup ^. impls
   traverse_ prepareTcScDefs $ bindGroup ^. scDefs
   _scDefs <- tcScDefGroup $ bindGroup ^. scDefs
+  _impls <- tcImpls $ bindGroup ^. impls
   pure BindGroup {..}
+
+prepareTcImpls ::
+  ( MonadReader env f,
+    MonadIO f,
+    MonadState TcEnv f,
+    MonadBind f,
+    HasUniqSupply env,
+    HasOpt env,
+    HasLogFunc env
+  ) =>
+  Impl (Malgo 'Rename) ->
+  f ()
+prepareTcImpls (pos, name, typ, _) = do
+  for_ (HashSet.toList $ getTyVars typ) \tyVar -> do
+    tv <- freshVar
+    typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
+  scheme <- generalize pos mempty =<< transType typ
+  varEnv . at name ?= scheme
+  pure ()
+
+tcImpls ::
+  ( MonadReader env f,
+    HasLogFunc env,
+    HasOpt env,
+    MonadIO f,
+    MonadFail f,
+    MonadState TcEnv f,
+    MonadBind f,
+    HasUniqSupply env
+  ) =>
+  [Impl (Malgo 'Rename)] ->
+  f [Impl (Malgo 'TypeCheck)]
+tcImpls ds = for ds \(pos, name, synType, expr) -> do
+  (expr', wanted) <- runWriterT (tcExpr expr)
+  nameType <- instantiate pos =<< lookupVar pos name
+  let exprType = typeOf expr'
+  let constraints = With pos (nameType :~ exprType) : wanted
+  solve constraints
+  exprType <- zonk exprType
+
+  -- impl _ : t の型と一致するかを検査
+  inferredScheme <- generalize pos mempty exprType
+  declaredScheme <- lookupVar pos name
+  abbrEnv <- use abbrEnv
+  -- 型同士を比較する際には型シノニムを展開する
+  declaredType <- expandAllTypeSynonym abbrEnv <$> instantiate pos declaredScheme
+  inferredType <- expandAllTypeSynonym abbrEnv <$> instantiate pos inferredScheme
+  case equiv declaredType inferredType of
+    Nothing -> errorOn pos $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+    Just subst
+      | anySame $ HashMap.elems subst -> errorOn pos $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+      | otherwise -> varEnv . at name ?= declaredScheme
+
+  pure (pos, name, tcType synType, expr')
 
 tcImports ::
   ( MonadState TcEnv m,
@@ -139,8 +196,9 @@ tcTypeDefinitions ::
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
-  m ([TypeSynonym (Malgo 'TypeCheck)], [DataDef (Malgo 'TypeCheck)])
-tcTypeDefinitions typeSynonyms dataDefs = do
+  [Class (Malgo 'Rename)] ->
+  m ([TypeSynonym (Malgo 'TypeCheck)], [DataDef (Malgo 'TypeCheck)], [Class (Malgo 'TypeCheck)])
+tcTypeDefinitions typeSynonyms dataDefs classes = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(_, name, params, _) -> do
     tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
@@ -148,8 +206,12 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   for_ dataDefs \(_, name, params, _) -> do
     tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
     typeEnv . at name .= Just (TypeDef tyCon [] [])
-  (,) <$> tcTypeSynonyms typeSynonyms
+  for_ classes \(_, name, params, _) -> do
+    tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
+    typeEnv . at name .= Just (TypeDef tyCon [] [])
+  (,,) <$> tcTypeSynonyms typeSynonyms
     <*> tcDataDefs dataDefs
+    <*> tcClasses classes
   where
     -- TODO: ほんとはpolymorphicな値を返さないといけないと思う
     buildTyConKind [] = TYPE $ Rep BoxedRep
@@ -221,6 +283,17 @@ tcDataDefs ds = do
     varEnv <>= HashMap.fromList valueCons'
     typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
+
+tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env, MonadFail m, HasLogFunc env) => [Class (Malgo 'Rename)] -> m [Class (Malgo 'TypeCheck)]
+tcClasses ds =
+  for ds \(pos, name, params, synType) -> do
+    TyCon con <- lookupType pos name
+    params' <- traverse (\p -> newLocalId (idToString p) (TYPE $ Rep BoxedRep)) params
+    zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
+    typeRep <- transType synType
+    abbrEnv . at con .= Just (params', typeRep)
+    updateFieldEnv (name ^. idName) (tcType synType) params' typeRep
+    pure (pos, name, params, tcType synType)
 
 tcForeigns ::
   ( MonadState TcEnv m,
@@ -318,8 +391,8 @@ tcScDefs ds@((pos, _, _) : _) = do
         -- 型同士を比較する際には型シノニムを展開する
         abbrEnv <- use abbrEnv
         declaredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) declaredScheme
-        inferedType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) inferredScheme
-        case equiv declaredType inferedType of
+        inferredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) inferredScheme
+        case equiv declaredType inferredType of
           Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
           Just subst
             | anySame $ HashMap.elems subst -> errorOn (pos ^. value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
@@ -376,8 +449,7 @@ tcExpr (Record pos kvs) = do
   let kvsType = TyRecord $ Map.fromList $ map (bimap removePrefix typeOf) kvs'
   pure $ Record (With kvsType pos) kvs'
 -- レコードリテラルでは、レコード型をフィールド名から検索する必要はない
--- * 存在しないフィールド名はRenameパスでエラーになる
--- * 必ずすべてのフィールド・値ペアがある
+
 -- レコード型を検索するコードは↓
 -- recordType <- instantiate pos =<< lookupRecordType pos (map fst kvs)
 -- tell [With pos $ recordType :~ kvsType]

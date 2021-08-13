@@ -35,6 +35,7 @@ data Opt = Opt
     dumpParsed :: Bool,
     dumpRenamed :: Bool,
     dumpTyped :: Bool,
+    dumpRefine :: Bool,
     dumpDesugar :: Bool,
     noOptimize :: Bool,
     noLambdaLift :: Bool,
@@ -53,6 +54,7 @@ defaultOpt src =
       dumpParsed = False,
       dumpRenamed = False,
       dumpTyped = False,
+      dumpRefine = False,
       dumpDesugar = False,
       noOptimize = False,
       noLambdaLift = False,
@@ -122,11 +124,7 @@ viewLine linum = do
   s <- liftIO $ readFile srcFileName
   pure $ lines s !! (linum - 1)
 
-#ifdef DEBUG
 errorOn :: (HasCallStack, HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
-#else
-errorOn :: (HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
-#endif
 errorOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
