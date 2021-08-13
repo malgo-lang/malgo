@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.TypeCheck.TcEnv
+module Malgo.Infer.TcEnv
   ( RecordTypeName,
     TcEnv (..),
     varEnv,

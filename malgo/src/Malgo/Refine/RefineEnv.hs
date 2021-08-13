@@ -6,7 +6,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv (..))
-import Malgo.TypeCheck.TcEnv
+import Malgo.Infer.TcEnv
 import Malgo.TypeRep.Static
 import Malgo.TypeRep.UTerm
 import qualified Malgo.TypeRep.UTerm as UTerm
