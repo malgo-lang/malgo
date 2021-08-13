@@ -12,7 +12,7 @@ import Text.Megaparsec (errorBundlePretty)
 import Text.Read (read)
 
 main :: IO ()
-main = do
+main = handleBug do
   command <- parseCommand
   case command of
     ToLL opt -> do
