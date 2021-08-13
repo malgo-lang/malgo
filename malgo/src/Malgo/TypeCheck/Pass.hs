@@ -3,6 +3,7 @@ module Malgo.TypeCheck.Pass where
 import qualified Data.HashMap.Strict as HashMap (mapKeys)
 import Data.List.Extra (anySame)
 import Data.Maybe (fromJust)
+import Data.String.Conversions (convertString)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -25,6 +26,7 @@ import qualified RIO.List.Partial as List
 import qualified RIO.Map as Map
 import qualified RIO.NonEmpty as NonEmpty
 import Text.Megaparsec (SourcePos)
+import Text.Pretty.Simple (pShow)
 
 -------------------------------
 -- Lookup the value of TcEnv --
@@ -71,12 +73,13 @@ typeCheck rnEnv (Module name bg) = do
       zonkedBg <-
         pure bg'
           >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
           >>= traverseOf (foreigns . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (impls . traversed . _4 . traversed . _2) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
       zonkedTcEnv <-
         pure tcEnv'
-          >>= traverseOf (varEnv . traversed . traversed) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
-          >>= traverseOf (typeEnv . traversed . traversed) (walkOn @TypeF @TypeVar (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (varEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (typeEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
       pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::

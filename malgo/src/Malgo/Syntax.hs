@@ -478,11 +478,13 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (BindGroup x)
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
 
 instance (Pretty (XId x)) => Pretty (BindGroup x) where
-  pPrint BindGroup {_scDefs, _scSigs, _dataDefs, _foreigns} =
+  pPrint BindGroup {..} =
     sep $
       punctuate ";" $
         map prettyDataDef _dataDefs
           <> map prettyForeign _foreigns
+          <> map prettyClass _classes
+          <> map prettyImpl _impls
           <> map prettyScSig _scSigs
           <> concatMap (map prettyScDef) _scDefs
     where
@@ -496,6 +498,24 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
       prettyScSig (_, f, t) = pPrint f <+> ":" <+> pPrint t
       prettyScDef (_, f, e) =
         sep [pPrint f <+> "=", pPrint e]
+      prettyClass (_, name, params, methods) =
+        sep
+          [ "class" <+> pPrint name <+> sep (map pPrint params) <+> "=" <+> "{",
+            nest 2 $
+              sep $
+                methods <&> \(label, synType) ->
+                  pPrint label <+> ":" <+> pPrint synType <> ";",
+            "}"
+          ]
+      prettyImpl (_, name, synType, methods) =
+        sep
+          [ "impl" <+> pPrint name <+> ":" <+> pPrint synType <+> "=" <+> "{",
+            nest 2 $
+              sep $
+                methods <&> \(label, expr) ->
+                  pPrint label <+> "=" <+> pPrint expr <> ";",
+            "}"
+          ]
 
 makeBindGroup :: (XId x ~ Id a, Eq a) => [Decl x] -> BindGroup x
 makeBindGroup ds =

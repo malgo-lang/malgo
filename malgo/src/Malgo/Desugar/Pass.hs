@@ -223,7 +223,8 @@ dsExp (G.Apply info f x) = runDef $ do
       --   適切な型にcastする必要がある
       x' <- cast xType =<< dsExp x
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
-    _ -> bug $ Unreachable "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
+    _ ->
+      bug $ Unreachable "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
 dsExp (G.Fn x (Clause _ [] ss :| _)) = do
   -- lazy valueの脱糖衣
   ss' <- dsStmts ss

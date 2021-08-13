@@ -111,8 +111,8 @@ pClass = label "class" do
   className <- upperIdent
   classParameters <- many lowerIdent
   void $ pOperator "="
-  def <- between (symbol "{") (symbol "}") $ asRecordFields pClassDefEntry
-  pure $ Class s className classParameters def
+  methods <- between (symbol "{") (symbol "}") $ asRecordFields pClassDefEntry
+  pure $ Class s className classParameters methods
   where
     pClassDefEntry = do
       label <- lowerIdent
