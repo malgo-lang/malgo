@@ -115,6 +115,12 @@ module Builtin = {
   {{/compareType}}
 
   -- String operators
+  foreign import malgo_string_length : String# -> Int64#;
+  lengthString# : String# -> Int64#;
+  lengthString# = { x -> malgo_string_length x };
+  lengthString : String -> Int64;
+  lengthString = { (String# str) -> Int64# (lengthString# str) };
+
   foreign import malgo_string_at : Int64# -> String# -> Char#;
   atString# : Int64# -> String# -> Char#;
   atString# = { i x -> malgo_string_at i x };
@@ -126,6 +132,12 @@ module Builtin = {
   appendString# = { x y -> malgo_string_append x y };
   appendString : String -> String -> String;
   appendString = { (String# x) (String# y) -> String# (appendString# x y) };
+
+  foreign import malgo_substring : String# -> Int64# -> Int64# -> String#;
+  substring# : String# -> Int64# -> Int64# -> String#;
+  substring# = { str start end -> malgo_substring str start end };
+  substring : String -> Int64 -> Int64 -> String;
+  substring = { (String# str) (Int64# start) (Int64# end) -> String# (substring# str start end) };
 
   {{#toStringType}}
   foreign import malgo_{{cType}}_to_string : {{malgoType}}# -> String#;

@@ -289,8 +289,86 @@ module Builtin = {
   geDouble : Double -> Double -> Bool;
   geDouble = { (Double# x) (Double# y) -> isTrue# (geDouble# x y) };
 
+  foreign import malgo_eq_char : Char# -> Char# -> Int32#;
+  eqChar# : Char# -> Char# -> Int32#;
+  eqChar# = { x y -> malgo_eq_char x y };
+  eqChar : Char -> Char -> Bool;
+  eqChar = { (Char# x) (Char# y) -> isTrue# (eqChar# x y) };
+
+  foreign import malgo_ne_char : Char# -> Char# -> Int32#;
+  neChar# : Char# -> Char# -> Int32#;
+  neChar# = { x y -> malgo_ne_char x y };
+  neChar : Char -> Char -> Bool;
+  neChar = { (Char# x) (Char# y) -> isTrue# (neChar# x y) };
+
+  foreign import malgo_lt_char : Char# -> Char# -> Int32#;
+  ltChar# : Char# -> Char# -> Int32#;
+  ltChar# = { x y -> malgo_lt_char x y };
+  ltChar : Char -> Char -> Bool;
+  ltChar = { (Char# x) (Char# y) -> isTrue# (ltChar# x y) };
+
+  foreign import malgo_gt_char : Char# -> Char# -> Int32#;
+  gtChar# : Char# -> Char# -> Int32#;
+  gtChar# = { x y -> malgo_gt_char x y };
+  gtChar : Char -> Char -> Bool;
+  gtChar = { (Char# x) (Char# y) -> isTrue# (gtChar# x y) };
+
+  foreign import malgo_le_char : Char# -> Char# -> Int32#;
+  leChar# : Char# -> Char# -> Int32#;
+  leChar# = { x y -> malgo_le_char x y };
+  leChar : Char -> Char -> Bool;
+  leChar = { (Char# x) (Char# y) -> isTrue# (leChar# x y) };
+
+  foreign import malgo_ge_char : Char# -> Char# -> Int32#;
+  geChar# : Char# -> Char# -> Int32#;
+  geChar# = { x y -> malgo_ge_char x y };
+  geChar : Char -> Char -> Bool;
+  geChar = { (Char# x) (Char# y) -> isTrue# (geChar# x y) };
+
+  foreign import malgo_eq_string : String# -> String# -> Int32#;
+  eqString# : String# -> String# -> Int32#;
+  eqString# = { x y -> malgo_eq_string x y };
+  eqString : String -> String -> Bool;
+  eqString = { (String# x) (String# y) -> isTrue# (eqString# x y) };
+
+  foreign import malgo_ne_string : String# -> String# -> Int32#;
+  neString# : String# -> String# -> Int32#;
+  neString# = { x y -> malgo_ne_string x y };
+  neString : String -> String -> Bool;
+  neString = { (String# x) (String# y) -> isTrue# (neString# x y) };
+
+  foreign import malgo_lt_string : String# -> String# -> Int32#;
+  ltString# : String# -> String# -> Int32#;
+  ltString# = { x y -> malgo_lt_string x y };
+  ltString : String -> String -> Bool;
+  ltString = { (String# x) (String# y) -> isTrue# (ltString# x y) };
+
+  foreign import malgo_gt_string : String# -> String# -> Int32#;
+  gtString# : String# -> String# -> Int32#;
+  gtString# = { x y -> malgo_gt_string x y };
+  gtString : String -> String -> Bool;
+  gtString = { (String# x) (String# y) -> isTrue# (gtString# x y) };
+
+  foreign import malgo_le_string : String# -> String# -> Int32#;
+  leString# : String# -> String# -> Int32#;
+  leString# = { x y -> malgo_le_string x y };
+  leString : String -> String -> Bool;
+  leString = { (String# x) (String# y) -> isTrue# (leString# x y) };
+
+  foreign import malgo_ge_string : String# -> String# -> Int32#;
+  geString# : String# -> String# -> Int32#;
+  geString# = { x y -> malgo_ge_string x y };
+  geString : String -> String -> Bool;
+  geString = { (String# x) (String# y) -> isTrue# (geString# x y) };
+
 
   -- String operators
+  foreign import malgo_string_length : String# -> Int64#;
+  lengthString# : String# -> Int64#;
+  lengthString# = { x -> malgo_string_length x };
+  lengthString : String -> Int64;
+  lengthString = { (String# str) -> Int64# (lengthString# str) };
+
   foreign import malgo_string_at : Int64# -> String# -> Char#;
   atString# : Int64# -> String# -> Char#;
   atString# = { i x -> malgo_string_at i x };
@@ -302,6 +380,12 @@ module Builtin = {
   appendString# = { x y -> malgo_string_append x y };
   appendString : String -> String -> String;
   appendString = { (String# x) (String# y) -> String# (appendString# x y) };
+
+  foreign import malgo_substring : String# -> Int64# -> Int64# -> String#;
+  substring# : String# -> Int64# -> Int64# -> String#;
+  substring# = { str start end -> malgo_substring str start end };
+  substring : String -> Int64 -> Int64 -> String;
+  substring = { (String# str) (Int64# start) (Int64# end) -> String# (substring# str start end) };
 
   foreign import malgo_int32_t_to_string : Int32# -> String#;
   toStringInt32# : Int32# -> String#;
@@ -326,6 +410,12 @@ module Builtin = {
   toStringDouble# = { x -> malgo_double_to_string x };
   toStringDouble : Double -> String;
   toStringDouble = { Double# x -> String# (toStringDouble# x) };
+
+  foreign import malgo_char_to_string : Char# -> String#;
+  toStringChar# : Char# -> String#;
+  toStringChar# = { x -> malgo_char_to_string x };
+  toStringChar : Char -> String;
+  toStringChar = { Char# x -> String# (toStringChar# x) };
 
 
   -- List

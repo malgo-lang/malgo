@@ -59,6 +59,19 @@ int32_t malgo_lt_double(double x, double y) { return x < y; }
 int32_t malgo_gt_double(double x, double y) { return x > y; }
 int32_t malgo_le_double(double x, double y) { return x <= y; }
 int32_t malgo_ge_double(double x, double y) { return x >= y; }
+int32_t malgo_eq_char(char x, char y) { return x == y; }
+int32_t malgo_ne_char(char x, char y) { return x != y; }
+int32_t malgo_lt_char(char x, char y) { return x < y; }
+int32_t malgo_gt_char(char x, char y) { return x > y; }
+int32_t malgo_le_char(char x, char y) { return x <= y; }
+int32_t malgo_ge_char(char x, char y) { return x >= y; }
+
+int32_t malgo_eq_string(char* x, char* y) { return strcmp(x, y) == 0; }
+int32_t malgo_ne_string(char* x, char* y) { return strcmp(x, y) != 0; }
+int32_t malgo_lt_string(char* x, char* y) { return strcmp(x, y) < 0; }
+int32_t malgo_gt_string(char* x, char* y) { return strcmp(x, y) > 0; }
+int32_t malgo_le_string(char* x, char* y) { return strcmp(x, y) <= 0; }
+int32_t malgo_ge_string(char* x, char* y) { return strcmp(x, y) >= 0; }
 
 // String operators
 char malgo_string_at(int64_t i, char *s) { return s[i]; }
@@ -67,6 +80,15 @@ char *malgo_string_append(char *s1, char *s2) {
   char *new = GC_MALLOC(sizeof(char) * strlen(s1) * strlen(s2) + 1);
   strcpy(new, s1);
   strcat(new, s2);
+  return new;
+}
+
+int64_t malgo_string_length(char *s) { return strlen(s); }
+
+char *malgo_substring(char *str, int64_t start, int64_t end) {
+  char *new = GC_MALLOC(sizeof(char) * (end - start + 1));
+  memcpy(new, &str[start], end - start);
+  new[end - start] = '\0';
   return new;
 }
 
@@ -151,6 +173,17 @@ char *malgo_double_to_string(double x) {
     size++;
     new = GC_REALLOC(new, sizeof(char) * size);
     writed = snprintf(new, size, "%" "lf" , x);
+  }
+  return new;
+}
+char *malgo_char_to_string(char x) {
+  size_t size = 4;  
+  char *new = GC_MALLOC(sizeof(char) * size);
+  int writed = -1;
+  while (writed < 0 || writed >= size) {
+    size++;
+    new = GC_REALLOC(new, sizeof(char) * size);
+    writed = snprintf(new, size, "%" "c" , x);
   }
   return new;
 }
