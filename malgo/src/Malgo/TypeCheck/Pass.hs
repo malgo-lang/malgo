@@ -3,7 +3,6 @@ module Malgo.TypeCheck.Pass where
 import qualified Data.HashMap.Strict as HashMap (mapKeys)
 import Data.List.Extra (anySame)
 import Data.Maybe (fromJust)
-import Data.String.Conversions (convertString)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -14,7 +13,7 @@ import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv
-import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), TypeF, typeConstructor, typeParameters, valueConstructors)
+import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), typeConstructor, typeParameters, valueConstructors)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
 import Malgo.UTerm
@@ -26,7 +25,6 @@ import qualified RIO.List.Partial as List
 import qualified RIO.Map as Map
 import qualified RIO.NonEmpty as NonEmpty
 import Text.Megaparsec (SourcePos)
-import Text.Pretty.Simple (pShow)
 
 -------------------------------
 -- Lookup the value of TcEnv --
@@ -75,7 +73,7 @@ typeCheck rnEnv (Module name bg) = do
           >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
           >>= traverseOf (foreigns . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (impls . traversed . _4 . traversed . _2) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (impls . traversed . _4) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
       zonkedTcEnv <-
         pure tcEnv'
           >>= traverseOf (varEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
@@ -136,9 +134,8 @@ tcImpls ::
   ) =>
   [Impl (Malgo 'Rename)] ->
   f [Impl (Malgo 'TypeCheck)]
-tcImpls ds = for ds \(pos, name, typ, methods) -> do
-  let expr = Record pos $ map (first $ WithPrefix . With Nothing) methods
-  (expr'@(Record _ methods'), wanted) <- runWriterT (tcExpr expr)
+tcImpls ds = for ds \(pos, name, synType, expr) -> do
+  (expr', wanted) <- runWriterT (tcExpr expr)
   nameType <- instantiate pos =<< lookupVar pos name
   let exprType = typeOf expr'
   let constraints = With pos (nameType :~ exprType) : wanted
@@ -158,7 +155,7 @@ tcImpls ds = for ds \(pos, name, typ, methods) -> do
       | anySame $ HashMap.elems subst -> errorOn pos $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
       | otherwise -> varEnv . at name ?= declaredScheme
 
-  pure (pos, name, tcType typ, map (first $ unwrapWithPrefix >>> view value) methods')
+  pure (pos, name, tcType synType, expr')
 
 tcImports ::
   ( MonadState TcEnv m,
@@ -289,18 +286,14 @@ tcDataDefs ds = do
 
 tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env, MonadFail m, HasLogFunc env) => [Class (Malgo 'Rename)] -> m [Class (Malgo 'TypeCheck)]
 tcClasses ds =
-  for ds \(pos, name, params, methods) -> do
+  for ds \(pos, name, params, synType) -> do
     TyCon con <- lookupType pos name
     params' <- traverse (\p -> newLocalId (idToString p) (TYPE $ Rep BoxedRep)) params
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
-    let typ = S.TyRecord pos methods
-    typeRep <- transType typ
+    typeRep <- transType synType
     abbrEnv . at con .= Just (params', typeRep)
-    updateFieldEnv (name ^. idName) (tcType typ) params' typeRep
-
-    case tcType typ of
-      S.TyRecord _ methods' -> pure (pos, name, params, methods')
-      _ -> bug $ Unreachable "tcType typ must be TyRecord"
+    updateFieldEnv (name ^. idName) (tcType synType) params' typeRep
+    pure (pos, name, params, tcType synType)
 
 tcForeigns ::
   ( MonadState TcEnv m,

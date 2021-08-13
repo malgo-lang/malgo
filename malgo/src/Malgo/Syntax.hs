@@ -374,8 +374,8 @@ data Decl x
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
   | Import (XImport x) ModuleName ImportList
-  | Class (XClass x) (XId x) [XId x] [(XId x, Type x)]
-  | Impl (XImpl x) (XId x) (Type x) [(XId x, Exp x)]
+  | Class (XClass x) (XId x) [XId x] (Type x)
+  | Impl (XImpl x) (XId x) (Type x) (Exp x)
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 
@@ -401,12 +401,8 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
   pPrint (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pPrint name
   pPrint (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pPrint xs) <+> "=" <+> "import" <+> pPrint name
   pPrint (Import _ name (As name')) = "module" <+> pPrint name' <+> "=" <+> "import" <+> pPrint name
-  pPrint (Class _ name params methods) =
-    "class" <+> pPrint name <+> sep (map pPrint params) <+> "="
-      <+> braces (sep $ map (\(label, typ) -> pPrint label <+> "=" <+> pPrint typ <> ";") methods)
-  pPrint (Impl _ name typ methods) =
-    "impl" <+> pPrint name <+> ":" <+> pPrint typ <+> "="
-      <+> braces (sep $ map (\(label, expr) -> pPrint label <+> "=" <+> pPrint expr <> ";") methods)
+  pPrint (Class _ name params synType) = "class" <+> pPrint name <+> sep (map pPrint params) <+> "=" <+> pPrint synType
+  pPrint (Impl _ name typ expr) = "impl" <+> pPrint name <+> ":" <+> pPrint typ <+> "=" <+> pPrint expr
 
 makePrisms ''Decl
 
@@ -467,9 +463,9 @@ type Foreign x = (XForeign x, XId x, Type x)
 
 type Import x = (XImport x, ModuleName, ImportList)
 
-type Class x = (XClass x, XId x, [XId x], [(XId x, Type x)])
+type Class x = (XClass x, XId x, [XId x], Type x)
 
-type Impl x = (XImpl x, XId x, Type x, [(XId x, Exp x)])
+type Impl x = (XImpl x, XId x, Type x, Exp x)
 
 makeLenses ''BindGroup
 
@@ -498,24 +494,10 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
       prettyScSig (_, f, t) = pPrint f <+> ":" <+> pPrint t
       prettyScDef (_, f, e) =
         sep [pPrint f <+> "=", pPrint e]
-      prettyClass (_, name, params, methods) =
-        sep
-          [ "class" <+> pPrint name <+> sep (map pPrint params) <+> "=" <+> "{",
-            nest 2 $
-              sep $
-                methods <&> \(label, synType) ->
-                  pPrint label <+> ":" <+> pPrint synType <> ";",
-            "}"
-          ]
-      prettyImpl (_, name, synType, methods) =
-        sep
-          [ "impl" <+> pPrint name <+> ":" <+> pPrint synType <+> "=" <+> "{",
-            nest 2 $
-              sep $
-                methods <&> \(label, expr) ->
-                  pPrint label <+> "=" <+> pPrint expr <> ";",
-            "}"
-          ]
+      prettyClass (_, name, params, synType) =
+        "class" <+> pPrint name <+> sep (map pPrint params) <+> "=" <+> pPrint synType
+      prettyImpl (_, name, synType, expr) =
+        "impl" <+> pPrint name <+> ":" <+> pPrint synType <+> "=" <+> pPrint expr
 
 makeBindGroup :: (XId x ~ Id a, Eq a) => [Decl x] -> BindGroup x
 makeBindGroup ds =

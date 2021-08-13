@@ -135,21 +135,21 @@ rnDecl (Import pos modName importList) = do
   infixInfo <>= interface ^. infixMap
   dependencies <>= [modName]
   pure $ Import pos modName importList
-rnDecl (Class pos name params methods) = do
+rnDecl (Class pos name params synType) = do
   params' <- traverse resolveName params
   local (appendRnEnv typeEnv (zip params $ map (With Implicit) params')) $
     Class pos
       <$> lookupTypeName pos name
       <*> pure params'
-      <*> traverse (bitraverse (lookupFieldName pos) rnType) methods
-rnDecl (Impl pos name typ methods) = do
+      <*> rnType synType
+rnDecl (Impl pos name typ expr) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
   local (appendRnEnv typeEnv (zip tyVars $ map (With Implicit) tyVars')) $
     Impl pos
       <$> lookupVarName pos name
       <*> rnType typ
-      <*> traverse (bitraverse (lookupFieldName pos) rnExp) methods
+      <*> rnExp expr
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
@@ -217,7 +217,7 @@ rnClause ::
 rnClause (Clause pos ps ss) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
-  when (anySame vars) $ errorOn pos "Same variables occurs in a pattern"
+  when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (With Implicit) <$> traverse resolveName vars
   local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss
   where
@@ -398,13 +398,13 @@ genToplevelEnv modName ds builtinEnv = do
       modify $ appendRnEnv varEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pure ()
-    aux (Class pos name _ methods) = do
+    aux (Class pos name _ synType) = do
       env <- get
       when (name `elem` HashMap.keys (env ^. typeEnv)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint name)
       name' <- resolveGlobalName modName name
       modify $ appendRnEnv typeEnv [(name, With Implicit name')]
-      genFieldEnv $ TyRecord pos methods
+      genFieldEnv synType
     aux (Impl pos name _ _) = do
       env <- use varEnv
       when (name `elem` HashMap.keys env) do

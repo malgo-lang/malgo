@@ -111,14 +111,7 @@ pClass = label "class" do
   className <- upperIdent
   classParameters <- many lowerIdent
   void $ pOperator "="
-  methods <- between (symbol "{") (symbol "}") $ asRecordFields pClassDefEntry
-  pure $ Class s className classParameters methods
-  where
-    pClassDefEntry = do
-      label <- lowerIdent
-      void $ pOperator ":"
-      value <- pType
-      pure (label, value)
+  Class s className classParameters <$> pType
 
 pImpl :: Parser (Decl (Malgo 'Parse))
 pImpl = label "impl" do
@@ -128,14 +121,7 @@ pImpl = label "impl" do
   void $ pOperator ":"
   typ <- pType
   void $ pOperator "="
-  def <- between (symbol "{") (symbol "}") $ asRecordFields pImplDefEntry
-  pure $ Impl s name typ def
-  where
-    pImplDefEntry = do
-      label <- lowerIdent
-      void $ pOperator "="
-      value <- pExp
-      pure (label, value)
+  Impl s name typ <$> pExp
 
 pScSig :: Parser (Decl (Malgo 'Parse))
 pScSig =

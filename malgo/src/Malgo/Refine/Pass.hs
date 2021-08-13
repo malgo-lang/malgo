@@ -13,7 +13,6 @@ import Malgo.TypeCheck.TcEnv
 import Malgo.TypeRep.Static
 import qualified Malgo.TypeRep.Static as Static
 import qualified RIO.List as List
-import qualified RIO.Map as Map
 import qualified RIO.NonEmpty as NonEmpty
 
 type TypeChecked t x = (x ~ Malgo 'TypeCheck) :: Constraint
@@ -107,11 +106,11 @@ refineImport :: (TypeChecked t x, MonadReader RefineEnv m) => Import x -> m (Imp
 refineImport (x, modName, importList) = pure (x, modName, importList)
 
 refineClass :: (TypeChecked t x, MonadReader RefineEnv m) => Class x -> m (TypeSynonym (Malgo 'Refine))
-refineClass (x, name, ps, methods) = (x,name,ps,) . Syn.TyRecord x <$> traverseOf (traversed . _2) refineType methods
+refineClass (x, name, ps, synType) = (x,name,ps,) <$> refineType synType
 
 refineImpl :: (TypeChecked t x, MonadReader RefineEnv m, MonadIO m) => Impl x -> m (ScSig (Malgo 'Refine), ScDef (Malgo 'Refine))
-refineImpl (x, name, typ, methods) = do
+refineImpl (x, name, typ, expr) = do
   typ <- refineType typ
-  methods <- traverseOf (traversed . _2) refineExp methods
-  let typeRep = Static.TyRecord $ Map.fromList $ over (mapped . _2) Static.typeOf methods
-  pure ((x, name, typ), (With typeRep x, name, Record (With typeRep x) (over (mapped . _1) (WithPrefix . With Nothing) methods)))
+  expr <- refineExp expr
+  let typeRep = Static.typeOf expr
+  pure ((x, name, typ), (With typeRep x, name, expr))
