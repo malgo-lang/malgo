@@ -36,6 +36,7 @@ toLLOpt =
       <*> switch (long "dump-parsed")
       <*> switch (long "dump-renamed")
       <*> switch (long "dump-typed")
+      <*> switch (long "dump-refine")
       <*> switch (long "dump-desugar")
       <*> switch (long "no-opt")
       <*> switch (long "no-lambdalift")
