@@ -19,8 +19,8 @@ import Malgo.Rename.Pass (rename)
 import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
-import qualified Malgo.TypeCheck.Pass as TypeCheck
-import qualified Malgo.TypeCheck.TcEnv as TcEnv
+import qualified Malgo.Infer.Pass as Infer
+import qualified Malgo.Infer.TcEnv as TcEnv
 import qualified Malgo.TypeRep.Static as Static
 import System.IO
   ( hPrint,
@@ -56,7 +56,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     hPrint stderr $ pPrint parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv =<< ask
   (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-  (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
+  (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ Infer.typeCheck rnEnv renamedAst
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
   let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
   let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv

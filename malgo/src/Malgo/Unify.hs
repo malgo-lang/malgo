@@ -10,7 +10,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
-import Malgo.TypeCheck.TcEnv (TcEnv, abbrEnv)
+import Malgo.Infer.TcEnv (TcEnv, abbrEnv)
 import Malgo.TypeRep.Static hiding (applySubst, kindOf)
 import Malgo.TypeRep.UTerm
 import Malgo.UTerm
