@@ -59,6 +59,7 @@ optimizeExpr state = 10 `times` opt
         >=> (flip evalStateT state . optCallInline)
         >=> optIdCast
         >=> optTrivialCall
+        -- TODO[optCast]
         -- >=> optCast
         >=> pure
           . flat
@@ -167,7 +168,7 @@ optIdCast (Match v cs) = Match <$> optIdCast v <*> traverseOf (traversed . appCa
 optIdCast e = pure e
 
 -- 効果がはっきりしないので一旦コメントアウト
--- TODO: ベンチマーク
+-- TODO[optCast] ベンチマーク
 -- optCast :: MonadUniq f => Exp (Id Type) -> f (Exp (Id Type))
 -- optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
 --   pts :-> _

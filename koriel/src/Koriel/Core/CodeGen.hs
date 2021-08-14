@@ -204,7 +204,10 @@ genInitVar ::
 genInitVar name expr = do
   view (globalValueMap . at name) >>= \case
     Nothing -> error $ show $ pPrint name <+> "is not found"
-    Just name' -> genExp expr $ store name' 0
+    Just name' -> genExp expr \eOpr -> do
+      -- TODO[genExp does not return correctly-typed value] 
+      -- eOpr <- bitcast eOpr (convType (C.typeOf name))
+      store name' 0 eOpr
 
 -- generate code for a 'known' function
 genFunc ::
@@ -233,6 +236,9 @@ genFunc name params body
     retty = convType (C.typeOf body)
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている
+-- FIXME[genExp does not return correctly-typed value]: convType (C.typeOf e) /= LT.typeOf (genExp e)
+--        継続に渡される値の型がptr i8だったときに正しくタグを取り出すため、bitcastする必要がある。
+-- TODO: genExpが正しい型の値を継続に渡すように変更する
 genExp ::
   ( MonadReader CodeGenEnv m,
     MonadState PrimMap m,
@@ -364,7 +370,8 @@ genExp (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = genExp e $ \eOpr -> mdo
     -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
-    -- TODO: genExpが正しい型の値を継続に渡すように変更する
+    -- TODO[genExp does not return correctly-typed value]
+    -- genExpが正しい型の値を継続に渡すように変更する
     eOpr' <- bitcast eOpr (convType $ C.typeOf e)
     br switchBlock
     -- 各ケースのコードとラベルを生成する
