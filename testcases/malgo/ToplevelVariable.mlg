@@ -12,9 +12,21 @@ module ToplevelVariable = {
 
   constId = const id;
 
+  data Maybe a = Nothing
+               | Just a
+               ;
+
+  comp : Maybe a;
+  comp = { Nothing -> Nothing
+         | Just x -> Nothing
+         } (Just ());
+
   main = {
+    { Nothing -> printString "OK"
+    | Just _ -> ()
+    } comp;
     printInt32 (constId const (addOne one))
   };
 }
 
--- Expected: 2
+-- Expected: OK2
