@@ -91,11 +91,19 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
         $ do
           traverse_ (uncurry genVar) _topVars
           traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
-          genLoadModule modName do
-            traverse_ (uncurry genInitVar) _topVars
-            retVoid
+          genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
   liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  where
+    initTopVars [] = retVoid
+    initTopVars ((name, expr) : xs) = do
+      view (globalValueMap . at name) >>= \case
+        Nothing -> error $ show $ pPrint name <+> "is not found"
+        Just name' -> genExp expr \eOpr -> do
+          -- TODO[genExp does not return correctly-typed value]
+          -- eOpr <- bitcast eOpr (convType (C.typeOf name))
+          store name' 0 eOpr
+          initTopVars xs
 
 convType :: C.Type -> LT.Type
 convType (ps :-> r) =
@@ -187,27 +195,6 @@ genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (con
 
 genLoadModule :: MonadModuleBuilder m => ModuleName -> IRBuilderT m () -> m Operand
 genLoadModule (ModuleName modName) m = function (LLVM.AST.mkName $ "koriel_load_" <> modName) [] LT.void $ const m
-
--- initialize toplevel variable
-genInitVar ::
-  ( MonadReader CodeGenEnv m,
-    MonadState PrimMap m,
-    MonadIRBuilder m,
-    MonadModuleBuilder m,
-    MonadFail m,
-    MonadFix m,
-    MonadIO m
-  ) =>
-  Id C.Type ->
-  Exp (Id C.Type) ->
-  m ()
-genInitVar name expr = do
-  view (globalValueMap . at name) >>= \case
-    Nothing -> error $ show $ pPrint name <+> "is not found"
-    Just name' -> genExp expr \eOpr -> do
-      -- TODO[genExp does not return correctly-typed value] 
-      -- eOpr <- bitcast eOpr (convType (C.typeOf name))
-      store name' 0 eOpr
 
 -- generate code for a 'known' function
 genFunc ::
