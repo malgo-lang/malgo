@@ -1,0 +1,17 @@
+module ZeroArgs = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  one : Int32;
+  one = !{ 1 };
+
+  id : a -> a;
+  id = { x -> !{ x } };
+
+  main : { () };
+  main = !{
+    { printString (toStringInt32 (id one) ) }
+  };
+}
+
+-- Expected: 1
