@@ -144,7 +144,7 @@ sizeofType (PtrT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
-findVar :: (MonadReader CodeGenEnv m, MonadIRBuilder m, MonadModuleBuilder m) => Id C.Type -> m Operand
+findVar :: (MonadReader CodeGenEnv m, MonadIRBuilder m) => Id C.Type -> m Operand
 findVar x =
   view (valueMap . at x) >>= \case
     Just opr -> pure opr
@@ -183,7 +183,14 @@ mallocBytes bytesOpr maybeType = do
     Nothing -> pure ptrOpr
 
 mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m Operand
-mallocType ty = join $ mallocBytes <$> sizeof 64 ty <*> pure (Just $ ptr ty)
+mallocType ty = mallocBytes (ConstantOperand $ sizeof ty) (Just $ ptr ty)
+
+sizeof :: LT.Type -> C.Constant
+sizeof ty = C.PtrToInt szPtr LT.i64
+  where
+    ptrType = LT.ptr ty
+    nullPtr = C.IntToPtr (C.Int 32 0) ptrType
+    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 toName :: Id a -> LLVM.AST.Name
 toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
@@ -501,10 +508,7 @@ globalStringPtr str nm = do
       llvmVals = map (C.Int 8) (utf8Vals ++ [0])
       char = IntegerType 8
       charArray = C.Array char llvmVals
-  ty <-
-    LLVM.AST.Typed.typeOf charArray >>= \case
-      Left err -> error err
-      Right x -> pure x
+  let ty = LLVM.AST.Typed.typeOf charArray
   emitDefn $
     GlobalDefinition
       globalVariableDefaults
