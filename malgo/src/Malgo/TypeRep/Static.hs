@@ -12,7 +12,7 @@ import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
-import Malgo.UTerm
+import Malgo.Infer.UTerm
 
 --------------------------------
 -- Common tag representations --

@@ -15,7 +15,7 @@ import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), TypeF (..))
 import qualified Malgo.TypeRep.Static as S
-import Malgo.UTerm
+import Malgo.Infer.UTerm
 
 ----------
 -- Type --
