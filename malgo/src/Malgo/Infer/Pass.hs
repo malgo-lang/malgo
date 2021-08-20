@@ -16,8 +16,8 @@ import Malgo.Infer.TcEnv
 import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), typeConstructor, typeParameters, valueConstructors)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
-import Malgo.UTerm
-import Malgo.Unify hiding (lookupVar)
+import Malgo.Infer.UTerm
+import Malgo.Infer.Unify hiding (lookupVar)
 import qualified RIO.HashMap as HashMap
 import qualified RIO.HashSet as HashSet
 import qualified RIO.List as List

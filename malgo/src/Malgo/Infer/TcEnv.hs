@@ -26,7 +26,7 @@ import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static (Scheme, TypeDef (..), TypeF)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
-import Malgo.UTerm
+import Malgo.Infer.UTerm
 
 type RecordTypeName = String
 

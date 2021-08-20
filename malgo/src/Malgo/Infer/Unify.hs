@@ -2,7 +2,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | Unification
-module Malgo.Unify where
+module Malgo.Infer.Unify where
 
 import Control.Monad.Except (ExceptT)
 import qualified Data.HashSet as HashSet
@@ -13,7 +13,7 @@ import Malgo.Prelude
 import Malgo.Infer.TcEnv (TcEnv, abbrEnv)
 import Malgo.TypeRep.Static hiding (applySubst, kindOf)
 import Malgo.TypeRep.UTerm
-import Malgo.UTerm
+import Malgo.Infer.UTerm
 import qualified RIO.HashMap as HashMap
 import qualified RIO.Map as Map
 import Text.Megaparsec (SourcePos)

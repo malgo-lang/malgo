@@ -13,7 +13,7 @@ import Malgo.Prelude
 import Malgo.Syntax.Extension
 import qualified Malgo.TypeRep.Static as S
 import qualified Malgo.TypeRep.UTerm as U
-import qualified Malgo.UTerm as U
+import qualified Malgo.Infer.UTerm as U
 import qualified RIO.NonEmpty as NonEmpty
 
 -- | Unboxed and literal

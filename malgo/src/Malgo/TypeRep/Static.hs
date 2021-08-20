@@ -11,8 +11,9 @@ import Data.Maybe (fromJust)
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
+import Malgo.Infer.UTerm
 import Malgo.Prelude
-import Malgo.UTerm
+import qualified RIO.List as List
 
 --------------------------------
 -- Common tag representations --
@@ -234,6 +235,9 @@ makeLenses ''TypeDef
 ---------------
 -- Utilities --
 ---------------
+
+buildTyApp :: Type -> [Type] -> Type
+buildTyApp = List.foldl TyApp
 
 viewTyConApp :: Type -> Maybe (Type, [Type])
 viewTyConApp (TyCon con) = Just (TyCon con, [])
