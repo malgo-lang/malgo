@@ -279,6 +279,7 @@ dsExp (G.RecordAccess x label) = runDef $ do
       pure $ Atom $ tuple List.!! fromJust (List.elemIndex (removePrefix label) (map fst kts))
   accessType <- dsType (x ^. GT.withType)
   Atom <$> let_ accessType obj
+dsExp (G.Seq _ ss) = dsStmts ss
 dsExp (G.Parens _ e) = dsExp e
 
 dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))

@@ -120,6 +120,9 @@ type family XAnn x where
   XAnn (Malgo 'Rename) = SimpleX 'Rename
   XAnn (Malgo _) = Void
 
+type family XSeq x where
+  XSeq (Malgo x) = SimpleX x
+
 type family XParens x where
   XParens (Malgo x) = SimpleX x
 
@@ -137,6 +140,7 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XForce x),
     c (XRecordAccess x),
     c (XAnn x),
+    c (XSeq x),
     c (XParens x)
   )
 

@@ -6,18 +6,18 @@ import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Infer.TcEnv
+import Malgo.Infer.UTerm
+import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
-import Malgo.Infer.TcEnv
 import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), typeConstructor, typeParameters, valueConstructors)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
-import Malgo.Infer.UTerm
-import Malgo.Infer.Unify hiding (lookupVar)
 import qualified RIO.HashMap as HashMap
 import qualified RIO.HashSet as HashSet
 import qualified RIO.List as List
@@ -472,6 +472,9 @@ tcExpr (Ann pos e t) = do
   typeRep <- transType t
   tell [With pos $ typeOf e' :~ typeRep]
   pure e'
+tcExpr (Seq pos ss) = do
+  ss' <- tcStmts ss
+  pure $ Seq (With (typeOf $ NonEmpty.last ss') pos) ss'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (With (typeOf e') pos) e'

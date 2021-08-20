@@ -298,6 +298,11 @@ pRecordAccess = do
   l <- char '#' >> pWithPrefix upperIdent lowerIdent
   pure $ RecordAccess s l
 
+pSeq :: Parser (Exp (Malgo 'Parse))
+pSeq = between (symbol "(") (symbol ")") do
+  s <- getSourcePos
+  Seq s <$> pStmts
+
 pSingleExp' :: Parser (Exp (Malgo 'Parse))
 pSingleExp' =
   try (Unboxed <$> getSourcePos <*> pUnboxed)
@@ -310,6 +315,7 @@ pSingleExp' =
     <|> pList
     <|> pFun
     <|> pRecordAccess
+    <|> try pSeq
     <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
 
 pSingleExp :: Parser (Exp (Malgo 'Parse))
