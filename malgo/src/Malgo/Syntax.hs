@@ -263,8 +263,7 @@ freevarsStmt (NoBind _ e) = freevars e
 -- Clause --
 ------------
 
--- [Exp x]は、末尾へのアクセスが速いものに変えたほうが良いかも
-data Clause x = Clause (XClause x) [Pat x] (NonEmpty (Stmt x))
+data Clause x = Clause (XClause x) [Pat x] (Exp x)
 
 deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Clause x)
 
@@ -274,8 +273,8 @@ instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), For
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
-  pPrintPrec _ _ (Clause _ [] e) = sep (punctuate ";" $ NonEmpty.toList $ fmap pPrint e)
-  pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", sep (punctuate ";" $ NonEmpty.toList $ fmap pPrint e)]
+  pPrintPrec _ _ (Clause _ [] e) = pPrint e
+  pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", pPrint e]
 
 instance
   ForallClauseX U.WithUType x =>
@@ -296,10 +295,10 @@ instance
   ) =>
   U.HasUTerm S.TypeF U.TypeVar (Clause x)
   where
-  walkOn f (Clause x ps e) = Clause <$> U.walkOn f x <*> traverse (U.walkOn f) ps <*> traverse (U.walkOn f) e
+  walkOn f (Clause x ps e) = Clause <$> U.walkOn f x <*> traverse (U.walkOn f) ps <*> U.walkOn f e
 
 freevarsClause :: (Eq (XId x), Hashable (XId x)) => Clause x -> HashSet (XId x)
-freevarsClause (Clause _ pats es) = HashSet.difference (foldMap freevarsStmt es) (mconcat (map bindVars pats))
+freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
 
 -------------
 -- Pattern --

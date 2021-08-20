@@ -431,10 +431,9 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   retType <- UVar <$> freshVar
   tell [With pos $ opType :~ TyArr (typeOf e1') (TyArr (typeOf e2') retType)]
   pure $ OpApp (With retType x) op e1' e2'
-tcExpr (Fn pos (Clause x [] ss :| _)) = do
-  ss' <- tcStmts ss
-  let ssType = typeOf $ NonEmpty.last ss'
-  pure $ Fn (With (TyApp TyLazy ssType) pos) (Clause (With (TyApp TyLazy ssType) x) [] ss' :| [])
+tcExpr (Fn pos (Clause x [] e :| _)) = do
+  e' <- tcExpr e
+  pure $ Fn (With (TyApp TyLazy (typeOf e')) pos) (Clause (With (TyApp TyLazy (typeOf e')) x) [] e' :| [])
 tcExpr (Fn pos cs) = do
   traverse tcClause cs >>= \case
     (c' :| cs') -> do
@@ -491,12 +490,11 @@ tcClause ::
   ) =>
   Clause (Malgo 'Rename) ->
   WriterT [With SourcePos Constraint] m (Clause (Malgo 'Infer))
-tcClause (Clause pos pats ss) = do
+tcClause (Clause pos pats e) = do
   pats' <- tcPatterns pats
-  ss' <- tcStmts ss
-  let ssType = typeOf $ NonEmpty.last ss'
+  e' <- tcExpr e
   let patTypes = map typeOf pats'
-  pure $ Clause (With (buildTyArr patTypes ssType) pos) pats' ss'
+  pure $ Clause (With (buildTyArr patTypes (typeOf e')) pos) pats' e'
 
 tcPatterns ::
   ( MonadBind m,

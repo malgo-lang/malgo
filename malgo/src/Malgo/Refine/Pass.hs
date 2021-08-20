@@ -69,7 +69,7 @@ refineExp (Seq x ss) = Seq (over ann toType x) <$> traverse refineStmt ss
 refineExp (Parens _ e) = refineExp e
 
 refineClause :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Clause x -> m (Clause (Malgo 'Refine))
-refineClause (Clause x ps es) = Clause (over ann toType x) <$> traverse refinePat ps <*> traverse refineStmt es
+refineClause (Clause x ps e) = Clause (over ann toType x) <$> traverse refinePat ps <*> refineExp e
 
 refineStmt :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Stmt x -> m (Stmt (Malgo 'Refine))
 refineStmt (Let x v e) = Let x v <$> refineExp e

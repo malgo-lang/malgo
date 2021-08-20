@@ -198,7 +198,7 @@ pFun =
                 <$> ( Clause
                         <$> getSourcePos
                         <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
-                        <*> pStmts
+                        <*> (Seq <$> getSourcePos <*> pStmts)
                     )
                 `sepBy1` pOperator "|"
             )

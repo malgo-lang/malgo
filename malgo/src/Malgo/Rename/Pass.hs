@@ -216,12 +216,12 @@ rnClause ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Clause (Malgo 'Parse) ->
   m (Clause (Malgo 'Rename))
-rnClause (Clause pos ps ss) = do
+rnClause (Clause pos ps e) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (With Implicit) <$> traverse resolveName vars
-  local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss
+  local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnExp e
   where
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
