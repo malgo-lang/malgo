@@ -108,6 +108,7 @@ data Exp x
   | Force (XForce x) (Exp x)
   | RecordAccess (XRecordAccess x) (WithPrefix (XId x))
   | Ann (XAnn x) (Exp x) (Type x)
+  | Seq (XSeq x) (NonEmpty (Stmt x))
   | Parens (XParens x) (Exp x)
 
 deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Exp x)
@@ -134,6 +135,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
   pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
   pPrintPrec _ _ (Ann _ e t) = parens $ pPrint e <+> ":" <+> pPrint t
+  pPrintPrec _ _ (Seq _ ss) = parens $ sep $ punctuate ";" $ NonEmpty.toList $ fmap pPrint ss
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
 instance
@@ -152,6 +154,7 @@ instance
   typeOf (Force x _) = x ^. U.withUType
   typeOf (RecordAccess x _) = x ^. U.withUType
   typeOf (Ann x _ _) = x ^. U.withUType
+  typeOf (Seq x _) = x ^. U.withUType
   typeOf (Parens x _) = x ^. U.withUType
 
 instance
@@ -170,6 +173,7 @@ instance
   typeOf (Force x _) = x ^. S.withType
   typeOf (RecordAccess x _) = x ^. S.withType
   typeOf (Ann x _ _) = x ^. S.withType
+  typeOf (Seq x _) = x ^. S.withType
   typeOf (Parens x _) = x ^. S.withType
 
 instance
@@ -192,6 +196,7 @@ instance
     Force x e -> Force <$> U.walkOn f x <*> U.walkOn f e
     RecordAccess x l -> RecordAccess <$> U.walkOn f x <*> pure l
     Ann x e t -> Ann <$> U.walkOn f x <*> U.walkOn f e <*> pure t
+    Seq x ss -> Seq <$> U.walkOn f x <*> traverse (U.walkOn f) ss
     Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
@@ -207,12 +212,12 @@ freevars (List _ es) = mconcat $ map freevars es
 freevars (Force _ e) = freevars e
 freevars (RecordAccess _ _) = mempty
 freevars (Ann _ e _) = freevars e
+freevars (Seq _ ss) = mconcat $ NonEmpty.toList $ fmap freevarsStmt ss
 freevars (Parens _ e) = freevars e
 
-------------
--- Clause --
-------------
-
+----------
+-- Stmt --
+----------
 data Stmt x
   = Let (XLet x) (XId x) (Exp x)
   | NoBind (XNoBind x) (Exp x)
@@ -254,8 +259,11 @@ freevarsStmt :: (Eq (XId x), Hashable (XId x)) => Stmt x -> HashSet (XId x)
 freevarsStmt (Let _ x e) = HashSet.delete x $ freevars e
 freevarsStmt (NoBind _ e) = freevars e
 
--- [Exp x]は、末尾へのアクセスが速いものに変えたほうが良いかも
-data Clause x = Clause (XClause x) [Pat x] (NonEmpty (Stmt x))
+------------
+-- Clause --
+------------
+
+data Clause x = Clause (XClause x) [Pat x] (Exp x)
 
 deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Clause x)
 
@@ -265,8 +273,8 @@ instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), For
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
-  pPrintPrec _ _ (Clause _ [] e) = sep (punctuate ";" $ NonEmpty.toList $ fmap pPrint e)
-  pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", sep (punctuate ";" $ NonEmpty.toList $ fmap pPrint e)]
+  pPrintPrec _ _ (Clause _ [] e) = pPrint e
+  pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", pPrint e]
 
 instance
   ForallClauseX U.WithUType x =>
@@ -287,10 +295,10 @@ instance
   ) =>
   U.HasUTerm S.TypeF U.TypeVar (Clause x)
   where
-  walkOn f (Clause x ps e) = Clause <$> U.walkOn f x <*> traverse (U.walkOn f) ps <*> traverse (U.walkOn f) e
+  walkOn f (Clause x ps e) = Clause <$> U.walkOn f x <*> traverse (U.walkOn f) ps <*> U.walkOn f e
 
 freevarsClause :: (Eq (XId x), Hashable (XId x)) => Clause x -> HashSet (XId x)
-freevarsClause (Clause _ pats es) = HashSet.difference (foldMap freevarsStmt es) (mconcat (map bindVars pats))
+freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
 
 -------------
 -- Pattern --

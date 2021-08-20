@@ -3,13 +3,13 @@
 module Malgo.Refine.Pass where
 
 import Data.Kind (Constraint)
+import Malgo.Infer.TcEnv
 import Malgo.Prelude
 import Malgo.Refine.RefineEnv
 import qualified Malgo.Refine.Space as Space
 import Malgo.Syntax hiding (TyArr, Type)
 import qualified Malgo.Syntax as Syn
 import Malgo.Syntax.Extension
-import Malgo.Infer.TcEnv
 import Malgo.TypeRep.Static
 import qualified Malgo.TypeRep.Static as Static
 import qualified RIO.List as List
@@ -65,10 +65,11 @@ refineExp (Tuple x es) = Tuple (over ann toType x) <$> traverse refineExp es
 refineExp (Record x kvs) = Record (over ann toType x) <$> traverseOf (traversed . _2) refineExp kvs
 refineExp (Force x e) = Force (over ann toType x) <$> refineExp e
 refineExp (RecordAccess x label) = pure $ RecordAccess (over ann toType x) label
+refineExp (Seq x ss) = Seq (over ann toType x) <$> traverse refineStmt ss
 refineExp (Parens _ e) = refineExp e
 
 refineClause :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Clause x -> m (Clause (Malgo 'Refine))
-refineClause (Clause x ps es) = Clause (over ann toType x) <$> traverse refinePat ps <*> traverse refineStmt es
+refineClause (Clause x ps e) = Clause (over ann toType x) <$> traverse refinePat ps <*> refineExp e
 
 refineStmt :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Stmt x -> m (Stmt (Malgo 'Refine))
 refineStmt (Let x v e) = Let x v <$> refineExp e

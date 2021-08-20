@@ -24,7 +24,6 @@ import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 import Malgo.TypeRep.Static as GT
 import qualified RIO.Char as Char
-import qualified RIO.NonEmpty as NonEmpty
 
 -- | トップレベル宣言
 data Def
@@ -224,22 +223,22 @@ dsExp (G.Apply info f x) = runDef $ do
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
     _ ->
       bug $ Unreachable "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn x (Clause _ [] ss :| _)) = do
+dsExp (G.Fn x (Clause _ [] e :| _)) = do
   -- lazy valueの脱糖衣
-  ss' <- dsStmts ss
+  e' <- dsExp e
   typ <- dsType (x ^. GT.withType)
   runDef do
-    fun <- let_ typ $ Fun [] ss'
+    fun <- let_ typ $ Fun [] e'
     pure $ Atom fun
-dsExp (G.Fn x cs@(Clause _ ps es :| _)) = do
+dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
   ps' <- traverse (\p -> newLocalId "$p" =<< dsType (GT.typeOf p)) ps
-  typ <- dsType (GT.typeOf (NonEmpty.last es))
+  typ <- dsType (GT.typeOf e)
   -- destruct Clauses
   (pss, es) <-
     unzip
       <$> traverse
-        ( \(Clause _ ps es) ->
-            pure (ps, dsStmts es)
+        ( \(Clause _ ps e) ->
+            pure (ps, dsExp e)
         )
         cs
   body <- match ps' (patMatrix $ toList pss) (toList es) (Error typ)
@@ -279,6 +278,7 @@ dsExp (G.RecordAccess x label) = runDef $ do
       pure $ Atom $ tuple List.!! fromJust (List.elemIndex (removePrefix label) (map fst kts))
   accessType <- dsType (x ^. GT.withType)
   Atom <$> let_ accessType obj
+dsExp (G.Seq _ ss) = dsStmts ss
 dsExp (G.Parens _ e) = dsExp e
 
 dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))

@@ -6,18 +6,18 @@ import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Infer.TcEnv
+import Malgo.Infer.UTerm
+import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
-import Malgo.Infer.TcEnv
 import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), typeConstructor, typeParameters, valueConstructors)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
-import Malgo.Infer.UTerm
-import Malgo.Infer.Unify hiding (lookupVar)
 import qualified RIO.HashMap as HashMap
 import qualified RIO.HashSet as HashSet
 import qualified RIO.List as List
@@ -431,10 +431,9 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   retType <- UVar <$> freshVar
   tell [With pos $ opType :~ TyArr (typeOf e1') (TyArr (typeOf e2') retType)]
   pure $ OpApp (With retType x) op e1' e2'
-tcExpr (Fn pos (Clause x [] ss :| _)) = do
-  ss' <- tcStmts ss
-  let ssType = typeOf $ NonEmpty.last ss'
-  pure $ Fn (With (TyApp TyLazy ssType) pos) (Clause (With (TyApp TyLazy ssType) x) [] ss' :| [])
+tcExpr (Fn pos (Clause x [] e :| _)) = do
+  e' <- tcExpr e
+  pure $ Fn (With (TyApp TyLazy (typeOf e')) pos) (Clause (With (TyApp TyLazy (typeOf e')) x) [] e' :| [])
 tcExpr (Fn pos cs) = do
   traverse tcClause cs >>= \case
     (c' :| cs') -> do
@@ -472,6 +471,9 @@ tcExpr (Ann pos e t) = do
   typeRep <- transType t
   tell [With pos $ typeOf e' :~ typeRep]
   pure e'
+tcExpr (Seq pos ss) = do
+  ss' <- tcStmts ss
+  pure $ Seq (With (typeOf $ NonEmpty.last ss') pos) ss'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (With (typeOf e') pos) e'
@@ -488,12 +490,11 @@ tcClause ::
   ) =>
   Clause (Malgo 'Rename) ->
   WriterT [With SourcePos Constraint] m (Clause (Malgo 'Infer))
-tcClause (Clause pos pats ss) = do
+tcClause (Clause pos pats e) = do
   pats' <- tcPatterns pats
-  ss' <- tcStmts ss
-  let ssType = typeOf $ NonEmpty.last ss'
+  e' <- tcExpr e
   let patTypes = map typeOf pats'
-  pure $ Clause (With (buildTyArr patTypes ssType) pos) pats' ss'
+  pure $ Clause (With (buildTyArr patTypes (typeOf e')) pos) pats' e'
 
 tcPatterns ::
   ( MonadBind m,

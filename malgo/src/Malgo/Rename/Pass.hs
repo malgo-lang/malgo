@@ -191,6 +191,7 @@ rnExp (List pos es) = do
 rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (RecordAccess pos (WithPrefix (With p l))) = RecordAccess pos . WithPrefix . With p <$> lookupFieldName pos l
 rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
+rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
@@ -215,12 +216,12 @@ rnClause ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Clause (Malgo 'Parse) ->
   m (Clause (Malgo 'Rename))
-rnClause (Clause pos ps ss) = do
+rnClause (Clause pos ps e) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (With Implicit) <$> traverse resolveName vars
-  local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnStmts ss
+  local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnExp e
   where
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
