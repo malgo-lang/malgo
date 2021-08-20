@@ -3,6 +3,7 @@
 
 module Malgo.TypeRep.Static where
 
+import qualified RIO.List as List
 import Data.Binary (Binary)
 import Data.Fix
 import Data.Functor.Foldable.TH (makeBaseFunctor)
@@ -234,6 +235,9 @@ makeLenses ''TypeDef
 ---------------
 -- Utilities --
 ---------------
+
+buildTyApp :: Type -> [Type] -> Type
+buildTyApp = List.foldl TyApp
 
 viewTyConApp :: Type -> Maybe (Type, [Type])
 viewTyConApp (TyCon con) = Just (TyCon con, [])
