@@ -3,7 +3,6 @@
 
 module Malgo.TypeRep.Static where
 
-import qualified RIO.List as List
 import Data.Binary (Binary)
 import Data.Fix
 import Data.Functor.Foldable.TH (makeBaseFunctor)
@@ -12,8 +11,9 @@ import Data.Maybe (fromJust)
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
-import Malgo.Prelude
 import Malgo.Infer.UTerm
+import Malgo.Prelude
+import qualified RIO.List as List
 
 --------------------------------
 -- Common tag representations --
