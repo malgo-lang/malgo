@@ -1,0 +1,10 @@
+module TypeAnnotation = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  main = {
+    printString (({x -> x} : String -> String) "hoge")
+  };
+}
+
+-- Expected: hoge
