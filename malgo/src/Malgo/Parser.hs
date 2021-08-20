@@ -144,7 +144,16 @@ pScDef =
 -- Expressions
 
 pExp :: Parser (Exp (Malgo 'Parse))
-pExp = pOpApp
+pExp =
+  try pAnn
+    <|> pOpApp
+
+pAnn :: Parser (Exp (Malgo 'Parse))
+pAnn = do
+  s <- getSourcePos
+  e <- pOpApp
+  void $ pOperator ":"
+  Ann s e <$> pType
 
 pBoxed :: Parser (Literal Boxed)
 pBoxed =
