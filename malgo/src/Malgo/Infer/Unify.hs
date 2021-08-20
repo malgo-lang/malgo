@@ -69,9 +69,8 @@ unify :: (MonadIO m, MonadReader env m, HasOpt env, HasLogFunc env) => SourcePos
 unify _ (UVar v1) (UVar v2)
   | v1 == v2 = pure (mempty, [])
   | otherwise = pure (HashMap.singleton v1 (UVar v2), [])
-unify _ (UVar v) (UTerm t) = pure (HashMap.singleton v (UTerm t), [])
-unify _ (UTerm t) (UVar v) = pure (HashMap.singleton v (UTerm t), [])
--- unify x (UTerm t1) (UTerm t2) = liftUnify x t1 t2
+unify _ (UVar v) t = pure (HashMap.singleton v t, [])
+unify _ t (UVar v) = pure (HashMap.singleton v t, [])
 unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [With x $ t11 :~ t21, With x $ t12 :~ t22])
 unify _ (TyVar v1) (TyVar v2) | v1 == v2 = pure (mempty, [])
 unify _ (TyCon c1) (TyCon c2) | c1 == c2 = pure (mempty, [])
@@ -142,7 +141,7 @@ solveLoop n (With x (t1 :~ t2) : cs) = do
   let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
   let t2' = fromMaybe t2 (expandTypeSynonym abbrEnv t2)
   (binds, cs') <- unify x t1' t2'
-  ifor_ binds $ \var term -> bindVar x var term
+  itraverse_ (bindVar x) binds
   solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
 zonkConstraint :: MonadBind f => With x Constraint -> f (With x Constraint)
@@ -189,7 +188,7 @@ generalizeMutRecs x bound terms = do
 
 instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m, HasLogFunc env) => SourcePos -> Scheme UType -> m UType
 instantiate x (Forall as t) = do
-  avs <- traverse ?? as $ \a -> do
+  avs <- for as \a -> do
     v <- UVar <$> freshVar
     solve [With x $ a ^. idMeta :~ kindOf v]
     pure (a, v)
