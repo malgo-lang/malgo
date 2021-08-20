@@ -1,4 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.TypeRep.Static where
@@ -235,6 +236,10 @@ makeLenses ''TypeDef
 ---------------
 -- Utilities --
 ---------------
+
+pattern TyConApp :: Type -> [Type] -> Type
+pattern TyConApp x xs <- (viewTyConApp -> Just (x, xs)) where
+  TyConApp x xs = buildTyApp x xs
 
 buildTyApp :: Type -> [Type] -> Type
 buildTyApp = List.foldl TyApp

@@ -12,10 +12,10 @@ import qualified Data.Map.Strict as Map
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
+import Malgo.Infer.UTerm
 import Malgo.Prelude
 import Malgo.TypeRep.Static (IsType (fromType, safeToType), Rep (..), TypeF (..))
 import qualified Malgo.TypeRep.Static as S
-import Malgo.Infer.UTerm
 
 ----------
 -- Type --
@@ -160,6 +160,12 @@ pattern Rep rep = UTerm (RepF rep)
 -- Utilities --
 ---------------
 
+pattern TyConApp :: UType -> [UType] -> UType
+pattern TyConApp x xs <-
+  (viewTyConApp -> Just (x, xs))
+  where
+    TyConApp x xs = buildTyApp x xs
+
 buildTyApp :: UType -> [UType] -> UType
 buildTyApp = List.foldl TyApp
 
@@ -178,7 +184,7 @@ splitTyArr (TyArr t1 t2) = let (ps, r) = splitTyArr t2 in (t1 : ps, r)
 splitTyArr t = ([], t)
 
 expandTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> Maybe UType
-expandTypeSynonym abbrEnv (viewTyConApp -> Just (TyCon con, ts)) =
+expandTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
   case abbrEnv ^. at con of
     Nothing -> Nothing
     Just (ps, orig) -> Just (applySubst (zip ps ts) orig)
@@ -186,9 +192,9 @@ expandTypeSynonym _ _ = Nothing
 
 expandAllTypeSynonym :: HashMap (Id UType) ([Id UType], UType) -> UType -> UType
 expandAllTypeSynonym _ (UVar v) = UVar v
-expandAllTypeSynonym abbrEnv (viewTyConApp -> Just (TyCon con, ts)) =
+expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
   case abbrEnv ^. at con of
-    Nothing -> buildTyApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
+    Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
     Just (ps, orig) ->
       -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
       expandAllTypeSynonym abbrEnv $ applySubst (zip ps ts) $ expandAllTypeSynonym abbrEnv orig

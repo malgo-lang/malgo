@@ -43,7 +43,7 @@ dsTyApp _ _ = pure AnyT
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: MonadState DsEnv m => GT.Type -> m C.Type
-unfoldType t@(viewTyConApp -> Just (TyCon con, ts)) = do
+unfoldType t@(TyConApp (TyCon con) ts) = do
   case GT.kindOf t of
     TYPE (Rep BoxedRep) -> do
       vcs <- lookupValueConstructors con ts
