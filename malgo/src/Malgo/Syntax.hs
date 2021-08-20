@@ -45,7 +45,7 @@ instance S.HasType (Literal x) where
   typeOf String {} = S.TyPrim S.StringT
 
 instance U.HasUTerm S.TypeF U.TypeVar (Literal x) where
-  walkOn f v = f (U.typeOf v) >> pure v
+  walkOn f v = f (U.typeOf v) $> v
 
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce

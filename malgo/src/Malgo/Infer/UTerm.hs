@@ -56,7 +56,8 @@ freevars (UVar v) = HashSet.singleton v
 freevars (UTerm t) = foldMap freevars t
 
 class HasUTerm t v a where
-  walkOn :: Monad f => (UTerm t v -> f (UTerm t v)) -> a -> f a
+  walkOn :: Traversal a a (UTerm t v) (UTerm t v)
+  -- walkOn :: Applicative f => (UTerm t v -> f (UTerm t v)) -> a -> f a
 
 instance HasUTerm t v (UTerm t v) where
   walkOn = id

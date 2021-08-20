@@ -1,5 +1,5 @@
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.TypeRep.Static where
@@ -38,8 +38,6 @@ data Rep
     StringRep
   deriving stock (Eq, Ord, Show, Generic, Data)
 
-makePrisms ''Rep
-
 instance Binary Rep
 
 instance Pretty Rep where pPrint rep = text $ show rep
@@ -47,8 +45,6 @@ instance Pretty Rep where pPrint rep = text $ show rep
 -- | Primitive Types
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving stock (Eq, Show, Ord, Generic, Data)
-
-makePrisms ''PrimT
 
 instance Binary PrimT
 
@@ -104,14 +100,7 @@ data Type
 
 instance Binary Type
 
-makePrisms ''Type
-makeBaseFunctor ''Type
-
 instance Plated Type
-
-deriving stock instance Data t => Data (TypeF t)
-
-instance Data t => Plated (TypeF t)
 
 instance Pretty Type where
   pPrintPrec l d (TyApp t1 t2) =
@@ -202,8 +191,6 @@ instance Binary ty => Binary (Scheme ty)
 instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall vs t) = "forall" <+> hsep (map pprIdName vs) <> "." <+> pPrint t
 
-makePrisms ''Scheme
-
 -- | Types qualified with `Type`
 class WithType a where
   withType :: Lens' a Type
@@ -228,15 +215,15 @@ instance Binary ty => Binary (TypeDef ty)
 instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
 
-makeLenses ''TypeDef
-
 ---------------
 -- Utilities --
 ---------------
 
 pattern TyConApp :: Type -> [Type] -> Type
-pattern TyConApp x xs <- (viewTyConApp -> Just (x, xs)) where
-  TyConApp x xs = buildTyApp x xs
+pattern TyConApp x xs <-
+  (viewTyConApp -> Just (x, xs))
+  where
+    TyConApp x xs = buildTyApp x xs
 
 buildTyApp :: Type -> [Type] -> Type
 buildTyApp = List.foldl TyApp
@@ -271,3 +258,20 @@ applySubst _ TyBottom = TyBottom
 applySubst subst (TYPE rep) = TYPE $ applySubst subst rep
 applySubst _ TyRep = TyRep
 applySubst _ (Rep rep) = Rep rep
+
+makeBaseFunctor ''Type
+
+deriving stock instance Data t => Data (TypeF t)
+
+instance Data t => Plated (TypeF t)
+
+makePrisms ''Rep
+
+makePrisms ''PrimT
+
+makePrisms ''Type
+
+makePrisms ''Scheme
+
+makeLenses ''TypeDef
+
