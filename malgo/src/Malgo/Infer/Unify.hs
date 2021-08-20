@@ -11,7 +11,7 @@ import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Infer.TcEnv (TcEnv, abbrEnv)
-import Malgo.TypeRep.Static hiding (applySubst, kindOf)
+import Malgo.TypeRep.Static (Scheme(..), Rep(..))
 import Malgo.TypeRep.UTerm
 import Malgo.Infer.UTerm
 import qualified RIO.HashMap as HashMap
@@ -71,59 +71,49 @@ unify _ (UVar v1) (UVar v2)
   | otherwise = pure (HashMap.singleton v1 (UVar v2), [])
 unify _ (UVar v) (UTerm t) = pure (HashMap.singleton v (UTerm t), [])
 unify _ (UTerm t) (UVar v) = pure (HashMap.singleton v (UTerm t), [])
-unify x (UTerm t1) (UTerm t2) = liftUnify x t1 t2
+-- unify x (UTerm t1) (UTerm t2) = liftUnify x t1 t2
+unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [With x $ t11 :~ t21, With x $ t12 :~ t22])
+unify _ (TyVar v1) (TyVar v2) | v1 == v2 = pure (mempty, [])
+unify _ (TyCon c1) (TyCon c2) | c1 == c2 = pure (mempty, [])
+unify _ (TyPrim p1) (TyPrim p2) | p1 == p2 = pure (mempty, [])
+unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [With x $ l1 :~ l2, With x $ r1 :~ r2])
+unify _ (TyTuple n1) (TyTuple n2) | n1 == n2 = pure (mempty, [])
+unify x (TyRecord kts1) (TyRecord kts2)
+  | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
+unify _ TyLazy TyLazy = pure (mempty, [])
+unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [With x $ t1 :~ t2])
+unify x (TYPE rep1) (TYPE rep2) = pure (mempty, [With x $ rep1 :~ rep2])
+unify _ TyRep TyRep = pure (mempty, [])
+unify _ (Rep rep1) (Rep rep2) | rep1 == rep2 = pure (mempty, [])
+unify x t1 t2 = errorOn x $ unifyErrorMessage t1 t2
 
 equiv :: UType -> UType -> Maybe (HashMap TypeVar TypeVar)
 equiv (UVar v1) (UVar v2)
   | v1 == v2 = Just mempty
   | otherwise = Just $ HashMap.singleton v1 v2
-equiv (UTerm t1) (UTerm t2) = liftEquiv t1 t2
+equiv (TyApp t11 t12) (TyApp t21 t22) = (<>) <$> equiv t11 t21 <*> equiv t12 t22
+equiv (TyVar v1) (TyVar v2) | v1 == v2 = Just mempty
+equiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
+equiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
+equiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
+equiv (TyTuple n1) (TyTuple n2) | n1 == n2 = Just mempty
+equiv (TyRecord kts1) (TyRecord kts2) | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
+equiv TyLazy TyLazy = Just mempty
+equiv (TyPtr t1) (TyPtr t2) = equiv t1 t2
+equiv (TYPE rep1) (TYPE rep2) = equiv rep1 rep2
+equiv TyRep TyRep = Just mempty
+equiv (Rep rep1) (Rep rep2) | rep1 == rep2 = Just mempty
 equiv _ _ = Nothing
 
 occursCheck :: TypeVar -> UType -> Bool
 occursCheck v t = HashSet.member v (freevars t)
 
-liftUnify :: (HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> TypeF UType -> TypeF UType -> m UnifyResult
-liftUnify x (TyAppF t11 t12) (TyAppF t21 t22) = pure (mempty, [With x $ t11 :~ t21, With x $ t12 :~ t22])
-liftUnify _ (TyVarF v1) (TyVarF v2) | v1 == v2 = pure (mempty, [])
-liftUnify _ (TyConF c1) (TyConF c2) | c1 == c2 = pure (mempty, [])
-liftUnify _ (TyPrimF p1) (TyPrimF p2) | p1 == p2 = pure (mempty, [])
-liftUnify x (TyArrF l1 r1) (TyArrF l2 r2) = pure (mempty, [With x $ l1 :~ l2, With x $ r1 :~ r2])
-liftUnify _ (TyTupleF n1) (TyTupleF n2) | n1 == n2 = pure (mempty, [])
-liftUnify x (TyRecordF kts1) (TyRecordF kts2)
-  | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
-liftUnify _ TyLazyF TyLazyF = pure (mempty, [])
-liftUnify x (TyPtrF t1) (TyPtrF t2) = pure (mempty, [With x $ t1 :~ t2])
-liftUnify x (TYPEF rep1) (TYPEF rep2) = pure (mempty, [With x $ rep1 :~ rep2])
-liftUnify _ TyRepF TyRepF = pure (mempty, [])
-liftUnify _ (RepF rep1) (RepF rep2) | rep1 == rep2 = pure (mempty, [])
-liftUnify x t1 t2 = errorOn x $ unifyErrorMessage t1 t2
-
-liftEquiv :: TypeF UType -> TypeF UType -> Maybe (HashMap TypeVar TypeVar)
-liftEquiv (TyAppF t11 t12) (TyAppF t21 t22) = (<>) <$> equiv t11 t21 <*> equiv t12 t22
-liftEquiv (TyVarF v1) (TyVarF v2) | v1 == v2 = Just mempty
-liftEquiv (TyConF c1) (TyConF c2) | c1 == c2 = Just mempty
-liftEquiv (TyPrimF p1) (TyPrimF p2) | p1 == p2 = Just mempty
-liftEquiv (TyArrF l1 r1) (TyArrF l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
-liftEquiv (TyTupleF n1) (TyTupleF n2) | n1 == n2 = Just mempty
-liftEquiv (TyRecordF kts1) (TyRecordF kts2)
-  | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
-liftEquiv TyLazyF TyLazyF = Just mempty
-liftEquiv (TyPtrF t1) (TyPtrF t2) = equiv t1 t2
-liftEquiv (TYPEF rep1) (TYPEF rep2) = equiv rep1 rep2
-liftEquiv TyRepF TyRepF = Just mempty
-liftEquiv (RepF rep1) (RepF rep2) | rep1 == rep2 = Just mempty
-liftEquiv _ _ = Nothing
-
-liftOccursCheck :: TypeVar -> TypeF UType -> Bool
-liftOccursCheck v t = or $ fmap (occursCheck v) t
-
 instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadState TcEnv m, HasLogFunc env) => MonadBind (TypeUnifyT m) where
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar = do
-    rep <- TypeVar <$> newNoNameId (UTerm TyRepF) Internal
-    kind <- TypeVar <$> newNoNameId (UTerm $ TYPEF $ UVar rep) Internal
+    rep <- TypeVar <$> newNoNameId TyRep Internal
+    kind <- TypeVar <$> newNoNameId (TYPE $ UVar rep) Internal
     TypeVar <$> newNoNameId (UVar kind) Internal
 
   bindVar x v t = do
@@ -163,7 +153,7 @@ generalize x bound term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
+  zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
 toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> TypeVar -> String -> m (Id UType)
@@ -180,7 +170,7 @@ defaultToBoxed x t = transformM ?? t $ \case
   UVar v -> do
     let vKind = kindOf $ v ^. typeVar . idMeta
     case vKind of
-      UTerm TyRepF -> bindVar x v (UTerm $ RepF BoxedRep) >> pure (UTerm $ RepF BoxedRep)
+      TyRep -> bindVar x v (Rep BoxedRep) >> pure (Rep BoxedRep)
       _ -> do
         void $ defaultToBoxed x vKind
         UVar <$> traverseOf (typeVar . idMeta) zonk v
@@ -194,7 +184,7 @@ generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
-  zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
+  zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
 instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m, HasLogFunc env) => SourcePos -> Scheme UType -> m UType
