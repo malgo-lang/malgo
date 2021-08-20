@@ -56,6 +56,10 @@ lookupRecordType pos fields = do
     lookup env (WithPrefix (With Nothing k)) = concat $ HashMap.lookup k env
     lookup env (WithPrefix (With (Just p) k)) = filter ((== p) . fst) $ concat $ HashMap.lookup k env
 
+--------------------
+-- Type inference --
+--------------------
+
 typeCheck :: (MonadFail m, HasOpt env, MonadReader env m, MonadIO m, HasUniqSupply env, HasLogFunc env) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'Infer), TcEnv)
 typeCheck rnEnv (Module name bg) = do
   tcEnv <- genTcEnv rnEnv

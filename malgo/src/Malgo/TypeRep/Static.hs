@@ -187,9 +187,6 @@ instance HasKind Type where
   kindOf TyRep = TyRep -- Rep :: Rep
   kindOf (Rep _) = TyRep
 
-buildTyArr :: Foldable t => t Type -> Type -> Type
-buildTyArr ps ret = foldr TyArr ret ps
-
 instance HasType Void where
   typeOf x = absurd x
 
@@ -243,6 +240,9 @@ pattern TyConApp x xs <- (viewTyConApp -> Just (x, xs)) where
 
 buildTyApp :: Type -> [Type] -> Type
 buildTyApp = List.foldl TyApp
+
+buildTyArr :: Foldable t => t Type -> Type -> Type
+buildTyArr ps ret = foldr TyArr ret ps
 
 viewTyConApp :: Type -> Maybe (Type, [Type])
 viewTyConApp (TyCon con) = Just (TyCon con, [])
