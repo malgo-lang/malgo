@@ -467,6 +467,11 @@ tcExpr (RecordAccess pos label) = do
       tell [With pos $ recordType :~ TyRecord (Map.insert (removePrefix label) retType kts)]
       pure $ RecordAccess (With (TyArr recordType retType) pos) label
     _ -> errorOn pos $ pPrint recordType <+> "is not record type"
+tcExpr (Ann pos e t) = do
+  e' <- tcExpr e
+  typeRep <- transType t
+  tell [With pos $ typeOf e' :~ typeRep]
+  pure e'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (With (typeOf e') pos) e'

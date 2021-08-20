@@ -115,6 +115,11 @@ type family XForce x where
 type family XRecordAccess x where
   XRecordAccess (Malgo x) = SimpleX x
 
+type family XAnn x where
+  XAnn (Malgo 'Parse) = SimpleX 'Parse
+  XAnn (Malgo 'Rename) = SimpleX 'Rename
+  XAnn (Malgo _) = Void
+
 type family XParens x where
   XParens (Malgo x) = SimpleX x
 
@@ -131,6 +136,7 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XList x),
     c (XForce x),
     c (XRecordAccess x),
+    c (XAnn x),
     c (XParens x)
   )
 

@@ -9,11 +9,11 @@ import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Koriel.Id
 import Koriel.Pretty
+import qualified Malgo.Infer.UTerm as U
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 import qualified Malgo.TypeRep.Static as S
 import qualified Malgo.TypeRep.UTerm as U
-import qualified Malgo.Infer.UTerm as U
 import qualified RIO.NonEmpty as NonEmpty
 
 -- | Unboxed and literal
@@ -50,7 +50,50 @@ instance U.HasUTerm S.TypeF U.TypeVar (Literal x) where
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce
 
--- Expression
+----------
+-- Type --
+----------
+
+data Type x
+  = TyApp (XTyApp x) (Type x) [Type x]
+  | TyVar (XTyVar x) (XId x)
+  | TyCon (XTyCon x) (XId x)
+  | TyArr (XTyArr x) (Type x) (Type x)
+  | TyTuple (XTyTuple x) [Type x]
+  | TyRecord (XTyRecord x) [(XId x, Type x)]
+  | TyLazy (XTyLazy x) (Type x)
+  | TyDArr (XTyDArr x) (Type x) (Type x)
+
+deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
+
+deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
+
+instance (Pretty (XId x)) => Pretty (Type x) where
+  pPrintPrec l d (TyApp _ t ts) =
+    maybeParens (d > 11) $ pPrint t <+> sep (map (pPrintPrec l 12) ts)
+  pPrintPrec _ _ (TyVar _ i) = pPrint i
+  pPrintPrec _ _ (TyCon _ i) = pPrint i
+  pPrintPrec l d (TyArr _ t1 t2) =
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
+  pPrintPrec _ _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pPrint ts
+  pPrintPrec l _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
+  pPrintPrec _ _ (TyLazy _ t) = braces $ pPrint t
+  pPrintPrec l d (TyDArr _ t1 t2) =
+    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "=>" <+> pPrintPrec l 10 t2
+
+getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
+getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
+getTyVars (TyVar _ v) = HashSet.singleton v
+getTyVars TyCon {} = mempty
+getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
+getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
+getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
+getTyVars (TyLazy _ t) = getTyVars t
+getTyVars (TyDArr _ t1 t2) = getTyVars t1 <> getTyVars t2
+
+----------------
+-- Expression --
+----------------
 
 data Exp x
   = Var (XVar x) (WithPrefix (XId x))
@@ -64,11 +107,12 @@ data Exp x
   | List (XList x) [Exp x]
   | Force (XForce x) (Exp x)
   | RecordAccess (XRecordAccess x) (WithPrefix (XId x))
+  | Ann (XAnn x) (Exp x) (Type x)
   | Parens (XParens x) (Exp x)
 
-deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Exp x)
+deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Exp x)
 
-deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, Show (XId x)) => Show (Exp x)
+deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Exp x)
 
 instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec _ _ (Var _ i) = pPrint i
@@ -89,6 +133,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
   pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
+  pPrintPrec _ _ (Ann _ e t) = parens $ pPrint e <+> ":" <+> pPrint t
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
 instance
@@ -106,6 +151,7 @@ instance
   typeOf (List x _) = x ^. U.withUType
   typeOf (Force x _) = x ^. U.withUType
   typeOf (RecordAccess x _) = x ^. U.withUType
+  typeOf (Ann x _ _) = x ^. U.withUType
   typeOf (Parens x _) = x ^. U.withUType
 
 instance
@@ -123,6 +169,7 @@ instance
   typeOf (List x _) = x ^. S.withType
   typeOf (Force x _) = x ^. S.withType
   typeOf (RecordAccess x _) = x ^. S.withType
+  typeOf (Ann x _ _) = x ^. S.withType
   typeOf (Parens x _) = x ^. S.withType
 
 instance
@@ -144,6 +191,7 @@ instance
     List x es -> List <$> U.walkOn f x <*> traverse (U.walkOn f) es
     Force x e -> Force <$> U.walkOn f x <*> U.walkOn f e
     RecordAccess x l -> RecordAccess <$> U.walkOn f x <*> pure l
+    Ann x e t -> Ann <$> U.walkOn f x <*> U.walkOn f e <*> pure t
     Parens x e -> Parens <$> U.walkOn f x <*> U.walkOn f e
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
@@ -158,6 +206,7 @@ freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (List _ es) = mconcat $ map freevars es
 freevars (Force _ e) = freevars e
 freevars (RecordAccess _ _) = mempty
+freevars (Ann _ e _) = freevars e
 freevars (Parens _ e) = freevars e
 
 ------------
@@ -168,9 +217,9 @@ data Stmt x
   = Let (XLet x) (XId x) (Exp x)
   | NoBind (XNoBind x) (Exp x)
 
-deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Stmt x)
+deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Stmt x)
 
-deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, Show (XId x)) => Show (Stmt x)
+deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Stmt x)
 
 instance Pretty (XId x) => Pretty (Stmt x) where
   pPrint (Let _ v e) = "let" <+> pPrint v <+> "=" <+> pPrint e
@@ -208,11 +257,11 @@ freevarsStmt (NoBind _ e) = freevars e
 -- [Exp x]は、末尾へのアクセスが速いものに変えたほうが良いかも
 data Clause x = Clause (XClause x) [Pat x] (NonEmpty (Stmt x))
 
-deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallStmtX Eq x, Eq (XId x)) => Eq (Clause x)
+deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Clause x)
 
-deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Show x, ForallStmtX Show x, Show (XId x)) => Show (Clause x)
+deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Clause x)
 
-instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x, ForallStmtX Ord x) => Ord (Clause x) where
+instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x, ForallStmtX Ord x, ForallTypeX Ord x) => Ord (Clause x) where
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
@@ -320,47 +369,6 @@ bindVars (ListP _ ps) = mconcat $ map bindVars ps
 bindVars UnboxedP {} = mempty
 
 makePrisms ''Pat
-
-----------
--- Type --
-----------
-
-data Type x
-  = TyApp (XTyApp x) (Type x) [Type x]
-  | TyVar (XTyVar x) (XId x)
-  | TyCon (XTyCon x) (XId x)
-  | TyArr (XTyArr x) (Type x) (Type x)
-  | TyTuple (XTyTuple x) [Type x]
-  | TyRecord (XTyRecord x) [(XId x, Type x)]
-  | TyLazy (XTyLazy x) (Type x)
-  | TyDArr (XTyDArr x) (Type x) (Type x)
-
-deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
-
-deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
-
-instance (Pretty (XId x)) => Pretty (Type x) where
-  pPrintPrec l d (TyApp _ t ts) =
-    maybeParens (d > 11) $ pPrint t <+> sep (map (pPrintPrec l 12) ts)
-  pPrintPrec _ _ (TyVar _ i) = pPrint i
-  pPrintPrec _ _ (TyCon _ i) = pPrint i
-  pPrintPrec l d (TyArr _ t1 t2) =
-    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec _ _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pPrint ts
-  pPrintPrec l _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
-  pPrintPrec _ _ (TyLazy _ t) = braces $ pPrint t
-  pPrintPrec l d (TyDArr _ t1 t2) =
-    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "=>" <+> pPrintPrec l 10 t2
-
-getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
-getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = HashSet.singleton v
-getTyVars TyCon {} = mempty
-getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
-getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
-getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
-getTyVars (TyLazy _ t) = getTyVars t
-getTyVars (TyDArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 
 -----------------
 -- Declaration --

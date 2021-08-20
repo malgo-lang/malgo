@@ -190,6 +190,7 @@ rnExp (List pos es) = do
     buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos (NoPrefix consName)) x) (buildListApply nilName consName xs)
 rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (RecordAccess pos (WithPrefix (With p l))) = RecordAccess pos . WithPrefix . With p <$> lookupFieldName pos l
+rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
