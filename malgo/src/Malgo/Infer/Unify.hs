@@ -9,11 +9,11 @@ import qualified Data.HashSet as HashSet
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Prelude
 import Malgo.Infer.TcEnv (TcEnv, abbrEnv)
-import Malgo.TypeRep.Static (Scheme(..), Rep(..))
-import Malgo.TypeRep.UTerm
 import Malgo.Infer.UTerm
+import Malgo.Prelude
+import Malgo.TypeRep.Static (Rep (..), Scheme (..))
+import Malgo.TypeRep.UTerm
 import qualified RIO.HashMap as HashMap
 import qualified RIO.Map as Map
 import Text.Megaparsec (SourcePos)
@@ -35,11 +35,6 @@ instance Pretty Constraint where
 ---------------
 -- Unifiable --
 ---------------
-
-type UnifyResult = (HashMap TypeVar UType, [With SourcePos Constraint])
-
-unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
-unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
 
 class Monad m => MonadBind m where
   lookupVar :: TypeVar -> m (Maybe UType)
@@ -65,7 +60,12 @@ instance MonadBind m => MonadBind (StateT s m)
 
 instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
 
-unify :: (MonadIO m, MonadReader env m, HasOpt env, HasLogFunc env) => SourcePos -> UType -> UType -> m UnifyResult
+type UnifyResult = Either (SourcePos, Doc) (HashMap TypeVar UType, [With SourcePos Constraint])
+
+unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
+unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
+
+unify :: SourcePos -> UType -> UType -> UnifyResult
 unify _ (UVar v1) (UVar v2)
   | v1 == v2 = pure (mempty, [])
   | otherwise = pure (HashMap.singleton v1 (UVar v2), [])
@@ -84,7 +84,7 @@ unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [With x $ t1 :~ t2])
 unify x (TYPE rep1) (TYPE rep2) = pure (mempty, [With x $ rep1 :~ rep2])
 unify _ TyRep TyRep = pure (mempty, [])
 unify _ (Rep rep1) (Rep rep2) | rep1 == rep2 = pure (mempty, [])
-unify x t1 t2 = errorOn x $ unifyErrorMessage t1 t2
+unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
 
 equiv :: UType -> UType -> Maybe (HashMap TypeVar TypeVar)
 equiv (UVar v1) (UVar v2)
@@ -111,9 +111,9 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar = do
-    rep <- TypeVar <$> newNoNameId TyRep Internal
-    kind <- TypeVar <$> newNoNameId (TYPE $ UVar rep) Internal
-    TypeVar <$> newNoNameId (UVar kind) Internal
+    rep <- TypeVar <$> newLocalId "r" TyRep
+    kind <- TypeVar <$> newLocalId "k" (TYPE $ UVar rep)
+    TypeVar <$> newLocalId "t" (UVar kind)
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
@@ -140,9 +140,11 @@ solveLoop n (With x (t1 :~ t2) : cs) = do
   abbrEnv <- use abbrEnv
   let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
   let t2' = fromMaybe t2 (expandTypeSynonym abbrEnv t2)
-  (binds, cs') <- unify x t1' t2'
-  itraverse_ (bindVar x) binds
-  solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
+  case unify x t1' t2' of
+    Left (pos, message) -> errorOn pos message
+    Right (binds, cs') -> do
+      itraverse_ (bindVar x) binds
+      solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
 zonkConstraint :: MonadBind f => With x Constraint -> f (With x Constraint)
 zonkConstraint (With m (x :~ y)) = With m <$> ((:~) <$> zonk x <*> zonk y)
@@ -160,8 +162,9 @@ toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   let tvKind = kindOf tvType
   let name = case tv ^. typeVar . idName of
-              x | x == noName -> hint
-                | otherwise -> x
+        x
+          | x == noName -> hint
+          | otherwise -> x
   newLocalId name tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
