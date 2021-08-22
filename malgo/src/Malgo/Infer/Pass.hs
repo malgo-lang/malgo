@@ -75,13 +75,13 @@ typeCheck rnEnv (Module name bg) = do
       zonkedBg <-
         pure bg'
           >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (foreigns . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (impls . traversed . _4) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (impls . traversed . _4 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       zonkedTcEnv <-
         pure tcEnv'
-          >>= traverseOf (varEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
-          >>= traverseOf (typeEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (varEnv . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (typeEnv . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::

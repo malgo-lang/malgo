@@ -23,10 +23,9 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
 import Malgo.Syntax.Extension
-import Malgo.TypeRep.Static (Scheme, TypeDef (..), TypeF)
+import Malgo.TypeRep.Static (Scheme, TypeDef (..))
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
-import Malgo.Infer.UTerm
 
 type RecordTypeName = String
 
@@ -54,12 +53,13 @@ instance Pretty TcEnv where
             ]
         )
 
-instance HasUTerm TypeF TypeVar TcEnv where
-  walkOn f TcEnv {..} =
-    TcEnv <$> traverseOf (traversed . traversed . walkOn) f _varEnv
-      <*> traverseOf (traversed . traversed . walkOn) f _typeEnv
-      <*> traverseOf (traversed . traversed . walkOn) f _abbrEnv
-      <*> traverseOf (traversed . traversed . _2 . traversed . walkOn) f _fieldEnv
+instance HasType TcEnv where
+  typeOf TcEnv {} = error "typeOf TcEnv{..}"
+  types f TcEnv {..} =
+    TcEnv <$> traverseOf (traversed . traversed . types) f _varEnv
+      <*> traverseOf (traversed . traversed . types) f _typeEnv
+      <*> traverseOf (traversed . traversed . types) f _abbrEnv
+      <*> traverseOf (traversed . traversed . _2 . traversed . types) f _fieldEnv
       <*> pure _rnEnv
 
 appendFieldEnv :: [(Id (), (RecordTypeName, Scheme UType))] -> TcEnv -> TcEnv

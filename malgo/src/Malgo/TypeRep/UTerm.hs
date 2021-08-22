@@ -48,17 +48,29 @@ instance (IsType a) => IsType (TypeF a) where
   safeToType = fmap embed . traverse safeToType
   fromType = fmap fromType . project
 
+class HasType a where
+  typeOf :: a -> UType
+  types :: Traversal' a UType
+
+class HasKind a where
+  kindOf :: a -> UType
+
+instance HasType t => HasType (With t a) where
+  typeOf (With x _) = typeOf x
+  types f (With x a) = With <$> traverseOf types f x <*> pure a
+
 newtype TypeVar = TypeVar {_typeVar :: Id UType}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
 
-instance HasUTerm TypeF TypeVar TypeVar where
-  walkOn f (TypeVar x) = TypeVar <$> traverseOf idMeta f x
+makeLenses ''TypeVar
+
+instance HasType TypeVar where
+  typeOf tv = UVar tv
+  types f (TypeVar x) = TypeVar <$> traverseOf idMeta f x
 
 instance Pretty TypeVar where
   pPrint (TypeVar v) = "'" <> pPrint v
-
-makeLenses ''TypeVar
 
 type TypeMap = HashMap TypeVar UType
 
@@ -81,11 +93,9 @@ applySubst subst t =
     TyVar v -> fromMaybe (TyVar v) $ List.lookup v subst
     t -> t
 
-class HasType a where
-  typeOf :: a -> UType
-
-class HasKind a where
-  kindOf :: a -> UType
+instance HasType UType where
+  typeOf = id
+  types = id 
 
 instance HasKind UType where
   kindOf (UVar v) = v ^. typeVar . idMeta
@@ -107,18 +117,10 @@ instance HasKind UType where
 
 instance HasType Void where
   typeOf = absurd
+  types _ = absurd
 
 instance HasKind Void where
   kindOf = absurd
-
-class WithUType a where
-  withUType :: Lens' a UType
-
-instance WithUType (With UType a) where
-  withUType f (With t a) = (`With` a) <$> f t
-
-instance WithUType Void where
-  withUType _ a = absurd a
 
 pattern TyApp :: UTerm TypeF v -> UTerm TypeF v -> UTerm TypeF v
 pattern TyApp t1 t2 = UTerm (TyAppF t1 t2)
