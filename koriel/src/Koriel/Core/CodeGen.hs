@@ -12,7 +12,6 @@ where
 
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
-import qualified Data.ByteString as BS
 import qualified Data.ByteString.Builder as B
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
@@ -21,6 +20,7 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
+import qualified Data.Text.Lazy.IO as Text
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import qualified Koriel.Core.Op as Op
 import Koriel.Core.Syntax
@@ -48,9 +48,8 @@ import LLVM.AST.Type hiding
   )
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
-import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr)
-import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
+import LLVM.Pretty (ppllvm)
 
 instance Hashable Name
 
@@ -93,7 +92,7 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
           traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
           genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
-  liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ Text.writeFile dstPath $ ppllvm llvmModule
   where
     initTopVars [] = retVoid
     initTopVars ((name, expr) : xs) = do
