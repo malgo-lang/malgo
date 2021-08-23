@@ -1,7 +1,13 @@
 ghc-options:
   $everything: -haddock
-  llvm-hs: -optcxx -std=c++14
+  llvm-hs: -optcxx=-std=c++14 -optcxx=-lstdc++ -optcxx=-fno-rtti
 packages:
 - koriel/
 - malgo/
+extra-deps:
+  - git: https://github.com/llvm-hs/llvm-hs
+    commit: 0c8795a95a8001c424af81a05b8ffacd774e76bd
+    subdirs:
+      - llvm-hs
+      - llvm-hs-pure
 resolver: lts-18.5

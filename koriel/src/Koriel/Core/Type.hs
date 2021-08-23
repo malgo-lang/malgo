@@ -48,8 +48,6 @@ data Type
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
-makePrisms ''Type
-
 instance Binary Type
 
 instance Pretty Type where
@@ -84,3 +82,5 @@ tyVar f = \case
 
 tyVar' :: Traversal' Con Type
 tyVar' f (Con tag ts) = Con tag <$> traverseOf (traversed . tyVar) f ts
+
+makePrisms ''Type
