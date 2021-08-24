@@ -370,10 +370,10 @@ genExp (Match e cs) k
     br switchBlock
     -- 各ケースのコードとラベルを生成する
     -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-    (defs, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (fromMaybe mempty $ e ^? to C.typeOf . _SumT) k) cs
-    -- defsの先頭を取り出し、switchのデフォルトケースとする
-    -- defsが空の場合、デフォルトケースはunreachableにジャンプする
-    defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defs
+    (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (fromMaybe mempty $ e ^? to C.typeOf . _SumT) k) cs
+    -- defaultsの先頭を取り出し、switchのデフォルトケースとする
+    -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
+    defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
     switchBlock <- block
     tagOpr <- case C.typeOf e of
       SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
