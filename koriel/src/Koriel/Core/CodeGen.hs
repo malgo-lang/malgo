@@ -450,7 +450,7 @@ genLocalDef ::
   m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
-  name <- toName <$> newLocalId (idToString funName <> "_closure") ()
+  name <- toName <$> newInternalId (idToString funName <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> bug $ Unreachable "The length of internal function parameters must be 1 or more"
     (rawCapture : ps') -> do

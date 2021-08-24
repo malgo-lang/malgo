@@ -66,6 +66,6 @@ llift e = pure e
 
 def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader env m, HasUniqSupply env) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
-  f <- newLocalId ("$raw_" <> name) (map typeOf xs :-> typeOf e)
+  f <- newInternalId ("$raw_" <> name) (map typeOf xs :-> typeOf e)
   funcs . at f ?= (xs, e)
   pure f

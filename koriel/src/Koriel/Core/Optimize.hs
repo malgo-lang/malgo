@@ -173,8 +173,8 @@ optIdCast e = pure e
 -- optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
 --   pts :-> _
 --     | length pts' == length pts -> do
---       f' <- newLocalId "$cast_opt" (pts' :-> rt')
---       ps' <- traverse (newLocalId "$p") pts'
+--       f' <- newInternalId "$cast_opt" (pts' :-> rt')
+--       ps' <- traverse (newInternalId "$p") pts'
 --       v' <- runDef do
 --         ps <- zipWithM cast pts $ map (Atom . Var) ps'
 --         r <- bind (Call f ps)
