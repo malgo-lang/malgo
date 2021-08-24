@@ -24,10 +24,10 @@ rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   pure (Module modName $ makeBindGroup ds', rnState)
 
 resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => String -> m RnId
-resolveName name = newLocalId name ()
+resolveName name = newInternalId name ()
 
 resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => ModuleName -> String -> m RnId
-resolveGlobalName modName name = newGlobalId name () modName
+resolveGlobalName modName name = newExternalId name () modName
 
 lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
 lookupVarName pos name =
@@ -346,7 +346,7 @@ genToplevelEnv modName ds builtinEnv = do
       env <- get
       when (x `elem` HashMap.keys (env ^. varEnv)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      x' <- newGlobalId x () modName
+      x' <- newExternalId x () modName
       modify $ appendRnEnv varEnv [(x, With Implicit x')]
     aux (Import pos modName' All) = do
       interface <-

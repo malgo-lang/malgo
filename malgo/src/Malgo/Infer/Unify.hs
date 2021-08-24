@@ -111,9 +111,9 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar = do
-    rep <- TypeVar <$> newLocalId "r" TyRep
-    kind <- TypeVar <$> newLocalId "k" (TYPE $ UVar rep)
-    TypeVar <$> newLocalId "t" (UVar kind)
+    rep <- TypeVar <$> newInternalId "r" TyRep
+    kind <- TypeVar <$> newInternalId "k" (TYPE $ UVar rep)
+    TypeVar <$> newInternalId "t" (UVar kind)
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
@@ -162,10 +162,9 @@ toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   let tvKind = kindOf tvType
   let name = case tv ^. typeVar . idName of
-        x
-          | x == noName -> hint
-          | otherwise -> x
-  newLocalId name tvKind
+              x | x == noName -> hint
+                | otherwise -> x
+  newInternalId name tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
 defaultToBoxed x t = transformM ?? t $ \case
