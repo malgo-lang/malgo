@@ -2,28 +2,40 @@ module List = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  infixl 6 (+#);
-  (+#) = {x y -> addInt64# x y};
+  infixl 6 (+);
+  (+) : Int32 -> Int32 -> Int32;
+  (+) = {x y -> addInt32 x y};
 
-  map = { f xs ->
-    xs |> { Nil -> Nil
-          | (Cons x xs) -> Cons (f x) (map' f xs)
-          }
-  };
+  infixl 6 (-);
+  (-) : Int32 -> Int32 -> Int32;
+  (-) = {x y -> subInt32 x y};
 
-  map' = { _ Nil -> Nil
-         | f (Cons x xs) -> Cons (f x) (map f xs)
-         };
+  infix 4 (<=);
+  (<=) : Int32 -> Int32 -> Bool;
+  (<=) = {x y -> leInt32 x y};
 
-  sum = { Nil -> 0L
-        | (Cons x xs) ->
-            sum xs |> addInt64 x
+  map : (a -> b) -> List a -> List b;
+  map = { _ Nil -> Nil
+        | f (Cons x xs) -> Cons (f x) (map f xs)
         };
 
+  sum : List Int32 -> Int32;
+  sum = { Nil -> 0
+        | Cons x xs -> x + sum xs
+        };
+
+  -- [0 .. n]
+  below : Int32 -> List Int32;
+  below = { n ->
+    if (n <= 0)
+       { [0] }
+       { Cons n (below (n - 1)) }
+  };
+
   main = {
-      sum (Cons 1L (Cons 2L Nil))
-        |> toStringInt64
+      sum (below 10)
+        |> toStringInt32
         |> putStrLn
   };
 }
--- Expected: 3
+-- Expected: 55
