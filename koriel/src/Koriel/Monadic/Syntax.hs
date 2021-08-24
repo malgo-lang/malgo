@@ -4,8 +4,9 @@ import qualified Data.List as List
 import Data.Monoid
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
+import Koriel.Prelude hiding (exp)
 import Koriel.Pretty
+import qualified RIO.HashSet as HashSet
 import qualified RIO.List.Partial as Partial
 
 data Program = Program {topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)]}
@@ -22,8 +23,23 @@ data Exp
   | Alloc Value
   | Fetch Var (Maybe Int)
   | Update Var Value
-  | Cast Value Type -- for polymorphic and/or recursive types
+  | Cast Type Value -- for polymorphic and/or recursive types
   deriving stock (Show, Eq, Ord, Generic)
+
+freevars :: Exp -> HashSet Var
+freevars (Bind e1 x e2) = freevars e1 <> HashSet.delete x (freevars e2)
+freevars (Unit v) = freevars' v
+freevars (Match v cs) = freevars' v <> mconcat (map (\(pat, expr) -> HashSet.difference (freevars expr) (freevars' pat)) cs)
+freevars (Apply f xs) = HashSet.insert f $ mconcat $ map freevars' xs
+freevars (Alloc v) = freevars' v
+freevars (Fetch v _) = HashSet.singleton v
+freevars (Update var value) = HashSet.insert var $ freevars' value
+freevars (Cast _ v) = freevars' v
+
+freevars' :: Value -> HashSet Var
+freevars' (Pack _ values) = mconcat $ map freevars' values
+freevars' (Var var) = HashSet.singleton var
+freevars' _ = HashSet.empty
 
 data Value
   = Pack Tag [Value]
@@ -110,6 +126,9 @@ typeIntersect t1 t2
 class HasType a where
   typeOf :: a -> Type
 
+instance HasType Func where
+  typeOf (Func ps e) = TFun (map (view idMeta) ps) (typeOf e)
+
 instance HasType Exp where
   typeOf (Bind _ _ e) = typeOf e
   typeOf (Unit v) = typeOf v
@@ -123,7 +142,7 @@ instance HasType Exp where
     | otherwise = bug $ Unreachable "length ts must be larger than n."
   typeOf Fetch {} = bug $ Unreachable "Fetch can only be applied to TPtr."
   typeOf Update {} = TEmpty
-  typeOf (Cast _ t) = t
+  typeOf (Cast t _) = t
 
 instance HasType Value where
   typeOf (Pack tag values) = TNode tag $ map typeOf values
@@ -168,6 +187,37 @@ fetch x idx = bind "fetch" (Fetch x idx)
 update :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Var -> Value -> ExpBuilderT m Var
 update x value = bind "update" (Update x value)
 
-cast :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Value -> Type -> ExpBuilderT m Var
-cast x typ = bind "cast" (Cast x typ)
+cast :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Type -> Value -> ExpBuilderT m Var
+cast typ x = bind "cast" (Cast typ x)
 
+-- | construct a closure value
+closure :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Func -> ExpBuilderT m (Var, Func, Var)
+closure (Func params expr) = do
+  -- calculate free variables
+  let fvs = HashSet.toList $ freevars expr
+
+  -- generate lambda-lifted function
+  captureParam <- newInternalId "$capture" (TPtr TAny)
+  liftedFunc <-
+    Func (captureParam : params) <$> exp do
+      captureParam <- cast (TPtr $ TNode 0 $ map (view idMeta) fvs) (Var captureParam)
+      ifor_ fvs \i fv ->
+        ExpBuilderT $ tell $ Endo $ Bind (Fetch captureParam (Just i)) fv
+      pure expr
+  liftedFuncName <- newInternalId "$closure" (typeOf liftedFunc)
+
+  -- generate closure value
+  captureArg <- cast (TPtr TAny) . Var =<< alloc (Pack 0 (map Var fvs))
+  closureValue <- alloc (Pack 0 (Var captureArg : [Var liftedFuncName]))
+  pure (liftedFuncName, liftedFunc, closureValue)
+
+-- | destruct a closure value and apply arguments
+applyClosure :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Value -> [Value] -> ExpBuilderT m Var
+applyClosure closure arguments =
+  case typeOf closure of
+    TPtr (TNode _ [TPtr TAny, TFun (TPtr TAny : _) _]) -> do
+      closure <- unit closure
+      capture <- fetch closure (Just 0)
+      func <- fetch closure (Just 1)
+      apply func (Var capture : arguments)
+    _ -> bug $ Unreachable "invalid type"

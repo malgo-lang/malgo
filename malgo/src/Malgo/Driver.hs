@@ -11,7 +11,9 @@ import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
-import Malgo.Interface (buildInterface, loadInterface, storeInterface, dependencieList)
+import qualified Malgo.Infer.Pass as Infer
+import qualified Malgo.Infer.TcEnv as TcEnv
+import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
@@ -19,8 +21,6 @@ import Malgo.Rename.Pass (rename)
 import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
-import qualified Malgo.Infer.Pass as Infer
-import qualified Malgo.Infer.TcEnv as TcEnv
 import qualified Malgo.TypeRep.Static as Static
 import System.IO
   ( hPrint,
