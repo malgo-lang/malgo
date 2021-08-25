@@ -1,107 +1,12 @@
 module Main = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
-
-  mapList : (a -> b) -> List a -> List b;
-  mapList =
-    { _ Nil -> Nil
-    | f (Cons x xs) -> Cons (f x) (mapList f xs)
-    };
-
-  data Maybe a = Nothing | Just a;
-
-  foreign import string_cons : Char# -> String# -> String#;
-
-  stringCons : Char -> String -> String;
-  stringCons = { (Char# c) (String# str) -> String# (string_cons c str) };
-
-  listToString : List Char -> String;
-  listToString =
-    { Nil -> ""
-    | Cons c cs -> stringCons c (listToString cs)
-    };
-
-  headString : String -> Maybe Char;
-  headString = { str ->
-    if (eqString str "")
-      { Nothing }
-      { Just (atString 0L str) }
-  };
-
-  tailString : String -> String;
-  tailString = { str ->
-    if (eqString str "")
-      { str }
-      { substring str 1L (lengthString str) }
-  };
-
-  takeWhileString = { pred str ->
-    headString str
-      |> { Nothing -> str
-         | Just c ->
-             if (pred c)
-               { stringCons c (takeWhileString pred (tailString str)) }
-               { "" }
-      }
-  };
-
-  dropWhileString = { pred str ->
-    headString str
-      |> { Nothing -> str
-         | Just c ->
-             if (pred c)
-               { dropWhileString pred (tailString str) }
-               { str }
-      }
-  };
-
-  foreign import is_digit : Char# -> Int32#;
-  isDigit : Char -> Bool;
-  isDigit = { Char# x -> isTrue# (is_digit x) };
-
-  foreign import is_lower : Char# -> Int32#;
-  isLower : Char -> Bool;
-  isLower = { Char# x -> isTrue# (is_lower x) };
-
-  foreign import is_alphanum : Char# -> Int32#;
-  isAlphanum : Char -> Bool;
-  isAlphanum = { Char# x -> isTrue# (is_alphanum x) };
-
-  isWhiteSpace : Char -> Bool;
-  isWhiteSpace =
-    { Char# ' '# -> True
-    | Char# '\n'# -> True
-    | Char# '\r'# -> True
-    | Char# '\t'# -> True
-    | _ -> False
-    };
-
-  foreign import atoi : String# -> Int32#;
-
-  type Token = String;
-
-  clex : String -> List Token;
-  clex = { inp ->
-    (headString inp, tailString inp)
-    |> { (Nothing, _) -> []
-       | (Just c, cs) ->
-          if (isWhiteSpace c)
-            { clex cs }
-            { if (isDigit c)
-                { let numToken = stringCons c (takeWhileString isDigit cs);
-                  let restCs = dropWhileString isDigit cs;
-                  Cons numToken (clex restCs)
-                }
-                { Cons (listToString [c]) (clex cs) }
-            }
-       }
-  };
+  data T = A | B | C;
 
   main : { () };
   main = { 
-    let src = getContents ();
-    let tokens = clex src;
-    mapList putStrLn tokens;
+    { (A, rest) -> ()
+    | (B, rest) -> ()
+    | (C, rest) -> ()
+    };
     ()
   };
 }
