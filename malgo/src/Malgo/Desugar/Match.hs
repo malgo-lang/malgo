@@ -193,7 +193,7 @@ group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ 
     aux _ ([], _) = bug $ Unreachable "ps must be not empty"
 
 groupTuple :: PatMatrix -> [m (Core.Exp (Id Core.Type))] -> (PatMatrix, [m (Core.Exp (Id Core.Type))])
-groupTuple (PatMatrix pss) es = over _1 patMatrix $ unzip $ zipWith aux pss es
+groupTuple (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
