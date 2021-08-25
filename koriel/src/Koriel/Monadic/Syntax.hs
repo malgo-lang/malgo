@@ -10,12 +10,58 @@ import Koriel.Prelude hiding (exp)
 import Koriel.Pretty
 import qualified RIO.HashSet as HashSet
 import qualified RIO.List.Partial as Partial
+import qualified Text.PrettyPrint as Pretty
 
-data Program = Program {topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)]}
+data Program = Program {topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)], externals :: [(Var, String)]}
   deriving stock (Show, Eq, Ord, Generic)
+
+instance Pretty Program where
+  pPrint Program {..} =
+    "variables:"
+      $$ nest
+        2
+        ( sep $
+            punctuate ";" $
+              map
+                ( \(v, e) ->
+                    pPrint v <+> ":" <+> pPrint (view idMeta v)
+                      $$ pPrint v <+> "=" <+> pPrint e
+                )
+                topVars
+        )
+      $$ "functions:"
+      $$ nest
+        2
+        ( sep $
+            punctuate ";" $
+              map
+                ( \(v, f) ->
+                    pPrint v <+> ":" <+> pPrint (view idMeta v)
+                      $$ pPrint v <+> "=" <+> pPrint f
+                )
+                topFuncs
+        )
+      $$ "externals:"
+      $$ nest
+        2
+        ( sep $
+            punctuate ";" $
+              map
+                ( \(v, s) ->
+                    pPrint v <+> ":" <+> pPrint (view idMeta v)
+                      $$ pPrint v <+> "=" <+> pPrint s
+                )
+                externals
+        )
+
+definedVars :: Program -> HashSet Var
+definedVars Program {..} = HashSet.fromList (map fst topVars) <> HashSet.fromList (map fst topFuncs) <> HashSet.fromList (map fst externals)
 
 data Func = Func [Var] Exp
   deriving stock (Show, Eq, Ord, Generic)
+
+instance Pretty Func where
+  pPrint (Func ps e) = sep (punctuate "," $ map pPrint ps) <+> "->" $$ nest 2 (pPrint e)
 
 data Exp
   = Bind Exp Var Exp
@@ -27,6 +73,19 @@ data Exp
   | Update Var Value
   | Cast Type Value -- for polymorphic and/or recursive types
   deriving stock (Show, Eq, Ord, Generic)
+
+instance Pretty Exp where
+  pPrint (Bind e1 x e2) = pPrint e1 <> ";" <+> pPrint x <+> pPrint (view idMeta x) <+> "->" $$ pPrint e2
+  pPrint (Unit x) = "unit" <+> pPrint x
+  pPrint (Match x cs) = "match" <+> pPrint x <+> "{" $$ nest 2 (sep $ punctuate ";" $ map pPrintClause cs) $$ "}"
+    where
+      pPrintClause (v, e) = pPrint v <+> "->" <+> pPrint e
+  pPrint (Apply f xs) = "apply" <+> sep (pPrint f : map pPrint xs)
+  pPrint (Alloc v) = "alloc" <+> pPrint v
+  pPrint (Fetch c Nothing) = "fetch" <+> pPrint c
+  pPrint (Fetch c (Just n)) = "fetch" <+> pPrint c <+> "[" <> pPrint n <> "]"
+  pPrint (Update var value) = "update" <+> pPrint var <+> pPrint value
+  pPrint (Cast t v) = "cast" <+> pPrint t <+> pPrint v
 
 freevars :: Exp -> HashSet Var
 freevars (Bind e1 x e2) = freevars e1 <> HashSet.delete x (freevars e2)
@@ -54,6 +113,16 @@ data Value
   | Var Var
   deriving stock (Show, Eq, Ord, Generic)
 
+instance Pretty Value where
+  pPrint (Pack tag vs) = "<" <> hsep (punctuate "," $ pPrint tag : map pPrint vs) <> ">"
+  pPrint (Int32 x) = Pretty.int (fromIntegral x)
+  pPrint (Int64 x) = Pretty.int (fromIntegral x) <> "L"
+  pPrint (Float x) = pPrint x <> "F"
+  pPrint (Double x) = pPrint x
+  pPrint (Char x) = Pretty.quotes $ pPrint x
+  pPrint (String x) = Pretty.doubleQuotes $ pPrint x
+  pPrint (Var x) = pPrint x
+
 type Tag = Int
 
 type Var = Id Type
@@ -73,7 +142,19 @@ data Type
   | TEmpty -- for typeUnion and Update
   deriving stock (Show, Eq, Ord, Generic)
 
-instance Pretty Type where pPrint = text . show
+instance Pretty Type where
+  pPrint TInt32 = "Int32#"
+  pPrint TInt64 = "Int64#"
+  pPrint TFloat = "Float#"
+  pPrint TDouble = "Double#"
+  pPrint TChar = "Char#"
+  pPrint TString = "String#"
+  pPrint TAny = "Any#"
+  pPrint (TFun params ret) = parens (hsep $ punctuate "," $ map pPrint params) <+> "->" <+> pPrint ret
+  pPrint (TNode tag ts) = "<" <> hsep (punctuate "," $ pPrint tag : map pPrint ts) <> ">"
+  pPrint (TPtr ty) = "Ptr#" <> parens (pPrint ty)
+  pPrint (TUnion t1 t2) = "Union#" <> parens (pPrint t1 <> "," <+> pPrint t2)
+  pPrint TEmpty = "Empty#"
 
 typeUnion :: Type -> Type -> Type
 typeUnion TEmpty t = t
@@ -156,6 +237,29 @@ instance HasType Value where
   typeOf String {} = TString
   typeOf (Var var) = var ^. idMeta
 
+newtype ProgramBuilderT m a = ProgramBuilderT {unProgramBuilderT :: StateT (Program, HashSet Var) m a}
+  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadWriter w, MonadReader r)
+
+runProgramBuilderT :: Monad m => ProgramBuilderT m () -> m Program
+runProgramBuilderT m = fst <$> execStateT (unProgramBuilderT m) (Program {topVars = [], topFuncs = [], externals = []}, mempty)
+
+program :: Monad m => ProgramBuilderT m () -> m Program
+program = runProgramBuilderT
+
+class Monad m => MonadProgramBuilder m where
+  getDefinedVars :: m (HashSet Var)
+  preDef :: Var -> m ()
+  defVar :: Var -> Exp -> m ()
+  defFunc :: Var -> Func -> m ()
+  defExt :: Var -> String -> m ()
+
+instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
+  getDefinedVars = ProgramBuilderT $ HashSet.union <$> gets (definedVars . fst) <*> gets snd
+  preDef var = ProgramBuilderT $ modify $ second $ HashSet.insert var
+  defVar name expr = ProgramBuilderT $ modify $ first (\p -> p {topVars = topVars p <> [(name, expr)]})
+  defFunc name func = ProgramBuilderT $ modify $ first (\p -> p {topFuncs = topFuncs p <> [(name, func)]})
+  defExt name raw = ProgramBuilderT $ modify $ first (\p -> p {externals = externals p <> [(name, raw)]})
+
 newtype ExpBuilderT m a = ExpBuilderT {unExpBuilderT :: WriterT (Endo Exp) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
@@ -173,6 +277,13 @@ instance (MonadIO m, HasUniqSupply env, MonadReader env m) => MonadExpBuilder (E
     x <- newInternalId ("$" <> hint) (typeOf exp)
     ExpBuilderT $ tell $ Endo $ Bind exp x
     pure x
+
+instance MonadProgramBuilder m => MonadProgramBuilder (ExpBuilderT m) where
+  getDefinedVars = lift getDefinedVars
+  preDef var = lift $ preDef var
+  defVar name expr = lift $ defVar name expr
+  defFunc name func = lift $ defFunc name func
+  defExt name raw = lift $ defExt name raw
 
 unit :: MonadExpBuilder m => Value -> m Var
 unit value = bind "unit" (Unit value)
@@ -200,13 +311,15 @@ closure ::
   ( MonadReader env m,
     HasUniqSupply env,
     MonadIO m,
-    MonadExpBuilder m
+    MonadExpBuilder m,
+    MonadProgramBuilder m
   ) =>
   Func ->
-  m (Id Type, Func, Var)
+  m Var
 closure (Func params expr) = do
   -- calculate free variables
-  let fvs = HashSet.toList $ freevars expr
+  defined <- getDefinedVars
+  let fvs = HashSet.toList $ HashSet.difference (freevars expr) defined
 
   -- generate lambda-lifted function
   captureParam <- newInternalId "$capture" (TPtr TAny)
@@ -217,11 +330,11 @@ closure (Func params expr) = do
         ExpBuilderT $ tell $ Endo $ Bind (Fetch captureParam (Just i)) fv
       pure expr
   liftedFuncName <- newInternalId "$closure" (typeOf liftedFunc)
+  defFunc liftedFuncName liftedFunc
 
   -- generate closure value
   captureArg <- cast (TPtr TAny) . Var =<< alloc (Pack 0 (map Var fvs))
-  closureValue <- alloc (Pack 0 (Var captureArg : [Var liftedFuncName]))
-  pure (liftedFuncName, liftedFunc, closureValue)
+  alloc (Pack 0 (Var captureArg : [Var liftedFuncName]))
 
 -- | destruct a closure value and apply arguments
 applyClosure :: MonadExpBuilder m => Value -> [Value] -> m Var
