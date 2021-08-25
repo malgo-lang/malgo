@@ -289,7 +289,7 @@ pList :: Parser (Exp (Malgo 'Parse))
 pList = label "list" $
   between (symbol "[") (symbol "]") $ do
     s <- getSourcePos
-    xs <- pExp `sepBy1` pOperator ","
+    xs <- pExp `sepBy` pOperator ","
     pure $ List s xs
 
 pRecordAccess :: Parser (Exp (Malgo 'Parse))

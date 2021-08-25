@@ -3,6 +3,7 @@
 module Malgo.Refine.Pass where
 
 import Data.Kind (Constraint)
+import Koriel.Pretty
 import Malgo.Infer.TcEnv
 import Malgo.Prelude
 import Malgo.Refine.RefineEnv
@@ -56,8 +57,9 @@ refineExp (Fn x cs) = do
   let typeSpaces = map (Space.normalize . Space.space env) $ x' ^. ann . to splitTyArr . _1
   let patSpaces = map (Space.normalize . Space.buildUnion) $ List.transpose $ NonEmpty.toList $ fmap (clauseSpace env) cs'
   exhaustive <- fmap Space.normalize <$> zipWithM Space.subtract typeSpaces patSpaces
-  when (any (/= Space.Empty) exhaustive) $
-    errorOn (x ^. value) "Pattern is not exhaustive"
+  isEmptys <- traverse Space.equalEmpty exhaustive
+  when (any not isEmptys) $
+    errorOn (x ^. value) $ "Pattern is not exhaustive:" <+> pPrint exhaustive
   pure $ Fn x' cs'
   where
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps

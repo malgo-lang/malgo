@@ -1,4 +1,4 @@
-module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, buildUnion, HasSpace (..)) where
+module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
 import Control.Monad.Extra (allM)
 import Data.Foldable.Extra (anyM)
