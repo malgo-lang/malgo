@@ -18,6 +18,7 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
 import qualified Data.HashMap.Strict as HashMap
+import Data.Kind (Constraint)
 import qualified Data.List as List
 import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
@@ -70,31 +71,38 @@ makeLenses ''CodeGenEnv
 instance HasUniqSupply CodeGenEnv where
   uniqSupply = codeGenUniqSupply
 
+type MonadCodeGen m =
+  ( MonadModuleBuilder m,
+    MonadReader CodeGenEnv m,
+    MonadState PrimMap m
+  ) ::
+    Constraint
+
+runCodeGenT :: Monad m => CodeGenEnv -> StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT env m =
+  execModuleBuilderT emptyModuleBuilder $
+    runReaderT (Lazy.evalStateT m mempty) env
+
 codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
 codeGen srcPath dstPath uniqSupply modName Program {..} = do
-  llvmir <- execModuleBuilderT emptyModuleBuilder $ do
-    -- topVarsのOprMapを作成
-    let varEnv = mconcatMap ?? _topVars $ \(v, e) ->
-          HashMap.singleton v $
-            ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v)
-    -- topFuncsのOprMapを作成
-    let funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
-          HashMap.singleton f $
-            ConstantOperand $
-              C.GlobalReference
-                (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
-                (toName f)
-    runReaderT
-      ?? CodeGenEnv {_codeGenUniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv}
-      $ Lazy.evalStateT
-        ?? (mempty :: PrimMap)
-        $ do
-          traverse_ (uncurry genVar) _topVars
-          traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
-          genLoadModule modName $ initTopVars _topVars
+  llvmir <- runCodeGenT CodeGenEnv {_codeGenUniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv} do
+    traverse_ (uncurry genVar) _topVars
+    traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
+    genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
   liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
+    -- topVarsのOprMapを作成
+    varEnv = mconcatMap ?? _topVars $ \(v, e) ->
+      HashMap.singleton v $
+        ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v)
+    -- topFuncsのOprMapを作成
+    funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
+      HashMap.singleton f $
+        ConstantOperand $
+          C.GlobalReference
+            (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
+            (toName f)
     initTopVars [] = retVoid
     initTopVars ((name, expr) : xs) = do
       view (globalValueMap . at name) >>= \case
@@ -144,7 +152,7 @@ sizeofType (PtrT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
-findVar :: (MonadReader CodeGenEnv m, MonadIRBuilder m) => Id C.Type -> m Operand
+findVar :: (MonadCodeGen m, MonadIRBuilder m) => Id C.Type -> m Operand
 findVar x =
   view (valueMap . at x) >>= \case
     Just opr -> pure opr
@@ -153,7 +161,7 @@ findVar x =
         Just opr -> load opr 0 -- global variable is a pointer to the actual value
         Nothing -> error $ show $ pPrint x <> " is not found"
 
-findFun :: (MonadReader CodeGenEnv m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
+findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
 findFun x = do
   view (funcMap . at x) >>= \case
     Just opr -> pure opr
@@ -164,14 +172,14 @@ findFun x = do
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
-findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => Name -> [LT.Type] -> LT.Type -> m Operand
+findExt :: (MonadCodeGen m) => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
   use (at x) >>= \case
     Just x -> pure x
     Nothing -> (at x <?=) =<< extern x ps r
 
 mallocBytes ::
-  (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) =>
+  (MonadCodeGen m, MonadIRBuilder m) =>
   Operand ->
   Maybe LT.Type ->
   m Operand
@@ -182,7 +190,7 @@ mallocBytes bytesOpr maybeType = do
     Just t -> bitcast ptrOpr t
     Nothing -> pure ptrOpr
 
-mallocType :: (MonadState PrimMap m, MonadModuleBuilder m, MonadIRBuilder m) => LT.Type -> m Operand
+mallocType :: (MonadCodeGen m, MonadIRBuilder m) => LT.Type -> m Operand
 mallocType ty = mallocBytes (ConstantOperand $ sizeof ty) (Just $ ptr ty)
 
 sizeof :: LT.Type -> C.Constant
@@ -421,7 +429,7 @@ genCase scrutinee cs k = \case
     pure $ Right (C.Int 8 tag, label)
 
 genAtom ::
-  (MonadReader CodeGenEnv m, MonadModuleBuilder m, MonadIO m, MonadIRBuilder m) =>
+  (MonadCodeGen m, MonadIO m, MonadIRBuilder m) =>
   Atom (Id C.Type) ->
   m Operand
 genAtom (Var x) = findVar x
@@ -438,10 +446,8 @@ genAtom (Unboxed (Bool True)) = pure $ int8 1
 genAtom (Unboxed (Bool False)) = pure $ int8 0
 
 genLocalDef ::
-  ( MonadReader CodeGenEnv m,
-    MonadModuleBuilder m,
+  ( MonadCodeGen m,
     MonadIRBuilder m,
-    MonadState PrimMap m,
     MonadFail m,
     MonadFix m,
     MonadIO m
