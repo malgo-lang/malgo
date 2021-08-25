@@ -1,0 +1,17 @@
+module TuplePattern = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  data T = A | B | C;
+
+  main : { () };
+  main = { 
+    (A, B)
+      |> { (A, rest) -> printString "A"
+         | (B, rest) -> ()
+         | (C, rest) -> ()
+         }
+  };
+}
+
+-- Expected: A
