@@ -1,3 +1,5 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Koriel.Monadic.Syntax where
 
 import qualified Data.List as List
@@ -163,35 +165,45 @@ runExpBuilderT m = uncurry (flip appEndo) <$> runWriterT (unExpBuilderT m)
 exp :: Functor f => ExpBuilderT f Exp -> f Exp
 exp = runExpBuilderT
 
-bind :: (MonadIO m, HasUniqSupply env, MonadReader env m) => String -> Exp -> ExpBuilderT m Var
-bind hint exp = do
-  x <- newInternalId ("$" <> hint) (typeOf exp)
-  ExpBuilderT $ tell $ Endo $ Bind exp x
-  pure x
+class Monad m => MonadExpBuilder m where
+  bind :: String -> Exp -> m Var
 
-unit :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Value -> ExpBuilderT m Var
+instance (MonadIO m, HasUniqSupply env, MonadReader env m) => MonadExpBuilder (ExpBuilderT m) where
+  bind hint exp = do
+    x <- newInternalId ("$" <> hint) (typeOf exp)
+    ExpBuilderT $ tell $ Endo $ Bind exp x
+    pure x
+
+unit :: MonadExpBuilder m => Value -> m Var
 unit value = bind "unit" (Unit value)
 
-match :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Value -> [(Value, Exp)] -> ExpBuilderT m Var
+match :: MonadExpBuilder m => Value -> [(Value, Exp)] -> m Var
 match x cs = bind "match" (Match x cs)
 
-apply :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Var -> [Value] -> ExpBuilderT m Var
+apply :: MonadExpBuilder m => Var -> [Value] -> m Var
 apply f xs = bind "apply" (Apply f xs)
 
-alloc :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Value -> ExpBuilderT m Var
+alloc :: MonadExpBuilder m => Value -> m Var
 alloc init = bind "alloc" (Alloc init)
 
-fetch :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Var -> Maybe Int -> ExpBuilderT m Var
+fetch :: MonadExpBuilder m => Var -> Maybe Int -> m Var
 fetch x idx = bind "fetch" (Fetch x idx)
 
-update :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Var -> Value -> ExpBuilderT m Var
+update :: MonadExpBuilder m => Var -> Value -> m Var
 update x value = bind "update" (Update x value)
 
-cast :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Type -> Value -> ExpBuilderT m Var
+cast :: MonadExpBuilder m => Type -> Value -> m Var
 cast typ x = bind "cast" (Cast typ x)
 
 -- | construct a closure value
-closure :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Func -> ExpBuilderT m (Var, Func, Var)
+closure ::
+  ( MonadReader env m,
+    HasUniqSupply env,
+    MonadIO m,
+    MonadExpBuilder m
+  ) =>
+  Func ->
+  m (Id Type, Func, Var)
 closure (Func params expr) = do
   -- calculate free variables
   let fvs = HashSet.toList $ freevars expr
@@ -212,7 +224,7 @@ closure (Func params expr) = do
   pure (liftedFuncName, liftedFunc, closureValue)
 
 -- | destruct a closure value and apply arguments
-applyClosure :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Value -> [Value] -> ExpBuilderT m Var
+applyClosure :: MonadExpBuilder m => Value -> [Value] -> m Var
 applyClosure closure arguments =
   case typeOf closure of
     TPtr (TNode _ [TPtr TAny, TFun (TPtr TAny : _) _]) -> do
