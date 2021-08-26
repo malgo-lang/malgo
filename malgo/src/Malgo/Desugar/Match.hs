@@ -161,22 +161,28 @@ partition ::
   ( (PatMatrix, PatMatrix),
     ([m (Core.Exp (Id Core.Type))], [m (Core.Exp (Id Core.Type))])
   )
-partition (splitCol -> (Just heads@(VarP {} : _), PatMatrix tails)) es =
-  let (heads', heads'') = span (has _VarP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
-partition (splitCol -> (Just heads@(ConP {} : _), PatMatrix tails)) es =
-  let (heads', heads'') = span (has _ConP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
-partition (splitCol -> (Just heads@(TupleP {} : _), PatMatrix tails)) es =
-  let (heads', heads'') = span (has _TupleP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
-partition (splitCol -> (Just heads@(RecordP {} : _), PatMatrix tails)) es =
-  let (heads', heads'') = span (has _RecordP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
-partition (splitCol -> (Just heads@(UnboxedP {} : _), PatMatrix tails)) es =
-  let (heads', heads'') = span (has _UnboxedP) heads
-   in (bimap (PatMatrix . (heads' :)) (PatMatrix . (heads'' :)) $ unzip $ map (List.splitAt (length heads')) tails, List.splitAt (length heads') es)
+partition (splitCol -> (Just heads@(VarP {} : _), PatMatrix tails)) es = partitionOn _VarP heads tails es
+partition (splitCol -> (Just heads@(ConP {} : _), PatMatrix tails)) es = partitionOn _ConP heads tails es
+partition (splitCol -> (Just heads@(TupleP {} : _), PatMatrix tails)) es = partitionOn _TupleP heads tails es
+partition (splitCol -> (Just heads@(RecordP {} : _), PatMatrix tails)) es = partitionOn _RecordP heads tails es
+partition (splitCol -> (Just heads@(UnboxedP {} : _), PatMatrix tails)) es = partitionOn _UnboxedP heads tails es
 partition _ _ = bug $ Unreachable "All patterns are covered"
+
+partitionOn ::
+  Prism' (Pat (Malgo 'Refine)) b ->
+  [Pat (Malgo 'Refine)] ->
+  [[Pat (Malgo 'Refine)]] ->
+  [a] ->
+  ((PatMatrix, PatMatrix), ([a], [a]))
+partitionOn prism heads tails es =
+  ( (PatMatrix $ onHeads : onTails, PatMatrix $ otherHeads : otherTails),
+    List.splitAt (length onHeads) es
+  )
+  where
+    -- onHeads : onTails => pattern that row starts with prism
+    -- otherHeads : otherTails => pattern row that starts without prism
+    (onHeads, otherHeads) = span (has prism) heads
+    (onTails, otherTails) = unzip $ map (List.splitAt (length onHeads)) tails
 
 -- コンストラクタgconの引数部のパターンpsを展開したパターン行列を生成する
 group ::
