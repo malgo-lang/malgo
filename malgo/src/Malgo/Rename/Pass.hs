@@ -292,7 +292,9 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
               <+> brackets (pPrint fix2)
               <+> "in the same infix expression"
           )
-  | associate_right = pure $ OpApp (pos1, fix1) op1 e11 (OpApp (pos2, fix2) op2 e12 e2)
+  | associate_right = do
+    e' <- mkOpApp pos2 fix2 op2 e12 e2
+    pure $ OpApp (pos1, fix1) op1 e11 e'
   where
     (nofix_error, associate_right) = compareFixity fix1 fix2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2

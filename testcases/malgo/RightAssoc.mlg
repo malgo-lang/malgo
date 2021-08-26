@@ -7,19 +7,22 @@ module RightAssoc = {
   (<|>) = Cons;
 
   f = { n ->
+    -- fixed: https://github.com/malgo-lang/malgo/commit/b499a897271ea32ffe55d5e15aaa0e3138479f58
+
     -- slow
-    (True, { 1 })
-    <|> ((True, { 2 })
-         <|> ((True, { 3 })
-              <|> ((True, { 4 })
-                   <|> Nil)))
+    let x = (True, { 1 })
+             <|> ((True, { 2 })
+                  <|> ((True, { 3 })
+                       <|> ((True, { 4 })
+                             <|> Nil)));
 
     -- fast, but type error on (True, { 3 })
-    -- (True, { 1 })
-    -- <|> (True, { 2 })
-    --      <|> (True, { 3 })
-    --           <|> (True, { 4 })
-    --                <|> Nil
+    let y = (True, { 1 })
+             <|> (True, { 2 })
+                  <|> (True, { 3 })
+                       <|> (True, { 4 })
+                            <|> Nil;
+    y
 
     -- fast
     -- (True, { 1 })
