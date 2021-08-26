@@ -306,20 +306,20 @@ runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
 
 let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
-  x <- newLocalId "$let" otype
+  x <- newInternalId "$let" otype
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
   pure (Var x)
 
 destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
 destruct val con@(Con _ ts) = do
-  vs <- traverse (newLocalId "$p") ts
+  vs <- traverse (newInternalId "$p") ts
   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
   pure $ map Var vs
 
 bind :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
-  x <- newLocalId "$d" (typeOf v)
+  x <- newInternalId "$d" (typeOf v)
   DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
   pure (Var x)
 
@@ -328,16 +328,16 @@ cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
     v <- bind e
-    x <- newLocalId "$cast" ty
+    x <- newInternalId "$cast" ty
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
 mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => ModuleName -> [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
 mainFunc (ModuleName mainModName) depList e = do
-  mainFuncId <- newId "main" ([] :-> Int32T) $ External (ModuleName "Builtin")
+  mainFuncId <- newExternalId "main" ([] :-> Int32T) (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
     _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
-    traverse_ (\(ModuleName modName) -> 
+    traverse_ (\(ModuleName modName) ->
       if modName == mainModName
          then bind $ RawCall ("koriel_load_" <> modName) ([] :-> VoidT) []
          else bind $ ExtCall ("koriel_load_" <> modName) ([] :-> VoidT) []) depList

@@ -11,7 +11,7 @@ import Data.Maybe (fromJust)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
-import Koriel.Id hiding (newGlobalId, newId)
+import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
@@ -129,7 +129,7 @@ dsForeign (x@(With _ (_, primName)), name, _) = do
   let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
-  params <- traverse (newLocalId "$p") paramTypes'
+  params <- traverse (newInternalId "$p") paramTypes'
   fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
   nameEnv . at name ?= name'
   pure (FunDef name' fun)
@@ -151,7 +151,7 @@ dsDataDef (_, name, _, cons) =
 
     -- generate constructor code
     conName' <- newCoreId conName $ buildConType paramTypes' retType'
-    ps <- traverse (newLocalId "$p") paramTypes'
+    ps <- traverse (newInternalId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
       packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ conName ^. toText) paramTypes') $ map C.Var ps)
@@ -203,8 +203,8 @@ dsExp (G.Var x (WithPrefix (With _ name))) = do
         -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
         case C.typeOf name' of
           pts :-> _ -> do
-            clsId <- newLocalId "$gblcls" (C.typeOf name')
-            ps <- traverse (newLocalId "$p") pts
+            clsId <- newInternalId "$gblcls" (C.typeOf name')
+            ps <- traverse (newInternalId "$p") pts
             pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
           _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
@@ -231,7 +231,7 @@ dsExp (G.Fn x (Clause _ [] e :| _)) = do
     fun <- let_ typ $ Fun [] e'
     pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
-  ps' <- traverse (\p -> newLocalId "$p" =<< dsType (GT.typeOf p)) ps
+  ps' <- traverse (\p -> newInternalId "$p" =<< dsType (GT.typeOf p)) ps
   typ <- dsType (GT.typeOf e)
   -- destruct Clauses
   (pss, es) <-
@@ -243,7 +243,7 @@ dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
         cs
   body <- match ps' (patMatrix $ toList pss) (toList es) (Error typ)
   obj <- curryFun ps' body
-  v <- newLocalId "$fun" =<< dsType (x ^. GT.withType)
+  v <- newInternalId "$fun" =<< dsType (x ^. GT.withType)
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
@@ -270,7 +270,7 @@ dsExp (G.Force _ e) = runDef $ do
 dsExp (G.RecordAccess x label) = runDef $ do
   GT.TyArr (GT.TyRecord recordType) _ <- pure $ x ^. GT.withType
   kts <- Map.toList <$> traverse dsType recordType
-  p <- newLocalId "$p" =<< dsType (GT.TyRecord recordType)
+  p <- newInternalId "$p" =<< dsType (GT.TyRecord recordType)
   obj <-
     Fun [p] <$> runDef do
       let con = C.Con C.Tuple $ map snd kts
@@ -289,7 +289,7 @@ dsStmts (NoBind _ e :| s : ss) = runDef $ do
   dsStmts (s :| ss)
 dsStmts (G.Let _ v e :| s : ss) = do
   e' <- dsExp e
-  v' <- newLocalId ("$let_" <> idToString v) (C.typeOf e')
+  v' <- newInternalId ("$let_" <> idToString v) (C.typeOf e')
   nameEnv . at v ?= v'
   ss' <- dsStmts (s :| ss)
   pure $ Match e' (Bind v' ss' :| [])
@@ -324,7 +324,7 @@ curryFun [] e = do
         pure $ C.Call f []
       pure ([], body)
     pts :-> _ -> do
-      ps <- traverse (newLocalId "$eta") pts
+      ps <- traverse (newInternalId "$eta") pts
       body <- runDef do
         f <- bind e
         pure $ C.Call f (map C.Var ps)
@@ -334,7 +334,7 @@ curryFun ps e = curryFun' ps []
   where
     curryFun' [] _ = bug $ Unreachable "length ps >= 1"
     curryFun' [x] as = do
-      fun <- newLocalId "$curry" (C.typeOf $ Fun ps e)
+      fun <- newInternalId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
       pure ([x], C.Let [C.LocalDef fun $ Fun ps e] body)
     curryFun' (x : xs) as = do

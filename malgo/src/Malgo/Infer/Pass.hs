@@ -233,7 +233,7 @@ tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     TyCon con <- lookupType pos name
 
-    params' <- traverse (\p -> newLocalId (idToString p) (TYPE $ Rep BoxedRep)) params
+    params' <- traverse (\p -> newInternalId (idToString p) (TYPE $ Rep BoxedRep)) params
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
 
     typ' <- transType typ
@@ -288,7 +288,7 @@ tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, Has
 tcClasses ds =
   for ds \(pos, name, params, synType) -> do
     TyCon con <- lookupType pos name
-    params' <- traverse (\p -> newLocalId (idToString p) (TYPE $ Rep BoxedRep)) params
+    params' <- traverse (\p -> newInternalId (idToString p) (TYPE $ Rep BoxedRep)) params
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     typeRep <- transType synType
     abbrEnv . at con .= Just (params', typeRep)
@@ -596,7 +596,7 @@ transType (S.TyApp pos t ts) = do
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
-      rep <- UVar . TypeVar <$> newLocalId "r" TyRep
+      rep <- UVar . TypeVar <$> newInternalId "r" TyRep
       solve [With pos $ kindOf t' :~ TYPE rep]
       pure $ TyPtr t'
     _ -> do

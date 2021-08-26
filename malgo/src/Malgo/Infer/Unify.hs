@@ -173,7 +173,7 @@ toBound x tv hint = do
   let name = case tv ^. typeVar . idName of
               x | x == noName -> hint
                 | otherwise -> x
-  newLocalId name tvKind
+  newInternalId name tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
 defaultToBoxed x t = transformM ?? t $ \case
