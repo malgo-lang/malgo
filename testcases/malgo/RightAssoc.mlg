@@ -1,0 +1,39 @@
+module RightAssoc = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  infixr 2 (<|>);
+  (<|>) : a -> List a -> List a;
+  (<|>) = Cons;
+
+  f = { n ->
+    -- slow
+    (True, { 1 })
+    <|> ((True, { 2 })
+         <|> ((True, { 3 })
+              <|> ((True, { 4 })
+                   <|> Nil)))
+
+    -- fast, but type error on (True, { 3 })
+    -- (True, { 1 })
+    -- <|> (True, { 2 })
+    --      <|> (True, { 3 })
+    --           <|> (True, { 4 })
+    --                <|> Nil
+
+    -- fast
+    -- (True, { 1 })
+    -- <|> (True, { 2 })
+    --      <|> ((True, { 3 })
+    --           <|> (True, { 4 })
+    --                <|> Nil)
+  };
+
+  main : { () };
+  main = { 
+    let x = f 4;
+    printString "OK"
+  };
+}
+
+-- Expected: OK

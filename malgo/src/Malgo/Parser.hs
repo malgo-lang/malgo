@@ -144,16 +144,19 @@ pScDef =
 -- Expressions
 
 pExp :: Parser (Exp (Malgo 'Parse))
-pExp =
-  try pAnn
-    <|> pOpApp
-
-pAnn :: Parser (Exp (Malgo 'Parse))
-pAnn = do
+pExp = do
+  -- The code below is very slow.
+  -- try pAnn <|> pOpApp
   s <- getSourcePos
   e <- pOpApp
-  void $ pOperator ":"
-  Ann s e <$> pType
+  try (fmap (Ann s e) (pOperator ":" >> pType)) <|> pure e
+
+-- pAnn :: Parser (Exp (Malgo 'Parse))
+-- pAnn = do
+--   s <- getSourcePos
+--   e <- pOpApp
+--   void $ pOperator ":"
+--   Ann s e <$> pType
 
 pBoxed :: Parser (Literal Boxed)
 pBoxed =
