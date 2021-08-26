@@ -16,6 +16,12 @@ const MalgoUnit malgo_unit = { 0, {} };
 // Cast
 void *malgo_unsafe_cast(void *x) { return x; }
 
+// Panic
+void* *malgo_panic(char* message) {
+  fprintf(stderr, message);
+  exit(1);
+}
+
 // Arithmetic operators
 int32_t malgo_add_int32_t(int32_t x, int32_t y) { return x + y; }
 int32_t malgo_sub_int32_t(int32_t x, int32_t y) { return x - y; }

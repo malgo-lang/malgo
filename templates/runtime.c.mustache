@@ -16,6 +16,13 @@ const MalgoUnit malgo_unit = { 0, {} };
 // Cast
 void *malgo_unsafe_cast(void *x) { return x; }
 
+// Panic
+void* *malgo_panic(char* message) {
+  fprintf(stderr, message);
+  exit(1);
+  return NULL;
+}
+
 // Arithmetic operators
 {{#magmaType}}
 {{cType}} malgo_add_{{cType}}({{cType}} x, {{cType}} y) { return x + y; }
