@@ -109,11 +109,13 @@ dsScDef (With typ _, name, expr) = do
   where
     dsVarDef name expr = do
       name' <- lookupName name
-      expr' <- dsExp expr
+      typ' <- dsType typ
+      expr' <- runDef $ fmap Atom $ cast typ' =<< dsExp expr
       pure [VarDef name' expr']
     dsFunDef name expr = do
       name' <- lookupName name
-      fun <- curryFun [] =<< dsExp expr
+      typ' <- dsType typ
+      fun <- curryFun [] =<< runDef (fmap Atom (cast typ' =<< dsExp expr))
       pure [FunDef name' fun]
 
 -- TODO: Malgoのforeignでvoid型をあつかえるようにする #13

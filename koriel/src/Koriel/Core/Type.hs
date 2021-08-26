@@ -53,7 +53,7 @@ makePrisms ''Type
 instance Binary Type
 
 instance Pretty Type where
-  pPrint (a :-> b) = brackets (sep $ punctuate "," $ map pPrint a) <+> "->" <+> pPrint b
+  pPrint (a :-> b) = sep [brackets (sep $ punctuate "," $ map pPrint a), "->", pPrint b]
   pPrint Int32T = "Int32#"
   pPrint Int64T = "Int64#"
   pPrint FloatT = "Float#"

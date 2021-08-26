@@ -41,8 +41,10 @@ match x y
   | otherwise =
     errorDoc $
       "type mismatch:"
-        $$ pPrint x <> ":" <> pPrint (typeOf x)
-        $$ pPrint y <> ":" <> pPrint (typeOf y)
+        $$ pPrint x
+        $$ nest 2 (":" <> pPrint (typeOf x))
+        $$ pPrint y
+        $$ nest 2 (":" <> pPrint (typeOf y))
 
 lintExp :: (MonadReader [Id a] m, HasType a, Eq a, Pretty a) => Exp (Id a) -> m ()
 lintExp (Atom x) = lintAtom x
