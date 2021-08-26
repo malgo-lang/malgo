@@ -18,8 +18,9 @@ void *malgo_unsafe_cast(void *x) { return x; }
 
 // Panic
 void* *malgo_panic(char* message) {
-  fprintf(stderr, message);
+  fprintf(stderr, "%s", message);
   exit(1);
+  return NULL;
 }
 
 // Arithmetic operators
