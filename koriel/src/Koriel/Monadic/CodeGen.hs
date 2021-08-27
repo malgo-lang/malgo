@@ -4,5 +4,5 @@ import Koriel.Monadic.Syntax
 import Koriel.Prelude hiding (exp)
 
 -- | generate a JavaScript program from Koriel
-codeGen :: Program -> IO ()
-codeGen Program {..} = undefined
+codeGen :: Module -> IO ()
+codeGen Module {..} = undefined

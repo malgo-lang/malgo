@@ -7,8 +7,8 @@ import Koriel.MonadUniq
 import Koriel.Monadic.Syntax
 import Koriel.Prelude hiding (exp)
 
-prelude :: (MonadIO m, HasUniqSupply env, MonadReader env m) => m Program
-prelude = program do
+prelude :: (MonadIO m, HasUniqSupply env, MonadReader env m) => m Module
+prelude = program (ModuleName "Prelude") do
   print_string_id <- newExternalId "print_string" (TFun [TString] (TNode [(0, [])])) (ModuleName "Prelude")
   defExt print_string_id "print_string"
   printStringId <- newExternalId "printString" (TFun [TString] (TNode [(0, [])])) (ModuleName "Prelude")

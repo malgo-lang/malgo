@@ -10,12 +10,13 @@ import Koriel.Pretty
 import qualified RIO.HashSet as HashSet
 import qualified Text.PrettyPrint as Pretty
 
-data Program = Program {topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)], externals :: [(Var, String)]}
+data Module = Module {modName :: ModuleName, topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)], externals :: [(Var, String)]}
   deriving stock (Show, Eq, Ord, Generic)
 
-instance Pretty Program where
-  pPrint Program {..} =
-    "variables:"
+instance Pretty Module where
+  pPrint Module {..} =
+    "module" <+> pPrint modName
+      $$ "variables:"
       $$ nest 2 (pPrintDecls topVars)
       $$ "functions:"
       $$ nest 2 (pPrintDecls topFuncs)
@@ -27,8 +28,8 @@ instance Pretty Program where
         pPrint name <+> ":" <+> pPrint (view idMeta name)
           $$ pPrint name <+> "=" <+> pPrint value
 
-definedVars :: Program -> HashSet Var
-definedVars Program {..} = HashSet.fromList (map fst topVars) <> HashSet.fromList (map fst topFuncs) <> HashSet.fromList (map fst externals)
+definedVars :: Module -> HashSet Var
+definedVars Module {..} = HashSet.fromList (map fst topVars) <> HashSet.fromList (map fst topFuncs) <> HashSet.fromList (map fst externals)
 
 data Func = Func [TyVar] [Var] Exp
   deriving stock (Show, Eq, Ord, Generic)
@@ -190,10 +191,14 @@ instance HasType Exp where
       TForall vs t -> applySubst (zip vs ts) t
       _ -> bug $ Unreachable "TyApply can only be applied to TForall."
   typeOf (Fold t _) = t
-  typeOf (Unfold (TRec x t) _) = applySubst [(x, t)] t
+  typeOf (Unfold (TRec x t) _) = unfoldType t
   typeOf (Unfold _ _) = bug $ Unreachable "Unfold can only be applied to TRec."
   typeOf (Exit t) = t
   typeOf (Catch e1 _) = typeOf e1
+
+unfoldType :: Type -> Type
+unfoldType (TRec x t) = applySubst [(x, t)] t
+unfoldType t = t
 
 applySubst :: Foldable t => t (TyVar, Type) -> Type -> Type
 applySubst xs t = foldr applySubst1 t xs
@@ -222,28 +227,28 @@ instance HasType Value where
   typeOf String {} = TString
   typeOf (Var var) = var ^. idMeta
 
-newtype ProgramBuilderT m a = ProgramBuilderT {unProgramBuilderT :: StateT (Program, HashSet Var) m a}
+newtype ModuleBuilderT m a = ModuleBuilderT {unModuleBuilderT :: StateT (Module, HashSet Var) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadWriter w, MonadReader r)
 
-runProgramBuilderT :: Monad m => ProgramBuilderT m () -> m Program
-runProgramBuilderT m = fst <$> execStateT (unProgramBuilderT m) (Program {topVars = [], topFuncs = [], externals = []}, mempty)
+runModuleBuilderT :: Monad m => ModuleName -> ModuleBuilderT m () -> m Module
+runModuleBuilderT modName m = fst <$> execStateT (unModuleBuilderT m) (Module {modName = modName, topVars = [], topFuncs = [], externals = []}, mempty)
 
-program :: Monad m => ProgramBuilderT m () -> m Program
-program = runProgramBuilderT
+program :: Monad m => ModuleName ->ModuleBuilderT m () -> m Module
+program = runModuleBuilderT
 
-class Monad m => MonadProgramBuilder m where
+class Monad m => MonadModuleBuilder m where
   getDefinedVars :: m (HashSet Var)
   preDef :: Var -> m ()
   defVar :: Var -> Exp -> m ()
   defFunc :: Var -> Func -> m ()
   defExt :: Var -> String -> m ()
 
-instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
-  getDefinedVars = ProgramBuilderT $ HashSet.union <$> gets (definedVars . fst) <*> gets snd
-  preDef var = ProgramBuilderT $ modify $ second $ HashSet.insert var
-  defVar name expr = ProgramBuilderT $ modify $ first (\p -> p {topVars = topVars p <> [(name, expr)]})
-  defFunc name func = ProgramBuilderT $ modify $ first (\p -> p {topFuncs = topFuncs p <> [(name, func)]})
-  defExt name raw = ProgramBuilderT $ modify $ first (\p -> p {externals = externals p <> [(name, raw)]})
+instance Monad m => MonadModuleBuilder (ModuleBuilderT m) where
+  getDefinedVars = ModuleBuilderT $ HashSet.union <$> gets (definedVars . fst) <*> gets snd
+  preDef var = ModuleBuilderT $ modify $ second $ HashSet.insert var
+  defVar name expr = ModuleBuilderT $ modify $ first (\p -> p {topVars = topVars p <> [(name, expr)]})
+  defFunc name func = ModuleBuilderT $ modify $ first (\p -> p {topFuncs = topFuncs p <> [(name, func)]})
+  defExt name raw = ModuleBuilderT $ modify $ first (\p -> p {externals = externals p <> [(name, raw)]})
 
 newtype ExpBuilderT m a = ExpBuilderT {unExpBuilderT :: WriterT (Endo Exp) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
@@ -263,7 +268,7 @@ instance (MonadIO m, HasUniqSupply env, MonadReader env m) => MonadExpBuilder (E
     ExpBuilderT $ tell $ Endo $ Bind exp x
     pure x
 
-instance MonadProgramBuilder m => MonadProgramBuilder (ExpBuilderT m) where
+instance MonadModuleBuilder m => MonadModuleBuilder (ExpBuilderT m) where
   getDefinedVars = lift getDefinedVars
   preDef var = lift $ preDef var
   defVar name expr = lift $ defVar name expr
