@@ -2,14 +2,12 @@
 
 module Koriel.Monadic.Syntax where
 
-import qualified Data.List as List
 import Data.Monoid
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude hiding (exp)
+import Koriel.Prelude hiding (Fold, exp)
 import Koriel.Pretty
 import qualified RIO.HashSet as HashSet
-import qualified RIO.List.Partial as Partial
 import qualified Text.PrettyPrint as Pretty
 
 data Program = Program {topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)], externals :: [(Var, String)]}
@@ -18,60 +16,55 @@ data Program = Program {topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)], exte
 instance Pretty Program where
   pPrint Program {..} =
     "variables:"
-      $$ nest
-        2
-        ( sep $
-            punctuate ";" $
-              map
-                ( \(v, e) ->
-                    pPrint v <+> ":" <+> pPrint (view idMeta v)
-                      $$ pPrint v <+> "=" <+> pPrint e
-                )
-                topVars
-        )
+      $$ nest 2 (pPrintDecls topVars)
       $$ "functions:"
-      $$ nest
-        2
-        ( sep $
-            punctuate ";" $
-              map
-                ( \(v, f) ->
-                    pPrint v <+> ":" <+> pPrint (view idMeta v)
-                      $$ pPrint v <+> "=" <+> pPrint f
-                )
-                topFuncs
-        )
+      $$ nest 2 (pPrintDecls topFuncs)
       $$ "externals:"
-      $$ nest
-        2
-        ( sep $
-            punctuate ";" $
-              map
-                ( \(v, s) ->
-                    pPrint v <+> ":" <+> pPrint (view idMeta v)
-                      $$ pPrint v <+> "=" <+> pPrint s
-                )
-                externals
-        )
+      $$ nest 2 (pPrintDecls externals)
+    where
+      pPrintDecls nvs = sep $ punctuate ";" $ map (uncurry pPrintDecl) nvs
+      pPrintDecl name value =
+        pPrint name <+> ":" <+> pPrint (view idMeta name)
+          $$ pPrint name <+> "=" <+> pPrint value
 
 definedVars :: Program -> HashSet Var
 definedVars Program {..} = HashSet.fromList (map fst topVars) <> HashSet.fromList (map fst topFuncs) <> HashSet.fromList (map fst externals)
 
-data Func = Func [Var] Exp
+data Func = Func [TyVar] [Var] Exp
   deriving stock (Show, Eq, Ord, Generic)
 
 instance Pretty Func where
-  pPrint (Func ps e) = sep (punctuate "," $ map pPrint ps) <+> "->" $$ nest 2 (pPrint e)
+  pPrint (Func ts ps e) =
+    sep
+      [ "Λ" <+> sep (punctuate "," $ map pPrint ts) <> ".",
+        "λ" <+> sep (punctuate "," $ map pPrint ps) <> ".",
+        nest 2 $ pPrint e
+      ]
+
+data ApplyMode
+  = -- | closure
+    Indirect
+  | -- | known function
+    Direct
+  deriving stock (Show, Eq, Ord, Generic)
 
 data Exp
   = Bind Exp Var Exp
   | Unit Value
   | Match Value [(Value, Exp)]
-  | Apply Var [Value]
+  | Apply ApplyMode Var [Value]
   | Alloc Value
-  | Fetch Var (Maybe Int)
+  | Fetch Var (Maybe (Tag, Int))
   | Update Var Value
-  | Cast Type Value -- for polymorphic and/or recursive types
+  | Closure Func
+  | -- type operator
+    TyAbs [TyVar] Exp
+  | TyApply Var [Type]
+  | Fold Type Value
+  | Unfold Type Value
+  | -- static exception
+    Exit Type -- go to next handler
+  | Catch Exp Exp -- try the first expression and catch `exit` with the second expression
   deriving stock (Show, Eq, Ord, Generic)
 
 instance Pretty Exp where
@@ -80,30 +73,43 @@ instance Pretty Exp where
   pPrint (Match x cs) = "match" <+> pPrint x <+> "{" $$ nest 2 (sep $ punctuate ";" $ map pPrintClause cs) $$ "}"
     where
       pPrintClause (v, e) = pPrint v <+> "->" <+> pPrint e
-  pPrint (Apply f xs) = "apply" <+> sep (pPrint f : map pPrint xs)
+  pPrint (Apply Indirect f xs) = "apply" <+> sep (pPrint f : map pPrint xs)
+  pPrint (Apply Direct f xs) = "apply*" <+> sep (pPrint f : map pPrint xs)
   pPrint (Alloc v) = "alloc" <+> pPrint v
   pPrint (Fetch c Nothing) = "fetch" <+> pPrint c
   pPrint (Fetch c (Just n)) = "fetch" <+> pPrint c <+> "[" <> pPrint n <> "]"
   pPrint (Update var value) = "update" <+> pPrint var <+> pPrint value
-  pPrint (Cast t v) = "cast" <+> pPrint t <+> pPrint v
+  pPrint (Closure func) = "closure" <+> parens (pPrint func)
+  pPrint (TyAbs ts e) = "Λ" <+> sep (punctuate "," $ map pPrint ts) <> "." <+> pPrint e
+  pPrint (TyApply x vs) = "tyapply" <+> sep (pPrint x : map pPrint vs)
+  pPrint (Fold t x) = "fold" <+> pPrint t <+> pPrint x
+  pPrint (Unfold t x) = "unfold" <+> pPrint t <+> pPrint x
+  pPrint (Exit t) = "exit" <+> pPrint t
+  pPrint (Catch e1 e2) = "catch" <+> pPrint e1 <+> "with" $$ nest 2 (pPrint e2)
 
 freevars :: Exp -> HashSet Var
 freevars (Bind e1 x e2) = freevars e1 <> HashSet.delete x (freevars e2)
 freevars (Unit v) = freevars' v
 freevars (Match v cs) = freevars' v <> mconcat (map (\(pat, expr) -> HashSet.difference (freevars expr) (freevars' pat)) cs)
-freevars (Apply f xs) = HashSet.insert f $ mconcat $ map freevars' xs
+freevars (Apply _ f xs) = HashSet.insert f $ mconcat $ map freevars' xs
 freevars (Alloc v) = freevars' v
 freevars (Fetch v _) = HashSet.singleton v
 freevars (Update var value) = HashSet.insert var $ freevars' value
-freevars (Cast _ v) = freevars' v
+freevars (Closure (Func _ ps e)) = HashSet.difference (freevars e) (HashSet.fromList ps)
+freevars (TyAbs _ e) = freevars e
+freevars (TyApply v _) = HashSet.singleton v
+freevars (Fold _ v) = freevars' v
+freevars (Unfold _ v) = freevars' v
+freevars (Exit _) = HashSet.empty
+freevars (Catch e1 e2) = freevars e1 <> freevars e2
 
 freevars' :: Value -> HashSet Var
-freevars' (Pack _ values) = mconcat $ map freevars' values
+freevars' (Pack _ _ values) = mconcat $ map freevars' values
 freevars' (Var var) = HashSet.singleton var
 freevars' _ = HashSet.empty
 
 data Value
-  = Pack Tag [Value]
+  = Pack Type Tag [Value]
   | Int32 Int32
   | Int64 Int64
   | Float Float
@@ -114,7 +120,7 @@ data Value
   deriving stock (Show, Eq, Ord, Generic)
 
 instance Pretty Value where
-  pPrint (Pack tag vs) = "<" <> hsep (punctuate "," $ pPrint tag : map pPrint vs) <> ">"
+  pPrint (Pack _ tag vs) = "<" <> hsep (punctuate "," $ pPrint tag : map pPrint vs) <> ">"
   pPrint (Int32 x) = Pretty.int (fromIntegral x)
   pPrint (Int64 x) = Pretty.int (fromIntegral x) <> "L"
   pPrint (Float x) = pPrint x <> "F"
@@ -127,6 +133,8 @@ type Tag = Int
 
 type Var = Id Type
 
+type TyVar = Id ()
+
 data Type
   = TInt32
   | TInt64
@@ -134,12 +142,13 @@ data Type
   | TDouble
   | TChar
   | TString
-  | TAny
   | TFun [Type] Type
-  | TNode Tag [Type]
+  | TNode [(Tag, [Type])]
   | TPtr Type
-  | TUnion Type Type
   | TEmpty -- for typeUnion and Update
+  | TVar TyVar
+  | TForall [TyVar] Type
+  | TRec TyVar Type
   deriving stock (Show, Eq, Ord, Generic)
 
 instance Pretty Type where
@@ -149,86 +158,62 @@ instance Pretty Type where
   pPrint TDouble = "Double#"
   pPrint TChar = "Char#"
   pPrint TString = "String#"
-  pPrint TAny = "Any#"
-  pPrint (TFun params ret) = parens (hsep $ punctuate "," $ map pPrint params) <+> "->" <+> pPrint ret
-  pPrint (TNode tag ts) = "<" <> hsep (punctuate "," $ pPrint tag : map pPrint ts) <> ">"
+  pPrint (TFun params ret) = parens (hsep (punctuate "," $ map pPrint params) <+> "->" <+> pPrint ret)
+  pPrint (TNode ns) = "<" <> sep (punctuate "|" $ map (\(tag, ts) -> pPrint tag <> ":" <> hsep (map pPrint ts)) ns) <> ">"
   pPrint (TPtr ty) = "Ptr#" <> parens (pPrint ty)
-  pPrint (TUnion t1 t2) = "Union#" <> parens (pPrint t1 <> "," <+> pPrint t2)
   pPrint TEmpty = "Empty#"
-
-typeUnion :: Type -> Type -> Type
-typeUnion TEmpty t = t
-typeUnion t TEmpty = t
-typeUnion TAny _ = TAny
-typeUnion _ TAny = TAny
-typeUnion (TPtr a) (TPtr b) = TPtr (typeUnion a b)
-typeUnion (TPtr _) t = error $ "It is not possible to construct the union of TPtr and " <> show t
-typeUnion t (TPtr _) = error $ "It is not possible to construct the union of TPtr and " <> show t
-typeUnion t1 t2
-  | isSubType t1 t2 = t2
-  | isSubType t2 t1 = t1
-  | otherwise = TUnion t1 t2
-
-isSubType :: Type -> Type -> Bool
-isSubType t1 t2 = typeSub t1 t2 == TEmpty
-
-typeSub :: Type -> Type -> Type
-typeSub TEmpty _ = TEmpty
-typeSub t1 TEmpty = t1
-typeSub _ TAny = TEmpty
-typeSub TAny _ = TAny
-typeSub (TUnion t1 t2) x = typeUnion (typeSub t1 x) (typeSub t2 x)
-typeSub x (TUnion t1 t2) = typeSub (typeSub x t1) t2
-typeSub (TNode tag1 ts1) (TNode tag2 ts2)
-  | tag1 == tag2 =
-    if
-        | allIsSubType -> TEmpty
-        | anyIsEmpty -> TNode tag1 ts1
-        | otherwise -> aux [] ts1 ts2
-  where
-    allIsSubType = List.and $ zipWith isSubType ts1 ts2
-    anyIsEmpty = elem TEmpty $ zipWith typeIntersect ts1 ts2
-    aux _ [] [] = TEmpty
-    aux acc (s : ss) (w : ws) = typeUnion (TNode tag1 (acc <> [typeSub s w] <> ss)) (aux (s : acc) ss ws)
-    aux _ _ _ = bug $ Unreachable "length ss == length ws"
-typeSub t _ = t
-
-typeIntersect :: Type -> Type -> Type
-typeIntersect TEmpty _ = TEmpty
-typeIntersect _ TEmpty = TEmpty
-typeIntersect TAny t = t
-typeIntersect t TAny = t
-typeIntersect (TUnion t1 t2) x = typeUnion (typeIntersect t1 x) (typeIntersect t2 x)
-typeIntersect x (TUnion t1 t2) = typeUnion (typeIntersect x t1) (typeIntersect x t2)
-typeIntersect (TNode tag1 ts1) (TNode tag2 ts2) | tag1 == tag2 = TNode tag1 (zipWith typeIntersect ts1 ts2)
-typeIntersect t1 t2
-  | t1 `isSubType` t2 = t1
-  | t1 `isSubType` t2 = t2
-  | otherwise = TEmpty
+  pPrint (TVar v) = pPrint v
+  pPrint (TForall ts t) = "∀" <> sep (map pPrint ts) <> "." <+> pPrint t
+  pPrint (TRec v t) = "μ" <> pPrint v <> "." <+> pPrint t
 
 class HasType a where
   typeOf :: a -> Type
 
 instance HasType Func where
-  typeOf (Func ps e) = TFun (map (view idMeta) ps) (typeOf e)
+  typeOf (Func ts ps e) = TForall ts $ TFun (map (view idMeta) ps) (typeOf e)
 
 instance HasType Exp where
   typeOf (Bind _ _ e) = typeOf e
   typeOf (Unit v) = typeOf v
-  typeOf (Match _ clauses) = Partial.foldr1 typeUnion $ map (typeOf . snd) clauses
-  typeOf (Apply (view idMeta -> TFun _ ret) _) = ret
-  typeOf Apply {} = bug $ Unreachable "typeOf Apply{} must be TFun _ _."
+  typeOf (Match _ ((_, e) : _)) = typeOf e
+  typeOf (Match _ []) = TEmpty
+  typeOf (Apply _ (view idMeta -> TFun _ ret) _) = ret
+  typeOf Apply {} = bug $ Unreachable "Apply can only be applied to TFun."
   typeOf (Alloc v) = TPtr $ typeOf v
   typeOf (Fetch (view idMeta -> TPtr ty) Nothing) = ty
-  typeOf (Fetch (view idMeta -> TPtr (TNode _ ts)) (Just n))
-    | length ts > n = ts Partial.!! n
-    | otherwise = bug $ Unreachable "length ts must be larger than n."
   typeOf Fetch {} = bug $ Unreachable "Fetch can only be applied to TPtr."
   typeOf Update {} = TEmpty
-  typeOf (Cast t _) = t
+  typeOf (Closure func) = typeOf func
+  typeOf (TyAbs ts e) = TForall ts $ typeOf e
+  typeOf (TyApply x ts) =
+    case x ^. idMeta of
+      TForall vs t -> applySubst (zip vs ts) t
+      _ -> bug $ Unreachable "TyApply can only be applied to TForall."
+  typeOf (Fold t _) = t
+  typeOf (Unfold (TRec x t) _) = applySubst [(x, t)] t
+  typeOf (Unfold _ _) = bug $ Unreachable "Unfold can only be applied to TRec."
+  typeOf (Exit t) = t
+  typeOf (Catch e1 _) = typeOf e1
+
+applySubst :: Foldable t => t (TyVar, Type) -> Type -> Type
+applySubst xs t = foldr applySubst1 t xs
+
+applySubst1 :: (TyVar, Type) -> Type -> Type
+applySubst1 (a, x) (TVar v)
+  | a == v = x
+  | otherwise = TVar v
+applySubst1 (a, x) (TRec v t)
+  -- [X -> _](μX.T) = T
+  | a == v = TRec v t
+  | otherwise = TRec v (applySubst1 (a, x) t)
+applySubst1 subst (TFun ps r) = TFun (map (applySubst1 subst) ps) (applySubst1 subst r)
+applySubst1 subst (TNode ns) = TNode (map (over (_2 . mapped) (applySubst1 subst)) ns)
+applySubst1 subst (TPtr t) = TPtr (applySubst1 subst t)
+applySubst1 subst (TForall vs t) = TForall vs (applySubst1 subst t) -- dom subst ∧ vs == Φ
+applySubst1 _ t = t
 
 instance HasType Value where
-  typeOf (Pack tag values) = TNode tag $ map typeOf values
+  typeOf (Pack ty _ _) = ty
   typeOf Int32 {} = TInt32
   typeOf Int64 {} = TInt64
   typeOf Float {} = TFloat
@@ -291,58 +276,32 @@ unit value = bind "unit" (Unit value)
 match :: MonadExpBuilder m => Value -> [(Value, Exp)] -> m Var
 match x cs = bind "match" (Match x cs)
 
-apply :: MonadExpBuilder m => Var -> [Value] -> m Var
-apply f xs = bind "apply" (Apply f xs)
+apply :: MonadExpBuilder m => ApplyMode -> Var -> [Value] -> m Var
+apply mode f xs = bind "apply" (Apply mode f xs)
 
 alloc :: MonadExpBuilder m => Value -> m Var
 alloc init = bind "alloc" (Alloc init)
 
-fetch :: MonadExpBuilder m => Var -> Maybe Int -> m Var
+fetch :: MonadExpBuilder m => Var -> Maybe (Tag, Int) -> m Var
 fetch x idx = bind "fetch" (Fetch x idx)
 
 update :: MonadExpBuilder m => Var -> Value -> m Var
 update x value = bind "update" (Update x value)
 
-cast :: MonadExpBuilder m => Type -> Value -> m Var
-cast typ x = bind "cast" (Cast typ x)
+closure :: MonadExpBuilder m => Func -> m Var
+closure func = bind "closure" (Closure func)
 
--- | construct a closure value
-closure ::
-  ( MonadReader env m,
-    HasUniqSupply env,
-    MonadIO m,
-    MonadExpBuilder m,
-    MonadProgramBuilder m
-  ) =>
-  Func ->
-  m Var
-closure (Func params expr) = do
-  -- calculate free variables
-  defined <- getDefinedVars
-  let fvs = HashSet.toList $ HashSet.difference (freevars expr) defined
+tyabs :: (MonadIO m, HasUniqSupply env, MonadReader env m, MonadExpBuilder m) => [String] -> ([TyVar] -> ExpBuilderT m Exp) -> m Var
+tyabs hints k = do
+  vs <- traverse (`newInternalId` ()) hints
+  e' <- exp $ k vs
+  bind "tyabs" $ TyAbs vs e'
 
-  -- generate lambda-lifted function
-  captureParam <- newInternalId "$capture" (TPtr TAny)
-  liftedFunc <-
-    Func (captureParam : params) <$> exp do
-      captureParam <- cast (TPtr $ TNode 0 $ map (view idMeta) fvs) (Var captureParam)
-      ifor_ fvs \i fv ->
-        ExpBuilderT $ tell $ Endo $ Bind (Fetch captureParam (Just i)) fv
-      pure expr
-  liftedFuncName <- newInternalId "$closure" (typeOf liftedFunc)
-  defFunc liftedFuncName liftedFunc
+tyapply :: MonadExpBuilder m => Var -> [Type] -> m Var
+tyapply x ts = bind "tyapply" (TyApply x ts)
 
-  -- generate closure value
-  captureArg <- cast (TPtr TAny) . Var =<< alloc (Pack 0 (map Var fvs))
-  alloc (Pack 0 (Var captureArg : [Var liftedFuncName]))
+fold :: MonadExpBuilder m => Type -> Value -> m Var
+fold t v = bind "fold" (Fold t v)
 
--- | destruct a closure value and apply arguments
-applyClosure :: MonadExpBuilder m => Value -> [Value] -> m Var
-applyClosure closure arguments =
-  case typeOf closure of
-    TPtr (TNode _ [TPtr TAny, TFun (TPtr TAny : _) _]) -> do
-      closure <- unit closure
-      capture <- fetch closure (Just 0)
-      func <- fetch closure (Just 1)
-      apply func (Var capture : arguments)
-    _ -> bug $ Unreachable "invalid type"
+unfold :: MonadExpBuilder m => Type -> Value -> m Var
+unfold t v = bind "unfold" (Unfold t v)
