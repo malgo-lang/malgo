@@ -13,6 +13,7 @@ author:         Yuya Kono
 maintainer:     takohati0821@gmail.com
 copyright:      2017-2021 Yuya Kono
 license:        BSD3
+license-file:   LICENSE
 build-type:     Simple
 
 source-repository head
@@ -21,6 +22,22 @@ source-repository head
 
 library
   exposed-modules:
+      Koriel.Core.Alpha
+      Koriel.Core.CodeGen
+      Koriel.Core.Flat
+      Koriel.Core.LambdaLift
+      Koriel.Core.Lint
+      Koriel.Core.Op
+      Koriel.Core.Optimize
+      Koriel.Core.Syntax
+      Koriel.Core.Type
+      Koriel.Id
+      Koriel.Monadic.CodeGen
+      Koriel.Monadic.Examples
+      Koriel.Monadic.Syntax
+      Koriel.MonadUniq
+      Koriel.Prelude
+      Koriel.Pretty
       Malgo.Desugar.DsEnv
       Malgo.Desugar.Match
       Malgo.Desugar.Pass
@@ -102,8 +119,9 @@ library
     , extra
     , filepath
     , hashable
-    , koriel
     , lens
+    , llvm-hs
+    , llvm-hs-pure
     , megaparsec
     , mtl
     , optparse-applicative
@@ -115,7 +133,9 @@ library
     , string-conversions
     , text
     , transformers
+    , uniplate
     , unordered-containers
+    , witherable
   default-language: Haskell2010
 
 executable malgo
@@ -179,8 +199,9 @@ executable malgo
     , extra
     , filepath
     , hashable
-    , koriel
     , lens
+    , llvm-hs
+    , llvm-hs-pure
     , malgo
     , megaparsec
     , mtl
@@ -193,5 +214,7 @@ executable malgo
     , string-conversions
     , text
     , transformers
+    , uniplate
     , unordered-containers
+    , witherable
   default-language: Haskell2010

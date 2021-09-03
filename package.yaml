@@ -1,35 +1,43 @@
-name: koriel
+name: malgo
 version: 1.0.0.0
 category: Compilers/Interpreters
 github: takoeight0821/malgo
 license: BSD3
 author: "Yuya Kono"
 maintainer: "takohati0821@gmail.com"
-copyright: "2017-2020 Yuya Kono"
+copyright: "2017-2021 Yuya Kono"
 
 build-type: Simple
 
 dependencies:
   - base
   - binary
+  - binary-instances
   - bytestring
+  - containers
   - data-fix
   - deriving-compat
-  - hashable
-  - unordered-containers
-  - witherable
+  - directory
   - extra
+  - filepath
+  - hashable
+  - lens
   - llvm-hs
   - llvm-hs-pure
   - megaparsec
   - mtl
+  - optparse-applicative
+  - parser-combinators
   - pretty
+  - pretty-simple
+  - recursion-schemes
+  - rio
   - string-conversions
   - text
   - transformers
-  - lens
   - uniplate
-  - rio
+  - unordered-containers
+  - witherable
 
 ghc-options:
   - -Wall
@@ -83,6 +91,7 @@ default-extensions:
   - ScopedTypeVariables
   - StandaloneDeriving
   - TupleSections
+  - TypeApplications
   - TypeFamilies
   - TypeSynonymInstances
   - ViewPatterns
@@ -90,3 +99,12 @@ default-extensions:
 
 library:
   source-dirs: src
+
+executables:
+  malgo:
+    main: Main.hs
+    source-dirs: app/
+    ghc-options:
+      - -threaded
+    dependencies:
+      - malgo

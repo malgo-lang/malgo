@@ -4,12 +4,8 @@ cradle:
       component: "malgo:exe:malgo"
     - path: "./malgo/src"
       component: "malgo:lib"
-    - path: "./koriel/src"
-      component: "koriel:lib"
   cabal:
     - path: "./malgo/app/"
       component: "malgo:exe:malgo"
     - path: "./malgo/src"
       component: "lib:malgo"
-    - path: "./koriel/src"
-      component: "lib:koriel"
