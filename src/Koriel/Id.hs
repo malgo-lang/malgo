@@ -27,7 +27,7 @@ import Data.Deriving
 import Data.Hashable (Hashable (hashWithSalt))
 import GHC.Exts
 import Koriel.MonadUniq
-import Koriel.Prelude hiding (toList, (.=))
+import Koriel.Prelude hiding (toList)
 import Koriel.Pretty
 
 newtype ModuleName = ModuleName String

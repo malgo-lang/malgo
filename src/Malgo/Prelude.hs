@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# OPTIONS_GHC -Wno-typed-holes #-}
@@ -14,9 +15,12 @@ module Malgo.Prelude
     errorOn,
     warningOn,
     defaultOpt,
-    With (..),
+    With,
+    pattern With,
     ann,
     value,
+    ViaAnn(..),
+    ViaVal(..),
   )
 where
 
@@ -155,10 +159,41 @@ warningOn pos x = do
             nest (length (show lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
 
-data With x v = With {_ann :: x, _value :: v}
-  deriving stock (Eq, Ord, Bounded, Read, Show, Generic)
+newtype With x v = With' {_withToTupleL :: (x, v)}
+  deriving newtype (Eq, Show, Ord)
+
+pattern With :: x -> v -> With x v
+pattern With x v = With' (x, v)
+
+{-# COMPLETE With :: With #-}
 
 makeLenses ''With
 
-instance (Pretty x, Pretty v) => Pretty (With x v) where
-  pPrintPrec l _ (With x v) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)
+ann :: forall x v x'. Lens (With x v) (With x' v) x x'
+ann = withToTupleL . _1
+
+value :: Lens (With x v) (With x v') v v'
+value = withToTupleL . _2
+
+instance (Pretty x, Pretty v) => Pretty (With v x) where
+  pPrintPrec l _ (With v x) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)
+
+newtype ViaAnn value ann = ViaAnn {getViaAnn :: With ann value}
+
+newtype ViaVal ann value = ViaVal {getViaVal :: With ann value}
+
+instance Functor (ViaAnn v) where
+  fmap f (ViaAnn (With x v)) = ViaAnn (With (f x) v)
+
+instance Foldable (ViaAnn v) where
+  foldMap f (ViaAnn (With x _)) = f x
+
+instance Traversable (ViaAnn v) where
+  traverse f (ViaAnn (With x v)) = ViaAnn . (`With` v) <$> f x
+
+-- [No `instance Bifunctor With'`]
+-- Bifunctor have two methods: `first` and `second`.
+-- How to map these methods to `ann` and `value`?
+-- @takoeight0821 think this problem does not have a good answer.
+
+-- @takoeight0821 think this problem does not have a good answer.

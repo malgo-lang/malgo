@@ -19,6 +19,7 @@ import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Pretty
+import Malgo.Infer.UTerm
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
@@ -26,7 +27,6 @@ import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static (Scheme, TypeDef (..), TypeF)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
-import Malgo.Infer.UTerm
 
 type RecordTypeName = String
 
@@ -96,5 +96,5 @@ genTcEnv rnEnv = do
 
 findBuiltinType :: String -> RnEnv -> Maybe (Id ())
 findBuiltinType x rnEnv = do
-  ids <- map _value <$> view (R.typeEnv . at x) rnEnv
+  ids <- map (view value) <$> view (R.typeEnv . at x) rnEnv
   find (view idSort >>> \case External (ModuleName "Builtin") -> True; _ -> False) ids
