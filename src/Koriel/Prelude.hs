@@ -8,10 +8,10 @@ module Koriel.Prelude
     module Control.Lens,
     module Witherable,
     unzip,
-    asumMap,
+    -- asumMap,
     foldMapA,
     ifoldMapA,
-    (<<$>>),
+    -- (<<$>>),
     replaceOf,
     Bug (..),
     bug,
@@ -40,11 +40,6 @@ unzip :: Functor f => f (a, b) -> (f a, f b)
 unzip xs = (fst <$> xs, snd <$> xs)
 {-# INLINE unzip #-}
 
--- | Alternative version of @asum@.
-asumMap :: forall b m f a. (Foldable f, Alternative m) => (a -> m b) -> f a -> m b
-asumMap = coerce (foldMap :: (a -> Alt m b) -> f a -> Alt m b)
-{-# INLINE asumMap #-}
-
 foldMapA :: forall b m f a. (Monoid b, Applicative m, Foldable f) => (a -> m b) -> f a -> m b
 foldMapA = coerce (foldMap :: (a -> Ap m b) -> f a -> Ap m b)
 {-# INLINE foldMapA #-}
@@ -52,12 +47,6 @@ foldMapA = coerce (foldMap :: (a -> Ap m b) -> f a -> Ap m b)
 ifoldMapA :: forall b m a. (Monoid b, Applicative m) => (Int -> a -> m b) -> [a] -> m b
 ifoldMapA = coerce (ifoldMap :: (Int -> a -> Ap m b) -> [a] -> Ap m b)
 {-# INLINE ifoldMapA #-}
-
-infixl 4 <<$>>
-
-(<<$>>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
-(<<$>>) = fmap . fmap
-{-# INLINE (<<$>>) #-}
 
 replaceOf :: Eq b => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
