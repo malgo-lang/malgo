@@ -75,7 +75,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       ( zipWith
           ( \case
               (VarP _ v) -> \e -> nameEnv . at v ?= scrutinee >> e
-              _ -> bug $ Unreachable "All elements of heads must be VarP"
+              _ -> error "All elements of heads must be VarP"
           )
           heads
           es
@@ -90,12 +90,12 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     -- 型からコンストラクタの集合を求める
     let (con, ts) = case Malgo.viewTyConApp patType of
           Just (Malgo.TypeRep.Static.TyCon con, ts) -> (con, ts)
-          _ -> bug $ Unreachable "patType must be TyApp or TyCon"
+          _ -> error "patType must be TyApp or TyCon"
     valueConstructors <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for valueConstructors \(conName, Forall _ conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
-      let coreCon = Core.Con (Data $ conName ^. toText) paramTypes
+      let coreCon = Core.Con (Data $ idToString conName) paramTypes
       params <- traverse (newInternalId "$p") paramTypes
       let (pat', es') = group conName pat es
       Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
@@ -127,7 +127,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
           map
             ( \case
                 UnboxedP _ x -> dsUnboxed x
-                _ -> bug $ Unreachable "All elements of heads must be UnboxedP"
+                _ -> error "All elements of heads must be UnboxedP"
             )
             heads
     cases <- traverse (\c -> Switch c <$> match restScrutinee tails es err) cs
@@ -166,7 +166,7 @@ partition (splitCol -> (Just heads@(ConP {} : _), PatMatrix tails)) es = partiti
 partition (splitCol -> (Just heads@(TupleP {} : _), PatMatrix tails)) es = partitionOn _TupleP heads tails es
 partition (splitCol -> (Just heads@(RecordP {} : _), PatMatrix tails)) es = partitionOn _RecordP heads tails es
 partition (splitCol -> (Just heads@(UnboxedP {} : _), PatMatrix tails)) es = partitionOn _UnboxedP heads tails es
-partition _ _ = bug $ Unreachable "All patterns are covered"
+partition _ _ = error "All patterns are covered"
 
 partitionOn ::
   Prism' (Pat (Malgo 'Refine)) b ->
@@ -196,14 +196,14 @@ group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ 
       | gcon == gcon' = Just (ps <> pss, e)
       | otherwise = Nothing
     aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
-    aux _ ([], _) = bug $ Unreachable "ps must be not empty"
+    aux _ ([], _) = error "ps must be not empty"
 
 groupTuple :: PatMatrix -> [m (Core.Exp (Id Core.Type))] -> (PatMatrix, [m (Core.Exp (Id Core.Type))])
 groupTuple (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
-    aux [] _ = bug $ Unreachable "ps must be not empty"
+    aux [] _ = error "ps must be not empty"
 
 groupRecord :: (MonadReader env m, MonadIO m, HasUniqSupply env) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
@@ -212,11 +212,11 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
       ps' <- extendRecordP x $ map (first removePrefix) ps
       pure (ps' <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
-    aux [] _ = bug $ Unreachable "ps must be not empty"
+    aux [] _ = error "ps must be not empty"
     extendRecordP (With (Malgo.TyRecord ktsMap) pos) ps = do
       let kts = Map.toList ktsMap
       for kts \(key, ty) ->
         case List.lookup key ps of
           Nothing -> VarP (With ty pos) <$> newInternalId "$_p" ()
           Just p -> pure p
-    extendRecordP _ _ = bug $ Unreachable "typeOf x must be TyRecord"
+    extendRecordP _ _ = error "typeOf x must be TyRecord"

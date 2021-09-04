@@ -299,7 +299,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         StringT -> icmp IP.EQ x' y'
         BoolT -> icmp IP.EQ x' y'
         SumT _ -> icmp IP.EQ x' y'
-        t -> bug $ Unreachable $ tshow t <> " is not comparable"
+        t -> error $ show t <> " is not comparable"
     genOp Op.Neq = \x' y' ->
       i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.NE x' y'
@@ -310,7 +310,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         StringT -> icmp IP.NE x' y'
         BoolT -> icmp IP.NE x' y'
         SumT _ -> icmp IP.NE x' y'
-        t -> bug $ Unreachable $ tshow t <> " is not comparable"
+        t -> error $ show t <> " is not comparable"
     genOp Op.Lt = \x' y' ->
       i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.SLT x' y'
@@ -318,7 +318,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         FloatT -> fcmp FP.OLT x' y'
         DoubleT -> fcmp FP.OLT x' y'
         CharT -> icmp IP.ULT x' y'
-        t -> bug $ Unreachable $ tshow t <> " is not comparable"
+        t -> error $ show t <> " is not comparable"
     genOp Op.Le = \x' y' ->
       i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.SLE x' y'
@@ -326,7 +326,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         FloatT -> fcmp FP.OLE x' y'
         DoubleT -> fcmp FP.OLE x' y'
         CharT -> icmp IP.ULE x' y'
-        t -> bug $ Unreachable $ tshow t <> " is not comparable"
+        t -> error $ show t <> " is not comparable"
     genOp Op.Gt = \x' y' ->
       i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.SGT x' y'
@@ -334,7 +334,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         FloatT -> fcmp FP.OGT x' y'
         DoubleT -> fcmp FP.OGT x' y'
         CharT -> icmp IP.UGT x' y'
-        t -> bug $ Unreachable $ tshow t <> " is not comparable"
+        t -> error $ show t <> " is not comparable"
     genOp Op.Ge = \x' y' ->
       i1ToBool =<< case C.typeOf x of
         Int32T -> icmp IP.SGE x' y'
@@ -342,7 +342,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         FloatT -> fcmp FP.OGE x' y'
         DoubleT -> fcmp FP.OGE x' y'
         CharT -> icmp IP.UGE x' y'
-        t -> bug $ Unreachable $ tshow t <> " is not comparable"
+        t -> error $ show t <> " is not comparable"
     genOp Op.And =
       LLVM.IRBuilder.and
     genOp Op.Or =
@@ -458,7 +458,7 @@ genLocalDef (LocalDef funName (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
   name <- toName <$> newInternalId (idToString funName <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
-    [] -> bug $ Unreachable "The length of internal function parameters must be 1 or more"
+    [] -> error "The length of internal function parameters must be 1 or more"
     (rawCapture : ps') -> do
       -- キャプチャした変数が詰まっている構造体を展開する
       capture <- bitcast rawCapture (ptr capType)
@@ -489,7 +489,7 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = d
     gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
   HashMap.singleton name <$> bitcast addr (convType $ SumT cs)
-genLocalDef (LocalDef (C.typeOf -> t) Pack {}) = bug $ Unreachable $ tshow t <> " must be SumT"
+genLocalDef (LocalDef (C.typeOf -> t) Pack {}) = error $ show t <> " must be SumT"
 
 genCon :: [Con] -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)

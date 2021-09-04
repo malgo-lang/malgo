@@ -40,7 +40,7 @@ lookupId n = do
   n' <- lookupVar n
   case n' of
     Var i -> pure i
-    _ -> bug $ Unreachable $ tshow n <> " must be bound to Var"
+    _ -> error $ show n <> " must be bound to Var"
 
 alphaExp :: (MonadReader AlphaEnv f, MonadIO f) => Exp (Id Type) -> f (Exp (Id Type))
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs

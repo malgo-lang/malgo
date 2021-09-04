@@ -190,7 +190,7 @@ typeSub (TNode tag1 ts1) (TNode tag2 ts2)
     anyIsEmpty = elem TEmpty $ zipWith typeIntersect ts1 ts2
     aux _ [] [] = TEmpty
     aux acc (s : ss) (w : ws) = typeUnion (TNode tag1 (acc <> [typeSub s w] <> ss)) (aux (s : acc) ss ws)
-    aux _ _ _ = bug $ Unreachable "length ss == length ws"
+    aux _ _ _ = error "length ss == length ws"
 typeSub t _ = t
 
 typeIntersect :: Type -> Type -> Type
@@ -217,13 +217,13 @@ instance HasType Exp where
   typeOf (Unit v) = typeOf v
   typeOf (Match _ clauses) = Partial.foldr1 typeUnion $ map (typeOf . snd) clauses
   typeOf (Apply (view idMeta -> TFun _ ret) _) = ret
-  typeOf Apply {} = bug $ Unreachable "typeOf Apply{} must be TFun _ _."
+  typeOf Apply {} = error "typeOf Apply{} must be TFun _ _."
   typeOf (Alloc v) = TPtr $ typeOf v
   typeOf (Fetch (view idMeta -> TPtr ty) Nothing) = ty
   typeOf (Fetch (view idMeta -> TPtr (TNode _ ts)) (Just n))
     | length ts > n = ts Partial.!! n
-    | otherwise = bug $ Unreachable "length ts must be larger than n."
-  typeOf Fetch {} = bug $ Unreachable "Fetch can only be applied to TPtr."
+    | otherwise = error "length ts must be larger than n."
+  typeOf Fetch {} = error "Fetch can only be applied to TPtr."
   typeOf Update {} = TEmpty
   typeOf (Cast t _) = t
 
@@ -345,4 +345,4 @@ applyClosure closure arguments =
       capture <- fetch closure (Just 0)
       func <- fetch closure (Just 1)
       apply func (Var capture : arguments)
-    _ -> bug $ Unreachable "invalid type"
+    _ -> error "invalid type"

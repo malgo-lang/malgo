@@ -114,7 +114,7 @@ subtract (Record kts1) (Record kts2)
     if isEmpty
       then pure Empty
       else pure $ Record kss
-  | otherwise = bug $ Unreachable "Record kts2 is invalid pattern"
+  | otherwise = error "Record kts2 is invalid pattern"
 subtract (Union s1 s2) x = Union <$> subtract s1 x <*> subtract s2 x
 subtract x (Union s1 s2) = do
   s1' <- subtract x s1
@@ -137,7 +137,7 @@ subtract' k ss ws = do
     aux acc (s : ss) (w : ws) = do
       s' <- subtract s w
       Union (k (acc <> [s'] <> ss)) <$> aux (s : acc) ss ws
-    aux _ _ _ = bug $ Unreachable "length ss == length ws"
+    aux _ _ _ = error "length ss == length ws"
 
 -- | intersection of spaces
 intersection :: MonadReader RefineEnv m => Space -> Space -> m Space

@@ -3,30 +3,20 @@
 
 module Koriel.Prelude
   ( module RIO,
-    module RIO.State,
-    module RIO.Writer,
+    module RIO.State, module RIO.Writer,
     module Control.Lens,
     module Witherable,
     unzip,
-    -- asumMap,
     foldMapA,
     ifoldMapA,
-    -- (<<$>>),
     replaceOf,
-    Bug (..),
-    bug,
-    handleBug,
     localState,
-    Unreachable (..),
   )
 where
 
-import Control.Exception (throw)
 import Control.Lens hiding (List)
 import Data.Coerce (coerce)
 import Data.Monoid
-import Data.String.Conversions (convertString)
-import GHC.Stack (callStack, prettyCallStack)
 import RIO hiding (ASetter, ASetter', Getting, Lens, Lens', catMaybes, filter, lens, mapMaybe, over, preview, set, sets, to, view, (%~), (.~), (^.), (^..), (^?))
 import RIO.State
 import RIO.Writer
@@ -50,27 +40,6 @@ ifoldMapA = coerce (ifoldMap :: (Int -> a -> Ap m b) -> [a] -> Ap m b)
 
 replaceOf :: Eq b => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
-
--- Unreachable
-newtype Unreachable = Unreachable {unreachableReason :: Text}
-  deriving stock (Show, Typeable)
-
-instance Exception Unreachable where
-  displayException (Unreachable reason) = "unreachable: " <> convertString reason
-
-data Bug = Bug SomeException CallStack
-  deriving stock (Show)
-
-instance Exception Bug where
-  displayException (Bug e cStack) =
-    "internal error [" <> displayException e <> "]\n"
-      <> prettyCallStack cStack
-
-bug :: (HasCallStack, Exception e) => e -> a
-bug e = throw $ toException (Bug (toException e) callStack)
-
-handleBug :: MonadUnliftIO m => m a -> m a
-handleBug m = m `catch` \(e :: Bug) -> error (displayException e)
 
 localState :: MonadState s m => m a -> m (a, s)
 localState action = do

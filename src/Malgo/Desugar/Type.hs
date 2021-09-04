@@ -50,7 +50,7 @@ unfoldType t@(viewTyConApp -> Just (TyCon con, ts)) = do
       SumT
         <$> traverse
           ( \(conName, Forall _ conType) ->
-              C.Con (Data $ conName ^. toText) <$> traverse dsType (fst $ splitTyArr conType)
+              C.Con (Data $ idToString conName) <$> traverse dsType (fst $ splitTyArr conType)
           )
           vcs
     _ -> dsType t

@@ -29,7 +29,7 @@ times :: Monad m => Int -> (t -> m t) -> t -> m t
 times 0 _ x = pure x
 times n f x
   | n > 0 = times (n - 1) f =<< f x
-  | otherwise = bug $ Unreachable $ tshow n <> " must be a natural number"
+  | otherwise = error $ show n <> " must be a natural number"
 
 -- | 最適化を行う関数
 --

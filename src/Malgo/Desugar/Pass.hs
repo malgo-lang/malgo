@@ -156,7 +156,7 @@ dsDataDef (_, name, _, cons) =
     ps <- traverse (newInternalId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
-      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ conName ^. toText) paramTypes') $ map C.Var ps)
+      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ idToString conName) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
     obj <- case ps of
       [] -> pure ([], expr)
@@ -224,7 +224,7 @@ dsExp (G.Apply info f x) = runDef $ do
       x' <- cast xType =<< dsExp x
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
     _ ->
-      bug $ Unreachable "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
+      error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
 dsExp (G.Fn x (Clause _ [] e :| _)) = do
   -- lazy valueの脱糖衣
   e' <- dsExp e
@@ -334,7 +334,7 @@ curryFun [] e = do
     _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
 curryFun ps e = curryFun' ps []
   where
-    curryFun' [] _ = bug $ Unreachable "length ps >= 1"
+    curryFun' [] _ = error "length ps >= 1"
     curryFun' [x] as = do
       fun <- newInternalId "$curry" (C.typeOf $ Fun ps e)
       let body = C.Call (C.Var fun) $ reverse $ C.Var x : as

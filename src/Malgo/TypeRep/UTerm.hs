@@ -204,4 +204,4 @@ expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
 expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv rep
 expandAllTypeSynonym _ t@TyRep {} = t
 expandAllTypeSynonym _ t@Rep {} = t
-expandAllTypeSynonym _ UTerm {} = bug $ Unreachable "All patterns are covered"
+expandAllTypeSynonym _ UTerm {} = error "All patterns are covered"

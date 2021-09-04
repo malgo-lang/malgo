@@ -49,7 +49,7 @@ lookupRecordType pos fields = do
   env <- use fieldEnv
   let candidates = map (lookup env) fields
   case List.foldr1 List.intersect candidates of
-    [] -> bug $ Unreachable "The existence of fields are proved on Rename pass"
+    [] -> errorOn pos "The existence of fields are proved on Rename pass"
     [(_, scheme)] -> pure scheme
     xs -> errorOn pos $ "Ambiguious record:" <+> sep (punctuate "," $ map (pPrint . fst) xs)
   where
