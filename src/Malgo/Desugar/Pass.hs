@@ -97,7 +97,7 @@ dsScDefs ds = do
     Just (Forall _ fType) <- use (varTypeEnv . at f)
     f' <- newCoreId f =<< dsType fType
     nameEnv . at f ?= f'
-  foldMapA dsScDef ds
+  foldMapM dsScDef ds
 
 dsScDef :: (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) => ScDef (Malgo 'Refine) -> f [Def]
 dsScDef (With typ _, name, expr) = do

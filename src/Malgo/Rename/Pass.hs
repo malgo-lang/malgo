@@ -263,7 +263,7 @@ rnStmts (Let x v e :| s : ss) = do
 -- infix宣言をMapに変換
 infixDecls :: (MonadReader RnEnv m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))
 infixDecls ds =
-  foldMapA ?? ds $ \case
+  foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
       name' <- lookupVarName pos name
       pure $ HashMap.singleton name' (assoc, order)

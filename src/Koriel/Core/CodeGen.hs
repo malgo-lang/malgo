@@ -350,7 +350,7 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     i1ToBool i1opr =
       zext i1opr i8
 genExp (Let xs e) k = do
-  env <- foldMapA prepare xs
+  env <- foldMapM prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
   local (over valueMap (env <>)) $ genExp e k
   where
@@ -422,9 +422,9 @@ genCase scrutinee cs k = \case
     addr <- bitcast scrutinee (ptr $ StructureType False [i8, conType])
     payloadAddr <- gep addr [int32 0, int32 1]
     -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
-    env <- ifoldMapA ?? vs $ \i v -> do
-      vOpr <- gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
-      pure $ HashMap.singleton v vOpr
+    env <-
+      HashMap.fromList <$> ifor vs \i v ->
+        (v,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
     void $ local (over valueMap (env <>)) $ genExp e k
     pure $ Right (C.Int 8 tag, label)
 
@@ -462,8 +462,9 @@ genLocalDef (LocalDef funName (Fun ps e)) = do
     (rawCapture : ps') -> do
       -- キャプチャした変数が詰まっている構造体を展開する
       capture <- bitcast rawCapture (ptr capType)
-      env <- ifoldMapA ?? fvs $ \i fv ->
-        HashMap.singleton fv <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
+      env <-
+        HashMap.fromList <$> ifor fvs \i fv ->
+          (fv,) <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
       local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExp e ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType

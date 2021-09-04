@@ -7,15 +7,12 @@ module Koriel.Prelude
     module Control.Lens,
     module Witherable,
     unzip,
-    foldMapA,
-    ifoldMapA,
     replaceOf,
     localState,
   )
 where
 
 import Control.Lens hiding (List)
-import Data.Coerce (coerce)
 import Data.Monoid
 import RIO hiding (ASetter, ASetter', Getting, Lens, Lens', catMaybes, filter, lens, mapMaybe, over, preview, set, sets, to, view, (%~), (.~), (^.), (^..), (^?))
 import RIO.State
@@ -29,14 +26,6 @@ import Prelude hiding (filter, log, undefined, unzip)
 unzip :: Functor f => f (a, b) -> (f a, f b)
 unzip xs = (fst <$> xs, snd <$> xs)
 {-# INLINE unzip #-}
-
-foldMapA :: forall b m f a. (Monoid b, Applicative m, Foldable f) => (a -> m b) -> f a -> m b
-foldMapA = coerce (foldMap :: (a -> Ap m b) -> f a -> Ap m b)
-{-# INLINE foldMapA #-}
-
-ifoldMapA :: forall b m a. (Monoid b, Applicative m) => (Int -> a -> m b) -> [a] -> m b
-ifoldMapA = coerce (ifoldMap :: (Int -> a -> Ap m b) -> [a] -> Ap m b)
-{-# INLINE ifoldMapA #-}
 
 replaceOf :: Eq b => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
