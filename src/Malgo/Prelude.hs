@@ -13,7 +13,7 @@ module Malgo.Prelude
     errorOn,
     warningOn,
     defaultOpt,
-    With,
+    With (..),
     ann,
     value,
     ViaAnn (..),

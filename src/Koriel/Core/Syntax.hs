@@ -26,7 +26,7 @@ data Unboxed
   | Float Float
   | Double Double
   | Char Char
-  | String String
+  | String Text
   | Bool Bool
   deriving stock (Eq, Ord, Show, Generic, Data, Typeable)
 
@@ -45,7 +45,7 @@ instance Pretty Unboxed where
   pPrint (Float x) = pPrint x
   pPrint (Double x) = pPrint x
   pPrint (Char x) = quotes (pPrint x)
-  pPrint (String x) = doubleQuotes (text x)
+  pPrint (String x) = doubleQuotes (pPrint x)
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 
@@ -96,9 +96,9 @@ data Exp a
   | -- | application of function (not closure)
     CallDirect a [Atom a]
   | -- | application of external function
-    ExtCall String Type [Atom a]
+    ExtCall Text Type [Atom a]
   | -- | application of llvm function
-    RawCall String Type [Atom a]
+    RawCall Text Type [Atom a]
   | -- | binary operation
     BinOp Op (Atom a) (Atom a)
   | -- | type casting
@@ -172,8 +172,8 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (ExtCall p t xs) = parens $ "external" <+> text p <+> pPrint t <+> sep (map pPrint xs)
-  pPrint (RawCall p t xs) = parens $ "raw" <+> text p <+> pPrint t <+> sep (map pPrint xs)
+  pPrint (ExtCall p t xs) = parens $ "external" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
+  pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) =

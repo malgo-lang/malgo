@@ -13,7 +13,6 @@ where
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.ByteString as BS
-import qualified Data.ByteString.Builder as B
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
 import Data.Char (ord)
@@ -202,14 +201,14 @@ sizeof ty = C.PtrToInt szPtr LT.i64
 
 toName :: Id a -> LLVM.AST.Name
 toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
-toName id = LLVM.AST.mkName $ idToString id
+toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
 genVar :: MonadModuleBuilder m => Id C.Type -> Exp (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
 genLoadModule :: MonadModuleBuilder m => ModuleName -> IRBuilderT m () -> m Operand
-genLoadModule (ModuleName modName) m = function (LLVM.AST.mkName $ "koriel_load_" <> modName) [] LT.void $ const m
+genLoadModule (ModuleName modName) m = function (LLVM.AST.mkName $ convertString $ "koriel_load_" <> modName) [] LT.void $ const m
 
 -- generate code for a 'known' function
 genFunc ::
@@ -233,7 +232,7 @@ genFunc name params body
     funcName = toName name
     llvmParams =
       map
-        (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ idToString x))
+        (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ idToText x))
         params
     retty = convType (C.typeOf body)
 
@@ -265,7 +264,7 @@ genExp (CallDirect f xs) k = do
   xsOprs <- traverse genAtom xs
   k =<< call fOpr (map (,[]) xsOprs)
 genExp (ExtCall name (ps :-> r) xs) k = do
-  primOpr <- findExt (LLVM.AST.mkName name) (map convType ps) (convType r)
+  primOpr <- findExt (LLVM.AST.mkName $ convertString name) (map convType ps) (convType r)
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
 genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
@@ -274,7 +273,7 @@ genExp (RawCall name (ps :-> r) xs) k = do
         ConstantOperand $
           C.GlobalReference
             (ptr $ FunctionType (convType r) (map convType ps) False)
-            (LLVM.AST.mkName name)
+            (LLVM.AST.mkName $ convertString name)
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
 genExp (RawCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
@@ -456,7 +455,7 @@ genLocalDef ::
   m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
-  name <- toName <$> newInternalId (idToString funName <> "_closure") ()
+  name <- toName <$> newInternalId (idToText funName <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> error "The length of internal function parameters must be 1 or more"
     (rawCapture : ps') -> do
@@ -509,9 +508,9 @@ findIndex con cs = case List.elemIndex con cs of
 --     nullPtr = C.IntToPtr (C.Int 32 0) ptrType
 --     szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
-globalStringPtr :: MonadModuleBuilder m => String -> Name -> m C.Constant
+globalStringPtr :: MonadModuleBuilder m => Text -> Name -> m C.Constant
 globalStringPtr str nm = do
-  let utf8Vals = map toInteger $ BL.unpack $ B.toLazyByteString $ B.stringUtf8 str
+  let utf8Vals = map toInteger $ BL.unpack $ convertString str
       llvmVals = map (C.Int 8) (utf8Vals ++ [0])
       char = IntegerType 8
       charArray = C.Array char llvmVals

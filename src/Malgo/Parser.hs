@@ -3,6 +3,7 @@ module Malgo.Parser (parseMalgo) where
 import Control.Monad.Combinators.Expr
 import Data.Foldable (foldl)
 import qualified Data.Set as Set
+import Data.String.Conversions (convertString)
 import qualified Data.Text as Text
 import Data.Void
 import Koriel.Id (ModuleName (ModuleName))
@@ -40,11 +41,11 @@ pModule = do
   pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ParsedDefinitions ds}
 
 -- module name
-pModuleName :: Parser String
+pModuleName :: Parser Text
 pModuleName = lexeme singleModuleName
 
-singleModuleName :: Parser String
-singleModuleName = some identLetter
+singleModuleName :: Parser Text
+singleModuleName = convertString <$> some identLetter
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
@@ -166,7 +167,7 @@ pBoxed =
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L"))
       <|> try (Int32 <$> lexeme L.decimal)
       <|> try (lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral))
-      <|> try (lexeme (String <$> (char '"' *> manyTill L.charLiteral (char '"'))))
+      <|> try (lexeme (String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"'))))
 
 pUnboxed :: Parser (Literal Unboxed)
 pUnboxed =
@@ -176,9 +177,9 @@ pUnboxed =
       <|> try (Int32 <$> lexeme (L.decimal <* char '#'))
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L#"))
       <|> try (lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#')))
-      <|> try (lexeme (String <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
+      <|> try (lexeme (String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
 
-pWithPrefix :: Parser String -> Parser x -> Parser (WithPrefix x)
+pWithPrefix :: Parser Text -> Parser x -> Parser (WithPrefix x)
 pWithPrefix prefix body =
   WithPrefix
     <$> ( try (With <$> (Just <$> prefix) <* char '.' <*> body)
@@ -461,26 +462,26 @@ reserved =
 reservedOp :: Parser Text
 reservedOp = choice $ map (try . pOperator) ["=>", "=", ":", "|", "->", ";", ",", "!"]
 
-lowerIdent :: Parser String
+lowerIdent :: Parser Text
 lowerIdent =
   label "lower identifier" $
     lexeme do
       notFollowedBy reserved <|> notReserved
-      (:) <$> (lowerChar <|> char '_') <*> many identLetter
+      convertString <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
 
-upperIdent :: Parser String
+upperIdent :: Parser Text
 upperIdent =
   label "upper identifier" $
     lexeme do
       notFollowedBy reserved <|> notReserved
-      (:) <$> upperChar <*> many identLetter
+      convertString <$> ((:) <$> upperChar <*> many identLetter)
 
-operator :: Parser String
+operator :: Parser Text
 operator =
   label "operator" $
     lexeme do
       notFollowedBy reservedOp
-      some opLetter
+      convertString <$> some opLetter
 
 notReserved :: Parser ()
 notReserved = do

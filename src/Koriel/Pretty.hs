@@ -10,11 +10,12 @@ module Koriel.Pretty
 where
 
 import Data.Fix
+import Data.String.Conversions (convertString)
 import Koriel.Prelude
+import qualified Text.Megaparsec.Pos as Megaparsec
 import Text.PrettyPrint.HughesPJClass hiding (char, double, first, float, int, integer, (<+>), (<>))
 import qualified Text.PrettyPrint.HughesPJClass as P
 import qualified Prelude
-import qualified Text.Megaparsec.Pos as Megaparsec
 
 -- change operator precedence
 infixl 9 <+>
@@ -34,3 +35,6 @@ instance Pretty (f (Fix f)) => Pretty (Fix f) where
 -- Pretty SourcePos
 instance Pretty Megaparsec.SourcePos where
   pPrint = text . Megaparsec.sourcePosPretty
+
+instance Pretty Text where
+  pPrint = text . convertString

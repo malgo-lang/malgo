@@ -17,7 +17,7 @@ import qualified Malgo.TypeRep.UTerm as U
 import qualified RIO.NonEmpty as NonEmpty
 
 -- | Unboxed and literal
-data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String String
+data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
   deriving stock (Show, Eq, Ord)
 
 instance Pretty (Literal x) where
@@ -26,7 +26,7 @@ instance Pretty (Literal x) where
   pPrint (Float f) = pPrint f <> "F"
   pPrint (Double d) = pPrint d
   pPrint (Char c) = quotes (pPrint c)
-  pPrint (String s) = doubleQuotes (text s)
+  pPrint (String s) = doubleQuotes (pPrint s)
 
 instance U.HasType (Literal x) where
   typeOf Int32 {} = U.TyPrim S.Int32T

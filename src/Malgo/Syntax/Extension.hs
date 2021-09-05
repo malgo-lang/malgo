@@ -22,12 +22,12 @@ data Malgo (p :: MalgoPhase)
 
 -- Id
 type family MalgoId (p :: MalgoPhase) where
-  MalgoId 'Parse = String
+  MalgoId 'Parse = Text
   MalgoId 'Rename = Id ()
   MalgoId 'Infer = Id ()
   MalgoId 'Refine = Id ()
 
-newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: With (Maybe String) x}
+newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: With (Maybe Text) x}
   deriving stock (Eq, Ord, Show)
 
 removePrefix :: WithPrefix a -> a
@@ -36,7 +36,7 @@ removePrefix = view value . unwrapWithPrefix
 pattern NoPrefix :: x -> WithPrefix x
 pattern NoPrefix x = WithPrefix (With Nothing x)
 
-pattern Prefix :: String -> x -> WithPrefix x
+pattern Prefix :: Text -> x -> WithPrefix x
 pattern Prefix p x = WithPrefix (With (Just p) x)
 
 instance Pretty x => Pretty (WithPrefix x) where
@@ -229,9 +229,9 @@ type family XInfix x where
 
 type family XForeign x where
   XForeign (Malgo 'Parse) = SourcePos
-  XForeign (Malgo 'Rename) = (SourcePos, String)
-  XForeign (Malgo 'Infer) = With U.UType (SourcePos, String)
-  XForeign (Malgo 'Refine) = With S.Type (SourcePos, String)
+  XForeign (Malgo 'Rename) = (SourcePos, Text)
+  XForeign (Malgo 'Infer) = With U.UType (SourcePos, Text)
+  XForeign (Malgo 'Refine) = With S.Type (SourcePos, Text)
 
 type family XImport x where
   XImport (Malgo _) = SourcePos

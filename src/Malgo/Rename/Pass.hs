@@ -23,46 +23,46 @@ rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   (ds', rnState) <- runStateT ?? RnState mempty [] modName $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
-resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => String -> m RnId
+resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => Text -> m RnId
 resolveName name = newInternalId name ()
 
-resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => ModuleName -> String -> m RnId
+resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => ModuleName -> Text -> m RnId
 resolveGlobalName modName name = newExternalId name () modName
 
-lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
+lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupVarName pos name =
   view (varEnv . at name) >>= \case
     Just names -> case List.find (\i -> i ^. ann == Implicit) names of
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> quotes (text name)
+          "Not in scope:" <+> quotes (pPrint name)
             $$ "Did you mean" <+> pPrint (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
-lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
+lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupTypeName pos name = do
   view (typeEnv . at name) >>= \case
     Just names -> case List.find (\i -> i ^. ann == Implicit) names of
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> quotes (text name)
+          "Not in scope:" <+> quotes (pPrint name)
             $$ "Did you mean" <+> pPrint (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
-lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> String -> m RnId
+lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupFieldName pos name = do
   view (fieldEnv . at name) >>= \case
     Just names -> case List.find (\i -> i ^. ann == Implicit) names of
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> quotes (text name)
+          "Not in scope:" <+> quotes (pPrint name)
             $$ "Did you mean" <+> pPrint (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
-lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> String -> m (Id ())
+lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
 lookupQualifiedVarName pos modName name = do
   view (varEnv . at name) >>= \case
     Just names ->
@@ -70,9 +70,9 @@ lookupQualifiedVarName pos modName name = do
         Just (With _ name) -> pure name
         Nothing ->
           errorOn pos $
-            "Not in scope:" <+> quotes (text name) <+> "in" <+> pPrint modName
-              $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> text name <> "`" <+> "?"
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (text name)
+            "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
+              $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- renamer
 

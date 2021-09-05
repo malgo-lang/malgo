@@ -6,6 +6,7 @@ import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Graph
+import Data.String.Conversions (convertString)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
@@ -64,19 +65,19 @@ loadInterface (ModuleName modName) = do
   logDebug $ "load interface: " <> displayShow modName
   modPaths <- modulePaths <$> getOpt
   logDebug $ "modPaths = " <> displayShow modPaths
-  message <- findAndReadFile modPaths (modName <> ".mlgi")
+  message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x
     Left (_, errorMessage) -> do
-      logDebug $ fromString errorMessage
+      logDebug $ displayShow errorMessage
       pure Nothing
   where
-    findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, String) Interface)
-    findAndReadFile [] modFile = pure $ Left (0, render $ "module" <+> pPrint modFile <+> "is not found")
+    findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)
+    findAndReadFile [] modFile = pure $ Left (0, "module" <+> pPrint modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
-        then liftIO $ decodeFileOrFail (modPath </> modFile)
+        then liftIO $ mapLeft (second text) <$> decodeFileOrFail (modPath </> modFile)
         else findAndReadFile rest modFile
 
 dependencieList :: (MonadIO m, HasOpt env, HasLogFunc env, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]

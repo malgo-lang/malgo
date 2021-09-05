@@ -9,13 +9,14 @@ import qualified Data.HashSet as HashSet
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Prelude
 import Malgo.Infer.TcEnv (TcEnv, abbrEnv)
+import Malgo.Infer.UTerm
+import Malgo.Prelude
 import Malgo.TypeRep.Static hiding (applySubst, kindOf)
 import Malgo.TypeRep.UTerm
-import Malgo.Infer.UTerm
 import qualified RIO.HashMap as HashMap
 import qualified RIO.Map as Map
+import qualified RIO.Text as Text
 import Text.Megaparsec (SourcePos)
 
 ----------------
@@ -162,17 +163,18 @@ generalize :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => 
 generalize x bound term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
-  as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
+  as <- zipWithM (toBound x) fvs [Text.singleton c | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   Forall as <$> zonk zonkedTerm
 
-toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> TypeVar -> String -> m (Id UType)
+toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> TypeVar -> Text -> m (Id UType)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   let tvKind = kindOf tvType
   let name = case tv ^. typeVar . idName of
-              x | x == noName -> hint
-                | otherwise -> x
+        x
+          | x == noName -> hint
+          | otherwise -> x
   newInternalId name tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> UType -> f UType
@@ -193,7 +195,7 @@ generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env
 generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
-  as <- zipWithM (toBound x) fvs [[c] | c <- ['a' ..]]
+  as <- zipWithM (toBound x) fvs [Text.singleton c | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ UTerm $ TyVarF a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 

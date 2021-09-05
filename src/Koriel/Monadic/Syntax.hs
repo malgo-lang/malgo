@@ -12,7 +12,7 @@ import qualified RIO.HashSet as HashSet
 import qualified RIO.List.Partial as Partial
 import qualified Text.PrettyPrint as Pretty
 
-data Program = Program {topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)], externals :: [(Var, String)]}
+data Program = Program {topVars :: [(Var, Exp)], topFuncs :: [(Var, Func)], externals :: [(Var, Text)]}
   deriving stock (Show, Eq, Ord, Generic)
 
 instance Pretty Program where
@@ -109,7 +109,7 @@ data Value
   | Float Float
   | Double Double
   | Char Char
-  | String String
+  | String Text
   | Var Var
   deriving stock (Show, Eq, Ord, Generic)
 
@@ -251,7 +251,7 @@ class Monad m => MonadProgramBuilder m where
   preDef :: Var -> m ()
   defVar :: Var -> Exp -> m ()
   defFunc :: Var -> Func -> m ()
-  defExt :: Var -> String -> m ()
+  defExt :: Var -> Text -> m ()
 
 instance Monad m => MonadProgramBuilder (ProgramBuilderT m) where
   getDefinedVars = ProgramBuilderT $ HashSet.union <$> gets (definedVars . fst) <*> gets snd
@@ -270,7 +270,7 @@ exp :: Functor f => ExpBuilderT f Exp -> f Exp
 exp = runExpBuilderT
 
 class Monad m => MonadExpBuilder m where
-  bind :: String -> Exp -> m Var
+  bind :: Text -> Exp -> m Var
 
 instance (MonadIO m, HasUniqSupply env, MonadReader env m) => MonadExpBuilder (ExpBuilderT m) where
   bind hint exp = do

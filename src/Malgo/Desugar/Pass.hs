@@ -24,6 +24,8 @@ import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 import Malgo.TypeRep.Static as GT
 import qualified RIO.Char as Char
+import qualified RIO.Text as T
+import qualified RIO.Text.Partial as T'
 
 -- | トップレベル宣言
 data Def
@@ -156,7 +158,7 @@ dsDataDef (_, name, _, cons) =
     ps <- traverse (newInternalId "$p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
-      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ idToString conName) paramTypes') $ map C.Var ps)
+      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ idToText conName) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
     obj <- case ps of
       [] -> pure ([], expr)
@@ -211,7 +213,7 @@ dsExp (G.Var x (WithPrefix (With _ name))) = do
           _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
-    isConstructor Id {_idName = x : _} = Char.isUpper x
+    isConstructor Id {_idName} | T.length _idName > 0 = Char.isUpper (T'.head _idName)
     isConstructor _ = False
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
 dsExp (G.Apply info f x) = runDef $ do
@@ -291,7 +293,7 @@ dsStmts (NoBind _ e :| s : ss) = runDef $ do
   dsStmts (s :| ss)
 dsStmts (G.Let _ v e :| s : ss) = do
   e' <- dsExp e
-  v' <- newInternalId ("$let_" <> idToString v) (C.typeOf e')
+  v' <- newInternalId ("$let_" <> idToText v) (C.typeOf e')
   nameEnv . at v ?= v'
   ss' <- dsStmts (s :| ss)
   pure $ Match e' (Bind v' ss' :| [])

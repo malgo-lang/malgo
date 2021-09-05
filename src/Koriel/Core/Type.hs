@@ -11,14 +11,14 @@ import Koriel.Pretty
 Constructors  C ::= <tag n>
 -}
 data Tag
-  = Data String
+  = Data Text
   | Tuple
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary Tag
 
 instance Pretty Tag where
-  pPrint (Data name) = text name
+  pPrint (Data name) = pPrint name
   pPrint Tuple = "#tuple"
 
 data Con = Con Tag [Type]

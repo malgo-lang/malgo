@@ -58,13 +58,13 @@ llift (Let [LocalDef n (Fun as body)] e) = do
       put backup
       body' <- llift body
       let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
-      newFun <- def (idToString n) (toList fvs <> as) body'
+      newFun <- def (idToText n) (toList fvs <> as) body'
       Let [LocalDef n (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
 
-def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader env m, HasUniqSupply env) => String -> [Id Type] -> Exp (Id Type) -> m (Id Type)
+def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader env m, HasUniqSupply env) => Text -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
   f <- newInternalId ("$raw_" <> name) (map typeOf xs :-> typeOf e)
   funcs . at f ?= (xs, e)

@@ -28,7 +28,7 @@ import Malgo.TypeRep.Static (Scheme, TypeDef (..), TypeF)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
 
-type RecordTypeName = String
+type RecordTypeName = Text
 
 data TcEnv = TcEnv
   { _varEnv :: HashMap RnId (Scheme UType),
@@ -94,7 +94,7 @@ genTcEnv rnEnv = do
         _rnEnv = rnEnv
       }
 
-findBuiltinType :: String -> RnEnv -> Maybe (Id ())
+findBuiltinType :: Text -> RnEnv -> Maybe (Id ())
 findBuiltinType x rnEnv = do
   ids <- map (view value) <$> view (R.typeEnv . at x) rnEnv
   find (view idSort >>> \case External (ModuleName "Builtin") -> True; _ -> False) ids
