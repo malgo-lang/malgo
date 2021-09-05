@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE TemplateHaskell #-}
 
 -- |
 -- malgoの共通中間表現。
@@ -7,7 +6,7 @@
 module Koriel.Core.Syntax where
 
 import qualified Data.HashSet as HashSet
-import Data.Monoid (Endo(..))
+import Data.Monoid (Endo (..))
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
@@ -271,7 +270,14 @@ data Program a = Program
   }
   deriving stock (Eq, Show, Functor, Generic)
 
-makeLenses ''Program
+moduleName :: Lens' (Program a) ModuleName
+moduleName = lens _moduleName (\p x -> p {_moduleName = x})
+
+topVars :: Lens' (Program a) [(a, Exp a)]
+topVars = lens _topVars (\p x -> p {_topVars = x})
+
+topFuncs :: Lens' (Program a) [(a, ([a], Exp a))]
+topFuncs = lens _topFuncs (\p x -> p {_topFuncs = x})
 
 instance Pretty a => Pretty (Program a) where
   pPrint Program {..} =
@@ -337,9 +343,12 @@ mainFunc (ModuleName mainModName) depList e = do
   mainFuncId <- newExternalId "main" ([] :-> Int32T) (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
     _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
-    traverse_ (\(ModuleName modName) ->
-      if modName == mainModName
-         then bind $ RawCall ("koriel_load_" <> modName) ([] :-> VoidT) []
-         else bind $ ExtCall ("koriel_load_" <> modName) ([] :-> VoidT) []) depList
+    traverse_
+      ( \(ModuleName modName) ->
+          if modName == mainModName
+            then bind $ RawCall ("koriel_load_" <> modName) ([] :-> VoidT) []
+            else bind $ ExtCall ("koriel_load_" <> modName) ([] :-> VoidT) []
+      )
+      depList
     pure e
   pure (mainFuncId, ([], mainFuncBody))

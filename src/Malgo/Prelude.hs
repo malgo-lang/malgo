@@ -156,7 +156,11 @@ warningOn pos x = do
 data With x v = With {_ann :: x, _value :: v}
   deriving stock (Eq, Show, Ord)
 
-makeLenses ''With
+ann :: Lens (With x v) (With x' v) x x'
+ann = lens _ann (\w x -> w {_ann = x})
+
+value :: Lens (With x v) (With x v') v v'
+value = lens _value (\w x -> w {_value = x})
 
 instance (Pretty x, Pretty v) => Pretty (With v x) where
   pPrintPrec l _ (With v x) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)

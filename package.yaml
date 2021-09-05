@@ -52,6 +52,7 @@ ghc-options:
   - -Wno-name-shadowing
   - -Wmissing-deriving-strategies
 
+  - -optP-Wno-nonportable-include-path
   - -j4
   - +RTS -A128m -n2m -qg -RTS
 

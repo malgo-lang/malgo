@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Koriel.Core.Optimize
   ( optimizeProgram,
   )
@@ -19,7 +17,11 @@ import Koriel.Prelude
 
 data OptimizeEnv = OptimizeEnv {_optimizeUniqSupply :: UniqSupply, _inlineLevel :: Int}
 
-makeLenses ''OptimizeEnv
+optimizeUniqSupply :: Lens' OptimizeEnv UniqSupply
+optimizeUniqSupply = lens _optimizeUniqSupply (\o x -> o {_optimizeUniqSupply = x})
+
+inlineLevel :: Lens' OptimizeEnv Int
+inlineLevel = lens _inlineLevel (\o x -> o {_inlineLevel = x})
 
 instance HasUniqSupply OptimizeEnv where
   uniqSupply = optimizeUniqSupply

@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Malgo.Infer.TcEnv
   ( RecordTypeName,
     TcEnv (..),
@@ -39,7 +37,20 @@ data TcEnv = TcEnv
   }
   deriving stock (Show)
 
-makeLenses ''TcEnv
+varEnv :: Lens' TcEnv (HashMap RnId (Scheme UType))
+varEnv = lens _varEnv (\t x -> t {_varEnv = x})
+
+typeEnv :: Lens' TcEnv (HashMap (Id ()) (TypeDef UType))
+typeEnv = lens _typeEnv (\t x -> t {_typeEnv = x})
+
+abbrEnv :: Lens' TcEnv (HashMap (Id UType) ([Id UType], UType))
+abbrEnv = lens _abbrEnv (\t x -> t {_abbrEnv = x})
+
+fieldEnv :: Lens' TcEnv (HashMap (Id ()) [(RecordTypeName, Scheme UType)])
+fieldEnv = lens _fieldEnv (\t x -> t {_fieldEnv = x})
+
+rnEnv :: Lens' TcEnv RnEnv
+rnEnv = lens _rnEnv (\t x -> t {_rnEnv = x})
 
 instance Pretty TcEnv where
   pPrint TcEnv {..} =

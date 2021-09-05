@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Koriel.Core.Type where
 
 import Data.Binary (Binary)
@@ -48,7 +46,10 @@ data Type
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
-makePrisms ''Type
+_SumT :: Prism' Type [Con]
+_SumT = prism SumT \case
+  SumT cs -> Right cs
+  t -> Left t
 
 instance Binary Type
 

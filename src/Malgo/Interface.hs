@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Malgo.Interface where
 
 import Data.Binary (Binary, decodeFileOrFail, encodeFile)
@@ -34,7 +32,29 @@ data Interface = Interface
 
 instance Binary Interface
 
-makeLenses ''Interface
+signatureMap :: Lens' Interface (HashMap RnId (GT.Scheme GT.Type))
+signatureMap = lens _signatureMap (\i x -> i {_signatureMap = x})
+
+typeDefMap :: Lens' Interface (HashMap RnId (GT.TypeDef GT.Type))
+typeDefMap = lens _typeDefMap (\i x -> i {_typeDefMap = x})
+
+typeAbbrMap :: Lens' Interface (HashMap (Id GT.Type) ([Id GT.Type], GT.Type))
+typeAbbrMap = lens _typeAbbrMap (\i x -> i {_typeAbbrMap = x})
+
+resolvedVarIdentMap :: Lens' Interface (HashMap PsId RnId)
+resolvedVarIdentMap = lens _resolvedVarIdentMap (\i x -> i {_resolvedVarIdentMap = x})
+
+resolvedTypeIdentMap :: Lens' Interface (HashMap PsId RnId)
+resolvedTypeIdentMap = lens _resolvedTypeIdentMap (\i x -> i {_resolvedTypeIdentMap = x})
+
+coreIdentMap :: Lens' Interface (HashMap RnId (Id C.Type))
+coreIdentMap = lens _coreIdentMap (\i x -> i {_coreIdentMap = x})
+
+infixMap :: Lens' Interface (HashMap RnId (Assoc, Int))
+infixMap = lens _infixMap (\i x -> i {_infixMap = x})
+
+dependencies :: Lens' Interface [ModuleName]
+dependencies = lens _dependencies (\i x -> i {_dependencies = x})
 
 instance Pretty Interface where
   pPrint = text . show

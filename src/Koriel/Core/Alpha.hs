@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Koriel.Core.Alpha
   ( alpha,
     AlphaEnv (..),
@@ -17,7 +15,11 @@ import Koriel.Prelude
 
 data AlphaEnv = AlphaEnv {_alphaUniqSupply :: UniqSupply, _alphaMap :: HashMap (Id Type) (Atom (Id Type))}
 
-makeLenses ''AlphaEnv
+alphaUniqSupply :: Lens' AlphaEnv UniqSupply
+alphaUniqSupply = lens _alphaUniqSupply (\a x -> a {_alphaUniqSupply = x})
+
+alphaMap :: Lens' AlphaEnv (HashMap (Id Type) (Atom (Id Type)))
+alphaMap = lens _alphaMap (\a x -> a {_alphaMap = x})
 
 instance HasUniqSupply AlphaEnv where
   uniqSupply = alphaUniqSupply

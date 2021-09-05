@@ -1,5 +1,4 @@
 {-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Syntax.Extension where
@@ -42,8 +41,6 @@ pattern Prefix p x = WithPrefix (With (Just p) x)
 instance Pretty x => Pretty (WithPrefix x) where
   pPrint (WithPrefix (With Nothing v)) = pPrint v
   pPrint (WithPrefix (With (Just x) v)) = pPrint x <> "." <> pPrint v
-
-makeLenses ''WithPrefix
 
 type PsId = XId (Malgo 'Parse)
 

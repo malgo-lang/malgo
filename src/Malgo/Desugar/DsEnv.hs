@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Malgo.Desugar.DsEnv where
 
 import qualified Data.HashMap.Strict as HashMap
@@ -39,7 +37,21 @@ instance Pretty DsEnv where
             ]
         )
 
-makeLenses ''DsEnv
+moduleName :: Lens' DsEnv ModuleName
+moduleName = lens _moduleName (\d x -> d {_moduleName = x})
+
+nameEnv :: Lens' DsEnv (HashMap (Id ()) (Id C.Type))
+nameEnv = lens _nameEnv (\d x -> d {_nameEnv = x})
+
+varTypeEnv :: Lens' DsEnv (HashMap (Id ()) (Scheme Type))
+varTypeEnv = lens _varTypeEnv (\d x -> d {_varTypeEnv = x})
+
+typeDefEnv :: Lens' DsEnv (HashMap (Id ()) (TypeDef Type))
+typeDefEnv = lens _typeDefEnv (\d x -> d {_typeDefEnv = x})
+
+desugarRnEnv :: Lens' DsEnv RnEnv
+desugarRnEnv = lens _desugarRnEnv (\d x -> d {_desugarRnEnv = x})
+
 
 class HasDsEnv env where
   dsEnv :: Lens' env DsEnv

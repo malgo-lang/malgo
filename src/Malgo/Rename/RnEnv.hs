@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Malgo.Rename.RnEnv where
 
 import qualified Data.HashMap.Strict as HashMap
@@ -27,7 +25,14 @@ instance Pretty RnState where
             ]
         )
 
-makeLenses ''RnState
+infixInfo :: Lens' RnState (HashMap RnId (Assoc, Int))
+infixInfo = lens _infixInfo (\r x -> r {_infixInfo = x})
+
+dependencies :: Lens' RnState [ModuleName]
+dependencies = lens _dependencies (\r x -> r {_dependencies = x})
+
+moduleName :: Lens' RnState ModuleName
+moduleName = lens _moduleName (\r x -> r {_moduleName = x})
 
 data Visibility
   = Explicit ModuleName -- must be qualified
@@ -55,7 +60,17 @@ instance Pretty RnEnv where
             ]
         )
 
-makeLenses ''RnEnv
+varEnv :: Lens' RnEnv (HashMap PsId [With Visibility RnId])
+varEnv = lens _varEnv (\r x -> r {_varEnv = x})
+
+typeEnv :: Lens' RnEnv (HashMap PsId [With Visibility RnId])
+typeEnv = lens _typeEnv (\r x -> r {_typeEnv = x})
+
+fieldEnv :: Lens' RnEnv (HashMap PsId [With Visibility RnId])
+fieldEnv = lens _fieldEnv (\r x -> r {_fieldEnv = x})
+
+rnMalgoEnv :: Lens' RnEnv MalgoEnv
+rnMalgoEnv = lens _rnMalgoEnv (\r x -> r {_rnMalgoEnv = x})
 
 class HasRnEnv env where
   rnEnv :: Lens' env RnEnv

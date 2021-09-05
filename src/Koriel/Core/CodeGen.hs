@@ -1,5 +1,4 @@
 {-# LANGUAGE RecursiveDo #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
@@ -65,7 +64,17 @@ data CodeGenEnv = CodeGenEnv
     _funcMap :: HashMap (Id C.Type) Operand
   }
 
-makeLenses ''CodeGenEnv
+codeGenUniqSupply :: Lens' CodeGenEnv UniqSupply
+codeGenUniqSupply = lens _codeGenUniqSupply (\c x -> c {_codeGenUniqSupply = x})
+
+valueMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
+valueMap = lens _valueMap (\c x -> c {_valueMap = x})
+
+globalValueMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
+globalValueMap = lens _globalValueMap (\c x -> c {_globalValueMap = x})
+
+funcMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
+funcMap = lens _funcMap (\c x -> c {_funcMap = x})
 
 instance HasUniqSupply CodeGenEnv where
   uniqSupply = codeGenUniqSupply

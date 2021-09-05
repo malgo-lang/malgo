@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Koriel.Core.LambdaLift
   ( lambdalift,
   )
@@ -19,7 +17,11 @@ data LambdaLiftState = LambdaLiftState
     _knowns :: HashSet (Id Type)
   }
 
-makeLenses ''LambdaLiftState
+funcs :: Lens' LambdaLiftState (HashMap (Id Type) ([Id Type], Exp (Id Type)))
+funcs = lens _funcs (\l x -> l {_funcs = x})
+
+knowns :: Lens' LambdaLiftState (HashSet (Id Type))
+knowns = lens _knowns (\l x -> l {_knowns = x})
 
 lambdalift :: MonadIO m => UniqSupply -> Program (Id Type) -> m (Program (Id Type))
 lambdalift us Program {..} =

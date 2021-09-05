@@ -1,12 +1,10 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Malgo.Refine.RefineEnv where
 
 import Koriel.Id
 import Koriel.MonadUniq
+import Malgo.Infer.TcEnv
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv (..))
-import Malgo.Infer.TcEnv
 import Malgo.TypeRep.Static
 import Malgo.TypeRep.UTerm
 import qualified Malgo.TypeRep.UTerm as UTerm
@@ -17,7 +15,11 @@ data RefineEnv = RefineEnv
     _refineMalgoEnv :: MalgoEnv
   }
 
-makeLenses ''RefineEnv
+typeDefEnv :: Lens' RefineEnv (HashMap (Id Kind) (TypeDef Type))
+typeDefEnv = lens _typeDefEnv (\r x -> r {_typeDefEnv = x})
+
+refineMalgoEnv :: Lens' RefineEnv MalgoEnv
+refineMalgoEnv = lens _refineMalgoEnv (\r x -> r {_refineMalgoEnv = x})
 
 instance HasMalgoEnv RefineEnv where
   malgoEnv = refineMalgoEnv
