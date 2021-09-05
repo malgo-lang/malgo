@@ -62,7 +62,7 @@ instance HasUTerm t v (UTerm t v) where
   walkOn = id
 
 instance HasUTerm t v x => HasUTerm t v (With x a) where
-  walkOn f with = getViaAnn <$> traverse (walkOn f) (ViaAnn with)-- With <$> walkOn f x <*> pure a
+  walkOn f (With x a) = With <$> walkOn f x <*> pure a
 
 instance HasUTerm t v Void where
   walkOn _ x = absurd x
