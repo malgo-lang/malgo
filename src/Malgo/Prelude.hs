@@ -99,11 +99,8 @@ instance Show LogFunc where
 instance Eq LogFunc where
   _ == _ = True
 
-type MalgoM a = RIO MalgoEnv a
-
-deriving newtype instance MonadFix (RIO env)
-
-deriving newtype instance MonadFail (RIO env)
+newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
 
 runMalgoM :: MalgoM a -> Opt -> IO a
 runMalgoM m opt = do
@@ -114,7 +111,7 @@ runMalgoM m opt = do
 
   withLogFunc logOptions \lf -> do
     let app = MalgoEnv {_malgoOpt = opt, _malgoUniqSupply = uniqSupply, _malgoLogFunc = lf}
-    runRIO app m
+    runReaderT (unMalgoM m) app
 
 getOpt :: (HasOpt env, MonadReader env m) => m Opt
 getOpt = view malgoOpt
