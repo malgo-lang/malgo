@@ -4,7 +4,6 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Malgo.Infer.TcEnv
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (RnEnv (..))
 import Malgo.TypeRep.Static
 import Malgo.TypeRep.UTerm
 import qualified Malgo.TypeRep.UTerm as UTerm
@@ -33,11 +32,11 @@ instance HasUniqSupply RefineEnv where
 instance HasLogFunc RefineEnv where
   logFuncL = refineMalgoEnv . logFuncL
 
-buildRefineEnv :: TcEnv -> RefineEnv
-buildRefineEnv TcEnv {_typeEnv, _rnEnv = RnEnv {_rnMalgoEnv}} =
+buildRefineEnv :: MalgoEnv -> TcEnv -> RefineEnv
+buildRefineEnv malgoEnv TcEnv {_typeEnv} =
   RefineEnv
     { _typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeEnv,
-      _refineMalgoEnv = _rnMalgoEnv
+      _refineMalgoEnv = malgoEnv
     }
   where
     f :: TypeDef UType -> Maybe (Id Kind, TypeDef Type)

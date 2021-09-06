@@ -5,7 +5,6 @@ module Malgo.Infer.TcEnv
     typeEnv,
     abbrEnv,
     fieldEnv,
-    rnEnv,
     appendFieldEnv,
     genTcEnv,
     findBuiltinType,
@@ -32,8 +31,7 @@ data TcEnv = TcEnv
   { _varEnv :: HashMap RnId (Scheme UType),
     _typeEnv :: HashMap RnId (TypeDef UType),
     _abbrEnv :: HashMap (Id UType) ([Id UType], UType),
-    _fieldEnv :: HashMap RnId [(RecordTypeName, Scheme UType)],
-    _rnEnv :: RnEnv
+    _fieldEnv :: HashMap RnId [(RecordTypeName, Scheme UType)]
   }
   deriving stock (Show)
 
@@ -49,9 +47,6 @@ abbrEnv = lens _abbrEnv (\t x -> t {_abbrEnv = x})
 fieldEnv :: Lens' TcEnv (HashMap (Id ()) [(RecordTypeName, Scheme UType)])
 fieldEnv = lens _fieldEnv (\t x -> t {_fieldEnv = x})
 
-rnEnv :: Lens' TcEnv RnEnv
-rnEnv = lens _rnEnv (\t x -> t {_rnEnv = x})
-
 instance Pretty TcEnv where
   pPrint TcEnv {..} =
     "TcEnv"
@@ -60,8 +55,7 @@ instance Pretty TcEnv where
             [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
               "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
               "_abbrEnv" <+> "=" <+> pPrint (HashMap.toList _abbrEnv),
-              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv),
-              "_rnEnv" <+> "=" <+> pPrint _rnEnv
+              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv)
             ]
         )
 
@@ -71,7 +65,6 @@ instance HasUTerm TypeF TypeVar TcEnv where
       <*> traverseOf (traversed . traversed . walkOn) f _typeEnv
       <*> traverseOf (traversed . traversed . walkOn) f _abbrEnv
       <*> traverseOf (traversed . traversed . _2 . traversed . walkOn) f _fieldEnv
-      <*> pure _rnEnv
 
 appendFieldEnv :: [(Id (), (RecordTypeName, Scheme UType))] -> TcEnv -> TcEnv
 appendFieldEnv newEnv = over fieldEnv (go newEnv)
@@ -101,8 +94,7 @@ genTcEnv rnEnv = do
               (string_t, TypeDef (TyPrim Static.StringT) [] [])
             ],
         _abbrEnv = mempty,
-        _fieldEnv = mempty,
-        _rnEnv = rnEnv
+        _fieldEnv = mempty
       }
 
 findBuiltinType :: Text -> RnEnv -> Maybe (Id ())

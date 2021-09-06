@@ -18,9 +18,10 @@ import qualified RIO.NonEmpty as NonEmpty
 
 type Infered t x = (x ~ Malgo 'Infer) :: Constraint
 
-refine :: (Infered t x, MonadIO m) => TcEnv -> Module x -> m (Module (Malgo 'Refine))
-refine tcEnv Module {_moduleName, _moduleDefinition} =
-  Module _moduleName <$> runReaderT (refineBindGroup _moduleDefinition) (buildRefineEnv tcEnv)
+refine :: (Infered t x, MonadIO m, MonadReader env m, HasMalgoEnv env) => TcEnv -> Module x -> m (Module (Malgo 'Refine))
+refine tcEnv Module {_moduleName, _moduleDefinition} = do
+  malgoEnv <- view malgoEnv
+  Module _moduleName <$> runReaderT (refineBindGroup _moduleDefinition) (buildRefineEnv malgoEnv tcEnv)
 
 refineBindGroup :: forall t x m. (Infered t x, MonadReader RefineEnv m, MonadIO m) => BindGroup x -> m (BindGroup (Malgo 'Refine))
 refineBindGroup BindGroup {..} = do

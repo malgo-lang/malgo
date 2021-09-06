@@ -11,7 +11,7 @@ import Malgo.Infer.UTerm
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (RnEnv)
+import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
@@ -56,8 +56,8 @@ lookupRecordType pos fields = do
     lookup env (WithPrefix (With Nothing k)) = concat $ HashMap.lookup k env
     lookup env (WithPrefix (With (Just p) k)) = filter ((== p) . fst) $ concat $ HashMap.lookup k env
 
-typeCheck :: (MonadFail m, HasOpt env, MonadReader env m, MonadIO m, HasUniqSupply env, HasLogFunc env) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'Infer), TcEnv)
-typeCheck rnEnv (Module name bg) = do
+typeCheck :: (MonadFail m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'Infer), TcEnv)
+typeCheck rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
   tcEnv <- genTcEnv rnEnv
   evalStateT ?? tcEnv $
     runTypeUnifyT $ do
@@ -88,7 +88,8 @@ tcBindGroup ::
     HasOpt env,
     MonadReader env m,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   BindGroup (Malgo 'Rename) ->
   m (BindGroup (Malgo 'Infer))
@@ -110,7 +111,8 @@ prepareTcImpls ::
     MonadBind f,
     HasUniqSupply env,
     HasOpt env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   Impl (Malgo 'Rename) ->
   f ()
@@ -130,7 +132,8 @@ tcImpls ::
     MonadFail f,
     MonadState TcEnv f,
     MonadBind f,
-    HasUniqSupply env
+    HasUniqSupply env,
+    HasRnEnv env
   ) =>
   [Impl (Malgo 'Rename)] ->
   f [Impl (Malgo 'Infer)]
@@ -192,7 +195,8 @@ tcTypeDefinitions ::
     HasOpt env,
     HasUniqSupply env,
     MonadFail m,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
@@ -225,7 +229,8 @@ tcTypeSynonyms ::
     HasOpt env,
     HasUniqSupply env,
     MonadFail f,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'Infer)]
@@ -256,7 +261,8 @@ tcDataDefs ::
     HasOpt env,
     MonadIO m,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   [DataDef (Malgo 'Rename)] ->
   m [DataDef (Malgo 'Infer)]
@@ -284,7 +290,7 @@ tcDataDefs ds = do
     typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
-tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env, MonadFail m, HasLogFunc env) => [Class (Malgo 'Rename)] -> m [Class (Malgo 'Infer)]
+tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env, MonadFail m, HasLogFunc env, HasRnEnv env) => [Class (Malgo 'Rename)] -> m [Class (Malgo 'Infer)]
 tcClasses ds =
   for ds \(pos, name, params, synType) -> do
     TyCon con <- lookupType pos name
@@ -302,7 +308,8 @@ tcForeigns ::
     MonadIO m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   [Foreign (Malgo 'Rename)] ->
   m [Foreign (Malgo 'Infer)]
@@ -322,7 +329,8 @@ tcScSigs ::
     MonadIO m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   [ScSig (Malgo 'Rename)] ->
   m [ScSig (Malgo 'Infer)]
@@ -351,7 +359,8 @@ tcScDefGroup ::
     MonadReader env m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
   m [[ScDef (Malgo 'Infer)]]
@@ -365,7 +374,8 @@ tcScDefs ::
     MonadReader env m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   [ScDef (Malgo 'Rename)] ->
   m [ScDef (Malgo 'Infer)]
@@ -407,7 +417,8 @@ tcExpr ::
     MonadReader env m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [With SourcePos Constraint] m (Exp (Malgo 'Infer))
@@ -486,7 +497,8 @@ tcClause ::
     MonadReader env m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   Clause (Malgo 'Rename) ->
   WriterT [With SourcePos Constraint] m (Clause (Malgo 'Infer))
@@ -556,7 +568,8 @@ tcStmts ::
     HasOpt env,
     MonadIO m,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   NonEmpty (Stmt (Malgo 'Rename)) ->
   WriterT [With SourcePos Constraint] m (NonEmpty (Stmt (Malgo 'Infer)))
@@ -570,7 +583,8 @@ tcStmt ::
     HasOpt env,
     MonadIO m,
     HasUniqSupply env,
-    HasLogFunc env
+    HasLogFunc env,
+    HasRnEnv env
   ) =>
   Stmt (Malgo 'Rename) ->
   WriterT [With SourcePos Constraint] m (Stmt (Malgo 'Infer))
@@ -589,9 +603,9 @@ tcStmt (Let pos v e) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) => S.Type (Malgo 'Rename) -> m UType
+transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env, HasRnEnv env) => S.Type (Malgo 'Rename) -> m UType
 transType (S.TyApp pos t ts) = do
-  rnEnv <- use rnEnv
+  rnEnv <- view rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do

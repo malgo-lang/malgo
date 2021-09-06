@@ -61,7 +61,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
   let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
-  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv (tcEnv ^. TcEnv.rnEnv) depList refinedAst
+  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv rnEnv depList refinedAst
   let inf = buildInterface rnState dsEnv
   storeInterface inf
   when (debugMode opt) $ do
