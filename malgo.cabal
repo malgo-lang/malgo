@@ -1,0 +1,222 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           malgo
+version:        1.0.0.0
+category:       Compilers/Interpreters
+homepage:       https://github.com/takoeight0821/malgo#readme
+bug-reports:    https://github.com/takoeight0821/malgo/issues
+author:         Yuya Kono
+maintainer:     takohati0821@gmail.com
+copyright:      2017-2021 Yuya Kono
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/takoeight0821/malgo
+
+library
+  exposed-modules:
+      Koriel.Core.Alpha
+      Koriel.Core.CodeGen
+      Koriel.Core.Flat
+      Koriel.Core.LambdaLift
+      Koriel.Core.Lint
+      Koriel.Core.Op
+      Koriel.Core.Optimize
+      Koriel.Core.Syntax
+      Koriel.Core.Type
+      Koriel.Id
+      Koriel.Monadic.CodeGen
+      Koriel.Monadic.Examples
+      Koriel.Monadic.Syntax
+      Koriel.MonadUniq
+      Koriel.Prelude
+      Koriel.Pretty
+      Malgo.Desugar.DsEnv
+      Malgo.Desugar.Match
+      Malgo.Desugar.Pass
+      Malgo.Desugar.Type
+      Malgo.Desugar.Unboxed
+      Malgo.Driver
+      Malgo.Infer.Pass
+      Malgo.Infer.TcEnv
+      Malgo.Infer.Unify
+      Malgo.Infer.UTerm
+      Malgo.Interface
+      Malgo.Parser
+      Malgo.Prelude
+      Malgo.Refine.Pass
+      Malgo.Refine.RefineEnv
+      Malgo.Refine.Space
+      Malgo.Rename.Pass
+      Malgo.Rename.RnEnv
+      Malgo.Syntax
+      Malgo.Syntax.Extension
+      Malgo.TypeRep.Static
+      Malgo.TypeRep.UTerm
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      src
+  default-extensions:
+      BangPatterns
+      BinaryLiterals
+      BlockArguments
+      ConstraintKinds
+      DataKinds
+      DefaultSignatures
+      DeriveDataTypeable
+      DeriveFoldable
+      DeriveFunctor
+      DeriveGeneric
+      DeriveTraversable
+      DerivingStrategies
+      DoAndIfThenElse
+      EmptyDataDecls
+      ExistentialQuantification
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      MultiParamTypeClasses
+      MultiWayIf
+      NamedFieldPuns
+      NoImplicitPrelude
+      OverloadedStrings
+      PartialTypeSignatures
+      PatternGuards
+      PolyKinds
+      RankNTypes
+      RecordWildCards
+      ScopedTypeVariables
+      StandaloneDeriving
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeSynonymInstances
+      ViewPatterns
+      StrictData
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS
+  build-depends:
+      base
+    , binary
+    , binary-instances
+    , bytestring
+    , containers
+    , data-fix
+    , deriving-compat
+    , directory
+    , extra
+    , filepath
+    , hashable
+    , lens
+    , llvm-hs
+    , llvm-hs-pure
+    , megaparsec
+    , microlens-platform
+    , mtl
+    , optparse-applicative
+    , parser-combinators
+    , pretty
+    , pretty-simple
+    , recursion-schemes
+    , rio
+    , string-conversions
+    , text
+    , transformers
+    , uniplate
+    , unordered-containers
+    , witherable
+  default-language: Haskell2010
+
+executable malgo
+  main-is: Main.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      app/
+  default-extensions:
+      BangPatterns
+      BinaryLiterals
+      BlockArguments
+      ConstraintKinds
+      DataKinds
+      DefaultSignatures
+      DeriveDataTypeable
+      DeriveFoldable
+      DeriveFunctor
+      DeriveGeneric
+      DeriveTraversable
+      DerivingStrategies
+      DoAndIfThenElse
+      EmptyDataDecls
+      ExistentialQuantification
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      MultiParamTypeClasses
+      MultiWayIf
+      NamedFieldPuns
+      NoImplicitPrelude
+      OverloadedStrings
+      PartialTypeSignatures
+      PatternGuards
+      PolyKinds
+      RankNTypes
+      RecordWildCards
+      ScopedTypeVariables
+      StandaloneDeriving
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeSynonymInstances
+      ViewPatterns
+      StrictData
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS -threaded
+  build-depends:
+      base
+    , binary
+    , binary-instances
+    , bytestring
+    , containers
+    , data-fix
+    , deriving-compat
+    , directory
+    , extra
+    , filepath
+    , hashable
+    , lens
+    , llvm-hs
+    , llvm-hs-pure
+    , malgo
+    , megaparsec
+    , microlens-platform
+    , mtl
+    , optparse-applicative
+    , parser-combinators
+    , pretty
+    , pretty-simple
+    , recursion-schemes
+    , rio
+    , string-conversions
+    , text
+    , transformers
+    , uniplate
+    , unordered-containers
+    , witherable
+  default-language: Haskell2010
