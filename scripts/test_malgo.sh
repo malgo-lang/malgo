@@ -6,7 +6,7 @@ TESTDIR=/tmp/malgo_test
 mkdir -p $TESTDIR
 mkdir -p $TESTDIR/libs
 
-BUILD=cabal
+BUILD=stack
 
 eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
 eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"

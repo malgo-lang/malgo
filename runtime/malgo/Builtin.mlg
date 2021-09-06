@@ -27,6 +27,11 @@ module Builtin = {
   string# : String# -> String;
   string# = { x -> String# x };
 
+  -- Panic
+  foreign import malgo_panic : String# -> a;
+  panic : String -> a;
+  panic = { String# message -> malgo_panic message };
+
   -- Arithmetic operators
   foreign import malgo_add_int32_t : Int32# -> Int32# -> Int32#;
   addInt32# : Int32# -> Int32# -> Int32#;
