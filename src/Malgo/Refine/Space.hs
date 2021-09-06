@@ -61,22 +61,22 @@ buildUnion [] = Empty
 buildUnion [s] = s
 buildUnion (s : ss) = Union s (buildUnion ss)
 
--- Ref: Malgo.TypeRep.Static.viewTyConApp
+-- Ref: Malgo.TypeRep.Static.TyConApp
 decomposable :: Type -> Bool
-decomposable (viewTyConApp -> Just (TyCon _, _)) = True
-decomposable (viewTyConApp -> Just (TyTuple _, _)) = True
+decomposable (TyConApp (TyCon _) _) = True
+decomposable (TyConApp (TyTuple _) _) = True
 decomposable (TyRecord _) = True
 decomposable _ = False
 
 decompose :: MonadReader RefineEnv m => Type -> m Space
-decompose t@(viewTyConApp -> Just (TyCon con, ts)) = do
+decompose t@(TyConApp (TyCon con) ts) = do
   env <- view typeDefEnv
   case env ^. at con of
     Nothing -> pure $ Type t
     Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
       spaces <- traverse (constructorSpace $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
       pure $ buildUnion spaces
-decompose (viewTyConApp -> Just (TyTuple _, ts)) = do
+decompose (TyConApp (TyTuple _) ts) = do
   env <- ask
   let ss = map (space env) ts
   pure $ Tuple ss

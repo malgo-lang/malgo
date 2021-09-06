@@ -5,7 +5,6 @@ module Malgo.Infer.UTerm where
 
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
-import Data.Void
 import Koriel.Pretty
 import Malgo.Prelude
 import qualified RIO.HashSet as HashSet
@@ -54,15 +53,3 @@ unfreeze = UTerm . fmap unfreeze . unFix
 freevars :: (Hashable a, Foldable t, Eq a) => UTerm t a -> HashSet a
 freevars (UVar v) = HashSet.singleton v
 freevars (UTerm t) = foldMap freevars t
-
-class HasUTerm t v a where
-  walkOn :: Monad f => (UTerm t v -> f (UTerm t v)) -> a -> f a
-
-instance HasUTerm t v (UTerm t v) where
-  walkOn = id
-
-instance HasUTerm t v x => HasUTerm t v (With x a) where
-  walkOn f (With x a) = With <$> walkOn f x <*> pure a
-
-instance HasUTerm t v Void where
-  walkOn _ x = absurd x

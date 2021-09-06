@@ -71,13 +71,13 @@ typeCheck rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
       zonkedBg <-
         pure bg'
           >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (scDefs . traversed . traversed . _3) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (foreigns . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (impls . traversed . _4) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (impls . traversed . _4 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       zonkedTcEnv <-
         pure tcEnv'
-          >>= traverseOf (varEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
-          >>= traverseOf (typeEnv . traversed . traversed) (walkOn (zonk >=> pure . expandAllTypeSynonym abbrEnv))
+          >>= traverseOf (varEnv . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (typeEnv . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
@@ -281,7 +281,7 @@ tcDataDefs ds = do
         -- name' <- lookupType pos name
         -- params' <- traverse (lookupType pos) params
         args' <- traverse transType args
-        pure $ buildTyArr args' (buildTyApp name' params')
+        pure $ buildTyArr args' (TyConApp name' params')
     -- let valueConsNames = map fst valueCons'
     -- let valueConsTypes = map snd valueCons'
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
@@ -452,7 +452,7 @@ tcExpr (Fn pos cs) = do
       pure $ Fn (With (typeOf c') pos) (c' :| cs')
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
-  let esType = buildTyApp (TyTuple $ length es) $ map typeOf es'
+  let esType = TyConApp (TyTuple $ length es) $ map typeOf es'
   pure $ Tuple (With esType pos) es'
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
@@ -545,7 +545,7 @@ tcPatterns (TupleP pos pats : ps) = do
   pats' <- tcPatterns pats
   ps' <- tcPatterns ps
   let patTypes = map typeOf pats'
-  pure $ TupleP (With (buildTyApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
+  pure $ TupleP (With (TyConApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
 tcPatterns (RecordP pos kps : ps) = do
   kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
@@ -617,11 +617,11 @@ transType (S.TyApp pos t ts) = do
       t' <- transType t
       ts' <- traverse transType ts
       solve [With pos $ buildTyArr (map kindOf ts') (TYPE $ Rep BoxedRep) :~ kindOf t']
-      buildTyApp <$> transType t <*> traverse transType ts
+      TyConApp <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
-transType (S.TyTuple _ ts) = buildTyApp (TyTuple $ length ts) <$> traverse transType ts
+transType (S.TyTuple _ ts) = TyConApp (TyTuple $ length ts) <$> traverse transType ts
 transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
 transType (S.TyLazy _ t) = TyApp TyLazy <$> transType t
 
