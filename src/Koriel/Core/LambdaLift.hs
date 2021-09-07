@@ -3,6 +3,7 @@ module Koriel.Core.LambdaLift
   )
 where
 
+import Control.Lens (At (at), Lens', lens, traverseOf, traversed, use, (<>=), (?=))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Koriel.Core.Flat
@@ -11,6 +12,7 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Relude.Extra.Map (member)
 
 data LambdaLiftState = LambdaLiftState
   { _funcs :: HashMap (Id Type) ([Id Type], Exp (Id Type)),
@@ -37,7 +39,7 @@ lambdalift us Program {..} =
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader UniqSupply f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
   ks <- use knowns
-  if f `elem` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
+  if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
 llift (Let [LocalDef n (Fun xs call@Call {})] e) = do
   call' <- llift call
   Let [LocalDef n (Fun xs call')] <$> llift e
@@ -54,7 +56,7 @@ llift (Let [LocalDef n (Fun as body)] e) = do
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
   let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
-  if null fvs && n `notElem` freevars e'
+  if null fvs && not (n `member` freevars e')
     then llift e
     else do
       put backup

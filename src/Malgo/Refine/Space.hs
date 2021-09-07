@@ -1,19 +1,19 @@
 module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
-import Control.Monad.Extra (allM)
-import Data.Foldable.Extra (anyM)
+import Control.Lens (mapped, over, _2, view, (^.), At (at))
+import qualified Data.HashMap.Strict as HashMap
 import Data.List (isSubsequenceOf)
+import qualified Data.List as List
+import qualified Data.Map as Map
 import Koriel.Id (Id)
 import Koriel.Pretty hiding (space)
-import Malgo.Prelude hiding (Empty, subtract)
+import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static
-import qualified RIO.HashMap as HashMap
-import qualified RIO.List as List
-import qualified RIO.Map as Map
-import System.Directory.Internal
+import Data.List.Extra (nubOrd)
+import Data.Traversable (for)
 
 -- | Space of values that covered by patterns
 data Space
@@ -161,7 +161,7 @@ equalEmpty Empty = pure True
 equalEmpty (Type t)
   | decomposable t = equalEmpty =<< decompose t
   | otherwise = pure False
-equalEmpty (Union s1 s2) = andM (equalEmpty s1) (equalEmpty s2)
+equalEmpty (Union s1 s2) = andM [equalEmpty s1, equalEmpty s2]
 equalEmpty (Constructor _ ss) = anyM equalEmpty ss
 equalEmpty (Tuple ss) = anyM equalEmpty ss
 equalEmpty (Record (map snd -> ss)) = anyM equalEmpty ss

@@ -2,23 +2,16 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Koriel.Prelude
-  ( module RIO,
-    module RIO.State,
-    module RIO.Writer,
-    module Witherable,
-    module Control.Lens,
+  ( module Relude,
     unzip,
     replaceOf,
     localState,
   )
 where
 
-import Control.Lens hiding (List)
+import Control.Lens (ASetter, over)
 import Data.Monoid
-import RIO hiding (ASetter, ASetter', Getting, Lens, Lens', catMaybes, filter, lens, mapMaybe, over, preview, set, sets, to, view, (%~), (.~), (^.), (^..), (^?))
-import RIO.State
-import RIO.Writer
-import Witherable
+import Relude hiding (Op, Type, unzip, All)
 
 -- | unzip :: [(a, b)] -> ([a], [b]) の一般化
 unzip :: Functor f => f (a, b) -> (f a, f b)

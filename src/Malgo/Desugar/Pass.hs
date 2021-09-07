@@ -1,13 +1,16 @@
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
+import Control.Lens (At (at), makePrisms, preuse, preview, traverseOf, traversed, use, view, (<>=), (?=), (^.), _2, _Just)
+import qualified Data.Char as Char
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
+import qualified Data.Text as T
+import Data.Traversable (for)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
@@ -23,9 +26,6 @@ import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 import Malgo.TypeRep.Static as GT
-import qualified RIO.Char as Char
-import qualified RIO.Text as T
-import qualified RIO.Text.Partial as T'
 
 -- | トップレベル宣言
 data Def
@@ -36,7 +36,7 @@ makePrisms ''Def
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
+  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
   HashMap RnId (Scheme GT.Type) ->
   HashMap RnId (TypeDef GT.Type) ->
   RnEnv ->
@@ -64,7 +64,7 @@ desugar varEnv typeEnv rnEnv depList (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env) =>
+  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
   BindGroup (Malgo 'Refine) ->
   m [Def]
 dsBindGroup bg = do
@@ -74,7 +74,7 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat dataDefs' <> foreigns' <> scDefs'
 
-dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env, HasLogFunc env) => Import (Malgo 'Refine) -> m ()
+dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env) => Import (Malgo 'Refine) -> m ()
 dsImport (pos, modName, _) = do
   interface <-
     loadInterface modName >>= \case
@@ -192,12 +192,12 @@ dsExp (G.Var x (WithPrefix (With _ name))) = do
   --    2. 引数のない値コンストラクタ
   case (x ^. GT.withType, C.typeOf name') of
     -- TyLazyの型を検査
-    (GT.TyApp GT.TyLazy _, [] :-> _) -> pure ()
+    (GT.TyApp GT.TyLazy _, [] :-> _) -> pass
     (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _)
-      | isConstructor name -> pure ()
+      | isConstructor name -> pass
       | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
-    _ -> pure ()
+    _ -> pass
   case C.typeOf name' of
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
     [] :-> _ | isConstructor name -> pure $ CallDirect name' []
@@ -213,7 +213,7 @@ dsExp (G.Var x (WithPrefix (With _ name))) = do
           _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
-    isConstructor Id {_idName} | T.length _idName > 0 = Char.isUpper (T'.head _idName)
+    isConstructor Id {_idName} | T.length _idName > 0 = Char.isUpper (T.head _idName)
     isConstructor _ = False
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
 dsExp (G.Apply info f x) = runDef $ do

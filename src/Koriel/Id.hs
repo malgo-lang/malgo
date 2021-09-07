@@ -20,9 +20,10 @@ module Koriel.Id
   )
 where
 
+import Control.Lens (Lens, Lens', lens)
 import Data.Binary (Binary)
+import Data.Data (Data)
 import Data.Functor.Classes
-import Data.Hashable (Hashable (hashWithSalt))
 import GHC.Exts
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
@@ -65,7 +66,7 @@ instance Ord1 Id where
   liftCompare cmp id1 id2 = compare (_idName id1) (_idName id2) <> compare (_idUniq id1) (_idUniq id2) <> cmp (_idMeta id1) (_idMeta id2) <> compare (_idSort id1) (_idSort id2)
 
 instance Show1 Id where
-  liftShowsPrec showPrec _ d (Id {..}) = showString "Id " . showsPrec d _idName . showString " " . showsPrec d _idUniq . showString " " . showPrec d _idMeta . showString " " . showsPrec d _idSort
+  liftShowsPrec showPrec _ d Id {..} = showString "Id " . showsPrec d _idName . showString " " . showsPrec d _idUniq . showString " " . showPrec d _idMeta . showString " " . showsPrec d _idSort
 
 -- TODO: calculate hash from idUniq
 instance Hashable (Id a) where
@@ -81,7 +82,7 @@ pprIdName Id {_idName} = pPrint _idName
 
 idToText :: Id a -> Text
 idToText Id {_idName, _idSort = External (ModuleName modName)} = modName <> "." <> _idName
-idToText Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> tshow _idUniq
+idToText Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> show _idUniq
 
 pPrintMeta :: (t -> Doc) -> t -> Doc
 

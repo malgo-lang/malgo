@@ -4,17 +4,17 @@
 
 module Malgo.TypeRep.Static where
 
+import Control.Lens (At (at), Lens', Plated, Prism', makeLenses, makePrisms, mapped, over, prism, prism', re, (^.), (^?), _1, _2)
 import Data.Binary (Binary)
+import Data.Data (Data)
 import Data.Fix
 import Data.Functor.Foldable.TH (makeBaseFunctor)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
-import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Infer.UTerm
 import Malgo.Prelude
-import qualified RIO.List as List
 
 --------------------------------
 -- Common tag representations --
@@ -226,7 +226,7 @@ pattern TyConApp x xs <-
     TyConApp x xs = buildTyApp x xs
 
 buildTyApp :: Type -> [Type] -> Type
-buildTyApp = List.foldl TyApp
+buildTyApp = foldl' TyApp
 
 buildTyArr :: Foldable t => t Type -> Type -> Type
 buildTyArr ps ret = foldr TyArr ret ps

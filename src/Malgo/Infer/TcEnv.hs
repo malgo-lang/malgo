@@ -11,12 +11,11 @@ module Malgo.Infer.TcEnv
   )
 where
 
-import Data.Foldable (find)
+import Control.Lens (At (at), Lens', lens, over, traverseOf, traversed, view, _2)
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Pretty
-import Malgo.Infer.UTerm
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R

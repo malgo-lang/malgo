@@ -6,6 +6,7 @@ where
 
 -- α変換
 
+import Control.Lens (Lens', lens, over, traverseOf, view)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -47,7 +48,7 @@ lookupId n = do
 alphaExp :: (MonadReader AlphaEnv f, MonadIO f) => Exp (Id Type) -> f (Exp (Id Type))
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
 alphaExp (Let ds e) = do
-  env <- foldMapM ?? ds $ \(LocalDef n _) -> HashMap.singleton n . Var <$> cloneId n
+  env <- foldMapM ?? ds $ \(LocalDef n _) -> one . (n,) . Var <$> cloneId n
   local (over alphaMap (env <>)) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
 alphaExp e = traverseOf atom alphaAtom e

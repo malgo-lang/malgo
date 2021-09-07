@@ -1,5 +1,4 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Prelude
@@ -21,13 +20,14 @@ module Malgo.Prelude
   )
 where
 
+import Control.Lens (Lens, Lens', lens, view)
 import Control.Monad.Fix (MonadFix)
 import Data.List ((!!))
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import System.FilePath ((-<.>))
-import System.IO (readFile)
+import System.IO (hPutStrLn)
 import Text.Megaparsec.Pos (SourcePos (..), unPos)
 
 data Opt = Opt
@@ -73,7 +73,6 @@ instance HasOpt Opt where
 
 data MalgoEnv = MalgoEnv
   { _malgoUniqSupply :: UniqSupply,
-    _malgoLogFunc :: LogFunc,
     _malgoOpt :: Opt
   }
   deriving stock (Show, Eq)
@@ -87,17 +86,8 @@ instance HasMalgoEnv MalgoEnv where
 instance HasUniqSupply MalgoEnv where
   uniqSupply = lens _malgoUniqSupply (\x y -> x {_malgoUniqSupply = y})
 
-instance HasLogFunc MalgoEnv where
-  logFuncL = lens _malgoLogFunc (\x y -> x {_malgoLogFunc = y})
-
 instance HasOpt MalgoEnv where
   malgoOpt = lens _malgoOpt (\x y -> x {_malgoOpt = y})
-
-instance Show LogFunc where
-  show _ = "LogFunc"
-
-instance Eq LogFunc where
-  _ == _ = True
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
@@ -105,53 +95,48 @@ newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
 runMalgoM :: MalgoM a -> Opt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
-  let isVerbose = debugMode opt
-  logOptions' <- logOptionsHandle stderr isVerbose
-  let logOptions = setLogVerboseFormat True $ setLogUseColor True logOptions'
-
-  withLogFunc logOptions \lf -> do
-    let app = MalgoEnv {_malgoOpt = opt, _malgoUniqSupply = uniqSupply, _malgoLogFunc = lf}
-    runReaderT (unMalgoM m) app
+  let env = MalgoEnv {_malgoOpt = opt, _malgoUniqSupply = uniqSupply}
+  runReaderT (unMalgoM m) env
 
 getOpt :: (HasOpt env, MonadReader env m) => m Opt
 getOpt = view malgoOpt
 
-viewLine :: (HasOpt env, MonadReader env m, MonadIO m) => Int -> m String
+viewLine :: (HasOpt env, MonadReader env m, MonadIO m) => Int -> m Text
 viewLine linum = do
   srcFileName <- srcName <$> getOpt
-  s <- liftIO $ readFile srcFileName
-  pure $ lines s !! (linum - 1)
+  s <- readFile srcFileName
+  pure $ lines (toText s) !! (linum - 1)
 
-errorOn :: (HasCallStack, HasOpt env, HasLogFunc env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
+errorOn :: (HasCallStack, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
 errorOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
   let columnNum = unPos $ sourceColumn pos
-  logError $
-    displayShow $
+  error $
+    show $
       "error on" <+> pPrint pos <> ":"
         $$ vcat
           [ x,
-            nest (length (show lineNum) + 1) "|",
-            pPrint lineNum <+> "|" <+> text l,
-            nest (length (show lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
+            nest (length (show @String lineNum) + 1) "|",
+            pPrint lineNum <+> "|" <+> pPrint l,
+            nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
-  exitFailure
 
-warningOn :: (HasLogFunc env, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m ()
+warningOn :: (HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m ()
 warningOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
   let columnNum = unPos $ sourceColumn pos
-  logWarn $
-    displayShow $
-      "warning on" <+> pPrint pos <> ":"
-        $$ vcat
-          [ x,
-            nest (length (show lineNum) + 1) "|",
-            pPrint lineNum <+> "|" <+> text l,
-            nest (length (show lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
-          ]
+  liftIO $
+    hPutStrLn stderr $
+      render $
+        "warning on" <+> pPrint pos <> ":"
+          $$ vcat
+            [ x,
+              nest (length (show @String lineNum) + 1) "|",
+              pPrint lineNum <+> "|" <+> text (toString l),
+              nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
+            ]
 
 data With x v = With {_ann :: x, _value :: v}
   deriving stock (Eq, Show, Ord)

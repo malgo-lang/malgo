@@ -1,8 +1,10 @@
 module Malgo.Interface where
 
+import Control.Lens (At (at), Lens', ifor_, lens, view, (?=), (^.), _1)
 import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
 import Data.Binary.Instances.UnorderedContainers ()
+import Data.Either.Extra (mapLeft)
 import Data.Graph
 import Data.String.Conversions (convertString)
 import qualified Koriel.Core.Type as C
@@ -15,7 +17,7 @@ import Malgo.Rename.RnEnv (RnState)
 import qualified Malgo.Rename.RnEnv as RnState
 import Malgo.Syntax.Extension
 import qualified Malgo.TypeRep.Static as GT
-import qualified RIO.Directory as Directory
+import qualified System.Directory as Directory
 import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
@@ -80,27 +82,27 @@ storeInterface interface = do
   opt <- getOpt
   liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
 
-loadInterface :: (MonadIO m, HasOpt env, MonadReader env m, HasLogFunc env) => ModuleName -> m (Maybe Interface)
+loadInterface :: (MonadIO m, HasOpt env, MonadReader env m) => ModuleName -> m (Maybe Interface)
 loadInterface (ModuleName modName) = do
-  logDebug $ "load interface: " <> displayShow modName
+  -- logDebug $ "load interface: " <> displayShow modName
   modPaths <- modulePaths <$> getOpt
-  logDebug $ "modPaths = " <> displayShow modPaths
+  -- logDebug $ "modPaths = " <> displayShow modPaths
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x
-    Left (_, errorMessage) -> do
-      logDebug $ displayShow errorMessage
+    Left (_, _) -> do
+      -- logDebug $ displayShow errorMessage
       pure Nothing
   where
     findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)
     findAndReadFile [] modFile = pure $ Left (0, "module" <+> pPrint modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
-      isExistModFile <- Directory.doesFileExist (modPath </> modFile)
+      isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
         then liftIO $ mapLeft (second text) <$> decodeFileOrFail (modPath </> modFile)
         else findAndReadFile rest modFile
 
-dependencieList :: (MonadIO m, HasOpt env, HasLogFunc env, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]
+dependencieList :: (MonadIO m, HasOpt env, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]
 dependencieList modName imports = do
   depList <- ordNub . ((modName, modName, imports) :) <$> foldMapM genDepList imports
   let (depGraph, nodeFromVertex, _) = graphFromEdges depList

@@ -1,5 +1,6 @@
 module Malgo.Rename.RnEnv where
 
+import Control.Lens (ASetter', Lens', lens, over)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.MonadUniq
@@ -86,9 +87,6 @@ instance HasOpt RnEnv where
 
 instance HasUniqSupply RnEnv where
   uniqSupply = rnMalgoEnv . uniqSupply
-
-instance HasLogFunc RnEnv where
-  logFuncL = rnMalgoEnv . logFuncL
 
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [With Visibility RnId]) -> [(PsId, With Visibility RnId)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)

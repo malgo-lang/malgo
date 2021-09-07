@@ -5,6 +5,7 @@ module Koriel.Core.Lint
   )
 where
 
+import Control.Lens (view, _1)
 import Control.Monad.Except
 import Koriel.Core.Op
 import Koriel.Core.Syntax
@@ -20,9 +21,9 @@ lint :: (Monad m, HasType a, Pretty a, Eq a) => Exp (Id a) -> m ()
 lint e =
   runReaderT (lintExp e) []
 
-defined :: (MonadReader (t (Id a)) f, Foldable t, Eq a, Pretty a) => Id a -> f ()
+defined :: (MonadReader [Id a] f, Eq a, Pretty a) => Id a -> f ()
 defined x
-  | idIsExternal x = pure ()
+  | idIsExternal x = pass
   | otherwise = do
     env <- ask
     unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
@@ -37,7 +38,7 @@ isMatch x y
 
 match :: (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> f ()
 match x y
-  | isMatch x y = pure ()
+  | isMatch x y = pass
   | otherwise =
     errorDoc $
       "type mismatch:"
@@ -123,7 +124,7 @@ lintExp (Let ds e) = local (map (view localDefVar) ds <>) $ do
 lintExp (Match e cs) = do
   lintExp e
   traverse_ lintCase cs
-lintExp Error {} = pure ()
+lintExp Error {} = pass
 
 lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
@@ -136,7 +137,7 @@ lintCase (Bind x e) = local (x :) $ lintExp e
 
 lintAtom :: (MonadReader [Id a] m, Pretty a, Eq a) => Atom (Id a) -> m ()
 lintAtom (Var x) = defined x
-lintAtom (Unboxed _) = pure ()
+lintAtom (Unboxed _) = pass
 
 lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, Eq a) => Program (Id a) -> m ()
 lintProgram Program {..} = do

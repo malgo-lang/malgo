@@ -3,8 +3,8 @@
 
 module Malgo.Syntax where
 
-import Data.Coerce (coerce)
-import Data.Foldable (find, foldl1)
+import Control.Lens (makePrisms, makeLenses, _2, (^.), view)
+import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Koriel.Id
@@ -13,7 +13,6 @@ import Malgo.Prelude
 import Malgo.Syntax.Extension
 import qualified Malgo.TypeRep.Static as S
 import qualified Malgo.TypeRep.UTerm as U
-import qualified RIO.NonEmpty as NonEmpty
 
 -- | Unboxed and literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
@@ -80,7 +79,7 @@ instance (Pretty (XId x)) => Pretty (Type x) where
 
 getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = HashSet.singleton v
+getTyVars (TyVar _ v) = one v
 getTyVars TyCon {} = mempty
 getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
@@ -125,14 +124,14 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
       space
         <> foldl1
           (\a b -> sep [a, nest (-2) $ "|" <+> b])
-          (NonEmpty.toList $ fmap (pPrintPrec l 0) cs)
+          (toList $ fmap (pPrintPrec l 0) cs)
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
   pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
   pPrintPrec _ _ (Ann _ e t) = parens $ pPrint e <+> ":" <+> pPrint t
-  pPrintPrec _ _ (Seq _ ss) = parens $ sep $ punctuate ";" $ NonEmpty.toList $ fmap pPrint ss
+  pPrintPrec _ _ (Seq _ ss) = parens $ sep $ punctuate ";" $ toList $ fmap pPrint ss
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
 instance
@@ -190,7 +189,7 @@ instance
   typeOf (Parens x _) = x ^. S.withType
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
-freevars (Var _ (WithPrefix v)) = HashSet.singleton (v ^. value)
+freevars (Var _ (WithPrefix v)) = one (v ^. value)
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
@@ -202,7 +201,7 @@ freevars (List _ es) = mconcat $ map freevars es
 freevars (Force _ e) = freevars e
 freevars (RecordAccess _ _) = mempty
 freevars (Ann _ e _) = freevars e
-freevars (Seq _ ss) = mconcat $ NonEmpty.toList $ fmap freevarsStmt ss
+freevars (Seq _ ss) = mconcat $ toList $ fmap freevarsStmt ss
 freevars (Parens _ e) = freevars e
 
 ----------
@@ -338,7 +337,7 @@ instance
   typeOf (UnboxedP x _) = x ^. S.withType
 
 bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
-bindVars (VarP _ x) = HashSet.singleton x
+bindVars (VarP _ x) = one x
 bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
 bindVars (TupleP _ ps) = mconcat $ map bindVars ps
 bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps

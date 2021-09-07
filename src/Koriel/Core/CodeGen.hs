@@ -9,17 +9,15 @@ module Koriel.Core.CodeGen
   )
 where
 
+import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, to, use, view, (<?=), (?~), (^.), (^?))
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
-import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
-import qualified Data.ByteString.Short as BS
-import Data.Char (ord)
 import qualified Data.HashMap.Strict as HashMap
-import Data.Kind (Constraint)
 import qualified Data.List as List
 import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
+import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import qualified Koriel.Core.Op as Op
 import Koriel.Core.Syntax
@@ -86,7 +84,7 @@ type MonadCodeGen m =
   ) ::
     Constraint
 
-runCodeGenT :: Monad m => CodeGenEnv -> StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
   execModuleBuilderT emptyModuleBuilder $
     runReaderT (Lazy.evalStateT m mempty) env
@@ -98,21 +96,22 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
     traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
     genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
-  liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     -- topVarsのOprMapを作成
     varEnv = mconcatMap ?? _topVars $ \(v, e) ->
-      HashMap.singleton v $
-        ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v)
+      one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
     -- topFuncsのOprMapを作成
     funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
-      HashMap.singleton f $
-        ConstantOperand $
-          C.GlobalReference
-            (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
-            (toName f)
+      one
+        ( f,
+          ConstantOperand $
+            C.GlobalReference
+              (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
+              (toName f)
+        )
     initTopVars [] = retVoid
-    initTopVars ((name, expr) : xs) = do
+    initTopVars ((name, expr) : xs) =
       view (globalValueMap . at name) >>= \case
         Nothing -> error $ show $ pPrint name <+> "is not found"
         Just name' -> genExp expr \eOpr -> do
@@ -170,7 +169,7 @@ findVar x =
         Nothing -> error $ show $ pPrint x <> " is not found"
 
 findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
-findFun x = do
+findFun x =
   view (funcMap . at x) >>= \case
     Just opr -> pure opr
     Nothing ->
@@ -241,7 +240,7 @@ genFunc name params body
     funcName = toName name
     llvmParams =
       map
-        (\x -> (convType $ x ^. idMeta, ParameterName $ BS.toShort $ convertString $ idToText x))
+        (\x -> (convType $ x ^. idMeta, ParameterName $ toShort $ encodeUtf8 $ idToText x))
         params
     retty = convType (C.typeOf body)
 
@@ -363,7 +362,7 @@ genExp (Let xs e) k = do
   local (over valueMap (env <>)) $ genExp e k
   where
     prepare (LocalDef name (Fun ps body)) =
-      HashMap.singleton name
+      one . (name,)
         <$> mallocType
           ( StructureType
               False
@@ -386,7 +385,7 @@ genExp (Match e cs) k
     br switchBlock
     -- 各ケースのコードとラベルを生成する
     -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-    (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (fromMaybe mempty $ e ^? to C.typeOf . _SumT) k) cs
+    (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (maybeToMonoid $ e ^? to C.typeOf . _SumT) k) cs
     -- defaultsの先頭を取り出し、switchのデフォルトケースとする
     -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
     defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
@@ -482,7 +481,7 @@ genLocalDef (LocalDef funName (Fun ps e)) = do
   closAddr <- findVar funName
   gepAndStore closAddr [int32 0, int32 0] =<< bitcast capture (ptr i8)
   gepAndStore closAddr [int32 0, int32 1] func
-  pure $ HashMap.singleton funName closAddr
+  pure $ one (funName, closAddr)
   where
     fvs = toList $ freevars (Fun ps e)
     -- キャプチャされる変数を詰める構造体の型
@@ -497,7 +496,7 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = d
   ifor_ xs $ \i x ->
     gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
-  HashMap.singleton name <$> bitcast addr (convType $ SumT cs)
+  one . (name,) <$> bitcast addr (convType $ SumT cs)
 genLocalDef (LocalDef (C.typeOf -> t) Pack {}) = error $ show t <> " must be SumT"
 
 genCon :: [Con] -> Con -> (Integer, LT.Type)

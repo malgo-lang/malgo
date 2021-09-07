@@ -1,8 +1,14 @@
 module Malgo.Infer.Pass where
 
-import qualified Data.HashMap.Strict as HashMap (mapKeys)
+import Control.Lens (At (at), forOf, ix, mapped, over, preuse, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _4, _Just)
+import Control.Monad.Writer.Strict (MonadWriter (listen, tell), WriterT (runWriterT))
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.HashSet as HashSet
+import qualified Data.List as List
 import Data.List.Extra (anySame)
+import qualified Data.Map as Map
 import Data.Maybe (fromJust)
+import Data.Traversable (for)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
@@ -10,7 +16,7 @@ import Malgo.Infer.TcEnv
 import Malgo.Infer.UTerm
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
-import Malgo.Prelude
+import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
@@ -18,33 +24,27 @@ import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), typeConstructor, typeParameters, valueConstructors)
 import qualified Malgo.TypeRep.Static as Static
 import Malgo.TypeRep.UTerm
-import qualified RIO.HashMap as HashMap
-import qualified RIO.HashSet as HashSet
-import qualified RIO.List as List
-import qualified RIO.List.Partial as List
-import qualified RIO.Map as Map
-import qualified RIO.NonEmpty as NonEmpty
 import Text.Megaparsec (SourcePos)
 
 -------------------------------
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupVar :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> RnId -> m (Scheme UType)
+lookupVar :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m (Scheme UType)
 lookupVar pos name =
   use (varEnv . at name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just scheme -> pure scheme
 
-lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> RnId -> m UType
+lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m UType
 lookupType pos name =
-  preuse (typeEnv . at name . _Just) >>= \case
+  preuse (typeEnv . ix name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just TypeDef {..} -> pure _typeConstructor
 
 -- fieldsのすべてのフィールドを含むレコード型を検索する
 -- マッチするレコード型が複数あった場合はエラー
-lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m, HasLogFunc env) => SourcePos -> [WithPrefix RnId] -> m (Scheme UType)
+lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> [WithPrefix RnId] -> m (Scheme UType)
 lookupRecordType pos fields = do
   env <- use fieldEnv
   let candidates = map (lookup env) fields
@@ -88,7 +88,6 @@ tcBindGroup ::
     HasOpt env,
     MonadReader env m,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   BindGroup (Malgo 'Rename) ->
@@ -111,7 +110,6 @@ prepareTcImpls ::
     MonadBind f,
     HasUniqSupply env,
     HasOpt env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   Impl (Malgo 'Rename) ->
@@ -122,11 +120,10 @@ prepareTcImpls (pos, name, typ, _) = do
     typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
   scheme <- generalize pos mempty =<< transType typ
   varEnv . at name ?= scheme
-  pure ()
+  pass
 
 tcImpls ::
   ( MonadReader env f,
-    HasLogFunc env,
     HasOpt env,
     MonadIO f,
     MonadFail f,
@@ -164,8 +161,7 @@ tcImports ::
   ( MonadState TcEnv m,
     MonadIO m,
     HasOpt env,
-    MonadReader env m,
-    HasLogFunc env
+    MonadReader env m
   ) =>
   [Import (Malgo 'Rename)] ->
   m [Import (Malgo 'Infer)]
@@ -176,8 +172,8 @@ tcImports = traverse tcImport
         loadInterface modName >>= \case
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
-      varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
-      typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
+      varEnv <>= (Static.fromType <<$>> interface ^. signatureMap)
+      typeEnv <>= (Static.fromType <<$>> interface ^. typeDefMap)
       abbrEnv
         <>= HashMap.mapKeys
           (fmap Static.fromType)
@@ -195,7 +191,6 @@ tcTypeDefinitions ::
     HasOpt env,
     HasUniqSupply env,
     MonadFail m,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
@@ -229,7 +224,6 @@ tcTypeSynonyms ::
     HasOpt env,
     HasUniqSupply env,
     MonadFail f,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
@@ -250,9 +244,9 @@ tcTypeSynonyms ds =
 updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'Infer) -> [Id UType] -> UType -> f ()
 updateFieldEnv typeName (S.TyRecord _ kts) params typ = do
   let scheme = Forall params typ
-  for_ kts \(label, _) -> do
+  for_ kts \(label, _) ->
     modify (appendFieldEnv [(label, (typeName, scheme))])
-updateFieldEnv _ _ _ _ = pure ()
+updateFieldEnv _ _ _ _ = pass
 
 tcDataDefs ::
   ( MonadState TcEnv m,
@@ -261,7 +255,6 @@ tcDataDefs ::
     HasOpt env,
     MonadIO m,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   [DataDef (Malgo 'Rename)] ->
@@ -290,7 +283,7 @@ tcDataDefs ds = do
     typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
-tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env, MonadFail m, HasLogFunc env, HasRnEnv env) => [Class (Malgo 'Rename)] -> m [Class (Malgo 'Infer)]
+tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env, MonadFail m, HasRnEnv env) => [Class (Malgo 'Rename)] -> m [Class (Malgo 'Infer)]
 tcClasses ds =
   for ds \(pos, name, params, synType) -> do
     TyCon con <- lookupType pos name
@@ -308,7 +301,6 @@ tcForeigns ::
     MonadIO m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   [Foreign (Malgo 'Rename)] ->
@@ -329,7 +321,6 @@ tcScSigs ::
     MonadIO m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   [ScSig (Malgo 'Rename)] ->
@@ -344,12 +335,13 @@ tcScSigs ds =
     pure (pos, name, tcType ty)
 
 prepareTcScDefs :: (MonadState TcEnv m, MonadBind m) => [ScDef (Malgo 'Rename)] -> m ()
-prepareTcScDefs = traverse_ \(_, name, _) -> do
-  use (varEnv . at name) >>= \case
-    Nothing -> do
-      ty <- Forall [] . UVar <$> freshVar
-      varEnv . at name ?= ty
-    Just _ -> pure ()
+prepareTcScDefs = traverse_ \(_, name, _) ->
+  whenNothingM_
+    (use (varEnv . at name))
+    ( do
+        ty <- Forall [] . UVar <$> freshVar
+        varEnv . at name ?= ty
+    )
 
 tcScDefGroup ::
   ( MonadBind m,
@@ -359,7 +351,6 @@ tcScDefGroup ::
     MonadReader env m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
@@ -374,7 +365,6 @@ tcScDefs ::
     MonadReader env m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   [ScDef (Malgo 'Rename)] ->
@@ -417,7 +407,6 @@ tcExpr ::
     MonadReader env m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   Exp (Malgo 'Rename) ->
@@ -445,7 +434,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
   pure $ Fn (With (TyApp TyLazy (typeOf e')) pos) (Clause (With (TyApp TyLazy (typeOf e')) x) [] e' :| [])
-tcExpr (Fn pos cs) = do
+tcExpr (Fn pos cs) =
   traverse tcClause cs >>= \case
     (c' :| cs') -> do
       for_ cs' \c -> tell [With pos $ typeOf c' :~ typeOf c]
@@ -484,7 +473,7 @@ tcExpr (Ann pos e t) = do
   pure e'
 tcExpr (Seq pos ss) = do
   ss' <- tcStmts ss
-  pure $ Seq (With (typeOf $ NonEmpty.last ss') pos) ss'
+  pure $ Seq (With (typeOf $ last ss') pos) ss'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (With (typeOf e') pos) e'
@@ -497,7 +486,6 @@ tcClause ::
     MonadReader env m,
     HasOpt env,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   Clause (Malgo 'Rename) ->
@@ -514,8 +502,7 @@ tcPatterns ::
     MonadFail m,
     MonadIO m,
     HasOpt env,
-    MonadReader env m,
-    HasLogFunc env
+    MonadReader env m
   ) =>
   [Pat (Malgo 'Rename)] ->
   WriterT [With SourcePos Constraint] m [Pat (Malgo 'Infer)]
@@ -568,7 +555,6 @@ tcStmts ::
     HasOpt env,
     MonadIO m,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   NonEmpty (Stmt (Malgo 'Rename)) ->
@@ -583,7 +569,6 @@ tcStmt ::
     HasOpt env,
     MonadIO m,
     HasUniqSupply env,
-    HasLogFunc env,
     HasRnEnv env
   ) =>
   Stmt (Malgo 'Rename) ->
@@ -603,7 +588,7 @@ tcStmt (Let pos v e) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env, HasLogFunc env, HasRnEnv env) => S.Type (Malgo 'Rename) -> m UType
+transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env, HasRnEnv env) => S.Type (Malgo 'Rename) -> m UType
 transType (S.TyApp pos t ts) = do
   rnEnv <- view rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv

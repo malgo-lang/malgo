@@ -1,9 +1,11 @@
 -- | パターンマッチのコンパイル
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
+import Control.Lens (At (at), Prism', has, over, (?=), _1)
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map.Strict as Map
+import Data.Traversable (for)
 import Koriel.Core.Syntax
 import qualified Koriel.Core.Syntax as Core
 import Koriel.Core.Type
@@ -14,7 +16,7 @@ import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
-import Malgo.Prelude
+import Malgo.Prelude hiding (group)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static
@@ -36,7 +38,7 @@ newtype PatMatrix = PatMatrix
   deriving newtype (Pretty)
 
 patMatrix :: [[Pat (Malgo 'Refine)]] -> PatMatrix
-patMatrix xss = PatMatrix $ List.transpose xss
+patMatrix xss = PatMatrix $ transpose xss
 
 headCol :: PatMatrix -> Maybe [Pat (Malgo 'Refine)]
 headCol PatMatrix {innerList = []} = Nothing
@@ -108,8 +110,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       (pat', es') <- groupRecord pat es
-      -- NonEmpty.singleton = (:| [])
-      (:| []) . Unpack con params <$> match (params <> restScrutinee) pat' es' err
+      one . Unpack con params <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
@@ -118,8 +119,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       let (pat', es') = groupTuple pat es
-      -- NonEmpty.singleton = (:| [])
-      (:| []) . Unpack con params <$> match (params <> restScrutinee) pat' es' err
+      one . Unpack con params <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
@@ -181,7 +181,7 @@ partitionOn prism heads tails es =
   where
     -- onHeads : onTails => pattern that row starts with prism
     -- otherHeads : otherTails => pattern row that starts without prism
-    (onHeads, otherHeads) = span (has prism) heads
+    (onHeads, otherHeads) = List.span (has prism) heads
     (onTails, otherTails) = unzip $ map (List.splitAt (length onHeads)) tails
 
 -- コンストラクタgconの引数部のパターンpsを展開したパターン行列を生成する
@@ -190,7 +190,7 @@ group ::
   PatMatrix ->
   [m (Core.Exp (Id Core.Type))] ->
   (PatMatrix, [m (Core.Exp (Id Core.Type))])
-group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMaybe (aux gcon) (zip pss es)
+group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMaybe (aux gcon) (zip pss es)
   where
     aux gcon (ConP _ gcon' ps : pss, e)
       | gcon == gcon' = Just (ps <> pss, e)
@@ -199,7 +199,7 @@ group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ 
     aux _ ([], _) = error "ps must be not empty"
 
 groupTuple :: PatMatrix -> [m (Core.Exp (Id Core.Type))] -> (PatMatrix, [m (Core.Exp (Id Core.Type))])
-groupTuple (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
+groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p

@@ -5,13 +5,14 @@
 -- A正規形に近い。
 module Koriel.Core.Syntax where
 
-import qualified Data.HashSet as HashSet
-import Data.Monoid (Endo (..))
+import Control.Lens (Lens', Plated, Traversal', lens, sans, traverseOf, traversed, view, _2)
+import Control.Monad.Writer (WriterT (runWriterT), tell)
+import Data.Data (Data)
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude hiding ((.=))
+import Koriel.Prelude
 import Koriel.Pretty
 
 class HasFreeVar f where
@@ -65,7 +66,7 @@ instance Pretty a => Pretty (Atom a) where
   pPrint (Unboxed x) = pPrint x
 
 instance HasFreeVar Atom where
-  freevars (Var x) = HashSet.singleton x
+  freevars (Var x) = one x
   freevars Unboxed {} = mempty
 
 class HasAtom f where
