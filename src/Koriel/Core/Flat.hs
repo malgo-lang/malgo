@@ -3,7 +3,8 @@ module Koriel.Core.Flat
   )
 where
 
-import Data.Monoid (Endo (..))
+import Control.Lens (traverseOf, traversed)
+import Control.Monad.Writer.Strict (MonadWriter (tell), WriterT (runWriterT))
 import Koriel.Core.Syntax
 import Koriel.Prelude
 

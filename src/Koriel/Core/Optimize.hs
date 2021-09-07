@@ -3,6 +3,7 @@ module Koriel.Core.Optimize
   )
 where
 
+import Control.Lens (At (at), Lens', cosmos, lengthOf, lens, over, traverseOf, traversed, view, (?=), (?~), _2)
 import Control.Monad.Except
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
@@ -14,6 +15,7 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Relude.Extra.Map (StaticMap (member))
 
 data OptimizeEnv = OptimizeEnv {_optimizeUniqSupply :: UniqSupply, _inlineLevel :: Int}
 
@@ -153,7 +155,7 @@ removeUnusedLet (Let ds e) = do
       -- limit回試行してわからなければ安全側に倒してTrue
       | limit <= 0 = True
       | idIsExternal v = True
-      | v `elem` fvs = True
+      | v `member` fvs = True
       | otherwise =
         -- fvsの要素fvについて、gamma[fv]をfvsに加える
         -- fvsに変化がなければ、vはどこからも参照されていない

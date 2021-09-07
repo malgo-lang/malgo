@@ -1,5 +1,6 @@
 module Malgo.Desugar.DsEnv where
 
+import Control.Lens (Lens', lens, mapped, over, traversed, use, _2)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Koriel.Core.Type as C
@@ -51,7 +52,6 @@ typeDefEnv = lens _typeDefEnv (\d x -> d {_typeDefEnv = x})
 
 desugarRnEnv :: Lens' DsEnv RnEnv
 desugarRnEnv = lens _desugarRnEnv (\d x -> d {_desugarRnEnv = x})
-
 
 class HasDsEnv env where
   dsEnv :: Lens' env DsEnv

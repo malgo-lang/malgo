@@ -2,7 +2,9 @@
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
 module Malgo.Refine.Pass where
 
-import Data.Kind (Constraint)
+import Control.Lens (over, traverseOf, traversed, view, _1, _2, (^.), (.~), to)
+import qualified Data.List as List
+import qualified Data.List.NonEmpty as NonEmpty
 import Koriel.Pretty
 import Malgo.Infer.TcEnv
 import Malgo.Prelude
@@ -13,8 +15,6 @@ import qualified Malgo.Syntax as Syn
 import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static
 import qualified Malgo.TypeRep.Static as Static
-import qualified RIO.List as List
-import qualified RIO.NonEmpty as NonEmpty
 
 type Infered t x = (x ~ Malgo 'Infer) :: Constraint
 

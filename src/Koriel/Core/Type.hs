@@ -1,8 +1,10 @@
 module Koriel.Core.Type where
 
+import Control.Lens (Prism', Traversal', prism, traverseOf, traversed, (^.))
 import Data.Binary (Binary)
+import Data.Data (Data)
 import Koriel.Id
-import Koriel.Prelude hiding ((.=))
+import Koriel.Prelude
 import Koriel.Pretty
 
 {-

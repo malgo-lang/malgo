@@ -5,6 +5,8 @@
 
 module Malgo.TypeRep.UTerm where
 
+import Control.Lens (Traversal', makeLenses, traverseOf, transform, (^.), over, At (at), mapped, _2)
+import Data.Data (Data)
 import Data.Deriving
 import Data.Functor.Foldable
 import qualified Data.List as List
@@ -95,7 +97,7 @@ applySubst subst t =
 
 instance HasType UType where
   typeOf = id
-  types = id 
+  types = id
 
 instance HasKind UType where
   kindOf (UVar v) = v ^. typeVar . idMeta

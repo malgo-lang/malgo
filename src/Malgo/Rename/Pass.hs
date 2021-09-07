@@ -1,6 +1,7 @@
 -- | 名前解決
 module Malgo.Rename.Pass where
 
+import Control.Lens (At (at), over, use, view, (<>=), (^.), _2)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.List (intersect)
@@ -13,7 +14,6 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import qualified RIO.List as List
 import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)
 
@@ -31,7 +31,7 @@ resolveGlobalName modName name = newExternalId name () modName
 lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupVarName pos name =
   view (varEnv . at name) >>= \case
-    Just names -> case List.find (\i -> i ^. ann == Implicit) names of
+    Just names -> case find (\i -> i ^. ann == Implicit) names of
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
@@ -42,7 +42,7 @@ lookupVarName pos name =
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupTypeName pos name = do
   view (typeEnv . at name) >>= \case
-    Just names -> case List.find (\i -> i ^. ann == Implicit) names of
+    Just names -> case find (\i -> i ^. ann == Implicit) names of
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
@@ -53,7 +53,7 @@ lookupTypeName pos name = do
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupFieldName pos name = do
   view (fieldEnv . at name) >>= \case
-    Just names -> case List.find (\i -> i ^. ann == Implicit) names of
+    Just names -> case find (\i -> i ^. ann == Implicit) names of
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
@@ -65,7 +65,7 @@ lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Modul
 lookupQualifiedVarName pos modName name = do
   view (varEnv . at name) >>= \case
     Just names ->
-      case List.find (\i -> i ^. ann == Explicit modName) names of
+      case find (\i -> i ^. ann == Explicit modName) names of
         Just (With _ name) -> pure name
         Nothing ->
           errorOn pos $
@@ -269,7 +269,7 @@ infixDecls ds =
     _ -> pure mempty
 
 mkOpApp ::
-  (MonadIO m, MonadReader env m, HasOpt env, HasLogFunc env) =>
+  (MonadIO m, MonadReader env m, HasOpt env) =>
   SourcePos ->
   (Assoc, Int) ->
   RnId ->
@@ -311,7 +311,7 @@ compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of
     left = (False, False)
     error_please = (True, False)
 
-genToplevelEnv :: (MonadReader env f, HasOpt env, MonadIO f, HasUniqSupply env, HasLogFunc env) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
+genToplevelEnv :: (MonadReader env f, HasOpt env, MonadIO f, HasUniqSupply env) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
 genToplevelEnv modName ds builtinEnv = do
   execStateT (traverse aux ds) builtinEnv
   where

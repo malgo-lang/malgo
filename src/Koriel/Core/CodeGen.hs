@@ -9,17 +9,17 @@ module Koriel.Core.CodeGen
   )
 where
 
+import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, to, use, view, (<?=), (?~), (^.), (^?))
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as BS
-import Data.Char (ord)
 import qualified Data.HashMap.Strict as HashMap
-import Data.Kind (Constraint)
 import qualified Data.List as List
 import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
+import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import qualified Koriel.Core.Op as Op
 import Koriel.Core.Syntax
@@ -86,7 +86,7 @@ type MonadCodeGen m =
   ) ::
     Constraint
 
-runCodeGenT :: Monad m => CodeGenEnv -> StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
   execModuleBuilderT emptyModuleBuilder $
     runReaderT (Lazy.evalStateT m mempty) env

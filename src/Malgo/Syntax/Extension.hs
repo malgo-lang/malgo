@@ -4,7 +4,6 @@
 module Malgo.Syntax.Extension where
 
 import Data.Binary (Binary)
-import Data.Kind (Constraint)
 import qualified Data.Kind as K
 import Data.Void
 import Koriel.Id
@@ -13,6 +12,7 @@ import Malgo.Prelude
 import qualified Malgo.TypeRep.Static as S
 import qualified Malgo.TypeRep.UTerm as U
 import Text.Megaparsec.Pos (SourcePos)
+import Control.Lens (view)
 
 -- Phase and type instance
 data MalgoPhase = Parse | Rename | Infer | Refine

@@ -1,6 +1,8 @@
 module Koriel.MonadUniq where
 
+import Control.Lens (Lens', lens, view)
 import Koriel.Prelude
+import Text.Show (Show (show))
 
 newtype UniqSupply = UniqSupply {_uniqSupply :: IORef Int}
   deriving stock (Eq)

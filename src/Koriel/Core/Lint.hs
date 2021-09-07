@@ -5,6 +5,7 @@ module Koriel.Core.Lint
   )
 where
 
+import Control.Lens (view, _1)
 import Control.Monad.Except
 import Koriel.Core.Op
 import Koriel.Core.Syntax
@@ -20,7 +21,7 @@ lint :: (Monad m, HasType a, Pretty a, Eq a) => Exp (Id a) -> m ()
 lint e =
   runReaderT (lintExp e) []
 
-defined :: (MonadReader (t (Id a)) f, Foldable t, Eq a, Pretty a) => Id a -> f ()
+defined :: (MonadReader [Id a] f, Eq a, Pretty a) => Id a -> f ()
 defined x
   | idIsExternal x = pure ()
   | otherwise = do

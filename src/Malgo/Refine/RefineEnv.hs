@@ -1,5 +1,7 @@
 module Malgo.Refine.RefineEnv where
 
+import Control.Lens (Lens', lens)
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.MonadUniq
 import Malgo.Infer.TcEnv
@@ -7,7 +9,6 @@ import Malgo.Prelude
 import Malgo.TypeRep.Static
 import Malgo.TypeRep.UTerm
 import qualified Malgo.TypeRep.UTerm as UTerm
-import qualified RIO.HashMap as HashMap
 
 data RefineEnv = RefineEnv
   { _typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
@@ -28,9 +29,6 @@ instance HasOpt RefineEnv where
 
 instance HasUniqSupply RefineEnv where
   uniqSupply = refineMalgoEnv . uniqSupply
-
-instance HasLogFunc RefineEnv where
-  logFuncL = refineMalgoEnv . logFuncL
 
 buildRefineEnv :: MalgoEnv -> TcEnv -> RefineEnv
 buildRefineEnv malgoEnv TcEnv {_typeEnv} =

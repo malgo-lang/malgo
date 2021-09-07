@@ -3,11 +3,13 @@
 
 module Malgo.Infer.UTerm where
 
+import Control.Lens (Plated)
+import Data.Data (Data)
 import Data.Fix
 import Data.Functor.Classes (Eq1 (liftEq), Ord1 (liftCompare), Show1 (liftShowsPrec))
+import qualified Data.HashSet as HashSet
 import Koriel.Pretty
 import Malgo.Prelude
-import qualified RIO.HashSet as HashSet
 import Text.Show (Show (showList, showsPrec), showParen, showString)
 
 -----------

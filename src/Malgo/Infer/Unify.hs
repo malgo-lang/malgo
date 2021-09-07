@@ -4,19 +4,21 @@
 -- | Unification
 module Malgo.Infer.Unify where
 
-import Control.Monad.Except (ExceptT)
+import Control.Lens (At (at), itraverse_, transformM, traverseOf, use, view, (?=), (^.))
+import Control.Monad.Writer.Strict (WriterT)
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
+import qualified Data.Map as Map
+import qualified Data.Text as Text
+import Data.Traversable (for)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Infer.TcEnv (TcEnv, abbrEnv)
 import Malgo.Infer.UTerm
-import Malgo.Prelude
+import Malgo.Prelude hiding (Constraint)
 import Malgo.TypeRep.Static (Rep (..), Scheme (..))
 import Malgo.TypeRep.UTerm
-import qualified RIO.HashMap as HashMap
-import qualified RIO.Map as Map
-import qualified RIO.Text as Text
 import Text.Megaparsec (SourcePos)
 
 ----------------
@@ -108,7 +110,7 @@ equiv _ _ = Nothing
 occursCheck :: TypeVar -> UType -> Bool
 occursCheck v t = HashSet.member v (freevars t)
 
-instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadState TcEnv m, HasLogFunc env) => MonadBind (TypeUnifyT m) where
+instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadState TcEnv m) => MonadBind (TypeUnifyT m) where
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar = do
@@ -131,10 +133,10 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 -- Solver --
 ------------
 
-solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f, HasLogFunc env) => [With SourcePos Constraint] -> f ()
+solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => [With SourcePos Constraint] -> f ()
 solve = solveLoop 5000
 
-solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f, HasLogFunc env) => Int -> [With SourcePos Constraint] -> f ()
+solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => Int -> [With SourcePos Constraint] -> f ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pure ()
 solveLoop n (With x (t1 :~ t2) : cs) = do
@@ -190,7 +192,7 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m, HasLogFunc env) => SourcePos -> Scheme UType -> m UType
+instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m) => SourcePos -> Scheme UType -> m UType
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- UVar <$> freshVar

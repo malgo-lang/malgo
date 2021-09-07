@@ -10,6 +10,7 @@ import System.FilePath ((</>))
 import System.FilePath.Lens (extension)
 import Text.Megaparsec (errorBundlePretty)
 import Text.Read (read)
+import Control.Lens ((.~))
 
 main :: IO ()
 main = do
@@ -21,7 +22,7 @@ main = do
       src <- T.readFile (srcName opt)
       let parsedAst = case parseMalgo (srcName opt) src of
             Right x -> x
-            Left err -> error $ errorBundlePretty err
+            Left err -> error $ toText $ errorBundlePretty err
       Driver.compileFromAST parsedAst opt
 
 toLLOpt :: Parser Opt

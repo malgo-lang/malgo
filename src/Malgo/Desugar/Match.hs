@@ -1,9 +1,11 @@
 -- | パターンマッチのコンパイル
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
+import Control.Lens (At (at), Prism', has, over, (?=), _1)
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map.Strict as Map
+import Data.Traversable (for)
 import Koriel.Core.Syntax
 import qualified Koriel.Core.Syntax as Core
 import Koriel.Core.Type
@@ -14,7 +16,7 @@ import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
-import Malgo.Prelude
+import Malgo.Prelude hiding (group)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Malgo.TypeRep.Static
@@ -181,7 +183,7 @@ partitionOn prism heads tails es =
   where
     -- onHeads : onTails => pattern that row starts with prism
     -- otherHeads : otherTails => pattern row that starts without prism
-    (onHeads, otherHeads) = span (has prism) heads
+    (onHeads, otherHeads) = List.span (has prism) heads
     (onTails, otherTails) = unzip $ map (List.splitAt (length onHeads)) tails
 
 -- コンストラクタgconの引数部のパターンpsを展開したパターン行列を生成する

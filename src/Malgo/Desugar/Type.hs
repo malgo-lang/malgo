@@ -9,6 +9,7 @@ import Malgo.Desugar.DsEnv
 import Malgo.Prelude
 import Malgo.TypeRep.Static
 import qualified Malgo.TypeRep.Static as GT
+import Control.Lens ((^.))
 
 -- Malgoの型をCoreの型に変換する
 dsType :: Monad m => GT.Type -> m C.Type

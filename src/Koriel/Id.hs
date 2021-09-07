@@ -22,12 +22,13 @@ where
 
 import Data.Binary (Binary)
 import Data.Functor.Classes
-import Data.Hashable (Hashable (hashWithSalt))
 import GHC.Exts
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty
 import Text.Show (showString, showsPrec)
+import Data.Data (Data)
+import Control.Lens (Lens', Lens, lens)
 
 newtype ModuleName = ModuleName Text
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -81,7 +82,7 @@ pprIdName Id {_idName} = pPrint _idName
 
 idToText :: Id a -> Text
 idToText Id {_idName, _idSort = External (ModuleName modName)} = modName <> "." <> _idName
-idToText Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> tshow _idUniq
+idToText Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> show _idUniq
 
 pPrintMeta :: (t -> Doc) -> t -> Doc
 

@@ -29,6 +29,7 @@ import System.IO
 import Text.Megaparsec
   ( errorBundlePretty,
   )
+import Control.Lens (view, (^.), over)
 
 -- |
 -- dumpHoge系のフラグによるダンプ出力を行うコンビネータ
@@ -94,7 +95,7 @@ compile opt = do
   src <- T.readFile (srcName opt)
   parsedAst <- case parseMalgo (srcName opt) src of
     Right x -> pure x
-    Left err -> error $ errorBundlePretty err
+    Left err -> error $ toText $ errorBundlePretty err
   when (dumpParsed opt) $ do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst

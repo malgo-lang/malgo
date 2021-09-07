@@ -12,6 +12,7 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Control.Lens (Lens', lens, view, over, traverseOf)
 
 data AlphaEnv = AlphaEnv {_alphaUniqSupply :: UniqSupply, _alphaMap :: HashMap (Id Type) (Atom (Id Type))}
 

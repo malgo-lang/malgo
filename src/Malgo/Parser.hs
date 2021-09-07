@@ -2,6 +2,7 @@ module Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
 import Data.Foldable (foldl)
+import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Set as Set
 import Data.String.Conversions (convertString)
 import qualified Data.Text as Text
@@ -10,11 +11,9 @@ import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Prelude hiding
   ( many,
     some,
-    try,
   )
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import qualified RIO.NonEmpty.Partial as NonEmpty
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
