@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
@@ -193,12 +192,12 @@ dsExp (G.Var x (WithPrefix (With _ name))) = do
   --    2. 引数のない値コンストラクタ
   case (x ^. GT.withType, C.typeOf name') of
     -- TyLazyの型を検査
-    (GT.TyApp GT.TyLazy _, [] :-> _) -> pure ()
+    (GT.TyApp GT.TyLazy _, [] :-> _) -> pass
     (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _)
-      | isConstructor name -> pure ()
+      | isConstructor name -> pass
       | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
-    _ -> pure ()
+    _ -> pass
   case C.typeOf name' of
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
     [] :-> _ | isConstructor name -> pure $ CallDirect name' []

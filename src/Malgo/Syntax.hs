@@ -79,7 +79,7 @@ instance (Pretty (XId x)) => Pretty (Type x) where
 
 getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = HashSet.singleton v
+getTyVars (TyVar _ v) = one v
 getTyVars TyCon {} = mempty
 getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
@@ -189,7 +189,7 @@ instance
   typeOf (Parens x _) = x ^. S.withType
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
-freevars (Var _ (WithPrefix v)) = HashSet.singleton (v ^. value)
+freevars (Var _ (WithPrefix v)) = one (v ^. value)
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
@@ -337,7 +337,7 @@ instance
   typeOf (UnboxedP x _) = x ^. S.withType
 
 bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
-bindVars (VarP _ x) = HashSet.singleton x
+bindVars (VarP _ x) = one x
 bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
 bindVars (TupleP _ ps) = mconcat $ map bindVars ps
 bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps

@@ -38,7 +38,7 @@ newtype PatMatrix = PatMatrix
   deriving newtype (Pretty)
 
 patMatrix :: [[Pat (Malgo 'Refine)]] -> PatMatrix
-patMatrix xss = PatMatrix $ List.transpose xss
+patMatrix xss = PatMatrix $ transpose xss
 
 headCol :: PatMatrix -> Maybe [Pat (Malgo 'Refine)]
 headCol PatMatrix {innerList = []} = Nothing
@@ -110,8 +110,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       (pat', es') <- groupRecord pat es
-      -- NonEmpty.singleton = (:| [])
-      (:| []) . Unpack con params <$> match (params <> restScrutinee) pat' es' err
+      one . Unpack con params <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
@@ -120,8 +119,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       let (pat', es') = groupTuple pat es
-      -- NonEmpty.singleton = (:| [])
-      (:| []) . Unpack con params <$> match (params <> restScrutinee) pat' es' err
+      one . Unpack con params <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
@@ -192,7 +190,7 @@ group ::
   PatMatrix ->
   [m (Core.Exp (Id Core.Type))] ->
   (PatMatrix, [m (Core.Exp (Id Core.Type))])
-group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMaybe (aux gcon) (zip pss es)
+group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMaybe (aux gcon) (zip pss es)
   where
     aux gcon (ConP _ gcon' ps : pss, e)
       | gcon == gcon' = Just (ps <> pss, e)
@@ -201,7 +199,7 @@ group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ 
     aux _ ([], _) = error "ps must be not empty"
 
 groupTuple :: PatMatrix -> [m (Core.Exp (Id Core.Type))] -> (PatMatrix, [m (Core.Exp (Id Core.Type))])
-groupTuple (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
+groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p

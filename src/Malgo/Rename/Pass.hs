@@ -40,38 +40,38 @@ lookupVarName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
-lookupTypeName pos name = do
+lookupTypeName pos name =
   view (typeEnv . at name) >>= \case
-    Just names -> case find (\i -> i ^. ann == Implicit) names of
-      Just (With _ name) -> pure name
-      Nothing ->
-        errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+  Just names -> case find (\i -> i ^. ann == Implicit) names of
+    Just (With _ name) -> pure name
+    Nothing ->
+      errorOn pos $
+        "Not in scope:" <+> quotes (pPrint name)
+          $$ "Did you mean" <+> pPrint (map (view value) names)
+  _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
-lookupFieldName pos name = do
+lookupFieldName pos name =
   view (fieldEnv . at name) >>= \case
-    Just names -> case find (\i -> i ^. ann == Implicit) names of
+  Just names -> case find (\i -> i ^. ann == Implicit) names of
+    Just (With _ name) -> pure name
+    Nothing ->
+      errorOn pos $
+        "Not in scope:" <+> quotes (pPrint name)
+          $$ "Did you mean" <+> pPrint (map (view value) names)
+  _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+
+lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
+lookupQualifiedVarName pos modName name =
+  view (varEnv . at name) >>= \case
+  Just names ->
+    case find (\i -> i ^. ann == Explicit modName) names of
       Just (With _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-
-lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
-lookupQualifiedVarName pos modName name = do
-  view (varEnv . at name) >>= \case
-    Just names ->
-      case find (\i -> i ^. ann == Explicit modName) names of
-        Just (With _ name) -> pure name
-        Nothing ->
-          errorOn pos $
-            "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
-              $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+          "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
+            $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
+  _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- renamer
 
@@ -265,7 +265,7 @@ infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
       name' <- lookupVarName pos name
-      pure $ HashMap.singleton name' (assoc, order)
+      pure $ one (name', (assoc, order))
     _ -> pure mempty
 
 mkOpApp ::
@@ -312,8 +312,8 @@ compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of
     error_please = (True, False)
 
 genToplevelEnv :: (MonadReader env f, HasOpt env, MonadIO f, HasUniqSupply env) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
-genToplevelEnv modName ds builtinEnv = do
-  execStateT (traverse aux ds) builtinEnv
+genToplevelEnv modName ds =
+  execStateT (traverse aux ds)
   where
     aux (ScDef pos x _) = do
       env <- use varEnv
@@ -321,7 +321,7 @@ genToplevelEnv modName ds builtinEnv = do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
       modify $ appendRnEnv varEnv [(x, With Implicit x')]
-    aux ScSig {} = pure ()
+    aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. typeEnv)) do
@@ -400,7 +400,7 @@ genToplevelEnv modName ds builtinEnv = do
         liftIO $ hPrint stderr $ pPrint interface
       modify $ appendRnEnv varEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ With (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
-    aux Infix {} = pure ()
+    aux Infix {} = pass
     aux (Class pos name _ synType) = do
       env <- get
       when (name `elem` HashMap.keys (env ^. typeEnv)) do
@@ -415,8 +415,8 @@ genToplevelEnv modName ds builtinEnv = do
       name' <- resolveGlobalName modName name
       modify $ appendRnEnv varEnv [(name, With Implicit name')]
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
-    genFieldEnv (TyVar _ _) = pure ()
-    genFieldEnv (TyCon _ _) = pure ()
+    genFieldEnv (TyVar _ _) = pass
+    genFieldEnv (TyCon _ _) = pass
     genFieldEnv (TyArr _ t1 t2) = genFieldEnv t1 >> genFieldEnv t2
     genFieldEnv (TyTuple _ ts) = traverse_ genFieldEnv ts
     genFieldEnv (TyRecord _ kts) = do

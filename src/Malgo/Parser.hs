@@ -3,9 +3,6 @@ module Malgo.Parser (parseMalgo) where
 import Control.Monad.Combinators.Expr
 import Data.Foldable (foldl)
 import qualified Data.List.NonEmpty as NonEmpty
-import qualified Data.Set as Set
-import Data.String.Conversions (convertString)
-import qualified Data.Text as Text
 import Data.Void
 import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Prelude hiding
@@ -44,7 +41,7 @@ pModuleName :: Parser Text
 pModuleName = lexeme singleModuleName
 
 singleModuleName :: Parser Text
-singleModuleName = convertString <$> some identLetter
+singleModuleName = toText <$> some identLetter
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
@@ -166,7 +163,7 @@ pBoxed =
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L"))
       <|> try (Int32 <$> lexeme L.decimal)
       <|> try (lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral))
-      <|> try (lexeme (String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"'))))
+      <|> try (lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"'))))
 
 pUnboxed :: Parser (Literal Unboxed)
 pUnboxed =
@@ -176,7 +173,7 @@ pUnboxed =
       <|> try (Int32 <$> lexeme (L.decimal <* char '#'))
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L#"))
       <|> try (lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#')))
-      <|> try (lexeme (String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
+      <|> try (lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
 
 pWithPrefix :: Parser Text -> Parser x -> Parser (WithPrefix x)
 pWithPrefix prefix body =
@@ -466,26 +463,26 @@ lowerIdent =
   label "lower identifier" $
     lexeme do
       notFollowedBy reserved <|> notReserved
-      convertString <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
+      toText <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
 
 upperIdent :: Parser Text
 upperIdent =
   label "upper identifier" $
     lexeme do
       notFollowedBy reserved <|> notReserved
-      convertString <$> ((:) <$> upperChar <*> many identLetter)
+      toText <$> ((:) <$> upperChar <*> many identLetter)
 
 operator :: Parser Text
 operator =
   label "operator" $
     lexeme do
       notFollowedBy reservedOp
-      convertString <$> some opLetter
+      toText <$> some opLetter
 
 notReserved :: Parser ()
 notReserved = do
   word <- lookAhead reserved
-  registerFancyFailure (Set.singleton $ ErrorFail $ "unexpected '" <> Text.unpack word <> "'\nThis is a reserved keyword")
+  registerFancyFailure (one $ ErrorFail $ "unexpected '" <> toString word <> "'\nThis is a reserved keyword")
 
 -- { _ , _ , ... , _ } or { _ ; _ ; ... ; _ ; }
 -- `;` terminatorによる分割を先に検討して、その後`,` separatorによる分割を検討する

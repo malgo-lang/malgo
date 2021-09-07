@@ -6,7 +6,6 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
 import Data.List.Extra (anySame)
-import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import Data.Maybe (fromJust)
 import Data.Traversable (for)
@@ -121,7 +120,7 @@ prepareTcImpls (pos, name, typ, _) = do
     typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
   scheme <- generalize pos mempty =<< transType typ
   varEnv . at name ?= scheme
-  pure ()
+  pass
 
 tcImpls ::
   ( MonadReader env f,
@@ -173,8 +172,8 @@ tcImports = traverse tcImport
         loadInterface modName >>= \case
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
-      varEnv <>= fmap (fmap Static.fromType) (interface ^. signatureMap)
-      typeEnv <>= fmap (fmap Static.fromType) (interface ^. typeDefMap)
+      varEnv <>= (Static.fromType <<$>> interface ^. signatureMap)
+      typeEnv <>= (Static.fromType <<$>> interface ^. typeDefMap)
       abbrEnv
         <>= HashMap.mapKeys
           (fmap Static.fromType)
@@ -245,9 +244,9 @@ tcTypeSynonyms ds =
 updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'Infer) -> [Id UType] -> UType -> f ()
 updateFieldEnv typeName (S.TyRecord _ kts) params typ = do
   let scheme = Forall params typ
-  for_ kts \(label, _) -> do
+  for_ kts \(label, _) ->
     modify (appendFieldEnv [(label, (typeName, scheme))])
-updateFieldEnv _ _ _ _ = pure ()
+updateFieldEnv _ _ _ _ = pass
 
 tcDataDefs ::
   ( MonadState TcEnv m,
@@ -336,12 +335,13 @@ tcScSigs ds =
     pure (pos, name, tcType ty)
 
 prepareTcScDefs :: (MonadState TcEnv m, MonadBind m) => [ScDef (Malgo 'Rename)] -> m ()
-prepareTcScDefs = traverse_ \(_, name, _) -> do
-  use (varEnv . at name) >>= \case
-    Nothing -> do
-      ty <- Forall [] . UVar <$> freshVar
-      varEnv . at name ?= ty
-    Just _ -> pure ()
+prepareTcScDefs = traverse_ \(_, name, _) ->
+  whenNothingM_
+    (use (varEnv . at name))
+    ( do
+        ty <- Forall [] . UVar <$> freshVar
+        varEnv . at name ?= ty
+    )
 
 tcScDefGroup ::
   ( MonadBind m,
@@ -434,7 +434,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
   pure $ Fn (With (TyApp TyLazy (typeOf e')) pos) (Clause (With (TyApp TyLazy (typeOf e')) x) [] e' :| [])
-tcExpr (Fn pos cs) = do
+tcExpr (Fn pos cs) =
   traverse tcClause cs >>= \case
     (c' :| cs') -> do
       for_ cs' \c -> tell [With pos $ typeOf c' :~ typeOf c]
@@ -473,7 +473,7 @@ tcExpr (Ann pos e t) = do
   pure e'
 tcExpr (Seq pos ss) = do
   ss' <- tcStmts ss
-  pure $ Seq (With (typeOf $ NonEmpty.last ss') pos) ss'
+  pure $ Seq (With (typeOf $ last ss') pos) ss'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
   pure $ Parens (With (typeOf e') pos) e'

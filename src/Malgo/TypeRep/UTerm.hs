@@ -11,7 +11,6 @@ import Data.Deriving
 import Data.Functor.Foldable
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
-import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Infer.UTerm

@@ -3,7 +3,6 @@
 module Malgo.Refine.Pass where
 
 import Control.Lens (over, traverseOf, traversed, view, _1, _2, (^.), (.~), to)
-import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import Koriel.Pretty
 import Malgo.Infer.TcEnv
@@ -56,7 +55,7 @@ refineExp (Fn x cs) = do
   cs' <- traverse refineClause cs
   env <- ask
   let typeSpaces = map (Space.normalize . Space.space env) $ x' ^. ann . to splitTyArr . _1
-  let patSpaces = map (Space.normalize . Space.buildUnion) $ List.transpose $ NonEmpty.toList $ fmap (clauseSpace env) cs'
+  let patSpaces = map (Space.normalize . Space.buildUnion) $ transpose $ NonEmpty.toList $ fmap (clauseSpace env) cs'
   exhaustive <- fmap Space.normalize <$> zipWithM Space.subtract typeSpaces patSpaces
   isEmptys <- traverse Space.equalEmpty exhaustive
   when (any not isEmptys) $

@@ -1,7 +1,7 @@
 module Malgo.Driver (compile, compileFromAST) where
 
+import Control.Lens (over, view, (^.))
 import Data.Maybe (fromJust)
-import qualified Data.Text.IO as T
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
@@ -29,7 +29,6 @@ import System.IO
 import Text.Megaparsec
   ( errorBundlePretty,
   )
-import Control.Lens (view, (^.), over)
 
 -- |
 -- dumpHoge系のフラグによるダンプ出力を行うコンビネータ
@@ -92,7 +91,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
 -- | .mlgから.llへのコンパイル
 compile :: Opt -> IO ()
 compile opt = do
-  src <- T.readFile (srcName opt)
+  src <- readFileText (srcName opt)
   parsedAst <- case parseMalgo (srcName opt) src of
     Right x -> pure x
     Left err -> error $ toText $ errorBundlePretty err

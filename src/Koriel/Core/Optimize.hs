@@ -58,7 +58,7 @@ optimizeExpr state = 10 `times` opt
     opt =
       pure
         >=> optVarBind
-        >=> (flip runReaderT mempty . optPackInline)
+        >=> (usingReaderT mempty . optPackInline)
         >=> removeUnusedLet
         >=> (flip evalStateT state . optCallInline)
         >=> optIdCast
@@ -99,7 +99,7 @@ checkInlineable (LocalDef f (Fun ps v)) = do
   level <- view inlineLevel
   -- ノードの数がlevel以下ならインライン展開する
   when (lengthOf cosmos v <= level {-  || f `notElem` freevars v -}) $ at f ?= (ps, v)
-checkInlineable _ = pure ()
+checkInlineable _ = pass
 
 lookupCallInline ::
   (MonadReader OptimizeEnv m, MonadState CallInlineMap m, MonadIO m) =>

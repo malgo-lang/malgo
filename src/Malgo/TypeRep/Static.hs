@@ -4,14 +4,13 @@
 
 module Malgo.TypeRep.Static where
 
-import Control.Lens (Lens', Plated, Prism', makeLenses, makePrisms, mapped, over, prism, prism', re, (^.), (^?), _1, _2, At (at))
+import Control.Lens (At (at), Lens', Plated, Prism', makeLenses, makePrisms, mapped, over, prism, prism', re, (^.), (^?), _1, _2)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.Fix
 import Data.Functor.Foldable.TH (makeBaseFunctor)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
-import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Infer.UTerm

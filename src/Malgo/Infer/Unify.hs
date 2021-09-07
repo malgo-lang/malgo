@@ -6,10 +6,8 @@ module Malgo.Infer.Unify where
 
 import Control.Lens (At (at), itraverse_, transformM, traverseOf, use, view, (?=), (^.))
 import Control.Monad.Writer.Strict (WriterT)
-import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.Map as Map
-import qualified Data.Text as Text
 import Data.Traversable (for)
 import Koriel.Id
 import Koriel.MonadUniq
@@ -71,9 +69,9 @@ unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("wit
 unify :: SourcePos -> UType -> UType -> UnifyResult
 unify _ (UVar v1) (UVar v2)
   | v1 == v2 = pure (mempty, [])
-  | otherwise = pure (HashMap.singleton v1 (UVar v2), [])
-unify _ (UVar v) t = pure (HashMap.singleton v t, [])
-unify _ t (UVar v) = pure (HashMap.singleton v t, [])
+  | otherwise = pure (one (v1, UVar v2), [])
+unify _ (UVar v) t = pure (one (v, t), [])
+unify _ t (UVar v) = pure (one (v, t), [])
 unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [With x $ t11 :~ t21, With x $ t12 :~ t22])
 unify _ (TyVar v1) (TyVar v2) | v1 == v2 = pure (mempty, [])
 unify _ (TyCon c1) (TyCon c2) | c1 == c2 = pure (mempty, [])
@@ -92,7 +90,7 @@ unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
 equiv :: UType -> UType -> Maybe (HashMap TypeVar TypeVar)
 equiv (UVar v1) (UVar v2)
   | v1 == v2 = Just mempty
-  | otherwise = Just $ HashMap.singleton v1 v2
+  | otherwise = Just $ one (v1, v2)
 equiv (TyApp t11 t12) (TyApp t21 t22) = (<>) <$> equiv t11 t21 <*> equiv t12 t22
 equiv (TyVar v1) (TyVar v2) | v1 == v2 = Just mempty
 equiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
@@ -138,7 +136,7 @@ solve = solveLoop 5000
 
 solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => Int -> [With SourcePos Constraint] -> f ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
-solveLoop _ [] = pure ()
+solveLoop _ [] = pass
 solveLoop n (With x (t1 :~ t2) : cs) = do
   abbrEnv <- use abbrEnv
   let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
@@ -156,7 +154,7 @@ generalize :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => 
 generalize x bound term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
-  as <- zipWithM (toBound x) fvs [Text.singleton c | c <- ['a' ..]]
+  as <- zipWithM (toBound x) fvs [one c | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
@@ -188,7 +186,7 @@ generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env
 generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
-  as <- zipWithM (toBound x) fvs [Text.singleton c | c <- ['a' ..]]
+  as <- zipWithM (toBound x) fvs [one c | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
