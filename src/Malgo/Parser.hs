@@ -178,8 +178,8 @@ pUnboxed =
 pWithPrefix :: Parser Text -> Parser x -> Parser (WithPrefix x)
 pWithPrefix prefix body =
   WithPrefix
-    <$> ( try (With <$> (Just <$> prefix) <* char '.' <*> body)
-            <|> With Nothing <$> body
+    <$> ( try (Annotated <$> (Just <$> prefix) <* char '.' <*> body)
+            <|> Annotated Nothing <$> body
         )
 
 pVariable :: Parser (Exp (Malgo 'Parse))
@@ -452,7 +452,8 @@ reserved =
         "infixr",
         "let",
         "type",
-        "module"
+        "module",
+        "with"
       ]
 
 reservedOp :: Parser Text

@@ -61,7 +61,7 @@ instance MonadBind m => MonadBind (StateT s m)
 
 instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
 
-type UnifyResult = Either (SourcePos, Doc) (HashMap TypeVar UType, [With SourcePos Constraint])
+type UnifyResult = Either (SourcePos, Doc) (HashMap TypeVar UType, [Annotated SourcePos Constraint])
 
 unifyErrorMessage :: (Pretty a, Pretty b) => a -> b -> Doc
 unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
@@ -72,17 +72,17 @@ unify _ (UVar v1) (UVar v2)
   | otherwise = pure (one (v1, UVar v2), [])
 unify _ (UVar v) t = pure (one (v, t), [])
 unify _ t (UVar v) = pure (one (v, t), [])
-unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [With x $ t11 :~ t21, With x $ t12 :~ t22])
+unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [Annotated x $ t11 :~ t21, Annotated x $ t12 :~ t22])
 unify _ (TyVar v1) (TyVar v2) | v1 == v2 = pure (mempty, [])
 unify _ (TyCon c1) (TyCon c2) | c1 == c2 = pure (mempty, [])
 unify _ (TyPrim p1) (TyPrim p2) | p1 == p2 = pure (mempty, [])
-unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [With x $ l1 :~ l2, With x $ r1 :~ r2])
+unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [Annotated x $ l1 :~ l2, Annotated x $ r1 :~ r2])
 unify _ (TyTuple n1) (TyTuple n2) | n1 == n2 = pure (mempty, [])
 unify x (TyRecord kts1) (TyRecord kts2)
-  | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> With x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
+  | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> Annotated x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
 unify _ TyLazy TyLazy = pure (mempty, [])
-unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [With x $ t1 :~ t2])
-unify x (TYPE rep1) (TYPE rep2) = pure (mempty, [With x $ rep1 :~ rep2])
+unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [Annotated x $ t1 :~ t2])
+unify x (TYPE rep1) (TYPE rep2) = pure (mempty, [Annotated x $ rep1 :~ rep2])
 unify _ TyRep TyRep = pure (mempty, [])
 unify _ (Rep rep1) (Rep rep2) | rep1 == rep2 = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
@@ -118,7 +118,7 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    solve [With x $ v ^. typeVar . idMeta :~ kindOf t]
+    solve [Annotated x $ v ^. typeVar . idMeta :~ kindOf t]
     TypeUnifyT $ at v ?= t
 
   zonk (UVar v) = do
@@ -131,13 +131,13 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 -- Solver --
 ------------
 
-solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => [With SourcePos Constraint] -> f ()
+solve :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => [Annotated SourcePos Constraint] -> f ()
 solve = solveLoop 5000
 
-solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => Int -> [With SourcePos Constraint] -> f ()
+solveLoop :: (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => Int -> [Annotated SourcePos Constraint] -> f ()
 solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
 solveLoop _ [] = pass
-solveLoop n (With x (t1 :~ t2) : cs) = do
+solveLoop n (Annotated x (t1 :~ t2) : cs) = do
   abbrEnv <- use abbrEnv
   let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
   let t2' = fromMaybe t2 (expandTypeSynonym abbrEnv t2)
@@ -147,8 +147,8 @@ solveLoop n (With x (t1 :~ t2) : cs) = do
       itraverse_ (bindVar x) binds
       solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
 
-zonkConstraint :: MonadBind f => With x Constraint -> f (With x Constraint)
-zonkConstraint (With m (x :~ y)) = With m <$> ((:~) <$> zonk x <*> zonk y)
+zonkConstraint :: MonadBind f => Annotated x Constraint -> f (Annotated x Constraint)
+zonkConstraint (Annotated m (x :~ y)) = Annotated m <$> ((:~) <$> zonk x <*> zonk y)
 
 generalize :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> UType -> m (Scheme UType)
 generalize x bound term = do
@@ -194,6 +194,6 @@ instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadStat
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- UVar <$> freshVar
-    solve [With x $ a ^. idMeta :~ kindOf v]
+    solve [Annotated x $ a ^. idMeta :~ kindOf v]
     pure (a, v)
   pure $ applySubst avs t

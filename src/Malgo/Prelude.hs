@@ -12,7 +12,7 @@ module Malgo.Prelude
     errorOn,
     warningOn,
     defaultOpt,
-    With (..),
+    Annotated (..),
     ann,
     value,
     ViaAnn (..),
@@ -138,41 +138,41 @@ warningOn pos x = do
               nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
             ]
 
-data With x v = With {_ann :: x, _value :: v}
+data Annotated x v = Annotated {_ann :: x, _value :: v}
   deriving stock (Eq, Show, Ord)
 
-ann :: Lens (With x v) (With x' v) x x'
+ann :: Lens (Annotated x v) (Annotated x' v) x x'
 ann = lens _ann (\w x -> w {_ann = x})
 
-value :: Lens (With x v) (With x v') v v'
+value :: Lens (Annotated x v) (Annotated x v') v v'
 value = lens _value (\w x -> w {_value = x})
 
-instance (Pretty x, Pretty v) => Pretty (With v x) where
-  pPrintPrec l _ (With v x) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)
+instance (Pretty x, Pretty v) => Pretty (Annotated v x) where
+  pPrintPrec l _ (Annotated v x) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)
 
-newtype ViaAnn value ann = ViaAnn {getViaAnn :: With ann value}
+newtype ViaAnn value ann = ViaAnn {getViaAnn :: Annotated ann value}
 
-newtype ViaVal ann value = ViaVal {getViaVal :: With ann value}
+newtype ViaVal ann value = ViaVal {getViaVal :: Annotated ann value}
 
 instance Functor (ViaAnn v) where
-  fmap f (ViaAnn (With x v)) = ViaAnn (With (f x) v)
+  fmap f (ViaAnn (Annotated x v)) = ViaAnn (Annotated (f x) v)
 
 instance Foldable (ViaAnn v) where
-  foldMap f (ViaAnn (With x _)) = f x
+  foldMap f (ViaAnn (Annotated x _)) = f x
 
 instance Traversable (ViaAnn v) where
-  traverse f (ViaAnn (With x v)) = ViaAnn . (`With` v) <$> f x
+  traverse f (ViaAnn (Annotated x v)) = ViaAnn . (`Annotated` v) <$> f x
 
 instance Functor (ViaVal v) where
-  fmap f (ViaVal (With x v)) = ViaVal (With x (f v))
+  fmap f (ViaVal (Annotated x v)) = ViaVal (Annotated x (f v))
 
 instance Foldable (ViaVal v) where
-  foldMap f (ViaVal (With _ v)) = f v
+  foldMap f (ViaVal (Annotated _ v)) = f v
 
 instance Traversable (ViaVal v) where
-  traverse f (ViaVal (With x v)) = ViaVal . With x <$> f v
+  traverse f (ViaVal (Annotated x v)) = ViaVal . Annotated x <$> f v
 
--- [No `instance Bifunctor With'`]
+-- [No `instance Bifunctor Annotated'`]
 -- Bifunctor have two methods: `first` and `second`.
 -- How to map these methods to `ann` and `value`?
 -- This problem does not have a good answer.

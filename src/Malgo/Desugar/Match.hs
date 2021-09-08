@@ -213,10 +213,10 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
       pure (ps' <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = error "ps must be not empty"
-    extendRecordP (With (Malgo.TyRecord ktsMap) pos) ps = do
+    extendRecordP (Annotated (Malgo.TyRecord ktsMap) pos) ps = do
       let kts = Map.toList ktsMap
       for kts \(key, ty) ->
         case List.lookup key ps of
-          Nothing -> VarP (With ty pos) <$> newInternalId "$_p" ()
+          Nothing -> VarP (Annotated ty pos) <$> newInternalId "$_p" ()
           Just p -> pure p
     extendRecordP _ _ = error "typeOf x must be TyRecord"
