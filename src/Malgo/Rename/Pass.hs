@@ -42,36 +42,36 @@ lookupVarName pos name =
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupTypeName pos name =
   view (typeEnv . at name) >>= \case
-  Just names -> case find (\i -> i ^. ann == Implicit) names of
-    Just (Annotated _ name) -> pure name
-    Nothing ->
-      errorOn pos $
-        "Not in scope:" <+> quotes (pPrint name)
-          $$ "Did you mean" <+> pPrint (map (view value) names)
-  _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+    Just names -> case find (\i -> i ^. ann == Implicit) names of
+      Just (Annotated _ name) -> pure name
+      Nothing ->
+        errorOn pos $
+          "Not in scope:" <+> quotes (pPrint name)
+            $$ "Did you mean" <+> pPrint (map (view value) names)
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupFieldName pos name =
   view (fieldEnv . at name) >>= \case
-  Just names -> case find (\i -> i ^. ann == Implicit) names of
-    Just (Annotated _ name) -> pure name
-    Nothing ->
-      errorOn pos $
-        "Not in scope:" <+> quotes (pPrint name)
-          $$ "Did you mean" <+> pPrint (map (view value) names)
-  _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+    Just names -> case find (\i -> i ^. ann == Implicit) names of
+      Just (Annotated _ name) -> pure name
+      Nothing ->
+        errorOn pos $
+          "Not in scope:" <+> quotes (pPrint name)
+            $$ "Did you mean" <+> pPrint (map (view value) names)
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
 lookupQualifiedVarName pos modName name =
   view (varEnv . at name) >>= \case
-  Just names ->
-    case find (\i -> i ^. ann == Explicit modName) names of
-      Just (Annotated _ name) -> pure name
-      Nothing ->
-        errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
-            $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
-  _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+    Just names ->
+      case find (\i -> i ^. ann == Explicit modName) names of
+        Just (Annotated _ name) -> pure name
+        Nothing ->
+          errorOn pos $
+            "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
+              $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
+    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- renamer
 
@@ -258,6 +258,15 @@ rnStmts (Let x v e :| s : ss) = do
   local (appendRnEnv varEnv [(v, Annotated Implicit v')]) do
     s' :| ss' <- rnStmts (s :| ss)
     pure $ Let x v' e' :| s' : ss'
+rnStmts (With x (Just v) e :| s : ss) = do
+  e <- rnExp e
+  ss <- rnExp (Fn x $ Clause x [VarP x v] (Seq x $ s :| ss) :| [])
+  pure $ NoBind x (Apply x e ss) :| []
+rnStmts (With x Nothing e :| s : ss) = do
+  e <- rnExp e
+  ss <- rnExp (Fn x $ Clause x [] (Seq x $ s :| ss) :| [])
+  pure $ NoBind x (Apply x e ss) :| []
+rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
 -- infix宣言をMapに変換
 infixDecls :: (MonadReader RnEnv m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))

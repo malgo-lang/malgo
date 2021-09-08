@@ -207,7 +207,7 @@ pStmts :: Parser (NonEmpty (Stmt (Malgo 'Parse)))
 pStmts = NonEmpty.fromList <$> pStmt `sepBy1` pOperator ";"
 
 pStmt :: Parser (Stmt (Malgo 'Parse))
-pStmt = try pLet <|> pNoBind
+pStmt = try pLet <|> try pWith <|> try pWith' <|> pNoBind
 
 pLet :: Parser (Stmt (Malgo 'Parse))
 pLet = do
@@ -216,6 +216,20 @@ pLet = do
   v <- lowerIdent
   void $ pOperator "="
   Let pos v <$> pExp
+
+pWith :: Parser (Stmt (Malgo 'Parse))
+pWith = do
+  void $ pKeyword "with"
+  pos <- getSourcePos
+  v <- lowerIdent
+  void $ pOperator "="
+  With pos (Just v) <$> pExp
+
+pWith' :: Parser (Stmt (Malgo 'Parse))
+pWith' = do
+  void $ pKeyword "with"
+  pos <- getSourcePos
+  With pos Nothing <$> pExp
 
 pNoBind :: Parser (Stmt (Malgo 'Parse))
 pNoBind = NoBind <$> getSourcePos <*> pExp

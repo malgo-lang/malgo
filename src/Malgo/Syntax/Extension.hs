@@ -152,10 +152,14 @@ type ForallClauseX (c :: K.Type -> Constraint) x = c (XClause x)
 type family XLet x where
   XLet (Malgo _) = SourcePos
 
+type family XWith x where
+  XWith (Malgo 'Parse) = SourcePos
+  XWith (Malgo _) = Void
+
 type family XNoBind x where
   XNoBind (Malgo _) = SourcePos
 
-type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XNoBind x))
+type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XWith x), c (XNoBind x))
 
 -- Pat Extensions
 type family XVarP x where
