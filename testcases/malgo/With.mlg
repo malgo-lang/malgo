@@ -1,0 +1,16 @@
+module With = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  twice = { k ->
+    k ();
+    k ()
+  };
+
+  main = {
+    with twice;
+    with twice;
+    printString "hello"
+  };
+}
+-- Expected: hellohellohellohello
