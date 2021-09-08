@@ -3,7 +3,7 @@
 
 module Malgo.Syntax where
 
-import Control.Lens (makePrisms, makeLenses, _2, (^.), view)
+import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
@@ -201,7 +201,7 @@ freevars (List _ es) = mconcat $ map freevars es
 freevars (Force _ e) = freevars e
 freevars (RecordAccess _ _) = mempty
 freevars (Ann _ e _) = freevars e
-freevars (Seq _ ss) = mconcat $ toList $ fmap freevarsStmt ss
+freevars (Seq _ ss) = freevarsStmts ss
 freevars (Parens _ e) = freevars e
 
 ----------
@@ -209,6 +209,7 @@ freevars (Parens _ e) = freevars e
 ----------
 data Stmt x
   = Let (XLet x) (XId x) (Exp x)
+  | With (XWith x) (Maybe (XId x)) (Exp x)
   | NoBind (XNoBind x) (Exp x)
 
 deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Stmt x)
@@ -217,6 +218,8 @@ deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Sho
 
 instance Pretty (XId x) => Pretty (Stmt x) where
   pPrint (Let _ v e) = "let" <+> pPrint v <+> "=" <+> pPrint e
+  pPrint (With _ Nothing e) = "with" <+> pPrint e
+  pPrint (With _ (Just v) e) = "with" <+> pPrint v <+> "=" <+> pPrint e
   pPrint (NoBind _ e) = pPrint e
 
 instance
@@ -224,10 +227,12 @@ instance
   U.HasType (Stmt x)
   where
   typeOf (Let _ _ e) = U.typeOf e
+  typeOf (With _ _ e) = U.typeOf e
   typeOf (NoBind _ e) = U.typeOf e
 
   types f = \case
     Let x v e -> Let x v <$> U.types f e
+    With x v e -> With x v <$> U.types f e
     NoBind x e -> NoBind x <$> U.types f e
 
 instance
@@ -235,11 +240,18 @@ instance
   S.HasType (Stmt x)
   where
   typeOf (Let _ _ e) = S.typeOf e
+  typeOf (With _ _ e) = S.typeOf e
   typeOf (NoBind _ e) = S.typeOf e
 
-freevarsStmt :: (Eq (XId x), Hashable (XId x)) => Stmt x -> HashSet (XId x)
-freevarsStmt (Let _ x e) = HashSet.delete x $ freevars e
-freevarsStmt (NoBind _ e) = freevars e
+freevarsStmts :: (Eq (XId x), Hashable (XId x)) => NonEmpty (Stmt x) -> HashSet (XId x)
+freevarsStmts (Let _ x e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
+freevarsStmts (With _ Nothing e :| ss) = freevars e <> freevarsStmts' ss
+freevarsStmts (With _ (Just x) e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
+freevarsStmts (NoBind _ e :| ss) = freevars e <> freevarsStmts' ss
+
+freevarsStmts' :: (Hashable (XId x), Eq (XId x)) => [Stmt x] -> HashSet (XId x)
+freevarsStmts' [] = mempty
+freevarsStmts' (s : ss) = freevarsStmts (s :| ss)
 
 ------------
 -- Clause --

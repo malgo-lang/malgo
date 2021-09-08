@@ -5,7 +5,7 @@
 
 module Malgo.TypeRep.UTerm where
 
-import Control.Lens (Traversal', makeLenses, traverseOf, transform, (^.), over, At (at), mapped, _2)
+import Control.Lens (At (at), Traversal', makeLenses, mapped, over, transform, traverseOf, (^.), _2)
 import Data.Data (Data)
 import Data.Deriving
 import Data.Functor.Foldable
@@ -56,9 +56,9 @@ class HasType a where
 class HasKind a where
   kindOf :: a -> UType
 
-instance HasType t => HasType (With t a) where
-  typeOf (With x _) = typeOf x
-  types f (With x a) = With <$> traverseOf types f x <*> pure a
+instance HasType t => HasType (Annotated t a) where
+  typeOf (Annotated x _) = typeOf x
+  types f (Annotated x a) = Annotated <$> traverseOf types f x <*> pure a
 
 newtype TypeVar = TypeVar {_typeVar :: Id UType}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)

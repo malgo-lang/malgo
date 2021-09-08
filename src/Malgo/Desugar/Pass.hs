@@ -102,7 +102,7 @@ dsScDefs ds = do
   foldMapM dsScDef ds
 
 dsScDef :: (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) => ScDef (Malgo 'Refine) -> f [Def]
-dsScDef (With typ _, name, expr) = do
+dsScDef (Annotated typ _, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   case typ of
     GT.TyArr _ _ -> dsFunDef name expr
@@ -128,7 +128,7 @@ dsForeign ::
   (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env) =>
   Foreign (Malgo 'Refine) ->
   f Def
-dsForeign (x@(With _ (_, primName)), name, _) = do
+dsForeign (x@(Annotated _ (_, primName)), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. GT.withType)
   let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
   paramTypes' <- traverse dsType paramTypes
@@ -183,7 +183,7 @@ dsExp ::
   (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
-dsExp (G.Var x (WithPrefix (With _ name))) = do
+dsExp (G.Var x (WithPrefix (Annotated _ name))) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
   -- Note: [0 argument]

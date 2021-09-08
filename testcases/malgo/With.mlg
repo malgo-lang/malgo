@@ -1,0 +1,28 @@
+module With = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  finally = { finalizer k ->
+    !k;
+    !finalizer
+  };
+
+  twice : {a} -> a;
+  twice = { k ->
+    !k;
+    !k
+  };
+
+  printAndReturn = { str k ->
+    printString str;
+    k str
+  };
+
+  main = {
+    with finally { printString "end" };
+    with twice;
+    with x = printAndReturn "foo";
+    printString x
+  };
+}
+-- Expected: foofoofoofooend

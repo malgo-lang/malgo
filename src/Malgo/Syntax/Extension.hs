@@ -3,6 +3,7 @@
 
 module Malgo.Syntax.Extension where
 
+import Control.Lens (view)
 import Data.Binary (Binary)
 import qualified Data.Kind as K
 import Data.Void
@@ -12,7 +13,6 @@ import Malgo.Prelude
 import qualified Malgo.TypeRep.Static as S
 import qualified Malgo.TypeRep.UTerm as U
 import Text.Megaparsec.Pos (SourcePos)
-import Control.Lens (view)
 
 -- Phase and type instance
 data MalgoPhase = Parse | Rename | Infer | Refine
@@ -26,21 +26,21 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Infer = Id ()
   MalgoId 'Refine = Id ()
 
-newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: With (Maybe Text) x}
+newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: Annotated (Maybe Text) x}
   deriving stock (Eq, Ord, Show)
 
 removePrefix :: WithPrefix a -> a
 removePrefix = view value . unwrapWithPrefix
 
 pattern NoPrefix :: x -> WithPrefix x
-pattern NoPrefix x = WithPrefix (With Nothing x)
+pattern NoPrefix x = WithPrefix (Annotated Nothing x)
 
 pattern Prefix :: Text -> x -> WithPrefix x
-pattern Prefix p x = WithPrefix (With (Just p) x)
+pattern Prefix p x = WithPrefix (Annotated (Just p) x)
 
 instance Pretty x => Pretty (WithPrefix x) where
-  pPrint (WithPrefix (With Nothing v)) = pPrint v
-  pPrint (WithPrefix (With (Just x) v)) = pPrint x <> "." <> pPrint v
+  pPrint (WithPrefix (Annotated Nothing v)) = pPrint v
+  pPrint (WithPrefix (Annotated (Just x) v)) = pPrint x <> "." <> pPrint v
 
 type PsId = XId (Malgo 'Parse)
 
@@ -68,8 +68,8 @@ type family XId x where
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = SourcePos
   SimpleX 'Rename = SourcePos
-  SimpleX 'Infer = With U.UType SourcePos
-  SimpleX 'Refine = With S.Type SourcePos
+  SimpleX 'Infer = Annotated U.UType SourcePos
+  SimpleX 'Refine = Annotated S.Type SourcePos
 
 type family XVar x where
   XVar (Malgo x) = SimpleX x
@@ -90,7 +90,7 @@ type family XApply x where
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SourcePos
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
-  XOpApp (Malgo 'Infer) = With U.UType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'Infer) = Annotated U.UType (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -152,10 +152,14 @@ type ForallClauseX (c :: K.Type -> Constraint) x = c (XClause x)
 type family XLet x where
   XLet (Malgo _) = SourcePos
 
+type family XWith x where
+  XWith (Malgo 'Parse) = SourcePos
+  XWith (Malgo _) = Void
+
 type family XNoBind x where
   XNoBind (Malgo _) = SourcePos
 
-type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XNoBind x))
+type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XWith x), c (XNoBind x))
 
 -- Pat Extensions
 type family XVarP x where
@@ -227,8 +231,8 @@ type family XInfix x where
 type family XForeign x where
   XForeign (Malgo 'Parse) = SourcePos
   XForeign (Malgo 'Rename) = (SourcePos, Text)
-  XForeign (Malgo 'Infer) = With U.UType (SourcePos, Text)
-  XForeign (Malgo 'Refine) = With S.Type (SourcePos, Text)
+  XForeign (Malgo 'Infer) = Annotated U.UType (SourcePos, Text)
+  XForeign (Malgo 'Refine) = Annotated S.Type (SourcePos, Text)
 
 type family XImport x where
   XImport (Malgo _) = SourcePos

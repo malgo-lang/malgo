@@ -195,7 +195,7 @@ instance Pretty ty => Pretty (Scheme ty) where
 class WithType a where
   withType :: Lens' a Type
 
-instance WithType (With Type a) where
+instance WithType (Annotated Type a) where
   withType = ann
 
 instance WithType Void where

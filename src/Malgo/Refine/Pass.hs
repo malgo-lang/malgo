@@ -116,4 +116,4 @@ refineImpl (x, name, typ, expr) = do
   typ <- refineType typ
   expr <- refineExp expr
   let typeRep = Static.typeOf expr
-  pure ((x, name, typ), (With typeRep x, name, expr))
+  pure ((x, name, typ), (Annotated typeRep x, name, expr))
