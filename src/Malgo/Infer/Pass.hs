@@ -1,7 +1,7 @@
 module Malgo.Infer.Pass where
 
 import Control.Lens (At (at), forOf, ix, mapped, over, preuse, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _4, _Just)
-import Control.Monad.Writer.Strict (MonadWriter (listen, tell), WriterT (runWriterT))
+import Control.Monad.Writer.Strict (MonadWriter (tell), WriterT (runWriterT))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
@@ -264,9 +264,7 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
     params' <- traverse (const $ UVar <$> freshVar) params
-    let nameKind = kindOf name'
-    let paramKinds = map kindOf params'
-    solve [Annotated pos $ buildTyArr paramKinds (TYPE $ Rep BoxedRep) :~ nameKind]
+    solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf name']
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
       unzip <$> forOf (traversed . _2) valueCons \args -> do
@@ -275,8 +273,6 @@ tcDataDefs ds = do
         -- params' <- traverse (lookupType pos) params
         args' <- traverse transType args
         pure $ buildTyArr args' (TyConApp name' params')
-    -- let valueConsNames = map fst valueCons'
-    -- let valueConsTypes = map snd valueCons'
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
     let valueCons' = zip valueConsNames $ map (Forall as) valueConsTypes'
     varEnv <>= HashMap.fromList valueCons'
@@ -575,13 +571,8 @@ tcStmt ::
   WriterT [Annotated SourcePos Constraint] m (Stmt (Malgo 'Infer))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
-  env <- use varEnv
-  envSet <- traverse (zonk . (\(Forall _ t) -> t)) (HashMap.elems env)
-  (e', wanted) <- listen $ tcExpr e
-  solve wanted
-  -- FIXME: value restriction
-  vScheme <- generalize pos (mconcat $ map freevars envSet) (typeOf e')
-  varEnv . at v ?= vScheme
+  e' <- tcExpr e
+  varEnv . at v ?= Forall [] (typeOf e')
   pure $ Let pos v e'
 
 -----------------------------------
