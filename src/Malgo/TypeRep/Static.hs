@@ -218,6 +218,9 @@ instance Binary ty => Binary (TypeDef ty)
 instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
 
+instance HasKind ty => HasKind (TypeDef ty) where
+  kindOf TypeDef {_typeConstructor} = kindOf _typeConstructor
+
 ---------------
 -- Utilities --
 ---------------

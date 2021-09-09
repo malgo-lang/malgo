@@ -14,7 +14,7 @@ import Malgo.Syntax.Extension
 import qualified Malgo.TypeRep.Static as S
 import qualified Malgo.TypeRep.UTerm as U
 
--- | Unboxed and literal
+-- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
   deriving stock (Show, Eq, Ord)
 
