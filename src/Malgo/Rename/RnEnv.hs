@@ -77,7 +77,7 @@ class HasRnEnv env where
   rnEnv :: Lens' env RnEnv
 
 instance HasRnEnv RnEnv where
-  rnEnv = lens id const
+  rnEnv = identity
 
 instance HasMalgoEnv RnEnv where
   malgoEnv = rnMalgoEnv

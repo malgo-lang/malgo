@@ -11,7 +11,7 @@ where
 
 import Control.Lens (ASetter, over)
 import Data.Monoid
-import Relude hiding (Op, Type, unzip, All)
+import Relude hiding (Op, Type, unzip, All, id)
 
 -- | unzip :: [(a, b)] -> ([a], [b]) の一般化
 unzip :: Functor f => f (a, b) -> (f a, f b)

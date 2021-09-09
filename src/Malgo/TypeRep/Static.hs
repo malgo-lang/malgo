@@ -135,9 +135,9 @@ class IsType a where
   {-# MINIMAL _Type | (safeToType, fromType) #-}
 
 instance IsType Type where
-  _Type = prism id Right
+  _Type = prism identity Right
   safeToType = Just
-  toType = id
+  toType = identity
 
 instance IsType (t (Fix t)) => IsType (Fix t) where
   safeToType (Fix t) = safeToType t

@@ -73,7 +73,7 @@ class HasAtom f where
   atom :: Traversal' (f a) (Atom a)
 
 instance HasAtom Atom where
-  atom = id
+  atom = identity
 
 data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)

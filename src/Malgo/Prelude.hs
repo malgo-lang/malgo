@@ -69,7 +69,7 @@ class HasOpt env where
   malgoOpt :: Lens' env Opt
 
 instance HasOpt Opt where
-  malgoOpt = lens id const
+  malgoOpt = lens identity const
 
 data MalgoEnv = MalgoEnv
   { _malgoUniqSupply :: UniqSupply,
@@ -81,7 +81,7 @@ class HasMalgoEnv env where
   malgoEnv :: Lens' env MalgoEnv
 
 instance HasMalgoEnv MalgoEnv where
-  malgoEnv = lens id const
+  malgoEnv = lens identity const
 
 instance HasUniqSupply MalgoEnv where
   uniqSupply = lens _malgoUniqSupply (\x y -> x {_malgoUniqSupply = y})

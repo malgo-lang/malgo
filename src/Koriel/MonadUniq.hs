@@ -14,7 +14,7 @@ class HasUniqSupply env where
   uniqSupply :: Lens' env UniqSupply
 
 instance HasUniqSupply UniqSupply where
-  uniqSupply = lens id const
+  uniqSupply = lens identity const
 
 getUniq :: (MonadIO m, HasUniqSupply env, MonadReader env m) => m Int
 getUniq = do
