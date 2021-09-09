@@ -31,7 +31,7 @@ type UType = UTerm TypeF TypeVar
 instance Pretty t => Pretty (TypeF t) where
   pPrintPrec l d (TyAppF t1 t2) =
     maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
-  pPrintPrec _ _ (TyVarF v) = pprIdName v
+  pPrintPrec _ _ (TyVarF v) = pPrint v
   pPrintPrec l d (TyConF c) = pPrintPrec l d c
   pPrintPrec _ _ (TyPrimF p) = pPrint p
   pPrintPrec l d (TyArrF t1 t2) =

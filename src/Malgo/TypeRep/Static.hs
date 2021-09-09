@@ -105,7 +105,7 @@ instance Plated Type
 instance Pretty Type where
   pPrintPrec l d (TyApp t1 t2) =
     maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
-  pPrintPrec _ _ (TyVar v) = pprIdName v
+  pPrintPrec _ _ (TyVar v) = pPrint v
   pPrintPrec l _ (TyCon c) = pPrintPrec l 0 c
   pPrintPrec l _ (TyPrim p) = pPrintPrec l 0 p
   pPrintPrec l d (TyArr t1 t2) =
@@ -189,7 +189,7 @@ data Scheme ty = Forall [Id ty] ty
 instance Binary ty => Binary (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
-  pPrint (Forall vs t) = "forall" <+> hsep (map pprIdName vs) <> "." <+> pPrint t
+  pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
 
 -- | Types qualified with `Type`
 class WithType a where
