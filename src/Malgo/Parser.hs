@@ -256,12 +256,12 @@ pSinglePat =
           (symbol "(")
           (symbol ")")
           ( TupleP <$> getSourcePos <*> do
-              x <- pPat
+              p <- pPat
               void $ pOperator ","
-              xs <- pPat `sepBy` pOperator ","
-              pure $ x : xs
+              (p :) <$> pPat `sepBy1` pOperator ","
           )
       )
+    <|> try (getSourcePos >>= \s -> symbol "(" >> symbol ")" >> pure (TupleP s []))
     <|> pRecordP
     <|> between
       (symbol "[")
