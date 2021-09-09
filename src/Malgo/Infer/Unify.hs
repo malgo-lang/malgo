@@ -41,9 +41,9 @@ class Monad m => MonadBind m where
   lookupVar :: TypeVar -> m (Maybe UType)
   default lookupVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => TypeVar -> m (Maybe UType)
   lookupVar v = lift (lookupVar v)
-  freshVar :: m TypeVar
-  default freshVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => m TypeVar
-  freshVar = lift freshVar
+  freshVar :: Maybe Text -> m TypeVar
+  default freshVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Maybe Text -> m TypeVar
+  freshVar = lift . freshVar
   bindVar :: SourcePos -> TypeVar -> UType -> m ()
   default bindVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => SourcePos -> TypeVar -> UType -> m ()
   bindVar x v t = lift (bindVar x v t)
@@ -111,10 +111,11 @@ occursCheck v t = HashSet.member v (freevars t)
 instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadState TcEnv m) => MonadBind (TypeUnifyT m) where
   lookupVar v = view (at v) <$> TypeUnifyT get
 
-  freshVar = do
-    rep <- TypeVar <$> newInternalId "r" TyRep
-    kind <- TypeVar <$> newInternalId "k" (TYPE $ UVar rep)
-    TypeVar <$> newInternalId "t" (UVar kind)
+  freshVar hint = do
+    hint <- pure $ fromMaybe "t" hint
+    rep <- TypeVar <$> newInternalId ("r" <> hint) TyRep
+    kind <- TypeVar <$> newInternalId ("k" <> hint) (TYPE $ UVar rep)
+    TypeVar <$> newInternalId hint (UVar kind)
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
@@ -193,7 +194,7 @@ generalizeMutRecs x bound terms = do
 instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m) => SourcePos -> Scheme UType -> m UType
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
-    v <- UVar <$> freshVar
+    v <- UVar <$> freshVar (Just $ a ^. idName)
     solve [Annotated x $ a ^. idMeta :~ kindOf v]
     pure (a, v)
   pure $ applySubst avs t

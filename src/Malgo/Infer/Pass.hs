@@ -116,7 +116,7 @@ prepareTcImpls ::
   f ()
 prepareTcImpls (pos, name, typ, _) = do
   for_ (HashSet.toList $ getTyVars typ) \tyVar -> do
-    tv <- freshVar
+    tv <- freshVar (Just $ tyVar ^. idName)
     typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
   scheme <- generalize pos mempty =<< transType typ
   varEnv . at name ?= scheme
@@ -263,7 +263,7 @@ tcDataDefs ds = do
   bindedTypeVars <- HashSet.unions . map (freevars . view typeConstructor) . HashMap.elems <$> use typeEnv
   for ds \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
-    params' <- traverse (const $ UVar <$> freshVar) params
+    params' <- traverse (\p -> UVar <$> freshVar (Just $ p ^. idName)) params
     solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf name']
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
@@ -304,7 +304,7 @@ tcForeigns ::
 tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar
+      tv <- freshVar $ Just $ tyVar ^. idName
       typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme@(Forall _ ty') <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
@@ -324,7 +324,7 @@ tcScSigs ::
 tcScSigs ds =
   for ds \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar
+      tv <- freshVar $ Just $ tyVar ^. idName
       typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
     scheme <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
@@ -335,7 +335,7 @@ prepareTcScDefs = traverse_ \(_, name, _) ->
   whenNothingM_
     (use (varEnv . at name))
     ( do
-        ty <- Forall [] . UVar <$> freshVar
+        ty <- Forall [] . UVar <$> freshVar Nothing
         varEnv . at name ?= ty
     )
 
@@ -416,7 +416,7 @@ tcExpr (Unboxed pos u) = do
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
-  retType <- UVar <$> freshVar
+  retType <- UVar <$> freshVar Nothing
   tell [Annotated pos $ typeOf f' :~ TyArr (typeOf x') retType]
   pure $ Apply (Annotated retType pos) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
@@ -424,7 +424,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e2' <- tcExpr e2
   opScheme <- lookupVar pos op
   opType <- instantiate pos opScheme
-  retType <- UVar <$> freshVar
+  retType <- UVar <$> freshVar Nothing
   tell [Annotated pos $ opType :~ TyArr (typeOf e1') (TyArr (typeOf e2') retType)]
   pure $ OpApp (Annotated retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] e :| _)) = do
@@ -451,12 +451,12 @@ tcExpr (Record pos kvs) = do
 -- pure $ Record (Annotated recordType pos) kvs'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
-  ty <- UVar <$> freshVar
+  ty <- UVar <$> freshVar Nothing
   tell [Annotated pos $ TyApp TyLazy ty :~ typeOf e']
   pure $ Force (Annotated ty pos) e'
 tcExpr (RecordAccess pos label) = do
   recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
-  retType <- UVar <$> freshVar
+  retType <- UVar <$> freshVar Nothing
   case recordType of
     TyRecord kts -> do
       tell [Annotated pos $ recordType :~ TyRecord (Map.insert (removePrefix label) retType kts)]
@@ -504,7 +504,7 @@ tcPatterns ::
   WriterT [Annotated SourcePos Constraint] m [Pat (Malgo 'Infer)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
-  ty <- UVar <$> freshVar
+  ty <- UVar <$> freshVar Nothing
   varEnv . at v ?= Forall [] ty
   ps' <- tcPatterns ps
   pure $ VarP (Annotated ty x) v : ps'
@@ -519,7 +519,7 @@ tcPatterns (ConP pos con pats : ps) = do
   when (not (null morePats) && not (null restPs)) $
     errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
-  ty <- UVar <$> freshVar
+  ty <- UVar <$> freshVar Nothing
   let patTypes = map typeOf pats'
   tell [Annotated pos $ conType :~ buildTyArr patTypes ty]
   ps' <- tcPatterns restPs

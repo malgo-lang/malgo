@@ -5,7 +5,7 @@
 
 module Malgo.TypeRep.UTerm where
 
-import Control.Lens (At (at), Traversal', makeLenses, mapped, over, transform, traverseOf, (^.), _2)
+import Control.Lens (At (at), Lens', Traversal', coerced, mapped, over, transform, traverseOf, (^.), _2)
 import Data.Data (Data)
 import Data.Deriving
 import Data.Functor.Foldable
@@ -28,7 +28,10 @@ deriveShow1 ''TypeF
 
 type UType = UTerm TypeF TypeVar
 
-instance Pretty t => Pretty (TypeF t) where
+instance Pretty (TypeF UType) where
+  pPrintPrec l _ (viewTyConApp . UTerm -> Just (TyCon c, ts)) = foldl' (<>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
+  pPrintPrec l _ (viewTyConApp . UTerm -> Just (TyTuple _, ts)) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec l _ (viewTyConApp . UTerm -> Just (TyLazy, [t])) = braces (pPrintPrec l 0 t)
   pPrintPrec l d (TyAppF t1 t2) =
     maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVarF v) = pPrint v
@@ -64,7 +67,8 @@ newtype TypeVar = TypeVar {_typeVar :: Id UType}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
 
-makeLenses ''TypeVar
+typeVar :: Lens' TypeVar (Id UType)
+typeVar = coerced
 
 instance HasType TypeVar where
   typeOf tv = UVar tv
@@ -214,3 +218,4 @@ expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv re
 expandAllTypeSynonym _ t@TyRep {} = t
 expandAllTypeSynonym _ t@Rep {} = t
 expandAllTypeSynonym _ UTerm {} = error "All patterns are covered"
+

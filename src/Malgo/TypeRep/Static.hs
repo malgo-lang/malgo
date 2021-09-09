@@ -103,6 +103,9 @@ instance Binary Type
 instance Plated Type
 
 instance Pretty Type where
+  pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
+  pPrintPrec l _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec l _ (TyConApp TyLazy [t]) = braces (pPrintPrec l 0 t)
   pPrintPrec l d (TyApp t1 t2) =
     maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVar v) = pPrint v

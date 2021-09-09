@@ -2,9 +2,10 @@ module With = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
+  finally : (a -> r) -> {a} -> r;
   finally = { finalizer k ->
-    !k;
-    !finalizer
+    let x = !k;
+    finalizer x
   };
 
   twice : {a} -> a;
@@ -19,7 +20,7 @@ module With = {
   };
 
   main = {
-    with finally { printString "end" };
+    with finally { () -> printString "end" };
     with twice;
     with x = printAndReturn "foo";
     printString x
