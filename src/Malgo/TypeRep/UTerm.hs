@@ -29,7 +29,7 @@ deriveShow1 ''TypeF
 type UType = UTerm TypeF TypeVar
 
 instance Pretty (TypeF UType) where
-  pPrintPrec l _ (viewTyConApp . UTerm -> Just (TyCon c, ts)) = foldl' (<>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
+  pPrintPrec l _ (viewTyConApp . UTerm -> Just (TyCon c, ts)) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
   pPrintPrec l _ (viewTyConApp . UTerm -> Just (TyTuple _, ts)) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
   pPrintPrec l _ (viewTyConApp . UTerm -> Just (TyLazy, [t])) = braces (pPrintPrec l 0 t)
   pPrintPrec l d (TyAppF t1 t2) =
