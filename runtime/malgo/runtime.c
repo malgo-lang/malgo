@@ -84,7 +84,7 @@ int32_t malgo_ge_string(char* x, char* y) { return strcmp(x, y) >= 0; }
 char malgo_string_at(int64_t i, char *s) { return s[i]; }
 
 char *malgo_string_append(char *s1, char *s2) {
-  char *new = GC_MALLOC(sizeof(char) * strlen(s1) * strlen(s2) + 1);
+  char *new = GC_MALLOC(sizeof(char) * (strlen(s1) + strlen(s2) + 1));
   strcpy(new, s1);
   strcat(new, s2);
   return new;
