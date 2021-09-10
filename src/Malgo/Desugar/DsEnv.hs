@@ -57,7 +57,7 @@ class HasDsEnv env where
   dsEnv :: Lens' env DsEnv
 
 instance HasDsEnv DsEnv where
-  dsEnv = lens id const
+  dsEnv = identity
 
 instance HasRnEnv DsEnv where
   rnEnv = desugarRnEnv

@@ -24,7 +24,7 @@ infixl 9 <+>
 (<+>) = (P.<+>)
 
 instance Pretty Doc where
-  pPrint = id
+  pPrint = identity
 
 errorDoc :: HasCallStack => Doc -> a
 errorDoc x = Prelude.error $ P.render x

@@ -99,8 +99,8 @@ applySubst subst t =
     t -> t
 
 instance HasType UType where
-  typeOf = id
-  types = id
+  typeOf = identity
+  types = identity
 
 instance HasKind UType where
   kindOf (UVar v) = v ^. typeVar . idMeta

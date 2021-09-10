@@ -2,6 +2,7 @@ module Malgo.Driver (compile, compileFromAST) where
 
 import Control.Lens (over, view, (^.))
 import Data.Maybe (fromJust)
+import Debug.Pretty.Simple (pTraceShowM)
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
@@ -10,6 +11,7 @@ import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Core.MlgToCore (mlgToCore)
 import Malgo.Desugar.Pass (desugar)
 import qualified Malgo.Infer.Pass as Infer
 import qualified Malgo.Infer.TcEnv as TcEnv
@@ -58,6 +60,12 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
   (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ Infer.typeCheck rnEnv renamedAst
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
+
+  -- MlgToCore
+  when (debugMode opt) do
+    mlgCore <- mlgToCore tcEnv refinedAst
+    pTraceShowM mlgCore
+
   let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
   let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
