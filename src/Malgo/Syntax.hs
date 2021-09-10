@@ -298,6 +298,7 @@ data Pat x
   | RecordP (XRecordP x) [(WithPrefix (XId x), Pat x)]
   | ListP (XListP x) [Pat x]
   | UnboxedP (XUnboxedP x) (Literal Unboxed)
+  | BoxedP (XBoxedP x) (Literal Boxed)
 
 deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)
 
@@ -317,6 +318,7 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
   pPrintPrec _ _ (ListP _ ps) =
     brackets $ sep $ punctuate "," $ map pPrint ps
   pPrintPrec _ _ (UnboxedP _ u) = pPrint u
+  pPrintPrec _ _ (BoxedP _ x) = pPrint x
 
 instance
   ForallPatX U.HasType x =>
@@ -328,6 +330,7 @@ instance
   typeOf (RecordP x _) = U.typeOf x
   typeOf (ListP x _) = U.typeOf x
   typeOf (UnboxedP x _) = U.typeOf x
+  typeOf (BoxedP x _) = U.typeOf x
 
   types f = \case
     VarP x v -> VarP <$> U.types f x <*> pure v
@@ -336,6 +339,7 @@ instance
     RecordP x kps -> RecordP <$> U.types f x <*> traverse (bitraverse pure (U.types f)) kps
     ListP x ps -> ListP <$> U.types f x <*> traverse (U.types f) ps
     UnboxedP x u -> UnboxedP <$> U.types f x <*> U.types f u
+    BoxedP x b -> BoxedP <$> U.types f x <*> U.types f b
 
 instance
   ForallPatX S.WithType x =>
@@ -347,6 +351,7 @@ instance
   typeOf (RecordP x _) = x ^. S.withType
   typeOf (ListP x _) = x ^. S.withType
   typeOf (UnboxedP x _) = x ^. S.withType
+  typeOf (BoxedP x _) = x ^. S.withType
 
 bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
 bindVars (VarP _ x) = one x
@@ -355,6 +360,7 @@ bindVars (TupleP _ ps) = mconcat $ map bindVars ps
 bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
 bindVars (ListP _ ps) = mconcat $ map bindVars ps
 bindVars UnboxedP {} = mempty
+bindVars BoxedP {} = mempty
 
 makePrisms ''Pat
 

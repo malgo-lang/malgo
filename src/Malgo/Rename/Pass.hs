@@ -160,7 +160,7 @@ rnExp (Var pos (WithPrefix (Annotated (Just modName) name))) = Var pos . Prefix 
 rnExp (Unboxed pos val) = pure $ Unboxed pos val
 rnExp (Boxed pos val) = do
   f <- lookupBox pos val
-  pure $ Apply pos f (Unboxed pos $ toUnboxed val)
+  pure $ Apply pos (Var pos (NoPrefix f)) (Unboxed pos $ toUnboxed val)
 rnExp (Apply pos e1 e2) = Apply pos <$> rnExp e1 <*> rnExp e2
 rnExp (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
@@ -193,13 +193,13 @@ rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
 rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
-lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (Exp (Malgo 'Rename))
-lookupBox pos Int32 {} = Var pos . NoPrefix <$> lookupVarName pos "int32#"
-lookupBox pos Int64 {} = Var pos . NoPrefix <$> lookupVarName pos "int64#"
-lookupBox pos Float {} = Var pos . NoPrefix <$> lookupVarName pos "float#"
-lookupBox pos Double {} = Var pos . NoPrefix <$> lookupVarName pos "double#"
-lookupBox pos Char {} = Var pos . NoPrefix <$> lookupVarName pos "char#"
-lookupBox pos String {} = Var pos . NoPrefix <$> lookupVarName pos "string#"
+lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (XId (Malgo 'Rename))
+lookupBox pos Int32 {} = lookupVarName pos "Int32#"
+lookupBox pos Int64 {} = lookupVarName pos "Int64#"
+lookupBox pos Float {} = lookupVarName pos "Float#"
+lookupBox pos Double {} = lookupVarName pos "Double#"
+lookupBox pos Char {} = lookupVarName pos "Char#"
+lookupBox pos String {} = lookupVarName pos "String#"
 
 rnType :: (MonadReader RnEnv m, MonadIO m) => Type (Malgo 'Parse) -> m (Type (Malgo 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
@@ -228,6 +228,7 @@ rnClause (Clause pos ps e) = do
     patVars (RecordP _ kvs) = concatMap (patVars . snd) kvs
     patVars (ListP _ xs) = concatMap patVars xs
     patVars UnboxedP {} = []
+    patVars BoxedP {} = []
 
 rnPat :: (MonadReader RnEnv m, MonadIO m) => Pat (Malgo 'Parse) -> m (Pat (Malgo 'Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
@@ -239,6 +240,7 @@ rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName 
     buildListP nilName _ [] = ConP pos nilName []
     buildListP nilName consName (x : xs) = ConP pos consName [x, buildListP nilName consName xs]
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
+rnPat (BoxedP pos x) = ConP pos <$> lookupBox pos x <*> pure [UnboxedP pos (coerce x)]
 
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => NonEmpty (Stmt (Malgo 'Parse)) -> m (NonEmpty (Stmt (Malgo 'Rename)))
 rnStmts (NoBind x e :| []) = do

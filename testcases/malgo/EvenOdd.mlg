@@ -1,19 +1,17 @@
 module EvenOdd = {
-  foreign import malgo_sub_int32_t : Int32# -> Int32# -> Int32#;
-  foreign import malgo_print_string : String# -> ();
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
-  data Bool = False | True;
-
-  even = { 0# -> True
-         | n -> odd (malgo_sub_int32_t n 1#)
+  even = { 0 -> True
+         | n -> odd (subInt32 n 1)
   };
 
-  odd = { 0# -> False
-        | n -> even (malgo_sub_int32_t n 1#)
+  odd = { 0 -> False
+        | n -> even (subInt32 n 1)
   };
 
-  main = { { False -> malgo_print_string "False"#
-           | True -> malgo_print_string "True"# } (even 10#) };
+  main = { { False -> putStrLn "False"
+           | True -> putStrLn "True" } (even 10) };
 }
 
 -- Expected: True
