@@ -250,7 +250,8 @@ pSinglePat :: Parser (Pat (Malgo 'Parse))
 pSinglePat =
   VarP <$> getSourcePos <*> lowerIdent
     <|> ConP <$> getSourcePos <*> upperIdent <*> pure []
-    <|> UnboxedP <$> getSourcePos <*> pUnboxed
+    <|> try (UnboxedP <$> getSourcePos <*> pUnboxed)
+    <|> BoxedP <$> getSourcePos <*> pBoxed
     <|> try
       ( between
           (symbol "(")
