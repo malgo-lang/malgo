@@ -11,8 +11,7 @@ import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import qualified Malgo.TypeRep.Static as S
-import qualified Malgo.TypeRep.UTerm as U
+import Malgo.TypeRep hiding (Type, TyApp, TyVar, TyCon, TyArr, TyTuple, TyRecord, TyLazy, freevars)
 
 -- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
@@ -26,22 +25,15 @@ instance Pretty (Literal x) where
   pPrint (Char c) = quotes (pPrint c)
   pPrint (String s) = doubleQuotes (pPrint s)
 
-instance U.HasType (Literal x) where
-  typeOf Int32 {} = U.TyPrim S.Int32T
-  typeOf Int64 {} = U.TyPrim S.Int64T
-  typeOf Float {} = U.TyPrim S.FloatT
-  typeOf Double {} = U.TyPrim S.DoubleT
-  typeOf Char {} = U.TyPrim S.CharT
-  typeOf String {} = U.TyPrim S.StringT
-  types f v = f (U.typeOf v) $> v
+instance HasType (Literal x) where
+  typeOf Int32 {} = TyPrim Int32T
+  typeOf Int64 {} = TyPrim Int64T
+  typeOf Float {} = TyPrim FloatT
+  typeOf Double {} = TyPrim DoubleT
+  typeOf Char {} = TyPrim CharT
+  typeOf String {} = TyPrim StringT
+  types f v = f (typeOf v) $> v
 
-instance S.HasType (Literal x) where
-  typeOf Int32 {} = S.TyPrim S.Int32T
-  typeOf Int64 {} = S.TyPrim S.Int64T
-  typeOf Float {} = S.TyPrim S.FloatT
-  typeOf Double {} = S.TyPrim S.DoubleT
-  typeOf Char {} = S.TyPrim S.CharT
-  typeOf String {} = S.TyPrim S.StringT
 
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce
@@ -135,58 +127,39 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
 
 instance
-  (ForallExpX U.HasType x, ForallClauseX U.HasType x, ForallPatX U.HasType x) =>
-  U.HasType (Exp x)
+  (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
+  HasType (Exp x)
   where
-  typeOf (Var x _) = U.typeOf x
-  typeOf (Unboxed x _) = U.typeOf x
-  typeOf (Boxed x _) = U.typeOf x
-  typeOf (Apply x _ _) = U.typeOf x
-  typeOf (OpApp x _ _ _) = U.typeOf x
-  typeOf (Fn x _) = U.typeOf x
-  typeOf (Tuple x _) = U.typeOf x
-  typeOf (Record x _) = U.typeOf x
-  typeOf (List x _) = U.typeOf x
-  typeOf (Force x _) = U.typeOf x
-  typeOf (RecordAccess x _) = U.typeOf x
-  typeOf (Ann x _ _) = U.typeOf x
-  typeOf (Seq x _) = U.typeOf x
-  typeOf (Parens x _) = U.typeOf x
+  typeOf (Var x _) = typeOf x
+  typeOf (Unboxed x _) = typeOf x
+  typeOf (Boxed x _) = typeOf x
+  typeOf (Apply x _ _) = typeOf x
+  typeOf (OpApp x _ _ _) = typeOf x
+  typeOf (Fn x _) = typeOf x
+  typeOf (Tuple x _) = typeOf x
+  typeOf (Record x _) = typeOf x
+  typeOf (List x _) = typeOf x
+  typeOf (Force x _) = typeOf x
+  typeOf (RecordAccess x _) = typeOf x
+  typeOf (Ann x _ _) = typeOf x
+  typeOf (Seq x _) = typeOf x
+  typeOf (Parens x _) = typeOf x
 
   types f = \case
-    Var x v -> Var <$> U.types f x <*> pure v
-    Unboxed x u -> Unboxed <$> U.types f x <*> U.types f u
-    Boxed x b -> Boxed <$> U.types f x <*> U.types f b
-    Apply x e1 e2 -> Apply <$> U.types f x <*> U.types f e1 <*> U.types f e2
-    OpApp x op e1 e2 -> OpApp <$> U.types f x <*> pure op <*> U.types f e1 <*> U.types f e2
-    Fn x cs -> Fn <$> U.types f x <*> traverse (U.types f) cs
-    Tuple x es -> Tuple <$> U.types f x <*> traverse (U.types f) es
-    Record x kvs -> Record <$> U.types f x <*> traverse (\(k, v) -> (k,) <$> U.types f v) kvs
-    List x es -> List <$> U.types f x <*> traverse (U.types f) es
-    Force x e -> Force <$> U.types f x <*> U.types f e
-    RecordAccess x l -> RecordAccess <$> U.types f x <*> pure l
-    Ann x e t -> Ann <$> U.types f x <*> U.types f e <*> pure t
-    Seq x ss -> Seq <$> U.types f x <*> traverse (U.types f) ss
-    Parens x e -> Parens <$> U.types f x <*> U.types f e
-
-instance
-  ForallExpX S.WithType x =>
-  S.HasType (Exp x)
-  where
-  typeOf (Var x _) = x ^. S.withType
-  typeOf (Unboxed x _) = x ^. S.withType
-  typeOf (Boxed x _) = x ^. S.withType
-  typeOf (Apply x _ _) = x ^. S.withType
-  typeOf (OpApp x _ _ _) = x ^. S.withType
-  typeOf (Fn x _) = x ^. S.withType
-  typeOf (Tuple x _) = x ^. S.withType
-  typeOf (Record x _) = x ^. S.withType
-  typeOf (List x _) = x ^. S.withType
-  typeOf (Force x _) = x ^. S.withType
-  typeOf (RecordAccess x _) = x ^. S.withType
-  typeOf (Ann x _ _) = x ^. S.withType
-  typeOf (Seq x _) = x ^. S.withType
-  typeOf (Parens x _) = x ^. S.withType
+    Var x v -> Var <$> types f x <*> pure v
+    Unboxed x u -> Unboxed <$> types f x <*> types f u
+    Boxed x b -> Boxed <$> types f x <*> types f b
+    Apply x e1 e2 -> Apply <$> types f x <*> types f e1 <*> types f e2
+    OpApp x op e1 e2 -> OpApp <$> types f x <*> pure op <*> types f e1 <*> types f e2
+    Fn x cs -> Fn <$> types f x <*> traverse (types f) cs
+    Tuple x es -> Tuple <$> types f x <*> traverse (types f) es
+    Record x kvs -> Record <$> types f x <*> traverse (\(k, v) -> (k,) <$> types f v) kvs
+    List x es -> List <$> types f x <*> traverse (types f) es
+    Force x e -> Force <$> types f x <*> types f e
+    RecordAccess x l -> RecordAccess <$> types f x <*> pure l
+    Ann x e t -> Ann <$> types f x <*> types f e <*> pure t
+    Seq x ss -> Seq <$> types f x <*> traverse (types f) ss
+    Parens x e -> Parens <$> types f x <*> types f e
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
 freevars (Var _ (WithPrefix v)) = one (v ^. value)
@@ -223,25 +196,17 @@ instance Pretty (XId x) => Pretty (Stmt x) where
   pPrint (NoBind _ e) = pPrint e
 
 instance
-  (ForallExpX U.HasType x, ForallClauseX U.HasType x, ForallPatX U.HasType x) =>
-  U.HasType (Stmt x)
+  (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
+  HasType (Stmt x)
   where
-  typeOf (Let _ _ e) = U.typeOf e
-  typeOf (With _ _ e) = U.typeOf e
-  typeOf (NoBind _ e) = U.typeOf e
+  typeOf (Let _ _ e) = typeOf e
+  typeOf (With _ _ e) = typeOf e
+  typeOf (NoBind _ e) = typeOf e
 
   types f = \case
-    Let x v e -> Let x v <$> U.types f e
-    With x v e -> With x v <$> U.types f e
-    NoBind x e -> NoBind x <$> U.types f e
-
-instance
-  ForallExpX S.WithType x =>
-  S.HasType (Stmt x)
-  where
-  typeOf (Let _ _ e) = S.typeOf e
-  typeOf (With _ _ e) = S.typeOf e
-  typeOf (NoBind _ e) = S.typeOf e
+    Let x v e -> Let x v <$> types f e
+    With x v e -> With x v <$> types f e
+    NoBind x e -> NoBind x <$> types f e
 
 freevarsStmts :: (Eq (XId x), Hashable (XId x)) => NonEmpty (Stmt x) -> HashSet (XId x)
 freevarsStmts (Let _ x e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
@@ -271,18 +236,12 @@ instance (Pretty (XId x)) => Pretty (Clause x) where
   pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", pPrint e]
 
 instance
-  (ForallClauseX U.HasType x, ForallPatX U.HasType x, ForallExpX U.HasType x) =>
-  U.HasType (Clause x)
+  (ForallClauseX HasType x, ForallPatX HasType x, ForallExpX HasType x) =>
+  HasType (Clause x)
   where
-  typeOf (Clause x _ _) = U.typeOf x
+  typeOf (Clause x _ _) = typeOf x
 
-  types f (Clause x ps e) = Clause <$> U.types f x <*> traverse (U.types f) ps <*> U.types f e
-
-instance
-  ForallClauseX S.WithType x =>
-  S.HasType (Clause x)
-  where
-  typeOf (Clause x _ _) = x ^. S.withType
+  types f (Clause x ps e) = Clause <$> types f x <*> traverse (types f) ps <*> types f e
 
 freevarsClause :: (Eq (XId x), Hashable (XId x)) => Clause x -> HashSet (XId x)
 freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
@@ -321,37 +280,25 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
   pPrintPrec _ _ (BoxedP _ x) = pPrint x
 
 instance
-  ForallPatX U.HasType x =>
-  U.HasType (Pat x)
+  ForallPatX HasType x =>
+  HasType (Pat x)
   where
-  typeOf (VarP x _) = U.typeOf x
-  typeOf (ConP x _ _) = U.typeOf x
-  typeOf (TupleP x _) = U.typeOf x
-  typeOf (RecordP x _) = U.typeOf x
-  typeOf (ListP x _) = U.typeOf x
-  typeOf (UnboxedP x _) = U.typeOf x
-  typeOf (BoxedP x _) = U.typeOf x
+  typeOf (VarP x _) = typeOf x
+  typeOf (ConP x _ _) = typeOf x
+  typeOf (TupleP x _) = typeOf x
+  typeOf (RecordP x _) = typeOf x
+  typeOf (ListP x _) = typeOf x
+  typeOf (UnboxedP x _) = typeOf x
+  typeOf (BoxedP x _) = typeOf x
 
   types f = \case
-    VarP x v -> VarP <$> U.types f x <*> pure v
-    ConP x c ps -> ConP <$> U.types f x <*> pure c <*> traverse (U.types f) ps
-    TupleP x ps -> TupleP <$> U.types f x <*> traverse (U.types f) ps
-    RecordP x kps -> RecordP <$> U.types f x <*> traverse (bitraverse pure (U.types f)) kps
-    ListP x ps -> ListP <$> U.types f x <*> traverse (U.types f) ps
-    UnboxedP x u -> UnboxedP <$> U.types f x <*> U.types f u
-    BoxedP x b -> BoxedP <$> U.types f x <*> U.types f b
-
-instance
-  ForallPatX S.WithType x =>
-  S.HasType (Pat x)
-  where
-  typeOf (VarP x _) = x ^. S.withType
-  typeOf (ConP x _ _) = x ^. S.withType
-  typeOf (TupleP x _) = x ^. S.withType
-  typeOf (RecordP x _) = x ^. S.withType
-  typeOf (ListP x _) = x ^. S.withType
-  typeOf (UnboxedP x _) = x ^. S.withType
-  typeOf (BoxedP x _) = x ^. S.withType
+    VarP x v -> VarP <$> types f x <*> pure v
+    ConP x c ps -> ConP <$> types f x <*> pure c <*> traverse (types f) ps
+    TupleP x ps -> TupleP <$> types f x <*> traverse (types f) ps
+    RecordP x kps -> RecordP <$> types f x <*> traverse (bitraverse pure (types f)) kps
+    ListP x ps -> ListP <$> types f x <*> traverse (types f) ps
+    UnboxedP x u -> UnboxedP <$> types f x <*> types f u
+    BoxedP x b -> BoxedP <$> types f x <*> types f b
 
 bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
 bindVars (VarP _ x) = one x

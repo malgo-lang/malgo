@@ -1,7 +1,6 @@
 module Malgo.Driver (compile, compileFromAST) where
 
 import Control.Lens (over, view, (^.))
-import Data.Maybe (fromJust)
 import Debug.Pretty.Simple (pTraceShowM)
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
@@ -23,7 +22,6 @@ import Malgo.Rename.Pass (rename)
 import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
-import qualified Malgo.TypeRep.Static as Static
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -66,8 +64,8 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     mlgCore <- mlgToCore tcEnv refinedAst
     pTraceShowM mlgCore
 
-  let varEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.varEnv
-  let typeEnv = fromJust $ traverse (traverse Static.safeToType) $ tcEnv ^. TcEnv.typeEnv
+  let varEnv = tcEnv ^. TcEnv.varEnv
+  let typeEnv = tcEnv ^. TcEnv.typeEnv
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
   (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv rnEnv depList refinedAst
   let inf = buildInterface rnState dsEnv

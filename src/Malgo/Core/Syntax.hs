@@ -2,10 +2,9 @@
 
 module Malgo.Core.Syntax where
 
-import Data.Data (Data)
 import Koriel.Id
 import Malgo.Prelude
-import Malgo.TypeRep.Static (PrimT, Rep)
+import Malgo.TypeRep (PrimT, Rep)
 
 type Kind = Type
 

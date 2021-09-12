@@ -10,8 +10,7 @@ import Data.Void
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
-import qualified Malgo.TypeRep.Static as S
-import qualified Malgo.TypeRep.UTerm as U
+import Malgo.TypeRep as TypeRep
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Phase and type instance
@@ -68,8 +67,8 @@ type family XId x where
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = SourcePos
   SimpleX 'Rename = SourcePos
-  SimpleX 'Infer = Annotated U.UType SourcePos
-  SimpleX 'Refine = Annotated S.Type SourcePos
+  SimpleX 'Infer = Annotated Type SourcePos
+  SimpleX 'Refine = Annotated Type SourcePos
 
 type family XVar x where
   XVar (Malgo x) = SimpleX x
@@ -90,7 +89,7 @@ type family XApply x where
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SourcePos
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
-  XOpApp (Malgo 'Infer) = Annotated U.UType (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'Infer) = Annotated Type (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -235,8 +234,8 @@ type family XInfix x where
 type family XForeign x where
   XForeign (Malgo 'Parse) = SourcePos
   XForeign (Malgo 'Rename) = (SourcePos, Text)
-  XForeign (Malgo 'Infer) = Annotated U.UType (SourcePos, Text)
-  XForeign (Malgo 'Refine) = Annotated S.Type (SourcePos, Text)
+  XForeign (Malgo 'Infer) = Annotated Type (SourcePos, Text)
+  XForeign (Malgo 'Refine) = Annotated Type (SourcePos, Text)
 
 type family XImport x where
   XImport (Malgo _) = SourcePos

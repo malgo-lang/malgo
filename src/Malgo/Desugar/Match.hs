@@ -19,8 +19,8 @@ import Malgo.Desugar.Unboxed (dsUnboxed)
 import Malgo.Prelude hiding (group)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Malgo.TypeRep.Static
-import qualified Malgo.TypeRep.Static as Malgo
+import Malgo.TypeRep
+import qualified Malgo.TypeRep as Malgo
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加
@@ -91,7 +91,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     --  errorDoc $ "Not valid type:" <+> pPrint patType
     -- 型からコンストラクタの集合を求める
     let (con, ts) = case Malgo.viewTyConApp patType of
-          Just (Malgo.TypeRep.Static.TyCon con, ts) -> (con, ts)
+          Just (Malgo.TyCon con, ts) -> (con, ts)
           _ -> error "patType must be TyApp or TyCon"
     valueConstructors <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する

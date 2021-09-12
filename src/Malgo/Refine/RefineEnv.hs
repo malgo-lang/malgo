@@ -6,9 +6,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Malgo.Infer.TcEnv
 import Malgo.Prelude
-import Malgo.TypeRep.Static
-import Malgo.TypeRep.UTerm
-import qualified Malgo.TypeRep.UTerm as UTerm
+import Malgo.TypeRep
 
 data RefineEnv = RefineEnv
   { _typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
@@ -37,6 +35,6 @@ buildRefineEnv malgoEnv TcEnv {_typeEnv} =
       _refineMalgoEnv = malgoEnv
     }
   where
-    f :: TypeDef UType -> Maybe (Id Kind, TypeDef Type)
-    f t@TypeDef {_typeConstructor = UTerm.TyCon con} = Just (fmap toType con, fmap toType t)
+    f :: TypeDef Type -> Maybe (Id Kind, TypeDef Type)
+    f t@TypeDef {_typeConstructor = TyCon con} = Just (con, t)
     f _ = Nothing

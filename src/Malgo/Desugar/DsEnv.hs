@@ -9,8 +9,8 @@ import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
 import Malgo.Syntax.Extension
-import Malgo.TypeRep.Static
-import qualified Malgo.TypeRep.Static as GT
+import Malgo.TypeRep
+import qualified Malgo.TypeRep as GT
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
