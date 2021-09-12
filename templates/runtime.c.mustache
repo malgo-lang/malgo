@@ -17,7 +17,7 @@ const MalgoUnit malgo_unit = { 0, {} };
 void *malgo_unsafe_cast(void *x) { return x; }
 
 // Panic
-void* *malgo_panic(char* message) {
+void *malgo_panic(char* message) {
   fprintf(stderr, "%s", message);
   exit(1);
   return NULL;
