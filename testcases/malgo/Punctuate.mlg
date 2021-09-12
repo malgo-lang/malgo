@@ -1,0 +1,47 @@
+module Punctuate = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  mapList : (a -> b) -> List a -> List b;
+  mapList =
+    { _ Nil -> Nil
+    | f (Cons x xs) -> Cons (f x) (mapList f xs)
+    };
+
+  infixr 6 (<>);
+  (<>) : String -> String -> String;
+  (<>) = appendString; 
+
+  concat : List String -> String;
+  concat =
+    { Nil -> ""
+    | Cons x xs -> x <> concat xs
+    };
+
+  punctuate : a -> List a -> List a;
+  punctuate =
+    { _ Nil -> Nil
+    | _ (Cons x Nil) -> Cons x Nil
+    | sep (Cons x xs) -> Cons x (Cons sep (punctuate sep xs))
+    };
+
+  
+  data SExpr = Symbol String
+             | SInt Int32
+             | SList (List SExpr);
+
+  show : SExpr -> String;
+  show =
+    { Symbol str -> "Symbol " <> str
+    | SInt int -> "SInt " <> toStringInt32 int
+    | SList ss -> "SList [" <> concat (punctuate ", " (mapList show ss)) <> "]"
+    };
+
+  main = {
+    -- (x (y (z)))  
+    let x = SList [Symbol "x", SList [Symbol "y", SList [Symbol "z"]]];
+    putStrLn (show x)
+  };
+}
+
+-- Expected: SList [Symbol x, SList [Symbol y, SList [Symbol z]]]
