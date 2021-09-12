@@ -85,10 +85,8 @@ rnDecls ds = do
   rnEnv <- genToplevelEnv modName ds =<< ask
   local (const rnEnv) $ do
     -- RnStateの生成
-    --   定義されていない識別子に対するInfixはエラー
-    rnState <- RnState <$> infixDecls ds <*> pure [] <*> use moduleName
+    put =<< RnState <$> infixDecls ds <*> pure [] <*> use moduleName
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
-    put rnState
     traverse rnDecl ds
 
 -- Declで定義されるトップレベル識別子はすでにRnEnvに正しく登録されているとする
@@ -271,6 +269,7 @@ rnStmts (With x Nothing e :| s : ss) = do
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
 -- infix宣言をMapに変換
+-- 定義されていない識別子に対するInfixはエラーとする
 infixDecls :: (MonadReader RnEnv m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))
 infixDecls ds =
   foldMapM ?? ds $ \case

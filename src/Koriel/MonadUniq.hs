@@ -1,6 +1,6 @@
 module Koriel.MonadUniq where
 
-import Control.Lens (Lens', lens, view)
+import Control.Lens (Lens', view)
 import Koriel.Prelude
 import Text.Show (Show (show))
 
@@ -14,7 +14,7 @@ class HasUniqSupply env where
   uniqSupply :: Lens' env UniqSupply
 
 instance HasUniqSupply UniqSupply where
-  uniqSupply = lens identity const
+  uniqSupply = identity
 
 getUniq :: (MonadIO m, HasUniqSupply env, MonadReader env m) => m Int
 getUniq = do

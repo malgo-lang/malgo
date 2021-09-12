@@ -36,7 +36,7 @@ moduleName :: Lens' RnState ModuleName
 moduleName = lens _moduleName (\r x -> r {_moduleName = x})
 
 data Visibility
-  = Explicit ModuleName -- must be qualified
+  = Explicit ModuleName -- variable that must be qualified
   | Implicit
   deriving stock (Show, Eq)
 
