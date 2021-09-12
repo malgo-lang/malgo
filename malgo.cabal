@@ -186,7 +186,90 @@ executable malgo
       TypeSynonymInstances
       ViewPatterns
       StrictData
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS -threaded
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base
+    , binary
+    , binary-instances
+    , bytestring
+    , containers
+    , data-fix
+    , deriving-compat
+    , directory
+    , extra
+    , filepath
+    , hashable
+    , lens
+    , llvm-hs
+    , llvm-hs-pure
+    , malgo
+    , megaparsec
+    , microlens-platform
+    , mtl
+    , optparse-applicative
+    , parser-combinators
+    , pretty
+    , pretty-simple
+    , recursion-schemes
+    , relude
+    , string-conversions
+    , text
+    , transformers
+    , uniplate
+    , unordered-containers
+    , witherable
+  default-language: Haskell2010
+
+test-suite malgo-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      test
+  default-extensions:
+      BangPatterns
+      BinaryLiterals
+      BlockArguments
+      ConstraintKinds
+      DataKinds
+      DefaultSignatures
+      DeriveDataTypeable
+      DeriveFoldable
+      DeriveFunctor
+      DeriveGeneric
+      DeriveTraversable
+      DerivingStrategies
+      DoAndIfThenElse
+      EmptyDataDecls
+      ExistentialQuantification
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      MultiParamTypeClasses
+      MultiWayIf
+      NamedFieldPuns
+      NoImplicitPrelude
+      OverloadedStrings
+      PartialTypeSignatures
+      PatternGuards
+      PolyKinds
+      RankNTypes
+      RecordWildCards
+      ScopedTypeVariables
+      StandaloneDeriving
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeSynonymInstances
+      ViewPatterns
+      StrictData
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base
     , binary
