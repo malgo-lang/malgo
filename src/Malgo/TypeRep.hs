@@ -104,7 +104,10 @@ data Type
 
 instance Binary Type
 
-instance Plated Type
+instance Plated Type where
+  plate _ t@TyMeta {} = pure t
+  -- plate f (TyRecord kts) = TyRecord <$> traverse f kts
+  plate f t = uniplate f t
 
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
@@ -122,7 +125,7 @@ instance Pretty Type where
   pPrintPrec _ _ TyLazy = "{}"
   pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
   pPrintPrec _ _ TyBottom = "#Bottom"
-  pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
+  pPrintPrec l _ (TYPE rep) = "TYPE" <+> pPrintPrec l 0 rep
   pPrintPrec _ _ TyRep = "#Rep"
   pPrintPrec l _ (Rep rep) = pPrintPrec l 0 rep
   pPrintPrec l _ (TyMeta tv) = pPrintPrec l 0 tv
@@ -317,39 +320,26 @@ expandTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
 expandTypeSynonym _ _ = Nothing
 
 expandAllTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Type
-expandAllTypeSynonym abbrEnv = transform $ \case
-  TyConApp (TyCon con) ts ->
-    case abbrEnv ^. at con of
-      Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
-      Just (ps, orig) ->
-        -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
-        expandAllTypeSynonym abbrEnv $ applySubst (HashMap.fromList $ zip ps ts) $ expandAllTypeSynonym abbrEnv orig
-  ty -> ty
-
--- expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
---   case abbrEnv ^. at con of
---     Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
---     Just (ps, orig) ->
---       -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
---       expandAllTypeSynonym abbrEnv $ applySubst (HashMap.fromList $ zip ps ts) $ expandAllTypeSynonym abbrEnv orig
--- expandAllTypeSynonym abbrEnv (TyApp t1 t2) = TyApp (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
--- expandAllTypeSynonym _ t@TyVar {} = t
--- expandAllTypeSynonym _ t@TyCon {} = t
--- expandAllTypeSynonym _ t@TyPrim {} = t
--- expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
--- expandAllTypeSynonym _ t@TyTuple {} = t
--- expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSynonym abbrEnv) kts
--- expandAllTypeSynonym _ t@TyLazy {} = t
--- expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
--- expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv rep
--- expandAllTypeSynonym _ t@TyRep {} = t
--- expandAllTypeSynonym _ t@Rep {} = t
-
--- makeBaseFunctor ''Type
---
--- deriving stock instance Data t => Data (TypeF t)
---
--- instance Data t => Plated (TypeF t)
+expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
+  case abbrEnv ^. at con of
+    Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
+    Just (ps, orig) ->
+      -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
+      expandAllTypeSynonym abbrEnv $ applySubst (HashMap.fromList $ zip ps ts) $ expandAllTypeSynonym abbrEnv orig
+expandAllTypeSynonym abbrEnv (TyApp t1 t2) = TyApp (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+expandAllTypeSynonym _ t@TyVar {} = t
+expandAllTypeSynonym _ t@TyCon {} = t
+expandAllTypeSynonym _ t@TyPrim {} = t
+expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+expandAllTypeSynonym _ t@TyTuple {} = t
+expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSynonym abbrEnv) kts
+expandAllTypeSynonym _ t@TyLazy {} = t
+expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
+expandAllTypeSynonym _ TyBottom = TyBottom
+expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv rep
+expandAllTypeSynonym _ t@TyRep {} = t
+expandAllTypeSynonym _ t@Rep {} = t
+expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
 
 makePrisms ''Rep
 makePrisms ''PrimT

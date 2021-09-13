@@ -63,7 +63,7 @@ typeCheck rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
       tcEnv' <- get
       -- FIXME: 自由なTyMetaに適当なTyVarを束縛する
       -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
-      -- 今はTyBottomに変換している
+      -- 今はAnyTに変換している
       abbrEnv <- use abbrEnv
       zonkedBg <-
         pure bg'
@@ -199,9 +199,9 @@ tcTypeDefinitions typeSynonyms dataDefs classes = do
   for_ classes \(_, name, params, _) -> do
     tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
     typeEnv . at name .= Just (TypeDef tyCon [] [])
-  (,,) <$> tcTypeSynonyms typeSynonyms
-    <*> tcDataDefs dataDefs
-    <*> tcClasses classes
+  typeSynonyms' <- tcTypeSynonyms typeSynonyms
+  dataDefs' <- tcDataDefs dataDefs
+  (typeSynonyms',dataDefs',) <$> tcClasses classes
   where
     -- TODO: ほんとはpolymorphicな値を返さないといけないと思う
     buildTyConKind [] = TYPE $ Rep BoxedRep
@@ -222,10 +222,8 @@ tcTypeSynonyms ::
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     TyCon con <- lookupType pos name
-
     params' <- traverse (\p -> newInternalId (idToText p) (TYPE $ Rep BoxedRep)) params
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
-
     typ' <- transType typ
     abbrEnv . at con .= Just (params', typ')
     updateFieldEnv (name ^. idName) (tcType typ) params' typ'
@@ -298,7 +296,6 @@ tcForeigns ds =
       tv <- freshVar $ Just $ tyVar ^. idName
       typeEnv . at tyVar ?= TypeDef (TyMeta tv) [] []
     ty' <- transType ty
-    traceShowM $ "ty' = " <> pPrint ty'
     scheme@(Forall _ ty') <- generalize pos mempty ty'
     varEnv . at name ?= scheme
     pure (Annotated ty' (pos, raw), name, tcType ty)

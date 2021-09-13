@@ -4,7 +4,7 @@
 -- | Unification
 module Malgo.Infer.Unify where
 
-import Control.Lens (At (at), itraverse_, transformM, transformMOf, transformMOn, traverseOf, use, view, (?=), (^.))
+import Control.Lens (At (at), itraverse_, transformM, traverseOf, use, view, (?=), (^.))
 import Control.Monad.Writer.Strict (WriterT)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
@@ -118,18 +118,17 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    traceM "bindVar"
-    traceShowM v
-    traceShowM t
     solve [Annotated x $ v ^. typeVar . idMeta :~ kindOf t]
     TypeUnifyT $ at v ?= t
 
-  zonk = transformM \case
-    TyMeta v -> do
-      mterm <- lookupVar v
-      mterm <- traverse zonk mterm
-      pure $ fromMaybe (TyMeta v) mterm
-    ty -> pure ty
+  zonk t = do
+    transformM ?? t $ \case
+      TyMeta v -> do
+        mterm <- lookupVar v
+        mterm <- traverse zonk mterm
+        pure $ fromMaybe (TyMeta v) mterm
+      ty -> do
+        pure ty
 
 ------------
 -- Solver --
@@ -149,7 +148,8 @@ solveLoop n (Annotated x (t1 :~ t2) : cs) = do
     Left (pos, message) -> errorOn pos message
     Right (binds, cs') -> do
       itraverse_ (bindVar x) binds
-      solveLoop (n - 1) =<< traverse zonkConstraint (cs' <> cs)
+      constraints <- traverse zonkConstraint (cs' <> cs)
+      solveLoop (n - 1) constraints
 
 zonkConstraint :: MonadBind f => Annotated x Constraint -> f (Annotated x Constraint)
 zonkConstraint (Annotated m (x :~ y)) = Annotated m <$> ((:~) <$> zonk x <*> zonk y)
@@ -157,10 +157,7 @@ zonkConstraint (Annotated m (x :~ y)) = Annotated m <$> ((:~) <$> zonk x <*> zon
 generalize :: HasCallStack => (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> Type -> m (Scheme Type)
 generalize x bound term = do
   zonkedTerm <- zonk term
-  traceShowM $ pPrint zonkedTerm
-  traceShowM zonkedTerm
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
-  traceShowM $ "fvs = " <> pPrint fvs
   as <- zipWithM (toBound x) fvs [one c | c <- ['a' ..]]
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
@@ -168,8 +165,6 @@ generalize x bound term = do
 toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> TypeVar -> Text -> m (Id Type)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
-  traceShowM $ "tv = " <> pPrint tv
-  traceShowM $ "boxed = " <> pPrint tvType
   let tvKind = kindOf tvType
   let name = case tv ^. typeVar . idName of
         x
