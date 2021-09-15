@@ -16,7 +16,7 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
 import qualified Malgo.Rename.RnEnv as RnState
 import Malgo.Syntax.Extension
-import qualified Malgo.TypeRep.Static as GT
+import qualified Malgo.TypeRep as GT
 import qualified System.Directory as Directory
 import System.FilePath ((-<.>), (</>))
 

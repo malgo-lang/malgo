@@ -25,7 +25,7 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
-import Malgo.TypeRep.Static as GT
+import Malgo.TypeRep as GT
 
 -- | トップレベル宣言
 data Def

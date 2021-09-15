@@ -1,5 +1,6 @@
 module Malgo.Desugar.Type (dsType, unfoldType) where
 
+import Control.Lens ((^.))
 import qualified Data.Map.Strict as Map
 import Koriel.Core.Type
 import qualified Koriel.Core.Type as C
@@ -7,9 +8,8 @@ import Koriel.Id
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Prelude
-import Malgo.TypeRep.Static
-import qualified Malgo.TypeRep.Static as GT
-import Control.Lens ((^.))
+import Malgo.TypeRep
+import qualified Malgo.TypeRep as GT
 
 -- Malgoの型をCoreの型に変換する
 dsType :: Monad m => GT.Type -> m C.Type
@@ -34,6 +34,7 @@ dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
 dsType GT.TyBottom = pure AnyT
+dsType GT.TyMeta{} = pure AnyT
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 dsTyApp :: Monad f => [GT.Type] -> GT.Type -> f C.Type

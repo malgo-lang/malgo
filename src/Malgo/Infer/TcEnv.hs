@@ -20,30 +20,28 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
 import Malgo.Syntax.Extension
-import Malgo.TypeRep.Static (Scheme, TypeDef (..))
-import qualified Malgo.TypeRep.Static as Static
-import Malgo.TypeRep.UTerm
+import Malgo.TypeRep
 
 type RecordTypeName = Text
 
 data TcEnv = TcEnv
-  { _varEnv :: HashMap RnId (Scheme UType),
-    _typeEnv :: HashMap RnId (TypeDef UType),
-    _abbrEnv :: HashMap (Id UType) ([Id UType], UType),
-    _fieldEnv :: HashMap RnId [(RecordTypeName, Scheme UType)]
+  { _varEnv :: HashMap RnId (Scheme Type),
+    _typeEnv :: HashMap RnId (TypeDef Type),
+    _abbrEnv :: HashMap (Id Type) ([Id Type], Type),
+    _fieldEnv :: HashMap RnId [(RecordTypeName, Scheme Type)]
   }
   deriving stock (Show)
 
-varEnv :: Lens' TcEnv (HashMap RnId (Scheme UType))
+varEnv :: Lens' TcEnv (HashMap RnId (Scheme Type))
 varEnv = lens _varEnv (\t x -> t {_varEnv = x})
 
-typeEnv :: Lens' TcEnv (HashMap (Id ()) (TypeDef UType))
+typeEnv :: Lens' TcEnv (HashMap (Id ()) (TypeDef Type))
 typeEnv = lens _typeEnv (\t x -> t {_typeEnv = x})
 
-abbrEnv :: Lens' TcEnv (HashMap (Id UType) ([Id UType], UType))
+abbrEnv :: Lens' TcEnv (HashMap (Id Type) ([Id Type], Type))
 abbrEnv = lens _abbrEnv (\t x -> t {_abbrEnv = x})
 
-fieldEnv :: Lens' TcEnv (HashMap (Id ()) [(RecordTypeName, Scheme UType)])
+fieldEnv :: Lens' TcEnv (HashMap (Id ()) [(RecordTypeName, Scheme Type)])
 fieldEnv = lens _fieldEnv (\t x -> t {_fieldEnv = x})
 
 instance Pretty TcEnv where
@@ -66,7 +64,7 @@ instance HasType TcEnv where
       <*> traverseOf (traversed . traversed . types) f _abbrEnv
       <*> traverseOf (traversed . traversed . _2 . traversed . types) f _fieldEnv
 
-appendFieldEnv :: [(Id (), (RecordTypeName, Scheme UType))] -> TcEnv -> TcEnv
+appendFieldEnv :: [(Id (), (RecordTypeName, Scheme Type))] -> TcEnv -> TcEnv
 appendFieldEnv newEnv = over fieldEnv (go newEnv)
   where
     go [] e = e
@@ -86,12 +84,12 @@ genTcEnv rnEnv = do
       { _varEnv = mempty,
         _typeEnv =
           HashMap.fromList
-            [ (int32_t, TypeDef (TyPrim Static.Int32T) [] []),
-              (int64_t, TypeDef (TyPrim Static.Int64T) [] []),
-              (float_t, TypeDef (TyPrim Static.FloatT) [] []),
-              (double_t, TypeDef (TyPrim Static.DoubleT) [] []),
-              (char_t, TypeDef (TyPrim Static.CharT) [] []),
-              (string_t, TypeDef (TyPrim Static.StringT) [] [])
+            [ (int32_t, TypeDef (TyPrim Int32T) [] []),
+              (int64_t, TypeDef (TyPrim Int64T) [] []),
+              (float_t, TypeDef (TyPrim FloatT) [] []),
+              (double_t, TypeDef (TyPrim DoubleT) [] []),
+              (char_t, TypeDef (TyPrim CharT) [] []),
+              (string_t, TypeDef (TyPrim StringT) [] [])
             ],
         _abbrEnv = mempty,
         _fieldEnv = mempty

@@ -11,7 +11,7 @@ import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
-import Malgo.TypeRep.Static
+import Malgo.TypeRep
 import Data.List.Extra (nubOrd)
 import Data.Traversable (for)
 

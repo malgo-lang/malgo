@@ -2,7 +2,7 @@
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
 module Malgo.Refine.Pass where
 
-import Control.Lens (over, traverseOf, traversed, view, _1, _2, (^.), (.~), to)
+import Control.Lens (over, to, traverseOf, traversed, view, (.~), (^.), _1, _2)
 import qualified Data.List.NonEmpty as NonEmpty
 import Koriel.Pretty
 import Malgo.Infer.TcEnv
@@ -12,8 +12,7 @@ import qualified Malgo.Refine.Space as Space
 import Malgo.Syntax hiding (TyArr, Type)
 import qualified Malgo.Syntax as Syn
 import Malgo.Syntax.Extension
-import Malgo.TypeRep.Static
-import qualified Malgo.TypeRep.Static as Static
+import Malgo.TypeRep
 
 type Infered t x = (x ~ Malgo 'Infer) :: Constraint
 
@@ -37,52 +36,51 @@ refineBindGroup BindGroup {..} = do
   pure BindGroup {..}
 
 refineScDef :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => ScDef x -> m (ScDef (Malgo 'Refine))
-refineScDef (x, name, expr) = (over ann toType x,name,) <$> refineExp expr
+refineScDef (x, name, expr) = (x,name,) <$> refineExp expr
 
 refineExp :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Exp x -> m (Exp (Malgo 'Refine))
-refineExp (Var x v) = pure $ Var (over ann toType x) v
-refineExp (Unboxed x u) = pure $ Unboxed (over ann toType x) u
-refineExp (Apply x e1 e2) = Apply (over ann toType x) <$> refineExp e1 <*> refineExp e2
+refineExp (Var x v) = pure $ Var x v
+refineExp (Unboxed x u) = pure $ Unboxed x u
+refineExp (Apply x e1 e2) = Apply x <$> refineExp e1 <*> refineExp e2
 refineExp (OpApp x op e1 e2) = do
-  let x' = over ann toType $ over value (view _1) x
   e1' <- refineExp e1
   e2' <- refineExp e2
-  let applyType = TyArr (typeOf e2') (x' ^. ann)
+  let applyType = TyArr (typeOf e2') (x ^. ann)
   let opType = TyArr (typeOf e1') applyType
+  let x' = over value fst x
   pure $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) (NoPrefix op)) e1') e2'
 refineExp (Fn x cs) = do
-  let x' = over ann toType x
   cs' <- traverse refineClause cs
   env <- ask
-  let typeSpaces = map (Space.normalize . Space.space env) $ x' ^. ann . to splitTyArr . _1
+  let typeSpaces = map (Space.normalize . Space.space env) $ x ^. ann . to splitTyArr . _1
   let patSpaces = map (Space.normalize . Space.buildUnion) $ transpose $ NonEmpty.toList $ fmap (clauseSpace env) cs'
   exhaustive <- fmap Space.normalize <$> zipWithM Space.subtract typeSpaces patSpaces
   isEmptys <- traverse Space.equalEmpty exhaustive
   when (any not isEmptys) $
     errorOn (x ^. value) $ "Pattern is not exhaustive:" <+> pPrint exhaustive
-  pure $ Fn x' cs'
+  pure $ Fn x cs'
   where
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps
-refineExp (Tuple x es) = Tuple (over ann toType x) <$> traverse refineExp es
-refineExp (Record x kvs) = Record (over ann toType x) <$> traverseOf (traversed . _2) refineExp kvs
-refineExp (Force x e) = Force (over ann toType x) <$> refineExp e
-refineExp (RecordAccess x label) = pure $ RecordAccess (over ann toType x) label
-refineExp (Seq x ss) = Seq (over ann toType x) <$> traverse refineStmt ss
+refineExp (Tuple x es) = Tuple x <$> traverse refineExp es
+refineExp (Record x kvs) = Record x <$> traverseOf (traversed . _2) refineExp kvs
+refineExp (Force x e) = Force x <$> refineExp e
+refineExp (RecordAccess x label) = pure $ RecordAccess x label
+refineExp (Seq x ss) = Seq x <$> traverse refineStmt ss
 refineExp (Parens _ e) = refineExp e
 
 refineClause :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Clause x -> m (Clause (Malgo 'Refine))
-refineClause (Clause x ps e) = Clause (over ann toType x) <$> traverse refinePat ps <*> refineExp e
+refineClause (Clause x ps e) = Clause x <$> traverse refinePat ps <*> refineExp e
 
 refineStmt :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Stmt x -> m (Stmt (Malgo 'Refine))
 refineStmt (Let x v e) = Let x v <$> refineExp e
 refineStmt (NoBind x e) = NoBind x <$> refineExp e
 
 refinePat :: (Infered t x, MonadReader RefineEnv m) => Pat x -> m (Pat (Malgo 'Refine))
-refinePat (VarP x v) = pure $ VarP (over ann toType x) v
-refinePat (ConP x c ps) = ConP (over ann toType x) c <$> traverse refinePat ps
-refinePat (TupleP x ps) = TupleP (over ann toType x) <$> traverse refinePat ps
-refinePat (RecordP x kps) = RecordP (over ann toType x) <$> traverseOf (traversed . _2) refinePat kps
-refinePat (UnboxedP x u) = pure $ UnboxedP (over ann toType x) u
+refinePat (VarP x v) = pure $ VarP x v
+refinePat (ConP x c ps) = ConP x c <$> traverse refinePat ps
+refinePat (TupleP x ps) = TupleP x <$> traverse refinePat ps
+refinePat (RecordP x kps) = RecordP x <$> traverseOf (traversed . _2) refinePat kps
+refinePat (UnboxedP x u) = pure $ UnboxedP x u
 
 refineScSig :: (Infered t x, MonadReader RefineEnv m) => ScSig x -> m (ScSig (Malgo 'Refine))
 refineScSig (x, name, ty) = (x,name,) <$> refineType ty
@@ -103,7 +101,7 @@ refineTypeSynonym :: (Infered t x, MonadReader RefineEnv m) => TypeSynonym x -> 
 refineTypeSynonym (x, name, ps, typ) = (x,name,ps,) <$> refineType typ
 
 refineForeign :: (Infered t x, MonadReader RefineEnv m) => Foreign x -> m (Foreign (Malgo 'Refine))
-refineForeign (x, name, ty) = (over ann toType x,name,) <$> refineType ty
+refineForeign (x, name, ty) = (x,name,) <$> refineType ty
 
 refineImport :: (Infered t x, MonadReader RefineEnv m) => Import x -> m (Import (Malgo 'Refine))
 refineImport (x, modName, importList) = pure (x, modName, importList)
@@ -115,5 +113,5 @@ refineImpl :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Impl x -> m (
 refineImpl (x, name, typ, expr) = do
   typ <- refineType typ
   expr <- refineExp expr
-  let typeRep = Static.typeOf expr
+  let typeRep = typeOf expr
   pure ((x, name, typ), (Annotated typeRep x, name, expr))

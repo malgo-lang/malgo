@@ -13,7 +13,6 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Infer.TcEnv
-import Malgo.Infer.UTerm
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
 import Malgo.Prelude hiding (Constraint)
@@ -21,22 +20,20 @@ import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
-import Malgo.TypeRep.Static (Rep (..), Scheme (Forall), TypeDef (..), typeConstructor, typeParameters, valueConstructors)
-import qualified Malgo.TypeRep.Static as Static
-import Malgo.TypeRep.UTerm
+import Malgo.TypeRep
 import Text.Megaparsec (SourcePos)
 
 -------------------------------
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupVar :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m (Scheme UType)
+lookupVar :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m (Scheme Type)
 lookupVar pos name =
   use (varEnv . at name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just scheme -> pure scheme
 
-lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m UType
+lookupType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m Type
 lookupType pos name =
   preuse (typeEnv . ix name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
@@ -44,7 +41,7 @@ lookupType pos name =
 
 -- fieldsのすべてのフィールドを含むレコード型を検索する
 -- マッチするレコード型が複数あった場合はエラー
-lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> [WithPrefix RnId] -> m (Scheme UType)
+lookupRecordType :: (MonadState TcEnv m, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> [WithPrefix RnId] -> m (Scheme Type)
 lookupRecordType pos fields = do
   env <- use fieldEnv
   let candidates = map (lookup env) fields
@@ -64,9 +61,9 @@ typeCheck rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
       put tcEnv
       bg' <- tcBindGroup bg
       tcEnv' <- get
-      -- FIXME: 自由なUVarに適当なTyVarを束縛する
+      -- FIXME: 自由なTyMetaに適当なTyVarを束縛する
       -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
-      -- 今はTyBottomに変換している
+      -- 今はAnyTに変換している
       abbrEnv <- use abbrEnv
       zonkedBg <-
         pure bg'
@@ -117,7 +114,7 @@ prepareTcImpls ::
 prepareTcImpls (pos, name, typ, _) = do
   for_ (HashSet.toList $ getTyVars typ) \tyVar -> do
     tv <- freshVar (Just $ tyVar ^. idName)
-    typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
+    typeEnv . at tyVar ?= TypeDef (TyMeta tv) [] []
   scheme <- generalize pos mempty =<< transType typ
   varEnv . at name ?= scheme
   pass
@@ -172,15 +169,9 @@ tcImports = traverse tcImport
         loadInterface modName >>= \case
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
-      varEnv <>= (Static.fromType <<$>> interface ^. signatureMap)
-      typeEnv <>= (Static.fromType <<$>> interface ^. typeDefMap)
-      abbrEnv
-        <>= HashMap.mapKeys
-          (fmap Static.fromType)
-          ( fmap
-              (over _2 Static.fromType . over (_1 . mapped . idMeta) Static.fromType)
-              (interface ^. typeAbbrMap)
-          )
+      varEnv <>= (interface ^. signatureMap)
+      typeEnv <>= (interface ^. typeDefMap)
+      abbrEnv <>= (interface ^. typeAbbrMap)
       pure (pos, modName, importList)
 
 tcTypeDefinitions ::
@@ -208,9 +199,9 @@ tcTypeDefinitions typeSynonyms dataDefs classes = do
   for_ classes \(_, name, params, _) -> do
     tyCon <- TyCon <$> newIdOnName (buildTyConKind params) name
     typeEnv . at name .= Just (TypeDef tyCon [] [])
-  (,,) <$> tcTypeSynonyms typeSynonyms
-    <*> tcDataDefs dataDefs
-    <*> tcClasses classes
+  typeSynonyms' <- tcTypeSynonyms typeSynonyms
+  dataDefs' <- tcDataDefs dataDefs
+  (typeSynonyms',dataDefs',) <$> tcClasses classes
   where
     -- TODO: ほんとはpolymorphicな値を返さないといけないと思う
     buildTyConKind [] = TYPE $ Rep BoxedRep
@@ -231,17 +222,15 @@ tcTypeSynonyms ::
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     TyCon con <- lookupType pos name
-
     params' <- traverse (\p -> newInternalId (idToText p) (TYPE $ Rep BoxedRep)) params
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
-
     typ' <- transType typ
     abbrEnv . at con .= Just (params', typ')
     updateFieldEnv (name ^. idName) (tcType typ) params' typ'
 
     pure (pos, name, params, tcType typ)
 
-updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'Infer) -> [Id UType] -> UType -> f ()
+updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'Infer) -> [Id Type] -> Type -> f ()
 updateFieldEnv typeName (S.TyRecord _ kts) params typ = do
   let scheme = Forall params typ
   for_ kts \(label, _) ->
@@ -263,7 +252,7 @@ tcDataDefs ds = do
   bindedTypeVars <- HashSet.unions . map (freevars . view typeConstructor) . HashMap.elems <$> use typeEnv
   for ds \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
-    params' <- traverse (\p -> UVar <$> freshVar (Just $ p ^. idName)) params
+    params' <- traverse (\p -> TyMeta <$> freshVar (Just $ p ^. idName)) params
     solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf name']
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
@@ -305,8 +294,9 @@ tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just $ tyVar ^. idName
-      typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
-    scheme@(Forall _ ty') <- generalize pos mempty =<< transType ty
+      typeEnv . at tyVar ?= TypeDef (TyMeta tv) [] []
+    ty' <- transType ty
+    scheme@(Forall _ ty') <- generalize pos mempty ty'
     varEnv . at name ?= scheme
     pure (Annotated ty' (pos, raw), name, tcType ty)
 
@@ -325,7 +315,7 @@ tcScSigs ds =
   for ds \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just $ tyVar ^. idName
-      typeEnv . at tyVar ?= TypeDef (UVar tv) [] []
+      typeEnv . at tyVar ?= TypeDef (TyMeta tv) [] []
     scheme <- generalize pos mempty =<< transType ty
     varEnv . at name ?= scheme
     pure (pos, name, tcType ty)
@@ -335,7 +325,7 @@ prepareTcScDefs = traverse_ \(_, name, _) ->
   whenNothingM_
     (use (varEnv . at name))
     ( do
-        ty <- Forall [] . UVar <$> freshVar Nothing
+        ty <- Forall [] . TyMeta <$> freshVar Nothing
         varEnv . at name ?= ty
     )
 
@@ -382,7 +372,7 @@ tcScDefs ds@((pos, _, _) : _) = do
     declaredScheme <- lookupVar (pos ^. value) name
     case declaredScheme of
       -- No explicit signature
-      Forall [] (UVar _) -> varEnv . at name ?= inferredScheme
+      Forall [] (TyMeta _) -> varEnv . at name ?= inferredScheme
       _ -> do
         -- 型同士を比較する際には型シノニムを展開する
         abbrEnv <- use abbrEnv
@@ -416,7 +406,7 @@ tcExpr (Unboxed pos u) = do
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
-  retType <- UVar <$> freshVar Nothing
+  retType <- TyMeta <$> freshVar Nothing
   tell [Annotated pos $ typeOf f' :~ TyArr (typeOf x') retType]
   pure $ Apply (Annotated retType pos) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
@@ -424,7 +414,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e2' <- tcExpr e2
   opScheme <- lookupVar pos op
   opType <- instantiate pos opScheme
-  retType <- UVar <$> freshVar Nothing
+  retType <- TyMeta <$> freshVar Nothing
   tell [Annotated pos $ opType :~ TyArr (typeOf e1') (TyArr (typeOf e2') retType)]
   pure $ OpApp (Annotated retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] e :| _)) = do
@@ -451,12 +441,12 @@ tcExpr (Record pos kvs) = do
 -- pure $ Record (Annotated recordType pos) kvs'
 tcExpr (Force pos e) = do
   e' <- tcExpr e
-  ty <- UVar <$> freshVar Nothing
+  ty <- TyMeta <$> freshVar Nothing
   tell [Annotated pos $ TyApp TyLazy ty :~ typeOf e']
   pure $ Force (Annotated ty pos) e'
 tcExpr (RecordAccess pos label) = do
   recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
-  retType <- UVar <$> freshVar Nothing
+  retType <- TyMeta <$> freshVar Nothing
   case recordType of
     TyRecord kts -> do
       tell [Annotated pos $ recordType :~ TyRecord (Map.insert (removePrefix label) retType kts)]
@@ -504,7 +494,7 @@ tcPatterns ::
   WriterT [Annotated SourcePos Constraint] m [Pat (Malgo 'Infer)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
-  ty <- UVar <$> freshVar Nothing
+  ty <- TyMeta <$> freshVar Nothing
   varEnv . at v ?= Forall [] ty
   ps' <- tcPatterns ps
   pure $ VarP (Annotated ty x) v : ps'
@@ -519,7 +509,7 @@ tcPatterns (ConP pos con pats : ps) = do
   when (not (null morePats) && not (null restPs)) $
     errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
-  ty <- UVar <$> freshVar Nothing
+  ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'
   tell [Annotated pos $ conType :~ buildTyArr patTypes ty]
   ps' <- tcPatterns restPs
@@ -579,14 +569,14 @@ tcStmt (Let pos v e) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env, HasRnEnv env) => S.Type (Malgo 'Rename) -> m UType
+transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env, HasUniqSupply env, HasRnEnv env) => S.Type (Malgo 'Rename) -> m Type
 transType (S.TyApp pos t ts) = do
   rnEnv <- view rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
-      rep <- UVar . TypeVar <$> newInternalId "r" TyRep
+      rep <- TyMeta . TypeVar <$> newInternalId "r" TyRep
       solve [Annotated pos $ kindOf t' :~ TYPE rep]
       pure $ TyPtr t'
     _ -> do

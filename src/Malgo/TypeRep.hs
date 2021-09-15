@@ -2,18 +2,18 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.TypeRep.Static where
+module Malgo.TypeRep where
 
-import Control.Lens (At (at), Lens', Plated, Prism', makeLenses, makePrisms, mapped, over, prism, prism', re, (^.), (^?), _1, _2)
+import Control.Lens (At (at), Lens', Plated (plate), Traversal', coerced, cosmos, makeLenses, makePrisms, mapped, over, toListOf, transform, traverseOf, view, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Data (Data)
-import Data.Fix
-import Data.Functor.Foldable.TH (makeBaseFunctor)
+import Data.Data.Lens (uniplate)
+import Data.Generics.Sum
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.HashSet as HashSet
 import qualified Data.Map.Strict as Map
-import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Pretty
-import Malgo.Infer.UTerm
 import Malgo.Prelude
 
 --------------------------------
@@ -56,9 +56,9 @@ instance Pretty PrimT where
   pPrint CharT = "Char#"
   pPrint StringT = "String#"
 
-----------------------------
--- Static representations --
-----------------------------
+--------------------------
+-- Type representations --
+--------------------------
 
 type Kind = Type
 
@@ -68,7 +68,7 @@ data Type
 
     -- | application of type constructor
     TyApp Type Type
-  | -- | type variable
+  | -- | type variable (qualified by `Forall`)
     TyVar (Id Kind)
   | -- | type constructor
     TyCon (Id Kind)
@@ -96,11 +96,18 @@ data Type
     TyRep
   | -- | runtime representation tag
     Rep Rep
+  | -- unifiable type variable
+
+    -- | type variable (not qualified)
+    TyMeta TypeVar
   deriving stock (Eq, Ord, Show, Generic, Data)
 
 instance Binary Type
 
-instance Plated Type
+instance Plated Type where
+  plate _ t@TyMeta {} = pure t
+  -- plate f (TyRecord kts) = TyRecord <$> traverse f kts
+  plate f t = uniplate f t
 
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
@@ -118,42 +125,52 @@ instance Pretty Type where
   pPrintPrec _ _ TyLazy = "{}"
   pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
   pPrintPrec _ _ TyBottom = "#Bottom"
-  pPrintPrec l _ (TYPE rep) = pPrintPrec l 0 rep
+  pPrintPrec l _ (TYPE rep) = "TYPE" <+> pPrintPrec l 0 rep
   pPrintPrec _ _ TyRep = "#Rep"
   pPrintPrec l _ (Rep rep) = pPrintPrec l 0 rep
+  pPrintPrec l _ (TyMeta tv) = pPrintPrec l 0 tv
 
--- | Types that can be translated to `Type`
-class IsType a where
-  _Type :: Prism' a Type
-  _Type = prism' fromType safeToType
-  safeToType :: a -> Maybe Type
-  safeToType a = a ^? _Type
-  toType :: HasCallStack => a -> Type
-  toType a = fromJust $ safeToType a
-  fromType :: Type -> a
-  fromType a = a ^. re _Type
-  {-# MINIMAL _Type | (safeToType, fromType) #-}
+-------------------
+-- Type variable --
+-------------------
 
-instance IsType Type where
-  _Type = prism identity Right
-  safeToType = Just
-  toType = identity
+newtype TypeVar = TypeVar {_typeVar :: Id Kind}
+  deriving newtype (Eq, Ord, Show, Generic, Hashable)
+  deriving stock (Data, Typeable)
 
-instance IsType (t (Fix t)) => IsType (Fix t) where
-  safeToType (Fix t) = safeToType t
-  fromType t = Fix $ fromType t
+instance Binary TypeVar
 
-instance IsType (t (UTerm t v)) => IsType (UTerm t v) where
-  safeToType (UVar _) = Just TyBottom -- TODO: return TypeVar
-  safeToType (UTerm t) = safeToType t
-  fromType t = UTerm $ fromType t
+instance Pretty TypeVar where
+  pPrint (TypeVar v) = "'" <> pPrint v
+
+instance HasType TypeVar where
+  typeOf = TyMeta
+  types f (TypeVar v) = TypeVar <$> traverseOf idMeta f v
+
+instance HasKind TypeVar where
+  kindOf = view (typeVar . idMeta)
+
+typeVar :: Lens' TypeVar (Id Type)
+typeVar = coerced
+
+freevars :: Type -> HashSet TypeVar
+freevars ty = HashSet.fromList $ toListOf (cosmos . _As @"TyMeta") ty
+
+-------------------------
+-- HasType and HasKind --
+-------------------------
 
 -- | Types that have a `Type`
 class HasType a where
   typeOf :: a -> Type
+  types :: Traversal' a Type
 
 class HasKind a where
   kindOf :: a -> Kind
+
+instance HasType t => HasType (Annotated t a) where
+  typeOf (Annotated x _) = typeOf x
+  types f (Annotated x a) = Annotated <$> traverseOf types f x <*> pure a
 
 instance HasKind PrimT where
   kindOf Int32T = TYPE (Rep Int32Rep)
@@ -162,6 +179,10 @@ instance HasKind PrimT where
   kindOf DoubleT = TYPE (Rep DoubleRep)
   kindOf CharT = TYPE (Rep CharRep)
   kindOf StringT = TYPE (Rep StringRep)
+
+instance HasType Type where
+  typeOf = identity
+  types = identity
 
 instance HasKind Type where
   kindOf (TyApp (kindOf -> TyArr _ k) _) = k
@@ -178,12 +199,14 @@ instance HasKind Type where
   kindOf (TYPE rep) = TYPE rep -- Type :: Type
   kindOf TyRep = TyRep -- Rep :: Rep
   kindOf (Rep _) = TyRep
+  kindOf (TyMeta tv) = kindOf tv
 
 instance HasType Void where
   typeOf x = absurd x
+  types _ = absurd
 
 instance HasKind Void where
-  kindOf x = absurd x
+  kindOf = absurd
 
 -- | Universally quantified type
 data Scheme ty = Forall [Id ty] ty
@@ -221,6 +244,25 @@ instance Pretty ty => Pretty (TypeDef ty) where
 instance HasKind ty => HasKind (TypeDef ty) where
   kindOf TypeDef {_typeConstructor} = kindOf _typeConstructor
 
+-----------------------
+-- Unification monad --
+-----------------------
+
+type TypeMap = HashMap TypeVar Type
+
+newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
+  deriving newtype (Functor, Applicative, Monad, MonadReader r, MonadIO, MonadFail)
+
+instance MonadState s m => MonadState s (TypeUnifyT m) where
+  get = TypeUnifyT $ lift get
+  put x = TypeUnifyT $ lift $ put x
+
+instance MonadTrans TypeUnifyT where
+  lift m = TypeUnifyT $ lift m
+
+runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
+runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
+
 ---------------
 -- Utilities --
 ---------------
@@ -251,33 +293,57 @@ splitTyArr t = ([], t)
 
 -- | apply substitution to a type
 applySubst :: HashMap (Id Type) Type -> Type -> Type
-applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t2)
-applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v
-applySubst _ (TyCon c) = TyCon c
-applySubst _ (TyPrim p) = TyPrim p
-applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
-applySubst _ (TyTuple n) = TyTuple n
-applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
-applySubst _ TyLazy = TyLazy
-applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
-applySubst _ TyBottom = TyBottom
-applySubst subst (TYPE rep) = TYPE $ applySubst subst rep
-applySubst _ TyRep = TyRep
-applySubst _ (Rep rep) = Rep rep
+applySubst subst = transform $ \case
+  TyVar v -> fromMaybe (TyVar v) $ subst ^. at v
+  ty -> ty
 
-makeBaseFunctor ''Type
+-- applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t2)
+-- applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v
+-- applySubst _ (TyCon c) = TyCon c
+-- applySubst _ (TyPrim p) = TyPrim p
+-- applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
+-- applySubst _ (TyTuple n) = TyTuple n
+-- applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
+-- applySubst _ TyLazy = TyLazy
+-- applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
+-- applySubst _ TyBottom = TyBottom
+-- applySubst subst (TYPE rep) = TYPE $ applySubst subst rep
+-- applySubst _ TyRep = TyRep
+-- applySubst _ (Rep rep) = Rep rep
 
-deriving stock instance Data t => Data (TypeF t)
+-- | expand type synonyms
+expandTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Maybe Type
+expandTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
+  case abbrEnv ^. at con of
+    Nothing -> Nothing
+    Just (ps, orig) -> Just (applySubst (HashMap.fromList $ zip ps ts) orig)
+expandTypeSynonym _ _ = Nothing
 
-instance Data t => Plated (TypeF t)
+expandAllTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Type
+expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
+  case abbrEnv ^. at con of
+    Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
+    Just (ps, orig) ->
+      -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
+      expandAllTypeSynonym abbrEnv $ applySubst (HashMap.fromList $ zip ps ts) $ expandAllTypeSynonym abbrEnv orig
+expandAllTypeSynonym abbrEnv (TyApp t1 t2) = TyApp (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+expandAllTypeSynonym _ t@TyVar {} = t
+expandAllTypeSynonym _ t@TyCon {} = t
+expandAllTypeSynonym _ t@TyPrim {} = t
+expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+expandAllTypeSynonym _ t@TyTuple {} = t
+expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSynonym abbrEnv) kts
+expandAllTypeSynonym _ t@TyLazy {} = t
+expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
+expandAllTypeSynonym _ TyBottom = TyBottom
+expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv rep
+expandAllTypeSynonym _ t@TyRep {} = t
+expandAllTypeSynonym _ t@Rep {} = t
+expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
 
 makePrisms ''Rep
-
 makePrisms ''PrimT
-
 makePrisms ''Type
-
 makePrisms ''Scheme
-
 makeLenses ''TypeDef
 

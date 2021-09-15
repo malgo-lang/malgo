@@ -12,7 +12,8 @@ import qualified Malgo.Infer.TcEnv as TcEnv
 import Malgo.Prelude
 import Malgo.Syntax as Syn
 import Malgo.Syntax.Extension
-import qualified Malgo.TypeRep.Static as Static
+import Malgo.TypeRep (kindOf, typeConstructor)
+import qualified Malgo.TypeRep as R
 
 -- | variable and type environment
 data Env = Env
@@ -21,7 +22,7 @@ data Env = Env
     -- | Syn.Type name to Core.Type name
     _typeNameEnv :: HashMap (Id ()) Name,
     -- | [Static type rep] name to Core.Type
-    _typeVarEnv :: HashMap (Id Static.Type) Core.Type,
+    _typeVarEnv :: HashMap (Id R.Type) Core.Type,
     _typeDefEnv :: HashMap Name Core.TypeDef
   }
 
@@ -38,17 +39,16 @@ lookupTypeName = undefined
 
 initEnv :: (MonadState Env m, MonadIO m, HasUniqSupply env, MonadReader env m) => TcEnv -> m ()
 initEnv TcEnv {_varEnv, _typeEnv} = do
-  _typeEnv <- pure $ Static.toType <<$>> _typeEnv
   ifor_ _typeEnv \name typeDef -> do
-    name' <- newIdOnName (dsKind (Static.kindOf typeDef)) name
+    name' <- newIdOnName (dsKind (kindOf typeDef)) name
     typeNameEnv . at name ?= name'
-    registerTypeConstructor (typeDef ^. Static.typeConstructor)
+    registerTypeConstructor (typeDef ^. typeConstructor)
   ifor_ _typeEnv \name typeDef -> do
     name' <- lookupTypeName name
     typeDef' <- dsTypeDef typeDef
     typeDefEnv . at name' ?= typeDef'
   ifor_ _varEnv \name scheme -> do
-    scheme' <- dsScheme $ fmap Static.toType scheme
+    scheme' <- dsScheme scheme
     name' <- newIdOnName scheme' name
     varNameEnv . at name ?= name'
 
@@ -60,27 +60,27 @@ mlgToCore tcEnv Syn.Module {_moduleDefinition = BindGroup {..}} = evaluatingStat
   _typeDefinitions <- use (typeDefEnv . to HashMap.toList)
   pure $ Core.Module {..}
 
-dsTypeDef :: Monad m => Static.TypeDef Static.Type -> m TypeDef
-dsTypeDef Static.TypeDef {..} = do
+dsTypeDef :: Monad m => R.TypeDef R.Type -> m TypeDef
+dsTypeDef R.TypeDef {..} = do
   _parameters <- traverse dsTypeParameter _typeParameters
   _constructors <- traverse dsValueConstructor _valueConstructors
   pure $ TypeDef {..}
   where
-    dsValueConstructor :: (Id (), Static.Scheme Static.Type) -> m Name
+    dsValueConstructor :: (Id (), R.Scheme R.Type) -> m Name
     dsValueConstructor (constr, sc) = undefined
-    dsTypeParameter :: Id Static.Type -> m Name
+    dsTypeParameter :: Id R.Type -> m Name
     dsTypeParameter id = undefined
 
-dsScheme :: Monad m => Static.Scheme Static.Type -> m Core.Type
+dsScheme :: Monad m => R.Scheme R.Type -> m Core.Type
 dsScheme = undefined
 
-dsKind :: Static.Kind -> Core.Type
-dsKind (Static.TYPE (Static.Rep rep)) = Core.TYPE rep
-dsKind (Static.TyArr k1 k2) = Core.TyFun [dsKind k1] (dsKind k2)
+dsKind :: R.Kind -> Core.Type
+dsKind (R.TYPE (R.Rep rep)) = Core.TYPE rep
+dsKind (R.TyArr k1 k2) = Core.TyFun [dsKind k1] (dsKind k2)
 dsKind k = errorDoc $ "invalid kind:" <+> pPrint k
 
-registerTypeConstructor :: Monad m => Static.Type -> m ()
-registerTypeConstructor (Static.TyVar x) = undefined
+registerTypeConstructor :: Monad m => R.Type -> m ()
+registerTypeConstructor (R.TyVar x) = undefined
 
 dsExp :: Syn.Exp (Malgo 'Refine) -> Core.Type -> Core.Exp
 dsExp e expected = undefined
