@@ -3,7 +3,7 @@ module Koriel.Core.Optimize
   )
 where
 
-import Control.Lens (At (at), Lens', cosmos, lengthOf, lens, over, traverseOf, traversed, view, (?=), (?~), _2)
+import Control.Lens (At (at), Lens', lens, over, traverseOf, traversed, view, (?=), (?~), _2)
 import Control.Monad.Except
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
@@ -97,8 +97,18 @@ checkInlineable ::
   m ()
 checkInlineable (LocalDef f (Fun ps v)) = do
   level <- view inlineLevel
-  -- ノードの数がlevel以下ならインライン展開する
-  when (lengthOf cosmos v <= level {-  || f `notElem` freevars v -}) $ at f ?= (ps, v)
+  -- 変数の数がlevel以下ならインライン展開する
+  -- let isInlineableSize = level >= lengthOf cosmos v -- ノードの数。遅い
+  -- let isInlineableSize = 0 < either identity identity (foldlMOf cosmos aux level v) -- 同上。ちょっと遅い
+  -- let isInlineableSize = level >= length v
+  let isInlineableSize = 0 < either identity identity (foldM aux level v)
+  -- when (not (f `member` freevars v) && lengthOf cosmos v <= level) $ at f ?= (ps, v)
+  when isInlineableSize $ do
+    at f ?= (ps, v)
+  where
+    aux n _
+      | n <= 0 = Left 0
+      | otherwise = Right (n - 1)
 checkInlineable _ = pass
 
 lookupCallInline ::
