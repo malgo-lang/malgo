@@ -4,7 +4,6 @@ module Koriel.Core.Flat
 where
 
 import Control.Lens (traverseOf, traversed)
-import Control.Monad.Writer.Strict (MonadWriter (tell), WriterT (runWriterT))
 import Koriel.Core.Syntax
 import Koriel.Prelude
 
