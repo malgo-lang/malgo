@@ -3,6 +3,8 @@
 
 module Koriel.Prelude
   ( module Relude,
+    module Control.Monad.Writer.Class,
+    module Control.Monad.Trans.Writer.CPS,
     unzip,
     replaceOf,
     localState,
@@ -10,8 +12,12 @@ module Koriel.Prelude
 where
 
 import Control.Lens (ASetter, over)
+import Control.Monad.Trans.Writer.CPS (WriterT, runWriterT)
+import qualified Control.Monad.Trans.Writer.CPS as W
+import Control.Monad.Writer.Class hiding (pass)
+import qualified Control.Monad.Writer.Class as Writer
 import Data.Monoid
-import Relude hiding (Op, Type, unzip, All, id)
+import Relude hiding (All, Op, Type, id, unzip)
 
 -- | unzip :: [(a, b)] -> ([a], [b]) の一般化
 unzip :: Functor f => f (a, b) -> (f a, f b)
@@ -28,3 +34,15 @@ localState action = do
   state <- get
   put backup
   pure (result, state)
+
+instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
+  tell = W.tell
+  listen = W.listen
+  pass = W.pass
+
+instance MonadState s m => MonadState s (WriterT w m) where
+  state = lift . state
+
+instance (Monoid w, MonadReader r m) => MonadReader r (WriterT w m) where
+  reader = lift . reader
+  local = W.mapWriterT . local

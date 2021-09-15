@@ -5,7 +5,6 @@
 module Malgo.Infer.Unify where
 
 import Control.Lens (At (at), itraverse_, transformM, traverseOf, use, view, (?=), (^.))
-import Control.Monad.Writer.Strict (WriterT)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.Map as Map

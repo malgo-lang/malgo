@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 -- |
 -- malgoの共通中間表現。
@@ -6,7 +7,6 @@
 module Koriel.Core.Syntax where
 
 import Control.Lens (Lens', Plated, Traversal', lens, sans, traverseOf, traversed, view, _2)
-import Control.Monad.Writer (WriterT (runWriterT), tell)
 import Data.Data (Data)
 import Koriel.Core.Op
 import Koriel.Core.Type

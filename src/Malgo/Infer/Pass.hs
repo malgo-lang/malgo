@@ -1,7 +1,6 @@
 module Malgo.Infer.Pass where
 
 import Control.Lens (At (at), forOf, ix, mapped, over, preuse, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _4, _Just)
-import Control.Monad.Writer.Strict (MonadWriter (tell), WriterT (runWriterT))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
