@@ -1,0 +1,15 @@
+module StringPatIsNotSupported = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  isHoge = {
+    | "hoge" -> True
+    | _ -> False
+  };
+
+  main = {
+    if (isHoge "hoge") { putStrLn "OK" } { putStrLn "Err" }
+  };
+}
+
+-- Expected: OK
