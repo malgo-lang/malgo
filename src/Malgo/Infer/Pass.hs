@@ -419,11 +419,24 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
   pure $ Fn (Annotated (TyApp TyLazy (typeOf e')) pos) (Clause (Annotated (TyApp TyLazy (typeOf e')) x) [] e' :| [])
-tcExpr (Fn pos cs) =
-  traverse tcClause cs >>= \case
-    (c' :| cs') -> do
-      for_ cs' \c -> tell [Annotated pos $ typeOf c' :~ typeOf c]
-      pure $ Fn (Annotated (typeOf c') pos) (c' :| cs')
+tcExpr (Fn pos cs) = do
+  (c' :| cs') <- traverse tcClause cs
+  -- パターンの数がすべての節で同じかを検査
+  -- tcPatternsでパターンの組み換えを行うので、このタイミングで検査する
+  -- TODO: エラーメッセージをもっとわかりやすく
+  let patNums :: Int = countPatNums c'
+  for_ cs' \c -> do
+    when (countPatNums c /= patNums) $
+      errorOn pos $
+        sep
+          [ nest 4 $ pPrint (patOf c) <+> "has" <+> pPrint (countPatNums c) <+> "patterns,",
+            "but" <+> pPrint (patOf c') <+> "has" <+> pPrint patNums
+          ]
+    tell [Annotated pos $ typeOf c' :~ typeOf c]
+  pure $ Fn (Annotated (typeOf c') pos) (c' :| cs')
+  where
+    countPatNums (Clause _ ps _) = length ps
+    patOf (Clause _ ps _) = ps
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
   let esType = TyConApp (TyTuple $ length es) $ map typeOf es'
