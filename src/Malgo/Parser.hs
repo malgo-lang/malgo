@@ -267,7 +267,7 @@ pSinglePat =
     <|> between
       (symbol "[")
       (symbol "]")
-      (ListP <$> getSourcePos <*> pPat `sepBy1` pOperator ",")
+      (ListP <$> getSourcePos <*> pPat `sepBy` pOperator ",")
     <|> between (symbol "(") (symbol ")") pPat
 
 pPat :: Parser (Pat (Malgo 'Parse))
