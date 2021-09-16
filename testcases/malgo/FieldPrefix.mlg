@@ -12,11 +12,11 @@ module FieldPrefix = {
     printString (toStringInt32 y)
   };
   
-  zero2D : { Point2D };
-  zero2D = { { Point2D.x = 0, y = 0 } };
+  zero2D : Point2D;
+  zero2D = { Point2D.x = 0, y = 0 };
 
   main = {
-    print2D !zero2D
+    print2D zero2D
   };
 }
 

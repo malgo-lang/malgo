@@ -33,9 +33,8 @@ module List = {
   };
 
   main = {
-      sum (below 10)
+      sum (map (addInt32 1) (below 10))
         |> toStringInt32
         |> putStrLn
   };
 }
--- Expected: 55

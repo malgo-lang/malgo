@@ -341,7 +341,7 @@ pSingleExp' =
     <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
 
 pSingleExp :: Parser (Exp (Malgo 'Parse))
-pSingleExp = try (Force <$> getSourcePos <* pOperator "!" <*> pSingleExp') <|> pSingleExp'
+pSingleExp = pSingleExp'
 
 pApply :: Parser (Exp (Malgo 'Parse))
 pApply = do
@@ -400,8 +400,8 @@ pTyRecord = between (symbol "{") (symbol "}") do
       value <- pType
       pure (label, value)
 
-pTyLazy :: Parser (Type (Malgo 'Parse))
-pTyLazy = between (symbol "{") (symbol "}") $ TyLazy <$> getSourcePos <*> pType
+pTyBlock :: Parser (Type (Malgo 'Parse))
+pTyBlock = between (symbol "{") (symbol "}") $ TyBlock <$> getSourcePos <*> pType
 
 pSingleType :: Parser (Type (Malgo 'Parse))
 pSingleType =
@@ -410,7 +410,7 @@ pSingleType =
     <|> try pTyUnit
     <|> try pTyTuple
     <|> try pTyRecord
-    <|> pTyLazy
+    <|> pTyBlock
     <|> between (symbol "(") (symbol ")") pType
 
 pTyApp :: Parser (Type (Malgo 'Parse))

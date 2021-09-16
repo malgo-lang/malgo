@@ -105,9 +105,6 @@ type family XList x where
   XList (Malgo 'Parse) = SourcePos
   XList (Malgo _) = Void
 
-type family XForce x where
-  XForce (Malgo x) = SimpleX x
-
 type family XRecordAccess x where
   XRecordAccess (Malgo x) = SimpleX x
 
@@ -133,7 +130,6 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XTuple x),
     c (XRecord x),
     c (XList x),
-    c (XForce x),
     c (XRecordAccess x),
     c (XAnn x),
     c (XSeq x),
@@ -205,15 +201,16 @@ type family XTyTuple x where
 type family XTyRecord x where
   XTyRecord (Malgo _) = SourcePos
 
-type family XTyLazy x where
-  XTyLazy (Malgo _) = SourcePos
+type family XTyBlock x where
+  XTyBlock (Malgo 'Parse) = SourcePos
+  XTyBlock (Malgo _) = Void
 
 type family XTyDArr x where
   XTyDArr (Malgo 'Parse) = SourcePos
   XTyDArr (Malgo _) = Void
 
 type ForallTypeX (c :: K.Type -> Constraint) x =
-  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyLazy x), c (XTyDArr x))
+  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyBlock x), c (XTyDArr x))
 
 -- Decl Extensions
 type family XScDef x where

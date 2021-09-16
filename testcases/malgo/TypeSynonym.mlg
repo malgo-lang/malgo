@@ -6,8 +6,8 @@ module TypeSynonym = {
 
   type MyString = String;
 
-  hello : { MyTuple MyString };
-  hello = { ("hello", "world") };
+  hello : MyTuple MyString;
+  hello = ("hello", "world");
 
   data T = TCon;
   type S = T;
@@ -17,7 +17,7 @@ module TypeSynonym = {
 
   main : { () };
   main = {
-    !hello |> { (h, w) -> putStr h; putStr " "; putStrLn w }
+    hello |> { (h, w) -> putStr h; putStr " "; putStrLn w }
   };
 }
 -- Expected: hello world

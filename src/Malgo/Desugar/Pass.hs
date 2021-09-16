@@ -51,13 +51,15 @@ desugar varEnv typeEnv rnEnv depList (Module modName ds) = do
     Just mainCall -> do
       mainFuncDef <-
         mainFunc modName depList =<< runDef do
-          _ <- bind mainCall
+          let unitCon = C.Con C.Tuple []
+          unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
+          _ <- bind $ mainCall [unit]
           pure (Atom $ C.Unboxed $ C.Int32 0)
       pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs))
     Nothing -> pure (dsEnv, Program modName varDefs funDefs)
   where
     -- エントリーポイントとなるmain関数を検索する
-    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId []
+    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
 
@@ -106,7 +108,6 @@ dsScDef (Annotated typ _, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   case typ of
     GT.TyArr _ _ -> dsFunDef name expr
-    GT.TyApp GT.TyLazy _ -> dsFunDef name expr
     _ -> dsVarDef name expr
   where
     dsVarDef name expr = do
@@ -186,14 +187,8 @@ dsExp ::
 dsExp (G.Var x (WithPrefix (Annotated _ name))) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
-  -- Note: [0 argument]
-  --   Core上で0引数関数で表現されるMalgoの値は以下の二つ。
-  --    1. {a}型の値（TyLazy）
-  --    2. 引数のない値コンストラクタ
+  -- 引数のない値コンストラクタは、Coreでは0引数の関数として扱われる
   case (x ^. GT.withType, C.typeOf name') of
-    -- TyLazyの型を検査
-    (GT.TyApp GT.TyLazy _, [] :-> _) -> pass
-    (GT.TyApp GT.TyLazy _, _) -> errorDoc $ "Invalid TyLazy:" <+> quotes (pPrint $ C.typeOf name')
     (_, [] :-> _)
       | isConstructor name -> pass
       | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
@@ -227,13 +222,6 @@ dsExp (G.Apply info f x) = runDef $ do
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn x (Clause _ [] e :| _)) = do
-  -- lazy valueの脱糖衣
-  e' <- dsExp e
-  typ <- dsType (x ^. GT.withType)
-  runDef do
-    fun <- let_ typ $ Fun [] e'
-    pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
   ps' <- traverse (\p -> newInternalId "$p" =<< dsType (GT.typeOf p)) ps
   typ <- dsType (GT.typeOf e)
@@ -267,10 +255,6 @@ dsExp (G.Record x kvs) = runDef $ do
   where
     sortRecordField [] _ = []
     sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
-dsExp (G.Force _ e) = runDef $ do
-  -- lazy valueは0引数関数に変換されるので、その評価は0引数関数の呼び出しになる
-  e' <- bind =<< dsExp e
-  pure $ Call e' []
 dsExp (G.RecordAccess x label) = runDef $ do
   GT.TyArr (GT.TyRecord recordType) _ <- pure $ x ^. GT.withType
   kts <- Map.toList <$> traverse dsType recordType

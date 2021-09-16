@@ -418,7 +418,8 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   pure $ OpApp (Annotated retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
-  pure $ Fn (Annotated (TyApp TyLazy (typeOf e')) pos) (Clause (Annotated (TyApp TyLazy (typeOf e')) x) [] e' :| [])
+  hole <- newInternalId "_" ()
+  pure $ Fn (Annotated (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Annotated (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Annotated (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do
   (c' :| cs') <- traverse tcClause cs
   -- パターンの数がすべての節で同じかを検査
@@ -451,11 +452,6 @@ tcExpr (Record pos kvs) = do
 -- recordType <- instantiate pos =<< lookupRecordType pos (map fst kvs)
 -- tell [Annotated pos $ recordType :~ kvsType]
 -- pure $ Record (Annotated recordType pos) kvs'
-tcExpr (Force pos e) = do
-  e' <- tcExpr e
-  ty <- TyMeta <$> freshVar Nothing
-  tell [Annotated pos $ TyApp TyLazy ty :~ typeOf e']
-  pure $ Force (Annotated ty pos) e'
 tcExpr (RecordAccess pos label) = do
   recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
   retType <- TyMeta <$> freshVar Nothing
@@ -601,7 +597,6 @@ transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyConApp (TyTuple $ length ts) <$> traverse transType ts
 transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
-transType (S.TyLazy _ t) = TyApp TyLazy <$> transType t
 
 tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'Infer)
 tcType (S.TyApp pos t ts) = S.TyApp pos (tcType t) (map tcType ts)
@@ -610,4 +605,3 @@ tcType (S.TyCon pos c) = S.TyCon pos c
 tcType (S.TyArr pos t1 t2) = S.TyArr pos (tcType t1) (tcType t2)
 tcType (S.TyTuple pos ts) = S.TyTuple pos $ map tcType ts
 tcType (S.TyRecord pos kts) = S.TyRecord pos $ over (mapped . _2) tcType kts
-tcType (S.TyLazy pos t) = S.TyLazy pos $ tcType t

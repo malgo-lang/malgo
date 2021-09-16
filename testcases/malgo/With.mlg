@@ -4,14 +4,14 @@ module With = {
 
   finally : (a -> r) -> {a} -> r;
   finally = { finalizer k ->
-    let x = !k;
+    let x = k ();
     finalizer x
   };
 
   twice : {a} -> a;
   twice = { k ->
-    !k;
-    !k
+    k ();
+    k ()
   };
 
   printAndReturn = { str k ->

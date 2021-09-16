@@ -100,12 +100,11 @@ module LearnMalgo = {
     addTen 5 -- 15
   };
 
-  -- 0引数の関数
+  -- { () -> 0 } の略記
   zero = { 0 };
 
   usingFunction'' = {
-    -- 0引数の関数を呼ぶには、!をつける
-    !zero -- 0
+    zero () -- 0
   };
 
   -- 型シグネチャ
@@ -132,8 +131,8 @@ module LearnMalgo = {
 
   -- ifは関数として定義されている
   -- if :: Bool -> {a} -> {a} -> a;
-  -- if = { True t _ -> !t
-  --      | False _ f -> !f
+  -- if = { True t _ -> t ()
+  --      | False _ f -> f ()
   --      };
 
   -- パターンマッチ
