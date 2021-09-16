@@ -194,14 +194,21 @@ pFun =
     between (symbol "{") (symbol "}") $
       Fn
         <$> getSourcePos
-        <*> ( NonEmpty.fromList
-                <$> ( Clause
-                        <$> getSourcePos
-                        <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
-                        <*> (Seq <$> getSourcePos <*> pStmts)
-                    )
-                `sepBy1` pOperator "|"
-            )
+        <*> (NonEmpty.fromList <$> pClauses)
+
+-- [|] pat1 -> exp1 | pat2 -> exp 2 | ...
+-- first `|` is optional
+pClauses :: Parser [Clause (Malgo 'Parse)]
+pClauses = do
+  _ <- optional (pOperator "|")
+  pClause `sepBy1` pOperator "|"
+
+pClause :: Parser (Clause (Malgo 'Parse))
+pClause =
+  Clause
+    <$> getSourcePos
+    <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
+    <*> (Seq <$> getSourcePos <*> pStmts)
 
 pStmts :: Parser (NonEmpty (Stmt (Malgo 'Parse)))
 pStmts = NonEmpty.fromList <$> pStmt `sepBy1` pOperator ";"

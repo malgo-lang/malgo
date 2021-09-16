@@ -2,7 +2,10 @@ module Pattern = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  isNil = { [] -> True | _ -> False };
+  isNil = {
+    | [] -> True
+    | _ -> False
+  };
 
   main = { putStrLn "OK" };
 }
