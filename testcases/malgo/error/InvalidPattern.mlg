@@ -1,0 +1,14 @@
+module InvalidPattern = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  isNil = {
+    | [] -> True
+    | _ _ -> False
+--      ^ different number of patterns
+  };
+
+  main = { putStrLn "OK" };
+}
+
+-- Expected: OK
