@@ -223,7 +223,7 @@ dsExp (G.Apply info f x) = runDef $ do
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
 dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
-  ps' <- traverse (\p -> newInternalId "$p" =<< dsType (GT.typeOf p)) ps
+  ps' <- traverse (\p -> newInternalId (patToName p) =<< dsType (GT.typeOf p)) ps
   typ <- dsType (GT.typeOf e)
   -- destruct Clauses
   (pss, es) <-
@@ -237,6 +237,14 @@ dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
   obj <- curryFun ps' body
   v <- newInternalId "$fun" =<< dsType (x ^. GT.withType)
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
+  where
+    patToName (G.VarP _ v) = v ^. idName
+    patToName (G.ConP _ c _) = T.toLower $ c ^. idName
+    patToName (G.TupleP _ _) = "tuple"
+    patToName (G.RecordP _ _) = "record"
+    patToName (G.ListP _ _) = "list"
+    patToName (G.UnboxedP _ _) = "unboxed"
+    patToName (G.BoxedP _ _) = "boxed"
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
   let con = C.Con C.Tuple $ map C.typeOf es'
