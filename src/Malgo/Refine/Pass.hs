@@ -63,7 +63,6 @@ refineExp (Fn x cs) = do
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps
 refineExp (Tuple x es) = Tuple x <$> traverse refineExp es
 refineExp (Record x kvs) = Record x <$> traverseOf (traversed . _2) refineExp kvs
-refineExp (Force x e) = Force x <$> refineExp e
 refineExp (RecordAccess x label) = pure $ RecordAccess x label
 refineExp (Seq x ss) = Seq x <$> traverse refineStmt ss
 refineExp (Parens _ e) = refineExp e
@@ -92,7 +91,6 @@ refineType (Syn.TyCon x v) = pure $ Syn.TyCon x v
 refineType (Syn.TyArr x t1 t2) = Syn.TyArr x <$> refineType t1 <*> refineType t2
 refineType (Syn.TyTuple x ts) = Syn.TyTuple x <$> traverse refineType ts
 refineType (Syn.TyRecord x kts) = Syn.TyRecord x <$> traverseOf (traversed . _2) refineType kts
-refineType (Syn.TyLazy x t) = Syn.TyLazy x <$> refineType t
 
 refineDataDef :: (Infered t x, MonadReader RefineEnv m) => DataDef x -> m (DataDef (Malgo 'Refine))
 refineDataDef (x, name, ps, cons) = (x,name,ps,) <$> traverse (_2 $ traverse refineType) cons

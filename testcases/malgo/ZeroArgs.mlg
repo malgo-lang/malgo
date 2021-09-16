@@ -3,15 +3,15 @@ module ZeroArgs = {
   module {..} = import Prelude;
 
   one : Int32;
-  one = !{ 1 };
+  one = { 1 } ();
 
   id : a -> a;
-  id = { x -> !{ x } };
+  id = { x -> { x } () };
 
   main : { () };
-  main = !{
+  main = {
     { printString (toStringInt32 (id one) ) }
-  };
+  } ();
 }
 
 -- Expected: 1

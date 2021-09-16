@@ -341,7 +341,7 @@ pSingleExp' =
     <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
 
 pSingleExp :: Parser (Exp (Malgo 'Parse))
-pSingleExp = try (Force <$> getSourcePos <* pOperator "!" <*> pSingleExp') <|> pSingleExp'
+pSingleExp = pSingleExp'
 
 pApply :: Parser (Exp (Malgo 'Parse))
 pApply = do

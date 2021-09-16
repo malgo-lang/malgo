@@ -185,7 +185,6 @@ rnExp (List pos es) = do
   where
     buildListApply nilName _ [] = Var pos (NoPrefix nilName)
     buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos (NoPrefix consName)) x) (buildListApply nilName consName xs)
-rnExp (Force pos e) = Force pos <$> rnExp e
 rnExp (RecordAccess pos (WithPrefix (Annotated p l))) = RecordAccess pos . WithPrefix . Annotated p <$> lookupFieldName pos l
 rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
 rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
@@ -206,7 +205,7 @@ rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
 rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldName pos) rnType) kts
-rnType (TyLazy pos t) = TyLazy pos <$> rnType t
+rnType (TyLazy pos t) = TyArr pos (TyTuple pos []) <$> rnType t
 rnType (TyDArr pos _ _) = errorOn pos "not implemented"
 
 rnClause ::

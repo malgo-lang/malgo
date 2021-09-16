@@ -78,7 +78,6 @@ unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [Annotated x $ l1 :~ l2, Ann
 unify _ (TyTuple n1) (TyTuple n2) | n1 == n2 = pure (mempty, [])
 unify x (TyRecord kts1) (TyRecord kts2)
   | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> Annotated x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
-unify _ TyLazy TyLazy = pure (mempty, [])
 unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [Annotated x $ t1 :~ t2])
 unify x (TYPE rep1) (TYPE rep2) = pure (mempty, [Annotated x $ rep1 :~ rep2])
 unify _ TyRep TyRep = pure (mempty, [])
@@ -96,7 +95,6 @@ equiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
 equiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
 equiv (TyTuple n1) (TyTuple n2) | n1 == n2 = Just mempty
 equiv (TyRecord kts1) (TyRecord kts2) | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
-equiv TyLazy TyLazy = Just mempty
 equiv (TyPtr t1) (TyPtr t2) = equiv t1 t2
 equiv (TYPE rep1) (TYPE rep2) = equiv rep1 rep2
 equiv TyRep TyRep = Just mempty

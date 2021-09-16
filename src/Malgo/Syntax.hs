@@ -11,7 +11,7 @@ import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import Malgo.TypeRep hiding (Type, TyApp, TyVar, TyCon, TyArr, TyTuple, TyRecord, TyLazy, freevars)
+import Malgo.TypeRep hiding (Type, TyApp, TyVar, TyCon, TyArr, TyTuple, TyRecord, freevars)
 
 -- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
@@ -93,7 +93,6 @@ data Exp x
   | Tuple (XTuple x) [Exp x]
   | Record (XRecord x) [(WithPrefix (XId x), Exp x)]
   | List (XList x) [Exp x]
-  | Force (XForce x) (Exp x)
   | RecordAccess (XRecordAccess x) (WithPrefix (XId x))
   | Ann (XAnn x) (Exp x) (Type x)
   | Seq (XSeq x) (NonEmpty (Stmt x))
@@ -120,7 +119,6 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
-  pPrintPrec l _ (Force _ x) = "!" <> pPrintPrec l 11 x
   pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
   pPrintPrec _ _ (Ann _ e t) = parens $ pPrint e <+> ":" <+> pPrint t
   pPrintPrec _ _ (Seq _ ss) = parens $ sep $ punctuate ";" $ toList $ fmap pPrint ss
@@ -139,7 +137,6 @@ instance
   typeOf (Tuple x _) = typeOf x
   typeOf (Record x _) = typeOf x
   typeOf (List x _) = typeOf x
-  typeOf (Force x _) = typeOf x
   typeOf (RecordAccess x _) = typeOf x
   typeOf (Ann x _ _) = typeOf x
   typeOf (Seq x _) = typeOf x
@@ -155,7 +152,6 @@ instance
     Tuple x es -> Tuple <$> types f x <*> traverse (types f) es
     Record x kvs -> Record <$> types f x <*> traverse (\(k, v) -> (k,) <$> types f v) kvs
     List x es -> List <$> types f x <*> traverse (types f) es
-    Force x e -> Force <$> types f x <*> types f e
     RecordAccess x l -> RecordAccess <$> types f x <*> pure l
     Ann x e t -> Ann <$> types f x <*> types f e <*> pure t
     Seq x ss -> Seq <$> types f x <*> traverse (types f) ss
@@ -171,7 +167,6 @@ freevars (Fn _ cs) = foldMap freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (List _ es) = mconcat $ map freevars es
-freevars (Force _ e) = freevars e
 freevars (RecordAccess _ _) = mempty
 freevars (Ann _ e _) = freevars e
 freevars (Seq _ ss) = freevarsStmts ss

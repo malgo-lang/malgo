@@ -11,7 +11,7 @@ module LazyList = {
   cons = { x xs -> {LCons x xs} };
 
   map = { f xs -> {
-      !xs |>
+      xs () |>
         { LNil -> LNil
         | LCons x xs -> LCons (f x) (map f xs)
         }
@@ -19,9 +19,9 @@ module LazyList = {
   };
 
   sum = { xs ->
-    !xs |> { LNil -> 0L
-           | LCons x xs -> addInt64 x (sum xs)
-           }
+    xs () |> { LNil -> 0L
+             | LCons x xs -> addInt64 x (sum xs)
+             }
   };
 
   main = {

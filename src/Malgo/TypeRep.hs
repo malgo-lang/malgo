@@ -7,7 +7,6 @@ module Malgo.TypeRep where
 import Control.Lens (At (at), Lens', Plated (plate), Traversal', coerced, cosmos, makeLenses, makePrisms, mapped, over, toListOf, transform, traverseOf, view, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Data (Data)
-import Data.Generics.Sum
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.Map.Strict as Map
@@ -81,8 +80,6 @@ data Type
     TyTuple Int
   | -- record type
     TyRecord (Map (Id ()) Type)
-  | -- | lazy type
-    TyLazy
   | -- | pointer type
     TyPtr Type
   | -- | bottom type
@@ -112,7 +109,6 @@ instance Plated Type where
   plate f (TyArr t1 t2) = TyArr <$> f t1 <*> f t2
   plate _ t@TyTuple{} = pure t
   plate f (TyRecord kts) = TyRecord <$> traverse f kts
-  plate _ t@TyLazy = pure t
   plate f (TyPtr t) = TyPtr <$> f t
   plate _ t@TyBottom = pure t
   plate f (TYPE t) = TYPE <$> f t
@@ -123,7 +119,6 @@ instance Plated Type where
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
   pPrintPrec l _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
-  pPrintPrec l _ (TyConApp TyLazy [t]) = braces (pPrintPrec l 0 t)
   pPrintPrec l d (TyApp t1 t2) =
     maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVar v) = pPrint v
@@ -133,7 +128,6 @@ instance Pretty Type where
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
-  pPrintPrec _ _ TyLazy = "{}"
   pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
   pPrintPrec _ _ TyBottom = "#Bottom"
   pPrintPrec l _ (TYPE rep) = "TYPE" <+> pPrintPrec l 0 rep
@@ -201,7 +195,6 @@ instance HasKind Type where
   kindOf (TyArr _ t2) = kindOf t2
   kindOf (TyTuple n) = buildTyArr (replicate n $ TYPE (Rep BoxedRep)) (TYPE (Rep BoxedRep))
   kindOf (TyRecord _) = TYPE (Rep BoxedRep)
-  kindOf TyLazy = TYPE (Rep BoxedRep) `TyArr` TYPE (Rep BoxedRep)
   kindOf (TyPtr _) = TYPE (Rep BoxedRep)
   kindOf TyBottom = TYPE (Rep BoxedRep)
   kindOf (TYPE rep) = TYPE rep -- Type :: Type
@@ -284,7 +277,6 @@ pattern TyConApp x xs <-
 viewTyConApp :: Type -> Maybe (Type, [Type])
 viewTyConApp (TyCon con) = Just (TyCon con, [])
 viewTyConApp (TyTuple n) = Just (TyTuple n, [])
-viewTyConApp TyLazy = Just (TyLazy, [])
 viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
 viewTyConApp _ = Nothing
 
@@ -341,7 +333,6 @@ expandAllTypeSynonym _ t@TyPrim {} = t
 expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
 expandAllTypeSynonym _ t@TyTuple {} = t
 expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSynonym abbrEnv) kts
-expandAllTypeSynonym _ t@TyLazy {} = t
 expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
 expandAllTypeSynonym _ TyBottom = TyBottom
 expandAllTypeSynonym abbrEnv (TYPE rep) = TYPE $ expandAllTypeSynonym abbrEnv rep

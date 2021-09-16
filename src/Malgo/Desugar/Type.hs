@@ -39,7 +39,6 @@ dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 dsTyApp :: Monad f => [GT.Type] -> GT.Type -> f C.Type
 dsTyApp ts (GT.TyTuple _) = SumT . pure . C.Con C.Tuple <$> traverse dsType ts
-dsTyApp [t] GT.TyLazy = ([] :->) <$> dsType t
 dsTyApp ts (GT.TyApp t1 t2) = dsTyApp (t2 : ts) t1
 dsTyApp _ _ = pure AnyT
 
