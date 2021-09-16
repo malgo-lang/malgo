@@ -6,7 +6,7 @@
 -- A正規形に近い。
 module Koriel.Core.Syntax where
 
-import Control.Lens (Lens', Plated, Traversal', lens, sans, traverseOf, traversed, view, _2)
+import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
 import Data.Data (Data)
 import Koriel.Core.Op
 import Koriel.Core.Type
@@ -111,7 +111,7 @@ data Exp a
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
-instance Data a => Plated (Exp a)
+-- instance Data a => Plated (Exp a)
 
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x

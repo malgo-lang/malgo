@@ -7,7 +7,6 @@ module Malgo.TypeRep where
 import Control.Lens (At (at), Lens', Plated (plate), Traversal', coerced, cosmos, makeLenses, makePrisms, mapped, over, toListOf, transform, traverseOf, view, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Data (Data)
-import Data.Data.Lens (uniplate)
 import Data.Generics.Sum
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
@@ -106,8 +105,20 @@ instance Binary Type
 
 instance Plated Type where
   plate _ t@TyMeta {} = pure t
-  -- plate f (TyRecord kts) = TyRecord <$> traverse f kts
-  plate f t = uniplate f t
+  plate f (TyApp t1 t2) = TyApp <$> f t1 <*> f t2
+  plate f (TyVar x) = TyVar <$> traverseOf idMeta f x
+  plate f (TyCon x) = TyCon <$> traverseOf idMeta f x
+  plate _ t@TyPrim{} = pure t
+  plate f (TyArr t1 t2) = TyArr <$> f t1 <*> f t2
+  plate _ t@TyTuple{} = pure t
+  plate f (TyRecord kts) = TyRecord <$> traverse f kts
+  plate _ t@TyLazy = pure t
+  plate f (TyPtr t) = TyPtr <$> f t
+  plate _ t@TyBottom = pure t
+  plate f (TYPE t) = TYPE <$> f t
+  plate _ t@TyRep = pure t
+  plate _ t@Rep{} = pure t
+  -- plate f t = uniplate f t
 
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
@@ -152,9 +163,6 @@ instance HasKind TypeVar where
 
 typeVar :: Lens' TypeVar (Id Type)
 typeVar = coerced
-
-freevars :: Type -> HashSet TypeVar
-freevars ty = HashSet.fromList $ toListOf (cosmos . _As @"TyMeta") ty
 
 -------------------------
 -- HasType and HasKind --
@@ -273,18 +281,18 @@ pattern TyConApp x xs <-
   where
     TyConApp x xs = buildTyApp x xs
 
-buildTyApp :: Type -> [Type] -> Type
-buildTyApp = foldl' TyApp
-
-buildTyArr :: Foldable t => t Type -> Type -> Type
-buildTyArr ps ret = foldr TyArr ret ps
-
 viewTyConApp :: Type -> Maybe (Type, [Type])
 viewTyConApp (TyCon con) = Just (TyCon con, [])
 viewTyConApp (TyTuple n) = Just (TyTuple n, [])
 viewTyConApp TyLazy = Just (TyLazy, [])
 viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
 viewTyConApp _ = Nothing
+
+buildTyApp :: Type -> [Type] -> Type
+buildTyApp = foldl' TyApp
+
+buildTyArr :: Foldable t => t Type -> Type -> Type
+buildTyArr ps ret = foldr TyArr ret ps
 
 -- | split a function type into its parameter types and return type
 splitTyArr :: Type -> ([Type], Type)
@@ -347,3 +355,5 @@ makePrisms ''Type
 makePrisms ''Scheme
 makeLenses ''TypeDef
 
+freevars :: Type -> HashSet TypeVar
+freevars ty = HashSet.fromList $ toListOf (cosmos . _TyMeta) ty
