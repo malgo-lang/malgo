@@ -3,7 +3,7 @@ module Koriel.Core.Optimize
   )
 where
 
-import Control.Lens (At (at), Lens', lens, over, traverseOf, traversed, view, (?=), (?~), _2)
+import Control.Lens (At (at), Lens', lens, over, traverseOf, traversed, use, view, (?=), (?~), _2)
 import Control.Monad.Except
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
@@ -49,10 +49,10 @@ optimizeProgram ::
   Program (Id Type) ->
   m (Program (Id Type))
 optimizeProgram us level prog@Program {..} = runReaderT ?? OptimizeEnv {_optimizeUniqSupply = us, _inlineLevel = level} $ do
-  state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) _topFuncs) mempty
+  state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) _topFuncs) (CallInlineEnv mempty)
   appProgram (optimizeExpr state) prog
 
-optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineMap -> Exp (Id Type) -> f (Exp (Id Type))
+optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
 optimizeExpr state = 10 `times` opt
   where
     opt =
@@ -68,17 +68,24 @@ optimizeExpr state = 10 `times` opt
         >=> pure
           . flat
 
--- (let ((f (fun () body))) (f)) = body
-optTrivialCall :: (Eq a, Applicative f) => Exp a -> f (Exp a)
-optTrivialCall (Let [LocalDef f (Fun [] body)] (Call (Var f') [])) | f == f' = optTrivialCall body
+-- (let ((f (fun ps body))) (f as)) = body[as/ps]
+optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+optTrivialCall (Let [LocalDef f (Fun ps body)] (Call (Var f') as)) | f == f' = do
+  us <- view uniqSupply
+  optTrivialCall =<< alpha body AlphaEnv {_alphaUniqSupply = us, _alphaMap = HashMap.fromList $ zip ps as}
 optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optTrivialCall ds <*> optTrivialCall e
 optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
 optTrivialCall e = pure e
 
-type CallInlineMap = HashMap (Id Type) ([Id Type], Exp (Id Type))
+newtype CallInlineEnv = CallInlineEnv
+  { _inlinableMap :: HashMap (Id Type) ([Id Type], Exp (Id Type))
+  }
+
+inlineableMap :: Lens' CallInlineEnv (HashMap (Id Type) ([Id Type], Exp (Id Type)))
+inlineableMap = lens _inlinableMap $ \e x -> e {_inlinableMap = x}
 
 optCallInline ::
-  (MonadState CallInlineMap f, MonadReader OptimizeEnv f, MonadIO f) =>
+  (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) =>
   Exp (Id Type) ->
   f (Exp (Id Type))
 optCallInline (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
@@ -92,7 +99,7 @@ optCallInline (Let ds e) = do
 optCallInline e = pure e
 
 checkInlineable ::
-  (MonadState CallInlineMap m, MonadReader OptimizeEnv m) =>
+  (MonadState CallInlineEnv m, MonadReader OptimizeEnv m) =>
   LocalDef (Id Type) ->
   m ()
 checkInlineable (LocalDef f (Fun ps v)) = do
@@ -104,7 +111,7 @@ checkInlineable (LocalDef f (Fun ps v)) = do
   let isInlineableSize = 0 < either identity identity (foldM aux level v)
   -- when (not (f `member` freevars v) && lengthOf cosmos v <= level) $ at f ?= (ps, v)
   when isInlineableSize $ do
-    at f ?= (ps, v)
+    inlineableMap . at f ?= (ps, v)
   where
     aux n _
       | n <= 0 = Left 0
@@ -112,13 +119,13 @@ checkInlineable (LocalDef f (Fun ps v)) = do
 checkInlineable _ = pass
 
 lookupCallInline ::
-  (MonadReader OptimizeEnv m, MonadState CallInlineMap m, MonadIO m) =>
+  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m, MonadIO m) =>
   (Id Type -> [Atom (Id Type)] -> Exp (Id Type)) ->
   Id Type ->
   [Atom (Id Type)] ->
   m (Exp (Id Type))
 lookupCallInline call f as = do
-  f' <- gets (view (at f))
+  f' <- use $ inlineableMap . at f
   us <- view uniqSupply
   case f' of
     Just (ps, v) -> alpha v AlphaEnv {_alphaUniqSupply = us, _alphaMap = HashMap.fromList $ zip ps as}
