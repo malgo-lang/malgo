@@ -49,7 +49,7 @@ data Type x
   | TyArr (XTyArr x) (Type x) (Type x)
   | TyTuple (XTyTuple x) [Type x]
   | TyRecord (XTyRecord x) [(XId x, Type x)]
-  | TyLazy (XTyLazy x) (Type x)
+  | TyBlock (XTyBlock x) (Type x)
   | TyDArr (XTyDArr x) (Type x) (Type x)
 
 deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
@@ -65,7 +65,7 @@ instance (Pretty (XId x)) => Pretty (Type x) where
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pPrint ts
   pPrintPrec l _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
-  pPrintPrec _ _ (TyLazy _ t) = braces $ pPrint t
+  pPrintPrec _ _ (TyBlock _ t) = braces $ pPrint t
   pPrintPrec l d (TyDArr _ t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "=>" <+> pPrintPrec l 10 t2
 
@@ -76,7 +76,7 @@ getTyVars TyCon {} = mempty
 getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
 getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
-getTyVars (TyLazy _ t) = getTyVars t
+getTyVars (TyBlock _ t) = getTyVars t
 getTyVars (TyDArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 
 ----------------

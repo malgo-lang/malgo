@@ -205,7 +205,7 @@ rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
 rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldName pos) rnType) kts
-rnType (TyLazy pos t) = TyArr pos (TyTuple pos []) <$> rnType t
+rnType (TyBlock pos t) = TyArr pos (TyTuple pos []) <$> rnType t
 rnType (TyDArr pos _ _) = errorOn pos "not implemented"
 
 rnClause ::
@@ -436,5 +436,5 @@ genToplevelEnv modName ds =
       traverse_ genFieldEnv ts
       ks' <- traverse (resolveGlobalName modName) ks
       zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, Annotated Implicit k')]) ks ks'
-    genFieldEnv (TyLazy _ t) = genFieldEnv t
+    genFieldEnv (TyBlock _ t) = genFieldEnv t
     genFieldEnv (TyDArr _ t1 t2) = genFieldEnv t1 >> genFieldEnv t2

@@ -201,16 +201,16 @@ type family XTyTuple x where
 type family XTyRecord x where
   XTyRecord (Malgo _) = SourcePos
 
-type family XTyLazy x where
-  XTyLazy (Malgo 'Parse) = SourcePos
-  XTyLazy (Malgo _) = Void
+type family XTyBlock x where
+  XTyBlock (Malgo 'Parse) = SourcePos
+  XTyBlock (Malgo _) = Void
 
 type family XTyDArr x where
   XTyDArr (Malgo 'Parse) = SourcePos
   XTyDArr (Malgo _) = Void
 
 type ForallTypeX (c :: K.Type -> Constraint) x =
-  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyLazy x), c (XTyDArr x))
+  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyBlock x), c (XTyDArr x))
 
 -- Decl Extensions
 type family XScDef x where

@@ -222,13 +222,6 @@ dsExp (G.Apply info f x) = runDef $ do
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn x (Clause _ [] e :| _)) = do
-  -- lazy valueの脱糖衣
-  e' <- dsExp e
-  typ <- dsType (x ^. GT.withType)
-  runDef do
-    fun <- let_ typ $ Fun [] e'
-    pure $ Atom fun
 dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
   ps' <- traverse (\p -> newInternalId "$p" =<< dsType (GT.typeOf p)) ps
   typ <- dsType (GT.typeOf e)
