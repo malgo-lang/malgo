@@ -16,7 +16,7 @@ data TyCon
 data Type
   = TyConApp TyCon [Type]
   | TyVar Name
-  | TyFun [Type] Type
+  | TyFun Type Type
   | TyPrim PrimT
   | TyPtr Type
   | TyBottom

@@ -76,7 +76,7 @@ dsScheme = undefined
 
 dsKind :: R.Kind -> Core.Type
 dsKind (R.TYPE (R.Rep rep)) = Core.TYPE rep
-dsKind (R.TyArr k1 k2) = Core.TyFun [dsKind k1] (dsKind k2)
+dsKind (R.TyArr k1 k2) = Core.TyFun (dsKind k1) (dsKind k2)
 dsKind k = errorDoc $ "invalid kind:" <+> pPrint k
 
 registerTypeConstructor :: Monad m => R.Type -> m ()
