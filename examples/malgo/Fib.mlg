@@ -3,7 +3,7 @@ module Fib = {
   module {..} = import Prelude;
 
   infix 4 (<=);
-  (<=) = { x y -> geInt32 x y };
+  (<=) = { x y -> leInt32 x y };
 
   infixl 6 (+);
   (+) = { x y -> addInt32 x y };
