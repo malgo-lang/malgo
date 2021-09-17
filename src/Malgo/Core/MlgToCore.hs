@@ -1,86 +1,52 @@
 module Malgo.Core.MlgToCore (mlgToCore) where
 
-import Control.Lens (Lens', at, ifor, ifor_, lens, to, use, (?=), (^.))
-import qualified Data.HashMap.Strict as HashMap
-import Data.Traversable (for)
+import Control.Lens (At (at), Lens', lens, use, (%=), (.=), (?=), (^.), _Cons)
 import Koriel.Id
-import Koriel.MonadUniq
-import Koriel.Pretty
-import Malgo.Core.Syntax as Core
-import Malgo.Infer.TcEnv (TcEnv (TcEnv))
+import Koriel.MonadUniq (HasUniqSupply)
+import Malgo.Core.Syntax
+import Malgo.Infer.TcEnv (TcEnv)
 import qualified Malgo.Infer.TcEnv as TcEnv
 import Malgo.Prelude
-import Malgo.Syntax as Syn
-import Malgo.Syntax.Extension
-import Malgo.TypeRep (kindOf, typeConstructor)
-import qualified Malgo.TypeRep as R
+import qualified Malgo.Syntax as S
+import Malgo.Syntax.Extension (Malgo, MalgoPhase (Refine), RnId)
+import qualified Malgo.TypeRep as S
 
--- | variable and type environment
-data Env = Env
-  { -- | Syn variable to Core variable
-    _varNameEnv :: HashMap (Id ()) Name,
-    -- | Syn.Type name to Core.Type name
-    _typeNameEnv :: HashMap (Id ()) Name,
-    -- | [Static type rep] name to Core.Type
-    _typeVarEnv :: HashMap (Id R.Type) Core.Type,
-    _typeDefEnv :: HashMap Name Core.TypeDef
-  }
+data DsEnv = DsEnv {_buildingModule :: Module, _tcEnv :: TcEnv}
 
-varNameEnv :: Lens' Env (HashMap (Id ()) Name)
-varNameEnv = lens _varNameEnv \e x -> e {_varNameEnv = x}
+buildingModule :: Lens' DsEnv Module
+buildingModule = lens _buildingModule \e x -> e {_buildingModule = x}
 
-typeNameEnv :: Lens' Env (HashMap (Id ()) Name)
-typeNameEnv = lens _typeNameEnv \e x -> e {_typeNameEnv = x}
+tcEnv :: Lens' DsEnv TcEnv
+tcEnv = lens _tcEnv \e x -> e {_tcEnv = x}
 
-typeDefEnv :: Lens' Env (HashMap Name Core.TypeDef)
-typeDefEnv = lens _typeDefEnv \e x -> e {_typeDefEnv = x}
+mlgToCore :: (MonadIO m, MonadReader env m, HasUniqSupply env, MonadFail m) => TcEnv -> S.Module (Malgo 'Refine) -> m Module
+mlgToCore tcEnv (S.Module _ S.BindGroup {_scDefs}) = evaluatingStateT
+  DsEnv
+    { _buildingModule = Module {_variableDefinitions = [], _externalDefinitions = [], _typeDefinitions = []},
+      _tcEnv = tcEnv
+    }
+  do
+    traverse_ dsScDefs _scDefs
+    use buildingModule
 
-lookupTypeName = undefined
+dsNewVarName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => RnId -> m Name
+dsNewVarName old = do
+  Just scheme <- use (tcEnv . TcEnv.varEnv . at old)
+  scheme <- dsScheme scheme
+  newIdOnName scheme old
 
-initEnv :: (MonadState Env m, MonadIO m, HasUniqSupply env, MonadReader env m) => TcEnv -> m ()
-initEnv TcEnv {_varEnv, _typeEnv} = do
-  ifor_ _typeEnv \name typeDef -> do
-    name' <- newIdOnName (dsKind (kindOf typeDef)) name
-    typeNameEnv . at name ?= name'
-    registerTypeConstructor (typeDef ^. typeConstructor)
-  ifor_ _typeEnv \name typeDef -> do
-    name' <- lookupTypeName name
-    typeDef' <- dsTypeDef typeDef
-    typeDefEnv . at name' ?= typeDef'
-  ifor_ _varEnv \name scheme -> do
-    scheme' <- dsScheme scheme
-    name' <- newIdOnName scheme' name
-    varNameEnv . at name ?= name'
+dsNewTyVarName _ = undefined
 
-mlgToCore :: (MonadReader env m, HasUniqSupply env, MonadIO m) => TcEnv -> Syn.Module (Malgo 'Refine) -> m Core.Module
-mlgToCore tcEnv Syn.Module {_moduleDefinition = BindGroup {..}} = evaluatingStateT (Env mempty mempty mempty mempty) do
-  initEnv tcEnv
-  _externalDefinitions <- pure []
-  _variableDefinitions <- pure []
-  _typeDefinitions <- use (typeDefEnv . to HashMap.toList)
-  pure $ Core.Module {..}
+dsScheme (S.Forall [] ty) = dsType ty
+dsScheme (S.Forall (p : ps) ty) = TyForall <$> dsNewTyVarName p <*> dsScheme (S.Forall ps ty)
 
-dsTypeDef :: Monad m => R.TypeDef R.Type -> m TypeDef
-dsTypeDef R.TypeDef {..} = do
-  _parameters <- traverse dsTypeParameter _typeParameters
-  _constructors <- traverse dsValueConstructor _valueConstructors
-  pure $ TypeDef {..}
-  where
-    dsValueConstructor :: (Id (), R.Scheme R.Type) -> m Name
-    dsValueConstructor (constr, sc) = undefined
-    dsTypeParameter :: Id R.Type -> m Name
-    dsTypeParameter id = undefined
+dsType (S.TyPrim p) = pure $ TyPrim p
 
-dsScheme :: Monad m => R.Scheme R.Type -> m Core.Type
-dsScheme = undefined
+dsScDefs ds = traverse dsScDef ds
 
-dsKind :: R.Kind -> Core.Type
-dsKind (R.TYPE (R.Rep rep)) = Core.TYPE rep
-dsKind (R.TyArr k1 k2) = Core.TyFun (dsKind k1) (dsKind k2)
-dsKind k = errorDoc $ "invalid kind:" <+> pPrint k
+dsScDef (_, name, expr) = do
+  name <- dsNewVarName name
+  expr <- dsExp expr (name ^. idMeta)
+  buildingModule . variableDefinitions %= ((name, expr) :)
 
-registerTypeConstructor :: Monad m => R.Type -> m ()
-registerTypeConstructor (R.TyVar x) = undefined
-
-dsExp :: Syn.Exp (Malgo 'Refine) -> Core.Type -> Core.Exp
-dsExp e expected = undefined
+dsExp (S.Unboxed _ (S.Int32 x)) (TyPrim S.Int32T) = pure $ Unboxed $ Int32 x
