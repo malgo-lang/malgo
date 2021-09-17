@@ -1,0 +1,23 @@
+module Fib = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  infix 4 (<=);
+  (<=) = { x y -> leInt32 x y };
+
+  infixl 6 (+);
+  (+) = { x y -> addInt32 x y };
+
+  infixl 6 (-);
+  (-) = { x y -> subInt32 x y };
+
+  fib = { n ->
+    if (n <= 1)
+      { 1 }
+      { fib (n - 1) + fib (n - 2) }
+  };
+
+  main = {
+    fib 30 |> toStringInt32 |> putStrLn
+  };
+}
