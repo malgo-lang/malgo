@@ -1,0 +1,12 @@
+module Level3_Func = {
+  data Int32 = Int32# Int32#;
+
+  i : Int32 -> Int32;
+  i = { x -> x };
+
+  x : Int32;
+  x = 42;
+
+  y : Int32;
+  y = i x;
+}

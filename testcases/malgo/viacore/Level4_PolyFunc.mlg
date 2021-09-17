@@ -1,0 +1,15 @@
+module Level4_PolyFunc = {
+  data Int32 = Int32# Int32#;
+
+  i : a -> a;
+  i = { x -> x };
+
+  k : a -> b -> a;
+  k = { x _ -> x };
+
+  x : Int32;
+  x = 42;
+
+  y : Int32;
+  y = k x i;
+}
