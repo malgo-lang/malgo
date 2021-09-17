@@ -118,14 +118,10 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
     solve [Annotated x $ v ^. typeVar . idMeta :~ kindOf t]
     TypeUnifyT $ at v ?= t
 
-  zonk t = do
-    transformM ?? t $ \case
-      TyMeta v -> do
-        mterm <- lookupVar v
-        mterm <- traverse zonk mterm
-        pure $ fromMaybe (TyMeta v) mterm
-      ty -> do
-        pure ty
+  zonk = do
+    transformM $ \case
+      TyMeta v -> fromMaybe (TyMeta v) <$> (traverse zonk =<< lookupVar v)
+      ty -> pure ty
 
 ------------
 -- Solver --
