@@ -1,6 +1,6 @@
 module Malgo.Core.MlgToCore (mlgToCore) where
 
-import Control.Lens (At (at), Lens', lens, use, (%=), (.=), (?=), (^.), _Cons)
+import Control.Lens (At (at), Lens', lens, use, (%=), (^.))
 import Koriel.Id
 import Koriel.MonadUniq (HasUniqSupply)
 import Malgo.Core.Syntax
@@ -9,7 +9,7 @@ import qualified Malgo.Infer.TcEnv as TcEnv
 import Malgo.Prelude
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension (Malgo, MalgoPhase (Refine), RnId)
-import qualified Malgo.TypeRep as S
+import qualified Malgo.TypeRep as T
 
 data DsEnv = DsEnv {_buildingModule :: Module, _tcEnv :: TcEnv}
 
@@ -35,18 +35,24 @@ dsNewVarName old = do
   scheme <- dsScheme scheme
   newIdOnName scheme old
 
+dsNewTyVarName :: Monad m => Id T.Type -> m Name
 dsNewTyVarName _ = undefined
 
-dsScheme (S.Forall [] ty) = dsType ty
-dsScheme (S.Forall (p : ps) ty) = TyForall <$> dsNewTyVarName p <*> dsScheme (S.Forall ps ty)
+dsScheme :: Monad f => T.Scheme T.Type -> f Type
+dsScheme (T.Forall [] ty) = dsType ty
+dsScheme (T.Forall (p : ps) ty) = TyForall <$> dsNewTyVarName p <*> dsScheme (T.Forall ps ty)
 
-dsType (S.TyPrim p) = pure $ TyPrim p
+dsType :: Applicative f => T.Type -> f Type
+dsType (T.TyPrim p) = pure $ TyPrim p
 
-dsScDefs ds = traverse dsScDef ds
+dsScDefs :: (MonadState DsEnv f, MonadIO f, HasUniqSupply env, MonadReader env f, MonadFail f) => [S.ScDef (Malgo 'Refine)] -> f ()
+dsScDefs = traverse_ dsScDef
 
+dsScDef :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => S.ScDef (Malgo 'Refine) -> m ()
 dsScDef (_, name, expr) = do
   name <- dsNewVarName name
   expr <- dsExp expr (name ^. idMeta)
   buildingModule . variableDefinitions %= ((name, expr) :)
 
-dsExp (S.Unboxed _ (S.Int32 x)) (TyPrim S.Int32T) = pure $ Unboxed $ Int32 x
+dsExp :: Applicative f => S.Exp (Malgo 'Refine) -> Type -> f Exp
+dsExp (S.Unboxed _ (S.Int32 x)) (TyPrim T.Int32T) = pure $ Unboxed $ Int32 x
