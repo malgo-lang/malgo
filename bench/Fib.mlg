@@ -18,8 +18,6 @@ module Fib = {
   };
 
   main = {
-    fib 5 |> toStringInt32 |> putStrLn
+    fib 30 |> toStringInt32 |> putStrLn
   };
 }
-
--- Expected: 8
