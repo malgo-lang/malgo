@@ -1,6 +1,6 @@
 module Malgo.Core.MlgToCore (mlgToCore) where
 
-import Control.Lens (At (at), Lens', lens, preuse, use, (%=), (^.), _Just)
+import Control.Lens (At (at), Lens', lens, preuse, use, (%=), (^.), _Just, (?=), (<?=))
 import qualified Data.List as List
 import Data.Maybe (fromJust)
 import Koriel.Id
@@ -14,8 +14,8 @@ import Malgo.Syntax.Extension (Malgo, MalgoPhase (Refine), RnId)
 import qualified Malgo.TypeRep as T
 
 data DsEnv = DsEnv
-  { _buildingModule :: Module, -- 脱糖の結果が詰め込まれるModule
-    _interned :: HashMap RnId Name, -- インターン済みのシンボル
+  { _buildingModule :: Module, -- ^ 脱糖の結果が詰め込まれるModule
+    _interned :: HashMap RnId Name, -- ^ インターン済みのシンボル
     _tcEnv :: TcEnv
   }
 
@@ -40,11 +40,16 @@ mlgToCore tcEnv (S.Module _ S.BindGroup {_scDefs, _dataDefs}) = evaluatingStateT
     traverse_ dsScDefs _scDefs
     use buildingModule
 
+-- | インターンしたシンボル（Name）を返す
 dsVarName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => RnId -> m Name
 dsVarName old = do
-  Just scheme <- use (tcEnv . TcEnv.varEnv . at old)
-  scheme <- dsScheme scheme
-  newIdOnName scheme old
+  use (interned . at old) >>= \case
+    Just name -> pure name
+    Nothing -> do
+      Just scheme <- use (tcEnv . TcEnv.varEnv . at old)
+      scheme <- dsScheme scheme
+      name <- newIdOnName scheme old
+      interned . at old <?= name
 
 dsNewTyVarName :: Monad m => Id T.Type -> m Name
 dsNewTyVarName _ = undefined
