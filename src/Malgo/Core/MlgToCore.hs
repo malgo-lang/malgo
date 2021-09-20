@@ -1,8 +1,9 @@
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+{-# OPTIONS_GHC -Wno-redundant-constraints #-}
+{-# OPTIONS_GHC -Wno-deprecations #-}
 module Malgo.Core.MlgToCore (mlgToCore) where
 
-import Control.Lens (At (at), Lens', lens, preuse, use, (%=), (^.), _Just, (?=), (<?=))
-import qualified Data.List as List
-import Data.Maybe (fromJust)
+import Control.Lens (At (at), Lens', lens, use, (%=), (^.), (<?=))
 import Koriel.Id
 import Koriel.MonadUniq (HasUniqSupply)
 import Malgo.Core.Syntax
