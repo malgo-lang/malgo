@@ -1,4 +1,4 @@
-module Malgo.Infer.Pass where
+module Malgo.TypeCheck.Pass where
 
 import Control.Lens (At (at), forOf, ix, mapped, over, preuse, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _4, _Just)
 import qualified Data.HashMap.Strict as HashMap
@@ -11,8 +11,8 @@ import Data.Traversable (for)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Infer.TcEnv
-import Malgo.Infer.Unify hiding (lookupVar)
+import Malgo.TypeCheck.TcEnv
+import Malgo.TypeCheck.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
@@ -52,7 +52,7 @@ lookupRecordType pos fields = do
     lookup env (WithPrefix (Annotated Nothing k)) = concat $ HashMap.lookup k env
     lookup env (WithPrefix (Annotated (Just p) k)) = filter ((== p) . fst) $ concat $ HashMap.lookup k env
 
-typeCheck :: (MonadFail m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'Infer), TcEnv)
+typeCheck :: (MonadFail m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
   tcEnv <- genTcEnv rnEnv
   evalStateT ?? tcEnv $
@@ -87,7 +87,7 @@ tcBindGroup ::
     HasRnEnv env
   ) =>
   BindGroup (Malgo 'Rename) ->
-  m (BindGroup (Malgo 'Infer))
+  m (BindGroup (Malgo 'TypeCheck))
 tcBindGroup bindGroup = do
   _imports <- tcImports $ bindGroup ^. imports
   (_typeSynonyms, _dataDefs, _classes) <- tcTypeDefinitions (bindGroup ^. typeSynonyms) (bindGroup ^. dataDefs) (bindGroup ^. classes)
@@ -129,7 +129,7 @@ tcImpls ::
     HasRnEnv env
   ) =>
   [Impl (Malgo 'Rename)] ->
-  f [Impl (Malgo 'Infer)]
+  f [Impl (Malgo 'TypeCheck)]
 tcImpls ds = for ds \(pos, name, synType, expr) -> do
   (expr', wanted) <- runWriterT (tcExpr expr)
   nameType <- instantiate pos =<< lookupVar pos name
@@ -146,9 +146,9 @@ tcImpls ds = for ds \(pos, name, synType, expr) -> do
   declaredType <- expandAllTypeSynonym abbrEnv <$> instantiate pos declaredScheme
   inferredType <- expandAllTypeSynonym abbrEnv <$> instantiate pos inferredScheme
   case equiv declaredType inferredType of
-    Nothing -> errorOn pos $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+    Nothing -> errorOn pos $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("TypeCheckred:" <+> pPrint inferredScheme)
     Just subst
-      | anySame $ HashMap.elems subst -> errorOn pos $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+      | anySame $ HashMap.elems subst -> errorOn pos $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("TypeCheckred:" <+> pPrint inferredScheme)
       | otherwise -> varEnv . at name ?= declaredScheme
 
   pure (pos, name, tcType synType, expr')
@@ -160,7 +160,7 @@ tcImports ::
     MonadReader env m
   ) =>
   [Import (Malgo 'Rename)] ->
-  m [Import (Malgo 'Infer)]
+  m [Import (Malgo 'TypeCheck)]
 tcImports = traverse tcImport
   where
     tcImport (pos, modName, importList) = do
@@ -186,7 +186,7 @@ tcTypeDefinitions ::
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
   [Class (Malgo 'Rename)] ->
-  m ([TypeSynonym (Malgo 'Infer)], [DataDef (Malgo 'Infer)], [Class (Malgo 'Infer)])
+  m ([TypeSynonym (Malgo 'TypeCheck)], [DataDef (Malgo 'TypeCheck)], [Class (Malgo 'TypeCheck)])
 tcTypeDefinitions typeSynonyms dataDefs classes = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(_, name, params, _) -> do
@@ -217,7 +217,7 @@ tcTypeSynonyms ::
     HasRnEnv env
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
-  f [TypeSynonym (Malgo 'Infer)]
+  f [TypeSynonym (Malgo 'TypeCheck)]
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     TyCon con <- lookupType pos name
@@ -229,7 +229,7 @@ tcTypeSynonyms ds =
 
     pure (pos, name, params, tcType typ)
 
-updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'Infer) -> [Id Type] -> Type -> f ()
+updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'TypeCheck) -> [Id Type] -> Type -> f ()
 updateFieldEnv typeName (S.TyRecord _ kts) params typ = do
   let scheme = Forall params typ
   for_ kts \(label, _) ->
@@ -246,7 +246,7 @@ tcDataDefs ::
     HasRnEnv env
   ) =>
   [DataDef (Malgo 'Rename)] ->
-  m [DataDef (Malgo 'Infer)]
+  m [DataDef (Malgo 'TypeCheck)]
 tcDataDefs ds = do
   bindedTypeVars <- HashSet.unions . map (freevars . view typeConstructor) . HashMap.elems <$> use typeEnv
   for ds \(pos, name, params, valueCons) -> do
@@ -267,7 +267,7 @@ tcDataDefs ds = do
     typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
-tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env, MonadFail m, HasRnEnv env) => [Class (Malgo 'Rename)] -> m [Class (Malgo 'Infer)]
+tcClasses :: (MonadBind m, MonadState TcEnv m, MonadIO m, MonadReader env m, HasOpt env, HasUniqSupply env, MonadFail m, HasRnEnv env) => [Class (Malgo 'Rename)] -> m [Class (Malgo 'TypeCheck)]
 tcClasses ds =
   for ds \(pos, name, params, synType) -> do
     TyCon con <- lookupType pos name
@@ -288,7 +288,7 @@ tcForeigns ::
     HasRnEnv env
   ) =>
   [Foreign (Malgo 'Rename)] ->
-  m [Foreign (Malgo 'Infer)]
+  m [Foreign (Malgo 'TypeCheck)]
 tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
@@ -309,7 +309,7 @@ tcScSigs ::
     HasRnEnv env
   ) =>
   [ScSig (Malgo 'Rename)] ->
-  m [ScSig (Malgo 'Infer)]
+  m [ScSig (Malgo 'TypeCheck)]
 tcScSigs ds =
   for ds \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
@@ -339,7 +339,7 @@ tcScDefGroup ::
     HasRnEnv env
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
-  m [[ScDef (Malgo 'Infer)]]
+  m [[ScDef (Malgo 'TypeCheck)]]
 tcScDefGroup = traverse tcScDefs
 
 tcScDefs ::
@@ -353,7 +353,7 @@ tcScDefs ::
     HasRnEnv env
   ) =>
   [ScDef (Malgo 'Rename)] ->
-  m [ScDef (Malgo 'Infer)]
+  m [ScDef (Malgo 'TypeCheck)]
 tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- for ds \(pos, name, expr) -> do
@@ -378,9 +378,9 @@ tcScDefs ds@((pos, _, _) : _) = do
         declaredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) declaredScheme
         inferredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) inferredScheme
         case equiv declaredType inferredType of
-          Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+          Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("TypeCheckred:" <+> pPrint inferredScheme)
           Just subst
-            | anySame $ HashMap.elems subst -> errorOn (pos ^. value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+            | anySame $ HashMap.elems subst -> errorOn (pos ^. value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("TypeCheckred:" <+> pPrint inferredScheme)
             | otherwise -> varEnv . at name ?= declaredScheme
   pure ds
 
@@ -395,7 +395,7 @@ tcExpr ::
     HasRnEnv env
   ) =>
   Exp (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Exp (Malgo 'Infer))
+  WriterT [Annotated SourcePos Constraint] m (Exp (Malgo 'TypeCheck))
 tcExpr (Var pos (WithPrefix (Annotated p v))) = do
   vType <- instantiate pos =<< lookupVar pos v
   pure $ Var (Annotated vType pos) (WithPrefix (Annotated p v))
@@ -483,7 +483,7 @@ tcClause ::
     HasRnEnv env
   ) =>
   Clause (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Clause (Malgo 'Infer))
+  WriterT [Annotated SourcePos Constraint] m (Clause (Malgo 'TypeCheck))
 tcClause (Clause pos pats e) = do
   pats' <- tcPatterns pats
   e' <- tcExpr e
@@ -499,7 +499,7 @@ tcPatterns ::
     MonadReader env m
   ) =>
   [Pat (Malgo 'Rename)] ->
-  WriterT [Annotated SourcePos Constraint] m [Pat (Malgo 'Infer)]
+  WriterT [Annotated SourcePos Constraint] m [Pat (Malgo 'TypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- TyMeta <$> freshVar Nothing
@@ -552,7 +552,7 @@ tcStmts ::
     HasRnEnv env
   ) =>
   NonEmpty (Stmt (Malgo 'Rename)) ->
-  WriterT [Annotated SourcePos Constraint] m (NonEmpty (Stmt (Malgo 'Infer)))
+  WriterT [Annotated SourcePos Constraint] m (NonEmpty (Stmt (Malgo 'TypeCheck)))
 tcStmts = traverse tcStmt
 
 tcStmt ::
@@ -566,7 +566,7 @@ tcStmt ::
     HasRnEnv env
   ) =>
   Stmt (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Stmt (Malgo 'Infer))
+  WriterT [Annotated SourcePos Constraint] m (Stmt (Malgo 'TypeCheck))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   e' <- tcExpr e
@@ -598,7 +598,7 @@ transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyConApp (TyTuple $ length ts) <$> traverse transType ts
 transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
 
-tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'Infer)
+tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'TypeCheck)
 tcType (S.TyApp pos t ts) = S.TyApp pos (tcType t) (map tcType ts)
 tcType (S.TyVar pos v) = S.TyVar pos v
 tcType (S.TyCon pos c) = S.TyCon pos c

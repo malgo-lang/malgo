@@ -12,8 +12,8 @@ import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Core.MlgToCore (mlgToCore)
 import Malgo.Desugar.Pass (desugar)
-import qualified Malgo.Infer.Pass as Infer
-import qualified Malgo.Infer.TcEnv as TcEnv
+import qualified Malgo.TypeCheck.Pass as TypeCheck
+import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -56,7 +56,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     hPrint stderr $ pPrint parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv =<< ask
   (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-  (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ Infer.typeCheck rnEnv renamedAst
+  (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
   -- MlgToCore

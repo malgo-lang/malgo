@@ -4,7 +4,7 @@ import Control.Lens (Lens', lens)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.MonadUniq
-import Malgo.Infer.TcEnv
+import Malgo.TypeCheck.TcEnv
 import Malgo.Prelude
 import Malgo.TypeRep
 

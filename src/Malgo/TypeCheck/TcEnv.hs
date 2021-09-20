@@ -1,4 +1,4 @@
-module Malgo.Infer.TcEnv
+module Malgo.TypeCheck.TcEnv
   ( RecordTypeName,
     TcEnv (..),
     varEnv,

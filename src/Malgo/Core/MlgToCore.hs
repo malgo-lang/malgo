@@ -7,8 +7,8 @@ import Control.Lens (At (at), Lens', lens, use, (%=), (^.), (<?=))
 import Koriel.Id
 import Koriel.MonadUniq (HasUniqSupply)
 import Malgo.Core.Syntax
-import Malgo.Infer.TcEnv (TcEnv)
-import qualified Malgo.Infer.TcEnv as TcEnv
+import Malgo.TypeCheck.TcEnv (TcEnv)
+import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import Malgo.Prelude
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension (Malgo, MalgoPhase (Refine), RnId)

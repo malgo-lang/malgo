@@ -43,9 +43,6 @@ library
       Malgo.Desugar.Type
       Malgo.Desugar.Unboxed
       Malgo.Driver
-      Malgo.Infer.Pass
-      Malgo.Infer.TcEnv
-      Malgo.Infer.Unify
       Malgo.Interface
       Malgo.Parser
       Malgo.Prelude
@@ -56,6 +53,9 @@ library
       Malgo.Rename.RnEnv
       Malgo.Syntax
       Malgo.Syntax.Extension
+      Malgo.TypeCheck.Pass
+      Malgo.TypeCheck.TcEnv
+      Malgo.TypeCheck.Unify
       Malgo.TypeRep
   other-modules:
       Paths_malgo
