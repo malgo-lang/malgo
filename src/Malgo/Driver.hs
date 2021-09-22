@@ -13,7 +13,6 @@ import Koriel.Pretty
 import Malgo.Core.MlgToCore (mlgToCore)
 import Malgo.Desugar.Pass (desugar)
 import qualified Malgo.TypeCheck.Pass as TypeCheck
-import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -64,10 +63,8 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     mlgCore <- mlgToCore tcEnv refinedAst
     pTraceShowM mlgCore
 
-  let varEnv = tcEnv ^. TcEnv.varEnv
-  let typeEnv = tcEnv ^. TcEnv.typeEnv
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
-  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv rnEnv depList refinedAst
+  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar rnEnv tcEnv depList refinedAst
   let inf = buildInterface rnState dsEnv
   storeInterface inf
   when (debugMode opt) $ do

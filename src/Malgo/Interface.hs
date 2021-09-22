@@ -16,6 +16,8 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
 import qualified Malgo.Rename.RnEnv as RnState
 import Malgo.Syntax.Extension
+import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv))
+import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import qualified Malgo.TypeRep as GT
 import qualified System.Directory as Directory
 import System.FilePath ((-<.>), (</>))
@@ -69,10 +71,10 @@ buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempt
     when (tcId ^. idSort == External modName) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
       coreIdentMap . at tcId ?= coreId
-  ifor_ (dsEnv ^. DsEnv.varTypeEnv) $ \tcId scheme ->
+  ifor_ (dsEnv ^. tcEnv . TcEnv.varEnv) $ \tcId scheme ->
     when (tcId ^. idSort == External modName) do
       signatureMap . at tcId ?= scheme
-  ifor_ (dsEnv ^. DsEnv.typeDefEnv) $ \rnId typeDef -> do
+  ifor_ (dsEnv ^. tcEnv . TcEnv.typeEnv) $ \rnId typeDef -> do
     when (rnId ^. idSort == External modName) do
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
