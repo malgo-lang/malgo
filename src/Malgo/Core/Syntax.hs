@@ -1,6 +1,6 @@
 module Malgo.Core.Syntax where
 
-import Control.Lens (Lens')
+import Control.Lens (Lens', lens)
 import Koriel.Id
 import Malgo.Prelude
 import Malgo.TypeRep (PrimT, Rep)
@@ -60,20 +60,25 @@ data TypeDef = TypeDef
   deriving stock (Show, Eq, Ord)
 
 data Module = Module
-  { _variableDefinitions :: [(Name, Exp)],
+  { _moduleName :: ModuleName,
+    _variableDefinitions :: [(Name, Exp)],
     _externalDefinitions :: [(Name, String)],
     _typeDefinitions :: [(Name, TypeDef)]
   }
   deriving stock (Show, Eq, Ord)
 
-externalDefinitions :: Lens' Module [(Name, String)]
-externalDefinitions f (Module x1 x2 x3) = fmap (\y1 -> Module x1 y1 x3) (f x2)
-{-# INLINE externalDefinitions #-}
-
-typeDefinitions :: Lens' Module [(Name, TypeDef)]
-typeDefinitions f (Module x1 x2 x3) = fmap (Module x1 x2) (f x3)
-{-# INLINE typeDefinitions #-}
+moduleName :: Lens' Module ModuleName
+moduleName = lens _moduleName \m x -> m {_moduleName = x}
+{-# INLINE moduleName #-}
 
 variableDefinitions :: Lens' Module [(Name, Exp)]
-variableDefinitions f (Module x1 x2 x3) = fmap (\y1 -> Module y1 x2 x3) (f x1)
+variableDefinitions = lens _variableDefinitions \m x -> m {_variableDefinitions = x}
 {-# INLINE variableDefinitions #-}
+
+typeDefinitions :: Lens' Module [(Name, TypeDef)]
+typeDefinitions = lens _typeDefinitions \m x -> m {_typeDefinitions = x}
+{-# INLINE typeDefinitions #-}
+
+externalDefinitions :: Lens' Module [(Name, String)]
+externalDefinitions = lens _externalDefinitions \m x -> m { _externalDefinitions = x}
+{-# INLINE externalDefinitions #-}
