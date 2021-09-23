@@ -101,19 +101,20 @@ data Type
 instance Binary Type
 
 instance Plated Type where
-  plate _ t@TyMeta {} = pure t
-  plate f (TyApp t1 t2) = TyApp <$> f t1 <*> f t2
-  plate f (TyVar x) = TyVar <$> traverseOf idMeta f x
-  plate f (TyCon x) = TyCon <$> traverseOf idMeta f x
-  plate _ t@TyPrim{} = pure t
-  plate f (TyArr t1 t2) = TyArr <$> f t1 <*> f t2
-  plate _ t@TyTuple{} = pure t
-  plate f (TyRecord kts) = TyRecord <$> traverse f kts
-  plate f (TyPtr t) = TyPtr <$> f t
-  plate _ t@TyBottom = pure t
-  plate f (TYPE t) = TYPE <$> f t
-  plate _ t@TyRep = pure t
-  plate _ t@Rep{} = pure t
+  plate f = \case
+    t@TyMeta {} -> pure t
+    TyApp t1 t2 -> TyApp <$> f t1 <*> f t2
+    TyVar x -> TyVar <$> traverseOf idMeta f x
+    TyCon x -> TyCon <$> traverseOf idMeta f x
+    t@TyPrim{} -> pure t
+    TyArr t1 t2 -> TyArr <$> f t1 <*> f t2
+    t@TyTuple{} -> pure t
+    TyRecord kts -> TyRecord <$> traverse f kts
+    TyPtr t -> TyPtr <$> f t
+    t@TyBottom -> pure t
+    TYPE t -> TYPE <$> f t
+    t@TyRep -> pure t
+    t@Rep{} -> pure t
   -- plate f t = uniplate f t
 
 instance Pretty Type where
