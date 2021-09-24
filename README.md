@@ -2,6 +2,8 @@
 
 [![Malgo CI](https://github.com/malgo-lang/malgo/workflows/Malgo%20CI/badge.svg)](https://github.com/malgo-lang/malgo/actions?query=workflow%3A%22Malgo+CI%22)
 
+A statically typed functional programming language.
+
 ## Requirement
 
 * [stack](https://docs.haskellstack.org/en/stable/README/)
