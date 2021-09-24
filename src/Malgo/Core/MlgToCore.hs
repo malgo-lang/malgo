@@ -2,7 +2,8 @@
 
 module Malgo.Core.MlgToCore (mlgToCore) where
 
-import Control.Lens (At (at), Lens', ifor_, lens, over, traverseOf, traversed, use, view, (<?=), (^.), _1, _2, (<>=))
+import Control.Lens (At (at), Lens', ifor_, lens, over, traverseOf, traversed, use, view, (<>=), (<?=), (^.), _1, _2)
+import qualified Data.Text as T
 import Koriel.Id
 import Koriel.MonadUniq (HasUniqSupply)
 import Koriel.Pretty
@@ -14,7 +15,6 @@ import Malgo.TypeCheck.TcEnv (TcEnv)
 import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import qualified Malgo.TypeRep as T
 import Text.Pretty.Simple (pShow)
-import qualified Data.Text as T
 
 data DsEnv = DsEnv
   { -- | 脱糖の結果が詰め込まれるModule
@@ -35,7 +35,7 @@ tcEnv :: Lens' DsEnv TcEnv
 tcEnv = lens _tcEnv \e x -> e {_tcEnv = x}
 
 mlgToCore :: (MonadIO m, MonadReader env m, HasUniqSupply env, MonadFail m) => TcEnv -> S.Module (Malgo 'Refine) -> m Module
-mlgToCore _tcEnv (S.Module modName S.BindGroup {_scDefs, _dataDefs}) = evaluatingStateT
+mlgToCore _tcEnv (S.Module modName S.BindGroup {_scDefs, _dataDefs, _foreigns}) = evaluatingStateT
   DsEnv
     { _buildingModule = Module {_moduleName = modName, _variableDefinitions = [], _externalDefinitions = [], _typeDefinitions = []},
       _interned = mempty,
@@ -43,6 +43,7 @@ mlgToCore _tcEnv (S.Module modName S.BindGroup {_scDefs, _dataDefs}) = evaluatin
     }
   do
     dsTypeDef =<< use (tcEnv . TcEnv.typeEnv)
+    traverse_ dsForeign _foreigns
     traverse_ dsScDefs _scDefs
     use buildingModule
 
@@ -87,6 +88,7 @@ dsScheme (T.Forall [] ty) = dsType ty
 dsScheme (T.Forall (p : ps) ty) = TyForall <$> dsTyVarName p <*> dsScheme (T.Forall ps ty)
 
 dsType :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => T.Type -> m Type
+dsType (T.TyVar v) = TyVar <$> dsTyVarName v
 dsType (T.TyCon con) = do
   con <- dsTyVarName con
   pure $ TyConApp (TyCon con) []
@@ -97,6 +99,11 @@ dsType (T.TYPE rep) = TYPE <$> dsRep rep
     dsRep (T.Rep rep) = pure rep
     dsRep _ = error "invalid Rep"
 dsType t = errorDoc $ "not implemented:" <+> pPrint t
+
+dsForeign :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => S.Foreign (Malgo 'Refine) -> m ()
+dsForeign (_, name, _) = do
+  name <- dsVarName name
+  buildingModule . externalDefinitions <>= [(name, toString $ name ^. idName)]
 
 dsScDefs :: (MonadState DsEnv f, MonadIO f, HasUniqSupply env, MonadReader env f, MonadFail f) => [S.ScDef (Malgo 'Refine)] -> f ()
 dsScDefs = traverse_ dsScDef
@@ -119,25 +126,25 @@ dsExp (S.Fn _ clauses@(S.Clause _ ps _ :| _)) = do
   ps' <- traverse (\p -> newInternalId (patToName p) =<< dsType (T.typeOf p)) ps
   clauses <- toList <$> traverse dsClause clauses
   pure $ Fn ps' (Match (map Var ps') clauses)
-    where
-      patToName (S.VarP _ v) = v ^. idName
-      patToName (S.ConP _ c _) = T.toLower $ c ^. idName
-      patToName (S.TupleP _ _) = "tuple"
-      patToName (S.RecordP _ _) = "record"
-      patToName (S.ListP _ _) = "list"
-      patToName (S.UnboxedP _ _) = "unboxed"
-      patToName (S.BoxedP _ _) = "boxed"
-      dsClause (S.Clause _ ps e) = do
-        ps <- traverse dsPat ps
-        e <- dsExp e
-        pure $ Clause ps e 
-      dsPat (S.VarP _ v) = VarP <$> dsVarName v
+  where
+    patToName (S.VarP _ v) = v ^. idName
+    patToName (S.ConP _ c _) = T.toLower $ c ^. idName
+    patToName (S.TupleP _ _) = "tuple"
+    patToName (S.RecordP _ _) = "record"
+    patToName (S.ListP _ _) = "list"
+    patToName (S.UnboxedP _ _) = "unboxed"
+    patToName (S.BoxedP _ _) = "boxed"
+    dsClause (S.Clause _ ps e) = do
+      ps <- traverse dsPat ps
+      e <- dsExp e
+      pure $ Clause ps e
+    dsPat (S.VarP _ v) = VarP <$> dsVarName v
 dsExp (S.Seq _ stmts) = dsSeq stmts
   where
     dsSeq (S.NoBind _ e :| []) = dsExp e
     dsSeq (S.NoBind _ e :| s : ss) = do
       hole <- newInternalId "_" =<< dsType (T.typeOf e)
-      Let hole <$> dsExp e <*>  dsSeq (s :| ss)
+      Let hole <$> dsExp e <*> dsSeq (s :| ss)
 dsExp e = error $ fromLazy $ "not implemented:\n" <> pShow e
 
 viewApply :: S.Exp x -> (S.Exp x, [S.Exp x])
