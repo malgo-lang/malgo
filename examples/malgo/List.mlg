@@ -2,6 +2,10 @@ module List = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
+  infix 4 (<=);
+  (<=) : Int32 -> Int32 -> Bool;
+  (<=) = {x y -> leInt32 x y};
+
   infixl 6 (+);
   (+) : Int32 -> Int32 -> Int32;
   (+) = {x y -> addInt32 x y};
@@ -9,10 +13,6 @@ module List = {
   infixl 6 (-);
   (-) : Int32 -> Int32 -> Int32;
   (-) = {x y -> subInt32 x y};
-
-  infix 4 (<=);
-  (<=) : Int32 -> Int32 -> Bool;
-  (<=) = {x y -> leInt32 x y};
 
   map : (a -> b) -> List a -> List b;
   map = { _ Nil -> Nil

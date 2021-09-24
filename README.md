@@ -15,7 +15,7 @@
 #### Homebrew
 
 ```sh
-$ brew install llvm-hs/llvm/llvm-9
+$ brew install llvm-hs/llvm/llvm-12
 ```
 
 #### Debian/Ubuntu
@@ -41,27 +41,97 @@ $ ./Hello
 Hello, world
 ```
 
-## Koriel
+## Examples
 
-The implementation of the internal representation.
+### Hello, world
 
-## Malgo
+```
+module Hello = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
-A statically typed functional programming language.
+  main = {
+    putStrLn "Hello, world!"
+  };
+}
+```
 
-# TODO
+### Fibonacci number
 
-* Rich build tool like go, cargo, cabal
+```
+module Fib = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
 
-* Malgo
-  + Import Builtin.mlg implicity
-  + Mutable (unboxed | boxed) polymorphic array (in Koriel, Array)
-  + Row polymorphism
-  + More rich standard library
-  + ML like module system
-  + Overloaded Literals
-* Koriel
-  + Rename Core -> Koriel
-  + Syntax and Parser
-    - Ref #9
-  + Support overloaded function
+  infix 4 (<=);
+  (<=) = { x y -> leInt32 x y };
+
+  infixl 6 (+);
+  (+) = { x y -> addInt32 x y };
+
+  infixl 6 (-);
+  (-) = { x y -> subInt32 x y };
+
+  fib = { n ->
+    if (n <= 1)
+      { 1 }
+      { fib (n - 1) + fib (n - 2) }
+  };
+
+  main = {
+    fib 5 |> toStringInt32 |> putStrLn
+  };
+}
+```
+
+### List operations
+
+```
+module List = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  infix 4 (<=);
+  (<=) : Int32 -> Int32 -> Bool;
+  (<=) = {x y -> leInt32 x y};
+
+  infixl 6 (+);
+  (+) : Int32 -> Int32 -> Int32;
+  (+) = {x y -> addInt32 x y};
+
+  infixl 6 (-);
+  (-) : Int32 -> Int32 -> Int32;
+  (-) = {x y -> subInt32 x y};
+
+  map : (a -> b) -> List a -> List b;
+  map = { _ Nil -> Nil
+        | f (Cons x xs) -> Cons (f x) (map f xs)
+        };
+
+  sum : List Int32 -> Int32;
+  sum = { Nil -> 0
+        | Cons x xs -> x + sum xs
+        };
+
+  -- [0 .. n]
+  below : Int32 -> List Int32;
+  below = { n ->
+    if (n <= 0)
+       { [0] }
+       { Cons n (below (n - 1)) }
+  };
+
+  main = {
+      sum (map (addInt32 1) (below 10))
+        |> toStringInt32
+        |> putStrLn
+  };
+}
+```
+
+### Lisp interpreter
+
+https://github.com/malgo-lang/minilisp
+
+## TODO
+[Malgo タスクリスト \- 星にゃーんのScrapbox](https://scrapbox.io/takoeight0821/Malgo_%E3%82%BF%E3%82%B9%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%88)
