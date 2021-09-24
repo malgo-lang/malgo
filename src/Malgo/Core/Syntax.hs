@@ -35,14 +35,15 @@ data Exp
   | Unboxed Unboxed
   | Apply Exp [Exp]
   | Fn [Name] Exp
-  | Match Exp [Clause]
+  | Let Name Exp Exp
+  | Match [Exp] [Clause]
   | Tuple [Exp]
   | Record (HashMap Name Exp)
   | RecordAccess Name
   | Type Type
   deriving stock (Show, Eq, Ord)
 
-data Clause = Clause Pat Exp
+data Clause = Clause [Pat] Exp
   deriving stock (Show, Eq, Ord)
 
 data Pat

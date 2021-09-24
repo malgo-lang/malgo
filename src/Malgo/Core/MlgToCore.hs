@@ -2,7 +2,7 @@
 
 module Malgo.Core.MlgToCore (mlgToCore) where
 
-import Control.Lens (At (at), Lens', ifor_, lens, over, traverseOf, traversed, use, view, (%=), (<?=), (^.), _1, _2)
+import Control.Lens (At (at), Lens', ifor_, lens, over, traverseOf, traversed, use, view, (<?=), (^.), _1, _2, (<>=))
 import Koriel.Id
 import Koriel.MonadUniq (HasUniqSupply)
 import Koriel.Pretty
@@ -14,6 +14,7 @@ import Malgo.TypeCheck.TcEnv (TcEnv)
 import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import qualified Malgo.TypeRep as T
 import Text.Pretty.Simple (pShow)
+import qualified Data.Text as T
 
 data DsEnv = DsEnv
   { -- | 脱糖の結果が詰め込まれるModule
@@ -104,7 +105,7 @@ dsScDef :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m,
 dsScDef (_, name, expr) = do
   name <- dsVarName name
   expr <- dsExp expr
-  buildingModule . variableDefinitions %= ((name, expr) :)
+  buildingModule . variableDefinitions <>= [(name, expr)]
 
 dsExp :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => S.Exp (Malgo 'Refine) -> m Exp
 dsExp (S.Var _ v) = Var <$> dsVarName (removePrefix v)
@@ -114,6 +115,29 @@ dsExp e@S.Apply {} = do
   f <- dsExp f
   args <- traverse dsExp args
   pure $ Apply f args
+dsExp (S.Fn _ clauses@(S.Clause _ ps _ :| _)) = do
+  ps' <- traverse (\p -> newInternalId (patToName p) =<< dsType (T.typeOf p)) ps
+  clauses <- toList <$> traverse dsClause clauses
+  pure $ Fn ps' (Match (map Var ps') clauses)
+    where
+      patToName (S.VarP _ v) = v ^. idName
+      patToName (S.ConP _ c _) = T.toLower $ c ^. idName
+      patToName (S.TupleP _ _) = "tuple"
+      patToName (S.RecordP _ _) = "record"
+      patToName (S.ListP _ _) = "list"
+      patToName (S.UnboxedP _ _) = "unboxed"
+      patToName (S.BoxedP _ _) = "boxed"
+      dsClause (S.Clause _ ps e) = do
+        ps <- traverse dsPat ps
+        e <- dsExp e
+        pure $ Clause ps e 
+      dsPat (S.VarP _ v) = VarP <$> dsVarName v
+dsExp (S.Seq _ stmts) = dsSeq stmts
+  where
+    dsSeq (S.NoBind _ e :| []) = dsExp e
+    dsSeq (S.NoBind _ e :| s : ss) = do
+      hole <- newInternalId "_" =<< dsType (T.typeOf e)
+      Let hole <$> dsExp e <*>  dsSeq (s :| ss)
 dsExp e = error $ fromLazy $ "not implemented:\n" <> pShow e
 
 viewApply :: S.Exp x -> (S.Exp x, [S.Exp x])
@@ -124,7 +148,7 @@ dsTypeDef :: (MonadState DsEnv m, MonadIO m, MonadReader env m, HasUniqSupply en
 dsTypeDef typeDefs = ifor_ typeDefs \name typeDef -> do
   name' <- dsTypeName name
   typeDef' <- dsTypeDef' typeDef
-  buildingModule . typeDefinitions %= ((name', typeDef') :)
+  buildingModule . typeDefinitions <>= [(name', typeDef')]
   where
     dsTypeDef' T.TypeDef {..} = do
       _parameters <- traverse dsTyVarName _typeParameters
