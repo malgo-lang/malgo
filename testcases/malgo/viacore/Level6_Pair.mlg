@@ -1,0 +1,17 @@
+module Level6_Pair = {
+  data T = A | B;
+
+  data Pair = Pair T T;
+
+  fst = { Pair x _ -> x };
+  
+  snd = { Pair _ x -> x };
+
+  fst' = { Pair A _ -> B
+         | Pair B _ -> A
+         };
+
+  snd' = { Pair _ A -> B
+         | Pair _ B -> A
+         };
+}

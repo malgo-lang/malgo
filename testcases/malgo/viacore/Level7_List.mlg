@@ -1,0 +1,18 @@
+module Level7_List = {
+  data T = A | B;
+
+  data List = Nil | Cons T List;
+
+  flip = { A -> B | B -> A };
+
+  map = {
+  | f Nil -> Nil
+  | f (Cons x xs) -> Cons (f x) xs
+  };
+
+  main = {
+    let list = [A, B, A];
+    let list' = map flip list;
+    ()
+  };
+}
