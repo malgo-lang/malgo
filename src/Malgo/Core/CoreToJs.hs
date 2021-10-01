@@ -3,12 +3,12 @@
 module Malgo.Core.CoreToJs where
 
 import Control.Lens (At (at), makeLenses, use, (?=), (^.))
-import Debug.Pretty.Simple (pTraceShowM)
 import Koriel.Id
+import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Core.Syntax hiding (moduleName)
 import Malgo.Prelude
-import Text.Pretty.Simple (pShow)
+import qualified Text.PrettyPrint as PP
 
 type Arity = Int
 
@@ -42,6 +42,7 @@ arityOf Record {} = pure (-1)
 arityOf RecordAccess {} = pure (-1)
 arityOf Type {} = pure (-1)
 
+codeGen :: (MonadReader env f, MonadIO f, HasUniqSupply env) => Module -> f Doc
 codeGen Module {..} =
   evaluatingStateT CodeGenEnv {_moduleName = _moduleName, _arityMap = mempty} $ do
     typeDefs <- sep <$> traverse emitTypeDef _typeDefinitions
@@ -72,11 +73,14 @@ zEncode = concatMap encode'
     encode' '#' = "zh"
     encode' c = [c]
 
-emitExtDef :: (MonadState CodeGenEnv m, MonadReader env m) => (Id Type, String) -> m ()
-emitExtDef (name, actual) = do
-  let arity = arityOfExt (name ^. idMeta)
-  pTraceShowM (name, actual, arity)
-  arityMap . at name ?= arity
+emitExtDef :: MonadState CodeGenEnv m => (Id Type, String) -> m ()
+emitExtDef (name, actual)
+  | name ^. idName == toText actual = do
+    let arity = arityOfExt (name ^. idMeta)
+    -- Currently only supported `foreign import foo = "foo";`
+    -- TODO: support `foreign import foo = { c "foo"; js "#1.foo()" };`
+    arityMap . at name ?= arity
+  | otherwise = error "not supported"
   where
     arityOfExt (TyFun _ t) = 1 + arityOfExt t
     arityOfExt _ = 0
@@ -86,6 +90,7 @@ data Int32 = Int32# Int32#
 
 const Int32# = (x) => ["Int32#", x];
 -}
+emitTypeDef :: (MonadReader env f, MonadState CodeGenEnv f, MonadIO f, HasUniqSupply env) => (a, TypeDef) -> f Doc
 emitTypeDef (_, TypeDef {..}) = sep <$> traverse emitConstr _constructors
   where
     emitConstr constr@Id {..} = do
@@ -118,27 +123,19 @@ emitExp (Fn params expr) = do
   params <- traverse emitVarName params
   expr <- runBlockBuilderT $ emitExp expr
   pure $ parens (sep $ punctuate "," params) <+> "=>" <+> expr
-emitExp (Match [u] [Clause [VarP x] e]) = do
-  x <- emitVarName x
-  u <- emitExp u
-  tell $ Endo (("const" <+> x <+> "=" <+> u) :)
-  emitExp e
-emitExp (Match us cs) =
-  match us cs
-  where
-    match [] (Clause [] e : _) = emitExp e
-    match (u : us) (c : _) = clause u us c
-    clause u us (Clause (VarP x : ps) e) = do
-      x <- emitVarName x
-      u <- emitExp u
-      tell $ Endo (("const" <+> x <+> "=" <+> u) :)
-      match us [Clause ps e]
-emitExp e = error $ fromLazy $ pShow e
+emitExp e = errorDoc $ pPrint e
 
+emitUnboxed :: Applicative f => Unboxed -> f Doc
 emitUnboxed (Int32 x) = pure $ pPrint (toInteger x)
+emitUnboxed (Int64 x) = pure $ pPrint (toInteger x)
+emitUnboxed (Float x) = pure $ pPrint x
+emitUnboxed (Double x) = pure $ pPrint x
+emitUnboxed (Char x) = pure $ quotes $ PP.char x
+emitUnboxed (String x) = pure $ doubleQuotes $ PP.text (toString x)
 
 type BlockBuilderT m a = WriterT (Endo [Doc]) m a
 
+runBlockBuilderT :: Monad m => WriterT (Endo [Doc]) m Doc -> m Doc
 runBlockBuilderT m = do
   (result, binds) <- runWriterT m
   case appEndo binds [] of

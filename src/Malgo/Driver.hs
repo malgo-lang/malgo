@@ -29,6 +29,7 @@ import Text.Megaparsec
   ( errorBundlePretty,
   )
 import qualified Malgo.Core.CoreToJs as CoreToJs
+import Malgo.Core.Match (compileMatch)
 
 -- |
 -- dumpHoge系のフラグによるダンプ出力を行うコンビネータ
@@ -62,8 +63,10 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   -- MlgToCore
   when (debugMode opt) do
     mlgCore <- mlgToCore tcEnv refinedAst
-    pTraceShowM mlgCore
-    js <- CoreToJs.codeGen mlgCore
+    traceShowM $ pPrint mlgCore
+    mlgCore' <- compileMatch mlgCore
+    traceShowM $ pPrint mlgCore'
+    js <- CoreToJs.codeGen mlgCore'
     putStrLn $ render js
 
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)

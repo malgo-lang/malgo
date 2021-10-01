@@ -3,6 +3,8 @@
 module Malgo.Core.MlgToCore (mlgToCore) where
 
 import Control.Lens (At (at), Lens', ifor_, lens, over, traverseOf, traversed, use, view, (<>=), (<?=), (^.), _1, _2)
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import Koriel.Id
 import Koriel.MonadUniq (HasUniqSupply)
@@ -10,11 +12,11 @@ import Koriel.Pretty
 import Malgo.Core.Syntax
 import Malgo.Prelude
 import qualified Malgo.Syntax as S
-import Malgo.Syntax.Extension (Malgo, MalgoPhase (Refine), RnId, removePrefix)
+import Malgo.Syntax.Extension (Malgo, MalgoPhase (Refine), RnId, WithPrefix (unwrapWithPrefix), removePrefix)
 import Malgo.TypeCheck.TcEnv (TcEnv)
 import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import qualified Malgo.TypeRep as T
-import Text.Pretty.Simple (pShow)
+import Relude.Unsafe (fromJust)
 
 data DsEnv = DsEnv
   { -- | 脱糖の結果が詰め込まれるModule
@@ -48,14 +50,27 @@ mlgToCore _tcEnv (S.Module modName S.BindGroup {_scDefs, _dataDefs, _foreigns}) 
     use buildingModule
 
 -- | インターンしたシンボル（Name）を返す
-dsVarName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => RnId -> m Name
+dsVarName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => RnId -> m Name
 dsVarName old = do
   use (interned . at (old ^. idUniq)) >>= \case
     Just name -> pure name
     Nothing -> do
-      Just scheme <- use (tcEnv . TcEnv.varEnv . at old)
+      scheme <-
+        use (tcEnv . TcEnv.varEnv . at old) >>= \case
+          Nothing -> errorDoc $ pPrint old <+> "is not defined"
+          Just x -> pure x
       scheme <- dsScheme scheme
       name <- newIdOnName scheme old
+      interned . at (old ^. idUniq) <?= name
+
+dsFieldName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => Map (Id ()) T.Type -> Id () -> m (Id Type)
+dsFieldName kts old = do
+  use (interned . at (old ^. idUniq)) >>= \case
+    Just name -> pure name
+    Nothing -> do
+      let ty = fromJust $ Map.lookup old kts
+      ty <- dsType ty
+      name <- newIdOnName ty old
       interned . at (old ^. idUniq) <?= name
 
 -- | TcEnv.typeEnvのキーからModule.typeDefinitionsのキーへの変換
@@ -88,6 +103,13 @@ dsScheme (T.Forall [] ty) = dsType ty
 dsScheme (T.Forall (p : ps) ty) = TyForall <$> dsTyVarName p <*> dsScheme (T.Forall ps ty)
 
 dsType :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => T.Type -> m Type
+dsType (T.TyConApp (T.TyCon con) ts) = do
+  con <- dsTyVarName con
+  TyConApp (TyCon con) <$> traverse dsType ts
+dsType (T.TyConApp (T.TyTuple _) ts) = do
+  ts <- traverse dsType ts
+  pure $ TyConApp (TupleC $ map kindOf ts) ts
+dsType T.TyApp {} = error "unreachable"
 dsType (T.TyVar v) = TyVar <$> dsTyVarName v
 dsType (T.TyCon con) = do
   con <- dsTyVarName con
@@ -98,7 +120,6 @@ dsType (T.TYPE rep) = TYPE <$> dsRep rep
   where
     dsRep (T.Rep rep) = pure rep
     dsRep _ = error "invalid Rep"
-dsType t = errorDoc $ "not implemented:" <+> pPrint t
 
 dsForeign :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => S.Foreign (Malgo 'Refine) -> m ()
 dsForeign (_, name, _) = do
@@ -117,6 +138,11 @@ dsScDef (_, name, expr) = do
 dsExp :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => S.Exp (Malgo 'Refine) -> m Exp
 dsExp (S.Var _ v) = Var <$> dsVarName (removePrefix v)
 dsExp (S.Unboxed _ (S.Int32 x)) = pure $ Unboxed $ Int32 x
+dsExp (S.Unboxed _ (S.Int64 x)) = pure $ Unboxed $ Int64 x
+dsExp (S.Unboxed _ (S.Float x)) = pure $ Unboxed $ Float x
+dsExp (S.Unboxed _ (S.Double x)) = pure $ Unboxed $ Double x
+dsExp (S.Unboxed _ (S.Char x)) = pure $ Unboxed $ Char x
+dsExp (S.Unboxed _ (S.String x)) = pure $ Unboxed $ String x
 dsExp e@S.Apply {} = do
   let (f, args) = viewApply e
   f <- dsExp f
@@ -139,13 +165,30 @@ dsExp (S.Fn _ clauses@(S.Clause _ ps _ :| _)) = do
       e <- dsExp e
       pure $ Clause ps e
     dsPat (S.VarP _ v) = VarP <$> dsVarName v
+    dsPat (S.ConP _ c ps) = ConP <$> dsVarName c <*> traverse dsPat ps
+dsExp (S.Tuple _ es) = Tuple <$> traverse dsExp es
+dsExp (S.Record (T.typeOf -> T.TyRecord kts) kes) =
+  Record . HashMap.fromList <$> traverse (bitraverse (dsFieldName kts . removePrefix) dsExp) kes
+dsExp S.Record {} = error "unreachable"
+dsExp (S.RecordAccess (T.typeOf -> T.TyArr (T.TyRecord kts) _) field) =
+  RecordAccess <$> dsRecordType kts <*> dsFieldName kts (removePrefix field)
+dsExp S.RecordAccess {} = error "unreachable"
 dsExp (S.Seq _ stmts) = dsSeq stmts
   where
     dsSeq (S.NoBind _ e :| []) = dsExp e
     dsSeq (S.NoBind _ e :| s : ss) = do
       hole <- newInternalId "_" =<< dsType (T.typeOf e)
       Let hole <$> dsExp e <*> dsSeq (s :| ss)
-dsExp e = error $ fromLazy $ "not implemented:\n" <> pShow e
+    dsSeq (S.Let _ _ e :| []) = dsExp e
+    dsSeq (S.Let _ name e :| s : ss) = do
+      name <- dsVarName name
+      Let name <$> dsExp e <*> dsSeq (s :| ss)
+dsExp (S.Parens _ e) = dsExp e
+
+dsRecordType :: (MonadReader env f, HasUniqSupply env, MonadIO f, MonadState DsEnv f) => Map (Id ()) T.Type -> f (HashMap (Id Type) Type)
+dsRecordType recordType = do
+  let recordkts = Map.toList recordType
+  HashMap.fromList <$> traverse (\(k, t) -> (,) <$> dsFieldName recordType k <*> dsType t) recordkts
 
 viewApply :: S.Exp x -> (S.Exp x, [S.Exp x])
 viewApply (S.Apply _ e1 e2) = over _2 (<> [e2]) $ viewApply e1
