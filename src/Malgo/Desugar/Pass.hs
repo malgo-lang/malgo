@@ -33,6 +33,7 @@ import Malgo.TypeRep as GT
 data Def
   = VarDef (Id C.Type) (C.Exp (Id C.Type))
   | FunDef (Id C.Type) ([Id C.Type], C.Exp (Id C.Type))
+  | ExtDef Text C.Type
 
 makePrisms ''Def
 
@@ -48,6 +49,7 @@ desugar rnEnv tcEnv depList (Module modName ds) = do
   (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName rnEnv tcEnv)
   let varDefs = mapMaybe (preview _VarDef) ds'
   let funDefs = mapMaybe (preview _FunDef) ds'
+  let extDefs = map (\dep -> ("koriel_load_" <> coerce dep, [] :-> VoidT)) (List.delete modName depList) <> [("GC_init", [] :-> VoidT)] <> mapMaybe (preview _ExtDef) ds'
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
@@ -56,8 +58,8 @@ desugar rnEnv tcEnv depList (Module modName ds) = do
           unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
           _ <- bind $ mainCall [unit]
           pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs))
-    Nothing -> pure (dsEnv, Program modName varDefs funDefs)
+      pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs) extDefs)
+    Nothing -> pure (dsEnv, Program modName varDefs funDefs extDefs)
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId
@@ -75,7 +77,7 @@ dsBindGroup bg = do
   dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
   foreigns' <- traverse dsForeign (bg ^. foreigns)
   scDefs' <- dsScDefGroup (bg ^. scDefs)
-  pure $ mconcat dataDefs' <> foreigns' <> scDefs'
+  pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
 dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env) => Import (Malgo 'Refine) -> m ()
 dsImport (pos, modName, _) = do
@@ -129,16 +131,16 @@ dsScDef (Annotated typ _, name, expr) = do
 dsForeign ::
   (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env) =>
   Foreign (Malgo 'Refine) ->
-  f Def
+  f [Def]
 dsForeign (x@(Annotated _ (_, primName)), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. GT.withType)
   let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
   params <- traverse (newInternalId "$p") paramTypes'
-  fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
+  fun <- curryFun params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
   nameEnv . at name ?= name'
-  pure (FunDef name' fun)
+  pure [FunDef name' fun, ExtDef primName (paramTypes' :-> retType)]
 
 dsDataDef ::
   (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env, MonadIO m) =>

@@ -92,6 +92,11 @@ runCodeGenT env m =
 codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
 codeGen srcPath dstPath uniqSupply modName Program {..} = do
   llvmir <- runCodeGenT CodeGenEnv {_codeGenUniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv} do
+    for_ _extFuncs \(name, typ) -> do
+      let name' = LLVM.AST.mkName $ convertString name
+      case typ of
+        ps :-> r -> extern name' (map convType ps) (convType r)
+        _ -> error "invalid type"
     traverse_ (uncurry genVar) _topVars
     traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
     genLoadModule modName $ initTopVars _topVars
@@ -271,11 +276,11 @@ genExp (CallDirect f xs) k = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
   k =<< call fOpr (map (,[]) xsOprs)
-genExp (ExtCall name (ps :-> r) xs) k = do
-  primOpr <- findExt (LLVM.AST.mkName $ convertString name) (map convType ps) (convType r)
-  xsOprs <- traverse genAtom xs
-  k =<< call primOpr (map (,[]) xsOprs)
-genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
+-- genExp (ExtCall name (ps :-> r) xs) k = do
+--   primOpr <- findExt (LLVM.AST.mkName $ convertString name) (map convType ps) (convType r)
+--   xsOprs <- traverse genAtom xs
+--   k =<< call primOpr (map (,[]) xsOprs)
+-- genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
 genExp (RawCall name (ps :-> r) xs) k = do
   let primOpr =
         ConstantOperand $

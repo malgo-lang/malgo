@@ -61,10 +61,10 @@ lintExp (CallDirect f xs) = do
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> errorDoc $ pPrint f <+> "is not callable"
-lintExp (ExtCall _ (ps :-> _) xs) = do
-  traverse_ lintAtom xs
-  zipWithM_ match ps xs
-lintExp ExtCall {} = error "primitive must be a function"
+-- lintExp (ExtCall _ (ps :-> _) xs) = do
+--   traverse_ lintAtom xs
+--   zipWithM_ match ps xs
+-- lintExp ExtCall {} = error "primitive must be a function"
 lintExp (RawCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
