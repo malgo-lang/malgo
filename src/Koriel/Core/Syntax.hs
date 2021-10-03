@@ -349,8 +349,8 @@ cast ty e
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => ModuleName -> [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
-mainFunc _ depList e = do
+mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc depList e = do
   mainFuncId <- newExternalId "main" ([] :-> Int32T) (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
     _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []

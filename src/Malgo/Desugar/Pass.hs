@@ -53,7 +53,7 @@ desugar rnEnv tcEnv depList (Module modName ds) = do
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
-        mainFunc modName depList =<< runDef do
+        mainFunc depList =<< runDef do
           let unitCon = C.Con C.Tuple []
           unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
           _ <- bind $ mainCall [unit]
