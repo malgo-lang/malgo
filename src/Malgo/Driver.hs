@@ -1,7 +1,7 @@
 module Malgo.Driver (compile, compileFromAST) where
 
 import Control.Lens (over, view, (^.))
-import Debug.Pretty.Simple (pTraceShowM)
+import Control.Monad.Catch (catch)
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
@@ -12,7 +12,6 @@ import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Core.MlgToCore (mlgToCore)
 import Malgo.Desugar.Pass (desugar)
-import qualified Malgo.TypeCheck.Pass as TypeCheck
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -21,6 +20,7 @@ import Malgo.Rename.Pass (rename)
 import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
+import qualified Malgo.TypeCheck.Pass as TypeCheck
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -28,8 +28,6 @@ import System.IO
 import Text.Megaparsec
   ( errorBundlePretty,
   )
-import qualified Malgo.Core.CoreToJs as CoreToJs
-import Malgo.Core.Match (compileMatch)
 
 -- |
 -- dumpHoge系のフラグによるダンプ出力を行うコンビネータ
@@ -61,13 +59,13 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
   -- MlgToCore
-  when (debugMode opt) do
-    mlgCore <- mlgToCore tcEnv refinedAst
-    traceShowM $ pPrint mlgCore
-    mlgCore' <- compileMatch mlgCore
-    traceShowM $ pPrint mlgCore'
-    js <- CoreToJs.codeGen mlgCore'
-    putStrLn $ render js
+  catch
+    ( do
+        mlgCore <- mlgToCore tcEnv refinedAst
+        when (debugMode opt) do
+          liftIO $ hPrint stderr $ pPrint mlgCore
+    )
+    (\e -> liftIO $ hPutStrLn stderr $ "MlgToCore Fail: " <> displayException (e :: SomeException))
 
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
   (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar rnEnv tcEnv depList refinedAst
