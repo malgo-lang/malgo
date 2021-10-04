@@ -284,33 +284,101 @@ tcScDefs ::
   m [ScDef (Malgo 'TypeCheck)]
 tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
-  ds <- for ds \(pos, name, expr) -> do
-    (expr', wanted) <- runWriterT (tcExpr expr)
-    nameType <- instantiate pos =<< lookupVar pos name
-    let exprType = typeOf expr'
-    let constraints = Annotated pos (nameType :~ exprType) : wanted
-    solve constraints
-    exprType <- zonk exprType
-    pure (Annotated exprType pos, name, expr')
+  ds <- traverse tcScDef ds
+  -- generalize mutually recursive functions
   (as, types) <- generalizeMutRecs pos mempty $ map (view (_1 . ann)) ds
-  -- Validate user-declared type signature and add type schemes to environment
-  for_ (zip ds types) \((pos, name, _), inferredSchemeType) -> do
-    let inferredScheme = Forall as inferredSchemeType
-    declaredScheme <- lookupVar (pos ^. value) name
-    case declaredScheme of
-      -- No explicit signature
-      Forall [] (TyMeta _) -> varEnv . at name ?= inferredScheme
-      _ -> do
-        -- 型同士を比較する際には型シノニムを展開する
-        abbrEnv <- use abbrEnv
-        declaredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) declaredScheme
-        inferredType <- expandAllTypeSynonym abbrEnv <$> instantiate (pos ^. value) inferredScheme
-        case equiv declaredType inferredType of
-          Nothing -> errorOn (pos ^. value) $ "Signature mismatch:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("TypeCheckred:" <+> pPrint inferredScheme)
-          Just subst
-            | anySame $ HashMap.elems subst -> errorOn (pos ^. value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("TypeCheckred:" <+> pPrint inferredScheme)
-            | otherwise -> varEnv . at name ?= declaredScheme
+  validateSignatures ds (as, types)
   pure ds
+
+-- | Infer types of a function (or variable)
+--
+-- `tcScDef` does *not* to generalize that types.
+--
+-- We need to generalize them by `generalizeMutRecs` and validate them signatures by `validateSignatures`
+tcScDef ::
+  (MonadReader env m, MonadIO m, MonadFail m, MonadState TcEnv m, MonadBind m, HasOpt env, HasUniqSupply env, HasRnEnv env) =>
+  ScDef (Malgo 'Rename) ->
+  m (ScDef (Malgo 'TypeCheck))
+tcScDef (pos, name, expr) = do
+  (expr', wanted) <- runWriterT (tcExpr expr)
+  nameType <- instantiate pos =<< lookupVar pos name
+  let exprType = typeOf expr'
+  let constraints = Annotated pos (nameType :~ exprType) : wanted
+  solve constraints
+  exprType <- zonk exprType
+  pure (Annotated exprType pos, name, expr')
+
+-- | Validate user-declared type signature and add type schemes to environment
+
+-- $howcheck
+
+validateSignatures ::
+  (MonadReader env0 m, HasOpt env0, MonadState TcEnv m, MonadIO m) =>
+  -- | definitions of mutualy recursive functions
+  [ScDef (Malgo 'TypeCheck)] ->
+  -- | signatures of mutualy recursive functions
+  ([Id Type], [Type]) ->
+  m ()
+validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
+  where
+    -- check single case
+    checkSingle (pos, name, _) inferredSchemeType = do
+      declaredScheme <- lookupVar (pos ^. value) name
+      let inferredScheme = Forall as inferredSchemeType
+      case declaredScheme of
+        -- No explicit signature
+        Forall [] (TyMeta _) -> varEnv . at name ?= inferredScheme
+        _ -> do
+          -- 型同士を比較する際には型シノニムを展開する
+          -- When we need to bind two or more variables to a single variable,
+          -- the declared signature is more general than the inferred one.
+          --   Example:
+          --     declared: forall a b. a -> b -> a
+          --     inferred: forall   x. x -> x -> x
+          --       evidence = [a -> x, b -> x] Error! Declared is too general
+          --
+          --    declared: forall a b. a -> b -> a
+          --    inferred: forall x y. x -> y -> x
+          --     evidence = [a -> x, b -> y] OK! Declared is well matched with inferred
+          abbrEnv <- use abbrEnv
+          let Forall _ declaredType = fmap (expandAllTypeSynonym abbrEnv) declaredScheme
+          let Forall _ inferredType = fmap (expandAllTypeSynonym abbrEnv) inferredScheme
+          case evidenceOfEquiv declaredType inferredType of
+            Just evidence
+              | anySame $ Map.elems evidence -> errorOn (pos ^. value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("TypeCheckred:" <+> pPrint inferredScheme)
+              | otherwise -> varEnv . at name ?= declaredScheme
+            Nothing ->
+              errorOn (pos ^. value) $
+                "Signature mismatch:"
+                  $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
+                  $$ nest 2 ("TypeCheckred:" <+> pPrint inferredScheme)
+
+-- | Which combination of variables should be unification to consider two types as equal?
+-- Use in `tcScDefs`.
+evidenceOfEquiv ::
+  -- | declared type (∀ was stripped)
+  Type ->
+  -- | inferred type (∀ was stripped)
+  Type ->
+  -- | evidence of equivalence (or no evidence)
+  Maybe (Map Type Type)
+evidenceOfEquiv (TyMeta v1) (TyMeta v2)
+  | v1 == v2 = Just mempty
+  | otherwise = Just $ one (TyMeta v1, TyMeta v2)
+evidenceOfEquiv (TyVar v1) (TyVar v2)
+  | v1 == v2 = Just mempty
+  | otherwise = Just $ one (TyVar v1, TyVar v2)
+evidenceOfEquiv (TyApp t11 t12) (TyApp t21 t22) = (<>) <$> evidenceOfEquiv t11 t21 <*> evidenceOfEquiv t12 t22
+evidenceOfEquiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
+evidenceOfEquiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
+evidenceOfEquiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> evidenceOfEquiv l1 l2 <*> evidenceOfEquiv r1 r2
+evidenceOfEquiv (TyTuple n1) (TyTuple n2) | n1 == n2 = Just mempty
+evidenceOfEquiv (TyRecord kts1) (TyRecord kts2) | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM evidenceOfEquiv (Map.elems kts1) (Map.elems kts2)
+evidenceOfEquiv (TyPtr t1) (TyPtr t2) = evidenceOfEquiv t1 t2
+evidenceOfEquiv (TYPE rep1) (TYPE rep2) = evidenceOfEquiv rep1 rep2
+evidenceOfEquiv TyRep TyRep = Just mempty
+evidenceOfEquiv (Rep rep1) (Rep rep2) | rep1 == rep2 = Just mempty
+evidenceOfEquiv _ _ = Nothing
 
 tcExpr ::
   ( MonadBind m,
@@ -382,7 +450,7 @@ tcExpr (Record pos kvs) = do
 -- tell [Annotated pos $ recordType :~ kvsType]
 -- pure $ Record (Annotated recordType pos) kvs'
 tcExpr (RecordAccess pos label) = do
-  recordType <- zonk =<< instantiate pos =<< lookupRecordType pos [label]
+  recordType <- instantiate pos =<< lookupRecordType pos [label]
   retType <- TyMeta <$> freshVar Nothing
   case recordType of
     TyRecord kts -> do

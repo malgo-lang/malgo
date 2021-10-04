@@ -12,8 +12,8 @@ import Data.Traversable (for)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.TypeCheck.TcEnv (TcEnv, abbrEnv)
 import Malgo.Prelude hiding (Constraint)
+import Malgo.TypeCheck.TcEnv (TcEnv, abbrEnv)
 import Malgo.TypeRep
 import Text.Megaparsec (SourcePos)
 
@@ -84,23 +84,6 @@ unify _ TyRep TyRep = pure (mempty, [])
 unify _ (Rep rep1) (Rep rep2) | rep1 == rep2 = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
 
-equiv :: Type -> Type -> Maybe (HashMap TypeVar TypeVar)
-equiv (TyMeta v1) (TyMeta v2)
-  | v1 == v2 = Just mempty
-  | otherwise = Just $ one (v1, v2)
-equiv (TyApp t11 t12) (TyApp t21 t22) = (<>) <$> equiv t11 t21 <*> equiv t12 t22
-equiv (TyVar v1) (TyVar v2) | v1 == v2 = Just mempty
-equiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
-equiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
-equiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> equiv l1 l2 <*> equiv r1 r2
-equiv (TyTuple n1) (TyTuple n2) | n1 == n2 = Just mempty
-equiv (TyRecord kts1) (TyRecord kts2) | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM equiv (Map.elems kts1) (Map.elems kts2)
-equiv (TyPtr t1) (TyPtr t2) = equiv t1 t2
-equiv (TYPE rep1) (TYPE rep2) = equiv rep1 rep2
-equiv TyRep TyRep = Just mempty
-equiv (Rep rep1) (Rep rep2) | rep1 == rep2 = Just mempty
-equiv _ _ = Nothing
-
 occursCheck :: TypeVar -> Type -> Bool
 occursCheck v t = HashSet.member v (freevars t)
 
@@ -132,10 +115,11 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
   zonk t@Rep {} = pure t
   zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
 
-  -- zonk =
-  --   transformM $ \case
-  --     TyMeta v -> fromMaybe (TyMeta v) <$> (traverse zonk =<< lookupVar v)
-  --     ty -> pure ty
+-- Anothor implementation using `Plated`
+-- zonk =
+--   transformM $ \case
+--     TyMeta v -> fromMaybe (TyMeta v) <$> (traverse zonk =<< lookupVar v)
+--     ty -> pure ty
 
 ------------
 -- Solver --
