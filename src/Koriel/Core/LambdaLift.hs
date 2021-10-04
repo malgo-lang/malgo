@@ -34,7 +34,7 @@ lambdalift us Program {..} =
       knowns <>= HashSet.fromList (map fst topFuncs)
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift _topVars
-      traverseOf appProgram (pure . flat) $ Program _moduleName _topVars (HashMap.toList _funcs)
+      traverseOf appProgram (pure . flat) $ Program _moduleName _topVars (HashMap.toList _funcs) _extFuncs
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader UniqSupply f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
@@ -43,7 +43,7 @@ llift (Call (Var f) xs) = do
 llift (Let [LocalDef n (Fun xs call@Call {})] e) = do
   call' <- llift call
   Let [LocalDef n (Fun xs call')] <$> llift e
-llift (Let [LocalDef n o@(Fun _ ExtCall {})] e) = Let [LocalDef n o] <$> llift e
+llift (Let [LocalDef n o@(Fun _ RawCall {})] e) = Let [LocalDef n o] <$> llift e
 llift (Let [LocalDef n o@(Fun _ CallDirect {})] e) = Let [LocalDef n o] <$> llift e
 llift (Let [LocalDef n (Fun as body)] e) = do
   backup <- get

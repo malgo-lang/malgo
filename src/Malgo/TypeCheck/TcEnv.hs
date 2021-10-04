@@ -1,6 +1,7 @@
-module Malgo.Infer.TcEnv
+module Malgo.TypeCheck.TcEnv
   ( RecordTypeName,
     TcEnv (..),
+    HasTcEnv (..),
     varEnv,
     typeEnv,
     abbrEnv,
@@ -43,6 +44,12 @@ abbrEnv = lens _abbrEnv (\t x -> t {_abbrEnv = x})
 
 fieldEnv :: Lens' TcEnv (HashMap (Id ()) [(RecordTypeName, Scheme Type)])
 fieldEnv = lens _fieldEnv (\t x -> t {_fieldEnv = x})
+
+class HasTcEnv env where
+  tcEnv :: Lens' env TcEnv
+
+instance HasTcEnv TcEnv where
+  tcEnv = identity
 
 instance Pretty TcEnv where
   pPrint TcEnv {..} =

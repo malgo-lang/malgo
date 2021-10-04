@@ -9,8 +9,11 @@ import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
 import Malgo.Syntax.Extension
+import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv), TcEnv)
 import Malgo.TypeRep
 import qualified Malgo.TypeRep as GT
+import Text.Pretty.Simple (pShow)
+import qualified Malgo.TypeCheck.TcEnv as TcEnv
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
@@ -18,25 +21,14 @@ data DsEnv = DsEnv
     _moduleName :: ModuleName,
     -- | Malgo -> Coreの名前環境
     _nameEnv :: HashMap RnId (Id C.Type),
+    _desugarRnEnv :: RnEnv,
     -- | 型環境
-    _varTypeEnv :: HashMap RnId (Scheme Type),
-    _typeDefEnv :: HashMap RnId (TypeDef Type),
-    _desugarRnEnv :: RnEnv
+    _desugarTcEnv :: TcEnv
   }
   deriving stock (Show)
 
 instance Pretty DsEnv where
-  pPrint DsEnv {..} =
-    "DsEnv"
-      <+> braces
-        ( sep
-            [ "_moduleName" <+> "=" <+> pPrint _moduleName,
-              "_nameEnv" <+> "=" <+> pPrint (HashMap.toList _nameEnv),
-              "_varTypeEnv" <+> "=" <+> pPrint (HashMap.toList _varTypeEnv),
-              "_typeDefEnv" <+> "=" <+> pPrint (HashMap.toList _typeDefEnv),
-              "_desugarRnEnv" <+> "=" <+> pPrint _desugarRnEnv
-            ]
-        )
+  pPrint dsEnv = text $ toString $ pShow dsEnv
 
 moduleName :: Lens' DsEnv ModuleName
 moduleName = lens _moduleName (\d x -> d {_moduleName = x})
@@ -44,11 +36,8 @@ moduleName = lens _moduleName (\d x -> d {_moduleName = x})
 nameEnv :: Lens' DsEnv (HashMap (Id ()) (Id C.Type))
 nameEnv = lens _nameEnv (\d x -> d {_nameEnv = x})
 
-varTypeEnv :: Lens' DsEnv (HashMap (Id ()) (Scheme Type))
-varTypeEnv = lens _varTypeEnv (\d x -> d {_varTypeEnv = x})
-
-typeDefEnv :: Lens' DsEnv (HashMap (Id ()) (TypeDef Type))
-typeDefEnv = lens _typeDefEnv (\d x -> d {_typeDefEnv = x})
+desugarTcEnv :: Lens' DsEnv TcEnv
+desugarTcEnv = lens _desugarTcEnv (\d x -> d {_desugarTcEnv = x})
 
 desugarRnEnv :: Lens' DsEnv RnEnv
 desugarRnEnv = lens _desugarRnEnv (\d x -> d {_desugarRnEnv = x})
@@ -59,21 +48,22 @@ class HasDsEnv env where
 instance HasDsEnv DsEnv where
   dsEnv = identity
 
+instance HasTcEnv DsEnv where
+  tcEnv = desugarTcEnv
+
 instance HasRnEnv DsEnv where
   rnEnv = desugarRnEnv
 
 makeDsEnv ::
   ModuleName ->
-  HashMap (Id ()) (Scheme Type) ->
-  HashMap (Id ()) (TypeDef Type) ->
   RnEnv ->
+  TcEnv ->
   DsEnv
-makeDsEnv modName varEnv typeEnv rnEnv =
+makeDsEnv modName rnEnv tcEnv =
   DsEnv
     { _moduleName = modName,
       _nameEnv = mempty,
-      _varTypeEnv = varEnv,
-      _typeDefEnv = typeEnv,
+      _desugarTcEnv = tcEnv,
       _desugarRnEnv = rnEnv
     }
 
@@ -83,7 +73,7 @@ lookupValueConstructors ::
   [GT.Type] ->
   m [(RnId, Scheme GT.Type)]
 lookupValueConstructors con ts = do
-  typeEnv <- use typeDefEnv
+  typeEnv <- use $ tcEnv . TcEnv.typeEnv
   -- _valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
   case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->

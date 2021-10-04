@@ -14,7 +14,7 @@ import Malgo.TypeRep as TypeRep
 import Text.Megaparsec.Pos (SourcePos)
 
 -- Phase and type instance
-data MalgoPhase = Parse | Rename | Infer | Refine
+data MalgoPhase = Parse | Rename | TypeCheck | Refine
 
 data Malgo (p :: MalgoPhase)
 
@@ -22,7 +22,7 @@ data Malgo (p :: MalgoPhase)
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = Text
   MalgoId 'Rename = Id ()
-  MalgoId 'Infer = Id ()
+  MalgoId 'TypeCheck = Id ()
   MalgoId 'Refine = Id ()
 
 newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: Annotated (Maybe Text) x}
@@ -67,7 +67,7 @@ type family XId x where
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = SourcePos
   SimpleX 'Rename = SourcePos
-  SimpleX 'Infer = Annotated Type SourcePos
+  SimpleX 'TypeCheck = Annotated Type SourcePos
   SimpleX 'Refine = Annotated Type SourcePos
 
 type family XVar x where
@@ -89,7 +89,7 @@ type family XApply x where
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SourcePos
   XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
-  XOpApp (Malgo 'Infer) = Annotated Type (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'TypeCheck) = Annotated Type (SourcePos, (Assoc, Int))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -231,7 +231,7 @@ type family XInfix x where
 type family XForeign x where
   XForeign (Malgo 'Parse) = SourcePos
   XForeign (Malgo 'Rename) = (SourcePos, Text)
-  XForeign (Malgo 'Infer) = Annotated Type (SourcePos, Text)
+  XForeign (Malgo 'TypeCheck) = Annotated Type (SourcePos, Text)
   XForeign (Malgo 'Refine) = Annotated Type (SourcePos, Text)
 
 type family XImport x where

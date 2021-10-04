@@ -25,38 +25,41 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
+import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv), TcEnv)
+import qualified Malgo.TypeCheck.TcEnv as Tc
 import Malgo.TypeRep as GT
 
 -- | トップレベル宣言
 data Def
   = VarDef (Id C.Type) (C.Exp (Id C.Type))
   | FunDef (Id C.Type) ([Id C.Type], C.Exp (Id C.Type))
+  | ExtDef Text C.Type
 
 makePrisms ''Def
 
 -- | MalgoからCoreへの変換
 desugar ::
   (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
-  HashMap RnId (Scheme GT.Type) ->
-  HashMap RnId (TypeDef GT.Type) ->
   RnEnv ->
+  TcEnv ->
   [ModuleName] ->
   Module x ->
   m (DsEnv, Program (Id C.Type))
-desugar varEnv typeEnv rnEnv depList (Module modName ds) = do
-  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName varEnv typeEnv rnEnv)
+desugar rnEnv tcEnv depList (Module modName ds) = do
+  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName rnEnv tcEnv)
   let varDefs = mapMaybe (preview _VarDef) ds'
   let funDefs = mapMaybe (preview _FunDef) ds'
+  let extDefs = map (\dep -> ("koriel_load_" <> coerce dep, [] :-> VoidT)) (List.delete modName depList) <> [("GC_init", [] :-> VoidT)] <> mapMaybe (preview _ExtDef) ds'
   case searchMain (HashMap.toList $ view nameEnv dsEnv) of
     Just mainCall -> do
       mainFuncDef <-
-        mainFunc modName depList =<< runDef do
+        mainFunc depList =<< runDef do
           let unitCon = C.Con C.Tuple []
           unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
           _ <- bind $ mainCall [unit]
           pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs))
-    Nothing -> pure (dsEnv, Program modName varDefs funDefs)
+      pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs) extDefs)
+    Nothing -> pure (dsEnv, Program modName varDefs funDefs extDefs)
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId
@@ -74,7 +77,7 @@ dsBindGroup bg = do
   dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
   foreigns' <- traverse dsForeign (bg ^. foreigns)
   scDefs' <- dsScDefGroup (bg ^. scDefs)
-  pure $ mconcat dataDefs' <> foreigns' <> scDefs'
+  pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
 dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env) => Import (Malgo 'Refine) -> m ()
 dsImport (pos, modName, _) = do
@@ -98,7 +101,7 @@ dsScDefs ::
 dsScDefs ds = do
   -- まず、宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
-    Just (Forall _ fType) <- use (varTypeEnv . at f)
+    Just (Forall _ fType) <- use (tcEnv . Tc.varEnv . at f)
     f' <- newCoreId f =<< dsType fType
     nameEnv . at f ?= f'
   foldMapM dsScDef ds
@@ -128,16 +131,16 @@ dsScDef (Annotated typ _, name, expr) = do
 dsForeign ::
   (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env) =>
   Foreign (Malgo 'Refine) ->
-  f Def
+  f [Def]
 dsForeign (x@(Annotated _ (_, primName)), name, _) = do
   name' <- newCoreId name =<< dsType (x ^. GT.withType)
   let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
   params <- traverse (newInternalId "$p") paramTypes'
-  fun <- curryFun params $ C.ExtCall primName (paramTypes' :-> retType) (map C.Var params)
+  fun <- curryFun params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
   nameEnv . at name ?= name'
-  pure (FunDef name' fun)
+  pure [FunDef name' fun, ExtDef primName (paramTypes' :-> retType)]
 
 dsDataDef ::
   (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env, MonadIO m) =>
@@ -146,7 +149,7 @@ dsDataDef ::
 dsDataDef (_, name, _, cons) =
   for cons $ \(conName, _) -> do
     -- lookup constructor infomations
-    Just vcs <- preuse (typeDefEnv . at name . _Just . valueConstructors)
+    Just vcs <- preuse (tcEnv . Tc.typeEnv . at name . _Just . valueConstructors)
     let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType

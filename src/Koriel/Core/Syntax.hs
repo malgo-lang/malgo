@@ -95,9 +95,10 @@ data Exp a
     Call (Atom a) [Atom a]
   | -- | application of function (not closure)
     CallDirect a [Atom a]
-  | -- | application of external function
-    ExtCall Text Type [Atom a]
-  | -- | application of llvm function
+  | --  | -- | application of external function
+    --   ExtCall Text Type [Atom a]
+
+    -- | application of llvm function
     RawCall Text Type [Atom a]
   | -- | binary operation
     BinOp Op (Atom a) (Atom a)
@@ -129,13 +130,13 @@ instance HasType a => HasType (Exp a) where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = error "length ps == length xs"
-  typeOf (ExtCall _ t xs) = case t of
-    ps :-> r -> go ps (map typeOf xs) r
-    _ -> error "t must be ps :-> r"
-    where
-      go [] [] v = v
-      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
-      go _ _ _ = error "length ps == length xs"
+  -- typeOf (ExtCall _ t xs) = case t of
+  --   ps :-> r -> go ps (map typeOf xs) r
+  --   _ -> error "t must be ps :-> r"
+  --   where
+  --     go [] [] v = v
+  --     go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
+  --     go _ _ _ = error "length ps == length xs"
   typeOf (RawCall _ t xs) = case t of
     ps :-> r -> go ps (map typeOf xs) r
     _ -> error "t must be ps :-> r"
@@ -172,7 +173,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (ExtCall p t xs) = parens $ "external" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
+  -- pPrint (ExtCall p t xs) = parens $ "external" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
   pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
@@ -185,7 +186,7 @@ instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
-  freevars (ExtCall _ _ xs) = foldMap freevars xs
+  -- freevars (ExtCall _ _ xs) = foldMap freevars xs
   freevars (RawCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
@@ -198,7 +199,7 @@ instance HasAtom Exp where
     Atom x -> Atom <$> f x
     Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
-    ExtCall p t xs -> ExtCall p t <$> traverse f xs
+    -- ExtCall p t xs -> ExtCall p t <$> traverse f xs
     RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
@@ -267,7 +268,8 @@ instance HasAtom Obj where
 data Program a = Program
   { _moduleName :: ModuleName,
     _topVars :: [(a, Exp a)],
-    _topFuncs :: [(a, ([a], Exp a))]
+    _topFuncs :: [(a, ([a], Exp a))],
+    _extFuncs :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
 
@@ -280,6 +282,9 @@ topVars = lens _topVars (\p x -> p {_topVars = x})
 topFuncs :: Lens' (Program a) [(a, ([a], Exp a))]
 topFuncs = lens _topFuncs (\p x -> p {_topFuncs = x})
 
+extFuncs :: Lens' (Program a) [(Text, Type)]
+extFuncs = lens _extFuncs (\p x -> p {_extFuncs = x})
+
 instance Pretty a => Pretty (Program a) where
   pPrint Program {..} =
     vcat $
@@ -287,7 +292,9 @@ instance Pretty a => Pretty (Program a) where
         [ ["variables:"],
           map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint e]) _topVars,
           ["functions:"],
-          map (\(f, (ps, e)) -> parens $ sep [sep ["define", pPrint f, parens (sep $ map pPrint ps)], pPrint e]) _topFuncs
+          map (\(f, (ps, e)) -> parens $ sep [sep ["define", pPrint f, parens (sep $ map pPrint ps)], pPrint e]) _topFuncs,
+          ["externals:"],
+          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
         ]
 
 appObj :: Traversal' (Obj a) (Exp a)
@@ -303,7 +310,10 @@ appCase f = \case
 
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {..} =
-  Program _moduleName <$> traverseOf (traversed . _2) f _topVars <*> traverseOf (traversed . _2 . _2) f _topFuncs
+  Program _moduleName
+    <$> traverseOf (traversed . _2) f _topVars
+    <*> traverseOf (traversed . _2 . _2) f _topFuncs
+    <*> pure _extFuncs
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
@@ -339,16 +349,14 @@ cast ty e
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => ModuleName -> [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
-mainFunc (ModuleName mainModName) depList e = do
+mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc depList e = do
   mainFuncId <- newExternalId "main" ([] :-> Int32T) (ModuleName "Builtin")
   mainFuncBody <- runDef $ do
-    _ <- bind $ ExtCall "GC_init" ([] :-> VoidT) []
+    _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
     traverse_
       ( \(ModuleName modName) ->
-          if modName == mainModName
-            then bind $ RawCall ("koriel_load_" <> modName) ([] :-> VoidT) []
-            else bind $ ExtCall ("koriel_load_" <> modName) ([] :-> VoidT) []
+          bind $ RawCall ("koriel_load_" <> modName) ([] :-> VoidT) []
       )
       depList
     pure e

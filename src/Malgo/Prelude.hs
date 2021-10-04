@@ -21,6 +21,7 @@ module Malgo.Prelude
 where
 
 import Control.Lens (Lens, Lens', lens, view)
+import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
 import Data.List ((!!))
 import Koriel.MonadUniq
@@ -90,7 +91,7 @@ instance HasOpt MalgoEnv where
   malgoOpt = lens _malgoOpt (\x y -> x {_malgoOpt = y})
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail, MonadThrow, MonadCatch)
 
 runMalgoM :: MalgoM a -> Opt -> IO a
 runMalgoM m opt = do

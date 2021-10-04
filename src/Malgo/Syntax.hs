@@ -375,7 +375,7 @@ type instance XModule (Malgo 'Parse) = ParsedDefinitions
 
 type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 
-type instance XModule (Malgo 'Infer) = BindGroup (Malgo 'Infer)
+type instance XModule (Malgo 'TypeCheck) = BindGroup (Malgo 'TypeCheck)
 
 type instance XModule (Malgo 'Refine) = BindGroup (Malgo 'Refine)
 

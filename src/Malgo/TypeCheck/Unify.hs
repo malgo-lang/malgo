@@ -2,7 +2,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | Unification
-module Malgo.Infer.Unify where
+module Malgo.TypeCheck.Unify where
 
 import Control.Lens (At (at), itraverse_, transformM, traverseOf, use, view, (?=), (^.))
 import qualified Data.HashMap.Strict as HashMap
@@ -12,7 +12,7 @@ import Data.Traversable (for)
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Infer.TcEnv (TcEnv, abbrEnv)
+import Malgo.TypeCheck.TcEnv (TcEnv, abbrEnv)
 import Malgo.Prelude hiding (Constraint)
 import Malgo.TypeRep
 import Text.Megaparsec (SourcePos)

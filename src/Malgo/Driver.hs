@@ -1,7 +1,7 @@
 module Malgo.Driver (compile, compileFromAST) where
 
 import Control.Lens (over, view, (^.))
-import Debug.Pretty.Simple (pTraceShowM)
+import Control.Monad.Catch (catch)
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
@@ -12,8 +12,6 @@ import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Core.MlgToCore (mlgToCore)
 import Malgo.Desugar.Pass (desugar)
-import qualified Malgo.Infer.Pass as Infer
-import qualified Malgo.Infer.TcEnv as TcEnv
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -22,6 +20,7 @@ import Malgo.Rename.Pass (rename)
 import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
+import qualified Malgo.TypeCheck.Pass as TypeCheck
 import System.IO
   ( hPrint,
     hPutStrLn,
@@ -56,18 +55,20 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     hPrint stderr $ pPrint parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv =<< ask
   (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-  (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ Infer.typeCheck rnEnv renamedAst
+  (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
   -- MlgToCore
-  when (debugMode opt) do
-    mlgCore <- mlgToCore tcEnv refinedAst
-    pTraceShowM mlgCore
+  catch
+    ( do
+        mlgCore <- mlgToCore tcEnv refinedAst
+        when (debugMode opt) do
+          liftIO $ hPrint stderr $ pPrint mlgCore
+    )
+    (\e -> liftIO $ hPutStrLn stderr $ "MlgToCore Fail: " <> displayException (e :: SomeException))
 
-  let varEnv = tcEnv ^. TcEnv.varEnv
-  let typeEnv = tcEnv ^. TcEnv.typeEnv
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
-  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar varEnv typeEnv rnEnv depList refinedAst
+  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar rnEnv tcEnv depList refinedAst
   let inf = buildInterface rnState dsEnv
   storeInterface inf
   when (debugMode opt) $ do

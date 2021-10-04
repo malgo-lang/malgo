@@ -2,8 +2,8 @@ module Level5_ExtFunc = {
   x : Int32#;
   x = 40#;
 
-  foreign import addInt32# : Int32# -> Int32# -> Int32#;
+  foreign import malgo_add_int32 : Int32# -> Int32# -> Int32#;
 
   y : Int32#;
-  y = addInt32# x 2#;
+  y = malgo_add_int32 x 2#;
 }
