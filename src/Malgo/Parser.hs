@@ -45,7 +45,7 @@ singleModuleName = toText <$> some identLetter
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
-pDecl = pDataDef <|> pTypeSynonym <|> pInfix <|> pForeign <|> pImport <|> pClass <|> pImpl <|> try pScSig <|> pScDef
+pDecl = pDataDef <|> pTypeSynonym <|> pInfix <|> pForeign <|> pImport <|> try pScSig <|> pScDef
 
 pDataDef :: Parser (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" $ do
@@ -100,25 +100,6 @@ pImport = label "import" $ do
   void $ pKeyword "import"
   modName <- ModuleName <$> pModuleName
   pure $ Import s modName importList
-
-pClass :: Parser (Decl (Malgo 'Parse))
-pClass = label "class" do
-  s <- getSourcePos
-  void $ pKeyword "class"
-  className <- upperIdent
-  classParameters <- many lowerIdent
-  void $ pOperator "="
-  Class s className classParameters <$> pType
-
-pImpl :: Parser (Decl (Malgo 'Parse))
-pImpl = label "impl" do
-  s <- getSourcePos
-  void $ pKeyword "impl"
-  name <- lowerIdent
-  void $ pOperator ":"
-  typ <- pType
-  void $ pOperator "="
-  Impl s name typ <$> pExp
 
 pScSig :: Parser (Decl (Malgo 'Parse))
 pScSig =
@@ -426,11 +407,7 @@ pTyArr = makeExprParser pTyTerm opTable
       [ [ InfixR do
             s <- getSourcePos
             void $ pOperator "->"
-            pure $ \l r -> TyArr s l r,
-          InfixR do
-            s <- getSourcePos
-            void $ pOperator "=>"
-            pure $ \l r -> TyDArr s l r
+            pure $ \l r -> TyArr s l r
         ]
       ]
 

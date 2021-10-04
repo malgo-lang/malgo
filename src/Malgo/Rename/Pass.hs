@@ -132,21 +132,6 @@ rnDecl (Import pos modName importList) = do
   infixInfo <>= interface ^. infixMap
   dependencies <>= [modName]
   pure $ Import pos modName importList
-rnDecl (Class pos name params synType) = do
-  params' <- traverse resolveName params
-  local (appendRnEnv typeEnv (zip params $ map (Annotated Implicit) params')) $
-    Class pos
-      <$> lookupTypeName pos name
-      <*> pure params'
-      <*> rnType synType
-rnDecl (Impl pos name typ expr) = do
-  let tyVars = HashSet.toList $ getTyVars typ
-  tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv typeEnv (zip tyVars $ map (Annotated Implicit) tyVars')) $
-    Impl pos
-      <$> lookupVarName pos name
-      <*> rnType typ
-      <*> rnExp expr
 
 -- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
 rnExp ::
@@ -412,19 +397,6 @@ genToplevelEnv modName ds =
       modify $ appendRnEnv varEnv (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pass
-    aux (Class pos name _ synType) = do
-      env <- get
-      when (name `elem` HashMap.keys (env ^. typeEnv)) do
-        errorOn pos $ "Duplicate name:" <+> quotes (pPrint name)
-      name' <- resolveGlobalName modName name
-      modify $ appendRnEnv typeEnv [(name, Annotated Implicit name')]
-      genFieldEnv synType
-    aux (Impl pos name _ _) = do
-      env <- use varEnv
-      when (name `elem` HashMap.keys env) do
-        errorOn pos $ "Duplicate name:" <+> quotes (pPrint name)
-      name' <- resolveGlobalName modName name
-      modify $ appendRnEnv varEnv [(name, Annotated Implicit name')]
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
     genFieldEnv (TyVar _ _) = pass
     genFieldEnv (TyCon _ _) = pass

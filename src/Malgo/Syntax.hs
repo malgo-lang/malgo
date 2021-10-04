@@ -50,7 +50,6 @@ data Type x
   | TyTuple (XTyTuple x) [Type x]
   | TyRecord (XTyRecord x) [(XId x, Type x)]
   | TyBlock (XTyBlock x) (Type x)
-  | TyDArr (XTyDArr x) (Type x) (Type x)
 
 deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
 
@@ -66,8 +65,6 @@ instance (Pretty (XId x)) => Pretty (Type x) where
   pPrintPrec _ _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pPrint ts
   pPrintPrec l _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec _ _ (TyBlock _ t) = braces $ pPrint t
-  pPrintPrec l d (TyDArr _ t1 t2) =
-    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "=>" <+> pPrintPrec l 10 t2
 
 getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
@@ -77,7 +74,6 @@ getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
 getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
 getTyVars (TyBlock _ t) = getTyVars t
-getTyVars (TyDArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 
 ----------------
 -- Expression --
@@ -318,8 +314,6 @@ data Decl x
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
   | Import (XImport x) ModuleName ImportList
-  | Class (XClass x) (XId x) [XId x] (Type x)
-  | Impl (XImpl x) (XId x) (Type x) (Exp x)
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 
@@ -345,8 +339,6 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
   pPrint (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pPrint name
   pPrint (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pPrint xs) <+> "=" <+> "import" <+> pPrint name
   pPrint (Import _ name (As name')) = "module" <+> pPrint name' <+> "=" <+> "import" <+> pPrint name
-  pPrint (Class _ name params synType) = "class" <+> pPrint name <+> sep (map pPrint params) <+> "=" <+> pPrint synType
-  pPrint (Impl _ name typ expr) = "impl" <+> pPrint name <+> ":" <+> pPrint typ <+> "=" <+> pPrint expr
 
 makePrisms ''Decl
 
@@ -390,9 +382,7 @@ data BindGroup x = BindGroup
     _dataDefs :: [DataDef x],
     _typeSynonyms :: [TypeSynonym x],
     _foreigns :: [Foreign x],
-    _imports :: [Import x],
-    _classes :: [Class x],
-    _impls :: [Impl x]
+    _imports :: [Import x]
   }
 
 type ScDef x = (XScDef x, XId x, Exp x)
@@ -407,10 +397,6 @@ type Foreign x = (XForeign x, XId x, Type x)
 
 type Import x = (XImport x, ModuleName, ImportList)
 
-type Class x = (XClass x, XId x, [XId x], Type x)
-
-type Impl x = (XImpl x, XId x, Type x, Exp x)
-
 makeLenses ''BindGroup
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (BindGroup x)
@@ -423,8 +409,6 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
       punctuate ";" $
         map prettyDataDef _dataDefs
           <> map prettyForeign _foreigns
-          <> map prettyClass _classes
-          <> map prettyImpl _impls
           <> map prettyScSig _scSigs
           <> concatMap (map prettyScDef) _scDefs
     where
@@ -438,10 +422,6 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
       prettyScSig (_, f, t) = pPrint f <+> ":" <+> pPrint t
       prettyScDef (_, f, e) =
         sep [pPrint f <+> "=", pPrint e]
-      prettyClass (_, name, params, synType) =
-        "class" <+> pPrint name <+> sep (map pPrint params) <+> "=" <+> pPrint synType
-      prettyImpl (_, name, synType, expr) =
-        "impl" <+> pPrint name <+> ":" <+> pPrint synType <+> "=" <+> pPrint expr
 
 makeBindGroup :: (XId x ~ Id a, Eq a) => [Decl x] -> BindGroup x
 makeBindGroup ds =
@@ -451,9 +431,7 @@ makeBindGroup ds =
       _dataDefs = mapMaybe dataDef ds,
       _typeSynonyms = mapMaybe typeSynonym ds,
       _foreigns = mapMaybe foreignDef ds,
-      _imports = mapMaybe importDef ds,
-      _classes = mapMaybe classDef ds,
-      _impls = mapMaybe implDef ds
+      _imports = mapMaybe importDef ds
     }
   where
     scDef (ScDef x f e) = Just (x, f, e)
@@ -468,10 +446,6 @@ makeBindGroup ds =
     foreignDef _ = Nothing
     importDef (Import x m ns) = Just (x, m, ns)
     importDef _ = Nothing
-    classDef (Class x n ps ms) = Just (x, n, ps, ms)
-    classDef _ = Nothing
-    implDef (Impl x n t ms) = Just (x, n, t, ms)
-    implDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
 adjacents :: (Eq a1, XId x ~ Id a1) => (a, XId x, Exp x) -> (XId x, Int, [Int])
