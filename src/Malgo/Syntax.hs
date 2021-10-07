@@ -11,7 +11,7 @@ import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import Malgo.TypeRep hiding (Type, TyApp, TyVar, TyCon, TyArr, TyTuple, TyRecord, freevars)
+import Malgo.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 
 -- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
@@ -33,7 +33,6 @@ instance HasType (Literal x) where
   typeOf Char {} = TyPrim CharT
   typeOf String {} = TyPrim StringT
   types f v = f (typeOf v) $> v
-
 
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce
@@ -420,8 +419,7 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
       pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
       prettyForeign (_, x, t) = "foreign import" <+> pPrint x <+> ":" <+> pPrint t
       prettyScSig (_, f, t) = pPrint f <+> ":" <+> pPrint t
-      prettyScDef (_, f, e) =
-        sep [pPrint f <+> "=", pPrint e]
+      prettyScDef (_, f, e) = sep [pPrint f <+> "=", nest 2 $ pPrint e]
 
 makeBindGroup :: (XId x ~ Id a, Eq a) => [Decl x] -> BindGroup x
 makeBindGroup ds =
