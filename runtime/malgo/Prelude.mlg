@@ -14,6 +14,13 @@ module Prelude = {
   case : a -> (a -> b) -> b;
   case = { x f -> f x };
 
+  -- Tuple functions
+  fst : (a, b) -> a;
+  fst = { (a, b) -> a };
+
+  snd : (a, b) -> b;
+  snd = { (a, b) -> b };
+
   -- optional value
   data Maybe a = Nothing | Just a;
 
