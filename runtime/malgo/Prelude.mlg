@@ -1,6 +1,124 @@
 module Prelude = {
   module {..} = import Builtin;
 
+  -- identity function
+  identity : a -> a;
+  identity = { x -> x };
+
+  -- return `a` for all inputs
+  const : a -> b -> a;
+  const = { a _ -> a }; 
+
+  -- reverse apply function
+  -- use as pattern match expression
+  case : a -> (a -> b) -> b;
+  case = { x f -> f x };
+
+  -- Tuple functions
+  fst : (a, b) -> a;
+  fst = { (a, b) -> a };
+
+  snd : (a, b) -> b;
+  snd = { (a, b) -> b };
+
+  -- optional value
+  data Maybe a = Nothing | Just a;
+
+  -- list
+  data List a = Nil | Cons a (List a);
+
+  head : List a -> a;
+  head = { Cons x _ -> x 
+         | _ -> exitFailure ()
+         };
+
+  tail : List a -> List a;
+  tail = { Cons _ xs -> xs
+         | _ -> exitFailure ()
+         };
+
+  -- fold left
+  foldl : (a -> b -> a) -> a -> List b -> a;
+  foldl =
+    { _ z Nil -> z
+    | f z (Cons x xs) -> foldl f (f z x) xs
+    };
+
+  -- map function over a list
+  mapList : (a -> b) -> List a -> List b;
+  mapList =
+    { _ Nil -> Nil
+    | f (Cons x xs) -> Cons (f x) (mapList f xs)
+    };
+
+  -- convert a list of character to a string
+  listToString : List Char -> String;
+  listToString =
+    { Nil -> ""
+    | Cons c cs -> consString c (listToString cs)
+    };
+
+  -- get the first character of string
+  headString : String -> Maybe Char;
+  headString = { str ->
+    if (eqString str "")
+      { Nothing }
+      { Just (atString 0L str) }
+  };
+
+  -- trim the first character of string
+  tailString : String -> String;
+  tailString = { str ->
+    if (eqString str "")
+      { str }
+      { substring str 1L (lengthString str) }
+  };
+
+  -- return the longest prefix of `str` of that satisfy `pred`
+  takeWhileString = { pred str ->
+    case (headString str) {
+    | Nothing -> str
+    | Just c ->
+        if (pred c)
+          { consString c (takeWhileString pred (tailString str)) }
+          { "" }
+    }
+  };
+
+  -- return the suffix remains after `takeWhileString pred str`
+  dropWhileString = { pred str ->
+    case (headString str) {
+    | Nothing -> str
+    | Just c ->
+        if (pred c)
+          { dropWhileString pred (tailString str) }
+          { str }
+    }
+  };
+
+  concatString : List String -> String;
+  concatString =
+    { Nil -> ""
+    | Cons x xs -> appendString x (concatString xs)
+    };
+
+  punctuate : a -> List a -> List a;
+  punctuate =
+    { _ Nil -> Nil
+    | _ (Cons x Nil) -> Cons x Nil
+    | sep (Cons x xs) -> Cons x (Cons sep (punctuate sep xs))
+    };
+
+  -- check that `x` is a whitespace
+  isWhiteSpace : Char -> Bool;
+  isWhiteSpace =
+    { Char# ' '# -> True
+    | Char# '\n'# -> True
+    | Char# '\r'# -> True
+    | Char# '\t'# -> True
+    | _ -> False
+    };
+
   infixr 9 (.);
   (.) : (b -> c) -> (a -> b) -> (a -> c);
   (.) = {f g -> {x -> f (g x)}};
@@ -20,6 +138,14 @@ module Prelude = {
 
   unless : Bool -> a -> {a} -> a;
   unless = { c tValue f -> if c {tValue} f };
+
+  -- multiway if
+  cond : List (Bool, {a}) -> a;
+  cond =
+    { Nil -> panic "no branch"
+    | Cons (True, x) _ -> x ()
+    | Cons (False, _) xs -> cond xs
+    };
 
   putStr : String -> ();
   putStr = { str -> printString str };

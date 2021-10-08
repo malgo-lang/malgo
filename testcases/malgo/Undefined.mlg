@@ -1,0 +1,18 @@
+module Undefined = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  f : Int32 -> Int32;
+  f = undefined;
+
+  g : Int32 -> Int32;
+  g = { x -> undefined };
+
+  main = {
+    let x = undefined;
+    let y = g x;
+    printString "OK"
+  };
+}
+
+-- Expected: OK

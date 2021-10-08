@@ -9,7 +9,7 @@ module Koriel.Core.CodeGen
   )
 where
 
-import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, to, use, view, (<?=), (?~), (^.), (^?))
+import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, to, use, view, (<?=), (?=), (?~), (^.), (^?))
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.ByteString.Lazy as BL
@@ -165,13 +165,31 @@ sizeofType AnyT = 8
 sizeofType VoidT = 0
 
 findVar :: (MonadCodeGen m, MonadIRBuilder m) => Id C.Type -> m Operand
-findVar x =
-  view (valueMap . at x) >>= \case
-    Just opr -> pure opr
-    Nothing ->
+findVar x = findLocalVar
+  where
+    findLocalVar =
+      view (valueMap . at x) >>= \case
+        Just opr -> pure opr
+        Nothing -> findGlobalVar
+    findGlobalVar =
       view (globalValueMap . at x) >>= \case
         Just opr -> load opr 0 -- global variable is a pointer to the actual value
-        Nothing -> error $ show $ pPrint x <> " is not found"
+        Nothing -> findExtVar
+    findExtVar =
+      use (at $ toName x) >>= \case
+        Just x -> load x 0
+        Nothing -> internExtVar
+    internExtVar = do
+      emitDefn $
+        GlobalDefinition
+          globalVariableDefaults
+            { name = toName x,
+              LLVM.AST.Global.type' = convType $ C.typeOf x,
+              linkage = LLVM.AST.Linkage.External
+            }
+      let opr = ConstantOperand (C.GlobalReference (ptr $ convType $ C.typeOf x) (toName x))
+      at (toName x) ?= opr
+      load opr 0
 
 findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
 findFun x =

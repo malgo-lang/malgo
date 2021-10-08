@@ -6,15 +6,7 @@ module ToplevelVariable = {
 
   addOne = addInt32 one;
 
-  id = { x -> x };
-
-  const = { x _ -> x };
-
-  constId = const id;
-
-  data Maybe a = Nothing
-               | Just a
-               ;
+  constId = const identity;
 
   comp : Maybe a;
   comp = { Nothing -> Nothing

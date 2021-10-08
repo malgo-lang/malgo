@@ -80,8 +80,38 @@ int32_t malgo_gt_string(char* x, char* y) { return strcmp(x, y) > 0; }
 int32_t malgo_le_string(char* x, char* y) { return strcmp(x, y) <= 0; }
 int32_t malgo_ge_string(char* x, char* y) { return strcmp(x, y) >= 0; }
 
+// char operators
+
+int32_t malgo_char_ord(char c) {
+  return (int32_t) c;
+}
+
+int32_t malgo_is_digit(char c) {
+  return '0' <= c && c <= '9';
+}
+
+int32_t malgo_is_lower(char c) {
+  return 'a' <= c && c <= 'z';
+}
+
+int32_t malgo_is_upper(char c) {
+  return 'A' <= c && c <= 'Z';
+}
+
+int32_t malgo_is_alphanum(char c) {
+  return malgo_is_digit(c) || malgo_is_lower(c) || malgo_is_upper(c);
+}
+
 // String operators
 char malgo_string_at(int64_t i, char *s) { return s[i]; }
+
+char* malgo_string_cons(char c, char* str) {
+  char *new = GC_MALLOC(sizeof(char) * (1 + strlen(str) + 1));
+  new[0] = c;
+  new[1] = '\0';
+  strcat(new, str);
+  return new;
+}
 
 char *malgo_string_append(char *s1, char *s2) {
   char *new = GC_MALLOC(sizeof(char) * (strlen(s1) + strlen(s2) + 1));

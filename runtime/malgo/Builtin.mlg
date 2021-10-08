@@ -27,10 +27,15 @@ module Builtin = {
   string# : String# -> String;
   string# = { x -> String# x };
 
-  -- Panic
+  -- Panic and Undefined
   foreign import malgo_panic : String# -> a;
   panic : String -> a;
   panic = { String# message -> malgo_panic message };
+
+  foreign import malgo_unsafe_cast : a -> b;
+
+  undefined : a;
+  undefined = malgo_unsafe_cast ();
 
   -- Arithmetic operators
   foreign import malgo_add_int32_t : Int32# -> Int32# -> Int32#;
@@ -366,6 +371,36 @@ module Builtin = {
   geString : String -> String -> Bool;
   geString = { (String# x) (String# y) -> isTrue# (geString# x y) };
 
+  -- char operators
+  foreign import malgo_char_ord : Char# -> Int32#;
+  ordChar# : Char# -> Int32#;
+  ordChar# = { x -> malgo_char_ord x };
+  ordChar : Char -> Int32;
+  ordChar = { (Char# chr) -> Int32# (ordChar# chr) };
+
+  foreign import malgo_is_digit : Char# -> Int32#;
+  isDigit# : Char# -> Int32#;
+  isDigit# = { x -> malgo_is_digit x };
+  isDigit : Char -> Bool;
+  isDigit = { Char# x -> isTrue# (isDigit# x) };
+
+  foreign import malgo_is_lower : Char# -> Int32#;
+  isLower# : Char# -> Int32#;
+  isLower# = { x -> malgo_is_lower x };
+  isLower : Char -> Bool;
+  isLower = { Char# x -> isTrue# (isLower# x) };
+
+  foreign import malgo_is_upper : Char# -> Int32#;
+  isUpper# : Char# -> Int32#;
+  isUpper# = { x -> malgo_is_upper x };
+  isUpper : Char -> Bool;
+  isUpper = { Char# x -> isTrue# (isUpper# x) };
+
+  foreign import malgo_is_alphanum : Char# -> Int32#;
+  isAlphanum# : Char# -> Int32#;
+  isAlphanum# = { x -> malgo_is_alphanum x };
+  isAlphanum : Char -> Bool;
+  isAlphanum = { Char# x -> isTrue# (isAlphanum# x) };
 
   -- String operators
   foreign import malgo_string_length : String# -> Int64#;
@@ -379,6 +414,12 @@ module Builtin = {
   atString# = { i x -> malgo_string_at i x };
   atString : Int64 -> String -> Char;
   atString = { (Int64# i) (String# x) -> Char# (atString# i x) };
+
+  foreign import malgo_string_cons : Char# -> String# -> String#;
+  consString# : Char# -> String# -> String#;
+  consString# = { c cs -> malgo_string_cons c cs };
+  consString : Char -> String -> String;
+  consString = { (Char# c) (String# cs) -> String# (consString# c cs) };
 
   foreign import malgo_string_append : String# -> String# -> String#;
   appendString# : String# -> String# -> String#;
@@ -423,19 +464,6 @@ module Builtin = {
   toStringChar = { Char# x -> String# (toStringChar# x) };
 
 
-  -- List
-  data List a = Nil | Cons a (List a);
-
-  head : List a -> a;
-  head = { Cons x _ -> x 
-         | _ -> exitFailure ()
-         };
-
-  tail : List a -> List a;
-  tail = { Cons _ xs -> xs
-         | _ -> exitFailure ()
-         };
-
   -- IO functions
   foreign import malgo_exit_failure : () -> a;
   exitFailure : () -> a;
@@ -464,11 +492,4 @@ module Builtin = {
 
   foreign import malgo_get_contents : () -> String#;
   getContents = { _ -> String# (malgo_get_contents ()) };
-
-  -- Tuple functions
-  fst : (a, b) -> a;
-  fst = { (a, b) -> a };
-
-  snd : (a, b) -> b;
-  snd = { (a, b) -> b };
 }
