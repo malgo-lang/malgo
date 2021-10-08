@@ -34,9 +34,9 @@ jobs:
         # cabal-version: '3.2.0.0'
     - name: Build
       run: |
-        stack build --fast
+        stack build
     - name: Run tests
       run: |
         mkdir -p $HOME/.local/share/malgo/base
         ./scripts/install_malgo_internal.sh
-        ./scripts/test_malgo_parallel.sh
+        stack test
