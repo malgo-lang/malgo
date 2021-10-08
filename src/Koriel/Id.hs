@@ -35,6 +35,8 @@ newtype ModuleName = ModuleName Text
 
 instance Binary ModuleName
 
+instance Hashable ModuleName
+
 instance Pretty ModuleName where
   pPrint (ModuleName modName) = pPrint modName
 
@@ -46,6 +48,8 @@ data IdSort
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary IdSort
+
+instance Hashable IdSort
 
 instance Pretty IdSort where
   pPrint (External modName) = "External" <+> pPrint modName
@@ -93,8 +97,8 @@ pPrintMeta _ _ = mempty
 #endif
 
 instance Pretty a => Pretty (Id a) where
-  pPrint id@(Id _ _ m (External modName)) = pPrint modName <> "." <> pprIdName id <> pPrintMeta pPrint m
-  pPrint id@(Id _ u m Internal) = pprIdName id <> "_" <> text (show u) <> pPrintMeta pPrint m
+  pPrint id@(Id _ u m (External _)) = pprIdName id <> pPrintMeta pPrint m
+  pPrint id@(Id _ u m _) = pprIdName id <> "_" <> text (show u) <> pPrintMeta pPrint m
 
 idName :: Lens' (Id a) Text
 idName = lens _idName (\i x -> i {_idName = x})

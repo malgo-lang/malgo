@@ -86,14 +86,11 @@ storeInterface interface = do
 
 loadInterface :: (MonadIO m, HasOpt env, MonadReader env m) => ModuleName -> m (Maybe Interface)
 loadInterface (ModuleName modName) = do
-  -- logDebug $ "load interface: " <> displayShow modName
   modPaths <- modulePaths <$> getOpt
-  -- logDebug $ "modPaths = " <> displayShow modPaths
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x
     Left (_, _) -> do
-      -- logDebug $ displayShow errorMessage
       pure Nothing
   where
     findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)

@@ -22,7 +22,7 @@ data DsEnv = DsEnv
   { -- | 脱糖の結果が詰め込まれるModule
     _buildingModule :: Module,
     -- | インターン済みのシンボル
-    _interned :: HashMap Int Name,
+    _interned :: HashMap (Int, IdSort) Name,
     -- _internedTyVar :: HashMap (Id T.Kind) Name,
     _tcEnv :: TcEnv
   }
@@ -30,7 +30,7 @@ data DsEnv = DsEnv
 buildingModule :: Lens' DsEnv Module
 buildingModule = lens _buildingModule \e x -> e {_buildingModule = x}
 
-interned :: Lens' DsEnv (HashMap Int Name)
+interned :: Lens' DsEnv (HashMap (Int, IdSort) Name)
 interned = lens _interned \e x -> e {_interned = x}
 
 tcEnv :: Lens' DsEnv TcEnv
@@ -52,7 +52,7 @@ mlgToCore _tcEnv (S.Module modName S.BindGroup {_scDefs, _dataDefs, _foreigns}) 
 -- | インターンしたシンボル（Name）を返す
 dsVarName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => RnId -> m Name
 dsVarName old = do
-  use (interned . at (old ^. idUniq)) >>= \case
+  use (interned . at (old ^. idUniq, old ^. idSort)) >>= \case
     Just name -> pure name
     Nothing -> do
       scheme <-
@@ -61,17 +61,17 @@ dsVarName old = do
           Just x -> pure x
       scheme <- dsScheme scheme
       name <- newIdOnName scheme old
-      interned . at (old ^. idUniq) <?= name
+      interned . at (old ^. idUniq, old ^. idSort) <?= name
 
 dsFieldName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => Map (Id ()) T.Type -> Id () -> m (Id Type)
 dsFieldName kts old = do
-  use (interned . at (old ^. idUniq)) >>= \case
+  use (interned . at (old ^. idUniq, old ^. idSort)) >>= \case
     Just name -> pure name
     Nothing -> do
       let ty = fromJust $ Map.lookup old kts
       ty <- dsType ty
       name <- newIdOnName ty old
-      interned . at (old ^. idUniq) <?= name
+      interned . at (old ^. idUniq, old ^. idSort) <?= name
 
 -- | TcEnv.typeEnvのキーからModule.typeDefinitionsのキーへの変換
 dsTypeName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => RnId -> m Name
@@ -79,24 +79,24 @@ dsTypeName old = do
   use (tcEnv . TcEnv.typeEnv . at old) >>= \case
     Just T.TypeDef {T._typeConstructor = T.TyCon con} -> dsTyVarName con
     Just _ ->
-      use (interned . at (old ^. idUniq)) >>= \case
+      use (interned . at (old ^. idUniq, old ^. idSort)) >>= \case
         Just name -> pure name
         Nothing -> do
           Just typeDef <- use (tcEnv . TcEnv.typeEnv . at old)
           let kind = T.kindOf typeDef
           kind <- dsType kind
           name <- newIdOnName kind old
-          interned . at (old ^. idUniq) <?= name
+          interned . at (old ^. idUniq, old ^. idSort) <?= name
     Nothing -> error "unreachable"
 
 dsTyVarName :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => Id T.Type -> m (Id Type)
 dsTyVarName old = do
-  use (interned . at (old ^. idUniq)) >>= \case
+  use (interned . at (old ^. idUniq, old ^. idSort)) >>= \case
     Just name -> pure name
     Nothing -> do
       kind <- dsType (old ^. idMeta)
       name <- newIdOnName kind old
-      interned . at (old ^. idUniq) <?= name
+      interned . at (old ^. idUniq, old ^. idSort) <?= name
 
 dsScheme :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => T.Scheme T.Type -> m Type
 dsScheme (T.Forall [] ty) = dsType ty

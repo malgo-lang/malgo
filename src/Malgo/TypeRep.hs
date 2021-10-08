@@ -106,16 +106,17 @@ instance Plated Type where
     TyApp t1 t2 -> TyApp <$> f t1 <*> f t2
     TyVar x -> TyVar <$> traverseOf idMeta f x
     TyCon x -> TyCon <$> traverseOf idMeta f x
-    t@TyPrim{} -> pure t
+    t@TyPrim {} -> pure t
     TyArr t1 t2 -> TyArr <$> f t1 <*> f t2
-    t@TyTuple{} -> pure t
+    t@TyTuple {} -> pure t
     TyRecord kts -> TyRecord <$> traverse f kts
     TyPtr t -> TyPtr <$> f t
     t@TyBottom -> pure t
     TYPE t -> TYPE <$> f t
     t@TyRep -> pure t
-    t@Rep{} -> pure t
-  -- plate f t = uniplate f t
+    t@Rep {} -> pure t
+
+-- plate f t = uniplate f t
 
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
@@ -297,20 +298,6 @@ applySubst :: HashMap (Id Type) Type -> Type -> Type
 applySubst subst = transform $ \case
   TyVar v -> fromMaybe (TyVar v) $ subst ^. at v
   ty -> ty
-
--- applySubst subst (TyApp t1 t2) = TyApp (applySubst subst t1) (applySubst subst t2)
--- applySubst subst (TyVar v) = fromMaybe (TyVar v) $ subst ^. at v
--- applySubst _ (TyCon c) = TyCon c
--- applySubst _ (TyPrim p) = TyPrim p
--- applySubst subst (TyArr t1 t2) = TyArr (applySubst subst t1) (applySubst subst t2)
--- applySubst _ (TyTuple n) = TyTuple n
--- applySubst subst (TyRecord kvs) = TyRecord $ fmap (applySubst subst) kvs
--- applySubst _ TyBlock = TyBlock
--- applySubst subst (TyPtr t) = TyPtr $ applySubst subst t
--- applySubst _ TyBottom = TyBottom
--- applySubst subst (TYPE rep) = TYPE $ applySubst subst rep
--- applySubst _ TyRep = TyRep
--- applySubst _ (Rep rep) = Rep rep
 
 -- | expand type synonyms
 expandTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Maybe Type

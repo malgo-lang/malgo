@@ -5,13 +5,13 @@ module Malgo.Refine.Pass where
 import Control.Lens (over, to, traverseOf, traversed, view, (.~), (^.), _1, _2)
 import qualified Data.List.NonEmpty as NonEmpty
 import Koriel.Pretty
-import Malgo.TypeCheck.TcEnv
 import Malgo.Prelude
 import Malgo.Refine.RefineEnv
 import qualified Malgo.Refine.Space as Space
 import Malgo.Syntax hiding (TyArr, Type)
 import qualified Malgo.Syntax as Syn
 import Malgo.Syntax.Extension
+import Malgo.TypeCheck.TcEnv
 import Malgo.TypeRep
 
 type TypeChecked t x = (x ~ Malgo 'TypeCheck) :: Constraint
@@ -23,16 +23,12 @@ refine tcEnv Module {_moduleName, _moduleDefinition} = do
 
 refineBindGroup :: forall t x m. (TypeChecked t x, MonadReader RefineEnv m, MonadIO m) => BindGroup x -> m (BindGroup (Malgo 'Refine))
 refineBindGroup BindGroup {..} = do
-  classTypeSynonyms <- traverse refineClass _classes
-  (implScSigs, implScDefs) <- unzip <$> traverse refineImpl _impls
-  _scDefs <- (implScDefs :) <$> traverse (traverse refineScDef) _scDefs
-  _scSigs <- (implScSigs <>) <$> traverse refineScSig _scSigs
+  _scDefs <- traverse (traverse refineScDef) _scDefs
+  _scSigs <- traverse refineScSig _scSigs
   _dataDefs <- traverse refineDataDef _dataDefs
-  _typeSynonyms <- (classTypeSynonyms <>) <$> traverse refineTypeSynonym _typeSynonyms
+  _typeSynonyms <- traverse refineTypeSynonym _typeSynonyms
   _foreigns <- traverse refineForeign _foreigns
   _imports <- traverse (refineImport @t @x) _imports
-  let _classes = []
-  let _impls = []
   pure BindGroup {..}
 
 refineScDef :: (TypeChecked t x, MonadReader RefineEnv m, MonadIO m) => ScDef x -> m (ScDef (Malgo 'Refine))
@@ -103,13 +99,3 @@ refineForeign (x, name, ty) = (x,name,) <$> refineType ty
 
 refineImport :: (TypeChecked t x, MonadReader RefineEnv m) => Import x -> m (Import (Malgo 'Refine))
 refineImport (x, modName, importList) = pure (x, modName, importList)
-
-refineClass :: (TypeChecked t x, MonadReader RefineEnv m) => Class x -> m (TypeSynonym (Malgo 'Refine))
-refineClass (x, name, ps, synType) = (x,name,ps,) <$> refineType synType
-
-refineImpl :: (TypeChecked t x, MonadReader RefineEnv m, MonadIO m) => Impl x -> m (ScSig (Malgo 'Refine), ScDef (Malgo 'Refine))
-refineImpl (x, name, typ, expr) = do
-  typ <- refineType typ
-  expr <- refineExp expr
-  let typeRep = typeOf expr
-  pure ((x, name, typ), (Annotated typeRep x, name, expr))
