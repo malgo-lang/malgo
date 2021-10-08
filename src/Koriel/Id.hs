@@ -35,6 +35,8 @@ newtype ModuleName = ModuleName Text
 
 instance Binary ModuleName
 
+instance Hashable ModuleName
+
 instance Pretty ModuleName where
   pPrint (ModuleName modName) = pPrint modName
 
@@ -46,6 +48,8 @@ data IdSort
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary IdSort
+
+instance Hashable IdSort
 
 instance Pretty IdSort where
   pPrint (External modName) = "External" <+> pPrint modName
