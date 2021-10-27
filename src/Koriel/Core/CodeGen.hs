@@ -45,9 +45,8 @@ import LLVM.AST.Type hiding
   )
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
-import LLVM.Context (withContext)
-import LLVM.IRBuilder hiding (globalStringPtr)
-import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
+import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
+import LLVM.Pretty (ppllvm)
 
 instance Hashable Name
 
@@ -101,7 +100,7 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
     traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
     genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
-  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ writeFileLText dstPath $ ppllvm llvmModule
   where
     -- topVarsのOprMapを作成
     varEnv = mconcatMap ?? _topVars $ \(v, e) ->
@@ -545,7 +544,10 @@ globalStringPtr str nm = do
       llvmVals = map (C.Int 8) (utf8Vals ++ [0])
       char = IntegerType 8
       charArray = C.Array char llvmVals
-  let ty = LLVM.AST.Typed.typeOf charArray
+  ty <-
+    LLVM.AST.Typed.typeOf charArray >>= \case
+      Left err -> error $ show err
+      Right ty -> pure ty
   emitDefn $
     GlobalDefinition
       globalVariableDefaults
