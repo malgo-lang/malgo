@@ -1,7 +1,7 @@
 -- | Name resolution and simple desugar transformation
 module Malgo.Rename.Pass where
 
-import Control.Lens (At (at), over, use, view, (<>=), (^.), _2)
+import Control.Lens (over, use, (<>=), (^.), _2, view)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.List (intersect)
@@ -24,65 +24,8 @@ rename ::
   Module (Malgo 'Parse) ->
   m (Module (Malgo 'Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
-  (ds', rnState) <- runStateT ?? RnState mempty [] modName $ runReaderT ?? builtinEnv $ rnDecls ds
+  (ds', rnState) <- runStateT ?? RnState mempty [] $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
-
--- | Resolving a new (local) name
-resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => Text -> m RnId
-resolveName name = newInternalId name ()
-
--- | Resolving a new global (toplevel) name
-resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => ModuleName -> Text -> m RnId
-resolveGlobalName modName name = newExternalId name () modName
-
--- | Resolving a variable name that is already resolved
-lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
-lookupVarName pos name =
-  view (varEnv . at name) >>= \case
-    Just names -> case find (\i -> i ^. ann == Implicit) names of
-      Just (Annotated _ name) -> pure name
-      Nothing ->
-        errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-
--- | Resolving a type name that is already resolved
-lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
-lookupTypeName pos name =
-  view (typeEnv . at name) >>= \case
-    Just names -> case find (\i -> i ^. ann == Implicit) names of
-      Just (Annotated _ name) -> pure name
-      Nothing ->
-        errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-
--- | Resolving a field name that is already resolved
-lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
-lookupFieldName pos name =
-  view (fieldEnv . at name) >>= \case
-    Just names -> case find (\i -> i ^. ann == Implicit) names of
-      Just (Annotated _ name) -> pure name
-      Nothing ->
-        errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map (view value) names)
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-
--- | Resolving a qualified variable name like Foo.x
-lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
-lookupQualifiedVarName pos modName name =
-  view (varEnv . at name) >>= \case
-    Just names ->
-      case find (\i -> i ^. ann == Explicit modName) names of
-        Just (Annotated _ name) -> pure name
-        Nothing ->
-          errorOn pos $
-            "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
-              $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- renamer
 
@@ -92,12 +35,12 @@ rnDecls ::
   [Decl (Malgo 'Parse)] ->
   m [Decl (Malgo 'Rename)]
 rnDecls ds = do
-  modName <- use moduleName
+  modName <- view moduleName
   -- RnEnvの生成
   rnEnv <- genToplevelEnv modName ds =<< ask
   local (const rnEnv) $ do
     -- RnStateの生成
-    put =<< RnState <$> infixDecls ds <*> pure [] <*> use moduleName
+    put =<< RnState <$> infixDecls ds <*> pure []
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     traverse rnDecl ds
 

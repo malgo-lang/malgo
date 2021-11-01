@@ -66,7 +66,7 @@ instance Pretty Interface where
 buildInterface :: RnState -> DsEnv -> Interface
 -- TODO: write abbrMap to interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
-  let modName = rnState ^. RnState.moduleName
+  let modName = dsEnv ^. DsEnv.moduleName
   ifor_ (dsEnv ^. DsEnv.nameEnv) $ \tcId coreId ->
     when (tcId ^. idSort == External modName) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId

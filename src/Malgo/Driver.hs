@@ -50,7 +50,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   when (dumpParsed opt) do
     hPutStrLn stderr "=== PARSED ==="
     hPrint stderr $ pPrint parsedAst
-  rnEnv <- RnEnv.genBuiltinRnEnv =<< ask
+  rnEnv <- RnEnv.genBuiltinRnEnv (Syntax._moduleName parsedAst) =<< ask
   (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
   (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
