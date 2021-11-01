@@ -1,4 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module Malgo.Core.CoreToJs where
 
