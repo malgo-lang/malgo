@@ -1,4 +1,4 @@
--- | 名前解決
+-- | Name resolution and simple desugar transformation
 module Malgo.Rename.Pass where
 
 import Control.Lens (At (at), over, use, view, (<>=), (^.), _2)
@@ -14,20 +14,28 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import System.IO (hPrint)
 import Text.Megaparsec.Pos (SourcePos)
 
-rename :: MonadIO m => RnEnv -> Module (Malgo 'Parse) -> m (Module (Malgo 'Rename), RnState)
+-- | Entry point of this 'Malgo.Rename.Pass'
+rename ::
+  MonadIO m =>
+  -- | The initial environment that includes Builtin function definitions.
+  RnEnv ->
+  Module (Malgo 'Parse) ->
+  m (Module (Malgo 'Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   (ds', rnState) <- runStateT ?? RnState mempty [] modName $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
+-- | Resolving a new (local) name
 resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => Text -> m RnId
 resolveName name = newInternalId name ()
 
+-- | Resolving a new global (toplevel) name
 resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => ModuleName -> Text -> m RnId
 resolveGlobalName modName name = newExternalId name () modName
 
+-- | Resolving a variable name that is already resolved
 lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupVarName pos name =
   view (varEnv . at name) >>= \case
@@ -39,6 +47,7 @@ lookupVarName pos name =
             $$ "Did you mean" <+> pPrint (map (view value) names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
+-- | Resolving a type name that is already resolved
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupTypeName pos name =
   view (typeEnv . at name) >>= \case
@@ -50,6 +59,7 @@ lookupTypeName pos name =
             $$ "Did you mean" <+> pPrint (map (view value) names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
+-- | Resolving a field name that is already resolved
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupFieldName pos name =
   view (fieldEnv . at name) >>= \case
@@ -61,6 +71,7 @@ lookupFieldName pos name =
             $$ "Did you mean" <+> pPrint (map (view value) names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
+-- | Resolving a qualified variable name like Foo.x
 lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
 lookupQualifiedVarName pos modName name =
   view (varEnv . at name) >>= \case
@@ -75,6 +86,7 @@ lookupQualifiedVarName pos modName name =
 
 -- renamer
 
+-- | Rename toplevel declarations
 rnDecls ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   [Decl (Malgo 'Parse)] ->
@@ -89,8 +101,9 @@ rnDecls ds = do
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     traverse rnDecl ds
 
--- Declで定義されるトップレベル識別子はすでにRnEnvに正しく登録されているとする
--- infix宣言はすでに解釈されRnStateに登録されているとする
+-- | Rename a toplevel declaration.
+-- It is assumed that the top-level identifier defined in Decl has already been correctly registered in RnEnv.
+-- The infix declaration is assumed to have already been interpreted and registered in RnState.
 rnDecl ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Decl (Malgo 'Parse) ->
@@ -133,7 +146,8 @@ rnDecl (Import pos modName importList) = do
   dependencies <>= [modName]
   pure $ Import pos modName importList
 
--- 名前解決の他に，infix宣言に基づくOpAppの再構成も行う
+-- | Rename a expression.
+-- In addition to name resolution, OpApp recombination based on infix declarations is also performed.
 rnExp ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Exp (Malgo 'Parse) ->
@@ -175,6 +189,7 @@ rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
 rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
+-- | Renamed identifier corresponding Boxed literals.
 lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (XId (Malgo 'Rename))
 lookupBox pos Int32 {} = lookupVarName pos "Int32#"
 lookupBox pos Int64 {} = lookupVarName pos "Int64#"
@@ -183,6 +198,7 @@ lookupBox pos Double {} = lookupVarName pos "Double#"
 lookupBox pos Char {} = lookupVarName pos "Char#"
 lookupBox pos String {} = lookupVarName pos "String#"
 
+-- | Rename a type.
 rnType :: (MonadReader RnEnv m, MonadIO m) => Type (Malgo 'Parse) -> m (Type (Malgo 'Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
 rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
@@ -192,6 +208,7 @@ rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldName pos) rnType) kts
 rnType (TyBlock pos t) = TyArr pos (TyTuple pos []) <$> rnType t
 
+-- | Rename a clause.
 rnClause ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Clause (Malgo 'Parse) ->
@@ -211,6 +228,7 @@ rnClause (Clause pos ps e) = do
     patVars UnboxedP {} = []
     patVars BoxedP {} = []
 
+-- | Rename a pattern.
 rnPat :: (MonadReader RnEnv m, MonadIO m) => Pat (Malgo 'Parse) -> m (Pat (Malgo 'Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
@@ -225,6 +243,7 @@ rnPat (BoxedP pos (String _)) = errorOn pos "String literal pattern is not suppo
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 rnPat (BoxedP pos x) = ConP pos <$> lookupBox pos x <*> pure [UnboxedP pos (coerce x)]
 
+-- | Rename statements in {}.
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => NonEmpty (Stmt (Malgo 'Parse)) -> m (NonEmpty (Stmt (Malgo 'Rename)))
 rnStmts (NoBind x e :| []) = do
   e' <- rnExp e
@@ -253,8 +272,7 @@ rnStmts (With x Nothing e :| s : ss) = do
   pure $ NoBind x (Apply x e ss) :| []
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
--- infix宣言をMapに変換
--- 定義されていない識別子に対するInfixはエラーとする
+-- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
 infixDecls :: (MonadReader RnEnv m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))
 infixDecls ds =
   foldMapM ?? ds $ \case
@@ -263,12 +281,19 @@ infixDecls ds =
       pure $ one (name', (assoc, order))
     _ -> pure mempty
 
+-- | OpApp recombination.
+-- Every OpApp in 'Malgo 'Parsed' is treated as left associative.
+-- 'mkOpApp' transforms it to actual associativity.
 mkOpApp ::
   (MonadIO m, MonadReader env m, HasOpt env) =>
   SourcePos ->
+  -- | Fixity of outer operator
   (Assoc, Int) ->
+  -- | Outer operator
   RnId ->
+  -- | Left expression as (x op y)
   Exp (Malgo 'Rename) ->
+  -- | Right expression
   Exp (Malgo 'Rename) ->
   m (Exp (Malgo 'Rename))
 -- (e11 op1 e12) op2 e2
@@ -291,21 +316,20 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
     pure $ OpApp (pos1, fix1) op1 e11 e'
   where
     (nofix_error, associate_right) = compareFixity fix1 fix2
+    compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of
+      GT -> left
+      LT -> right
+      EQ -> case (assoc1, assoc2) of
+        (RightA, RightA) -> right
+        (LeftA, LeftA) -> left
+        _ -> error_please
+      where
+        right = (False, True)
+        left = (False, False)
+        error_please = (True, False)
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
-compareFixity :: (Assoc, Int) -> (Assoc, Int) -> (Bool, Bool)
-compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of
-  GT -> left
-  LT -> right
-  EQ -> case (assoc1, assoc2) of
-    (RightA, RightA) -> right
-    (LeftA, LeftA) -> left
-    _ -> error_please
-  where
-    right = (False, True)
-    left = (False, False)
-    error_please = (True, False)
-
+-- | Generate toplevel environment.
 genToplevelEnv :: (MonadReader env f, HasOpt env, MonadIO f, HasUniqSupply env) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
 genToplevelEnv modName ds =
   execStateT (traverse aux ds)
@@ -351,7 +375,7 @@ genToplevelEnv modName ds =
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       opt <- getOpt
       when (debugMode opt) $
-        liftIO $ hPrint stderr $ pPrint interface
+        hPrint stderr $ pPrint interface
       -- 全ての識別子をImplicitでimportする
       modify $ appendRnEnv varEnv (map (over _2 $ Annotated Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ Annotated Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
@@ -362,7 +386,7 @@ genToplevelEnv modName ds =
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       opt <- getOpt
       when (debugMode opt) $
-        liftIO $ hPrint stderr $ pPrint interface
+        hPrint stderr $ pPrint interface
       modify $
         appendRnEnv
           varEnv
@@ -392,7 +416,7 @@ genToplevelEnv modName ds =
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       opt <- getOpt
       when (debugMode opt) $
-        liftIO $ hPrint stderr $ pPrint interface
+        hPrint stderr $ pPrint interface
       modify $ appendRnEnv varEnv (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pass

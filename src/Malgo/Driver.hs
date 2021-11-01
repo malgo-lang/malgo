@@ -1,4 +1,5 @@
-module Malgo.Driver (compile, compileFromAST) where
+-- | Malgo.Driver is the entry point of `malgo to-ll`.
+module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Lens (over, view, (^.))
 import Control.Monad.Catch (catch)
@@ -21,36 +22,32 @@ import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
 import qualified Malgo.TypeCheck.Pass as TypeCheck
-import System.IO
-  ( hPrint,
-    hPutStrLn,
-  )
 import Text.Megaparsec
   ( errorBundlePretty,
   )
 
--- |
--- dumpHoge系のフラグによるダンプ出力を行うコンビネータ
---
--- 引数 m のアクションの返り値をpPrintしてstderrに吐く
+-- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
   (MonadIO m, Pretty a) =>
-  -- | dumpHoge系のフラグの値
+  -- | `dump` flag.
   Bool ->
+  -- | Header of dump.
   String ->
+  -- | The pass (e.g. `Malgo.Rename.Pass.rename rnEnv parsedAst`)
   m a ->
   m a
 withDump isDump label m = do
   result <- m
-  when isDump $ liftIO do
+  when isDump do
     hPutStrLn stderr label
     hPrint stderr $ pPrint result
   pure result
 
+-- | Compile the parsed AST.
 compileFromAST :: Syntax.Module (Malgo 'Parse) -> Opt -> IO ()
 compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   uniqSupply <- view uniqSupply
-  when (dumpParsed opt) $ liftIO do
+  when (dumpParsed opt) do
     hPutStrLn stderr "=== PARSED ==="
     hPrint stderr $ pPrint parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv =<< ask
@@ -63,9 +60,9 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     ( do
         mlgCore <- mlgToCore tcEnv refinedAst
         when (debugMode opt) do
-          liftIO $ hPrint stderr $ pPrint mlgCore
+          hPrint stderr $ pPrint mlgCore
     )
-    (\e -> liftIO $ hPutStrLn stderr $ "MlgToCore Fail: " <> displayException (e :: SomeException))
+    (\e -> hPutStrLn stderr $ "MlgToCore Fail: " <> displayException (e :: SomeException))
 
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
   (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar rnEnv tcEnv depList refinedAst
@@ -73,15 +70,13 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   storeInterface inf
   when (debugMode opt) $ do
     inf <- loadInterface (Syntax._moduleName typedAst)
-    liftIO $ do
-      hPutStrLn stderr "=== INTERFACE ==="
-      hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
+    hPutStrLn stderr "=== INTERFACE ==="
+    hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
   runLint $ lintProgram core
   coreOpt <- if noOptimize opt then pure core else optimizeProgram uniqSupply (inlineSize opt) core
-  when (dumpDesugar opt && not (noOptimize opt)) $
-    liftIO $ do
-      hPutStrLn stderr "=== OPTIMIZE ==="
-      hPrint stderr $ pPrint $ over appProgram flat coreOpt
+  when (dumpDesugar opt && not (noOptimize opt)) do
+    hPutStrLn stderr "=== OPTIMIZE ==="
+    hPrint stderr $ pPrint $ over appProgram flat coreOpt
   runLint $ lintProgram coreOpt
   coreLL <- if noLambdaLift opt then pure coreOpt else lambdalift uniqSupply coreOpt
   when (dumpDesugar opt && not (noLambdaLift opt)) $
@@ -95,7 +90,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
       hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
   codeGen (srcName opt) (dstName opt) uniqSupply (Syntax._moduleName typedAst) coreLLOpt
 
--- | .mlgから.llへのコンパイル
+-- | Read the source file and parse it, then compile.
 compile :: Opt -> IO ()
 compile opt = do
   src <- readFileText (srcName opt)

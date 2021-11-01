@@ -2,12 +2,29 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Koriel.Prelude
-  ( module Relude,
+  ( 
+    -- * Reexports
+    module Relude,
     module Control.Monad.Writer.Class,
     module Control.Monad.Trans.Writer.CPS,
+
+    -- * Utilities
     unzip,
     replaceOf,
     localState,
+
+    -- * Lift IO functions
+
+    -- ** Show
+    hPrint,
+
+    -- ** String
+    hPutStr,
+    hPutStrLn,
+
+    -- ** Text
+    hPutText,
+    hPutTextLn,
   )
 where
 
@@ -17,9 +34,11 @@ import qualified Control.Monad.Trans.Writer.CPS as W
 import Control.Monad.Writer.Class hiding (pass)
 import qualified Control.Monad.Writer.Class as Writer
 import Data.Monoid
+import qualified Data.Text.IO as T
 import Relude hiding (All, Op, Type, id, unzip)
+import qualified System.IO
 
--- | unzip :: [(a, b)] -> ([a], [b]) の一般化
+-- | Generalization of 'Data.List.unzip' :: [(a, b)] -> ([a], [b])
 unzip :: Functor f => f (a, b) -> (f a, f b)
 unzip xs = (fst <$> xs, snd <$> xs)
 {-# INLINE unzip #-}
@@ -46,3 +65,25 @@ instance MonadState s m => MonadState s (WriterT w m) where
 instance (Monoid w, MonadReader r m) => MonadReader r (WriterT w m) where
   reader = lift . reader
   local = W.mapWriterT . local
+
+-- Lift IO funcitons
+
+-- | Lifted version of 'System.IO.hPrint'.
+hPrint :: (MonadIO m, Show a) => Handle -> a -> m ()
+hPrint handle x = liftIO $ System.IO.hPrint handle x
+
+-- | Lifted version of 'System.IO.hPutStr'.
+hPutStr :: MonadIO m => Handle -> String -> m ()
+hPutStr handle x = liftIO $ System.IO.hPutStr handle x
+
+-- | Lifted version of 'System.IO.hPutStrLn'.
+hPutStrLn :: MonadIO m => Handle -> String -> m ()
+hPutStrLn handle x = liftIO $ System.IO.hPutStrLn handle x
+
+-- | Lifted version of 'T.hPutStr'.
+hPutText :: MonadIO m => Handle -> Text -> m ()
+hPutText handle x = liftIO $ T.hPutStr handle x
+
+-- | Lifted version of 'T.hPutStrLn'.
+hPutTextLn :: MonadIO m => Handle -> Text -> m ()
+hPutTextLn handle x = liftIO $ T.hPutStrLn handle x

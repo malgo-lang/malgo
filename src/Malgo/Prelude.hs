@@ -28,7 +28,6 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 import System.FilePath ((-<.>))
-import System.IO (hPutStrLn)
 import Text.Megaparsec.Pos (SourcePos (..), unPos)
 
 data Opt = Opt
@@ -128,16 +127,15 @@ warningOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
   let columnNum = unPos $ sourceColumn pos
-  liftIO $
-    hPutStrLn stderr $
-      render $
-        "warning on" <+> pPrint pos <> ":"
-          $$ vcat
-            [ x,
-              nest (length (show @String lineNum) + 1) "|",
-              pPrint lineNum <+> "|" <+> text (toString l),
-              nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
-            ]
+  hPutStrLn stderr $
+    render $
+      "warning on" <+> pPrint pos <> ":"
+        $$ vcat
+          [ x,
+            nest (length (show @String lineNum) + 1) "|",
+            pPrint lineNum <+> "|" <+> text (toString l),
+            nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
+          ]
 
 data Annotated x v = Annotated {_ann :: x, _value :: v}
   deriving stock (Eq, Show, Ord)
