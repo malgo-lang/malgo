@@ -13,18 +13,19 @@ import Malgo.Prelude
 import Malgo.TypeRep as TypeRep
 import Text.Megaparsec.Pos (SourcePos)
 
--- Phase and type instance
+-- | Phase and type instance
 data MalgoPhase = Parse | Rename | TypeCheck | Refine
 
 data Malgo (p :: MalgoPhase)
 
--- Id
+-- | Id
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = Text
   MalgoId 'Rename = Id ()
   MalgoId 'TypeCheck = Id ()
   MalgoId 'Refine = Id ()
 
+-- | Qualified name
 newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: Annotated (Maybe Text) x}
   deriving stock (Eq, Ord, Show)
 
@@ -62,7 +63,7 @@ instance Pretty Assoc where
 type family XId x where
   XId (Malgo p) = MalgoId p
 
--- Exp Extensions
+-- * Exp Extensions
 
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = SourcePos
@@ -136,13 +137,13 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XParens x)
   )
 
--- Clause Extensions
+-- * Clause Extensions
 type family XClause x where
   XClause (Malgo x) = SimpleX x
 
 type ForallClauseX (c :: K.Type -> Constraint) x = c (XClause x)
 
--- Stmt Extensions
+-- * Stmt Extensions
 
 type family XLet x where
   XLet (Malgo _) = SourcePos
@@ -156,7 +157,7 @@ type family XNoBind x where
 
 type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XWith x), c (XNoBind x))
 
--- Pat Extensions
+-- * Pat Extensions
 type family XVarP x where
   XVarP (Malgo x) = SimpleX x
 
@@ -182,7 +183,7 @@ type family XBoxedP x where
 
 type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XListP x), c (XUnboxedP x), c (XBoxedP x))
 
--- Type Extensions
+-- * Type Extensions
 type family XTyApp x where
   XTyApp (Malgo _) = SourcePos
 
@@ -205,14 +206,10 @@ type family XTyBlock x where
   XTyBlock (Malgo 'Parse) = SourcePos
   XTyBlock (Malgo _) = Void
 
-type family XTyDArr x where
-  XTyDArr (Malgo 'Parse) = SourcePos
-  XTyDArr (Malgo _) = Void
-
 type ForallTypeX (c :: K.Type -> Constraint) x =
-  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyBlock x), c (XTyDArr x))
+  (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyBlock x))
 
--- Decl Extensions
+-- * Decl Extensions
 type family XScDef x where
   XScDef (Malgo x) = SimpleX x
 
@@ -258,5 +255,5 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
     ForallTypeX c x
   )
 
--- Module Extensions
+-- * Module Extensions
 type family XModule x
