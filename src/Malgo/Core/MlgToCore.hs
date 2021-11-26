@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module Malgo.Core.MlgToCore (mlgToCore) where
 
@@ -12,7 +13,7 @@ import Koriel.Pretty
 import Malgo.Core.Syntax
 import Malgo.Prelude
 import qualified Malgo.Syntax as S
-import Malgo.Syntax.Extension (Malgo, MalgoPhase (Refine), RnId, WithPrefix (unwrapWithPrefix), removePrefix)
+import Malgo.Syntax.Extension (Malgo, MalgoPhase (Refine), RnId, removePrefix)
 import Malgo.TypeCheck.TcEnv (TcEnv)
 import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import qualified Malgo.TypeRep as T
@@ -121,7 +122,7 @@ dsType (T.TYPE rep) = TYPE <$> dsRep rep
     dsRep (T.Rep rep) = pure rep
     dsRep _ = error "invalid Rep"
 
-dsForeign :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => S.Foreign (Malgo 'Refine) -> m ()
+dsForeign :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => S.Foreign (Malgo 'Refine) -> m ()
 dsForeign (_, name, _) = do
   name <- dsVarName name
   buildingModule . externalDefinitions <>= [(name, toString $ name ^. idName)]

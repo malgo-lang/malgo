@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 module Malgo.Core.Match (compileMatch) where
 
 import Control.Lens (traverseOf, traversed, _2)

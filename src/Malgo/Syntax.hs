@@ -37,9 +37,7 @@ instance HasType (Literal x) where
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce
 
-----------
--- Type --
-----------
+-- * Type
 
 data Type x
   = TyApp (XTyApp x) (Type x) [Type x]
@@ -74,9 +72,7 @@ getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
 getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
 getTyVars (TyBlock _ t) = getTyVars t
 
-----------------
--- Expression --
-----------------
+-- * Expression
 
 data Exp x
   = Var (XVar x) (WithPrefix (XId x))
@@ -159,17 +155,33 @@ freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = foldMap freevarsClause cs
+  where
+    freevarsClause :: (Eq (XId x), Hashable (XId x)) => Clause x -> HashSet (XId x)
+    freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
+    bindVars (VarP _ x) = one x
+    bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
+    bindVars (TupleP _ ps) = mconcat $ map bindVars ps
+    bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
+    bindVars (ListP _ ps) = mconcat $ map bindVars ps
+    bindVars UnboxedP {} = mempty
+    bindVars BoxedP {} = mempty
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (List _ es) = mconcat $ map freevars es
 freevars (RecordAccess _ _) = mempty
 freevars (Ann _ e _) = freevars e
 freevars (Seq _ ss) = freevarsStmts ss
+  where
+    freevarsStmts (Let _ x e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
+    freevarsStmts (With _ Nothing e :| ss) = freevars e <> freevarsStmts' ss
+    freevarsStmts (With _ (Just x) e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
+    freevarsStmts (NoBind _ e :| ss) = freevars e <> freevarsStmts' ss
+    freevarsStmts' [] = mempty
+    freevarsStmts' (s : ss) = freevarsStmts (s :| ss)
 freevars (Parens _ e) = freevars e
 
-----------
--- Stmt --
-----------
+-- * Stmt
+
 data Stmt x
   = Let (XLet x) (XId x) (Exp x)
   | With (XWith x) (Maybe (XId x)) (Exp x)
@@ -198,19 +210,7 @@ instance
     With x v e -> With x v <$> types f e
     NoBind x e -> NoBind x <$> types f e
 
-freevarsStmts :: (Eq (XId x), Hashable (XId x)) => NonEmpty (Stmt x) -> HashSet (XId x)
-freevarsStmts (Let _ x e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
-freevarsStmts (With _ Nothing e :| ss) = freevars e <> freevarsStmts' ss
-freevarsStmts (With _ (Just x) e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
-freevarsStmts (NoBind _ e :| ss) = freevars e <> freevarsStmts' ss
-
-freevarsStmts' :: (Hashable (XId x), Eq (XId x)) => [Stmt x] -> HashSet (XId x)
-freevarsStmts' [] = mempty
-freevarsStmts' (s : ss) = freevarsStmts (s :| ss)
-
-------------
--- Clause --
-------------
+-- * Clause
 
 data Clause x = Clause (XClause x) [Pat x] (Exp x)
 
@@ -233,12 +233,7 @@ instance
 
   types f (Clause x ps e) = Clause <$> types f x <*> traverse (types f) ps <*> types f e
 
-freevarsClause :: (Eq (XId x), Hashable (XId x)) => Clause x -> HashSet (XId x)
-freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
-
--------------
--- Pattern --
--------------
+-- * Pattern
 
 data Pat x
   = VarP (XVarP x) (XId x)
@@ -290,20 +285,9 @@ instance
     UnboxedP x u -> UnboxedP <$> types f x <*> types f u
     BoxedP x b -> BoxedP <$> types f x <*> types f b
 
-bindVars :: (Eq (XId x), Hashable (XId x)) => Pat x -> HashSet (XId x)
-bindVars (VarP _ x) = one x
-bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
-bindVars (TupleP _ ps) = mconcat $ map bindVars ps
-bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
-bindVars (ListP _ ps) = mconcat $ map bindVars ps
-bindVars UnboxedP {} = mempty
-bindVars BoxedP {} = mempty
-
 makePrisms ''Pat
 
------------------
--- Declaration --
------------------
+-- * Declaration
 
 data Decl x
   = ScDef (XScDef x) (XId x) (Exp x)
@@ -341,9 +325,7 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
 
 makePrisms ''Decl
 
-------------
--- Module --
-------------
+-- * Module
 
 data Module x = Module {_moduleName :: ModuleName, _moduleDefinition :: XModule x}
 
@@ -370,9 +352,7 @@ type instance XModule (Malgo 'TypeCheck) = BindGroup (Malgo 'TypeCheck)
 
 type instance XModule (Malgo 'Refine) = BindGroup (Malgo 'Refine)
 
-----------------
--- Bind group --
-----------------
+-- * Bind group
 
 data BindGroup x = BindGroup
   { -- | 相互再帰的なグループに分割
