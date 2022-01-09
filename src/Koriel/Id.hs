@@ -73,7 +73,7 @@ instance Show1 Id where
   liftShowsPrec showPrec _ d Id {..} = showString "Id " . showsPrec d _idName . showString " " . showsPrec d _idUniq . showString " " . showPrec d _idMeta . showString " " . showsPrec d _idSort
 
 -- TODO: calculate hash from idUniq
-instance Hashable (Id a) where
+instance Eq a => Hashable (Id a) where
   hashWithSalt salt Id {_idUniq} = hashWithSalt salt _idUniq
 
 instance Binary a => Binary (Id a)

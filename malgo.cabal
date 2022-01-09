@@ -121,7 +121,7 @@ library
     , generic-lens
     , hashable
     , lens
-    , llvm-hs-pretty
+    , llvm-hs
     , llvm-hs-pure
     , megaparsec
     , microlens-platform
@@ -131,7 +131,7 @@ library
     , pretty
     , pretty-simple
     , recursion-schemes
-    , relude
+    , relude >=1.0.0.0
     , string-conversions
     , text
     , transformers
@@ -204,7 +204,7 @@ executable malgo
     , generic-lens
     , hashable
     , lens
-    , llvm-hs-pretty
+    , llvm-hs
     , llvm-hs-pure
     , malgo
     , megaparsec
@@ -215,7 +215,7 @@ executable malgo
     , pretty
     , pretty-simple
     , recursion-schemes
-    , relude
+    , relude >=1.0.0.0
     , string-conversions
     , text
     , transformers
@@ -290,7 +290,7 @@ test-suite malgo-test
     , hashable
     , hspec
     , lens
-    , llvm-hs-pretty
+    , llvm-hs
     , llvm-hs-pure
     , malgo
     , megaparsec
@@ -301,7 +301,7 @@ test-suite malgo-test
     , pretty
     , pretty-simple
     , recursion-schemes
-    , relude
+    , relude >=1.0.0.0
     , string-conversions
     , text
     , transformers

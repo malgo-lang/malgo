@@ -4,10 +4,11 @@ ghc-options:
 extra-deps:
 - github: llvm-hs/llvm-hs
   subdirs:
-    # - llvm-hs
+    - llvm-hs
     - llvm-hs-pure
-  commit: 47ed4d900aaa8ed2b74726cfc2eeeeb029a1f165
-- github: llvm-hs/llvm-hs-pretty
-  commit: 990bb6981f6214d9c1bbf46fd9e9ce5596d3bf30
-resolver: lts-18.10
+  commit: 9db657851caf0aa7805b26bcedbd5f445b70f929
+  # 47ed4d900aaa8ed2b74726cfc2eeeeb029a1f165
+# - github: llvm-hs/llvm-hs-pretty
+#   commit: 990bb6981f6214d9c1bbf46fd9e9ce5596d3bf30
+resolver: lts-18.21
 allow-newer: true

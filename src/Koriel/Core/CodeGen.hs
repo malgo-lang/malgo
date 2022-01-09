@@ -46,7 +46,9 @@ import LLVM.AST.Type hiding
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
-import LLVM.Pretty (ppllvm)
+-- import LLVM.Pretty (ppllvm)
+import LLVM.Context (withContext)
+import LLVM.Module (withModuleFromAST, moduleLLVMAssembly)
 
 instance Hashable Name
 
@@ -100,7 +102,8 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
     traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
     genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
-  liftIO $ writeFileLText dstPath $ ppllvm llvmModule
+  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly 
+  -- liftIO $ writeFileLText dstPath $ ppllvm llvmModule
   where
     -- topVarsのOprMapを作成
     varEnv = mconcatMap ?? _topVars $ \(v, e) ->
