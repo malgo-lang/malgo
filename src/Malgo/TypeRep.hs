@@ -270,6 +270,15 @@ runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 -- Utilities --
 ---------------
 
+{-
+A type constructor is a type. So we treat it as a type.
+But we also want to treat it as a type "constructor".
+Because of this, we define the pattern synonym `TyConApp`.
+
+Defining `TyConApp` as a constructor of `Type` is (a bit) difficult.
+Because `TyConApp con []` and `con` must be equivalent.
+-}
+
 pattern TyConApp :: Type -> [Type] -> Type
 pattern TyConApp x xs <-
   (viewTyConApp -> Just (x, xs))
