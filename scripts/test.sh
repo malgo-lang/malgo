@@ -14,6 +14,12 @@ TestFilePath=$1
 file=`basename $TestFilePath`
 malgoOptions=${@:2}
 
+# 並列にテストを実行すると、ここでコンパイル順序の前提が崩れうる。
+# コンパイル順序を保証するために、事前にpretest.shを実行する。
+# eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
+# eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"
+# cp ./runtime/malgo/runtime.c $TESTDIR/libs/runtime.c
+
 echo '=== no opt no lambdalift ==='
 
 LLFILE=$TESTDIR/${file/.mlg/.ll}
