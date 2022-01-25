@@ -66,7 +66,8 @@ unify _ (TyMeta v1) (TyMeta v2)
   | otherwise = pure (one (v1, TyMeta v2), [])
 unify _ (TyMeta v) t = pure (one (v, t), [])
 unify _ t (TyMeta v) = pure (one (v, t), [])
-unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [Annotated x $ t11 :~ t21, Annotated x $ t12 :~ t22])
+unify x (TyApp c1 (toList -> ts1)) (TyApp c2 (toList -> ts2)) =
+  pure (mempty, Annotated x (c1 :~ c2) : zipWith (\t1 t2 -> Annotated x $ t1 :~ t2) ts1 ts2)
 unify _ (TyVar v1) (TyVar v2) | v1 == v2 = pure (mempty, [])
 unify _ (TyCon c1) (TyCon c2) | c1 == c2 = pure (mempty, [])
 unify _ (TyPrim p1) (TyPrim p2) | p1 == p2 = pure (mempty, [])
@@ -99,7 +100,7 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
       occursCheck :: TypeVar -> Type -> Bool
       occursCheck v t = HashSet.member v (freevars t)
 
-  zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
+  zonk (TyApp c ts) = TyApp <$> zonk c <*> traverse zonk ts
   zonk (TyVar v) = TyVar <$> traverseOf idMeta zonk v
   zonk (TyCon c) = TyCon <$> traverseOf idMeta zonk c
   zonk t@TyPrim {} = pure t

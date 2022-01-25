@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module Malgo.Core.MlgToCore (mlgToCore) where
 
@@ -104,10 +103,10 @@ dsScheme (T.Forall [] ty) = dsType ty
 dsScheme (T.Forall (p : ps) ty) = TyForall <$> dsTyVarName p <*> dsScheme (T.Forall ps ty)
 
 dsType :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => T.Type -> m Type
-dsType (T.TyConApp (T.TyCon con) ts) = do
+dsType (T.TyApp (T.TyCon con) (toList -> ts)) = do
   con <- dsTyVarName con
   TyConApp (TyCon con) <$> traverse dsType ts
-dsType (T.TyConApp (T.TyTuple _) ts) = do
+dsType (T.TyApp (T.TyTuple _) (toList -> ts)) = do
   ts <- traverse dsType ts
   pure $ TyConApp (TupleC $ map kindOf ts) ts
 dsType T.TyApp {} = error "unreachable"
@@ -116,11 +115,15 @@ dsType (T.TyCon con) = do
   con <- dsTyVarName con
   pure $ TyConApp (TyCon con) []
 dsType (T.TyArr t1 t2) = TyFun <$> dsType t1 <*> dsType t2
+dsType (T.TyTuple n)
+  | n == 0 = pure $ TyConApp (TupleC []) []
+  | otherwise = error "unreachable"
 dsType (T.TyPrim p) = pure $ TyPrim p
 dsType (T.TYPE rep) = TYPE <$> dsRep rep
   where
     dsRep (T.Rep rep) = pure rep
     dsRep _ = error "invalid Rep"
+dsType _ = error "not implmented"
 
 dsForeign :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => S.Foreign (Malgo 'Refine) -> m ()
 dsForeign (_, name, _) = do

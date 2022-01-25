@@ -199,7 +199,7 @@ tcDataDefs ds = do
         -- name' <- lookupType pos name
         -- params' <- traverse (lookupType pos) params
         args' <- traverse transType args
-        pure $ buildTyArr args' (TyConApp name' params')
+        pure $ buildTyArr args' (buildTyApp name' params')
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
     let valueCons' = zip valueConsNames $ map (Forall as) valueConsTypes'
     varEnv <>= HashMap.fromList valueCons'
@@ -368,7 +368,8 @@ evidenceOfEquiv (TyMeta v1) (TyMeta v2)
 evidenceOfEquiv (TyVar v1) (TyVar v2)
   | v1 == v2 = Just mempty
   | otherwise = Just $ one (TyVar v1, TyVar v2)
-evidenceOfEquiv (TyApp t11 t12) (TyApp t21 t22) = (<>) <$> evidenceOfEquiv t11 t21 <*> evidenceOfEquiv t12 t22
+evidenceOfEquiv (TyApp c1 (toList -> ts1)) (TyApp c2 (toList -> ts2)) =
+  evidenceOfEquiv c1 c2 <> foldMap (uncurry evidenceOfEquiv) (zip ts1 ts2)
 evidenceOfEquiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
 evidenceOfEquiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
 evidenceOfEquiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> evidenceOfEquiv l1 l2 <*> evidenceOfEquiv r1 r2
@@ -437,7 +438,7 @@ tcExpr (Fn pos cs) = do
     patOf (Clause _ ps _) = ps
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
-  let esType = TyConApp (TyTuple $ length es) $ map typeOf es'
+  let esType = buildTyApp (TyTuple $ length es) $ map typeOf es'
   pure $ Tuple (Annotated esType pos) es'
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
@@ -523,7 +524,7 @@ tcPatterns (TupleP pos pats : ps) = do
   pats' <- tcPatterns pats
   ps' <- tcPatterns ps
   let patTypes = map typeOf pats'
-  pure $ TupleP (Annotated (TyConApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
+  pure $ TupleP (Annotated (buildTyApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
 tcPatterns (RecordP pos kps : ps) = do
   kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
@@ -588,11 +589,11 @@ transType (S.TyApp pos t ts) = do
       t' <- transType t
       ts' <- traverse transType ts
       solve [Annotated pos $ buildTyArr (map kindOf ts') (TYPE $ Rep BoxedRep) :~ kindOf t']
-      TyConApp <$> transType t <*> traverse transType ts
+      buildTyApp <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
-transType (S.TyTuple _ ts) = TyConApp (TyTuple $ length ts) <$> traverse transType ts
+transType (S.TyTuple _ ts) = buildTyApp (TyTuple $ length ts) <$> traverse transType ts
 transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
 
 tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'TypeCheck)

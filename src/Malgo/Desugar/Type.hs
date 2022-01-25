@@ -11,9 +11,10 @@ import Malgo.Prelude
 import Malgo.TypeRep
 import qualified Malgo.TypeRep as GT
 
--- Malgoの型をCoreの型に変換する
+-- | Convert Malgo types to Core types
 dsType :: Monad m => GT.Type -> m C.Type
-dsType t@GT.TyApp {} = dsTyApp [] t
+dsType (GT.TyApp (GT.TyTuple _) (toList -> ts)) = SumT . pure . C.Con C.Tuple <$> traverse dsType ts
+dsType (GT.TyApp _ _) = pure AnyT
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
   case con ^. idMeta of
@@ -34,25 +35,29 @@ dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
 dsType GT.TyBottom = pure AnyT
-dsType GT.TyMeta{} = pure AnyT
+dsType GT.TyMeta {} = pure AnyT
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
-dsTyApp :: Monad f => [GT.Type] -> GT.Type -> f C.Type
-dsTyApp ts (GT.TyTuple _) = SumT . pure . C.Con C.Tuple <$> traverse dsType ts
-dsTyApp ts (GT.TyApp t1 t2) = dsTyApp (t2 : ts) t1
-dsTyApp _ _ = pure AnyT
-
--- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
+-- | Expand a type such as 'List a' into a union type such as 'Nil | Cons a (List a)'.
 unfoldType :: MonadState DsEnv m => GT.Type -> m C.Type
-unfoldType t@(TyConApp (TyCon con) ts) = do
+unfoldType t@(TyApp (TyCon con) (toList -> ts)) = do
   case GT.kindOf t of
-    TYPE (Rep BoxedRep) -> do
-      vcs <- lookupValueConstructors con ts
-      SumT
-        <$> traverse
-          ( \(conName, Forall _ conType) ->
-              C.Con (Data $ idToText conName) <$> traverse dsType (fst $ splitTyArr conType)
-          )
-          vcs
+    TYPE (Rep BoxedRep) -> unfoldTyCon con ts
+    _ -> dsType t
+unfoldType t@(TyCon con) = do
+  case GT.kindOf t of
+    TYPE (Rep BoxedRep) -> unfoldTyCon con []
     _ -> dsType t
 unfoldType t = dsType t
+
+-- | Expand a type constructor and apply its arguments.
+-- The result type's kind must be TYPE (Rep BoxedRep).
+unfoldTyCon :: MonadState DsEnv m => Id GT.Type -> [GT.Type] -> m C.Type
+unfoldTyCon con ts = do
+  vcs <- lookupValueConstructors con ts
+  SumT
+    <$> traverse
+      ( \(conName, Forall _ conType) ->
+          C.Con (Data $ idToText conName) <$> traverse dsType (fst $ splitTyArr conType)
+      )
+      vcs

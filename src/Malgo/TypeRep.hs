@@ -4,7 +4,7 @@
 
 module Malgo.TypeRep where
 
-import Control.Lens (At (at), Lens', Plated (plate), Traversal', coerced, cosmos, makeLenses, makePrisms, mapped, over, toListOf, transform, traverseOf, view, (^.), _1, _2)
+import Control.Lens (At (at), Lens', Plated (plate), Traversal', coerced, cosmos, makeLenses, makePrisms, over, toListOf, transform, traverseOf, view, (^.), _1)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import qualified Data.HashMap.Strict as HashMap
@@ -65,7 +65,7 @@ data Type
   = -- type level operator
 
     -- | application of type constructor
-    TyApp Type Type
+    TyApp Type (NonEmpty Type)
   | -- | type variable (qualified by `Forall`)
     TyVar (Id Kind)
   | -- | type constructor
@@ -103,7 +103,7 @@ instance Binary Type
 instance Plated Type where
   plate f = \case
     t@TyMeta {} -> pure t
-    TyApp t1 t2 -> TyApp <$> f t1 <*> f t2
+    TyApp c ts -> TyApp <$> f c <*> traverse f ts
     TyVar x -> TyVar <$> traverseOf idMeta f x
     TyCon x -> TyCon <$> traverseOf idMeta f x
     t@TyPrim {} -> pure t
@@ -119,10 +119,9 @@ instance Plated Type where
 -- plate f t = uniplate f t
 
 instance Pretty Type where
-  pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
-  pPrintPrec l _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
-  pPrintPrec l d (TyApp t1 t2) =
-    maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
+  -- pPrintPrec l d (TyApp (TyCon c) ts) = maybeParens (d > 10) $ foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
+  pPrintPrec l _ (TyApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ toList $ fmap (pPrintPrec l 0) ts
+  pPrintPrec l d (TyApp t ts) = maybeParens (d > 10) $ foldl' (<+>) (pPrintPrec l 0 t) $ toList $ fmap (pPrintPrec l 11) ts
   pPrintPrec _ _ (TyVar v) = pPrint v
   pPrintPrec l _ (TyCon c) = pPrintPrec l 0 c
   pPrintPrec l _ (TyPrim p) = pPrintPrec l 0 p
@@ -189,8 +188,13 @@ instance HasType Type where
   types = identity
 
 instance HasKind Type where
-  kindOf (TyApp (kindOf -> TyArr _ k) _) = k
-  kindOf TyApp {} = error "invalid kind"
+  -- kindOf (TyApp (kindOf -> TyArr _ k) _) = k
+  -- kindOf TyApp {} = error "invalid kind"
+  kindOf (TyApp (kindOf -> k) (toList -> ts)) = apply k ts
+    where
+      apply k [] = k
+      apply (TyArr _ k) (_ : ts) = apply k ts
+      apply _ _ = error "invalid kind"
   kindOf (TyVar v) = v ^. idMeta
   kindOf (TyCon c) = c ^. idMeta
   kindOf (TyPrim p) = kindOf p
@@ -270,29 +274,9 @@ runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 -- Utilities --
 ---------------
 
-{-
-A type constructor is a type. So we treat it as a type.
-But we also want to treat it as a type "constructor".
-Because of this, we define the pattern synonym `TyConApp`.
-
-Defining `TyConApp` as a constructor of `Type` is (a bit) difficult.
-Because `TyConApp con []` and `con` must be equivalent.
--}
-
-pattern TyConApp :: Type -> [Type] -> Type
-pattern TyConApp x xs <-
-  (viewTyConApp -> Just (x, xs))
-  where
-    TyConApp x xs = buildTyApp x xs
-
-viewTyConApp :: Type -> Maybe (Type, [Type])
-viewTyConApp (TyCon con) = Just (TyCon con, [])
-viewTyConApp (TyTuple n) = Just (TyTuple n, [])
-viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
-viewTyConApp _ = Nothing
-
 buildTyApp :: Type -> [Type] -> Type
-buildTyApp = foldl' TyApp
+buildTyApp t [] = t
+buildTyApp t (x:xs) = TyApp t (x :| xs)
 
 buildTyArr :: Foldable t => t Type -> Type -> Type
 buildTyArr ps ret = foldr TyArr ret ps
@@ -310,22 +294,34 @@ applySubst subst = transform $ \case
 
 -- | expand type synonyms
 expandTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Maybe Type
-expandTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
+expandTypeSynonym abbrEnv (TyApp (TyCon con) ts) =
   case abbrEnv ^. at con of
     Nothing -> Nothing
-    Just (ps, orig) -> Just (applySubst (HashMap.fromList $ zip ps ts) orig)
+    Just (ps, orig) -> Just (applySubst (HashMap.fromList $ zip ps $ toList ts) orig)
+expandTypeSynonym abbrEnv (TyCon con) =
+  case abbrEnv ^. at con of
+    Nothing -> Nothing
+    Just (_, orig) ->
+      -- 引数が与えられていないので、ここでは代入は行わない
+      -- 必要ならばunifyで適切な型が代入される
+      Just orig
 expandTypeSynonym _ _ = Nothing
 
 expandAllTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Type
-expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
+expandAllTypeSynonym abbrEnv (TyApp (TyCon con) ts) =
   case abbrEnv ^. at con of
-    Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
+    Nothing -> TyApp (TyCon con) $ fmap (expandAllTypeSynonym abbrEnv) ts
     Just (ps, orig) ->
       -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
-      expandAllTypeSynonym abbrEnv $ applySubst (HashMap.fromList $ zip ps ts) $ expandAllTypeSynonym abbrEnv orig
-expandAllTypeSynonym abbrEnv (TyApp t1 t2) = TyApp (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
+      expandAllTypeSynonym abbrEnv $ applySubst (HashMap.fromList $ zip ps $ toList ts) $ expandAllTypeSynonym abbrEnv orig
+expandAllTypeSynonym abbrEnv (TyCon con) =
+  case abbrEnv ^. at con of
+    Nothing -> TyCon con
+    Just (_, orig) ->
+      -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
+      expandAllTypeSynonym abbrEnv orig
+expandAllTypeSynonym abbrEnv (TyApp c ts) = TyApp (expandAllTypeSynonym abbrEnv c) (fmap (expandAllTypeSynonym abbrEnv) ts)
 expandAllTypeSynonym _ t@TyVar {} = t
-expandAllTypeSynonym _ t@TyCon {} = t
 expandAllTypeSynonym _ t@TyPrim {} = t
 expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
 expandAllTypeSynonym _ t@TyTuple {} = t

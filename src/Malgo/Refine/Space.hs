@@ -1,10 +1,12 @@
 module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
-import Control.Lens (mapped, over, _2, view, (^.), At (at))
+import Control.Lens (At (at), mapped, over, view, (^.), _2)
 import qualified Data.HashMap.Strict as HashMap
 import Data.List (isSubsequenceOf)
 import qualified Data.List as List
+import Data.List.Extra (nubOrd)
 import qualified Data.Map as Map
+import Data.Traversable (for)
 import Koriel.Id (Id)
 import Koriel.Pretty hiding (space)
 import Malgo.Prelude hiding (subtract)
@@ -12,8 +14,6 @@ import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
 import Malgo.TypeRep
-import Data.List.Extra (nubOrd)
-import Data.Traversable (for)
 
 -- | Space of values that covered by patterns
 data Space
@@ -61,25 +61,37 @@ buildUnion [] = Empty
 buildUnion [s] = s
 buildUnion (s : ss) = Union s (buildUnion ss)
 
--- Ref: Malgo.TypeRep.Static.TyConApp
+-- | Check whether the given type can be decomposed into space(s).
 decomposable :: Type -> Bool
-decomposable (TyConApp (TyCon _) _) = True
-decomposable (TyConApp (TyTuple _) _) = True
+decomposable (TyApp (TyCon _) _) = True
+decomposable (TyApp (TyTuple _) _) = True
+decomposable (TyCon _) = True
+decomposable (TyTuple _) = True
 decomposable (TyRecord _) = True
 decomposable _ = False
 
 decompose :: MonadReader RefineEnv m => Type -> m Space
-decompose t@(TyConApp (TyCon con) ts) = do
+decompose t@(TyApp (TyCon con) (toList -> ts)) = do
   env <- view typeDefEnv
   case env ^. at con of
     Nothing -> pure $ Type t
     Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
       spaces <- traverse (constructorSpace $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
       pure $ buildUnion spaces
-decompose (TyConApp (TyTuple _) ts) = do
+decompose (TyApp (TyTuple _) (toList -> ts)) = do
   env <- ask
   let ss = map (space env) ts
   pure $ Tuple ss
+decompose t@(TyCon con) = do
+  env <- view typeDefEnv
+  case env ^. at con of
+    Nothing -> pure $ Type t
+    Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
+      spaces <- traverse (constructorSpace mempty) _valueConstructors
+      pure $ buildUnion spaces
+decompose (TyTuple n)
+  | n == 0 = pure $ Tuple []
+  | otherwise = error "Invalid TyTuple"
 decompose (TyRecord kts) = do
   env <- ask
   pure $ Record $ over (mapped . _2) (space env) $ Map.toList kts
