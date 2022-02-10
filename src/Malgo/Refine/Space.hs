@@ -61,7 +61,8 @@ buildUnion [] = Empty
 buildUnion [s] = s
 buildUnion (s : ss) = Union s (buildUnion ss)
 
--- Ref: Malgo.TypeRep.Static.TyConApp
+-- Ref: Malgo.TypeRep.TyConApp
+-- | Check whether the given type can be decomposed into space(s).
 decomposable :: Type -> Bool
 decomposable (TyConApp (TyCon _) _) = True
 decomposable (TyConApp (TyTuple _) _) = True

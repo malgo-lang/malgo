@@ -60,9 +60,15 @@ instance Pretty Expr where
   pPrint (BoxedLit _ lit) = pPrint lit
   pPrint (RawApp _ es) = P.parens (P.hsep $ toList $ pPrint <$> es)
   pPrint (App _ e es) = P.hsep $ pPrint <$> (e : toList es)
+  pPrint (OpApp _ op es) = P.hsep $ pPrintOpList op : fmap pPrint (toList es)
+    where
+      pPrintOpList (x :| xs) = P.hcat $ pPrint x : map pPrint xs
+  pPrint (Fun _ (c :| cs)) = P.brackets $ P.sep $ P.punctuate "|" $ map pPrint (c : cs)
+  pPrint (Tuple _ es) = P.parens $ P.hsep $ P.punctuate "," $ map pPrint es
 
-data Op = OpSymbol Text
-        | OpPlaceholder 
+data Op
+  = OpSymbol Text
+  | OpPlaceholder
   deriving stock (Eq, Ord, Show)
 
 instance Pretty Op where
