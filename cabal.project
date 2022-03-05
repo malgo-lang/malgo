@@ -3,16 +3,12 @@ packages: *.cabal
 source-repository-package
   type: git
   location: https://github.com/llvm-hs/llvm-hs.git
-  tag: 9db657851caf0aa7805b26bcedbd5f445b70f929
+  tag: eda85a2bbe362a0b89df5adce0cb65e4e755eac5
   subdir: llvm-hs
 
 source-repository-package
   type: git
   location: https://github.com/llvm-hs/llvm-hs.git
-  tag: 9db657851caf0aa7805b26bcedbd5f445b70f929
+  tag: eda85a2bbe362a0b89df5adce0cb65e4e755eac5
   subdir: llvm-hs-pure
-
-package llvm-hs
-  ghc-options:
-    -optcxx -std=c++14
 

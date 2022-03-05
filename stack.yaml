@@ -1,16 +1,11 @@
-ghc-options:
-  $everything: -haddock
-  llvm-hs: -optcxx -std=c++14
 extra-deps:
 - github: llvm-hs/llvm-hs
   subdirs:
     - llvm-hs
     - llvm-hs-pure
-  commit: 9db657851caf0aa7805b26bcedbd5f445b70f929
+  commit: eda85a2bbe362a0b89df5adce0cb65e4e755eac5
 - relude-1.0.0.1@sha256:35bcdaf14018e79f11e712b0e2314c1aac79976f28f4adc179985457493557d5,11569
-  # 47ed4d900aaa8ed2b74726cfc2eeeeb029a1f165
-# - github: llvm-hs/llvm-hs-pretty
-#   commit: 990bb6981f6214d9c1bbf46fd9e9ce5596d3bf30
-# resolver: nightly-2022-01-06 # lts-18.21
 resolver: lts-18.21
-# allow-newer: true
+
+ghc-options:
+  $everything: -haddock
