@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module Malgo.Core.MlgToCore (mlgToCore) where
 
@@ -110,17 +109,25 @@ dsType (T.TyConApp (T.TyCon con) ts) = do
 dsType (T.TyConApp (T.TyTuple _) ts) = do
   ts <- traverse dsType ts
   pure $ TyConApp (TupleC $ map kindOf ts) ts
+dsType T.TyConApp {} = error "unreachable"
 dsType T.TyApp {} = error "unreachable"
 dsType (T.TyVar v) = TyVar <$> dsTyVarName v
 dsType (T.TyCon con) = do
   con <- dsTyVarName con
   pure $ TyConApp (TyCon con) []
-dsType (T.TyArr t1 t2) = TyFun <$> dsType t1 <*> dsType t2
 dsType (T.TyPrim p) = pure $ TyPrim p
+dsType (T.TyArr t1 t2) = TyFun <$> dsType t1 <*> dsType t2
+dsType T.TyTuple {} = error "unreachable"
+dsType (T.TyRecord kts) = TyRecord . HashMap.fromList <$> traverse (bitraverse (dsFieldName kts) dsType) (Map.toList kts)
+dsType (T.TyPtr t) = TyPtr <$> dsType t
+dsType T.TyBottom = pure TyBottom
 dsType (T.TYPE rep) = TYPE <$> dsRep rep
   where
     dsRep (T.Rep rep) = pure rep
     dsRep _ = error "invalid Rep"
+dsType T.TyRep = error "unreachable"
+dsType T.Rep{} = error "unreachable"
+dsType T.TyMeta{} = error "unreachable"
 
 dsForeign :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m) => S.Foreign (Malgo 'Refine) -> m ()
 dsForeign (_, name, _) = do
@@ -136,14 +143,17 @@ dsScDef (_, name, expr) = do
   expr <- dsExp expr
   buildingModule . variableDefinitions <>= [(name, expr)]
 
+dsLiteral :: forall k (x :: k). S.Literal x -> Unboxed
+dsLiteral (S.Int32 x) = Int32 x
+dsLiteral (S.Int64 x) = Int64 x
+dsLiteral (S.Float x) = Float x
+dsLiteral (S.Double x) = Double x
+dsLiteral (S.Char x) = Char x
+dsLiteral (S.String x) = String x
+
 dsExp :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => S.Exp (Malgo 'Refine) -> m Exp
 dsExp (S.Var _ v) = Var <$> dsVarName (removePrefix v)
-dsExp (S.Unboxed _ (S.Int32 x)) = pure $ Unboxed $ Int32 x
-dsExp (S.Unboxed _ (S.Int64 x)) = pure $ Unboxed $ Int64 x
-dsExp (S.Unboxed _ (S.Float x)) = pure $ Unboxed $ Float x
-dsExp (S.Unboxed _ (S.Double x)) = pure $ Unboxed $ Double x
-dsExp (S.Unboxed _ (S.Char x)) = pure $ Unboxed $ Char x
-dsExp (S.Unboxed _ (S.String x)) = pure $ Unboxed $ String x
+dsExp (S.Unboxed _ lit) = pure $ Unboxed $ dsLiteral lit
 dsExp e@S.Apply {} = do
   let (f, args) = viewApply e
   f <- dsExp f
@@ -167,6 +177,8 @@ dsExp (S.Fn _ clauses@(S.Clause _ ps _ :| _)) = do
       pure $ Clause ps e
     dsPat (S.VarP _ v) = VarP <$> dsVarName v
     dsPat (S.ConP _ c ps) = ConP <$> dsVarName c <*> traverse dsPat ps
+    dsPat (S.TupleP _ ps) = TupleP <$> traverse dsPat ps
+    dsPat (S.UnboxedP _ lit) = pure $ UnboxedP $ dsLiteral lit
 dsExp (S.Tuple _ es) = Tuple <$> traverse dsExp es
 dsExp (S.Record (T.typeOf -> T.TyRecord kts) kes) =
   Record . HashMap.fromList <$> traverse (bitraverse (dsFieldName kts . removePrefix) dsExp) kes

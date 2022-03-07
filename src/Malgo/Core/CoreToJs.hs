@@ -4,11 +4,12 @@
 module Malgo.Core.CoreToJs where
 
 import Control.Lens (At (at), makeLenses, use, (?=), (^.))
+import Control.Monad.Except (MonadError (throwError))
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Core.Syntax hiding (moduleName)
-import Malgo.Prelude
+import Malgo.Prelude hiding (empty)
 import qualified Text.PrettyPrint as PP
 
 type Arity = Int
@@ -91,8 +92,11 @@ data Int32 = Int32# Int32#
 
 const Int32# = (x) => ["Int32#", x];
 -}
-emitTypeDef :: (MonadReader env f, MonadState CodeGenEnv f, MonadIO f, HasUniqSupply env) => (a, TypeDef) -> f Doc
-emitTypeDef (_, TypeDef {..}) = sep <$> traverse emitConstr _constructors
+emitTypeDef :: (MonadReader env f, MonadState CodeGenEnv f, MonadIO f, HasUniqSupply env) => (Name, TypeDef) -> f Doc
+emitTypeDef (name, TypeDef {..}) = do
+  constructors <- traverse emitConstr _constructors
+  foldFun <- emitFoldFun _constructors
+  pure $ sep constructors $$ foldFun
   where
     emitConstr constr@Id {..} = do
       constrName <- emitVarName constr
@@ -108,8 +112,31 @@ emitTypeDef (_, TypeDef {..}) = sep <$> traverse emitConstr _constructors
             parens (sep $ punctuate "," $ reverse revArgs)
               <+> "=>"
               <+> brackets (sep $ punctuate "," $ doubleQuotes constrName : reverse revArgs)
+    emitFoldFun [] = pure empty
+    emitFoldFun constrs = do
+      cases <- traverse emitCase constrs
+      pure $
+        "const" <+> pPrint name <> "_fold = (fa, matcher) =>"
+          <+> braces
+            ( sep
+                [ "const tag = getTag(fa);",
+                  "switch (tag) {",
+                  nest 2 $ sep cases,
+                  "  default: return matcher.onDefault();",
+                  "}"
+                ]
+            )
+            <> ";"
+    emitOnConstr constr = ("matcher.on" <>) <$> emitVarName constr
+    emitCase constr = do
+      tag <- quotes <$> emitVarName constr
+      onConstr <- emitOnConstr constr
+      let params = emitCaseParams (1 :: Int) $ constr ^. idMeta
+      pure $ "case" <+> tag <> ":" <+> "return" <+> onConstr <> parens (sep $ punctuate "," params) <> ";"
+    emitCaseParams n (TyFun _ t) = "fa[" <> pPrint n <> "]" : emitCaseParams n t
+    emitCaseParams _ _ = []
 
-emitExp :: (MonadReader env f, MonadState CodeGenEnv f) => Exp -> BlockBuilderT f Doc
+emitExp :: HasCallStack => (MonadReader env f, MonadState CodeGenEnv f) => Exp -> BlockBuilderT f Doc
 emitExp (Var v) = emitVarName v
 emitExp (Unboxed unboxed) = emitUnboxed unboxed
 emitExp (Apply f xs) = do
@@ -119,12 +146,40 @@ emitExp (Apply f xs) = do
       f <- emitExp f
       xs <- traverse emitExp xs
       pure $ parens f <> parens (sep $ punctuate "," xs)
-    else error "partial application is not implemented"
+    else throwError $ "partial application is not implemented: " <> show (pPrint (Apply f xs))
 emitExp (Fn params expr) = do
   params <- traverse emitVarName params
   expr <- runBlockBuilderT $ emitExp expr
   pure $ parens (sep $ punctuate "," params) <+> "=>" <+> expr
-emitExp e = errorDoc $ pPrint e
+emitExp (Let var val exp) = do
+  var' <- emitVarName var
+  val' <- emitExp val
+  tell (Endo (["let" <+> var' <+> "=" <+> val' <> ";"] <>))
+  emitExp exp
+emitExp Match {} = throwError "match expression must be compiled to switch expression in Malgo.Core.Match"
+emitExp (Switch e cases) = do
+  case typeOf e of
+    TyConApp (TyCon typeName) _ -> do
+      e' <- emitExp e
+      cases <- traverse emitCase cases
+      pure $ pPrint typeName <> "_fold" <> parens (e' <> "," <+> braces (sep $ punctuate "," cases))
+    _ -> throwError $ show $ "not implemented:" $$ pPrint e
+  where
+    emitCase (Case Default e) = do
+      e' <- runBlockBuilderT $ emitExp e
+      pure $ "onDefalut: () =>" <+> e'
+    emitCase (Case (ConT conName ps) e) = do
+      e' <- runBlockBuilderT $ emitExp e
+      conName' <- emitVarName conName
+      pure $ "on" <> conName' <> ": (" <> sep (punctuate "," $ map pPrint ps) <> ") =>" <+> e'
+    emitCase c = pure $ "ERROR(" <> pPrint c <> ")"
+emitExp (Tuple es) = do
+  es' <- traverse emitExp es
+  pure $ "[" <> sep (punctuate "," es') <> "]"
+emitExp (RaiseFail _) = do
+  tell (Endo ("throw 'raise_Fail';" :))
+  pure empty
+emitExp e = throwError $ show $ "not implemented:" <+> pPrint e
 
 emitUnboxed :: Applicative f => Unboxed -> f Doc
 emitUnboxed (Int32 x) = pure $ pPrint (toInteger x)
@@ -134,14 +189,19 @@ emitUnboxed (Double x) = pure $ pPrint x
 emitUnboxed (Char x) = pure $ quotes $ PP.char x
 emitUnboxed (String x) = pure $ doubleQuotes $ PP.text (toString x)
 
-type BlockBuilderT m a = WriterT (Endo [Doc]) m a
+type BlockBuilderT m a = ExceptT Text (WriterT (Endo [Doc]) m) a
 
-runBlockBuilderT :: Monad m => WriterT (Endo [Doc]) m Doc -> m Doc
+runBlockBuilderT :: HasCallStack => MonadState CodeGenEnv m => BlockBuilderT m Doc -> m Doc
 runBlockBuilderT m = do
-  (result, binds) <- runWriterT m
+  (result, binds) <- runWriterT $ runExceptT m
   case appEndo binds [] of
-    [] -> pure result
+    [] -> case result of
+      Left err -> pure $ "ERROR(" <> text (toString err) <> ")"
+      Right result -> pure result
     binds ->
-      pure $
-        braces $
-          sep (punctuate ";" binds) <> ";" $$ "return" <+> result <> ";"
+      case result of
+        Left err -> pure $ "ERROR(" <> sep binds $$ "return" <+> text (toString err) <> ";)"
+        Right result ->
+          pure $
+            braces $
+              sep binds $$ "return" <+> result <> ";"

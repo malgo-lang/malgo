@@ -11,6 +11,7 @@ import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
+import qualified Malgo.Core.CoreToJs as CoreToJS
 import Malgo.Core.MlgToCore (mlgToCore)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
@@ -25,6 +26,7 @@ import qualified Malgo.TypeCheck.Pass as TypeCheck
 import Text.Megaparsec
   ( errorBundlePretty,
   )
+import Malgo.Core.Match (compileMatch)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -61,6 +63,12 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
         mlgCore <- mlgToCore tcEnv refinedAst
         when (debugMode opt) do
           hPrint stderr $ pPrint mlgCore
+        mlgCore' <- compileMatch mlgCore
+        when (debugMode opt) do
+          hPrint stderr $ pPrint mlgCore'
+        js <- CoreToJS.codeGen mlgCore'
+        when (debugMode opt) do
+         hPrint stderr $ pPrint js
     )
     (\e -> hPutStrLn stderr $ "MlgToCore Fail: " <> displayException (e :: SomeException))
 
