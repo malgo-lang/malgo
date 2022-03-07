@@ -35,15 +35,15 @@ data Type
   deriving stock (Show, Eq, Ord)
 
 instance Pretty Type where
-  pPrint (TyConApp con ts) = parens $ pPrint con <+> sep (map pPrint ts)
+  pPrint (TyConApp con ts) = pPrint con <+> sep (map (parens . pPrint) ts)
   pPrint (TyRecord kts) = braces $ sep $ punctuate "," $ map (\(k, t) -> pPrint k <> ":" <+> pPrint t) $ HashMap.toList kts
   pPrint (TyVar name) = pPrint name
-  pPrint (TyFun t1 t2) = pPrint t1 <+> "->" <+> pPrint t2
+  pPrint (TyFun t1 t2) = parens (pPrint t1) <+> "->" <+> parens (pPrint t2)
   pPrint (TyPrim p) = pPrint p
-  pPrint (TyPtr t) = parens $ "Ptr#" <+> pPrint t
+  pPrint (TyPtr t) = "Ptr#" <+> parens (pPrint t)
   pPrint TyBottom = "⊥"
-  pPrint (TYPE rep) = parens $ "TYPE" <+> pPrint rep
-  pPrint (TyForall v t) = parens $ "∀" <> pPrint v <> "." <+> pPrint t
+  pPrint (TYPE rep) = "TYPE" <+> parens (pPrint rep)
+  pPrint (TyForall v t) = "∀" <> pPrint v <> "." <+> pPrint t
 
 class HasType a where
   typeOf :: a -> Type
@@ -124,8 +124,8 @@ instance Pretty Exp where
   pPrint (Var name) = pPrint name
   pPrint (Unboxed x) = pPrint x
   pPrint (Apply f xs) = parens $ pPrint f <+> sep (map pPrint xs)
-  pPrint (Fn ps e) = braces $ sep (map pPrint ps) <+> "->" <+> pPrint e
-  pPrint (Let x v e) = sep ["let" <+> pPrint x <+> "=" <+> pPrint v, "in" <+> pPrint e]
+  pPrint (Fn ps e) = braces $ sep (map (\p -> pPrint p <> ":" <> pPrint (p ^. idMeta)) ps) <+> "->" <+> pPrint e
+  pPrint (Let x v e) = sep ["let" <+> pPrint x <> ":" <> pPrint (x ^. idMeta) <+> "=" <+> pPrint v, "in" <+> pPrint e]
   pPrint (Match us cs) = sep ["match" <+> pPrint us, "{", sep $ punctuate "," $ map (nest 2 . pPrint) cs, "}"]
   pPrint (Switch u cs) = sep ["switch" <+> pPrint u, "{", sep $ punctuate "," $ map (nest 2 . pPrint) cs, "}"]
   pPrint (Tuple es) = parens $ sep $ punctuate "," $ map pPrint es
@@ -223,7 +223,7 @@ data TypeDef = TypeDef
   deriving stock (Show, Eq, Ord)
 
 instance Pretty TypeDef where
-  pPrint TypeDef {..} = "∀" <> hsep (map pPrint _parameters) <> "." <+> sep (punctuate " |" $ map pPrint _constructors)
+  pPrint TypeDef {..} = "∀" <> hsep (map pPrint _parameters) <> "." <+> sep (punctuate " |" $ map (\c -> pPrint c <> ":" <> pPrint (c ^. idMeta)) _constructors)
 
 data Module = Module
   { _moduleName :: ModuleName,
@@ -237,7 +237,7 @@ instance Pretty Module where
   pPrint Module {..} =
     sep
       [ "module" <+> pPrint _moduleName <+> "=" <+> "{",
-        nest 2 $ sep $ punctuate ";" $ map (\(n, e) -> sep [pPrint n <+> "=", nest 2 $ pPrint e]) _variableDefinitions,
+        nest 2 $ sep $ punctuate ";" $ map (\(n, e) -> sep [pPrint n <> ":" <> pPrint (n ^. idMeta) <+> "=", nest 2 $ pPrint e]) _variableDefinitions,
         nest 2 $ sep $ punctuate ";" $ map (\(n, e) -> sep [pPrint n <+> "=", nest 2 $ pPrint e]) _externalDefinitions,
         nest 2 $ sep $ punctuate ";" $ map (\(n, e) -> sep [pPrint n <+> "=", nest 2 $pPrint e]) _typeDefinitions,
         "}"
