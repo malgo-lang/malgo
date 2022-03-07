@@ -141,6 +141,7 @@ dsScDef :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m,
 dsScDef (_, name, expr) = do
   name <- dsVarName name
   expr <- dsExp expr
+  -- TODO: We needs to wrap `expr` with `Fn [..type variables]` for explicit generalization.
   buildingModule . variableDefinitions <>= [(name, expr)]
 
 dsLiteral :: forall k (x :: k). S.Literal x -> Unboxed
@@ -152,7 +153,9 @@ dsLiteral (S.Char x) = Char x
 dsLiteral (S.String x) = String x
 
 dsExp :: (MonadState DsEnv m, MonadIO m, HasUniqSupply env, MonadReader env m, MonadFail m) => S.Exp (Malgo 'Refine) -> m Exp
-dsExp (S.Var _ v) = Var <$> dsVarName (removePrefix v)
+dsExp (S.Var _ v) =
+  -- TODO: We needs to wrap `v` with `Apply ... [..type variables]` for explicit instantiation.
+  Var <$> dsVarName (removePrefix v)
 dsExp (S.Unboxed _ lit) = pure $ Unboxed $ dsLiteral lit
 dsExp e@S.Apply {} = do
   let (f, args) = viewApply e
