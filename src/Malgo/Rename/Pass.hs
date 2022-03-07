@@ -316,9 +316,6 @@ genToplevelEnv modName ds =
         loadInterface modName' >>= \case
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
-      opt <- getOpt
-      when (debugMode opt) $
-        hPrint stderr $ pPrint interface
       -- 全ての識別子をImplicitでimportする
       modify $ appendRnEnv varEnv (map (over _2 $ Annotated Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ Annotated Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
@@ -327,9 +324,6 @@ genToplevelEnv modName ds =
         loadInterface modName' >>= \case
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
-      opt <- getOpt
-      when (debugMode opt) $
-        hPrint stderr $ pPrint interface
       modify $
         appendRnEnv
           varEnv
@@ -357,9 +351,6 @@ genToplevelEnv modName ds =
         loadInterface modName' >>= \case
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
-      opt <- getOpt
-      when (debugMode opt) $
-        hPrint stderr $ pPrint interface
       modify $ appendRnEnv varEnv (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv typeEnv (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pass
