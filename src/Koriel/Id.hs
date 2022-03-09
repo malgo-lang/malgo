@@ -97,7 +97,7 @@ pPrintMeta _ _ = mempty
 #endif
 
 instance Pretty a => Pretty (Id a) where
-  pPrint id@(Id _ _ m (External _)) = pprIdName id <> pPrintMeta pPrint m
+  pPrint id@(Id _ _ m (External modName)) = pPrint modName <> "." <> pprIdName id <> pPrintMeta pPrint m
   pPrint id@(Id _ u m _) = pprIdName id <> "_" <> text (show u) <> pPrintMeta pPrint m
 
 idName :: Lens' (Id a) Text

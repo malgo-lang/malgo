@@ -1,21 +1,51 @@
-{-# LANGUAGE UndecidableInstances #-}
-
 -- |
--- malgoの共通中間表現。
--- A正規形に近い。
-module Koriel.Core.Syntax where
+-- imperative version of Core
+module Koriel.Core.Imp where
 
 import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
+import qualified Data.HashSet as HashSet
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
 
 class HasFreeVar f where
   -- | free variables
   freevars :: (Eq a, Hashable a) => f a -> HashSet a
+
+-- | toplevel function definitions
+data Program a = Program
+  { _moduleName :: ModuleName,
+    _topVars :: [(a, Block a)],
+    _topFuncs :: [(a, ([a], Block a))],
+    _extFuncs :: [(Text, Type)]
+  }
+  deriving stock (Eq, Show, Functor)
+
+moduleName :: Lens' (Program a) ModuleName
+moduleName = lens _moduleName (\p x -> p {_moduleName = x})
+
+topVars :: Lens' (Program a) [(a, Block a)]
+topVars = lens _topVars (\p x -> p {_topVars = x})
+
+topFuncs :: Lens' (Program a) [(a, ([a], Block a))]
+topFuncs = lens _topFuncs (\p x -> p {_topFuncs = x})
+
+extFuncs :: Lens' (Program a) [(Text, Type)]
+extFuncs = lens _extFuncs (\p x -> p {_extFuncs = x})
+
+instance Pretty a => Pretty (Program a) where
+  pPrint Program {..} =
+    vcat $
+      concat
+        [ ["variables:"],
+          map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint e]) _topVars,
+          ["functions:"],
+          map (\(f, (ps, e)) -> parens $ sep [sep ["define", pPrint f, parens (sep $ map pPrint ps)], pPrint e]) _topFuncs,
+          ["externals:"],
+          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
+        ]
 
 -- | unboxed values
 data Unboxed
@@ -26,7 +56,7 @@ data Unboxed
   | Char Char
   | String Text
   | Bool Bool
-  deriving stock (Eq, Show)
+  deriving stock (Eq, Ord, Show)
 
 instance HasType Unboxed where
   typeOf Int32 {} = Int32T
@@ -73,18 +103,6 @@ class HasAtom f where
 instance HasAtom Atom where
   atom = identity
 
-data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
-  deriving stock (Eq, Show, Functor, Foldable)
-
-instance Pretty a => Pretty (LocalDef a) where
-  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
-
-localDefVar :: Lens' (LocalDef a) a
-localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
-
-localDefObj :: Lens' (LocalDef a) (Obj a)
-localDefObj = lens _localDefObj (\l o -> l {_localDefObj = o})
-
 -- | expressions
 data Exp a
   = -- | atom (variables and literals)
@@ -99,15 +117,9 @@ data Exp a
     BinOp Op (Atom a) (Atom a)
   | -- | type casting
     Cast Type (Atom a)
-  | -- | definition of local variables
-    Let [LocalDef a] (Exp a)
-  | -- | pattern matching
-    Match (Exp a) (NonEmpty (Case a))
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable)
-
--- instance Data a => Plated (Exp a)
 
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
@@ -153,33 +165,24 @@ instance HasType a => HasType (Exp a) where
     where
       boolT = BoolT
   typeOf (Cast ty _) = ty
-  typeOf (Let _ e) = typeOf e
-  typeOf (Match _ (c :| _)) = typeOf c
   typeOf (Error t) = t
 
 instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  -- pPrint (ExtCall p t xs) = parens $ "external" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
   pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
-  pPrint (Let xs e) =
-    parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
-  pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
   pPrint (Error _) = "ERROR"
 
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
-  -- freevars (ExtCall _ _ xs) = foldMap freevars xs
   freevars (RawCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
-  freevars (Let xs e) = foldr (sans . view localDefVar) (freevars e <> foldMap (freevars . view localDefObj) xs) xs
-  freevars (Match e cs) = freevars e <> foldMap freevars cs
   freevars (Error _) = mempty
 
 instance HasAtom Exp where
@@ -187,22 +190,19 @@ instance HasAtom Exp where
     Atom x -> Atom <$> f x
     Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
-    -- ExtCall p t xs -> ExtCall p t <$> traverse f xs
     RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverseOf (traversed . localDefObj . atom) f xs <*> traverseOf atom f e
-    Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
 
 -- | alternatives
 data Case a
   = -- | constructor pattern
-    Unpack Con [a] (Exp a)
+    Unpack Con [a] (Block a)
   | -- | unboxed value pattern
-    Switch Unboxed (Exp a)
+    Switch Unboxed (Block a)
   | -- | variable pattern
-    Bind a (Exp a)
+    Bind a (Block a)
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasType a => HasType (Case a) where
@@ -230,7 +230,7 @@ instance HasAtom Case where
 -- | heap objects
 data Obj a
   = -- | function (arity >= 1)
-    Fun [a] (Exp a)
+    Fun [a] (Block a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
   deriving stock (Eq, Show, Functor, Foldable)
@@ -252,100 +252,108 @@ instance HasAtom Obj where
     Fun xs e -> Fun xs <$> traverseOf atom f e
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
 
--- | toplevel function definitions
-data Program a = Program
-  { _moduleName :: ModuleName,
-    _topVars :: [(a, Exp a)],
-    _topFuncs :: [(a, ([a], Exp a))],
-    _extFuncs :: [(Text, Type)]
-  }
-  deriving stock (Eq, Show, Functor)
+data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
+  deriving stock (Eq, Show, Functor, Foldable)
 
-moduleName :: Lens' (Program a) ModuleName
-moduleName = lens _moduleName (\p x -> p {_moduleName = x})
+instance Pretty a => Pretty (LocalDef a) where
+  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
 
-topVars :: Lens' (Program a) [(a, Exp a)]
-topVars = lens _topVars (\p x -> p {_topVars = x})
+localDefVar :: Lens' (LocalDef a) a
+localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
 
-topFuncs :: Lens' (Program a) [(a, ([a], Exp a))]
-topFuncs = lens _topFuncs (\p x -> p {_topFuncs = x})
+localDefObj :: Lens' (LocalDef a) (Obj a)
+localDefObj = lens _localDefObj (\l o -> l {_localDefObj = o})
 
-extFuncs :: Lens' (Program a) [(Text, Type)]
-extFuncs = lens _extFuncs (\p x -> p {_extFuncs = x})
+newtype Block a = Block {_statements :: [Stmt a]}
+  deriving stock (Eq, Show, Functor, Foldable)
 
-instance Pretty a => Pretty (Program a) where
-  pPrint Program {..} =
-    vcat $
-      concat
-        [ ["variables:"],
-          map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint e]) _topVars,
-          ["functions:"],
-          map (\(f, (ps, e)) -> parens $ sep [sep ["define", pPrint f, parens (sep $ map pPrint ps)], pPrint e]) _topFuncs,
-          ["externals:"],
-          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
-        ]
+instance HasType a => HasType (Block a) where
+  typeOf (Block stmts) = go stmts
+    where
+      go [] = VoidT
+      go [Match (Just r) _ _] = typeOf r
+      go (Return a : _) = typeOf a
+      go (_ : rest) = go rest
+
+  -- typeOf (Match _ (c :| _)) = typeOf c
+instance Pretty a => Pretty (Block a) where
+  pPrint (Block stmts) = braces $ sep $ punctuate ";" $ map pPrint stmts
+
+instance HasFreeVar Block where
+  freevars (Block stmts) = HashSet.difference (foldMap freevars stmts) (foldMap bound stmts)
+
+instance HasAtom Block where
+  atom f (Block stmts) = Block <$> traverseOf (traversed . atom) f stmts
+
+data Stmt a
+  = -- | _1 = eval(expression)
+    Eval a (Exp a)
+  | -- | definition of local variables
+    Let [LocalDef a]
+  | -- | pattern matching
+    Match
+      (Maybe a) -- ^ result variable
+      a -- ^ scrutinee
+      (NonEmpty (Case a)) -- branches
+  | Break a -- ^ break from Match with the result value
+  | Return a
+  deriving stock (Eq, Show, Functor, Foldable)
+
+instance Pretty a => Pretty (Stmt a) where
+  pPrint (Eval x e) = pPrint x <+> "=" <+> "eval" <+> pPrint e
+  pPrint (Let xs) =
+    "let" <+> parens (sep (map pPrint xs))
+  pPrint (Match Nothing v cs) = parens ("match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs))
+  pPrint (Match (Just r) v cs) = pPrint r <+> "=" <+> parens ("match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs))
+  pPrint (Break x) = "break" <+> pPrint x
+  pPrint (Return x) = "return" <+> pPrint x
+
+instance HasFreeVar Stmt where
+  freevars (Eval _ e) = freevars e
+  freevars (Let xs) = foldr (sans . view localDefVar) (foldMap (freevars . view localDefObj) xs) xs
+  freevars (Match _ v cs) = one v <> foldMap freevars cs
+  freevars (Break x) = one x
+  freevars (Return x) = one x
+
+instance HasAtom Stmt where
+  atom f = \case
+    Eval x e -> Eval x <$> traverseOf atom f e
+    Let xs -> Let <$> traverseOf (traversed . localDefObj . atom) f xs
+    Match r v cs -> Match r v <$> traverseOf (traversed . atom) f cs
+    s -> pure s
+
+bound :: (Hashable a, Eq a) => Stmt a -> HashSet a
+bound (Eval x _) = one x
+bound (Let xs) = fromList $ map (view localDefVar) xs
+bound (Match (Just r) _ _) = one r
+bound Match {} = mempty
+bound (Break _) = mempty
+bound (Return _) = mempty
+
+appStmt :: Traversal' (Stmt a) (Exp a)
+appStmt f = \case
+  Eval x e -> Eval x <$> f e
+  Let xs -> Let <$> traverseOf (traversed . localDefObj . appObj) f xs
+  Match r v cs -> Match r v <$> traverseOf (traversed . appCase) f cs
+  s -> pure s
+
+appBlock :: Traversal' (Block a) (Exp a)
+appBlock f Block {..} = Block <$> traverseOf (traversed . appStmt) f _statements
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
-  Fun ps e -> Fun ps <$> f e
+  Fun ps e -> Fun ps <$> appBlock f e
   o -> pure o
 
 appCase :: Traversal' (Case a) (Exp a)
 appCase f = \case
-  Unpack con ps e -> Unpack con ps <$> f e
-  Switch u e -> Switch u <$> f e
-  Bind x e -> Bind x <$> f e
+  Unpack con ps e -> Unpack con ps <$> appBlock f e
+  Switch u e -> Switch u <$> appBlock f e
+  Bind x e -> Bind x <$> appBlock f e
 
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {..} =
   Program _moduleName
-    <$> traverseOf (traversed . _2) f _topVars
-    <*> traverseOf (traversed . _2 . _2) f _topFuncs
+    <$> traverseOf (traversed . _2 . appBlock) f _topVars
+    <*> traverseOf (traversed . _2 . _2 . appBlock) f _topFuncs
     <*> pure _extFuncs
-
-newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
-  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
-
-runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
-runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
-
-let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
-let_ otype obj = do
-  x <- newInternalId "$let" otype
-  DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
-  pure (Var x)
-
-destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
-destruct val con@(Con _ ts) = do
-  vs <- traverse (newInternalId "$p") ts
-  DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
-  pure $ map Var vs
-
-bind :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
-bind (Atom a) = pure a
-bind v = do
-  x <- newInternalId "$d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
-  pure (Var x)
-
-cast :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
-cast ty e
-  | ty == typeOf e = bind e
-  | otherwise = do
-    v <- bind e
-    x <- newInternalId "$cast" ty
-    DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
-    pure (Var x)
-
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
-mainFunc depList e = do
-  mainFuncId <- newExternalId "main" ([] :-> Int32T) (ModuleName "Builtin")
-  mainFuncBody <- runDef $ do
-    _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
-    traverse_
-      ( \(ModuleName modName) ->
-          bind $ RawCall ("koriel_load_" <> modName) ([] :-> VoidT) []
-      )
-      depList
-    pure e
-  pure (mainFuncId, ([], mainFuncBody))

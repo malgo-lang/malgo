@@ -296,11 +296,6 @@ genExp (CallDirect f xs) k = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
   k =<< call fOpr (map (,[]) xsOprs)
--- genExp (ExtCall name (ps :-> r) xs) k = do
---   primOpr <- findExt (LLVM.AST.mkName $ convertString name) (map convType ps) (convType r)
---   xsOprs <- traverse genAtom xs
---   k =<< call primOpr (map (,[]) xsOprs)
--- genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
 genExp (RawCall name (ps :-> r) xs) k = do
   let primOpr =
         ConstantOperand $

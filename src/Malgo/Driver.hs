@@ -27,6 +27,7 @@ import Text.Megaparsec
   ( errorBundlePretty,
   )
 import Malgo.Core.Match (compileMatch)
+import Koriel.Core.ToImp (toImp)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -96,6 +97,11 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     liftIO $ do
       hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
       hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
+  imp <- toImp $ over appProgram flat coreLLOpt
+  when (dumpDesugar opt) $
+    liftIO $ do
+      hPutStrLn stderr "=== IMPERATIVE ==="
+      hPrint stderr $ pPrint imp
   codeGen (srcName opt) (dstName opt) uniqSupply (Syntax._moduleName typedAst) coreLLOpt
 
 -- | Read the source file and parse it, then compile.
