@@ -2,7 +2,6 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Lens (over, view, (^.))
-import Control.Monad.Catch (catch)
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
@@ -11,7 +10,6 @@ import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Core.MlgToCore (mlgToCore)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
 import Malgo.Parser (parseMalgo)
@@ -54,15 +52,6 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   (renamedAst, rnState) <- withDump (dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
   (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
-
-  -- MlgToCore
-  catch
-    ( do
-        mlgCore <- mlgToCore tcEnv refinedAst
-        when (debugMode opt) do
-          hPrint stderr $ pPrint mlgCore
-    )
-    (\e -> hPutStrLn stderr $ "MlgToCore Fail: " <> displayException (e :: SomeException))
 
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
   (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar rnEnv tcEnv depList refinedAst

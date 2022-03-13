@@ -1,6 +1,5 @@
 import Malgo.Prelude
 import System.Directory (listDirectory)
-import System.Exit (ExitCode (ExitFailure, ExitSuccess))
 import System.FilePath (isExtensionOf, (</>))
 import System.Process.Typed
 import Test.Hspec
