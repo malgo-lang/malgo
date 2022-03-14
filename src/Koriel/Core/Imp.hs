@@ -256,7 +256,7 @@ data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (LocalDef a) where
-  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
+  pPrint (LocalDef v o) = pPrint v <+> "=" <+> pPrint o
 
 localDefVar :: Lens' (LocalDef a) a
 localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
@@ -301,8 +301,7 @@ data Stmt a
 
 instance Pretty a => Pretty (Stmt a) where
   pPrint (Eval x e) = pPrint x <+> "=" <+> "eval" <+> pPrint e
-  pPrint (Let xs) =
-    "let" <+> parens (sep (map pPrint xs))
+  pPrint (Let xs) = "let" <+> brackets (sep (map pPrint xs))
   pPrint (Match Nothing v cs) = parens ("match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs))
   pPrint (Match (Just r) v cs) = pPrint r <+> "=" <+> parens ("match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs))
   pPrint (Break x) = "break" <+> pPrint x

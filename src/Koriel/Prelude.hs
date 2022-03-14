@@ -2,8 +2,7 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Koriel.Prelude
-  ( 
-    -- * Reexports
+  ( -- * Reexports
     module Relude,
     module Control.Monad.Writer.Class,
     module Control.Monad.Trans.Writer.CPS,
@@ -35,6 +34,7 @@ import Control.Monad.Writer.Class hiding (pass)
 import qualified Control.Monad.Writer.Class as Writer
 import Data.Monoid
 import qualified Data.Text.IO as T
+import qualified LLVM.AST
 import Relude hiding (All, Op, Type, id, unzip)
 import qualified System.IO
 
@@ -87,3 +87,5 @@ hPutText handle x = liftIO $ T.hPutStr handle x
 -- | Lifted version of 'T.hPutStrLn'.
 hPutTextLn :: MonadIO m => Handle -> Text -> m ()
 hPutTextLn handle x = liftIO $ T.hPutStrLn handle x
+
+instance Hashable LLVM.AST.Name

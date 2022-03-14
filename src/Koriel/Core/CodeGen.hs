@@ -50,8 +50,6 @@ import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Context (withContext)
 import LLVM.Module (withModuleFromAST, moduleLLVMAssembly)
 
-instance Hashable Name
-
 type PrimMap = HashMap Name Operand
 
 -- 変数のHashMapとknown関数のHashMapを分割する

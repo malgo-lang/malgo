@@ -55,7 +55,10 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
-  (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar rnEnv tcEnv depList refinedAst
+  (dsEnv, core) <- desugar rnEnv tcEnv depList refinedAst
+  when (dumpDesugar opt) $ do
+    hPutStrLn stderr "=== DESUGAR ==="
+    hPrint stderr $ pPrint $ over appProgram flat core
   let inf = buildInterface rnState dsEnv
   storeInterface inf
   when (debugMode opt) $ do
