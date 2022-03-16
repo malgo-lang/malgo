@@ -3,7 +3,7 @@
 
 module Koriel.Core.ImpToLLVM where
 
-import Control.Lens (At (at), over, use, view, (?=), (^.))
+import Control.Lens (At (at), over, use, view, (<?=), (?=), (^.))
 import Control.Lens.TH (makeLenses)
 import qualified Control.Monad.State.Lazy as Lazy
 import qualified Data.ByteString.Lazy as BL
@@ -18,6 +18,7 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Koriel.Pretty
 import LLVM (moduleLLVMAssembly, withModuleFromAST)
 import LLVM.AST (Definition (GlobalDefinition), Module (moduleDefinitions, moduleName, moduleSourceFileName), Name, Operand (ConstantOperand), Type (IntegerType), UnnamedAddr (GlobalAddr), defaultModule, globalVariableDefaults, mkName)
 import qualified LLVM.AST.Constant as Constant
@@ -143,18 +144,39 @@ genFunc name params body =
     llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ toShort $ encodeUtf8 $ idToText x)) params
     func = if idIsExternal name then function else internalFunction
 
+genBlock :: (MonadReader CodeGenEnv f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f) => Block (Id C.Type) -> f ()
 genBlock Block {_statements} = genStmts _statements
 
+genStmts :: (MonadReader CodeGenEnv f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f) => [Stmt (Id C.Type)] -> f ()
 genStmts [] = pure ()
 genStmts (Eval x e : ss) = do
   e' <- genExp (C.typeOf x) e
   local (over localValueMap (HashMap.insert x e')) $ genStmts ss
 
+genExp :: (MonadReader CodeGenEnv m, MonadIO m, MonadModuleBuilder m, MonadIRBuilder m, MonadState PrimMap m) => C.Type -> Exp (Id C.Type) -> m Operand
 genExp t e
   | t == C.typeOf e = genExp' e
   | otherwise = error "not implemented: insert cast"
 
 genExp' (Atom x) = genAtom x
+genExp' (Call f xs) = do
+  fOpr <- genAtom f
+  captureOpr <- gepAndLoad fOpr [int32 0, int32 0]
+  funcOpr <- gepAndLoad fOpr [int32 0, int32 1]
+  xsOprs <- traverse genAtom xs
+  call funcOpr (map (,[]) $ captureOpr : xsOprs)
+genExp' (CallDirect f xs) = do
+  fOpr <- findFun f
+  xsOprs <- traverse genAtom xs
+  call fOpr (map (,[]) xsOprs)
+genExp' (RawCall name (ps :-> r) xs) = do
+  let primOpr =
+        ConstantOperand $
+          Constant.GlobalReference
+            (ptr $ FunctionType (convType r) (map convType ps) False)
+            (mkName $ convertString name)
+  xsOprs <- traverse genAtom xs
+  call primOpr (map (,[]) xsOprs)
 
 genAtom :: (MonadReader CodeGenEnv m, MonadIO m, MonadModuleBuilder m, MonadIRBuilder m, MonadState PrimMap m) => Atom (Id C.Type) -> m Operand
 genAtom (Var x) = findVar x
@@ -197,6 +219,24 @@ findVar x = findLocalVar
       at (toName x) ?= opr
       load opr 0
 
+findFun :: (MonadReader CodeGenEnv m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
+findFun x =
+  view (functionMap . at x) >>= \case
+    Just opr -> pure opr
+    Nothing ->
+      case C.typeOf x of
+        ps :-> r -> findExt (toName x) (map convType ps) (convType r)
+        _ -> error $ show $ pPrint x <> " is not found"
+
+-- | Intern a external function or return the interned external function
+findExt :: (MonadState PrimMap m, MonadModuleBuilder m) => Name -> [LT.Type] -> LT.Type -> m Operand
+findExt x ps r =
+  use (at x) >>= \case
+    Just x -> pure x
+    Nothing -> do
+      ext <- extern x ps r
+      at x <?= ext
+
 -- | 'function', but linkage = Internal
 internalFunction ::
   MonadModuleBuilder m =>
@@ -232,3 +272,22 @@ globalStringPtr str nm = do
           unnamedAddr = Just GlobalAddr
         }
   pure $ Constant.GetElementPtr True (Constant.GlobalReference (ptr ty) nm) [Constant.Int 32 0, Constant.Int 32 0]
+
+gepAndLoad ::
+  (MonadIRBuilder m, MonadModuleBuilder m) =>
+  Operand ->
+  [Operand] ->
+  m Operand
+gepAndLoad opr addrs = do
+  addr <- gep opr addrs
+  load addr 0
+
+gepAndStore ::
+  (MonadIRBuilder m, MonadModuleBuilder m) =>
+  Operand ->
+  [Operand] ->
+  Operand ->
+  m ()
+gepAndStore opr addrs val = do
+  addr <- gep opr addrs
+  store addr 0 val
