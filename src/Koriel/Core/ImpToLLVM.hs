@@ -30,37 +30,48 @@ import qualified LLVM.AST.Typed
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr)
 
-data CodeGenEnv = CodeGenEnv
+data CodeGenEnv m = CodeGenEnv
   { _codeGenUniqSupply :: UniqSupply,
     _localValueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
-    _functionMap :: HashMap (Id C.Type) Operand
+    _functionMap :: HashMap (Id C.Type) Operand,
+    _returnOperator :: Operand -> m (),
+    _breakOperator :: Operand -> m ()
   }
 
 makeLenses ''CodeGenEnv
 
-instance HasUniqSupply CodeGenEnv where
+instance HasUniqSupply (CodeGenEnv m) where
   uniqSupply = codeGenUniqSupply
 
-mkCodeGenEnv :: UniqSupply -> HashMap (Id C.Type) Operand -> HashMap (Id C.Type) Operand -> CodeGenEnv
+newtype CodeGenT m a = CodeGenT
+  { runCodeGenT ::
+      Lazy.StateT
+        PrimMap
+        ( ReaderT
+            (CodeGenEnv (IRBuilderT (CodeGenT m))) -- stores 'CodeGenEnv n' in the 'ReaderT', where 'n = IRBuilderT (CodeGenT m)'. Recursively!
+            (ModuleBuilderT m)
+        )
+        a
+  }
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadState PrimMap, MonadReader (CodeGenEnv (IRBuilderT (CodeGenT m))), MonadModuleBuilder)
+
+mkCodeGenEnv :: MonadIRBuilder m => UniqSupply -> HashMap (Id C.Type) Operand -> HashMap (Id C.Type) Operand -> CodeGenEnv m
 mkCodeGenEnv _codeGenUniqSupply _globalValueMap _functionMap =
-  let _localValueMap = mempty in CodeGenEnv {..}
+  let _localValueMap = mempty
+      _returnOperator = ret
+      _breakOperator = const pass
+   in CodeGenEnv {..}
 
 type PrimMap = HashMap Name Operand
 
-type MonadCodeGen m =
-  ( MonadModuleBuilder m,
-    MonadReader CodeGenEnv m,
-    MonadState PrimMap m
-  ) ::
-    Constraint
+-- runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+execCodeGenT :: Monad m => CodeGenEnv (IRBuilderT (CodeGenT m)) -> CodeGenT m a -> m [Definition]
+execCodeGenT env (CodeGenT m) = execModuleBuilderT emptyModuleBuilder $ runReaderT (Lazy.evalStateT m mempty) env
 
-runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
-runCodeGenT env m = execModuleBuilderT emptyModuleBuilder $ runReaderT (Lazy.evalStateT m mempty) env
-
-codeGen :: MonadIO m => FilePath -> FilePath -> UniqSupply -> p -> Program (Id C.Type) -> m ()
+codeGen :: MonadIO m => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
 codeGen srcPath dstPath uniqSupply modName Program {..} = do
-  llvmir <- runCodeGenT (mkCodeGenEnv uniqSupply globalVarEnv funcEnv) do
+  llvmir <- execCodeGenT (mkCodeGenEnv uniqSupply globalVarEnv funcEnv) do
     for_ _extFuncs \(name, typ) -> do
       let name' = LLVM.AST.mkName $ convertString name
       case typ of
@@ -68,6 +79,7 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
         _ -> error "invalid type"
     traverse_ (uncurry genGlobalVar) _topVars
     traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
+    genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
   liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
@@ -83,6 +95,13 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
               (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
               (toName f)
         )
+    initTopVars [] = retVoid
+    initTopVars ((name, block) : xs) =
+      view (globalValueMap . at name) >>= \case
+        Nothing -> errorDoc $ pPrint name <+> "is not found"
+        Just name' -> do
+          local (over returnOperator (const (store name' 0))) $ genBlock block
+          initTopVars xs
 
 toName :: Id a -> LLVM.AST.Name
 toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
@@ -127,6 +146,9 @@ sizeofType (PtrT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
+genLoadModule :: MonadModuleBuilder m => ModuleName -> IRBuilderT m () -> m Operand
+genLoadModule (ModuleName modName) m = function (mkName $ convertString $ "koriel_load_" <> modName) [] LT.void $ const m
+
 -- | Generate a (LLVM-level) global variable declaration for a (Malgo-level) toplevel variable definition.
 -- It doesn't initialize the variable.
 genGlobalVar :: MonadModuleBuilder m => Id C.Type -> Block (Id C.Type) -> m Operand
@@ -136,7 +158,7 @@ genGlobalVar name body = global (toName name) typ (Constant.Undef typ)
 
 -- | Generate a function corresponding a 'known' function in Malgo.
 -- Known functions does not have free variables.
-genFunc :: (MonadModuleBuilder m, MonadReader CodeGenEnv m, MonadState PrimMap m, MonadIO m) => Id C.Type -> [Id C.Type] -> Block (Id C.Type) -> m Operand
+genFunc :: (MonadReader (CodeGenEnv (IRBuilderT m)) m, MonadModuleBuilder m, MonadIO m, MonadState PrimMap m) => Id C.Type -> [Id C.Type] -> Block (Id C.Type) -> m Operand
 genFunc name params body =
   func funcName llvmParams (convType $ C.typeOf body) $ \args -> local (over localValueMap (HashMap.fromList (zip params args) <>)) $ genBlock body
   where
@@ -144,16 +166,28 @@ genFunc name params body =
     llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ toShort $ encodeUtf8 $ idToText x)) params
     func = if idIsExternal name then function else internalFunction
 
-genBlock :: (MonadReader CodeGenEnv f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f) => Block (Id C.Type) -> f ()
+genBlock :: (MonadReader (CodeGenEnv f) f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f) => Block (Id C.Type) -> f ()
 genBlock Block {_statements} = genStmts _statements
 
-genStmts :: (MonadReader CodeGenEnv f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f) => [Stmt (Id C.Type)] -> f ()
-genStmts [] = pure ()
+genStmts :: (MonadReader (CodeGenEnv f) f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f) => [Stmt (Id C.Type)] -> f ()
+genStmts [] = pass
 genStmts (Eval x e : ss) = do
   e' <- genExp (C.typeOf x) e
   local (over localValueMap (HashMap.insert x e')) $ genStmts ss
+genStmts (Let ds : ss) = do
+  _
+genStmts (Match result scrutinee branches : ss) = do
+  _
+genStmts (Break x : _) = do
+  x' <- findVar x
+  breakOp <- view breakOperator
+  breakOp x'
+genStmts (Return x : _) = do
+  x' <- findVar x
+  retOp <- view returnOperator
+  retOp x'
 
-genExp :: (MonadReader CodeGenEnv m, MonadIO m, MonadModuleBuilder m, MonadIRBuilder m, MonadState PrimMap m) => C.Type -> Exp (Id C.Type) -> m Operand
+genExp :: (MonadReader (CodeGenEnv m) m, MonadIO m, MonadModuleBuilder m, MonadIRBuilder m, MonadState PrimMap m) => C.Type -> Exp (Id C.Type) -> m Operand
 genExp t e
   | t == C.typeOf e = genExp' e
   | otherwise = error "not implemented: insert cast"
@@ -178,7 +212,7 @@ genExp' (RawCall name (ps :-> r) xs) = do
   xsOprs <- traverse genAtom xs
   call primOpr (map (,[]) xsOprs)
 
-genAtom :: (MonadReader CodeGenEnv m, MonadIO m, MonadModuleBuilder m, MonadIRBuilder m, MonadState PrimMap m) => Atom (Id C.Type) -> m Operand
+genAtom :: (MonadReader (CodeGenEnv m) m, MonadIO m, MonadModuleBuilder m, MonadIRBuilder m, MonadState PrimMap m) => Atom (Id C.Type) -> m Operand
 genAtom (Var x) = findVar x
 genAtom (Unboxed u) = case u of
   Int32 x -> pure $ int32 x
@@ -192,7 +226,7 @@ genAtom (Unboxed u) = case u of
   Bool True -> pure $ int8 1
   Bool False -> pure $ int8 0
 
-findVar :: (MonadState PrimMap m, MonadIRBuilder m, MonadModuleBuilder m, MonadReader CodeGenEnv m) => Id C.Type -> m Operand
+findVar :: (MonadState PrimMap m, MonadIRBuilder m, MonadModuleBuilder m, MonadReader (CodeGenEnv m) m) => Id C.Type -> m Operand
 findVar x = findLocalVar
   where
     findLocalVar =
@@ -219,7 +253,7 @@ findVar x = findLocalVar
       at (toName x) ?= opr
       load opr 0
 
-findFun :: (MonadReader CodeGenEnv m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
+findFun :: (MonadReader (CodeGenEnv m) m, MonadState PrimMap m, MonadModuleBuilder m) => Id C.Type -> m Operand
 findFun x =
   view (functionMap . at x) >>= \case
     Just opr -> pure opr
@@ -249,7 +283,7 @@ internalFunction ::
   -- | Function body builder
   ([Operand] -> IRBuilderT m ()) ->
   m Operand
-internalFunction = _
+internalFunction = undefined
 
 globalStringPtr :: MonadModuleBuilder m => Text -> Name -> m Constant.Constant
 globalStringPtr str nm = do
