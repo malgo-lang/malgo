@@ -1,22 +1,24 @@
+{-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 
 module Koriel.Core.ImpToLLVM where
 
-import Control.Lens (At (at), ifor, ifor_, over, use, view, (<?=), (?=), (^.))
+import Control.Lens (At (at), ifor, ifor_, over, use, view, (<?=), (?=), (?~), (^.), (^?))
 import Control.Lens.TH (makeLenses)
+import Control.Monad.Fix
 import qualified Control.Monad.State.Lazy as Lazy
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (Foldable (maximum))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
-import Data.List.Extra (mconcatMap)
+import Data.List.Extra (headDef, mconcatMap)
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Imp
 import qualified Koriel.Core.Op as Op
-import Koriel.Core.Type (Con (Con), Type (..))
+import Koriel.Core.Type (Con (Con), Type (..), _SumT)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.MonadUniq
@@ -60,7 +62,7 @@ newtype CodeGenT m a = CodeGenT
         )
         a
   }
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadState PrimMap, MonadReader (CodeGenEnv (IRBuilderT (CodeGenT m))), MonadModuleBuilder)
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadFix, MonadFail, MonadState PrimMap, MonadReader (CodeGenEnv (IRBuilderT (CodeGenT m))), MonadModuleBuilder)
 
 instance MonadTrans CodeGenT where
   lift m = CodeGenT (lift $ lift m)
@@ -78,7 +80,7 @@ type PrimMap = HashMap Name Operand
 execCodeGenT :: Monad m => CodeGenEnv (IRBuilderT (CodeGenT m)) -> CodeGenT m a -> m a
 execCodeGenT env (CodeGenT m) = runReaderT (Lazy.evalStateT m mempty) env
 
-codeGen :: MonadIO m => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
+codeGen :: (MonadIO m, MonadFix m, MonadFail m) => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
 codeGen srcPath dstPath uniqSupply modName Program {..} = do
   llvmir <- execModuleBuilderT emptyModuleBuilder $ execCodeGenT (mkCodeGenEnv uniqSupply globalVarEnv funcEnv) do
     for_ _extFuncs \(name, typ) -> do
@@ -168,7 +170,7 @@ genLoadModule (ModuleName modName) m = function (mkName $ convertString $ "korie
 
 -- | Generate a function corresponding a 'known' function in Malgo.
 -- Known functions does not have free variables.
-genFunc :: (MonadReader (CodeGenEnv (IRBuilderT m)) m, MonadModuleBuilder m, MonadIO m, MonadState PrimMap m) => Id C.Type -> [Id C.Type] -> Block (Id C.Type) -> m Operand
+genFunc :: (MonadReader (CodeGenEnv (IRBuilderT m)) m, MonadModuleBuilder m, MonadIO m, MonadState PrimMap m, MonadFix m, MonadFail m) => Id C.Type -> [Id C.Type] -> Block (Id C.Type) -> m Operand
 genFunc name params body =
   func funcName llvmParams (convType $ C.typeOf body) $ \args -> local (over localValueMap (HashMap.fromList (zip params args) <>)) $ genBlock body
   where
@@ -176,10 +178,10 @@ genFunc name params body =
     llvmParams = map (\x -> (convType $ x ^. idMeta, ParameterName $ toShort $ encodeUtf8 $ idToText x)) params
     func = if idIsExternal name then function else internalFunction
 
-genBlock :: (MonadReader (CodeGenEnv f) f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f) => Block (Id C.Type) -> f ()
+genBlock :: (MonadReader (CodeGenEnv f) f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f, MonadFix f, MonadFail f) => Block (Id C.Type) -> f ()
 genBlock Block {_statements} = genStmts _statements
 
-genStmts :: (MonadReader (CodeGenEnv f) f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f) => [Stmt (Id C.Type)] -> f ()
+genStmts :: (MonadReader (CodeGenEnv f) f, MonadIO f, MonadModuleBuilder f, MonadIRBuilder f, MonadState PrimMap f, MonadFix f, MonadFail f) => [Stmt (Id C.Type)] -> f ()
 genStmts [] = pass
 genStmts (Eval x e : ss) = do
   e' <- genExp (C.typeOf x) e
@@ -199,8 +201,24 @@ genStmts (Let ds : ss) = do
               ]
           )
     prepare _ = pure mempty
-genStmts (Match result scrutinee branches : ss) = do
-  _
+genStmts (Match (Just result) scrutinee branches : ss) = mdo
+  scrOpr <- findVar scrutinee
+  resultPtrOpr <- alloca (convType $ result ^. idMeta) Nothing 0
+  br switchBlock
+  -- Generate labels and code for each cases
+  (defaults, labels) <-
+    local (over breakOperator (const $ \x -> store resultPtrOpr 0 x >> br returnBlock)) $
+      partitionEithers . toList <$> traverse (genCase scrOpr (maybeToMonoid $ scrutinee ^? idMeta . _SumT)) branches
+  defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
+  switchBlock <- block
+  tagOpr <- case scrutinee ^. idMeta of
+    SumT _ -> gepAndLoad scrOpr [int32 0, int32 0]
+    _ -> pure scrOpr
+  switch tagOpr defaultLabel labels
+  returnBlock <- block
+  resultOpr <- load resultPtrOpr 0
+  local (over localValueMap (HashMap.insert result resultOpr)) $ genStmts ss
+genStmts (Match Nothing _ _ : _) = error "not implemented"
 genStmts (Break x : _) = do
   x' <- findVar x
   breakOp <- view breakOperator
@@ -210,7 +228,33 @@ genStmts (Return x : _) = do
   retOp <- view returnOperator
   retOp x'
 
-genLocalDef :: (MonadModuleBuilder m, MonadIO m, MonadState PrimMap m, MonadIRBuilder m, MonadReader (CodeGenEnv m) m) => LocalDef (Id C.Type) -> m (HashMap (Id C.Type) Operand)
+genCase :: (MonadModuleBuilder f, MonadReader (CodeGenEnv f) f, MonadIRBuilder f, MonadIO f, MonadState PrimMap f, MonadFix f, MonadFail f) => Operand -> [Con] -> Case (Id C.Type) -> f (Either Name (Constant, Name))
+genCase scrutinee constrList clause = do
+  label <- block
+  case clause of
+    Unpack con ids bl -> do
+      let (tag, conType) = genCon constrList con
+      addr <- bitcast scrutinee (ptr $ StructureType False [i8, conType])
+      payloadAddr <- gep addr [int32 0, int32 1]
+      env <-
+        HashMap.fromList <$> ifor ids \i v ->
+          (v,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
+      local (over localValueMap (env <>)) $ genBlock bl
+      pure $ Right (Constant.Int 8 tag, label)
+    Switch un bl -> do
+      ConstantOperand u' <- genAtom $ Unboxed un
+      genBlock bl
+      pure $ Right (u', label)
+    Bind id bl -> do
+      local (over localValueMap $ at id ?~ scrutinee) $ genBlock bl
+      pure $ Left label
+
+genCon :: [Con] -> Con -> (Integer, LT.Type)
+genCon constrList con@(Con _ ts)
+  | con `elem` constrList = (findIndex con constrList, StructureType False (map convType ts))
+  | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint constrList
+
+genLocalDef :: (MonadModuleBuilder m, MonadIO m, MonadState PrimMap m, MonadIRBuilder m, MonadReader (CodeGenEnv m) m, MonadFix m, MonadFail m) => LocalDef (Id C.Type) -> m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName (Fun ps b)) = do
   -- Generate the base function of the closure 'Fun ps b'
   func <- genBaseFunction
@@ -231,10 +275,12 @@ genLocalDef (LocalDef funName (Fun ps b)) = do
     genBaseFunction = do
       name <- toName <$> newInternalId (idToText funName <> "_closure") ()
       env <- ask
+      primMap <- get
       internalFunction name (map (,NoParameterName) psTypes) retType $ \args -> do
         state <- liftIRState get
-        runIn
+        (_, primMap') <- runIn
           (env {_breakOperator = const pass, _returnOperator = ret})
+          primMap
           state
           case args of
             [] -> error "The length of internal function parameters must be 1 or more"
@@ -246,11 +292,12 @@ genLocalDef (LocalDef funName (Fun ps b)) = do
                   (fv,) <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
               local (over localValueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $
                 local (over returnOperator (const ret)) $ genBlock b
-    runIn :: Monad m => CodeGenEnv (IRBuilderT (CodeGenT m)) -> IRBuilderState -> IRBuilderT (CodeGenT m) a -> IRBuilderT m a
-    runIn env s (IRBuilderT m) = do
-      (r, s) <- lift $ execCodeGenT env $ runStateT m s
+        put primMap'
+    runIn :: Monad m => CodeGenEnv (IRBuilderT (CodeGenT m)) -> PrimMap -> IRBuilderState -> IRBuilderT (CodeGenT m) a -> IRBuilderT m (a, PrimMap)
+    runIn env primMap s (IRBuilderT m) = do
+      ((r, s), primMap') <- lift $ runReaderT (Lazy.runStateT (runCodeGenT $ runStateT m s) primMap) env
       liftIRState (modify (const s))
-      pure r
+      pure (r, primMap')
 genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = do
   addr <- mallocType (StructureType False [i8, StructureType False $ map convType ts])
   gepAndStore addr [int32 0, int32 0] (int8 $ findIndex con cs)
@@ -288,6 +335,7 @@ genExp' (RawCall name (ps :-> r) xs) = do
             (mkName $ convertString name)
   xsOprs <- traverse genAtom xs
   call primOpr (map (,[]) xsOprs)
+genExp' e@RawCall {} = error $ "unreachable: genExp' " <> show e
 genExp' (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add
@@ -359,6 +407,12 @@ genExp' (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
       LLVM.IRBuilder.or
     i1ToBool i1opr =
       zext i1opr i8
+genExp' (Cast ty x) = do
+  xOpr <- genAtom x
+  bitcast xOpr (convType ty)
+genExp' (Error ty) = do
+  unreachable
+  pure $ ConstantOperand (Constant.Undef (convType ty))
 
 genAtom :: (MonadReader (CodeGenEnv m) m, MonadIO m, MonadModuleBuilder m, MonadIRBuilder m, MonadState PrimMap m) => Atom (Id C.Type) -> m Operand
 genAtom (Var x) = findVar x

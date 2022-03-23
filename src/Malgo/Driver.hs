@@ -2,12 +2,14 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Lens (over, view, (^.))
-import Koriel.Core.CodeGen (codeGen)
+import qualified Koriel.Core.CodeGen as Core
 import Koriel.Core.Flat (flat)
+import qualified Koriel.Core.ImpToLLVM as Imp
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lintProgram, runLint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
+import Koriel.Core.ToImp (toImp)
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
@@ -20,10 +22,10 @@ import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
 import qualified Malgo.TypeCheck.Pass as TypeCheck
+import System.FilePath ((-<.>))
 import Text.Megaparsec
   ( errorBundlePretty,
   )
-import Koriel.Core.ToImp (toImp)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -86,7 +88,8 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     liftIO $ do
       hPutStrLn stderr "=== IMPERATIVE ==="
       hPrint stderr $ pPrint imp
-  codeGen (srcName opt) (dstName opt) uniqSupply (Syntax._moduleName typedAst) coreLLOpt
+  Imp.codeGen (srcName opt) (dstName opt) uniqSupply (Syntax._moduleName typedAst) imp
+  Core.codeGen (srcName opt) (dstName opt -<.> "core.ll") uniqSupply (Syntax._moduleName typedAst) coreLLOpt
 
 -- | Read the source file and parse it, then compile.
 compile :: Opt -> IO ()
