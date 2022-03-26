@@ -131,9 +131,9 @@ lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 
 lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
-lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
-lintCase (Switch _ e) = lintExp e
-lintCase (Bind x e) = local (x :) $ lintExp e
+lintCase (Case (Unpack _ vs) e) = local (vs <>) $ lintExp e
+lintCase (Case (Switch _) e) = lintExp e
+lintCase (Case (Bind x) e) = local (x :) $ lintExp e
 
 lintAtom :: (MonadReader [Id a] m, Pretty a, Eq a) => Atom (Id a) -> m ()
 lintAtom (Var x) = defined x

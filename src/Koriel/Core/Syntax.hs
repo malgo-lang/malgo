@@ -12,6 +12,7 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
+import qualified Data.HashSet as HashSet
 
 class HasFreeVar f where
   -- | free variables
@@ -196,36 +197,37 @@ instance HasAtom Exp where
     Error t -> pure (Error t)
 
 -- | alternatives
-data Case a
-  = -- | constructor pattern
-    Unpack Con [a] (Exp a)
-  | -- | unboxed value pattern
-    Switch Unboxed (Exp a)
-  | -- | variable pattern
-    Bind a (Exp a)
+data Case a = Case (Pat a) (Exp a)
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasType a => HasType (Case a) where
-  typeOf (Unpack _ _ e) = typeOf e
-  typeOf (Switch _ e) = typeOf e
-  typeOf (Bind _ e) = typeOf e
+  typeOf (Case _ e) = typeOf e
 
 instance Pretty a => Pretty (Case a) where
-  pPrint (Unpack c xs e) =
-    parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
-  pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
-  pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
+  pPrint (Case p e) = parens $ sep [pPrint p, pPrint e]
 
 instance HasFreeVar Case where
-  freevars (Unpack _ xs e) = foldr sans (freevars e) xs
-  freevars (Switch _ e) = freevars e
-  freevars (Bind x e) = sans x $ freevars e
+  freevars (Case p e) = HashSet.difference (freevars e) (freevars p)
 
 instance HasAtom Case where
   atom f = \case
-    Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
-    Switch u e -> Switch u <$> traverseOf atom f e
-    Bind a e -> Bind a <$> traverseOf atom f e
+    Case p e -> Case p <$> traverseOf atom f e
+
+data Pat a
+  = Unpack Con [a] -- ^ constructor pattern
+  | Switch Unboxed -- ^ unboxed value pattern
+  | Bind a -- ^ variable pattern
+  deriving stock (Eq, Show, Functor, Foldable)
+
+instance Pretty a => Pretty (Pat a) where
+  pPrint (Unpack c xs) = "unpack" <+> parens (pPrint c <+> sep (map pPrint xs))
+  pPrint (Switch u) = "switch" <+> pPrint u
+  pPrint (Bind x) = "bind" <+> pPrint x
+
+instance HasFreeVar Pat where
+  freevars (Unpack _ xs) = fromList xs
+  freevars (Switch _) = mempty
+  freevars (Bind x) = one x
 
 -- | heap objects
 data Obj a
@@ -292,9 +294,7 @@ appObj f = \case
 
 appCase :: Traversal' (Case a) (Exp a)
 appCase f = \case
-  Unpack con ps e -> Unpack con ps <$> f e
-  Switch u e -> Switch u <$> f e
-  Bind x e -> Bind x <$> f e
+  Case p e -> Case p <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {..} =
@@ -318,14 +318,14 @@ let_ otype obj = do
 destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
 destruct val con@(Con _ ts) = do
   vs <- traverse (newInternalId "$p") ts
-  DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match val (Case (Unpack con vs) e :| [])
   pure $ map Var vs
 
 bind :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newInternalId "$d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match v (Case (Bind x) e :| [])
   pure (Var x)
 
 cast :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -334,7 +334,7 @@ cast ty e
   | otherwise = do
     v <- bind e
     x <- newInternalId "$cast" ty
-    DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
+    DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Case (Bind x) e :| [])
     pure (Var x)
 
 mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))

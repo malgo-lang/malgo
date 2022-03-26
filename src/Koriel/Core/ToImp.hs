@@ -25,7 +25,7 @@ expToBlock (S.Let defs e) = do
   defs <- traverse localDefToLocalDef defs
   Block e <- expToBlock e
   pure $ Block $ [Let defs] <> e
-expToBlock (S.Match s (S.Bind x e :| _)) = do
+expToBlock (S.Match s (S.Case (S.Bind x) e :| _)) = do
   Block s <- expToBlock s
   Block e <- expToBlock e
   let sValue = lastValue s
@@ -44,15 +44,15 @@ lastValue [Match r _ _] = r
 lastValue (_ : rest) = lastValue rest
 
 caseToCase :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.Case (Id Type) -> m (Case (Id Type))
-caseToCase (S.Unpack con ps e) = do
+caseToCase (S.Case (S.Unpack con ps) e) = do
   Block e <- expToBlock e
   let eValue = lastValue e
   pure $ Unpack con ps (Block $ e <> [Break eValue])
-caseToCase (S.Switch u e) = do
+caseToCase (S.Case (S.Switch u) e) = do
   Block e <- expToBlock e
   let eValue = lastValue e
   pure $ Switch (unboxedToUnboxed u) (Block $ e <> [Break eValue])
-caseToCase (S.Bind x e) = do
+caseToCase (S.Case (S.Bind x) e) = do
   Block e <- expToBlock e
   let eValue = lastValue e
   pure $ Bind x (Block $ e <> [Break eValue])
