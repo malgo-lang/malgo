@@ -2,7 +2,6 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Lens (over, view, (^.))
-import qualified Koriel.Core.CodeGen as Core
 import Koriel.Core.Flat (flat)
 import qualified Koriel.Core.ImpToLLVM as Imp
 import Koriel.Core.LambdaLift (lambdalift)
@@ -22,7 +21,6 @@ import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
 import qualified Malgo.TypeCheck.Pass as TypeCheck
-import System.FilePath ((-<.>))
 import Text.Megaparsec
   ( errorBundlePretty,
   )
@@ -89,7 +87,6 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
       hPutStrLn stderr "=== IMPERATIVE ==="
       hPrint stderr $ pPrint imp
   Imp.codeGen (srcName opt) (dstName opt) uniqSupply (Syntax._moduleName typedAst) imp
-  Core.codeGen (srcName opt) (dstName opt -<.> "core.ll") uniqSupply (Syntax._moduleName typedAst) coreLLOpt
 
 -- | Read the source file and parse it, then compile.
 compile :: Opt -> IO ()

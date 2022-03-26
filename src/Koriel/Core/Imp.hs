@@ -271,11 +271,11 @@ instance HasType a => HasType (Block a) where
   typeOf (Block stmts) = go stmts
     where
       go [] = VoidT
-      go [Match (Just r) _ _] = typeOf r
+      go [Match r _ _] = typeOf r
       go (Return a : _) = typeOf a
       go (_ : rest) = go rest
 
-  -- typeOf (Match _ (c :| _)) = typeOf c
+-- typeOf (Match _ (c :| _)) = typeOf c
 instance Pretty a => Pretty (Block a) where
   pPrint (Block stmts) = braces $ sep $ punctuate ";" $ map pPrint stmts
 
@@ -292,18 +292,20 @@ data Stmt a
     Let [LocalDef a]
   | -- | pattern matching
     Match
-      (Maybe a) -- ^ result variable
-      a -- ^ scrutinee
+      a
+      -- ^ result variable
+      a
+      -- ^ scrutinee
       (NonEmpty (Case a)) -- branches
-  | Break a -- ^ break from Match with the result value
+  | -- | break from Match with the result value
+    Break a
   | Return a
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Stmt a) where
   pPrint (Eval x e) = pPrint x <+> "=" <+> "eval" <+> pPrint e
   pPrint (Let xs) = "let" <+> brackets (sep (map pPrint xs))
-  pPrint (Match Nothing v cs) = parens ("match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs))
-  pPrint (Match (Just r) v cs) = pPrint r <+> "=" <+> parens ("match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs))
+  pPrint (Match r v cs) = pPrint r <+> "=" <+> parens ("match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs))
   pPrint (Break x) = "break" <+> pPrint x
   pPrint (Return x) = "return" <+> pPrint x
 
@@ -324,8 +326,7 @@ instance HasAtom Stmt where
 bound :: (Hashable a, Eq a) => Stmt a -> HashSet a
 bound (Eval x _) = one x
 bound (Let xs) = fromList $ map (view localDefVar) xs
-bound (Match (Just r) _ _) = one r
-bound Match {} = mempty
+bound (Match r _ _) = one r
 bound (Break _) = mempty
 bound (Return _) = mempty
 

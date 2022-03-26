@@ -201,7 +201,7 @@ genStmts (Let ds : ss) = do
               ]
           )
     prepare _ = pure mempty
-genStmts (Match (Just result) scrutinee branches : ss) = mdo
+genStmts (Match  result scrutinee branches : ss) = mdo
   scrOpr <- findVar scrutinee
   resultPtrOpr <- alloca (convType $ result ^. idMeta) Nothing 0
   br switchBlock
@@ -218,7 +218,6 @@ genStmts (Match (Just result) scrutinee branches : ss) = mdo
   returnBlock <- block
   resultOpr <- load resultPtrOpr 0
   local (over localValueMap (HashMap.insert result resultOpr)) $ genStmts ss
-genStmts (Match Nothing _ _ : _) = error "not implemented"
 genStmts (Break x : _) = do
   x' <- findVar x
   breakOp <- view breakOperator

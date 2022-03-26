@@ -34,13 +34,13 @@ expToBlock e@(S.Match s cs) = do
   Block s <- expToBlock s
   result <- newInternalId "mr" (typeOf e)
   cs <- traverse caseToCase cs
-  pure $ Block $ s <> [Match (Just result) (lastValue s) cs]
+  pure $ Block $ s <> [Match result (lastValue s) cs]
 expToBlock (S.Error t) = eval (Error t)
 
 lastValue :: [Stmt (Id Type)] -> Id Type
 lastValue [] = error "no value"
 lastValue [Eval x _] = x
-lastValue [Match (Just r) _ _] = r
+lastValue [Match r _ _] = r
 lastValue (_ : rest) = lastValue rest
 
 caseToCase :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.Case (Id Type) -> m (Case (Id Type))
