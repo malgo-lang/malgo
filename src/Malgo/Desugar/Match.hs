@@ -100,7 +100,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       let coreCon = Core.Con (Data $ idToText conName) paramTypes
       params <- traverse (newInternalId "$p") paramTypes
       let (pat', es') = group conName pat es
-      Case (Unpack coreCon params) <$> match (params <> restScrutinee) pat' es' err
+      Case (Unpack coreCon $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
     unfoldedType <- unfoldType patType
     pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
   -- パターンの先頭がすべてレコードのとき
@@ -110,7 +110,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       (pat', es') <- groupRecord pat es
-      one . Case (Unpack con params) <$> match (params <> restScrutinee) pat' es' err
+      one . Case (Unpack con $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
@@ -119,7 +119,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       let (pat', es') = groupTuple pat es
-      one . Case (Unpack con params) <$> match (params <> restScrutinee) pat' es' err
+      one . Case (Unpack con $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do

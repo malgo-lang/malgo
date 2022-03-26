@@ -141,7 +141,7 @@ optPackInline (Match (Atom (Var v)) (Case (Unpack con xs) body :| [])) = do
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Match (Atom $ Var v) $ Case (Unpack con xs) body' :| []
   where
-    build (x : xs) (a : as) body = Match (Atom a) $ Case (Bind x) (build xs as body) :| []
+    build (x : xs) (a : as) body = Match (Atom a) $ Case x (build xs as body) :| []
     build _ _ body = body
 optPackInline (Match v cs) =
   Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs

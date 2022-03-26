@@ -47,7 +47,11 @@ caseToCase :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.Case (Id Ty
 caseToCase (S.Case (S.Unpack con ps) e) = do
   Block e <- expToBlock e
   let eValue = lastValue e
-  pure $ Unpack con ps (Block $ e <> [Break eValue])
+  let vs =
+        map ?? ps $ \case
+          S.Bind x -> x
+          _ -> error "invalid pattern"
+  pure $ Unpack con vs (Block $ e <> [Break eValue])
 caseToCase (S.Case (S.Switch u) e) = do
   Block e <- expToBlock e
   let eValue = lastValue e

@@ -6,13 +6,13 @@
 module Koriel.Core.Syntax where
 
 import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
+import qualified Data.HashSet as HashSet
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import qualified Data.HashSet as HashSet
 
 class HasFreeVar f where
   -- | free variables
@@ -214,9 +214,12 @@ instance HasAtom Case where
     Case p e -> Case p <$> traverseOf atom f e
 
 data Pat a
-  = Unpack Con [a] -- ^ constructor pattern
-  | Switch Unboxed -- ^ unboxed value pattern
-  | Bind a -- ^ variable pattern
+  = -- | constructor pattern
+    Unpack Con [Pat a]
+  | -- | unboxed value pattern
+    Switch Unboxed
+  | -- | variable pattern
+    Bind a
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Pat a) where
@@ -225,7 +228,7 @@ instance Pretty a => Pretty (Pat a) where
   pPrint (Bind x) = "bind" <+> pPrint x
 
 instance HasFreeVar Pat where
-  freevars (Unpack _ xs) = fromList xs
+  freevars (Unpack _ xs) = mconcat $ map freevars xs
   freevars (Switch _) = mempty
   freevars (Bind x) = one x
 
@@ -318,7 +321,7 @@ let_ otype obj = do
 destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
 destruct val con@(Con _ ts) = do
   vs <- traverse (newInternalId "$p") ts
-  DefBuilderT $ tell $ Endo $ \e -> Match val (Case (Unpack con vs) e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match val (Case (Unpack con $ map Bind vs) e :| [])
   pure $ map Var vs
 
 bind :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))

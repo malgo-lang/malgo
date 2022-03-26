@@ -67,10 +67,15 @@ alphaObj (Fun ps e) = do
 alphaObj o = traverseOf atom alphaAtom o
 
 alphaCase :: (MonadReader AlphaEnv m, MonadIO m) => Case (Id Type) -> m (Case (Id Type))
-alphaCase (Case (Unpack c ps) e) = do
-  ps' <- traverse cloneId ps
-  local (over alphaMap (HashMap.fromList (zip ps $ map Var ps') <>)) $ Case (Unpack c ps') <$> alphaExp e
-alphaCase (Case (Switch u) e) = Case (Switch u) <$> alphaExp e
-alphaCase (Case (Bind x) e) = do
+alphaCase (Case p e) = do
+  (newMap, p') <- alphaPat p
+  local (over alphaMap (newMap <>)) $ Case p' <$> alphaExp e
+
+alphaPat :: (MonadReader AlphaEnv m, MonadIO m) => Pat (Id Type) -> m (HashMap (Id Type) (Atom (Id Type)), Pat (Id Type))
+alphaPat (Unpack c ps) = do
+  (newEnv, ps') <- first mconcat . unzip <$> traverse alphaPat ps
+  pure (newEnv, Unpack c ps')
+alphaPat (Switch u) = pure (mempty, Switch u)
+alphaPat (Bind x) = do
   x' <- cloneId x
-  local (over alphaMap (HashMap.insert x $ Var x')) $ Case (Bind x') <$> alphaExp e
+  pure (one (x, Var x'), Bind x')
