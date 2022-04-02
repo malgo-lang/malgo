@@ -87,14 +87,9 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) heads = do
     let patType = Malgo.typeOf $ List.head heads
-    unfoldedType <- unfoldType patType
-    let constrList = case unfoldedType of
-          SumT cs -> cs
-          _ -> errorDoc $ "unfoledType must be SumT, but" <+> pPrint unfoldedType
+    unfoldedType@(SumT constrList) <- unfoldType patType
     -- 型からコンストラクタの集合を求める
-    let (con, ts) = case Malgo.viewTyConApp patType of
-          Just (Malgo.TyCon con, ts) -> (con, ts)
-          _ -> error "patType must be TyApp or TyCon"
+    Just (Malgo.TyCon con, ts) <- pure $ Malgo.viewTyConApp patType
     valueConstructors <- lookupValueConstructors con ts
     -- 各コンストラクタごとにC.Caseを生成する
     cases <- for valueConstructors \(conName, Forall _ conType) -> do
