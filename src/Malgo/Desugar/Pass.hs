@@ -55,7 +55,7 @@ desugar rnEnv tcEnv depList (Module modName ds) = do
       mainFuncDef <-
         mainFunc depList =<< runDef do
           let unitCon = C.Con C.Tuple []
-          unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
+          unit <- let_ (SumT [unitCon]) (Pack [unitCon] unitCon [])
           _ <- bind $ mainCall [unit]
           pure (Atom $ C.Unboxed $ C.Int32 0)
       pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs) extDefs)
@@ -161,8 +161,8 @@ dsDataDef (_, name, _, cons) =
     conName' <- newCoreId conName $ buildConType paramTypes' retType'
     ps <- traverse (newInternalId "$p") paramTypes'
     expr <- runDef $ do
-      unfoldedType <- unfoldType retType
-      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ idToText conName) paramTypes') $ map C.Var ps)
+      unfoldedType@(SumT cs) <- unfoldType retType
+      packed <- let_ unfoldedType (Pack cs (C.Con (Data $ idToText conName) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
     obj <- case ps of
       [] -> pure ([], expr)
@@ -252,7 +252,7 @@ dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
   let con = C.Con C.Tuple $ map C.typeOf es'
   let ty = SumT [con]
-  tuple <- let_ ty $ Pack ty con es'
+  tuple <- let_ ty $ Pack [con] con es'
   pure $ Atom tuple
 dsExp (G.Record x kvs) = runDef $ do
   kvs' <- map (first removePrefix) <$> traverseOf (traversed . _2) (bind <=< dsExp) kvs
@@ -261,7 +261,7 @@ dsExp (G.Record x kvs) = runDef $ do
   let con = C.Con C.Tuple $ map snd kts
   let ty = SumT [con]
   let vs' = sortRecordField (map fst kts) kvs'
-  tuple <- let_ ty $ Pack ty con vs'
+  tuple <- let_ ty $ Pack [con] con vs'
   pure $ Atom tuple
   where
     sortRecordField [] _ = []
@@ -273,7 +273,7 @@ dsExp (G.RecordAccess x label) = runDef $ do
   obj <-
     Fun [p] <$> runDef do
       let con = C.Con C.Tuple $ map snd kts
-      tuple <- destruct (Atom (C.Var p)) con
+      tuple <- destruct (Atom (C.Var p)) [con] con
       pure $ Atom $ tuple List.!! fromJust (List.elemIndex (removePrefix label) (map fst kts))
   accessType <- dsType (x ^. GT.withType)
   Atom <$> let_ accessType obj

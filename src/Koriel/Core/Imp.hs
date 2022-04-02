@@ -232,16 +232,16 @@ data Obj a
   = -- | function (arity >= 1)
     Fun [a] (Block a)
   | -- | saturated constructor (arity >= 0)
-    Pack Type Con [Atom a]
+    Pack [Con] Con [Atom a]
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
-  typeOf (Pack t _ _) = t
+  typeOf (Pack cs _ _) = SumT cs
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
+  pPrint (Pack cs c xs) = parens $ sep (["pack", pPrint cs, pPrint c] <> map pPrint xs)
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -250,7 +250,7 @@ instance HasFreeVar Obj where
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
-    Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
+    Pack cs con xs -> Pack cs con <$> traverseOf (traversed . atom) f xs
 
 data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable)

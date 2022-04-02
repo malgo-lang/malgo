@@ -128,14 +128,21 @@ lintExp Error {} = pass
 
 lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
-lintObj (Pack _ _ xs) = traverse_ lintAtom xs
+lintObj (Pack cs c xs)
+  | c `elem` cs = traverse_ lintAtom xs
+  | otherwise = error "Pack"
 
 lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
-lintCase (Case p e) = local (go p <>) $ lintExp e
+lintCase (Case p e) = do
+  vs <- go p
+  local (vs <>) $ lintExp e
   where
-    go (Unpack _ ps) = concatMap go ps
-    go (Switch _) = []
-    go (Bind x) = [x]
+    go (Unpack constrList con ps) = do
+      when (con `notElem` constrList) $
+        errorDoc $ pPrint con <+> "is not in" <+> pPrint constrList
+      concat <$> traverse go ps
+    go (Switch _) = pure []
+    go (Bind x) = pure [x]
 
 lintAtom :: (MonadReader [Id a] m, Pretty a, Eq a) => Atom (Id a) -> m ()
 lintAtom (Var x) = defined x

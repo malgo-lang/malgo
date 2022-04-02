@@ -160,15 +160,14 @@ instance HasType a => HasType (Exp a) where
 
 instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
-  pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
-  pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  -- pPrint (ExtCall p t xs) = parens $ "external" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
-  pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
-  pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
-  pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
+  pPrint (Call f xs) = parens $ sep $ pPrint f : map pPrint xs
+  pPrint (CallDirect f xs) = parens $ sep $ "direct" : pPrint f : map pPrint xs
+  pPrint (RawCall p t xs) = parens $ sep $ "raw" : pPrint p : pPrint t : map pPrint xs
+  pPrint (BinOp o x y) = parens $ sep [pPrint o, pPrint x, pPrint y]
+  pPrint (Cast ty x) = parens $ sep ["cast", pPrint ty, pPrint x]
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
-  pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
+  pPrint (Match v cs) = parens $ sep $ "match" : pPrint v : toList (fmap pPrint cs)
   pPrint (Error _) = "ERROR"
 
 instance HasFreeVar Exp where
@@ -215,7 +214,7 @@ instance HasAtom Case where
 
 data Pat a
   = -- | constructor pattern
-    Unpack Con [Pat a]
+    Unpack [Con] Con [Pat a]
   | -- | unboxed value pattern
     Switch Unboxed
   | -- | variable pattern
@@ -223,12 +222,12 @@ data Pat a
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance Pretty a => Pretty (Pat a) where
-  pPrint (Unpack c xs) = "unpack" <+> parens (pPrint c <+> sep (map pPrint xs))
-  pPrint (Switch u) = "switch" <+> pPrint u
-  pPrint (Bind x) = "bind" <+> pPrint x
+  pPrint (Unpack cs c xs) = parens $ sep $ "unpack" : pPrint c : "in" : pPrint cs : map pPrint xs
+  pPrint (Switch u) = parens $ "switch" <+> pPrint u
+  pPrint (Bind x) = parens $ "bind" <+> pPrint x
 
 instance HasFreeVar Pat where
-  freevars (Unpack _ xs) = mconcat $ map freevars xs
+  freevars (Unpack _ _ xs) = mconcat $ map freevars xs
   freevars (Switch _) = mempty
   freevars (Bind x) = one x
 
@@ -237,16 +236,16 @@ data Obj a
   = -- | function (arity >= 1)
     Fun [a] (Exp a)
   | -- | saturated constructor (arity >= 0)
-    Pack Type Con [Atom a]
+    Pack [Con] Con [Atom a]
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
-  typeOf (Pack t _ _) = t
+  typeOf (Pack cs _ _) = SumT cs
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
+  pPrint (Pack cs c xs) = parens $ sep (["pack", pPrint cs, pPrint c] <> map pPrint xs)
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -255,7 +254,7 @@ instance HasFreeVar Obj where
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
-    Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
+    Pack cs con xs -> Pack cs con <$> traverseOf (traversed . atom) f xs
 
 -- | toplevel function definitions
 data Program a = Program
@@ -318,10 +317,10 @@ let_ otype obj = do
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
   pure (Var x)
 
-destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
-destruct val con@(Con _ ts) = do
+destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> [Con] -> Con -> DefBuilderT m [Atom (Id Type)]
+destruct val cs con@(Con _ ts) = do
   vs <- traverse (newInternalId "$p") ts
-  DefBuilderT $ tell $ Endo $ \e -> Match val (Case (Unpack con $ map Bind vs) e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match val (Case (Unpack cs con $ map Bind vs) e :| [])
   pure $ map Var vs
 
 bind :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))

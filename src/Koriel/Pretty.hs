@@ -27,7 +27,7 @@ instance Pretty Doc where
   pPrint = identity
 
 errorDoc :: HasCallStack => Doc -> a
-errorDoc x = Prelude.error $ P.render x
+errorDoc x = Prelude.error $ P.renderStyle style {lineLength = 270} x
 
 instance Pretty (f (Fix f)) => Pretty (Fix f) where
   pPrintPrec l d (Fix f) = pPrintPrec l d f

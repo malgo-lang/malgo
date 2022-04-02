@@ -72,9 +72,9 @@ alphaCase (Case p e) = do
   local (over alphaMap (newMap <>)) $ Case p' <$> alphaExp e
 
 alphaPat :: (MonadReader AlphaEnv m, MonadIO m) => Pat (Id Type) -> m (HashMap (Id Type) (Atom (Id Type)), Pat (Id Type))
-alphaPat (Unpack c ps) = do
+alphaPat (Unpack cs c ps) = do
   (newEnv, ps') <- first mconcat . unzip <$> traverse alphaPat ps
-  pure (newEnv, Unpack c ps')
+  pure (newEnv, Unpack cs c ps')
 alphaPat (Switch u) = pure (mempty, Switch u)
 alphaPat (Bind x) = do
   x' <- cloneId x

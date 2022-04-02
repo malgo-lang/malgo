@@ -87,8 +87,10 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) heads = do
     let patType = Malgo.typeOf $ List.head heads
-    -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
-    --  errorDoc $ "Not valid type:" <+> pPrint patType
+    unfoldedType <- unfoldType patType
+    let constrList = case unfoldedType of
+          SumT cs -> cs
+          _ -> errorDoc $ "unfoledType must be SumT, but" <+> pPrint unfoldedType
     -- 型からコンストラクタの集合を求める
     let (con, ts) = case Malgo.viewTyConApp patType of
           Just (Malgo.TyCon con, ts) -> (con, ts)
@@ -100,8 +102,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       let coreCon = Core.Con (Data $ idToText conName) paramTypes
       params <- traverse (newInternalId "$p") paramTypes
       let (pat', es') = group conName pat es
-      Case (Unpack coreCon $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
-    unfoldedType <- unfoldType patType
+      Case (Unpack constrList coreCon $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
@@ -110,7 +111,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       (pat', es') <- groupRecord pat es
-      one . Case (Unpack con $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
+      one . Case (Unpack [con] con $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
@@ -119,7 +120,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       let (pat', es') = groupTuple pat es
-      one . Case (Unpack con $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
+      one . Case (Unpack [con] con $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
     pure $ Match (Atom $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do

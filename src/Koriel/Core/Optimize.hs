@@ -134,12 +134,12 @@ lookupCallInline call f as = do
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
-optPackInline (Match (Atom (Var v)) (Case (Unpack con xs) body :| [])) = do
+optPackInline (Match (Atom (Var v)) (Case (Unpack cs con xs) body :| [])) = do
   body' <- optPackInline body
   mPack <- view (at v)
   case mPack of
     Just (con', as) | con == con' -> pure $ build xs as body'
-    _ -> pure $ Match (Atom $ Var v) $ Case (Unpack con xs) body' :| []
+    _ -> pure $ Match (Atom $ Var v) $ Case (Unpack cs con xs) body' :| []
   where
     build (x : xs) (a : as) body = Match (Atom a) $ Case x (build xs as body) :| []
     build _ _ body = body

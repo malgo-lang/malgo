@@ -44,7 +44,7 @@ lastValue [Match r _ _] = r
 lastValue (_ : rest) = lastValue rest
 
 caseToCase :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.Case (Id Type) -> m (Case (Id Type))
-caseToCase (S.Case (S.Unpack con ps) e) = do
+caseToCase (S.Case (S.Unpack _ con ps) e) = do
   Block e <- expToBlock e
   let eValue = lastValue e
   let vs =
