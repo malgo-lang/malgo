@@ -50,7 +50,7 @@ alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
 alphaExp (Let ds e) = do
   env <- foldMapM ?? ds $ \(LocalDef n _) -> one . (n,) . Var <$> cloneId n
   local (over alphaMap (env <>)) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
-alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
+alphaExp (Match es cs) = Match <$> traverse alphaExp es <*> traverse alphaCase cs
 alphaExp e = traverseOf atom alphaAtom e
 
 alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))
@@ -67,9 +67,9 @@ alphaObj (Fun ps e) = do
 alphaObj o = traverseOf atom alphaAtom o
 
 alphaCase :: (MonadReader AlphaEnv m, MonadIO m) => Case (Id Type) -> m (Case (Id Type))
-alphaCase (Case p e) = do
-  (newMap, p') <- alphaPat p
-  local (over alphaMap (newMap <>)) $ Case p' <$> alphaExp e
+alphaCase (Case ps e) = do
+  (newMaps, ps') <- mapAndUnzipM alphaPat ps
+  local (over alphaMap (mconcat newMaps <>)) $ Case ps' <$> alphaExp e
 
 alphaPat :: (MonadReader AlphaEnv m, MonadIO m) => Pat (Id Type) -> m (HashMap (Id Type) (Atom (Id Type)), Pat (Id Type))
 alphaPat (Unpack cs c ps) = do

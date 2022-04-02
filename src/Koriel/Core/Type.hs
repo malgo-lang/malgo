@@ -87,3 +87,11 @@ tyVar f = \case
 
 tyVar' :: Traversal' Con Type
 tyVar' f (Con tag ts) = Con tag <$> traverseOf (traversed . tyVar) f ts
+
+-- Return the most specific type
+mostSpecific :: Type -> Type -> Type
+mostSpecific AnyT t = t
+mostSpecific t AnyT = t
+mostSpecific (ps1 :-> r1) (ps2 :-> r2) = zipWith mostSpecific ps1 ps2 :-> mostSpecific r1 r2
+mostSpecific (PtrT t1) (PtrT t2) = PtrT $ mostSpecific t1 t2
+mostSpecific t _ = t

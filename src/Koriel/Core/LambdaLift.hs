@@ -65,7 +65,7 @@ llift (Let [LocalDef n (Fun as body)] e) = do
       newFun <- def (idToText n) (toList fvs <> as) body'
       Let [LocalDef n (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
-llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
+llift (Match es cs) = Match <$> traverse llift es <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
 
 def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader env m, HasUniqSupply env) => Text -> [Id Type] -> Exp (Id Type) -> m (Id Type)

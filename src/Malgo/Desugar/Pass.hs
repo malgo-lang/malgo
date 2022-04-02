@@ -291,7 +291,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
   v' <- newInternalId ("$let_" <> idToText v) (C.typeOf e')
   nameEnv . at v ?= v'
   ss' <- dsStmts (s :| ss)
-  pure $ Match e' (Case (Bind v') ss' :| [])
+  pure $ Match [e'] (Case [Bind v'] ss' :| [])
 
 -- Desugar Monad
 

@@ -97,8 +97,8 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       let coreCon = Core.Con (Data $ idToText conName) paramTypes
       params <- traverse (newInternalId "$p") paramTypes
       let (pat', es') = group conName pat es
-      Case (Unpack constrList coreCon $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
-    pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
+      Case [Unpack constrList coreCon $ map Bind params] <$> match (params <> restScrutinee) pat' es' err
+    pure $ Match [Cast unfoldedType $ Core.Var scrutinee] $ NonEmpty.fromList cases
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
     let patType = Malgo.typeOf $ List.head heads
@@ -106,8 +106,8 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       (pat', es') <- groupRecord pat es
-      one . Case (Unpack [con] con $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
-    pure $ Match (Atom $ Core.Var scrutinee) cases
+      one . Case [Unpack [con] con $ map Bind params] <$> match (params <> restScrutinee) pat' es' err
+    pure $ Match [Atom $ Core.Var scrutinee] cases
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
     let patType = Malgo.typeOf $ List.head heads
@@ -115,8 +115,8 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     params <- traverse (newInternalId "$p") ts
     cases <- do
       let (pat', es') = groupTuple pat es
-      one . Case (Unpack [con] con $ map Bind params) <$> match (params <> restScrutinee) pat' es' err
-    pure $ Match (Atom $ Core.Var scrutinee) cases
+      one . Case [Unpack [con] con $ map Bind params] <$> match (params <> restScrutinee) pat' es' err
+    pure $ Match [Atom $ Core.Var scrutinee] cases
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
     let cs =
@@ -126,11 +126,11 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
                 _ -> error "All elements of heads must be UnboxedP"
             )
             heads
-    cases <- traverse (\c -> Case (Switch c) <$> match restScrutinee tails es err) cs
+    cases <- traverse (\c -> Case [Switch c] <$> match restScrutinee tails es err) cs
     -- パターンの網羅性を保証するため、
     -- `_ -> err` を追加する
     hole <- newInternalId "$_" (Core.typeOf scrutinee)
-    pure $ Match (Atom $ Core.Var scrutinee) $ NonEmpty.fromList (cases <> [Case (Core.Bind hole) err])
+    pure $ Match [Atom $ Core.Var scrutinee] $ NonEmpty.fromList (cases <> [Case [Core.Bind hole] err])
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
   | otherwise =

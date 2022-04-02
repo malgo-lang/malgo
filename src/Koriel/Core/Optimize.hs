@@ -74,7 +74,7 @@ optTrivialCall (Let [LocalDef f (Fun ps body)] (Call (Var f') as)) | f == f' = d
   us <- view uniqSupply
   optTrivialCall =<< alpha body AlphaEnv {_alphaUniqSupply = us, _alphaMap = HashMap.fromList $ zip ps as}
 optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optTrivialCall ds <*> optTrivialCall e
-optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
+optTrivialCall (Match vs cs) = Match <$> traverse optTrivialCall vs <*> traverseOf (traversed . appCase) optTrivialCall cs
 optTrivialCall e = pure e
 
 newtype CallInlineEnv = CallInlineEnv
@@ -90,8 +90,8 @@ optCallInline ::
   f (Exp (Id Type))
 optCallInline (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
 optCallInline (CallDirect f xs) = lookupCallInline CallDirect f xs
-optCallInline (Match v cs) =
-  Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
+optCallInline (Match vs cs) =
+  Match <$> traverse optCallInline vs <*> traverseOf (traversed . appCase) optCallInline cs
 optCallInline (Let ds e) = do
   ds' <- traverseOf (traversed . localDefObj . appObj) optCallInline ds
   traverse_ checkInlineable ds'
@@ -134,17 +134,17 @@ lookupCallInline call f as = do
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
-optPackInline (Match (Atom (Var v)) (Case (Unpack cs con xs) body :| [])) = do
+optPackInline (Match [Atom (Var v)] (Case [Unpack cs con xs] body :| [])) = do
   body' <- optPackInline body
   mPack <- view (at v)
   case mPack of
     Just (con', as) | con == con' -> pure $ build xs as body'
-    _ -> pure $ Match (Atom $ Var v) $ Case (Unpack cs con xs) body' :| []
+    _ -> pure $ Match [Atom $ Var v] $ Case [Unpack cs con xs] body' :| []
   where
-    build (x : xs) (a : as) body = Match (Atom a) $ Case x (build xs as body) :| []
+    build (x : xs) (a : as) body = Match [Atom a] $ Case [x] (build xs as body) :| []
     build _ _ body = body
 optPackInline (Match v cs) =
-  Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
+  Match <$> traverse optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
 optPackInline (Let ds e) = do
   ds' <- traverseOf (traversed . localDefObj . appObj) optPackInline ds
   local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
@@ -154,9 +154,9 @@ optPackInline (Let ds e) = do
 optPackInline e = pure e
 
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
-optVarBind (Match (Atom a) (Case (Bind x) e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
+optVarBind (Match [Atom a] (Case [Bind x] e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optVarBind ds <*> optVarBind e
-optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
+optVarBind (Match vs cs) = Match <$> traverse optVarBind vs <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e
 
 removeUnusedLet :: (Monad f, Eq a) => Exp (Id a) -> f (Exp (Id a))
@@ -178,14 +178,14 @@ removeUnusedLet (Let ds e) = do
         -- fvsに変化がなければ、vはどこからも参照されていない
         let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
          in fvs /= fvs' && reachable limit gamma v fvs'
-removeUnusedLet (Match v cs) =
-  Match <$> removeUnusedLet v <*> traverseOf (traversed . appCase) removeUnusedLet cs
+removeUnusedLet (Match vs cs) =
+  Match <$> traverse removeUnusedLet vs <*> traverseOf (traversed . appCase) removeUnusedLet cs
 removeUnusedLet e = pure e
 
 optIdCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
 optIdCast (Cast t e) | typeOf e == t = pure (Atom e)
 optIdCast (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optIdCast ds <*> optIdCast e
-optIdCast (Match v cs) = Match <$> optIdCast v <*> traverseOf (traversed . appCase) optIdCast cs
+optIdCast (Match vs cs) = Match <$> traverse optIdCast vs <*> traverseOf (traversed . appCase) optIdCast cs
 optIdCast e = pure e
 
 -- 効果がはっきりしないので一旦コメントアウト

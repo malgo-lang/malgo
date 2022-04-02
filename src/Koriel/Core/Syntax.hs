@@ -103,7 +103,7 @@ data Exp a
   | -- | definition of local variables
     Let [LocalDef a] (Exp a)
   | -- | pattern matching
-    Match (Exp a) (NonEmpty (Case a))
+    Match [Exp a] (NonEmpty (Case a))
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable)
@@ -179,7 +179,7 @@ instance HasFreeVar Exp where
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . view localDefVar) (freevars e <> foldMap (freevars . view localDefObj) xs) xs
-  freevars (Match e cs) = freevars e <> foldMap freevars cs
+  freevars (Match es cs) = foldMap freevars es <> foldMap freevars cs
   freevars (Error _) = mempty
 
 instance HasAtom Exp where
@@ -192,11 +192,11 @@ instance HasAtom Exp where
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . localDefObj . atom) f xs <*> traverseOf atom f e
-    Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
+    Match es cs -> Match <$> traverseOf (traversed . atom) f es <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
 
 -- | alternatives
-data Case a = Case (Pat a) (Exp a)
+data Case a = Case [Pat a] (Exp a)
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasType a => HasType (Case a) where
@@ -206,7 +206,7 @@ instance Pretty a => Pretty (Case a) where
   pPrint (Case p e) = parens $ sep [pPrint p, pPrint e]
 
 instance HasFreeVar Case where
-  freevars (Case p e) = HashSet.difference (freevars e) (freevars p)
+  freevars (Case p e) = HashSet.difference (freevars e) (foldMap freevars p)
 
 instance HasAtom Case where
   atom f = \case
@@ -230,6 +230,11 @@ instance HasFreeVar Pat where
   freevars (Unpack _ _ xs) = mconcat $ map freevars xs
   freevars (Switch _) = mempty
   freevars (Bind x) = one x
+
+instance HasType a => HasType (Pat a) where
+  typeOf (Unpack cs _ _) = SumT cs
+  typeOf (Switch u) = typeOf u
+  typeOf (Bind a) = typeOf a
 
 -- | heap objects
 data Obj a
@@ -320,14 +325,14 @@ let_ otype obj = do
 destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> [Con] -> Con -> DefBuilderT m [Atom (Id Type)]
 destruct val cs con@(Con _ ts) = do
   vs <- traverse (newInternalId "$p") ts
-  DefBuilderT $ tell $ Endo $ \e -> Match val (Case (Unpack cs con $ map Bind vs) e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match [val] (Case [Unpack cs con $ map Bind vs] e :| [])
   pure $ map Var vs
 
 bind :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newInternalId "$d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e -> Match v (Case (Bind x) e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match [v] (Case [Bind x] e :| [])
   pure (Var x)
 
 cast :: (MonadIO m, MonadReader env m, HasUniqSupply env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -336,7 +341,7 @@ cast ty e
   | otherwise = do
     v <- bind e
     x <- newInternalId "$cast" ty
-    DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Case (Bind x) e :| [])
+    DefBuilderT $ tell $ Endo $ \e -> Match [Cast ty v] (Case [Bind x] e :| [])
     pure (Var x)
 
 mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))

@@ -17,14 +17,10 @@ flatExp :: Monad m => Exp a -> WriterT (Endo (Exp a)) m (Exp a)
 flatExp (Let ds e) = do
   tell . Endo . Let =<< traverseOf (traversed . localDefObj . appObj) (runFlat . flatExp) ds
   flatExp e
-flatExp (Match v (Case (Unpack cs con ps) e :| [])) = do
-  v <- flatExp v
-  tell $ Endo $ \k -> Match v (Case (Unpack cs con ps) k :| [])
+flatExp (Match vs (Case pats e :| [])) = do
+  vs' <- traverse flatExp vs
+  tell $ Endo $ \k -> Match vs' (Case pats k :| [])
   flatExp e
-flatExp (Match v (Case (Bind x) e :| [])) = do
-  v <- flatExp v
-  tell $ Endo $ \k -> Match v (Case (Bind x) k :| [])
-  flatExp e
-flatExp (Match e cs) =
-  Match <$> flatExp e <*> traverseOf (traversed . appCase) (runFlat . flatExp) cs
+flatExp (Match es cs) =
+  Match <$> traverse flatExp es <*> traverseOf (traversed . appCase) (runFlat . flatExp) cs
 flatExp e = pure e

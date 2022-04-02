@@ -121,8 +121,8 @@ lintExp (Cast _ x) = lintAtom x
 lintExp (Let ds e) = local (map (view localDefVar) ds <>) $ do
   traverse_ (lintObj . view localDefObj) ds
   lintExp e
-lintExp (Match e cs) = do
-  lintExp e
+lintExp (Match es cs) = do
+  traverse_ lintExp es
   traverse_ lintCase cs
 lintExp Error {} = pass
 
@@ -133,8 +133,8 @@ lintObj (Pack cs c xs)
   | otherwise = error "Pack"
 
 lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
-lintCase (Case p e) = do
-  vs <- go p
+lintCase (Case ps e) = do
+  vs <- foldMapM go ps
   local (vs <>) $ lintExp e
   where
     go (Unpack constrList con ps) = do
