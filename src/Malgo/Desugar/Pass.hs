@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
@@ -18,7 +19,6 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
-import Malgo.Desugar.Match
 import Malgo.Desugar.Type
 import Malgo.Interface
 import Malgo.Prelude
@@ -225,21 +225,13 @@ dsExp (G.Apply info f x) = runDef $ do
       Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
-  ps' <- traverse (\p -> newInternalId (patToName p) =<< dsType (GT.typeOf p)) ps
-  typ <- dsType (GT.typeOf e)
-  -- destruct Clauses
-  (pss, es) <-
-    unzip
-      <$> traverse
-        ( \(Clause _ ps e) ->
-            pure (ps, dsExp e)
-        )
-        cs
-  body <- match ps' (patMatrix $ toList pss) (toList es) (Error typ)
-  obj <- curryFun ps' body
-  v <- newInternalId "$fun" =<< dsType (x ^. GT.withType)
-  pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
+dsExp (G.Fn x cs@(Clause _ ps _ :| _)) = do
+  funParams <- traverse (\p -> newInternalId (patToName p) =<< dsType (GT.typeOf p)) ps
+  clauses <- traverse dsClause cs
+  let scrutinee = zipWith mayCast (wantedTypes $ toList clauses) (map C.Var funParams)
+  obj <- curryFun funParams $ C.Match scrutinee clauses
+  funVar <- newInternalId "$fun" =<< dsType (x ^. GT.withType)
+  pure $ C.Let [C.LocalDef funVar (uncurry Fun obj)] $ Atom $ C.Var funVar
   where
     patToName (G.VarP _ v) = v ^. idName
     patToName (G.ConP _ c _) = T.toLower $ c ^. idName
@@ -263,9 +255,6 @@ dsExp (G.Record x kvs) = runDef $ do
   let vs' = sortRecordField (map fst kts) kvs'
   tuple <- let_ ty $ Pack [con] con vs'
   pure $ Atom tuple
-  where
-    sortRecordField [] _ = []
-    sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
 dsExp (G.RecordAccess x label) = runDef $ do
   GT.TyArr (GT.TyRecord recordType) _ <- pure $ x ^. GT.withType
   kts <- Map.toList <$> traverse dsType recordType
@@ -279,6 +268,51 @@ dsExp (G.RecordAccess x label) = runDef $ do
   Atom <$> let_ accessType obj
 dsExp (G.Seq _ ss) = dsStmts ss
 dsExp (G.Parens _ e) = dsExp e
+
+dsClause :: (MonadReader env m, MonadFail m, MonadState DsEnv m, MonadIO m, HasUniqSupply env) => Clause (Malgo 'Refine) -> m (Case (Id C.Type))
+dsClause (Clause _ ps body) = do
+  ps' <- traverse dsPat ps
+  body' <- dsExp body
+  pure $ Case ps' body'
+
+dsPat :: (MonadReader env f, MonadIO f, HasUniqSupply env, MonadState DsEnv f, MonadFail f) => G.Pat (Malgo 'Refine) -> f (C.Pat (Id C.Type))
+dsPat (VarP x v) = do
+  v' <- newCoreId v =<< dsType (GT.typeOf x)
+  nameEnv . at v ?= v'
+  pure $ Bind v'
+dsPat (ConP x c ps) = do
+  ps' <- traverse dsPat ps
+  SumT constrList <- unfoldType (GT.typeOf x)
+  pure $ Unpack constrList (Con (Data $ idToText c) $ map C.typeOf ps') ps'
+dsPat (TupleP _ ps) = do
+  ps' <- traverse dsPat ps
+  let con = Con C.Tuple $ map C.typeOf ps'
+  pure $ Unpack [con] con ps'
+dsPat (RecordP x kps) = do
+  kps' <- map (first removePrefix) <$> traverseOf (traversed . _2) dsPat kps
+  GT.TyRecord recordType <- pure $ GT.typeOf x
+  kts <- Map.toList <$> traverse dsType recordType
+  let ps' = sortRecordField (map fst kts) kps'
+  let con = Con C.Tuple $ map snd kts
+  pure $ Unpack [con] con ps'
+dsPat (UnboxedP _ lit) = pure $ Switch (dsUnboxed lit)
+
+-- | most specific wanted types
+wantedTypes :: [Case (Id C.Type)] -> [C.Type]
+wantedTypes cases =
+  let pss = map (\(Case ps _) -> ps) cases
+      tss = map (map C.typeOf) pss
+      tss' = transpose tss
+   in map (foldr mostSpecific AnyT) tss'
+
+mayCast :: C.HasType a => C.Type -> Atom a -> C.Exp a
+mayCast t a
+  | t == C.typeOf a = Atom a
+  | otherwise = Cast t a
+
+sortRecordField :: [Id ()] -> [(Id (), a)] -> [a]
+sortRecordField [] _ = []
+sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
 
 dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExp e
