@@ -35,14 +35,19 @@ topFuncs = lens _topFuncs (\p x -> p {_topFuncs = x})
 extFuncs :: Lens' (Program a) [(Text, Type)]
 extFuncs = lens _extFuncs (\p x -> p {_extFuncs = x})
 
-instance Pretty a => Pretty (Program a) where
+instance (Pretty a, HasType a) => Pretty (Program a) where
   pPrint Program {..} =
     vcat $
       concat
         [ ["variables:"],
           map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint e]) _topVars,
           ["functions:"],
-          map (\(f, (ps, e)) -> parens $ sep [sep ["define", pPrint f, parens (sep $ map pPrint ps)], pPrint e]) _topFuncs,
+          map
+            ( \(f, (ps, e)) ->
+                parens $
+                  sep [sep ["define", pPrint f, parens (sep $ map (\p -> pPrint p <> ":" <> pPrint (typeOf p)) ps)], pPrint e]
+            )
+            _topFuncs,
           ["externals:"],
           map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
         ]
