@@ -6,10 +6,12 @@
 module Koriel.Core.Syntax where
 
 import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
+import Control.Lens.TH (makeFieldsNoPrefix)
 import qualified Data.HashSet as HashSet
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
+import Koriel.Lens (HasBody (body), HasPatterns (patterns))
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
@@ -196,7 +198,7 @@ instance HasAtom Exp where
     Error t -> pure (Error t)
 
 -- | alternatives
-data Case a = Case [Pat a] (Exp a)
+data Case a = Case {_patterns :: [Pat a], _body :: Exp a}
   deriving stock (Eq, Show, Functor, Foldable)
 
 instance HasType a => HasType (Case a) where
@@ -211,6 +213,20 @@ instance HasFreeVar Case where
 instance HasAtom Case where
   atom f = \case
     Case p e -> Case p <$> traverseOf atom f e
+
+instance HasBody (Case a) (Exp a) where
+  {-# INLINE body #-}
+  body f (Case x1 x2) =
+    fmap
+      (Case x1)
+      (f x2)
+
+instance HasPatterns (Case a) [Pat a] where
+  {-# INLINE patterns #-}
+  patterns f (Case x1 x2) =
+    fmap
+      (`Case` x2)
+      (f x1)
 
 data Pat a
   = -- | constructor pattern

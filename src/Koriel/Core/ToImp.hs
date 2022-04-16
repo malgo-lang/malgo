@@ -1,12 +1,14 @@
 module Koriel.Core.ToImp where
 
-import Control.Lens (traverseOf, traversed, _2)
+import Control.Lens (traverseOf, traversed, view, (^.), _2)
 import Koriel.Core.Imp
 import qualified Koriel.Core.Syntax as S
 import Koriel.Core.Type
 import Koriel.Id
+import Koriel.Lens (HasBody (body), HasPatterns (patterns))
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Koriel.Pretty (Pretty (pPrint), errorDoc)
 
 toImp :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.Program (Id Type) -> m (Program (Id Type))
 toImp S.Program {..} = do
@@ -25,41 +27,56 @@ expToBlock (S.Let defs e) = do
   defs <- traverse localDefToLocalDef defs
   Block e <- expToBlock e
   pure $ Block $ [Let defs] <> e
-expToBlock (S.Match [s] (S.Case [S.Bind x] e :| _)) = do
-  Block s <- expToBlock s
-  Block e <- expToBlock e
-  let sValue = lastValue s
-  pure $ Block $ s <> [Eval x (Atom (Var sValue))] <> e
-expToBlock e@(S.Match [s] cs) = do
-  Block s <- expToBlock s
-  result <- newInternalId "mr" (typeOf e)
-  cs <- traverse caseToCase cs
-  pure $ Block $ s <> [Match result (lastValue s) cs]
+expToBlock (S.Match scrutinees cases) = do
+  matchToBlock scrutinees cases
 expToBlock (S.Error t) = eval (Error t)
 
-lastValue :: [Stmt (Id Type)] -> Id Type
-lastValue [] = error "no value"
-lastValue [Eval x _] = x
-lastValue [Match r _ _] = r
-lastValue (_ : rest) = lastValue rest
+matchToBlock ::
+  (MonadIO m, MonadReader env m, HasUniqSupply env) =>
+  -- | scrutinees
+  [S.Exp (Id Type)] ->
+  -- | cases in S.Match
+  NonEmpty (S.Case (Id Type)) ->
+  m (Block (Id Type))
+matchToBlock [scrutinee] (S.Case [S.Bind x] body :| _) = do
+  Block scrutinee' <- expToBlock scrutinee
+  Block body <- expToBlock body
+  let scrutineeBlockResult = resultOf scrutinee'
+  pure $ Block $ scrutinee' <> [Eval x (Atom (Var scrutineeBlockResult))] <> body
+matchToBlock [scrutinee] cases = do
+  Block scrutinee' <- expToBlock scrutinee
+  result <- newInternalId "match_result" (typeOf $ S.Match [scrutinee] cases)
+  cases <- traverse (uncurry caseToCase <<< view patterns &&& view body) cases
+  pure $ Block $ scrutinee' <> [Match result (resultOf scrutinee') cases]
+matchToBlock scrutinees cases = do
+  errorDoc $ "matchToBlock: not implemented " <> pPrint (scrutinees, cases)
 
-caseToCase :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.Case (Id Type) -> m (Case (Id Type))
-caseToCase (S.Case [S.Unpack _ con ps] e) = do
+resultOf :: [Stmt (Id Type)] -> Id Type
+resultOf [] = error "This block has no result"
+resultOf [Eval x _] = x
+resultOf [Match r _ _] = r
+resultOf (_ : rest) = resultOf rest
+
+-- | convert S.Case to Imp.Case
+caseToCase :: (MonadReader env m, MonadIO m, HasUniqSupply env) => [S.Pat (Id Type)] -> S.Exp (Id Type) -> m (Case (Id Type))
+caseToCase [S.Unpack _ con pats] e = do
   Block e <- expToBlock e
-  let eValue = lastValue e
-  let vs =
-        map ?? ps $ \case
+  let eValue = resultOf e
+  let bindVars =
+        map ?? pats $ \case
           S.Bind x -> x
           _ -> error "invalid pattern"
-  pure $ Unpack con vs (Block $ e <> [Break eValue])
-caseToCase (S.Case [S.Switch u] e) = do
+  pure $ Unpack con bindVars (Block $ e <> [Break eValue])
+caseToCase [S.Switch u] e = do
   Block e <- expToBlock e
-  let eValue = lastValue e
+  let eValue = resultOf e
   pure $ Switch (unboxedToUnboxed u) (Block $ e <> [Break eValue])
-caseToCase (S.Case [S.Bind x] e) = do
+caseToCase [S.Bind x] e = do
   Block e <- expToBlock e
-  let eValue = lastValue e
+  let eValue = resultOf e
   pure $ Bind x (Block $ e <> [Break eValue])
+caseToCase ps e = do
+  errorDoc $ "caseToCase: not implemented " <> pPrint (S.Case ps e)
 
 localDefToLocalDef :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.LocalDef (Id Type) -> m (LocalDef (Id Type))
 localDefToLocalDef (S.LocalDef x o) = LocalDef x <$> objToObj o
@@ -67,7 +84,7 @@ localDefToLocalDef (S.LocalDef x o) = LocalDef x <$> objToObj o
 objToObj :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.Obj (Id Type) -> m (Obj (Id Type))
 objToObj (S.Fun ps e) = do
   Block e <- expToBlock e
-  let eValue = lastValue e
+  let eValue = resultOf e
   pure $ Fun ps $ Block $ e <> [Return eValue]
 objToObj (S.Pack t c as) = pure $ Pack t c (map atomToAtom as)
 
@@ -91,5 +108,5 @@ eval e = do
 
 ret :: Applicative f => Block (Id Type) -> f (Block (Id Type))
 ret (Block block) = do
-  let value = lastValue block
+  let value = resultOf block
   pure $ Block $ block <> [Return value]
