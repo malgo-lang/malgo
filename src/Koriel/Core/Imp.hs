@@ -271,6 +271,7 @@ localDefObj = lens _localDefObj (\l o -> l {_localDefObj = o})
 
 newtype Block a = Block {_statements :: [Stmt a]}
   deriving stock (Eq, Show, Functor, Foldable)
+  deriving newtype (Monoid, Semigroup)
 
 instance HasType a => HasType (Block a) where
   typeOf (Block stmts) = go stmts
