@@ -38,3 +38,7 @@ instance Pretty Megaparsec.SourcePos where
 
 instance Pretty Text where
   pPrint = text . convertString
+
+-- | Prettyprint NonEmpty as [x, y, ...]
+instance Pretty a => Pretty (NonEmpty a) where
+  pPrint = pPrint . toList
