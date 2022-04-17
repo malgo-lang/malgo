@@ -1,9 +1,13 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Koriel.Core.Type where
 
 import Control.Lens (Prism', Traversal', prism, traverseOf, traversed, (^.))
+import Control.Lens.TH (makeFieldsNoPrefix)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Prelude
 import Koriel.Pretty
 
@@ -95,3 +99,18 @@ mostSpecific t AnyT = t
 mostSpecific (ps1 :-> r1) (ps2 :-> r2) = zipWith mostSpecific ps1 ps2 :-> mostSpecific r1 r2
 mostSpecific (PtrT t1) (PtrT t2) = PtrT $ mostSpecific t1 t2
 mostSpecific t _ = t
+
+newtype TypeEnv = TypeEnv
+  { _constructorInfoMap :: Map Text ConInfo
+  }
+  deriving stock (Show)
+  deriving newtype (Monoid, Semigroup)
+
+data ConInfo = ConInfo
+  { _paramTypes :: [Type],
+    _returnType :: Type
+  }
+  deriving stock (Show)
+
+makeFieldsNoPrefix ''ConInfo
+makeFieldsNoPrefix ''TypeEnv

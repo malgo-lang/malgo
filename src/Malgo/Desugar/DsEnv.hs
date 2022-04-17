@@ -10,10 +10,10 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv), TcEnv)
+import qualified Malgo.TypeCheck.TcEnv as TcEnv
 import Malgo.TypeRep
 import qualified Malgo.TypeRep as GT
 import Text.Pretty.Simple (pShow)
-import qualified Malgo.TypeCheck.TcEnv as TcEnv
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
@@ -23,7 +23,8 @@ data DsEnv = DsEnv
     _nameEnv :: HashMap RnId (Id C.Type),
     _desugarRnEnv :: RnEnv,
     -- | 型環境
-    _desugarTcEnv :: TcEnv
+    _desugarTcEnv :: TcEnv,
+    _coreTypeEnv :: C.TypeEnv
   }
   deriving stock (Show)
 
@@ -41,6 +42,9 @@ desugarTcEnv = lens _desugarTcEnv (\d x -> d {_desugarTcEnv = x})
 
 desugarRnEnv :: Lens' DsEnv RnEnv
 desugarRnEnv = lens _desugarRnEnv (\d x -> d {_desugarRnEnv = x})
+
+coreTypeEnv :: Lens' DsEnv C.TypeEnv
+coreTypeEnv = lens _coreTypeEnv (\d x -> d {_coreTypeEnv = x})
 
 class HasDsEnv env where
   dsEnv :: Lens' env DsEnv
@@ -64,7 +68,8 @@ makeDsEnv modName rnEnv tcEnv =
     { _moduleName = modName,
       _nameEnv = mempty,
       _desugarTcEnv = tcEnv,
-      _desugarRnEnv = rnEnv
+      _desugarRnEnv = rnEnv,
+      _coreTypeEnv = mempty
     }
 
 lookupValueConstructors ::

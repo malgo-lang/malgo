@@ -1,6 +1,6 @@
 module Koriel.Core.ToImp where
 
-import Control.Lens (traverseOf, traversed, view, (^.), _2)
+import Control.Lens (traverseOf, traversed, view, _2)
 import Koriel.Core.Imp
 import qualified Koriel.Core.Syntax as S
 import Koriel.Core.Type
@@ -8,7 +8,7 @@ import Koriel.Id
 import Koriel.Lens (HasBody (body), HasPatterns (patterns))
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Koriel.Pretty (Pretty (pPrint), errorDoc)
+import Koriel.Pretty (Pretty (pPrint), errorDoc, ($$))
 
 toImp :: (MonadIO m, MonadReader env m, HasUniqSupply env) => S.Program (Id Type) -> m (Program (Id Type))
 toImp S.Program {..} = do
@@ -38,6 +38,7 @@ matchToBlock ::
   -- | cases in S.Match
   NonEmpty (S.Case (Id Type)) ->
   m (Block (Id Type))
+matchToBlock [] _ = errorDoc "matchToBlock: empty scrutinees"
 matchToBlock [scrutinee] (S.Case [S.Bind x] body :| _) = do
   Block scrutinee' <- expToBlock scrutinee
   Block body <- expToBlock body
@@ -49,7 +50,8 @@ matchToBlock [scrutinee] cases = do
   cases <- traverse (uncurry caseToCase <<< view patterns &&& view body) cases
   pure $ Block $ scrutinee' <> [Match result (resultOf scrutinee') cases]
 matchToBlock scrutinees cases = do
-  errorDoc $ "matchToBlock: not implemented " <> pPrint (scrutinees, cases)
+  simplified <- simplifyMatch scrutinees cases
+  expToBlock simplified
 
 resultOf :: [Stmt (Id Type)] -> Id Type
 resultOf [] = error "This block has no result"

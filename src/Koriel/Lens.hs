@@ -7,3 +7,12 @@ class HasBody s a | s -> a where
 
 class HasPatterns s a | s -> a where
   patterns :: Lens' s a
+
+class HasParamTypes s a | s -> a where
+  paramTypes :: Lens' s a
+
+class HasReturnType s a | s -> a where
+  returnType :: Lens' s a
+
+class HasConstructorInfoMap s a | s -> a where
+  constructorInfoMap :: Lens' s a

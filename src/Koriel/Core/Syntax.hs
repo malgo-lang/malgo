@@ -1,3 +1,4 @@
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 -- |
@@ -6,7 +7,7 @@
 module Koriel.Core.Syntax where
 
 import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
-import Control.Lens.TH (makeFieldsNoPrefix)
+import Control.Lens.TH (makeFieldsNoPrefix, makePrisms)
 import qualified Data.HashSet as HashSet
 import Koriel.Core.Op
 import Koriel.Core.Type
@@ -225,7 +226,7 @@ instance HasPatterns (Case a) [Pat a] where
   {-# INLINE patterns #-}
   patterns f (Case x1 x2) =
     fmap
-      (`Case` x2)
+      (Case ?? x2)
       (f x1)
 
 data Pat a
@@ -377,3 +378,5 @@ mainFunc depList e = do
       depList
     pure e
   pure (mainFuncId, ([], mainFuncBody))
+
+makePrisms ''Pat
