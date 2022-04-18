@@ -112,19 +112,19 @@ idMeta = lens _idMeta (\i x -> i {_idMeta = x})
 idSort :: Lens' (Id a) IdSort
 idSort = lens _idSort (\i x -> i {_idSort = x})
 
-newNoNameId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> IdSort -> f (Id a)
+newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> IdSort -> f (Id a)
 newNoNameId m s = Id noName <$> getUniq <*> pure m <*> pure s
 
-newInternalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => Text -> a -> f (Id a)
+newInternalId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> f (Id a)
 newInternalId n m = Id n <$> getUniq <*> pure m <*> pure Internal
 
-newExternalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => Text -> a -> ModuleName -> f (Id a)
+newExternalId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> ModuleName -> f (Id a)
 newExternalId n m modName = Id n <$> getUniq <*> pure m <*> pure (External modName)
 
-newIdOnName :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> Id b -> f (Id a)
+newIdOnName :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> Id b -> f (Id a)
 newIdOnName meta Id {_idName, _idSort} = Id _idName <$> getUniq <*> pure meta <*> pure _idSort
 
-cloneId :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Id a -> m (Id a)
+cloneId :: (MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Id a -> m (Id a)
 cloneId Id {..} = do
   _idUniq <- getUniq
   pure Id {_idName, _idUniq, _idMeta, _idSort}
