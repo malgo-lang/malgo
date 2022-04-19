@@ -25,7 +25,7 @@ optimizeUniqSupply = lens _optimizeUniqSupply (\o x -> o {_optimizeUniqSupply = 
 inlineLevel :: Lens' OptimizeEnv Int
 inlineLevel = lens _inlineLevel (\o x -> o {_inlineLevel = x})
 
-instance HasUniqSupply OptimizeEnv where
+instance HasUniqSupply OptimizeEnv UniqSupply where
   uniqSupply = optimizeUniqSupply
 
 -- | Apply a monadic function n times.

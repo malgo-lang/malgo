@@ -22,7 +22,7 @@ alphaUniqSupply = lens _alphaUniqSupply (\a x -> a {_alphaUniqSupply = x})
 alphaMap :: Lens' AlphaEnv (HashMap (Id Type) (Atom (Id Type)))
 alphaMap = lens _alphaMap (\a x -> a {_alphaMap = x})
 
-instance HasUniqSupply AlphaEnv where
+instance HasUniqSupply AlphaEnv UniqSupply where
   uniqSupply = alphaUniqSupply
 
 alpha :: MonadIO m => Exp (Id Type) -> AlphaEnv -> m (Exp (Id Type))

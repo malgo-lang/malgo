@@ -39,7 +39,7 @@ makePrisms ''Def
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
+  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env Opt, HasUniqSupply env UniqSupply) =>
   RnEnv ->
   TcEnv ->
   [ModuleName] ->
@@ -69,7 +69,7 @@ desugar rnEnv tcEnv depList (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env, HasUniqSupply env) =>
+  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env Opt, HasUniqSupply env UniqSupply) =>
   BindGroup (Malgo 'Refine) ->
   m [Def]
 dsBindGroup bg = do
@@ -79,7 +79,7 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
-dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env) => Import (Malgo 'Refine) -> m ()
+dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env Opt) => Import (Malgo 'Refine) -> m ()
 dsImport (pos, modName, _) = do
   interface <-
     loadInterface modName >>= \case
@@ -89,13 +89,13 @@ dsImport (pos, modName, _) = do
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply) =>
   [[ScDef (Malgo 'Refine)]] ->
   f [Def]
 dsScDefGroup = dsScDefs . mconcat
 
 dsScDefs ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) =>
+  (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply) =>
   [ScDef (Malgo 'Refine)] ->
   f [Def]
 dsScDefs ds = do
@@ -106,7 +106,7 @@ dsScDefs ds = do
     nameEnv . at f ?= f'
   foldMapM dsScDef ds
 
-dsScDef :: (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env) => ScDef (Malgo 'Refine) -> f [Def]
+dsScDef :: (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply) => ScDef (Malgo 'Refine) -> f [Def]
 dsScDef (Annotated typ _, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   case typ of
@@ -129,7 +129,7 @@ dsScDef (Annotated typ _, name, expr) = do
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env) =>
+  (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env UniqSupply) =>
   Foreign (Malgo 'Refine) ->
   f [Def]
 dsForeign (x@(Annotated _ (_, primName)), name, _) = do
@@ -143,7 +143,7 @@ dsForeign (x@(Annotated _ (_, primName)), name, _) = do
   pure [FunDef name' fun, ExtDef primName (paramTypes' :-> retType)]
 
 dsDataDef ::
-  (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env, MonadIO m) =>
+  (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m) =>
   DataDef (Malgo 'Refine) ->
   m [Def]
 dsDataDef (_, name, _, cons) =
@@ -184,7 +184,7 @@ dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
 dsExp ::
-  (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) =>
+  (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var x (WithPrefix (Annotated _ name))) = do
@@ -280,7 +280,7 @@ dsExp (G.RecordAccess x label) = runDef $ do
 dsExp (G.Seq _ ss) = dsStmts ss
 dsExp (G.Parens _ e) = dsExp e
 
-dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
+dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExp e
 dsStmts (G.Let _ _ e :| []) = dsExp e
 dsStmts (NoBind _ e :| s : ss) = runDef $ do
@@ -302,13 +302,13 @@ lookupName name = do
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
 
-newCoreId :: (MonadReader env f, MonadIO f, HasUniqSupply env) => RnId -> C.Type -> f (Id C.Type)
+newCoreId :: (MonadReader env f, MonadIO f, HasUniqSupply env UniqSupply) => RnId -> C.Type -> f (Id C.Type)
 newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::
   HasCallStack =>
-  (MonadIO m, MonadReader env m, HasUniqSupply env) =>
+  (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) =>
   -- | パラメータリスト
   [Id C.Type] ->
   -- | カリー化されていない関数値
