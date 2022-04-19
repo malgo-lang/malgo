@@ -94,15 +94,15 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasOpt env Opt, Monad
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    solve [Annotated x $ v ^. typeVar . idMeta :~ kindOf t]
+    solve [Annotated x $ v ^. typeVar . meta :~ kindOf t]
     TypeUnifyT $ at v ?= t
     where
       occursCheck :: TypeVar -> Type -> Bool
       occursCheck v t = HashSet.member v (freevars t)
 
   zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
-  zonk (TyVar v) = TyVar <$> traverseOf idMeta zonk v
-  zonk (TyCon c) = TyCon <$> traverseOf idMeta zonk c
+  zonk (TyVar v) = TyVar <$> traverseOf meta zonk v
+  zonk (TyCon c) = TyCon <$> traverseOf meta zonk c
   zonk t@TyPrim {} = pure t
   zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2
   zonk t@TyTuple {} = pure t
@@ -158,23 +158,23 @@ generalizeMutRecs x bound terms = do
 
 toBound :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => SourcePos -> TypeVar -> Text -> m (Id Type)
 toBound x tv hint = do
-  tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
+  tvType <- defaultToBoxed x $ tv ^. typeVar . meta
   let tvKind = kindOf tvType
-  let name = case tv ^. typeVar . idName of
+  let n = case tv ^. typeVar . name of
         x
           | x == noName -> hint
           | otherwise -> x
-  newInternalId name tvKind
+  newInternalId n tvKind
 
 defaultToBoxed :: MonadBind f => SourcePos -> Type -> f Type
 defaultToBoxed x = transformM \case
   TyMeta v -> do
-    let vKind = kindOf $ v ^. typeVar . idMeta
+    let vKind = kindOf $ v ^. typeVar . meta
     case vKind of
       TyRep -> bindVar x v (Rep BoxedRep) >> pure (Rep BoxedRep)
       _ -> do
         void $ defaultToBoxed x vKind
-        TyMeta <$> traverseOf (typeVar . idMeta) zonk v
+        TyMeta <$> traverseOf (typeVar . meta) zonk v
   t -> pure t
 
 unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar
@@ -183,7 +183,7 @@ unboundFreevars bound t = HashSet.difference (freevars t) bound
 instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env Opt, MonadState TcEnv m) => SourcePos -> Scheme Type -> m Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
-    v <- TyMeta <$> freshVar (Just $ a ^. idName)
-    solve [Annotated x $ a ^. idMeta :~ kindOf v]
+    v <- TyMeta <$> freshVar (Just $ a ^. name)
+    solve [Annotated x $ a ^. meta :~ kindOf v]
     pure (a, v)
   pure $ applySubst (HashMap.fromList avs) t

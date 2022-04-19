@@ -188,7 +188,7 @@ findVar x = findLocalVar
       emitDefn $
         GlobalDefinition
           globalVariableDefaults
-            { name = toName x,
+            { LLVM.AST.Global.name = toName x,
               LLVM.AST.Global.type' = convType $ C.typeOf x,
               linkage = LLVM.AST.Linkage.External
             }
@@ -236,7 +236,7 @@ sizeof ty = C.PtrToInt szPtr LT.i64
     szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 toName :: Id a -> LLVM.AST.Name
-toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
+toName Id {_name = "main", _sort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
@@ -268,7 +268,7 @@ genFunc name params body
     funcName = toName name
     llvmParams =
       map
-        (\x -> (convType $ x ^. idMeta, ParameterName $ toShort $ encodeUtf8 $ idToText x))
+        (\x -> (convType $ x ^. meta, ParameterName $ toShort $ encodeUtf8 $ idToText x))
         params
     retty = convType (C.typeOf body)
 
@@ -557,7 +557,7 @@ globalStringPtr str nm = do
   emitDefn $
     GlobalDefinition
       globalVariableDefaults
-        { name = nm,
+        { LLVM.AST.Global.name = nm,
           LLVM.AST.Global.type' = ty,
           linkage = LLVM.AST.Linkage.External,
           isConstant = True,
@@ -607,7 +607,7 @@ internalFunction label argtys retty body = do
   let def =
         GlobalDefinition
           functionDefaults
-            { name = label,
+            { LLVM.AST.Global.name = label,
               linkage = LLVM.AST.Linkage.Internal,
               parameters = (zipWith (\ty nm -> Parameter ty nm []) tys paramNames, False),
               returnType = retty,

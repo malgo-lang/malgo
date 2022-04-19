@@ -11,6 +11,7 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.Map.Strict as Map
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Prelude
 
@@ -104,8 +105,8 @@ instance Plated Type where
   plate f = \case
     t@TyMeta {} -> pure t
     TyApp t1 t2 -> TyApp <$> f t1 <*> f t2
-    TyVar x -> TyVar <$> traverseOf idMeta f x
-    TyCon x -> TyCon <$> traverseOf idMeta f x
+    TyVar x -> TyVar <$> traverseOf meta f x
+    TyCon x -> TyCon <$> traverseOf meta f x
     t@TyPrim {} -> pure t
     TyArr t1 t2 -> TyArr <$> f t1 <*> f t2
     t@TyTuple {} -> pure t
@@ -152,10 +153,10 @@ instance Pretty TypeVar where
 
 instance HasType TypeVar where
   typeOf = TyMeta
-  types f (TypeVar v) = TypeVar <$> traverseOf idMeta f v
+  types f (TypeVar v) = TypeVar <$> traverseOf meta f v
 
 instance HasKind TypeVar where
-  kindOf = view (typeVar . idMeta)
+  kindOf = view (typeVar . meta)
 
 typeVar :: Lens' TypeVar (Id Type)
 typeVar = coerced
@@ -191,8 +192,8 @@ instance HasType Type where
 instance HasKind Type where
   kindOf (TyApp (kindOf -> TyArr _ k) _) = k
   kindOf TyApp {} = error "invalid kind"
-  kindOf (TyVar v) = v ^. idMeta
-  kindOf (TyCon c) = c ^. idMeta
+  kindOf (TyVar v) = v ^. meta
+  kindOf (TyCon c) = c ^. meta
   kindOf (TyPrim p) = kindOf p
   kindOf (TyArr _ t2) = kindOf t2
   kindOf (TyTuple n) = buildTyArr (replicate n $ TYPE (Rep BoxedRep)) (TYPE (Rep BoxedRep))

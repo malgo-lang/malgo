@@ -16,6 +16,7 @@ import Control.Lens (At (at), Lens', lens, over, traverseOf, traversed, view, _2
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
@@ -105,4 +106,4 @@ genTcEnv rnEnv = do
 findBuiltinType :: Text -> RnEnv -> Maybe (Id ())
 findBuiltinType x rnEnv = do
   ids <- map (view value) <$> view (R.typeEnv . at x) rnEnv
-  find (view idSort >>> \case External (ModuleName "Builtin") -> True; _ -> False) ids
+  find (view sort >>> \case External (ModuleName "Builtin") -> True; _ -> False) ids

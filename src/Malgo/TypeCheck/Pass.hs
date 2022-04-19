@@ -159,15 +159,15 @@ tcTypeSynonyms ::
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'TypeCheck)]
 tcTypeSynonyms ds =
-  for ds \(pos, name, params, typ) -> do
-    TyCon con <- lookupType pos name
+  for ds \(pos, typeName, params, typ) -> do
+    TyCon con <- lookupType pos typeName
     params' <- traverse (\p -> newInternalId (idToText p) (TYPE $ Rep BoxedRep)) params
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     typ' <- transType typ
     abbrEnv . at con .= Just (params', typ')
-    updateFieldEnv (name ^. idName) (tcType typ) params' typ'
+    updateFieldEnv (typeName ^. name) (tcType typ) params' typ'
 
-    pure (pos, name, params, tcType typ)
+    pure (pos, typeName, params, tcType typ)
 
 updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'TypeCheck) -> [Id Type] -> Type -> f ()
 updateFieldEnv typeName (S.TyRecord _ kts) params typ = do
@@ -189,10 +189,10 @@ tcDataDefs ::
   m [DataDef (Malgo 'TypeCheck)]
 tcDataDefs ds = do
   bindedTypeVars <- HashSet.unions . map (freevars . view typeConstructor) . HashMap.elems <$> use typeEnv
-  for ds \(pos, name, params, valueCons) -> do
-    name' <- lookupType pos name
-    params' <- traverse (\p -> TyMeta <$> freshVar (Just $ p ^. idName)) params
-    solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf name']
+  for ds \(pos, typeName, params, valueCons) -> do
+    typeName' <- lookupType pos typeName
+    params' <- traverse (\p -> TyMeta <$> freshVar (Just $ p ^. name)) params
+    solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf typeName']
     zipWithM_ (\p p' -> typeEnv . at p .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
       unzip <$> forOf (traversed . _2) valueCons \args -> do
@@ -200,12 +200,12 @@ tcDataDefs ds = do
         -- name' <- lookupType pos name
         -- params' <- traverse (lookupType pos) params
         args' <- traverse transType args
-        pure $ buildTyArr args' (TyConApp name' params')
+        pure $ buildTyArr args' (TyConApp typeName' params')
     (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
     let valueCons' = zip valueConsNames $ map (Forall as) valueConsTypes'
     varEnv <>= HashMap.fromList valueCons'
-    typeEnv . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
-    pure (pos, name, params, map (second (map tcType)) valueCons)
+    typeEnv . at typeName %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
+    pure (pos, typeName, params, map (second (map tcType)) valueCons)
 
 tcForeigns ::
   ( MonadState TcEnv m,
@@ -219,14 +219,14 @@ tcForeigns ::
   [Foreign (Malgo 'Rename)] ->
   m [Foreign (Malgo 'TypeCheck)]
 tcForeigns ds =
-  for ds \((pos, raw), name, ty) -> do
+  for ds \((pos, raw), funcName, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar $ Just $ tyVar ^. idName
+      tv <- freshVar $ Just $ tyVar ^. name
       typeEnv . at tyVar ?= TypeDef (TyMeta tv) [] []
     ty' <- transType ty
     scheme@(Forall _ ty') <- generalize pos mempty ty'
-    varEnv . at name ?= scheme
-    pure (Annotated ty' (pos, raw), name, tcType ty)
+    varEnv . at funcName ?= scheme
+    pure (Annotated ty' (pos, raw), funcName, tcType ty)
 
 tcScSigs ::
   ( MonadBind m,
@@ -240,13 +240,13 @@ tcScSigs ::
   [ScSig (Malgo 'Rename)] ->
   m [ScSig (Malgo 'TypeCheck)]
 tcScSigs ds =
-  for ds \(pos, name, ty) -> do
+  for ds \(pos, scName, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar $ Just $ tyVar ^. idName
+      tv <- freshVar $ Just $ tyVar ^. name
       typeEnv . at tyVar ?= TypeDef (TyMeta tv) [] []
     scheme <- generalize pos mempty =<< transType ty
-    varEnv . at name ?= scheme
-    pure (pos, name, tcType ty)
+    varEnv . at scName ?= scheme
+    pure (pos, scName, tcType ty)
 
 prepareTcScDefs :: (MonadState TcEnv m, MonadBind m) => [ScDef (Malgo 'Rename)] -> m ()
 prepareTcScDefs = traverse_ \(_, name, _) ->
