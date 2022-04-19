@@ -5,7 +5,6 @@ import qualified Data.Map.Strict as Map
 import Koriel.Core.Type
 import qualified Koriel.Core.Type as C
 import Koriel.Id
-import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Prelude
@@ -17,7 +16,7 @@ dsType :: Monad m => GT.Type -> m C.Type
 dsType t@GT.TyApp {} = dsTyApp [] t
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
-  case con ^. meta of
+  case con ^. idMeta of
     GT.TYPE (GT.Rep GT.BoxedRep) -> pure AnyT
     kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
@@ -35,7 +34,7 @@ dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
 dsType GT.TyBottom = pure AnyT
-dsType GT.TyMeta {} = pure AnyT
+dsType GT.TyMeta{} = pure AnyT
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 dsTyApp :: Monad f => [GT.Type] -> GT.Type -> f C.Type

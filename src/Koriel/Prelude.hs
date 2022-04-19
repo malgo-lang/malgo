@@ -2,7 +2,8 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Koriel.Prelude
-  ( -- * Reexports
+  ( 
+    -- * Reexports
     module Relude,
     module Control.Monad.Writer.Class,
     module Control.Monad.Trans.Writer.CPS,
@@ -34,7 +35,7 @@ import Control.Monad.Writer.Class hiding (pass)
 import qualified Control.Monad.Writer.Class as Writer
 import Data.Monoid
 import qualified Data.Text.IO as T
-import Relude hiding (All, Op, Type, id, sort, unzip)
+import Relude hiding (All, Op, Type, id, unzip)
 import qualified System.IO
 
 -- | Generalization of 'Data.List.unzip' :: [(a, b)] -> ([a], [b])

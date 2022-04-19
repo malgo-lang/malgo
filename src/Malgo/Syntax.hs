@@ -8,7 +8,6 @@ import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Koriel.Id
-import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
@@ -429,7 +428,7 @@ makeBindGroup ds =
 
 adjacents :: (Eq a1, XId x ~ Id a1) => (a, XId x, Exp x) -> (XId x, Int, [Int])
 adjacents (_, f, e) =
-  (f, f ^. uniq, map (view uniq) $ toList $ HashSet.delete f (freevars e))
+  (f, f ^. idUniq, map (view idUniq) $ toList $ HashSet.delete f (freevars e))
 
 makeSCC :: (Eq a1, XId x ~ Id a1) => [(a, XId x, Exp x)] -> [[XId x]]
 makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'

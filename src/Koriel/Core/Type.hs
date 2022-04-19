@@ -6,7 +6,6 @@ import Data.Data (Data)
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
-import Koriel.Lens
 
 {-
 Constructors  C ::= <tag n>
@@ -77,7 +76,7 @@ instance HasType Type where
   typeOf x = x
 
 instance HasType a => HasType (Id a) where
-  typeOf x = typeOf $ x ^. meta
+  typeOf x = typeOf $ x ^. idMeta
 
 tyVar :: Traversal' Type Type
 tyVar f = \case
