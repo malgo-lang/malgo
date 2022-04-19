@@ -4,6 +4,7 @@ module Malgo.Rename.RnEnv where
 import Control.Lens (ASetter', At (at), Lens', lens, over, view, (^.))
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
@@ -182,4 +183,3 @@ lookupQualifiedVarName pos modName name =
             "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
               $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-

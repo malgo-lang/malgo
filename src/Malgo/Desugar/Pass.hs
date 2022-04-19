@@ -15,6 +15,7 @@ import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv

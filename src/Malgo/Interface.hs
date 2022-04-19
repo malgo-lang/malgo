@@ -9,6 +9,7 @@ import Data.Graph
 import Data.String.Conversions (convertString)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsEnv)
 import qualified Malgo.Desugar.DsEnv as DsEnv

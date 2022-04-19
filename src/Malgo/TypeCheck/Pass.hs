@@ -9,6 +9,7 @@ import qualified Data.Map as Map
 import Data.Maybe (fromJust)
 import Data.Traversable (for)
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)

@@ -25,6 +25,7 @@ import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.Functor.Classes
 import GHC.Exts
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty

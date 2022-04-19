@@ -11,6 +11,7 @@ import Data.Data (Data)
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty

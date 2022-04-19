@@ -10,6 +10,7 @@ import qualified Data.HashSet as HashSet
 import qualified Data.Map as Map
 import Data.Traversable (for)
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude hiding (Constraint)

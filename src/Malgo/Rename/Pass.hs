@@ -7,6 +7,7 @@ import qualified Data.HashSet as HashSet
 import Data.List (intersect)
 import Data.List.Extra (anySame, disjoint)
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Interface hiding (dependencies)

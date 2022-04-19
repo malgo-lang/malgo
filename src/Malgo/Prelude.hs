@@ -6,7 +6,6 @@ module Malgo.Prelude
   ( module Koriel.Prelude,
     runMalgoM,
     Opt (..),
-    HasOpt (..),
     MalgoEnv (..),
     HasMalgoEnv (..),
     getOpt,
@@ -26,6 +25,7 @@ import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
 import Data.List ((!!))
+import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply)
 import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude

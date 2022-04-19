@@ -10,6 +10,7 @@ import Koriel.Core.Flat
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Relude.Extra.Map (member)

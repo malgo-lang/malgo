@@ -11,6 +11,7 @@ import qualified Koriel.Core.Syntax as Core
 import Koriel.Core.Type
 import qualified Koriel.Core.Type as Core
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv

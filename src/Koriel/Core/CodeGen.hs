@@ -23,6 +23,9 @@ import qualified Koriel.Core.Op as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type as C
 import Koriel.Id
+-- import LLVM.Pretty (ppllvm)
+
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
@@ -45,7 +48,6 @@ import LLVM.AST.Type hiding
   )
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
--- import LLVM.Pretty (ppllvm)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)

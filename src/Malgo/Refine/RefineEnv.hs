@@ -3,6 +3,7 @@ module Malgo.Refine.RefineEnv where
 import Control.Lens (Lens', lens)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Malgo.Prelude
 import Malgo.TypeCheck.TcEnv
