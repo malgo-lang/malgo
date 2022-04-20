@@ -27,7 +27,6 @@ import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv), TcEnv)
-import qualified Malgo.TypeCheck.TcEnv as Tc
 import Malgo.TypeRep as GT
 
 -- | トップレベル宣言
@@ -102,7 +101,7 @@ dsScDefs ::
 dsScDefs ds = do
   -- まず、宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
-    Just (Forall _ fType) <- use (tcEnv . Tc.varEnv . at f)
+    Just (Forall _ fType) <- use (tcEnv . signatureMap . at f)
     f' <- newCoreId f =<< dsType fType
     nameEnv . at f ?= f'
   foldMapM dsScDef ds
@@ -150,7 +149,7 @@ dsDataDef ::
 dsDataDef (_, name, _, cons) =
   for cons $ \(conName, _) -> do
     -- lookup constructor infomations
-    Just vcs <- preuse (tcEnv . Tc.typeEnv . at name . _Just . valueConstructors)
+    Just vcs <- preuse (tcEnv . typeDefMap . at name . _Just . valueConstructors)
     let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType

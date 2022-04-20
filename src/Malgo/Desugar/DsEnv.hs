@@ -13,7 +13,7 @@ import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv), TcEnv)
 import Malgo.TypeRep
 import qualified Malgo.TypeRep as GT
 import Text.Pretty.Simple (pShow)
-import qualified Malgo.TypeCheck.TcEnv as TcEnv
+import Koriel.Lens
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
@@ -73,7 +73,7 @@ lookupValueConstructors ::
   [GT.Type] ->
   m [(RnId, Scheme GT.Type)]
 lookupValueConstructors con ts = do
-  typeEnv <- use $ tcEnv . TcEnv.typeEnv
+  typeEnv <- use $ tcEnv . typeDefMap
   -- _valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
   case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->

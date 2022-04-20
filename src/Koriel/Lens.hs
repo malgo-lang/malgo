@@ -32,3 +32,6 @@ class HasTypeDefMap s a | s -> a where
 
 class HasTypeSynonymMap s a | s -> a where
   typeSynonymMap :: Lens' s a
+
+class HasFieldBelongMap s a | s -> a where
+  fieldBelongMap :: Lens' s a

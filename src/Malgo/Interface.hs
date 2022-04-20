@@ -53,10 +53,10 @@ buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempt
     when (tcId ^. idSort == External modName) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
       coreIdentMap . at tcId ?= coreId
-  ifor_ (dsEnv ^. tcEnv . TcEnv.varEnv) $ \tcId scheme ->
+  ifor_ (dsEnv ^. tcEnv . signatureMap) $ \tcId scheme ->
     when (tcId ^. idSort == External modName) do
       signatureMap . at tcId ?= scheme
-  ifor_ (dsEnv ^. tcEnv . TcEnv.typeEnv) $ \rnId typeDef -> do
+  ifor_ (dsEnv ^. tcEnv . typeDefMap) $ \rnId typeDef -> do
     when (rnId ^. idSort == External modName) do
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef

@@ -14,7 +14,7 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude hiding (Constraint)
-import Malgo.TypeCheck.TcEnv (TcEnv, abbrEnv)
+import Malgo.TypeCheck.TcEnv (TcEnv)
 import Malgo.TypeRep
 import Text.Megaparsec (SourcePos)
 
@@ -128,7 +128,7 @@ solve = solveLoop (5000 :: Int)
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
     solveLoop _ [] = pass
     solveLoop n (Annotated x (t1 :~ t2) : cs) = do
-      abbrEnv <- use abbrEnv
+      abbrEnv <- use typeSynonymMap
       let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
       let t2' = fromMaybe t2 (expandTypeSynonym abbrEnv t2)
       case unify x t1' t2' of
