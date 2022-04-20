@@ -40,13 +40,12 @@ makePrisms ''Def
 -- | MalgoからCoreへの変換
 desugar ::
   (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env Opt, HasUniqSupply env UniqSupply) =>
-  RnEnv ->
   TcEnv ->
   [ModuleName] ->
   Module x ->
   m (DsEnv, Program (Id C.Type))
-desugar rnEnv tcEnv depList (Module modName ds) = do
-  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName rnEnv tcEnv)
+desugar tcEnv depList (Module modName ds) = do
+  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName tcEnv)
   let varDefs = mapMaybe (preview _VarDef) ds'
   let funDefs = mapMaybe (preview _FunDef) ds'
   let extDefs = map (\dep -> ("koriel_load_" <> coerce dep, [] :-> VoidT)) (List.delete modName depList) <> [("GC_init", [] :-> VoidT)] <> mapMaybe (preview _ExtDef) ds'

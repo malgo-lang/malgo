@@ -5,15 +5,14 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Koriel.Core.Type as C
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv), TcEnv)
 import Malgo.TypeRep
 import qualified Malgo.TypeRep as GT
 import Text.Pretty.Simple (pShow)
-import Koriel.Lens
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
@@ -21,7 +20,6 @@ data DsEnv = DsEnv
     _moduleName :: ModuleName,
     -- | Malgo -> Coreの名前環境
     _nameEnv :: HashMap RnId (Id C.Type),
-    _desugarRnEnv :: RnEnv,
     -- | 型環境
     _desugarTcEnv :: TcEnv
   }
@@ -39,9 +37,6 @@ nameEnv = lens _nameEnv (\d x -> d {_nameEnv = x})
 desugarTcEnv :: Lens' DsEnv TcEnv
 desugarTcEnv = lens _desugarTcEnv (\d x -> d {_desugarTcEnv = x})
 
-desugarRnEnv :: Lens' DsEnv RnEnv
-desugarRnEnv = lens _desugarRnEnv (\d x -> d {_desugarRnEnv = x})
-
 class HasDsEnv env where
   dsEnv :: Lens' env DsEnv
 
@@ -53,15 +48,13 @@ instance HasTcEnv DsEnv where
 
 makeDsEnv ::
   ModuleName ->
-  RnEnv ->
   TcEnv ->
   DsEnv
-makeDsEnv modName rnEnv tcEnv =
+makeDsEnv modName tcEnv =
   DsEnv
     { _moduleName = modName,
       _nameEnv = mempty,
-      _desugarTcEnv = tcEnv,
-      _desugarRnEnv = rnEnv
+      _desugarTcEnv = tcEnv
     }
 
 lookupValueConstructors ::
