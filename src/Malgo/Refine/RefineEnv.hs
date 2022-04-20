@@ -3,9 +3,10 @@ module Malgo.Refine.RefineEnv where
 import Control.Lens (Lens', lens)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
-import Malgo.TypeCheck.TcEnv
 import Malgo.Prelude
+import Malgo.TypeCheck.TcEnv
 import Malgo.TypeRep
 
 data RefineEnv = RefineEnv
@@ -22,10 +23,10 @@ refineMalgoEnv = lens _refineMalgoEnv (\r x -> r {_refineMalgoEnv = x})
 instance HasMalgoEnv RefineEnv where
   malgoEnv = refineMalgoEnv
 
-instance HasOpt RefineEnv where
-  malgoOpt = refineMalgoEnv . malgoOpt
+instance HasOpt RefineEnv Opt where
+  opt = refineMalgoEnv . opt
 
-instance HasUniqSupply RefineEnv where
+instance HasUniqSupply RefineEnv UniqSupply where
   uniqSupply = refineMalgoEnv . uniqSupply
 
 buildRefineEnv :: MalgoEnv -> TcEnv -> RefineEnv

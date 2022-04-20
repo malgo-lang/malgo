@@ -23,6 +23,9 @@ import qualified Koriel.Core.Op as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type as C
 import Koriel.Id
+-- import LLVM.Pretty (ppllvm)
+
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
@@ -45,10 +48,9 @@ import LLVM.AST.Type hiding
   )
 import qualified LLVM.AST.Type as LT
 import LLVM.AST.Typed (typeOf)
-import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
--- import LLVM.Pretty (ppllvm)
 import LLVM.Context (withContext)
-import LLVM.Module (withModuleFromAST, moduleLLVMAssembly)
+import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
+import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 
 instance Hashable Name
 
@@ -75,7 +77,7 @@ globalValueMap = lens _globalValueMap (\c x -> c {_globalValueMap = x})
 funcMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
 funcMap = lens _funcMap (\c x -> c {_funcMap = x})
 
-instance HasUniqSupply CodeGenEnv where
+instance HasUniqSupply CodeGenEnv UniqSupply where
   uniqSupply = codeGenUniqSupply
 
 type MonadCodeGen m =
@@ -102,9 +104,10 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
     traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
     genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
-  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly 
-  -- liftIO $ writeFileLText dstPath $ ppllvm llvmModule
+  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
+    -- liftIO $ writeFileLText dstPath $ ppllvm llvmModule
+
     -- topVarsのOprMapを作成
     varEnv = mconcatMap ?? _topVars $ \(v, e) ->
       one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))

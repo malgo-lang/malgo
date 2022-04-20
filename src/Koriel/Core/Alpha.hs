@@ -1,16 +1,16 @@
+-- | α変換
 module Koriel.Core.Alpha
   ( alpha,
     AlphaEnv (..),
   )
 where
 
--- α変換
-
 import Control.Lens (Lens', lens, over, traverseOf, view)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 
@@ -22,7 +22,7 @@ alphaUniqSupply = lens _alphaUniqSupply (\a x -> a {_alphaUniqSupply = x})
 alphaMap :: Lens' AlphaEnv (HashMap (Id Type) (Atom (Id Type)))
 alphaMap = lens _alphaMap (\a x -> a {_alphaMap = x})
 
-instance HasUniqSupply AlphaEnv where
+instance HasUniqSupply AlphaEnv UniqSupply where
   uniqSupply = alphaUniqSupply
 
 alpha :: MonadIO m => Exp (Id Type) -> AlphaEnv -> m (Exp (Id Type))

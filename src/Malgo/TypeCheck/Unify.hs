@@ -10,6 +10,7 @@ import qualified Data.HashSet as HashSet
 import qualified Data.Map as Map
 import Data.Traversable (for)
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude hiding (Constraint)
@@ -82,7 +83,7 @@ unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
     unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
 
-instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadState TcEnv m) => MonadBind (TypeUnifyT m) where
+instance (MonadReader env m, HasUniqSupply env UniqSupply, HasOpt env Opt, MonadIO m, MonadState TcEnv m) => MonadBind (TypeUnifyT m) where
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar hint = do
@@ -121,7 +122,7 @@ instance (MonadReader env m, HasUniqSupply env, HasOpt env, MonadIO m, MonadStat
 
 -- * Constraint solver
 
-solve :: HasCallStack => (MonadIO f, MonadReader env f, HasOpt env, MonadBind f, MonadState TcEnv f) => [Annotated SourcePos Constraint] -> f ()
+solve :: HasCallStack => (MonadIO f, MonadReader env f, HasOpt env Opt, MonadBind f, MonadState TcEnv f) => [Annotated SourcePos Constraint] -> f ()
 solve = solveLoop (5000 :: Int)
   where
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
@@ -139,7 +140,7 @@ solve = solveLoop (5000 :: Int)
     zonkConstraint :: MonadBind f => Annotated x Constraint -> f (Annotated x Constraint)
     zonkConstraint (Annotated m (x :~ y)) = Annotated m <$> ((:~) <$> zonk x <*> zonk y)
 
-generalize :: HasCallStack => (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> Type -> m (Scheme Type)
+generalize :: HasCallStack => (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => SourcePos -> HashSet TypeVar -> Type -> m (Scheme Type)
 generalize x bound term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
@@ -147,7 +148,7 @@ generalize x bound term = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
-generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> HashSet TypeVar -> [Type] -> m ([Id Type], [Type])
+generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => SourcePos -> HashSet TypeVar -> [Type] -> m ([Id Type], [Type])
 generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
@@ -155,7 +156,7 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-toBound :: (MonadBind m, MonadIO m, HasUniqSupply env, MonadReader env m) => SourcePos -> TypeVar -> Text -> m (Id Type)
+toBound :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => SourcePos -> TypeVar -> Text -> m (Id Type)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   let tvKind = kindOf tvType
@@ -179,7 +180,7 @@ defaultToBoxed x = transformM \case
 unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
 
-instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env, MonadState TcEnv m) => SourcePos -> Scheme Type -> m Type
+instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env Opt, MonadState TcEnv m) => SourcePos -> Scheme Type -> m Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just $ a ^. idName)

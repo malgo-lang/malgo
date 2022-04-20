@@ -4,6 +4,7 @@ module Malgo.Rename.RnEnv where
 import Control.Lens (ASetter', At (at), Lens', lens, over, view, (^.))
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
@@ -84,10 +85,10 @@ instance HasRnEnv RnEnv where
 instance HasMalgoEnv RnEnv where
   malgoEnv = rnMalgoEnv
 
-instance HasOpt RnEnv where
-  malgoOpt = rnMalgoEnv . malgoOpt
+instance HasOpt RnEnv Opt where
+  opt = rnMalgoEnv . opt
 
-instance HasUniqSupply RnEnv where
+instance HasUniqSupply RnEnv UniqSupply where
   uniqSupply = rnMalgoEnv . uniqSupply
 
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [Annotated Visibility RnId]) -> [(PsId, Annotated Visibility RnId)] -> RnEnv -> RnEnv
@@ -97,7 +98,7 @@ appendRnEnv lens newEnv = over lens (go newEnv)
     go ((n, n') : xs) e = go xs $ HashMap.alter (f n') n e
     f n' ns = Just $ (n' :) $ concat ns
 
-genBuiltinRnEnv :: (MonadReader env m, HasUniqSupply env, MonadIO m) => ModuleName -> MalgoEnv -> m RnEnv
+genBuiltinRnEnv :: (MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m) => ModuleName -> MalgoEnv -> m RnEnv
 genBuiltinRnEnv modName malgoEnv = do
   -- generate RnId of primitive types
   int32_t <- newExternalId "Int32#" () $ ModuleName "Builtin"
@@ -127,11 +128,11 @@ genBuiltinRnEnv modName malgoEnv = do
       }
 
 -- | Resolving a new (local) name
-resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => Text -> m RnId
+resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply) => Text -> m RnId
 resolveName name = newInternalId name ()
 
 -- | Resolving a new global (toplevel) name
-resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env) => ModuleName -> Text -> m RnId
+resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply) => ModuleName -> Text -> m RnId
 resolveGlobalName modName name = newExternalId name () modName
 
 -- | Resolving a variable name that is already resolved
@@ -182,4 +183,3 @@ lookupQualifiedVarName pos modName name =
             "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
               $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-

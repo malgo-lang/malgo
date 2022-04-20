@@ -8,7 +8,7 @@ import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lintProgram, runLint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
-import Koriel.MonadUniq
+import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)

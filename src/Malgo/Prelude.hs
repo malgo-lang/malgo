@@ -1,11 +1,11 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Prelude
   ( module Koriel.Prelude,
     runMalgoM,
     Opt (..),
-    HasOpt (..),
     MalgoEnv (..),
     HasMalgoEnv (..),
     getOpt,
@@ -21,10 +21,13 @@ module Malgo.Prelude
 where
 
 import Control.Lens (Lens, Lens', lens, view)
+import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
 import Data.List ((!!))
-import Koriel.MonadUniq
+import Koriel.Lens
+import Koriel.MonadUniq (UniqSupply)
+import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
 import System.FilePath ((-<.>))
@@ -65,17 +68,13 @@ defaultOpt src =
       forceRebuild = False
     }
 
-class HasOpt env where
-  malgoOpt :: Lens' env Opt
-
-instance HasOpt Opt where
-  malgoOpt = identity
-
 data MalgoEnv = MalgoEnv
-  { _malgoUniqSupply :: UniqSupply,
-    _malgoOpt :: Opt
+  { _uniqSupply :: UniqSupply,
+    _opt :: Opt
   }
   deriving stock (Show, Eq)
+
+makeFieldsNoPrefix ''MalgoEnv
 
 class HasMalgoEnv env where
   malgoEnv :: Lens' env MalgoEnv
@@ -83,31 +82,25 @@ class HasMalgoEnv env where
 instance HasMalgoEnv MalgoEnv where
   malgoEnv = identity
 
-instance HasUniqSupply MalgoEnv where
-  uniqSupply = lens _malgoUniqSupply (\x y -> x {_malgoUniqSupply = y})
-
-instance HasOpt MalgoEnv where
-  malgoOpt = lens _malgoOpt (\x y -> x {_malgoOpt = y})
-
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail, MonadThrow, MonadCatch)
 
 runMalgoM :: MalgoM a -> Opt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
-  let env = MalgoEnv {_malgoOpt = opt, _malgoUniqSupply = uniqSupply}
+  let env = MalgoEnv {_opt = opt, _uniqSupply = uniqSupply}
   runReaderT (unMalgoM m) env
 
-getOpt :: (HasOpt env, MonadReader env m) => m Opt
-getOpt = view malgoOpt
+getOpt :: (HasOpt env Opt, MonadReader env m) => m Opt
+getOpt = view opt
 
-viewLine :: (HasOpt env, MonadReader env m, MonadIO m) => Int -> m Text
+viewLine :: (HasOpt env Opt, MonadReader env m, MonadIO m) => Int -> m Text
 viewLine linum = do
   srcFileName <- srcName <$> getOpt
   s <- readFile srcFileName
   pure $ lines (toText s) !! (linum - 1)
 
-errorOn :: (HasCallStack, HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
+errorOn :: (HasCallStack, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
 errorOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos
@@ -122,7 +115,7 @@ errorOn pos x = do
             nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
 
-warningOn :: (HasOpt env, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m ()
+warningOn :: (HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m ()
 warningOn pos x = do
   l <- viewLine (unPos $ sourceLine pos)
   let lineNum = unPos $ sourceLine pos

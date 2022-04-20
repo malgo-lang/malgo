@@ -9,6 +9,7 @@ import Data.Graph
 import Data.String.Conversions (convertString)
 import qualified Koriel.Core.Type as C
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsEnv)
 import qualified Malgo.Desugar.DsEnv as DsEnv
@@ -79,12 +80,12 @@ buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempt
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
-storeInterface :: (MonadIO m, HasOpt env, MonadReader env m) => Interface -> m ()
+storeInterface :: (MonadIO m, HasOpt env Opt, MonadReader env m) => Interface -> m ()
 storeInterface interface = do
   opt <- getOpt
   liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
 
-loadInterface :: (MonadIO m, HasOpt env, MonadReader env m) => ModuleName -> m (Maybe Interface)
+loadInterface :: (MonadIO m, HasOpt env Opt, MonadReader env m) => ModuleName -> m (Maybe Interface)
 loadInterface (ModuleName modName) = do
   modPaths <- modulePaths <$> getOpt
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
@@ -101,7 +102,7 @@ loadInterface (ModuleName modName) = do
         then liftIO $ mapLeft (second text) <$> decodeFileOrFail (modPath </> modFile)
         else findAndReadFile rest modFile
 
-dependencieList :: (MonadIO m, HasOpt env, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]
+dependencieList :: (MonadIO m, HasOpt env Opt, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]
 dependencieList modName imports = do
   depList <- ordNub . ((modName, modName, imports) :) <$> foldMapM genDepList imports
   let (depGraph, nodeFromVertex, _) = graphFromEdges depList
