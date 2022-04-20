@@ -1,24 +1,27 @@
-{-# LANGUAGE TemplateHaskell, UndecidableInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE UndecidableInstances #-}
+
 module Malgo.TypeCheck.TcEnv
   ( RecordTypeName,
     TcEnv (..),
     HasTcEnv (..),
     genTcEnv,
     findBuiltinType,
-  appendFieldBelongMap)
+    appendFieldBelongMap,
+  )
 where
 
-import Control.Lens (At (at), Lens', over, traverseOf, traversed, view, _2, makeFieldsNoPrefix)
+import Control.Lens (At (at), Lens', makeFieldsNoPrefix, over, traverseOf, traversed, view, (^.), _2)
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
 import Malgo.Syntax.Extension
 import Malgo.TypeRep
-import Koriel.Lens
 import Text.Pretty.Simple (pShow)
 
 type RecordTypeName = Text
@@ -27,7 +30,8 @@ data TcEnv = TcEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
     _typeSynonymMap :: HashMap (Id Type) ([Id Type], Type),
-    _fieldBelongMap :: HashMap RnId [(RecordTypeName, Scheme Type)]
+    _fieldBelongMap :: HashMap RnId [(RecordTypeName, Scheme Type)],
+    _resolvedTypeIdentMap :: HashMap PsId [Annotated R.Visibility RnId]
   }
   deriving stock (Show)
 
@@ -46,9 +50,10 @@ instance HasType TcEnv where
   typeOf TcEnv {} = error "typeOf TcEnv{..}"
   types f TcEnv {..} =
     TcEnv <$> traverseOf (traversed . traversed . types) f _signatureMap
-      <*> traverseOf (traversed . traversed . types) f _typeDefMap 
+      <*> traverseOf (traversed . traversed . types) f _typeDefMap
       <*> traverseOf (traversed . traversed . types) f _typeSynonymMap
       <*> traverseOf (traversed . traversed . _2 . traversed . types) f _fieldBelongMap
+      <*> pure _resolvedTypeIdentMap
 
 appendFieldBelongMap :: [(Id (), (RecordTypeName, Scheme Type))] -> TcEnv -> TcEnv
 appendFieldBelongMap newEnv = over fieldBelongMap (go newEnv)
@@ -78,10 +83,11 @@ genTcEnv rnEnv = do
               (string_t, TypeDef (TyPrim StringT) [] [])
             ],
         _typeSynonymMap = mempty,
-        _fieldBelongMap = mempty
+        _fieldBelongMap = mempty,
+        _resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap
       }
 
-findBuiltinType :: Text -> RnEnv -> Maybe (Id ())
+findBuiltinType :: (HasResolvedTypeIdentMap s (HashMap PsId [Annotated R.Visibility RnId])) => PsId -> s -> Maybe RnId
 findBuiltinType x rnEnv = do
-  ids <- map (view value) <$> view (R.typeEnv . at x) rnEnv
+  ids <- map (view value) <$> view (resolvedTypeIdentMap . at x) rnEnv
   find (view idSort >>> \case External (ModuleName "Builtin") -> True; _ -> False) ids

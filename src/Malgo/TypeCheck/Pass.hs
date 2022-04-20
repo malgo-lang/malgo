@@ -14,7 +14,7 @@ import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Interface (loadInterface)
 import Malgo.Prelude hiding (Constraint)
-import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
+import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
@@ -83,8 +83,7 @@ tcBindGroup ::
     MonadIO m,
     HasOpt env Opt,
     MonadReader env m,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   BindGroup (Malgo 'Rename) ->
   m (BindGroup (Malgo 'TypeCheck))
@@ -124,8 +123,7 @@ tcTypeDefinitions ::
     MonadIO m,
     HasOpt env Opt,
     HasUniqSupply env UniqSupply,
-    MonadFail m,
-    HasRnEnv env
+    MonadFail m
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
@@ -153,8 +151,7 @@ tcTypeSynonyms ::
     MonadReader env f,
     HasOpt env Opt,
     HasUniqSupply env UniqSupply,
-    MonadFail f,
-    HasRnEnv env
+    MonadFail f
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'TypeCheck)]
@@ -182,8 +179,7 @@ tcDataDefs ::
     MonadReader env m,
     HasOpt env Opt,
     MonadIO m,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   [DataDef (Malgo 'Rename)] ->
   m [DataDef (Malgo 'TypeCheck)]
@@ -213,8 +209,7 @@ tcForeigns ::
     MonadReader env m,
     MonadIO m,
     HasOpt env Opt,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   [Foreign (Malgo 'Rename)] ->
   m [Foreign (Malgo 'TypeCheck)]
@@ -234,8 +229,7 @@ tcScSigs ::
     MonadReader env m,
     MonadIO m,
     HasOpt env Opt,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   [ScSig (Malgo 'Rename)] ->
   m [ScSig (Malgo 'TypeCheck)]
@@ -264,8 +258,7 @@ tcScDefGroup ::
     MonadIO m,
     MonadReader env m,
     HasOpt env Opt,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
   m [[ScDef (Malgo 'TypeCheck)]]
@@ -278,8 +271,7 @@ tcScDefs ::
     MonadIO m,
     MonadReader env m,
     HasOpt env Opt,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   [ScDef (Malgo 'Rename)] ->
   m [ScDef (Malgo 'TypeCheck)]
@@ -297,7 +289,7 @@ tcScDefs ds@((pos, _, _) : _) = do
 --
 -- We need to generalize them by `generalizeMutRecs` and validate them signatures by `validateSignatures`
 tcScDef ::
-  (MonadReader env m, MonadIO m, MonadFail m, MonadState TcEnv m, MonadBind m, HasOpt env Opt, HasUniqSupply env UniqSupply, HasRnEnv env) =>
+  (MonadReader env m, MonadIO m, MonadFail m, MonadState TcEnv m, MonadBind m, HasOpt env Opt, HasUniqSupply env UniqSupply) =>
   ScDef (Malgo 'Rename) ->
   m (ScDef (Malgo 'TypeCheck))
 tcScDef (pos, name, expr) = do
@@ -388,8 +380,7 @@ tcExpr ::
     MonadIO m,
     MonadReader env m,
     HasOpt env Opt,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [Annotated SourcePos Constraint] m (Exp (Malgo 'TypeCheck))
@@ -477,8 +468,7 @@ tcClause ::
     MonadIO m,
     MonadReader env m,
     HasOpt env Opt,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   Clause (Malgo 'Rename) ->
   WriterT [Annotated SourcePos Constraint] m (Clause (Malgo 'TypeCheck))
@@ -546,8 +536,7 @@ tcStmts ::
     MonadReader env m,
     HasOpt env Opt,
     MonadIO m,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   NonEmpty (Stmt (Malgo 'Rename)) ->
   WriterT [Annotated SourcePos Constraint] m (NonEmpty (Stmt (Malgo 'TypeCheck)))
@@ -560,8 +549,7 @@ tcStmt ::
     MonadReader env m,
     HasOpt env Opt,
     MonadIO m,
-    HasUniqSupply env UniqSupply,
-    HasRnEnv env
+    HasUniqSupply env UniqSupply
   ) =>
   Stmt (Malgo 'Rename) ->
   WriterT [Annotated SourcePos Constraint] m (Stmt (Malgo 'TypeCheck))
@@ -575,10 +563,10 @@ tcStmt (Let pos v e) = do
 -- Translate Type representation --
 -----------------------------------
 
-transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env Opt, HasUniqSupply env UniqSupply, HasRnEnv env) => S.Type (Malgo 'Rename) -> m Type
+transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasOpt env Opt, HasUniqSupply env UniqSupply) => S.Type (Malgo 'Rename) -> m Type
 transType (S.TyApp pos t ts) = do
-  rnEnv <- view rnEnv
-  let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
+  tcEnv <- get
+  let ptr_t = fromJust $ findBuiltinType "Ptr#" tcEnv
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t

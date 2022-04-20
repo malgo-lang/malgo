@@ -56,20 +56,20 @@ rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExp ex
 rnDecl (ScSig pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv typeEnv (zip tyVars $ map (Annotated Implicit) tyVars')) $
+  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Annotated Implicit) tyVars')) $
     ScSig pos
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
   params' <- traverse resolveName params
-  local (appendRnEnv typeEnv (zip params $ map (Annotated Implicit) params')) $
+  local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Annotated Implicit) params')) $
     DataDef pos
       <$> lookupTypeName pos name
       <*> pure params'
       <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (TypeSynonym pos name params typ) = do
   params' <- traverse resolveName params
-  local (appendRnEnv typeEnv (zip params $ map (Annotated Implicit) params')) $
+  local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Annotated Implicit) params')) $
     TypeSynonym pos <$> lookupTypeName pos name
       <*> pure params'
       <*> rnType typ
@@ -77,7 +77,7 @@ rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos 
 rnDecl (Foreign pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv typeEnv (zip tyVars $ map (Annotated Implicit) tyVars')) $
+  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Annotated Implicit) tyVars')) $
     Foreign (pos, name)
       <$> lookupVarName pos name
       <*> rnType typ
@@ -162,7 +162,7 @@ rnClause (Clause pos ps e) = do
   -- varsに重複がないことを確認
   when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (Annotated Implicit) <$> traverse resolveName vars
-  local (appendRnEnv varEnv vm) $ Clause pos <$> traverse rnPat ps <*> rnExp e
+  local (appendRnEnv resolvedVarIdentMap vm) $ Clause pos <$> traverse rnPat ps <*> rnExp e
   where
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
@@ -203,7 +203,7 @@ rnStmts (NoBind x e :| s : ss) = do
 rnStmts (Let x v e :| s : ss) = do
   e' <- rnExp e
   v' <- resolveName v
-  local (appendRnEnv varEnv [(v, Annotated Implicit v')]) do
+  local (appendRnEnv resolvedVarIdentMap [(v, Annotated Implicit v')]) do
     s' :| ss' <- rnStmts (s :| ss)
     pure $ Let x v' e' :| s' : ss'
 rnStmts (With x (Just v) e :| s : ss) = do
@@ -279,39 +279,39 @@ genToplevelEnv modName ds =
   execStateT (traverse aux ds)
   where
     aux (ScDef pos x _) = do
-      env <- use varEnv
+      env <- use resolvedVarIdentMap
       when (x `elem` HashMap.keys env) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
-      modify $ appendRnEnv varEnv [(x, Annotated Implicit x')]
+      modify $ appendRnEnv resolvedVarIdentMap [(x, Annotated Implicit x')]
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
       env <- get
-      when (x `elem` HashMap.keys (env ^. typeEnv)) do
+      when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      unless (disjoint (map fst cs) (HashMap.keys (env ^. varEnv))) do
+      unless (disjoint (map fst cs) (HashMap.keys (env ^. resolvedVarIdentMap))) do
         errorOn pos $
           "Duplicate name(s):"
             <+> sep
-              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. varEnv)))
+              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
       x' <- resolveGlobalName modName x
       xs' <- traverse (resolveGlobalName modName . fst) cs
-      modify $ appendRnEnv varEnv (zip (map fst cs) $ map (Annotated Implicit) xs')
-      modify $ appendRnEnv typeEnv [(x, Annotated Implicit x')]
+      modify $ appendRnEnv resolvedVarIdentMap (zip (map fst cs) $ map (Annotated Implicit) xs')
+      modify $ appendRnEnv resolvedTypeIdentMap [(x, Annotated Implicit x')]
       traverse_ (traverse_ genFieldEnv . snd) cs
     aux (TypeSynonym pos x _ t) = do
       env <- get
-      when (x `elem` HashMap.keys (env ^. typeEnv)) do
+      when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
-      modify $ appendRnEnv typeEnv [(x, Annotated Implicit x')]
+      modify $ appendRnEnv resolvedTypeIdentMap [(x, Annotated Implicit x')]
       genFieldEnv t
     aux (Foreign pos x _) = do
       env <- get
-      when (x `elem` HashMap.keys (env ^. varEnv)) do
+      when (x `elem` HashMap.keys (env ^. resolvedVarIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newExternalId x () modName
-      modify $ appendRnEnv varEnv [(x, Annotated Implicit x')]
+      modify $ appendRnEnv resolvedVarIdentMap [(x, Annotated Implicit x')]
     aux (Import pos modName' All) = do
       interface <-
         loadInterface modName' >>= \case
@@ -321,8 +321,8 @@ genToplevelEnv modName ds =
       when (debugMode opt) $
         hPrint stderr $ pPrint interface
       -- 全ての識別子をImplicitでimportする
-      modify $ appendRnEnv varEnv (map (over _2 $ Annotated Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv typeEnv (map (over _2 $ Annotated Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
+      modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Annotated Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Annotated Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux (Import pos modName' (Selected implicits)) = do
       interface <-
         loadInterface modName' >>= \case
@@ -333,7 +333,7 @@ genToplevelEnv modName ds =
         hPrint stderr $ pPrint interface
       modify $
         appendRnEnv
-          varEnv
+          resolvedVarIdentMap
           ( map
               ( \(name, id) ->
                   if name `elem` implicits
@@ -344,7 +344,7 @@ genToplevelEnv modName ds =
           )
       modify $
         appendRnEnv
-          typeEnv
+          resolvedTypeIdentMap
           ( map
               ( \(name, id) ->
                   if name `elem` implicits
@@ -361,8 +361,8 @@ genToplevelEnv modName ds =
       opt <- getOpt
       when (debugMode opt) $
         hPrint stderr $ pPrint interface
-      modify $ appendRnEnv varEnv (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv typeEnv (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
+      modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Annotated (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pass
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
     genFieldEnv (TyVar _ _) = pass
@@ -374,5 +374,5 @@ genToplevelEnv modName ds =
       let ts = map snd kts
       traverse_ genFieldEnv ts
       ks' <- traverse (resolveGlobalName modName) ks
-      zipWithM_ (\k k' -> modify $ appendRnEnv fieldEnv [(k, Annotated Implicit k')]) ks ks'
+      zipWithM_ (\k k' -> modify $ appendRnEnv resolvedFieldIdentMap [(k, Annotated Implicit k')]) ks ks'
     genFieldEnv (TyBlock _ t) = genFieldEnv t

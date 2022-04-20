@@ -7,7 +7,7 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
+import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv), TcEnv)
 import Malgo.TypeRep
@@ -50,9 +50,6 @@ instance HasDsEnv DsEnv where
 
 instance HasTcEnv DsEnv where
   tcEnv = desugarTcEnv
-
-instance HasRnEnv DsEnv where
-  rnEnv = desugarRnEnv
 
 makeDsEnv ::
   ModuleName ->
