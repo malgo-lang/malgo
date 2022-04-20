@@ -12,7 +12,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Interface (loadInterface, signatureMap, typeAbbrMap, typeDefMap)
+import Malgo.Interface (loadInterface)
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (HasRnEnv (rnEnv), RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
@@ -114,7 +114,7 @@ tcImports = traverse tcImport
           Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
       varEnv <>= (interface ^. signatureMap)
       typeEnv <>= (interface ^. typeDefMap)
-      abbrEnv <>= (interface ^. typeAbbrMap)
+      abbrEnv <>= (interface ^. typeSynonymMap)
       pure (pos, modName, importList)
 
 tcTypeDefinitions ::

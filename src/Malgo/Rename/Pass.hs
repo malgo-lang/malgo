@@ -10,7 +10,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Interface hiding (dependencies)
+import Malgo.Interface
 import Malgo.Prelude
 import Malgo.Rename.RnEnv
 import Malgo.Syntax
@@ -87,7 +87,7 @@ rnDecl (Import pos modName importList) = do
       Just x -> pure x
       Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
   infixInfo <>= interface ^. infixMap
-  dependencies <>= [modName]
+  Malgo.Rename.RnEnv.dependencies <>= [modName]
   pure $ Import pos modName importList
 
 -- | Rename a expression.
