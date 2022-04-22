@@ -30,9 +30,9 @@ instance HasUniqSupply RefineEnv UniqSupply where
   uniqSupply = refineMalgoEnv . uniqSupply
 
 buildRefineEnv :: MalgoEnv -> TcEnv -> RefineEnv
-buildRefineEnv malgoEnv TcEnv {_typeEnv} =
+buildRefineEnv malgoEnv TcEnv {_typeDefMap} =
   RefineEnv
-    { _typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeEnv,
+    { _typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap,
       _refineMalgoEnv = malgoEnv
     }
   where

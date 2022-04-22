@@ -1,15 +1,17 @@
+{-# LANGUAGE TemplateHaskell, UndecidableInstances #-}
 -- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
 module Malgo.Rename.RnEnv where
 
-import Control.Lens (ASetter', At (at), Lens', lens, over, view, (^.))
+import Koriel.Lens
+import Control.Lens (ASetter', At (at), Lens', lens, over, view, (^.), makeFieldsNoPrefix)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
-import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 import Text.Megaparsec.Pos (SourcePos)
+import Text.Pretty.Simple (pShow)
 
 data RnState = RnState
   { _infixInfo :: HashMap RnId (Assoc, Int),
@@ -41,55 +43,19 @@ data Visibility
 instance Pretty Visibility where pPrint = text . show
 
 data RnEnv = RnEnv
-  { _varEnv :: HashMap PsId [Annotated Visibility RnId],
-    _typeEnv :: HashMap PsId [Annotated Visibility RnId],
-    _fieldEnv :: HashMap PsId [Annotated Visibility RnId],
+  { _resolvedVarIdentMap :: HashMap PsId [Annotated Visibility RnId],
+    _resolvedTypeIdentMap :: HashMap PsId [Annotated Visibility RnId],
+    _resolvedFieldIdentMap :: HashMap PsId [Annotated Visibility RnId],
     _moduleName :: ModuleName,
-    _rnMalgoEnv :: MalgoEnv
+    _uniqSupply :: UniqSupply,
+    _opt :: Opt
   }
   deriving stock (Show, Eq)
 
 instance Pretty RnEnv where
-  pPrint RnEnv {_varEnv, _typeEnv, _fieldEnv, _moduleName} =
-    "RnEnv"
-      <+> braces
-        ( sep
-            [ "_varEnv" <+> "=" <+> pPrint (HashMap.toList _varEnv),
-              "_typeEnv" <+> "=" <+> pPrint (HashMap.toList _typeEnv),
-              "_fieldEnv" <+> "=" <+> pPrint (HashMap.toList _fieldEnv),
-              "_moduleName" <+> "=" <+> pPrint _moduleName
-            ]
-        )
-
-varEnv :: Lens' RnEnv (HashMap PsId [Annotated Visibility RnId])
-varEnv = lens _varEnv (\r x -> r {_varEnv = x})
-
-typeEnv :: Lens' RnEnv (HashMap PsId [Annotated Visibility RnId])
-typeEnv = lens _typeEnv (\r x -> r {_typeEnv = x})
-
-fieldEnv :: Lens' RnEnv (HashMap PsId [Annotated Visibility RnId])
-fieldEnv = lens _fieldEnv (\r x -> r {_fieldEnv = x})
-
-moduleName :: Lens' RnEnv ModuleName
-moduleName = lens _moduleName (\r x -> r {_moduleName = x})
-
-rnMalgoEnv :: Lens' RnEnv MalgoEnv
-rnMalgoEnv = lens _rnMalgoEnv (\r x -> r {_rnMalgoEnv = x})
-
-class HasRnEnv env where
-  rnEnv :: Lens' env RnEnv
-
-instance HasRnEnv RnEnv where
-  rnEnv = identity
-
-instance HasMalgoEnv RnEnv where
-  malgoEnv = rnMalgoEnv
-
-instance HasOpt RnEnv Opt where
-  opt = rnMalgoEnv . opt
-
-instance HasUniqSupply RnEnv UniqSupply where
-  uniqSupply = rnMalgoEnv . uniqSupply
+  pPrint = pPrint . toString . pShow
+  
+makeFieldsNoPrefix ''RnEnv
 
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [Annotated Visibility RnId]) -> [(PsId, Annotated Visibility RnId)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)
@@ -111,8 +77,8 @@ genBuiltinRnEnv modName malgoEnv = do
 
   pure $
     RnEnv
-      { _varEnv = mempty,
-        _typeEnv =
+      { _resolvedVarIdentMap = mempty,
+        _resolvedTypeIdentMap=
           HashMap.fromList
             [ ("Int32#", [Annotated Implicit int32_t]),
               ("Int64#", [Annotated Implicit int64_t]),
@@ -122,9 +88,10 @@ genBuiltinRnEnv modName malgoEnv = do
               ("String#", [Annotated Implicit string_t]),
               ("Ptr#", [Annotated Implicit ptr_t])
             ],
-        _fieldEnv = HashMap.empty,
+        _resolvedFieldIdentMap = HashMap.empty,
         _moduleName = modName,
-        _rnMalgoEnv = malgoEnv
+        _uniqSupply = malgoEnv ^. uniqSupply,
+        _opt = malgoEnv ^. opt
       }
 
 -- | Resolving a new (local) name
@@ -138,7 +105,7 @@ resolveGlobalName modName name = newExternalId name () modName
 -- | Resolving a variable name that is already resolved
 lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupVarName pos name =
-  view (varEnv . at name) >>= \case
+  view (resolvedVarIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
       Just (Annotated _ name) -> pure name
       Nothing ->
@@ -150,7 +117,7 @@ lookupVarName pos name =
 -- | Resolving a type name that is already resolved
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupTypeName pos name =
-  view (typeEnv . at name) >>= \case
+  view (resolvedTypeIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
       Just (Annotated _ name) -> pure name
       Nothing ->
@@ -162,7 +129,7 @@ lookupTypeName pos name =
 -- | Resolving a field name that is already resolved
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
 lookupFieldName pos name =
-  view (fieldEnv . at name) >>= \case
+  view (resolvedFieldIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
       Just (Annotated _ name) -> pure name
       Nothing ->
@@ -174,7 +141,7 @@ lookupFieldName pos name =
 -- | Resolving a qualified variable name like Foo.x
 lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
 lookupQualifiedVarName pos modName name =
-  view (varEnv . at name) >>= \case
+  view (resolvedVarIdentMap . at name) >>= \case
     Just names ->
       case find (\i -> i ^. ann == Explicit modName) names of
         Just (Annotated _ name) -> pure name
