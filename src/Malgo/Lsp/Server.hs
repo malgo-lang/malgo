@@ -11,9 +11,9 @@ import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
 import Malgo.Interface
 import Malgo.Parser (parseMalgo)
-import Malgo.Prelude
+import Malgo.Prelude hiding (Range)
 import Malgo.Syntax
-import Malgo.Syntax.Extension hiding (Range)
+import Malgo.Syntax.Extension
 import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
 import Text.Megaparsec (errorBundlePretty)

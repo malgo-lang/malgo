@@ -105,7 +105,7 @@ resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply
 resolveGlobalName modName name = newExternalId name () modName
 
 -- | Resolving a variable name that is already resolved
-lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
+lookupVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupVarName pos name =
   view (resolvedVarIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
@@ -117,7 +117,7 @@ lookupVarName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a type name that is already resolved
-lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
+lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupTypeName pos name =
   view (resolvedTypeIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
@@ -129,7 +129,7 @@ lookupTypeName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a field name that is already resolved
-lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
+lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupFieldName pos name =
   view (resolvedFieldIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
@@ -141,7 +141,7 @@ lookupFieldName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a qualified variable name like Foo.x
-lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
+lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> ModuleName -> Text -> m (Id ())
 lookupQualifiedVarName pos modName name =
   view (resolvedVarIdentMap . at name) >>= \case
     Just names ->

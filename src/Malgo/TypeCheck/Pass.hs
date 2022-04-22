@@ -27,13 +27,13 @@ import Text.Megaparsec (SourcePos)
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupVar :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m (Scheme Type)
+lookupVar :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> RnId -> m (Scheme Type)
 lookupVar pos name =
   use (signatureMap . at name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just scheme -> pure scheme
 
-lookupType :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m Type
+lookupType :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> RnId -> m Type
 lookupType pos name =
   preuse (typeDefMap . ix name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
@@ -41,7 +41,7 @@ lookupType pos name =
 
 -- fieldsのすべてのフィールドを含むレコード型を検索する
 -- マッチするレコード型が複数あった場合はエラー
-lookupRecordType :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> [WithPrefix RnId] -> m (Scheme Type)
+lookupRecordType :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> [WithPrefix RnId] -> m (Scheme Type)
 lookupRecordType pos fields = do
   env <- use fieldBelongMap
   let candidates = map (lookup env) fields
@@ -383,7 +383,7 @@ tcExpr ::
     HasUniqSupply env UniqSupply
   ) =>
   Exp (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Exp (Malgo 'TypeCheck))
+  WriterT [Annotated Range Constraint] m (Exp (Malgo 'TypeCheck))
 tcExpr (Var pos (WithPrefix (Annotated p v))) = do
   vType <- instantiate pos =<< lookupVar pos v
   pure $ Var (Annotated vType pos) (WithPrefix (Annotated p v))
@@ -471,7 +471,7 @@ tcClause ::
     HasUniqSupply env UniqSupply
   ) =>
   Clause (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Clause (Malgo 'TypeCheck))
+  WriterT [Annotated Range Constraint] m (Clause (Malgo 'TypeCheck))
 tcClause (Clause pos pats e) = do
   pats' <- tcPatterns pats
   e' <- tcExpr e
@@ -487,7 +487,7 @@ tcPatterns ::
     MonadReader env m
   ) =>
   [Pat (Malgo 'Rename)] ->
-  WriterT [Annotated SourcePos Constraint] m [Pat (Malgo 'TypeCheck)]
+  WriterT [Annotated Range Constraint] m [Pat (Malgo 'TypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- TyMeta <$> freshVar Nothing
@@ -539,7 +539,7 @@ tcStmts ::
     HasUniqSupply env UniqSupply
   ) =>
   NonEmpty (Stmt (Malgo 'Rename)) ->
-  WriterT [Annotated SourcePos Constraint] m (NonEmpty (Stmt (Malgo 'TypeCheck)))
+  WriterT [Annotated Range Constraint] m (NonEmpty (Stmt (Malgo 'TypeCheck)))
 tcStmts = traverse tcStmt
 
 tcStmt ::
@@ -552,7 +552,7 @@ tcStmt ::
     HasUniqSupply env UniqSupply
   ) =>
   Stmt (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Stmt (Malgo 'TypeCheck))
+  WriterT [Annotated Range Constraint] m (Stmt (Malgo 'TypeCheck))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   e' <- tcExpr e

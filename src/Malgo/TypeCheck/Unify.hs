@@ -16,7 +16,6 @@ import Koriel.Pretty
 import Malgo.Prelude hiding (Constraint)
 import Malgo.TypeCheck.TcEnv (TcEnv)
 import Malgo.TypeRep
-import Text.Megaparsec (SourcePos)
 
 -- * Constraint
 
@@ -40,8 +39,8 @@ class Monad m => MonadBind m where
   freshVar :: Maybe Text -> m TypeVar
   default freshVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Maybe Text -> m TypeVar
   freshVar = lift . freshVar
-  bindVar :: HasCallStack => SourcePos -> TypeVar -> Type -> m ()
-  default bindVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => SourcePos -> TypeVar -> Type -> m ()
+  bindVar :: HasCallStack => Range -> TypeVar -> Type -> m ()
+  default bindVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Range -> TypeVar -> Type -> m ()
   bindVar x v t = lift (bindVar x v t)
 
   -- | Apply all substituation
@@ -58,10 +57,10 @@ instance MonadBind m => MonadBind (StateT s m)
 instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
 
 -- | 'Right' (substituation, new constraints) or 'Left' (position, error message)
-type UnifyResult = Either (SourcePos, Doc) (HashMap TypeVar Type, [Annotated SourcePos Constraint])
+type UnifyResult = Either (Range, Doc) (HashMap TypeVar Type, [Annotated Range Constraint])
 
 -- | Unify two types
-unify :: SourcePos -> Type -> Type -> UnifyResult
+unify :: Range -> Type -> Type -> UnifyResult
 unify _ (TyMeta v1) (TyMeta v2)
   | v1 == v2 = pure (mempty, [])
   | otherwise = pure (one (v1, TyMeta v2), [])
@@ -122,7 +121,7 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasOpt env Opt, Monad
 
 -- * Constraint solver
 
-solve :: HasCallStack => (MonadIO f, MonadReader env f, HasOpt env Opt, MonadBind f, MonadState TcEnv f) => [Annotated SourcePos Constraint] -> f ()
+solve :: HasCallStack => (MonadIO f, MonadReader env f, HasOpt env Opt, MonadBind f, MonadState TcEnv f) => [Annotated Range Constraint] -> f ()
 solve = solveLoop (5000 :: Int)
   where
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
@@ -140,7 +139,7 @@ solve = solveLoop (5000 :: Int)
     zonkConstraint :: MonadBind f => Annotated x Constraint -> f (Annotated x Constraint)
     zonkConstraint (Annotated m (x :~ y)) = Annotated m <$> ((:~) <$> zonk x <*> zonk y)
 
-generalize :: HasCallStack => (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => SourcePos -> HashSet TypeVar -> Type -> m (Scheme Type)
+generalize :: HasCallStack => (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Range -> HashSet TypeVar -> Type -> m (Scheme Type)
 generalize x bound term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
@@ -148,7 +147,7 @@ generalize x bound term = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
-generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => SourcePos -> HashSet TypeVar -> [Type] -> m ([Id Type], [Type])
+generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Range -> HashSet TypeVar -> [Type] -> m ([Id Type], [Type])
 generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
@@ -156,7 +155,7 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-toBound :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => SourcePos -> TypeVar -> Text -> m (Id Type)
+toBound :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Range -> TypeVar -> Text -> m (Id Type)
 toBound x tv hint = do
   tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
   let tvKind = kindOf tvType
@@ -166,7 +165,7 @@ toBound x tv hint = do
           | otherwise -> x
   newInternalId name tvKind
 
-defaultToBoxed :: MonadBind f => SourcePos -> Type -> f Type
+defaultToBoxed :: MonadBind f => Range -> Type -> f Type
 defaultToBoxed x = transformM \case
   TyMeta v -> do
     let vKind = kindOf $ v ^. typeVar . idMeta
@@ -180,7 +179,7 @@ defaultToBoxed x = transformM \case
 unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
 
-instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env Opt, MonadState TcEnv m) => SourcePos -> Scheme Type -> m Type
+instantiate :: (MonadBind m, MonadIO m, MonadReader env m, HasOpt env Opt, MonadState TcEnv m) => Range -> Scheme Type -> m Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just $ a ^. idName)

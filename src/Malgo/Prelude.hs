@@ -9,6 +9,7 @@ module Malgo.Prelude
     MalgoEnv (..),
     HasMalgoEnv (..),
     getOpt,
+    Range (..),
     errorOn,
     warningOn,
     defaultOpt,
@@ -18,7 +19,7 @@ module Malgo.Prelude
   )
 where
 
-import Control.Lens (Lens', view)
+import Control.Lens (Lens', view, (^.))
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
@@ -99,14 +100,27 @@ viewLine linum = do
   s <- readFile srcFileName
   pure $ lines (toText s) !! (linum - 1)
 
-errorOn :: (HasCallStack, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
-errorOn pos x = do
-  l <- viewLine (unPos $ sourceLine pos)
-  let lineNum = unPos $ sourceLine pos
-  let columnNum = unPos $ sourceColumn pos
+-- | Range of a token.
+data Range = Range
+  { _start :: SourcePos,
+    _end :: SourcePos
+  }
+  deriving stock (Eq, Ord, Show)
+
+instance Pretty Range where
+  pPrint (Range start end) =
+    pPrint start <> "-" <> pPrint end
+
+makeFieldsNoPrefix ''Range
+
+errorOn :: (HasCallStack, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> Doc -> m a
+errorOn range x = do
+  l <- viewLine (unPos $ sourceLine $ range ^. start)
+  let lineNum = unPos $ sourceLine $ range ^. start
+  let columnNum = unPos $ sourceColumn $ range ^. start
   error $
     show $
-      "error on" <+> pPrint pos <> ":"
+      "error on" <+> pPrint range <> ":"
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",
@@ -114,14 +128,14 @@ errorOn pos x = do
             nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
 
-warningOn :: (HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m ()
-warningOn pos x = do
-  l <- viewLine (unPos $ sourceLine pos)
-  let lineNum = unPos $ sourceLine pos
-  let columnNum = unPos $ sourceColumn pos
+warningOn :: (HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> Doc -> m ()
+warningOn range x = do
+  l <- viewLine (unPos $ sourceLine $ range ^. start)
+  let lineNum = unPos $ sourceLine $ range ^. start
+  let columnNum = unPos $ sourceColumn $ range ^. start
   hPutStrLn stderr $
     render $
-      "warning on" <+> pPrint pos <> ":"
+      "warning on" <+> pPrint range <> ":"
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",

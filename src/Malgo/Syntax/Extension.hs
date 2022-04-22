@@ -1,11 +1,9 @@
 {-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Syntax.Extension where
 
 import Control.Lens (view)
-import Control.Lens.TH
 import Data.Binary (Binary)
 import qualified Data.Kind as K
 import Data.Void
@@ -14,20 +12,6 @@ import Koriel.Pretty
 import Language.LSP.Types.Lens (HasValue (value))
 import Malgo.Prelude
 import Malgo.TypeRep as TypeRep
-import Text.Megaparsec.Pos (SourcePos)
-
--- | Range of a token.
-data Range = Range
-  { _start :: SourcePos,
-    _end :: SourcePos
-  }
-  deriving stock (Eq, Ord, Show)
-
-instance Pretty Range where
-  pPrint (Range start end) =
-    pPrint start <> "-" <> pPrint end
-
-makeFieldsNoPrefix ''Range
 
 -- | Phase and type instance
 data MalgoPhase = Parse | Rename | TypeCheck | Refine
@@ -82,10 +66,10 @@ type family XId x where
 -- * Exp Extensions
 
 type family SimpleX (x :: MalgoPhase) where
-  SimpleX 'Parse = SourcePos
-  SimpleX 'Rename = SourcePos
-  SimpleX 'TypeCheck = Annotated Type SourcePos
-  SimpleX 'Refine = Annotated Type SourcePos
+  SimpleX 'Parse = Range
+  SimpleX 'Rename = SimpleX 'Parse
+  SimpleX 'TypeCheck = Annotated Type (SimpleX 'Rename)
+  SimpleX 'Refine = SimpleX 'TypeCheck
 
 type family XVar x where
   XVar (Malgo x) = SimpleX x

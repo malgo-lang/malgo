@@ -49,48 +49,54 @@ pDecl = pDataDef <|> pTypeSynonym <|> pInfix <|> pForeign <|> pImport <|> try pS
 
 pDataDef :: Parser (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" $ do
-  s <- getSourcePos
+  start <- getSourcePos
   void $ pKeyword "data"
   d <- upperIdent
   xs <- many lowerIdent
   void $ pOperator "="
   ts <- pConDef `sepBy` pOperator "|"
-  pure $ DataDef s d xs ts
+  end <- getSourcePos
+  pure $ DataDef (Range start end) d xs ts
   where
     pConDef = (,) <$> upperIdent <*> many pSingleType
 
 pTypeSynonym :: Parser (Decl (Malgo 'Parse))
 pTypeSynonym = label "toplevel type synonym" do
-  s <- getSourcePos
+  start <- getSourcePos
   void $ pKeyword "type"
   d <- upperIdent
   xs <- many lowerIdent
   void $ pOperator "="
-  TypeSynonym s d xs <$> pType
+  t <- pType
+  end <- getSourcePos
+  pure $ TypeSynonym (Range start end) d xs t
 
 pInfix :: Parser (Decl (Malgo 'Parse))
 pInfix = label "infix declaration" $ do
-  s <- getSourcePos
+  start <- getSourcePos
   a <-
     try (pKeyword "infixl" $> LeftA)
       <|> try (pKeyword "infixr" $> RightA)
       <|> (pKeyword "infix" $> NeutralA)
   i <- lexeme L.decimal
   x <- between (symbol "(") (symbol ")") operator
-  pure $ Infix s a i x
+  end <- getSourcePos
+  pure $ Infix (Range start end) a i x
 
 pForeign :: Parser (Decl (Malgo 'Parse))
 pForeign = label "foreign import" $ do
-  s <- getSourcePos
+  start <- getSourcePos
   void $ pKeyword "foreign"
   void $ pKeyword "import"
   x <- lowerIdent
   void $ pOperator ":"
-  Foreign s x <$> pType
+  t <- pType
+  end <- getSourcePos
+  pure $ Foreign (Range start end) x t
 
 pImport :: Parser (Decl (Malgo 'Parse))
 pImport = label "import" $ do
-  s <- getSourcePos
+  start <- getSourcePos
   void $ pKeyword "module"
   importList <-
     try (between (symbol "{") (symbol "}") (symbol ".." >> pure All))
@@ -99,25 +105,28 @@ pImport = label "import" $ do
   void $ pOperator "="
   void $ pKeyword "import"
   modName <- ModuleName <$> pModuleName
-  pure $ Import s modName importList
+  end <- getSourcePos
+  pure $ Import (Range start end) modName importList
 
 pScSig :: Parser (Decl (Malgo 'Parse))
 pScSig =
-  label "toplevel function signature" $
-    ScSig
-      <$> getSourcePos
-      <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
-      <* pOperator ":"
-      <*> pType
+  label "toplevel function signature" $ do
+    start <- getSourcePos
+    name <- lowerIdent <|> between (symbol "(") (symbol ")") operator
+    void $ pOperator ":"
+    t <- pType
+    end <- getSourcePos
+    pure $ ScSig (Range start end) name t
 
 pScDef :: Parser (Decl (Malgo 'Parse))
 pScDef =
-  label "toplevel function definition" $
-    ScDef
-      <$> getSourcePos
-      <*> (lowerIdent <|> between (symbol "(") (symbol ")") operator)
-      <* pOperator "="
-      <*> pExp
+  label "toplevel function definition" $ do
+    start <- getSourcePos
+    name <- lowerIdent <|> between (symbol "(") (symbol ")") operator
+    void $ pOperator "="
+    e <- pExp
+    end <- getSourcePos
+    pure $ ScDef (Range start end) name e
 
 -- Expressions
 
@@ -125,9 +134,9 @@ pExp :: Parser (Exp (Malgo 'Parse))
 pExp = do
   -- The code below is very slow.
   -- try pAnn <|> pOpApp
-  s <- getSourcePos
+  start <- getSourcePos
   e <- pOpApp
-  try (fmap (Ann s e) (pOperator ":" >> pType)) <|> pure e
+  try (do _ <- pOperator ":"; t <- pType; end <- getSourcePos; pure $ Ann (Range start end) e t) <|> pure e
 
 -- pAnn :: Parser (Exp (Malgo 'Parse))
 -- pAnn = do
@@ -166,16 +175,20 @@ pWithPrefix prefix body =
 pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
   label "variable" $ do
-    s <- getSourcePos
-    Var s <$> pWithPrefix singleModuleName (lowerIdent <|> upperIdent)
+    start <- getSourcePos
+    name <- pWithPrefix singleModuleName (lowerIdent <|> upperIdent)
+    end <- getSourcePos
+    pure $ Var (Range start end) name
 
 pFun :: Parser (Exp (Malgo 'Parse))
 pFun =
-  label "function literal" $
-    between (symbol "{") (symbol "}") $
-      Fn
-        <$> getSourcePos
-        <*> (NonEmpty.fromList <$> pClauses)
+  label "function literal" $ do
+    start <- getSourcePos
+    clauses <-
+      between (symbol "{") (symbol "}") $
+        NonEmpty.fromList <$> pClauses
+    end <- getSourcePos
+    pure $ Fn (Range start end) clauses
 
 -- [|] pat1 -> exp1 | pat2 -> exp 2 | ...
 -- first `|` is optional
@@ -185,11 +198,16 @@ pClauses = do
   pClause `sepBy1` pOperator "|"
 
 pClause :: Parser (Clause (Malgo 'Parse))
-pClause =
-  Clause
-    <$> getSourcePos
-    <*> (try (some pSinglePat <* pOperator "->") <|> pure [])
-    <*> (Seq <$> getSourcePos <*> pStmts)
+pClause = do
+  start <- getSourcePos
+  pat <- try (some pSinglePat <* pOperator "->") <|> pure []
+  stmts <- do
+    start <- getSourcePos
+    stmts <- pStmts
+    end <- getSourcePos
+    pure $ Seq (Range start end) stmts
+  end <- getSourcePos
+  pure $ Clause (Range start end) pat stmts
 
 pStmts :: Parser (NonEmpty (Stmt (Malgo 'Parse)))
 pStmts = NonEmpty.fromList <$> pStmt `sepBy1` pOperator ";"
@@ -200,33 +218,45 @@ pStmt = try pLet <|> try pWith <|> try pWith' <|> pNoBind
 pLet :: Parser (Stmt (Malgo 'Parse))
 pLet = do
   void $ pKeyword "let"
-  pos <- getSourcePos
+  start <- getSourcePos
   v <- lowerIdent
   void $ pOperator "="
-  Let pos v <$> pExp
+  e <- pExp
+  end <- getSourcePos
+  pure $ Let (Range start end) v e
 
 pWith :: Parser (Stmt (Malgo 'Parse))
 pWith = do
   void $ pKeyword "with"
-  pos <- getSourcePos
+  start <- getSourcePos
   v <- lowerIdent
   void $ pOperator "="
-  With pos (Just v) <$> pExp
+  e <- pExp
+  end <- getSourcePos
+  pure $ With (Range start end) (Just v) e
 
 pWith' :: Parser (Stmt (Malgo 'Parse))
 pWith' = do
   void $ pKeyword "with"
-  pos <- getSourcePos
-  With pos Nothing <$> pExp
+  start <- getSourcePos
+  e <- pExp
+  end <- getSourcePos
+  pure $ With (Range start end) Nothing e
 
 pNoBind :: Parser (Stmt (Malgo 'Parse))
-pNoBind = NoBind <$> getSourcePos <*> pExp
+pNoBind = do
+  start <- getSourcePos
+  e <- pExp
+  end <- getSourcePos
+  pure $ NoBind (Range start end) e
 
 pRecordP :: Parser (Pat (Malgo 'Parse))
-pRecordP = between (symbol "{") (symbol "}") do
-  s <- getSourcePos
-  kvs <- asRecordFields pRecordPEntry
-  pure $ RecordP s kvs
+pRecordP = do
+  start <- getSourcePos
+  kvs <- between (symbol "{") (symbol "}") do
+    asRecordFields pRecordPEntry
+  end <- getSourcePos
+  pure $ RecordP (Range start end) kvs
   where
     pRecordPEntry = do
       label <- pWithPrefix upperIdent lowerIdent
@@ -236,51 +266,94 @@ pRecordP = between (symbol "{") (symbol "}") do
 
 pSinglePat :: Parser (Pat (Malgo 'Parse))
 pSinglePat =
-  VarP <$> getSourcePos <*> lowerIdent
-    <|> ConP <$> getSourcePos <*> upperIdent <*> pure []
-    <|> try (UnboxedP <$> getSourcePos <*> pUnboxed)
-    <|> BoxedP <$> getSourcePos <*> pBoxed
-    <|> try
-      ( between
-          (symbol "(")
-          (symbol ")")
-          ( TupleP <$> getSourcePos <*> do
-              p <- pPat
-              void $ pOperator ","
-              (p :) <$> pPat `sepBy1` pOperator ","
-          )
-      )
-    <|> try (getSourcePos >>= \s -> symbol "(" >> symbol ")" >> pure (TupleP s []))
+  pVarP
+    <|> pConP
+    <|> try pUnboxedP
+    <|> pBoxedP
+    <|> try pTupleP
+    <|> try pUnitP
     <|> pRecordP
-    <|> between
-      (symbol "[")
-      (symbol "]")
-      (ListP <$> getSourcePos <*> pPat `sepBy` pOperator ",")
+    <|> pListP
     <|> between (symbol "(") (symbol ")") pPat
+  where
+    pVarP = do
+      start <- getSourcePos
+      name <- lowerIdent
+      end <- getSourcePos
+      pure $ VarP (Range start end) name
+    pConP = do
+      start <- getSourcePos
+      name <- upperIdent
+      end <- getSourcePos
+      pure $ ConP (Range start end) name []
+    pUnboxedP = do
+      start <- getSourcePos
+      u <- pUnboxed
+      end <- getSourcePos
+      pure $ UnboxedP (Range start end) u
+    pBoxedP = do
+      start <- getSourcePos
+      b <- pBoxed
+      end <- getSourcePos
+      pure $ BoxedP (Range start end) b
+    pTupleP = do
+      start <- getSourcePos
+      ps <- between (symbol "(") (symbol ")") $ do
+        p <- pPat
+        void $ pOperator ","
+        (p :) <$> pPat `sepBy1` pOperator ","
+      end <- getSourcePos
+      pure $ TupleP (Range start end) ps
+    pUnitP = do
+      start <- getSourcePos
+      _ <- symbol "("
+      _ <- symbol ")"
+      end <- getSourcePos
+      pure $ TupleP (Range start end) []
+    pListP = do
+      start <- getSourcePos
+      ps <- between (symbol "[") (symbol "]") $ do
+        pPat `sepBy` pOperator ","
+      end <- getSourcePos
+      pure $ ListP (Range start end) ps
 
 pPat :: Parser (Pat (Malgo 'Parse))
 pPat =
-  label "pattern" $ try (ConP <$> getSourcePos <*> upperIdent <*> some pSinglePat) <|> pSinglePat
+  label "pattern" $ try pConP <|> pSinglePat
+  where
+    pConP = do
+      start <- getSourcePos
+      name <- upperIdent
+      ps <- some pSinglePat
+      end <- getSourcePos
+      pure $ ConP (Range start end) name ps
 
 pTuple :: Parser (Exp (Malgo 'Parse))
-pTuple = label "tuple" $
-  between (symbol "(") (symbol ")") $ do
-    s <- getSourcePos
+pTuple = label "tuple" do
+  start <- getSourcePos
+  xs <- between (symbol "(") (symbol ")") do
     x <- pExp
     void $ pOperator ","
     xs <- pExp `sepBy` pOperator ","
-    pure $ Tuple s (x : xs)
+    pure (x : xs)
+  end <- getSourcePos
+  pure $ Tuple (Range start end) xs
 
 pUnit :: Parser (Exp (Malgo 'Parse))
-pUnit = between (symbol "(") (symbol ")") $ do
-  s <- getSourcePos
-  pure $ Tuple s []
+pUnit = do
+  start <- getSourcePos
+  _ <- symbol "("
+  _ <- symbol ")"
+  end <- getSourcePos
+  pure $ Tuple (Range start end) []
 
 pRecord :: Parser (Exp (Malgo 'Parse))
-pRecord = between (symbol "{") (symbol "}") do
-  s <- getSourcePos
-  kvs <- asRecordFields pRecordEntry
-  pure $ Record s kvs
+pRecord = do
+  start <- getSourcePos
+  kvs <- between (symbol "{") (symbol "}") do
+    asRecordFields pRecordEntry
+  end <- getSourcePos
+  pure $ Record (Range start end) kvs
   where
     pRecordEntry = do
       label <- pWithPrefix upperIdent lowerIdent
@@ -289,27 +362,32 @@ pRecord = between (symbol "{") (symbol "}") do
       pure (label, value)
 
 pList :: Parser (Exp (Malgo 'Parse))
-pList = label "list" $
-  between (symbol "[") (symbol "]") $ do
-    s <- getSourcePos
-    xs <- pExp `sepBy` pOperator ","
-    pure $ List s xs
+pList = label "list" do
+  start <- getSourcePos
+  xs <- between (symbol "[") (symbol "]") do
+    pExp `sepBy` pOperator ","
+  end <- getSourcePos
+  pure $ List (Range start end) xs
 
 pRecordAccess :: Parser (Exp (Malgo 'Parse))
 pRecordAccess = do
-  s <- getSourcePos
+  start <- getSourcePos
   l <- char '#' >> pWithPrefix upperIdent lowerIdent
-  pure $ RecordAccess s l
+  end <- getSourcePos
+  pure $ RecordAccess (Range start end) l
 
 pSeq :: Parser (Exp (Malgo 'Parse))
-pSeq = between (symbol "(") (symbol ")") do
-  s <- getSourcePos
-  Seq s <$> pStmts
+pSeq = do
+  start <- getSourcePos
+  stmts <- between (symbol "(") (symbol ")") do
+    pStmts
+  end <- getSourcePos
+  pure $ Seq (Range start end) stmts
 
 pSingleExp' :: Parser (Exp (Malgo 'Parse))
 pSingleExp' =
-  try (Unboxed <$> getSourcePos <*> pUnboxed)
-    <|> try (Boxed <$> getSourcePos <*> pBoxed)
+  try pUnboxedExp
+    <|> try pBoxedExp
     <|> pVariable
     <|> try pUnit
     <|> try pTuple
@@ -319,17 +397,34 @@ pSingleExp' =
     <|> pFun
     <|> pRecordAccess
     <|> try pSeq
-    <|> between (symbol "(") (symbol ")") (Parens <$> getSourcePos <*> pExp)
+    <|> pParens
+  where
+    pUnboxedExp = do
+      start <- getSourcePos
+      u <- pUnboxed
+      end <- getSourcePos
+      pure $ Unboxed (Range start end) u
+    pBoxedExp = do
+      start <- getSourcePos
+      b <- pBoxed
+      end <- getSourcePos
+      pure $ Boxed (Range start end) b
+    pParens = do
+      start <- getSourcePos
+      e <- between (symbol "(") (symbol ")") pExp
+      end <- getSourcePos
+      pure $ Parens (Range start end) e
 
 pSingleExp :: Parser (Exp (Malgo 'Parse))
 pSingleExp = pSingleExp'
 
 pApply :: Parser (Exp (Malgo 'Parse))
 pApply = do
-  s <- getSourcePos
+  start <- getSourcePos
   f <- pSingleExp
   xs <- some pSingleExp
-  pure $ foldl (Apply s) f xs
+  end <- getSourcePos
+  pure $ foldl (Apply (Range start end)) f xs
 
 pTerm :: Parser (Exp (Malgo 'Parse))
 pTerm = try pApply <|> pSingleExp
@@ -339,9 +434,10 @@ pOpApp = makeExprParser pTerm opTable
   where
     opTable =
       [ [ InfixL $ do
-            s <- getSourcePos
+            start <- getSourcePos
             op <- operator
-            pure $ \l r -> OpApp s op l r
+            end <- getSourcePos
+            pure $ \l r -> OpApp (Range start end) op l r
         ]
       ]
 
@@ -351,29 +447,45 @@ pType :: Parser (Type (Malgo 'Parse))
 pType = try pTyArr <|> pTyTerm
 
 pTyVar :: Parser (Type (Malgo 'Parse))
-pTyVar = label "type variable" $ TyVar <$> getSourcePos <*> lowerIdent
+pTyVar = label "type variable" do
+  start <- getSourcePos
+  name <- lowerIdent
+  end <- getSourcePos
+  pure $ TyVar (Range start end) name
 
 pTyCon :: Parser (Type (Malgo 'Parse))
-pTyCon = label "type constructor" $ TyCon <$> getSourcePos <*> upperIdent
+pTyCon = label "type constructor" do
+  start <- getSourcePos
+  name <- upperIdent
+  end <- getSourcePos
+  pure $ TyCon (Range start end) name
 
 pTyTuple :: Parser (Type (Malgo 'Parse))
-pTyTuple = between (symbol "(") (symbol ")") $ do
-  s <- getSourcePos
-  x <- pType
-  void $ pOperator ","
-  xs <- pType `sepBy` pOperator ","
-  pure $ TyTuple s (x : xs)
+pTyTuple = do
+  start <- getSourcePos
+  xs <- between (symbol "(") (symbol ")") do
+    x <- pType
+    void $ pOperator ","
+    xs <- pType `sepBy` pOperator ","
+    pure (x : xs)
+  end <- getSourcePos
+  pure $ TyTuple (Range start end) xs
 
 pTyUnit :: Parser (Type (Malgo 'Parse))
-pTyUnit = between (symbol "(") (symbol ")") $ do
-  s <- getSourcePos
-  pure $ TyTuple s []
+pTyUnit = do
+  start <- getSourcePos
+  _ <- symbol "("
+  _ <- symbol ")"
+  end <- getSourcePos
+  pure $ TyTuple (Range start end) []
 
 pTyRecord :: Parser (Type (Malgo 'Parse))
-pTyRecord = between (symbol "{") (symbol "}") do
-  s <- getSourcePos
-  kvs <- asRecordFields pTyRecordEntry
-  pure $ TyRecord s kvs
+pTyRecord = do
+  start <- getSourcePos
+  kvs <- between (symbol "{") (symbol "}") do
+    asRecordFields pTyRecordEntry
+  end <- getSourcePos
+  pure $ TyRecord (Range start end) kvs
   where
     pTyRecordEntry = do
       label <- lowerIdent
@@ -382,7 +494,13 @@ pTyRecord = between (symbol "{") (symbol "}") do
       pure (label, value)
 
 pTyBlock :: Parser (Type (Malgo 'Parse))
-pTyBlock = between (symbol "{") (symbol "}") $ TyBlock <$> getSourcePos <*> pType
+pTyBlock = do
+  start <- getSourcePos
+  _ <- symbol "{"
+  t <- pType
+  _ <- symbol "}"
+  end <- getSourcePos
+  pure $ TyBlock (Range start end) t
 
 pSingleType :: Parser (Type (Malgo 'Parse))
 pSingleType =
@@ -395,7 +513,12 @@ pSingleType =
     <|> between (symbol "(") (symbol ")") pType
 
 pTyApp :: Parser (Type (Malgo 'Parse))
-pTyApp = TyApp <$> getSourcePos <*> pSingleType <*> some pSingleType
+pTyApp = do
+  start <- getSourcePos
+  f <- pSingleType
+  xs <- some pSingleType
+  end <- getSourcePos
+  pure $ TyApp (Range start end) f xs
 
 pTyTerm :: Parser (Type (Malgo 'Parse))
 pTyTerm = try pTyApp <|> pSingleType
@@ -405,9 +528,10 @@ pTyArr = makeExprParser pTyTerm opTable
   where
     opTable =
       [ [ InfixR do
-            s <- getSourcePos
+            start <- getSourcePos
             void $ pOperator "->"
-            pure $ \l r -> TyArr s l r
+            end <- getSourcePos
+            pure $ \l r -> TyArr (Range start end) l r
         ]
       ]
 
