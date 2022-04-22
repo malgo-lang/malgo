@@ -41,7 +41,7 @@ instance Binary Interface
 makeFieldsNoPrefix ''Interface
 
 instance Pretty Interface where
-  pPrint = text . show
+  pPrint = Koriel.Pretty.text . show
 
 buildInterface :: RnState -> DsEnv -> Interface
 -- TODO: write abbrMap to interface
@@ -78,7 +78,7 @@ loadInterface (ModuleName modName) = do
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
-        then liftIO $ mapLeft (second text) <$> decodeFileOrFail (modPath </> modFile)
+        then liftIO $ mapLeft (second Koriel.Pretty.text) <$> decodeFileOrFail (modPath </> modFile)
         else findAndReadFile rest modFile
 
 dependencieList :: (MonadIO m, HasOpt env Opt, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]

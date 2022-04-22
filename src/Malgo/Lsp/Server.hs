@@ -13,7 +13,7 @@ import Malgo.Interface
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax
-import Malgo.Syntax.Extension
+import Malgo.Syntax.Extension hiding (Range)
 import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
 import Text.Megaparsec (errorBundlePretty)

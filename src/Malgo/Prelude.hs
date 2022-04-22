@@ -13,14 +13,12 @@ module Malgo.Prelude
     warningOn,
     defaultOpt,
     Annotated (..),
-    ann,
-    value,
     ViaAnn (..),
     ViaVal (..),
   )
 where
 
-import Control.Lens (Lens, Lens', lens, view)
+import Control.Lens (Lens', view)
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
@@ -30,6 +28,7 @@ import Koriel.MonadUniq (UniqSupply)
 import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
+import qualified Koriel.Pretty as P
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), unPos)
 
@@ -126,18 +125,14 @@ warningOn pos x = do
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",
-            pPrint lineNum <+> "|" <+> text (toString l),
+            pPrint lineNum <+> "|" <+> P.text (toString l),
             nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
 
 data Annotated x v = Annotated {_ann :: x, _value :: v}
   deriving stock (Eq, Show, Ord)
 
-ann :: Lens (Annotated x v) (Annotated x' v) x x'
-ann = lens _ann (\w x -> w {_ann = x})
-
-value :: Lens (Annotated x v) (Annotated x v') v v'
-value = lens _value (\w x -> w {_value = x})
+makeFieldsNoPrefix ''Annotated
 
 instance (Pretty x, Pretty v) => Pretty (Annotated v x) where
   pPrintPrec l _ (Annotated v x) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)

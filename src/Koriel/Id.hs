@@ -28,7 +28,7 @@ import GHC.Exts
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
-import Koriel.Pretty
+import Koriel.Pretty as P
 import Text.Show (showString, showsPrec)
 
 newtype ModuleName = ModuleName Text
@@ -99,7 +99,7 @@ pPrintMeta _ _ = mempty
 
 instance Pretty a => Pretty (Id a) where
   pPrint id@(Id _ _ m (External _)) = pprIdName id <> pPrintMeta pPrint m
-  pPrint id@(Id _ u m _) = pprIdName id <> "_" <> text (show u) <> pPrintMeta pPrint m
+  pPrint id@(Id _ u m _) = pprIdName id <> "_" <> P.text (show u) <> pPrintMeta pPrint m
 
 idName :: Lens' (Id a) Text
 idName = lens _idName (\i x -> i {_idName = x})

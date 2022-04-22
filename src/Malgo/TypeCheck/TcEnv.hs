@@ -37,7 +37,7 @@ data TcEnv = TcEnv
 makeFieldsNoPrefix ''TcEnv
 
 instance Pretty TcEnv where
-  pPrint env = text $ toString $ pShow env
+  pPrint env = Koriel.Pretty.text $ toString $ pShow env
 
 instance HasType TcEnv where
   typeOf TcEnv {} = error "typeOf TcEnv{..}"

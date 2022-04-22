@@ -1,6 +1,27 @@
-module Koriel.Lens where
+module Koriel.Lens
+  ( HasAnn (..),
+    HasValue (..),
+    HasUniqSupply (..),
+    HasOpt (..),
+    HasCoreIdentMap (..),
+    HasDependencies (..),
+    HasInfixMap (..),
+    HasResolvedTypeIdentMap (..),
+    HasResolvedVarIdentMap (..),
+    HasSignatureMap (..),
+    HasTypeDefMap (..),
+    HasTypeSynonymMap (..),
+    HasFieldBelongMap (..),
+    HasModuleName (..),
+    HasNameEnv (..),
+  )
+where
 
 import Control.Lens
+import Language.LSP.Types.Lens (HasValue (..))
+
+class HasAnn s a | s -> a where
+  ann :: Lens' s a
 
 class HasUniqSupply s a | s -> a where
   uniqSupply :: Lens' s a

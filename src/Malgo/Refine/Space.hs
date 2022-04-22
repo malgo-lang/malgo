@@ -1,19 +1,20 @@
 module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
-import Control.Lens (mapped, over, _2, view, (^.), At (at))
+import Control.Lens (At (at), mapped, over, view, (^.), _2)
 import qualified Data.HashMap.Strict as HashMap
 import Data.List (isSubsequenceOf)
 import qualified Data.List as List
+import Data.List.Extra (nubOrd)
 import qualified Data.Map as Map
+import Data.Traversable (for)
 import Koriel.Id (Id)
+import Koriel.Lens (HasAnn (ann))
 import Koriel.Pretty hiding (space)
 import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
 import Malgo.TypeRep
-import Data.List.Extra (nubOrd)
-import Data.Traversable (for)
 
 -- | Space of values that covered by patterns
 data Space
@@ -62,6 +63,7 @@ buildUnion [s] = s
 buildUnion (s : ss) = Union s (buildUnion ss)
 
 -- Ref: Malgo.TypeRep.TyConApp
+
 -- | Check whether the given type can be decomposed into space(s).
 decomposable :: Type -> Bool
 decomposable (TyConApp (TyCon _) _) = True
@@ -171,7 +173,7 @@ class HasSpace a where
   space :: RefineEnv -> a -> Space
 
 instance HasSpace Type where
-  space _ t = Type t
+  space _ = Type
 
 instance HasSpace (Pat (Malgo 'Refine)) where
   space _ (VarP x _) = Type (x ^. ann)

@@ -1,11 +1,13 @@
-{-# LANGUAGE TemplateHaskell, UndecidableInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE UndecidableInstances #-}
+
 -- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
 module Malgo.Rename.RnEnv where
 
-import Koriel.Lens
-import Control.Lens (ASetter', At (at), Lens', lens, over, view, (^.), makeFieldsNoPrefix)
+import Control.Lens (ASetter', At (at), Lens', lens, makeFieldsNoPrefix, over, view, (^.))
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
@@ -40,7 +42,7 @@ data Visibility
   | Implicit
   deriving stock (Show, Eq)
 
-instance Pretty Visibility where pPrint = text . show
+instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
 
 data RnEnv = RnEnv
   { _resolvedVarIdentMap :: HashMap PsId [Annotated Visibility RnId],
@@ -54,7 +56,7 @@ data RnEnv = RnEnv
 
 instance Pretty RnEnv where
   pPrint = pPrint . toString . pShow
-  
+
 makeFieldsNoPrefix ''RnEnv
 
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [Annotated Visibility RnId]) -> [(PsId, Annotated Visibility RnId)] -> RnEnv -> RnEnv
@@ -78,7 +80,7 @@ genBuiltinRnEnv modName malgoEnv = do
   pure $
     RnEnv
       { _resolvedVarIdentMap = mempty,
-        _resolvedTypeIdentMap=
+        _resolvedTypeIdentMap =
           HashMap.fromList
             [ ("Int32#", [Annotated Implicit int32_t]),
               ("Int64#", [Annotated Implicit int64_t]),

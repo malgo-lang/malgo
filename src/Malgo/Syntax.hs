@@ -8,6 +8,7 @@ import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Koriel.Id
+import Koriel.Lens (HasValue (value))
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension

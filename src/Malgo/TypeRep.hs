@@ -11,6 +11,7 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.Map.Strict as Map
 import Koriel.Id
+import Koriel.Lens (HasAnn (ann))
 import Koriel.Pretty
 import Malgo.Prelude
 
@@ -205,7 +206,7 @@ instance HasKind Type where
   kindOf (TyMeta tv) = kindOf tv
 
 instance HasType Void where
-  typeOf x = absurd x
+  typeOf = absurd
   types _ = absurd
 
 instance HasKind Void where
@@ -228,7 +229,7 @@ instance WithType (Annotated Type a) where
   withType = ann
 
 instance WithType Void where
-  withType _ a = absurd a
+  withType _ = absurd
 
 -- | Definition of Type constructor
 -- valueConstructorsのSchemeは、typeParametersで全称化されている
