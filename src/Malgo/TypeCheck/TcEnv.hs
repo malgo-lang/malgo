@@ -4,14 +4,13 @@
 module Malgo.TypeCheck.TcEnv
   ( RecordTypeName,
     TcEnv (..),
-    HasTcEnv (..),
     genTcEnv,
     findBuiltinType,
     appendFieldBelongMap,
   )
 where
 
-import Control.Lens (At (at), Lens', makeFieldsNoPrefix, over, traverseOf, traversed, view, (^.), _2)
+import Control.Lens (At (at), makeFieldsNoPrefix, over, traverseOf, traversed, view, (^.), _2)
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
@@ -36,12 +35,6 @@ data TcEnv = TcEnv
   deriving stock (Show)
 
 makeFieldsNoPrefix ''TcEnv
-
-class HasTcEnv env where
-  tcEnv :: Lens' env TcEnv
-
-instance HasTcEnv TcEnv where
-  tcEnv = identity
 
 instance Pretty TcEnv where
   pPrint env = text $ toString $ pShow env

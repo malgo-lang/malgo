@@ -1,9 +1,10 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
+
 module Malgo.Interface where
 
-import Control.Lens.TH
 import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
+import Control.Lens.TH
 import Data.Binary (Binary, decodeFileOrFail, encodeFile)
 import Data.Binary.Get (ByteOffset)
 import Data.Binary.Instances.UnorderedContainers ()
@@ -20,7 +21,6 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
 import qualified Malgo.Rename.RnEnv as RnState
 import Malgo.Syntax.Extension
-import Malgo.TypeCheck.TcEnv (HasTcEnv (tcEnv))
 import qualified Malgo.TypeRep as GT
 import qualified System.Directory as Directory
 import System.FilePath ((-<.>), (</>))
@@ -47,15 +47,15 @@ instance Pretty Interface where
 buildInterface :: RnState -> DsEnv -> Interface
 -- TODO: write abbrMap to interface
 buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
-  let modName = dsEnv ^. DsEnv.moduleName
-  ifor_ (dsEnv ^. DsEnv.nameEnv) $ \tcId coreId ->
+  let modName = dsEnv ^. moduleName
+  ifor_ (dsEnv ^. nameEnv) $ \tcId coreId ->
     when (tcId ^. idSort == External modName) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
       coreIdentMap . at tcId ?= coreId
-  ifor_ (dsEnv ^. tcEnv . signatureMap) $ \tcId scheme ->
+  ifor_ (dsEnv ^. signatureMap) $ \tcId scheme ->
     when (tcId ^. idSort == External modName) do
       signatureMap . at tcId ?= scheme
-  ifor_ (dsEnv ^. tcEnv . typeDefMap) $ \rnId typeDef -> do
+  ifor_ (dsEnv ^. typeDefMap) $ \rnId typeDef -> do
     when (rnId ^. idSort == External modName) do
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
