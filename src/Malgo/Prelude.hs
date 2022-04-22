@@ -1,5 +1,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Prelude
@@ -30,6 +31,7 @@ import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
 import qualified Koriel.Pretty as P
+import Language.LSP.Types.Lens (HasRange (range))
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), unPos)
 
@@ -113,6 +115,9 @@ instance Pretty Range where
 
 makeFieldsNoPrefix ''Range
 
+instance HasRange Range Range where
+  range = identity
+
 errorOn :: (HasCallStack, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> Doc -> m a
 errorOn range x = do
   l <- viewLine (unPos $ sourceLine $ range ^. start)
@@ -150,6 +155,9 @@ makeFieldsNoPrefix ''Annotated
 
 instance (Pretty x, Pretty v) => Pretty (Annotated v x) where
   pPrintPrec l _ (Annotated v x) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)
+
+instance HasRange v r => HasRange (Annotated x v) r where
+  range = value . range
 
 newtype ViaAnn value ann = ViaAnn {getViaAnn :: Annotated ann value}
 
