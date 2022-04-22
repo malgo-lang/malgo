@@ -16,7 +16,6 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsEnv)
-import qualified Malgo.Desugar.DsEnv as DsEnv
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
 import qualified Malgo.Rename.RnEnv as RnState

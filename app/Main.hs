@@ -1,7 +1,9 @@
 module Main where
 
+import Control.Lens ((.~))
 import qualified Data.Text.IO as T
 import qualified Malgo.Driver as Driver
+import qualified Malgo.Lsp.Server as Lsp
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (value)
 import Options.Applicative
@@ -10,7 +12,6 @@ import System.FilePath ((</>))
 import System.FilePath.Lens (extension)
 import Text.Megaparsec (errorBundlePretty)
 import Text.Read (read)
-import Control.Lens ((.~))
 
 main :: IO ()
 main = do
@@ -19,11 +20,15 @@ main = do
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt {modulePaths = modulePaths opt <> [".malgo-work" </> "build", basePath]}
-      src <- T.readFile (srcName opt)
+      src <- readFileText (srcName opt)
       let parsedAst = case parseMalgo (srcName opt) src of
             Right x -> x
             Left err -> error $ toText $ errorBundlePretty err
       Driver.compileFromAST parsedAst opt
+    Lsp opt -> do
+      basePath <- getXdgDirectory XdgData ("malgo" </> "base")
+      opt <- pure $ opt {modulePaths = modulePaths opt <> [".malgo-work" </> "build", basePath]}
+      void $ Lsp.server opt
 
 toLLOpt :: Parser Opt
 toLLOpt =
@@ -48,13 +53,18 @@ toLLOpt =
   )
     <**> helper
 
-newtype Command = ToLL Opt
+lspOpt :: Parser Opt
+lspOpt = toLLOpt
+
+data Command
+  = ToLL Opt
+  | Lsp Opt
 
 parseCommand :: IO Command
 parseCommand = do
   command <-
     execParser
-      ( info (subparser toLL <**> helper) $
+      ( info ((subparser toLL <|> subparser lsp) <**> helper) $
           fullDesc
             <> header "malgo programming language"
       )
@@ -63,6 +73,10 @@ parseCommand = do
       if null (dstName opt)
         then pure $ ToLL $ opt {dstName = srcName opt & extension .~ ".ll"}
         else pure command
+    Lsp opt ->
+      if null $ dstName opt
+        then pure $ Lsp $ opt {dstName = srcName opt & extension .~ ".ll"}
+        else pure command
   where
     toLL =
       command "to-ll" $
@@ -70,3 +84,9 @@ parseCommand = do
           fullDesc
             <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
             <> header "malgo to LLVM Textual IR Compiler"
+    lsp =
+      command "lsp" $
+        info (Lsp <$> lspOpt) $
+          fullDesc
+            <> progDesc "Language Server for Malgo"
+            <> header "Malgo Language Server"
