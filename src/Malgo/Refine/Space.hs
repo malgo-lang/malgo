@@ -85,7 +85,7 @@ decompose (TyConApp (TyTuple _) ts) = do
   pure $ Tuple ss
 decompose (TyRecord kts) = do
   env <- ask
-  pure $ Record $ over (mapped . _2) (space env) $ Map.toList kts
+  pure $ Record $ over (mapped . _2) (space env) $ HashMap.toList kts
 decompose t = pure $ Type t
 
 constructorSpace :: MonadReader RefineEnv m => HashMap (Id Type) Type -> (Id (), Scheme Type) -> m Space

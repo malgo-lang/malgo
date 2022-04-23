@@ -2,9 +2,9 @@
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
 import Control.Lens (At (at), Prism', has, over, (?=), _1)
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
-import qualified Data.Map.Strict as Map
 import Data.Traversable (for)
 import Koriel.Core.Syntax
 import qualified Koriel.Core.Syntax as Core
@@ -215,7 +215,7 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = error "ps must be not empty"
     extendRecordP (Annotated (Malgo.TyRecord ktsMap) pos) ps = do
-      let kts = Map.toList ktsMap
+      let kts = HashMap.toList ktsMap
       for kts \(key, ty) ->
         case List.lookup key ps of
           Nothing -> VarP (Annotated ty pos) <$> newInternalId "$_p" ()

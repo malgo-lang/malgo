@@ -24,6 +24,7 @@ import Control.Lens (Lens', view, (^.))
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
+import Data.Binary (Binary)
 import Data.List ((!!))
 import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply)
@@ -34,6 +35,7 @@ import qualified Koriel.Pretty as P
 import Language.LSP.Types.Lens (HasRange (range))
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), unPos)
+import qualified Text.Megaparsec.Pos as Megaparsec
 
 data Opt = Opt
   { srcName :: FilePath,
@@ -107,7 +109,19 @@ data Range = Range
   { _start :: SourcePos,
     _end :: SourcePos
   }
-  deriving stock (Eq, Ord, Show)
+  deriving stock (Eq, Ord, Show, Generic)
+
+instance Binary Megaparsec.Pos
+
+instance Binary SourcePos
+
+instance Binary Range
+
+instance Hashable Megaparsec.Pos
+
+instance Hashable SourcePos
+
+instance Hashable Range
 
 instance Pretty Range where
   pPrint (Range start end) =

@@ -1,7 +1,7 @@
 module Malgo.Desugar.Type (dsType, unfoldType) where
 
 import Control.Lens ((^.))
-import qualified Data.Map.Strict as Map
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Core.Type
 import qualified Koriel.Core.Type as C
 import Koriel.Id
@@ -32,9 +32,9 @@ dsType (GT.TyArr t1 t2) = do
 dsType (GT.TyTuple 0) = pure $ SumT [C.Con C.Tuple []]
 dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyRecord kts) =
-  SumT . pure . C.Con C.Tuple . Map.elems <$> traverse dsType kts
+  SumT . pure . C.Con C.Tuple . HashMap.elems <$> traverse dsType kts
 dsType GT.TyBottom = pure AnyT
-dsType GT.TyMeta{} = pure AnyT
+dsType GT.TyMeta {} = pure AnyT
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 
 dsTyApp :: Monad f => [GT.Type] -> GT.Type -> f C.Type

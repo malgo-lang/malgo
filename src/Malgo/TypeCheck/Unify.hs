@@ -7,7 +7,6 @@ module Malgo.TypeCheck.Unify where
 import Control.Lens (At (at), itraverse_, transformM, traverseOf, use, view, (?=), (^.))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
-import qualified Data.Map as Map
 import Data.Traversable (for)
 import Koriel.Id
 import Koriel.Lens
@@ -73,7 +72,7 @@ unify _ (TyPrim p1) (TyPrim p2) | p1 == p2 = pure (mempty, [])
 unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [Annotated x $ l1 :~ l2, Annotated x $ r1 :~ r2])
 unify _ (TyTuple n1) (TyTuple n2) | n1 == n2 = pure (mempty, [])
 unify x (TyRecord kts1) (TyRecord kts2)
-  | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> Annotated x $ t1 :~ t2) (Map.elems kts1) (Map.elems kts2))
+  | HashMap.keys kts1 == HashMap.keys kts2 = pure (mempty, zipWith (\t1 t2 -> Annotated x $ t1 :~ t2) (HashMap.elems kts1) (HashMap.elems kts2))
 unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [Annotated x $ t1 :~ t2])
 unify x (TYPE rep1) (TYPE rep2) = pure (mempty, [Annotated x $ rep1 :~ rep2])
 unify _ TyRep TyRep = pure (mempty, [])
