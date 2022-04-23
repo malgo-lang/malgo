@@ -16,6 +16,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsEnv)
+import Malgo.Lsp.Index (Index)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
 import qualified Malgo.Rename.RnEnv as RnState
@@ -32,7 +33,8 @@ data Interface = Interface
     _resolvedTypeIdentMap :: HashMap PsId RnId, -- from DsEnv
     _coreIdentMap :: HashMap RnId (Id C.Type), -- from DsEnv
     _infixMap :: HashMap RnId (Assoc, Int), -- from RnState
-    _dependencies :: [ModuleName] -- from RnState
+    _dependencies :: [ModuleName], -- from RnState
+    _lspIndex :: Index -- from Lsp.Index
   }
   deriving stock (Show, Generic)
 
@@ -45,7 +47,7 @@ instance Pretty Interface where
 
 buildInterface :: RnState -> DsEnv -> Interface
 -- TODO: write abbrMap to interface
-buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
+buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) mempty $ do
   let modName = dsEnv ^. moduleName
   ifor_ (dsEnv ^. nameEnv) $ \tcId coreId ->
     when (tcId ^. idSort == External modName) do
