@@ -45,9 +45,9 @@ makeFieldsNoPrefix ''Interface
 instance Pretty Interface where
   pPrint = Koriel.Pretty.text . show
 
-buildInterface :: RnState -> DsEnv -> Interface
+buildInterface :: RnState -> DsEnv -> Index -> Interface
 -- TODO: write abbrMap to interface
-buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) mempty $ do
+buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) index $ do
   let modName = dsEnv ^. moduleName
   ifor_ (dsEnv ^. nameEnv) $ \tcId coreId ->
     when (tcId ^. idSort == External modName) do
@@ -72,7 +72,8 @@ loadInterface (ModuleName modName) = do
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x
-    Left (_, _) -> do
+    Left (_, err) -> do
+      hPrint stderr err
       pure Nothing
   where
     findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)

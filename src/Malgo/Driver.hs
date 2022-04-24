@@ -12,6 +12,7 @@ import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
+import qualified Malgo.Lsp.Pass as Lsp
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
@@ -53,14 +54,18 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
+  let index = Lsp.index tcEnv refinedAst
+
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
   (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv depList refinedAst
-  let inf = buildInterface rnState dsEnv
+
+  let inf = buildInterface rnState dsEnv index
   storeInterface inf
   when (debugMode opt) $ do
     inf <- loadInterface (Syntax._moduleName typedAst)
     hPutStrLn stderr "=== INTERFACE ==="
     hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
+
   runLint $ lintProgram core
   coreOpt <- if noOptimize opt then pure core else optimizeProgram uniqSupply (inlineSize opt) core
   when (dumpDesugar opt && not (noOptimize opt)) do
