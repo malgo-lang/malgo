@@ -56,6 +56,8 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
 
   let index = Lsp.index tcEnv refinedAst
 
+  traceShowM $ pPrint index
+
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
   (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv depList refinedAst
 

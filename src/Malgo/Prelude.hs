@@ -125,7 +125,11 @@ instance Hashable Range
 
 instance Pretty Range where
   pPrint (Range start end) =
-    pPrint start <> "-" <> pPrint end
+    P.text (sourceName start) <> ":" <> pPrint (unPos (sourceLine start)) <> ":" <> pPrint (unPos (sourceColumn start))
+      <> "-"
+      <> pPrint (unPos (sourceLine end))
+      <> ":"
+      <> pPrint (unPos (sourceColumn end))
 
 makeFieldsNoPrefix ''Range
 

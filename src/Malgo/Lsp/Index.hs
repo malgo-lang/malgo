@@ -7,16 +7,20 @@ import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Lens
+import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.TypeRep (Scheme, Type)
 import Text.Megaparsec.Pos (SourcePos)
 
--- | A 'Index' is a mapping from 'Info' to '[Range]'.
+-- | A 'Index' is a mapping from 'Info' to '[Range]' (references).
 newtype Index = Index {unwrapIndex :: HashMap Info [Range]}
   deriving stock (Show, Generic)
   deriving newtype (Semigroup, Monoid)
 
 instance Binary Index
+
+instance Pretty Index where
+  pPrint = pPrint . HashMap.toList . unwrapIndex
 
 -- | An 'Info' records
 --  * Symbol name
@@ -32,6 +36,9 @@ data Info = Info
 instance Binary Info
 
 instance Hashable Info
+
+instance Pretty Info where
+  pPrint Info {..} = pPrint _name <+> ":" <+> pPrint _typeSignature <+> "defined in" <+> pPrint _definitions
 
 makeFieldsNoPrefix ''Info
 
