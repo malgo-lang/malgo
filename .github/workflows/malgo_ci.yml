@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        ghc: ['8.10.4', '9.0.4']
+        ghc: ['8.10.4', '9.0.2']
         os: [ubuntu-latest]
       # fail-fast: true
 
@@ -31,7 +31,6 @@ jobs:
           .stack-work
         key: ${{ runner.os }}-build-${{ hashFiles('malgo/package.yaml', 'koriel/package.yaml', 'stack.yaml') }}
     - uses: haskell/actions/setup@v1
-      run: ghcup upgrade
       with:
         ghc-version: ${{ matrix.ghc }}
         enable-stack: true
