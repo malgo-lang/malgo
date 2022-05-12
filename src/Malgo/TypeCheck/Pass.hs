@@ -21,19 +21,18 @@ import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv
 import Malgo.TypeCheck.Unify hiding (lookupVar)
 import Malgo.TypeRep
-import Text.Megaparsec (SourcePos)
 
 -------------------------------
 -- Lookup the value of TcEnv --
 -------------------------------
 
-lookupVar :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m (Scheme Type)
+lookupVar :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> RnId -> m (Scheme Type)
 lookupVar pos name =
   use (signatureMap . at name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just scheme -> pure scheme
 
-lookupType :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> RnId -> m Type
+lookupType :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> RnId -> m Type
 lookupType pos name =
   preuse (typeDefMap . ix name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
@@ -41,7 +40,7 @@ lookupType pos name =
 
 -- fieldsのすべてのフィールドを含むレコード型を検索する
 -- マッチするレコード型が複数あった場合はエラー
-lookupRecordType :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> [WithPrefix RnId] -> m (Scheme Type)
+lookupRecordType :: (MonadState TcEnv m, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> [WithPrefix RnId] -> m (Scheme Type)
 lookupRecordType pos fields = do
   env <- use fieldBelongMap
   let candidates = map (lookup env) fields
@@ -366,7 +365,7 @@ evidenceOfEquiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
 evidenceOfEquiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
 evidenceOfEquiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> evidenceOfEquiv l1 l2 <*> evidenceOfEquiv r1 r2
 evidenceOfEquiv (TyTuple n1) (TyTuple n2) | n1 == n2 = Just mempty
-evidenceOfEquiv (TyRecord kts1) (TyRecord kts2) | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM evidenceOfEquiv (Map.elems kts1) (Map.elems kts2)
+evidenceOfEquiv (TyRecord kts1) (TyRecord kts2) | HashMap.keys kts1 == HashMap.keys kts2 = mconcat <$> zipWithM evidenceOfEquiv (HashMap.elems kts1) (HashMap.elems kts2)
 evidenceOfEquiv (TyPtr t1) (TyPtr t2) = evidenceOfEquiv t1 t2
 evidenceOfEquiv (TYPE rep1) (TYPE rep2) = evidenceOfEquiv rep1 rep2
 evidenceOfEquiv TyRep TyRep = Just mempty
@@ -383,7 +382,7 @@ tcExpr ::
     HasUniqSupply env UniqSupply
   ) =>
   Exp (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Exp (Malgo 'TypeCheck))
+  WriterT [Annotated Range Constraint] m (Exp (Malgo 'TypeCheck))
 tcExpr (Var pos (WithPrefix (Annotated p v))) = do
   vType <- instantiate pos =<< lookupVar pos v
   pure $ Var (Annotated vType pos) (WithPrefix (Annotated p v))
@@ -433,7 +432,7 @@ tcExpr (Tuple pos es) = do
   pure $ Tuple (Annotated esType pos) es'
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
-  let kvsType = TyRecord $ Map.fromList $ map (bimap removePrefix typeOf) kvs'
+  let kvsType = TyRecord $ HashMap.fromList $ map (bimap removePrefix typeOf) kvs'
   pure $ Record (Annotated kvsType pos) kvs'
 -- レコードリテラルでは、レコード型をフィールド名から検索する必要はない
 
@@ -446,7 +445,7 @@ tcExpr (RecordAccess pos label) = do
   retType <- TyMeta <$> freshVar Nothing
   case recordType of
     TyRecord kts -> do
-      tell [Annotated pos $ recordType :~ TyRecord (Map.insert (removePrefix label) retType kts)]
+      tell [Annotated pos $ recordType :~ TyRecord (HashMap.insert (removePrefix label) retType kts)]
       pure $ RecordAccess (Annotated (TyArr recordType retType) pos) label
     _ -> errorOn pos $ pPrint recordType <+> "is not record type"
 tcExpr (Ann pos e t) = do
@@ -471,7 +470,7 @@ tcClause ::
     HasUniqSupply env UniqSupply
   ) =>
   Clause (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Clause (Malgo 'TypeCheck))
+  WriterT [Annotated Range Constraint] m (Clause (Malgo 'TypeCheck))
 tcClause (Clause pos pats e) = do
   pats' <- tcPatterns pats
   e' <- tcExpr e
@@ -487,7 +486,7 @@ tcPatterns ::
     MonadReader env m
   ) =>
   [Pat (Malgo 'Rename)] ->
-  WriterT [Annotated SourcePos Constraint] m [Pat (Malgo 'TypeCheck)]
+  WriterT [Annotated Range Constraint] m [Pat (Malgo 'TypeCheck)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- TyMeta <$> freshVar Nothing
@@ -520,7 +519,7 @@ tcPatterns (RecordP pos kps : ps) = do
   ps' <- tcPatterns ps
 
   recordType@(TyRecord recordKts) <- instantiate pos =<< lookupRecordType pos (map fst kps)
-  let patternKts = Map.fromList $ map (bimap removePrefix typeOf) kps'
+  let patternKts = HashMap.fromList $ map (bimap removePrefix typeOf) kps'
   let patternType = TyRecord $ patternKts <> recordKts
 
   tell [Annotated pos $ recordType :~ patternType]
@@ -539,7 +538,7 @@ tcStmts ::
     HasUniqSupply env UniqSupply
   ) =>
   NonEmpty (Stmt (Malgo 'Rename)) ->
-  WriterT [Annotated SourcePos Constraint] m (NonEmpty (Stmt (Malgo 'TypeCheck)))
+  WriterT [Annotated Range Constraint] m (NonEmpty (Stmt (Malgo 'TypeCheck)))
 tcStmts = traverse tcStmt
 
 tcStmt ::
@@ -552,7 +551,7 @@ tcStmt ::
     HasUniqSupply env UniqSupply
   ) =>
   Stmt (Malgo 'Rename) ->
-  WriterT [Annotated SourcePos Constraint] m (Stmt (Malgo 'TypeCheck))
+  WriterT [Annotated Range Constraint] m (Stmt (Malgo 'TypeCheck))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   e' <- tcExpr e
@@ -582,7 +581,7 @@ transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyConApp (TyTuple $ length ts) <$> traverse transType ts
-transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
+transType (S.TyRecord _ kts) = TyRecord . HashMap.fromList <$> traverseOf (traversed . _2) transType kts
 
 tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'TypeCheck)
 tcType (S.TyApp pos t ts) = S.TyApp pos (tcType t) (map tcType ts)

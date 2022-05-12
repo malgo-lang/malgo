@@ -1,5 +1,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Prelude
@@ -9,29 +10,32 @@ module Malgo.Prelude
     MalgoEnv (..),
     HasMalgoEnv (..),
     getOpt,
+    Range (..),
     errorOn,
     warningOn,
     defaultOpt,
     Annotated (..),
-    ann,
-    value,
     ViaAnn (..),
     ViaVal (..),
   )
 where
 
-import Control.Lens (Lens, Lens', lens, view)
+import Control.Lens (Lens', view, (^.))
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
+import Data.Binary (Binary)
 import Data.List ((!!))
 import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply)
 import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
+import qualified Koriel.Pretty as P
+import Language.LSP.Types.Lens (HasRange (range))
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), unPos)
+import qualified Text.Megaparsec.Pos as Megaparsec
 
 data Opt = Opt
   { srcName :: FilePath,
@@ -100,14 +104,46 @@ viewLine linum = do
   s <- readFile srcFileName
   pure $ lines (toText s) !! (linum - 1)
 
-errorOn :: (HasCallStack, HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m a
-errorOn pos x = do
-  l <- viewLine (unPos $ sourceLine pos)
-  let lineNum = unPos $ sourceLine pos
-  let columnNum = unPos $ sourceColumn pos
+-- | Range of a token.
+data Range = Range
+  { _start :: SourcePos,
+    _end :: SourcePos
+  }
+  deriving stock (Eq, Ord, Show, Generic)
+
+instance Binary Megaparsec.Pos
+
+instance Binary SourcePos
+
+instance Binary Range
+
+instance Hashable Megaparsec.Pos
+
+instance Hashable SourcePos
+
+instance Hashable Range
+
+instance Pretty Range where
+  pPrint (Range start end) =
+    P.text (sourceName start) <> ":" <> pPrint (unPos (sourceLine start)) <> ":" <> pPrint (unPos (sourceColumn start))
+      <> "-"
+      <> pPrint (unPos (sourceLine end))
+      <> ":"
+      <> pPrint (unPos (sourceColumn end))
+
+makeFieldsNoPrefix ''Range
+
+instance HasRange Range Range where
+  range = identity
+
+errorOn :: (HasCallStack, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> Doc -> m a
+errorOn range x = do
+  l <- viewLine (unPos $ sourceLine $ range ^. start)
+  let lineNum = unPos $ sourceLine $ range ^. start
+  let columnNum = unPos $ sourceColumn $ range ^. start
   error $
     show $
-      "error on" <+> pPrint pos <> ":"
+      "error on" <+> pPrint range <> ":"
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",
@@ -115,32 +151,31 @@ errorOn pos x = do
             nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
 
-warningOn :: (HasOpt env Opt, MonadReader env m, MonadIO m) => SourcePos -> Doc -> m ()
-warningOn pos x = do
-  l <- viewLine (unPos $ sourceLine pos)
-  let lineNum = unPos $ sourceLine pos
-  let columnNum = unPos $ sourceColumn pos
+warningOn :: (HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> Doc -> m ()
+warningOn range x = do
+  l <- viewLine (unPos $ sourceLine $ range ^. start)
+  let lineNum = unPos $ sourceLine $ range ^. start
+  let columnNum = unPos $ sourceColumn $ range ^. start
   hPutStrLn stderr $
     render $
-      "warning on" <+> pPrint pos <> ":"
+      "warning on" <+> pPrint range <> ":"
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",
-            pPrint lineNum <+> "|" <+> text (toString l),
+            pPrint lineNum <+> "|" <+> P.text (toString l),
             nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
 
 data Annotated x v = Annotated {_ann :: x, _value :: v}
   deriving stock (Eq, Show, Ord)
 
-ann :: Lens (Annotated x v) (Annotated x' v) x x'
-ann = lens _ann (\w x -> w {_ann = x})
-
-value :: Lens (Annotated x v) (Annotated x v') v v'
-value = lens _value (\w x -> w {_value = x})
+makeFieldsNoPrefix ''Annotated
 
 instance (Pretty x, Pretty v) => Pretty (Annotated v x) where
   pPrintPrec l _ (Annotated v x) = pPrintPrec l 0 v <> brackets (pPrintPrec l 0 x)
+
+instance HasRange v r => HasRange (Annotated x v) r where
+  range = value . range
 
 newtype ViaAnn value ann = ViaAnn {getViaAnn :: Annotated ann value}
 

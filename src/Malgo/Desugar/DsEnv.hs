@@ -31,7 +31,7 @@ data DsEnv = DsEnv
   deriving stock (Show)
 
 instance Pretty DsEnv where
-  pPrint dsEnv = text $ toString $ pShow dsEnv
+  pPrint dsEnv = Koriel.Pretty.text $ toString $ pShow dsEnv
 
 makeFieldsNoPrefix ''DsEnv
 

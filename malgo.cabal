@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -43,6 +43,9 @@ library
       Malgo.Desugar.Unboxed
       Malgo.Driver
       Malgo.Interface
+      Malgo.Lsp.Index
+      Malgo.Lsp.Pass
+      Malgo.Lsp.Server
       Malgo.Parser
       Malgo.Prelude
       Malgo.Refine.Pass
@@ -120,6 +123,8 @@ library
     , lens
     , llvm-hs
     , llvm-hs-pure
+    , lsp
+    , lsp-types
     , megaparsec
     , microlens-platform
     , mtl
@@ -203,6 +208,8 @@ executable malgo
     , lens
     , llvm-hs
     , llvm-hs-pure
+    , lsp
+    , lsp-types
     , malgo
     , megaparsec
     , microlens-platform
@@ -289,6 +296,8 @@ test-suite malgo-test
     , lens
     , llvm-hs
     , llvm-hs-pure
+    , lsp
+    , lsp-types
     , malgo
     , megaparsec
     , microlens-platform

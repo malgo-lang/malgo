@@ -6,11 +6,12 @@ module Malgo.TypeRep where
 
 import Control.Lens (At (at), Lens', Plated (plate), Traversal', coerced, cosmos, makeLenses, makePrisms, mapped, over, toListOf, transform, traverseOf, view, (^.), _1, _2)
 import Data.Binary (Binary)
+import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
-import qualified Data.Map.Strict as Map
 import Koriel.Id
+import Koriel.Lens (HasAnn (ann))
 import Koriel.Pretty
 import Malgo.Prelude
 
@@ -38,6 +39,8 @@ data Rep
 
 instance Binary Rep
 
+instance Hashable Rep
+
 instance Pretty Rep where pPrint rep = text $ show rep
 
 -- | Primitive Types
@@ -45,6 +48,8 @@ data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving stock (Eq, Show, Ord, Generic, Data)
 
 instance Binary PrimT
+
+instance Hashable PrimT
 
 instance Pretty PrimT where
   pPrint Int32T = "Int32#"
@@ -79,7 +84,7 @@ data Type
   | -- | tuple type
     TyTuple Int
   | -- record type
-    TyRecord (Map (Id ()) Type)
+    TyRecord (HashMap (Id ()) Type)
   | -- | pointer type
     TyPtr Type
   | -- | bottom type
@@ -99,6 +104,8 @@ data Type
   deriving stock (Eq, Ord, Show, Generic, Data)
 
 instance Binary Type
+
+instance Hashable Type
 
 instance Plated Type where
   plate f = \case
@@ -129,7 +136,7 @@ instance Pretty Type where
   pPrintPrec l d (TyArr t1 t2) =
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
-  pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ Map.toList kvs
+  pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ HashMap.toList kvs
   pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
   pPrintPrec _ _ TyBottom = "#Bottom"
   pPrintPrec l _ (TYPE rep) = "TYPE" <+> pPrintPrec l 0 rep
@@ -205,7 +212,7 @@ instance HasKind Type where
   kindOf (TyMeta tv) = kindOf tv
 
 instance HasType Void where
-  typeOf x = absurd x
+  typeOf = absurd
   types _ = absurd
 
 instance HasKind Void where
@@ -216,6 +223,8 @@ data Scheme ty = Forall [Id ty] ty
   deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
 
 instance Binary ty => Binary (Scheme ty)
+
+instance (Eq ty, Hashable ty) => Hashable (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
@@ -228,7 +237,7 @@ instance WithType (Annotated Type a) where
   withType = ann
 
 instance WithType Void where
-  withType _ a = absurd a
+  withType _ = absurd
 
 -- | Definition of Type constructor
 -- valueConstructorsのSchemeは、typeParametersで全称化されている

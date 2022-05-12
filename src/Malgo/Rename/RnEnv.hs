@@ -1,11 +1,13 @@
-{-# LANGUAGE TemplateHaskell, UndecidableInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE UndecidableInstances #-}
+
 -- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
 module Malgo.Rename.RnEnv where
 
-import Koriel.Lens
-import Control.Lens (ASetter', At (at), Lens', lens, over, view, (^.), makeFieldsNoPrefix)
+import Control.Lens (ASetter', At (at), Lens', lens, makeFieldsNoPrefix, over, view, (^.))
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
@@ -40,7 +42,7 @@ data Visibility
   | Implicit
   deriving stock (Show, Eq)
 
-instance Pretty Visibility where pPrint = text . show
+instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
 
 data RnEnv = RnEnv
   { _resolvedVarIdentMap :: HashMap PsId [Annotated Visibility RnId],
@@ -54,7 +56,7 @@ data RnEnv = RnEnv
 
 instance Pretty RnEnv where
   pPrint = pPrint . toString . pShow
-  
+
 makeFieldsNoPrefix ''RnEnv
 
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [Annotated Visibility RnId]) -> [(PsId, Annotated Visibility RnId)] -> RnEnv -> RnEnv
@@ -78,7 +80,7 @@ genBuiltinRnEnv modName malgoEnv = do
   pure $
     RnEnv
       { _resolvedVarIdentMap = mempty,
-        _resolvedTypeIdentMap=
+        _resolvedTypeIdentMap =
           HashMap.fromList
             [ ("Int32#", [Annotated Implicit int32_t]),
               ("Int64#", [Annotated Implicit int64_t]),
@@ -103,7 +105,7 @@ resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply
 resolveGlobalName modName name = newExternalId name () modName
 
 -- | Resolving a variable name that is already resolved
-lookupVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
+lookupVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupVarName pos name =
   view (resolvedVarIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
@@ -115,7 +117,7 @@ lookupVarName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a type name that is already resolved
-lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
+lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupTypeName pos name =
   view (resolvedTypeIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
@@ -127,7 +129,7 @@ lookupTypeName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a field name that is already resolved
-lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> Text -> m RnId
+lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupFieldName pos name =
   view (resolvedFieldIdentMap . at name) >>= \case
     Just names -> case find (\i -> i ^. ann == Implicit) names of
@@ -139,7 +141,7 @@ lookupFieldName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a qualified variable name like Foo.x
-lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => SourcePos -> ModuleName -> Text -> m (Id ())
+lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> ModuleName -> Text -> m (Id ())
 lookupQualifiedVarName pos modName name =
   view (resolvedVarIdentMap . at name) >>= \case
     Just names ->

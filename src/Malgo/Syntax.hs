@@ -8,7 +8,9 @@ import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Koriel.Id
+import Koriel.Lens (HasValue (value))
 import Koriel.Pretty
+import Language.LSP.Types.Lens (HasRange (range))
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 import Malgo.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
@@ -62,6 +64,16 @@ instance (Pretty (XId x)) => Pretty (Type x) where
   pPrintPrec _ _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pPrint ts
   pPrintPrec l _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec _ _ (TyBlock _ t) = braces $ pPrint t
+
+instance (HasRange (XTyApp x) r, HasRange (XTyVar x) r, HasRange (XTyCon x) r, HasRange (XTyArr x) r, HasRange (XTyTuple x) r, HasRange (XTyRecord x) r, HasRange (XTyBlock x) r) => HasRange (Type x) r where
+  range f = \case
+    TyApp x t ts -> range f x <&> \x -> TyApp x t ts
+    TyVar x i -> range f x <&> \x -> TyVar x i
+    TyCon x i -> range f x <&> \x -> TyCon x i
+    TyArr x t1 t2 -> range f x <&> \x -> TyArr x t1 t2
+    TyTuple x ts -> range f x <&> \x -> TyTuple x ts
+    TyRecord x kvs -> range f x <&> \x -> TyRecord x kvs
+    TyBlock x t -> range f x <&> \x -> TyBlock x t
 
 getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
@@ -147,6 +159,39 @@ instance
     Ann x e t -> Ann <$> types f x <*> types f e <*> pure t
     Seq x ss -> Seq <$> types f x <*> traverse (types f) ss
     Parens x e -> Parens <$> types f x <*> types f e
+
+instance
+  ( HasRange (XVar x) r,
+    HasRange (XCon x) r,
+    HasRange (XUnboxed x) r,
+    HasRange (XBoxed x) r,
+    HasRange (XApply x) r,
+    HasRange (XOpApp x) r,
+    HasRange (XFn x) r,
+    HasRange (XTuple x) r,
+    HasRange (XRecord x) r,
+    HasRange (XList x) r,
+    HasRange (XRecordAccess x) r,
+    HasRange (XAnn x) r,
+    HasRange (XSeq x) r,
+    HasRange (XParens x) r
+  ) =>
+  HasRange (Exp x) r
+  where
+  range f = \case
+    Var x v -> range f x <&> \x -> Var x v
+    Unboxed x u -> range f x <&> \x -> Unboxed x u
+    Boxed x b -> range f x <&> \x -> Boxed x b
+    Apply x e1 e2 -> range f x <&> \x -> Apply x e1 e2
+    OpApp x op e1 e2 -> range f x <&> \x -> OpApp x op e1 e2
+    Fn x cs -> range f x <&> \x -> Fn x cs
+    Tuple x es -> range f x <&> \x -> Tuple x es
+    Record x kvs -> range f x <&> \x -> Record x kvs
+    List x es -> range f x <&> \x -> List x es
+    RecordAccess x l -> range f x <&> \x -> RecordAccess x l
+    Ann x e t -> range f x <&> \x -> Ann x e t
+    Seq x ss -> range f x <&> \x -> Seq x ss
+    Parens x e -> range f x <&> \x -> Parens x e
 
 freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
 freevars (Var _ (WithPrefix v)) = one (v ^. value)

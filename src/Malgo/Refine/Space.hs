@@ -1,19 +1,21 @@
 module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
-import Control.Lens (mapped, over, _2, view, (^.), At (at))
+import Control.Lens (At (at), mapped, over, view, (^.), _2)
 import qualified Data.HashMap.Strict as HashMap
 import Data.List (isSubsequenceOf)
 import qualified Data.List as List
+import Data.List.Extra (nubOrd)
 import qualified Data.Map as Map
+import Data.Traversable (for)
 import Koriel.Id (Id)
+import Koriel.Lens (HasAnn (ann))
 import Koriel.Pretty hiding (space)
 import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
 import Malgo.TypeRep
-import Data.List.Extra (nubOrd)
-import Data.Traversable (for)
+import Text.Pretty.Simple (pShow)
 
 -- | Space of values that covered by patterns
 data Space
@@ -62,6 +64,7 @@ buildUnion [s] = s
 buildUnion (s : ss) = Union s (buildUnion ss)
 
 -- Ref: Malgo.TypeRep.TyConApp
+
 -- | Check whether the given type can be decomposed into space(s).
 decomposable :: Type -> Bool
 decomposable (TyConApp (TyCon _) _) = True
@@ -83,7 +86,11 @@ decompose (TyConApp (TyTuple _) ts) = do
   pure $ Tuple ss
 decompose (TyRecord kts) = do
   env <- ask
-  pure $ Record $ over (mapped . _2) (space env) $ Map.toList kts
+  pure $
+    Record $
+      over (mapped . _2) (space env) $
+        -- sort by key because the order of `toList` results is unspecified.
+        sortWith fst $ HashMap.toList kts
 decompose t = pure $ Type t
 
 constructorSpace :: MonadReader RefineEnv m => HashMap (Id Type) Type -> (Id (), Scheme Type) -> m Space
@@ -94,7 +101,7 @@ constructorSpace subst (con, Forall _ (splitTyArr -> (ps, _))) = do
 
 isSuperOf :: Ord a => [(a, b)] -> [(a, b)] -> Bool
 isSuperOf kts1 kts2
-  | nubOrd (map fst kts1) `isSubsequenceOf` nubOrd (map fst kts2) = True
+  | map fst kts1 `isSubsequenceOf` map fst kts2 = True
   | otherwise = False
 
 -- | subtraction of s1 and s2
@@ -115,7 +122,13 @@ subtract (Record kts1) (Record kts2)
     if isEmpty
       then pure Empty
       else pure $ Record kss
-  | otherwise = error "Record kts2 is invalid pattern"
+  | otherwise =
+    error $
+      "Record kts2 is invalid pattern:\n"
+        <> toText (pShow kts1)
+        <> "\n"
+        <> toText (pShow kts2)
+        <> "\n"
 subtract (Union s1 s2) x = Union <$> subtract s1 x <*> subtract s2 x
 subtract x (Union s1 s2) = do
   s1' <- subtract x s1
@@ -171,7 +184,7 @@ class HasSpace a where
   space :: RefineEnv -> a -> Space
 
 instance HasSpace Type where
-  space _ t = Type t
+  space _ = Type
 
 instance HasSpace (Pat (Malgo 'Refine)) where
   space _ (VarP x _) = Type (x ^. ann)

@@ -255,7 +255,7 @@ dsExp (G.Tuple _ es) = runDef $ do
 dsExp (G.Record x kvs) = runDef $ do
   kvs' <- map (first removePrefix) <$> traverseOf (traversed . _2) (bind <=< dsExp) kvs
   GT.TyRecord recordType <- pure $ x ^. GT.withType
-  kts <- Map.toList <$> traverse dsType recordType
+  kts <- HashMap.toList <$> traverse dsType recordType
   let con = C.Con C.Tuple $ map snd kts
   let ty = SumT [con]
   let vs' = sortRecordField (map fst kts) kvs'
@@ -266,7 +266,7 @@ dsExp (G.Record x kvs) = runDef $ do
     sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
 dsExp (G.RecordAccess x label) = runDef $ do
   GT.TyArr (GT.TyRecord recordType) _ <- pure $ x ^. GT.withType
-  kts <- Map.toList <$> traverse dsType recordType
+  kts <- HashMap.toList <$> traverse dsType recordType
   p <- newInternalId "$p" =<< dsType (GT.TyRecord recordType)
   obj <-
     Fun [p] <$> runDef do

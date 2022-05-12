@@ -23,8 +23,6 @@ import qualified Koriel.Core.Op as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type as C
 import Koriel.Id
--- import LLVM.Pretty (ppllvm)
-
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
@@ -188,7 +186,7 @@ findVar x = findLocalVar
       emitDefn $
         GlobalDefinition
           globalVariableDefaults
-            { name = toName x,
+            { LLVM.AST.Global.name = toName x,
               LLVM.AST.Global.type' = convType $ C.typeOf x,
               linkage = LLVM.AST.Linkage.External
             }
@@ -557,7 +555,7 @@ globalStringPtr str nm = do
   emitDefn $
     GlobalDefinition
       globalVariableDefaults
-        { name = nm,
+        { LLVM.AST.Global.name = nm,
           LLVM.AST.Global.type' = ty,
           linkage = LLVM.AST.Linkage.External,
           isConstant = True,
@@ -607,9 +605,9 @@ internalFunction label argtys retty body = do
   let def =
         GlobalDefinition
           functionDefaults
-            { name = label,
+            { LLVM.AST.Global.name = label,
               linkage = LLVM.AST.Linkage.Internal,
-              parameters = (zipWith (\ty nm -> Parameter ty nm []) tys paramNames, False),
+              LLVM.AST.Global.parameters = (zipWith (\ty nm -> Parameter ty nm []) tys paramNames, False),
               returnType = retty,
               basicBlocks = blocks
             }

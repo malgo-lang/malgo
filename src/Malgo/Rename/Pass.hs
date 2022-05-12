@@ -15,7 +15,6 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Text.Megaparsec.Pos (SourcePos)
 
 -- | Entry point of this 'Malgo.Rename.Pass'
 rename ::
@@ -134,7 +133,7 @@ rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExp (Parens pos e) = Parens pos <$> rnExp e
 
 -- | Renamed identifier corresponding Boxed literals.
-lookupBox :: (MonadReader RnEnv f, MonadIO f) => SourcePos -> Literal x -> f (XId (Malgo 'Rename))
+lookupBox :: (MonadReader RnEnv f, MonadIO f) => Range -> Literal x -> f (XId (Malgo 'Rename))
 lookupBox pos Int32 {} = lookupVarName pos "Int32#"
 lookupBox pos Int64 {} = lookupVarName pos "Int64#"
 lookupBox pos Float {} = lookupVarName pos "Float#"
@@ -230,7 +229,7 @@ infixDecls ds =
 -- 'mkOpApp' transforms it to actual associativity.
 mkOpApp ::
   (MonadIO m, MonadReader env m, HasOpt env Opt) =>
-  SourcePos ->
+  Range ->
   -- | Fixity of outer operator
   (Assoc, Int) ->
   -- | Outer operator

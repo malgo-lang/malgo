@@ -9,9 +9,9 @@ import qualified Data.Kind as K
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
+import Language.LSP.Types.Lens (HasValue (value))
 import Malgo.Prelude
 import Malgo.TypeRep as TypeRep
-import Text.Megaparsec.Pos (SourcePos)
 
 -- | Phase and type instance
 data MalgoPhase = Parse | Rename | TypeCheck | Refine
@@ -66,10 +66,10 @@ type family XId x where
 -- * Exp Extensions
 
 type family SimpleX (x :: MalgoPhase) where
-  SimpleX 'Parse = SourcePos
-  SimpleX 'Rename = SourcePos
-  SimpleX 'TypeCheck = Annotated Type SourcePos
-  SimpleX 'Refine = Annotated Type SourcePos
+  SimpleX 'Parse = Range
+  SimpleX 'Rename = SimpleX 'Parse
+  SimpleX 'TypeCheck = Annotated Type (SimpleX 'Rename)
+  SimpleX 'Refine = SimpleX 'TypeCheck
 
 type family XVar x where
   XVar (Malgo x) = SimpleX x
@@ -81,16 +81,16 @@ type family XUnboxed x where
   XUnboxed (Malgo x) = SimpleX x
 
 type family XBoxed x where
-  XBoxed (Malgo 'Parse) = SourcePos
+  XBoxed (Malgo 'Parse) = SimpleX 'Parse
   XBoxed (Malgo _) = Void
 
 type family XApply x where
   XApply (Malgo x) = SimpleX x
 
 type family XOpApp x where
-  XOpApp (Malgo 'Parse) = SourcePos
-  XOpApp (Malgo 'Rename) = (SourcePos, (Assoc, Int))
-  XOpApp (Malgo 'TypeCheck) = Annotated Type (SourcePos, (Assoc, Int))
+  XOpApp (Malgo 'Parse) = SimpleX 'Parse
+  XOpApp (Malgo 'Rename) = (XOpApp (Malgo 'Parse), (Assoc, Int))
+  XOpApp (Malgo 'TypeCheck) = Annotated Type (XOpApp (Malgo 'Rename))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -103,7 +103,7 @@ type family XRecord x where
   XRecord (Malgo x) = SimpleX x
 
 type family XList x where
-  XList (Malgo 'Parse) = SourcePos
+  XList (Malgo 'Parse) = SimpleX 'Parse
   XList (Malgo _) = Void
 
 type family XRecordAccess x where
@@ -138,6 +138,7 @@ type ForallExpX (c :: K.Type -> Constraint) x =
   )
 
 -- * Clause Extensions
+
 type family XClause x where
   XClause (Malgo x) = SimpleX x
 
@@ -146,18 +147,19 @@ type ForallClauseX (c :: K.Type -> Constraint) x = c (XClause x)
 -- * Stmt Extensions
 
 type family XLet x where
-  XLet (Malgo _) = SourcePos
+  XLet (Malgo _) = SimpleX 'Parse
 
 type family XWith x where
-  XWith (Malgo 'Parse) = SourcePos
+  XWith (Malgo 'Parse) = SimpleX 'Parse
   XWith (Malgo _) = Void
 
 type family XNoBind x where
-  XNoBind (Malgo _) = SourcePos
+  XNoBind (Malgo _) = SimpleX 'Parse
 
 type ForallStmtX (c :: K.Type -> Constraint) x = (c (XLet x), c (XWith x), c (XNoBind x))
 
 -- * Pat Extensions
+
 type family XVarP x where
   XVarP (Malgo x) = SimpleX x
 
@@ -171,7 +173,7 @@ type family XRecordP x where
   XRecordP (Malgo x) = SimpleX x
 
 type family XListP x where
-  XListP (Malgo 'Parse) = SourcePos
+  XListP (Malgo 'Parse) = SimpleX 'Parse
   XListP (Malgo _) = Void
 
 type family XUnboxedP x where
@@ -184,55 +186,57 @@ type family XBoxedP x where
 type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XListP x), c (XUnboxedP x), c (XBoxedP x))
 
 -- * Type Extensions
+
 type family XTyApp x where
-  XTyApp (Malgo _) = SourcePos
+  XTyApp (Malgo _) = SimpleX 'Parse
 
 type family XTyVar x where
-  XTyVar (Malgo _) = SourcePos
+  XTyVar (Malgo _) = SimpleX 'Parse
 
 type family XTyCon x where
-  XTyCon (Malgo _) = SourcePos
+  XTyCon (Malgo _) = SimpleX 'Parse
 
 type family XTyArr x where
-  XTyArr (Malgo _) = SourcePos
+  XTyArr (Malgo _) = SimpleX 'Parse
 
 type family XTyTuple x where
-  XTyTuple (Malgo _) = SourcePos
+  XTyTuple (Malgo _) = SimpleX 'Parse
 
 type family XTyRecord x where
-  XTyRecord (Malgo _) = SourcePos
+  XTyRecord (Malgo _) = SimpleX 'Parse
 
 type family XTyBlock x where
-  XTyBlock (Malgo 'Parse) = SourcePos
+  XTyBlock (Malgo 'Parse) = SimpleX 'Parse
   XTyBlock (Malgo _) = Void
 
 type ForallTypeX (c :: K.Type -> Constraint) x =
   (c (XTyApp x), c (XTyVar x), c (XTyCon x), c (XTyArr x), c (XTyTuple x), c (XTyRecord x), c (XTyBlock x))
 
 -- * Decl Extensions
+
 type family XScDef x where
   XScDef (Malgo x) = SimpleX x
 
 type family XScSig x where
-  XScSig (Malgo _) = SourcePos
+  XScSig (Malgo _) = SimpleX 'Parse
 
 type family XDataDef x where
-  XDataDef (Malgo _) = SourcePos
+  XDataDef (Malgo _) = SimpleX 'Parse
 
 type family XTypeSynonym x where
-  XTypeSynonym (Malgo _) = SourcePos
+  XTypeSynonym (Malgo _) = SimpleX 'Parse
 
 type family XInfix x where
-  XInfix (Malgo _) = SourcePos
+  XInfix (Malgo _) = SimpleX 'Parse
 
 type family XForeign x where
-  XForeign (Malgo 'Parse) = SourcePos
-  XForeign (Malgo 'Rename) = (SourcePos, Text)
-  XForeign (Malgo 'TypeCheck) = Annotated Type (SourcePos, Text)
-  XForeign (Malgo 'Refine) = Annotated Type (SourcePos, Text)
+  XForeign (Malgo 'Parse) = SimpleX 'Parse
+  XForeign (Malgo 'Rename) = (XForeign (Malgo 'Parse), Text)
+  XForeign (Malgo 'TypeCheck) = Annotated Type (XForeign (Malgo 'Rename))
+  XForeign (Malgo 'Refine) = XForeign (Malgo 'TypeCheck)
 
 type family XImport x where
-  XImport (Malgo _) = SourcePos
+  XImport (Malgo _) = SimpleX 'Parse
 
 data ImportList = All | Selected [PsId] | As ModuleName
 
@@ -256,4 +260,5 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
   )
 
 -- * Module Extensions
+
 type family XModule x

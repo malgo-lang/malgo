@@ -16,7 +16,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsEnv)
-import qualified Malgo.Desugar.DsEnv as DsEnv
+import Malgo.Lsp.Index (Index)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
 import qualified Malgo.Rename.RnEnv as RnState
@@ -33,7 +33,8 @@ data Interface = Interface
     _resolvedTypeIdentMap :: HashMap PsId RnId, -- from DsEnv
     _coreIdentMap :: HashMap RnId (Id C.Type), -- from DsEnv
     _infixMap :: HashMap RnId (Assoc, Int), -- from RnState
-    _dependencies :: [ModuleName] -- from RnState
+    _dependencies :: [ModuleName], -- from RnState
+    _lspIndex :: Index -- from Lsp.Index
   }
   deriving stock (Show, Generic)
 
@@ -42,11 +43,11 @@ instance Binary Interface
 makeFieldsNoPrefix ''Interface
 
 instance Pretty Interface where
-  pPrint = text . show
+  pPrint = Koriel.Pretty.text . show
 
-buildInterface :: RnState -> DsEnv -> Interface
+buildInterface :: RnState -> DsEnv -> Index -> Interface
 -- TODO: write abbrMap to interface
-buildInterface rnState dsEnv = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
+buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) index $ do
   let modName = dsEnv ^. moduleName
   ifor_ (dsEnv ^. nameEnv) $ \tcId coreId ->
     when (tcId ^. idSort == External modName) do
@@ -71,7 +72,8 @@ loadInterface (ModuleName modName) = do
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x
-    Left (_, _) -> do
+    Left (_, err) -> do
+      hPrint stderr err
       pure Nothing
   where
     findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)
@@ -79,7 +81,7 @@ loadInterface (ModuleName modName) = do
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
-        then liftIO $ mapLeft (second text) <$> decodeFileOrFail (modPath </> modFile)
+        then liftIO $ mapLeft (second Koriel.Pretty.text) <$> decodeFileOrFail (modPath </> modFile)
         else findAndReadFile rest modFile
 
 dependencieList :: (MonadIO m, HasOpt env Opt, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]
