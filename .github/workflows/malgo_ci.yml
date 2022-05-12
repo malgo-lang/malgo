@@ -8,8 +8,11 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        ghc: ['8.10.4', '9.0.4']
+      fail-fast: true
 
     steps:
     - name: Install packages
@@ -28,11 +31,11 @@ jobs:
         key: ${{ runner.os }}-build-${{ hashFiles('malgo/package.yaml', 'koriel/package.yaml', 'stack.yaml') }}
     - uses: haskell/actions/setup@v1
       with:
-        ghc-version: '8.10.4'
+        ghc-version: ${{ matrix.ghc }}
         enable-stack: true
         stack-version: 'latest'
         # cabal-version: '3.2.0.0'
-    - name: Build
+    - name: GHC ${{matrix.ghc}} Build
       run: |
         stack build
     - name: Run tests
