@@ -32,7 +32,7 @@ import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
 import qualified Koriel.Pretty as P
-import Language.LSP.Types.Lens (HasRange (range))
+import Language.LSP.Types.Lens (HasRange (range), HasStart(start), HasEnd(end))
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), unPos)
 import qualified Text.Megaparsec.Pos as Megaparsec
@@ -101,8 +101,8 @@ getOpt = view opt
 viewLine :: (HasOpt env Opt, MonadReader env m, MonadIO m) => Int -> m Text
 viewLine linum = do
   srcFileName <- srcName <$> getOpt
-  s <- readFile srcFileName
-  pure $ lines (toText s) !! (linum - 1)
+  s <- readFileBS srcFileName
+  pure $ lines (decodeUtf8 s) !! (linum - 1)
 
 -- | Range of a token.
 data Range = Range
