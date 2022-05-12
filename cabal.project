@@ -1,7 +1,5 @@
 packages: *.cabal
 
-allow-newer: bytestring
-
 source-repository-package
   type: git
   location: https://github.com/llvm-hs/llvm-hs.git
@@ -16,7 +14,7 @@ source-repository-package
   tag: 789e2b9e8b827d4c5e15b997f16e395fd2259c0f
   subdir: llvm-hs-pure
 
-source-repository-package
-  type: git
-  location: https://github.com/kowainik/relude.git
-  tag: 3011495606b8437a3ccd21d03d743f4d31e9c257
+-- source-repository-package
+--   type: git
+--   location: https://github.com/kowainik/relude.git
+--   tag: 3011495606b8437a3ccd21d03d743f4d31e9c257
