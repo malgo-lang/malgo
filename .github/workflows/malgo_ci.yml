@@ -12,7 +12,8 @@ jobs:
     strategy:
       matrix:
         ghc: ['8.10.4', '9.0.4']
-      fail-fast: true
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+      # fail-fast: true
 
     steps:
     - name: Install packages
