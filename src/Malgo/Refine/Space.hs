@@ -4,8 +4,6 @@ import Control.Lens (At (at), mapped, over, view, (^.), _2)
 import qualified Data.HashMap.Strict as HashMap
 import Data.List (isSubsequenceOf)
 import qualified Data.List as List
-import Data.List.Extra (nubOrd)
-import qualified Data.Map as Map
 import Data.Traversable (for)
 import Koriel.Id (Id)
 import Koriel.Lens (HasAnn (ann))

@@ -8,11 +8,21 @@ TESTDIR=/tmp/malgo_test
 mkdir -p $TESTDIR
 mkdir -p $TESTDIR/libs
 
-BUILD=stack
+BUILD=''
+# $2 is the string "stack" or "cabal"
+# It is used to determine which command to use to test (assign to BUILD)
+if [ "$#" = "2" ]; then
+    if [ "$2" = "stack" ]; then
+        BUILD="stack"
+    fi
+fi
+if [ -z $BUILD ]; then
+    BUILD="cabal"
+fi
 
 TestFilePath=$1
 file=`basename $TestFilePath`
-malgoOptions=${@:2}
+malgoOptions='' # No options
 
 # 並列にテストを実行すると、ここでコンパイル順序の前提が崩れうる。
 # コンパイル順序を保証するために、事前にpretest.shを実行する。

@@ -7,7 +7,6 @@ import Control.Lens (At (at), makePrisms, preuse, preview, traverseOf, traversed
 import qualified Data.Char as Char
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List as List
-import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust)
 import qualified Data.Text as T
 import Data.Traversable (for)

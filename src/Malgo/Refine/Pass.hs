@@ -2,7 +2,7 @@
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
 module Malgo.Refine.Pass where
 
-import Control.Lens (over, to, traverseOf, traversed, view, (.~), (^.), _1, _2)
+import Control.Lens (to, traverseOf, traversed, view, (.~), (^.), _1, _2)
 import qualified Data.List.NonEmpty as NonEmpty
 import Koriel.Lens (HasAnn (ann), HasValue (value))
 import Koriel.Pretty
