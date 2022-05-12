@@ -31,6 +31,7 @@ jobs:
           .stack-work
         key: ${{ runner.os }}-build-${{ hashFiles('malgo/package.yaml', 'koriel/package.yaml', 'stack.yaml') }}
     - uses: haskell/actions/setup@v1
+      run: ghcup upgrade
       with:
         ghc-version: ${{ matrix.ghc }}
         enable-stack: true
