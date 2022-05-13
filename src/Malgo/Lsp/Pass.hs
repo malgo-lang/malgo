@@ -12,12 +12,14 @@ import Koriel.Pretty (Pretty (pPrint))
 import Malgo.Lsp.Index
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
+import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv
 import Malgo.TypeRep
 
 data IndexEnv = IndexEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
+    _typeDefMap :: HashMap RnId (TypeDef Type),
     _definitionMap :: HashMap RnId Info,
     _buildingIndex :: Index
   }
@@ -28,6 +30,7 @@ newIndexEnv :: TcEnv -> IndexEnv
 newIndexEnv tcEnv =
   IndexEnv
     { _signatureMap = tcEnv ^. signatureMap,
+      _typeDefMap = tcEnv ^. typeDefMap,
       _definitionMap = mempty,
       _buildingIndex = mempty
     }
@@ -41,6 +44,45 @@ indexModule Module {..} = indexBindGroup _moduleDefinition
 indexBindGroup :: (MonadState IndexEnv m) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do
   traverse_ (traverse_ indexScDef) _scDefs
+  traverse_ indexScSig _scSigs
+  traverse_ indexDataDef _dataDefs
+
+indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
+indexDataDef (range, typeName, typeParameters, constructors) = do
+  typeKind <- lookupTypeKind typeName
+  let info = Info {_name = typeName ^. idName, _typeSignature = Forall [] typeKind, _definitions = [range]}
+  addIndex info [range]
+  addDefinition typeName info
+
+  for_ typeParameters \Annotated {_ann = range, _value = typeParameter} -> do
+    typeParameterKind <- lookupTypeKind typeParameter
+    let info = Info {_name = typeParameter ^. idName, _typeSignature = Forall [] typeParameterKind, _definitions = [range]}
+    addIndex info [range]
+    addDefinition typeParameter info
+
+  traverse_ indexConstructor constructors
+  where
+    indexConstructor (constructor, parameters) = do
+      constructorType <- lookupSignature constructor
+      let info = Info {_name = constructor ^. idName, _typeSignature = constructorType, _definitions = [range]}
+      -- TODO: assign correct range of type parameter
+      addIndex info [range]
+      addDefinition constructor info
+      traverse_ indexType parameters
+
+indexType :: MonadState IndexEnv m => S.Type (Malgo 'Refine) -> m ()
+indexType _ = pass
+
+indexScSig :: MonadState IndexEnv m => ScSig (Malgo 'Refine) -> m ()
+indexScSig (range, ident, _) = do
+  -- lookup the infomation of this variable
+  minfo <- lookupInfo ident
+  case minfo of
+    Nothing -> do
+      identType <- lookupSignature ident
+      let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
+      addIndex info [range]
+    Just info -> addIndex info [range]
 
 indexScDef :: (MonadState IndexEnv m) => ScDef (Malgo 'Refine) -> m ()
 indexScDef (view value -> range, ident, expr) = do
@@ -121,6 +163,13 @@ lookupSignature ident = do
   case mIdentType of
     Just identType -> pure identType
     Nothing -> error $ "lookupSignature: " <> show ident <> " not found"
+
+lookupTypeKind :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m Kind
+lookupTypeKind typeName = do
+  mTypeDef <- use (typeDefMap . at typeName)
+  case mTypeDef of
+    Just typeDef -> pure $ kindOf (typeDef ^. typeConstructor)
+    Nothing -> error $ "lookupTypeKind: " <> show typeName <> " not found"
 
 lookupInfo :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> m (Maybe Info)
 lookupInfo ident =

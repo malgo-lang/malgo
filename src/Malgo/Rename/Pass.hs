@@ -60,12 +60,12 @@ rnDecl (ScSig pos name typ) = do
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
-  params' <- traverse resolveName params
-  local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Annotated Implicit) params')) $
+  params' <- traverse (resolveName . view value) params
+  local (appendRnEnv resolvedTypeIdentMap (zip (map (view value) params) (map (Annotated Implicit) params'))) $
     DataDef pos
       <$> lookupTypeName pos name
-      <*> pure params'
-      <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
+        <*> pure (zipWith (\p p' -> Annotated {_ann = p ^. ann, _value = p'}) params params')
+        <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (TypeSynonym pos name params typ) = do
   params' <- traverse resolveName params
   local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Annotated Implicit) params')) $

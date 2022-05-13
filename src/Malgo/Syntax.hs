@@ -337,7 +337,7 @@ makePrisms ''Pat
 data Decl x
   = ScDef (XScDef x) (XId x) (Exp x)
   | ScSig (XScSig x) (XId x) (Type x)
-  | DataDef (XDataDef x) (XId x) [XId x] [(XId x, [Type x])]
+  | DataDef (XDataDef x) (XId x) [Annotated Range (XId x)] [(XId x, [Type x])]
   | TypeSynonym (XTypeSynonym x) (XId x) [XId x] (Type x)
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
@@ -413,7 +413,7 @@ type ScDef x = (XScDef x, XId x, Exp x)
 
 type ScSig x = (XScSig x, XId x, Type x)
 
-type DataDef x = (XDataDef x, XId x, [XId x], [(XId x, [Type x])])
+type DataDef x = (XDataDef x, XId x, [Annotated Range (XId x)], [(XId x, [Type x])])
 
 type TypeSynonym x = (XTypeSynonym x, XId x, [XId x], Type x)
 
