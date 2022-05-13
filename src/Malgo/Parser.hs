@@ -53,7 +53,11 @@ pDataDef = label "toplevel type definition" $ do
   start <- getSourcePos
   d <- upperIdent
   end <- getSourcePos
-  xs <- many lowerIdent
+  xs <- many do
+    start <- getSourcePos
+    x <- lowerIdent
+    end <- getSourcePos
+    pure Annotated {_ann = Range start end, _value = x}
   void $ pOperator "="
   ts <- pConDef `sepBy` pOperator "|"
   pure $ DataDef (Range start end) d xs ts

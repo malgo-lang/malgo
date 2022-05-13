@@ -186,9 +186,9 @@ tcDataDefs ds = do
   bindedTypeVars <- HashSet.unions . map (freevars . view typeConstructor) . HashMap.elems <$> use typeDefMap
   for ds \(pos, name, params, valueCons) -> do
     name' <- lookupType pos name
-    params' <- traverse (\p -> TyMeta <$> freshVar (Just $ p ^. idName)) params
+    params' <- traverse (\p -> TyMeta <$> freshVar (Just $ p ^. value . idName)) params
     solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf name']
-    zipWithM_ (\p p' -> typeDefMap . at p .= Just (TypeDef p' [] [])) params params'
+    zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef p' [] [])) params params'
     (valueConsNames, valueConsTypes) <-
       unzip <$> forOf (traversed . _2) valueCons \args -> do
         -- 値コンストラクタの型を構築
