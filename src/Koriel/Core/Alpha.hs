@@ -10,7 +10,7 @@ import qualified Data.HashMap.Strict as HashMap
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.Lens hiding (alpha)
+import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 

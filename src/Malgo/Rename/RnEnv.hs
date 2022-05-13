@@ -12,7 +12,6 @@ import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import Text.Megaparsec.Pos (SourcePos)
 import Text.Pretty.Simple (pShow)
 
 data RnState = RnState
