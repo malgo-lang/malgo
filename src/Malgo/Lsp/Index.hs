@@ -38,7 +38,7 @@ instance Binary Info
 instance Hashable Info
 
 instance Pretty Info where
-  pPrint Info {..} = pPrint _name <+> ":" <+> pPrint _typeSignature <+> "defined in" <+> pPrint _definitions
+  pPrint Info {..} = pPrint _name <+> ":" <+> pPrint _typeSignature <+> pPrint _definitions
 
 makeFieldsNoPrefix ''Info
 

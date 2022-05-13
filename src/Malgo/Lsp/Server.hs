@@ -18,7 +18,6 @@ import Malgo.Syntax.Extension
 import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
 import Text.Megaparsec (errorBundlePretty, SourcePos (SourcePos), mkPos)
-import Text.Megaparsec.Pos (SourcePos)
 import Koriel.Pretty (render, Pretty (pPrint))
 import qualified Koriel.Pretty as P
 
@@ -53,11 +52,14 @@ handlers opt =
               Nothing -> mempty
               Just interface -> interface ^. lspIndex
         let infos = findInfosOfPos (convertPos (Unsafe.fromJust $ doc ^. uri . to uriToFilePath) pos) index
-        let Position _l _c' = pos
-            rsp = Hover ms (Just range)
-            ms = HoverContents $ markedUpContent "malgo" (toHoverDocument infos)
-            range = Range pos pos
-        responder (Right $ Just rsp)
+        case infos of
+          [] -> responder (Right Nothing)
+          _ -> do
+            let Position _l _c' = pos
+                rsp = Hover ms (Just range)
+                ms = HoverContents $ markedUpContent "malgo" (toHoverDocument infos)
+                range = Range pos pos
+            responder (Right $ Just rsp)
     ]
 
 convertPos :: FilePath -> Position -> SourcePos
