@@ -10,7 +10,7 @@ import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
 import Malgo.Interface
-import Malgo.Lsp.Index (findInfosOfPos)
+import Malgo.Lsp.Index (findInfosOfPos, Info)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (Range)
 import Malgo.Syntax
@@ -19,6 +19,8 @@ import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
 import Text.Megaparsec (errorBundlePretty, SourcePos (SourcePos), mkPos)
 import Text.Megaparsec.Pos (SourcePos)
+import Koriel.Pretty (render, Pretty (pPrint))
+import qualified Koriel.Pretty as P
 
 newtype LspEnv = LspEnv
   { _opt :: Opt
@@ -53,13 +55,16 @@ handlers opt =
         let infos = findInfosOfPos (convertPos (Unsafe.fromJust $ doc ^. uri . to uriToFilePath) pos) index
         let Position _l _c' = pos
             rsp = Hover ms (Just range)
-            ms = HoverContents $ markedUpContent "haskell" (show (textDocumentIdentifierToModuleName doc) <> "\n" <> show infos)
+            ms = HoverContents $ markedUpContent "malgo" (toHoverDocument infos)
             range = Range pos pos
         responder (Right $ Just rsp)
     ]
 
 convertPos :: FilePath -> Position -> SourcePos
 convertPos srcName Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
+
+toHoverDocument :: [Info] -> Text
+toHoverDocument infos = toText $ render $ P.sep $ P.punctuate ";" $ map pPrint infos
 
 server :: Opt -> IO Int
 server opt =
