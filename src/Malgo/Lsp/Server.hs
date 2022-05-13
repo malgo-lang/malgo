@@ -10,13 +10,15 @@ import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
 import Malgo.Interface
+import Malgo.Lsp.Index (findInfosOfPos)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (Range)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
-import Text.Megaparsec (errorBundlePretty)
+import Text.Megaparsec (errorBundlePretty, SourcePos (SourcePos), mkPos)
+import Text.Megaparsec.Pos (SourcePos)
 
 newtype LspEnv = LspEnv
   { _opt :: Opt
@@ -44,13 +46,20 @@ handlers opt =
       requestHandler STextDocumentHover $ \req responder -> do
         let RequestMessage _ _ _ (HoverParams doc pos _workDone) = req
         _ast <- readAst opt (Unsafe.fromJust $ doc ^. uri . to uriToFilePath)
-        interface <- liftIO $ runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) (LspEnv opt)
+        minterface <- liftIO $ runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) (LspEnv opt)
+        let index = case minterface of
+              Nothing -> mempty
+              Just interface -> interface ^. lspIndex
+        let infos = findInfosOfPos (convertPos (Unsafe.fromJust $ doc ^. uri . to uriToFilePath) pos) index
         let Position _l _c' = pos
             rsp = Hover ms (Just range)
-            ms = HoverContents $ markedUpContent "haskell" (show (textDocumentIdentifierToModuleName doc) <> "\n" <> show interface)
+            ms = HoverContents $ markedUpContent "haskell" (show (textDocumentIdentifierToModuleName doc) <> "\n" <> show infos)
             range = Range pos pos
         responder (Right $ Just rsp)
     ]
+
+convertPos :: FilePath -> Position -> SourcePos
+convertPos srcName Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
 
 server :: Opt -> IO Int
 server opt =
