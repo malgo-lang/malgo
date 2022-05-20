@@ -6,20 +6,19 @@ import Control.Lens (to, view, (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import Koriel.Id
 import Koriel.Lens
+import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
 import Malgo.Interface
-import Malgo.Lsp.Index (findInfosOfPos, Info)
+import Malgo.Lsp.Index (Info (..), findInfosOfPos)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (Range)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
-import Text.Megaparsec (errorBundlePretty, SourcePos (SourcePos), mkPos)
-import Koriel.Pretty (render, Pretty (pPrint))
-import qualified Koriel.Pretty as P
+import Text.Megaparsec (SourcePos (SourcePos), errorBundlePretty, mkPos)
 
 newtype LspEnv = LspEnv
   { _opt :: Opt
@@ -57,7 +56,7 @@ handlers opt =
           _ -> do
             let Position _l _c' = pos
                 rsp = Hover ms (Just range)
-                ms = HoverContents $ markedUpContent "malgo" (toHoverDocument infos)
+                ms = HoverContents $ toHoverDocument infos
                 range = Range pos pos
             responder (Right $ Just rsp)
     ]
@@ -65,8 +64,13 @@ handlers opt =
 convertPos :: FilePath -> Position -> SourcePos
 convertPos srcName Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
 
-toHoverDocument :: [Info] -> Text
-toHoverDocument infos = toText $ render $ P.sep $ P.punctuate ";" $ map pPrint infos
+toHoverDocument :: [Info] -> MarkupContent
+toHoverDocument infos =
+  mconcat $ map aux infos
+  where
+    aux Info {..} =
+      markedUpContent "malgo" (toText $ render $ pPrint _name <+> ":" <+> pPrint _typeSignature)
+        <> unmarkedUpContent (toText $ render $ pPrint _definitions)
 
 server :: Opt -> IO Int
 server opt =
