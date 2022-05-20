@@ -405,7 +405,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   pure $ OpApp (Annotated retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
-  hole <- newInternalId "_" ()
+  hole <- newInternalId "$_" ()
   signatureMap . at hole ?= Forall [] (TyTuple 0)
   pure $ Fn (Annotated (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Annotated (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Annotated (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do
