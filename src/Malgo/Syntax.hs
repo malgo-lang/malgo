@@ -337,7 +337,7 @@ makePrisms ''Pat
 data Decl x
   = ScDef (XScDef x) (XId x) (Exp x)
   | ScSig (XScSig x) (XId x) (Type x)
-  | DataDef (XDataDef x) (XId x) [Annotated Range (XId x)] [(XId x, [Type x])]
+  | DataDef (XDataDef x) (XId x) [Annotated Range (XId x)] [(Range, XId x, [Type x])]
   | TypeSynonym (XTypeSynonym x) (XId x) [XId x] (Type x)
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
@@ -356,7 +356,7 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
         nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
       ]
     where
-      pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
+      pprConDef (_, con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
   pPrint (TypeSynonym _ t xs t') =
     sep
       [ "type" <+> pPrint t <+> sep (map pPrint xs) <+> "=",
@@ -413,7 +413,7 @@ type ScDef x = (XScDef x, XId x, Exp x)
 
 type ScSig x = (XScSig x, XId x, Type x)
 
-type DataDef x = (XDataDef x, XId x, [Annotated Range (XId x)], [(XId x, [Type x])])
+type DataDef x = (XDataDef x, XId x, [Annotated Range (XId x)], [(Range, XId x, [Type x])])
 
 type TypeSynonym x = (XTypeSynonym x, XId x, [XId x], Type x)
 
@@ -441,7 +441,7 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
           [ "data" <+> pPrint d <+> sep (map pPrint xs) <+> "=",
             nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
           ]
-      pprConDef (con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
+      pprConDef (_, con, ts) = pPrint con <+> sep (map (pPrintPrec prettyNormal 12) ts)
       prettyForeign (_, x, t) = "foreign import" <+> pPrint x <+> ":" <+> pPrint t
       prettyScSig (_, f, t) = pPrint f <+> ":" <+> pPrint t
       prettyScDef (_, f, e) = sep [pPrint f <+> "=", nest 2 $ pPrint e]

@@ -62,7 +62,11 @@ pDataDef = label "toplevel type definition" $ do
   ts <- pConDef `sepBy` pOperator "|"
   pure $ DataDef (Range start end) d xs ts
   where
-    pConDef = (,) <$> upperIdent <*> many pSingleType
+    pConDef = do
+      start <- getSourcePos
+      x <- upperIdent
+      end <- getSourcePos
+      (Range start end,x,) <$> many pSingleType
 
 pTypeSynonym :: Parser (Decl (Malgo 'Parse))
 pTypeSynonym = label "toplevel type synonym" do

@@ -144,7 +144,7 @@ dsDataDef ::
   DataDef (Malgo 'Refine) ->
   m [Def]
 dsDataDef (_, name, _, cons) =
-  for cons $ \(conName, _) -> do
+  for cons $ \(_, conName, _) -> do
     -- lookup constructor infomations
     Just vcs <- preuse (typeDefMap . at name . _Just . valueConstructors)
     let Forall _ conType = fromJust $ List.lookup conName vcs

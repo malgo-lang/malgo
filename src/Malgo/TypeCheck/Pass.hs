@@ -189,8 +189,8 @@ tcDataDefs ds = do
     params' <- traverse (\p -> TyMeta <$> freshVar (Just $ p ^. value . idName)) params
     solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf name']
     zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef p' [] [])) params params'
-    (valueConsNames, valueConsTypes) <-
-      unzip <$> forOf (traversed . _2) valueCons \args -> do
+    (_, valueConsNames, valueConsTypes) <-
+      unzip3 <$> forOf (traversed . _3) valueCons \args -> do
         -- 値コンストラクタの型を構築
         -- name' <- lookupType pos name
         -- params' <- traverse (lookupType pos) params

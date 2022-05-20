@@ -71,7 +71,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
 
   traverse_ indexConstructor constructors
   where
-    indexConstructor (constructor, parameters) = do
+    indexConstructor (range, constructor, parameters) = do
       constructorType <- lookupSignature constructor
       let info = Info {_name = constructor ^. idName, _typeSignature = constructorType, _definitions = [range]}
       addIndex info [range]

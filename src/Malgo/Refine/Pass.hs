@@ -2,7 +2,7 @@
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
 module Malgo.Refine.Pass where
 
-import Control.Lens (to, traverseOf, traversed, view, (.~), (^.), _1, _2)
+import Control.Lens (to, traverseOf, traversed, view, (.~), (^.), _1, _2, _3)
 import qualified Data.List.NonEmpty as NonEmpty
 import Koriel.Lens (HasAnn (ann), HasValue (value))
 import Koriel.Pretty
@@ -90,7 +90,7 @@ refineType (Syn.TyTuple x ts) = Syn.TyTuple x <$> traverse refineType ts
 refineType (Syn.TyRecord x kts) = Syn.TyRecord x <$> traverseOf (traversed . _2) refineType kts
 
 refineDataDef :: (TypeChecked t x, MonadReader RefineEnv m) => DataDef x -> m (DataDef (Malgo 'Refine))
-refineDataDef (x, name, ps, cons) = (x,name,ps,) <$> traverse (_2 $ traverse refineType) cons
+refineDataDef (x, name, ps, cons) = (x,name,ps,) <$> traverse (_3 $ traverse refineType) cons
 
 refineTypeSynonym :: (TypeChecked t x, MonadReader RefineEnv m) => TypeSynonym x -> m (TypeSynonym (Malgo 'Refine))
 refineTypeSynonym (x, name, ps, typ) = (x,name,ps,) <$> refineType typ
