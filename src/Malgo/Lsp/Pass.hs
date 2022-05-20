@@ -133,7 +133,7 @@ indexExp (Var (view value -> range) (removePrefix -> ident)) = do
   case minfo of
     Nothing -> do
       identType <- lookupSignature ident
-      let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
+      let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = []}
       addIndex info [range]
     Just info -> addIndex info [range]
 indexExp (Unboxed (view value -> range) u) = do
