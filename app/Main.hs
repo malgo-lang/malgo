@@ -7,7 +7,7 @@ import qualified Malgo.Lsp.Server as Lsp
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (value)
 import Options.Applicative
-import System.Directory (XdgDirectory (XdgData), getXdgDirectory)
+import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath ((</>))
 import System.FilePath.Lens (extension)
 import Text.Megaparsec (errorBundlePretty)
@@ -69,14 +69,16 @@ parseCommand = do
             <> header "malgo programming language"
       )
   case command of
-    ToLL opt ->
+    ToLL opt -> do
+      srcName <- makeAbsolute $ srcName opt
       if null (dstName opt)
-        then pure $ ToLL $ opt {dstName = srcName opt & extension .~ ".ll"}
-        else pure command
-    Lsp opt ->
+        then pure $ ToLL $ opt {srcName = srcName, dstName = srcName & extension .~ ".ll"}
+        else pure $ ToLL $ opt {srcName = srcName}
+    Lsp opt -> do
+      srcName <- makeAbsolute $ srcName opt
       if null $ dstName opt
-        then pure $ Lsp $ opt {dstName = srcName opt & extension .~ ".ll"}
-        else pure command
+        then pure $ Lsp $ opt {dstName = srcName & extension .~ ".ll"}
+        else pure $ Lsp $ opt {srcName = srcName}
   where
     toLL =
       command "to-ll" $
