@@ -14,11 +14,12 @@ import Malgo.Interface
 import Malgo.Lsp.Index (Info (..), findInfosOfPos)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (Range)
+import qualified Malgo.Prelude as Malgo
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
-import Text.Megaparsec (SourcePos (SourcePos), errorBundlePretty, mkPos)
+import Text.Megaparsec (SourcePos (..), errorBundlePretty, mkPos, unPos)
 
 newtype LspEnv = LspEnv
   { _opt :: Opt
@@ -50,7 +51,7 @@ handlers opt =
         let index = case minterface of
               Nothing -> mempty
               Just interface -> interface ^. lspIndex
-        let infos = findInfosOfPos (convertPos (Unsafe.fromJust $ doc ^. uri . to uriToFilePath) pos) index
+        let infos = findInfosOfPos (positionToSourcePos (Unsafe.fromJust $ doc ^. uri . to uriToFilePath) pos) index
         case infos of
           [] -> responder (Right Nothing)
           _ -> do
@@ -58,11 +59,28 @@ handlers opt =
                 rsp = Hover ms (Just range)
                 ms = HoverContents $ toHoverDocument infos
                 range = Range pos pos
-            responder (Right $ Just rsp)
+            responder (Right $ Just rsp),
+      requestHandler STextDocumentDefinition $ \req responder -> do
+        let RequestMessage _ _ _ (DefinitionParams doc pos _workDone _partialResult) = req
+        _ast <- readAst opt (Unsafe.fromJust $ doc ^. uri . to uriToFilePath)
+        minterface <- liftIO $ runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) (LspEnv opt)
+        let index = case minterface of
+              Nothing -> mempty
+              Just interface -> interface ^. lspIndex
+        let infos = findInfosOfPos (positionToSourcePos (Unsafe.fromJust $ doc ^. uri . to uriToFilePath) pos) index
+        case infos of
+          [] -> responder (Right $ InR $ InL $ Language.LSP.Types.List [])
+          _ -> do
+            let rsp = InR (InL $ Language.LSP.Types.List $ concatMap infoToLocation infos)
+            responder (Right rsp)
     ]
 
-convertPos :: FilePath -> Position -> SourcePos
-convertPos srcName Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
+positionToSourcePos :: FilePath -> Position -> SourcePos
+positionToSourcePos srcName Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
+
+sourcePosToPosition :: SourcePos -> Position
+sourcePosToPosition SourcePos {sourceLine, sourceColumn} =
+  Position (fromIntegral $ unPos sourceLine - 1) (fromIntegral $ unPos sourceColumn - 1)
 
 toHoverDocument :: [Info] -> MarkupContent
 toHoverDocument infos =
@@ -71,6 +89,14 @@ toHoverDocument infos =
     aux Info {..} =
       markedUpContent "malgo" (toText $ render $ pPrint _name <+> ":" <+> pPrint _typeSignature)
         <> unmarkedUpContent (toText $ render $ pPrint _definitions)
+
+infoToLocation :: Info -> [Location]
+infoToLocation Info {..} =
+  map aux _definitions
+  where
+    aux Malgo.Range {_start, _end} =
+      let filePath = sourceName _start
+       in Location (filePathToUri filePath) (Range (sourcePosToPosition _start) (sourcePosToPosition _end))
 
 server :: Opt -> IO Int
 server opt =
