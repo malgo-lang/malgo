@@ -227,6 +227,7 @@ instance Binary ty => Binary (Scheme ty)
 instance (Eq ty, Hashable ty) => Hashable (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
+  pPrint (Forall [] t) = pPrint t
   pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
 
 -- | Types qualified with `Type`
