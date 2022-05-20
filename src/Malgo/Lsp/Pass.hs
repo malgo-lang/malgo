@@ -6,6 +6,7 @@ module Malgo.Lsp.Pass where
 import Control.Lens (At (at), modifying, use, view, (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import qualified Data.HashMap.Strict as HashMap
+import qualified Data.Text as Text
 import Koriel.Id (idName)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
@@ -36,7 +37,15 @@ newIndexEnv tcEnv =
     }
 
 index :: TcEnv -> Module (Malgo 'Refine) -> Index
-index tcEnv mod = view buildingIndex $ execState (indexModule mod) $ newIndexEnv tcEnv
+index tcEnv mod = removeInternalInfos $ view buildingIndex $ execState (indexModule mod) $ newIndexEnv tcEnv
+
+-- | Remove infos that are only used internally.
+-- These infos' names start with '$'.
+removeInternalInfos :: Index -> Index
+removeInternalInfos (Index index) = Index $ HashMap.filterWithKey (\k _ -> not $ isInternal k) index
+  where
+    isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
+    isInternal _ = False
 
 indexModule :: (MonadState IndexEnv m) => Module (Malgo 'Refine) -> m ()
 indexModule Module {..} = indexBindGroup _moduleDefinition
