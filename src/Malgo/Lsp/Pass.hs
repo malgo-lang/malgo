@@ -52,9 +52,9 @@ indexModule Module {..} = indexBindGroup _moduleDefinition
 
 indexBindGroup :: (MonadState IndexEnv m) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do
-  traverse_ (traverse_ indexScDef) _scDefs
-  traverse_ indexScSig _scSigs
   traverse_ indexDataDef _dataDefs
+  traverse_ indexScSig _scSigs
+  traverse_ (traverse_ indexScDef) _scDefs
 
 indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
 indexDataDef (range, typeName, typeParameters, constructors) = do
@@ -111,12 +111,18 @@ indexScSig (range, ident, _) = do
 
 indexScDef :: (MonadState IndexEnv m) => ScDef (Malgo 'Refine) -> m ()
 indexScDef (view value -> range, ident, expr) = do
-  -- lookup the type of the variable `ident`
-  identType <- lookupSignature ident
-  -- index the information of this definition
-  let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
-  addIndex info [range]
-  addDefinition ident info
+  minfo <- lookupInfo ident
+  case minfo of
+    Nothing -> do
+      -- lookup the type of the variable `ident`
+      identType <- lookupSignature ident
+      -- index the information of this definition
+      let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
+      addIndex info [range]
+      addDefinition ident info
+    Just info -> do
+      addIndex info [range]
+      addDefinition ident info
   -- traverse the expression
   indexExp expr
 
@@ -169,10 +175,11 @@ indexPat (VarP (Annotated ty range) v) = do
   let info = Info {_name = v ^. idName, _typeSignature = Forall [] ty, _definitions = [range]}
   addIndex info [range]
   addDefinition v info
-indexPat (ConP (Annotated ty range) c ps) = do
-  let info = Info {_name = c ^. idName, _typeSignature = Forall [] ty, _definitions = [range]}
-  addIndex info [range]
-  addDefinition c info
+indexPat (ConP (Annotated _ range) c ps) = do
+  minfo <- lookupInfo c
+  case minfo of
+    Nothing -> pass
+    Just info -> addIndex info [range]
   traverse_ indexPat ps
 indexPat (TupleP _ ps) =
   traverse_ indexPat ps
