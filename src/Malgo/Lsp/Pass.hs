@@ -74,13 +74,29 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
     indexConstructor (constructor, parameters) = do
       constructorType <- lookupSignature constructor
       let info = Info {_name = constructor ^. idName, _typeSignature = constructorType, _definitions = [range]}
-      -- TODO: assign correct range of type parameter
       addIndex info [range]
       addDefinition constructor info
       traverse_ indexType parameters
 
 indexType :: MonadState IndexEnv m => S.Type (Malgo 'Refine) -> m ()
-indexType _ = pass
+indexType (S.TyApp _ t ts) = do
+  indexType t
+  traverse_ indexType ts
+indexType (S.TyVar range name) = do
+  minfo <- lookupInfo name
+  case minfo of
+    Nothing -> pass -- TODO: add new entry
+    Just info -> addIndex info [range]
+indexType (S.TyCon range name) = do
+  minfo <- lookupInfo name
+  case minfo of
+    Nothing -> pass -- TODO: add new entry
+    Just info -> addIndex info [range]
+indexType (S.TyArr _ t1 t2) = do
+  indexType t1
+  indexType t2
+indexType (S.TyTuple _ ts) = traverse_ indexType ts
+indexType (S.TyRecord _ fields) = traverse_ (indexType . snd) fields
 
 indexScSig :: MonadState IndexEnv m => ScSig (Malgo 'Refine) -> m ()
 indexScSig (range, ident, _) = do
