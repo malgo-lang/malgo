@@ -54,7 +54,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   (typedAst, tcEnv) <- withDump (dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
   refinedAst <- withDump (dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
-  index <- withDump (debugMode opt) "=== INDEX ===" $ pure $ Lsp.index tcEnv refinedAst
+  index <- withDump (debugMode opt) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
 
   depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
   (dsEnv, core) <- withDump (dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv depList refinedAst

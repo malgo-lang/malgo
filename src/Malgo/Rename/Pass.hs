@@ -1,7 +1,7 @@
 -- | Name resolution and simple desugar transformation
 module Malgo.Rename.Pass where
 
-import Control.Lens (over, use, view, (<>=), (^.), _2)
+import Control.Lens (over, use, view, (<>=), (^.), _2, _3)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.List (intersect)
@@ -288,16 +288,16 @@ genToplevelEnv modName ds =
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      unless (disjoint (map fst cs) (HashMap.keys (env ^. resolvedVarIdentMap))) do
+      unless (disjoint (map (view _2) cs) (HashMap.keys (env ^. resolvedVarIdentMap))) do
         errorOn pos $
           "Duplicate name(s):"
             <+> sep
-              (punctuate "," $ map (quotes . pPrint) (map fst cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
+              (punctuate "," $ map (quotes . pPrint) (map (view _2) cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
       x' <- resolveGlobalName modName x
-      xs' <- traverse (resolveGlobalName modName . fst) cs
-      modify $ appendRnEnv resolvedVarIdentMap (zip (map fst cs) $ map (Annotated Implicit) xs')
+      xs' <- traverse (resolveGlobalName modName . view _2) cs
+      modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Annotated Implicit) xs')
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Annotated Implicit x')]
-      traverse_ (traverse_ genFieldEnv . snd) cs
+      traverse_ (traverse_ genFieldEnv . view _3) cs
     aux (TypeSynonym pos x _ t) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do

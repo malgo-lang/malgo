@@ -189,8 +189,8 @@ tcDataDefs ds = do
     params' <- traverse (\p -> TyMeta <$> freshVar (Just $ p ^. value . idName)) params
     solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf name']
     zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef p' [] [])) params params'
-    (valueConsNames, valueConsTypes) <-
-      unzip <$> forOf (traversed . _2) valueCons \args -> do
+    (_, valueConsNames, valueConsTypes) <-
+      unzip3 <$> forOf (traversed . _3) valueCons \args -> do
         -- 値コンストラクタの型を構築
         -- name' <- lookupType pos name
         -- params' <- traverse (lookupType pos) params
@@ -405,7 +405,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   pure $ OpApp (Annotated retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
-  hole <- newInternalId "_" ()
+  hole <- newInternalId "$_" ()
   signatureMap . at hole ?= Forall [] (TyTuple 0)
   pure $ Fn (Annotated (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Annotated (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Annotated (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do
