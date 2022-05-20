@@ -22,7 +22,6 @@ import Malgo.TypeRep
 data IndexEnv = IndexEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
-    _definitionMap :: HashMap RnId Info,
     _buildingIndex :: Index
   }
 
@@ -33,7 +32,6 @@ newIndexEnv tcEnv =
   IndexEnv
     { _signatureMap = tcEnv ^. signatureMap,
       _typeDefMap = tcEnv ^. typeDefMap,
-      _definitionMap = mempty,
       _buildingIndex = mempty
     }
 
@@ -43,7 +41,7 @@ index tcEnv mod = removeInternalInfos . view buildingIndex <$> execStateT (index
 -- | Remove infos that are only used internally.
 -- These infos' names start with '$'.
 removeInternalInfos :: Index -> Index
-removeInternalInfos (Index index) = Index $ HashMap.filterWithKey (\k _ -> not $ isInternal k) index
+removeInternalInfos (Index refs defs) = Index (HashMap.filterWithKey (\k _ -> not $ isInternal k) refs) defs
   where
     isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
     isInternal _ = False
@@ -73,13 +71,13 @@ indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
 indexDataDef (range, typeName, typeParameters, constructors) = do
   typeKind <- lookupTypeKind typeName
   let info = Info {_name = typeName ^. idName, _typeSignature = Forall [] typeKind, _definitions = [range]}
-  addIndex info [range]
+  addReferences info [range]
   addDefinition typeName info
 
   for_ typeParameters \Annotated {_ann = range, _value = typeParameter} -> do
     typeParameterKind <- lookupTypeKind typeParameter
     let info = Info {_name = typeParameter ^. idName, _typeSignature = Forall [] typeParameterKind, _definitions = [range]}
-    addIndex info [range]
+    addReferences info [range]
     addDefinition typeParameter info
 
   traverse_ indexConstructor constructors
@@ -87,7 +85,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
     indexConstructor (range, constructor, parameters) = do
       constructorType <- lookupSignature constructor
       let info = Info {_name = constructor ^. idName, _typeSignature = constructorType, _definitions = [range]}
-      addIndex info [range]
+      addReferences info [range]
       addDefinition constructor info
       traverse_ indexType parameters
 
@@ -99,12 +97,12 @@ indexType (S.TyVar range name) = do
   minfo <- lookupInfo name
   case minfo of
     Nothing -> pass -- TODO: add new entry
-    Just info -> addIndex info [range]
+    Just info -> addReferences info [range]
 indexType (S.TyCon range name) = do
   minfo <- lookupInfo name
   case minfo of
     Nothing -> pass -- TODO: add new entry
-    Just info -> addIndex info [range]
+    Just info -> addReferences info [range]
 indexType (S.TyArr _ t1 t2) = do
   indexType t1
   indexType t2
@@ -119,8 +117,8 @@ indexScSig (range, ident, _) = do
     Nothing -> do
       identType <- lookupSignature ident
       let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
-      addIndex info [range]
-    Just info -> addIndex info [range]
+      addReferences info [range]
+    Just info -> addReferences info [range]
 
 indexScDef :: (MonadState IndexEnv m) => ScDef (Malgo 'Refine) -> m ()
 indexScDef (view value -> range, ident, expr) = do
@@ -131,10 +129,10 @@ indexScDef (view value -> range, ident, expr) = do
       identType <- lookupSignature ident
       -- index the information of this definition
       let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
-      addIndex info [range]
+      addReferences info [range]
       addDefinition ident info
     Just info -> do
-      addIndex info [range]
+      addReferences info [range]
       addDefinition ident info
   -- traverse the expression
   indexExp expr
@@ -147,11 +145,11 @@ indexExp (Var (view value -> range) (removePrefix -> ident)) = do
     Nothing -> do
       identType <- lookupSignature ident
       let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = []}
-      addIndex info [range]
-    Just info -> addIndex info [range]
+      addReferences info [range]
+    Just info -> addReferences info [range]
 indexExp (Unboxed (view value -> range) u) = do
   let info = Info {_name = show $ pPrint u, _typeSignature = Forall [] (typeOf u), _definitions = [range]}
-  addIndex info [range]
+  addReferences info [range]
 indexExp (Apply _ e1 e2) = do
   indexExp e1
   indexExp e2
@@ -171,7 +169,7 @@ indexStmt :: (MonadState IndexEnv m) => Stmt (Malgo 'Refine) -> m ()
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
   let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
-  addIndex info [range]
+  addReferences info [range]
   addDefinition ident info
   indexExp expr
 indexStmt (NoBind _ expr) =
@@ -186,13 +184,13 @@ indexPat :: (MonadState IndexEnv m) => Pat (Malgo 'Refine) -> m ()
 indexPat (VarP (Annotated ty range) v) = do
   -- index the information of this definition
   let info = Info {_name = v ^. idName, _typeSignature = Forall [] ty, _definitions = [range]}
-  addIndex info [range]
+  addReferences info [range]
   addDefinition v info
 indexPat (ConP (Annotated _ range) c ps) = do
   minfo <- lookupInfo c
   case minfo of
     Nothing -> pass
-    Just info -> addIndex info [range]
+    Just info -> addReferences info [range]
   traverse_ indexPat ps
 indexPat (TupleP _ ps) =
   traverse_ indexPat ps
@@ -200,7 +198,7 @@ indexPat (RecordP _ kps) =
   traverse_ (indexPat . snd) kps
 indexPat (UnboxedP (view value -> range) u) = do
   let info = Info {_name = show $ pPrint u, _typeSignature = Forall [] (typeOf u), _definitions = [range]}
-  addIndex info [range]
+  addReferences info [range]
 
 lookupSignature :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> m (Scheme Type)
 lookupSignature ident = do
@@ -218,15 +216,15 @@ lookupTypeKind typeName = do
 
 lookupInfo :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> m (Maybe Info)
 lookupInfo ident =
-  use (definitionMap . at ident)
+  use (buildingIndex . definitionMap . at ident)
 
-addIndex :: (MonadState IndexEnv m) => Info -> [Range] -> m ()
-addIndex info refs =
-  modifying buildingIndex $ \(Index index) -> Index $ HashMap.alter f info index
+addReferences :: (MonadState IndexEnv m) => Info -> [Range] -> m ()
+addReferences info refs =
+  modifying buildingIndex $ \(Index refs defs) -> Index (HashMap.alter f info refs) defs
   where
     f Nothing = Just refs
     f (Just oldRefs) = Just (ordNub $ oldRefs <> refs)
 
 addDefinition :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> Info -> m ()
 addDefinition ident info =
-  modifying definitionMap $ HashMap.insert ident info
+  modifying (buildingIndex . definitionMap) $ HashMap.insert ident info
