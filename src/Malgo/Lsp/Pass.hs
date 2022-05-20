@@ -10,6 +10,7 @@ import qualified Data.Text as Text
 import Koriel.Id (idName)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
+import Malgo.Interface (HasLspIndex (lspIndex), loadInterface)
 import Malgo.Lsp.Index
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
@@ -36,8 +37,8 @@ newIndexEnv tcEnv =
       _buildingIndex = mempty
     }
 
-index :: TcEnv -> Module (Malgo 'Refine) -> Index
-index tcEnv mod = removeInternalInfos $ view buildingIndex $ execState (indexModule mod) $ newIndexEnv tcEnv
+index :: (MonadIO m, HasOpt env Opt, MonadReader env m) => TcEnv -> Module (Malgo 'Refine) -> m Index
+index tcEnv mod = removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv)
 
 -- | Remove infos that are only used internally.
 -- These infos' names start with '$'.
@@ -47,14 +48,26 @@ removeInternalInfos (Index index) = Index $ HashMap.filterWithKey (\k _ -> not $
     isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
     isInternal _ = False
 
-indexModule :: (MonadState IndexEnv m) => Module (Malgo 'Refine) -> m ()
+indexModule :: (MonadIO m, HasOpt env Opt, MonadReader env m, MonadState IndexEnv m) => Module (Malgo 'Refine) -> m ()
 indexModule Module {..} = indexBindGroup _moduleDefinition
 
-indexBindGroup :: (MonadState IndexEnv m) => BindGroup (Malgo 'Refine) -> m ()
+indexBindGroup :: (MonadIO m, HasOpt env Opt, MonadReader env m, MonadState IndexEnv m) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do
+  traverse_ indexImport _imports
   traverse_ indexDataDef _dataDefs
   traverse_ indexScSig _scSigs
   traverse_ (traverse_ indexScDef) _scDefs
+
+indexImport :: (MonadIO m, HasOpt env Opt, MonadReader env m, MonadState IndexEnv m) => Import (Malgo 'Refine) -> m ()
+indexImport (_, moduleName, _) = do
+  -- include the index file of the imported module
+  minterface <- loadInterface moduleName
+  case minterface of
+    Nothing ->
+      error $ "Could not find interface file for module " <> show moduleName
+    Just interface -> do
+      let index = interface ^. lspIndex
+      modifying buildingIndex (`mappend` index)
 
 indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
 indexDataDef (range, typeName, typeParameters, constructors) = do

@@ -10,7 +10,7 @@ import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.TypeRep (Scheme, Type)
-import Text.Megaparsec.Pos (SourcePos (..), Pos)
+import Text.Megaparsec.Pos (Pos, SourcePos (..))
 
 -- | A 'Index' is a mapping from 'Info' to '[Range]' (references).
 newtype Index = Index {unwrapIndex :: HashMap Info [Range]}
