@@ -76,7 +76,7 @@ parseCommand = do
     Lsp opt -> do
       srcName <- makeAbsolute $ _srcName opt
       if null $ _dstName opt
-        then pure $ Lsp $ opt {_dstName = srcName & extension .~ ".ll"}
+        then pure $ Lsp $ opt {_srcName = srcName, _dstName = srcName & extension .~ ".ll"}
         else pure $ Lsp $ opt {_srcName = srcName}
   where
     toLL =

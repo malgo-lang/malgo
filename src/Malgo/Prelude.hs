@@ -91,7 +91,7 @@ instance HasSrcName MalgoEnv FilePath where
   srcName = toLLOpt . srcName
 
 instance HasDstName MalgoEnv FilePath where
-  dstName = toLLOpt . srcName
+  dstName = toLLOpt . dstName
 
 instance HasModulePaths MalgoEnv [FilePath] where
   modulePaths = toLLOpt . modulePaths
