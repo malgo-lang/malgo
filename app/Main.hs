@@ -1,11 +1,10 @@
 module Main where
 
 import Control.Lens ((.~))
-import qualified Data.Text.IO as T
 import qualified Malgo.Driver as Driver
 import qualified Malgo.Lsp.Server as Lsp
 import Malgo.Parser (parseMalgo)
-import Malgo.Prelude hiding (value)
+import Malgo.Prelude
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath ((</>))
@@ -19,20 +18,20 @@ main = do
   case command of
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt {modulePaths = modulePaths opt <> [".malgo-work" </> "build", basePath]}
-      src <- readFileText (srcName opt)
-      let parsedAst = case parseMalgo (srcName opt) src of
+      opt <- pure $ opt {_modulePaths = _modulePaths opt <> [".malgo-work" </> "build", basePath]}
+      src <- readFileText (_srcName opt)
+      let parsedAst = case parseMalgo (_srcName opt) src of
             Right x -> x
             Left err -> error $ toText $ errorBundlePretty err
       Driver.compileFromAST parsedAst opt
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt {modulePaths = modulePaths opt <> [".malgo-work" </> "build", basePath]}
+      opt <- pure $ opt {_modulePaths = _modulePaths opt <> [".malgo-work" </> "build", basePath]}
       void $ Lsp.server opt
 
-toLLOpt :: Parser Opt
+toLLOpt :: Parser ToLLOpt
 toLLOpt =
-  ( Opt
+  ( ToLLOpt
       <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
       <*> strOption
         ( long "output" <> short 'o' <> metavar "OUTPUT" <> value ""
@@ -53,12 +52,12 @@ toLLOpt =
   )
     <**> helper
 
-lspOpt :: Parser Opt
+lspOpt :: Parser ToLLOpt
 lspOpt = toLLOpt
 
 data Command
-  = ToLL Opt
-  | Lsp Opt
+  = ToLL ToLLOpt
+  | Lsp ToLLOpt
 
 parseCommand :: IO Command
 parseCommand = do
@@ -70,15 +69,15 @@ parseCommand = do
       )
   case command of
     ToLL opt -> do
-      srcName <- makeAbsolute $ srcName opt
-      if null (dstName opt)
-        then pure $ ToLL $ opt {srcName = srcName, dstName = srcName & extension .~ ".ll"}
-        else pure $ ToLL $ opt {srcName = srcName}
+      srcName <- makeAbsolute $ _srcName opt
+      if null (_dstName opt)
+        then pure $ ToLL $ opt {_srcName = srcName, _dstName = srcName & extension .~ ".ll"}
+        else pure $ ToLL $ opt {_srcName = srcName}
     Lsp opt -> do
-      srcName <- makeAbsolute $ srcName opt
-      if null $ dstName opt
-        then pure $ Lsp $ opt {dstName = srcName & extension .~ ".ll"}
-        else pure $ Lsp $ opt {srcName = srcName}
+      srcName <- makeAbsolute $ _srcName opt
+      if null $ _dstName opt
+        then pure $ Lsp $ opt {_dstName = srcName & extension .~ ".ll"}
+        else pure $ Lsp $ opt {_srcName = srcName}
   where
     toLL =
       command "to-ll" $
