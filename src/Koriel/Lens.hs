@@ -17,6 +17,20 @@ module Koriel.Lens
     HasName (..),
     HasTypeSignature (..),
     HasDefinitions (..),
+    HasToLLOpt (..),
+    HasSrcName (..),
+    HasDstName (..),
+    HasDumpParsed (..),
+    HasDumpRenamed (..),
+    HasDumpTyped (..),
+    HasForceRebuild (..),
+    HasModulePaths (..),
+    HasDebugMode (..),
+    HasInlineSize (..),
+    HasNoLambdaLift (..),
+    HasNoOptimize (..),
+    HasDumpDesugar (..),
+    HasDumpRefine (..),
   )
 where
 
@@ -70,3 +84,45 @@ class HasTypeSignature s a | s -> a where
 
 class HasDefinitions s a | s -> a where
   definitions :: Lens' s a
+
+class HasSrcName s a | s -> a where
+  srcName :: Lens' s a
+
+class HasDstName s a | s -> a where
+  dstName :: Lens' s a
+
+class HasDumpParsed s a | s -> a where
+  dumpParsed :: Lens' s a
+
+class HasDumpRenamed s a | s -> a where
+  dumpRenamed :: Lens' s a
+
+class HasDumpTyped s a | s -> a where
+  dumpTyped :: Lens' s a
+
+class HasDumpRefine s a | s -> a where
+  dumpRefine :: Lens' s a
+
+class HasDumpDesugar s a | s -> a where
+  dumpDesugar :: Lens' s a
+
+class HasNoOptimize s a | s -> a where
+  noOptimize :: Lens' s a
+
+class HasNoLambdaLift s a | s -> a where
+  noLambdaLift :: Lens' s a
+
+class HasInlineSize s a | s -> a where
+  inlineSize :: Lens' s a
+
+class HasDebugMode s a | s -> a where
+  debugMode :: Lens' s a
+
+class HasModulePaths s a | s -> a where
+  modulePaths :: Lens' s a
+
+class HasForceRebuild s a | s -> a where
+  forceRebuild :: Lens' s a
+
+class HasToLLOpt s a | s -> a where
+  toLLOpt :: Lens' s a

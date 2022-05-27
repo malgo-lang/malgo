@@ -61,14 +61,16 @@ buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty
       resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
-storeInterface :: (MonadIO m, HasOpt env Opt, MonadReader env m) => Interface -> m ()
+storeInterface :: (MonadIO m, HasDstName env FilePath, MonadReader env m) => Interface -> m ()
 storeInterface interface = do
-  opt <- getOpt
-  liftIO $ encodeFile (dstName opt -<.> "mlgi") interface
+  dstName <- view dstName
+  traceM $ "storeInterface: " <> show dstName
+  liftIO $ encodeFile (dstName -<.> "mlgi") interface
 
-loadInterface :: (MonadIO m, HasOpt env Opt, MonadReader env m) => ModuleName -> m (Maybe Interface)
+loadInterface :: (MonadReader s m, HasModulePaths s [FilePath], MonadIO m) => ModuleName -> m (Maybe Interface)
 loadInterface (ModuleName modName) = do
-  modPaths <- modulePaths <$> getOpt
+  modPaths <- view modulePaths
+  traceShowM modPaths
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x
@@ -77,14 +79,14 @@ loadInterface (ModuleName modName) = do
       pure Nothing
   where
     findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)
-    findAndReadFile [] modFile = pure $ Left (0, "module" <+> pPrint modFile <+> "is not found")
+    findAndReadFile [] modFile = pure $ Left (0, "interface" <+> pPrint modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
         then liftIO $ mapLeft (second Koriel.Pretty.text) <$> decodeFileOrFail (modPath </> modFile)
         else findAndReadFile rest modFile
 
-dependencieList :: (MonadIO m, HasOpt env Opt, MonadReader env m) => ModuleName -> [ModuleName] -> m [ModuleName]
+dependencieList :: (HasModulePaths s [FilePath], MonadIO m, MonadReader s m) => ModuleName -> [ModuleName] -> m [ModuleName]
 dependencieList modName imports = do
   depList <- ordNub . ((modName, modName, imports) :) <$> foldMapM genDepList imports
   let (depGraph, nodeFromVertex, _) = graphFromEdges depList

@@ -35,7 +35,7 @@ newIndexEnv tcEnv =
       _buildingIndex = mempty
     }
 
-index :: (MonadIO m, HasOpt env Opt, MonadReader env m) => TcEnv -> Module (Malgo 'Refine) -> m Index
+index :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath]) => TcEnv -> Module (Malgo 'Refine) -> m Index
 index tcEnv mod = removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv)
 
 -- | Remove infos that are only used internally.
@@ -46,17 +46,17 @@ removeInternalInfos (Index refs defs) = Index (HashMap.filterWithKey (\k _ -> no
     isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
     isInternal _ = False
 
-indexModule :: (MonadIO m, HasOpt env Opt, MonadReader env m, MonadState IndexEnv m) => Module (Malgo 'Refine) -> m ()
+indexModule :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => Module (Malgo 'Refine) -> m ()
 indexModule Module {..} = indexBindGroup _moduleDefinition
 
-indexBindGroup :: (MonadIO m, HasOpt env Opt, MonadReader env m, MonadState IndexEnv m) => BindGroup (Malgo 'Refine) -> m ()
+indexBindGroup :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do
   traverse_ indexImport _imports
   traverse_ indexDataDef _dataDefs
   traverse_ indexScSig _scSigs
   traverse_ (traverse_ indexScDef) _scDefs
 
-indexImport :: (MonadIO m, HasOpt env Opt, MonadReader env m, MonadState IndexEnv m) => Import (Malgo 'Refine) -> m ()
+indexImport :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => Import (Malgo 'Refine) -> m ()
 indexImport (_, moduleName, _) = do
   -- include the index file of the imported module
   minterface <- loadInterface moduleName

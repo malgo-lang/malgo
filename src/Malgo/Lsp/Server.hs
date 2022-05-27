@@ -1,11 +1,7 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Malgo.Lsp.Server where
 
 import Control.Lens (to, view, (^.))
-import Control.Lens.TH (makeFieldsNoPrefix)
 import Koriel.Id
-import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
@@ -21,25 +17,19 @@ import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
 import Text.Megaparsec (SourcePos (..), errorBundlePretty, mkPos, unPos)
 
-newtype LspEnv = LspEnv
-  { _opt :: Opt
-  }
-
-makeFieldsNoPrefix ''LspEnv
-
 textDocumentIdentifierToModuleName :: TextDocumentIdentifier -> ModuleName
 textDocumentIdentifierToModuleName (uriToFilePath . view uri -> Just filePath) =
   ModuleName $ toText $ takeFileName $ dropExtensions filePath
 textDocumentIdentifierToModuleName _ = error "textDocumentIdentifierToModuleName: invalid TextDocumentIdentifier"
 
-readAst :: MonadIO m => Opt -> FilePath -> m (Module (Malgo 'Parse))
+readAst :: MonadIO m => ToLLOpt -> FilePath -> m (Module (Malgo 'Parse))
 readAst _opt filePath = do
   src <- readFileText filePath
   case parseMalgo filePath src of
     Left err -> error $ toText $ "readAst: " <> errorBundlePretty err
     Right ast -> pure ast
 
-handlers :: Opt -> Handlers (LspM ())
+handlers :: ToLLOpt -> Handlers (LspM ())
 handlers opt =
   mconcat
     [ notificationHandler SInitialized $ \_notification -> do
@@ -47,7 +37,7 @@ handlers opt =
       requestHandler STextDocumentHover $ \req responder -> do
         let RequestMessage _ _ _ (HoverParams doc pos _workDone) = req
         _ast <- readAst opt (Unsafe.fromJust $ doc ^. uri . to uriToFilePath)
-        minterface <- liftIO $ runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) (LspEnv opt)
+        minterface <- liftIO $ runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) opt
         let index = case minterface of
               Nothing -> mempty
               Just interface -> interface ^. lspIndex
@@ -63,7 +53,7 @@ handlers opt =
       requestHandler STextDocumentDefinition $ \req responder -> do
         let RequestMessage _ _ _ (DefinitionParams doc pos _workDone _partialResult) = req
         _ast <- readAst opt (Unsafe.fromJust $ doc ^. uri . to uriToFilePath)
-        minterface <- liftIO $ runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) (LspEnv opt)
+        minterface <- liftIO $ runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) opt
         let index = case minterface of
               Nothing -> mempty
               Just interface -> interface ^. lspIndex
@@ -98,7 +88,7 @@ infoToLocation Info {..} =
       let filePath = sourceName _start
        in Location (filePathToUri filePath) (Range (sourcePosToPosition _start) (sourcePosToPosition _end))
 
-server :: Opt -> IO Int
+server :: ToLLOpt -> IO Int
 server opt =
   runServer $
     ServerDefinition

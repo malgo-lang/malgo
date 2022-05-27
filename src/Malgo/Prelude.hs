@@ -6,14 +6,13 @@
 module Malgo.Prelude
   ( module Koriel.Prelude,
     runMalgoM,
-    Opt (..),
+    ToLLOpt (..),
     MalgoEnv (..),
     HasMalgoEnv (..),
-    getOpt,
     Range (..),
     errorOn,
     warningOn,
-    defaultOpt,
+    defaultToLLOpt,
     Annotated (..),
     ViaAnn (..),
     ViaVal (..),
@@ -32,49 +31,51 @@ import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
 import qualified Koriel.Pretty as P
-import Language.LSP.Types.Lens (HasRange (range), HasStart(start), HasEnd(end))
+import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), unPos)
 import qualified Text.Megaparsec.Pos as Megaparsec
 
-data Opt = Opt
-  { srcName :: FilePath,
-    dstName :: FilePath,
-    dumpParsed :: Bool,
-    dumpRenamed :: Bool,
-    dumpTyped :: Bool,
-    dumpRefine :: Bool,
-    dumpDesugar :: Bool,
-    noOptimize :: Bool,
-    noLambdaLift :: Bool,
-    inlineSize :: Int,
-    debugMode :: Bool,
-    modulePaths :: [FilePath],
-    forceRebuild :: Bool
+data ToLLOpt = ToLLOpt
+  { _srcName :: FilePath,
+    _dstName :: FilePath,
+    _dumpParsed :: Bool,
+    _dumpRenamed :: Bool,
+    _dumpTyped :: Bool,
+    _dumpRefine :: Bool,
+    _dumpDesugar :: Bool,
+    _noOptimize :: Bool,
+    _noLambdaLift :: Bool,
+    _inlineSize :: Int,
+    _debugMode :: Bool,
+    _modulePaths :: [FilePath],
+    _forceRebuild :: Bool
   }
   deriving stock (Eq, Show)
 
-defaultOpt :: FilePath -> Opt
-defaultOpt src =
-  Opt
-    { srcName = src,
-      dstName = src -<.> "ll",
-      dumpParsed = False,
-      dumpRenamed = False,
-      dumpTyped = False,
-      dumpRefine = False,
-      dumpDesugar = False,
-      noOptimize = False,
-      noLambdaLift = False,
-      inlineSize = 10,
-      debugMode = False,
-      modulePaths = [],
-      forceRebuild = False
+makeFieldsNoPrefix ''ToLLOpt
+
+defaultToLLOpt :: FilePath -> ToLLOpt
+defaultToLLOpt src =
+  ToLLOpt
+    { _srcName = src,
+      _dstName = src -<.> "ll",
+      _dumpParsed = False,
+      _dumpRenamed = False,
+      _dumpTyped = False,
+      _dumpRefine = False,
+      _dumpDesugar = False,
+      _noOptimize = False,
+      _noLambdaLift = False,
+      _inlineSize = 10,
+      _debugMode = False,
+      _modulePaths = [],
+      _forceRebuild = False
     }
 
 data MalgoEnv = MalgoEnv
   { _uniqSupply :: UniqSupply,
-    _opt :: Opt
+    _toLLOpt :: ToLLOpt
   }
   deriving stock (Show, Eq)
 
@@ -86,21 +87,27 @@ class HasMalgoEnv env where
 instance HasMalgoEnv MalgoEnv where
   malgoEnv = identity
 
+instance HasSrcName MalgoEnv FilePath where
+  srcName = toLLOpt . srcName
+
+instance HasDstName MalgoEnv FilePath where
+  dstName = toLLOpt . dstName
+
+instance HasModulePaths MalgoEnv [FilePath] where
+  modulePaths = toLLOpt . modulePaths
+
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail, MonadThrow, MonadCatch)
 
-runMalgoM :: MalgoM a -> Opt -> IO a
+runMalgoM :: MalgoM a -> ToLLOpt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
-  let env = MalgoEnv {_opt = opt, _uniqSupply = uniqSupply}
+  let env = MalgoEnv {_toLLOpt = opt, _uniqSupply = uniqSupply}
   runReaderT (unMalgoM m) env
 
-getOpt :: (HasOpt env Opt, MonadReader env m) => m Opt
-getOpt = view opt
-
-viewLine :: (HasOpt env Opt, MonadReader env m, MonadIO m) => Int -> m Text
+viewLine :: (MonadReader env m, MonadIO m, HasSrcName env FilePath) => Int -> m Text
 viewLine linum = do
-  srcFileName <- srcName <$> getOpt
+  srcFileName <- view srcName
   s <- readFileBS srcFileName
   pure $ lines (decodeUtf8 s) !! (linum - 1)
 
@@ -136,7 +143,7 @@ makeFieldsNoPrefix ''Range
 instance HasRange Range Range where
   range = identity
 
-errorOn :: (HasCallStack, HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> Doc -> m a
+errorOn :: (HasCallStack, MonadReader env m, MonadIO m, HasSrcName env FilePath) => Range -> Doc -> m a
 errorOn range x = do
   l <- viewLine (unPos $ sourceLine $ range ^. start)
   let lineNum = unPos $ sourceLine $ range ^. start
@@ -151,7 +158,7 @@ errorOn range x = do
             nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
           ]
 
-warningOn :: (HasOpt env Opt, MonadReader env m, MonadIO m) => Range -> Doc -> m ()
+warningOn :: (MonadReader env m, MonadIO m, HasSrcName env FilePath) => Range -> Doc -> m ()
 warningOn range x = do
   l <- viewLine (unPos $ sourceLine $ range ^. start)
   let lineNum = unPos $ sourceLine $ range ^. start

@@ -23,8 +23,8 @@ refineMalgoEnv = lens _refineMalgoEnv (\r x -> r {_refineMalgoEnv = x})
 instance HasMalgoEnv RefineEnv where
   malgoEnv = refineMalgoEnv
 
-instance HasOpt RefineEnv Opt where
-  opt = refineMalgoEnv . opt
+instance HasSrcName RefineEnv FilePath where
+  srcName = refineMalgoEnv . srcName
 
 instance HasUniqSupply RefineEnv UniqSupply where
   uniqSupply = refineMalgoEnv . uniqSupply
