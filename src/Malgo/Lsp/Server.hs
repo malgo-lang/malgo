@@ -8,6 +8,7 @@ import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
 import Malgo.Interface
 import Malgo.Lsp.Index (Info (..), findInfosOfPos)
+import Malgo.Lsp.Pass (LspOpt)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (Range)
 import qualified Malgo.Prelude as Malgo
@@ -22,14 +23,14 @@ textDocumentIdentifierToModuleName (uriToFilePath . view uri -> Just filePath) =
   ModuleName $ toText $ takeFileName $ dropExtensions filePath
 textDocumentIdentifierToModuleName _ = error "textDocumentIdentifierToModuleName: invalid TextDocumentIdentifier"
 
-readAst :: MonadIO m => ToLLOpt -> FilePath -> m (Module (Malgo 'Parse))
+readAst :: MonadIO m => LspOpt -> FilePath -> m (Module (Malgo 'Parse))
 readAst _opt filePath = do
   src <- readFileText filePath
   case parseMalgo filePath src of
     Left err -> error $ toText $ "readAst: " <> errorBundlePretty err
     Right ast -> pure ast
 
-handlers :: ToLLOpt -> Handlers (LspM ())
+handlers :: LspOpt -> Handlers (LspM ())
 handlers opt =
   mconcat
     [ notificationHandler SInitialized $ \_notification -> do
@@ -88,7 +89,7 @@ infoToLocation Info {..} =
       let filePath = sourceName _start
        in Location (filePathToUri filePath) (Range (sourcePosToPosition _start) (sourcePosToPosition _end))
 
-server :: ToLLOpt -> IO Int
+server :: LspOpt -> IO Int
 server opt =
   runServer $
     ServerDefinition

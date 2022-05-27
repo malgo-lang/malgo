@@ -64,13 +64,11 @@ buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty
 storeInterface :: (MonadIO m, HasDstName env FilePath, MonadReader env m) => Interface -> m ()
 storeInterface interface = do
   dstName <- view dstName
-  traceM $ "storeInterface: " <> show dstName
   liftIO $ encodeFile (dstName -<.> "mlgi") interface
 
 loadInterface :: (MonadReader s m, HasModulePaths s [FilePath], MonadIO m) => ModuleName -> m (Maybe Interface)
 loadInterface (ModuleName modName) = do
   modPaths <- view modulePaths
-  traceShowM modPaths
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x

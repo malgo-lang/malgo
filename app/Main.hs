@@ -1,7 +1,9 @@
 module Main where
 
-import Control.Lens ((.~))
+import Control.Lens ((.~), (<>~))
+import Koriel.Lens (HasModulePaths (..))
 import qualified Malgo.Driver as Driver
+import Malgo.Lsp.Pass (LspOpt (..))
 import qualified Malgo.Lsp.Server as Lsp
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -18,7 +20,7 @@ main = do
   case command of
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt {_modulePaths = _modulePaths opt <> [".malgo-work" </> "build", basePath]}
+      opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
       src <- readFileText (_srcName opt)
       let parsedAst = case parseMalgo (_srcName opt) src of
             Right x -> x
@@ -26,7 +28,7 @@ main = do
       Driver.compileFromAST parsedAst opt
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt {_modulePaths = _modulePaths opt <> [".malgo-work" </> "build", basePath]}
+      opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
       void $ Lsp.server opt
 
 toLLOpt :: Parser ToLLOpt
@@ -52,12 +54,12 @@ toLLOpt =
   )
     <**> helper
 
-lspOpt :: Parser ToLLOpt
-lspOpt = toLLOpt
+lspOpt :: Parser LspOpt
+lspOpt = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
 
 data Command
   = ToLL ToLLOpt
-  | Lsp ToLLOpt
+  | Lsp LspOpt
 
 parseCommand :: IO Command
 parseCommand = do
@@ -73,11 +75,7 @@ parseCommand = do
       if null (_dstName opt)
         then pure $ ToLL $ opt {_srcName = srcName, _dstName = srcName & extension .~ ".ll"}
         else pure $ ToLL $ opt {_srcName = srcName}
-    Lsp opt -> do
-      srcName <- makeAbsolute $ _srcName opt
-      if null $ _dstName opt
-        then pure $ Lsp $ opt {_srcName = srcName, _dstName = srcName & extension .~ ".ll"}
-        else pure $ Lsp $ opt {_srcName = srcName}
+    Lsp opt -> pure $ Lsp opt
   where
     toLL =
       command "to-ll" $
