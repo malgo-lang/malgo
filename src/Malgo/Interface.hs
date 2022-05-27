@@ -69,6 +69,7 @@ storeInterface interface = do
 loadInterface :: (MonadReader s m, HasModulePaths s [FilePath], MonadIO m) => ModuleName -> m (Maybe Interface)
 loadInterface (ModuleName modName) = do
   modPaths <- view modulePaths
+  traceShowM modPaths
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x
@@ -77,7 +78,7 @@ loadInterface (ModuleName modName) = do
       pure Nothing
   where
     findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)
-    findAndReadFile [] modFile = pure $ Left (0, "module" <+> pPrint modFile <+> "is not found")
+    findAndReadFile [] modFile = pure $ Left (0, "interface" <+> pPrint modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
