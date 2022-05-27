@@ -37,7 +37,7 @@ makePrisms ''Def
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasOpt env Opt, HasUniqSupply env UniqSupply) =>
+  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasUniqSupply env UniqSupply, HasModulePaths env [FilePath], HasSrcName env FilePath) =>
   TcEnv ->
   [ModuleName] ->
   Module x ->
@@ -66,7 +66,7 @@ desugar tcEnv depList (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasOpt env Opt, HasUniqSupply env UniqSupply) =>
+  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasUniqSupply env UniqSupply, HasSrcName env FilePath, HasModulePaths env [FilePath]) =>
   BindGroup (Malgo 'Refine) ->
   m [Def]
 dsBindGroup bg = do
@@ -76,7 +76,7 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
-dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasOpt env Opt) => Import (Malgo 'Refine) -> m ()
+dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasModulePaths env [FilePath], HasSrcName env FilePath) => Import (Malgo 'Refine) -> m ()
 dsImport (pos, modName, _) = do
   interface <-
     loadInterface modName >>= \case
