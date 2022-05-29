@@ -19,6 +19,12 @@ import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv
 import Malgo.TypeRep
 
+newtype LspOpt = LspOpt
+  { _modulePaths :: [FilePath]
+  }
+
+makeFieldsNoPrefix ''LspOpt
+
 data IndexEnv = IndexEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
