@@ -99,7 +99,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     cases <- for valueConstructors \(conName, Forall _ conType) -> do
       paramTypes <- traverse dsType $ fst $ splitTyArr conType
       let coreCon = Core.Con (Data $ idToText conName) paramTypes
-      params <- traverse (newInternalId "$p") paramTypes
+      params <- traverse (newTemporalId "p") paramTypes
       let (pat', es') = group conName pat es
       Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
     unfoldedType <- unfoldType patType
@@ -108,7 +108,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   | all (has _RecordP) heads = do
     let patType = Malgo.typeOf $ List.head heads
     SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
-    params <- traverse (newInternalId "$p") ts
+    params <- traverse (newTemporalId "p") ts
     cases <- do
       (pat', es') <- groupRecord pat es
       one . Unpack con params <$> match (params <> restScrutinee) pat' es' err
@@ -117,7 +117,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   | all (has _TupleP) heads = do
     let patType = Malgo.typeOf $ List.head heads
     SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
-    params <- traverse (newInternalId "$p") ts
+    params <- traverse (newTemporalId "p") ts
     cases <- do
       let (pat', es') = groupTuple pat es
       one . Unpack con params <$> match (params <> restScrutinee) pat' es' err
@@ -134,7 +134,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     cases <- traverse (\c -> Switch c <$> match restScrutinee tails es err) cs
     -- パターンの網羅性を保証するため、
     -- `_ -> err` を追加する
-    hole <- newInternalId "$_" (Core.typeOf scrutinee)
+    hole <- newTemporalId "_" (Core.typeOf scrutinee)
     pure $ Match (Atom $ Core.Var scrutinee) $ NonEmpty.fromList (cases <> [Core.Bind hole err])
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
@@ -218,6 +218,6 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
       let kts = HashMap.toList ktsMap
       for kts \(key, ty) ->
         case List.lookup key ps of
-          Nothing -> VarP (Annotated ty pos) <$> newInternalId "$_p" ()
+          Nothing -> VarP (Annotated ty pos) <$> newTemporalId "_p" ()
           Just p -> pure p
     extendRecordP _ _ = error "typeOf x must be TyRecord"
