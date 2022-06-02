@@ -86,8 +86,8 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
 
   freshVar hint = do
     hint <- pure $ fromMaybe "t" hint
-    rep <- TypeVar <$> newInternalId ("r" <> hint) TyRep
-    kind <- TypeVar <$> newInternalId ("k" <> hint) (TYPE $ TyMeta rep)
+    rep <- TypeVar <$> newTemporalId ("r" <> hint) TyRep
+    kind <- TypeVar <$> newTemporalId ("k" <> hint) (TYPE $ TyMeta rep)
     TypeVar <$> newInternalId hint (TyMeta kind)
 
   bindVar x v t = do

@@ -17,6 +17,7 @@ module Koriel.Id
     newIdOnName,
     cloneId,
     newNoNameId,
+    newTemporalId,
   )
 where
 
@@ -29,6 +30,7 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty as P
+import Numeric (showHex)
 import Text.Show (showString, showsPrec)
 
 newtype ModuleName = ModuleName Text
@@ -46,6 +48,8 @@ data IdSort
     External ModuleName
   | -- | モジュール内に閉じた識別子
     Internal
+  | -- | コンパイラが生成する一時変数の識別子
+    Temporal
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary IdSort
@@ -55,6 +59,7 @@ instance Hashable IdSort
 instance Pretty IdSort where
   pPrint (External modName) = "External" <+> pPrint modName
   pPrint Internal = "Internal"
+  pPrint Temporal = "Temporal"
 
 data Id a = Id
   { _idName :: Text,
@@ -80,14 +85,15 @@ instance Eq a => Hashable (Id a) where
 instance Binary a => Binary (Id a)
 
 noName :: Text
-noName = "$noName"
+noName = "noName"
 
 pprIdName :: Id a -> Doc
 pprIdName Id {_idName} = pPrint _idName
 
 idToText :: Id a -> Text
 idToText Id {_idName, _idSort = External (ModuleName modName)} = modName <> "." <> _idName
-idToText Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> show _idUniq
+idToText Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> toText (showHex _idUniq "")
+idToText Id {_idName, _idUniq, _idSort = Temporal} = "$" <> _idName <> "_" <> toText (showHex _idUniq "")
 
 pPrintMeta :: (t -> Doc) -> t -> Doc
 
@@ -114,6 +120,9 @@ idSort = lens _idSort (\i x -> i {_idSort = x})
 
 newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> IdSort -> f (Id a)
 newNoNameId m s = Id noName <$> getUniq <*> pure m <*> pure s
+
+newTemporalId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> f (Id a)
+newTemporalId n m = Id n <$> getUniq <*> pure m <*> pure Temporal
 
 newInternalId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> f (Id a)
 newInternalId n m = Id n <$> getUniq <*> pure m <*> pure Internal
