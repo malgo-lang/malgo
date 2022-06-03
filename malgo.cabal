@@ -107,7 +107,8 @@ library
       StrictData
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS
   build-depends:
-      base
+      aeson
+    , base
     , binary
     , binary-instances
     , bytestring
@@ -192,7 +193,8 @@ executable malgo
       StrictData
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base
+      aeson
+    , base
     , binary
     , binary-instances
     , bytestring
@@ -279,7 +281,8 @@ test-suite malgo-test
       StrictData
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base
+      aeson
+    , base
     , binary
     , binary-instances
     , bytestring

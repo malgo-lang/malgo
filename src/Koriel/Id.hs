@@ -22,6 +22,7 @@ module Koriel.Id
 where
 
 import Control.Lens (Lens, Lens', lens)
+import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.Functor.Classes
@@ -38,6 +39,10 @@ newtype ModuleName = ModuleName Text
 
 instance Binary ModuleName
 
+instance ToJSON ModuleName
+
+instance FromJSON ModuleName
+
 instance Hashable ModuleName
 
 instance Pretty ModuleName where
@@ -53,6 +58,10 @@ data IdSort
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary IdSort
+
+instance ToJSON IdSort
+
+instance FromJSON IdSort
 
 instance Hashable IdSort
 
@@ -83,6 +92,14 @@ instance Eq a => Hashable (Id a) where
   hashWithSalt salt Id {_idUniq} = hashWithSalt salt _idUniq
 
 instance Binary a => Binary (Id a)
+
+instance ToJSON a => ToJSON (Id a)
+
+instance ToJSON a => ToJSONKey (Id a)
+
+instance FromJSON a => FromJSON (Id a)
+
+instance FromJSON a => FromJSONKey (Id a)
 
 noName :: Text
 noName = "noName"

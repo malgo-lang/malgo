@@ -1,6 +1,7 @@
 module Koriel.Core.Type where
 
 import Control.Lens (Prism', Traversal', prism, traverseOf, traversed, (^.))
+import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Koriel.Id
@@ -17,6 +18,10 @@ data Tag
 
 instance Binary Tag
 
+instance ToJSON Tag
+
+instance FromJSON Tag
+
 instance Pretty Tag where
   pPrint (Data name) = pPrint name
   pPrint Tuple = "#tuple"
@@ -25,6 +30,10 @@ data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary Con
+
+instance ToJSON Con
+
+instance FromJSON Con
 
 instance Pretty Con where
   pPrint (Con tag xs) = parens $ sep $ pPrint tag : map pPrint xs
@@ -54,6 +63,10 @@ _SumT = prism SumT \case
   t -> Left t
 
 instance Binary Type
+
+instance ToJSON Type
+
+instance FromJSON Type
 
 instance Pretty Type where
   pPrint (a :-> b) = sep [brackets (sep $ punctuate "," $ map pPrint a), "->", pPrint b]

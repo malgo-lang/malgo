@@ -1,21 +1,24 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Lsp.Index where
 
 import Control.Lens.TH
+import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Lens
 import Koriel.Pretty
+import Language.LSP.Types (DocumentSymbol (..))
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
 import Malgo.TypeRep (Scheme, Type)
 import System.FilePath (takeFileName)
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
 
--- | A 'Index' is a mapping from 'Info' to '[Range]' (references).
 data Index = Index
   { _references :: HashMap Info [Range],
     _definitionMap :: HashMap RnId Info
@@ -28,7 +31,9 @@ instance Semigroup Index where
 instance Monoid Index where
   mempty = Index mempty mempty
 
-instance Binary Index
+instance ToJSON Index
+
+instance FromJSON Index
 
 instance Pretty Index where
   pPrint = pPrint . HashMap.toList . _references
@@ -45,6 +50,14 @@ data Info = Info
   deriving stock (Eq, Ord, Show, Generic)
 
 instance Binary Info
+
+instance ToJSON Info
+
+instance ToJSONKey Info
+
+instance FromJSON Info
+
+instance FromJSONKey Info
 
 instance Hashable Info
 

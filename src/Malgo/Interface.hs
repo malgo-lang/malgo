@@ -5,10 +5,8 @@ module Malgo.Interface where
 
 import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
 import Control.Lens.TH
-import Data.Binary (Binary, decodeFileOrFail, encodeFile)
-import Data.Binary.Get (ByteOffset)
-import Data.Binary.Instances.UnorderedContainers ()
-import Data.Either.Extra (mapLeft)
+import Data.Aeson
+import Data.Either.Extra (maybeToEither)
 import Data.Graph
 import Data.String.Conversions (convertString)
 import qualified Koriel.Core.Type as C
@@ -38,7 +36,9 @@ data Interface = Interface
   }
   deriving stock (Show, Generic)
 
-instance Binary Interface
+instance ToJSON Interface
+
+instance FromJSON Interface
 
 makeFieldsNoPrefix ''Interface
 
@@ -72,16 +72,16 @@ loadInterface (ModuleName modName) = do
   message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
   case message of
     Right x -> pure $ Just x
-    Left (_, err) -> do
+    Left err -> do
       hPrint stderr err
       pure Nothing
   where
-    findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)
-    findAndReadFile [] modFile = pure $ Left (0, "interface" <+> pPrint modFile <+> "is not found")
+    -- findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)
+    findAndReadFile [] modFile = pure $ Left ("interface" <+> pPrint modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
-        then liftIO $ mapLeft (second Koriel.Pretty.text) <$> decodeFileOrFail (modPath </> modFile)
+        then liftIO $ maybeToEither "decode error" <$> decodeFileStrict (modPath </> modFile)
         else findAndReadFile rest modFile
 
 dependencieList :: (HasModulePaths s [FilePath], MonadIO m, MonadReader s m) => ModuleName -> [ModuleName] -> m [ModuleName]
