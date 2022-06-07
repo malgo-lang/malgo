@@ -1,0 +1,16 @@
+mo Fib
+  im Builtin rt;
+  im Prelude rt;
+
+  de fib fu num ->
+    leInt32 num 1 |>
+      fu True -> 1
+      or False -> addInt32 ka fib ka subInt32 num 1 ko ko ka fib ka subInt32 num 2 ko ko
+      on
+  on ne;
+
+  de main fu
+    putStrLn ka toStringInt32 ka fib 5 ko ko
+  on ne;
+le
+-- Expected: 8
