@@ -384,8 +384,8 @@ pSeq = do
   end <- getSourcePos
   pure $ Seq (Range start end) stmts
 
-pSingleExp' :: Parser (Exp (Malgo 'Parse))
-pSingleExp' =
+pSingleExp :: Parser (Exp (Malgo 'Parse))
+pSingleExp =
   try pUnboxedExp
     <|> try pBoxedExp
     <|> pVariable
@@ -414,9 +414,6 @@ pSingleExp' =
       e <- between (symbol "(") (symbol ")") pExp
       end <- getSourcePos
       pure $ Parens (Range start end) e
-
-pSingleExp :: Parser (Exp (Malgo 'Parse))
-pSingleExp = pSingleExp'
 
 pApply :: Parser (Exp (Malgo 'Parse))
 pApply = do
