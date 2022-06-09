@@ -38,10 +38,7 @@ pModule = do
 
 -- module name
 pModuleName :: Parser Text
-pModuleName = lexeme singleModuleName
-
-singleModuleName :: Parser Text
-singleModuleName = toText <$> some identLetter
+pModuleName = lexeme $ toText <$> some identLetter
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
@@ -190,7 +187,7 @@ pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
   label "variable" do
     start <- getSourcePos
-    name <- pWithPrefix singleModuleName (lowerIdent <|> upperIdent)
+    name <- pWithPrefix pModuleName (lowerIdent <|> upperIdent)
     end <- getSourcePos
     pure $ Var (Range start end) name
 
