@@ -45,7 +45,14 @@ singleModuleName = toText <$> some identLetter
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
-pDecl = pDataDef <|> pTypeSynonym <|> pInfix <|> pForeign <|> pImport <|> try pScSig <|> pScDef
+pDecl =
+  pDataDef
+    <|> pTypeSynonym
+    <|> pInfix
+    <|> pForeign
+    <|> pImport
+    <|> try pScSig -- try before 'pScDef'
+    <|> pScDef
 
 pDataDef :: Parser (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" do
@@ -104,8 +111,8 @@ pImport :: Parser (Decl (Malgo 'Parse))
 pImport = label "import" do
   void $ pKeyword "module"
   importList <-
-    try (between (symbol "{") (symbol "}") (symbol ".." >> pure All))
-      <|> between (symbol "{") (symbol "}") (Selected <$> (lowerIdent <|> upperIdent <|> between (symbol "(") (symbol ")") operator) `sepBy` symbol ",")
+    try (between (symbol "{") (symbol "}") importAll)
+      <|> between (symbol "{") (symbol "}") importSelected
       <|> As . ModuleName <$> pModuleName
   void $ pOperator "="
   void $ pKeyword "import"
@@ -113,6 +120,9 @@ pImport = label "import" do
   modName <- ModuleName <$> pModuleName
   end <- getSourcePos
   pure $ Import (Range start end) modName importList
+  where
+    importAll = symbol ".." >> pure All
+    importSelected = Selected <$> (lowerIdent <|> upperIdent <|> between (symbol "(") (symbol ")") operator) `sepBy` symbol ","
 
 pScSig :: Parser (Decl (Malgo 'Parse))
 pScSig =
@@ -136,18 +146,17 @@ pScDef =
 
 pExp :: Parser (Exp (Malgo 'Parse))
 pExp = do
-  -- The code below is very slow.
-  -- try pAnn <|> pOpApp
   start <- getSourcePos
-  e <- pOpApp
-  try (do _ <- pOperator ":"; t <- pType; end <- getSourcePos; pure $ Ann (Range start end) e t) <|> pure e
-
--- pAnn :: Parser (Exp (Malgo 'Parse))
--- pAnn = do
---   s <- getSourcePos
---   e <- pOpApp
---   void $ pOperator ":"
---   Ann s e <$> pType
+  expr <- pOpApp
+  -- try type annotation for expression before just simple expression
+  try (pAnnotation start expr)
+    <|> pure expr
+  where
+    pAnnotation start expr = do
+      _ <- pOperator ":"
+      ty <- pType
+      end <- getSourcePos
+      pure $ Ann (Range start end) expr ty
 
 pBoxed :: Parser (Literal Boxed)
 pBoxed =
@@ -155,9 +164,9 @@ pBoxed =
     try (Float <$> lexeme (L.float <* string' "F"))
       <|> try (Double <$> lexeme L.float)
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L"))
-      <|> try (Int32 <$> lexeme L.decimal)
-      <|> try (lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral))
-      <|> try (lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"'))))
+      <|> Int32 <$> lexeme L.decimal
+      <|> lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral)
+      <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"')))
 
 pUnboxed :: Parser (Literal Unboxed)
 pUnboxed =
@@ -165,16 +174,17 @@ pUnboxed =
     try (Double <$> lexeme (L.float <* char '#'))
       <|> try (Float <$> lexeme (L.float <* string' "F#"))
       <|> try (Int32 <$> lexeme (L.decimal <* char '#'))
-      <|> try (Int64 <$> lexeme (L.decimal <* string' "L#"))
-      <|> try (lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#')))
-      <|> try (lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')))
+      <|> Int64 <$> lexeme (L.decimal <* string' "L#")
+      <|> lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'))
+      <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
 
 pWithPrefix :: Parser Text -> Parser x -> Parser (WithPrefix x)
 pWithPrefix prefix body =
-  WithPrefix
-    <$> ( try (Annotated <$> (Just <$> prefix) <* char '.' <*> body)
-            <|> Annotated Nothing <$> body
-        )
+  fmap WithPrefix $
+    -- try full path identifier like `Foo.bar`
+    -- before simple identifier like `bar`
+    try (Annotated <$> (Just <$> prefix) <* char '.' <*> body)
+      <|> Annotated Nothing <$> body
 
 pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
@@ -201,6 +211,7 @@ pClauses = do
   _ <- optional (pOperator "|")
   pClause `sepBy1` pOperator "|"
 
+-- a clause is 'pat -> exp' or 'exp'
 pClause :: Parser (Clause (Malgo 'Parse))
 pClause = do
   start <- getSourcePos
@@ -217,7 +228,7 @@ pStmts :: Parser (NonEmpty (Stmt (Malgo 'Parse)))
 pStmts = NonEmpty.fromList <$> pStmt `sepBy1` pOperator ";"
 
 pStmt :: Parser (Stmt (Malgo 'Parse))
-pStmt = try pLet <|> try pWith <|> try pWith' <|> pNoBind
+pStmt = try pLet <|> pWith <|> pNoBind
 
 pLet :: Parser (Stmt (Malgo 'Parse))
 pLet = do
@@ -229,21 +240,20 @@ pLet = do
   Let (Range start end) v <$> pExp
 
 pWith :: Parser (Stmt (Malgo 'Parse))
-pWith = do
+pWith = label "with" do
   void $ pKeyword "with"
   start <- getSourcePos
-  v <- lowerIdent
-  end <- getSourcePos
-  void $ pOperator "="
-  With (Range start end) (Just v) <$> pExp
-
-pWith' :: Parser (Stmt (Malgo 'Parse))
-pWith' = do
-  void $ pKeyword "with"
-  start <- getSourcePos
-  e <- pExp
-  end <- getSourcePos
-  pure $ With (Range start end) Nothing e
+  asum
+    [ try do
+        var <- lowerIdent
+        void $ pOperator "="
+        end <- getSourcePos
+        With (Range start end) (Just var) <$> pExp,
+      do
+        e <- pExp
+        end <- getSourcePos
+        pure $ With (Range start end) Nothing e
+    ]
 
 pNoBind :: Parser (Stmt (Malgo 'Parse))
 pNoBind = do
