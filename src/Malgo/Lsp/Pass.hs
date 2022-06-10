@@ -4,11 +4,11 @@
 
 module Malgo.Lsp.Pass where
 
-import Control.Lens (At (at), modifying, use, view, (^.))
+import Control.Lens (At (at), modifying, use, view, (.~), (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Text as Text
-import Koriel.Id (Id (..), idName, idToText)
+import Koriel.Id (Id (..), IdSort (Temporal), idName)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
 import Language.LSP.Types (DocumentSymbol (..), SymbolKind (..))
@@ -72,7 +72,8 @@ indexImport (_, moduleName, _) = do
     Nothing ->
       error $ "Could not find interface file for module " <> show moduleName
     Just interface -> do
-      let index = interface ^. lspIndex
+      -- Merge imported module's interface without document symbol infomations
+      let index = interface ^. lspIndex & symbolInfo .~ mempty
       modifying buildingIndex (`mappend` index)
 
 indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
@@ -179,6 +180,7 @@ indexExp (Parens _ e) =
   indexExp e
 
 indexStmt :: (MonadState IndexEnv m) => Stmt (Malgo 'Refine) -> m ()
+indexStmt (Let _ (Id _ _ _ Temporal) expr) = indexExp expr
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
   let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
@@ -195,6 +197,7 @@ indexClause (Clause _ ps e) = do
   indexExp e
 
 indexPat :: (MonadState IndexEnv m) => Pat (Malgo 'Refine) -> m ()
+indexPat (VarP _ (Id _ _ _ Temporal)) = pass
 indexPat (VarP (Annotated ty range) v) = do
   -- index the information of this definition
   let info = Info {_name = v ^. idName, _typeSignature = Forall [] ty, _definitions = [range]}
@@ -251,7 +254,7 @@ addSymbolInfo ident symbol =
 symbol :: SymbolKind -> Id a -> Range -> DocumentSymbol
 symbol kind name range =
   DocumentSymbol
-    { _name = idToText name,
+    { _name = name ^. idName,
       _detail = Nothing,
       _kind = kind,
       _tags = Nothing,

@@ -31,6 +31,7 @@ module Koriel.Lens
     HasNoOptimize (..),
     HasDumpDesugar (..),
     HasDumpRefine (..),
+    HasSymbolInfo (..),
   )
 where
 
@@ -126,3 +127,6 @@ class HasForceRebuild s a | s -> a where
 
 class HasToLLOpt s a | s -> a where
   toLLOpt :: Lens' s a
+
+class HasSymbolInfo s a | s -> a where
+  symbolInfo :: Lens' s a
