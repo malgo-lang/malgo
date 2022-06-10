@@ -1,69 +1,34 @@
 #!/usr/bin/env bash
 
-set -eu
+if [ -z "$XDG_DATA_HOME" ]; then
+  LIB_PATH=$HOME/.local/share/malgo/base
+else
+  LIB_PATH=$XDG_DATA_HOME/malgo/base
+fi
 
-TESTDIR=/tmp/malgo_test
-mkdir -p $TESTDIR
-mkdir -p $TESTDIR/libs
+src_file=$(basename -- "$1")
+malgoOptions=${@:2}
 
-BUILD=stack
+mkdir -p .malgo-work/build
 
-eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
-eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"
-cp ./runtime/malgo/runtime.c $TESTDIR/libs/runtime.c
+bench "malgo to-ll $LIB_PATH/Builtin.mlg -o .malgo-work/build/Builtin.ll"
 
-echo '=== no opt no lambdalift ==='
-for file in `ls ./bench | grep '\.mlg$'`; do
-  LLFILE=$TESTDIR/${file/.mlg/.ll}
-  OUTFILE=$TESTDIR/${file/.mlg/.out-nono}
+bench "malgo to-ll $LIB_PATH/Prelude.mlg -o .malgo-work/build/Prelude.ll"
 
-  echo $file
+bench "malgo to-ll $1 -o .malgo-work/build/${src_file%.mlg}.ll $malgoOptions"
 
-  eval "$BUILD exec malgo -- to-ll --force --no-opt --no-lambdalift -M $TESTDIR/libs ./bench/$file -o $LLFILE"
+echo "-O2"
+bench "clang -O2 -lm $(pkg-config --cflags --libs bdw-gc) .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll $LIB_PATH/runtime.c .malgo-work/build/${src_file%.mlg}.ll -o ${src_file%.mlg}"
+bench "./${src_file%.mlg}"
 
-  clang -O3 -flto -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
+echo "-O2 -flto"
+bench "clang -O2 -flto -lm $(pkg-config --cflags --libs bdw-gc) .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll $LIB_PATH/runtime.c .malgo-work/build/${src_file%.mlg}.ll -o ${src_file%.mlg}"
+bench "./${src_file%.mlg}"
 
-  hyperfine --warmup 3 $OUTFILE
-done
+echo "-O3"
+bench "clang -O3 -lm $(pkg-config --cflags --libs bdw-gc) .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll $LIB_PATH/runtime.c .malgo-work/build/${src_file%.mlg}.ll -o ${src_file%.mlg}"
+bench "./${src_file%.mlg}"
 
-echo '=== no opt ==='
-for file in `ls ./bench | grep '\.mlg$'`; do
-  LLFILE=$TESTDIR/${file/.mlg/.ll}
-  OUTFILE=$TESTDIR/${file/.mlg/.out-noopt}
-
-  echo $file
-
-  eval "$BUILD exec malgo -- to-ll --force --no-opt -M $TESTDIR/libs ./bench/$file -o $LLFILE"
-
-  clang -O3 -flto -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
-
-  hyperfine --warmup 3 $OUTFILE
-done
-
-echo '=== no lambdalift ==='
-for file in `ls ./bench | grep '\.mlg$'`; do
-  LLFILE=$TESTDIR/${file/.mlg/.ll}
-  OUTFILE=$TESTDIR/${file/.mlg/.out-nolift}
-
-  echo $file
-
-  eval "$BUILD exec malgo -- to-ll --force --no-lambdalift -M $TESTDIR/libs ./bench/$file -o $LLFILE"
-
-  clang -O3 -flto -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
-
-  hyperfine --warmup 3 $OUTFILE
-done
-
-echo '=== opt ==='
-for file in `ls ./bench | grep '\.mlg$'`; do
-  LLFILE=$TESTDIR/${file/.mlg/.ll}
-  OUTFILE=$TESTDIR/${file/.mlg/.out}
-
-  echo $file
-
-  eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./bench/$file -o $LLFILE"
-
-  clang -O3 -flto -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
-
-  hyperfine --warmup 3 $OUTFILE
-done
+echo "-O3 -flto"
+bench "clang -O3 -flto -lm $(pkg-config --cflags --libs bdw-gc) .malgo-work/build/Builtin.ll .malgo-work/build/Prelude.ll $LIB_PATH/runtime.c .malgo-work/build/${src_file%.mlg}.ll -o ${src_file%.mlg}"
+bench "./${src_file%.mlg}"
