@@ -1,37 +1,44 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Lsp.Index where
 
 import Control.Lens.TH
+import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Lens
 import Koriel.Pretty
+import Language.LSP.Types (DocumentSymbol (..))
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
 import Malgo.TypeRep (Scheme, Type)
 import System.FilePath (takeFileName)
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
+import Text.Pretty.Simple (pShow)
 
--- | A 'Index' is a mapping from 'Info' to '[Range]' (references).
 data Index = Index
   { _references :: HashMap Info [Range],
-    _definitionMap :: HashMap RnId Info
+    _definitionMap :: HashMap RnId Info,
+    _symbolInfo :: HashMap RnId DocumentSymbol
   }
   deriving stock (Show, Generic)
 
 instance Semigroup Index where
-  (Index refs1 defs1) <> (Index refs2 defs2) = Index (refs1 <> refs2) (defs1 <> defs2)
+  (Index refs1 defs1 syms1) <> (Index refs2 defs2 syms2) = Index (refs1 <> refs2) (defs1 <> defs2) (syms1 <> syms2)
 
 instance Monoid Index where
-  mempty = Index mempty mempty
+  mempty = Index mempty mempty mempty
 
-instance Binary Index
+instance ToJSON Index
+
+instance FromJSON Index
 
 instance Pretty Index where
-  pPrint = pPrint . HashMap.toList . _references
+  pPrint = text . toString . pShow
 
 -- | An 'Info' records
 --  * Symbol name
@@ -46,6 +53,14 @@ data Info = Info
 
 instance Binary Info
 
+instance ToJSON Info
+
+instance ToJSONKey Info
+
+instance FromJSON Info
+
+instance FromJSONKey Info
+
 instance Hashable Info
 
 instance Pretty Info where
@@ -57,7 +72,7 @@ makeFieldsNoPrefix ''Index
 -- | 'findInfosOfPos' finds all 'Info's that are corresponding to the given 'SourcePos'.
 -- It ignores file names.
 findInfosOfPos :: SourcePos -> Index -> [Info]
-findInfosOfPos pos (Index refs _) =
+findInfosOfPos pos (Index refs _ _) =
   HashMap.keys $
     HashMap.filter (any (isInRange pos)) refs
 

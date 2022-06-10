@@ -4,6 +4,7 @@
 module Malgo.Syntax.Extension where
 
 import Control.Lens (view)
+import Data.Aeson
 import Data.Binary (Binary)
 import qualified Data.Kind as K
 import Data.Void
@@ -54,6 +55,10 @@ data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show, Generic)
 
 instance Binary Assoc
+
+instance ToJSON Assoc
+
+instance FromJSON Assoc
 
 instance Pretty Assoc where
   pPrint LeftA = "l"

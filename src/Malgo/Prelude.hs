@@ -16,6 +16,10 @@ module Malgo.Prelude
     Annotated (..),
     ViaAnn (..),
     ViaVal (..),
+    positionToSourcePos,
+    sourcePosToPosition,
+    malgoRangeToLspRange,
+    malgoRangeToLocation,
   )
 where
 
@@ -23,6 +27,7 @@ import Control.Lens (Lens', view, (^.))
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
+import Data.Aeson
 import Data.Binary (Binary)
 import Data.List ((!!))
 import Koriel.Lens
@@ -31,9 +36,11 @@ import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
 import qualified Koriel.Pretty as P
+import Language.LSP.Types (Position (..), filePathToUri)
+import qualified Language.LSP.Types as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
 import System.FilePath ((-<.>))
-import Text.Megaparsec.Pos (SourcePos (..), unPos)
+import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
 import qualified Text.Megaparsec.Pos as Megaparsec
 
 data ToLLOpt = ToLLOpt
@@ -130,6 +137,18 @@ instance Hashable SourcePos
 
 instance Hashable Range
 
+instance ToJSON Megaparsec.Pos
+
+instance ToJSON SourcePos
+
+instance ToJSON Range
+
+instance FromJSON Megaparsec.Pos
+
+instance FromJSON SourcePos
+
+instance FromJSON Range
+
 instance Pretty Range where
   pPrint (Range start end) =
     P.text (sourceName start) <> ":" <> pPrint (unPos (sourceLine start)) <> ":" <> pPrint (unPos (sourceColumn start))
@@ -210,3 +229,18 @@ instance Traversable (ViaVal v) where
 -- Bifunctor have two methods: `first` and `second`.
 -- How to map these methods to `ann` and `value`?
 -- This problem does not have a good answer.
+
+positionToSourcePos :: FilePath -> Position -> SourcePos
+positionToSourcePos srcName Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
+
+sourcePosToPosition :: SourcePos -> Position
+sourcePosToPosition SourcePos {sourceLine, sourceColumn} =
+  Position (fromIntegral $ unPos sourceLine - 1) (fromIntegral $ unPos sourceColumn - 1)
+
+malgoRangeToLspRange :: Range -> Lsp.Range
+malgoRangeToLspRange Range {_start, _end} =
+  Lsp.Range (sourcePosToPosition _start) (sourcePosToPosition _end)
+
+malgoRangeToLocation :: Range -> Lsp.Location
+malgoRangeToLocation Range {_start, _end} =
+  Lsp.Location (filePathToUri (sourceName _start)) $ Lsp.Range (sourcePosToPosition _start) (sourcePosToPosition _end)

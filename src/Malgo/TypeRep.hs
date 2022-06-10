@@ -5,6 +5,7 @@
 module Malgo.TypeRep where
 
 import Control.Lens (At (at), Lens', Plated (plate), Traversal', coerced, cosmos, makeLenses, makePrisms, mapped, over, toListOf, transform, traverseOf, view, (^.), _1, _2)
+import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
@@ -39,6 +40,10 @@ data Rep
 
 instance Binary Rep
 
+instance ToJSON Rep
+
+instance FromJSON Rep
+
 instance Hashable Rep
 
 instance Pretty Rep where pPrint rep = text $ show rep
@@ -48,6 +53,10 @@ data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving stock (Eq, Show, Ord, Generic, Data)
 
 instance Binary PrimT
+
+instance ToJSON PrimT
+
+instance FromJSON PrimT
 
 instance Hashable PrimT
 
@@ -105,6 +114,10 @@ data Type
 
 instance Binary Type
 
+instance ToJSON Type
+
+instance FromJSON Type
+
 instance Hashable Type
 
 instance Plated Type where
@@ -153,6 +166,10 @@ newtype TypeVar = TypeVar {_typeVar :: Id Kind}
   deriving stock (Data, Typeable)
 
 instance Binary TypeVar
+
+instance ToJSON TypeVar
+
+instance FromJSON TypeVar
 
 instance Pretty TypeVar where
   pPrint (TypeVar v) = "'" <> pPrint v
@@ -224,6 +241,10 @@ data Scheme ty = Forall [Id ty] ty
 
 instance Binary ty => Binary (Scheme ty)
 
+instance ToJSON ty => ToJSON (Scheme ty)
+
+instance FromJSON ty => FromJSON (Scheme ty)
+
 instance (Eq ty, Hashable ty) => Hashable (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
@@ -250,6 +271,10 @@ data TypeDef ty = TypeDef
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
 
 instance Binary ty => Binary (TypeDef ty)
+
+instance ToJSON ty => ToJSON (TypeDef ty)
+
+instance FromJSON ty => FromJSON (TypeDef ty)
 
 instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)

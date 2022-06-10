@@ -1,15 +1,17 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-deprecations #-}
 
 module Malgo.Lsp.Pass where
 
-import Control.Lens (At (at), modifying, use, view, (^.))
+import Control.Lens (At (at), modifying, use, view, (.~), (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Text as Text
-import Koriel.Id (idName)
+import Koriel.Id (Id (..), IdSort (Temporal), idName)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
+import Language.LSP.Types (DocumentSymbol (..), SymbolKind (..))
 import Malgo.Interface (HasLspIndex (lspIndex), loadInterface)
 import Malgo.Lsp.Index
 import Malgo.Prelude
@@ -47,7 +49,7 @@ index tcEnv mod = removeInternalInfos . view buildingIndex <$> execStateT (index
 -- | Remove infos that are only used internally.
 -- These infos' names start with '$'.
 removeInternalInfos :: Index -> Index
-removeInternalInfos (Index refs defs) = Index (HashMap.filterWithKey (\k _ -> not $ isInternal k) refs) defs
+removeInternalInfos (Index refs defs syms) = Index (HashMap.filterWithKey (\k _ -> not $ isInternal k) refs) defs syms
   where
     isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
     isInternal _ = False
@@ -70,7 +72,8 @@ indexImport (_, moduleName, _) = do
     Nothing ->
       error $ "Could not find interface file for module " <> show moduleName
     Just interface -> do
-      let index = interface ^. lspIndex
+      -- Merge imported module's interface without document symbol infomations
+      let index = interface ^. lspIndex & symbolInfo .~ mempty
       modifying buildingIndex (`mappend` index)
 
 indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
@@ -79,12 +82,14 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
   let info = Info {_name = typeName ^. idName, _typeSignature = Forall [] typeKind, _definitions = [range]}
   addReferences info [range]
   addDefinition typeName info
+  addSymbolInfo typeName (symbol SkEnum typeName range)
 
   for_ typeParameters \Annotated {_ann = range, _value = typeParameter} -> do
     typeParameterKind <- lookupTypeKind typeParameter
     let info = Info {_name = typeParameter ^. idName, _typeSignature = Forall [] typeParameterKind, _definitions = [range]}
     addReferences info [range]
     addDefinition typeParameter info
+    addSymbolInfo typeParameter (symbol SkTypeParameter typeParameter range)
 
   traverse_ indexConstructor constructors
   where
@@ -93,6 +98,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
       let info = Info {_name = constructor ^. idName, _typeSignature = constructorType, _definitions = [range]}
       addReferences info [range]
       addDefinition constructor info
+      addSymbolInfo constructor (symbol SkEnumMember constructor range)
       traverse_ indexType parameters
 
 indexType :: MonadState IndexEnv m => S.Type (Malgo 'Refine) -> m ()
@@ -137,9 +143,11 @@ indexScDef (view value -> range, ident, expr) = do
       let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
       addReferences info [range]
       addDefinition ident info
+      addSymbolInfo ident (symbol SkFunction ident range)
     Just info -> do
       addReferences info [range]
       addDefinition ident info
+      addSymbolInfo ident (symbol SkFunction ident range)
   -- traverse the expression
   indexExp expr
 
@@ -172,11 +180,13 @@ indexExp (Parens _ e) =
   indexExp e
 
 indexStmt :: (MonadState IndexEnv m) => Stmt (Malgo 'Refine) -> m ()
+indexStmt (Let _ (Id _ _ _ Temporal) expr) = indexExp expr
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
   let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
   addReferences info [range]
   addDefinition ident info
+  addSymbolInfo ident (symbol SkVariable ident range)
   indexExp expr
 indexStmt (NoBind _ expr) =
   indexExp expr
@@ -187,11 +197,13 @@ indexClause (Clause _ ps e) = do
   indexExp e
 
 indexPat :: (MonadState IndexEnv m) => Pat (Malgo 'Refine) -> m ()
+indexPat (VarP _ (Id _ _ _ Temporal)) = pass
 indexPat (VarP (Annotated ty range) v) = do
   -- index the information of this definition
   let info = Info {_name = v ^. idName, _typeSignature = Forall [] ty, _definitions = [range]}
   addReferences info [range]
   addDefinition v info
+  addSymbolInfo v (symbol SkVariable v range)
 indexPat (ConP (Annotated _ range) c ps) = do
   minfo <- lookupInfo c
   case minfo of
@@ -226,7 +238,7 @@ lookupInfo ident =
 
 addReferences :: (MonadState IndexEnv m) => Info -> [Range] -> m ()
 addReferences info refs =
-  modifying buildingIndex $ \(Index refs defs) -> Index (HashMap.alter f info refs) defs
+  modifying buildingIndex $ \(Index refs defs syms) -> Index (HashMap.alter f info refs) defs syms
   where
     f Nothing = Just refs
     f (Just oldRefs) = Just (ordNub $ oldRefs <> refs)
@@ -234,3 +246,20 @@ addReferences info refs =
 addDefinition :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> Info -> m ()
 addDefinition ident info =
   modifying (buildingIndex . definitionMap) $ HashMap.insert ident info
+
+addSymbolInfo :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> DocumentSymbol -> m ()
+addSymbolInfo ident symbol =
+  modifying (buildingIndex . symbolInfo) $ HashMap.insert ident symbol
+
+symbol :: SymbolKind -> Id a -> Range -> DocumentSymbol
+symbol kind name range =
+  DocumentSymbol
+    { _name = name ^. idName,
+      _detail = Nothing,
+      _kind = kind,
+      _tags = Nothing,
+      _deprecated = Nothing,
+      _range = malgoRangeToLspRange range,
+      _selectionRange = malgoRangeToLspRange range,
+      _children = Nothing
+    }

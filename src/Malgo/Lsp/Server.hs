@@ -1,7 +1,9 @@
 module Malgo.Lsp.Server where
 
 import Control.Lens (to, view, (^.))
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
+import Koriel.Lens (HasSymbolInfo (..))
 import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
@@ -11,12 +13,11 @@ import Malgo.Lsp.Index (Info (..), findInfosOfPos)
 import Malgo.Lsp.Pass (LspOpt)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (Range)
-import qualified Malgo.Prelude as Malgo
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import qualified Relude.Unsafe as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
-import Text.Megaparsec (SourcePos (..), errorBundlePretty, mkPos, unPos)
+import Text.Megaparsec (errorBundlePretty)
 
 textDocumentIdentifierToModuleName :: TextDocumentIdentifier -> ModuleName
 textDocumentIdentifierToModuleName (uriToFilePath . view uri -> Just filePath) =
@@ -35,6 +36,7 @@ handlers opt =
   mconcat
     [ notificationHandler SInitialized $ \_notification -> do
         liftIO $ hPutStrLn stderr "Initialized",
+      -- textDocument/hover
       requestHandler STextDocumentHover $ \req responder -> do
         let RequestMessage _ _ _ (HoverParams doc pos _workDone) = req
         _ast <- readAst opt (Unsafe.fromJust $ doc ^. uri . to uriToFilePath)
@@ -51,6 +53,7 @@ handlers opt =
                 ms = HoverContents $ toHoverDocument infos
                 range = Range pos pos
             responder (Right $ Just rsp),
+      -- textDocument/definition
       requestHandler STextDocumentDefinition $ \req responder -> do
         let RequestMessage _ _ _ (DefinitionParams doc pos _workDone _partialResult) = req
         _ast <- readAst opt (Unsafe.fromJust $ doc ^. uri . to uriToFilePath)
@@ -63,15 +66,16 @@ handlers opt =
           [] -> responder (Right $ InR $ InL $ Language.LSP.Types.List [])
           _ -> do
             let rsp = InR (InL $ Language.LSP.Types.List $ concatMap infoToLocation infos)
-            responder (Right rsp)
+            responder (Right rsp),
+      requestHandler STextDocumentDocumentSymbol $ \req responder -> do
+        let RequestMessage _ _ _ (DocumentSymbolParams _ _ doc) = req
+        minterface <- liftIO $ runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) opt
+        let index = case minterface of
+              Nothing -> mempty
+              Just interface -> interface ^. lspIndex
+        let documentSymbol = HashMap.elems $ index ^. symbolInfo
+        responder $ Right $ InL $ Language.LSP.Types.List documentSymbol
     ]
-
-positionToSourcePos :: FilePath -> Position -> SourcePos
-positionToSourcePos srcName Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
-
-sourcePosToPosition :: SourcePos -> Position
-sourcePosToPosition SourcePos {sourceLine, sourceColumn} =
-  Position (fromIntegral $ unPos sourceLine - 1) (fromIntegral $ unPos sourceColumn - 1)
 
 toHoverDocument :: [Info] -> MarkupContent
 toHoverDocument infos =
@@ -83,11 +87,7 @@ toHoverDocument infos =
 
 infoToLocation :: Info -> [Location]
 infoToLocation Info {..} =
-  map aux _definitions
-  where
-    aux Malgo.Range {_start, _end} =
-      let filePath = sourceName _start
-       in Location (filePathToUri filePath) (Range (sourcePosToPosition _start) (sourcePosToPosition _end))
+  map malgoRangeToLocation _definitions
 
 server :: LspOpt -> IO Int
 server opt =

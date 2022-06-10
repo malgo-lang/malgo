@@ -55,7 +55,7 @@ toLLOpt =
     <**> helper
 
 lspOpt :: Parser LspOpt
-lspOpt = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
+lspOpt = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")) <**> helper
 
 data Command
   = ToLL ToLLOpt
