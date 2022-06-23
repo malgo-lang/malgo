@@ -1,6 +1,8 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Malgo.Refine.RefineEnv where
 
-import Control.Lens (Lens', lens)
+import Control.Lens (makeFieldsNoPrefix, (^.))
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.Lens
@@ -11,29 +13,18 @@ import Malgo.TypeRep
 
 data RefineEnv = RefineEnv
   { _typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
-    _refineMalgoEnv :: MalgoEnv
+    _srcName :: FilePath,
+    _uniqSupply :: UniqSupply
   }
 
-typeDefEnv :: Lens' RefineEnv (HashMap (Id Kind) (TypeDef Type))
-typeDefEnv = lens _typeDefEnv (\r x -> r {_typeDefEnv = x})
-
-refineMalgoEnv :: Lens' RefineEnv MalgoEnv
-refineMalgoEnv = lens _refineMalgoEnv (\r x -> r {_refineMalgoEnv = x})
-
-instance HasMalgoEnv RefineEnv where
-  malgoEnv = refineMalgoEnv
-
-instance HasSrcName RefineEnv FilePath where
-  srcName = refineMalgoEnv . srcName
-
-instance HasUniqSupply RefineEnv UniqSupply where
-  uniqSupply = refineMalgoEnv . uniqSupply
+makeFieldsNoPrefix ''RefineEnv
 
 buildRefineEnv :: MalgoEnv -> TcEnv -> RefineEnv
 buildRefineEnv malgoEnv TcEnv {_typeDefMap} =
   RefineEnv
     { _typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap,
-      _refineMalgoEnv = malgoEnv
+      _srcName = malgoEnv ^. srcName,
+      _uniqSupply = malgoEnv ^. uniqSupply
     }
   where
     f :: TypeDef Type -> Maybe (Id Kind, TypeDef Type)

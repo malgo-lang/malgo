@@ -21,7 +21,7 @@ main = do
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
-      src <- readFileText (_srcName opt)
+      src <- decodeUtf8 <$> readFileBS (_srcName opt)
       let parsedAst = case parseMalgo (_srcName opt) src of
             Right x -> x
             Left err -> error $ toText $ errorBundlePretty err

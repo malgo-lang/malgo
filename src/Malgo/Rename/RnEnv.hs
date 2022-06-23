@@ -49,7 +49,9 @@ data RnEnv = RnEnv
     _resolvedFieldIdentMap :: HashMap PsId [Annotated Visibility RnId],
     _moduleName :: ModuleName,
     _uniqSupply :: UniqSupply,
-    _toLLOpt :: ToLLOpt
+    _srcName :: FilePath,
+    _debugMode :: Bool,
+    _modulePaths :: [FilePath]
   }
   deriving stock (Show, Eq)
 
@@ -57,15 +59,6 @@ instance Pretty RnEnv where
   pPrint = pPrint . toString . pShow
 
 makeFieldsNoPrefix ''RnEnv
-
-instance HasSrcName RnEnv FilePath where
-  srcName = toLLOpt . srcName
-
-instance HasDebugMode RnEnv Bool where
-  debugMode = toLLOpt . debugMode
-
-instance HasModulePaths RnEnv [FilePath] where
-  modulePaths = toLLOpt . modulePaths
 
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [Annotated Visibility RnId]) -> [(PsId, Annotated Visibility RnId)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)
@@ -101,7 +94,9 @@ genBuiltinRnEnv modName malgoEnv = do
         _resolvedFieldIdentMap = HashMap.empty,
         _moduleName = modName,
         _uniqSupply = malgoEnv ^. uniqSupply,
-        _toLLOpt = malgoEnv ^. toLLOpt
+        _srcName = malgoEnv ^. toLLOpt . srcName,
+        _debugMode = malgoEnv ^. toLLOpt . debugMode,
+        _modulePaths = malgoEnv ^. toLLOpt . modulePaths
       }
 
 -- | Resolving a new (local) name

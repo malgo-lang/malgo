@@ -75,7 +75,7 @@ instance (HasRange (XTyApp x) r, HasRange (XTyVar x) r, HasRange (XTyCon x) r, H
     TyRecord x kvs -> range f x <&> \x -> TyRecord x kvs
     TyBlock x t -> range f x <&> \x -> TyBlock x t
 
-getTyVars :: (Eq (XId x), Hashable (XId x)) => Type x -> HashSet (XId x)
+getTyVars :: Hashable (XId x) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
 getTyVars (TyVar _ v) = one v
 getTyVars TyCon {} = mempty
@@ -193,7 +193,7 @@ instance
     Seq x ss -> range f x <&> \x -> Seq x ss
     Parens x e -> range f x <&> \x -> Parens x e
 
-freevars :: (Eq (XId x), Hashable (XId x)) => Exp x -> HashSet (XId x)
+freevars :: Hashable (XId x) => Exp x -> HashSet (XId x)
 freevars (Var _ (WithPrefix v)) = one (v ^. value)
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
@@ -201,7 +201,7 @@ freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = foldMap freevarsClause cs
   where
-    freevarsClause :: (Eq (XId x), Hashable (XId x)) => Clause x -> HashSet (XId x)
+    freevarsClause :: Hashable (XId x) => Clause x -> HashSet (XId x)
     freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
     bindVars (VarP _ x) = one x
     bindVars (ConP _ _ ps) = mconcat $ map bindVars ps

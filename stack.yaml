@@ -4,8 +4,9 @@ extra-deps:
     - llvm-hs
     - llvm-hs-pure
   commit: 789e2b9e8b827d4c5e15b997f16e395fd2259c0f
-    # - relude-1.0.0.1@sha256:35bcdaf14018e79f11e712b0e2314c1aac79976f28f4adc179985457493557d5,11569
-resolver: lts-19.8
+- relude-1.1.0.0
+- hashable-1.4.0.2
+resolver: lts-19.12
 
 ghc-options:
   $everything: -haddock

@@ -32,6 +32,7 @@ module Koriel.Lens
     HasDumpDesugar (..),
     HasDumpRefine (..),
     HasSymbolInfo (..),
+    HasTypeDefENv (..),
   )
 where
 
@@ -130,3 +131,6 @@ class HasToLLOpt s a | s -> a where
 
 class HasSymbolInfo s a | s -> a where
   symbolInfo :: Lens' s a
+
+class HasTypeDefENv s a | s -> a where
+  typeDefEnv :: Lens' s a

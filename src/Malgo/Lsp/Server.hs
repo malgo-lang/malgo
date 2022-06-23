@@ -26,7 +26,7 @@ textDocumentIdentifierToModuleName _ = error "textDocumentIdentifierToModuleName
 
 readAst :: MonadIO m => LspOpt -> FilePath -> m (Module (Malgo 'Parse))
 readAst _opt filePath = do
-  src <- readFileText filePath
+  src <- decodeUtf8 <$> readFileBS filePath
   case parseMalgo filePath src of
     Left err -> error $ toText $ "readAst: " <> errorBundlePretty err
     Right ast -> pure ast

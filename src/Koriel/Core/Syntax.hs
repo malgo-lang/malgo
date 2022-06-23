@@ -18,7 +18,7 @@ import Koriel.Pretty
 
 class HasFreeVar f where
   -- | free variables
-  freevars :: (Eq a, Hashable a) => f a -> HashSet a
+  freevars :: Hashable a => f a -> HashSet a
 
 -- | unboxed values
 data Unboxed

@@ -87,7 +87,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
 -- | Read the source file and parse it, then compile.
 compile :: ToLLOpt -> IO ()
 compile opt = do
-  src <- readFileText (view srcName opt)
+  src <- decodeUtf8 <$> readFileBS (view srcName opt)
   parsedAst <- case parseMalgo (view srcName opt) src of
     Right x -> pure x
     Left err -> error $ toText $ errorBundlePretty err
