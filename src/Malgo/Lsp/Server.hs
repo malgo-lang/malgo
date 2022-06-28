@@ -73,7 +73,7 @@ handlers opt =
         let index = case minterface of
               Nothing -> mempty
               Just interface -> interface ^. lspIndex
-        let documentSymbol = HashMap.elems $ index ^. symbolInfo
+        let documentSymbol = HashMap.elems $ HashMap.filterWithKey (\k _ -> idIsExternal k) $ index ^. symbolInfo
         responder $ Right $ InL $ Language.LSP.Types.List documentSymbol
     ]
 
