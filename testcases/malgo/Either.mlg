@@ -1,0 +1,27 @@
+module Either = {
+  module {..} = import Builtin;
+  module {..} = import Prelude;
+
+  data Either a b = Left a | Right b;
+
+  id = {x -> x};
+
+  andThen = { _ (Left x) -> Left x
+            | f (Right x) -> f x };
+
+  main = {
+    Right 1 |> { Right x -> putStrLn (toStringInt32 x) | _ -> putStrLn "unreachable" };
+
+    let x = Right 1;
+
+    x |> andThen { x -> Right (addInt32 x 1) }
+      |> andThen { y -> y |> toStringInt32 |> putStrLn |> Right };
+
+    x |> andThen { _ -> Left "error" }
+      |> andThen { x -> Right (addInt32 x 1) }
+      |> { Left err -> putStrLn err
+         | Right x -> x |> toStringInt32 |> putStrLn } 
+  };
+}
+
+-- Expected: 12error
