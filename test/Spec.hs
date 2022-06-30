@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+
 import Malgo.Prelude
 import System.Directory (listDirectory)
 import System.FilePath (isExtensionOf, (</>))
@@ -15,13 +16,32 @@ buildCommand = "cabal"
 #endif
 
 main :: IO ()
-main = hspec do
-  _ <- runIO $ readProcess (proc "./scripts/pretest.sh" [buildCommand])
-  describe "Test malgo to-ll" do
+main = do
+  hspec do
+    _ <- runIO $ readProcess (proc "./scripts/pretest.sh" [buildCommand])
     testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo"
-    parallel $ for_ testcases \testcase -> do
-      it ("run test.sh " <> testcase) $ example do
-        (exitCode, out, err) <- readProcess (proc "./scripts/test.sh" ["./testcases/malgo" </> testcase, buildCommand])
-        case exitCode of
-          ExitSuccess -> pass
-          ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+    describe "Test malgo to-ll" do
+      parallel $ for_ testcases \testcase -> do
+        it ("test usual case " <> testcase) $ example do
+          (exitCode, out, err) <- readProcess (proc "./scripts/test/test.sh" ["./testcases/malgo" </> testcase, buildCommand])
+          case exitCode of
+            ExitSuccess -> pass
+            ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+
+        it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
+          (exitCode, out, err) <- readProcess (proc "./scripts/test/test-nono.sh" ["./testcases/malgo" </> testcase, buildCommand])
+          case exitCode of
+            ExitSuccess -> pass
+            ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+
+        it ("test noopt case " <> testcase <> " (no optimization)") $ example do
+          (exitCode, out, err) <- readProcess (proc "./scripts/test/test-noopt.sh" ["./testcases/malgo" </> testcase, buildCommand])
+          case exitCode of
+            ExitSuccess -> pass
+            ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+
+        it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
+          (exitCode, out, err) <- readProcess (proc "./scripts/test/test-nolift.sh" ["./testcases/malgo" </> testcase, buildCommand])
+          case exitCode of
+            ExitSuccess -> pass
+            ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)

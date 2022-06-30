@@ -149,3 +149,21 @@ llvm-hs>   Reason: tried: '/usr/local/lib/libc++abi.1.dylib' (no such file), '/u
 ```
 
 I don't know exactly what caused this. However, I was able to solve it with `ln -s /usr/local/lib/libc++abi.1.dylib /usr/local/Cellar/llvm-12/12/12_2/lib/llvm-12/lib/lib/libc++.1.0.dylib`.
+
+## How to Test
+
+```sh
+# full test (parallel)
+cabal test --test-show-details=streaming
+# full test (serial)
+cabal test --test-show-details=streaming --test-options='-j1'
+# usual case (all optimization enabled) only
+cabal test --test-show-details=streaming --test-options='--match "usual"'
+# no all optimization case only
+cabal test --test-show-details=streaming --test-options='--match "nono"'
+# no lambda-lift optimization case only
+cabal test --test-show-details=streaming --test-options='--match "nolift"'
+# no other optimization case only
+cabal test --test-show-details=streaming --test-options='--match "noopt"'
+
+cabal exec malgo 
