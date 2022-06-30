@@ -10,12 +10,12 @@ module Either = {
             | f (Right x) -> f x };
 
   main = {
-    Right 1 |> { Right x -> putStrLn (toStringInt32 x) | _ -> putStrLn "unreachable" };
+    Right 1 |> { Right x -> putStr (toStringInt32 x) | _ -> putStrLn "unreachable" };
 
     let x = Right 1;
 
     x |> andThen { x -> Right (addInt32 x 1) }
-      |> andThen { y -> y |> toStringInt32 |> putStrLn |> Right };
+      |> andThen { y -> y |> toStringInt32 |> putStr |> Right };
 
     x |> andThen { _ -> Left "error" }
       |> andThen { x -> Right (addInt32 x 1) }
