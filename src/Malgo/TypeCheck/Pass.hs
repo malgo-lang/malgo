@@ -185,23 +185,20 @@ tcDataDefs ::
   [DataDef (Malgo 'Rename)] ->
   m [DataDef (Malgo 'TypeCheck)]
 tcDataDefs ds = do
-  bindedTypeVars <- HashSet.unions . map (freevars . view typeConstructor) . HashMap.elems <$> use typeDefMap
   for ds \(pos, name, params, valueCons) -> do
+    -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
     name' <- lookupType pos name
-    params' <- traverse (\p -> TyMeta <$> freshVar (Just $ p ^. value . idName)) params
-    solve [Annotated pos $ buildTyArr (map kindOf params') (TYPE $ Rep BoxedRep) :~ kindOf name']
-    zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef p' [] [])) params params'
+    params' <- traverse (\p -> newInternalId (idToText $ p ^. value) (TYPE $ Rep BoxedRep)) params
+    zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef (TyVar p') [] [])) params params'
     (_, valueConsNames, valueConsTypes) <-
       unzip3 <$> forOf (traversed . _3) valueCons \args -> do
         -- 値コンストラクタの型を構築
-        -- name' <- lookupType pos name
-        -- params' <- traverse (lookupType pos) params
         args' <- traverse transType args
-        pure $ buildTyArr args' (TyConApp name' params')
-    (as, valueConsTypes') <- generalizeMutRecs pos bindedTypeVars valueConsTypes
-    let valueCons' = zip valueConsNames $ map (Forall as) valueConsTypes'
+        pure $ buildTyArr args' (TyConApp name' $ map TyVar params')
+    let valueCons' = zip valueConsNames $ map (Forall params') valueConsTypes
     signatureMap <>= HashMap.fromList valueCons'
-    typeDefMap . at name %= (_Just . typeParameters .~ as) . (_Just . valueConstructors .~ valueCons')
+    -- 2. 環境に登録する
+    typeDefMap . at name %= (_Just . typeParameters .~ params') . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
 tcForeigns ::
