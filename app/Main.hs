@@ -78,14 +78,14 @@ parseCommand = do
     Lsp opt -> pure $ Lsp opt
   where
     toLL =
-      command "to-ll" $
-        info (ToLL <$> toLLOpt) $
-          fullDesc
-            <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
-            <> header "malgo to LLVM Textual IR Compiler"
+      command "to-ll"
+        $ info (ToLL <$> toLLOpt)
+        $ fullDesc
+          <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
+          <> header "malgo to LLVM Textual IR Compiler"
     lsp =
-      command "lsp" $
-        info (Lsp <$> lspOpt) $
-          fullDesc
-            <> progDesc "Language Server for Malgo"
-            <> header "Malgo Language Server"
+      command "lsp"
+        $ info (Lsp <$> lspOpt)
+        $ fullDesc
+          <> progDesc "Language Server for Malgo"
+          <> header "Malgo Language Server"
