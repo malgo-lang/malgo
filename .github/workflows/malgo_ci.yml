@@ -26,10 +26,10 @@ jobs:
       with:
         path: |
           ~/.cabal
-          dist-newstyle
+          v0.2/dist-newstyle
           ~/.stack
-          .stack-work
-        key: ${{ runner.os }}-build-${{ hashFiles('malgo/package.yaml', 'koriel/package.yaml', 'stack.yaml') }}
+          v0.2/.stack-work
+        key: ${{ runner.os }}-build-${{ hashFiles('v0.2/package.yaml', 'v0.2/stack.yaml') }}
     - uses: haskell/actions/setup@v1
       with:
         ghc-version: ${{ matrix.ghc }}
@@ -38,10 +38,12 @@ jobs:
         # cabal-version: '3.2.0.0'
     - name: GHC ${{matrix.ghc}} Build
       run: |
+        cd v0.2/
         stack build
     - name: Run tests
       run: |
         mkdir -p $HOME/.local/share/malgo/base
+        cd v0.2/
         ./scripts/install_malgo_internal.sh
         ./scripts/pretest.sh stack
         stack test
