@@ -311,7 +311,7 @@ impl<'a> Parser<'a> {
 
     fn expr_bp(&mut self, min_bp: u16) {
         let checkpoint = self.builder.checkpoint();
-        let ops = self.peek_leading_operator();
+        let ops = self.peek_expr_leading_operator();
 
         // save states for backtracking
         let events = self.builder.save();
@@ -366,7 +366,7 @@ impl<'a> Parser<'a> {
                 0
             };
 
-            let ops = self.peek_following_operator(skip_width);
+            let ops = self.peek_expr_following_operator(skip_width);
 
             // save states for backtracking
             let events = self.builder.save();
@@ -427,12 +427,12 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn peek_leading_operator(&self) -> Vec<Operator<LeadingOperator>> {
-        self.peek_operator(&self.language.leading_operators, 0)
+    fn peek_expr_leading_operator(&self) -> Vec<Operator<LeadingOperator>> {
+        self.peek_operator(&self.language.expression.leading_operators, 0)
     }
 
-    fn peek_following_operator(&self, skip_width: usize) -> Vec<Operator<FollowingOperator>> {
-        self.peek_operator(&self.language.following_operators, skip_width)
+    fn peek_expr_following_operator(&self, skip_width: usize) -> Vec<Operator<FollowingOperator>> {
+        self.peek_operator(&self.language.expression.following_operators, skip_width)
     }
 
     fn peek_operator<F>(&self, operators: &[Operator<F>], position: usize) -> Vec<Operator<F>>

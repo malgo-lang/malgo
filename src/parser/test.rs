@@ -71,3 +71,49 @@ fn test_if_then() {
         "(ROOT (OP if (PRIM x) then (PRIM y)))",
     );
 }
+
+#[test]
+fn test_plus() {
+    success_complete(language(), "1 + 2", "(ROOT (OP (PRIM 1) + (PRIM 2)))");
+}
+
+#[test]
+fn test_plus_mul() {
+    success_complete(
+        language(),
+        "1 + 2 * 3",
+        "(ROOT (OP (PRIM 1) + (OP (PRIM 2) * (PRIM 3))))",
+    );
+}
+
+#[test]
+fn test_mul_plus() {
+    success_complete(
+        language(),
+        "1 * 2 + 3",
+        "(ROOT (OP (OP (PRIM 1) * (PRIM 2)) + (PRIM 3)))",
+    );
+}
+
+#[test]
+fn test_equal() {
+    success_complete(
+        language(),
+        "x = y = z",
+        "(ROOT (OP (PRIM x) = (OP (PRIM y) = (PRIM z))))",
+    );
+}
+
+#[test]
+fn test_fn_call() {
+    success_complete(language(), "f(x)", "(ROOT (OP (PRIM f) ( (PRIM x) )))");
+}
+
+#[test]
+fn test_fn_call_plus() {
+    success_complete(
+        language(),
+        "f(x) + 1",
+        "(ROOT (OP (OP (PRIM f) ( (PRIM x) )) + (PRIM 1)))",
+    );
+}

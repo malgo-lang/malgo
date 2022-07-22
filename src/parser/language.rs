@@ -40,6 +40,18 @@ pub enum Part {
     Placeholder { kind: PlaceholderKind, name: String },
 }
 
+impl Part {
+    fn tag(name: &str) -> Part {
+        Part::Tag { name: name.into() }
+    }
+    fn placeholder(kind: PlaceholderKind, name: &str) -> Part {
+        Part::Placeholder {
+            kind,
+            name: name.into(),
+        }
+    }
+}
+
 impl fmt::Display for Part {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -101,79 +113,75 @@ impl Operator<FollowingOperator> {
         }
     }
 }
+
 #[derive(Debug, Clone, Default)]
 pub struct Language {
+    pub expression: ExprOperators,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct ExprOperators {
     pub leading_operators: Vec<Operator<LeadingOperator>>,
     pub following_operators: Vec<Operator<FollowingOperator>>,
 }
 
 pub fn language() -> Language {
+    use PlaceholderKind::*;
     Language {
-        leading_operators: vec![
-            Operator::prefix(60, vec![Part::Tag { name: "-".into() }]),
-            Operator::prefix(
-                40,
-                vec![
-                    Part::Tag { name: "if".into() },
-                    Part::Placeholder {
-                        kind: PlaceholderKind::Expr,
-                        name: "cond".into(),
-                    },
-                    Part::Tag {
-                        name: "then".into(),
-                    },
-                    Part::Placeholder {
-                        kind: PlaceholderKind::Expr,
-                        name: "then-body".into(),
-                    },
-                    Part::Tag {
-                        name: "else".into(),
-                    },
-                ],
-            ),
-            Operator::prefix(
-                40,
-                vec![
-                    Part::Tag { name: "if".into() },
-                    Part::Placeholder {
-                        kind: PlaceholderKind::Expr,
-                        name: "cond".into(),
-                    },
-                    Part::Tag {
-                        name: "then".into(),
-                    },
-                ],
-            ),
-            Operator::closed(vec![
-                Part::Tag { name: "(".into() },
-                Part::Placeholder {
-                    kind: PlaceholderKind::Expr,
-                    name: "expr".into(),
-                },
-                Part::Tag { name: ")".into() },
-            ]),
-            Operator::closed(vec![
-                Part::Tag { name: "{".into() },
-                Part::Placeholder {
-                    kind: PlaceholderKind::Ident,
-                    name: "param".into(),
-                },
-                Part::Tag { name: "->".into() },
-                Part::Placeholder {
-                    kind: PlaceholderKind::Expr,
-                    name: "body".into(),
-                },
-                Part::Tag { name: "}".into() },
-            ]),
-            Operator::closed(vec![
-                Part::Tag { name: "{".into() },
-                Part::Placeholder {
-                    kind: PlaceholderKind::Expr,
-                    name: "body".into(),
-                },
-                Part::Tag { name: "}".into() },
-            ]),
-        ],
-        following_operators: vec![],
+        expression: ExprOperators {
+            leading_operators: vec![
+                Operator::prefix(60, vec![Part::tag("-")]),
+                Operator::prefix(
+                    40,
+                    vec![
+                        Part::tag("if"),
+                        Part::placeholder(Expr, "cond"),
+                        Part::tag("then"),
+                        Part::placeholder(Expr, "then-body"),
+                        Part::tag("else"),
+                    ],
+                ),
+                Operator::prefix(
+                    40,
+                    vec![
+                        Part::tag("if"),
+                        Part::placeholder(Expr, "cond"),
+                        Part::tag("then"),
+                    ],
+                ),
+                Operator::closed(vec![
+                    Part::tag("("),
+                    Part::placeholder(Expr, "expr"),
+                    Part::tag(")"),
+                ]),
+                Operator::closed(vec![
+                    Part::tag("{"),
+                    Part::placeholder(Ident, "param"),
+                    Part::tag("->"),
+                    Part::placeholder(Expr, "body"),
+                    Part::tag("}"),
+                ]),
+                Operator::closed(vec![
+                    Part::tag("{"),
+                    Part::placeholder(Expr, "body"),
+                    Part::tag("}"),
+                ]),
+            ],
+            following_operators: vec![
+                Operator::infixl(50, vec![Part::tag("+")]),
+                Operator::infixl(50, vec![Part::tag("-")]),
+                Operator::infixl(60, vec![Part::tag("*")]),
+                Operator::infixl(60, vec![Part::tag("/")]),
+                Operator::infixr(30, vec![Part::tag("=")]),
+                Operator::postfix(
+                    100,
+                    vec![
+                        Part::tag("("),
+                        Part::placeholder(Expr, "arg"),
+                        Part::tag(")"),
+                    ],
+                ),
+            ],
+        },
     }
 }
