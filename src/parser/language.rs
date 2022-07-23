@@ -154,6 +154,14 @@ pub fn language() -> Language {
                     Part::placeholder(Expr, "expr"),
                     Part::tag(")"),
                 ]),
+                Operator::prefix(
+                    20,
+                    vec![
+                        Part::tag("let"),
+                        Part::placeholder(Ident, "var"),
+                        Part::tag("="),
+                    ],
+                ),
                 Operator::closed(vec![
                     Part::tag("{"),
                     Part::placeholder(Ident, "param"),
@@ -181,6 +189,8 @@ pub fn language() -> Language {
                         Part::tag(")"),
                     ],
                 ),
+                Operator::infixl(1, vec![Part::tag(";")]),
+                Operator::postfix(1, vec![Part::tag(";")]),
             ],
         },
     }

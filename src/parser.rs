@@ -1,7 +1,7 @@
 pub mod language;
 pub mod syntax_kind;
 #[cfg(test)]
-mod test;
+mod tests;
 mod tree_sink;
 
 use std::fmt;

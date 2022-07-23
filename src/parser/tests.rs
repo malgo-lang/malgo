@@ -11,7 +11,7 @@ fn success_complete(language: Language, input: &str, expected: &str) {
         "{}",
         parser.error_report().unwrap()
     );
-    assert!(parser.rest().is_empty());
+    assert!(parser.rest().is_empty(), "{}", parser.rest());
 
     let root: rowan::SyntaxNode<MalgoLang> = rowan::SyntaxNode::new_root(parser.builder.finish());
     assert_eq!(root.text_range().len(), input.len().try_into().unwrap());
@@ -115,5 +115,23 @@ fn test_fn_call_plus() {
         language(),
         "f(x) + 1",
         "(ROOT (OP (OP (PRIM f) ( (PRIM x) )) + (PRIM 1)))",
+    );
+}
+
+#[test]
+fn test_let() {
+    success_complete(
+        language(),
+        "let x = 1; x",
+        "(ROOT (OP (OP let x = (PRIM 1)) ; (PRIM x)))",
+    );
+}
+
+#[test]
+fn test_let2() {
+    success_complete(
+        language(),
+        "let x = 1; x;",
+        "(ROOT (OP (OP (OP let x = (PRIM 1)) ; (PRIM x)) ;))",
     );
 }
