@@ -1,7 +1,10 @@
+use std::collections::HashMap;
+
+use super::ast::*;
 use super::language::*;
 use super::*;
 
-fn success_complete(language: Language, input: &str, expected: &str) {
+fn success_complete(language: Language, input: &str, expected: &str, evaluated: i64) {
     let _ = tracing_subscriber::fmt::try_init();
 
     let mut parser = Parser::new(input, language);
@@ -23,16 +26,27 @@ fn success_complete(language: Language, input: &str, expected: &str) {
         input,
         root,
     );
+
+    let state = HashMap::new();
+    let res = Root::cast(root).unwrap().expr().unwrap().eval(&state);
+    if evaluated != 0xdeadbeaf {
+        assert_eq!(res, Some(evaluated));
+    }
 }
 
 #[test]
 fn test_int() {
-    success_complete(language(), "42", "(ROOT (PRIM 42))");
+    success_complete(language(), "42", "(Root (Primitive 42))", 42);
 }
 
 #[test]
 fn test_pre_minus() {
-    success_complete(language(), "-42", "(ROOT (OP - (PRIM 42)))");
+    success_complete(
+        language(),
+        "-42",
+        "(Root (UnaryMinus - (Primitive 42)))",
+        -42,
+    );
 }
 
 #[test]
@@ -40,18 +54,29 @@ fn test_parens() {
     success_complete(
         language(),
         "-(-42)",
-        "(ROOT (OP - (OP ( (OP - (PRIM 42)) ))))",
+        "(Root (UnaryMinus - (Parens ( (UnaryMinus - (Primitive 42)) ))))",
+        42,
     );
 }
 
 #[test]
 fn test_function() {
-    success_complete(language(), "{ x -> x }", "(ROOT (OP { x -> (PRIM x) }))");
+    success_complete(
+        language(),
+        "{ x -> x }",
+        "(Root (Fun { x -> (Primitive x) }))",
+        0xdeadbeaf,
+    );
 }
 
 #[test]
 fn test_function_noparam() {
-    success_complete(language(), "{ x }", "(ROOT (OP { (PRIM x) }))");
+    success_complete(
+        language(),
+        "{ x }",
+        "(Root (Block { (Primitive x) }))",
+        0xdeadbeaf,
+    );
 }
 
 #[test]
@@ -59,7 +84,8 @@ fn test_if_then_else() {
     success_complete(
         language(),
         "if x then y else z",
-        "(ROOT (OP if (PRIM x) then (PRIM y) else (PRIM z)))",
+        "(Root (IfThenElse if (Primitive x) then (Primitive y) else (Primitive z)))",
+        0xdeadbeaf,
     );
 }
 
@@ -68,13 +94,19 @@ fn test_if_then() {
     success_complete(
         language(),
         "if x then y",
-        "(ROOT (OP if (PRIM x) then (PRIM y)))",
+        "(Root (IfThen if (Primitive x) then (Primitive y)))",
+        0xdeadbeaf,
     );
 }
 
 #[test]
 fn test_plus() {
-    success_complete(language(), "1 + 2", "(ROOT (OP (PRIM 1) + (PRIM 2)))");
+    success_complete(
+        language(),
+        "1 + 2",
+        "(Root (Plus (Primitive 1) + (Primitive 2)))",
+        3,
+    );
 }
 
 #[test]
@@ -82,7 +114,8 @@ fn test_plus_mul() {
     success_complete(
         language(),
         "1 + 2 * 3",
-        "(ROOT (OP (PRIM 1) + (OP (PRIM 2) * (PRIM 3))))",
+        "(Root (Plus (Primitive 1) + (Asterisk (Primitive 2) * (Primitive 3))))",
+        7,
     );
 }
 
@@ -91,7 +124,8 @@ fn test_mul_plus() {
     success_complete(
         language(),
         "1 * 2 + 3",
-        "(ROOT (OP (OP (PRIM 1) * (PRIM 2)) + (PRIM 3)))",
+        "(Root (Plus (Asterisk (Primitive 1) * (Primitive 2)) + (Primitive 3)))",
+        5,
     );
 }
 
@@ -100,13 +134,19 @@ fn test_equal() {
     success_complete(
         language(),
         "x = y = z",
-        "(ROOT (OP (PRIM x) = (OP (PRIM y) = (PRIM z))))",
+        "(Root (Equal (Primitive x) = (Equal (Primitive y) = (Primitive z))))",
+        0xdeadbeaf,
     );
 }
 
 #[test]
 fn test_fn_call() {
-    success_complete(language(), "f(x)", "(ROOT (OP (PRIM f) ( (PRIM x) )))");
+    success_complete(
+        language(),
+        "f(x)",
+        "(Root (FunCall (Primitive f) ( (Primitive x) )))",
+        0xdeadbeaf,
+    );
 }
 
 #[test]
@@ -114,7 +154,8 @@ fn test_fn_call_plus() {
     success_complete(
         language(),
         "f(x) + 1",
-        "(ROOT (OP (OP (PRIM f) ( (PRIM x) )) + (PRIM 1)))",
+        "(Root (Plus (FunCall (Primitive f) ( (Primitive x) )) + (Primitive 1)))",
+        0xdeadbeaf,
     );
 }
 
@@ -122,16 +163,8 @@ fn test_fn_call_plus() {
 fn test_let() {
     success_complete(
         language(),
-        "let x = 1; x",
-        "(ROOT (OP (OP let x = (PRIM 1)) ; (PRIM x)))",
-    );
-}
-
-#[test]
-fn test_let2() {
-    success_complete(
-        language(),
-        "let x = 1; x;",
-        "(ROOT (OP (OP (OP let x = (PRIM 1)) ; (PRIM x)) ;))",
+        "let x = 1 in x",
+        "(Root (Let let x = (Primitive 1) in (Primitive x)))",
+        0xdeadbeaf,
     );
 }

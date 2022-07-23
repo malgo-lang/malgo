@@ -11,7 +11,21 @@ pub enum SyntaxKind {
     Ident,
     Int,
 
-    Operator,
+    UnaryMinus,
+    IfThenElse,
+    IfThen,
+    Parens,
+    Let,
+    Fun,
+    Block,
+
+    Plus,
+    Minus,
+    Asterisk,
+    Slash,
+    Equal,
+    FunCall,
+
     Primitive,
 
     Root,
@@ -36,18 +50,6 @@ impl From<SyntaxKind> for rowan::SyntaxKind {
 
 impl fmt::Display for SyntaxKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        use SyntaxKind::*;
-
-        match self {
-            Whitespace => write!(f, "WS"),
-            Eof => write!(f, "EOF"),
-            Error => write!(f, "ERROR"),
-            Symbol => write!(f, "SYM"),
-            Ident => write!(f, "IDENT"),
-            Int => write!(f, "INT"),
-            Operator => write!(f, "OP"),
-            Primitive => write!(f, "PRIM"),
-            Root => write!(f, "ROOT"),
-        }
+        write!(f, "{:?}", self)
     }
 }

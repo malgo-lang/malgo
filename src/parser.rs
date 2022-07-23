@@ -1,3 +1,4 @@
+mod ast;
 pub mod language;
 pub mod syntax_kind;
 #[cfg(test)]
@@ -38,8 +39,10 @@ impl<'a> Token<'a> {
     }
 }
 
+type SyntaxNode = rowan::SyntaxNode<MalgoLang>;
+
 #[derive(Debug)]
-pub struct PrintSyntaxNode<'a>(pub &'a rowan::SyntaxNode<MalgoLang>);
+pub struct PrintSyntaxNode<'a>(pub &'a SyntaxNode);
 
 impl fmt::Display for PrintSyntaxNode<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -323,7 +326,7 @@ impl<'a> Parser<'a> {
             self.position = position;
             self.errors = errors.clone();
 
-            self.builder.start_node(SyntaxKind::Operator);
+            self.builder.start_node(op.kind);
             self.parse_operator(op);
 
             if let LeadingOperator::Prefix { right_bp } = op.fix {
@@ -397,7 +400,7 @@ impl<'a> Parser<'a> {
                     }
                 }
 
-                self.builder.start_node_at(checkpoint, SyntaxKind::Operator);
+                self.builder.start_node_at(checkpoint, op.kind);
                 self.skip_ws();
                 self.parse_operator(op);
 
