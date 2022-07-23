@@ -4,7 +4,7 @@ use super::ast::*;
 use super::language::*;
 use super::*;
 
-fn success_complete(language: Language, input: &str, expected: &str, evaluated: i64) {
+fn success_complete(language: Language, input: &str, expected: &str, evaluated: Option<i64>) {
     let _ = tracing_subscriber::fmt::try_init();
 
     let mut parser = Parser::new(input, language);
@@ -29,14 +29,12 @@ fn success_complete(language: Language, input: &str, expected: &str, evaluated: 
 
     let state = HashMap::new();
     let res = Root::cast(root).unwrap().expr().unwrap().eval(&state);
-    if evaluated != 0xdeadbeaf {
-        assert_eq!(res, Some(evaluated));
-    }
+    assert_eq!(res, evaluated);
 }
 
 #[test]
 fn test_int() {
-    success_complete(language(), "42", "(Root (Primitive 42))", 42);
+    success_complete(language(), "42", "(Root (Primitive 42))", Some(42));
 }
 
 #[test]
@@ -45,7 +43,7 @@ fn test_pre_minus() {
         language(),
         "-42",
         "(Root (UnaryMinus - (Primitive 42)))",
-        -42,
+        Some(-42),
     );
 }
 
@@ -55,7 +53,7 @@ fn test_parens() {
         language(),
         "-(-42)",
         "(Root (UnaryMinus - (Parens ( (UnaryMinus - (Primitive 42)) ))))",
-        42,
+        Some(42),
     );
 }
 
@@ -65,7 +63,7 @@ fn test_function() {
         language(),
         "{ x -> x }",
         "(Root (Fun { x -> (Primitive x) }))",
-        0xdeadbeaf,
+        None,
     );
 }
 
@@ -75,7 +73,7 @@ fn test_function_noparam() {
         language(),
         "{ x }",
         "(Root (Block { (Primitive x) }))",
-        0xdeadbeaf,
+        None,
     );
 }
 
@@ -83,9 +81,9 @@ fn test_function_noparam() {
 fn test_if_then_else() {
     success_complete(
         language(),
-        "if x then y else z",
-        "(Root (IfThenElse if (Primitive x) then (Primitive y) else (Primitive z)))",
-        0xdeadbeaf,
+        "if 1 then 42 else 54",
+        "(Root (IfThenElse if (Primitive 1) then (Primitive 42) else (Primitive 54)))",
+        Some(42),
     );
 }
 
@@ -93,9 +91,19 @@ fn test_if_then_else() {
 fn test_if_then() {
     success_complete(
         language(),
-        "if x then y",
-        "(Root (IfThen if (Primitive x) then (Primitive y)))",
-        0xdeadbeaf,
+        "if 1 then 42",
+        "(Root (IfThen if (Primitive 1) then (Primitive 42)))",
+        Some(42),
+    );
+}
+
+#[test]
+fn test_if_then2() {
+    success_complete(
+        language(),
+        "if 0 then 42",
+        "(Root (IfThen if (Primitive 0) then (Primitive 42)))",
+        None,
     );
 }
 
@@ -105,7 +113,7 @@ fn test_plus() {
         language(),
         "1 + 2",
         "(Root (Plus (Primitive 1) + (Primitive 2)))",
-        3,
+        Some(3),
     );
 }
 
@@ -115,7 +123,7 @@ fn test_plus_mul() {
         language(),
         "1 + 2 * 3",
         "(Root (Plus (Primitive 1) + (Asterisk (Primitive 2) * (Primitive 3))))",
-        7,
+        Some(7),
     );
 }
 
@@ -125,7 +133,7 @@ fn test_mul_plus() {
         language(),
         "1 * 2 + 3",
         "(Root (Plus (Asterisk (Primitive 1) * (Primitive 2)) + (Primitive 3)))",
-        5,
+        Some(5),
     );
 }
 
@@ -133,9 +141,9 @@ fn test_mul_plus() {
 fn test_equal() {
     success_complete(
         language(),
-        "x = y = z",
-        "(Root (Equal (Primitive x) = (Equal (Primitive y) = (Primitive z))))",
-        0xdeadbeaf,
+        "1 = 1",
+        "(Root (Equal (Primitive 1) = (Primitive 1)))",
+        Some(1),
     );
 }
 
@@ -145,7 +153,7 @@ fn test_fn_call() {
         language(),
         "f(x)",
         "(Root (FunCall (Primitive f) ( (Primitive x) )))",
-        0xdeadbeaf,
+        None,
     );
 }
 
@@ -155,7 +163,7 @@ fn test_fn_call_plus() {
         language(),
         "f(x) + 1",
         "(Root (Plus (FunCall (Primitive f) ( (Primitive x) )) + (Primitive 1)))",
-        0xdeadbeaf,
+        None,
     );
 }
 
@@ -165,6 +173,6 @@ fn test_let() {
         language(),
         "let x = 1 in x",
         "(Root (Let let x = (Primitive 1) in (Primitive x)))",
-        0xdeadbeaf,
+        None,
     );
 }

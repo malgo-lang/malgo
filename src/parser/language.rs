@@ -3,7 +3,8 @@ use std::{assert_matches::assert_matches, fmt};
 use super::syntax_kind::SyntaxKind;
 
 // TODO:
-// 1. Add Part::Sequence(Part, token Vec of a delimiter])
+// 1. Add Part::Sequence(Part, token Vec of a delimiter]).
+// 1. Add Language.statement and Part::Stmt.
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum MalgoLang {}
