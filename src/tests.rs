@@ -1,12 +1,17 @@
+use crate::eval;
 use crate::eval::Eval;
-use crate::eval::Value;
 use crate::parser::ast::*;
 use crate::parser::language::*;
 use crate::parser::Parser;
 use crate::parser::PrintSyntaxNode;
 use std::collections::HashMap;
 
-fn success_complete(language: Language, input: &str, expected: &str, evaluated: Option<Value>) {
+fn success_complete(
+    language: Language,
+    input: &str,
+    expected: &str,
+    evaluated: eval::Result<eval::Value>,
+) {
     let _ = tracing_subscriber::fmt::try_init();
 
     let mut parser = Parser::new(input, language);
@@ -30,7 +35,7 @@ fn success_complete(language: Language, input: &str, expected: &str, evaluated: 
     );
 
     let state = HashMap::new();
-    let res = Root::cast(root).unwrap().expr().unwrap().eval(&state).ok();
+    let res = Root::cast(root).unwrap().expr().unwrap().eval(&state);
     assert_eq!(res, evaluated);
 }
 
@@ -40,7 +45,7 @@ fn test_int() {
         language(),
         "42",
         "(Root (Primitive 42))",
-        Some(Value::Int(42)),
+        Ok(eval::Value::Int(42)),
     );
 }
 
@@ -50,7 +55,7 @@ fn test_pre_minus() {
         language(),
         "-42",
         "(Root (UnaryMinus - (Primitive 42)))",
-        Some(Value::Int(-42)),
+        Ok(eval::Value::Int(-42)),
     );
 }
 
@@ -60,7 +65,7 @@ fn test_parens() {
         language(),
         "-(-42)",
         "(Root (UnaryMinus - (Parens ( (UnaryMinus - (Primitive 42)) ))))",
-        Some(Value::Int(42)),
+        Ok(eval::Value::Int(42)),
     );
 }
 
@@ -68,9 +73,9 @@ fn test_parens() {
 fn test_function() {
     success_complete(
         language(),
-        "{ x -> x }",
-        "(Root (Fun { x -> (Primitive x) }))",
-        None,
+        "{ x -> x }(1)",
+        "(Root (FunCall (Fun { (Ident x) -> (Primitive x) }) ( (Primitive 1) )))",
+        Ok(eval::Value::Int(1)),
     );
 }
 
@@ -80,7 +85,7 @@ fn test_function_noparam() {
         language(),
         "{ x }",
         "(Root (Block { (Primitive x) }))",
-        None,
+        Err(eval::Error::Undefined),
     );
 }
 
@@ -90,7 +95,7 @@ fn test_if_then_else() {
         language(),
         "if 1 = 1 then 42 else 54",
         "(Root (IfThenElse if (Equal (Primitive 1) = (Primitive 1)) then (Primitive 42) else (Primitive 54)))",
-        Some(Value::Int(42)),
+        Ok(eval::Value::Int(42)),
     );
 }
 
@@ -100,7 +105,7 @@ fn test_if_then() {
         language(),
         "if 1 = 1 then 42",
         "(Root (IfThen if (Equal (Primitive 1) = (Primitive 1)) then (Primitive 42)))",
-        Some(Value::Int(42)),
+        Ok(eval::Value::Int(42)),
     );
 }
 
@@ -110,7 +115,7 @@ fn test_if_then2() {
         language(),
         "if 0 = 1 then 42",
         "(Root (IfThen if (Equal (Primitive 0) = (Primitive 1)) then (Primitive 42)))",
-        None,
+        Err(eval::Error::Undefined),
     );
 }
 
@@ -120,7 +125,7 @@ fn test_plus() {
         language(),
         "1 + 2",
         "(Root (Plus (Primitive 1) + (Primitive 2)))",
-        Some(Value::Int(3)),
+        Ok(eval::Value::Int(3)),
     );
 }
 
@@ -130,7 +135,7 @@ fn test_plus_mul() {
         language(),
         "1 + 2 * 3",
         "(Root (Plus (Primitive 1) + (Asterisk (Primitive 2) * (Primitive 3))))",
-        Some(Value::Int(7)),
+        Ok(eval::Value::Int(7)),
     );
 }
 
@@ -140,7 +145,7 @@ fn test_mul_plus() {
         language(),
         "1 * 2 + 3",
         "(Root (Plus (Asterisk (Primitive 1) * (Primitive 2)) + (Primitive 3)))",
-        Some(Value::Int(5)),
+        Ok(eval::Value::Int(5)),
     );
 }
 
@@ -150,7 +155,7 @@ fn test_equal() {
         language(),
         "1 = 1",
         "(Root (Equal (Primitive 1) = (Primitive 1)))",
-        Some(Value::Bool(true)),
+        Ok(eval::Value::Bool(true)),
     );
 }
 
@@ -160,7 +165,7 @@ fn test_fn_call() {
         language(),
         "f(x)",
         "(Root (FunCall (Primitive f) ( (Primitive x) )))",
-        None,
+        Err(eval::Error::Undefined),
     );
 }
 
@@ -170,7 +175,7 @@ fn test_fn_call_plus() {
         language(),
         "f(x) + 1",
         "(Root (Plus (FunCall (Primitive f) ( (Primitive x) )) + (Primitive 1)))",
-        None,
+        Err(eval::Error::Undefined),
     );
 }
 
@@ -179,7 +184,17 @@ fn test_let() {
     success_complete(
         language(),
         "let x = 1 in x",
-        "(Root (Let let x = (Primitive 1) in (Primitive x)))",
-        None,
+        "(Root (Let let (Ident x) = (Primitive 1) in (Primitive x)))",
+        Ok(eval::Value::Int(1)),
+    );
+}
+
+#[test]
+fn test_let2() {
+    success_complete(
+        language(),
+        "(let x = 1 in x) + (let x = 2 in x)",
+       "(Root (Plus (Parens ( (Let let (Ident x) = (Primitive 1) in (Primitive x)) )) + (Parens ( (Let let (Ident x) = (Primitive 2) in (Primitive x)) ))))",
+        Ok(eval::Value::Int(3)),
     );
 }

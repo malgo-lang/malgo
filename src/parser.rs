@@ -303,8 +303,10 @@ impl<'a> Parser<'a> {
                     kind: PlaceholderKind::Ident,
                     name: _,
                 } => {
+                    self.builder.start_node(SyntaxKind::Ident);
                     self.consume_ident();
                     self.skip_ws();
+                    self.builder.finish_node();
                 }
             }
         }

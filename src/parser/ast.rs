@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::syntax_kind::SyntaxKind;
 use super::SyntaxNode;
 
@@ -47,13 +45,13 @@ ast_node!(FunCall);
 ast_node!(Primitive);
 ast_node!(Root);
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(transparent)]
 pub struct Identifier(SyntaxNode);
 
 impl Identifier {
     #[allow(unused)]
-    fn cast(node: SyntaxNode) -> Option<Self> {
+    pub fn cast(node: SyntaxNode) -> Option<Self> {
         if Ident::cast(node.clone()).is_some() {
             Some(Identifier(node))
         } else {
@@ -61,12 +59,12 @@ impl Identifier {
         }
     }
     #[allow(unused)]
-    fn text(&self) -> String {
+    pub fn text(&self) -> String {
         format!("{}", self.0.first_token().unwrap())
     }
 }
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(transparent)]
 pub struct Expr(SyntaxNode);
 

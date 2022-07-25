@@ -2,10 +2,19 @@ use std::{collections::HashMap, fmt::Display};
 
 use super::parser::ast::*;
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Value {
     Int(i64),
     Bool(bool),
+    Fun(FunValue)
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FunValue {param: String, body: Expr, state: HashMap<String, Value>}
+impl Display for FunValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<function>")
+    }
 }
 
 impl Value {
@@ -29,10 +38,19 @@ impl Value {
         }
     }
 
+    #[allow(dead_code)]
+    pub fn fun(&self) -> Result<FunValue> {
+        match self {
+            Value::Fun(fun) => Ok(fun.clone()),
+            _ => Err(Error::TypeMismatch { expected: Type::Fun, actual: self.type_of() })
+        }
+    }
+
     pub fn type_of(&self) -> Type {
         match self {
             Value::Int(_) => Type::Int,
             Value::Bool(_) => Type::Bool,
+            Value::Fun(_) => Type::Fun,
         }
     }
 }
@@ -42,6 +60,7 @@ impl Display for Value {
         match self {
             Value::Int(n) => write!(f, "{}", n),
             Value::Bool(b) => write!(f, "{}", b),
+            Value::Fun(fun) => write!(f, "{}", fun),
         }
     }
 }
@@ -50,6 +69,7 @@ impl Display for Value {
 pub enum Type {
     Int,
     Bool,
+    Fun
 }
 
 impl Display for Type {
@@ -57,15 +77,17 @@ impl Display for Type {
         match self {
             Type::Int => write!(f, "Int"),
             Type::Bool => write!(f, "Bool"),
+            Type::Fun => write!(f, "Fun")
         }
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Error {
     TypeMismatch { expected: Type, actual: Type },
     InvalidNodeAccess(usize),
     Undefined,
+    VariableNotDefined(String)
 }
 
 impl Display for Error {
@@ -80,6 +102,9 @@ impl Display for Error {
             }
             Error::InvalidNodeAccess(n) => {
                 write!(f, "invalid node access: {}", n)
+            }
+            Error::VariableNotDefined(name) => {
+                write!(f, "variable {} is not defined", name)
             }
             Error::Undefined => {
                 write!(f, "undefined")
@@ -175,14 +200,38 @@ impl Eval for Parens {
 }
 
 impl Eval for Let {
-    fn eval(&self, _state: &HashMap<String, Value>) -> Result<Value> {
-        Err(Error::Undefined)
+    fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
+        let var = self
+            .nth_with_cast(0, Identifier::cast)
+            .ok_or(Error::InvalidNodeAccess(0))?;
+
+        let val = self
+            .nth_with_cast(1, Expr::cast)
+            .ok_or(Error::InvalidNodeAccess(1))?
+            .eval(state)?;
+
+        let mut newstate = state.clone();
+        newstate.insert(var.text(), val);
+
+        let body = self
+            .nth_with_cast(2, Expr::cast)
+            .ok_or(Error::InvalidNodeAccess(2))?
+            .eval(&newstate)?;
+
+        Ok(body)
     }
 }
 
 impl Eval for Fun {
-    fn eval(&self, _state: &HashMap<String, Value>) -> Result<Value> {
-        Err(Error::Undefined)
+    fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
+        let param = self
+            .nth_with_cast(0, Identifier::cast)
+            .ok_or(Error::InvalidNodeAccess(0))?
+            .text();
+        let body = self.nth_with_cast(1, Expr::cast)
+            .ok_or(Error::InvalidNodeAccess(1))?;
+        let state = state.clone();
+        Ok(Value::Fun(FunValue{param, body, state}))
     }
 }
 
@@ -277,13 +326,19 @@ impl Eval for FunCall {
 }
 
 impl Eval for Primitive {
-    fn eval(&self, _state: &HashMap<String, Value>) -> Result<Value> {
+    fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
         fn text(node: &Primitive) -> String {
             match node.0.green().children().next() {
                 Some(rowan::NodeOrToken::Token(token)) => token.text().to_string(),
                 _ => unreachable!(),
             }
         }
-        Ok(Value::Int(text(self).parse().unwrap()))
+
+        if let Ok(int) = text(self).parse() {
+            Ok(Value::Int(int))
+        } else {
+            let name = text(self);
+            state.get(&name).ok_or(Error::VariableNotDefined(name)).map(|v| v.clone())
+        }
     }
 }
