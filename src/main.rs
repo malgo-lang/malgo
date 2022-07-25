@@ -5,7 +5,10 @@
     io_error_other
 )]
 
+mod eval;
 mod parser;
+#[cfg(test)]
+mod tests;
 
 use std::io;
 

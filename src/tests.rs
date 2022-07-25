@@ -1,10 +1,12 @@
+use crate::eval::Eval;
+use crate::eval::Value;
+use crate::parser::ast::*;
+use crate::parser::language::*;
+use crate::parser::Parser;
+use crate::parser::PrintSyntaxNode;
 use std::collections::HashMap;
 
-use super::ast::*;
-use super::language::*;
-use super::*;
-
-fn success_complete(language: Language, input: &str, expected: &str, evaluated: Option<i64>) {
+fn success_complete(language: Language, input: &str, expected: &str, evaluated: Option<Value>) {
     let _ = tracing_subscriber::fmt::try_init();
 
     let mut parser = Parser::new(input, language);
@@ -28,13 +30,18 @@ fn success_complete(language: Language, input: &str, expected: &str, evaluated: 
     );
 
     let state = HashMap::new();
-    let res = Root::cast(root).unwrap().expr().unwrap().eval(&state);
+    let res = Root::cast(root).unwrap().expr().unwrap().eval(&state).ok();
     assert_eq!(res, evaluated);
 }
 
 #[test]
 fn test_int() {
-    success_complete(language(), "42", "(Root (Primitive 42))", Some(42));
+    success_complete(
+        language(),
+        "42",
+        "(Root (Primitive 42))",
+        Some(Value::Int(42)),
+    );
 }
 
 #[test]
@@ -43,7 +50,7 @@ fn test_pre_minus() {
         language(),
         "-42",
         "(Root (UnaryMinus - (Primitive 42)))",
-        Some(-42),
+        Some(Value::Int(-42)),
     );
 }
 
@@ -53,7 +60,7 @@ fn test_parens() {
         language(),
         "-(-42)",
         "(Root (UnaryMinus - (Parens ( (UnaryMinus - (Primitive 42)) ))))",
-        Some(42),
+        Some(Value::Int(42)),
     );
 }
 
@@ -81,9 +88,9 @@ fn test_function_noparam() {
 fn test_if_then_else() {
     success_complete(
         language(),
-        "if 1 then 42 else 54",
-        "(Root (IfThenElse if (Primitive 1) then (Primitive 42) else (Primitive 54)))",
-        Some(42),
+        "if 1 = 1 then 42 else 54",
+        "(Root (IfThenElse if (Equal (Primitive 1) = (Primitive 1)) then (Primitive 42) else (Primitive 54)))",
+        Some(Value::Int(42)),
     );
 }
 
@@ -91,9 +98,9 @@ fn test_if_then_else() {
 fn test_if_then() {
     success_complete(
         language(),
-        "if 1 then 42",
-        "(Root (IfThen if (Primitive 1) then (Primitive 42)))",
-        Some(42),
+        "if 1 = 1 then 42",
+        "(Root (IfThen if (Equal (Primitive 1) = (Primitive 1)) then (Primitive 42)))",
+        Some(Value::Int(42)),
     );
 }
 
@@ -101,8 +108,8 @@ fn test_if_then() {
 fn test_if_then2() {
     success_complete(
         language(),
-        "if 0 then 42",
-        "(Root (IfThen if (Primitive 0) then (Primitive 42)))",
+        "if 0 = 1 then 42",
+        "(Root (IfThen if (Equal (Primitive 0) = (Primitive 1)) then (Primitive 42)))",
         None,
     );
 }
@@ -113,7 +120,7 @@ fn test_plus() {
         language(),
         "1 + 2",
         "(Root (Plus (Primitive 1) + (Primitive 2)))",
-        Some(3),
+        Some(Value::Int(3)),
     );
 }
 
@@ -123,7 +130,7 @@ fn test_plus_mul() {
         language(),
         "1 + 2 * 3",
         "(Root (Plus (Primitive 1) + (Asterisk (Primitive 2) * (Primitive 3))))",
-        Some(7),
+        Some(Value::Int(7)),
     );
 }
 
@@ -133,7 +140,7 @@ fn test_mul_plus() {
         language(),
         "1 * 2 + 3",
         "(Root (Plus (Asterisk (Primitive 1) * (Primitive 2)) + (Primitive 3)))",
-        Some(5),
+        Some(Value::Int(5)),
     );
 }
 
@@ -143,7 +150,7 @@ fn test_equal() {
         language(),
         "1 = 1",
         "(Root (Equal (Primitive 1) = (Primitive 1)))",
-        Some(1),
+        Some(Value::Bool(true)),
     );
 }
 

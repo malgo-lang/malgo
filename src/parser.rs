@@ -1,8 +1,6 @@
-mod ast;
+pub mod ast;
 pub mod language;
 pub mod syntax_kind;
-#[cfg(test)]
-mod tests;
 mod tree_sink;
 
 use std::fmt;
@@ -86,8 +84,8 @@ pub struct Parser<'a> {
     input: &'a str,
     language: Language,
     position: usize,
-    errors: Vec<ParseError>,
-    builder: TreeSink<'a>,
+    pub errors: Vec<ParseError>,
+    pub builder: TreeSink<'a>,
 }
 
 impl<'a> Parser<'a> {
@@ -121,7 +119,7 @@ impl<'a> Parser<'a> {
         self.builder.finish_node();
     }
 
-    fn error_report(&self) -> Option<ErrorReport> {
+    pub fn error_report(&self) -> Option<ErrorReport> {
         if self.errors.is_empty() {
             return None;
         }
@@ -130,7 +128,7 @@ impl<'a> Parser<'a> {
         })
     }
 
-    fn rest(&self) -> &'a str {
+    pub fn rest(&self) -> &'a str {
         &self.input[self.position..]
     }
 

@@ -7,7 +7,7 @@ macro_rules! ast_node {
     ($ast:ident) => {
         #[derive(PartialEq, Eq, Hash)]
         #[repr(transparent)]
-        pub struct $ast(SyntaxNode);
+        pub struct $ast(pub SyntaxNode);
         impl $ast {
             #[allow(unused)]
             pub fn cast(node: SyntaxNode) -> Option<Self> {
@@ -70,7 +70,7 @@ impl Identifier {
 #[repr(transparent)]
 pub struct Expr(SyntaxNode);
 
-enum ExprKind {
+pub enum ExprKind {
     UnaryMinus(UnaryMinus),
     IfThenElse(IfThenElse),
     IfThen(IfThen),
@@ -110,7 +110,7 @@ impl Expr {
         }
     }
 
-    fn kind(&self) -> ExprKind {
+    pub fn kind(&self) -> ExprKind {
         UnaryMinus::cast(self.0.clone())
             .map(ExprKind::UnaryMinus)
             .or_else(|| IfThenElse::cast(self.0.clone()).map(ExprKind::IfThenElse))
@@ -134,167 +134,5 @@ impl Root {
     #[allow(unused)]
     pub fn expr(&self) -> Option<Expr> {
         self.nth_with_cast(0, Expr::cast)
-    }
-}
-
-pub trait Eval<T> {
-    type State;
-    fn eval(&self, state: &Self::State) -> Option<T>;
-}
-
-impl Eval<i64> for Expr {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        use ExprKind::*;
-        match self.kind() {
-            UnaryMinus(x) => x.eval(state),
-            IfThenElse(x) => x.eval(state),
-            IfThen(x) => x.eval(state),
-            Parens(x) => x.eval(state),
-            Let(x) => x.eval(state),
-            Fun(x) => x.eval(state),
-            Block(x) => x.eval(state),
-            Plus(x) => x.eval(state),
-            Minus(x) => x.eval(state),
-            Asterisk(x) => x.eval(state),
-            Slash(x) => x.eval(state),
-            Equal(x) => x.eval(state),
-            FunCall(x) => x.eval(state),
-            Primitive(x) => x.eval(state),
-        }
-    }
-}
-
-impl Eval<i64> for UnaryMinus {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        let arg = self.nth_with_cast(0, Expr::cast)?;
-        let val = arg.eval(state)?;
-        Some(-val)
-    }
-}
-
-impl Eval<i64> for IfThenElse {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        let cond = self.nth_with_cast(0, Expr::cast)?;
-        let val = cond.eval(state)?;
-        if val != 0 {
-            let e1 = self.nth_with_cast(1, Expr::cast)?;
-            let val = e1.eval(state)?;
-            Some(val)
-        } else {
-            let e2 = self.nth_with_cast(2, Expr::cast)?;
-            let val = e2.eval(state)?;
-            Some(val)
-        }
-    }
-}
-
-impl Eval<i64> for IfThen {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        let cond = self.nth_with_cast(0, Expr::cast)?;
-        let val = cond.eval(state)?;
-        if val != 0 {
-            let e1 = self.nth_with_cast(1, Expr::cast)?;
-            let val = e1.eval(state)?;
-            Some(val)
-        } else {
-            None
-        }
-    }
-}
-
-impl Eval<i64> for Parens {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        self.nth_with_cast(0, Expr::cast)?.eval(state)
-    }
-}
-
-impl Eval<i64> for Let {
-    type State = HashMap<String, i64>;
-    fn eval(&self, _state: &Self::State) -> Option<i64> {
-        None
-    }
-}
-
-impl Eval<i64> for Fun {
-    type State = HashMap<String, i64>;
-    fn eval(&self, _state: &Self::State) -> Option<i64> {
-        None
-    }
-}
-
-impl Eval<i64> for Block {
-    type State = HashMap<String, i64>;
-    fn eval(&self, _state: &Self::State) -> Option<i64> {
-        None
-    }
-}
-
-impl Eval<i64> for Plus {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        let left = self.nth_with_cast(0, Expr::cast)?.eval(state)?;
-        let right = self.nth_with_cast(1, Expr::cast)?.eval(state)?;
-        Some(left + right)
-    }
-}
-
-impl Eval<i64> for Minus {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        let left = self.nth_with_cast(0, Expr::cast)?.eval(state)?;
-        let right = self.nth_with_cast(1, Expr::cast)?.eval(state)?;
-        Some(left - right)
-    }
-}
-
-impl Eval<i64> for Asterisk {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        let left = self.nth_with_cast(0, Expr::cast)?.eval(state)?;
-        let right = self.nth_with_cast(1, Expr::cast)?.eval(state)?;
-        Some(left * right)
-    }
-}
-
-impl Eval<i64> for Slash {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        let left = self.nth_with_cast(0, Expr::cast)?.eval(state)?;
-        let right = self.nth_with_cast(1, Expr::cast)?.eval(state)?;
-        Some(left / right)
-    }
-}
-
-impl Eval<i64> for Equal {
-    type State = HashMap<String, i64>;
-    fn eval(&self, state: &Self::State) -> Option<i64> {
-        let left = self.nth_with_cast(0, Expr::cast)?.eval(state)?;
-        let right = self.nth_with_cast(1, Expr::cast)?.eval(state)?;
-        Some(if left == right { 1 } else { 0 })
-    }
-}
-
-impl Eval<i64> for FunCall {
-    type State = HashMap<String, i64>;
-    fn eval(&self, _state: &Self::State) -> Option<i64> {
-        None
-    }
-}
-
-impl Eval<i64> for Primitive {
-    type State = HashMap<String, i64>;
-    fn eval(&self, _state: &Self::State) -> Option<i64> {
-        fn text(node: &Primitive) -> String {
-            match node.0.green().children().next() {
-                Some(rowan::NodeOrToken::Token(token)) => token.text().to_string(),
-                _ => unreachable!(),
-            }
-        }
-        text(self).parse().ok()
     }
 }
