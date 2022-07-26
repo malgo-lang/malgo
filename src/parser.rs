@@ -37,7 +37,7 @@ impl<'a> Token<'a> {
     }
 }
 
-type SyntaxNode = rowan::SyntaxNode<MalgoLang>;
+pub type SyntaxNode = rowan::SyntaxNode<MalgoLang>;
 
 #[derive(Debug)]
 pub struct PrintSyntaxNode<'a>(pub &'a SyntaxNode);
