@@ -23,6 +23,12 @@ macro_rules! ast_node {
                 self.0.children().nth(n).map(cast)?
             }
         }
+        impl TryFrom<SyntaxNode> for $ast {
+            type Error = &'static str;
+            fn try_from(value: SyntaxNode) -> Result<Self, Self::Error> {
+                $ast::cast(value).ok_or("Cast Error")
+            }
+        }
     };
 }
 
