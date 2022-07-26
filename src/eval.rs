@@ -156,19 +156,16 @@ impl Eval for IfThenElse {
         let cond = self
             .nth_with_cast(0, Expr::cast)
             .ok_or(Error::InvalidNodeAccess(0))?;
-        let val = cond.eval(state)?.bool()?;
-        if val {
-            let e1 = self
+        if cond.eval(state)?.bool()? {
+            self
                 .nth_with_cast(1, Expr::cast)
-                .ok_or(Error::InvalidNodeAccess(1))?;
-            let val = e1.eval(state)?;
-            Ok(val)
+                .ok_or(Error::InvalidNodeAccess(1))?
+                .eval(state)
         } else {
-            let e2 = self
+            self
                 .nth_with_cast(2, Expr::cast)
-                .ok_or(Error::InvalidNodeAccess(2))?;
-            let val = e2.eval(state)?;
-            Ok(val)
+                .ok_or(Error::InvalidNodeAccess(2))?
+                .eval(state)
         }
     }
 }
@@ -178,13 +175,10 @@ impl Eval for IfThen {
         let cond = self
             .nth_with_cast(0, Expr::cast)
             .ok_or(Error::InvalidNodeAccess(0))?;
-        let val = cond.eval(state)?.bool()?;
-        if val {
-            let e1 = self
+        if cond.eval(state)?.bool()? {
+            self
                 .nth_with_cast(1, Expr::cast)
-                .ok_or(Error::InvalidNodeAccess(1))?;
-            let val = e1.eval(state)?;
-            Ok(val)
+                .ok_or(Error::InvalidNodeAccess(1))?.eval(state)
         } else {
             Err(Error::Undefined)
         }
@@ -213,12 +207,10 @@ impl Eval for Let {
         let mut newstate = state.clone();
         newstate.insert(var.text(), val);
 
-        let body = self
+        self
             .nth_with_cast(2, Expr::cast)
             .ok_or(Error::InvalidNodeAccess(2))?
-            .eval(&newstate)?;
-
-        Ok(body)
+            .eval(&newstate)
     }
 }
 
