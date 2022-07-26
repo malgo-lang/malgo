@@ -6,11 +6,15 @@ use super::parser::ast::*;
 pub enum Value {
     Int(i64),
     Bool(bool),
-    Fun(FunValue)
+    Fun(FunValue),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct FunValue {param: String, body: Expr, state: HashMap<String, Value>}
+pub struct FunValue {
+    param: String,
+    body: Expr,
+    state: HashMap<String, Value>,
+}
 impl Display for FunValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "<function>")
@@ -42,7 +46,10 @@ impl Value {
     pub fn fun(&self) -> Result<FunValue> {
         match self {
             Value::Fun(fun) => Ok(fun.clone()),
-            _ => Err(Error::TypeMismatch { expected: Type::Fun, actual: self.type_of() })
+            _ => Err(Error::TypeMismatch {
+                expected: Type::Fun,
+                actual: self.type_of(),
+            }),
         }
     }
 
@@ -69,7 +76,7 @@ impl Display for Value {
 pub enum Type {
     Int,
     Bool,
-    Fun
+    Fun,
 }
 
 impl Display for Type {
@@ -77,7 +84,7 @@ impl Display for Type {
         match self {
             Type::Int => write!(f, "Int"),
             Type::Bool => write!(f, "Bool"),
-            Type::Fun => write!(f, "Fun")
+            Type::Fun => write!(f, "Fun"),
         }
     }
 }
@@ -85,9 +92,8 @@ impl Display for Type {
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Error {
     TypeMismatch { expected: Type, actual: Type },
-    InvalidNodeAccess(usize),
     Undefined,
-    VariableNotDefined(String)
+    VariableNotDefined(String),
 }
 
 impl Display for Error {
@@ -99,9 +105,6 @@ impl Display for Error {
                     "type mismatch: expected {}, but actual {}",
                     expected, actual
                 )
-            }
-            Error::InvalidNodeAccess(n) => {
-                write!(f, "invalid node access: {}", n)
             }
             Error::VariableNotDefined(name) => {
                 write!(f, "variable {} is not defined", name)
@@ -143,9 +146,7 @@ impl Eval for Expr {
 
 impl Eval for UnaryMinus {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let arg = self
-            .nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?;
+        let arg = self.arg();
         let val = arg.eval(state)?.int()?;
         Ok(Value::Int(-val))
     }
@@ -153,32 +154,20 @@ impl Eval for UnaryMinus {
 
 impl Eval for IfThenElse {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let cond = self
-            .nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?;
+        let cond = self.cond();
         if cond.eval(state)?.bool()? {
-            self
-                .nth_with_cast(1, Expr::cast)
-                .ok_or(Error::InvalidNodeAccess(1))?
-                .eval(state)
+            self.then_body().eval(state)
         } else {
-            self
-                .nth_with_cast(2, Expr::cast)
-                .ok_or(Error::InvalidNodeAccess(2))?
-                .eval(state)
+            self.else_body().eval(state)
         }
     }
 }
 
 impl Eval for IfThen {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let cond = self
-            .nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?;
+        let cond = self.cond();
         if cond.eval(state)?.bool()? {
-            self
-                .nth_with_cast(1, Expr::cast)
-                .ok_or(Error::InvalidNodeAccess(1))?.eval(state)
+            self.then_body().eval(state)
         } else {
             Err(Error::Undefined)
         }
@@ -187,43 +176,29 @@ impl Eval for IfThen {
 
 impl Eval for Parens {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        self.nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?
-            .eval(state)
+        self.expr().eval(state)
     }
 }
 
 impl Eval for Let {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let var = self
-            .nth_with_cast(0, Identifier::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?;
+        let var = self.var();
 
-        let val = self
-            .nth_with_cast(1, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(1))?
-            .eval(state)?;
+        let val = self.value().eval(state)?;
 
         let mut newstate = state.clone();
         newstate.insert(var.text(), val);
 
-        self
-            .nth_with_cast(2, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(2))?
-            .eval(&newstate)
+        self.body().eval(&newstate)
     }
 }
 
 impl Eval for Fun {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let param = self
-            .nth_with_cast(0, Identifier::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?
-            .text();
-        let body = self.nth_with_cast(1, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(1))?;
+        let param = self.param().text();
+        let body = self.body();
         let state = state.clone();
-        Ok(Value::Fun(FunValue{param, body, state}))
+        Ok(Value::Fun(FunValue { param, body, state }))
     }
 }
 
@@ -235,78 +210,40 @@ impl Eval for Block {
 
 impl Eval for Plus {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let left = self
-            .nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?
-            .eval(state)?
-            .int()?;
-        let right = self
-            .nth_with_cast(1, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(1))?
-            .eval(state)?
-            .int()?;
+        let left = self.left().eval(state)?.int()?;
+        let right = self.right().eval(state)?.int()?;
         Ok(Value::Int(left + right))
     }
 }
 
 impl Eval for Minus {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let left = self
-            .nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?
-            .eval(state)?
-            .int()?;
-        let right = self
-            .nth_with_cast(1, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(1))?
-            .eval(state)?
-            .int()?;
+        let left = self.left().eval(state)?.int()?;
+        let right = self.right().eval(state)?.int()?;
         Ok(Value::Int(left - right))
     }
 }
 
 impl Eval for Asterisk {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let left = self
-            .nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?
-            .eval(state)?
-            .int()?;
-        let right = self
-            .nth_with_cast(1, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(1))?
-            .eval(state)?
-            .int()?;
+        let left = self.left().eval(state)?.int()?;
+        let right = self.right().eval(state)?.int()?;
         Ok(Value::Int(left * right))
     }
 }
 
 impl Eval for Slash {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let left = self
-            .nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?
-            .eval(state)?
-            .int()?;
-        let right = self
-            .nth_with_cast(1, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(1))?
-            .eval(state)?
-            .int()?;
+        let left = self.left().eval(state)?.int()?;
+        let right = self.right().eval(state)?.int()?;
         Ok(Value::Int(left / right))
     }
 }
 
 impl Eval for Equal {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let left = self
-            .nth_with_cast(0, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(0))?
-            .eval(state)?;
-        let right = self
-            .nth_with_cast(1, Expr::cast)
-            .ok_or(Error::InvalidNodeAccess(1))?
-            .eval(state)?;
+        let left = self.left().eval(state)?.int()?;
+        let right = self.right().eval(state)?.int()?;
         Ok(Value::Bool(left == right))
     }
 }
@@ -330,7 +267,10 @@ impl Eval for Primitive {
             Ok(Value::Int(int))
         } else {
             let name = text(self);
-            state.get(&name).ok_or(Error::VariableNotDefined(name)).map(|v| v.clone())
+            state
+                .get(&name)
+                .ok_or(Error::VariableNotDefined(name))
+                .map(|v| v.clone())
         }
     }
 }

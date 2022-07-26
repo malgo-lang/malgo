@@ -16,11 +16,8 @@ macro_rules! ast_node {
                 }
             }
             #[allow(unused)]
-            pub fn nth_with_cast<F, T>(&self, n: usize, cast: F) -> Option<T>
-            where
-                F: Fn(SyntaxNode) -> Option<T>,
-            {
-                self.0.children().nth(n).map(cast)?
+            pub fn nth(&self, n: usize) -> Option<SyntaxNode> {
+                self.0.children().nth(n)
             }
         }
         impl TryFrom<SyntaxNode> for $ast {
@@ -137,6 +134,116 @@ impl Expr {
 impl Root {
     #[allow(unused)]
     pub fn expr(&self) -> Option<Expr> {
-        self.nth_with_cast(0, Expr::cast)
+        self.nth(0).and_then(Expr::cast)
+    }
+}
+
+impl UnaryMinus {
+    pub fn arg(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl IfThenElse {
+    pub fn cond(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn then_body(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn else_body(&self) -> Expr {
+        self.nth(2).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl IfThen {
+    pub fn cond(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn then_body(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl Parens {
+    pub fn expr(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl Let {
+    pub fn var(&self) -> Identifier {
+        self.nth(0).and_then(Identifier::cast).unwrap()
+    }
+
+    pub fn value(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn body(&self) -> Expr {
+        self.nth(2).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl Fun {
+    pub fn param(&self) -> Identifier {
+        self.nth(0).and_then(Identifier::cast).unwrap()
+    }
+
+    pub fn body(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl Plus {
+    pub fn left(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn right(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl Minus {
+    pub fn left(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn right(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl Asterisk {
+    pub fn left(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn right(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl Slash {
+    pub fn left(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn right(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+}
+
+impl Equal {
+    pub fn left(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn right(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
     }
 }
