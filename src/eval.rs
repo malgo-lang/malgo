@@ -146,16 +146,14 @@ impl Eval for Expr {
 
 impl Eval for UnaryMinus {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let arg = self.arg();
-        let val = arg.eval(state)?.int()?;
+        let val = self.arg().eval(state)?.int()?;
         Ok(Value::Int(-val))
     }
 }
 
 impl Eval for IfThenElse {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let cond = self.cond();
-        if cond.eval(state)?.bool()? {
+        if self.cond().eval(state)?.bool()? {
             self.then_body().eval(state)
         } else {
             self.else_body().eval(state)
@@ -165,8 +163,7 @@ impl Eval for IfThenElse {
 
 impl Eval for IfThen {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let cond = self.cond();
-        if cond.eval(state)?.bool()? {
+        if self.cond().eval(state)?.bool()? {
             self.then_body().eval(state)
         } else {
             Err(Error::Undefined)
@@ -182,12 +179,10 @@ impl Eval for Parens {
 
 impl Eval for Let {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let var = self.var();
-
         let val = self.value().eval(state)?;
 
         let mut newstate = state.clone();
-        newstate.insert(var.text(), val);
+        newstate.insert(self.var().text(), val);
 
         self.body().eval(&newstate)
     }
@@ -195,10 +190,7 @@ impl Eval for Let {
 
 impl Eval for Fun {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        let param = self.param().text();
-        let body = self.body();
-        let state = state.clone();
-        Ok(Value::Fun(FunValue { param, body, state }))
+        Ok(Value::Fun(FunValue { param: self.param().text(), body: self.body(), state: state.clone() }))
     }
 }
 
