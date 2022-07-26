@@ -134,12 +134,10 @@ impl<'a> Parser<'a> {
 
     fn consume(&mut self, len: usize) {
         assert!(self.rest().len() >= len, "input is too short");
-        tracing::debug!("consume: {}", &self.rest()[0..len]);
         self.position += len;
     }
 
     fn push_error(&mut self, message: String) {
-        tracing::debug!("push error: {}", message);
         self.errors.push(ParseError {
             position: self.position,
             message,
@@ -294,8 +292,6 @@ impl<'a> Parser<'a> {
                     kind: PlaceholderKind::Expr,
                     name: _,
                 } => {
-                    let span = tracing::debug_span!("inside", part = %op.parts[i], i);
-                    let _enter = span.enter();
                     self.expr_bp(0);
                     self.skip_ws();
                 }
@@ -330,8 +326,6 @@ impl<'a> Parser<'a> {
             self.parse_operator(op);
 
             if let LeadingOperator::Prefix { right_bp } = op.fix {
-                let span = tracing::debug_span!("prefix", part = %op.parts[0], i = 0);
-                let _enter = span.enter();
                 self.expr_bp(right_bp);
             }
 
@@ -381,7 +375,6 @@ impl<'a> Parser<'a> {
                 self.position = position;
                 self.errors = errors.clone();
 
-                tracing::debug!(?op, "hit op");
                 match op.fix {
                     FollowingOperator::InfixL { bp } => {
                         if bp <= min_bp {
@@ -406,8 +399,6 @@ impl<'a> Parser<'a> {
 
                 match op.fix {
                     FollowingOperator::InfixL { bp } | FollowingOperator::InfixR { bp } => {
-                        let span = tracing::debug_span!("infix", part = %op.parts[0], i = 0);
-                        let _enter = span.enter();
                         self.skip_ws();
                         self.expr_bp(bp);
                     }
