@@ -6,15 +6,12 @@
     extend_one
 )]
 
-mod eval;
-mod parser;
-#[cfg(test)]
-mod tests;
+mod pratt;
 
 use std::io;
 
 use clap::Parser as ClapParser;
-use parser::{language::language, Parser, PrintSyntaxNode};
+use pratt::parser::{language::language, Parser, PrintSyntaxNode};
 
 #[derive(ClapParser, Debug)]
 #[clap(author, version, about, long_about = None)]

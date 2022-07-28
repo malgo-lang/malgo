@@ -1,9 +1,9 @@
-use crate::eval;
-use crate::eval::Eval;
-use crate::parser::ast::*;
-use crate::parser::language::*;
-use crate::parser::Parser;
-use crate::parser::PrintSyntaxNode;
+use super::eval;
+use super::eval::Eval;
+use super::parser::ast::*;
+use super::parser::language::*;
+use super::parser::Parser;
+use super::parser::PrintSyntaxNode;
 use std::collections::HashMap;
 
 fn success_complete(

@@ -7,7 +7,7 @@ use std::fmt;
 
 use regex::Regex;
 
-use crate::parser::language::FollowingOperator;
+use crate::pratt::parser::language::FollowingOperator;
 
 use self::{
     language::{Language, LeadingOperator, MalgoLang, Operator, Part, PlaceholderKind},
