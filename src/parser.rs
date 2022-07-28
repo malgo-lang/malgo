@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use std::{fmt, path::PathBuf, rc::Rc};
 
 use regex::Regex;
@@ -7,6 +10,7 @@ pub enum TokenKind {
     Whitespace,
     Eof,
     Symbol(String),
+    Special(String),
     Ident(String),
     Number(String),
 }
@@ -17,6 +21,7 @@ impl fmt::Display for TokenKind {
             TokenKind::Whitespace => write!(f, " "),
             TokenKind::Eof => write!(f, "<EOF>"),
             TokenKind::Symbol(s) => write!(f, "{}", s),
+            TokenKind::Special(s) => write!(f, "{}", s),
             TokenKind::Ident(s) => write!(f, "{}", s),
             TokenKind::Number(s) => write!(f, "{}", s),
         }
@@ -118,11 +123,22 @@ impl Lexer {
         }
     }
 
+    pub fn tokenize(&mut self) -> Vec<Token> {
+        let mut tokens = Vec::new();
+        while self.peek_token().kind != TokenKind::Eof {
+            self.skip_ws();
+            let token = self.peek_token();
+            self.expect_token(&token);
+            tokens.push(token);
+        }
+        return tokens;
+    }
+
     fn peek_token_at(&self, position: usize) -> Token {
         assert!(
-            self.remaining().is_char_boundary(self.position),
-            "invalid position: {}, remaining: {}",
-            self.position,
+            self.remaining().is_char_boundary(position),
+            "invalid position: {}, remaining: '{}'",
+            position,
             self.remaining()
         );
 
@@ -136,13 +152,34 @@ impl Lexer {
                 Span::new(self.source.clone(), self.position, self.position),
             );
         }
-        
 
         match input.chars().next().unwrap() {
             '0'..='9' => {
                 let value = input.split(|c| !('0'..='9').contains(&c)).next().unwrap();
                 Token::new(
                     TokenKind::Number(value.to_string()),
+                    Span::new(
+                        self.source.clone(),
+                        self.position + position,
+                        self.position + position + value.len(),
+                    ),
+                )
+            }
+            c if is_special(c) => {
+                let value = c.to_string();
+                Token::new(
+                    TokenKind::Special(value.to_string()),
+                    Span::new(
+                        self.source.clone(),
+                        self.position + position,
+                        self.position + position + value.len(),
+                    ),
+                )
+            }
+            c if is_ident_start(c) => {
+                let value = input.split(|c| !is_ident_continue(c)).next().unwrap();
+                Token::new(
+                    TokenKind::Ident(value.to_string()),
                     Span::new(
                         self.source.clone(),
                         self.position + position,
@@ -177,9 +214,9 @@ impl Lexer {
     }
 
     /// Expects the given token at the current position.
-    pub fn expect_token(&mut self, token: Token) {
+    pub fn expect_token(&mut self, token: &Token) {
         let lookahead = self.peek_token();
-        if lookahead == token {
+        if lookahead == *token {
             self.consume_token();
         } else {
             panic!("expected {:?}, got {:?}", token, lookahead);
@@ -189,11 +226,6 @@ impl Lexer {
     /// Returns the remaining input after the current position.
     fn remaining(&self) -> &str {
         &self.input[self.position..]
-    }
-
-    /// Peek at the next character in the input.
-    fn peek_char(&self) -> Option<char> {
-        self.input.chars().nth(self.position)
     }
 
     /// Consumes the first n characters of the input.
@@ -211,36 +243,51 @@ impl Lexer {
     fn skip_ws(&mut self) {
         let token = self.peek_token();
         if token.kind == TokenKind::Whitespace {
-            self.expect_token(token);
+            self.expect_token(&token);
         }
     }
 }
 
 /// ```
+/// use malgo::parser::is_ident_start;
 /// assert!(is_ident_start('a'));
 /// assert!(is_ident_start('_'));
 /// assert!(is_ident_start('A'));
 /// ```
-fn is_ident_start(c: char) -> bool {
-    let regex = Regex::new(r"\p{XID_Start}").unwrap();
+pub fn is_ident_start(c: char) -> bool {
+    let regex = Regex::new(r"[\p{XID_Start}_]").unwrap();
     regex.is_match(&c.to_string())
 }
 
 /// ```
+/// use malgo::parser::is_ident_continue;
 /// assert!(is_ident_continue('a'));
 /// assert!(is_ident_continue('_'));
 /// assert!(is_ident_continue('A'));
 /// assert!(is_ident_continue('0'));
 /// ```
-fn is_ident_continue(c: char) -> bool {
+pub fn is_ident_continue(c: char) -> bool {
     let regex = Regex::new(r"\p{XID_Continue}").unwrap();
     regex.is_match(&c.to_string())
 }
-fn is_special(c: char) -> bool {
+
+/// ```
+/// use malgo::parser::is_special;
+/// for c in "(),;[]{}`".chars() {
+///     assert!(is_special(c));
+/// }
+/// ```
+pub fn is_special(c: char) -> bool {
     let special_chars = "(),;[]{}`";
     special_chars.chars().any(|s| s == c)
 }
-fn is_symbol(c: char) -> bool {
+
+/// ```
+/// use malgo::parser::is_symbol;
+/// assert!(is_symbol('+'));
+/// assert!(is_symbol('<'));
+/// ```
+pub fn is_symbol(c: char) -> bool {
     let regex = Regex::new(r"\p{Punctuation}|\p{Symbol}").unwrap();
     regex.is_match(&c.to_string())
 }
@@ -249,44 +296,4 @@ fn is_symbol(c: char) -> bool {
 pub struct Parser {
     tokens: Vec<Token>,
     current: usize,
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_lexer_peek_token() {
-        let source = Rc::new(PathBuf::from("test.mlg"));
-        let input = "1 + 2 * 3";
-        let lexer = Lexer::new(source.clone(), input.to_string());
-        let token = lexer.peek_token();
-        assert_eq!(token.kind, TokenKind::Number("1".to_string()));
-        assert_eq!(token.span, Span::new(source.clone(), 0, 1));
-    }
-
-    #[test]
-    fn test_lexer_peek_token_at() {
-        let source = Rc::new(PathBuf::from("test.mlg"));
-        let input = "1 + 2 * 3";
-        let lexer = Lexer::new(source.clone(), input.to_string());
-        let token = lexer.peek_token_at(1);
-        assert_eq!(token.kind, TokenKind::Whitespace);
-        assert_eq!(token.span, Span::new(source.clone(), 1, 2));
-    }
-
-    #[test]
-    fn test_lexer_expect_token() {
-        let source = Rc::new(PathBuf::from("test.mlg"));
-        let input = "1 + 2 * 3";
-        let mut lexer = Lexer::new(source.clone(), input.to_string());
-        lexer.expect_token(Token::new(
-            TokenKind::Number("1".to_string()),
-            Span::new(source.clone(), 0, 1),
-        ));
-        lexer.expect_token(Token::new(
-            TokenKind::Whitespace,
-            Span::new(source.clone(), 1, 2),
-        ));
-    }
 }

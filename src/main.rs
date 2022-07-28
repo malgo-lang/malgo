@@ -1,17 +1,12 @@
 #![feature(
-    assert_matches,
-    exclusive_range_pattern,
     io_read_to_string,
     io_error_other,
-    extend_one
 )]
-
-mod pratt;
 
 use std::io;
 
 use clap::Parser as ClapParser;
-use pratt::parser::{language::language, Parser, PrintSyntaxNode};
+use malgo::pratt::parser::{language::language, Parser, PrintSyntaxNode};
 
 #[derive(ClapParser, Debug)]
 #[clap(author, version, about, long_about = None)]
