@@ -165,7 +165,7 @@ fn test_fn_call() {
         language(),
         "f(x)",
         "(Root (FunCall (Primitive f) ( (Primitive x) )))",
-        Err(eval::Error::Undefined),
+        Err(eval::Error::VariableNotDefined("f".to_string())),
     );
 }
 
@@ -175,7 +175,7 @@ fn test_fn_call_plus() {
         language(),
         "f(x) + 1",
         "(Root (Plus (FunCall (Primitive f) ( (Primitive x) )) + (Primitive 1)))",
-        Err(eval::Error::Undefined),
+        Err(eval::Error::VariableNotDefined("f".to_string())),
     );
 }
 
