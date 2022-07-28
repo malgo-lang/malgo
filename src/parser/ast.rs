@@ -247,3 +247,13 @@ impl Equal {
         self.nth(1).and_then(Expr::cast).unwrap()
     }
 }
+
+impl FunCall {
+    pub fn fun(&self) -> Expr {
+        self.nth(0).and_then(Expr::cast).unwrap()
+    }
+
+    pub fn arg(&self) -> Expr {
+        self.nth(1).and_then(Expr::cast).unwrap()
+    }
+}

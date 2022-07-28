@@ -15,6 +15,7 @@ pub struct FunValue {
     body: Expr,
     state: HashMap<String, Value>,
 }
+
 impl Display for FunValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "<function>")
@@ -190,7 +191,11 @@ impl Eval for Let {
 
 impl Eval for Fun {
     fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
-        Ok(Value::Fun(FunValue { param: self.param().text(), body: self.body(), state: state.clone() }))
+        Ok(Value::Fun(FunValue {
+            param: self.param().text(),
+            body: self.body(),
+            state: state.clone(),
+        }))
     }
 }
 
@@ -241,8 +246,12 @@ impl Eval for Equal {
 }
 
 impl Eval for FunCall {
-    fn eval(&self, _state: &HashMap<String, Value>) -> Result<Value> {
-        Err(Error::Undefined)
+    fn eval(&self, state: &HashMap<String, Value>) -> Result<Value> {
+        let fun = self.fun().eval(state)?.fun()?;
+        let arg = self.arg().eval(state)?;
+        let mut fun_state = fun.state;
+        fun_state.extend_one((fun.param, arg));
+        fun.body.eval(&fun_state)
     }
 }
 

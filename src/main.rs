@@ -2,7 +2,8 @@
     assert_matches,
     exclusive_range_pattern,
     io_read_to_string,
-    io_error_other
+    io_error_other,
+    extend_one
 )]
 
 mod eval;
