@@ -59,51 +59,6 @@ impl Token {
         self.span.end - self.span.start
     }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Expression {
-    pub span: Span,
-    pub kind: ExpressionKind,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ExpressionKind {
-    Variable(String),
-    Number(u64),
-    If {
-        condition: Box<Expression>,
-        then_branch: Box<Expression>,
-        else_branch: Box<Expression>,
-    },
-    Let {
-        name: String,
-        value: Box<Expression>,
-        body: Box<Expression>,
-    },
-    Fun {
-        parameters: Vec<String>,
-        body: Box<Expression>,
-    },
-    Call {
-        function: Box<Expression>,
-        arguments: Vec<Box<Expression>>,
-    },
-    Binary {
-        left: Box<Expression>,
-        operator: BinaryOperator,
-        right: Box<Expression>,
-    },
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum BinaryOperator {
-    Plus,
-    Minus,
-    Asterisk,
-    Slash,
-    Equal,
-}
-
 #[derive(Debug, Clone)]
 pub struct Lexer {
     source: Rc<PathBuf>,
@@ -166,6 +121,17 @@ impl Lexer {
                 let value = c.to_string();
                 Token::new(
                     TokenKind::Special(value.to_string()),
+                    Span::new(
+                        self.source.clone(),
+                        self.position + position,
+                        self.position + position + value.len(),
+                    ),
+                )
+            }
+            c if lexing_rules::is_symbol(c) => {
+                let value = input.split(|c| !lexing_rules::is_symbol(c)).next().unwrap();
+                Token::new(
+                    TokenKind::Symbol(value.to_string()),
                     Span::new(
                         self.source.clone(),
                         self.position + position,
