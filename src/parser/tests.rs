@@ -1,39 +1,8 @@
+use std::{path::PathBuf, rc::Rc};
+
+use crate::parser::lexer::{Lexer, Span, TokenKind};
+
 use super::*;
-
-#[test]
-fn test_lexer_peek_token() {
-    let source = Rc::new(PathBuf::from("test.mlg"));
-    let input = "1 + 2 * 3";
-    let lexer = Lexer::new(source.clone(), input.to_string());
-    let token = lexer.peek_token();
-    assert_eq!(token.kind, TokenKind::Number("1".to_string()));
-    assert_eq!(token.span, Span::new(source.clone(), 0, 1));
-}
-
-#[test]
-fn test_lexer_peek_token_at() {
-    let source = Rc::new(PathBuf::from("test.mlg"));
-    let input = "1 + 2 * 3";
-    let lexer = Lexer::new(source.clone(), input.to_string());
-    let token = lexer.peek_token_at(1);
-    assert_eq!(token.kind, TokenKind::Whitespace);
-    assert_eq!(token.span, Span::new(source.clone(), 1, 2));
-}
-
-#[test]
-fn test_lexer_expect_token() {
-    let source = Rc::new(PathBuf::from("test.mlg"));
-    let input = "1 + 2 * 3";
-    let mut lexer = Lexer::new(source.clone(), input.to_string());
-    lexer.expect_token(&Token::new(
-        TokenKind::Number("1".to_string()),
-        Span::new(source.clone(), 0, 1),
-    ));
-    lexer.expect_token(&Token::new(
-        TokenKind::Whitespace,
-        Span::new(source.clone(), 1, 2),
-    ));
-}
 
 #[test]
 fn test_lexer_tokenize() {
