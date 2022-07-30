@@ -20,51 +20,117 @@ impl Parser {
     }
 
     // expr ::= let | fun | if | equality
-    // let ::= "let" ident "=" expr "in" expr
-    // fun ::= "{" params "->" expr "}"
-    // params ::= ident ("," ident)*
-    // if ::= "if" expr "then" expr "else" expr
-    // equality ::= add (("==" | "!=") add)*
     fn parse_expr(&mut self) -> Result<Expr, String> {
-        self.parse_add()
+        // let ::= "let" ident "=" expr "in" expr
+        if let Ok(span1) = self.expect(TokenKind::Ident("let".to_string())) {
+            let ident = self.expect_ident()?;
+            let _ = self.expect(TokenKind::Symbol("=".to_string()))?;
+            let value = self.parse_expr()?;
+            let _ = self.expect(TokenKind::Ident("in".to_string()))?;
+            let body = self.parse_expr()?;
+            return Ok(Expr::new(
+                concat_span(&span1, &body.span),
+                ExprKind::Let {
+                    name: ident,
+                    value: Box::new(value),
+                    body: Box::new(body),
+                },
+            ));
+        }
+
+        // fun ::= "{" params "->" expr "}"
+        if let Ok(span1) = self.expect(TokenKind::Special("{".to_string())) {
+            let mut parameters = Vec::new();
+            // params ::= (ident ("," ident)*)?
+            if let Err(_) = self.expect(TokenKind::Symbol("->".to_string())) {
+                loop {
+                    let ident = self.expect_ident()?;
+                    parameters.push(ident);
+                    if let Ok(_) = self.expect(TokenKind::Special(",".to_string())) {
+                        continue;
+                    } else {
+                        let _ = self.expect(TokenKind::Symbol("->".to_string()))?;
+                        break;
+                    }
+                }
+            }
+            let body = self.parse_expr()?;
+            let _ = self.expect(TokenKind::Special("}".to_string()))?;
+            return Ok(Expr::new(
+                concat_span(&span1, &body.span),
+                ExprKind::Fun {
+                    parameters,
+                    body: Box::new(body),
+                },
+            ));
+        }
+
+        // if ::= "if" expr "then" expr "else" expr
+        if let Ok(span1) = self.expect(TokenKind::Ident("if".to_string())) {
+            let cond = self.parse_expr()?;
+            let _ = self.expect(TokenKind::Ident("then".to_string()))?;
+            let then_branch = self.parse_expr()?;
+            let _ = self.expect(TokenKind::Ident("else".to_string()))?;
+            let else_branch = self.parse_expr()?;
+            return Ok(Expr::new(
+                concat_span(&span1, &else_branch.span),
+                ExprKind::If {
+                    condition: Box::new(cond),
+                    then_branch: Box::new(then_branch),
+                    else_branch: Box::new(else_branch),
+                },
+            ));
+        }
+        self.parse_equality()
+    }
+
+    /// equality ::= add ("==" add)*
+    fn parse_equality(&mut self) -> Result<Expr, String> {
+        let mut lhs = self.parse_add()?;
+        loop {
+            if let Ok(_) = self.expect(TokenKind::Symbol("==".to_string())) {
+                let rhs = self.parse_add()?;
+                lhs = Expr::new(
+                    concat_span(&lhs.span, &rhs.span),
+                    ExprKind::Binary {
+                        left: Box::new(lhs),
+                        operator: BinaryOperator::Equal,
+                        right: Box::new(rhs),
+                    },
+                );
+            } else {
+                break;
+            }
+        }
+        Ok(lhs)
     }
 
     /// add ::= mul (("+" | "-") mul)*
     fn parse_add(&mut self) -> Result<Expr, String> {
         let mut lhs = self.parse_mul()?;
         loop {
-            match self.peek() {
-                Some(Token {
-                    kind: TokenKind::Symbol(s),
-                    span: _,
-                }) if *s == "+" => {
-                    self.current += 1;
-                    let rhs = self.parse_mul()?;
-                    lhs = Expr::new(
-                        concat_span(&lhs.span, &rhs.span),
-                        ExprKind::Binary {
-                            left: Box::new(lhs),
-                            operator: BinaryOperator::Plus,
-                            right: Box::new(rhs),
-                        },
-                    );
-                }
-                Some(Token {
-                    kind: TokenKind::Symbol(s),
-                    span: _,
-                }) if *s == "-" => {
-                    self.current += 1;
-                    let rhs = self.parse_mul()?;
-                    lhs = Expr::new(
-                        concat_span(&lhs.span, &rhs.span),
-                        ExprKind::Binary {
-                            left: Box::new(lhs),
-                            operator: BinaryOperator::Minus,
-                            right: Box::new(rhs),
-                        },
-                    );
-                }
-                _ => break,
+            if let Ok(_) = self.expect(TokenKind::Symbol("+".to_string())) {
+                let rhs = self.parse_mul()?;
+                lhs = Expr::new(
+                    concat_span(&lhs.span, &rhs.span),
+                    ExprKind::Binary {
+                        left: Box::new(lhs),
+                        operator: BinaryOperator::Plus,
+                        right: Box::new(rhs),
+                    },
+                );
+            } else if let Ok(_) = self.expect(TokenKind::Symbol("-".to_string())) {
+                let rhs = self.parse_mul()?;
+                lhs = Expr::new(
+                    concat_span(&lhs.span, &rhs.span),
+                    ExprKind::Binary {
+                        left: Box::new(lhs),
+                        operator: BinaryOperator::Minus,
+                        right: Box::new(rhs),
+                    },
+                );
+            } else {
+                break;
             }
         }
         Ok(lhs)
@@ -74,63 +140,80 @@ impl Parser {
     fn parse_mul(&mut self) -> Result<Expr, String> {
         let mut lhs = self.parse_unary()?;
         loop {
-            match self.peek() {
-                Some(Token {
-                    kind: TokenKind::Symbol(s),
-                    span: _,
-                }) if *s == "*" => {
-                    self.current += 1;
-                    let rhs = self.parse_unary()?;
-                    lhs = Expr::new(
-                        concat_span(&lhs.span, &rhs.span),
-                        ExprKind::Binary {
-                            left: Box::new(lhs),
-                            operator: BinaryOperator::Asterisk,
-                            right: Box::new(rhs),
-                        },
-                    );
-                }
-                Some(Token {
-                    kind: TokenKind::Symbol(s),
-                    span: _,
-                }) if *s == "/" => {
-                    self.current += 1;
-                    let rhs = self.parse_unary()?;
-                    lhs = Expr::new(
-                        concat_span(&lhs.span, &rhs.span),
-                        ExprKind::Binary {
-                            left: Box::new(lhs),
-                            operator: BinaryOperator::Slash,
-                            right: Box::new(rhs),
-                        },
-                    );
-                }
-                _ => break,
+            if let Ok(_) = self.expect(TokenKind::Symbol("*".to_string())) {
+                let rhs = self.parse_unary()?;
+                lhs = Expr::new(
+                    concat_span(&lhs.span, &rhs.span),
+                    ExprKind::Binary {
+                        left: Box::new(lhs),
+                        operator: BinaryOperator::Asterisk,
+                        right: Box::new(rhs),
+                    },
+                );
+            } else if let Ok(_) = self.expect(TokenKind::Symbol("/".to_string())) {
+                let rhs = self.parse_unary()?;
+                lhs = Expr::new(
+                    concat_span(&lhs.span, &rhs.span),
+                    ExprKind::Binary {
+                        left: Box::new(lhs),
+                        operator: BinaryOperator::Slash,
+                        right: Box::new(rhs),
+                    },
+                );
+            } else {
+                break;
             }
         }
         Ok(lhs)
     }
 
-    /// unary ::= "-" unary | primary
+    /// unary ::= "-" unary | call
     fn parse_unary(&mut self) -> Result<Expr, String> {
-        match self.peek() {
-            Some(Token {
-                kind: TokenKind::Symbol(s),
-                span,
-            }) if *s == "-" => {
-                let span = span.clone();
-                self.current += 1;
-                let expr = self.parse_unary()?;
-                Ok(Expr::new(
-                    concat_span(&span, &expr.span),
-                    ExprKind::Unary {
-                        operator: UnaryOperator::Minus,
-                        operand: Box::new(expr),
-                    },
-                ))
-            }
-            _ => self.parse_primary(),
+        if let Ok(span) = self.expect(TokenKind::Symbol("-".to_string())) {
+            let operand = self.parse_unary()?;
+            return Ok(Expr::new(
+                concat_span(&span, &operand.span),
+                ExprKind::Unary {
+                    operator: UnaryOperator::Minus,
+                    operand: Box::new(operand),
+                },
+            ));
+        } else {
+            return self.parse_call();
         }
+    }
+
+    /// call ::= primary ("(" (expr ("," expr)*)? ")")*
+    fn parse_call(&mut self) -> Result<Expr, String> {
+        let mut operand = self.parse_primary()?;
+        loop {
+            if let Ok(_) = self.expect(TokenKind::Special("(".to_string())) {
+                let mut arguments = Vec::new();
+                let span_end = if let Ok(span) = self.expect(TokenKind::Special(")".to_string())) {
+                    span
+                } else {
+                    loop {
+                        let arg = self.parse_expr()?;
+                        arguments.push(arg);
+                        if let Ok(_) = self.expect(TokenKind::Special(",".to_string())) {
+                            continue;
+                        } else {
+                            break self.expect(TokenKind::Special(")".to_string()))?;
+                        }
+                    }
+                };
+                operand = Expr::new(
+                    concat_span(&operand.span, &span_end),
+                    ExprKind::Call {
+                        callee: Box::new(operand),
+                        arguments,
+                    },
+                );
+            } else {
+                break;
+            }
+        }
+        Ok(operand)
     }
 
     /// primary ::= ident | number | "(" expr ")"
@@ -147,10 +230,6 @@ impl Parser {
         }
     }
 
-    fn peek(&self) -> Option<&Token> {
-        self.tokens.get(self.current)
-    }
-
     fn parse_variable(&mut self) -> Result<Expr, String> {
         match self.peek() {
             Some(Token {
@@ -158,7 +237,7 @@ impl Parser {
                 kind: TokenKind::Ident(s),
             }) => {
                 let result = Ok(Expr::new(span.to_owned(), ExprKind::Variable(s.to_owned())));
-                self.current += 1;
+                self.consume();
                 result
             }
             Some(token) => Err(format!("unexpected token: {}", token)),
@@ -176,7 +255,7 @@ impl Parser {
                     span.to_owned(),
                     ExprKind::Number(s.parse().unwrap()),
                 ));
-                self.current += 1;
+                self.consume();
                 result
             }
             Some(token) => Err(format!("unexpected token: {}", token)),
@@ -185,32 +264,58 @@ impl Parser {
     }
 
     fn parse_paren(&mut self) -> Result<Expr, String> {
+        if let Ok(span_1) = self.expect(TokenKind::Special("(".to_string())) {
+            let expr = self.parse_expr()?;
+            if let Ok(span_2) = self.expect(TokenKind::Special(")".to_string())) {
+                return Ok(Expr::new(concat_span(&span_1, &span_2), expr.kind));
+            } else {
+                return Err("expected ')'".to_string());
+            }
+        }
+        if let Some(token) = self.peek() {
+            return Err(format!("unexpected token: {}", token));
+        }
+        Err("unexpected EOF".to_string())
+    }
+
+    fn peek(&self) -> Option<&Token> {
+        self.tokens.get(self.current)
+    }
+
+    fn consume(&mut self) {
+        self.current += 1;
+    }
+
+    fn expect(&mut self, expected: TokenKind) -> Result<Span, String> {
+        match self.peek() {
+            Some(Token { span, kind }) if *kind == expected => {
+                let span = span.clone();
+                self.consume();
+                Ok(span)
+            }
+            Some(token) => Err(format!("unexpected token: {}", token)),
+            None => Err("unexpected EOF".to_string()),
+        }
+    }
+
+    fn expect_ident(&mut self) -> Result<String, String> {
         match self.peek() {
             Some(Token {
                 span: _,
-                kind: TokenKind::Special(s),
-            }) if *s == "(" => {
-                self.current += 1;
-                let expr = self.parse_expr()?;
-                match self.peek() {
-                    Some(Token {
-                        span: _,
-                        kind: TokenKind::Special(s),
-                    }) if *s == ")" => {
-                        self.current += 1;
-                        Ok(expr)
-                    }
-                    Some(token) => Err(format!("unexpected token: {}", token)),
-                    None => Err("unexpected EOF".to_owned()),
-                }
+                kind: TokenKind::Ident(s),
+            }) => {
+                let result = Ok(s.to_owned());
+                self.consume();
+                result
             }
             Some(token) => Err(format!("unexpected token: {}", token)),
-            None => Err("unexpected EOF".to_owned()),
+            None => Err("unexpected EOF".to_string()),
         }
     }
 }
 
 fn concat_span(span_1: &Span, span_2: &Span) -> Span {
+    assert_eq!(*span_1.source, *span_2.source);
     Span {
         source: span_1.source.clone(),
         start: span_1.start,
@@ -249,8 +354,8 @@ pub enum ExprKind {
         body: Box<Expr>,
     },
     Call {
-        function: Box<Expr>,
-        arguments: Vec<Box<Expr>>,
+        callee: Box<Expr>,
+        arguments: Vec<Expr>,
     },
     Unary {
         operator: UnaryOperator,
