@@ -9,11 +9,11 @@ impl Parser {
     // expr ::= let | fun | if | equality
     pub fn parse_expr(&mut self) -> Result<Expr, String> {
         // let ::= "let" ident "=" expr "in" expr
-        if let Ok(span1) = self.expect(TokenKind::Ident("let".to_string())) {
+        if let Ok(span1) = self.expect(TokenKind::ident("let")) {
             let ident = self.expect_ident()?;
-            let _ = self.expect(TokenKind::Symbol("=".to_string()))?;
+            let _ = self.expect(TokenKind::symbol("="))?;
             let value = self.parse_expr()?;
-            let _ = self.expect(TokenKind::Ident("in".to_string()))?;
+            let _ = self.expect(TokenKind::ident("in"))?;
             let body = self.parse_expr()?;
             return Ok(Expr::new(
                 concat_span(&span1, &body.span),
@@ -26,23 +26,23 @@ impl Parser {
         }
 
         // fun ::= "{" params "->" expr "}"
-        if let Ok(span1) = self.expect(TokenKind::Special("{".to_string())) {
+        if let Ok(span1) = self.expect(TokenKind::special("{")) {
             let mut parameters = Vec::new();
             // params ::= (ident ("," ident)*)?
-            if let Err(_) = self.expect(TokenKind::Symbol("->".to_string())) {
+            if let Err(_) = self.expect(TokenKind::symbol("->")) {
                 loop {
                     let ident = self.expect_ident()?;
                     parameters.push(ident);
-                    if let Ok(_) = self.expect(TokenKind::Special(",".to_string())) {
+                    if let Ok(_) = self.expect(TokenKind::special(",")) {
                         continue;
                     } else {
-                        let _ = self.expect(TokenKind::Symbol("->".to_string()))?;
+                        let _ = self.expect(TokenKind::symbol("->"))?;
                         break;
                     }
                 }
             }
             let body = self.parse_expr()?;
-            let span2 = self.expect(TokenKind::Special("}".to_string()))?;
+            let span2 = self.expect(TokenKind::special("}"))?;
             return Ok(Expr::new(
                 concat_span(&span1, &span2),
                 ExprKind::Fun {
@@ -53,11 +53,11 @@ impl Parser {
         }
 
         // if ::= "if" expr "then" expr "else" expr
-        if let Ok(span1) = self.expect(TokenKind::Ident("if".to_string())) {
+        if let Ok(span1) = self.expect(TokenKind::ident("if")) {
             let cond = self.parse_expr()?;
-            let _ = self.expect(TokenKind::Ident("then".to_string()))?;
+            let _ = self.expect(TokenKind::ident("then"))?;
             let then_branch = self.parse_expr()?;
-            let _ = self.expect(TokenKind::Ident("else".to_string()))?;
+            let _ = self.expect(TokenKind::ident("else"))?;
             let else_branch = self.parse_expr()?;
             return Ok(Expr::new(
                 concat_span(&span1, &else_branch.span),
@@ -75,7 +75,7 @@ impl Parser {
     fn parse_equality(&mut self) -> Result<Expr, String> {
         let mut lhs = self.parse_add()?;
         loop {
-            if let Ok(_) = self.expect(TokenKind::Symbol("==".to_string())) {
+            if let Ok(_) = self.expect(TokenKind::symbol("==")) {
                 let rhs = self.parse_add()?;
                 lhs = Expr::new(
                     concat_span(&lhs.span, &rhs.span),
@@ -86,17 +86,16 @@ impl Parser {
                     },
                 );
             } else {
-                break;
+                return Ok(lhs);
             }
         }
-        Ok(lhs)
     }
 
     /// add ::= mul (("+" | "-") mul)*
     fn parse_add(&mut self) -> Result<Expr, String> {
         let mut lhs = self.parse_mul()?;
         loop {
-            if let Ok(_) = self.expect(TokenKind::Symbol("+".to_string())) {
+            if let Ok(_) = self.expect(TokenKind::symbol("+")) {
                 let rhs = self.parse_mul()?;
                 lhs = Expr::new(
                     concat_span(&lhs.span, &rhs.span),
@@ -106,7 +105,7 @@ impl Parser {
                         right: Box::new(rhs),
                     },
                 );
-            } else if let Ok(_) = self.expect(TokenKind::Symbol("-".to_string())) {
+            } else if let Ok(_) = self.expect(TokenKind::symbol("-")) {
                 let rhs = self.parse_mul()?;
                 lhs = Expr::new(
                     concat_span(&lhs.span, &rhs.span),
@@ -117,17 +116,16 @@ impl Parser {
                     },
                 );
             } else {
-                break;
+                return Ok(lhs);
             }
         }
-        Ok(lhs)
     }
 
     /// mul ::= unary (("*" | "/") unary)*
     fn parse_mul(&mut self) -> Result<Expr, String> {
         let mut lhs = self.parse_unary()?;
         loop {
-            if let Ok(_) = self.expect(TokenKind::Symbol("*".to_string())) {
+            if let Ok(_) = self.expect(TokenKind::symbol("*")) {
                 let rhs = self.parse_unary()?;
                 lhs = Expr::new(
                     concat_span(&lhs.span, &rhs.span),
@@ -137,7 +135,7 @@ impl Parser {
                         right: Box::new(rhs),
                     },
                 );
-            } else if let Ok(_) = self.expect(TokenKind::Symbol("/".to_string())) {
+            } else if let Ok(_) = self.expect(TokenKind::symbol("/")) {
                 let rhs = self.parse_unary()?;
                 lhs = Expr::new(
                     concat_span(&lhs.span, &rhs.span),
@@ -148,15 +146,14 @@ impl Parser {
                     },
                 );
             } else {
-                break;
+                return Ok(lhs);
             }
         }
-        Ok(lhs)
     }
 
     /// unary ::= "-" unary | call
     fn parse_unary(&mut self) -> Result<Expr, String> {
-        if let Ok(span) = self.expect(TokenKind::Symbol("-".to_string())) {
+        if let Ok(span) = self.expect(TokenKind::symbol("-")) {
             let operand = self.parse_unary()?;
             return Ok(Expr::new(
                 concat_span(&span, &operand.span),
@@ -174,18 +171,18 @@ impl Parser {
     fn parse_call(&mut self) -> Result<Expr, String> {
         let mut operand = self.parse_primary()?;
         loop {
-            if let Ok(_) = self.expect(TokenKind::Special("(".to_string())) {
+            if let Ok(_) = self.expect(TokenKind::special("(")) {
                 let mut arguments = Vec::new();
-                let span_end = if let Ok(span) = self.expect(TokenKind::Special(")".to_string())) {
+                let span_end = if let Ok(span) = self.expect(TokenKind::special(")")) {
                     span
                 } else {
                     loop {
                         let arg = self.parse_expr()?;
                         arguments.push(arg);
-                        if let Ok(_) = self.expect(TokenKind::Special(",".to_string())) {
+                        if let Ok(_) = self.expect(TokenKind::special(",")) {
                             continue;
                         } else {
-                            break self.expect(TokenKind::Special(")".to_string()))?;
+                            break self.expect(TokenKind::special(")"))?;
                         }
                     }
                 };
@@ -197,10 +194,9 @@ impl Parser {
                     },
                 );
             } else {
-                break;
+                return Ok(operand);
             }
         }
-        Ok(operand)
     }
 
     /// primary ::= ident | number | "(" expr ")"
@@ -251,9 +247,9 @@ impl Parser {
     }
 
     fn parse_paren(&mut self) -> Result<Expr, String> {
-        if let Ok(span_1) = self.expect(TokenKind::Special("(".to_string())) {
+        if let Ok(span_1) = self.expect(TokenKind::special("(")) {
             let expr = self.parse_expr()?;
-            if let Ok(span_2) = self.expect(TokenKind::Special(")".to_string())) {
+            if let Ok(span_2) = self.expect(TokenKind::special(")")) {
                 return Ok(Expr::new(concat_span(&span_1, &span_2), expr.kind));
             } else {
                 return Err("expected ')'".to_string());

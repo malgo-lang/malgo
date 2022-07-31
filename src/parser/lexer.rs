@@ -14,6 +14,24 @@ pub enum TokenKind {
     Number(String),
 }
 
+impl TokenKind {
+    pub fn symbol(s: &str) -> Self {
+        TokenKind::Symbol(s.to_string())
+    }
+
+    pub fn special(s: &str) -> Self {
+        TokenKind::Special(s.to_string())
+    }
+
+    pub fn ident(s: &str) -> Self {
+        TokenKind::Ident(s.to_string())
+    }
+
+    pub fn number(s: &str) -> Self {
+        TokenKind::Number(s.to_string())
+    }
+}
+
 impl fmt::Display for TokenKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -111,7 +129,7 @@ impl Lexer {
             '0'..='9' => {
                 let value = input.split(|c| !('0'..='9').contains(&c)).next().unwrap();
                 Token::new(
-                    TokenKind::Number(value.to_string()),
+                    TokenKind::number(value),
                     Span::new(
                         self.source.clone(),
                         self.position + position,
@@ -122,7 +140,7 @@ impl Lexer {
             c if lexing_rules::is_special(c) => {
                 let value = c.to_string();
                 Token::new(
-                    TokenKind::Special(value.to_string()),
+                    TokenKind::Special(value.clone()),
                     Span::new(
                         self.source.clone(),
                         self.position + position,
@@ -133,7 +151,7 @@ impl Lexer {
             c if lexing_rules::is_symbol(c) => {
                 let value = input.split(|c| !lexing_rules::is_symbol(c)).next().unwrap();
                 Token::new(
-                    TokenKind::Symbol(value.to_string()),
+                    TokenKind::symbol(value),
                     Span::new(
                         self.source.clone(),
                         self.position + position,
@@ -147,7 +165,7 @@ impl Lexer {
                     .next()
                     .unwrap();
                 Token::new(
-                    TokenKind::Ident(value.to_string()),
+                    TokenKind::ident(value),
                     Span::new(
                         self.source.clone(),
                         self.position + position,
