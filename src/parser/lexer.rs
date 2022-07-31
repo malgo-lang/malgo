@@ -1,4 +1,6 @@
 pub mod lexing_rules;
+#[cfg(test)]
+mod tests;
 
 use std::{fmt, path::PathBuf, rc::Rc};
 
