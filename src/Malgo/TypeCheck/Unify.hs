@@ -74,9 +74,7 @@ unify _ (TyTuple n1) (TyTuple n2) | n1 == n2 = pure (mempty, [])
 unify x (TyRecord kts1) (TyRecord kts2)
   | HashMap.keys kts1 == HashMap.keys kts2 = pure (mempty, zipWith (\t1 t2 -> Annotated x $ t1 :~ t2) (HashMap.elems kts1) (HashMap.elems kts2))
 unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [Annotated x $ t1 :~ t2])
-unify x (TYPE rep1) (TYPE rep2) = pure (mempty, [Annotated x $ rep1 :~ rep2])
-unify _ TyRep TyRep = pure (mempty, [])
-unify _ Rep Rep = pure (mempty, [])
+unify _ TYPE TYPE = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
     unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
@@ -86,8 +84,7 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
 
   freshVar hint = do
     hint <- pure $ fromMaybe "t" hint
-    rep <- TypeVar <$> newTemporalId ("r" <> hint) TyRep
-    kind <- TypeVar <$> newTemporalId ("k" <> hint) (TYPE $ TyMeta rep)
+    kind <- TypeVar <$> newTemporalId ("k" <> hint) TYPE
     TypeVar <$> newInternalId hint (TyMeta kind)
 
   bindVar x v t = do
@@ -107,9 +104,7 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
   zonk (TyRecord kts) = TyRecord <$> traverse zonk kts
   zonk (TyPtr t) = TyPtr <$> zonk t
   zonk t@TyBottom = pure t
-  zonk (TYPE t) = TYPE <$> zonk t
-  zonk t@TyRep {} = pure t
-  zonk t@Rep {} = pure t
+  zonk TYPE = pure TYPE
   zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
 
 -- Anothor implementation using `Plated`
@@ -168,11 +163,8 @@ defaultToBoxed :: MonadBind f => Range -> Type -> f Type
 defaultToBoxed x = transformM \case
   TyMeta v -> do
     let vKind = kindOf $ v ^. typeVar . idMeta
-    case vKind of
-      TyRep -> bindVar x v Rep >> pure Rep
-      _ -> do
-        void $ defaultToBoxed x vKind
-        TyMeta <$> traverseOf (typeVar . idMeta) zonk v
+    void $ defaultToBoxed x vKind
+    TyMeta <$> traverseOf (typeVar . idMeta) zonk v
   t -> pure t
 
 unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar

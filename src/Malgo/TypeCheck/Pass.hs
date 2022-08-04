@@ -141,9 +141,8 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   dataDefs' <- tcDataDefs dataDefs
   pure (typeSynonyms', dataDefs')
   where
-    -- TODO: ほんとはpolymorphicな値を返さないといけないと思う
-    buildTyConKind [] = TYPE Rep
-    buildTyConKind (_ : xs) = TyArr (TYPE Rep) (buildTyConKind xs)
+    buildTyConKind [] = TYPE
+    buildTyConKind (_ : xs) = TyArr TYPE (buildTyConKind xs)
 
 tcTypeSynonyms ::
   ( MonadBind f,
@@ -159,7 +158,7 @@ tcTypeSynonyms ::
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     TyCon con <- lookupType pos name
-    params' <- traverse (\p -> newInternalId (idToText p) (TYPE Rep)) params
+    params' <- traverse (\p -> newInternalId (idToText p) TYPE) params
     zipWithM_ (\p p' -> typeDefMap . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     typ' <- transType typ
     typeSynonymMap . at con .= Just (params', typ')
@@ -188,7 +187,7 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
     name' <- lookupType pos name
-    params' <- traverse (\p -> newInternalId (idToText $ p ^. value) (TYPE Rep)) params
+    params' <- traverse (\p -> newInternalId (idToText $ p ^. value) TYPE) params
     zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef (TyVar p') [] [])) params params'
     (_, valueConsNames, valueConsTypes) <-
       unzip3 <$> forOf (traversed . _3) valueCons \args -> do
@@ -366,9 +365,7 @@ evidenceOfEquiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> evidenceOfEquiv l1 l2 <*>
 evidenceOfEquiv (TyTuple n1) (TyTuple n2) | n1 == n2 = Just mempty
 evidenceOfEquiv (TyRecord kts1) (TyRecord kts2) | HashMap.keys kts1 == HashMap.keys kts2 = mconcat <$> zipWithM evidenceOfEquiv (HashMap.elems kts1) (HashMap.elems kts2)
 evidenceOfEquiv (TyPtr t1) (TyPtr t2) = evidenceOfEquiv t1 t2
-evidenceOfEquiv (TYPE rep1) (TYPE rep2) = evidenceOfEquiv rep1 rep2
-evidenceOfEquiv TyRep TyRep = Just mempty
-evidenceOfEquiv Rep Rep = Just mempty
+evidenceOfEquiv TYPE TYPE = Just mempty
 evidenceOfEquiv _ _ = Nothing
 
 tcExpr ::
@@ -568,13 +565,12 @@ transType (S.TyApp pos t ts) = do
   case (t, ts) of
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
-      rep <- TyMeta . TypeVar <$> newInternalId "r" TyRep
-      solve [Annotated pos $ kindOf t' :~ TYPE rep]
+      solve [Annotated pos $ kindOf t' :~ TYPE]
       pure $ TyPtr t'
     _ -> do
       t' <- transType t
       ts' <- traverse transType ts
-      solve [Annotated pos $ buildTyArr (map kindOf ts') (TYPE Rep) :~ kindOf t']
+      solve [Annotated pos $ buildTyArr (map kindOf ts') TYPE :~ kindOf t']
       TyConApp <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
