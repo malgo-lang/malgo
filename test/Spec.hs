@@ -45,3 +45,12 @@ main = do
           case exitCode of
             ExitSuccess -> pass
             ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+    errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo/error"
+    describe "Test malgo to-ll (must be error)" do
+      parallel $ for_ errorcases \errorcase -> do
+        it ("test error case " <> errorcase) $ example do
+          (exitCode, out, err) <- readProcess (proc "./scripts/test/test-error.sh" ["./testcases/malgo/error" </> errorcase, buildCommand])
+          case exitCode of
+            ExitSuccess -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+            ExitFailure _ -> pass
+
