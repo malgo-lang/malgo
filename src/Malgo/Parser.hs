@@ -376,14 +376,6 @@ pList = label "list" do
   end <- getSourcePos
   pure $ List (Range start end) xs
 
-pRecordAccess :: Parser (Exp (Malgo 'Parse))
-pRecordAccess = do
-  start <- getSourcePos
-  l <- char '#' >> lowerIdent
-  end <- getSourcePos
-  pure $ RecordAccess (Range start end) l
-
-
 pSeq :: Parser (Exp (Malgo 'Parse))
 pSeq = do
   start <- getSourcePos
@@ -402,7 +394,6 @@ pSingleExp =
     <|> try pList
     <|> pList
     <|> pFun
-    <|> pRecordAccess
     <|> try pSeq
     <|> pParens
   where

@@ -127,7 +127,6 @@ rnExp (List pos es) = do
   where
     buildListApply nilName _ [] = Var pos nilName
     buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos consName) x) (buildListApply nilName consName xs)
-rnExp (RecordAccess pos l) = pure $ RecordAccess pos l
 rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
 rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExp (Parens pos e) = Parens pos <$> rnExp e

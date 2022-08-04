@@ -77,7 +77,6 @@ refineExp (Fn x cs) = do
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps
 refineExp (Tuple x es) = Tuple x <$> traverse refineExp es
 refineExp (Record x kvs) = Record x <$> traverseOf (traversed . _2) refineExp kvs
-refineExp (RecordAccess x label) = pure $ RecordAccess x label
 refineExp (Seq x ss) = Seq x <$> traverse refineStmt ss
 refineExp (Parens _ e) = refineExp e
 

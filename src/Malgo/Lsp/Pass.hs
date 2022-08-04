@@ -173,7 +173,6 @@ indexExp (Tuple _ es) =
   traverse_ indexExp es
 indexExp (Record _ fields) =
   traverse_ (indexExp . snd) fields
-indexExp (RecordAccess _ _) = pass
 indexExp (Seq _ stmts) =
   traverse_ indexStmt stmts
 indexExp (Parens _ e) =

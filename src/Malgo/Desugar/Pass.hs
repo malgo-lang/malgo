@@ -263,17 +263,6 @@ dsExp (G.Record x kvs) = runDef $ do
   where
     sortRecordField [] _ = []
     sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
-dsExp (G.RecordAccess x label) = runDef $ do
-  GT.TyArr (GT.TyRecord recordType) _ <- pure $ x ^. GT.withType
-  kts <- HashMap.toList <$> traverse dsType recordType
-  p <- newTemporalId "p" =<< dsType (GT.TyRecord recordType)
-  obj <-
-    Fun [p] <$> runDef do
-      let con = C.Con C.Tuple $ map snd kts
-      tuple <- destruct (Atom (C.Var p)) con
-      pure $ Atom $ tuple List.!! fromJust (List.elemIndex label (map fst kts))
-  accessType <- dsType (x ^. GT.withType)
-  Atom <$> let_ accessType obj
 dsExp (G.Seq _ ss) = dsStmts ss
 dsExp (G.Parens _ e) = dsExp e
 

@@ -430,14 +430,6 @@ tcExpr (Record pos kvs) = do
   -- レコードリテラルでは、レコード型をフィールド名から検索する必要はない
   let kvsType = TyRecord $ HashMap.fromList $ map (bimap identity typeOf) kvs'
   pure $ Record (Annotated kvsType pos) kvs'
-tcExpr (RecordAccess pos label) = undefined
-  -- recordType <- instantiate pos =<< lookupRecordType pos label
-  -- retType <- TyMeta <$> freshVar Nothing
-  -- case recordType of
-  --   TyRecord kts -> do
-  --     tell [Annotated pos $ recordType :~ TyRecord (HashMap.insert label retType kts)]
-  --     pure $ RecordAccess (Annotated (TyArr recordType retType) pos) label
-  --   _ -> errorOn pos $ pPrint recordType <+> "is not record type"
 tcExpr (Ann pos e t) = do
   e' <- tcExpr e
   typeRep <- transType t

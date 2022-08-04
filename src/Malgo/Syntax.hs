@@ -8,7 +8,6 @@ import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import qualified Data.HashSet as HashSet
 import Koriel.Id
-import Koriel.Lens (HasValue (value))
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasRange (range))
 import Malgo.Prelude
@@ -96,7 +95,6 @@ data Exp x
   | Tuple (XTuple x) [Exp x]
   | Record (XRecord x) [(Text, Exp x)]
   | List (XList x) [Exp x]
-  | RecordAccess (XRecordAccess x) Text
   | Ann (XAnn x) (Exp x) (Type x)
   | Seq (XSeq x) (NonEmpty (Stmt x))
   | Parens (XParens x) (Exp x)
@@ -122,7 +120,6 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
-  pPrintPrec l _ (RecordAccess _ x) = "#" <> pPrintPrec l 0 x
   pPrintPrec _ _ (Ann _ e t) = parens $ pPrint e <+> ":" <+> pPrint t
   pPrintPrec _ _ (Seq _ ss) = parens $ sep $ punctuate ";" $ toList $ fmap pPrint ss
   pPrintPrec _ _ (Parens _ x) = parens $ pPrint x
@@ -140,7 +137,6 @@ instance
   typeOf (Tuple x _) = typeOf x
   typeOf (Record x _) = typeOf x
   typeOf (List x _) = typeOf x
-  typeOf (RecordAccess x _) = typeOf x
   typeOf (Ann x _ _) = typeOf x
   typeOf (Seq x _) = typeOf x
   typeOf (Parens x _) = typeOf x
@@ -155,7 +151,6 @@ instance
     Tuple x es -> Tuple <$> types f x <*> traverse (types f) es
     Record x kvs -> Record <$> types f x <*> traverse (\(k, v) -> (k,) <$> types f v) kvs
     List x es -> List <$> types f x <*> traverse (types f) es
-    RecordAccess x l -> RecordAccess <$> types f x <*> pure l
     Ann x e t -> Ann <$> types f x <*> types f e <*> pure t
     Seq x ss -> Seq <$> types f x <*> traverse (types f) ss
     Parens x e -> Parens <$> types f x <*> types f e
@@ -188,7 +183,6 @@ instance
     Tuple x es -> range f x <&> \x -> Tuple x es
     Record x kvs -> range f x <&> \x -> Record x kvs
     List x es -> range f x <&> \x -> List x es
-    RecordAccess x l -> range f x <&> \x -> RecordAccess x l
     Ann x e t -> range f x <&> \x -> Ann x e t
     Seq x ss -> range f x <&> \x -> Seq x ss
     Parens x e -> range f x <&> \x -> Parens x e
@@ -213,7 +207,6 @@ freevars (Fn _ cs) = foldMap freevarsClause cs
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (List _ es) = mconcat $ map freevars es
-freevars (RecordAccess _ _) = mempty
 freevars (Ann _ e _) = freevars e
 freevars (Seq _ ss) = freevarsStmts ss
   where
