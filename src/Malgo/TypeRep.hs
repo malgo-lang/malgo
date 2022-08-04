@@ -20,34 +20,6 @@ import Malgo.Prelude
 -- Common tag representations --
 --------------------------------
 
--- | Runtime representation
-data Rep
-  = -- | Boxed value
-    BoxedRep
-  | -- | Int32#
-    Int32Rep
-  | -- | Int64#
-    Int64Rep
-  | -- | Float#
-    FloatRep
-  | -- | Double#
-    DoubleRep
-  | -- | Char#
-    CharRep
-  | -- | String#
-    StringRep
-  deriving stock (Eq, Ord, Show, Generic, Data)
-
-instance Binary Rep
-
-instance ToJSON Rep
-
-instance FromJSON Rep
-
-instance Hashable Rep
-
-instance Pretty Rep where pPrint rep = text $ show rep
-
 -- | Primitive Types
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving stock (Eq, Show, Ord, Generic, Data)
@@ -105,7 +77,7 @@ data Type
   | -- | kind of runtime representation tags
     TyRep
   | -- | runtime representation tag
-    Rep Rep
+    Rep
   | -- unifiable type variable
 
     -- | type variable (not qualified)
@@ -154,7 +126,7 @@ instance Pretty Type where
   pPrintPrec _ _ TyBottom = "#Bottom"
   pPrintPrec l _ (TYPE rep) = "TYPE" <+> pPrintPrec l 0 rep
   pPrintPrec _ _ TyRep = "#Rep"
-  pPrintPrec l _ (Rep rep) = pPrintPrec l 0 rep
+  pPrintPrec _ _ Rep = "Rep"
   pPrintPrec l _ (TyMeta tv) = pPrintPrec l 0 tv
 
 -------------------
@@ -201,12 +173,12 @@ instance HasType t => HasType (Annotated t a) where
   types f (Annotated x a) = Annotated <$> traverseOf types f x <*> pure a
 
 instance HasKind PrimT where
-  kindOf Int32T = TYPE (Rep Int32Rep)
-  kindOf Int64T = TYPE (Rep Int64Rep)
-  kindOf FloatT = TYPE (Rep FloatRep)
-  kindOf DoubleT = TYPE (Rep DoubleRep)
-  kindOf CharT = TYPE (Rep CharRep)
-  kindOf StringT = TYPE (Rep StringRep)
+  kindOf Int32T = TYPE Rep
+  kindOf Int64T = TYPE Rep
+  kindOf FloatT = TYPE Rep
+  kindOf DoubleT = TYPE Rep
+  kindOf CharT = TYPE Rep
+  kindOf StringT = TYPE Rep
 
 instance HasType Type where
   typeOf = identity
@@ -219,13 +191,13 @@ instance HasKind Type where
   kindOf (TyCon c) = c ^. idMeta
   kindOf (TyPrim p) = kindOf p
   kindOf (TyArr _ t2) = kindOf t2
-  kindOf (TyTuple n) = buildTyArr (replicate n $ TYPE (Rep BoxedRep)) (TYPE (Rep BoxedRep))
-  kindOf (TyRecord _) = TYPE (Rep BoxedRep)
-  kindOf (TyPtr _) = TYPE (Rep BoxedRep)
-  kindOf TyBottom = TYPE (Rep BoxedRep)
+  kindOf (TyTuple n) = buildTyArr (replicate n $ TYPE Rep) (TYPE Rep)
+  kindOf (TyRecord _) = TYPE Rep
+  kindOf (TyPtr _) = TYPE Rep
+  kindOf TyBottom = TYPE Rep
   kindOf (TYPE rep) = TYPE rep -- Type :: Type
   kindOf TyRep = TyRep -- Rep :: Rep
-  kindOf (Rep _) = TyRep
+  kindOf Rep = TyRep
   kindOf (TyMeta tv) = kindOf tv
 
 instance HasType Void where
@@ -363,7 +335,6 @@ expandAllTypeSynonym _ t@TyRep {} = t
 expandAllTypeSynonym _ t@Rep {} = t
 expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
 
-makePrisms ''Rep
 makePrisms ''PrimT
 makePrisms ''Type
 makePrisms ''Scheme

@@ -142,8 +142,8 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   pure (typeSynonyms', dataDefs')
   where
     -- TODO: ほんとはpolymorphicな値を返さないといけないと思う
-    buildTyConKind [] = TYPE $ Rep BoxedRep
-    buildTyConKind (_ : xs) = TyArr (TYPE $ Rep BoxedRep) (buildTyConKind xs)
+    buildTyConKind [] = TYPE Rep
+    buildTyConKind (_ : xs) = TyArr (TYPE Rep) (buildTyConKind xs)
 
 tcTypeSynonyms ::
   ( MonadBind f,
@@ -159,7 +159,7 @@ tcTypeSynonyms ::
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     TyCon con <- lookupType pos name
-    params' <- traverse (\p -> newInternalId (idToText p) (TYPE $ Rep BoxedRep)) params
+    params' <- traverse (\p -> newInternalId (idToText p) (TYPE Rep)) params
     zipWithM_ (\p p' -> typeDefMap . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     typ' <- transType typ
     typeSynonymMap . at con .= Just (params', typ')
@@ -188,7 +188,7 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
     name' <- lookupType pos name
-    params' <- traverse (\p -> newInternalId (idToText $ p ^. value) (TYPE $ Rep BoxedRep)) params
+    params' <- traverse (\p -> newInternalId (idToText $ p ^. value) (TYPE Rep)) params
     zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef (TyVar p') [] [])) params params'
     (_, valueConsNames, valueConsTypes) <-
       unzip3 <$> forOf (traversed . _3) valueCons \args -> do
@@ -368,7 +368,7 @@ evidenceOfEquiv (TyRecord kts1) (TyRecord kts2) | HashMap.keys kts1 == HashMap.k
 evidenceOfEquiv (TyPtr t1) (TyPtr t2) = evidenceOfEquiv t1 t2
 evidenceOfEquiv (TYPE rep1) (TYPE rep2) = evidenceOfEquiv rep1 rep2
 evidenceOfEquiv TyRep TyRep = Just mempty
-evidenceOfEquiv (Rep rep1) (Rep rep2) | rep1 == rep2 = Just mempty
+evidenceOfEquiv Rep Rep = Just mempty
 evidenceOfEquiv _ _ = Nothing
 
 tcExpr ::
@@ -574,7 +574,7 @@ transType (S.TyApp pos t ts) = do
     _ -> do
       t' <- transType t
       ts' <- traverse transType ts
-      solve [Annotated pos $ buildTyArr (map kindOf ts') (TYPE $ Rep BoxedRep) :~ kindOf t']
+      solve [Annotated pos $ buildTyArr (map kindOf ts') (TYPE Rep) :~ kindOf t']
       TyConApp <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c

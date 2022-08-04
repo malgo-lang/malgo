@@ -76,7 +76,7 @@ unify x (TyRecord kts1) (TyRecord kts2)
 unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [Annotated x $ t1 :~ t2])
 unify x (TYPE rep1) (TYPE rep2) = pure (mempty, [Annotated x $ rep1 :~ rep2])
 unify _ TyRep TyRep = pure (mempty, [])
-unify _ (Rep rep1) (Rep rep2) | rep1 == rep2 = pure (mempty, [])
+unify _ Rep Rep = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
     unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
@@ -169,7 +169,7 @@ defaultToBoxed x = transformM \case
   TyMeta v -> do
     let vKind = kindOf $ v ^. typeVar . idMeta
     case vKind of
-      TyRep -> bindVar x v (Rep BoxedRep) >> pure (Rep BoxedRep)
+      TyRep -> bindVar x v Rep >> pure Rep
       _ -> do
         void $ defaultToBoxed x vKind
         TyMeta <$> traverseOf (typeVar . idMeta) zonk v
