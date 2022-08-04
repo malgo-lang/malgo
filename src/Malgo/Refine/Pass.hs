@@ -2,9 +2,10 @@
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
 module Malgo.Refine.Pass where
 
-import Control.Lens (to, traverseOf, traversed, view, (.~), (^.), _1, _2, _3)
+import Control.Lens (At (at), to, traverseOf, traversed, view, (.~), (^.), _1, _2, _3)
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List.NonEmpty as NonEmpty
-import Koriel.Lens (HasAnn (ann), HasValue (value))
+import Koriel.Lens (HasAnn (ann), HasSignatureMap (signatureMap), HasValue (value))
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Refine.RefineEnv
@@ -14,6 +15,7 @@ import qualified Malgo.Syntax as Syn
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv
 import Malgo.TypeRep
+import qualified Malgo.TypeRep as T
 
 type TypeChecked t x = (x ~ Malgo 'TypeCheck) :: Constraint
 
@@ -36,16 +38,31 @@ refineScDef :: (TypeChecked t x, MonadReader RefineEnv m, MonadIO m) => ScDef x 
 refineScDef (x, name, expr) = (x,name,) <$> refineExp expr
 
 refineExp :: (MonadReader RefineEnv m, MonadIO m) => Exp (Malgo 'TypeCheck) -> m (Exp (Malgo 'Refine))
-refineExp (Var x v) = pure $ Var x v
+refineExp (Var x v) = do
+  vScheme <- view (signatureMap . at (removePrefix v))
+  case vScheme of
+    Nothing -> pass
+    Just (Forall _ originalType) -> do
+      let instantiatedType = x ^. ann
+      checkValidInstantiation originalType instantiatedType
+  pure $ Var x v
+  where
+    checkValidInstantiation (T.TyVar v) (TyPrim p) = errorOn (x ^. value) $ "Invalid instantiation:" <+> "'" <> pPrint v <> "'" <+> "can't be instantiated with" <+> pPrint p
+    checkValidInstantiation (T.TyVar _) _ = pass
+    checkValidInstantiation (T.TyApp t1 t2) (T.TyApp t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
+    checkValidInstantiation (T.TyArr t1 t2) (T.TyArr t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
+    checkValidInstantiation (T.TyRecord fs) (T.TyRecord fs') = zipWithM_ checkValidInstantiation (HashMap.elems fs) (HashMap.elems fs')
+    checkValidInstantiation (TyPtr t) (TyPtr t') = checkValidInstantiation t t'
+    checkValidInstantiation t1 t2 | t1 == t2 = pass
+      | otherwise = errorOn (x ^. value) $ "Type mismatch:" <+> pPrint t1 <+> "and" <+> pPrint t2 <+> "are not the same"
 refineExp (Unboxed x u) = pure $ Unboxed x u
 refineExp (Apply x e1 e2) = Apply x <$> refineExp e1 <*> refineExp e2
 refineExp (OpApp x op e1 e2) = do
-  e1' <- refineExp e1
-  e2' <- refineExp e2
-  let applyType = TyArr (typeOf e2') (x ^. ann)
-  let opType = TyArr (typeOf e1') applyType
+  -- Rearrange OpApp to Apply. This transformation makes code generation easier.
+  let applyType = TyArr (typeOf e2) (x ^. ann) -- e2 -> result
+  let opType = TyArr (typeOf e1) applyType -- e1 -> e2 -> result
   let x' = x {_value = fst $ x ^. value}
-  pure $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) (NoPrefix op)) e1') e2'
+  refineExp $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) (NoPrefix op)) e1) e2
 refineExp (Fn x cs) = do
   cs' <- traverse refineClause cs
   env <- ask

@@ -17,7 +17,7 @@ dsType t@GT.TyApp {} = dsTyApp [] t
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
   case con ^. idMeta of
-    GT.TYPE (GT.Rep GT.BoxedRep) -> pure AnyT
+    GT.TYPE -> pure AnyT
     kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
@@ -46,7 +46,7 @@ dsTyApp _ _ = pure AnyT
 unfoldType :: MonadState DsEnv m => GT.Type -> m C.Type
 unfoldType t@(TyConApp (TyCon con) ts) = do
   case GT.kindOf t of
-    TYPE (Rep BoxedRep) -> do
+    TYPE -> do
       vcs <- lookupValueConstructors con ts
       SumT
         <$> traverse

@@ -12,7 +12,8 @@ import Malgo.TypeCheck.TcEnv
 import Malgo.TypeRep
 
 data RefineEnv = RefineEnv
-  { _typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
+  { _signatureMap :: HashMap (Id ()) (Scheme Type),
+    _typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
     _srcName :: FilePath,
     _uniqSupply :: UniqSupply
   }
@@ -20,9 +21,10 @@ data RefineEnv = RefineEnv
 makeFieldsNoPrefix ''RefineEnv
 
 buildRefineEnv :: MalgoEnv -> TcEnv -> RefineEnv
-buildRefineEnv malgoEnv TcEnv {_typeDefMap} =
+buildRefineEnv malgoEnv TcEnv {_signatureMap, _typeDefMap} =
   RefineEnv
-    { _typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap,
+    { _signatureMap = _signatureMap,
+      _typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap,
       _srcName = malgoEnv ^. srcName,
       _uniqSupply = malgoEnv ^. uniqSupply
     }
