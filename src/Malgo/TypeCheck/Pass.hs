@@ -379,9 +379,9 @@ tcExpr ::
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [Annotated Range Constraint] m (Exp (Malgo 'TypeCheck))
-tcExpr (Var pos (WithPrefix (Annotated p v))) = do
+tcExpr (Var pos v) = do
   vType <- instantiate pos =<< lookupVar pos v
-  pure $ Var (Annotated vType pos) (WithPrefix (Annotated p v))
+  pure $ Var (Annotated vType pos) v
 tcExpr (Unboxed pos u) = do
   let uType = typeOf u
   pure $ Unboxed (Annotated uType pos) u

@@ -184,7 +184,7 @@ dsExp ::
   (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
-dsExp (G.Var x (WithPrefix (Annotated _ name))) = do
+dsExp (G.Var x name) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
   -- 引数のない値コンストラクタは、Coreでは0引数の関数として扱われる

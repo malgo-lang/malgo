@@ -87,7 +87,7 @@ getTyVars (TyBlock _ t) = getTyVars t
 -- * Expression
 
 data Exp x
-  = Var (XVar x) (WithPrefix (XId x))
+  = Var (XVar x) (XId x)
   | Unboxed (XUnboxed x) (Literal Unboxed)
   | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Exp x) (Exp x)
@@ -194,7 +194,7 @@ instance
     Parens x e -> range f x <&> \x -> Parens x e
 
 freevars :: Hashable (XId x) => Exp x -> HashSet (XId x)
-freevars (Var _ (WithPrefix v)) = one (v ^. value)
+freevars (Var _ v) = one v
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2

@@ -95,12 +95,12 @@ rnExp ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Exp (Malgo 'Parse) ->
   m (Exp (Malgo 'Rename))
-rnExp (Var pos (WithPrefix (Annotated Nothing name))) = Var pos . NoPrefix <$> lookupVarName pos name
-rnExp (Var pos (WithPrefix (Annotated (Just modName) name))) = Var pos . Prefix modName <$> lookupQualifiedVarName pos (ModuleName modName) name
+rnExp (Var (WithPrefix (Annotated Nothing pos)) name) = Var pos <$> lookupVarName pos name
+rnExp (Var (WithPrefix (Annotated (Just modName) pos)) name) = Var pos <$> lookupQualifiedVarName pos (ModuleName modName) name
 rnExp (Unboxed pos val) = pure $ Unboxed pos val
 rnExp (Boxed pos val) = do
   f <- lookupBox pos val
-  pure $ Apply pos (Var pos (NoPrefix f)) (Unboxed pos $ toUnboxed val)
+  pure $ Apply pos (Var pos f) (Unboxed pos $ toUnboxed val)
 rnExp (Apply pos e1 e2) = Apply pos <$> rnExp e1 <*> rnExp e2
 rnExp (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
@@ -125,8 +125,8 @@ rnExp (List pos es) = do
   consName <- lookupVarName pos "Cons"
   buildListApply nilName consName <$> traverse rnExp es
   where
-    buildListApply nilName _ [] = Var pos (NoPrefix nilName)
-    buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos (NoPrefix consName)) x) (buildListApply nilName consName xs)
+    buildListApply nilName _ [] = Var pos nilName
+    buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos consName) x) (buildListApply nilName consName xs)
 rnExp (RecordAccess pos (WithPrefix (Annotated p l))) = RecordAccess pos . WithPrefix . Annotated p <$> lookupFieldName pos l
 rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
 rnExp (Seq pos ss) = Seq pos <$> rnStmts ss

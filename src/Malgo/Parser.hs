@@ -175,21 +175,20 @@ pUnboxed =
       <|> lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'))
       <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
 
-pWithPrefix :: Parser Text -> Parser x -> Parser (WithPrefix x)
+pWithPrefix :: Parser Text -> Parser x -> Parser (Maybe Text, x)
 pWithPrefix prefix body =
-  fmap WithPrefix $
-    -- try full path identifier like `Foo.bar`
-    -- before simple identifier like `bar`
-    try (Annotated <$> (Just <$> prefix) <* char '.' <*> body)
-      <|> Annotated Nothing <$> body
+  -- try full path identifier like `Foo.bar`
+  -- before simple identifier like `bar`
+  try ((,) <$> (Just <$> prefix) <* char '.' <*> body)
+    <|> (Nothing,) <$> body
 
 pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
   label "variable" do
     start <- getSourcePos
-    name <- pWithPrefix pModuleName (lowerIdent <|> upperIdent)
+    (prefix, name) <- pWithPrefix pModuleName (lowerIdent <|> upperIdent)
     end <- getSourcePos
-    pure $ Var (Range start end) name
+    pure $ Var (WithPrefix $ Annotated prefix (Range start end)) name
 
 pFun :: Parser (Exp (Malgo 'Parse))
 pFun =
@@ -268,10 +267,10 @@ pRecordP = do
   pure $ RecordP (Range start end) kvs
   where
     pRecordPEntry = do
-      label <- pWithPrefix upperIdent lowerIdent
+      (prefix, label) <- pWithPrefix upperIdent lowerIdent
       void $ pOperator "="
       value <- pPat
-      pure (label, value)
+      pure (WithPrefix $ Annotated prefix label, value)
 
 pSinglePat :: Parser (Pat (Malgo 'Parse))
 pSinglePat =
@@ -364,10 +363,10 @@ pRecord = do
   pure $ Record (Range start end) kvs
   where
     pRecordEntry = do
-      label <- pWithPrefix upperIdent lowerIdent
+      (prefix, label) <- pWithPrefix upperIdent lowerIdent
       void $ pOperator "="
       value <- pExp
-      pure (label, value)
+      pure (WithPrefix $ Annotated prefix label, value)
 
 pList :: Parser (Exp (Malgo 'Parse))
 pList = label "list" do
@@ -380,9 +379,10 @@ pList = label "list" do
 pRecordAccess :: Parser (Exp (Malgo 'Parse))
 pRecordAccess = do
   start <- getSourcePos
-  l <- char '#' >> pWithPrefix upperIdent lowerIdent
+  (prefix, l) <- char '#' >> pWithPrefix upperIdent lowerIdent
   end <- getSourcePos
-  pure $ RecordAccess (Range start end) l
+  pure $ RecordAccess (Range start end) (WithPrefix (Annotated prefix l))
+
 
 pSeq :: Parser (Exp (Malgo 'Parse))
 pSeq = do

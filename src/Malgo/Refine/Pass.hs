@@ -39,7 +39,7 @@ refineScDef (x, name, expr) = (x,name,) <$> refineExp expr
 
 refineExp :: (MonadReader RefineEnv m, MonadIO m) => Exp (Malgo 'TypeCheck) -> m (Exp (Malgo 'Refine))
 refineExp (Var x v) = do
-  vScheme <- view (signatureMap . at (removePrefix v))
+  vScheme <- view (signatureMap . at v)
   case vScheme of
     Nothing -> pass
     Just (Forall _ originalType) -> do
@@ -62,7 +62,7 @@ refineExp (OpApp x op e1 e2) = do
   let applyType = TyArr (typeOf e2) (x ^. ann) -- e2 -> result
   let opType = TyArr (typeOf e1) applyType -- e1 -> e2 -> result
   let x' = x {_value = fst $ x ^. value}
-  refineExp $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) (NoPrefix op)) e1) e2
+  refineExp $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) op) e1) e2
 refineExp (Fn x cs) = do
   cs' <- traverse refineClause cs
   env <- ask

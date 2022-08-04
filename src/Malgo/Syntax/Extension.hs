@@ -77,6 +77,7 @@ type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Refine = SimpleX 'TypeCheck
 
 type family XVar x where
+  XVar (Malgo 'Parse) = WithPrefix (SimpleX 'Parse)
   XVar (Malgo x) = SimpleX x
 
 type family XCon x where

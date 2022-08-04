@@ -152,7 +152,7 @@ indexScDef (view value -> range, ident, expr) = do
   indexExp expr
 
 indexExp :: (MonadState IndexEnv m) => Exp (Malgo 'Refine) -> m ()
-indexExp (Var (view value -> range) (removePrefix -> ident)) = do
+indexExp (Var (view value -> range) ident) = do
   -- lookup the infomation of this variable
   minfo <- lookupInfo ident
   case minfo of
