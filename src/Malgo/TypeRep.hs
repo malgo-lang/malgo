@@ -65,7 +65,7 @@ data Type
   | -- | tuple type
     TyTuple Int
   | -- record type
-    TyRecord (HashMap (Id ()) Type)
+    TyRecord (HashMap Text Type)
   | -- | pointer type
     TyPtr Type
   | -- | bottom type

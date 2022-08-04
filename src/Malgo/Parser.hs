@@ -267,10 +267,10 @@ pRecordP = do
   pure $ RecordP (Range start end) kvs
   where
     pRecordPEntry = do
-      (prefix, label) <- pWithPrefix upperIdent lowerIdent
+      label <- lowerIdent
       void $ pOperator "="
       value <- pPat
-      pure (WithPrefix $ Annotated prefix label, value)
+      pure (label, value)
 
 pSinglePat :: Parser (Pat (Malgo 'Parse))
 pSinglePat =
@@ -363,10 +363,10 @@ pRecord = do
   pure $ Record (Range start end) kvs
   where
     pRecordEntry = do
-      (prefix, label) <- pWithPrefix upperIdent lowerIdent
+      label <- lowerIdent
       void $ pOperator "="
       value <- pExp
-      pure (WithPrefix $ Annotated prefix label, value)
+      pure (label, value)
 
 pList :: Parser (Exp (Malgo 'Parse))
 pList = label "list" do
@@ -379,9 +379,9 @@ pList = label "list" do
 pRecordAccess :: Parser (Exp (Malgo 'Parse))
 pRecordAccess = do
   start <- getSourcePos
-  (prefix, l) <- char '#' >> pWithPrefix upperIdent lowerIdent
+  l <- char '#' >> lowerIdent
   end <- getSourcePos
-  pure $ RecordAccess (Range start end) (WithPrefix (Annotated prefix l))
+  pure $ RecordAccess (Range start end) l
 
 
 pSeq :: Parser (Exp (Malgo 'Parse))

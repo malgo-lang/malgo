@@ -38,19 +38,18 @@ lookupType pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just TypeDef {..} -> pure _typeConstructor
 
--- fieldsのすべてのフィールドを含むレコード型を検索する
--- マッチするレコード型が複数あった場合はエラー
-lookupRecordType :: (MonadState TcEnv m, MonadReader env m, MonadIO m, HasSrcName env FilePath) => Range -> [WithPrefix RnId] -> m (Scheme Type)
-lookupRecordType pos fields = do
+-- | fieldsのすべてのフィールドを含むレコード型を検索する
+-- | マッチするレコード型が複数あった場合はエラー
+exactMatchRecordType :: (MonadState TcEnv m, MonadReader env m, MonadIO m, HasSrcName env FilePath) => Range
+  -> [Text] -- ^ full field list of the wanted record type
+  -> m (Scheme Type)
+exactMatchRecordType pos fields = do
   env <- use fieldBelongMap
-  let candidates = map (lookup env) fields
-  case List.foldr1 List.intersect candidates of
-    [] -> errorOn pos "The existence of fields are proved on Rename pass"
+  let candidates = concat $ HashMap.lookup fields env 
+  case candidates of
+    [] -> errorOn pos $ "The existence of fields are proved on Rename pass" $$ "fields:" <+> pPrint fields
     [(_, scheme)] -> pure scheme
-    xs -> errorOn pos $ "Ambiguious record:" <+> sep (punctuate "," $ map (pPrint . fst) xs)
-  where
-    lookup env (WithPrefix (Annotated Nothing k)) = concat $ HashMap.lookup k env
-    lookup env (WithPrefix (Annotated (Just p) k)) = filter ((== p) . fst) $ concat $ HashMap.lookup k env
+    xs -> errorOn pos $ "Ambiguious record:" <+> sep (punctuate "," $ map pPrint xs)
 
 typeCheck :: (MonadFail m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'TypeCheck), TcEnv)
 typeCheck rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
@@ -169,8 +168,8 @@ tcTypeSynonyms ds =
 updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'TypeCheck) -> [Id Type] -> Type -> f ()
 updateFieldEnv typeName (S.TyRecord _ kts) params typ = do
   let scheme = Forall params typ
-  for_ kts \(label, _) ->
-    modify (appendFieldBelongMap [(label, (typeName, scheme))])
+  let labels = map (view _1) kts
+  modify (appendFieldBelongMap [(labels, (typeName, scheme))])
 updateFieldEnv _ _ _ _ = pass
 
 tcDataDefs ::
@@ -428,22 +427,17 @@ tcExpr (Tuple pos es) = do
   pure $ Tuple (Annotated esType pos) es'
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
-  let kvsType = TyRecord $ HashMap.fromList $ map (bimap removePrefix typeOf) kvs'
+  -- レコードリテラルでは、レコード型をフィールド名から検索する必要はない
+  let kvsType = TyRecord $ HashMap.fromList $ map (bimap identity typeOf) kvs'
   pure $ Record (Annotated kvsType pos) kvs'
--- レコードリテラルでは、レコード型をフィールド名から検索する必要はない
-
--- レコード型を検索するコードは↓
--- recordType <- instantiate pos =<< lookupRecordType pos (map fst kvs)
--- tell [Annotated pos $ recordType :~ kvsType]
--- pure $ Record (Annotated recordType pos) kvs'
-tcExpr (RecordAccess pos label) = do
-  recordType <- instantiate pos =<< lookupRecordType pos [label]
-  retType <- TyMeta <$> freshVar Nothing
-  case recordType of
-    TyRecord kts -> do
-      tell [Annotated pos $ recordType :~ TyRecord (HashMap.insert (removePrefix label) retType kts)]
-      pure $ RecordAccess (Annotated (TyArr recordType retType) pos) label
-    _ -> errorOn pos $ pPrint recordType <+> "is not record type"
+tcExpr (RecordAccess pos label) = undefined
+  -- recordType <- instantiate pos =<< lookupRecordType pos label
+  -- retType <- TyMeta <$> freshVar Nothing
+  -- case recordType of
+  --   TyRecord kts -> do
+  --     tell [Annotated pos $ recordType :~ TyRecord (HashMap.insert label retType kts)]
+  --     pure $ RecordAccess (Annotated (TyArr recordType retType) pos) label
+  --   _ -> errorOn pos $ pPrint recordType <+> "is not record type"
 tcExpr (Ann pos e t) = do
   e' <- tcExpr e
   typeRep <- transType t
@@ -513,9 +507,8 @@ tcPatterns (TupleP pos pats : ps) = do
 tcPatterns (RecordP pos kps : ps) = do
   kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
-
-  recordType@(TyRecord recordKts) <- instantiate pos =<< lookupRecordType pos (map fst kps)
-  let patternKts = HashMap.fromList $ map (bimap removePrefix typeOf) kps'
+  recordType@(TyRecord recordKts) <- instantiate pos =<< exactMatchRecordType pos (map fst kps)
+  let patternKts = HashMap.fromList $ map (bimap identity typeOf) kps'
   let patternType = TyRecord $ patternKts <> recordKts
 
   tell [Annotated pos $ recordType :~ patternType]

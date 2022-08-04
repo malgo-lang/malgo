@@ -210,7 +210,7 @@ groupRecord :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply) => P
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
   where
     aux (RecordP x ps : pss) e = do
-      ps' <- extendRecordP x $ map (first removePrefix) ps
+      ps' <- extendRecordP x ps
       pure (ps' <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = error "ps must be not empty"

@@ -6,8 +6,6 @@ module Record = {
 
   personAge = { { age = age } -> age };
 
-  personAge' = { p -> #age p };
-
   main = {
     personAge {name = "Hoge", age = 42}
       |> toStringInt32

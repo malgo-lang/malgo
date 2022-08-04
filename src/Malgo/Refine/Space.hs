@@ -24,7 +24,7 @@ data Space
   | -- | constructor space e.g. Nil, Cons a (List a), Just Int32
     Constructor (Id ()) [Space]
   | Tuple [Space]
-  | Record [(Id (), Space)]
+  | Record [(Text, Space)]
   | -- | union of spaces
     Union Space Space
   deriving stock (Eq, Show)
@@ -188,5 +188,5 @@ instance HasSpace (Pat (Malgo 'Refine)) where
   space _ (VarP x _) = Type (x ^. ann)
   space env (ConP _ con ps) = Constructor con (map (space env) ps)
   space env (TupleP _ ps) = Tuple $ map (space env) ps
-  space env (RecordP _ xps) = Record $ map (bimap removePrefix (space env)) xps
+  space env (RecordP _ xps) = Record $ map (bimap identity (space env)) xps
   space _ (UnboxedP _ _) = Empty

@@ -29,7 +29,7 @@ data TcEnv = TcEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
     _typeSynonymMap :: HashMap (Id Type) ([Id Type], Type),
-    _fieldBelongMap :: HashMap RnId [(RecordTypeName, Scheme Type)],
+    _fieldBelongMap :: HashMap [Text] [(RecordTypeName, Scheme Type)],
     _resolvedTypeIdentMap :: HashMap PsId [Annotated R.Visibility RnId]
   }
   deriving stock (Show)
@@ -48,7 +48,7 @@ instance HasType TcEnv where
       <*> traverseOf (traversed . traversed . _2 . traversed . types) f _fieldBelongMap
       <*> pure _resolvedTypeIdentMap
 
-appendFieldBelongMap :: [(Id (), (RecordTypeName, Scheme Type))] -> TcEnv -> TcEnv
+appendFieldBelongMap :: [([Text], (RecordTypeName, Scheme Type))] -> TcEnv -> TcEnv
 appendFieldBelongMap newEnv = over fieldBelongMap (go newEnv)
   where
     go [] e = e

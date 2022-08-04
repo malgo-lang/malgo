@@ -7,7 +7,7 @@ module TestPolySynonym = {
   type Pair a b = { fst: b, snd: a };
 
   first : { fst: a, snd: b } -> a;
-  first = { {fst = x} -> x };
+  first = { { fst = x, snd = _ } -> x };
 
   main : Fun0 ();
   main = {

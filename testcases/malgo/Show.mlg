@@ -15,17 +15,20 @@ module Show = {
     show = { x -> toStringInt32 x };
   };
 
+  show : Show a -> a -> String;
+  show = { { show = show } -> show };
+
   showTuple2 : Show a -> Show b -> Show (a, b);
   showTuple2 = {
     showDictA showDictB -> {
       show = { (a, b) ->
-        "(" <> #show showDictA a <> ", " <> #show showDictB b <> ")"
+        "(" <> show showDictA a <> ", " <> show showDictB b <> ")"
       };
     }
   };
 
   print : Show a -> a -> ();
-  print = { showDict x -> printString (#show showDict x) };
+  print = { showDict x -> printString (show showDict x) };
 
   main = { print (showTuple2 showInt32 showInt32) (1, 2) };
 }

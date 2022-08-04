@@ -47,7 +47,7 @@ data Type x
   | TyCon (XTyCon x) (XId x)
   | TyArr (XTyArr x) (Type x) (Type x)
   | TyTuple (XTyTuple x) [Type x]
-  | TyRecord (XTyRecord x) [(XId x, Type x)]
+  | TyRecord (XTyRecord x) [(Text, Type x)]
   | TyBlock (XTyBlock x) (Type x)
 
 deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
@@ -94,9 +94,9 @@ data Exp x
   | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
   | Fn (XFn x) (NonEmpty (Clause x))
   | Tuple (XTuple x) [Exp x]
-  | Record (XRecord x) [(WithPrefix (XId x), Exp x)]
+  | Record (XRecord x) [(Text, Exp x)]
   | List (XList x) [Exp x]
-  | RecordAccess (XRecordAccess x) (WithPrefix (XId x))
+  | RecordAccess (XRecordAccess x) Text
   | Ann (XAnn x) (Exp x) (Type x)
   | Seq (XSeq x) (NonEmpty (Stmt x))
   | Parens (XParens x) (Exp x)
@@ -284,7 +284,7 @@ data Pat x
   = VarP (XVarP x) (XId x)
   | ConP (XConP x) (XId x) [Pat x]
   | TupleP (XTupleP x) [Pat x]
-  | RecordP (XRecordP x) [(WithPrefix (XId x), Pat x)]
+  | RecordP (XRecordP x) [(Text, Pat x)]
   | ListP (XListP x) [Pat x]
   | UnboxedP (XUnboxedP x) (Literal Unboxed)
   | BoxedP (XBoxedP x) (Literal Boxed)

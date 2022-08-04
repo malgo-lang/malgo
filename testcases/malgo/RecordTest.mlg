@@ -8,21 +8,13 @@ module RecordTest = {
 
   type C a = { x: a, y: a };
 
-  -- これはとりあえず後回し
-  -- #x = { D' x -> x } になる
-  -- 細かい文法設計はOCamlを参考にする？
-  -- FIXME: これをTypeCheckで弾く
-  -- data D a = D { x: a };
+  f = { { a = a, b = _ } -> a };
 
-  f = { p -> #a p };
-
-  g = { B p -> #a p };
-
-  -- h = { p -> #x p };
+  g = { B { a = a, b = _ } -> a };
 
   main = {
     let x = { a = 32, b = 10 };
-    printString (toStringInt32 (addInt32 (f x) (#b x)))
+    printString (toStringInt32 (addInt32 (f x) ({{a=_,b=b} -> b} x)))
   };
 }
 

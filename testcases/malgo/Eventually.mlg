@@ -26,12 +26,18 @@ module Eventually = {
     { Done value -> Done value
     | NotYetDone work -> (work ())
     };
+  
+  bind : EventuallyBuilder a b -> Eventually a -> (a -> Eventually b) -> Eventually b;
+  bind = { { bind = x, return = _ } -> x };
+
+  return : EventuallyBuilder a b -> a -> Eventually a;
+  return = { { bind = _, return = x } -> x };
 
   comp : Eventually Int32;
   comp =
-    #bind eventually (NotYetDone { Done (printString "1") }) { _ -> 
-      #bind eventually (NotYetDone { Done (printString "2") }) { _ ->
-        #return eventually 3 } };
+    bind eventually (NotYetDone { Done (printString "1") }) { _ -> 
+      bind eventually (NotYetDone { Done (printString "2") }) { _ ->
+        return eventually 3 } };
 
   main : { () };
   main = {

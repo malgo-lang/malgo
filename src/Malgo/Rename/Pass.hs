@@ -116,7 +116,7 @@ rnExp (Record pos kvs) =
   Record pos
     <$> traverse
       ( bitraverse
-          (\(WithPrefix (Annotated p x)) -> WithPrefix . Annotated p <$> lookupFieldName pos x)
+          pure 
           rnExp
       )
       kvs
@@ -127,7 +127,7 @@ rnExp (List pos es) = do
   where
     buildListApply nilName _ [] = Var pos nilName
     buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos consName) x) (buildListApply nilName consName xs)
-rnExp (RecordAccess pos (WithPrefix (Annotated p l))) = RecordAccess pos . WithPrefix . Annotated p <$> lookupFieldName pos l
+rnExp (RecordAccess pos l) = pure $ RecordAccess pos l
 rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
 rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExp (Parens pos e) = Parens pos <$> rnExp e
@@ -148,7 +148,7 @@ rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
 rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
 rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
-rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse (lookupFieldName pos) rnType) kts
+rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse pure rnType) kts
 rnType (TyBlock pos t) = TyArr pos (TyTuple pos []) <$> rnType t
 
 -- | Rename a clause.
@@ -176,7 +176,7 @@ rnPat :: (MonadReader RnEnv m, MonadIO m) => Pat (Malgo 'Parse) -> m (Pat (Malgo
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
-rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse (\(WithPrefix (Annotated p k)) -> WithPrefix . Annotated p <$> lookupFieldName pos k) rnPat) kvs
+rnPat (RecordP pos kvs) = RecordP pos <$> traverse (bitraverse pure rnPat) kvs
 rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName pos "Cons" <*> traverse rnPat xs
   where
     buildListP nilName _ [] = ConP pos nilName []
