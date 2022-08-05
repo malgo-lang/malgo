@@ -8,8 +8,8 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Malgo.Prelude
-import Malgo.TypeCheck.TcEnv
-import Malgo.TypeCheck.TypeRep
+import Malgo.Infer.TcEnv
+import Malgo.Infer.TypeRep
 
 data RefineEnv = RefineEnv
   { _signatureMap :: HashMap (Id ()) (Scheme Type),

@@ -20,7 +20,7 @@ import Malgo.Rename.Pass (rename)
 import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
-import qualified Malgo.TypeCheck.Pass as TypeCheck
+import qualified Malgo.Infer.Pass as Infer
 import Text.Megaparsec
   ( errorBundlePretty,
   )
@@ -51,7 +51,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     hPrint stderr $ pPrint parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv (Syntax._moduleName parsedAst) =<< ask
   (renamedAst, rnState) <- withDump (view dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-  (typedAst, tcEnv) <- withDump (view dumpTyped opt) "=== TYPE CHECK ===" $ TypeCheck.typeCheck rnEnv renamedAst
+  (typedAst, tcEnv) <- withDump (view dumpTyped opt) "=== TYPE CHECK ===" $ Infer.infer rnEnv renamedAst
   refinedAst <- withDump (view dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
   index <- withDump (view debugMode opt) "=== INDEX ===" $ Lsp.index tcEnv refinedAst

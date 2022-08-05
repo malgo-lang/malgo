@@ -15,7 +15,7 @@ import Koriel.Pretty
 import Language.LSP.Types (DocumentSymbol (..))
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
-import Malgo.TypeCheck.TypeRep (Scheme, Type)
+import Malgo.Infer.TypeRep (Scheme, Type)
 import System.FilePath (takeFileName)
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
 import Text.Pretty.Simple (pShow)

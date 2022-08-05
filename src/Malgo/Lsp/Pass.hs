@@ -18,8 +18,8 @@ import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
-import Malgo.TypeCheck.TcEnv
-import Malgo.TypeCheck.TypeRep
+import Malgo.Infer.TcEnv
+import Malgo.Infer.TypeRep
 
 newtype LspOpt = LspOpt
   { _modulePaths :: [FilePath]

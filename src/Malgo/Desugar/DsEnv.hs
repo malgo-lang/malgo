@@ -13,9 +13,9 @@ import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import Malgo.TypeCheck.TcEnv (TcEnv)
-import Malgo.TypeCheck.TypeRep
-import qualified Malgo.TypeCheck.TypeRep as GT
+import Malgo.Infer.TcEnv (TcEnv)
+import Malgo.Infer.TypeRep
+import qualified Malgo.Infer.TypeRep as GT
 import Text.Pretty.Simple (pShow)
 
 -- 脱糖衣処理の環境

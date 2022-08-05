@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.TypeCheck.TcEnv
+module Malgo.Infer.TcEnv
   ( RecordTypeName,
     TcEnv (..),
     genTcEnv,
@@ -20,7 +20,7 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
 import Malgo.Syntax.Extension
-import Malgo.TypeCheck.TypeRep
+import Malgo.Infer.TypeRep
 import Text.Pretty.Simple (pShow)
 
 type RecordTypeName = Text
