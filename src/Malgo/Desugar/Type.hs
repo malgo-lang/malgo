@@ -7,9 +7,9 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
-import Malgo.Prelude
 import Malgo.Infer.TypeRep
 import qualified Malgo.Infer.TypeRep as GT
+import Malgo.Prelude
 
 -- Malgoの型をCoreの型に変換する
 dsType :: Monad m => GT.Type -> m C.Type
@@ -33,7 +33,6 @@ dsType (GT.TyTuple 0) = pure $ SumT [C.Con C.Tuple []]
 dsType (GT.TyPtr t) = PtrT <$> dsType t
 dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . HashMap.elems <$> traverse dsType kts
-dsType GT.TyBottom = pure AnyT
 dsType GT.TyMeta {} = pure AnyT
 dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
 

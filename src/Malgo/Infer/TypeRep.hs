@@ -68,8 +68,6 @@ data Type
     TyRecord (HashMap Text Type)
   | -- | pointer type
     TyPtr Type
-  | -- | bottom type
-    TyBottom
   | -- kind constructor
 
     -- | star
@@ -99,7 +97,6 @@ instance Plated Type where
     t@TyTuple {} -> pure t
     TyRecord kts -> TyRecord <$> traverse f kts
     TyPtr t -> TyPtr <$> f t
-    t@TyBottom -> pure t
     TYPE -> pure TYPE
 
 -- plate f t = uniplate f t
@@ -117,7 +114,6 @@ instance Pretty Type where
   pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ HashMap.toList kvs
   pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
-  pPrintPrec _ _ TyBottom = "#Bottom"
   pPrintPrec _ _ TYPE = "TYPE"
   pPrintPrec l _ (TyMeta tv) = pPrintPrec l 0 tv
 
@@ -181,7 +177,6 @@ instance HasKind Type where
   kindOf (TyTuple n) = buildTyArr (replicate n TYPE) TYPE
   kindOf (TyRecord _) = TYPE
   kindOf (TyPtr _) = TYPE
-  kindOf TyBottom = TYPE
   kindOf TYPE = TYPE -- Type :: Type
   kindOf (TyMeta tv) = kindOf tv
 
@@ -314,7 +309,6 @@ expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv
 expandAllTypeSynonym _ t@TyTuple {} = t
 expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSynonym abbrEnv) kts
 expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
-expandAllTypeSynonym _ TyBottom = TyBottom
 expandAllTypeSynonym _ TYPE = TYPE
 expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
 

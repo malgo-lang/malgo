@@ -12,9 +12,9 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Prelude hiding (Constraint)
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
+import Malgo.Prelude hiding (Constraint)
 
 -- * Constraint
 
@@ -103,7 +103,6 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
   zonk t@TyTuple {} = pure t
   zonk (TyRecord kts) = TyRecord <$> traverse zonk kts
   zonk (TyPtr t) = TyPtr <$> zonk t
-  zonk t@TyBottom = pure t
   zonk TYPE = pure TYPE
   zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
 
