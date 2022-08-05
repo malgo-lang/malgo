@@ -317,5 +317,6 @@ makePrisms ''Type
 makePrisms ''Scheme
 makeLenses ''TypeDef
 
+-- | get all meta type variables in a type
 freevars :: Type -> HashSet TypeVar
 freevars ty = HashSet.fromList $ toListOf (cosmos . _TyMeta) ty
