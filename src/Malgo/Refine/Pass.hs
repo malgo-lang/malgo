@@ -7,15 +7,15 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List.NonEmpty as NonEmpty
 import Koriel.Lens (HasAnn (ann), HasSignatureMap (signatureMap), HasValue (value))
 import Koriel.Pretty
+import Malgo.Infer.TcEnv
+import Malgo.Infer.TypeRep
+import qualified Malgo.Infer.TypeRep as T
 import Malgo.Prelude
 import Malgo.Refine.RefineEnv
 import qualified Malgo.Refine.Space as Space
 import Malgo.Syntax hiding (TyArr, Type)
 import qualified Malgo.Syntax as Syn
 import Malgo.Syntax.Extension
-import Malgo.Infer.TcEnv
-import Malgo.Infer.TypeRep
-import qualified Malgo.Infer.TypeRep as T
 
 type Infered t x = (x ~ Malgo 'Infer) :: Constraint
 
@@ -52,8 +52,9 @@ refineExp (Var x v) = do
     checkValidInstantiation (T.TyApp t1 t2) (T.TyApp t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
     checkValidInstantiation (T.TyArr t1 t2) (T.TyArr t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
     checkValidInstantiation (T.TyRecord fs) (T.TyRecord fs') = zipWithM_ checkValidInstantiation (HashMap.elems fs) (HashMap.elems fs')
-    checkValidInstantiation (TyPtr t) (TyPtr t') = checkValidInstantiation t t'
-    checkValidInstantiation t1 t2 | t1 == t2 = pass
+    checkValidInstantiation TyPtr TyPtr = pass
+    checkValidInstantiation t1 t2
+      | t1 == t2 = pass
       | otherwise = errorOn (x ^. value) $ "Type mismatch:" <+> pPrint t1 <+> "and" <+> pPrint t2 <+> "are not the same"
 refineExp (Unboxed x u) = pure $ Unboxed x u
 refineExp (Apply x e1 e2) = Apply x <$> refineExp e1 <*> refineExp e2

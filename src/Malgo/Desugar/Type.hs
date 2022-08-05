@@ -30,7 +30,7 @@ dsType (GT.TyArr t1 t2) = do
   t2' <- dsType t2
   pure $ [t1'] :-> t2'
 dsType (GT.TyTuple 0) = pure $ SumT [C.Con C.Tuple []]
-dsType (GT.TyPtr t) = PtrT <$> dsType t
+dsType GT.TyPtr = errorDoc "unreachable"
 dsType (GT.TyRecord kts) =
   SumT . pure . C.Con C.Tuple . HashMap.elems <$> traverse dsType kts
 dsType GT.TyMeta {} = pure AnyT

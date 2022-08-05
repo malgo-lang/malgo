@@ -12,15 +12,15 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Infer.TcEnv
+import Malgo.Infer.TypeRep
+import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface)
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
-import Malgo.Infer.TcEnv
-import Malgo.Infer.Unify hiding (lookupVar)
-import Malgo.Infer.TypeRep
 
 -------------------------------
 -- Lookup the value of TcEnv --
@@ -40,12 +40,15 @@ lookupType pos name =
 
 -- | fieldsのすべてのフィールドを含むレコード型を検索する
 -- | マッチするレコード型が複数あった場合はエラー
-exactMatchRecordType :: (MonadState TcEnv m, MonadReader env m, MonadIO m, HasSrcName env FilePath) => Range
-  -> [Text] -- ^ full field list of the wanted record type
-  -> m (Scheme Type)
+exactMatchRecordType ::
+  (MonadState TcEnv m, MonadReader env m, MonadIO m, HasSrcName env FilePath) =>
+  Range ->
+  -- | full field list of the wanted record type
+  [Text] ->
+  m (Scheme Type)
 exactMatchRecordType pos fields = do
   env <- use fieldBelongMap
-  let candidates = concat $ HashMap.lookup fields env 
+  let candidates = concat $ HashMap.lookup fields env
   case candidates of
     [] -> errorOn pos $ "The existence of fields are proved on Rename pass" $$ "fields:" <+> pPrint fields
     [(_, scheme)] -> pure scheme
@@ -363,7 +366,7 @@ evidenceOfEquiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
 evidenceOfEquiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> evidenceOfEquiv l1 l2 <*> evidenceOfEquiv r1 r2
 evidenceOfEquiv (TyTuple n1) (TyTuple n2) | n1 == n2 = Just mempty
 evidenceOfEquiv (TyRecord kts1) (TyRecord kts2) | HashMap.keys kts1 == HashMap.keys kts2 = mconcat <$> zipWithM evidenceOfEquiv (HashMap.elems kts1) (HashMap.elems kts2)
-evidenceOfEquiv (TyPtr t1) (TyPtr t2) = evidenceOfEquiv t1 t2
+evidenceOfEquiv TyPtr TyPtr = Just mempty
 evidenceOfEquiv TYPE TYPE = Just mempty
 evidenceOfEquiv _ _ = Nothing
 
@@ -551,7 +554,7 @@ transType (S.TyApp pos t ts) = do
     (S.TyCon _ c, [t]) | c == ptr_t -> do
       t' <- transType t
       solve [Annotated pos $ kindOf t' :~ TYPE]
-      pure $ TyPtr t'
+      pure $ TyApp TyPtr t'
     _ -> do
       t' <- transType t
       ts' <- traverse transType ts

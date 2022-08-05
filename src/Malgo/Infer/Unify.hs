@@ -73,7 +73,7 @@ unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [Annotated x $ l1 :~ l2, Ann
 unify _ (TyTuple n1) (TyTuple n2) | n1 == n2 = pure (mempty, [])
 unify x (TyRecord kts1) (TyRecord kts2)
   | HashMap.keys kts1 == HashMap.keys kts2 = pure (mempty, zipWith (\t1 t2 -> Annotated x $ t1 :~ t2) (HashMap.elems kts1) (HashMap.elems kts2))
-unify x (TyPtr t1) (TyPtr t2) = pure (mempty, [Annotated x $ t1 :~ t2])
+unify _ TyPtr TyPtr = pure (mempty, [])
 unify _ TYPE TYPE = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
@@ -102,7 +102,7 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
   zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2
   zonk t@TyTuple {} = pure t
   zonk (TyRecord kts) = TyRecord <$> traverse zonk kts
-  zonk (TyPtr t) = TyPtr <$> zonk t
+  zonk TyPtr = pure TyPtr
   zonk TYPE = pure TYPE
   zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
 

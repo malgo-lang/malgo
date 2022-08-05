@@ -67,7 +67,7 @@ data Type
   | -- record type
     TyRecord (HashMap Text Type)
   | -- | pointer type
-    TyPtr Type
+    TyPtr
   | -- kind constructor
 
     -- | star
@@ -96,14 +96,13 @@ instance Plated Type where
     TyArr t1 t2 -> TyArr <$> f t1 <*> f t2
     t@TyTuple {} -> pure t
     TyRecord kts -> TyRecord <$> traverse f kts
-    TyPtr t -> TyPtr <$> f t
+    TyPtr -> pure TyPtr
     TYPE -> pure TYPE
-
--- plate f t = uniplate f t
 
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
   pPrintPrec l _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
+  pPrintPrec l _ (TyConApp TyPtr [t]) = "Ptr#" <+> pPrintPrec l 0 t
   pPrintPrec l d (TyApp t1 t2) =
     maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
   pPrintPrec _ _ (TyVar v) = pPrint v
@@ -113,7 +112,7 @@ instance Pretty Type where
     maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
   pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
   pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ HashMap.toList kvs
-  pPrintPrec l d (TyPtr ty) = maybeParens (d > 10) $ sep ["Ptr#", pPrintPrec l 11 ty]
+  pPrintPrec _ _ TyPtr = "Ptr#"
   pPrintPrec _ _ TYPE = "TYPE"
   pPrintPrec l _ (TyMeta tv) = pPrintPrec l 0 tv
 
@@ -176,7 +175,7 @@ instance HasKind Type where
   kindOf (TyArr _ t2) = kindOf t2
   kindOf (TyTuple n) = buildTyArr (replicate n TYPE) TYPE
   kindOf (TyRecord _) = TYPE
-  kindOf (TyPtr _) = TYPE
+  kindOf TyPtr = TYPE `TyArr` TYPE
   kindOf TYPE = TYPE -- Type :: Type
   kindOf (TyMeta tv) = kindOf tv
 
@@ -266,6 +265,7 @@ pattern TyConApp x xs <-
 viewTyConApp :: Type -> Maybe (Type, [Type])
 viewTyConApp (TyCon con) = Just (TyCon con, [])
 viewTyConApp (TyTuple n) = Just (TyTuple n, [])
+viewTyConApp TyPtr = Just (TyPtr, [])
 viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
 viewTyConApp _ = Nothing
 
@@ -308,7 +308,7 @@ expandAllTypeSynonym _ t@TyPrim {} = t
 expandAllTypeSynonym abbrEnv (TyArr t1 t2) = TyArr (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
 expandAllTypeSynonym _ t@TyTuple {} = t
 expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSynonym abbrEnv) kts
-expandAllTypeSynonym abbrEnv (TyPtr t) = TyPtr $ expandAllTypeSynonym abbrEnv t
+expandAllTypeSynonym _ TyPtr = TyPtr
 expandAllTypeSynonym _ TYPE = TYPE
 expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
 
