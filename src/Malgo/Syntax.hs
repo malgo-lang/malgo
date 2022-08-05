@@ -12,7 +12,7 @@ import Koriel.Pretty
 import Language.LSP.Types.Lens (HasRange (range))
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import Malgo.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
+import Malgo.TypeCheck.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 
 -- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text

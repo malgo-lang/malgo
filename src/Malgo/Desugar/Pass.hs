@@ -25,7 +25,7 @@ import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 import Malgo.TypeCheck.TcEnv (TcEnv)
-import Malgo.TypeRep as GT
+import Malgo.TypeCheck.TypeRep as GT
 
 -- | トップレベル宣言
 data Def

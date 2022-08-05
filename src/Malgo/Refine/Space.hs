@@ -12,7 +12,7 @@ import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
-import Malgo.TypeRep
+import Malgo.TypeCheck.TypeRep
 import Text.Pretty.Simple (pShow)
 
 -- | Space of values that covered by patterns
@@ -61,7 +61,7 @@ buildUnion [] = Empty
 buildUnion [s] = s
 buildUnion (s : ss) = Union s (buildUnion ss)
 
--- Ref: Malgo.TypeRep.TyConApp
+-- Ref: Malgo.TypeCheck.TypeRep.TyConApp
 
 -- | Check whether the given type can be decomposed into space(s).
 decomposable :: Type -> Bool

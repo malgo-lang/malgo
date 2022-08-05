@@ -14,7 +14,7 @@ import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Prelude hiding (Constraint)
 import Malgo.TypeCheck.TcEnv (TcEnv)
-import Malgo.TypeRep
+import Malgo.TypeCheck.TypeRep
 
 -- * Constraint
 

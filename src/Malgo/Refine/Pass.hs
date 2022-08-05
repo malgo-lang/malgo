@@ -14,8 +14,8 @@ import Malgo.Syntax hiding (TyArr, Type)
 import qualified Malgo.Syntax as Syn
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv
-import Malgo.TypeRep
-import qualified Malgo.TypeRep as T
+import Malgo.TypeCheck.TypeRep
+import qualified Malgo.TypeCheck.TypeRep as T
 
 type TypeChecked t x = (x ~ Malgo 'TypeCheck) :: Constraint
 

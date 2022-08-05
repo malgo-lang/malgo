@@ -20,7 +20,7 @@ import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
 import Malgo.Syntax.Extension
-import Malgo.TypeRep
+import Malgo.TypeCheck.TypeRep
 import Text.Pretty.Simple (pShow)
 
 type RecordTypeName = Text

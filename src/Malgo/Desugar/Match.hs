@@ -20,8 +20,8 @@ import Malgo.Desugar.Unboxed (dsUnboxed)
 import Malgo.Prelude hiding (group)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Malgo.TypeRep
-import qualified Malgo.TypeRep as Malgo
+import Malgo.TypeCheck.TypeRep
+import qualified Malgo.TypeCheck.TypeRep as Malgo
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加

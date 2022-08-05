@@ -20,7 +20,7 @@ import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
 import Malgo.TypeCheck.TcEnv
 import Malgo.TypeCheck.Unify hiding (lookupVar)
-import Malgo.TypeRep
+import Malgo.TypeCheck.TypeRep
 
 -------------------------------
 -- Lookup the value of TcEnv --

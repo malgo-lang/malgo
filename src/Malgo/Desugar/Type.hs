@@ -8,8 +8,8 @@ import Koriel.Id
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Prelude
-import Malgo.TypeRep
-import qualified Malgo.TypeRep as GT
+import Malgo.TypeCheck.TypeRep
+import qualified Malgo.TypeCheck.TypeRep as GT
 
 -- Malgoの型をCoreの型に変換する
 dsType :: Monad m => GT.Type -> m C.Type

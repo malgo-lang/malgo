@@ -1,11 +1,11 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.6.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           malgo
-version:        1.0.0.0
+version:        0.2.0
 category:       Compilers/Interpreters
 homepage:       https://github.com/takoeight0821/malgo#readme
 bug-reports:    https://github.com/takoeight0821/malgo/issues
@@ -57,8 +57,8 @@ library
       Malgo.Syntax.Extension
       Malgo.TypeCheck.Pass
       Malgo.TypeCheck.TcEnv
+      Malgo.TypeCheck.TypeRep
       Malgo.TypeCheck.Unify
-      Malgo.TypeRep
   other-modules:
       Paths_malgo
   hs-source-dirs:

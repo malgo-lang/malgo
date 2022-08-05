@@ -12,7 +12,7 @@ import Koriel.Id
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasValue (value))
 import Malgo.Prelude
-import Malgo.TypeRep as TypeRep
+import Malgo.TypeCheck.TypeRep as TypeRep
 
 -- | Phase and type instance
 data MalgoPhase = Parse | Rename | TypeCheck | Refine

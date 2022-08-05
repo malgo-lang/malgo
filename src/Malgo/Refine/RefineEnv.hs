@@ -9,7 +9,7 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Malgo.Prelude
 import Malgo.TypeCheck.TcEnv
-import Malgo.TypeRep
+import Malgo.TypeCheck.TypeRep
 
 data RefineEnv = RefineEnv
   { _signatureMap :: HashMap (Id ()) (Scheme Type),
