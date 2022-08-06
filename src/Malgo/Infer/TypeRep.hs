@@ -11,7 +11,6 @@ import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
-import Koriel.Lens (HasAnn (ann))
 import Koriel.Pretty
 import Malgo.Prelude
 
@@ -187,16 +186,6 @@ instance (Eq ty, Hashable ty) => Hashable (Scheme ty)
 instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall [] t) = pPrint t
   pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
-
--- | Types qualified with `Type`
-class WithType a where
-  withType :: Lens' a Type
-
-instance WithType (Annotated Type a) where
-  withType = ann
-
-instance WithType Void where
-  withType _ = absurd
 
 -- | Definition of Type constructor
 -- valueConstructorsのSchemeは、typeParametersで全称化されている

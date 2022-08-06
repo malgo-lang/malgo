@@ -20,12 +20,12 @@ import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.Match
 import Malgo.Desugar.Type
+import Malgo.Infer.TcEnv (TcEnv)
+import Malgo.Infer.TypeRep as GT
 import Malgo.Interface
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
-import Malgo.Infer.TcEnv (TcEnv)
-import Malgo.Infer.TypeRep as GT
 
 -- | トップレベル宣言
 data Def
@@ -129,9 +129,9 @@ dsForeign ::
   (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env UniqSupply) =>
   Foreign (Malgo 'Refine) ->
   f [Def]
-dsForeign (x@(Annotated _ (_, primName)), name, _) = do
-  name' <- newCoreId name =<< dsType (x ^. GT.withType)
-  let (paramTypes, retType) = splitTyArr (x ^. GT.withType)
+dsForeign (Annotated typ (_, primName), name, _) = do
+  name' <- newCoreId name =<< dsType typ
+  let (paramTypes, retType) = splitTyArr typ
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
   params <- traverse (newTemporalId "p") paramTypes'
@@ -184,11 +184,11 @@ dsExp ::
   (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
-dsExp (G.Var x name) = do
+dsExp (G.Var (Annotated typ _) name) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
   -- 引数のない値コンストラクタは、Coreでは0引数の関数として扱われる
-  case (x ^. GT.withType, C.typeOf name') of
+  case (typ, C.typeOf name') of
     (_, [] :-> _)
       | isConstructor name -> pass
       | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
@@ -211,20 +211,20 @@ dsExp (G.Var x name) = do
     isConstructor Id {_idName} | T.length _idName > 0 = Char.isUpper (T.head _idName)
     isConstructor _ = False
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
-dsExp (G.Apply info f x) = runDef $ do
-  f' <- bind =<< dsExp f
-  case C.typeOf f' of
-    [xType] :-> _ -> do
+dsExp (G.Apply (Annotated typ _) fun arg) = runDef $ do
+  fun' <- bind =<< dsExp fun
+  case C.typeOf fun' of
+    [paramType] :-> _ -> do
       -- Note: [Cast Argument Type]
       --   x の型と f の引数の型は必ずしも一致しない
       --   適切な型にcastする必要がある
-      x' <- cast xType =<< dsExp x
-      Cast <$> dsType (info ^. GT.withType) <*> bind (Call f' [x'])
+      arg' <- cast paramType =<< dsExp arg
+      Cast <$> dsType typ <*> bind (Call fun' [arg'])
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
+dsExp (G.Fn (Annotated typ _) cs@(Clause _ ps e :| _)) = do
   ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
-  typ <- dsType (GT.typeOf e)
+  eType <- dsType (GT.typeOf e)
   -- destruct Clauses
   (pss, es) <-
     unzip
@@ -233,9 +233,9 @@ dsExp (G.Fn x cs@(Clause _ ps e :| _)) = do
             pure (ps, dsExp e)
         )
         cs
-  body <- match ps' (patMatrix $ toList pss) (toList es) (Error typ)
+  body <- match ps' (patMatrix $ toList pss) (toList es) (Error eType)
   obj <- curryFun ps' body
-  v <- newTemporalId "fun" =<< dsType (x ^. GT.withType)
+  v <- newTemporalId "fun" =<< dsType typ
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
   where
     patToName (G.VarP _ v) = v ^. idName
@@ -251,9 +251,8 @@ dsExp (G.Tuple _ es) = runDef $ do
   let ty = SumT [con]
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
-dsExp (G.Record x kvs) = runDef $ do
+dsExp (G.Record (Annotated (GT.TyRecord recordType) _) kvs) = runDef $ do
   kvs' <- traverseOf (traversed . _2) (bind <=< dsExp) kvs
-  GT.TyRecord recordType <- pure $ x ^. GT.withType
   kts <- HashMap.toList <$> traverse dsType recordType
   let con = C.Con C.Tuple $ map snd kts
   let ty = SumT [con]
@@ -263,6 +262,7 @@ dsExp (G.Record x kvs) = runDef $ do
   where
     sortRecordField [] _ = []
     sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
+dsExp (G.Record _ _) = error "unreachable"
 dsExp (G.Seq _ ss) = dsStmts ss
 dsExp (G.Parens _ e) = dsExp e
 
