@@ -16,6 +16,7 @@ import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
+import Malgo.Annotated
 import Malgo.Infer.TypeRep
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)

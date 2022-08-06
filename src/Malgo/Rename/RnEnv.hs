@@ -10,6 +10,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Annotated
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 import Text.Pretty.Simple (pShow)

@@ -12,6 +12,7 @@ import Data.Data (Data)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.Pretty
+import Malgo.Annotated
 import Malgo.Prelude
 
 --------------------------------

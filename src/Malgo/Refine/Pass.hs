@@ -7,6 +7,7 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List.NonEmpty as NonEmpty
 import Koriel.Lens (HasAnn (ann), HasSignatureMap (signatureMap), HasValue (value))
 import Koriel.Pretty
+import Malgo.Annotated
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import qualified Malgo.Infer.TypeRep as T

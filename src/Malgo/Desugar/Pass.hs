@@ -17,6 +17,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Annotated
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.Match
 import Malgo.Desugar.Type

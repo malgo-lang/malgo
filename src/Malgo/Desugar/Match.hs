@@ -14,14 +14,15 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Annotated
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
+import Malgo.Infer.TypeRep
+import qualified Malgo.Infer.TypeRep as Malgo
 import Malgo.Prelude hiding (group)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Malgo.Infer.TypeRep
-import qualified Malgo.Infer.TypeRep as Malgo
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加

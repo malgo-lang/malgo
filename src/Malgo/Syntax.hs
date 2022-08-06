@@ -10,9 +10,10 @@ import qualified Data.HashSet as HashSet
 import Koriel.Id
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasRange (range))
+import Malgo.Annotated
+import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 
 -- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text

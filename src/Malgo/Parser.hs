@@ -5,6 +5,7 @@ import Data.Foldable (foldl)
 import qualified Data.List.NonEmpty as NonEmpty
 import Data.Void
 import Koriel.Id (ModuleName (ModuleName))
+import Malgo.Annotated
 import Malgo.Prelude hiding
   ( many,
     some,

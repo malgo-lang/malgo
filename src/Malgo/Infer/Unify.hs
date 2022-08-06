@@ -12,6 +12,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Annotated
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (Constraint)

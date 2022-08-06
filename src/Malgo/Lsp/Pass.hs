@@ -12,14 +12,15 @@ import Koriel.Id (Id (..), IdSort (Temporal), idName)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
 import Language.LSP.Types (DocumentSymbol (..), SymbolKind (..))
+import Malgo.Annotated
+import Malgo.Infer.TcEnv
+import Malgo.Infer.TypeRep
 import Malgo.Interface (HasLspIndex (lspIndex), loadInterface)
 import Malgo.Lsp.Index
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
-import Malgo.Infer.TcEnv
-import Malgo.Infer.TypeRep
 
 newtype LspOpt = LspOpt
   { _modulePaths :: [FilePath]

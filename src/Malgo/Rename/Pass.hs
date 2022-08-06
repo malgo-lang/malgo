@@ -10,6 +10,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Annotated
 import Malgo.Interface
 import Malgo.Prelude
 import Malgo.Rename.RnEnv
@@ -116,7 +117,7 @@ rnExp (Record pos kvs) =
   Record pos
     <$> traverse
       ( bitraverse
-          pure 
+          pure
           rnExp
       )
       kvs
