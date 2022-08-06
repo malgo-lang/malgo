@@ -13,7 +13,7 @@ module Either = {
     let x = Right 1;
 
     x |> andThen { x -> Right (addInt32 x 1) }
-      |> andThen { y -> y |> toStringInt32 |> putStrLn |> Right };
+      |> andThen { y -> y |> toStringInt32 |> putStr |> Right };
 
     x |> andThen { _ -> Left "error" }
       |> andThen { x -> Right (addInt32 x 1) }

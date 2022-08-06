@@ -16,7 +16,7 @@ buildCommand = "cabal"
 #endif
 
 main :: IO ()
-main = do
+main =
   hspec do
     _ <- runIO $ readProcess (proc "./scripts/pretest.sh" [buildCommand])
     testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo"
@@ -45,6 +45,14 @@ main = do
           case exitCode of
             ExitSuccess -> pass
             ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+    examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
+    describe "Test example malgo to-ll" do
+      parallel $ for_ examples \examplecase -> do
+        it ("test " <> examplecase) $ example do
+          (exitCode, out, err) <- readProcess (proc "./scripts/test/test.sh" ["./examples/malgo" </> examplecase, buildCommand])
+          case exitCode of
+            ExitSuccess -> pass
+            ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo/error"
     describe "Test malgo to-ll (must be error)" do
       parallel $ for_ errorcases \errorcase -> do
@@ -53,4 +61,3 @@ main = do
           case exitCode of
             ExitSuccess -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
             ExitFailure _ -> pass
-

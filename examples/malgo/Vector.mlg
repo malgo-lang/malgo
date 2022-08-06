@@ -2,20 +2,6 @@ module Vector = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  foreign import malgo_unsafe_cast : a -> b;
-
-  -- castToPtrChar# : a -> Ptr# Char#;
-  -- castToPtrChar# = { x -> malgo_unsafe_cast x };
-
-  -- castToPtrPtrChar# : Ptr# a -> Ptr# (Ptr# Char#);
-  -- castToPtrPtrChar# = { x -> malgo_unsafe_cast x };
-
-  castFromPtrChar# : Ptr# Char# -> a;
-  castFromPtrChar# = { x -> malgo_unsafe_cast x };
-
-  castFromPtrPtrChar# : Ptr# (Ptr# Char#) -> Ptr# a;
-  castFromPtrPtrChar# = { x -> malgo_unsafe_cast x };
-
   foreign import malgo_new_vector : Int64# -> Ptr# Char# -> Ptr# (Ptr# Char#);
 
   foreign import malgo_read_vector : Int64# -> Ptr# (Ptr# Char#) -> Ptr# Char#;
@@ -24,18 +10,14 @@ module Vector = {
 
   newVector : Int64 -> a -> Vector a;
   newVector = { (Int64# length) init ->
-    -- Vector (Int64# length) (castFromPtrPtrChar# (malgo_new_vector length (castToPtrChar# init)))
     Vector (Int64# length) (malgo_unsafe_cast (malgo_new_vector length (malgo_unsafe_cast init)))
   };
-
-  data Maybe a = Nothing | Just a;
 
   readVector : Int64 -> Vector a -> Maybe a;
   readVector = { (Int64# index) (Vector (Int64# length) ptr) ->
     if (isTrue# (geInt64# index length))
     { Nothing }
-    -- { Just (castFromPtrChar# (read_vector index (castToPtrPtrChar# ptr))) }
-    { Just (castFromPtrChar# (malgo_read_vector index (malgo_unsafe_cast ptr))) }
+    { Just (malgo_unsafe_cast (malgo_read_vector index (malgo_unsafe_cast ptr))) }
   };
 
   main = {
