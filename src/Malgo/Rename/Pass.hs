@@ -96,8 +96,8 @@ rnExp ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Exp (Malgo 'Parse) ->
   m (Exp (Malgo 'Rename))
-rnExp (Var (WithPrefix (Annotated Nothing pos)) name) = Var pos <$> lookupVarName pos name
-rnExp (Var (WithPrefix (Annotated (Just modName) pos)) name) = Var pos <$> lookupQualifiedVarName pos (ModuleName modName) name
+rnExp (Var ((Qualified Implicit pos)) name) = Var pos <$> lookupVarName pos name
+rnExp (Var ((Qualified (Explicit modName) pos)) name) = Var pos <$> lookupQualifiedVarName pos modName name
 rnExp (Unboxed pos val) = pure $ Unboxed pos val
 rnExp (Boxed pos val) = do
   f <- lookupBox pos val

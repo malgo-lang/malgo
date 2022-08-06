@@ -36,13 +36,6 @@ infixInfo = lens _infixInfo (\r x -> r {_infixInfo = x})
 dependencies :: Lens' RnState [ModuleName]
 dependencies = lens _dependencies (\r x -> r {_dependencies = x})
 
-data Visibility
-  = Explicit ModuleName -- variable that must be qualified
-  | Implicit
-  deriving stock (Show, Eq)
-
-instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
-
 -- | Resolved identifier
 data Resolved = Resolved
   { -- | Visibility of the identifier

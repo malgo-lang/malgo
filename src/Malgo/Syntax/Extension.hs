@@ -1,16 +1,17 @@
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Syntax.Extension where
 
-import Control.Lens (view)
+import Control.Lens (makeFieldsNoPrefix)
 import Data.Aeson
 import Data.Binary (Binary)
 import qualified Data.Kind as K
 import Data.Void
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
-import Language.LSP.Types.Lens (HasValue (value))
 import Malgo.Annotated
 import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Prelude
@@ -27,22 +28,32 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Infer = Id ()
   MalgoId 'Refine = Id ()
 
+data Visibility
+  = Explicit ModuleName -- variable that must be qualified
+  | Implicit
+  deriving stock (Show, Eq, Ord)
+
+instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
+
 -- | Qualified name
-newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: Annotated (Maybe Text) x}
+data Qualified x = Qualified {_visibility :: Visibility, _name :: x}
   deriving stock (Eq, Ord, Show)
 
-removePrefix :: WithPrefix a -> a
-removePrefix = view value . unwrapWithPrefix
+makeFieldsNoPrefix ''Qualified
 
-pattern NoPrefix :: x -> WithPrefix x
-pattern NoPrefix x = WithPrefix (Annotated Nothing x)
+instance Pretty x => Pretty (Qualified x) where
+  pPrint (Qualified Implicit v) = pPrint v
+  pPrint (Qualified (Explicit x) v) = pPrint x <> "." <> pPrint v
 
-pattern Prefix :: Text -> x -> WithPrefix x
-pattern Prefix p x = WithPrefix (Annotated (Just p) x)
+-- | Type-annotated field
+data Field x = Field {_typeAnn :: Maybe Text, _field :: x}
+  deriving stock (Eq, Ord, Show)
 
-instance Pretty x => Pretty (WithPrefix x) where
-  pPrint (WithPrefix (Annotated Nothing v)) = pPrint v
-  pPrint (WithPrefix (Annotated (Just x) v)) = pPrint x <> "." <> pPrint v
+makeFieldsNoPrefix ''Field
+
+instance Pretty x => Pretty (Field x) where
+  pPrint (Field Nothing v) = pPrint v
+  pPrint (Field (Just x) v) = pPrint x <> "." <> pPrint v
 
 type PsId = XId (Malgo 'Parse)
 
@@ -78,7 +89,7 @@ type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Refine = SimpleX 'Infer
 
 type family XVar x where
-  XVar (Malgo 'Parse) = WithPrefix (SimpleX 'Parse)
+  XVar (Malgo 'Parse) = Qualified (SimpleX 'Parse)
   XVar (Malgo x) = SimpleX x
 
 type family XCon x where
