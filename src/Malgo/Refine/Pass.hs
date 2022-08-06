@@ -63,7 +63,7 @@ refineExp (OpApp x op e1 e2) = do
   -- Rearrange OpApp to Apply. This transformation makes code generation easier.
   let applyType = TyArr (typeOf e2) (x ^. ann) -- e2 -> result
   let opType = TyArr (typeOf e1) applyType -- e1 -> e2 -> result
-  let x' = x {_value = fst $ x ^. value}
+  let x' = x {Malgo.Annotated._value = fst $ x ^. value}
   refineExp $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) op) e1) e2
 refineExp (Fn x cs) = do
   cs' <- traverse refineClause cs

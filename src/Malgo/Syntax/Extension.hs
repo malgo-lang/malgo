@@ -36,7 +36,7 @@ data Visibility
 instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
 
 -- | Qualified name
-data Qualified x = Qualified {_visibility :: Visibility, _name :: x}
+data Qualified x = Qualified {_visibility :: Visibility, _value :: x}
   deriving stock (Eq, Ord, Show)
 
 makeFieldsNoPrefix ''Qualified
