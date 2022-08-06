@@ -1,4 +1,4 @@
-module Malgo.Infer.Pass where
+module Malgo.Infer.Pass (infer) where
 
 import Control.Lens (At (at), forOf, ix, mapped, over, preuse, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
 import qualified Data.HashMap.Strict as HashMap
@@ -6,7 +6,6 @@ import qualified Data.HashSet as HashSet
 import qualified Data.List as List
 import Data.List.Extra (anySame)
 import qualified Data.Map as Map
-import Data.Maybe (fromJust)
 import Data.Traversable (for)
 import Koriel.Id
 import Koriel.Lens
@@ -297,13 +296,9 @@ tcScDef (pos, name, expr) = do
   let exprType = typeOf expr'
   let constraints = Annotated pos (nameType :~ exprType) : wanted
   solve constraints
-  exprType <- zonk exprType
   pure (Annotated exprType pos, name, expr')
 
 -- | Validate user-declared type signature and add type schemes to environment
-
--- $howcheck
-
 validateSignatures ::
   (MonadReader env m, HasSrcName env FilePath, MonadState TcEnv m, MonadIO m) =>
   -- | definitions of mutualy recursive functions
@@ -547,19 +542,7 @@ tcStmt (Let pos v e) = do
 -----------------------------------
 
 transType :: (MonadState TcEnv m, MonadBind m, MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply, HasSrcName env FilePath) => S.Type (Malgo 'Rename) -> m Type
-transType (S.TyApp pos t ts) = do
-  tcEnv <- get
-  let ptr_t = fromJust $ findBuiltinType "Ptr#" tcEnv
-  case (t, ts) of
-    (S.TyCon _ c, [t]) | c == ptr_t -> do
-      t' <- transType t
-      solve [Annotated pos $ kindOf t' :~ TYPE]
-      pure $ TyApp TyPtr t'
-    _ -> do
-      t' <- transType t
-      ts' <- traverse transType ts
-      solve [Annotated pos $ buildTyArr (map kindOf ts') TYPE :~ kindOf t']
-      TyConApp <$> transType t <*> traverse transType ts
+transType (S.TyApp _ t ts) = TyConApp <$> transType t <*> traverse transType ts
 transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2

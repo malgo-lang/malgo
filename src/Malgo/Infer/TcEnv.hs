@@ -16,11 +16,11 @@ import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
+import Malgo.Infer.TypeRep
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
 import Malgo.Syntax.Extension
-import Malgo.Infer.TypeRep
 import Text.Pretty.Simple (pShow)
 
 type RecordTypeName = Text
@@ -63,6 +63,7 @@ genTcEnv rnEnv = do
   let double_t = fromJust $ findBuiltinType "Double#" rnEnv
   let char_t = fromJust $ findBuiltinType "Char#" rnEnv
   let string_t = fromJust $ findBuiltinType "String#" rnEnv
+  let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
   pure $
     TcEnv
       { _signatureMap = mempty,
@@ -73,7 +74,8 @@ genTcEnv rnEnv = do
               (float_t, TypeDef (TyPrim FloatT) [] []),
               (double_t, TypeDef (TyPrim DoubleT) [] []),
               (char_t, TypeDef (TyPrim CharT) [] []),
-              (string_t, TypeDef (TyPrim StringT) [] [])
+              (string_t, TypeDef (TyPrim StringT) [] []),
+              (ptr_t, TypeDef TyPtr [] [])
             ],
         _typeSynonymMap = mempty,
         _fieldBelongMap = mempty,
