@@ -10,7 +10,6 @@ import qualified Data.HashSet as HashSet
 import Koriel.Id
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasRange (range))
-import Malgo.Annotated
 import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 import Malgo.Prelude
 import Malgo.Syntax.Extension
@@ -331,7 +330,7 @@ makePrisms ''Pat
 data Decl x
   = ScDef (XScDef x) (XId x) (Exp x)
   | ScSig (XScSig x) (XId x) (Type x)
-  | DataDef (XDataDef x) (XId x) [Annotated Range (XId x)] [(Range, XId x, [Type x])]
+  | DataDef (XDataDef x) (XId x) [(Range, XId x)] [(Range, XId x, [Type x])]
   | TypeSynonym (XTypeSynonym x) (XId x) [XId x] (Type x)
   | Infix (XInfix x) Assoc Int (XId x)
   | Foreign (XForeign x) (XId x) (Type x)
@@ -407,7 +406,7 @@ type ScDef x = (XScDef x, XId x, Exp x)
 
 type ScSig x = (XScSig x, XId x, Type x)
 
-type DataDef x = (XDataDef x, XId x, [Annotated Range (XId x)], [(Range, XId x, [Type x])])
+type DataDef x = (XDataDef x, XId x, [(Range, XId x)], [(Range, XId x, [Type x])])
 
 type TypeSynonym x = (XTypeSynonym x, XId x, [XId x], Type x)
 

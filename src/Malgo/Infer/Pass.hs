@@ -189,8 +189,8 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
     name' <- lookupType pos name
-    params' <- traverse (\p -> newInternalId (idToText $ p ^. value) TYPE) params
-    zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef (TyVar p') [] [])) params params'
+    params' <- traverse (\(_, p) -> newInternalId (idToText p) TYPE) params
+    zipWithM_ (\(_, p) p' -> typeDefMap . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     (_, valueConsNames, valueConsTypes) <-
       unzip3 <$> forOf (traversed . _3) valueCons \args -> do
         -- 値コンストラクタの型を構築

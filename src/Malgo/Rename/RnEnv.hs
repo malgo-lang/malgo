@@ -37,17 +37,7 @@ dependencies :: Lens' RnState [ModuleName]
 dependencies = lens _dependencies (\r x -> r {_dependencies = x})
 
 -- | Resolved identifier
-data Resolved = Resolved
-  { -- | Visibility of the identifier
-    visibility :: Visibility,
-    -- | Inner identifier
-    ident :: RnId
-  }
-  deriving stock (Show, Eq)
-
-instance Pretty Resolved where
-  pPrint (Resolved vis rnId) =
-    pPrint vis <> "." <> pPrint rnId
+type Resolved = Qualified RnId
 
 data RnEnv = RnEnv
   { _resolvedVarIdentMap :: HashMap PsId [Resolved],
@@ -89,13 +79,13 @@ genBuiltinRnEnv modName malgoEnv = do
       { _resolvedVarIdentMap = mempty,
         _resolvedTypeIdentMap =
           HashMap.fromList
-            [ ("Int32#", [Resolved Implicit int32_t]),
-              ("Int64#", [Resolved Implicit int64_t]),
-              ("Float#", [Resolved Implicit float_t]),
-              ("Double#", [Resolved Implicit double_t]),
-              ("Char#", [Resolved Implicit char_t]),
-              ("String#", [Resolved Implicit string_t]),
-              ("Ptr#", [Resolved Implicit ptr_t])
+            [ ("Int32#", [Qualified Implicit int32_t]),
+              ("Int64#", [Qualified Implicit int64_t]),
+              ("Float#", [Qualified Implicit float_t]),
+              ("Double#", [Qualified Implicit double_t]),
+              ("Char#", [Qualified Implicit char_t]),
+              ("String#", [Qualified Implicit string_t]),
+              ("Ptr#", [Qualified Implicit ptr_t])
             ],
         _resolvedFieldIdentMap = HashMap.empty,
         _moduleName = modName,
@@ -117,8 +107,8 @@ resolveGlobalName modName name = newExternalId name () modName
 lookupVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupVarName pos name =
   view (resolvedVarIdentMap . at name) >>= \case
-    Just names -> case find (\(Resolved visi _) -> visi == Implicit) names of
-      Just (Resolved _ name) -> pure name
+    Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
+      Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
@@ -129,8 +119,8 @@ lookupVarName pos name =
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupTypeName pos name =
   view (resolvedTypeIdentMap . at name) >>= \case
-    Just names -> case find (\(Resolved visi _) -> visi == Implicit) names of
-      Just (Resolved _ name) -> pure name
+    Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
+      Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
@@ -141,8 +131,8 @@ lookupTypeName pos name =
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupFieldName pos name =
   view (resolvedFieldIdentMap . at name) >>= \case
-    Just names -> case find (\(Resolved visi _) -> visi == Implicit) names of
-      Just (Resolved _ name) -> pure name
+    Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
+      Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
@@ -154,14 +144,10 @@ lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> ModuleNam
 lookupQualifiedVarName pos modName name =
   view (resolvedVarIdentMap . at name) >>= \case
     Just names ->
-      case find (\(Resolved visi _) -> visi == Explicit modName) names of
-        Just (Resolved _ name) -> pure name
+      case find (\(Qualified visi _) -> visi == Explicit modName) names of
+        Just (Qualified _ name) -> pure name
         Nothing ->
           errorOn pos $
             "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
               $$ "Did you mean" <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-
-pPrintQualifiedId :: Resolved -> Doc
-pPrintQualifiedId (Resolved Implicit id) = pPrint id
-pPrintQualifiedId (Resolved (Explicit modName) id) = pPrint modName <> "." <> pPrint id

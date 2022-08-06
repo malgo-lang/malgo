@@ -85,7 +85,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
   addDefinition typeName info
   addSymbolInfo typeName (symbol SkEnum typeName range)
 
-  for_ typeParameters \Annotated {_ann = range, _value = typeParameter} -> do
+  for_ typeParameters \(range, typeParameter) -> do
     typeParameterKind <- lookupTypeKind typeParameter
     let info = Info {_name = typeParameter ^. idName, _typeSignature = Forall [] typeParameterKind, _definitions = [range]}
     addReferences info [range]

@@ -5,7 +5,6 @@ import Data.Foldable (foldl)
 import qualified Data.List.NonEmpty as NonEmpty
 import Data.Void
 import Koriel.Id (ModuleName (ModuleName))
-import Malgo.Annotated
 import Malgo.Prelude hiding
   ( many,
     some,
@@ -62,7 +61,7 @@ pDataDef = label "toplevel type definition" do
     start <- getSourcePos
     x <- lowerIdent
     end <- getSourcePos
-    pure Annotated {_ann = Range start end, _value = x}
+    pure (Range start end, x)
   void $ pOperator "="
   ts <- pConDef `sepBy` pOperator "|"
   pure $ DataDef (Range start end) d xs ts

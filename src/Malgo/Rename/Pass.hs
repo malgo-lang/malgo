@@ -10,7 +10,6 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Annotated
 import Malgo.Interface
 import Malgo.Prelude
 import Malgo.Rename.RnEnv
@@ -56,20 +55,20 @@ rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExp ex
 rnDecl (ScSig pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Resolved Implicit) tyVars')) $
+  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars')) $
     ScSig pos
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
-  params' <- traverse (resolveName . view value) params
-  local (appendRnEnv resolvedTypeIdentMap (zip (map (view value) params) (map (Resolved Implicit) params'))) $
+  params' <- traverse (resolveName . snd) params
+  local (appendRnEnv resolvedTypeIdentMap (zip (map snd params) (map (Qualified Implicit) params'))) $
     DataDef pos
       <$> lookupTypeName pos name
-        <*> pure (zipWith (\p p' -> Annotated {_ann = p ^. ann, _value = p'}) params params')
+        <*> pure (zipWith (\(range, _) p' -> (range, p')) params params')
         <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (TypeSynonym pos name params typ) = do
   params' <- traverse resolveName params
-  local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Resolved Implicit) params')) $
+  local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Qualified Implicit) params')) $
     TypeSynonym pos <$> lookupTypeName pos name
       <*> pure params'
       <*> rnType typ
@@ -77,7 +76,7 @@ rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos 
 rnDecl (Foreign pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Resolved Implicit) tyVars')) $
+  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars')) $
     Foreign (pos, name)
       <$> lookupVarName pos name
       <*> rnType typ
@@ -160,7 +159,7 @@ rnClause (Clause pos ps e) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
   when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
-  vm <- zip vars . map (Resolved Implicit) <$> traverse resolveName vars
+  vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
   local (appendRnEnv resolvedVarIdentMap vm) $ Clause pos <$> traverse rnPat ps <*> rnExp e
   where
     patVars (VarP _ x) = [x]
@@ -202,7 +201,7 @@ rnStmts (NoBind x e :| s : ss) = do
 rnStmts (Let x v e :| s : ss) = do
   e' <- rnExp e
   v' <- resolveName v
-  local (appendRnEnv resolvedVarIdentMap [(v, Resolved Implicit v')]) do
+  local (appendRnEnv resolvedVarIdentMap [(v, Qualified Implicit v')]) do
     s' :| ss' <- rnStmts (s :| ss)
     pure $ Let x v' e' :| s' : ss'
 rnStmts (With x (Just v) e :| s : ss) = do
@@ -282,7 +281,7 @@ genToplevelEnv modName ds =
       when (x `elem` HashMap.keys env) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
-      modify $ appendRnEnv resolvedVarIdentMap [(x, Resolved Implicit x')]
+      modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
       env <- get
@@ -295,22 +294,22 @@ genToplevelEnv modName ds =
               (punctuate "," $ map (quotes . pPrint) (map (view _2) cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
       x' <- resolveGlobalName modName x
       xs' <- traverse (resolveGlobalName modName . view _2) cs
-      modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Resolved Implicit) xs')
-      modify $ appendRnEnv resolvedTypeIdentMap [(x, Resolved Implicit x')]
+      modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
+      modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
       traverse_ (traverse_ genFieldEnv . view _3) cs
     aux (TypeSynonym pos x _ t) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
-      modify $ appendRnEnv resolvedTypeIdentMap [(x, Resolved Implicit x')]
+      modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
       genFieldEnv t
     aux (Foreign pos x _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedVarIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newExternalId x () modName
-      modify $ appendRnEnv resolvedVarIdentMap [(x, Resolved Implicit x')]
+      modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux (Import pos modName' All) = do
       interface <-
         loadInterface modName' >>= \case
@@ -319,8 +318,8 @@ genToplevelEnv modName ds =
       whenM (view debugMode) $
         hPrint stderr $ pPrint interface
       -- 全ての識別子をImplicitでimportする
-      modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Resolved Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Resolved Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
+      modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Qualified Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Qualified Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux (Import pos modName' (Selected implicits)) = do
       interface <-
         loadInterface modName' >>= \case
@@ -334,8 +333,8 @@ genToplevelEnv modName ds =
           ( map
               ( \(name, id) ->
                   if name `elem` implicits
-                    then (name, Resolved Implicit id)
-                    else (name, Resolved (Explicit modName') id)
+                    then (name, Qualified Implicit id)
+                    else (name, Qualified (Explicit modName') id)
               )
               $ HashMap.toList $ interface ^. resolvedVarIdentMap
           )
@@ -345,8 +344,8 @@ genToplevelEnv modName ds =
           ( map
               ( \(name, id) ->
                   if name `elem` implicits
-                    then (name, Resolved Implicit id)
-                    else (name, Resolved (Explicit modName') id)
+                    then (name, Qualified Implicit id)
+                    else (name, Qualified (Explicit modName') id)
               )
               $ HashMap.toList $ interface ^. resolvedTypeIdentMap
           )
@@ -357,8 +356,8 @@ genToplevelEnv modName ds =
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       whenM (view debugMode) $
         hPrint stderr $ pPrint interface
-      modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Resolved (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Resolved (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
+      modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Qualified (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
+      modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Qualified (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pass
     genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
     genFieldEnv (TyVar _ _) = pass
@@ -370,5 +369,5 @@ genToplevelEnv modName ds =
       let ts = map snd kts
       traverse_ genFieldEnv ts
       ks' <- traverse (resolveGlobalName modName) ks
-      zipWithM_ (\k k' -> modify $ appendRnEnv resolvedFieldIdentMap [(k, Resolved Implicit k')]) ks ks'
+      zipWithM_ (\k k' -> modify $ appendRnEnv resolvedFieldIdentMap [(k, Qualified Implicit k')]) ks ks'
     genFieldEnv (TyBlock _ t) = genFieldEnv t
