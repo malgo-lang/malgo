@@ -43,7 +43,13 @@ data Visibility
 
 instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
 
-data Resolved = Resolved {visibility :: Visibility, ident :: RnId}
+-- | Resolved identifier
+data Resolved = Resolved
+  { -- | Visibility of the identifier
+    visibility :: Visibility,
+    -- | Inner identifier
+    ident :: RnId
+  }
   deriving stock (Show, Eq)
 
 instance Pretty Resolved where
