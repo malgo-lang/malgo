@@ -10,7 +10,7 @@ module Malgo.Infer.TcEnv
   )
 where
 
-import Control.Lens (At (at), makeFieldsNoPrefix, over, traverseOf, traversed, view, (^.), _2)
+import Control.Lens (At (at), makeFieldsNoPrefix, over, view, (^.))
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
@@ -38,15 +38,6 @@ makeFieldsNoPrefix ''TcEnv
 
 instance Pretty TcEnv where
   pPrint env = Koriel.Pretty.text $ toString $ pShow env
-
-instance HasType TcEnv where
-  typeOf TcEnv {} = error "typeOf TcEnv{..}"
-  types f TcEnv {..} =
-    TcEnv <$> traverseOf (traversed . traversed . types) f _signatureMap
-      <*> traverseOf (traversed . traversed . types) f _typeDefMap
-      <*> traverseOf (traversed . traversed . types) f _typeSynonymMap
-      <*> traverseOf (traversed . traversed . _2 . traversed . types) f _fieldBelongMap
-      <*> pure _resolvedTypeIdentMap
 
 appendFieldBelongMap :: [([Text], (RecordTypeName, Scheme Type))] -> TcEnv -> TcEnv
 appendFieldBelongMap newEnv = over fieldBelongMap (go newEnv)
