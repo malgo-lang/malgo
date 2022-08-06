@@ -4,13 +4,12 @@
 
 module Malgo.Infer.TypeRep where
 
-import Control.Lens (At (at), Lens', Plated (plate), Traversal', coerced, cosmos, makeLenses, makePrisms, mapped, over, toListOf, transform, traverseOf, view, (^.), _1, _2)
+import Control.Lens (At (at), Lens', Traversal', coerced, makeLenses, makePrisms, mapped, over, traverseOf, view, (^.), _1, _2)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
 import Koriel.Id
 import Koriel.Lens (HasAnn (ann))
 import Koriel.Pretty
@@ -85,19 +84,6 @@ instance ToJSON Type
 instance FromJSON Type
 
 instance Hashable Type
-
-instance Plated Type where
-  plate f = \case
-    t@TyMeta {} -> pure t
-    TyApp t1 t2 -> TyApp <$> f t1 <*> f t2
-    TyVar x -> TyVar <$> traverseOf idMeta f x
-    TyCon x -> TyCon <$> traverseOf idMeta f x
-    t@TyPrim {} -> pure t
-    TyArr t1 t2 -> TyArr <$> f t1 <*> f t2
-    t@TyTuple {} -> pure t
-    TyRecord kts -> TyRecord <$> traverse f kts
-    TyPtr -> pure TyPtr
-    TYPE -> pure TYPE
 
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
@@ -282,9 +268,17 @@ splitTyArr t = ([], t)
 
 -- | apply substitution to a type
 applySubst :: HashMap (Id Type) Type -> Type -> Type
-applySubst subst = transform $ \case
-  TyVar v -> fromMaybe (TyVar v) $ subst ^. at v
-  ty -> ty
+applySubst subst = \case
+  TyApp ty ty' -> TyApp (applySubst subst ty) (applySubst subst ty')
+  TyVar id -> fromMaybe (TyVar id) $ subst ^. at id -- TyVar (over idMeta (applySubst subst) id)
+  TyCon id -> TyCon (over idMeta (applySubst subst) id)
+  TyPrim pt -> TyPrim pt
+  TyArr ty ty' -> TyArr (applySubst subst ty) (applySubst subst ty')
+  TyTuple n -> TyTuple n
+  TyRecord hm -> TyRecord $ fmap (applySubst subst) hm
+  TyPtr -> TyPtr
+  TYPE -> TYPE
+  TyMeta tv -> TyMeta tv
 
 -- | expand type synonyms
 expandTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Maybe Type
@@ -319,4 +313,13 @@ makeLenses ''TypeDef
 
 -- | get all meta type variables in a type
 freevars :: Type -> HashSet TypeVar
-freevars ty = HashSet.fromList $ toListOf (cosmos . _TyMeta) ty
+freevars (TyApp t1 t2) = freevars t1 <> freevars t2
+freevars v@TyVar {} = freevars $ kindOf v
+freevars c@TyCon {} = freevars $ kindOf c
+freevars TyPrim {} = mempty
+freevars (TyArr t1 t2) = freevars t1 <> freevars t2
+freevars TyTuple {} = mempty
+freevars (TyRecord kts) = foldMap freevars kts
+freevars TyPtr = mempty
+freevars TYPE = mempty
+freevars (TyMeta tv) = one tv

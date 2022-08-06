@@ -4,7 +4,7 @@
 -- | Unification
 module Malgo.Infer.Unify where
 
-import Control.Lens (At (at), itraverse_, transformM, traverseOf, use, view, (?=), (^.))
+import Control.Lens (At (at), itraverse_, traverseOf, use, view, (?=), (^.))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.Traversable (for)
@@ -159,12 +159,20 @@ toBound x tv hint = do
   newInternalId name tvKind
 
 defaultToBoxed :: MonadBind f => Range -> Type -> f Type
-defaultToBoxed x = transformM \case
-  TyMeta v -> do
-    let vKind = kindOf $ v ^. typeVar . idMeta
+defaultToBoxed x = \case
+  TyApp ty ty' -> TyApp <$> defaultToBoxed x ty <*> defaultToBoxed x ty'
+  TyVar id -> TyVar <$> traverseOf idMeta (defaultToBoxed x) id
+  TyCon id -> TyCon <$> traverseOf idMeta (defaultToBoxed x) id
+  TyPrim pt -> pure $ TyPrim pt
+  TyArr ty ty' -> TyArr <$> defaultToBoxed x ty <*> defaultToBoxed x ty'
+  TyTuple n -> pure $ TyTuple n
+  TyRecord hm -> TyRecord <$> traverse (defaultToBoxed x) hm
+  TyPtr -> pure TyPtr
+  TYPE -> pure TYPE
+  TyMeta tv -> do
+    let vKind = kindOf $ tv ^. typeVar . idMeta
     void $ defaultToBoxed x vKind
-    TyMeta <$> traverseOf (typeVar . idMeta) zonk v
-  t -> pure t
+    TyMeta <$> traverseOf (typeVar . idMeta) zonk tv
 
 unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
