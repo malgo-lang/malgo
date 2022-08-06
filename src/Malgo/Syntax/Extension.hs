@@ -12,10 +12,10 @@ import Koriel.Id
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasValue (value))
 import Malgo.Prelude
-import Malgo.TypeRep as TypeRep
+import Malgo.Infer.TypeRep as TypeRep
 
 -- | Phase and type instance
-data MalgoPhase = Parse | Rename | TypeCheck | Refine
+data MalgoPhase = Parse | Rename | Infer | Refine
 
 data Malgo (p :: MalgoPhase)
 
@@ -23,7 +23,7 @@ data Malgo (p :: MalgoPhase)
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = Text
   MalgoId 'Rename = Id ()
-  MalgoId 'TypeCheck = Id ()
+  MalgoId 'Infer = Id ()
   MalgoId 'Refine = Id ()
 
 -- | Qualified name
@@ -73,8 +73,8 @@ type family XId x where
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = Range
   SimpleX 'Rename = SimpleX 'Parse
-  SimpleX 'TypeCheck = Annotated Type (SimpleX 'Rename)
-  SimpleX 'Refine = SimpleX 'TypeCheck
+  SimpleX 'Infer = Annotated Type (SimpleX 'Rename)
+  SimpleX 'Refine = SimpleX 'Infer
 
 type family XVar x where
   XVar (Malgo 'Parse) = WithPrefix (SimpleX 'Parse)
@@ -96,7 +96,7 @@ type family XApply x where
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SimpleX 'Parse
   XOpApp (Malgo 'Rename) = (XOpApp (Malgo 'Parse), (Assoc, Int))
-  XOpApp (Malgo 'TypeCheck) = Annotated Type (XOpApp (Malgo 'Rename))
+  XOpApp (Malgo 'Infer) = Annotated Type (XOpApp (Malgo 'Rename))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -238,8 +238,8 @@ type family XInfix x where
 type family XForeign x where
   XForeign (Malgo 'Parse) = SimpleX 'Parse
   XForeign (Malgo 'Rename) = (XForeign (Malgo 'Parse), Text)
-  XForeign (Malgo 'TypeCheck) = Annotated Type (XForeign (Malgo 'Rename))
-  XForeign (Malgo 'Refine) = XForeign (Malgo 'TypeCheck)
+  XForeign (Malgo 'Infer) = Annotated Type (XForeign (Malgo 'Rename))
+  XForeign (Malgo 'Refine) = XForeign (Malgo 'Infer)
 
 type family XImport x where
   XImport (Malgo _) = SimpleX 'Parse

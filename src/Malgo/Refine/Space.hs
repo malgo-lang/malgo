@@ -8,11 +8,11 @@ import Data.Traversable (for)
 import Koriel.Id (Id)
 import Koriel.Lens (HasAnn (ann))
 import Koriel.Pretty hiding (space)
+import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
-import Malgo.TypeRep
 import Text.Pretty.Simple (pShow)
 
 -- | Space of values that covered by patterns
@@ -27,7 +27,7 @@ data Space
   | Record [(Text, Space)]
   | -- | union of spaces
     Union Space Space
-  deriving stock (Eq, Show)
+  deriving stock (Eq, Ord, Show)
 
 instance Pretty Space where
   pPrint Empty = "O"
@@ -61,7 +61,7 @@ buildUnion [] = Empty
 buildUnion [s] = s
 buildUnion (s : ss) = Union s (buildUnion ss)
 
--- Ref: Malgo.TypeRep.TyConApp
+-- Ref: Malgo.Infer.TypeRep.TyConApp
 
 -- | Check whether the given type can be decomposed into space(s).
 decomposable :: Type -> Bool
@@ -188,5 +188,5 @@ instance HasSpace (Pat (Malgo 'Refine)) where
   space _ (VarP x _) = Type (x ^. ann)
   space env (ConP _ con ps) = Constructor con (map (space env) ps)
   space env (TupleP _ ps) = Tuple $ map (space env) ps
-  space env (RecordP _ xps) = Record $ map (bimap identity (space env)) xps
+  space env (RecordP _ xps) = Record $ sort $ map (bimap identity (space env)) xps
   space _ (UnboxedP _ _) = Empty

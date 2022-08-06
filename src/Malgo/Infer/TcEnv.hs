@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.TypeCheck.TcEnv
+module Malgo.Infer.TcEnv
   ( RecordTypeName,
     TcEnv (..),
     genTcEnv,
@@ -10,17 +10,17 @@ module Malgo.TypeCheck.TcEnv
   )
 where
 
-import Control.Lens (At (at), makeFieldsNoPrefix, over, traverseOf, traversed, view, (^.), _2)
+import Control.Lens (At (at), makeFieldsNoPrefix, over, view, (^.))
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
+import Malgo.Infer.TypeRep
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv)
 import qualified Malgo.Rename.RnEnv as R
 import Malgo.Syntax.Extension
-import Malgo.TypeRep
 import Text.Pretty.Simple (pShow)
 
 type RecordTypeName = Text
@@ -39,15 +39,6 @@ makeFieldsNoPrefix ''TcEnv
 instance Pretty TcEnv where
   pPrint env = Koriel.Pretty.text $ toString $ pShow env
 
-instance HasType TcEnv where
-  typeOf TcEnv {} = error "typeOf TcEnv{..}"
-  types f TcEnv {..} =
-    TcEnv <$> traverseOf (traversed . traversed . types) f _signatureMap
-      <*> traverseOf (traversed . traversed . types) f _typeDefMap
-      <*> traverseOf (traversed . traversed . types) f _typeSynonymMap
-      <*> traverseOf (traversed . traversed . _2 . traversed . types) f _fieldBelongMap
-      <*> pure _resolvedTypeIdentMap
-
 appendFieldBelongMap :: [([Text], (RecordTypeName, Scheme Type))] -> TcEnv -> TcEnv
 appendFieldBelongMap newEnv = over fieldBelongMap (go newEnv)
   where
@@ -63,6 +54,7 @@ genTcEnv rnEnv = do
   let double_t = fromJust $ findBuiltinType "Double#" rnEnv
   let char_t = fromJust $ findBuiltinType "Char#" rnEnv
   let string_t = fromJust $ findBuiltinType "String#" rnEnv
+  let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
   pure $
     TcEnv
       { _signatureMap = mempty,
@@ -73,7 +65,8 @@ genTcEnv rnEnv = do
               (float_t, TypeDef (TyPrim FloatT) [] []),
               (double_t, TypeDef (TyPrim DoubleT) [] []),
               (char_t, TypeDef (TyPrim CharT) [] []),
-              (string_t, TypeDef (TyPrim StringT) [] [])
+              (string_t, TypeDef (TyPrim StringT) [] []),
+              (ptr_t, TypeDef TyPtr [] [])
             ],
         _typeSynonymMap = mempty,
         _fieldBelongMap = mempty,

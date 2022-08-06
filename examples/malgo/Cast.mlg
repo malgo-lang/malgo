@@ -2,24 +2,11 @@ module Cast = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  foreign import unsafe_cast : a -> b;
-
-  castToInt64 : a -> Int64;
-  castToInt64 = { x -> unsafe_cast x };
-
-  castToInt32 : a -> Int32;
-  castToInt32 = { x -> unsafe_cast x };
-
-  data Maybe a = Nothing | Just a;
-
-  castMaybe : Maybe a -> b;
-  castMaybe = { x -> unsafe_cast x };
-
   main = {
     let x = 1;
-    let x' = unsafe_cast x;
-    let x'' = castToInt32 x;
-    x |> toStringInt32 |> putStrLn
+    let x' = malgo_unsafe_cast x;
+    let x'' = malgo_unsafe_cast x;
+    x'' |> toStringInt32 |> putStrLn
   };
 }
 
