@@ -116,7 +116,7 @@ lookupVarName pos name =
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map (view value) names)
+            $$ "Did you mean" <+> pPrint (map pPrintQualifiedId names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a type name that is already resolved
@@ -128,7 +128,7 @@ lookupTypeName pos name =
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map (view value) names)
+            $$ "Did you mean" <+> pPrint (map pPrintQualifiedId names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a field name that is already resolved
@@ -140,7 +140,7 @@ lookupFieldName pos name =
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map (view value) names)
+            $$ "Did you mean" <+> pPrint (map pPrintQualifiedId names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a qualified variable name like Foo.x
@@ -153,5 +153,9 @@ lookupQualifiedVarName pos modName name =
         Nothing ->
           errorOn pos $
             "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
-              $$ "Did you mean" <+> "`" <> pPrint modName <+> "." <+> pPrint name <> "`" <+> "?"
+              $$ "Did you mean" <+> pPrint (map pPrintQualifiedId names)
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+
+pPrintQualifiedId :: Annotated Visibility RnId -> Doc
+pPrintQualifiedId (Annotated Implicit id) = pPrint id
+pPrintQualifiedId (Annotated (Explicit modName) id) = pPrint modName <> "." <> pPrint id
