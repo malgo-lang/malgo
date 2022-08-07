@@ -12,14 +12,14 @@ import Koriel.Id (Id (..), IdSort (Temporal), idName)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
 import Language.LSP.Types (DocumentSymbol (..), SymbolKind (..))
+import Malgo.Infer.TcEnv
+import Malgo.Infer.TypeRep
 import Malgo.Interface (HasLspIndex (lspIndex), loadInterface)
 import Malgo.Lsp.Index
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
 import qualified Malgo.Syntax as S
 import Malgo.Syntax.Extension
-import Malgo.Infer.TcEnv
-import Malgo.Infer.TypeRep
 
 newtype LspOpt = LspOpt
   { _modulePaths :: [FilePath]
@@ -84,7 +84,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
   addDefinition typeName info
   addSymbolInfo typeName (symbol SkEnum typeName range)
 
-  for_ typeParameters \Annotated {_ann = range, _value = typeParameter} -> do
+  for_ typeParameters \(range, typeParameter) -> do
     typeParameterKind <- lookupTypeKind typeParameter
     let info = Info {_name = typeParameter ^. idName, _typeSignature = Forall [] typeParameterKind, _definitions = [range]}
     addReferences info [range]
@@ -197,13 +197,13 @@ indexClause (Clause _ ps e) = do
 
 indexPat :: (MonadState IndexEnv m) => Pat (Malgo 'Refine) -> m ()
 indexPat (VarP _ (Id _ _ _ Temporal)) = pass
-indexPat (VarP (Annotated ty range) v) = do
+indexPat (VarP (Typed ty range) v) = do
   -- index the information of this definition
   let info = Info {_name = v ^. idName, _typeSignature = Forall [] ty, _definitions = [range]}
   addReferences info [range]
   addDefinition v info
   addSymbolInfo v (symbol SkVariable v range)
-indexPat (ConP (Annotated _ range) c ps) = do
+indexPat (ConP (Typed _ range) c ps) = do
   minfo <- lookupInfo c
   case minfo of
     Nothing -> pass

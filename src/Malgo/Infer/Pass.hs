@@ -1,6 +1,6 @@
 module Malgo.Infer.Pass (infer) where
 
-import Control.Lens (At (at), forOf, ix, mapped, over, preuse, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
+import Control.Lens (At (at), forOf, ix, mapped, over, preuse, to, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.List as List
@@ -67,9 +67,9 @@ infer rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
       abbrEnv <- use typeSynonymMap
       zonkedBg <-
         pure bg'
-          >>= traverseOf (scDefs . traversed . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (foreigns . traversed . _1 . ann) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       zonkedTcEnv <-
         pure tcEnv'
           >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
@@ -188,8 +188,8 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
     name' <- lookupType pos name
-    params' <- traverse (\p -> newInternalId (idToText $ p ^. value) TYPE) params
-    zipWithM_ (\p p' -> typeDefMap . at (p ^. value) .= Just (TypeDef (TyVar p') [] [])) params params'
+    params' <- traverse (\(_, p) -> newInternalId (idToText p) TYPE) params
+    zipWithM_ (\(_, p) p' -> typeDefMap . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     (_, valueConsNames, valueConsTypes) <-
       unzip3 <$> forOf (traversed . _3) valueCons \args -> do
         -- 値コンストラクタの型を構築
@@ -219,7 +219,7 @@ tcForeigns ds =
     ty' <- transType ty
     scheme@(Forall _ ty') <- generalize pos mempty ty'
     signatureMap . at name ?= scheme
-    pure (Annotated ty' (pos, raw), name, tcType ty)
+    pure (Typed ty' (pos, raw), name, tcType ty)
 
 tcScSigs ::
   ( MonadBind m,
@@ -277,7 +277,7 @@ tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- traverse tcScDef ds
   -- generalize mutually recursive functions
-  (as, types) <- generalizeMutRecs pos mempty $ map (view (_1 . ann)) ds
+  (as, types) <- generalizeMutRecs pos mempty $ map (view (_1 . to typeOf)) ds
   validateSignatures ds (as, types)
   pure ds
 
@@ -294,9 +294,9 @@ tcScDef (pos, name, expr) = do
   (expr', wanted) <- runWriterT (tcExpr expr)
   nameType <- instantiate pos =<< lookupVar pos name
   let exprType = typeOf expr'
-  let constraints = Annotated pos (nameType :~ exprType) : wanted
+  let constraints = (pos, nameType :~ exprType) : wanted
   solve constraints
-  pure (Annotated exprType pos, name, expr')
+  pure (Typed exprType pos, name, expr')
 
 -- | Validate user-declared type signature and add type schemes to environment
 validateSignatures ::
@@ -375,32 +375,32 @@ tcExpr ::
     HasSrcName env FilePath
   ) =>
   Exp (Malgo 'Rename) ->
-  WriterT [Annotated Range Constraint] m (Exp (Malgo 'Infer))
+  WriterT [(Range, Constraint)] m (Exp (Malgo 'Infer))
 tcExpr (Var pos v) = do
   vType <- instantiate pos =<< lookupVar pos v
-  pure $ Var (Annotated vType pos) v
+  pure $ Var (Typed vType pos) v
 tcExpr (Unboxed pos u) = do
   let uType = typeOf u
-  pure $ Unboxed (Annotated uType pos) u
+  pure $ Unboxed (Typed uType pos) u
 tcExpr (Apply pos f x) = do
   f' <- tcExpr f
   x' <- tcExpr x
   retType <- TyMeta <$> freshVar Nothing
-  tell [Annotated pos $ typeOf f' :~ TyArr (typeOf x') retType]
-  pure $ Apply (Annotated retType pos) f' x'
+  tell [(pos, typeOf f' :~ TyArr (typeOf x') retType)]
+  pure $ Apply (Typed retType pos) f' x'
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
   e2' <- tcExpr e2
   opScheme <- lookupVar pos op
   opType <- instantiate pos opScheme
   retType <- TyMeta <$> freshVar Nothing
-  tell [Annotated pos $ opType :~ TyArr (typeOf e1') (TyArr (typeOf e2') retType)]
-  pure $ OpApp (Annotated retType x) op e1' e2'
+  tell [(pos, opType :~ TyArr (typeOf e1') (TyArr (typeOf e2') retType))]
+  pure $ OpApp (Typed retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
   hole <- newInternalId "$_" ()
   signatureMap . at hole ?= Forall [] (TyTuple 0)
-  pure $ Fn (Annotated (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Annotated (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Annotated (TyTuple 0) pos) hole] e' :| [])
+  pure $ Fn (Typed (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Typed (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Typed (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do
   (c' :| cs') <- traverse tcClause cs
   -- パターンの数がすべての節で同じかを検査
@@ -414,31 +414,31 @@ tcExpr (Fn pos cs) = do
           [ nest 4 $ pPrint (patOf c) <+> "has" <+> pPrint (countPatNums c) <+> "patterns,",
             "but" <+> pPrint (patOf c') <+> "has" <+> pPrint patNums
           ]
-    tell [Annotated pos $ typeOf c' :~ typeOf c]
-  pure $ Fn (Annotated (typeOf c') pos) (c' :| cs')
+    tell [(pos, typeOf c' :~ typeOf c)]
+  pure $ Fn (Typed (typeOf c') pos) (c' :| cs')
   where
     countPatNums (Clause _ ps _) = length ps
     patOf (Clause _ ps _) = ps
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
   let esType = TyConApp (TyTuple $ length es) $ map typeOf es'
-  pure $ Tuple (Annotated esType pos) es'
+  pure $ Tuple (Typed esType pos) es'
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
   -- レコードリテラルでは、レコード型をフィールド名から検索する必要はない
   let kvsType = TyRecord $ HashMap.fromList $ map (bimap identity typeOf) kvs'
-  pure $ Record (Annotated kvsType pos) kvs'
+  pure $ Record (Typed kvsType pos) kvs'
 tcExpr (Ann pos e t) = do
   e' <- tcExpr e
   typeRep <- transType t
-  tell [Annotated pos $ typeOf e' :~ typeRep]
+  tell [(pos, typeOf e' :~ typeRep)]
   pure e'
 tcExpr (Seq pos ss) = do
   ss' <- tcStmts ss
-  pure $ Seq (Annotated (typeOf $ last ss') pos) ss'
+  pure $ Seq (Typed (typeOf $ last ss') pos) ss'
 tcExpr (Parens pos e) = do
   e' <- tcExpr e
-  pure $ Parens (Annotated (typeOf e') pos) e'
+  pure $ Parens (Typed (typeOf e') pos) e'
 
 tcClause ::
   ( MonadBind m,
@@ -450,12 +450,12 @@ tcClause ::
     HasSrcName env FilePath
   ) =>
   Clause (Malgo 'Rename) ->
-  WriterT [Annotated Range Constraint] m (Clause (Malgo 'Infer))
+  WriterT [(Range, Constraint)] m (Clause (Malgo 'Infer))
 tcClause (Clause pos pats e) = do
   pats' <- tcPatterns pats
   e' <- tcExpr e
   let patTypes = map typeOf pats'
-  pure $ Clause (Annotated (buildTyArr patTypes (typeOf e')) pos) pats' e'
+  pure $ Clause (Typed (buildTyArr patTypes (typeOf e')) pos) pats' e'
 
 tcPatterns ::
   ( MonadBind m,
@@ -466,13 +466,13 @@ tcPatterns ::
     HasSrcName env FilePath
   ) =>
   [Pat (Malgo 'Rename)] ->
-  WriterT [Annotated Range Constraint] m [Pat (Malgo 'Infer)]
+  WriterT [(Range, Constraint)] m [Pat (Malgo 'Infer)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- TyMeta <$> freshVar Nothing
   signatureMap . at v ?= Forall [] ty
   ps' <- tcPatterns ps
-  pure $ VarP (Annotated ty x) v : ps'
+  pure $ VarP (Typed ty x) v : ps'
 tcPatterns (ConP pos con pats : ps) = do
   conType <- instantiate pos =<< lookupVar pos con
   let (conParams, _) = splitTyArr conType
@@ -486,14 +486,14 @@ tcPatterns (ConP pos con pats : ps) = do
   pats' <- tcPatterns (pats <> morePats)
   ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'
-  tell [Annotated pos $ conType :~ buildTyArr patTypes ty]
+  tell [(pos, conType :~ buildTyArr patTypes ty)]
   ps' <- tcPatterns restPs
-  pure (ConP (Annotated ty pos) con pats' : ps')
+  pure (ConP (Typed ty pos) con pats' : ps')
 tcPatterns (TupleP pos pats : ps) = do
   pats' <- tcPatterns pats
   ps' <- tcPatterns ps
   let patTypes = map typeOf pats'
-  pure $ TupleP (Annotated (TyConApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
+  pure $ TupleP (Typed (TyConApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
 tcPatterns (RecordP pos kps : ps) = do
   kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
@@ -501,11 +501,11 @@ tcPatterns (RecordP pos kps : ps) = do
   let patternKts = HashMap.fromList $ map (bimap identity typeOf) kps'
   let patternType = TyRecord $ patternKts <> recordKts
 
-  tell [Annotated pos $ recordType :~ patternType]
-  pure $ RecordP (Annotated patternType pos) kps' : ps'
+  tell [(pos, recordType :~ patternType)]
+  pure $ RecordP (Typed patternType pos) kps' : ps'
 tcPatterns (UnboxedP pos unboxed : ps) = do
   ps' <- tcPatterns ps
-  pure $ UnboxedP (Annotated (typeOf unboxed) pos) unboxed : ps'
+  pure $ UnboxedP (Typed (typeOf unboxed) pos) unboxed : ps'
 
 tcStmts ::
   ( MonadState TcEnv m,
@@ -517,7 +517,7 @@ tcStmts ::
     HasSrcName env FilePath
   ) =>
   NonEmpty (Stmt (Malgo 'Rename)) ->
-  WriterT [Annotated Range Constraint] m (NonEmpty (Stmt (Malgo 'Infer)))
+  WriterT [(Range, Constraint)] m (NonEmpty (Stmt (Malgo 'Infer)))
 tcStmts = traverse tcStmt
 
 tcStmt ::
@@ -530,7 +530,7 @@ tcStmt ::
     HasSrcName env FilePath
   ) =>
   Stmt (Malgo 'Rename) ->
-  WriterT [Annotated Range Constraint] m (Stmt (Malgo 'Infer))
+  WriterT [(Range, Constraint)] m (Stmt (Malgo 'Infer))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   e' <- tcExpr e

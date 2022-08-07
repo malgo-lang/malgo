@@ -33,6 +33,9 @@ module Koriel.Lens
     HasDumpRefine (..),
     HasSymbolInfo (..),
     HasTypeDefENv (..),
+    HasVisibility (..),
+    HasField (..),
+    HasTypeAnn (..),
   )
 where
 
@@ -41,6 +44,15 @@ import Language.LSP.Types.Lens (HasName (..), HasValue (..))
 
 class HasAnn s a | s -> a where
   ann :: Lens' s a
+
+class HasVisibility s a | s -> a where
+  visibility :: Lens' s a
+
+class HasTypeAnn s a | s -> a where
+  typeAnn :: Lens' s a
+
+class HasField s a | s -> a where
+  field :: Lens' s a
 
 class HasUniqSupply s a | s -> a where
   uniqSupply :: Lens' s a

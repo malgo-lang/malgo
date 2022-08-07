@@ -61,7 +61,7 @@ pDataDef = label "toplevel type definition" do
     start <- getSourcePos
     x <- lowerIdent
     end <- getSourcePos
-    pure Annotated {_ann = Range start end, _value = x}
+    pure (Range start end, x)
   void $ pOperator "="
   ts <- pConDef `sepBy` pOperator "|"
   pure $ DataDef (Range start end) d xs ts
@@ -175,20 +175,27 @@ pUnboxed =
       <|> lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'))
       <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
 
-pWithPrefix :: Parser Text -> Parser x -> Parser (Maybe Text, x)
-pWithPrefix prefix body =
-  -- try full path identifier like `Foo.bar`
-  -- before simple identifier like `bar`
-  try ((,) <$> (Just <$> prefix) <* char '.' <*> body)
-    <|> (Nothing,) <$> body
-
 pVariable :: Parser (Exp (Malgo 'Parse))
 pVariable =
-  label "variable" do
-    start <- getSourcePos
-    (prefix, name) <- pWithPrefix pModuleName (lowerIdent <|> upperIdent)
-    end <- getSourcePos
-    pure $ Var (WithPrefix $ Annotated prefix (Range start end)) name
+  -- try full path identifier like `Foo.bar`
+  -- before simple identifier like `bar`
+  try pExplicitVariable <|> pImplicitVariable
+  where
+    pExplicitVariable :: Parser (Exp (Malgo 'Parse))
+    pExplicitVariable = label "explicit variable" $ do
+      start <- getSourcePos
+      qualifier <- Explicit . ModuleName <$> pModuleName
+      _ <- char '.'
+      name <- lowerIdent <|> upperIdent
+      end <- getSourcePos
+      pure $ Var (Qualified qualifier (Range start end)) name
+
+    pImplicitVariable :: Parser (Exp (Malgo 'Parse))
+    pImplicitVariable = label "implicit variable" $ do
+      start <- getSourcePos
+      name <- lowerIdent <|> upperIdent
+      end <- getSourcePos
+      pure $ Var (Qualified Implicit (Range start end)) name
 
 pFun :: Parser (Exp (Malgo 'Parse))
 pFun =

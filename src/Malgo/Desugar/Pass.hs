@@ -104,7 +104,7 @@ dsScDefs ds = do
   foldMapM dsScDef ds
 
 dsScDef :: (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply) => ScDef (Malgo 'Refine) -> f [Def]
-dsScDef (Annotated typ _, name, expr) = do
+dsScDef (Typed typ _, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   case typ of
     GT.TyArr _ _ -> dsFunDef name expr
@@ -129,7 +129,7 @@ dsForeign ::
   (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env UniqSupply) =>
   Foreign (Malgo 'Refine) ->
   f [Def]
-dsForeign (Annotated typ (_, primName), name, _) = do
+dsForeign (Typed typ (_, primName), name, _) = do
   name' <- newCoreId name =<< dsType typ
   let (paramTypes, retType) = splitTyArr typ
   paramTypes' <- traverse dsType paramTypes
@@ -184,7 +184,7 @@ dsExp ::
   (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
-dsExp (G.Var (Annotated typ _) name) = do
+dsExp (G.Var (Typed typ _) name) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
   -- 引数のない値コンストラクタは、Coreでは0引数の関数として扱われる
@@ -211,7 +211,7 @@ dsExp (G.Var (Annotated typ _) name) = do
     isConstructor Id {_idName} | T.length _idName > 0 = Char.isUpper (T.head _idName)
     isConstructor _ = False
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
-dsExp (G.Apply (Annotated typ _) fun arg) = runDef $ do
+dsExp (G.Apply (Typed typ _) fun arg) = runDef $ do
   fun' <- bind =<< dsExp fun
   case C.typeOf fun' of
     [paramType] :-> _ -> do
@@ -222,7 +222,7 @@ dsExp (G.Apply (Annotated typ _) fun arg) = runDef $ do
       Cast <$> dsType typ <*> bind (Call fun' [arg'])
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn (Annotated typ _) cs@(Clause _ ps e :| _)) = do
+dsExp (G.Fn (Typed typ _) cs@(Clause _ ps e :| _)) = do
   ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
   eType <- dsType (GT.typeOf e)
   -- destruct Clauses
@@ -251,7 +251,7 @@ dsExp (G.Tuple _ es) = runDef $ do
   let ty = SumT [con]
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
-dsExp (G.Record (Annotated (GT.TyRecord recordType) _) kvs) = runDef $ do
+dsExp (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
   kvs' <- traverseOf (traversed . _2) (bind <=< dsExp) kvs
   kts <- HashMap.toList <$> traverse dsType recordType
   let con = C.Con C.Tuple $ map snd kts

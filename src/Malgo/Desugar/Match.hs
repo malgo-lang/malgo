@@ -17,11 +17,11 @@ import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
+import Malgo.Infer.TypeRep
+import qualified Malgo.Infer.TypeRep as Malgo
 import Malgo.Prelude hiding (group)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Malgo.Infer.TypeRep
-import qualified Malgo.Infer.TypeRep as Malgo
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加
@@ -214,10 +214,10 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
       pure (ps' <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = error "ps must be not empty"
-    extendRecordP (Annotated (Malgo.TyRecord ktsMap) pos) ps = do
+    extendRecordP (Typed (Malgo.TyRecord ktsMap) pos) ps = do
       let kts = HashMap.toList ktsMap
       for kts \(key, ty) ->
         case List.lookup key ps of
-          Nothing -> VarP (Annotated ty pos) <$> newTemporalId "_p" ()
+          Nothing -> VarP (Typed ty pos) <$> newTemporalId "_p" ()
           Just p -> pure p
     extendRecordP _ _ = error "typeOf x must be TyRecord"

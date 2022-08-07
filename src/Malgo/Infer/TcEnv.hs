@@ -18,8 +18,7 @@ import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Infer.TypeRep
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (RnEnv)
-import qualified Malgo.Rename.RnEnv as R
+import Malgo.Rename.RnEnv (Resolved, RnEnv)
 import Malgo.Syntax.Extension
 import Text.Pretty.Simple (pShow)
 
@@ -30,7 +29,7 @@ data TcEnv = TcEnv
     _typeDefMap :: HashMap RnId (TypeDef Type),
     _typeSynonymMap :: HashMap (Id Type) ([Id Type], Type),
     _fieldBelongMap :: HashMap [Text] [(RecordTypeName, Scheme Type)],
-    _resolvedTypeIdentMap :: HashMap PsId [Annotated R.Visibility RnId]
+    _resolvedTypeIdentMap :: HashMap PsId [Resolved]
   }
   deriving stock (Show)
 
@@ -73,7 +72,7 @@ genTcEnv rnEnv = do
         _resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap
       }
 
-findBuiltinType :: (HasResolvedTypeIdentMap s (HashMap PsId [Annotated R.Visibility RnId])) => PsId -> s -> Maybe RnId
+findBuiltinType :: (HasResolvedTypeIdentMap s (HashMap PsId [Resolved])) => PsId -> s -> Maybe RnId
 findBuiltinType x rnEnv = do
   ids <- map (view value) <$> view (resolvedTypeIdentMap . at x) rnEnv
   find (view idSort >>> \case External (ModuleName "Builtin") -> True; _ -> False) ids

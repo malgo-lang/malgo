@@ -1,18 +1,20 @@
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Syntax.Extension where
 
-import Control.Lens (view)
+import Control.Lens (makeFieldsNoPrefix)
 import Data.Aeson
 import Data.Binary (Binary)
 import qualified Data.Kind as K
 import Data.Void
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
-import Language.LSP.Types.Lens (HasValue (value))
-import Malgo.Prelude
 import Malgo.Infer.TypeRep as TypeRep
+import Malgo.Prelude
 
 -- | Phase and type instance
 data MalgoPhase = Parse | Rename | Infer | Refine
@@ -26,22 +28,44 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Infer = Id ()
   MalgoId 'Refine = Id ()
 
+data Visibility
+  = Explicit ModuleName -- variable that must be qualified
+  | Implicit
+  deriving stock (Show, Eq, Ord)
+
+instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
+
 -- | Qualified name
-newtype WithPrefix x = WithPrefix {unwrapWithPrefix :: Annotated (Maybe Text) x}
+data Qualified x = Qualified {_visibility :: Visibility, _value :: x}
   deriving stock (Eq, Ord, Show)
 
-removePrefix :: WithPrefix a -> a
-removePrefix = view value . unwrapWithPrefix
+makeFieldsNoPrefix ''Qualified
 
-pattern NoPrefix :: x -> WithPrefix x
-pattern NoPrefix x = WithPrefix (Annotated Nothing x)
+instance Pretty x => Pretty (Qualified x) where
+  pPrint (Qualified Implicit v) = pPrint v
+  pPrint (Qualified (Explicit x) v) = pPrint x <> "." <> pPrint v
 
-pattern Prefix :: Text -> x -> WithPrefix x
-pattern Prefix p x = WithPrefix (Annotated (Just p) x)
+-- | Type-annotated field
+data Field x = Field {_typeAnn :: Maybe Text, _field :: x}
+  deriving stock (Eq, Ord, Show)
 
-instance Pretty x => Pretty (WithPrefix x) where
-  pPrint (WithPrefix (Annotated Nothing v)) = pPrint v
-  pPrint (WithPrefix (Annotated (Just x) v)) = pPrint x <> "." <> pPrint v
+makeFieldsNoPrefix ''Field
+
+instance Pretty x => Pretty (Field x) where
+  pPrint (Field Nothing v) = pPrint v
+  pPrint (Field (Just x) v) = pPrint x <> "." <> pPrint v
+
+data Typed x = Typed {_annotated :: Type, _value :: x}
+  deriving stock (Eq, Ord, Show)
+
+makeFieldsNoPrefix ''Typed
+
+instance Pretty x => Pretty (Typed x) where
+  pPrint (Typed t v) = pPrint v <+> ":" <+> pPrint t
+
+instance HasType (Typed x) where
+  typeOf (Typed t _) = t
+  types = annotated
 
 type PsId = XId (Malgo 'Parse)
 
@@ -73,11 +97,11 @@ type family XId x where
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = Range
   SimpleX 'Rename = SimpleX 'Parse
-  SimpleX 'Infer = Annotated Type (SimpleX 'Rename)
+  SimpleX 'Infer = Typed (SimpleX 'Rename)
   SimpleX 'Refine = SimpleX 'Infer
 
 type family XVar x where
-  XVar (Malgo 'Parse) = WithPrefix (SimpleX 'Parse)
+  XVar (Malgo 'Parse) = Qualified (SimpleX 'Parse)
   XVar (Malgo x) = SimpleX x
 
 type family XCon x where
@@ -96,7 +120,7 @@ type family XApply x where
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SimpleX 'Parse
   XOpApp (Malgo 'Rename) = (XOpApp (Malgo 'Parse), (Assoc, Int))
-  XOpApp (Malgo 'Infer) = Annotated Type (XOpApp (Malgo 'Rename))
+  XOpApp (Malgo 'Infer) = Typed (XOpApp (Malgo 'Rename))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -238,7 +262,7 @@ type family XInfix x where
 type family XForeign x where
   XForeign (Malgo 'Parse) = SimpleX 'Parse
   XForeign (Malgo 'Rename) = (XForeign (Malgo 'Parse), Text)
-  XForeign (Malgo 'Infer) = Annotated Type (XForeign (Malgo 'Rename))
+  XForeign (Malgo 'Infer) = Typed (XForeign (Malgo 'Rename))
   XForeign (Malgo 'Refine) = XForeign (Malgo 'Infer)
 
 type family XImport x where

@@ -36,17 +36,13 @@ infixInfo = lens _infixInfo (\r x -> r {_infixInfo = x})
 dependencies :: Lens' RnState [ModuleName]
 dependencies = lens _dependencies (\r x -> r {_dependencies = x})
 
-data Visibility
-  = Explicit ModuleName -- variable that must be qualified
-  | Implicit
-  deriving stock (Show, Eq)
-
-instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
+-- | Resolved identifier
+type Resolved = Qualified RnId
 
 data RnEnv = RnEnv
-  { _resolvedVarIdentMap :: HashMap PsId [Annotated Visibility RnId],
-    _resolvedTypeIdentMap :: HashMap PsId [Annotated Visibility RnId],
-    _resolvedFieldIdentMap :: HashMap PsId [Annotated Visibility RnId],
+  { _resolvedVarIdentMap :: HashMap PsId [Resolved],
+    _resolvedTypeIdentMap :: HashMap PsId [Resolved],
+    _resolvedFieldIdentMap :: HashMap PsId [Resolved],
     _moduleName :: ModuleName,
     _uniqSupply :: UniqSupply,
     _srcName :: FilePath,
@@ -60,7 +56,7 @@ instance Pretty RnEnv where
 
 makeFieldsNoPrefix ''RnEnv
 
-appendRnEnv :: ASetter' RnEnv (HashMap PsId [Annotated Visibility RnId]) -> [(PsId, Annotated Visibility RnId)] -> RnEnv -> RnEnv
+appendRnEnv :: ASetter' RnEnv (HashMap PsId [Resolved]) -> [(PsId, Resolved)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens (go newEnv)
   where
     go [] e = e
@@ -83,13 +79,13 @@ genBuiltinRnEnv modName malgoEnv = do
       { _resolvedVarIdentMap = mempty,
         _resolvedTypeIdentMap =
           HashMap.fromList
-            [ ("Int32#", [Annotated Implicit int32_t]),
-              ("Int64#", [Annotated Implicit int64_t]),
-              ("Float#", [Annotated Implicit float_t]),
-              ("Double#", [Annotated Implicit double_t]),
-              ("Char#", [Annotated Implicit char_t]),
-              ("String#", [Annotated Implicit string_t]),
-              ("Ptr#", [Annotated Implicit ptr_t])
+            [ ("Int32#", [Qualified Implicit int32_t]),
+              ("Int64#", [Qualified Implicit int64_t]),
+              ("Float#", [Qualified Implicit float_t]),
+              ("Double#", [Qualified Implicit double_t]),
+              ("Char#", [Qualified Implicit char_t]),
+              ("String#", [Qualified Implicit string_t]),
+              ("Ptr#", [Qualified Implicit ptr_t])
             ],
         _resolvedFieldIdentMap = HashMap.empty,
         _moduleName = modName,
@@ -111,36 +107,36 @@ resolveGlobalName modName name = newExternalId name () modName
 lookupVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupVarName pos name =
   view (resolvedVarIdentMap . at name) >>= \case
-    Just names -> case find (\i -> i ^. ann == Implicit) names of
-      Just (Annotated _ name) -> pure name
+    Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
+      Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map pPrintQualifiedId names)
+            $$ "Did you mean" <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a type name that is already resolved
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupTypeName pos name =
   view (resolvedTypeIdentMap . at name) >>= \case
-    Just names -> case find (\i -> i ^. ann == Implicit) names of
-      Just (Annotated _ name) -> pure name
+    Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
+      Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map pPrintQualifiedId names)
+            $$ "Did you mean" <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a field name that is already resolved
 lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupFieldName pos name =
   view (resolvedFieldIdentMap . at name) >>= \case
-    Just names -> case find (\i -> i ^. ann == Implicit) names of
-      Just (Annotated _ name) -> pure name
+    Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
+      Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
           "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint (map pPrintQualifiedId names)
+            $$ "Did you mean" <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a qualified variable name like Foo.x
@@ -148,14 +144,10 @@ lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> ModuleNam
 lookupQualifiedVarName pos modName name =
   view (resolvedVarIdentMap . at name) >>= \case
     Just names ->
-      case find (\i -> i ^. ann == Explicit modName) names of
-        Just (Annotated _ name) -> pure name
+      case find (\(Qualified visi _) -> visi == Explicit modName) names of
+        Just (Qualified _ name) -> pure name
         Nothing ->
           errorOn pos $
             "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
-              $$ "Did you mean" <+> pPrint (map pPrintQualifiedId names)
+              $$ "Did you mean" <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-
-pPrintQualifiedId :: Annotated Visibility RnId -> Doc
-pPrintQualifiedId (Annotated Implicit id) = pPrint id
-pPrintQualifiedId (Annotated (Explicit modName) id) = pPrint modName <> "." <> pPrint id
