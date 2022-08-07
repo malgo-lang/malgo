@@ -12,7 +12,6 @@ import Koriel.Id (Id (..), IdSort (Temporal), idName)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
 import Language.LSP.Types (DocumentSymbol (..), SymbolKind (..))
-import Malgo.Annotated
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Interface (HasLspIndex (lspIndex), loadInterface)
@@ -198,13 +197,13 @@ indexClause (Clause _ ps e) = do
 
 indexPat :: (MonadState IndexEnv m) => Pat (Malgo 'Refine) -> m ()
 indexPat (VarP _ (Id _ _ _ Temporal)) = pass
-indexPat (VarP (Annotated ty range) v) = do
+indexPat (VarP (Typed ty range) v) = do
   -- index the information of this definition
   let info = Info {_name = v ^. idName, _typeSignature = Forall [] ty, _definitions = [range]}
   addReferences info [range]
   addDefinition v info
   addSymbolInfo v (symbol SkVariable v range)
-indexPat (ConP (Annotated _ range) c ps) = do
+indexPat (ConP (Typed _ range) c ps) = do
   minfo <- lookupInfo c
   case minfo of
     Nothing -> pass

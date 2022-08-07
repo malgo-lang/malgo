@@ -6,7 +6,6 @@ import Data.List (isSubsequenceOf)
 import qualified Data.List as List
 import Data.Traversable (for)
 import Koriel.Id (Id)
-import Koriel.Lens (HasAnn (ann))
 import Koriel.Pretty hiding (space)
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (subtract)
@@ -185,7 +184,7 @@ instance HasSpace Type where
   space _ = Type
 
 instance HasSpace (Pat (Malgo 'Refine)) where
-  space _ (VarP x _) = Type (x ^. ann)
+  space _ (VarP x _) = Type $ typeOf x
   space env (ConP _ con ps) = Constructor con (map (space env) ps)
   space env (TupleP _ ps) = Tuple $ map (space env) ps
   space env (RecordP _ xps) = Record $ sort $ map (bimap identity (space env)) xps

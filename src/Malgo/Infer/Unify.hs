@@ -12,7 +12,6 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Annotated
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (Constraint)
@@ -57,7 +56,7 @@ instance MonadBind m => MonadBind (StateT s m)
 instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
 
 -- | 'Right' (substituation, new constraints) or 'Left' (position, error message)
-type UnifyResult = Either (Range, Doc) (HashMap TypeVar Type, [Annotated Range Constraint])
+type UnifyResult = Either (Range, Doc) (HashMap TypeVar Type, [(Range, Constraint)])
 
 -- | Unify two types
 unify :: Range -> Type -> Type -> UnifyResult
@@ -66,14 +65,14 @@ unify _ (TyMeta v1) (TyMeta v2)
   | otherwise = pure (one (v1, TyMeta v2), [])
 unify _ (TyMeta v) t = pure (one (v, t), [])
 unify _ t (TyMeta v) = pure (one (v, t), [])
-unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [Annotated x $ t11 :~ t21, Annotated x $ t12 :~ t22])
+unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [(x, t11 :~ t21), (x, t12 :~ t22)])
 unify _ (TyVar v1) (TyVar v2) | v1 == v2 = pure (mempty, [])
 unify _ (TyCon c1) (TyCon c2) | c1 == c2 = pure (mempty, [])
 unify _ (TyPrim p1) (TyPrim p2) | p1 == p2 = pure (mempty, [])
-unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [Annotated x $ l1 :~ l2, Annotated x $ r1 :~ r2])
+unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [(x, l1 :~ l2), (x, r1 :~ r2)])
 unify _ (TyTuple n1) (TyTuple n2) | n1 == n2 = pure (mempty, [])
 unify x (TyRecord kts1) (TyRecord kts2)
-  | HashMap.keys kts1 == HashMap.keys kts2 = pure (mempty, zipWith (\t1 t2 -> Annotated x $ t1 :~ t2) (HashMap.elems kts1) (HashMap.elems kts2))
+  | HashMap.keys kts1 == HashMap.keys kts2 = pure (mempty, zipWith (\t1 t2 -> (x, t1 :~ t2)) (HashMap.elems kts1) (HashMap.elems kts2))
 unify _ TyPtr TyPtr = pure (mempty, [])
 unify _ TYPE TYPE = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
@@ -90,7 +89,7 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    solve [Annotated x $ v ^. typeVar . idMeta :~ kindOf t]
+    solve [(x, v ^. typeVar . idMeta :~ kindOf t)]
     TypeUnifyT $ at v ?= t
     where
       occursCheck :: TypeVar -> Type -> Bool
@@ -115,12 +114,12 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
 
 -- * Constraint solver
 
-solve :: (HasCallStack, HasSrcName env FilePath) => (MonadIO f, MonadReader env f, MonadBind f, MonadState TcEnv f) => [Annotated Range Constraint] -> f ()
+solve :: (HasCallStack, HasSrcName env FilePath) => (MonadIO f, MonadReader env f, MonadBind f, MonadState TcEnv f) => [(Range, Constraint)] -> f ()
 solve = solveLoop (5000 :: Int)
   where
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
     solveLoop _ [] = pass
-    solveLoop n (Annotated x (t1 :~ t2) : cs) = do
+    solveLoop n ((x, t1 :~ t2) : cs) = do
       abbrEnv <- use typeSynonymMap
       let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
       let t2' = fromMaybe t2 (expandTypeSynonym abbrEnv t2)
@@ -130,8 +129,7 @@ solve = solveLoop (5000 :: Int)
           itraverse_ (bindVar x) binds
           constraints <- traverse zonkConstraint (cs' <> cs)
           solveLoop (n - 1) constraints
-    zonkConstraint :: MonadBind f => Annotated x Constraint -> f (Annotated x Constraint)
-    zonkConstraint (Annotated m (x :~ y)) = Annotated m <$> ((:~) <$> zonk x <*> zonk y)
+    zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
 generalize :: HasCallStack => (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Range -> HashSet TypeVar -> Type -> m (Scheme Type)
 generalize x bound term = do
@@ -182,6 +180,6 @@ instantiate :: (MonadBind m, MonadIO m, MonadReader env m, MonadState TcEnv m, H
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just $ a ^. idName)
-    solve [Annotated x $ a ^. idMeta :~ kindOf v]
+    solve [(x, a ^. idMeta :~ kindOf v)]
     pure (a, v)
   pure $ applySubst (HashMap.fromList avs) t

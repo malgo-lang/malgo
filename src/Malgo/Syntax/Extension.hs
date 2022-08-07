@@ -1,3 +1,4 @@
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -12,7 +13,6 @@ import Data.Void
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Malgo.Annotated
 import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Prelude
 
@@ -55,6 +55,18 @@ instance Pretty x => Pretty (Field x) where
   pPrint (Field Nothing v) = pPrint v
   pPrint (Field (Just x) v) = pPrint x <> "." <> pPrint v
 
+data Typed x = Typed {_annotated :: Type, _value :: x}
+  deriving stock (Eq, Ord, Show)
+
+makeFieldsNoPrefix ''Typed
+
+instance Pretty x => Pretty (Typed x) where
+  pPrint (Typed t v) = pPrint v <+> ":" <+> pPrint t
+
+instance HasType (Typed x) where
+  typeOf (Typed t _) = t
+  types = annotated
+
 type PsId = XId (Malgo 'Parse)
 
 type RnId = XId (Malgo 'Rename)
@@ -85,7 +97,7 @@ type family XId x where
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = Range
   SimpleX 'Rename = SimpleX 'Parse
-  SimpleX 'Infer = Annotated Type (SimpleX 'Rename)
+  SimpleX 'Infer = Typed (SimpleX 'Rename)
   SimpleX 'Refine = SimpleX 'Infer
 
 type family XVar x where
@@ -108,7 +120,7 @@ type family XApply x where
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SimpleX 'Parse
   XOpApp (Malgo 'Rename) = (XOpApp (Malgo 'Parse), (Assoc, Int))
-  XOpApp (Malgo 'Infer) = Annotated Type (XOpApp (Malgo 'Rename))
+  XOpApp (Malgo 'Infer) = Typed (XOpApp (Malgo 'Rename))
   XOpApp (Malgo 'Refine) = Void
 
 type family XFn x where
@@ -250,7 +262,7 @@ type family XInfix x where
 type family XForeign x where
   XForeign (Malgo 'Parse) = SimpleX 'Parse
   XForeign (Malgo 'Rename) = (XForeign (Malgo 'Parse), Text)
-  XForeign (Malgo 'Infer) = Annotated Type (XForeign (Malgo 'Rename))
+  XForeign (Malgo 'Infer) = Typed (XForeign (Malgo 'Rename))
   XForeign (Malgo 'Refine) = XForeign (Malgo 'Infer)
 
 type family XImport x where

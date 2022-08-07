@@ -5,9 +5,8 @@ module Malgo.Refine.Pass where
 import Control.Lens (At (at), to, traverseOf, traversed, view, (.~), (^.), _1, _2, _3)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.List.NonEmpty as NonEmpty
-import Koriel.Lens (HasAnn (ann), HasSignatureMap (signatureMap), HasValue (value))
+import Koriel.Lens (HasSignatureMap (signatureMap), HasValue (value))
 import Koriel.Pretty
-import Malgo.Annotated
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import qualified Malgo.Infer.TypeRep as T
@@ -44,7 +43,7 @@ refineExp (Var x v) = do
   case vScheme of
     Nothing -> pass
     Just (Forall _ originalType) -> do
-      let instantiatedType = x ^. ann
+      let instantiatedType = x ^. annotated
       checkValidInstantiation originalType instantiatedType
   pure $ Var x v
   where
@@ -61,14 +60,14 @@ refineExp (Unboxed x u) = pure $ Unboxed x u
 refineExp (Apply x e1 e2) = Apply x <$> refineExp e1 <*> refineExp e2
 refineExp (OpApp x op e1 e2) = do
   -- Rearrange OpApp to Apply. This transformation makes code generation easier.
-  let applyType = TyArr (typeOf e2) (x ^. ann) -- e2 -> result
+  let applyType = TyArr (typeOf e2) (typeOf x) -- e2 -> result
   let opType = TyArr (typeOf e1) applyType -- e1 -> e2 -> result
-  let x' = x {Malgo.Annotated._value = fst $ x ^. value}
-  refineExp $ Apply x' (Apply (x' & ann .~ applyType) (Var (x' & ann .~ opType) op) e1) e2
+  let x' = Typed (typeOf x) (fst $ x ^. value)
+  refineExp $ Apply x' (Apply (x' & types .~ applyType) (Var (x' & types .~ opType) op) e1) e2
 refineExp (Fn x cs) = do
   cs' <- traverse refineClause cs
   env <- ask
-  let typeSpaces = map (Space.normalize . Space.space env) $ x ^. ann . to splitTyArr . _1
+  let typeSpaces = map (Space.normalize . Space.space env) $ x ^. to typeOf . to splitTyArr . _1
   let patSpaces = map (Space.normalize . Space.buildUnion) $ transpose $ NonEmpty.toList $ fmap (clauseSpace env) cs'
   exhaustive <- fmap Space.normalize <$> zipWithM Space.subtract typeSpaces patSpaces
   isEmptys <- traverse Space.equalEmpty exhaustive

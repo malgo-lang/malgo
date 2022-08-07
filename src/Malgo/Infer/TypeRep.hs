@@ -12,7 +12,6 @@ import Data.Data (Data)
 import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.Pretty
-import Malgo.Annotated
 import Malgo.Prelude
 
 --------------------------------
@@ -140,10 +139,6 @@ class HasType a where
 
 class HasKind a where
   kindOf :: a -> Kind
-
-instance HasType t => HasType (Annotated t a) where
-  typeOf (Annotated x _) = typeOf x
-  types f (Annotated x a) = Annotated <$> traverseOf types f x <*> pure a
 
 instance HasKind PrimT where
   kindOf _ = TYPE
