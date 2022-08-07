@@ -436,9 +436,6 @@ tcExpr (Ann pos e t) = do
 tcExpr (Seq pos ss) = do
   ss' <- tcStmts ss
   pure $ Seq (Typed (typeOf $ last ss') pos) ss'
-tcExpr (Parens pos e) = do
-  e' <- tcExpr e
-  pure $ Parens (Typed (typeOf e') pos) e'
 
 tcClause ::
   ( MonadBind m,

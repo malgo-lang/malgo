@@ -129,7 +129,7 @@ rnExp (List pos es) = do
     buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos consName) x) (buildListApply nilName consName xs)
 rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
 rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
-rnExp (Parens pos e) = Parens pos <$> rnExp e
+rnExp (Parens _ e) = rnExp e
 
 -- | Renamed identifier corresponding Boxed literals.
 lookupBox :: (MonadReader RnEnv f, MonadIO f) => Range -> Literal x -> f (XId (Malgo 'Rename))

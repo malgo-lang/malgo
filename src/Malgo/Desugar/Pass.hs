@@ -264,7 +264,6 @@ dsExp (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
     sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
 dsExp (G.Record _ _) = error "unreachable"
 dsExp (G.Seq _ ss) = dsStmts ss
-dsExp (G.Parens _ e) = dsExp e
 
 dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExp e

@@ -148,7 +148,8 @@ type family XSeq x where
   XSeq (Malgo x) = SimpleX x
 
 type family XParens x where
-  XParens (Malgo x) = SimpleX x
+  XParens (Malgo 'Parse) = SimpleX 'Parse
+  XParens (Malgo x) = Void
 
 type ForallExpX (c :: K.Type -> Constraint) x =
   ( c (XVar x),

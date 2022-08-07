@@ -175,8 +175,6 @@ indexExp (Record _ fields) =
   traverse_ (indexExp . snd) fields
 indexExp (Seq _ stmts) =
   traverse_ indexStmt stmts
-indexExp (Parens _ e) =
-  indexExp e
 
 indexStmt :: (MonadState IndexEnv m) => Stmt (Malgo 'Refine) -> m ()
 indexStmt (Let _ (Id _ _ _ Temporal) expr) = indexExp expr

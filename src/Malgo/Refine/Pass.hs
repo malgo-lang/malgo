@@ -79,7 +79,6 @@ refineExp (Fn x cs) = do
 refineExp (Tuple x es) = Tuple x <$> traverse refineExp es
 refineExp (Record x kvs) = Record x <$> traverseOf (traversed . _2) refineExp kvs
 refineExp (Seq x ss) = Seq x <$> traverse refineStmt ss
-refineExp (Parens _ e) = refineExp e
 
 refineClause :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Clause x -> m (Clause (Malgo 'Refine))
 refineClause (Clause x ps e) = Clause x <$> traverse refinePat ps <*> refineExp e
