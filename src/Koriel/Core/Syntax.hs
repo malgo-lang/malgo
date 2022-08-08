@@ -131,13 +131,6 @@ instance HasType a => HasType (Exp a) where
       go [] [] v = v
       go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
       go _ _ _ = error "length ps == length xs"
-  -- typeOf (ExtCall _ t xs) = case t of
-  --   ps :-> r -> go ps (map typeOf xs) r
-  --   _ -> error "t must be ps :-> r"
-  --   where
-  --     go [] [] v = v
-  --     go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
-  --     go _ _ _ = error "length ps == length xs"
   typeOf (RawCall _ t xs) = case t of
     ps :-> r -> go ps (map typeOf xs) r
     _ -> error "t must be ps :-> r"
@@ -174,7 +167,6 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  -- pPrint (ExtCall p t xs) = parens $ "external" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
   pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
@@ -187,7 +179,6 @@ instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
-  -- freevars (ExtCall _ _ xs) = foldMap freevars xs
   freevars (RawCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
@@ -200,7 +191,6 @@ instance HasAtom Exp where
     Atom x -> Atom <$> f x
     Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
-    -- ExtCall p t xs -> ExtCall p t <$> traverse f xs
     RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
@@ -320,7 +310,7 @@ appProgram f Program {..} =
 mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
 mainFunc depList e = do
   -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
-  mainFuncId <- newExternalId "main" ([] :-> Int32T) (ModuleName "Builtin")
+  mainFuncId <- newNativeId "main" ([] :-> Int32T)
   mainFuncBody <- runDef do
     _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
     traverse_

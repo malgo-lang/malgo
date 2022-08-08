@@ -234,7 +234,7 @@ sizeof ty = C.PtrToInt szPtr LT.i64
     szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 toName :: Id a -> LLVM.AST.Name
-toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
+-- toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
@@ -258,7 +258,7 @@ genFunc ::
   Exp (Id C.Type) ->
   m Operand
 genFunc name params body
-  | idIsExternal name =
+  | idIsExternal name || idIsNative name =
     function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   | otherwise =
     internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
@@ -297,11 +297,6 @@ genExp (CallDirect f xs) k = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
   k =<< call fOpr (map (,[]) xsOprs)
--- genExp (ExtCall name (ps :-> r) xs) k = do
---   primOpr <- findExt (LLVM.AST.mkName $ convertString name) (map convType ps) (convType r)
---   xsOprs <- traverse genAtom xs
---   k =<< call primOpr (map (,[]) xsOprs)
--- genExp (ExtCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
 genExp (RawCall name (ps :-> r) xs) k = do
   let primOpr =
         ConstantOperand $
@@ -376,17 +371,15 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
         DoubleT -> fcmp FP.OGE x' y'
         CharT -> icmp IP.UGE x' y'
         t -> error $ show t <> " is not comparable"
-    genOp Op.And =
-      LLVM.IRBuilder.and
-    genOp Op.Or =
-      LLVM.IRBuilder.or
-    i1ToBool i1opr =
-      zext i1opr i8
+    genOp Op.And = LLVM.IRBuilder.and
+    genOp Op.Or = LLVM.IRBuilder.or
+    i1ToBool i1opr = zext i1opr i8
 genExp (Let xs e) k = do
   env <- foldMapM prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
   local (over valueMap (env <>)) $ genExp e k
   where
+    -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
     prepare (LocalDef name (Fun ps body)) =
       one . (name,)
         <$> mallocType
