@@ -1,9 +1,4 @@
-module Koriel.Core.Lint
-  ( lint,
-    runLint,
-    lintProgram,
-  )
-where
+module Koriel.Core.Lint (lint) where
 
 import Control.Lens (view, _1)
 import Control.Monad.Except
@@ -14,12 +9,13 @@ import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
 
+-- | Lint a program.
+-- The reason `lint` is a monadic action is to control when errors are reported.
+lint :: (Monad m, HasType a, Pretty a, Eq a) => Program (Id a) -> m ()
+lint = runLint . lintProgram
+
 runLint :: ReaderT [a] m b -> m b
 runLint m = runReaderT m []
-
-lint :: (Monad m, HasType a, Pretty a, Eq a) => Exp (Id a) -> m ()
-lint e =
-  runReaderT (lintExp e) []
 
 defined :: (MonadReader [Id a] f, Eq a, Pretty a) => Id a -> f ()
 defined x

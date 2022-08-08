@@ -34,7 +34,7 @@ import Koriel.Pretty as P
 import Numeric (showHex)
 import Text.Show (showString, showsPrec)
 
-newtype ModuleName = ModuleName Text
+newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary ModuleName

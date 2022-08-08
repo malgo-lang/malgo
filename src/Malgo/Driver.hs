@@ -5,7 +5,7 @@ import Control.Lens (over, view, (^.))
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
-import Koriel.Core.Lint (lintProgram, runLint)
+import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
 import Koriel.Lens
@@ -66,12 +66,12 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     hPutStrLn stderr "=== INTERFACE ==="
     hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-  runLint $ lintProgram core
+  lint core
   coreOpt <- if view noOptimize opt then pure core else optimizeProgram uniqSupply (view inlineSize opt) core
   when (view dumpDesugar opt && not (view noOptimize opt)) do
     hPutStrLn stderr "=== OPTIMIZE ==="
     hPrint stderr $ pPrint $ over appProgram flat coreOpt
-  runLint $ lintProgram coreOpt
+  lint coreOpt
   coreLL <- if view noLambdaLift opt then pure coreOpt else lambdalift uniqSupply coreOpt
   when (view dumpDesugar opt && not (view noLambdaLift opt)) $
     liftIO $ do

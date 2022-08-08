@@ -316,6 +316,19 @@ appProgram f Program {..} =
     <*> traverseOf (traversed . _2 . _2) f _topFuncs
     <*> pure _extFuncs
 
+-- | Generate main function.
+mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc depList e = do
+  -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
+  mainFuncId <- newExternalId "main" ([] :-> Int32T) (ModuleName "Builtin")
+  mainFuncBody <- runDef do
+    _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
+    traverse_
+      do \modName -> bind $ RawCall ("koriel_load_" <> raw modName) ([] :-> VoidT) []
+      depList
+    pure e
+  pure (mainFuncId, ([], mainFuncBody))
+
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
@@ -327,12 +340,6 @@ let_ otype obj = do
   x <- newTemporalId "let" otype
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
   pure (Var x)
-
-destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
-destruct val con@(Con _ ts) = do
-  vs <- traverse (newTemporalId "p") ts
-  DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
-  pure $ map Var vs
 
 bind :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
@@ -350,15 +357,15 @@ cast ty e
     DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
     pure (Var x)
 
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
-mainFunc depList e = do
-  mainFuncId <- newExternalId "main" ([] :-> Int32T) (ModuleName "Builtin")
-  mainFuncBody <- runDef $ do
-    _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
-    traverse_
-      ( \(ModuleName modName) ->
-          bind $ RawCall ("koriel_load_" <> modName) ([] :-> VoidT) []
-      )
-      depList
-    pure e
-  pure (mainFuncId, ([], mainFuncBody))
+-- `destruct` is convenient when treating types that have only one constructor.
+-- For example, if we can write `let Foo x = v;` as the syntax sugar of `let x = v |> { Foo x -> x | _ -> error }`,
+-- we can use `destruct` to support this syntax sugar.
+-- But `let Foo x = v` style has some problem:
+-- 1. Programmer must check whether the type can be treated that have only one constructor.
+-- 2. There is more safe and convenenient way: `if let` in Rust.
+
+-- destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
+-- destruct val con@(Con _ ts) = do
+--   vs <- traverse (newTemporalId "p") ts
+--   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
+--   pure $ map Var vs
