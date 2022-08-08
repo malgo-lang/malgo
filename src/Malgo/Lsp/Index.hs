@@ -13,9 +13,9 @@ import qualified Data.HashMap.Strict as HashMap
 import Koriel.Lens
 import Koriel.Pretty
 import Language.LSP.Types (DocumentSymbol (..))
+import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
-import Malgo.Infer.TypeRep (Scheme, Type)
 import System.FilePath (takeFileName)
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
 import Text.Pretty.Simple (pShow)

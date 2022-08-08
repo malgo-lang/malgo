@@ -7,9 +7,9 @@ import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
-import Malgo.Prelude
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
+import Malgo.Prelude
 
 data RefineEnv = RefineEnv
   { _signatureMap :: HashMap (Id ()) (Scheme Type),

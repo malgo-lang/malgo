@@ -2,8 +2,7 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Koriel.Prelude
-  ( 
-    -- * Reexports
+  ( -- * Reexports
     module Relude,
     module Control.Monad.Writer.Class,
     module Control.Monad.Trans.Writer.CPS,

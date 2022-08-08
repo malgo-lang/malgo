@@ -14,12 +14,12 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsEnv)
+import qualified Malgo.Infer.TypeRep as GT
 import Malgo.Lsp.Index (Index)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
 import qualified Malgo.Rename.RnEnv as RnState
 import Malgo.Syntax.Extension
-import qualified Malgo.Infer.TypeRep as GT
 import qualified System.Directory as Directory
 import System.FilePath ((-<.>), (</>))
 

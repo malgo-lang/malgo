@@ -11,6 +11,7 @@ import Koriel.Core.Syntax
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
+import qualified Malgo.Infer.Pass as Infer
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
 import qualified Malgo.Lsp.Pass as Lsp
 import Malgo.Parser (parseMalgo)
@@ -20,7 +21,6 @@ import Malgo.Rename.Pass (rename)
 import qualified Malgo.Rename.RnEnv as RnEnv
 import qualified Malgo.Syntax as Syntax
 import Malgo.Syntax.Extension
-import qualified Malgo.Infer.Pass as Infer
 import Text.Megaparsec
   ( errorBundlePretty,
   )

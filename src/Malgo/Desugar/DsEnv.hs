@@ -11,11 +11,11 @@ import qualified Koriel.Core.Type as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Malgo.Prelude
-import Malgo.Syntax.Extension
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import qualified Malgo.Infer.TypeRep as GT
+import Malgo.Prelude
+import Malgo.Syntax.Extension
 import Text.Pretty.Simple (pShow)
 
 -- 脱糖衣処理の環境
