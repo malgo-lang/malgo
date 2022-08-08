@@ -56,7 +56,6 @@ pDataDef = label "toplevel type definition" do
   void $ pKeyword "data"
   start <- getSourcePos
   d <- upperIdent
-  end <- getSourcePos
   xs <- many do
     start <- getSourcePos
     x <- lowerIdent
@@ -64,48 +63,53 @@ pDataDef = label "toplevel type definition" do
     pure (Range start end, x)
   void $ pOperator "="
   ts <- pConDef `sepBy` pOperator "|"
+  end <- getSourcePos
   pure $ DataDef (Range start end) d xs ts
   where
     pConDef = do
       start <- getSourcePos
       x <- upperIdent
+      params <- many pSingleType
       end <- getSourcePos
-      (Range start end,x,) <$> many pSingleType
+      pure (Range start end, x, params)
 
 pTypeSynonym :: Parser (Decl (Malgo 'Parse))
 pTypeSynonym = label "toplevel type synonym" do
   void $ pKeyword "type"
   start <- getSourcePos
   d <- upperIdent
-  end <- getSourcePos
   xs <- many lowerIdent
   void $ pOperator "="
-  TypeSynonym (Range start end) d xs <$> pType
+  t <- pType
+  end <- getSourcePos
+  pure $ TypeSynonym (Range start end) d xs t
 
 pInfix :: Parser (Decl (Malgo 'Parse))
 pInfix = label "infix declaration" do
+  start <- getSourcePos
   a <-
     try (pKeyword "infixl" $> LeftA)
       <|> try (pKeyword "infixr" $> RightA)
       <|> pKeyword "infix" $> NeutralA
   i <- lexeme L.decimal
-  start <- getSourcePos
   x <- between (symbol "(") (symbol ")") operator
   end <- getSourcePos
   pure $ Infix (Range start end) a i x
 
 pForeign :: Parser (Decl (Malgo 'Parse))
 pForeign = label "foreign import" do
+  start <- getSourcePos
   void $ pKeyword "foreign"
   void $ pKeyword "import"
-  start <- getSourcePos
   x <- lowerIdent
-  end <- getSourcePos
   void $ pOperator ":"
-  Foreign (Range start end) x <$> pType
+  t <- pType
+  end <- getSourcePos
+  pure $ Foreign (Range start end) x t
 
 pImport :: Parser (Decl (Malgo 'Parse))
 pImport = label "import" do
+  start <- getSourcePos
   void $ pKeyword "module"
   importList <-
     try (between (symbol "{") (symbol "}") importAll)
@@ -113,7 +117,6 @@ pImport = label "import" do
       <|> As . ModuleName <$> pModuleName
   void $ pOperator "="
   void $ pKeyword "import"
-  start <- getSourcePos
   modName <- ModuleName <$> pModuleName
   end <- getSourcePos
   pure $ Import (Range start end) modName importList
@@ -126,18 +129,20 @@ pScSig =
   label "toplevel function signature" do
     start <- getSourcePos
     name <- lowerIdent <|> between (symbol "(") (symbol ")") operator
-    end <- getSourcePos
     void $ pOperator ":"
-    ScSig (Range start end) name <$> pType
+    typ <- pType
+    end <- getSourcePos
+    pure $ ScSig (Range start end) name typ
 
 pScDef :: Parser (Decl (Malgo 'Parse))
 pScDef =
   label "toplevel function definition" do
     start <- getSourcePos
     name <- lowerIdent <|> between (symbol "(") (symbol ")") operator
-    end <- getSourcePos
     void $ pOperator "="
-    ScDef (Range start end) name <$> pExp
+    exp <- pExp
+    end <- getSourcePos
+    pure $ ScDef (Range start end) name exp
 
 -- Expressions
 
@@ -235,23 +240,25 @@ pStmt = try pLet <|> pWith <|> pNoBind
 
 pLet :: Parser (Stmt (Malgo 'Parse))
 pLet = do
-  void $ pKeyword "let"
   start <- getSourcePos
+  void $ pKeyword "let"
   v <- lowerIdent
-  end <- getSourcePos
   void $ pOperator "="
-  Let (Range start end) v <$> pExp
+  exp <- pExp
+  end <- getSourcePos
+  pure $ Let (Range start end) v exp
 
 pWith :: Parser (Stmt (Malgo 'Parse))
 pWith = label "with" do
-  void $ pKeyword "with"
   start <- getSourcePos
+  void $ pKeyword "with"
   asum
     [ try do
         var <- lowerIdent
         void $ pOperator "="
+        exp <- pExp
         end <- getSourcePos
-        With (Range start end) (Just var) <$> pExp,
+        pure $ With (Range start end) (Just var) exp,
       do
         e <- pExp
         end <- getSourcePos
