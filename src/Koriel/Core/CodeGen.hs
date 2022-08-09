@@ -413,6 +413,7 @@ genExp (Match e cs) k
     switchBlock <- block
     tagOpr <- case C.typeOf e of
       SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
+      RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
       _ -> pure eOpr'
     switch tagOpr defaultLabel labels
 genExp (Cast ty x) k = do
@@ -455,6 +456,17 @@ genCase scrutinee cs k = \case
         (v,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
     void $ local (over valueMap (env <>)) $ genExp e k
     pure $ Right (C.Int 8 tag, label)
+  OpenRecord kvs e -> do
+    label <- block
+    kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
+      hashTableGet <- findExt "malgo_hash_table_get" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8] (ptr i8)
+      i <- getUniq
+      key <- ConstantOperand <$> globalStringPtr k (mkName $ "key" <> show i)
+      value <- call hashTableGet [(scrutinee, []), (key, [])]
+      value <- bitcast value (convType $ C.typeOf v)
+      pure (v, value)
+    local (over valueMap (HashMap.fromList kvs' <>)) $ genExp e k
+    pure $ Left label
 
 genAtom ::
   (MonadCodeGen m, MonadIO m, MonadIRBuilder m) =>
@@ -525,7 +537,7 @@ genLocalDef (LocalDef name (Record kvs)) = do
   for_ (HashMap.toList kvs) \(k, v) -> do
     i <- getUniq
     k <- ConstantOperand <$> globalStringPtr k (mkName $ "key" <> show i)
-    v <- genAtom v
+    v <- join $ bitcast <$> genAtom v <*> pure (ptr i8)
     insert <- findExt "malgo_hash_table_insert" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8, ptr i8] LT.void
     call insert $ map (,[]) [hashTable, k, v]
   pure $ one (name, hashTable)

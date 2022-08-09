@@ -189,6 +189,8 @@ instance HasAtom Exp where
 data Case a
   = -- | constructor pattern
     Unpack Con [a] (Exp a)
+  | -- | record pattern
+    OpenRecord (HashMap Text a) (Exp a)
   | -- | unboxed value pattern
     Switch Unboxed (Exp a)
   | -- | variable pattern
@@ -197,23 +199,28 @@ data Case a
 
 instance HasType a => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
+  typeOf (OpenRecord _ e) = typeOf e
   typeOf (Switch _ e) = typeOf e
   typeOf (Bind _ e) = typeOf e
 
 instance Pretty a => Pretty (Case a) where
   pPrint (Unpack c xs e) =
     parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
+  pPrint (OpenRecord pat e) =
+    parens $ sep ["open", pPrint $ HashMap.toList pat, pPrint e]
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
+  freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
   freevars (Switch _ e) = freevars e
   freevars (Bind x e) = sans x $ freevars e
 
 instance HasAtom Case where
   atom f = \case
     Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
+    OpenRecord pat e -> OpenRecord pat <$> traverseOf atom f e
     Switch u e -> Switch u <$> traverseOf atom f e
     Bind a e -> Bind a <$> traverseOf atom f e
 
@@ -289,6 +296,7 @@ appObj f = \case
 appCase :: Traversal' (Case a) (Exp a)
 appCase f = \case
   Unpack con ps e -> Unpack con ps <$> f e
+  OpenRecord kvs e -> OpenRecord kvs <$> f e
   Switch u e -> Switch u <$> f e
   Bind x e -> Bind x <$> f e
 

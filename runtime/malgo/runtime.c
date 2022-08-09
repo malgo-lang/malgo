@@ -358,7 +358,7 @@ static int hash(char *x)
 // `malgo_hash_table_new` create a new hash table.
 struct hash_table *malgo_hash_table_new()
 {
-  struct hash_table *ht = malloc(sizeof(struct hash_table));
+  struct hash_table *ht = GC_MALLOC(sizeof(struct hash_table));
   for (size_t i = 0; i < HASH_TABLE_BUCKET_SIZE; i++)
   {
     ht->buckets[i].next = NULL;
@@ -386,28 +386,8 @@ void malgo_hash_table_insert(struct hash_table *ht, char *key, void *value)
   // insert new key-value pair
   b->key = key;
   b->value = value;
-  b->next = malloc(sizeof(struct bucket));
+  b->next = GC_MALLOC(sizeof(struct bucket));
   ht->size++;
-}
-
-// `malgo_hash_table_remove` remove a entry by a key from the hash table.
-void malgo_hash_table_remove(struct hash_table *ht, char *key)
-{
-  int h = hash(key);
-  struct bucket *b = &ht->buckets[h];
-  while (b->next != NULL)
-  {
-    if (strcmp(b->next->key, key) == 0)
-    {
-      // remove b->next
-      struct bucket *next = b->next;
-      b->next = next->next;
-      free(next);
-      ht->size--;
-      return;
-    }
-    b = b->next;
-  }
 }
 
 // `malgo_hash_table_get` get a value by a key from the hash table.
@@ -415,11 +395,11 @@ void *malgo_hash_table_get(struct hash_table *ht, char *key)
 {
   int h = hash(key);
   struct bucket *b = &ht->buckets[h];
-  while (b->next != NULL)
+  while (b != NULL)
   {
-    if (strcmp(b->next->key, key) == 0)
+    if (strcmp(b->key, key) == 0)
     {
-      return b->next->value;
+      return b->value;
     }
     b = b->next;
   }
