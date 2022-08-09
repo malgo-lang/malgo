@@ -125,6 +125,7 @@ lintExp Error {} = pass
 lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
+lintObj (Record kvs) = traverse_ lintAtom kvs
 
 lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e

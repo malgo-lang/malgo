@@ -94,6 +94,8 @@ codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqS
 codeGen srcPath dstPath uniqSupply modName Program {..} = do
   llvmir <- runCodeGenT CodeGenEnv {_codeGenUniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv} do
     for_ _extFuncs \(name, typ) -> do
+      _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
+      _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
       let name' = LLVM.AST.mkName $ convertString name
       case typ of
         ps :-> r -> extern name' (map convType ps) (convType r)
@@ -104,8 +106,6 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
   liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
-    -- liftIO $ writeFileLText dstPath $ ppllvm llvmModule
-
     -- topVarsのOprMapを作成
     varEnv = mconcatMap ?? _topVars $ \(v, e) ->
       one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
@@ -147,6 +147,7 @@ convType (SumT cs) =
             [i8, if size == 0 then StructureType False [] else LT.VectorType size i8]
         )
 convType (PtrT ty) = ptr $ convType ty
+convType (RecordT _) = ptr $ LT.NamedTypeReference $ mkName "struct.hash_table"
 convType AnyT = ptr i8
 convType VoidT = LT.void
 
@@ -164,6 +165,7 @@ sizeofType StringT = 8
 sizeofType BoolT = 1
 sizeofType (SumT _) = 8
 sizeofType (PtrT _) = 8
+sizeofType (RecordT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
@@ -517,6 +519,16 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = d
   -- nameの型にキャスト
   one . (name,) <$> bitcast addr (convType $ SumT cs)
 genLocalDef (LocalDef (C.typeOf -> t) Pack {}) = error $ show t <> " must be SumT"
+genLocalDef (LocalDef name (Record kvs)) = do
+  newHashTable <- findExt "malgo_hash_table_new" [] (ptr $ NamedTypeReference $ mkName "struct.hash_table")
+  hashTable <- call newHashTable []
+  for_ (HashMap.toList kvs) \(k, v) -> do
+    i <- getUniq
+    k <- ConstantOperand <$> globalStringPtr k (mkName $ "key" <> show i)
+    v <- genAtom v
+    insert <- findExt "malgo_hash_table_insert" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8, ptr i8] LT.void
+    call insert $ map (,[]) [hashTable, k, v]
+  pure $ one (name, hashTable)
 
 genCon :: [Con] -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
