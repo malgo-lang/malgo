@@ -42,7 +42,6 @@ type Resolved = Qualified RnId
 data RnEnv = RnEnv
   { _resolvedVarIdentMap :: HashMap PsId [Resolved],
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
-    _resolvedFieldIdentMap :: HashMap PsId [Resolved],
     _moduleName :: ModuleName,
     _uniqSupply :: UniqSupply,
     _srcName :: FilePath,
@@ -87,7 +86,6 @@ genBuiltinRnEnv modName malgoEnv = do
               ("String#", [Qualified Implicit string_t]),
               ("Ptr#", [Qualified Implicit ptr_t])
             ],
-        _resolvedFieldIdentMap = HashMap.empty,
         _moduleName = modName,
         _uniqSupply = malgoEnv ^. uniqSupply,
         _srcName = malgoEnv ^. toLLOpt . srcName,
@@ -119,18 +117,6 @@ lookupVarName pos name =
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
 lookupTypeName pos name =
   view (resolvedTypeIdentMap . at name) >>= \case
-    Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
-      Just (Qualified _ name) -> pure name
-      Nothing ->
-        errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint names
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-
--- | Resolving a field name that is already resolved
-lookupFieldName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
-lookupFieldName pos name =
-  view (resolvedFieldIdentMap . at name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
       Nothing ->

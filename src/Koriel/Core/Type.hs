@@ -1,6 +1,6 @@
 module Koriel.Core.Type where
 
-import Control.Lens (Prism', Traversal', prism, traverseOf, traversed, (^.))
+import Control.Lens (Prism', prism, (^.))
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
@@ -90,13 +90,3 @@ instance HasType Type where
 
 instance HasType a => HasType (Id a) where
   typeOf x = typeOf $ x ^. idMeta
-
-tyVar :: Traversal' Type Type
-tyVar f = \case
-  ps :-> r -> (:->) <$> traverseOf (traversed . tyVar) f ps <*> traverseOf tyVar f r
-  SumT cs -> SumT <$> traverseOf (traversed . tyVar') f (toList cs)
-  AnyT -> f AnyT
-  t -> pure t
-
-tyVar' :: Traversal' Con Type
-tyVar' f (Con tag ts) = Con tag <$> traverseOf (traversed . tyVar) f ts

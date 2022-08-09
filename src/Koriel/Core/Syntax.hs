@@ -113,31 +113,17 @@ data Exp a
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
--- instance Data a => Plated (Exp a)
-
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
-    ps :-> r -> go ps (map typeOf xs) r
+    ps :-> r | map typeOf xs == ps -> r
     _ -> errorDoc $ "Invalid type:" <+> quotes (pPrint $ typeOf f)
-    where
-      go [] [] v = v
-      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
-      go _ _ _ = error "length ps == length xs"
   typeOf (CallDirect f xs) = case typeOf f of
-    ps :-> r -> go ps (map typeOf xs) r
+    ps :-> r | map typeOf xs == ps -> r
     _ -> error "typeOf f must be ps :-> r"
-    where
-      go [] [] v = v
-      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
-      go _ _ _ = error "length ps == length xs"
   typeOf (RawCall _ t xs) = case t of
-    ps :-> r -> go ps (map typeOf xs) r
+    ps :-> r | map typeOf xs == ps -> r
     _ -> error "t must be ps :-> r"
-    where
-      go [] [] v = v
-      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
-      go _ _ _ = error "length ps == length xs"
   typeOf (BinOp o x _) = case o of
     Add -> typeOf x
     Sub -> typeOf x
