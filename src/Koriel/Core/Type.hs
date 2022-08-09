@@ -3,7 +3,9 @@ module Koriel.Core.Type where
 import Control.Lens (Prism', prism, (^.))
 import Data.Aeson
 import Data.Binary (Binary)
+import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -53,6 +55,7 @@ data Type
   | BoolT
   | SumT [Con]
   | PtrT Type
+  | RecordT (HashMap Text Type)
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -79,6 +82,7 @@ instance Pretty Type where
   pPrint BoolT = "Bool#"
   pPrint (SumT cs) = parens $ sep ("sum" : map pPrint cs)
   pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
+  pPrint (RecordT fs) = parens $ "Record#" <+> sep (punctuate "," $ map (\(k, v) -> pPrint k <+> ":" <+> pPrint v) $ HashMap.toList fs)
   pPrint AnyT = "Any#"
   pPrint VoidT = "Void#"
 

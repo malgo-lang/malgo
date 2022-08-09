@@ -8,6 +8,7 @@ module Koriel.Core.Syntax where
 
 import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
 import Data.Data (Data)
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
@@ -222,24 +223,30 @@ data Obj a
     Fun [a] (Exp a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
+  | -- | record
+    Record (HashMap Text (Atom a))
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
   typeOf (Pack t _ _) = t
+  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
+  pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
+  freevars (Record kvs) = foldMap freevars kvs
 
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
+    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
 -- | toplevel function definitions
 data Program a = Program
