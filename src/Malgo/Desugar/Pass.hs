@@ -254,14 +254,8 @@ dsExp (G.Tuple _ es) = runDef $ do
 dsExp (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
   kvs' <- traverseOf (traversed . _2) (bind <=< dsExp) kvs
   kts <- HashMap.toList <$> traverse dsType recordType
-  let con = C.Con C.Tuple $ map snd kts
-  let ty = SumT [con]
-  let vs' = sortRecordField (map fst kts) kvs'
-  tuple <- let_ ty $ Pack ty con vs'
-  pure $ Atom tuple
-  where
-    sortRecordField [] _ = []
-    sortRecordField (k : ks) kvs = fromJust (List.lookup k kvs) : sortRecordField ks kvs
+  v <- newTemporalId "record" $ RecordT (HashMap.fromList kts)
+  pure $ C.Let [C.LocalDef v (C.Record $ HashMap.fromList kvs')] $ Atom $ C.Var v
 dsExp (G.Record _ _) = error "unreachable"
 dsExp (G.Seq _ ss) = dsStmts ss
 

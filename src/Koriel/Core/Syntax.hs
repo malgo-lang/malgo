@@ -8,6 +8,7 @@ module Koriel.Core.Syntax where
 
 import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
 import Data.Data (Data)
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
@@ -113,31 +114,17 @@ data Exp a
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
--- instance Data a => Plated (Exp a)
-
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
-    ps :-> r -> go ps (map typeOf xs) r
+    ps :-> r | map typeOf xs == ps -> r
     _ -> errorDoc $ "Invalid type:" <+> quotes (pPrint $ typeOf f)
-    where
-      go [] [] v = v
-      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
-      go _ _ _ = error "length ps == length xs"
   typeOf (CallDirect f xs) = case typeOf f of
-    ps :-> r -> go ps (map typeOf xs) r
+    ps :-> r | map typeOf xs == ps -> r
     _ -> error "typeOf f must be ps :-> r"
-    where
-      go [] [] v = v
-      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
-      go _ _ _ = error "length ps == length xs"
   typeOf (RawCall _ t xs) = case t of
-    ps :-> r -> go ps (map typeOf xs) r
+    ps :-> r | map typeOf xs == ps -> r
     _ -> error "t must be ps :-> r"
-    where
-      go [] [] v = v
-      go (p : ps) (x : xs) v = replaceOf tyVar p x (go ps xs v)
-      go _ _ _ = error "length ps == length xs"
   typeOf (BinOp o x _) = case o of
     Add -> typeOf x
     Sub -> typeOf x
@@ -202,6 +189,8 @@ instance HasAtom Exp where
 data Case a
   = -- | constructor pattern
     Unpack Con [a] (Exp a)
+  | -- | record pattern
+    OpenRecord (HashMap Text a) (Exp a)
   | -- | unboxed value pattern
     Switch Unboxed (Exp a)
   | -- | variable pattern
@@ -210,23 +199,28 @@ data Case a
 
 instance HasType a => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
+  typeOf (OpenRecord _ e) = typeOf e
   typeOf (Switch _ e) = typeOf e
   typeOf (Bind _ e) = typeOf e
 
 instance Pretty a => Pretty (Case a) where
   pPrint (Unpack c xs e) =
     parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
+  pPrint (OpenRecord pat e) =
+    parens $ sep ["open", pPrint $ HashMap.toList pat, pPrint e]
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
+  freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
   freevars (Switch _ e) = freevars e
   freevars (Bind x e) = sans x $ freevars e
 
 instance HasAtom Case where
   atom f = \case
     Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
+    OpenRecord pat e -> OpenRecord pat <$> traverseOf atom f e
     Switch u e -> Switch u <$> traverseOf atom f e
     Bind a e -> Bind a <$> traverseOf atom f e
 
@@ -236,24 +230,30 @@ data Obj a
     Fun [a] (Exp a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
+  | -- | record
+    Record (HashMap Text (Atom a))
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
   typeOf (Pack t _ _) = t
+  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
 instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
+  pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
+  freevars (Record kvs) = foldMap freevars kvs
 
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
+    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
 -- | toplevel function definitions
 data Program a = Program
@@ -296,6 +296,7 @@ appObj f = \case
 appCase :: Traversal' (Case a) (Exp a)
 appCase f = \case
   Unpack con ps e -> Unpack con ps <$> f e
+  OpenRecord kvs e -> OpenRecord kvs <$> f e
   Switch u e -> Switch u <$> f e
   Bind x e -> Bind x <$> f e
 

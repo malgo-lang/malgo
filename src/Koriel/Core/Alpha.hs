@@ -70,6 +70,11 @@ alphaCase :: (MonadReader AlphaEnv m, MonadIO m) => Case (Id Type) -> m (Case (I
 alphaCase (Unpack c ps e) = do
   ps' <- traverse cloneId ps
   local (over alphaMap (HashMap.fromList (zip ps $ map Var ps') <>)) $ Unpack c ps' <$> alphaExp e
+alphaCase (OpenRecord kps e) = do
+  kps' <- traverse cloneId kps
+  let ps = HashMap.elems kps
+  let ps' = HashMap.elems kps'
+  local (over alphaMap (HashMap.fromList (zip ps $ map Var ps') <>)) $ OpenRecord kps' <$> alphaExp e
 alphaCase (Bind x e) = do
   x' <- cloneId x
   local (over alphaMap (HashMap.insert x $ Var x')) $ Bind x' <$> alphaExp e

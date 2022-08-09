@@ -1,7 +1,7 @@
 -- | Name resolution and simple desugar transformation
 module Malgo.Rename.Pass where
 
-import Control.Lens (over, use, view, (<>=), (^.), _2, _3)
+import Control.Lens (over, use, view, (<>=), (^.), _2)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import Data.List (intersect)
@@ -296,14 +296,12 @@ genToplevelEnv modName ds =
       xs' <- traverse (resolveGlobalName modName . view _2) cs
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
-      traverse_ (traverse_ genFieldEnv . view _3) cs
-    aux (TypeSynonym pos x _ t) = do
+    aux (TypeSynonym pos x _ _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- resolveGlobalName modName x
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
-      genFieldEnv t
     aux (Foreign pos x _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedVarIdentMap)) do
@@ -359,15 +357,3 @@ genToplevelEnv modName ds =
       modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Qualified (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Qualified (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pass
-    genFieldEnv (TyApp _ t ts) = genFieldEnv t >> traverse_ genFieldEnv ts
-    genFieldEnv (TyVar _ _) = pass
-    genFieldEnv (TyCon _ _) = pass
-    genFieldEnv (TyArr _ t1 t2) = genFieldEnv t1 >> genFieldEnv t2
-    genFieldEnv (TyTuple _ ts) = traverse_ genFieldEnv ts
-    genFieldEnv (TyRecord _ kts) = do
-      let ks = map fst kts
-      let ts = map snd kts
-      traverse_ genFieldEnv ts
-      ks' <- traverse (resolveGlobalName modName) ks
-      zipWithM_ (\k k' -> modify $ appendRnEnv resolvedFieldIdentMap [(k, Qualified Implicit k')]) ks ks'
-    genFieldEnv (TyBlock _ t) = genFieldEnv t

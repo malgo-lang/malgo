@@ -1,9 +1,11 @@
 module Koriel.Core.Type where
 
-import Control.Lens (Prism', Traversal', prism, traverseOf, traversed, (^.))
+import Control.Lens (Prism', prism, (^.))
 import Data.Aeson
 import Data.Binary (Binary)
+import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -53,6 +55,7 @@ data Type
   | BoolT
   | SumT [Con]
   | PtrT Type
+  | RecordT (HashMap Text Type)
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -79,6 +82,7 @@ instance Pretty Type where
   pPrint BoolT = "Bool#"
   pPrint (SumT cs) = parens $ sep ("sum" : map pPrint cs)
   pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
+  pPrint (RecordT fs) = parens $ "Record#" <+> sep (punctuate "," $ map (\(k, v) -> pPrint k <+> ":" <+> pPrint v) $ HashMap.toList fs)
   pPrint AnyT = "Any#"
   pPrint VoidT = "Void#"
 
@@ -90,13 +94,3 @@ instance HasType Type where
 
 instance HasType a => HasType (Id a) where
   typeOf x = typeOf $ x ^. idMeta
-
-tyVar :: Traversal' Type Type
-tyVar f = \case
-  ps :-> r -> (:->) <$> traverseOf (traversed . tyVar) f ps <*> traverseOf tyVar f r
-  SumT cs -> SumT <$> traverseOf (traversed . tyVar') f (toList cs)
-  AnyT -> f AnyT
-  t -> pure t
-
-tyVar' :: Traversal' Con Type
-tyVar' f (Con tag ts) = Con tag <$> traverseOf (traversed . tyVar) f ts

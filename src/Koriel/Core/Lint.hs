@@ -2,6 +2,7 @@ module Koriel.Core.Lint (lint) where
 
 import Control.Lens (view, _1)
 import Control.Monad.Except
+import qualified Data.HashMap.Strict as HashMap
 import Koriel.Core.Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -125,9 +126,11 @@ lintExp Error {} = pass
 lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
+lintObj (Record kvs) = traverse_ lintAtom kvs
 
 lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
+lintCase (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
 lintCase (Switch _ e) = lintExp e
 lintCase (Bind x e) = local (x :) $ lintExp e
 
