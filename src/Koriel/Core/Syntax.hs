@@ -110,6 +110,8 @@ data Exp a
     Let [LocalDef a] (Exp a)
   | -- | pattern matching
     Match (Exp a) (NonEmpty (Case a))
+  | -- | pattern matching, but only one branch
+    MatchOne (Exp a) (Case a)
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
@@ -148,6 +150,7 @@ instance HasType a => HasType (Exp a) where
   typeOf (Cast ty _) = ty
   typeOf (Let _ e) = typeOf e
   typeOf (Match _ (c :| _)) = typeOf c
+  typeOf (MatchOne _ c) = typeOf c
   typeOf (Error t) = t
 
 instance Pretty a => Pretty (Exp a) where
@@ -160,6 +163,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
+  pPrint (MatchOne v c) = parens $ "match1" <+> pPrint v $$ pPrint c
   pPrint (Error _) = "ERROR"
 
 instance HasFreeVar Exp where
@@ -171,6 +175,7 @@ instance HasFreeVar Exp where
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . view localDefVar) (freevars e <> foldMap (freevars . view localDefObj) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
+  freevars (MatchOne e c) = freevars e <> freevars c
   freevars (Error _) = mempty
 
 instance HasAtom Exp where
@@ -183,6 +188,7 @@ instance HasAtom Exp where
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . localDefObj . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
+    MatchOne e c -> MatchOne <$> traverseOf atom f e <*> traverseOf atom f c
     Error t -> pure (Error t)
 
 -- | alternatives

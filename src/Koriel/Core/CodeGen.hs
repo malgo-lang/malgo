@@ -9,7 +9,7 @@ module Koriel.Core.CodeGen
   )
 where
 
-import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, to, use, view, (<?=), (?=), (?~), (^.), (^?))
+import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, use, view, (<?=), (?=), (?~), (^.))
 import Control.Monad.Fix (MonadFix)
 import qualified Control.Monad.Trans.State.Lazy as Lazy
 import qualified Data.ByteString.Lazy as BL
@@ -403,10 +403,10 @@ genExp (Match e cs) k
     -- TODO[genExp does not return correctly-typed value]
     -- genExpが正しい型の値を継続に渡すように変更する
     eOpr' <- bitcast eOpr (convType $ C.typeOf e)
-    br switchBlock
+    br switchBlock -- We need to end the current block before executing genCase
     -- 各ケースのコードとラベルを生成する
     -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-    (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (maybeToMonoid $ e ^? to C.typeOf . _SumT) k) cs
+    (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (constructorList e) k) cs
     -- defaultsの先頭を取り出し、switchのデフォルトケースとする
     -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
     defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
@@ -416,10 +416,28 @@ genExp (Match e cs) k
       RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
       _ -> pure eOpr'
     switch tagOpr defaultLabel labels
+genExp (MatchOne scrutinee clause) k = do
+  genExp scrutinee $ \sOpr -> mdo
+    -- bitcast eOpr to typeOf e
+    -- TODO[genExp does not return correctly-typed value]
+    sOpr' <- bitcast sOpr (convType $ C.typeOf scrutinee) `named` "scrutinee"
+    br jumpBlock -- We need to end the current block before executing genCase.
+    label <- genCase sOpr' (constructorList scrutinee) (\o -> k o `named` "ko") clause `named` "clause"
+    jumpBlock <- block
+    case label of
+      Left label -> br label
+      Right (_, label) -> br label
 genExp (Cast ty x) k = do
   xOpr <- genAtom x
   k =<< bitcast xOpr (convType ty)
 genExp (Error _) _ = unreachable
+
+-- | Get constructor list from the type of scrutinee.
+constructorList :: HasType s => s -> [Con]
+constructorList scrutinee =
+  case C.typeOf scrutinee of
+    SumT cs -> cs
+    _ -> []
 
 genCase ::
   ( MonadReader CodeGenEnv m,
@@ -461,7 +479,7 @@ genCase scrutinee cs k = \case
     kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
       hashTableGet <- findExt "malgo_hash_table_get" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8] (ptr i8)
       i <- getUniq
-      key <- ConstantOperand <$> globalStringPtr k (mkName $ "key" <> show i)
+      key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
       value <- call hashTableGet [(scrutinee, []), (key, [])]
       value <- bitcast value (convType $ C.typeOf v)
       pure (v, value)
@@ -536,10 +554,10 @@ genLocalDef (LocalDef name (Record kvs)) = do
   hashTable <- call newHashTable []
   for_ (HashMap.toList kvs) \(k, v) -> do
     i <- getUniq
-    k <- ConstantOperand <$> globalStringPtr k (mkName $ "key" <> show i)
+    k' <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
     v <- join $ bitcast <$> genAtom v <*> pure (ptr i8)
     insert <- findExt "malgo_hash_table_insert" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8, ptr i8] LT.void
-    call insert $ map (,[]) [hashTable, k, v]
+    call insert (map (,[]) [hashTable, k', v]) `named` ("hash_insert_" <> encodeUtf8 k)
   pure $ one (name, hashTable)
 
 genCon :: [Con] -> Con -> (Integer, LT.Type)

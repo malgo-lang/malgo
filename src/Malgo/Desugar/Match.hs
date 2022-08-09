@@ -109,10 +109,10 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     let patType = Malgo.typeOf $ List.head heads
     RecordT kts <- dsType patType
     params <- traverse (newTemporalId "p") kts
-    cases <- do
+    clause <- do
       (pat', es') <- groupRecord pat es
-      one . OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
-    pure $ Match (Atom $ Core.Var scrutinee) cases
+      OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
+    pure $ MatchOne (Atom $ Core.Var scrutinee) clause
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
     let patType = Malgo.typeOf $ List.head heads
