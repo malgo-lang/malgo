@@ -39,11 +39,8 @@ instance Pretty TcEnv where
   pPrint env = Koriel.Pretty.text $ toString $ pShow env
 
 appendFieldBelongMap :: [([Text], (RecordTypeName, Scheme Type))] -> TcEnv -> TcEnv
-appendFieldBelongMap newEnv = over fieldBelongMap (go newEnv)
-  where
-    go [] e = e
-    go ((n, n') : xs) e = go xs $ HashMap.alter (f n') n e
-    f n' ns = Just $ (n' :) $ concat ns
+appendFieldBelongMap newEnv = over fieldBelongMap $
+  \e -> foldr (\(k, v) -> HashMap.insertWith (<>) k [v]) e newEnv
 
 genTcEnv :: Applicative f => RnEnv -> f TcEnv
 genTcEnv rnEnv = do

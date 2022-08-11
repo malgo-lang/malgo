@@ -40,7 +40,10 @@ dependencies = lens _dependencies (\r x -> r {_dependencies = x})
 type Resolved = Qualified RnId
 
 data RnEnv = RnEnv
-  { _resolvedVarIdentMap :: HashMap PsId [Resolved],
+  { -- | Environment for resolved variable identifiers.
+    -- The key is the raw identifier (e.g. `foo`, `bar`).
+    -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
+    _resolvedVarIdentMap :: HashMap PsId [Resolved],
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
     _moduleName :: ModuleName,
     _uniqSupply :: UniqSupply,
@@ -55,16 +58,14 @@ instance Pretty RnEnv where
 
 makeFieldsNoPrefix ''RnEnv
 
+-- | Append resolved identifiers to the environment.
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [Resolved]) -> [(PsId, Resolved)] -> RnEnv -> RnEnv
-appendRnEnv lens newEnv = over lens (go newEnv)
-  where
-    go [] e = e
-    go ((n, n') : xs) e = go xs $ HashMap.alter (f n') n e
-    f n' ns = Just $ (n' :) $ concat ns
+appendRnEnv lens newEnv = over lens $
+  \e -> foldr (\(k, v) -> HashMap.insertWith (<>) k [v]) e newEnv
 
+-- | Generate RnId of primitive types
 genBuiltinRnEnv :: (MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m) => ModuleName -> MalgoEnv -> m RnEnv
 genBuiltinRnEnv modName malgoEnv = do
-  -- generate RnId of primitive types
   int32_t <- newExternalId "Int32#" () $ ModuleName "Builtin"
   int64_t <- newExternalId "Int64#" () $ ModuleName "Builtin"
   float_t <- newExternalId "Float#" () $ ModuleName "Builtin"
