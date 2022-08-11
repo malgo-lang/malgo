@@ -416,17 +416,6 @@ genExp (Match e cs) k
       RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
       _ -> pure eOpr'
     switch tagOpr defaultLabel labels
-genExp (MatchOne scrutinee clause) k = do
-  genExp scrutinee $ \sOpr -> mdo
-    -- bitcast eOpr to typeOf e
-    -- TODO[genExp does not return correctly-typed value]
-    sOpr' <- bitcast sOpr (convType $ C.typeOf scrutinee) `named` "scrutinee"
-    br jumpBlock -- We need to end the current block before executing genCase.
-    label <- genCase sOpr' (constructorList scrutinee) (\o -> k o `named` "ko") clause `named` "clause"
-    jumpBlock <- block
-    case label of
-      Left label -> br label
-      Right (_, label) -> br label
 genExp (Cast ty x) k = do
   xOpr <- genAtom x
   k =<< bitcast xOpr (convType ty)

@@ -121,9 +121,6 @@ lintExp (Let ds e) = local (map (view localDefVar) ds <>) $ do
 lintExp (Match e cs) = do
   lintExp e
   traverse_ lintCase cs
-lintExp (MatchOne scrutinee clause) = do
-  lintExp scrutinee
-  lintCase clause
 lintExp Error {} = pass
 
 lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()

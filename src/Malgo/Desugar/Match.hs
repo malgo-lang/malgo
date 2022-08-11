@@ -112,16 +112,16 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
     clause <- do
       (pat', es') <- groupRecord pat es
       OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
-    pure $ MatchOne (Atom $ Core.Var scrutinee) clause
+    pure $ Match (Atom $ Core.Var scrutinee) $ clause :| []
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
     let patType = Malgo.typeOf $ List.head heads
     SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
     params <- traverse (newTemporalId "p") ts
-    cases <- do
+    clause <- do
       let (pat', es') = groupTuple pat es
-      one . Unpack con params <$> match (params <> restScrutinee) pat' es' err
-    pure $ Match (Atom $ Core.Var scrutinee) cases
+      Unpack con params <$> match (params <> restScrutinee) pat' es' err
+    pure $ Match (Atom $ Core.Var scrutinee) $ clause :| []
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
     let cs =
