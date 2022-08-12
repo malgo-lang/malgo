@@ -37,22 +37,6 @@ lookupType pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
     Just TypeDef {..} -> pure _typeConstructor
 
--- | fieldsのすべてのフィールドを含むレコード型を検索する
--- | マッチするレコード型が複数あった場合はエラー
-exactMatchRecordType ::
-  (MonadState TcEnv m, MonadReader env m, MonadIO m, HasSrcName env FilePath) =>
-  Range ->
-  -- | full field list of the wanted record type
-  [Text] ->
-  m (Scheme Type)
-exactMatchRecordType pos fields = do
-  env <- use fieldBelongMap
-  let candidates = concat $ HashMap.lookup fields env
-  case candidates of
-    [] -> errorOn pos $ "The existence of fields are proved on Rename pass" $$ "fields:" <+> pPrint fields
-    [(_, scheme)] -> pure scheme
-    xs -> errorOn pos $ "Ambiguious record:" <+> sep (punctuate "," $ map pPrint xs)
-
 infer :: (MonadFail m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'Infer), TcEnv)
 infer rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
   tcEnv <- genTcEnv rnEnv
@@ -163,16 +147,8 @@ tcTypeSynonyms ds =
     zipWithM_ (\p p' -> typeDefMap . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     typ' <- transType typ
     typeSynonymMap . at con .= Just (params', typ')
-    updateFieldEnv (name ^. idName) (tcType typ) params' typ'
 
     pure (pos, name, params, tcType typ)
-
-updateFieldEnv :: (MonadState TcEnv f) => RecordTypeName -> S.Type (Malgo 'Infer) -> [Id Type] -> Type -> f ()
-updateFieldEnv typeName (S.TyRecord _ kts) params typ = do
-  let scheme = Forall params typ
-  let labels = map (view _1) kts
-  modify (appendFieldBelongMap [(labels, (typeName, scheme))])
-updateFieldEnv _ _ _ _ = pass
 
 tcDataDefs ::
   ( MonadState TcEnv m,
@@ -494,11 +470,7 @@ tcPatterns (TupleP pos pats : ps) = do
 tcPatterns (RecordP pos kps : ps) = do
   kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
-  recordType@(TyRecord recordKts) <- instantiate pos =<< exactMatchRecordType pos (map fst kps)
-  let patternKts = HashMap.fromList $ map (bimap identity typeOf) kps'
-  let patternType = TyRecord $ patternKts <> recordKts
-
-  tell [(pos, recordType :~ patternType)]
+  let patternType = TyRecord $ HashMap.fromList $ map (bimap identity typeOf) kps'
   pure $ RecordP (Typed patternType pos) kps' : ps'
 tcPatterns (UnboxedP pos unboxed : ps) = do
   ps' <- tcPatterns ps

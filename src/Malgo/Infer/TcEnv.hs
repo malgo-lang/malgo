@@ -6,11 +6,10 @@ module Malgo.Infer.TcEnv
     TcEnv (..),
     genTcEnv,
     findBuiltinType,
-    appendFieldBelongMap,
   )
 where
 
-import Control.Lens (At (at), makeFieldsNoPrefix, over, view, (^.))
+import Control.Lens (At (at), makeFieldsNoPrefix, view, (^.))
 import qualified Data.HashMap.Strict as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
@@ -28,7 +27,6 @@ data TcEnv = TcEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
     _typeSynonymMap :: HashMap (Id Type) ([Id Type], Type),
-    _fieldBelongMap :: HashMap [Text] [(RecordTypeName, Scheme Type)],
     _resolvedTypeIdentMap :: HashMap PsId [Resolved]
   }
   deriving stock (Show)
@@ -37,10 +35,6 @@ makeFieldsNoPrefix ''TcEnv
 
 instance Pretty TcEnv where
   pPrint env = Koriel.Pretty.text $ toString $ pShow env
-
-appendFieldBelongMap :: [([Text], (RecordTypeName, Scheme Type))] -> TcEnv -> TcEnv
-appendFieldBelongMap newEnv = over fieldBelongMap $
-  \e -> foldr (\(k, v) -> HashMap.insertWith (<>) k [v]) e newEnv
 
 genTcEnv :: Applicative f => RnEnv -> f TcEnv
 genTcEnv rnEnv = do
@@ -65,7 +59,6 @@ genTcEnv rnEnv = do
               (ptr_t, TypeDef TyPtr [] [])
             ],
         _typeSynonymMap = mempty,
-        _fieldBelongMap = mempty,
         _resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap
       }
 
