@@ -64,27 +64,18 @@ library
   hs-source-dirs:
       src
   default-extensions:
-      BangPatterns
-      BinaryLiterals
       BlockArguments
       ConstraintKinds
       DataKinds
       DefaultSignatures
       DeriveDataTypeable
-      DeriveFoldable
-      DeriveFunctor
       DeriveGeneric
       DeriveTraversable
       DerivingStrategies
-      DoAndIfThenElse
-      EmptyDataDecls
-      ExistentialQuantification
       FlexibleContexts
       FlexibleInstances
       FunctionalDependencies
-      GADTs
       GeneralizedNewtypeDeriving
-      InstanceSigs
       KindSignatures
       LambdaCase
       MultiParamTypeClasses
@@ -92,20 +83,16 @@ library
       NamedFieldPuns
       NoImplicitPrelude
       OverloadedStrings
-      PartialTypeSignatures
-      PatternGuards
-      PolyKinds
       RankNTypes
       RecordWildCards
       ScopedTypeVariables
       StandaloneDeriving
+      StrictData
       TupleSections
       TypeApplications
       TypeFamilies
-      TypeSynonymInstances
       ViewPatterns
-      StrictData
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS
   build-depends:
       aeson
     , base
@@ -150,27 +137,18 @@ executable malgo
   hs-source-dirs:
       app/
   default-extensions:
-      BangPatterns
-      BinaryLiterals
       BlockArguments
       ConstraintKinds
       DataKinds
       DefaultSignatures
       DeriveDataTypeable
-      DeriveFoldable
-      DeriveFunctor
       DeriveGeneric
       DeriveTraversable
       DerivingStrategies
-      DoAndIfThenElse
-      EmptyDataDecls
-      ExistentialQuantification
       FlexibleContexts
       FlexibleInstances
       FunctionalDependencies
-      GADTs
       GeneralizedNewtypeDeriving
-      InstanceSigs
       KindSignatures
       LambdaCase
       MultiParamTypeClasses
@@ -178,20 +156,16 @@ executable malgo
       NamedFieldPuns
       NoImplicitPrelude
       OverloadedStrings
-      PartialTypeSignatures
-      PatternGuards
-      PolyKinds
       RankNTypes
       RecordWildCards
       ScopedTypeVariables
       StandaloneDeriving
+      StrictData
       TupleSections
       TypeApplications
       TypeFamilies
-      TypeSynonymInstances
       ViewPatterns
-      StrictData
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , base
@@ -238,27 +212,18 @@ test-suite malgo-test
   hs-source-dirs:
       test
   default-extensions:
-      BangPatterns
-      BinaryLiterals
       BlockArguments
       ConstraintKinds
       DataKinds
       DefaultSignatures
       DeriveDataTypeable
-      DeriveFoldable
-      DeriveFunctor
       DeriveGeneric
       DeriveTraversable
       DerivingStrategies
-      DoAndIfThenElse
-      EmptyDataDecls
-      ExistentialQuantification
       FlexibleContexts
       FlexibleInstances
       FunctionalDependencies
-      GADTs
       GeneralizedNewtypeDeriving
-      InstanceSigs
       KindSignatures
       LambdaCase
       MultiParamTypeClasses
@@ -266,20 +231,16 @@ test-suite malgo-test
       NamedFieldPuns
       NoImplicitPrelude
       OverloadedStrings
-      PartialTypeSignatures
-      PatternGuards
-      PolyKinds
       RankNTypes
       RecordWildCards
       ScopedTypeVariables
       StandaloneDeriving
+      StrictData
       TupleSections
       TypeApplications
       TypeFamilies
-      TypeSynonymInstances
       ViewPatterns
-      StrictData
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j4 +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , base
