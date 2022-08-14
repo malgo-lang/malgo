@@ -2,8 +2,8 @@
 module Malgo.Rename.Pass where
 
 import Control.Lens (over, use, view, (<>=), (^.), _2)
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
+import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Data.List (intersect)
 import Data.List.Extra (anySame, disjoint)
 import Koriel.Id
@@ -35,7 +35,7 @@ rnDecls ::
   [Decl (Malgo 'Parse)] ->
   m [Decl (Malgo 'Rename)]
 rnDecls ds = do
-  modName <- view moduleName
+  modName <- asks (.moduleName)
   -- RnEnvの生成
   rnEnv <- genToplevelEnv modName ds =<< ask
   local (const rnEnv) $ do
@@ -64,12 +64,13 @@ rnDecl (DataDef pos name params cs) = do
   local (appendRnEnv resolvedTypeIdentMap (zip (map snd params) (map (Qualified Implicit) params'))) $
     DataDef pos
       <$> lookupTypeName pos name
-        <*> pure (zipWith (\(range, _) p' -> (range, p')) params params')
-        <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
+      <*> pure (zipWith (\(range, _) p' -> (range, p')) params params')
+      <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (TypeSynonym pos name params typ) = do
   params' <- traverse resolveName params
   local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Qualified Implicit) params')) $
-    TypeSynonym pos <$> lookupTypeName pos name
+    TypeSynonym pos
+      <$> lookupTypeName pos name
       <*> pure params'
       <*> rnType typ
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
@@ -85,7 +86,7 @@ rnDecl (Import pos modName importList) = do
     loadInterface modName >>= \case
       Just x -> pure x
       Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
-  infixInfo <>= interface ^. infixMap
+  infixInfo <>= interface.infixMap
   Malgo.Rename.RnEnv.dependencies <>= [modName]
   pure $ Import pos modName importList
 
@@ -241,21 +242,21 @@ mkOpApp ::
 -- (e11 op1 e12) op2 e2
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
-    errorOn pos1 $
-      "Precedence parsing error:"
-        $+$ nest
-          2
-          ( "cannot mix"
-              <+> quotes (pPrint op1)
-              <+> brackets (pPrint fix1)
-              <+> "and"
-              <+> quotes (pPrint op2)
-              <+> brackets (pPrint fix2)
-              <+> "in the same infix expression"
-          )
+      errorOn pos1 $
+        "Precedence parsing error:"
+          $+$ nest
+            2
+            ( "cannot mix"
+                <+> quotes (pPrint op1)
+                <+> brackets (pPrint fix1)
+                <+> "and"
+                <+> quotes (pPrint op2)
+                <+> brackets (pPrint fix2)
+                <+> "in the same infix expression"
+            )
   | associate_right = do
-    e' <- mkOpApp pos2 fix2 op2 e12 e2
-    pure $ OpApp (pos1, fix1) op1 e11 e'
+      e' <- mkOpApp pos2 fix2 op2 e12 e2
+      pure $ OpApp (pos1, fix1) op1 e11 e'
   where
     (nofix_error, associate_right) = compareFixity fix1 fix2
     compareFixity (assoc1, prec1) (assoc2, prec2) = case prec1 `compare` prec2 of
@@ -314,7 +315,8 @@ genToplevelEnv modName ds =
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       whenM (view debugMode) $
-        hPrint stderr $ pPrint interface
+        hPrint stderr $
+          pPrint interface
       -- 全ての識別子をImplicitでimportする
       modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Qualified Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Qualified Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
@@ -324,7 +326,8 @@ genToplevelEnv modName ds =
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       whenM (view debugMode) $
-        hPrint stderr $ pPrint interface
+        hPrint stderr $
+          pPrint interface
       modify $
         appendRnEnv
           resolvedVarIdentMap
@@ -334,7 +337,8 @@ genToplevelEnv modName ds =
                     then (name, Qualified Implicit id)
                     else (name, Qualified (Explicit modName') id)
               )
-              $ HashMap.toList $ interface ^. resolvedVarIdentMap
+              $ HashMap.toList
+              $ interface ^. resolvedVarIdentMap
           )
       modify $
         appendRnEnv
@@ -345,7 +349,8 @@ genToplevelEnv modName ds =
                     then (name, Qualified Implicit id)
                     else (name, Qualified (Explicit modName') id)
               )
-              $ HashMap.toList $ interface ^. resolvedTypeIdentMap
+              $ HashMap.toList
+              $ interface ^. resolvedTypeIdentMap
           )
     aux (Import pos modName' (As modNameAs)) = do
       interface <-
@@ -353,7 +358,8 @@ genToplevelEnv modName ds =
           Just x -> pure x
           Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
       whenM (view debugMode) $
-        hPrint stderr $ pPrint interface
+        hPrint stderr $
+          pPrint interface
       modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Qualified (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
       modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Qualified (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
     aux Infix {} = pass

@@ -5,18 +5,19 @@
 
 module Malgo.Prelude
   ( module Koriel.Prelude,
-    runMalgoM,
-    ToLLOpt (..),
-    MalgoEnv (..),
-    HasMalgoEnv (..),
-    Range (..),
-    errorOn,
-    warningOn,
-    defaultToLLOpt,
-    positionToSourcePos,
-    sourcePosToPosition,
-    malgoRangeToLspRange,
-    malgoRangeToLocation,
+    module Malgo.Prelude,
+    -- runMalgoM,
+    -- ToLLOpt (..),
+    -- MalgoEnv (..),
+    -- HasMalgoEnv (..),
+    -- Range (..),
+    -- errorOn,
+    -- warningOn,
+    -- defaultToLLOpt,
+    -- positionToSourcePos,
+    -- sourcePosToPosition,
+    -- malgoRangeToLspRange,
+    -- malgoRangeToLocation,
   )
 where
 
@@ -148,7 +149,11 @@ instance FromJSON Range
 
 instance Pretty Range where
   pPrint (Range start end) =
-    P.text (sourceName start) <> ":" <> pPrint (unPos (sourceLine start)) <> ":" <> pPrint (unPos (sourceColumn start))
+    P.text (sourceName start)
+      <> ":"
+      <> pPrint (unPos (sourceLine start))
+      <> ":"
+      <> pPrint (unPos (sourceColumn start))
       <> "-"
       <> pPrint (unPos (sourceLine end))
       <> ":"
@@ -166,7 +171,8 @@ errorOn range x = do
   let columnNum = unPos $ sourceColumn $ range ^. start
   error $
     show $
-      "error on" <+> pPrint range <> ":"
+      "error on"
+        <+> pPrint range <> ":"
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",
@@ -181,7 +187,8 @@ warningOn range x = do
   let columnNum = unPos $ sourceColumn $ range ^. start
   hPutStrLn stderr $
     render $
-      "warning on" <+> pPrint range <> ":"
+      "warning on"
+        <+> pPrint range <> ":"
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",

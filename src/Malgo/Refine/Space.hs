@@ -1,9 +1,9 @@
 module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
 import Control.Lens (At (at), mapped, over, view, (^.), _2)
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Data.List (isSubsequenceOf)
-import qualified Data.List as List
+import Data.List qualified as List
 import Data.Traversable (for)
 import Koriel.Id (Id)
 import Koriel.Pretty hiding (space)
@@ -87,7 +87,8 @@ decompose (TyRecord kts) = do
     Record $
       over (mapped . _2) (space env) $
         -- sort by key because the order of `toList` results is unspecified.
-        sortWith fst $ HashMap.toList kts
+        sortWith fst $
+          HashMap.toList kts
 decompose t = pure $ Type t
 
 constructorSpace :: MonadReader RefineEnv m => HashMap (Id Type) Type -> (Id (), Scheme Type) -> m Space
@@ -111,21 +112,21 @@ subtract (Constructor k1 ss) (Constructor k2 ws)
 subtract (Tuple ss) (Tuple ws) = subtract' Tuple ss ws
 subtract (Record kts1) (Record kts2)
   | kts2 `isSuperOf` kts1 = do
-    kss <- for kts1 \(k, s1) -> do
-      case List.lookup k kts2 of
-        Nothing -> pure (k, Empty)
-        Just s2 -> (k,) <$> s1 `subtract` s2
-    isEmpty <- allM (equalEmpty . snd) kss
-    if isEmpty
-      then pure Empty
-      else pure $ Record kss
+      kss <- for kts1 \(k, s1) -> do
+        case List.lookup k kts2 of
+          Nothing -> pure (k, Empty)
+          Just s2 -> (k,) <$> s1 `subtract` s2
+      isEmpty <- allM (equalEmpty . snd) kss
+      if isEmpty
+        then pure Empty
+        else pure $ Record kss
   | otherwise =
-    error $
-      "Record kts2 is invalid pattern:\n"
-        <> toText (pShow kts1)
-        <> "\n"
-        <> toText (pShow kts2)
-        <> "\n"
+      error $
+        "Record kts2 is invalid pattern:\n"
+          <> toText (pShow kts1)
+          <> "\n"
+          <> toText (pShow kts2)
+          <> "\n"
 subtract (Union s1 s2) x = Union <$> subtract s1 x <*> subtract s2 x
 subtract x (Union s1 s2) = do
   s1' <- subtract x s1

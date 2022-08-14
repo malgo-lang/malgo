@@ -45,7 +45,7 @@ data RnEnv = RnEnv
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
     _resolvedVarIdentMap :: HashMap PsId [Resolved],
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
-    _moduleName :: ModuleName,
+    moduleName :: ModuleName,
     _uniqSupply :: UniqSupply,
     _srcName :: FilePath,
     _debugMode :: Bool,
@@ -87,7 +87,7 @@ genBuiltinRnEnv modName malgoEnv = do
               ("String#", [Qualified Implicit string_t]),
               ("Ptr#", [Qualified Implicit ptr_t])
             ],
-        _moduleName = modName,
+        moduleName = modName,
         _uniqSupply = malgoEnv ^. uniqSupply,
         _srcName = malgoEnv ^. toLLOpt . srcName,
         _debugMode = malgoEnv ^. toLLOpt . debugMode,
@@ -110,8 +110,10 @@ lookupVarName pos name =
       Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint names
+          "Not in scope:"
+            <+> quotes (pPrint name)
+            $$ "Did you mean"
+            <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a type name that is already resolved
@@ -122,8 +124,10 @@ lookupTypeName pos name =
       Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint names
+          "Not in scope:"
+            <+> quotes (pPrint name)
+            $$ "Did you mean"
+            <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a qualified variable name like Foo.x
@@ -135,6 +139,10 @@ lookupQualifiedVarName pos modName name =
         Just (Qualified _ name) -> pure name
         Nothing ->
           errorOn pos $
-            "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
-              $$ "Did you mean" <+> pPrint names
+            "Not in scope:"
+              <+> quotes (pPrint name)
+              <+> "in"
+              <+> pPrint modName
+              $$ "Did you mean"
+              <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)

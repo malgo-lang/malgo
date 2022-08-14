@@ -6,7 +6,7 @@ import Malgo.Driver qualified as Driver
 import Malgo.Lsp.Pass (LspOpt (..))
 import Malgo.Lsp.Server qualified as Lsp
 import Malgo.Parser (parseMalgo)
-import Malgo.Prelude
+import Malgo.Prelude hiding (toLLOpt)
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath ((</>))
@@ -22,7 +22,7 @@ main = do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
       src <- decodeUtf8 <$> readFileBS opt._srcName
-      let parsedAst = case parseMalgo opt._srcName  src of
+      let parsedAst = case parseMalgo opt._srcName src of
             Right x -> x
             Left err -> error $ toText $ errorBundlePretty err
       Driver.compileFromAST parsedAst opt
@@ -39,7 +39,10 @@ toLLOpt =
   ( ToLLOpt
       <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
       <*> strOption
-        ( long "output" <> short 'o' <> metavar "OUTPUT" <> value ""
+        ( long "output"
+            <> short 'o'
+            <> metavar "OUTPUT"
+            <> value ""
             <> help
               "Write LLVM IR to OUTPUT"
         )

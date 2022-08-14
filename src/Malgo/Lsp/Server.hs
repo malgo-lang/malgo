@@ -1,18 +1,17 @@
 module Malgo.Lsp.Server (server) where
 
 import Control.Lens (to, view, (^.))
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
-import Koriel.Lens (HasSymbolInfo (..))
 import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
 import Malgo.Interface
-import Malgo.Lsp.Index (Index, Info (..), findInfosOfPos)
+import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), findInfosOfPos)
 import Malgo.Lsp.Pass (LspOpt)
 import Malgo.Prelude hiding (Range)
-import qualified Relude.Unsafe as Unsafe
+import Relude.Unsafe qualified as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
 
 textDocumentIdentifierToModuleName :: TextDocumentIdentifier -> ModuleName
@@ -58,12 +57,12 @@ toHoverDocument infos =
   mconcat $ map aux infos
   where
     aux Info {..} =
-      markedUpContent "malgo" (toText $ render $ pPrint _name <+> ":" <+> pPrint _typeSignature)
-        <> unmarkedUpContent (toText $ render $ pPrint _definitions)
+      markedUpContent "malgo" (toText $ render $ pPrint _name <+> ":" <+> pPrint typeSignature)
+        <> unmarkedUpContent (toText $ render $ pPrint definitions)
 
 infoToLocation :: Info -> [Location]
 infoToLocation Info {..} =
-  map malgoRangeToLocation _definitions
+  map malgoRangeToLocation definitions
 
 server :: LspOpt -> IO Int
 server opt =

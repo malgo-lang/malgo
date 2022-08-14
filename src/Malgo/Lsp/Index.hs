@@ -9,7 +9,7 @@ import Control.Lens.TH
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Lens
 import Koriel.Pretty
 import Language.LSP.Types (DocumentSymbol (..))
@@ -46,8 +46,8 @@ instance Pretty Index where
 --  * Definition
 data Info = Info
   { _name :: Text,
-    _typeSignature :: Scheme Type,
-    _definitions :: [Range]
+    typeSignature :: Scheme Type,
+    definitions :: [Range]
   }
   deriving stock (Eq, Ord, Show, Generic)
 
@@ -64,7 +64,7 @@ instance FromJSONKey Info
 instance Hashable Info
 
 instance Pretty Info where
-  pPrint Info {..} = pPrint _name <+> ":" <+> pPrint _typeSignature <+> pPrint _definitions
+  pPrint Info {..} = pPrint _name <+> ":" <+> pPrint typeSignature <+> pPrint definitions
 
 makeFieldsNoPrefix ''Info
 makeFieldsNoPrefix ''Index

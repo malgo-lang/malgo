@@ -6,8 +6,8 @@ module Malgo.Lsp.Pass where
 
 import Control.Lens (At (at), modifying, use, view, (.~), (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.Text as Text
+import Data.HashMap.Strict qualified as HashMap
+import Data.Text qualified as Text
 import Koriel.Id (Id (..), IdSort (Temporal), idName)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
@@ -18,7 +18,7 @@ import Malgo.Interface (HasLspIndex (lspIndex), loadInterface)
 import Malgo.Lsp.Index
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
-import qualified Malgo.Syntax as S
+import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
 
 newtype LspOpt = LspOpt
@@ -79,14 +79,14 @@ indexImport (_, moduleName, _) = do
 indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
 indexDataDef (range, typeName, typeParameters, constructors) = do
   typeKind <- lookupTypeKind typeName
-  let info = Info {_name = typeName ^. idName, _typeSignature = Forall [] typeKind, _definitions = [range]}
+  let info = Info {_name = typeName ^. idName, typeSignature = Forall [] typeKind, definitions = [range]}
   addReferences info [range]
   addDefinition typeName info
   addSymbolInfo typeName (symbol SkEnum typeName range)
 
   for_ typeParameters \(range, typeParameter) -> do
     typeParameterKind <- lookupTypeKind typeParameter
-    let info = Info {_name = typeParameter ^. idName, _typeSignature = Forall [] typeParameterKind, _definitions = [range]}
+    let info = Info {_name = typeParameter ^. idName, typeSignature = Forall [] typeParameterKind, definitions = [range]}
     addReferences info [range]
     addDefinition typeParameter info
     addSymbolInfo typeParameter (symbol SkTypeParameter typeParameter range)
@@ -95,7 +95,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
   where
     indexConstructor (range, constructor, parameters) = do
       constructorType <- lookupSignature constructor
-      let info = Info {_name = constructor ^. idName, _typeSignature = constructorType, _definitions = [range]}
+      let info = Info {_name = constructor ^. idName, typeSignature = constructorType, definitions = [range]}
       addReferences info [range]
       addDefinition constructor info
       addSymbolInfo constructor (symbol SkEnumMember constructor range)
@@ -128,7 +128,7 @@ indexScSig (range, ident, _) = do
   case minfo of
     Nothing -> do
       identType <- lookupSignature ident
-      let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
+      let info = Info {_name = ident ^. idName, typeSignature = identType, definitions = [range]}
       addReferences info [range]
     Just info -> addReferences info [range]
 
@@ -140,7 +140,7 @@ indexScDef (view value -> range, ident, expr) = do
       -- lookup the type of the variable `ident`
       identType <- lookupSignature ident
       -- index the information of this definition
-      let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
+      let info = Info {_name = ident ^. idName, typeSignature = identType, definitions = [range]}
       addReferences info [range]
       addDefinition ident info
       addSymbolInfo ident (symbol SkFunction ident range)
@@ -158,11 +158,11 @@ indexExp (Var (view value -> range) ident) = do
   case minfo of
     Nothing -> do
       identType <- lookupSignature ident
-      let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = []}
+      let info = Info {_name = ident ^. idName, typeSignature = identType, definitions = []}
       addReferences info [range]
     Just info -> addReferences info [range]
 indexExp (Unboxed (view value -> range) u) = do
-  let info = Info {_name = show $ pPrint u, _typeSignature = Forall [] (typeOf u), _definitions = [range]}
+  let info = Info {_name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 indexExp (Apply _ e1 e2) = do
   indexExp e1
@@ -180,7 +180,7 @@ indexStmt :: (MonadState IndexEnv m) => Stmt (Malgo 'Refine) -> m ()
 indexStmt (Let _ (Id _ _ _ Temporal) expr) = indexExp expr
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
-  let info = Info {_name = ident ^. idName, _typeSignature = identType, _definitions = [range]}
+  let info = Info {_name = ident ^. idName, typeSignature = identType, definitions = [range]}
   addReferences info [range]
   addDefinition ident info
   addSymbolInfo ident (symbol SkVariable ident range)
@@ -197,7 +197,7 @@ indexPat :: (MonadState IndexEnv m) => Pat (Malgo 'Refine) -> m ()
 indexPat (VarP _ (Id _ _ _ Temporal)) = pass
 indexPat (VarP (Typed ty range) v) = do
   -- index the information of this definition
-  let info = Info {_name = v ^. idName, _typeSignature = Forall [] ty, _definitions = [range]}
+  let info = Info {_name = v ^. idName, typeSignature = Forall [] ty, definitions = [range]}
   addReferences info [range]
   addDefinition v info
   addSymbolInfo v (symbol SkVariable v range)
@@ -212,7 +212,7 @@ indexPat (TupleP _ ps) =
 indexPat (RecordP _ kps) =
   traverse_ (indexPat . snd) kps
 indexPat (UnboxedP (view value -> range) u) = do
-  let info = Info {_name = show $ pPrint u, _typeSignature = Forall [] (typeOf u), _definitions = [range]}
+  let info = Info {_name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 
 lookupSignature :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> m (Scheme Type)
