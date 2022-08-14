@@ -1,11 +1,11 @@
 module Malgo.Infer.Pass (infer) where
 
 import Control.Lens (At (at), forOf, ix, mapped, over, preuse, to, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
-import qualified Data.List as List
+import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
+import Data.List qualified as List
 import Data.List.Extra (anySame)
-import qualified Data.Map as Map
+import Data.Map qualified as Map
 import Data.Traversable (for)
 import Koriel.Id
 import Koriel.Lens
@@ -18,7 +18,7 @@ import Malgo.Interface (loadInterface)
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
-import qualified Malgo.Syntax as S
+import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
 
 -------------------------------

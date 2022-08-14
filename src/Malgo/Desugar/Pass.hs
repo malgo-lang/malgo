@@ -4,15 +4,15 @@
 module Malgo.Desugar.Pass (desugar) where
 
 import Control.Lens (At (at), makePrisms, preuse, preview, traverseOf, traversed, use, view, (<>=), (?=), (^.), _2, _Just)
-import qualified Data.Char as Char
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.List as List
+import Data.Char qualified as Char
+import Data.HashMap.Strict qualified as HashMap
+import Data.List qualified as List
 import Data.Maybe (fromJust)
-import qualified Data.Text as T
+import Data.Text qualified as T
 import Data.Traversable (for)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
-import qualified Koriel.Core.Type as C
+import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -198,14 +198,14 @@ dsExp (G.Var (Typed typ _) name) = do
     [] :-> _ | isConstructor name -> pure $ CallDirect name' []
     _
       | idIsExternal name' -> do
-        -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
-        -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
-        case C.typeOf name' of
-          pts :-> _ -> do
-            clsId <- newTemporalId "gblcls" (C.typeOf name')
-            ps <- traverse (newTemporalId "p") pts
-            pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
-          _ -> pure $ Atom $ C.Var name'
+          -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
+          -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
+          case C.typeOf name' of
+            pts :-> _ -> do
+              clsId <- newTemporalId "gblcls" (C.typeOf name')
+              ps <- traverse (newTemporalId "p") pts
+              pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+            _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
     isConstructor Id {_idName} | T.length _idName > 0 = Char.isUpper (T.head _idName)

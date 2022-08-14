@@ -12,10 +12,10 @@ where
 import Data.Fix
 import Data.String.Conversions (convertString)
 import Koriel.Prelude
-import qualified Text.Megaparsec.Pos as Megaparsec
+import Text.Megaparsec.Pos qualified as Megaparsec
 import Text.PrettyPrint.HughesPJClass hiding (char, double, first, float, int, integer, (<+>), (<>))
-import qualified Text.PrettyPrint.HughesPJClass as P
-import qualified Prelude
+import Text.PrettyPrint.HughesPJClass qualified as P
+import Prelude qualified
 
 -- change operator precedence
 infixl 9 <+>

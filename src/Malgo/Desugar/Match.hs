@@ -2,14 +2,14 @@
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
 import Control.Lens (At (at), Prism', has, over, (?=), _1)
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.List as List
-import qualified Data.List.NonEmpty as NonEmpty
+import Data.HashMap.Strict qualified as HashMap
+import Data.List qualified as List
+import Data.List.NonEmpty qualified as NonEmpty
 import Data.Traversable (for)
 import Koriel.Core.Syntax
-import qualified Koriel.Core.Syntax as Core
+import Koriel.Core.Syntax qualified as Core
 import Koriel.Core.Type
-import qualified Koriel.Core.Type as Core
+import Koriel.Core.Type qualified as Core
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -18,7 +18,7 @@ import Malgo.Desugar.DsEnv
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
 import Malgo.Infer.TypeRep
-import qualified Malgo.Infer.TypeRep as Malgo
+import Malgo.Infer.TypeRep qualified as Malgo
 import Malgo.Prelude hiding (group)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
@@ -71,78 +71,78 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- Variable Rule
   -- パターンの先頭がすべて変数のとき
   | all (has _VarP) heads = do
-    -- 変数パターンvについて、式中に現れるすべてのvをscrutineeで置き換える
-    match
-      restScrutinee
-      tails
-      ( zipWith
-          ( \case
-              (VarP _ v) -> \e -> nameEnv . at v ?= scrutinee >> e
-              _ -> error "All elements of heads must be VarP"
-          )
-          heads
-          es
-      )
-      err
+      -- 変数パターンvについて、式中に現れるすべてのvをscrutineeで置き換える
+      match
+        restScrutinee
+        tails
+        ( zipWith
+            ( \case
+                (VarP _ v) -> \e -> nameEnv . at v ?= scrutinee >> e
+                _ -> error "All elements of heads must be VarP"
+            )
+            heads
+            es
+        )
+        err
   -- Constructor Rule
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) heads = do
-    let patType = Malgo.typeOf $ List.head heads
-    -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
-    --  errorDoc $ "Not valid type:" <+> pPrint patType
-    -- 型からコンストラクタの集合を求める
-    let (con, ts) = case Malgo.viewTyConApp patType of
-          Just (Malgo.TyCon con, ts) -> (con, ts)
-          _ -> error "patType must be TyApp or TyCon"
-    valueConstructors <- lookupValueConstructors con ts
-    -- 各コンストラクタごとにC.Caseを生成する
-    cases <- for valueConstructors \(conName, Forall _ conType) -> do
-      paramTypes <- traverse dsType $ fst $ splitTyArr conType
-      let coreCon = Core.Con (Data $ idToText conName) paramTypes
-      params <- traverse (newTemporalId "p") paramTypes
-      let (pat', es') = group conName pat es
-      Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
-    unfoldedType <- unfoldType patType
-    pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
+      let patType = Malgo.typeOf $ List.head heads
+      -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
+      --  errorDoc $ "Not valid type:" <+> pPrint patType
+      -- 型からコンストラクタの集合を求める
+      let (con, ts) = case Malgo.viewTyConApp patType of
+            Just (Malgo.TyCon con, ts) -> (con, ts)
+            _ -> error "patType must be TyApp or TyCon"
+      valueConstructors <- lookupValueConstructors con ts
+      -- 各コンストラクタごとにC.Caseを生成する
+      cases <- for valueConstructors \(conName, Forall _ conType) -> do
+        paramTypes <- traverse dsType $ fst $ splitTyArr conType
+        let coreCon = Core.Con (Data $ idToText conName) paramTypes
+        params <- traverse (newTemporalId "p") paramTypes
+        let (pat', es') = group conName pat es
+        Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
+      unfoldedType <- unfoldType patType
+      pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
-    let patType = Malgo.typeOf $ List.head heads
-    RecordT kts <- dsType patType
-    params <- traverse (newTemporalId "p") kts
-    clause <- do
-      (pat', es') <- groupRecord pat es
-      OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
-    pure $ Match (Atom $ Core.Var scrutinee) $ clause :| []
+      let patType = Malgo.typeOf $ List.head heads
+      RecordT kts <- dsType patType
+      params <- traverse (newTemporalId "p") kts
+      clause <- do
+        (pat', es') <- groupRecord pat es
+        OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
+      pure $ Match (Atom $ Core.Var scrutinee) $ clause :| []
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
-    let patType = Malgo.typeOf $ List.head heads
-    SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
-    params <- traverse (newTemporalId "p") ts
-    clause <- do
-      let (pat', es') = groupTuple pat es
-      Unpack con params <$> match (params <> restScrutinee) pat' es' err
-    pure $ Match (Atom $ Core.Var scrutinee) $ clause :| []
+      let patType = Malgo.typeOf $ List.head heads
+      SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
+      params <- traverse (newTemporalId "p") ts
+      clause <- do
+        let (pat', es') = groupTuple pat es
+        Unpack con params <$> match (params <> restScrutinee) pat' es' err
+      pure $ Match (Atom $ Core.Var scrutinee) $ clause :| []
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
-    let cs =
-          map
-            ( \case
-                UnboxedP _ x -> dsUnboxed x
-                _ -> error "All elements of heads must be UnboxedP"
-            )
-            heads
-    cases <- traverse (\c -> Switch c <$> match restScrutinee tails es err) cs
-    -- パターンの網羅性を保証するため、
-    -- `_ -> err` を追加する
-    hole <- newTemporalId "_" (Core.typeOf scrutinee)
-    pure $ Match (Atom $ Core.Var scrutinee) $ NonEmpty.fromList (cases <> [Core.Bind hole err])
+      let cs =
+            map
+              ( \case
+                  UnboxedP _ x -> dsUnboxed x
+                  _ -> error "All elements of heads must be UnboxedP"
+              )
+              heads
+      cases <- traverse (\c -> Switch c <$> match restScrutinee tails es err) cs
+      -- パターンの網羅性を保証するため、
+      -- `_ -> err` を追加する
+      hole <- newTemporalId "_" (Core.typeOf scrutinee)
+      pure $ Match (Atom $ Core.Var scrutinee) $ NonEmpty.fromList (cases <> [Core.Bind hole err])
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
   | otherwise =
-    do
-      let ((pat', pat''), (es', es'')) = partition pat es
-      err' <- match (scrutinee : restScrutinee) pat'' es'' err
-      match (scrutinee : restScrutinee) pat' es' err'
+      do
+        let ((pat', pat''), (es', es'')) = partition pat es
+        err' <- match (scrutinee : restScrutinee) pat'' es'' err
+        match (scrutinee : restScrutinee) pat' es' err'
 match [] (PatMatrix []) (e : _) _ = e
 match _ (PatMatrix []) [] err = pure err
 match scrutinees pat es err = do

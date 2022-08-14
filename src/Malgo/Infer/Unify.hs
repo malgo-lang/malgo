@@ -5,8 +5,8 @@
 module Malgo.Infer.Unify where
 
 import Control.Lens (At (at), itraverse_, traverseOf, use, view, (?=), (^.))
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
+import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Data.Traversable (for)
 import Koriel.Id
 import Koriel.Lens

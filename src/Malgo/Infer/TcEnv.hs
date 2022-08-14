@@ -10,7 +10,7 @@ module Malgo.Infer.TcEnv
 where
 
 import Control.Lens (At (at), makeFieldsNoPrefix, view, (^.))
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Lens
