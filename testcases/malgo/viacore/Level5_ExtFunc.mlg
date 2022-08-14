@@ -1,9 +1,0 @@
-module Level5_ExtFunc = {
-  x : Int32#;
-  x = 40#;
-
-  foreign import malgo_add_int32 : Int32# -> Int32# -> Int32#;
-
-  y : Int32#;
-  y = malgo_add_int32 x 2#;
-}
