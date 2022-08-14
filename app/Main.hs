@@ -5,13 +5,11 @@ import Koriel.Lens (HasModulePaths (..))
 import Malgo.Driver qualified as Driver
 import Malgo.Lsp.Pass (LspOpt (..))
 import Malgo.Lsp.Server qualified as Lsp
-import Malgo.Parser (parseMalgo)
 import Malgo.Prelude hiding (toLLOpt)
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath ((</>))
 import System.FilePath.Lens (extension)
-import Text.Megaparsec (errorBundlePretty)
 import Text.Read (read)
 
 main :: IO ()
@@ -21,11 +19,7 @@ main = do
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
-      src <- decodeUtf8 <$> readFileBS opt._srcName
-      let parsedAst = case parseMalgo opt._srcName src of
-            Right x -> x
-            Left err -> error $ toText $ errorBundlePretty err
-      Driver.compileFromAST parsedAst opt
+      Driver.compile opt
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]

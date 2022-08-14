@@ -1,5 +1,5 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
-module Malgo.Driver (compile, compileFromAST, withDump) where
+module Malgo.Driver (compile, withDump) where
 
 import Control.Lens (over, view, (^.))
 import Koriel.Core.CodeGen (codeGen)
