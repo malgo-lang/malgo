@@ -21,8 +21,8 @@ main = do
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
-      src <- decodeUtf8 <$> readFileBS (_srcName opt)
-      let parsedAst = case parseMalgo (_srcName opt) src of
+      src <- decodeUtf8 <$> readFileBS opt._srcName
+      let parsedAst = case parseMalgo opt._srcName  src of
             Right x -> x
             Left err -> error $ toText $ errorBundlePretty err
       Driver.compileFromAST parsedAst opt
@@ -78,8 +78,8 @@ parseCommand = do
       )
   case command of
     ToLL opt -> do
-      srcName <- makeAbsolute $ _srcName opt
-      if null (_dstName opt)
+      srcName <- makeAbsolute opt._srcName
+      if null opt._dstName
         then pure $ ToLL $ opt {_srcName = srcName, _dstName = srcName & extension .~ ".ll"}
         else pure $ ToLL $ opt {_srcName = srcName}
     Lsp opt -> pure $ Lsp opt
