@@ -36,6 +36,7 @@ library
       Koriel.MonadUniq
       Koriel.Prelude
       Koriel.Pretty
+      Malgo.Build
       Malgo.Desugar.DsEnv
       Malgo.Desugar.Match
       Malgo.Desugar.Pass
@@ -81,7 +82,8 @@ library
       NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS
   build-depends:
-      aeson
+      Glob
+    , aeson
     , base
     , binary
     , binary-instances
@@ -89,6 +91,7 @@ library
     , containers
     , data-fix
     , deriving-compat
+    , dhall
     , directory
     , exceptions
     , extra
@@ -141,7 +144,8 @@ executable malgo
       NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson
+      Glob
+    , aeson
     , base
     , binary
     , binary-instances
@@ -149,6 +153,7 @@ executable malgo
     , containers
     , data-fix
     , deriving-compat
+    , dhall
     , directory
     , exceptions
     , extra
@@ -203,7 +208,8 @@ test-suite malgo-test
       NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson
+      Glob
+    , aeson
     , base
     , binary
     , binary-instances
@@ -211,6 +217,7 @@ test-suite malgo-test
     , containers
     , data-fix
     , deriving-compat
+    , dhall
     , directory
     , exceptions
     , extra

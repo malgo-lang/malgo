@@ -10,6 +10,7 @@ copyright: "2017-2021 Yuya Kono"
 build-type: Simple
 
 dependencies:
+  - Glob
   - aeson
   - base
   - binary
@@ -22,11 +23,13 @@ dependencies:
   - exceptions
   - extra
   - filepath
+  - generic-lens
   - hashable
   - lens
-  - generic-lens
   - llvm-hs
   - llvm-hs-pure
+  - lsp
+  - lsp-types
   - megaparsec
   - microlens-platform
   - mtl
@@ -42,8 +45,7 @@ dependencies:
   - uniplate
   - unordered-containers
   - witherable
-  - lsp
-  - lsp-types
+  - dhall
 
 ghc-options:
   - -Wall

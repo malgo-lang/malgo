@@ -2,6 +2,7 @@ module Main where
 
 import Control.Lens ((.~), (<>~))
 import Koriel.Lens (HasModulePaths (..))
+import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
 import Malgo.Lsp.Pass (LspOpt (..))
 import Malgo.Lsp.Server qualified as Lsp
@@ -24,9 +25,8 @@ main = do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
       void $ Lsp.server opt
-    Build opt -> do
-      putStrLn "Building..."
-      putStrLn $ "  Source: " <> opt.srcName
+    Build _ -> do
+      Build.run
 
 toLLOpt :: Parser ToLLOpt
 toLLOpt =
@@ -57,7 +57,7 @@ toLLOpt =
 lspOpt :: Parser LspOpt
 lspOpt = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")) <**> helper
 
-newtype BuildOpt = BuildOpt {srcName :: FilePath}
+data BuildOpt = BuildOpt
   deriving stock (Eq, Show)
 
 data Command
@@ -69,7 +69,7 @@ parseCommand :: IO Command
 parseCommand = do
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser lsp) <**> helper) $
+      ( info ((subparser toLL <|> subparser lsp <|> subparser build) <**> helper) $
           fullDesc
             <> header "malgo programming language"
       )
@@ -94,3 +94,10 @@ parseCommand = do
           fullDesc
             <> progDesc "Language Server for Malgo"
             <> header "Malgo Language Server"
+    build =
+      command "build" $
+        info (Build <$> buildOpt) $
+          fullDesc
+            <> progDesc "Build Malgo program"
+            <> header "malgo build"
+    buildOpt = pure BuildOpt
