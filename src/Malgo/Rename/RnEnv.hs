@@ -5,7 +5,7 @@
 module Malgo.Rename.RnEnv where
 
 import Control.Lens (ASetter', At (at), Lens', lens, makeFieldsNoPrefix, over, view, (^.))
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -31,10 +31,10 @@ instance Pretty RnState where
         )
 
 infixInfo :: Lens' RnState (HashMap RnId (Assoc, Int))
-infixInfo = lens _infixInfo (\r x -> r {_infixInfo = x})
+infixInfo = lens (._infixInfo) (\r x -> r {_infixInfo = x})
 
 dependencies :: Lens' RnState [ModuleName]
-dependencies = lens _dependencies (\r x -> r {_dependencies = x})
+dependencies = lens (._dependencies) (\r x -> r {_dependencies = x})
 
 -- | Resolved identifier
 type Resolved = Qualified RnId
@@ -45,7 +45,7 @@ data RnEnv = RnEnv
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
     _resolvedVarIdentMap :: HashMap PsId [Resolved],
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
-    _moduleName :: ModuleName,
+    moduleName :: ModuleName,
     _uniqSupply :: UniqSupply,
     _srcName :: FilePath,
     _debugMode :: Bool,
@@ -87,7 +87,7 @@ genBuiltinRnEnv modName malgoEnv = do
               ("String#", [Qualified Implicit string_t]),
               ("Ptr#", [Qualified Implicit ptr_t])
             ],
-        _moduleName = modName,
+        moduleName = modName,
         _uniqSupply = malgoEnv ^. uniqSupply,
         _srcName = malgoEnv ^. toLLOpt . srcName,
         _debugMode = malgoEnv ^. toLLOpt . debugMode,
@@ -110,8 +110,10 @@ lookupVarName pos name =
       Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint names
+          "Not in scope:"
+            <+> quotes (pPrint name)
+            $$ "Did you mean"
+            <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a type name that is already resolved
@@ -122,8 +124,10 @@ lookupTypeName pos name =
       Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos $
-          "Not in scope:" <+> quotes (pPrint name)
-            $$ "Did you mean" <+> pPrint names
+          "Not in scope:"
+            <+> quotes (pPrint name)
+            $$ "Did you mean"
+            <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a qualified variable name like Foo.x
@@ -135,6 +139,10 @@ lookupQualifiedVarName pos modName name =
         Just (Qualified _ name) -> pure name
         Nothing ->
           errorOn pos $
-            "Not in scope:" <+> quotes (pPrint name) <+> "in" <+> pPrint modName
-              $$ "Did you mean" <+> pPrint names
+            "Not in scope:"
+              <+> quotes (pPrint name)
+              <+> "in"
+              <+> pPrint modName
+              $$ "Did you mean"
+              <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)

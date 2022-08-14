@@ -9,7 +9,7 @@ import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
@@ -177,7 +177,7 @@ instance ToJSON ty => ToJSON (Scheme ty)
 
 instance FromJSON ty => FromJSON (Scheme ty)
 
-instance (Eq ty, Hashable ty) => Hashable (Scheme ty)
+instance Hashable ty => Hashable (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall [] t) = pPrint t

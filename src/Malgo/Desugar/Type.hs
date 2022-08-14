@@ -2,12 +2,12 @@ module Malgo.Desugar.Type (dsType, unfoldType) where
 
 import Control.Lens ((^.))
 import Koriel.Core.Type
-import qualified Koriel.Core.Type as C
+import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Infer.TypeRep
-import qualified Malgo.Infer.TypeRep as GT
+import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude
 
 -- Malgoの型をCoreの型に変換する

@@ -77,6 +77,8 @@ library
       StrictData
       TypeFamilies
       ViewPatterns
+      OverloadedRecordDot
+      NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS
   build-depends:
       aeson
@@ -135,6 +137,8 @@ executable malgo
       StrictData
       TypeFamilies
       ViewPatterns
+      OverloadedRecordDot
+      NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
@@ -195,6 +199,8 @@ test-suite malgo-test
       StrictData
       TypeFamilies
       ViewPatterns
+      OverloadedRecordDot
+      NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson

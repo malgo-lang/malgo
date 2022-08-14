@@ -9,18 +9,18 @@ import Data.Aeson
 import Data.Either.Extra (maybeToEither)
 import Data.Graph
 import Data.String.Conversions (convertString)
-import qualified Koriel.Core.Type as C
+import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Malgo.Desugar.DsEnv (DsEnv)
-import qualified Malgo.Infer.TypeRep as GT
+import Malgo.Desugar.DsEnv (DsEnv, HasNameEnv (nameEnv), moduleName)
+import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Lsp.Index (Index)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
-import qualified Malgo.Rename.RnEnv as RnState
+import Malgo.Rename.RnEnv qualified as RnState
 import Malgo.Syntax.Extension
-import qualified System.Directory as Directory
+import System.Directory qualified as Directory
 import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
@@ -30,8 +30,8 @@ data Interface = Interface
     _resolvedVarIdentMap :: HashMap PsId RnId, -- from DsEnv
     _resolvedTypeIdentMap :: HashMap PsId RnId, -- from DsEnv
     _coreIdentMap :: HashMap RnId (Id C.Type), -- from DsEnv
-    _infixMap :: HashMap RnId (Assoc, Int), -- from RnState
-    _dependencies :: [ModuleName], -- from RnState
+    infixMap :: HashMap RnId (Assoc, Int), -- from RnState
+    dependencies :: [ModuleName], -- from RnState
     _lspIndex :: Index -- from Lsp.Index
   }
   deriving stock (Show, Generic)
@@ -48,7 +48,7 @@ instance Pretty Interface where
 buildInterface :: RnState -> DsEnv -> Index -> Interface
 -- TODO: write abbrMap to interface
 buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) index $ do
-  let modName = dsEnv ^. moduleName
+  let modName = dsEnv.moduleName
   ifor_ (dsEnv ^. nameEnv) $ \tcId coreId ->
     when (tcId ^. idSort == External modName) do
       resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
@@ -98,7 +98,7 @@ dependencieList modName imports = do
         loadInterface modName >>= \case
           Nothing -> error $ show $ pPrint modName <> " is not found"
           Just x -> pure x
-      let to = interface ^. dependencies
+      let to = interface.dependencies
       case to of
         [] -> pure [(node, from, to)]
         _ -> do

@@ -8,7 +8,7 @@ module Malgo.Syntax.Extension where
 import Control.Lens (makeFieldsNoPrefix)
 import Data.Aeson
 import Data.Binary (Binary)
-import qualified Data.Kind as K
+import Data.Kind qualified as K
 import Data.Void
 import Koriel.Id
 import Koriel.Lens
@@ -36,7 +36,7 @@ data Visibility
 instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
 
 -- | Qualified name
-data Qualified x = Qualified {_visibility :: Visibility, _value :: x}
+data Qualified x = Qualified {visibility :: Visibility, _value :: x}
   deriving stock (Eq, Ord, Show)
 
 makeFieldsNoPrefix ''Qualified
@@ -46,10 +46,8 @@ instance Pretty x => Pretty (Qualified x) where
   pPrint (Qualified (Explicit x) v) = pPrint x <> "." <> pPrint v
 
 -- | Type-annotated field
-data Field x = Field {_typeAnn :: Maybe Text, _field :: x}
+data Field x = Field {typeAnn :: Maybe Text, field :: x}
   deriving stock (Eq, Ord, Show)
-
-makeFieldsNoPrefix ''Field
 
 instance Pretty x => Pretty (Field x) where
   pPrint (Field Nothing v) = pPrint v

@@ -2,7 +2,7 @@ module Koriel.Core.Lint (lint) where
 
 import Control.Lens (view, _1)
 import Control.Monad.Except
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -22,8 +22,8 @@ defined :: (MonadReader [Id a] f, Eq a, Pretty a) => Id a -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
-    env <- ask
-    unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
+      env <- ask
+      unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
@@ -37,12 +37,12 @@ match :: (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> 
 match x y
   | isMatch x y = pass
   | otherwise =
-    errorDoc $
-      "type mismatch:"
-        $$ pPrint x
-        $$ nest 2 (":" <> pPrint (typeOf x))
-        $$ pPrint y
-        $$ nest 2 (":" <> pPrint (typeOf y))
+      errorDoc $
+        "type mismatch:"
+          $$ pPrint x
+          $$ nest 2 (":" <> pPrint (typeOf x))
+          $$ pPrint y
+          $$ nest 2 (":" <> pPrint (typeOf y))
 
 lintExp :: (MonadReader [Id a] m, HasType a, Eq a, Pretty a) => Exp (Id a) -> m ()
 lintExp (Atom x) = lintAtom x

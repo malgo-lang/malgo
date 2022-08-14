@@ -29,13 +29,13 @@ where
 
 import Control.Lens (ASetter, over)
 import Control.Monad.Trans.Writer.CPS (WriterT, runWriterT)
-import qualified Control.Monad.Trans.Writer.CPS as W
+import Control.Monad.Trans.Writer.CPS qualified as W
 import Control.Monad.Writer.Class hiding (pass)
-import qualified Control.Monad.Writer.Class as Writer
+import Control.Monad.Writer.Class qualified as Writer
 import Data.Monoid
-import qualified Data.Text.IO as T
+import Data.Text.IO qualified as T
 import Relude hiding (All, Op, Type, id, unzip)
-import qualified System.IO
+import System.IO qualified
 
 -- | Generalization of 'Data.List.unzip' :: [(a, b)] -> ([a], [b])
 unzip :: Functor f => f (a, b) -> (f a, f b)

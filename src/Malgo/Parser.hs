@@ -2,7 +2,7 @@ module Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
 import Data.Foldable (foldl)
-import qualified Data.List.NonEmpty as NonEmpty
+import Data.List.NonEmpty qualified as NonEmpty
 import Data.Void
 import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Prelude hiding
@@ -13,7 +13,7 @@ import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Text.Megaparsec
 import Text.Megaparsec.Char
-import qualified Text.Megaparsec.Char.Lexer as L
+import Text.Megaparsec.Char.Lexer qualified as L
 
 type Parser = Parsec Void Text
 

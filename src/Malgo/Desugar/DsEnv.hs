@@ -5,15 +5,15 @@ module Malgo.Desugar.DsEnv where
 
 import Control.Lens (mapped, over, traversed, use, (^.), _2)
 import Control.Lens.TH
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.List as List
-import qualified Koriel.Core.Type as C
+import Data.HashMap.Strict qualified as HashMap
+import Data.List qualified as List
+import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
-import qualified Malgo.Infer.TypeRep as GT
+import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 import Text.Pretty.Simple (pShow)
@@ -21,7 +21,7 @@ import Text.Pretty.Simple (pShow)
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
   { -- モジュール名
-    _moduleName :: ModuleName,
+    moduleName :: ModuleName,
     -- | Malgo -> Coreの名前環境
     _nameEnv :: HashMap RnId (Id C.Type),
     -- | 型環境
@@ -41,7 +41,7 @@ makeDsEnv ::
   DsEnv
 makeDsEnv modName tcEnv =
   DsEnv
-    { _moduleName = modName,
+    { moduleName = modName,
       _nameEnv = mempty,
       _signatureMap = tcEnv ^. signatureMap,
       _typeDefMap = tcEnv ^. typeDefMap

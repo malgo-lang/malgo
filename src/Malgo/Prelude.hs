@@ -5,18 +5,19 @@
 
 module Malgo.Prelude
   ( module Koriel.Prelude,
-    runMalgoM,
-    ToLLOpt (..),
-    MalgoEnv (..),
-    HasMalgoEnv (..),
-    Range (..),
-    errorOn,
-    warningOn,
-    defaultToLLOpt,
-    positionToSourcePos,
-    sourcePosToPosition,
-    malgoRangeToLspRange,
-    malgoRangeToLocation,
+    module Malgo.Prelude,
+    -- runMalgoM,
+    -- ToLLOpt (..),
+    -- MalgoEnv (..),
+    -- HasMalgoEnv (..),
+    -- Range (..),
+    -- errorOn,
+    -- warningOn,
+    -- defaultToLLOpt,
+    -- positionToSourcePos,
+    -- sourcePosToPosition,
+    -- malgoRangeToLspRange,
+    -- malgoRangeToLocation,
   )
 where
 
@@ -32,13 +33,13 @@ import Koriel.MonadUniq (UniqSupply)
 import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
-import qualified Koriel.Pretty as P
+import Koriel.Pretty qualified as P
 import Language.LSP.Types (Position (..), filePathToUri)
-import qualified Language.LSP.Types as Lsp
+import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
-import qualified Text.Megaparsec.Pos as Megaparsec
+import Text.Megaparsec.Pos qualified as Megaparsec
 
 data ToLLOpt = ToLLOpt
   { _srcName :: FilePath,
@@ -107,7 +108,7 @@ runMalgoM :: MalgoM a -> ToLLOpt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
   let env = MalgoEnv {_toLLOpt = opt, _uniqSupply = uniqSupply}
-  runReaderT (unMalgoM m) env
+  runReaderT (m.unMalgoM) env
 
 viewLine :: (MonadReader env m, MonadIO m, HasSrcName env FilePath) => Int -> m Text
 viewLine linum = do
@@ -148,7 +149,11 @@ instance FromJSON Range
 
 instance Pretty Range where
   pPrint (Range start end) =
-    P.text (sourceName start) <> ":" <> pPrint (unPos (sourceLine start)) <> ":" <> pPrint (unPos (sourceColumn start))
+    P.text (sourceName start)
+      <> ":"
+      <> pPrint (unPos (sourceLine start))
+      <> ":"
+      <> pPrint (unPos (sourceColumn start))
       <> "-"
       <> pPrint (unPos (sourceLine end))
       <> ":"
@@ -166,7 +171,8 @@ errorOn range x = do
   let columnNum = unPos $ sourceColumn $ range ^. start
   error $
     show $
-      "error on" <+> pPrint range <> ":"
+      "error on"
+        <+> pPrint range <> ":"
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",
@@ -181,7 +187,8 @@ warningOn range x = do
   let columnNum = unPos $ sourceColumn $ range ^. start
   hPutStrLn stderr $
     render $
-      "warning on" <+> pPrint range <> ":"
+      "warning on"
+        <+> pPrint range <> ":"
         $$ vcat
           [ x,
             nest (length (show @String lineNum) + 1) "|",

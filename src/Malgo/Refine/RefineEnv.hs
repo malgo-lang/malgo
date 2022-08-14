@@ -3,7 +3,7 @@
 module Malgo.Refine.RefineEnv where
 
 import Control.Lens (makeFieldsNoPrefix, (^.))
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq

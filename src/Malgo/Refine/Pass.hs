@@ -3,18 +3,18 @@
 module Malgo.Refine.Pass where
 
 import Control.Lens (At (at), to, traverseOf, traversed, view, (.~), (^.), _1, _2, _3)
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.List.NonEmpty as NonEmpty
+import Data.HashMap.Strict qualified as HashMap
+import Data.List.NonEmpty qualified as NonEmpty
 import Koriel.Lens (HasSignatureMap (signatureMap), HasValue (value))
 import Koriel.Pretty
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
-import qualified Malgo.Infer.TypeRep as T
+import Malgo.Infer.TypeRep qualified as T
 import Malgo.Prelude
 import Malgo.Refine.RefineEnv
-import qualified Malgo.Refine.Space as Space
+import Malgo.Refine.Space qualified as Space
 import Malgo.Syntax hiding (TyArr, Type)
-import qualified Malgo.Syntax as Syn
+import Malgo.Syntax qualified as Syn
 import Malgo.Syntax.Extension
 
 type Infered t x = (x ~ Malgo 'Infer) :: Constraint
@@ -72,7 +72,8 @@ refineExp (Fn x cs) = do
   exhaustive <- fmap Space.normalize <$> zipWithM Space.subtract typeSpaces patSpaces
   isEmptys <- traverse Space.equalEmpty exhaustive
   when (any not isEmptys) $
-    errorOn (x ^. value) $ "Pattern is not exhaustive:" <+> pPrint exhaustive
+    errorOn (x ^. value) $
+      "Pattern is not exhaustive:" <+> pPrint exhaustive
   pure $ Fn x cs'
   where
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps

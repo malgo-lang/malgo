@@ -89,10 +89,10 @@ data Id a = Id
   deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
 
 instance Eq1 Id where
-  liftEq eq id1 id2 = _idName id1 == _idName id2 && _idUniq id1 == _idUniq id2 && eq (_idMeta id1) (_idMeta id2) && _idSort id1 == _idSort id2
+  liftEq eq id1 id2 = id1._idName == id2._idName && id1._idUniq == id2._idUniq && eq (id1._idMeta) (id2._idMeta) && id1._idSort == id2._idSort
 
 instance Ord1 Id where
-  liftCompare cmp id1 id2 = compare (_idName id1) (_idName id2) <> compare (_idUniq id1) (_idUniq id2) <> cmp (_idMeta id1) (_idMeta id2) <> compare (_idSort id1) (_idSort id2)
+  liftCompare cmp id1 id2 = compare (id1._idName) (id2._idName) <> compare (id1._idUniq) (id2._idUniq) <> cmp (id1._idMeta) (id2._idMeta) <> compare (id1._idSort) (id2._idSort)
 
 instance Show1 Id where
   liftShowsPrec showPrec _ d Id {..} = showString "Id " . showsPrec d _idName . showString " " . showsPrec d _idUniq . showString " " . showPrec d _idMeta . showString " " . showsPrec d _idSort
@@ -135,16 +135,16 @@ instance Pretty a => Pretty (Id a) where
       pprIdName = text . toString . idToText
 
 idName :: Lens' (Id a) Text
-idName = lens _idName (\i x -> i {_idName = x})
+idName = lens (._idName) (\i x -> i {_idName = x})
 
 idUniq :: Lens' (Id a) Int
-idUniq = lens _idUniq (\i x -> i {_idUniq = x})
+idUniq = lens (._idUniq) (\i x -> i {_idUniq = x})
 
 idMeta :: Lens (Id a) (Id b) a b
-idMeta = lens _idMeta (\i x -> i {_idMeta = x})
+idMeta = lens (._idMeta) (\i x -> i {_idMeta = x})
 
 idSort :: Lens' (Id a) IdSort
-idSort = lens _idSort (\i x -> i {_idSort = x})
+idSort = lens (._idSort) (\i x -> i {_idSort = x})
 
 newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> IdSort -> f (Id a)
 newNoNameId m s = Id noName <$> getUniq <*> pure m <*> pure s

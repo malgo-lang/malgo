@@ -9,7 +9,7 @@ module Koriel.Core.Syntax where
 
 import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
 import Data.Data (Data)
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
@@ -85,10 +85,10 @@ instance Pretty a => Pretty (LocalDef a) where
   pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
 
 localDefVar :: Lens' (LocalDef a) a
-localDefVar = lens _localDefVar (\l v -> l {_localDefVar = v})
+localDefVar = lens (._localDefVar) (\l v -> l {_localDefVar = v})
 
 localDefObj :: Lens' (LocalDef a) (Obj a)
-localDefObj = lens _localDefObj (\l o -> l {_localDefObj = o})
+localDefObj = lens (._localDefObj) (\l o -> l {_localDefObj = o})
 
 -- | expressions
 data Exp a
@@ -266,16 +266,16 @@ data Program a = Program
   deriving stock (Eq, Show, Functor, Generic)
 
 moduleName :: Lens' (Program a) ModuleName
-moduleName = lens _moduleName (\p x -> p {_moduleName = x})
+moduleName = lens (._moduleName) (\p x -> p {_moduleName = x})
 
 topVars :: Lens' (Program a) [(a, Exp a)]
-topVars = lens _topVars (\p x -> p {_topVars = x})
+topVars = lens (._topVars) (\p x -> p {_topVars = x})
 
 topFuncs :: Lens' (Program a) [(a, ([a], Exp a))]
-topFuncs = lens _topFuncs (\p x -> p {_topFuncs = x})
+topFuncs = lens (._topFuncs) (\p x -> p {_topFuncs = x})
 
 extFuncs :: Lens' (Program a) [(Text, Type)]
-extFuncs = lens _extFuncs (\p x -> p {_extFuncs = x})
+extFuncs = lens (._extFuncs) (\p x -> p {_extFuncs = x})
 
 instance Pretty a => Pretty (Program a) where
   pPrint Program {..} =
@@ -316,7 +316,7 @@ mainFunc depList e = do
   mainFuncBody <- runDef do
     _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
     traverse_
-      do \modName -> bind $ RawCall ("koriel_load_" <> raw modName) ([] :-> VoidT) []
+      do \modName -> bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
       depList
     pure e
   pure (mainFuncId, ([], mainFuncBody))
@@ -325,7 +325,7 @@ newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id T
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
 runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
-runDef m = uncurry (flip appEndo) <$> runWriterT (unDefBuilderT m)
+runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
 
 let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
@@ -344,10 +344,10 @@ cast :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Type -> 
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
-    v <- bind e
-    x <- newTemporalId "cast" ty
-    DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
-    pure (Var x)
+      v <- bind e
+      x <- newTemporalId "cast" ty
+      DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
+      pure (Var x)
 
 -- `destruct` is convenient when treating types that have only one constructor.
 -- For example, if we can write `let Foo x = v;` as the syntax sugar of `let x = v |> { Foo x -> x | _ -> error }`,

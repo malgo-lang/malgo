@@ -6,7 +6,7 @@ module Malgo.Syntax where
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
-import qualified Data.HashSet as HashSet
+import Data.HashSet qualified as HashSet
 import Koriel.Id
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasRange (range))
