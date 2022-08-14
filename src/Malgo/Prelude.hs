@@ -32,13 +32,13 @@ import Koriel.MonadUniq (UniqSupply)
 import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
-import qualified Koriel.Pretty as P
+import Koriel.Pretty qualified as P
 import Language.LSP.Types (Position (..), filePathToUri)
-import qualified Language.LSP.Types as Lsp
+import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
-import qualified Text.Megaparsec.Pos as Megaparsec
+import Text.Megaparsec.Pos qualified as Megaparsec
 
 data ToLLOpt = ToLLOpt
   { _srcName :: FilePath,
@@ -107,7 +107,7 @@ runMalgoM :: MalgoM a -> ToLLOpt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
   let env = MalgoEnv {_toLLOpt = opt, _uniqSupply = uniqSupply}
-  runReaderT (unMalgoM m) env
+  runReaderT (m.unMalgoM) env
 
 viewLine :: (MonadReader env m, MonadIO m, HasSrcName env FilePath) => Int -> m Text
 viewLine linum = do

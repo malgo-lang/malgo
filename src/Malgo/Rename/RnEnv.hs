@@ -5,7 +5,7 @@
 module Malgo.Rename.RnEnv where
 
 import Control.Lens (ASetter', At (at), Lens', lens, makeFieldsNoPrefix, over, view, (^.))
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -31,10 +31,10 @@ instance Pretty RnState where
         )
 
 infixInfo :: Lens' RnState (HashMap RnId (Assoc, Int))
-infixInfo = lens _infixInfo (\r x -> r {_infixInfo = x})
+infixInfo = lens (._infixInfo) (\r x -> r {_infixInfo = x})
 
 dependencies :: Lens' RnState [ModuleName]
-dependencies = lens _dependencies (\r x -> r {_dependencies = x})
+dependencies = lens (._dependencies) (\r x -> r {_dependencies = x})
 
 -- | Resolved identifier
 type Resolved = Qualified RnId

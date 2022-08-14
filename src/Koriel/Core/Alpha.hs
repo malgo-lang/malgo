@@ -6,7 +6,7 @@ module Koriel.Core.Alpha
 where
 
 import Control.Lens (Lens', lens, over, traverseOf, view)
-import qualified Data.HashMap.Strict as HashMap
+import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -17,10 +17,10 @@ import Koriel.Prelude
 data AlphaEnv = AlphaEnv {_alphaUniqSupply :: UniqSupply, _alphaMap :: HashMap (Id Type) (Atom (Id Type))}
 
 alphaUniqSupply :: Lens' AlphaEnv UniqSupply
-alphaUniqSupply = lens _alphaUniqSupply (\a x -> a {_alphaUniqSupply = x})
+alphaUniqSupply = lens (._alphaUniqSupply) (\a x -> a {_alphaUniqSupply = x})
 
 alphaMap :: Lens' AlphaEnv (HashMap (Id Type) (Atom (Id Type)))
-alphaMap = lens _alphaMap (\a x -> a {_alphaMap = x})
+alphaMap = lens (._alphaMap) (\a x -> a {_alphaMap = x})
 
 instance HasUniqSupply AlphaEnv UniqSupply where
   uniqSupply = alphaUniqSupply

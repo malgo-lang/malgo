@@ -5,9 +5,9 @@ where
 
 import Control.Lens (At (at), Lens', lens, over, traverseOf, traversed, use, view, (?=), (?~), _2)
 import Control.Monad.Except
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
-import qualified Data.List as List
+import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
+import Data.List qualified as List
 import Koriel.Core.Alpha
 import Koriel.Core.Flat
 import Koriel.Core.Syntax
@@ -21,10 +21,10 @@ import Relude.Extra.Map (StaticMap (member))
 data OptimizeEnv = OptimizeEnv {_optimizeUniqSupply :: UniqSupply, _inlineLevel :: Int}
 
 optimizeUniqSupply :: Lens' OptimizeEnv UniqSupply
-optimizeUniqSupply = lens _optimizeUniqSupply (\o x -> o {_optimizeUniqSupply = x})
+optimizeUniqSupply = lens (._optimizeUniqSupply) (\o x -> o {_optimizeUniqSupply = x})
 
 inlineLevel :: Lens' OptimizeEnv Int
-inlineLevel = lens _inlineLevel (\o x -> o {_inlineLevel = x})
+inlineLevel = lens (._inlineLevel) (\o x -> o {_inlineLevel = x})
 
 instance HasUniqSupply OptimizeEnv UniqSupply where
   uniqSupply = optimizeUniqSupply
@@ -83,7 +83,7 @@ newtype CallInlineEnv = CallInlineEnv
   }
 
 inlineableMap :: Lens' CallInlineEnv (HashMap (Id Type) ([Id Type], Exp (Id Type)))
-inlineableMap = lens _inlinableMap $ \e x -> e {_inlinableMap = x}
+inlineableMap = lens (._inlinableMap) $ \e x -> e {_inlinableMap = x}
 
 optCallInline ::
   (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) =>
@@ -175,10 +175,10 @@ removeUnusedLet (Let ds e) = do
       | idIsExternal v = True
       | v `member` fvs = True
       | otherwise =
-        -- fvsの要素fvについて、gamma[fv]をfvsに加える
-        -- fvsに変化がなければ、vはどこからも参照されていない
-        let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
-         in fvs /= fvs' && reachable limit gamma v fvs'
+          -- fvsの要素fvについて、gamma[fv]をfvsに加える
+          -- fvsに変化がなければ、vはどこからも参照されていない
+          let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
+           in fvs /= fvs' && reachable limit gamma v fvs'
 removeUnusedLet (Match v cs) =
   Match <$> removeUnusedLet v <*> traverseOf (traversed . appCase) removeUnusedLet cs
 removeUnusedLet e = pure e

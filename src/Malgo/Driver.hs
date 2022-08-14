@@ -11,15 +11,15 @@ import Koriel.Core.Syntax
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
-import qualified Malgo.Infer.Pass as Infer
+import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
-import qualified Malgo.Lsp.Pass as Lsp
+import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
-import qualified Malgo.Rename.RnEnv as RnEnv
-import qualified Malgo.Syntax as Syntax
+import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import Text.Megaparsec
   ( errorBundlePretty,
@@ -49,20 +49,20 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
   when (view dumpParsed opt) do
     hPutStrLn stderr "=== PARSED ==="
     hPrint stderr $ pPrint parsedAst
-  rnEnv <- RnEnv.genBuiltinRnEnv (Syntax._moduleName parsedAst) =<< ask
+  rnEnv <- RnEnv.genBuiltinRnEnv (parsedAst._moduleName) =<< ask
   (renamedAst, rnState) <- withDump (view dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
   (typedAst, tcEnv) <- withDump (view dumpTyped opt) "=== TYPE CHECK ===" $ Infer.infer rnEnv renamedAst
   refinedAst <- withDump (view dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
   index <- withDump (view debugMode opt) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
 
-  depList <- dependencieList (Syntax._moduleName typedAst) (rnState ^. RnEnv.dependencies)
+  depList <- dependencieList (typedAst._moduleName) (rnState ^. RnEnv.dependencies)
   (dsEnv, core) <- withDump (view dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv depList refinedAst
 
   let inf = buildInterface rnState dsEnv index
   storeInterface inf
   when (view debugMode opt) $ do
-    inf <- loadInterface (Syntax._moduleName typedAst)
+    inf <- loadInterface (typedAst._moduleName)
     hPutStrLn stderr "=== INTERFACE ==="
     hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
@@ -82,7 +82,7 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     liftIO $ do
       hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
       hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-  codeGen (view srcName opt) (view dstName opt) uniqSupply (Syntax._moduleName typedAst) coreLLOpt
+  codeGen (view srcName opt) (view dstName opt) uniqSupply (typedAst._moduleName) coreLLOpt
 
 -- | Read the source file and parse it, then compile.
 compile :: ToLLOpt -> IO ()

@@ -4,8 +4,8 @@ module Koriel.Core.LambdaLift
 where
 
 import Control.Lens (At (at), Lens', lens, traverseOf, traversed, use, (<>=), (?=))
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
+import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Koriel.Core.Flat
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -21,10 +21,10 @@ data LambdaLiftState = LambdaLiftState
   }
 
 funcs :: Lens' LambdaLiftState (HashMap (Id Type) ([Id Type], Exp (Id Type)))
-funcs = lens _funcs (\l x -> l {_funcs = x})
+funcs = lens (._funcs) (\l x -> l {_funcs = x})
 
 knowns :: Lens' LambdaLiftState (HashSet (Id Type))
-knowns = lens _knowns (\l x -> l {_knowns = x})
+knowns = lens (._knowns) (\l x -> l {_knowns = x})
 
 lambdalift :: MonadIO m => UniqSupply -> Program (Id Type) -> m (Program (Id Type))
 lambdalift us Program {..} =

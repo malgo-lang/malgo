@@ -11,15 +11,15 @@ where
 
 import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, use, view, (<?=), (?=), (?~), (^.))
 import Control.Monad.Fix (MonadFix)
-import qualified Control.Monad.Trans.State.Lazy as Lazy
-import qualified Data.ByteString.Lazy as BL
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.List as List
+import Control.Monad.Trans.State.Lazy qualified as Lazy
+import Data.ByteString.Lazy qualified as BL
+import Data.HashMap.Strict qualified as HashMap
+import Data.List qualified as List
 import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
 import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
-import qualified Koriel.Core.Op as Op
+import Koriel.Core.Op qualified as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type as C
 import Koriel.Id
@@ -34,17 +34,17 @@ import LLVM.AST
     defaultModule,
     mkName,
   )
-import qualified LLVM.AST.Constant as C
-import qualified LLVM.AST.FloatingPointPredicate as FP
+import LLVM.AST.Constant qualified as C
+import LLVM.AST.FloatingPointPredicate qualified as FP
 import LLVM.AST.Global
-import qualified LLVM.AST.IntegerPredicate as IP
+import LLVM.AST.IntegerPredicate qualified as IP
 import LLVM.AST.Linkage (Linkage (External, Internal))
 import LLVM.AST.Operand (Operand (..))
 import LLVM.AST.Type hiding
   ( double,
     void,
   )
-import qualified LLVM.AST.Type as LT
+import LLVM.AST.Type qualified as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
@@ -64,16 +64,16 @@ data CodeGenEnv = CodeGenEnv
   }
 
 codeGenUniqSupply :: Lens' CodeGenEnv UniqSupply
-codeGenUniqSupply = lens _codeGenUniqSupply (\c x -> c {_codeGenUniqSupply = x})
+codeGenUniqSupply = lens (._codeGenUniqSupply) (\c x -> c {_codeGenUniqSupply = x})
 
 valueMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
-valueMap = lens _valueMap (\c x -> c {_valueMap = x})
+valueMap = lens (._valueMap) (\c x -> c {_valueMap = x})
 
 globalValueMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
-globalValueMap = lens _globalValueMap (\c x -> c {_globalValueMap = x})
+globalValueMap = lens (._globalValueMap) (\c x -> c {_globalValueMap = x})
 
 funcMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
-funcMap = lens _funcMap (\c x -> c {_funcMap = x})
+funcMap = lens (._funcMap) (\c x -> c {_funcMap = x})
 
 instance HasUniqSupply CodeGenEnv UniqSupply where
   uniqSupply = codeGenUniqSupply
@@ -261,9 +261,9 @@ genFunc ::
   m Operand
 genFunc name params body
   | idIsExternal name || idIsNative name =
-    function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
+      function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   | otherwise =
-    internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
+      internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   where
     funcName = toName name
     llvmParams =
@@ -399,23 +399,23 @@ genExp (Match e (Bind x body :| _)) k = genExp e $ \eOpr -> do
 genExp (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = genExp e $ \eOpr -> mdo
-    -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
-    -- TODO[genExp does not return correctly-typed value]
-    -- genExpが正しい型の値を継続に渡すように変更する
-    eOpr' <- bitcast eOpr (convType $ C.typeOf e)
-    br switchBlock -- We need to end the current block before executing genCase
-    -- 各ケースのコードとラベルを生成する
-    -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-    (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (constructorList e) k) cs
-    -- defaultsの先頭を取り出し、switchのデフォルトケースとする
-    -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-    defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
-    switchBlock <- block
-    tagOpr <- case C.typeOf e of
-      SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
-      RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-      _ -> pure eOpr'
-    switch tagOpr defaultLabel labels
+      -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
+      -- TODO[genExp does not return correctly-typed value]
+      -- genExpが正しい型の値を継続に渡すように変更する
+      eOpr' <- bitcast eOpr (convType $ C.typeOf e)
+      br switchBlock -- We need to end the current block before executing genCase
+      -- 各ケースのコードとラベルを生成する
+      -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+      (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (constructorList e) k) cs
+      -- defaultsの先頭を取り出し、switchのデフォルトケースとする
+      -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
+      defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
+      switchBlock <- block
+      tagOpr <- case C.typeOf e of
+        SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
+        RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+        _ -> pure eOpr'
+      switch tagOpr defaultLabel labels
 genExp (Cast ty x) k = do
   xOpr <- genAtom x
   k =<< bitcast xOpr (convType ty)
