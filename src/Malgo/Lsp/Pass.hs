@@ -8,20 +8,21 @@ import Control.Lens (At (at), modifying, use, view, (.~), (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as Text
-import Koriel.Id (Id (..), IdSort (Temporal), name)
+import Koriel.Id (Id (..), IdSort (Temporal), ModuleName, name)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
-import Malgo.Interface (HasLspIndex (lspIndex), loadInterface)
+import Malgo.Interface (HasLspIndex (lspIndex), Interface, loadInterface)
 import Malgo.Lsp.Index
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
 
-newtype LspOpt = LspOpt
-  { _modulePaths :: [FilePath]
+data LspOpt = LspOpt
+  { _modulePaths :: [FilePath],
+    _interfaces :: IORef (HashMap ModuleName Interface)
   }
 
 makeFieldsNoPrefix ''LspOpt
@@ -42,7 +43,7 @@ newIndexEnv tcEnv =
       _buildingIndex = mempty
     }
 
-index :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath]) => TcEnv -> Module (Malgo 'Refine) -> m Index
+index :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => TcEnv -> Module (Malgo 'Refine) -> m Index
 index tcEnv mod = removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv)
 
 -- | Remove infos that are only used internally.
@@ -53,17 +54,17 @@ removeInternalInfos (Index refs defs syms) = Index (HashMap.filterWithKey (\k _ 
     isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
     isInternal _ = False
 
-indexModule :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => Module (Malgo 'Refine) -> m ()
+indexModule :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => Module (Malgo 'Refine) -> m ()
 indexModule Module {..} = indexBindGroup _moduleDefinition
 
-indexBindGroup :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => BindGroup (Malgo 'Refine) -> m ()
+indexBindGroup :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do
   traverse_ indexImport _imports
   traverse_ indexDataDef _dataDefs
   traverse_ indexScSig _scSigs
   traverse_ (traverse_ indexScDef) _scDefs
 
-indexImport :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => Import (Malgo 'Refine) -> m ()
+indexImport :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => Import (Malgo 'Refine) -> m ()
 indexImport (_, moduleName, _) = do
   -- include the index file of the imported module
   minterface <- loadInterface moduleName

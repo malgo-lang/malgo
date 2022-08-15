@@ -16,7 +16,6 @@ import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import Text.Pretty.Simple (pShow)
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
@@ -28,10 +27,6 @@ data DsEnv = DsEnv
     _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
     _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type)
   }
-  deriving stock (Show)
-
-instance Pretty DsEnv where
-  pPrint dsEnv = Koriel.Pretty.text $ toString $ pShow dsEnv
 
 makeFieldsNoPrefix ''DsEnv
 

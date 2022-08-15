@@ -7,8 +7,8 @@ import Codec.Serialise
 import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
 import Control.Lens.TH
 import Data.Aeson
-import Data.Either.Extra (maybeToEither)
 import Data.Graph
+import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (convertString)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
@@ -71,26 +71,38 @@ storeInterface interface = do
 
   liftIO $ writeFileSerialise (dstName -<.> "mlgi") interface
 
-loadInterface :: (MonadReader s m, HasModulePaths s [FilePath], MonadIO m) => ModuleName -> m (Maybe Interface)
+loadInterface ::
+  ( MonadReader s m,
+    MonadIO m,
+    HasInterfaces s (IORef (HashMap ModuleName Interface)),
+    HasModulePaths s [FilePath]
+  ) =>
+  ModuleName ->
+  m (Maybe Interface)
 loadInterface (ModuleName modName) = do
-  modPaths <- view modulePaths
-  message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
-  case message of
-    Right x -> pure $ Just x
-    Left err -> do
-      hPrint stderr err
-      pure Nothing
+  interfacesRef <- view interfaces
+  interfaces <- readIORef interfacesRef
+  case HashMap.lookup (ModuleName modName) interfaces of
+    Just interface -> return $ Just interface
+    Nothing -> do
+      modPaths <- view modulePaths
+      message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
+      case message of
+        Right x -> do
+          writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
+          pure $ Just x
+        Left err -> do
+          hPrint stderr err
+          pure Nothing
   where
-    -- findAndReadFile :: MonadIO m => [FilePath] -> FilePath -> m (Either (ByteOffset, Doc) Interface)
     findAndReadFile [] modFile = pure $ Left ("interface" <+> pPrint modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
-        then -- liftIO $ maybeToEither "decode error" <$> decodeFileStrict (modPath </> modFile)
-          Right <$> liftIO (readFileDeserialise (modPath </> modFile))
+        then Right <$> liftIO (readFileDeserialise (modPath </> modFile))
         else findAndReadFile rest modFile
 
-dependencieList :: (HasModulePaths s [FilePath], MonadIO m, MonadReader s m) => ModuleName -> [ModuleName] -> m [ModuleName]
+dependencieList :: (HasModulePaths s [FilePath], HasInterfaces s (IORef (HashMap ModuleName Interface)), MonadIO m, MonadReader s m) => ModuleName -> [ModuleName] -> m [ModuleName]
 dependencieList modName imports = do
   depList <- ordNub . ((modName, modName, imports) :) <$> foldMapM genDepList imports
   let (depGraph, nodeFromVertex, _) = graphFromEdges depList

@@ -10,9 +10,9 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
+import {-# SOURCE #-} Malgo.Interface
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-import Text.Pretty.Simple (pShow)
 
 data RnState = RnState
   { _infixInfo :: HashMap RnId (Assoc, Int),
@@ -49,12 +49,9 @@ data RnEnv = RnEnv
     _uniqSupply :: UniqSupply,
     _srcName :: FilePath,
     _debugMode :: Bool,
-    _modulePaths :: [FilePath]
+    _modulePaths :: [FilePath],
+    _interfaces :: IORef (HashMap ModuleName Interface)
   }
-  deriving stock (Show, Eq)
-
-instance Pretty RnEnv where
-  pPrint = pPrint . toString . pShow
 
 makeFieldsNoPrefix ''RnEnv
 
@@ -91,7 +88,8 @@ genBuiltinRnEnv modName malgoEnv = do
         _uniqSupply = malgoEnv ^. uniqSupply,
         _srcName = malgoEnv ^. toLLOpt . srcName,
         _debugMode = malgoEnv ^. toLLOpt . debugMode,
-        _modulePaths = malgoEnv ^. toLLOpt . modulePaths
+        _modulePaths = malgoEnv ^. toLLOpt . modulePaths,
+        _interfaces = malgoEnv ^. interfaces
       }
 
 -- | Resolving a new (local) name

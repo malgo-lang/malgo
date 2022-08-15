@@ -14,12 +14,11 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Lens
-import Koriel.Pretty
 import Malgo.Infer.TypeRep
+import {-# SOURCE #-} Malgo.Interface (Interface)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (Resolved, RnEnv)
 import Malgo.Syntax.Extension
-import Text.Pretty.Simple (pShow)
 
 type RecordTypeName = Text
 
@@ -27,14 +26,11 @@ data TcEnv = TcEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
     _typeSynonymMap :: HashMap (Id Type) ([Id Type], Type),
-    _resolvedTypeIdentMap :: HashMap PsId [Resolved]
+    _resolvedTypeIdentMap :: HashMap PsId [Resolved],
+    _interfaces :: IORef (HashMap ModuleName Interface)
   }
-  deriving stock (Show)
 
 makeFieldsNoPrefix ''TcEnv
-
-instance Pretty TcEnv where
-  pPrint env = Koriel.Pretty.text $ toString $ pShow env
 
 genTcEnv :: Applicative f => RnEnv -> f TcEnv
 genTcEnv rnEnv = do
@@ -59,7 +55,8 @@ genTcEnv rnEnv = do
               (ptr_t, TypeDef TyPtr [] [])
             ],
         _typeSynonymMap = mempty,
-        _resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap
+        _resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap,
+        _interfaces = rnEnv ^. interfaces
       }
 
 findBuiltinType :: (HasResolvedTypeIdentMap s (HashMap PsId [Resolved])) => PsId -> s -> Maybe RnId

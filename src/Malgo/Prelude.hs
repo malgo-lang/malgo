@@ -29,6 +29,7 @@ import Control.Monad.Fix (MonadFix)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.List ((!!))
+import Koriel.Id (ModuleName)
 import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply)
 import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
@@ -38,6 +39,7 @@ import Koriel.Pretty qualified as P
 import Language.LSP.Types (Position (..), filePathToUri)
 import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
+import {-# SOURCE #-} Malgo.Interface (Interface)
 import System.FilePath ((-<.>))
 import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
 import Text.Megaparsec.Pos qualified as Megaparsec
@@ -81,9 +83,9 @@ defaultToLLOpt src =
 
 data MalgoEnv = MalgoEnv
   { _uniqSupply :: UniqSupply,
-    _toLLOpt :: ToLLOpt
+    _toLLOpt :: ToLLOpt,
+    _interfaces :: IORef (HashMap ModuleName Interface)
   }
-  deriving stock (Show, Eq)
 
 makeFieldsNoPrefix ''MalgoEnv
 
@@ -108,7 +110,8 @@ newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
 runMalgoM :: MalgoM a -> ToLLOpt -> IO a
 runMalgoM m opt = do
   uniqSupply <- UniqSupply <$> newIORef 0
-  let env = MalgoEnv {_toLLOpt = opt, _uniqSupply = uniqSupply}
+  interfaces <- newIORef mempty
+  let env = MalgoEnv {_toLLOpt = opt, _uniqSupply = uniqSupply, _interfaces = interfaces}
   runReaderT (m.unMalgoM) env
 
 viewLine :: (MonadReader env m, MonadIO m, HasSrcName env FilePath) => Int -> m Text

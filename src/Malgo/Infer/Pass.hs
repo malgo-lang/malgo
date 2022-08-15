@@ -14,7 +14,7 @@ import Koriel.Pretty
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
-import Malgo.Interface (loadInterface)
+import Malgo.Interface (Interface, loadInterface)
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
@@ -66,7 +66,8 @@ tcBindGroup ::
     MonadReader env m,
     HasUniqSupply env UniqSupply,
     HasModulePaths env [FilePath],
-    HasSrcName env FilePath
+    HasSrcName env FilePath,
+    HasInterfaces env (IORef (HashMap ModuleName Interface))
   ) =>
   BindGroup (Malgo 'Rename) ->
   m (BindGroup (Malgo 'Infer))
@@ -84,7 +85,8 @@ tcImports ::
     MonadIO m,
     MonadReader env m,
     HasModulePaths env [FilePath],
-    HasSrcName env FilePath
+    HasSrcName env FilePath,
+    HasInterfaces env (IORef (HashMap ModuleName Interface))
   ) =>
   [Import (Malgo 'Rename)] ->
   m [Import (Malgo 'Infer)]

@@ -51,13 +51,15 @@ compileFromAST parsedAst opt = runMalgoM ?? opt $ do
     hPrint stderr $ pPrint parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv (parsedAst._moduleName) =<< ask
   (renamedAst, rnState) <- withDump (view dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
-  (typedAst, tcEnv) <- withDump (view dumpTyped opt) "=== TYPE CHECK ===" $ Infer.infer rnEnv renamedAst
+  (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
+  _ <- withDump (view dumpTyped opt) "=== TYPE CHECK ===" $ pure typedAst
   refinedAst <- withDump (view dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
 
   index <- withDump (view debugMode opt) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
 
   depList <- dependencieList (typedAst._moduleName) (rnState ^. RnEnv.dependencies)
-  (dsEnv, core) <- withDump (view dumpDesugar opt) "=== DESUGAR ===" $ desugar tcEnv depList refinedAst
+  (dsEnv, core) <- desugar tcEnv depList refinedAst
+  _ <- withDump (view dumpDesugar opt) "=== DESUGAR ===" $ pure core
 
   let inf = buildInterface rnState dsEnv index
   storeInterface inf
