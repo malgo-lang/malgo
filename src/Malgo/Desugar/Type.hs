@@ -1,6 +1,5 @@
 module Malgo.Desugar.Type (dsType, unfoldType) where
 
-import Control.Lens ((^.))
 import Koriel.Core.Type
 import Koriel.Core.Type qualified as C
 import Koriel.Id
@@ -15,7 +14,7 @@ dsType :: Monad m => GT.Type -> m C.Type
 dsType t@GT.TyApp {} = dsTyApp [] t
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
-  case con ^. idMeta of
+  case con.meta of
     GT.TYPE -> pure AnyT
     kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T

@@ -4,7 +4,7 @@
 
 module Malgo.Infer.TypeRep where
 
-import Control.Lens (At (at), Lens', Traversal', coerced, makeLenses, makePrisms, mapped, over, traverseOf, view, (^.), _1, _2)
+import Control.Lens (At (at), Lens', Traversal', coerced, makeLenses, makePrisms, mapped, over, (^.), _1, _2)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
@@ -120,10 +120,11 @@ instance Pretty TypeVar where
 
 instance HasType TypeVar where
   typeOf = TyMeta
-  types f (TypeVar v) = TypeVar <$> traverseOf idMeta f v
+  types f (TypeVar v) = do
+    f (v.meta) <&> \k -> TypeVar v {meta = k}
 
 instance HasKind TypeVar where
-  kindOf = view (typeVar . idMeta)
+  kindOf = (._typeVar.meta)
 
 typeVar :: Lens' TypeVar (Id Type)
 typeVar = coerced
@@ -150,8 +151,8 @@ instance HasType Type where
 instance HasKind Type where
   kindOf (TyApp (kindOf -> TyArr _ k) _) = k
   kindOf TyApp {} = error "invalid kind"
-  kindOf (TyVar v) = v ^. idMeta
-  kindOf (TyCon c) = c ^. idMeta
+  kindOf (TyVar v) = v.meta
+  kindOf (TyCon c) = c.meta
   kindOf (TyPrim p) = kindOf p
   kindOf (TyArr _ t2) = kindOf t2
   kindOf (TyTuple n) = buildTyArr (replicate n TYPE) TYPE
@@ -256,7 +257,7 @@ applySubst :: HashMap (Id Type) Type -> Type -> Type
 applySubst subst = \case
   TyApp ty ty' -> TyApp (applySubst subst ty) (applySubst subst ty')
   TyVar id -> fromMaybe (TyVar id) $ subst ^. at id -- TyVar (over idMeta (applySubst subst) id)
-  TyCon id -> TyCon (over idMeta (applySubst subst) id)
+  TyCon id -> TyCon $ id {meta = applySubst subst (id.meta)}
   TyPrim pt -> TyPrim pt
   TyArr ty ty' -> TyArr (applySubst subst ty) (applySubst subst ty')
   TyTuple n -> TyTuple n

@@ -10,7 +10,6 @@ import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.HashMap.Strict qualified as HashMap
-import Koriel.Lens
 import Koriel.Pretty
 import Language.LSP.Types (DocumentSymbol (..))
 import Malgo.Infer.TypeRep (Scheme, Type)

@@ -59,7 +59,7 @@ desugar tcEnv depList (Module modName ds) = do
     Nothing -> pure (dsEnv, Program modName varDefs funDefs extDefs)
   where
     -- エントリーポイントとなるmain関数を検索する
-    searchMain ((griffId, coreId) : _) | griffId ^. idName == "main" && griffId ^. idSort == External modName = Just $ CallDirect coreId
+    searchMain ((griffId, coreId) : _) | griffId.name == "main" && griffId.sort == External modName = Just $ CallDirect coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
 
@@ -208,7 +208,7 @@ dsExp (G.Var (Typed typ _) name) = do
             _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
-    isConstructor Id {_idName} | T.length _idName > 0 = Char.isUpper (T.head _idName)
+    isConstructor Id {name} | T.length name > 0 = Char.isUpper (T.head name)
     isConstructor _ = False
 dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
 dsExp (G.Apply (Typed typ _) fun arg) = runDef $ do
@@ -238,8 +238,8 @@ dsExp (G.Fn (Typed typ _) cs@(Clause _ ps e :| _)) = do
   v <- newTemporalId "fun" =<< dsType typ
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
   where
-    patToName (G.VarP _ v) = v ^. idName
-    patToName (G.ConP _ c _) = T.toLower $ c ^. idName
+    patToName (G.VarP _ v) = v.name
+    patToName (G.ConP _ c _) = T.toLower $ c.name
     patToName (G.TupleP _ _) = "tuple"
     patToName (G.RecordP _ _) = "record"
     patToName (G.ListP _ _) = "list"

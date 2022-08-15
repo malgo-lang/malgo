@@ -1,6 +1,6 @@
 module Koriel.Core.Type where
 
-import Control.Lens (Prism', prism, (^.))
+import Control.Lens (Prism', prism)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
@@ -93,4 +93,4 @@ instance HasType Type where
   typeOf x = x
 
 instance HasType a => HasType (Id a) where
-  typeOf x = typeOf $ x ^. idMeta
+  typeOf x = typeOf $ x.meta

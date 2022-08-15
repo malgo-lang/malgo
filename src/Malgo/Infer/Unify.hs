@@ -4,7 +4,7 @@
 -- | Unification
 module Malgo.Infer.Unify where
 
-import Control.Lens (At (at), itraverse_, traverseOf, use, view, (?=), (^.))
+import Control.Lens (At (at), itraverse_, use, view, (?=))
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.Traversable (for)
@@ -89,15 +89,19 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    solve [(x, v ^. typeVar . idMeta :~ kindOf t)]
+    solve [(x, v._typeVar.meta :~ kindOf t)]
     TypeUnifyT $ at v ?= t
     where
       occursCheck :: TypeVar -> Type -> Bool
       occursCheck v t = HashSet.member v (freevars t)
 
   zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
-  zonk (TyVar v) = TyVar <$> traverseOf idMeta zonk v
-  zonk (TyCon c) = TyCon <$> traverseOf idMeta zonk c
+  zonk (TyVar v) = do
+    k <- zonk $ v.meta
+    pure $ TyVar v {meta = k}
+  zonk (TyCon c) = do
+    k <- zonk $ c.meta
+    pure $ TyCon c {meta = k}
   zonk t@TyPrim {} = pure t
   zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2
   zonk t@TyTuple {} = pure t
@@ -149,9 +153,9 @@ generalizeMutRecs x bound terms = do
 
 toBound :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Range -> TypeVar -> Text -> m (Id Type)
 toBound x tv hint = do
-  tvType <- defaultToBoxed x $ tv ^. typeVar . idMeta
+  tvType <- defaultToBoxed x $ tv._typeVar.meta
   let tvKind = kindOf tvType
-  let name = case tv ^. typeVar . idName of
+  let name = case tv._typeVar.name of
         x
           | x == noName -> hint
           | otherwise -> x
@@ -160,8 +164,12 @@ toBound x tv hint = do
 defaultToBoxed :: MonadBind f => Range -> Type -> f Type
 defaultToBoxed x = \case
   TyApp ty ty' -> TyApp <$> defaultToBoxed x ty <*> defaultToBoxed x ty'
-  TyVar id -> TyVar <$> traverseOf idMeta (defaultToBoxed x) id
-  TyCon id -> TyCon <$> traverseOf idMeta (defaultToBoxed x) id
+  TyVar id -> do
+    k <- defaultToBoxed x id.meta
+    pure $ TyVar id {meta = k}
+  TyCon id -> do
+    k <- defaultToBoxed x id.meta
+    pure $ TyCon id {meta = k}
   TyPrim pt -> pure $ TyPrim pt
   TyArr ty ty' -> TyArr <$> defaultToBoxed x ty <*> defaultToBoxed x ty'
   TyTuple n -> pure $ TyTuple n
@@ -169,9 +177,10 @@ defaultToBoxed x = \case
   TyPtr -> pure TyPtr
   TYPE -> pure TYPE
   TyMeta tv -> do
-    let vKind = kindOf $ tv ^. typeVar . idMeta
+    let vKind = kindOf $ tv._typeVar.meta
     void $ defaultToBoxed x vKind
-    TyMeta <$> traverseOf (typeVar . idMeta) zonk tv
+    k <- zonk $ tv._typeVar.meta
+    pure $ TyMeta tv {_typeVar = tv._typeVar {meta = k}}
 
 unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
@@ -179,7 +188,7 @@ unboundFreevars bound t = HashSet.difference (freevars t) bound
 instantiate :: (MonadBind m, MonadIO m, MonadReader env m, MonadState TcEnv m, HasSrcName env FilePath) => Range -> Scheme Type -> m Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
-    v <- TyMeta <$> freshVar (Just $ a ^. idName)
-    solve [(x, a ^. idMeta :~ kindOf v)]
+    v <- TyMeta <$> freshVar (Just $ a.name)
+    solve [(x, a.meta :~ kindOf v)]
     pure (a, v)
   pure $ applySubst (HashMap.fromList avs) t

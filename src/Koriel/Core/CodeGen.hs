@@ -9,7 +9,7 @@ module Koriel.Core.CodeGen
   )
 where
 
-import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, use, view, (<?=), (?=), (?~), (^.))
+import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, use, view, (<?=), (?=), (?~))
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
@@ -236,7 +236,7 @@ sizeof ty = C.PtrToInt szPtr LT.i64
     szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 toName :: Id a -> LLVM.AST.Name
--- toName Id {_idName = "main", _idSort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
+-- toName Id {name = "main", sort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
@@ -268,7 +268,7 @@ genFunc name params body
     funcName = toName name
     llvmParams =
       map
-        (\x -> (convType $ x ^. idMeta, ParameterName $ toShort $ encodeUtf8 $ idToText x))
+        (\x -> (convType $ x.meta, ParameterName $ toShort $ encodeUtf8 $ idToText x))
         params
     retty = convType (C.typeOf body)
 

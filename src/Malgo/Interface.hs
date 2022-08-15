@@ -50,15 +50,15 @@ buildInterface :: RnState -> DsEnv -> Index -> Interface
 buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) index $ do
   let modName = dsEnv.moduleName
   ifor_ (dsEnv ^. nameEnv) $ \tcId coreId ->
-    when (tcId ^. idSort == External modName) do
-      resolvedVarIdentMap . at (tcId ^. idName) ?= tcId
+    when (tcId.sort == External modName) do
+      resolvedVarIdentMap . at (tcId.name) ?= tcId
       coreIdentMap . at tcId ?= coreId
   ifor_ (dsEnv ^. signatureMap) $ \tcId scheme ->
-    when (tcId ^. idSort == External modName) do
+    when (tcId.sort == External modName) do
       signatureMap . at tcId ?= scheme
   ifor_ (dsEnv ^. typeDefMap) $ \rnId typeDef -> do
-    when (rnId ^. idSort == External modName) do
-      resolvedTypeIdentMap . at (rnId ^. idName) ?= rnId
+    when (rnId.sort == External modName) do
+      resolvedTypeIdentMap . at (rnId.name) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
 storeInterface :: (MonadIO m, HasDstName env FilePath, MonadReader env m) => Interface -> m ()

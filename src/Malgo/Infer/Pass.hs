@@ -188,7 +188,7 @@ tcForeigns ::
 tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar $ Just $ tyVar ^. idName
+      tv <- freshVar $ Just $ tyVar.name
       typeDefMap . at tyVar ?= TypeDef (TyMeta tv) [] []
     ty' <- transType ty
     scheme@(Forall _ ty') <- generalize pos mempty ty'
@@ -208,7 +208,7 @@ tcScSigs ::
 tcScSigs ds =
   for ds \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar $ Just $ tyVar ^. idName
+      tv <- freshVar $ Just $ tyVar.name
       typeDefMap . at tyVar ?= TypeDef (TyMeta tv) [] []
     scheme <- generalize pos mempty =<< transType ty
     signatureMap . at name ?= scheme

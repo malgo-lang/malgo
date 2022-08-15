@@ -4,10 +4,6 @@ module Koriel.Id
   ( IdSort (..),
     ModuleName (..),
     Id (..),
-    idName,
-    idUniq,
-    idMeta,
-    idSort,
     idToText,
     newInternalId,
     newExternalId,
@@ -22,7 +18,6 @@ module Koriel.Id
   )
 where
 
-import Control.Lens (Lens, Lens', lens)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
@@ -81,25 +76,25 @@ instance Pretty IdSort where
   pPrint Native = "Native"
 
 data Id a = Id
-  { _idName :: Text,
-    _idUniq :: Int,
-    _idMeta :: a,
-    _idSort :: IdSort
+  { name :: Text,
+    uniq :: Int,
+    meta :: a,
+    sort :: IdSort
   }
   deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
 
 instance Eq1 Id where
-  liftEq eq id1 id2 = id1._idName == id2._idName && id1._idUniq == id2._idUniq && eq (id1._idMeta) (id2._idMeta) && id1._idSort == id2._idSort
+  liftEq eq id1 id2 = id1.name == id2.name && id1.uniq == id2.uniq && eq (id1.meta) (id2.meta) && id1.sort == id2.sort
 
 instance Ord1 Id where
-  liftCompare cmp id1 id2 = compare (id1._idName) (id2._idName) <> compare (id1._idUniq) (id2._idUniq) <> cmp (id1._idMeta) (id2._idMeta) <> compare (id1._idSort) (id2._idSort)
+  liftCompare cmp id1 id2 = compare (id1.name) (id2.name) <> compare (id1.uniq) (id2.uniq) <> cmp (id1.meta) (id2.meta) <> compare (id1.sort) (id2.sort)
 
 instance Show1 Id where
-  liftShowsPrec showPrec _ d Id {..} = showString "Id " . showsPrec d _idName . showString " " . showsPrec d _idUniq . showString " " . showPrec d _idMeta . showString " " . showsPrec d _idSort
+  liftShowsPrec showPrec _ d Id {..} = showString "Id " . showsPrec d name . showString " " . showsPrec d uniq . showString " " . showPrec d meta . showString " " . showsPrec d sort
 
 -- TODO: calculate hash from idUniq
 instance Eq a => Hashable (Id a) where
-  hashWithSalt salt Id {_idUniq} = hashWithSalt salt _idUniq
+  hashWithSalt salt Id {uniq} = hashWithSalt salt uniq
 
 instance Binary a => Binary (Id a)
 
@@ -115,10 +110,10 @@ noName :: Text
 noName = "noName"
 
 idToText :: Id a -> Text
-idToText Id {_idName, _idSort = External (ModuleName modName)} = modName <> "." <> _idName
-idToText Id {_idName, _idUniq, _idSort = Internal} = _idName <> "_" <> toText (showHex _idUniq "")
-idToText Id {_idName, _idUniq, _idSort = Temporal} = "$" <> _idName <> "_" <> toText (showHex _idUniq "")
-idToText Id {_idName, _idUniq, _idSort = Native} = _idName
+idToText Id {name, sort = External (ModuleName modName)} = modName <> "." <> name
+idToText Id {name, uniq, sort = Internal} = name <> "_" <> toText (showHex uniq "")
+idToText Id {name, uniq, sort = Temporal} = "$" <> name <> "_" <> toText (showHex uniq "")
+idToText Id {name, sort = Native} = name
 
 pPrintMeta :: (t -> Doc) -> t -> Doc
 
@@ -133,18 +128,6 @@ instance Pretty a => Pretty (Id a) where
     where
       pprIdName :: Id a -> Doc
       pprIdName = text . toString . idToText
-
-idName :: Lens' (Id a) Text
-idName = lens (._idName) (\i x -> i {_idName = x})
-
-idUniq :: Lens' (Id a) Int
-idUniq = lens (._idUniq) (\i x -> i {_idUniq = x})
-
-idMeta :: Lens (Id a) (Id b) a b
-idMeta = lens (._idMeta) (\i x -> i {_idMeta = x})
-
-idSort :: Lens' (Id a) IdSort
-idSort = lens (._idSort) (\i x -> i {_idSort = x})
 
 newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> IdSort -> f (Id a)
 newNoNameId m s = Id noName <$> getUniq <*> pure m <*> pure s
@@ -162,17 +145,17 @@ newNativeId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => T
 newNativeId n m = Id n <$> getUniq <*> pure m <*> pure Native
 
 newIdOnName :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> Id b -> f (Id a)
-newIdOnName meta Id {_idName, _idSort} = Id _idName <$> getUniq <*> pure meta <*> pure _idSort
+newIdOnName meta Id {name, sort} = Id name <$> getUniq <*> pure meta <*> pure sort
 
 cloneId :: (MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Id a -> m (Id a)
 cloneId Id {..} = do
-  _idUniq <- getUniq
-  pure Id {_idName, _idUniq, _idMeta, _idSort}
+  uniq <- getUniq
+  pure Id {name, uniq, meta, sort}
 
 idIsExternal :: Id a -> Bool
-idIsExternal Id {_idSort = External _} = True
+idIsExternal Id {sort = External _} = True
 idIsExternal _ = False
 
 idIsNative :: Id a -> Bool
-idIsNative Id {_idSort = Native} = True
+idIsNative Id {sort = Native} = True
 idIsNative _ = False
