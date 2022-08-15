@@ -3,6 +3,7 @@
 
 module Malgo.Interface where
 
+import Codec.Serialise
 import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
 import Control.Lens.TH
 import Data.Aeson
@@ -40,6 +41,8 @@ instance ToJSON Interface
 
 instance FromJSON Interface
 
+instance Serialise Interface
+
 makeFieldsNoPrefix ''Interface
 
 instance Pretty Interface where
@@ -64,7 +67,9 @@ buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty
 storeInterface :: (MonadIO m, HasDstName env FilePath, MonadReader env m) => Interface -> m ()
 storeInterface interface = do
   dstName <- view dstName
-  liftIO $ encodeFile (dstName -<.> "mlgi") interface
+  -- liftIO $ encodeFile (dstName -<.> "mlgi") interface
+
+  liftIO $ writeFileSerialise (dstName -<.> "mlgi") interface
 
 loadInterface :: (MonadReader s m, HasModulePaths s [FilePath], MonadIO m) => ModuleName -> m (Maybe Interface)
 loadInterface (ModuleName modName) = do
@@ -81,7 +86,8 @@ loadInterface (ModuleName modName) = do
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
-        then liftIO $ maybeToEither "decode error" <$> decodeFileStrict (modPath </> modFile)
+        then -- liftIO $ maybeToEither "decode error" <$> decodeFileStrict (modPath </> modFile)
+          Right <$> liftIO (readFileDeserialise (modPath </> modFile))
         else findAndReadFile rest modFile
 
 dependencieList :: (HasModulePaths s [FilePath], MonadIO m, MonadReader s m) => ModuleName -> [ModuleName] -> m [ModuleName]

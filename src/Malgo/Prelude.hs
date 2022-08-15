@@ -21,6 +21,7 @@ module Malgo.Prelude
   )
 where
 
+import Codec.Serialise
 import Control.Lens (Lens', view, (^.))
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
@@ -146,6 +147,12 @@ instance FromJSON Megaparsec.Pos
 instance FromJSON SourcePos
 
 instance FromJSON Range
+
+instance Serialise Megaparsec.Pos
+
+instance Serialise SourcePos
+
+instance Serialise Range
 
 instance Pretty Range where
   pPrint (Range start end) =

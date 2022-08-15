@@ -18,6 +18,7 @@ module Koriel.Id
   )
 where
 
+import Codec.Serialise
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
@@ -40,6 +41,8 @@ instance ToJSON ModuleName
 instance FromJSON ModuleName
 
 instance Hashable ModuleName
+
+instance Serialise ModuleName
 
 instance Pretty ModuleName where
   pPrint (ModuleName modName) = pPrint modName
@@ -68,6 +71,8 @@ instance ToJSON IdSort
 instance FromJSON IdSort
 
 instance Hashable IdSort
+
+instance Serialise IdSort
 
 instance Pretty IdSort where
   pPrint (External modName) = "External" <+> pPrint modName
@@ -105,6 +110,8 @@ instance ToJSON a => ToJSONKey (Id a)
 instance FromJSON a => FromJSON (Id a)
 
 instance FromJSON a => FromJSONKey (Id a)
+
+instance Serialise a => Serialise (Id a)
 
 noName :: Text
 noName = "noName"

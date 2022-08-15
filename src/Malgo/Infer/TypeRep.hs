@@ -4,6 +4,7 @@
 
 module Malgo.Infer.TypeRep where
 
+import Codec.Serialise
 import Control.Lens (At (at), Lens', Traversal', coerced, makeLenses, makePrisms, mapped, over, (^.), _1, _2)
 import Data.Aeson
 import Data.Binary (Binary)
@@ -29,6 +30,8 @@ instance ToJSON PrimT
 instance FromJSON PrimT
 
 instance Hashable PrimT
+
+instance Serialise PrimT
 
 instance Pretty PrimT where
   pPrint Int32T = "Int32#"
@@ -84,6 +87,8 @@ instance FromJSON Type
 
 instance Hashable Type
 
+instance Serialise Type
+
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
   pPrintPrec l _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
@@ -114,6 +119,8 @@ instance Binary TypeVar
 instance ToJSON TypeVar
 
 instance FromJSON TypeVar
+
+instance Serialise TypeVar
 
 instance Pretty TypeVar where
   pPrint (TypeVar v) = "'" <> pPrint v
@@ -180,6 +187,8 @@ instance FromJSON ty => FromJSON (Scheme ty)
 
 instance Hashable ty => Hashable (Scheme ty)
 
+instance Serialise ty => Serialise (Scheme ty)
+
 instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall [] t) = pPrint t
   pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
@@ -198,6 +207,8 @@ instance Binary ty => Binary (TypeDef ty)
 instance ToJSON ty => ToJSON (TypeDef ty)
 
 instance FromJSON ty => FromJSON (TypeDef ty)
+
+instance Serialise ty => Serialise (TypeDef ty)
 
 instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)

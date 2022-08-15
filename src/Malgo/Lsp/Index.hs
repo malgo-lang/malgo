@@ -5,8 +5,11 @@
 
 module Malgo.Lsp.Index where
 
+import Codec.Serialise
+import Codec.Serialise qualified as Serialise
 import Control.Lens.TH
 import Data.Aeson
+import Data.Aeson qualified as JSON
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.HashMap.Strict qualified as HashMap
@@ -15,6 +18,7 @@ import Language.LSP.Types (DocumentSymbol (..))
 import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
+import Relude.Unsafe qualified as Unsafe
 import System.FilePath (takeFileName)
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
 import Text.Pretty.Simple (pShow)
@@ -35,6 +39,10 @@ instance Monoid Index where
 instance ToJSON Index
 
 instance FromJSON Index
+
+instance Serialise Index where
+  encode x = Serialise.encode (JSON.encode x)
+  decode = Unsafe.fromJust . JSON.decode <$> Serialise.decode
 
 instance Pretty Index where
   pPrint = text . toString . pShow
@@ -59,6 +67,8 @@ instance ToJSONKey Info
 instance FromJSON Info
 
 instance FromJSONKey Info
+
+instance Serialise Info
 
 instance Hashable Info
 

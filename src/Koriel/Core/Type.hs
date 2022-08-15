@@ -1,5 +1,6 @@
 module Koriel.Core.Type where
 
+import Codec.Serialise
 import Control.Lens (Prism', prism)
 import Data.Aeson
 import Data.Binary (Binary)
@@ -24,6 +25,8 @@ instance ToJSON Tag
 
 instance FromJSON Tag
 
+instance Serialise Tag
+
 instance Pretty Tag where
   pPrint (Data name) = pPrint name
   pPrint Tuple = "#tuple"
@@ -36,6 +39,8 @@ instance Binary Con
 instance ToJSON Con
 
 instance FromJSON Con
+
+instance Serialise Con
 
 instance Pretty Con where
   pPrint (Con tag xs) = parens $ sep $ pPrint tag : map pPrint xs
@@ -70,6 +75,8 @@ instance Binary Type
 instance ToJSON Type
 
 instance FromJSON Type
+
+instance Serialise Type
 
 instance Pretty Type where
   pPrint (a :-> b) = sep [brackets (sep $ punctuate "," $ map pPrint a), "->", pPrint b]
