@@ -6,7 +6,6 @@ module Koriel.Lens
     HasSignatureMap (..),
     HasTypeDefMap (..),
     HasTypeSynonymMap (..),
-    HasName (..),
     HasSrcName (..),
     HasModulePaths (..),
     HasDebugMode (..),
@@ -14,7 +13,6 @@ module Koriel.Lens
 where
 
 import Control.Lens
-import Language.LSP.Types.Lens (HasName (..))
 
 class HasUniqSupply s a | s -> a where
   uniqSupply :: Lens' s a
