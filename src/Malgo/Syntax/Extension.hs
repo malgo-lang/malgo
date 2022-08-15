@@ -1,17 +1,14 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Syntax.Extension where
 
-import Control.Lens (makeFieldsNoPrefix)
+import Control.Lens (lens)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Kind qualified as K
 import Data.Void
 import Koriel.Id
-import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Prelude
@@ -36,10 +33,8 @@ data Visibility
 instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
 
 -- | Qualified name
-data Qualified x = Qualified {visibility :: Visibility, _value :: x}
+data Qualified x = Qualified {visibility :: Visibility, value :: x}
   deriving stock (Eq, Ord, Show)
-
-makeFieldsNoPrefix ''Qualified
 
 instance Pretty x => Pretty (Qualified x) where
   pPrint (Qualified Implicit v) = pPrint v
@@ -53,17 +48,15 @@ instance Pretty x => Pretty (Field x) where
   pPrint (Field Nothing v) = pPrint v
   pPrint (Field (Just x) v) = pPrint x <> "." <> pPrint v
 
-data Typed x = Typed {_annotated :: Type, _value :: x}
+data Typed x = Typed {annotated :: Type, value :: x}
   deriving stock (Eq, Ord, Show)
-
-makeFieldsNoPrefix ''Typed
 
 instance Pretty x => Pretty (Typed x) where
   pPrint (Typed t v) = pPrint v <+> ":" <+> pPrint t
 
 instance HasType (Typed x) where
   typeOf (Typed t _) = t
-  types = annotated
+  types = lens (.annotated) (\x y -> x {annotated = y})
 
 type PsId = XId (Malgo 'Parse)
 

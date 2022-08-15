@@ -50,13 +50,11 @@ infer rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
       -- 今はAnyTに変換している
       abbrEnv <- use typeSynonymMap
       zonkedBg <-
-        pure bg'
-          >>= traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+        traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
           >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       zonkedTcEnv <-
-        pure tcEnv'
-          >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+        traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) tcEnv'
           >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       pure (Module name zonkedBg, zonkedTcEnv)
 
@@ -286,7 +284,7 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
   where
     -- check single case
     checkSingle (pos, name, _) inferredSchemeType = do
-      declaredScheme <- lookupVar (pos ^. value) name
+      declaredScheme <- lookupVar (pos.value) name
       let inferredScheme = Forall as inferredSchemeType
       case declaredScheme of
         -- No explicit signature
@@ -308,10 +306,10 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
           let Forall _ inferredType = fmap (expandAllTypeSynonym abbrEnv) inferredScheme
           case evidenceOfEquiv declaredType inferredType of
             Just evidence
-              | anySame $ Map.elems evidence -> errorOn (pos ^. value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+              | anySame $ Map.elems evidence -> errorOn (pos.value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
               | otherwise -> signatureMap . at name ?= declaredScheme
             Nothing ->
-              errorOn (pos ^. value) $
+              errorOn (pos.value) $
                 "Signature mismatch:"
                   $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
                   $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)

@@ -12,8 +12,8 @@ import Malgo.Infer.TypeRep
 import Malgo.Prelude
 
 data RefineEnv = RefineEnv
-  { _signatureMap :: HashMap (Id ()) (Scheme Type),
-    _typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
+  { signatureMap :: HashMap (Id ()) (Scheme Type),
+    typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
     _srcName :: FilePath,
     _uniqSupply :: UniqSupply
   }
@@ -23,8 +23,8 @@ makeFieldsNoPrefix ''RefineEnv
 buildRefineEnv :: MalgoEnv -> TcEnv -> RefineEnv
 buildRefineEnv malgoEnv TcEnv {_signatureMap, _typeDefMap} =
   RefineEnv
-    { _signatureMap = _signatureMap,
-      _typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap,
+    { signatureMap = _signatureMap,
+      typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap,
       _srcName = malgoEnv ^. srcName,
       _uniqSupply = malgoEnv ^. uniqSupply
     }

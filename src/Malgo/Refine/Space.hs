@@ -1,6 +1,5 @@
 module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
-import Control.Lens (At (at), mapped, over, view, (^.), _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List (isSubsequenceOf)
 import Data.List qualified as List
@@ -50,7 +49,7 @@ normalize (Union s Empty) = normalize s
 normalize (Union Empty s) = normalize s
 normalize (Constructor con ss) = Constructor con $ map normalize ss
 normalize (Tuple ss) = Tuple $ map normalize ss
-normalize (Record kss) = Record $ over (mapped . _2) normalize kss
+normalize (Record kss) = Record $ map (second normalize) kss
 normalize (Union s1 s2) = Union (normalize s1) (normalize s2)
 normalize (Type t) = Type t
 normalize Empty = Empty
@@ -71,8 +70,8 @@ decomposable _ = False
 
 decompose :: MonadReader RefineEnv m => Type -> m Space
 decompose t@(TyConApp (TyCon con) ts) = do
-  env <- view typeDefEnv
-  case env ^. at con of
+  env <- asks (.typeDefEnv)
+  case HashMap.lookup con env of
     Nothing -> pure $ Type t
     Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
       spaces <- traverse (constructorSpace $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
@@ -85,7 +84,7 @@ decompose (TyRecord kts) = do
   env <- ask
   pure $
     Record $
-      over (mapped . _2) (space env) $
+      map (second $ space env) $
         -- sort by key because the order of `toList` results is unspecified.
         sortWith fst $
           HashMap.toList kts

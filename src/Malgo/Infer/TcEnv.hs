@@ -64,5 +64,5 @@ genTcEnv rnEnv = do
 
 findBuiltinType :: (HasResolvedTypeIdentMap s (HashMap PsId [Resolved])) => PsId -> s -> Maybe RnId
 findBuiltinType x rnEnv = do
-  ids <- map (view value) <$> view (resolvedTypeIdentMap . at x) rnEnv
+  ids <- map (.value) <$> view (resolvedTypeIdentMap . at x) rnEnv
   find (view idSort >>> \case External (ModuleName "Builtin") -> True; _ -> False) ids

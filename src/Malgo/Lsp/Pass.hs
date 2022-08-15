@@ -133,7 +133,7 @@ indexScSig (range, ident, _) = do
     Just info -> addReferences info [range]
 
 indexScDef :: (MonadState IndexEnv m) => ScDef (Malgo 'Refine) -> m ()
-indexScDef (view value -> range, ident, expr) = do
+indexScDef (Typed {value = range}, ident, expr) = do
   minfo <- lookupInfo ident
   case minfo of
     Nothing -> do
@@ -152,7 +152,7 @@ indexScDef (view value -> range, ident, expr) = do
   indexExp expr
 
 indexExp :: (MonadState IndexEnv m) => Exp (Malgo 'Refine) -> m ()
-indexExp (Var (view value -> range) ident) = do
+indexExp (Var Typed {value = range} ident) = do
   -- lookup the infomation of this variable
   minfo <- lookupInfo ident
   case minfo of
@@ -161,7 +161,7 @@ indexExp (Var (view value -> range) ident) = do
       let info = Info {_name = ident ^. idName, typeSignature = identType, definitions = []}
       addReferences info [range]
     Just info -> addReferences info [range]
-indexExp (Unboxed (view value -> range) u) = do
+indexExp (Unboxed Typed {value = range} u) = do
   let info = Info {_name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 indexExp (Apply _ e1 e2) = do
@@ -211,7 +211,7 @@ indexPat (TupleP _ ps) =
   traverse_ indexPat ps
 indexPat (RecordP _ kps) =
   traverse_ (indexPat . snd) kps
-indexPat (UnboxedP (view value -> range) u) = do
+indexPat (UnboxedP Typed {value = range} u) = do
   let info = Info {_name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 
