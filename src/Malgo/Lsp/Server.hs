@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-deprecations #-}
+
 module Malgo.Lsp.Server (server) where
 
 import Control.Lens (to, view, (^.))
@@ -9,6 +11,7 @@ import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
 import Malgo.Interface
 import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), findInfosOfPos)
+import Malgo.Lsp.Index qualified as Index
 import Malgo.Lsp.Pass (LspOpt)
 import Malgo.Prelude hiding (Range)
 import Relude.Unsafe qualified as Unsafe
@@ -45,9 +48,28 @@ handlers opt =
       requestHandler STextDocumentDocumentSymbol $ \req responder -> do
         let RequestMessage _ _ _ (DocumentSymbolParams _ _ doc) = req
         index <- loadIndex doc opt
-        let documentSymbol = HashMap.elems $ HashMap.filterWithKey (\k _ -> idIsExternal k) $ index ^. symbolInfo
+        let documentSymbol = map toDocumentSymbol $ HashMap.elems $ HashMap.filterWithKey (\k _ -> idIsExternal k) $ index ^. symbolInfo
         responder $ Right $ InL $ Language.LSP.Types.List documentSymbol
     ]
+
+toDocumentSymbol :: Index.Symbol -> DocumentSymbol
+toDocumentSymbol Index.Symbol {..} =
+  DocumentSymbol
+    { _name = name,
+      _detail = Nothing,
+      _kind = toKind kind,
+      _tags = Nothing,
+      _deprecated = Nothing,
+      _range = malgoRangeToLspRange range,
+      _selectionRange = malgoRangeToLspRange range,
+      _children = Nothing
+    }
+  where
+    toKind Index.Data = SkEnum
+    toKind Index.TypeParam = SkTypeParameter
+    toKind Index.Constructor = SkEnumMember
+    toKind Index.Function = SkFunction
+    toKind Index.Variable = SkVariable
 
 loadIndex :: MonadIO f => TextDocumentIdentifier -> LspOpt -> f Index
 loadIndex doc opt = maybe mempty (view lspIndex) <$> runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) opt

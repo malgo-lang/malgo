@@ -11,7 +11,6 @@ import Data.Text qualified as Text
 import Koriel.Id (Id (..), IdSort (Temporal), name)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
-import Language.LSP.Types (DocumentSymbol (..), SymbolKind (..))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Interface (HasLspIndex (lspIndex), loadInterface)
@@ -82,14 +81,14 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
   let info = Info {_name = typeName.name, typeSignature = Forall [] typeKind, definitions = [range]}
   addReferences info [range]
   addDefinition typeName info
-  addSymbolInfo typeName (symbol SkEnum typeName range)
+  addSymbolInfo typeName (symbol Data typeName range)
 
   for_ typeParameters \(range, typeParameter) -> do
     typeParameterKind <- lookupTypeKind typeParameter
     let info = Info {_name = typeParameter.name, typeSignature = Forall [] typeParameterKind, definitions = [range]}
     addReferences info [range]
     addDefinition typeParameter info
-    addSymbolInfo typeParameter (symbol SkTypeParameter typeParameter range)
+    addSymbolInfo typeParameter (symbol TypeParam typeParameter range)
 
   traverse_ indexConstructor constructors
   where
@@ -98,7 +97,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
       let info = Info {_name = constructor.name, typeSignature = constructorType, definitions = [range]}
       addReferences info [range]
       addDefinition constructor info
-      addSymbolInfo constructor (symbol SkEnumMember constructor range)
+      addSymbolInfo constructor (symbol Constructor constructor range)
       traverse_ indexType parameters
 
 indexType :: MonadState IndexEnv m => S.Type (Malgo 'Refine) -> m ()
@@ -143,11 +142,11 @@ indexScDef (Typed {value = range}, ident, expr) = do
       let info = Info {_name = ident.name, typeSignature = identType, definitions = [range]}
       addReferences info [range]
       addDefinition ident info
-      addSymbolInfo ident (symbol SkFunction ident range)
+      addSymbolInfo ident (symbol Function ident range)
     Just info -> do
       addReferences info [range]
       addDefinition ident info
-      addSymbolInfo ident (symbol SkFunction ident range)
+      addSymbolInfo ident (symbol Function ident range)
   -- traverse the expression
   indexExp expr
 
@@ -183,7 +182,7 @@ indexStmt (Let range ident expr) = do
   let info = Info {_name = ident.name, typeSignature = identType, definitions = [range]}
   addReferences info [range]
   addDefinition ident info
-  addSymbolInfo ident (symbol SkVariable ident range)
+  addSymbolInfo ident (symbol Variable ident range)
   indexExp expr
 indexStmt (NoBind _ expr) =
   indexExp expr
@@ -200,7 +199,7 @@ indexPat (VarP (Typed ty range) v) = do
   let info = Info {_name = v.name, typeSignature = Forall [] ty, definitions = [range]}
   addReferences info [range]
   addDefinition v info
-  addSymbolInfo v (symbol SkVariable v range)
+  addSymbolInfo v (symbol Variable v range)
 indexPat (ConP (Typed _ range) c ps) = do
   minfo <- lookupInfo c
   case minfo of
@@ -244,19 +243,9 @@ addDefinition :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> Info -> m ()
 addDefinition ident info =
   modifying (buildingIndex . definitionMap) $ HashMap.insert ident info
 
-addSymbolInfo :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> DocumentSymbol -> m ()
+addSymbolInfo :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> Symbol -> m ()
 addSymbolInfo ident symbol =
   modifying (buildingIndex . symbolInfo) $ HashMap.insert ident symbol
 
-symbol :: SymbolKind -> Id a -> Range -> DocumentSymbol
-symbol kind name range =
-  DocumentSymbol
-    { _name = name.name,
-      _detail = Nothing,
-      _kind = kind,
-      _tags = Nothing,
-      _deprecated = Nothing,
-      _range = malgoRangeToLspRange range,
-      _selectionRange = malgoRangeToLspRange range,
-      _children = Nothing
-    }
+symbol :: SymbolKind -> Id a -> Range -> Symbol
+symbol kind name = Symbol kind name.name

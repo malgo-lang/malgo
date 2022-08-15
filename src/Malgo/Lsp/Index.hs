@@ -14,7 +14,6 @@ import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Pretty
-import Language.LSP.Types (DocumentSymbol (..))
 import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
@@ -23,10 +22,28 @@ import System.FilePath (takeFileName)
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
 import Text.Pretty.Simple (pShow)
 
+data SymbolKind = Data | TypeParam | Constructor | Function | Variable
+  deriving stock (Show, Generic)
+
+instance ToJSON SymbolKind
+
+instance FromJSON SymbolKind
+
+instance Serialise SymbolKind
+
+data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
+  deriving stock (Show, Generic)
+
+instance ToJSON Symbol
+
+instance FromJSON Symbol
+
+instance Serialise Symbol
+
 data Index = Index
   { _references :: HashMap Info [Range],
     _definitionMap :: HashMap RnId Info,
-    _symbolInfo :: HashMap RnId DocumentSymbol
+    _symbolInfo :: HashMap RnId Symbol
   }
   deriving stock (Show, Generic)
 
@@ -40,9 +57,11 @@ instance ToJSON Index
 
 instance FromJSON Index
 
-instance Serialise Index where
-  encode x = Serialise.encode (JSON.encode x)
-  decode = Unsafe.fromJust . JSON.decode <$> Serialise.decode
+instance Serialise Index
+
+-- where
+--   encode x = Serialise.encode (JSON.encode x)
+--   decode = Unsafe.fromJust . JSON.decode <$> Serialise.decode
 
 instance Pretty Index where
   pPrint = text . toString . pShow
