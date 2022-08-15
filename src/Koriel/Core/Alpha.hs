@@ -1,11 +1,13 @@
--- | α変換
+{-# LANGUAGE TemplateHaskell #-}
+
+-- | Alpha conversion
 module Koriel.Core.Alpha
   ( alpha,
     AlphaEnv (..),
   )
 where
 
-import Control.Lens (Lens', lens, over, traverseOf, view)
+import Control.Lens (makeFieldsNoPrefix, traverseOf)
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -14,16 +16,9 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 
-data AlphaEnv = AlphaEnv {_alphaUniqSupply :: UniqSupply, _alphaMap :: HashMap (Id Type) (Atom (Id Type))}
+data AlphaEnv = AlphaEnv {_uniqSupply :: UniqSupply, subst :: HashMap (Id Type) (Atom (Id Type))}
 
-alphaUniqSupply :: Lens' AlphaEnv UniqSupply
-alphaUniqSupply = lens (._alphaUniqSupply) (\a x -> a {_alphaUniqSupply = x})
-
-alphaMap :: Lens' AlphaEnv (HashMap (Id Type) (Atom (Id Type)))
-alphaMap = lens (._alphaMap) (\a x -> a {_alphaMap = x})
-
-instance HasUniqSupply AlphaEnv UniqSupply where
-  uniqSupply = alphaUniqSupply
+makeFieldsNoPrefix ''AlphaEnv
 
 alpha :: MonadIO m => Exp (Id Type) -> AlphaEnv -> m (Exp (Id Type))
 alpha = runAlpha . alphaExp
@@ -33,7 +28,7 @@ runAlpha = runReaderT
 
 lookupVar :: MonadReader AlphaEnv m => Id Type -> m (Atom (Id Type))
 lookupVar n = do
-  env <- view alphaMap
+  env <- asks (.subst)
   case HashMap.lookup n env of
     Just n' -> pure n'
     Nothing -> pure (Var n)
@@ -48,8 +43,9 @@ lookupId n = do
 alphaExp :: (MonadReader AlphaEnv f, MonadIO f) => Exp (Id Type) -> f (Exp (Id Type))
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
 alphaExp (Let ds e) = do
-  env <- foldMapM ?? ds $ \(LocalDef n _) -> one . (n,) . Var <$> cloneId n
-  local (over alphaMap (env <>)) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
+  -- Avoid capturing variables
+  env <- foldMapM (\(LocalDef n _) -> one . (n,) . Var <$> cloneId n) ds
+  local (\e -> e {subst = env <> e.subst}) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
 alphaExp e = traverseOf atom alphaAtom e
 
@@ -58,24 +54,30 @@ alphaAtom (Var x) = lookupVar x
 alphaAtom a@Unboxed {} = pure a
 
 alphaLocalDef :: (MonadReader AlphaEnv f, MonadIO f) => LocalDef (Id Type) -> f (LocalDef (Id Type))
-alphaLocalDef (LocalDef x o) = LocalDef <$> lookupId x <*> alphaObj o
+alphaLocalDef (LocalDef x o) =
+  -- Since `alphaExp Let{}` avoids capturing variables, only `lookupId` should be applied here.
+  LocalDef <$> lookupId x <*> alphaObj o
 
 alphaObj :: (MonadReader AlphaEnv m, MonadIO m) => Obj (Id Type) -> m (Obj (Id Type))
 alphaObj (Fun ps e) = do
+  -- Avoid capturing variables
   ps' <- traverse cloneId ps
-  local (over alphaMap (HashMap.fromList (zip ps $ map Var ps') <>)) $ Fun ps' <$> alphaExp e
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Fun ps' <$> alphaExp e
 alphaObj o = traverseOf atom alphaAtom o
 
 alphaCase :: (MonadReader AlphaEnv m, MonadIO m) => Case (Id Type) -> m (Case (Id Type))
 alphaCase (Unpack c ps e) = do
+  -- Avoid capturing variables
   ps' <- traverse cloneId ps
-  local (over alphaMap (HashMap.fromList (zip ps $ map Var ps') <>)) $ Unpack c ps' <$> alphaExp e
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Unpack c ps' <$> alphaExp e
 alphaCase (OpenRecord kps e) = do
+  -- Avoid capturing variables
   kps' <- traverse cloneId kps
   let ps = HashMap.elems kps
   let ps' = HashMap.elems kps'
-  local (over alphaMap (HashMap.fromList (zip ps $ map Var ps') <>)) $ OpenRecord kps' <$> alphaExp e
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ OpenRecord kps' <$> alphaExp e
 alphaCase (Bind x e) = do
+  -- Avoid capturing variables
   x' <- cloneId x
-  local (over alphaMap (HashMap.insert x $ Var x')) $ Bind x' <$> alphaExp e
+  local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' <$> alphaExp e
 alphaCase (Switch u e) = Switch u <$> alphaExp e

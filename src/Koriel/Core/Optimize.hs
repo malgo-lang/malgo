@@ -73,7 +73,7 @@ optimizeExpr state = 10 `times` opt
 optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
 optTrivialCall (Let [LocalDef f (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- view uniqSupply
-  optTrivialCall =<< alpha body AlphaEnv {_alphaUniqSupply = us, _alphaMap = HashMap.fromList $ zip ps as}
+  optTrivialCall =<< alpha body AlphaEnv {_uniqSupply = us, subst = HashMap.fromList $ zip ps as}
 optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . localDefObj . appObj) optTrivialCall ds <*> optTrivialCall e
 optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
 optTrivialCall e = pure e
@@ -129,7 +129,7 @@ lookupCallInline call f as = do
   f' <- use $ inlineableMap . at f
   us <- view uniqSupply
   case f' of
-    Just (ps, v) -> alpha v AlphaEnv {_alphaUniqSupply = us, _alphaMap = HashMap.fromList $ zip ps as}
+    Just (ps, v) -> alpha v AlphaEnv {_uniqSupply = us, subst = HashMap.fromList $ zip ps as}
     Nothing -> pure $ call f as
 
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
