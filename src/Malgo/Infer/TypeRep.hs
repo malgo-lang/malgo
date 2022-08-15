@@ -105,7 +105,7 @@ instance Pretty Type where
 -- Type variable --
 -------------------
 
-newtype TypeVar = TypeVar {_typeVar :: Id Kind}
+newtype TypeVar = TypeVar {typeVar :: Id Kind}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
 
@@ -124,7 +124,7 @@ instance HasType TypeVar where
     f (v.meta) <&> \k -> TypeVar v {meta = k}
 
 instance HasKind TypeVar where
-  kindOf = (._typeVar.meta)
+  kindOf = (.typeVar.meta)
 
 typeVar :: Lens' TypeVar (Id Type)
 typeVar = coerced

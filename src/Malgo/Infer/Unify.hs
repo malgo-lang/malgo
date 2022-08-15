@@ -89,7 +89,7 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    solve [(x, v._typeVar.meta :~ kindOf t)]
+    solve [(x, v.typeVar.meta :~ kindOf t)]
     TypeUnifyT $ at v ?= t
     where
       occursCheck :: TypeVar -> Type -> Bool
@@ -153,9 +153,9 @@ generalizeMutRecs x bound terms = do
 
 toBound :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Range -> TypeVar -> Text -> m (Id Type)
 toBound x tv hint = do
-  tvType <- defaultToBoxed x $ tv._typeVar.meta
+  tvType <- defaultToBoxed x $ tv.typeVar.meta
   let tvKind = kindOf tvType
-  let name = case tv._typeVar.name of
+  let name = case tv.typeVar.name of
         x
           | x == noName -> hint
           | otherwise -> x
@@ -177,10 +177,10 @@ defaultToBoxed x = \case
   TyPtr -> pure TyPtr
   TYPE -> pure TYPE
   TyMeta tv -> do
-    let vKind = kindOf $ tv._typeVar.meta
+    let vKind = kindOf $ tv.typeVar.meta
     void $ defaultToBoxed x vKind
-    k <- zonk $ tv._typeVar.meta
-    pure $ TyMeta tv {_typeVar = tv._typeVar {meta = k}}
+    k <- zonk $ tv.typeVar.meta
+    pure $ TyMeta tv {typeVar = tv.typeVar {meta = k}}
 
 unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
