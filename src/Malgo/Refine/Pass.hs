@@ -31,7 +31,7 @@ refineBindGroup BindGroup {..} = do
   _dataDefs <- traverse refineDataDef _dataDefs
   _typeSynonyms <- traverse refineTypeSynonym _typeSynonyms
   _foreigns <- traverse refineForeign _foreigns
-  _imports <- traverse (refineImport @t @x) _imports
+  _imports <- traverse refineImport _imports
   pure BindGroup {..}
 
 refineScDef :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => ScDef x -> m (ScDef (Malgo 'Refine))
