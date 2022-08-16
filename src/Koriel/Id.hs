@@ -22,14 +22,12 @@ import Codec.Serialise
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
-import Data.Functor.Classes
 import GHC.Exts
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty as P
 import Numeric (showHex)
-import Text.Show (showString, showsPrec)
 
 newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -88,16 +86,6 @@ data Id a = Id
   }
   deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
 
-instance Eq1 Id where
-  liftEq eq id1 id2 = id1.name == id2.name && id1.uniq == id2.uniq && eq (id1.meta) (id2.meta) && id1.sort == id2.sort
-
-instance Ord1 Id where
-  liftCompare cmp id1 id2 = compare (id1.name) (id2.name) <> compare (id1.uniq) (id2.uniq) <> cmp (id1.meta) (id2.meta) <> compare (id1.sort) (id2.sort)
-
-instance Show1 Id where
-  liftShowsPrec showPrec _ d Id {..} = showString "Id " . showsPrec d name . showString " " . showsPrec d uniq . showString " " . showPrec d meta . showString " " . showsPrec d sort
-
--- TODO: calculate hash from idUniq
 instance Eq a => Hashable (Id a) where
   hashWithSalt salt Id {uniq} = hashWithSalt salt uniq
 
