@@ -235,10 +235,16 @@ lookupInfo ident =
 
 addReferences :: (MonadState IndexEnv m) => Info -> [Range] -> m ()
 addReferences info refs =
-  modifying buildingIndex $ \(Index refs defs syms) -> Index (HashMap.alter f info refs) defs syms
-  where
-    f Nothing = Just refs
-    f (Just oldRefs) = Just (ordNub $ oldRefs <> refs)
+  modifying buildingIndex $ \i ->
+    Index
+      { _references =
+          HashMap.insert
+            info
+            (refs <> HashMap.lookupDefault [] info i._references)
+            i._references,
+        _definitionMap = i._definitionMap,
+        _symbolInfo = i._symbolInfo
+      }
 
 addDefinition :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> Info -> m ()
 addDefinition ident info =
