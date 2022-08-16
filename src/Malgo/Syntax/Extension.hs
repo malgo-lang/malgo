@@ -8,6 +8,7 @@ import Control.Lens (lens)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Kind qualified as K
+import Data.Store (Store)
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
@@ -77,6 +78,8 @@ instance ToJSON Assoc
 instance FromJSON Assoc
 
 instance Serialise Assoc
+
+instance Store Assoc
 
 instance Pretty Assoc where
   pPrint LeftA = "l"

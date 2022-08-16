@@ -11,6 +11,7 @@ import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store)
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
@@ -32,6 +33,8 @@ instance FromJSON PrimT
 instance Hashable PrimT
 
 instance Serialise PrimT
+
+instance Store PrimT
 
 instance Pretty PrimT where
   pPrint Int32T = "Int32#"
@@ -89,6 +92,8 @@ instance Hashable Type
 
 instance Serialise Type
 
+instance Store Type
+
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
   pPrintPrec l _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
@@ -121,6 +126,8 @@ instance ToJSON TypeVar
 instance FromJSON TypeVar
 
 instance Serialise TypeVar
+
+instance Store TypeVar
 
 instance Pretty TypeVar where
   pPrint (TypeVar v) = "'" <> pPrint v
@@ -189,6 +196,8 @@ instance Hashable ty => Hashable (Scheme ty)
 
 instance Serialise ty => Serialise (Scheme ty)
 
+instance Store ty => Store (Scheme ty)
+
 instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall [] t) = pPrint t
   pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
@@ -209,6 +218,8 @@ instance ToJSON ty => ToJSON (TypeDef ty)
 instance FromJSON ty => FromJSON (TypeDef ty)
 
 instance Serialise ty => Serialise (TypeDef ty)
+
+instance Store ty => Store (TypeDef ty)
 
 instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)

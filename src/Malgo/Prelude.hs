@@ -29,6 +29,7 @@ import Control.Monad.Fix (MonadFix)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.List ((!!))
+import Data.Store (Store)
 import Koriel.Id (ModuleName)
 import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply)
@@ -155,6 +156,12 @@ instance Serialise Megaparsec.Pos
 instance Serialise SourcePos
 
 instance Serialise Range
+
+instance Store Megaparsec.Pos
+
+instance Store SourcePos
+
+instance Store Range
 
 instance Pretty Range where
   pPrint (Range start end) =

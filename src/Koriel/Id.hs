@@ -22,6 +22,7 @@ import Codec.Serialise
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
+import Data.Store (Store)
 import GHC.Exts
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -41,6 +42,8 @@ instance FromJSON ModuleName
 instance Hashable ModuleName
 
 instance Serialise ModuleName
+
+instance Store ModuleName
 
 instance Pretty ModuleName where
   pPrint (ModuleName modName) = pPrint modName
@@ -72,6 +75,8 @@ instance Hashable IdSort
 
 instance Serialise IdSort
 
+instance Store IdSort
+
 instance Pretty IdSort where
   pPrint (External modName) = "External" <+> pPrint modName
   pPrint Internal = "Internal"
@@ -99,6 +104,8 @@ instance FromJSON a => FromJSON (Id a)
 instance FromJSON a => FromJSONKey (Id a)
 
 instance Serialise a => Serialise (Id a)
+
+instance Store a => Store (Id a)
 
 noName :: Text
 noName = "noName"

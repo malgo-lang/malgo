@@ -7,6 +7,7 @@ import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store)
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -29,6 +30,8 @@ instance FromJSON Tag
 
 instance Serialise Tag
 
+instance Store Tag
+
 instance Pretty Tag where
   pPrint (Data name) = pPrint name
   pPrint Tuple = "#tuple"
@@ -45,6 +48,8 @@ instance ToJSON Con
 instance FromJSON Con
 
 instance Serialise Con
+
+instance Store Con
 
 instance Pretty Con where
   pPrint (Con tag xs) = parens $ sep $ pPrint tag : map pPrint xs
@@ -83,6 +88,8 @@ instance ToJSON Type
 instance FromJSON Type
 
 instance Serialise Type
+
+instance Store Type
 
 instance Pretty Type where
   pPrint (a :-> b) = sep [brackets (sep $ punctuate "," $ map pPrint a), "->", pPrint b]

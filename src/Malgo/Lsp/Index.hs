@@ -11,6 +11,7 @@ import Data.Aeson
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store)
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude
@@ -28,6 +29,8 @@ instance FromJSON SymbolKind
 
 instance Serialise SymbolKind
 
+instance Store SymbolKind
+
 data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
   deriving stock (Show, Generic)
 
@@ -36,6 +39,8 @@ instance ToJSON Symbol
 instance FromJSON Symbol
 
 instance Serialise Symbol
+
+instance Store Symbol
 
 data Index = Index
   { _references :: HashMap Info [Range],
@@ -55,6 +60,8 @@ instance ToJSON Index
 instance FromJSON Index
 
 instance Serialise Index
+
+instance Store Index
 
 instance Pretty Index where
   pPrint = text . toString . pShow
@@ -81,6 +88,8 @@ instance FromJSON Info
 instance FromJSONKey Info
 
 instance Serialise Info
+
+instance Store Info
 
 instance Hashable Info
 

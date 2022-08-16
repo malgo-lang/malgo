@@ -9,6 +9,8 @@ import Control.Lens.TH
 import Data.Aeson
 import Data.Graph
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store)
+import Data.Store qualified as Store
 import Data.String.Conversions (convertString)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
@@ -52,6 +54,8 @@ instance FromJSON Interface
 
 instance Serialise Interface
 
+instance Store Interface
+
 makeFieldsNoPrefix ''Interface
 
 instance Pretty Interface where
@@ -76,7 +80,8 @@ buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty
 storeInterface :: (MonadIO m, HasDstName env FilePath, MonadReader env m) => Interface -> m ()
 storeInterface interface = do
   dstName <- view dstName
-  liftIO $ writeFileSerialise (dstName -<.> "mlgi") interface
+  let encoded = Store.encode interface
+  writeFileBS (dstName -<.> "mlgi") encoded
 
 loadInterface ::
   ( MonadReader s m,
@@ -106,7 +111,9 @@ loadInterface (ModuleName modName) = do
     findAndReadFile (modPath : rest) modFile = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
-        then Right <$> liftIO (readFileDeserialise (modPath </> modFile))
+        then do
+          raw <- readFileBS (modPath </> modFile)
+          Right <$> liftIO (Store.decodeIO raw)
         else findAndReadFile rest modFile
 
 dependencieList :: (HasModulePaths s [FilePath], HasInterfaces s (IORef (HashMap ModuleName Interface)), MonadIO m, MonadReader s m) => ModuleName -> [ModuleName] -> m [ModuleName]
