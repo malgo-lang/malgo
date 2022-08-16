@@ -86,8 +86,7 @@ data Id a = Id
   }
   deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
 
-instance Eq a => Hashable (Id a) where
-  hashWithSalt salt Id {uniq} = hashWithSalt salt uniq
+instance Hashable a => Hashable (Id a)
 
 instance Binary a => Binary (Id a)
 

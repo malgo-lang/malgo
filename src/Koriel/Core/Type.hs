@@ -21,6 +21,8 @@ data Tag
 
 instance Binary Tag
 
+instance Hashable Tag
+
 instance ToJSON Tag
 
 instance FromJSON Tag
@@ -35,6 +37,8 @@ data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Binary Con
+
+instance Hashable Con
 
 instance ToJSON Con
 
@@ -71,6 +75,8 @@ _SumT = prism SumT \case
   t -> Left t
 
 instance Binary Type
+
+instance Hashable Type
 
 instance ToJSON Type
 
