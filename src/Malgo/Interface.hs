@@ -25,15 +25,24 @@ import System.Directory qualified as Directory
 import System.FilePath ((-<.>), (</>))
 
 data Interface = Interface
-  { _signatureMap :: HashMap RnId (GT.Scheme GT.Type), -- from TypeRep.Static
-    _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type), -- from TypeRep.Static
-    _typeSynonymMap :: HashMap (Id GT.Type) ([Id GT.Type], GT.Type), -- from TypeRef.Static
-    _resolvedVarIdentMap :: HashMap PsId RnId, -- from DsEnv
-    _resolvedTypeIdentMap :: HashMap PsId RnId, -- from DsEnv
-    _coreIdentMap :: HashMap RnId (Id C.Type), -- from DsEnv
-    infixMap :: HashMap RnId (Assoc, Int), -- from RnState
-    dependencies :: [ModuleName], -- from RnState
-    _lspIndex :: Index -- from Lsp.Index
+  { -- | Used in Infer
+    _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
+    -- | Used in Infer
+    _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
+    -- | Used in Infer
+    _typeSynonymMap :: HashMap (Id GT.Type) ([Id GT.Type], GT.Type),
+    -- | Used in Rename
+    _resolvedVarIdentMap :: HashMap PsId RnId,
+    -- | Used in Rename
+    _resolvedTypeIdentMap :: HashMap PsId RnId,
+    -- | Used in Desugar
+    _coreIdentMap :: HashMap RnId (Id C.Type),
+    -- | Used in Rename
+    infixMap :: HashMap RnId (Assoc, Int),
+    -- | Used in Rename
+    dependencies :: [ModuleName],
+    -- | Used in Lsp
+    _lspIndex :: Index
   }
   deriving stock (Show, Generic)
 
@@ -67,8 +76,6 @@ buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty
 storeInterface :: (MonadIO m, HasDstName env FilePath, MonadReader env m) => Interface -> m ()
 storeInterface interface = do
   dstName <- view dstName
-  -- liftIO $ encodeFile (dstName -<.> "mlgi") interface
-
   liftIO $ writeFileSerialise (dstName -<.> "mlgi") interface
 
 loadInterface ::

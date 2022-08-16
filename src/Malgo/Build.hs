@@ -3,11 +3,13 @@ module Malgo.Build where
 import Control.Lens
 import Data.Graph (graphFromEdges, reverseTopSort)
 import Data.List ((\\))
+import Data.List qualified as List
 import Dhall hiding (map)
 import Malgo.Driver qualified as Driver
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..), _moduleName)
+import Relude.Unsafe qualified as Unsafe
 import System.Directory (getCurrentDirectory)
 import System.FilePath (takeBaseName, (</>))
 import System.FilePath.Glob (glob)
@@ -55,15 +57,18 @@ run = do
   let compileOptions =
         map
           ( \path ->
-              (defaultToLLOpt path)
-                { _dstName = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
-                  _modulePaths = [workspaceDir </> "build"]
-                }
+              ( path,
+                (defaultToLLOpt path)
+                  { _dstName = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
+                    _modulePaths = [workspaceDir </> "build"]
+                  }
+              )
           )
           topSorted
-  for_ compileOptions \opt -> do
+  interfaces <- newIORef mempty
+  for_ compileOptions \(path, opt) -> do
     putStrLn ("Compile " <> opt._srcName)
-    Driver.compile opt
+    Driver.compileFromAST (Unsafe.fromJust $ List.lookup path parsedAstList) opt interfaces
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []

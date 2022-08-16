@@ -107,10 +107,9 @@ instance HasModulePaths MalgoEnv [FilePath] where
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail, MonadThrow, MonadCatch)
 
-runMalgoM :: MalgoM a -> ToLLOpt -> IO a
-runMalgoM m opt = do
+runMalgoM :: MalgoM a -> ToLLOpt -> IORef (HashMap ModuleName Interface) -> IO a
+runMalgoM m opt interfaces = do
   uniqSupply <- UniqSupply <$> newIORef 0
-  interfaces <- newIORef mempty
   let env = MalgoEnv {_toLLOpt = opt, _uniqSupply = uniqSupply, _interfaces = interfaces}
   runReaderT (m.unMalgoM) env
 
