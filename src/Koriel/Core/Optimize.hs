@@ -1,9 +1,11 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Koriel.Core.Optimize
   ( optimizeProgram,
   )
 where
 
-import Control.Lens (At (at), Lens', lens, over, traverseOf, traversed, use, view, (?=), (?~), _2)
+import Control.Lens (At (at), makeFieldsNoPrefix, traverseOf, traversed, view)
 import Control.Monad.Except
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
@@ -18,16 +20,9 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
-data OptimizeEnv = OptimizeEnv {_optimizeUniqSupply :: UniqSupply, _inlineLevel :: Int}
+data OptimizeEnv = OptimizeEnv {_uniqSupply :: UniqSupply, inlineLevel :: Int}
 
-optimizeUniqSupply :: Lens' OptimizeEnv UniqSupply
-optimizeUniqSupply = lens (._optimizeUniqSupply) (\o x -> o {_optimizeUniqSupply = x})
-
-inlineLevel :: Lens' OptimizeEnv Int
-inlineLevel = lens (._inlineLevel) (\o x -> o {_inlineLevel = x})
-
-instance HasUniqSupply OptimizeEnv UniqSupply where
-  uniqSupply = optimizeUniqSupply
+makeFieldsNoPrefix ''OptimizeEnv
 
 -- | Apply a monadic function n times.
 times :: Monad m => Int -> (t -> m t) -> t -> m t
@@ -49,12 +44,12 @@ optimizeProgram ::
   Int ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram us level prog@Program {..} = runReaderT ?? OptimizeEnv {_optimizeUniqSupply = us, _inlineLevel = level} $ do
-  state <- execStateT (traverse (checkInlineable . uncurry LocalDef . over _2 (uncurry Fun)) _topFuncs) (CallInlineEnv mempty)
+optimizeProgram us level prog@Program {..} = runReaderT ?? OptimizeEnv {_uniqSupply = us, inlineLevel = level} $ do
+  state <- execStateT ?? CallInlineEnv mempty $ for_ _topFuncs $ \(name, (ps, e)) -> checkInlinable $ LocalDef name (Fun ps e)
   appProgram (optimizeExpr state) prog
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
-optimizeExpr state = 10 `times` opt
+optimizeExpr state = 3 `times` opt
   where
     opt =
       pure
@@ -79,11 +74,8 @@ optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (travers
 optTrivialCall e = pure e
 
 newtype CallInlineEnv = CallInlineEnv
-  { _inlinableMap :: HashMap (Id Type) ([Id Type], Exp (Id Type))
+  { inlinableMap :: HashMap (Id Type) ([Id Type], Exp (Id Type))
   }
-
-inlineableMap :: Lens' CallInlineEnv (HashMap (Id Type) ([Id Type], Exp (Id Type)))
-inlineableMap = lens (._inlinableMap) $ \e x -> e {_inlinableMap = x}
 
 optCallInline ::
   (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) =>
@@ -95,29 +87,25 @@ optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
 optCallInline (Let ds e) = do
   ds' <- traverseOf (traversed . localDefObj . appObj) optCallInline ds
-  traverse_ checkInlineable ds'
+  traverse_ checkInlinable ds'
   Let ds' <$> optCallInline e
 optCallInline e = pure e
 
-checkInlineable ::
+checkInlinable ::
   (MonadState CallInlineEnv m, MonadReader OptimizeEnv m) =>
   LocalDef (Id Type) ->
   m ()
-checkInlineable (LocalDef f (Fun ps v)) = do
-  level <- view inlineLevel
+checkInlinable (LocalDef f (Fun ps v)) = do
+  level <- asks (.inlineLevel)
   -- 変数の数がlevel以下ならインライン展開する
-  -- let isInlineableSize = level >= lengthOf cosmos v -- ノードの数。遅い
-  -- let isInlineableSize = 0 < either identity identity (foldlMOf cosmos aux level v) -- 同上。ちょっと遅い
-  -- let isInlineableSize = level >= length v
-  let isInlineableSize = 0 < either identity identity (foldM aux level v)
-  -- when (not (f `member` freevars v) && lengthOf cosmos v <= level) $ at f ?= (ps, v)
-  when isInlineableSize $ do
-    inlineableMap . at f ?= (ps, v)
+  let isInlinableSize = 0 < foldl' countdown level v
+  when isInlinableSize $ do
+    modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
   where
-    aux n _
-      | n <= 0 = Left 0
-      | otherwise = Right (n - 1)
-checkInlineable _ = pass
+    countdown n _
+      | n <= 0 = 0
+      | otherwise = n - 1
+checkInlinable _ = pass
 
 lookupCallInline ::
   (MonadReader OptimizeEnv m, MonadState CallInlineEnv m, MonadIO m) =>
@@ -126,7 +114,7 @@ lookupCallInline ::
   [Atom (Id Type)] ->
   m (Exp (Id Type))
 lookupCallInline call f as = do
-  f' <- use $ inlineableMap . at f
+  f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
   us <- view uniqSupply
   case f' of
     Just (ps, v) -> alpha v AlphaEnv {_uniqSupply = us, subst = HashMap.fromList $ zip ps as}
@@ -137,8 +125,7 @@ type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
 optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
   body' <- optPackInline body
-  mPack <- view (at v)
-  case mPack of
+  view (at v) >>= \case
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []
   where
@@ -150,7 +137,7 @@ optPackInline (Let ds e) = do
   ds' <- traverseOf (traversed . localDefObj . appObj) optPackInline ds
   local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
   where
-    toPackInlineMap (LocalDef v (Pack _ con as)) = mempty & at v ?~ (con, as)
+    toPackInlineMap (LocalDef v (Pack _ con as)) = one (v, (con, as))
     toPackInlineMap _ = mempty
 optPackInline e = pure e
 

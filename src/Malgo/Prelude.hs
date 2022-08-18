@@ -6,18 +6,6 @@
 module Malgo.Prelude
   ( module Koriel.Prelude,
     module Malgo.Prelude,
-    -- runMalgoM,
-    -- ToLLOpt (..),
-    -- MalgoEnv (..),
-    -- HasMalgoEnv (..),
-    -- Range (..),
-    -- errorOn,
-    -- warningOn,
-    -- defaultToLLOpt,
-    -- positionToSourcePos,
-    -- sourcePosToPosition,
-    -- malgoRangeToLspRange,
-    -- malgoRangeToLocation,
   )
 where
 
