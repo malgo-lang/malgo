@@ -29,9 +29,7 @@ runAlpha = runReaderT
 lookupVar :: MonadReader AlphaEnv m => Id Type -> m (Atom (Id Type))
 lookupVar n = do
   env <- asks (.subst)
-  case HashMap.lookup n env of
-    Just n' -> pure n'
-    Nothing -> pure (Var n)
+  pure $ HashMap.lookupDefault (Var n) n env
 
 lookupId :: (MonadReader AlphaEnv m) => Id Type -> m (Id Type)
 lookupId n = do
