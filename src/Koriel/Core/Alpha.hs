@@ -42,18 +42,12 @@ alphaExp :: (MonadReader AlphaEnv f, MonadIO f) => Exp (Id Type) -> f (Exp (Id T
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
 alphaExp (Let ds e) = do
   -- Avoid capturing variables
-
-  -- このコードでも動くはずだけど、segfaultする。
-  -- let binds = map (._localDefVar) ds
-  -- env <- ask
-  -- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` binds) e.subst}) $ do
-  --   env' <- ask
-  --   when (env.subst /= env'.subst) $ do
-  --     traceShowM $ "binds: " <> pPrint binds <> " env: " <> pPrint (HashMap.keys $ env.subst)
-  --     traceShowM $ "env': " <> pPrint (HashMap.keys $ env'.subst)
-  --   Let <$> traverse alphaLocalDef ds <*> alphaExp e
   env <- foldMapM (\(LocalDef n _) -> one . (n,) . Var <$> cloneId n) ds
   local (\e -> e {subst = env <> e.subst}) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
+-- このコードでも動くはずだけど、segfaultする。
+-- let binds = map (._localDefVar) ds
+-- e' <- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` binds) e.subst}) $ do
+--   Let <$> traverse alphaLocalDef ds <*> alphaExp e
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
 alphaExp e = traverseOf atom alphaAtom e
 
@@ -69,27 +63,27 @@ alphaLocalDef (LocalDef x o) =
 alphaObj :: (MonadReader AlphaEnv m, MonadIO m) => Obj (Id Type) -> m (Obj (Id Type))
 alphaObj (Fun ps e) = do
   -- Avoid capturing variables
-  -- ps' <- traverse cloneId ps
-  -- local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Fun ps' <$> alphaExp e
-  local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Fun ps <$> alphaExp e
+  ps' <- traverse cloneId ps
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Fun ps' <$> alphaExp e
+-- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Fun ps <$> alphaExp e
 alphaObj o = traverseOf atom alphaAtom o
 
 alphaCase :: (MonadReader AlphaEnv m, MonadIO m) => Case (Id Type) -> m (Case (Id Type))
 alphaCase (Unpack c ps e) = do
   -- Avoid capturing variables
-  -- ps' <- traverse cloneId ps
-  -- local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Unpack c ps' <$> alphaExp e
-  local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Unpack c ps <$> alphaExp e
+  ps' <- traverse cloneId ps
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Unpack c ps' <$> alphaExp e
+-- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Unpack c ps <$> alphaExp e
 alphaCase (OpenRecord kps e) = do
   -- Avoid capturing variables
   let ps = HashMap.elems kps
-  -- kps' <- traverse cloneId kps
-  -- let ps' = HashMap.elems kps'
-  -- local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ OpenRecord kps' <$> alphaExp e
-  local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ OpenRecord kps <$> alphaExp e
+  kps' <- traverse cloneId kps
+  let ps' = HashMap.elems kps'
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ OpenRecord kps' <$> alphaExp e
+-- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ OpenRecord kps <$> alphaExp e
 alphaCase (Bind x e) = do
   -- Avoid capturing variables
-  -- x' <- cloneId x
-  -- local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' <$> alphaExp e
-  local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExp e
+  x' <- cloneId x
+  local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' <$> alphaExp e
+-- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExp e
 alphaCase (Switch u e) = Switch u <$> alphaExp e
