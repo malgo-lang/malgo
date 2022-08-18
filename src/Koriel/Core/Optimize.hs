@@ -59,10 +59,7 @@ optimizeExpr state = 3 `times` opt
         >=> (flip evalStateT state . optCallInline)
         >=> optIdCast
         >=> optTrivialCall
-        -- TODO[optCast]
-        -- >=> optCast
-        >=> pure
-          . flat
+        >=> pure . flat
 
 -- (let ((f (fun ps body))) (f as)) = body[as/ps]
 optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
