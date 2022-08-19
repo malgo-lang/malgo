@@ -1,10 +1,10 @@
 module RightAssoc = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  infixr 2 (<|>);
-  def (<|>) : a -> List a -> List a;
-  def (<|>) = Cons;
+  infixr 2 (<|>)
+  def (<|>) : a -> List a -> List a
+  def (<|>) = Cons
 
   def f = { n ->
     -- fixed: https://github.com/malgo-lang/malgo/commit/b499a897271ea32ffe55d5e15aaa0e3138479f58
@@ -30,13 +30,13 @@ module RightAssoc = {
     --      <|> ((True, { 3 })
     --           <|> (True, { 4 })
     --                <|> Nil)
-  };
+  }
 
-  def main : { () };
+  def main : { () }
   def main = { 
     let x = f 4;
     printString "OK"
-  };
+  }
 }
 
 -- Expected: OK

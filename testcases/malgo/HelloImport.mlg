@@ -1,12 +1,12 @@
 module HelloImport = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  def main : {()};
+  def main : {()}
   def main = {
     putStr (String# "hello"#);
     putStrLn |> { f -> f (String# " world"#) }
-  };
+  }
 }
 
 -- Expected: hello world

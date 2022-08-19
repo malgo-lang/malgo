@@ -1,9 +1,9 @@
 module TestLet = {
-  module {..} = import Builtin;
+  module {..} = import Builtin
 
-  infixl 0 (|>);
-  def (|>) : a -> (a -> b) -> b;
-  def (|>) = {x f -> f x};
+  infixl 0 (|>)
+  def (|>) : a -> (a -> b) -> b
+  def (|>) = {x f -> f x}
 
   def main = {
     let x = addInt32# 1# 2#;
@@ -12,6 +12,6 @@ module TestLet = {
     let x = Int32# (addInt32# 1# 2#);
     let printInt32 = {(Int32# x) -> printString# (toStringInt32# x)};
     printInt32 x
-  };
+  }
 }
 -- Expected: 33

@@ -1,14 +1,14 @@
 module InvalidPattern = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
   def isNil = {
     | [] -> True
     | _ _ -> False
 --      ^ different number of patterns
-  };
+  }
 
-  def main = { putStrLn "OK" };
+  def main = { putStrLn "OK" }
 }
 
 -- Expected: OK

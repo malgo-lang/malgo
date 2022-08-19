@@ -1,18 +1,18 @@
 module Test3 = {
-  data Tag = A | B;
-  data List a = Nil | Cons a (List a);
+  data Tag = A | B
+  data List a = Nil | Cons a (List a)
 
-  infixl 0 (|>);
-  def (|>) : a -> (a -> b) -> b;
-  def (|>) = {x f -> f x};
+  infixl 0 (|>)
+  def (|>) : a -> (a -> b) -> b
+  def (|>) = {x f -> f x}
 
-  foreign import malgo_print_string : String# -> ();
+  foreign import malgo_print_string : String# -> ()
 
   def main = { 
     Cons A (Cons B Nil) |> {
         (Cons A (Cons B Nil)) -> malgo_print_string "OK"#
       | _ -> malgo_print_string "WRONG"#
       }
-    };
+  }
 }
 -- Expected: OK

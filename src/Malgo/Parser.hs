@@ -33,7 +33,7 @@ pModule = do
   void $ pKeyword "module"
   x <- pModuleName
   void $ pOperator "="
-  ds <- between (symbol "{") (symbol "}") $ pDecl `endBy` pOperator ";"
+  ds <- between (symbol "{") (symbol "}") $ many pDecl
   pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ParsedDefinitions ds}
 
 -- module name
@@ -598,14 +598,14 @@ lowerIdent :: Parser Text
 lowerIdent =
   label "lower identifier" $
     lexeme do
-      notFollowedBy reserved <|> notReserved
+      notFollowedBy reserved
       toText <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
 
 upperIdent :: Parser Text
 upperIdent =
   label "upper identifier" $
     lexeme do
-      notFollowedBy reserved <|> notReserved
+      notFollowedBy reserved
       toText <$> ((:) <$> upperChar <*> many identLetter)
 
 operator :: Parser Text
@@ -614,11 +614,6 @@ operator =
     lexeme do
       notFollowedBy reservedOp
       toText <$> some opLetter
-
-notReserved :: Parser ()
-notReserved = do
-  word <- lookAhead reserved
-  registerFancyFailure (one $ ErrorFail $ "unexpected '" <> toString word <> "'\nThis is a reserved keyword")
 
 -- { _ , _ , ... , _ } or { _ ; _ ; ... ; _ ; }
 -- `;` terminatorによる分割を先に検討して、その後`,` separatorによる分割を検討する

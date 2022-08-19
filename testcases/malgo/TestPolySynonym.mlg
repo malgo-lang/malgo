@@ -1,19 +1,19 @@
 module TestPolySynonym = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  type Fun0 a = {a};
+  type Fun0 a = {a}
 
-  type Pair a b = { fst: b, snd: a };
+  type Pair a b = { fst: b, snd: a }
 
-  def first : { fst: a, snd: b } -> a;
-  def first = { { fst = x, snd = _ } -> x };
+  def first : { fst: a, snd: b } -> a
+  def first = { { fst = x, snd = _ } -> x }
 
-  def main : Fun0 ();
+  def main : Fun0 ()
   def main = {
     let x = { fst = 1, snd = "hoge" };
     first x |> printInt32
-  };
+  }
 }
 
 -- Expected: 1

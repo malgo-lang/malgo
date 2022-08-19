@@ -1,15 +1,15 @@
 module StringPatIsNotSupported = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
   def isHoge = {
     | "hoge" -> True
     | _ -> False
-  };
+  }
 
   def main = {
     if (isHoge "hoge") { putStrLn "OK" } { putStrLn "Err" }
-  };
+  }
 }
 
 -- Expected: OK

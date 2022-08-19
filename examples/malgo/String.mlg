@@ -1,13 +1,13 @@
 module String = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
   def main = {
     let str1 = "Hello";
     let str2 = "world";
     printChar <| atString 0L str1;
     putStrLn <| appendString str1 <| appendString " " str2
-  };
+  }
 }
 
 -- Expected: HHello world

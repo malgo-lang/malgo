@@ -1,8 +1,8 @@
 module TestExplicitModule = {
-  module {..} = import Builtin;
-  module Prelude = import Prelude;
+  module {..} = import Builtin
+  module Prelude = import Prelude
 
-  def main = { Prelude.putStrLn "Hello, world" };
+  def main = { Prelude.putStrLn "Hello, world" }
 }
 
 -- Expected: Hello, world

@@ -1,14 +1,14 @@
 module LazyList = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
   
-  data LazyList a = LNil | LCons a {LazyList a};
+  data LazyList a = LNil | LCons a {LazyList a}
 
-  def nil : {LazyList a};
-  def nil = {LNil};
+  def nil : {LazyList a}
+  def nil = {LNil}
 
-  def cons : a -> {LazyList a} -> {LazyList a}; 
-  def cons = { x xs -> {LCons x xs} };
+  def cons : a -> {LazyList a} -> {LazyList a}
+  def cons = { x xs -> {LCons x xs} }
 
   def map = { f xs -> {
     xs () |>
@@ -16,20 +16,20 @@ module LazyList = {
       | LCons x xs -> LCons (f x) (map f xs)
       }
     }
-  };
+  }
 
   def sum = { xs ->
     xs () |> { LNil -> 0L
              | LCons x xs -> addInt64 x (sum xs)
              }
-  };
+  }
 
   def main = {
     let xs = {LCons 1L {LCons 2L nil}};
     sum (cons 1L (cons 2L nil)) 
       |> toStringInt64
       |> putStrLn
-  };
+  }
 }
 
 -- Expected: 3
