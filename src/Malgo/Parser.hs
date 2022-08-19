@@ -558,7 +558,7 @@ symbol :: Text -> Parser Text
 symbol = L.symbol sc
 
 identLetter :: Parser Char
-identLetter = alphaNumChar <|> oneOf ("_#'" :: String)
+identLetter = alphaNumChar <|> oneOf ("_#" :: String)
 
 opLetter :: Parser Char
 opLetter = oneOf ("+-*/\\%=><:;|&!#." :: String)
