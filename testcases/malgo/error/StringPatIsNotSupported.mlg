@@ -2,12 +2,12 @@ module StringPatIsNotSupported = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  isHoge = {
+  def isHoge = {
     | "hoge" -> True
     | _ -> False
   };
 
-  main = {
+  def main = {
     if (isHoge "hoge") { putStrLn "OK" } { putStrLn "Err" }
   };
 }

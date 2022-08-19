@@ -2,7 +2,7 @@ module List = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  main = {
+  def main = {
     let xs = [1, 2, 3];
     let nil = [];
     putStrLn (toStringInt32 (head xs))

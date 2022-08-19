@@ -2,18 +2,19 @@ module ToplevelVariable = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  one = 1;
+  def one = 1;
 
-  addOne = addInt32 one;
+  def addOne = addInt32 one;
 
-  constId = const identity;
+  def constId = const identity;
 
-  comp : Maybe a;
-  comp = { Nothing -> Nothing
-         | Just x -> Nothing
-         } (Just ());
+  def comp : Maybe a;
+  def comp =
+    { Nothing -> Nothing
+    | Just x -> Nothing
+    } (Just ());
 
-  main = {
+  def main = {
     { Nothing -> printString "OK"
     | Just _ -> ()
     } comp;

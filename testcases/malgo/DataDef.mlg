@@ -5,6 +5,6 @@ module DataDef = {
   foreign import malgo_int64_t_to_string : Int64# -> String#;
   foreign import malgo_print_string : String# -> ();
 
-  main = { {(Int# x) -> malgo_print_string (malgo_int64_t_to_string x) } (Int# 1L#) };
+  def main = { {(Int# x) -> malgo_print_string (malgo_int64_t_to_string x) } (Int# 1L#) };
 }
 -- Expected: 1

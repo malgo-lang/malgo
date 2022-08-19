@@ -3,21 +3,21 @@ module Punctuate = {
   module {..} = import Prelude;
 
   infixr 6 (<>);
-  (<>) : String -> String -> String;
-  (<>) = appendString; 
+  def (<>) : String -> String -> String;
+  def (<>) = appendString; 
 
   data SExpr = Symbol String
              | SInt Int32
              | SList (List SExpr);
 
-  show : SExpr -> String;
-  show =
+  def show : SExpr -> String;
+  def show =
     { Symbol str -> "Symbol " <> str
     | SInt int -> "SInt " <> toStringInt32 int
     | SList ss -> "SList [" <> concatString (punctuate ", " (mapList show ss)) <> "]"
     };
 
-  main = {
+  def main = {
     -- (x (y (z)))  
     let x = SList [Symbol "x", SList [Symbol "y", SList [Symbol "z"]]];
     putStrLn (show x)

@@ -4,22 +4,22 @@ module ErrorPatSynRecon = {
   foreign import malgo_add_i64 : Int64# -> Int64# -> Int64#;
 
   infixl 6 (+#);
-  (+#) = {x y -> malgo_add_i64 x y};
+  def (+#) = {x y -> malgo_add_i64 x y};
 
   infixl 0 (|>);
-  (|>) : a -> (a -> b) -> b;
-  (|>) = {x f -> f x};
+  def (|>) : a -> (a -> b) -> b;
+  def (|>) = {x f -> f x};
 
   data List a = Nil | Cons a (List a);
 
-  sum = { Cons Int# x xs -> -- Error: invalid pattern
+  def sum = { Cons Int# x xs -> -- Error: invalid pattern
             sum xs |> {(Int# s) -> Int# (x +# s)}
         | Nil -> Int# 0L#
         };
 
   foreign import print_int : Int64# -> ();
 
-  main = {
+  def main = {
     let x = sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil));
     ()
   };

@@ -2,7 +2,7 @@ module TypeAnnotation = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  main = {
+  def main = {
     printString (({x -> x} : String -> String) "hoge")
   };
 }

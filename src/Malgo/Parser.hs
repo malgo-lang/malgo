@@ -128,6 +128,7 @@ pScSig :: Parser (Decl (Malgo 'Parse))
 pScSig =
   label "toplevel function signature" do
     start <- getSourcePos
+    void $ pKeyword "def"
     name <- lowerIdent <|> between (symbol "(") (symbol ")") operator
     void $ pOperator ":"
     typ <- pType
@@ -138,6 +139,7 @@ pScDef :: Parser (Decl (Malgo 'Parse))
 pScDef =
   label "toplevel function definition" do
     start <- getSourcePos
+    void $ pKeyword "def"
     name <- lowerIdent <|> between (symbol "(") (symbol ")") operator
     void $ pOperator "="
     exp <- pExp
@@ -573,6 +575,7 @@ reserved =
     map
       (try . pKeyword)
       [ "class",
+        "def",
         "data",
         "exists",
         "forall",

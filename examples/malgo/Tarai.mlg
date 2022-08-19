@@ -3,18 +3,18 @@ module Tarai = {
   module {..} = import Prelude;
 
   infix 4 (<=);
-  (<=) = { (Int64# x) (Int64# y) -> isTrue# (leInt64# x y) };
+  def (<=) = { (Int64# x) (Int64# y) -> isTrue# (leInt64# x y) };
 
   infixl 6 (-);
-  (-) = { x y -> subInt64 x y };
+  def (-) = { x y -> subInt64 x y };
 
-  tarai = { x y z ->
+  def tarai = { x y z ->
     if (x <= y)
     { y }
     { tarai (tarai (x - 1L) y z) (tarai (y - 1L) z x) (tarai (z - 1L) x y) }
   };
 
-  main = {
+  def main = {
     putStrLn (toStringInt64 (tarai 12L 6L 0L))
   };
 }

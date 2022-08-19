@@ -9,487 +9,489 @@ module Builtin = {
   data Bool = False | True;
 
   -- Boxing functions
-  int32# : Int32# -> Int32;
-  int32# = { x -> Int32# x };
+  def int32# : Int32# -> Int32;
+  def int32# = { x -> Int32# x };
 
-  int64# : Int64# -> Int64;
-  int64# = { x -> Int64# x };
+  def int64# : Int64# -> Int64;
+  def int64# = { x -> Int64# x };
 
-  float# : Float# -> Float;
-  float# = { x -> Float# x };
+  def float# : Float# -> Float;
+  def float# = { x -> Float# x };
 
-  double# : Double# -> Double;
-  double# = { x -> Double# x };
+  def double# : Double# -> Double;
+  def double# = { x -> Double# x };
 
-  char# : Char# -> Char;
-  char# = { x -> Char# x };
+  def char# : Char# -> Char;
+  def char# = { x -> Char# x };
 
-  string# : String# -> String;
-  string# = { x -> String# x };
+  def string# : String# -> String;
+  def string# = { x -> String# x };
 
   -- Panic and Undefined
   foreign import malgo_panic : String# -> a;
-  panic : String -> a;
-  panic = { String# message -> malgo_panic message };
+  def panic : String -> a;
+  def panic = { String# message -> malgo_panic message };
 
   foreign import malgo_unsafe_cast : a -> b;
 
-  undefined : a;
-  undefined = malgo_unsafe_cast ();
+  def undefined : a;
+  def undefined = malgo_unsafe_cast ();
 
   -- Arithmetic operators
   foreign import malgo_add_int32_t : Int32# -> Int32# -> Int32#;
-  addInt32# : Int32# -> Int32# -> Int32#;
-  addInt32# = { x y -> malgo_add_int32_t x y };
-  addInt32 : Int32 -> Int32 -> Int32;
-  addInt32 = { (Int32# x) (Int32# y) -> Int32# (addInt32# x y) };
+  def addInt32# : Int32# -> Int32# -> Int32#;
+  def addInt32# = { x y -> malgo_add_int32_t x y };
+  def addInt32 : Int32 -> Int32 -> Int32;
+  def addInt32 = { (Int32# x) (Int32# y) -> Int32# (addInt32# x y) };
 
   foreign import malgo_sub_int32_t : Int32# -> Int32# -> Int32#;
-  subInt32# : Int32# -> Int32# -> Int32#;
-  subInt32# = { x y -> malgo_sub_int32_t x y };
-  subInt32 : Int32 -> Int32 -> Int32;
-  subInt32 = { (Int32# x) (Int32# y) -> Int32# (subInt32# x y) };
+  def subInt32# : Int32# -> Int32# -> Int32#;
+  def subInt32# = { x y -> malgo_sub_int32_t x y };
+  def subInt32 : Int32 -> Int32 -> Int32;
+  def subInt32 = { (Int32# x) (Int32# y) -> Int32# (subInt32# x y) };
 
   foreign import malgo_mul_int32_t : Int32# -> Int32# -> Int32#;
-  mulInt32# : Int32# -> Int32# -> Int32#;
-  mulInt32# = { x y -> malgo_mul_int32_t x y };
-  mulInt32 : Int32 -> Int32 -> Int32;
-  mulInt32 = { (Int32# x) (Int32# y) -> Int32# (mulInt32# x y) };
+  def mulInt32# : Int32# -> Int32# -> Int32#;
+  def mulInt32# = { x y -> malgo_mul_int32_t x y };
+  def mulInt32 : Int32 -> Int32 -> Int32;
+  def mulInt32 = { (Int32# x) (Int32# y) -> Int32# (mulInt32# x y) };
 
   foreign import malgo_div_int32_t : Int32# -> Int32# -> Int32#;
-  divInt32# : Int32# -> Int32# -> Int32#;
-  divInt32# = { x y -> malgo_div_int32_t x y };
-  divInt32 : Int32 -> Int32 -> Int32;
-  divInt32 = { (Int32# x) (Int32# y) -> Int32# (divInt32# x y) };
+  def divInt32# : Int32# -> Int32# -> Int32#;
+  def divInt32# = { x y -> malgo_div_int32_t x y };
+  def divInt32 : Int32 -> Int32 -> Int32;
+  def divInt32 = { (Int32# x) (Int32# y) -> Int32# (divInt32# x y) };
 
   foreign import malgo_add_int64_t : Int64# -> Int64# -> Int64#;
-  addInt64# : Int64# -> Int64# -> Int64#;
-  addInt64# = { x y -> malgo_add_int64_t x y };
-  addInt64 : Int64 -> Int64 -> Int64;
-  addInt64 = { (Int64# x) (Int64# y) -> Int64# (addInt64# x y) };
+  def addInt64# : Int64# -> Int64# -> Int64#;
+  def addInt64# = { x y -> malgo_add_int64_t x y };
+  def addInt64 : Int64 -> Int64 -> Int64;
+  def addInt64 = { (Int64# x) (Int64# y) -> Int64# (addInt64# x y) };
 
   foreign import malgo_sub_int64_t : Int64# -> Int64# -> Int64#;
-  subInt64# : Int64# -> Int64# -> Int64#;
-  subInt64# = { x y -> malgo_sub_int64_t x y };
-  subInt64 : Int64 -> Int64 -> Int64;
-  subInt64 = { (Int64# x) (Int64# y) -> Int64# (subInt64# x y) };
+  def subInt64# : Int64# -> Int64# -> Int64#;
+  def subInt64# = { x y -> malgo_sub_int64_t x y };
+  def subInt64 : Int64 -> Int64 -> Int64;
+  def subInt64 = { (Int64# x) (Int64# y) -> Int64# (subInt64# x y) };
 
   foreign import malgo_mul_int64_t : Int64# -> Int64# -> Int64#;
-  mulInt64# : Int64# -> Int64# -> Int64#;
-  mulInt64# = { x y -> malgo_mul_int64_t x y };
-  mulInt64 : Int64 -> Int64 -> Int64;
-  mulInt64 = { (Int64# x) (Int64# y) -> Int64# (mulInt64# x y) };
+  def mulInt64# : Int64# -> Int64# -> Int64#;
+  def mulInt64# = { x y -> malgo_mul_int64_t x y };
+  def mulInt64 : Int64 -> Int64 -> Int64;
+  def mulInt64 = { (Int64# x) (Int64# y) -> Int64# (mulInt64# x y) };
 
   foreign import malgo_div_int64_t : Int64# -> Int64# -> Int64#;
-  divInt64# : Int64# -> Int64# -> Int64#;
-  divInt64# = { x y -> malgo_div_int64_t x y };
-  divInt64 : Int64 -> Int64 -> Int64;
-  divInt64 = { (Int64# x) (Int64# y) -> Int64# (divInt64# x y) };
+  def divInt64# : Int64# -> Int64# -> Int64#;
+  def divInt64# = { x y -> malgo_div_int64_t x y };
+  def divInt64 : Int64 -> Int64 -> Int64;
+  def divInt64 = { (Int64# x) (Int64# y) -> Int64# (divInt64# x y) };
 
   foreign import malgo_add_float : Float# -> Float# -> Float#;
-  addFloat# : Float# -> Float# -> Float#;
-  addFloat# = { x y -> malgo_add_float x y };
-  addFloat : Float -> Float -> Float;
-  addFloat = { (Float# x) (Float# y) -> Float# (addFloat# x y) };
+  def addFloat# : Float# -> Float# -> Float#;
+  def addFloat# = { x y -> malgo_add_float x y };
+  def addFloat : Float -> Float -> Float;
+  def addFloat = { (Float# x) (Float# y) -> Float# (addFloat# x y) };
 
   foreign import malgo_sub_float : Float# -> Float# -> Float#;
-  subFloat# : Float# -> Float# -> Float#;
-  subFloat# = { x y -> malgo_sub_float x y };
-  subFloat : Float -> Float -> Float;
-  subFloat = { (Float# x) (Float# y) -> Float# (subFloat# x y) };
+  def subFloat# : Float# -> Float# -> Float#;
+  def subFloat# = { x y -> malgo_sub_float x y };
+  def subFloat : Float -> Float -> Float;
+  def subFloat = { (Float# x) (Float# y) -> Float# (subFloat# x y) };
 
   foreign import malgo_mul_float : Float# -> Float# -> Float#;
-  mulFloat# : Float# -> Float# -> Float#;
-  mulFloat# = { x y -> malgo_mul_float x y };
-  mulFloat : Float -> Float -> Float;
-  mulFloat = { (Float# x) (Float# y) -> Float# (mulFloat# x y) };
+  def mulFloat# : Float# -> Float# -> Float#;
+  def mulFloat# = { x y -> malgo_mul_float x y };
+  def mulFloat : Float -> Float -> Float;
+  def mulFloat = { (Float# x) (Float# y) -> Float# (mulFloat# x y) };
 
   foreign import malgo_div_float : Float# -> Float# -> Float#;
-  divFloat# : Float# -> Float# -> Float#;
-  divFloat# = { x y -> malgo_div_float x y };
-  divFloat : Float -> Float -> Float;
-  divFloat = { (Float# x) (Float# y) -> Float# (divFloat# x y) };
+  def divFloat# : Float# -> Float# -> Float#;
+  def divFloat# = { x y -> malgo_div_float x y };
+  def divFloat : Float -> Float -> Float;
+  def divFloat = { (Float# x) (Float# y) -> Float# (divFloat# x y) };
 
   foreign import malgo_add_double : Double# -> Double# -> Double#;
-  addDouble# : Double# -> Double# -> Double#;
-  addDouble# = { x y -> malgo_add_double x y };
-  addDouble : Double -> Double -> Double;
-  addDouble = { (Double# x) (Double# y) -> Double# (addDouble# x y) };
+  def addDouble# : Double# -> Double# -> Double#;
+  def addDouble# = { x y -> malgo_add_double x y };
+  def addDouble : Double -> Double -> Double;
+  def addDouble = { (Double# x) (Double# y) -> Double# (addDouble# x y) };
 
   foreign import malgo_sub_double : Double# -> Double# -> Double#;
-  subDouble# : Double# -> Double# -> Double#;
-  subDouble# = { x y -> malgo_sub_double x y };
-  subDouble : Double -> Double -> Double;
-  subDouble = { (Double# x) (Double# y) -> Double# (subDouble# x y) };
+  def subDouble# : Double# -> Double# -> Double#;
+  def subDouble# = { x y -> malgo_sub_double x y };
+  def subDouble : Double -> Double -> Double;
+  def subDouble = { (Double# x) (Double# y) -> Double# (subDouble# x y) };
 
   foreign import malgo_mul_double : Double# -> Double# -> Double#;
-  mulDouble# : Double# -> Double# -> Double#;
-  mulDouble# = { x y -> malgo_mul_double x y };
-  mulDouble : Double -> Double -> Double;
-  mulDouble = { (Double# x) (Double# y) -> Double# (mulDouble# x y) };
+  def mulDouble# : Double# -> Double# -> Double#;
+  def mulDouble# = { x y -> malgo_mul_double x y };
+  def mulDouble : Double -> Double -> Double;
+  def mulDouble = { (Double# x) (Double# y) -> Double# (mulDouble# x y) };
 
   foreign import malgo_div_double : Double# -> Double# -> Double#;
-  divDouble# : Double# -> Double# -> Double#;
-  divDouble# = { x y -> malgo_div_double x y };
-  divDouble : Double -> Double -> Double;
-  divDouble = { (Double# x) (Double# y) -> Double# (divDouble# x y) };
+  def divDouble# : Double# -> Double# -> Double#;
+  def divDouble# = { x y -> malgo_div_double x y };
+  def divDouble : Double -> Double -> Double;
+  def divDouble = { (Double# x) (Double# y) -> Double# (divDouble# x y) };
 
 
   foreign import sqrtf : Float# -> Float#;
-  sqrtFloat# : Float# -> Float#;
-  sqrtFloat# = { x -> sqrtf x };
-  sqrtFloat : Float -> Float;
-  sqrtFloat = { Float# x -> Float# (sqrtFloat# x) };
+  def sqrtFloat# : Float# -> Float#;
+  def sqrtFloat# = { x -> sqrtf x };
+  def sqrtFloat : Float -> Float;
+  def sqrtFloat = { Float# x -> Float# (sqrtFloat# x) };
 
   foreign import sqrt : Double# -> Double#;
-  sqrtDouble# : Double# -> Double#;
-  sqrtDouble# = { x -> sqrt x };
-  sqrtDouble : Double -> Double;
-  sqrtDouble = { Double# x -> Double# (sqrtDouble# x) };
+  def sqrtDouble# : Double# -> Double#;
+  def sqrtDouble# = { x -> sqrt x };
+  def sqrtDouble : Double -> Double;
+  def sqrtDouble = { Double# x -> Double# (sqrtDouble# x) };
 
-  isTrue# : Int32# -> Bool;
-  isTrue# = { 1# -> True
-            | _  -> False };
+  def isTrue# : Int32# -> Bool;
+  def isTrue# =
+    { 1# -> True
+    | _  -> False };
 
-  not : Bool -> Bool;
-  not = { True -> False
-        | False -> True };
+  def not : Bool -> Bool;
+  def not =
+    { True -> False
+    | False -> True };
 
   foreign import malgo_eq_int32_t : Int32# -> Int32# -> Int32#;
-  eqInt32# : Int32# -> Int32# -> Int32#;
-  eqInt32# = { x y -> malgo_eq_int32_t x y };
-  eqInt32 : Int32 -> Int32 -> Bool;
-  eqInt32 = { (Int32# x) (Int32# y) -> isTrue# (eqInt32# x y) };
+  def eqInt32# : Int32# -> Int32# -> Int32#;
+  def eqInt32# = { x y -> malgo_eq_int32_t x y };
+  def eqInt32 : Int32 -> Int32 -> Bool;
+  def eqInt32 = { (Int32# x) (Int32# y) -> isTrue# (eqInt32# x y) };
 
   foreign import malgo_ne_int32_t : Int32# -> Int32# -> Int32#;
-  neInt32# : Int32# -> Int32# -> Int32#;
-  neInt32# = { x y -> malgo_ne_int32_t x y };
-  neInt32 : Int32 -> Int32 -> Bool;
-  neInt32 = { (Int32# x) (Int32# y) -> isTrue# (neInt32# x y) };
+  def neInt32# : Int32# -> Int32# -> Int32#;
+  def neInt32# = { x y -> malgo_ne_int32_t x y };
+  def neInt32 : Int32 -> Int32 -> Bool;
+  def neInt32 = { (Int32# x) (Int32# y) -> isTrue# (neInt32# x y) };
 
   foreign import malgo_lt_int32_t : Int32# -> Int32# -> Int32#;
-  ltInt32# : Int32# -> Int32# -> Int32#;
-  ltInt32# = { x y -> malgo_lt_int32_t x y };
-  ltInt32 : Int32 -> Int32 -> Bool;
-  ltInt32 = { (Int32# x) (Int32# y) -> isTrue# (ltInt32# x y) };
+  def ltInt32# : Int32# -> Int32# -> Int32#;
+  def ltInt32# = { x y -> malgo_lt_int32_t x y };
+  def ltInt32 : Int32 -> Int32 -> Bool;
+  def ltInt32 = { (Int32# x) (Int32# y) -> isTrue# (ltInt32# x y) };
 
   foreign import malgo_gt_int32_t : Int32# -> Int32# -> Int32#;
-  gtInt32# : Int32# -> Int32# -> Int32#;
-  gtInt32# = { x y -> malgo_gt_int32_t x y };
-  gtInt32 : Int32 -> Int32 -> Bool;
-  gtInt32 = { (Int32# x) (Int32# y) -> isTrue# (gtInt32# x y) };
+  def gtInt32# : Int32# -> Int32# -> Int32#;
+  def gtInt32# = { x y -> malgo_gt_int32_t x y };
+  def gtInt32 : Int32 -> Int32 -> Bool;
+  def gtInt32 = { (Int32# x) (Int32# y) -> isTrue# (gtInt32# x y) };
 
   foreign import malgo_le_int32_t : Int32# -> Int32# -> Int32#;
-  leInt32# : Int32# -> Int32# -> Int32#;
-  leInt32# = { x y -> malgo_le_int32_t x y };
-  leInt32 : Int32 -> Int32 -> Bool;
-  leInt32 = { (Int32# x) (Int32# y) -> isTrue# (leInt32# x y) };
+  def leInt32# : Int32# -> Int32# -> Int32#;
+  def leInt32# = { x y -> malgo_le_int32_t x y };
+  def leInt32 : Int32 -> Int32 -> Bool;
+  def leInt32 = { (Int32# x) (Int32# y) -> isTrue# (leInt32# x y) };
 
   foreign import malgo_ge_int32_t : Int32# -> Int32# -> Int32#;
-  geInt32# : Int32# -> Int32# -> Int32#;
-  geInt32# = { x y -> malgo_ge_int32_t x y };
-  geInt32 : Int32 -> Int32 -> Bool;
-  geInt32 = { (Int32# x) (Int32# y) -> isTrue# (geInt32# x y) };
+  def geInt32# : Int32# -> Int32# -> Int32#;
+  def geInt32# = { x y -> malgo_ge_int32_t x y };
+  def geInt32 : Int32 -> Int32 -> Bool;
+  def geInt32 = { (Int32# x) (Int32# y) -> isTrue# (geInt32# x y) };
 
   foreign import malgo_eq_int64_t : Int64# -> Int64# -> Int32#;
-  eqInt64# : Int64# -> Int64# -> Int32#;
-  eqInt64# = { x y -> malgo_eq_int64_t x y };
-  eqInt64 : Int64 -> Int64 -> Bool;
-  eqInt64 = { (Int64# x) (Int64# y) -> isTrue# (eqInt64# x y) };
+  def eqInt64# : Int64# -> Int64# -> Int32#;
+  def eqInt64# = { x y -> malgo_eq_int64_t x y };
+  def eqInt64 : Int64 -> Int64 -> Bool;
+  def eqInt64 = { (Int64# x) (Int64# y) -> isTrue# (eqInt64# x y) };
 
   foreign import malgo_ne_int64_t : Int64# -> Int64# -> Int32#;
-  neInt64# : Int64# -> Int64# -> Int32#;
-  neInt64# = { x y -> malgo_ne_int64_t x y };
-  neInt64 : Int64 -> Int64 -> Bool;
-  neInt64 = { (Int64# x) (Int64# y) -> isTrue# (neInt64# x y) };
+  def neInt64# : Int64# -> Int64# -> Int32#;
+  def neInt64# = { x y -> malgo_ne_int64_t x y };
+  def neInt64 : Int64 -> Int64 -> Bool;
+  def neInt64 = { (Int64# x) (Int64# y) -> isTrue# (neInt64# x y) };
 
   foreign import malgo_lt_int64_t : Int64# -> Int64# -> Int32#;
-  ltInt64# : Int64# -> Int64# -> Int32#;
-  ltInt64# = { x y -> malgo_lt_int64_t x y };
-  ltInt64 : Int64 -> Int64 -> Bool;
-  ltInt64 = { (Int64# x) (Int64# y) -> isTrue# (ltInt64# x y) };
+  def ltInt64# : Int64# -> Int64# -> Int32#;
+  def ltInt64# = { x y -> malgo_lt_int64_t x y };
+  def ltInt64 : Int64 -> Int64 -> Bool;
+  def ltInt64 = { (Int64# x) (Int64# y) -> isTrue# (ltInt64# x y) };
 
   foreign import malgo_gt_int64_t : Int64# -> Int64# -> Int32#;
-  gtInt64# : Int64# -> Int64# -> Int32#;
-  gtInt64# = { x y -> malgo_gt_int64_t x y };
-  gtInt64 : Int64 -> Int64 -> Bool;
-  gtInt64 = { (Int64# x) (Int64# y) -> isTrue# (gtInt64# x y) };
+  def gtInt64# : Int64# -> Int64# -> Int32#;
+  def gtInt64# = { x y -> malgo_gt_int64_t x y };
+  def gtInt64 : Int64 -> Int64 -> Bool;
+  def gtInt64 = { (Int64# x) (Int64# y) -> isTrue# (gtInt64# x y) };
 
   foreign import malgo_le_int64_t : Int64# -> Int64# -> Int32#;
-  leInt64# : Int64# -> Int64# -> Int32#;
-  leInt64# = { x y -> malgo_le_int64_t x y };
-  leInt64 : Int64 -> Int64 -> Bool;
-  leInt64 = { (Int64# x) (Int64# y) -> isTrue# (leInt64# x y) };
+  def leInt64# : Int64# -> Int64# -> Int32#;
+  def leInt64# = { x y -> malgo_le_int64_t x y };
+  def leInt64 : Int64 -> Int64 -> Bool;
+  def leInt64 = { (Int64# x) (Int64# y) -> isTrue# (leInt64# x y) };
 
   foreign import malgo_ge_int64_t : Int64# -> Int64# -> Int32#;
-  geInt64# : Int64# -> Int64# -> Int32#;
-  geInt64# = { x y -> malgo_ge_int64_t x y };
-  geInt64 : Int64 -> Int64 -> Bool;
-  geInt64 = { (Int64# x) (Int64# y) -> isTrue# (geInt64# x y) };
+  def geInt64# : Int64# -> Int64# -> Int32#;
+  def geInt64# = { x y -> malgo_ge_int64_t x y };
+  def geInt64 : Int64 -> Int64 -> Bool;
+  def geInt64 = { (Int64# x) (Int64# y) -> isTrue# (geInt64# x y) };
 
   foreign import malgo_eq_float : Float# -> Float# -> Int32#;
-  eqFloat# : Float# -> Float# -> Int32#;
-  eqFloat# = { x y -> malgo_eq_float x y };
-  eqFloat : Float -> Float -> Bool;
-  eqFloat = { (Float# x) (Float# y) -> isTrue# (eqFloat# x y) };
+  def eqFloat# : Float# -> Float# -> Int32#;
+  def eqFloat# = { x y -> malgo_eq_float x y };
+  def eqFloat : Float -> Float -> Bool;
+  def eqFloat = { (Float# x) (Float# y) -> isTrue# (eqFloat# x y) };
 
   foreign import malgo_ne_float : Float# -> Float# -> Int32#;
-  neFloat# : Float# -> Float# -> Int32#;
-  neFloat# = { x y -> malgo_ne_float x y };
-  neFloat : Float -> Float -> Bool;
-  neFloat = { (Float# x) (Float# y) -> isTrue# (neFloat# x y) };
+  def neFloat# : Float# -> Float# -> Int32#;
+  def neFloat# = { x y -> malgo_ne_float x y };
+  def neFloat : Float -> Float -> Bool;
+  def neFloat = { (Float# x) (Float# y) -> isTrue# (neFloat# x y) };
 
   foreign import malgo_lt_float : Float# -> Float# -> Int32#;
-  ltFloat# : Float# -> Float# -> Int32#;
-  ltFloat# = { x y -> malgo_lt_float x y };
-  ltFloat : Float -> Float -> Bool;
-  ltFloat = { (Float# x) (Float# y) -> isTrue# (ltFloat# x y) };
+  def ltFloat# : Float# -> Float# -> Int32#;
+  def ltFloat# = { x y -> malgo_lt_float x y };
+  def ltFloat : Float -> Float -> Bool;
+  def ltFloat = { (Float# x) (Float# y) -> isTrue# (ltFloat# x y) };
 
   foreign import malgo_gt_float : Float# -> Float# -> Int32#;
-  gtFloat# : Float# -> Float# -> Int32#;
-  gtFloat# = { x y -> malgo_gt_float x y };
-  gtFloat : Float -> Float -> Bool;
-  gtFloat = { (Float# x) (Float# y) -> isTrue# (gtFloat# x y) };
+  def gtFloat# : Float# -> Float# -> Int32#;
+  def gtFloat# = { x y -> malgo_gt_float x y };
+  def gtFloat : Float -> Float -> Bool;
+  def gtFloat = { (Float# x) (Float# y) -> isTrue# (gtFloat# x y) };
 
   foreign import malgo_le_float : Float# -> Float# -> Int32#;
-  leFloat# : Float# -> Float# -> Int32#;
-  leFloat# = { x y -> malgo_le_float x y };
-  leFloat : Float -> Float -> Bool;
-  leFloat = { (Float# x) (Float# y) -> isTrue# (leFloat# x y) };
+  def leFloat# : Float# -> Float# -> Int32#;
+  def leFloat# = { x y -> malgo_le_float x y };
+  def leFloat : Float -> Float -> Bool;
+  def leFloat = { (Float# x) (Float# y) -> isTrue# (leFloat# x y) };
 
   foreign import malgo_ge_float : Float# -> Float# -> Int32#;
-  geFloat# : Float# -> Float# -> Int32#;
-  geFloat# = { x y -> malgo_ge_float x y };
-  geFloat : Float -> Float -> Bool;
-  geFloat = { (Float# x) (Float# y) -> isTrue# (geFloat# x y) };
+  def geFloat# : Float# -> Float# -> Int32#;
+  def geFloat# = { x y -> malgo_ge_float x y };
+  def geFloat : Float -> Float -> Bool;
+  def geFloat = { (Float# x) (Float# y) -> isTrue# (geFloat# x y) };
 
   foreign import malgo_eq_double : Double# -> Double# -> Int32#;
-  eqDouble# : Double# -> Double# -> Int32#;
-  eqDouble# = { x y -> malgo_eq_double x y };
-  eqDouble : Double -> Double -> Bool;
-  eqDouble = { (Double# x) (Double# y) -> isTrue# (eqDouble# x y) };
+  def eqDouble# : Double# -> Double# -> Int32#;
+  def eqDouble# = { x y -> malgo_eq_double x y };
+  def eqDouble : Double -> Double -> Bool;
+  def eqDouble = { (Double# x) (Double# y) -> isTrue# (eqDouble# x y) };
 
   foreign import malgo_ne_double : Double# -> Double# -> Int32#;
-  neDouble# : Double# -> Double# -> Int32#;
-  neDouble# = { x y -> malgo_ne_double x y };
-  neDouble : Double -> Double -> Bool;
-  neDouble = { (Double# x) (Double# y) -> isTrue# (neDouble# x y) };
+  def neDouble# : Double# -> Double# -> Int32#;
+  def neDouble# = { x y -> malgo_ne_double x y };
+  def neDouble : Double -> Double -> Bool;
+  def neDouble = { (Double# x) (Double# y) -> isTrue# (neDouble# x y) };
 
   foreign import malgo_lt_double : Double# -> Double# -> Int32#;
-  ltDouble# : Double# -> Double# -> Int32#;
-  ltDouble# = { x y -> malgo_lt_double x y };
-  ltDouble : Double -> Double -> Bool;
-  ltDouble = { (Double# x) (Double# y) -> isTrue# (ltDouble# x y) };
+  def ltDouble# : Double# -> Double# -> Int32#;
+  def ltDouble# = { x y -> malgo_lt_double x y };
+  def ltDouble : Double -> Double -> Bool;
+  def ltDouble = { (Double# x) (Double# y) -> isTrue# (ltDouble# x y) };
 
   foreign import malgo_gt_double : Double# -> Double# -> Int32#;
-  gtDouble# : Double# -> Double# -> Int32#;
-  gtDouble# = { x y -> malgo_gt_double x y };
-  gtDouble : Double -> Double -> Bool;
-  gtDouble = { (Double# x) (Double# y) -> isTrue# (gtDouble# x y) };
+  def gtDouble# : Double# -> Double# -> Int32#;
+  def gtDouble# = { x y -> malgo_gt_double x y };
+  def gtDouble : Double -> Double -> Bool;
+  def gtDouble = { (Double# x) (Double# y) -> isTrue# (gtDouble# x y) };
 
   foreign import malgo_le_double : Double# -> Double# -> Int32#;
-  leDouble# : Double# -> Double# -> Int32#;
-  leDouble# = { x y -> malgo_le_double x y };
-  leDouble : Double -> Double -> Bool;
-  leDouble = { (Double# x) (Double# y) -> isTrue# (leDouble# x y) };
+  def leDouble# : Double# -> Double# -> Int32#;
+  def leDouble# = { x y -> malgo_le_double x y };
+  def leDouble : Double -> Double -> Bool;
+  def leDouble = { (Double# x) (Double# y) -> isTrue# (leDouble# x y) };
 
   foreign import malgo_ge_double : Double# -> Double# -> Int32#;
-  geDouble# : Double# -> Double# -> Int32#;
-  geDouble# = { x y -> malgo_ge_double x y };
-  geDouble : Double -> Double -> Bool;
-  geDouble = { (Double# x) (Double# y) -> isTrue# (geDouble# x y) };
+  def geDouble# : Double# -> Double# -> Int32#;
+  def geDouble# = { x y -> malgo_ge_double x y };
+  def geDouble : Double -> Double -> Bool;
+  def geDouble = { (Double# x) (Double# y) -> isTrue# (geDouble# x y) };
 
   foreign import malgo_eq_char : Char# -> Char# -> Int32#;
-  eqChar# : Char# -> Char# -> Int32#;
-  eqChar# = { x y -> malgo_eq_char x y };
-  eqChar : Char -> Char -> Bool;
-  eqChar = { (Char# x) (Char# y) -> isTrue# (eqChar# x y) };
+  def eqChar# : Char# -> Char# -> Int32#;
+  def eqChar# = { x y -> malgo_eq_char x y };
+  def eqChar : Char -> Char -> Bool;
+  def eqChar = { (Char# x) (Char# y) -> isTrue# (eqChar# x y) };
 
   foreign import malgo_ne_char : Char# -> Char# -> Int32#;
-  neChar# : Char# -> Char# -> Int32#;
-  neChar# = { x y -> malgo_ne_char x y };
-  neChar : Char -> Char -> Bool;
-  neChar = { (Char# x) (Char# y) -> isTrue# (neChar# x y) };
+  def neChar# : Char# -> Char# -> Int32#;
+  def neChar# = { x y -> malgo_ne_char x y };
+  def neChar : Char -> Char -> Bool;
+  def neChar = { (Char# x) (Char# y) -> isTrue# (neChar# x y) };
 
   foreign import malgo_lt_char : Char# -> Char# -> Int32#;
-  ltChar# : Char# -> Char# -> Int32#;
-  ltChar# = { x y -> malgo_lt_char x y };
-  ltChar : Char -> Char -> Bool;
-  ltChar = { (Char# x) (Char# y) -> isTrue# (ltChar# x y) };
+  def ltChar# : Char# -> Char# -> Int32#;
+  def ltChar# = { x y -> malgo_lt_char x y };
+  def ltChar : Char -> Char -> Bool;
+  def ltChar = { (Char# x) (Char# y) -> isTrue# (ltChar# x y) };
 
   foreign import malgo_gt_char : Char# -> Char# -> Int32#;
-  gtChar# : Char# -> Char# -> Int32#;
-  gtChar# = { x y -> malgo_gt_char x y };
-  gtChar : Char -> Char -> Bool;
-  gtChar = { (Char# x) (Char# y) -> isTrue# (gtChar# x y) };
+  def gtChar# : Char# -> Char# -> Int32#;
+  def gtChar# = { x y -> malgo_gt_char x y };
+  def gtChar : Char -> Char -> Bool;
+  def gtChar = { (Char# x) (Char# y) -> isTrue# (gtChar# x y) };
 
   foreign import malgo_le_char : Char# -> Char# -> Int32#;
-  leChar# : Char# -> Char# -> Int32#;
-  leChar# = { x y -> malgo_le_char x y };
-  leChar : Char -> Char -> Bool;
-  leChar = { (Char# x) (Char# y) -> isTrue# (leChar# x y) };
+  def leChar# : Char# -> Char# -> Int32#;
+  def leChar# = { x y -> malgo_le_char x y };
+  def leChar : Char -> Char -> Bool;
+  def leChar = { (Char# x) (Char# y) -> isTrue# (leChar# x y) };
 
   foreign import malgo_ge_char : Char# -> Char# -> Int32#;
-  geChar# : Char# -> Char# -> Int32#;
-  geChar# = { x y -> malgo_ge_char x y };
-  geChar : Char -> Char -> Bool;
-  geChar = { (Char# x) (Char# y) -> isTrue# (geChar# x y) };
+  def geChar# : Char# -> Char# -> Int32#;
+  def geChar# = { x y -> malgo_ge_char x y };
+  def geChar : Char -> Char -> Bool;
+  def geChar = { (Char# x) (Char# y) -> isTrue# (geChar# x y) };
 
   foreign import malgo_eq_string : String# -> String# -> Int32#;
-  eqString# : String# -> String# -> Int32#;
-  eqString# = { x y -> malgo_eq_string x y };
-  eqString : String -> String -> Bool;
-  eqString = { (String# x) (String# y) -> isTrue# (eqString# x y) };
+  def eqString# : String# -> String# -> Int32#;
+  def eqString# = { x y -> malgo_eq_string x y };
+  def eqString : String -> String -> Bool;
+  def eqString = { (String# x) (String# y) -> isTrue# (eqString# x y) };
 
   foreign import malgo_ne_string : String# -> String# -> Int32#;
-  neString# : String# -> String# -> Int32#;
-  neString# = { x y -> malgo_ne_string x y };
-  neString : String -> String -> Bool;
-  neString = { (String# x) (String# y) -> isTrue# (neString# x y) };
+  def neString# : String# -> String# -> Int32#;
+  def neString# = { x y -> malgo_ne_string x y };
+  def neString : String -> String -> Bool;
+  def neString = { (String# x) (String# y) -> isTrue# (neString# x y) };
 
   foreign import malgo_lt_string : String# -> String# -> Int32#;
-  ltString# : String# -> String# -> Int32#;
-  ltString# = { x y -> malgo_lt_string x y };
-  ltString : String -> String -> Bool;
-  ltString = { (String# x) (String# y) -> isTrue# (ltString# x y) };
+  def ltString# : String# -> String# -> Int32#;
+  def ltString# = { x y -> malgo_lt_string x y };
+  def ltString : String -> String -> Bool;
+  def ltString = { (String# x) (String# y) -> isTrue# (ltString# x y) };
 
   foreign import malgo_gt_string : String# -> String# -> Int32#;
-  gtString# : String# -> String# -> Int32#;
-  gtString# = { x y -> malgo_gt_string x y };
-  gtString : String -> String -> Bool;
-  gtString = { (String# x) (String# y) -> isTrue# (gtString# x y) };
+  def gtString# : String# -> String# -> Int32#;
+  def gtString# = { x y -> malgo_gt_string x y };
+  def gtString : String -> String -> Bool;
+  def gtString = { (String# x) (String# y) -> isTrue# (gtString# x y) };
 
   foreign import malgo_le_string : String# -> String# -> Int32#;
-  leString# : String# -> String# -> Int32#;
-  leString# = { x y -> malgo_le_string x y };
-  leString : String -> String -> Bool;
-  leString = { (String# x) (String# y) -> isTrue# (leString# x y) };
+  def leString# : String# -> String# -> Int32#;
+  def leString# = { x y -> malgo_le_string x y };
+  def leString : String -> String -> Bool;
+  def leString = { (String# x) (String# y) -> isTrue# (leString# x y) };
 
   foreign import malgo_ge_string : String# -> String# -> Int32#;
-  geString# : String# -> String# -> Int32#;
-  geString# = { x y -> malgo_ge_string x y };
-  geString : String -> String -> Bool;
-  geString = { (String# x) (String# y) -> isTrue# (geString# x y) };
+  def geString# : String# -> String# -> Int32#;
+  def geString# = { x y -> malgo_ge_string x y };
+  def geString : String -> String -> Bool;
+  def geString = { (String# x) (String# y) -> isTrue# (geString# x y) };
 
   -- char operators
   foreign import malgo_char_ord : Char# -> Int32#;
-  ordChar# : Char# -> Int32#;
-  ordChar# = { x -> malgo_char_ord x };
-  ordChar : Char -> Int32;
-  ordChar = { (Char# chr) -> Int32# (ordChar# chr) };
+  def ordChar# : Char# -> Int32#;
+  def ordChar# = { x -> malgo_char_ord x };
+  def ordChar : Char -> Int32;
+  def ordChar = { (Char# chr) -> Int32# (ordChar# chr) };
 
   foreign import malgo_is_digit : Char# -> Int32#;
-  isDigit# : Char# -> Int32#;
-  isDigit# = { x -> malgo_is_digit x };
-  isDigit : Char -> Bool;
-  isDigit = { Char# x -> isTrue# (isDigit# x) };
+  def isDigit# : Char# -> Int32#;
+  def isDigit# = { x -> malgo_is_digit x };
+  def isDigit : Char -> Bool;
+  def isDigit = { Char# x -> isTrue# (isDigit# x) };
 
   foreign import malgo_is_lower : Char# -> Int32#;
-  isLower# : Char# -> Int32#;
-  isLower# = { x -> malgo_is_lower x };
-  isLower : Char -> Bool;
-  isLower = { Char# x -> isTrue# (isLower# x) };
+  def isLower# : Char# -> Int32#;
+  def isLower# = { x -> malgo_is_lower x };
+  def isLower : Char -> Bool;
+  def isLower = { Char# x -> isTrue# (isLower# x) };
 
   foreign import malgo_is_upper : Char# -> Int32#;
-  isUpper# : Char# -> Int32#;
-  isUpper# = { x -> malgo_is_upper x };
-  isUpper : Char -> Bool;
-  isUpper = { Char# x -> isTrue# (isUpper# x) };
+  def isUpper# : Char# -> Int32#;
+  def isUpper# = { x -> malgo_is_upper x };
+  def isUpper : Char -> Bool;
+  def isUpper = { Char# x -> isTrue# (isUpper# x) };
 
   foreign import malgo_is_alphanum : Char# -> Int32#;
-  isAlphanum# : Char# -> Int32#;
-  isAlphanum# = { x -> malgo_is_alphanum x };
-  isAlphanum : Char -> Bool;
-  isAlphanum = { Char# x -> isTrue# (isAlphanum# x) };
+  def isAlphanum# : Char# -> Int32#;
+  def isAlphanum# = { x -> malgo_is_alphanum x };
+  def isAlphanum : Char -> Bool;
+  def isAlphanum = { Char# x -> isTrue# (isAlphanum# x) };
 
   -- String operators
   foreign import malgo_string_length : String# -> Int64#;
-  lengthString# : String# -> Int64#;
-  lengthString# = { x -> malgo_string_length x };
-  lengthString : String -> Int64;
-  lengthString = { (String# str) -> Int64# (lengthString# str) };
+  def lengthString# : String# -> Int64#;
+  def lengthString# = { x -> malgo_string_length x };
+  def lengthString : String -> Int64;
+  def lengthString = { (String# str) -> Int64# (lengthString# str) };
 
   foreign import malgo_string_at : Int64# -> String# -> Char#;
-  atString# : Int64# -> String# -> Char#;
-  atString# = { i x -> malgo_string_at i x };
-  atString : Int64 -> String -> Char;
-  atString = { (Int64# i) (String# x) -> Char# (atString# i x) };
+  def atString# : Int64# -> String# -> Char#;
+  def atString# = { i x -> malgo_string_at i x };
+  def atString : Int64 -> String -> Char;
+  def atString = { (Int64# i) (String# x) -> Char# (atString# i x) };
 
   foreign import malgo_string_cons : Char# -> String# -> String#;
-  consString# : Char# -> String# -> String#;
-  consString# = { c cs -> malgo_string_cons c cs };
-  consString : Char -> String -> String;
-  consString = { (Char# c) (String# cs) -> String# (consString# c cs) };
+  def consString# : Char# -> String# -> String#;
+  def consString# = { c cs -> malgo_string_cons c cs };
+  def consString : Char -> String -> String;
+  def consString = { (Char# c) (String# cs) -> String# (consString# c cs) };
 
   foreign import malgo_string_append : String# -> String# -> String#;
-  appendString# : String# -> String# -> String#;
-  appendString# = { x y -> malgo_string_append x y };
-  appendString : String -> String -> String;
-  appendString = { (String# x) (String# y) -> String# (appendString# x y) };
+  def appendString# : String# -> String# -> String#;
+  def appendString# = { x y -> malgo_string_append x y };
+  def appendString : String -> String -> String;
+  def appendString = { (String# x) (String# y) -> String# (appendString# x y) };
 
   foreign import malgo_substring : String# -> Int64# -> Int64# -> String#;
-  substring# : String# -> Int64# -> Int64# -> String#;
-  substring# = { str start end -> malgo_substring str start end };
-  substring : String -> Int64 -> Int64 -> String;
-  substring = { (String# str) (Int64# start) (Int64# end) -> String# (substring# str start end) };
+  def substring# : String# -> Int64# -> Int64# -> String#;
+  def substring# = { str start end -> malgo_substring str start end };
+  def substring : String -> Int64 -> Int64 -> String;
+  def substring = { (String# str) (Int64# start) (Int64# end) -> String# (substring# str start end) };
 
   foreign import malgo_int32_t_to_string : Int32# -> String#;
-  toStringInt32# : Int32# -> String#;
-  toStringInt32# = { x -> malgo_int32_t_to_string x };
-  toStringInt32 : Int32 -> String;
-  toStringInt32 = { Int32# x -> String# (toStringInt32# x) };
+  def toStringInt32# : Int32# -> String#;
+  def toStringInt32# = { x -> malgo_int32_t_to_string x };
+  def toStringInt32 : Int32 -> String;
+  def toStringInt32 = { Int32# x -> String# (toStringInt32# x) };
 
   foreign import malgo_int64_t_to_string : Int64# -> String#;
-  toStringInt64# : Int64# -> String#;
-  toStringInt64# = { x -> malgo_int64_t_to_string x };
-  toStringInt64 : Int64 -> String;
-  toStringInt64 = { Int64# x -> String# (toStringInt64# x) };
+  def toStringInt64# : Int64# -> String#;
+  def toStringInt64# = { x -> malgo_int64_t_to_string x };
+  def toStringInt64 : Int64 -> String;
+  def toStringInt64 = { Int64# x -> String# (toStringInt64# x) };
 
   foreign import malgo_float_to_string : Float# -> String#;
-  toStringFloat# : Float# -> String#;
-  toStringFloat# = { x -> malgo_float_to_string x };
-  toStringFloat : Float -> String;
-  toStringFloat = { Float# x -> String# (toStringFloat# x) };
+  def toStringFloat# : Float# -> String#;
+  def toStringFloat# = { x -> malgo_float_to_string x };
+  def toStringFloat : Float -> String;
+  def toStringFloat = { Float# x -> String# (toStringFloat# x) };
 
   foreign import malgo_double_to_string : Double# -> String#;
-  toStringDouble# : Double# -> String#;
-  toStringDouble# = { x -> malgo_double_to_string x };
-  toStringDouble : Double -> String;
-  toStringDouble = { Double# x -> String# (toStringDouble# x) };
+  def toStringDouble# : Double# -> String#;
+  def toStringDouble# = { x -> malgo_double_to_string x };
+  def toStringDouble : Double -> String;
+  def toStringDouble = { Double# x -> String# (toStringDouble# x) };
 
   foreign import malgo_char_to_string : Char# -> String#;
-  toStringChar# : Char# -> String#;
-  toStringChar# = { x -> malgo_char_to_string x };
-  toStringChar : Char -> String;
-  toStringChar = { Char# x -> String# (toStringChar# x) };
+  def toStringChar# : Char# -> String#;
+  def toStringChar# = { x -> malgo_char_to_string x };
+  def toStringChar : Char -> String;
+  def toStringChar = { Char# x -> String# (toStringChar# x) };
 
 
   -- IO functions
   foreign import malgo_exit_failure : () -> a;
-  exitFailure : () -> a;
-  exitFailure = { _ -> malgo_exit_failure () };
+  def exitFailure : () -> a;
+  def exitFailure = { _ -> malgo_exit_failure () };
 
   foreign import malgo_newline : () -> ();
-  newline = { _ -> malgo_newline () };
+  def newline = { _ -> malgo_newline () };
 
   foreign import malgo_print_char : Char# -> ();
-  printChar# : Char# -> ();
-  printChar# = { x -> malgo_print_char x };
-  printChar : Char -> ();
-  printChar = { Char# x -> printChar# x };
+  def printChar# : Char# -> ();
+  def printChar# = { x -> malgo_print_char x };
+  def printChar : Char -> ();
+  def printChar = { Char# x -> printChar# x };
 
   foreign import malgo_print_string : String# -> ();
-  printString# : String# -> ();
-  printString# = { x -> malgo_print_string x };
-  printString : String -> ();
-  printString = { String# x -> printString# x };
+  def printString# : String# -> ();
+  def printString# = { x -> malgo_print_string x };
+  def printString : String -> ();
+  def printString = { String# x -> printString# x };
 
   foreign import malgo_flush : () -> ();
-  flush = { _ -> malgo_flush () };
+  def flush = { _ -> malgo_flush () };
 
   foreign import malgo_get_char : () -> Char#;
-  getChar = { _ -> Char# (malgo_get_char ()) };
+  def getChar = { _ -> Char# (malgo_get_char ()) };
 
   foreign import malgo_get_contents : () -> String#;
-  getContents = { _ -> String# (malgo_get_contents ()) };
+  def getContents = { _ -> String# (malgo_get_contents ()) };
 }

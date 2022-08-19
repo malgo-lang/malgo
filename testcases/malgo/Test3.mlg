@@ -3,12 +3,12 @@ module Test3 = {
   data List a = Nil | Cons a (List a);
 
   infixl 0 (|>);
-  (|>) : a -> (a -> b) -> b;
-  (|>) = {x f -> f x};
+  def (|>) : a -> (a -> b) -> b;
+  def (|>) = {x f -> f x};
 
   foreign import malgo_print_string : String# -> ();
 
-  main = { 
+  def main = { 
     Cons A (Cons B Nil) |> {
         (Cons A (Cons B Nil)) -> malgo_print_string "OK"#
       | _ -> malgo_print_string "WRONG"#

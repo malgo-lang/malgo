@@ -3,10 +3,10 @@ module RightAssoc = {
   module {..} = import Prelude;
 
   infixr 2 (<|>);
-  (<|>) : a -> List a -> List a;
-  (<|>) = Cons;
+  def (<|>) : a -> List a -> List a;
+  def (<|>) = Cons;
 
-  f = { n ->
+  def f = { n ->
     -- fixed: https://github.com/malgo-lang/malgo/commit/b499a897271ea32ffe55d5e15aaa0e3138479f58
 
     -- slow
@@ -32,8 +32,8 @@ module RightAssoc = {
     --                <|> Nil)
   };
 
-  main : { () };
-  main = { 
+  def main : { () };
+  def main = { 
     let x = f 4;
     printString "OK"
   };

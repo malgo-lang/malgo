@@ -2,10 +2,10 @@ module DeferLaw = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  f : a -> a;
-  f = { x -> { x } () };
+  def f : a -> a;
+  def f = { x -> { x } () };
 
-  main = {
+  def main = {
     putStrLn (f "Hello")
   };
 }

@@ -2,11 +2,11 @@ module Cast = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  main = {
+  def main = {
     let x = 1;
-    let x' = malgo_unsafe_cast x;
-    let x'' = malgo_unsafe_cast x;
-    x'' |> toStringInt32 |> putStrLn
+    let x_ = malgo_unsafe_cast x;
+    let x__ = malgo_unsafe_cast x;
+    x__ |> toStringInt32 |> putStrLn
   };
 }
 

@@ -2,12 +2,12 @@ module Pattern = {
   module {..} = import Builtin;
   module {..} = import Prelude;
 
-  isNil = {
+  def isNil = {
     | [] -> True
     | _ -> False
   };
 
-  main = { putStrLn "OK" };
+  def main = { putStrLn "OK" };
 }
 
 -- Expected: OK

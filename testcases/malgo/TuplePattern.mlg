@@ -4,8 +4,8 @@ module TuplePattern = {
 
   data T = A | B | C;
 
-  main : { () };
-  main = { 
+  def main : { () };
+  def main = { 
     (A, B)
       |> { (A, rest) -> printString "A"
          | (B, rest) -> ()

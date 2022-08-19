@@ -2,12 +2,12 @@ module Test0 = {
   module {..} = import Builtin;
 
   infixl 0 (|>);
-  (|>) : a -> (a -> b) -> b;
-  (|>) = { x f -> f x };
+  def (|>) : a -> (a -> b) -> b;
+  def (|>) = { x f -> f x };
   
   infixl 6 (+#);
-  (+#) = {x y -> addInt64# x y};
+  def (+#) = {x y -> addInt64# x y};
   
-  main = { Int64# 1L# |> {(Int64# i) -> printString# (toStringInt64# i)} };
+  def main = { Int64# 1L# |> {(Int64# i) -> printString# (toStringInt64# i)} };
 }
 -- Expected: 1

@@ -4,9 +4,9 @@ module Record = {
 
   type Person = { name: String, age: Int32 };
 
-  personAge = { { name = _, age = age } -> age };
+  def personAge = { { name = _, age = age } -> age };
 
-  main = {
+  def main = {
     personAge {name = "Hoge", age = 42}
       |> toStringInt32
       |> putStrLn

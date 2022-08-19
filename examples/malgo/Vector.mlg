@@ -8,19 +8,19 @@ module Vector = {
 
   data Vector a = Vector Int64 (Ptr# a);
 
-  newVector : Int64 -> a -> Vector a;
-  newVector = { (Int64# length) init ->
+  def newVector : Int64 -> a -> Vector a;
+  def newVector = { (Int64# length) init ->
     Vector (Int64# length) (malgo_unsafe_cast (malgo_new_vector length (malgo_unsafe_cast init)))
   };
 
-  readVector : Int64 -> Vector a -> Maybe a;
-  readVector = { (Int64# index) (Vector (Int64# length) ptr) ->
+  def readVector : Int64 -> Vector a -> Maybe a;
+  def readVector = { (Int64# index) (Vector (Int64# length) ptr) ->
     if (isTrue# (geInt64# index length))
     { Nothing }
     { Just (malgo_unsafe_cast (malgo_read_vector index (malgo_unsafe_cast ptr))) }
   };
 
-  main = {
+  def main = {
     let vec = newVector 10L 5;
     let val = readVector 2L vec;
     val |> { Nothing -> putStrLn "ERROR"

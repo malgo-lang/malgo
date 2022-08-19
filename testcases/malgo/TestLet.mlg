@@ -2,10 +2,10 @@ module TestLet = {
   module {..} = import Builtin;
 
   infixl 0 (|>);
-  (|>) : a -> (a -> b) -> b;
-  (|>) = {x f -> f x};
+  def (|>) : a -> (a -> b) -> b;
+  def (|>) = {x f -> f x};
 
-  main = {
+  def main = {
     let x = addInt32# 1# 2#;
     printString# (toStringInt32# x);
 

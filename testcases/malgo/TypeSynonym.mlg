@@ -6,17 +6,17 @@ module TypeSynonym = {
 
   type MyString = String;
 
-  hello : MyTuple MyString;
-  hello = ("hello", "world");
+  def hello : MyTuple MyString;
+  def hello = ("hello", "world");
 
   data T = TCon;
   type S = T;
 
-  idOverS : S -> T;
-  idOverS = { x -> x };
+  def idOverS : S -> T;
+  def idOverS = { x -> x };
 
-  main : { () };
-  main = {
+  def main : { () };
+  def main = {
     hello |> { (h, w) -> putStr h; putStr " "; putStrLn w }
   };
 }

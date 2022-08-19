@@ -8,11 +8,11 @@ module RecordTest = {
 
   type C a = { x: a, y: a };
 
-  f = { { a = a, b = _ } -> a };
+  def f = { { a = a, b = _ } -> a };
 
-  g = { B { a = a, b = _ } -> a };
+  def g = { B { a = a, b = _ } -> a };
 
-  main = {
+  def main = {
     let x = { a = 32, b = 10 };
     printString (toStringInt32 (addInt32 (f x) ({{a=_,b=b} -> b} x)))
   };
