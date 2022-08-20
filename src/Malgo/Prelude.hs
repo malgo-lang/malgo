@@ -2,6 +2,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
 module Malgo.Prelude
   ( module Koriel.Prelude,
@@ -10,7 +11,7 @@ module Malgo.Prelude
 where
 
 import Codec.Serialise
-import Control.Lens (Lens', view, (^.))
+import Control.Lens (Lens', view)
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
@@ -18,6 +19,7 @@ import Data.Aeson
 import Data.Binary (Binary)
 import Data.List ((!!))
 import Data.Store (Store)
+import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id (ModuleName)
 import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply)
@@ -168,49 +170,51 @@ makeFieldsNoPrefix ''Range
 instance HasRange Range Range where
   range = identity
 
-errorOn :: (HasCallStack, MonadReader env m, MonadIO m, HasSrcName env FilePath) => Range -> Doc -> m a
+errorOn :: MonadIO m => Range -> Doc -> m a
 errorOn range x = do
-  l <- viewLine (unPos $ sourceLine $ range ^. start)
-  let lineNum = unPos $ sourceLine $ range ^. start
-  let columnNum = unPos $ sourceColumn $ range ^. start
-  error $
-    show $
-      "error on"
-        <+> pPrint range <> ":"
-        $$ vcat
-          [ x,
-            nest (length (show @String lineNum) + 1) "|",
-            pPrint lineNum <+> "|" <+> pPrint l,
-            nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
-          ]
+  let srcFileName = sourceName range._start
+  src <- readFileBS srcFileName
+  let diag =
+        addReport def (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
+          addFile diag (sourceName $ range._start) (decodeUtf8 src)
+  printDiagnostic stderr True True 4 defaultStyle diag
+  exitFailure
+  where
+    rangeToPosition (Range start end) =
+      Error.Diagnose.Position
+        { begin = (unPos $ sourceLine start, unPos $ sourceColumn start),
+          end = (unPos $ sourceLine end, unPos $ sourceColumn end),
+          file = sourceName start
+        }
 
 warningOn :: (MonadReader env m, MonadIO m, HasSrcName env FilePath) => Range -> Doc -> m ()
 warningOn range x = do
-  l <- viewLine (unPos $ sourceLine $ range ^. start)
-  let lineNum = unPos $ sourceLine $ range ^. start
-  let columnNum = unPos $ sourceColumn $ range ^. start
-  hPutStrLn stderr $
-    render $
-      "warning on"
-        <+> pPrint range <> ":"
-        $$ vcat
-          [ x,
-            nest (length (show @String lineNum) + 1) "|",
-            pPrint lineNum <+> "|" <+> P.text (toString l),
-            nest (length (show @String lineNum) + 1) "|" <> mconcat (replicate columnNum space) <> "^"
-          ]
+  let srcFileName = sourceName range._start
+  src <- readFileBS srcFileName
+  let diag =
+        addReport def (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
+          addFile diag (sourceName $ range._start) (decodeUtf8 src)
+  printDiagnostic stderr True True 4 defaultStyle diag
+  exitFailure
+  where
+    rangeToPosition (Range start end) =
+      Error.Diagnose.Position
+        { begin = (unPos $ sourceLine start, unPos $ sourceColumn start),
+          end = (unPos $ sourceLine end, unPos $ sourceColumn end),
+          file = sourceName start
+        }
 
 -- [No `instance Bifunctor Annotated'`]
 -- Bifunctor have two methods: `first` and `second`.
 -- How to map these methods to `ann` and `value`?
 -- This problem does not have a good answer.
 
-positionToSourcePos :: FilePath -> Position -> SourcePos
-positionToSourcePos srcName Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
+positionToSourcePos :: FilePath -> Lsp.Position -> SourcePos
+positionToSourcePos srcName Lsp.Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
 
-sourcePosToPosition :: SourcePos -> Position
+sourcePosToPosition :: SourcePos -> Lsp.Position
 sourcePosToPosition SourcePos {sourceLine, sourceColumn} =
-  Position (fromIntegral $ unPos sourceLine - 1) (fromIntegral $ unPos sourceColumn - 1)
+  Lsp.Position (fromIntegral $ unPos sourceLine - 1) (fromIntegral $ unPos sourceColumn - 1)
 
 malgoRangeToLspRange :: Range -> Lsp.Range
 malgoRangeToLspRange Range {_start, _end} =
