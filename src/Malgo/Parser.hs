@@ -1,9 +1,12 @@
+{-# OPTIONS_GHC -Wno-orphans #-}
+
 module Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
 import Data.Foldable (foldl)
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Void
+import Error.Diagnose.Compat.Megaparsec (HasHints (hints))
 import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Prelude hiding
   ( many,
@@ -16,6 +19,9 @@ import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
 type Parser = Parsec Void Text
+
+instance HasHints Void Text where
+  hints = const []
 
 -- | パーサー
 --

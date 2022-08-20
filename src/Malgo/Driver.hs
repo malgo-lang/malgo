@@ -2,6 +2,8 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Lens (over, view, (^.))
+import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
+import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
@@ -22,9 +24,6 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
-import Text.Megaparsec
-  ( errorBundlePretty,
-  )
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -95,7 +94,10 @@ compile opt interfaces = do
   src <- decodeUtf8 <$> readFileBS (view srcName opt)
   parsedAst <- case parseMalgo (view srcName opt) src of
     Right x -> pure x
-    Left err -> error $ toText $ errorBundlePretty err
+    Left err ->
+      let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
+          diag' = addFile diag (view srcName opt) (toString src)
+       in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
   when (view dumpParsed opt) $ do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
