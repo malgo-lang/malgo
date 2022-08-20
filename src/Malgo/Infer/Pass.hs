@@ -375,7 +375,6 @@ tcExpr (Fn pos cs) = do
   (c' :| cs') <- traverse tcClause cs
   -- パターンの数がすべての節で同じかを検査
   -- tcPatternsでパターンの組み換えを行うので、このタイミングで検査する
-  -- TODO: エラーメッセージをもっとわかりやすく
   let patNums :: Int = countPatNums c'
   for_ cs' \c -> do
     when (countPatNums c /= patNums) $ do
