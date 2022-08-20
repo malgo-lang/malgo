@@ -7,10 +7,12 @@ import Data.List qualified as List
 import Data.List.Extra (anySame)
 import Data.Map qualified as Map
 import Data.Traversable (for)
+import Error.Diagnose (Marker (This, Where), Report (..), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
+import Language.LSP.Types.Lens (HasRange (range))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
@@ -20,6 +22,8 @@ import Malgo.Rename.RnEnv (RnEnv)
 import Malgo.Syntax hiding (Type (..), freevars)
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
+import Relude.Unsafe qualified as Unsafe
+import Text.Megaparsec (sourceName)
 
 -------------------------------
 -- Lookup the value of TcEnv --
@@ -374,17 +378,27 @@ tcExpr (Fn pos cs) = do
   -- TODO: エラーメッセージをもっとわかりやすく
   let patNums :: Int = countPatNums c'
   for_ cs' \c -> do
-    when (countPatNums c /= patNums) $
-      errorOn pos $
-        sep
-          [ nest 4 $ pPrint (patOf c) <+> "has" <+> pPrint (countPatNums c) <+> "patterns,",
-            "but" <+> pPrint (patOf c') <+> "has" <+> pPrint patNums
-          ]
+    when (countPatNums c /= patNums) $ do
+      let srcFileName = sourceName pos._start
+      src <- decodeUtf8 <$> readFileBS srcFileName
+      let diag =
+            def & \diag ->
+              addFile diag srcFileName src & \diag ->
+                addReport diag (Err Nothing "The number of patterns in each clause must be the same" (mainDiag c' : map restDiag cs') [])
+      printDiagnostic stderr True True 4 defaultStyle diag
+      exitFailure
     tell [(pos, typeOf c' :~ typeOf c)]
   pure $ Fn (Typed (typeOf c') pos) (c' :| cs')
   where
     countPatNums (Clause _ ps _) = length ps
-    patOf (Clause _ ps _) = ps
+    mainDiag (Clause _ ps _) =
+      let first = Unsafe.head ps
+          last = Unsafe.last ps
+       in (rangeToPosition (first ^. range <> last ^. range), This $ render $ "Length of patterns in this clause is" <+> pPrint (length ps))
+    restDiag (Clause _ ps _) =
+      let first = Unsafe.head ps
+          last = Unsafe.last ps
+       in (rangeToPosition (first ^. range <> last ^. range), Where $ render $ "Length of patterns in this clause is" <+> pPrint (length ps))
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
   let esType = TyConApp (TyTuple $ length es) $ map typeOf es'

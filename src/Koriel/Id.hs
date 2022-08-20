@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Koriel.Id
   ( IdSort (..),
@@ -116,19 +117,9 @@ idToText Id {name, uniq, sort = Internal} = name <> "_" <> toText (showHex uniq 
 idToText Id {name, uniq, sort = Temporal} = "$" <> name <> "_" <> toText (showHex uniq "")
 idToText Id {name, sort = Native} = name
 
-pPrintMeta :: (t -> Doc) -> t -> Doc
-
-#ifdef DEBUG
-pPrintMeta ppr x = braces (ppr x)
-#else
-pPrintMeta _ _ = mempty
-#endif
-
 instance Pretty a => Pretty (Id a) where
-  pPrint id@(Id _ _ m _) = pprIdName id <> pPrintMeta pPrint m
-    where
-      pprIdName :: Id a -> Doc
-      pprIdName = text . toString . idToText
+  pPrint (Id name uniq _ Temporal) = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
+  pPrint (Id name _ _ _) = text $ toString name
 
 newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> IdSort -> f (Id a)
 newNoNameId m s = Id noName <$> getUniq <*> pure m <*> pure s

@@ -323,6 +323,42 @@ instance
     UnboxedP x u -> UnboxedP <$> types f x <*> types f u
     BoxedP x b -> BoxedP <$> types f x <*> types f b
 
+instance
+  ( HasRange (XVarP x) r,
+    HasRange (XConP x) r,
+    HasRange (XTupleP x) r,
+    HasRange (XRecordP x) r,
+    HasRange (XListP x) r,
+    HasRange (XUnboxedP x) r,
+    HasRange (XBoxedP x) r
+  ) =>
+  HasRange (Pat x) r
+  where
+  range f = \case
+    VarP x v -> range f x <&> \x -> VarP x v
+    ConP x c ps -> range f x <&> \x -> ConP x c ps
+    TupleP x ps -> range f x <&> \x -> TupleP x ps
+    RecordP x kps -> range f x <&> \x -> RecordP x kps
+    ListP x ps -> range f x <&> \x -> ListP x ps
+    UnboxedP x u -> range f x <&> \x -> UnboxedP x u
+    BoxedP x b -> range f x <&> \x -> BoxedP x b
+
+{-
+  range f = \case
+    Var x v -> range f x <&> \x -> Var x v
+    Unboxed x u -> range f x <&> \x -> Unboxed x u
+    Boxed x b -> range f x <&> \x -> Boxed x b
+    Apply x e1 e2 -> range f x <&> \x -> Apply x e1 e2
+    OpApp x op e1 e2 -> range f x <&> \x -> OpApp x op e1 e2
+    Fn x cs -> range f x <&> \x -> Fn x cs
+    Tuple x es -> range f x <&> \x -> Tuple x es
+    Record x kvs -> range f x <&> \x -> Record x kvs
+    List x es -> range f x <&> \x -> List x es
+    Ann x e t -> range f x <&> \x -> Ann x e t
+    Seq x ss -> range f x <&> \x -> Seq x ss
+    Parens x e -> range f x <&> \x -> Parens x e
+-}
+
 makePrisms ''Pat
 
 -- * Declaration

@@ -110,6 +110,9 @@ data Range = Range
   }
   deriving stock (Eq, Ord, Show, Generic)
 
+instance Semigroup Range where
+  Range s1 e1 <> Range s2 e2 = Range (min s1 s2) (max e1 e2)
+
 instance Binary Megaparsec.Pos
 
 instance Binary SourcePos
@@ -172,13 +175,14 @@ errorOn range x = do
           addFile diag (sourceName $ range._start) (decodeUtf8 src)
   printDiagnostic stderr True True 4 defaultStyle diag
   exitFailure
-  where
-    rangeToPosition (Range start end) =
-      Error.Diagnose.Position
-        { begin = (unPos $ sourceLine start, unPos $ sourceColumn start),
-          end = (unPos $ sourceLine end, unPos $ sourceColumn end),
-          file = sourceName start
-        }
+
+rangeToPosition :: Range -> Error.Diagnose.Position
+rangeToPosition (Range start end) =
+  Error.Diagnose.Position
+    { begin = (unPos $ sourceLine start, unPos $ sourceColumn start),
+      end = (unPos $ sourceLine end, unPos $ sourceColumn end),
+      file = sourceName start
+    }
 
 warningOn :: MonadIO m => Range -> Doc -> m ()
 warningOn range x = do
@@ -216,3 +220,6 @@ malgoRangeToLspRange Range {_start, _end} =
 malgoRangeToLocation :: Range -> Lsp.Location
 malgoRangeToLocation Range {_start, _end} =
   Lsp.Location (filePathToUri (sourceName _start)) $ Lsp.Range (sourcePosToPosition _start) (sourcePosToPosition _end)
+
+instance HasRange Void Range where
+  range _ = absurd
