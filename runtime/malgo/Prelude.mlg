@@ -155,7 +155,7 @@ module Prelude = {
 
   def putStrLn : String -> ()
   def putStrLn = { str ->
-    printString str
+    printString str;
     newline ()
   }
 
