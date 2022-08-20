@@ -11,13 +11,12 @@ module Malgo.Prelude
 where
 
 import Codec.Serialise
-import Control.Lens (Lens', view)
+import Control.Lens (Lens')
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
 import Data.Aeson
 import Data.Binary (Binary)
-import Data.List ((!!))
 import Data.Store (Store)
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id (ModuleName)
@@ -104,12 +103,6 @@ runMalgoM m opt interfaces = do
   let env = MalgoEnv {_toLLOpt = opt, _uniqSupply = uniqSupply, _interfaces = interfaces}
   runReaderT (m.unMalgoM) env
 
-viewLine :: (MonadReader env m, MonadIO m, HasSrcName env FilePath) => Int -> m Text
-viewLine linum = do
-  srcFileName <- view srcName
-  s <- readFileBS srcFileName
-  pure $ lines (decodeUtf8 s) !! (linum - 1)
-
 -- | Range of a token.
 data Range = Range
   { _start :: SourcePos,
@@ -187,7 +180,7 @@ errorOn range x = do
           file = sourceName start
         }
 
-warningOn :: (MonadReader env m, MonadIO m, HasSrcName env FilePath) => Range -> Doc -> m ()
+warningOn :: MonadIO m => Range -> Doc -> m ()
 warningOn range x = do
   let srcFileName = sourceName range._start
   src <- readFileBS srcFileName

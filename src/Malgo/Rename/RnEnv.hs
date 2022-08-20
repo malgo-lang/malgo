@@ -47,7 +47,6 @@ data RnEnv = RnEnv
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
     moduleName :: ModuleName,
     _uniqSupply :: UniqSupply,
-    _srcName :: FilePath,
     _debugMode :: Bool,
     _modulePaths :: [FilePath],
     _interfaces :: IORef (HashMap ModuleName Interface)
@@ -86,7 +85,6 @@ genBuiltinRnEnv modName malgoEnv = do
             ],
         moduleName = modName,
         _uniqSupply = malgoEnv ^. uniqSupply,
-        _srcName = malgoEnv ^. toLLOpt . srcName,
         _debugMode = malgoEnv ^. toLLOpt . debugMode,
         _modulePaths = malgoEnv ^. toLLOpt . modulePaths,
         _interfaces = malgoEnv ^. interfaces

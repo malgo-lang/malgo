@@ -79,7 +79,7 @@ unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
     unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
 
-instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePath, MonadIO m, MonadState TcEnv m) => MonadBind (TypeUnifyT m) where
+instance (MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m, MonadState TcEnv m) => MonadBind (TypeUnifyT m) where
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar hint = do
@@ -118,7 +118,7 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, HasSrcName env FilePa
 
 -- * Constraint solver
 
-solve :: (HasCallStack, HasSrcName env FilePath) => (MonadIO f, MonadReader env f, MonadBind f, MonadState TcEnv f) => [(Range, Constraint)] -> f ()
+solve :: (MonadIO f, MonadBind f, MonadState TcEnv f) => [(Range, Constraint)] -> f ()
 solve = solveLoop (5000 :: Int)
   where
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
@@ -185,7 +185,7 @@ defaultToBoxed x = \case
 unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
 
-instantiate :: (MonadBind m, MonadIO m, MonadReader env m, MonadState TcEnv m, HasSrcName env FilePath) => Range -> Scheme Type -> m Type
+instantiate :: (MonadBind m, MonadIO m, MonadState TcEnv m) => Range -> Scheme Type -> m Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just $ a.name)
