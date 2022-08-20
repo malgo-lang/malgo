@@ -1,15 +1,16 @@
 module Either = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  data Either a b = Left a | Right b;
+  data Either a b = Left a | Right b
 
-  id = {x -> x};
+  def id = {x -> x}
 
-  andThen = { _ (Left x) -> Left x
-            | f (Right x) -> f x };
+  def andThen =
+    { _ (Left x) -> Left x
+    | f (Right x) -> f x }
 
-  main = {
+  def main = {
     let x = Right 1;
 
     x |> andThen { x -> Right (addInt32 x 1) }
@@ -19,7 +20,7 @@ module Either = {
       |> andThen { x -> Right (addInt32 x 1) }
       |> { Left err -> putStrLn err
          | Right x -> x |> toStringInt32 |> putStrLn } 
-  };
+  }
 }
 
 -- Expected: 2error

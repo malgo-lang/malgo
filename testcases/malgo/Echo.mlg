@@ -1,10 +1,10 @@
 module Echo = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  main = {
+  def main = {
     putStr (getContents ())
-  };
+  }
 }
 
 -- Expected: Hello

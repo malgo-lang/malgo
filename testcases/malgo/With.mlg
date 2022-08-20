@@ -1,29 +1,29 @@
 module With = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  finally : (a -> r) -> {a} -> r;
-  finally = { finalizer k ->
+  def finally : (a -> r) -> {a} -> r
+  def finally = { finalizer k ->
     let x = k ();
     finalizer x
-  };
+  }
 
-  twice : {a} -> a;
-  twice = { k ->
+  def twice : {a} -> a
+  def twice = { k ->
     k ();
     k ()
-  };
+  }
 
-  printAndReturn = { str k ->
+  def printAndReturn = { str k ->
     printString str;
     k str
-  };
+  }
 
-  main = {
+  def main = {
     with finally { () -> printString "end" };
     with twice;
     with x = printAndReturn "foo";
     printString x
-  };
+  }
 }
 -- Expected: foofoofoofooend

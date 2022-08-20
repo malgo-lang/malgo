@@ -9,16 +9,15 @@ import Test.Hspec
 -- | 'stack build' and 'stack test' pass '-DSTACK' to ghc.
 -- This enables switching test scripts mode 'stack' or 'cabal'.
 buildCommand :: String
-#ifdef STACK
-buildCommand = "stack"
-#else
 buildCommand = "cabal"
-#endif
 
 main :: IO ()
 main =
   hspec do
-    _ <- runIO $ readProcess (proc "./scripts/pretest.sh" [buildCommand])
+    (exitCode, _, stderr) <- runIO $ readProcess (proc "./scripts/pretest.sh" [buildCommand])
+    case exitCode of
+      ExitSuccess -> pass
+      ExitFailure _ -> error $ "pretest.sh failed\n" <> decodeUtf8 stderr
     testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo"
     describe "Test malgo to-ll" do
       parallel $ for_ testcases \testcase -> do

@@ -1,21 +1,21 @@
 module RecordTest = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  type A = { a: Int32, b: Int32 };
+  type A = { a: Int32, b: Int32 }
 
-  data B = B A;
+  data B = B A
 
-  type C a = { x: a, y: a };
+  type C a = { x: a, y: a }
 
-  f = { { a = a, b = _ } -> a };
+  def f = { { a = a, b = _ } -> a }
 
-  g = { B { a = a, b = _ } -> a };
+  def g = { B { a = a, b = _ } -> a }
 
-  main = {
+  def main = {
     let x = { a = 32, b = 10 };
     printString (toStringInt32 (addInt32 (f x) ({{a=_,b=b} -> b} x)))
-  };
+  }
 }
 
 -- Expected: 42

@@ -1,9 +1,9 @@
 module ErrorKind3 = {
-  f : a -> Int32#;
-  f = { x -> 42# };
+  def f : a -> Int32#
+  def f = { x -> 42# }
 
-  main = {
+  def main = {
     f 43#;
     ()
-  };
+  }
 }

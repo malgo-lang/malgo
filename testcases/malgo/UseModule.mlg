@@ -1,14 +1,14 @@
 module UseModule = {
-  module {..} = import Builtin;
-  module Prelude = import Prelude;
-  module {addInt32, (<|), (.)} = import Prelude;
+  module {..} = import Builtin
+  module Prelude = import Prelude
+  module {addInt32, (<|), (.)} = import Prelude
 
-  succ = { x -> addInt32 x 1 };
+  def succ = { x -> addInt32 x 1 }
 
-  main = {
+  def main = {
     Prelude.putStrLn "Hello, world!";
     Prelude.printInt32 <| (succ . succ) 1
-  };
+  }
 }
 
 -- Expected: Hello, world!

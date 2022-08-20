@@ -1,81 +1,83 @@
 module Prelude = {
-  module {..} = import Builtin;
+  module {..} = import Builtin
 
   -- identity function
-  identity : a -> a;
-  identity = { x -> x };
+  def identity : a -> a
+  def identity = { x -> x }
 
   -- return `a` for all inputs
-  const : a -> b -> a;
-  const = { a _ -> a }; 
+  def const : a -> b -> a
+  def const = { a _ -> a }
 
   -- reverse apply function
   -- use as pattern match expression
-  case : a -> (a -> b) -> b;
-  case = { x f -> f x };
+  def case : a -> (a -> b) -> b
+  def case = { x f -> f x }
 
   -- Tuple functions
-  fst : (a, b) -> a;
-  fst = { (a, b) -> a };
+  def fst : (a, b) -> a
+  def fst = { (a, b) -> a }
 
-  snd : (a, b) -> b;
-  snd = { (a, b) -> b };
+  def snd : (a, b) -> b
+  def snd = { (a, b) -> b }
 
   -- optional value
-  data Maybe a = Nothing | Just a;
+  data Maybe a = Nothing | Just a
 
   -- list
-  data List a = Nil | Cons a (List a);
+  data List a = Nil | Cons a (List a)
 
-  head : List a -> a;
-  head = { Cons x _ -> x 
-         | _ -> exitFailure ()
-         };
+  def head : List a -> a
+  def head =
+    { Cons x _ -> x 
+    | _ -> exitFailure ()
+    }
 
-  tail : List a -> List a;
-  tail = { Cons _ xs -> xs
-         | _ -> exitFailure ()
-         };
+  def tail : List a -> List a
+  def tail =
+    { Cons _ xs -> xs
+    | _ -> exitFailure ()
+    }
 
   -- fold left
-  foldl : (a -> b -> a) -> a -> List b -> a;
-  foldl =
+  def foldl : (a -> b -> a) -> a -> List b -> a
+  def foldl =
     { _ z Nil -> z
     | f z (Cons x xs) -> foldl f (f z x) xs
-    };
+    }
 
   -- map function over a list
-  mapList : (a -> b) -> List a -> List b;
-  mapList =
+  def mapList : (a -> b) -> List a -> List b
+  def mapList =
     { _ Nil -> Nil
     | f (Cons x xs) -> Cons (f x) (mapList f xs)
-    };
+    }
 
   -- convert a list of character to a string
-  listToString : List Char -> String;
-  listToString =
+  def listToString : List Char -> String
+  def listToString =
     { Nil -> ""
     | Cons c cs -> consString c (listToString cs)
-    };
+    }
 
   -- get the first character of string
-  headString : String -> Maybe Char;
-  headString = { str ->
+  def headString : String -> Maybe Char
+  def headString = { str ->
     if (eqString str "")
       { Nothing }
       { Just (atString 0L str) }
-  };
+  }
 
   -- trim the first character of string
-  tailString : String -> String;
-  tailString = { str ->
+  def tailString : String -> String
+  def tailString = { str ->
     if (eqString str "")
       { str }
       { substring str 1L (lengthString str) }
-  };
+  }
 
   -- return the longest prefix of `str` of that satisfy `pred`
-  takeWhileString = { pred str ->
+  def takeWhileString = { pred str ->
     case (headString str) {
     | Nothing -> str
     | Just c ->
@@ -83,10 +85,10 @@ module Prelude = {
           { consString c (takeWhileString pred (tailString str)) }
           { "" }
     }
-  };
+  }
 
   -- return the suffix remains after `takeWhileString pred str`
-  dropWhileString = { pred str ->
+  def dropWhileString = { pred str ->
     case (headString str) {
     | Nothing -> str
     | Just c ->
@@ -94,71 +96,72 @@ module Prelude = {
           { dropWhileString pred (tailString str) }
           { str }
     }
-  };
+  }
 
-  concatString : List String -> String;
-  concatString =
+  def concatString : List String -> String
+  def concatString =
     { Nil -> ""
     | Cons x xs -> appendString x (concatString xs)
-    };
+    }
 
-  punctuate : a -> List a -> List a;
-  punctuate =
+  def punctuate : a -> List a -> List a
+  def punctuate =
     { _ Nil -> Nil
     | _ (Cons x Nil) -> Cons x Nil
     | sep (Cons x xs) -> Cons x (Cons sep (punctuate sep xs))
-    };
+    }
 
   -- check that `x` is a whitespace
-  isWhiteSpace : Char -> Bool;
-  isWhiteSpace =
+  def isWhiteSpace : Char -> Bool
+  def isWhiteSpace =
     { Char# ' '# -> True
     | Char# '\n'# -> True
     | Char# '\r'# -> True
     | Char# '\t'# -> True
     | _ -> False
-    };
+    }
 
-  infixr 9 (.);
-  (.) : (b -> c) -> (a -> b) -> (a -> c);
-  (.) = {f g -> {x -> f (g x)}};
+  infixr 9 (.)
+  def (.) : (b -> c) -> (a -> b) -> (a -> c)
+  def (.) = {f g -> {x -> f (g x)}}
 
-  infixl 0 (|>);
-  (|>) : a -> (a -> b) -> b;
-  (|>) = {x f -> f x};
+  infixl 0 (|>)
+  def (|>) : a -> (a -> b) -> b
+  def (|>) = {x f -> f x}
 
-  infixr 0 (<|);
-  (<|) : (a -> b) -> a -> b;
-  (<|) = {f x -> f x};
+  infixr 0 (<|)
+  def (<|) : (a -> b) -> a -> b
+  def (<|) = {f x -> f x}
 
-  if : Bool -> {a} -> {a} -> a;
-  if = { True t _ -> t ()
-       | False _ f -> f ()
-       };
+  def if : Bool -> {a} -> {a} -> a
+  def if =
+    { True t _ -> t ()
+    | False _ f -> f ()
+    }
 
-  unless : Bool -> a -> {a} -> a;
-  unless = { c tValue f -> if c {tValue} f };
+  def unless : Bool -> a -> {a} -> a
+  def unless = { c tValue f -> if c {tValue} f }
 
   -- multiway if
-  cond : List (Bool, {a}) -> a;
-  cond =
+  def cond : List (Bool, {a}) -> a
+  def cond =
     { Nil -> panic "no branch"
     | Cons (True, x) _ -> x ()
     | Cons (False, _) xs -> cond xs
-    };
+    }
 
-  putStr : String -> ();
-  putStr = { str -> printString str };
+  def putStr : String -> ()
+  def putStr = { str -> printString str }
 
-  putStrLn : String -> ();
-  putStrLn = { str ->
+  def putStrLn : String -> ()
+  def putStrLn = { str ->
     printString str;
     newline ()
-  };
+  }
 
-  printInt32 : Int32 -> ();
-  printInt32 = { i -> printString (toStringInt32 i) };
+  def printInt32 : Int32 -> ()
+  def printInt32 = { i -> printString (toStringInt32 i) }
 
-  printInt64 : Int64 -> ();
-  printInt64 = { i -> printString (toStringInt64 i) };
+  def printInt64 : Int64 -> ()
+  def printInt64 = { i -> printString (toStringInt64 i) }
 }

@@ -1,8 +1,8 @@
 module QualifiedImport = {
-  module {..} = import Builtin;
-  module P = import Prelude;
+  module {..} = import Builtin
+  module P = import Prelude
   
-  main = {
+  def main = {
     putStrLn "Hello, world!"
-  };
+  }
 }

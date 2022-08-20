@@ -1,51 +1,51 @@
 module Eventually = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
   data Eventually a = Done a
-                    | NotYetDone { Eventually a };
+                    | NotYetDone { Eventually a }
 
   type EventuallyBuilder a b = {
     bind : Eventually a -> (a -> Eventually b) -> Eventually b;
     return : a -> Eventually a;
-  };
+  }
 
-  eventually : EventuallyBuilder a b;
-  eventually = {
+  def eventually : EventuallyBuilder a b
+  def eventually = {
     bind = eventuallyBind;
     return = Done;
-  };
+  }
 
-  eventuallyBind : Eventually a -> (a -> Eventually b) -> Eventually b;
-  eventuallyBind =
+  def eventuallyBind : Eventually a -> (a -> Eventually b) -> Eventually b
+  def eventuallyBind =
     { (Done value) k -> k value
     | (NotYetDone work) k -> NotYetDone { eventuallyBind (work ()) k }
-    };
+    }
 
-  step =
+  def step =
     { Done value -> Done value
     | NotYetDone work -> (work ())
-    };
+    }
   
-  bind : EventuallyBuilder a b -> Eventually a -> (a -> Eventually b) -> Eventually b;
-  bind = { { bind = x, return = _ } -> x };
+  def bind : EventuallyBuilder a b -> Eventually a -> (a -> Eventually b) -> Eventually b
+  def bind = { { bind = x, return = _ } -> x }
 
-  return : EventuallyBuilder a b -> a -> Eventually a;
-  return = { { bind = _, return = x } -> x };
+  def return : EventuallyBuilder a b -> a -> Eventually a
+  def return = { { bind = _, return = x } -> x }
 
-  comp : Eventually Int32;
-  comp =
+  def comp : Eventually Int32
+  def comp =
     bind eventually (NotYetDone { Done (printString "1") }) { _ -> 
       bind eventually (NotYetDone { Done (printString "2") }) { _ ->
-        return eventually 3 } };
+        return eventually 3 } }
 
-  main : { () };
-  main = {
+  def main : { () }
+  def main = {
     comp |> step;
     comp |> step |> step |> step
       |> { Done x -> printString (toStringInt32 x)
          | NotYetDone _ -> printString "not yet" }
-  };
+  }
 }
 
 -- Expected: 1123

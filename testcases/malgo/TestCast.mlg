@@ -1,14 +1,14 @@
 module TestCast = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  foreign import malgo_new_vector : Int64# -> Ptr# Char# -> Ptr# (Ptr# Char#);
+  foreign import malgo_new_vector : Int64# -> Ptr# Char# -> Ptr# (Ptr# Char#)
 
-  foreign import malgo_read_vector : Int64# -> Ptr# (Ptr# Char#) -> Ptr# Char#;
+  foreign import malgo_read_vector : Int64# -> Ptr# (Ptr# Char#) -> Ptr# Char#
 
-  main = {
+  def main = {
     printInt32 (malgo_unsafe_cast (malgo_read_vector 2L# (malgo_new_vector 10L# (malgo_unsafe_cast 5))))
-  };
+  }
 }
 
 -- Expected: 5

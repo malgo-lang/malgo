@@ -1,20 +1,20 @@
 module HelloBoxed = {
-  foreign import malgo_print_string : String# -> ();
-  foreign import malgo_newline : () -> ();
+  foreign import malgo_print_string : String# -> ()
+  foreign import malgo_newline : () -> ()
 
-  data String = String# String#;
+  data String = String# String#
 
-  putStrLn : String -> ();
-  putStrLn = { (String# str) ->
+  def putStrLn : String -> ()
+  def putStrLn = { (String# str) ->
     malgo_print_string str;
     malgo_newline ()
-  };
+  }
 
-  string# : String# -> String;
-  string# = { x -> String# x };
+  def string# : String# -> String
+  def string# = { x -> String# x }
 
-  main = {
+  def main = {
     putStrLn "Hello, world"
-  };
+  }
 }
 -- Expected: Hello, world

@@ -1,17 +1,20 @@
 module EvenOdd = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+  module {..} = import Builtin
+  module {..} = import Prelude
 
-  even = { 0 -> True
-         | n -> odd (subInt32 n 1)
-  };
+  def even = {
+    | 0 -> True
+    | n -> odd (subInt32 n 1)
+  }
 
-  odd = { 0 -> False
-        | n -> even (subInt32 n 1)
-  };
+  def odd = {
+    | 0 -> False
+    | n -> even (subInt32 n 1)
+  }
 
-  main = { { False -> putStrLn "False"
-           | True -> putStrLn "True" } (even 10) };
+  def main =
+    { { False -> putStrLn "False"
+    | True -> putStrLn "True" } (even 10) }
 }
 
 -- Expected: True
