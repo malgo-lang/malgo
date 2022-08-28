@@ -4,7 +4,7 @@
 
 -- |
 -- LLVM IRの生成
-module Koriel.Core.CodeGen
+module Koriel.Core.CodeGen.LLVM
   ( codeGen,
   )
 where
