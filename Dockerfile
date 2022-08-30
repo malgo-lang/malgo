@@ -3,7 +3,7 @@ FROM haskell:9.2.2
 WORKDIR /opt/malgo
 
 RUN apt-get update
-RUN apt-get install -y lsb-release wget software-properties-common gnupg curl
+RUN apt-get install -y lsb-release wget software-properties-common gnupg curl libgc-dev
 
 RUN wget https://apt.llvm.org/llvm.sh
 RUN chmod +x llvm.sh
