@@ -21,7 +21,6 @@ RUN ghcup install hls
 RUN cabal update
 
 COPY ./malgo.cabal /opt/malgo/malgo.cabal
-COPY ./cabal.project /opt/malgo/cabal.project
-COPY ./cabal.project.local /opt/malgo/cabal.project.local
+COPY ./cabal.project* /opt/malgo/
 
 RUN cabal build --only-dependencies -j
