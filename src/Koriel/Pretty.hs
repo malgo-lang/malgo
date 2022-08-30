@@ -13,7 +13,7 @@ import Data.Fix
 import Data.String.Conversions (convertString)
 import Koriel.Prelude
 import Text.Megaparsec.Pos qualified as Megaparsec
-import Text.PrettyPrint.HughesPJClass hiding (char, double, first, float, int, integer, (<+>), (<>))
+import Text.PrettyPrint.HughesPJClass hiding ({- char, -} double, first, float, int, integer, (<+>), (<>))
 import Text.PrettyPrint.HughesPJClass qualified as P
 import Prelude qualified
 
