@@ -10,40 +10,52 @@ import Data.List qualified as List
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
+import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as GT
+import {-# SOURCE #-} Malgo.Interface (Interface)
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
-  { -- モジュール名
-    moduleName :: ModuleName,
-    -- | Malgo -> Coreの名前環境
+  { _moduleName :: ModuleName,
+    _uniqSupply :: UniqSupply,
+    _modulePaths :: [FilePath],
+    _interfaces :: IORef (HashMap ModuleName Interface)
+  }
+
+makeFieldsNoPrefix ''DsEnv
+
+makeDsEnv :: ModuleName -> MalgoEnv -> DsEnv
+makeDsEnv _moduleName MalgoEnv {..} =
+  let _modulePaths = _toLLOpt._modulePaths
+   in DsEnv {..}
+
+data DsState = DsState
+  { -- | Malgo -> Coreの名前環境
     _nameEnv :: HashMap RnId (Id C.Type),
     -- | 型環境
     _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
     _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type)
   }
 
-makeFieldsNoPrefix ''DsEnv
+makeFieldsNoPrefix ''DsState
 
-makeDsEnv ::
-  ModuleName ->
+makeDsState ::
   TcEnv ->
-  DsEnv
-makeDsEnv modName tcEnv =
-  DsEnv
-    { moduleName = modName,
-      _nameEnv = mempty,
+  DsState
+makeDsState tcEnv =
+  DsState
+    { _nameEnv = mempty,
       _signatureMap = tcEnv ^. signatureMap,
       _typeDefMap = tcEnv ^. typeDefMap
     }
 
 lookupValueConstructors ::
-  MonadState DsEnv m =>
+  MonadState DsState m =>
   Id GT.Type ->
   [GT.Type] ->
   m [(RnId, Scheme GT.Type)]

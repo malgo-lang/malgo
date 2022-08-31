@@ -309,7 +309,7 @@ appProgram f Program {..} =
     <*> pure _extFuncs
 
 -- | Generate main function.
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
+mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
 mainFunc depList e = do
   -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
   mainFuncId <- newNativeId "main" ([] :-> Int32T)
@@ -327,20 +327,20 @@ newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id T
 runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
 
-let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
+let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
   x <- newTemporalId "let" otype
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
   pure (Var x)
 
-bind :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+bind :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
   DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
   pure (Var x)
 
-cast :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+cast :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do

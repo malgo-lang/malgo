@@ -63,7 +63,7 @@ compileFromAST parsedAst opt interfaces = runMalgoM act opt interfaces
       (dsEnv, core) <- desugar tcEnv depList refinedAst
       _ <- withDump (view dumpDesugar opt) "=== DESUGAR ===" $ pure core
 
-      let inf = buildInterface rnState dsEnv index
+      let inf = buildInterface rnEnv._moduleName rnState dsEnv index
       storeInterface inf
       when (view debugMode opt) $ do
         inf <- loadInterface (typedAst._moduleName)

@@ -45,7 +45,7 @@ data RnEnv = RnEnv
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
     _resolvedVarIdentMap :: HashMap PsId [Resolved],
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
-    moduleName :: ModuleName,
+    _moduleName :: ModuleName,
     _uniqSupply :: UniqSupply,
     _debugMode :: Bool,
     _modulePaths :: [FilePath],
@@ -83,7 +83,7 @@ genBuiltinRnEnv modName malgoEnv = do
               ("String#", [Qualified Implicit string_t]),
               ("Ptr#", [Qualified Implicit ptr_t])
             ],
-        moduleName = modName,
+        _moduleName = modName,
         _uniqSupply = malgoEnv ^. uniqSupply,
         _debugMode = malgoEnv ^. toLLOpt . debugMode,
         _modulePaths = malgoEnv ^. toLLOpt . modulePaths,
@@ -91,7 +91,7 @@ genBuiltinRnEnv modName malgoEnv = do
       }
 
 -- | Resolving a new (local) name
-resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply) => Text -> m RnId
+resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Text -> m RnId
 resolveName name = newInternalId name ()
 
 -- | Resolving a new global (toplevel) name

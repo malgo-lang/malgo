@@ -1,9 +1,11 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Koriel.Core.LambdaLift
   ( lambdalift,
   )
 where
 
-import Control.Lens (At (at), Lens', lens, traverseOf, traversed, use, (<>=), (?=))
+import Control.Lens (At (at), Lens', lens, makeFieldsNoPrefix, traverseOf, traversed, use, (<>=), (?=))
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Koriel.Core.Flat
@@ -26,9 +28,16 @@ funcs = lens (._funcs) (\l x -> l {_funcs = x})
 knowns :: Lens' LambdaLiftState (HashSet (Id Type))
 knowns = lens (._knowns) (\l x -> l {_knowns = x})
 
+data LambdaLiftEnv = LambdaLiftEnv
+  { _uniqSupply :: UniqSupply,
+    _moduleName :: ModuleName
+  }
+
+makeFieldsNoPrefix ''LambdaLiftEnv
+
 lambdalift :: MonadIO m => UniqSupply -> Program (Id Type) -> m (Program (Id Type))
-lambdalift us Program {..} =
-  runReaderT ?? us $
+lambdalift _uniqSupply Program {..} =
+  runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map fst _topFuncs} $ do
       topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) _topFuncs
       funcs <>= HashMap.fromList topFuncs
@@ -37,7 +46,7 @@ lambdalift us Program {..} =
       -- TODO: lambdalift _topVars
       traverseOf appProgram (pure . flat) $ Program _moduleName _topVars (HashMap.toList _funcs) _extFuncs
 
-llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader UniqSupply f) => Exp (Id Type) -> f (Exp (Id Type))
+llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader env f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
@@ -69,7 +78,7 @@ llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
 
-def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader env m, HasUniqSupply env UniqSupply) => Text -> [Id Type] -> Exp (Id Type) -> m (Id Type)
+def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Text -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
   f <- newTemporalId ("raw_" <> name) (map typeOf xs :-> typeOf e)
   funcs . at f ?= (xs, e)

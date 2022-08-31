@@ -16,7 +16,7 @@ import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Malgo.Desugar.DsEnv (DsEnv, HasNameEnv (nameEnv), moduleName)
+import Malgo.Desugar.DsEnv (DsState, HasNameEnv (nameEnv))
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Lsp.Index (Index)
 import Malgo.Prelude
@@ -61,19 +61,18 @@ makeFieldsNoPrefix ''Interface
 instance Pretty Interface where
   pPrint = Koriel.Pretty.text . show
 
-buildInterface :: RnState -> DsEnv -> Index -> Interface
+buildInterface :: ModuleName -> RnState -> DsState -> Index -> Interface
 -- TODO: write abbrMap to interface
-buildInterface rnState dsEnv index = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) index $ do
-  let modName = dsEnv.moduleName
-  ifor_ (dsEnv ^. nameEnv) $ \tcId coreId ->
-    when (tcId.sort == External modName) do
+buildInterface moduleName rnState dsState index = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) index $ do
+  ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
+    when (tcId.sort == External && tcId.moduleName == moduleName) do
       resolvedVarIdentMap . at (tcId.name) ?= tcId
       coreIdentMap . at tcId ?= coreId
-  ifor_ (dsEnv ^. signatureMap) $ \tcId scheme ->
-    when (tcId.sort == External modName) do
+  ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
+    when (tcId.sort == External && tcId.moduleName == moduleName) do
       signatureMap . at tcId ?= scheme
-  ifor_ (dsEnv ^. typeDefMap) $ \rnId typeDef -> do
-    when (rnId.sort == External modName) do
+  ifor_ (dsState ^. typeDefMap) $ \rnId typeDef -> do
+    when (rnId.sort == External && rnId.moduleName == moduleName) do
       resolvedTypeIdentMap . at (rnId.name) ?= rnId
       typeDefMap . at rnId ?= typeDef
 

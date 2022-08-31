@@ -37,36 +37,38 @@ makePrisms ''Def
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasUniqSupply env UniqSupply, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) =>
+  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasMalgoEnv env) =>
   TcEnv ->
   [ModuleName] ->
   Module x ->
-  m (DsEnv, Program (Id C.Type))
+  m (DsState, Program (Id C.Type))
 desugar tcEnv depList (Module modName ds) = do
-  (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsEnv modName tcEnv)
-  let varDefs = mapMaybe (preview _VarDef) ds'
-  let funDefs = mapMaybe (preview _FunDef) ds'
-  let extDefs = map (\dep -> ("koriel_load_" <> coerce dep, [] :-> VoidT)) (List.delete modName depList) <> [("GC_init", [] :-> VoidT)] <> mapMaybe (preview _ExtDef) ds'
-  case searchMain (HashMap.toList $ view nameEnv dsEnv) of
-    Just mainCall -> do
-      mainFuncDef <-
-        mainFunc depList =<< runDef do
-          let unitCon = C.Con C.Tuple []
-          unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
-          _ <- bind $ mainCall [unit]
-          pure (Atom $ C.Unboxed $ C.Int32 0)
-      pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs) extDefs)
-    Nothing -> pure (dsEnv, Program modName varDefs funDefs extDefs)
+  malgoEnv <- view malgoEnv
+  runReaderT ?? (makeDsEnv modName malgoEnv) $ do
+    (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
+    let varDefs = mapMaybe (preview _VarDef) ds'
+    let funDefs = mapMaybe (preview _FunDef) ds'
+    let extDefs = map (\dep -> ("koriel_load_" <> coerce dep, [] :-> VoidT)) (List.delete modName depList) <> [("GC_init", [] :-> VoidT)] <> mapMaybe (preview _ExtDef) ds'
+    case searchMain (HashMap.toList $ view nameEnv dsEnv) of
+      Just mainCall -> do
+        mainFuncDef <-
+          mainFunc depList =<< runDef do
+            let unitCon = C.Con C.Tuple []
+            unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
+            _ <- bind $ mainCall [unit]
+            pure (Atom $ C.Unboxed $ C.Int32 0)
+        pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs) extDefs)
+      Nothing -> pure (dsEnv, Program modName varDefs funDefs extDefs)
   where
     -- エントリーポイントとなるmain関数を検索する
-    searchMain ((griffId, coreId) : _) | griffId.name == "main" && griffId.sort == External modName = Just $ CallDirect coreId
+    searchMain ((griffId, coreId) : _) | griffId.name == "main" && griffId.sort == External && griffId.moduleName == modName = Just $ CallDirect coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadState DsEnv m, MonadReader env m, MonadFail m, MonadIO m, HasUniqSupply env UniqSupply, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) =>
+  (MonadState DsState m, MonadReader env m, MonadFail m, MonadIO m, HasUniqSupply env UniqSupply, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface)), HasModuleName env ModuleName) =>
   BindGroup (Malgo 'Refine) ->
   m [Def]
 dsBindGroup bg = do
@@ -76,7 +78,7 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
-dsImport :: (MonadReader env m, MonadState DsEnv m, MonadIO m, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => Import (Malgo 'Refine) -> m ()
+dsImport :: (MonadReader env m, MonadState DsState m, MonadIO m, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => Import (Malgo 'Refine) -> m ()
 dsImport (pos, modName, _) = do
   interface <-
     loadInterface modName >>= \case
@@ -86,13 +88,13 @@ dsImport (pos, modName, _) = do
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply) =>
+  (MonadState DsState f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
   [[ScDef (Malgo 'Refine)]] ->
   f [Def]
 dsScDefGroup = dsScDefs . mconcat
 
 dsScDefs ::
-  (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply) =>
+  (MonadState DsState f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
   [ScDef (Malgo 'Refine)] ->
   f [Def]
 dsScDefs ds = do
@@ -103,7 +105,7 @@ dsScDefs ds = do
     nameEnv . at f ?= f'
   foldMapM dsScDef ds
 
-dsScDef :: (MonadState DsEnv f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply) => ScDef (Malgo 'Refine) -> f [Def]
+dsScDef :: (MonadState DsState f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => ScDef (Malgo 'Refine) -> f [Def]
 dsScDef (Typed typ _, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   case typ of
@@ -126,7 +128,7 @@ dsScDef (Typed typ _, name, expr) = do
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (MonadState DsEnv f, MonadIO f, MonadReader env f, HasUniqSupply env UniqSupply) =>
+  (MonadState DsState f, MonadIO f, MonadReader env f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
   Foreign (Malgo 'Refine) ->
   f [Def]
 dsForeign (Typed typ (_, primName), name, _) = do
@@ -140,7 +142,7 @@ dsForeign (Typed typ (_, primName), name, _) = do
   pure [FunDef name' fun, ExtDef primName (paramTypes' :-> retType)]
 
 dsDataDef ::
-  (MonadState DsEnv m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m) =>
+  (MonadState DsState m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m, HasModuleName env ModuleName) =>
   DataDef (Malgo 'Refine) ->
   m [Def]
 dsDataDef (_, name, _, cons) =
@@ -181,7 +183,7 @@ dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
 dsExp ::
-  (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply) =>
+  (MonadState DsState m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var (Typed typ _) name) = do
@@ -259,7 +261,7 @@ dsExp (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
 dsExp (G.Record _ _) = error "unreachable"
 dsExp (G.Seq _ ss) = dsStmts ss
 
-dsStmts :: (MonadState DsEnv m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
+dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExp e
 dsStmts (G.Let _ _ e :| []) = dsExp e
 dsStmts (NoBind _ e :| s : ss) = runDef $ do
@@ -274,7 +276,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
 
 -- Desugar Monad
 
-lookupName :: HasCallStack => MonadState DsEnv m => RnId -> m (Id C.Type)
+lookupName :: HasCallStack => MonadState DsState m => RnId -> m (Id C.Type)
 lookupName name = do
   mname' <- use (nameEnv . at name)
   case mname' of
@@ -286,7 +288,7 @@ newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::
-  HasCallStack =>
+  (HasCallStack, HasModuleName env ModuleName) =>
   (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) =>
   -- | パラメータリスト
   [Id C.Type] ->

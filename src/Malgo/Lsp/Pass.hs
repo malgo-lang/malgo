@@ -177,7 +177,7 @@ indexExp (Seq _ stmts) =
   traverse_ indexStmt stmts
 
 indexStmt :: (MonadState IndexEnv m) => Stmt (Malgo 'Refine) -> m ()
-indexStmt (Let _ (Id _ _ _ Temporal) expr) = indexExp expr
+indexStmt (Let _ Id {sort = Temporal} expr) = indexExp expr
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
   let info = Info {_name = ident.name, typeSignature = identType, definitions = [range]}
@@ -194,7 +194,7 @@ indexClause (Clause _ ps e) = do
   indexExp e
 
 indexPat :: (MonadState IndexEnv m) => Pat (Malgo 'Refine) -> m ()
-indexPat (VarP _ (Id _ _ _ Temporal)) = pass
+indexPat (VarP _ Id {sort = Temporal}) = pass
 indexPat (VarP (Typed ty range) v) = do
   -- index the information of this definition
   let info = Info {_name = v.name, typeSignature = Forall [] ty, definitions = [range]}

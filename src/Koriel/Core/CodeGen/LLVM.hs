@@ -1,4 +1,5 @@
 {-# LANGUAGE RecursiveDo #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
@@ -9,7 +10,7 @@ module Koriel.Core.CodeGen.LLVM
   )
 where
 
-import Control.Lens (At (at), Lens', ifor, ifor_, lens, over, use, view, (<?=), (?=), (?~))
+import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
@@ -57,26 +58,14 @@ type PrimMap = HashMap Name Operand
 -- 変数のHashMapとknown関数のHashMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data CodeGenEnv = CodeGenEnv
-  { _codeGenUniqSupply :: UniqSupply,
+  { _uniqSupply :: UniqSupply,
     _valueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
-    _funcMap :: HashMap (Id C.Type) Operand
+    _funcMap :: HashMap (Id C.Type) Operand,
+    _moduleName :: ModuleName
   }
 
-codeGenUniqSupply :: Lens' CodeGenEnv UniqSupply
-codeGenUniqSupply = lens (._codeGenUniqSupply) (\c x -> c {_codeGenUniqSupply = x})
-
-valueMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
-valueMap = lens (._valueMap) (\c x -> c {_valueMap = x})
-
-globalValueMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
-globalValueMap = lens (._globalValueMap) (\c x -> c {_globalValueMap = x})
-
-funcMap :: Lens' CodeGenEnv (HashMap (Id C.Type) Operand)
-funcMap = lens (._funcMap) (\c x -> c {_funcMap = x})
-
-instance HasUniqSupply CodeGenEnv UniqSupply where
-  uniqSupply = codeGenUniqSupply
+makeFieldsNoPrefix ''CodeGenEnv
 
 type MonadCodeGen m =
   ( MonadModuleBuilder m,
@@ -92,7 +81,7 @@ runCodeGenT env m =
 
 codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
 codeGen srcPath dstPath uniqSupply modName Program {..} = do
-  llvmir <- runCodeGenT CodeGenEnv {_codeGenUniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv} do
+  llvmir <- runCodeGenT CodeGenEnv {_uniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv, _moduleName = modName} do
     for_ _extFuncs \(name, typ) -> do
       _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
       _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
