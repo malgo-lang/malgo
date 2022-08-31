@@ -225,7 +225,6 @@ sizeof ty = C.PtrToInt szPtr LT.i64
     szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 toName :: Id a -> LLVM.AST.Name
--- toName Id {name = "main", sort = Koriel.Id.External (ModuleName "Builtin")} = LLVM.AST.mkName "main"
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
@@ -492,7 +491,7 @@ genLocalDef ::
   m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
-  name <- toName <$> newInternalId (idToText funName <> "_closure") ()
+  name <- toName <$> newInternalId (funName.name <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> error "The length of internal function parameters must be 1 or more"
     (rawCapture : ps') -> do

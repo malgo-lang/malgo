@@ -26,8 +26,7 @@ import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.Store (Store)
-import Data.Text qualified as Text
-import GHC.Exts
+import Data.String.Conversions (convertString)
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
@@ -119,16 +118,15 @@ noName :: Text
 noName = "noName"
 
 idToText :: Id a -> Text
-idToText Id {name, moduleName, sort = External} = moduleName.raw <> "." <> name
-idToText Id {name, uniq, sort = Internal} = name <> "_" <> toText (showHex uniq "")
-idToText Id {name, uniq, sort = Temporal} = "$" <> name <> "_" <> toText (showHex uniq "")
-idToText Id {name, sort = Native} = name
+idToText id@Id {moduleName, sort = Internal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
+idToText id@Id {moduleName, sort = Temporal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
+idToText id = convertString $ render $ pPrint id
 
-instance Pretty a => Pretty (Id a) where
-  pPrint Id {name, moduleName, sort = External} = pPrint moduleName <> "." <> pPrint (Text.concatMap (\c -> if c == '|' then "\\|" else Text.singleton c) name)
-  pPrint Id {name, uniq, sort = Internal} = pPrint (Text.concatMap (\c -> if c == '|' then "\\|" else Text.singleton c) name) <> "_" <> pPrint uniq
-  pPrint Id {name, uniq, sort = Temporal} = pPrint $ "$" <> Text.concatMap (\c -> if c == '|' then "\\|" else Text.singleton c) name <> "_" <> toText (showHex uniq "")
-  pPrint Id {name, sort = Native} = pPrint $ Text.concatMap (\c -> if c == '|' then "\\|" else Text.singleton c) name
+instance Pretty (Id a) where
+  pPrint Id {name, moduleName, sort = External} = pPrint moduleName <> "." <> pPrint name
+  pPrint Id {name, uniq, sort = Internal} = pPrint name <> "_" <> pPrint uniq
+  pPrint Id {name, uniq, sort = Temporal} = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
+  pPrint Id {name, sort = Native} = pPrint name
 
 newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadReader env f) => a -> IdSort -> f (Id a)
 newNoNameId meta sort = do
