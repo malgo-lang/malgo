@@ -29,6 +29,7 @@ library
       Koriel.Core.Lint
       Koriel.Core.Op
       Koriel.Core.Optimize
+      Koriel.Core.Scheme
       Koriel.Core.Syntax
       Koriel.Core.Type
       Koriel.Id
@@ -121,6 +122,7 @@ library
     , uniplate
     , unordered-containers
     , witherable
+    , zenc
   default-language: GHC2021
 
 executable malgo
@@ -187,6 +189,7 @@ executable malgo
     , uniplate
     , unordered-containers
     , witherable
+    , zenc
   default-language: GHC2021
 
 test-suite malgo-test
@@ -256,4 +259,5 @@ test-suite malgo-test
     , uniplate
     , unordered-containers
     , witherable
+    , zenc
   default-language: GHC2021
