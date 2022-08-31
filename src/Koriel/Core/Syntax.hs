@@ -281,11 +281,11 @@ instance Pretty a => Pretty (Program a) where
   pPrint Program {..} =
     vcat $
       concat
-        [ ["variables:"],
+        [ ["; variables"],
           map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint e]) _topVars,
-          ["functions:"],
-          map (\(f, (ps, e)) -> parens $ sep [sep ["define", pPrint f, parens (sep $ map pPrint ps)], pPrint e]) _topFuncs,
-          ["externals:"],
+          ["; functions"],
+          map (\(f, (ps, e)) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps)], pPrint e]) _topFuncs,
+          ["; externals"],
           map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
         ]
 

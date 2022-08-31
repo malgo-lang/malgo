@@ -24,6 +24,7 @@ import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.Store (Store)
+import Data.Text qualified as Text
 import GHC.Exts
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -118,8 +119,10 @@ idToText Id {name, uniq, sort = Temporal} = "$" <> name <> "_" <> toText (showHe
 idToText Id {name, sort = Native} = name
 
 instance Pretty a => Pretty (Id a) where
-  pPrint (Id name uniq _ Temporal) = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
-  pPrint (Id name _ _ _) = text $ toString name
+  pPrint (Id name _ _ (External modName)) = pPrint modName <> "." <> pPrint (Text.concatMap (\c -> if c == '|' then "\\|" else Text.singleton c) name)
+  pPrint (Id name uniq _ Internal) = pPrint (Text.concatMap (\c -> if c == '|' then "\\|" else Text.singleton c) name) <> "_" <> pPrint uniq
+  pPrint (Id name uniq _ Temporal) = pPrint $ "$" <> Text.concatMap (\c -> if c == '|' then "\\|" else Text.singleton c) name <> "_" <> toText (showHex uniq "")
+  pPrint (Id name _ _ Native) = pPrint $ Text.concatMap (\c -> if c == '|' then "\\|" else Text.singleton c) name
 
 newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> IdSort -> f (Id a)
 newNoNameId m s = Id noName <$> getUniq <*> pure m <*> pure s
