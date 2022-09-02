@@ -12,7 +12,6 @@ where
 
 import Control.Lens (Lens')
 import Control.Lens.TH
-import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
 import Data.Store (Store)
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
@@ -92,7 +91,7 @@ instance HasModulePaths MalgoEnv [FilePath] where
   modulePaths = toLLOpt . modulePaths
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail, MonadThrow, MonadCatch)
+  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
 
 runMalgoM :: MalgoM a -> ToLLOpt -> IORef (HashMap ModuleName Interface) -> IO a
 runMalgoM m opt interfaces = do

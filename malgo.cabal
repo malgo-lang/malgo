@@ -85,17 +85,12 @@ library
   build-depends:
       Glob
     , base
-    , bytestring
     , containers
-    , data-fix
-    , deriving-compat
     , dhall
     , diagnose
     , directory
-    , exceptions
     , extra
     , filepath
-    , generic-lens
     , hashable
     , lens
     , llvm-hs
@@ -103,19 +98,16 @@ library
     , lsp
     , lsp-types
     , megaparsec
-    , microlens-platform
     , mtl
     , optparse-applicative
     , parser-combinators
     , pretty
     , pretty-simple
-    , recursion-schemes
     , relude >=1.0.0.0
     , store
     , string-conversions
     , text
     , transformers
-    , uniplate
     , unordered-containers
     , witherable
     , zenc
@@ -147,17 +139,12 @@ executable malgo
   build-depends:
       Glob
     , base
-    , bytestring
     , containers
-    , data-fix
-    , deriving-compat
     , dhall
     , diagnose
     , directory
-    , exceptions
     , extra
     , filepath
-    , generic-lens
     , hashable
     , lens
     , llvm-hs
@@ -166,19 +153,16 @@ executable malgo
     , lsp-types
     , malgo
     , megaparsec
-    , microlens-platform
     , mtl
     , optparse-applicative
     , parser-combinators
     , pretty
     , pretty-simple
-    , recursion-schemes
     , relude >=1.0.0.0
     , store
     , string-conversions
     , text
     , transformers
-    , uniplate
     , unordered-containers
     , witherable
     , zenc
@@ -211,17 +195,12 @@ test-suite malgo-test
   build-depends:
       Glob
     , base
-    , bytestring
     , containers
-    , data-fix
-    , deriving-compat
     , dhall
     , diagnose
     , directory
-    , exceptions
     , extra
     , filepath
-    , generic-lens
     , hashable
     , hspec
     , lens
@@ -231,20 +210,17 @@ test-suite malgo-test
     , lsp-types
     , malgo
     , megaparsec
-    , microlens-platform
     , mtl
     , optparse-applicative
     , parser-combinators
     , pretty
     , pretty-simple
-    , recursion-schemes
     , relude >=1.0.0.0
     , store
     , string-conversions
     , text
     , transformers
     , typed-process
-    , uniplate
     , unordered-containers
     , witherable
     , zenc
