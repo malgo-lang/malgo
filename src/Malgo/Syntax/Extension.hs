@@ -5,7 +5,6 @@ module Malgo.Syntax.Extension where
 
 import Control.Lens (lens)
 import Data.Aeson
-import Data.Binary (Binary)
 import Data.Kind qualified as K
 import Data.Store (Store)
 import Data.Void
@@ -73,8 +72,6 @@ data Boxed
 
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show, Generic)
-
-instance Binary Assoc
 
 instance ToJSON Assoc
 

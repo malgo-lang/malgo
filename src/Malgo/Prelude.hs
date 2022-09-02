@@ -15,7 +15,6 @@ import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
 import Data.Aeson
-import Data.Binary (Binary)
 import Data.Store (Store)
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id (ModuleName)
@@ -111,12 +110,6 @@ data Range = Range
 
 instance Semigroup Range where
   Range s1 e1 <> Range s2 e2 = Range (min s1 s2) (max e1 e2)
-
-instance Binary Megaparsec.Pos
-
-instance Binary SourcePos
-
-instance Binary Range
 
 instance Hashable Megaparsec.Pos
 

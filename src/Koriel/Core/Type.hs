@@ -2,8 +2,6 @@ module Koriel.Core.Type where
 
 import Control.Lens (Prism', prism)
 import Data.Aeson
-import Data.Binary (Binary)
-import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store (Store)
@@ -19,8 +17,6 @@ data Tag
   | Tuple
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
-instance Binary Tag
-
 instance Hashable Tag
 
 instance ToJSON Tag
@@ -35,8 +31,6 @@ instance Pretty Tag where
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-instance Binary Con
 
 instance Hashable Con
 
@@ -73,8 +67,6 @@ _SumT :: Prism' Type [Con]
 _SumT = prism SumT \case
   SumT cs -> Right cs
   t -> Left t
-
-instance Binary Type
 
 instance Hashable Type
 

@@ -7,8 +7,6 @@ module Malgo.Lsp.Index where
 
 import Control.Lens.TH
 import Data.Aeson
-import Data.Binary (Binary)
-import Data.Binary.Instances.UnorderedContainers ()
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store (Store)
 import Koriel.Pretty
@@ -69,8 +67,6 @@ data Info = Info
     definitions :: [Range]
   }
   deriving stock (Eq, Ord, Show, Generic)
-
-instance Binary Info
 
 instance ToJSON Info
 
