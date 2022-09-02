@@ -6,7 +6,6 @@
 module Malgo.Lsp.Index where
 
 import Control.Lens.TH
-import Data.Aeson
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store (Store)
 import Koriel.Pretty
@@ -20,18 +19,10 @@ import Text.Pretty.Simple (pShow)
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
 
-instance ToJSON SymbolKind
-
-instance FromJSON SymbolKind
-
 instance Store SymbolKind
 
 data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
   deriving stock (Show, Generic)
-
-instance ToJSON Symbol
-
-instance FromJSON Symbol
 
 instance Store Symbol
 
@@ -48,10 +39,6 @@ instance Semigroup Index where
 instance Monoid Index where
   mempty = Index mempty mempty mempty
 
-instance ToJSON Index
-
-instance FromJSON Index
-
 instance Store Index
 
 instance Pretty Index where
@@ -67,14 +54,6 @@ data Info = Info
     definitions :: [Range]
   }
   deriving stock (Eq, Ord, Show, Generic)
-
-instance ToJSON Info
-
-instance ToJSONKey Info
-
-instance FromJSON Info
-
-instance FromJSONKey Info
 
 instance Store Info
 

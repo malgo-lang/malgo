@@ -21,7 +21,6 @@ module Koriel.Id
 where
 
 import Control.Lens (Lens', view)
-import Data.Aeson
 import Data.Data (Data)
 import Data.Store (Store)
 import Data.String.Conversions (convertString)
@@ -33,10 +32,6 @@ import Numeric (showHex)
 
 newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-instance ToJSON ModuleName
-
-instance FromJSON ModuleName
 
 instance Hashable ModuleName
 
@@ -68,10 +63,6 @@ data IdSort
     Native
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
-instance ToJSON IdSort
-
-instance FromJSON IdSort
-
 instance Hashable IdSort
 
 instance Store IdSort
@@ -89,14 +80,6 @@ data Id a = Id
   deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
 
 instance Hashable a => Hashable (Id a)
-
-instance ToJSON a => ToJSON (Id a)
-
-instance ToJSON a => ToJSONKey (Id a)
-
-instance FromJSON a => FromJSON (Id a)
-
-instance FromJSON a => FromJSONKey (Id a)
 
 instance Store a => Store (Id a)
 

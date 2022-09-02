@@ -14,7 +14,6 @@ import Control.Lens (Lens')
 import Control.Lens.TH
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.Fix (MonadFix)
-import Data.Aeson
 import Data.Store (Store)
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id (ModuleName)
@@ -116,18 +115,6 @@ instance Hashable Megaparsec.Pos
 instance Hashable SourcePos
 
 instance Hashable Range
-
-instance ToJSON Megaparsec.Pos
-
-instance ToJSON SourcePos
-
-instance ToJSON Range
-
-instance FromJSON Megaparsec.Pos
-
-instance FromJSON SourcePos
-
-instance FromJSON Range
 
 instance Store Megaparsec.Pos
 

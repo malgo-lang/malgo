@@ -5,7 +5,6 @@ module Malgo.Interface where
 
 import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
 import Control.Lens.TH
-import Data.Aeson
 import Data.Graph
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store (Store)
@@ -46,10 +45,6 @@ data Interface = Interface
     _lspIndex :: Index
   }
   deriving stock (Show, Generic)
-
-instance ToJSON Interface
-
-instance FromJSON Interface
 
 instance Store Interface
 

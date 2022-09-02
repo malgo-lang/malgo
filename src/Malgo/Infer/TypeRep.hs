@@ -5,7 +5,6 @@
 module Malgo.Infer.TypeRep where
 
 import Control.Lens (At (at), Lens', Traversal', coerced, makeLenses, makePrisms, mapped, over, (^.), _1, _2)
-import Data.Aeson
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store (Store)
@@ -20,10 +19,6 @@ import Malgo.Prelude
 -- | Primitive Types
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving stock (Eq, Show, Ord, Generic, Data)
-
-instance ToJSON PrimT
-
-instance FromJSON PrimT
 
 instance Hashable PrimT
 
@@ -75,10 +70,6 @@ data Type
     TyMeta TypeVar
   deriving stock (Eq, Ord, Show, Generic, Data)
 
-instance ToJSON Type
-
-instance FromJSON Type
-
 instance Hashable Type
 
 instance Store Type
@@ -107,10 +98,6 @@ instance Pretty Type where
 newtype TypeVar = TypeVar {typeVar :: Id Kind}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
-
-instance ToJSON TypeVar
-
-instance FromJSON TypeVar
 
 instance Store TypeVar
 
@@ -171,10 +158,6 @@ instance HasKind Void where
 data Scheme ty = Forall [Id ty] ty
   deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
 
-instance ToJSON ty => ToJSON (Scheme ty)
-
-instance FromJSON ty => FromJSON (Scheme ty)
-
 instance Hashable ty => Hashable (Scheme ty)
 
 instance Store ty => Store (Scheme ty)
@@ -191,10 +174,6 @@ data TypeDef ty = TypeDef
     _valueConstructors :: [(Id (), Scheme ty)]
   }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
-
-instance ToJSON ty => ToJSON (TypeDef ty)
-
-instance FromJSON ty => FromJSON (TypeDef ty)
 
 instance Store ty => Store (TypeDef ty)
 

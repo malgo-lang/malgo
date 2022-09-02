@@ -1,7 +1,6 @@
 module Koriel.Core.Type where
 
 import Control.Lens (Prism', prism)
-import Data.Aeson
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store (Store)
@@ -19,10 +18,6 @@ data Tag
 
 instance Hashable Tag
 
-instance ToJSON Tag
-
-instance FromJSON Tag
-
 instance Store Tag
 
 instance Pretty Tag where
@@ -33,10 +28,6 @@ data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
 
 instance Hashable Con
-
-instance ToJSON Con
-
-instance FromJSON Con
 
 instance Store Con
 
@@ -69,10 +60,6 @@ _SumT = prism SumT \case
   t -> Left t
 
 instance Hashable Type
-
-instance ToJSON Type
-
-instance FromJSON Type
 
 instance Store Type
 
