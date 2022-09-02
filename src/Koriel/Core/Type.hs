@@ -34,7 +34,7 @@ instance Store Tag
 
 instance Pretty Tag where
   pPrint (Data name) = pPrint name
-  pPrint Tuple = "#tuple"
+  pPrint Tuple = "Tuple#"
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)

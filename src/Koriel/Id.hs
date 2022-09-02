@@ -4,6 +4,7 @@
 module Koriel.Id
   ( IdSort (..),
     ModuleName (..),
+    HasModuleName (..),
     Id (..),
     idToText,
     newInternalId,
@@ -20,11 +21,12 @@ module Koriel.Id
 where
 
 import Codec.Serialise
+import Control.Lens (Lens', view)
 import Data.Aeson
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.Store (Store)
-import GHC.Exts
+import Data.String.Conversions (convertString)
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
@@ -49,11 +51,17 @@ instance Store ModuleName
 instance Pretty ModuleName where
   pPrint (ModuleName modName) = pPrint modName
 
+class HasModuleName s a | s -> a where
+  moduleName :: Lens' s a
+
+instance HasModuleName ModuleName ModuleName where
+  moduleName = identity
+
 -- | Identifier sort.
 data IdSort
   = -- | Identifiers that can be referenced by other `External` modules.
     -- They are printed as `ModuleName.idName`.
-    External ModuleName
+    External
   | -- | Identifiers closed in the module. They are not visible outside (so `Internal`) the module.
     -- They are printed as `idName_deadbeaf`.
     Internal
@@ -79,15 +87,13 @@ instance Serialise IdSort
 instance Store IdSort
 
 instance Pretty IdSort where
-  pPrint (External modName) = "External" <+> pPrint modName
-  pPrint Internal = "Internal"
-  pPrint Temporal = "Temporal"
-  pPrint Native = "Native"
+  pPrint = P.text . show
 
 data Id a = Id
   { name :: Text,
     uniq :: Int,
     meta :: a,
+    moduleName :: ModuleName,
     sort :: IdSort
   }
   deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
@@ -112,40 +118,62 @@ noName :: Text
 noName = "noName"
 
 idToText :: Id a -> Text
-idToText Id {name, sort = External (ModuleName modName)} = modName <> "." <> name
-idToText Id {name, uniq, sort = Internal} = name <> "_" <> toText (showHex uniq "")
-idToText Id {name, uniq, sort = Temporal} = "$" <> name <> "_" <> toText (showHex uniq "")
-idToText Id {name, sort = Native} = name
+idToText id@Id {moduleName, sort = Internal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
+idToText id@Id {moduleName, sort = Temporal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
+idToText id = convertString $ render $ pPrint id
 
-instance Pretty a => Pretty (Id a) where
-  pPrint (Id name uniq _ Temporal) = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
-  pPrint (Id name _ _ _) = text $ toString name
+instance Pretty (Id a) where
+  pPrint Id {name, moduleName, sort = External} = pPrint moduleName <> "." <> pPrint name
+  pPrint Id {name, uniq, sort = Internal} = pPrint name <> "_" <> pPrint uniq
+  pPrint Id {name, uniq, sort = Temporal} = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
+  pPrint Id {name, sort = Native} = pPrint name
 
-newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> IdSort -> f (Id a)
-newNoNameId m s = Id noName <$> getUniq <*> pure m <*> pure s
+newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadReader env f) => a -> IdSort -> f (Id a)
+newNoNameId meta sort = do
+  let name = noName
+  uniq <- getUniq
+  moduleName <- view moduleName
+  pure Id {..}
 
-newTemporalId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> f (Id a)
-newTemporalId n m = Id n <$> getUniq <*> pure m <*> pure Temporal
+newTemporalId :: (MonadReader s m, MonadIO m, HasUniqSupply s UniqSupply, HasModuleName s ModuleName) => Text -> a -> m (Id a)
+newTemporalId name meta = do
+  uniq <- getUniq
+  moduleName <- view moduleName
+  let sort = Temporal
+  pure Id {..}
 
-newInternalId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> f (Id a)
-newInternalId n m = Id n <$> getUniq <*> pure m <*> pure Internal
+newInternalId :: (MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadReader env f) => Text -> a -> f (Id a)
+newInternalId name meta = do
+  uniq <- getUniq
+  moduleName <- view moduleName
+  let sort = Internal
+  pure Id {..}
 
 newExternalId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> ModuleName -> f (Id a)
-newExternalId n m modName = Id n <$> getUniq <*> pure m <*> pure (External modName)
+newExternalId name meta moduleName = do
+  uniq <- getUniq
+  let sort = External
+  pure Id {..}
 
-newNativeId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> f (Id a)
-newNativeId n m = Id n <$> getUniq <*> pure m <*> pure Native
+newNativeId :: (MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadReader env f) => Text -> a -> f (Id a)
+newNativeId name meta = do
+  uniq <- getUniq
+  moduleName <- view moduleName
+  let sort = Native
+  pure Id {..}
 
 newIdOnName :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> Id b -> f (Id a)
-newIdOnName meta Id {name, sort} = Id name <$> getUniq <*> pure meta <*> pure sort
+newIdOnName meta Id {name, moduleName, sort} = do
+  uniq <- getUniq
+  pure Id {..}
 
 cloneId :: (MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Id a -> m (Id a)
 cloneId Id {..} = do
   uniq <- getUniq
-  pure Id {name, uniq, meta, sort}
+  pure Id {..}
 
 idIsExternal :: Id a -> Bool
-idIsExternal Id {sort = External _} = True
+idIsExternal Id {sort = External} = True
 idIsExternal _ = False
 
 idIsNative :: Id a -> Bool

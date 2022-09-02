@@ -39,7 +39,7 @@ dsTyApp ts (GT.TyApp t1 t2) = dsTyApp (t2 : ts) t1
 dsTyApp _ _ = pure AnyT
 
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
-unfoldType :: MonadState DsEnv m => GT.Type -> m C.Type
+unfoldType :: MonadState DsState m => GT.Type -> m C.Type
 unfoldType t@(TyConApp (TyCon con) ts) = do
   case GT.kindOf t of
     TYPE -> do

@@ -4,7 +4,7 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 import Control.Lens (over, view, (^.))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
-import Koriel.Core.CodeGen (codeGen)
+import Koriel.Core.CodeGen.LLVM (codeGen)
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
@@ -63,7 +63,7 @@ compileFromAST parsedAst opt interfaces = runMalgoM act opt interfaces
       (dsEnv, core) <- desugar tcEnv depList refinedAst
       _ <- withDump (view dumpDesugar opt) "=== DESUGAR ===" $ pure core
 
-      let inf = buildInterface rnState dsEnv index
+      let inf = buildInterface rnEnv._moduleName rnState dsEnv index
       storeInterface inf
       when (view debugMode opt) $ do
         inf <- loadInterface (typedAst._moduleName)

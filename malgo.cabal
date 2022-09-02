@@ -23,7 +23,7 @@ source-repository head
 library
   exposed-modules:
       Koriel.Core.Alpha
-      Koriel.Core.CodeGen
+      Koriel.Core.CodeGen.LLVM
       Koriel.Core.Flat
       Koriel.Core.LambdaLift
       Koriel.Core.Lint
@@ -36,6 +36,7 @@ library
       Koriel.MonadUniq
       Koriel.Prelude
       Koriel.Pretty
+      Koriel.Scheme.Common
       Malgo.Build
       Malgo.Desugar.DsEnv
       Malgo.Desugar.Match
@@ -121,6 +122,7 @@ library
     , uniplate
     , unordered-containers
     , witherable
+    , zenc
   default-language: GHC2021
 
 executable malgo
@@ -187,6 +189,7 @@ executable malgo
     , uniplate
     , unordered-containers
     , witherable
+    , zenc
   default-language: GHC2021
 
 test-suite malgo-test
@@ -256,4 +259,5 @@ test-suite malgo-test
     , uniplate
     , unordered-containers
     , witherable
+    , zenc
   default-language: GHC2021

@@ -18,7 +18,7 @@ lint = runLint . lintProgram
 runLint :: ReaderT [a] m b -> m b
 runLint m = runReaderT m []
 
-defined :: (MonadReader [Id a] f, Eq a, Pretty a) => Id a -> f ()
+defined :: (MonadReader [Id a] f, Eq a) => Id a -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
@@ -134,7 +134,7 @@ lintCase (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
 lintCase (Switch _ e) = lintExp e
 lintCase (Bind x e) = local (x :) $ lintExp e
 
-lintAtom :: (MonadReader [Id a] m, Pretty a, Eq a) => Atom (Id a) -> m ()
+lintAtom :: (MonadReader [Id a] m, Eq a) => Atom (Id a) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 

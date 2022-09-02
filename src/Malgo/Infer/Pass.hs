@@ -70,7 +70,8 @@ tcBindGroup ::
     MonadReader env m,
     HasUniqSupply env UniqSupply,
     HasModulePaths env [FilePath],
-    HasInterfaces env (IORef (HashMap ModuleName Interface))
+    HasInterfaces env (IORef (HashMap ModuleName Interface)),
+    HasModuleName env ModuleName
   ) =>
   BindGroup (Malgo 'Rename) ->
   m (BindGroup (Malgo 'Infer))
@@ -110,7 +111,8 @@ tcTypeDefinitions ::
     MonadReader env m,
     MonadIO m,
     HasUniqSupply env UniqSupply,
-    MonadFail m
+    MonadFail m,
+    HasModuleName env ModuleName
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   [DataDef (Malgo 'Rename)] ->
@@ -136,7 +138,8 @@ tcTypeSynonyms ::
     MonadIO f,
     MonadReader env f,
     HasUniqSupply env UniqSupply,
-    MonadFail f
+    MonadFail f,
+    HasModuleName env ModuleName
   ) =>
   [TypeSynonym (Malgo 'Rename)] ->
   f [TypeSynonym (Malgo 'Infer)]
@@ -155,7 +158,8 @@ tcDataDefs ::
     MonadBind m,
     MonadReader env m,
     MonadIO m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   [DataDef (Malgo 'Rename)] ->
   m [DataDef (Malgo 'Infer)]
@@ -181,7 +185,8 @@ tcForeigns ::
     MonadBind m,
     MonadReader env m,
     MonadIO m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   [Foreign (Malgo 'Rename)] ->
   m [Foreign (Malgo 'Infer)]
@@ -200,7 +205,8 @@ tcScSigs ::
     MonadState TcEnv m,
     MonadReader env m,
     MonadIO m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   [ScSig (Malgo 'Rename)] ->
   m [ScSig (Malgo 'Infer)]
@@ -228,7 +234,8 @@ tcScDefGroup ::
     MonadFail m,
     MonadIO m,
     MonadReader env m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   [[ScDef (Malgo 'Rename)]] ->
   m [[ScDef (Malgo 'Infer)]]
@@ -240,7 +247,8 @@ tcScDefs ::
     MonadFail m,
     MonadIO m,
     MonadReader env m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   [ScDef (Malgo 'Rename)] ->
   m [ScDef (Malgo 'Infer)]
@@ -258,7 +266,7 @@ tcScDefs ds@((pos, _, _) : _) = do
 --
 -- We need to generalize them by `generalizeMutRecs` and validate them signatures by `validateSignatures`
 tcScDef ::
-  (MonadReader env m, MonadIO m, MonadFail m, MonadState TcEnv m, MonadBind m, HasUniqSupply env UniqSupply) =>
+  (MonadReader env m, MonadIO m, MonadFail m, MonadState TcEnv m, MonadBind m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
   ScDef (Malgo 'Rename) ->
   m (ScDef (Malgo 'Infer))
 tcScDef (pos, name, expr) = do
@@ -342,7 +350,8 @@ tcExpr ::
     MonadFail m,
     MonadIO m,
     MonadReader env m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   Exp (Malgo 'Rename) ->
   WriterT [(Range, Constraint)] m (Exp (Malgo 'Infer))
@@ -422,7 +431,8 @@ tcClause ::
     MonadFail m,
     MonadIO m,
     MonadReader env m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   Clause (Malgo 'Rename) ->
   WriterT [(Range, Constraint)] m (Clause (Malgo 'Infer))
@@ -482,7 +492,8 @@ tcStmts ::
     MonadFail m,
     MonadReader env m,
     MonadIO m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   NonEmpty (Stmt (Malgo 'Rename)) ->
   WriterT [(Range, Constraint)] m (NonEmpty (Stmt (Malgo 'Infer)))
@@ -494,7 +505,8 @@ tcStmt ::
     MonadFail m,
     MonadReader env m,
     MonadIO m,
-    HasUniqSupply env UniqSupply
+    HasUniqSupply env UniqSupply,
+    HasModuleName env ModuleName
   ) =>
   Stmt (Malgo 'Rename) ->
   WriterT [(Range, Constraint)] m (Stmt (Malgo 'Infer))

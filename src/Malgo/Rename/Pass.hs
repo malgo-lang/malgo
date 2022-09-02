@@ -35,7 +35,7 @@ rnDecls ::
   [Decl (Malgo 'Parse)] ->
   m [Decl (Malgo 'Rename)]
 rnDecls ds = do
-  modName <- asks (.moduleName)
+  modName <- view moduleName
   -- RnEnvの生成
   rnEnv <- genToplevelEnv modName ds =<< ask
   local (const rnEnv) $ do
@@ -337,8 +337,8 @@ genToplevelEnv modName ds =
                     then (name, Qualified Implicit id)
                     else (name, Qualified (Explicit modName') id)
               )
-              $ HashMap.toList
-              $ interface ^. resolvedVarIdentMap
+              $ HashMap.toList $
+                interface ^. resolvedVarIdentMap
           )
       modify $
         appendRnEnv
@@ -349,8 +349,8 @@ genToplevelEnv modName ds =
                     then (name, Qualified Implicit id)
                     else (name, Qualified (Explicit modName') id)
               )
-              $ HashMap.toList
-              $ interface ^. resolvedTypeIdentMap
+              $ HashMap.toList $
+                interface ^. resolvedTypeIdentMap
           )
     aux (Import pos modName' (As modNameAs)) = do
       interface <-
