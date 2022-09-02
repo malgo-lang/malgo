@@ -3,7 +3,6 @@
 
 module Malgo.Interface where
 
-import Codec.Serialise
 import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
 import Control.Lens.TH
 import Data.Aeson
@@ -51,8 +50,6 @@ data Interface = Interface
 instance ToJSON Interface
 
 instance FromJSON Interface
-
-instance Serialise Interface
 
 instance Store Interface
 

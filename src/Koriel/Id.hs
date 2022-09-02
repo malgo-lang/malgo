@@ -20,7 +20,6 @@ module Koriel.Id
   )
 where
 
-import Codec.Serialise
 import Control.Lens (Lens', view)
 import Data.Aeson
 import Data.Binary (Binary)
@@ -43,8 +42,6 @@ instance ToJSON ModuleName
 instance FromJSON ModuleName
 
 instance Hashable ModuleName
-
-instance Serialise ModuleName
 
 instance Store ModuleName
 
@@ -82,8 +79,6 @@ instance FromJSON IdSort
 
 instance Hashable IdSort
 
-instance Serialise IdSort
-
 instance Store IdSort
 
 instance Pretty IdSort where
@@ -109,8 +104,6 @@ instance ToJSON a => ToJSONKey (Id a)
 instance FromJSON a => FromJSON (Id a)
 
 instance FromJSON a => FromJSONKey (Id a)
-
-instance Serialise a => Serialise (Id a)
 
 instance Store a => Store (Id a)
 

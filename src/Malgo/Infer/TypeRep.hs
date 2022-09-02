@@ -4,7 +4,6 @@
 
 module Malgo.Infer.TypeRep where
 
-import Codec.Serialise
 import Control.Lens (At (at), Lens', Traversal', coerced, makeLenses, makePrisms, mapped, over, (^.), _1, _2)
 import Data.Aeson
 import Data.Binary (Binary)
@@ -31,8 +30,6 @@ instance ToJSON PrimT
 instance FromJSON PrimT
 
 instance Hashable PrimT
-
-instance Serialise PrimT
 
 instance Store PrimT
 
@@ -90,8 +87,6 @@ instance FromJSON Type
 
 instance Hashable Type
 
-instance Serialise Type
-
 instance Store Type
 
 instance Pretty Type where
@@ -124,8 +119,6 @@ instance Binary TypeVar
 instance ToJSON TypeVar
 
 instance FromJSON TypeVar
-
-instance Serialise TypeVar
 
 instance Store TypeVar
 
@@ -194,8 +187,6 @@ instance FromJSON ty => FromJSON (Scheme ty)
 
 instance Hashable ty => Hashable (Scheme ty)
 
-instance Serialise ty => Serialise (Scheme ty)
-
 instance Store ty => Store (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
@@ -216,8 +207,6 @@ instance Binary ty => Binary (TypeDef ty)
 instance ToJSON ty => ToJSON (TypeDef ty)
 
 instance FromJSON ty => FromJSON (TypeDef ty)
-
-instance Serialise ty => Serialise (TypeDef ty)
 
 instance Store ty => Store (TypeDef ty)
 

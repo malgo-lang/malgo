@@ -3,7 +3,6 @@
 
 module Malgo.Syntax.Extension where
 
-import Codec.Serialise (Serialise)
 import Control.Lens (lens)
 import Data.Aeson
 import Data.Binary (Binary)
@@ -80,8 +79,6 @@ instance Binary Assoc
 instance ToJSON Assoc
 
 instance FromJSON Assoc
-
-instance Serialise Assoc
 
 instance Store Assoc
 

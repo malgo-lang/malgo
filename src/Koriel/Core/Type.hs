@@ -1,6 +1,5 @@
 module Koriel.Core.Type where
 
-import Codec.Serialise
 import Control.Lens (Prism', prism)
 import Data.Aeson
 import Data.Binary (Binary)
@@ -28,8 +27,6 @@ instance ToJSON Tag
 
 instance FromJSON Tag
 
-instance Serialise Tag
-
 instance Store Tag
 
 instance Pretty Tag where
@@ -46,8 +43,6 @@ instance Hashable Con
 instance ToJSON Con
 
 instance FromJSON Con
-
-instance Serialise Con
 
 instance Store Con
 
@@ -86,8 +81,6 @@ instance Hashable Type
 instance ToJSON Type
 
 instance FromJSON Type
-
-instance Serialise Type
 
 instance Store Type
 

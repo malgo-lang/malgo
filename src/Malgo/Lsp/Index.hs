@@ -5,7 +5,6 @@
 
 module Malgo.Lsp.Index where
 
-import Codec.Serialise
 import Control.Lens.TH
 import Data.Aeson
 import Data.Binary (Binary)
@@ -27,8 +26,6 @@ instance ToJSON SymbolKind
 
 instance FromJSON SymbolKind
 
-instance Serialise SymbolKind
-
 instance Store SymbolKind
 
 data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
@@ -37,8 +34,6 @@ data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
 instance ToJSON Symbol
 
 instance FromJSON Symbol
-
-instance Serialise Symbol
 
 instance Store Symbol
 
@@ -58,8 +53,6 @@ instance Monoid Index where
 instance ToJSON Index
 
 instance FromJSON Index
-
-instance Serialise Index
 
 instance Store Index
 
@@ -86,8 +79,6 @@ instance ToJSONKey Info
 instance FromJSON Info
 
 instance FromJSONKey Info
-
-instance Serialise Info
 
 instance Store Info
 
