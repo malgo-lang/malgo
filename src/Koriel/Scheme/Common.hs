@@ -1,9 +1,7 @@
--- | Koriel.Core.Scheme provides two components:
+-- | Koriel.Scheme.Common provides two components:
 -- 1. Scheme AST
--- 2. Core to Scheme compiler
--- 3. Scheme AST pretty printer
--- 4. Scheme Evaluator
-module Koriel.Core.Scheme where
+-- 2. Scheme AST pretty printer
+module Koriel.Scheme.Common where
 
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Koriel.Id
@@ -28,6 +26,7 @@ data Expr
   | Lambda [Identifier] Expr
   | Cond [Clause]
   | LetRec [Binding] Expr
+  | Define Identifier [Identifier] Expr
   deriving stock (Eq, Ord, Show)
 
 instance Pretty Expr where
@@ -37,6 +36,7 @@ instance Pretty Expr where
   pPrint (Lambda args body) = P.parens $ P.sep ["lambda", P.parens $ P.hsep $ map pPrint args, pPrint body]
   pPrint (Cond clauses) = P.parens $ P.sep $ "cond" : map pPrint clauses
   pPrint (LetRec bindings body) = P.parens $ P.sep ["letrec", P.parens $ P.hsep $ map pPrint bindings, pPrint body]
+  pPrint (Define name args body) = P.parens $ P.sep ["define", P.parens $ P.hsep $ map pPrint $ name : args, pPrint body]
 
 data Literal
   = Integer Integer
