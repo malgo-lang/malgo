@@ -8,7 +8,6 @@ import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty (Pretty (pPrint))
 import Koriel.Pretty qualified as P
-import Text.Encoding.Z (zEncodeString)
 
 newtype Identifier = Identifier String
   deriving newtype (Eq, Ord, Show)
@@ -17,7 +16,12 @@ instance Pretty Identifier where
   pPrint (Identifier t) = P.text t
 
 fromId :: Id a -> Identifier
-fromId id = Identifier $ zEncodeString $ convertString $ idToText id
+fromId id = Identifier $ encode $ convertString $ idToText id
+  where
+    encode :: String -> String
+    encode = concatMap aux
+    aux '|' = "\\|"
+    aux c = [c]
 
 data Expr
   = Symbol Identifier
