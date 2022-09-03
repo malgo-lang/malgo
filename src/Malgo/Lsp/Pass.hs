@@ -8,7 +8,7 @@ import Control.Lens (At (at), modifying, use, view, (.~), (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as Text
-import Koriel.Id (Id (..), IdSort (Temporal), name)
+import Koriel.Id (Id (..), IdSort (Temporal), ModuleName, name)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
 import Malgo.Infer.TcEnv
@@ -28,21 +28,25 @@ makeFieldsNoPrefix ''LspOpt
 data IndexEnv = IndexEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
-    _buildingIndex :: Index
+    _buildingIndex :: Index,
+    _cache :: IORef (HashMap ModuleName Index)
   }
 
 makeFieldsNoPrefix ''IndexEnv
 
-newIndexEnv :: TcEnv -> IndexEnv
-newIndexEnv tcEnv =
+newIndexEnv :: TcEnv -> IORef (HashMap ModuleName Index) -> IndexEnv
+newIndexEnv tcEnv cache =
   IndexEnv
     { _signatureMap = tcEnv ^. signatureMap,
       _typeDefMap = tcEnv ^. typeDefMap,
-      _buildingIndex = mempty
+      _buildingIndex = mempty,
+      _cache = cache
     }
 
 index :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath]) => TcEnv -> Module (Malgo 'Refine) -> m Index
-index tcEnv mod = removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv)
+index tcEnv mod = do
+  cache <- newIORef mempty
+  removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv cache)
 
 -- | Remove infos that are only used internally.
 -- These infos' names start with '$'.
@@ -65,7 +69,8 @@ indexBindGroup BindGroup {..} = do
 indexImport :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => Import (Malgo 'Refine) -> m ()
 indexImport (_, moduleName, _) = do
   -- include the index file of the imported module
-  mindex <- loadIndex moduleName
+  cache <- use cache
+  mindex <- loadIndex moduleName cache
   case mindex of
     Nothing ->
       error $ "Could not find index file for module " <> show moduleName
