@@ -71,7 +71,7 @@ toDocumentSymbol Index.Symbol {..} =
     toKind Index.Variable = SkVariable
 
 loadIndex :: MonadIO f => TextDocumentIdentifier -> LspOpt -> f Index
-loadIndex doc opt = maybe mempty identity <$> runReaderT (Index.loadIndex $ textDocumentIdentifierToModuleName doc) opt
+loadIndex doc opt = maybe mempty identity <$> runReaderT (Index.loadIndex (textDocumentIdentifierToModuleName doc)) opt
 
 toHoverDocument :: [Info] -> MarkupContent
 toHoverDocument infos =
@@ -86,7 +86,7 @@ infoToLocation Info {..} =
   map malgoRangeToLocation definitions
 
 server :: LspOpt -> IO Int
-server opt =
+server opt = do
   runServer $
     ServerDefinition
       { onConfigurationChange = \_ _ -> Right (),

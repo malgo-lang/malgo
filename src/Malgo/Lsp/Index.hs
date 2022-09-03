@@ -92,17 +92,18 @@ storeIndex index = do
   let encoded = encode index
   writeFileBS (dstName -<.> "idx") encoded
 
-loadIndex :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath]) => ModuleName -> IORef (HashMap ModuleName Index) -> m (Maybe Index)
-loadIndex modName cache = do
+loadIndex :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath], HasIndexes s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
+loadIndex modName = do
   modPaths <- view modulePaths
-  indexes <- readIORef cache
+  indexesRef <- view indexes
+  indexes <- readIORef indexesRef
   case HashMap.lookup modName indexes of
     Just index -> pure $ Just index
     Nothing -> do
       message <- findAndReadFile modPaths (convertString modName.raw <> ".idx")
       case message of
         Right x -> do
-          writeIORef cache $ HashMap.insert modName x indexes
+          writeIORef indexesRef $ HashMap.insert modName x indexes
           pure $ Just x
         Left err -> do
           hPrint stderr err

@@ -24,12 +24,14 @@ import Language.LSP.Types (Position (..), filePathToUri)
 import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
 import {-# SOURCE #-} Malgo.Interface (Interface)
+import {-# SOURCE #-} Malgo.Lsp.Index (Index)
 import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
 import Text.Megaparsec.Pos qualified as Megaparsec
 
 data MalgoEnv = MalgoEnv
   { _uniqSupply :: UniqSupply,
     _interfaces :: IORef (HashMap ModuleName Interface),
+    _indexes :: IORef (HashMap ModuleName Index),
     _srcName :: FilePath,
     _dstName :: FilePath,
     _dumpParsed :: Bool,

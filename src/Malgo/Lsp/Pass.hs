@@ -20,7 +20,8 @@ import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
 
 data LspOpt = LspOpt
-  { _modulePaths :: [FilePath]
+  { _modulePaths :: [FilePath],
+    _indexes :: IORef (HashMap ModuleName Index)
   }
 
 makeFieldsNoPrefix ''LspOpt
@@ -28,25 +29,22 @@ makeFieldsNoPrefix ''LspOpt
 data IndexEnv = IndexEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
-    _buildingIndex :: Index,
-    _cache :: IORef (HashMap ModuleName Index)
+    _buildingIndex :: Index
   }
 
 makeFieldsNoPrefix ''IndexEnv
 
-newIndexEnv :: TcEnv -> IORef (HashMap ModuleName Index) -> IndexEnv
-newIndexEnv tcEnv cache =
+newIndexEnv :: TcEnv -> IndexEnv
+newIndexEnv tcEnv =
   IndexEnv
     { _signatureMap = tcEnv ^. signatureMap,
       _typeDefMap = tcEnv ^. typeDefMap,
-      _buildingIndex = mempty,
-      _cache = cache
+      _buildingIndex = mempty
     }
 
-index :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath]) => TcEnv -> Module (Malgo 'Refine) -> m Index
+index :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath], HasIndexes env (IORef (HashMap ModuleName Index))) => TcEnv -> Module (Malgo 'Refine) -> m Index
 index tcEnv mod = do
-  cache <- newIORef mempty
-  removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv cache)
+  removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv)
 
 -- | Remove infos that are only used internally.
 -- These infos' names start with '$'.
@@ -56,21 +54,20 @@ removeInternalInfos (Index refs defs syms) = Index (HashMap.filterWithKey (\k _ 
     isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
     isInternal _ = False
 
-indexModule :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => Module (Malgo 'Refine) -> m ()
+indexModule :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasIndexes env (IORef (HashMap ModuleName Index))) => Module (Malgo 'Refine) -> m ()
 indexModule Module {..} = indexBindGroup _moduleDefinition
 
-indexBindGroup :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => BindGroup (Malgo 'Refine) -> m ()
+indexBindGroup :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasIndexes env (IORef (HashMap ModuleName Index))) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do
   traverse_ indexImport _imports
   traverse_ indexDataDef _dataDefs
   traverse_ indexScSig _scSigs
   traverse_ (traverse_ indexScDef) _scDefs
 
-indexImport :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath]) => Import (Malgo 'Refine) -> m ()
+indexImport :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasIndexes env (IORef (HashMap ModuleName Index))) => Import (Malgo 'Refine) -> m ()
 indexImport (_, moduleName, _) = do
   -- include the index file of the imported module
-  cache <- use cache
-  mindex <- loadIndex moduleName cache
+  mindex <- loadIndex moduleName
   case mindex of
     Nothing ->
       error $ "Could not find index file for module " <> show moduleName

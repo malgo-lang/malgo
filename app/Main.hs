@@ -3,10 +3,12 @@
 module Main where
 
 import Control.Lens (makeFieldsNoPrefix, (.~), (<>~))
+import Koriel.Id (ModuleName)
 import Koriel.Lens (HasModulePaths (..))
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
+import Malgo.Lsp.Index (Index)
 import Malgo.Lsp.Pass (LspOpt (..))
 import Malgo.Lsp.Server qualified as Lsp
 import Malgo.Prelude hiding (MalgoEnv (..))
@@ -44,6 +46,7 @@ main = do
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
       _uniqSupply <- UniqSupply <$> newIORef 0
       _interfaces <- newIORef mempty
+      _indexes <- newIORef mempty
       let ToLLOpt {..} = opt
       Driver.compile Prelude.MalgoEnv {..}
     Lsp opt -> do
@@ -95,8 +98,8 @@ toLLOpt =
   )
     <**> helper
 
-lspOpt :: Parser LspOpt
-lspOpt = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")) <**> helper
+lspOpt :: IORef (HashMap ModuleName Index) -> Parser LspOpt
+lspOpt cache = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")) <*> pure cache <**> helper
 
 data BuildOpt = BuildOpt
   deriving stock (Eq, Show)
@@ -108,9 +111,10 @@ data Command
 
 parseCommand :: IO Command
 parseCommand = do
+  cache <- newIORef mempty
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser lsp <|> subparser build) <**> helper) $
+      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build) <**> helper) $
           fullDesc
             <> header "malgo programming language"
       )
@@ -129,9 +133,9 @@ parseCommand = do
           fullDesc
             <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
             <> header "malgo to LLVM Textual IR Compiler"
-    lsp =
+    lsp cache = do
       command "lsp" $
-        info (Lsp <$> lspOpt) $
+        info (Lsp <$> lspOpt cache) $
           fullDesc
             <> progDesc "Language Server for Malgo"
             <> header "Malgo Language Server"

@@ -58,6 +58,7 @@ run = do
 
   _uniqSupply <- UniqSupply <$> newIORef 0
   _interfaces <- newIORef mempty
+  _indexes <- newIORef mempty
   let compileOptions =
         map
           ( \path ->
@@ -65,6 +66,7 @@ run = do
                 MalgoEnv
                   { _uniqSupply = _uniqSupply,
                     _interfaces = _interfaces,
+                    _indexes = _indexes,
                     _srcName = path,
                     _dstName = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
                     _dumpParsed = False,
