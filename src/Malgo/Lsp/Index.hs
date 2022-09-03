@@ -7,12 +7,13 @@ module Malgo.Lsp.Index where
 
 import Control.Lens.TH
 import Data.HashMap.Strict qualified as HashMap
-import Data.Store (Store)
+import Data.Store (PeekException, Store, decode, encode)
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
-import System.FilePath (takeFileName)
+import System.Directory (createDirectoryIfMissing)
+import System.FilePath (takeDirectory, takeFileName)
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
 import Text.Pretty.Simple (pShow)
 
@@ -79,3 +80,11 @@ isInRange pos Range {_start, _end}
   where
     posToTuple :: SourcePos -> (Pos, Pos)
     posToTuple SourcePos {sourceLine, sourceColumn} = (sourceLine, sourceColumn)
+
+storeIndex :: FilePath -> Index -> IO ()
+storeIndex path index = do
+  createDirectoryIfMissing True (takeDirectory path)
+  writeFileBS path (encode index)
+
+loadIndex :: FilePath -> IO (Either PeekException Index)
+loadIndex path = decode <$> readFileBS path
