@@ -2,7 +2,7 @@
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
 module Malgo.Refine.Pass where
 
-import Control.Lens (view, _3)
+import Control.Lens (_3)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List.NonEmpty qualified as NonEmpty
 import Koriel.Pretty
@@ -18,9 +18,9 @@ import Malgo.Syntax.Extension
 
 type Infered t x = (x ~ Malgo 'Infer) :: Constraint
 
-refine :: (Infered t x, MonadIO m, MonadReader env m, HasMalgoEnv env) => TcEnv -> Module x -> m (Module (Malgo 'Refine))
+refine :: (Infered t x, MonadIO m, MonadReader MalgoEnv m) => TcEnv -> Module x -> m (Module (Malgo 'Refine))
 refine tcEnv Module {_moduleName, _moduleDefinition} = do
-  malgoEnv <- view malgoEnv
+  malgoEnv <- ask
   Module _moduleName <$> runReaderT (refineBindGroup _moduleDefinition) (buildRefineEnv malgoEnv tcEnv)
 
 refineBindGroup :: forall t x m. (Infered t x, MonadReader RefineEnv m, MonadIO m) => BindGroup x -> m (BindGroup (Malgo 'Refine))

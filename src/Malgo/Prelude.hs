@@ -10,7 +10,6 @@ module Malgo.Prelude
   )
 where
 
-import Control.Lens (Lens')
 import Control.Lens.TH
 import Control.Monad.Fix (MonadFix)
 import Data.Store (Store)
@@ -46,12 +45,6 @@ data MalgoEnv = MalgoEnv
   }
 
 makeFieldsNoPrefix ''MalgoEnv
-
-class HasMalgoEnv env where
-  malgoEnv :: Lens' env MalgoEnv
-
-instance HasMalgoEnv MalgoEnv where
-  malgoEnv = identity
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
