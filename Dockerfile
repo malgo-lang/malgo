@@ -25,7 +25,7 @@ RUN ghcup upgrade && \
 
 ENV PATH=${PATH}:/root/.cabal/bin
 
-COPY ./malgo-compiler/malgo.cabal /opt/malgo/malgo-compiler/malgo.cabal
+COPY ./malgo.cabal /opt/malgo/malgo.cabal
 COPY ./cabal.project* /opt/malgo/
 
 RUN cabal update && \
