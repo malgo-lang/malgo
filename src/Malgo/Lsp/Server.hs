@@ -9,7 +9,6 @@ import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
-import Malgo.Interface
 import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), findInfosOfPos)
 import Malgo.Lsp.Index qualified as Index
 import Malgo.Lsp.Pass (LspOpt)
@@ -72,7 +71,7 @@ toDocumentSymbol Index.Symbol {..} =
     toKind Index.Variable = SkVariable
 
 loadIndex :: MonadIO f => TextDocumentIdentifier -> LspOpt -> f Index
-loadIndex doc opt = maybe mempty (view lspIndex) <$> runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) opt
+loadIndex doc opt = maybe mempty identity <$> runReaderT (Index.loadIndex $ textDocumentIdentifierToModuleName doc) opt
 
 toHoverDocument :: [Info] -> MarkupContent
 toHoverDocument infos =

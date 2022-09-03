@@ -15,6 +15,7 @@ import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
+import Malgo.Lsp.Index (storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -57,12 +58,13 @@ compileFromAST parsedAst env = runMalgoM env act
       refinedAst <- withDump (view dumpRefine env) "=== REFINE ===" $ refine tcEnv typedAst
 
       index <- withDump (view debugMode env) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
+      storeIndex index
 
       depList <- dependencieList (typedAst._moduleName) (rnState ^. RnEnv.dependencies)
       (dsEnv, core) <- desugar tcEnv depList refinedAst
       _ <- withDump (view dumpDesugar env) "=== DESUGAR ===" $ pure core
 
-      let inf = buildInterface rnEnv._moduleName rnState dsEnv index
+      let inf = buildInterface rnEnv._moduleName rnState dsEnv
       storeInterface inf
       when (view debugMode env) $ do
         inf <- loadInterface (typedAst._moduleName)
