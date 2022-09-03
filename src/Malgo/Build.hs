@@ -5,6 +5,7 @@ import Data.Graph (graphFromEdges, reverseTopSort)
 import Data.List ((\\))
 import Data.List qualified as List
 import Dhall hiding (map)
+import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -54,21 +55,35 @@ run = do
   let moduleDepends = map takeImports parsedAstList
   let (graph, nodeFromVertex, _) = graphFromEdges moduleDepends
   let topSorted = map (nodeFromVertex >>> view _1) $ reverseTopSort graph
+
+  _uniqSupply <- UniqSupply <$> newIORef 0
+  _interfaces <- newIORef mempty
   let compileOptions =
         map
           ( \path ->
               ( path,
-                (defaultToLLOpt path)
-                  { _dstName = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
+                MalgoEnv
+                  { _uniqSupply = _uniqSupply,
+                    _interfaces = _interfaces,
+                    _srcName = path,
+                    _dstName = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
+                    _dumpParsed = False,
+                    _dumpRenamed = False,
+                    _dumpTyped = False,
+                    _dumpRefine = False,
+                    _dumpDesugar = False,
+                    _noOptimize = False,
+                    _noLambdaLift = False,
+                    _inlineSize = 10,
+                    _debugMode = False,
                     _modulePaths = [workspaceDir </> "build"]
                   }
               )
           )
           topSorted
-  interfaces <- newIORef mempty
-  for_ compileOptions \(path, opt) -> do
-    putStrLn ("Compile " <> opt._srcName)
-    Driver.compileFromAST (Unsafe.fromJust $ List.lookup path parsedAstList) opt interfaces
+  for_ compileOptions \(path, env) -> do
+    putStrLn ("Compile " <> env._srcName)
+    Driver.compileFromAST (Unsafe.fromJust $ List.lookup path parsedAstList) env
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []

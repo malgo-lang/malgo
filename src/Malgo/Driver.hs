@@ -10,12 +10,11 @@ import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
-import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (Interface, buildInterface, dependencieList, loadInterface, storeInterface)
+import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
 import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -43,62 +42,62 @@ withDump isDump label m = do
   pure result
 
 -- | Compile the parsed AST.
-compileFromAST :: Syntax.Module (Malgo 'Parse) -> ToLLOpt -> IORef (HashMap ModuleName Interface) -> IO ()
-compileFromAST parsedAst opt interfaces = runMalgoM act opt interfaces
+compileFromAST :: Syntax.Module (Malgo 'Parse) -> MalgoEnv -> IO ()
+compileFromAST parsedAst env = runMalgoM env act
   where
     act = do
       uniqSupply <- view uniqSupply
-      when (view dumpParsed opt) do
+      when (view dumpParsed env) do
         hPutStrLn stderr "=== PARSED ==="
         hPrint stderr $ pPrint parsedAst
       rnEnv <- RnEnv.genBuiltinRnEnv (parsedAst._moduleName) =<< ask
-      (renamedAst, rnState) <- withDump (view dumpRenamed opt) "=== RENAME ===" $ rename rnEnv parsedAst
+      (renamedAst, rnState) <- withDump (view dumpRenamed env) "=== RENAME ===" $ rename rnEnv parsedAst
       (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
-      _ <- withDump (view dumpTyped opt) "=== TYPE CHECK ===" $ pure typedAst
-      refinedAst <- withDump (view dumpRefine opt) "=== REFINE ===" $ refine tcEnv typedAst
+      _ <- withDump (view dumpTyped env) "=== TYPE CHECK ===" $ pure typedAst
+      refinedAst <- withDump (view dumpRefine env) "=== REFINE ===" $ refine tcEnv typedAst
 
-      index <- withDump (view debugMode opt) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
+      index <- withDump (view debugMode env) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
 
       depList <- dependencieList (typedAst._moduleName) (rnState ^. RnEnv.dependencies)
       (dsEnv, core) <- desugar tcEnv depList refinedAst
-      _ <- withDump (view dumpDesugar opt) "=== DESUGAR ===" $ pure core
+      _ <- withDump (view dumpDesugar env) "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface rnEnv._moduleName rnState dsEnv index
       storeInterface inf
-      when (view debugMode opt) $ do
+      when (view debugMode env) $ do
         inf <- loadInterface (typedAst._moduleName)
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
       lint core
-      coreOpt <- if view noOptimize opt then pure core else optimizeProgram uniqSupply (view inlineSize opt) core
-      when (view dumpDesugar opt && not (view noOptimize opt)) do
+      coreOpt <- if view noOptimize env then pure core else optimizeProgram uniqSupply (view inlineSize env) core
+      when (view dumpDesugar env && not (view noOptimize env)) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint $ over appProgram flat coreOpt
       lint coreOpt
-      coreLL <- if view noLambdaLift opt then pure coreOpt else lambdalift uniqSupply coreOpt
-      when (view dumpDesugar opt && not (view noLambdaLift opt)) $
+      coreLL <- if view noLambdaLift env then pure coreOpt else lambdalift uniqSupply coreOpt
+      when (view dumpDesugar env && not (view noLambdaLift env)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLL
-      coreLLOpt <- if view noOptimize opt then pure coreLL else optimizeProgram uniqSupply (view inlineSize opt) coreLL
-      when (view dumpDesugar opt && not (view noLambdaLift opt) && not (view noOptimize opt)) $
+      coreLLOpt <- if view noOptimize env then pure coreLL else optimizeProgram uniqSupply (view inlineSize env) coreLL
+      when (view dumpDesugar env && not (view noLambdaLift env) && not (view noOptimize env)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-      codeGen (view srcName opt) (view dstName opt) uniqSupply (typedAst._moduleName) coreLLOpt
+      codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) coreLLOpt
 
 -- | Read the source file and parse it, then compile.
-compile :: ToLLOpt -> IORef (HashMap ModuleName Interface) -> IO ()
-compile opt interfaces = do
-  src <- decodeUtf8 <$> readFileBS (view srcName opt)
-  parsedAst <- case parseMalgo (view srcName opt) src of
+compile :: MalgoEnv -> IO ()
+compile env = do
+  src <- decodeUtf8 <$> readFileBS (view srcName env)
+  parsedAst <- case parseMalgo (view srcName env) src of
     Right x -> pure x
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-          diag' = addFile diag (view srcName opt) (toString src)
+          diag' = addFile diag (view srcName env) (toString src)
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
-  when (view dumpParsed opt) $ do
+  when (view dumpParsed env) $ do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
-  compileFromAST parsedAst opt interfaces
+  compileFromAST parsedAst env

@@ -30,9 +30,7 @@ data DsEnv = DsEnv
 makeFieldsNoPrefix ''DsEnv
 
 makeDsEnv :: ModuleName -> MalgoEnv -> DsEnv
-makeDsEnv _moduleName MalgoEnv {..} =
-  let _modulePaths = _toLLOpt._modulePaths
-   in DsEnv {..}
+makeDsEnv _moduleName MalgoEnv {..} = DsEnv {..}
 
 data DsState = DsState
   { -- | Malgo -> Coreの名前環境
