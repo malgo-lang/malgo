@@ -1,19 +1,41 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Main where
 
-import Control.Lens ((.~), (<>~))
+import Control.Lens (makeFieldsNoPrefix, (.~), (<>~))
 import Koriel.Id (ModuleName)
 import Koriel.Lens (HasModulePaths (..))
+import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
-import Malgo.Interface
+import Malgo.Lsp.Index (Index)
 import Malgo.Lsp.Pass (LspOpt (..))
 import Malgo.Lsp.Server qualified as Lsp
-import Malgo.Prelude hiding (toLLOpt)
+import Malgo.Prelude hiding (MalgoEnv (..))
+import Malgo.Prelude qualified as Prelude
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
-import System.FilePath ((</>))
+import System.FilePath ((-<.>), (</>))
 import System.FilePath.Lens (extension)
 import Text.Read (read)
+
+data ToLLOpt = ToLLOpt
+  { _srcName :: FilePath,
+    _dstName :: FilePath,
+    _dumpParsed :: Bool,
+    _dumpRenamed :: Bool,
+    _dumpTyped :: Bool,
+    _dumpRefine :: Bool,
+    _dumpDesugar :: Bool,
+    _noOptimize :: Bool,
+    _noLambdaLift :: Bool,
+    _inlineSize :: Int,
+    _debugMode :: Bool,
+    _modulePaths :: [FilePath]
+  }
+  deriving stock (Eq, Show)
+
+makeFieldsNoPrefix ''ToLLOpt
 
 main :: IO ()
 main = do
@@ -22,14 +44,34 @@ main = do
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
-      interfaces <- newIORef mempty
-      Driver.compile opt interfaces
+      _uniqSupply <- UniqSupply <$> newIORef 0
+      _interfaces <- newIORef mempty
+      _indexes <- newIORef mempty
+      let ToLLOpt {..} = opt
+      Driver.compile Prelude.MalgoEnv {..}
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
       void $ Lsp.server opt
     Build _ -> do
       Build.run
+
+defaultToLLOpt :: FilePath -> ToLLOpt
+defaultToLLOpt src =
+  ToLLOpt
+    { _srcName = src,
+      _dstName = src -<.> "ll",
+      _dumpParsed = False,
+      _dumpRenamed = False,
+      _dumpTyped = False,
+      _dumpRefine = False,
+      _dumpDesugar = False,
+      _noOptimize = False,
+      _noLambdaLift = False,
+      _inlineSize = 10,
+      _debugMode = False,
+      _modulePaths = []
+    }
 
 toLLOpt :: Parser ToLLOpt
 toLLOpt =
@@ -53,12 +95,11 @@ toLLOpt =
       <*> fmap read (strOption (long "inline" <> value "10"))
       <*> switch (long "debug-mode")
       <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
-      <*> switch (long "force")
   )
     <**> helper
 
-lspOpt :: IORef (HashMap ModuleName Interface) -> Parser LspOpt
-lspOpt ref = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")) <*> pure ref <**> helper
+lspOpt :: IORef (HashMap ModuleName Index) -> Parser LspOpt
+lspOpt cache = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")) <*> pure cache <**> helper
 
 data BuildOpt = BuildOpt
   deriving stock (Eq, Show)
@@ -70,10 +111,10 @@ data Command
 
 parseCommand :: IO Command
 parseCommand = do
-  interfacesRef <- newIORef mempty
+  cache <- newIORef mempty
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser (lsp interfacesRef) <|> subparser build) <**> helper) $
+      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build) <**> helper) $
           fullDesc
             <> header "malgo programming language"
       )
@@ -92,9 +133,9 @@ parseCommand = do
           fullDesc
             <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
             <> header "malgo to LLVM Textual IR Compiler"
-    lsp ref =
+    lsp cache = do
       command "lsp" $
-        info (Lsp <$> lspOpt ref) $
+        info (Lsp <$> lspOpt cache) $
           fullDesc
             <> progDesc "Language Server for Malgo"
             <> header "Malgo Language Server"

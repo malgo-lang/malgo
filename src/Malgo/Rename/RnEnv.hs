@@ -85,8 +85,8 @@ genBuiltinRnEnv modName malgoEnv = do
             ],
         _moduleName = modName,
         _uniqSupply = malgoEnv ^. uniqSupply,
-        _debugMode = malgoEnv ^. toLLOpt . debugMode,
-        _modulePaths = malgoEnv ^. toLLOpt . modulePaths,
+        _debugMode = malgoEnv ^. debugMode,
+        _modulePaths = malgoEnv ^. modulePaths,
         _interfaces = malgoEnv ^. interfaces
       }
 

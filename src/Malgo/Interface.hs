@@ -16,7 +16,6 @@ import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsState, HasNameEnv (nameEnv))
 import Malgo.Infer.TypeRep qualified as GT
-import Malgo.Lsp.Index (Index)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnState)
 import Malgo.Rename.RnEnv qualified as RnState
@@ -40,9 +39,7 @@ data Interface = Interface
     -- | Used in Rename
     infixMap :: HashMap RnId (Assoc, Int),
     -- | Used in Rename
-    dependencies :: [ModuleName],
-    -- | Used in Lsp
-    _lspIndex :: Index
+    dependencies :: [ModuleName]
   }
   deriving stock (Show, Generic)
 
@@ -53,9 +50,9 @@ makeFieldsNoPrefix ''Interface
 instance Pretty Interface where
   pPrint = Koriel.Pretty.text . show
 
-buildInterface :: ModuleName -> RnState -> DsState -> Index -> Interface
+buildInterface :: ModuleName -> RnState -> DsState -> Interface
 -- TODO: write abbrMap to interface
-buildInterface moduleName rnState dsState index = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) index $ do
+buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
   ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
       resolvedVarIdentMap . at (tcId.name) ?= tcId

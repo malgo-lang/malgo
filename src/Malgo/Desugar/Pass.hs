@@ -37,13 +37,13 @@ makePrisms ''Def
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadReader env m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m, HasMalgoEnv env) =>
+  (MonadReader MalgoEnv m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m) =>
   TcEnv ->
   [ModuleName] ->
   Module x ->
   m (DsState, Program (Id C.Type))
 desugar tcEnv depList (Module modName ds) = do
-  malgoEnv <- view malgoEnv
+  malgoEnv <- ask
   runReaderT ?? (makeDsEnv modName malgoEnv) $ do
     (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
     let varDefs = mapMaybe (preview _VarDef) ds'

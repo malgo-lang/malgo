@@ -17,8 +17,8 @@ fi
 
 eval "$BUILD build"
 
-eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
+eval "$BUILD exec malgo -- to-ll -M $TESTDIR/libs ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
 ls /tmp/malgo_test/libs/
-eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"
+eval "$BUILD exec malgo -- to-ll -M $TESTDIR/libs ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"
 ls /tmp/malgo_test/libs/
 cp ./runtime/malgo/runtime.c $TESTDIR/libs/runtime.c

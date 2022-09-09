@@ -10,7 +10,6 @@ module Malgo.Prelude
   )
 where
 
-import Control.Lens (Lens')
 import Control.Lens.TH
 import Control.Monad.Fix (MonadFix)
 import Data.Store (Store)
@@ -18,7 +17,6 @@ import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile
 import Koriel.Id (ModuleName)
 import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply)
-import Koriel.MonadUniq hiding (UniqSupply (_uniqSupply))
 import Koriel.Prelude
 import Koriel.Pretty
 import Koriel.Pretty qualified as P
@@ -26,12 +24,15 @@ import Language.LSP.Types (Position (..), filePathToUri)
 import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
 import {-# SOURCE #-} Malgo.Interface (Interface)
-import System.FilePath ((-<.>))
+import {-# SOURCE #-} Malgo.Lsp.Index (Index)
 import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
 import Text.Megaparsec.Pos qualified as Megaparsec
 
-data ToLLOpt = ToLLOpt
-  { _srcName :: FilePath,
+data MalgoEnv = MalgoEnv
+  { _uniqSupply :: UniqSupply,
+    _interfaces :: IORef (HashMap ModuleName Interface),
+    _indexes :: IORef (HashMap ModuleName Index),
+    _srcName :: FilePath,
     _dstName :: FilePath,
     _dumpParsed :: Bool,
     _dumpRenamed :: Bool,
@@ -42,62 +43,16 @@ data ToLLOpt = ToLLOpt
     _noLambdaLift :: Bool,
     _inlineSize :: Int,
     _debugMode :: Bool,
-    _modulePaths :: [FilePath],
-    _forceRebuild :: Bool
-  }
-  deriving stock (Eq, Show)
-
-makeFieldsNoPrefix ''ToLLOpt
-
-defaultToLLOpt :: FilePath -> ToLLOpt
-defaultToLLOpt src =
-  ToLLOpt
-    { _srcName = src,
-      _dstName = src -<.> "ll",
-      _dumpParsed = False,
-      _dumpRenamed = False,
-      _dumpTyped = False,
-      _dumpRefine = False,
-      _dumpDesugar = False,
-      _noOptimize = False,
-      _noLambdaLift = False,
-      _inlineSize = 10,
-      _debugMode = False,
-      _modulePaths = [],
-      _forceRebuild = False
-    }
-
-data MalgoEnv = MalgoEnv
-  { _uniqSupply :: UniqSupply,
-    _toLLOpt :: ToLLOpt,
-    _interfaces :: IORef (HashMap ModuleName Interface)
+    _modulePaths :: [FilePath]
   }
 
 makeFieldsNoPrefix ''MalgoEnv
 
-class HasMalgoEnv env where
-  malgoEnv :: Lens' env MalgoEnv
-
-instance HasMalgoEnv MalgoEnv where
-  malgoEnv = identity
-
-instance HasSrcName MalgoEnv FilePath where
-  srcName = toLLOpt . srcName
-
-instance HasDstName MalgoEnv FilePath where
-  dstName = toLLOpt . dstName
-
-instance HasModulePaths MalgoEnv [FilePath] where
-  modulePaths = toLLOpt . modulePaths
-
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
 
-runMalgoM :: MalgoM a -> ToLLOpt -> IORef (HashMap ModuleName Interface) -> IO a
-runMalgoM m opt interfaces = do
-  uniqSupply <- UniqSupply <$> newIORef 0
-  let env = MalgoEnv {_toLLOpt = opt, _uniqSupply = uniqSupply, _interfaces = interfaces}
-  runReaderT (m.unMalgoM) env
+runMalgoM :: MalgoEnv -> MalgoM a -> IO a
+runMalgoM env m = runReaderT (m.unMalgoM) env
 
 -- | Range of a token.
 data Range = Range

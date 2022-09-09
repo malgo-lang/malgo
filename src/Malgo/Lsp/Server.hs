@@ -2,15 +2,14 @@
 
 module Malgo.Lsp.Server (server) where
 
-import Control.Lens (to, view, (^.))
+import Control.Lens (view, (^.))
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
 import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
-import Malgo.Interface
-import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), findInfosOfPos)
+import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), findReferences)
 import Malgo.Lsp.Index qualified as Index
 import Malgo.Lsp.Pass (LspOpt)
 import Malgo.Prelude hiding (Range)
@@ -31,7 +30,7 @@ handlers opt =
       requestHandler STextDocumentHover $ \req responder -> do
         let RequestMessage _ _ _ (HoverParams doc pos _workDone) = req
         index <- loadIndex doc opt
-        case findInfosOfPos (positionToSourcePos (Unsafe.fromJust $ doc ^. uri . to uriToFilePath) pos) index of
+        case findReferences (positionToSourcePos (Unsafe.fromJust $ uriToFilePath $ doc ^. uri) pos) index of
           [] -> responder (Right Nothing)
           infos -> do
             let rsp = Hover ms (Just range)
@@ -42,7 +41,7 @@ handlers opt =
       requestHandler STextDocumentDefinition $ \req responder -> do
         let RequestMessage _ _ _ (DefinitionParams doc pos _workDone _partialResult) = req
         index <- loadIndex doc opt
-        let infos = findInfosOfPos (positionToSourcePos (Unsafe.fromJust $ doc ^. uri . to uriToFilePath) pos) index
+        let infos = findReferences (positionToSourcePos (Unsafe.fromJust $ uriToFilePath $ doc ^. uri) pos) index
             rsp = InR $ InL $ Language.LSP.Types.List $ concatMap infoToLocation infos
         responder (Right rsp),
       requestHandler STextDocumentDocumentSymbol $ \req responder -> do
@@ -72,7 +71,7 @@ toDocumentSymbol Index.Symbol {..} =
     toKind Index.Variable = SkVariable
 
 loadIndex :: MonadIO f => TextDocumentIdentifier -> LspOpt -> f Index
-loadIndex doc opt = maybe mempty (view lspIndex) <$> runReaderT (loadInterface $ textDocumentIdentifierToModuleName doc) opt
+loadIndex doc opt = maybe mempty identity <$> runReaderT (Index.loadIndex (textDocumentIdentifierToModuleName doc)) opt
 
 toHoverDocument :: [Info] -> MarkupContent
 toHoverDocument infos =
@@ -87,7 +86,7 @@ infoToLocation Info {..} =
   map malgoRangeToLocation definitions
 
 server :: LspOpt -> IO Int
-server opt =
+server opt = do
   runServer $
     ServerDefinition
       { onConfigurationChange = \_ _ -> Right (),

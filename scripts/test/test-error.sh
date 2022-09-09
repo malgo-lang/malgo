@@ -26,8 +26,8 @@ malgoOptions='' # No options
 
 # 並列にテストを実行すると、ここでコンパイル順序の前提が崩れうる。
 # コンパイル順序を保証するために、事前にpretest.shを実行する。
-# eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
-# eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"
+# eval "$BUILD exec malgo -- to-ll -M $TESTDIR/libs ./runtime/malgo/Builtin.mlg -o $TESTDIR/libs/Builtin.ll"
+# eval "$BUILD exec malgo -- to-ll -M $TESTDIR/libs ./runtime/malgo/Prelude.mlg -o $TESTDIR/libs/Prelude.ll"
 # cp ./runtime/malgo/runtime.c $TESTDIR/libs/runtime.c
 
 echo '=== opt ==='
@@ -37,4 +37,4 @@ OUTFILE=$TESTDIR/${file/.mlg/.out}
 
 echo $file
 
-eval "$BUILD exec malgo -- to-ll --force -M $TESTDIR/libs $TestFilePath -o $LLFILE $malgoOptions"
+eval "$BUILD exec malgo -- to-ll -M $TESTDIR/libs $TestFilePath -o $LLFILE $malgoOptions"
