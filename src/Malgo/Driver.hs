@@ -24,6 +24,7 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
+import System.Directory (makeAbsolute)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -92,8 +93,9 @@ compileFromAST parsedAst env = runMalgoM env act
 -- | Read the source file and parse it, then compile.
 compile :: MalgoEnv -> IO ()
 compile env = do
-  src <- decodeUtf8 <$> readFileBS (view srcName env)
-  parsedAst <- case parseMalgo (view srcName env) src of
+  srcPath <- makeAbsolute $ view srcName env
+  src <- decodeUtf8 <$> readFileBS srcPath
+  parsedAst <- case parseMalgo srcPath src of
     Right x -> pure x
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err

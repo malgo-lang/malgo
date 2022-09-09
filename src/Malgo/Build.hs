@@ -11,7 +11,7 @@ import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..), _moduleName)
 import Relude.Unsafe qualified as Unsafe
-import System.Directory (getCurrentDirectory)
+import System.Directory (getCurrentDirectory, makeAbsolute)
 import System.FilePath (takeBaseName, (</>))
 import System.FilePath.Glob (glob)
 
@@ -49,7 +49,7 @@ run = do
   sourceFiles <- concat <$> traverse (glob . (</> "**/*.mlg")) sourceDirs
   excludePatterns <- getExcludePatterns
   excludeFiles <- concat <$> traverse glob excludePatterns
-  let sourceFiles' = sourceFiles \\ excludeFiles
+  sourceFiles' <- traverse makeAbsolute $ sourceFiles \\ excludeFiles
   sourceContents <- map (decodeUtf8 @Text) <$> traverse readFileBS sourceFiles'
   let parsedAstList = mconcat $ zipWith parse sourceFiles' sourceContents
   let moduleDepends = map takeImports parsedAstList
