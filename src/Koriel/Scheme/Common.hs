@@ -24,7 +24,8 @@ fromId id = Identifier $ encode $ convertString $ idToText id
     aux c = [c]
 
 data Expr
-  = Symbol Identifier
+  = Variable Identifier
+  | Symbol Identifier
   | Literal Literal
   | Call Expr [Expr]
   | Lambda [Identifier] Expr
@@ -34,7 +35,8 @@ data Expr
   deriving stock (Eq, Ord, Show)
 
 instance Pretty Expr where
-  pPrint (Symbol id) = pPrint id
+  pPrint (Variable i) = pPrint i
+  pPrint (Symbol id) = "'" <> pPrint id
   pPrint (Literal lit) = pPrint lit
   pPrint (Call f args) = P.parens $ P.hsep $ map pPrint $ f : args
   pPrint (Lambda args body) = P.parens $ P.sep ["lambda", P.parens $ P.hsep $ map pPrint args, pPrint body]
