@@ -1,7 +1,7 @@
--- | Koriel.Scheme.Common provides two components:
+-- | Koriel.Scheme.AST provides two components:
 -- 1. Scheme AST
 -- 2. Scheme AST pretty printer
-module Koriel.Scheme.Common where
+module Koriel.Scheme.AST where
 
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Koriel.Id
