@@ -82,9 +82,9 @@ runCodeGenT env m =
 codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
 codeGen srcPath dstPath uniqSupply modName Program {..} = do
   llvmir <- runCodeGenT CodeGenEnv {_uniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv, _moduleName = modName} do
+    _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
+    _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     for_ _extFuncs \(name, typ) -> do
-      _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
-      _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
       let name' = LLVM.AST.mkName $ convertString name
       case typ of
         ps :-> r -> extern name' (map convType ps) (convType r)

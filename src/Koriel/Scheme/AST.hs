@@ -31,7 +31,8 @@ data Expr
   | Lambda [Identifier] Expr
   | Cond [Clause]
   | LetRec [Binding] Expr
-  | Define Identifier [Identifier] Expr
+  | Define Identifier (Maybe [Identifier]) Expr
+  | Error String
   deriving stock (Eq, Ord, Show)
 
 instance Pretty Expr where
@@ -42,7 +43,9 @@ instance Pretty Expr where
   pPrint (Lambda args body) = P.parens $ P.sep ["lambda", P.parens $ P.hsep $ map pPrint args, pPrint body]
   pPrint (Cond clauses) = P.parens $ P.sep $ "cond" : map pPrint clauses
   pPrint (LetRec bindings body) = P.parens $ P.sep ["letrec", P.parens $ P.hsep $ map pPrint bindings, pPrint body]
-  pPrint (Define name args body) = P.parens $ P.sep ["define", P.parens $ P.hsep $ map pPrint $ name : args, pPrint body]
+  pPrint (Define name Nothing body) = P.parens $ P.sep ["define", pPrint name, pPrint body]
+  pPrint (Define name (Just args) body) = P.parens $ P.sep ["define", P.parens $ P.hsep $ map pPrint $ name : args, pPrint body]
+  pPrint (Error msg) = P.parens $ P.sep ["error", P.text msg]
 
 data Literal
   = Integer Integer
