@@ -97,7 +97,10 @@ genAlts scrutinee alts = traverse genAlts' (toList alts)
       --        (arg2 (third scrutinee))
       --        ...)
       --    e))
-      undefined
+      let pred = Scheme.Call (Variable "=") [Scheme.Call (Variable "first") [scrutinee], genCon con]
+      let binds = genArgs 2 args
+      body <- genExp e
+      pure $ Clause pred (Scheme.LetRec binds body)
     genAlts' (OpenRecord fields e) = do
       -- srfi-69 hash table
       undefined
@@ -105,7 +108,7 @@ genAlts scrutinee alts = traverse genAlts' (toList alts)
       -- ((= scrutinee unboxed) e)
       Clause
         ( Scheme.Call
-            (Variable $ Identifier "=")
+            (Variable "=")
             [scrutinee, Literal $ genUnboxed unboxed]
         )
         <$> genExp e
@@ -115,6 +118,25 @@ genAlts scrutinee alts = traverse genAlts' (toList alts)
       let value = scrutinee
       e' <- genExp e
       pure $ Clause (Literal $ Boolean True) (Scheme.LetRec [Binding {name, value}] e')
+    genArgs _ [] = []
+    genArgs n (x : xs) =
+      let name = fromId x
+          value = Scheme.Call (Variable $ toOrdinal n) [scrutinee]
+          rest = genArgs (n + 1) xs
+       in Binding {name, value} : rest
+
+toOrdinal :: Int -> Identifier
+toOrdinal 1 = "first"
+toOrdinal 2 = "second"
+toOrdinal 3 = "third"
+toOrdinal 4 = "fourth"
+toOrdinal 5 = "fifth"
+toOrdinal 6 = "sixth"
+toOrdinal 7 = "seventh"
+toOrdinal 8 = "eighth"
+toOrdinal 9 = "ninth"
+toOrdinal 10 = "tenth"
+toOrdinal _ = error "toOrdinal: too large"
 
 -- | Compile Core binds to Scheme letrec binds.
 genBind :: MonadCodeGen m => LocalDef (Id Type) -> m Binding
@@ -127,35 +149,40 @@ genObj :: MonadCodeGen m => Obj (Id Type) -> m Expr
 genObj (Fun params body) =
   -- (lambda (...params) body)
   undefined
-genObj (Pack _ con args) =
+genObj (Pack _ con args) = do
   -- (cons 'con args)
-  undefined
+  let args' = map genAtom args
+  pure $ Scheme.Call (Variable "cons") (genCon con : args')
 genObj (Record fields) =
   -- srfi-69 hash table
   undefined
 
+genCon :: Con -> Expr
+genCon (Con (Data name) _) = Symbol $ Identifier $ convertString name
+genCon (Con Tuple _) = Symbol "tuple"
+
 genOp :: MonadCodeGen m => Op -> m (Expr -> Expr -> Expr)
-genOp Add = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "+") [lhs, rhs]
-genOp Sub = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "-") [lhs, rhs]
-genOp Mul = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "*") [lhs, rhs]
+genOp Add = pure $ \lhs rhs -> Scheme.Call (Variable "+") [lhs, rhs]
+genOp Sub = pure $ \lhs rhs -> Scheme.Call (Variable "-") [lhs, rhs]
+genOp Mul = pure $ \lhs rhs -> Scheme.Call (Variable "*") [lhs, rhs]
 genOp Div =
   -- use `floor-quotient` instead of `/` to avoid problems with real numbers
-  pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "floor-quotient") [lhs, rhs]
+  pure $ \lhs rhs -> Scheme.Call (Variable "floor-quotient") [lhs, rhs]
 genOp Mod =
   -- use `floor-remainder` instead of `modulo` or `mod` to avoid problems with real numbers
-  pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "floor-remainder") [lhs, rhs]
-genOp FAdd = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "+") [lhs, rhs]
-genOp FSub = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "-") [lhs, rhs]
-genOp FMul = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "*") [lhs, rhs]
-genOp FDiv = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "/") [lhs, rhs]
-genOp Eq = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "=") [lhs, rhs]
-genOp Neq = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "not") [Scheme.Call (Variable $ Identifier "=") [lhs, rhs]]
-genOp Lt = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "<") [lhs, rhs]
-genOp Le = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "<=") [lhs, rhs]
-genOp Gt = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier ">") [lhs, rhs]
-genOp Ge = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier ">=") [lhs, rhs]
-genOp And = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "and") [lhs, rhs]
-genOp Or = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "or") [lhs, rhs]
+  pure $ \lhs rhs -> Scheme.Call (Variable "floor-remainder") [lhs, rhs]
+genOp FAdd = pure $ \lhs rhs -> Scheme.Call (Variable "+") [lhs, rhs]
+genOp FSub = pure $ \lhs rhs -> Scheme.Call (Variable "-") [lhs, rhs]
+genOp FMul = pure $ \lhs rhs -> Scheme.Call (Variable "*") [lhs, rhs]
+genOp FDiv = pure $ \lhs rhs -> Scheme.Call (Variable "/") [lhs, rhs]
+genOp Eq = pure $ \lhs rhs -> Scheme.Call (Variable "=") [lhs, rhs]
+genOp Neq = pure $ \lhs rhs -> Scheme.Call (Variable "not") [Scheme.Call (Variable "=") [lhs, rhs]]
+genOp Lt = pure $ \lhs rhs -> Scheme.Call (Variable "<") [lhs, rhs]
+genOp Le = pure $ \lhs rhs -> Scheme.Call (Variable "<=") [lhs, rhs]
+genOp Gt = pure $ \lhs rhs -> Scheme.Call (Variable ">") [lhs, rhs]
+genOp Ge = pure $ \lhs rhs -> Scheme.Call (Variable ">=") [lhs, rhs]
+genOp And = pure $ \lhs rhs -> Scheme.Call (Variable "and") [lhs, rhs]
+genOp Or = pure $ \lhs rhs -> Scheme.Call (Variable "or") [lhs, rhs]
 
 genAtom :: Atom (Id a) -> Expr
 genAtom (Var v) = Variable (fromId v)

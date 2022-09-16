@@ -10,7 +10,10 @@ import Koriel.Pretty (Pretty (pPrint))
 import Koriel.Pretty qualified as P
 
 newtype Identifier = Identifier String
-  deriving newtype (Eq, Ord, Show)
+  deriving newtype (Eq, Ord, Show, Semigroup)
+
+instance IsString Identifier where
+  fromString = Identifier
 
 instance Pretty Identifier where
   pPrint (Identifier t) = P.text t
