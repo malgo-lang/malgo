@@ -53,25 +53,25 @@ genVar (name, body) = do
   pure $ Define name' Nothing body'
 
 genExp :: MonadCodeGen m => Exp (Id Type) -> m Expr
-genExp (Atom atom) = genAtom atom
+genExp (Atom atom) = pure $ genAtom atom
 genExp (Core.Call func args) = do
-  func' <- genAtom func
-  args' <- traverse genAtom args
+  let func' = genAtom func
+  let args' = map genAtom args
   pure $ Scheme.Call func' args'
 genExp (CallDirect func args) = do
   let func' = Variable (fromId func)
-  args' <- traverse genAtom args
+  let args' = map genAtom args
   pure $ Scheme.Call func' args'
 genExp (RawCall func _ args) = do
   let func' = Variable $ Identifier $ convertString func
-  args' <- traverse genAtom args
+  let args' = map genAtom args
   pure $ Scheme.Call func' args'
 genExp (BinOp op lhs rhs) = do
-  lhs' <- genAtom lhs
-  rhs' <- genAtom rhs
+  let lhs' = genAtom lhs
+  let rhs' = genAtom rhs
   op' <- genOp op
   pure $ op' lhs' rhs'
-genExp (Cast _ e) = genAtom e
+genExp (Cast _ e) = pure $ genAtom e
 genExp (Let binds body) = do
   binds' <- traverse genBind binds
   body' <- genExp body
@@ -84,17 +84,55 @@ genExp (Core.Error typ) = pure $ Scheme.Error $ "internal error: " <> show typ
 
 -- | Compile Core match alternatives to Scheme cond.
 --  It generates `cond` expression from these alternatives:
---  1. The clause that checks the tag of the scrutinee and binds the corresponding constructor arguments.
---  2. checks the scrutinee is a record and binds the corresponding fields.
---  3. checks the scrutinee is the unboxed value.
---  4. Simply binds the scrutinee to the variable.
+--  1. Check the tag of scrutinee and bind the corresponding constructor arguments.
+--  2. Check the scrutinee is a record and binds the corresponding fields.
+--  3. Check the scrutinee is the unboxed value.
+--  4. Simply bind the scrutinee to the variable.
 genAlts :: MonadCodeGen m => Expr -> NonEmpty (Case (Id Type)) -> m [Clause]
-genAlts scrutinee alts = genAlts' (toList alts)
+genAlts scrutinee alts = traverse genAlts' (toList alts)
   where
-    genAlts' [] = pure []
+    genAlts' (Unpack con args e) = do
+      -- ((= (first scrutinee) con)
+      --  (let ((arg1 (second scrutinee))
+      --        (arg2 (third scrutinee))
+      --        ...)
+      --    e))
+      undefined
+    genAlts' (OpenRecord fields e) = do
+      -- srfi-69 hash table
+      undefined
+    genAlts' (Switch unboxed e) = do
+      -- ((= scrutinee unboxed) e)
+      Clause
+        ( Scheme.Call
+            (Variable $ Identifier "=")
+            [scrutinee, Literal $ genUnboxed unboxed]
+        )
+        <$> genExp e
+    genAlts' (Bind var e) = do
+      -- (#t (let ((var scrutinee)) e))
+      let name = fromId var
+      let value = scrutinee
+      e' <- genExp e
+      pure $ Clause (Literal $ Boolean True) (Scheme.LetRec [Binding {name, value}] e')
 
+-- | Compile Core binds to Scheme letrec binds.
 genBind :: MonadCodeGen m => LocalDef (Id Type) -> m Binding
-genBind = undefined
+genBind LocalDef {_variable, _object} = do
+  let name = fromId _variable
+  value <- genObj _object
+  pure Binding {..}
+
+genObj :: MonadCodeGen m => Obj (Id Type) -> m Expr
+genObj (Fun params body) =
+  -- (lambda (...params) body)
+  undefined
+genObj (Pack _ con args) =
+  -- (cons 'con args)
+  undefined
+genObj (Record fields) =
+  -- srfi-69 hash table
+  undefined
 
 genOp :: MonadCodeGen m => Op -> m (Expr -> Expr -> Expr)
 genOp Add = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "+") [lhs, rhs]
@@ -119,14 +157,16 @@ genOp Ge = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier ">=") [lhs, rhs
 genOp And = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "and") [lhs, rhs]
 genOp Or = pure $ \lhs rhs -> Scheme.Call (Variable $ Identifier "or") [lhs, rhs]
 
-genAtom :: MonadCodeGen m => Atom (Id Type) -> m Expr
-genAtom (Var v) = pure $ Variable (fromId v)
-genAtom (Unboxed u) = pure $
-  Literal $ case u of
-    Int32 i -> Integer i
-    Int64 i -> Integer i
-    Core.Float f -> Scheme.Float $ floatToDouble f
-    Core.Double f -> Scheme.Float f
-    Core.Char c -> Scheme.Char c
-    Core.String s -> Scheme.String $ convertString s
-    Bool b -> Boolean b
+genAtom :: Atom (Id a) -> Expr
+genAtom (Var v) = Variable (fromId v)
+genAtom (Unboxed u) = Literal $ genUnboxed u
+
+genUnboxed :: Unboxed -> Literal
+genUnboxed u = case u of
+  Int32 i -> Integer i
+  Int64 i -> Integer i
+  Core.Float f -> Scheme.Float $ floatToDouble f
+  Core.Double f -> Scheme.Float f
+  Core.Char c -> Scheme.Char c
+  Core.String s -> Scheme.String $ convertString s
+  Bool b -> Boolean b
