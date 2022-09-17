@@ -2,9 +2,11 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Lens (over, view, (^.))
+import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM (codeGen)
+import Koriel.Core.CodeGen.Scheme qualified as Scheme
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
@@ -25,6 +27,7 @@ import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Directory (makeAbsolute)
+import System.FilePath ((-<.>))
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -88,7 +91,11 @@ compileFromAST parsedAst env = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-      codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) coreLLOpt
+      case view compileMode env of
+        LLVM -> codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) coreLLOpt
+        Scheme -> do
+          code <- Scheme.codeGen uniqSupply coreLLOpt
+          writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
 compile :: MalgoEnv -> IO ()

@@ -34,6 +34,7 @@ data MalgoEnv = MalgoEnv
     _indexes :: IORef (HashMap ModuleName Index),
     _srcName :: FilePath,
     _dstName :: FilePath,
+    _compileMode :: CompileMode,
     _dumpParsed :: Bool,
     _dumpRenamed :: Bool,
     _dumpTyped :: Bool,
@@ -45,6 +46,9 @@ data MalgoEnv = MalgoEnv
     _debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
+
+data CompileMode = LLVM | Scheme
+  deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
 
