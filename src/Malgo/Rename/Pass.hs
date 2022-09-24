@@ -82,10 +82,7 @@ rnDecl (Foreign pos name typ) = do
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (Import pos modName importList) = do
-  interface <-
-    loadInterface modName >>= \case
-      Just x -> pure x
-      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
+  interface <- loadInterface modName
   infixInfo <>= interface.infixMap
   Malgo.Rename.RnEnv.dependencies <>= HashSet.insert modName interface.dependencies
   pure $ Import pos modName importList
@@ -309,11 +306,8 @@ genToplevelEnv modName ds =
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newExternalId x () modName
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
-    aux (Import pos modName' importList) = do
-      interface <-
-        loadInterface modName' >>= \case
-          Just i -> pure i
-          Nothing -> errorOn pos $ "Cannot find module:" <+> quotes (pPrint modName')
+    aux (Import _ modName' importList) = do
+      interface <- loadInterface modName'
       let varIdentAssoc = HashMap.toList $ interface ^. resolvedVarIdentMap
       let typeIdentAssoc = HashMap.toList $ interface ^. resolvedTypeIdentMap
       modify $ appendRnEnv resolvedVarIdentMap (map (resolveImport modName' importList) varIdentAssoc)
