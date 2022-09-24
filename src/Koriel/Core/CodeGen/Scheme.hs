@@ -76,6 +76,11 @@ genExp (Let binds body) = do
   binds' <- traverse genBind binds
   body' <- genExp body
   pure $ Scheme.LetRec binds' body'
+genExp (Core.Match s (Bind var e :| [])) = do
+  let name = fromId var
+  value <- genExp s
+  e' <- genExp e
+  pure $ Scheme.LetRec [Binding {name, value}] e'
 genExp (Core.Match e alts) = do
   e <- genExp e
   alts <- genAlts e alts
@@ -148,7 +153,7 @@ genBind LocalDef {_variable, _object} = do
 genObj :: MonadCodeGen m => Obj (Id Type) -> m Expr
 genObj (Fun params body) =
   -- (lambda (...params) body)
-  undefined
+  Lambda (map fromId params) <$> genExp body
 genObj (Pack _ con args) = do
   -- (cons 'con args)
   let args' = map genAtom args
