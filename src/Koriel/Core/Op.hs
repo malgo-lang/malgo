@@ -1,6 +1,7 @@
 module Koriel.Core.Op where
 
 import Data.Data (Data)
+import Data.Store (Store)
 import Koriel.Prelude
 import Koriel.Pretty
 
@@ -42,3 +43,5 @@ instance Pretty Op where
   pPrint Ge = ">="
   pPrint And = "&&"
   pPrint Or = "||"
+
+instance Store Op

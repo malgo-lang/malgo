@@ -2,6 +2,7 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Lens (over, view, (^.))
+import Data.Store (encode)
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
@@ -91,6 +92,7 @@ compileFromAST parsedAst env = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
+      writeFileBS (view dstName env -<.> "kor") $ encode coreLLOpt
       case view compileMode env of
         LLVM -> codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) coreLLOpt
         Scheme -> do
