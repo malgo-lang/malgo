@@ -16,8 +16,7 @@ import Numeric.Extra (floatToDouble)
 type MonadCodeGen m = (MonadIO m, MonadReader CGEnv m, MonadState CGState m)
 
 data CGEnv = CGEnv
-  { _moduleName :: ModuleName,
-    _uniqSupply :: UniqSupply
+  { _uniqSupply :: UniqSupply
   }
 
 data CGState = CGState

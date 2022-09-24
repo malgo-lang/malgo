@@ -81,7 +81,7 @@ compileFromAST parsedAst env = runMalgoM env act
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint $ over appProgram flat coreOpt
       lint coreOpt
-      coreLL <- if view noLambdaLift env then pure coreOpt else lambdalift uniqSupply coreOpt
+      coreLL <- if view noLambdaLift env then pure coreOpt else lambdalift uniqSupply typedAst._moduleName coreOpt
       when (view dumpDesugar env && not (view noLambdaLift env)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="

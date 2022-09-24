@@ -57,8 +57,8 @@ desugar tcEnv depList (Module modName ds) = do
             unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
             _ <- bind $ mainCall [unit]
             pure (Atom $ C.Unboxed $ C.Int32 0)
-        pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs) extDefs)
-      Nothing -> pure (dsEnv, Program modName varDefs funDefs extDefs)
+        pure (dsEnv, Program varDefs (mainFuncDef : funDefs) extDefs)
+      Nothing -> pure (dsEnv, Program varDefs funDefs extDefs)
   where
     -- エントリーポイントとなるmain関数を検索する
     searchMain ((griffId, coreId) : _) | griffId.name == "main" && griffId.sort == External && griffId.moduleName == modName = Just $ CallDirect coreId

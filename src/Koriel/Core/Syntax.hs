@@ -96,8 +96,7 @@ makeFieldsNoPrefix ''LocalDef
 
 -- | toplevel function definitions
 data Program a = Program
-  { _moduleName :: ModuleName,
-    _topVars :: [(a, Exp a)],
+  { _topVars :: [(a, Exp a)],
     _topFuncs :: [(a, ([a], Exp a))],
     _extFuncs :: [(Text, Type)]
   }
@@ -290,7 +289,7 @@ appCase f = \case
 
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {..} =
-  Program _moduleName
+  Program
     <$> traverseOf (traversed . _2) f _topVars
     <*> traverseOf (traversed . _2 . _2) f _topFuncs
     <*> pure _extFuncs

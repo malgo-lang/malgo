@@ -35,8 +35,8 @@ data LambdaLiftEnv = LambdaLiftEnv
 
 makeFieldsNoPrefix ''LambdaLiftEnv
 
-lambdalift :: MonadIO m => UniqSupply -> Program (Id Type) -> m (Program (Id Type))
-lambdalift _uniqSupply Program {..} =
+lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
+lambdalift _uniqSupply _moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map fst _topFuncs} $ do
       topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) _topFuncs
@@ -44,7 +44,7 @@ lambdalift _uniqSupply Program {..} =
       knowns <>= HashSet.fromList (map fst topFuncs)
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift _topVars
-      traverseOf appProgram (pure . flat) $ Program _moduleName _topVars (HashMap.toList _funcs) _extFuncs
+      traverseOf appProgram (pure . flat) $ Program _topVars (HashMap.toList _funcs) _extFuncs
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader env f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
