@@ -1,6 +1,7 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
+import Control.Exception.Extra (assertIO)
 import Control.Lens (over, view, (^.))
 import Data.HashSet qualified as HashSet
 import Data.Store (encode)
@@ -19,6 +20,7 @@ import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
+import Malgo.Link qualified as Link
 import Malgo.Lsp.Index (storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Parser (parseMalgo)
@@ -29,7 +31,7 @@ import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Directory (makeAbsolute)
-import System.FilePath ((-<.>))
+import System.FilePath (takeDirectory, (-<.>))
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -94,10 +96,15 @@ compileFromAST parsedAst env = runMalgoM env act
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
       writeFileBS (view dstName env -<.> "kor") $ encode coreLLOpt
+
+      -- check module paths include dstName's directory
+      liftIO $ assertIO (takeDirectory env._dstName `elem` env._modulePaths)
+      linkedCore <- Link.link typedAst._moduleName
+
       case view compileMode env of
-        LLVM -> codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) coreLLOpt
+        LLVM -> codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) linkedCore
         Scheme -> do
-          code <- Scheme.codeGen uniqSupply coreLLOpt
+          code <- Scheme.codeGen uniqSupply linkedCore
           writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.

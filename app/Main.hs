@@ -2,6 +2,7 @@
 
 module Main where
 
+import Control.Exception.Extra (assertIO)
 import Control.Lens (makeFieldsNoPrefix, (.~), (<>~))
 import Koriel.Id (ModuleName)
 import Koriel.Lens (HasModulePaths (..))
@@ -15,7 +16,7 @@ import Malgo.Prelude hiding (MalgoEnv (..))
 import Malgo.Prelude qualified as Prelude
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
-import System.FilePath ((-<.>), (</>))
+import System.FilePath (takeDirectory, (-<.>), (</>))
 import System.FilePath.Lens (extension)
 import Text.Read (read)
 
@@ -44,7 +45,7 @@ main = do
   case command of
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
+      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt._dstName, ".malgo-work" </> "build", basePath]
       _uniqSupply <- UniqSupply <$> newIORef 0
       _interfaces <- newIORef mempty
       _indexes <- newIORef mempty

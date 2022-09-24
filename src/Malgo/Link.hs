@@ -5,22 +5,23 @@ import Data.HashSet qualified as HashSet
 import Data.Store (decodeIO)
 import Data.String.Conversions (convertString)
 import Koriel.Core.Syntax
+import Koriel.Core.Type (Type)
 import Koriel.Id
 import Koriel.Lens
-import Koriel.Pretty (errorDoc, pPrint, quotes, (<+>))
+import Koriel.Pretty (errorDoc, pPrint, quotes, ($$), (<+>))
 import Malgo.Interface
 import Malgo.Prelude
 import System.Directory (doesFileExist)
 import System.FilePath ((</>))
 
-link :: (MonadIO m, MonadReader env m, HasInterfaces env (IORef (HashMap ModuleName Interface)), HasModulePaths env [FilePath]) => ModuleName -> m (Program (Id ()))
+link :: (MonadIO m, MonadReader env m, HasInterfaces env (IORef (HashMap ModuleName Interface)), HasModulePaths env [FilePath]) => ModuleName -> m (Program (Id Type))
 link mainModName = do
   interface <- loadInterface mainModName
   mainCoreIR <- loadCore mainModName
   depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)
   pure $ mconcat (mainCoreIR : depCoreIRs)
 
-loadCore :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath]) => ModuleName -> m (Program (Id ()))
+loadCore :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath]) => ModuleName -> m (Program (Id Type))
 loadCore (ModuleName modName) = do
   modPaths <- view modulePaths
   message <- findAndReadFile modPaths (convertString modName <> ".kor")
@@ -28,7 +29,11 @@ loadCore (ModuleName modName) = do
     Right x -> pure x
     Left err -> do
       hPrint stderr err
-      errorDoc $ "Cannot find module:" <+> quotes (pPrint modName)
+      errorDoc $
+        "Cannot find module:"
+          <+> quotes (pPrint modName)
+          $$ "Module paths:"
+          <+> pPrint modPaths
   where
     findAndReadFile [] modFile = pure $ Left (pPrint modFile <+> "not found")
     findAndReadFile (path : paths) modFile = do
