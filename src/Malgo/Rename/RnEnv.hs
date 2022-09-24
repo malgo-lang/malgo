@@ -6,6 +6,7 @@ module Malgo.Rename.RnEnv where
 
 import Control.Lens (ASetter', At (at), Lens', lens, makeFieldsNoPrefix, over, view, (^.))
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -16,7 +17,7 @@ import Malgo.Syntax.Extension
 
 data RnState = RnState
   { _infixInfo :: HashMap RnId (Assoc, Int),
-    _dependencies :: [ModuleName]
+    _dependencies :: HashSet ModuleName
   }
   deriving stock (Show)
 
@@ -26,14 +27,14 @@ instance Pretty RnState where
       <+> braces
         ( sep
             [ sep ["_infixInfo", "=", pPrint $ HashMap.toList _infixInfo],
-              sep ["_dependencies", "=", pPrint _dependencies]
+              sep ["_dependencies", "=", pPrint $ HashSet.toList _dependencies]
             ]
         )
 
 infixInfo :: Lens' RnState (HashMap RnId (Assoc, Int))
 infixInfo = lens (._infixInfo) (\r x -> r {_infixInfo = x})
 
-dependencies :: Lens' RnState [ModuleName]
+dependencies :: Lens' RnState (HashSet ModuleName)
 dependencies = lens (._dependencies) (\r x -> r {_dependencies = x})
 
 -- | Resolved identifier

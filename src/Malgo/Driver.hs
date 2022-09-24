@@ -2,6 +2,7 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Lens (over, view, (^.))
+import Data.HashSet qualified as HashSet
 import Data.Store (encode)
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -65,7 +66,7 @@ compileFromAST parsedAst env = runMalgoM env act
       index <- withDump (view debugMode env) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
       storeIndex index
 
-      depList <- dependencieList (typedAst._moduleName) (rnState ^. RnEnv.dependencies)
+      depList <- dependencieList (typedAst._moduleName) (HashSet.toList $ rnState ^. RnEnv.dependencies)
       (dsEnv, core) <- desugar tcEnv depList refinedAst
       _ <- withDump (view dumpDesugar env) "=== DESUGAR ===" $ pure core
 

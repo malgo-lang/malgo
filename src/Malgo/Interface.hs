@@ -7,6 +7,7 @@ import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
 import Control.Lens.TH
 import Data.Graph
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Data.Store (Store)
 import Data.Store qualified as Store
 import Data.String.Conversions (convertString)
@@ -39,7 +40,7 @@ data Interface = Interface
     -- | Used in Rename
     infixMap :: HashMap RnId (Assoc, Int),
     -- | Used in Rename
-    dependencies :: [ModuleName]
+    dependencies :: HashSet ModuleName
   }
   deriving stock (Show, Generic)
 
@@ -118,7 +119,7 @@ dependencieList modName imports = do
         loadInterface modName >>= \case
           Nothing -> error $ show $ pPrint modName <> " is not found"
           Just x -> pure x
-      let to = interface.dependencies
+      let to = HashSet.toList interface.dependencies
       case to of
         [] -> pure [(node, from, to)]
         _ -> do
