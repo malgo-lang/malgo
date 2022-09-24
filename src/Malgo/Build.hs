@@ -69,6 +69,7 @@ run = do
                     _indexes = _indexes,
                     _srcName = path,
                     _dstName = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
+                    _compileMode = LLVM,
                     _dumpParsed = False,
                     _dumpRenamed = False,
                     _dumpTyped = False,

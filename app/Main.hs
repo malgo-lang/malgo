@@ -22,6 +22,7 @@ import Text.Read (read)
 data ToLLOpt = ToLLOpt
   { _srcName :: FilePath,
     _dstName :: FilePath,
+    _compileMode :: CompileMode,
     _dumpParsed :: Bool,
     _dumpRenamed :: Bool,
     _dumpTyped :: Bool,
@@ -61,6 +62,7 @@ defaultToLLOpt src =
   ToLLOpt
     { _srcName = src,
       _dstName = src -<.> "ll",
+      _compileMode = LLVM,
       _dumpParsed = False,
       _dumpRenamed = False,
       _dumpTyped = False,
@@ -84,6 +86,14 @@ toLLOpt =
             <> value ""
             <> help
               "Write LLVM IR to OUTPUT"
+        )
+      <*> flag
+        LLVM
+        Scheme
+        ( long "scheme"
+            <> short 's'
+            <> help
+              "Compile to Scheme instead of LLVM"
         )
       <*> switch (long "dump-parsed")
       <*> switch (long "dump-renamed")

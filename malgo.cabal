@@ -24,6 +24,7 @@ library
   exposed-modules:
       Koriel.Core.Alpha
       Koriel.Core.CodeGen.LLVM
+      Koriel.Core.CodeGen.Scheme
       Koriel.Core.Flat
       Koriel.Core.LambdaLift
       Koriel.Core.Lint
@@ -36,7 +37,7 @@ library
       Koriel.MonadUniq
       Koriel.Prelude
       Koriel.Pretty
-      Koriel.Scheme.Common
+      Koriel.Scheme.AST
       Malgo.Build
       Malgo.Desugar.DsEnv
       Malgo.Desugar.Match

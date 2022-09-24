@@ -1,7 +1,7 @@
--- | Koriel.Scheme.Common provides two components:
+-- | Koriel.Scheme.AST provides two components:
 -- 1. Scheme AST
 -- 2. Scheme AST pretty printer
-module Koriel.Scheme.Common where
+module Koriel.Scheme.AST where
 
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Koriel.Id
@@ -10,7 +10,10 @@ import Koriel.Pretty (Pretty (pPrint))
 import Koriel.Pretty qualified as P
 
 newtype Identifier = Identifier String
-  deriving newtype (Eq, Ord, Show)
+  deriving newtype (Eq, Ord, Show, Semigroup)
+
+instance IsString Identifier where
+  fromString = Identifier
 
 instance Pretty Identifier where
   pPrint (Identifier t) = P.text t
@@ -24,23 +27,28 @@ fromId id = Identifier $ encode $ convertString $ idToText id
     aux c = [c]
 
 data Expr
-  = Symbol Identifier
+  = Variable Identifier
+  | Symbol Identifier
   | Literal Literal
   | Call Expr [Expr]
   | Lambda [Identifier] Expr
   | Cond [Clause]
   | LetRec [Binding] Expr
-  | Define Identifier [Identifier] Expr
+  | Define Identifier (Maybe [Identifier]) Expr
+  | Error String
   deriving stock (Eq, Ord, Show)
 
 instance Pretty Expr where
-  pPrint (Symbol id) = pPrint id
+  pPrint (Variable i) = pPrint i
+  pPrint (Symbol id) = "'" <> pPrint id
   pPrint (Literal lit) = pPrint lit
   pPrint (Call f args) = P.parens $ P.hsep $ map pPrint $ f : args
   pPrint (Lambda args body) = P.parens $ P.sep ["lambda", P.parens $ P.hsep $ map pPrint args, pPrint body]
   pPrint (Cond clauses) = P.parens $ P.sep $ "cond" : map pPrint clauses
   pPrint (LetRec bindings body) = P.parens $ P.sep ["letrec", P.parens $ P.hsep $ map pPrint bindings, pPrint body]
-  pPrint (Define name args body) = P.parens $ P.sep ["define", P.parens $ P.hsep $ map pPrint $ name : args, pPrint body]
+  pPrint (Define name Nothing body) = P.parens $ P.sep ["define", pPrint name, pPrint body]
+  pPrint (Define name (Just args) body) = P.parens $ P.sep ["define", P.parens $ P.hsep $ map pPrint $ name : args, pPrint body]
+  pPrint (Error msg) = P.parens $ P.sep ["error", P.text msg]
 
 data Literal
   = Integer Integer

@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 -- |
@@ -7,7 +8,7 @@
 -- A正規形に近い。
 module Koriel.Core.Syntax where
 
-import Control.Lens (Lens', Traversal', lens, sans, traverseOf, traversed, view, _2)
+import Control.Lens (Traversal', makeFieldsNoPrefix, sans, traverseOf, traversed, _2)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Op
@@ -33,25 +34,6 @@ data Unboxed
   | Bool Bool
   deriving stock (Eq, Ord, Show, Generic, Data, Typeable)
 
-instance HasType Unboxed where
-  typeOf Int32 {} = Int32T
-  typeOf Int64 {} = Int64T
-  typeOf Float {} = FloatT
-  typeOf Double {} = DoubleT
-  typeOf Char {} = CharT
-  typeOf String {} = StringT
-  typeOf Bool {} = BoolT
-
-instance Pretty Unboxed where
-  pPrint (Int32 x) = pPrint x
-  pPrint (Int64 x) = pPrint x
-  pPrint (Float x) = pPrint x
-  pPrint (Double x) = pPrint x
-  pPrint (Char x) = quotes (pPrint x)
-  pPrint (String x) = doubleQuotes (pPrint x)
-  pPrint (Bool True) = "True#"
-  pPrint (Bool False) = "False#"
-
 -- | atoms
 data Atom a
   = -- | variable
@@ -60,35 +42,30 @@ data Atom a
     Unboxed Unboxed
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
-instance HasType a => HasType (Atom a) where
-  typeOf (Var x) = typeOf x
-  typeOf (Unboxed x) = typeOf x
-
-instance Pretty a => Pretty (Atom a) where
-  pPrint (Var x) = pPrint x
-  pPrint (Unboxed x) = pPrint x
-
-instance HasFreeVar Atom where
-  freevars (Var x) = one x
-  freevars Unboxed {} = mempty
-
-class HasAtom f where
-  atom :: Traversal' (f a) (Atom a)
-
-instance HasAtom Atom where
-  atom = identity
-
-data LocalDef a = LocalDef {_localDefVar :: a, _localDefObj :: Obj a}
+-- | heap objects
+data Obj a
+  = -- | function (arity >= 1)
+    Fun [a] (Exp a)
+  | -- | saturated constructor (arity >= 0)
+    Pack Type Con [Atom a]
+  | -- | record
+    Record (HashMap Text (Atom a))
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
-instance Pretty a => Pretty (LocalDef a) where
-  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
+data LocalDef a = LocalDef {_variable :: a, _object :: Obj a}
+  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
-localDefVar :: Lens' (LocalDef a) a
-localDefVar = lens (._localDefVar) (\l v -> l {_localDefVar = v})
-
-localDefObj :: Lens' (LocalDef a) (Obj a)
-localDefObj = lens (._localDefObj) (\l o -> l {_localDefObj = o})
+-- | alternatives
+data Case a
+  = -- | constructor pattern
+    Unpack Con [a] (Exp a)
+  | -- | record pattern
+    OpenRecord (HashMap Text a) (Exp a)
+  | -- | unboxed value pattern
+    Switch Unboxed (Exp a)
+  | -- | variable pattern
+    Bind a (Exp a)
+  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 -- | expressions
 data Exp a
@@ -114,6 +91,80 @@ data Exp a
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+
+makeFieldsNoPrefix ''LocalDef
+
+-- | toplevel function definitions
+data Program a = Program
+  { _moduleName :: ModuleName,
+    _topVars :: [(a, Exp a)],
+    _topFuncs :: [(a, ([a], Exp a))],
+    _extFuncs :: [(Text, Type)]
+  }
+  deriving stock (Eq, Show, Functor, Generic)
+
+makeFieldsNoPrefix ''Program
+
+instance HasType Unboxed where
+  typeOf Int32 {} = Int32T
+  typeOf Int64 {} = Int64T
+  typeOf Float {} = FloatT
+  typeOf Double {} = DoubleT
+  typeOf Char {} = CharT
+  typeOf String {} = StringT
+  typeOf Bool {} = BoolT
+
+instance Pretty Unboxed where
+  pPrint (Int32 x) = pPrint x
+  pPrint (Int64 x) = pPrint x
+  pPrint (Float x) = pPrint x
+  pPrint (Double x) = pPrint x
+  pPrint (Char x) = quotes (pPrint x)
+  pPrint (String x) = doubleQuotes (pPrint x)
+  pPrint (Bool True) = "True#"
+  pPrint (Bool False) = "False#"
+
+instance HasType a => HasType (Atom a) where
+  typeOf (Var x) = typeOf x
+  typeOf (Unboxed x) = typeOf x
+
+instance Pretty a => Pretty (Atom a) where
+  pPrint (Var x) = pPrint x
+  pPrint (Unboxed x) = pPrint x
+
+instance HasFreeVar Atom where
+  freevars (Var x) = one x
+  freevars Unboxed {} = mempty
+
+class HasAtom f where
+  atom :: Traversal' (f a) (Atom a)
+
+instance HasAtom Atom where
+  atom = identity
+
+instance HasType a => HasType (Obj a) where
+  typeOf (Fun xs e) = map typeOf xs :-> typeOf e
+  typeOf (Pack t _ _) = t
+  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
+
+instance Pretty a => Pretty (Obj a) where
+  pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
+  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
+  pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
+
+instance HasFreeVar Obj where
+  freevars (Fun as e) = foldr sans (freevars e) as
+  freevars (Pack _ _ xs) = foldMap freevars xs
+  freevars (Record kvs) = foldMap freevars kvs
+
+instance HasAtom Obj where
+  atom f = \case
+    Fun xs e -> Fun xs <$> traverseOf atom f e
+    Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
+    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
+
+instance Pretty a => Pretty (LocalDef a) where
+  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
 
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
@@ -170,7 +221,7 @@ instance HasFreeVar Exp where
   freevars (RawCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
-  freevars (Let xs e) = foldr (sans . view localDefVar) (freevars e <> foldMap (freevars . view localDefObj) xs) xs
+  freevars (Let xs e) = foldr (sans . (._variable)) (freevars e <> foldMap (freevars . (._object)) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
   freevars (Error _) = mempty
 
@@ -182,21 +233,9 @@ instance HasAtom Exp where
     RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverseOf (traversed . localDefObj . atom) f xs <*> traverseOf atom f e
+    Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
-
--- | alternatives
-data Case a
-  = -- | constructor pattern
-    Unpack Con [a] (Exp a)
-  | -- | record pattern
-    OpenRecord (HashMap Text a) (Exp a)
-  | -- | unboxed value pattern
-    Switch Unboxed (Exp a)
-  | -- | variable pattern
-    Bind a (Exp a)
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
 
 instance HasType a => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
@@ -224,58 +263,6 @@ instance HasAtom Case where
     OpenRecord pat e -> OpenRecord pat <$> traverseOf atom f e
     Switch u e -> Switch u <$> traverseOf atom f e
     Bind a e -> Bind a <$> traverseOf atom f e
-
--- | heap objects
-data Obj a
-  = -- | function (arity >= 1)
-    Fun [a] (Exp a)
-  | -- | saturated constructor (arity >= 0)
-    Pack Type Con [Atom a]
-  | -- | record
-    Record (HashMap Text (Atom a))
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
-
-instance HasType a => HasType (Obj a) where
-  typeOf (Fun xs e) = map typeOf xs :-> typeOf e
-  typeOf (Pack t _ _) = t
-  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
-
-instance Pretty a => Pretty (Obj a) where
-  pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
-  pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
-
-instance HasFreeVar Obj where
-  freevars (Fun as e) = foldr sans (freevars e) as
-  freevars (Pack _ _ xs) = foldMap freevars xs
-  freevars (Record kvs) = foldMap freevars kvs
-
-instance HasAtom Obj where
-  atom f = \case
-    Fun xs e -> Fun xs <$> traverseOf atom f e
-    Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
-    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
-
--- | toplevel function definitions
-data Program a = Program
-  { _moduleName :: ModuleName,
-    _topVars :: [(a, Exp a)],
-    _topFuncs :: [(a, ([a], Exp a))],
-    _extFuncs :: [(Text, Type)]
-  }
-  deriving stock (Eq, Show, Functor, Generic)
-
-moduleName :: Lens' (Program a) ModuleName
-moduleName = lens (._moduleName) (\p x -> p {_moduleName = x})
-
-topVars :: Lens' (Program a) [(a, Exp a)]
-topVars = lens (._topVars) (\p x -> p {_topVars = x})
-
-topFuncs :: Lens' (Program a) [(a, ([a], Exp a))]
-topFuncs = lens (._topFuncs) (\p x -> p {_topFuncs = x})
-
-extFuncs :: Lens' (Program a) [(Text, Type)]
-extFuncs = lens (._extFuncs) (\p x -> p {_extFuncs = x})
 
 instance Pretty a => Pretty (Program a) where
   pPrint Program {..} =
