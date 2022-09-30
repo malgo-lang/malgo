@@ -73,6 +73,7 @@ storeInterface interface = do
   writeFileBS (dstName -<.> "mlgi") encoded
 
 loadInterface ::
+  HasCallStack =>
   ( MonadReader s m,
     MonadIO m,
     HasInterfaces s (IORef (HashMap ModuleName Interface)),

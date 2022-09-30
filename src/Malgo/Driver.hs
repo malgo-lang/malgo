@@ -15,6 +15,7 @@ import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
+import Koriel.Id (ModuleName (..))
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
@@ -31,7 +32,7 @@ import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Directory (makeAbsolute)
-import System.FilePath (takeDirectory, (-<.>))
+import System.FilePath (takeBaseName, takeDirectory, (-<.>))
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -55,6 +56,9 @@ compileFromAST :: Syntax.Module (Malgo 'Parse) -> MalgoEnv -> IO ()
 compileFromAST parsedAst env = runMalgoM env act
   where
     act = do
+      when (convertString (takeBaseName env._srcName) /= parsedAst._moduleName.raw) $
+        error "Module name must be source file's base name."
+
       uniqSupply <- view uniqSupply
       when (view dumpParsed env) do
         hPutStrLn stderr "=== PARSED ==="
@@ -101,10 +105,15 @@ compileFromAST parsedAst env = runMalgoM env act
       liftIO $ assertIO (takeDirectory env._dstName `elem` env._modulePaths)
       linkedCore <- Link.link typedAst._moduleName
 
+      when (view dumpDesugar env) $
+        liftIO $ do
+          hPutStrLn stderr "=== LINKED ==="
+          hPrint stderr $ pPrint $ over appProgram flat linkedCore
+
       case view compileMode env of
-        LLVM -> codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) linkedCore
+        LLVM -> codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) coreLLOpt
         Scheme -> do
-          code <- Scheme.codeGen uniqSupply linkedCore
+          code <- Scheme.codeGen uniqSupply coreLLOpt
           writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
