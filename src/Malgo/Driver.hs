@@ -102,7 +102,7 @@ compileFromAST parsedAst env = runMalgoM env act
 
       -- check module paths include dstName's directory
       liftIO $ assertIO (takeDirectory env._dstName `elem` env._modulePaths)
-      linkedCore <- Link.link typedAst._moduleName
+      linkedCore <- Link.link inf coreLLOpt
 
       when (view dumpDesugar env) $
         liftIO $ do

@@ -14,10 +14,8 @@ import Malgo.Prelude
 import System.Directory (doesFileExist)
 import System.FilePath ((</>))
 
-link :: (MonadIO m, MonadReader env m, HasInterfaces env (IORef (HashMap ModuleName Interface)), HasModulePaths env [FilePath]) => ModuleName -> m (Program (Id Type))
-link mainModName = do
-  interface <- loadInterface mainModName
-  mainCoreIR <- loadCore mainModName
+link :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath]) => Interface -> Program (Id Type) -> m (Program (Id Type))
+link interface mainCoreIR = do
   depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)
   pure $ mconcat (mainCoreIR : depCoreIRs)
 
