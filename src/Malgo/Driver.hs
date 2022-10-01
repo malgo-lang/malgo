@@ -72,8 +72,7 @@ compileFromAST parsedAst env = runMalgoM env act
       index <- withDump (view debugMode env) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
       storeIndex index
 
-      depList <- dependencieList (typedAst._moduleName) (HashSet.toList $ rnState ^. RnEnv.dependencies)
-      (dsEnv, core) <- desugar tcEnv depList refinedAst
+      (dsEnv, core) <- desugar tcEnv refinedAst
       _ <- withDump (view dumpDesugar env) "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface rnEnv._moduleName rnState dsEnv
@@ -111,7 +110,9 @@ compileFromAST parsedAst env = runMalgoM env act
           hPrint stderr $ pPrint $ over appProgram flat linkedCore
 
       case view compileMode env of
-        LLVM -> codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) coreLLOpt
+        LLVM -> do
+          depList <- dependencieList (typedAst._moduleName) (HashSet.toList $ rnState ^. RnEnv.dependencies)
+          codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) dsEnv depList coreLLOpt
         Scheme -> do
           code <- Scheme.codeGen uniqSupply coreLLOpt
           writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code

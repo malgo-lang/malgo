@@ -50,6 +50,7 @@ import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
+import Malgo.Desugar.DsEnv (DsState (..), HasNameEnv (nameEnv))
 
 instance Hashable Name
 
@@ -79,11 +80,24 @@ runCodeGenT env m =
   execModuleBuilderT emptyModuleBuilder $
     runReaderT (Lazy.evalStateT m mempty) env
 
-codeGen :: (MonadFix m, MonadFail m, MonadIO m) => FilePath -> FilePath -> UniqSupply -> ModuleName -> Program (Id C.Type) -> m ()
-codeGen srcPath dstPath uniqSupply modName Program {..} = do
+codeGen ::
+  (MonadFix m, MonadFail m, MonadIO m) =>
+  FilePath ->
+  FilePath ->
+  UniqSupply ->
+  ModuleName ->
+  DsState ->
+  [ModuleName] ->
+  Program (Id C.Type) ->
+  m ()
+codeGen srcPath dstPath uniqSupply modName dsState depList Program {..} = do
   llvmir <- runCodeGenT CodeGenEnv {_uniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv, _moduleName = modName} do
     _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
+    void $ extern "GC_init" [] LT.void
+    for_ (List.delete modName depList) \dep -> do
+      let depName = convertString dep.raw
+      void $ extern (mkName $ "koriel_load_" <> depName) [] LT.void
     for_ _extFuncs \(name, typ) -> do
       let name' = LLVM.AST.mkName $ convertString name
       case typ of
@@ -91,6 +105,16 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
         _ -> error "invalid type"
     traverse_ (uncurry genVar) _topVars
     traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
+    case searchMain (HashMap.toList $ view nameEnv dsState) of
+      Just mainCall -> do
+        (f, (ps, body)) <-
+          mainFunc depList =<< runDef do
+            let unitCon = C.Con C.Tuple []
+            unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
+            _ <- bind $ mainCall [unit]
+            pure (Atom $ Unboxed $ Int32 0)
+        void $ genFunc f ps body
+      Nothing -> pass
     genLoadModule modName $ initTopVars _topVars
   let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
   liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
@@ -116,6 +140,14 @@ codeGen srcPath dstPath uniqSupply modName Program {..} = do
           -- eOpr <- bitcast eOpr (convType (C.typeOf name))
           store name' 0 eOpr
           initTopVars xs
+    -- エントリーポイントとなるmain関数を検索する
+    searchMain :: [(Id a, Id b)] -> Maybe ([Atom (Id b)] -> Exp (Id b))
+    searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
+      | griffId.name == "main"
+          && griffId.moduleName == modName =
+          Just $ CallDirect coreId
+    searchMain (_ : xs) = searchMain xs
+    searchMain _ = Nothing
 
 convType :: C.Type -> LT.Type
 convType (ps :-> r) =

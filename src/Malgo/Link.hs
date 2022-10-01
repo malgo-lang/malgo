@@ -1,6 +1,6 @@
 module Malgo.Link where
 
-import Control.Lens (view, (^.))
+import Control.Lens (view)
 import Data.HashSet qualified as HashSet
 import Data.Store (decodeIO)
 import Data.String.Conversions (convertString)
