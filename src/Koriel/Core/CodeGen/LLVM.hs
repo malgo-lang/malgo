@@ -87,17 +87,13 @@ codeGen ::
   UniqSupply ->
   ModuleName ->
   DsState ->
-  [ModuleName] ->
   Program (Id C.Type) ->
   m ()
-codeGen srcPath dstPath uniqSupply modName dsState depList Program {..} = do
+codeGen srcPath dstPath uniqSupply modName dsState Program {..} = do
   llvmir <- runCodeGenT CodeGenEnv {_uniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv, _moduleName = modName} do
     _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
-    for_ (List.delete modName depList) \dep -> do
-      let depName = convertString dep.raw
-      void $ extern (mkName $ "koriel_load_" <> depName) [] LT.void
     for_ _extFuncs \(name, typ) -> do
       let name' = LLVM.AST.mkName $ convertString name
       case typ of
@@ -108,7 +104,7 @@ codeGen srcPath dstPath uniqSupply modName dsState depList Program {..} = do
     case searchMain (HashMap.toList $ view nameEnv dsState) of
       Just mainCall -> do
         (f, (ps, body)) <-
-          mainFunc depList =<< runDef do
+          mainFunc =<< runDef do
             let unitCon = C.Con C.Tuple []
             unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
             _ <- bind $ mainCall [unit]
@@ -148,6 +144,15 @@ codeGen srcPath dstPath uniqSupply modName dsState depList Program {..} = do
           Just $ CallDirect coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
+    -- Generate main function.
+    mainFunc e = do
+      -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
+      mainFuncId <- newNativeId "main" ([] :-> Int32T)
+      mainFuncBody <- runDef do
+        _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
+        _ <- bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
+        pure e
+      pure (mainFuncId, ([], mainFuncBody))
 
 convType :: C.Type -> LT.Type
 convType (ps :-> r) =

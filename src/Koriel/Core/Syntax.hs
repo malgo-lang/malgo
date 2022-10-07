@@ -312,19 +312,6 @@ appProgram f Program {..} =
     <*> traverseOf (traversed . _2 . _2) f _topFuncs
     <*> pure _extFuncs
 
--- | Generate main function.
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
-mainFunc depList e = do
-  -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
-  mainFuncId <- newNativeId "main" ([] :-> Int32T)
-  mainFuncBody <- runDef do
-    _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
-    traverse_
-      do \modName -> bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
-      depList
-    pure e
-  pure (mainFuncId, ([], mainFuncBody))
-
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
 

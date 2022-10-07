@@ -2,8 +2,7 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception.Extra (assertIO)
-import Control.Lens (over, view, (^.))
-import Data.HashSet qualified as HashSet
+import Control.Lens (over, view)
 import Data.Store (encode)
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -20,7 +19,7 @@ import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
+import Malgo.Interface (buildInterface, loadInterface, storeInterface)
 import Malgo.Link qualified as Link
 import Malgo.Lsp.Index (storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
@@ -104,17 +103,18 @@ compileFromAST parsedAst env = runMalgoM env act
       liftIO $ assertIO (takeDirectory env._dstName `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
+      linkedCoreOpt <- if view noOptimize env then pure linkedCore else optimizeProgram uniqSupply (view inlineSize env) linkedCore
+
       when (view dumpDesugar env) $
         liftIO $ do
           hPutStrLn stderr "=== LINKED ==="
-          hPrint stderr $ pPrint $ over appProgram flat linkedCore
+          hPrint stderr $ pPrint $ over appProgram flat linkedCoreOpt
 
       case view compileMode env of
         LLVM -> do
-          depList <- dependencieList (typedAst._moduleName) (HashSet.toList $ rnState ^. RnEnv.dependencies)
-          codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) dsEnv depList coreLLOpt
+          codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do
-          code <- Scheme.codeGen uniqSupply coreLLOpt
+          code <- Scheme.codeGen uniqSupply linkedCoreOpt
           writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
