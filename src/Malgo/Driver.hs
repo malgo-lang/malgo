@@ -112,7 +112,7 @@ compileFromAST parsedAst env = runMalgoM env act
 
       case view compileMode env of
         LLVM -> do
-          codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) dsEnv linkedCoreOpt
+          codeGen env (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do
           code <- Scheme.codeGen uniqSupply linkedCoreOpt
           writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code

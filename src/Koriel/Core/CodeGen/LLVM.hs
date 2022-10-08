@@ -51,6 +51,7 @@ import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import Malgo.Desugar.DsEnv (DsState (..), HasNameEnv (nameEnv))
+import Malgo.Prelude (MalgoEnv (..))
 
 instance Hashable Name
 
@@ -82,15 +83,13 @@ runCodeGenT env m =
 
 codeGen ::
   (MonadFix m, MonadFail m, MonadIO m) =>
-  FilePath ->
-  FilePath ->
-  UniqSupply ->
+  MalgoEnv ->
   ModuleName ->
   DsState ->
   Program (Id C.Type) ->
   m ()
-codeGen srcPath dstPath uniqSupply modName dsState Program {..} = do
-  llvmir <- runCodeGenT CodeGenEnv {_uniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv, _moduleName = modName} do
+codeGen malgoEnv modName dsState Program {..} = do
+  llvmir <- runCodeGenT CodeGenEnv {_uniqSupply = malgoEnv._uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv, _moduleName = modName} do
     _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
@@ -112,8 +111,13 @@ codeGen srcPath dstPath uniqSupply modName dsState Program {..} = do
         void $ genFunc f ps body
       Nothing -> pass
     genLoadModule modName $ initTopVars _topVars
-  let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
-  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  let llvmModule =
+        defaultModule
+          { LLVM.AST.moduleName = fromString $ malgoEnv._srcName,
+            moduleSourceFileName = fromString $ malgoEnv._srcName,
+            moduleDefinitions = llvmir
+          }
+  liftIO $ withContext $ \ctx -> writeFileBS malgoEnv._dstName =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     -- topVarsのOprMapを作成
     varEnv = mconcatMap ?? _topVars $ \(v, e) ->
