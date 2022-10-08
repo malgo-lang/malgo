@@ -2,7 +2,6 @@
 
 module Main where
 
-import Control.Exception.Extra (assertIO)
 import Control.Lens (makeFieldsNoPrefix, (.~), (<>~))
 import Koriel.Id (ModuleName)
 import Koriel.Lens (HasModulePaths (..))
