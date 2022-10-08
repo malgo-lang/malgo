@@ -20,8 +20,8 @@ import System.FilePath.Lens (extension)
 import Text.Read (read)
 
 data ToLLOpt = ToLLOpt
-  { _srcName :: FilePath,
-    _dstName :: FilePath,
+  { _srcPath :: FilePath,
+    _dstPath :: FilePath,
     _compileMode :: CompileMode,
     _dumpParsed :: Bool,
     _dumpRenamed :: Bool,
@@ -44,7 +44,7 @@ main = do
   case command of
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt._dstName, ".malgo-work" </> "build", basePath]
+      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt._dstPath, ".malgo-work" </> "build", basePath]
       _uniqSupply <- UniqSupply <$> newIORef 0
       _interfaces <- newIORef mempty
       _indexes <- newIORef mempty
@@ -60,8 +60,8 @@ main = do
 defaultToLLOpt :: FilePath -> ToLLOpt
 defaultToLLOpt src =
   ToLLOpt
-    { _srcName = src,
-      _dstName = src -<.> "ll",
+    { _srcPath = src,
+      _dstPath = src -<.> "ll",
       _compileMode = LLVM,
       _dumpParsed = False,
       _dumpRenamed = False,
@@ -130,10 +130,10 @@ parseCommand = do
       )
   case command of
     ToLL opt -> do
-      srcName <- makeAbsolute opt._srcName
-      if null opt._dstName
-        then pure $ ToLL $ opt {_srcName = srcName, _dstName = srcName & extension .~ ".ll"}
-        else pure $ ToLL $ opt {_srcName = srcName}
+      srcPath <- makeAbsolute opt._srcPath
+      if null opt._dstPath
+        then pure $ ToLL $ opt {_srcPath = srcPath, _dstPath = srcPath & extension .~ ".ll"}
+        else pure $ ToLL $ opt {_srcPath = srcPath}
     Lsp opt -> pure $ Lsp opt
     Build opt -> pure $ Build opt
   where
