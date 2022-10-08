@@ -35,6 +35,6 @@ cat $TestFilePath | grep -q '^-- Expected: '
 
 eval "$BUILD exec malgo -- to-ll --no-opt -M $TESTDIR/libs $TestFilePath -o $LLFILE $malgoOptions"
 
-clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $TESTDIR/libs/Prelude.ll $TESTDIR/libs/Builtin.ll $LLFILE -o $OUTFILE
+clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $LLFILE -o $OUTFILE
 
 test "$(echo 'Hello' | $OUTFILE)" = "$(cat $TestFilePath | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"

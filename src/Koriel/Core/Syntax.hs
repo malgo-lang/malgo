@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -11,6 +12,8 @@ module Koriel.Core.Syntax where
 import Control.Lens (Traversal', makeFieldsNoPrefix, sans, traverseOf, traversed, _2)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store)
+import Generic.Data
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
@@ -96,12 +99,12 @@ makeFieldsNoPrefix ''LocalDef
 
 -- | toplevel function definitions
 data Program a = Program
-  { _moduleName :: ModuleName,
-    _topVars :: [(a, Exp a)],
+  { _topVars :: [(a, Exp a)],
     _topFuncs :: [(a, ([a], Exp a))],
     _extFuncs :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
+  deriving (Semigroup, Monoid) via Generically (Program a)
 
 makeFieldsNoPrefix ''Program
 
@@ -124,6 +127,8 @@ instance Pretty Unboxed where
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 
+instance Store Unboxed
+
 instance HasType a => HasType (Atom a) where
   typeOf (Var x) = typeOf x
   typeOf (Unboxed x) = typeOf x
@@ -131,6 +136,8 @@ instance HasType a => HasType (Atom a) where
 instance Pretty a => Pretty (Atom a) where
   pPrint (Var x) = pPrint x
   pPrint (Unboxed x) = pPrint x
+
+instance Store a => Store (Atom a)
 
 instance HasFreeVar Atom where
   freevars (Var x) = one x
@@ -152,6 +159,8 @@ instance Pretty a => Pretty (Obj a) where
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
   pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
 
+instance Store a => Store (Obj a)
+
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
@@ -165,6 +174,8 @@ instance HasAtom Obj where
 
 instance Pretty a => Pretty (LocalDef a) where
   pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
+
+instance Store a => Store (LocalDef a)
 
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
@@ -214,6 +225,8 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
   pPrint (Error _) = "ERROR"
 
+instance Store a => Store (Exp a)
+
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
@@ -251,6 +264,8 @@ instance Pretty a => Pretty (Case a) where
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
+instance Store a => Store (Case a)
+
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
   freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
@@ -276,6 +291,8 @@ instance Pretty a => Pretty (Program a) where
           map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
         ]
 
+instance Store a => Store (Program a)
+
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
   Fun ps e -> Fun ps <$> f e
@@ -290,23 +307,10 @@ appCase f = \case
 
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {..} =
-  Program _moduleName
+  Program
     <$> traverseOf (traversed . _2) f _topVars
     <*> traverseOf (traversed . _2 . _2) f _topFuncs
     <*> pure _extFuncs
-
--- | Generate main function.
-mainFunc :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => [ModuleName] -> Exp (Id Type) -> m (Id Type, ([Id Type], Exp (Id Type)))
-mainFunc depList e = do
-  -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
-  mainFuncId <- newNativeId "main" ([] :-> Int32T)
-  mainFuncBody <- runDef do
-    _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
-    traverse_
-      do \modName -> bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
-      depList
-    pure e
-  pure (mainFuncId, ([], mainFuncBody))
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)

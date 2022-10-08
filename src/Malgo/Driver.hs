@@ -1,7 +1,9 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
-import Control.Lens (over, view, (^.))
+import Control.Exception.Extra (assertIO)
+import Control.Lens (over, view)
+import Data.Store (encode)
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
@@ -12,11 +14,13 @@ import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
+import Koriel.Id (ModuleName (..))
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (buildInterface, dependencieList, loadInterface, storeInterface)
+import Malgo.Interface (buildInterface, loadInterface, storeInterface)
+import Malgo.Link qualified as Link
 import Malgo.Lsp.Index (storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Parser (parseMalgo)
@@ -27,7 +31,7 @@ import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Directory (makeAbsolute)
-import System.FilePath ((-<.>))
+import System.FilePath (takeBaseName, takeDirectory, (-<.>))
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -51,6 +55,9 @@ compileFromAST :: Syntax.Module (Malgo 'Parse) -> MalgoEnv -> IO ()
 compileFromAST parsedAst env = runMalgoM env act
   where
     act = do
+      when (convertString (takeBaseName env._srcName) /= parsedAst._moduleName.raw) $
+        error "Module name must be source file's base name."
+
       uniqSupply <- view uniqSupply
       when (view dumpParsed env) do
         hPutStrLn stderr "=== PARSED ==="
@@ -64,8 +71,7 @@ compileFromAST parsedAst env = runMalgoM env act
       index <- withDump (view debugMode env) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
       storeIndex index
 
-      depList <- dependencieList (typedAst._moduleName) (rnState ^. RnEnv.dependencies)
-      (dsEnv, core) <- desugar tcEnv depList refinedAst
+      (dsEnv, core) <- desugar tcEnv refinedAst
       _ <- withDump (view dumpDesugar env) "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface rnEnv._moduleName rnState dsEnv
@@ -81,7 +87,7 @@ compileFromAST parsedAst env = runMalgoM env act
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint $ over appProgram flat coreOpt
       lint coreOpt
-      coreLL <- if view noLambdaLift env then pure coreOpt else lambdalift uniqSupply coreOpt
+      coreLL <- if view noLambdaLift env then pure coreOpt else lambdalift uniqSupply typedAst._moduleName coreOpt
       when (view dumpDesugar env && not (view noLambdaLift env)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
@@ -91,10 +97,24 @@ compileFromAST parsedAst env = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
+      writeFileBS (view dstName env -<.> "kor") $ encode coreLLOpt
+
+      -- check module paths include dstName's directory
+      liftIO $ assertIO (takeDirectory env._dstName `elem` env._modulePaths)
+      linkedCore <- Link.link inf coreLLOpt
+
+      linkedCoreOpt <- if view noOptimize env then pure linkedCore else optimizeProgram uniqSupply (view inlineSize env) linkedCore
+
+      when (view dumpDesugar env) $
+        liftIO $ do
+          hPutStrLn stderr "=== LINKED ==="
+          hPrint stderr $ pPrint $ over appProgram flat linkedCoreOpt
+
       case view compileMode env of
-        LLVM -> codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) coreLLOpt
+        LLVM -> do
+          codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do
-          code <- Scheme.codeGen uniqSupply coreLLOpt
+          code <- Scheme.codeGen uniqSupply linkedCoreOpt
           writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.

@@ -1,7 +1,7 @@
 -- | Name resolution and simple desugar transformation
 module Malgo.Rename.Pass where
 
-import Control.Lens (over, use, view, (<>=), (^.), _2)
+import Control.Lens (use, view, (<>=), (^.), _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List (intersect)
@@ -24,7 +24,7 @@ rename ::
   Module (Malgo 'Parse) ->
   m (Module (Malgo 'Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
-  (ds', rnState) <- runStateT ?? RnState mempty [] $ runReaderT ?? builtinEnv $ rnDecls ds
+  (ds', rnState) <- runStateT ?? RnState mempty HashSet.empty $ runReaderT ?? builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
 -- renamer
@@ -40,7 +40,7 @@ rnDecls ds = do
   rnEnv <- genToplevelEnv modName ds =<< ask
   local (const rnEnv) $ do
     -- RnStateの生成
-    put =<< RnState <$> infixDecls ds <*> pure []
+    put =<< RnState <$> infixDecls ds <*> pure HashSet.empty
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     traverse rnDecl ds
 
@@ -82,12 +82,9 @@ rnDecl (Foreign pos name typ) = do
       <$> lookupVarName pos name
       <*> rnType typ
 rnDecl (Import pos modName importList) = do
-  interface <-
-    loadInterface modName >>= \case
-      Just x -> pure x
-      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
+  interface <- loadInterface modName
   infixInfo <>= interface.infixMap
-  Malgo.Rename.RnEnv.dependencies <>= [modName]
+  Malgo.Rename.RnEnv.dependencies <>= HashSet.insert modName interface.dependencies
   pure $ Import pos modName importList
 
 -- | Rename a expression.
@@ -273,7 +270,7 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (MonadReader env f, MonadIO f, HasUniqSupply env UniqSupply, HasModulePaths env [FilePath], HasDebugMode env Bool, HasInterfaces env (IORef (HashMap ModuleName Interface))) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
+genToplevelEnv :: (MonadReader env f, MonadIO f, HasUniqSupply env UniqSupply, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
 genToplevelEnv modName ds =
   execStateT (traverse aux ds)
   where
@@ -309,57 +306,17 @@ genToplevelEnv modName ds =
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       x' <- newExternalId x () modName
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
-    aux (Import pos modName' All) = do
-      interface <-
-        loadInterface modName' >>= \case
-          Just x -> pure x
-          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
-      whenM (view debugMode) $
-        hPrint stderr $
-          pPrint interface
-      -- 全ての識別子をImplicitでimportする
-      modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Qualified Implicit) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Qualified Implicit) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
-    aux (Import pos modName' (Selected implicits)) = do
-      interface <-
-        loadInterface modName' >>= \case
-          Just x -> pure x
-          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
-      whenM (view debugMode) $
-        hPrint stderr $
-          pPrint interface
-      modify $
-        appendRnEnv
-          resolvedVarIdentMap
-          ( map
-              ( \(name, id) ->
-                  if name `elem` implicits
-                    then (name, Qualified Implicit id)
-                    else (name, Qualified (Explicit modName') id)
-              )
-              $ HashMap.toList $
-                interface ^. resolvedVarIdentMap
-          )
-      modify $
-        appendRnEnv
-          resolvedTypeIdentMap
-          ( map
-              ( \(name, id) ->
-                  if name `elem` implicits
-                    then (name, Qualified Implicit id)
-                    else (name, Qualified (Explicit modName') id)
-              )
-              $ HashMap.toList $
-                interface ^. resolvedTypeIdentMap
-          )
-    aux (Import pos modName' (As modNameAs)) = do
-      interface <-
-        loadInterface modName' >>= \case
-          Just x -> pure x
-          Nothing -> errorOn pos $ "module" <+> pPrint modName' <+> "is not found"
-      whenM (view debugMode) $
-        hPrint stderr $
-          pPrint interface
-      modify $ appendRnEnv resolvedVarIdentMap (map (over _2 $ Qualified (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedVarIdentMap)
-      modify $ appendRnEnv resolvedTypeIdentMap (map (over _2 $ Qualified (Explicit modNameAs)) $ HashMap.toList $ interface ^. resolvedTypeIdentMap)
+    aux (Import _ modName' importList) = do
+      interface <- loadInterface modName'
+      let varIdentAssoc = HashMap.toList $ interface ^. resolvedVarIdentMap
+      let typeIdentAssoc = HashMap.toList $ interface ^. resolvedTypeIdentMap
+      modify $ appendRnEnv resolvedVarIdentMap (map (resolveImport modName' importList) varIdentAssoc)
+      modify $ appendRnEnv resolvedTypeIdentMap (map (resolveImport modName' importList) typeIdentAssoc)
     aux Infix {} = pass
+
+resolveImport :: ModuleName -> ImportList -> (PsId, RnId) -> (PsId, Qualified RnId)
+resolveImport _ All (psId, rnId) = (psId, Qualified Implicit rnId)
+resolveImport modName (Selected implicits) (psId, rnId)
+  | psId `elem` implicits = (psId, Qualified Implicit rnId)
+  | otherwise = (psId, Qualified (Explicit modName) rnId)
+resolveImport _ (As modNameAs) (psId, rnId) = (psId, Qualified (Explicit modNameAs) rnId)

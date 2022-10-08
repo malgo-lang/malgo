@@ -3,7 +3,7 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
-import Control.Lens (At (at), makePrisms, preuse, preview, traverseOf, traversed, use, view, (<>=), (?=), (^.), _2, _Just)
+import Control.Lens (At (at), makePrisms, preuse, preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2, _Just)
 import Data.Char qualified as Char
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
@@ -39,31 +39,27 @@ makePrisms ''Def
 desugar ::
   (MonadReader MalgoEnv m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m) =>
   TcEnv ->
-  [ModuleName] ->
   Module x ->
   m (DsState, Program (Id C.Type))
-desugar tcEnv depList (Module modName ds) = do
+desugar tcEnv (Module modName ds) = do
   malgoEnv <- ask
-  runReaderT ?? (makeDsEnv modName malgoEnv) $ do
+  runReaderT ?? makeDsEnv modName malgoEnv $ do
     (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
     let varDefs = mapMaybe (preview _VarDef) ds'
     let funDefs = mapMaybe (preview _FunDef) ds'
-    let extDefs = map (\dep -> ("koriel_load_" <> coerce dep, [] :-> VoidT)) (List.delete modName depList) <> [("GC_init", [] :-> VoidT)] <> mapMaybe (preview _ExtDef) ds'
-    case searchMain (HashMap.toList $ view nameEnv dsEnv) of
-      Just mainCall -> do
-        mainFuncDef <-
-          mainFunc depList =<< runDef do
-            let unitCon = C.Con C.Tuple []
-            unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
-            _ <- bind $ mainCall [unit]
-            pure (Atom $ C.Unboxed $ C.Int32 0)
-        pure (dsEnv, Program modName varDefs (mainFuncDef : funDefs) extDefs)
-      Nothing -> pure (dsEnv, Program modName varDefs funDefs extDefs)
-  where
-    -- エントリーポイントとなるmain関数を検索する
-    searchMain ((griffId, coreId) : _) | griffId.name == "main" && griffId.sort == External && griffId.moduleName == modName = Just $ CallDirect coreId
-    searchMain (_ : xs) = searchMain xs
-    searchMain _ = Nothing
+    -- let extDefs = map (\dep -> ("koriel_load_" <> coerce dep, [] :-> VoidT)) (List.delete modName depList) <> [("GC_init", [] :-> VoidT)] <> mapMaybe (preview _ExtDef) ds'
+    let extDefs = mapMaybe (preview _ExtDef) ds'
+    -- case searchMain (HashMap.toList $ view nameEnv dsEnv) of
+    --   Just mainCall -> do
+    --     mainFuncDef <-
+    --       mainFunc depList =<< runDef do
+    --         let unitCon = C.Con C.Tuple []
+    --         unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
+    --         _ <- bind $ mainCall [unit]
+    --         pure (Atom $ C.Unboxed $ C.Int32 0)
+    --     pure (dsEnv, Program varDefs (mainFuncDef : funDefs) extDefs)
+    --   Nothing -> pure (dsEnv, Program varDefs funDefs extDefs)
+    pure (dsEnv, Program varDefs funDefs extDefs)
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
@@ -79,11 +75,8 @@ dsBindGroup bg = do
   pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
 dsImport :: (MonadReader env m, MonadState DsState m, MonadIO m, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => Import (Malgo 'Refine) -> m ()
-dsImport (pos, modName, _) = do
-  interface <-
-    loadInterface modName >>= \case
-      Just x -> pure x
-      Nothing -> errorOn pos $ "module" <+> pPrint modName <+> "is not found"
+dsImport (_, modName, _) = do
+  interface <- loadInterface modName
   nameEnv <>= interface ^. coreIdentMap
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する

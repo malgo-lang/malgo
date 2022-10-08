@@ -7,6 +7,7 @@ import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
 import Control.Lens.TH
 import Data.Graph
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Data.Store (Store)
 import Data.Store qualified as Store
 import Data.String.Conversions (convertString)
@@ -39,7 +40,7 @@ data Interface = Interface
     -- | Used in Rename
     infixMap :: HashMap RnId (Assoc, Int),
     -- | Used in Rename
-    dependencies :: [ModuleName]
+    dependencies :: HashSet ModuleName
   }
   deriving stock (Show, Generic)
 
@@ -72,28 +73,29 @@ storeInterface interface = do
   writeFileBS (dstName -<.> "mlgi") encoded
 
 loadInterface ::
+  HasCallStack =>
   ( MonadReader s m,
     MonadIO m,
     HasInterfaces s (IORef (HashMap ModuleName Interface)),
     HasModulePaths s [FilePath]
   ) =>
   ModuleName ->
-  m (Maybe Interface)
+  m Interface
 loadInterface (ModuleName modName) = do
   interfacesRef <- view interfaces
   interfaces <- readIORef interfacesRef
   case HashMap.lookup (ModuleName modName) interfaces of
-    Just interface -> return $ Just interface
+    Just interface -> pure interface
     Nothing -> do
       modPaths <- view modulePaths
       message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
       case message of
         Right x -> do
           writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
-          pure $ Just x
+          pure x
         Left err -> do
           hPrint stderr err
-          pure Nothing
+          errorDoc $ "Cannot find module:" <+> quotes (pPrint modName)
   where
     findAndReadFile [] modFile = pure $ Left ("interface" <+> pPrint modFile <+> "is not found")
     findAndReadFile (modPath : rest) modFile = do
@@ -114,11 +116,8 @@ dependencieList modName imports = do
     genDepList modName = do
       let node = modName
       let from = modName
-      interface <-
-        loadInterface modName >>= \case
-          Nothing -> error $ show $ pPrint modName <> " is not found"
-          Just x -> pure x
-      let to = interface.dependencies
+      interface <- loadInterface modName
+      let to = HashSet.toList interface.dependencies
       case to of
         [] -> pure [(node, from, to)]
         _ -> do

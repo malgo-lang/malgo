@@ -1,4 +1,4 @@
-module TestLetUnboxed = {
+module TestNestedLetFunc = {
   foreign import malgo_print_string : String# -> ()
   def main = {
     let f = {let y = {a -> ()} ()};
