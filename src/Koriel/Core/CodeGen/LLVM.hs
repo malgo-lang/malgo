@@ -113,11 +113,11 @@ codeGen malgoEnv modName dsState Program {..} = do
     genLoadModule modName $ initTopVars _topVars
   let llvmModule =
         defaultModule
-          { LLVM.AST.moduleName = fromString $ malgoEnv._srcName,
-            moduleSourceFileName = fromString $ malgoEnv._srcName,
+          { LLVM.AST.moduleName = fromString $ malgoEnv._srcPath,
+            moduleSourceFileName = fromString $ malgoEnv._srcPath,
             moduleDefinitions = llvmir
           }
-  liftIO $ withContext $ \ctx -> writeFileBS malgoEnv._dstName =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ withContext $ \ctx -> writeFileBS malgoEnv._dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     -- topVarsのOprMapを作成
     varEnv = mconcatMap ?? _topVars $ \(v, e) ->

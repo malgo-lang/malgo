@@ -66,11 +66,11 @@ buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty
       resolvedTypeIdentMap . at (rnId.name) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
-storeInterface :: (MonadIO m, HasDstName env FilePath, MonadReader env m) => Interface -> m ()
+storeInterface :: (MonadIO m, HasDstPath env FilePath, MonadReader env m) => Interface -> m ()
 storeInterface interface = do
-  dstName <- view dstName
+  dstPath <- view dstPath
   let encoded = Store.encode interface
-  writeFileBS (dstName -<.> "mlgi") encoded
+  writeFileBS (dstPath -<.> "mlgi") encoded
 
 loadInterface ::
   HasCallStack =>

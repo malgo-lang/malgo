@@ -6,7 +6,7 @@ module Koriel.Lens
     HasSignatureMap (..),
     HasTypeDefMap (..),
     HasTypeSynonymMap (..),
-    HasSrcName (..),
+    HasSrcPath (..),
     HasModulePaths (..),
     HasDebugMode (..),
   )
@@ -35,8 +35,8 @@ class HasTypeDefMap s a | s -> a where
 class HasTypeSynonymMap s a | s -> a where
   typeSynonymMap :: Lens' s a
 
-class HasSrcName s a | s -> a where
-  srcName :: Lens' s a
+class HasSrcPath s a | s -> a where
+  srcPath :: Lens' s a
 
 class HasDebugMode s a | s -> a where
   debugMode :: Lens' s a

@@ -55,7 +55,7 @@ compileFromAST :: Syntax.Module (Malgo 'Parse) -> MalgoEnv -> IO ()
 compileFromAST parsedAst env = runMalgoM env act
   where
     act = do
-      when (convertString (takeBaseName env._srcName) /= parsedAst._moduleName.raw) $
+      when (convertString (takeBaseName env._srcPath) /= parsedAst._moduleName.raw) $
         error "Module name must be source file's base name."
 
       uniqSupply <- view uniqSupply
@@ -97,10 +97,10 @@ compileFromAST parsedAst env = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-      writeFileBS (view dstName env -<.> "kor") $ encode coreLLOpt
+      writeFileBS (view dstPath env -<.> "kor") $ encode coreLLOpt
 
       -- check module paths include dstName's directory
-      liftIO $ assertIO (takeDirectory env._dstName `elem` env._modulePaths)
+      liftIO $ assertIO (takeDirectory env._dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
       linkedCoreOpt <- if view noOptimize env then pure linkedCore else optimizeProgram uniqSupply (view inlineSize env) linkedCore
@@ -115,18 +115,18 @@ compileFromAST parsedAst env = runMalgoM env act
           codeGen env (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do
           code <- Scheme.codeGen uniqSupply linkedCoreOpt
-          writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
+          writeFileBS (view dstPath env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
 compile :: MalgoEnv -> IO ()
 compile env = do
-  srcPath <- makeAbsolute $ view srcName env
+  srcPath <- makeAbsolute $ view srcPath env
   src <- decodeUtf8 <$> readFileBS srcPath
   parsedAst <- case parseMalgo srcPath src of
     Right x -> pure x
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-          diag' = addFile diag (view srcName env) (toString src)
+          diag' = addFile diag env._srcPath (toString src)
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
   when (view dumpParsed env) $ do
     hPutStrLn stderr "=== PARSE ==="
