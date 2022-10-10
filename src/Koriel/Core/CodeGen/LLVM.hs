@@ -52,6 +52,7 @@ import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import Malgo.Desugar.DsEnv (DsState (..), HasNameEnv (nameEnv))
 import Malgo.Prelude (MalgoEnv (..))
+import GHC.Records (HasField)
 
 instance Hashable Name
 
@@ -68,6 +69,28 @@ data CodeGenEnv = CodeGenEnv
   }
 
 makeFieldsNoPrefix ''CodeGenEnv
+
+newCodeGenEnv :: HasField "_uniqSupply" r UniqSupply => r -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
+newCodeGenEnv malgoEnv moduleName Program{..} = 
+  CodeGenEnv { _uniqSupply = malgoEnv._uniqSupply,
+               _valueMap = mempty,
+               _globalValueMap = varMap,
+               _funcMap = funcMap,
+               _moduleName = moduleName}
+  where
+    -- topVarsのOprMapを作成
+    varMap = mconcatMap ?? _topVars $ \(v, e) ->
+      one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
+    -- topFuncsのOprMapを作成
+    funcMap = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
+      one
+        ( f,
+          ConstantOperand $
+            C.GlobalReference
+              (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
+              (toName f)
+        )
+
 
 type MonadCodeGen m =
   ( MonadModuleBuilder m,
@@ -89,7 +112,7 @@ codeGen ::
   Program (Id C.Type) ->
   m ()
 codeGen malgoEnv modName dsState Program {..} = do
-  llvmir <- runCodeGenT CodeGenEnv {_uniqSupply = malgoEnv._uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv, _moduleName = modName} do
+  llvmir <- runCodeGenT (newCodeGenEnv malgoEnv modName Program{..}) do
     _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
@@ -119,18 +142,6 @@ codeGen malgoEnv modName dsState Program {..} = do
           }
   liftIO $ withContext $ \ctx -> writeFileBS malgoEnv._dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
-    -- topVarsのOprMapを作成
-    varEnv = mconcatMap ?? _topVars $ \(v, e) ->
-      one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
-    -- topFuncsのOprMapを作成
-    funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
-      one
-        ( f,
-          ConstantOperand $
-            C.GlobalReference
-              (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
-              (toName f)
-        )
     initTopVars [] = retVoid
     initTopVars ((name, expr) : xs) =
       view (globalValueMap . at name) >>= \case
