@@ -29,7 +29,7 @@ data ToLLOpt = ToLLOpt
     _dumpRefine :: Bool,
     _dumpDesugar :: Bool,
     _noOptimize :: Bool,
-    _noLambdaLift :: Bool,
+    lambdaLift :: Bool,
     _inlineSize :: Int,
     _debugMode :: Bool,
     _modulePaths :: [FilePath]
@@ -69,7 +69,7 @@ defaultToLLOpt src =
       _dumpRefine = False,
       _dumpDesugar = False,
       _noOptimize = False,
-      _noLambdaLift = False,
+      lambdaLift = False,
       _inlineSize = 15,
       _debugMode = False,
       _modulePaths = []
@@ -101,7 +101,7 @@ toLLOpt =
       <*> switch (long "dump-refine")
       <*> switch (long "dump-desugar")
       <*> switch (long "no-opt")
-      <*> switch (long "no-lambdalift")
+      <*> switch (long "lambdalift")
       <*> fmap read (strOption (long "inline" <> value "15"))
       <*> switch (long "debug-mode")
       <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
