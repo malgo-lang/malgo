@@ -18,6 +18,7 @@ import Malgo.Infer.TypeRep qualified as GT
 import {-# SOURCE #-} Malgo.Interface (Interface)
 import Malgo.Prelude
 import Malgo.Syntax.Extension
+import qualified Koriel.Core.Syntax as C
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
@@ -32,12 +33,21 @@ makeFieldsNoPrefix ''DsEnv
 makeDsEnv :: ModuleName -> MalgoEnv -> DsEnv
 makeDsEnv _moduleName MalgoEnv {..} = DsEnv {..}
 
+-- | トップレベル宣言
+data Def
+  = VarDef (Id C.Type) (C.Exp (Id C.Type))
+  | FunDef (Id C.Type) ([Id C.Type], C.Exp (Id C.Type))
+  | ExtDef Text C.Type
+
+makePrisms ''Def
+
 data DsState = DsState
   { -- | Malgo -> Coreの名前環境
     _nameEnv :: HashMap RnId (Id C.Type),
     -- | 型環境
     _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
-    _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type)
+    _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
+    _globalDefs :: [Def]
   }
 
 makeFieldsNoPrefix ''DsState
@@ -49,7 +59,8 @@ makeDsState tcEnv =
   DsState
     { _nameEnv = mempty,
       _signatureMap = tcEnv ^. signatureMap,
-      _typeDefMap = tcEnv ^. typeDefMap
+      _typeDefMap = tcEnv ^. typeDefMap,
+      _globalDefs = []
     }
 
 lookupValueConstructors ::

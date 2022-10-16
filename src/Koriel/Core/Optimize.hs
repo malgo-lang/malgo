@@ -44,9 +44,11 @@ optimizeProgram ::
   Int ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram us level prog@Program {..} = runReaderT ?? OptimizeEnv {_uniqSupply = us, inlineLevel = level} $ do
+optimizeProgram us level Program {..} = runReaderT ?? OptimizeEnv {_uniqSupply = us, inlineLevel = level} $ do
   state <- execStateT ?? CallInlineEnv mempty $ for_ _topFuncs $ \(name, (ps, e)) -> checkInlinable $ LocalDef name (Fun ps e)
-  appProgram (optimizeExpr state) prog
+  _topVars <- traverse (\(n, e) -> (n,) <$> optimizeExpr state e) _topVars
+  _topFuncs <- traverse (\(n, (ps, e)) -> (n,) . (ps,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) _topFuncs
+  pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
 optimizeExpr state = 3 `times` opt
@@ -95,13 +97,9 @@ checkInlinable ::
 checkInlinable (LocalDef f (Fun ps v)) = do
   level <- asks (.inlineLevel)
   -- 変数の数がlevel以下ならインライン展開する
-  let isInlinableSize = 0 < foldl' countdown level v
+  let isInlinableSize = level >= length v
   when isInlinableSize $ do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
-  where
-    countdown n _
-      | n <= 0 = 0
-      | otherwise = n - 1
 checkInlinable _ = pass
 
 lookupCallInline ::

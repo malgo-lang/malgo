@@ -76,8 +76,8 @@ run = do
                     _dumpRefine = False,
                     _dumpDesugar = False,
                     _noOptimize = False,
-                    lambdaLift = True,
-                    _inlineSize = 10,
+                    lambdaLift = False,
+                    _inlineSize = 15,
                     _debugMode = False,
                     _modulePaths = [workspaceDir </> "build"]
                   }
