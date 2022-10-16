@@ -26,6 +26,7 @@ import Malgo.Interface
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
+import GHC.Records (HasField)
 
 -- | トップレベル宣言
 data Def
@@ -110,11 +111,39 @@ dsScDef (Typed typ _, name, expr) = do
       typ' <- dsType typ
       expr' <- runDef $ fmap Atom $ cast typ' =<< dsExp expr
       pure [VarDef name' expr']
+    dsFunDef name (G.Fn _ cs)= do
+      name' <- lookupName name
+      fun <- fnToObj typ cs
+      pure [FunDef name' fun]
     dsFunDef name expr = do
       name' <- lookupName name
       typ' <- dsType typ
       fun <- curryFun [] =<< runDef (fmap Atom (cast typ' =<< dsExp expr))
       pure [FunDef name' fun]
+
+fnToObj :: (MonadIO f, HasUniqSupply env UniqSupply, MonadFail f, MonadReader env f, HasModuleName env ModuleName, MonadState DsState f) => GT.Type -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Exp (Id C.Type))
+fnToObj typ cs@(Clause _ ps e :| _ ) = do
+  ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
+  eType <- dsType (GT.typeOf e)
+  -- destruct Clauses
+  (pss, es) <-
+    unzip
+      <$> traverse
+        ( \(Clause _ ps e) ->
+            pure (ps, dsExp e)
+        )
+        cs
+  body <- match ps' (patMatrix $ toList pss) (toList es) (Error eType)
+  curryFun ps' body
+
+patToName :: HasField "name" (XId x) Text => Pat x -> Text
+patToName (G.VarP _ v) = v.name
+patToName (G.ConP _ c _) = T.toLower $ c.name
+patToName (G.TupleP _ _) = "tuple"
+patToName (G.RecordP _ _) = "record"
+patToName (G.ListP _ _) = "list"
+patToName (G.UnboxedP _ _) = "unboxed"
+patToName (G.BoxedP _ _) = "boxed"
 
 -- TODO: Malgoのforeignでvoid型をあつかえるようにする #13
 -- 1. Malgoの型とCの型の相互変換を定義する
@@ -217,29 +246,10 @@ dsExp (G.Apply (Typed typ _) fun arg) = runDef $ do
       Cast <$> dsType typ <*> bind (Call fun' [arg'])
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn (Typed typ _) cs@(Clause _ ps e :| _)) = do
-  ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
-  eType <- dsType (GT.typeOf e)
-  -- destruct Clauses
-  (pss, es) <-
-    unzip
-      <$> traverse
-        ( \(Clause _ ps e) ->
-            pure (ps, dsExp e)
-        )
-        cs
-  body <- match ps' (patMatrix $ toList pss) (toList es) (Error eType)
-  obj <- curryFun ps' body
+dsExp (G.Fn (Typed typ _) cs) = do
+  obj <- fnToObj typ cs
   v <- newTemporalId "fun" =<< dsType typ
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
-  where
-    patToName (G.VarP _ v) = v.name
-    patToName (G.ConP _ c _) = T.toLower $ c.name
-    patToName (G.TupleP _ _) = "tuple"
-    patToName (G.RecordP _ _) = "record"
-    patToName (G.ListP _ _) = "list"
-    patToName (G.UnboxedP _ _) = "unboxed"
-    patToName (G.BoxedP _ _) = "boxed"
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
   let con = C.Con C.Tuple $ map C.typeOf es'
