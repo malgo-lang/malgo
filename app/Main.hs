@@ -70,7 +70,7 @@ defaultToLLOpt src =
       _dumpDesugar = False,
       _noOptimize = False,
       _noLambdaLift = False,
-      _inlineSize = 10,
+      _inlineSize = 15,
       _debugMode = False,
       _modulePaths = []
     }
@@ -102,7 +102,7 @@ toLLOpt =
       <*> switch (long "dump-desugar")
       <*> switch (long "no-opt")
       <*> switch (long "no-lambdalift")
-      <*> fmap read (strOption (long "inline" <> value "10"))
+      <*> fmap read (strOption (long "inline" <> value "15"))
       <*> switch (long "debug-mode")
       <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
   )
