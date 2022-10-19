@@ -14,7 +14,7 @@ import Malgo.Prelude
 data RefineEnv = RefineEnv
   { signatureMap :: HashMap (Id ()) (Scheme Type),
     typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
-    _srcName :: FilePath,
+    _srcPath :: FilePath,
     _uniqSupply :: UniqSupply
   }
 
@@ -25,7 +25,7 @@ buildRefineEnv malgoEnv TcEnv {_signatureMap, _typeDefMap} =
   RefineEnv
     { signatureMap = _signatureMap,
       typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap,
-      _srcName = malgoEnv ^. srcName,
+      _srcPath = malgoEnv ^. srcPath,
       _uniqSupply = malgoEnv ^. uniqSupply
     }
   where

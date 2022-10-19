@@ -55,7 +55,7 @@ compileFromAST :: Syntax.Module (Malgo 'Parse) -> MalgoEnv -> IO ()
 compileFromAST parsedAst env = runMalgoM env act
   where
     act = do
-      when (convertString (takeBaseName env._srcName) /= parsedAst._moduleName.raw) $
+      when (convertString (takeBaseName env._srcPath) /= parsedAst._moduleName.raw) $
         error "Module name must be source file's base name."
 
       uniqSupply <- view uniqSupply
@@ -87,20 +87,20 @@ compileFromAST parsedAst env = runMalgoM env act
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint $ over appProgram flat coreOpt
       lint coreOpt
-      coreLL <- if view noLambdaLift env then pure coreOpt else lambdalift uniqSupply typedAst._moduleName coreOpt
-      when (view dumpDesugar env && not (view noLambdaLift env)) $
+      coreLL <- if env.lambdaLift then lambdalift uniqSupply typedAst._moduleName coreOpt else pure coreOpt
+      when (view dumpDesugar env && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLL
       coreLLOpt <- if view noOptimize env then pure coreLL else optimizeProgram uniqSupply (view inlineSize env) coreLL
-      when (view dumpDesugar env && not (view noLambdaLift env) && not (view noOptimize env)) $
+      when (view dumpDesugar env && env.lambdaLift && not (view noOptimize env)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-      writeFileBS (view dstName env -<.> "kor") $ encode coreLLOpt
+      writeFileBS (view dstPath env -<.> "kor") $ encode coreLLOpt
 
       -- check module paths include dstName's directory
-      liftIO $ assertIO (takeDirectory env._dstName `elem` env._modulePaths)
+      liftIO $ assertIO (takeDirectory env._dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
       linkedCoreOpt <- if view noOptimize env then pure linkedCore else optimizeProgram uniqSupply (view inlineSize env) linkedCore
@@ -112,21 +112,21 @@ compileFromAST parsedAst env = runMalgoM env act
 
       case view compileMode env of
         LLVM -> do
-          codeGen (view srcName env) (view dstName env) uniqSupply (typedAst._moduleName) dsEnv linkedCoreOpt
+          codeGen env (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do
           code <- Scheme.codeGen uniqSupply linkedCoreOpt
-          writeFileBS (view dstName env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
+          writeFileBS (view dstPath env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
 compile :: MalgoEnv -> IO ()
 compile env = do
-  srcPath <- makeAbsolute $ view srcName env
+  srcPath <- makeAbsolute $ view srcPath env
   src <- decodeUtf8 <$> readFileBS srcPath
   parsedAst <- case parseMalgo srcPath src of
     Right x -> pure x
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-          diag' = addFile diag (view srcName env) (toString src)
+          diag' = addFile diag env._srcPath (toString src)
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
   when (view dumpParsed env) $ do
     hPutStrLn stderr "=== PARSE ==="

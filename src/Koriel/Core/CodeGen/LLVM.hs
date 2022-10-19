@@ -20,6 +20,7 @@ import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
 import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
+import GHC.Records (HasField)
 import Koriel.Core.Op qualified as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type as C
@@ -51,6 +52,7 @@ import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import Malgo.Desugar.DsEnv (DsState (..), HasNameEnv (nameEnv))
+import Malgo.Prelude (MalgoEnv (..))
 
 instance Hashable Name
 
@@ -68,6 +70,29 @@ data CodeGenEnv = CodeGenEnv
 
 makeFieldsNoPrefix ''CodeGenEnv
 
+newCodeGenEnv :: HasField "_uniqSupply" r UniqSupply => r -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
+newCodeGenEnv malgoEnv moduleName Program {..} =
+  CodeGenEnv
+    { _uniqSupply = malgoEnv._uniqSupply,
+      _valueMap = mempty,
+      _globalValueMap = varMap,
+      _funcMap = funcMap,
+      _moduleName = moduleName
+    }
+  where
+    -- topVarsのOprMapを作成
+    varMap = mconcatMap ?? _topVars $ \(v, e) ->
+      one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
+    -- topFuncsのOprMapを作成
+    funcMap = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
+      one
+        ( f,
+          ConstantOperand $
+            C.GlobalReference
+              (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
+              (toName f)
+        )
+
 type MonadCodeGen m =
   ( MonadModuleBuilder m,
     MonadReader CodeGenEnv m,
@@ -82,15 +107,13 @@ runCodeGenT env m =
 
 codeGen ::
   (MonadFix m, MonadFail m, MonadIO m) =>
-  FilePath ->
-  FilePath ->
-  UniqSupply ->
+  MalgoEnv ->
   ModuleName ->
   DsState ->
   Program (Id C.Type) ->
   m ()
-codeGen srcPath dstPath uniqSupply modName dsState Program {..} = do
-  llvmir <- runCodeGenT CodeGenEnv {_uniqSupply = uniqSupply, _valueMap = mempty, _globalValueMap = varEnv, _funcMap = funcEnv, _moduleName = modName} do
+codeGen malgoEnv modName dsState Program {..} = do
+  llvmir <- runCodeGenT (newCodeGenEnv malgoEnv modName Program {..}) do
     _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
@@ -112,21 +135,14 @@ codeGen srcPath dstPath uniqSupply modName dsState Program {..} = do
         void $ genFunc f ps body
       Nothing -> pass
     genLoadModule modName $ initTopVars _topVars
-  let llvmModule = defaultModule {LLVM.AST.moduleName = fromString srcPath, moduleSourceFileName = fromString srcPath, moduleDefinitions = llvmir}
-  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  let llvmModule =
+        defaultModule
+          { LLVM.AST.moduleName = fromString $ malgoEnv._srcPath,
+            moduleSourceFileName = fromString $ malgoEnv._srcPath,
+            moduleDefinitions = llvmir
+          }
+  liftIO $ withContext $ \ctx -> writeFileBS malgoEnv._dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
-    -- topVarsのOprMapを作成
-    varEnv = mconcatMap ?? _topVars $ \(v, e) ->
-      one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
-    -- topFuncsのOprMapを作成
-    funcEnv = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
-      one
-        ( f,
-          ConstantOperand $
-            C.GlobalReference
-              (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
-              (toName f)
-        )
     initTopVars [] = retVoid
     initTopVars ((name, expr) : xs) =
       view (globalValueMap . at name) >>= \case

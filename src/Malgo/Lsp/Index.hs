@@ -87,11 +87,11 @@ isInRange pos Range {_start, _end}
     posToTuple :: SourcePos -> (Pos, Pos)
     posToTuple SourcePos {sourceLine, sourceColumn} = (sourceLine, sourceColumn)
 
-storeIndex :: (MonadReader s m, HasDstName s FilePath, Store a, MonadIO m) => a -> m ()
+storeIndex :: (MonadReader s m, HasDstPath s FilePath, Store a, MonadIO m) => a -> m ()
 storeIndex index = do
-  dstName <- view dstName
+  dstPath <- view dstPath
   let encoded = encode index
-  writeFileBS (dstName -<.> "idx") encoded
+  writeFileBS (dstPath -<.> "idx") encoded
 
 loadIndex :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath], HasIndexes s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
 loadIndex modName = do

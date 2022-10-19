@@ -1,15 +1,14 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
-import Control.Lens (At (at), makePrisms, preuse, preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2, _Just)
+import Control.Lens (At (at), preuse, preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2, _Just)
 import Data.Char qualified as Char
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
 import Data.Maybe (fromJust)
 import Data.Text qualified as T
 import Data.Traversable (for)
+import GHC.Records (HasField)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import Koriel.Core.Type qualified as C
@@ -27,14 +26,6 @@ import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 
--- | トップレベル宣言
-data Def
-  = VarDef (Id C.Type) (C.Exp (Id C.Type))
-  | FunDef (Id C.Type) ([Id C.Type], C.Exp (Id C.Type))
-  | ExtDef Text C.Type
-
-makePrisms ''Def
-
 -- | MalgoからCoreへの変換
 desugar ::
   (MonadReader MalgoEnv m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m) =>
@@ -45,20 +36,10 @@ desugar tcEnv (Module modName ds) = do
   malgoEnv <- ask
   runReaderT ?? makeDsEnv modName malgoEnv $ do
     (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
-    let varDefs = mapMaybe (preview _VarDef) ds'
-    let funDefs = mapMaybe (preview _FunDef) ds'
-    -- let extDefs = map (\dep -> ("koriel_load_" <> coerce dep, [] :-> VoidT)) (List.delete modName depList) <> [("GC_init", [] :-> VoidT)] <> mapMaybe (preview _ExtDef) ds'
-    let extDefs = mapMaybe (preview _ExtDef) ds'
-    -- case searchMain (HashMap.toList $ view nameEnv dsEnv) of
-    --   Just mainCall -> do
-    --     mainFuncDef <-
-    --       mainFunc depList =<< runDef do
-    --         let unitCon = C.Con C.Tuple []
-    --         unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
-    --         _ <- bind $ mainCall [unit]
-    --         pure (Atom $ C.Unboxed $ C.Int32 0)
-    --     pure (dsEnv, Program varDefs (mainFuncDef : funDefs) extDefs)
-    --   Nothing -> pure (dsEnv, Program varDefs funDefs extDefs)
+    let ds'' = ds' <> dsEnv._globalDefs
+    let varDefs = mapMaybe (preview _VarDef) ds''
+    let funDefs = mapMaybe (preview _FunDef) ds''
+    let extDefs = mapMaybe (preview _ExtDef) ds''
     pure (dsEnv, Program varDefs funDefs extDefs)
 
 -- BindGroupの脱糖衣
@@ -110,11 +91,39 @@ dsScDef (Typed typ _, name, expr) = do
       typ' <- dsType typ
       expr' <- runDef $ fmap Atom $ cast typ' =<< dsExp expr
       pure [VarDef name' expr']
+    dsFunDef name (G.Fn _ cs) = do
+      name' <- lookupName name
+      fun <- fnToObj True name.name cs
+      pure [FunDef name' fun]
     dsFunDef name expr = do
       name' <- lookupName name
       typ' <- dsType typ
-      fun <- curryFun [] =<< runDef (fmap Atom (cast typ' =<< dsExp expr))
+      fun <- curryFun True name.name [] =<< runDef (fmap Atom (cast typ' =<< dsExp expr))
       pure [FunDef name' fun]
+
+fnToObj :: (MonadIO f, HasUniqSupply env UniqSupply, MonadFail f, MonadReader env f, HasModuleName env ModuleName, MonadState DsState f) => Bool -> Text -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Exp (Id C.Type))
+fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
+  ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
+  eType <- dsType (GT.typeOf e)
+  -- destruct Clauses
+  (pss, es) <-
+    unzip
+      <$> traverse
+        ( \(Clause _ ps e) ->
+            pure (ps, dsExp e)
+        )
+        cs
+  body <- match ps' (patMatrix $ toList pss) (toList es) (Error eType)
+  curryFun isToplevel hint ps' body
+
+patToName :: HasField "name" (XId x) Text => Pat x -> Text
+patToName (G.VarP _ v) = v.name
+patToName (G.ConP _ c _) = T.toLower $ c.name
+patToName (G.TupleP _ _) = "tuple"
+patToName (G.RecordP _ _) = "record"
+patToName (G.ListP _ _) = "list"
+patToName (G.UnboxedP _ _) = "unboxed"
+patToName (G.BoxedP _ _) = "boxed"
 
 -- TODO: Malgoのforeignでvoid型をあつかえるようにする #13
 -- 1. Malgoの型とCの型の相互変換を定義する
@@ -130,7 +139,7 @@ dsForeign (Typed typ (_, primName), name, _) = do
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
   params <- traverse (newTemporalId "p") paramTypes'
-  fun <- curryFun params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
+  fun <- curryFun True name.name params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
   nameEnv . at name ?= name'
   pure [FunDef name' fun, ExtDef primName (paramTypes' :-> retType)]
 
@@ -158,7 +167,7 @@ dsDataDef (_, name, _, cons) =
       pure $ Cast retType' packed
     obj <- case ps of
       [] -> pure ([], expr)
-      _ -> curryFun ps expr
+      _ -> curryFun True conName.name ps expr
     nameEnv . at conName ?= conName'
     pure (FunDef conName' obj)
   where
@@ -217,29 +226,10 @@ dsExp (G.Apply (Typed typ _) fun arg) = runDef $ do
       Cast <$> dsType typ <*> bind (Call fun' [arg'])
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn (Typed typ _) cs@(Clause _ ps e :| _)) = do
-  ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
-  eType <- dsType (GT.typeOf e)
-  -- destruct Clauses
-  (pss, es) <-
-    unzip
-      <$> traverse
-        ( \(Clause _ ps e) ->
-            pure (ps, dsExp e)
-        )
-        cs
-  body <- match ps' (patMatrix $ toList pss) (toList es) (Error eType)
-  obj <- curryFun ps' body
+dsExp (G.Fn (Typed typ _) cs) = do
+  obj <- fnToObj False "inner" cs
   v <- newTemporalId "fun" =<< dsType typ
   pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
-  where
-    patToName (G.VarP _ v) = v.name
-    patToName (G.ConP _ c _) = T.toLower $ c.name
-    patToName (G.TupleP _ _) = "tuple"
-    patToName (G.RecordP _ _) = "record"
-    patToName (G.ListP _ _) = "list"
-    patToName (G.UnboxedP _ _) = "unboxed"
-    patToName (G.BoxedP _ _) = "boxed"
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
   let con = C.Con C.Tuple $ map C.typeOf es'
@@ -281,15 +271,19 @@ newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::
-  (HasCallStack, HasModuleName env ModuleName) =>
-  (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) =>
+  HasCallStack =>
+  (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadState DsState m) =>
+  -- | トップレベル関数か否か
+  Bool ->
+  -- | uncurryされた関数名のヒント
+  Text ->
   -- | パラメータリスト
   [Id C.Type] ->
-  -- | カリー化されていない関数値
+  -- | uncurryされた関数値
   C.Exp (Id C.Type) ->
   m ([Id C.Type], C.Exp (Id C.Type))
 -- η展開
-curryFun [] e = do
+curryFun isToplevel hint [] e = do
   case C.typeOf e of
     [] :-> _ -> do
       body <- runDef do
@@ -301,15 +295,23 @@ curryFun [] e = do
       body <- runDef do
         f <- bind e
         pure $ C.Call f (map C.Var ps)
-      curryFun ps body
+      curryFun isToplevel hint ps body
     _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
-curryFun ps e = curryFun' ps []
+curryFun isToplevel hint ps e = curryFun' ps []
   where
     curryFun' [] _ = error "length ps >= 1"
     curryFun' [x] as = do
-      fun <- newTemporalId "curry" (C.typeOf $ Fun ps e)
-      let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
-      pure ([x], C.Let [C.LocalDef fun $ Fun ps e] body)
+      fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e) -- =<< view moduleName
+      if isToplevel
+        then do
+          -- トップレベル関数であるならeに自由変数は含まれないので、
+          -- uncurry後の関数もトップレベル関数にできる。
+          globalDefs <>= [FunDef fun (ps, e)]
+          let body = C.CallDirect fun $ reverse $ C.Var x : as
+          pure ([x], body)
+        else do
+          let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
+          pure ([x], C.Let [LocalDef fun (Fun ps e)] body)
     curryFun' (x : xs) as = do
       fun <- curryFun' xs (C.Var x : as)
       let funObj = uncurry Fun fun

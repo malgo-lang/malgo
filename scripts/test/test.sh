@@ -39,7 +39,7 @@ echo $file
 
 cat $TestFilePath | grep -q '^-- Expected: '
 
-eval "$BUILD exec malgo -- to-ll -M $TESTDIR/libs $TestFilePath -o $LLFILE $malgoOptions"
+eval "$BUILD exec malgo -- to-ll --lambdalift -M $TESTDIR/libs $TestFilePath -o $LLFILE $malgoOptions"
 
 clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $LLFILE -o $OUTFILE
 
