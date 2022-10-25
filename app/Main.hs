@@ -23,15 +23,10 @@ data ToLLOpt = ToLLOpt
   { _srcPath :: FilePath,
     _dstPath :: FilePath,
     _compileMode :: CompileMode,
-    _dumpParsed :: Bool,
-    _dumpRenamed :: Bool,
-    _dumpTyped :: Bool,
-    _dumpRefine :: Bool,
-    _dumpDesugar :: Bool,
     _noOptimize :: Bool,
     lambdaLift :: Bool,
     _inlineSize :: Int,
-    _debugMode :: Bool,
+    debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
   deriving stock (Eq, Show)
@@ -63,15 +58,10 @@ defaultToLLOpt src =
     { _srcPath = src,
       _dstPath = src -<.> "ll",
       _compileMode = LLVM,
-      _dumpParsed = False,
-      _dumpRenamed = False,
-      _dumpTyped = False,
-      _dumpRefine = False,
-      _dumpDesugar = False,
       _noOptimize = False,
       lambdaLift = False,
       _inlineSize = 15,
-      _debugMode = False,
+      debugMode = False,
       _modulePaths = []
     }
 
@@ -95,11 +85,6 @@ toLLOpt =
             <> help
               "Compile to Scheme instead of LLVM"
         )
-      <*> switch (long "dump-parsed")
-      <*> switch (long "dump-renamed")
-      <*> switch (long "dump-typed")
-      <*> switch (long "dump-refine")
-      <*> switch (long "dump-desugar")
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
       <*> fmap read (strOption (long "inline" <> value "15"))

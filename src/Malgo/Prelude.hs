@@ -35,15 +35,10 @@ data MalgoEnv = MalgoEnv
     _srcPath :: FilePath,
     _dstPath :: FilePath,
     _compileMode :: CompileMode,
-    _dumpParsed :: Bool,
-    _dumpRenamed :: Bool,
-    _dumpTyped :: Bool,
-    _dumpRefine :: Bool,
-    _dumpDesugar :: Bool,
     _noOptimize :: Bool,
     lambdaLift :: Bool,
     _inlineSize :: Int,
-    _debugMode :: Bool,
+    debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
 

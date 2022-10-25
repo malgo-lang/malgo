@@ -59,41 +59,41 @@ compileFromAST parsedAst env = runMalgoM env act
         error "Module name must be source file's base name."
 
       uniqSupply <- view uniqSupply
-      when (view dumpParsed env) do
+      when env.debugMode do
         hPutStrLn stderr "=== PARSED ==="
         hPrint stderr $ pPrint parsedAst
       rnEnv <- RnEnv.genBuiltinRnEnv (parsedAst._moduleName) =<< ask
-      (renamedAst, rnState) <- withDump (view dumpRenamed env) "=== RENAME ===" $ rename rnEnv parsedAst
+      (renamedAst, rnState) <- withDump env.debugMode "=== RENAME ===" $ rename rnEnv parsedAst
       (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
-      _ <- withDump (view dumpTyped env) "=== TYPE CHECK ===" $ pure typedAst
-      refinedAst <- withDump (view dumpRefine env) "=== REFINE ===" $ refine tcEnv typedAst
+      _ <- withDump env.debugMode "=== TYPE CHECK ===" $ pure typedAst
+      refinedAst <- withDump env.debugMode "=== REFINE ===" $ refine tcEnv typedAst
 
-      index <- withDump (view debugMode env) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
+      index <- withDump env.debugMode "=== INDEX ===" $ Lsp.index tcEnv refinedAst
       storeIndex index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
-      _ <- withDump (view dumpDesugar env) "=== DESUGAR ===" $ pure core
+      _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface rnEnv._moduleName rnState dsEnv
       storeInterface inf
-      when (view debugMode env) $ do
+      when env.debugMode $ do
         inf <- loadInterface (typedAst._moduleName)
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
       lint core
       coreOpt <- if view noOptimize env then pure core else optimizeProgram uniqSupply (view inlineSize env) core
-      when (view dumpDesugar env && not (view noOptimize env)) do
+      when (env.debugMode && not (view noOptimize env)) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint $ over appProgram flat coreOpt
       lint coreOpt
       coreLL <- if env.lambdaLift then lambdalift uniqSupply typedAst._moduleName coreOpt else pure coreOpt
-      when (view dumpDesugar env && env.lambdaLift) $
+      when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLL
       coreLLOpt <- if view noOptimize env then pure coreLL else optimizeProgram uniqSupply (view inlineSize env) coreLL
-      when (view dumpDesugar env && env.lambdaLift && not (view noOptimize env)) $
+      when (env.debugMode && env.lambdaLift && not (view noOptimize env)) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
@@ -105,7 +105,7 @@ compileFromAST parsedAst env = runMalgoM env act
 
       linkedCoreOpt <- if view noOptimize env then pure linkedCore else optimizeProgram uniqSupply (view inlineSize env) linkedCore
 
-      when (view dumpDesugar env) $
+      when env.debugMode $
         liftIO $ do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pPrint $ over appProgram flat linkedCoreOpt
@@ -128,7 +128,7 @@ compile env = do
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
           diag' = addFile diag env._srcPath (toString src)
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
-  when (view dumpParsed env) $ do
+  when env.debugMode $ do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
   compileFromAST parsedAst env

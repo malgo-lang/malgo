@@ -70,15 +70,10 @@ run = do
                     _srcPath = path,
                     _dstPath = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
                     _compileMode = LLVM,
-                    _dumpParsed = False,
-                    _dumpRenamed = False,
-                    _dumpTyped = False,
-                    _dumpRefine = False,
-                    _dumpDesugar = False,
                     _noOptimize = False,
                     lambdaLift = False,
                     _inlineSize = 15,
-                    _debugMode = False,
+                    debugMode = False,
                     _modulePaths = [workspaceDir </> "build"]
                   }
               )
