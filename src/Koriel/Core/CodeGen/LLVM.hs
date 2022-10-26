@@ -107,12 +107,13 @@ runCodeGenT env m =
 
 codeGen ::
   (MonadFix m, MonadFail m, MonadIO m) =>
+  FilePath ->
   MalgoEnv ->
   ModuleName ->
   DsState ->
   Program (Id C.Type) ->
   m ()
-codeGen malgoEnv modName dsState Program {..} = do
+codeGen srcPath malgoEnv modName dsState Program {..} = do
   llvmir <- runCodeGenT (newCodeGenEnv malgoEnv modName Program {..}) do
     _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
@@ -137,8 +138,8 @@ codeGen malgoEnv modName dsState Program {..} = do
     genLoadModule modName $ initTopVars _topVars
   let llvmModule =
         defaultModule
-          { LLVM.AST.moduleName = fromString $ malgoEnv._srcPath,
-            moduleSourceFileName = fromString $ malgoEnv._srcPath,
+          { LLVM.AST.moduleName = fromString srcPath,
+            moduleSourceFileName = fromString srcPath,
             moduleDefinitions = llvmir
           }
   liftIO $ withContext $ \ctx -> writeFileBS malgoEnv._dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly

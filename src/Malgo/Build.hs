@@ -67,7 +67,6 @@ run = do
                   { _uniqSupply = _uniqSupply,
                     _interfaces = _interfaces,
                     _indexes = _indexes,
-                    _srcPath = path,
                     _dstPath = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
                     _compileMode = LLVM,
                     _noOptimize = False,
@@ -80,8 +79,8 @@ run = do
           )
           topSorted
   for_ compileOptions \(path, env) -> do
-    putStrLn ("Compile " <> env._srcPath)
-    Driver.compileFromAST (Unsafe.fromJust $ List.lookup path parsedAstList) env
+    putStrLn ("Compile " <> path)
+    Driver.compileFromAST path env (Unsafe.fromJust $ List.lookup path parsedAstList)
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []

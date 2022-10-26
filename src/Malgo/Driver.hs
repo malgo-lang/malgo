@@ -30,7 +30,6 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
-import System.Directory (makeAbsolute)
 import System.FilePath (takeBaseName, takeDirectory, (-<.>))
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
@@ -51,11 +50,11 @@ withDump isDump label m = do
   pure result
 
 -- | Compile the parsed AST.
-compileFromAST :: Syntax.Module (Malgo 'Parse) -> MalgoEnv -> IO ()
-compileFromAST parsedAst env = runMalgoM env act
+compileFromAST :: FilePath -> MalgoEnv -> Syntax.Module (Malgo 'Parse) -> IO ()
+compileFromAST srcPath env parsedAst = runMalgoM env act
   where
     act = do
-      when (convertString (takeBaseName env._srcPath) /= parsedAst._moduleName.raw) $
+      when (convertString (takeBaseName srcPath) /= parsedAst._moduleName.raw) $
         error "Module name must be source file's base name."
 
       uniqSupply <- view uniqSupply
@@ -112,23 +111,22 @@ compileFromAST parsedAst env = runMalgoM env act
 
       case view compileMode env of
         LLVM -> do
-          codeGen env (typedAst._moduleName) dsEnv linkedCoreOpt
+          codeGen srcPath env (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do
           code <- Scheme.codeGen uniqSupply linkedCoreOpt
           writeFileBS (view dstPath env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
-compile :: MalgoEnv -> IO ()
-compile env = do
-  srcPath <- makeAbsolute $ view srcPath env
+compile :: FilePath -> MalgoEnv -> IO ()
+compile srcPath env = do
   src <- decodeUtf8 <$> readFileBS srcPath
   parsedAst <- case parseMalgo srcPath src of
     Right x -> pure x
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-          diag' = addFile diag env._srcPath (toString src)
+          diag' = addFile diag srcPath (toString src)
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
   when env.debugMode $ do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
-  compileFromAST parsedAst env
+  compileFromAST srcPath env parsedAst
