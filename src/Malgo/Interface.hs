@@ -11,7 +11,6 @@ import Data.HashSet qualified as HashSet
 import Data.Store (Store)
 import Data.Store qualified as Store
 import Data.String.Conversions (convertString)
-import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
@@ -23,7 +22,7 @@ import Malgo.Rename.RnEnv (RnState)
 import Malgo.Rename.RnEnv qualified as RnState
 import Malgo.Syntax.Extension
 import System.Directory qualified as Directory
-import System.FilePath ((-<.>), (</>))
+import System.FilePath ((</>), replaceExtension)
 
 data Interface = Interface
   { -- | Used in Infer
@@ -67,11 +66,8 @@ buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty
       resolvedTypeIdentMap . at (rnId.name) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
-storeInterface :: (MonadIO m, MonadReader env m, HasField "dstPath" env FilePath) => Interface -> m ()
-storeInterface interface = do
-  dstPath <- asks (.dstPath)
-  let encoded = Store.encode interface
-  writeFileBS (dstPath -<.> "mlgi") encoded
+toInterfacePath :: String -> FilePath
+toInterfacePath x = replaceExtension x "mlgi"
 
 loadInterface ::
   HasCallStack =>
@@ -89,7 +85,7 @@ loadInterface (ModuleName modName) = do
     Just interface -> pure interface
     Nothing -> do
       modPaths <- view modulePaths
-      message <- findAndReadFile modPaths (convertString modName <> ".mlgi")
+      message <- findAndReadFile modPaths (toInterfacePath $ convertString modName)
       case message of
         Right x -> do
           writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces

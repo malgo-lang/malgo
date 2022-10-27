@@ -19,7 +19,7 @@ import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (buildInterface, loadInterface, storeInterface)
+import Malgo.Interface (buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
 import Malgo.Lsp.Index (storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
@@ -74,7 +74,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface rnEnv._moduleName rnState dsEnv
-      storeInterface inf
+      writeFileBS (toInterfacePath env.dstPath) $ encode inf
+
       when env.debugMode $ do
         inf <- loadInterface (typedAst._moduleName)
         hPutStrLn stderr "=== INTERFACE ==="
