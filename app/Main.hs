@@ -20,7 +20,7 @@ import System.FilePath.Lens (extension)
 import Text.Read (read)
 
 data ToLLOpt = ToLLOpt
-  { _srcPath :: FilePath,
+  { srcPath :: FilePath,
     _dstPath :: FilePath,
     _compileMode :: CompileMode,
     _noOptimize :: Bool,
@@ -44,7 +44,7 @@ main = do
       _interfaces <- newIORef mempty
       _indexes <- newIORef mempty
       let ToLLOpt {..} = opt
-      Driver.compile Prelude.MalgoEnv {..}
+      Driver.compile opt.srcPath Prelude.MalgoEnv {..}
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
@@ -55,7 +55,7 @@ main = do
 defaultToLLOpt :: FilePath -> ToLLOpt
 defaultToLLOpt src =
   ToLLOpt
-    { _srcPath = src,
+    { srcPath = src,
       _dstPath = src -<.> "ll",
       _compileMode = LLVM,
       _noOptimize = False,
@@ -115,10 +115,10 @@ parseCommand = do
       )
   case command of
     ToLL opt -> do
-      srcPath <- makeAbsolute opt._srcPath
+      srcPath <- makeAbsolute opt.srcPath
       if null opt._dstPath
-        then pure $ ToLL $ opt {_srcPath = srcPath, _dstPath = srcPath & extension .~ ".ll"}
-        else pure $ ToLL $ opt {_srcPath = srcPath}
+        then pure $ ToLL $ opt {srcPath = srcPath, _dstPath = srcPath & extension .~ ".ll"}
+        else pure $ ToLL $ opt {srcPath = srcPath}
     Lsp opt -> pure $ Lsp opt
     Build opt -> pure $ Build opt
   where
