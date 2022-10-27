@@ -11,6 +11,7 @@ import Data.HashSet qualified as HashSet
 import Data.Store (Store)
 import Data.Store qualified as Store
 import Data.String.Conversions (convertString)
+import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
@@ -66,9 +67,9 @@ buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty
       resolvedTypeIdentMap . at (rnId.name) ?= rnId
       typeDefMap . at rnId ?= typeDef
 
-storeInterface :: (MonadIO m, HasDstPath env FilePath, MonadReader env m) => Interface -> m ()
+storeInterface :: (MonadIO m, MonadReader env m, HasField "dstPath" env FilePath) => Interface -> m ()
 storeInterface interface = do
-  dstPath <- view dstPath
+  dstPath <- asks (.dstPath)
   let encoded = Store.encode interface
   writeFileBS (dstPath -<.> "mlgi") encoded
 

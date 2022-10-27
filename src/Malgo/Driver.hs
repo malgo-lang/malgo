@@ -96,10 +96,10 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-      writeFileBS (view dstPath env -<.> "kor") $ encode coreLLOpt
+      writeFileBS (env.dstPath -<.> "kor") $ encode coreLLOpt
 
       -- check module paths include dstName's directory
-      liftIO $ assertIO (takeDirectory env._dstPath `elem` env._modulePaths)
+      liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
       linkedCoreOpt <- if view noOptimize env then pure linkedCore else optimizeProgram uniqSupply (view inlineSize env) linkedCore
@@ -114,7 +114,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
           codeGen srcPath env (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do
           code <- Scheme.codeGen uniqSupply linkedCoreOpt
-          writeFileBS (view dstPath env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
+          writeFileBS (env.dstPath -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()

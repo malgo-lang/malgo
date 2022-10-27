@@ -12,6 +12,7 @@ import Data.Store (Store, encode)
 import Data.Store qualified as Store
 import Data.Store.TH (makeStore)
 import Data.String.Conversions (convertString)
+import GHC.Records (HasField)
 import Koriel.Id (ModuleName (..))
 import Koriel.Lens (HasModulePaths (modulePaths))
 import Koriel.Pretty
@@ -87,9 +88,9 @@ isInRange pos Range {_start, _end}
     posToTuple :: SourcePos -> (Pos, Pos)
     posToTuple SourcePos {sourceLine, sourceColumn} = (sourceLine, sourceColumn)
 
-storeIndex :: (MonadReader s m, HasDstPath s FilePath, Store a, MonadIO m) => a -> m ()
+storeIndex :: (MonadReader s m, Store a, MonadIO m, HasField "dstPath" s FilePath) => a -> m ()
 storeIndex index = do
-  dstPath <- view dstPath
+  dstPath <- asks (.dstPath)
   let encoded = encode index
   writeFileBS (dstPath -<.> "idx") encoded
 

@@ -21,7 +21,7 @@ import Text.Read (read)
 
 data ToLLOpt = ToLLOpt
   { srcPath :: FilePath,
-    _dstPath :: FilePath,
+    dstPath :: FilePath,
     _compileMode :: CompileMode,
     _noOptimize :: Bool,
     lambdaLift :: Bool,
@@ -39,7 +39,7 @@ main = do
   case command of
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt._dstPath, ".malgo-work" </> "build", basePath]
+      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt.dstPath, ".malgo-work" </> "build", basePath]
       _uniqSupply <- UniqSupply <$> newIORef 0
       _interfaces <- newIORef mempty
       _indexes <- newIORef mempty
@@ -56,7 +56,7 @@ defaultToLLOpt :: FilePath -> ToLLOpt
 defaultToLLOpt src =
   ToLLOpt
     { srcPath = src,
-      _dstPath = src -<.> "ll",
+      dstPath = src -<.> "ll",
       _compileMode = LLVM,
       _noOptimize = False,
       lambdaLift = False,
@@ -116,8 +116,8 @@ parseCommand = do
   case command of
     ToLL opt -> do
       srcPath <- makeAbsolute opt.srcPath
-      if null opt._dstPath
-        then pure $ ToLL $ opt {srcPath = srcPath, _dstPath = srcPath & extension .~ ".ll"}
+      if null opt.dstPath
+        then pure $ ToLL $ opt {srcPath = srcPath, dstPath = srcPath & extension .~ ".ll"}
         else pure $ ToLL $ opt {srcPath = srcPath}
     Lsp opt -> pure $ Lsp opt
     Build opt -> pure $ Build opt

@@ -142,7 +142,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
             moduleSourceFileName = fromString srcPath,
             moduleDefinitions = llvmir
           }
-  liftIO $ withContext $ \ctx -> writeFileBS malgoEnv._dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ withContext $ \ctx -> writeFileBS malgoEnv.dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     initTopVars [] = retVoid
     initTopVars ((name, expr) : xs) =

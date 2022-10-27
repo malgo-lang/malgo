@@ -32,7 +32,7 @@ data MalgoEnv = MalgoEnv
   { _uniqSupply :: UniqSupply,
     _interfaces :: IORef (HashMap ModuleName Interface),
     _indexes :: IORef (HashMap ModuleName Index),
-    _dstPath :: FilePath,
+    dstPath :: FilePath,
     _compileMode :: CompileMode,
     _noOptimize :: Bool,
     lambdaLift :: Bool,
