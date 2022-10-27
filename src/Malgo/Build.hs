@@ -68,10 +68,10 @@ run = do
                     _interfaces = _interfaces,
                     _indexes = _indexes,
                     dstPath = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
-                    _compileMode = LLVM,
-                    _noOptimize = False,
+                    compileMode = LLVM,
+                    noOptimize = False,
                     lambdaLift = False,
-                    _inlineSize = 15,
+                    inlineSize = 15,
                     debugMode = False,
                     _modulePaths = [workspaceDir </> "build"]
                   }

@@ -82,8 +82,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
       lint core
-      coreOpt <- if view noOptimize env then pure core else optimizeProgram uniqSupply (view inlineSize env) core
-      when (env.debugMode && not (view noOptimize env)) do
+      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply env.inlineSize core
+      when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint $ over appProgram flat coreOpt
       lint coreOpt
@@ -92,8 +92,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLL
-      coreLLOpt <- if view noOptimize env then pure coreLL else optimizeProgram uniqSupply (view inlineSize env) coreLL
-      when (env.debugMode && env.lambdaLift && not (view noOptimize env)) $
+      coreLLOpt <- if env.noOptimize then pure coreLL else optimizeProgram uniqSupply env.inlineSize coreLL
+      when (env.debugMode && env.lambdaLift && not env.noOptimize) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
@@ -103,14 +103,14 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
-      linkedCoreOpt <- if view noOptimize env then pure linkedCore else optimizeProgram uniqSupply (view inlineSize env) linkedCore
+      linkedCoreOpt <- if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply env.inlineSize linkedCore
 
       when env.debugMode $
         liftIO $ do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pPrint $ over appProgram flat linkedCoreOpt
 
-      case view compileMode env of
+      case env.compileMode of
         LLVM -> do
           codeGen srcPath env (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do

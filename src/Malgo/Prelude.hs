@@ -33,10 +33,10 @@ data MalgoEnv = MalgoEnv
     _interfaces :: IORef (HashMap ModuleName Interface),
     _indexes :: IORef (HashMap ModuleName Index),
     dstPath :: FilePath,
-    _compileMode :: CompileMode,
-    _noOptimize :: Bool,
+    compileMode :: CompileMode,
+    noOptimize :: Bool,
     lambdaLift :: Bool,
-    _inlineSize :: Int,
+    inlineSize :: Int,
     debugMode :: Bool,
     _modulePaths :: [FilePath]
   }

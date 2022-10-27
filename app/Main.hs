@@ -22,10 +22,10 @@ import Text.Read (read)
 data ToLLOpt = ToLLOpt
   { srcPath :: FilePath,
     dstPath :: FilePath,
-    _compileMode :: CompileMode,
-    _noOptimize :: Bool,
+    compileMode :: CompileMode,
+    noOptimize :: Bool,
     lambdaLift :: Bool,
-    _inlineSize :: Int,
+    inlineSize :: Int,
     debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
@@ -57,10 +57,10 @@ defaultToLLOpt src =
   ToLLOpt
     { srcPath = src,
       dstPath = src -<.> "ll",
-      _compileMode = LLVM,
-      _noOptimize = False,
+      compileMode = LLVM,
+      noOptimize = False,
       lambdaLift = False,
-      _inlineSize = 15,
+      inlineSize = 15,
       debugMode = False,
       _modulePaths = []
     }
