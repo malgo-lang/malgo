@@ -149,8 +149,8 @@ struct StringBuilder
 
 struct StringBuilder *new_sb(void)
 {
-  struct StringBuilder *sb = GC_MALLOC(sizeof(struct StringBuilder));
-  sb->buf = GC_MALLOC(8 * sizeof(char));
+  struct StringBuilder *sb = malloc(sizeof(struct StringBuilder));
+  sb->buf = malloc(8 * sizeof(char));
   sb->capacity = 8;
   sb->length = 0;
   return sb;
@@ -161,7 +161,7 @@ void sb_putc(struct StringBuilder *sb, char c)
   while (sb->length >= sb->capacity)
   {
     sb->capacity += 8;
-    sb->buf = GC_REALLOC(sb->buf, sizeof(char) * sb->capacity);
+    sb->buf = realloc(sb->buf, sizeof(char) * sb->capacity);
   }
   sb->buf[sb->length] = c;
   sb->length++;
@@ -177,7 +177,7 @@ void sb_puts(struct StringBuilder *sb, char *str)
 
 void sb_destory(struct StringBuilder *sb)
 {
-  GC_FREE(sb);
+  free(sb);
 }
 
 char *sb_run(struct StringBuilder *sb)
@@ -299,7 +299,7 @@ char *malgo_get_contents(MalgoUnit *__attribute__((unused)) unused)
 {
   struct StringBuilder *sb = new_sb();
 
-  char c;
+  int c;
   while ((c = fgetc(stdin)) != EOF)
   {
     sb_putc(sb, c);
