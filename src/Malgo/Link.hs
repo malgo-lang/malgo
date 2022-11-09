@@ -1,8 +1,8 @@
 module Malgo.Link where
 
 import Control.Lens (view)
+import Data.Binary qualified as Binary
 import Data.HashSet qualified as HashSet
-import Data.Store (decodeIO)
 import Data.String.Conversions (convertString)
 import Koriel.Core.Syntax
 import Koriel.Core.Type (Type)
@@ -38,6 +38,6 @@ loadCore (ModuleName modName) = do
       isExistModFile <- liftIO $ doesFileExist (path </> modFile)
       if isExistModFile
         then do
-          raw <- readFileBS (path </> modFile)
-          Right <$> liftIO (decodeIO raw)
+          pgm <- liftIO $ Binary.decodeFile (path </> modFile)
+          pure $ Right pgm
         else findAndReadFile paths modFile

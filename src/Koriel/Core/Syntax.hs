@@ -10,9 +10,9 @@
 module Koriel.Core.Syntax where
 
 import Control.Lens (Traversal', makeFieldsNoPrefix, sans, traverseOf, traversed, _2)
+import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
-import Data.Store (Store)
 import Generic.Data
 import Koriel.Core.Op
 import Koriel.Core.Type
@@ -127,7 +127,7 @@ instance Pretty Unboxed where
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 
-instance Store Unboxed
+instance Binary Unboxed
 
 instance HasType a => HasType (Atom a) where
   typeOf (Var x) = typeOf x
@@ -137,7 +137,7 @@ instance Pretty a => Pretty (Atom a) where
   pPrint (Var x) = pPrint x
   pPrint (Unboxed x) = pPrint x
 
-instance Store a => Store (Atom a)
+instance Binary a => Binary (Atom a)
 
 instance HasFreeVar Atom where
   freevars (Var x) = one x
@@ -159,7 +159,7 @@ instance Pretty a => Pretty (Obj a) where
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
   pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
 
-instance Store a => Store (Obj a)
+instance Binary a => Binary (Obj a)
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -175,7 +175,7 @@ instance HasAtom Obj where
 instance Pretty a => Pretty (LocalDef a) where
   pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
 
-instance Store a => Store (LocalDef a)
+instance Binary a => Binary (LocalDef a)
 
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
@@ -225,7 +225,7 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
   pPrint (Error _) = "ERROR"
 
-instance Store a => Store (Exp a)
+instance Binary a => Binary (Exp a)
 
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
@@ -264,7 +264,7 @@ instance Pretty a => Pretty (Case a) where
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
 
-instance Store a => Store (Case a)
+instance Binary a => Binary (Case a)
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
@@ -291,7 +291,7 @@ instance Pretty a => Pretty (Program a) where
           map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
         ]
 
-instance Store a => Store (Program a)
+instance Binary a => Binary (Program a)
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case

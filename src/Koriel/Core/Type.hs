@@ -1,9 +1,10 @@
 module Koriel.Core.Type where
 
 import Control.Lens (Prism', prism)
+import Data.Binary (Binary)
+import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
-import Data.Store (Store)
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -18,7 +19,7 @@ data Tag
 
 instance Hashable Tag
 
-instance Store Tag
+instance Binary Tag
 
 instance Pretty Tag where
   pPrint (Data name) = pPrint name
@@ -29,7 +30,7 @@ data Con = Con Tag [Type]
 
 instance Hashable Con
 
-instance Store Con
+instance Binary Con
 
 instance Pretty Con where
   pPrint (Con tag xs) = parens $ sep $ pPrint tag : map pPrint xs
@@ -61,7 +62,7 @@ _SumT = prism SumT \case
 
 instance Hashable Type
 
-instance Store Type
+instance Binary Type
 
 instance Pretty Type where
   pPrint (a :-> b) = sep [brackets (sep $ punctuate "," $ map pPrint a), "->", pPrint b]

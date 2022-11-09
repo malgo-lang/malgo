@@ -12,7 +12,7 @@ where
 
 import Control.Lens.TH
 import Control.Monad.Fix (MonadFix)
-import Data.Store (Store)
+import Data.Binary (Binary)
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id (ModuleName)
 import Koriel.Lens
@@ -68,11 +68,11 @@ instance Hashable SourcePos
 
 instance Hashable Range
 
-instance Store Megaparsec.Pos
+instance Binary Megaparsec.Pos
 
-instance Store SourcePos
+instance Binary SourcePos
 
-instance Store Range
+instance Binary Range
 
 instance Pretty Range where
   pPrint (Range start end) =

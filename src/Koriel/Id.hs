@@ -21,8 +21,8 @@ module Koriel.Id
 where
 
 import Control.Lens (Lens', view)
+import Data.Binary (Binary)
 import Data.Data (Data)
-import Data.Store (Store)
 import Data.String.Conversions (convertString)
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -35,7 +35,7 @@ newtype ModuleName = ModuleName {raw :: Text}
 
 instance Hashable ModuleName
 
-instance Store ModuleName
+instance Binary ModuleName
 
 instance Pretty ModuleName where
   pPrint (ModuleName modName) = pPrint modName
@@ -65,7 +65,7 @@ data IdSort
 
 instance Hashable IdSort
 
-instance Store IdSort
+instance Binary IdSort
 
 instance Pretty IdSort where
   pPrint = P.text . show
@@ -81,7 +81,7 @@ data Id a = Id
 
 instance Hashable a => Hashable (Id a)
 
-instance Store a => Store (Id a)
+instance Binary a => Binary (Id a)
 
 noName :: Text
 noName = "noName"

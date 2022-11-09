@@ -5,9 +5,10 @@
 module Malgo.Infer.TypeRep where
 
 import Control.Lens (At (at), Lens', Traversal', coerced, makeLenses, makePrisms, mapped, over, (^.), _1, _2)
+import Data.Binary (Binary)
+import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
-import Data.Store (Store)
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
@@ -22,7 +23,7 @@ data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
 
 instance Hashable PrimT
 
-instance Store PrimT
+instance Binary PrimT
 
 instance Pretty PrimT where
   pPrint Int32T = "Int32#"
@@ -72,7 +73,7 @@ data Type
 
 instance Hashable Type
 
-instance Store Type
+instance Binary Type
 
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
@@ -99,7 +100,7 @@ newtype TypeVar = TypeVar {typeVar :: Id Kind}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
 
-instance Store TypeVar
+instance Binary TypeVar
 
 instance Pretty TypeVar where
   pPrint (TypeVar v) = "'" <> pPrint v
@@ -160,7 +161,7 @@ data Scheme ty = Forall [Id ty] ty
 
 instance Hashable ty => Hashable (Scheme ty)
 
-instance Store ty => Store (Scheme ty)
+instance Binary ty => Binary (Scheme ty)
 
 instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall [] t) = pPrint t
@@ -175,7 +176,7 @@ data TypeDef ty = TypeDef
   }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
 
-instance Store ty => Store (TypeDef ty)
+instance Binary ty => Binary (TypeDef ty)
 
 instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)

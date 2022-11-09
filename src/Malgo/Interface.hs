@@ -5,11 +5,10 @@ module Malgo.Interface where
 
 import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
 import Control.Lens.TH
+import Data.Binary (Binary, decodeFile)
 import Data.Graph
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
-import Data.Store (Store)
-import Data.Store qualified as Store
 import Data.String.Conversions (convertString)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
@@ -22,7 +21,7 @@ import Malgo.Rename.RnEnv (RnState)
 import Malgo.Rename.RnEnv qualified as RnState
 import Malgo.Syntax.Extension
 import System.Directory qualified as Directory
-import System.FilePath ((</>), replaceExtension)
+import System.FilePath (replaceExtension, (</>))
 
 data Interface = Interface
   { -- | Used in Infer
@@ -44,7 +43,7 @@ data Interface = Interface
   }
   deriving stock (Show, Generic)
 
-instance Store Interface
+instance Binary Interface
 
 makeFieldsNoPrefix ''Interface
 
@@ -99,8 +98,8 @@ loadInterface (ModuleName modName) = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
         then do
-          raw <- readFileBS (modPath </> modFile)
-          Right <$> liftIO (Store.decodeIO raw)
+          inf <- liftIO $ decodeFile (modPath </> modFile)
+          pure $ Right inf
         else findAndReadFile rest modFile
 
 dependencieList :: (HasModulePaths s [FilePath], HasInterfaces s (IORef (HashMap ModuleName Interface)), MonadIO m, MonadReader s m) => ModuleName -> [ModuleName] -> m [ModuleName]

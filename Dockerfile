@@ -22,3 +22,5 @@ COPY ./cabal.project* /opt/malgo/
 
 RUN cabal update && \
   cabal build --only-dependencies -j
+
+RUN cabal install hpack

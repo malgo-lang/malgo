@@ -3,7 +3,7 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception.Extra (assertIO)
 import Control.Lens (over, view)
-import Data.Store (encode)
+import Data.Binary qualified as Binary
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
@@ -74,7 +74,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface rnEnv._moduleName rnState dsEnv
-      writeFileBS (toInterfacePath env.dstPath) $ encode inf
+      writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
 
       when env.debugMode $ do
         inf <- loadInterface (typedAst._moduleName)
@@ -97,7 +97,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-      writeFileBS (env.dstPath -<.> "kor") $ encode coreLLOpt
+      writeFileLBS (env.dstPath -<.> "kor") $ Binary.encode coreLLOpt
 
       -- check module paths include dstName's directory
       liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
