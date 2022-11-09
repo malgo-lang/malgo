@@ -1,10 +1,10 @@
 module Malgo.Build where
 
 import Control.Lens
+import Data.Aeson (FromJSON, decodeFileStrict)
 import Data.Graph (graphFromEdges, reverseTopSort)
 import Data.List ((\\))
 import Data.List qualified as List
-import Dhall hiding (map)
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
 import Malgo.Parser (parseMalgo)
@@ -21,23 +21,30 @@ data Config = Config
   }
   deriving stock (Show, Generic)
 
-instance FromDhall Config
+instance FromJSON Config
 
 getWorkspaceDir :: IO FilePath
 getWorkspaceDir = do
   pwd <- getCurrentDirectory
   return $ pwd </> ".malgo-work"
 
+readBuildConfig :: IO Config
+readBuildConfig = do
+  pwd <- getCurrentDirectory
+  let configPath = pwd </> "build.json"
+  mconfig <- decodeFileStrict configPath
+  case mconfig of
+    Nothing -> error $ "Failed to read build.json: " <> show configPath
+    Just config -> pure config
+
 getSourceDirs :: IO [FilePath]
 getSourceDirs = do
-  pwd <- getCurrentDirectory
-  config <- input @Config auto (toText $ pwd </> "build.dhall")
+  config <- readBuildConfig
   return config.sourceDirectories
 
 getExcludePatterns :: IO [FilePath]
 getExcludePatterns = do
-  pwd <- getCurrentDirectory
-  config <- input @Config auto (toText $ pwd </> "build.dhall")
+  config <- readBuildConfig
   return config.excludePatterns
 
 run :: IO ()
