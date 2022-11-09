@@ -23,6 +23,11 @@ fi
 TestFilePath=$1
 file=`basename $TestFilePath`
 malgoOptions='' # No options
+if which clang; then
+    CC=clang
+else
+    CC=clang-12
+fi
 
 # 並列にテストを実行すると、ここでコンパイル順序の前提が崩れうる。
 # コンパイル順序を保証するために、事前にpretest.shを実行する。
@@ -41,6 +46,6 @@ cat $TestFilePath | grep -q '^-- Expected: '
 
 eval "$BUILD exec malgo -- to-ll --lambdalift -M $TESTDIR/libs $TestFilePath -o $LLFILE $malgoOptions"
 
-clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $LLFILE -o $OUTFILE
+$CC -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $LLFILE -o $OUTFILE
 
 test "$(echo 'Hello' | $OUTFILE)" = "$(cat $TestFilePath | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"

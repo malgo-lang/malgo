@@ -7,11 +7,10 @@ module Malgo.Lsp.Index where
 
 import Control.Lens (view)
 import Control.Lens.TH
+import Data.Binary (Binary, decodeFile, encode)
 import Data.HashMap.Strict qualified as HashMap
-import Data.Store (Store, encode)
-import Data.Store qualified as Store
-import Data.Store.TH (makeStore)
 import Data.String.Conversions (convertString)
+import GHC.Records (HasField)
 import Koriel.Id (ModuleName (..))
 import Koriel.Lens (HasModulePaths (modulePaths))
 import Koriel.Pretty
@@ -21,17 +20,16 @@ import Malgo.Syntax.Extension (RnId)
 import System.Directory qualified as Directory
 import System.FilePath (takeFileName, (-<.>), (</>))
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
-import Text.Pretty.Simple (pShow)
 
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
 
-makeStore ''SymbolKind
+instance Binary SymbolKind
 
 data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
   deriving stock (Show, Generic)
 
-makeStore ''Symbol
+instance Binary Symbol
 
 -- | An 'Info' records
 --  * Symbol name
@@ -49,7 +47,8 @@ instance Hashable Info
 instance Pretty Info where
   pPrint Info {..} = pPrint _name <+> ":" <+> pPrint typeSignature <+> pPrint definitions
 
-makeStore ''Info
+instance Binary Info
+
 makeFieldsNoPrefix ''Info
 
 data Index = Index
@@ -65,10 +64,10 @@ instance Semigroup Index where
 instance Monoid Index where
   mempty = Index mempty mempty mempty
 
-makeStore ''Index
+instance Binary Index
 
 instance Pretty Index where
-  pPrint = text . toString . pShow
+  pPrint = text . show
 
 makeFieldsNoPrefix ''Index
 
@@ -87,11 +86,11 @@ isInRange pos Range {_start, _end}
     posToTuple :: SourcePos -> (Pos, Pos)
     posToTuple SourcePos {sourceLine, sourceColumn} = (sourceLine, sourceColumn)
 
-storeIndex :: (MonadReader s m, HasDstPath s FilePath, Store a, MonadIO m) => a -> m ()
+storeIndex :: (MonadReader s m, MonadIO m, HasField "dstPath" s FilePath) => Index -> m ()
 storeIndex index = do
-  dstPath <- view dstPath
+  dstPath <- asks (.dstPath)
   let encoded = encode index
-  writeFileBS (dstPath -<.> "idx") encoded
+  writeFileLBS (dstPath -<.> "idx") encoded
 
 loadIndex :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath], HasIndexes s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
 loadIndex modName = do
@@ -115,6 +114,6 @@ loadIndex modName = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
         then do
-          raw <- readFileBS (modPath </> modFile)
-          Right <$> liftIO (Store.decodeIO raw)
+          idx <- liftIO $ decodeFile (modPath </> modFile)
+          pure $ Right idx
         else findAndReadFile rest modFile

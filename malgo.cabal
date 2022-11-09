@@ -86,9 +86,11 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS
   build-depends:
       Glob
+    , aeson
     , base
+    , binary
+    , binary-instances
     , containers
-    , dhall
     , diagnose
     , directory
     , extra
@@ -105,9 +107,7 @@ library
     , optparse-applicative
     , parser-combinators
     , pretty
-    , pretty-simple
     , relude >=1.0.0.0
-    , store
     , string-conversions
     , text
     , transformers
@@ -120,7 +120,7 @@ executable malgo
   other-modules:
       Paths_malgo
   hs-source-dirs:
-      app/
+      app/malgo/
   default-extensions:
       BlockArguments
       DataKinds
@@ -140,9 +140,11 @@ executable malgo
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
+    , aeson
     , base
+    , binary
+    , binary-instances
     , containers
-    , dhall
     , diagnose
     , directory
     , extra
@@ -160,9 +162,7 @@ executable malgo
     , optparse-applicative
     , parser-combinators
     , pretty
-    , pretty-simple
     , relude >=1.0.0.0
-    , store
     , string-conversions
     , text
     , transformers
@@ -196,9 +196,11 @@ test-suite malgo-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
+    , aeson
     , base
+    , binary
+    , binary-instances
     , containers
-    , dhall
     , diagnose
     , directory
     , extra
@@ -217,9 +219,7 @@ test-suite malgo-test
     , optparse-applicative
     , parser-combinators
     , pretty
-    , pretty-simple
     , relude >=1.0.0.0
-    , store
     , string-conversions
     , text
     , transformers

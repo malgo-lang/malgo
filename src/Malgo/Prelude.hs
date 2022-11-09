@@ -12,7 +12,7 @@ where
 
 import Control.Lens.TH
 import Control.Monad.Fix (MonadFix)
-import Data.Store (Store)
+import Data.Binary (Binary)
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id (ModuleName)
 import Koriel.Lens
@@ -32,18 +32,12 @@ data MalgoEnv = MalgoEnv
   { _uniqSupply :: UniqSupply,
     _interfaces :: IORef (HashMap ModuleName Interface),
     _indexes :: IORef (HashMap ModuleName Index),
-    _srcPath :: FilePath,
-    _dstPath :: FilePath,
-    _compileMode :: CompileMode,
-    _dumpParsed :: Bool,
-    _dumpRenamed :: Bool,
-    _dumpTyped :: Bool,
-    _dumpRefine :: Bool,
-    _dumpDesugar :: Bool,
-    _noOptimize :: Bool,
+    dstPath :: FilePath,
+    compileMode :: CompileMode,
+    noOptimize :: Bool,
     lambdaLift :: Bool,
-    _inlineSize :: Int,
-    _debugMode :: Bool,
+    inlineSize :: Int,
+    debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
 
@@ -74,11 +68,11 @@ instance Hashable SourcePos
 
 instance Hashable Range
 
-instance Store Megaparsec.Pos
+instance Binary Megaparsec.Pos
 
-instance Store SourcePos
+instance Binary SourcePos
 
-instance Store Range
+instance Binary Range
 
 instance Pretty Range where
   pPrint (Range start end) =

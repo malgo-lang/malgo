@@ -23,6 +23,11 @@ fi
 TestFilePath=$1
 file=`basename $TestFilePath`
 malgoOptions='' # No options
+if which clang; then
+    CC=clang
+else
+    CC=clang-12
+fi
 
 echo '=== no lambdalift ==='
 
@@ -35,6 +40,6 @@ cat $TestFilePath | grep -q '^-- Expected: '
 
 eval "$BUILD exec malgo -- to-ll -M $TESTDIR/libs $TestFilePath -o $LLFILE $malgoOptions"
 
-clang -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $LLFILE -o $OUTFILE
+$CC -Wno-override-module -lm $(pkg-config bdw-gc --libs --cflags) $TESTDIR/libs/runtime.c $LLFILE -o $OUTFILE
 
 test "$(echo 'Hello' | $OUTFILE)" = "$(cat $TestFilePath | grep '^-- Expected: ' | sed -e 's/^-- Expected: //')"

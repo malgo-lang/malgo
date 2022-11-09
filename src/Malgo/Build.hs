@@ -1,10 +1,10 @@
 module Malgo.Build where
 
 import Control.Lens
+import Data.Aeson (FromJSON, decodeFileStrict)
 import Data.Graph (graphFromEdges, reverseTopSort)
 import Data.List ((\\))
 import Data.List qualified as List
-import Dhall hiding (map)
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
 import Malgo.Parser (parseMalgo)
@@ -21,23 +21,30 @@ data Config = Config
   }
   deriving stock (Show, Generic)
 
-instance FromDhall Config
+instance FromJSON Config
 
 getWorkspaceDir :: IO FilePath
 getWorkspaceDir = do
   pwd <- getCurrentDirectory
   return $ pwd </> ".malgo-work"
 
+readBuildConfig :: IO Config
+readBuildConfig = do
+  pwd <- getCurrentDirectory
+  let configPath = pwd </> "build.json"
+  mconfig <- decodeFileStrict configPath
+  case mconfig of
+    Nothing -> error $ "Failed to read build.json: " <> show configPath
+    Just config -> pure config
+
 getSourceDirs :: IO [FilePath]
 getSourceDirs = do
-  pwd <- getCurrentDirectory
-  config <- input @Config auto (toText $ pwd </> "build.dhall")
+  config <- readBuildConfig
   return config.sourceDirectories
 
 getExcludePatterns :: IO [FilePath]
 getExcludePatterns = do
-  pwd <- getCurrentDirectory
-  config <- input @Config auto (toText $ pwd </> "build.dhall")
+  config <- readBuildConfig
   return config.excludePatterns
 
 run :: IO ()
@@ -67,26 +74,20 @@ run = do
                   { _uniqSupply = _uniqSupply,
                     _interfaces = _interfaces,
                     _indexes = _indexes,
-                    _srcPath = path,
-                    _dstPath = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
-                    _compileMode = LLVM,
-                    _dumpParsed = False,
-                    _dumpRenamed = False,
-                    _dumpTyped = False,
-                    _dumpRefine = False,
-                    _dumpDesugar = False,
-                    _noOptimize = False,
+                    dstPath = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
+                    compileMode = LLVM,
+                    noOptimize = False,
                     lambdaLift = False,
-                    _inlineSize = 15,
-                    _debugMode = False,
+                    inlineSize = 15,
+                    debugMode = False,
                     _modulePaths = [workspaceDir </> "build"]
                   }
               )
           )
           topSorted
   for_ compileOptions \(path, env) -> do
-    putStrLn ("Compile " <> env._srcPath)
-    Driver.compileFromAST (Unsafe.fromJust $ List.lookup path parsedAstList) env
+    putStrLn ("Compile " <> path)
+    Driver.compileFromAST path env (Unsafe.fromJust $ List.lookup path parsedAstList)
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []

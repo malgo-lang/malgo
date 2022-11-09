@@ -20,18 +20,13 @@ import System.FilePath.Lens (extension)
 import Text.Read (read)
 
 data ToLLOpt = ToLLOpt
-  { _srcPath :: FilePath,
-    _dstPath :: FilePath,
-    _compileMode :: CompileMode,
-    _dumpParsed :: Bool,
-    _dumpRenamed :: Bool,
-    _dumpTyped :: Bool,
-    _dumpRefine :: Bool,
-    _dumpDesugar :: Bool,
-    _noOptimize :: Bool,
+  { srcPath :: FilePath,
+    dstPath :: FilePath,
+    compileMode :: CompileMode,
+    noOptimize :: Bool,
     lambdaLift :: Bool,
-    _inlineSize :: Int,
-    _debugMode :: Bool,
+    inlineSize :: Int,
+    debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
   deriving stock (Eq, Show)
@@ -44,12 +39,12 @@ main = do
   case command of
     ToLL opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt._dstPath, ".malgo-work" </> "build", basePath]
+      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt.dstPath, ".malgo-work" </> "build", basePath]
       _uniqSupply <- UniqSupply <$> newIORef 0
       _interfaces <- newIORef mempty
       _indexes <- newIORef mempty
       let ToLLOpt {..} = opt
-      Driver.compile Prelude.MalgoEnv {..}
+      Driver.compile opt.srcPath Prelude.MalgoEnv {..}
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
@@ -60,18 +55,13 @@ main = do
 defaultToLLOpt :: FilePath -> ToLLOpt
 defaultToLLOpt src =
   ToLLOpt
-    { _srcPath = src,
-      _dstPath = src -<.> "ll",
-      _compileMode = LLVM,
-      _dumpParsed = False,
-      _dumpRenamed = False,
-      _dumpTyped = False,
-      _dumpRefine = False,
-      _dumpDesugar = False,
-      _noOptimize = False,
+    { srcPath = src,
+      dstPath = src -<.> "ll",
+      compileMode = LLVM,
+      noOptimize = False,
       lambdaLift = False,
-      _inlineSize = 15,
-      _debugMode = False,
+      inlineSize = 15,
+      debugMode = False,
       _modulePaths = []
     }
 
@@ -95,11 +85,6 @@ toLLOpt =
             <> help
               "Compile to Scheme instead of LLVM"
         )
-      <*> switch (long "dump-parsed")
-      <*> switch (long "dump-renamed")
-      <*> switch (long "dump-typed")
-      <*> switch (long "dump-refine")
-      <*> switch (long "dump-desugar")
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
       <*> fmap read (strOption (long "inline" <> value "15"))
@@ -130,10 +115,10 @@ parseCommand = do
       )
   case command of
     ToLL opt -> do
-      srcPath <- makeAbsolute opt._srcPath
-      if null opt._dstPath
-        then pure $ ToLL $ opt {_srcPath = srcPath, _dstPath = srcPath & extension .~ ".ll"}
-        else pure $ ToLL $ opt {_srcPath = srcPath}
+      srcPath <- makeAbsolute opt.srcPath
+      if null opt.dstPath
+        then pure $ ToLL $ opt {srcPath = srcPath, dstPath = srcPath & extension .~ ".ll"}
+        else pure $ ToLL $ opt {srcPath = srcPath}
     Lsp opt -> pure $ Lsp opt
     Build opt -> pure $ Build opt
   where

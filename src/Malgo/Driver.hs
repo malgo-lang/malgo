@@ -3,7 +3,7 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception.Extra (assertIO)
 import Control.Lens (over, view)
-import Data.Store (encode)
+import Data.Binary qualified as Binary
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
@@ -19,7 +19,7 @@ import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (buildInterface, loadInterface, storeInterface)
+import Malgo.Interface (buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
 import Malgo.Lsp.Index (storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
@@ -30,7 +30,6 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
-import System.Directory (makeAbsolute)
 import System.FilePath (takeBaseName, takeDirectory, (-<.>))
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
@@ -51,84 +50,84 @@ withDump isDump label m = do
   pure result
 
 -- | Compile the parsed AST.
-compileFromAST :: Syntax.Module (Malgo 'Parse) -> MalgoEnv -> IO ()
-compileFromAST parsedAst env = runMalgoM env act
+compileFromAST :: FilePath -> MalgoEnv -> Syntax.Module (Malgo 'Parse) -> IO ()
+compileFromAST srcPath env parsedAst = runMalgoM env act
   where
     act = do
-      when (convertString (takeBaseName env._srcPath) /= parsedAst._moduleName.raw) $
+      when (convertString (takeBaseName srcPath) /= parsedAst._moduleName.raw) $
         error "Module name must be source file's base name."
 
       uniqSupply <- view uniqSupply
-      when (view dumpParsed env) do
+      when env.debugMode do
         hPutStrLn stderr "=== PARSED ==="
         hPrint stderr $ pPrint parsedAst
       rnEnv <- RnEnv.genBuiltinRnEnv (parsedAst._moduleName) =<< ask
-      (renamedAst, rnState) <- withDump (view dumpRenamed env) "=== RENAME ===" $ rename rnEnv parsedAst
+      (renamedAst, rnState) <- withDump env.debugMode "=== RENAME ===" $ rename rnEnv parsedAst
       (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
-      _ <- withDump (view dumpTyped env) "=== TYPE CHECK ===" $ pure typedAst
-      refinedAst <- withDump (view dumpRefine env) "=== REFINE ===" $ refine tcEnv typedAst
+      _ <- withDump env.debugMode "=== TYPE CHECK ===" $ pure typedAst
+      refinedAst <- withDump env.debugMode "=== REFINE ===" $ refine tcEnv typedAst
 
-      index <- withDump (view debugMode env) "=== INDEX ===" $ Lsp.index tcEnv refinedAst
+      index <- withDump env.debugMode "=== INDEX ===" $ Lsp.index tcEnv refinedAst
       storeIndex index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
-      _ <- withDump (view dumpDesugar env) "=== DESUGAR ===" $ pure core
+      _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface rnEnv._moduleName rnState dsEnv
-      storeInterface inf
-      when (view debugMode env) $ do
+      writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
+
+      when env.debugMode $ do
         inf <- loadInterface (typedAst._moduleName)
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
       lint core
-      coreOpt <- if view noOptimize env then pure core else optimizeProgram uniqSupply (view inlineSize env) core
-      when (view dumpDesugar env && not (view noOptimize env)) do
+      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply env.inlineSize core
+      when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint $ over appProgram flat coreOpt
       lint coreOpt
       coreLL <- if env.lambdaLift then lambdalift uniqSupply typedAst._moduleName coreOpt else pure coreOpt
-      when (view dumpDesugar env && env.lambdaLift) $
+      when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLL
-      coreLLOpt <- if view noOptimize env then pure coreLL else optimizeProgram uniqSupply (view inlineSize env) coreLL
-      when (view dumpDesugar env && env.lambdaLift && not (view noOptimize env)) $
+      coreLLOpt <- if env.noOptimize then pure coreLL else optimizeProgram uniqSupply env.inlineSize coreLL
+      when (env.debugMode && env.lambdaLift && not env.noOptimize) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-      writeFileBS (view dstPath env -<.> "kor") $ encode coreLLOpt
+      writeFileLBS (env.dstPath -<.> "kor") $ Binary.encode coreLLOpt
 
       -- check module paths include dstName's directory
-      liftIO $ assertIO (takeDirectory env._dstPath `elem` env._modulePaths)
+      liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
-      linkedCoreOpt <- if view noOptimize env then pure linkedCore else optimizeProgram uniqSupply (view inlineSize env) linkedCore
+      linkedCoreOpt <- if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply env.inlineSize linkedCore
 
-      when (view dumpDesugar env) $
+      when env.debugMode $
         liftIO $ do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pPrint $ over appProgram flat linkedCoreOpt
 
-      case view compileMode env of
+      case env.compileMode of
         LLVM -> do
-          codeGen env (typedAst._moduleName) dsEnv linkedCoreOpt
+          codeGen srcPath env (typedAst._moduleName) dsEnv linkedCoreOpt
         Scheme -> do
           code <- Scheme.codeGen uniqSupply linkedCoreOpt
-          writeFileBS (view dstPath env -<.> "scm") $ convertString $ render $ sep $ map pPrint code
+          writeFileBS (env.dstPath -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
-compile :: MalgoEnv -> IO ()
-compile env = do
-  srcPath <- makeAbsolute $ view srcPath env
+compile :: FilePath -> MalgoEnv -> IO ()
+compile srcPath env = do
   src <- decodeUtf8 <$> readFileBS srcPath
   parsedAst <- case parseMalgo srcPath src of
     Right x -> pure x
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-          diag' = addFile diag env._srcPath (toString src)
+          diag' = addFile diag srcPath (toString src)
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
-  when (view dumpParsed env) $ do
+  when env.debugMode $ do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
-  compileFromAST parsedAst env
+  compileFromAST srcPath env parsedAst

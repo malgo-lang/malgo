@@ -1,7 +1,7 @@
 module Koriel.Core.Op where
 
+import Data.Binary (Binary)
 import Data.Data (Data)
-import Data.Store (Store)
 import Koriel.Prelude
 import Koriel.Pretty
 
@@ -44,4 +44,4 @@ instance Pretty Op where
   pPrint And = "&&"
   pPrint Or = "||"
 
-instance Store Op
+instance Binary Op

@@ -11,7 +11,10 @@ build-type: Simple
 
 dependencies:
   - Glob
+  - aeson
   - base
+  - binary
+  - binary-instances
   - containers
   - directory
   - extra
@@ -27,15 +30,12 @@ dependencies:
   - optparse-applicative
   - parser-combinators
   - pretty
-  - pretty-simple
   - relude >= 1.0.0.0
   - string-conversions
   - text
   - transformers
   - unordered-containers
   - witherable
-  - dhall
-  - store
   - diagnose
   - generic-data
 
@@ -80,7 +80,7 @@ library:
 executables:
   malgo:
     main: Main.hs
-    source-dirs: app/
+    source-dirs: app/malgo/
     ghc-options:
       - -threaded
       - -rtsopts
