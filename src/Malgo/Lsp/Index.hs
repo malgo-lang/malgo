@@ -20,7 +20,6 @@ import Malgo.Syntax.Extension (RnId)
 import System.Directory qualified as Directory
 import System.FilePath (takeFileName, (-<.>), (</>))
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
-import Text.Pretty.Simple (pShow)
 
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
@@ -68,7 +67,7 @@ instance Monoid Index where
 instance Binary Index
 
 instance Pretty Index where
-  pPrint = text . toString . pShow
+  pPrint = text . show
 
 makeFieldsNoPrefix ''Index
 

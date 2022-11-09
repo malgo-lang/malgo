@@ -11,7 +11,6 @@ import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
-import Text.Pretty.Simple (pShow)
 
 -- | Space of values that covered by patterns
 data Space
@@ -122,9 +121,9 @@ subtract (Record kts1) (Record kts2)
   | otherwise =
       error $
         "Record kts2 is invalid pattern:\n"
-          <> toText (pShow kts1)
+          <> show kts1
           <> "\n"
-          <> toText (pShow kts2)
+          <> show kts2
           <> "\n"
 subtract (Union s1 s2) x = Union <$> subtract s1 x <*> subtract s2 x
 subtract x (Union s1 s2) = do
