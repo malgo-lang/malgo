@@ -11,6 +11,7 @@ module Koriel.Prelude
     unzip,
     replaceOf,
     localState,
+    chomp,
 
     -- * Lift IO functions
 
@@ -32,6 +33,7 @@ import Control.Monad.Trans.Writer.CPS (WriterT, runWriterT)
 import Control.Monad.Trans.Writer.CPS qualified as W
 import Control.Monad.Writer.Class hiding (pass)
 import Control.Monad.Writer.Class qualified as Writer
+import Data.List (dropWhileEnd)
 import Data.Monoid
 import Data.Text.IO qualified as T
 import Relude hiding (All, Op, Type, id, unzip)
@@ -52,6 +54,9 @@ localState action = do
   state <- get
   put backup
   pure (result, state)
+
+chomp :: String -> String
+chomp = dropWhileEnd (`elem` ['\r', '\n'])
 
 instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
   tell = W.tell
