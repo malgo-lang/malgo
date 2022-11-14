@@ -1,7 +1,9 @@
 {-# LANGUAGE CPP #-}
 
+import Malgo.Driver qualified as Driver
 import Malgo.Prelude
-import System.Directory (listDirectory)
+import System.Directory (copyFile, listDirectory)
+import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, (</>))
 import System.Process.Typed
 import Test.Hspec
@@ -14,10 +16,13 @@ buildCommand = "cabal"
 main :: IO ()
 main =
   hspec do
-    (exitCode, _, stderr) <- runIO $ readProcess (proc "./scripts/pretest.sh" [buildCommand])
-    case exitCode of
-      ExitSuccess -> pass
-      ExitFailure _ -> error $ "pretest.sh failed\n" <> decodeUtf8 stderr
+    -- Setup directory for test
+    runIO setupTestDir
+    -- Setup malgo base library
+    runIO do
+      setupRuntime
+      setupBuiltin
+      setupPrelude
     testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo"
     describe "Test malgo to-ll" do
       parallel $ for_ testcases \testcase -> do
@@ -60,3 +65,33 @@ main =
           case exitCode of
             ExitSuccess -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
             ExitFailure _ -> pass
+
+testDirectory :: FilePath
+testDirectory = "/tmp/malgo_test"
+
+setupTestDir :: IO ()
+setupTestDir = do
+  -- create /tmp/malgo-test
+  createDirectoryIfMissing True testDirectory
+  createDirectoryIfMissing True (testDirectory </> "libs")
+
+-- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
+setupBuiltin :: IO ()
+setupBuiltin = do
+  compile "./runtime/malgo/Builtin.mlg" (testDirectory </> "libs/Builtin.ll") [testDirectory </> "libs"]
+
+-- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
+setupPrelude :: IO ()
+setupPrelude = do
+  compile "./runtime/malgo/Prelude.mlg" (testDirectory </> "libs/Prelude.ll") [testDirectory </> "libs"]
+
+-- | Copy runtime.c to /tmp/malgo-test/libs
+setupRuntime :: IO ()
+setupRuntime = do
+  copyFile "./runtime/malgo/runtime.c" (testDirectory </> "libs/runtime.c")
+
+-- | Wrapper of 'Malgo.Driver.compile'
+compile :: FilePath -> FilePath -> [FilePath] -> IO ()
+compile src dst modPaths = do
+  malgoEnv <- newMalgoEnv dst modPaths
+  Driver.compile src malgoEnv
