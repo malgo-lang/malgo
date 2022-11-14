@@ -47,18 +47,12 @@ main =
             ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
 
         it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
-          (exitCode, out, err) <- readProcess (proc "./scripts/test/test-nolift.sh" ["./testcases/malgo" </> testcase, buildCommand])
-          case exitCode of
-            ExitSuccess -> pass
-            ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+          testNoLift ("./testcases/malgo" </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" do
       parallel $ for_ examples \examplecase -> do
         it ("test " <> examplecase) $ example do
-          (exitCode, out, err) <- readProcess (proc "./scripts/test/test.sh" ["./examples/malgo" </> examplecase, buildCommand])
-          case exitCode of
-            ExitSuccess -> pass
-            ExitFailure _ -> expectationFailure ("stdout:\n" <> decodeUtf8 out <> "\nstderr:\n" <> decodeUtf8 err)
+          testNormal ("./examples/malgo" </> examplecase)
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo/error"
     describe "Test malgo to-ll (must be error)" do
       parallel $ for_ errorcases \errorcase -> do
@@ -110,9 +104,9 @@ getClangCommand =
         ExitSuccess -> pure x
         ExitFailure _ -> go xs
 
-testNormal :: FilePath -> IO ()
-testNormal testcase = do
-  compile testcase (testDirectory </> takeBaseName testcase -<.> ".ll") [testDirectory </> "libs"] True
+test :: FilePath -> String -> Bool -> IO ()
+test testcase postfix lambdaLift = do
+  compile testcase (testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll")) [testDirectory </> "libs"] lambdaLift
   clang <- getClangCommand
   out <- readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   runProcess_
@@ -122,8 +116,14 @@ testNormal testcase = do
           "-lm",
           chomp $ convertString out,
           testDirectory </> "libs" </> "runtime.c",
-          testDirectory </> takeBaseName testcase -<.> ".ll",
+          testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll"),
           "-o",
-          testDirectory </> takeBaseName testcase -<.> ".out"
+          testDirectory </> takeBaseName testcase -<.> (postfix <> ".out")
         ]
     )
+
+testNormal :: FilePath -> IO ()
+testNormal testcase = test testcase "" True
+
+testNoLift :: FilePath -> IO ()
+testNoLift testcase = test testcase "nolift" False
