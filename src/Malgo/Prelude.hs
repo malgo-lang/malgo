@@ -16,7 +16,7 @@ import Data.Binary (Binary)
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id (ModuleName)
 import Koriel.Lens
-import Koriel.MonadUniq (UniqSupply)
+import Koriel.MonadUniq (UniqSupply (..))
 import Koriel.Prelude
 import Koriel.Pretty
 import Koriel.Pretty qualified as P
@@ -25,6 +25,8 @@ import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
 import {-# SOURCE #-} Malgo.Interface (Interface)
 import {-# SOURCE #-} Malgo.Lsp.Index (Index)
+import System.Directory (XdgDirectory (XdgData), getXdgDirectory)
+import System.FilePath (takeDirectory, takeExtension, (</>))
 import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
 import Text.Megaparsec.Pos qualified as Megaparsec
 
@@ -45,6 +47,23 @@ data CompileMode = LLVM | Scheme
   deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
+
+newMalgoEnv :: FilePath -> [FilePath] -> IO MalgoEnv
+newMalgoEnv dstPath modulePaths = do
+  _uniqSupply <- UniqSupply <$> newIORef 0
+  _interfaces <- newIORef mempty
+  _indexes <- newIORef mempty
+  basePath <- getXdgDirectory XdgData ("malgo" </> "base")
+  let _modulePaths = modulePaths <> [takeDirectory dstPath, ".malgo-work" </> "build", basePath]
+  let compileMode = case takeExtension dstPath of
+        ".ll" -> LLVM
+        ".scm" -> Scheme
+        _ -> error "unknown extension"
+  let noOptimize = False
+  let lambdaLift = False
+  let inlineSize = 10
+  let debugMode = False
+  pure MalgoEnv {..}
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
