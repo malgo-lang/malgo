@@ -102,18 +102,19 @@ test :: FilePath -> String -> Bool -> Bool -> IO ()
 test testcase postfix lambdaLift noOptimize = do
   compile testcase (testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll")) [testDirectory </> "libs"] lambdaLift noOptimize
   clang <- getClangCommand
-  out <- readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
+  pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   runProcess_
     ( proc
         clang
-        [ "-Wno-override-module",
-          "-lm",
-          chomp $ convertString out,
-          testDirectory </> "libs" </> "runtime.c",
-          testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll"),
-          "-o",
-          testDirectory </> takeBaseName testcase -<.> (postfix <> ".out")
-        ]
+        $ [ "-Wno-override-module",
+            "-lm"
+          ]
+          <> pkgConfig
+          <> [ testDirectory </> "libs" </> "runtime.c",
+               testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll"),
+               "-o",
+               testDirectory </> takeBaseName testcase -<.> (postfix <> ".out")
+             ]
     )
 
 testError :: FilePath -> IO ()
