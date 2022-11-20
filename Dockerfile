@@ -23,4 +23,4 @@ COPY ./cabal.project* /opt/malgo/
 RUN cabal update && \
   cabal build --only-dependencies -j
 
-RUN cabal install hpack
+RUN cabal install hpack hlint

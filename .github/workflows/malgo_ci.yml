@@ -44,5 +44,4 @@ jobs:
         run: |
           mkdir -p $HOME/.local/share/malgo/base
           ./scripts/install_malgo_internal.sh
-          ./scripts/pretest.sh cabal
           cabal test
