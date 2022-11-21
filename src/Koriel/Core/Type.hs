@@ -1,6 +1,8 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module Koriel.Core.Type where
 
-import Control.Lens (Prism', prism)
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
@@ -16,10 +18,7 @@ data Tag
   = Data Text
   | Tuple
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-instance Hashable Tag
-
-instance Binary Tag
+  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty Tag where
   pPrint (Data name) = pPrint name
@@ -27,10 +26,7 @@ instance Pretty Tag where
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-instance Hashable Con
-
-instance Binary Con
+  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty Con where
   pPrint (Con tag xs) = parens $ sep $ pPrint tag : map pPrint xs
@@ -54,15 +50,7 @@ data Type
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-_SumT :: Prism' Type [Con]
-_SumT = prism SumT \case
-  SumT cs -> Right cs
-  t -> Left t
-
-instance Hashable Type
-
-instance Binary Type
+  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty Type where
   pPrint (a :-> b) = sep [brackets (sep $ punctuate "," $ map pPrint a), "->", pPrint b]

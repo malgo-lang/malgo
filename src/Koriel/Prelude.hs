@@ -12,6 +12,7 @@ module Koriel.Prelude
     replaceOf,
     localState,
     chomp,
+    PrettyShow (..),
 
     -- * Lift IO functions
 
@@ -38,6 +39,8 @@ import Data.Monoid
 import Data.Text.IO qualified as T
 import Relude hiding (All, Op, Type, id, unzip)
 import System.IO qualified
+import Text.PrettyPrint.HughesPJClass (Pretty (pPrint))
+import Text.PrettyPrint.HughesPJClass qualified as P
 
 -- | Generalization of 'Data.List.unzip' :: [(a, b)] -> ([a], [b])
 unzip :: Functor f => f (a, b) -> (f a, f b)
@@ -57,6 +60,11 @@ localState action = do
 
 chomp :: String -> String
 chomp = dropWhileEnd (`elem` ['\r', '\n'])
+
+newtype PrettyShow a = PrettyShow a
+
+instance Show a => Pretty (PrettyShow a) where
+  pPrint (PrettyShow a) = P.text $ show a
 
 instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
   tell = W.tell
