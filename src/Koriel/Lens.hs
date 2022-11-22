@@ -9,6 +9,11 @@ module Koriel.Lens
     HasSrcPath (..),
     HasModulePaths (..),
     HasDebugMode (..),
+    HasObject (..),
+    HasVariable (..),
+    HasExtFuncs (..),
+    HasTopFuncs (..),
+    HasTopVars (..),
   )
 where
 
@@ -43,3 +48,18 @@ class HasDebugMode s a | s -> a where
 
 class HasModulePaths s a | s -> a where
   modulePaths :: Lens' s a
+
+class HasObject s a | s -> a where
+  object :: Lens' s a
+
+class HasVariable s a | s -> a where
+  variable :: Lens' s a
+
+class HasExtFuncs s a | s -> a where
+  extFuncs :: Lens' s a
+
+class HasTopFuncs s a | s -> a where
+  topFuncs :: Lens' s a
+
+class HasTopVars s a | s -> a where
+  topVars :: Lens' s a

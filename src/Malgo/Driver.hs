@@ -3,6 +3,7 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception.Extra (assertIO)
 import Control.Lens (over, view)
+import Data.Aeson qualified as Aeson
 import Data.Binary qualified as Binary
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -98,6 +99,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
       writeFileLBS (env.dstPath -<.> "kor") $ Binary.encode coreLLOpt
+      writeFileLBS (env.dstPath -<.> "kor.json") $ Aeson.encode coreLLOpt
 
       -- check module paths include dstName's directory
       liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)

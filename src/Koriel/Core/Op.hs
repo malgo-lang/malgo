@@ -1,5 +1,8 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module Koriel.Core.Op where
 
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Koriel.Prelude
@@ -24,6 +27,7 @@ data Op
   | And
   | Or
   deriving stock (Eq, Show, Generic, Data)
+  deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance Pretty Op where
   pPrint Add = "+"
@@ -43,5 +47,3 @@ instance Pretty Op where
   pPrint Ge = ">="
   pPrint And = "&&"
   pPrint Or = "||"
-
-instance Binary Op

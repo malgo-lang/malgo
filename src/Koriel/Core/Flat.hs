@@ -5,6 +5,7 @@ where
 
 import Control.Lens (traverseOf, traversed)
 import Koriel.Core.Syntax
+import Koriel.Lens (HasObject (..))
 import Koriel.Prelude
 
 flat :: Exp a -> Exp a

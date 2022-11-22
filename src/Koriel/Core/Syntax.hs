@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE PatternSynonyms #-}
@@ -9,7 +10,8 @@
 -- A正規形に近い。
 module Koriel.Core.Syntax where
 
-import Control.Lens (Traversal', makeFieldsNoPrefix, sans, traverseOf, traversed, _2)
+import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _2)
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
@@ -36,6 +38,26 @@ data Unboxed
   | String Text
   | Bool Bool
   deriving stock (Eq, Ord, Show, Generic, Data, Typeable)
+  deriving anyclass (Binary, ToJSON, FromJSON)
+
+instance HasType Unboxed where
+  typeOf Int32 {} = Int32T
+  typeOf Int64 {} = Int64T
+  typeOf Float {} = FloatT
+  typeOf Double {} = DoubleT
+  typeOf Char {} = CharT
+  typeOf String {} = StringT
+  typeOf Bool {} = BoolT
+
+instance Pretty Unboxed where
+  pPrint (Int32 x) = pPrint x
+  pPrint (Int64 x) = pPrint x
+  pPrint (Float x) = pPrint x
+  pPrint (Double x) = pPrint x
+  pPrint (Char x) = quotes (pPrint x)
+  pPrint (String x) = doubleQuotes (pPrint x)
+  pPrint (Bool True) = "True#"
+  pPrint (Bool False) = "False#"
 
 -- | atoms
 data Atom a
@@ -44,6 +66,25 @@ data Atom a
   | -- | literal of unboxed values
     Unboxed Unboxed
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving anyclass (Binary, ToJSON, FromJSON)
+
+instance HasType a => HasType (Atom a) where
+  typeOf (Var x) = typeOf x
+  typeOf (Unboxed x) = typeOf x
+
+instance Pretty a => Pretty (Atom a) where
+  pPrint (Var x) = pPrint x
+  pPrint (Unboxed x) = pPrint x
+
+instance HasFreeVar Atom where
+  freevars (Var x) = one x
+  freevars Unboxed {} = mempty
+
+class HasAtom f where
+  atom :: Traversal' (f a) (Atom a)
+
+instance HasAtom Atom where
+  atom = identity
 
 -- | heap objects
 data Obj a
@@ -54,9 +95,47 @@ data Obj a
   | -- | record
     Record (HashMap Text (Atom a))
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving anyclass (Binary, ToJSON, FromJSON)
+
+instance HasType a => HasType (Obj a) where
+  typeOf (Fun xs e) = map typeOf xs :-> typeOf e
+  typeOf (Pack t _ _) = t
+  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
+
+instance Pretty a => Pretty (Obj a) where
+  pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
+  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
+  pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
+
+instance HasFreeVar Obj where
+  freevars (Fun as e) = foldr sans (freevars e) as
+  freevars (Pack _ _ xs) = foldMap freevars xs
+  freevars (Record kvs) = foldMap freevars kvs
+
+instance HasAtom Obj where
+  atom f = \case
+    Fun xs e -> Fun xs <$> traverseOf atom f e
+    Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
+    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
 data LocalDef a = LocalDef {_variable :: a, _object :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving anyclass (Binary, ToJSON, FromJSON)
+
+instance HasObject (LocalDef a) (Obj a) where
+  {-# INLINE object #-}
+  object :: Lens' (LocalDef a) (Obj a)
+  object f (LocalDef variable object) =
+    fmap (LocalDef variable) (f object)
+
+instance HasVariable (LocalDef a) a where
+  {-# INLINE variable #-}
+  variable :: Lens' (LocalDef a) a
+  variable f (LocalDef variable object) =
+    fmap (`LocalDef` object) (f variable)
+
+instance Pretty a => Pretty (LocalDef a) where
+  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
 
 -- | alternatives
 data Case a
@@ -69,6 +148,34 @@ data Case a
   | -- | variable pattern
     Bind a (Exp a)
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving anyclass (Binary, ToJSON, FromJSON)
+
+instance HasType a => HasType (Case a) where
+  typeOf (Unpack _ _ e) = typeOf e
+  typeOf (OpenRecord _ e) = typeOf e
+  typeOf (Switch _ e) = typeOf e
+  typeOf (Bind _ e) = typeOf e
+
+instance Pretty a => Pretty (Case a) where
+  pPrint (Unpack c xs e) =
+    parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
+  pPrint (OpenRecord pat e) =
+    parens $ sep ["open", pPrint $ HashMap.toList pat, pPrint e]
+  pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
+  pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
+
+instance HasFreeVar Case where
+  freevars (Unpack _ xs e) = foldr sans (freevars e) xs
+  freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
+  freevars (Switch _ e) = freevars e
+  freevars (Bind x e) = sans x $ freevars e
+
+instance HasAtom Case where
+  atom f = \case
+    Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
+    OpenRecord pat e -> OpenRecord pat <$> traverseOf atom f e
+    Switch u e -> Switch u <$> traverseOf atom f e
+    Bind a e -> Bind a <$> traverseOf atom f e
 
 -- | expressions
 data Exp a
@@ -94,88 +201,7 @@ data Exp a
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
-
-makeFieldsNoPrefix ''LocalDef
-
--- | toplevel function definitions
-data Program a = Program
-  { _topVars :: [(a, Exp a)],
-    _topFuncs :: [(a, ([a], Exp a))],
-    _extFuncs :: [(Text, Type)]
-  }
-  deriving stock (Eq, Show, Functor, Generic)
-  deriving (Semigroup, Monoid) via Generically (Program a)
-
-makeFieldsNoPrefix ''Program
-
-instance HasType Unboxed where
-  typeOf Int32 {} = Int32T
-  typeOf Int64 {} = Int64T
-  typeOf Float {} = FloatT
-  typeOf Double {} = DoubleT
-  typeOf Char {} = CharT
-  typeOf String {} = StringT
-  typeOf Bool {} = BoolT
-
-instance Pretty Unboxed where
-  pPrint (Int32 x) = pPrint x
-  pPrint (Int64 x) = pPrint x
-  pPrint (Float x) = pPrint x
-  pPrint (Double x) = pPrint x
-  pPrint (Char x) = quotes (pPrint x)
-  pPrint (String x) = doubleQuotes (pPrint x)
-  pPrint (Bool True) = "True#"
-  pPrint (Bool False) = "False#"
-
-instance Binary Unboxed
-
-instance HasType a => HasType (Atom a) where
-  typeOf (Var x) = typeOf x
-  typeOf (Unboxed x) = typeOf x
-
-instance Pretty a => Pretty (Atom a) where
-  pPrint (Var x) = pPrint x
-  pPrint (Unboxed x) = pPrint x
-
-instance Binary a => Binary (Atom a)
-
-instance HasFreeVar Atom where
-  freevars (Var x) = one x
-  freevars Unboxed {} = mempty
-
-class HasAtom f where
-  atom :: Traversal' (f a) (Atom a)
-
-instance HasAtom Atom where
-  atom = identity
-
-instance HasType a => HasType (Obj a) where
-  typeOf (Fun xs e) = map typeOf xs :-> typeOf e
-  typeOf (Pack t _ _) = t
-  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
-
-instance Pretty a => Pretty (Obj a) where
-  pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
-  pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
-
-instance Binary a => Binary (Obj a)
-
-instance HasFreeVar Obj where
-  freevars (Fun as e) = foldr sans (freevars e) as
-  freevars (Pack _ _ xs) = foldMap freevars xs
-  freevars (Record kvs) = foldMap freevars kvs
-
-instance HasAtom Obj where
-  atom f = \case
-    Fun xs e -> Fun xs <$> traverseOf atom f e
-    Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
-    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
-
-instance Pretty a => Pretty (LocalDef a) where
-  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
-
-instance Binary a => Binary (LocalDef a)
+  deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Exp a) where
   typeOf (Atom x) = typeOf x
@@ -225,8 +251,6 @@ instance Pretty a => Pretty (Exp a) where
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
   pPrint (Error _) = "ERROR"
 
-instance Binary a => Binary (Exp a)
-
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
@@ -250,34 +274,30 @@ instance HasAtom Exp where
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
 
-instance HasType a => HasType (Case a) where
-  typeOf (Unpack _ _ e) = typeOf e
-  typeOf (OpenRecord _ e) = typeOf e
-  typeOf (Switch _ e) = typeOf e
-  typeOf (Bind _ e) = typeOf e
+-- | toplevel function definitions
+data Program a = Program
+  { _topVars :: [(a, Exp a)],
+    _topFuncs :: [(a, ([a], Exp a))],
+    _extFuncs :: [(Text, Type)]
+  }
+  deriving stock (Eq, Show, Functor, Generic)
+  deriving anyclass (Binary, ToJSON, FromJSON)
+  deriving (Semigroup, Monoid) via Generically (Program a)
 
-instance Pretty a => Pretty (Case a) where
-  pPrint (Unpack c xs e) =
-    parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
-  pPrint (OpenRecord pat e) =
-    parens $ sep ["open", pPrint $ HashMap.toList pat, pPrint e]
-  pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
-  pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
+instance HasExtFuncs (Program a) [(Text, Type)] where
+  {-# INLINE extFuncs #-}
+  extFuncs :: Lens' (Program a) [(Text, Type)]
+  extFuncs f Program {..} = fmap (\_extFuncs -> Program {..}) (f _extFuncs)
 
-instance Binary a => Binary (Case a)
+instance HasTopFuncs (Program a) [(a, ([a], Exp a))] where
+  {-# INLINE topFuncs #-}
+  topFuncs :: Lens' (Program a) [(a, ([a], Exp a))]
+  topFuncs f (Program {..}) = fmap (\_topFuncs -> Program {..}) (f _topFuncs)
 
-instance HasFreeVar Case where
-  freevars (Unpack _ xs e) = foldr sans (freevars e) xs
-  freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
-  freevars (Switch _ e) = freevars e
-  freevars (Bind x e) = sans x $ freevars e
-
-instance HasAtom Case where
-  atom f = \case
-    Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
-    OpenRecord pat e -> OpenRecord pat <$> traverseOf atom f e
-    Switch u e -> Switch u <$> traverseOf atom f e
-    Bind a e -> Bind a <$> traverseOf atom f e
+instance HasTopVars (Program a) [(a, Exp a)] where
+  {-# INLINE topVars #-}
+  topVars :: Lens' (Program a) [(a, Exp a)]
+  topVars f Program {..} = fmap (\_topVars -> Program {..}) (f _topVars)
 
 instance Pretty a => Pretty (Program a) where
   pPrint Program {..} =
@@ -290,8 +310,6 @@ instance Pretty a => Pretty (Program a) where
           ["; externals"],
           map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
         ]
-
-instance Binary a => Binary (Program a)
 
 appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
