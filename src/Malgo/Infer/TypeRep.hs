@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -20,10 +21,7 @@ import Malgo.Prelude
 -- | Primitive Types
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving stock (Eq, Show, Ord, Generic, Data)
-
-instance Hashable PrimT
-
-instance Binary PrimT
+  deriving anyclass (Hashable, Binary)
 
 instance Pretty PrimT where
   pPrint Int32T = "Int32#"
@@ -70,10 +68,7 @@ data Type
     -- | type variable (not qualified)
     TyMeta TypeVar
   deriving stock (Eq, Ord, Show, Generic, Data)
-
-instance Hashable Type
-
-instance Binary Type
+  deriving anyclass (Hashable, Binary)
 
 instance Pretty Type where
   pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
@@ -99,8 +94,7 @@ instance Pretty Type where
 newtype TypeVar = TypeVar {typeVar :: Id Kind}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
-
-instance Binary TypeVar
+  deriving anyclass (Binary)
 
 instance Pretty TypeVar where
   pPrint (TypeVar v) = "'" <> pPrint v
@@ -112,9 +106,6 @@ instance HasType TypeVar where
 
 instance HasKind TypeVar where
   kindOf = (.typeVar.meta)
-
-typeVar :: Lens' TypeVar (Id Type)
-typeVar = coerced
 
 -------------------------
 -- HasType and HasKind --
@@ -158,10 +149,7 @@ instance HasKind Void where
 -- | Universally quantified type
 data Scheme ty = Forall [Id ty] ty
   deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
-
-instance Hashable ty => Hashable (Scheme ty)
-
-instance Binary ty => Binary (Scheme ty)
+  deriving anyclass (Hashable, Binary)
 
 instance Pretty ty => Pretty (Scheme ty) where
   pPrint (Forall [] t) = pPrint t
@@ -175,8 +163,7 @@ data TypeDef ty = TypeDef
     _valueConstructors :: [(Id (), Scheme ty)]
   }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
-
-instance Binary ty => Binary (TypeDef ty)
+  deriving anyclass (Binary)
 
 instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
@@ -190,6 +177,10 @@ instance HasKind ty => HasKind (TypeDef ty) where
 
 type TypeMap = HashMap TypeVar Type
 
+-- | Note for The Instance of 'MonadState' for 'TypeUnifyT':
+--
+-- @MonadState TypeUnifyT@ does not use 'TypeMap'.
+-- Instead, it uses inner monad's 'MonadState' instance.
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
   deriving newtype (Functor, Applicative, Monad, MonadReader r, MonadIO, MonadFail)
 

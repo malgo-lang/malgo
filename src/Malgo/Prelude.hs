@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
@@ -71,27 +72,24 @@ newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
 runMalgoM :: MalgoEnv -> MalgoM a -> IO a
 runMalgoM env m = runReaderT (m.unMalgoM) env
 
+instance Hashable Megaparsec.Pos
+
+instance Hashable SourcePos
+
+instance Binary Megaparsec.Pos
+
+instance Binary SourcePos
+
 -- | Range of a token.
 data Range = Range
   { _start :: SourcePos,
     _end :: SourcePos
   }
   deriving stock (Eq, Ord, Show, Generic)
+  deriving anyclass (Binary, Hashable)
 
 instance Semigroup Range where
   Range s1 e1 <> Range s2 e2 = Range (min s1 s2) (max e1 e2)
-
-instance Hashable Megaparsec.Pos
-
-instance Hashable SourcePos
-
-instance Hashable Range
-
-instance Binary Megaparsec.Pos
-
-instance Binary SourcePos
-
-instance Binary Range
 
 instance Pretty Range where
   pPrint (Range start end) =

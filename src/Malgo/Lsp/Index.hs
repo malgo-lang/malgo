@@ -1,4 +1,6 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
@@ -11,6 +13,7 @@ import Data.Binary (Binary, decodeFile, encode)
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (convertString)
 import GHC.Records (HasField)
+import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
 import Koriel.Lens (HasModulePaths (modulePaths))
 import Koriel.Pretty
@@ -23,13 +26,11 @@ import Text.Megaparsec.Pos (Pos, SourcePos (..))
 
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
-
-instance Binary SymbolKind
+  deriving anyclass (Binary)
 
 data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
   deriving stock (Show, Generic)
-
-instance Binary Symbol
+  deriving anyclass (Binary)
 
 -- | An 'Info' records
 --  * Symbol name
@@ -41,13 +42,10 @@ data Info = Info
     definitions :: [Range]
   }
   deriving stock (Eq, Ord, Show, Generic)
-
-instance Hashable Info
+  deriving anyclass (Binary, Hashable)
 
 instance Pretty Info where
   pPrint Info {..} = pPrint _name <+> ":" <+> pPrint typeSignature <+> pPrint definitions
-
-instance Binary Info
 
 makeFieldsNoPrefix ''Info
 
@@ -57,17 +55,9 @@ data Index = Index
     _symbolInfo :: HashMap RnId Symbol
   }
   deriving stock (Show, Generic)
-
-instance Semigroup Index where
-  (Index refs1 defs1 syms1) <> (Index refs2 defs2 syms2) = Index (refs1 <> refs2) (defs1 <> defs2) (syms1 <> syms2)
-
-instance Monoid Index where
-  mempty = Index mempty mempty mempty
-
-instance Binary Index
-
-instance Pretty Index where
-  pPrint = text . show
+  deriving anyclass (Binary)
+  deriving (Monoid, Semigroup) via (Generically Index)
+  deriving (Pretty) via (PrettyShow Index)
 
 makeFieldsNoPrefix ''Index
 
