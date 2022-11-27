@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module Malgo.Build where
 
 import Control.Lens
@@ -20,8 +22,7 @@ data Config = Config
     excludePatterns :: [FilePath]
   }
   deriving stock (Show, Generic)
-
-instance FromJSON Config
+  deriving anyclass (FromJSON)
 
 getWorkspaceDir :: IO FilePath
 getWorkspaceDir = do

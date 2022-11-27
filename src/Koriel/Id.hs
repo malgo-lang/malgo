@@ -1,4 +1,6 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Koriel.Id
@@ -21,6 +23,7 @@ module Koriel.Id
 where
 
 import Control.Lens (Lens', view)
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.String.Conversions (convertString)
@@ -32,13 +35,7 @@ import Numeric (showHex)
 
 newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-instance Hashable ModuleName
-
-instance Binary ModuleName
-
-instance Pretty ModuleName where
-  pPrint (ModuleName modName) = pPrint modName
+  deriving newtype (Hashable, Binary, Pretty, ToJSON, FromJSON)
 
 class HasModuleName s a | s -> a where
   moduleName :: Lens' s a
@@ -62,13 +59,8 @@ data IdSort
     --   These are `Native`, so they are printed raw. No prefix and no postfix.
     Native
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-
-instance Hashable IdSort
-
-instance Binary IdSort
-
-instance Pretty IdSort where
-  pPrint = P.text . show
+  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
+  deriving (Pretty) via PrettyShow IdSort
 
 data Id a = Id
   { name :: Text,
@@ -78,24 +70,21 @@ data Id a = Id
     sort :: IdSort
   }
   deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
-
-instance Hashable a => Hashable (Id a)
-
-instance Binary a => Binary (Id a)
-
-noName :: Text
-noName = "noName"
-
-idToText :: Id a -> Text
-idToText id@Id {moduleName, sort = Internal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
-idToText id@Id {moduleName, sort = Temporal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
-idToText id = convertString $ render $ pPrint id
+  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty (Id a) where
   pPrint Id {name, moduleName, sort = External} = pPrint moduleName <> "." <> pPrint name
   pPrint Id {name, uniq, sort = Internal} = pPrint name <> "_" <> pPrint uniq
   pPrint Id {name, uniq, sort = Temporal} = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
   pPrint Id {name, sort = Native} = pPrint name
+
+idToText :: Id a -> Text
+idToText id@Id {moduleName, sort = Internal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
+idToText id@Id {moduleName, sort = Temporal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
+idToText id = convertString $ render $ pPrint id
+
+noName :: Text
+noName = "noName"
 
 newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadReader env f) => a -> IdSort -> f (Id a)
 newNoNameId meta sort = do
