@@ -1,6 +1,5 @@
 {-# LANGUAGE CPP #-}
 
-import Data.String.Conversions (ConvertibleStrings (convertString))
 import Malgo.Driver qualified as Driver
 import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
@@ -45,11 +44,11 @@ main =
           testNoOpt ("./testcases/malgo" </> testcase)
         it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
           testNoLift ("./testcases/malgo" </> testcase)
-    examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
+    examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "../examples/malgo"
     describe "Test example malgo to-ll" do
       parallel $ for_ examples \examplecase -> do
         it ("test " <> examplecase) $ example do
-          testNormal ("./examples/malgo" </> examplecase)
+          testNormal ("../examples/malgo" </> examplecase)
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo/error"
     describe "Test malgo to-ll (must be error)" do
       parallel $ for_ errorcases \errorcase -> do
@@ -68,17 +67,17 @@ setupTestDir = do
 -- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
 setupBuiltin :: IO ()
 setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" (testDirectory </> "libs/Builtin.ll") [testDirectory </> "libs"] False False
+  compile "../runtime/malgo/Builtin.mlg" (testDirectory </> "libs/Builtin.ll") [testDirectory </> "libs"] False False
 
 -- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
 setupPrelude :: IO ()
 setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" (testDirectory </> "libs/Prelude.ll") [testDirectory </> "libs"] False False
+  compile "../runtime/malgo/Prelude.mlg" (testDirectory </> "libs/Prelude.ll") [testDirectory </> "libs"] False False
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
 setupRuntime = do
-  copyFile "./runtime/malgo/runtime.c" (testDirectory </> "libs/runtime.c")
+  copyFile "../runtime/malgo/runtime.c" (testDirectory </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
