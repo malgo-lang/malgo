@@ -22,7 +22,7 @@ RUN wget https://apt.llvm.org/llvm.sh && \
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
-ENV PATH=/root/.ghcup/bin:${PATH}
+ENV PATH=/root/.cabal/bin:/root/.ghcup/bin:${PATH}
 
 RUN ghcup upgrade && ghcup install ghc 9.2.4 && ghcup set ghc 9.2.4
 
