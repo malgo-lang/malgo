@@ -5,7 +5,7 @@
 
 module Malgo.Infer.TypeRep where
 
-import Control.Lens (At (at), Lens', Traversal', coerced, makeLenses, makePrisms, mapped, over, (^.), _1, _2)
+import Control.Lens (At (at), Traversal', makeLenses, makePrisms, mapped, over, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
