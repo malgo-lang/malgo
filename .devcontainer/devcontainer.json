@@ -23,11 +23,14 @@
 	// "forwardPorts": [],
 	// Uncomment the next line to run commands after the container is created - for example installing curl.
 	// "postCreateCommand": "apt-get update && apt-get install -y curl",
-	"postCreateCommand": "ghcup compile hls --git-ref bc18cedf157e19c75c5676d8defcb982d6488fad --ghc 9.2.4"
 	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust
 	// "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
 	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
 	// "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
+	"mounts": [
+		// share package.tar.gz with the host
+		"source=${localEnv:HOME}/.cabal/packages,target=/root/.cabal/packages,type=bind,consistency=cached",
+	]
 	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode"
 }
