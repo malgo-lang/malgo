@@ -1,6 +1,5 @@
 {-# LANGUAGE CPP #-}
 
-import Data.String.Conversions (ConvertibleStrings (convertString))
 import Malgo.Driver qualified as Driver
 import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
