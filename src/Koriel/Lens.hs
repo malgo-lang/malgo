@@ -14,6 +14,8 @@ module Koriel.Lens
     HasExtFuncs (..),
     HasTopFuncs (..),
     HasTopVars (..),
+    HasInterfaces (..),
+    HasIndexes (..),
   )
 where
 
@@ -63,3 +65,9 @@ class HasTopFuncs s a | s -> a where
 
 class HasTopVars s a | s -> a where
   topVars :: Lens' s a
+
+class HasIndexes s a | s -> a where
+  indexes :: Lens' s a
+
+class HasInterfaces s a | s -> a where
+  interfaces :: Lens' s a

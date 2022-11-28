@@ -24,6 +24,7 @@ import Malgo.Interface (buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
 import Malgo.Lsp.Index (storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
+import Malgo.Monad
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)

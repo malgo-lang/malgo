@@ -9,6 +9,7 @@ import Data.List ((\\))
 import Data.List qualified as List
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
+import Malgo.Monad
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..), _moduleName)

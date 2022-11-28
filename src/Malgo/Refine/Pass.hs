@@ -9,6 +9,7 @@ import Koriel.Pretty
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as T
+import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Refine.RefineEnv
 import Malgo.Refine.Space qualified as Space

@@ -11,8 +11,9 @@ import Malgo.Driver qualified as Driver
 import Malgo.Lsp.Index (Index)
 import Malgo.Lsp.Pass (LspOpt (..))
 import Malgo.Lsp.Server qualified as Lsp
-import Malgo.Prelude hiding (MalgoEnv (..))
-import Malgo.Prelude qualified as Prelude
+import Malgo.Prelude
+import Malgo.Monad (CompileMode(..))
+import Malgo.Monad qualified as Monad
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath (takeDirectory, (-<.>), (</>))
@@ -44,7 +45,7 @@ main = do
       _interfaces <- newIORef mempty
       _indexes <- newIORef mempty
       let ToLLOpt {..} = opt
-      Driver.compile opt.srcPath Prelude.MalgoEnv {..}
+      Driver.compile opt.srcPath Monad.MalgoEnv {..}
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]

@@ -17,6 +17,7 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
+import Malgo.Desugar.DsState
 import Malgo.Desugar.Match
 import Malgo.Desugar.Type
 import Malgo.Infer.TcEnv (TcEnv)
@@ -25,6 +26,7 @@ import Malgo.Interface
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
+import Malgo.Monad
 
 -- | MalgoからCoreへの変換
 desugar ::

@@ -2,6 +2,7 @@
 
 import Malgo.Driver qualified as Driver
 import Malgo.Prelude
+import Malgo.Monad
 import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
