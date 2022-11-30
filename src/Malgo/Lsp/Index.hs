@@ -15,7 +15,7 @@ import Data.String.Conversions (convertString)
 import GHC.Records (HasField)
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
-import Koriel.Lens (HasModulePaths (modulePaths))
+import Koriel.Lens (HasIndexes (..), HasModulePaths (..))
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude

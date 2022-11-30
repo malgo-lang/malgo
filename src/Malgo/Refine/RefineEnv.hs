@@ -9,6 +9,7 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
+import Malgo.Monad
 import Malgo.Prelude
 
 data RefineEnv = RefineEnv

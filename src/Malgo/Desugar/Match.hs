@@ -14,7 +14,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Desugar.DsEnv
+import Malgo.Desugar.DsState
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
 import Malgo.Infer.TypeRep

@@ -13,6 +13,7 @@ import Koriel.Pretty
 import Malgo.Interface
 import Malgo.Prelude
 import Malgo.Rename.RnEnv
+import Malgo.Rename.RnState
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 
@@ -84,7 +85,7 @@ rnDecl (Foreign pos name typ) = do
 rnDecl (Import pos modName importList) = do
   interface <- loadInterface modName
   infixInfo <>= interface.infixMap
-  Malgo.Rename.RnEnv.dependencies <>= HashSet.insert modName interface.dependencies
+  dependencies <>= HashSet.insert modName interface.dependencies
   pure $ Import pos modName importList
 
 -- | Rename a expression.

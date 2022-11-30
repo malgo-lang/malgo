@@ -4,38 +4,16 @@
 -- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
 module Malgo.Rename.RnEnv where
 
-import Control.Lens (ASetter', At (at), Lens', lens, makeFieldsNoPrefix, over, view, (^.))
+import Control.Lens (ASetter', At (at), makeFieldsNoPrefix, over, view, (^.))
 import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
-import {-# SOURCE #-} Malgo.Interface
+import Malgo.Interface
+import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Syntax.Extension
-
-data RnState = RnState
-  { _infixInfo :: HashMap RnId (Assoc, Int),
-    _dependencies :: HashSet ModuleName
-  }
-  deriving stock (Show)
-
-instance Pretty RnState where
-  pPrint RnState {_infixInfo, _dependencies} =
-    "RnState"
-      <+> braces
-        ( sep
-            [ sep ["_infixInfo", "=", pPrint $ HashMap.toList _infixInfo],
-              sep ["_dependencies", "=", pPrint $ HashSet.toList _dependencies]
-            ]
-        )
-
-infixInfo :: Lens' RnState (HashMap RnId (Assoc, Int))
-infixInfo = lens (._infixInfo) (\r x -> r {_infixInfo = x})
-
-dependencies :: Lens' RnState (HashSet ModuleName)
-dependencies = lens (._dependencies) (\r x -> r {_dependencies = x})
 
 -- | Resolved identifier
 type Resolved = Qualified RnId

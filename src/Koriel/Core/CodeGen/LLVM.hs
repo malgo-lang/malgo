@@ -51,8 +51,8 @@ import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
-import Malgo.Desugar.DsEnv (DsState (..), HasNameEnv (nameEnv))
-import Malgo.Prelude (MalgoEnv (..))
+import Malgo.Desugar.DsState (DsState (..), HasNameEnv (nameEnv))
+import Malgo.Monad (MalgoEnv (..))
 
 instance Hashable Name
 

@@ -15,7 +15,7 @@ import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Lens
 import Malgo.Infer.TypeRep
-import {-# SOURCE #-} Malgo.Interface (Interface)
+import Malgo.Interface (Interface)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (Resolved, RnEnv)
 import Malgo.Syntax.Extension

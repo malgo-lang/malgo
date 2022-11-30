@@ -14,11 +14,11 @@ import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Malgo.Desugar.DsEnv (DsState, HasNameEnv (nameEnv))
+import Malgo.Desugar.DsState (DsState, HasNameEnv (nameEnv))
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (RnState)
-import Malgo.Rename.RnEnv qualified as RnState
+import Malgo.Rename.RnState (RnState)
+import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
 import System.Directory qualified as Directory
 import System.FilePath (replaceExtension, (</>))
