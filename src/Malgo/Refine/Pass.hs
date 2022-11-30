@@ -17,14 +17,12 @@ import Malgo.Syntax hiding (TyArr, Type)
 import Malgo.Syntax qualified as Syn
 import Malgo.Syntax.Extension
 
-type Infered t x = (x ~ Malgo 'Infer) :: Constraint
-
-refine :: (Infered t x, MonadIO m, MonadReader MalgoEnv m) => TcEnv -> Module x -> m (Module (Malgo 'Refine))
+refine :: (MonadIO m, MonadReader MalgoEnv m) => TcEnv -> Module (Malgo 'Infer) -> m (Module (Malgo 'Refine))
 refine tcEnv Module {_moduleName, _moduleDefinition} = do
   malgoEnv <- ask
   Module _moduleName <$> runReaderT (refineBindGroup _moduleDefinition) (buildRefineEnv malgoEnv tcEnv)
 
-refineBindGroup :: forall t x m. (Infered t x, MonadReader RefineEnv m, MonadIO m) => BindGroup x -> m (BindGroup (Malgo 'Refine))
+refineBindGroup :: (MonadReader RefineEnv m, MonadIO m) => BindGroup (Malgo 'Infer) -> m (BindGroup (Malgo 'Refine))
 refineBindGroup BindGroup {..} = do
   _scDefs <- traverse (traverse refineScDef) _scDefs
   _scSigs <- traverse refineScSig _scSigs
@@ -34,7 +32,7 @@ refineBindGroup BindGroup {..} = do
   _imports <- traverse refineImport _imports
   pure BindGroup {..}
 
-refineScDef :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => ScDef x -> m (ScDef (Malgo 'Refine))
+refineScDef :: (MonadReader RefineEnv m, MonadIO m) => ScDef (Malgo 'Infer) -> m (ScDef (Malgo 'Refine))
 refineScDef (x, name, expr) = (x,name,) <$> refineExp expr
 
 refineExp :: (MonadReader RefineEnv m, MonadIO m) => Exp (Malgo 'Infer) -> m (Exp (Malgo 'Refine))
@@ -82,24 +80,24 @@ refineExp (Tuple x es) = Tuple x <$> traverse refineExp es
 refineExp (Record x kvs) = Record x <$> traverse (\(k, v) -> (k,) <$> refineExp v) kvs
 refineExp (Seq x ss) = Seq x <$> traverse refineStmt ss
 
-refineClause :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Clause x -> m (Clause (Malgo 'Refine))
+refineClause :: (MonadReader RefineEnv m, MonadIO m) => Clause (Malgo 'Infer) -> m (Clause (Malgo 'Refine))
 refineClause (Clause x ps e) = Clause x <$> traverse refinePat ps <*> refineExp e
 
-refineStmt :: (Infered t x, MonadReader RefineEnv m, MonadIO m) => Stmt x -> m (Stmt (Malgo 'Refine))
+refineStmt :: (MonadReader RefineEnv m, MonadIO m) => Stmt (Malgo 'Infer) -> m (Stmt (Malgo 'Refine))
 refineStmt (Let x v e) = Let x v <$> refineExp e
 refineStmt (NoBind x e) = NoBind x <$> refineExp e
 
-refinePat :: (Infered t x, MonadReader RefineEnv m) => Pat x -> m (Pat (Malgo 'Refine))
+refinePat :: MonadReader RefineEnv m => Pat (Malgo 'Infer) -> m (Pat (Malgo 'Refine))
 refinePat (VarP x v) = pure $ VarP x v
 refinePat (ConP x c ps) = ConP x c <$> traverse refinePat ps
 refinePat (TupleP x ps) = TupleP x <$> traverse refinePat ps
 refinePat (RecordP x kps) = RecordP x <$> traverse (\(k, p) -> (k,) <$> refinePat p) kps
 refinePat (UnboxedP x u) = pure $ UnboxedP x u
 
-refineScSig :: (Infered t x, MonadReader RefineEnv m) => ScSig x -> m (ScSig (Malgo 'Refine))
+refineScSig :: MonadReader RefineEnv m => ScSig (Malgo 'Infer) -> m (ScSig (Malgo 'Refine))
 refineScSig (x, name, ty) = (x,name,) <$> refineType ty
 
-refineType :: (Infered t x, MonadReader RefineEnv m) => Syn.Type x -> m (Syn.Type (Malgo 'Refine))
+refineType :: MonadReader RefineEnv m => Syn.Type (Malgo 'Infer) -> m (Syn.Type (Malgo 'Refine))
 refineType (Syn.TyApp x t ts) = Syn.TyApp x <$> refineType t <*> traverse refineType ts
 refineType (Syn.TyVar x v) = pure $ Syn.TyVar x v
 refineType (Syn.TyCon x v) = pure $ Syn.TyCon x v
@@ -107,14 +105,14 @@ refineType (Syn.TyArr x t1 t2) = Syn.TyArr x <$> refineType t1 <*> refineType t2
 refineType (Syn.TyTuple x ts) = Syn.TyTuple x <$> traverse refineType ts
 refineType (Syn.TyRecord x kts) = Syn.TyRecord x <$> traverse (\(k, t) -> (k,) <$> refineType t) kts
 
-refineDataDef :: (Infered t x, MonadReader RefineEnv m) => DataDef x -> m (DataDef (Malgo 'Refine))
+refineDataDef :: MonadReader RefineEnv m => DataDef (Malgo 'Infer) -> m (DataDef (Malgo 'Refine))
 refineDataDef (x, name, ps, cons) = (x,name,ps,) <$> traverse (_3 $ traverse refineType) cons
 
-refineTypeSynonym :: (Infered t x, MonadReader RefineEnv m) => TypeSynonym x -> m (TypeSynonym (Malgo 'Refine))
+refineTypeSynonym :: MonadReader RefineEnv m => TypeSynonym (Malgo 'Infer) -> m (TypeSynonym (Malgo 'Refine))
 refineTypeSynonym (x, name, ps, typ) = (x,name,ps,) <$> refineType typ
 
-refineForeign :: (Infered t x, MonadReader RefineEnv m) => Foreign x -> m (Foreign (Malgo 'Refine))
+refineForeign :: MonadReader RefineEnv m => Foreign (Malgo 'Infer) -> m (Foreign (Malgo 'Refine))
 refineForeign (x, name, ty) = (x,name,) <$> refineType ty
 
-refineImport :: (Infered t x, MonadReader RefineEnv m) => Import x -> m (Import (Malgo 'Refine))
+refineImport :: MonadReader RefineEnv m => Import (Malgo 'Infer) -> m (Import (Malgo 'Refine))
 refineImport (x, modName, importList) = pure (x, modName, importList)
