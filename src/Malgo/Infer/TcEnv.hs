@@ -5,7 +5,6 @@ module Malgo.Infer.TcEnv
   ( RecordTypeName,
     TcEnv (..),
     genTcEnv,
-    findBuiltinType,
   )
 where
 
@@ -59,10 +58,10 @@ genTcEnv rnEnv = do
         _interfaces = rnEnv ^. interfaces
       }
 
-findBuiltinType :: (HasResolvedTypeIdentMap s (HashMap PsId [Resolved])) => PsId -> s -> Maybe RnId
+findBuiltinType :: PsId -> RnEnv -> Maybe RnId
 findBuiltinType x rnEnv = do
   ids <- map (.value) <$> view (resolvedTypeIdentMap . at x) rnEnv
-  find (isBuiltin) ids
+  find isBuiltin ids
   where
     isBuiltin :: RnId -> Bool
     isBuiltin Id {moduleName = ModuleName "Builtin", sort = External} = True
