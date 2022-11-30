@@ -39,8 +39,9 @@ appendRnEnv lens newEnv = over lens $
   \e -> foldr (\(k, v) -> HashMap.insertWith (<>) k [v]) e newEnv
 
 -- | Generate RnId of primitive types
-genBuiltinRnEnv :: (MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m) => ModuleName -> MalgoEnv -> m RnEnv
-genBuiltinRnEnv modName malgoEnv = do
+genBuiltinRnEnv :: ModuleName -> MalgoM RnEnv
+genBuiltinRnEnv modName = do
+  malgoEnv <- ask
   int32_t <- newExternalId "Int32#" () $ ModuleName "Builtin"
   int64_t <- newExternalId "Int64#" () $ ModuleName "Builtin"
   float_t <- newExternalId "Float#" () $ ModuleName "Builtin"
@@ -70,11 +71,11 @@ genBuiltinRnEnv modName malgoEnv = do
       }
 
 -- | Resolving a new (local) name
-resolveName :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Text -> m RnId
+resolveName :: (MonadReader RnEnv m, MonadIO m) => Text -> m RnId
 resolveName name = newInternalId name ()
 
 -- | Resolving a new global (toplevel) name
-resolveGlobalName :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply) => ModuleName -> Text -> m RnId
+resolveGlobalName :: (MonadReader RnEnv m, MonadIO m) => ModuleName -> Text -> m RnId
 resolveGlobalName modName name = newExternalId name () modName
 
 -- | Resolving a variable name that is already resolved
