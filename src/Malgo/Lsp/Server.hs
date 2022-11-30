@@ -9,9 +9,8 @@ import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
-import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), findReferences)
+import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), LspOpt, findReferences)
 import Malgo.Lsp.Index qualified as Index
-import Malgo.Lsp.Pass (LspOpt)
 import Malgo.Prelude hiding (Range)
 import Relude.Unsafe qualified as Unsafe
 import System.FilePath (dropExtensions, takeFileName)

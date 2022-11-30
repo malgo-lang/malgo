@@ -8,12 +8,11 @@ import Koriel.Lens (HasModulePaths (..))
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
-import Malgo.Lsp.Index (Index)
-import Malgo.Lsp.Pass (LspOpt (..))
+import Malgo.Lsp.Index (Index, LspOpt (..))
 import Malgo.Lsp.Server qualified as Lsp
-import Malgo.Prelude
-import Malgo.Monad (CompileMode(..))
+import Malgo.Monad (CompileMode (..))
 import Malgo.Monad qualified as Monad
+import Malgo.Prelude
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath (takeDirectory, (-<.>), (</>))

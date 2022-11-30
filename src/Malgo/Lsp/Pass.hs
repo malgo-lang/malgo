@@ -8,23 +8,17 @@ import Control.Lens (At (at), modifying, use, view, (.~), (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as Text
-import Koriel.Id (Id (..), IdSort (Temporal), ModuleName, name)
+import Koriel.Id (Id (..), IdSort (Temporal), name)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Lsp.Index
+import Malgo.Monad (MalgoEnv, MalgoM)
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
-
-data LspOpt = LspOpt
-  { _modulePaths :: [FilePath],
-    _indexes :: IORef (HashMap ModuleName Index)
-  }
-
-makeFieldsNoPrefix ''LspOpt
 
 data IndexEnv = IndexEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
@@ -42,7 +36,7 @@ newIndexEnv tcEnv =
       _buildingIndex = mempty
     }
 
-index :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath], HasIndexes env (IORef (HashMap ModuleName Index))) => TcEnv -> Module (Malgo 'Refine) -> m Index
+index :: TcEnv -> Module (Malgo 'Refine) -> MalgoM Index
 index tcEnv mod = do
   removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv)
 
@@ -54,17 +48,17 @@ removeInternalInfos (Index refs defs syms) = Index (HashMap.filterWithKey (\k _ 
     isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
     isInternal _ = False
 
-indexModule :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasIndexes env (IORef (HashMap ModuleName Index))) => Module (Malgo 'Refine) -> m ()
+indexModule :: (MonadIO m, MonadReader MalgoEnv m, MonadState IndexEnv m) => Module (Malgo 'Refine) -> m ()
 indexModule Module {..} = indexBindGroup _moduleDefinition
 
-indexBindGroup :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasIndexes env (IORef (HashMap ModuleName Index))) => BindGroup (Malgo 'Refine) -> m ()
+indexBindGroup :: (MonadIO m, MonadReader MalgoEnv m, MonadState IndexEnv m) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do
   traverse_ indexImport _imports
   traverse_ indexDataDef _dataDefs
   traverse_ indexScSig _scSigs
   traverse_ (traverse_ indexScDef) _scDefs
 
-indexImport :: (MonadIO m, MonadReader env m, MonadState IndexEnv m, HasModulePaths env [FilePath], HasIndexes env (IORef (HashMap ModuleName Index))) => Import (Malgo 'Refine) -> m ()
+indexImport :: (MonadIO m, MonadReader MalgoEnv m, MonadState IndexEnv m) => Import (Malgo 'Refine) -> m ()
 indexImport (_, moduleName, _) = do
   -- include the index file of the imported module
   mindex <- loadIndex moduleName
@@ -132,7 +126,7 @@ indexScSig (range, ident, _) = do
       addReferences info [range]
     Just info -> addReferences info [range]
 
-indexScDef :: (MonadState IndexEnv m) => ScDef (Malgo 'Refine) -> m ()
+indexScDef :: MonadState IndexEnv m => ScDef (Malgo 'Refine) -> m ()
 indexScDef (Typed {value = range}, ident, expr) = do
   minfo <- lookupInfo ident
   case minfo of
@@ -151,7 +145,7 @@ indexScDef (Typed {value = range}, ident, expr) = do
   -- traverse the expression
   indexExp expr
 
-indexExp :: (MonadState IndexEnv m) => Exp (Malgo 'Refine) -> m ()
+indexExp :: MonadState IndexEnv m => Exp (Malgo 'Refine) -> m ()
 indexExp (Var Typed {value = range} ident) = do
   -- lookup the infomation of this variable
   minfo <- lookupInfo ident
@@ -176,7 +170,7 @@ indexExp (Record _ fields) =
 indexExp (Seq _ stmts) =
   traverse_ indexStmt stmts
 
-indexStmt :: (MonadState IndexEnv m) => Stmt (Malgo 'Refine) -> m ()
+indexStmt :: MonadState IndexEnv m => Stmt (Malgo 'Refine) -> m ()
 indexStmt (Let _ Id {sort = Temporal} expr) = indexExp expr
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
@@ -188,12 +182,12 @@ indexStmt (Let range ident expr) = do
 indexStmt (NoBind _ expr) =
   indexExp expr
 
-indexClause :: (MonadState IndexEnv m) => Clause (Malgo 'Refine) -> m ()
+indexClause :: MonadState IndexEnv m => Clause (Malgo 'Refine) -> m ()
 indexClause (Clause _ ps e) = do
   traverse_ indexPat ps
   indexExp e
 
-indexPat :: (MonadState IndexEnv m) => Pat (Malgo 'Refine) -> m ()
+indexPat :: MonadState IndexEnv m => Pat (Malgo 'Refine) -> m ()
 indexPat (VarP _ Id {sort = Temporal}) = pass
 indexPat (VarP (Typed ty range) v) = do
   -- index the information of this definition
@@ -215,7 +209,7 @@ indexPat (UnboxedP Typed {value = range} u) = do
   let info = Info {_name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 
-lookupSignature :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> m (Scheme Type)
+lookupSignature :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Scheme Type)
 lookupSignature ident = do
   mIdentType <- use (signatureMap . at ident)
   case mIdentType of
@@ -229,11 +223,11 @@ lookupTypeKind typeName = do
     Just typeDef -> pure $ kindOf (typeDef ^. typeConstructor)
     Nothing -> error $ "lookupTypeKind: " <> show typeName <> " not found"
 
-lookupInfo :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> m (Maybe Info)
+lookupInfo :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Maybe Info)
 lookupInfo ident =
   use (buildingIndex . definitionMap . at ident)
 
-addReferences :: (MonadState IndexEnv m) => Info -> [Range] -> m ()
+addReferences :: MonadState IndexEnv m => Info -> [Range] -> m ()
 addReferences info refs =
   modifying buildingIndex $ \i ->
     Index
@@ -246,11 +240,11 @@ addReferences info refs =
         _symbolInfo = i._symbolInfo
       }
 
-addDefinition :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> Info -> m ()
+addDefinition :: MonadState IndexEnv m => XId (Malgo 'Refine) -> Info -> m ()
 addDefinition ident info =
   modifying (buildingIndex . definitionMap) $ HashMap.insert ident info
 
-addSymbolInfo :: (MonadState IndexEnv m) => XId (Malgo 'Refine) -> Symbol -> m ()
+addSymbolInfo :: MonadState IndexEnv m => XId (Malgo 'Refine) -> Symbol -> m ()
 addSymbolInfo ident symbol =
   modifying (buildingIndex . symbolInfo) $ HashMap.insert ident symbol
 
