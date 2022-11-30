@@ -11,8 +11,6 @@ import Koriel.Core.Syntax qualified as Core
 import Koriel.Core.Type
 import Koriel.Core.Type qualified as Core
 import Koriel.Id
-import Koriel.Lens
-import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsEnv)
 import Malgo.Desugar.DsState
@@ -58,7 +56,7 @@ splitCol mat = (headCol mat, tailCol mat)
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  (MonadState DsState m, MonadIO m, MonadReader DsEnv m, MonadFail m) =>
+  (MonadState DsState m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
   -- | マッチ対象
   [Id Core.Type] ->
   -- | パターン（転置行列）
