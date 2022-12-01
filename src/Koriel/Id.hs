@@ -11,11 +11,9 @@ module Koriel.Id
     idToText,
     newInternalId,
     newExternalId,
-    noName,
     idIsExternal,
     newIdOnName,
     cloneId,
-    newNoNameId,
     newTemporalId,
     newNativeId,
     idIsNative,
@@ -82,16 +80,6 @@ idToText :: Id a -> Text
 idToText id@Id {moduleName, sort = Internal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
 idToText id@Id {moduleName, sort = Temporal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
 idToText id = convertString $ render $ pPrint id
-
-noName :: Text
-noName = "noName"
-
-newNoNameId :: (MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadReader env f) => a -> IdSort -> f (Id a)
-newNoNameId meta sort = do
-  let name = noName
-  uniq <- getUniq
-  moduleName <- view moduleName
-  pure Id {..}
 
 newTemporalId :: (MonadReader s m, MonadIO m, HasUniqSupply s UniqSupply, HasModuleName s ModuleName) => Text -> a -> m (Id a)
 newTemporalId name meta = do

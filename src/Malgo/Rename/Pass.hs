@@ -8,7 +8,6 @@ import Data.List (intersect)
 import Data.List.Extra (anySame, disjoint)
 import Koriel.Id
 import Koriel.Lens
-import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Interface
 import Malgo.Prelude
@@ -271,7 +270,7 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (MonadReader env f, MonadIO f, HasUniqSupply env UniqSupply, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
+genToplevelEnv :: (MonadReader RnEnv f, MonadIO f) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
 genToplevelEnv modName ds =
   execStateT (traverse aux ds)
   where

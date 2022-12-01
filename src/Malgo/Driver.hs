@@ -63,7 +63,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       when env.debugMode do
         hPutStrLn stderr "=== PARSED ==="
         hPrint stderr $ pPrint parsedAst
-      rnEnv <- RnEnv.genBuiltinRnEnv (parsedAst._moduleName) =<< ask
+      rnEnv <- RnEnv.genBuiltinRnEnv (parsedAst._moduleName)
       (renamedAst, rnState) <- withDump env.debugMode "=== RENAME ===" $ rename rnEnv parsedAst
       (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
       _ <- withDump env.debugMode "=== TYPE CHECK ===" $ pure typedAst

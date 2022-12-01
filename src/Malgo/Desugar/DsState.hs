@@ -36,6 +36,7 @@ data DsState = DsState
 
 makeFieldsNoPrefix ''DsState
 
+-- | 'makeDsStore' only takes 'TcEnv', but importing 'RnEnv' causes cyclic dependency.
 makeDsState ::
   (HasSignatureMap env (HashMap RnId (Scheme Type)), HasTypeDefMap env (HashMap (Id ()) (TypeDef Type))) =>
   env ->

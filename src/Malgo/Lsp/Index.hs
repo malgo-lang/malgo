@@ -61,6 +61,13 @@ data Index = Index
 
 makeFieldsNoPrefix ''Index
 
+data LspOpt = LspOpt
+  { _modulePaths :: [FilePath],
+    _indexes :: IORef (HashMap ModuleName Index)
+  }
+
+makeFieldsNoPrefix ''LspOpt
+
 -- | 'findReferences' finds all references that are corresponding to the given 'SourcePos'.
 -- It ignores file names.
 findReferences :: SourcePos -> Index -> [Info]
@@ -76,6 +83,8 @@ isInRange pos Range {_start, _end}
     posToTuple :: SourcePos -> (Pos, Pos)
     posToTuple SourcePos {sourceLine, sourceColumn} = (sourceLine, sourceColumn)
 
+-- | 'storeIndex' stores the given 'Index' to @dstPath -<.> "idx"@.
+-- It only be used in 'MalgoM' monad, but importing 'Malgo.Monad' causes cyclic dependency.
 storeIndex :: (MonadReader s m, MonadIO m, HasField "dstPath" s FilePath) => Index -> m ()
 storeIndex index = do
   dstPath <- asks (.dstPath)

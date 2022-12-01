@@ -8,13 +8,11 @@ import Data.List qualified as List
 import Data.Maybe (fromJust)
 import Data.Text qualified as T
 import Data.Traversable (for)
-import GHC.Records (HasField)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
-import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.DsState
@@ -23,16 +21,16 @@ import Malgo.Desugar.Type
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep as GT
 import Malgo.Interface
+import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
-import Malgo.Monad
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadReader MalgoEnv m, XModule x ~ BindGroup (Malgo 'Refine), MonadFail m, MonadIO m) =>
+  (MonadReader MalgoEnv m, MonadFail m, MonadIO m) =>
   TcEnv ->
-  Module x ->
+  Module (Malgo 'Refine) ->
   m (DsState, Program (Id C.Type))
 desugar tcEnv (Module modName ds) = do
   malgoEnv <- ask
@@ -47,7 +45,7 @@ desugar tcEnv (Module modName ds) = do
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
 dsBindGroup ::
-  (MonadState DsState m, MonadReader env m, MonadFail m, MonadIO m, HasUniqSupply env UniqSupply, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface)), HasModuleName env ModuleName) =>
+  (MonadState DsState m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
   BindGroup (Malgo 'Refine) ->
   m [Def]
 dsBindGroup bg = do
@@ -57,20 +55,20 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
-dsImport :: (MonadReader env m, MonadState DsState m, MonadIO m, HasModulePaths env [FilePath], HasInterfaces env (IORef (HashMap ModuleName Interface))) => Import (Malgo 'Refine) -> m ()
+dsImport :: (MonadReader DsEnv m, MonadState DsState m, MonadIO m) => Import (Malgo 'Refine) -> m ()
 dsImport (_, modName, _) = do
   interface <- loadInterface modName
   nameEnv <>= interface ^. coreIdentMap
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::
-  (MonadState DsState f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
+  (MonadState DsState f, MonadReader DsEnv f, MonadFail f, MonadIO f) =>
   [[ScDef (Malgo 'Refine)]] ->
   f [Def]
 dsScDefGroup = dsScDefs . mconcat
 
 dsScDefs ::
-  (MonadState DsState f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
+  (MonadState DsState f, MonadReader DsEnv f, MonadFail f, MonadIO f) =>
   [ScDef (Malgo 'Refine)] ->
   f [Def]
 dsScDefs ds = do
@@ -81,7 +79,7 @@ dsScDefs ds = do
     nameEnv . at f ?= f'
   foldMapM dsScDef ds
 
-dsScDef :: (MonadState DsState f, MonadReader env f, MonadFail f, MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => ScDef (Malgo 'Refine) -> f [Def]
+dsScDef :: (MonadState DsState f, MonadReader DsEnv f, MonadFail f, MonadIO f) => ScDef (Malgo 'Refine) -> f [Def]
 dsScDef (Typed typ _, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   case typ of
@@ -103,7 +101,7 @@ dsScDef (Typed typ _, name, expr) = do
       fun <- curryFun True name.name [] =<< runDef (fmap Atom (cast typ' =<< dsExp expr))
       pure [FunDef name' fun]
 
-fnToObj :: (MonadIO f, HasUniqSupply env UniqSupply, MonadFail f, MonadReader env f, HasModuleName env ModuleName, MonadState DsState f) => Bool -> Text -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Exp (Id C.Type))
+fnToObj :: (MonadIO f, MonadFail f, MonadReader DsEnv f, MonadState DsState f) => Bool -> Text -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Exp (Id C.Type))
 fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
   ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
   eType <- dsType (GT.typeOf e)
@@ -118,21 +116,19 @@ fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
   body <- match ps' (patMatrix $ toList pss) (toList es) (Error eType)
   curryFun isToplevel hint ps' body
 
-patToName :: HasField "name" (XId x) Text => Pat x -> Text
+patToName :: Pat (Malgo 'Refine) -> Text
 patToName (G.VarP _ v) = v.name
 patToName (G.ConP _ c _) = T.toLower $ c.name
 patToName (G.TupleP _ _) = "tuple"
 patToName (G.RecordP _ _) = "record"
-patToName (G.ListP _ _) = "list"
 patToName (G.UnboxedP _ _) = "unboxed"
-patToName (G.BoxedP _ _) = "boxed"
 
 -- TODO: Malgoのforeignでvoid型をあつかえるようにする #13
 -- 1. Malgoの型とCの型の相互変換を定義する
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (MonadState DsState f, MonadIO f, MonadReader env f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
+  (MonadState DsState f, MonadIO f, MonadReader DsEnv f) =>
   Foreign (Malgo 'Refine) ->
   f [Def]
 dsForeign (Typed typ (_, primName), name, _) = do
@@ -146,7 +142,7 @@ dsForeign (Typed typ (_, primName), name, _) = do
   pure [FunDef name' fun, ExtDef primName (paramTypes' :-> retType)]
 
 dsDataDef ::
-  (MonadState DsState m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m, HasModuleName env ModuleName) =>
+  (MonadState DsState m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
   DataDef (Malgo 'Refine) ->
   m [Def]
 dsDataDef (_, name, _, cons) =
@@ -187,7 +183,7 @@ dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
 dsExp ::
-  (MonadState DsState m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
+  (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) =>
   G.Exp (Malgo 'Refine) ->
   m (C.Exp (Id C.Type))
 dsExp (G.Var (Typed typ _) name) = do
@@ -246,7 +242,7 @@ dsExp (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
 dsExp (G.Record _ _) = error "unreachable"
 dsExp (G.Seq _ ss) = dsStmts ss
 
-dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
+dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExp e
 dsStmts (G.Let _ _ e :| []) = dsExp e
 dsStmts (NoBind _ e :| s : ss) = runDef $ do
@@ -261,20 +257,19 @@ dsStmts (G.Let _ v e :| s : ss) = do
 
 -- Desugar Monad
 
-lookupName :: HasCallStack => MonadState DsState m => RnId -> m (Id C.Type)
+lookupName :: MonadState DsState m => RnId -> m (Id C.Type)
 lookupName name = do
   mname' <- use (nameEnv . at name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
 
-newCoreId :: (MonadReader env f, MonadIO f, HasUniqSupply env UniqSupply) => RnId -> C.Type -> f (Id C.Type)
+newCoreId :: (MonadReader DsEnv f, MonadIO f) => RnId -> C.Type -> f (Id C.Type)
 newCoreId griffId coreType = newIdOnName coreType griffId
 
 -- 関数をカリー化する
 curryFun ::
-  HasCallStack =>
-  (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadState DsState m) =>
+  (MonadIO m, MonadReader DsEnv m, MonadState DsState m) =>
   -- | トップレベル関数か否か
   Bool ->
   -- | uncurryされた関数名のヒント

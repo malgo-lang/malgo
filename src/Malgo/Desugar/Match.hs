@@ -11,9 +11,8 @@ import Koriel.Core.Syntax qualified as Core
 import Koriel.Core.Type
 import Koriel.Core.Type qualified as Core
 import Koriel.Id
-import Koriel.Lens
-import Koriel.MonadUniq
 import Koriel.Pretty
+import Malgo.Desugar.DsEnv (DsEnv)
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
@@ -57,7 +56,7 @@ splitCol mat = (headCol mat, tailCol mat)
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  (MonadState DsState m, MonadIO m, MonadReader env m, MonadFail m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) =>
+  (MonadState DsState m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
   -- | マッチ対象
   [Id Core.Type] ->
   -- | パターン（転置行列）
@@ -206,7 +205,7 @@ groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWi
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = error "ps must be not empty"
 
-groupRecord :: (MonadReader env m, MonadIO m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
+groupRecord :: (MonadReader DsEnv m, MonadIO m) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
   where
     aux (RecordP x ps : pss) e = do

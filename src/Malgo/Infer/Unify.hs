@@ -15,6 +15,7 @@ import Koriel.Pretty
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (Constraint)
+import Malgo.Rename.RnEnv (RnEnv)
 
 -- * Constraint
 
@@ -135,30 +136,27 @@ solve = solveLoop (5000 :: Int)
           solveLoop (n - 1) constraints
     zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
-generalize :: (HasCallStack, HasModuleName env ModuleName) => (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Range -> HashSet TypeVar -> Type -> m (Scheme Type)
+generalize :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> HashSet TypeVar -> Type -> m (Scheme Type)
 generalize x bound term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
-  as <- zipWithM (toBound x) fvs [one c | c <- ['a' ..]]
+  as <- traverse (toBound x) fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
-generalizeMutRecs :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m, HasModuleName env ModuleName) => Range -> HashSet TypeVar -> [Type] -> m ([Id Type], [Type])
+generalizeMutRecs :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> HashSet TypeVar -> [Type] -> m ([Id Type], [Type])
 generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
-  as <- zipWithM (toBound x) fvs [one c | c <- ['a' ..]]
+  as <- traverse (toBound x) fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-toBound :: (MonadBind m, MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m, HasModuleName env ModuleName) => Range -> TypeVar -> Text -> m (Id Type)
-toBound x tv hint = do
+toBound :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> TypeVar -> m (Id Type)
+toBound x tv = do
   tvType <- defaultToBoxed x $ tv.typeVar.meta
   let tvKind = kindOf tvType
-  let name = case tv.typeVar.name of
-        x
-          | x == noName -> hint
-          | otherwise -> x
+  let name = tv.typeVar.name
   newInternalId name tvKind
 
 defaultToBoxed :: MonadBind f => Range -> Type -> f Type
