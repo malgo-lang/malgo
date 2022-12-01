@@ -12,13 +12,13 @@ import Koriel.Pretty
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
-lint :: (Monad m, HasType a, Pretty a, Eq a) => Program (Id a) -> m ()
+lint :: Monad m => Program (Id Type) -> m ()
 lint = runLint . lintProgram
 
-runLint :: ReaderT [a] m b -> m b
+runLint :: ReaderT [Id Type] m a -> m a
 runLint m = runReaderT m []
 
-defined :: (MonadReader [Id a] f, Eq a) => Id a -> f ()
+defined :: (MonadReader [Id Type] f) => Id Type -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
@@ -44,7 +44,7 @@ match x y
           $$ pPrint y
           $$ nest 2 (":" <> pPrint (typeOf y))
 
-lintExp :: (MonadReader [Id a] m, HasType a, Eq a, Pretty a) => Exp (Id a) -> m ()
+lintExp :: MonadReader [Id Type] m => Exp (Id Type) -> m ()
 lintExp (Atom x) = lintAtom x
 lintExp (Call f xs) = do
   lintAtom f
@@ -123,22 +123,22 @@ lintExp (Match e cs) = do
   traverse_ lintCase cs
 lintExp Error {} = pass
 
-lintObj :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Obj (Id a) -> m ()
+lintObj :: MonadReader [Id Type] m => Obj (Id Type) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: (MonadReader [Id a] m, Pretty a, HasType a, Eq a) => Case (Id a) -> m ()
+lintCase :: MonadReader [Id Type] m => Case (Id Type) -> m ()
 lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
 lintCase (Switch _ e) = lintExp e
 lintCase (Bind x e) = local (x :) $ lintExp e
 
-lintAtom :: (MonadReader [Id a] m, Eq a) => Atom (Id a) -> m ()
+lintAtom :: MonadReader [Id Type] m => Atom (Id Type) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
-lintProgram :: (MonadReader [Id a] m, HasType a, Pretty a, Eq a) => Program (Id a) -> m ()
+lintProgram :: MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
   let fs = map (view _1) _topFuncs
   local (fs <>) $

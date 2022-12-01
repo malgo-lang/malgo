@@ -46,7 +46,7 @@ lambdalift _uniqSupply _moduleName Program {..} =
       -- TODO: lambdalift _topVars
       traverseOf appProgram (pure . flat) $ Program _topVars (HashMap.toList _funcs) _extFuncs
 
-llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader env f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Exp (Id Type) -> f (Exp (Id Type))
+llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
@@ -78,7 +78,7 @@ llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
 
-def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Text -> [Id Type] -> Exp (Id Type) -> m (Id Type)
+def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Text -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
   f <- newTemporalId ("raw_" <> name) (map typeOf xs :-> typeOf e)
   funcs . at f ?= (xs, e)
