@@ -11,7 +11,12 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        haskellPackages = pkgs.haskell.packages.ghc925;
+        haskellPackages = pkgs.haskell.packages.ghc925.override {
+          overrides = self: super: {
+            # ListLike gets stuck in tests on GHC 9.2.5 and 9.4.3 [GHC regression!] · Issue #23 · ddssff/listlike https://github.com/ddssff/listlike/issues/23
+            ListLike = pkgs.haskell.lib.dontCheck super.ListLike;
+          };
+        };
 
         jailbreakUnbreak = pkg:
           pkgs.haskell.lib.doJailbreak (pkg.overrideAttrs (_: { meta = { }; }));
@@ -52,15 +57,6 @@
               }) [ pkgs.boehmgc ])
             [ pkgs.which pkgs.pkg-config ];
         defaultPackage = self.packages.${system}.${packageName};
-
-        devShell = pkgs.mkShell {
-          buildInputs = with haskellPackages; [
-            haskell-language-server
-            ghcid
-            cabal-install
-          ];
-          inputsFrom = builtins.attrValues self.packages.${system};
-        };
       });
 }
 
