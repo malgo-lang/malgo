@@ -29,19 +29,22 @@
           rev = "fe8fd556e8d2cc028f61d4d7b4b6bf18c456d090";
           sha256 = "1b4kh0c8sgb39qzfi3cnagz1ssgl96mzb6s18xapy0qj23zql0p0";
         };
-        llvm-hs = pkgs.haskell.lib.dontCheck (pkgs.haskell.lib.overrideCabal ((haskellPackages.callCabal2nix "llvm-hs" "${llvm-hs-repo}/llvm-hs" {
-          inherit llvm-hs-pure;
-        }).overrideAttrs (oldAttrs: rec {
-          buildInputs = oldAttrs.buildInputs ++ [
-            pkgs.llvm_12
-          ];
-        })) (oldAttrs: {
-          preCompileBuildDriver = oldAttrs.preCompileBuildDriver or "" + ''
-            substituteInPlace Setup.hs --replace "addToLdLibraryPath libDir" "pure ()"
-          '';
-        }));
-        llvm-hs-pure = haskellPackages.callCabal2nix "llvm-hs-pure" "${llvm-hs-repo}/llvm-hs-pure" {};
-      in {
+        llvm-hs = pkgs.haskell.lib.dontCheck (pkgs.haskell.lib.overrideCabal
+          ((haskellPackages.callCabal2nix "llvm-hs" "${llvm-hs-repo}/llvm-hs" {
+            inherit llvm-hs-pure;
+          }).overrideAttrs (oldAttrs: rec {
+            buildInputs = oldAttrs.buildInputs ++ [
+              pkgs.llvm_12
+            ];
+          }))
+          (oldAttrs: {
+            preCompileBuildDriver = oldAttrs.preCompileBuildDriver or "" + ''
+              substituteInPlace Setup.hs --replace "addToLdLibraryPath libDir" "pure ()"
+            '';
+          }));
+        llvm-hs-pure = haskellPackages.callCabal2nix "llvm-hs-pure" "${llvm-hs-repo}/llvm-hs-pure" { };
+      in
+      {
         packages.${packageName} = # (ref:haskell-package-def)
           pkgs.haskell.lib.addTestToolDepends
             (pkgs.haskell.lib.addBuildDepends
@@ -51,8 +54,8 @@
                 inherit llvm-hs-pure;
                 generic-data = pkgs.haskell.lib.dontCheck haskellPackages.generic-data;
                 diagnose = (pkgs.haskell.lib.overrideCabal haskellPackages.diagnose (drv: {
-                  configureFlags = ["-fmegaparsec-compat" ];
-                  buildDepends = (drv.buildDepends or []) ++ [haskellPackages.megaparsec];
+                  configureFlags = [ "-fmegaparsec-compat" ];
+                  buildDepends = (drv.buildDepends or [ ]) ++ [ haskellPackages.megaparsec ];
                 }));
               }) [ pkgs.boehmgc ])
             [ pkgs.which pkgs.pkg-config ];
