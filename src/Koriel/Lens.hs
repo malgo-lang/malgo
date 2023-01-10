@@ -16,6 +16,7 @@ module Koriel.Lens
     HasTopVars (..),
     HasInterfaces (..),
     HasIndexes (..),
+    HasKindCtx (..),
   )
 where
 
@@ -71,3 +72,6 @@ class HasIndexes s a | s -> a where
 
 class HasInterfaces s a | s -> a where
   interfaces :: Lens' s a
+
+class HasKindCtx s a | s -> a where
+  kindCtx :: Lens' s a

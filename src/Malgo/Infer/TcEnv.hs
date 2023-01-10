@@ -24,8 +24,9 @@ type RecordTypeName = Text
 data TcEnv = TcEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
-    _typeSynonymMap :: HashMap (Id Type) ([Id Type], Type),
+    _typeSynonymMap :: HashMap TypeVar ([TypeVar], Type),
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
+    _kindCtx :: KindCtx,
     _interfaces :: IORef (HashMap ModuleName Interface)
   }
 
@@ -55,6 +56,16 @@ genTcEnv rnEnv = do
             ],
         _typeSynonymMap = mempty,
         _resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap,
+        _kindCtx =
+          HashMap.fromList
+            [ (int32_t, TYPE),
+              (int64_t, TYPE),
+              (float_t, TYPE),
+              (double_t, TYPE),
+              (char_t, TYPE),
+              (string_t, TYPE),
+              (ptr_t, TYPE `TyArr` TYPE)
+            ],
         _interfaces = rnEnv ^. interfaces
       }
 

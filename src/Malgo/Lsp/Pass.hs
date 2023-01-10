@@ -23,6 +23,7 @@ import Malgo.Syntax.Extension
 data IndexEnv = IndexEnv
   { _signatureMap :: HashMap RnId (Scheme Type),
     _typeDefMap :: HashMap RnId (TypeDef Type),
+    _kindCtx :: KindCtx,
     _buildingIndex :: Index
   }
 
@@ -33,6 +34,7 @@ newIndexEnv tcEnv =
   IndexEnv
     { _signatureMap = tcEnv ^. signatureMap,
       _typeDefMap = tcEnv ^. typeDefMap,
+      _kindCtx = tcEnv ^. kindCtx,
       _buildingIndex = mempty
     }
 
@@ -220,7 +222,9 @@ lookupTypeKind :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m Kind
 lookupTypeKind typeName = do
   mTypeDef <- use (typeDefMap . at typeName)
   case mTypeDef of
-    Just typeDef -> pure $ kindOf (typeDef ^. typeConstructor)
+    Just typeDef -> do
+      ctx <- use kindCtx
+      pure $ kindOf ctx (typeDef ^. typeConstructor)
     Nothing -> error $ "lookupTypeKind: " <> show typeName <> " not found"
 
 lookupInfo :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Maybe Info)

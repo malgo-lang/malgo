@@ -89,7 +89,7 @@ decompose (TyRecord kts) = do
           HashMap.toList kts
 decompose t = pure $ Type t
 
-constructorSpace :: MonadReader RefineEnv m => HashMap (Id Type) Type -> (Id (), Scheme Type) -> m Space
+constructorSpace :: MonadReader RefineEnv m => HashMap TypeVar Type -> (Id (), Scheme Type) -> m Space
 constructorSpace subst (con, Forall _ (splitTyArr -> (ps, _))) = do
   env <- ask
   let ss = map (space env . applySubst subst) ps
