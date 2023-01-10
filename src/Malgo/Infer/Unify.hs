@@ -33,14 +33,14 @@ instance Pretty Constraint where
 
 -- | Monad that handles substitution over type variables
 class Monad m => MonadBind m where
-  lookupVar :: TypeVar -> m (Maybe Type)
-  default lookupVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => TypeVar -> m (Maybe Type)
+  lookupVar :: MetaVar -> m (Maybe Type)
+  default lookupVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => MetaVar -> m (Maybe Type)
   lookupVar v = lift (lookupVar v)
-  freshVar :: Maybe Text -> m TypeVar
-  default freshVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Maybe Text -> m TypeVar
+  freshVar :: Maybe Text -> m MetaVar
+  default freshVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Maybe Text -> m MetaVar
   freshVar = lift . freshVar
-  bindVar :: HasCallStack => Range -> TypeVar -> Type -> m ()
-  default bindVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Range -> TypeVar -> Type -> m ()
+  bindVar :: HasCallStack => Range -> MetaVar -> Type -> m ()
+  default bindVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Range -> MetaVar -> Type -> m ()
   bindVar x v t = lift (bindVar x v t)
 
   -- | Apply all substituation
@@ -57,7 +57,7 @@ instance MonadBind m => MonadBind (StateT s m)
 instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
 
 -- | 'Right' (substituation, new constraints) or 'Left' (position, error message)
-type UnifyResult = Either (Range, Doc) (HashMap TypeVar Type, [(Range, Constraint)])
+type UnifyResult = Either (Range, Doc) (HashMap MetaVar Type, [(Range, Constraint)])
 
 -- | Unify two types
 unify :: Range -> Type -> Type -> UnifyResult
@@ -85,15 +85,15 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m, MonadState
 
   freshVar hint = do
     hint <- pure $ fromMaybe "t" hint
-    kind <- TypeVar <$> newTemporalId ("k" <> hint) TYPE
-    TypeVar <$> newInternalId hint (TyMeta kind)
+    kind <- MetaVar <$> newTemporalId ("k" <> hint) TYPE
+    MetaVar <$> newInternalId hint (TyMeta kind)
 
   bindVar x v t = do
     when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
-    solve [(x, v.typeVar.meta :~ kindOf t)]
+    solve [(x, v.metaVar.meta :~ kindOf t)]
     TypeUnifyT $ at v ?= t
     where
-      occursCheck :: TypeVar -> Type -> Bool
+      occursCheck :: MetaVar -> Type -> Bool
       occursCheck v t = HashSet.member v (freevars t)
 
   zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
@@ -136,7 +136,7 @@ solve = solveLoop (5000 :: Int)
           solveLoop (n - 1) constraints
     zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
-generalize :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> HashSet TypeVar -> Type -> m (Scheme Type)
+generalize :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> HashSet MetaVar -> Type -> m (Scheme Type)
 generalize x bound term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
@@ -144,7 +144,7 @@ generalize x bound term = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
-generalizeMutRecs :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> HashSet TypeVar -> [Type] -> m ([Id Type], [Type])
+generalizeMutRecs :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> HashSet MetaVar -> [Type] -> m ([Id Type], [Type])
 generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
@@ -152,11 +152,11 @@ generalizeMutRecs x bound terms = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-toBound :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> TypeVar -> m (Id Type)
+toBound :: (MonadBind m, MonadIO m, MonadReader RnEnv m) => Range -> MetaVar -> m (Id Type)
 toBound x tv = do
-  tvType <- defaultToBoxed x $ tv.typeVar.meta
+  tvType <- defaultToBoxed x $ tv.metaVar.meta
   let tvKind = kindOf tvType
-  let name = tv.typeVar.name
+  let name = tv.metaVar.name
   newInternalId name tvKind
 
 defaultToBoxed :: MonadBind f => Range -> Type -> f Type
@@ -175,12 +175,12 @@ defaultToBoxed x = \case
   TyPtr -> pure TyPtr
   TYPE -> pure TYPE
   TyMeta tv -> do
-    let vKind = kindOf $ tv.typeVar.meta
+    let vKind = kindOf $ tv.metaVar.meta
     void $ defaultToBoxed x vKind
-    k <- zonk $ tv.typeVar.meta
-    pure $ TyMeta tv {typeVar = tv.typeVar {meta = k}}
+    k <- zonk $ tv.metaVar.meta
+    pure $ TyMeta tv {metaVar = tv.metaVar {meta = k}}
 
-unboundFreevars :: HashSet TypeVar -> Type -> HashSet TypeVar
+unboundFreevars :: HashSet MetaVar -> Type -> HashSet MetaVar
 unboundFreevars bound t = HashSet.difference (freevars t) bound
 
 instantiate :: (MonadBind m, MonadIO m, MonadState TcEnv m) => Range -> Scheme Type -> m Type

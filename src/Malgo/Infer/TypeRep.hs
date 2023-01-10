@@ -66,7 +66,7 @@ data Type
   | -- unifiable type variable
 
     -- | type variable (not qualified)
-    TyMeta TypeVar
+    TyMeta MetaVar
   deriving stock (Eq, Ord, Show, Generic, Data)
   deriving anyclass (Hashable, Binary)
 
@@ -91,21 +91,21 @@ instance Pretty Type where
 -- Type variable --
 -------------------
 
-newtype TypeVar = TypeVar {typeVar :: Id Kind}
+newtype MetaVar = MetaVar {metaVar :: Id Kind}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
   deriving anyclass (Binary)
 
-instance Pretty TypeVar where
-  pPrint (TypeVar v) = "'" <> pPrint v
+instance Pretty MetaVar where
+  pPrint (MetaVar v) = "'" <> pPrint v
 
-instance HasType TypeVar where
+instance HasType MetaVar where
   typeOf = TyMeta
-  types f (TypeVar v) = do
-    f (v.meta) <&> \k -> TypeVar v {meta = k}
+  types f (MetaVar v) = do
+    f (v.meta) <&> \k -> MetaVar v {meta = k}
 
-instance HasKind TypeVar where
-  kindOf = (.typeVar.meta)
+instance HasKind MetaVar where
+  kindOf = (.metaVar.meta)
 
 -------------------------
 -- HasType and HasKind --
@@ -175,7 +175,7 @@ instance HasKind ty => HasKind (TypeDef ty) where
 -- Unification monad --
 -----------------------
 
-type TypeMap = HashMap TypeVar Type
+type TypeMap = HashMap MetaVar Type
 
 -- | Note for The Instance of 'MonadState' for 'TypeUnifyT':
 --
@@ -268,7 +268,7 @@ makePrisms ''Scheme
 makeLenses ''TypeDef
 
 -- | get all meta type variables in a type
-freevars :: Type -> HashSet TypeVar
+freevars :: Type -> HashSet MetaVar
 freevars (TyApp t1 t2) = freevars t1 <> freevars t2
 freevars v@TyVar {} = freevars $ kindOf v
 freevars c@TyCon {} = freevars $ kindOf c
