@@ -37,6 +37,8 @@ instance Pretty PrimT where
 
 type Kind = Type
 
+type TypeVar = Id Kind
+
 -- | Definition of `Type`
 data Type
   = -- type level operator
@@ -44,9 +46,9 @@ data Type
     -- | application of type constructor
     TyApp Type Type
   | -- | type variable (qualified by `Forall`)
-    TyVar (Id Kind)
+    TyVar TypeVar
   | -- | type constructor
-    TyCon (Id Kind)
+    TyCon TypeVar
   | -- primitive type constructor
 
     -- | primitive types
@@ -237,14 +239,14 @@ applySubst subst = \case
   TyMeta tv -> TyMeta tv
 
 -- | expand type synonyms
-expandTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Maybe Type
+expandTypeSynonym :: HashMap TypeVar ([TypeVar], Type) -> Type -> Maybe Type
 expandTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
   case abbrEnv ^. at con of
     Nothing -> Nothing
     Just (ps, orig) -> Just (applySubst (HashMap.fromList $ zip ps ts) orig)
 expandTypeSynonym _ _ = Nothing
 
-expandAllTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Type
+expandAllTypeSynonym :: HashMap TypeVar ([TypeVar], Type) -> Type -> Type
 expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
   case abbrEnv ^. at con of
     Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
