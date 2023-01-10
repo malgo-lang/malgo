@@ -26,8 +26,7 @@ data MalgoEnv = MalgoEnv
     _modulePaths :: [FilePath]
   }
 
-data CompileMode = LLVM | Scheme
-  deriving stock (Eq, Show)
+data CompileMode = LLVM deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
 
@@ -40,7 +39,6 @@ newMalgoEnv dstPath modulePaths = do
   let _modulePaths = modulePaths <> [takeDirectory dstPath, ".malgo-work" </> "build", basePath]
   let compileMode = case takeExtension dstPath of
         ".ll" -> LLVM
-        ".scm" -> Scheme
         _ -> error "unknown extension"
   let noOptimize = False
   let lambdaLift = False

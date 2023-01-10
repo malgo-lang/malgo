@@ -77,14 +77,7 @@ toLLOpt =
             <> help
               "Write LLVM IR to OUTPUT"
         )
-      <*> flag
-        LLVM
-        Scheme
-        ( long "scheme"
-            <> short 's'
-            <> help
-              "Compile to Scheme instead of LLVM"
-        )
+      <*> pure LLVM
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
       <*> fmap read (strOption (long "inline" <> value "15"))

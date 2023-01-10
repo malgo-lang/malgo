@@ -9,7 +9,6 @@ import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM (codeGen)
-import Koriel.Core.CodeGen.Scheme qualified as Scheme
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
@@ -116,9 +115,6 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       case env.compileMode of
         LLVM -> do
           codeGen srcPath env (typedAst._moduleName) dsEnv linkedCoreOpt
-        Scheme -> do
-          code <- Scheme.codeGen uniqSupply linkedCoreOpt
-          writeFileBS (env.dstPath -<.> "scm") $ convertString $ render $ sep $ map pPrint code
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
