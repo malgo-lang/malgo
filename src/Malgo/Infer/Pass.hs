@@ -110,11 +110,11 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(_, name, params, _) -> do
     tyCon <- newIdOnName () name
-    kindCtx %= HashMap.insert tyCon (buildTyConKind params)
+    kindCtx %= insertKind tyCon (buildTyConKind params)
     typeDefMap . at name .= Just (TypeDef (TyCon tyCon) [] [])
   for_ dataDefs \(_, name, params, _) -> do
     tyCon <- newIdOnName () name
-    kindCtx %= HashMap.insert tyCon (buildTyConKind params)
+    kindCtx %= insertKind tyCon (buildTyConKind params)
     typeDefMap . at name .= Just (TypeDef (TyCon tyCon) [] [])
   typeSynonyms' <- tcTypeSynonyms typeSynonyms
   dataDefs' <- tcDataDefs dataDefs
@@ -135,10 +135,7 @@ tcTypeSynonyms ::
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     TyCon con <- lookupType pos name
-    params' <- for params \p -> do
-      p' <- newInternalId (idToText p) ()
-      kindCtx %= HashMap.insert p' TYPE
-      pure p'
+    params' <- for params \p -> newInternalId (idToText p) ()
     zipWithM_ (\p p' -> typeDefMap . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     typ' <- transType typ
     typeSynonymMap . at con .= Just (params', typ')
@@ -157,10 +154,7 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
     name' <- lookupType pos name
-    params' <- for params \(_, p) -> do
-      p' <- newInternalId (idToText p) ()
-      kindCtx %= HashMap.insert p' TYPE
-      pure p'
+    params' <- for params \(_, p) -> newInternalId (idToText p) ()
     zipWithM_ (\(_, p) p' -> typeDefMap . at p .= Just (TypeDef (TyVar p') [] [])) params params'
     (_, valueConsNames, valueConsTypes) <-
       unzip3 <$> forOf (traversed . _3) valueCons \args -> do

@@ -5,7 +5,7 @@
 
 module Malgo.Infer.TypeRep where
 
-import Control.Lens (At (at), Traversal', makeLenses, makePrisms, mapped, non, over, (^.), _1, _2)
+import Control.Lens (At (at), Traversal', makeLenses, makePrisms, mapped, over, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
@@ -39,7 +39,16 @@ type Kind = Type
 
 type TypeVar = Id ()
 
+-- TODO: Add insert function that ignores `hoge = TYPE`
 type KindCtx = HashMap TypeVar Kind
+
+insertKind :: TypeVar -> Kind -> KindCtx -> KindCtx
+insertKind tv k ctx
+  | k == TYPE = ctx
+  | otherwise = HashMap.insert tv k ctx
+
+askKind :: TypeVar -> KindCtx -> Kind
+askKind tv ctx = fromMaybe TYPE (HashMap.lookup tv ctx)
 
 -- | Definition of `Type`
 data Type
@@ -108,7 +117,7 @@ instance HasType MetaVar where
   types _ (MetaVar v) = pure $ MetaVar v
 
 instance HasKind MetaVar where
-  kindOf ctx MetaVar {metaVar} = ctx ^. at metaVar . non (error "unknown meta variable")
+  kindOf ctx MetaVar {metaVar} = askKind metaVar ctx
 
 -------------------------
 -- HasType and HasKind --
@@ -123,7 +132,7 @@ class HasKind a where
   kindOf :: KindCtx -> a -> Kind
 
 instance HasKind TypeVar where
-  kindOf ctx v = ctx ^. at v . non TYPE
+  kindOf ctx v = askKind v ctx
 
 instance HasKind PrimT where
   kindOf _ _ = TYPE

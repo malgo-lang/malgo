@@ -3,7 +3,7 @@
 
 module Malgo.Interface where
 
-import Control.Lens (At (at), ifor_, view, (?=), (^.), _1)
+import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.), _1)
 import Control.Lens.TH
 import Data.Binary (Binary, decodeFile)
 import Data.Graph
@@ -15,7 +15,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsState (DsState, HasNameEnv (nameEnv))
-import Malgo.Infer.TypeRep (KindCtx)
+import Malgo.Infer.TypeRep (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude
 import Malgo.Rename.RnState (RnState)
@@ -68,7 +68,7 @@ buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty
       typeDefMap . at rnId ?= typeDef
   ifor_ (dsState ^. kindCtx) $ \tv kind -> do
     when (tv.sort == External && tv.moduleName == moduleName) do
-      kindCtx . at tv ?= kind
+      kindCtx %= insertKind tv kind
 
 toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"

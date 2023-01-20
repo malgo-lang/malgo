@@ -5,7 +5,7 @@
 -- | Unification
 module Malgo.Infer.Unify where
 
-import Control.Lens (At (at), itraverse_, use, view, (%=), (<>=), (?=))
+import Control.Lens (At (at), itraverse_, use, view, (%=), (?=))
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.Traversable (for)
@@ -87,9 +87,8 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m, MonadState
   freshVar hint = do
     hint <- pure $ fromMaybe "t" hint
     kind <- newTemporalId ("k" <> hint) ()
-    kindCtx <>= one (kind, TYPE)
     newVar <- newInternalId hint ()
-    kindCtx <>= one (newVar, TyMeta $ MetaVar kind)
+    kindCtx %= insertKind newVar (TyMeta $ MetaVar kind)
     pure $ MetaVar newVar
 
   bindVar x v t = do
@@ -105,12 +104,12 @@ instance (MonadReader env m, HasUniqSupply env UniqSupply, MonadIO m, MonadState
   zonk (TyVar v) = do
     ctx <- use kindCtx
     k <- zonk $ kindOf ctx v
-    kindCtx %= HashMap.insert v k
+    kindCtx %= insertKind v k
     pure $ TyVar v
   zonk (TyCon c) = do
     ctx <- use kindCtx
     k <- zonk $ kindOf ctx c
-    kindCtx %= HashMap.insert c k
+    kindCtx %= insertKind c k
     pure $ TyCon c
   zonk t@TyPrim {} = pure t
   zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2
@@ -171,7 +170,7 @@ toBound x tv = do
   let tvKind = kindOf ctx tvType
   let name = tv.metaVar.name
   boundVar <- newInternalId name ()
-  kindCtx %= HashMap.insert boundVar tvKind
+  kindCtx %= insertKind boundVar tvKind
   pure boundVar
 
 -- TODO: Rewrite this function as a modifier of `kindCtx`.
@@ -181,12 +180,12 @@ defaultToBoxed x = \case
   TyVar id -> do
     ctx <- use kindCtx
     k <- defaultToBoxed x $ kindOf ctx id
-    kindCtx %= HashMap.insert id k
+    kindCtx %= insertKind id k
     pure $ TyVar id
   TyCon id -> do
     ctx <- use kindCtx
     k <- defaultToBoxed x $ kindOf ctx id
-    kindCtx %= HashMap.insert id k
+    kindCtx %= insertKind id k
     pure $ TyCon id
   TyPrim pt -> pure $ TyPrim pt
   TyArr ty ty' -> TyArr <$> defaultToBoxed x ty <*> defaultToBoxed x ty'
@@ -200,7 +199,7 @@ defaultToBoxed x = \case
     void $ defaultToBoxed x vKind
     ctx <- use kindCtx
     k <- zonk $ kindOf ctx tv.metaVar
-    kindCtx %= HashMap.insert tv.metaVar k
+    kindCtx %= insertKind tv.metaVar k
     pure $ TyMeta tv
 
 -- TODO: lift to a monadic action
