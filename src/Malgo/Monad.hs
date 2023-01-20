@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Monad where
+module Malgo.Monad (MalgoEnv (..), CompileMode (..), newMalgoEnv, MalgoM, runMalgoM) where
 
 import Control.Lens.TH
 import Control.Monad.Fix (MonadFix)

@@ -1,7 +1,41 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Syntax where
+module Malgo.Syntax
+  ( Literal (..),
+    Type (..),
+    Exp (..),
+    Stmt (..),
+    Clause (..),
+    Pat (..),
+    _VarP,
+    _ConP,
+    _TupleP,
+    _RecordP,
+    _ListP,
+    _UnboxedP,
+    _BoxedP,
+    Decl (..),
+    ParsedDefinitions (..),
+    BindGroup (..),
+    ScDef,
+    ScSig,
+    DataDef,
+    TypeSynonym,
+    Foreign,
+    Import,
+    scDefs,
+    scSigs,
+    dataDefs,
+    typeSynonyms,
+    foreigns,
+    imports,
+    Module (..),
+    toUnboxed,
+    getTyVars,
+    makeBindGroup,
+  )
+where
 
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Foldable (foldl1)

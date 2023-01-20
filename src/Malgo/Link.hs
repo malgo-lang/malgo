@@ -1,4 +1,4 @@
-module Malgo.Link where
+module Malgo.Link (link) where
 
 import Control.Lens (view)
 import Data.Binary qualified as Binary
