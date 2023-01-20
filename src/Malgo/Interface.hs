@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Interface where
+module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
 
 import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.), _1)
 import Control.Lens.TH
@@ -106,21 +106,3 @@ loadInterface (ModuleName modName) = do
           inf <- liftIO $ decodeFile (modPath </> modFile)
           pure $ Right inf
         else findAndReadFile rest modFile
-
-dependencieList :: (HasModulePaths s [FilePath], HasInterfaces s (IORef (HashMap ModuleName Interface)), MonadIO m, MonadReader s m) => ModuleName -> [ModuleName] -> m [ModuleName]
-dependencieList modName imports = do
-  depList <- ordNub . ((modName, modName, imports) :) <$> foldMapM genDepList imports
-  let (depGraph, nodeFromVertex, _) = graphFromEdges depList
-  let topSorted = map (view _1 . nodeFromVertex) $ reverse $ topSort depGraph
-  pure topSorted
-  where
-    genDepList modName = do
-      let node = modName
-      let from = modName
-      interface <- loadInterface modName
-      let to = HashSet.toList interface.dependencies
-      case to of
-        [] -> pure [(node, from, to)]
-        _ -> do
-          xs <- foldMapM genDepList to
-          pure $ (node, from, to) : xs
