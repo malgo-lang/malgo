@@ -1,6 +1,6 @@
 -- | Malgo.Refine.Pass is the final AST-to-AST pass.
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
-module Malgo.Refine.Pass where
+module Malgo.Refine.Pass (refine) where
 
 import Control.Lens (_3)
 import Data.HashMap.Strict qualified as HashMap

@@ -5,7 +5,19 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Malgo.Lsp.Index where
+module Malgo.Lsp.Index
+  ( SymbolKind (..),
+    Symbol (..),
+    Info (..),
+    Index (..),
+    definitionMap,
+    LspOpt (..),
+    HasSymbolInfo (..),
+    findReferences,
+    loadIndex,
+    storeIndex,
+  )
+where
 
 import Control.Lens (view)
 import Control.Lens.TH

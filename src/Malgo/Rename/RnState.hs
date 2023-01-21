@@ -1,4 +1,4 @@
-module Malgo.Rename.RnState where
+module Malgo.Rename.RnState (RnState (..), infixInfo, dependencies) where
 
 import Control.Lens (Lens', lens)
 import Data.HashMap.Strict qualified as HashMap

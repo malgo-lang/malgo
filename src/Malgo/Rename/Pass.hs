@@ -1,5 +1,5 @@
 -- | Name resolution and simple desugar transformation
-module Malgo.Rename.Pass where
+module Malgo.Rename.Pass (rename) where
 
 import Control.Lens (use, view, (<>=), (^.), _2)
 import Data.HashMap.Strict qualified as HashMap

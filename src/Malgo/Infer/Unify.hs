@@ -3,7 +3,7 @@
 {-# OPTIONS_GHC -Wno-unused-matches #-}
 
 -- | Unification
-module Malgo.Infer.Unify where
+module Malgo.Infer.Unify (Constraint (..), MonadBind (..), solve, generalize, generalizeMutRecs, instantiate) where
 
 import Control.Lens (At (at), itraverse_, use, view, (%=), (?=))
 import Data.HashMap.Strict qualified as HashMap

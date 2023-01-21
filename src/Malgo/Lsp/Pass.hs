@@ -2,7 +2,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
-module Malgo.Lsp.Pass where
+module Malgo.Lsp.Pass (index) where
 
 import Control.Lens (At (at), modifying, use, view, (.~), (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)

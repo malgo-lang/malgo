@@ -3,12 +3,10 @@
 
 module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
 
-import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.), _1)
+import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.))
 import Control.Lens.TH
 import Data.Binary (Binary, decodeFile)
-import Data.Graph
 import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
 import Data.String.Conversions (convertString)
 import Koriel.Core.Type qualified as C
 import Koriel.Id

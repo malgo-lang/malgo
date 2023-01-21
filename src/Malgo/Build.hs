@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Malgo.Build where
+module Malgo.Build (run) where
 
 import Control.Lens
 import Data.Aeson (FromJSON, decodeFileStrict)

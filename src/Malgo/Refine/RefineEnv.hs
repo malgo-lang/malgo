@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Refine.RefineEnv where
+module Malgo.Refine.RefineEnv (RefineEnv (..), buildRefineEnv) where
 
 import Control.Lens (makeFieldsNoPrefix, (^.))
 import Data.HashMap.Strict qualified as HashMap

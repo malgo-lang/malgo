@@ -1,10 +1,73 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Syntax.Extension where
+module Malgo.Syntax.Extension
+  ( MalgoPhase (..),
+    Malgo,
+    MalgoId,
+    Visibility (..),
+    Qualified (..),
+    Field (..),
+    Typed (..),
+    PsId,
+    RnId,
+    Unboxed,
+    Boxed,
+    Assoc (..),
+    XId,
+    SimpleX,
+    XVar,
+    XCon,
+    XUnboxed,
+    XBoxed,
+    XApply,
+    XOpApp,
+    XFn,
+    XTuple,
+    XRecord,
+    XList,
+    XRecordAccess,
+    XAnn,
+    XSeq,
+    XParens,
+    ForallExpX,
+    XClause,
+    ForallClauseX,
+    XLet,
+    XWith,
+    XNoBind,
+    ForallStmtX,
+    XVarP,
+    XConP,
+    XTupleP,
+    XRecordP,
+    XListP,
+    XUnboxedP,
+    XBoxedP,
+    ForallPatX,
+    XTyApp,
+    XTyVar,
+    XTyCon,
+    XTyArr,
+    XTyTuple,
+    XTyRecord,
+    XTyBlock,
+    ForallTypeX,
+    XScDef,
+    XScSig,
+    XDataDef,
+    XTypeSynonym,
+    XInfix,
+    XForeign,
+    XImport,
+    ImportList (..),
+    ForallDeclX,
+    XModule,
+  )
+where
 
 import Control.Lens (lens)
-import Data.Binary ( Binary )
+import Data.Binary (Binary)
 import Data.Kind qualified as K
 import Data.Void
 import Koriel.Id
