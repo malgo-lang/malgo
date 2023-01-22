@@ -15,7 +15,7 @@ import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..), _moduleName)
 import Relude.Unsafe qualified as Unsafe
 import System.Directory (getCurrentDirectory, makeAbsolute)
-import System.FilePath (takeBaseName, (</>))
+import System.FilePath ((</>))
 import System.FilePath.Glob (glob)
 
 data Config = Config
@@ -24,11 +24,6 @@ data Config = Config
   }
   deriving stock (Show, Generic)
   deriving anyclass (FromJSON)
-
-getWorkspaceDir :: IO FilePath
-getWorkspaceDir = do
-  pwd <- getCurrentDirectory
-  return $ pwd </> ".malgo-work"
 
 readBuildConfig :: IO Config
 readBuildConfig = do
@@ -68,25 +63,12 @@ run = do
   _uniqSupply <- UniqSupply <$> newIORef 0
   _interfaces <- newIORef mempty
   _indexes <- newIORef mempty
-  let compileOptions =
-        map
-          ( \path ->
-              ( path,
-                MalgoEnv
-                  { _uniqSupply = _uniqSupply,
-                    _interfaces = _interfaces,
-                    _indexes = _indexes,
-                    dstPath = workspaceDir </> "build" </> (takeBaseName path <> ".ll"),
-                    compileMode = LLVM,
-                    noOptimize = False,
-                    lambdaLift = False,
-                    inlineSize = 15,
-                    debugMode = False,
-                    _modulePaths = [workspaceDir </> "build"]
-                  }
-              )
-          )
-          topSorted
+  compileOptions <-
+    traverse
+      ( \path ->
+          (path,) <$> newMalgoEnv path [] (Just _uniqSupply) (Just _interfaces) (Just _indexes)
+      )
+      topSorted
   for_ compileOptions \(path, env) -> do
     putStrLn ("Compile " <> path)
     Driver.compileFromAST path env (Unsafe.fromJust $ List.lookup path parsedAstList)

@@ -431,8 +431,6 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
   pPrint (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pPrint xs) <+> "=" <+> "import" <+> pPrint name
   pPrint (Import _ name (As name')) = "module" <+> pPrint name' <+> "=" <+> "import" <+> pPrint name
 
-makePrisms ''Decl
-
 -- * Module
 
 data Module x = Module {_moduleName :: ModuleName, _moduleDefinition :: XModule x}
