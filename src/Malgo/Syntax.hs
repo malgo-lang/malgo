@@ -1,7 +1,41 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Syntax where
+module Malgo.Syntax
+  ( Literal (..),
+    Type (..),
+    Exp (..),
+    Stmt (..),
+    Clause (..),
+    Pat (..),
+    _VarP,
+    _ConP,
+    _TupleP,
+    _RecordP,
+    _ListP,
+    _UnboxedP,
+    _BoxedP,
+    Decl (..),
+    ParsedDefinitions (..),
+    BindGroup (..),
+    ScDef,
+    ScSig,
+    DataDef,
+    TypeSynonym,
+    Foreign,
+    Import,
+    scDefs,
+    scSigs,
+    dataDefs,
+    typeSynonyms,
+    foreigns,
+    imports,
+    Module (..),
+    toUnboxed,
+    getTyVars,
+    makeBindGroup,
+  )
+where
 
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Foldable (foldl1)
@@ -396,8 +430,6 @@ instance (Pretty (XId x)) => Pretty (Decl x) where
   pPrint (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pPrint name
   pPrint (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pPrint xs) <+> "=" <+> "import" <+> pPrint name
   pPrint (Import _ name (As name')) = "module" <+> pPrint name' <+> "=" <+> "import" <+> pPrint name
-
-makePrisms ''Decl
 
 -- * Module
 

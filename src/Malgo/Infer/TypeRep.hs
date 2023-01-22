@@ -3,9 +3,36 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Infer.TypeRep where
+module Malgo.Infer.TypeRep
+  ( PrimT (..),
+    Kind,
+    TypeVar,
+    KindCtx,
+    insertKind,
+    askKind,
+    Type (..),
+    MetaVar (..),
+    HasType (..),
+    HasKind (..),
+    Scheme (..),
+    TypeDef (..),
+    typeConstructor,
+    typeParameters,
+    valueConstructors,
+    TypeUnifyT (..),
+    runTypeUnifyT,
+    pattern TyConApp,
+    viewTyConApp,
+    buildTyArr,
+    splitTyArr,
+    applySubst,
+    expandTypeSynonym,
+    expandAllTypeSynonym,
+    freevars,
+  )
+where
 
-import Control.Lens (At (at), Traversal', makeLenses, makePrisms, mapped, over, (^.), _1, _2)
+import Control.Lens (At (at), Traversal', makeLenses, mapped, over, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
@@ -37,6 +64,19 @@ instance Pretty PrimT where
 
 type Kind = Type
 
+type TypeVar = Id ()
+
+-- TODO: Add insert function that ignores `hoge = TYPE`
+type KindCtx = HashMap TypeVar Kind
+
+insertKind :: TypeVar -> Kind -> KindCtx -> KindCtx
+insertKind tv k ctx
+  | k == TYPE = ctx
+  | otherwise = HashMap.insert tv k ctx
+
+askKind :: TypeVar -> KindCtx -> Kind
+askKind tv ctx = fromMaybe TYPE (HashMap.lookup tv ctx)
+
 -- | Definition of `Type`
 data Type
   = -- type level operator
@@ -44,9 +84,9 @@ data Type
     -- | application of type constructor
     TyApp Type Type
   | -- | type variable (qualified by `Forall`)
-    TyVar (Id Kind)
+    TyVar TypeVar
   | -- | type constructor
-    TyCon (Id Kind)
+    TyCon TypeVar
   | -- primitive type constructor
 
     -- | primitive types
@@ -66,7 +106,7 @@ data Type
   | -- unifiable type variable
 
     -- | type variable (not qualified)
-    TyMeta TypeVar
+    TyMeta MetaVar
   deriving stock (Eq, Ord, Show, Generic, Data)
   deriving anyclass (Hashable, Binary)
 
@@ -86,117 +126,6 @@ instance Pretty Type where
   pPrintPrec _ _ TyPtr = "Ptr#"
   pPrintPrec _ _ TYPE = "TYPE"
   pPrintPrec l _ (TyMeta tv) = pPrintPrec l 0 tv
-
--------------------
--- Type variable --
--------------------
-
-newtype TypeVar = TypeVar {typeVar :: Id Kind}
-  deriving newtype (Eq, Ord, Show, Generic, Hashable)
-  deriving stock (Data, Typeable)
-  deriving anyclass (Binary)
-
-instance Pretty TypeVar where
-  pPrint (TypeVar v) = "'" <> pPrint v
-
-instance HasType TypeVar where
-  typeOf = TyMeta
-  types f (TypeVar v) = do
-    f (v.meta) <&> \k -> TypeVar v {meta = k}
-
-instance HasKind TypeVar where
-  kindOf = (.typeVar.meta)
-
--------------------------
--- HasType and HasKind --
--------------------------
-
--- | Types that have a `Type`
-class HasType a where
-  typeOf :: a -> Type
-  types :: Traversal' a Type
-
-class HasKind a where
-  kindOf :: a -> Kind
-
-instance HasKind PrimT where
-  kindOf _ = TYPE
-
-instance HasType Type where
-  typeOf = identity
-  types = identity
-
-instance HasKind Type where
-  kindOf (TyApp (kindOf -> TyArr _ k) _) = k
-  kindOf TyApp {} = error "invalid kind"
-  kindOf (TyVar v) = v.meta
-  kindOf (TyCon c) = c.meta
-  kindOf (TyPrim p) = kindOf p
-  kindOf (TyArr _ t2) = kindOf t2
-  kindOf (TyTuple n) = buildTyArr (replicate n TYPE) TYPE
-  kindOf (TyRecord _) = TYPE
-  kindOf TyPtr = TYPE `TyArr` TYPE
-  kindOf TYPE = TYPE -- Type :: Type
-  kindOf (TyMeta tv) = kindOf tv
-
-instance HasType Void where
-  typeOf = absurd
-  types _ = absurd
-
-instance HasKind Void where
-  kindOf = absurd
-
--- | Universally quantified type
-data Scheme ty = Forall [Id ty] ty
-  deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
-  deriving anyclass (Hashable, Binary)
-
-instance Pretty ty => Pretty (Scheme ty) where
-  pPrint (Forall [] t) = pPrint t
-  pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
-
--- | Definition of Type constructor
--- valueConstructorsのSchemeは、typeParametersで全称化されている
-data TypeDef ty = TypeDef
-  { _typeConstructor :: ty,
-    _typeParameters :: [Id ty],
-    _valueConstructors :: [(Id (), Scheme ty)]
-  }
-  deriving stock (Show, Generic, Functor, Foldable, Traversable)
-  deriving anyclass (Binary)
-
-instance Pretty ty => Pretty (TypeDef ty) where
-  pPrint (TypeDef c q u) = pPrint (c, q, u)
-
-instance HasKind ty => HasKind (TypeDef ty) where
-  kindOf TypeDef {_typeConstructor} = kindOf _typeConstructor
-
------------------------
--- Unification monad --
------------------------
-
-type TypeMap = HashMap TypeVar Type
-
--- | Note for The Instance of 'MonadState' for 'TypeUnifyT':
---
--- @MonadState TypeUnifyT@ does not use 'TypeMap'.
--- Instead, it uses inner monad's 'MonadState' instance.
-newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
-  deriving newtype (Functor, Applicative, Monad, MonadReader r, MonadIO, MonadFail)
-
-instance MonadState s m => MonadState s (TypeUnifyT m) where
-  get = TypeUnifyT $ lift get
-  put x = TypeUnifyT $ lift $ put x
-
-instance MonadTrans TypeUnifyT where
-  lift m = TypeUnifyT $ lift m
-
-runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
-runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
-
----------------
--- Utilities --
----------------
 
 pattern TyConApp :: Type -> [Type] -> Type
 pattern TyConApp x xs <-
@@ -222,12 +151,127 @@ splitTyArr :: Type -> ([Type], Type)
 splitTyArr (TyArr t1 t2) = over _1 (t1 :) $ splitTyArr t2
 splitTyArr t = ([], t)
 
+-------------------
+-- Type variable --
+-------------------
+
+newtype MetaVar = MetaVar {metaVar :: Id ()}
+  deriving newtype (Eq, Ord, Show, Generic, Hashable)
+  deriving stock (Data, Typeable)
+  deriving anyclass (Binary)
+
+instance Pretty MetaVar where
+  pPrint (MetaVar v) = "'" <> pPrint v
+
+instance HasType MetaVar where
+  typeOf = TyMeta
+  types _ (MetaVar v) = pure $ MetaVar v
+
+instance HasKind MetaVar where
+  kindOf ctx MetaVar {metaVar} = askKind metaVar ctx
+
+-------------------------
+-- HasType and HasKind --
+-------------------------
+
+-- | Types that have a `Type`
+class HasType a where
+  typeOf :: a -> Type
+  types :: Traversal' a Type
+
+class HasKind a where
+  kindOf :: KindCtx -> a -> Kind
+
+instance HasKind TypeVar where
+  kindOf ctx v = askKind v ctx
+
+instance HasKind PrimT where
+  kindOf _ _ = TYPE
+
+instance HasType Type where
+  typeOf = identity
+  types = identity
+
+instance HasKind Type where
+  kindOf ctx (TyApp (kindOf ctx -> TyArr _ k) _) = k
+  kindOf _ TyApp {} = error "invalid kind"
+  kindOf ctx (TyVar v) = kindOf ctx v
+  kindOf ctx (TyCon c) = kindOf ctx c
+  kindOf ctx (TyPrim p) = kindOf ctx p
+  kindOf ctx (TyArr _ t2) = kindOf ctx t2
+  kindOf _ (TyTuple n) = buildTyArr (replicate n TYPE) TYPE
+  kindOf _ (TyRecord _) = TYPE
+  kindOf _ TyPtr = TYPE `TyArr` TYPE
+  kindOf _ TYPE = TYPE -- Type :: Type
+  kindOf ctx (TyMeta tv) = kindOf ctx tv
+
+instance HasType Void where
+  typeOf = absurd
+  types _ = absurd
+
+instance HasKind Void where
+  kindOf _ = absurd
+
+-- | Universally quantified type
+data Scheme ty = Forall [TypeVar] ty
+  deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
+  deriving anyclass (Hashable, Binary)
+
+instance Pretty ty => Pretty (Scheme ty) where
+  pPrint (Forall [] t) = pPrint t
+  pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
+
+-- | Definition of Type constructor
+-- valueConstructorsのSchemeは、typeParametersで全称化されている
+data TypeDef ty = TypeDef
+  { _typeConstructor :: ty,
+    _typeParameters :: [TypeVar],
+    _valueConstructors :: [(Id (), Scheme ty)]
+  }
+  deriving stock (Show, Generic, Functor, Foldable, Traversable)
+  deriving anyclass (Binary)
+
+instance Pretty ty => Pretty (TypeDef ty) where
+  pPrint (TypeDef c q u) = pPrint (c, q, u)
+
+instance HasKind ty => HasKind (TypeDef ty) where
+  kindOf ctx TypeDef {_typeConstructor} = kindOf ctx _typeConstructor
+
+makeLenses ''TypeDef
+
+-----------------------
+-- Unification monad --
+-----------------------
+
+type TypeMap = HashMap MetaVar Type
+
+-- | Note for The Instance of 'MonadState' for 'TypeUnifyT':
+--
+-- @MonadState TypeUnifyT@ does not use 'TypeMap'.
+-- Instead, it uses inner monad's 'MonadState' instance.
+newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
+  deriving newtype (Functor, Applicative, Monad, MonadReader r, MonadIO, MonadFail)
+
+instance MonadState s m => MonadState s (TypeUnifyT m) where
+  get = TypeUnifyT $ lift get
+  put x = TypeUnifyT $ lift $ put x
+
+instance MonadTrans TypeUnifyT where
+  lift m = TypeUnifyT $ lift m
+
+runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
+runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
+
+---------------
+-- Utilities --
+---------------
+
 -- | apply substitution to a type
-applySubst :: HashMap (Id Type) Type -> Type -> Type
+applySubst :: HashMap TypeVar Type -> Type -> Type
 applySubst subst = \case
   TyApp ty ty' -> TyApp (applySubst subst ty) (applySubst subst ty')
-  TyVar id -> fromMaybe (TyVar id) $ subst ^. at id -- TyVar (over idMeta (applySubst subst) id)
-  TyCon id -> TyCon $ id {meta = applySubst subst (id.meta)}
+  TyVar id -> fromMaybe (TyVar id) $ subst ^. at id
+  TyCon id -> TyCon id
   TyPrim pt -> TyPrim pt
   TyArr ty ty' -> TyArr (applySubst subst ty) (applySubst subst ty')
   TyTuple n -> TyTuple n
@@ -237,14 +281,14 @@ applySubst subst = \case
   TyMeta tv -> TyMeta tv
 
 -- | expand type synonyms
-expandTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Maybe Type
+expandTypeSynonym :: HashMap TypeVar ([TypeVar], Type) -> Type -> Maybe Type
 expandTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
   case abbrEnv ^. at con of
     Nothing -> Nothing
     Just (ps, orig) -> Just (applySubst (HashMap.fromList $ zip ps ts) orig)
 expandTypeSynonym _ _ = Nothing
 
-expandAllTypeSynonym :: HashMap (Id Kind) ([Id Kind], Type) -> Type -> Type
+expandAllTypeSynonym :: HashMap TypeVar ([TypeVar], Type) -> Type -> Type
 expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
   case abbrEnv ^. at con of
     Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
@@ -262,20 +306,15 @@ expandAllTypeSynonym _ TyPtr = TyPtr
 expandAllTypeSynonym _ TYPE = TYPE
 expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
 
-makePrisms ''PrimT
-makePrisms ''Type
-makePrisms ''Scheme
-makeLenses ''TypeDef
-
 -- | get all meta type variables in a type
-freevars :: Type -> HashSet TypeVar
-freevars (TyApp t1 t2) = freevars t1 <> freevars t2
-freevars v@TyVar {} = freevars $ kindOf v
-freevars c@TyCon {} = freevars $ kindOf c
-freevars TyPrim {} = mempty
-freevars (TyArr t1 t2) = freevars t1 <> freevars t2
-freevars TyTuple {} = mempty
-freevars (TyRecord kts) = foldMap freevars kts
-freevars TyPtr = mempty
-freevars TYPE = mempty
-freevars (TyMeta tv) = one tv
+freevars :: KindCtx -> Type -> HashSet MetaVar
+freevars ctx (TyApp t1 t2) = freevars ctx t1 <> freevars ctx t2
+freevars ctx v@TyVar {} = freevars ctx $ kindOf ctx v
+freevars ctx c@TyCon {} = freevars ctx $ kindOf ctx c
+freevars _ TyPrim {} = mempty
+freevars ctx (TyArr t1 t2) = freevars ctx t1 <> freevars ctx t2
+freevars _ TyTuple {} = mempty
+freevars ctx (TyRecord kts) = foldMap (freevars ctx) kts
+freevars _ TyPtr = mempty
+freevars _ TYPE = mempty
+freevars _ (TyMeta tv) = one tv

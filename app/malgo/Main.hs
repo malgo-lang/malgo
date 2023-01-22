@@ -1,21 +1,20 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Main where
+module Main (main) where
 
 import Control.Lens (makeFieldsNoPrefix, (.~), (<>~))
 import Koriel.Id (ModuleName)
 import Koriel.Lens (HasModulePaths (..))
-import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
 import Malgo.Lsp.Index (Index, LspOpt (..))
 import Malgo.Lsp.Server qualified as Lsp
-import Malgo.Monad (CompileMode (..))
+import Malgo.Monad (CompileMode (..), newMalgoEnv)
 import Malgo.Monad qualified as Monad
 import Malgo.Prelude
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
-import System.FilePath (takeDirectory, (-<.>), (</>))
+import System.FilePath (takeDirectory, (</>))
 import System.FilePath.Lens (extension)
 import Text.Read (read)
 
@@ -38,32 +37,20 @@ main = do
   command <- parseCommand
   case command of
     ToLL opt -> do
-      basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt.dstPath, ".malgo-work" </> "build", basePath]
-      _uniqSupply <- UniqSupply <$> newIORef 0
-      _interfaces <- newIORef mempty
-      _indexes <- newIORef mempty
-      let ToLLOpt {..} = opt
-      Driver.compile opt.srcPath Monad.MalgoEnv {..}
+      -- basePath <- getXdgDirectory XdgData ("malgo" </> "base")
+      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt.dstPath]
+      -- _uniqSupply <- UniqSupply <$> newIORef 0
+      -- _interfaces <- newIORef mempty
+      -- _indexes <- newIORef mempty
+      -- let ToLLOpt {..} = opt
+      env <- newMalgoEnv opt.srcPath opt._modulePaths Nothing Nothing Nothing
+      Driver.compile opt.srcPath env {Monad.dstPath = opt.dstPath, Monad.compileMode = opt.compileMode, Monad.noOptimize = opt.noOptimize, Monad.lambdaLift = opt.lambdaLift, Monad.inlineSize = opt.inlineSize, Monad.debugMode = opt.debugMode}
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
       void $ Lsp.server opt
     Build _ -> do
       Build.run
-
-defaultToLLOpt :: FilePath -> ToLLOpt
-defaultToLLOpt src =
-  ToLLOpt
-    { srcPath = src,
-      dstPath = src -<.> "ll",
-      compileMode = LLVM,
-      noOptimize = False,
-      lambdaLift = False,
-      inlineSize = 15,
-      debugMode = False,
-      _modulePaths = []
-    }
 
 toLLOpt :: Parser ToLLOpt
 toLLOpt =

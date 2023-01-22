@@ -1,11 +1,11 @@
 {-# LANGUAGE CPP #-}
 
 import Malgo.Driver qualified as Driver
-import Malgo.Prelude
 import Malgo.Monad
+import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
-import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
+import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
     proc,
@@ -83,8 +83,8 @@ setupRuntime = do
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
 compile src dst modPaths lambdaLift noOptimize = do
-  malgoEnv <- newMalgoEnv dst modPaths
-  Driver.compile src malgoEnv {lambdaLift, noOptimize}
+  malgoEnv <- newMalgoEnv src modPaths Nothing Nothing Nothing
+  Driver.compile src malgoEnv {dstPath = dst, _modulePaths = takeDirectory dst : malgoEnv._modulePaths, lambdaLift, noOptimize}
 
 -- | Get the correct name of `clang`
 getClangCommand :: IO String

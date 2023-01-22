@@ -1,12 +1,13 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Desugar.DsEnv where
+module Malgo.Desugar.DsEnv (DsEnv (..), makeDsEnv) where
 
 import Control.Lens.TH
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
+import Malgo.Infer.TcEnv (TcEnv (TcEnv, _kindCtx))
 import Malgo.Interface (Interface)
 import Malgo.Monad
 import Malgo.Prelude
@@ -21,5 +22,5 @@ data DsEnv = DsEnv
 
 makeFieldsNoPrefix ''DsEnv
 
-makeDsEnv :: ModuleName -> MalgoEnv -> DsEnv
-makeDsEnv _moduleName MalgoEnv {..} = DsEnv {..}
+makeDsEnv :: ModuleName -> MalgoEnv -> TcEnv -> DsEnv
+makeDsEnv _moduleName MalgoEnv {..} TcEnv {_kindCtx} = DsEnv {..}

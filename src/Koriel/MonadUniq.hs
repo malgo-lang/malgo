@@ -1,4 +1,4 @@
-module Koriel.MonadUniq where
+module Koriel.MonadUniq (UniqSupply (..), getUniq) where
 
 import Control.Lens (view)
 import Koriel.Lens

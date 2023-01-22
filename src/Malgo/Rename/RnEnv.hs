@@ -2,7 +2,18 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
-module Malgo.Rename.RnEnv where
+module Malgo.Rename.RnEnv
+  ( Resolved,
+    RnEnv (..),
+    appendRnEnv,
+    genBuiltinRnEnv,
+    resolveName,
+    resolveGlobalName,
+    lookupVarName,
+    lookupTypeName,
+    lookupQualifiedVarName,
+  )
+where
 
 import Control.Lens (ASetter', At (at), makeFieldsNoPrefix, over, view, (^.))
 import Data.HashMap.Strict qualified as HashMap

@@ -1,7 +1,18 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Desugar.DsState where
+module Malgo.Desugar.DsState
+  ( Def (..),
+    _VarDef,
+    _FunDef,
+    _ExtDef,
+    DsState (..),
+    HasNameEnv (..),
+    HasGlobalDefs (..),
+    makeDsState,
+    lookupValueConstructors,
+  )
+where
 
 import Control.Lens (mapped, over, traversed, use, (^.), _2)
 import Control.Lens.TH
@@ -31,6 +42,7 @@ data DsState = DsState
     -- | 型環境
     _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
     _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
+    _kindCtx :: KindCtx,
     _globalDefs :: [Def]
   }
 
@@ -38,7 +50,7 @@ makeFieldsNoPrefix ''DsState
 
 -- | 'makeDsStore' only takes 'TcEnv', but importing 'RnEnv' causes cyclic dependency.
 makeDsState ::
-  (HasSignatureMap env (HashMap RnId (Scheme Type)), HasTypeDefMap env (HashMap (Id ()) (TypeDef Type))) =>
+  (HasSignatureMap env (HashMap RnId (Scheme Type)), HasTypeDefMap env (HashMap (Id ()) (TypeDef Type)), HasKindCtx env KindCtx) =>
   env ->
   DsState
 makeDsState tcEnv =
@@ -46,12 +58,13 @@ makeDsState tcEnv =
     { _nameEnv = mempty,
       _signatureMap = tcEnv ^. signatureMap,
       _typeDefMap = tcEnv ^. typeDefMap,
+      _kindCtx = tcEnv ^. kindCtx,
       _globalDefs = []
     }
 
 lookupValueConstructors ::
   MonadState DsState m =>
-  Id GT.Type ->
+  GT.TypeVar ->
   [GT.Type] ->
   m [(RnId, Scheme GT.Type)]
 lookupValueConstructors con ts = do

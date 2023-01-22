@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Refine.RefineEnv where
+module Malgo.Refine.RefineEnv (RefineEnv (..), buildRefineEnv) where
 
 import Control.Lens (makeFieldsNoPrefix, (^.))
 import Data.HashMap.Strict qualified as HashMap
@@ -14,7 +14,7 @@ import Malgo.Prelude
 
 data RefineEnv = RefineEnv
   { signatureMap :: HashMap (Id ()) (Scheme Type),
-    typeDefEnv :: HashMap (Id Kind) (TypeDef Type),
+    typeDefEnv :: HashMap TypeVar (TypeDef Type),
     _uniqSupply :: UniqSupply
   }
 
@@ -28,6 +28,6 @@ buildRefineEnv malgoEnv TcEnv {_signatureMap, _typeDefMap} =
       _uniqSupply = malgoEnv ^. uniqSupply
     }
   where
-    f :: TypeDef Type -> Maybe (Id Kind, TypeDef Type)
+    f :: TypeDef Type -> Maybe (TypeVar, TypeDef Type)
     f t@TypeDef {_typeConstructor = TyCon con} = Just (con, t)
     f _ = Nothing
