@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Koriel.Core.Op where
+module Koriel.Core.Op (Op (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)

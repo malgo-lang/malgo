@@ -6,7 +6,25 @@
 -- |
 -- malgoの共通中間表現。
 -- A正規形に近い。
-module Koriel.Core.Syntax where
+module Koriel.Core.Syntax
+  ( Unboxed (..),
+    Atom (..),
+    Obj (..),
+    LocalDef (..),
+    Case (..),
+    Exp (..),
+    Program (..),
+    HasAtom (..),
+    runDef,
+    let_,
+    bind,
+    cast,
+    appObj,
+    appCase,
+    appProgram,
+    freevars,
+  )
+where
 
 import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _2)
 import Data.Aeson (FromJSON, ToJSON)

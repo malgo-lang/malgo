@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Desugar.DsEnv where
+module Malgo.Desugar.DsEnv (DsEnv (..), makeDsEnv) where
 
 import Control.Lens.TH
 import Koriel.Id

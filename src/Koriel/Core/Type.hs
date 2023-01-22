@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Koriel.Core.Type where
+module Koriel.Core.Type (Tag (..), Con (..), Type (..), HasType (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
