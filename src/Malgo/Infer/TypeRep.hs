@@ -3,9 +3,36 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Infer.TypeRep where
+module Malgo.Infer.TypeRep
+  ( PrimT (..),
+    Kind,
+    TypeVar,
+    KindCtx,
+    insertKind,
+    askKind,
+    Type (..),
+    MetaVar (..),
+    HasType (..),
+    HasKind (..),
+    Scheme (..),
+    TypeDef (..),
+    typeConstructor,
+    typeParameters,
+    valueConstructors,
+    TypeUnifyT (..),
+    runTypeUnifyT,
+    pattern TyConApp,
+    viewTyConApp,
+    buildTyArr,
+    splitTyArr,
+    applySubst,
+    expandTypeSynonym,
+    expandAllTypeSynonym,
+    freevars,
+  )
+where
 
-import Control.Lens (At (at), Traversal', makeLenses, makePrisms, mapped, over, (^.), _1, _2)
+import Control.Lens (At (at), Traversal', makeLenses, mapped, over, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
@@ -100,6 +127,30 @@ instance Pretty Type where
   pPrintPrec _ _ TYPE = "TYPE"
   pPrintPrec l _ (TyMeta tv) = pPrintPrec l 0 tv
 
+pattern TyConApp :: Type -> [Type] -> Type
+pattern TyConApp x xs <-
+  (viewTyConApp -> Just (x, xs))
+  where
+    TyConApp x xs = buildTyApp x xs
+
+viewTyConApp :: Type -> Maybe (Type, [Type])
+viewTyConApp (TyCon con) = Just (TyCon con, [])
+viewTyConApp (TyTuple n) = Just (TyTuple n, [])
+viewTyConApp TyPtr = Just (TyPtr, [])
+viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
+viewTyConApp _ = Nothing
+
+buildTyApp :: Type -> [Type] -> Type
+buildTyApp = foldl' TyApp
+
+buildTyArr :: Foldable t => t Type -> Type -> Type
+buildTyArr ps ret = foldr TyArr ret ps
+
+-- | split a function type into its parameter types and return type
+splitTyArr :: Type -> ([Type], Type)
+splitTyArr (TyArr t1 t2) = over _1 (t1 :) $ splitTyArr t2
+splitTyArr t = ([], t)
+
 -------------------
 -- Type variable --
 -------------------
@@ -186,6 +237,8 @@ instance Pretty ty => Pretty (TypeDef ty) where
 instance HasKind ty => HasKind (TypeDef ty) where
   kindOf ctx TypeDef {_typeConstructor} = kindOf ctx _typeConstructor
 
+makeLenses ''TypeDef
+
 -----------------------
 -- Unification monad --
 -----------------------
@@ -212,30 +265,6 @@ runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 ---------------
 -- Utilities --
 ---------------
-
-pattern TyConApp :: Type -> [Type] -> Type
-pattern TyConApp x xs <-
-  (viewTyConApp -> Just (x, xs))
-  where
-    TyConApp x xs = buildTyApp x xs
-
-viewTyConApp :: Type -> Maybe (Type, [Type])
-viewTyConApp (TyCon con) = Just (TyCon con, [])
-viewTyConApp (TyTuple n) = Just (TyTuple n, [])
-viewTyConApp TyPtr = Just (TyPtr, [])
-viewTyConApp (TyApp t1 t2) = over (mapped . _2) (<> [t2]) $ viewTyConApp t1
-viewTyConApp _ = Nothing
-
-buildTyApp :: Type -> [Type] -> Type
-buildTyApp = foldl' TyApp
-
-buildTyArr :: Foldable t => t Type -> Type -> Type
-buildTyArr ps ret = foldr TyArr ret ps
-
--- | split a function type into its parameter types and return type
-splitTyArr :: Type -> ([Type], Type)
-splitTyArr (TyArr t1 t2) = over _1 (t1 :) $ splitTyArr t2
-splitTyArr t = ([], t)
 
 -- | apply substitution to a type
 applySubst :: HashMap TypeVar Type -> Type -> Type
@@ -276,11 +305,6 @@ expandAllTypeSynonym abbrEnv (TyRecord kts) = TyRecord $ fmap (expandAllTypeSyno
 expandAllTypeSynonym _ TyPtr = TyPtr
 expandAllTypeSynonym _ TYPE = TYPE
 expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
-
-makePrisms ''PrimT
-makePrisms ''Type
-makePrisms ''Scheme
-makeLenses ''TypeDef
 
 -- | get all meta type variables in a type
 freevars :: KindCtx -> Type -> HashSet MetaVar

@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
@@ -49,7 +50,7 @@ data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
 --  * Type
 --  * Definition
 data Info = Info
-  { _name :: Text,
+  { name :: Text,
     typeSignature :: Scheme Type,
     definitions :: [Range]
   }
@@ -57,12 +58,10 @@ data Info = Info
   deriving anyclass (Binary, Hashable)
 
 instance Pretty Info where
-  pPrint Info {..} = pPrint _name <+> ":" <+> pPrint typeSignature <+> pPrint definitions
-
-makeFieldsNoPrefix ''Info
+  pPrint Info {..} = pPrint name <+> ":" <+> pPrint typeSignature <+> pPrint definitions
 
 data Index = Index
-  { _references :: HashMap Info [Range],
+  { references :: HashMap Info [Range],
     _definitionMap :: HashMap RnId Info,
     _symbolInfo :: HashMap RnId Symbol
   }

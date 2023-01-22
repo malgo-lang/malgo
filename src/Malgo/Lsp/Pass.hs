@@ -47,7 +47,7 @@ index tcEnv mod = do
 removeInternalInfos :: Index -> Index
 removeInternalInfos (Index refs defs syms) = Index (HashMap.filterWithKey (\k _ -> not $ isInternal k) refs) defs syms
   where
-    isInternal (Info {_name}) | "$" `Text.isPrefixOf` _name = True
+    isInternal (Info {name}) | "$" `Text.isPrefixOf` name = True
     isInternal _ = False
 
 indexModule :: (MonadIO m, MonadReader MalgoEnv m, MonadState IndexEnv m) => Module (Malgo 'Refine) -> m ()
@@ -75,14 +75,14 @@ indexImport (_, moduleName, _) = do
 indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
 indexDataDef (range, typeName, typeParameters, constructors) = do
   typeKind <- lookupTypeKind typeName
-  let info = Info {_name = typeName.name, typeSignature = Forall [] typeKind, definitions = [range]}
+  let info = Info {name = typeName.name, typeSignature = Forall [] typeKind, definitions = [range]}
   addReferences info [range]
   addDefinition typeName info
   addSymbolInfo typeName (symbol Data typeName range)
 
   for_ typeParameters \(range, typeParameter) -> do
     typeParameterKind <- lookupTypeKind typeParameter
-    let info = Info {_name = typeParameter.name, typeSignature = Forall [] typeParameterKind, definitions = [range]}
+    let info = Info {name = typeParameter.name, typeSignature = Forall [] typeParameterKind, definitions = [range]}
     addReferences info [range]
     addDefinition typeParameter info
     addSymbolInfo typeParameter (symbol TypeParam typeParameter range)
@@ -91,7 +91,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
   where
     indexConstructor (range, constructor, parameters) = do
       constructorType <- lookupSignature constructor
-      let info = Info {_name = constructor.name, typeSignature = constructorType, definitions = [range]}
+      let info = Info {name = constructor.name, typeSignature = constructorType, definitions = [range]}
       addReferences info [range]
       addDefinition constructor info
       addSymbolInfo constructor (symbol Constructor constructor range)
@@ -124,7 +124,7 @@ indexScSig (range, ident, _) = do
   case minfo of
     Nothing -> do
       identType <- lookupSignature ident
-      let info = Info {_name = ident.name, typeSignature = identType, definitions = [range]}
+      let info = Info {name = ident.name, typeSignature = identType, definitions = [range]}
       addReferences info [range]
     Just info -> addReferences info [range]
 
@@ -136,7 +136,7 @@ indexScDef (Typed {value = range}, ident, expr) = do
       -- lookup the type of the variable `ident`
       identType <- lookupSignature ident
       -- index the information of this definition
-      let info = Info {_name = ident.name, typeSignature = identType, definitions = [range]}
+      let info = Info {name = ident.name, typeSignature = identType, definitions = [range]}
       addReferences info [range]
       addDefinition ident info
       addSymbolInfo ident (symbol Function ident range)
@@ -154,11 +154,11 @@ indexExp (Var Typed {value = range} ident) = do
   case minfo of
     Nothing -> do
       identType <- lookupSignature ident
-      let info = Info {_name = ident.name, typeSignature = identType, definitions = []}
+      let info = Info {name = ident.name, typeSignature = identType, definitions = []}
       addReferences info [range]
     Just info -> addReferences info [range]
 indexExp (Unboxed Typed {value = range} u) = do
-  let info = Info {_name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
+  let info = Info {name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 indexExp (Apply _ e1 e2) = do
   indexExp e1
@@ -176,7 +176,7 @@ indexStmt :: MonadState IndexEnv m => Stmt (Malgo 'Refine) -> m ()
 indexStmt (Let _ Id {sort = Temporal} expr) = indexExp expr
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
-  let info = Info {_name = ident.name, typeSignature = identType, definitions = [range]}
+  let info = Info {name = ident.name, typeSignature = identType, definitions = [range]}
   addReferences info [range]
   addDefinition ident info
   addSymbolInfo ident (symbol Variable ident range)
@@ -193,7 +193,7 @@ indexPat :: MonadState IndexEnv m => Pat (Malgo 'Refine) -> m ()
 indexPat (VarP _ Id {sort = Temporal}) = pass
 indexPat (VarP (Typed ty range) v) = do
   -- index the information of this definition
-  let info = Info {_name = v.name, typeSignature = Forall [] ty, definitions = [range]}
+  let info = Info {name = v.name, typeSignature = Forall [] ty, definitions = [range]}
   addReferences info [range]
   addDefinition v info
   addSymbolInfo v (symbol Variable v range)
@@ -208,7 +208,7 @@ indexPat (TupleP _ ps) =
 indexPat (RecordP _ kps) =
   traverse_ (indexPat . snd) kps
 indexPat (UnboxedP Typed {value = range} u) = do
-  let info = Info {_name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
+  let info = Info {name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 
 lookupSignature :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Scheme Type)
@@ -235,11 +235,11 @@ addReferences :: MonadState IndexEnv m => Info -> [Range] -> m ()
 addReferences info refs =
   modifying buildingIndex $ \i ->
     Index
-      { _references =
+      { references =
           HashMap.insert
             info
-            (refs <> HashMap.lookupDefault [] info i._references)
-            i._references,
+            (refs <> HashMap.lookupDefault [] info i.references)
+            i.references,
         _definitionMap = i._definitionMap,
         _symbolInfo = i._symbolInfo
       }

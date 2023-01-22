@@ -18,7 +18,7 @@ import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface)
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (RnEnv)
-import Malgo.Syntax hiding (Type (..), freevars)
+import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
 import Relude.Unsafe qualified as Unsafe

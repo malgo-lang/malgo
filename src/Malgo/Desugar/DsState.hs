@@ -1,7 +1,18 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Desugar.DsState where
+module Malgo.Desugar.DsState
+  ( Def (..),
+    _VarDef,
+    _FunDef,
+    _ExtDef,
+    DsState (..),
+    HasNameEnv (..),
+    HasGlobalDefs (..),
+    makeDsState,
+    lookupValueConstructors,
+  )
+where
 
 import Control.Lens (mapped, over, traversed, use, (^.), _2)
 import Control.Lens.TH

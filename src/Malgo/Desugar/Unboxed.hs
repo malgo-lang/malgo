@@ -1,4 +1,4 @@
-module Malgo.Desugar.Unboxed where
+module Malgo.Desugar.Unboxed (dsUnboxed) where
 
 -- Unboxedの脱糖衣
 

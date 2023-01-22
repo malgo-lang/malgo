@@ -77,7 +77,7 @@ toHoverDocument infos =
   mconcat $ map aux infos
   where
     aux Info {..} =
-      markedUpContent "malgo" (toText $ render $ pPrint _name <+> ":" <+> pPrint typeSignature)
+      markedUpContent "malgo" (toText $ render $ pPrint name <+> ":" <+> pPrint typeSignature)
         <> unmarkedUpContent (toText $ render $ pPrint definitions)
 
 infoToLocation :: Info -> [Location]
