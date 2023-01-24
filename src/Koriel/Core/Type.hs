@@ -53,7 +53,7 @@ data Type
   deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty Type where
-  pPrint (a :-> b) = sep [brackets (sep $ punctuate "," $ map pPrint a), "->", pPrint b]
+  pPrint (a :-> b) = parens $ sep ["->", brackets (sep $ map pPrint a), pPrint b]
   pPrint Int32T = "Int32#"
   pPrint Int64T = "Int64#"
   pPrint FloatT = "Float#"

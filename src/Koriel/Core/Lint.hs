@@ -117,10 +117,11 @@ lintExp (BinOp o x y) = do
 lintExp (Cast _ x) = lintAtom x
 lintExp (Let ds e) = local (map (._variable) ds <>) $ do
   traverse_ (lintObj . (._object)) ds
+  for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
   lintExp e
 lintExp (Match e cs) = do
   lintExp e
-  traverse_ lintCase cs
+  traverse_ (lintCase e) cs
 lintExp Error {} = pass
 
 lintObj :: MonadReader [Id Type] m => Obj (Id Type) -> m ()
@@ -128,11 +129,13 @@ lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: MonadReader [Id Type] m => Case (Id Type) -> m ()
-lintCase (Unpack _ vs e) = local (vs <>) $ lintExp e
-lintCase (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
-lintCase (Switch _ e) = lintExp e
-lintCase (Bind x e) = local (x :) $ lintExp e
+lintCase :: MonadReader [Id Type] m => Exp (Id Type) -> Case (Id Type) -> m ()
+lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExp e
+lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
+lintCase _ (Switch _ e) = lintExp e
+lintCase scrutinee (Bind x e) = local (x :) do
+  match scrutinee x
+  lintExp e
 
 lintAtom :: MonadReader [Id Type] m => Atom (Id Type) -> m ()
 lintAtom (Var x) = defined x

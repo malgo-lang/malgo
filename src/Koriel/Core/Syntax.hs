@@ -118,9 +118,9 @@ instance HasType a => HasType (Obj a) where
   typeOf (Pack t _ _) = t
   typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
-instance Pretty a => Pretty (Obj a) where
+instance (Pretty a, HasType a) => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
+  pPrint (Pack _ c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) -- The type of `pack` is already printed in the parent `LocalDef`.
   pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
 
 instance HasFreeVar Obj where
@@ -150,8 +150,8 @@ instance HasVariable (LocalDef a) a where
   variable f (LocalDef variable object) =
     fmap (`LocalDef` object) (f variable)
 
-instance Pretty a => Pretty (LocalDef a) where
-  pPrint (LocalDef v o) = parens $ pPrint v $$ pPrint o
+instance (Pretty a, HasType a) => Pretty (LocalDef a) where
+  pPrint (LocalDef v o) = parens $ pPrint v <+> pPrint (typeOf v) $$ pPrint o
 
 -- | alternatives
 data Case a
@@ -172,13 +172,13 @@ instance HasType a => HasType (Case a) where
   typeOf (Switch _ e) = typeOf e
   typeOf (Bind _ e) = typeOf e
 
-instance Pretty a => Pretty (Case a) where
+instance (Pretty a, HasType a) => Pretty (Case a) where
   pPrint (Unpack c xs e) =
     parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
   pPrint (OpenRecord pat e) =
     parens $ sep ["open", pPrint $ HashMap.toList pat, pPrint e]
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
-  pPrint (Bind x e) = parens $ sep ["bind" <+> pPrint x, pPrint e]
+  pPrint (Bind x e) = parens $ sep ["bind", pPrint x, pPrint (typeOf x), pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
@@ -255,12 +255,12 @@ instance HasType a => HasType (Exp a) where
   typeOf (Match _ (c :| _)) = typeOf c
   typeOf (Error t) = t
 
-instance Pretty a => Pretty (Exp a) where
+instance (Pretty a, HasType a) => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
-  pPrint (Call f xs) = parens $ pPrint f <+> sep (map pPrint xs)
+  pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
-  pPrint (BinOp o x y) = parens $ pPrint o <+> pPrint x <+> pPrint y
+  pPrint (RawCall p _ xs) = parens $ "raw" <+> pPrint p <+> sep (map pPrint xs)
+  pPrint (BinOp o x y) = parens $ "binop" <+> pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
@@ -315,14 +315,14 @@ instance HasTopVars (Program a) [(a, Exp a)] where
   topVars :: Lens' (Program a) [(a, Exp a)]
   topVars f Program {..} = fmap (\_topVars -> Program {..}) (f _topVars)
 
-instance Pretty a => Pretty (Program a) where
+instance (Pretty a, HasType a) => Pretty (Program a) where
   pPrint Program {..} =
     vcat $
       concat
         [ ["; variables"],
-          map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint e]) _topVars,
+          map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint $ typeOf v, pPrint e]) _topVars,
           ["; functions"],
-          map (\(f, (ps, e)) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps)], pPrint e]) _topFuncs,
+          map (\(f, (ps, e)) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint $ typeOf f], pPrint e]) _topFuncs,
           ["; externals"],
           map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
         ]

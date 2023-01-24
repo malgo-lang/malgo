@@ -10,7 +10,7 @@ module Koriel.Core.CodeGen.LLVM
   )
 where
 
-import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
+import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~), (^.))
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
@@ -20,7 +20,6 @@ import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
 import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
-import GHC.Records (HasField)
 import Koriel.Core.Op qualified as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type as C
@@ -70,10 +69,10 @@ data CodeGenEnv = CodeGenEnv
 
 makeFieldsNoPrefix ''CodeGenEnv
 
-newCodeGenEnv :: HasField "_uniqSupply" r UniqSupply => r -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
+newCodeGenEnv :: HasUniqSupply r UniqSupply => r -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
 newCodeGenEnv malgoEnv moduleName Program {..} =
   CodeGenEnv
-    { _uniqSupply = malgoEnv._uniqSupply,
+    { _uniqSupply = malgoEnv ^. uniqSupply,
       _valueMap = mempty,
       _globalValueMap = varMap,
       _funcMap = funcMap,
