@@ -5,7 +5,7 @@ module Koriel.Core.Optimize
   )
 where
 
-import Control.Lens (At (at), makeFieldsNoPrefix, traverseOf, traversed, view)
+import Control.Lens (traverseOf, traversed)
 import Control.Monad.Except
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
@@ -20,8 +20,6 @@ import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
 data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, inlineLevel :: Int}
-
-makeFieldsNoPrefix ''OptimizeEnv
 
 -- | Apply a monadic function n times.
 times :: Monad m => Int -> (t -> m t) -> t -> m t
@@ -119,7 +117,7 @@ type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
 optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
   body' <- optPackInline body
-  view (at v) >>= \case
+  asks (HashMap.lookup v) >>= \case
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []
   where

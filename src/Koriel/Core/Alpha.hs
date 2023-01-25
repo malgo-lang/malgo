@@ -7,7 +7,7 @@ module Koriel.Core.Alpha
   )
 where
 
-import Control.Lens (makeFieldsNoPrefix, traverseOf)
+import Control.Lens (traverseOf)
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -17,7 +17,8 @@ import Koriel.Prelude
 
 data AlphaEnv = AlphaEnv {uniqSupply :: UniqSupply, subst :: HashMap (Id Type) (Atom (Id Type))}
 
-makeFieldsNoPrefix ''AlphaEnv
+updateSubst :: [(Id Type, Atom (Id Type))] -> AlphaEnv -> AlphaEnv
+updateSubst xs e = e {subst = HashMap.fromList xs <> e.subst}
 
 alpha :: MonadIO m => Exp (Id Type) -> AlphaEnv -> m (Exp (Id Type))
 alpha = runAlpha . alphaExp
@@ -63,26 +64,22 @@ alphaObj :: (MonadReader AlphaEnv m, MonadIO m) => Obj (Id Type) -> m (Obj (Id T
 alphaObj (Fun ps e) = do
   -- Avoid capturing variables
   ps' <- traverse cloneId ps
-  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Fun ps' <$> alphaExp e
--- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Fun ps <$> alphaExp e
+  local (updateSubst (zip ps $ map Var ps')) $ Fun ps' <$> alphaExp e
 alphaObj o = traverseOf atom alphaAtom o
 
 alphaCase :: (MonadReader AlphaEnv m, MonadIO m) => Case (Id Type) -> m (Case (Id Type))
 alphaCase (Unpack c ps e) = do
   -- Avoid capturing variables
   ps' <- traverse cloneId ps
-  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Unpack c ps' <$> alphaExp e
--- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Unpack c ps <$> alphaExp e
+  local (updateSubst (zip ps $ map Var ps')) $ Unpack c ps' <$> alphaExp e
 alphaCase (OpenRecord kps e) = do
   -- Avoid capturing variables
   let ps = HashMap.elems kps
   kps' <- traverse cloneId kps
   let ps' = HashMap.elems kps'
-  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ OpenRecord kps' <$> alphaExp e
--- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ OpenRecord kps <$> alphaExp e
+  local (updateSubst (zip ps $ map Var ps')) $ OpenRecord kps' <$> alphaExp e
 alphaCase (Bind x e) = do
   -- Avoid capturing variables
   x' <- cloneId x
-  local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' <$> alphaExp e
--- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExp e
+  local (updateSubst [(x, Var x')]) $ Bind x' <$> alphaExp e
 alphaCase (Switch u e) = Switch u <$> alphaExp e
