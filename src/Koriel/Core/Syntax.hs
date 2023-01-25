@@ -11,7 +11,6 @@ module Koriel.Core.Syntax
     Atom (..),
     Obj (..),
     LocalDef (..),
-    object,
     Case (..),
     Exp (..),
     Program (..),
@@ -140,11 +139,11 @@ data LocalDef a = LocalDef {variable :: a, object :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-object :: Functor f => (Obj a -> f (Obj a)) -> LocalDef a -> f (LocalDef a)
-object f (LocalDef x1 x2) = fmap (LocalDef x1) (f x2)
-
 instance (Pretty a, HasType a) => Pretty (LocalDef a) where
   pPrint (LocalDef v o) = parens $ pPrint v <+> pPrint (typeOf v) $$ pPrint o
+
+instance HasAtom LocalDef where
+  atom f (LocalDef x o) = LocalDef x <$> traverseOf atom f o
 
 -- | alternatives
 data Case a
@@ -279,7 +278,7 @@ instance HasAtom Exp where
     RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
+    Let xs e -> Let <$> traverseOf (traversed . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
 
@@ -305,9 +304,9 @@ instance (Pretty a, HasType a) => Pretty (Program a) where
           map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) extFuncs
         ]
 
-appObj :: Traversal' (Obj a) (Exp a)
+appObj :: Traversal' (LocalDef a) (Exp a)
 appObj f = \case
-  Fun ps e -> Fun ps <$> f e
+  LocalDef v (Fun ps e) -> LocalDef v . Fun ps <$> f e
   o -> pure o
 
 appCase :: Traversal' (Case a) (Exp a)
