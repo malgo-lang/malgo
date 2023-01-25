@@ -11,6 +11,8 @@ module Koriel.Core.Syntax
     Atom (..),
     Obj (..),
     LocalDef (..),
+    HasObject (..),
+    HasVariable (..),
     Case (..),
     Exp (..),
     Program (..),
@@ -138,17 +140,19 @@ data LocalDef a = LocalDef {_variable :: a, _object :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasObject (LocalDef a) (Obj a) where
-  {-# INLINE object #-}
-  object :: Lens' (LocalDef a) (Obj a)
-  object f (LocalDef variable object) =
-    fmap (LocalDef variable) (f object)
+class HasObject s a | s -> a where
+  object :: Lens' s a
 
-instance HasVariable (LocalDef a) a where
+instance HasObject (LocalDef a_a2Uxm) (Obj a_a2Uxm) where
+  {-# INLINE object #-}
+  object f (LocalDef x1 x2) = fmap (LocalDef x1) (f x2)
+
+class HasVariable s a | s -> a where
+  variable :: Lens' s a
+
+instance HasVariable (LocalDef a_a2Uxm) a_a2Uxm where
   {-# INLINE variable #-}
-  variable :: Lens' (LocalDef a) a
-  variable f (LocalDef variable object) =
-    fmap (`LocalDef` object) (f variable)
+  variable f (LocalDef x1 x2) = fmap (\y1 -> (LocalDef y1) x2) (f x1)
 
 instance (Pretty a, HasType a) => Pretty (LocalDef a) where
   pPrint (LocalDef v o) = parens $ pPrint v <+> pPrint (typeOf v) $$ pPrint o
@@ -292,39 +296,24 @@ instance HasAtom Exp where
 
 -- | toplevel function definitions
 data Program a = Program
-  { _topVars :: [(a, Exp a)],
-    _topFuncs :: [(a, ([a], Exp a))],
-    _extFuncs :: [(Text, Type)]
+  { topVars :: [(a, Exp a)],
+    topFuncs :: [(a, ([a], Exp a))],
+    extFuncs :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
   deriving anyclass (Binary, ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
-
-instance HasExtFuncs (Program a) [(Text, Type)] where
-  {-# INLINE extFuncs #-}
-  extFuncs :: Lens' (Program a) [(Text, Type)]
-  extFuncs f Program {..} = fmap (\_extFuncs -> Program {..}) (f _extFuncs)
-
-instance HasTopFuncs (Program a) [(a, ([a], Exp a))] where
-  {-# INLINE topFuncs #-}
-  topFuncs :: Lens' (Program a) [(a, ([a], Exp a))]
-  topFuncs f (Program {..}) = fmap (\_topFuncs -> Program {..}) (f _topFuncs)
-
-instance HasTopVars (Program a) [(a, Exp a)] where
-  {-# INLINE topVars #-}
-  topVars :: Lens' (Program a) [(a, Exp a)]
-  topVars f Program {..} = fmap (\_topVars -> Program {..}) (f _topVars)
 
 instance (Pretty a, HasType a) => Pretty (Program a) where
   pPrint Program {..} =
     vcat $
       concat
         [ ["; variables"],
-          map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint $ typeOf v, pPrint e]) _topVars,
+          map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint $ typeOf v, pPrint e]) topVars,
           ["; functions"],
-          map (\(f, (ps, e)) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint $ typeOf f], pPrint e]) _topFuncs,
+          map (\(f, (ps, e)) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint $ typeOf f], pPrint e]) topFuncs,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) _extFuncs
+          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) extFuncs
         ]
 
 appObj :: Traversal' (Obj a) (Exp a)
@@ -342,9 +331,9 @@ appCase f = \case
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {..} =
   Program
-    <$> traverseOf (traversed . _2) f _topVars
-    <*> traverseOf (traversed . _2 . _2) f _topFuncs
-    <*> pure _extFuncs
+    <$> traverseOf (traversed . _2) f topVars
+    <*> traverseOf (traversed . _2 . _2) f topFuncs
+    <*> pure extFuncs
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)

@@ -143,8 +143,8 @@ lintAtom (Unboxed _) = pass
 
 lintProgram :: MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
-  let fs = map (view _1) _topFuncs
+  let fs = map (view _1) topFuncs
   local (fs <>) $
-    traverse_ ?? _topFuncs $ \(f, (ps, body)) -> local (ps <>) do
+    for_ topFuncs $ \(f, (ps, body)) -> local (ps <>) do
       match f (map typeOf ps :-> typeOf body)
       lintExp body

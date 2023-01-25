@@ -38,13 +38,13 @@ makeFieldsNoPrefix ''LambdaLiftEnv
 lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
 lambdalift _uniqSupply _moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
-    evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map fst _topFuncs} $ do
-      topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) _topFuncs
+    evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map fst topFuncs} $ do
+      topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs
       funcs <>= HashMap.fromList topFuncs
       knowns <>= HashSet.fromList (map fst topFuncs)
       LambdaLiftState {_funcs} <- get
-      -- TODO: lambdalift _topVars
-      traverseOf appProgram (pure . flat) $ Program _topVars (HashMap.toList _funcs) _extFuncs
+      -- TODO: lambdalift topVars
+      traverseOf appProgram (pure . flat) $ Program topVars (HashMap.toList _funcs) extFuncs
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Call (Var f) xs) = do

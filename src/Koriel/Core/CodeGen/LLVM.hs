@@ -80,10 +80,10 @@ newCodeGenEnv malgoEnv moduleName Program {..} =
     }
   where
     -- topVarsのOprMapを作成
-    varMap = mconcatMap ?? _topVars $ \(v, e) ->
+    varMap = mconcatMap ?? topVars $ \(v, e) ->
       one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
     -- topFuncsのOprMapを作成
-    funcMap = mconcatMap ?? _topFuncs $ \(f, (ps, e)) ->
+    funcMap = mconcatMap ?? topFuncs $ \(f, (ps, e)) ->
       one
         ( f,
           ConstantOperand $
@@ -117,13 +117,13 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
     _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
-    for_ _extFuncs \(name, typ) -> do
+    for_ extFuncs \(name, typ) -> do
       let name' = LLVM.AST.mkName $ convertString name
       case typ of
         ps :-> r -> extern name' (map convType ps) (convType r)
         _ -> error "invalid type"
-    traverse_ (uncurry genVar) _topVars
-    traverse_ (\(f, (ps, body)) -> genFunc f ps body) _topFuncs
+    traverse_ (uncurry genVar) topVars
+    traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
     case searchMain (HashMap.toList $ view nameEnv dsState) of
       Just mainCall -> do
         (f, (ps, body)) <-
@@ -134,7 +134,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
             pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
-    genLoadModule modName $ initTopVars _topVars
+    genLoadModule modName $ initTopVars topVars
   let llvmModule =
         defaultModule
           { LLVM.AST.moduleName = fromString srcPath,
