@@ -22,7 +22,7 @@ link interface mainCoreIR = do
 loadCore :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath]) => ModuleName -> m (Program (Id Type))
 loadCore (ModuleName modName) = do
   modPaths <- view modulePaths
-  message <- findAndReadFile modPaths (convertString modName <> ".kor")
+  message <- findAndReadFile modPaths (convertString modName <> ".kor.bin")
   case message of
     Right x -> pure x
     Left err -> do

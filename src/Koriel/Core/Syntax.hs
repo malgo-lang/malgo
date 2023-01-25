@@ -143,16 +143,16 @@ data LocalDef a = LocalDef {_variable :: a, _object :: Obj a}
 class HasObject s a | s -> a where
   object :: Lens' s a
 
-instance HasObject (LocalDef a_a2Uxm) (Obj a_a2Uxm) where
+instance HasObject (LocalDef a) (Obj a) where
   {-# INLINE object #-}
   object f (LocalDef x1 x2) = fmap (LocalDef x1) (f x2)
 
 class HasVariable s a | s -> a where
   variable :: Lens' s a
 
-instance HasVariable (LocalDef a_a2Uxm) a_a2Uxm where
+instance HasVariable (LocalDef a) a where
   {-# INLINE variable #-}
-  variable f (LocalDef x1 x2) = fmap (\y1 -> (LocalDef y1) x2) (f x1)
+  variable f (LocalDef x1 x2) = fmap (`LocalDef` x2) (f x1)
 
 instance (Pretty a, HasType a) => Pretty (LocalDef a) where
   pPrint (LocalDef v o) = parens $ pPrint v <+> pPrint (typeOf v) $$ pPrint o

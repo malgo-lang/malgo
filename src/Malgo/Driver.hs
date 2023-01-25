@@ -98,7 +98,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
-      writeFileLBS (env.dstPath -<.> "kor") $ Binary.encode coreLLOpt
+      writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode coreLLOpt
+      writeFile (env.dstPath -<.> "kor") $ render $ pPrint coreLLOpt
       -- writeFileLBS (env.dstPath -<.> "kor.json") $ Aeson.encode coreLLOpt
 
       -- check module paths include dstName's directory
