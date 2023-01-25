@@ -12,7 +12,6 @@ import Koriel.Core.Flat
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Relude.Extra.Map (member)
@@ -29,14 +28,14 @@ knowns :: Lens' LambdaLiftState (HashSet (Id Type))
 knowns = lens (._knowns) (\l x -> l {_knowns = x})
 
 data LambdaLiftEnv = LambdaLiftEnv
-  { _uniqSupply :: UniqSupply,
+  { uniqSupply :: UniqSupply,
     _moduleName :: ModuleName
   }
 
 makeFieldsNoPrefix ''LambdaLiftEnv
 
 lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
-lambdalift _uniqSupply _moduleName Program {..} =
+lambdalift uniqSupply _moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map fst topFuncs} $ do
       topFuncs <- traverse (\(f, (ps, e)) -> (f,) . (ps,) <$> llift e) topFuncs

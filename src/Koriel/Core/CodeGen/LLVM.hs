@@ -10,7 +10,7 @@ module Koriel.Core.CodeGen.LLVM
   )
 where
 
-import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~), (^.))
+import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
@@ -24,7 +24,6 @@ import Koriel.Core.Op qualified as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type as C
 import Koriel.Id
-import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
@@ -60,7 +59,7 @@ type PrimMap = HashMap Name Operand
 -- 変数のHashMapとknown関数のHashMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data CodeGenEnv = CodeGenEnv
-  { _uniqSupply :: UniqSupply,
+  { uniqSupply :: UniqSupply,
     _valueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
     _funcMap :: HashMap (Id C.Type) Operand,
@@ -69,10 +68,10 @@ data CodeGenEnv = CodeGenEnv
 
 makeFieldsNoPrefix ''CodeGenEnv
 
-newCodeGenEnv :: HasUniqSupply r UniqSupply => r -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
+newCodeGenEnv :: HasUniqSupply r => r -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
 newCodeGenEnv malgoEnv moduleName Program {..} =
   CodeGenEnv
-    { _uniqSupply = malgoEnv ^. uniqSupply,
+    { uniqSupply = malgoEnv.uniqSupply,
       _valueMap = mempty,
       _globalValueMap = varMap,
       _funcMap = funcMap,

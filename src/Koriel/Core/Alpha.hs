@@ -12,11 +12,10 @@ import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 
-data AlphaEnv = AlphaEnv {_uniqSupply :: UniqSupply, subst :: HashMap (Id Type) (Atom (Id Type))}
+data AlphaEnv = AlphaEnv {uniqSupply :: UniqSupply, subst :: HashMap (Id Type) (Atom (Id Type))}
 
 makeFieldsNoPrefix ''AlphaEnv
 

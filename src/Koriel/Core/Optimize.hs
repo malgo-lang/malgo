@@ -15,12 +15,11 @@ import Koriel.Core.Flat
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
-data OptimizeEnv = OptimizeEnv {_uniqSupply :: UniqSupply, inlineLevel :: Int}
+data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, inlineLevel :: Int}
 
 makeFieldsNoPrefix ''OptimizeEnv
 
@@ -44,7 +43,7 @@ optimizeProgram ::
   Int ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram us level Program {..} = runReaderT ?? OptimizeEnv {_uniqSupply = us, inlineLevel = level} $ do
+optimizeProgram us level Program {..} = runReaderT ?? OptimizeEnv {uniqSupply = us, inlineLevel = level} $ do
   state <- execStateT ?? CallInlineEnv mempty $ for_ topFuncs $ \(name, (ps, e)) -> checkInlinable $ LocalDef name (Fun ps e)
   topVars <- traverse (\(n, e) -> (n,) <$> optimizeExpr state e) topVars
   topFuncs <- traverse (\(n, (ps, e)) -> (n,) . (ps,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuncs
@@ -66,8 +65,8 @@ optimizeExpr state = 3 `times` opt
 -- (let ((f (fun ps body))) (f as)) = body[as/ps]
 optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
 optTrivialCall (Let [LocalDef f (Fun ps body)] (Call (Var f') as)) | f == f' = do
-  us <- view uniqSupply
-  optTrivialCall =<< alpha body AlphaEnv {_uniqSupply = us, subst = HashMap.fromList $ zip ps as}
+  us <- asks (.uniqSupply)
+  optTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
 optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
 optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
 optTrivialCall e = pure e
@@ -110,9 +109,9 @@ lookupCallInline ::
   m (Exp (Id Type))
 lookupCallInline call f as = do
   f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
-  us <- view uniqSupply
+  us <- asks (.uniqSupply)
   case f' of
-    Just (ps, v) -> alpha v AlphaEnv {_uniqSupply = us, subst = HashMap.fromList $ zip ps as}
+    Just (ps, v) -> alpha v AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
     Nothing -> pure $ call f as
 
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])

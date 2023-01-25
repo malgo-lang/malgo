@@ -38,7 +38,6 @@ import Generic.Data
 import Koriel.Core.Op
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
@@ -343,20 +342,20 @@ newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id T
 runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
 
-let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
+let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
   x <- newTemporalId "let" otype
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
   pure (Var x)
 
-bind :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
   DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
   pure (Var x)
 
-cast :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply, HasModuleName env ModuleName) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do

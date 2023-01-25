@@ -15,7 +15,7 @@ import Malgo.Prelude
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
   { _moduleName :: ModuleName,
-    _uniqSupply :: UniqSupply,
+    uniqSupply :: UniqSupply,
     _modulePaths :: [FilePath],
     _interfaces :: IORef (HashMap ModuleName Interface)
   }

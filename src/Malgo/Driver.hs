@@ -2,7 +2,7 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception.Extra (assertIO)
-import Control.Lens (over, view)
+import Control.Lens (over)
 import Data.Binary qualified as Binary
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -14,7 +14,6 @@ import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Core.Syntax
 import Koriel.Id (ModuleName (..))
-import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
@@ -57,7 +56,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       when (convertString (takeBaseName srcPath) /= parsedAst._moduleName.raw) $
         error "Module name must be source file's base name."
 
-      uniqSupply <- view uniqSupply
+      uniqSupply <- asks (.uniqSupply)
       when env.debugMode do
         hPutStrLn stderr "=== PARSED ==="
         hPrint stderr $ pPrint parsedAst

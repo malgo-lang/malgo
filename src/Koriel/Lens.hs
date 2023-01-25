@@ -1,6 +1,5 @@
 module Koriel.Lens
-  ( HasUniqSupply (..),
-    HasResolvedTypeIdentMap (..),
+  ( HasResolvedTypeIdentMap (..),
     HasResolvedVarIdentMap (..),
     HasSignatureMap (..),
     HasTypeDefMap (..),
@@ -13,9 +12,6 @@ module Koriel.Lens
 where
 
 import Control.Lens
-
-class HasUniqSupply s a | s -> a where
-  uniqSupply :: Lens' s a
 
 class HasResolvedTypeIdentMap s a | s -> a where
   resolvedTypeIdentMap :: Lens' s a

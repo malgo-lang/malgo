@@ -25,7 +25,6 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.String.Conversions (convertString)
-import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty as P
@@ -81,39 +80,39 @@ idToText id@Id {moduleName, sort = Internal} = moduleName.raw <> "." <> convertS
 idToText id@Id {moduleName, sort = Temporal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
 idToText id = convertString $ render $ pPrint id
 
-newTemporalId :: (MonadReader s m, MonadIO m, HasUniqSupply s UniqSupply, HasModuleName s ModuleName) => Text -> a -> m (Id a)
+newTemporalId :: (MonadReader s m, MonadIO m, HasModuleName s ModuleName, HasUniqSupply s) => Text -> a -> m (Id a)
 newTemporalId name meta = do
   uniq <- getUniq
   moduleName <- view moduleName
   let sort = Temporal
   pure Id {..}
 
-newInternalId :: (MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadReader env f) => Text -> a -> f (Id a)
+newInternalId :: (MonadIO f, HasModuleName env ModuleName, MonadReader env f, HasUniqSupply env) => Text -> a -> f (Id a)
 newInternalId name meta = do
   uniq <- getUniq
   moduleName <- view moduleName
   let sort = Internal
   pure Id {..}
 
-newExternalId :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => Text -> a -> ModuleName -> f (Id a)
+newExternalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => Text -> a -> ModuleName -> f (Id a)
 newExternalId name meta moduleName = do
   uniq <- getUniq
   let sort = External
   pure Id {..}
 
-newNativeId :: (MonadIO f, HasUniqSupply env UniqSupply, HasModuleName env ModuleName, MonadReader env f) => Text -> a -> f (Id a)
+newNativeId :: (MonadIO f, HasUniqSupply env, HasModuleName env ModuleName, MonadReader env f) => Text -> a -> f (Id a)
 newNativeId name meta = do
   uniq <- getUniq
   moduleName <- view moduleName
   let sort = Native
   pure Id {..}
 
-newIdOnName :: (MonadIO f, HasUniqSupply env UniqSupply, MonadReader env f) => a -> Id b -> f (Id a)
+newIdOnName :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> Id b -> f (Id a)
 newIdOnName meta Id {name, moduleName, sort} = do
   uniq <- getUniq
   pure Id {..}
 
-cloneId :: (MonadIO m, HasUniqSupply env UniqSupply, MonadReader env m) => Id a -> m (Id a)
+cloneId :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Id a -> m (Id a)
 cloneId Id {..} = do
   uniq <- getUniq
   pure Id {..}

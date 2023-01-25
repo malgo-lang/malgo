@@ -15,7 +15,7 @@ import System.Directory (XdgDirectory (XdgData), getCurrentDirectory, getXdgDire
 import System.FilePath (takeBaseName, takeExtension, (</>))
 
 data MalgoEnv = MalgoEnv
-  { _uniqSupply :: UniqSupply,
+  { uniqSupply :: UniqSupply,
     _interfaces :: IORef (HashMap ModuleName Interface),
     _indexes :: IORef (HashMap ModuleName Index),
     dstPath :: FilePath,
@@ -44,7 +44,7 @@ newMalgoEnv ::
   Maybe (IORef (HashMap ModuleName Index)) ->
   IO MalgoEnv
 newMalgoEnv srcFile modulePaths mUniqSupply mInterfaces mIndexes = do
-  _uniqSupply <- fromMaybeM (UniqSupply <$> newIORef 0) (pure mUniqSupply)
+  uniqSupply <- fromMaybeM (UniqSupply <$> newIORef 0) (pure mUniqSupply)
   _interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
   _indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
   basePath <- getXdgDirectory XdgData ("malgo" </> "base")
