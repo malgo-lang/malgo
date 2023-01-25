@@ -4,12 +4,11 @@
 
 module Malgo.Lsp.Pass (index) where
 
-import Control.Lens (At (at), modifying, to, use, view, (^.))
+import Control.Lens ((^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as Text
 import Koriel.Id (Id (..), IdSort (Temporal), name)
-import Koriel.Lens
 import Koriel.Pretty (Pretty (pPrint))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
@@ -21,10 +20,10 @@ import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
 
 data IndexEnv = IndexEnv
-  { _signatureMap :: HashMap RnId (Scheme Type),
-    _typeDefMap :: HashMap RnId (TypeDef Type),
-    _kindCtx :: KindCtx,
-    _buildingIndex :: Index
+  { signatureMap :: HashMap RnId (Scheme Type),
+    typeDefMap :: HashMap RnId (TypeDef Type),
+    kindCtx :: KindCtx,
+    buildingIndex :: Index
   }
 
 makeFieldsNoPrefix ''IndexEnv
@@ -32,15 +31,15 @@ makeFieldsNoPrefix ''IndexEnv
 newIndexEnv :: TcEnv -> IndexEnv
 newIndexEnv tcEnv =
   IndexEnv
-    { _signatureMap = tcEnv ^. signatureMap,
-      _typeDefMap = tcEnv ^. typeDefMap,
-      _kindCtx = tcEnv ^. kindCtx,
-      _buildingIndex = mempty
+    { signatureMap = tcEnv._signatureMap,
+      typeDefMap = tcEnv._typeDefMap,
+      kindCtx = tcEnv._kindCtx,
+      buildingIndex = mempty
     }
 
 index :: TcEnv -> Module (Malgo 'Refine) -> MalgoM Index
 index tcEnv mod = do
-  removeInternalInfos . view buildingIndex <$> execStateT (indexModule mod) (newIndexEnv tcEnv)
+  removeInternalInfos . asks (.buildingIndex) <$> execStateT (indexModule mod) (newIndexEnv tcEnv)
 
 -- | Remove infos that are only used internally.
 -- These infos' names start with '$'.
@@ -70,7 +69,7 @@ indexImport (_, moduleName, _) = do
     Just index -> do
       -- Merge imported module's interface without document symbol infomations
       index <- pure $ index {symbolInfo = mempty}
-      modifying buildingIndex (`mappend` index)
+      modify \x -> x {buildingIndex = x.buildingIndex `mappend` index}
 
 indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
 indexDataDef (range, typeName, typeParameters, constructors) = do
@@ -213,53 +212,65 @@ indexPat (UnboxedP Typed {value = range} u) = do
 
 lookupSignature :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Scheme Type)
 lookupSignature ident = do
-  mIdentType <- use (signatureMap . at ident)
+  mIdentType <- gets (HashMap.lookup ident . (.signatureMap))
   case mIdentType of
     Just identType -> pure identType
     Nothing -> error $ "lookupSignature: " <> show ident <> " not found"
 
 lookupTypeKind :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m Kind
 lookupTypeKind typeName = do
-  mTypeDef <- use (typeDefMap . at typeName)
+  mTypeDef <- gets (HashMap.lookup typeName . (.typeDefMap))
   case mTypeDef of
     Just typeDef -> do
-      ctx <- use kindCtx
+      ctx <- gets (.kindCtx)
       pure $ kindOf ctx (typeDef ^. typeConstructor)
     Nothing -> error $ "lookupTypeKind: " <> show typeName <> " not found"
 
 lookupInfo :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Maybe Info)
 lookupInfo ident =
-  use (buildingIndex . to (.definitionMap) . at ident)
+  gets (HashMap.lookup ident . (.definitionMap) . (.buildingIndex))
 
 addReferences :: MonadState IndexEnv m => Info -> [Range] -> m ()
 addReferences info refs =
-  modifying buildingIndex $ \Index {..} ->
-    Index
-      { references =
-          HashMap.insert
-            info
-            (refs <> HashMap.lookupDefault [] info references)
-            references,
-        definitionMap,
-        symbolInfo
+  modify \x ->
+    x
+      { buildingIndex =
+          let Index {..} = x.buildingIndex
+           in Index
+                { references =
+                    HashMap.insert
+                      info
+                      (refs <> HashMap.lookupDefault [] info references)
+                      references,
+                  definitionMap,
+                  symbolInfo
+                }
       }
 
 addDefinition :: MonadState IndexEnv m => XId (Malgo 'Refine) -> Info -> m ()
 addDefinition ident info =
-  modifying buildingIndex $ \Index {..} ->
-    Index
-      { references,
-        definitionMap = HashMap.insert ident info definitionMap,
-        symbolInfo
+  modify \x ->
+    x
+      { buildingIndex =
+          let Index {..} = x.buildingIndex
+           in Index
+                { references,
+                  definitionMap = HashMap.insert ident info definitionMap,
+                  symbolInfo
+                }
       }
 
 addSymbolInfo :: MonadState IndexEnv m => XId (Malgo 'Refine) -> Symbol -> m ()
 addSymbolInfo ident symbol =
-  modifying buildingIndex $ \Index {..} ->
-    Index
-      { references,
-        definitionMap,
-        symbolInfo = HashMap.insert ident symbol symbolInfo
+  modify \x ->
+    x
+      { buildingIndex =
+          let Index {..} = x.buildingIndex
+           in Index
+                { references,
+                  definitionMap,
+                  symbolInfo = HashMap.insert ident symbol symbolInfo
+                }
       }
 
 symbol :: SymbolKind -> Id a -> Range -> Symbol
