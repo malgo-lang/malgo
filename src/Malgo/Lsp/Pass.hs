@@ -4,7 +4,6 @@
 
 module Malgo.Lsp.Pass (index) where
 
-import Control.Lens ((^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as Text
@@ -223,7 +222,7 @@ lookupTypeKind typeName = do
   case mTypeDef of
     Just typeDef -> do
       ctx <- gets (.kindCtx)
-      pure $ kindOf ctx (typeDef ^. typeConstructor)
+      pure $ kindOf ctx (typeDef.typeConstructor)
     Nothing -> error $ "lookupTypeKind: " <> show typeName <> " not found"
 
 lookupInfo :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Maybe Info)

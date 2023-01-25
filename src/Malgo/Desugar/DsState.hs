@@ -70,7 +70,7 @@ lookupValueConstructors ::
 lookupValueConstructors con ts = do
   typeEnv <- use typeDefMap
   -- _valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
-  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (HashMap.elems typeEnv) of
+  case List.find (\TypeDef {..} -> typeConstructor == GT.TyCon con && not (List.null valueConstructors)) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->
-      pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
+      pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip typeParameters ts) valueConstructors
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)
