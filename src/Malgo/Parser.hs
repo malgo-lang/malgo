@@ -598,7 +598,7 @@ reserved =
       ]
 
 reservedOp :: Parser Text
-reservedOp = choice $ map (try . pOperator) ["=>", "=", ":", "|", "->", ";", ",", "!"]
+reservedOp = choice $ map (try . pOperator) ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"] -- #| and |# are for block comments in Koriel
 
 lowerIdent :: Parser Text
 lowerIdent =

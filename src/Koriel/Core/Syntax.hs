@@ -33,6 +33,7 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Generic.Data
 import Koriel.Core.Op
 import Koriel.Core.Type
@@ -41,6 +42,7 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
+import Numeric (showHex)
 
 class HasFreeVar f where
   -- | free variables
@@ -68,10 +70,10 @@ instance HasType Unboxed where
   typeOf Bool {} = BoolT
 
 instance Pretty Unboxed where
-  pPrint (Int32 x) = pPrint x
-  pPrint (Int64 x) = pPrint x
-  pPrint (Float x) = pPrint x
-  pPrint (Double x) = pPrint x
+  pPrint (Int32 x) = pPrint x <> "_i32"
+  pPrint (Int64 x) = pPrint x <> "_i64"
+  pPrint (Float x) = text (showHex (castFloatToWord32 x) "") <> "_f32" <+> "#|" <> pPrint x <> "|#"
+  pPrint (Double x) = text (showHex (castDoubleToWord64 x) "") <> "_f64" <+> "#|" <> pPrint x <> "|#"
   pPrint (Char x) = quotes (pPrint x)
   pPrint (String x) = doubleQuotes (pPrint x)
   pPrint (Bool True) = "True#"
