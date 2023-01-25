@@ -1,7 +1,7 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
-import Control.Lens (At (at), preuse, preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2, _Just)
+import Control.Lens (At (at), preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2)
 import Data.Char qualified as Char
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
@@ -25,6 +25,7 @@ import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
+import Relude.Unsafe qualified as Unsafe
 
 -- | MalgoからCoreへの変換
 desugar ::
@@ -142,14 +143,16 @@ dsForeign (Typed typ (_, primName), name, _) = do
   pure [FunDef name' fun, ExtDef primName (paramTypes' :-> retType)]
 
 dsDataDef ::
-  (MonadState DsState m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
+  (MonadState DsState m, MonadReader DsEnv m, MonadIO m) =>
   DataDef (Malgo 'Refine) ->
   m [Def]
 dsDataDef (_, name, _, cons) =
   for cons $ \(_, conName, _) -> do
     -- lookup constructor infomations
-    Just vcs <- preuse (typeDefMap . at name . _Just . valueConstructors)
-    let Forall _ conType = fromJust $ List.lookup conName vcs
+    TypeDef {valueConstructors} <- do
+      typeDefMap <- use typeDefMap
+      pure (Unsafe.fromJust (HashMap.lookup name typeDefMap))
+    let Forall _ conType = fromJust $ List.lookup conName valueConstructors
 
     -- desugar conType
     let (paramTypes, retType) = splitTyArr conType

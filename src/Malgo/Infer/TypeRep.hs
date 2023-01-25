@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Infer.TypeRep
@@ -29,7 +28,7 @@ module Malgo.Infer.TypeRep
   )
 where
 
-import Control.Lens (At (at), Traversal', makeLenses, mapped, over, (^.), _1, _2)
+import Control.Lens (At (at), Traversal', mapped, over, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
@@ -233,8 +232,6 @@ instance Pretty ty => Pretty (TypeDef ty) where
 
 instance HasKind ty => HasKind (TypeDef ty) where
   kindOf ctx TypeDef {typeConstructor} = kindOf ctx typeConstructor
-
-makeLenses ''TypeDef
 
 -----------------------
 -- Unification monad --
