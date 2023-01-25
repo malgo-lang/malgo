@@ -4,7 +4,7 @@
 
 module Malgo.Lsp.Pass (index) where
 
-import Control.Lens (At (at), modifying, use, view, (.~), (^.))
+import Control.Lens (At (at), modifying, to, use, view, (^.))
 import Control.Lens.TH (makeFieldsNoPrefix)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as Text
@@ -69,7 +69,7 @@ indexImport (_, moduleName, _) = do
       error $ "Could not find index file for module " <> show moduleName
     Just index -> do
       -- Merge imported module's interface without document symbol infomations
-      index <- pure $ index & symbolInfo .~ mempty
+      index <- pure $ index {symbolInfo = mempty}
       modifying buildingIndex (`mappend` index)
 
 indexDataDef :: MonadState IndexEnv m => DataDef (Malgo 'Refine) -> m ()
@@ -229,28 +229,38 @@ lookupTypeKind typeName = do
 
 lookupInfo :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Maybe Info)
 lookupInfo ident =
-  use (buildingIndex . definitionMap . at ident)
+  use (buildingIndex . to (.definitionMap) . at ident)
 
 addReferences :: MonadState IndexEnv m => Info -> [Range] -> m ()
 addReferences info refs =
-  modifying buildingIndex $ \i ->
+  modifying buildingIndex $ \Index {..} ->
     Index
       { references =
           HashMap.insert
             info
-            (refs <> HashMap.lookupDefault [] info i.references)
-            i.references,
-        _definitionMap = i._definitionMap,
-        _symbolInfo = i._symbolInfo
+            (refs <> HashMap.lookupDefault [] info references)
+            references,
+        definitionMap,
+        symbolInfo
       }
 
 addDefinition :: MonadState IndexEnv m => XId (Malgo 'Refine) -> Info -> m ()
 addDefinition ident info =
-  modifying (buildingIndex . definitionMap) $ HashMap.insert ident info
+  modifying buildingIndex $ \Index {..} ->
+    Index
+      { references,
+        definitionMap = HashMap.insert ident info definitionMap,
+        symbolInfo
+      }
 
 addSymbolInfo :: MonadState IndexEnv m => XId (Malgo 'Refine) -> Symbol -> m ()
 addSymbolInfo ident symbol =
-  modifying (buildingIndex . symbolInfo) $ HashMap.insert ident symbol
+  modifying buildingIndex $ \Index {..} ->
+    Index
+      { references,
+        definitionMap,
+        symbolInfo = HashMap.insert ident symbol symbolInfo
+      }
 
 symbol :: SymbolKind -> Id a -> Range -> Symbol
 symbol kind name = Symbol kind name.name
