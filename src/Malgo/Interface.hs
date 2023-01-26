@@ -12,7 +12,7 @@ import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Malgo.Desugar.DsState (DsState, HasNameEnv (nameEnv))
+import Malgo.Desugar.DsState (DsState (..))
 import Malgo.Infer.TypeRep (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude
@@ -50,27 +50,31 @@ makeFieldsNoPrefix ''Interface
 instance Pretty Interface where
   pPrint = Koriel.Pretty.text . show
 
+-- | Build an 'Interface' from 'RnState' and 'DsState'.
 buildInterface :: ModuleName -> RnState -> DsState -> Interface
 -- TODO: write abbrMap to interface
 buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
-  ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
+  ifor_ (dsState.nameEnv) $ \tcId coreId ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
       resolvedVarIdentMap . at (tcId.name) ?= tcId
       coreIdentMap . at tcId ?= coreId
-  ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
+  ifor_ (dsState.signatureMap) $ \tcId scheme ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
       signatureMap . at tcId ?= scheme
-  ifor_ (dsState ^. typeDefMap) $ \rnId typeDef -> do
+  ifor_ (dsState.typeDefMap) $ \rnId typeDef -> do
     when (rnId.sort == External && rnId.moduleName == moduleName) do
       resolvedTypeIdentMap . at (rnId.name) ?= rnId
       typeDefMap . at rnId ?= typeDef
-  ifor_ (dsState ^. kindCtx) $ \tv kind -> do
+  ifor_ (dsState.kindCtx) $ \tv kind -> do
     when (tv.sort == External && tv.moduleName == moduleName) do
       kindCtx %= insertKind tv kind
 
+-- | Convert destination file path to interface file path.
 toInterfacePath :: String -> FilePath
-toInterfacePath x = replaceExtension x "mlgi"
+toInterfacePath dstPath = replaceExtension dstPath "mlgi"
 
+-- | Load an 'Interface' from a file.
+-- The file path is determined from the module name and `--module-path` option.
 loadInterface ::
   HasCallStack =>
   ( MonadReader s m,

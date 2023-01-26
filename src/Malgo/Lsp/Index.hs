@@ -11,9 +11,7 @@ module Malgo.Lsp.Index
     Symbol (..),
     Info (..),
     Index (..),
-    definitionMap,
     LspOpt (..),
-    HasSymbolInfo (..),
     findReferences,
     loadIndex,
     storeIndex,
@@ -62,15 +60,13 @@ instance Pretty Info where
 
 data Index = Index
   { references :: HashMap Info [Range],
-    _definitionMap :: HashMap RnId Info,
-    _symbolInfo :: HashMap RnId Symbol
+    definitionMap :: HashMap RnId Info,
+    symbolInfo :: HashMap RnId Symbol
   }
   deriving stock (Show, Generic)
   deriving anyclass (Binary)
   deriving (Monoid, Semigroup) via (Generically Index)
   deriving (Pretty) via (PrettyShow Index)
-
-makeFieldsNoPrefix ''Index
 
 data LspOpt = LspOpt
   { _modulePaths :: [FilePath],
