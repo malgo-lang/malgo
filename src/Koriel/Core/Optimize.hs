@@ -96,7 +96,7 @@ checkInlinable (LocalDef f (Fun ps v)) = do
   -- 変数の数がlevel以下ならインライン展開する
   let isInlinableSize = level >= length v
   when isInlinableSize $ do
-    modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
+    modify \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
 checkInlinable _ = pass
 
 lookupCallInline ::
