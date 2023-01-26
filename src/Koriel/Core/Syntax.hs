@@ -11,6 +11,8 @@ module Koriel.Core.Syntax
     Atom (..),
     Obj (..),
     LocalDef (..),
+    HasObject (..),
+    HasVariable (..),
     Case (..),
     Exp (..),
     Program (..),
@@ -26,7 +28,7 @@ module Koriel.Core.Syntax
   )
 where
 
-import Control.Lens (Traversal', sans, traverseOf, traversed, _2)
+import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _2)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
@@ -135,15 +137,26 @@ instance HasAtom Obj where
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
     Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
-data LocalDef a = LocalDef {variable :: a, object :: Obj a}
+data LocalDef a = LocalDef {_variable :: a, _object :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
+class HasObject s a | s -> a where
+  object :: Lens' s a
+
+instance HasObject (LocalDef a) (Obj a) where
+  {-# INLINE object #-}
+  object f (LocalDef x1 x2) = fmap (LocalDef x1) (f x2)
+
+class HasVariable s a | s -> a where
+  variable :: Lens' s a
+
+instance HasVariable (LocalDef a) a where
+  {-# INLINE variable #-}
+  variable f (LocalDef x1 x2) = fmap (`LocalDef` x2) (f x1)
+
 instance (Pretty a, HasType a) => Pretty (LocalDef a) where
   pPrint (LocalDef v o) = parens $ pPrint v <+> pPrint (typeOf v) $$ pPrint o
-
-instance HasAtom LocalDef where
-  atom f (LocalDef x o) = LocalDef x <$> traverseOf atom f o
 
 -- | alternatives
 data Case a
@@ -266,7 +279,7 @@ instance HasFreeVar Exp where
   freevars (RawCall _ _ xs) = foldMap freevars xs
   freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
-  freevars (Let xs e) = foldr (sans . (.variable)) (freevars e <> foldMap (freevars . (.object)) xs) xs
+  freevars (Let xs e) = foldr (sans . (._variable)) (freevars e <> foldMap (freevars . (._object)) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
   freevars (Error _) = mempty
 
@@ -278,7 +291,7 @@ instance HasAtom Exp where
     RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverseOf (traversed . atom) f xs <*> traverseOf atom f e
+    Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Error t -> pure (Error t)
 
@@ -304,9 +317,9 @@ instance (Pretty a, HasType a) => Pretty (Program a) where
           map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) extFuncs
         ]
 
-appObj :: Traversal' (LocalDef a) (Exp a)
+appObj :: Traversal' (Obj a) (Exp a)
 appObj f = \case
-  LocalDef v (Fun ps e) -> LocalDef v . Fun ps <$> f e
+  Fun ps e -> Fun ps <$> f e
   o -> pure o
 
 appCase :: Traversal' (Case a) (Exp a)

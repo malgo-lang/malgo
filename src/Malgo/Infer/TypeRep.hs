@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Infer.TypeRep
@@ -15,6 +16,9 @@ module Malgo.Infer.TypeRep
     HasKind (..),
     Scheme (..),
     TypeDef (..),
+    typeConstructor,
+    typeParameters,
+    valueConstructors,
     TypeUnifyT (..),
     runTypeUnifyT,
     pattern TyConApp,
@@ -28,7 +32,7 @@ module Malgo.Infer.TypeRep
   )
 where
 
-import Control.Lens (At (at), Traversal', mapped, over, (^.), _1, _2)
+import Control.Lens (At (at), Traversal', makeLenses, mapped, over, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
@@ -220,9 +224,9 @@ instance Pretty ty => Pretty (Scheme ty) where
 -- | Definition of Type constructor
 -- valueConstructorsのSchemeは、typeParametersで全称化されている
 data TypeDef ty = TypeDef
-  { typeConstructor :: ty,
-    typeParameters :: [TypeVar],
-    valueConstructors :: [(Id (), Scheme ty)]
+  { _typeConstructor :: ty,
+    _typeParameters :: [TypeVar],
+    _valueConstructors :: [(Id (), Scheme ty)]
   }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
   deriving anyclass (Binary)
@@ -231,7 +235,9 @@ instance Pretty ty => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
 
 instance HasKind ty => HasKind (TypeDef ty) where
-  kindOf ctx TypeDef {typeConstructor} = kindOf ctx typeConstructor
+  kindOf ctx TypeDef {_typeConstructor} = kindOf ctx _typeConstructor
+
+makeLenses ''TypeDef
 
 -----------------------
 -- Unification monad --

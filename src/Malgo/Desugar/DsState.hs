@@ -7,12 +7,14 @@ module Malgo.Desugar.DsState
     _FunDef,
     _ExtDef,
     DsState (..),
+    HasNameEnv (..),
+    HasGlobalDefs (..),
     makeDsState,
     lookupValueConstructors,
   )
 where
 
-import Control.Lens (mapped, over, traversed, (^.), _2)
+import Control.Lens (mapped, over, traversed, use, (^.), _2)
 import Control.Lens.TH
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
@@ -36,45 +38,39 @@ makePrisms ''Def
 
 data DsState = DsState
   { -- | Malgo -> Coreの名前環境
-    nameEnv :: HashMap RnId (Id C.Type),
-    -- | 変数-型
-    signatureMap :: HashMap RnId (GT.Scheme GT.Type),
-    -- | 型名-型定義
-    typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
-    -- | 型変数-カインド
-    kindCtx :: KindCtx,
-    -- | トップレベル宣言
-    globalDefs :: [Def]
+    _nameEnv :: HashMap RnId (Id C.Type),
+    -- | 型環境
+    _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
+    _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
+    _kindCtx :: KindCtx,
+    _globalDefs :: [Def]
   }
 
 makeFieldsNoPrefix ''DsState
 
 -- | 'makeDsStore' only takes 'TcEnv', but importing 'RnEnv' causes cyclic dependency.
 makeDsState ::
-  (HasSignatureMap env (HashMap RnId (Scheme Type)), HasKindCtx env KindCtx, HasTypeDefMap env (HashMap (Id ()) (TypeDef Type))) =>
+  (HasSignatureMap env (HashMap RnId (Scheme Type)), HasTypeDefMap env (HashMap (Id ()) (TypeDef Type)), HasKindCtx env KindCtx) =>
   env ->
   DsState
 makeDsState tcEnv =
   DsState
-    { nameEnv = mempty,
-      signatureMap = tcEnv ^. signatureMap,
-      typeDefMap = tcEnv ^. typeDefMap,
-      kindCtx = tcEnv ^. kindCtx,
-      globalDefs = []
+    { _nameEnv = mempty,
+      _signatureMap = tcEnv ^. signatureMap,
+      _typeDefMap = tcEnv ^. typeDefMap,
+      _kindCtx = tcEnv ^. kindCtx,
+      _globalDefs = []
     }
 
 lookupValueConstructors ::
   MonadState DsState m =>
-  -- | 型コンストラクタ
   GT.TypeVar ->
-  -- | 型実引数
   [GT.Type] ->
   m [(RnId, Scheme GT.Type)]
 lookupValueConstructors con ts = do
-  typeEnv <- gets (.typeDefMap)
-  -- valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
-  -- TODO: 型シノニムを考慮する必要があるのか？考慮する必要がないため無視するのなら、assertionでチェックすべきでは？
-  case List.find (\TypeDef {..} -> typeConstructor == GT.TyCon con && not (List.null valueConstructors)) (HashMap.elems typeEnv) of
+  typeEnv <- use typeDefMap
+  -- _valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
+  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->
-      pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip typeParameters ts) valueConstructors
+      pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint con)

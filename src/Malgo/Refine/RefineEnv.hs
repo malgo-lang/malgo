@@ -1,3 +1,5 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Malgo.Refine.RefineEnv (RefineEnv (..), buildRefineEnv) where
 
 import Data.HashMap.Strict qualified as HashMap
@@ -23,5 +25,5 @@ buildRefineEnv malgoEnv TcEnv {_signatureMap, _typeDefMap} =
     }
   where
     f :: TypeDef Type -> Maybe (TypeVar, TypeDef Type)
-    f t@TypeDef {typeConstructor = TyCon con} = Just (con, t)
+    f t@TypeDef {_typeConstructor = TyCon con} = Just (con, t)
     f _ = Nothing

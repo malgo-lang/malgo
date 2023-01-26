@@ -10,7 +10,7 @@ module Koriel.Core.CodeGen.LLVM
   )
 where
 
-import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, use, (<?=), (?=))
+import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, use, view, (<?=), (?=))
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
@@ -49,7 +49,7 @@ import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
-import Malgo.Desugar.DsState (DsState (..))
+import Malgo.Desugar.DsState (DsState (..), HasNameEnv (nameEnv))
 import Malgo.Monad (MalgoEnv (..))
 
 instance Hashable Name
@@ -126,7 +126,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
         _ -> error "invalid type"
     traverse_ (uncurry genVar) topVars
     traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
-    case searchMain (HashMap.toList dsState.nameEnv) of
+    case searchMain (HashMap.toList $ view nameEnv dsState) of
       Just mainCall -> do
         (f, (ps, body)) <-
           mainFunc =<< runDef do

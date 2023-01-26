@@ -1,7 +1,7 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
-import Control.Lens (preview, traverseOf, traversed, (^.), _2)
+import Control.Lens (At (at), preuse, preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2, _Just)
 import Data.Char qualified as Char
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
@@ -12,6 +12,7 @@ import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
+import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Desugar.DsEnv
 import Malgo.Desugar.DsState
@@ -24,7 +25,6 @@ import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
-import Relude.Unsafe qualified as Unsafe
 
 -- | MalgoからCoreへの変換
 desugar ::
@@ -36,7 +36,7 @@ desugar tcEnv (Module modName ds) = do
   malgoEnv <- ask
   runReaderT ?? makeDsEnv modName malgoEnv tcEnv $ do
     (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
-    let ds'' = ds' <> dsEnv.globalDefs
+    let ds'' = ds' <> dsEnv._globalDefs
     let varDefs = mapMaybe (preview _VarDef) ds''
     let funDefs = mapMaybe (preview _FunDef) ds''
     let extDefs = mapMaybe (preview _ExtDef) ds''
@@ -58,7 +58,7 @@ dsBindGroup bg = do
 dsImport :: (MonadReader DsEnv m, MonadState DsState m, MonadIO m) => Import (Malgo 'Refine) -> m ()
 dsImport (_, modName, _) = do
   interface <- loadInterface modName
-  modify \s -> s {nameEnv = s.nameEnv <> interface ^. coreIdentMap}
+  nameEnv <>= interface ^. coreIdentMap
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::
@@ -74,9 +74,9 @@ dsScDefs ::
 dsScDefs ds = do
   -- まず、宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
-    Just (Forall _ fType) <- gets $ (.signatureMap) >>> HashMap.lookup f
+    Just (Forall _ fType) <- use (signatureMap . at f)
     f' <- newCoreId f =<< dsType fType
-    modify \s -> s {nameEnv = HashMap.insert f f' s.nameEnv}
+    nameEnv . at f ?= f'
   foldMapM dsScDef ds
 
 dsScDef :: (MonadState DsState f, MonadReader DsEnv f, MonadFail f, MonadIO f) => ScDef (Malgo 'Refine) -> f [Def]
@@ -138,20 +138,18 @@ dsForeign (Typed typ (_, primName), name, _) = do
   retType <- dsType retType
   params <- traverse (newTemporalId "p") paramTypes'
   fun <- curryFun True name.name params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
-  modify \s -> s {nameEnv = HashMap.insert name name' s.nameEnv}
+  nameEnv . at name ?= name'
   pure [FunDef name' fun, ExtDef primName (paramTypes' :-> retType)]
 
 dsDataDef ::
-  (MonadState DsState m, MonadReader DsEnv m, MonadIO m) =>
+  (MonadState DsState m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
   DataDef (Malgo 'Refine) ->
   m [Def]
 dsDataDef (_, name, _, cons) =
   for cons $ \(_, conName, _) -> do
     -- lookup constructor infomations
-    TypeDef {valueConstructors} <- do
-      typeDefMap <- gets (.typeDefMap)
-      pure (Unsafe.fromJust (HashMap.lookup name typeDefMap))
-    let Forall _ conType = fromJust $ List.lookup conName valueConstructors
+    Just vcs <- preuse (typeDefMap . at name . _Just . valueConstructors)
+    let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType
     let (paramTypes, retType) = splitTyArr conType
@@ -168,7 +166,7 @@ dsDataDef (_, name, _, cons) =
     obj <- case ps of
       [] -> pure ([], expr)
       _ -> curryFun True conName.name ps expr
-    modify \s -> s {nameEnv = HashMap.insert conName conName' s.nameEnv}
+    nameEnv . at conName ?= conName'
     pure (FunDef conName' obj)
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
@@ -253,7 +251,7 @@ dsStmts (NoBind _ e :| s : ss) = runDef $ do
 dsStmts (G.Let _ v e :| s : ss) = do
   e' <- dsExp e
   v' <- newTemporalId ("let_" <> idToText v) (C.typeOf e')
-  modify \s -> s {nameEnv = HashMap.insert v v' s.nameEnv}
+  nameEnv . at v ?= v'
   ss' <- dsStmts (s :| ss)
   pure $ Match e' (Bind v' ss' :| [])
 
@@ -261,7 +259,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
 
 lookupName :: MonadState DsState m => RnId -> m (Id C.Type)
 lookupName name = do
-  mname' <- gets $ (.nameEnv) >>> HashMap.lookup name
+  mname' <- use (nameEnv . at name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
@@ -305,8 +303,7 @@ curryFun isToplevel hint ps e = curryFun' ps []
         then do
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
-          -- modify \s -> s {globalDefs = s.globalDefs <> [FunDef fun (ps, e)]}
-          modify \s -> s {globalDefs = FunDef fun (ps, e) : s.globalDefs}
+          globalDefs <>= [FunDef fun (ps, e)]
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do

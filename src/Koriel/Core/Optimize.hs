@@ -5,7 +5,7 @@ module Koriel.Core.Optimize
   )
 where
 
-import Control.Lens (traverseOf, traversed)
+import Control.Lens (At (at), makeFieldsNoPrefix, traverseOf, traversed, view)
 import Control.Monad.Except
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
@@ -20,6 +20,8 @@ import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
 data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, inlineLevel :: Int}
+
+makeFieldsNoPrefix ''OptimizeEnv
 
 -- | Apply a monadic function n times.
 times :: Monad m => Int -> (t -> m t) -> t -> m t
@@ -65,7 +67,7 @@ optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (
 optTrivialCall (Let [LocalDef f (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- asks (.uniqSupply)
   optTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
-optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . appObj) optTrivialCall ds <*> optTrivialCall e
+optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
 optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
 optTrivialCall e = pure e
 
@@ -82,7 +84,7 @@ optCallInline (CallDirect f xs) = lookupCallInline CallDirect f xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
 optCallInline (Let ds e) = do
-  ds' <- traverseOf (traversed . appObj) optCallInline ds
+  ds' <- traverseOf (traversed . object . appObj) optCallInline ds
   traverse_ checkInlinable ds'
   Let ds' <$> optCallInline e
 optCallInline e = pure e
@@ -96,7 +98,7 @@ checkInlinable (LocalDef f (Fun ps v)) = do
   -- 変数の数がlevel以下ならインライン展開する
   let isInlinableSize = level >= length v
   when isInlinableSize $ do
-    modify \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
+    modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
 checkInlinable _ = pass
 
 lookupCallInline ::
@@ -117,7 +119,7 @@ type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
 optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
   body' <- optPackInline body
-  asks (HashMap.lookup v) >>= \case
+  view (at v) >>= \case
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []
   where
@@ -126,7 +128,7 @@ optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
 optPackInline (Match v cs) =
   Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
 optPackInline (Let ds e) = do
-  ds' <- traverseOf (traversed . appObj) optPackInline ds
+  ds' <- traverseOf (traversed . object . appObj) optPackInline ds
   local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
   where
     toPackInlineMap (LocalDef v (Pack _ con as)) = one (v, (con, as))
@@ -135,13 +137,13 @@ optPackInline e = pure e
 
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
 optVarBind (Match (Atom a) (Bind x e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
-optVarBind (Let ds e) = Let <$> traverseOf (traversed . appObj) optVarBind ds <*> optVarBind e
+optVarBind (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optVarBind ds <*> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e
 
 removeUnusedLet :: (Monad f, Hashable a) => Exp (Id a) -> f (Exp (Id a))
 removeUnusedLet (Let ds e) = do
-  ds' <- traverseOf (traversed . appObj) removeUnusedLet ds
+  ds' <- traverseOf (traversed . object . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
   -- 定義vから到達可能でかつvで定義されていない変数すべての集合のマップ
   let gamma = map (\(LocalDef v o) -> (v, HashSet.delete v $ freevars o)) ds'
@@ -164,7 +166,7 @@ removeUnusedLet e = pure e
 
 optIdCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
 optIdCast (Cast t e) | typeOf e == t = pure (Atom e)
-optIdCast (Let ds e) = Let <$> traverseOf (traversed . appObj) optIdCast ds <*> optIdCast e
+optIdCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optIdCast ds <*> optIdCast e
 optIdCast (Match v cs) = Match <$> optIdCast v <*> traverseOf (traversed . appCase) optIdCast cs
 optIdCast e = pure e
 

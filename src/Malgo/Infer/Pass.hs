@@ -1,6 +1,6 @@
 module Malgo.Infer.Pass (infer) where
 
-import Control.Lens (At (at), forOf, ix, mapped, modifying, over, preuse, to, traverseOf, traversed, use, view, (%=), (.=), (<>=), (?=), (^.), _1, _2, _3)
+import Control.Lens (At (at), forOf, ix, mapped, over, preuse, to, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
@@ -38,7 +38,7 @@ lookupType :: (MonadState TcEnv m, MonadIO m) => Range -> RnId -> m Type
 lookupType pos name =
   preuse (typeDefMap . ix name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
-    Just TypeDef {..} -> pure typeConstructor
+    Just TypeDef {..} -> pure _typeConstructor
 
 infer :: (MonadFail m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'Infer), TcEnv)
 infer rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
@@ -164,17 +164,7 @@ tcDataDefs ds = do
     let valueCons' = zip valueConsNames $ map (Forall params') valueConsTypes
     signatureMap <>= HashMap.fromList valueCons'
     -- 2. 環境に登録する
-    modifying typeDefMap $
-      HashMap.adjust
-        ( \TypeDef {..} ->
-            ( TypeDef
-                { typeConstructor,
-                  typeParameters = params',
-                  valueConstructors = valueCons'
-                }
-            )
-        )
-        name
+    typeDefMap . at name %= (_Just . typeParameters .~ params') . (_Just . valueConstructors .~ valueCons')
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
 tcForeigns ::

@@ -1,7 +1,7 @@
 -- | パターンマッチのコンパイル
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
-import Control.Lens (Prism', has, over, _1)
+import Control.Lens (At (at), Prism', has, over, (?=), _1)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
 import Data.List.NonEmpty qualified as NonEmpty
@@ -25,10 +25,11 @@ import Malgo.Syntax.Extension
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加
 
--- | 各節のパターン列を行列に見立て、転置してmatchにわたし、パターンを分解する
+-- 各節のパターン列を行列に見立て、転置してmatchにわたし、パターンを分解する
 -- 例えば、{ f Nil -> f empty | f (Cons x xs) -> f x }の場合は、
 -- [ [f, Nil], [f, Cons x xs] ] に見立て、
 -- [ [f, f], [Nil, Cons x xs] ] に転置する
+
 newtype PatMatrix = PatMatrix
   { -- | パターンの転置行列
     innerList :: [[Pat (Malgo 'Refine)]]
@@ -36,8 +37,6 @@ newtype PatMatrix = PatMatrix
   deriving stock (Show)
   deriving newtype (Pretty)
 
--- | PatMatrixのコンストラクタ
--- 転置前のパターン列を受け取り、転置してPatMatrixを作成する
 patMatrix :: [[Pat (Malgo 'Refine)]] -> PatMatrix
 patMatrix xss = PatMatrix $ transpose xss
 
@@ -77,9 +76,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
         tails
         ( zipWith
             ( \case
-                (VarP _ v) -> \e -> do
-                  modify \s -> s {nameEnv = HashMap.insert v scrutinee s.nameEnv}
-                  e
+                (VarP _ v) -> \e -> nameEnv . at v ?= scrutinee >> e
                 _ -> error "All elements of heads must be VarP"
             )
             heads

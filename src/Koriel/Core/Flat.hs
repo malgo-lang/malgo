@@ -15,7 +15,7 @@ runFlat = fmap (uncurry (flip appEndo)) . runWriterT
 
 flatExp :: Monad m => Exp a -> WriterT (Endo (Exp a)) m (Exp a)
 flatExp (Let ds e) = do
-  tell . Endo . Let =<< traverseOf (traversed . appObj) (runFlat . flatExp) ds
+  tell . Endo . Let =<< traverseOf (traversed . object . appObj) (runFlat . flatExp) ds
   flatExp e
 flatExp (Match v (Unpack con ps e :| [])) = do
   v <- flatExp v

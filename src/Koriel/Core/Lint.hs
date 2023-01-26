@@ -115,9 +115,9 @@ lintExp (BinOp o x y) = do
     And -> match x BoolT >> match y BoolT
     Or -> match x BoolT >> match y BoolT
 lintExp (Cast _ x) = lintAtom x
-lintExp (Let ds e) = local (map (.variable) ds <>) $ do
-  traverse_ (lintObj . (.object)) ds
-  for_ ds $ \LocalDef {variable, object} -> match variable object
+lintExp (Let ds e) = local (map (._variable) ds <>) $ do
+  traverse_ (lintObj . (._object)) ds
+  for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
   lintExp e
 lintExp (Match e cs) = do
   lintExp e

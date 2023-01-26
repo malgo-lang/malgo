@@ -72,8 +72,8 @@ decompose t@(TyConApp (TyCon con) ts) = do
   env <- asks (.typeDefEnv)
   case HashMap.lookup con env of
     Nothing -> pure $ Type t
-    Just TypeDef {typeParameters, valueConstructors} -> do
-      spaces <- traverse (constructorSpace $ HashMap.fromList $ zip typeParameters ts) valueConstructors
+    Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
+      spaces <- traverse (constructorSpace $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
       pure $ buildUnion spaces
 decompose (TyConApp (TyTuple _) ts) = do
   env <- ask

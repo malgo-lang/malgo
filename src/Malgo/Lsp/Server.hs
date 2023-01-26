@@ -9,7 +9,7 @@ import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
-import Malgo.Lsp.Index (Index, Info (..), LspOpt, findReferences)
+import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), LspOpt, findReferences)
 import Malgo.Lsp.Index qualified as Index
 import Malgo.Prelude hiding (Range)
 import Relude.Unsafe qualified as Unsafe
@@ -46,7 +46,7 @@ handlers opt =
       requestHandler STextDocumentDocumentSymbol $ \req responder -> do
         let RequestMessage _ _ _ (DocumentSymbolParams _ _ doc) = req
         index <- loadIndex doc opt
-        let documentSymbol = map toDocumentSymbol $ HashMap.elems $ HashMap.filterWithKey (\k _ -> idIsExternal k) $ index.symbolInfo
+        let documentSymbol = map toDocumentSymbol $ HashMap.elems $ HashMap.filterWithKey (\k _ -> idIsExternal k) $ index ^. symbolInfo
         responder $ Right $ InL $ Language.LSP.Types.List documentSymbol
     ]
 
