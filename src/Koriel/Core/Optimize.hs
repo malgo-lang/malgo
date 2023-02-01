@@ -44,7 +44,7 @@ optimizeProgram ::
   Program (Id Type) ->
   m (Program (Id Type))
 optimizeProgram us level Program {..} = runReaderT ?? OptimizeEnv {uniqSupply = us, inlineLevel = level} $ do
-  state <- execStateT ?? CallInlineEnv mempty $ for_ topFuncs $ \(name, (ps, e)) -> checkInlinable $ LocalDef name (Fun ps e)
+  state <- execStateT ?? CallInlineEnv mempty $ for_ topFuncs $ \(name, (ps, e)) -> checkInlinable $ LocalDef name (typeOf name) (Fun ps e)
   topVars <- traverse (\(n, e) -> (n,) <$> optimizeExpr state e) topVars
   topFuncs <- traverse (\(n, (ps, e)) -> (n,) . (ps,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuncs
   pure $ Program {..}
@@ -64,7 +64,7 @@ optimizeExpr state = 3 `times` opt
 
 -- (let ((f (fun ps body))) (f as)) = body[as/ps]
 optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
-optTrivialCall (Let [LocalDef f (Fun ps body)] (Call (Var f') as)) | f == f' = do
+optTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- asks (.uniqSupply)
   optTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
 optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
@@ -93,7 +93,7 @@ checkInlinable ::
   (MonadState CallInlineEnv m, MonadReader OptimizeEnv m) =>
   LocalDef (Id Type) ->
   m ()
-checkInlinable (LocalDef f (Fun ps v)) = do
+checkInlinable (LocalDef f _ (Fun ps v)) = do
   level <- asks (.inlineLevel)
   -- 変数の数がlevel以下ならインライン展開する
   let isInlinableSize = level >= length v
@@ -123,7 +123,7 @@ optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []
   where
-    build (x : xs) (a : as) body = Match (Atom a) $ Bind x (build xs as body) :| []
+    build (x : xs) (a : as) body = Match (Atom a) $ Bind x (typeOf x) (build xs as body) :| []
     build _ _ body = body
 optPackInline (Match v cs) =
   Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
@@ -131,12 +131,12 @@ optPackInline (Let ds e) = do
   ds' <- traverseOf (traversed . object . appObj) optPackInline ds
   local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
   where
-    toPackInlineMap (LocalDef v (Pack _ con as)) = one (v, (con, as))
+    toPackInlineMap (LocalDef v _ (Pack _ con as)) = one (v, (con, as))
     toPackInlineMap _ = mempty
 optPackInline e = pure e
 
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
-optVarBind (Match (Atom a) (Bind x e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
+optVarBind (Match (Atom a) (Bind x _ e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optVarBind ds <*> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e
@@ -146,8 +146,8 @@ removeUnusedLet (Let ds e) = do
   ds' <- traverseOf (traversed . object . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
   -- 定義vから到達可能でかつvで定義されていない変数すべての集合のマップ
-  let gamma = map (\(LocalDef v o) -> (v, HashSet.delete v $ freevars o)) ds'
-  if any (\(LocalDef v _) -> reachable 100 gamma v $ freevars e') ds' then pure $ Let ds' e' else pure e'
+  let gamma = map (\(LocalDef v _ o) -> (v, HashSet.delete v $ freevars o)) ds'
+  if any (\(LocalDef v _ _) -> reachable 100 gamma v $ freevars e') ds' then pure $ Let ds' e' else pure e'
   where
     reachable :: Hashable a => Int -> [(Id a, HashSet (Id a))] -> Id a -> HashSet (Id a) -> Bool
     reachable limit gamma v fvs

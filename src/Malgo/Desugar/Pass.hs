@@ -25,6 +25,7 @@ import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
+import Relude.Unsafe qualified as Unsafe
 
 -- | MalgoからCoreへの変換
 desugar ::
@@ -206,7 +207,7 @@ dsExp (G.Var (Typed typ _) name) = do
             pts :-> _ -> do
               clsId <- newTemporalId "gblcls" (C.typeOf name')
               ps <- traverse (newTemporalId "p") pts
-              pure $ C.Let [LocalDef clsId (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+              pure $ C.Let [LocalDef clsId (C.typeOf clsId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
             _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
@@ -227,7 +228,7 @@ dsExp (G.Apply (Typed typ _) fun arg) = runDef $ do
 dsExp (G.Fn (Typed typ _) cs) = do
   obj <- fnToObj False "inner" cs
   v <- newTemporalId "fun" =<< dsType typ
-  pure $ C.Let [C.LocalDef v (uncurry Fun obj)] $ Atom $ C.Var v
+  pure $ C.Let [C.LocalDef v (C.typeOf v) (uncurry Fun obj)] $ Atom $ C.Var v
 dsExp (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExp) es
   let con = C.Con C.Tuple $ map C.typeOf es'
@@ -238,9 +239,13 @@ dsExp (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
   kvs' <- traverseOf (traversed . _2) (bind <=< dsExp) kvs
   kts <- HashMap.toList <$> traverse dsType recordType
   v <- newTemporalId "record" $ RecordT (HashMap.fromList kts)
-  pure $ C.Let [C.LocalDef v (C.Record $ HashMap.fromList kvs')] $ Atom $ C.Var v
+  let kvs'' = zipKvs kvs' kts
+  pure $ C.Let [C.LocalDef v (C.typeOf v) (C.Record $ HashMap.fromList kvs'')] $ Atom $ C.Var v
 dsExp (G.Record _ _) = error "unreachable"
 dsExp (G.Seq _ ss) = dsStmts ss
+
+zipKvs :: Eq a => [(a, b)] -> [(a, c)] -> [(a, (b, c))]
+zipKvs kvs = map (\(k, v) -> (k, (Unsafe.fromJust $ List.lookup k kvs, v)))
 
 dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExp e
@@ -253,7 +258,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
   v' <- newTemporalId ("let_" <> idToText v) (C.typeOf e')
   nameEnv . at v ?= v'
   ss' <- dsStmts (s :| ss)
-  pure $ Match e' (Bind v' ss' :| [])
+  pure $ Match e' (Bind v' (C.typeOf v') ss' :| [])
 
 -- Desugar Monad
 
@@ -308,7 +313,7 @@ curryFun isToplevel hint ps e = curryFun' ps []
           pure ([x], body)
         else do
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
-          pure ([x], C.Let [LocalDef fun (Fun ps e)] body)
+          pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps e)] body)
     curryFun' (x : xs) as = do
       fun <- curryFun' xs (C.Var x : as)
       let funObj = uncurry Fun fun

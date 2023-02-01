@@ -49,12 +49,12 @@ llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) 
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
-llift (Let [LocalDef n (Fun xs call@Call {})] e) = do
+llift (Let [LocalDef n t (Fun xs call@Call {})] e) = do
   call' <- llift call
-  Let [LocalDef n (Fun xs call')] <$> llift e
-llift (Let [LocalDef n o@(Fun _ RawCall {})] e) = Let [LocalDef n o] <$> llift e
-llift (Let [LocalDef n o@(Fun _ CallDirect {})] e) = Let [LocalDef n o] <$> llift e
-llift (Let [LocalDef n (Fun as body)] e) = do
+  Let [LocalDef n t (Fun xs call')] <$> llift e
+llift (Let [LocalDef n t o@(Fun _ RawCall {})] e) = Let [LocalDef n t o] <$> llift e
+llift (Let [LocalDef n t o@(Fun _ CallDirect {})] e) = Let [LocalDef n t o] <$> llift e
+llift (Let [LocalDef n t (Fun as body)] e) = do
   backup <- get
   ks <- use knowns
   -- nがknownだと仮定してlambda liftする
@@ -72,7 +72,7 @@ llift (Let [LocalDef n (Fun as body)] e) = do
       body' <- llift body
       let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
       newFun <- def n.name (toList fvs <> as) body'
-      Let [LocalDef n (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
+      Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e

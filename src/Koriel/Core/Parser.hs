@@ -6,7 +6,7 @@ module Koriel.Core.Parser where
 import Error.Diagnose.Compat.Megaparsec
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
 import Koriel.Core.Syntax
-import Koriel.Prelude hiding (some)
+import Koriel.Prelude hiding (many, some)
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec qualified as Megaparsec
 import Text.Megaparsec.Char qualified as Char
@@ -53,6 +53,23 @@ unboxed = try int32 <|> try int64 <|> try float <|> double <|> char <|> string <
 -- | Parse an atom.
 atom :: Parser (Atom Text)
 atom = try (Var <$> ident) <|> Unboxed <$> unboxed
+
+-- | Parse an object.
+object :: Parser (Obj Text)
+object = between (symbol "(") (symbol ")") do
+  fun <|> pack <|> record
+  where
+    fun = do
+      void $ symbol "fun"
+      xs <- between (symbol "(") (symbol ")") (many ident)
+      Fun xs <$> expr
+    pack = do
+      undefined
+    record = do
+      undefined
+
+-- | Parse an expression.
+expr = undefined
 
 -- * Common combinators
 

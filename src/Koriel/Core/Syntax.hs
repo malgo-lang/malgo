@@ -28,7 +28,7 @@ module Koriel.Core.Syntax
   )
 where
 
-import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _2)
+import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _1, _2)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
@@ -112,16 +112,16 @@ data Obj a
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
   | -- | record
-    Record (HashMap Text (Atom a))
+    Record (HashMap Text (Atom a, Type))
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
   typeOf (Pack t _ _) = t
-  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
+  typeOf (Record kvs) = RecordT (fmap (snd >>> typeOf) kvs)
 
-instance (Pretty a, HasType a) => Pretty (Obj a) where
+instance (Pretty a) => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack _ c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) -- The type of `pack` is already printed in the parent `LocalDef`.
   pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
@@ -129,15 +129,15 @@ instance (Pretty a, HasType a) => Pretty (Obj a) where
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
-  freevars (Record kvs) = foldMap freevars kvs
+  freevars (Record kvs) = foldMap (fst >>> freevars) kvs
 
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
-    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
+    Record kvs -> Record <$> traverseOf (traversed . _1 . atom) f kvs
 
-data LocalDef a = LocalDef {_variable :: a, _object :: Obj a}
+data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
@@ -146,17 +146,17 @@ class HasObject s a | s -> a where
 
 instance HasObject (LocalDef a) (Obj a) where
   {-# INLINE object #-}
-  object f (LocalDef x1 x2) = fmap (LocalDef x1) (f x2)
+  object f (LocalDef x1 t x2) = fmap (LocalDef x1 t) (f x2)
 
 class HasVariable s a | s -> a where
   variable :: Lens' s a
 
 instance HasVariable (LocalDef a) a where
   {-# INLINE variable #-}
-  variable f (LocalDef x1 x2) = fmap (`LocalDef` x2) (f x1)
+  variable f (LocalDef x1 t x2) = fmap (\x1 -> LocalDef x1 t x2) (f x1)
 
-instance (Pretty a, HasType a) => Pretty (LocalDef a) where
-  pPrint (LocalDef v o) = parens $ pPrint v <+> pPrint (typeOf v) $$ pPrint o
+instance (Pretty a) => Pretty (LocalDef a) where
+  pPrint (LocalDef v t o) = parens $ pPrint v <+> pPrint t $$ pPrint o
 
 -- | alternatives
 data Case a
@@ -167,7 +167,7 @@ data Case a
   | -- | unboxed value pattern
     Switch Unboxed (Exp a)
   | -- | variable pattern
-    Bind a (Exp a)
+    Bind a Type (Exp a)
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
@@ -175,28 +175,28 @@ instance HasType a => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
   typeOf (OpenRecord _ e) = typeOf e
   typeOf (Switch _ e) = typeOf e
-  typeOf (Bind _ e) = typeOf e
+  typeOf (Bind _ _ e) = typeOf e
 
-instance (Pretty a, HasType a) => Pretty (Case a) where
+instance (Pretty a) => Pretty (Case a) where
   pPrint (Unpack c xs e) =
     parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
   pPrint (OpenRecord pat e) =
     parens $ sep ["open", pPrint $ HashMap.toList pat, pPrint e]
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
-  pPrint (Bind x e) = parens $ sep ["bind", pPrint x, pPrint (typeOf x), pPrint e]
+  pPrint (Bind x t e) = parens $ sep ["bind", pPrint x, pPrint t, pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
   freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
   freevars (Switch _ e) = freevars e
-  freevars (Bind x e) = sans x $ freevars e
+  freevars (Bind x _ e) = sans x $ freevars e
 
 instance HasAtom Case where
   atom f = \case
     Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
     OpenRecord pat e -> OpenRecord pat <$> traverseOf atom f e
     Switch u e -> Switch u <$> traverseOf atom f e
-    Bind a e -> Bind a <$> traverseOf atom f e
+    Bind a t e -> Bind a t <$> traverseOf atom f e
 
 -- | expressions
 data Exp a
@@ -267,7 +267,7 @@ instance HasType a => HasType (Exp a) where
   typeOf (Match _ (c :| _)) = typeOf c
   typeOf (Error t) = t
 
-instance (Pretty a, HasType a) => Pretty (Exp a) where
+instance (Pretty a) => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
@@ -334,7 +334,7 @@ appCase f = \case
   Unpack con ps e -> Unpack con ps <$> f e
   OpenRecord kvs e -> OpenRecord kvs <$> f e
   Switch u e -> Switch u <$> f e
-  Bind x e -> Bind x <$> f e
+  Bind x t e -> Bind x t <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {..} =
@@ -352,14 +352,14 @@ runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
 let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
   x <- newTemporalId "let" otype
-  DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x obj] e
+  DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x otype obj] e
   pure (Var x)
 
 bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x (typeOf x) e :| [])
   pure (Var x)
 
 cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -368,7 +368,7 @@ cast ty e
   | otherwise = do
       v <- bind e
       x <- newTemporalId "cast" ty
-      DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x e :| [])
+      DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x ty e :| [])
       pure (Var x)
 
 -- `destruct` is convenient when treating types that have only one constructor.

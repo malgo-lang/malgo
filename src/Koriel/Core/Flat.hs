@@ -21,9 +21,9 @@ flatExp (Match v (Unpack con ps e :| [])) = do
   v <- flatExp v
   tell $ Endo $ \k -> Match v (Unpack con ps k :| [])
   flatExp e
-flatExp (Match v (Bind x e :| [])) = do
+flatExp (Match v (Bind x t e :| [])) = do
   v <- flatExp v
-  tell $ Endo $ \k -> Match v (Bind x k :| [])
+  tell $ Endo $ \k -> Match v (Bind x t k :| [])
   flatExp e
 flatExp (Match e cs) =
   Match <$> flatExp e <*> traverseOf (traversed . appCase) (runFlat . flatExp) cs

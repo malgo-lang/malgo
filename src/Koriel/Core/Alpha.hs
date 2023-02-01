@@ -41,7 +41,7 @@ alphaExp :: (MonadReader AlphaEnv f, MonadIO f) => Exp (Id Type) -> f (Exp (Id T
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
 alphaExp (Let ds e) = do
   -- Avoid capturing variables
-  env <- foldMapM (\(LocalDef n _) -> one . (n,) . Var <$> cloneId n) ds
+  env <- foldMapM (\(LocalDef n _ _) -> one . (n,) . Var <$> cloneId n) ds
   local (\e -> e {subst = env <> e.subst}) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
 -- このコードでも動くはずだけど、segfaultする。
 -- let binds = map (._localDefVar) ds
@@ -55,9 +55,9 @@ alphaAtom (Var x) = lookupVar x
 alphaAtom a@Unboxed {} = pure a
 
 alphaLocalDef :: (MonadReader AlphaEnv f, MonadIO f) => LocalDef (Id Type) -> f (LocalDef (Id Type))
-alphaLocalDef (LocalDef x o) =
+alphaLocalDef (LocalDef x t o) =
   -- Since `alphaExp Let{}` avoids capturing variables, only `lookupId` should be applied here.
-  LocalDef <$> lookupId x <*> alphaObj o
+  LocalDef <$> lookupId x <*> pure t <*> alphaObj o
 
 alphaObj :: (MonadReader AlphaEnv m, MonadIO m) => Obj (Id Type) -> m (Obj (Id Type))
 alphaObj (Fun ps e) = do
@@ -80,9 +80,9 @@ alphaCase (OpenRecord kps e) = do
   let ps' = HashMap.elems kps'
   local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ OpenRecord kps' <$> alphaExp e
 -- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ OpenRecord kps <$> alphaExp e
-alphaCase (Bind x e) = do
+alphaCase (Bind x t e) = do
   -- Avoid capturing variables
   x' <- cloneId x
-  local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' <$> alphaExp e
+  local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' t <$> alphaExp e
 -- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExp e
 alphaCase (Switch u e) = Switch u <$> alphaExp e

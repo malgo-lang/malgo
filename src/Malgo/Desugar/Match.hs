@@ -134,7 +134,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       -- パターンの網羅性を保証するため、
       -- `_ -> err` を追加する
       hole <- newTemporalId "_" (Core.typeOf scrutinee)
-      pure $ Match (Atom $ Core.Var scrutinee) $ NonEmpty.fromList (cases <> [Core.Bind hole err])
+      pure $ Match (Atom $ Core.Var scrutinee) $ NonEmpty.fromList (cases <> [Core.Bind hole (Core.typeOf hole) err])
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
   | otherwise =
