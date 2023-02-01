@@ -124,7 +124,20 @@ instance HasType a => HasType (Obj a) where
 instance (Pretty a) => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack _ c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) -- The type of `pack` is already printed in the parent `LocalDef`.
-  pPrint (Record kvs) = parens $ sep ["record" <+> parens (sep $ map (\(k, v) -> pPrint k <+> pPrint v) (HashMap.toList kvs))]
+  pPrint (Record kvs) =
+    parens $
+      sep
+        [ "record"
+            <+> parens
+              ( sep $
+                  map
+                    ( \(k, v) ->
+                        pPrint k
+                          <+> parens (sep [pPrint (fst v), pPrint (snd v)])
+                    )
+                    (HashMap.toList kvs)
+              )
+        ]
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -277,7 +290,7 @@ instance (Pretty a) => Pretty (Exp a) where
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
-  pPrint (Error _) = "ERROR"
+  pPrint (Error t) = parens $ "ERROR" <+> pPrint t
 
 instance HasFreeVar Exp where
   freevars (Atom x) = freevars x

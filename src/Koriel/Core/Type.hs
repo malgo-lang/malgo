@@ -63,7 +63,7 @@ instance Pretty Type where
   pPrint BoolT = "Bool#"
   pPrint (SumT cs) = parens $ sep ("sum" : map pPrint cs)
   pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
-  pPrint (RecordT fs) = parens $ "Record#" <+> sep (punctuate "," $ map (\(k, v) -> pPrint k <+> ":" <+> pPrint v) $ HashMap.toList fs)
+  pPrint (RecordT fs) = parens $ "Record#" <+> sep (map (\(k, v) -> parens $ sep [pPrint k, pPrint v]) $ HashMap.toList fs)
   pPrint AnyT = "Any#"
   pPrint VoidT = "Void#"
 

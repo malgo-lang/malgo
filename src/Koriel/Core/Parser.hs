@@ -3,9 +3,11 @@
 
 module Koriel.Core.Parser where
 
+import Data.HashMap.Strict qualified as HashMap
 import Error.Diagnose.Compat.Megaparsec
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
-import Koriel.Core.Syntax
+import Koriel.Core.Syntax hiding (atom)
+import Koriel.Core.Type
 import Koriel.Prelude hiding (many, some)
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec qualified as Megaparsec
@@ -64,12 +66,89 @@ object = between (symbol "(") (symbol ")") do
       xs <- between (symbol "(") (symbol ")") (many ident)
       Fun xs <$> expr
     pack = do
-      undefined
+      void $ symbol "pack"
+      ty <- type_
+      con <- constructor
+      as <- many atom
+      pure $ Pack ty con as
     record = do
-      undefined
+      void $ symbol "record"
+      kvs <-
+        between
+          (symbol "(")
+          (symbol ")")
+          ( many do
+              k <- ident
+              v <- between (symbol "(") (symbol ")") $ (,) <$> atom <*> type_
+              pure (k, v)
+          )
+      pure $ Record $ HashMap.fromList kvs
 
 -- | Parse an expression.
-expr = undefined
+expr :: Parser (Exp Text)
+expr =
+  do
+    Atom <$> atom
+    <|> between (symbol "(") (symbol ")") do
+      asum
+        [ do
+            void $ symbol "call"
+            f <- atom
+            as <- many atom
+            pure $ Call f as
+        ]
+
+-- | Parse a type.
+type_ :: Parser Type
+type_ =
+  between (symbol "(") (symbol ")") withParams
+    <|> simple
+  where
+    simple =
+      asumMap
+        (\(n, t) -> try (symbol n) >> pure t)
+        [ ("Int32#", Int32T),
+          ("Int64#", Int64T),
+          ("Float#", FloatT),
+          ("Double#", DoubleT),
+          ("Char#", CharT),
+          ("String#", StringT),
+          ("Bool#", BoolT),
+          ("Any#", AnyT),
+          ("Void#", VoidT)
+        ]
+    withParams =
+      asum
+        [ do
+            void $ symbol "->"
+            ps <- between (symbol "[") (symbol "]") (many type_)
+            r <- type_
+            pure $ ps :-> r,
+          do
+            void $ symbol "sum"
+            cs <- many constructor
+            pure $ SumT cs,
+          do
+            void $ symbol "Ptr#"
+            PtrT <$> type_,
+          do
+            void $ symbol "Record#"
+            fs <- many $ between (symbol "(") (symbol ")") do
+              k <- ident
+              v <- type_
+              pure (k, v)
+            pure $ RecordT $ HashMap.fromList fs
+        ]
+
+-- | Parse a constructor.
+constructor :: Parser Con
+constructor = between (symbol "(") (symbol ")") do
+  tag <- tuple <|> data_
+  args <- many type_
+  pure $ Con tag args
+  where
+    tuple = void (symbol "Tuple#") >> pure Tuple
+    data_ = Data <$> ident
 
 -- * Common combinators
 
