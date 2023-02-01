@@ -214,6 +214,13 @@ data Exp a
   | -- | binary operation
     BinOp Op (Atom a) (Atom a)
   | -- | type casting
+    --
+    -- 'Cast'命令は、一見'Atom'の一種にできそうに見える。しかし、
+    --
+    -- * 'Atom'は再帰的にできない（'HasAtom'の制約）
+    -- * 'Cast'は'Atom'上の操作（/=変数'a'上の操作）
+    --
+    -- よって、castをatomにすることは出来ない。
     Cast Type (Atom a)
   | -- | definition of local variables
     Let [LocalDef a] (Exp a)
