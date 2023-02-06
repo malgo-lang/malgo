@@ -117,13 +117,13 @@ lookupCallInline call f as = do
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
-optPackInline (Match (Atom (Var v)) (Unpack con xs body :| [])) = do
+optPackInline (Match (Atom (Var v)) [Unpack con xs body]) = do
   body' <- optPackInline body
   view (at v) >>= \case
     Just (con', as) | con == con' -> pure $ build xs as body'
-    _ -> pure $ Match (Atom $ Var v) $ Unpack con xs body' :| []
+    _ -> pure $ Match (Atom $ Var v) [Unpack con xs body']
   where
-    build (x : xs) (a : as) body = Match (Atom a) $ Bind x (typeOf x) (build xs as body) :| []
+    build (x : xs) (a : as) body = Match (Atom a) [Bind x (typeOf x) (build xs as body)]
     build _ _ body = body
 optPackInline (Match v cs) =
   Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
@@ -136,7 +136,7 @@ optPackInline (Let ds e) = do
 optPackInline e = pure e
 
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
-optVarBind (Match (Atom a) (Bind x _ e :| [])) = replaceOf atom (Var x) a <$> optVarBind e
+optVarBind (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optVarBind ds <*> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind e = pure e

@@ -6,7 +6,8 @@ module Koriel.Core.Parser where
 import Data.HashMap.Strict qualified as HashMap
 import Error.Diagnose.Compat.Megaparsec
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
-import Koriel.Core.Syntax hiding (atom)
+import Koriel.Core.Op
+import Koriel.Core.Syntax hiding (atom, object)
 import Koriel.Core.Type
 import Koriel.Prelude hiding (many, some)
 import Text.Megaparsec hiding (parse)
@@ -17,12 +18,16 @@ import Text.Megaparsec.Char.Lexer qualified as Lexer
 parse :: String -> Text -> Either (ParseErrorBundle Text Void) (Program Text)
 parse = Megaparsec.parse do
   space
-  undefined
+  program
 
 type Parser = Parsec Void Text
 
 instance HasHints Void Text where
   hints = const []
+
+-- | Parse a program.
+program :: Parser (Program Text)
+program = undefined
 
 -- | Parse an unboxed literal.
 unboxed :: Parser Unboxed
@@ -93,10 +98,56 @@ expr =
       asum
         [ do
             void $ symbol "call"
-            f <- atom
-            as <- many atom
-            pure $ Call f as
+            Call <$> atom <*> many atom,
+          do
+            void $ symbol "direct"
+            CallDirect <$> ident <*> many atom,
+          do
+            void $ symbol "raw"
+            RawCall <$> ident <*> type_ <*> many atom,
+          do
+            void $ symbol "binop"
+            BinOp <$> operator <*> atom <*> atom,
+          do
+            void $ symbol "cast"
+            Cast <$> type_ <*> atom,
+          do
+            void $ symbol "let"
+            Let <$> between (symbol "(") (symbol ")") (many localDef) <*> expr,
+          do
+            void $ symbol "match"
+            Match <$> expr <*> many case_
         ]
+
+-- | Parse a local definition.
+localDef :: Parser (LocalDef Text)
+localDef = between (symbol "(") (symbol ")") do
+  LocalDef <$> ident <*> type_ <*> object
+
+case_ :: Parser (Case Text)
+case_ = between (symbol "(") (symbol ")") do
+  asum
+    [ do
+        void $ symbol "unpack"
+        (c, xs) <- between (symbol "(") (symbol ")") do
+          c <- constructor
+          xs <- many ident
+          pure (c, xs)
+        Unpack c xs <$> expr,
+      do
+        void $ symbol "open"
+        kvs <- between (symbol "(") (symbol ")") $ many do
+          k <- ident
+          v <- ident
+          pure (k, v)
+        OpenRecord (HashMap.fromList kvs) <$> expr,
+      do
+        void $ symbol "switch"
+        Switch <$> unboxed <*> expr,
+      do
+        void $ symbol "bind"
+        Bind <$> ident <*> type_ <*> expr
+    ]
 
 -- | Parse a type.
 type_ :: Parser Type
@@ -149,6 +200,29 @@ constructor = between (symbol "(") (symbol ")") do
   where
     tuple = void (symbol "Tuple#") >> pure Tuple
     data_ = Data <$> ident
+
+-- | Parser an operator.
+operator :: Parser Op
+operator =
+  asum
+    [ try (symbol "+.") >> pure FAdd,
+      try (symbol "-.") >> pure FSub,
+      try (symbol "*.") >> pure FMul,
+      try (symbol "/.") >> pure FDiv,
+      symbol "+" >> pure Add,
+      symbol "-" >> pure Sub,
+      symbol "*" >> pure Mul,
+      symbol "/" >> pure Div,
+      symbol "%" >> pure Mod,
+      symbol "==" >> pure Eq,
+      try (symbol "<>") >> pure Neq,
+      try (symbol "<=") >> pure Le,
+      try (symbol ">=") >> pure Ge,
+      symbol "<" >> pure Lt,
+      symbol ">" >> pure Gt,
+      symbol "&&" >> pure And,
+      symbol "||" >> pure Or
+    ]
 
 -- * Common combinators
 

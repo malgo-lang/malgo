@@ -258,7 +258,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
   v' <- newTemporalId ("let_" <> idToText v) (C.typeOf e')
   nameEnv . at v ?= v'
   ss' <- dsStmts (s :| ss)
-  pure $ Match e' (Bind v' (C.typeOf v') ss' :| [])
+  pure $ Match e' [Bind v' (C.typeOf v') ss']
 
 -- Desugar Monad
 

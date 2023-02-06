@@ -432,8 +432,8 @@ genExp (Let xs e) k = do
               ]
           )
     prepare _ = pure mempty
-genExp (Match e (Bind _ _ body :| _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
-genExp (Match e (Bind x _ body :| _)) k = genExp e $ \eOpr -> do
+genExp (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
+genExp (Match e (Bind x _ body : _)) k = genExp e $ \eOpr -> do
   eOpr <- bitcast eOpr (convType $ C.typeOf e)
   local (over valueMap (at x ?~ eOpr)) (genExp body k)
 genExp (Match e cs) k

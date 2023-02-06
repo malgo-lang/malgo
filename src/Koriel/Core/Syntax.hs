@@ -194,7 +194,7 @@ instance (Pretty a) => Pretty (Case a) where
   pPrint (Unpack c xs e) =
     parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
   pPrint (OpenRecord pat e) =
-    parens $ sep ["open", pPrint $ HashMap.toList pat, pPrint e]
+    parens $ sep ["open", parens $ sep $ map (\(k, v) -> pPrint k <+> pPrint v) $ HashMap.toList pat, pPrint e]
   pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
   pPrint (Bind x t e) = parens $ sep ["bind", pPrint x, pPrint t, pPrint e]
 
@@ -238,7 +238,7 @@ data Exp a
   | -- | definition of local variables
     Let [LocalDef a] (Exp a)
   | -- | pattern matching
-    Match (Exp a) (NonEmpty (Case a))
+    Match (Exp a) [Case a]
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
@@ -277,14 +277,15 @@ instance HasType a => HasType (Exp a) where
       boolT = BoolT
   typeOf (Cast ty _) = ty
   typeOf (Let _ e) = typeOf e
-  typeOf (Match _ (c :| _)) = typeOf c
+  typeOf (Match _ (c : _)) = typeOf c
+  typeOf (Match _ []) = error "Match must have at least one case"
   typeOf (Error t) = t
 
 instance (Pretty a) => Pretty (Exp a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (RawCall p _ xs) = parens $ "raw" <+> pPrint p <+> sep (map pPrint xs)
+  pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
   pPrint (BinOp o x y) = parens $ "binop" <+> pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) =
@@ -372,7 +373,7 @@ bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env Modu
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e -> Match v (Bind x (typeOf x) e :| [])
+  DefBuilderT $ tell $ Endo $ \e -> Match v [Bind x (typeOf x) e]
   pure (Var x)
 
 cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -381,7 +382,7 @@ cast ty e
   | otherwise = do
       v <- bind e
       x <- newTemporalId "cast" ty
-      DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) (Bind x ty e :| [])
+      DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) [Bind x ty e]
       pure (Var x)
 
 -- `destruct` is convenient when treating types that have only one constructor.

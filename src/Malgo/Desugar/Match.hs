@@ -4,7 +4,6 @@ module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 import Control.Lens (At (at), Prism', has, over, (?=), _1)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
-import Data.List.NonEmpty qualified as NonEmpty
 import Data.Traversable (for)
 import Koriel.Core.Syntax
 import Koriel.Core.Syntax qualified as Core
@@ -102,7 +101,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
         let (pat', es') = group conName pat es
         Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
       unfoldedType <- unfoldType patType
-      pure $ Match (Cast unfoldedType $ Core.Var scrutinee) $ NonEmpty.fromList cases
+      pure $ Match (Cast unfoldedType $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
       let patType = Malgo.typeOf $ List.head heads
@@ -111,7 +110,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       clause <- do
         (pat', es') <- groupRecord pat es
         OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
-      pure $ Match (Atom $ Core.Var scrutinee) $ clause :| []
+      pure $ Match (Atom $ Core.Var scrutinee) [clause]
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
       let patType = Malgo.typeOf $ List.head heads
@@ -120,7 +119,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       clause <- do
         let (pat', es') = groupTuple pat es
         Unpack con params <$> match (params <> restScrutinee) pat' es' err
-      pure $ Match (Atom $ Core.Var scrutinee) $ clause :| []
+      pure $ Match (Atom $ Core.Var scrutinee) [clause]
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
       let cs =
@@ -134,7 +133,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       -- パターンの網羅性を保証するため、
       -- `_ -> err` を追加する
       hole <- newTemporalId "_" (Core.typeOf scrutinee)
-      pure $ Match (Atom $ Core.Var scrutinee) $ NonEmpty.fromList (cases <> [Core.Bind hole (Core.typeOf hole) err])
+      pure $ Match (Atom $ Core.Var scrutinee) $ cases <> [Core.Bind hole (Core.typeOf hole) err]
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
   | otherwise =
