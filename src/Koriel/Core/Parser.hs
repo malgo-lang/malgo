@@ -27,7 +27,31 @@ instance HasHints Void Text where
 
 -- | Parse a program.
 program :: Parser (Program Text)
-program = undefined
+program = do
+  void $ symbol ";"
+  void $ symbol "variables"
+  topVars <- many $ between (symbol "(") (symbol ")") do
+    void $ symbol "define"
+    v <- ident
+    t <- type_
+    e <- expr
+    pure (v, t, e)
+  void $ symbol ";"
+  void $ symbol "functions"
+  topFuns <- many $ between (symbol "(") (symbol ")") do
+    void $ symbol "define"
+    f : xs <- between (symbol "(") (symbol ")") (some ident)
+    t <- type_
+    e <- expr
+    pure (f, xs, t, e)
+  void $ symbol ";"
+  void $ symbol "externals"
+  extFuns <- many $ between (symbol "(") (symbol ")") do
+    void $ symbol "extern"
+    f <- ident
+    t <- type_
+    pure (f, t)
+  pure $ Program {..}
 
 -- | Parse an unboxed literal.
 unboxed :: Parser Unboxed

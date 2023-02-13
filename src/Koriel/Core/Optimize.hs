@@ -44,9 +44,9 @@ optimizeProgram ::
   Program (Id Type) ->
   m (Program (Id Type))
 optimizeProgram us level Program {..} = runReaderT ?? OptimizeEnv {uniqSupply = us, inlineLevel = level} $ do
-  state <- execStateT ?? CallInlineEnv mempty $ for_ topFuncs $ \(name, (ps, e)) -> checkInlinable $ LocalDef name (typeOf name) (Fun ps e)
-  topVars <- traverse (\(n, e) -> (n,) <$> optimizeExpr state e) topVars
-  topFuncs <- traverse (\(n, (ps, e)) -> (n,) . (ps,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuncs
+  state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
+  topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))

@@ -28,7 +28,7 @@ module Koriel.Core.Syntax
   )
 where
 
-import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _1, _2)
+import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _1, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
@@ -318,9 +318,9 @@ instance HasAtom Exp where
 
 -- | toplevel function definitions
 data Program a = Program
-  { topVars :: [(a, Exp a)],
-    topFuncs :: [(a, ([a], Exp a))],
-    extFuncs :: [(Text, Type)]
+  { topVars :: [(a, Type, Exp a)],
+    topFuns :: [(a, [a], Type, Exp a)],
+    extFuns :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
   deriving anyclass (Binary, ToJSON, FromJSON)
@@ -331,11 +331,11 @@ instance (Pretty a, HasType a) => Pretty (Program a) where
     vcat $
       concat
         [ ["; variables"],
-          map (\(v, e) -> parens $ sep ["define", pPrint v, pPrint $ typeOf v, pPrint e]) topVars,
+          map (\(v, t, e) -> parens $ sep ["define", pPrint v, pPrint t, pPrint e]) topVars,
           ["; functions"],
-          map (\(f, (ps, e)) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint $ typeOf f], pPrint e]) topFuncs,
+          map (\(f, ps, t, e) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) extFuncs
+          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) extFuns
         ]
 
 appObj :: Traversal' (Obj a) (Exp a)
@@ -353,9 +353,9 @@ appCase f = \case
 appProgram :: Traversal' (Program a) (Exp a)
 appProgram f Program {..} =
   Program
-    <$> traverseOf (traversed . _2) f topVars
-    <*> traverseOf (traversed . _2 . _2) f topFuncs
-    <*> pure extFuncs
+    <$> traverseOf (traversed . _3) f topVars
+    <*> traverseOf (traversed . _4) f topFuns
+    <*> pure extFuns
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
