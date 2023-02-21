@@ -326,7 +326,7 @@ data Program a = Program
   deriving anyclass (Binary, ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
 
-instance (Pretty a, HasType a) => Pretty (Program a) where
+instance (Pretty a) => Pretty (Program a) where
   pPrint Program {..} =
     vcat $
       concat

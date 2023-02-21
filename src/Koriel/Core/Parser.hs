@@ -4,7 +4,6 @@
 module Koriel.Core.Parser where
 
 import Data.HashMap.Strict qualified as HashMap
-import Error.Diagnose.Compat.Megaparsec
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
 import Koriel.Core.Op
 import Koriel.Core.Syntax hiding (atom, object)
@@ -22,30 +21,21 @@ parse = Megaparsec.parse do
 
 type Parser = Parsec Void Text
 
-instance HasHints Void Text where
-  hints = const []
-
 -- | Parse a program.
 program :: Parser (Program Text)
 program = do
-  void $ symbol ";"
-  void $ symbol "variables"
-  topVars <- many $ between (symbol "(") (symbol ")") do
+  topVars <- many $ try $ between (symbol "(") (symbol ")") do
     void $ symbol "define"
     v <- ident
     t <- type_
     e <- expr
     pure (v, t, e)
-  void $ symbol ";"
-  void $ symbol "functions"
   topFuns <- many $ between (symbol "(") (symbol ")") do
     void $ symbol "define"
     f : xs <- between (symbol "(") (symbol ")") (some ident)
     t <- type_
     e <- expr
     pure (f, xs, t, e)
-  void $ symbol ";"
-  void $ symbol "externals"
   extFuns <- many $ between (symbol "(") (symbol ")") do
     void $ symbol "extern"
     f <- ident
@@ -268,7 +258,7 @@ symbol = Lexer.symbol space
 -- | Character that can be used in an identifier.
 -- Basically, it is the same as 'Malgo.Parser.identLetter', but we also allow '$' for temporary variables.
 identLetter :: Parser Char
-identLetter = Char.alphaNumChar <|> oneOf ("_+-*/\\%=><:;|&!#." :: String)
+identLetter = Char.alphaNumChar <|> oneOf ("_+-*/\\%=><:;|&!#.$" :: String)
 
 -- | Parse an identifier.
 -- In Koriel, we always know where an identifier appears,

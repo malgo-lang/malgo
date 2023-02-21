@@ -3,8 +3,12 @@
 module Main (main) where
 
 import Control.Lens (makeFieldsNoPrefix, (.~), (<>~))
+import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
+import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
+import Koriel.Core.Parser qualified as Koriel
 import Koriel.Id (ModuleName)
 import Koriel.Lens (HasModulePaths (..))
+import Koriel.Pretty (pPrint)
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
 import Malgo.Lsp.Index (Index, LspOpt (..))
@@ -51,6 +55,15 @@ main = do
       void $ Lsp.server opt
     Build _ -> do
       Build.run
+    Koriel (KorielOpt srcPath) -> do
+      srcContents <- readFileBS srcPath
+      case Koriel.parse srcPath (decodeUtf8 srcContents) of
+        Left err ->
+          let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
+              diag' = addFile diag srcPath (decodeUtf8 srcContents)
+           in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
+        Right prog -> do
+          print $ pPrint prog
 
 toLLOpt :: Parser ToLLOpt
 toLLOpt =
@@ -79,17 +92,21 @@ lspOpt cache = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> me
 data BuildOpt = BuildOpt
   deriving stock (Eq, Show)
 
+data KorielOpt = KorielOpt FilePath
+  deriving stock (Eq, Show)
+
 data Command
   = ToLL ToLLOpt
   | Lsp LspOpt
   | Build BuildOpt
+  | Koriel KorielOpt
 
 parseCommand :: IO Command
 parseCommand = do
   cache <- newIORef mempty
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build) <**> helper) $
+      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build <|> subparser koriel) <**> helper) $
           fullDesc
             <> header "malgo programming language"
       )
@@ -101,6 +118,7 @@ parseCommand = do
         else pure $ ToLL $ opt {srcPath = srcPath}
     Lsp opt -> pure $ Lsp opt
     Build opt -> pure $ Build opt
+    Koriel opt -> pure $ Koriel opt
   where
     toLL =
       command "to-ll" $
@@ -121,3 +139,10 @@ parseCommand = do
             <> progDesc "Build Malgo program"
             <> header "malgo build"
     buildOpt = pure BuildOpt
+    koriel =
+      command "koriel" $
+        info (Koriel <$> korielOpt) $
+          fullDesc
+            <> progDesc "Koriel Compiler"
+            <> header "malgo koriel"
+    korielOpt = KorielOpt <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
