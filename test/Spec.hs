@@ -1,5 +1,7 @@
 {-# LANGUAGE CPP #-}
 
+import Control.Exception.Extra (assertIO)
+import Koriel.Core.Parser qualified as Koriel
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
@@ -84,7 +86,14 @@ setupRuntime = do
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
 compile src dst modPaths lambdaLift noOptimize = do
   malgoEnv <- newMalgoEnv src modPaths Nothing Nothing Nothing
-  Driver.compile src malgoEnv {dstPath = dst, _modulePaths = takeDirectory dst : malgoEnv._modulePaths, lambdaLift, noOptimize}
+  Driver.compile
+    src
+    malgoEnv
+      { dstPath = dst,
+        _modulePaths = takeDirectory dst : malgoEnv._modulePaths,
+        lambdaLift,
+        noOptimize
+      }
 
 -- | Get the correct name of `clang`
 getClangCommand :: IO String
@@ -100,7 +109,13 @@ getClangCommand =
 
 test :: FilePath -> String -> Bool -> Bool -> IO ()
 test testcase postfix lambdaLift noOptimize = do
-  compile testcase (testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll")) [testDirectory </> "libs"] lambdaLift noOptimize
+  let llPath = testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll")
+  compile testcase llPath [testDirectory </> "libs"] lambdaLift noOptimize
+
+  -- Check if the generated Koriel code is valid
+  koriel <- readFileBS (llPath -<.> "kor")
+  assertIO (isRight $ Koriel.parse (testDirectory </> takeBaseName testcase -<.> (postfix <> ".kor")) (decodeUtf8 koriel))
+
   clang <- getClangCommand
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   runProcess_

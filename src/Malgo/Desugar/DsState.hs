@@ -30,8 +30,8 @@ import Malgo.Syntax.Extension
 
 -- | トップレベル宣言
 data Def
-  = VarDef (Id C.Type) (C.Exp (Id C.Type))
-  | FunDef (Id C.Type) ([Id C.Type], C.Exp (Id C.Type))
+  = VarDef (Id C.Type) C.Type (C.Exp (Id C.Type))
+  | FunDef (Id C.Type) [Id C.Type] C.Type (C.Exp (Id C.Type))
   | ExtDef Text C.Type
 
 makePrisms ''Def

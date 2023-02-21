@@ -79,10 +79,10 @@ newCodeGenEnv malgoEnv moduleName Program {..} =
     }
   where
     -- topVarsのOprMapを作成
-    varMap = mconcatMap ?? topVars $ \(v, e) ->
+    varMap = mconcatMap ?? topVars $ \(v, _, e) ->
       one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
     -- topFuncsのOprMapを作成
-    funcMap = mconcatMap ?? topFuncs $ \(f, (ps, e)) ->
+    funcMap = mconcatMap ?? topFuns $ \(f, ps, _, e) ->
       one
         ( f,
           ConstantOperand $
@@ -116,13 +116,13 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
     _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
-    for_ extFuncs \(name, typ) -> do
+    for_ extFuns \(name, typ) -> do
       let name' = LLVM.AST.mkName $ convertString name
       case typ of
         ps :-> r -> extern name' (map convType ps) (convType r)
         _ -> error "invalid type"
-    traverse_ (uncurry genVar) topVars
-    traverse_ (\(f, (ps, body)) -> genFunc f ps body) topFuncs
+    traverse_ (\(n, _, e) -> genVar n e) topVars
+    traverse_ (\(f, ps, _, body) -> genFunc f ps body) topFuns
     case searchMain (HashMap.toList $ view nameEnv dsState) of
       Just mainCall -> do
         (f, (ps, body)) <-
@@ -143,7 +143,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
   liftIO $ withContext $ \ctx -> writeFileBS malgoEnv.dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     initTopVars [] = retVoid
-    initTopVars ((name, expr) : xs) =
+    initTopVars ((name, _, expr) : xs) =
       view (globalValueMap . at name) >>= \case
         Nothing -> error $ show $ pPrint name <+> "is not found"
         Just name' -> genExp expr \eOpr -> do
@@ -422,7 +422,7 @@ genExp (Let xs e) k = do
   local (over valueMap (env <>)) $ genExp e k
   where
     -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
-    prepare (LocalDef name (Fun ps body)) =
+    prepare (LocalDef name _ (Fun ps body)) =
       one . (name,)
         <$> mallocType
           ( StructureType
@@ -432,8 +432,8 @@ genExp (Let xs e) k = do
               ]
           )
     prepare _ = pure mempty
-genExp (Match e (Bind _ body :| _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
-genExp (Match e (Bind x body :| _)) k = genExp e $ \eOpr -> do
+genExp (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
+genExp (Match e (Bind x _ body : _)) k = genExp e $ \eOpr -> do
   eOpr <- bitcast eOpr (convType $ C.typeOf e)
   local (over valueMap (at x ?~ eOpr)) (genExp body k)
 genExp (Match e cs) k
@@ -483,7 +483,7 @@ genCase ::
   Case (Id C.Type) ->
   m (Either LLVM.AST.Name (C.Constant, LLVM.AST.Name))
 genCase scrutinee cs k = \case
-  Bind x e -> do
+  Bind x _ e -> do
     label <- block
     void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
     pure $ Left label
@@ -541,7 +541,7 @@ genLocalDef ::
   ) =>
   LocalDef (Id C.Type) ->
   m (HashMap (Id C.Type) Operand)
-genLocalDef (LocalDef funName (Fun ps e)) = do
+genLocalDef (LocalDef funName _ (Fun ps e)) = do
   -- クロージャの元になる関数を生成する
   name <- toName <$> newInternalId (funName.name <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
@@ -568,7 +568,7 @@ genLocalDef (LocalDef funName (Fun ps e)) = do
     capType = StructureType False (map (convType . C.typeOf) fvs)
     psTypes = ptr i8 : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
-genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = do
+genLocalDef (LocalDef name@(C.typeOf -> SumT cs) _ (Pack _ con@(Con _ ts) xs)) = do
   addr <- mallocType (StructureType False [i8, StructureType False $ map convType ts])
   -- タグの書き込み
   gepAndStore addr [int32 0, int32 0] (int8 $ findIndex con cs)
@@ -577,11 +577,11 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) (Pack _ con@(Con _ ts) xs)) = d
     gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
   one . (name,) <$> bitcast addr (convType $ SumT cs)
-genLocalDef (LocalDef (C.typeOf -> t) Pack {}) = error $ show t <> " must be SumT"
-genLocalDef (LocalDef name (Record kvs)) = do
+genLocalDef (LocalDef (C.typeOf -> t) _ Pack {}) = error $ show t <> " must be SumT"
+genLocalDef (LocalDef name _ (Record kvs)) = do
   newHashTable <- findExt "malgo_hash_table_new" [] (ptr $ NamedTypeReference $ mkName "struct.hash_table")
   hashTable <- call newHashTable []
-  for_ (HashMap.toList kvs) \(k, v) -> do
+  for_ (HashMap.toList kvs) \(k, (v, _)) -> do
     i <- getUniq
     k' <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
     v <- join $ bitcast <$> genAtom v <*> pure (ptr i8)

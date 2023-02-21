@@ -127,13 +127,14 @@ lintExp Error {} = pass
 lintObj :: MonadReader [Id Type] m => Obj (Id Type) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
-lintObj (Record kvs) = traverse_ lintAtom kvs
+lintObj (Record kvs) = traverse_ (fst >>> lintAtom) kvs
 
 lintCase :: MonadReader [Id Type] m => Exp (Id Type) -> Case (Id Type) -> m ()
 lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
 lintCase _ (Switch _ e) = lintExp e
-lintCase scrutinee (Bind x e) = local (x :) do
+lintCase scrutinee (Bind x t e) = local (x :) do
+  match x t
   match scrutinee x
   lintExp e
 
@@ -143,8 +144,8 @@ lintAtom (Unboxed _) = pass
 
 lintProgram :: MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
-  let fs = map (view _1) topFuncs
+  let fs = map (view _1) topFuns
   local (fs <>) $
-    for_ topFuncs $ \(f, (ps, body)) -> local (ps <>) do
+    for_ topFuns $ \(f, ps, _, body) -> local (ps <>) do
       match f (map typeOf ps :-> typeOf body)
       lintExp body

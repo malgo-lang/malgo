@@ -37,6 +37,7 @@ import Control.Monad.Writer.Class qualified as Writer
 import Data.List (dropWhileEnd)
 import Data.Monoid
 import Data.Text.IO qualified as T
+import Error.Diagnose.Compat.Megaparsec (HasHints (hints))
 import Relude hiding (All, Op, Type, id, unzip)
 import System.IO qualified
 import Text.PrettyPrint.HughesPJClass (Pretty (pPrint))
@@ -99,3 +100,6 @@ hPutText handle x = liftIO $ T.hPutStr handle x
 -- | Lifted version of 'T.hPutStrLn'.
 hPutTextLn :: MonadIO m => Handle -> Text -> m ()
 hPutTextLn handle x = liftIO $ T.hPutStrLn handle x
+
+instance HasHints Void Text where
+  hints = const []
