@@ -71,7 +71,7 @@ data Id a = Id
 
 instance Pretty (Id a) where
   pPrint Id {name, moduleName, sort = External} = pPrint moduleName <> "." <> pPrint name
-  pPrint Id {name, uniq, sort = Internal} = pPrint name <> "_" <> pPrint uniq
+  pPrint Id {name, uniq, sort = Internal} = pPrint name <> "_" <> pPrint (showHex uniq "")
   pPrint Id {name, uniq, sort = Temporal} = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
   pPrint Id {name, sort = Native} = pPrint name
 
