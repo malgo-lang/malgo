@@ -86,7 +86,7 @@ resolveName :: (MonadReader RnEnv m, MonadIO m) => Text -> m RnId
 resolveName name = newInternalId name ()
 
 -- | Resolving a new global (toplevel) name
-resolveGlobalName :: (MonadReader RnEnv m, MonadIO m) => ModuleName -> Text -> m RnId
+resolveGlobalName :: Monad f => ModuleName -> Text -> f (Id ())
 resolveGlobalName modName name = newExternalId name () modName
 
 -- | Resolving a variable name that is already resolved

@@ -304,7 +304,7 @@ genToplevelEnv modName ds =
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedVarIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      x' <- newExternalId x () modName
+      x' <- resolveGlobalName modName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux (Import _ modName' importList) = do
       interface <- loadInterface modName'

@@ -71,7 +71,7 @@ data Id a = Id
 
 instance Pretty (Id a) where
   pPrint Id {name, moduleName, sort = External} = pPrint moduleName <> "." <> pPrint name
-  pPrint Id {name, uniq, sort = Internal} = pPrint name <> "_" <> pPrint (showHex uniq "")
+  pPrint Id {name, uniq, sort = Internal} = pPrint $ name <> "_" <> toText (showHex uniq "")
   pPrint Id {name, uniq, sort = Temporal} = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
   pPrint Id {name, sort = Native} = pPrint name
 
@@ -94,16 +94,15 @@ newInternalId name meta = do
   let sort = Internal
   pure Id {..}
 
-newExternalId :: (MonadIO f, HasUniqSupply env, MonadReader env f) => Text -> a -> ModuleName -> f (Id a)
+newExternalId :: (Monad f) => Text -> a -> ModuleName -> f (Id a)
 newExternalId name meta moduleName = do
-  uniq <- getUniq
+  let uniq = -1
   let sort = External
   pure Id {..}
 
-newNativeId :: (MonadIO f, HasUniqSupply env, HasModuleName env ModuleName, MonadReader env f) => Text -> a -> f (Id a)
-newNativeId name meta = do
-  uniq <- getUniq
-  moduleName <- view moduleName
+newNativeId :: (Monad f) => Text -> a -> ModuleName -> f (Id a)
+newNativeId name meta moduleName = do
+  let uniq = -1
   let sort = Native
   pure Id {..}
 
