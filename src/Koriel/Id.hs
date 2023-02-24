@@ -93,8 +93,9 @@ newInternalId name meta = do
   let sort = Internal
   pure Id {..}
 
-newExternalId :: (Monad f) => Text -> a -> ModuleName -> f (Id a)
-newExternalId name meta moduleName = do
+newExternalId :: (MonadReader env f, HasModuleName env ModuleName) => Text -> a -> f (Id a)
+newExternalId name meta = do
+  moduleName <- view moduleName
   let sort = External
   pure Id {..}
 

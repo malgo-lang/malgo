@@ -35,9 +35,8 @@ rnDecls ::
   [Decl (Malgo 'Parse)] ->
   m [Decl (Malgo 'Rename)]
 rnDecls ds = do
-  modName <- view moduleName
   -- RnEnvの生成
-  rnEnv <- genToplevelEnv modName ds =<< ask
+  rnEnv <- genToplevelEnv ds =<< ask
   local (const rnEnv) $ do
     -- RnStateの生成
     put =<< RnState <$> infixDecls ds <*> pure HashSet.empty
@@ -270,15 +269,15 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (MonadReader RnEnv f, MonadIO f) => ModuleName -> [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
-genToplevelEnv modName ds =
+genToplevelEnv :: (MonadReader RnEnv f, MonadIO f) => [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
+genToplevelEnv ds =
   execStateT (traverse aux ds)
   where
     aux (ScDef pos x _) = do
       env <- use resolvedVarIdentMap
       when (x `elem` HashMap.keys env) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      x' <- resolveGlobalName modName x
+      x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
@@ -290,21 +289,21 @@ genToplevelEnv modName ds =
           "Duplicate name(s):"
             <+> sep
               (punctuate "," $ map (quotes . pPrint) (map (view _2) cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
-      x' <- resolveGlobalName modName x
-      xs' <- traverse (resolveGlobalName modName . view _2) cs
+      x' <- resolveGlobalName x
+      xs' <- traverse (resolveGlobalName . view _2) cs
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (TypeSynonym pos x _ _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      x' <- resolveGlobalName modName x
+      x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (Foreign pos x _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedVarIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
-      x' <- resolveGlobalName modName x
+      x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux (Import _ modName' importList) = do
       interface <- loadInterface modName'
