@@ -133,7 +133,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
             pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
-    genLoadModule modName $ initTopVars topVars
+    genLoadModule $ initTopVars topVars
   let llvmModule =
         defaultModule
           { LLVM.AST.moduleName = fromString srcPath,
@@ -162,7 +162,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
     -- Generate main function.
     mainFunc e = do
       -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
-      mainFuncId <- newNativeId "main" ([] :-> Int32T) modName
+      mainFuncId <- newNativeId "main" ([] :-> Int32T)
       mainFuncBody <- runDef do
         _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
         _ <- bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
@@ -283,8 +283,10 @@ toName id = LLVM.AST.mkName $ convertString $ idToText id
 genVar :: MonadModuleBuilder m => Id C.Type -> Exp (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
-genLoadModule :: MonadModuleBuilder m => ModuleName -> IRBuilderT m () -> m Operand
-genLoadModule (ModuleName modName) m = function (LLVM.AST.mkName $ convertString $ "koriel_load_" <> modName) [] LT.void $ const m
+genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
+genLoadModule m = do
+  ModuleName modName <- view Koriel.Id.moduleName
+  function (LLVM.AST.mkName $ convertString $ "koriel_load_" <> modName) [] LT.void $ const m
 
 -- generate code for a 'known' function
 genFunc ::
