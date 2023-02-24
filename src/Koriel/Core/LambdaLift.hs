@@ -1,3 +1,4 @@
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Koriel.Core.LambdaLift
@@ -27,15 +28,25 @@ funcs = lens (._funcs) (\l x -> l {_funcs = x})
 knowns :: Lens' LambdaLiftState (HashSet (Id Type))
 knowns = lens (._knowns) (\l x -> l {_knowns = x})
 
-data LambdaLiftEnv = LambdaLiftEnv
-  { uniqSupply :: UniqSupply,
-    _moduleName :: ModuleName
+newtype LambdaLiftEnv = LambdaLiftEnv
+  { uniqSupply :: UniqSupply
   }
 
 makeFieldsNoPrefix ''LambdaLiftEnv
 
-lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
-lambdalift uniqSupply _moduleName Program {..} =
+data DefEnv = DefEnv {uniqSupply :: UniqSupply, _moduleName :: ModuleName}
+
+makeFieldsNoPrefix ''DefEnv
+
+def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Id Type -> [Id Type] -> Exp (Id Type) -> m (Id Type)
+def name xs e = do
+  uniqSupply <- asks (.uniqSupply)
+  f <- runReaderT (newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)) (DefEnv uniqSupply name.moduleName)
+  funcs . at f ?= (xs, typeOf f, e)
+  pure f
+
+lambdalift :: MonadIO m => UniqSupply -> Program (Id Type) -> m (Program (Id Type))
+lambdalift uniqSupply Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns} $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
@@ -77,14 +88,8 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       put backup
       body' <- llift body
       let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
-      newFun <- def n.name (toList fvs <> as) body'
+      newFun <- def n (toList fvs <> as) body'
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift e = pure e
-
-def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Text -> [Id Type] -> Exp (Id Type) -> m (Id Type)
-def name xs e = do
-  f <- newTemporalId ("raw_" <> name) (map typeOf xs :-> typeOf e)
-  funcs . at f ?= (xs, typeOf f, e)
-  pure f
