@@ -12,8 +12,6 @@ module Koriel.Id
     newInternalId,
     newExternalId,
     idIsExternal,
-    newIdOnName,
-    cloneId,
     newTemporalId,
     newNativeId,
     idIsNative,
@@ -103,18 +101,6 @@ newExternalId name meta moduleName = do
 newNativeId :: (Monad f) => Text -> a -> ModuleName -> f (Id a)
 newNativeId name meta moduleName = do
   let sort = Native
-  pure Id {..}
-
-newIdOnName :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> Id b -> f (Id a)
-newIdOnName meta Id {name, moduleName, sort} = do
-  uniq <- getUniq
-  name <- pure $ name <> "_" <> convertString (showHex uniq "")
-  pure Id {..}
-
-cloneId :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Id a -> m (Id a)
-cloneId Id {..} = do
-  uniq <- getUniq
-  name <- pure $ name <> "_" <> convertString (showHex uniq "")
   pure Id {..}
 
 idIsExternal :: Id a -> Bool

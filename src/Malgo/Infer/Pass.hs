@@ -109,11 +109,11 @@ tcTypeDefinitions ::
 tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(_, name, params, _) -> do
-    tyCon <- newIdOnName () name
+    let tyCon = name
     kindCtx %= insertKind tyCon (buildTyConKind params)
     typeDefMap . at name .= Just (TypeDef (TyCon tyCon) [] [])
   for_ dataDefs \(_, name, params, _) -> do
-    tyCon <- newIdOnName () name
+    let tyCon = name
     kindCtx %= insertKind tyCon (buildTyConKind params)
     typeDefMap . at name .= Just (TypeDef (TyCon tyCon) [] [])
   typeSynonyms' <- tcTypeSynonyms typeSynonyms

@@ -75,7 +75,7 @@ dsScDefs ds = do
   -- まず、宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
     Just (Forall _ fType) <- use (signatureMap . at f)
-    f' <- newCoreId f =<< dsType fType
+    f' <- toCoreId f <$> dsType fType
     nameEnv . at f ?= f'
   foldMapM dsScDef ds
 
@@ -132,7 +132,7 @@ dsForeign ::
   Foreign (Malgo 'Refine) ->
   f [Def]
 dsForeign (Typed typ (_, primName), name, _) = do
-  name' <- newCoreId name =<< dsType typ
+  name' <- toCoreId name <$> dsType typ
   let (paramTypes, retType) = splitTyArr typ
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
@@ -157,7 +157,7 @@ dsDataDef (_, name, _, cons) =
     retType' <- dsType retType
 
     -- generate constructor code
-    conName' <- newCoreId conName $ buildConType paramTypes' retType'
+    let conName' = toCoreId conName $ buildConType paramTypes' retType'
     ps <- traverse (newTemporalId "p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
@@ -265,8 +265,8 @@ lookupName name = do
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
 
-newCoreId :: (MonadReader DsEnv f, MonadIO f) => RnId -> C.Type -> f (Id C.Type)
-newCoreId griffId coreType = newIdOnName coreType griffId
+toCoreId :: RnId -> C.Type -> Id C.Type
+toCoreId griffId coreType = griffId {meta = coreType}
 
 -- 関数をカリー化する
 curryFun ::
