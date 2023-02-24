@@ -61,7 +61,6 @@ data IdSort
 
 data Id a = Id
   { name :: Text,
-    uniq :: Int,
     meta :: a,
     moduleName :: ModuleName,
     sort :: IdSort
@@ -71,8 +70,8 @@ data Id a = Id
 
 instance Pretty (Id a) where
   pPrint Id {name, moduleName, sort = External} = pPrint moduleName <> "." <> pPrint name
-  pPrint Id {name, uniq, sort = Internal} = pPrint $ name <> "_" <> toText (showHex uniq "")
-  pPrint Id {name, uniq, sort = Temporal} = pPrint $ "$" <> name <> "_" <> toText (showHex uniq "")
+  pPrint Id {name, sort = Internal} = pPrint name
+  pPrint Id {name, sort = Temporal} = "$" <> pPrint name
   pPrint Id {name, sort = Native} = pPrint name
 
 idToText :: Id a -> Text
@@ -83,6 +82,7 @@ idToText id = convertString $ render $ pPrint id
 newTemporalId :: (MonadReader s m, MonadIO m, HasModuleName s ModuleName, HasUniqSupply s) => Text -> a -> m (Id a)
 newTemporalId name meta = do
   uniq <- getUniq
+  name <- pure $ name <> "_" <> convertString (showHex uniq "")
   moduleName <- view moduleName
   let sort = Temporal
   pure Id {..}
@@ -90,30 +90,31 @@ newTemporalId name meta = do
 newInternalId :: (MonadIO f, HasModuleName env ModuleName, MonadReader env f, HasUniqSupply env) => Text -> a -> f (Id a)
 newInternalId name meta = do
   uniq <- getUniq
+  name <- pure $ name <> "_" <> convertString (showHex uniq "")
   moduleName <- view moduleName
   let sort = Internal
   pure Id {..}
 
 newExternalId :: (Monad f) => Text -> a -> ModuleName -> f (Id a)
 newExternalId name meta moduleName = do
-  let uniq = -1
   let sort = External
   pure Id {..}
 
 newNativeId :: (Monad f) => Text -> a -> ModuleName -> f (Id a)
 newNativeId name meta moduleName = do
-  let uniq = -1
   let sort = Native
   pure Id {..}
 
 newIdOnName :: (MonadIO f, HasUniqSupply env, MonadReader env f) => a -> Id b -> f (Id a)
 newIdOnName meta Id {name, moduleName, sort} = do
   uniq <- getUniq
+  name <- pure $ name <> "_" <> convertString (showHex uniq "")
   pure Id {..}
 
 cloneId :: (MonadIO m, HasUniqSupply env, MonadReader env m) => Id a -> m (Id a)
 cloneId Id {..} = do
   uniq <- getUniq
+  name <- pure $ name <> "_" <> convertString (showHex uniq "")
   pure Id {..}
 
 idIsExternal :: Id a -> Bool
