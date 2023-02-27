@@ -14,7 +14,7 @@ import Malgo.Prelude
 
 -- 脱糖衣処理の環境
 data DsEnv = DsEnv
-  { _moduleName :: ModuleName,
+  { moduleName :: ModuleName,
     uniqSupply :: UniqSupply,
     _modulePaths :: [FilePath],
     _interfaces :: IORef (HashMap ModuleName Interface)
@@ -23,4 +23,4 @@ data DsEnv = DsEnv
 makeFieldsNoPrefix ''DsEnv
 
 makeDsEnv :: ModuleName -> MalgoEnv -> TcEnv -> DsEnv
-makeDsEnv _moduleName MalgoEnv {..} TcEnv {_kindCtx} = DsEnv {..}
+makeDsEnv moduleName MalgoEnv {..} TcEnv {_kindCtx} = DsEnv {..}

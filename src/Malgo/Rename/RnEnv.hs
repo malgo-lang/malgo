@@ -35,7 +35,7 @@ data RnEnv = RnEnv
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
     _resolvedVarIdentMap :: HashMap PsId [Resolved],
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
-    _moduleName :: ModuleName,
+    moduleName :: ModuleName,
     uniqSupply :: UniqSupply,
     debugMode :: Bool,
     _modulePaths :: [FilePath],
@@ -75,7 +75,7 @@ genBuiltinRnEnv modName = do
                 ("String#", [Qualified Implicit string_t]),
                 ("Ptr#", [Qualified Implicit ptr_t])
               ],
-          _moduleName = modName,
+          moduleName = modName,
           uniqSupply = malgoEnv.uniqSupply,
           debugMode = malgoEnv.debugMode,
           _modulePaths = malgoEnv ^. modulePaths,

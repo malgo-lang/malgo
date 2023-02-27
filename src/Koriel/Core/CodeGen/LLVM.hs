@@ -63,7 +63,7 @@ data CodeGenEnv = CodeGenEnv
     _valueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
     _funcMap :: HashMap (Id C.Type) Operand,
-    _moduleName :: ModuleName
+    moduleName :: ModuleName
   }
 
 makeFieldsNoPrefix ''CodeGenEnv
@@ -75,7 +75,7 @@ newCodeGenEnv malgoEnv moduleName Program {..} =
       _valueMap = mempty,
       _globalValueMap = varMap,
       _funcMap = funcMap,
-      _moduleName = moduleName
+      moduleName = moduleName
     }
   where
     -- topVarsのOprMapを作成
@@ -285,7 +285,7 @@ genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (con
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
 genLoadModule m = do
-  ModuleName modName <- view Koriel.Id.moduleName
+  ModuleName modName <- asks (.moduleName)
   function (LLVM.AST.mkName $ convertString $ "koriel_load_" <> modName) [] LT.void $ const m
 
 -- generate code for a 'known' function

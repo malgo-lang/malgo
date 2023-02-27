@@ -2,11 +2,11 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Koriel.Id
   ( IdSort (..),
     ModuleName (..),
-    HasModuleName (..),
     Id (..),
     idToText,
     newInternalId,
@@ -15,14 +15,15 @@ module Koriel.Id
     newTemporalId,
     newNativeId,
     idIsNative,
+    HasModuleName,
   )
 where
 
-import Control.Lens (Lens', view)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.String.Conversions (convertString)
+import GHC.Records
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty as P
@@ -32,11 +33,10 @@ newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving newtype (Hashable, Binary, Pretty, ToJSON, FromJSON)
 
-class HasModuleName s a | s -> a where
-  moduleName :: Lens' s a
+type HasModuleName r = HasField "moduleName" r ModuleName
 
-instance HasModuleName ModuleName ModuleName where
-  moduleName = identity
+instance HasField "moduleName" ModuleName ModuleName where
+  getField = identity
 
 -- | Identifier sort.
 data IdSort
@@ -77,31 +77,31 @@ idToText id@Id {moduleName, sort = Internal} = moduleName.raw <> "." <> convertS
 idToText id@Id {moduleName, sort = Temporal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
 idToText id = convertString $ render $ pPrint id
 
-newTemporalId :: (MonadReader s m, MonadIO m, HasModuleName s ModuleName, HasUniqSupply s) => Text -> a -> m (Id a)
+newTemporalId :: (MonadReader env m, MonadIO m, HasUniqSupply env, HasModuleName env) => Text -> a -> m (Id a)
 newTemporalId name meta = do
   uniq <- getUniq
   name <- pure $ name <> "_" <> convertString (showHex uniq "")
-  moduleName <- view moduleName
+  moduleName <- asks (.moduleName)
   let sort = Temporal
   pure Id {..}
 
-newInternalId :: (MonadIO f, HasModuleName env ModuleName, MonadReader env f, HasUniqSupply env) => Text -> a -> f (Id a)
+newInternalId :: (MonadIO f, MonadReader env f, HasUniqSupply env, HasModuleName env) => Text -> a -> f (Id a)
 newInternalId name meta = do
   uniq <- getUniq
   name <- pure $ name <> "_" <> convertString (showHex uniq "")
-  moduleName <- view moduleName
+  moduleName <- asks (.moduleName)
   let sort = Internal
   pure Id {..}
 
-newExternalId :: (MonadReader env f, HasModuleName env ModuleName) => Text -> a -> f (Id a)
+newExternalId :: (MonadReader env f, HasModuleName env) => Text -> a -> f (Id a)
 newExternalId name meta = do
-  moduleName <- view moduleName
+  moduleName <- asks (.moduleName)
   let sort = External
   pure Id {..}
 
-newNativeId :: (MonadReader env f, HasModuleName env ModuleName) => Text -> a -> f (Id a)
+newNativeId :: (MonadReader env f, HasModuleName env) => Text -> a -> f (Id a)
 newNativeId name meta = do
-  moduleName <- view moduleName
+  moduleName <- asks (.moduleName)
   let sort = Native
   pure Id {..}
 

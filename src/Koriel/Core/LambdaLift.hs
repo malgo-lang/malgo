@@ -34,9 +34,7 @@ newtype LambdaLiftEnv = LambdaLiftEnv
 
 makeFieldsNoPrefix ''LambdaLiftEnv
 
-data DefEnv = DefEnv {uniqSupply :: UniqSupply, _moduleName :: ModuleName}
-
-makeFieldsNoPrefix ''DefEnv
+data DefEnv = DefEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName}
 
 def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Id Type -> [Id Type] -> Exp (Id Type) -> m (Id Type)
 def name xs e = do
