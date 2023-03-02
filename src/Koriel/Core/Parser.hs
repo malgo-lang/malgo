@@ -30,7 +30,7 @@ program = do
     t <- type_
     e <- expr
     pure (v, t, e)
-  topFuns <- many $ between (symbol "(") (symbol ")") do
+  topFuns <- many $ try $ between (symbol "(") (symbol ")") do
     void $ symbol "define"
     f : xs <- between (symbol "(") (symbol ")") (some ident)
     t <- type_
@@ -98,7 +98,7 @@ object = between (symbol "(") (symbol ")") do
           (symbol ")")
           ( many do
               k <- ident
-              v <- between (symbol "(") (symbol ")") $ (,) <$> atom <*> type_
+              v <- atom
               pure (k, v)
           )
       pure $ Record $ HashMap.fromList kvs

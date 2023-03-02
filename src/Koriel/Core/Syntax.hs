@@ -28,7 +28,7 @@ module Koriel.Core.Syntax
   )
 where
 
-import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _1, _3, _4)
+import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
@@ -112,14 +112,14 @@ data Obj a
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
   | -- | record
-    Record (HashMap Text (Atom a, Type))
+    Record (HashMap Text (Atom a))
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
   typeOf (Pack t _ _) = t
-  typeOf (Record kvs) = RecordT (fmap (snd >>> typeOf) kvs)
+  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
 instance (Pretty a) => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
@@ -133,7 +133,7 @@ instance (Pretty a) => Pretty (Obj a) where
                   map
                     ( \(k, v) ->
                         pPrint k
-                          <+> parens (sep [pPrint (fst v), pPrint (snd v)])
+                          <+> pPrint v
                     )
                     (HashMap.toList kvs)
               )
@@ -142,13 +142,13 @@ instance (Pretty a) => Pretty (Obj a) where
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
-  freevars (Record kvs) = foldMap (fst >>> freevars) kvs
+  freevars (Record kvs) = foldMap freevars kvs
 
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
-    Record kvs -> Record <$> traverseOf (traversed . _1 . atom) f kvs
+    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
 data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)

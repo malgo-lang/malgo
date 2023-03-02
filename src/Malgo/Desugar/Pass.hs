@@ -238,8 +238,7 @@ dsExp (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
   kvs' <- traverseOf (traversed . _2) (bind <=< dsExp) kvs
   kts <- HashMap.toList <$> traverse dsType recordType
   v <- newTemporalId "record" $ RecordT (HashMap.fromList kts)
-  let kvs'' = HashMap.intersectionWith (,) (HashMap.fromList kvs') (HashMap.fromList kts)
-  pure $ C.Let [C.LocalDef v (C.typeOf v) (C.Record kvs'')] $ Atom $ C.Var v
+  pure $ C.Let [C.LocalDef v (C.typeOf v) (C.Record $ HashMap.fromList kvs')] $ Atom $ C.Var v
 dsExp (G.Record _ _) = error "unreachable"
 dsExp (G.Seq _ ss) = dsStmts ss
 

@@ -1,10 +1,16 @@
 {-# LANGUAGE CPP #-}
 
-import Control.Exception.Extra (assertIO)
+import Data.String.Conversions (convertString)
+import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
+import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
+import Koriel.Core.Annotate qualified as Koriel
+import Koriel.Core.Lint qualified as Koriel
 import Koriel.Core.Parser qualified as Koriel
+import Koriel.Id (ModuleName (..))
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
+import Prettyprinter (unAnnotate)
 import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
@@ -114,7 +120,13 @@ test testcase postfix lambdaLift noOptimize = do
 
   -- Check if the generated Koriel code is valid
   koriel <- readFileBS (llPath -<.> "kor")
-  assertIO (isRight $ Koriel.parse (testDirectory </> takeBaseName testcase -<.> (postfix <> ".kor")) (decodeUtf8 koriel))
+  case Koriel.parse (llPath -<.> "kor") (decodeUtf8 koriel) of
+    Left err ->
+      let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
+          diag' = addFile diag testcase (decodeUtf8 koriel)
+       in printDiagnostic stderr True True 4 unAnnotate diag' >> exitFailure
+    Right _ -> do
+      pass
 
   clang <- getClangCommand
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])

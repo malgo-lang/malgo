@@ -583,7 +583,7 @@ genLocalDef (LocalDef (C.typeOf -> t) _ Pack {}) = error $ show t <> " must be S
 genLocalDef (LocalDef name _ (Record kvs)) = do
   newHashTable <- findExt "malgo_hash_table_new" [] (ptr $ NamedTypeReference $ mkName "struct.hash_table")
   hashTable <- call newHashTable []
-  for_ (HashMap.toList kvs) \(k, (v, _)) -> do
+  for_ (HashMap.toList kvs) \(k, v) -> do
     i <- getUniq
     k' <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
     v <- join $ bitcast <$> genAtom v <*> pure (ptr i8)

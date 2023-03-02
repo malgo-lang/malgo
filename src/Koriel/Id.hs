@@ -16,6 +16,7 @@ module Koriel.Id
     newNativeId,
     idIsNative,
     HasModuleName,
+    newInternalId',
   )
 where
 
@@ -89,6 +90,12 @@ newInternalId :: (MonadIO f, MonadReader env f, HasUniqSupply env, HasModuleName
 newInternalId name meta = do
   uniq <- getUniq
   name <- pure $ name <> "_" <> convertString (showHex uniq "")
+  moduleName <- asks (.moduleName)
+  let sort = Internal
+  pure Id {..}
+
+newInternalId' :: (MonadReader r m, HasField "moduleName" r ModuleName) => Text -> a -> m (Id a)
+newInternalId' name meta = do
   moduleName <- asks (.moduleName)
   let sort = Internal
   pure Id {..}
