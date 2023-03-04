@@ -74,7 +74,7 @@ instance Pretty (Id a) where
 
 idToText :: Id a -> Text
 idToText Id {name, moduleName, sort = External} = moduleName.raw <> "." <> name
-idToText Id {name, moduleName, sort = Internal} = moduleName.raw <> "." <> name
+idToText Id {name, moduleName, sort = Internal} = moduleName.raw <> ".#" <> name
 idToText Id {name, moduleName, sort = Temporal} = moduleName.raw <> ".$" <> name
 idToText Id {name, sort = Native} = name
 

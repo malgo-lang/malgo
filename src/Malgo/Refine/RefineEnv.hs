@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Malgo.Refine.RefineEnv (RefineEnv (..), buildRefineEnv) where
 
 import Data.HashMap.Strict qualified as HashMap
