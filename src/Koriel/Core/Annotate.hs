@@ -2,10 +2,12 @@ module Koriel.Core.Annotate (annotate) where
 
 import Control.Lens (ifor)
 import Data.HashMap.Strict qualified as HashMap
+import Data.Text qualified as Text
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.Prelude
+import Koriel.Pretty (Pretty (pPrint), errorDoc)
 
 -- | Type-check the program and annotate with type information.
 annotate :: MonadIO m => ModuleName -> Program Text -> m (Program (Id Type))
@@ -14,40 +16,50 @@ annotate moduleName program = runReaderT (annProgram program) (Context moduleNam
 data Context = Context
   { -- | The current module name.
     moduleName :: ModuleName,
-    -- | Textual identifiers to unique identifiers.
     nameEnv :: HashMap Text (Id Type)
   }
 
-lookupName :: MonadReader Context m => Text -> m (Id Type)
+lookupName :: HasCallStack => MonadReader Context m => Text -> m (Id Type)
 lookupName name =
   HashMap.lookupDefault
     (error $ "lookupName: " <> show name)
     name
     <$> asks (.nameEnv)
 
+parseId :: MonadReader Context m => Text -> Type -> m (Id Type)
+parseId name meta
+  | Text.head name == '@' = do
+      (moduleName, name) <- pure $ second Text.tail $ Text.breakOn "." (Text.tail name)
+      pure Id {name, meta, moduleName = ModuleName moduleName, sort = External}
+  | Text.head name == '#' = do
+      moduleName <- asks (.moduleName)
+      pure Id {name = Text.tail name, meta, moduleName, sort = Internal}
+  | Text.head name == '$' = do
+      moduleName <- asks (.moduleName)
+      pure Id {name = Text.tail name, meta, moduleName, sort = Temporal}
+  | Text.head name == '%' = do
+      moduleName <- asks (.moduleName)
+      pure Id {name = Text.tail name, meta, moduleName, sort = Native}
+  | otherwise = do
+      error $ "parseId: " <> show name
+
 annProgram :: (MonadReader Context m, MonadIO m) => Program Text -> m (Program (Id Type))
 annProgram Program {..} = do
   varEnv <- foldMapM prepareVarDecl topVars
   funEnv <- foldMapM prepareFunDecl topFuns
-  extEnv <- foldMapM prepareExtDecl extFuns
-  local (\ctx -> ctx {nameEnv = varEnv <> funEnv <> extEnv}) do
+  local (\ctx -> ctx {nameEnv = varEnv <> funEnv}) do
     topVars <- traverse annVarDecl topVars
     topFuns <- traverse annFunDecl topFuns
     pure Program {..}
 
 prepareVarDecl :: MonadReader Context m => (Text, Type, Exp Text) -> m (HashMap Text (Id Type))
 prepareVarDecl (name, ty, _) = do
-  id <- newExternalId name ty
+  id <- parseId name ty
   pure $ one (name, id)
 
 prepareFunDecl :: MonadReader Context m => (Text, [Text], Type, Exp Text) -> m (HashMap Text (Id Type))
 prepareFunDecl (name, _, ty, _) = do
-  id <- newExternalId name ty
-  pure $ one (name, id)
-
-prepareExtDecl :: MonadReader Context m => (Text, Type) -> m (HashMap Text (Id Type))
-prepareExtDecl (name, ty) = do
-  id <- newExternalId name ty
+  id <- parseId name ty
   pure $ one (name, id)
 
 annVarDecl :: (MonadReader Context m, MonadIO m) => (Text, Type, Exp Text) -> m (Id Type, Type, Exp (Id Type))
@@ -56,10 +68,13 @@ annVarDecl (name, ty, body) = do
   (name,ty,) <$> annExp body
 
 annFunDecl :: (MonadReader Context m, MonadIO m) => (Text, [Text], Type, Exp Text) -> m (Id Type, [Id Type], Type, Exp (Id Type))
-annFunDecl (name, args, ty, body) = do
+annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   name <- lookupName name
-  args <- traverse lookupName args
-  (name,args,ty,) <$> annExp body
+  params' <- zipWithM parseId params paramTypes
+  local
+    (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv})
+    $ (name,params',ty,) <$> annExp body
+annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pPrint name
 
 annExp :: (MonadReader Context m, MonadIO m) => Exp Text -> m (Exp (Id Type))
 annExp (Atom atom) = Atom <$> annAtom atom
@@ -69,46 +84,48 @@ annExp (RawCall fun typ args) = RawCall fun typ <$> traverse annAtom args
 annExp (BinOp op x y) = BinOp op <$> annAtom x <*> annAtom y
 annExp (Cast typ x) = Cast typ <$> annAtom x
 annExp (Let defs body) = do
-  defs <- traverse annDef defs
-  body <- annExp body
+  (env, defs) <- foldMapM annDef defs
+  body <- local (\ctx -> ctx {nameEnv = env <> ctx.nameEnv}) do
+    annExp body
   pure $ Let defs body
   where
     annDef (LocalDef variable typ object) = do
-      variable <- lookupName variable
-      object <- annObj typ object
-      pure $ LocalDef variable typ object
+      variable' <- parseId variable typ
+      object <- local (\ctx -> ctx {nameEnv = HashMap.insert variable variable' ctx.nameEnv}) do
+        annObj typ object
+      pure (one (variable, variable'), [LocalDef variable' typ object])
 annExp (Match scrutinee alts) = do
   scrutinee <- annExp scrutinee
   Match scrutinee <$> traverse (annCase $ typeOf scrutinee) alts
   where
     annCase _ (Unpack (Con tag paramTypes) params body) = do
-      params' <- zipWithM newInternalId' params paramTypes
+      params' <- zipWithM parseId params paramTypes
       local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
         body <- annExp body
         pure $ Unpack (Con tag paramTypes) params' body
     annCase (RecordT fieldTypes) (OpenRecord fields body) = do
       fields' <- ifor fields \field variable -> do
         let ty = HashMap.lookupDefault (error $ "annExp: " <> show field) field fieldTypes
-        newInternalId' variable ty
+        parseId variable ty
       local (\ctx -> ctx {nameEnv = HashMap.fromList (HashMap.elems (HashMap.intersectionWith (,) fields fields')) <> ctx.nameEnv}) do
         body <- annExp body
         pure $ OpenRecord fields' body
     annCase ty OpenRecord {} = error $ "annCase: " <> show ty
     annCase _ (Switch value body) = Switch value <$> annExp body
     annCase _ (Bind var ty body) = do
-      var' <- newInternalId' var ty
+      var' <- parseId var ty
       local (\ctx -> ctx {nameEnv = HashMap.insert var var' ctx.nameEnv}) do
         body <- annExp body
         pure $ Bind var' ty body
 annExp (Error ty) = pure $ Error ty
 
-annAtom :: MonadReader Context m => Atom Text -> m (Atom (Id Type))
+annAtom :: HasCallStack => MonadReader Context m => Atom Text -> m (Atom (Id Type))
 annAtom (Var name) = Var <$> lookupName name
 annAtom (Unboxed value) = pure $ Unboxed value
 
 annObj :: (MonadReader Context m, MonadIO m) => Type -> Obj Text -> m (Obj (Id Type))
 annObj (paramTypes :-> _) (Fun params body) = do
-  params' <- zipWithM newInternalId' params paramTypes
+  params' <- zipWithM parseId params paramTypes
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
     body <- annExp body
     pure $ Fun params' body

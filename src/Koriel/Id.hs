@@ -16,7 +16,6 @@ module Koriel.Id
     newNativeId,
     idIsNative,
     HasModuleName,
-    newInternalId',
   )
 where
 
@@ -68,15 +67,16 @@ data Id a = Id
   deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty (Id a) where
-  pPrint Id {name, moduleName, sort = External} = pPrint moduleName <> "." <> pPrint name
-  pPrint Id {name, sort = Internal} = pPrint name
+  pPrint Id {name, moduleName, sort = External} = "@" <> pPrint moduleName <> "." <> pPrint name
+  pPrint Id {name, sort = Internal} = "#" <> pPrint name
   pPrint Id {name, sort = Temporal} = "$" <> pPrint name
-  pPrint Id {name, sort = Native} = pPrint name
+  pPrint Id {name, sort = Native} = "%" <> pPrint name
 
 idToText :: Id a -> Text
-idToText id@Id {moduleName, sort = Internal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
-idToText id@Id {moduleName, sort = Temporal} = moduleName.raw <> "." <> convertString (render $ pPrint id)
-idToText id = convertString $ render $ pPrint id
+idToText Id {name, moduleName, sort = External} = moduleName.raw <> "." <> name
+idToText Id {name, moduleName, sort = Internal} = moduleName.raw <> "." <> name
+idToText Id {name, moduleName, sort = Temporal} = moduleName.raw <> ".$" <> name
+idToText Id {name, sort = Native} = name
 
 newTemporalId :: (MonadReader env m, MonadIO m, HasUniqSupply env, HasModuleName env) => Text -> a -> m (Id a)
 newTemporalId name meta = do
@@ -90,12 +90,6 @@ newInternalId :: (MonadIO f, MonadReader env f, HasUniqSupply env, HasModuleName
 newInternalId name meta = do
   uniq <- getUniq
   name <- pure $ name <> "_" <> convertString (showHex uniq "")
-  moduleName <- asks (.moduleName)
-  let sort = Internal
-  pure Id {..}
-
-newInternalId' :: (MonadReader r m, HasField "moduleName" r ModuleName) => Text -> a -> m (Id a)
-newInternalId' name meta = do
   moduleName <- asks (.moduleName)
   let sort = Internal
   pure Id {..}

@@ -123,7 +123,7 @@ instance HasType a => HasType (Obj a) where
 
 instance (Pretty a) => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack _ c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) -- The type of `pack` is already printed in the parent `LocalDef`.
+  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
   pPrint (Record kvs) =
     parens $
       sep
@@ -335,7 +335,7 @@ instance (Pretty a) => Pretty (Program a) where
           ["; functions"],
           map (\(f, ps, t, e) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) extFuns
+          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) extFuns
         ]
 
 appObj :: Traversal' (Obj a) (Exp a)

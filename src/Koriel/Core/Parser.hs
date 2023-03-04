@@ -21,27 +21,34 @@ parse = Megaparsec.parse do
 
 type Parser = Parsec Void Text
 
+-- | トップレベル宣言
+data Def
+  = VarDef Text Type (Exp Text)
+  | FunDef Text [Text] Type (Exp Text)
+  | ExtDef Text Type
+
 -- | Parse a program.
 program :: Parser (Program Text)
 program = do
-  topVars <- many $ try $ between (symbol "(") (symbol ")") do
-    void $ symbol "define"
-    v <- ident
-    t <- type_
-    e <- expr
-    pure (v, t, e)
-  topFuns <- many $ try $ between (symbol "(") (symbol ")") do
-    void $ symbol "define"
-    f : xs <- between (symbol "(") (symbol ")") (some ident)
-    t <- type_
-    e <- expr
-    pure (f, xs, t, e)
-  extFuns <- many $ between (symbol "(") (symbol ")") do
-    void $ symbol "extern"
-    f <- ident
-    t <- type_
-    pure (f, t)
+  defs <- many $ between (symbol "(") (symbol ")") do
+    define <|> extern
+  let (topVars, topFuns, extFuns) = foldMap go defs
   pure $ Program {..}
+  where
+    define = do
+      void $ symbol "define"
+      varDef <|> funDef
+    varDef = do
+      VarDef <$> ident <*> type_ <*> expr
+    funDef = do
+      f : xs <- between (symbol "(") (symbol ")") (some ident)
+      FunDef f xs <$> type_ <*> expr
+    extern = do
+      void $ symbol "extern"
+      ExtDef <$> ident <*> type_
+    go (VarDef v t e) = ([(v, t, e)], [], [])
+    go (FunDef f xs t e) = ([], [(f, xs, t, e)], [])
+    go (ExtDef f t) = ([], [], [(f, t)])
 
 -- | Parse an unboxed literal.
 unboxed :: Parser Unboxed
@@ -256,9 +263,14 @@ symbol :: Text -> Parser Text
 symbol = Lexer.symbol space
 
 -- | Character that can be used in an identifier.
--- Basically, it is the same as 'Malgo.Parser.identLetter', but we also allow '$' for temporary variables.
+-- Basically, it is the same as 'Malgo.Parser.identLetter', but we also allow:
+-- - '@' for global variables.
+-- - '$' for temporary variables.
+identStartLetter :: Parser Char
+identStartLetter = Char.letterChar <|> oneOf ("_+-*/\\%=><:;|&!#.@$" :: String)
+
 identLetter :: Parser Char
-identLetter = Char.alphaNumChar <|> oneOf ("_+-*/\\%=><:;|&!#.$" :: String)
+identLetter = Char.alphaNumChar <|> oneOf ("_+-*/\\%=><:;|&!#.@$" :: String)
 
 -- | Parse an identifier.
 -- In Koriel, we always know where an identifier appears,
@@ -266,5 +278,6 @@ identLetter = Char.alphaNumChar <|> oneOf ("_+-*/\\%=><:;|&!#.$" :: String)
 -- (And identifiers that textually look like keywords are allowed.)
 ident :: Parser Text
 ident = lexeme do
-  xs <- some identLetter
-  pure $ toText xs
+  x <- identStartLetter
+  xs <- many identLetter
+  pure $ toText $ x : xs
