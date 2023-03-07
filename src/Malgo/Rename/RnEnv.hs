@@ -35,7 +35,7 @@ data RnEnv = RnEnv
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
     _resolvedVarIdentMap :: HashMap PsId [Resolved],
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
-    _moduleName :: ModuleName,
+    moduleName :: ModuleName,
     uniqSupply :: UniqSupply,
     debugMode :: Bool,
     _modulePaths :: [FilePath],
@@ -53,41 +53,42 @@ appendRnEnv lens newEnv = over lens $
 genBuiltinRnEnv :: ModuleName -> MalgoM RnEnv
 genBuiltinRnEnv modName = do
   malgoEnv <- ask
-  int32_t <- newExternalId "Int32#" () $ ModuleName "Builtin"
-  int64_t <- newExternalId "Int64#" () $ ModuleName "Builtin"
-  float_t <- newExternalId "Float#" () $ ModuleName "Builtin"
-  double_t <- newExternalId "Double#" () $ ModuleName "Builtin"
-  char_t <- newExternalId "Char#" () $ ModuleName "Builtin"
-  string_t <- newExternalId "String#" () $ ModuleName "Builtin"
-  ptr_t <- newExternalId "Ptr#" () $ ModuleName "Builtin"
+  runReaderT ?? ModuleName "Builtin" $ do
+    int32_t <- newExternalId "Int32#" ()
+    int64_t <- newExternalId "Int64#" ()
+    float_t <- newExternalId "Float#" ()
+    double_t <- newExternalId "Double#" ()
+    char_t <- newExternalId "Char#" ()
+    string_t <- newExternalId "String#" ()
+    ptr_t <- newExternalId "Ptr#" ()
 
-  pure $
-    RnEnv
-      { _resolvedVarIdentMap = mempty,
-        _resolvedTypeIdentMap =
-          HashMap.fromList
-            [ ("Int32#", [Qualified Implicit int32_t]),
-              ("Int64#", [Qualified Implicit int64_t]),
-              ("Float#", [Qualified Implicit float_t]),
-              ("Double#", [Qualified Implicit double_t]),
-              ("Char#", [Qualified Implicit char_t]),
-              ("String#", [Qualified Implicit string_t]),
-              ("Ptr#", [Qualified Implicit ptr_t])
-            ],
-        _moduleName = modName,
-        uniqSupply = malgoEnv.uniqSupply,
-        debugMode = malgoEnv.debugMode,
-        _modulePaths = malgoEnv ^. modulePaths,
-        _interfaces = malgoEnv ^. interfaces
-      }
+    pure $
+      RnEnv
+        { _resolvedVarIdentMap = mempty,
+          _resolvedTypeIdentMap =
+            HashMap.fromList
+              [ ("Int32#", [Qualified Implicit int32_t]),
+                ("Int64#", [Qualified Implicit int64_t]),
+                ("Float#", [Qualified Implicit float_t]),
+                ("Double#", [Qualified Implicit double_t]),
+                ("Char#", [Qualified Implicit char_t]),
+                ("String#", [Qualified Implicit string_t]),
+                ("Ptr#", [Qualified Implicit ptr_t])
+              ],
+          moduleName = modName,
+          uniqSupply = malgoEnv.uniqSupply,
+          debugMode = malgoEnv.debugMode,
+          _modulePaths = malgoEnv ^. modulePaths,
+          _interfaces = malgoEnv ^. interfaces
+        }
 
 -- | Resolving a new (local) name
 resolveName :: (MonadReader RnEnv m, MonadIO m) => Text -> m RnId
 resolveName name = newInternalId name ()
 
 -- | Resolving a new global (toplevel) name
-resolveGlobalName :: (MonadReader RnEnv m, MonadIO m) => ModuleName -> Text -> m RnId
-resolveGlobalName modName name = newExternalId name () modName
+resolveGlobalName :: (MonadReader RnEnv f) => Text -> f (Id ())
+resolveGlobalName name = newExternalId name ()
 
 -- | Resolving a variable name that is already resolved
 lookupVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId

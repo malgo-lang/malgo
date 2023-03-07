@@ -28,7 +28,7 @@ module Koriel.Core.Syntax
   )
 where
 
-import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _1, _3, _4)
+import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
@@ -112,18 +112,18 @@ data Obj a
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
   | -- | record
-    Record (HashMap Text (Atom a, Type))
+    Record (HashMap Text (Atom a))
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
   typeOf (Pack t _ _) = t
-  typeOf (Record kvs) = RecordT (fmap (snd >>> typeOf) kvs)
+  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
 instance (Pretty a) => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack _ c xs) = parens $ sep (["pack", pPrint c] <> map pPrint xs) -- The type of `pack` is already printed in the parent `LocalDef`.
+  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
   pPrint (Record kvs) =
     parens $
       sep
@@ -133,7 +133,7 @@ instance (Pretty a) => Pretty (Obj a) where
                   map
                     ( \(k, v) ->
                         pPrint k
-                          <+> parens (sep [pPrint (fst v), pPrint (snd v)])
+                          <+> pPrint v
                     )
                     (HashMap.toList kvs)
               )
@@ -142,13 +142,13 @@ instance (Pretty a) => Pretty (Obj a) where
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
-  freevars (Record kvs) = foldMap (fst >>> freevars) kvs
+  freevars (Record kvs) = foldMap freevars kvs
 
 instance HasAtom Obj where
   atom f = \case
     Fun xs e -> Fun xs <$> traverseOf atom f e
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
-    Record kvs -> Record <$> traverseOf (traversed . _1 . atom) f kvs
+    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
 data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
@@ -335,7 +335,7 @@ instance (Pretty a) => Pretty (Program a) where
           ["; functions"],
           map (\(f, ps, t, e) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", pPrint f, pPrint t]) extFuns
+          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) extFuns
         ]
 
 appObj :: Traversal' (Obj a) (Exp a)
@@ -363,20 +363,20 @@ newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id T
 runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
 
-let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
+let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
   x <- newTemporalId "let" otype
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x otype obj] e
   pure (Var x)
 
-bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
   DefBuilderT $ tell $ Endo $ \e -> Match v [Bind x (typeOf x) e]
   pure (Var x)
 
-cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env ModuleName) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do

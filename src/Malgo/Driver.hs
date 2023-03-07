@@ -73,7 +73,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       (dsEnv, core) <- desugar tcEnv refinedAst
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
 
-      let inf = buildInterface rnEnv._moduleName rnState dsEnv
+      let inf = buildInterface rnEnv.moduleName rnState dsEnv
       writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
 
       when env.debugMode $ do
@@ -87,7 +87,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint $ over appProgram flat coreOpt
       lint coreOpt
-      coreLL <- if env.lambdaLift then lambdalift uniqSupply typedAst._moduleName coreOpt else pure coreOpt
+      coreLL <- if env.lambdaLift then lambdalift uniqSupply coreOpt else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
@@ -98,14 +98,13 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
       writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode coreLLOpt
-      writeFile (env.dstPath -<.> "kor") $ render $ pPrint coreLLOpt
-      -- writeFileLBS (env.dstPath -<.> "kor.json") $ Aeson.encode coreLLOpt
 
       -- check module paths include dstName's directory
       liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
       linkedCoreOpt <- if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply env.inlineSize linkedCore
+      writeFile (env.dstPath -<.> "kor") $ render $ pPrint linkedCoreOpt
 
       when env.debugMode $
         liftIO $ do

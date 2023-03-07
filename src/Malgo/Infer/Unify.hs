@@ -16,7 +16,7 @@ import Koriel.Pretty
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (Constraint)
-import Malgo.Rename.RnEnv (RnEnv (uniqSupply))
+import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply))
 
 -- * Constraint
 
@@ -81,7 +81,7 @@ unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
     unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
 
-instance (MonadReader env m, HasUniqSupply env, MonadIO m, MonadState TcEnv m, HasModuleName env ModuleName) => MonadBind (TypeUnifyT m) where
+instance (MonadReader env m, HasUniqSupply env, MonadIO m, MonadState TcEnv m, HasModuleName env) => MonadBind (TypeUnifyT m) where
   lookupVar v = view (at v) <$> TypeUnifyT get
 
   freshVar hint = do

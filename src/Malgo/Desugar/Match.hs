@@ -11,7 +11,7 @@ import Koriel.Core.Type
 import Koriel.Core.Type qualified as Core
 import Koriel.Id
 import Koriel.Pretty
-import Malgo.Desugar.DsEnv (DsEnv (uniqSupply))
+import Malgo.Desugar.DsEnv (DsEnv (uniqSupply, moduleName))
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)

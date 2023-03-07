@@ -17,7 +17,7 @@ import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface)
 import Malgo.Prelude hiding (Constraint)
-import Malgo.Rename.RnEnv (RnEnv (uniqSupply))
+import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
@@ -109,11 +109,11 @@ tcTypeDefinitions ::
 tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(_, name, params, _) -> do
-    tyCon <- newIdOnName () name
+    let tyCon = name
     kindCtx %= insertKind tyCon (buildTyConKind params)
     typeDefMap . at name .= Just (TypeDef (TyCon tyCon) [] [])
   for_ dataDefs \(_, name, params, _) -> do
-    tyCon <- newIdOnName () name
+    let tyCon = name
     kindCtx %= insertKind tyCon (buildTyConKind params)
     typeDefMap . at name .= Just (TypeDef (TyCon tyCon) [] [])
   typeSynonyms' <- tcTypeSynonyms typeSynonyms

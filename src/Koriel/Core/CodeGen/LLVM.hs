@@ -63,7 +63,7 @@ data CodeGenEnv = CodeGenEnv
     _valueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
     _funcMap :: HashMap (Id C.Type) Operand,
-    _moduleName :: ModuleName
+    moduleName :: ModuleName
   }
 
 makeFieldsNoPrefix ''CodeGenEnv
@@ -75,7 +75,7 @@ newCodeGenEnv malgoEnv moduleName Program {..} =
       _valueMap = mempty,
       _globalValueMap = varMap,
       _funcMap = funcMap,
-      _moduleName = moduleName
+      moduleName = moduleName
     }
   where
     -- topVarsのOprMapを作成
@@ -133,7 +133,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
             pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
-    genLoadModule modName $ initTopVars topVars
+    genLoadModule $ initTopVars topVars
   let llvmModule =
         defaultModule
           { LLVM.AST.moduleName = fromString srcPath,
@@ -283,8 +283,10 @@ toName id = LLVM.AST.mkName $ convertString $ idToText id
 genVar :: MonadModuleBuilder m => Id C.Type -> Exp (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
-genLoadModule :: MonadModuleBuilder m => ModuleName -> IRBuilderT m () -> m Operand
-genLoadModule (ModuleName modName) m = function (LLVM.AST.mkName $ convertString $ "koriel_load_" <> modName) [] LT.void $ const m
+genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
+genLoadModule m = do
+  ModuleName modName <- asks (.moduleName)
+  function (LLVM.AST.mkName $ convertString $ "koriel_load_" <> modName) [] LT.void $ const m
 
 -- generate code for a 'known' function
 genFunc ::
@@ -581,7 +583,7 @@ genLocalDef (LocalDef (C.typeOf -> t) _ Pack {}) = error $ show t <> " must be S
 genLocalDef (LocalDef name _ (Record kvs)) = do
   newHashTable <- findExt "malgo_hash_table_new" [] (ptr $ NamedTypeReference $ mkName "struct.hash_table")
   hashTable <- call newHashTable []
-  for_ (HashMap.toList kvs) \(k, (v, _)) -> do
+  for_ (HashMap.toList kvs) \(k, v) -> do
     i <- getUniq
     k' <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
     v <- join $ bitcast <$> genAtom v <*> pure (ptr i8)

@@ -14,6 +14,9 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Control.Exception.Extra (assertIO)
+import Data.String.Conversions (convertString)
+import Numeric (showHex)
 
 data AlphaEnv = AlphaEnv {uniqSupply :: UniqSupply, subst :: HashMap (Id Type) (Atom (Id Type))}
 
@@ -36,6 +39,13 @@ lookupId n = do
   case n' of
     Var i -> pure i
     _ -> error $ show n <> " must be bound to Var"
+
+cloneId :: (MonadIO m, MonadReader AlphaEnv m) => Id a -> m (Id a)
+cloneId Id {..} = do
+  liftIO $ assertIO (sort == Internal || sort == Temporal) -- only Internal or Temporal id can be cloned
+  uniq <- getUniq
+  name <- pure $ name <> "_" <> convertString (showHex uniq "")
+  pure Id {..}
 
 alphaExp :: (MonadReader AlphaEnv f, MonadIO f) => Exp (Id Type) -> f (Exp (Id Type))
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
