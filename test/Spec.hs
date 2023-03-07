@@ -15,10 +15,13 @@ import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
+    nullStream,
     proc,
     readProcessStdout_,
     runProcess,
     runProcess_,
+    setStderr,
+    setStdout,
   )
 import Test.Hspec
   ( anyException,
@@ -119,7 +122,7 @@ getClangCommand =
   where
     go [] = error "clang not found"
     go (x : xs) = do
-      exitCode <- runProcess (proc "which" [x])
+      exitCode <- runProcess (proc "which" [x] & setStdout nullStream & setStderr nullStream)
       case exitCode of
         ExitSuccess -> pure x
         ExitFailure _ -> go xs

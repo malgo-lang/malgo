@@ -307,14 +307,14 @@ expandAllTypeSynonym _ TYPE = TYPE
 expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
 
 -- | get all meta type variables in a type
-freevars :: KindCtx -> Type -> HashSet MetaVar
-freevars ctx (TyApp t1 t2) = freevars ctx t1 <> freevars ctx t2
-freevars ctx v@TyVar {} = freevars ctx $ kindOf ctx v
-freevars ctx c@TyCon {} = freevars ctx $ kindOf ctx c
-freevars _ TyPrim {} = mempty
-freevars ctx (TyArr t1 t2) = freevars ctx t1 <> freevars ctx t2
-freevars _ TyTuple {} = mempty
-freevars ctx (TyRecord kts) = foldMap (freevars ctx) kts
-freevars _ TyPtr = mempty
-freevars _ TYPE = mempty
-freevars _ (TyMeta tv) = one tv
+freevars :: Type -> HashSet MetaVar
+freevars (TyApp t1 t2) = freevars t1 <> freevars t2
+freevars TyVar {} = mempty
+freevars TyCon {} = mempty
+freevars TyPrim {} = mempty
+freevars (TyArr t1 t2) = freevars t1 <> freevars t2
+freevars TyTuple {} = mempty
+freevars (TyRecord kts) = foldMap freevars kts
+freevars TyPtr = mempty
+freevars TYPE = mempty
+freevars (TyMeta tv) = one tv

@@ -1,6 +1,5 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# OPTIONS_GHC -Wno-unused-matches #-}
 
 -- | Unification
 module Malgo.Infer.Unify (Constraint (..), MonadBind (..), solve, generalize, generalizeMutRecs, instantiate) where
@@ -92,13 +91,13 @@ instance (MonadReader env m, HasUniqSupply env, MonadIO m, MonadState TcEnv m, H
     pure $ MetaVar newVar
 
   bindVar x v t = do
+    when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     ctx <- use kindCtx
-    when (occursCheck ctx v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     solve [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
     TypeUnifyT $ at v ?= t
     where
-      occursCheck :: KindCtx -> MetaVar -> Type -> Bool
-      occursCheck ctx v t = HashSet.member v (freevars ctx t)
+      occursCheck :: MetaVar -> Type -> Bool
+      occursCheck v t = HashSet.member v (freevars t)
 
   zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
   zonk (TyVar v) = do
@@ -147,8 +146,7 @@ solve = solveLoop (5000 :: Int)
 generalize :: (MonadBind m, MonadIO m, MonadReader RnEnv m, MonadState TcEnv m) => Range -> HashSet MetaVar -> Type -> m (Scheme Type)
 generalize x bound term = do
   zonkedTerm <- zonk term
-  ctx <- use kindCtx
-  let fvs = HashSet.toList $ unboundFreevars ctx bound zonkedTerm
+  let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
   as <- traverse (toBound x) fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
@@ -156,8 +154,7 @@ generalize x bound term = do
 generalizeMutRecs :: (MonadBind m, MonadIO m, MonadReader RnEnv m, MonadState TcEnv m) => Range -> HashSet MetaVar -> [Type] -> m ([TypeVar], [Type])
 generalizeMutRecs x bound terms = do
   zonkedTerms <- traverse zonk terms
-  ctx <- use kindCtx
-  let fvs = HashSet.toList $ mconcat $ map (unboundFreevars ctx bound) zonkedTerms
+  let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
   as <- traverse (toBound x) fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
@@ -203,8 +200,8 @@ defaultToBoxed x = \case
     pure $ TyMeta tv
 
 -- TODO: lift to a monadic action
-unboundFreevars :: KindCtx -> HashSet MetaVar -> Type -> HashSet MetaVar
-unboundFreevars ctx bound t = HashSet.difference (freevars ctx t) bound
+unboundFreevars :: HashSet MetaVar -> Type -> HashSet MetaVar
+unboundFreevars bound t = HashSet.difference (freevars t) bound
 
 instantiate :: (MonadBind m, MonadIO m, MonadState TcEnv m) => Range -> Scheme Type -> m Type
 instantiate x (Forall as t) = do
