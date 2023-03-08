@@ -137,18 +137,18 @@ solve = solveLoop (5000 :: Int)
           solveLoop (n - 1) constraints
     zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
-generalize :: MonadBind m => Range -> HashSet MetaVar -> Type -> m (Scheme Type)
-generalize x bound term = do
+generalize :: MonadBind m => Range -> Type -> m (Scheme Type)
+generalize x term = do
   zonkedTerm <- zonk term
-  let fvs = HashSet.toList $ unboundFreevars bound zonkedTerm
+  let fvs = HashSet.toList $ freevars zonkedTerm
   let as = map toBound fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
-generalizeMutRecs :: MonadBind m => Range -> HashSet MetaVar -> [Type] -> m ([TypeVar], [Type])
-generalizeMutRecs x bound terms = do
+generalizeMutRecs :: MonadBind m => Range -> [Type] -> m ([TypeVar], [Type])
+generalizeMutRecs x terms = do
   zonkedTerms <- traverse zonk terms
-  let fvs = HashSet.toList $ mconcat $ map (unboundFreevars bound) zonkedTerms
+  let fvs = HashSet.toList $ mconcat $ map freevars zonkedTerms
   let as = map toBound fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
@@ -159,10 +159,6 @@ generalizeMutRecs x bound terms = do
 -- So we can reuse the free variable as a bound variable.
 toBound :: HasField "metaVar" r a => r -> a
 toBound tv = tv.metaVar
-
--- TODO: lift to a monadic action
-unboundFreevars :: HashSet MetaVar -> Type -> HashSet MetaVar
-unboundFreevars bound t = HashSet.difference (freevars t) bound
 
 instantiate :: (MonadBind m, MonadIO m, MonadState TcEnv m) => Range -> Scheme Type -> m Type
 instantiate x (Forall as t) = do

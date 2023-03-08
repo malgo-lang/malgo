@@ -181,7 +181,7 @@ tcForeigns ds =
       tv <- freshVar $ Just $ tyVar.name
       typeDefMap . at tyVar ?= TypeDef (TyMeta tv) [] []
     ty' <- transType ty
-    scheme@(Forall _ ty') <- generalize pos mempty ty'
+    scheme@(Forall _ ty') <- generalize pos ty'
     signatureMap . at name ?= scheme
     pure (Typed ty' (pos, raw), name, tcType ty)
 
@@ -198,7 +198,7 @@ tcScSigs ds =
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just $ tyVar.name
       typeDefMap . at tyVar ?= TypeDef (TyMeta tv) [] []
-    scheme <- generalize pos mempty =<< transType ty
+    scheme <- generalize pos =<< transType ty
     signatureMap . at name ?= scheme
     pure (pos, name, tcType ty)
 
@@ -235,7 +235,7 @@ tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- traverse tcScDef ds
   -- generalize mutually recursive functions
-  (as, types) <- generalizeMutRecs pos mempty $ map (view (_1 . to typeOf)) ds
+  (as, types) <- generalizeMutRecs pos $ map (view (_1 . to typeOf)) ds
   validateSignatures ds (as, types)
   pure ds
 
