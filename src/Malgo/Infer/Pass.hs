@@ -47,17 +47,14 @@ infer rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
     runTypeUnifyT $ do
       put tcEnv
       bg' <- tcBindGroup bg
-      tcEnv' <- get
-      -- FIXME: 自由なTyMetaに適当なTyVarを束縛する
-      -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
-      -- 今はAnyTに変換している
       abbrEnv <- use typeSynonymMap
       zonkedBg <-
         traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
           >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       zonkedTcEnv <-
-        traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) tcEnv'
+        get
+          >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       pure (Module name zonkedBg, zonkedTcEnv)
 

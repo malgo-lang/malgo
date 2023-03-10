@@ -9,7 +9,6 @@ module Malgo.Infer.TypeRep
     TypeVar,
     KindCtx,
     insertKind,
-    askKind,
     Type (..),
     MetaVar (..),
     HasType (..),
