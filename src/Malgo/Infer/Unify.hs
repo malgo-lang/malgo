@@ -1,6 +1,5 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# OPTIONS_GHC -Wno-unused-matches #-}
 
 -- | Unification
 module Malgo.Infer.Unify (Constraint (..), MonadBind (..), solve, generalize, generalizeMutRecs, instantiate) where
@@ -9,6 +8,7 @@ import Control.Lens (At (at), itraverse_, use, view, (%=), (?=))
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.Traversable (for)
+import GHC.Records (HasField)
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
@@ -16,7 +16,6 @@ import Koriel.Pretty
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (Constraint)
-import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply))
 
 -- * Constraint
 
@@ -92,13 +91,13 @@ instance (MonadReader env m, HasUniqSupply env, MonadIO m, MonadState TcEnv m, H
     pure $ MetaVar newVar
 
   bindVar x v t = do
+    when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     ctx <- use kindCtx
-    when (occursCheck ctx v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
     solve [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
     TypeUnifyT $ at v ?= t
     where
-      occursCheck :: KindCtx -> MetaVar -> Type -> Bool
-      occursCheck ctx v t = HashSet.member v (freevars ctx t)
+      occursCheck :: MetaVar -> Type -> Bool
+      occursCheck v t = HashSet.member v (freevars t)
 
   zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
   zonk (TyVar v) = do
@@ -119,12 +118,6 @@ instance (MonadReader env m, HasUniqSupply env, MonadIO m, MonadState TcEnv m, H
   zonk TYPE = pure TYPE
   zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
 
--- Anothor implementation using `Plated`
--- zonk =
---   transformM $ \case
---     TyMeta v -> fromMaybe (TyMeta v) <$> (traverse zonk =<< lookupVar v)
---     ty -> pure ty
-
 -- * Constraint solver
 
 solve :: (MonadIO f, MonadBind f, MonadState TcEnv f) => [(Range, Constraint)] -> f ()
@@ -144,67 +137,28 @@ solve = solveLoop (5000 :: Int)
           solveLoop (n - 1) constraints
     zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
-generalize :: (MonadBind m, MonadIO m, MonadReader RnEnv m, MonadState TcEnv m) => Range -> HashSet MetaVar -> Type -> m (Scheme Type)
-generalize x bound term = do
+generalize :: MonadBind m => Range -> Type -> m (Scheme Type)
+generalize x term = do
   zonkedTerm <- zonk term
-  ctx <- use kindCtx
-  let fvs = HashSet.toList $ unboundFreevars ctx bound zonkedTerm
-  as <- traverse (toBound x) fvs
+  let fvs = HashSet.toList $ freevars zonkedTerm
+  let as = map toBound fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
-generalizeMutRecs :: (MonadBind m, MonadIO m, MonadReader RnEnv m, MonadState TcEnv m) => Range -> HashSet MetaVar -> [Type] -> m ([TypeVar], [Type])
-generalizeMutRecs x bound terms = do
+generalizeMutRecs :: MonadBind m => Range -> [Type] -> m ([TypeVar], [Type])
+generalizeMutRecs x terms = do
   zonkedTerms <- traverse zonk terms
-  ctx <- use kindCtx
-  let fvs = HashSet.toList $ mconcat $ map (unboundFreevars ctx bound) zonkedTerms
-  as <- traverse (toBound x) fvs
+  let fvs = HashSet.toList $ mconcat $ map freevars zonkedTerms
+  let as = map toBound fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
 
-toBound :: (MonadBind m, MonadIO m, MonadReader RnEnv m, MonadState TcEnv m) => Range -> MetaVar -> m (Id ())
-toBound x tv = do
-  ctx <- use kindCtx
-  tvType <- defaultToBoxed x $ kindOf ctx tv.metaVar
-  ctx <- use kindCtx
-  let tvKind = kindOf ctx tvType
-  let name = tv.metaVar.name
-  boundVar <- newInternalId name ()
-  kindCtx %= insertKind boundVar tvKind
-  pure boundVar
-
--- TODO: Rewrite this function as a modifier of `kindCtx`.
-defaultToBoxed :: (MonadBind f, MonadState TcEnv f) => Range -> Type -> f Type
-defaultToBoxed x = \case
-  TyApp ty ty' -> TyApp <$> defaultToBoxed x ty <*> defaultToBoxed x ty'
-  TyVar id -> do
-    ctx <- use kindCtx
-    k <- defaultToBoxed x $ kindOf ctx id
-    kindCtx %= insertKind id k
-    pure $ TyVar id
-  TyCon id -> do
-    ctx <- use kindCtx
-    k <- defaultToBoxed x $ kindOf ctx id
-    kindCtx %= insertKind id k
-    pure $ TyCon id
-  TyPrim pt -> pure $ TyPrim pt
-  TyArr ty ty' -> TyArr <$> defaultToBoxed x ty <*> defaultToBoxed x ty'
-  TyTuple n -> pure $ TyTuple n
-  TyRecord hm -> TyRecord <$> traverse (defaultToBoxed x) hm
-  TyPtr -> pure TyPtr
-  TYPE -> pure TYPE
-  TyMeta tv -> do
-    ctx <- use kindCtx
-    let vKind = kindOf ctx tv.metaVar
-    void $ defaultToBoxed x vKind
-    ctx <- use kindCtx
-    k <- zonk $ kindOf ctx tv.metaVar
-    kindCtx %= insertKind tv.metaVar k
-    pure $ TyMeta tv
-
--- TODO: lift to a monadic action
-unboundFreevars :: KindCtx -> HashSet MetaVar -> Type -> HashSet MetaVar
-unboundFreevars ctx bound t = HashSet.difference (freevars ctx t) bound
+-- `toBound` "generates" a new bound variable from a free variable.
+-- But it's not really generating a new variable, it's just using the free variable as a bound variable.
+-- The free variable will zonk to the bound variable as soon as the bound variable is bound (`bindVar`).
+-- So we can reuse the free variable as a bound variable.
+toBound :: HasField "metaVar" r a => r -> a
+toBound tv = tv.metaVar
 
 instantiate :: (MonadBind m, MonadIO m, MonadState TcEnv m) => Range -> Scheme Type -> m Type
 instantiate x (Forall as t) = do

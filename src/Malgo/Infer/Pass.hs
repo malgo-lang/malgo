@@ -47,17 +47,14 @@ infer rnEnv (Module name bg) = runReaderT ?? rnEnv $ do
     runTypeUnifyT $ do
       put tcEnv
       bg' <- tcBindGroup bg
-      tcEnv' <- get
-      -- FIXME: 自由なTyMetaに適当なTyVarを束縛する
-      -- Right x |> { Right x -> print_Int32 x } みたいなパターンで必要
-      -- 今はAnyTに変換している
       abbrEnv <- use typeSynonymMap
       zonkedBg <-
         traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
           >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       zonkedTcEnv <-
-        traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) tcEnv'
+        get
+          >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
           >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       pure (Module name zonkedBg, zonkedTcEnv)
 
@@ -181,7 +178,7 @@ tcForeigns ds =
       tv <- freshVar $ Just $ tyVar.name
       typeDefMap . at tyVar ?= TypeDef (TyMeta tv) [] []
     ty' <- transType ty
-    scheme@(Forall _ ty') <- generalize pos mempty ty'
+    scheme@(Forall _ ty') <- generalize pos ty'
     signatureMap . at name ?= scheme
     pure (Typed ty' (pos, raw), name, tcType ty)
 
@@ -198,7 +195,7 @@ tcScSigs ds =
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just $ tyVar.name
       typeDefMap . at tyVar ?= TypeDef (TyMeta tv) [] []
-    scheme <- generalize pos mempty =<< transType ty
+    scheme <- generalize pos =<< transType ty
     signatureMap . at name ?= scheme
     pure (pos, name, tcType ty)
 
@@ -235,7 +232,7 @@ tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- traverse tcScDef ds
   -- generalize mutually recursive functions
-  (as, types) <- generalizeMutRecs pos mempty $ map (view (_1 . to typeOf)) ds
+  (as, types) <- generalizeMutRecs pos $ map (view (_1 . to typeOf)) ds
   validateSignatures ds (as, types)
   pure ds
 
