@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+void *malgo_malloc(size_t size);
+
 // Unit
 typedef struct
 {
@@ -16,15 +18,10 @@ typedef struct
 const MalgoUnit malgo_unit = {0, {}};
 
 // Cast
-void *malgo_unsafe_cast(void *x) { return x; }
+void *malgo_unsafe_cast(void *x);
 
 // Panic
-void *malgo_panic(char *message)
-{
-  fprintf(stderr, "%s", message);
-  exit(1);
-  return NULL;
-}
+void *malgo_panic(char *message);
 
 // Arithmetic operators
 int32_t malgo_add_int32_t(int32_t x, int32_t y) { return x + y; }

@@ -260,7 +260,8 @@ mallocBytes ::
   Maybe LT.Type ->
   m Operand
 mallocBytes bytesOpr maybeType = do
-  gcMalloc <- findExt "GC_malloc" [i64] (ptr i8)
+  -- gcMalloc <- findExt "GC_malloc" [i64] (ptr i8)
+  gcMalloc <- findExt "malgo_malloc" [i64] (ptr i8)
   ptrOpr <- call gcMalloc [(bytesOpr, [])]
   case maybeType of
     Just t -> bitcast ptrOpr t

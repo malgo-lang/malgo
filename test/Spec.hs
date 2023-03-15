@@ -10,14 +10,13 @@ import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
-import System.Directory (copyFile, listDirectory)
+import System.Directory (copyFile, listDirectory, setCurrentDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
     nullStream,
     proc,
-    readProcessStdout_,
     runProcess,
     runProcess_,
     setStderr,
@@ -88,6 +87,10 @@ setupPrelude = do
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
 setupRuntime = do
+  setCurrentDirectory "./griff"
+  runProcess_ $ proc "cargo" ["build", "--release"]
+  setCurrentDirectory "../"
+  copyFile "./griff/target/release/libgriff_rustlib.a" (testDirectory </> "libs/libgriff_rustlib.a")
   copyFile "./runtime/malgo/runtime.c" (testDirectory </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
@@ -133,16 +136,17 @@ test testcase postfix lambdaLift noOptimize = do
   compile testcase llPath [testDirectory </> "libs"] lambdaLift noOptimize
 
   clang <- getClangCommand
-  pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   runProcess_
     ( proc
         clang
         $ [ "-Wno-override-module",
             "-lm"
           ]
-          <> pkgConfig
           <> [ testDirectory </> "libs" </> "runtime.c",
                testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll"),
+               testDirectory </> "libs" </> "libgriff_rustlib.a",
+               "-lpthread",
+               "-ldl",
                "-o",
                testDirectory </> takeBaseName testcase -<.> (postfix <> ".out")
              ]
