@@ -17,6 +17,7 @@ import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
     nullStream,
     proc,
+    readProcessStdout_,
     runProcess,
     runProcess_,
     setStderr,
@@ -135,6 +136,7 @@ test testcase postfix lambdaLift noOptimize = do
   let llPath = testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll")
   compile testcase llPath [testDirectory </> "libs"] lambdaLift noOptimize
 
+  pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
   runProcess_
     ( proc
@@ -142,6 +144,7 @@ test testcase postfix lambdaLift noOptimize = do
         $ [ "-Wno-override-module",
             "-lm"
           ]
+          <> pkgConfig
           <> [ testDirectory </> "libs" </> "runtime.c",
                testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll"),
                testDirectory </> "libs" </> "libgriff_rustlib.a",
