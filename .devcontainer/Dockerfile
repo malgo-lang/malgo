@@ -30,7 +30,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8  
 
 RUN apt-get install -y --no-install-recommends \
-  lsb-release wget software-properties-common gnupg
+  lsb-release wget software-properties-common gnupg cmake
 
 RUN wget https://apt.llvm.org/llvm.sh && \
   chmod +x llvm.sh && \
@@ -44,4 +44,10 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcup-install /root/.ghcup/ /root/.ghcup/
 COPY --from=ghcup-install /root/.cabal/ /root/.cabal/
 
-ENV PATH=/root/.cabal/bin:/root/.ghcup/bin:${PATH}
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
+
+RUN chmod +x rustup.sh
+
+RUN ./rustup.sh -y
+
+ENV PATH=/root/.cargo/bin:/root/.cabal/bin:/root/.ghcup/bin:${PATH}
