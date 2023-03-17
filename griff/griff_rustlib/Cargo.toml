@@ -7,4 +7,4 @@ edition = "2021"
 crate-type = ["staticlib"]
 
 [dependencies]
-bdwgc-alloc = "0.6.3"
+bdwgc-alloc = { version = "0.6.3", features=["cmake"], default-features=false }

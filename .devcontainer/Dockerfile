@@ -30,7 +30,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8  
 
 RUN apt-get install -y --no-install-recommends \
-  lsb-release wget software-properties-common gnupg
+  lsb-release wget software-properties-common gnupg cmake
 
 RUN wget https://apt.llvm.org/llvm.sh && \
   chmod +x llvm.sh && \
