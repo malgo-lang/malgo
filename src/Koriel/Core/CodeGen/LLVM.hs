@@ -113,8 +113,8 @@ codeGen ::
   m ()
 codeGen srcPath malgoEnv modName dsState Program {..} = do
   llvmir <- runCodeGenT (newCodeGenEnv malgoEnv modName Program {..}) do
-    _ <- typedef (mkName "struct.bucket") (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
-    _ <- typedef (mkName "struct.hash_table") (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
+    _ <- typedef (mkName "struct.bucket") Nothing -- (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
+    _ <- typedef (mkName "struct.hash_table") Nothing -- (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
     for_ extFuns \(name, typ) -> do
       let name' = LLVM.AST.mkName $ convertString name
@@ -303,8 +303,11 @@ genFunc ::
   Exp (Id C.Type) ->
   m Operand
 genFunc name params body
-  | idIsExternal name || idIsNative name =
-      function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
+  | idIsExternal name || idIsNative name = do
+      moduleName <- asks (.moduleName)
+      if name.moduleName == moduleName
+        then function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
+        else internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   | otherwise =
       internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
   where
@@ -601,13 +604,6 @@ findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
 findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
   Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
-
--- sizeof :: LT.Type -> Operand
--- sizeof ty = ConstantOperand $ C.PtrToInt szPtr LT.i64
---   where
---     ptrType = LT.ptr ty
---     nullPtr = C.IntToPtr (C.Int 32 0) ptrType
---     szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
 
 globalStringPtr :: MonadModuleBuilder m => Text -> Name -> m C.Constant
 globalStringPtr str nm = do
