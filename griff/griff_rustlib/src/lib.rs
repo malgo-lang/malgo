@@ -35,7 +35,10 @@ pub extern "C" fn malgo_unsafe_cast(ptr: *mut c_void) -> *mut c_void {
 
 #[no_mangle]
 /// Panic.
-pub extern "C" fn malgo_panic(message: *const u8) -> *mut c_void {
+/// # Safety
+/// - `message` must be a valid pointer to a null-terminated string.
+/// More info: https://doc.rust-lang.org/core/primitive.pointer.html#method.offset
+pub unsafe extern "C" fn malgo_panic(message: *const u8) -> *mut c_void {
     panic!(
         "panic: {}",
         unsafe { std::ffi::CStr::from_ptr(message) }
@@ -149,23 +152,20 @@ pub extern "C" fn malgo_is_alphanum(c: u8) -> i32 {
 }
 
 /// Get the nth char of a string
+/// # Safety
+/// - `i` must be in the range of `0..strlen(s)`
+/// More info: https://doc.rust-lang.org/core/primitive.pointer.html#method.offset
 #[no_mangle]
-pub extern "C" fn malgo_string_at(i: isize, s: *const u8) -> u8 {
+pub unsafe extern "C" fn malgo_string_at(i: isize, s: *const u8) -> u8 {
     unsafe { *s.offset(i) }
 }
 
-// Translated from C code below:
-// char *malgo_string_cons(char c, char *str)
-// {
-//   char *new = GC_MALLOC(sizeof(char) * (1 + strlen(str) + 1));
-//   new[0] = c;
-//   new[1] = '\0';
-//   strcat(new, str);
-//   return new;
-// }
 /// Add a charactor to the head of a string
+/// # Safety
+/// - `s` must be a valid pointer to a null-terminated string
+/// More info: https://doc.rust-lang.org/core/ffi/struct.CStr.html#method.from_ptr
 #[no_mangle]
-pub extern "C" fn malgo_string_cons(c: u8, s: *const u8) -> *mut u8 {
+pub unsafe extern "C" fn malgo_string_cons(c: u8, s: *const u8) -> *mut u8 {
     let slice = unsafe { CStr::from_ptr(s) };
     CString::new(format!("{}{}", c as char, slice.to_str().unwrap()))
         .unwrap()
@@ -173,8 +173,11 @@ pub extern "C" fn malgo_string_cons(c: u8, s: *const u8) -> *mut u8 {
 }
 
 /// Concatenate two strings
+/// # Safety
+/// - `s1` and `s2` must be valid pointers to null-terminated strings
+/// More info: https://doc.rust-lang.org/core/ffi/struct.CStr.html#method.from_ptr
 #[no_mangle]
-pub extern "C" fn malgo_string_append(s1: *const u8, s2: *const u8) -> *mut u8 {
+pub unsafe extern "C" fn malgo_string_append(s1: *const u8, s2: *const u8) -> *mut u8 {
     let slice1 = unsafe { CStr::from_ptr(s1) };
     let slice2 = unsafe { CStr::from_ptr(s2) };
     CString::new(format!(
@@ -187,15 +190,21 @@ pub extern "C" fn malgo_string_append(s1: *const u8, s2: *const u8) -> *mut u8 {
 }
 
 /// Get the length of a string
+/// # Safety
+/// - `s` must be a valid pointer to a null-terminated string
+/// More info: https://doc.rust-lang.org/core/ffi/struct.CStr.html#method.from_ptr
 #[no_mangle]
-pub extern "C" fn malgo_string_length(s: *const u8) -> isize {
+pub unsafe extern "C" fn malgo_string_length(s: *const u8) -> isize {
     let slice = unsafe { CStr::from_ptr(s) };
     slice.to_str().unwrap().len() as isize
 }
 
 /// Get the substring of a string
+/// # Safety
+/// - `s` must be a valid pointer to a null-terminated string
+/// More info: https://doc.rust-lang.org/core/ffi/struct.CStr.html#method.from_ptr
 #[no_mangle]
-pub extern "C" fn malgo_substring(s: *const u8, start: isize, end: isize) -> *mut u8 {
+pub unsafe extern "C" fn malgo_substring(s: *const u8, start: isize, end: isize) -> *mut u8 {
     let slice = unsafe { CStr::from_ptr(s) };
     let str = slice.to_str().unwrap();
     let start = if start < 0 { 0 } else { start as usize };
@@ -223,25 +232,12 @@ malgo_to_string!(malgo_float_to_string, f32);
 malgo_to_string!(malgo_double_to_string, f64);
 malgo_to_string!(malgo_char_to_string, u8);
 
-// Translated from C code below:
-/*
-const MalgoUnit *malgo_exit_failure(MalgoUnit *__attribute__((unused)) unused)
-{
-  exit(1);
-}
- */
 /// Exit with failure
 #[no_mangle]
 pub extern "C" fn malgo_exit_failure(_unused: *const MalgoUnit) -> *const MalgoUnit {
     std::process::exit(1);
 }
 
-// Translated from C code below:
-// const MalgoUnit *malgo_newline(MalgoUnit *__attribute__((unused)) unused)
-// {
-//   puts("");
-//   return &malgo_unit;
-// }
 /// Print a newline
 #[no_mangle]
 pub extern "C" fn malgo_newline(_unused: *const MalgoUnit) -> *const MalgoUnit {
@@ -249,12 +245,6 @@ pub extern "C" fn malgo_newline(_unused: *const MalgoUnit) -> *const MalgoUnit {
     &MALGO_UNIT
 }
 
-// Translated from C code below:
-// const MalgoUnit *malgo_print_char(char x)
-// {
-//   printf("%c", x);
-//   return &malgo_unit;
-// }
 /// Print a char
 #[no_mangle]
 pub extern "C" fn malgo_print_char(x: u8) -> *const MalgoUnit {
@@ -262,26 +252,17 @@ pub extern "C" fn malgo_print_char(x: u8) -> *const MalgoUnit {
     &MALGO_UNIT
 }
 
-// Translated from C code below:
-// const MalgoUnit *malgo_print_string(char *x)
-// {
-//   printf("%s", x);
-//   return &malgo_unit;
-// }
 /// Print a string
+/// # Safety
+/// - `x` must be a valid pointer to a null-terminated string
+/// More info: https://doc.rust-lang.org/core/ffi/struct.CStr.html#method.from_ptr
 #[no_mangle]
-pub extern "C" fn malgo_print_string(x: *const u8) -> *const MalgoUnit {
+pub unsafe extern "C" fn malgo_print_string(x: *const u8) -> *const MalgoUnit {
     let slice = unsafe { CStr::from_ptr(x) };
     print!("{}", slice.to_str().unwrap());
     &MALGO_UNIT
 }
 
-// Translated from C code below:
-// const MalgoUnit *malgo_flush(MalgoUnit *__attribute__((unused)) unused)
-// {
-//   fflush(stdout);
-//   return &malgo_unit;
-// }
 /// Flush stdout
 #[no_mangle]
 pub extern "C" fn malgo_flush(_unused: *const MalgoUnit) -> *const MalgoUnit {
@@ -289,11 +270,6 @@ pub extern "C" fn malgo_flush(_unused: *const MalgoUnit) -> *const MalgoUnit {
     &MALGO_UNIT
 }
 
-// Translated from C code below:
-// char malgo_get_char(MalgoUnit *__attribute__((unused)) unused)
-// {
-//   return getchar();
-// }
 /// Get a char from stdin
 #[no_mangle]
 pub extern "C" fn malgo_get_char(_unused: *const MalgoUnit) -> u8 {
@@ -302,18 +278,6 @@ pub extern "C" fn malgo_get_char(_unused: *const MalgoUnit) -> u8 {
     buf[0]
 }
 
-// Translated from C code below:
-// char *malgo_get_contents(MalgoUnit *__attribute__((unused)) unused)
-// {
-//   struct StringBuilder *sb = new_sb();
-//
-//   int c;
-//   while ((c = fgetc(stdin)) != EOF)
-//   {
-//     sb_putc(sb, c);
-//   }
-//   return sb_run(sb);
-// }
 /// Get all contents from stdin
 #[no_mangle]
 pub extern "C" fn malgo_get_contents(_unused: *const MalgoUnit) -> *mut u8 {
@@ -322,16 +286,6 @@ pub extern "C" fn malgo_get_contents(_unused: *const MalgoUnit) -> *mut u8 {
     CString::new(buf).unwrap().into_raw()
 }
 
-// Translated from C code below:
-// void **malgo_new_vector(int64_t len, void *init)
-// {
-//   void **ptr = GC_MALLOC(sizeof(void *) * len);
-//   for (int64_t i = 0; i < len; i++)
-//   {
-//     ptr[i] = init;
-//   }
-//   return ptr;
-// }
 /// Create a new vector
 #[no_mangle]
 pub extern "C" fn malgo_new_vector(len: i64, init: *mut u8) -> *mut *mut u8 {
@@ -342,26 +296,24 @@ pub extern "C" fn malgo_new_vector(len: i64, init: *mut u8) -> *mut *mut u8 {
     vec.as_mut_ptr()
 }
 
-// Translated from C code below:
-// void *malgo_read_vector(int64_t index, void **ptr) { return ptr[index]; }
 /// Read a vector
+/// # Safety
+/// - `index` must be in range of `ptr`
+/// More info: https://doc.rust-lang.org/core/primitive.pointer.html#method.offset
 #[no_mangle]
-pub extern "C" fn malgo_read_vector(index: i64, ptr: *mut *mut u8) -> *mut u8 {
+pub unsafe extern "C" fn malgo_read_vector(index: i64, ptr: *const *const u8) -> *const u8 {
     unsafe { *ptr.offset(index as isize) }
 }
 
-// Translated from C code below:
-// const MalgoUnit *malgo_write_vector(int64_t index, void **ptr, void *val)
-// {
-//   ptr[index] = val;
-//   return &malgo_unit;
-// }
 /// Write a vector
+/// # Safety
+/// - `index` must be in range of `ptr`
+/// More info: https://doc.rust-lang.org/core/primitive.pointer.html#method.offset
 #[no_mangle]
-pub extern "C" fn malgo_write_vector(
+pub unsafe extern "C" fn malgo_write_vector(
     index: i64,
-    ptr: *mut *mut u8,
-    val: *mut u8,
+    ptr: *mut *const u8,
+    val: *const u8,
 ) -> *const MalgoUnit {
     unsafe { *ptr.offset(index as isize) = val };
     &MALGO_UNIT
