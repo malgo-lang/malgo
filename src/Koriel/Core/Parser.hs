@@ -163,8 +163,8 @@ case_ = between (symbol "(") (symbol ")") do
           pure (k, v)
         OpenRecord (HashMap.fromList kvs) <$> expr,
       do
-        void $ symbol "switch"
-        Switch <$> unboxed <*> expr,
+        void $ symbol "exact"
+        Exact <$> unboxed <*> expr,
       do
         void $ symbol "bind"
         Bind <$> ident <*> type_ <*> expr

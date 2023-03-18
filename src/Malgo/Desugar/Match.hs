@@ -11,7 +11,7 @@ import Koriel.Core.Type
 import Koriel.Core.Type qualified as Core
 import Koriel.Id
 import Koriel.Pretty
-import Malgo.Desugar.DsEnv (DsEnv (uniqSupply, moduleName))
+import Malgo.Desugar.DsEnv (DsEnv (moduleName, uniqSupply))
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
@@ -129,7 +129,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
                   _ -> error "All elements of heads must be UnboxedP"
               )
               heads
-      cases <- traverse (\c -> Switch c <$> match restScrutinee tails es err) cs
+      cases <- traverse (\c -> Exact c <$> match restScrutinee tails es err) cs
       -- パターンの網羅性を保証するため、
       -- `_ -> err` を追加する
       hole <- newTemporalId "_" (Core.typeOf scrutinee)

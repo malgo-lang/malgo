@@ -493,7 +493,7 @@ genCase scrutinee cs k = \case
     label <- block
     void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
     pure $ Left label
-  Switch u e -> do
+  Exact u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
     label <- block
     genExp e k

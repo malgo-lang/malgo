@@ -7,15 +7,15 @@ module Koriel.Core.Alpha
   )
 where
 
+import Control.Exception.Extra (assertIO)
 import Control.Lens (makeFieldsNoPrefix, traverseOf)
 import Data.HashMap.Strict qualified as HashMap
+import Data.String.Conversions (convertString)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Control.Exception.Extra (assertIO)
-import Data.String.Conversions (convertString)
 import Numeric (showHex)
 
 data AlphaEnv = AlphaEnv {uniqSupply :: UniqSupply, subst :: HashMap (Id Type) (Atom (Id Type))}
@@ -95,4 +95,4 @@ alphaCase (Bind x t e) = do
   x' <- cloneId x
   local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' t <$> alphaExp e
 -- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExp e
-alphaCase (Switch u e) = Switch u <$> alphaExp e
+alphaCase (Exact u e) = Exact u <$> alphaExp e

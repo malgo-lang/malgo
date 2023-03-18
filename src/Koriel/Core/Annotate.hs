@@ -111,7 +111,7 @@ annExp (Match scrutinee alts) = do
         body <- annExp body
         pure $ OpenRecord fields' body
     annCase ty OpenRecord {} = error $ "annCase: " <> show ty
-    annCase _ (Switch value body) = Switch value <$> annExp body
+    annCase _ (Exact value body) = Exact value <$> annExp body
     annCase _ (Bind var ty body) = do
       var' <- parseId var ty
       local (\ctx -> ctx {nameEnv = HashMap.insert var var' ctx.nameEnv}) do

@@ -132,7 +132,7 @@ lintObj (Record kvs) = traverse_ lintAtom kvs
 lintCase :: MonadReader [Id Type] m => Exp (Id Type) -> Case (Id Type) -> m ()
 lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
-lintCase _ (Switch _ e) = lintExp e
+lintCase _ (Exact _ e) = lintExp e
 lintCase scrutinee (Bind x t e) = local (x :) do
   match x t
   match scrutinee x
