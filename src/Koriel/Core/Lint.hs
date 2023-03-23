@@ -1,6 +1,6 @@
 module Koriel.Core.Lint (lint) where
 
-import Control.Lens (view, _1)
+import Control.Lens (traverseOf_, traversed, view, _1, _2)
 import Control.Monad.Except
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Op
@@ -122,6 +122,12 @@ lintExp (Let ds e) = local (map (._variable) ds <>) $ do
 lintExp (Match e cs) = do
   lintExp e
   traverse_ (lintCase e) cs
+lintExp (Switch a cs) = do
+  lintAtom a
+  traverseOf_ (traversed . _2) lintExp cs
+lintExp (Destruct a _ xs e) = do
+  lintAtom a
+  local (xs <>) $ lintExp e
 lintExp Error {} = pass
 
 lintObj :: MonadReader [Id Type] m => Obj (Id Type) -> m ()

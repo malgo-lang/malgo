@@ -6,7 +6,7 @@ module Koriel.Core.LambdaLift
   )
 where
 
-import Control.Lens (At (at), Lens', lens, makeFieldsNoPrefix, traverseOf, traversed, use, view, (<>=), (?=), _1)
+import Control.Lens (At (at), Lens', lens, makeFieldsNoPrefix, traverseOf, traversed, use, view, (<>=), (?=), _1, _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Koriel.Core.Flat
@@ -61,9 +61,15 @@ lambdalift uniqSupply Program {..} =
           extFuns
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+llift (Atom a) = pure $ Atom a
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
+llift (Call f xs) = pure $ Call f xs
+llift (CallDirect f xs) = pure $ CallDirect f xs
+llift (RawCall f t xs) = pure $ RawCall f t xs
+llift (BinOp op x y) = pure $ BinOp op x y
+llift (Cast t x) = pure $ Cast t x
 llift (Let [LocalDef n t (Fun xs call@Call {})] e) = do
   call' <- llift call
   Let [LocalDef n t (Fun xs call')] <$> llift e
@@ -90,4 +96,6 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
-llift e = pure e
+llift (Switch a cs) = Switch a <$> traverseOf (traversed . _2) llift cs
+llift (Destruct a c xs e) = Destruct a c xs <$> llift e
+llift (Error t) = pure $ Error t
