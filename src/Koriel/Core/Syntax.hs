@@ -34,6 +34,8 @@ import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
+import Data.String.Conversions
+import Data.Text qualified as Text
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Generic.Data
 import Koriel.Core.Op
@@ -74,8 +76,30 @@ instance Pretty Unboxed where
   pPrint (Int64 x) = pPrint x <> "_i64"
   pPrint (Float x) = text (showHex (castFloatToWord32 x) "") <> "_f32" <+> "#|" <> pPrint x <> "|#"
   pPrint (Double x) = text (showHex (castDoubleToWord64 x) "") <> "_f64" <+> "#|" <> pPrint x <> "|#"
-  pPrint (Char x) = quotes (pPrint x)
-  pPrint (String x) = doubleQuotes (pPrint x)
+  pPrint (Char x) = quotes (text $ convertString $ escape x)
+    where
+      escape '\\' = "\\\\"
+      escape '\a' = "\\a"
+      escape '\b' = "\\b"
+      escape '\f' = "\\f"
+      escape '\n' = "\\n"
+      escape '\r' = "\\r"
+      escape '\t' = "\\t"
+      escape '\v' = "\\v"
+      escape '\'' = "\\'"
+      escape x = [x]
+  pPrint (String x) = doubleQuotes (text $ convertString $ Text.concatMap escape x)
+    where
+      escape '\\' = "\\\\"
+      escape '\a' = "\\a"
+      escape '\b' = "\\b"
+      escape '\f' = "\\f"
+      escape '\n' = "\\n"
+      escape '\r' = "\\r"
+      escape '\t' = "\\t"
+      escape '\v' = "\\v"
+      escape '\"' = "\\\""
+      escape x = one x
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 
@@ -306,7 +330,7 @@ instance (Pretty a) => Pretty (Exp a) where
     where
       pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
   pPrint (Destruct v con xs e) = parens $ "destruct" <+> pPrint v <+> pPrint con <+> parens (sep (map pPrint xs)) $$ pPrint e
-  pPrint (Assign x v e) = parens $ "assign" <+> pPrint x <+> pPrint v $$ pPrint e
+  pPrint (Assign x v e) = parens $ "=" <+> pPrint x <+> pPrint v $$ pPrint e
   pPrint (Error t) = parens $ "ERROR" <+> pPrint t
 
 instance HasFreeVar Exp where
@@ -399,7 +423,9 @@ bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => 
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e -> Match v [Bind x (typeOf x) e]
+  DefBuilderT $ tell $ Endo $ \e ->
+    Assign x v e
+  -- Match v [Bind x (typeOf x) e]
   pure (Var x)
 
 cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -408,7 +434,7 @@ cast ty e
   | otherwise = do
       v <- bind e
       x <- newTemporalId "cast" ty
-      DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) [Bind x ty e]
+      DefBuilderT $ tell $ Endo $ \e -> Assign x (Cast ty v) e
       pure (Var x)
 
 -- `destruct` is convenient when treating types that have only one constructor.

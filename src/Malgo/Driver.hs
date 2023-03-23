@@ -71,6 +71,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       storeIndex index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
+      core <- pure $ over appProgram flat core
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface rnEnv.moduleName rnState dsEnv
@@ -82,34 +83,34 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
       lint core
-      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply env.inlineSize core
+      coreOpt <- over appProgram flat <$> if env.noOptimize then pure core else optimizeProgram uniqSupply env.inlineSize core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
-        hPrint stderr $ pPrint $ over appProgram flat coreOpt
+        hPrint stderr $ pPrint coreOpt
       lint coreOpt
-      coreLL <- if env.lambdaLift then lambdalift uniqSupply coreOpt else pure coreOpt
+      coreLL <- over appProgram flat <$> if env.lambdaLift then lambdalift uniqSupply coreOpt else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
-          hPrint stderr $ pPrint $ over appProgram flat coreLL
-      coreLLOpt <- if env.noOptimize then pure coreLL else optimizeProgram uniqSupply env.inlineSize coreLL
+          hPrint stderr $ pPrint coreLL
+      coreLLOpt <- over appProgram flat <$> if env.noOptimize then pure coreLL else optimizeProgram uniqSupply env.inlineSize coreLL
       when (env.debugMode && env.lambdaLift && not env.noOptimize) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
-          hPrint stderr $ pPrint $ over appProgram flat coreLLOpt
+          hPrint stderr $ pPrint coreLLOpt
       writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode coreLLOpt
 
       -- check module paths include dstName's directory
       liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
-      linkedCoreOpt <- if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply env.inlineSize linkedCore
+      linkedCoreOpt <- over appProgram flat <$> if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply env.inlineSize linkedCore
       writeFile (env.dstPath -<.> "kor") $ render $ pPrint linkedCoreOpt
 
       when env.debugMode $
         liftIO $ do
           hPutStrLn stderr "=== LINKED ==="
-          hPrint stderr $ pPrint $ over appProgram flat linkedCoreOpt
+          hPrint stderr $ pPrint linkedCoreOpt
 
       case env.compileMode of
         LLVM -> do
