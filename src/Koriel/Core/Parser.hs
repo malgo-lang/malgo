@@ -137,7 +137,22 @@ expr =
             Let <$> between (symbol "(") (symbol ")") (many localDef) <*> expr,
           do
             void $ symbol "match"
-            Match <$> expr <*> many case_
+            Match <$> expr <*> many case_,
+          do
+            void $ symbol "switch"
+            Switch
+              <$> atom
+              <*> some
+                ( between (symbol "(") (symbol ")") do
+                    (,) <$> tag <*> expr
+                ),
+          do
+            void $ symbol "destruct"
+            Destruct
+              <$> atom
+              <*> constructor
+              <*> between (symbol "(") (symbol ")") (many ident)
+              <*> expr
         ]
 
 -- | Parse a local definition.
@@ -215,9 +230,12 @@ type_ =
 -- | Parse a constructor.
 constructor :: Parser Con
 constructor = between (symbol "(") (symbol ")") do
-  tag <- tuple <|> data_
+  tag <- tag
   args <- many type_
   pure $ Con tag args
+
+tag :: Parser Tag
+tag = tuple <|> data_
   where
     tuple = void (symbol "Tuple#") >> pure Tuple
     data_ = Data <$> ident

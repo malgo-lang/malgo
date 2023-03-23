@@ -117,6 +117,15 @@ annExp (Match scrutinee alts) = do
       local (\ctx -> ctx {nameEnv = HashMap.insert var var' ctx.nameEnv}) do
         body <- annExp body
         pure $ Bind var' ty body
+annExp (Switch v cases) = Switch <$> annAtom v <*> traverse annCase cases
+  where
+    annCase (tag, body) = (tag,) <$> annExp body
+annExp (Destruct v con@(Con _ paramTypes) params body) = do
+  v <- annAtom v
+  params' <- zipWithM parseId params paramTypes
+  local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
+    body <- annExp body
+    pure $ Destruct v con params' body
 annExp (Error ty) = pure $ Error ty
 
 annAtom :: HasCallStack => MonadReader Context m => Atom Text -> m (Atom (Id Type))

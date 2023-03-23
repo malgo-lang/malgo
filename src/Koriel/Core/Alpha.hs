@@ -48,17 +48,23 @@ cloneId Id {..} = do
   pure Id {..}
 
 alphaExp :: (MonadReader AlphaEnv f, MonadIO f) => Exp (Id Type) -> f (Exp (Id Type))
+alphaExp (Atom x) = Atom <$> alphaAtom x
+alphaExp (Call f xs) = Call <$> alphaAtom f <*> traverse alphaAtom xs
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
+alphaExp (RawCall n t xs) = RawCall n t <$> traverse alphaAtom xs
+alphaExp (BinOp op x y) = BinOp op <$> alphaAtom x <*> alphaAtom y
+alphaExp (Cast t x) = Cast t <$> alphaAtom x
 alphaExp (Let ds e) = do
   -- Avoid capturing variables
   env <- foldMapM (\(LocalDef n _ _) -> one . (n,) . Var <$> cloneId n) ds
   local (\e -> e {subst = env <> e.subst}) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
--- このコードでも動くはずだけど、segfaultする。
--- let binds = map (._localDefVar) ds
--- e' <- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` binds) e.subst}) $ do
---   Let <$> traverse alphaLocalDef ds <*> alphaExp e
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
-alphaExp e = traverseOf atom alphaAtom e
+alphaExp (Switch v cs) = Switch <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExp e) cs
+alphaExp (Destruct v con xs e) = do
+  -- Avoid capturing variables
+  env <- foldMapM (\x -> one . (x,) . Var <$> cloneId x) xs
+  local (\e -> e {subst = env <> e.subst}) $ Destruct <$> alphaAtom v <*> pure con <*> traverse lookupId xs <*> alphaExp e
+alphaExp (Error t) = pure $ Error t
 
 alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x

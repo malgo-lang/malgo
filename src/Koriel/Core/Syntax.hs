@@ -28,11 +28,12 @@ module Koriel.Core.Syntax
   )
 where
 
-import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _3, _4)
+import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _2, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Generic.Data
 import Koriel.Core.Op
@@ -239,6 +240,10 @@ data Exp a
     Let [LocalDef a] (Exp a)
   | -- | pattern matching
     Match (Exp a) [Case a]
+  | -- | switch expression
+    Switch (Atom a) [(Tag, Exp a)]
+  | -- | destruct a value
+    Destruct (Atom a) Con [a] (Exp a)
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
@@ -279,6 +284,9 @@ instance HasType a => HasType (Exp a) where
   typeOf (Let _ e) = typeOf e
   typeOf (Match _ (c : _)) = typeOf c
   typeOf (Match _ []) = error "Match must have at least one case"
+  typeOf (Switch _ ((_, e) : _)) = typeOf e
+  typeOf (Switch _ []) = error "Switch must have at least one case"
+  typeOf (Destruct _ _ _ e) = typeOf e
   typeOf (Error t) = t
 
 instance (Pretty a) => Pretty (Exp a) where
@@ -291,6 +299,10 @@ instance (Pretty a) => Pretty (Exp a) where
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
+  pPrint (Switch v cs) = parens $ "switch" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs)
+    where
+      pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
+  pPrint (Destruct v con xs e) = parens $ "destruct" <+> pPrint v <+> pPrint con <+> parens (sep (map pPrint xs)) $$ pPrint e
   pPrint (Error t) = parens $ "ERROR" <+> pPrint t
 
 instance HasFreeVar Exp where
@@ -302,6 +314,12 @@ instance HasFreeVar Exp where
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . (._variable)) (freevars e <> foldMap (freevars . (._object)) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
+  freevars (Switch v cs) = freevars v <> foldMap (freevars . snd) cs
+  freevars (Destruct v _ xs e) =
+    freevars v
+      <> HashSet.difference
+        (freevars e)
+        (HashSet.fromList xs)
   freevars (Error _) = mempty
 
 instance HasAtom Exp where
@@ -314,6 +332,8 @@ instance HasAtom Exp where
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
+    Switch v cs -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs
+    Destruct v con xs e -> Destruct <$> f v <*> pure con <*> pure xs <*> traverseOf atom f e
     Error t -> pure (Error t)
 
 -- | toplevel function definitions

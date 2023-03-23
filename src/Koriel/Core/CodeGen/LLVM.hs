@@ -51,6 +51,7 @@ import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import Malgo.Desugar.DsState (DsState (..), HasNameEnv (nameEnv))
 import Malgo.Monad (MalgoEnv (..))
+import Relude.Unsafe qualified as Unsafe
 
 instance Hashable Name
 
@@ -462,6 +463,30 @@ genExp (Match e cs) k
         RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
         _ -> pure eOpr'
       switch tagOpr defaultLabel labels
+genExp (Switch v bs) k = mdo
+  vOpr <- genAtom v
+  br switchBlock
+  labels <- toList <$> traverse (genBranch (constructorList v) k) bs
+  defaultLabel <- block >>= \l -> unreachable >> pure l
+  switchBlock <- block
+  switch vOpr defaultLabel labels
+  where
+    genBranch cs k (tag, e) = do
+      label <- block
+      let tag' = case C.typeOf v of
+            SumT _ -> C.Int 8 $ fromIntegral $ Unsafe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
+            RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
+            _ -> error "Switch is not supported for this type."
+      genExp e k
+      pure (tag', label)
+genExp (Destruct v (Con _ ts) xs e) k = do
+  v <- genAtom v
+  addr <- bitcast v (ptr $ StructureType False [i8, StructureType False (map convType ts)])
+  payloadAddr <- gep addr [int32 0, int32 1]
+  env <-
+    HashMap.fromList <$> ifor xs \i x -> do
+      (x,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
+  local (over valueMap (env <>)) $ genExp e k
 genExp (Cast ty x) k = do
   xOpr <- genAtom x
   k =<< bitcast xOpr (convType ty)
