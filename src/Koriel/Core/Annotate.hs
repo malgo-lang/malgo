@@ -126,6 +126,12 @@ annExp (Destruct v con@(Con _ paramTypes) params body) = do
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
     body <- annExp body
     pure $ Destruct v con params' body
+annExp (Assign x v e) = do
+  v' <- annExp v
+  x' <- parseId x (typeOf v')
+  local (\ctx -> ctx {nameEnv = HashMap.insert x x' ctx.nameEnv}) do
+    e <- annExp e
+    pure $ Assign x' v' e
 annExp (Error ty) = pure $ Error ty
 
 annAtom :: HasCallStack => MonadReader Context m => Atom Text -> m (Atom (Id Type))

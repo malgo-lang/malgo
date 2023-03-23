@@ -98,4 +98,5 @@ llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift (Switch a cs) = Switch a <$> traverseOf (traversed . _2) llift cs
 llift (Destruct a c xs e) = Destruct a c xs <$> llift e
+llift (Assign x v e) = Assign x v <$> llift e
 llift (Error t) = pure $ Error t

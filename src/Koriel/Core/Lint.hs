@@ -128,6 +128,7 @@ lintExp (Switch a cs) = do
 lintExp (Destruct a _ xs e) = do
   lintAtom a
   local (xs <>) $ lintExp e
+lintExp (Assign x v e) = lintExp v >> local (x :) (lintExp e)
 lintExp Error {} = pass
 
 lintObj :: MonadReader [Id Type] m => Obj (Id Type) -> m ()

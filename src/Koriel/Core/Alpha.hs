@@ -64,6 +64,10 @@ alphaExp (Destruct v con xs e) = do
   -- Avoid capturing variables
   env <- foldMapM (\x -> one . (x,) . Var <$> cloneId x) xs
   local (\e -> e {subst = env <> e.subst}) $ Destruct <$> alphaAtom v <*> pure con <*> traverse lookupId xs <*> alphaExp e
+alphaExp (Assign x v e) = do
+  v' <- alphaExp v
+  x' <- cloneId x
+  local (\e -> e {subst = one (x, Var x') <> e.subst}) $ Assign x' v' <$> alphaExp e
 alphaExp (Error t) = pure $ Error t
 
 alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))

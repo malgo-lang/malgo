@@ -423,6 +423,9 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     genOp Op.And = LLVM.IRBuilder.and
     genOp Op.Or = LLVM.IRBuilder.or
     i1ToBool i1opr = zext i1opr i8
+genExp (Cast ty x) k = do
+  xOpr <- genAtom x
+  k =<< bitcast xOpr (convType ty)
 genExp (Let xs e) k = do
   env <- foldMapM prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
@@ -487,9 +490,11 @@ genExp (Destruct v (Con _ ts) xs e) k = do
     HashMap.fromList <$> ifor xs \i x -> do
       (x,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
   local (over valueMap (env <>)) $ genExp e k
-genExp (Cast ty x) k = do
-  xOpr <- genAtom x
-  k =<< bitcast xOpr (convType ty)
+genExp (Assign _ v e) k | C.typeOf v == VoidT = genExp v $ \_ -> genExp e k
+genExp (Assign x v e) k = do
+  genExp v $ \vOpr -> do
+    vOpr <- bitcast vOpr (convType $ C.typeOf v)
+    local (over valueMap $ at x ?~ vOpr) $ genExp e k
 genExp (Error _) _ = unreachable
 
 -- | Get constructor list from the type of scrutinee.

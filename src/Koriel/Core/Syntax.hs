@@ -244,6 +244,8 @@ data Exp a
     Switch (Atom a) [(Tag, Exp a)]
   | -- | destruct a value
     Destruct (Atom a) Con [a] (Exp a)
+  | -- | Assign a value to a variable
+    Assign a (Exp a) (Exp a)
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
@@ -287,6 +289,7 @@ instance HasType a => HasType (Exp a) where
   typeOf (Switch _ ((_, e) : _)) = typeOf e
   typeOf (Switch _ []) = error "Switch must have at least one case"
   typeOf (Destruct _ _ _ e) = typeOf e
+  typeOf (Assign _ _ e) = typeOf e
   typeOf (Error t) = t
 
 instance (Pretty a) => Pretty (Exp a) where
@@ -303,6 +306,7 @@ instance (Pretty a) => Pretty (Exp a) where
     where
       pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
   pPrint (Destruct v con xs e) = parens $ "destruct" <+> pPrint v <+> pPrint con <+> parens (sep (map pPrint xs)) $$ pPrint e
+  pPrint (Assign x v e) = parens $ "assign" <+> pPrint x <+> pPrint v $$ pPrint e
   pPrint (Error t) = parens $ "ERROR" <+> pPrint t
 
 instance HasFreeVar Exp where
@@ -320,6 +324,7 @@ instance HasFreeVar Exp where
       <> HashSet.difference
         (freevars e)
         (HashSet.fromList xs)
+  freevars (Assign x v e) = freevars v <> sans x (freevars e)
   freevars (Error _) = mempty
 
 instance HasAtom Exp where
@@ -334,6 +339,7 @@ instance HasAtom Exp where
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Switch v cs -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs
     Destruct v con xs e -> Destruct <$> f v <*> pure con <*> pure xs <*> traverseOf atom f e
+    Assign x v e -> Assign x <$> traverseOf atom f v <*> traverseOf atom f e
     Error t -> pure (Error t)
 
 -- | toplevel function definitions

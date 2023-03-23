@@ -152,7 +152,10 @@ expr =
               <$> atom
               <*> constructor
               <*> between (symbol "(") (symbol ")") (many ident)
-              <*> expr
+              <*> expr,
+          do
+            void $ symbol "="
+            Assign <$> ident <*> expr <*> expr
         ]
 
 -- | Parse a local definition.
