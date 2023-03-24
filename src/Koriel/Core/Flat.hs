@@ -1,26 +1,51 @@
 module Koriel.Core.Flat
   ( flat,
+    runFlat,
+    flatExp,
   )
 where
 
 import Control.Lens (traverseOf, traversed, _2)
 import Koriel.Core.Syntax
+import Koriel.Core.Type
+import Koriel.Id (HasModuleName, Id, ModuleName, newTemporalId)
+import Koriel.MonadUniq (HasUniqSupply, UniqSupply)
 import Koriel.Prelude
 
-flat :: Eq a => Exp a -> Exp a
-flat e = runIdentity $ runFlat (flatExp e)
+data FlatEnv = FlatEnv
+  { uniqSupply :: UniqSupply,
+    moduleName :: ModuleName
+  }
+
+flat :: (MonadIO m, MonadReader env m, HasUniqSupply env) => ModuleName -> Program (Id Type) -> m (Program (Id Type))
+flat moduleName prog = do
+  uniqSupply <- asks (.uniqSupply)
+  runReaderT ?? FlatEnv {..} $
+    traverseOf appProgram (runFlat . flatExp) prog
 
 runFlat :: Monad m => WriterT (Endo r) m r -> m r
 runFlat = fmap (uncurry (flip appEndo)) . runWriterT
 
-flatExp :: (Monad m, Eq a) => Exp a -> WriterT (Endo (Exp a)) m (Exp a)
+flatExp ::
+  ( MonadReader env m,
+    MonadIO m,
+    HasUniqSupply env,
+    HasModuleName env
+  ) =>
+  Exp (Id Type) ->
+  WriterT (Endo (Exp (Id Type))) m (Exp (Id Type))
 flatExp (Let ds e) = do
   tell . Endo . Let =<< traverseOf (traversed . object . appObj) (runFlat . flatExp) ds
   flatExp e
 flatExp (Match v [Unpack con ps e]) = do
   v <- flatExp v
-  tell $ Endo $ \k -> Match v [Unpack con ps k]
+  v' <- newTemporalId (nameFromCon con) (typeOf v)
+  tell $ Endo $ \k -> Assign v' v (Destruct (Var v') con ps k) -- Match v [Unpack con ps k]
   flatExp e
+  where
+    nameFromCon :: Con -> Text
+    nameFromCon (Con (Data name) _) = name
+    nameFromCon (Con Tuple _) = "tuple"
 flatExp (Match v [Bind x _ e]) = do
   v <- flatExp v
   tell $ Endo $ \k -> Assign x v k

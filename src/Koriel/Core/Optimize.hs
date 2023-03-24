@@ -19,7 +19,7 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
-data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, inlineLevel :: Int}
+data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName, inlineLevel :: Int}
 
 makeFieldsNoPrefix ''OptimizeEnv
 
@@ -39,11 +39,12 @@ times n f x
 optimizeProgram ::
   MonadIO m =>
   UniqSupply ->
+  ModuleName ->
   -- | インライン展開する関数のサイズ
   Int ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram us level Program {..} = runReaderT ?? OptimizeEnv {uniqSupply = us, inlineLevel = level} $ do
+optimizeProgram us moduleName level Program {..} = runReaderT ?? OptimizeEnv {uniqSupply = us, moduleName, inlineLevel = level} $ do
   state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
@@ -52,7 +53,7 @@ optimizeProgram us level Program {..} = runReaderT ?? OptimizeEnv {uniqSupply = 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
 optimizeExpr state = 5 `times` opt
   where
-    opt =
+    opt = do
       pure
         >=> optVarBind
         >=> (usingReaderT mempty . optPackInline)
@@ -60,7 +61,7 @@ optimizeExpr state = 5 `times` opt
         >=> (flip evalStateT state . optCallInline)
         >=> optIdCast
         >=> optTrivialCall
-        >=> pure . flat
+        >=> runFlat . flatExp
 
 -- (let ((f (fun ps body))) (f as)) = body[as/ps]
 optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))

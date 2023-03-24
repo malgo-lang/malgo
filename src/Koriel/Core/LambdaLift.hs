@@ -1,12 +1,11 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE TemplateHaskell #-}
 
 module Koriel.Core.LambdaLift
   ( lambdalift,
   )
 where
 
-import Control.Lens (At (at), Lens', lens, makeFieldsNoPrefix, traverseOf, traversed, use, view, (<>=), (?=), _1, _2)
+import Control.Lens (At (at), Lens', lens, traverseOf, traversed, use, view, (<>=), (?=), _1, _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Koriel.Core.Flat
@@ -28,11 +27,10 @@ funcs = lens (._funcs) (\l x -> l {_funcs = x})
 knowns :: Lens' LambdaLiftState (HashSet (Id Type))
 knowns = lens (._knowns) (\l x -> l {_knowns = x})
 
-newtype LambdaLiftEnv = LambdaLiftEnv
-  { uniqSupply :: UniqSupply
+data LambdaLiftEnv = LambdaLiftEnv
+  { uniqSupply :: UniqSupply,
+    moduleName :: ModuleName
   }
-
-makeFieldsNoPrefix ''LambdaLiftEnv
 
 data DefEnv = DefEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName}
 
@@ -43,8 +41,8 @@ def name xs e = do
   funcs . at f ?= (xs, typeOf f, e)
   pure f
 
-lambdalift :: MonadIO m => UniqSupply -> Program (Id Type) -> m (Program (Id Type))
-lambdalift uniqSupply Program {..} =
+lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
+lambdalift uniqSupply moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns} $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
@@ -52,7 +50,7 @@ lambdalift uniqSupply Program {..} =
       knowns <>= HashSet.fromList (map (view _1) topFuns)
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift topVars
-      traverseOf appProgram (pure . flat) $
+      flat moduleName $
         Program
           topVars
           ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $

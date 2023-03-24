@@ -2,7 +2,6 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception.Extra (assertIO)
-import Control.Lens (over)
 import Data.Binary qualified as Binary
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -12,7 +11,6 @@ import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
-import Koriel.Core.Syntax
 import Koriel.Id (ModuleName (..))
 import Koriel.Pretty
 import Malgo.Desugar.Pass (desugar)
@@ -52,15 +50,16 @@ withDump isDump label m = do
 compileFromAST :: FilePath -> MalgoEnv -> Syntax.Module (Malgo 'Parse) -> IO ()
 compileFromAST srcPath env parsedAst = runMalgoM env act
   where
+    moduleName = parsedAst._moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= parsedAst._moduleName.raw) $
+      when (convertString (takeBaseName srcPath) /= moduleName.raw) $
         error "Module name must be source file's base name."
 
       uniqSupply <- asks (.uniqSupply)
       when env.debugMode do
         hPutStrLn stderr "=== PARSED ==="
         hPrint stderr $ pPrint parsedAst
-      rnEnv <- RnEnv.genBuiltinRnEnv (parsedAst._moduleName)
+      rnEnv <- RnEnv.genBuiltinRnEnv moduleName
       (renamedAst, rnState) <- withDump env.debugMode "=== RENAME ===" $ rename rnEnv parsedAst
       (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
       _ <- withDump env.debugMode "=== TYPE CHECK ===" $ pure typedAst
@@ -71,29 +70,29 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       storeIndex index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
-      core <- pure $ over appProgram flat core
+      core <- flat moduleName core
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
 
-      let inf = buildInterface rnEnv.moduleName rnState dsEnv
+      let inf = buildInterface moduleName rnState dsEnv
       writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
 
       when env.debugMode $ do
-        inf <- loadInterface (typedAst._moduleName)
+        inf <- loadInterface moduleName
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
       lint core
-      coreOpt <- over appProgram flat <$> if env.noOptimize then pure core else optimizeProgram uniqSupply env.inlineSize core
+      coreOpt <- flat moduleName =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.inlineSize core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
       lint coreOpt
-      coreLL <- over appProgram flat <$> if env.lambdaLift then lambdalift uniqSupply coreOpt else pure coreOpt
+      coreLL <- flat moduleName =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-      coreLLOpt <- over appProgram flat <$> if env.noOptimize then pure coreLL else optimizeProgram uniqSupply env.inlineSize coreLL
+      coreLLOpt <- flat moduleName =<< if env.noOptimize then pure coreLL else optimizeProgram uniqSupply moduleName env.inlineSize coreLL
       when (env.debugMode && env.lambdaLift && not env.noOptimize) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
@@ -104,7 +103,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
-      linkedCoreOpt <- over appProgram flat <$> if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply env.inlineSize linkedCore
+      linkedCoreOpt <- flat moduleName =<< if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply moduleName env.inlineSize linkedCore
       writeFile (env.dstPath -<.> "kor") $ render $ pPrint linkedCoreOpt
 
       when env.debugMode $
@@ -114,7 +113,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
 
       case env.compileMode of
         LLVM -> do
-          codeGen srcPath env (typedAst._moduleName) dsEnv linkedCoreOpt
+          codeGen srcPath env moduleName dsEnv linkedCoreOpt
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
