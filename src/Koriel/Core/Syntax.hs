@@ -31,11 +31,11 @@ where
 import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _2, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
+import Data.Char (showLitChar)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.String.Conversions
-import Data.Text qualified as Text
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Generic.Data
 import Koriel.Core.Op
@@ -76,30 +76,8 @@ instance Pretty Unboxed where
   pPrint (Int64 x) = pPrint x <> "_i64"
   pPrint (Float x) = text (showHex (castFloatToWord32 x) "") <> "_f32" <+> "#|" <> pPrint x <> "|#"
   pPrint (Double x) = text (showHex (castDoubleToWord64 x) "") <> "_f64" <+> "#|" <> pPrint x <> "|#"
-  pPrint (Char x) = quotes (text $ convertString $ escape x)
-    where
-      escape '\\' = "\\\\"
-      escape '\a' = "\\a"
-      escape '\b' = "\\b"
-      escape '\f' = "\\f"
-      escape '\n' = "\\n"
-      escape '\r' = "\\r"
-      escape '\t' = "\\t"
-      escape '\v' = "\\v"
-      escape '\'' = "\\'"
-      escape x = [x]
-  pPrint (String x) = doubleQuotes (text $ convertString $ Text.concatMap escape x)
-    where
-      escape '\\' = "\\\\"
-      escape '\a' = "\\a"
-      escape '\b' = "\\b"
-      escape '\f' = "\\f"
-      escape '\n' = "\\n"
-      escape '\r' = "\\r"
-      escape '\t' = "\\t"
-      escape '\v' = "\\v"
-      escape '\"' = "\\\""
-      escape x = one x
+  pPrint (Char x) = quotes (text $ convertString $ showLitChar x "")
+  pPrint (String x) = doubleQuotes (text $ concatMap (`showLitChar` "") $ convertString @_ @String x)
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 

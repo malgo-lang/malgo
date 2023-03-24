@@ -3,7 +3,7 @@ module Koriel.Core.Flat
   )
 where
 
-import Control.Lens (traverseOf, traversed)
+import Control.Lens (traverseOf, traversed, _2)
 import Koriel.Core.Syntax
 import Koriel.Prelude
 
@@ -27,12 +27,16 @@ flatExp (Match v [Bind x _ e]) = do
   flatExp e
 flatExp (Match e cs) =
   Match <$> flatExp e <*> traverseOf (traversed . appCase) (runFlat . flatExp) cs
-flatExp (Switch v cs) = pure $ Switch v (map (second flat) cs)
-flatExp (Destruct v con ps e) = pure $ Destruct v con ps (flat e)
+flatExp (Switch v cs) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExp) cs
+flatExp (Destruct v con ps e) = Destruct v con ps <$> runFlat (flatExp e)
 flatExp (Assign x v e) = do
   v <- flatExp v
   case v of
-    Atom (Var v') -> flatExp $ replaceOf atom (Var x) (Var v') e
+    Atom (Var v') ->
+      -- Flatten e[x := v'] after assigning v' to x.
+      -- If we do it before, we might miss some assignments to x.
+      -- These assignments are constructed by the Endo monoid.
+      flatExp $ replaceOf atom (Var x) (Var v') e
     _ -> do
       tell $ Endo $ \k -> Assign x v k
       flatExp e
