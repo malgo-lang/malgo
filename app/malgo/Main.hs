@@ -1,4 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
+-- For use of 'undefined'
+{-# OPTIONS_GHC -Wno-deprecations #-}
 
 module Main (main) where
 
@@ -47,7 +49,7 @@ main = do
       -- _interfaces <- newIORef mempty
       -- _indexes <- newIORef mempty
       -- let ToLLOpt {..} = opt
-      env <- newMalgoEnv opt.srcPath opt._modulePaths Nothing Nothing Nothing
+      env <- newMalgoEnv opt.srcPath opt._modulePaths Nothing undefined Nothing Nothing
       Driver.compile opt.srcPath env {Monad.dstPath = opt.dstPath, Monad.compileMode = opt.compileMode, Monad.noOptimize = opt.noOptimize, Monad.lambdaLift = opt.lambdaLift, Monad.inlineSize = opt.inlineSize, Monad.debugMode = opt.debugMode}
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
