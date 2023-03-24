@@ -1,4 +1,6 @@
 {-# LANGUAGE CPP #-}
+-- For `undefined`
+{-# OPTIONS_GHC -Wno-deprecations #-}
 
 import Data.String.Conversions (convertString)
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -97,7 +99,7 @@ setupRuntime = do
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
 compile src dst modPaths lambdaLift noOptimize = do
-  malgoEnv <- newMalgoEnv src modPaths Nothing Nothing Nothing
+  malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
   malgoEnv <-
     pure
       malgoEnv

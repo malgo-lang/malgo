@@ -16,6 +16,8 @@ import System.FilePath (takeBaseName, takeExtension, (</>))
 
 data MalgoEnv = MalgoEnv
   { uniqSupply :: UniqSupply,
+    -- In 'Malgo.Driver.compile' function, 'moduleName' can be 'undefined'.
+    moduleName :: ~ModuleName,
     _interfaces :: IORef (HashMap ModuleName Interface),
     _indexes :: IORef (HashMap ModuleName Index),
     dstPath :: FilePath,
@@ -40,10 +42,11 @@ newMalgoEnv ::
   FilePath ->
   [FilePath] ->
   Maybe UniqSupply ->
+  ModuleName ->
   Maybe (IORef (HashMap ModuleName Interface)) ->
   Maybe (IORef (HashMap ModuleName Index)) ->
   IO MalgoEnv
-newMalgoEnv srcFile modulePaths mUniqSupply mInterfaces mIndexes = do
+newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
   uniqSupply <- fromMaybeM (UniqSupply <$> newIORef 0) (pure mUniqSupply)
   _interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
   _indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)

@@ -70,7 +70,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       storeIndex index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
-      core <- flat moduleName core
+      core <- flat core
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
 
       let inf = buildInterface moduleName rnState dsEnv
@@ -82,17 +82,17 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
       lint core
-      coreOpt <- flat moduleName =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.inlineSize core
+      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.inlineSize core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
       lint coreOpt
-      coreLL <- flat moduleName =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
+      coreLL <- flat =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-      coreLLOpt <- flat moduleName =<< if env.noOptimize then pure coreLL else optimizeProgram uniqSupply moduleName env.inlineSize coreLL
+      coreLLOpt <- flat =<< if env.noOptimize then pure coreLL else optimizeProgram uniqSupply moduleName env.inlineSize coreLL
       when (env.debugMode && env.lambdaLift && not env.noOptimize) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
@@ -103,7 +103,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
       linkedCore <- Link.link inf coreLLOpt
 
-      linkedCoreOpt <- flat moduleName =<< if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply moduleName env.inlineSize linkedCore
+      linkedCoreOpt <- flat =<< if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply moduleName env.inlineSize linkedCore
       writeFile (env.dstPath -<.> "kor") $ render $ pPrint linkedCoreOpt
 
       when env.debugMode $
@@ -128,4 +128,4 @@ compile srcPath env = do
   when env.debugMode $ do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
-  compileFromAST srcPath env parsedAst
+  compileFromAST srcPath env {moduleName = parsedAst._moduleName} parsedAst

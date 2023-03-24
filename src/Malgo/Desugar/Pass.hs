@@ -32,9 +32,9 @@ desugar ::
   TcEnv ->
   Module (Malgo 'Refine) ->
   m (DsState, Program (Id C.Type))
-desugar tcEnv (Module modName ds) = do
+desugar tcEnv (Module _ ds) = do
   malgoEnv <- ask
-  runReaderT ?? makeDsEnv modName malgoEnv $ do
+  runReaderT ?? makeDsEnv malgoEnv $ do
     (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
     let ds'' = ds' <> dsEnv._globalDefs
     let varDefs = mapMaybe (preview _VarDef) ds''

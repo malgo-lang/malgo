@@ -17,9 +17,10 @@ data FlatEnv = FlatEnv
     moduleName :: ModuleName
   }
 
-flat :: (MonadIO m, MonadReader env m, HasUniqSupply env) => ModuleName -> Program (Id Type) -> m (Program (Id Type))
-flat moduleName prog = do
+flat :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Program (Id Type) -> m (Program (Id Type))
+flat prog = do
   uniqSupply <- asks (.uniqSupply)
+  moduleName <- asks (.moduleName)
   runReaderT ?? FlatEnv {..} $
     traverseOf appProgram (runFlat . flatExp) prog
 

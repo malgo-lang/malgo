@@ -50,7 +50,7 @@ lambdalift uniqSupply moduleName Program {..} =
       knowns <>= HashSet.fromList (map (view _1) topFuns)
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift topVars
-      flat moduleName $
+      flat $
         Program
           topVars
           ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
