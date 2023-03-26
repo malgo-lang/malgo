@@ -71,17 +71,27 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
 
       (dsEnv, core) <- desugar tcEnv refinedAst
       core <- flat core
+      lint core
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
+      writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
       let inf = buildInterface moduleName rnState dsEnv
       writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
+
+      -- check module paths include dstName's directory
+      liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
+      core <- Link.link inf core
+      writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
+      when env.debugMode $
+        liftIO $ do
+          hPutStrLn stderr "=== LINKED ==="
+          hPrint stderr $ pPrint core
 
       when env.debugMode $ do
         inf <- loadInterface moduleName
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      lint core
       coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.inlineSize core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
@@ -97,23 +107,12 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint coreLLOpt
-      writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode coreLLOpt
 
-      -- check module paths include dstName's directory
-      liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
-      linkedCore <- Link.link inf coreLLOpt
-
-      linkedCoreOpt <- flat =<< if env.noOptimize then pure linkedCore else optimizeProgram uniqSupply moduleName env.inlineSize linkedCore
-      writeFile (env.dstPath -<.> "kor") $ render $ pPrint linkedCoreOpt
-
-      when env.debugMode $
-        liftIO $ do
-          hPutStrLn stderr "=== LINKED ==="
-          hPrint stderr $ pPrint linkedCoreOpt
+      writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreLLOpt
 
       case env.compileMode of
         LLVM -> do
-          codeGen srcPath env moduleName dsEnv linkedCoreOpt
+          codeGen srcPath env moduleName dsEnv coreLLOpt
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()

@@ -42,7 +42,9 @@ flatExp (Let ds e) = do
   flatExp e
 flatExp (Match e cs) = flatMatch e cs
 flatExp (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExp) cs <*> flatExp e
-flatExp (Destruct v con ps e) = Destruct v con ps <$> runFlat (flatExp e)
+flatExp (Destruct v con ps e) = do
+  tell $ Endo $ \k -> Destruct v con ps k
+  flatExp e
 flatExp (Assign x v e) = do
   v <- flatExp v
   case v of
@@ -52,7 +54,10 @@ flatExp (Assign x v e) = do
       -- These assignments are constructed by the Endo monoid.
       flatExp $ replaceOf atom (Var x) (Var v') e
     _ -> do
-      tell $ Endo $ \k -> Assign x v k
+      tell $ Endo $ \k ->
+        case k of
+          Atom (Var y) | x == y -> v -- (= x v x) -> v
+          _ -> Assign x v k
       flatExp e
 flatExp e = pure e
 
@@ -67,15 +72,19 @@ flatMatch ::
   FlatT m (Exp (Id Type))
 flatMatch e [Unpack con ps e'] = do
   e <- flatExp e
-  e' <- runFlat $ flatExp e'
   v <- newTemporalId (nameFromCon con) (typeOf e)
-  pure $ Assign v e (Destruct (Var v) con ps e')
+  tell $ Endo $ \k -> Assign v e k
+  tell $ Endo $ \k -> Destruct (Var v) con ps k
+  flatExp e'
   where
     nameFromCon :: Con -> Text
     nameFromCon (Con (Data name) _) = name
     nameFromCon (Con Tuple _) = "tuple"
 flatMatch e [Bind x _ e'] = do
   e <- flatExp e
-  e' <- runFlat $ flatExp e'
-  pure $ Assign x e e'
+  tell $ Endo $ \k ->
+    case k of
+      Atom (Var y) | x == y -> e -- (= x e x) -> v
+      _ -> Assign x e k
+  flatExp e'
 flatMatch e cs = Match <$> flatExp e <*> traverseOf (traversed . appCase) (runFlat . flatExp) cs

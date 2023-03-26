@@ -408,7 +408,6 @@ bind v = do
   x <- newTemporalId "d" (typeOf v)
   DefBuilderT $ tell $ Endo $ \e ->
     Assign x v e
-  -- Match v [Bind x (typeOf x) e]
   pure (Var x)
 
 cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))

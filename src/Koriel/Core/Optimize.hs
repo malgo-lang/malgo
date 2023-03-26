@@ -51,7 +51,7 @@ optimizeProgram us moduleName level Program {..} = runReaderT ?? OptimizeEnv {un
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
-optimizeExpr state = 5 `times` opt
+optimizeExpr state = 10 `times` opt
   where
     opt = do
       pure
@@ -128,9 +128,9 @@ optPackInline (Match (Atom (Var v)) [Unpack con xs body]) = do
   body' <- optPackInline body
   view (at v) >>= \case
     Just (con', as) | con == con' -> pure $ build xs as body'
-    _ -> pure $ Match (Atom $ Var v) [Unpack con xs body']
+    _ -> pure $ Destruct (Var v) con xs body'
   where
-    build (x : xs) (a : as) body = Match (Atom a) [Bind x (typeOf x) (build xs as body)]
+    build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
 optPackInline (Match v cs) =
   Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
@@ -141,7 +141,7 @@ optPackInline (Destruct (Var v) con xs body) = do
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Destruct (Var v) con xs body'
   where
-    build (x : xs) (a : as) body = Match (Atom a) [Bind x (typeOf x) (build xs as body)]
+    build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
 optPackInline (Assign x v e) = Assign x <$> optPackInline v <*> optPackInline e
 optPackInline (Let ds e) = do
