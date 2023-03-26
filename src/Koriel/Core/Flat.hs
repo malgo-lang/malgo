@@ -24,7 +24,9 @@ flat prog = do
   runReaderT ?? FlatEnv {..} $
     traverseOf appProgram (runFlat . flatExp) prog
 
-runFlat :: Monad m => WriterT (Endo r) m r -> m r
+type FlatT m = WriterT (Endo (Exp (Id Type))) m
+
+runFlat :: Monad m => FlatT m (Exp (Id Type)) -> m (Exp (Id Type))
 runFlat = fmap (uncurry (flip appEndo)) . runWriterT
 
 flatExp ::
@@ -34,25 +36,11 @@ flatExp ::
     HasModuleName env
   ) =>
   Exp (Id Type) ->
-  WriterT (Endo (Exp (Id Type))) m (Exp (Id Type))
+  FlatT m (Exp (Id Type))
 flatExp (Let ds e) = do
   tell . Endo . Let =<< traverseOf (traversed . object . appObj) (runFlat . flatExp) ds
   flatExp e
-flatExp (Match v [Unpack con ps e]) = do
-  v <- flatExp v
-  v' <- newTemporalId (nameFromCon con) (typeOf v)
-  tell $ Endo $ \k -> Assign v' v (Destruct (Var v') con ps k) -- Match v [Unpack con ps k]
-  flatExp e
-  where
-    nameFromCon :: Con -> Text
-    nameFromCon (Con (Data name) _) = name
-    nameFromCon (Con Tuple _) = "tuple"
-flatExp (Match v [Bind x _ e]) = do
-  v <- flatExp v
-  tell $ Endo $ \k -> Assign x v k
-  flatExp e
-flatExp (Match e cs) =
-  Match <$> flatExp e <*> traverseOf (traversed . appCase) (runFlat . flatExp) cs
+flatExp (Match e cs) = flatMatch e cs
 flatExp (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExp) cs <*> flatExp e
 flatExp (Destruct v con ps e) = Destruct v con ps <$> runFlat (flatExp e)
 flatExp (Assign x v e) = do
@@ -67,3 +55,27 @@ flatExp (Assign x v e) = do
       tell $ Endo $ \k -> Assign x v k
       flatExp e
 flatExp e = pure e
+
+flatMatch ::
+  ( MonadReader env m,
+    MonadIO m,
+    HasUniqSupply env,
+    HasModuleName env
+  ) =>
+  Exp (Id Type) ->
+  [Case (Id Type)] ->
+  FlatT m (Exp (Id Type))
+flatMatch e [Unpack con ps e'] = do
+  e <- flatExp e
+  e' <- runFlat $ flatExp e'
+  v <- newTemporalId (nameFromCon con) (typeOf e)
+  pure $ Assign v e (Destruct (Var v) con ps e')
+  where
+    nameFromCon :: Con -> Text
+    nameFromCon (Con (Data name) _) = name
+    nameFromCon (Con Tuple _) = "tuple"
+flatMatch e [Bind x _ e'] = do
+  e <- flatExp e
+  e' <- runFlat $ flatExp e'
+  pure $ Assign x e e'
+flatMatch e cs = Match <$> flatExp e <*> traverseOf (traversed . appCase) (runFlat . flatExp) cs
