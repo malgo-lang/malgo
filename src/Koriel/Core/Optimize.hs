@@ -19,7 +19,7 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
-data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName, inlineLevel :: Int}
+data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName, inlineLevel :: Int, knowns :: HashSet (Id Type)}
 
 makeFieldsNoPrefix ''OptimizeEnv
 
@@ -40,11 +40,12 @@ optimizeProgram ::
   MonadIO m =>
   UniqSupply ->
   ModuleName ->
+  HashSet (Id Type) ->
   -- | インライン展開する関数のサイズ
   Int ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram us moduleName level Program {..} = runReaderT ?? OptimizeEnv {uniqSupply = us, moduleName, inlineLevel = level} $ do
+optimizeProgram uniqSupply moduleName knowns inlineLevel Program {..} = runReaderT ?? OptimizeEnv {..} $ do
   state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
@@ -61,6 +62,7 @@ optimizeExpr state = 10 `times` opt
         >=> (flip evalStateT state . optCallInline)
         >=> optIdCast
         >=> optTrivialCall
+        >=> optCast
         >=> runFlat . flatExp
 
 -- (let ((f (fun ps body))) (f as)) = body[as/ps]
@@ -195,3 +197,32 @@ optIdCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optIdCast c
 optIdCast (Destruct a c xs e) = Destruct a c xs <$> optIdCast e
 optIdCast (Assign x v e) = Assign x <$> optIdCast v <*> optIdCast e
 optIdCast e = pure e
+
+-- 効果がはっきりしないので一旦コメントアウト
+-- TODO[optCast] ベンチマーク
+optCast :: (MonadIO m, MonadReader OptimizeEnv m) => Exp (Id Type) -> m (Exp (Id Type))
+optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
+  pts :-> _
+    | length pts' == length pts -> do
+        f' <- newInternalId "cast_opt" (pts' :-> rt')
+        ps' <- traverse (newInternalId "p") pts'
+        v' <- runDef do
+          ps <- zipWithM cast pts $ map (Atom . Var) ps'
+
+          ks <- asks (.knowns)
+
+          r <- case f of
+            -- If `f` is a known function, we must call it directly.
+            Var f | f `member` ks -> do
+              bind (CallDirect f ps)
+            _ -> bind (Call f ps)
+          pure $ Cast rt' r
+        pure (Let [LocalDef f' (pts' :-> rt') $ Fun ps' v'] (Atom $ Var f'))
+    | otherwise -> error "optCast: invalid cast"
+  _ -> pure e
+optCast (Match v cs) = Match <$> optCast v <*> traverseOf (traversed . appCase) optCast cs
+optCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optCast ds <*> optCast e
+optCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optCast cs <*> optCast e
+optCast (Destruct a c xs e) = Destruct a c xs <$> optCast e
+optCast (Assign x v e) = Assign x <$> optCast v <*> optCast e
+optCast e = pure e

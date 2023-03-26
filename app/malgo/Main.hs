@@ -82,7 +82,7 @@ toLLOpt =
       <*> pure LLVM
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
-      <*> fmap read (strOption (long "inline" <> value "15"))
+      <*> fmap read (strOption (long "inline" <> value "10"))
       <*> switch (long "debug-mode")
       <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
   )

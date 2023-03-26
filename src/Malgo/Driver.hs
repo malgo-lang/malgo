@@ -2,7 +2,9 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception.Extra (assertIO)
+import Control.Lens (traverseOf, _1)
 import Data.Binary qualified as Binary
+import Data.HashSet qualified as HashSet
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
@@ -92,23 +94,24 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.inlineSize core
+      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName mempty env.inlineSize core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
       lint coreOpt
-      coreLL <- flat =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
+      (coreLL, knowns) <- traverseOf _1 flat =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure (coreOpt, mempty)
       when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-      coreLLOpt <- flat =<< if env.noOptimize then pure coreLL else optimizeProgram uniqSupply moduleName env.inlineSize coreLL
+      coreLLOpt <- flat =<< if env.noOptimize then pure coreLL else optimizeProgram uniqSupply moduleName knowns env.inlineSize coreLL
       when (env.debugMode && env.lambdaLift && not env.noOptimize) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
           hPrint stderr $ pPrint coreLLOpt
 
       writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreLLOpt
+      appendFile (env.dstPath -<.> "kor.opt") $ render $ pPrint $ HashSet.toList knowns
 
       case env.compileMode of
         LLVM -> do

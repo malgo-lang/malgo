@@ -38,10 +38,11 @@ def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) =>
 def name xs e = do
   uniqSupply <- asks (.uniqSupply)
   f <- runReaderT (newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)) (DefEnv uniqSupply name.moduleName)
+  -- knowns . at f ?= ()
   funcs . at f ?= (xs, typeOf f, e)
   pure f
 
-lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
+lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type), HashSet (Id Type))
 lambdalift uniqSupply moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns} $ do
@@ -50,13 +51,16 @@ lambdalift uniqSupply moduleName Program {..} =
       knowns <>= HashSet.fromList (map (view _1) topFuns)
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift topVars
-      flat $
-        Program
-          topVars
-          ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
-              HashMap.toList _funcs
-          )
-          extFuns
+      prog <-
+        flat $
+          Program
+            topVars
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
+                HashMap.toList _funcs
+            )
+            extFuns
+      prog <- appProgram toDirect prog
+      (prog,) <$> use knowns
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Atom a) = pure $ Atom a
@@ -98,3 +102,23 @@ llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> ll
 llift (Destruct a c xs e) = Destruct a c xs <$> llift e
 llift (Assign x v e) = Assign x v <$> llift e
 llift (Error t) = pure $ Error t
+
+-- | `toDirect` converts `Call` to `CallDirect` if the callee is known.
+-- If `f` is a known function, we must call it directly.
+-- These conversions are almost done in `llift`, but not all of them.
+toDirect :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+toDirect (Atom a) = pure $ Atom a
+toDirect (Call (Var f) xs) = do
+  ks <- use knowns
+  if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
+toDirect (Call f xs) = pure $ Call f xs
+toDirect (CallDirect f xs) = pure $ CallDirect f xs
+toDirect (RawCall f t xs) = pure $ RawCall f t xs
+toDirect (BinOp op x y) = pure $ BinOp op x y
+toDirect (Cast t x) = pure $ Cast t x
+toDirect (Let ds e) = Let <$> traverseOf (traversed . object . appObj) toDirect ds <*> toDirect e
+toDirect (Match e cs) = Match <$> toDirect e <*> traverseOf (traversed . appCase) toDirect cs
+toDirect (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) toDirect cs <*> toDirect e
+toDirect (Destruct a c xs e) = Destruct a c xs <$> toDirect e
+toDirect (Assign x v e) = Assign x <$> toDirect v <*> toDirect e
+toDirect (Error t) = pure $ Error t

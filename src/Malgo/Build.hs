@@ -66,7 +66,7 @@ run = do
   traverse_
     ( \path -> do
         let ast = Unsafe.fromJust $ List.lookup path parsedAstList
-        putStrLn ("Conpile " <> path)
+        putStrLn ("Compile " <> path)
         env <- newMalgoEnv path [] (Just _uniqSupply) ast._moduleName (Just _interfaces) (Just _indexes)
         Driver.compileFromAST path env ast
     )
