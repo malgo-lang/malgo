@@ -243,7 +243,12 @@ data Exp a
   | -- | pattern matching
     Match (Exp a) [Case a]
   | -- | switch expression
-    Switch (Atom a) [(Tag, Exp a)]
+    Switch
+      (Atom a)
+      [(Tag, Exp a)]
+      -- ^ cases
+      (Exp a)
+      -- ^ default case
   | -- | destruct a value
     Destruct (Atom a) Con [a] (Exp a)
   | -- | Assign a value to a variable
@@ -288,8 +293,8 @@ instance HasType a => HasType (Exp a) where
   typeOf (Let _ e) = typeOf e
   typeOf (Match _ (c : _)) = typeOf c
   typeOf (Match _ []) = error "Match must have at least one case"
-  typeOf (Switch _ ((_, e) : _)) = typeOf e
-  typeOf (Switch _ []) = error "Switch must have at least one case"
+  typeOf (Switch _ ((_, e) : _) _) = typeOf e
+  typeOf (Switch _ [] e) = typeOf e
   typeOf (Destruct _ _ _ e) = typeOf e
   typeOf (Assign _ _ e) = typeOf e
   typeOf (Error t) = t
@@ -304,7 +309,7 @@ instance (Pretty a) => Pretty (Exp a) where
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
-  pPrint (Switch v cs) = parens $ "switch" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs)
+  pPrint (Switch v cs e) = parens $ "switch" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
     where
       pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
   pPrint (Destruct v con xs e) = parens $ "destruct" <+> pPrint v <+> pPrint con <+> parens (sep (map pPrint xs)) $$ pPrint e
@@ -320,7 +325,7 @@ instance HasFreeVar Exp where
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . (._variable)) (freevars e <> foldMap (freevars . (._object)) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
-  freevars (Switch v cs) = freevars v <> foldMap (freevars . snd) cs
+  freevars (Switch v cs e) = freevars v <> foldMap (freevars . snd) cs <> freevars e
   freevars (Destruct v _ xs e) =
     freevars v
       <> HashSet.difference
@@ -339,7 +344,7 @@ instance HasAtom Exp where
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
-    Switch v cs -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs
+    Switch v cs e -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
     Destruct v con xs e -> Destruct <$> f v <*> pure con <*> pure xs <*> traverseOf atom f e
     Assign x v e -> Assign x <$> traverseOf atom f v <*> traverseOf atom f e
     Error t -> pure (Error t)

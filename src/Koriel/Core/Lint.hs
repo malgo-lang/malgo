@@ -122,9 +122,10 @@ lintExp (Let ds e) = local (map (._variable) ds <>) $ do
 lintExp (Match e cs) = do
   lintExp e
   traverse_ (lintCase e) cs
-lintExp (Switch a cs) = do
+lintExp (Switch a cs e) = do
   lintAtom a
   traverseOf_ (traversed . _2) lintExp cs
+  lintExp e
 lintExp (Destruct a _ xs e) = do
   lintAtom a
   local (xs <>) $ lintExp e

@@ -143,9 +143,12 @@ expr =
             Switch
               <$> atom
               <*> some
-                ( between (symbol "(") (symbol ")") do
+                ( try $ between (symbol "(") (symbol ")") do
                     (,) <$> tag <*> expr
-                ),
+                )
+              <*> between (symbol "(") (symbol ")") do
+                void $ symbol "default"
+                expr,
           do
             void $ symbol "destruct"
             Destruct

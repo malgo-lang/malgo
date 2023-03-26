@@ -53,7 +53,7 @@ flatExp (Match v [Bind x _ e]) = do
   flatExp e
 flatExp (Match e cs) =
   Match <$> flatExp e <*> traverseOf (traversed . appCase) (runFlat . flatExp) cs
-flatExp (Switch v cs) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExp) cs
+flatExp (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExp) cs <*> flatExp e
 flatExp (Destruct v con ps e) = Destruct v con ps <$> runFlat (flatExp e)
 flatExp (Assign x v e) = do
   v <- flatExp v

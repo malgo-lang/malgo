@@ -117,7 +117,7 @@ annExp (Match scrutinee alts) = do
       local (\ctx -> ctx {nameEnv = HashMap.insert var var' ctx.nameEnv}) do
         body <- annExp body
         pure $ Bind var' ty body
-annExp (Switch v cases) = Switch <$> annAtom v <*> traverse annCase cases
+annExp (Switch v cases def) = Switch <$> annAtom v <*> traverse annCase cases <*> annExp def
   where
     annCase (tag, body) = (tag,) <$> annExp body
 annExp (Destruct v con@(Con _ paramTypes) params body) = do

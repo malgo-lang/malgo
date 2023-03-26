@@ -70,7 +70,7 @@ optTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' =
   optTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
 optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
 optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
-optTrivialCall (Switch a cs) = Switch a <$> traverseOf (traversed . _2) optTrivialCall cs
+optTrivialCall (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optTrivialCall cs <*> optTrivialCall e
 optTrivialCall (Destruct a c xs e) = Destruct a c xs <$> optTrivialCall e
 optTrivialCall (Assign x v e) = Assign x <$> optTrivialCall v <*> optTrivialCall e
 optTrivialCall e = pure e
@@ -87,7 +87,7 @@ optCallInline (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
 optCallInline (CallDirect f xs) = lookupCallInline CallDirect f xs
 optCallInline (Match v cs) =
   Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
-optCallInline (Switch a cs) = Switch a <$> traverseOf (traversed . _2) optCallInline cs
+optCallInline (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optCallInline cs <*> optCallInline e
 optCallInline (Destruct a c xs e) = Destruct a c xs <$> optCallInline e
 optCallInline (Assign x v e) = Assign x <$> optCallInline v <*> optCallInline e
 optCallInline (Let ds e) = do
@@ -134,7 +134,7 @@ optPackInline (Match (Atom (Var v)) [Unpack con xs body]) = do
     build _ _ body = body
 optPackInline (Match v cs) =
   Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
-optPackInline (Switch a cs) = Switch a <$> traverseOf (traversed . _2) optPackInline cs
+optPackInline (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optPackInline cs <*> optPackInline e
 optPackInline (Destruct (Var v) con xs body) = do
   body' <- optPackInline body
   view (at v) >>= \case
@@ -156,7 +156,7 @@ optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
 optVarBind (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optVarBind ds <*> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
-optVarBind (Switch a cs) = Switch a <$> traverseOf (traversed . _2) optVarBind cs
+optVarBind (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optVarBind cs <*> optVarBind e
 optVarBind (Destruct a c xs e) = Destruct a c xs <$> optVarBind e
 optVarBind (Assign x (Atom a) e) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind e = pure e
@@ -182,7 +182,7 @@ removeUnusedLet (Let ds e) = do
            in fvs /= fvs' && reachable limit gamma v fvs'
 removeUnusedLet (Match v cs) =
   Match <$> removeUnusedLet v <*> traverseOf (traversed . appCase) removeUnusedLet cs
-removeUnusedLet (Switch a cs) = Switch a <$> traverseOf (traversed . _2) removeUnusedLet cs
+removeUnusedLet (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) removeUnusedLet cs <*> removeUnusedLet e
 removeUnusedLet (Destruct a c xs e) = Destruct a c xs <$> removeUnusedLet e
 removeUnusedLet (Assign x v e) = Assign x <$> removeUnusedLet v <*> removeUnusedLet e
 removeUnusedLet e = pure e
@@ -191,7 +191,7 @@ optIdCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
 optIdCast (Cast t e) | typeOf e == t = pure (Atom e)
 optIdCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optIdCast ds <*> optIdCast e
 optIdCast (Match v cs) = Match <$> optIdCast v <*> traverseOf (traversed . appCase) optIdCast cs
-optIdCast (Switch a cs) = Switch a <$> traverseOf (traversed . _2) optIdCast cs
+optIdCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optIdCast cs <*> optIdCast e
 optIdCast (Destruct a c xs e) = Destruct a c xs <$> optIdCast e
 optIdCast (Assign x v e) = Assign x <$> optIdCast v <*> optIdCast e
 optIdCast e = pure e

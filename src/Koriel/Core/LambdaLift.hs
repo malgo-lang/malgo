@@ -94,7 +94,7 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
-llift (Switch a cs) = Switch a <$> traverseOf (traversed . _2) llift cs
+llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> llift e
 llift (Destruct a c xs e) = Destruct a c xs <$> llift e
 llift (Assign x v e) = Assign x v <$> llift e
 llift (Error t) = pure $ Error t

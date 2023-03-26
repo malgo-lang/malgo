@@ -466,11 +466,12 @@ genExp (Match e cs) k
         RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
         _ -> pure eOpr'
       switch tagOpr defaultLabel labels
-genExp (Switch v bs) k = mdo
+genExp (Switch v bs e) k = mdo
   vOpr <- genAtom v
   br switchBlock
   labels <- toList <$> traverse (genBranch (constructorList v) k) bs
-  defaultLabel <- block >>= \l -> unreachable >> pure l
+  defaultLabel <- block
+  genExp e k
   switchBlock <- block
   switch vOpr defaultLabel labels
   where

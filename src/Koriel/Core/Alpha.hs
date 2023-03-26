@@ -59,7 +59,7 @@ alphaExp (Let ds e) = do
   env <- foldMapM (\(LocalDef n _ _) -> one . (n,) . Var <$> cloneId n) ds
   local (\e -> e {subst = env <> e.subst}) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
-alphaExp (Switch v cs) = Switch <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExp e) cs
+alphaExp (Switch v cs e) = Switch <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExp e) cs <*> alphaExp e
 alphaExp (Destruct v con xs e) = do
   -- Avoid capturing variables
   env <- foldMapM (\x -> one . (x,) . Var <$> cloneId x) xs
