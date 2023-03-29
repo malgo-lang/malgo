@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 -- |
@@ -25,10 +26,14 @@ module Koriel.Core.Syntax
     appCase,
     appProgram,
     freevars,
+    _Unpack,
+    _OpenRecord,
+    _Exact,
+    _Bind,
   )
 where
 
-import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _2, _3, _4)
+import Control.Lens (Lens', Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Char (showLitChar)
@@ -431,3 +436,5 @@ cast ty e
 --   vs <- traverse (newTemporalId "p") ts
 --   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
 --   pure $ map Var vs
+
+makePrisms ''Case
