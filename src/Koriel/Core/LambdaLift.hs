@@ -100,6 +100,7 @@ llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
 llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> llift e
 llift (Destruct a c xs e) = Destruct a c xs <$> llift e
+llift (DestructRecord a xs e) = DestructRecord a xs <$> llift e
 llift (Assign x v e) = Assign x v <$> llift e
 llift (Error t) = pure $ Error t
 
@@ -120,5 +121,6 @@ toDirect (Let ds e) = Let <$> traverseOf (traversed . object . appObj) toDirect 
 toDirect (Match e cs) = Match <$> toDirect e <*> traverseOf (traversed . appCase) toDirect cs
 toDirect (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) toDirect cs <*> toDirect e
 toDirect (Destruct a c xs e) = Destruct a c xs <$> toDirect e
+toDirect (DestructRecord a xs e) = DestructRecord a xs <$> toDirect e
 toDirect (Assign x v e) = Assign x <$> toDirect v <*> toDirect e
 toDirect (Error t) = pure $ Error t

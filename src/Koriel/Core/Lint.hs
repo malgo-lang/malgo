@@ -135,6 +135,9 @@ lintExp (Switch a cs e) = do
 lintExp (Destruct a _ xs e) = do
   lintAtom a
   local (xs <>) $ lintExp e
+lintExp (DestructRecord a xs e) = do
+  lintAtom a
+  local (HashMap.elems xs <>) $ lintExp e
 lintExp (Assign x v e) = lintExp v >> local (x :) (lintExp e)
 lintExp Error {} = pass
 

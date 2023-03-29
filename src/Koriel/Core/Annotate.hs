@@ -3,6 +3,7 @@ module Koriel.Core.Annotate (annotate) where
 import Control.Lens (ifor)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as Text
+import Data.Traversable (for)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -126,6 +127,26 @@ annExp (Destruct v con@(Con _ paramTypes) params body) = do
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
     body <- annExp body
     pure $ Destruct v con params' body
+annExp (DestructRecord v kvs body) = do
+  v <- annAtom v
+  case typeOf v of
+    RecordT kts -> do
+      kvs' <-
+        HashMap.fromList <$> for (HashMap.toList kvs) \(k, v) -> do
+          let ty = HashMap.lookupDefault (error $ "annExp[DestructRecord]: " <> show k) k kts
+          v' <- parseId v ty
+          pure (k, v')
+      local
+        ( \ctx ->
+            ctx
+              { nameEnv =
+                  HashMap.fromList (HashMap.elems (HashMap.intersectionWith (,) kvs kvs')) <> ctx.nameEnv
+              }
+        )
+        do
+          body <- annExp body
+          pure $ DestructRecord v kvs' body
+    ty -> error $ "annExp[DestructRecord]: " <> show ty
 annExp (Assign x v e) = do
   v' <- annExp v
   x' <- parseId x (typeOf v')

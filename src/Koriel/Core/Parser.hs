@@ -113,7 +113,7 @@ object = between (symbol "(") (symbol ")") do
 -- | Parse an expression.
 expr :: Parser (Exp Text)
 expr =
-  do
+  label "expression" do
     Atom <$> atom
     <|> between (symbol "(") (symbol ")") do
       asum
@@ -144,11 +144,14 @@ expr =
               <$> atom
               <*> some
                 ( try $ between (symbol "(") (symbol ")") do
-                    (,) <$> tag <*> expr
+                    (,) <$> (notFollowedBy (symbol "default") >> tag) <*> expr
                 )
-              <*> between (symbol "(") (symbol ")") do
-                void $ symbol "default"
-                expr,
+              <*> label
+                "default case"
+                ( between (symbol "(") (symbol ")") do
+                    void $ symbol "default"
+                    expr
+                ),
           do
             void $ symbol "destruct"
             Destruct
@@ -157,8 +160,17 @@ expr =
               <*> between (symbol "(") (symbol ")") (many ident)
               <*> expr,
           do
+            void $ symbol "destruct-record"
+            DestructRecord
+              <$> atom
+              <*> between (symbol "(") (symbol ")") (HashMap.fromList <$> many ((,) <$> ident <*> ident))
+              <*> expr,
+          do
             void $ symbol "="
-            Assign <$> ident <*> expr <*> expr
+            Assign <$> ident <*> expr <*> expr,
+          do
+            void $ symbol "ERROR"
+            Error <$> type_
         ]
 
 -- | Parse a local definition.
@@ -193,7 +205,7 @@ case_ = between (symbol "(") (symbol ")") do
 
 -- | Parse a type.
 type_ :: Parser Type
-type_ =
+type_ = label "type" do
   between (symbol "(") (symbol ")") withParams
     <|> simple
   where

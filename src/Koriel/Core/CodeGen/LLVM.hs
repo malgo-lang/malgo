@@ -473,7 +473,11 @@ genExp (Switch v bs e) k = mdo
   defaultLabel <- block
   genExp e k
   switchBlock <- block
-  switch vOpr defaultLabel labels
+  tagOpr <- case C.typeOf v of
+    SumT _ -> gepAndLoad vOpr [int32 0, int32 0]
+    RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+    _ -> pure vOpr
+  switch tagOpr defaultLabel labels
   where
     genBranch cs k (tag, e) = do
       label <- block
@@ -491,6 +495,16 @@ genExp (Destruct v (Con _ ts) xs e) k = do
     HashMap.fromList <$> ifor xs \i x -> do
       (x,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
   local (over valueMap (env <>)) $ genExp e k
+genExp (DestructRecord scrutinee kvs e) k = do
+  scrutinee <- genAtom scrutinee
+  kvs' <- for (HashMap.toList kvs) \(k, v) -> do
+    hashTableGet <- findExt "malgo_hash_table_get" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8] (ptr i8)
+    i <- getUniq
+    key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
+    value <- call hashTableGet [(scrutinee, []), (key, [])]
+    value <- bitcast value (convType $ C.typeOf v)
+    pure (v, value)
+  local (over valueMap (<> HashMap.fromList kvs')) $ genExp e k
 genExp (Assign _ v e) k | C.typeOf v == VoidT = genExp v $ \_ -> genExp e k
 genExp (Assign x v e) k = do
   genExp v $ \vOpr -> do
