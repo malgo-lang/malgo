@@ -132,6 +132,10 @@ lintExp (Switch a cs e) = do
   lintAtom a
   traverseOf_ (traversed . _2) lintExp cs
   lintExp e
+lintExp (SwitchUnboxed a cs e) = do
+  lintAtom a
+  traverseOf_ (traversed . _2) lintExp cs
+  lintExp e
 lintExp (Destruct a _ xs e) = do
   lintAtom a
   local (xs <>) $ lintExp e

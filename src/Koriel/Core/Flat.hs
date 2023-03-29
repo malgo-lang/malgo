@@ -106,14 +106,26 @@ matchToSwitch scrutinee cs@(Unpack {} : _) = do
         Just def -> def
         Nothing -> Error (typeOf $ snd $ Unsafe.head cs')
   pure $ Switch (Var scrutinee) cs' def
+  where
+    unpackToDestruct :: Id Type -> Case (Id Type) -> (Tag, Exp (Id Type))
+    unpackToDestruct s (Unpack con@(Con tag _) xs e) = (tag, Destruct (Var s) con xs e)
+    unpackToDestruct _ _ = error "unpackToDestruct: unreachable"
 matchToSwitch scrutinee (OpenRecord kvs e : _) = do
   pure $ DestructRecord (Var scrutinee) kvs e
-matchToSwitch scrutinee cs = pure $ Match (Atom (Var scrutinee)) cs
+matchToSwitch scrutinee cs@(Exact {} : _) = do
+  let cs' = map flatExact $ takeWhile (has _Exact) cs
+  let mdef = bindToAssign scrutinee <$> find (has _Bind) cs
+  let def = case mdef of
+        Just def -> def
+        Nothing -> Error (typeOf $ snd $ Unsafe.head cs')
+  pure $ SwitchUnboxed (Var scrutinee) cs' def
+  where
+    flatExact :: Case a -> (Unboxed, Exp a)
+    flatExact (Exact u e) = (u, e)
+    flatExact _ = error "flatExact: unreachable"
+matchToSwitch scrutinee (Bind x _ e : _) = pure $ Assign x (Atom $ Var scrutinee) e
+matchToSwitch _ _ = error "matchToSwitch: unreachable"
 
 bindToAssign :: Id Type -> Case (Id Type) -> Exp (Id Type)
 bindToAssign s (Bind x _ e) = Assign x (Atom (Var s)) e
 bindToAssign _ _ = error "bindToAssign: unreachable"
-
-unpackToDestruct :: Id Type -> Case (Id Type) -> (Tag, Exp (Id Type))
-unpackToDestruct s (Unpack con@(Con tag _) xs e) = (tag, Destruct (Var s) con xs e)
-unpackToDestruct _ _ = error "unpackToDestruct: unreachable"
