@@ -254,6 +254,13 @@ data Exp a
       -- ^ cases
       (Exp a)
       -- ^ default case
+  | -- | switch by unboxed value
+    SwitchUnboxed
+      (Atom a)
+      [(Unboxed, Exp a)]
+      -- ^ cases
+      (Exp a)
+      -- ^ default case
   | -- | destruct a value
     Destruct (Atom a) Con [a] (Exp a)
   | -- | destruct a record
@@ -302,6 +309,8 @@ instance HasType a => HasType (Exp a) where
   typeOf (Match _ []) = error "Match must have at least one case"
   typeOf (Switch _ ((_, e) : _) _) = typeOf e
   typeOf (Switch _ [] e) = typeOf e
+  typeOf (SwitchUnboxed _ ((_, e) : _) _) = typeOf e
+  typeOf (SwitchUnboxed _ [] e) = typeOf e
   typeOf (Destruct _ _ _ e) = typeOf e
   typeOf (DestructRecord _ _ e) = typeOf e
   typeOf (Assign _ _ e) = typeOf e
@@ -320,6 +329,9 @@ instance (Pretty a) => Pretty (Exp a) where
   pPrint (Switch v cs e) = parens $ "switch" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
     where
       pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
+  pPrint (SwitchUnboxed v cs e) = parens $ "switch-unboxed" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
+    where
+      pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
   pPrint (Destruct v con xs e) = parens $ "destruct" <+> pPrint v <+> pPrint con <+> parens (sep (map pPrint xs)) $$ pPrint e
   pPrint (DestructRecord v kvs e) =
     parens $ "destruct-record" <+> pPrint v <+> parens (sep (map (\(k, v) -> pPrint k <+> pPrint v) $ HashMap.toList kvs)) $$ pPrint e
@@ -336,6 +348,7 @@ instance HasFreeVar Exp where
   freevars (Let xs e) = foldr (sans . (._variable)) (freevars e <> foldMap (freevars . (._object)) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
   freevars (Switch v cs e) = freevars v <> foldMap (freevars . snd) cs <> freevars e
+  freevars (SwitchUnboxed v cs e) = freevars v <> foldMap (freevars . snd) cs <> freevars e
   freevars (Destruct v _ xs e) =
     freevars v
       <> HashSet.difference
@@ -360,6 +373,7 @@ instance HasAtom Exp where
     Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Switch v cs e -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
+    SwitchUnboxed v cs e -> SwitchUnboxed <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
     Destruct v con xs e -> Destruct <$> f v <*> pure con <*> pure xs <*> traverseOf atom f e
     DestructRecord v kvs e -> DestructRecord <$> f v <*> pure kvs <*> traverseOf atom f e
     Assign x v e -> Assign x <$> traverseOf atom f v <*> traverseOf atom f e

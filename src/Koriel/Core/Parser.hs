@@ -139,6 +139,20 @@ expr =
             void $ symbol "match"
             Match <$> expr <*> many case_,
           do
+            void $ symbol "switch-unboxed"
+            SwitchUnboxed
+              <$> atom
+              <*> some
+                ( try $ between (symbol "(") (symbol ")") do
+                    (,) <$> (notFollowedBy (symbol "default") >> unboxed) <*> expr
+                )
+              <*> label
+                "default case"
+                ( between (symbol "(") (symbol ")") do
+                    void $ symbol "default"
+                    expr
+                ),
+          do
             void $ symbol "switch"
             Switch
               <$> atom

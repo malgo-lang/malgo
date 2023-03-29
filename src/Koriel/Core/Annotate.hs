@@ -121,6 +121,9 @@ annExp (Match scrutinee alts) = do
 annExp (Switch v cases def) = Switch <$> annAtom v <*> traverse annCase cases <*> annExp def
   where
     annCase (tag, body) = (tag,) <$> annExp body
+annExp (SwitchUnboxed v cases def) = SwitchUnboxed <$> annAtom v <*> traverse annCase cases <*> annExp def
+  where
+    annCase (tag, body) = (tag,) <$> annExp body
 annExp (Destruct v con@(Con _ paramTypes) params body) = do
   v <- annAtom v
   params' <- zipWithM parseId params paramTypes

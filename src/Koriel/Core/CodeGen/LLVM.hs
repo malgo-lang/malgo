@@ -489,6 +489,20 @@ genExp (Switch v bs e) k = mdo
             _ -> error "Switch is not supported for this type."
       genExp e k
       pure (tag', label)
+genExp (SwitchUnboxed v bs e) k = mdo
+  vOpr <- genAtom v
+  br switchBlock
+  labels <- toList <$> traverse (genBranch k) bs
+  defaultLabel <- block
+  genExp e k
+  switchBlock <- block
+  switch vOpr defaultLabel labels
+  where
+    genBranch k (u, e) = do
+      ConstantOperand u' <- genAtom $ Unboxed u
+      label <- block
+      genExp e k
+      pure (u', label)
 genExp (Destruct v (Con _ ts) xs e) k = do
   v <- genAtom v
   addr <- bitcast v (ptr $ StructureType False [i8, StructureType False (map convType ts)])
