@@ -61,6 +61,8 @@ type PrimMap = HashMap Name Operand
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data CodeGenEnv = CodeGenEnv
   { uniqSupply :: UniqSupply,
+    -- In optimization, some variables are defined multiple times.
+    -- So, we need to treat them as as scoped variables.
     _valueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
     _funcMap :: HashMap (Id C.Type) Operand,
@@ -496,7 +498,7 @@ genExp (Destruct v (Con _ ts) xs e) k = do
       (x,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
   local (over valueMap (env <>)) $ genExp e k
 genExp (DestructRecord scrutinee kvs e) k = do
-  scrutinee <- genAtom scrutinee
+  scrutinee <- bitcast ?? convType (C.typeOf scrutinee) =<< genAtom scrutinee
   kvs' <- for (HashMap.toList kvs) \(k, v) -> do
     hashTableGet <- findExt "malgo_hash_table_get" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8] (ptr i8)
     i <- getUniq
@@ -504,7 +506,7 @@ genExp (DestructRecord scrutinee kvs e) k = do
     value <- call hashTableGet [(scrutinee, []), (key, [])]
     value <- bitcast value (convType $ C.typeOf v)
     pure (v, value)
-  local (over valueMap (<> HashMap.fromList kvs')) $ genExp e k
+  local (over valueMap (HashMap.fromList kvs' <>)) $ genExp e k
 genExp (Assign _ v e) k | C.typeOf v == VoidT = genExp v $ \_ -> genExp e k
 genExp (Assign x v e) k = do
   genExp v $ \vOpr -> do

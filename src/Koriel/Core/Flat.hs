@@ -106,6 +106,8 @@ matchToSwitch scrutinee cs@(Unpack {} : _) = do
         Just def -> def
         Nothing -> Error (typeOf $ snd $ Unsafe.head cs')
   pure $ Switch (Var scrutinee) cs' def
+matchToSwitch scrutinee (OpenRecord kvs e : _) = do
+  pure $ DestructRecord (Var scrutinee) kvs e
 matchToSwitch scrutinee cs = pure $ Match (Atom (Var scrutinee)) cs
 
 bindToAssign :: Id Type -> Case (Id Type) -> Exp (Id Type)

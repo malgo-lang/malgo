@@ -153,17 +153,17 @@ expr =
                     expr
                 ),
           do
+            void $ try $ symbol "destruct-record"
+            DestructRecord
+              <$> atom
+              <*> between (symbol "(") (symbol ")") (HashMap.fromList <$> many ((,) <$> ident <*> ident))
+              <*> expr,
+          do
             void $ symbol "destruct"
             Destruct
               <$> atom
               <*> constructor
               <*> between (symbol "(") (symbol ")") (many ident)
-              <*> expr,
-          do
-            void $ symbol "destruct-record"
-            DestructRecord
-              <$> atom
-              <*> between (symbol "(") (symbol ")") (HashMap.fromList <$> many ((,) <$> ident <*> ident))
               <*> expr,
           do
             void $ symbol "="
