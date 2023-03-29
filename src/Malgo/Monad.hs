@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Monad (MalgoEnv (..), CompileMode (..), getWorkspaceDir, newMalgoEnv, MalgoM, runMalgoM) where
+module Malgo.Monad (MalgoEnv (..), CompileMode (..), defaultInlineSize, getWorkspaceDir, newMalgoEnv, MalgoM, runMalgoM) where
 
 import Control.Lens.TH
 import Control.Monad.Extra (fromMaybeM)
@@ -33,6 +33,9 @@ data CompileMode = LLVM deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
 
+defaultInlineSize :: Int
+defaultInlineSize = 10
+
 getWorkspaceDir :: IO FilePath
 getWorkspaceDir = do
   pwd <- getCurrentDirectory
@@ -57,8 +60,8 @@ newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
         ".ll" -> LLVM
         _ -> error "unknown extension"
   let noOptimize = False
-  let lambdaLift = False
-  let inlineSize = 10
+  let lambdaLift = True
+  let inlineSize = defaultInlineSize
   let debugMode = False
   let _modulePaths = modulePaths <> [workspaceDir </> "build", basePath]
   pure MalgoEnv {..}

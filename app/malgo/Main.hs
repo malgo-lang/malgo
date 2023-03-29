@@ -22,7 +22,6 @@ import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath (takeDirectory, (</>))
 import System.FilePath.Lens (extension)
-import Text.Read (read)
 
 data ToLLOpt = ToLLOpt
   { srcPath :: FilePath,
@@ -30,7 +29,6 @@ data ToLLOpt = ToLLOpt
     compileMode :: CompileMode,
     noOptimize :: Bool,
     lambdaLift :: Bool,
-    inlineSize :: Int,
     debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
@@ -50,7 +48,7 @@ main = do
       -- _indexes <- newIORef mempty
       -- let ToLLOpt {..} = opt
       env <- newMalgoEnv opt.srcPath opt._modulePaths Nothing undefined Nothing Nothing
-      Driver.compile opt.srcPath env {Monad.dstPath = opt.dstPath, Monad.compileMode = opt.compileMode, Monad.noOptimize = opt.noOptimize, Monad.lambdaLift = opt.lambdaLift, Monad.inlineSize = opt.inlineSize, Monad.debugMode = opt.debugMode}
+      Driver.compile opt.srcPath env {Monad.dstPath = opt.dstPath, Monad.compileMode = opt.compileMode, Monad.noOptimize = opt.noOptimize, Monad.lambdaLift = opt.lambdaLift, Monad.debugMode = opt.debugMode}
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
@@ -82,7 +80,6 @@ toLLOpt =
       <*> pure LLVM
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
-      <*> fmap read (strOption (long "inline" <> value "10"))
       <*> switch (long "debug-mode")
       <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
   )

@@ -104,7 +104,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-      coreLLOpt <- flat =<< if env.noOptimize then pure coreLL else optimizeProgram uniqSupply moduleName knowns env.inlineSize coreLL
+      coreLLOpt <- flat =<< if env.noOptimize || not env.lambdaLift then pure coreLL else optimizeProgram uniqSupply moduleName knowns env.inlineSize coreLL
       when (env.debugMode && env.lambdaLift && not env.noOptimize) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="

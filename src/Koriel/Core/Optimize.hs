@@ -24,10 +24,14 @@ data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, moduleName :: ModuleNa
 makeFieldsNoPrefix ''OptimizeEnv
 
 -- | Apply a monadic function n times.
-times :: Monad m => Int -> (t -> m t) -> t -> m t
+times :: (Monad m, Eq t) => Int -> (t -> m t) -> t -> m t
 times 0 _ x = pure x
 times n f x
-  | n > 0 = times (n - 1) f =<< f x
+  | n > 0 = do
+      x' <- f x
+      if x == x'
+        then pure x
+        else times (n - 1) f x'
   | otherwise = error $ show n <> " must be a natural number"
 
 -- | 最適化を行う関数
@@ -65,7 +69,7 @@ optimizeExpr state = 10 `times` opt
         >=> optCast
         >=> runFlat . flatExp
 
--- (let ((f (fun ps body))) (f as)) = body[as/ps]
+-- | (let ((f (fun ps body))) (f as)) = body[as/ps]
 optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
 optTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- asks (.uniqSupply)
@@ -81,6 +85,7 @@ newtype CallInlineEnv = CallInlineEnv
   { inlinableMap :: HashMap (Id Type) ([Id Type], Exp (Id Type))
   }
 
+-- | Inline a function call.
 optCallInline ::
   (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) =>
   Exp (Id Type) ->
@@ -98,6 +103,7 @@ optCallInline (Let ds e) = do
   Let ds' <$> optCallInline e
 optCallInline e = pure e
 
+-- | Check if a function is inlinable.
 checkInlinable ::
   (MonadState CallInlineEnv m, MonadReader OptimizeEnv m) =>
   LocalDef (Id Type) ->
@@ -110,21 +116,22 @@ checkInlinable (LocalDef f _ (Fun ps v)) = do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
 checkInlinable _ = pass
 
+-- | Lookup a function in the inlinable map.
 lookupCallInline ::
-  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m, MonadIO m) =>
+  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) =>
   (Id Type -> [Atom (Id Type)] -> Exp (Id Type)) ->
   Id Type ->
   [Atom (Id Type)] ->
   m (Exp (Id Type))
 lookupCallInline call f as = do
   f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
-  us <- asks (.uniqSupply)
-  case f' of
-    Just (ps, v) -> alpha v AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
-    Nothing -> pure $ call f as
+  pure case f' of
+    Just (ps, v) -> foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
+    Nothing -> call f as
 
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
+-- | Inline simple pattern match and pack.
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
 optPackInline (Match (Atom (Var v)) [Unpack con xs body]) = do
   body' <- optPackInline body
@@ -154,6 +161,7 @@ optPackInline (Let ds e) = do
     toPackInlineMap _ = mempty
 optPackInline e = pure e
 
+-- | Remove variable binding if that variable is an alias of another variable.
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
 optVarBind (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optVarBind ds <*> optVarBind e
@@ -163,6 +171,8 @@ optVarBind (Destruct a c xs e) = Destruct a c xs <$> optVarBind e
 optVarBind (Assign x (Atom a) e) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind e = pure e
 
+-- | Remove unused let bindings
+-- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
 removeUnusedLet :: (Monad f, Hashable a) => Exp (Id a) -> f (Exp (Id a))
 removeUnusedLet (Let ds e) = do
   ds' <- traverseOf (traversed . object . appObj) removeUnusedLet ds
@@ -189,6 +199,7 @@ removeUnusedLet (Destruct a c xs e) = Destruct a c xs <$> removeUnusedLet e
 removeUnusedLet (Assign x v e) = Assign x <$> removeUnusedLet v <*> removeUnusedLet e
 removeUnusedLet e = pure e
 
+-- | Remove a cast if it is redundant.
 optIdCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
 optIdCast (Cast t e) | typeOf e == t = pure (Atom e)
 optIdCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optIdCast ds <*> optIdCast e
@@ -198,8 +209,9 @@ optIdCast (Destruct a c xs e) = Destruct a c xs <$> optIdCast e
 optIdCast (Assign x v e) = Assign x <$> optIdCast v <*> optIdCast e
 optIdCast e = pure e
 
--- 効果がはっきりしないので一旦コメントアウト
--- TODO[optCast] ベンチマーク
+-- TODO: ベンチマーク
+
+-- | Specialize a function which is casted to a specific type.
 optCast :: (MonadIO m, MonadReader OptimizeEnv m) => Exp (Id Type) -> m (Exp (Id Type))
 optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
   pts :-> _
