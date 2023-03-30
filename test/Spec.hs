@@ -69,7 +69,7 @@ main =
       parallel $ for_ examples \examplecase -> do
         it ("test " <> examplecase) $ example do
           testNormal ("./examples/malgo" </> examplecase)
-    errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo/error"
+    errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
     describe "Test malgo to-ll (must be error)" do
       parallel $ for_ errorcases \errorcase -> do
         it ("test error case " <> errorcase) $
