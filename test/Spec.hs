@@ -19,6 +19,7 @@ import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
+    byteStringInput,
     nullStream,
     proc,
     readProcessStderr_,
@@ -26,6 +27,7 @@ import System.Process.Typed
     runProcess,
     runProcess_,
     setStderr,
+    setStdin,
     setStdout,
   )
 import Test.Hspec
@@ -62,6 +64,7 @@ main =
           testNormal (testcaseDir </> testcase)
         it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
           testNoNo (testcaseDir </> testcase)
+
         it ("test noopt case " <> testcase <> " (no optimization)") $ example do
           testNoOpt (testcaseDir </> testcase)
         it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
@@ -156,20 +159,25 @@ test testcase postfix lambdaLift noOptimize = do
             <> pkgConfig
             <> [ outputDir </> "libs" </> "runtime.c",
                  outputDir </> takeBaseName testcase -<.> (postfix <> ".ll"),
-                 outputDir </> "libs" </> "libgriff_rustlib.a",
-                 "-lpthread",
-                 "-ldl",
+                 -- outputDir </> "libs" </> "libgriff_rustlib.a",
+                 -- "-lpthread",
+                 -- "-ldl",
                  "-o",
                  outputDir </> takeBaseName testcase -<.> (postfix <> ".out")
                ]
       )
   hPutStr stderr $ convertString err
-  result <- decodeUtf8 <$> readProcessStdout_ (proc (outputDir </> takeBaseName testcase -<.> (postfix <> ".out")) [])
-  [expected] <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
-  if "-- Expected: " <> Text.stripEnd result == expected
+  result <-
+    decodeUtf8
+      <$> readProcessStdout_
+        ( proc (outputDir </> takeBaseName testcase -<.> (postfix <> ".out")) []
+            & setStdin (byteStringInput "Hello")
+        )
+  expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
+  if map ("-- Expected: " <>) (lines $ Text.stripEnd result) == expected
     then pass
     else do
-      Text.hPutStrLn stderr $ "Expected: " <> expected
+      Text.hPutStrLn stderr $ "Expected: " <> Text.concat expected
       Text.hPutStrLn stderr $ "Actual: " <> result
       exitFailure
 
