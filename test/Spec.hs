@@ -37,6 +37,12 @@ import Test.Hspec
     shouldThrow,
   )
 
+testcaseDir :: FilePath
+testcaseDir = "./test/testcases/malgo"
+
+outputDir :: FilePath
+outputDir = "/tmp/malgo_test"
+
 main :: IO ()
 main =
   hspec do
@@ -47,17 +53,17 @@ main =
       setupRuntime
       setupBuiltin
       setupPrelude
-    testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./testcases/malgo"
+    testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
     describe "Test malgo to-ll" do
       parallel $ for_ testcases \testcase -> do
         it ("test usual case " <> testcase) $ example do
-          testNormal ("./testcases/malgo" </> testcase)
+          testNormal (testcaseDir </> testcase)
         it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
-          testNoNo ("./testcases/malgo" </> testcase)
+          testNoNo (testcaseDir </> testcase)
         it ("test noopt case " <> testcase <> " (no optimization)") $ example do
-          testNoOpt ("./testcases/malgo" </> testcase)
+          testNoOpt (testcaseDir </> testcase)
         it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
-          testNoLift ("./testcases/malgo" </> testcase)
+          testNoLift (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" do
       parallel $ for_ examples \examplecase -> do
@@ -67,26 +73,23 @@ main =
     describe "Test malgo to-ll (must be error)" do
       parallel $ for_ errorcases \errorcase -> do
         it ("test error case " <> errorcase) $
-          testError ("./testcases/malgo/error" </> errorcase) `shouldThrow` anyException
-
-testDirectory :: FilePath
-testDirectory = "/tmp/malgo_test"
+          testError (testcaseDir </> "error" </> errorcase) `shouldThrow` anyException
 
 setupTestDir :: IO ()
 setupTestDir = do
   -- create /tmp/malgo-test
-  createDirectoryIfMissing True testDirectory
-  createDirectoryIfMissing True (testDirectory </> "libs")
+  createDirectoryIfMissing True outputDir
+  createDirectoryIfMissing True (outputDir </> "libs")
 
 -- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
 setupBuiltin :: IO ()
 setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" (testDirectory </> "libs/Builtin.ll") [testDirectory </> "libs"] False False
+  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False
 
 -- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
 setupPrelude :: IO ()
 setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" (testDirectory </> "libs/Prelude.ll") [testDirectory </> "libs"] False False
+  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
@@ -94,8 +97,8 @@ setupRuntime = do
   setCurrentDirectory "./griff"
   runProcess_ $ proc "cargo" ["build", "--release"]
   setCurrentDirectory "../"
-  copyFile "./griff/target/release/libgriff_rustlib.a" (testDirectory </> "libs/libgriff_rustlib.a")
-  copyFile "./runtime/malgo/runtime.c" (testDirectory </> "libs/runtime.c")
+  copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
+  copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
@@ -136,8 +139,8 @@ getClangCommand =
 
 test :: FilePath -> String -> Bool -> Bool -> IO ()
 test testcase postfix lambdaLift noOptimize = do
-  let llPath = testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll")
-  compile testcase llPath [testDirectory </> "libs"] lambdaLift noOptimize
+  let llPath = outputDir </> takeBaseName testcase -<.> (postfix <> ".ll")
+  compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
@@ -149,20 +152,20 @@ test testcase postfix lambdaLift noOptimize = do
               "-lm"
             ]
             <> pkgConfig
-            <> [ testDirectory </> "libs" </> "runtime.c",
-                 testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll"),
-                 testDirectory </> "libs" </> "libgriff_rustlib.a",
+            <> [ outputDir </> "libs" </> "runtime.c",
+                 outputDir </> takeBaseName testcase -<.> (postfix <> ".ll"),
+                 outputDir </> "libs" </> "libgriff_rustlib.a",
                  "-lpthread",
                  "-ldl",
                  "-o",
-                 testDirectory </> takeBaseName testcase -<.> (postfix <> ".out")
+                 outputDir </> takeBaseName testcase -<.> (postfix <> ".out")
                ]
       )
   hPutStr stderr $ convertString err
 
 testError :: FilePath -> IO ()
 testError testcase = do
-  compile testcase (testDirectory </> takeBaseName testcase -<.> ".ll") [testDirectory </> "libs"] False False
+  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False
 
 testNormal :: FilePath -> IO ()
 testNormal testcase = test testcase "" True False
