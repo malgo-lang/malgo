@@ -3,6 +3,8 @@
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
 import Data.String.Conversions (convertString)
+import Data.Text qualified as Text
+import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Annotate qualified as Koriel
@@ -162,6 +164,14 @@ test testcase postfix lambdaLift noOptimize = do
                ]
       )
   hPutStr stderr $ convertString err
+  result <- decodeUtf8 <$> readProcessStdout_ (proc (outputDir </> takeBaseName testcase -<.> (postfix <> ".out")) [])
+  [expected] <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
+  if "-- Expected: " <> Text.stripEnd result == expected
+    then pass
+    else do
+      Text.hPutStrLn stderr $ "Expected: " <> expected
+      Text.hPutStrLn stderr $ "Actual: " <> result
+      exitFailure
 
 testError :: FilePath -> IO ()
 testError testcase = do

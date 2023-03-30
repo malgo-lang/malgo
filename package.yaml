@@ -102,3 +102,11 @@ tests:
       - typed-process
       - hspec
       - prettyprinter
+
+benchmarks:
+  malgo-bench:
+    main: Main.hs
+    source-dirs: benchmarks
+    dependencies:
+      - malgo
+      - typed-process

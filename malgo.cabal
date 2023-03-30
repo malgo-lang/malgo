@@ -231,3 +231,59 @@ test-suite malgo-test
     , unordered-containers
     , witherable
   default-language: GHC2021
+
+benchmark malgo-bench
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      benchmarks
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DerivingStrategies
+      FunctionalDependencies
+      LambdaCase
+      MultiWayIf
+      NoImplicitPrelude
+      OverloadedStrings
+      RecordWildCards
+      StrictData
+      TypeFamilies
+      ViewPatterns
+      OverloadedRecordDot
+      NoFieldSelectors
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS
+  build-depends:
+      Glob
+    , aeson
+    , base
+    , binary
+    , binary-instances
+    , containers
+    , diagnose
+    , directory
+    , extra
+    , filepath
+    , generic-data
+    , hashable
+    , lens
+    , llvm-hs
+    , llvm-hs-pure
+    , lsp
+    , lsp-types
+    , megaparsec
+    , mtl
+    , optparse-applicative
+    , parser-combinators
+    , pretty
+    , relude >=1.0.0.0
+    , string-conversions
+    , text
+    , transformers
+    , typed-process
+    , unordered-containers
+    , witherable
+  default-language: GHC2021
