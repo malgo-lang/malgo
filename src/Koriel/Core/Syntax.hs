@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 -- |
@@ -25,14 +26,21 @@ module Koriel.Core.Syntax
     appCase,
     appProgram,
     freevars,
+    _Unpack,
+    _OpenRecord,
+    _Exact,
+    _Bind,
   )
 where
 
-import Control.Lens (Lens', Traversal', sans, traverseOf, traversed, _3, _4)
+import Control.Lens (Lens', Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
+import Data.Char (showLitChar)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
+import Data.String.Conversions
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Generic.Data
 import Koriel.Core.Op
@@ -73,8 +81,8 @@ instance Pretty Unboxed where
   pPrint (Int64 x) = pPrint x <> "_i64"
   pPrint (Float x) = text (showHex (castFloatToWord32 x) "") <> "_f32" <+> "#|" <> pPrint x <> "|#"
   pPrint (Double x) = text (showHex (castDoubleToWord64 x) "") <> "_f64" <+> "#|" <> pPrint x <> "|#"
-  pPrint (Char x) = quotes (pPrint x)
-  pPrint (String x) = doubleQuotes (pPrint x)
+  pPrint (Char x) = quotes (text $ convertString $ showLitChar x "")
+  pPrint (String x) = doubleQuotes (text $ concatMap (`showLitChar` "") $ convertString @_ @String x)
   pPrint (Bool True) = "True#"
   pPrint (Bool False) = "False#"
 
@@ -178,7 +186,7 @@ data Case a
   | -- | record pattern
     OpenRecord (HashMap Text a) (Exp a)
   | -- | unboxed value pattern
-    Switch Unboxed (Exp a)
+    Exact Unboxed (Exp a)
   | -- | variable pattern
     Bind a Type (Exp a)
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
@@ -187,7 +195,7 @@ data Case a
 instance HasType a => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
   typeOf (OpenRecord _ e) = typeOf e
-  typeOf (Switch _ e) = typeOf e
+  typeOf (Exact _ e) = typeOf e
   typeOf (Bind _ _ e) = typeOf e
 
 instance (Pretty a) => Pretty (Case a) where
@@ -195,20 +203,20 @@ instance (Pretty a) => Pretty (Case a) where
     parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
   pPrint (OpenRecord pat e) =
     parens $ sep ["open", parens $ sep $ map (\(k, v) -> pPrint k <+> pPrint v) $ HashMap.toList pat, pPrint e]
-  pPrint (Switch u e) = parens $ sep ["switch" <+> pPrint u, pPrint e]
+  pPrint (Exact u e) = parens $ sep ["exact" <+> pPrint u, pPrint e]
   pPrint (Bind x t e) = parens $ sep ["bind", pPrint x, pPrint t, pPrint e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
   freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
-  freevars (Switch _ e) = freevars e
+  freevars (Exact _ e) = freevars e
   freevars (Bind x _ e) = sans x $ freevars e
 
 instance HasAtom Case where
   atom f = \case
     Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
     OpenRecord pat e -> OpenRecord pat <$> traverseOf atom f e
-    Switch u e -> Switch u <$> traverseOf atom f e
+    Exact u e -> Exact u <$> traverseOf atom f e
     Bind a t e -> Bind a t <$> traverseOf atom f e
 
 -- | expressions
@@ -239,6 +247,26 @@ data Exp a
     Let [LocalDef a] (Exp a)
   | -- | pattern matching
     Match (Exp a) [Case a]
+  | -- | switch expression
+    Switch
+      (Atom a)
+      [(Tag, Exp a)]
+      -- ^ cases
+      (Exp a)
+      -- ^ default case
+  | -- | switch by unboxed value
+    SwitchUnboxed
+      (Atom a)
+      [(Unboxed, Exp a)]
+      -- ^ cases
+      (Exp a)
+      -- ^ default case
+  | -- | destruct a value
+    Destruct (Atom a) Con [a] (Exp a)
+  | -- | destruct a record
+    DestructRecord (Atom a) (HashMap Text a) (Exp a)
+  | -- | Assign a value to a variable
+    Assign a (Exp a) (Exp a)
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
@@ -279,6 +307,13 @@ instance HasType a => HasType (Exp a) where
   typeOf (Let _ e) = typeOf e
   typeOf (Match _ (c : _)) = typeOf c
   typeOf (Match _ []) = error "Match must have at least one case"
+  typeOf (Switch _ ((_, e) : _) _) = typeOf e
+  typeOf (Switch _ [] e) = typeOf e
+  typeOf (SwitchUnboxed _ ((_, e) : _) _) = typeOf e
+  typeOf (SwitchUnboxed _ [] e) = typeOf e
+  typeOf (Destruct _ _ _ e) = typeOf e
+  typeOf (DestructRecord _ _ e) = typeOf e
+  typeOf (Assign _ _ e) = typeOf e
   typeOf (Error t) = t
 
 instance (Pretty a) => Pretty (Exp a) where
@@ -291,6 +326,16 @@ instance (Pretty a) => Pretty (Exp a) where
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
+  pPrint (Switch v cs e) = parens $ "switch" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
+    where
+      pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
+  pPrint (SwitchUnboxed v cs e) = parens $ "switch-unboxed" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
+    where
+      pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
+  pPrint (Destruct v con xs e) = parens $ "destruct" <+> pPrint v <+> pPrint con <+> parens (sep (map pPrint xs)) $$ pPrint e
+  pPrint (DestructRecord v kvs e) =
+    parens $ "destruct-record" <+> pPrint v <+> parens (sep (map (\(k, v) -> pPrint k <+> pPrint v) $ HashMap.toList kvs)) $$ pPrint e
+  pPrint (Assign x v e) = parens $ "=" <+> pPrint x <+> pPrint v $$ pPrint e
   pPrint (Error t) = parens $ "ERROR" <+> pPrint t
 
 instance HasFreeVar Exp where
@@ -302,6 +347,19 @@ instance HasFreeVar Exp where
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . (._variable)) (freevars e <> foldMap (freevars . (._object)) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
+  freevars (Switch v cs e) = freevars v <> foldMap (freevars . snd) cs <> freevars e
+  freevars (SwitchUnboxed v cs e) = freevars v <> foldMap (freevars . snd) cs <> freevars e
+  freevars (Destruct v _ xs e) =
+    freevars v
+      <> HashSet.difference
+        (freevars e)
+        (HashSet.fromList xs)
+  freevars (DestructRecord v kvs e) =
+    freevars v
+      <> HashSet.difference
+        (freevars e)
+        (HashSet.fromList $ HashMap.elems kvs)
+  freevars (Assign x v e) = freevars v <> sans x (freevars e)
   freevars (Error _) = mempty
 
 instance HasAtom Exp where
@@ -314,6 +372,11 @@ instance HasAtom Exp where
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
+    Switch v cs e -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
+    SwitchUnboxed v cs e -> SwitchUnboxed <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
+    Destruct v con xs e -> Destruct <$> f v <*> pure con <*> pure xs <*> traverseOf atom f e
+    DestructRecord v kvs e -> DestructRecord <$> f v <*> pure kvs <*> traverseOf atom f e
+    Assign x v e -> Assign x <$> traverseOf atom f v <*> traverseOf atom f e
     Error t -> pure (Error t)
 
 -- | toplevel function definitions
@@ -347,7 +410,7 @@ appCase :: Traversal' (Case a) (Exp a)
 appCase f = \case
   Unpack con ps e -> Unpack con ps <$> f e
   OpenRecord kvs e -> OpenRecord kvs <$> f e
-  Switch u e -> Switch u <$> f e
+  Exact u e -> Exact u <$> f e
   Bind x t e -> Bind x t <$> f e
 
 appProgram :: Traversal' (Program a) (Exp a)
@@ -373,7 +436,8 @@ bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => 
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e -> Match v [Bind x (typeOf x) e]
+  DefBuilderT $ tell $ Endo $ \e ->
+    Assign x v e
   pure (Var x)
 
 cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -382,7 +446,7 @@ cast ty e
   | otherwise = do
       v <- bind e
       x <- newTemporalId "cast" ty
-      DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) [Bind x ty e]
+      DefBuilderT $ tell $ Endo $ \e -> Assign x (Cast ty v) e
       pure (Var x)
 
 -- `destruct` is convenient when treating types that have only one constructor.
@@ -397,3 +461,5 @@ cast ty e
 --   vs <- traverse (newTemporalId "p") ts
 --   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
 --   pure $ map Var vs
+
+makePrisms ''Case

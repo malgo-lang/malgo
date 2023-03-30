@@ -1,4 +1,6 @@
 {-# LANGUAGE CPP #-}
+-- For `undefined`
+{-# OPTIONS_GHC -Wno-deprecations #-}
 
 import Data.String.Conversions (convertString)
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -17,6 +19,7 @@ import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
     nullStream,
     proc,
+    readProcessStderr_,
     readProcessStdout_,
     runProcess,
     runProcess_,
@@ -97,7 +100,7 @@ setupRuntime = do
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
 compile src dst modPaths lambdaLift noOptimize = do
-  malgoEnv <- newMalgoEnv src modPaths Nothing Nothing Nothing
+  malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
   malgoEnv <-
     pure
       malgoEnv
@@ -138,22 +141,24 @@ test testcase postfix lambdaLift noOptimize = do
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
-  runProcess_
-    ( proc
-        clang
-        $ [ "-Wno-override-module",
-            "-lm"
-          ]
-          <> pkgConfig
-          <> [ testDirectory </> "libs" </> "runtime.c",
-               testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll"),
-               testDirectory </> "libs" </> "libgriff_rustlib.a",
-               "-lpthread",
-               "-ldl",
-               "-o",
-               testDirectory </> takeBaseName testcase -<.> (postfix <> ".out")
-             ]
-    )
+  err <-
+    readProcessStderr_
+      ( proc
+          clang
+          $ [ "-Wno-override-module",
+              "-lm"
+            ]
+            <> pkgConfig
+            <> [ testDirectory </> "libs" </> "runtime.c",
+                 testDirectory </> takeBaseName testcase -<.> (postfix <> ".ll"),
+                 testDirectory </> "libs" </> "libgriff_rustlib.a",
+                 "-lpthread",
+                 "-ldl",
+                 "-o",
+                 testDirectory </> takeBaseName testcase -<.> (postfix <> ".out")
+               ]
+      )
+  hPutStr stderr $ convertString err
 
 testError :: FilePath -> IO ()
 testError testcase = do

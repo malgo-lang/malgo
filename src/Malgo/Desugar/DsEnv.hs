@@ -21,5 +21,5 @@ data DsEnv = DsEnv
 
 makeFieldsNoPrefix ''DsEnv
 
-makeDsEnv :: ModuleName -> MalgoEnv -> DsEnv
-makeDsEnv moduleName MalgoEnv {..} = DsEnv {..}
+makeDsEnv :: MalgoEnv -> DsEnv
+makeDsEnv MalgoEnv {..} = DsEnv {..}

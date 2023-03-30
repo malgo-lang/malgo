@@ -113,7 +113,7 @@ object = between (symbol "(") (symbol ")") do
 -- | Parse an expression.
 expr :: Parser (Exp Text)
 expr =
-  do
+  label "expression" do
     Atom <$> atom
     <|> between (symbol "(") (symbol ")") do
       asum
@@ -137,7 +137,54 @@ expr =
             Let <$> between (symbol "(") (symbol ")") (many localDef) <*> expr,
           do
             void $ symbol "match"
-            Match <$> expr <*> many case_
+            Match <$> expr <*> many case_,
+          do
+            void $ symbol "switch-unboxed"
+            SwitchUnboxed
+              <$> atom
+              <*> some
+                ( try $ between (symbol "(") (symbol ")") do
+                    (,) <$> (notFollowedBy (symbol "default") >> unboxed) <*> expr
+                )
+              <*> label
+                "default case"
+                ( between (symbol "(") (symbol ")") do
+                    void $ symbol "default"
+                    expr
+                ),
+          do
+            void $ symbol "switch"
+            Switch
+              <$> atom
+              <*> some
+                ( try $ between (symbol "(") (symbol ")") do
+                    (,) <$> (notFollowedBy (symbol "default") >> tag) <*> expr
+                )
+              <*> label
+                "default case"
+                ( between (symbol "(") (symbol ")") do
+                    void $ symbol "default"
+                    expr
+                ),
+          do
+            void $ try $ symbol "destruct-record"
+            DestructRecord
+              <$> atom
+              <*> between (symbol "(") (symbol ")") (HashMap.fromList <$> many ((,) <$> ident <*> ident))
+              <*> expr,
+          do
+            void $ symbol "destruct"
+            Destruct
+              <$> atom
+              <*> constructor
+              <*> between (symbol "(") (symbol ")") (many ident)
+              <*> expr,
+          do
+            void $ symbol "="
+            Assign <$> ident <*> expr <*> expr,
+          do
+            void $ symbol "ERROR"
+            Error <$> type_
         ]
 
 -- | Parse a local definition.
@@ -163,8 +210,8 @@ case_ = between (symbol "(") (symbol ")") do
           pure (k, v)
         OpenRecord (HashMap.fromList kvs) <$> expr,
       do
-        void $ symbol "switch"
-        Switch <$> unboxed <*> expr,
+        void $ symbol "exact"
+        Exact <$> unboxed <*> expr,
       do
         void $ symbol "bind"
         Bind <$> ident <*> type_ <*> expr
@@ -172,7 +219,7 @@ case_ = between (symbol "(") (symbol ")") do
 
 -- | Parse a type.
 type_ :: Parser Type
-type_ =
+type_ = label "type" do
   between (symbol "(") (symbol ")") withParams
     <|> simple
   where
@@ -215,9 +262,12 @@ type_ =
 -- | Parse a constructor.
 constructor :: Parser Con
 constructor = between (symbol "(") (symbol ")") do
-  tag <- tuple <|> data_
+  tag <- tag
   args <- many type_
   pure $ Con tag args
+
+tag :: Parser Tag
+tag = tuple <|> data_
   where
     tuple = void (symbol "Tuple#") >> pure Tuple
     data_ = Data <$> ident

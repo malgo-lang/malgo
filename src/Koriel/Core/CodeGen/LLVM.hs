@@ -51,6 +51,7 @@ import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import Malgo.Desugar.DsState (DsState (..), HasNameEnv (nameEnv))
 import Malgo.Monad (MalgoEnv (..))
+import Relude.Unsafe qualified as Unsafe
 
 instance Hashable Name
 
@@ -60,6 +61,8 @@ type PrimMap = HashMap Name Operand
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data CodeGenEnv = CodeGenEnv
   { uniqSupply :: UniqSupply,
+    -- In optimization, some variables are defined multiple times.
+    -- So, we need to treat them as as scoped variables.
     _valueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
     _funcMap :: HashMap (Id C.Type) Operand,
@@ -422,6 +425,9 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     genOp Op.And = LLVM.IRBuilder.and
     genOp Op.Or = LLVM.IRBuilder.or
     i1ToBool i1opr = zext i1opr i8
+genExp (Cast ty x) k = do
+  xOpr <- genAtom x
+  k =<< bitcast xOpr (convType ty)
 genExp (Let xs e) k = do
   env <- foldMapM prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
@@ -438,6 +444,7 @@ genExp (Let xs e) k = do
               ]
           )
     prepare _ = pure mempty
+-- These `match` cases are not necessary.
 genExp (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
 genExp (Match e (Bind x _ body : _)) k = genExp e $ \eOpr -> do
   eOpr <- bitcast eOpr (convType $ C.typeOf e)
@@ -462,9 +469,64 @@ genExp (Match e cs) k
         RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
         _ -> pure eOpr'
       switch tagOpr defaultLabel labels
-genExp (Cast ty x) k = do
-  xOpr <- genAtom x
-  k =<< bitcast xOpr (convType ty)
+genExp (Switch v bs e) k = mdo
+  vOpr <- genAtom v
+  br switchBlock
+  labels <- toList <$> traverse (genBranch (constructorList v) k) bs
+  defaultLabel <- block
+  genExp e k
+  switchBlock <- block
+  tagOpr <- case C.typeOf v of
+    SumT _ -> gepAndLoad vOpr [int32 0, int32 0]
+    RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+    _ -> pure vOpr
+  switch tagOpr defaultLabel labels
+  where
+    genBranch cs k (tag, e) = do
+      label <- block
+      let tag' = case C.typeOf v of
+            SumT _ -> C.Int 8 $ fromIntegral $ Unsafe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
+            RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
+            _ -> error "Switch is not supported for this type."
+      genExp e k
+      pure (tag', label)
+genExp (SwitchUnboxed v bs e) k = mdo
+  vOpr <- genAtom v
+  br switchBlock
+  labels <- toList <$> traverse (genBranch k) bs
+  defaultLabel <- block
+  genExp e k
+  switchBlock <- block
+  switch vOpr defaultLabel labels
+  where
+    genBranch k (u, e) = do
+      ConstantOperand u' <- genAtom $ Unboxed u
+      label <- block
+      genExp e k
+      pure (u', label)
+genExp (Destruct v (Con _ ts) xs e) k = do
+  v <- genAtom v
+  addr <- bitcast v (ptr $ StructureType False [i8, StructureType False (map convType ts)])
+  payloadAddr <- gep addr [int32 0, int32 1]
+  env <-
+    HashMap.fromList <$> ifor xs \i x -> do
+      (x,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
+  local (over valueMap (env <>)) $ genExp e k
+genExp (DestructRecord scrutinee kvs e) k = do
+  scrutinee <- bitcast ?? convType (C.typeOf scrutinee) =<< genAtom scrutinee
+  kvs' <- for (HashMap.toList kvs) \(k, v) -> do
+    hashTableGet <- findExt "malgo_hash_table_get" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8] (ptr i8)
+    i <- getUniq
+    key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
+    value <- call hashTableGet [(scrutinee, []), (key, [])]
+    value <- bitcast value (convType $ C.typeOf v)
+    pure (v, value)
+  local (over valueMap (HashMap.fromList kvs' <>)) $ genExp e k
+genExp (Assign _ v e) k | C.typeOf v == VoidT = genExp v $ \_ -> genExp e k
+genExp (Assign x v e) k = do
+  genExp v $ \vOpr -> do
+    vOpr <- bitcast vOpr (convType $ C.typeOf v)
+    local (over valueMap $ at x ?~ vOpr) $ genExp e k
 genExp (Error _) _ = unreachable
 
 -- | Get constructor list from the type of scrutinee.
@@ -493,7 +555,7 @@ genCase scrutinee cs k = \case
     label <- block
     void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
     pure $ Left label
-  Switch u e -> do
+  Exact u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
     label <- block
     genExp e k

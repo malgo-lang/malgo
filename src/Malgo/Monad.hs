@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Monad (MalgoEnv (..), CompileMode (..), getWorkspaceDir, newMalgoEnv, MalgoM, runMalgoM) where
+module Malgo.Monad (MalgoEnv (..), CompileMode (..), defaultInlineSize, getWorkspaceDir, newMalgoEnv, MalgoM, runMalgoM) where
 
 import Control.Lens.TH
 import Control.Monad.Extra (fromMaybeM)
@@ -16,6 +16,8 @@ import System.FilePath (takeBaseName, takeExtension, (</>))
 
 data MalgoEnv = MalgoEnv
   { uniqSupply :: UniqSupply,
+    -- In 'Malgo.Driver.compile' function, 'moduleName' can be 'undefined'.
+    moduleName :: ~ModuleName,
     _interfaces :: IORef (HashMap ModuleName Interface),
     _indexes :: IORef (HashMap ModuleName Index),
     dstPath :: FilePath,
@@ -31,6 +33,9 @@ data CompileMode = LLVM deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
 
+defaultInlineSize :: Int
+defaultInlineSize = 10
+
 getWorkspaceDir :: IO FilePath
 getWorkspaceDir = do
   pwd <- getCurrentDirectory
@@ -40,10 +45,11 @@ newMalgoEnv ::
   FilePath ->
   [FilePath] ->
   Maybe UniqSupply ->
+  ModuleName ->
   Maybe (IORef (HashMap ModuleName Interface)) ->
   Maybe (IORef (HashMap ModuleName Index)) ->
   IO MalgoEnv
-newMalgoEnv srcFile modulePaths mUniqSupply mInterfaces mIndexes = do
+newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
   uniqSupply <- fromMaybeM (UniqSupply <$> newIORef 0) (pure mUniqSupply)
   _interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
   _indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
@@ -54,8 +60,8 @@ newMalgoEnv srcFile modulePaths mUniqSupply mInterfaces mIndexes = do
         ".ll" -> LLVM
         _ -> error "unknown extension"
   let noOptimize = False
-  let lambdaLift = False
-  let inlineSize = 10
+  let lambdaLift = True
+  let inlineSize = defaultInlineSize
   let debugMode = False
   let _modulePaths = modulePaths <> [workspaceDir </> "build", basePath]
   pure MalgoEnv {..}

@@ -1,12 +1,11 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE TemplateHaskell #-}
 
 module Koriel.Core.LambdaLift
   ( lambdalift,
   )
 where
 
-import Control.Lens (At (at), Lens', lens, makeFieldsNoPrefix, traverseOf, traversed, use, view, (<>=), (?=), _1)
+import Control.Lens (At (at), Lens', lens, traverseOf, traversed, use, view, (<>=), (?=), _1, _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Koriel.Core.Flat
@@ -28,11 +27,10 @@ funcs = lens (._funcs) (\l x -> l {_funcs = x})
 knowns :: Lens' LambdaLiftState (HashSet (Id Type))
 knowns = lens (._knowns) (\l x -> l {_knowns = x})
 
-newtype LambdaLiftEnv = LambdaLiftEnv
-  { uniqSupply :: UniqSupply
+data LambdaLiftEnv = LambdaLiftEnv
+  { uniqSupply :: UniqSupply,
+    moduleName :: ModuleName
   }
-
-makeFieldsNoPrefix ''LambdaLiftEnv
 
 data DefEnv = DefEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName}
 
@@ -40,11 +38,12 @@ def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) =>
 def name xs e = do
   uniqSupply <- asks (.uniqSupply)
   f <- runReaderT (newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)) (DefEnv uniqSupply name.moduleName)
+  -- knowns . at f ?= ()
   funcs . at f ?= (xs, typeOf f, e)
   pure f
 
-lambdalift :: MonadIO m => UniqSupply -> Program (Id Type) -> m (Program (Id Type))
-lambdalift uniqSupply Program {..} =
+lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type), HashSet (Id Type))
+lambdalift uniqSupply moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns} $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
@@ -52,18 +51,27 @@ lambdalift uniqSupply Program {..} =
       knowns <>= HashSet.fromList (map (view _1) topFuns)
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift topVars
-      traverseOf appProgram (pure . flat) $
-        Program
-          topVars
-          ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
-              HashMap.toList _funcs
-          )
-          extFuns
+      prog <-
+        flat $
+          Program
+            topVars
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
+                HashMap.toList _funcs
+            )
+            extFuns
+      prog <- appProgram toDirect prog
+      (prog,) <$> use knowns
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+llift (Atom a) = pure $ Atom a
 llift (Call (Var f) xs) = do
   ks <- use knowns
   if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
+llift (Call f xs) = pure $ Call f xs
+llift (CallDirect f xs) = pure $ CallDirect f xs
+llift (RawCall f t xs) = pure $ RawCall f t xs
+llift (BinOp op x y) = pure $ BinOp op x y
+llift (Cast t x) = pure $ Cast t x
 llift (Let [LocalDef n t (Fun xs call@Call {})] e) = do
   call' <- llift call
   Let [LocalDef n t (Fun xs call')] <$> llift e
@@ -90,4 +98,31 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
-llift e = pure e
+llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> llift e
+llift (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) llift cs <*> llift e
+llift (Destruct a c xs e) = Destruct a c xs <$> llift e
+llift (DestructRecord a xs e) = DestructRecord a xs <$> llift e
+llift (Assign x v e) = Assign x v <$> llift e
+llift (Error t) = pure $ Error t
+
+-- | `toDirect` converts `Call` to `CallDirect` if the callee is known.
+-- If `f` is a known function, we must call it directly.
+-- These conversions are almost done in `llift`, but not all of them.
+toDirect :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+toDirect (Atom a) = pure $ Atom a
+toDirect (Call (Var f) xs) = do
+  ks <- use knowns
+  if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
+toDirect (Call f xs) = pure $ Call f xs
+toDirect (CallDirect f xs) = pure $ CallDirect f xs
+toDirect (RawCall f t xs) = pure $ RawCall f t xs
+toDirect (BinOp op x y) = pure $ BinOp op x y
+toDirect (Cast t x) = pure $ Cast t x
+toDirect (Let ds e) = Let <$> traverseOf (traversed . object . appObj) toDirect ds <*> toDirect e
+toDirect (Match e cs) = Match <$> toDirect e <*> traverseOf (traversed . appCase) toDirect cs
+toDirect (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) toDirect cs <*> toDirect e
+toDirect (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) toDirect cs <*> toDirect e
+toDirect (Destruct a c xs e) = Destruct a c xs <$> toDirect e
+toDirect (DestructRecord a xs e) = DestructRecord a xs <$> toDirect e
+toDirect (Assign x v e) = Assign x <$> toDirect v <*> toDirect e
+toDirect (Error t) = pure $ Error t

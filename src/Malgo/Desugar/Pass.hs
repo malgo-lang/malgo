@@ -32,9 +32,9 @@ desugar ::
   TcEnv ->
   Module (Malgo 'Refine) ->
   m (DsState, Program (Id C.Type))
-desugar tcEnv (Module modName ds) = do
+desugar tcEnv (Module _ ds) = do
   malgoEnv <- ask
-  runReaderT ?? makeDsEnv modName malgoEnv $ do
+  runReaderT ?? makeDsEnv malgoEnv $ do
     (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
     let ds'' = ds' <> dsEnv._globalDefs
     let varDefs = mapMaybe (preview _VarDef) ds''
@@ -298,15 +298,16 @@ curryFun isToplevel hint ps e = curryFun' ps []
   where
     curryFun' [] _ = error "length ps >= 1"
     curryFun' [x] as = do
-      fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e) -- =<< view moduleName
       if isToplevel
         then do
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
+          fun <- newExternalId (hint <> "_curry") (C.typeOf $ Fun ps e) -- =<< view moduleName
           globalDefs <>= [FunDef fun ps (C.typeOf fun) e]
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do
+          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e) -- =<< view moduleName
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
           pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps e)] body)
     curryFun' (x : xs) as = do

@@ -3,6 +3,7 @@ module Koriel.Core.Annotate (annotate) where
 import Control.Lens (ifor)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as Text
+import Data.Traversable (for)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -111,12 +112,50 @@ annExp (Match scrutinee alts) = do
         body <- annExp body
         pure $ OpenRecord fields' body
     annCase ty OpenRecord {} = error $ "annCase: " <> show ty
-    annCase _ (Switch value body) = Switch value <$> annExp body
+    annCase _ (Exact value body) = Exact value <$> annExp body
     annCase _ (Bind var ty body) = do
       var' <- parseId var ty
       local (\ctx -> ctx {nameEnv = HashMap.insert var var' ctx.nameEnv}) do
         body <- annExp body
         pure $ Bind var' ty body
+annExp (Switch v cases def) = Switch <$> annAtom v <*> traverse annCase cases <*> annExp def
+  where
+    annCase (tag, body) = (tag,) <$> annExp body
+annExp (SwitchUnboxed v cases def) = SwitchUnboxed <$> annAtom v <*> traverse annCase cases <*> annExp def
+  where
+    annCase (tag, body) = (tag,) <$> annExp body
+annExp (Destruct v con@(Con _ paramTypes) params body) = do
+  v <- annAtom v
+  params' <- zipWithM parseId params paramTypes
+  local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
+    body <- annExp body
+    pure $ Destruct v con params' body
+annExp (DestructRecord v kvs body) = do
+  v <- annAtom v
+  case typeOf v of
+    RecordT kts -> do
+      kvs' <-
+        HashMap.fromList <$> for (HashMap.toList kvs) \(k, v) -> do
+          let ty = HashMap.lookupDefault (error $ "annExp[DestructRecord]: " <> show k) k kts
+          v' <- parseId v ty
+          pure (k, v')
+      local
+        ( \ctx ->
+            ctx
+              { nameEnv =
+                  HashMap.fromList (HashMap.elems (HashMap.intersectionWith (,) kvs kvs')) <> ctx.nameEnv
+              }
+        )
+        do
+          body <- annExp body
+          pure $ DestructRecord v kvs' body
+    ty -> error $ "annExp[DestructRecord]: " <> show ty
+annExp (Assign x v e) = do
+  v' <- annExp v
+  x' <- parseId x (typeOf v')
+  local (\ctx -> ctx {nameEnv = HashMap.insert x x' ctx.nameEnv}) do
+    e <- annExp e
+    pure $ Assign x' v' e
 annExp (Error ty) = pure $ Error ty
 
 annAtom :: HasCallStack => MonadReader Context m => Atom Text -> m (Atom (Id Type))

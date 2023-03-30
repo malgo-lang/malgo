@@ -7,15 +7,15 @@ module Koriel.Core.Alpha
   )
 where
 
+import Control.Exception.Extra (assertIO)
 import Control.Lens (makeFieldsNoPrefix, traverseOf)
 import Data.HashMap.Strict qualified as HashMap
+import Data.String.Conversions (convertString)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Control.Exception.Extra (assertIO)
-import Data.String.Conversions (convertString)
 import Numeric (showHex)
 
 data AlphaEnv = AlphaEnv {uniqSupply :: UniqSupply, subst :: HashMap (Id Type) (Atom (Id Type))}
@@ -48,17 +48,33 @@ cloneId Id {..} = do
   pure Id {..}
 
 alphaExp :: (MonadReader AlphaEnv f, MonadIO f) => Exp (Id Type) -> f (Exp (Id Type))
+alphaExp (Atom x) = Atom <$> alphaAtom x
+alphaExp (Call f xs) = Call <$> alphaAtom f <*> traverse alphaAtom xs
 alphaExp (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
+alphaExp (RawCall n t xs) = RawCall n t <$> traverse alphaAtom xs
+alphaExp (BinOp op x y) = BinOp op <$> alphaAtom x <*> alphaAtom y
+alphaExp (Cast t x) = Cast t <$> alphaAtom x
 alphaExp (Let ds e) = do
   -- Avoid capturing variables
   env <- foldMapM (\(LocalDef n _ _) -> one . (n,) . Var <$> cloneId n) ds
   local (\e -> e {subst = env <> e.subst}) $ Let <$> traverse alphaLocalDef ds <*> alphaExp e
--- このコードでも動くはずだけど、segfaultする。
--- let binds = map (._localDefVar) ds
--- e' <- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` binds) e.subst}) $ do
---   Let <$> traverse alphaLocalDef ds <*> alphaExp e
 alphaExp (Match e cs) = Match <$> alphaExp e <*> traverse alphaCase cs
-alphaExp e = traverseOf atom alphaAtom e
+alphaExp (Switch v cs e) = Switch <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExp e) cs <*> alphaExp e
+alphaExp (SwitchUnboxed v cs e) = SwitchUnboxed <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExp e) cs <*> alphaExp e
+alphaExp (Destruct v con xs e) = do
+  -- Avoid capturing variables
+  env <- foldMapM (\x -> one . (x,) . Var <$> cloneId x) xs
+  local (\e -> e {subst = env <> e.subst}) $ Destruct <$> alphaAtom v <*> pure con <*> traverse lookupId xs <*> alphaExp e
+alphaExp (DestructRecord v kvs e) = do
+  -- Avoid capturing variables
+  let xs = HashMap.elems kvs
+  env <- foldMapM (\x -> one . (x,) . Var <$> cloneId x) xs
+  local (\e -> e {subst = env <> e.subst}) $ DestructRecord <$> alphaAtom v <*> traverse lookupId kvs <*> alphaExp e
+alphaExp (Assign x v e) = do
+  v' <- alphaExp v
+  x' <- cloneId x
+  local (\e -> e {subst = one (x, Var x') <> e.subst}) $ Assign x' v' <$> alphaExp e
+alphaExp (Error t) = pure $ Error t
 
 alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x
@@ -95,4 +111,4 @@ alphaCase (Bind x t e) = do
   x' <- cloneId x
   local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' t <$> alphaExp e
 -- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExp e
-alphaCase (Switch u e) = Switch u <$> alphaExp e
+alphaCase (Exact u e) = Exact u <$> alphaExp e

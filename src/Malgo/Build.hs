@@ -63,15 +63,14 @@ run = do
   _uniqSupply <- UniqSupply <$> newIORef 0
   _interfaces <- newIORef mempty
   _indexes <- newIORef mempty
-  compileOptions <-
-    traverse
-      ( \path ->
-          (path,) <$> newMalgoEnv path [] (Just _uniqSupply) (Just _interfaces) (Just _indexes)
-      )
-      topSorted
-  for_ compileOptions \(path, env) -> do
-    putStrLn ("Compile " <> path)
-    Driver.compileFromAST path env (Unsafe.fromJust $ List.lookup path parsedAstList)
+  traverse_
+    ( \path -> do
+        let ast = Unsafe.fromJust $ List.lookup path parsedAstList
+        putStrLn ("Compile " <> path)
+        env <- newMalgoEnv path [] (Just _uniqSupply) ast._moduleName (Just _interfaces) (Just _indexes)
+        Driver.compileFromAST path env ast
+    )
+    topSorted
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []

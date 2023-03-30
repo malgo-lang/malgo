@@ -1,6 +1,6 @@
 module Koriel.Core.Lint (lint) where
 
-import Control.Lens (view, _1)
+import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
 import Control.Monad.Except
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Op
@@ -122,6 +122,27 @@ lintExp (Let ds e) = local (map (._variable) ds <>) $ do
 lintExp (Match e cs) = do
   lintExp e
   traverse_ (lintCase e) cs
+  -- check if all cases have same type of pattern
+  if all (\c -> has _Unpack c || has _Bind c) cs
+    || all (\c -> has _OpenRecord c || has _Bind c) cs
+    || all (\c -> has _Exact c || has _Bind c) cs
+    then pass
+    else errorDoc $ "pattern mismatch:" $$ pPrint cs
+lintExp (Switch a cs e) = do
+  lintAtom a
+  traverseOf_ (traversed . _2) lintExp cs
+  lintExp e
+lintExp (SwitchUnboxed a cs e) = do
+  lintAtom a
+  traverseOf_ (traversed . _2) lintExp cs
+  lintExp e
+lintExp (Destruct a _ xs e) = do
+  lintAtom a
+  local (xs <>) $ lintExp e
+lintExp (DestructRecord a xs e) = do
+  lintAtom a
+  local (HashMap.elems xs <>) $ lintExp e
+lintExp (Assign x v e) = lintExp v >> local (x :) (lintExp e)
 lintExp Error {} = pass
 
 lintObj :: MonadReader [Id Type] m => Obj (Id Type) -> m ()
@@ -132,7 +153,7 @@ lintObj (Record kvs) = traverse_ lintAtom kvs
 lintCase :: MonadReader [Id Type] m => Exp (Id Type) -> Case (Id Type) -> m ()
 lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
-lintCase _ (Switch _ e) = lintExp e
+lintCase _ (Exact _ e) = lintExp e
 lintCase scrutinee (Bind x t e) = local (x :) do
   match x t
   match scrutinee x
