@@ -17,6 +17,7 @@ import Malgo.Prelude
 import System.Directory (copyFile, listDirectory, setCurrentDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
+import System.IO.Silently (hSilence)
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
     byteStringInput,
@@ -88,12 +89,12 @@ setupTestDir = do
 -- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
 setupBuiltin :: IO ()
 setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False
+  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False True
 
 -- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
 setupPrelude :: IO ()
 setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False
+  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False True
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
@@ -105,29 +106,31 @@ setupRuntime = do
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
-compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
-compile src dst modPaths lambdaLift noOptimize = do
-  malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
-  malgoEnv <-
-    pure
-      malgoEnv
-        { dstPath = dst,
-          _modulePaths = takeDirectory dst : malgoEnv._modulePaths,
-          lambdaLift,
-          noOptimize
-        }
-  Driver.compile src malgoEnv
+compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> Bool -> IO ()
+compile src dst modPaths lambdaLift noOptimize isPrintError = do
+  let ioWrapper = if isPrintError then hSilence [stderr] else identity
+  ioWrapper do
+    malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
+    malgoEnv <-
+      pure
+        malgoEnv
+          { dstPath = dst,
+            _modulePaths = takeDirectory dst : malgoEnv._modulePaths,
+            lambdaLift,
+            noOptimize
+          }
+    Driver.compile src malgoEnv
 
-  -- Check if the generated Koriel code is valid
-  let korielPath = dst -<.> "kor"
-  koriel <- decodeUtf8 <$> readFileBS korielPath
-  case Koriel.parse korielPath koriel of
-    Left err ->
-      let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-          diag' = addFile diag korielPath (toString koriel)
-       in printDiagnostic stderr True False 4 defaultStyle diag' >> exitFailure
-    Right ast -> do
-      Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
+    -- Check if the generated Koriel code is valid
+    let korielPath = dst -<.> "kor"
+    koriel <- decodeUtf8 <$> readFileBS korielPath
+    case Koriel.parse korielPath koriel of
+      Left err ->
+        let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
+            diag' = addFile diag korielPath (toString koriel)
+         in printDiagnostic stderr True False 4 defaultStyle diag' >> exitFailure
+      Right ast -> do
+        Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
 
 -- | Get the correct name of `clang`
 getClangCommand :: IO String
@@ -141,10 +144,10 @@ getClangCommand =
         ExitSuccess -> pure x
         ExitFailure _ -> go xs
 
-test :: FilePath -> String -> Bool -> Bool -> IO ()
-test testcase postfix lambdaLift noOptimize = do
+test :: FilePath -> String -> Bool -> Bool -> Bool -> IO ()
+test testcase postfix lambdaLift noOptimize isPrintError = do
   let llPath = outputDir </> takeBaseName testcase -<.> (postfix <> ".ll")
-  compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize
+  compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize isPrintError
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
@@ -182,16 +185,16 @@ test testcase postfix lambdaLift noOptimize = do
 
 testError :: FilePath -> IO ()
 testError testcase = do
-  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False
+  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False False
 
 testNormal :: FilePath -> IO ()
-testNormal testcase = test testcase "" True False
+testNormal testcase = test testcase "" True False True
 
 testNoLift :: FilePath -> IO ()
-testNoLift testcase = test testcase "nolift" False False
+testNoLift testcase = test testcase "nolift" False False True
 
 testNoOpt :: FilePath -> IO ()
-testNoOpt testcase = test testcase "noopt" True True
+testNoOpt testcase = test testcase "noopt" True True True
 
 testNoNo :: FilePath -> IO ()
-testNoNo testcase = test testcase "nono" False True
+testNoNo testcase = test testcase "nono" False True True
