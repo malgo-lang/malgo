@@ -321,10 +321,6 @@ genFunc name params body
         params
     retty = convType (C.typeOf body)
 
--- genUnpackでコード生成しつつラベルを返すため、CPSにしている
--- FIXME[genExp does not return correctly-typed value]: convType (C.typeOf e) /= LT.typeOf (genExp e)
---        継続に渡される値の型がptr i8だったときに正しくタグを取り出すため、bitcastする必要がある。
--- TODO: genExpが正しい型の値を継続に渡すように変更する
 genExp ::
   ( MonadReader CodeGenEnv m,
     MonadState PrimMap m,
@@ -337,18 +333,39 @@ genExp ::
   Exp (Id C.Type) ->
   (Operand -> m ()) ->
   m ()
-genExp (Atom x) k = k =<< genAtom x
-genExp (Call f xs) k = do
+genExp e k = genExp' e \eOpr -> do
+  case C.typeOf e of
+    VoidT -> k (ConstantOperand (C.Undef LT.void))
+    t -> k =<< bitcast eOpr (convType t)
+
+-- genUnpackでコード生成しつつラベルを返すため、CPSにしている
+-- FIXME[genExp does not return correctly-typed value]: convType (C.typeOf e) /= LT.typeOf (genExp e)
+--        継続に渡される値の型がptr i8だったときに正しくタグを取り出すため、bitcastする必要がある。
+-- TODO: genExpが正しい型の値を継続に渡すように変更する
+genExp' ::
+  ( MonadReader CodeGenEnv m,
+    MonadState PrimMap m,
+    MonadIRBuilder m,
+    MonadModuleBuilder m,
+    MonadFail m,
+    MonadFix m,
+    MonadIO m
+  ) =>
+  Exp (Id C.Type) ->
+  (Operand -> m ()) ->
+  m ()
+genExp' (Atom x) k = k =<< genAtom x
+genExp' (Call f xs) k = do
   fOpr <- genAtom f
   captureOpr <- gepAndLoad fOpr [int32 0, int32 0]
   funcOpr <- gepAndLoad fOpr [int32 0, int32 1]
   xsOprs <- traverse genAtom xs
   k =<< call funcOpr (map (,[]) $ captureOpr : xsOprs)
-genExp (CallDirect f xs) k = do
+genExp' (CallDirect f xs) k = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
   k =<< call fOpr (map (,[]) xsOprs)
-genExp (RawCall name (ps :-> r) xs) k = do
+genExp' (RawCall name (ps :-> r) xs) k = do
   let primOpr =
         ConstantOperand $
           C.GlobalReference
@@ -356,8 +373,8 @@ genExp (RawCall name (ps :-> r) xs) k = do
             (LLVM.AST.mkName $ convertString name)
   xsOprs <- traverse genAtom xs
   k =<< call primOpr (map (,[]) xsOprs)
-genExp (RawCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
-genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
+genExp' (RawCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
+genExp' (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add
     genOp Op.Sub = sub
@@ -425,10 +442,10 @@ genExp (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     genOp Op.And = LLVM.IRBuilder.and
     genOp Op.Or = LLVM.IRBuilder.or
     i1ToBool i1opr = zext i1opr i8
-genExp (Cast ty x) k = do
+genExp' (Cast ty x) k = do
   xOpr <- genAtom x
   k =<< bitcast xOpr (convType ty)
-genExp (Let xs e) k = do
+genExp' (Let xs e) k = do
   env <- foldMapM prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
   local (over valueMap (env <>)) $ genExp e k
@@ -445,11 +462,11 @@ genExp (Let xs e) k = do
           )
     prepare _ = pure mempty
 -- These `match` cases are not necessary.
-genExp (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
-genExp (Match e (Bind x _ body : _)) k = genExp e $ \eOpr -> do
+genExp' (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
+genExp' (Match e (Bind x _ body : _)) k = genExp e $ \eOpr -> do
   eOpr <- bitcast eOpr (convType $ C.typeOf e)
   local (over valueMap (at x ?~ eOpr)) (genExp body k)
-genExp (Match e cs) k
+genExp' (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = genExp e $ \eOpr -> mdo
       -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
@@ -469,7 +486,7 @@ genExp (Match e cs) k
         RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
         _ -> pure eOpr'
       switch tagOpr defaultLabel labels
-genExp (Switch v bs e) k = mdo
+genExp' (Switch v bs e) k = mdo
   vOpr <- genAtom v
   br switchBlock
   labels <- toList <$> traverse (genBranch (constructorList v) k) bs
@@ -490,7 +507,7 @@ genExp (Switch v bs e) k = mdo
             _ -> error "Switch is not supported for this type."
       genExp e k
       pure (tag', label)
-genExp (SwitchUnboxed v bs e) k = mdo
+genExp' (SwitchUnboxed v bs e) k = mdo
   vOpr <- genAtom v
   br switchBlock
   labels <- toList <$> traverse (genBranch k) bs
@@ -504,7 +521,7 @@ genExp (SwitchUnboxed v bs e) k = mdo
       label <- block
       genExp e k
       pure (u', label)
-genExp (Destruct v (Con _ ts) xs e) k = do
+genExp' (Destruct v (Con _ ts) xs e) k = do
   v <- genAtom v
   addr <- bitcast v (ptr $ StructureType False [i8, StructureType False (map convType ts)])
   payloadAddr <- gep addr [int32 0, int32 1]
@@ -512,7 +529,7 @@ genExp (Destruct v (Con _ ts) xs e) k = do
     HashMap.fromList <$> ifor xs \i x -> do
       (x,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
   local (over valueMap (env <>)) $ genExp e k
-genExp (DestructRecord scrutinee kvs e) k = do
+genExp' (DestructRecord scrutinee kvs e) k = do
   scrutinee <- bitcast ?? convType (C.typeOf scrutinee) =<< genAtom scrutinee
   kvs' <- for (HashMap.toList kvs) \(k, v) -> do
     hashTableGet <- findExt "malgo_hash_table_get" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8] (ptr i8)
@@ -522,12 +539,12 @@ genExp (DestructRecord scrutinee kvs e) k = do
     value <- bitcast value (convType $ C.typeOf v)
     pure (v, value)
   local (over valueMap (HashMap.fromList kvs' <>)) $ genExp e k
-genExp (Assign _ v e) k | C.typeOf v == VoidT = genExp v $ \_ -> genExp e k
-genExp (Assign x v e) k = do
+genExp' (Assign _ v e) k | C.typeOf v == VoidT = genExp v $ \_ -> genExp e k
+genExp' (Assign x v e) k = do
   genExp v $ \vOpr -> do
     vOpr <- bitcast vOpr (convType $ C.typeOf v)
     local (over valueMap $ at x ?~ vOpr) $ genExp e k
-genExp (Error _) _ = unreachable
+genExp' (Error _) _ = unreachable
 
 -- | Get constructor list from the type of scrutinee.
 constructorList :: HasType s => s -> [Con]

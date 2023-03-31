@@ -56,16 +56,16 @@ optimizeProgram uniqSupply moduleName knowns inlineLevel Program {..} = runReade
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
-optimizeExpr state = 3 `times` opt
+optimizeExpr state = 5 `times` opt
   where
     opt = do
       pure
-        -- >=> optVarBind
-        -- >=> (usingReaderT mempty . optPackInline)
-        -- >=> removeUnusedLet
+        >=> optVarBind
+        >=> (usingReaderT mempty . optPackInline)
+        >=> removeUnusedLet
         >=> (flip evalStateT state . optCallInline)
         >=> optIdCast
-        -- >=> optTrivialCall
+        >=> optTrivialCall
         >=> runFlat . flatExp
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
@@ -77,10 +77,10 @@ optTrivialCall e@RawCall {} = pure e
 optTrivialCall e@BinOp {} = pure e
 optTrivialCall e@Cast {} = pure e
 optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
-optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
 optTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- asks (.uniqSupply)
   optTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
+optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
 optTrivialCall (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optTrivialCall cs <*> optTrivialCall e
 optTrivialCall (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optTrivialCall cs <*> optTrivialCall e
 optTrivialCall (Destruct a c xs e) = Destruct a c xs <$> optTrivialCall e
@@ -132,16 +132,22 @@ checkInlinable _ = pass
 
 -- | Lookup a function in the inlinable map.
 lookupCallInline ::
-  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) =>
+  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m, MonadIO m) =>
   (Id Type -> [Atom (Id Type)] -> Exp (Id Type)) ->
   Id Type ->
   [Atom (Id Type)] ->
   m (Exp (Id Type))
 lookupCallInline call f as = do
   f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
-  pure case f' of
-    Just (ps, v) -> foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
-    Nothing -> call f as
+  us <- asks (.uniqSupply)
+  case f' of
+    Just (ps, v) ->
+      -- v[as/ps]
+      -- 以下のように書くと、変数のキャプチャが発生してうまく動かない。
+      -- optIdCastと干渉するようだ。
+      -- pure $ foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
+      alpha v AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
+    Nothing -> pure $ call f as
 
 type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
