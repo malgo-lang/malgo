@@ -60,27 +60,33 @@ optimizeExpr state = 3 `times` opt
   where
     opt = do
       pure
-        >=> optVarBind
-        >=> (usingReaderT mempty . optPackInline)
-        >=> removeUnusedLet
+        -- >=> optVarBind
+        -- >=> (usingReaderT mempty . optPackInline)
+        -- >=> removeUnusedLet
         >=> (flip evalStateT state . optCallInline)
         >=> optIdCast
-        >=> optTrivialCall
-        >=> optCast
+        -- >=> optTrivialCall
         >=> runFlat . flatExp
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
 optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+optTrivialCall e@Atom {} = pure e
+optTrivialCall e@Call {} = pure e
+optTrivialCall e@CallDirect {} = pure e
+optTrivialCall e@RawCall {} = pure e
+optTrivialCall e@BinOp {} = pure e
+optTrivialCall e@Cast {} = pure e
+optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
+optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
 optTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- asks (.uniqSupply)
   optTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
-optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
-optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
 optTrivialCall (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optTrivialCall cs <*> optTrivialCall e
+optTrivialCall (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optTrivialCall cs <*> optTrivialCall e
 optTrivialCall (Destruct a c xs e) = Destruct a c xs <$> optTrivialCall e
 optTrivialCall (DestructRecord a xs e) = DestructRecord a xs <$> optTrivialCall e
 optTrivialCall (Assign x v e) = Assign x <$> optTrivialCall v <*> optTrivialCall e
-optTrivialCall e = pure e
+optTrivialCall e@Error {} = pure e
 
 newtype CallInlineEnv = CallInlineEnv
   { inlinableMap :: HashMap (Id Type) ([Id Type], Exp (Id Type))
@@ -91,19 +97,25 @@ optCallInline ::
   (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) =>
   Exp (Id Type) ->
   f (Exp (Id Type))
+optCallInline e@Atom {} = pure e
 optCallInline (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
+optCallInline e@Call {} = pure e
 optCallInline (CallDirect f xs) = lookupCallInline CallDirect f xs
-optCallInline (Match v cs) =
-  Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
-optCallInline (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optCallInline cs <*> optCallInline e
-optCallInline (Destruct a c xs e) = Destruct a c xs <$> optCallInline e
-optCallInline (DestructRecord a xs e) = DestructRecord a xs <$> optCallInline e
-optCallInline (Assign x v e) = Assign x <$> optCallInline v <*> optCallInline e
+optCallInline e@RawCall {} = pure e
+optCallInline e@BinOp {} = pure e
+optCallInline e@Cast {} = pure e
 optCallInline (Let ds e) = do
   ds' <- traverseOf (traversed . object . appObj) optCallInline ds
   traverse_ checkInlinable ds'
   Let ds' <$> optCallInline e
-optCallInline e = pure e
+optCallInline (Match v cs) =
+  Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
+optCallInline (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optCallInline cs <*> optCallInline e
+optCallInline (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optCallInline cs <*> optCallInline e
+optCallInline (Destruct a c xs e) = Destruct a c xs <$> optCallInline e
+optCallInline (DestructRecord a xs e) = DestructRecord a xs <$> optCallInline e
+optCallInline (Assign x v e) = Assign x <$> optCallInline v <*> optCallInline e
+optCallInline e@Error {} = pure e
 
 -- | Check if a function is inlinable.
 checkInlinable ::
@@ -135,6 +147,18 @@ type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 -- | Inline simple pattern match and pack.
 optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
+optPackInline e@Atom {} = pure e
+optPackInline e@Call {} = pure e
+optPackInline e@CallDirect {} = pure e
+optPackInline e@RawCall {} = pure e
+optPackInline e@BinOp {} = pure e
+optPackInline e@Cast {} = pure e
+optPackInline (Let ds e) = do
+  ds' <- traverseOf (traversed . object . appObj) optPackInline ds
+  local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
+  where
+    toPackInlineMap (LocalDef v _ (Pack _ con as)) = one (v, (con, as))
+    toPackInlineMap _ = mempty
 optPackInline (Match (Atom (Var v)) [Unpack con xs body]) = do
   body' <- optPackInline body
   view (at v) >>= \case
@@ -146,6 +170,7 @@ optPackInline (Match (Atom (Var v)) [Unpack con xs body]) = do
 optPackInline (Match v cs) =
   Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
 optPackInline (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optPackInline cs <*> optPackInline e
+optPackInline (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optPackInline cs <*> optPackInline e
 optPackInline (Destruct (Var v) con xs body) = do
   body' <- optPackInline body
   view (at v) >>= \case
@@ -154,30 +179,39 @@ optPackInline (Destruct (Var v) con xs body) = do
   where
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
+optPackInline (Destruct a c xs body) = Destruct a c xs <$> optPackInline body
 optPackInline (DestructRecord v xs body) = DestructRecord v xs <$> optPackInline body
 optPackInline (Assign x v e) = Assign x <$> optPackInline v <*> optPackInline e
-optPackInline (Let ds e) = do
-  ds' <- traverseOf (traversed . object . appObj) optPackInline ds
-  local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
-  where
-    toPackInlineMap (LocalDef v _ (Pack _ con as)) = one (v, (con, as))
-    toPackInlineMap _ = mempty
-optPackInline e = pure e
+optPackInline e@Error {} = pure e
 
 -- | Remove variable binding if that variable is an alias of another variable.
 optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
-optVarBind (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> optVarBind e
+optVarBind e@Atom {} = pure e
+optVarBind e@Call {} = pure e
+optVarBind e@CallDirect {} = pure e
+optVarBind e@RawCall {} = pure e
+optVarBind e@BinOp {} = pure e
+optVarBind e@Cast {} = pure e
 optVarBind (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optVarBind ds <*> optVarBind e
+optVarBind (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> optVarBind e
 optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
 optVarBind (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optVarBind cs <*> optVarBind e
+optVarBind (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optVarBind cs <*> optVarBind e
 optVarBind (Destruct a c xs e) = Destruct a c xs <$> optVarBind e
 optVarBind (DestructRecord a xs e) = DestructRecord a xs <$> optVarBind e
 optVarBind (Assign x (Atom a) e) = replaceOf atom (Var x) a <$> optVarBind e
-optVarBind e = pure e
+optVarBind (Assign x v e) = Assign x <$> optVarBind v <*> optVarBind e
+optVarBind e@Error {} = pure e
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
 removeUnusedLet :: (Monad f, Hashable a) => Exp (Id a) -> f (Exp (Id a))
+removeUnusedLet e@Atom {} = pure e
+removeUnusedLet e@Call {} = pure e
+removeUnusedLet e@CallDirect {} = pure e
+removeUnusedLet e@RawCall {} = pure e
+removeUnusedLet e@BinOp {} = pure e
+removeUnusedLet e@Cast {} = pure e
 removeUnusedLet (Let ds e) = do
   ds' <- traverseOf (traversed . object . appObj) removeUnusedLet ds
   e' <- removeUnusedLet e
@@ -199,26 +233,40 @@ removeUnusedLet (Let ds e) = do
 removeUnusedLet (Match v cs) =
   Match <$> removeUnusedLet v <*> traverseOf (traversed . appCase) removeUnusedLet cs
 removeUnusedLet (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) removeUnusedLet cs <*> removeUnusedLet e
+removeUnusedLet (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) removeUnusedLet cs <*> removeUnusedLet e
 removeUnusedLet (Destruct a c xs e) = Destruct a c xs <$> removeUnusedLet e
 removeUnusedLet (DestructRecord a xs e) = DestructRecord a xs <$> removeUnusedLet e
 removeUnusedLet (Assign x v e) = Assign x <$> removeUnusedLet v <*> removeUnusedLet e
-removeUnusedLet e = pure e
+removeUnusedLet e@Error {} = pure e
 
 -- | Remove a cast if it is redundant.
 optIdCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
-optIdCast (Cast t e) | typeOf e == t = pure (Atom e)
+optIdCast e@Atom {} = pure e
+optIdCast e@Call {} = pure e
+optIdCast e@CallDirect {} = pure e
+optIdCast e@RawCall {} = pure e
+optIdCast e@BinOp {} = pure e
+optIdCast (Cast t e)
+  | typeOf e == t = pure (Atom e)
+  | otherwise = pure (Cast t e)
 optIdCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optIdCast ds <*> optIdCast e
 optIdCast (Match v cs) = Match <$> optIdCast v <*> traverseOf (traversed . appCase) optIdCast cs
 optIdCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optIdCast cs <*> optIdCast e
+optIdCast (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optIdCast cs <*> optIdCast e
 optIdCast (Destruct a c xs e) = Destruct a c xs <$> optIdCast e
 optIdCast (DestructRecord a xs e) = DestructRecord a xs <$> optIdCast e
 optIdCast (Assign x v e) = Assign x <$> optIdCast v <*> optIdCast e
-optIdCast e = pure e
+optIdCast e@Error {} = pure e
 
 -- TODO: ベンチマーク
 
 -- | Specialize a function which is casted to a specific type.
 optCast :: (MonadIO m, MonadReader OptimizeEnv m) => Exp (Id Type) -> m (Exp (Id Type))
+optCast e@Atom {} = pure e
+optCast e@Call {} = pure e
+optCast e@CallDirect {} = pure e
+optCast e@RawCall {} = pure e
+optCast e@BinOp {} = pure e
 optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
   pts :-> _
     | length pts' == length pts -> do
@@ -227,21 +275,18 @@ optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
         v' <- runDef do
           ps <- zipWithM cast pts $ map (Atom . Var) ps'
 
-          ks <- asks (.knowns)
-
-          r <- case f of
-            -- If `f` is a known function, we must call it directly.
-            Var f | f `member` ks -> do
-              bind (CallDirect f ps)
-            _ -> bind (Call f ps)
+          -- If `f` is always a unknown function because it appears in `cast`.
+          r <- bind (Call f ps)
           pure $ Cast rt' r
         pure (Let [LocalDef f' (pts' :-> rt') $ Fun ps' v'] (Atom $ Var f'))
     | otherwise -> error "optCast: invalid cast"
   _ -> pure e
+optCast e@Cast {} = pure e
 optCast (Match v cs) = Match <$> optCast v <*> traverseOf (traversed . appCase) optCast cs
 optCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optCast ds <*> optCast e
 optCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optCast cs <*> optCast e
+optCast (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optCast cs <*> optCast e
 optCast (Destruct a c xs e) = Destruct a c xs <$> optCast e
 optCast (DestructRecord a xs e) = DestructRecord a xs <$> optCast e
 optCast (Assign x v e) = Assign x <$> optCast v <*> optCast e
-optCast e = pure e
+optCast e@Error {} = pure e
