@@ -1,4 +1,5 @@
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE Strict #-}
 
 module Koriel.Core.LambdaLift
   ( lambdalift,
@@ -39,7 +40,7 @@ def name xs e = do
   uniqSupply <- asks (.uniqSupply)
   f <- runReaderT (newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)) (DefEnv uniqSupply name.moduleName)
   -- knowns . at f ?= ()
-  funcs . at f ?= (xs, typeOf f, e)
+  modify $ \state@LambdaLiftState {_funcs} -> state {_funcs = HashMap.insert f (xs, typeOf f, e) _funcs}
   pure f
 
 lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type), HashSet (Id Type))
@@ -84,12 +85,14 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
   knowns . at n ?= ()
   body' <- llift body
   funcs . at n ?= (as, t, body')
-  (e', _) <- localState $ llift e
+  (e', state) <- localState $ llift e
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
   let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
   if null fvs && not (n `member` freevars e')
-    then llift e
+    then do
+      put state
+      pure e'
     else do
       put backup
       body' <- llift body
@@ -102,7 +105,7 @@ llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> ll
 llift (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) llift cs <*> llift e
 llift (Destruct a c xs e) = Destruct a c xs <$> llift e
 llift (DestructRecord a xs e) = DestructRecord a xs <$> llift e
-llift (Assign x v e) = Assign x v <$> llift e
+llift (Assign x v e) = Assign x <$> llift v <*> llift e
 llift (Error t) = pure $ Error t
 
 -- | `toDirect` converts `Call` to `CallDirect` if the callee is known.

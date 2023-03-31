@@ -49,20 +49,25 @@ flatExp (Destruct v con ps e) = do
 flatExp (DestructRecord v kvs e) = do
   tell $ Endo $ \k -> DestructRecord v kvs k
   flatExp e
+flatExp (Assign x (Atom (Var v)) e) = do
+  flatExp $ replaceOf atom (Var x) (Var v) e
 flatExp (Assign x v e) = do
   v <- flatExp v
-  case v of
-    Atom (Var v') ->
-      -- Flatten e[x := v'] after assigning v' to x.
-      -- If we do it before, we might miss some assignments to x.
-      -- These assignments are constructed by the Endo monoid.
-      flatExp $ replaceOf atom (Var x) (Var v') e
-    _ -> do
-      tell $ Endo $ \k ->
-        case k of
-          Atom (Var y) | x == y -> v -- (= x v x) -> v
-          _ -> Assign x v k
-      flatExp e
+  tell $ Endo $ \k -> Assign x v k
+  flatExp e
+-- v <- flatExp v
+-- case v of
+--   Atom (Var v') ->
+--     -- Flatten e[x := v'] after assigning v' to x.
+--     -- If we do it before, we might miss some assignments to x.
+--     -- These assignments are constructed by the Endo monoid.
+--     flatExp $ replaceOf atom (Var x) (Var v') e
+--   _ -> do
+--     tell $ Endo $ \k ->
+--       case k of
+--         Atom (Var y) | x == y -> v -- (= x v x) -> v
+--         _ -> Assign x v k
+--     flatExp e
 flatExp e = pure e
 
 flatMatch ::

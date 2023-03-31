@@ -12,13 +12,13 @@ import Koriel.Pretty
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
-lint :: Monad m => Program (Id Type) -> m ()
+lint :: HasCallStack => Monad m => Program (Id Type) -> m ()
 lint = runLint . lintProgram
 
 runLint :: ReaderT [Id Type] m a -> m a
 runLint m = runReaderT m []
 
-defined :: (MonadReader [Id Type] f) => Id Type -> f ()
+defined :: HasCallStack => MonadReader [Id Type] f => Id Type -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
@@ -44,7 +44,7 @@ match x y
           $$ pPrint y
           $$ nest 2 (":" <> pPrint (typeOf y))
 
-lintExp :: MonadReader [Id Type] m => Exp (Id Type) -> m ()
+lintExp :: HasCallStack => MonadReader [Id Type] m => Exp (Id Type) -> m ()
 lintExp (Atom x) = lintAtom x
 lintExp (Call f xs) = do
   lintAtom f
@@ -142,15 +142,17 @@ lintExp (Destruct a _ xs e) = do
 lintExp (DestructRecord a xs e) = do
   lintAtom a
   local (HashMap.elems xs <>) $ lintExp e
-lintExp (Assign x v e) = lintExp v >> local (x :) (lintExp e)
+lintExp (Assign x v e) = do
+  lintExp v
+  local (x :) (lintExp e)
 lintExp Error {} = pass
 
-lintObj :: MonadReader [Id Type] m => Obj (Id Type) -> m ()
+lintObj :: HasCallStack => MonadReader [Id Type] m => Obj (Id Type) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExp body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: MonadReader [Id Type] m => Exp (Id Type) -> Case (Id Type) -> m ()
+lintCase :: HasCallStack => MonadReader [Id Type] m => Exp (Id Type) -> Case (Id Type) -> m ()
 lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExp e
 lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
 lintCase _ (Exact _ e) = lintExp e
@@ -159,11 +161,11 @@ lintCase scrutinee (Bind x t e) = local (x :) do
   match scrutinee x
   lintExp e
 
-lintAtom :: MonadReader [Id Type] m => Atom (Id Type) -> m ()
+lintAtom :: HasCallStack => MonadReader [Id Type] m => Atom (Id Type) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
-lintProgram :: MonadReader [Id Type] m => Program (Id Type) -> m ()
+lintProgram :: HasCallStack => MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
   let fs = map (view _1) topFuns
   local (fs <>) $

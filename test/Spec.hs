@@ -58,13 +58,12 @@ main =
       setupBuiltin
       setupPrelude
     testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
-    describe "Test malgo to-ll" do
+    describe "Tet malgo to-ll" do
       parallel $ for_ testcases \testcase -> do
         it ("test usual case " <> testcase) $ example do
           testNormal (testcaseDir </> testcase)
         it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
           testNoNo (testcaseDir </> testcase)
-
         it ("test noopt case " <> testcase <> " (no optimization)") $ example do
           testNoOpt (testcaseDir </> testcase)
         it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do

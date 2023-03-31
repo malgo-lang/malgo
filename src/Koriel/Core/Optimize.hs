@@ -56,7 +56,7 @@ optimizeProgram uniqSupply moduleName knowns inlineLevel Program {..} = runReade
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
-optimizeExpr state = 10 `times` opt
+optimizeExpr state = 3 `times` opt
   where
     opt = do
       pure
