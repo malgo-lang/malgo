@@ -95,7 +95,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName mempty env.inlineSize core
+      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName mempty env.optimizeOption core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
@@ -108,7 +108,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-      coreLLOpt <- flat =<< if env.noOptimize || not env.lambdaLift then pure coreLL else optimizeProgram uniqSupply moduleName knowns env.inlineSize coreLL
+      coreLLOpt <- flat =<< if env.noOptimize || not env.lambdaLift then pure coreLL else optimizeProgram uniqSupply moduleName knowns env.optimizeOption coreLL
       writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreLLOpt
       when (env.debugMode && env.lambdaLift && not env.noOptimize) $

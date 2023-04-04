@@ -571,30 +571,33 @@ pKeyword keyword = lexeme (string keyword <* notFollowedBy identLetter)
 pOperator :: Text -> Parser Text
 pOperator op = lexeme (string op <* notFollowedBy opLetter)
 
+reservedKeywords :: [Text]
+reservedKeywords =
+  [ "class",
+    "def",
+    "data",
+    "exists",
+    "forall",
+    "foreign",
+    "impl",
+    "import",
+    "infix",
+    "infixl",
+    "infixr",
+    "let",
+    "type",
+    "module",
+    "with"
+  ]
+
 reserved :: Parser Text
-reserved =
-  choice $
-    map
-      (try . pKeyword)
-      [ "class",
-        "def",
-        "data",
-        "exists",
-        "forall",
-        "foreign",
-        "impl",
-        "import",
-        "infix",
-        "infixl",
-        "infixr",
-        "let",
-        "type",
-        "module",
-        "with"
-      ]
+reserved = choice $ map (try . pKeyword) reservedKeywords -- #| and |# are for block comments in Koriel
+
+reservedOperators :: [Text]
+reservedOperators = ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"]
 
 reservedOp :: Parser Text
-reservedOp = choice $ map (try . pOperator) ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"] -- #| and |# are for block comments in Koriel
+reservedOp = choice $ map (try . pOperator) reservedOperators
 
 lowerIdent :: Parser Text
 lowerIdent =

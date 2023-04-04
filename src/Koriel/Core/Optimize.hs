@@ -2,6 +2,8 @@
 
 module Koriel.Core.Optimize
   ( optimizeProgram,
+    OptimizeOption (..),
+    defaultOptimizeOption,
   )
 where
 
@@ -19,7 +21,44 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
-data OptimizeEnv = OptimizeEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName, inlineLevel :: Int, knowns :: HashSet (Id Type)}
+data OptimizeOption = OptimizeOption
+  { -- | Replace trivial variable bindings with the `match` or `=` expression.
+    doOptVarBind :: Bool,
+    -- | Inline value constructors.
+    doOptPackInline :: Bool,
+    -- | Remove unnecessary `let` bindings.
+    doOptRemoveUnusedLet :: Bool,
+    -- | Inline function calls.
+    doOptCallInline :: Bool,
+    -- | Threshold of the size of functions to be inlined.
+    inlineSize :: Int,
+    -- | Remove unnecessary `cast` expressions.
+    doOptIdCast :: Bool,
+    -- | Normalize trivial function calls.
+    doOptTrivialCall :: Bool,
+    -- | Specialize polymorphic functions.
+    doOptCast :: Bool
+  }
+
+defaultOptimizeOption :: OptimizeOption
+defaultOptimizeOption =
+  OptimizeOption
+    { doOptVarBind = True,
+      doOptPackInline = True,
+      doOptRemoveUnusedLet = True,
+      doOptCallInline = True,
+      inlineSize = 10,
+      doOptIdCast = True,
+      doOptTrivialCall = True,
+      doOptCast = True
+    }
+
+data OptimizeEnv = OptimizeEnv
+  { uniqSupply :: UniqSupply,
+    moduleName :: ModuleName,
+    knowns :: HashSet (Id Type),
+    option :: OptimizeOption
+  }
 
 makeFieldsNoPrefix ''OptimizeEnv
 
@@ -45,27 +84,29 @@ optimizeProgram ::
   UniqSupply ->
   ModuleName ->
   HashSet (Id Type) ->
-  -- | インライン展開する関数のサイズ
-  Int ->
+  OptimizeOption ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram uniqSupply moduleName knowns inlineLevel Program {..} = runReaderT ?? OptimizeEnv {..} $ do
+optimizeProgram uniqSupply moduleName knowns option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
   state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
-optimizeExpr state = 5 `times` opt
+optimizeExpr state expr = do
+  option <- asks (.option)
+  5 `times` opt option $ expr
   where
-    opt = do
+    opt option = do
       pure
-        >=> optVarBind
-        >=> (usingReaderT mempty . optPackInline)
-        >=> removeUnusedLet
-        >=> (flip evalStateT state . optCallInline)
-        >=> optIdCast
-        >=> optTrivialCall
+        >=> (if option.doOptVarBind then optVarBind else pure)
+        >=> (if option.doOptPackInline then usingReaderT mempty . optPackInline else pure)
+        >=> (if option.doOptRemoveUnusedLet then removeUnusedLet else pure)
+        >=> (if option.doOptCallInline then flip evalStateT state . optCallInline else pure)
+        >=> (if option.doOptIdCast then optIdCast else pure)
+        >=> (if option.doOptTrivialCall then optTrivialCall else pure)
+        >=> (if option.doOptCast then optCast else pure)
         >=> runFlat . flatExp
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
@@ -123,7 +164,7 @@ checkInlinable ::
   LocalDef (Id Type) ->
   m ()
 checkInlinable (LocalDef f _ (Fun ps v)) = do
-  level <- asks (.inlineLevel)
+  level <- asks (.option.inlineSize)
   -- 変数の数がlevel以下ならインライン展開する
   let isInlinableSize = level >= length v
   when isInlinableSize $ do
@@ -264,9 +305,8 @@ optIdCast (DestructRecord a xs e) = DestructRecord a xs <$> optIdCast e
 optIdCast (Assign x v e) = Assign x <$> optIdCast v <*> optIdCast e
 optIdCast e@Error {} = pure e
 
--- TODO: ベンチマーク
-
 -- | Specialize a function which is casted to a specific type.
+-- TODO: ベンチマーク
 optCast :: (MonadIO m, MonadReader OptimizeEnv m) => Exp (Id Type) -> m (Exp (Id Type))
 optCast e@Atom {} = pure e
 optCast e@Call {} = pure e

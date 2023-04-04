@@ -7,6 +7,7 @@ module Main (main) where
 import Control.Lens (makeFieldsNoPrefix, (.~), (<>~))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
+import Koriel.Core.Optimize (OptimizeOption (..))
 import Koriel.Core.Parser qualified as Koriel
 import Koriel.Id (ModuleName)
 import Koriel.Lens (HasModulePaths (..))
@@ -19,6 +20,7 @@ import Malgo.Monad (CompileMode (..), newMalgoEnv)
 import Malgo.Monad qualified as Monad
 import Malgo.Prelude
 import Options.Applicative
+import Relude.Unsafe (read)
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath (takeDirectory, (</>))
 import System.FilePath.Lens (extension)
@@ -29,10 +31,10 @@ data ToLLOpt = ToLLOpt
     compileMode :: CompileMode,
     noOptimize :: Bool,
     lambdaLift :: Bool,
+    optimizeOption :: OptimizeOption,
     debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
-  deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''ToLLOpt
 
@@ -41,14 +43,18 @@ main = do
   command <- parseCommand
   case command of
     ToLL opt -> do
-      -- basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [takeDirectory opt.dstPath]
-      -- _uniqSupply <- UniqSupply <$> newIORef 0
-      -- _interfaces <- newIORef mempty
-      -- _indexes <- newIORef mempty
-      -- let ToLLOpt {..} = opt
       env <- newMalgoEnv opt.srcPath opt._modulePaths Nothing undefined Nothing Nothing
-      Driver.compile opt.srcPath env {Monad.dstPath = opt.dstPath, Monad.compileMode = opt.compileMode, Monad.noOptimize = opt.noOptimize, Monad.lambdaLift = opt.lambdaLift, Monad.debugMode = opt.debugMode}
+      Driver.compile
+        opt.srcPath
+        env
+          { Monad.dstPath = opt.dstPath,
+            Monad.compileMode = opt.compileMode,
+            Monad.noOptimize = opt.noOptimize,
+            Monad.lambdaLift = opt.lambdaLift,
+            Monad.optimizeOption = opt.optimizeOption,
+            Monad.debugMode = opt.debugMode
+          }
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
@@ -80,6 +86,16 @@ toLLOpt =
       <*> pure LLVM
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
+      <*> ( OptimizeOption
+              <$> switch (long "ffold-variable")
+              <*> switch (long "finline-constructor")
+              <*> switch (long "feliminate-unused-let")
+              <*> switch (long "finline-function")
+              <*> (read <$> strOption (long "finline-threshold" <> metavar "INT" <> value "10"))
+              <*> switch (long "ffold-redundant-cast")
+              <*> switch (long "ffold-trivial-call")
+              <*> switch (long "fspecialize-function")
+          )
       <*> switch (long "debug-mode")
       <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
   )
@@ -91,7 +107,7 @@ lspOpt cache = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> me
 data BuildOpt = BuildOpt
   deriving stock (Eq, Show)
 
-data KorielOpt = KorielOpt FilePath
+newtype KorielOpt = KorielOpt FilePath
   deriving stock (Eq, Show)
 
 data Command

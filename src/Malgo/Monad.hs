@@ -1,10 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Monad (MalgoEnv (..), CompileMode (..), defaultInlineSize, getWorkspaceDir, newMalgoEnv, MalgoM, runMalgoM) where
+module Malgo.Monad (MalgoEnv (..), CompileMode (..), getWorkspaceDir, newMalgoEnv, MalgoM, runMalgoM) where
 
 import Control.Lens.TH
 import Control.Monad.Extra (fromMaybeM)
 import Control.Monad.Fix (MonadFix)
+import Koriel.Core.Optimize (OptimizeOption, defaultOptimizeOption)
 import Koriel.Id (ModuleName)
 import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply (..))
@@ -24,7 +25,7 @@ data MalgoEnv = MalgoEnv
     compileMode :: CompileMode,
     noOptimize :: Bool,
     lambdaLift :: Bool,
-    inlineSize :: Int,
+    optimizeOption :: OptimizeOption,
     debugMode :: Bool,
     _modulePaths :: [FilePath]
   }
@@ -32,9 +33,6 @@ data MalgoEnv = MalgoEnv
 data CompileMode = LLVM deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
-
-defaultInlineSize :: Int
-defaultInlineSize = 10
 
 getWorkspaceDir :: IO FilePath
 getWorkspaceDir = do
@@ -61,7 +59,7 @@ newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
         _ -> error "unknown extension"
   let noOptimize = False
   let lambdaLift = True
-  let inlineSize = defaultInlineSize
+  let optimizeOption = defaultOptimizeOption
   let debugMode = False
   let _modulePaths = modulePaths <> [workspaceDir </> "build", basePath]
   pure MalgoEnv {..}
