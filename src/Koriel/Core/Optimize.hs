@@ -22,35 +22,28 @@ import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
 data OptimizeOption = OptimizeOption
-  { -- | Replace trivial variable bindings with the `match` or `=` expression.
-    doOptVarBind :: Bool,
-    -- | Inline value constructors.
-    doOptPackInline :: Bool,
-    -- | Remove unnecessary `let` bindings.
-    doOptRemoveUnusedLet :: Bool,
-    -- | Inline function calls.
-    doOptCallInline :: Bool,
+  { doFoldVariable :: Bool,
+    doInlineConstructor :: Bool,
+    doEliminateUnusedLet :: Bool,
+    doInlineFunction :: Bool,
     -- | Threshold of the size of functions to be inlined.
-    inlineSize :: Int,
-    -- | Remove unnecessary `cast` expressions.
-    doOptIdCast :: Bool,
-    -- | Normalize trivial function calls.
-    doOptTrivialCall :: Bool,
-    -- | Specialize polymorphic functions.
-    doOptCast :: Bool
+    inlineThreshold :: Int,
+    doFoldRedundantCast :: Bool,
+    doFoldTrivialCall :: Bool,
+    doSpecializeFunction :: Bool
   }
 
 defaultOptimizeOption :: OptimizeOption
 defaultOptimizeOption =
   OptimizeOption
-    { doOptVarBind = True,
-      doOptPackInline = True,
-      doOptRemoveUnusedLet = True,
-      doOptCallInline = True,
-      inlineSize = 10,
-      doOptIdCast = True,
-      doOptTrivialCall = True,
-      doOptCast = True
+    { doFoldVariable = True,
+      doInlineConstructor = True,
+      doEliminateUnusedLet = True,
+      doInlineFunction = True,
+      inlineThreshold = 10,
+      doFoldRedundantCast = True,
+      doFoldTrivialCall = True,
+      doSpecializeFunction = True
     }
 
 data OptimizeEnv = OptimizeEnv
@@ -73,12 +66,6 @@ times n f x
         else times (n - 1) f x'
   | otherwise = error $ show n <> " must be a natural number"
 
--- | 最適化を行う関数
---
--- * 自明な変数の付け替えの簡約 (optVarBind)
--- * 値コンストラクタを含む、関数のインライン展開 (optPackInline, optCallInline)
--- * 不要なletの削除 (removeUnusedLet)
--- * 無意味なcastの削除（optIdCast）
 optimizeProgram ::
   MonadIO m =>
   UniqSupply ->
@@ -100,63 +87,63 @@ optimizeExpr state expr = do
   where
     opt option = do
       pure
-        >=> (if option.doOptVarBind then optVarBind else pure)
-        >=> (if option.doOptPackInline then usingReaderT mempty . optPackInline else pure)
-        >=> (if option.doOptRemoveUnusedLet then removeUnusedLet else pure)
-        >=> (if option.doOptCallInline then flip evalStateT state . optCallInline else pure)
-        >=> (if option.doOptIdCast then optIdCast else pure)
-        >=> (if option.doOptTrivialCall then optTrivialCall else pure)
-        >=> (if option.doOptCast then optCast else pure)
+        >=> (if option.doFoldVariable then foldVariable else pure)
+        >=> (if option.doInlineConstructor then usingReaderT mempty . inlineConstructor else pure)
+        >=> (if option.doEliminateUnusedLet then eliminateUnusedLet else pure)
+        >=> (if option.doInlineFunction then flip evalStateT state . inlineFunction else pure)
+        >=> (if option.doFoldRedundantCast then foldRedundantCast else pure)
+        >=> (if option.doFoldTrivialCall then foldTrivialCall else pure)
+        >=> (if option.doSpecializeFunction then specializeFunction else pure)
         >=> runFlat . flatExp
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
-optTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
-optTrivialCall e@Atom {} = pure e
-optTrivialCall e@Call {} = pure e
-optTrivialCall e@CallDirect {} = pure e
-optTrivialCall e@RawCall {} = pure e
-optTrivialCall e@BinOp {} = pure e
-optTrivialCall e@Cast {} = pure e
-optTrivialCall (Match v cs) = Match <$> optTrivialCall v <*> traverseOf (traversed . appCase) optTrivialCall cs
-optTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' = do
+foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+foldTrivialCall e@Atom {} = pure e
+foldTrivialCall e@Call {} = pure e
+foldTrivialCall e@CallDirect {} = pure e
+foldTrivialCall e@RawCall {} = pure e
+foldTrivialCall e@BinOp {} = pure e
+foldTrivialCall e@Cast {} = pure e
+foldTrivialCall (Match v cs) = Match <$> foldTrivialCall v <*> traverseOf (traversed . appCase) foldTrivialCall cs
+foldTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- asks (.uniqSupply)
-  optTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
-optTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optTrivialCall ds <*> optTrivialCall e
-optTrivialCall (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optTrivialCall cs <*> optTrivialCall e
-optTrivialCall (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optTrivialCall cs <*> optTrivialCall e
-optTrivialCall (Destruct a c xs e) = Destruct a c xs <$> optTrivialCall e
-optTrivialCall (DestructRecord a xs e) = DestructRecord a xs <$> optTrivialCall e
-optTrivialCall (Assign x v e) = Assign x <$> optTrivialCall v <*> optTrivialCall e
-optTrivialCall e@Error {} = pure e
+  foldTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
+foldTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) foldTrivialCall ds <*> foldTrivialCall e
+foldTrivialCall (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) foldTrivialCall cs <*> foldTrivialCall e
+foldTrivialCall (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) foldTrivialCall cs <*> foldTrivialCall e
+foldTrivialCall (Destruct a c xs e) = Destruct a c xs <$> foldTrivialCall e
+foldTrivialCall (DestructRecord a xs e) = DestructRecord a xs <$> foldTrivialCall e
+foldTrivialCall (Assign x v e) = Assign x <$> foldTrivialCall v <*> foldTrivialCall e
+foldTrivialCall e@Error {} = pure e
 
 newtype CallInlineEnv = CallInlineEnv
   { inlinableMap :: HashMap (Id Type) ([Id Type], Exp (Id Type))
   }
 
 -- | Inline a function call.
-optCallInline ::
+inlineFunction ::
   (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) =>
   Exp (Id Type) ->
   f (Exp (Id Type))
-optCallInline e@Atom {} = pure e
-optCallInline (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
-optCallInline e@Call {} = pure e
-optCallInline (CallDirect f xs) = lookupCallInline CallDirect f xs
-optCallInline e@RawCall {} = pure e
-optCallInline e@BinOp {} = pure e
-optCallInline e@Cast {} = pure e
-optCallInline (Let ds e) = do
-  ds' <- traverseOf (traversed . object . appObj) optCallInline ds
+inlineFunction e@Atom {} = pure e
+inlineFunction (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
+inlineFunction e@Call {} = pure e
+inlineFunction (CallDirect f xs) = lookupCallInline CallDirect f xs
+inlineFunction e@RawCall {} = pure e
+inlineFunction e@BinOp {} = pure e
+inlineFunction e@Cast {} = pure e
+inlineFunction (Let ds e) = do
+  ds' <- traverseOf (traversed . object . appObj) inlineFunction ds
   traverse_ checkInlinable ds'
-  Let ds' <$> optCallInline e
-optCallInline (Match v cs) =
-  Match <$> optCallInline v <*> traverseOf (traversed . appCase) optCallInline cs
-optCallInline (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optCallInline cs <*> optCallInline e
-optCallInline (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optCallInline cs <*> optCallInline e
-optCallInline (Destruct a c xs e) = Destruct a c xs <$> optCallInline e
-optCallInline (DestructRecord a xs e) = DestructRecord a xs <$> optCallInline e
-optCallInline (Assign x v e) = Assign x <$> optCallInline v <*> optCallInline e
-optCallInline e@Error {} = pure e
+  Let ds' <$> inlineFunction e
+inlineFunction (Match v cs) =
+  Match <$> inlineFunction v <*> traverseOf (traversed . appCase) inlineFunction cs
+inlineFunction (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) inlineFunction cs <*> inlineFunction e
+inlineFunction (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) inlineFunction cs <*> inlineFunction e
+inlineFunction (Destruct a c xs e) = Destruct a c xs <$> inlineFunction e
+inlineFunction (DestructRecord a xs e) = DestructRecord a xs <$> inlineFunction e
+inlineFunction (Assign x v e) = Assign x <$> inlineFunction v <*> inlineFunction e
+inlineFunction e@Error {} = pure e
 
 -- | Check if a function is inlinable.
 checkInlinable ::
@@ -164,10 +151,10 @@ checkInlinable ::
   LocalDef (Id Type) ->
   m ()
 checkInlinable (LocalDef f _ (Fun ps v)) = do
-  level <- asks (.option.inlineSize)
+  threshold <- asks (.option.inlineThreshold)
   -- 変数の数がlevel以下ならインライン展開する
-  let isInlinableSize = level >= length v
-  when isInlinableSize $ do
+  let isInlinable = threshold >= length v
+  when isInlinable $ do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
 checkInlinable _ = pass
 
@@ -190,78 +177,78 @@ lookupCallInline call f as = do
       alpha v AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
     Nothing -> pure $ call f as
 
-type PackInlineMap = HashMap (Id Type) (Con, [Atom (Id Type)])
+type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 -- | Inline simple pattern match and pack.
-optPackInline :: MonadReader PackInlineMap m => Exp (Id Type) -> m (Exp (Id Type))
-optPackInline e@Atom {} = pure e
-optPackInline e@Call {} = pure e
-optPackInline e@CallDirect {} = pure e
-optPackInline e@RawCall {} = pure e
-optPackInline e@BinOp {} = pure e
-optPackInline e@Cast {} = pure e
-optPackInline (Let ds e) = do
-  ds' <- traverseOf (traversed . object . appObj) optPackInline ds
-  local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> optPackInline e
+inlineConstructor :: MonadReader InlineConstructorMap m => Exp (Id Type) -> m (Exp (Id Type))
+inlineConstructor e@Atom {} = pure e
+inlineConstructor e@Call {} = pure e
+inlineConstructor e@CallDirect {} = pure e
+inlineConstructor e@RawCall {} = pure e
+inlineConstructor e@BinOp {} = pure e
+inlineConstructor e@Cast {} = pure e
+inlineConstructor (Let ds e) = do
+  ds' <- traverseOf (traversed . object . appObj) inlineConstructor ds
+  local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> inlineConstructor e
   where
     toPackInlineMap (LocalDef v _ (Pack _ con as)) = one (v, (con, as))
     toPackInlineMap _ = mempty
-optPackInline (Match (Atom (Var v)) [Unpack con xs body]) = do
-  body' <- optPackInline body
+inlineConstructor (Match (Atom (Var v)) [Unpack con xs body]) = do
+  body' <- inlineConstructor body
   view (at v) >>= \case
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Destruct (Var v) con xs body'
   where
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
-optPackInline (Match v cs) =
-  Match <$> optPackInline v <*> traverseOf (traversed . appCase) optPackInline cs
-optPackInline (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optPackInline cs <*> optPackInline e
-optPackInline (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optPackInline cs <*> optPackInline e
-optPackInline (Destruct (Var v) con xs body) = do
-  body' <- optPackInline body
+inlineConstructor (Match v cs) =
+  Match <$> inlineConstructor v <*> traverseOf (traversed . appCase) inlineConstructor cs
+inlineConstructor (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) inlineConstructor cs <*> inlineConstructor e
+inlineConstructor (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) inlineConstructor cs <*> inlineConstructor e
+inlineConstructor (Destruct (Var v) con xs body) = do
+  body' <- inlineConstructor body
   view (at v) >>= \case
     Just (con', as) | con == con' -> pure $ build xs as body'
     _ -> pure $ Destruct (Var v) con xs body'
   where
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
-optPackInline (Destruct a c xs body) = Destruct a c xs <$> optPackInline body
-optPackInline (DestructRecord v xs body) = DestructRecord v xs <$> optPackInline body
-optPackInline (Assign x v e) = Assign x <$> optPackInline v <*> optPackInline e
-optPackInline e@Error {} = pure e
+inlineConstructor (Destruct a c xs body) = Destruct a c xs <$> inlineConstructor body
+inlineConstructor (DestructRecord v xs body) = DestructRecord v xs <$> inlineConstructor body
+inlineConstructor (Assign x v e) = Assign x <$> inlineConstructor v <*> inlineConstructor e
+inlineConstructor e@Error {} = pure e
 
 -- | Remove variable binding if that variable is an alias of another variable.
-optVarBind :: (Eq a, Applicative f) => Exp a -> f (Exp a)
-optVarBind e@Atom {} = pure e
-optVarBind e@Call {} = pure e
-optVarBind e@CallDirect {} = pure e
-optVarBind e@RawCall {} = pure e
-optVarBind e@BinOp {} = pure e
-optVarBind e@Cast {} = pure e
-optVarBind (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optVarBind ds <*> optVarBind e
-optVarBind (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> optVarBind e
-optVarBind (Match v cs) = Match <$> optVarBind v <*> traverseOf (traversed . appCase) optVarBind cs
-optVarBind (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optVarBind cs <*> optVarBind e
-optVarBind (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optVarBind cs <*> optVarBind e
-optVarBind (Destruct a c xs e) = Destruct a c xs <$> optVarBind e
-optVarBind (DestructRecord a xs e) = DestructRecord a xs <$> optVarBind e
-optVarBind (Assign x (Atom a) e) = replaceOf atom (Var x) a <$> optVarBind e
-optVarBind (Assign x v e) = Assign x <$> optVarBind v <*> optVarBind e
-optVarBind e@Error {} = pure e
+foldVariable :: (Eq a, Applicative f) => Exp a -> f (Exp a)
+foldVariable e@Atom {} = pure e
+foldVariable e@Call {} = pure e
+foldVariable e@CallDirect {} = pure e
+foldVariable e@RawCall {} = pure e
+foldVariable e@BinOp {} = pure e
+foldVariable e@Cast {} = pure e
+foldVariable (Let ds e) = Let <$> traverseOf (traversed . object . appObj) foldVariable ds <*> foldVariable e
+foldVariable (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> foldVariable e
+foldVariable (Match v cs) = Match <$> foldVariable v <*> traverseOf (traversed . appCase) foldVariable cs
+foldVariable (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) foldVariable cs <*> foldVariable e
+foldVariable (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) foldVariable cs <*> foldVariable e
+foldVariable (Destruct a c xs e) = Destruct a c xs <$> foldVariable e
+foldVariable (DestructRecord a xs e) = DestructRecord a xs <$> foldVariable e
+foldVariable (Assign x (Atom a) e) = replaceOf atom (Var x) a <$> foldVariable e
+foldVariable (Assign x v e) = Assign x <$> foldVariable v <*> foldVariable e
+foldVariable e@Error {} = pure e
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
-removeUnusedLet :: (Monad f, Hashable a) => Exp (Id a) -> f (Exp (Id a))
-removeUnusedLet e@Atom {} = pure e
-removeUnusedLet e@Call {} = pure e
-removeUnusedLet e@CallDirect {} = pure e
-removeUnusedLet e@RawCall {} = pure e
-removeUnusedLet e@BinOp {} = pure e
-removeUnusedLet e@Cast {} = pure e
-removeUnusedLet (Let ds e) = do
-  ds' <- traverseOf (traversed . object . appObj) removeUnusedLet ds
-  e' <- removeUnusedLet e
+eliminateUnusedLet :: (Monad f, Hashable a) => Exp (Id a) -> f (Exp (Id a))
+eliminateUnusedLet e@Atom {} = pure e
+eliminateUnusedLet e@Call {} = pure e
+eliminateUnusedLet e@CallDirect {} = pure e
+eliminateUnusedLet e@RawCall {} = pure e
+eliminateUnusedLet e@BinOp {} = pure e
+eliminateUnusedLet e@Cast {} = pure e
+eliminateUnusedLet (Let ds e) = do
+  ds' <- traverseOf (traversed . object . appObj) eliminateUnusedLet ds
+  e' <- eliminateUnusedLet e
   -- 定義vから到達可能でかつvで定義されていない変数すべての集合のマップ
   let gamma = map (\(LocalDef v _ o) -> (v, HashSet.delete v $ freevars o)) ds'
   if any (\(LocalDef v _ _) -> reachable 100 gamma v $ freevars e') ds' then pure $ Let ds' e' else pure e'
@@ -277,43 +264,43 @@ removeUnusedLet (Let ds e) = do
           -- fvsに変化がなければ、vはどこからも参照されていない
           let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
            in fvs /= fvs' && reachable limit gamma v fvs'
-removeUnusedLet (Match v cs) =
-  Match <$> removeUnusedLet v <*> traverseOf (traversed . appCase) removeUnusedLet cs
-removeUnusedLet (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) removeUnusedLet cs <*> removeUnusedLet e
-removeUnusedLet (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) removeUnusedLet cs <*> removeUnusedLet e
-removeUnusedLet (Destruct a c xs e) = Destruct a c xs <$> removeUnusedLet e
-removeUnusedLet (DestructRecord a xs e) = DestructRecord a xs <$> removeUnusedLet e
-removeUnusedLet (Assign x v e) = Assign x <$> removeUnusedLet v <*> removeUnusedLet e
-removeUnusedLet e@Error {} = pure e
+eliminateUnusedLet (Match v cs) =
+  Match <$> eliminateUnusedLet v <*> traverseOf (traversed . appCase) eliminateUnusedLet cs
+eliminateUnusedLet (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) eliminateUnusedLet cs <*> eliminateUnusedLet e
+eliminateUnusedLet (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) eliminateUnusedLet cs <*> eliminateUnusedLet e
+eliminateUnusedLet (Destruct a c xs e) = Destruct a c xs <$> eliminateUnusedLet e
+eliminateUnusedLet (DestructRecord a xs e) = DestructRecord a xs <$> eliminateUnusedLet e
+eliminateUnusedLet (Assign x v e) = Assign x <$> eliminateUnusedLet v <*> eliminateUnusedLet e
+eliminateUnusedLet e@Error {} = pure e
 
 -- | Remove a cast if it is redundant.
-optIdCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
-optIdCast e@Atom {} = pure e
-optIdCast e@Call {} = pure e
-optIdCast e@CallDirect {} = pure e
-optIdCast e@RawCall {} = pure e
-optIdCast e@BinOp {} = pure e
-optIdCast (Cast t e)
+foldRedundantCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
+foldRedundantCast e@Atom {} = pure e
+foldRedundantCast e@Call {} = pure e
+foldRedundantCast e@CallDirect {} = pure e
+foldRedundantCast e@RawCall {} = pure e
+foldRedundantCast e@BinOp {} = pure e
+foldRedundantCast (Cast t e)
   | typeOf e == t = pure (Atom e)
   | otherwise = pure (Cast t e)
-optIdCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optIdCast ds <*> optIdCast e
-optIdCast (Match v cs) = Match <$> optIdCast v <*> traverseOf (traversed . appCase) optIdCast cs
-optIdCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optIdCast cs <*> optIdCast e
-optIdCast (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optIdCast cs <*> optIdCast e
-optIdCast (Destruct a c xs e) = Destruct a c xs <$> optIdCast e
-optIdCast (DestructRecord a xs e) = DestructRecord a xs <$> optIdCast e
-optIdCast (Assign x v e) = Assign x <$> optIdCast v <*> optIdCast e
-optIdCast e@Error {} = pure e
+foldRedundantCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) foldRedundantCast ds <*> foldRedundantCast e
+foldRedundantCast (Match v cs) = Match <$> foldRedundantCast v <*> traverseOf (traversed . appCase) foldRedundantCast cs
+foldRedundantCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) foldRedundantCast cs <*> foldRedundantCast e
+foldRedundantCast (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) foldRedundantCast cs <*> foldRedundantCast e
+foldRedundantCast (Destruct a c xs e) = Destruct a c xs <$> foldRedundantCast e
+foldRedundantCast (DestructRecord a xs e) = DestructRecord a xs <$> foldRedundantCast e
+foldRedundantCast (Assign x v e) = Assign x <$> foldRedundantCast v <*> foldRedundantCast e
+foldRedundantCast e@Error {} = pure e
 
 -- | Specialize a function which is casted to a specific type.
 -- TODO: ベンチマーク
-optCast :: (MonadIO m, MonadReader OptimizeEnv m) => Exp (Id Type) -> m (Exp (Id Type))
-optCast e@Atom {} = pure e
-optCast e@Call {} = pure e
-optCast e@CallDirect {} = pure e
-optCast e@RawCall {} = pure e
-optCast e@BinOp {} = pure e
-optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
+specializeFunction :: (MonadIO m, MonadReader OptimizeEnv m) => Exp (Id Type) -> m (Exp (Id Type))
+specializeFunction e@Atom {} = pure e
+specializeFunction e@Call {} = pure e
+specializeFunction e@CallDirect {} = pure e
+specializeFunction e@RawCall {} = pure e
+specializeFunction e@BinOp {} = pure e
+specializeFunction e@(Cast (pts' :-> rt') f) = case typeOf f of
   pts :-> _
     | length pts' == length pts -> do
         f' <- newInternalId "cast_opt" (pts' :-> rt')
@@ -325,14 +312,14 @@ optCast e@(Cast (pts' :-> rt') f) = case typeOf f of
           r <- bind (Call f ps)
           pure $ Cast rt' r
         pure (Let [LocalDef f' (pts' :-> rt') $ Fun ps' v'] (Atom $ Var f'))
-    | otherwise -> error "optCast: invalid cast"
+    | otherwise -> error "specializeFunction: invalid cast"
   _ -> pure e
-optCast e@Cast {} = pure e
-optCast (Match v cs) = Match <$> optCast v <*> traverseOf (traversed . appCase) optCast cs
-optCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) optCast ds <*> optCast e
-optCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) optCast cs <*> optCast e
-optCast (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) optCast cs <*> optCast e
-optCast (Destruct a c xs e) = Destruct a c xs <$> optCast e
-optCast (DestructRecord a xs e) = DestructRecord a xs <$> optCast e
-optCast (Assign x v e) = Assign x <$> optCast v <*> optCast e
-optCast e@Error {} = pure e
+specializeFunction e@Cast {} = pure e
+specializeFunction (Match v cs) = Match <$> specializeFunction v <*> traverseOf (traversed . appCase) specializeFunction cs
+specializeFunction (Let ds e) = Let <$> traverseOf (traversed . object . appObj) specializeFunction ds <*> specializeFunction e
+specializeFunction (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) specializeFunction cs <*> specializeFunction e
+specializeFunction (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) specializeFunction cs <*> specializeFunction e
+specializeFunction (Destruct a c xs e) = Destruct a c xs <$> specializeFunction e
+specializeFunction (DestructRecord a xs e) = DestructRecord a xs <$> specializeFunction e
+specializeFunction (Assign x v e) = Assign x <$> specializeFunction v <*> specializeFunction e
+specializeFunction e@Error {} = pure e

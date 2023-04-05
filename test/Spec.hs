@@ -219,24 +219,24 @@ testNoNo testcase = test testcase "nono" False True defaultOptimizeOption True
 #ifdef TEST_ALL
 showOptimizeOption :: OptimizeOption -> [Text]
 showOptimizeOption OptimizeOption {..} =
-  ["fold-variable" | doOptVarBind]
-    <> ["inline-constructor" | doOptPackInline]
-    <> ["eliminate-unused-let" | doOptRemoveUnusedLet]
-    <> ["inline-function" | doOptCallInline]
-    <> ["fold-redudant-cast" | doOptIdCast]
-    <> ["fold-trivial-call" | doOptTrivialCall]
-    <> ["specialize-function" | doOptCast]
+  ["fold-variable" | doFoldVariable]
+    <> ["inline-constructor" | doInlineConstructor]
+    <> ["eliminate-unused-let" | doEliminateUnusedLet]
+    <> ["inline-function" | doInlineFunction]
+    <> ["fold-redudant-cast" | doFoldRedundantCast]
+    <> ["fold-trivial-call" | doFoldTrivialCall]
+    <> ["specialize-function" | doSpecializeFunction]
 
 optimizeOptions :: [OptimizeOption]
 optimizeOptions =
-  let inlineSize = 10
-      doOptCast = False
+  let inlineThreshold = 10
+      doSpecializeFunction = False
    in [ OptimizeOption {..}
-        | doOptVarBind <- [True, False],
-          doOptPackInline <- [True, False],
-          doOptRemoveUnusedLet <- [True, False],
-          doOptCallInline <- [True, False],
-          doOptIdCast <- [True, False],
-          doOptTrivialCall <- [True, False]
+        | doFoldVariable <- [True, False],
+          doInlineConstructor <- [True, False],
+          doEliminateUnusedLet <- [True, False],
+          doInlineFunction<- [True, False],
+          doFoldRedundantCast <- [True, False],
+          doFoldTrivialCall <- [True, False]
       ]
 #endif
