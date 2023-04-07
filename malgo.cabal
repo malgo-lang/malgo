@@ -115,6 +115,7 @@ library
     , syb
     , text
     , transformers
+    , unliftio
     , unordered-containers
     , witherable
   default-language: GHC2021
@@ -171,6 +172,7 @@ executable malgo
     , syb
     , text
     , transformers
+    , unliftio
     , unordered-containers
     , witherable
   default-language: GHC2021
@@ -233,6 +235,7 @@ test-suite malgo-test
     , time
     , transformers
     , typed-process
+    , unliftio
     , unordered-containers
     , witherable
   default-language: GHC2021
@@ -291,6 +294,7 @@ benchmark malgo-bench
     , text
     , transformers
     , typed-process
+    , unliftio
     , unordered-containers
     , witherable
   default-language: GHC2021
