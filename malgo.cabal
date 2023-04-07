@@ -112,6 +112,7 @@ library
     , pretty
     , relude >=1.0.0.0
     , string-conversions
+    , syb
     , text
     , transformers
     , unordered-containers
@@ -167,6 +168,7 @@ executable malgo
     , pretty
     , relude >=1.0.0.0
     , string-conversions
+    , syb
     , text
     , transformers
     , unordered-containers
@@ -226,6 +228,7 @@ test-suite malgo-test
     , relude >=1.0.0.0
     , silently
     , string-conversions
+    , syb
     , text
     , time
     , transformers
@@ -284,6 +287,7 @@ benchmark malgo-bench
     , pretty
     , relude >=1.0.0.0
     , string-conversions
+    , syb
     , text
     , transformers
     , typed-process

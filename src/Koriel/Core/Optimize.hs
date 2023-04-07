@@ -9,6 +9,7 @@ where
 
 import Control.Lens (At (at), makeFieldsNoPrefix, traverseOf, traversed, view, _2)
 import Control.Monad.Except
+import Data.Generics (gsize)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
@@ -40,7 +41,7 @@ defaultOptimizeOption =
       doInlineConstructor = True,
       doEliminateUnusedLet = True,
       doInlineFunction = True,
-      inlineThreshold = 10,
+      inlineThreshold = 5,
       doFoldRedundantCast = True,
       doFoldTrivialCall = True,
       doSpecializeFunction = True
@@ -152,8 +153,8 @@ checkInlinable ::
   m ()
 checkInlinable (LocalDef f _ (Fun ps v)) = do
   threshold <- asks (.option.inlineThreshold)
-  -- 変数の数がlevel以下ならインライン展開する
-  let isInlinable = threshold >= length v
+  -- ノードの数がthreshold以下ならインライン展開する
+  let isInlinable = threshold >= gsize v
   when isInlinable $ do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
 checkInlinable _ = pass
