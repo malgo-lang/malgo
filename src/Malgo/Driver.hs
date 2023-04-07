@@ -2,7 +2,6 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception.Extra (assertIO)
-import Control.Lens (traverseOf, _1)
 import Data.Binary qualified as Binary
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -95,21 +94,23 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName mempty env.optimizeOption core
+      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.optimizeOption core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
       writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
-      (coreLL, knowns) <- traverseOf _1 flat =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure (coreOpt, mempty)
-      writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
+      coreLL <- flat =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
+      when env.debugMode $
+        writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreLL
       when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-      coreLLOpt <- flat =<< if env.noOptimize || not env.lambdaLift then pure coreLL else optimizeProgram uniqSupply moduleName knowns env.optimizeOption coreLL
-      writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
+      coreLLOpt <- flat =<< if env.noOptimize || not env.lambdaLift then pure coreLL else optimizeProgram uniqSupply moduleName env.optimizeOption coreLL
+      when env.debugMode $
+        writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreLLOpt
       when (env.debugMode && env.lambdaLift && not env.noOptimize) $
         liftIO $ do

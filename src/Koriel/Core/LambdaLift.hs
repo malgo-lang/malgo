@@ -43,7 +43,7 @@ def name xs e = do
   modify $ \state@LambdaLiftState {_funcs} -> state {_funcs = HashMap.insert f (xs, typeOf f, e) _funcs}
   pure f
 
-lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type), HashSet (Id Type))
+lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
 lambdalift uniqSupply moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns} $ do
@@ -60,8 +60,7 @@ lambdalift uniqSupply moduleName Program {..} =
                 HashMap.toList _funcs
             )
             extFuns
-      prog <- appProgram toDirect prog
-      (prog,) <$> use knowns
+      appProgram toDirect prog
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
 llift (Atom a) = pure $ Atom a

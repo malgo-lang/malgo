@@ -41,7 +41,7 @@ defaultOptimizeOption =
       doInlineConstructor = True,
       doEliminateUnusedLet = True,
       doInlineFunction = True,
-      inlineThreshold = 5,
+      inlineThreshold = 10,
       doFoldRedundantCast = True,
       doFoldTrivialCall = True,
       doSpecializeFunction = True
@@ -50,7 +50,6 @@ defaultOptimizeOption =
 data OptimizeEnv = OptimizeEnv
   { uniqSupply :: UniqSupply,
     moduleName :: ModuleName,
-    knowns :: HashSet (Id Type),
     option :: OptimizeOption
   }
 
@@ -71,11 +70,10 @@ optimizeProgram ::
   MonadIO m =>
   UniqSupply ->
   ModuleName ->
-  HashSet (Id Type) ->
   OptimizeOption ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram uniqSupply moduleName knowns option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
+optimizeProgram uniqSupply moduleName option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
   state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
@@ -161,21 +159,17 @@ checkInlinable _ = pass
 
 -- | Lookup a function in the inlinable map.
 lookupCallInline ::
-  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m, MonadIO m) =>
+  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) =>
   (Id Type -> [Atom (Id Type)] -> Exp (Id Type)) ->
   Id Type ->
   [Atom (Id Type)] ->
   m (Exp (Id Type))
 lookupCallInline call f as = do
   f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
-  us <- asks (.uniqSupply)
   case f' of
     Just (ps, v) ->
       -- v[as/ps]
-      -- 以下のように書くと、変数のキャプチャが発生してうまく動かない。
-      -- optIdCastと干渉するようだ。
-      -- pure $ foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
-      alpha v AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
+      pure $ foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
     Nothing -> pure $ call f as
 
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
