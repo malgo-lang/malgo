@@ -7,6 +7,7 @@ module Koriel.Core.Optimize
   )
 where
 
+import Control.Exception.Extra (assertIO)
 import Control.Lens (At (at), makeFieldsNoPrefix, traverseOf, traversed, view, _2)
 import Control.Monad.Except
 import Data.Generics (gsize)
@@ -50,6 +51,7 @@ defaultOptimizeOption =
 data OptimizeEnv = OptimizeEnv
   { uniqSupply :: UniqSupply,
     moduleName :: ModuleName,
+    debugMode :: Bool,
     option :: OptimizeOption
   }
 
@@ -59,21 +61,18 @@ makeFieldsNoPrefix ''OptimizeEnv
 times :: (Monad m, Eq t) => Int -> (t -> m t) -> t -> m t
 times 0 _ x = pure x
 times n f x
-  | n > 0 = do
-      x' <- f x
-      if x == x'
-        then pure x
-        else times (n - 1) f x'
+  | n > 0 = times (n - 1) f =<< f x
   | otherwise = error $ show n <> " must be a natural number"
 
 optimizeProgram ::
   MonadIO m =>
   UniqSupply ->
   ModuleName ->
+  Bool ->
   OptimizeOption ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram uniqSupply moduleName option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
+optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
   state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
@@ -93,7 +92,13 @@ optimizeExpr state expr = do
         >=> (if option.doFoldRedundantCast then foldRedundantCast else pure)
         >=> (if option.doFoldTrivialCall then foldTrivialCall else pure)
         >=> (if option.doSpecializeFunction then specializeFunction else pure)
-        >=> runFlat . flatExp
+        >=> \x -> do
+          -- Check if the optimization result are flattened.
+          debugMode <- asks (.debugMode)
+          when debugMode $ do
+            x' <- runFlat $ flatExp x
+            liftIO $ assertIO (x == x')
+          pure x
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
 foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
