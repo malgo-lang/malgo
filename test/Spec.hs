@@ -128,6 +128,7 @@ compile src dst modPaths lambdaLift noOptimize option isPrintError = do
             _modulePaths = takeDirectory dst : malgoEnv._modulePaths,
             lambdaLift,
             noOptimize,
+            debugMode = True,
             optimizeOption = option
           }
     Driver.compile src malgoEnv

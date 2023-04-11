@@ -102,24 +102,17 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       lint coreOpt
       coreLL <- flat =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
       when env.debugMode $
-        writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
+        writeFile (env.dstPath -<.> "kor.opt.lift") $
+          render $
+            pPrint coreOpt
       lint coreLL
       when (env.debugMode && env.lambdaLift) $
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-      coreLLOpt <- flat =<< if env.noOptimize || not env.lambdaLift then pure coreLL else optimizeProgram uniqSupply moduleName env.optimizeOption coreLL
-      when env.debugMode $
-        writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
-      lint coreLLOpt
-      when (env.debugMode && env.lambdaLift && not env.noOptimize) $
-        liftIO $ do
-          hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
-          hPrint stderr $ pPrint coreLLOpt
-
       case env.compileMode of
         LLVM -> do
-          codeGen srcPath env moduleName dsEnv coreLLOpt
+          codeGen srcPath env moduleName dsEnv coreLL
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
