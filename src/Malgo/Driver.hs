@@ -110,6 +110,13 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         liftIO $ do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
+
+      when (env.debugMode && not env.noOptimize) do
+        coreLLOpt <- optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption coreLL
+        hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
+        hPrint stderr $ pPrint coreLLOpt
+        assert (coreLLOpt == coreLL) pass
+
       case env.compileMode of
         LLVM -> do
           codeGen srcPath env moduleName dsEnv coreLL

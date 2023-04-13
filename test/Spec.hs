@@ -41,6 +41,7 @@ import Test.Hspec
     it,
     parallel,
     runIO,
+    sequential,
     shouldThrow,
   )
 
@@ -63,14 +64,15 @@ main =
     testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
     describe "Test malgo to-ll" $ parallel do
       for_ testcases \testcase -> do
-        it ("test usual case " <> testcase) $ example do
-          testNormal (testcaseDir </> testcase)
-        it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
-          testNoNo (testcaseDir </> testcase)
-        it ("test noopt case " <> testcase <> " (no optimization)") $ example do
-          testNoOpt (testcaseDir </> testcase)
-        it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
-          testNoLift (testcaseDir </> testcase)
+        describe testcase $ sequential do
+          it ("test usual case " <> testcase) $ example do
+            testNormal (testcaseDir </> testcase)
+          it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
+            testNoNo (testcaseDir </> testcase)
+          it ("test noopt case " <> testcase <> " (no optimization)") $ example do
+            testNoOpt (testcaseDir </> testcase)
+          it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
+            testNoLift (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" $ parallel do
       for_ examples \examplecase -> do
@@ -85,9 +87,10 @@ main =
 #ifdef TEST_ALL
     describe "Test malgo to-ll on all combinations of optimization options" $ parallel do
       for_ testcases \testcase ->
-        for_ optimizeOptions \option -> do
-          it ("test " <> testcase <> " " <> show (showOptimizeOption option)) $ example do
-            test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option True
+        describe testcase $ sequential do
+          for_ optimizeOptions \option -> do
+            it ("test " <> testcase <> " " <> show (showOptimizeOption option)) $ example do
+              test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option True
 #endif
 
 setupTestDir :: IO ()
