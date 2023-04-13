@@ -1,13 +1,13 @@
-{-# OPTIONS_GHC -Wno-deprecations #-}
-
 module Main (main) where
 
-import Data.String.Conversions (convertString)
+import Criterion
+import Criterion.Main
+import Data.String.Conversions
 import Malgo.Driver qualified as Driver
 import Malgo.Monad (MalgoEnv (..), newMalgoEnv)
 import Relude
 import System.Directory (copyFile, createDirectoryIfMissing, listDirectory, setCurrentDirectory)
-import System.FilePath (isExtensionOf, takeDirectory, (-<.>), (</>))
+import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.IO (hPutStr)
 import System.Process.Typed (ExitCode (..), nullStream, proc, readProcessStderr_, readProcessStdout_, runProcess, runProcess_, setStderr, setStdout)
 
@@ -17,36 +17,68 @@ benchmarkDir = "benchmarks"
 outputDir :: FilePath
 outputDir = "/tmp/malgo_benchmark"
 
-main :: IO ()
-main = do
+setupEnv :: IO [FilePath]
+setupEnv = do
   setupOutputDir
   setupBuiltin
   setupPrelude
   setupRuntime
   benchmarks <- filter (isExtensionOf "mlg") <$> listDirectory benchmarkDir
   for_ benchmarks \benchmark -> do
-    let llPath = outputDir </> benchmark -<.> "ll"
-    compile (benchmarkDir </> benchmark) llPath [outputDir </> "libs"] False False
-    pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
-    clang <- getClangCommand
-    err <-
-      readProcessStderr_
-        ( proc
-            clang
-            $ [ "-Wno-override-module",
-                "-lm"
-              ]
-              <> pkgConfig
-              <> [ outputDir </> "libs" </> "runtime.c",
-                   llPath,
-                   outputDir </> "libs" </> "libgriff_rustlib.a",
-                   "-lpthread",
-                   "-ldl",
-                   "-o",
-                   llPath -<.> "out"
-                 ]
-        )
-    hPutStr stderr $ convertString err
+    let llOptPath = outputDir </> benchmark -<.> "ll"
+    let llNoOptPath = outputDir </> benchmark -<.> "no-opt.ll"
+    let llNoLLPath = outputDir </> benchmark -<.> "no-ll.ll"
+    compile (benchmarkDir </> benchmark) llOptPath [outputDir </> "libs"] True False
+    compile (benchmarkDir </> benchmark) llNoOptPath [outputDir </> "libs"] True True
+    compile (benchmarkDir </> benchmark) llNoLLPath [outputDir </> "libs"] False False
+    runClang llOptPath
+    runClang llNoOptPath
+    runClang llNoLLPath
+  pure benchmarks
+  where
+    runClang llPath = do
+      pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
+      clang <- getClangCommand
+      err <-
+        readProcessStderr_
+          ( proc
+              clang
+              $ [ "-Wno-override-module",
+                  "-lm"
+                ]
+                <> pkgConfig
+                <> [ outputDir </> "libs" </> "runtime.c",
+                     llPath,
+                     outputDir </> "libs" </> "libgriff_rustlib.a",
+                     "-lpthread",
+                     "-ldl",
+                     "-o",
+                     llPath -<.> "out"
+                   ]
+          )
+      hPutStr stderr $ convertString err
+
+main :: IO ()
+main = do
+  benchmarks <- setupEnv
+  defaultMain
+    [ bgroup "optimized" $ map runOpt benchmarks,
+      bgroup "no optimized" $ map runNoOpt benchmarks,
+      bgroup "no lambdalift" $ map runNoLL benchmarks
+    ]
+  where
+    runOpt testcase = bench (takeBaseName testcase) $ nfIO $ do
+      runProcess_ $
+        proc (outputDir </> takeBaseName testcase -<.> "out") []
+          & setStdout nullStream
+    runNoOpt testcase = bench (takeBaseName testcase) $ nfIO $ do
+      runProcess_ $
+        proc (outputDir </> takeBaseName testcase -<.> "no-opt.out") []
+          & setStdout nullStream
+    runNoLL testcase = bench (takeBaseName testcase) $ nfIO $ do
+      runProcess_ $
+        proc (outputDir </> takeBaseName testcase -<.> "no-ll.out") []
+          & setStdout nullStream
 
 -- | Get the correct name of `clang`
 getClangCommand :: IO String

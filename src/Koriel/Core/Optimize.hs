@@ -44,7 +44,7 @@ defaultOptimizeOption =
       inlineThreshold = 10,
       doFoldRedundantCast = True,
       doFoldTrivialCall = True,
-      doSpecializeFunction = True
+      doSpecializeFunction = False
     }
 
 data OptimizeEnv = OptimizeEnv
