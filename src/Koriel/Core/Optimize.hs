@@ -7,7 +7,6 @@ module Koriel.Core.Optimize
   )
 where
 
-import Control.Exception.Extra (assertIO)
 import Control.Lens (At (at), makeFieldsNoPrefix, traverseOf, traversed, view, _2)
 import Control.Monad.Except
 import Data.Generics (gsize)
@@ -92,13 +91,7 @@ optimizeExpr state expr = do
         >=> (if option.doFoldRedundantCast then foldRedundantCast else pure)
         >=> (if option.doFoldTrivialCall then foldTrivialCall else pure)
         >=> (if option.doSpecializeFunction then specializeFunction else pure)
-        >=> \x -> do
-          -- Check if the optimization result are flattened.
-          debugMode <- asks (.debugMode)
-          when debugMode $ do
-            x' <- runFlat $ flatExp x
-            liftIO $ assertIO (x == x')
-          pure x
+        >=> runFlat . flatExp
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
 foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))

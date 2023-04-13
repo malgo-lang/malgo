@@ -1,7 +1,7 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
-import Control.Exception.Extra (assertIO)
+import Control.Exception (assert)
 import Data.Binary qualified as Binary
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -78,7 +78,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
 
       -- check module paths include dstName's directory
-      liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
+      assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
       core <- Link.link inf core
       writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
 
@@ -94,13 +94,13 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core
+      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
       writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
-      coreLL <- flat =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
+      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
       when env.debugMode $
         writeFile (env.dstPath -<.> "kor.opt.lift") $
           render $

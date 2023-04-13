@@ -7,7 +7,7 @@ module Koriel.Core.Alpha
   )
 where
 
-import Control.Exception.Extra (assertIO)
+import Control.Exception (assert)
 import Control.Lens (makeFieldsNoPrefix, traverseOf)
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (convertString)
@@ -42,7 +42,7 @@ lookupId n = do
 
 cloneId :: (MonadIO m, MonadReader AlphaEnv m) => Id a -> m (Id a)
 cloneId Id {..} = do
-  liftIO $ assertIO (sort == Internal || sort == Temporal) -- only Internal or Temporal id can be cloned
+  assert (sort == Internal || sort == Temporal) pass -- only Internal or Temporal id can be cloned
   uniq <- getUniq
   name <- pure $ name <> "_" <> convertString (showHex uniq "")
   pure Id {..}
