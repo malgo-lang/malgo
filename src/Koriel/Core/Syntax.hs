@@ -21,8 +21,6 @@ module Koriel.Core.Syntax
     let_,
     bind,
     cast,
-    appCase,
-    appProgram,
     freevars,
     _Unpack,
     _OpenRecord,
@@ -417,26 +415,12 @@ instance HasExpr Obj where
 instance HasExpr LocalDef where
   expr = object . expr
 
-appCase :: Traversal' (Case a) (Expr a)
-appCase f = \case
-  Unpack con ps e -> Unpack con ps <$> f e
-  OpenRecord kvs e -> OpenRecord kvs <$> f e
-  Exact u e -> Exact u <$> f e
-  Bind x t e -> Bind x t <$> f e
-
 instance HasExpr Case where
   expr f = \case
     Unpack con ps e -> Unpack con ps <$> f e
     OpenRecord kvs e -> OpenRecord kvs <$> f e
     Exact u e -> Exact u <$> f e
     Bind x t e -> Bind x t <$> f e
-
-appProgram :: Traversal' (Program a) (Expr a)
-appProgram f Program {..} =
-  Program
-    <$> traverseOf (traversed . _3) f topVars
-    <*> traverseOf (traversed . _4) f topFuns
-    <*> pure extFuns
 
 instance HasExpr Program where
   expr f Program {..} =

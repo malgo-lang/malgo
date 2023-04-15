@@ -104,7 +104,7 @@ foldTrivialCall e@CallDirect {} = pure e
 foldTrivialCall e@RawCall {} = pure e
 foldTrivialCall e@BinOp {} = pure e
 foldTrivialCall e@Cast {} = pure e
-foldTrivialCall (Match v cs) = Match <$> foldTrivialCall v <*> traverseOf (traversed . appCase) foldTrivialCall cs
+foldTrivialCall (Match v cs) = Match <$> foldTrivialCall v <*> traverseOf (traversed . expr) foldTrivialCall cs
 foldTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- asks (.uniqSupply)
   foldTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
@@ -137,7 +137,7 @@ inlineFunction (Let ds e) = do
   traverse_ checkInlinable ds'
   Let ds' <$> inlineFunction e
 inlineFunction (Match v cs) =
-  Match <$> inlineFunction v <*> traverseOf (traversed . appCase) inlineFunction cs
+  Match <$> inlineFunction v <*> traverseOf (traversed . expr) inlineFunction cs
 inlineFunction (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) inlineFunction cs <*> inlineFunction e
 inlineFunction (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) inlineFunction cs <*> inlineFunction e
 inlineFunction (Destruct a c xs e) = Destruct a c xs <$> inlineFunction e
@@ -198,7 +198,7 @@ inlineConstructor (Match (Atom (Var v)) [Unpack con xs body]) = do
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
 inlineConstructor (Match v cs) =
-  Match <$> inlineConstructor v <*> traverseOf (traversed . appCase) inlineConstructor cs
+  Match <$> inlineConstructor v <*> traverseOf (traversed . expr) inlineConstructor cs
 inlineConstructor (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) inlineConstructor cs <*> inlineConstructor e
 inlineConstructor (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) inlineConstructor cs <*> inlineConstructor e
 inlineConstructor (Destruct (Var v) con xs body) = do
@@ -224,7 +224,7 @@ foldVariable e@BinOp {} = pure e
 foldVariable e@Cast {} = pure e
 foldVariable (Let ds e) = Let <$> traverseOf (traversed . expr) foldVariable ds <*> foldVariable e
 foldVariable (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> foldVariable e
-foldVariable (Match v cs) = Match <$> foldVariable v <*> traverseOf (traversed . appCase) foldVariable cs
+foldVariable (Match v cs) = Match <$> foldVariable v <*> traverseOf (traversed . expr) foldVariable cs
 foldVariable (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) foldVariable cs <*> foldVariable e
 foldVariable (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) foldVariable cs <*> foldVariable e
 foldVariable (Destruct a c xs e) = Destruct a c xs <$> foldVariable e
@@ -261,7 +261,7 @@ eliminateUnusedLet (Let ds e) = do
           let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
            in fvs /= fvs' && reachable limit gamma v fvs'
 eliminateUnusedLet (Match v cs) =
-  Match <$> eliminateUnusedLet v <*> traverseOf (traversed . appCase) eliminateUnusedLet cs
+  Match <$> eliminateUnusedLet v <*> traverseOf (traversed . expr) eliminateUnusedLet cs
 eliminateUnusedLet (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) eliminateUnusedLet cs <*> eliminateUnusedLet e
 eliminateUnusedLet (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) eliminateUnusedLet cs <*> eliminateUnusedLet e
 eliminateUnusedLet (Destruct a c xs e) = Destruct a c xs <$> eliminateUnusedLet e
@@ -280,7 +280,7 @@ foldRedundantCast (Cast t e)
   | typeOf e == t = pure (Atom e)
   | otherwise = pure (Cast t e)
 foldRedundantCast (Let ds e) = Let <$> traverseOf (traversed . expr) foldRedundantCast ds <*> foldRedundantCast e
-foldRedundantCast (Match v cs) = Match <$> foldRedundantCast v <*> traverseOf (traversed . appCase) foldRedundantCast cs
+foldRedundantCast (Match v cs) = Match <$> foldRedundantCast v <*> traverseOf (traversed . expr) foldRedundantCast cs
 foldRedundantCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) foldRedundantCast cs <*> foldRedundantCast e
 foldRedundantCast (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) foldRedundantCast cs <*> foldRedundantCast e
 foldRedundantCast (Destruct a c xs e) = Destruct a c xs <$> foldRedundantCast e
@@ -311,7 +311,7 @@ specializeFunction e@(Cast (pts' :-> rt') f) = case typeOf f of
     | otherwise -> error "specializeFunction: invalid cast"
   _ -> pure e
 specializeFunction e@Cast {} = pure e
-specializeFunction (Match v cs) = Match <$> specializeFunction v <*> traverseOf (traversed . appCase) specializeFunction cs
+specializeFunction (Match v cs) = Match <$> specializeFunction v <*> traverseOf (traversed . expr) specializeFunction cs
 specializeFunction (Let ds e) = Let <$> traverseOf (traversed . expr) specializeFunction ds <*> specializeFunction e
 specializeFunction (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) specializeFunction cs <*> specializeFunction e
 specializeFunction (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) specializeFunction cs <*> specializeFunction e

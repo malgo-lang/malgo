@@ -61,7 +61,7 @@ lambdalift uniqSupply moduleName Program {..} =
                 HashMap.toList _funcs
             )
             extFuns
-      appProgram toDirect prog
+      traverseOf expr toDirect prog
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Expr (Id Type) -> f (Expr (Id Type))
 llift (Atom a) = pure $ Atom a
@@ -100,7 +100,7 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       newFun <- def n (toList fvs <> as) body'
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
-llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . appCase) llift cs
+llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . expr) llift cs
 llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> llift e
 llift (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) llift cs <*> llift e
 llift (Destruct a c xs e) = Destruct a c xs <$> llift e
@@ -122,7 +122,7 @@ toDirect (RawCall f t xs) = pure $ RawCall f t xs
 toDirect (BinOp op x y) = pure $ BinOp op x y
 toDirect (Cast t x) = pure $ Cast t x
 toDirect (Let ds e) = Let <$> traverseOf (traversed . expr) toDirect ds <*> toDirect e
-toDirect (Match e cs) = Match <$> toDirect e <*> traverseOf (traversed . appCase) toDirect cs
+toDirect (Match e cs) = Match <$> toDirect e <*> traverseOf (traversed . expr) toDirect cs
 toDirect (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) toDirect cs <*> toDirect e
 toDirect (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) toDirect cs <*> toDirect e
 toDirect (Destruct a c xs e) = Destruct a c xs <$> toDirect e

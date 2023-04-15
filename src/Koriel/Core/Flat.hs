@@ -24,7 +24,7 @@ flat prog = do
   uniqSupply <- asks (.uniqSupply)
   moduleName <- asks (.moduleName)
   runReaderT ?? FlatEnv {..} $
-    traverseOf appProgram (runFlat . flatExpr) prog
+    traverseOf expr (runFlat . flatExpr) prog
 
 type FlatT m = WriterT (Endo (Expr (Id Type))) m
 
@@ -87,7 +87,7 @@ flatMatch e [Bind x _ e'] = do
   flatExpr e'
 flatMatch e cs = do
   e <- flatExpr e
-  cs <- traverseOf (traversed . appCase) (runFlat . flatExpr) cs
+  cs <- traverseOf (traversed . expr) (runFlat . flatExpr) cs
   e' <- newTemporalId "match" (typeOf e)
   tell $ Endo $ \k -> Assign e' e k
   matchToSwitch e' cs
