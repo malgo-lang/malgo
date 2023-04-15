@@ -108,7 +108,7 @@ foldTrivialCall (Match v cs) = Match <$> foldTrivialCall v <*> traverseOf (trave
 foldTrivialCall (Let [LocalDef f _ (Fun ps body)] (Call (Var f') as)) | f == f' = do
   us <- asks (.uniqSupply)
   foldTrivialCall =<< alpha body AlphaEnv {uniqSupply = us, subst = HashMap.fromList $ zip ps as}
-foldTrivialCall (Let ds e) = Let <$> traverseOf (traversed . object . appObj) foldTrivialCall ds <*> foldTrivialCall e
+foldTrivialCall (Let ds e) = Let <$> traverseOf (traversed . expr) foldTrivialCall ds <*> foldTrivialCall e
 foldTrivialCall (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) foldTrivialCall cs <*> foldTrivialCall e
 foldTrivialCall (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) foldTrivialCall cs <*> foldTrivialCall e
 foldTrivialCall (Destruct a c xs e) = Destruct a c xs <$> foldTrivialCall e
@@ -133,7 +133,7 @@ inlineFunction e@RawCall {} = pure e
 inlineFunction e@BinOp {} = pure e
 inlineFunction e@Cast {} = pure e
 inlineFunction (Let ds e) = do
-  ds' <- traverseOf (traversed . object . appObj) inlineFunction ds
+  ds' <- traverseOf (traversed . expr) inlineFunction ds
   traverse_ checkInlinable ds'
   Let ds' <$> inlineFunction e
 inlineFunction (Match v cs) =
@@ -184,7 +184,7 @@ inlineConstructor e@RawCall {} = pure e
 inlineConstructor e@BinOp {} = pure e
 inlineConstructor e@Cast {} = pure e
 inlineConstructor (Let ds e) = do
-  ds' <- traverseOf (traversed . object . appObj) inlineConstructor ds
+  ds' <- traverseOf (traversed . expr) inlineConstructor ds
   local (mconcat (map toPackInlineMap ds') <>) $ Let ds' <$> inlineConstructor e
   where
     toPackInlineMap (LocalDef v _ (Pack _ con as)) = one (v, (con, as))
@@ -222,7 +222,7 @@ foldVariable e@CallDirect {} = pure e
 foldVariable e@RawCall {} = pure e
 foldVariable e@BinOp {} = pure e
 foldVariable e@Cast {} = pure e
-foldVariable (Let ds e) = Let <$> traverseOf (traversed . object . appObj) foldVariable ds <*> foldVariable e
+foldVariable (Let ds e) = Let <$> traverseOf (traversed . expr) foldVariable ds <*> foldVariable e
 foldVariable (Match (Atom a) [Bind x _ e]) = replaceOf atom (Var x) a <$> foldVariable e
 foldVariable (Match v cs) = Match <$> foldVariable v <*> traverseOf (traversed . appCase) foldVariable cs
 foldVariable (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) foldVariable cs <*> foldVariable e
@@ -243,7 +243,7 @@ eliminateUnusedLet e@RawCall {} = pure e
 eliminateUnusedLet e@BinOp {} = pure e
 eliminateUnusedLet e@Cast {} = pure e
 eliminateUnusedLet (Let ds e) = do
-  ds' <- traverseOf (traversed . object . appObj) eliminateUnusedLet ds
+  ds' <- traverseOf (traversed . expr) eliminateUnusedLet ds
   e' <- eliminateUnusedLet e
   -- 定義vから到達可能でかつvで定義されていない変数すべての集合のマップ
   let gamma = map (\(LocalDef v _ o) -> (v, HashSet.delete v $ freevars o)) ds'
@@ -279,7 +279,7 @@ foldRedundantCast e@BinOp {} = pure e
 foldRedundantCast (Cast t e)
   | typeOf e == t = pure (Atom e)
   | otherwise = pure (Cast t e)
-foldRedundantCast (Let ds e) = Let <$> traverseOf (traversed . object . appObj) foldRedundantCast ds <*> foldRedundantCast e
+foldRedundantCast (Let ds e) = Let <$> traverseOf (traversed . expr) foldRedundantCast ds <*> foldRedundantCast e
 foldRedundantCast (Match v cs) = Match <$> foldRedundantCast v <*> traverseOf (traversed . appCase) foldRedundantCast cs
 foldRedundantCast (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) foldRedundantCast cs <*> foldRedundantCast e
 foldRedundantCast (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) foldRedundantCast cs <*> foldRedundantCast e
@@ -312,7 +312,7 @@ specializeFunction e@(Cast (pts' :-> rt') f) = case typeOf f of
   _ -> pure e
 specializeFunction e@Cast {} = pure e
 specializeFunction (Match v cs) = Match <$> specializeFunction v <*> traverseOf (traversed . appCase) specializeFunction cs
-specializeFunction (Let ds e) = Let <$> traverseOf (traversed . object . appObj) specializeFunction ds <*> specializeFunction e
+specializeFunction (Let ds e) = Let <$> traverseOf (traversed . expr) specializeFunction ds <*> specializeFunction e
 specializeFunction (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) specializeFunction cs <*> specializeFunction e
 specializeFunction (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) specializeFunction cs <*> specializeFunction e
 specializeFunction (Destruct a c xs e) = Destruct a c xs <$> specializeFunction e

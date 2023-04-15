@@ -16,11 +16,11 @@ module Koriel.Core.Syntax
     Expr (..),
     Program (..),
     HasAtom (..),
+    HasExpr (..),
     runDef,
     let_,
     bind,
     cast,
-    appObj,
     appCase,
     appProgram,
     freevars,
@@ -179,6 +179,9 @@ instance HasVariable (LocalDef a) a where
 
 instance (Pretty a) => Pretty (LocalDef a) where
   pPrint (LocalDef v t o) = parens $ pPrint v <+> pPrint t $$ pPrint o
+
+instance HasAtom LocalDef where
+  atom = object . atom
 
 -- | alternatives
 data Case a
@@ -369,7 +372,7 @@ instance HasAtom Expr where
     RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
+    Let xs e -> Let <$> traverseOf (traversed . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Switch v cs e -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
     SwitchUnboxed v cs e -> SwitchUnboxed <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
@@ -406,19 +409,13 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
           map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) $ sort extFuns
         ]
 
-appObj :: Traversal' (Obj a) (Expr a)
-appObj f = \case
-  Fun ps e -> Fun ps <$> f e
-  o -> pure o
-
 instance HasExpr Obj where
   expr f = \case
     Fun ps e -> Fun ps <$> f e
     o -> pure o
 
 instance HasExpr LocalDef where
-  expr f = \case
-    LocalDef x t o -> LocalDef x t <$> expr f o
+  expr = object . expr
 
 appCase :: Traversal' (Case a) (Expr a)
 appCase f = \case

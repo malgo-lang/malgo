@@ -3,7 +3,7 @@ module Koriel.Core.Parser (parse) where
 import Data.HashMap.Strict qualified as HashMap
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
 import Koriel.Core.Op
-import Koriel.Core.Syntax hiding (atom, object)
+import Koriel.Core.Syntax hiding (atom, expr, object)
 import Koriel.Core.Type
 import Koriel.Prelude hiding (many, some)
 import Text.Megaparsec hiding (parse)

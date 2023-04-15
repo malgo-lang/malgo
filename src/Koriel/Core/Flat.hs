@@ -40,7 +40,7 @@ flatExpr ::
   Expr (Id Type) ->
   FlatT m (Expr (Id Type))
 flatExpr (Let ds e) = do
-  tell . Endo . Let =<< traverseOf (traversed . object . appObj) (runFlat . flatExpr) ds
+  tell . Endo . Let =<< traverseOf (traversed . expr) (runFlat . flatExpr) ds
   flatExpr e
 flatExpr (Match e cs) = flatMatch e cs
 flatExpr (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExpr) cs <*> flatExpr e
