@@ -36,13 +36,17 @@ data Def
 
 makePrisms ''Def
 
+-- | 'DsState' tracks the state of desugaring.
 data DsState = DsState
-  { -- | Malgo -> Coreの名前環境
+  { -- | Name mapping from Malgo's 'RnId' to Koriel's 'Id'.
     _nameEnv :: HashMap RnId (Id C.Type),
-    -- | 型環境
+    -- | Type signatures.
     _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
+    -- | Type definitions.
     _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
+    -- | Kind context.
     _kindCtx :: KindCtx,
+    -- | Top-level definitions.
     _globalDefs :: [Def]
   }
 

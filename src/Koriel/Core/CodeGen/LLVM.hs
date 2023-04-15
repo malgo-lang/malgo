@@ -1,10 +1,8 @@
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
 
--- |
--- LLVM IRの生成
+-- | LLVM Code Generator
 module Koriel.Core.CodeGen.LLVM
   ( codeGen,
   )
@@ -53,9 +51,8 @@ import Malgo.Desugar.DsState (DsState (..), HasNameEnv (nameEnv))
 import Malgo.Monad (MalgoEnv (..))
 import Relude.Unsafe qualified as Unsafe
 
-instance Hashable Name
-
-type PrimMap = HashMap Name Operand
+-- | 'PrimMap' is a map from primitive function name to its LLVM function.
+type PrimMap = Map Name Operand
 
 -- 変数のHashMapとknown関数のHashMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -106,12 +103,18 @@ runCodeGenT env m =
   execModuleBuilderT emptyModuleBuilder $
     runReaderT (Lazy.evalStateT m mempty) env
 
+-- | Generate LLVM IR from a program.
 codeGen ::
   (MonadFix m, MonadFail m, MonadIO m) =>
+  -- | Source file path
   FilePath ->
+  -- | Malgo environment
   MalgoEnv ->
+  -- | Module name of the source program
   ModuleName ->
+  -- | Collected information from the desugarer
   DsState ->
+  -- | Source program
   Program (Id C.Type) ->
   m ()
 codeGen srcPath malgoEnv modName dsState Program {..} = do

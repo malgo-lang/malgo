@@ -18,6 +18,7 @@ data FlatEnv = FlatEnv
     moduleName :: ModuleName
   }
 
+-- | 'flat' flattens nested let bindings and destructuring assignments.
 flat :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Program (Id Type) -> m (Program (Id Type))
 flat prog = do
   uniqSupply <- asks (.uniqSupply)
@@ -55,21 +56,9 @@ flatExp (Assign x v e) = do
   v <- flatExp v
   tell $ Endo $ \k -> Assign x v k
   flatExp e
--- v <- flatExp v
--- case v of
---   Atom (Var v') ->
---     -- Flatten e[x := v'] after assigning v' to x.
---     -- If we do it before, we might miss some assignments to x.
---     -- These assignments are constructed by the Endo monoid.
---     flatExp $ replaceOf atom (Var x) (Var v') e
---   _ -> do
---     tell $ Endo $ \k ->
---       case k of
---         Atom (Var y) | x == y -> v -- (= x v x) -> v
---         _ -> Assign x v k
---     flatExp e
 flatExp e = pure e
 
+-- | 'flatMatch' flattens match expressions into a sequence of assignments and destructuring assignments.
 flatMatch ::
   ( MonadReader env m,
     MonadIO m,
@@ -103,6 +92,7 @@ flatMatch e cs = do
   tell $ Endo $ \k -> Assign e' e k
   matchToSwitch e' cs
 
+-- | 'matchToSwitch' converts a match expression into a switch expression.
 matchToSwitch :: Monad m => Id Type -> [Case (Id Type)] -> FlatT m (Exp (Id Type))
 matchToSwitch scrutinee cs@(Unpack {} : _) = do
   let cs' = map (unpackToDestruct scrutinee) $ takeWhile (has _Unpack) cs
@@ -131,6 +121,7 @@ matchToSwitch scrutinee cs@(Exact {} : _) = do
 matchToSwitch scrutinee (Bind x _ e : _) = pure $ Assign x (Atom $ Var scrutinee) e
 matchToSwitch _ _ = error "matchToSwitch: unreachable"
 
+-- | 'bindToAssign' converts a bind case into an assignment.
 bindToAssign :: Id Type -> Case (Id Type) -> Exp (Id Type)
 bindToAssign s (Bind x _ e) = Assign x (Atom (Var s)) e
 bindToAssign _ _ = error "bindToAssign: unreachable"

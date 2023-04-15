@@ -43,6 +43,7 @@ def name xs e = do
   modify $ \state@LambdaLiftState {_funcs} -> state {_funcs = HashMap.insert f (xs, typeOf f, e) _funcs}
   pure f
 
+-- | Lambda lifting
 lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
 lambdalift uniqSupply moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $

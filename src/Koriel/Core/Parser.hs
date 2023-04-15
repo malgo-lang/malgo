@@ -1,7 +1,4 @@
-{-# OPTIONS_GHC -Wno-missing-export-lists #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
-
-module Koriel.Core.Parser where
+module Koriel.Core.Parser (parse) where
 
 import Data.HashMap.Strict qualified as HashMap
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
@@ -14,6 +11,7 @@ import Text.Megaparsec qualified as Megaparsec
 import Text.Megaparsec.Char qualified as Char
 import Text.Megaparsec.Char.Lexer qualified as Lexer
 
+-- | Parse a Koriel program.
 parse :: String -> Text -> Either (ParseErrorBundle Text Void) (Program Text)
 parse = Megaparsec.parse do
   space

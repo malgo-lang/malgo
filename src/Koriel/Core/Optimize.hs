@@ -22,6 +22,8 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Relude.Extra.Map (StaticMap (member))
 
+-- | 'OptimizeOption' is a set of options for the optimizer.
+--  If the option is 'True', the optimizer will apply the optimization.
 data OptimizeOption = OptimizeOption
   { doFoldVariable :: Bool,
     doInlineConstructor :: Bool,
@@ -63,6 +65,7 @@ times n f x
   | n > 0 = times (n - 1) f =<< f x
   | otherwise = error $ show n <> " must be a natural number"
 
+-- | Optimize a program
 optimizeProgram ::
   MonadIO m =>
   UniqSupply ->

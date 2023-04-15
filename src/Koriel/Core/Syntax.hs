@@ -4,9 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
--- |
--- malgoの共通中間表現。
--- A正規形に近い。
+-- | AST definitions for Koriel language
 module Koriel.Core.Syntax
   ( Unboxed (..),
     Atom (..),
@@ -51,6 +49,7 @@ import Koriel.Prelude
 import Koriel.Pretty
 import Numeric (showHex)
 
+-- | 'f' may have free variables
 class HasFreeVar f where
   -- | free variables
   freevars :: Hashable a => f a -> HashSet a
@@ -107,6 +106,7 @@ instance HasFreeVar Atom where
   freevars (Var x) = one x
   freevars Unboxed {} = mempty
 
+-- | 'f' may include atoms
 class HasAtom f where
   atom :: Traversal' (f a) (Atom a)
 
@@ -158,6 +158,7 @@ instance HasAtom Obj where
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
     Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
+-- | Let bindings
 data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
@@ -227,10 +228,8 @@ data Exp a
     Call (Atom a) [Atom a]
   | -- | application of function (not closure)
     CallDirect a [Atom a]
-  | --  | -- | application of external function
-    --   ExtCall Text Type [Atom a]
-
-    -- | application of llvm function
+  | -- | application of primitive function
+    -- Primitive functions are defined in target language.
     RawCall Text Type [Atom a]
   | -- | binary operation
     BinOp Op (Atom a) (Atom a)

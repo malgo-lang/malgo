@@ -8,6 +8,7 @@ import Data.Data (Data)
 import Koriel.Prelude
 import Koriel.Pretty
 
+-- | Binary operators
 data Op
   = Add
   | Sub

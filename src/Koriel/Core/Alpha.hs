@@ -18,10 +18,16 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Numeric (showHex)
 
-data AlphaEnv = AlphaEnv {uniqSupply :: UniqSupply, subst :: HashMap (Id Type) (Atom (Id Type))}
+-- | Environment for alpha conversion
+data AlphaEnv = AlphaEnv
+  { uniqSupply :: UniqSupply,
+    -- | Substitution
+    subst :: HashMap (Id Type) (Atom (Id Type))
+  }
 
 makeFieldsNoPrefix ''AlphaEnv
 
+-- | Alpha conversion
 alpha :: MonadIO m => Exp (Id Type) -> AlphaEnv -> m (Exp (Id Type))
 alpha = runAlpha . alphaExp
 
