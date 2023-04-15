@@ -13,7 +13,7 @@ module Koriel.Core.Syntax
     HasObject (..),
     HasVariable (..),
     Case (..),
-    Exp (..),
+    Expr (..),
     Program (..),
     HasAtom (..),
     runDef,
@@ -116,7 +116,7 @@ instance HasAtom Atom where
 -- | heap objects
 data Obj a
   = -- | function (arity >= 1)
-    Fun [a] (Exp a)
+    Fun [a] (Expr a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
   | -- | record
@@ -183,13 +183,13 @@ instance (Pretty a) => Pretty (LocalDef a) where
 -- | alternatives
 data Case a
   = -- | constructor pattern
-    Unpack Con [a] (Exp a)
+    Unpack Con [a] (Expr a)
   | -- | record pattern
-    OpenRecord (HashMap Text a) (Exp a)
+    OpenRecord (HashMap Text a) (Expr a)
   | -- | unboxed value pattern
-    Exact Unboxed (Exp a)
+    Exact Unboxed (Expr a)
   | -- | variable pattern
-    Bind a Type (Exp a)
+    Bind a Type (Expr a)
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
@@ -221,7 +221,7 @@ instance HasAtom Case where
     Bind a t e -> Bind a t <$> traverseOf atom f e
 
 -- | expressions
-data Exp a
+data Expr a
   = -- | atom (variables and literals)
     Atom (Atom a)
   | -- | application of closure
@@ -243,35 +243,35 @@ data Exp a
     -- よって、castをatomにすることは出来ない。
     Cast Type (Atom a)
   | -- | definition of local variables
-    Let [LocalDef a] (Exp a)
+    Let [LocalDef a] (Expr a)
   | -- | pattern matching
-    Match (Exp a) [Case a]
+    Match (Expr a) [Case a]
   | -- | switch expression
     Switch
       (Atom a)
-      [(Tag, Exp a)]
+      [(Tag, Expr a)]
       -- ^ cases
-      (Exp a)
+      (Expr a)
       -- ^ default case
   | -- | switch by unboxed value
     SwitchUnboxed
       (Atom a)
-      [(Unboxed, Exp a)]
+      [(Unboxed, Expr a)]
       -- ^ cases
-      (Exp a)
+      (Expr a)
       -- ^ default case
   | -- | destruct a value
-    Destruct (Atom a) Con [a] (Exp a)
+    Destruct (Atom a) Con [a] (Expr a)
   | -- | destruct a record
-    DestructRecord (Atom a) (HashMap Text a) (Exp a)
+    DestructRecord (Atom a) (HashMap Text a) (Expr a)
   | -- | Assign a value to a variable
-    Assign a (Exp a) (Exp a)
+    Assign a (Expr a) (Expr a)
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Exp a) where
+instance HasType a => HasType (Expr a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
     ps :-> r | map typeOf xs == ps -> r
@@ -315,7 +315,7 @@ instance HasType a => HasType (Exp a) where
   typeOf (Assign _ _ e) = typeOf e
   typeOf (Error t) = t
 
-instance (Pretty a) => Pretty (Exp a) where
+instance (Pretty a) => Pretty (Expr a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
@@ -337,7 +337,7 @@ instance (Pretty a) => Pretty (Exp a) where
   pPrint (Assign x v e) = parens $ "=" <+> pPrint x <+> pPrint v $$ pPrint e
   pPrint (Error t) = parens $ "ERROR" <+> pPrint t
 
-instance HasFreeVar Exp where
+instance HasFreeVar Expr where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
@@ -361,7 +361,7 @@ instance HasFreeVar Exp where
   freevars (Assign x v e) = freevars v <> sans x (freevars e)
   freevars (Error _) = mempty
 
-instance HasAtom Exp where
+instance HasAtom Expr where
   atom f = \case
     Atom x -> Atom <$> f x
     Call x xs -> Call <$> f x <*> traverse f xs
@@ -378,10 +378,16 @@ instance HasAtom Exp where
     Assign x v e -> Assign x <$> traverseOf atom f v <*> traverseOf atom f e
     Error t -> pure (Error t)
 
+class HasExpr f where
+  expr :: Traversal' (f a) (Expr a)
+
+instance HasExpr Expr where
+  expr = identity
+
 -- | toplevel function definitions
 data Program a = Program
-  { topVars :: [(a, Type, Exp a)],
-    topFuns :: [(a, [a], Type, Exp a)],
+  { topVars :: [(a, Type, Expr a)],
+    topFuns :: [(a, [a], Type, Expr a)],
     extFuns :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
@@ -400,29 +406,52 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
           map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) $ sort extFuns
         ]
 
-appObj :: Traversal' (Obj a) (Exp a)
+appObj :: Traversal' (Obj a) (Expr a)
 appObj f = \case
   Fun ps e -> Fun ps <$> f e
   o -> pure o
 
-appCase :: Traversal' (Case a) (Exp a)
+instance HasExpr Obj where
+  expr f = \case
+    Fun ps e -> Fun ps <$> f e
+    o -> pure o
+
+instance HasExpr LocalDef where
+  expr f = \case
+    LocalDef x t o -> LocalDef x t <$> expr f o
+
+appCase :: Traversal' (Case a) (Expr a)
 appCase f = \case
   Unpack con ps e -> Unpack con ps <$> f e
   OpenRecord kvs e -> OpenRecord kvs <$> f e
   Exact u e -> Exact u <$> f e
   Bind x t e -> Bind x t <$> f e
 
-appProgram :: Traversal' (Program a) (Exp a)
+instance HasExpr Case where
+  expr f = \case
+    Unpack con ps e -> Unpack con ps <$> f e
+    OpenRecord kvs e -> OpenRecord kvs <$> f e
+    Exact u e -> Exact u <$> f e
+    Bind x t e -> Bind x t <$> f e
+
+appProgram :: Traversal' (Program a) (Expr a)
 appProgram f Program {..} =
   Program
     <$> traverseOf (traversed . _3) f topVars
     <*> traverseOf (traversed . _4) f topFuns
     <*> pure extFuns
 
-newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
+instance HasExpr Program where
+  expr f Program {..} =
+    Program
+      <$> traverseOf (traversed . _3) f topVars
+      <*> traverseOf (traversed . _4) f topFuns
+      <*> pure extFuns
+
+newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Expr (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
-runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
+runDef :: Functor f => DefBuilderT f (Expr (Id Type)) -> f (Expr (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
 
 let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -431,7 +460,7 @@ let_ otype obj = do
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x otype obj] e
   pure (Var x)
 
-bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Expr (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
@@ -439,7 +468,7 @@ bind v = do
     Assign x v e
   pure (Var x)
 
-cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Expr (Id Type) -> DefBuilderT m (Atom (Id Type))
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
@@ -455,7 +484,7 @@ cast ty e
 -- 1. Programmer must check whether the type can be treated that have only one constructor.
 -- 2. There is more safe and convenenient way: `if let` in Rust.
 
--- destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
+-- destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Expr (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
 -- destruct val con@(Con _ ts) = do
 --   vs <- traverse (newTemporalId "p") ts
 --   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])

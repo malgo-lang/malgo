@@ -1,7 +1,7 @@
 module Koriel.Core.Flat
   ( flat,
     runFlat,
-    flatExp,
+    flatExpr,
   )
 where
 
@@ -24,39 +24,39 @@ flat prog = do
   uniqSupply <- asks (.uniqSupply)
   moduleName <- asks (.moduleName)
   runReaderT ?? FlatEnv {..} $
-    traverseOf appProgram (runFlat . flatExp) prog
+    traverseOf appProgram (runFlat . flatExpr) prog
 
-type FlatT m = WriterT (Endo (Exp (Id Type))) m
+type FlatT m = WriterT (Endo (Expr (Id Type))) m
 
-runFlat :: Monad m => FlatT m (Exp (Id Type)) -> m (Exp (Id Type))
+runFlat :: Monad m => FlatT m (Expr (Id Type)) -> m (Expr (Id Type))
 runFlat = fmap (uncurry (flip appEndo)) . runWriterT
 
-flatExp ::
+flatExpr ::
   ( MonadReader env m,
     MonadIO m,
     HasUniqSupply env,
     HasModuleName env
   ) =>
-  Exp (Id Type) ->
-  FlatT m (Exp (Id Type))
-flatExp (Let ds e) = do
-  tell . Endo . Let =<< traverseOf (traversed . object . appObj) (runFlat . flatExp) ds
-  flatExp e
-flatExp (Match e cs) = flatMatch e cs
-flatExp (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExp) cs <*> flatExp e
-flatExp (Destruct v con ps e) = do
+  Expr (Id Type) ->
+  FlatT m (Expr (Id Type))
+flatExpr (Let ds e) = do
+  tell . Endo . Let =<< traverseOf (traversed . object . appObj) (runFlat . flatExpr) ds
+  flatExpr e
+flatExpr (Match e cs) = flatMatch e cs
+flatExpr (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExpr) cs <*> flatExpr e
+flatExpr (Destruct v con ps e) = do
   tell $ Endo $ \k -> Destruct v con ps k
-  flatExp e
-flatExp (DestructRecord v kvs e) = do
+  flatExpr e
+flatExpr (DestructRecord v kvs e) = do
   tell $ Endo $ \k -> DestructRecord v kvs k
-  flatExp e
-flatExp (Assign x (Atom (Var v)) e) = do
-  flatExp $ replaceOf atom (Var x) (Var v) e
-flatExp (Assign x v e) = do
-  v <- flatExp v
+  flatExpr e
+flatExpr (Assign x (Atom (Var v)) e) = do
+  flatExpr $ replaceOf atom (Var x) (Var v) e
+flatExpr (Assign x v e) = do
+  v <- flatExpr v
   tell $ Endo $ \k -> Assign x v k
-  flatExp e
-flatExp e = pure e
+  flatExpr e
+flatExpr e = pure e
 
 -- | 'flatMatch' flattens match expressions into a sequence of assignments and destructuring assignments.
 flatMatch ::
@@ -65,35 +65,35 @@ flatMatch ::
     HasUniqSupply env,
     HasModuleName env
   ) =>
-  Exp (Id Type) ->
+  Expr (Id Type) ->
   [Case (Id Type)] ->
-  FlatT m (Exp (Id Type))
+  FlatT m (Expr (Id Type))
 flatMatch e [Unpack con ps e'] = do
-  e <- flatExp e
+  e <- flatExpr e
   v <- newTemporalId (nameFromCon con) (typeOf e)
   tell $ Endo $ \k -> Assign v e k
   tell $ Endo $ \k -> Destruct (Var v) con ps k
-  flatExp e'
+  flatExpr e'
   where
     nameFromCon :: Con -> Text
     nameFromCon (Con (Data name) _) = name
     nameFromCon (Con Tuple _) = "tuple"
 flatMatch e [Bind x _ e'] = do
-  e <- flatExp e
+  e <- flatExpr e
   tell $ Endo $ \k ->
     case k of
       Atom (Var y) | x == y -> e -- (= x e x) -> v
       _ -> Assign x e k
-  flatExp e'
+  flatExpr e'
 flatMatch e cs = do
-  e <- flatExp e
-  cs <- traverseOf (traversed . appCase) (runFlat . flatExp) cs
+  e <- flatExpr e
+  cs <- traverseOf (traversed . appCase) (runFlat . flatExpr) cs
   e' <- newTemporalId "match" (typeOf e)
   tell $ Endo $ \k -> Assign e' e k
   matchToSwitch e' cs
 
 -- | 'matchToSwitch' converts a match expression into a switch expression.
-matchToSwitch :: Monad m => Id Type -> [Case (Id Type)] -> FlatT m (Exp (Id Type))
+matchToSwitch :: Monad m => Id Type -> [Case (Id Type)] -> FlatT m (Expr (Id Type))
 matchToSwitch scrutinee cs@(Unpack {} : _) = do
   let cs' = map (unpackToDestruct scrutinee) $ takeWhile (has _Unpack) cs
   let mdef = bindToAssign scrutinee <$> find (has _Bind) cs
@@ -102,7 +102,7 @@ matchToSwitch scrutinee cs@(Unpack {} : _) = do
         Nothing -> Error (typeOf $ snd $ Unsafe.head cs')
   pure $ Switch (Var scrutinee) cs' def
   where
-    unpackToDestruct :: Id Type -> Case (Id Type) -> (Tag, Exp (Id Type))
+    unpackToDestruct :: Id Type -> Case (Id Type) -> (Tag, Expr (Id Type))
     unpackToDestruct s (Unpack con@(Con tag _) xs e) = (tag, Destruct (Var s) con xs e)
     unpackToDestruct _ _ = error "unpackToDestruct: unreachable"
 matchToSwitch scrutinee (OpenRecord kvs e : _) = do
@@ -115,13 +115,13 @@ matchToSwitch scrutinee cs@(Exact {} : _) = do
         Nothing -> Error (typeOf $ snd $ Unsafe.head cs')
   pure $ SwitchUnboxed (Var scrutinee) cs' def
   where
-    flatExact :: Case a -> (Unboxed, Exp a)
+    flatExact :: Case a -> (Unboxed, Expr a)
     flatExact (Exact u e) = (u, e)
     flatExact _ = error "flatExact: unreachable"
 matchToSwitch scrutinee (Bind x _ e : _) = pure $ Assign x (Atom $ Var scrutinee) e
 matchToSwitch _ _ = error "matchToSwitch: unreachable"
 
 -- | 'bindToAssign' converts a bind case into an assignment.
-bindToAssign :: Id Type -> Case (Id Type) -> Exp (Id Type)
+bindToAssign :: Id Type -> Case (Id Type) -> Expr (Id Type)
 bindToAssign s (Bind x _ e) = Assign x (Atom (Var s)) e
 bindToAssign _ _ = error "bindToAssign: unreachable"

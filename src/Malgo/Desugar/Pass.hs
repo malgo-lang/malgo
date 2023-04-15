@@ -89,7 +89,7 @@ dsScDef (Typed typ _, name, expr) = do
     dsVarDef name expr = do
       name' <- lookupName name
       typ' <- dsType typ
-      expr' <- runDef $ fmap Atom $ cast typ' =<< dsExp expr
+      expr' <- runDef $ fmap Atom $ cast typ' =<< dsExpr expr
       pure [VarDef name' typ' expr']
     dsFunDef name (G.Fn _ cs) = do
       name' <- lookupName name
@@ -98,10 +98,10 @@ dsScDef (Typed typ _, name, expr) = do
     dsFunDef name expr = do
       name' <- lookupName name
       typ' <- dsType typ
-      (ps, e) <- curryFun True name.name [] =<< runDef (fmap Atom (cast typ' =<< dsExp expr))
+      (ps, e) <- curryFun True name.name [] =<< runDef (fmap Atom (cast typ' =<< dsExpr expr))
       pure [FunDef name' ps (C.typeOf name') e]
 
-fnToObj :: (MonadIO f, MonadFail f, MonadReader DsEnv f, MonadState DsState f) => Bool -> Text -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Exp (Id C.Type))
+fnToObj :: (MonadIO f, MonadFail f, MonadReader DsEnv f, MonadState DsState f) => Bool -> Text -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Expr (Id C.Type))
 fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
   ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
   eType <- dsType (GT.typeOf e)
@@ -110,7 +110,7 @@ fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
     unzip
       <$> traverse
         ( \(Clause _ ps e) ->
-            pure (ps, dsExp e)
+            pure (ps, dsExpr e)
         )
         cs
   body <- match ps' (patMatrix $ toList pss) (toList es) (Error eType)
@@ -182,11 +182,11 @@ dsUnboxed (G.Double x) = C.Double x
 dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
-dsExp ::
+dsExpr ::
   (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) =>
-  G.Exp (Malgo 'Refine) ->
-  m (C.Exp (Id C.Type))
-dsExp (G.Var (Typed typ _) name) = do
+  G.Expr (Malgo 'Refine) ->
+  m (C.Expr (Id C.Type))
+dsExpr (G.Var (Typed typ _) name) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
   -- 引数のない値コンストラクタは、Coreでは0引数の関数として扱われる
@@ -212,44 +212,44 @@ dsExp (G.Var (Typed typ _) name) = do
   where
     isConstructor Id {name} | T.length name > 0 = Char.isUpper (T.head name)
     isConstructor _ = False
-dsExp (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
-dsExp (G.Apply (Typed typ _) fun arg) = runDef $ do
-  fun' <- bind =<< dsExp fun
+dsExpr (G.Unboxed _ u) = pure $ Atom $ C.Unboxed $ dsUnboxed u
+dsExpr (G.Apply (Typed typ _) fun arg) = runDef $ do
+  fun' <- bind =<< dsExpr fun
   case C.typeOf fun' of
     [paramType] :-> _ -> do
       -- Note: [Cast Argument Type]
       --   x の型と f の引数の型は必ずしも一致しない
       --   適切な型にcastする必要がある
-      arg' <- cast paramType =<< dsExp arg
+      arg' <- cast paramType =<< dsExpr arg
       Cast <$> dsType typ <*> bind (Call fun' [arg'])
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
-dsExp (G.Fn (Typed typ _) cs) = do
+dsExpr (G.Fn (Typed typ _) cs) = do
   obj <- fnToObj False "inner" cs
   v <- newTemporalId "fun" =<< dsType typ
   pure $ C.Let [C.LocalDef v (C.typeOf v) (uncurry Fun obj)] $ Atom $ C.Var v
-dsExp (G.Tuple _ es) = runDef $ do
-  es' <- traverse (bind <=< dsExp) es
+dsExpr (G.Tuple _ es) = runDef $ do
+  es' <- traverse (bind <=< dsExpr) es
   let con = C.Con C.Tuple $ map C.typeOf es'
   let ty = SumT [con]
   tuple <- let_ ty $ Pack ty con es'
   pure $ Atom tuple
-dsExp (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
-  kvs' <- traverseOf (traversed . _2) (bind <=< dsExp) kvs
+dsExpr (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
+  kvs' <- traverseOf (traversed . _2) (bind <=< dsExpr) kvs
   kts <- HashMap.toList <$> traverse dsType recordType
   v <- newTemporalId "record" $ RecordT (HashMap.fromList kts)
   pure $ C.Let [C.LocalDef v (C.typeOf v) (C.Record $ HashMap.fromList kvs')] $ Atom $ C.Var v
-dsExp (G.Record _ _) = error "unreachable"
-dsExp (G.Seq _ ss) = dsStmts ss
+dsExpr (G.Record _ _) = error "unreachable"
+dsExpr (G.Seq _ ss) = dsStmts ss
 
-dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Exp (Id C.Type))
-dsStmts (NoBind _ e :| []) = dsExp e
-dsStmts (G.Let _ _ e :| []) = dsExp e
+dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Expr (Id C.Type))
+dsStmts (NoBind _ e :| []) = dsExpr e
+dsStmts (G.Let _ _ e :| []) = dsExpr e
 dsStmts (NoBind _ e :| s : ss) = runDef $ do
-  _ <- bind =<< dsExp e
+  _ <- bind =<< dsExpr e
   dsStmts (s :| ss)
 dsStmts (G.Let _ v e :| s : ss) = do
-  e' <- dsExp e
+  e' <- dsExpr e
   v' <- newTemporalId ("let_" <> idToText v) (C.typeOf e')
   nameEnv . at v ?= v'
   ss' <- dsStmts (s :| ss)
@@ -277,8 +277,8 @@ curryFun ::
   -- | パラメータリスト
   [Id C.Type] ->
   -- | uncurryされた関数値
-  C.Exp (Id C.Type) ->
-  m ([Id C.Type], C.Exp (Id C.Type))
+  C.Expr (Id C.Type) ->
+  m ([Id C.Type], C.Expr (Id C.Type))
 -- η展開
 curryFun isToplevel hint [] e = do
   case C.typeOf e of

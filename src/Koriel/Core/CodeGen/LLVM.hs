@@ -152,13 +152,13 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
     initTopVars ((name, _, expr) : xs) =
       view (globalValueMap . at name) >>= \case
         Nothing -> error $ show $ pPrint name <+> "is not found"
-        Just name' -> genExp expr \eOpr -> do
-          -- TODO[genExp does not return correctly-typed value]
+        Just name' -> genExpr expr \eOpr -> do
+          -- TODO[genExpr does not return correctly-typed value]
           -- eOpr <- bitcast eOpr (convType (C.typeOf name))
           store name' 0 eOpr
           initTopVars xs
     -- エントリーポイントとなるmain関数を検索する
-    searchMain :: [(Id a, Id b)] -> Maybe ([Atom (Id b)] -> Exp (Id b))
+    searchMain :: [(Id a, Id b)] -> Maybe ([Atom (Id b)] -> Expr (Id b))
     searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
       | griffId.name == "main"
           && griffId.moduleName == modName =
@@ -287,7 +287,7 @@ toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
-genVar :: MonadModuleBuilder m => Id C.Type -> Exp (Id C.Type) -> m Operand
+genVar :: MonadModuleBuilder m => Id C.Type -> Expr (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
@@ -306,16 +306,16 @@ genFunc ::
   ) =>
   Id C.Type ->
   [Id C.Type] ->
-  Exp (Id C.Type) ->
+  Expr (Id C.Type) ->
   m Operand
 genFunc name params body
   | idIsExternal name || idIsNative name = do
       moduleName <- asks (.moduleName)
       if name.moduleName == moduleName
-        then function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
-        else internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
+        then function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExpr body ret
+        else internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExpr body ret
   | otherwise =
-      internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExp body ret
+      internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExpr body ret
   where
     funcName = toName name
     llvmParams =
@@ -324,7 +324,7 @@ genFunc name params body
         params
     retty = convType (C.typeOf body)
 
-genExp ::
+genExpr ::
   ( MonadReader CodeGenEnv m,
     MonadState PrimMap m,
     MonadIRBuilder m,
@@ -333,16 +333,16 @@ genExp ::
     MonadFix m,
     MonadIO m
   ) =>
-  Exp (Id C.Type) ->
+  Expr (Id C.Type) ->
   (Operand -> m ()) ->
   m ()
-genExp e k = genExp' e \eOpr -> do
+genExpr e k = genExp' e \eOpr -> do
   case C.typeOf e of
     VoidT -> k (ConstantOperand (C.Undef LT.void))
     t -> k =<< bitcast eOpr (convType t)
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている
--- FIXME[genExp does not return correctly-typed value]: convType (C.typeOf e) /= LT.typeOf (genExp e)
+-- FIXME[genExpr does not return correctly-typed value]: convType (C.typeOf e) /= LT.typeOf (genExpr e)
 --        継続に渡される値の型がptr i8だったときに正しくタグを取り出すため、bitcastする必要がある。
 -- TODO: genExpが正しい型の値を継続に渡すように変更する
 genExp' ::
@@ -354,7 +354,7 @@ genExp' ::
     MonadFix m,
     MonadIO m
   ) =>
-  Exp (Id C.Type) ->
+  Expr (Id C.Type) ->
   (Operand -> m ()) ->
   m ()
 genExp' (Atom x) k = k =<< genAtom x
@@ -451,7 +451,7 @@ genExp' (Cast ty x) k = do
 genExp' (Let xs e) k = do
   env <- foldMapM prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
-  local (over valueMap (env <>)) $ genExp e k
+  local (over valueMap (env <>)) $ genExpr e k
   where
     -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
     prepare (LocalDef name _ (Fun ps body)) =
@@ -465,15 +465,15 @@ genExp' (Let xs e) k = do
           )
     prepare _ = pure mempty
 -- These `match` cases are not necessary.
-genExp' (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExp e $ \_ -> genExp body k
-genExp' (Match e (Bind x _ body : _)) k = genExp e $ \eOpr -> do
+genExp' (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExpr e $ \_ -> genExpr body k
+genExp' (Match e (Bind x _ body : _)) k = genExpr e $ \eOpr -> do
   eOpr <- bitcast eOpr (convType $ C.typeOf e)
-  local (over valueMap (at x ?~ eOpr)) (genExp body k)
+  local (over valueMap (at x ?~ eOpr)) (genExpr body k)
 genExp' (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
-  | otherwise = genExp e $ \eOpr -> mdo
+  | otherwise = genExpr e $ \eOpr -> mdo
       -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
-      -- TODO[genExp does not return correctly-typed value]
+      -- TODO[genExpr does not return correctly-typed value]
       -- genExpが正しい型の値を継続に渡すように変更する
       eOpr' <- bitcast eOpr (convType $ C.typeOf e)
       br switchBlock -- We need to end the current block before executing genCase
@@ -494,7 +494,7 @@ genExp' (Switch v bs e) k = mdo
   br switchBlock
   labels <- toList <$> traverse (genBranch (constructorList v) k) bs
   defaultLabel <- block
-  genExp e k
+  genExpr e k
   switchBlock <- block
   tagOpr <- case C.typeOf v of
     SumT _ -> gepAndLoad vOpr [int32 0, int32 0]
@@ -508,21 +508,21 @@ genExp' (Switch v bs e) k = mdo
             SumT _ -> C.Int 8 $ fromIntegral $ Unsafe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
             RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
             _ -> error "Switch is not supported for this type."
-      genExp e k
+      genExpr e k
       pure (tag', label)
 genExp' (SwitchUnboxed v bs e) k = mdo
   vOpr <- genAtom v
   br switchBlock
   labels <- toList <$> traverse (genBranch k) bs
   defaultLabel <- block
-  genExp e k
+  genExpr e k
   switchBlock <- block
   switch vOpr defaultLabel labels
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
       label <- block
-      genExp e k
+      genExpr e k
       pure (u', label)
 genExp' (Destruct v (Con _ ts) xs e) k = do
   v <- genAtom v
@@ -531,7 +531,7 @@ genExp' (Destruct v (Con _ ts) xs e) k = do
   env <-
     HashMap.fromList <$> ifor xs \i x -> do
       (x,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
-  local (over valueMap (env <>)) $ genExp e k
+  local (over valueMap (env <>)) $ genExpr e k
 genExp' (DestructRecord scrutinee kvs e) k = do
   scrutinee <- bitcast ?? convType (C.typeOf scrutinee) =<< genAtom scrutinee
   kvs' <- for (HashMap.toList kvs) \(k, v) -> do
@@ -541,12 +541,12 @@ genExp' (DestructRecord scrutinee kvs e) k = do
     value <- call hashTableGet [(scrutinee, []), (key, [])]
     value <- bitcast value (convType $ C.typeOf v)
     pure (v, value)
-  local (over valueMap (HashMap.fromList kvs' <>)) $ genExp e k
-genExp' (Assign _ v e) k | C.typeOf v == VoidT = genExp v $ \_ -> genExp e k
+  local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e k
+genExp' (Assign _ v e) k | C.typeOf v == VoidT = genExpr v $ \_ -> genExpr e k
 genExp' (Assign x v e) k = do
-  genExp v $ \vOpr -> do
+  genExpr v $ \vOpr -> do
     vOpr <- bitcast vOpr (convType $ C.typeOf v)
-    local (over valueMap $ at x ?~ vOpr) $ genExp e k
+    local (over valueMap $ at x ?~ vOpr) $ genExpr e k
 genExp' (Error _) _ = unreachable
 
 -- | Get constructor list from the type of scrutinee.
@@ -573,12 +573,12 @@ genCase ::
 genCase scrutinee cs k = \case
   Bind x _ e -> do
     label <- block
-    void $ local (over valueMap $ at x ?~ scrutinee) $ genExp e k
+    void $ local (over valueMap $ at x ?~ scrutinee) $ genExpr e k
     pure $ Left label
   Exact u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
     label <- block
-    genExp e k
+    genExpr e k
     pure $ Right (u', label)
   Unpack con vs e -> do
     label <- block
@@ -589,7 +589,7 @@ genCase scrutinee cs k = \case
     env <-
       HashMap.fromList <$> ifor vs \i v ->
         (v,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
-    void $ local (over valueMap (env <>)) $ genExp e k
+    void $ local (over valueMap (env <>)) $ genExpr e k
     pure $ Right (C.Int 8 tag, label)
   OpenRecord kvs e -> do
     label <- block
@@ -600,7 +600,7 @@ genCase scrutinee cs k = \case
       value <- call hashTableGet [(scrutinee, []), (key, [])]
       value <- bitcast value (convType $ C.typeOf v)
       pure (v, value)
-    local (over valueMap (HashMap.fromList kvs' <>)) $ genExp e k
+    local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e k
     pure $ Left label
 
 genAtom ::
@@ -640,7 +640,7 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
       env <-
         HashMap.fromList <$> ifor fvs \i fv ->
           (fv,) <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
-      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExp e ret
+      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExpr e ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType
   ifor_ fvs $ \i fv -> do

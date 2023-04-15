@@ -145,7 +145,7 @@ instance Pretty Assoc where
 type family XId x where
   XId (Malgo p) = MalgoId p
 
--- * Exp Extensions
+-- * Expr Extensions
 
 type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Parse = Range

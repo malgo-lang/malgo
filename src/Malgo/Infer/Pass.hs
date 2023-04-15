@@ -327,8 +327,8 @@ tcExpr ::
     MonadIO m,
     MonadReader RnEnv m
   ) =>
-  Exp (Malgo 'Rename) ->
-  WriterT [(Range, Constraint)] m (Exp (Malgo 'Infer))
+  Expr (Malgo 'Rename) ->
+  WriterT [(Range, Constraint)] m (Expr (Malgo 'Infer))
 tcExpr (Var pos v) = do
   vType <- instantiate pos =<< lookupVar pos v
   pure $ Var (Typed vType pos) v

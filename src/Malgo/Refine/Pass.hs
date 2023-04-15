@@ -33,10 +33,10 @@ refineBindGroup BindGroup {..} = do
   pure BindGroup {..}
 
 refineScDef :: (MonadReader RefineEnv m, MonadIO m) => ScDef (Malgo 'Infer) -> m (ScDef (Malgo 'Refine))
-refineScDef (x, name, expr) = (x,name,) <$> refineExp expr
+refineScDef (x, name, expr) = (x,name,) <$> refineExpr expr
 
-refineExp :: (MonadReader RefineEnv m, MonadIO m) => Exp (Malgo 'Infer) -> m (Exp (Malgo 'Refine))
-refineExp (Var x v) = do
+refineExpr :: (MonadReader RefineEnv m, MonadIO m) => Expr (Malgo 'Infer) -> m (Expr (Malgo 'Refine))
+refineExpr (Var x v) = do
   vScheme <- asks ((.signatureMap) >>> HashMap.lookup v)
   case vScheme of
     Nothing -> pass
@@ -54,15 +54,15 @@ refineExp (Var x v) = do
     checkValidInstantiation t1 t2
       | t1 == t2 = pass
       | otherwise = errorOn (x.value) $ "Type mismatch:" <+> pPrint t1 <+> "and" <+> pPrint t2 <+> "are not the same"
-refineExp (Unboxed x u) = pure $ Unboxed x u
-refineExp (Apply x e1 e2) = Apply x <$> refineExp e1 <*> refineExp e2
-refineExp (OpApp x op e1 e2) = do
+refineExpr (Unboxed x u) = pure $ Unboxed x u
+refineExpr (Apply x e1 e2) = Apply x <$> refineExpr e1 <*> refineExpr e2
+refineExpr (OpApp x op e1 e2) = do
   -- Rearrange OpApp to Apply. This transformation makes code generation easier.
   let applyType = TyArr (typeOf e2) (typeOf x) -- e2 -> result
   let opType = TyArr (typeOf e1) applyType -- e1 -> e2 -> result
   let x' = Typed (typeOf x) (fst $ x.value)
-  refineExp $ Apply x' (Apply (x' {annotated = applyType}) (Var (x' {annotated = opType}) op) e1) e2
-refineExp (Fn x cs) = do
+  refineExpr $ Apply x' (Apply (x' {annotated = applyType}) (Var (x' {annotated = opType}) op) e1) e2
+refineExpr (Fn x cs) = do
   cs' <- traverse refineClause cs
   env <- ask
   let (patTypes, _) = splitTyArr $ typeOf x
@@ -76,16 +76,16 @@ refineExp (Fn x cs) = do
   pure $ Fn x cs'
   where
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps
-refineExp (Tuple x es) = Tuple x <$> traverse refineExp es
-refineExp (Record x kvs) = Record x <$> traverse (\(k, v) -> (k,) <$> refineExp v) kvs
-refineExp (Seq x ss) = Seq x <$> traverse refineStmt ss
+refineExpr (Tuple x es) = Tuple x <$> traverse refineExpr es
+refineExpr (Record x kvs) = Record x <$> traverse (\(k, v) -> (k,) <$> refineExpr v) kvs
+refineExpr (Seq x ss) = Seq x <$> traverse refineStmt ss
 
 refineClause :: (MonadReader RefineEnv m, MonadIO m) => Clause (Malgo 'Infer) -> m (Clause (Malgo 'Refine))
-refineClause (Clause x ps e) = Clause x <$> traverse refinePat ps <*> refineExp e
+refineClause (Clause x ps e) = Clause x <$> traverse refinePat ps <*> refineExpr e
 
 refineStmt :: (MonadReader RefineEnv m, MonadIO m) => Stmt (Malgo 'Infer) -> m (Stmt (Malgo 'Refine))
-refineStmt (Let x v e) = Let x v <$> refineExp e
-refineStmt (NoBind x e) = NoBind x <$> refineExp e
+refineStmt (Let x v e) = Let x v <$> refineExpr e
+refineStmt (NoBind x e) = NoBind x <$> refineExpr e
 
 refinePat :: MonadReader RefineEnv m => Pat (Malgo 'Infer) -> m (Pat (Malgo 'Refine))
 refinePat (VarP x v) = pure $ VarP x v

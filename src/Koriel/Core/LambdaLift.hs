@@ -18,11 +18,11 @@ import Koriel.Prelude
 import Relude.Extra.Map (member)
 
 data LambdaLiftState = LambdaLiftState
-  { _funcs :: HashMap (Id Type) ([Id Type], Type, Exp (Id Type)),
+  { _funcs :: HashMap (Id Type) ([Id Type], Type, Expr (Id Type)),
     _knowns :: HashSet (Id Type)
   }
 
-funcs :: Lens' LambdaLiftState (HashMap (Id Type) ([Id Type], Type, Exp (Id Type)))
+funcs :: Lens' LambdaLiftState (HashMap (Id Type) ([Id Type], Type, Expr (Id Type)))
 funcs = lens (._funcs) (\l x -> l {_funcs = x})
 
 knowns :: Lens' LambdaLiftState (HashSet (Id Type))
@@ -35,7 +35,7 @@ data LambdaLiftEnv = LambdaLiftEnv
 
 data DefEnv = DefEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName}
 
-def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Id Type -> [Id Type] -> Exp (Id Type) -> m (Id Type)
+def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Id Type -> [Id Type] -> Expr (Id Type) -> m (Id Type)
 def name xs e = do
   uniqSupply <- asks (.uniqSupply)
   f <- runReaderT (newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)) (DefEnv uniqSupply name.moduleName)
@@ -63,7 +63,7 @@ lambdalift uniqSupply moduleName Program {..} =
             extFuns
       appProgram toDirect prog
 
-llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Expr (Id Type) -> f (Expr (Id Type))
 llift (Atom a) = pure $ Atom a
 llift (Call (Var f) xs) = do
   ks <- use knowns
@@ -111,7 +111,7 @@ llift (Error t) = pure $ Error t
 -- | `toDirect` converts `Call` to `CallDirect` if the callee is known.
 -- If `f` is a known function, we must call it directly.
 -- These conversions are almost done in `llift`, but not all of them.
-toDirect :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+toDirect :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Expr (Id Type) -> f (Expr (Id Type))
 toDirect (Atom a) = pure $ Atom a
 toDirect (Call (Var f) xs) = do
   ks <- use knowns

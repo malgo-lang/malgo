@@ -80,7 +80,7 @@ optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
 
-optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Exp (Id Type) -> f (Exp (Id Type))
+optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
 optimizeExpr state expr = do
   option <- asks (.option)
   5 `times` opt option $ expr
@@ -94,10 +94,10 @@ optimizeExpr state expr = do
         >=> (if option.doFoldRedundantCast then foldRedundantCast else pure)
         >=> (if option.doFoldTrivialCall then foldTrivialCall else pure)
         >=> (if option.doSpecializeFunction then specializeFunction else pure)
-        >=> runFlat . flatExp
+        >=> runFlat . flatExpr
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
-foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Exp (Id Type) -> f (Exp (Id Type))
+foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
 foldTrivialCall e@Atom {} = pure e
 foldTrivialCall e@Call {} = pure e
 foldTrivialCall e@CallDirect {} = pure e
@@ -117,14 +117,14 @@ foldTrivialCall (Assign x v e) = Assign x <$> foldTrivialCall v <*> foldTrivialC
 foldTrivialCall e@Error {} = pure e
 
 newtype CallInlineEnv = CallInlineEnv
-  { inlinableMap :: HashMap (Id Type) ([Id Type], Exp (Id Type))
+  { inlinableMap :: HashMap (Id Type) ([Id Type], Expr (Id Type))
   }
 
 -- | Inline a function call.
 inlineFunction ::
   (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) =>
-  Exp (Id Type) ->
-  f (Exp (Id Type))
+  Expr (Id Type) ->
+  f (Expr (Id Type))
 inlineFunction e@Atom {} = pure e
 inlineFunction (Call (Var f) xs) = lookupCallInline (Call . Var) f xs
 inlineFunction e@Call {} = pure e
@@ -161,10 +161,10 @@ checkInlinable _ = pass
 -- | Lookup a function in the inlinable map.
 lookupCallInline ::
   (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) =>
-  (Id Type -> [Atom (Id Type)] -> Exp (Id Type)) ->
+  (Id Type -> [Atom (Id Type)] -> Expr (Id Type)) ->
   Id Type ->
   [Atom (Id Type)] ->
-  m (Exp (Id Type))
+  m (Expr (Id Type))
 lookupCallInline call f as = do
   f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
   case f' of
@@ -176,7 +176,7 @@ lookupCallInline call f as = do
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 -- | Inline simple pattern match and pack.
-inlineConstructor :: MonadReader InlineConstructorMap m => Exp (Id Type) -> m (Exp (Id Type))
+inlineConstructor :: MonadReader InlineConstructorMap m => Expr (Id Type) -> m (Expr (Id Type))
 inlineConstructor e@Atom {} = pure e
 inlineConstructor e@Call {} = pure e
 inlineConstructor e@CallDirect {} = pure e
@@ -215,7 +215,7 @@ inlineConstructor (Assign x v e) = Assign x <$> inlineConstructor v <*> inlineCo
 inlineConstructor e@Error {} = pure e
 
 -- | Remove variable binding if that variable is an alias of another variable.
-foldVariable :: (Eq a, Applicative f) => Exp a -> f (Exp a)
+foldVariable :: (Eq a, Applicative f) => Expr a -> f (Expr a)
 foldVariable e@Atom {} = pure e
 foldVariable e@Call {} = pure e
 foldVariable e@CallDirect {} = pure e
@@ -235,7 +235,7 @@ foldVariable e@Error {} = pure e
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
-eliminateUnusedLet :: (Monad f, Hashable a) => Exp (Id a) -> f (Exp (Id a))
+eliminateUnusedLet :: (Monad f, Hashable a) => Expr (Id a) -> f (Expr (Id a))
 eliminateUnusedLet e@Atom {} = pure e
 eliminateUnusedLet e@Call {} = pure e
 eliminateUnusedLet e@CallDirect {} = pure e
@@ -270,7 +270,7 @@ eliminateUnusedLet (Assign x v e) = Assign x <$> eliminateUnusedLet v <*> elimin
 eliminateUnusedLet e@Error {} = pure e
 
 -- | Remove a cast if it is redundant.
-foldRedundantCast :: (HasType a, Applicative f) => Exp a -> f (Exp a)
+foldRedundantCast :: (HasType a, Applicative f) => Expr a -> f (Expr a)
 foldRedundantCast e@Atom {} = pure e
 foldRedundantCast e@Call {} = pure e
 foldRedundantCast e@CallDirect {} = pure e
@@ -290,7 +290,7 @@ foldRedundantCast e@Error {} = pure e
 
 -- | Specialize a function which is casted to a specific type.
 -- TODO: ベンチマーク
-specializeFunction :: (MonadIO m, MonadReader OptimizeEnv m) => Exp (Id Type) -> m (Exp (Id Type))
+specializeFunction :: (MonadIO m, MonadReader OptimizeEnv m) => Expr (Id Type) -> m (Expr (Id Type))
 specializeFunction e@Atom {} = pure e
 specializeFunction e@Call {} = pure e
 specializeFunction e@CallDirect {} = pure e

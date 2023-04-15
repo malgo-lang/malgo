@@ -50,7 +50,7 @@ rnDecl ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
   Decl (Malgo 'Parse) ->
   m (Decl (Malgo 'Rename))
-rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExp expr
+rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExpr expr
 rnDecl (ScSig pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
@@ -88,45 +88,45 @@ rnDecl (Import pos modName importList) = do
 
 -- | Rename a expression.
 -- In addition to name resolution, OpApp recombination based on infix declarations is also performed.
-rnExp ::
+rnExpr ::
   (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
-  Exp (Malgo 'Parse) ->
-  m (Exp (Malgo 'Rename))
-rnExp (Var ((Qualified Implicit pos)) name) = Var pos <$> lookupVarName pos name
-rnExp (Var ((Qualified (Explicit modName) pos)) name) = Var pos <$> lookupQualifiedVarName pos modName name
-rnExp (Unboxed pos val) = pure $ Unboxed pos val
-rnExp (Boxed pos val) = do
+  Expr (Malgo 'Parse) ->
+  m (Expr (Malgo 'Rename))
+rnExpr (Var ((Qualified Implicit pos)) name) = Var pos <$> lookupVarName pos name
+rnExpr (Var ((Qualified (Explicit modName) pos)) name) = Var pos <$> lookupQualifiedVarName pos modName name
+rnExpr (Unboxed pos val) = pure $ Unboxed pos val
+rnExpr (Boxed pos val) = do
   f <- lookupBox pos val
   pure $ Apply pos (Var pos f) (Unboxed pos $ toUnboxed val)
-rnExp (Apply pos e1 e2) = Apply pos <$> rnExp e1 <*> rnExp e2
-rnExp (OpApp pos op e1 e2) = do
+rnExpr (Apply pos e1 e2) = Apply pos <$> rnExpr e1 <*> rnExpr e2
+rnExpr (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
-  e1' <- rnExp e1
-  e2' <- rnExp e2
+  e1' <- rnExpr e1
+  e2' <- rnExpr e2
   mfixity <- HashMap.lookup op' <$> use infixInfo
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> quotes (pPrint op)
-rnExp (Fn pos cs) = Fn pos <$> traverse rnClause cs
-rnExp (Tuple pos es) = Tuple pos <$> traverse rnExp es
-rnExp (Record pos kvs) =
+rnExpr (Fn pos cs) = Fn pos <$> traverse rnClause cs
+rnExpr (Tuple pos es) = Tuple pos <$> traverse rnExpr es
+rnExpr (Record pos kvs) =
   Record pos
     <$> traverse
       ( bitraverse
           pure
-          rnExp
+          rnExpr
       )
       kvs
-rnExp (List pos es) = do
+rnExpr (List pos es) = do
   nilName <- lookupVarName pos "Nil"
   consName <- lookupVarName pos "Cons"
-  buildListApply nilName consName <$> traverse rnExp es
+  buildListApply nilName consName <$> traverse rnExpr es
   where
     buildListApply nilName _ [] = Var pos nilName
     buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos consName) x) (buildListApply nilName consName xs)
-rnExp (Ann pos e t) = Ann pos <$> rnExp e <*> rnType t
-rnExp (Seq pos ss) = Seq pos <$> rnStmts ss
-rnExp (Parens _ e) = rnExp e
+rnExpr (Ann pos e t) = Ann pos <$> rnExpr e <*> rnType t
+rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
+rnExpr (Parens _ e) = rnExpr e
 
 -- | Renamed identifier corresponding Boxed literals.
 lookupBox :: (MonadReader RnEnv f, MonadIO f) => Range -> Literal x -> f (XId (Malgo 'Rename))
@@ -157,7 +157,7 @@ rnClause (Clause pos ps e) = do
   -- varsに重複がないことを確認
   when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
-  local (appendRnEnv resolvedVarIdentMap vm) $ Clause pos <$> traverse rnPat ps <*> rnExp e
+  local (appendRnEnv resolvedVarIdentMap vm) $ Clause pos <$> traverse rnPat ps <*> rnExpr e
   where
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
@@ -185,29 +185,29 @@ rnPat (BoxedP pos x) = ConP pos <$> lookupBox pos x <*> pure [UnboxedP pos (coer
 -- | Rename statements in {}.
 rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => NonEmpty (Stmt (Malgo 'Parse)) -> m (NonEmpty (Stmt (Malgo 'Rename)))
 rnStmts (NoBind x e :| []) = do
-  e' <- rnExp e
+  e' <- rnExpr e
   pure $ NoBind x e' :| []
 rnStmts (Let x v e :| []) = do
-  e' <- rnExp e
+  e' <- rnExpr e
   v' <- resolveName v
   pure $ Let x v' e' :| []
 rnStmts (NoBind x e :| s : ss) = do
-  e' <- rnExp e
+  e' <- rnExpr e
   s' :| ss' <- rnStmts (s :| ss)
   pure $ NoBind x e' :| s' : ss'
 rnStmts (Let x v e :| s : ss) = do
-  e' <- rnExp e
+  e' <- rnExpr e
   v' <- resolveName v
   local (appendRnEnv resolvedVarIdentMap [(v, Qualified Implicit v')]) do
     s' :| ss' <- rnStmts (s :| ss)
     pure $ Let x v' e' :| s' : ss'
 rnStmts (With x (Just v) e :| s : ss) = do
-  e <- rnExp e
-  ss <- rnExp (Fn x $ Clause x [VarP x v] (Seq x $ s :| ss) :| [])
+  e <- rnExpr e
+  ss <- rnExpr (Fn x $ Clause x [VarP x v] (Seq x $ s :| ss) :| [])
   pure $ NoBind x (Apply x e ss) :| []
 rnStmts (With x Nothing e :| s : ss) = do
-  e <- rnExp e
-  ss <- rnExp (Fn x $ Clause x [] (Seq x $ s :| ss) :| [])
+  e <- rnExpr e
+  ss <- rnExpr (Fn x $ Clause x [] (Seq x $ s :| ss) :| [])
   pure $ NoBind x (Apply x e ss) :| []
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
@@ -231,10 +231,10 @@ mkOpApp ::
   -- | Outer operator
   RnId ->
   -- | Left expression as (x op y)
-  Exp (Malgo 'Rename) ->
+  Expr (Malgo 'Rename) ->
   -- | Right expression
-  Exp (Malgo 'Rename) ->
-  m (Exp (Malgo 'Rename))
+  Expr (Malgo 'Rename) ->
+  m (Expr (Malgo 'Rename))
 -- (e11 op1 e12) op2 e2
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =

@@ -21,8 +21,8 @@ type Parser = Parsec Void Text
 
 -- | トップレベル宣言
 data Def
-  = VarDef Text Type (Exp Text)
-  | FunDef Text [Text] Type (Exp Text)
+  = VarDef Text Type (Expr Text)
+  | FunDef Text [Text] Type (Expr Text)
   | ExtDef Text Type
 
 -- | Parse a program.
@@ -109,7 +109,7 @@ object = between (symbol "(") (symbol ")") do
       pure $ Record $ HashMap.fromList kvs
 
 -- | Parse an expression.
-expr :: Parser (Exp Text)
+expr :: Parser (Expr Text)
 expr =
   label "expression" do
     Atom <$> atom

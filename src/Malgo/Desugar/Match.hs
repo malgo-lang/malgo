@@ -61,10 +61,10 @@ match ::
   -- | パターン（転置行列）
   PatMatrix ->
   -- | righthand
-  [m (Core.Exp (Id Core.Type))] ->
+  [m (Core.Expr (Id Core.Type))] ->
   -- | fail
-  Core.Exp (Id Core.Type) ->
-  m (Core.Exp (Id Core.Type))
+  Core.Expr (Id Core.Type) ->
+  m (Core.Expr (Id Core.Type))
 match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- Variable Rule
   -- パターンの先頭がすべて変数のとき
@@ -156,9 +156,9 @@ match scrutinees pat es err = do
 -- , [ [Nil] ])
 partition ::
   PatMatrix ->
-  [m (Core.Exp (Id Core.Type))] ->
+  [m (Core.Expr (Id Core.Type))] ->
   ( (PatMatrix, PatMatrix),
-    ([m (Core.Exp (Id Core.Type))], [m (Core.Exp (Id Core.Type))])
+    ([m (Core.Expr (Id Core.Type))], [m (Core.Expr (Id Core.Type))])
   )
 partition (splitCol -> (Just heads@(VarP {} : _), PatMatrix tails)) es = partitionOn _VarP heads tails es
 partition (splitCol -> (Just heads@(ConP {} : _), PatMatrix tails)) es = partitionOn _ConP heads tails es
@@ -187,8 +187,8 @@ partitionOn prism heads tails es =
 group ::
   XId (Malgo 'Refine) ->
   PatMatrix ->
-  [m (Core.Exp (Id Core.Type))] ->
-  (PatMatrix, [m (Core.Exp (Id Core.Type))])
+  [m (Core.Expr (Id Core.Type))] ->
+  (PatMatrix, [m (Core.Expr (Id Core.Type))])
 group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMaybe (aux gcon) (zip pss es)
   where
     aux gcon (ConP _ gcon' ps : pss, e)
@@ -197,14 +197,14 @@ group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMa
     aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux _ ([], _) = error "ps must be not empty"
 
-groupTuple :: PatMatrix -> [m (Core.Exp (Id Core.Type))] -> (PatMatrix, [m (Core.Exp (Id Core.Type))])
+groupTuple :: PatMatrix -> [m (Core.Expr (Id Core.Type))] -> (PatMatrix, [m (Core.Expr (Id Core.Type))])
 groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
     aux [] _ = error "ps must be not empty"
 
-groupRecord :: (MonadReader DsEnv m, MonadIO m) => PatMatrix -> [m (Core.Exp (Id Core.Type))] -> m (PatMatrix, [m (Core.Exp (Id Core.Type))])
+groupRecord :: (MonadReader DsEnv m, MonadIO m) => PatMatrix -> [m (Core.Expr (Id Core.Type))] -> m (PatMatrix, [m (Core.Expr (Id Core.Type))])
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
   where
     aux (RecordP x ps : pss) e = do
