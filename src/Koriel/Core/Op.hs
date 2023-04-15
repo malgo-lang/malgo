@@ -26,7 +26,7 @@ data Op
   | Ge
   | And
   | Or
-  deriving stock (Eq, Show, Generic, Data)
+  deriving stock (Eq, Ord, Show, Generic, Data)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance Pretty Op where

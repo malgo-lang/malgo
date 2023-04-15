@@ -41,7 +41,6 @@ import Test.Hspec
     it,
     parallel,
     runIO,
-    sequential,
     shouldThrow,
   )
 
@@ -64,7 +63,7 @@ main =
     testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
     describe "Test malgo to-ll" $ parallel do
       for_ testcases \testcase -> do
-        describe testcase $ sequential do
+        describe testcase do
           it ("test usual case " <> testcase) $ example do
             testNormal (testcaseDir </> testcase)
           it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
@@ -87,10 +86,10 @@ main =
 #ifdef TEST_ALL
     describe "Test malgo to-ll on all combinations of optimization options" $ parallel do
       for_ testcases \testcase ->
-        describe testcase $ sequential do
+        describe testcase do
           for_ optimizeOptions \option -> do
             it ("test " <> testcase <> " " <> show (showOptimizeOption option)) $ example do
-              test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option True
+              test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option
 #endif
 
 setupTestDir :: IO ()
@@ -102,12 +101,12 @@ setupTestDir = do
 -- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
 setupBuiltin :: IO ()
 setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False defaultOptimizeOption True
+  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False defaultOptimizeOption False
 
 -- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
 setupPrelude :: IO ()
 setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False defaultOptimizeOption True
+  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False defaultOptimizeOption False
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
@@ -121,14 +120,14 @@ setupRuntime = do
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> Bool -> IO ()
 compile src dst modPaths lambdaLift noOptimize option isPrintError = do
-  let ioWrapper = if isPrintError then hSilence [stderr] else identity
+  let ioWrapper = if isPrintError then identity else hSilence [stderr]
   ioWrapper do
     malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
     malgoEnv <-
       pure
         malgoEnv
           { dstPath = dst,
-            _modulePaths = takeDirectory dst : malgoEnv._modulePaths,
+            _modulePaths = [takeDirectory dst, outputDir </> "libs"],
             lambdaLift,
             noOptimize,
             debugMode = True,
@@ -159,10 +158,23 @@ getClangCommand =
         ExitSuccess -> pure x
         ExitFailure _ -> go xs
 
-test :: FilePath -> String -> Bool -> Bool -> OptimizeOption -> Bool -> IO ()
-test testcase postfix lambdaLift noOptimize option isPrintError = do
-  let llPath = outputDir </> takeBaseName testcase -<.> (postfix <> ".ll")
-  timeoutWrapper "compile" $ compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option isPrintError
+test ::
+  -- | File path of the test case
+  FilePath ->
+  -- | Postfix of the output file
+  String ->
+  -- | Whether to perform lambda-lifting
+  Bool ->
+  -- | Whether to perform optimization
+  Bool ->
+  -- | Optimization option
+  OptimizeOption ->
+  IO ()
+test testcase postfix lambdaLift noOptimize option = do
+  createDirectoryIfMissing True (outputDir </> postfix)
+  let llPath = outputDir </> postfix </> takeBaseName testcase -<.> ".ll"
+  timeoutWrapper "compile" $
+    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option False
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
@@ -175,12 +187,12 @@ test testcase postfix lambdaLift noOptimize option isPrintError = do
             ]
             <> pkgConfig
             <> [ outputDir </> "libs" </> "runtime.c",
-                 outputDir </> takeBaseName testcase -<.> (postfix <> ".ll"),
+                 outputDir </> postfix </> takeBaseName testcase -<.> ".ll",
                  -- outputDir </> "libs" </> "libgriff_rustlib.a",
                  -- "-lpthread",
                  -- "-ldl",
                  "-o",
-                 outputDir </> takeBaseName testcase -<.> (postfix <> ".out")
+                 outputDir </> postfix </> takeBaseName testcase -<.> ".out"
                ]
       )
   hPutStr stderr $ convertString err
@@ -188,7 +200,7 @@ test testcase postfix lambdaLift noOptimize option isPrintError = do
     timeoutWrapper "run" $
       decodeUtf8
         <$> readProcessStdout_
-          ( proc (outputDir </> takeBaseName testcase -<.> (postfix <> ".out")) []
+          ( proc (outputDir </> postfix </> takeBaseName testcase -<.> ".out") []
               & setStdin (byteStringInput "Hello")
           )
   expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
@@ -209,16 +221,16 @@ testError testcase = do
   compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption False
 
 testNormal :: FilePath -> IO ()
-testNormal testcase = test testcase "" True False defaultOptimizeOption True
+testNormal testcase = test testcase "" True False defaultOptimizeOption
 
 testNoLift :: FilePath -> IO ()
-testNoLift testcase = test testcase "nolift" False False defaultOptimizeOption True
+testNoLift testcase = test testcase "nolift" False False defaultOptimizeOption
 
 testNoOpt :: FilePath -> IO ()
-testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption True
+testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption
 
 testNoNo :: FilePath -> IO ()
-testNoNo testcase = test testcase "nono" False True defaultOptimizeOption True
+testNoNo testcase = test testcase "nono" False True defaultOptimizeOption
 
 #ifdef TEST_ALL
 showOptimizeOption :: OptimizeOption -> [Text]

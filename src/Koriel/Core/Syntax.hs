@@ -92,7 +92,7 @@ data Atom a
     Var a
   | -- | literal of unboxed values
     Unboxed Unboxed
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Atom a) where
@@ -121,7 +121,7 @@ data Obj a
     Pack Type Con [Atom a]
   | -- | record
     Record (HashMap Text (Atom a))
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Obj a) where
@@ -159,7 +159,7 @@ instance HasAtom Obj where
     Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
 data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 class HasObject s a | s -> a where
@@ -189,7 +189,7 @@ data Case a
     Exact Unboxed (Exp a)
   | -- | variable pattern
     Bind a Type (Exp a)
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Case a) where
@@ -269,7 +269,7 @@ data Exp a
     Assign a (Exp a) (Exp a)
   | -- | raise an internal error
     Error Type
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Exp a) where
@@ -389,16 +389,16 @@ data Program a = Program
   deriving anyclass (Binary, ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
 
-instance (Pretty a) => Pretty (Program a) where
+instance (Pretty a, Ord a) => Pretty (Program a) where
   pPrint Program {..} =
     vcat $
       concat
         [ ["; variables"],
-          map (\(v, t, e) -> parens $ sep ["define", pPrint v, pPrint t, pPrint e]) topVars,
+          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) $ sort topVars,
           ["; functions"],
-          map (\(f, ps, t, e) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) topFuns,
+          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) $ sort topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) extFuns
+          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) $ sort extFuns
         ]
 
 appObj :: Traversal' (Obj a) (Exp a)

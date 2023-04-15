@@ -85,11 +85,11 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       lint core
 
       when env.debugMode $
-        liftIO $ do
+        liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pPrint core
 
-      when env.debugMode $ do
+      when env.debugMode do
         inf <- loadInterface moduleName
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
@@ -98,23 +98,21 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
-      writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
+        writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
-      when env.debugMode $
-        writeFile (env.dstPath -<.> "kor.opt.lift") $
-          render $
-            pPrint coreOpt
       lint coreLL
       when (env.debugMode && env.lambdaLift) $
-        liftIO $ do
+        liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
+          writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
 
       when (env.debugMode && not env.noOptimize) do
         coreLLOpt <- optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption coreLL
         hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
         hPrint stderr $ pPrint coreLLOpt
+        writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pPrint coreLLOpt
         assert (coreLLOpt == coreLL) pass
 
       case env.compileMode of
@@ -131,7 +129,7 @@ compile srcPath env = do
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
           diag' = addFile diag srcPath (toString src)
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
-  when env.debugMode $ do
+  when env.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
   compileFromAST srcPath env {moduleName = parsedAst._moduleName} parsedAst
