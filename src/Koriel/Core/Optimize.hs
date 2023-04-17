@@ -92,7 +92,7 @@ optimizeExpr state expr = do
         >=> runOpt option.doFoldVariable foldVariable foldVariable'
         >=> (if option.doInlineConstructor then usingReaderT mempty . inlineConstructor else pure)
         >=> (if option.doEliminateUnusedLet then eliminateUnusedLet else pure)
-        >=> (if option.doInlineFunction then flip evalStateT state . inlineFunction else pure)
+        >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction) (flip evalStateT state . inlineFunction')
         >=> (if option.doFoldRedundantCast then foldRedundantCast else pure)
         >=> runOpt option.doFoldTrivialCall foldTrivialCall foldTrivialCall'
         >=> (if option.doSpecializeFunction then specializeFunction else pure)
@@ -178,6 +178,25 @@ checkInlinable (LocalDef f _ (Fun ps v)) = do
   when isInlinable $ do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
 checkInlinable _ = pass
+
+inlineFunction' :: (MonadState CallInlineEnv f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
+inlineFunction' =
+  transformM \case
+    Call (Var f) xs -> lookupCallInline (Call . Var) f xs
+    CallDirect f xs -> lookupCallInline CallDirect f xs
+    Let ds e -> do
+      traverse_ checkInlineable' ds
+      pure $ Let ds e
+    x -> pure x
+  where
+    checkInlineable' (LocalDef f _ (Fun ps v)) = do
+      threshold <- asks (.option.inlineThreshold)
+      -- ノードの数がthreshold以下ならインライン展開する
+      -- v <- inlineFunction v
+      let isInlinable = threshold >= gsize v
+      when isInlinable $ do
+        modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
+    checkInlineable' _ = pass
 
 -- | Lookup a function in the inlinable map.
 lookupCallInline ::
