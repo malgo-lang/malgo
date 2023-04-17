@@ -7,8 +7,9 @@ module Koriel.Core.Optimize
   )
 where
 
-import Control.Lens (At (at), makeFieldsNoPrefix, traverseOf, traversed, view, _2)
+import Control.Lens (At (at), makeFieldsNoPrefix, transformM, traverseOf, traversed, view, _2)
 import Control.Monad.Except
+import Data.Data (Data)
 import Data.Generics (gsize)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
@@ -20,6 +21,7 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Koriel.Pretty (errorDoc, pPrint, ($$))
 import Relude.Extra.Map (StaticMap (member))
 
 -- | 'OptimizeOption' is a set of options for the optimizer.
@@ -87,14 +89,26 @@ optimizeExpr state expr = do
   where
     opt option = do
       pure
-        >=> (if option.doFoldVariable then foldVariable else pure)
+        >=> runOpt option.doFoldVariable foldVariable foldVariable'
         >=> (if option.doInlineConstructor then usingReaderT mempty . inlineConstructor else pure)
         >=> (if option.doEliminateUnusedLet then eliminateUnusedLet else pure)
         >=> (if option.doInlineFunction then flip evalStateT state . inlineFunction else pure)
         >=> (if option.doFoldRedundantCast then foldRedundantCast else pure)
-        >=> (if option.doFoldTrivialCall then foldTrivialCall else pure)
+        >=> runOpt option.doFoldTrivialCall foldTrivialCall foldTrivialCall'
         >=> (if option.doSpecializeFunction then specializeFunction else pure)
         >=> runFlat . flatExpr
+    runOpt :: HasCallStack => (MonadReader OptimizeEnv m, MonadIO m) => (Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type)))
+    runOpt flag f f' =
+      if flag
+        then \e -> do
+          e' <- f e
+          e'' <- f' e
+          uniqSupply <- asks (.uniqSupply)
+          equiv <- equiv uniqSupply e' e''
+          case equiv of
+            Just _ -> pure e'
+            Nothing -> errorDoc $ "Optimizations is not equivalent" $$ pPrint e $$ pPrint e' $$ pPrint e''
+        else pure
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
 foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
@@ -115,6 +129,13 @@ foldTrivialCall (Destruct a c xs e) = Destruct a c xs <$> foldTrivialCall e
 foldTrivialCall (DestructRecord a xs e) = DestructRecord a xs <$> foldTrivialCall e
 foldTrivialCall (Assign x v e) = Assign x <$> foldTrivialCall v <*> foldTrivialCall e
 foldTrivialCall e@Error {} = pure e
+
+foldTrivialCall' :: (MonadIO f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
+foldTrivialCall' = transformM \case
+  Let [LocalDef f _ (Fun ps body)] (Call (Var f') as) | f == f' -> do
+    uniqSupply <- asks (.uniqSupply)
+    alpha body AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps as}
+  x -> pure x
 
 newtype CallInlineEnv = CallInlineEnv
   { inlinableMap :: HashMap (Id Type) ([Id Type], Expr (Id Type))
@@ -232,6 +253,13 @@ foldVariable (DestructRecord a xs e) = DestructRecord a xs <$> foldVariable e
 foldVariable (Assign x (Atom a) e) = replaceOf atom (Var x) a <$> foldVariable e
 foldVariable (Assign x v e) = Assign x <$> foldVariable v <*> foldVariable e
 foldVariable e@Error {} = pure e
+
+foldVariable' :: (Eq a, Monad f, Data a) => Expr a -> f (Expr a)
+foldVariable' = transformM
+  \case
+    Match (Atom a) [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
+    Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
+    x -> pure x
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.

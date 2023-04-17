@@ -29,7 +29,7 @@ module Koriel.Core.Syntax
   )
 where
 
-import Control.Lens (Lens', Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
+import Control.Lens (Lens', Plated, Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Char (showLitChar)
@@ -384,6 +384,8 @@ class HasExpr f where
 
 instance HasExpr Expr where
   expr = identity
+
+instance Data a => Plated (Expr a)
 
 -- | toplevel function definitions
 data Program a = Program

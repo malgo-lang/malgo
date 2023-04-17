@@ -4,6 +4,7 @@
 module Koriel.Core.Alpha
   ( alpha,
     AlphaEnv (..),
+    equiv,
   )
 where
 
@@ -18,11 +19,13 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 import Numeric (showHex)
 
+type Subst = HashMap (Id Type) (Atom (Id Type))
+
 -- | Environment for alpha conversion
 data AlphaEnv = AlphaEnv
   { uniqSupply :: UniqSupply,
     -- | Substitution
-    subst :: HashMap (Id Type) (Atom (Id Type))
+    subst :: Subst
   }
 
 makeFieldsNoPrefix ''AlphaEnv
@@ -118,3 +121,111 @@ alphaCase (Bind x t e) = do
   local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Bind x' t <$> alphaExpr e
 -- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExpr e
 alphaCase (Exact u e) = Exact u <$> alphaExpr e
+
+equiv :: MonadIO m => UniqSupply -> Expr (Id Type) -> Expr (Id Type) -> m (Maybe Subst)
+equiv uniqSupply e1 e2 = runReaderT ?? AlphaEnv {uniqSupply, subst = mempty} $ do
+  isEquiv <- equivExpr e1 e2
+  if isEquiv then Just <$> asks (.subst) else pure Nothing
+
+equivExpr :: MonadReader AlphaEnv m => Expr (Id Type) -> Expr (Id Type) -> m Bool
+equivExpr (Atom x) (Atom y) = equivAtom x y
+equivExpr (Call f xs) (Call g ys) =
+  (&&) <$> equivAtom f g <*> andM (zipWith equivAtom xs ys)
+equivExpr (CallDirect f xs) (CallDirect g ys) = do
+  subst <- asks (.subst)
+  ( HashMap.lookupDefault (Var f) f subst
+      == HashMap.lookupDefault (Var g) g subst
+      &&
+    )
+    <$> andM (zipWith equivAtom xs ys)
+equivExpr (RawCall n t xs) (RawCall m u ys) =
+  ((n == m && t == u) &&) <$> andM (zipWith equivAtom xs ys)
+equivExpr (BinOp op x y) (BinOp op' x' y') =
+  (op == op' &&) <$> andM [equivAtom x x', equivAtom y y']
+equivExpr (Cast t x) (Cast u y) =
+  (t == u &&) <$> equivAtom x y
+equivExpr (Let ds e) (Let ds' e') = do
+  subst <- mconcat <$> zipWithM equivLocalDef ds ds'
+  if HashMap.null subst
+    then pure False
+    else do
+      local (\e -> e {subst = subst <> e.subst}) $ equivExpr e e'
+equivExpr (Match e cs) (Match e' cs') = do
+  (&&) <$> equivExpr e e' <*> andM (zipWith equivCase cs cs')
+equivExpr (Switch x cs e) (Switch y cs' e') = do
+  andM [equivAtom x y, andM $ zipWith equivAlt cs cs', equivExpr e e']
+  where
+    equivAlt (tag, e) (tag', e') | tag == tag' = equivExpr e e'
+    equivAlt _ _ = pure False
+equivExpr (SwitchUnboxed x cs e) (SwitchUnboxed y cs' e') = do
+  andM [equivAtom x y, andM $ zipWith equivAlt cs cs', equivExpr e e']
+  where
+    equivAlt (tag, e) (tag', e') | tag == tag' = equivExpr e e'
+    equivAlt _ _ = pure False
+equivExpr (Destruct x c ps e) (Destruct y c' ps' e') | c == c' = do
+  (&&)
+    <$> equivAtom x y
+    <*> local
+      (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst})
+      (equivExpr e e')
+equivExpr (DestructRecord x kps e) (DestructRecord y kps' e') = do
+  (&&)
+    <$> equivAtom x y
+    <*> local
+      ( \e ->
+          e
+            { subst =
+                HashMap.fromList (zip (HashMap.elems kps) (map Var $ HashMap.elems kps')) <> e.subst
+            }
+      )
+      (equivExpr e e')
+equivExpr (Assign x e b) (Assign y e' b') =
+  (&&)
+    <$> equivExpr e e'
+    <*> local (\e -> e {subst = one (x, Var y) <> e.subst}) (equivExpr b b')
+equivExpr (Error t) (Error u) = pure $ t == u
+equivExpr _ _ = pure False
+
+equivCase :: MonadReader AlphaEnv m => Case (Id Type) -> Case (Id Type) -> m Bool
+equivCase (Unpack c ps e) (Unpack c' ps' e') | c == c' = do
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ equivExpr e e'
+equivCase (OpenRecord kps e) (OpenRecord kps' e') = do
+  local
+    ( \e ->
+        e
+          { subst =
+              HashMap.fromList (zip (HashMap.elems kps) (map Var $ HashMap.elems kps')) <> e.subst
+          }
+    )
+    $ equivExpr e e'
+equivCase (Exact u e) (Exact u' e')
+  | u == u' =
+      equivExpr e e'
+equivCase (Bind x t e) (Bind y u f) | t == u = do
+  local (\e -> e {subst = one (x, Var y) <> e.subst}) $ equivExpr e f
+equivCase _ _ = pure False
+
+equivLocalDef :: MonadReader AlphaEnv m => LocalDef (Id Type) -> LocalDef (Id Type) -> m Subst
+equivLocalDef (LocalDef x t o) (LocalDef y u p) =
+  local (\e -> e {subst = one (x, Var y) <> e.subst}) $
+    ifM
+      ((t == u &&) <$> equivObj o p)
+      (pure $ one (x, Var y))
+      (pure mempty)
+
+equivObj :: MonadReader AlphaEnv m => Obj (Id Type) -> Obj (Id Type) -> m Bool
+equivObj (Fun ps e) (Fun ps' e') = do
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ equivExpr e e'
+equivObj (Pack t c xs) (Pack u d ys) =
+  ((t == u && c == d) &&) <$> andM (zipWith equivAtom xs ys)
+equivObj (Record kvs) (Record kvs') =
+  andM $ HashMap.intersectionWith equivAtom kvs kvs'
+equivObj _ _ = pure False
+
+equivAtom :: MonadReader AlphaEnv m => Atom (Id Type) -> Atom (Id Type) -> m Bool
+equivAtom (Var x) (Var y) = do
+  subst <- asks (.subst)
+  pure $
+    HashMap.lookupDefault (Var x) x subst
+      == HashMap.lookupDefault (Var y) y subst
+equivAtom x y = pure $ x == y
