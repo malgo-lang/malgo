@@ -6,7 +6,7 @@ ENV PATH=/root/.cabal/bin:/root/.ghcup/bin:${PATH}
 
 RUN ghcup upgrade && ghcup install ghc 9.2.7 && ghcup set ghc 9.2.7
 
-RUN ghcup compile hls --git-ref b08691db779f7a35ff322b71e72a12f6e3376fd9 --ghc 9.2.7
+RUN ghcup compile hls --git-ref b08691db779f7a35ff322b71e72a12f6e3376fd9 --ghc 9.2.7 -j8
 
 RUN ghcup gc
 
