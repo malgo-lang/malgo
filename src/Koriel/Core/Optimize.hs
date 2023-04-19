@@ -90,12 +90,12 @@ optimizeExpr state expr = do
     opt option = do
       pure
         >=> runOpt option.doFoldVariable foldVariable foldVariable'
-        >=> (if option.doInlineConstructor then usingReaderT mempty . inlineConstructor else pure)
-        >=> (if option.doEliminateUnusedLet then eliminateUnusedLet else pure)
+        >=> runOpt option.doInlineConstructor (usingReaderT mempty . inlineConstructor) (usingReaderT mempty . inlineConstructor')
+        >=> runOpt option.doEliminateUnusedLet eliminateUnusedLet eliminateUnusedLet'
         >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction) (flip evalStateT state . inlineFunction')
-        >=> (if option.doFoldRedundantCast then foldRedundantCast else pure)
+        >=> runOpt option.doFoldRedundantCast foldRedundantCast foldRedundantCast'
         >=> runOpt option.doFoldTrivialCall foldTrivialCall foldTrivialCall'
-        >=> (if option.doSpecializeFunction then specializeFunction else pure)
+        >=> runOpt option.doSpecializeFunction specializeFunction specializeFunction'
         >=> runFlat . flatExpr
     runOpt :: HasCallStack => (MonadReader OptimizeEnv m, MonadIO m) => (Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type)))
     runOpt flag f f' =
@@ -106,7 +106,7 @@ optimizeExpr state expr = do
           uniqSupply <- asks (.uniqSupply)
           equiv <- equiv uniqSupply e' e''
           case equiv of
-            Just _ -> pure e'
+            Just _ -> pure e''
             Nothing -> errorDoc $ "Optimizations is not equivalent" $$ pPrint e $$ pPrint e' $$ pPrint e''
         else pure
 
@@ -254,6 +254,26 @@ inlineConstructor (DestructRecord v xs body) = DestructRecord v xs <$> inlineCon
 inlineConstructor (Assign x v e) = Assign x <$> inlineConstructor v <*> inlineConstructor e
 inlineConstructor e@Error {} = pure e
 
+inlineConstructor' :: MonadReader InlineConstructorMap m => Expr (Id Type) -> m (Expr (Id Type))
+inlineConstructor' =
+  transformM \case
+    Let ds e -> do
+      local (mconcat (map toPackInlineMap ds) <>) $ pure $ Let ds e
+    Match (Atom (Var v)) [Unpack con xs body] -> do
+      view (at v) >>= \case
+        Just (con', as) | con == con' -> pure $ build xs as body
+        _ -> pure $ Destruct (Var v) con xs body
+    Destruct (Var v) con xs body -> do
+      view (at v) >>= \case
+        Just (con', as) | con == con' -> pure $ build xs as body
+        _ -> pure $ Destruct (Var v) con xs body
+    e -> pure e
+  where
+    toPackInlineMap (LocalDef v _ (Pack _ con as)) = one (v, (con, as))
+    toPackInlineMap _ = mempty
+    build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
+    build _ _ body = body
+
 -- | Remove variable binding if that variable is an alias of another variable.
 foldVariable :: (Eq a, Applicative f) => Expr a -> f (Expr a)
 foldVariable e@Atom {} = pure e
@@ -316,6 +336,26 @@ eliminateUnusedLet (DestructRecord a xs e) = DestructRecord a xs <$> eliminateUn
 eliminateUnusedLet (Assign x v e) = Assign x <$> eliminateUnusedLet v <*> eliminateUnusedLet e
 eliminateUnusedLet e@Error {} = pure e
 
+eliminateUnusedLet' :: (Monad f, Hashable a, Data a) => Expr (Id a) -> f (Expr (Id a))
+eliminateUnusedLet' =
+  transformM \case
+    Let ds e -> do
+      -- Reachable variables from 'v'
+      let gamma = map (\(LocalDef v _ o) -> (v, HashSet.delete v $ freevars o)) ds
+      if any (\(LocalDef v _ _) -> reachable 100 gamma v $ freevars e) ds
+        then pure $ Let ds e
+        else pure e
+    e -> pure e
+  where
+    reachable limit gamma v fvs
+      | limit <= (0 :: Int) = True
+      | idIsExternal v = True
+      | v `member` fvs = True
+      | otherwise =
+          -- Add gamma[fv] to fvs
+          let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
+           in fvs /= fvs' && reachable limit gamma v fvs'
+
 -- | Remove a cast if it is redundant.
 foldRedundantCast :: (HasType a, Applicative f) => Expr a -> f (Expr a)
 foldRedundantCast e@Atom {} = pure e
@@ -334,6 +374,14 @@ foldRedundantCast (Destruct a c xs e) = Destruct a c xs <$> foldRedundantCast e
 foldRedundantCast (DestructRecord a xs e) = DestructRecord a xs <$> foldRedundantCast e
 foldRedundantCast (Assign x v e) = Assign x <$> foldRedundantCast v <*> foldRedundantCast e
 foldRedundantCast e@Error {} = pure e
+
+foldRedundantCast' :: (HasType a, Data a, Monad f) => Expr a -> f (Expr a)
+foldRedundantCast' =
+  transformM \case
+    Cast t e
+      | typeOf e == t -> pure (Atom e)
+      | otherwise -> pure (Cast t e)
+    e -> pure e
 
 -- | Specialize a function which is casted to a specific type.
 -- TODO: ベンチマーク
@@ -366,3 +414,22 @@ specializeFunction (Destruct a c xs e) = Destruct a c xs <$> specializeFunction 
 specializeFunction (DestructRecord a xs e) = DestructRecord a xs <$> specializeFunction e
 specializeFunction (Assign x v e) = Assign x <$> specializeFunction v <*> specializeFunction e
 specializeFunction e@Error {} = pure e
+
+specializeFunction' :: (MonadIO m, MonadReader OptimizeEnv m) => Expr (Id Type) -> m (Expr (Id Type))
+specializeFunction' =
+  transformM \case
+    Cast (pts' :-> rt') f -> case typeOf f of
+      pts :-> _
+        | length pts' == length pts -> do
+            f' <- newInternalId "cast_opt" (pts' :-> rt')
+            ps' <- traverse (newInternalId "p") pts'
+            v' <- runDef do
+              ps <- zipWithM cast pts $ map (Atom . Var) ps'
+
+              -- If `f` is always a unknown function because it appears in `cast`.
+              r <- bind (Call f ps)
+              pure $ Cast rt' r
+            pure (Let [LocalDef f' (pts' :-> rt') $ Fun ps' v'] (Atom $ Var f'))
+        | otherwise -> error "specializeFunction: invalid cast"
+      _ -> pure (Cast (pts' :-> rt') f)
+    e -> pure e

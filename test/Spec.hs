@@ -101,12 +101,12 @@ setupTestDir = do
 -- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
 setupBuiltin :: IO ()
 setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False defaultOptimizeOption False
+  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False defaultOptimizeOption
 
 -- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
 setupPrelude :: IO ()
 setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False defaultOptimizeOption False
+  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False defaultOptimizeOption
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
@@ -118,10 +118,9 @@ setupRuntime = do
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
-compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> Bool -> IO ()
-compile src dst modPaths lambdaLift noOptimize option isPrintError = do
-  let ioWrapper = if isPrintError then identity else hSilence [stderr]
-  ioWrapper do
+compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> IO ()
+compile src dst modPaths lambdaLift noOptimize option =
+  hSilence [stderr] do
     malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
     malgoEnv <-
       pure
@@ -174,7 +173,7 @@ test testcase postfix lambdaLift noOptimize option = do
   createDirectoryIfMissing True (outputDir </> postfix)
   let llPath = outputDir </> postfix </> takeBaseName testcase -<.> ".ll"
   timeoutWrapper "compile" $
-    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option False
+    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
@@ -218,7 +217,7 @@ test testcase postfix lambdaLift noOptimize option = do
 
 testError :: FilePath -> IO ()
 testError testcase = do
-  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption False
+  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption
 
 testNormal :: FilePath -> IO ()
 testNormal testcase = test testcase "" True False defaultOptimizeOption
