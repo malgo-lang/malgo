@@ -4,9 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
--- |
--- malgoの共通中間表現。
--- A正規形に近い。
+-- | AST definitions for Koriel language
 module Koriel.Core.Syntax
   ( Unboxed (..),
     Atom (..),
@@ -15,16 +13,14 @@ module Koriel.Core.Syntax
     HasObject (..),
     HasVariable (..),
     Case (..),
-    Exp (..),
+    Expr (..),
     Program (..),
     HasAtom (..),
+    HasExpr (..),
     runDef,
     let_,
     bind,
     cast,
-    appObj,
-    appCase,
-    appProgram,
     freevars,
     _Unpack,
     _OpenRecord,
@@ -33,7 +29,7 @@ module Koriel.Core.Syntax
   )
 where
 
-import Control.Lens (Lens', Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
+import Control.Lens (Lens', Plated, Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Char (showLitChar)
@@ -51,6 +47,7 @@ import Koriel.Prelude
 import Koriel.Pretty
 import Numeric (showHex)
 
+-- | 'f' may have free variables
 class HasFreeVar f where
   -- | free variables
   freevars :: Hashable a => f a -> HashSet a
@@ -92,7 +89,7 @@ data Atom a
     Var a
   | -- | literal of unboxed values
     Unboxed Unboxed
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Atom a) where
@@ -107,6 +104,7 @@ instance HasFreeVar Atom where
   freevars (Var x) = one x
   freevars Unboxed {} = mempty
 
+-- | 'f' may include atoms
 class HasAtom f where
   atom :: Traversal' (f a) (Atom a)
 
@@ -116,12 +114,12 @@ instance HasAtom Atom where
 -- | heap objects
 data Obj a
   = -- | function (arity >= 1)
-    Fun [a] (Exp a)
+    Fun [a] (Expr a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
   | -- | record
     Record (HashMap Text (Atom a))
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Obj a) where
@@ -158,8 +156,9 @@ instance HasAtom Obj where
     Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
     Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
 
+-- | Let bindings
 data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 class HasObject s a | s -> a where
@@ -179,17 +178,20 @@ instance HasVariable (LocalDef a) a where
 instance (Pretty a) => Pretty (LocalDef a) where
   pPrint (LocalDef v t o) = parens $ pPrint v <+> pPrint t $$ pPrint o
 
+instance HasAtom LocalDef where
+  atom = object . atom
+
 -- | alternatives
 data Case a
   = -- | constructor pattern
-    Unpack Con [a] (Exp a)
+    Unpack Con [a] (Expr a)
   | -- | record pattern
-    OpenRecord (HashMap Text a) (Exp a)
+    OpenRecord (HashMap Text a) (Expr a)
   | -- | unboxed value pattern
-    Exact Unboxed (Exp a)
+    Exact Unboxed (Expr a)
   | -- | variable pattern
-    Bind a Type (Exp a)
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+    Bind a Type (Expr a)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasType a => HasType (Case a) where
@@ -220,17 +222,15 @@ instance HasAtom Case where
     Bind a t e -> Bind a t <$> traverseOf atom f e
 
 -- | expressions
-data Exp a
+data Expr a
   = -- | atom (variables and literals)
     Atom (Atom a)
   | -- | application of closure
     Call (Atom a) [Atom a]
   | -- | application of function (not closure)
     CallDirect a [Atom a]
-  | --  | -- | application of external function
-    --   ExtCall Text Type [Atom a]
-
-    -- | application of llvm function
+  | -- | application of primitive function
+    -- Primitive functions are defined in target language.
     RawCall Text Type [Atom a]
   | -- | binary operation
     BinOp Op (Atom a) (Atom a)
@@ -244,35 +244,35 @@ data Exp a
     -- よって、castをatomにすることは出来ない。
     Cast Type (Atom a)
   | -- | definition of local variables
-    Let [LocalDef a] (Exp a)
+    Let [LocalDef a] (Expr a)
   | -- | pattern matching
-    Match (Exp a) [Case a]
+    Match (Expr a) [Case a]
   | -- | switch expression
     Switch
       (Atom a)
-      [(Tag, Exp a)]
+      [(Tag, Expr a)]
       -- ^ cases
-      (Exp a)
+      (Expr a)
       -- ^ default case
   | -- | switch by unboxed value
     SwitchUnboxed
       (Atom a)
-      [(Unboxed, Exp a)]
+      [(Unboxed, Expr a)]
       -- ^ cases
-      (Exp a)
+      (Expr a)
       -- ^ default case
   | -- | destruct a value
-    Destruct (Atom a) Con [a] (Exp a)
+    Destruct (Atom a) Con [a] (Expr a)
   | -- | destruct a record
-    DestructRecord (Atom a) (HashMap Text a) (Exp a)
+    DestructRecord (Atom a) (HashMap Text a) (Expr a)
   | -- | Assign a value to a variable
-    Assign a (Exp a) (Exp a)
+    Assign a (Expr a) (Expr a)
   | -- | raise an internal error
     Error Type
-  deriving stock (Eq, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Exp a) where
+instance HasType a => HasType (Expr a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
     ps :-> r | map typeOf xs == ps -> r
@@ -316,7 +316,7 @@ instance HasType a => HasType (Exp a) where
   typeOf (Assign _ _ e) = typeOf e
   typeOf (Error t) = t
 
-instance (Pretty a) => Pretty (Exp a) where
+instance (Pretty a) => Pretty (Expr a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
@@ -338,7 +338,7 @@ instance (Pretty a) => Pretty (Exp a) where
   pPrint (Assign x v e) = parens $ "=" <+> pPrint x <+> pPrint v $$ pPrint e
   pPrint (Error t) = parens $ "ERROR" <+> pPrint t
 
-instance HasFreeVar Exp where
+instance HasFreeVar Expr where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
@@ -362,7 +362,7 @@ instance HasFreeVar Exp where
   freevars (Assign x v e) = freevars v <> sans x (freevars e)
   freevars (Error _) = mempty
 
-instance HasAtom Exp where
+instance HasAtom Expr where
   atom f = \case
     Atom x -> Atom <$> f x
     Call x xs -> Call <$> f x <*> traverse f xs
@@ -370,7 +370,7 @@ instance HasAtom Exp where
     RawCall p t xs -> RawCall p t <$> traverse f xs
     BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
-    Let xs e -> Let <$> traverseOf (traversed . object . atom) f xs <*> traverseOf atom f e
+    Let xs e -> Let <$> traverseOf (traversed . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
     Switch v cs e -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
     SwitchUnboxed v cs e -> SwitchUnboxed <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
@@ -379,51 +379,62 @@ instance HasAtom Exp where
     Assign x v e -> Assign x <$> traverseOf atom f v <*> traverseOf atom f e
     Error t -> pure (Error t)
 
+class HasExpr f where
+  expr :: Traversal' (f a) (Expr a)
+
+instance HasExpr Expr where
+  expr = identity
+
+instance Data a => Plated (Expr a)
+
 -- | toplevel function definitions
 data Program a = Program
-  { topVars :: [(a, Type, Exp a)],
-    topFuns :: [(a, [a], Type, Exp a)],
+  { topVars :: [(a, Type, Expr a)],
+    topFuns :: [(a, [a], Type, Expr a)],
     extFuns :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
   deriving anyclass (Binary, ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
 
-instance (Pretty a) => Pretty (Program a) where
+instance (Pretty a, Ord a) => Pretty (Program a) where
   pPrint Program {..} =
     vcat $
       concat
         [ ["; variables"],
-          map (\(v, t, e) -> parens $ sep ["define", pPrint v, pPrint t, pPrint e]) topVars,
+          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) $ sort topVars,
           ["; functions"],
-          map (\(f, ps, t, e) -> parens $ sep [sep ["define", parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) topFuns,
+          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) $ sort topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) extFuns
+          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) $ sort extFuns
         ]
 
-appObj :: Traversal' (Obj a) (Exp a)
-appObj f = \case
-  Fun ps e -> Fun ps <$> f e
-  o -> pure o
+instance HasExpr Obj where
+  expr f = \case
+    Fun ps e -> Fun ps <$> f e
+    o -> pure o
 
-appCase :: Traversal' (Case a) (Exp a)
-appCase f = \case
-  Unpack con ps e -> Unpack con ps <$> f e
-  OpenRecord kvs e -> OpenRecord kvs <$> f e
-  Exact u e -> Exact u <$> f e
-  Bind x t e -> Bind x t <$> f e
+instance HasExpr LocalDef where
+  expr = object . expr
 
-appProgram :: Traversal' (Program a) (Exp a)
-appProgram f Program {..} =
-  Program
-    <$> traverseOf (traversed . _3) f topVars
-    <*> traverseOf (traversed . _4) f topFuns
-    <*> pure extFuns
+instance HasExpr Case where
+  expr f = \case
+    Unpack con ps e -> Unpack con ps <$> f e
+    OpenRecord kvs e -> OpenRecord kvs <$> f e
+    Exact u e -> Exact u <$> f e
+    Bind x t e -> Bind x t <$> f e
 
-newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Exp (Id Type))) m a}
+instance HasExpr Program where
+  expr f Program {..} =
+    Program
+      <$> traverseOf (traversed . _3) f topVars
+      <*> traverseOf (traversed . _4) f topFuns
+      <*> pure extFuns
+
+newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Expr (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
-runDef :: Functor f => DefBuilderT f (Exp (Id Type)) -> f (Exp (Id Type))
+runDef :: Functor f => DefBuilderT f (Expr (Id Type)) -> f (Expr (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
 
 let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -432,7 +443,7 @@ let_ otype obj = do
   DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x otype obj] e
   pure (Var x)
 
-bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Expr (Id Type) -> DefBuilderT m (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
@@ -440,7 +451,7 @@ bind v = do
     Assign x v e
   pure (Var x)
 
-cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Exp (Id Type) -> DefBuilderT m (Atom (Id Type))
+cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Expr (Id Type) -> DefBuilderT m (Atom (Id Type))
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
@@ -456,7 +467,7 @@ cast ty e
 -- 1. Programmer must check whether the type can be treated that have only one constructor.
 -- 2. There is more safe and convenenient way: `if let` in Rust.
 
--- destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Exp (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
+-- destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Expr (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
 -- destruct val con@(Con _ ts) = do
 --   vs <- traverse (newTemporalId "p") ts
 --   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])

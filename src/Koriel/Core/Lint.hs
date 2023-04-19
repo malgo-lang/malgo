@@ -12,13 +12,13 @@ import Koriel.Pretty
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
-lint :: Monad m => Program (Id Type) -> m ()
+lint :: HasCallStack => Monad m => Program (Id Type) -> m ()
 lint = runLint . lintProgram
 
 runLint :: ReaderT [Id Type] m a -> m a
 runLint m = runReaderT m []
 
-defined :: (MonadReader [Id Type] f) => Id Type -> f ()
+defined :: HasCallStack => MonadReader [Id Type] f => Id Type -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
@@ -44,29 +44,29 @@ match x y
           $$ pPrint y
           $$ nest 2 (":" <> pPrint (typeOf y))
 
-lintExp :: MonadReader [Id Type] m => Exp (Id Type) -> m ()
-lintExp (Atom x) = lintAtom x
-lintExp (Call f xs) = do
+lintExpr :: HasCallStack => MonadReader [Id Type] m => Expr (Id Type) -> m ()
+lintExpr (Atom x) = lintAtom x
+lintExpr (Call f xs) = do
   lintAtom f
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> errorDoc $ pPrint f <+> "is not callable"
-lintExp (CallDirect f xs) = do
+lintExpr (CallDirect f xs) = do
   defined f
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> errorDoc $ pPrint f <+> "is not callable"
--- lintExp (ExtCall _ (ps :-> _) xs) = do
+-- lintExpr (ExtCall _ (ps :-> _) xs) = do
 --   traverse_ lintAtom xs
 --   zipWithM_ match ps xs
--- lintExp ExtCall {} = error "primitive must be a function"
-lintExp (RawCall _ (ps :-> _) xs) = do
+-- lintExpr ExtCall {} = error "primitive must be a function"
+lintExpr (RawCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
-lintExp RawCall {} = error "primitive must be a function"
-lintExp (BinOp o x y) = do
+lintExpr RawCall {} = error "primitive must be a function"
+lintExpr (BinOp o x y) = do
   lintAtom x
   lintAtom y
   case o of
@@ -114,13 +114,13 @@ lintExp (BinOp o x y) = do
     Ge -> match x y
     And -> match x BoolT >> match y BoolT
     Or -> match x BoolT >> match y BoolT
-lintExp (Cast _ x) = lintAtom x
-lintExp (Let ds e) = local (map (._variable) ds <>) $ do
+lintExpr (Cast _ x) = lintAtom x
+lintExpr (Let ds e) = local (map (._variable) ds <>) $ do
   traverse_ (lintObj . (._object)) ds
   for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
-  lintExp e
-lintExp (Match e cs) = do
-  lintExp e
+  lintExpr e
+lintExpr (Match e cs) = do
+  lintExpr e
   traverse_ (lintCase e) cs
   -- check if all cases have same type of pattern
   if all (\c -> has _Unpack c || has _Bind c) cs
@@ -128,45 +128,47 @@ lintExp (Match e cs) = do
     || all (\c -> has _Exact c || has _Bind c) cs
     then pass
     else errorDoc $ "pattern mismatch:" $$ pPrint cs
-lintExp (Switch a cs e) = do
+lintExpr (Switch a cs e) = do
   lintAtom a
-  traverseOf_ (traversed . _2) lintExp cs
-  lintExp e
-lintExp (SwitchUnboxed a cs e) = do
+  traverseOf_ (traversed . _2) lintExpr cs
+  lintExpr e
+lintExpr (SwitchUnboxed a cs e) = do
   lintAtom a
-  traverseOf_ (traversed . _2) lintExp cs
-  lintExp e
-lintExp (Destruct a _ xs e) = do
+  traverseOf_ (traversed . _2) lintExpr cs
+  lintExpr e
+lintExpr (Destruct a _ xs e) = do
   lintAtom a
-  local (xs <>) $ lintExp e
-lintExp (DestructRecord a xs e) = do
+  local (xs <>) $ lintExpr e
+lintExpr (DestructRecord a xs e) = do
   lintAtom a
-  local (HashMap.elems xs <>) $ lintExp e
-lintExp (Assign x v e) = lintExp v >> local (x :) (lintExp e)
-lintExp Error {} = pass
+  local (HashMap.elems xs <>) $ lintExpr e
+lintExpr (Assign x v e) = do
+  lintExpr v
+  local (x :) (lintExpr e)
+lintExpr Error {} = pass
 
-lintObj :: MonadReader [Id Type] m => Obj (Id Type) -> m ()
-lintObj (Fun params body) = local (params <>) $ lintExp body
+lintObj :: HasCallStack => MonadReader [Id Type] m => Obj (Id Type) -> m ()
+lintObj (Fun params body) = local (params <>) $ lintExpr body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: MonadReader [Id Type] m => Exp (Id Type) -> Case (Id Type) -> m ()
-lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExp e
-lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExp e
-lintCase _ (Exact _ e) = lintExp e
+lintCase :: HasCallStack => MonadReader [Id Type] m => Expr (Id Type) -> Case (Id Type) -> m ()
+lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExpr e
+lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExpr e
+lintCase _ (Exact _ e) = lintExpr e
 lintCase scrutinee (Bind x t e) = local (x :) do
   match x t
   match scrutinee x
-  lintExp e
+  lintExpr e
 
-lintAtom :: MonadReader [Id Type] m => Atom (Id Type) -> m ()
+lintAtom :: HasCallStack => MonadReader [Id Type] m => Atom (Id Type) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
-lintProgram :: MonadReader [Id Type] m => Program (Id Type) -> m ()
+lintProgram :: HasCallStack => MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
   let fs = map (view _1) topFuns
   local (fs <>) $
     for_ topFuns $ \(f, ps, _, body) -> local (ps <>) do
       match f (map typeOf ps :-> typeOf body)
-      lintExp body
+      lintExpr body

@@ -5,6 +5,7 @@ module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfac
 
 import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.))
 import Control.Lens.TH
+import Control.Monad.Extra (firstJustM)
 import Data.Binary (Binary, decodeFile)
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (convertString)
@@ -86,21 +87,19 @@ loadInterface (ModuleName modName) = do
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
-      modPaths <- view modulePaths
-      message <- findAndReadFile modPaths (toInterfacePath $ convertString modName)
+      message <-
+        firstJustM
+          (readFileIfExists (toInterfacePath $ convertString modName))
+          =<< view modulePaths
       case message of
-        Right x -> do
+        Just x -> do
           writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
           pure x
-        Left err -> do
-          hPrint stderr err
+        Nothing -> do
           errorDoc $ "Cannot find module:" <+> quotes (pPrint modName)
   where
-    findAndReadFile [] modFile = pure $ Left ("interface" <+> pPrint modFile <+> "is not found")
-    findAndReadFile (modPath : rest) modFile = do
-      isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
-      if isExistModFile
-        then do
-          inf <- liftIO $ decodeFile (modPath </> modFile)
-          pure $ Right inf
-        else findAndReadFile rest modFile
+    readFileIfExists file directory =
+      ifM
+        (liftIO $ Directory.doesFileExist (directory </> file))
+        (Just <$> liftIO (decodeFile (directory </> file)))
+        (pure Nothing)

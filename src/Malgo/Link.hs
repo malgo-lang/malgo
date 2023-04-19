@@ -14,6 +14,7 @@ import Malgo.Prelude
 import System.Directory (doesFileExist)
 import System.FilePath ((</>))
 
+-- | Linking a program with its dependencies.
 link :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath], Binary a) => Interface -> Program a -> m (Program a)
 link interface mainCoreIR = do
   depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)

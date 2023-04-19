@@ -2,14 +2,16 @@
 
 module Malgo.Build (run) where
 
-import Control.Lens
+import Control.Concurrent (getNumCapabilities)
+import Control.Lens (Field2 (_2), view)
 import Data.Aeson (FromJSON, decodeFileStrict)
-import Data.Graph (graphFromEdges, reverseTopSort)
 import Data.List ((\\))
 import Data.List qualified as List
+import Data.List.Extra (chunksOf)
+import Koriel.Id (ModuleName (..))
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
-import Malgo.Monad
+import Malgo.Monad (getWorkspaceDir, newMalgoEnv)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..), _moduleName)
@@ -17,6 +19,7 @@ import Relude.Unsafe qualified as Unsafe
 import System.Directory (getCurrentDirectory, makeAbsolute)
 import System.FilePath ((</>))
 import System.FilePath.Glob (glob)
+import UnliftIO (mapConcurrently_)
 
 data Config = Config
   { sourceDirectories :: [FilePath],
@@ -57,20 +60,23 @@ run = do
   sourceContents <- map (decodeUtf8 @Text) <$> traverse readFileBS sourceFiles'
   let parsedAstList = mconcat $ zipWith parse sourceFiles' sourceContents
   let moduleDepends = map takeImports parsedAstList
-  let (graph, nodeFromVertex, _) = graphFromEdges moduleDepends
-  let topSorted = map (nodeFromVertex >>> view _1) $ reverseTopSort graph
+  n <- getNumCapabilities
+  let splited = split n $ map (\(_, i, o) -> (i, o)) moduleDepends
 
   _uniqSupply <- UniqSupply <$> newIORef 0
   _interfaces <- newIORef mempty
   _indexes <- newIORef mempty
   traverse_
-    ( \path -> do
-        let ast = Unsafe.fromJust $ List.lookup path parsedAstList
-        putStrLn ("Compile " <> path)
-        env <- newMalgoEnv path [] (Just _uniqSupply) ast._moduleName (Just _interfaces) (Just _indexes)
-        Driver.compileFromAST path env ast
+    ( mapConcurrently_
+        ( \(path, moduleName, _) -> do
+            let ast = Unsafe.fromJust $ List.lookup path parsedAstList
+            putStrLn ("Compile " <> path)
+            env <- newMalgoEnv path [] (Just _uniqSupply) moduleName (Just _interfaces) (Just _indexes)
+            Driver.compileFromAST path env ast
+        )
+        . mapMaybe (\mod -> List.find (view _2 >>> (== mod)) moduleDepends)
     )
-    topSorted
+    splited
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []
@@ -79,10 +85,26 @@ run = do
       let ParsedDefinitions ds = _moduleDefinition
        in ( sourceFile,
             _moduleName,
-            mapMaybe
-              ( \case
-                  Import _ imported _ -> Just imported
-                  _ -> Nothing
-              )
-              ds
+            ordNub $
+              mapMaybe
+                ( \case
+                    Import _ imported _ -> Just imported
+                    _ -> Nothing
+                )
+                ds
           )
+
+split :: Int -> [(ModuleName, [ModuleName])] -> [[ModuleName]]
+split n graph =
+  reverse $ cut graph []
+  where
+    root :: (ModuleName, [ModuleName]) -> Maybe ModuleName
+    root (x, []) = Just x
+    root _ = Nothing
+    cut :: [(ModuleName, [ModuleName])] -> [[ModuleName]] -> [[ModuleName]]
+    cut [] acc = acc
+    cut xs acc =
+      let roots = mapMaybe root xs
+          rests = filter (\(x, _) -> x `notElem` roots) xs
+          roots' = chunksOf n roots
+       in cut (map (second (\\ roots)) rests) (roots' <> acc)

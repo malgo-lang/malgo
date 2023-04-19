@@ -1,10 +1,8 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
-import Control.Exception.Extra (assertIO)
-import Control.Lens (traverseOf, _1)
+import Control.Exception (assert)
 import Data.Binary qualified as Binary
-import Data.HashSet qualified as HashSet
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
@@ -73,7 +71,6 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
 
       (dsEnv, core) <- desugar tcEnv refinedAst
       core <- flat core
-      lint core
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
       writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
@@ -81,41 +78,39 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
 
       -- check module paths include dstName's directory
-      liftIO $ assertIO (takeDirectory env.dstPath `elem` env._modulePaths)
+      assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
       core <- Link.link inf core
       writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
+
+      lint core
+
       when env.debugMode $
-        liftIO $ do
+        liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pPrint core
 
-      when env.debugMode $ do
+      when env.debugMode do
         inf <- loadInterface moduleName
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- flat =<< if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName mempty env.inlineSize core
+      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
+        writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
-      (coreLL, knowns) <- traverseOf _1 flat =<< if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure (coreOpt, mempty)
+      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
+      lint coreLL
       when (env.debugMode && env.lambdaLift) $
-        liftIO $ do
+        liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-      coreLLOpt <- flat =<< if env.noOptimize || not env.lambdaLift then pure coreLL else optimizeProgram uniqSupply moduleName knowns env.inlineSize coreLL
-      when (env.debugMode && env.lambdaLift && not env.noOptimize) $
-        liftIO $ do
-          hPutStrLn stderr "=== LAMBDALIFT OPTIMIZE ==="
-          hPrint stderr $ pPrint coreLLOpt
-
-      writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreLLOpt
-      appendFile (env.dstPath -<.> "kor.opt") $ render $ pPrint $ HashSet.toList knowns
+          writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
 
       case env.compileMode of
         LLVM -> do
-          codeGen srcPath env moduleName dsEnv coreLLOpt
+          codeGen srcPath env moduleName dsEnv coreLL
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
@@ -127,7 +122,7 @@ compile srcPath env = do
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
           diag' = addFile diag srcPath (toString src)
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
-  when env.debugMode $ do
+  when env.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
   compileFromAST srcPath env {moduleName = parsedAst._moduleName} parsedAst

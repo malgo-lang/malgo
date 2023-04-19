@@ -4,7 +4,7 @@
 module Malgo.Syntax
   ( Literal (..),
     Type (..),
-    Exp (..),
+    Expr (..),
     Stmt (..),
     Clause (..),
     Pat (..),
@@ -119,25 +119,25 @@ getTyVars (TyBlock _ t) = getTyVars t
 
 -- * Expression
 
-data Exp x
+data Expr x
   = Var (XVar x) (XId x)
   | Unboxed (XUnboxed x) (Literal Unboxed)
   | Boxed (XBoxed x) (Literal Boxed)
-  | Apply (XApply x) (Exp x) (Exp x)
-  | OpApp (XOpApp x) (XId x) (Exp x) (Exp x)
+  | Apply (XApply x) (Expr x) (Expr x)
+  | OpApp (XOpApp x) (XId x) (Expr x) (Expr x)
   | Fn (XFn x) (NonEmpty (Clause x))
-  | Tuple (XTuple x) [Exp x]
-  | Record (XRecord x) [(Text, Exp x)]
-  | List (XList x) [Exp x]
-  | Ann (XAnn x) (Exp x) (Type x)
+  | Tuple (XTuple x) [Expr x]
+  | Record (XRecord x) [(Text, Expr x)]
+  | List (XList x) [Expr x]
+  | Ann (XAnn x) (Expr x) (Type x)
   | Seq (XSeq x) (NonEmpty (Stmt x))
-  | Parens (XParens x) (Exp x)
+  | Parens (XParens x) (Expr x)
 
-deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Exp x)
+deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Expr x)
 
-deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Exp x)
+deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Expr x)
 
-instance (Pretty (XId x)) => Pretty (Exp x) where
+instance (Pretty (XId x)) => Pretty (Expr x) where
   pPrintPrec _ _ (Var _ i) = pPrint i
   pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
   pPrintPrec _ _ (Boxed _ lit) = pPrint lit
@@ -160,7 +160,7 @@ instance (Pretty (XId x)) => Pretty (Exp x) where
 
 instance
   (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
-  HasType (Exp x)
+  HasType (Expr x)
   where
   typeOf (Var x _) = typeOf x
   typeOf (Unboxed x _) = typeOf x
@@ -205,7 +205,7 @@ instance
     HasRange (XSeq x) r,
     HasRange (XParens x) r
   ) =>
-  HasRange (Exp x) r
+  HasRange (Expr x) r
   where
   range f = \case
     Var x v -> range f x <&> \x -> Var x v
@@ -221,7 +221,7 @@ instance
     Seq x ss -> range f x <&> \x -> Seq x ss
     Parens x e -> range f x <&> \x -> Parens x e
 
-freevars :: Hashable (XId x) => Exp x -> HashSet (XId x)
+freevars :: Hashable (XId x) => Expr x -> HashSet (XId x)
 freevars (Var _ v) = one v
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
@@ -255,9 +255,9 @@ freevars (Parens _ e) = freevars e
 -- * Stmt
 
 data Stmt x
-  = Let (XLet x) (XId x) (Exp x)
-  | With (XWith x) (Maybe (XId x)) (Exp x)
-  | NoBind (XNoBind x) (Exp x)
+  = Let (XLet x) (XId x) (Expr x)
+  | With (XWith x) (Maybe (XId x)) (Expr x)
+  | NoBind (XNoBind x) (Expr x)
 
 deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Stmt x)
 
@@ -284,7 +284,7 @@ instance
 
 -- * Clause
 
-data Clause x = Clause (XClause x) [Pat x] (Exp x)
+data Clause x = Clause (XClause x) [Pat x] (Expr x)
 
 deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Clause x)
 
@@ -398,7 +398,7 @@ makePrisms ''Pat
 -- * Declaration
 
 data Decl x
-  = ScDef (XScDef x) (XId x) (Exp x)
+  = ScDef (XScDef x) (XId x) (Expr x)
   | ScSig (XScSig x) (XId x) (Type x)
   | DataDef (XDataDef x) (XId x) [(Range, XId x)] [(Range, XId x, [Type x])]
   | TypeSynonym (XTypeSynonym x) (XId x) [XId x] (Type x)
@@ -470,7 +470,7 @@ data BindGroup x = BindGroup
     _imports :: [Import x]
   }
 
-type ScDef x = (XScDef x, XId x, Exp x)
+type ScDef x = (XScDef x, XId x, Expr x)
 
 type ScSig x = (XScSig x, XId x, Type x)
 
@@ -532,11 +532,11 @@ makeBindGroup ds =
     importDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
-adjacents :: Hashable (XId x) => (a, XId x, Exp x) -> (XId x, XId x, [XId x])
+adjacents :: Hashable (XId x) => (a, XId x, Expr x) -> (XId x, XId x, [XId x])
 adjacents (_, f, e) =
   (f, f, toList $ HashSet.delete f (freevars e))
 
-makeSCC :: (Hashable (XId x), Ord (XId x)) => [(a, XId x, Exp x)] -> [[XId x]]
+makeSCC :: (Hashable (XId x), Ord (XId x)) => [(a, XId x, Expr x)] -> [[XId x]]
 makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'
   where
     vertices = map (view _2 . adjacents) ds

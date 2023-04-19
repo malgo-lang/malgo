@@ -38,6 +38,8 @@ dependencies:
   - witherable
   - diagnose
   - generic-data
+  - syb
+  - unliftio
 
 ghc-options:
   - -Wall
@@ -102,3 +104,14 @@ tests:
       - typed-process
       - hspec
       - prettyprinter
+      - silently
+      - time
+
+benchmarks:
+  malgo-bench:
+    main: Main.hs
+    source-dirs: benchmarks
+    dependencies:
+      - malgo
+      - typed-process
+      - criterion

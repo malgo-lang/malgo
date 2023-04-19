@@ -53,41 +53,41 @@ annProgram Program {..} = do
     topFuns <- traverse annFunDecl topFuns
     pure Program {..}
 
-prepareVarDecl :: MonadReader Context m => (Text, Type, Exp Text) -> m (HashMap Text (Id Type))
+prepareVarDecl :: MonadReader Context m => (Text, Type, Expr Text) -> m (HashMap Text (Id Type))
 prepareVarDecl (name, ty, _) = do
   id <- parseId name ty
   pure $ one (name, id)
 
-prepareFunDecl :: MonadReader Context m => (Text, [Text], Type, Exp Text) -> m (HashMap Text (Id Type))
+prepareFunDecl :: MonadReader Context m => (Text, [Text], Type, Expr Text) -> m (HashMap Text (Id Type))
 prepareFunDecl (name, _, ty, _) = do
   id <- parseId name ty
   pure $ one (name, id)
 
-annVarDecl :: (MonadReader Context m, MonadIO m) => (Text, Type, Exp Text) -> m (Id Type, Type, Exp (Id Type))
+annVarDecl :: (MonadReader Context m, MonadIO m) => (Text, Type, Expr Text) -> m (Id Type, Type, Expr (Id Type))
 annVarDecl (name, ty, body) = do
   name <- lookupName name
-  (name,ty,) <$> annExp body
+  (name,ty,) <$> annExpr body
 
-annFunDecl :: (MonadReader Context m, MonadIO m) => (Text, [Text], Type, Exp Text) -> m (Id Type, [Id Type], Type, Exp (Id Type))
+annFunDecl :: (MonadReader Context m, MonadIO m) => (Text, [Text], Type, Expr Text) -> m (Id Type, [Id Type], Type, Expr (Id Type))
 annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   name <- lookupName name
   params' <- zipWithM parseId params paramTypes
   local
     (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv})
-    $ (name,params',ty,) <$> annExp body
+    $ (name,params',ty,) <$> annExpr body
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pPrint name
 
-annExp :: (MonadReader Context m, MonadIO m) => Exp Text -> m (Exp (Id Type))
-annExp (Atom atom) = Atom <$> annAtom atom
-annExp (Call fun args) = Call <$> annAtom fun <*> traverse annAtom args
-annExp (CallDirect fun args) = CallDirect <$> lookupName fun <*> traverse annAtom args
-annExp (RawCall fun typ args) = RawCall fun typ <$> traverse annAtom args
-annExp (BinOp op x y) = BinOp op <$> annAtom x <*> annAtom y
-annExp (Cast typ x) = Cast typ <$> annAtom x
-annExp (Let defs body) = do
+annExpr :: (MonadReader Context m, MonadIO m) => Expr Text -> m (Expr (Id Type))
+annExpr (Atom atom) = Atom <$> annAtom atom
+annExpr (Call fun args) = Call <$> annAtom fun <*> traverse annAtom args
+annExpr (CallDirect fun args) = CallDirect <$> lookupName fun <*> traverse annAtom args
+annExpr (RawCall fun typ args) = RawCall fun typ <$> traverse annAtom args
+annExpr (BinOp op x y) = BinOp op <$> annAtom x <*> annAtom y
+annExpr (Cast typ x) = Cast typ <$> annAtom x
+annExpr (Let defs body) = do
   (env, defs) <- foldMapM annDef defs
   body <- local (\ctx -> ctx {nameEnv = env <> ctx.nameEnv}) do
-    annExp body
+    annExpr body
   pure $ Let defs body
   where
     annDef (LocalDef variable typ object) = do
@@ -95,42 +95,42 @@ annExp (Let defs body) = do
       object <- local (\ctx -> ctx {nameEnv = HashMap.insert variable variable' ctx.nameEnv}) do
         annObj typ object
       pure (one (variable, variable'), [LocalDef variable' typ object])
-annExp (Match scrutinee alts) = do
-  scrutinee <- annExp scrutinee
+annExpr (Match scrutinee alts) = do
+  scrutinee <- annExpr scrutinee
   Match scrutinee <$> traverse (annCase $ typeOf scrutinee) alts
   where
     annCase _ (Unpack (Con tag paramTypes) params body) = do
       params' <- zipWithM parseId params paramTypes
       local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
-        body <- annExp body
+        body <- annExpr body
         pure $ Unpack (Con tag paramTypes) params' body
     annCase (RecordT fieldTypes) (OpenRecord fields body) = do
       fields' <- ifor fields \field variable -> do
         let ty = HashMap.lookupDefault (error $ "annExp: " <> show field) field fieldTypes
         parseId variable ty
       local (\ctx -> ctx {nameEnv = HashMap.fromList (HashMap.elems (HashMap.intersectionWith (,) fields fields')) <> ctx.nameEnv}) do
-        body <- annExp body
+        body <- annExpr body
         pure $ OpenRecord fields' body
     annCase ty OpenRecord {} = error $ "annCase: " <> show ty
-    annCase _ (Exact value body) = Exact value <$> annExp body
+    annCase _ (Exact value body) = Exact value <$> annExpr body
     annCase _ (Bind var ty body) = do
       var' <- parseId var ty
       local (\ctx -> ctx {nameEnv = HashMap.insert var var' ctx.nameEnv}) do
-        body <- annExp body
+        body <- annExpr body
         pure $ Bind var' ty body
-annExp (Switch v cases def) = Switch <$> annAtom v <*> traverse annCase cases <*> annExp def
+annExpr (Switch v cases def) = Switch <$> annAtom v <*> traverse annCase cases <*> annExpr def
   where
-    annCase (tag, body) = (tag,) <$> annExp body
-annExp (SwitchUnboxed v cases def) = SwitchUnboxed <$> annAtom v <*> traverse annCase cases <*> annExp def
+    annCase (tag, body) = (tag,) <$> annExpr body
+annExpr (SwitchUnboxed v cases def) = SwitchUnboxed <$> annAtom v <*> traverse annCase cases <*> annExpr def
   where
-    annCase (tag, body) = (tag,) <$> annExp body
-annExp (Destruct v con@(Con _ paramTypes) params body) = do
+    annCase (tag, body) = (tag,) <$> annExpr body
+annExpr (Destruct v con@(Con _ paramTypes) params body) = do
   v <- annAtom v
   params' <- zipWithM parseId params paramTypes
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
-    body <- annExp body
+    body <- annExpr body
     pure $ Destruct v con params' body
-annExp (DestructRecord v kvs body) = do
+annExpr (DestructRecord v kvs body) = do
   v <- annAtom v
   case typeOf v of
     RecordT kts -> do
@@ -147,16 +147,16 @@ annExp (DestructRecord v kvs body) = do
               }
         )
         do
-          body <- annExp body
+          body <- annExpr body
           pure $ DestructRecord v kvs' body
     ty -> error $ "annExp[DestructRecord]: " <> show ty
-annExp (Assign x v e) = do
-  v' <- annExp v
+annExpr (Assign x v e) = do
+  v' <- annExpr v
   x' <- parseId x (typeOf v')
   local (\ctx -> ctx {nameEnv = HashMap.insert x x' ctx.nameEnv}) do
-    e <- annExp e
+    e <- annExpr e
     pure $ Assign x' v' e
-annExp (Error ty) = pure $ Error ty
+annExpr (Error ty) = pure $ Error ty
 
 annAtom :: HasCallStack => MonadReader Context m => Atom Text -> m (Atom (Id Type))
 annAtom (Var name) = Var <$> lookupName name
@@ -166,7 +166,7 @@ annObj :: (MonadReader Context m, MonadIO m) => Type -> Obj Text -> m (Obj (Id T
 annObj (paramTypes :-> _) (Fun params body) = do
   params' <- zipWithM parseId params paramTypes
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
-    body <- annExp body
+    body <- annExpr body
     pure $ Fun params' body
 annObj ty Fun {} = error $ "annObj Fun: " <> show ty
 annObj _ (Pack ty con args) = do

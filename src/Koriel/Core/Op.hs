@@ -8,6 +8,7 @@ import Data.Data (Data)
 import Koriel.Prelude
 import Koriel.Pretty
 
+-- | Binary operators
 data Op
   = Add
   | Sub
@@ -26,7 +27,7 @@ data Op
   | Ge
   | And
   | Or
-  deriving stock (Eq, Show, Generic, Data)
+  deriving stock (Eq, Ord, Show, Generic, Data)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance Pretty Op where

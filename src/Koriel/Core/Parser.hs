@@ -1,12 +1,9 @@
-{-# OPTIONS_GHC -Wno-missing-export-lists #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
-
-module Koriel.Core.Parser where
+module Koriel.Core.Parser (parse) where
 
 import Data.HashMap.Strict qualified as HashMap
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
 import Koriel.Core.Op
-import Koriel.Core.Syntax hiding (atom, object)
+import Koriel.Core.Syntax hiding (atom, expr, object)
 import Koriel.Core.Type
 import Koriel.Prelude hiding (many, some)
 import Text.Megaparsec hiding (parse)
@@ -14,6 +11,7 @@ import Text.Megaparsec qualified as Megaparsec
 import Text.Megaparsec.Char qualified as Char
 import Text.Megaparsec.Char.Lexer qualified as Lexer
 
+-- | Parse a Koriel program.
 parse :: String -> Text -> Either (ParseErrorBundle Text Void) (Program Text)
 parse = Megaparsec.parse do
   space
@@ -23,8 +21,8 @@ type Parser = Parsec Void Text
 
 -- | トップレベル宣言
 data Def
-  = VarDef Text Type (Exp Text)
-  | FunDef Text [Text] Type (Exp Text)
+  = VarDef Text Type (Expr Text)
+  | FunDef Text [Text] Type (Expr Text)
   | ExtDef Text Type
 
 -- | Parse a program.
@@ -111,7 +109,7 @@ object = between (symbol "(") (symbol ")") do
       pure $ Record $ HashMap.fromList kvs
 
 -- | Parse an expression.
-expr :: Parser (Exp Text)
+expr :: Parser (Expr Text)
 expr =
   label "expression" do
     Atom <$> atom

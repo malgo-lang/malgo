@@ -145,10 +145,10 @@ indexScDef (Typed {value = range}, ident, expr) = do
       addDefinition ident info
       addSymbolInfo ident (symbol Function ident range)
   -- traverse the expression
-  indexExp expr
+  indexExpr expr
 
-indexExp :: MonadState IndexEnv m => Exp (Malgo 'Refine) -> m ()
-indexExp (Var Typed {value = range} ident) = do
+indexExpr :: MonadState IndexEnv m => Expr (Malgo 'Refine) -> m ()
+indexExpr (Var Typed {value = range} ident) = do
   -- lookup the infomation of this variable
   minfo <- lookupInfo ident
   case minfo of
@@ -157,37 +157,37 @@ indexExp (Var Typed {value = range} ident) = do
       let info = Info {name = ident.name, typeSignature = identType, definitions = []}
       addReferences info [range]
     Just info -> addReferences info [range]
-indexExp (Unboxed Typed {value = range} u) = do
+indexExpr (Unboxed Typed {value = range} u) = do
   let info = Info {name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
-indexExp (Apply _ e1 e2) = do
-  indexExp e1
-  indexExp e2
-indexExp (Fn _ clauses) =
+indexExpr (Apply _ e1 e2) = do
+  indexExpr e1
+  indexExpr e2
+indexExpr (Fn _ clauses) =
   traverse_ indexClause clauses
-indexExp (Tuple _ es) =
-  traverse_ indexExp es
-indexExp (Record _ fields) =
-  traverse_ (indexExp . snd) fields
-indexExp (Seq _ stmts) =
+indexExpr (Tuple _ es) =
+  traverse_ indexExpr es
+indexExpr (Record _ fields) =
+  traverse_ (indexExpr . snd) fields
+indexExpr (Seq _ stmts) =
   traverse_ indexStmt stmts
 
 indexStmt :: MonadState IndexEnv m => Stmt (Malgo 'Refine) -> m ()
-indexStmt (Let _ Id {sort = Temporal} expr) = indexExp expr
+indexStmt (Let _ Id {sort = Temporal} expr) = indexExpr expr
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
   let info = Info {name = ident.name, typeSignature = identType, definitions = [range]}
   addReferences info [range]
   addDefinition ident info
   addSymbolInfo ident (symbol Variable ident range)
-  indexExp expr
+  indexExpr expr
 indexStmt (NoBind _ expr) =
-  indexExp expr
+  indexExpr expr
 
 indexClause :: MonadState IndexEnv m => Clause (Malgo 'Refine) -> m ()
 indexClause (Clause _ ps e) = do
   traverse_ indexPat ps
-  indexExp e
+  indexExpr e
 
 indexPat :: MonadState IndexEnv m => Pat (Malgo 'Refine) -> m ()
 indexPat (VarP _ Id {sort = Temporal}) = pass

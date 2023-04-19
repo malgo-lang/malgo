@@ -144,14 +144,14 @@ pScDef =
     void $ pKeyword "def"
     name <- lowerIdent <|> between (symbol "(") (symbol ")") operator
     void $ pOperator "="
-    exp <- pExp
+    exp <- pExpr
     end <- getSourcePos
     pure $ ScDef (Range start end) name exp
 
 -- Expressions
 
-pExp :: Parser (Exp (Malgo 'Parse))
-pExp = do
+pExpr :: Parser (Expr (Malgo 'Parse))
+pExpr = do
   start <- getSourcePos
   expr <- pOpApp
   -- try type annotation for expression before just simple expression
@@ -184,13 +184,13 @@ pUnboxed =
       <|> lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'))
       <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
 
-pVariable :: Parser (Exp (Malgo 'Parse))
+pVariable :: Parser (Expr (Malgo 'Parse))
 pVariable =
   -- try full path identifier like `Foo.bar`
   -- before simple identifier like `bar`
   try pExplicitVariable <|> pImplicitVariable
   where
-    pExplicitVariable :: Parser (Exp (Malgo 'Parse))
+    pExplicitVariable :: Parser (Expr (Malgo 'Parse))
     pExplicitVariable = label "explicit variable" $ do
       start <- getSourcePos
       qualifier <- Explicit . ModuleName <$> pModuleName
@@ -199,14 +199,14 @@ pVariable =
       end <- getSourcePos
       pure $ Var (Qualified qualifier (Range start end)) name
 
-    pImplicitVariable :: Parser (Exp (Malgo 'Parse))
+    pImplicitVariable :: Parser (Expr (Malgo 'Parse))
     pImplicitVariable = label "implicit variable" $ do
       start <- getSourcePos
       name <- lowerIdent <|> upperIdent
       end <- getSourcePos
       pure $ Var (Qualified Implicit (Range start end)) name
 
-pFun :: Parser (Exp (Malgo 'Parse))
+pFun :: Parser (Expr (Malgo 'Parse))
 pFun =
   label "function literal" do
     start <- getSourcePos
@@ -248,7 +248,7 @@ pLet = do
   void $ pKeyword "let"
   v <- lowerIdent
   void $ pOperator "="
-  exp <- pExp
+  exp <- pExpr
   end <- getSourcePos
   pure $ Let (Range start end) v exp
 
@@ -260,11 +260,11 @@ pWith = label "with" do
     [ try do
         var <- lowerIdent
         void $ pOperator "="
-        exp <- pExp
+        exp <- pExpr
         end <- getSourcePos
         pure $ With (Range start end) (Just var) exp,
       do
-        e <- pExp
+        e <- pExpr
         end <- getSourcePos
         pure $ With (Range start end) Nothing e
     ]
@@ -272,7 +272,7 @@ pWith = label "with" do
 pNoBind :: Parser (Stmt (Malgo 'Parse))
 pNoBind = do
   start <- getSourcePos
-  e <- pExp
+  e <- pExpr
   end <- getSourcePos
   pure $ NoBind (Range start end) e
 
@@ -353,18 +353,18 @@ pPat =
       end <- getSourcePos
       pure $ ConP (Range start end) name ps
 
-pTuple :: Parser (Exp (Malgo 'Parse))
+pTuple :: Parser (Expr (Malgo 'Parse))
 pTuple = label "tuple" do
   start <- getSourcePos
   xs <- between (symbol "(") (symbol ")") do
-    x <- pExp
+    x <- pExpr
     void $ pOperator ","
-    xs <- pExp `sepBy` pOperator ","
+    xs <- pExpr `sepBy` pOperator ","
     pure (x : xs)
   end <- getSourcePos
   pure $ Tuple (Range start end) xs
 
-pUnit :: Parser (Exp (Malgo 'Parse))
+pUnit :: Parser (Expr (Malgo 'Parse))
 pUnit = do
   start <- getSourcePos
   _ <- symbol "("
@@ -372,7 +372,7 @@ pUnit = do
   end <- getSourcePos
   pure $ Tuple (Range start end) []
 
-pRecord :: Parser (Exp (Malgo 'Parse))
+pRecord :: Parser (Expr (Malgo 'Parse))
 pRecord = do
   start <- getSourcePos
   kvs <- between (symbol "{") (symbol "}") do
@@ -383,28 +383,28 @@ pRecord = do
     pRecordEntry = do
       label <- lowerIdent
       void $ pOperator "="
-      value <- pExp
+      value <- pExpr
       pure (label, value)
 
-pList :: Parser (Exp (Malgo 'Parse))
+pList :: Parser (Expr (Malgo 'Parse))
 pList = label "list" do
   start <- getSourcePos
   xs <- between (symbol "[") (symbol "]") do
-    pExp `sepBy` pOperator ","
+    pExpr `sepBy` pOperator ","
   end <- getSourcePos
   pure $ List (Range start end) xs
 
-pSeq :: Parser (Exp (Malgo 'Parse))
+pSeq :: Parser (Expr (Malgo 'Parse))
 pSeq = do
   start <- getSourcePos
   stmts <- between (symbol "(") (symbol ")") pStmts
   end <- getSourcePos
   pure $ Seq (Range start end) stmts
 
-pSingleExp :: Parser (Exp (Malgo 'Parse))
-pSingleExp =
-  try pUnboxedExp
-    <|> try pBoxedExp
+pSingleExpr :: Parser (Expr (Malgo 'Parse))
+pSingleExpr =
+  try pUnboxedExpr
+    <|> try pBoxedExpr
     <|> pVariable
     <|> try pUnit
     <|> try pTuple
@@ -415,34 +415,34 @@ pSingleExp =
     <|> try pSeq
     <|> pParens
   where
-    pUnboxedExp = do
+    pUnboxedExpr = do
       start <- getSourcePos
       u <- pUnboxed
       end <- getSourcePos
       pure $ Unboxed (Range start end) u
-    pBoxedExp = do
+    pBoxedExpr = do
       start <- getSourcePos
       b <- pBoxed
       end <- getSourcePos
       pure $ Boxed (Range start end) b
     pParens = do
       start <- getSourcePos
-      e <- between (symbol "(") (symbol ")") pExp
+      e <- between (symbol "(") (symbol ")") pExpr
       end <- getSourcePos
       pure $ Parens (Range start end) e
 
-pApply :: Parser (Exp (Malgo 'Parse))
+pApply :: Parser (Expr (Malgo 'Parse))
 pApply = do
   start <- getSourcePos
-  f <- pSingleExp
-  xs <- some pSingleExp
+  f <- pSingleExpr
+  xs <- some pSingleExpr
   end <- getSourcePos
   pure $ foldl (Apply (Range start end)) f xs
 
-pTerm :: Parser (Exp (Malgo 'Parse))
-pTerm = try pApply <|> pSingleExp
+pTerm :: Parser (Expr (Malgo 'Parse))
+pTerm = try pApply <|> pSingleExpr
 
-pOpApp :: Parser (Exp (Malgo 'Parse))
+pOpApp :: Parser (Expr (Malgo 'Parse))
 pOpApp = makeExprParser pTerm opTable
   where
     opTable =
@@ -571,30 +571,33 @@ pKeyword keyword = lexeme (string keyword <* notFollowedBy identLetter)
 pOperator :: Text -> Parser Text
 pOperator op = lexeme (string op <* notFollowedBy opLetter)
 
+reservedKeywords :: [Text]
+reservedKeywords =
+  [ "class",
+    "def",
+    "data",
+    "exists",
+    "forall",
+    "foreign",
+    "impl",
+    "import",
+    "infix",
+    "infixl",
+    "infixr",
+    "let",
+    "type",
+    "module",
+    "with"
+  ]
+
 reserved :: Parser Text
-reserved =
-  choice $
-    map
-      (try . pKeyword)
-      [ "class",
-        "def",
-        "data",
-        "exists",
-        "forall",
-        "foreign",
-        "impl",
-        "import",
-        "infix",
-        "infixl",
-        "infixr",
-        "let",
-        "type",
-        "module",
-        "with"
-      ]
+reserved = choice $ map (try . pKeyword) reservedKeywords -- #| and |# are for block comments in Koriel
+
+reservedOperators :: [Text]
+reservedOperators = ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"]
 
 reservedOp :: Parser Text
-reservedOp = choice $ map (try . pOperator) ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"] -- #| and |# are for block comments in Koriel
+reservedOp = choice $ map (try . pOperator) reservedOperators
 
 lowerIdent :: Parser Text
 lowerIdent =

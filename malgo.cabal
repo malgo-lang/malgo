@@ -112,8 +112,10 @@ library
     , pretty
     , relude >=1.0.0.0
     , string-conversions
+    , syb
     , text
     , transformers
+    , unliftio
     , unordered-containers
     , witherable
   default-language: GHC2021
@@ -167,8 +169,10 @@ executable malgo
     , pretty
     , relude >=1.0.0.0
     , string-conversions
+    , syb
     , text
     , transformers
+    , unliftio
     , unordered-containers
     , witherable
   default-language: GHC2021
@@ -224,10 +228,74 @@ test-suite malgo-test
     , pretty
     , prettyprinter
     , relude >=1.0.0.0
+    , silently
     , string-conversions
+    , syb
+    , text
+    , time
+    , transformers
+    , typed-process
+    , unliftio
+    , unordered-containers
+    , witherable
+  default-language: GHC2021
+
+benchmark malgo-bench
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_malgo
+  hs-source-dirs:
+      benchmarks
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DerivingStrategies
+      FunctionalDependencies
+      LambdaCase
+      MultiWayIf
+      NoImplicitPrelude
+      OverloadedStrings
+      RecordWildCards
+      StrictData
+      TypeFamilies
+      ViewPatterns
+      OverloadedRecordDot
+      NoFieldSelectors
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS
+  build-depends:
+      Glob
+    , aeson
+    , base
+    , binary
+    , binary-instances
+    , containers
+    , criterion
+    , diagnose
+    , directory
+    , extra
+    , filepath
+    , generic-data
+    , hashable
+    , lens
+    , llvm-hs
+    , llvm-hs-pure
+    , lsp
+    , lsp-types
+    , malgo
+    , megaparsec
+    , mtl
+    , optparse-applicative
+    , parser-combinators
+    , pretty
+    , relude >=1.0.0.0
+    , string-conversions
+    , syb
     , text
     , transformers
     , typed-process
+    , unliftio
     , unordered-containers
     , witherable
   default-language: GHC2021
