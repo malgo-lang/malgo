@@ -7,6 +7,7 @@ import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM (codeGen)
+import Koriel.Core.CodeGen.PrintLLVM qualified as PrintLLVM
 import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
@@ -111,6 +112,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       case env.compileMode of
         LLVM -> do
           codeGen srcPath env moduleName dsEnv coreLL
+        PrintLLVM -> do
+          PrintLLVM.codeGen srcPath env moduleName coreLL
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()

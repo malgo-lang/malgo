@@ -83,7 +83,7 @@ toLLOpt =
             <> help
               "Write LLVM IR to OUTPUT"
         )
-      <*> pure LLVM
+      <*> (flag' LLVM (long "llvm") <|> flag' PrintLLVM (long "print-llvm") <|> pure LLVM)
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
       <*> ( OptimizeOption
