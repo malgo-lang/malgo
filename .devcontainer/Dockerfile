@@ -34,7 +34,7 @@ RUN apt-get install -y --no-install-recommends \
 
 RUN wget https://apt.llvm.org/llvm.sh && \
   chmod +x llvm.sh && \
-  ./llvm.sh 12
+  ./llvm.sh 15
 
 RUN apt-get install -y --no-install-recommends \
   libgc-dev

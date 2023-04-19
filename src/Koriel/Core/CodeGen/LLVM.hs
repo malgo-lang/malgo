@@ -20,7 +20,8 @@ import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Op qualified as Op
 import Koriel.Core.Syntax
-import Koriel.Core.Type as C
+import Koriel.Core.Type hiding (typeOf)
+import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
@@ -79,17 +80,11 @@ newCodeGenEnv malgoEnv moduleName Program {..} =
     }
   where
     -- topVarsのOprMapを作成
-    varMap = mconcatMap ?? topVars $ \(v, _, e) ->
-      one (v, ConstantOperand $ C.GlobalReference (ptr $ convType $ C.typeOf e) (toName v))
+    varMap = mconcatMap ?? topVars $ \(v, _, _) ->
+      one (v, ConstantOperand $ C.GlobalReference $ toName v)
     -- topFuncsのOprMapを作成
-    funcMap = mconcatMap ?? topFuns $ \(f, ps, _, e) ->
-      one
-        ( f,
-          ConstantOperand $
-            C.GlobalReference
-              (ptr $ FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) ps) False)
-              (toName f)
-        )
+    funcMap = mconcatMap ?? topFuns $ \(f, _, _, _) ->
+      one (f, ConstantOperand $ C.GlobalReference $ toName f)
 
 type MonadCodeGen m =
   ( MonadModuleBuilder m,
@@ -176,27 +171,30 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
       pure (mainFuncId, ([], mainFuncBody))
 
 convType :: C.Type -> LT.Type
-convType (ps :-> r) =
-  ptr $
-    StructureType False [ptr i8, ptr $ FunctionType (convType r) (ptr i8 : map convType ps) False]
+convType (_ :-> _) = ptr
 convType Int32T = i32
 convType Int64T = i64
 convType FloatT = LT.float
 convType DoubleT = LT.double
 convType CharT = i8
-convType StringT = ptr i8
+convType StringT = ptr
 convType BoolT = i8
-convType (SumT cs) =
-  let size = maximum $ sizeofCon <$> toList cs
-   in ptr
-        ( StructureType
-            False
-            [i8, if size == 0 then StructureType False [] else LT.VectorType size i8]
-        )
-convType (PtrT ty) = ptr $ convType ty
-convType (RecordT _) = ptr $ LT.NamedTypeReference $ mkName "struct.hash_table"
-convType AnyT = ptr i8
+convType (SumT _) = ptr
+convType (PtrT _) = ptr
+convType (RecordT _) = ptr
+convType AnyT = ptr
 convType VoidT = LT.void
+
+innerType :: C.Type -> LT.Type
+innerType (_ :-> _) = StructureType False [ptr, ptr]
+innerType StringT = i8
+innerType (SumT cs) =
+  let size = maximum $ sizeofCon <$> toList cs
+   in StructureType False [i8, if size == 0 then StructureType False [] else LT.VectorType size i8]
+innerType (PtrT ty) = convType ty
+innerType (RecordT _) = LT.NamedTypeReference (mkName "struct.hash_table")
+innerType AnyT = i8
+innerType _ = error "invalid type"
 
 sizeofCon :: Num a => Con -> a
 sizeofCon (Con _ ts) = sum $ map sizeofType ts
@@ -225,11 +223,11 @@ findVar x = findLocalVar
         Nothing -> findGlobalVar
     findGlobalVar =
       view (globalValueMap . at x) >>= \case
-        Just opr -> load opr 0 -- global variable is a pointer to the actual value
+        Just opr -> load (convType $ C.typeOf x) opr 0 -- global variable is a pointer to the actual value
         Nothing -> findExtVar
     findExtVar =
       use (at $ toName x) >>= \case
-        Just x -> load x 0
+        Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
       emitDefn $
@@ -239,9 +237,9 @@ findVar x = findLocalVar
               LLVM.AST.Global.type' = convType $ C.typeOf x,
               linkage = LLVM.AST.Linkage.External
             }
-      let opr = ConstantOperand (C.GlobalReference (ptr $ convType $ C.typeOf x) (toName x))
+      let opr = ConstantOperand (C.GlobalReference (toName x))
       at (toName x) ?= opr
-      load opr 0
+      load (convType $ C.typeOf x) opr 0
 
 findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
 findFun x =
@@ -265,23 +263,19 @@ mallocBytes ::
   Operand ->
   Maybe LT.Type ->
   m Operand
-mallocBytes bytesOpr maybeType = do
-  -- gcMalloc <- findExt "GC_malloc" [i64] (ptr i8)
-  gcMalloc <- findExt "malgo_malloc" [i64] (ptr i8)
-  ptrOpr <- call gcMalloc [(bytesOpr, [])]
-  case maybeType of
-    Just t -> bitcast ptrOpr t
-    Nothing -> pure ptrOpr
+mallocBytes bytesOpr _maybeType = do
+  gcMalloc <- findExt "malgo_malloc" [i64] ptr
+  call (FunctionType ptr [i64] False) gcMalloc [(bytesOpr, [])]
 
 mallocType :: (MonadCodeGen m, MonadIRBuilder m) => LT.Type -> m Operand
-mallocType ty = mallocBytes (ConstantOperand $ sizeof ty) (Just $ ptr ty)
+mallocType ty = mallocBytes (ConstantOperand $ sizeof ty) (Just ptr)
 
 sizeof :: LT.Type -> C.Constant
 sizeof ty = C.PtrToInt szPtr LT.i64
   where
-    ptrType = LT.ptr ty
+    ptrType = LT.ptr
     nullPtr = C.IntToPtr (C.Int 32 0) ptrType
-    szPtr = C.GetElementPtr True nullPtr [C.Int 32 1]
+    szPtr = C.GetElementPtr True ty nullPtr [C.Int 32 1]
 
 toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
@@ -339,12 +333,11 @@ genExpr ::
 genExpr e k = genExp' e \eOpr -> do
   case C.typeOf e of
     VoidT -> k (ConstantOperand (C.Undef LT.void))
-    t -> k =<< bitcast eOpr (convType t)
+    t
+      | convType t /= ptr -> k =<< bitcast eOpr (convType t)
+      | otherwise -> k eOpr
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている
--- FIXME[genExpr does not return correctly-typed value]: convType (C.typeOf e) /= LT.typeOf (genExpr e)
---        継続に渡される値の型がptr i8だったときに正しくタグを取り出すため、bitcastする必要がある。
--- TODO: genExpが正しい型の値を継続に渡すように変更する
 genExp' ::
   ( MonadReader CodeGenEnv m,
     MonadState PrimMap m,
@@ -358,25 +351,26 @@ genExp' ::
   (Operand -> m ()) ->
   m ()
 genExp' (Atom x) k = k =<< genAtom x
-genExp' (Call f xs) k = do
+genExp' e@(Call f xs) k = do
   fOpr <- genAtom f
-  captureOpr <- gepAndLoad fOpr [int32 0, int32 0]
-  funcOpr <- gepAndLoad fOpr [int32 0, int32 1]
+  captureAddr <- gep (innerType $ C.typeOf f) fOpr [int32 0, int32 0]
+  captureOpr <- load ptr captureAddr 0
+  funcAddr <- gep (innerType $ C.typeOf f) fOpr [int32 0, int32 1]
+  funcOpr <- load ptr funcAddr 0
   xsOprs <- traverse genAtom xs
-  k =<< call funcOpr (map (,[]) $ captureOpr : xsOprs)
-genExp' (CallDirect f xs) k = do
+  k =<< call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) funcOpr (map (,[]) $ captureOpr : xsOprs)
+genExp' e@(CallDirect f xs) k = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
-  k =<< call fOpr (map (,[]) xsOprs)
-genExp' (RawCall name (ps :-> r) xs) k = do
+  k =<< call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
+genExp' e@(RawCall name _ xs) k = do
   let primOpr =
         ConstantOperand $
-          C.GlobalReference
-            (ptr $ FunctionType (convType r) (map convType ps) False)
-            (LLVM.AST.mkName $ convertString name)
+          C.GlobalReference $
+            LLVM.AST.mkName $
+              convertString name
   xsOprs <- traverse genAtom xs
-  k =<< call primOpr (map (,[]) xsOprs)
-genExp' (RawCall _ t _) _ = error $ show $ pPrint t <> " is not fuction type"
+  k =<< call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
 genExp' (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add
@@ -447,27 +441,23 @@ genExp' (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     i1ToBool i1opr = zext i1opr i8
 genExp' (Cast ty x) k = do
   xOpr <- genAtom x
-  k =<< bitcast xOpr (convType ty)
+  xOprTy <- typeOf xOpr
+  if Right (convType ty) /= xOprTy
+    then k =<< bitcast xOpr (convType ty)
+    else k xOpr
 genExp' (Let xs e) k = do
   env <- foldMapM prepare xs
   env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
   local (over valueMap (env <>)) $ genExpr e k
   where
     -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
-    prepare (LocalDef name _ (Fun ps body)) =
+    prepare (LocalDef name _ (Fun _ _)) =
       one . (name,)
-        <$> mallocType
-          ( StructureType
-              False
-              [ ptr i8,
-                ptr $ FunctionType (convType $ C.typeOf body) (ptr i8 : map (convType . C.typeOf) ps) False
-              ]
-          )
+        <$> mallocType (StructureType False [ptr, ptr])
     prepare _ = pure mempty
 -- These `match` cases are not necessary.
 genExp' (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExpr e $ \_ -> genExpr body k
 genExp' (Match e (Bind x _ body : _)) k = genExpr e $ \eOpr -> do
-  eOpr <- bitcast eOpr (convType $ C.typeOf e)
   local (over valueMap (at x ?~ eOpr)) (genExpr body k)
 genExp' (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
@@ -475,19 +465,21 @@ genExp' (Match e cs) k
       -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
       -- TODO[genExpr does not return correctly-typed value]
       -- genExpが正しい型の値を継続に渡すように変更する
-      eOpr' <- bitcast eOpr (convType $ C.typeOf e)
+      -- eOpr' <- bitcast eOpr (convType $ C.typeOf e)
       br switchBlock -- We need to end the current block before executing genCase
       -- 各ケースのコードとラベルを生成する
       -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-      (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr' (constructorList e) k) cs
+      (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr (constructorList e) k) cs
       -- defaultsの先頭を取り出し、switchのデフォルトケースとする
       -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
       defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
       switchBlock <- block
       tagOpr <- case C.typeOf e of
-        SumT _ -> gepAndLoad eOpr' [int32 0, int32 0]
+        SumT _ -> do
+          tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
+          load i8 tagAddr 0
         RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-        _ -> pure eOpr'
+        _ -> pure eOpr
       switch tagOpr defaultLabel labels
 genExp' (Switch v bs e) k = mdo
   vOpr <- genAtom v
@@ -497,7 +489,9 @@ genExp' (Switch v bs e) k = mdo
   genExpr e k
   switchBlock <- block
   tagOpr <- case C.typeOf v of
-    SumT _ -> gepAndLoad vOpr [int32 0, int32 0]
+    SumT _ -> do
+      tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
+      load i8 tagAddr 0
     RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
     _ -> pure vOpr
   switch tagOpr defaultLabel labels
@@ -526,19 +520,20 @@ genExp' (SwitchUnboxed v bs e) k = mdo
       pure (u', label)
 genExp' (Destruct v (Con _ ts) xs e) k = do
   v <- genAtom v
-  addr <- bitcast v (ptr $ StructureType False [i8, StructureType False (map convType ts)])
-  payloadAddr <- gep addr [int32 0, int32 1]
+  payloadAddr <- gep (StructureType False [i8, StructureType False (map convType ts)]) v [int32 0, int32 1]
   env <-
     HashMap.fromList <$> ifor xs \i x -> do
-      (x,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
+      (x,) <$> do
+        xAddr <- gep (StructureType False (map convType ts)) payloadAddr [int32 0, int32 $ fromIntegral i]
+        load (convType $ C.typeOf x) xAddr 0
   local (over valueMap (env <>)) $ genExpr e k
 genExp' (DestructRecord scrutinee kvs e) k = do
   scrutinee <- bitcast ?? convType (C.typeOf scrutinee) =<< genAtom scrutinee
   kvs' <- for (HashMap.toList kvs) \(k, v) -> do
-    hashTableGet <- findExt "malgo_hash_table_get" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8] (ptr i8)
+    hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
     i <- getUniq
     key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
-    value <- call hashTableGet [(scrutinee, []), (key, [])]
+    value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
     value <- bitcast value (convType $ C.typeOf v)
     pure (v, value)
   local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e k
@@ -583,21 +578,23 @@ genCase scrutinee cs k = \case
   Unpack con vs e -> do
     label <- block
     let (tag, conType) = genCon cs con
-    addr <- bitcast scrutinee (ptr $ StructureType False [i8, conType])
-    payloadAddr <- gep addr [int32 0, int32 1]
+    -- addr <- bitcast scrutinee (ptr $ StructureType False [i8, conType])
+    payloadAddr <- gep (StructureType False [i8, conType]) scrutinee [int32 0, int32 1]
     -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
     env <-
       HashMap.fromList <$> ifor vs \i v ->
-        (v,) <$> gepAndLoad payloadAddr [int32 0, int32 $ fromIntegral i]
+        (v,) <$> do
+          vAddr <- gep conType payloadAddr [int32 0, int32 $ fromIntegral i]
+          load (convType $ C.typeOf v) vAddr 0
     void $ local (over valueMap (env <>)) $ genExpr e k
     pure $ Right (C.Int 8 tag, label)
   OpenRecord kvs e -> do
     label <- block
     kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
-      hashTableGet <- findExt "malgo_hash_table_get" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8] (ptr i8)
+      hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
       i <- getUniq
       key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
-      value <- call hashTableGet [(scrutinee, []), (key, [])]
+      value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
       value <- bitcast value (convType $ C.typeOf v)
       pure (v, value)
     local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e k
@@ -634,47 +631,49 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
   name <- toName <$> newInternalId (funName.name <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> error "The length of internal function parameters must be 1 or more"
-    (rawCapture : ps') -> do
+    (capture : ps') -> do
       -- キャプチャした変数が詰まっている構造体を展開する
-      capture <- bitcast rawCapture (ptr capType)
+      -- capture <- bitcast rawCapture (ptr capType)
       env <-
         HashMap.fromList <$> ifor fvs \i fv ->
-          (fv,) <$> gepAndLoad capture [int32 0, int32 $ fromIntegral i]
+          (fv,) <$> do
+            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i]
+            load (convType $ C.typeOf fv) fvAddr 0
       local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExpr e ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType
   ifor_ fvs $ \i fv -> do
     fvOpr <- findVar fv
-    gepAndStore capture [int32 0, int32 $ fromIntegral i] fvOpr
+    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr
   closAddr <- findVar funName
-  gepAndStore closAddr [int32 0, int32 0] =<< bitcast capture (ptr i8)
-  gepAndStore closAddr [int32 0, int32 1] func
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func
   pure $ one (funName, closAddr)
   where
     fvs = toList $ freevars (Fun ps e)
     -- キャプチャされる変数を詰める構造体の型
     capType = StructureType False (map (convType . C.typeOf) fvs)
-    psTypes = ptr i8 : map (convType . C.typeOf) ps
+    psTypes = ptr : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
 genLocalDef (LocalDef name@(C.typeOf -> SumT cs) _ (Pack _ con@(Con _ ts) xs)) = do
   addr <- mallocType (StructureType False [i8, StructureType False $ map convType ts])
   -- タグの書き込み
-  gepAndStore addr [int32 0, int32 0] (int8 $ findIndex con cs)
+  gepAndStore (StructureType False [i8, StructureType False $ map convType ts]) addr [int32 0, int32 0] (int8 $ findIndex con cs)
   -- 引数の書き込み
   ifor_ xs $ \i x ->
-    gepAndStore addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
+    gepAndStore (StructureType False [i8, StructureType False $ map convType ts]) addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
   one . (name,) <$> bitcast addr (convType $ SumT cs)
 genLocalDef (LocalDef (C.typeOf -> t) _ Pack {}) = error $ show t <> " must be SumT"
 genLocalDef (LocalDef name _ (Record kvs)) = do
-  newHashTable <- findExt "malgo_hash_table_new" [] (ptr $ NamedTypeReference $ mkName "struct.hash_table")
-  hashTable <- call newHashTable []
+  newHashTable <- findExt "malgo_hash_table_new" [] ptr
+  hashTable <- call (FunctionType ptr [] False) newHashTable []
   for_ (HashMap.toList kvs) \(k, v) -> do
     i <- getUniq
     k' <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
-    v <- join $ bitcast <$> genAtom v <*> pure (ptr i8)
-    insert <- findExt "malgo_hash_table_insert" [ptr $ NamedTypeReference $ mkName "struct.hash_table", ptr i8, ptr i8] LT.void
-    call insert (map (,[]) [hashTable, k', v]) `named` ("hash_insert_" <> encodeUtf8 k)
+    v <- join $ bitcast <$> genAtom v <*> pure ptr
+    insert <- findExt "malgo_hash_table_insert" [ptr, ptr, ptr] LT.void
+    call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` ("hash_insert_" <> encodeUtf8 k)
   pure $ one (name, hashTable)
 
 genCon :: [Con] -> Con -> (Integer, LT.Type)
@@ -707,25 +706,17 @@ globalStringPtr str nm = do
           initializer = Just charArray,
           unnamedAddr = Just GlobalAddr
         }
-  pure $ C.GetElementPtr True (C.GlobalReference (ptr ty) nm) [C.Int 32 0, C.Int 32 0]
-
-gepAndLoad ::
-  (MonadIRBuilder m, MonadModuleBuilder m) =>
-  Operand ->
-  [Operand] ->
-  m Operand
-gepAndLoad opr addrs = do
-  addr <- gep opr addrs
-  load addr 0
+  pure $ C.GetElementPtr True ty (C.GlobalReference nm) [C.Int 32 0, C.Int 32 0]
 
 gepAndStore ::
   (MonadIRBuilder m, MonadModuleBuilder m) =>
+  LT.Type ->
   Operand ->
   [Operand] ->
   Operand ->
   m ()
-gepAndStore opr addrs val = do
-  addr <- gep opr addrs
+gepAndStore ty opr addrs val = do
+  addr <- gep ty opr addrs
   store addr 0 val
 
 internalFunction ::
@@ -756,6 +747,5 @@ internalFunction label argtys retty body = do
               returnType = retty,
               basicBlocks = blocks
             }
-      funty = ptr $ FunctionType retty (fst <$> argtys) False
   emitDefn def
-  pure $ ConstantOperand $ C.GlobalReference funty label
+  pure $ ConstantOperand $ C.GlobalReference label
