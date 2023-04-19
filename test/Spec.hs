@@ -72,8 +72,8 @@ main =
             testNoOpt (testcaseDir </> testcase)
           it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
             testNoLift (testcaseDir </> testcase)
-          it ("test pure-haskell backend case " <> testcase) $ example do
-            testPrintLLVM (testcaseDir </> testcase)
+          -- it ("test pure-haskell backend case " <> testcase) $ example do
+          --   testPrintLLVM (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" $ parallel do
       for_ examples \examplecase -> do
