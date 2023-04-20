@@ -36,6 +36,8 @@ import Data.Char (showLitChar)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
+import Data.List qualified as List
+import Data.Monoid (Endo (..))
 import Data.String.Conversions
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Generic.Data
@@ -50,7 +52,7 @@ import Numeric (showHex)
 -- | 'f' may have free variables
 class HasFreeVar f where
   -- | free variables
-  freevars :: Hashable a => f a -> HashSet a
+  freevars :: (Hashable a) => f a -> HashSet a
 
 -- | unboxed values
 data Unboxed
@@ -92,16 +94,16 @@ data Atom a
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Atom a) where
+instance (HasType a) => HasType (Atom a) where
   typeOf (Var x) = typeOf x
   typeOf (Unboxed x) = typeOf x
 
-instance Pretty a => Pretty (Atom a) where
+instance (Pretty a) => Pretty (Atom a) where
   pPrint (Var x) = pPrint x
   pPrint (Unboxed x) = pPrint x
 
 instance HasFreeVar Atom where
-  freevars (Var x) = one x
+  freevars (Var x) = HashSet.singleton x
   freevars Unboxed {} = mempty
 
 -- | 'f' may include atoms
@@ -122,7 +124,7 @@ data Obj a
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Obj a) where
+instance (HasType a) => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
   typeOf (Pack t _ _) = t
   typeOf (Record kvs) = RecordT (fmap typeOf kvs)
@@ -194,7 +196,7 @@ data Case a
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Case a) where
+instance (HasType a) => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
   typeOf (OpenRecord _ e) = typeOf e
   typeOf (Exact _ e) = typeOf e
@@ -272,7 +274,7 @@ data Expr a
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Expr a) where
+instance (HasType a) => HasType (Expr a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
     ps :-> r | map typeOf xs == ps -> r
@@ -385,7 +387,7 @@ class HasExpr f where
 instance HasExpr Expr where
   expr = identity
 
-instance Data a => Plated (Expr a)
+instance (Data a) => Plated (Expr a)
 
 -- | toplevel function definitions
 data Program a = Program
@@ -402,11 +404,11 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
     vcat $
       concat
         [ ["; variables"],
-          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) $ sort topVars,
+          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) $ List.sort topVars,
           ["; functions"],
-          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) $ sort topFuns,
+          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) $ List.sort topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) $ sort extFuns
+          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) $ List.sort extFuns
         ]
 
 instance HasExpr Obj where
@@ -434,7 +436,7 @@ instance HasExpr Program where
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Expr (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
 
-runDef :: Functor f => DefBuilderT f (Expr (Id Type)) -> f (Expr (Id Type))
+runDef :: (Functor f) => DefBuilderT f (Expr (Id Type)) -> f (Expr (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
 
 let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))

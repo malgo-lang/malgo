@@ -1,10 +1,12 @@
 module Malgo.Infer.Pass (infer) where
 
-import Control.Lens (At (at), forOf, ix, mapped, over, preuse, to, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
+import Control.Lens (At (at), forOf, ix, mapped, preuse, to, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
 import Data.List.Extra (anySame)
+import Data.List.NonEmpty qualified as NonEmpty
+import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Traversable (for)
 import Error.Diagnose (Marker (This, Where), Report (..), addFile, addReport, def, defaultStyle, printDiagnostic)
@@ -16,12 +18,11 @@ import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface)
-import Malgo.Prelude hiding (Constraint)
+import Malgo.Prelude
 import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
-import Relude.Unsafe qualified as Unsafe
 import Text.Megaparsec (sourceName)
 
 -------------------------------
@@ -201,12 +202,11 @@ tcScSigs ds =
 
 prepareTcScDefs :: (MonadState TcEnv m, MonadBind m) => [ScDef (Malgo 'Rename)] -> m ()
 prepareTcScDefs = traverse_ \(_, name, _) ->
-  whenNothingM_
-    (use (signatureMap . at name))
-    ( do
-        ty <- Forall [] . TyMeta <$> freshVar Nothing
-        signatureMap . at name ?= ty
-    )
+  use (signatureMap . at name) >>= \case
+    Nothing -> do
+      ty <- Forall [] . TyMeta <$> freshVar Nothing
+      signatureMap . at name ?= ty
+    Just _ -> pass
 
 tcScDefGroup ::
   ( MonadBind m,
@@ -306,10 +306,10 @@ evidenceOfEquiv ::
   Maybe (Map Type Type)
 evidenceOfEquiv (TyMeta v1) (TyMeta v2)
   | v1 == v2 = Just mempty
-  | otherwise = Just $ one (TyMeta v1, TyMeta v2)
+  | otherwise = Just $ Map.singleton (TyMeta v1) (TyMeta v2)
 evidenceOfEquiv (TyVar v1) (TyVar v2)
   | v1 == v2 = Just mempty
-  | otherwise = Just $ one (TyVar v1, TyVar v2)
+  | otherwise = Just $ Map.singleton (TyVar v1) (TyVar v2)
 evidenceOfEquiv (TyApp t11 t12) (TyApp t21 t22) = (<>) <$> evidenceOfEquiv t11 t21 <*> evidenceOfEquiv t12 t22
 evidenceOfEquiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
 evidenceOfEquiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
@@ -362,24 +362,24 @@ tcExpr (Fn pos cs) = do
   for_ cs' \c -> do
     when (countPatNums c /= patNums) $ do
       let srcFileName = sourceName pos._start
-      src <- decodeUtf8 <$> readFileBS srcFileName
+      src <- liftIO $ readFile srcFileName
       let diag =
             def & \diag ->
               addFile diag srcFileName src & \diag ->
                 addReport diag (Err Nothing "The number of patterns in each clause must be the same" (mainDiag c' : map restDiag cs') [])
       printDiagnostic stderr True True 4 defaultStyle diag
-      exitFailure
+      liftIO $ exitFailure
     tell [(pos, typeOf c' :~ typeOf c)]
   pure $ Fn (Typed (typeOf c') pos) (c' :| cs')
   where
     countPatNums (Clause _ ps _) = length ps
     mainDiag (Clause _ ps _) =
-      let first = Unsafe.head ps
-          last = Unsafe.last ps
+      let first = head ps
+          last = List.last ps
        in (rangeToPosition (first ^. range <> last ^. range), This $ render $ "Length of patterns in this clause is" <+> pPrint (length ps))
     restDiag (Clause _ ps _) =
-      let first = Unsafe.head ps
-          last = Unsafe.last ps
+      let first = head ps
+          last = List.last ps
        in (rangeToPosition (first ^. range <> last ^. range), Where $ render $ "Length of patterns in this clause is" <+> pPrint (length ps))
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
@@ -397,7 +397,7 @@ tcExpr (Ann pos e t) = do
   pure e'
 tcExpr (Seq pos ss) = do
   ss' <- tcStmts ss
-  pure $ Seq (Typed (typeOf $ last ss') pos) ss'
+  pure $ Seq (Typed (typeOf $ NonEmpty.last ss') pos) ss'
 
 tcClause ::
   ( MonadBind m,

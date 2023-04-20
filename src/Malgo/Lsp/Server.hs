@@ -4,6 +4,7 @@ module Malgo.Lsp.Server (server) where
 
 import Control.Lens (view, (^.))
 import Data.HashMap.Strict qualified as HashMap
+import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Pretty (Pretty (pPrint), render, (<+>))
 import Language.LSP.Server
@@ -12,12 +13,11 @@ import Language.LSP.Types.Lens (HasUri (uri))
 import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), LspOpt, findReferences)
 import Malgo.Lsp.Index qualified as Index
 import Malgo.Prelude hiding (Range)
-import Relude.Unsafe qualified as Unsafe
 import System.FilePath (dropExtensions, takeFileName)
 
 textDocumentIdentifierToModuleName :: TextDocumentIdentifier -> ModuleName
 textDocumentIdentifierToModuleName (uriToFilePath . view uri -> Just filePath) =
-  ModuleName $ toText $ takeFileName $ dropExtensions filePath
+  ModuleName $ convertString $ takeFileName $ dropExtensions filePath
 textDocumentIdentifierToModuleName _ = error "textDocumentIdentifierToModuleName: invalid TextDocumentIdentifier"
 
 handlers :: LspOpt -> Handlers (LspM ())
@@ -29,7 +29,7 @@ handlers opt =
       requestHandler STextDocumentHover $ \req responder -> do
         let RequestMessage _ _ _ (HoverParams doc pos _workDone) = req
         index <- loadIndex doc opt
-        case findReferences (positionToSourcePos (Unsafe.fromJust $ uriToFilePath $ doc ^. uri) pos) index of
+        case findReferences (positionToSourcePos (fromJust $ uriToFilePath $ doc ^. uri) pos) index of
           [] -> responder (Right Nothing)
           infos -> do
             let rsp = Hover ms (Just range)
@@ -40,7 +40,7 @@ handlers opt =
       requestHandler STextDocumentDefinition $ \req responder -> do
         let RequestMessage _ _ _ (DefinitionParams doc pos _workDone _partialResult) = req
         index <- loadIndex doc opt
-        let infos = findReferences (positionToSourcePos (Unsafe.fromJust $ uriToFilePath $ doc ^. uri) pos) index
+        let infos = findReferences (positionToSourcePos (fromJust $ uriToFilePath $ doc ^. uri) pos) index
             rsp = InR $ InL $ Language.LSP.Types.List $ concatMap infoToLocation infos
         responder (Right rsp),
       requestHandler STextDocumentDocumentSymbol $ \req responder -> do
@@ -69,7 +69,7 @@ toDocumentSymbol Index.Symbol {..} =
     toKind Index.Function = SkFunction
     toKind Index.Variable = SkVariable
 
-loadIndex :: MonadIO f => TextDocumentIdentifier -> LspOpt -> f Index
+loadIndex :: (MonadIO f) => TextDocumentIdentifier -> LspOpt -> f Index
 loadIndex doc opt = maybe mempty identity <$> runReaderT (Index.loadIndex (textDocumentIdentifierToModuleName doc)) opt
 
 toHoverDocument :: [Info] -> MarkupContent
@@ -77,8 +77,8 @@ toHoverDocument infos =
   mconcat $ map aux infos
   where
     aux Info {..} =
-      markedUpContent "malgo" (toText $ render $ pPrint name <+> ":" <+> pPrint typeSignature)
-        <> unmarkedUpContent (toText $ render $ pPrint definitions)
+      markedUpContent "malgo" (convertString $ render $ pPrint name <+> ":" <+> pPrint typeSignature)
+        <> unmarkedUpContent (convertString $ render $ pPrint definitions)
 
 infoToLocation :: Info -> [Location]
 infoToLocation Info {..} =

@@ -6,12 +6,12 @@ module Koriel.Core.Flat
 where
 
 import Control.Lens (has, traverseOf, traversed, _2)
+import Data.Monoid (Endo (..))
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id (HasModuleName, Id, ModuleName, newTemporalId)
 import Koriel.MonadUniq (HasUniqSupply, UniqSupply)
 import Koriel.Prelude
-import Relude.Unsafe qualified as Unsafe
 
 data FlatEnv = FlatEnv
   { uniqSupply :: UniqSupply,
@@ -28,7 +28,7 @@ flat prog = do
 
 type FlatT m = WriterT (Endo (Expr (Id Type))) m
 
-runFlat :: Monad m => FlatT m (Expr (Id Type)) -> m (Expr (Id Type))
+runFlat :: (Monad m) => FlatT m (Expr (Id Type)) -> m (Expr (Id Type))
 runFlat = fmap (uncurry (flip appEndo)) . runWriterT
 
 flatExpr ::
@@ -93,13 +93,13 @@ flatMatch e cs = do
   matchToSwitch e' cs
 
 -- | 'matchToSwitch' converts a match expression into a switch expression.
-matchToSwitch :: Monad m => Id Type -> [Case (Id Type)] -> FlatT m (Expr (Id Type))
+matchToSwitch :: (Monad m) => Id Type -> [Case (Id Type)] -> FlatT m (Expr (Id Type))
 matchToSwitch scrutinee cs@(Unpack {} : _) = do
   let cs' = map (unpackToDestruct scrutinee) $ takeWhile (has _Unpack) cs
   let mdef = bindToAssign scrutinee <$> find (has _Bind) cs
   let def = case mdef of
         Just def -> def
-        Nothing -> Error (typeOf $ snd $ Unsafe.head cs')
+        Nothing -> Error (typeOf $ snd $ head cs')
   pure $ Switch (Var scrutinee) cs' def
   where
     unpackToDestruct :: Id Type -> Case (Id Type) -> (Tag, Expr (Id Type))
@@ -112,7 +112,7 @@ matchToSwitch scrutinee cs@(Exact {} : _) = do
   let mdef = bindToAssign scrutinee <$> find (has _Bind) cs
   let def = case mdef of
         Just def -> def
-        Nothing -> Error (typeOf $ snd $ Unsafe.head cs')
+        Nothing -> Error (typeOf $ snd $ head cs')
   pure $ SwitchUnboxed (Var scrutinee) cs' def
   where
     flatExact :: Case a -> (Unboxed, Expr a)

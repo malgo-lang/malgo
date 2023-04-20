@@ -5,10 +5,9 @@ module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfac
 
 import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.))
 import Control.Lens.TH
-import Control.Monad.Extra (firstJustM)
+import Control.Monad.Extra (firstJustM, ifM)
 import Data.Binary (Binary, decodeFile)
 import Data.HashMap.Strict qualified as HashMap
-import Data.String.Conversions (convertString)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
@@ -83,7 +82,7 @@ loadInterface ::
   m Interface
 loadInterface (ModuleName modName) = do
   interfacesRef <- view interfaces
-  interfaces <- readIORef interfacesRef
+  interfaces <- liftIO $ readIORef interfacesRef
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
@@ -93,7 +92,7 @@ loadInterface (ModuleName modName) = do
           =<< view modulePaths
       case message of
         Just x -> do
-          writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
+          liftIO $ writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
           pure x
         Nothing -> do
           errorDoc $ "Cannot find module:" <+> quotes (pPrint modName)

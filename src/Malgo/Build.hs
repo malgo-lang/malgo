@@ -8,6 +8,7 @@ import Data.Aeson (FromJSON, decodeFileStrict)
 import Data.List ((\\))
 import Data.List qualified as List
 import Data.List.Extra (chunksOf)
+import Data.Maybe (fromJust)
 import Koriel.Id (ModuleName (..))
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
@@ -15,7 +16,6 @@ import Malgo.Monad (getWorkspaceDir, newMalgoEnv)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..), _moduleName)
-import Relude.Unsafe qualified as Unsafe
 import System.Directory (getCurrentDirectory, makeAbsolute)
 import System.FilePath ((</>))
 import System.FilePath.Glob (glob)
@@ -57,7 +57,7 @@ run = do
   excludePatterns <- getExcludePatterns
   excludeFiles <- concat <$> traverse glob excludePatterns
   sourceFiles' <- traverse makeAbsolute $ sourceFiles \\ excludeFiles
-  sourceContents <- map (decodeUtf8 @Text) <$> traverse readFileBS sourceFiles'
+  sourceContents <- map convertString <$> traverse readFile sourceFiles'
   let parsedAstList = mconcat $ zipWith parse sourceFiles' sourceContents
   let moduleDepends = map takeImports parsedAstList
   n <- getNumCapabilities
@@ -69,7 +69,7 @@ run = do
   traverse_
     ( mapConcurrently_
         ( \(path, moduleName, _) -> do
-            let ast = Unsafe.fromJust $ List.lookup path parsedAstList
+            let ast = fromJust $ List.lookup path parsedAstList
             putStrLn ("Compile " <> path)
             env <- newMalgoEnv path [] (Just _uniqSupply) moduleName (Just _interfaces) (Just _indexes)
             Driver.compileFromAST path env ast

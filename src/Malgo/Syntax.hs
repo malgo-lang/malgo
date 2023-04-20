@@ -38,9 +38,9 @@ module Malgo.Syntax
 where
 
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
-import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.HashSet qualified as HashSet
+import Data.Int
 import Koriel.Id
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasRange (range))
@@ -108,9 +108,9 @@ instance (HasRange (XTyApp x) r, HasRange (XTyVar x) r, HasRange (XTyCon x) r, H
     TyRecord x kvs -> range f x <&> \x -> TyRecord x kvs
     TyBlock x t -> range f x <&> \x -> TyBlock x t
 
-getTyVars :: Hashable (XId x) => Type x -> HashSet (XId x)
+getTyVars :: (Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = one v
+getTyVars (TyVar _ v) = HashSet.singleton v
 getTyVars TyCon {} = mempty
 getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
@@ -221,17 +221,17 @@ instance
     Seq x ss -> range f x <&> \x -> Seq x ss
     Parens x e -> range f x <&> \x -> Parens x e
 
-freevars :: Hashable (XId x) => Expr x -> HashSet (XId x)
-freevars (Var _ v) = one v
+freevars :: (Hashable (XId x)) => Expr x -> HashSet (XId x)
+freevars (Var _ v) = HashSet.singleton v
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = foldMap freevarsClause cs
   where
-    freevarsClause :: Hashable (XId x) => Clause x -> HashSet (XId x)
+    freevarsClause :: (Hashable (XId x)) => Clause x -> HashSet (XId x)
     freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
-    bindVars (VarP _ x) = one x
+    bindVars (VarP _ x) = HashSet.singleton x
     bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
     bindVars (TupleP _ ps) = mconcat $ map bindVars ps
     bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
@@ -263,7 +263,7 @@ deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, F
 
 deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Stmt x)
 
-instance Pretty (XId x) => Pretty (Stmt x) where
+instance (Pretty (XId x)) => Pretty (Stmt x) where
   pPrint (Let _ v e) = "let" <+> pPrint v <+> "=" <+> pPrint e
   pPrint (With _ Nothing e) = "with" <+> pPrint e
   pPrint (With _ (Just v) e) = "with" <+> pPrint v <+> "=" <+> pPrint e
@@ -337,7 +337,7 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
   pPrintPrec _ _ (BoxedP _ x) = pPrint x
 
 instance
-  ForallPatX HasType x =>
+  (ForallPatX HasType x) =>
   HasType (Pat x)
   where
   typeOf (VarP x _) = typeOf x
@@ -532,7 +532,7 @@ makeBindGroup ds =
     importDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
-adjacents :: Hashable (XId x) => (a, XId x, Expr x) -> (XId x, XId x, [XId x])
+adjacents :: (Hashable (XId x)) => (a, XId x, Expr x) -> (XId x, XId x, [XId x])
 adjacents (_, f, e) =
   (f, f, toList $ HashSet.delete f (freevars e))
 

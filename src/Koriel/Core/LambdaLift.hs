@@ -15,7 +15,6 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Relude.Extra.Map (member)
 
 data LambdaLiftState = LambdaLiftState
   { _funcs :: HashMap (Id Type) ([Id Type], Type, Expr (Id Type)),
@@ -44,7 +43,7 @@ def name xs e = do
   pure f
 
 -- | Lambda lifting
-lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
+lambdalift :: (MonadIO m) => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
 lambdalift uniqSupply moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
     evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns} $ do
@@ -67,7 +66,7 @@ llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) 
 llift (Atom a) = pure $ Atom a
 llift (Call (Var f) xs) = do
   ks <- use knowns
-  if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
+  if f `HashSet.member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
 llift (Call f xs) = pure $ Call f xs
 llift (CallDirect f xs) = pure $ CallDirect f xs
 llift (RawCall f t xs) = pure $ RawCall f t xs
@@ -89,7 +88,7 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
   let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
-  if null fvs && not (n `member` freevars e')
+  if null fvs && not (n `HashSet.member` freevars e')
     then do
       put state
       pure e'
@@ -115,7 +114,7 @@ toDirect :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv 
 toDirect (Atom a) = pure $ Atom a
 toDirect (Call (Var f) xs) = do
   ks <- use knowns
-  if f `member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
+  if f `HashSet.member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
 toDirect (Call f xs) = pure $ Call f xs
 toDirect (CallDirect f xs) = pure $ CallDirect f xs
 toDirect (RawCall f t xs) = pure $ RawCall f t xs

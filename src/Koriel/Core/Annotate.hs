@@ -11,7 +11,7 @@ import Koriel.Prelude
 import Koriel.Pretty (Pretty (pPrint), errorDoc)
 
 -- | Type-check the program and annotate with type information.
-annotate :: MonadIO m => ModuleName -> Program Text -> m (Program (Id Type))
+annotate :: (MonadIO m) => ModuleName -> Program Text -> m (Program (Id Type))
 annotate moduleName program = runReaderT (annProgram program) (Context moduleName mempty)
 
 data Context = Context
@@ -20,14 +20,14 @@ data Context = Context
     nameEnv :: HashMap Text (Id Type)
   }
 
-lookupName :: HasCallStack => MonadReader Context m => Text -> m (Id Type)
+lookupName :: (HasCallStack, MonadReader Context m) => Text -> m (Id Type)
 lookupName name =
   HashMap.lookupDefault
     (error $ "lookupName: " <> show name)
     name
     <$> asks (.nameEnv)
 
-parseId :: MonadReader Context m => Text -> Type -> m (Id Type)
+parseId :: (MonadReader Context m) => Text -> Type -> m (Id Type)
 parseId name meta
   | Text.head name == '@' = do
       (moduleName, name) <- pure $ second Text.tail $ Text.breakOn "." (Text.tail name)
@@ -53,15 +53,15 @@ annProgram Program {..} = do
     topFuns <- traverse annFunDecl topFuns
     pure Program {..}
 
-prepareVarDecl :: MonadReader Context m => (Text, Type, Expr Text) -> m (HashMap Text (Id Type))
+prepareVarDecl :: (MonadReader Context m) => (Text, Type, Expr Text) -> m (HashMap Text (Id Type))
 prepareVarDecl (name, ty, _) = do
   id <- parseId name ty
-  pure $ one (name, id)
+  pure $ HashMap.singleton name id
 
-prepareFunDecl :: MonadReader Context m => (Text, [Text], Type, Expr Text) -> m (HashMap Text (Id Type))
+prepareFunDecl :: (MonadReader Context m) => (Text, [Text], Type, Expr Text) -> m (HashMap Text (Id Type))
 prepareFunDecl (name, _, ty, _) = do
   id <- parseId name ty
-  pure $ one (name, id)
+  pure $ HashMap.singleton name id
 
 annVarDecl :: (MonadReader Context m, MonadIO m) => (Text, Type, Expr Text) -> m (Id Type, Type, Expr (Id Type))
 annVarDecl (name, ty, body) = do
@@ -94,7 +94,7 @@ annExpr (Let defs body) = do
       variable' <- parseId variable typ
       object <- local (\ctx -> ctx {nameEnv = HashMap.insert variable variable' ctx.nameEnv}) do
         annObj typ object
-      pure (one (variable, variable'), [LocalDef variable' typ object])
+      pure (HashMap.singleton variable variable', [LocalDef variable' typ object])
 annExpr (Match scrutinee alts) = do
   scrutinee <- annExpr scrutinee
   Match scrutinee <$> traverse (annCase $ typeOf scrutinee) alts
@@ -158,7 +158,7 @@ annExpr (Assign x v e) = do
     pure $ Assign x' v' e
 annExpr (Error ty) = pure $ Error ty
 
-annAtom :: HasCallStack => MonadReader Context m => Atom Text -> m (Atom (Id Type))
+annAtom :: (HasCallStack, MonadReader Context m) => Atom Text -> m (Atom (Id Type))
 annAtom (Var name) = Var <$> lookupName name
 annAtom (Unboxed value) = pure $ Unboxed value
 

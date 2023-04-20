@@ -2,7 +2,6 @@
 -- For `undefined`
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
-import Data.String.Conversions (convertString)
 import Data.Text qualified as Text
 import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -21,8 +20,7 @@ import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.IO.Silently (hSilence)
 import System.Process.Typed
-  ( ExitCode (ExitFailure, ExitSuccess),
-    byteStringInput,
+  ( byteStringInput,
     nullStream,
     proc,
     readProcessStderr_,
@@ -138,11 +136,11 @@ compile src dst modPaths lambdaLift optimize option compileMode =
 
     -- Check if the generated Koriel code is valid
     let korielPath = dst -<.> "kor"
-    koriel <- decodeUtf8 <$> readFileBS korielPath
-    case Koriel.parse korielPath koriel of
+    koriel <- readFile korielPath
+    case Koriel.parse korielPath $ convertString koriel of
       Left err ->
         let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-            diag' = addFile diag korielPath (toString koriel)
+            diag' = addFile diag korielPath koriel
          in printDiagnostic stderr True False 4 defaultStyle diag' >> exitFailure
       Right ast -> do
         Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
@@ -179,7 +177,7 @@ test testcase postfix lambdaLift optimize option compileMode = do
   timeoutWrapper "compile" $
     compile testcase llPath [outputDir </> "libs"] lambdaLift optimize option compileMode
 
-  pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
+  pkgConfig <- words . convertString <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
   err <-
     readProcessStderr_
@@ -201,13 +199,13 @@ test testcase postfix lambdaLift optimize option compileMode = do
   hPutStr stderr $ convertString err
   result <-
     timeoutWrapper "run" $
-      decodeUtf8
+      convertString
         <$> readProcessStdout_
           ( proc (outputDir </> postfix </> takeBaseName testcase -<.> ".out") []
               & setStdin (byteStringInput "Hello")
           )
-  expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
-  if map ("-- Expected: " <>) (lines $ Text.stripEnd result) == expected
+  expected <- filter ("-- Expected: " `Text.isPrefixOf`) . Text.lines . convertString <$> readFile testcase
+  if map ("-- Expected: " <>) (Text.lines $ Text.stripEnd result) == expected
     then pass
     else do
       Text.hPutStrLn stderr $ "Expected: " <> Text.concat expected

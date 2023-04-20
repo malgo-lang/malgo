@@ -18,7 +18,7 @@ import Malgo.Syntax.Extension
 
 -- | Entry point of this 'Malgo.Rename.Pass'
 rename ::
-  MonadIO m =>
+  (MonadIO m) =>
   -- | The initial environment that includes Builtin function definitions.
   RnEnv ->
   Module (Malgo 'Parse) ->
@@ -217,14 +217,14 @@ infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
       name' <- lookupVarName pos name
-      pure $ one (name', (assoc, order))
+      pure $ HashMap.singleton name' (assoc, order)
     _ -> pure mempty
 
 -- | OpApp recombination.
 -- Every OpApp in 'Malgo 'Parsed' is treated as left associative.
 -- 'mkOpApp' transforms it to actual associativity.
 mkOpApp ::
-  MonadIO m =>
+  (MonadIO m) =>
   Range ->
   -- | Fixity of outer operator
   (Assoc, Int) ->

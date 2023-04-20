@@ -12,13 +12,13 @@ import Koriel.Pretty
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
-lint :: HasCallStack => Monad m => Program (Id Type) -> m ()
+lint :: (HasCallStack, Monad m) => Program (Id Type) -> m ()
 lint = runLint . lintProgram
 
 runLint :: ReaderT [Id Type] m a -> m a
 runLint m = runReaderT m []
 
-defined :: HasCallStack => MonadReader [Id Type] f => Id Type -> f ()
+defined :: (HasCallStack, MonadReader [Id Type] f) => Id Type -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
@@ -44,7 +44,7 @@ match x y
           $$ pPrint y
           $$ nest 2 (":" <> pPrint (typeOf y))
 
-lintExpr :: HasCallStack => MonadReader [Id Type] m => Expr (Id Type) -> m ()
+lintExpr :: (HasCallStack) => (MonadReader [Id Type] m) => Expr (Id Type) -> m ()
 lintExpr (Atom x) = lintAtom x
 lintExpr (Call f xs) = do
   lintAtom f
@@ -147,12 +147,12 @@ lintExpr (Assign x v e) = do
   local (x :) (lintExpr e)
 lintExpr Error {} = pass
 
-lintObj :: HasCallStack => MonadReader [Id Type] m => Obj (Id Type) -> m ()
+lintObj :: (HasCallStack) => (MonadReader [Id Type] m) => Obj (Id Type) -> m ()
 lintObj (Fun params body) = local (params <>) $ lintExpr body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: HasCallStack => MonadReader [Id Type] m => Expr (Id Type) -> Case (Id Type) -> m ()
+lintCase :: (HasCallStack) => (MonadReader [Id Type] m) => Expr (Id Type) -> Case (Id Type) -> m ()
 lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExpr e
 lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExpr e
 lintCase _ (Exact _ e) = lintExpr e
@@ -161,11 +161,11 @@ lintCase scrutinee (Bind x t e) = local (x :) do
   match scrutinee x
   lintExpr e
 
-lintAtom :: HasCallStack => MonadReader [Id Type] m => Atom (Id Type) -> m ()
+lintAtom :: (HasCallStack) => (MonadReader [Id Type] m) => Atom (Id Type) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
-lintProgram :: HasCallStack => MonadReader [Id Type] m => Program (Id Type) -> m ()
+lintProgram :: (HasCallStack) => (MonadReader [Id Type] m) => Program (Id Type) -> m ()
 lintProgram Program {..} = do
   let fs = map (view _1) topFuns
   local (fs <>) $

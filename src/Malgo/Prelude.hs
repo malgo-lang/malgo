@@ -59,15 +59,15 @@ makeFieldsNoPrefix ''Range
 instance HasRange Range Range where
   range = identity
 
-errorOn :: MonadIO m => Range -> Doc -> m a
+errorOn :: (MonadIO m) => Range -> Doc -> m a
 errorOn range x = do
   let srcFileName = sourceName range._start
-  src <- readFileBS srcFileName
+  src <- liftIO $ readFile srcFileName
   let diag =
         addReport def (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
-          addFile diag (sourceName $ range._start) (decodeUtf8 src)
+          addFile diag (sourceName $ range._start) src
   printDiagnostic stderr True True 4 defaultStyle diag
-  exitFailure
+  liftIO exitFailure
 
 rangeToPosition :: Range -> Error.Diagnose.Position
 rangeToPosition (Range start end) =
@@ -77,15 +77,15 @@ rangeToPosition (Range start end) =
       file = sourceName start
     }
 
-warningOn :: MonadIO m => Range -> Doc -> m ()
+warningOn :: (MonadIO m) => Range -> Doc -> m ()
 warningOn range x = do
   let srcFileName = sourceName range._start
-  src <- readFileBS srcFileName
+  src <- liftIO $ readFile srcFileName
   let diag =
         addReport def (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
-          addFile diag (sourceName $ range._start) (decodeUtf8 src)
+          addFile diag (sourceName $ range._start) src
   printDiagnostic stderr True True 4 defaultStyle diag
-  exitFailure
+  liftIO exitFailure
   where
     rangeToPosition (Range start end) =
       Error.Diagnose.Position

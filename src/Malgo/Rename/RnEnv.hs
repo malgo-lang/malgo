@@ -15,7 +15,7 @@ module Malgo.Rename.RnEnv
   )
 where
 
-import Control.Lens (ASetter', At (at), makeFieldsNoPrefix, over, view, (^.))
+import Control.Lens (ASetter', At (at), makeFieldsNoPrefix, view, (^.))
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
 import Koriel.Lens

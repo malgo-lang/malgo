@@ -4,6 +4,7 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.List (isSubsequenceOf)
 import Data.List qualified as List
 import Data.Traversable (for)
+import GHC.Exts (sortWith)
 import Koriel.Id (Id)
 import Koriel.Pretty hiding (space)
 import Malgo.Infer.TypeRep
@@ -35,7 +36,7 @@ instance Pretty Space where
   pPrint (Union s1 s2) = pPrint s1 <+> "|" <+> pPrint s2
 
 -- | whether space s1 is a subspace of space s2
-subspace :: MonadReader RefineEnv m => Space -> Space -> m Bool
+subspace :: (MonadReader RefineEnv m) => Space -> Space -> m Bool
 subspace s1 s2 = subtract s1 s2 >>= \s' -> pure $ s' == Empty
 
 -- malgoにはsubtypingがないので、これでいいはず
@@ -67,7 +68,7 @@ decomposable (TyConApp (TyTuple _) _) = True
 decomposable (TyRecord _) = True
 decomposable _ = False
 
-decompose :: MonadReader RefineEnv m => Type -> m Space
+decompose :: (MonadReader RefineEnv m) => Type -> m Space
 decompose t@(TyConApp (TyCon con) ts) = do
   env <- asks (.typeDefEnv)
   case HashMap.lookup con env of
@@ -89,19 +90,19 @@ decompose (TyRecord kts) = do
           HashMap.toList kts
 decompose t = pure $ Type t
 
-constructorSpace :: MonadReader RefineEnv m => HashMap TypeVar Type -> (Id (), Scheme Type) -> m Space
+constructorSpace :: (MonadReader RefineEnv m) => HashMap TypeVar Type -> (Id (), Scheme Type) -> m Space
 constructorSpace subst (con, Forall _ (splitTyArr -> (ps, _))) = do
   env <- ask
   let ss = map (space env . applySubst subst) ps
   pure $ Constructor con ss
 
-isSuperOf :: Ord a => [(a, b)] -> [(a, b)] -> Bool
+isSuperOf :: (Ord a) => [(a, b)] -> [(a, b)] -> Bool
 isSuperOf kts1 kts2
   | map fst kts1 `isSubsequenceOf` map fst kts2 = True
   | otherwise = False
 
 -- | subtraction of s1 and s2
-subtract :: MonadReader RefineEnv m => Space -> Space -> m Space
+subtract :: (MonadReader RefineEnv m) => Space -> Space -> m Space
 subtract Empty _ = pure Empty
 subtract s1 Empty = pure s1
 subtract (Type t1) (Type t2) | t1 `isSubTypeOf` t2 = pure Empty
@@ -134,7 +135,7 @@ subtract (Type t) x | decomposable t = join $ subtract <$> decompose t <*> pure 
 subtract x (Type t) | decomposable t = subtract x =<< decompose t
 subtract a _ = pure a
 
-subtract' :: MonadReader RefineEnv m => ([Space] -> Space) -> [Space] -> [Space] -> m Space
+subtract' :: (MonadReader RefineEnv m) => ([Space] -> Space) -> [Space] -> [Space] -> m Space
 subtract' k ss ws = do
   isSubSpace <- and <$> zipWithM subspace ss ws
   isEmpty <- anyM equalEmpty =<< zipWithM intersection ss ws
@@ -150,7 +151,7 @@ subtract' k ss ws = do
     aux _ _ _ = error "length ss == length ws"
 
 -- | intersection of spaces
-intersection :: MonadReader RefineEnv m => Space -> Space -> m Space
+intersection :: (MonadReader RefineEnv m) => Space -> Space -> m Space
 intersection Empty _ = pure Empty
 intersection _ Empty = pure Empty
 intersection (Type t1) (Type t2)
@@ -166,7 +167,7 @@ intersection x (Type t) | decomposable t = intersection x =<< decompose t
 intersection _ _ = pure Empty
 
 -- | compare with empty space
-equalEmpty :: MonadReader RefineEnv m => Space -> m Bool
+equalEmpty :: (MonadReader RefineEnv m) => Space -> m Bool
 equalEmpty Empty = pure True
 equalEmpty (Type t)
   | decomposable t = equalEmpty =<< decompose t
@@ -186,5 +187,5 @@ instance HasSpace (Pat (Malgo 'Refine)) where
   space _ (VarP x _) = Type $ typeOf x
   space env (ConP _ con ps) = Constructor con (map (space env) ps)
   space env (TupleP _ ps) = Tuple $ map (space env) ps
-  space env (RecordP _ xps) = Record $ sort $ map (bimap identity (space env)) xps
+  space env (RecordP _ xps) = Record $ List.sort $ map (bimap identity (space env)) xps
   space _ (UnboxedP _ _) = Empty

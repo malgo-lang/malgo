@@ -20,7 +20,6 @@ import Malgo.Monad (CompileMode (..), newMalgoEnv)
 import Malgo.Monad qualified as Monad
 import Malgo.Prelude
 import Options.Applicative
-import Relude.Unsafe (read)
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
 import System.FilePath (takeDirectory, (</>))
 import System.FilePath.Lens (extension)
@@ -62,11 +61,11 @@ main = do
     Build _ -> do
       Build.run
     Koriel (KorielOpt srcPath) -> do
-      srcContents <- readFileBS srcPath
-      case Koriel.parse srcPath (decodeUtf8 srcContents) of
+      srcContents <- readFile srcPath
+      case Koriel.parse srcPath (convertString srcContents) of
         Left err ->
           let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-              diag' = addFile diag srcPath (decodeUtf8 srcContents)
+              diag' = addFile diag srcPath srcContents
            in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
         Right prog -> do
           print $ pPrint prog

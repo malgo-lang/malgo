@@ -21,7 +21,6 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Relude.Extra.Map (StaticMap (member))
 
 -- | 'OptimizeOption' is a set of options for the optimizer.
 --  If the option is 'True', the optimizer will apply the optimization.
@@ -68,7 +67,7 @@ times n f x
 
 -- | Optimize a program
 optimizeProgram ::
-  MonadIO m =>
+  (MonadIO m) =>
   UniqSupply ->
   ModuleName ->
   Bool ->
@@ -89,14 +88,14 @@ optimizeExpr state expr = do
     opt option = do
       pure
         >=> runOpt option.doFoldVariable foldVariable
-        >=> runOpt option.doInlineConstructor (usingReaderT mempty . inlineConstructor)
+        >=> runOpt option.doInlineConstructor (flip runReaderT mempty . inlineConstructor)
         >=> runOpt option.doEliminateUnusedLet eliminateUnusedLet
         >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
         >=> runOpt option.doFoldRedundantCast foldRedundantCast
         >=> runOpt option.doFoldTrivialCall foldTrivialCall
         >=> runOpt option.doSpecializeFunction specializeFunction
         >=> runFlat . flatExpr
-    runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
+    runOpt :: (Monad m) => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag
         then f
@@ -153,7 +152,7 @@ lookupCallInline call f as = do
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 -- | Inline simple pattern match and pack.
-inlineConstructor :: MonadReader InlineConstructorMap m => Expr (Id Type) -> m (Expr (Id Type))
+inlineConstructor :: (MonadReader InlineConstructorMap m) => Expr (Id Type) -> m (Expr (Id Type))
 inlineConstructor =
   transformM \case
     Let ds e -> do
@@ -168,7 +167,7 @@ inlineConstructor =
         _ -> pure $ Destruct (Var v) con xs body
     e -> pure e
   where
-    toPackInlineMap (LocalDef v _ (Pack _ con as)) = one (v, (con, as))
+    toPackInlineMap (LocalDef v _ (Pack _ con as)) = HashMap.singleton v (con, as)
     toPackInlineMap _ = mempty
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
@@ -197,7 +196,7 @@ eliminateUnusedLet =
     reachable limit gamma v fvs
       | limit <= (0 :: Int) = True
       | idIsExternal v = True
-      | v `member` fvs = True
+      | v `HashSet.member` fvs = True
       | otherwise =
           -- Add gamma[fv] to fvs
           let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)

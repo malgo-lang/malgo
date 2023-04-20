@@ -158,7 +158,7 @@ indexExpr (Var Typed {value = range} ident) = do
       addReferences info [range]
     Just info -> addReferences info [range]
 indexExpr (Unboxed Typed {value = range} u) = do
-  let info = Info {name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
+  let info = Info {name = convertString $ show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 indexExpr (Apply _ e1 e2) = do
   indexExpr e1
@@ -208,7 +208,7 @@ indexPat (TupleP _ ps) =
 indexPat (RecordP _ kps) =
   traverse_ (indexPat . snd) kps
 indexPat (UnboxedP Typed {value = range} u) = do
-  let info = Info {name = show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
+  let info = Info {name = convertString $ show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 
 lookupSignature :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Scheme Type)

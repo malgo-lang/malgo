@@ -68,6 +68,7 @@ where
 
 import Control.Lens (lens)
 import Data.Binary (Binary)
+import Data.Kind (Constraint)
 import Data.Kind qualified as K
 import Data.Void
 import Koriel.Id
@@ -99,7 +100,7 @@ instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
 data Qualified x = Qualified {visibility :: Visibility, value :: x}
   deriving stock (Eq, Ord, Show)
 
-instance Pretty x => Pretty (Qualified x) where
+instance (Pretty x) => Pretty (Qualified x) where
   pPrint (Qualified Implicit v) = pPrint v
   pPrint (Qualified (Explicit x) v) = pPrint x <> "." <> pPrint v
 
@@ -107,21 +108,21 @@ instance Pretty x => Pretty (Qualified x) where
 data Field x = Field {typeAnn :: Maybe Text, field :: x}
   deriving stock (Eq, Ord, Show)
 
-instance Pretty x => Pretty (Field x) where
+instance (Pretty x) => Pretty (Field x) where
   pPrint (Field Nothing v) = pPrint v
   pPrint (Field (Just x) v) = pPrint x <> "." <> pPrint v
 
 data Typed x = Typed {annotated :: Type, value :: x}
   deriving stock (Eq, Ord, Show)
 
-instance Pretty x => Pretty (Typed x) where
+instance (Pretty x) => Pretty (Typed x) where
   pPrint (Typed t v) = pPrint v <+> ":" <+> pPrint t
 
 instance HasType (Typed x) where
   typeOf (Typed t _) = t
   types = lens (.annotated) (\x y -> x {annotated = y})
 
-instance HasRange x r => HasRange (Typed x) r where
+instance (HasRange x r) => HasRange (Typed x) r where
   range f (Typed t v) = range f v <&> \v -> Typed t v
 
 type PsId = XId (Malgo 'Parse)

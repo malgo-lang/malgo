@@ -8,7 +8,7 @@ import Malgo.Monad
 
 -- | Generate LLVM IR from a program.
 codeGen ::
-  MonadIO m =>
+  (MonadIO m) =>
   -- | The path of the source file.
   FilePath ->
   -- | Malgo environment.
@@ -19,4 +19,4 @@ codeGen ::
   Program (Id Type) ->
   m ()
 codeGen srcPath malgoEnv modName Program {..} = do
-  writeFile malgoEnv.dstPath ""
+  liftIO $ writeFile malgoEnv.dstPath ""

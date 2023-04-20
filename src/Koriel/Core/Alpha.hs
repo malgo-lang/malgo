@@ -10,8 +10,8 @@ where
 
 import Control.Exception (assert)
 import Control.Lens (makeFieldsNoPrefix, traverseOf)
+import Control.Monad.Extra (ifM)
 import Data.HashMap.Strict qualified as HashMap
-import Data.String.Conversions (convertString)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -31,13 +31,13 @@ data AlphaEnv = AlphaEnv
 makeFieldsNoPrefix ''AlphaEnv
 
 -- | Alpha conversion
-alpha :: MonadIO m => Expr (Id Type) -> AlphaEnv -> m (Expr (Id Type))
+alpha :: (MonadIO m) => Expr (Id Type) -> AlphaEnv -> m (Expr (Id Type))
 alpha = runAlpha . alphaExpr
 
 runAlpha :: ReaderT AlphaEnv m a -> AlphaEnv -> m a
 runAlpha = runReaderT
 
-lookupVar :: MonadReader AlphaEnv m => Id Type -> m (Atom (Id Type))
+lookupVar :: (MonadReader AlphaEnv m) => Id Type -> m (Atom (Id Type))
 lookupVar n = do
   env <- asks (.subst)
   pure $ HashMap.lookupDefault (Var n) n env
@@ -65,24 +65,24 @@ alphaExpr (BinOp op x y) = BinOp op <$> alphaAtom x <*> alphaAtom y
 alphaExpr (Cast t x) = Cast t <$> alphaAtom x
 alphaExpr (Let ds e) = do
   -- Avoid capturing variables
-  env <- foldMapM (\(LocalDef n _ _) -> one . (n,) . Var <$> cloneId n) ds
+  env <- foldMapM (\(LocalDef n _ _) -> HashMap.singleton n . Var <$> cloneId n) ds
   local (\e -> e {subst = env <> e.subst}) $ Let <$> traverse alphaLocalDef ds <*> alphaExpr e
 alphaExpr (Match e cs) = Match <$> alphaExpr e <*> traverse alphaCase cs
 alphaExpr (Switch v cs e) = Switch <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExpr e) cs <*> alphaExpr e
 alphaExpr (SwitchUnboxed v cs e) = SwitchUnboxed <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExpr e) cs <*> alphaExpr e
 alphaExpr (Destruct v con xs e) = do
   -- Avoid capturing variables
-  env <- foldMapM (\x -> one . (x,) . Var <$> cloneId x) xs
+  env <- foldMapM (\x -> HashMap.singleton x . Var <$> cloneId x) xs
   local (\e -> e {subst = env <> e.subst}) $ Destruct <$> alphaAtom v <*> pure con <*> traverse lookupId xs <*> alphaExpr e
 alphaExpr (DestructRecord v kvs e) = do
   -- Avoid capturing variables
   let xs = HashMap.elems kvs
-  env <- foldMapM (\x -> one . (x,) . Var <$> cloneId x) xs
+  env <- foldMapM (\x -> HashMap.singleton x . Var <$> cloneId x) xs
   local (\e -> e {subst = env <> e.subst}) $ DestructRecord <$> alphaAtom v <*> traverse lookupId kvs <*> alphaExpr e
 alphaExpr (Assign x v e) = do
   v' <- alphaExpr v
   x' <- cloneId x
-  local (\e -> e {subst = one (x, Var x') <> e.subst}) $ Assign x' v' <$> alphaExpr e
+  local (\e -> e {subst = HashMap.insert x (Var x') e.subst}) $ Assign x' v' <$> alphaExpr e
 alphaExpr (Error t) = pure $ Error t
 
 alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))
@@ -122,12 +122,12 @@ alphaCase (Bind x t e) = do
 -- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExpr e
 alphaCase (Exact u e) = Exact u <$> alphaExpr e
 
-equiv :: MonadIO m => UniqSupply -> Expr (Id Type) -> Expr (Id Type) -> m (Maybe Subst)
+equiv :: (MonadIO m) => UniqSupply -> Expr (Id Type) -> Expr (Id Type) -> m (Maybe Subst)
 equiv uniqSupply e1 e2 = runReaderT ?? AlphaEnv {uniqSupply, subst = mempty} $ do
   isEquiv <- equivExpr e1 e2
   if isEquiv then Just <$> asks (.subst) else pure Nothing
 
-equivExpr :: MonadReader AlphaEnv m => Expr (Id Type) -> Expr (Id Type) -> m Bool
+equivExpr :: (MonadReader AlphaEnv m) => Expr (Id Type) -> Expr (Id Type) -> m Bool
 equivExpr (Atom x) (Atom y) = equivAtom x y
 equivExpr (Call f xs) (Call g ys) =
   (&&) <$> equivAtom f g <*> andM (zipWith equivAtom xs ys)
@@ -182,11 +182,11 @@ equivExpr (DestructRecord x kps e) (DestructRecord y kps' e') = do
 equivExpr (Assign x e b) (Assign y e' b') =
   (&&)
     <$> equivExpr e e'
-    <*> local (\e -> e {subst = one (x, Var y) <> e.subst}) (equivExpr b b')
+    <*> local (\e -> e {subst = HashMap.insert x (Var y) e.subst}) (equivExpr b b')
 equivExpr (Error t) (Error u) = pure $ t == u
 equivExpr _ _ = pure False
 
-equivCase :: MonadReader AlphaEnv m => Case (Id Type) -> Case (Id Type) -> m Bool
+equivCase :: (MonadReader AlphaEnv m) => Case (Id Type) -> Case (Id Type) -> m Bool
 equivCase (Unpack c ps e) (Unpack c' ps' e') | c == c' = do
   local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ equivExpr e e'
 equivCase (OpenRecord kps e) (OpenRecord kps' e') = do
@@ -202,18 +202,18 @@ equivCase (Exact u e) (Exact u' e')
   | u == u' =
       equivExpr e e'
 equivCase (Bind x t e) (Bind y u f) | t == u = do
-  local (\e -> e {subst = one (x, Var y) <> e.subst}) $ equivExpr e f
+  local (\e -> e {subst = HashMap.insert x (Var y) e.subst}) $ equivExpr e f
 equivCase _ _ = pure False
 
-equivLocalDef :: MonadReader AlphaEnv m => LocalDef (Id Type) -> LocalDef (Id Type) -> m Subst
+equivLocalDef :: (MonadReader AlphaEnv m) => LocalDef (Id Type) -> LocalDef (Id Type) -> m Subst
 equivLocalDef (LocalDef x t o) (LocalDef y u p) =
-  local (\e -> e {subst = one (x, Var y) <> e.subst}) $
+  local (\e -> e {subst = HashMap.insert x (Var y) e.subst}) $
     ifM
       ((t == u &&) <$> equivObj o p)
-      (pure $ one (x, Var y))
+      (pure $ HashMap.singleton x (Var y))
       (pure mempty)
 
-equivObj :: MonadReader AlphaEnv m => Obj (Id Type) -> Obj (Id Type) -> m Bool
+equivObj :: (MonadReader AlphaEnv m) => Obj (Id Type) -> Obj (Id Type) -> m Bool
 equivObj (Fun ps e) (Fun ps' e') = do
   local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ equivExpr e e'
 equivObj (Pack t c xs) (Pack u d ys) =
@@ -222,7 +222,7 @@ equivObj (Record kvs) (Record kvs') =
   andM $ HashMap.intersectionWith equivAtom kvs kvs'
 equivObj _ _ = pure False
 
-equivAtom :: MonadReader AlphaEnv m => Atom (Id Type) -> Atom (Id Type) -> m Bool
+equivAtom :: (MonadReader AlphaEnv m) => Atom (Id Type) -> Atom (Id Type) -> m Bool
 equivAtom (Var x) (Var y) = do
   subst <- asks (.subst)
   pure $

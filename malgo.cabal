@@ -94,6 +94,7 @@ library
     , base
     , binary
     , binary-instances
+    , bytestring
     , containers
     , diagnose >=2.4.0
     , directory
@@ -111,7 +112,6 @@ library
     , optparse-applicative
     , parser-combinators
     , pretty
-    , relude >=1.0.0.0
     , string-conversions
     , syb
     , text
@@ -150,6 +150,7 @@ executable malgo
     , base
     , binary
     , binary-instances
+    , bytestring
     , containers
     , diagnose >=2.4.0
     , directory
@@ -168,7 +169,6 @@ executable malgo
     , optparse-applicative
     , parser-combinators
     , pretty
-    , relude >=1.0.0.0
     , string-conversions
     , syb
     , text
@@ -208,6 +208,7 @@ test-suite malgo-test
     , base
     , binary
     , binary-instances
+    , bytestring
     , containers
     , diagnose >=2.4.0
     , directory
@@ -228,7 +229,6 @@ test-suite malgo-test
     , parser-combinators
     , pretty
     , prettyprinter
-    , relude >=1.0.0.0
     , silently
     , string-conversions
     , syb
@@ -271,6 +271,7 @@ benchmark malgo-bench
     , base
     , binary
     , binary-instances
+    , bytestring
     , containers
     , criterion
     , diagnose >=2.4.0
@@ -290,7 +291,6 @@ benchmark malgo-bench
     , optparse-applicative
     , parser-combinators
     , pretty
-    , relude >=1.0.0.0
     , string-conversions
     , syb
     , text

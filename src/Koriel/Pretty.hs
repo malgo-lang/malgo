@@ -9,10 +9,10 @@ module Koriel.Pretty
   )
 where
 
-import Data.String.Conversions (convertString)
+{- char, -}
 import Koriel.Prelude
 import Text.Megaparsec.Pos qualified as Megaparsec
-import Text.PrettyPrint.HughesPJClass hiding ({- char, -} double, first, float, int, integer, (<+>), (<>))
+import Text.PrettyPrint.HughesPJClass hiding (double, first, float, int, integer, (<+>), (<>))
 import Text.PrettyPrint.HughesPJClass qualified as P
 import Prelude qualified
 
@@ -25,7 +25,7 @@ infixl 9 <+>
 instance Pretty Doc where
   pPrint = identity
 
-errorDoc :: HasCallStack => Doc -> a
+errorDoc :: (HasCallStack) => Doc -> a
 errorDoc x = Prelude.error $ P.render x
 
 -- Pretty SourcePos

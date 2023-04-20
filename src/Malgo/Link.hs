@@ -4,7 +4,6 @@ import Control.Lens (view)
 import Data.Binary (Binary)
 import Data.Binary qualified as Binary
 import Data.HashSet qualified as HashSet
-import Data.String.Conversions (convertString)
 import Koriel.Core.Syntax
 import Koriel.Id
 import Koriel.Lens

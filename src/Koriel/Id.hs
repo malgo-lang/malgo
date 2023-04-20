@@ -22,7 +22,6 @@ where
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
-import Data.String.Conversions (convertString)
 import GHC.Records
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)

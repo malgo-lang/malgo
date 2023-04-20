@@ -23,8 +23,8 @@ where
 import Control.Lens (view)
 import Control.Lens.TH
 import Data.Binary (Binary, decodeFile, encode)
+import Data.ByteString.Lazy qualified as LBS
 import Data.HashMap.Strict qualified as HashMap
-import Data.String.Conversions (convertString)
 import GHC.Records (HasField)
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
@@ -100,20 +100,20 @@ storeIndex :: (MonadReader s m, MonadIO m, HasField "dstPath" s FilePath) => Ind
 storeIndex index = do
   dstPath <- asks (.dstPath)
   let encoded = encode index
-  writeFileLBS (dstPath -<.> "idx") encoded
+  liftIO $ LBS.writeFile (dstPath -<.> "idx") encoded
 
 loadIndex :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath], HasIndexes s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
 loadIndex modName = do
   modPaths <- view modulePaths
   indexesRef <- view indexes
-  indexes <- readIORef indexesRef
+  indexes <- liftIO $ readIORef indexesRef
   case HashMap.lookup modName indexes of
     Just index -> pure $ Just index
     Nothing -> do
       message <- findAndReadFile modPaths (convertString modName.raw <> ".idx")
       case message of
         Right x -> do
-          writeIORef indexesRef $ HashMap.insert modName x indexes
+          liftIO $ writeIORef indexesRef $ HashMap.insert modName x indexes
           pure $ Just x
         Left err -> do
           hPrint stderr err

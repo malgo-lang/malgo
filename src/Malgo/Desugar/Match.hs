@@ -1,7 +1,7 @@
 -- | パターンマッチのコンパイル
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
-import Control.Lens (At (at), Prism', has, over, (?=), _1)
+import Control.Lens (At (at), Prism', has, (?=), _1)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
 import Data.Traversable (for)
@@ -17,7 +17,7 @@ import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as Malgo
-import Malgo.Prelude hiding (group)
+import Malgo.Prelude
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 
@@ -37,7 +37,7 @@ newtype PatMatrix = PatMatrix
   deriving newtype (Pretty)
 
 patMatrix :: [[Pat (Malgo 'Refine)]] -> PatMatrix
-patMatrix xss = PatMatrix $ transpose xss
+patMatrix xss = PatMatrix $ List.transpose xss
 
 headCol :: PatMatrix -> Maybe [Pat (Malgo 'Refine)]
 headCol PatMatrix {innerList = []} = Nothing
@@ -189,7 +189,7 @@ group ::
   PatMatrix ->
   [m (Core.Expr (Id Core.Type))] ->
   (PatMatrix, [m (Core.Expr (Id Core.Type))])
-group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMaybe (aux gcon) (zip pss es)
+group gcon (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMaybe (aux gcon) (zip pss es)
   where
     aux gcon (ConP _ gcon' ps : pss, e)
       | gcon == gcon' = Just (ps <> pss, e)
@@ -198,7 +198,7 @@ group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMa
     aux _ ([], _) = error "ps must be not empty"
 
 groupTuple :: PatMatrix -> [m (Core.Expr (Id Core.Type))] -> (PatMatrix, [m (Core.Expr (Id Core.Type))])
-groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
+groupTuple (PatMatrix (List.transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p

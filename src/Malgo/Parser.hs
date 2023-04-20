@@ -3,14 +3,10 @@
 module Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
-import Data.Foldable (foldl)
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Void
 import Koriel.Id (ModuleName (ModuleName))
-import Malgo.Prelude hiding
-  ( many,
-    some,
-  )
+import Malgo.Prelude
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Text.Megaparsec
@@ -40,7 +36,7 @@ pModule = do
 
 -- module name
 pModuleName :: Parser Text
-pModuleName = lexeme $ toText <$> some identLetter
+pModuleName = lexeme $ convertString <$> some identLetter
 
 -- toplevel declaration
 pDecl :: Parser (Decl (Malgo 'Parse))
@@ -172,7 +168,7 @@ pBoxed =
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L"))
       <|> Int32 <$> lexeme L.decimal
       <|> lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral)
-      <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"')))
+      <|> lexeme (String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"')))
 
 pUnboxed :: Parser (Literal Unboxed)
 pUnboxed =
@@ -182,7 +178,7 @@ pUnboxed =
       <|> try (Int32 <$> lexeme (L.decimal <* char '#'))
       <|> Int64 <$> lexeme (L.decimal <* string' "L#")
       <|> lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'))
-      <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
+      <|> lexeme (String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
 
 pVariable :: Parser (Expr (Malgo 'Parse))
 pVariable =
@@ -604,21 +600,21 @@ lowerIdent =
   label "lower identifier" $
     lexeme do
       notFollowedBy reserved
-      toText <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
+      convertString <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
 
 upperIdent :: Parser Text
 upperIdent =
   label "upper identifier" $
     lexeme do
       notFollowedBy reserved
-      toText <$> ((:) <$> upperChar <*> many identLetter)
+      convertString <$> ((:) <$> upperChar <*> many identLetter)
 
 operator :: Parser Text
 operator =
   label "operator" $
     lexeme do
       notFollowedBy reservedOp
-      toText <$> some opLetter
+      convertString <$> some opLetter
 
 -- { _ , _ , ... , _ } or { _ ; _ ; ... ; _ ; }
 -- `;` terminatorによる分割を先に検討して、その後`,` separatorによる分割を検討する

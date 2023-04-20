@@ -3,7 +3,7 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception (assert)
 import Data.Binary qualified as Binary
-import Data.String.Conversions (ConvertibleStrings (convertString))
+import Data.ByteString.Lazy qualified as LBS
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM (codeGen)
@@ -73,15 +73,15 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       (dsEnv, core) <- desugar tcEnv refinedAst
       core <- flat core
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-      writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
+      liftIO $ LBS.writeFile (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
       let inf = buildInterface moduleName rnState dsEnv
-      writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
+      liftIO $ LBS.writeFile (toInterfacePath env.dstPath) $ Binary.encode inf
 
       -- check module paths include dstName's directory
       assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
       core <- Link.link inf core
-      writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
+      liftIO $ writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
 
       lint core
 
@@ -99,7 +99,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       when (env.debugMode && env.optimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
-        writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
+        liftIO $ writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
       lint coreLL
@@ -118,12 +118,12 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
 compile srcPath env = do
-  src <- decodeUtf8 <$> readFileBS srcPath
-  parsedAst <- case parseMalgo srcPath src of
+  src <- readFile srcPath
+  parsedAst <- case parseMalgo srcPath $ convertString src of
     Right x -> pure x
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-          diag' = addFile diag srcPath (toString src)
+          diag' = addFile diag srcPath src
        in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
   when env.debugMode do
     hPutStrLn stderr "=== PARSE ==="

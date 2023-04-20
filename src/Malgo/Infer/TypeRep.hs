@@ -31,11 +31,13 @@ module Malgo.Infer.TypeRep
   )
 where
 
-import Control.Lens (At (at), Traversal', makeLenses, mapped, over, (^.), _1, _2)
+import Control.Lens (At (at), Traversal', makeLenses, mapped, (^.), _1, _2)
 import Data.Binary (Binary)
 import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
+import Data.Maybe (fromMaybe)
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
@@ -142,7 +144,7 @@ viewTyConApp _ = Nothing
 buildTyApp :: Type -> [Type] -> Type
 buildTyApp = foldl' TyApp
 
-buildTyArr :: Foldable t => t Type -> Type -> Type
+buildTyArr :: (Foldable t) => t Type -> Type -> Type
 buildTyArr ps ret = foldr TyArr ret ps
 
 -- | split a function type into its parameter types and return type
@@ -216,7 +218,7 @@ data Scheme ty = Forall [TypeVar] ty
   deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
   deriving anyclass (Hashable, Binary)
 
-instance Pretty ty => Pretty (Scheme ty) where
+instance (Pretty ty) => Pretty (Scheme ty) where
   pPrint (Forall [] t) = pPrint t
   pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
 
@@ -230,10 +232,10 @@ data TypeDef ty = TypeDef
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
   deriving anyclass (Binary)
 
-instance Pretty ty => Pretty (TypeDef ty) where
+instance (Pretty ty) => Pretty (TypeDef ty) where
   pPrint (TypeDef c q u) = pPrint (c, q, u)
 
-instance HasKind ty => HasKind (TypeDef ty) where
+instance (HasKind ty) => HasKind (TypeDef ty) where
   kindOf ctx TypeDef {_typeConstructor} = kindOf ctx _typeConstructor
 
 makeLenses ''TypeDef
@@ -251,14 +253,14 @@ type TypeMap = HashMap MetaVar Type
 newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
   deriving newtype (Functor, Applicative, Monad, MonadReader r, MonadIO, MonadFail)
 
-instance MonadState s m => MonadState s (TypeUnifyT m) where
+instance (MonadState s m) => MonadState s (TypeUnifyT m) where
   get = TypeUnifyT $ lift get
   put x = TypeUnifyT $ lift $ put x
 
 instance MonadTrans TypeUnifyT where
   lift m = TypeUnifyT $ lift m
 
-runTypeUnifyT :: Monad m => TypeUnifyT m a -> m a
+runTypeUnifyT :: (Monad m) => TypeUnifyT m a -> m a
 runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
 
 ---------------
@@ -316,4 +318,4 @@ freevars TyTuple {} = mempty
 freevars (TyRecord kts) = foldMap freevars kts
 freevars TyPtr = mempty
 freevars TYPE = mempty
-freevars (TyMeta tv) = one tv
+freevars (TyMeta tv) = HashSet.singleton tv
