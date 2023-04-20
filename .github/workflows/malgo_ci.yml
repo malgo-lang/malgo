@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        ghc: ["9.2.7"]
+        ghc: ["9.4.4"]
         os: [ubuntu-latest]
       # fail-fast: true
 
@@ -36,7 +36,7 @@ jobs:
             ${{ matrix.ghc }}
             # enable-stack: true
             # stack-version: 'latest'
-          cabal-version: "3.6.2.0"
+          cabal-version: "3.10.1.0"
       - name: GHC ${{matrix.ghc}} Build
         run: |
           cabal build
