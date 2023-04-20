@@ -12,6 +12,14 @@ RUN ghcup install hls 1.10.0.0
 
 RUN ghcup gc
 
+# FROM buildpack-deps:stable AS mold-build
+# 
+# RUN git clone https://github.com/rui314/mold.git
+# RUN mkdir mold/build
+# RUN cd mold/build && git checkout v1.11.0 && ../install-build-deps.sh
+# RUN cd mold/build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=c++ ..
+# RUN cd mold/build && cmake --build . -j $(nproc)
+
 FROM buildpack-deps:stable
 
 # https://wiki.debian.org/SourcesList
@@ -45,6 +53,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcup-install /root/.ghcup/ /root/.ghcup/
 COPY --from=ghcup-install /root/.cabal/ /root/.cabal/
+# COPY --from=mold-build /mold /mold
+# 
+# RUN cd /mold/build && cmake --install .
 
 # RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
 # 
