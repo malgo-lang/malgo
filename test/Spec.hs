@@ -16,7 +16,7 @@ import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
-import System.Directory (copyFile, listDirectory, setCurrentDirectory)
+import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.IO.Silently (hSilence)
@@ -28,7 +28,6 @@ import System.Process.Typed
     readProcessStderr_,
     readProcessStdout_,
     runProcess,
-    runProcess_,
     setStderr,
     setStdin,
     setStdout,
@@ -72,8 +71,8 @@ main =
             testNoOpt (testcaseDir </> testcase)
           it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
             testNoLift (testcaseDir </> testcase)
-          -- it ("test pure-haskell backend case " <> testcase) $ example do
-          --   testPrintLLVM (testcaseDir </> testcase)
+    -- it ("test pure-haskell backend case " <> testcase) $ example do
+    --   testPrintLLVM (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" $ parallel do
       for_ examples \examplecase -> do
@@ -113,15 +112,15 @@ setupPrelude = do
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
 setupRuntime = do
-  setCurrentDirectory "./griff"
-  runProcess_ $ proc "cargo" ["build", "--release"]
-  setCurrentDirectory "../"
-  copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
+  -- setCurrentDirectory "./griff"
+  -- runProcess_ $ proc "cargo" ["build", "--release"]
+  -- setCurrentDirectory "../"
+  -- copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
-compile src dst modPaths lambdaLift noOptimize option compileMode =
+compile src dst modPaths lambdaLift optimize option compileMode =
   hSilence [stderr] do
     malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
     malgoEnv <-
@@ -130,7 +129,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
           { dstPath = dst,
             _modulePaths = [takeDirectory dst, outputDir </> "libs"],
             lambdaLift,
-            noOptimize,
+            optimize,
             compileMode,
             debugMode = True,
             optimizeOption = option
@@ -151,7 +150,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
 -- | Get the correct name of `clang`
 getClangCommand :: IO String
 getClangCommand =
-  go ["clang", "clang-12"]
+  go ["clang", "clang-15"]
   where
     go [] = error "clang not found"
     go (x : xs) = do
@@ -174,11 +173,11 @@ test ::
   -- | Which backend to use
   CompileMode ->
   IO ()
-test testcase postfix lambdaLift noOptimize option compileMode = do
+test testcase postfix lambdaLift optimize option compileMode = do
   createDirectoryIfMissing True (outputDir </> postfix)
   let llPath = outputDir </> postfix </> takeBaseName testcase -<.> ".ll"
   timeoutWrapper "compile" $
-    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
+    compile testcase llPath [outputDir </> "libs"] lambdaLift optimize option compileMode
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
@@ -225,19 +224,19 @@ testError testcase = do
   compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
 
 testNormal :: FilePath -> IO ()
-testNormal testcase = test testcase "" True False defaultOptimizeOption LLVM
+testNormal testcase = test testcase "" True True defaultOptimizeOption LLVM
 
 testNoLift :: FilePath -> IO ()
-testNoLift testcase = test testcase "nolift" False False defaultOptimizeOption LLVM
+testNoLift testcase = test testcase "nolift" False True defaultOptimizeOption LLVM
 
 testNoOpt :: FilePath -> IO ()
-testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption LLVM
+testNoOpt testcase = test testcase "noopt" True False defaultOptimizeOption LLVM
 
 testNoNo :: FilePath -> IO ()
-testNoNo testcase = test testcase "nono" False True defaultOptimizeOption LLVM
+testNoNo testcase = test testcase "nono" False False defaultOptimizeOption LLVM
 
 testPrintLLVM :: FilePath -> IO ()
-testPrintLLVM testcase = test testcase "printllvm" True False defaultOptimizeOption PrintLLVM
+testPrintLLVM testcase = test testcase "printllvm" True True defaultOptimizeOption PrintLLVM
 
 #ifdef TEST_ALL
 showOptimizeOption :: OptimizeOption -> [Text]

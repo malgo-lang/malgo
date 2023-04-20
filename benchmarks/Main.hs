@@ -28,12 +28,15 @@ setupEnv = do
     let llOptPath = outputDir </> benchmark -<.> "ll"
     let llNoOptPath = outputDir </> benchmark -<.> "no-opt.ll"
     let llNoLLPath = outputDir </> benchmark -<.> "no-ll.ll"
-    compile (benchmarkDir </> benchmark) llOptPath [outputDir </> "libs"] True False
-    compile (benchmarkDir </> benchmark) llNoOptPath [outputDir </> "libs"] True True
-    compile (benchmarkDir </> benchmark) llNoLLPath [outputDir </> "libs"] False False
+    let llNoNoPath = outputDir </> benchmark -<.> "nono.ll"
+    compile (benchmarkDir </> benchmark) llOptPath [outputDir </> "libs"] True True
+    compile (benchmarkDir </> benchmark) llNoOptPath [outputDir </> "libs"] True False
+    compile (benchmarkDir </> benchmark) llNoLLPath [outputDir </> "libs"] False True
+    compile (benchmarkDir </> benchmark) llNoNoPath [outputDir </> "libs"] False True
     runClang llOptPath
     runClang llNoOptPath
     runClang llNoLLPath
+    runClang llNoNoPath
   pure benchmarks
   where
     runClang llPath = do
@@ -49,9 +52,9 @@ setupEnv = do
                 <> pkgConfig
                 <> [ outputDir </> "libs" </> "runtime.c",
                      llPath,
-                     outputDir </> "libs" </> "libgriff_rustlib.a",
-                     "-lpthread",
-                     "-ldl",
+                     -- outputDir </> "libs" </> "libgriff_rustlib.a",
+                     -- "-lpthread",
+                     -- "-ldl",
                      "-o",
                      llPath -<.> "out"
                    ]
@@ -64,7 +67,8 @@ main = do
   defaultMain
     [ bgroup "optimized" $ map runOpt benchmarks,
       bgroup "no optimized" $ map runNoOpt benchmarks,
-      bgroup "no lambdalift" $ map runNoLL benchmarks
+      bgroup "no lambdalift" $ map runNoLL benchmarks,
+      bgroup "do nothing" $ map runNoNo benchmarks
     ]
   where
     runOpt testcase = bench (takeBaseName testcase) $ nfIO $ do
@@ -79,11 +83,15 @@ main = do
       runProcess_ $
         proc (outputDir </> takeBaseName testcase -<.> "no-ll.out") []
           & setStdout nullStream
+    runNoNo testcase = bench (takeBaseName testcase) $ nfIO $ do
+      runProcess_ $
+        proc (outputDir </> takeBaseName testcase -<.> "nono.out") []
+          & setStdout nullStream
 
 -- | Get the correct name of `clang`
 getClangCommand :: IO String
 getClangCommand =
-  go ["clang", "clang-12"]
+  go ["clang", "clang-15"]
   where
     go [] = error "clang not found"
     go (x : xs) = do
@@ -108,15 +116,15 @@ setupPrelude = do
 
 setupRuntime :: IO ()
 setupRuntime = do
-  setCurrentDirectory "./griff"
-  runProcess_ $ proc "cargo" ["build", "--release"]
-  setCurrentDirectory "../"
-  copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
+  -- setCurrentDirectory "./griff"
+  -- runProcess_ $ proc "cargo" ["build", "--release"]
+  -- setCurrentDirectory "../"
+  -- copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
-compile src dst modPaths lambdaLift noOptimize = do
+compile src dst modPaths lambdaLift optimize = do
   malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
   malgoEnv <-
     pure
@@ -124,6 +132,6 @@ compile src dst modPaths lambdaLift noOptimize = do
         { dstPath = dst,
           _modulePaths = takeDirectory dst : malgoEnv._modulePaths,
           lambdaLift,
-          noOptimize
+          optimize
         }
   Driver.compile src malgoEnv

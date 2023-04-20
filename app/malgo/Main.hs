@@ -29,7 +29,7 @@ data ToLLOpt = ToLLOpt
   { srcPath :: FilePath,
     dstPath :: FilePath,
     compileMode :: CompileMode,
-    noOptimize :: Bool,
+    optimize :: Bool,
     lambdaLift :: Bool,
     optimizeOption :: OptimizeOption,
     debugMode :: Bool,
@@ -50,7 +50,7 @@ main = do
         env
           { Monad.dstPath = opt.dstPath,
             Monad.compileMode = opt.compileMode,
-            Monad.noOptimize = opt.noOptimize,
+            Monad.optimize = opt.optimize,
             Monad.lambdaLift = opt.lambdaLift,
             Monad.optimizeOption = opt.optimizeOption,
             Monad.debugMode = opt.debugMode
@@ -84,7 +84,7 @@ toLLOpt =
               "Write LLVM IR to OUTPUT"
         )
       <*> (flag' LLVM (long "llvm") <|> flag' PrintLLVM (long "print-llvm") <|> pure LLVM)
-      <*> switch (long "no-opt")
+      <*> (not <$> switch (long "no-opt"))
       <*> switch (long "lambdalift")
       <*> ( OptimizeOption
               <$> switch (long "ffold-variable")

@@ -23,7 +23,7 @@ data MalgoEnv = MalgoEnv
     _indexes :: IORef (HashMap ModuleName Index),
     dstPath :: FilePath,
     compileMode :: CompileMode,
-    noOptimize :: Bool,
+    optimize :: Bool,
     lambdaLift :: Bool,
     optimizeOption :: OptimizeOption,
     debugMode :: Bool,
@@ -57,8 +57,8 @@ newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
   let compileMode = case takeExtension dstPath of
         ".ll" -> LLVM
         _ -> error "unknown extension"
-  let noOptimize = False
-  let lambdaLift = True
+  let optimize = True
+  let lambdaLift = False
   let optimizeOption = defaultOptimizeOption
   let debugMode = False
   let _modulePaths = modulePaths <> [workspaceDir </> "build", basePath]

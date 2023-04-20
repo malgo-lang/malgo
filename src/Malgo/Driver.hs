@@ -95,8 +95,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core
-      when (env.debugMode && not env.noOptimize) do
+      coreOpt <- if env.optimize then optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core else pure core
+      when (env.debugMode && env.optimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
         writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
