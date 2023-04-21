@@ -55,8 +55,8 @@ ghc-options:
   - -Wmissing-export-lists
 
   - -optP-Wno-nonportable-include-path
-  - -j
-  - +RTS -A128m -n2m -qg -RTS
+  # From: Keeping Compilation Fast https://www.parsonsmatt.org/2019/11/27/keeping_compilation_fast.html
+  - -j +RTS -A128m -n2m -RTS
 
 language: GHC2021
 

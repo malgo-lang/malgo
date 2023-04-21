@@ -132,18 +132,6 @@ newtype PrettyShow a = PrettyShow a
 instance (Show a) => Pretty (PrettyShow a) where
   pPrint (PrettyShow a) = P.text $ show a
 
-instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
-  tell = W.tell
-  listen = W.listen
-  pass = W.pass
-
-instance (MonadState s m) => MonadState s (WriterT w m) where
-  state = lift . state
-
-instance (Monoid w, MonadReader r m) => MonadReader r (WriterT w m) where
-  reader = lift . reader
-  local = W.mapWriterT . local
-
 pass :: (Applicative m) => m ()
 pass = pure ()
 
