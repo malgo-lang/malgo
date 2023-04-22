@@ -1,11 +1,12 @@
 module Malgo.Refine.RefineEnv (RefineEnv (..), buildRefineEnv) where
 
 import Data.HashMap.Strict qualified as HashMap
+-- import Malgo.Infer.TcEnv
+
+import GHC.Records (HasField)
 import Koriel.Id
 import Koriel.MonadUniq
-import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
-import Malgo.Monad
 import Malgo.Prelude
 
 data RefineEnv = RefineEnv
@@ -14,11 +15,18 @@ data RefineEnv = RefineEnv
     uniqSupply :: UniqSupply
   }
 
-buildRefineEnv :: MalgoEnv -> TcEnv -> RefineEnv
-buildRefineEnv malgoEnv TcEnv {_signatureMap, _typeDefMap} =
+buildRefineEnv ::
+  ( HasUniqSupply m,
+    HasField "_signatureMap" t (HashMap (Id ()) (Scheme Type)),
+    HasField "_typeDefMap" t (HashMap (Id ()) (TypeDef Type))
+  ) =>
+  m ->
+  t ->
   RefineEnv
-    { signatureMap = _signatureMap,
-      typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap,
+buildRefineEnv malgoEnv tcEnv =
+  RefineEnv
+    { signatureMap = tcEnv._signatureMap,
+      typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems tcEnv._typeDefMap,
       uniqSupply = malgoEnv.uniqSupply
     }
   where

@@ -307,8 +307,8 @@ genToplevelEnv ds =
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux (Import _ modName' importList) = do
       interface <- loadInterface modName'
-      let varIdentAssoc = HashMap.toList $ interface ^. resolvedVarIdentMap
-      let typeIdentAssoc = HashMap.toList $ interface ^. resolvedTypeIdentMap
+      let varIdentAssoc = HashMap.toList interface.resolvedVarIdentMap
+      let typeIdentAssoc = HashMap.toList interface.resolvedTypeIdentMap
       modify $ appendRnEnv resolvedVarIdentMap (map (resolveImport modName' importList) varIdentAssoc)
       modify $ appendRnEnv resolvedTypeIdentMap (map (resolveImport modName' importList) typeIdentAssoc)
     aux Infix {} = pass

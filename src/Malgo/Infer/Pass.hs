@@ -17,9 +17,9 @@ import Language.LSP.Types.Lens (HasRange (range))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
-import Malgo.Interface (loadInterface)
+import Malgo.Interface (Interface (..), loadInterface)
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply, _interfaces, _resolvedTypeIdentMap))
+import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply, _interfaces, _modulePaths, _resolvedTypeIdentMap))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
@@ -88,10 +88,10 @@ tcImports = traverse tcImport
   where
     tcImport (pos, modName, importList) = do
       interface <- loadInterface modName
-      signatureMap <>= (interface ^. signatureMap)
-      typeDefMap <>= (interface ^. typeDefMap)
-      typeSynonymMap <>= (interface ^. typeSynonymMap)
-      kindCtx <>= (interface ^. kindCtx)
+      signatureMap <>= interface.signatureMap
+      typeDefMap <>= interface.typeDefMap
+      typeSynonymMap <>= interface.typeSynonymMap
+      kindCtx <>= interface.kindCtx
       pure (pos, modName, importList)
 
 tcTypeDefinitions ::

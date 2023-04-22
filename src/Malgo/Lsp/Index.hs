@@ -20,7 +20,6 @@ module Malgo.Lsp.Index
   )
 where
 
-import Control.Lens (view)
 import Control.Lens.TH
 import Data.Binary (Binary, decodeFile, encode)
 import Data.ByteString.Lazy qualified as LBS
@@ -28,7 +27,6 @@ import Data.HashMap.Strict qualified as HashMap
 import GHC.Records (HasField)
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
-import Koriel.Lens (HasIndexes (..), HasModulePaths (..))
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude
@@ -77,8 +75,6 @@ data LspOpt = LspOpt
     _indexes :: IORef (HashMap ModuleName Index)
   }
 
-makeFieldsNoPrefix ''LspOpt
-
 -- | 'findReferences' finds all references that are corresponding to the given 'SourcePos'.
 -- It ignores file names.
 findReferences :: SourcePos -> Index -> [Info]
@@ -102,10 +98,10 @@ storeIndex index = do
   let encoded = encode index
   liftIO $ LBS.writeFile (dstPath -<.> "idx") encoded
 
-loadIndex :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath], HasIndexes s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
+loadIndex :: (MonadReader s m, MonadIO m, HasField "_modulePaths" s [FilePath], HasField "_indexes" s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
 loadIndex modName = do
-  modPaths <- view modulePaths
-  indexesRef <- view indexes
+  modPaths <- asks (._modulePaths)
+  indexesRef <- asks (._indexes)
   indexes <- liftIO $ readIORef indexesRef
   case HashMap.lookup modName indexes of
     Just index -> pure $ Just index

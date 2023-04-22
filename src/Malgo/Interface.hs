@@ -1,17 +1,12 @@
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE UndecidableInstances #-}
+module Malgo.Interface (Interface (..), buildInterface, toInterfacePath, loadInterface) where
 
-module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
-
-import Control.Lens (At (at), ifor_, view, (%=), (?=))
-import Control.Lens.TH
+import Control.Lens (ifor_)
 import Control.Monad.Extra (firstJustM, ifM)
 import Data.Binary (Binary, decodeFile)
 import Data.HashMap.Strict qualified as HashMap
 import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
-import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT
@@ -22,18 +17,18 @@ import System.FilePath (replaceExtension, (</>))
 
 data Interface = Interface
   { -- | Used in Infer
-    _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
+    signatureMap :: HashMap RnId (GT.Scheme GT.Type),
     -- | Used in Infer
-    _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
+    typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
     -- | Used in Infer
-    _typeSynonymMap :: HashMap GT.TypeVar ([GT.TypeVar], GT.Type),
-    _kindCtx :: KindCtx,
+    typeSynonymMap :: HashMap GT.TypeVar ([GT.TypeVar], GT.Type),
+    kindCtx :: KindCtx,
     -- | Used in Rename
-    _resolvedVarIdentMap :: HashMap PsId RnId,
+    resolvedVarIdentMap :: HashMap PsId RnId,
     -- | Used in Rename
-    _resolvedTypeIdentMap :: HashMap PsId RnId,
+    resolvedTypeIdentMap :: HashMap PsId RnId,
     -- | Used in Desugar
-    _coreIdentMap :: HashMap RnId (Id C.Type),
+    coreIdentMap :: HashMap RnId (Id C.Type),
     -- | Used in Rename
     infixMap :: HashMap RnId (Assoc, Int),
     -- | Used in Rename
@@ -42,8 +37,6 @@ data Interface = Interface
   deriving stock (Show, Generic)
 
 instance Binary Interface
-
-makeFieldsNoPrefix ''Interface
 
 instance Pretty Interface where
   pPrint = Koriel.Pretty.text . show
@@ -64,18 +57,24 @@ buildInterface ::
 buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty mempty mempty mempty mempty mempty (rnState._infixInfo) (rnState._dependencies) $ do
   ifor_ dsState._nameEnv $ \tcId coreId ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
-      resolvedVarIdentMap . at (tcId.name) ?= tcId
-      coreIdentMap . at tcId ?= coreId
+      -- resolvedVarIdentMap . at (tcId.name) ?= tcId
+      modify $ \e -> e {resolvedVarIdentMap = HashMap.insert (tcId.name) tcId e.resolvedVarIdentMap}
+      -- coreIdentMap . at tcId ?= coreId
+      modify $ \e -> e {coreIdentMap = HashMap.insert tcId coreId e.coreIdentMap}
   ifor_ dsState._signatureMap $ \tcId scheme ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
-      signatureMap . at tcId ?= scheme
+      -- signatureMap . at tcId ?= scheme
+      modify $ \e -> e {signatureMap = HashMap.insert tcId scheme e.signatureMap}
   ifor_ dsState._typeDefMap $ \rnId typeDef -> do
     when (rnId.sort == External && rnId.moduleName == moduleName) do
-      resolvedTypeIdentMap . at (rnId.name) ?= rnId
-      typeDefMap . at rnId ?= typeDef
+      -- resolvedTypeIdentMap . at (rnId.name) ?= rnId
+      modify $ \e -> e {resolvedTypeIdentMap = HashMap.insert (rnId.name) rnId e.resolvedTypeIdentMap}
+      -- typeDefMap . at rnId ?= typeDef
+      modify $ \e -> e {typeDefMap = HashMap.insert rnId typeDef e.typeDefMap}
   ifor_ dsState._kindCtx $ \tv kind -> do
     when (tv.sort == External && tv.moduleName == moduleName) do
-      kindCtx %= insertKind tv kind
+      -- kindCtx %= insertKind tv kind
+      modify $ \e -> e {kindCtx = insertKind tv kind e.kindCtx}
 
 toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"
@@ -84,13 +83,13 @@ loadInterface ::
   ( HasCallStack,
     MonadReader s m,
     MonadIO m,
-    HasInterfaces s (IORef (HashMap ModuleName Interface)),
-    HasModulePaths s [FilePath]
+    HasField "_interfaces" s (IORef (HashMap ModuleName Interface)),
+    HasField "_modulePaths" s [FilePath]
   ) =>
   ModuleName ->
   m Interface
 loadInterface (ModuleName modName) = do
-  interfacesRef <- view interfaces
+  interfacesRef <- asks (._interfaces)
   interfaces <- liftIO $ readIORef interfacesRef
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
@@ -98,7 +97,7 @@ loadInterface (ModuleName modName) = do
       message <-
         firstJustM
           (readFileIfExists (toInterfacePath $ convertString modName))
-          =<< view modulePaths
+          =<< asks (._modulePaths)
       case message of
         Just x -> do
           liftIO $ writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces

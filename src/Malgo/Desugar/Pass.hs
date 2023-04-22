@@ -58,7 +58,7 @@ dsBindGroup bg = do
 dsImport :: (MonadReader DsEnv m, MonadState DsState m, MonadIO m) => Import (Malgo 'Refine) -> m ()
 dsImport (_, modName, _) = do
   interface <- loadInterface modName
-  nameEnv <>= interface ^. coreIdentMap
+  nameEnv <>= interface.coreIdentMap
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::

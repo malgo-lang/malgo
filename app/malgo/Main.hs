@@ -15,6 +15,7 @@ import Koriel.Pretty (pPrint)
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
 import Malgo.Lsp.Index (Index, LspOpt (..))
+import Malgo.Lsp.Index qualified as Index
 import Malgo.Lsp.Server qualified as Lsp
 import Malgo.Monad (CompileMode (..), newMalgoEnv)
 import Malgo.Monad qualified as Monad
@@ -56,7 +57,7 @@ main = do
           }
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
+      opt <- pure opt {Index._modulePaths = opt._modulePaths <> [".malgo-work" </> "build", basePath]}
       void $ Lsp.server opt
     Build _ -> do
       Build.run
