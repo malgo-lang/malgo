@@ -3,21 +3,19 @@
 
 module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
 
-import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.))
+import Control.Lens (At (at), ifor_, view, (%=), (?=))
 import Control.Lens.TH
 import Control.Monad.Extra (firstJustM, ifM)
 import Data.Binary (Binary, decodeFile)
 import Data.HashMap.Strict qualified as HashMap
+import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Malgo.Desugar.DsState (DsState, HasNameEnv (nameEnv))
 import Malgo.Infer.TypeRep (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude
-import Malgo.Rename.RnState (RnState)
-import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
 import System.Directory qualified as Directory
 import System.FilePath (replaceExtension, (</>))
@@ -50,21 +48,32 @@ makeFieldsNoPrefix ''Interface
 instance Pretty Interface where
   pPrint = Koriel.Pretty.text . show
 
-buildInterface :: ModuleName -> RnState -> DsState -> Interface
+buildInterface ::
+  ( HasField "_infixInfo" r (HashMap RnId (Assoc, Int)),
+    HasField "_dependencies" r (HashSet ModuleName),
+    HasField "_nameEnv" d (HashMap RnId (Id C.Type)),
+    HasField "_signatureMap" d (HashMap RnId (GT.Scheme GT.Type)),
+    HasField "_typeDefMap" d (HashMap RnId (GT.TypeDef GT.Type)),
+    HasField "_kindCtx" d KindCtx
+  ) =>
+  ModuleName ->
+  r ->
+  d ->
+  Interface
 -- TODO: write abbrMap to interface
-buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
-  ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
+buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty mempty mempty mempty mempty mempty (rnState._infixInfo) (rnState._dependencies) $ do
+  ifor_ dsState._nameEnv $ \tcId coreId ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
       resolvedVarIdentMap . at (tcId.name) ?= tcId
       coreIdentMap . at tcId ?= coreId
-  ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
+  ifor_ dsState._signatureMap $ \tcId scheme ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
       signatureMap . at tcId ?= scheme
-  ifor_ (dsState ^. typeDefMap) $ \rnId typeDef -> do
+  ifor_ dsState._typeDefMap $ \rnId typeDef -> do
     when (rnId.sort == External && rnId.moduleName == moduleName) do
       resolvedTypeIdentMap . at (rnId.name) ?= rnId
       typeDefMap . at rnId ?= typeDef
-  ifor_ (dsState ^. kindCtx) $ \tv kind -> do
+  ifor_ dsState._kindCtx $ \tv kind -> do
     when (tv.sort == External && tv.moduleName == moduleName) do
       kindCtx %= insertKind tv kind
 
@@ -72,8 +81,8 @@ toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"
 
 loadInterface ::
-  HasCallStack =>
-  ( MonadReader s m,
+  ( HasCallStack,
+    MonadReader s m,
     MonadIO m,
     HasInterfaces s (IORef (HashMap ModuleName Interface)),
     HasModulePaths s [FilePath]

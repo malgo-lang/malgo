@@ -14,6 +14,7 @@ import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Id (ModuleName (..))
 import Koriel.Pretty
+import Malgo.Desugar.DsState (DsState (..))
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (buildInterface, loadInterface, toInterfacePath)
@@ -26,6 +27,7 @@ import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Rename.RnState (RnState (..))
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.FilePath (takeBaseName, takeDirectory, (-<.>))
