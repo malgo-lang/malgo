@@ -19,7 +19,7 @@ jobs:
       - name: Install packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgc-dev llvm-12-dev
+          sudo apt-get install -y libgc-dev llvm-15-dev
       - uses: actions/checkout@v2
       - name: Cache .cabal
         uses: actions/cache@v3
