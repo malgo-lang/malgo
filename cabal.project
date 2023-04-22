@@ -1,6 +1,6 @@
 packages: *.cabal
 
--- with-compiler: ghc-9.6.1
+with-compiler: ghc-9.4.4
 
 source-repository-package
   type: git
@@ -17,5 +17,3 @@ source-repository-package
 constraints: diagnose +megaparsec-compat
 
 allow-newer: diagnose:text, co-log-core:base
-
-

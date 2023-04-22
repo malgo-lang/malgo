@@ -129,7 +129,6 @@ compile src dst modPaths lambdaLift optimize option compileMode =
             lambdaLift,
             optimize,
             compileMode,
-            debugMode = True,
             optimizeOption = option
           }
     Driver.compile src malgoEnv

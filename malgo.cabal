@@ -108,7 +108,7 @@ library
     , lsp
     , lsp-types
     , megaparsec
-    , mtl
+    , mtl >=2.3
     , optparse-applicative
     , parser-combinators
     , pretty
@@ -165,7 +165,7 @@ executable malgo
     , lsp-types
     , malgo
     , megaparsec
-    , mtl
+    , mtl >=2.3
     , optparse-applicative
     , parser-combinators
     , pretty
@@ -224,7 +224,7 @@ test-suite malgo-test
     , lsp-types
     , malgo
     , megaparsec
-    , mtl
+    , mtl >=2.3
     , optparse-applicative
     , parser-combinators
     , pretty
@@ -287,7 +287,7 @@ benchmark malgo-bench
     , lsp-types
     , malgo
     , megaparsec
-    , mtl
+    , mtl >=2.3
     , optparse-applicative
     , parser-combinators
     , pretty
