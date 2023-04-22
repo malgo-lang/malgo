@@ -25,6 +25,7 @@ import Data.Maybe (fromJust)
 import Data.String.Conversions
 import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
+import GHC.Records (HasField)
 import Koriel.Core.Op qualified as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type hiding (typeOf)
@@ -55,7 +56,6 @@ import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
-import Malgo.Desugar.DsState (DsState (..), HasNameEnv (nameEnv))
 import Malgo.Monad (MalgoEnv (..))
 
 -- | 'PrimMap' is a map from primitive function name to its LLVM function.
@@ -106,7 +106,11 @@ runCodeGenT env m =
 
 -- | Generate LLVM IR from a program.
 codeGen ::
-  (MonadFix m, MonadFail m, MonadIO m) =>
+  ( MonadFix m,
+    MonadFail m,
+    MonadIO m,
+    HasField "_nameEnv" d (HashMap (Id ()) (Id C.Type))
+  ) =>
   -- | Source file path
   FilePath ->
   -- | Malgo environment
@@ -114,7 +118,7 @@ codeGen ::
   -- | Module name of the source program
   ModuleName ->
   -- | Collected information from the desugarer
-  DsState ->
+  d ->
   -- | Source program
   Program (Id C.Type) ->
   m ()
@@ -130,7 +134,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
         _ -> error "invalid type"
     traverse_ (\(n, _, e) -> genVar n e) topVars
     traverse_ (\(f, ps, _, body) -> genFunc f ps body) topFuns
-    case searchMain (HashMap.toList $ view nameEnv dsState) of
+    case searchMain (HashMap.toList dsState._nameEnv) of
       Just mainCall -> do
         (f, (ps, body)) <-
           mainFunc =<< runDef do

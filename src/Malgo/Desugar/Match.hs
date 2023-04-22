@@ -1,5 +1,5 @@
 -- | パターンマッチのコンパイル
-module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
+module Malgo.Desugar.Match (match, PatMatrix, patMatrix, dsUnboxed) where
 
 import Control.Lens (At (at), Prism', has, (?=), _1)
 import Data.HashMap.Strict qualified as HashMap
@@ -14,12 +14,13 @@ import Koriel.Pretty
 import Malgo.Desugar.DsEnv (DsEnv (moduleName, uniqSupply))
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Type (dsType, unfoldType)
-import Malgo.Desugar.Unboxed (dsUnboxed)
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as Malgo
 import Malgo.Prelude
 import Malgo.Syntax
+import Malgo.Syntax qualified as G
 import Malgo.Syntax.Extension
+import Malgo.Syntax.Extension qualified as G
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加
@@ -219,3 +220,12 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
           Nothing -> VarP (Typed ty pos) <$> newTemporalId "_p" ()
           Just p -> pure p
     extendRecordP _ _ = error "typeOf x must be TyRecord"
+
+-- Unboxedの脱糖衣
+dsUnboxed :: Literal G.Unboxed -> Core.Unboxed
+dsUnboxed (G.Int32 x) = Core.Int32 $ toInteger x
+dsUnboxed (G.Int64 x) = Core.Int64 $ toInteger x
+dsUnboxed (G.Float x) = Core.Float x
+dsUnboxed (G.Double x) = Core.Double x
+dsUnboxed (G.Char x) = Core.Char x
+dsUnboxed (G.String x) = Core.String x

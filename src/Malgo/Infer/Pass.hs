@@ -19,7 +19,7 @@ import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface)
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply))
+import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply, _interfaces, _resolvedTypeIdentMap))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
@@ -368,7 +368,7 @@ tcExpr (Fn pos cs) = do
               addFile diag srcFileName src & \diag ->
                 addReport diag (Err Nothing "The number of patterns in each clause must be the same" (mainDiag c' : map restDiag cs') [])
       printDiagnostic stderr True True 4 defaultStyle diag
-      liftIO $ exitFailure
+      liftIO exitFailure
     tell [(pos, typeOf c' :~ typeOf c)]
   pure $ Fn (Typed (typeOf c') pos) (c' :| cs')
   where

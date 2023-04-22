@@ -173,15 +173,6 @@ dsDataDef (_, name, _, cons) =
     buildConType [] retType = [] :-> retType
     buildConType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
 
--- Unboxedの脱糖衣
-dsUnboxed :: Literal G.Unboxed -> C.Unboxed
-dsUnboxed (G.Int32 x) = C.Int32 $ toInteger x
-dsUnboxed (G.Int64 x) = C.Int64 $ toInteger x
-dsUnboxed (G.Float x) = C.Float x
-dsUnboxed (G.Double x) = C.Double x
-dsUnboxed (G.Char x) = C.Char x
-dsUnboxed (G.String x) = C.String x
-
 dsExpr ::
   (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) =>
   G.Expr (Malgo 'Refine) ->
