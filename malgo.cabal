@@ -94,7 +94,7 @@ library
     , binary
     , binary-instances
     , containers
-    , diagnose
+    , diagnose >=2.4
     , directory
     , extra
     , filepath
@@ -150,7 +150,7 @@ executable malgo
     , binary
     , binary-instances
     , containers
-    , diagnose
+    , diagnose >=2.4
     , directory
     , extra
     , filepath
@@ -208,7 +208,7 @@ test-suite malgo-test
     , binary
     , binary-instances
     , containers
-    , diagnose
+    , diagnose >=2.4
     , directory
     , extra
     , filepath
@@ -272,7 +272,7 @@ benchmark malgo-bench
     , binary-instances
     , containers
     , criterion
-    , diagnose
+    , diagnose >=2.4
     , directory
     , extra
     , filepath

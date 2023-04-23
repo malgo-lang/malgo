@@ -13,7 +13,6 @@ jobs:
       matrix:
         ghc: ["9.2.7"]
         os: [ubuntu-latest]
-      # fail-fast: true
 
     steps:
       - name: Install packages
@@ -34,8 +33,6 @@ jobs:
         with:
           ghc-version:
             ${{ matrix.ghc }}
-            # enable-stack: true
-            # stack-version: 'latest'
           cabal-version: "3.6.2.0"
       - name: GHC ${{matrix.ghc}} Build
         run: |
