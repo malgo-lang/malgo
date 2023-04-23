@@ -86,7 +86,7 @@ library
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
     , aeson
@@ -142,7 +142,7 @@ executable malgo
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
     , aeson
@@ -200,7 +200,7 @@ test-suite malgo-test
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
     , aeson
@@ -263,7 +263,7 @@ benchmark malgo-bench
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -j +RTS -A128m -n2m -qg -RTS
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
     , aeson

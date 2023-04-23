@@ -14,18 +14,9 @@ source-repository-package
   tag: 80e0de0f96eb78288c88fda0eaba0f7cf5d38a30
   subdir: llvm-hs-pure
 
--- source-repository-package
---   type: git
---   location: https://github.com/MuKnIO/llvm-hs.git
---   tag: fe8fd556e8d2cc028f61d4d7b4b6bf18c456d090
---   subdir: llvm-hs
---   --sha256: 1b4kh0c8sgb39qzfi3cnagz1ssgl96mzb6s18xapy0qj23zql0p0
--- 
--- source-repository-package
---   type: git
---   location: https://github.com/MuKnIO/llvm-hs.git
---   tag: fe8fd556e8d2cc028f61d4d7b4b6bf18c456d090
---   subdir: llvm-hs-pure
---   --sha256: 1b4kh0c8sgb39qzfi3cnagz1ssgl96mzb6s18xapy0qj23zql0p0
-
 constraints: diagnose +megaparsec-compat
+
+package *
+  -- '-j' option and RTS options are from: Keeping Compilation Fast https://www.parsonsmatt.org/2019/11/27/keeping_compilation_fast.html
+  ghc-options:
+    -j4 +RTS -A128m -n2m -RTS
