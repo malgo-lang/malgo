@@ -129,7 +129,6 @@ compile src dst modPaths lambdaLift noOptimize option =
             _modulePaths = [takeDirectory dst, outputDir </> "libs"],
             lambdaLift,
             noOptimize,
-            debugMode = True,
             optimizeOption = option
           }
     Driver.compile src malgoEnv
@@ -148,7 +147,7 @@ compile src dst modPaths lambdaLift noOptimize option =
 -- | Get the correct name of `clang`
 getClangCommand :: IO String
 getClangCommand =
-  go ["clang", "clang-12"]
+  go ["clang-15", "clang"]
   where
     go [] = error "clang not found"
     go (x : xs) = do

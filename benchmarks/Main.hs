@@ -85,7 +85,7 @@ main = do
 -- | Get the correct name of `clang`
 getClangCommand :: IO String
 getClangCommand =
-  go ["clang", "clang-12"]
+  go ["clang-15", "clang"]
   where
     go [] = error "clang not found"
     go (x : xs) = do
