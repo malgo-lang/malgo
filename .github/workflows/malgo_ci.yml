@@ -42,7 +42,7 @@ jobs:
           cabal build --only-dependencies
       - name: Install fourmolu
         run: |
-          cabal install fourmolu
+          cabal install fourmolu-0.12.0.0 --ignore-project
       - name: Check formatting
         run: |
           fourmolu --mode check $(find src app benchmarks test -name '*.hs')
