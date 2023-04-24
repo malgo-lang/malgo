@@ -44,7 +44,9 @@ setupEnv = do
           ( proc
               clang
               $ [ "-Wno-override-module",
-                  "-lm"
+                  "-lm",
+                  "-Xclang",
+                  "-opaque-pointers"
                 ]
                 <> pkgConfig
                 <> [ outputDir </> "libs" </> "runtime.c",
