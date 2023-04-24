@@ -4,9 +4,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 ENV PATH=/root/.cabal/bin:/root/.ghcup/bin:${PATH}
 
-RUN ghcup upgrade && ghcup install ghc 9.2.7 && ghcup set ghc 9.2.7
+RUN ghcup upgrade && ghcup install ghc 9.4.4 && ghcup set ghc 9.4.4
 
-RUN ghcup compile hls --git-ref b08691db779f7a35ff322b71e72a12f6e3376fd9 --ghc 9.2.7 -j8
+RUN ghcup install cabal 3.10.1.0 && ghcup set cabal 3.10.1.0
+
+RUN --mount=type=cache,target=/root/.ghcup/tmp ghcup compile hls --git-ref 6640ebf33eeb8a62ccd094e2f47f69106acfd200 --ghc 9.4.4 -j8
 
 RUN ghcup gc
 
