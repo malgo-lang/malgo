@@ -1,11 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 -- | Alpha conversion
-module Koriel.Core.Alpha
-  ( alpha,
-    AlphaEnv (..),
-    equiv,
-  )
+module Koriel.Core.Alpha (
+  alpha,
+  AlphaEnv (..),
+  equiv,
+)
 where
 
 import Control.Exception (assert)
@@ -42,7 +42,7 @@ lookupVar n = do
   env <- asks (.subst)
   pure $ HashMap.lookupDefault (Var n) n env
 
-lookupId :: (MonadReader AlphaEnv m) => Id Type -> m (Id Type)
+lookupId :: MonadReader AlphaEnv m => Id Type -> m (Id Type)
 lookupId n = do
   n' <- lookupVar n
   case n' of
@@ -85,7 +85,7 @@ alphaExpr (Assign x v e) = do
   local (\e -> e {subst = one (x, Var x') <> e.subst}) $ Assign x' v' <$> alphaExpr e
 alphaExpr (Error t) = pure $ Error t
 
-alphaAtom :: (MonadReader AlphaEnv f) => Atom (Id Type) -> f (Atom (Id Type))
+alphaAtom :: MonadReader AlphaEnv f => Atom (Id Type) -> f (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x
 alphaAtom a@Unboxed {} = pure a
 

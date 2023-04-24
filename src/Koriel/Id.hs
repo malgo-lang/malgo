@@ -4,19 +4,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Koriel.Id
-  ( IdSort (..),
-    ModuleName (..),
-    Id (..),
-    idToText,
-    newInternalId,
-    newExternalId,
-    idIsExternal,
-    newTemporalId,
-    newNativeId,
-    idIsNative,
-    HasModuleName,
-  )
+module Koriel.Id (
+  IdSort (..),
+  ModuleName (..),
+  Id (..),
+  idToText,
+  newInternalId,
+  newExternalId,
+  idIsExternal,
+  newTemporalId,
+  newNativeId,
+  idIsNative,
+  HasModuleName,
+)
 where
 
 import Data.Aeson (FromJSON, ToJSON)

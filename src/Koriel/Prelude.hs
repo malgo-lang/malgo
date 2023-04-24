@@ -1,32 +1,32 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Koriel.Prelude
-  ( -- * Reexports
-    module Relude,
-    module Control.Monad.Writer.Class,
-    module Control.Monad.Trans.Writer.CPS,
+module Koriel.Prelude (
+  -- * Reexports
+  module Relude,
+  module Control.Monad.Writer.Class,
+  module Control.Monad.Trans.Writer.CPS,
 
-    -- * Utilities
-    unzip,
-    replaceOf,
-    localState,
-    chomp,
-    PrettyShow (..),
+  -- * Utilities
+  unzip,
+  replaceOf,
+  localState,
+  chomp,
+  PrettyShow (..),
 
-    -- * Lift IO functions
+  -- * Lift IO functions
 
-    -- ** Show
-    hPrint,
+  -- ** Show
+  hPrint,
 
-    -- ** String
-    hPutStr,
-    hPutStrLn,
+  -- ** String
+  hPutStr,
+  hPutStrLn,
 
-    -- ** Text
-    hPutText,
-    hPutTextLn,
-  )
+  -- ** Text
+  hPutText,
+  hPutTextLn,
+)
 where
 
 import Control.Lens (ASetter, over)

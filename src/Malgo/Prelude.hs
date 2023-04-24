@@ -5,10 +5,10 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
-module Malgo.Prelude
-  ( module Koriel.Prelude,
-    module Malgo.Prelude,
-  )
+module Malgo.Prelude (
+  module Koriel.Prelude,
+  module Malgo.Prelude,
+)
 where
 
 import Control.Lens.TH

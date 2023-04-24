@@ -5,28 +5,28 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | AST definitions for Koriel language
-module Koriel.Core.Syntax
-  ( Unboxed (..),
-    Atom (..),
-    Obj (..),
-    LocalDef (..),
-    HasObject (..),
-    HasVariable (..),
-    Case (..),
-    Expr (..),
-    Program (..),
-    HasAtom (..),
-    HasExpr (..),
-    runDef,
-    let_,
-    bind,
-    cast,
-    freevars,
-    _Unpack,
-    _OpenRecord,
-    _Exact,
-    _Bind,
-  )
+module Koriel.Core.Syntax (
+  Unboxed (..),
+  Atom (..),
+  Obj (..),
+  LocalDef (..),
+  HasObject (..),
+  HasVariable (..),
+  Case (..),
+  Expr (..),
+  Program (..),
+  HasAtom (..),
+  HasExpr (..),
+  runDef,
+  let_,
+  bind,
+  cast,
+  freevars,
+  _Unpack,
+  _OpenRecord,
+  _Exact,
+  _Bind,
+)
 where
 
 import Control.Lens (Lens', Plated, Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
@@ -127,7 +127,7 @@ instance HasType a => HasType (Obj a) where
   typeOf (Pack t _ _) = t
   typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
-instance (Pretty a) => Pretty (Obj a) where
+instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
   pPrint (Record kvs) =
@@ -175,7 +175,7 @@ instance HasVariable (LocalDef a) a where
   {-# INLINE variable #-}
   variable f (LocalDef x1 t x2) = fmap (\x1 -> LocalDef x1 t x2) (f x1)
 
-instance (Pretty a) => Pretty (LocalDef a) where
+instance Pretty a => Pretty (LocalDef a) where
   pPrint (LocalDef v t o) = parens $ pPrint v <+> pPrint t $$ pPrint o
 
 instance HasAtom LocalDef where
@@ -200,7 +200,7 @@ instance HasType a => HasType (Case a) where
   typeOf (Exact _ e) = typeOf e
   typeOf (Bind _ _ e) = typeOf e
 
-instance (Pretty a) => Pretty (Case a) where
+instance Pretty a => Pretty (Case a) where
   pPrint (Unpack c xs e) =
     parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
   pPrint (OpenRecord pat e) =
@@ -250,17 +250,17 @@ data Expr a
   | -- | switch expression
     Switch
       (Atom a)
+      -- | cases
       [(Tag, Expr a)]
-      -- ^ cases
+      -- | default case
       (Expr a)
-      -- ^ default case
   | -- | switch by unboxed value
     SwitchUnboxed
       (Atom a)
+      -- | cases
       [(Unboxed, Expr a)]
-      -- ^ cases
+      -- | default case
       (Expr a)
-      -- ^ default case
   | -- | destruct a value
     Destruct (Atom a) Con [a] (Expr a)
   | -- | destruct a record
@@ -316,7 +316,7 @@ instance HasType a => HasType (Expr a) where
   typeOf (Assign _ _ e) = typeOf e
   typeOf (Error t) = t
 
-instance (Pretty a) => Pretty (Expr a) where
+instance Pretty a => Pretty (Expr a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)

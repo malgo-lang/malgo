@@ -3,9 +3,9 @@
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 
 -- | LLVM Code Generator
-module Koriel.Core.CodeGen.LLVM
-  ( codeGen,
-  )
+module Koriel.Core.CodeGen.LLVM (
+  codeGen,
+)
 where
 
 import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
@@ -26,23 +26,23 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import LLVM.AST
-  ( Definition (..),
-    Module (..),
-    Name,
-    defaultModule,
-    mkName,
-  )
+import LLVM.AST (
+  Definition (..),
+  Module (..),
+  Name,
+  defaultModule,
+  mkName,
+ )
 import LLVM.AST.Constant qualified as C
 import LLVM.AST.FloatingPointPredicate qualified as FP
 import LLVM.AST.Global
 import LLVM.AST.IntegerPredicate qualified as IP
 import LLVM.AST.Linkage (Linkage (External, Internal))
 import LLVM.AST.Operand (Operand (..))
-import LLVM.AST.Type hiding
-  ( double,
-    void,
-  )
+import LLVM.AST.Type hiding (
+  double,
+  void,
+ )
 import LLVM.AST.Type qualified as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
@@ -241,7 +241,7 @@ findVar x = findLocalVar
       at (toName x) ?= opr
       load (convType $ C.typeOf x) opr 0
 
-findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
+findFun :: MonadCodeGen m => Id C.Type -> m Operand
 findFun x =
   view (funcMap . at x) >>= \case
     Just opr -> pure opr
@@ -252,7 +252,7 @@ findFun x =
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
-findExt :: (MonadCodeGen m) => Name -> [LT.Type] -> LT.Type -> m Operand
+findExt :: MonadCodeGen m => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
   use (at x) >>= \case
     Just x -> pure x

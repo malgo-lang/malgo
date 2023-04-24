@@ -1,9 +1,9 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE Strict #-}
 
-module Koriel.Core.LambdaLift
-  ( lambdalift,
-  )
+module Koriel.Core.LambdaLift (
+  lambdalift,
+)
 where
 
 import Control.Lens (At (at), Lens', lens, traverseOf, traversed, use, view, (<>=), (?=), _1, _2)

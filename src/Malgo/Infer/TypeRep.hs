@@ -3,32 +3,32 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Infer.TypeRep
-  ( PrimT (..),
-    Kind,
-    TypeVar,
-    KindCtx,
-    insertKind,
-    Type (..),
-    MetaVar (..),
-    HasType (..),
-    HasKind (..),
-    Scheme (..),
-    TypeDef (..),
-    typeConstructor,
-    typeParameters,
-    valueConstructors,
-    TypeUnifyT (..),
-    runTypeUnifyT,
-    pattern TyConApp,
-    viewTyConApp,
-    buildTyArr,
-    splitTyArr,
-    applySubst,
-    expandTypeSynonym,
-    expandAllTypeSynonym,
-    freevars,
-  )
+module Malgo.Infer.TypeRep (
+  PrimT (..),
+  Kind,
+  TypeVar,
+  KindCtx,
+  insertKind,
+  Type (..),
+  MetaVar (..),
+  HasType (..),
+  HasKind (..),
+  Scheme (..),
+  TypeDef (..),
+  typeConstructor,
+  typeParameters,
+  valueConstructors,
+  TypeUnifyT (..),
+  runTypeUnifyT,
+  pattern TyConApp,
+  viewTyConApp,
+  buildTyArr,
+  splitTyArr,
+  applySubst,
+  expandTypeSynonym,
+  expandAllTypeSynonym,
+  freevars,
+)
 where
 
 import Control.Lens (At (at), Traversal', makeLenses, mapped, over, (^.), _1, _2)

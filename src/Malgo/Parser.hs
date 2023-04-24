@@ -7,10 +7,10 @@ import Data.Foldable (foldl)
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Void
 import Koriel.Id (ModuleName (ModuleName))
-import Malgo.Prelude hiding
-  ( many,
-    some,
-  )
+import Malgo.Prelude hiding (
+  many,
+  some,
+ )
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Text.Megaparsec
