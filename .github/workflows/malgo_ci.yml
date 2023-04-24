@@ -11,14 +11,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        ghc: ["9.2.7"]
+        ghc: ["9.4.4"]
         os: [ubuntu-latest]
 
     steps:
       - name: Install packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgc-dev llvm-12-dev
+          sudo apt-get install -y libgc-dev llvm-15-dev
       - uses: actions/checkout@v2
       - name: Cache .cabal
         uses: actions/cache@v3
@@ -33,7 +33,7 @@ jobs:
         with:
           ghc-version:
             ${{ matrix.ghc }}
-          cabal-version: "3.6.2.0"
+          cabal-version: "3.10.1.0"
       - name: Install dependencies
         run: |
           cabal update
