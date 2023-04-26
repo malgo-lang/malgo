@@ -1,18 +1,59 @@
 FROM buildpack-deps:stable AS ghcup-install
 
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    #
+    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+    && apt-get update \
+    && apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# ********************************************************
+# * Anything else you want to do like clean up goes here *
+# ********************************************************
+
+# [Optional] Set the default user. Omit if you want to keep the default as root.
+USER $USERNAME
+
+ENV HOME=/home/$USERNAME
+
 RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
-ENV PATH=/root/.cabal/bin:/root/.ghcup/bin:${PATH}
+ENV PATH=$HOME/.cabal/bin:$HOME/.ghcup/bin:${PATH}
 
-RUN ghcup upgrade && ghcup install ghc 9.4.4 && ghcup set ghc 9.4.4
+RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.4.4 && ghcup set ghc 9.4.4
 
 RUN ghcup install cabal 3.10.1.0 && ghcup set cabal 3.10.1.0
 
-RUN --mount=type=cache,target=/root/.ghcup/tmp ghcup compile hls --git-ref 6640ebf33eeb8a62ccd094e2f47f69106acfd200 --ghc 9.4.4 -j8
+RUN ghcup compile hls --git-ref 6640ebf33eeb8a62ccd094e2f47f69106acfd200 --ghc 9.4.4 -j$(nproc)
 
 RUN ghcup gc
 
 FROM buildpack-deps:stable
+
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    #
+    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+    && apt-get update \
+    && apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# ********************************************************
+# * Anything else you want to do like clean up goes here *
+# ********************************************************
 
 # https://wiki.debian.org/SourcesList
 RUN echo 'deb-src http://deb.debian.org/debian bullseye main' >> /etc/apt/sources.list
@@ -27,24 +68,32 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get install -y --no-install-recommends \
   locales
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+
+# [Optional] Set the default user. Omit if you want to keep the default as root.
+USER $USERNAME
+
+ENV HOME=/home/$USERNAME
+
 ENV LANG en_US.UTF-8  
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8  
 
-RUN apt-get install -y --no-install-recommends \
+RUN sudo apt-get install -y --no-install-recommends \
   lsb-release wget software-properties-common gnupg cmake
 
-RUN wget https://apt.llvm.org/llvm.sh && \
-  chmod +x llvm.sh && \
-  ./llvm.sh 15
+WORKDIR $HOME/scripts
 
-RUN apt-get install -y --no-install-recommends \
+RUN wget https://apt.llvm.org/llvm.sh
+RUN chmod +x llvm.sh
+RUN sudo ./llvm.sh 15
+
+RUN sudo apt-get install -y --no-install-recommends \
   libgc-dev
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 
-COPY --from=ghcup-install /root/.ghcup/ /root/.ghcup/
-COPY --from=ghcup-install /root/.cabal/ /root/.cabal/
+COPY --from=ghcup-install $HOME/.ghcup/ $HOME/.ghcup/
+COPY --from=ghcup-install $HOME/.cabal/ $HOME/.cabal/
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
 
@@ -52,4 +101,4 @@ RUN chmod +x rustup.sh
 
 RUN ./rustup.sh -y
 
-ENV PATH=/root/.cargo/bin:/root/.cabal/bin:/root/.ghcup/bin:${PATH}
+ENV PATH=$HOME/.cargo/bin:$HOME/.cabal/bin:$HOME/.ghcup/bin:${PATH}
