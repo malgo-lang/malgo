@@ -3,7 +3,8 @@ packages: *.cabal
 with-compiler: ghc-9.4.4
 
 jobs: $ncpus
-package *
+
+package malgo
   -- '-j' option and RTS options are from: Keeping Compilation Fast https://www.parsonsmatt.org/2019/11/27/keeping_compilation_fast.html
   ghc-options:
     -j +RTS -A128m -n2m -RTS

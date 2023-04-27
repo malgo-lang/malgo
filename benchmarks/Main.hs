@@ -51,9 +51,9 @@ setupEnv = do
                 <> pkgConfig
                 <> [ outputDir </> "libs" </> "runtime.c",
                      llPath,
-                     outputDir </> "libs" </> "libgriff_rustlib.a",
-                     "-lpthread",
-                     "-ldl",
+                     -- outputDir </> "libs" </> "libgriff_rustlib.a",
+                     -- "-lpthread",
+                     -- "-ldl",
                      "-o",
                      llPath -<.> "out"
                    ]
@@ -110,10 +110,10 @@ setupPrelude = do
 
 setupRuntime :: IO ()
 setupRuntime = do
-  setCurrentDirectory "./griff"
-  runProcess_ $ proc "cargo" ["build", "--release"]
-  setCurrentDirectory "../"
-  copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
+  -- setCurrentDirectory "./griff"
+  -- runProcess_ $ proc "cargo" ["build", "--release"]
+  -- setCurrentDirectory "../"
+  -- copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'

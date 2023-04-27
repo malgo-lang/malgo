@@ -78,6 +78,8 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8  
 
+RUN sudo usermod --shell /bin/bash vscode
+
 RUN sudo apt-get install -y --no-install-recommends \
   lsb-release wget software-properties-common gnupg cmake
 
@@ -95,10 +97,4 @@ RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 COPY --from=ghcup-install $HOME/.ghcup/ $HOME/.ghcup/
 COPY --from=ghcup-install $HOME/.cabal/ $HOME/.cabal/
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
-
-RUN chmod +x rustup.sh
-
-RUN ./rustup.sh -y
-
-ENV PATH=$HOME/.cargo/bin:$HOME/.cabal/bin:$HOME/.ghcup/bin:${PATH}
+ENV PATH=$HOME/.cabal/bin:$HOME/.ghcup/bin:${PATH}

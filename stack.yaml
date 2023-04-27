@@ -1,4 +1,4 @@
-resolver: lts-20.18
+resolver: nightly-2023-04-24
 
 extra-deps:
 - git: https://github.com/llvm-hs/llvm-hs.git
@@ -14,5 +14,7 @@ flags:
   diagnose:
     megaparsec-compat: true
 
-# system-ghc: true
+ghc-options:
+  malgo: -j +RTS -A128m -n2m -RTS
 
+allow-newer: true

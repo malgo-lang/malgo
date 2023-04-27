@@ -16,33 +16,32 @@ import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
-import System.Directory (copyFile, listDirectory, setCurrentDirectory)
+import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.IO.Silently (hSilence)
-import System.Process.Typed (
-  ExitCode (ExitFailure, ExitSuccess),
-  byteStringInput,
-  nullStream,
-  proc,
-  readProcessStderr_,
-  readProcessStdout_,
-  runProcess,
-  runProcess_,
-  setStderr,
-  setStdin,
-  setStdout,
- )
-import Test.Hspec (
-  anyException,
-  describe,
-  example,
-  hspec,
-  it,
-  parallel,
-  runIO,
-  shouldThrow,
- )
+import System.Process.Typed
+  ( ExitCode (ExitFailure, ExitSuccess),
+    byteStringInput,
+    nullStream,
+    proc,
+    readProcessStderr_,
+    readProcessStdout_,
+    runProcess,
+    setStderr,
+    setStdin,
+    setStdout,
+  )
+import Test.Hspec
+  ( anyException,
+    describe,
+    example,
+    hspec,
+    it,
+    parallel,
+    runIO,
+    shouldThrow,
+  )
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
@@ -111,10 +110,10 @@ setupPrelude = do
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
 setupRuntime = do
-  setCurrentDirectory "./griff"
-  runProcess_ $ proc "cargo" ["build", "--release"]
-  setCurrentDirectory "../"
-  copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
+  -- setCurrentDirectory "./griff"
+  -- runProcess_ $ proc "cargo" ["build", "--release"]
+  -- setCurrentDirectory "../"
+  -- copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
