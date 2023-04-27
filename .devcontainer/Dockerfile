@@ -27,11 +27,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 ENV PATH=$HOME/.cabal/bin:$HOME/.ghcup/bin:${PATH}
 
-RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.4.4 && ghcup set ghc 9.4.4
+RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.6.1 && ghcup set ghc 9.6.1
 
 RUN ghcup install cabal 3.10.1.0 && ghcup set cabal 3.10.1.0
 
-RUN ghcup compile hls --git-ref 6640ebf33eeb8a62ccd094e2f47f69106acfd200 --ghc 9.4.4 -j$(nproc)
+RUN ghcup compile hls --git-ref 6640ebf33eeb8a62ccd094e2f47f69106acfd200 --ghc 9.6.1 -j$(nproc)
 
 RUN ghcup gc
 

@@ -31,9 +31,7 @@ where
 
 import Control.Lens (ASetter, over)
 import Control.Monad.Trans.Writer.CPS (WriterT, runWriterT)
-import Control.Monad.Trans.Writer.CPS qualified as W
 import Control.Monad.Writer.Class hiding (pass)
-import Control.Monad.Writer.Class qualified as Writer
 import Data.List (dropWhileEnd)
 import Data.Monoid
 import Data.Text.IO qualified as T
@@ -66,18 +64,6 @@ newtype PrettyShow a = PrettyShow a
 
 instance Show a => Pretty (PrettyShow a) where
   pPrint (PrettyShow a) = P.text $ show a
-
-instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
-  tell = W.tell
-  listen = W.listen
-  pass = W.pass
-
-instance MonadState s m => MonadState s (WriterT w m) where
-  state = lift . state
-
-instance (Monoid w, MonadReader r m) => MonadReader r (WriterT w m) where
-  reader = lift . reader
-  local = W.mapWriterT . local
 
 -- Lift IO funcitons
 
