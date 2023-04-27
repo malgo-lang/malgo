@@ -35,6 +35,8 @@ RUN ghcup compile hls --git-ref 6640ebf33eeb8a62ccd094e2f47f69106acfd200 --ghc 9
 
 RUN ghcup gc
 
+RUN cabal install fourmolu
+
 FROM buildpack-deps:stable
 
 ARG USERNAME=vscode

@@ -20,28 +20,28 @@ import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.IO.Silently (hSilence)
-import System.Process.Typed
-  ( ExitCode (ExitFailure, ExitSuccess),
-    byteStringInput,
-    nullStream,
-    proc,
-    readProcessStderr_,
-    readProcessStdout_,
-    runProcess,
-    setStderr,
-    setStdin,
-    setStdout,
-  )
-import Test.Hspec
-  ( anyException,
-    describe,
-    example,
-    hspec,
-    it,
-    parallel,
-    runIO,
-    shouldThrow,
-  )
+import System.Process.Typed (
+  ExitCode (ExitFailure, ExitSuccess),
+  byteStringInput,
+  nullStream,
+  proc,
+  readProcessStderr_,
+  readProcessStdout_,
+  runProcess,
+  setStderr,
+  setStdin,
+  setStdout,
+ )
+import Test.Hspec (
+  anyException,
+  describe,
+  example,
+  hspec,
+  it,
+  parallel,
+  runIO,
+  shouldThrow,
+ )
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
