@@ -83,8 +83,8 @@ main =
           testError (testcaseDir </> "error" </> errorcase) `shouldThrow` anyException
 
 #ifdef TEST_ALL
-    describe "Test malgo to-ll on all combinations of optimization options" $ parallel do
-      for_ testcases \testcase ->
+    describe "Test malgo to-ll on all combinations of optimization options" do
+      for_ testcases \testcase -> parallel $
         describe testcase do
           for_ optimizeOptions \option -> do
             it ("test " <> testcase <> " " <> show (showOptimizeOption option)) $ example do
