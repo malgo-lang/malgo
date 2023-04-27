@@ -1,11 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Infer.TcEnv
-  ( RecordTypeName,
-    TcEnv (..),
-    genTcEnv,
-  )
+module Malgo.Infer.TcEnv (
+  RecordTypeName,
+  TcEnv (..),
+  genTcEnv,
+)
 where
 
 import Control.Lens (At (at), makeFieldsNoPrefix, view, (^.))

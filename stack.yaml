@@ -1,8 +1,8 @@
-resolver: lts-20.18
+resolver: nightly-2023-04-24
 
 extra-deps:
-- git: https://github.com/MuKnIO/llvm-hs.git
-  commit: fe8fd556e8d2cc028f61d4d7b4b6bf18c456d090
+- git: https://github.com/llvm-hs/llvm-hs.git
+  commit: 80e0de0f96eb78288c88fda0eaba0f7cf5d38a30
   subdirs:
   - llvm-hs
   - llvm-hs-pure
@@ -14,5 +14,7 @@ flags:
   diagnose:
     megaparsec-compat: true
 
-# system-ghc: true
+ghc-options:
+  malgo: -j +RTS -A128m -n2m -RTS
 
+allow-newer: true

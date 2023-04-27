@@ -11,15 +11,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        ghc: ["9.2.7"]
+        ghc: ["9.4.4"]
         os: [ubuntu-latest]
-      # fail-fast: true
 
     steps:
       - name: Install packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgc-dev llvm-12-dev
+          sudo apt-get install -y libgc-dev
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 15
       - uses: actions/checkout@v2
       - name: Cache .cabal
         uses: actions/cache@v3
@@ -34,9 +36,16 @@ jobs:
         with:
           ghc-version:
             ${{ matrix.ghc }}
-            # enable-stack: true
-            # stack-version: 'latest'
-          cabal-version: "3.6.2.0"
+          cabal-version: "3.10.1.0"
+      - name: Install dependencies
+        run: |
+          cabal build --only-dependencies
+      - name: Install fourmolu
+        run: |
+          cabal install fourmolu-0.12.0.0 --ignore-project
+      - name: Check formatting
+        run: |
+          fourmolu --mode check $(find src app benchmarks test -name '*.hs')
       - name: GHC ${{matrix.ghc}} Build
         run: |
           cabal build

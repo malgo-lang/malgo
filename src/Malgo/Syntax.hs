@@ -1,40 +1,40 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Syntax
-  ( Literal (..),
-    Type (..),
-    Expr (..),
-    Stmt (..),
-    Clause (..),
-    Pat (..),
-    _VarP,
-    _ConP,
-    _TupleP,
-    _RecordP,
-    _ListP,
-    _UnboxedP,
-    _BoxedP,
-    Decl (..),
-    ParsedDefinitions (..),
-    BindGroup (..),
-    ScDef,
-    ScSig,
-    DataDef,
-    TypeSynonym,
-    Foreign,
-    Import,
-    scDefs,
-    scSigs,
-    dataDefs,
-    typeSynonyms,
-    foreigns,
-    imports,
-    Module (..),
-    toUnboxed,
-    getTyVars,
-    makeBindGroup,
-  )
+module Malgo.Syntax (
+  Literal (..),
+  Type (..),
+  Expr (..),
+  Stmt (..),
+  Clause (..),
+  Pat (..),
+  _VarP,
+  _ConP,
+  _TupleP,
+  _RecordP,
+  _ListP,
+  _UnboxedP,
+  _BoxedP,
+  Decl (..),
+  ParsedDefinitions (..),
+  BindGroup (..),
+  ScDef,
+  ScSig,
+  DataDef,
+  TypeSynonym,
+  Foreign,
+  Import,
+  scDefs,
+  scSigs,
+  dataDefs,
+  typeSynonyms,
+  foreigns,
+  imports,
+  Module (..),
+  toUnboxed,
+  getTyVars,
+  makeBindGroup,
+)
 where
 
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
@@ -87,7 +87,7 @@ deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
 
 deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
 
-instance (Pretty (XId x)) => Pretty (Type x) where
+instance Pretty (XId x) => Pretty (Type x) where
   pPrintPrec l d (TyApp _ t ts) =
     maybeParens (d > 11) $ pPrint t <+> sep (map (pPrintPrec l 12) ts)
   pPrintPrec _ _ (TyVar _ i) = pPrint i
@@ -137,7 +137,7 @@ deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, F
 
 deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Expr x)
 
-instance (Pretty (XId x)) => Pretty (Expr x) where
+instance Pretty (XId x) => Pretty (Expr x) where
   pPrintPrec _ _ (Var _ i) = pPrint i
   pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
   pPrintPrec _ _ (Boxed _ lit) = pPrint lit
@@ -293,7 +293,7 @@ deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Sho
 instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x, ForallStmtX Ord x, ForallTypeX Ord x) => Ord (Clause x) where
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
-instance (Pretty (XId x)) => Pretty (Clause x) where
+instance Pretty (XId x) => Pretty (Clause x) where
   pPrintPrec _ _ (Clause _ [] e) = pPrint e
   pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", pPrint e]
 
@@ -322,7 +322,7 @@ deriving stock instance (ForallPatX Show x, Show (XId x)) => Show (Pat x)
 
 deriving stock instance (ForallPatX Ord x, Ord (XId x)) => Ord (Pat x)
 
-instance (Pretty (XId x)) => Pretty (Pat x) where
+instance Pretty (XId x) => Pretty (Pat x) where
   pPrintPrec _ _ (VarP _ i) = pPrint i
   pPrintPrec _ _ (ConP _ i []) = pPrint i
   pPrintPrec l d (ConP _ i ps) =
@@ -410,7 +410,7 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (Decl x)
 
-instance (Pretty (XId x)) => Pretty (Decl x) where
+instance Pretty (XId x) => Pretty (Decl x) where
   pPrint (ScDef _ f e) = sep [pPrint f <+> "=", nest 2 $ pPrint e]
   pPrint (ScSig _ f t) = pPrint f <+> ":" <+> pPrint t
   pPrint (DataDef _ d xs cs) =
@@ -488,7 +488,7 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (BindGroup x)
 
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
 
-instance (Pretty (XId x)) => Pretty (BindGroup x) where
+instance Pretty (XId x) => Pretty (BindGroup x) where
   pPrint BindGroup {..} =
     sep $
       punctuate ";" $

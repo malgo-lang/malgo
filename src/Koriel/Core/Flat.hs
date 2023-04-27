@@ -1,8 +1,8 @@
-module Koriel.Core.Flat
-  ( flat,
-    runFlat,
-    flatExpr,
-  )
+module Koriel.Core.Flat (
+  flat,
+  runFlat,
+  flatExpr,
+)
 where
 
 import Control.Lens (has, traverseOf, traversed, _2)

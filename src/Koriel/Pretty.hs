@@ -2,11 +2,11 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Koriel.Pretty
-  ( module Text.PrettyPrint.HughesPJClass,
-    (<+>),
-    errorDoc,
-  )
+module Koriel.Pretty (
+  module Text.PrettyPrint.HughesPJClass,
+  (<+>),
+  errorDoc,
+)
 where
 
 import Data.String.Conversions (convertString)

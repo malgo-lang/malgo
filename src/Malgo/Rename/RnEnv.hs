@@ -2,17 +2,17 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
-module Malgo.Rename.RnEnv
-  ( Resolved,
-    RnEnv (..),
-    appendRnEnv,
-    genBuiltinRnEnv,
-    resolveName,
-    resolveGlobalName,
-    lookupVarName,
-    lookupTypeName,
-    lookupQualifiedVarName,
-  )
+module Malgo.Rename.RnEnv (
+  Resolved,
+  RnEnv (..),
+  appendRnEnv,
+  genBuiltinRnEnv,
+  resolveName,
+  resolveGlobalName,
+  lookupVarName,
+  lookupTypeName,
+  lookupQualifiedVarName,
+)
 where
 
 import Control.Lens (ASetter', At (at), makeFieldsNoPrefix, over, view, (^.))
@@ -87,7 +87,7 @@ resolveName :: (MonadReader RnEnv m, MonadIO m) => Text -> m RnId
 resolveName name = newInternalId name ()
 
 -- | Resolving a new global (toplevel) name
-resolveGlobalName :: (MonadReader RnEnv f) => Text -> f (Id ())
+resolveGlobalName :: MonadReader RnEnv f => Text -> f (Id ())
 resolveGlobalName name = newExternalId name ()
 
 -- | Resolving a variable name that is already resolved

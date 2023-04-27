@@ -1,10 +1,10 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Optimize
-  ( optimizeProgram,
-    OptimizeOption (..),
-    defaultOptimizeOption,
-  )
+module Koriel.Core.Optimize (
+  optimizeProgram,
+  OptimizeOption (..),
+  defaultOptimizeOption,
+)
 where
 
 import Control.Lens (At (at), makeFieldsNoPrefix, transformM, view)

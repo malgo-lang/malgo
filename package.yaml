@@ -36,7 +36,7 @@ dependencies:
   - transformers
   - unordered-containers
   - witherable
-  - diagnose
+  - diagnose >= 2.4
   - generic-data
   - syb
   - unliftio
@@ -55,8 +55,8 @@ ghc-options:
   - -Wmissing-export-lists
 
   - -optP-Wno-nonportable-include-path
-  - -j
-  - +RTS -A128m -n2m -qg -RTS
+  # - -j4
+  # - +RTS -A128m -n2m -RTS
 
 language: GHC2021
 
