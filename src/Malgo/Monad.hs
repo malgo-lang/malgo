@@ -12,7 +12,7 @@ import Koriel.MonadUniq (UniqSupply (..))
 import Koriel.Prelude
 import Malgo.Interface (Interface)
 import Malgo.Lsp.Index (Index)
-import System.Directory (XdgDirectory (XdgData), getCurrentDirectory, getXdgDirectory)
+import System.Directory (XdgDirectory (XdgData), createDirectoryIfMissing, getCurrentDirectory, getXdgDirectory)
 import System.FilePath (takeBaseName, takeExtension, (</>))
 
 data MalgoEnv = MalgoEnv
@@ -34,9 +34,13 @@ data CompileMode = LLVM deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
 
+-- | Get workspace directory.
+-- If directory does not exist, create it.
 getWorkspaceDir :: IO FilePath
 getWorkspaceDir = do
   pwd <- getCurrentDirectory
+  createDirectoryIfMissing True $ pwd </> ".malgo-work"
+  createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "build"
   return $ pwd </> ".malgo-work"
 
 newMalgoEnv ::

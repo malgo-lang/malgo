@@ -7,10 +7,7 @@ module Koriel.Core.Optimize (
 )
 where
 
-import Control.Lens (At (at), makeFieldsNoPrefix, transformM, view)
-import Control.Monad.Except
-import Data.Data (Data)
-import Data.Generics (gsize)
+import Control.Lens (At (at), lengthOf, makeFieldsNoPrefix, transformM, view)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
@@ -76,9 +73,9 @@ optimizeProgram ::
   Program (Id Type) ->
   m (Program (Id Type))
 optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
-  state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
-  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
-  topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
+  state <- {-# SCC setup_inline #-} execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+  topVars <- {-# SCC topVars_optimize #-} traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
+  topFuns <- {-# SCC topFuns_optimize #-} traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
@@ -102,53 +99,14 @@ optimizeExpr state expr = do
         then f
         else pure
 
--- | (let ((f (fun ps body))) (f as)) = body[as/ps]
-foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
-foldTrivialCall = transformM \case
-  Let [LocalDef f _ (Fun ps body)] (Call (Var f') as) | f == f' -> do
-    uniqSupply <- asks (.uniqSupply)
-    alpha body AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps as}
-  x -> pure x
-
-newtype CallInlineEnv = CallInlineEnv
-  { inlinableMap :: HashMap (Id Type) ([Id Type], Expr (Id Type))
-  }
-
--- | Inline a function call.
-inlineFunction :: (MonadState CallInlineEnv f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
-inlineFunction =
-  transformM \case
-    Call (Var f) xs -> lookupCallInline (Call . Var) f xs
-    CallDirect f xs -> lookupCallInline CallDirect f xs
-    Let ds e -> do
-      traverse_ checkInlinable ds
-      pure $ Let ds e
+-- | Remove variable binding if that variable is an alias of another variable.
+foldVariable :: (Eq a, Monad f) => Expr a -> f (Expr a)
+foldVariable = transformM
+  \case
+    Match (Atom a) [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
+    Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
     x -> pure x
-
-checkInlinable :: (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) => LocalDef (Id Type) -> m ()
-checkInlinable (LocalDef f _ (Fun ps v)) = do
-  threshold <- asks (.option.inlineThreshold)
-  -- ノードの数がthreshold以下ならインライン展開する
-  -- v <- inlineFunction v
-  let isInlinable = threshold >= gsize v
-  when isInlinable $ do
-    modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
-checkInlinable _ = pass
-
--- | Lookup a function in the inlinable map.
-lookupCallInline ::
-  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) =>
-  (Id Type -> [Atom (Id Type)] -> Expr (Id Type)) ->
-  Id Type ->
-  [Atom (Id Type)] ->
-  m (Expr (Id Type))
-lookupCallInline call f as = do
-  f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
-  case f' of
-    Just (ps, v) ->
-      -- v[as/ps]
-      pure $ foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
-    Nothing -> pure $ call f as
+{-# SCC foldVariable #-}
 
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
@@ -172,18 +130,11 @@ inlineConstructor =
     toPackInlineMap _ = mempty
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
-
--- | Remove variable binding if that variable is an alias of another variable.
-foldVariable :: (Eq a, Monad f, Data a) => Expr a -> f (Expr a)
-foldVariable = transformM
-  \case
-    Match (Atom a) [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
-    Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
-    x -> pure x
+{-# SCC inlineConstructor #-}
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
-eliminateUnusedLet :: (Monad f, Hashable a, Data a) => Expr (Id a) -> f (Expr (Id a))
+eliminateUnusedLet :: (Monad f, Hashable a) => Expr (Id a) -> f (Expr (Id a))
 eliminateUnusedLet =
   transformM \case
     Let ds e -> do
@@ -202,15 +153,70 @@ eliminateUnusedLet =
           -- Add gamma[fv] to fvs
           let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
            in fvs /= fvs' && reachable limit gamma v fvs'
+{-# SCC eliminateUnusedLet #-}
+
+newtype CallInlineEnv = CallInlineEnv
+  { inlinableMap :: HashMap (Id Type) ([Id Type], Expr (Id Type))
+  }
+
+-- | Inline a function call.
+inlineFunction :: (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) => Expr (Id Type) -> f (Expr (Id Type))
+inlineFunction =
+  transformM \case
+    Call (Var f) xs -> lookupCallInline (Call . Var) f xs
+    CallDirect f xs -> lookupCallInline CallDirect f xs
+    Let ds e -> do
+      traverse_ checkInlinable ds
+      pure $ Let ds e
+    x -> pure x
+{-# SCC inlineFunction #-}
+
+checkInlinable :: (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) => LocalDef (Id Type) -> m ()
+checkInlinable (LocalDef f _ (Fun ps v)) = do
+  threshold <- asks (.option.inlineThreshold)
+  -- atomの数がthreshold以下ならインライン展開する
+  let isInlinable = threshold >= lengthOf atom v && not (f `member` freevars v)
+  when isInlinable $ do
+    modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
+checkInlinable _ = pass
+
+-- | Lookup a function in the inlinable map.
+lookupCallInline ::
+  (MonadReader OptimizeEnv m, MonadState CallInlineEnv m, MonadIO m) =>
+  (Id Type -> [Atom (Id Type)] -> Expr (Id Type)) ->
+  Id Type ->
+  [Atom (Id Type)] ->
+  m (Expr (Id Type))
+lookupCallInline call f as = do
+  f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
+  case f' of
+    Just (ps, v) -> do
+      -- v[as/ps]
+      -- Test failed in Lint : pure $ foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
+      -- use Alpha.alpha
+      uniqSupply <- asks (.uniqSupply)
+      let subst = HashMap.fromList $ zip ps as
+      alpha v (AlphaEnv {uniqSupply, subst})
+    Nothing -> pure $ call f as
 
 -- | Remove a cast if it is redundant.
-foldRedundantCast :: (HasType a, Data a, Monad f) => Expr a -> f (Expr a)
+foldRedundantCast :: (HasType a, Monad f) => Expr a -> f (Expr a)
 foldRedundantCast =
   transformM \case
     Cast t e
       | typeOf e == t -> pure (Atom e)
       | otherwise -> pure (Cast t e)
     e -> pure e
+{-# SCC foldRedundantCast #-}
+
+-- | (let ((f (fun ps body))) (f as)) = body[as/ps]
+foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
+foldTrivialCall = transformM \case
+  Let [LocalDef f _ (Fun ps body)] (Call (Var f') as) | f == f' -> do
+    uniqSupply <- asks (.uniqSupply)
+    alpha body AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps as}
+  x -> pure x
+{-# SCC foldTrivialCall #-}
 
 -- | Specialize a function which is casted to a specific type.
 -- TODO: ベンチマーク
@@ -232,3 +238,4 @@ specializeFunction =
         | otherwise -> error "specializeFunction: invalid cast"
       _ -> pure (Cast (pts' :-> rt') f)
     e -> pure e
+{-# SCC specializeFunction #-}
