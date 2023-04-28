@@ -73,9 +73,9 @@ optimizeProgram ::
   Program (Id Type) ->
   m (Program (Id Type))
 optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
-  state <- {-# SCC setup_inline #-} execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
-  topVars <- {-# SCC topVars_optimize #-} traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
-  topFuns <- {-# SCC topFuns_optimize #-} traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
+  state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
+  topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
@@ -106,7 +106,6 @@ foldVariable = transformM
     Match (Atom a) [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
     Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
     x -> pure x
-{-# SCC foldVariable #-}
 
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
@@ -130,7 +129,6 @@ inlineConstructor =
     toPackInlineMap _ = mempty
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
-{-# SCC inlineConstructor #-}
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
@@ -153,7 +151,6 @@ eliminateUnusedLet =
           -- Add gamma[fv] to fvs
           let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
            in fvs /= fvs' && reachable limit gamma v fvs'
-{-# SCC eliminateUnusedLet #-}
 
 newtype CallInlineEnv = CallInlineEnv
   { inlinableMap :: HashMap (Id Type) ([Id Type], Expr (Id Type))
@@ -169,7 +166,6 @@ inlineFunction =
       traverse_ checkInlinable ds
       pure $ Let ds e
     x -> pure x
-{-# SCC inlineFunction #-}
 
 checkInlinable :: (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) => LocalDef (Id Type) -> m ()
 checkInlinable (LocalDef f _ (Fun ps v)) = do
@@ -207,7 +203,6 @@ foldRedundantCast =
       | typeOf e == t -> pure (Atom e)
       | otherwise -> pure (Cast t e)
     e -> pure e
-{-# SCC foldRedundantCast #-}
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
 foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
@@ -216,7 +211,6 @@ foldTrivialCall = transformM \case
     uniqSupply <- asks (.uniqSupply)
     alpha body AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps as}
   x -> pure x
-{-# SCC foldTrivialCall #-}
 
 -- | Specialize a function which is casted to a specific type.
 -- TODO: ベンチマーク
@@ -238,4 +232,3 @@ specializeFunction =
         | otherwise -> error "specializeFunction: invalid cast"
       _ -> pure (Cast (pts' :-> rt') f)
     e -> pure e
-{-# SCC specializeFunction #-}

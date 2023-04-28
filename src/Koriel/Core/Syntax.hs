@@ -401,6 +401,7 @@ instance Plated (Expr a) where
   plate f (DestructRecord v kvs e) = DestructRecord v kvs <$> f e
   plate f (Assign x v e) = Assign x <$> f v <*> f e
   plate _ e@Error {} = pure e
+  {-# INLINE plate #-}
 
 -- | toplevel function definitions
 data Program a = Program
