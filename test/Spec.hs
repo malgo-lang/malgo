@@ -180,9 +180,9 @@ test testcase postfix lambdaLift noOptimize option = do
       ( proc
           clang
           $ [ "-Wno-override-module",
-              "-lm",
-              "-Xclang",
-              "-opaque-pointers"
+              "-lm"
+              -- "-Xclang",
+              -- "-opaque-pointers"
             ]
             <> pkgConfig
             <> [ outputDir </> "libs" </> "runtime.c",
