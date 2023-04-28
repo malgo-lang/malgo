@@ -29,7 +29,7 @@ module Koriel.Core.Syntax (
 )
 where
 
-import Control.Lens (Lens', Plated, Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
+import Control.Lens (Lens', Plated (..), Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Char (showLitChar)
@@ -385,7 +385,23 @@ class HasExpr f where
 instance HasExpr Expr where
   expr = identity
 
-instance Data a => Plated (Expr a)
+instance Plated (Expr a) where
+  plate :: Traversal' (Expr a) (Expr a)
+  plate _ e@Atom {} = pure e
+  plate _ e@Call {} = pure e
+  plate _ e@CallDirect {} = pure e
+  plate _ e@RawCall {} = pure e
+  plate _ e@BinOp {} = pure e
+  plate _ e@Cast {} = pure e
+  plate f (Let xs e) = Let <$> (traverseOf (traversed . expr) f xs) <*> f e
+  plate f (Match e cs) = Match <$> f e <*> (traverseOf (traversed . expr) f cs)
+  plate f (Switch v cs e) = Switch v <$> (traverseOf (traversed . _2) f cs) <*> f e
+  plate f (SwitchUnboxed v cs e) = SwitchUnboxed v <$> (traverseOf (traversed . _2) f cs) <*> f e
+  plate f (Destruct v con xs e) = Destruct v con xs <$> f e
+  plate f (DestructRecord v kvs e) = DestructRecord v kvs <$> f e
+  plate f (Assign x v e) = Assign x <$> f v <*> f e
+  plate _ e@Error {} = pure e
+  {-# INLINE plate #-}
 
 -- | toplevel function definitions
 data Program a = Program
@@ -432,7 +448,7 @@ instance HasExpr Program where
       <*> pure extFuns
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Expr (Id Type))) m a}
-  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadTrans, MonadState s, MonadReader r)
+  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadState s, MonadReader r)
 
 runDef :: Functor f => DefBuilderT f (Expr (Id Type)) -> f (Expr (Id Type))
 runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)

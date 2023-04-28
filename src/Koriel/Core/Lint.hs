@@ -1,7 +1,6 @@
 module Koriel.Core.Lint (lint) where
 
 import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
-import Control.Monad.Except
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Core.Op
 import Koriel.Core.Syntax
@@ -58,10 +57,6 @@ lintExpr (CallDirect f xs) = do
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
     _ -> errorDoc $ pPrint f <+> "is not callable"
--- lintExpr (ExtCall _ (ps :-> _) xs) = do
---   traverse_ lintAtom xs
---   zipWithM_ match ps xs
--- lintExpr ExtCall {} = error "primitive must be a function"
 lintExpr (RawCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
