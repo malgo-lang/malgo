@@ -3,6 +3,7 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception (assert)
 import Data.Binary qualified as Binary
+import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
@@ -11,8 +12,9 @@ import Koriel.Core.Flat (flat)
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
-import Koriel.Id (ModuleName (..))
+import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), ModuleName (..))
 import Koriel.Pretty
+import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (buildInterface, loadInterface, toInterfacePath)
@@ -110,7 +112,15 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
 
       case env.compileMode of
         LLVM -> do
-          codeGen srcPath env moduleName dsEnv coreLL
+          codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLL
+    -- エントリーポイントとなるmain関数を検索する
+    searchMain :: [(Id a, Id b)] -> Maybe (Id b)
+    searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
+      | griffId.name == "main"
+          && griffId.moduleName == moduleName =
+          Just coreId
+    searchMain (_ : xs) = searchMain xs
+    searchMain _ = Nothing
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
@@ -125,4 +135,4 @@ compile srcPath env = do
   when env.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
-  compileFromAST srcPath env {moduleName = parsedAst._moduleName} parsedAst
+  compileFromAST srcPath env {Malgo.Monad.moduleName = parsedAst._moduleName} parsedAst

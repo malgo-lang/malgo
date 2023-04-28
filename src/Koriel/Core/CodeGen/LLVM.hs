@@ -48,8 +48,6 @@ import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
-import Malgo.Desugar.DsState (DsState (..), HasNameEnv (nameEnv))
-import Malgo.Monad (MalgoEnv (..))
 import Relude.Unsafe qualified as Unsafe
 
 -- | 'PrimMap' is a map from primitive function name to its LLVM function.
@@ -69,10 +67,10 @@ data CodeGenEnv = CodeGenEnv
 
 makeFieldsNoPrefix ''CodeGenEnv
 
-newCodeGenEnv :: HasUniqSupply r => r -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
-newCodeGenEnv malgoEnv moduleName Program {..} =
+newCodeGenEnv :: UniqSupply -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
+newCodeGenEnv uniqSupply moduleName Program {..} =
   CodeGenEnv
-    { uniqSupply = malgoEnv.uniqSupply,
+    { uniqSupply = uniqSupply,
       _valueMap = mempty,
       _globalValueMap = varMap,
       _funcMap = funcMap,
@@ -103,17 +101,19 @@ codeGen ::
   (MonadFix m, MonadFail m, MonadIO m) =>
   -- | Source file path
   FilePath ->
-  -- | Malgo environment
-  MalgoEnv ->
+  -- | Destination file path
+  FilePath ->
+  -- | Unique supply
+  UniqSupply ->
   -- | Module name of the source program
   ModuleName ->
-  -- | Collected information from the desugarer
-  DsState ->
+  -- | Entry point of the source program
+  Maybe (Id C.Type) ->
   -- | Source program
   Program (Id C.Type) ->
   m ()
-codeGen srcPath malgoEnv modName dsState Program {..} = do
-  llvmir <- runCodeGenT (newCodeGenEnv malgoEnv modName Program {..}) do
+codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
+  llvmir <- runCodeGenT (newCodeGenEnv uniqSupply modName Program {..}) do
     _ <- typedef (mkName "struct.bucket") Nothing -- (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") Nothing -- (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
@@ -124,13 +124,13 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
         _ -> error "invalid type"
     traverse_ (\(n, _, e) -> genVar n e) topVars
     traverse_ (\(f, ps, _, body) -> genFunc f ps body) topFuns
-    case searchMain (HashMap.toList $ view nameEnv dsState) of
-      Just mainCall -> do
+    case mentry of
+      Just entry -> do
         (f, (ps, body)) <-
           mainFunc =<< runDef do
             let unitCon = C.Con C.Tuple []
             unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
-            _ <- bind $ mainCall [unit]
+            _ <- bind $ CallDirect entry [unit]
             pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
@@ -141,7 +141,7 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
             moduleSourceFileName = fromString srcPath,
             moduleDefinitions = llvmir
           }
-  liftIO $ withContext $ \ctx -> writeFileBS malgoEnv.dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     initTopVars [] = retVoid
     initTopVars ((name, _, expr) : xs) =
@@ -152,14 +152,6 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
           -- eOpr <- bitcast eOpr (convType (C.typeOf name))
           store name' 0 eOpr
           initTopVars xs
-    -- エントリーポイントとなるmain関数を検索する
-    searchMain :: [(Id a, Id b)] -> Maybe ([Atom (Id b)] -> Expr (Id b))
-    searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
-      | griffId.name == "main"
-          && griffId.moduleName == modName =
-          Just $ CallDirect coreId
-    searchMain (_ : xs) = searchMain xs
-    searchMain _ = Nothing
     -- Generate main function.
     mainFunc e = do
       -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
