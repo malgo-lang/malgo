@@ -91,6 +91,12 @@ main =
               test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option
 #endif
 
+    describe "Print LLVM assembly" do
+      testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
+      for_ testcases \testcase -> do
+        it ("test " <> testcase) $ example do
+          test (testcaseDir </> testcase) "print" False True defaultOptimizeOption PrintLLVM
+
 setupTestDir :: IO ()
 setupTestDir = do
   -- create /tmp/malgo-test
@@ -100,12 +106,12 @@ setupTestDir = do
 -- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
 setupBuiltin :: IO ()
 setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False defaultOptimizeOption
+  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
 
 -- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
 setupPrelude :: IO ()
 setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False defaultOptimizeOption
+  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
@@ -117,8 +123,8 @@ setupRuntime = do
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
-compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> IO ()
-compile src dst modPaths lambdaLift noOptimize option =
+compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
+compile src dst modPaths lambdaLift noOptimize option compileMode =
   hSilence [stderr] do
     malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
     malgoEnv <-
@@ -128,6 +134,7 @@ compile src dst modPaths lambdaLift noOptimize option =
             _modulePaths = [takeDirectory dst, outputDir </> "libs"],
             lambdaLift,
             noOptimize,
+            compileMode,
             optimizeOption = option
           }
     Driver.compile src malgoEnv
@@ -158,7 +165,7 @@ getClangCommand =
 test ::
   -- | File path of the test case
   FilePath ->
-  -- | Postfix of the output file
+  -- | Type of the test case
   String ->
   -- | Whether to perform lambda-lifting
   Bool ->
@@ -166,12 +173,14 @@ test ::
   Bool ->
   -- | Optimization option
   OptimizeOption ->
+  -- | Compile mode
+  CompileMode ->
   IO ()
-test testcase postfix lambdaLift noOptimize option = do
-  createDirectoryIfMissing True (outputDir </> postfix)
-  let llPath = outputDir </> postfix </> takeBaseName testcase -<.> ".ll"
+test testcase typ lambdaLift noOptimize option compileMode = do
+  createDirectoryIfMissing True (outputDir </> typ)
+  let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
   timeoutWrapper "compile" $
-    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option
+    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
@@ -186,12 +195,12 @@ test testcase postfix lambdaLift noOptimize option = do
             ]
             <> pkgConfig
             <> [ outputDir </> "libs" </> "runtime.c",
-                 outputDir </> postfix </> takeBaseName testcase -<.> ".ll",
+                 outputDir </> typ </> takeBaseName testcase -<.> ".ll",
                  -- outputDir </> "libs" </> "libgriff_rustlib.a",
                  -- "-lpthread",
                  -- "-ldl",
                  "-o",
-                 outputDir </> postfix </> takeBaseName testcase -<.> ".out"
+                 outputDir </> typ </> takeBaseName testcase -<.> ".out"
                ]
       )
   hPutStr stderr $ convertString err
@@ -199,7 +208,7 @@ test testcase postfix lambdaLift noOptimize option = do
     timeoutWrapper "run" $
       decodeUtf8
         <$> readProcessStdout_
-          ( proc (outputDir </> postfix </> takeBaseName testcase -<.> ".out") []
+          ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
               & setStdin (byteStringInput "Hello")
           )
   expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
@@ -217,19 +226,19 @@ test testcase postfix lambdaLift noOptimize option = do
 
 testError :: FilePath -> IO ()
 testError testcase = do
-  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption
+  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
 
 testNormal :: FilePath -> IO ()
-testNormal testcase = test testcase "" True False defaultOptimizeOption
+testNormal testcase = test testcase "normal" True False defaultOptimizeOption LLVM
 
 testNoLift :: FilePath -> IO ()
-testNoLift testcase = test testcase "nolift" False False defaultOptimizeOption
+testNoLift testcase = test testcase "nolift" False False defaultOptimizeOption LLVM
 
 testNoOpt :: FilePath -> IO ()
-testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption
+testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption LLVM
 
 testNoNo :: FilePath -> IO ()
-testNoNo testcase = test testcase "nono" False True defaultOptimizeOption
+testNoNo testcase = test testcase "nono" False True defaultOptimizeOption LLVM
 
 #ifdef TEST_ALL
 showOptimizeOption :: OptimizeOption -> [Text]

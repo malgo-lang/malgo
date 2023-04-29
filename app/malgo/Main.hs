@@ -83,7 +83,11 @@ toLLOpt =
             <> help
               "Write LLVM IR to OUTPUT"
         )
-      <*> pure LLVM
+      <*> ( strOption (long "compile-mode" <> short 'c' <> metavar "COMPILE_MODE" <> value "llvm") <&> \case
+              ("llvm" :: String) -> LLVM
+              "print-llvm" -> PrintLLVM
+              _ -> error "Invalid compile mode"
+          )
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
       <*> ( OptimizeOption
