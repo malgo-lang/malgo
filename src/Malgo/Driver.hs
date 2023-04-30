@@ -115,7 +115,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         LLVM -> do
           codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLL
         PrintLLVM -> do
-          PrintLLVM.codeGen coreLL
+          liftIO $ PrintLLVM.codeGen srcPath env.dstPath moduleName coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id a, Id b)] -> Maybe (Id b)
     searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
