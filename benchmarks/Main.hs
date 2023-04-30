@@ -51,9 +51,6 @@ setupEnv = do
                 <> pkgConfig
                 <> [ outputDir </> "libs" </> "runtime.c",
                      llPath,
-                     -- outputDir </> "libs" </> "libgriff_rustlib.a",
-                     -- "-lpthread",
-                     -- "-ldl",
                      "-o",
                      llPath -<.> "out"
                    ]

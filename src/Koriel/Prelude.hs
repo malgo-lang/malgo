@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
@@ -30,7 +31,7 @@ module Koriel.Prelude (
 where
 
 import Control.Lens (ASetter, over)
-import Control.Monad.Trans.Writer.CPS (WriterT, runWriterT)
+import Control.Monad.Trans.Writer.CPS (WriterT, runWriterT, writerT)
 import Control.Monad.Writer.Class hiding (pass)
 import Data.List (dropWhileEnd)
 import Data.Monoid
@@ -40,6 +41,12 @@ import Relude hiding (All, Op, Type, id, unzip)
 import System.IO qualified
 import Text.PrettyPrint.HughesPJClass (Pretty (pPrint))
 import Text.PrettyPrint.HughesPJClass qualified as P
+#if defined(__GLASGOW_HASKELL__)
+#if __GLASGOW_HASKELL__ <= 904
+import Control.Monad.Trans.Writer.CPS qualified as CPS
+import Control.Monad.Writer.Class qualified as Writer
+#endif
+#endif
 
 -- | Generalization of 'Data.List.unzip' :: [(a, b)] -> ([a], [b])
 unzip :: Functor f => f (a, b) -> (f a, f b)
@@ -89,3 +96,21 @@ hPutTextLn handle x = liftIO $ T.hPutStrLn handle x
 
 instance HasHints Void Text where
   hints = const []
+
+#if defined(__GLASGOW_HASKELL__)
+#if __GLASGOW_HASKELL__ <= 904
+instance MonadState s m => MonadState s (WriterT w m) where
+  get = lift get
+  put = lift . put
+  state = lift . state
+
+instance (Monoid w, MonadReader r m) => MonadReader r (WriterT w m) where
+  ask = lift ask
+  local f = writerT . local f . runWriterT
+
+instance (Monoid w, Monad m) => MonadWriter w (WriterT w m) where
+  tell = CPS.tell
+  listen = CPS.listen
+  pass = CPS.pass
+#endif
+#endif

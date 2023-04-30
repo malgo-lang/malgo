@@ -25,12 +25,11 @@ import System.Process.Typed (
   byteStringInput,
   nullStream,
   proc,
-  readProcessStderr_,
   readProcessStdout_,
   runProcess,
   setStderr,
   setStdin,
-  setStdout,
+  setStdout, readProcessStdout, readProcessStderr,
  )
 import Test.Hspec (
   anyException,
@@ -92,8 +91,7 @@ main =
 #endif
 
     describe "Print LLVM assembly" do
-      testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
-      for_ testcases \testcase -> do
+      parallel $ for_ testcases \testcase -> do
         it ("test " <> testcase) $ example do
           test (testcaseDir </> testcase) "print" False True defaultOptimizeOption PrintLLVM
 
@@ -116,10 +114,6 @@ setupPrelude = do
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
 setupRuntime = do
-  -- setCurrentDirectory "./griff"
-  -- runProcess_ $ proc "cargo" ["build", "--release"]
-  -- setCurrentDirectory "../"
-  -- copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
@@ -184,33 +178,34 @@ test testcase typ lambdaLift noOptimize option compileMode = do
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- getClangCommand
-  err <-
-    readProcessStderr_
+  (exitCode, err) <-
+    readProcessStderr
       ( proc
           clang
           $ [ "-Wno-override-module",
               "-lm"
-              -- "-Xclang",
-              -- "-opaque-pointers"
             ]
             <> pkgConfig
             <> [ outputDir </> "libs" </> "runtime.c",
                  outputDir </> typ </> takeBaseName testcase -<.> ".ll",
-                 -- outputDir </> "libs" </> "libgriff_rustlib.a",
-                 -- "-lpthread",
-                 -- "-ldl",
                  "-o",
                  outputDir </> typ </> takeBaseName testcase -<.> ".out"
                ]
       )
   hPutStr stderr $ convertString err
-  result <-
+  when (exitCode /= ExitSuccess) do
+    Text.hPutStrLn stderr $ "Exit code: " <> show exitCode
+    exitFailure
+  (exitCode, result) <-
     timeoutWrapper "run" $
-      decodeUtf8
-        <$> readProcessStdout_
+      second decodeUtf8
+        <$> readProcessStdout
           ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
               & setStdin (byteStringInput "Hello")
           )
+  when (exitCode /= ExitSuccess) do
+    Text.hPutStrLn stderr $ "Exit code: " <> show exitCode
+    exitFailure
   expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
   if map ("-- Expected: " <>) (lines $ Text.stripEnd result) == expected
     then pass
