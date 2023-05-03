@@ -25,11 +25,13 @@ import System.Process.Typed (
   byteStringInput,
   nullStream,
   proc,
+  readProcessStderr,
+  readProcessStdout,
   readProcessStdout_,
   runProcess,
   setStderr,
   setStdin,
-  setStdout, readProcessStdout, readProcessStderr,
+  setStdout,
  )
 import Test.Hspec (
   anyException,
@@ -81,6 +83,10 @@ main =
         it ("test error case " <> errorcase) $
           testError (testcaseDir </> "error" </> errorcase) `shouldThrow` anyException
 
+    describe "Print LLVM assembly" do
+      parallel $ for_ testcases \testcase -> do
+        it ("test " <> testcase) $ example do
+          test (testcaseDir </> testcase) "print" False True defaultOptimizeOption PrintLLVM
 #ifdef TEST_ALL
     describe "Test malgo to-ll on all combinations of optimization options" do
       for_ testcases \testcase -> parallel $
@@ -89,11 +95,6 @@ main =
             it ("test " <> testcase <> " " <> show (showOptimizeOption option)) $ example do
               test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option
 #endif
-
-    describe "Print LLVM assembly" do
-      parallel $ for_ testcases \testcase -> do
-        it ("test " <> testcase) $ example do
-          test (testcaseDir </> testcase) "print" False True defaultOptimizeOption PrintLLVM
 
 setupTestDir :: IO ()
 setupTestDir = do
@@ -184,7 +185,8 @@ test testcase typ lambdaLift noOptimize option compileMode = do
       ( proc
           clang
           $ [ "-Wno-override-module",
-              "-lm"
+              "-lm",
+              "-O3"
             ]
             <> pkgConfig
             <> [ outputDir </> "libs" </> "runtime.c",
@@ -193,25 +195,9 @@ test testcase typ lambdaLift noOptimize option compileMode = do
                  outputDir </> typ </> takeBaseName testcase -<.> ".out"
                ]
       )
-  hPutStr stderr $ convertString err
+  hPutStr stdout $ convertString err
   when (exitCode /= ExitSuccess) do
-    Text.hPutStrLn stderr $ "Exit code: " <> show exitCode
-    exitFailure
-
-  (exitCode, err) <-
-    readProcessStderr
-      ( proc
-          clang
-          $ [ "-Wno-override-module",
-              "-O2", "-S", "-emit-llvm",
-              outputDir </> typ </> takeBaseName testcase -<.> ".ll",
-              "-o",
-              outputDir </> typ </> takeBaseName testcase <> "_opt" -<.> ".ll"
-            ]
-      )
-  hPutStr stderr $ convertString err
-  when (exitCode /= ExitSuccess) do
-    Text.hPutStrLn stderr $ "Exit code: " <> show exitCode
+    Text.hPutStrLn stdout $ "Exit code: " <> show exitCode
     exitFailure
 
   (exitCode, result) <-
