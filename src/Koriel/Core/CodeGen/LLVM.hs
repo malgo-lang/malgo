@@ -148,8 +148,6 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
       view (globalValueMap . at name) >>= \case
         Nothing -> error $ show $ pPrint name <+> "is not found"
         Just name' -> genExpr expr \eOpr -> do
-          -- TODO[genExpr does not return correctly-typed value]
-          -- eOpr <- bitcast eOpr (convType (C.typeOf name))
           store name' 0 eOpr
           initTopVars xs
     -- Generate main function.
@@ -325,9 +323,7 @@ genExpr ::
 genExpr e k = genExp' e \eOpr -> do
   case C.typeOf e of
     VoidT -> k (ConstantOperand (C.Undef LT.void))
-    t
-      | convType t /= ptr -> k =<< bitcast eOpr (convType t)
-      | otherwise -> k eOpr
+    _ -> k eOpr
 
 -- genUnpackでコード生成しつつラベルを返すため、CPSにしている
 genExp' ::
@@ -454,10 +450,6 @@ genExp' (Match e (Bind x _ body : _)) k = genExpr e $ \eOpr -> do
 genExp' (Match e cs) k
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = genExpr e $ \eOpr -> mdo
-      -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
-      -- TODO[genExpr does not return correctly-typed value]
-      -- genExpが正しい型の値を継続に渡すように変更する
-      -- eOpr' <- bitcast eOpr (convType $ C.typeOf e)
       br switchBlock -- We need to end the current block before executing genCase
       -- 各ケースのコードとラベルを生成する
       -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
@@ -520,19 +512,17 @@ genExp' (Destruct v (Con _ ts) xs e) k = do
         load (convType $ C.typeOf x) xAddr 0
   local (over valueMap (env <>)) $ genExpr e k
 genExp' (DestructRecord scrutinee kvs e) k = do
-  scrutinee <- bitcast ?? convType (C.typeOf scrutinee) =<< genAtom scrutinee
+  scrutinee <- genAtom scrutinee
   kvs' <- for (HashMap.toList kvs) \(k, v) -> do
     hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
     i <- getUniq
     key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
     value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
-    value <- bitcast value (convType $ C.typeOf v)
     pure (v, value)
   local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e k
 genExp' (Assign _ v e) k | C.typeOf v == VoidT = genExpr v $ \_ -> genExpr e k
 genExp' (Assign x v e) k = do
   genExpr v $ \vOpr -> do
-    vOpr <- bitcast vOpr (convType $ C.typeOf v)
     local (over valueMap $ at x ?~ vOpr) $ genExpr e k
 genExp' (Error _) _ = unreachable
 
@@ -570,9 +560,7 @@ genCase scrutinee cs k = \case
   Unpack con vs e -> do
     label <- block
     let (tag, conType) = genCon cs con
-    -- addr <- bitcast scrutinee (ptr $ StructureType False [i8, conType])
     payloadAddr <- gep (StructureType False [i8, conType]) scrutinee [int32 0, int32 1]
-    -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
     env <-
       HashMap.fromList <$> ifor vs \i v ->
         (v,) <$> do
@@ -587,7 +575,6 @@ genCase scrutinee cs k = \case
       i <- getUniq
       key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
       value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
-      value <- bitcast value (convType $ C.typeOf v)
       pure (v, value)
     local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e k
     pure $ Left label
@@ -625,7 +612,6 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
     [] -> error "The length of internal function parameters must be 1 or more"
     (capture : ps') -> do
       -- キャプチャした変数が詰まっている構造体を展開する
-      -- capture <- bitcast rawCapture (ptr capType)
       env <-
         HashMap.fromList <$> ifor fvs \i fv ->
           (fv,) <$> do
@@ -655,7 +641,7 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) _ (Pack _ con@(Con _ ts) xs)) =
   ifor_ xs $ \i x ->
     gepAndStore (StructureType False [i8, StructureType False $ map convType ts]) addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
-  one . (name,) <$> bitcast addr (convType $ SumT cs)
+  pure $ HashMap.singleton name addr
 genLocalDef (LocalDef (C.typeOf -> t) _ Pack {}) = error $ show t <> " must be SumT"
 genLocalDef (LocalDef name _ (Record kvs)) = do
   newHashTable <- findExt "malgo_hash_table_new" [] ptr
@@ -663,7 +649,7 @@ genLocalDef (LocalDef name _ (Record kvs)) = do
   for_ (HashMap.toList kvs) \(k, v) -> do
     i <- getUniq
     k' <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
-    v <- join $ bitcast <$> genAtom v <*> pure ptr
+    v <- genAtom v
     insert <- findExt "malgo_hash_table_insert" [ptr, ptr, ptr] LT.void
     call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` ("hash_insert_" <> encodeUtf8 k)
   pure $ one (name, hashTable)
