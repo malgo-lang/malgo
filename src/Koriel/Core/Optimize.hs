@@ -7,7 +7,7 @@ module Koriel.Core.Optimize (
 )
 where
 
-import Control.Lens (At (at), lengthOf, makeFieldsNoPrefix, transformM, view)
+import Control.Lens (At (at), lengthOf, makeFieldsNoPrefix, transform, transformM, view)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
@@ -31,7 +31,8 @@ data OptimizeOption = OptimizeOption
     inlineThreshold :: Int,
     doFoldRedundantCast :: Bool,
     doFoldTrivialCall :: Bool,
-    doSpecializeFunction :: Bool
+    doSpecializeFunction :: Bool,
+    doRemoveNoopDestruct :: Bool
   }
 
 defaultOptimizeOption :: OptimizeOption
@@ -41,10 +42,11 @@ defaultOptimizeOption =
       doInlineConstructor = True,
       doEliminateUnusedLet = True,
       doInlineFunction = True,
-      inlineThreshold = 10,
+      inlineThreshold = 15,
       doFoldRedundantCast = True,
       doFoldTrivialCall = True,
-      doSpecializeFunction = False
+      doSpecializeFunction = False,
+      doRemoveNoopDestruct = True
     }
 
 data OptimizeEnv = OptimizeEnv
@@ -92,6 +94,7 @@ optimizeExpr state expr = do
         >=> runOpt option.doFoldRedundantCast foldRedundantCast
         >=> runOpt option.doFoldTrivialCall foldTrivialCall
         >=> runOpt option.doSpecializeFunction specializeFunction
+        >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
         >=> runFlat . flatExpr
     runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
@@ -171,6 +174,7 @@ checkInlinable :: (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) => Loc
 checkInlinable (LocalDef f _ (Fun ps v)) = do
   threshold <- asks (.option.inlineThreshold)
   -- atomの数がthreshold以下ならインライン展開する
+  -- TODO: 再帰関数かどうかコールグラフを作って判定する
   let isInlinable = threshold >= lengthOf atom v && not (f `member` freevars v)
   when isInlinable $ do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
@@ -232,3 +236,10 @@ specializeFunction =
         | otherwise -> error "specializeFunction: invalid cast"
       _ -> pure (Cast (pts' :-> rt') f)
     e -> pure e
+
+-- | Remove `destruct` if it does not bind any variables.
+removeNoopDestruct :: Expr (Id a) -> Expr (Id a)
+removeNoopDestruct =
+  transform \case
+    Destruct _ _ [] e -> e
+    e -> e

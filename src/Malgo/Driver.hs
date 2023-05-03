@@ -75,7 +75,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       (dsEnv, core) <- desugar tcEnv refinedAst
       core <- flat core
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-      writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
+      -- writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
       let inf = buildInterface moduleName rnState dsEnv
       writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
@@ -101,15 +101,25 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
+      when env.testMode do
         writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
+
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
       lint coreLL
       when (env.debugMode && env.lambdaLift) $
         liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-          writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
+      when env.testMode do
+        writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
+
+      -- Optimization after lambda lifting causes code explosion.
+      -- The effect of lambda lifting is expected to be fully realized by backend's optimization.
+      -- So do not optimization again.
+      -- TODO: Can we only optimize the code that has been lambda lifted?
+      -- TODO: Improve the function inliner to reduce the code explosion.
+      -- TODO: Add more information to `call` instruction to improve the function inliner.
 
       case env.compileMode of
         LLVM -> do

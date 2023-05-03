@@ -129,6 +129,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
             lambdaLift,
             noOptimize,
             compileMode,
+            testMode = True,
             optimizeOption = option
           }
     Driver.compile src malgoEnv
@@ -196,6 +197,23 @@ test testcase typ lambdaLift noOptimize option compileMode = do
   when (exitCode /= ExitSuccess) do
     Text.hPutStrLn stderr $ "Exit code: " <> show exitCode
     exitFailure
+
+  (exitCode, err) <-
+    readProcessStderr
+      ( proc
+          clang
+          $ [ "-Wno-override-module",
+              "-O2", "-S", "-emit-llvm",
+              outputDir </> typ </> takeBaseName testcase -<.> ".ll",
+              "-o",
+              outputDir </> typ </> takeBaseName testcase <> "_opt" -<.> ".ll"
+            ]
+      )
+  hPutStr stderr $ convertString err
+  when (exitCode /= ExitSuccess) do
+    Text.hPutStrLn stderr $ "Exit code: " <> show exitCode
+    exitFailure
+
   (exitCode, result) <-
     timeoutWrapper "run" $
       second decodeUtf8
@@ -245,6 +263,7 @@ showOptimizeOption OptimizeOption {..} =
     <> ["fold-redudant-cast" | doFoldRedundantCast]
     <> ["fold-trivial-call" | doFoldTrivialCall]
     <> ["specialize-function" | doSpecializeFunction]
+    <> ["remove-noop-destruct" | doRemoveNoopDestruct]
 
 optimizeOptions :: [OptimizeOption]
 optimizeOptions =
@@ -256,6 +275,7 @@ optimizeOptions =
           doEliminateUnusedLet <- [True, False],
           doInlineFunction<- [True, False],
           doFoldRedundantCast <- [True, False],
-          doFoldTrivialCall <- [True, False]
+          doFoldTrivialCall <- [True, False],
+          doRemoveNoopDestuct <- [True, False]
       ]
 #endif

@@ -27,6 +27,7 @@ data MalgoEnv = MalgoEnv
     lambdaLift :: Bool,
     optimizeOption :: OptimizeOption,
     debugMode :: Bool,
+    testMode :: Bool,
     _modulePaths :: [FilePath]
   }
 
@@ -65,6 +66,7 @@ newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
   let lambdaLift = True
   let optimizeOption = defaultOptimizeOption
   let debugMode = False
+  let testMode = False
   let _modulePaths = modulePaths <> [workspaceDir </> "build", basePath]
   pure MalgoEnv {..}
 
