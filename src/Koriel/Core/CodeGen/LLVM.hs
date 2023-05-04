@@ -296,9 +296,7 @@ genLoadModule m = do
 
 -- generate code for a 'known' function
 genFunc ::
-  ( MonadModuleBuilder m,
-    MonadReader CodeGenEnv m,
-    MonadState PrimMap m,
+  ( MonadCodeGen m,
     MonadFix m,
     MonadFail m,
     MonadIO m
@@ -324,36 +322,16 @@ genFunc name params body = do
     retty = convType (C.typeOf body)
 
 genExpr ::
-  ( MonadReader CodeGenEnv m,
-    MonadState PrimMap m,
-    MonadIRBuilder m,
-    MonadModuleBuilder m,
+  ( MonadIRBuilder m,
+    MonadCodeGen m,
     MonadFail m,
     MonadFix m,
     MonadIO m
   ) =>
   Expr (Id C.Type) ->
   ContT () m Operand
-genExpr e = do
-  eOpr <- genExp' e
-  case C.typeOf e of
-    VoidT -> pure (ConstantOperand (C.Undef LT.void))
-    _ -> pure eOpr
-
--- genUnpackでコード生成しつつラベルを返すため、CPSにしている
-genExp' ::
-  ( MonadReader CodeGenEnv m,
-    MonadState PrimMap m,
-    MonadIRBuilder m,
-    MonadModuleBuilder m,
-    MonadFail m,
-    MonadFix m,
-    MonadIO m
-  ) =>
-  Expr (Id C.Type) ->
-  ContT () m Operand
-genExp' (Atom x) = genAtom x
-genExp' e@(Call f xs) = do
+genExpr (Atom x) = genAtom x
+genExpr e@(Call f xs) = do
   fOpr <- genAtom f
   captureAddr <- gep (innerType $ C.typeOf f) fOpr [int32 0, int32 0]
   captureOpr <- load ptr captureAddr 0
@@ -361,11 +339,11 @@ genExp' e@(Call f xs) = do
   funcOpr <- load ptr funcAddr 0
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) funcOpr (map (,[]) $ captureOpr : xsOprs)
-genExp' e@(CallDirect f xs) = do
+genExpr e@(CallDirect f xs) = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
-genExp' e@(RawCall name _ xs) = do
+genExpr e@(RawCall name _ xs) = do
   let primOpr =
         ConstantOperand $
           C.GlobalReference $
@@ -373,7 +351,7 @@ genExp' e@(RawCall name _ xs) = do
               convertString name
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
-genExp' (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
+genExpr (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add
     genOp Op.Sub = sub
@@ -384,70 +362,33 @@ genExp' (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
     genOp Op.FSub = fsub
     genOp Op.FMul = fmul
     genOp Op.FDiv = fdiv
-    genOp Op.Eq = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.EQ x' y'
-        Int64T -> icmp IP.EQ x' y'
-        FloatT -> fcmp FP.OEQ x' y'
-        DoubleT -> fcmp FP.OEQ x' y'
-        CharT -> icmp IP.EQ x' y'
-        StringT -> icmp IP.EQ x' y'
-        BoolT -> icmp IP.EQ x' y'
-        SumT _ -> icmp IP.EQ x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Neq = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.NE x' y'
-        Int64T -> icmp IP.NE x' y'
-        FloatT -> fcmp FP.ONE x' y'
-        DoubleT -> fcmp FP.ONE x' y'
-        CharT -> icmp IP.NE x' y'
-        StringT -> icmp IP.NE x' y'
-        BoolT -> icmp IP.NE x' y'
-        SumT _ -> icmp IP.NE x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Lt = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.SLT x' y'
-        Int64T -> icmp IP.SLT x' y'
-        FloatT -> fcmp FP.OLT x' y'
-        DoubleT -> fcmp FP.OLT x' y'
-        CharT -> icmp IP.ULT x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Le = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.SLE x' y'
-        Int64T -> icmp IP.SLE x' y'
-        FloatT -> fcmp FP.OLE x' y'
-        DoubleT -> fcmp FP.OLE x' y'
-        CharT -> icmp IP.ULE x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Gt = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.SGT x' y'
-        Int64T -> icmp IP.SGT x' y'
-        FloatT -> fcmp FP.OGT x' y'
-        DoubleT -> fcmp FP.OGT x' y'
-        CharT -> icmp IP.UGT x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Ge = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.SGE x' y'
-        Int64T -> icmp IP.SGE x' y'
-        FloatT -> fcmp FP.OGE x' y'
-        DoubleT -> fcmp FP.OGE x' y'
-        CharT -> icmp IP.UGE x' y'
-        t -> error $ show t <> " is not comparable"
+    genOp Op.Eq = genCmpOp IP.EQ IP.EQ FP.OEQ
+    genOp Op.Neq = genCmpOp IP.NE IP.NE FP.ONE
+    genOp Op.Lt = genCmpOp IP.SLT IP.ULT FP.OLT
+    genOp Op.Le = genCmpOp IP.SLE IP.ULE FP.OLE
+    genOp Op.Gt = genCmpOp IP.SGT IP.UGT FP.OGT
+    genOp Op.Ge = genCmpOp IP.SGE IP.UGE FP.OGE
     genOp Op.And = LLVM.IRBuilder.and
     genOp Op.Or = LLVM.IRBuilder.or
+    genCmpOp signed unsigned ordered = \x' y' ->
+      i1ToBool =<< case C.typeOf x of
+        Int32T -> icmp signed x' y'
+        Int64T -> icmp signed x' y'
+        FloatT -> fcmp ordered x' y'
+        DoubleT -> fcmp ordered x' y'
+        CharT -> icmp unsigned x' y'
+        StringT -> icmp unsigned x' y'
+        BoolT -> icmp unsigned x' y'
+        SumT _ -> icmp unsigned x' y'
+        t -> error $ show t <> " is not comparable"
     i1ToBool i1opr = zext i1opr i8
-genExp' (Cast ty x) = do
+genExpr (Cast ty x) = do
   xOpr <- genAtom x
   xOprTy <- typeOf xOpr
   if Right (convType ty) /= xOprTy
     then bitcast xOpr (convType ty)
     else pure xOpr
-genExp' (Let xs e) = do
+genExpr (Let xs e) = do
   env <- foldMapM prepare xs
   env <- lift $ local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
   local (over valueMap (env <>)) $ genExpr e
@@ -458,13 +399,13 @@ genExp' (Let xs e) = do
         <$> mallocType (StructureType False [ptr, ptr])
     prepare _ = pure mempty
 -- These `match` cases are not necessary.
-genExp' (Match e (Bind _ _ body : _)) | C.typeOf e == VoidT = do
+genExpr (Match e (Bind _ _ body : _)) | C.typeOf e == VoidT = do
   _ <- genExpr e
   genExpr body
-genExp' (Match e (Bind x _ body : _)) = do
+genExpr (Match e (Bind x _ body : _)) = do
   eOpr <- genExpr e
   local (over valueMap (at x ?~ eOpr)) (genExpr body)
-genExp' (Match e cs)
+genExpr (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = do
       withTerminator (genExpr e) \k eOpr -> mdo
@@ -483,7 +424,7 @@ genExp' (Match e cs)
           RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
           _ -> pure eOpr
         switch tagOpr defaultLabel labels
-genExp' (Switch v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
+genExpr (Switch v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
   br switchBlock
   labels <- toList <$> traverse (genBranch (constructorList v) k) bs
   defaultLabel <- block
@@ -505,7 +446,7 @@ genExp' (Switch v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
             _ -> error "Switch is not supported for this type."
       runContT (genExpr e) k
       pure (tag', label)
-genExp' (SwitchUnboxed v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
+genExpr (SwitchUnboxed v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
   br switchBlock
   labels <- toList <$> traverse (genBranch k) bs
   defaultLabel <- block
@@ -518,7 +459,7 @@ genExp' (SwitchUnboxed v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
       label <- block
       runContT (genExpr e) k
       pure (u', label)
-genExp' (Destruct v (Con _ ts) xs e) = do
+genExpr (Destruct v (Con _ ts) xs e) = do
   v <- genAtom v
   payloadAddr <- gep (StructureType False [i8, StructureType False (map convType ts)]) v [int32 0, int32 1]
   env <-
@@ -527,7 +468,7 @@ genExp' (Destruct v (Con _ ts) xs e) = do
         xAddr <- gep (StructureType False (map convType ts)) payloadAddr [int32 0, int32 $ fromIntegral i]
         load (convType $ C.typeOf x) xAddr 0
   local (over valueMap (env <>)) $ genExpr e
-genExp' (DestructRecord scrutinee kvs e) = do
+genExpr (DestructRecord scrutinee kvs e) = do
   scrutinee <- genAtom scrutinee
   kvs' <- for (HashMap.toList kvs) \(k, v) -> do
     hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
@@ -536,13 +477,13 @@ genExp' (DestructRecord scrutinee kvs e) = do
     value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
     pure (v, value)
   local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e
-genExp' (Assign _ v e) | C.typeOf v == VoidT = do
+genExpr (Assign _ v e) | C.typeOf v == VoidT = do
   _ <- genExpr v
   genExpr e
-genExp' (Assign x v e) = do
+genExpr (Assign x v e) = do
   vOpr <- genExpr v
   local (over valueMap $ at x ?~ vOpr) $ genExpr e
-genExp' (Error _) = ContT \_ -> unreachable
+genExpr (Error _) = ContT \_ -> unreachable
 
 -- | Get constructor list from the type of scrutinee.
 constructorList :: HasType s => s -> [Con]
@@ -552,9 +493,7 @@ constructorList scrutinee =
     _ -> []
 
 genCase ::
-  ( MonadReader CodeGenEnv m,
-    MonadModuleBuilder m,
-    MonadState PrimMap m,
+  ( MonadCodeGen m,
     MonadIRBuilder m,
     MonadFail m,
     MonadFix m,
