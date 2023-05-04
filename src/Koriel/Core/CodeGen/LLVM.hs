@@ -206,6 +206,19 @@ sizeofType (RecordT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
+-- | Change the current terminator.
+withTerminator ::
+  -- | Action
+  ContT () m Operand ->
+  -- | Builder of the new terminator based on the current terminator
+  ( (Operand -> m ()) ->
+    -- \^ Current terminator
+    Operand ->
+    m ()
+  ) ->
+  ContT () m Operand
+withTerminator = flip withContT
+
 findVar :: (MonadCodeGen m, MonadIRBuilder m) => Id C.Type -> m Operand
 findVar x = findLocalVar
   where
@@ -454,7 +467,7 @@ genExp' (Match e (Bind x _ body : _)) = do
 genExp' (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = do
-      withContT ?? genExpr e $ \k eOpr -> mdo
+      withTerminator (genExpr e) \k eOpr -> mdo
         br switchBlock -- We need to end the current block before executing genCase
         -- 各ケースのコードとラベルを生成する
         -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
@@ -470,7 +483,7 @@ genExp' (Match e cs)
           RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
           _ -> pure eOpr
         switch tagOpr defaultLabel labels
-genExp' (Switch v bs e) = withContT ?? genAtom v $ \k vOpr -> mdo
+genExp' (Switch v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
   br switchBlock
   labels <- toList <$> traverse (genBranch (constructorList v) k) bs
   defaultLabel <- block
@@ -492,7 +505,7 @@ genExp' (Switch v bs e) = withContT ?? genAtom v $ \k vOpr -> mdo
             _ -> error "Switch is not supported for this type."
       runContT (genExpr e) k
       pure (tag', label)
-genExp' (SwitchUnboxed v bs e) = withContT ?? genAtom v $ \k vOpr -> mdo
+genExp' (SwitchUnboxed v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
   br switchBlock
   labels <- toList <$> traverse (genBranch k) bs
   defaultLabel <- block
