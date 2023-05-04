@@ -9,7 +9,7 @@ module Koriel.Core.CodeGen.LLVM (
 where
 
 import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
-import Control.Monad.Cont (ContT (..))
+import Control.Monad.Cont (ContT (..), withContT)
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
@@ -453,24 +453,24 @@ genExp' (Match e (Bind x _ body : _)) = do
   local (over valueMap (at x ?~ eOpr)) (genExpr body)
 genExp' (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
-  | otherwise = ContT \k -> runContT (genExpr e) \eOpr -> mdo
-      br switchBlock -- We need to end the current block before executing genCase
-      -- 各ケースのコードとラベルを生成する
-      -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-      (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr (constructorList e) k) cs
-      -- defaultsの先頭を取り出し、switchのデフォルトケースとする
-      -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-      defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
-      switchBlock <- block
-      tagOpr <- case C.typeOf e of
-        SumT _ -> do
-          tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
-          load i8 tagAddr 0
-        RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-        _ -> pure eOpr
-      switch tagOpr defaultLabel labels
-genExp' (Switch v bs e) = ContT \k -> mdo
-  vOpr <- genAtom v
+  | otherwise = do
+      withContT ?? genExpr e $ \k eOpr -> mdo
+        br switchBlock -- We need to end the current block before executing genCase
+        -- 各ケースのコードとラベルを生成する
+        -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+        (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr (constructorList e) k) cs
+        -- defaultsの先頭を取り出し、switchのデフォルトケースとする
+        -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
+        defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
+        switchBlock <- block
+        tagOpr <- case C.typeOf e of
+          SumT _ -> do
+            tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
+            load i8 tagAddr 0
+          RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+          _ -> pure eOpr
+        switch tagOpr defaultLabel labels
+genExp' (Switch v bs e) = withContT ?? genAtom v $ \k vOpr -> mdo
   br switchBlock
   labels <- toList <$> traverse (genBranch (constructorList v) k) bs
   defaultLabel <- block
@@ -492,8 +492,7 @@ genExp' (Switch v bs e) = ContT \k -> mdo
             _ -> error "Switch is not supported for this type."
       runContT (genExpr e) k
       pure (tag', label)
-genExp' (SwitchUnboxed v bs e) = ContT \k -> mdo
-  vOpr <- genAtom v
+genExp' (SwitchUnboxed v bs e) = withContT ?? genAtom v $ \k vOpr -> mdo
   br switchBlock
   labels <- toList <$> traverse (genBranch k) bs
   defaultLabel <- block
