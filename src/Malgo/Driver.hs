@@ -75,7 +75,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       (dsEnv, core) <- desugar tcEnv refinedAst
       core <- flat core
       _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-      -- writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
+      writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
       let inf = buildInterface moduleName rnState dsEnv
       writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
