@@ -408,11 +408,11 @@ genExpr (Match e (Bind x _ body : _)) = do
 genExpr (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = do
-      withTerminator (genExpr e) \k eOpr -> mdo
+      genExpr e `withTerminator` \k eOpr -> mdo
         br switchBlock -- We need to end the current block before executing genCase
         -- 各ケースのコードとラベルを生成する
         -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-        (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr (constructorList e) k) cs
+        (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
         -- defaultsの先頭を取り出し、switchのデフォルトケースとする
         -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
         defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
@@ -424,19 +424,20 @@ genExpr (Match e cs)
           RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
           _ -> pure eOpr
         switch tagOpr defaultLabel labels
-genExpr (Switch v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
-  br switchBlock
-  labels <- toList <$> traverse (genBranch (constructorList v) k) bs
-  defaultLabel <- block
-  runContT (genExpr e) k
-  switchBlock <- block
-  tagOpr <- case C.typeOf v of
-    SumT _ -> do
-      tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
-      load i8 tagAddr 0
-    RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-    _ -> pure vOpr
-  switch tagOpr defaultLabel labels
+genExpr (Switch v bs e) =
+  genAtom v `withTerminator` \k vOpr -> mdo
+    br switchBlock
+    labels <- traverse (genBranch (constructorList v) k) bs
+    defaultLabel <- block
+    runContT (genExpr e) k
+    switchBlock <- block
+    tagOpr <- case C.typeOf v of
+      SumT _ -> do
+        tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
+        load i8 tagAddr 0
+      RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+      _ -> pure vOpr
+    switch tagOpr defaultLabel labels
   where
     genBranch cs k (tag, e) = do
       label <- block
@@ -446,13 +447,14 @@ genExpr (Switch v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
             _ -> error "Switch is not supported for this type."
       runContT (genExpr e) k
       pure (tag', label)
-genExpr (SwitchUnboxed v bs e) = withTerminator (genAtom v) \k vOpr -> mdo
-  br switchBlock
-  labels <- toList <$> traverse (genBranch k) bs
-  defaultLabel <- block
-  runContT (genExpr e) k
-  switchBlock <- block
-  switch vOpr defaultLabel labels
+genExpr (SwitchUnboxed v bs e) =
+  genAtom v `withTerminator` \k vOpr -> mdo
+    br switchBlock
+    labels <- traverse (genBranch k) bs
+    defaultLabel <- block
+    runContT (genExpr e) k
+    switchBlock <- block
+    switch vOpr defaultLabel labels
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
