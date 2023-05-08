@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE OverloadedStrings #-}
 -- For `undefined`
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
@@ -41,6 +42,7 @@ import Test.Hspec (
   it,
   parallel,
   runIO,
+  shouldBe,
   shouldThrow,
  )
 
@@ -146,16 +148,17 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
       Right ast -> do
         Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
 
--- | Get the correct name of `clang`
-getClangCommand :: IO String
-getClangCommand =
-  go ["clang-15", "clang"]
+findCommand :: [String] -> IO String
+findCommand list =
+  go list >>= \case
+    Nothing -> error $ "Command not found: " <> Text.intercalate ", " (map convertString list)
+    Just x -> pure x
   where
-    go [] = error "clang not found"
+    go [] = pure Nothing
     go (x : xs) = do
       exitCode <- runProcess (proc "which" [x] & setStdout nullStream & setStderr nullStream)
       case exitCode of
-        ExitSuccess -> pure x
+        ExitSuccess -> pure $ Just x
         ExitFailure _ -> go xs
 
 test ::
@@ -178,8 +181,26 @@ test testcase typ lambdaLift noOptimize option compileMode = do
   timeoutWrapper "compile" $
     compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
 
+  -- Format the generated LLVM assembly
+  when (typ == "print") do
+    -- find opt or opt-15
+    opt <- findCommand ["opt-15", "opt"]
+    (exitCode, err) <-
+      readProcessStderr
+        ( proc
+            opt
+            [ "-S",
+              "-instnamer",
+              "-o",
+              llPath,
+              llPath
+            ]
+        )
+    putText $ convertString err
+    exitCode `shouldBe` ExitSuccess
+
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
-  clang <- getClangCommand
+  clang <- findCommand ["clang-15", "clang"]
   (exitCode, err) <-
     readProcessStderr
       ( proc
@@ -195,10 +216,8 @@ test testcase typ lambdaLift noOptimize option compileMode = do
                  outputDir </> typ </> takeBaseName testcase -<.> ".out"
                ]
       )
-  hPutStr stdout $ convertString err
-  when (exitCode /= ExitSuccess) do
-    Text.hPutStrLn stdout $ "Exit code: " <> show exitCode
-    exitFailure
+  putText $ convertString err
+  exitCode `shouldBe` ExitSuccess
 
   (exitCode, result) <-
     timeoutWrapper "run" $
@@ -207,16 +226,9 @@ test testcase typ lambdaLift noOptimize option compileMode = do
           ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
               & setStdin (byteStringInput "Hello")
           )
-  when (exitCode /= ExitSuccess) do
-    Text.hPutStrLn stderr $ "Exit code: " <> show exitCode
-    exitFailure
+  exitCode `shouldBe` ExitSuccess
   expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
-  if map ("-- Expected: " <>) (lines $ Text.stripEnd result) == expected
-    then pass
-    else do
-      Text.hPutStrLn stderr $ "Expected: " <> Text.concat expected
-      Text.hPutStrLn stderr $ "Actual: " <> result
-      exitFailure
+  map ("-- Expected: " <>) (lines $ Text.stripEnd result) `shouldBe` expected
   where
     timeoutWrapper phase m = do
       timeout 60 m >>= \case
