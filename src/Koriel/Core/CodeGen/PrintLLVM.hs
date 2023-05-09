@@ -1,6 +1,6 @@
 module Koriel.Core.CodeGen.PrintLLVM (codeGen) where
 
-import Control.Lens (over, view, _1)
+import Control.Lens (view, _1)
 import Control.Monad.Cont (ContT, runContT, withContT)
 import Data.Foldable (maximum)
 import Data.HashMap.Strict qualified as HashMap
@@ -10,7 +10,7 @@ import Data.Tuple.Extra (uncurry3)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Syntax hiding (variable)
 import Koriel.Core.Type
-import Koriel.Id (Id (..), IdSort (Temporal), ModuleName (..), idToText)
+import Koriel.Id (Id (..), ModuleName (..), idToText)
 import Koriel.Prelude
 import Koriel.Pretty
 
@@ -52,7 +52,7 @@ codeGen srcPath dstPath moduleName Program {..} = do
             | toAsm typ == "ptr" -> do
                 name <- lookupName name
                 eOpr <- putExprLn expr
-                putAsmLn $ "store ptr " <> eOpr <> ", ptr " <> name
+                store typ eOpr name
             | otherwise -> pure ()
         pure "0"
   where
@@ -67,6 +67,8 @@ runBlockBuilder = runContT
 withTerminator :: BlockBuilder m Register -> ((Register -> m ()) -> Register -> m ()) -> BlockBuilder m Register
 withTerminator = flip withContT
 
+-- | Register name it don't have type information.
+-- e.g. "%1", "@a"
 type Register = Text
 
 putExprLn ::
@@ -75,9 +77,11 @@ putExprLn ::
   -- | Register name of the result
   BlockBuilder m Register
 putExprLn (Atom atom) = do
+  -- `putExprLn` returns a register name of the result.
+  -- So we need to allocate a memory, store the result, and load it.
   addr <- register "atom" $ putAsmLn $ "alloca " <> toAsm (typeOf atom)
   value <- atomToAsm atom
-  store (typeOf atom) value addr
+  putAsmLn $ "store " <> value <> ", ptr " <> addr
   reg <- load (typeOf atom) addr
   pure reg
 putExprLn (Call f xs) = do
