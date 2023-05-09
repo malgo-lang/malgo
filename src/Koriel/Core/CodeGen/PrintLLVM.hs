@@ -1,13 +1,13 @@
 module Koriel.Core.CodeGen.PrintLLVM (codeGen) where
 
-import Control.Lens (view, _1)
+import Control.Lens (ifor, ifor_, view, _1)
 import Control.Monad.Cont (ContT, runContT, withContT)
+import Control.Monad.Extra (whileM)
 import Data.Foldable (maximum)
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (convertString)
 import Data.Text qualified as Text
 import Data.Tuple.Extra (uncurry3)
-import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Syntax hiding (variable)
 import Koriel.Core.Type
 import Koriel.Id (Id (..), ModuleName (..), idToText)
@@ -34,6 +34,7 @@ codeGen srcPath dstPath moduleName Program {..} = do
           foldr buildInternTable mempty topVars
             & \m -> foldr buildInternTable m topFuns
     register <- newIORef mempty
+    postprocess <- newIORef []
     runReaderT ?? CodeGenEnv {..} $ do
       putAsmLn $ "source_filename = \"" <> toText srcPath <> "\""
       extern "GC_init" [] VoidT
@@ -46,6 +47,7 @@ codeGen srcPath dstPath moduleName Program {..} = do
 
       traverse_ (uncurry4 function) topFuns
 
+      resetRegister
       define "main" Int32T do
         for_ topVars \case
           (name, typ, expr)
@@ -55,6 +57,12 @@ codeGen srcPath dstPath moduleName Program {..} = do
                 store typ eOpr name
             | otherwise -> pure ()
         pure "0"
+
+      whileM do
+        postprocess' <- readIORef postprocess
+        writeIORef postprocess []
+        void $ sequence_ postprocess'
+        not . null <$> readIORef postprocess
   where
     buildInternTable s = HashMap.insert (view _1 s) Global
     uncurry4 f (w, x, y, z) = f w x y z
@@ -69,24 +77,20 @@ withTerminator = flip withContT
 
 -- | Register name it don't have type information.
 -- e.g. "%1", "@a"
+-- @Register@ also be used as a constant.
+-- e.g. "42", "3.14"
 type Register = Text
 
 putExprLn ::
+  HasCallStack =>
   (MonadReader CodeGenEnv m, MonadIO m) =>
   Expr KName ->
   -- | Register name of the result
   BlockBuilder m Register
-putExprLn (Atom atom) = do
-  -- `putExprLn` returns a register name of the result.
-  -- So we need to allocate a memory, store the result, and load it.
-  addr <- register "atom" $ putAsmLn $ "alloca " <> toAsm (typeOf atom)
-  value <- atomToAsm atom
-  putAsmLn $ "store " <> value <> ", ptr " <> addr
-  reg <- load (typeOf atom) addr
-  pure reg
+putExprLn (Atom atom) = atomToConstant atom
 putExprLn (Call f xs) = do
-  f' <- register "f" $ putAsmLn =<< atomToAsm f
-  xs' <- traverse (register "x" . putAsmLn <=< atomToAsm) xs
+  f' <- atomToConstant f
+  xs' <- traverse atomToConstant xs
 
   captureAddr <- gep (typeOf f) f' [0, 0]
   capture <- load AnyT captureAddr
@@ -94,12 +98,83 @@ putExprLn (Call f xs) = do
   funcAddr <- gep (typeOf f) f' [0, 1]
   func <- load (typeOf f) funcAddr -- typeOf f == "ptr"
   callClosure func (typeOf f) capture xs'
+putExprLn (CallDirect f xs) = do
+  f' <- lookupName f
+  xs' <- traverse atomToConstant xs
+  call f' (typeOf f) xs'
+putExprLn (RawCall name (params :-> ret) xs) = do
+  xs' <- traverse atomToConstant xs
+  call (sigil Global <> show name) (params :-> ret) xs'
+putExprLn BinOp {} = error "not implemented"
+putExprLn (Cast ty a) = do
+  a' <- atomToConstant a
+  register "cast" $ do
+    putAsmLn $ "bitcast " <> toAsm (typeOf a) <> " " <> a' <> " to " <> toAsm ty
+putExprLn (Let ds e) = do
+  modifier <- prepare ds
+  local modifier do
+    traverse_ putLocalDefLn ds
+    putExprLn e
+  where
+    -- intern and allocate all variables
+    prepare [] = pure identity
+    prepare (LocalDef {_variable, typ} : rest) = do
+      (modifier, reg) <- intern _variable Local
+      putAsmLn $ reg <> " = alloca " <> toInnerType typ
+      modifier' <- prepare rest
+      pure $ modifier' . modifier
 putExprLn _ = do
   (putAsmLn "; not implemented" >> pure "%undefined") `withTerminator` \_ _ -> putAsmLn "unreachable"
 
+putLocalDefLn :: (MonadReader CodeGenEnv m, MonadIO m) => LocalDef KName -> BlockBuilder m ()
+putLocalDefLn (LocalDef closureName (_ :-> ret) (Fun params body)) = do
+  -- Reserve generation of closure internal function
+  let internalFunctionName = closureName.name <> ".closure"
+  defer do
+    resetRegister
+    let captureRegister = sigil Local <> closureName.name <> ".capture"
+    (modifier, params') <- prepare params
+    local modifier do
+      putAsmLn $ "define internal " <> toAsm ret <> " @" <> internalFunctionName <> "(" <> Text.intercalate ", " (("ptr " <> captureRegister) : params') <> ") {"
+      entry <- label "entry"
+      putAsmLn $ entry <> ":"
+      runBlockBuilder ?? (\opr -> putAsmLn $ "ret " <> toAsm ret <> " " <> opr) $ do
+        -- unpack capture
+        modifier <- unpackCapture captureRegister
+        local modifier $
+          putExprLn body
+      putAsmLn "}"
+  capture <- register "capture" $ putAsmLn $ "alloca " <> captureType
+  ifor_ fvs $ \i fv -> do
+    fv' <- lookupName fv
+    addr <- register "addr" $ putAsmLn $ "getelementptr " <> captureType <> ", ptr " <> capture <> ", " <> "i32 0, i32 " <> show i
+    store (typeOf fv) fv' addr
+  closure <- lookupName closureName
+  whereCapture <- gep (typeOf closureName) closure [0, 0]
+  store AnyT capture whereCapture
+  whereFunction <- gep (typeOf closureName) closure [0, 1]
+  store AnyT (sigil Global <> internalFunctionName) whereFunction
+  where
+    prepare [] = pure (identity, [])
+    prepare (p : ps) = do
+      (modifier, reg) <- intern p Local
+      (modifier', regs) <- prepare ps
+      pure (modifier' . modifier, toAsm (typeOf p) <> " " <> reg : regs)
+    fvs = toList $ freevars (Fun params body)
+    captureType = "{ " <> Text.intercalate ", " (map (toAsm . typeOf) fvs) <> " }"
+    unpackCapture captureAddr = do
+      newEnv <-
+        HashMap.fromList <$> ifor fvs \i fv -> do
+          fvAddr <- register "fvAddr" $ putAsmLn $ "getelementptr " <> captureType <> ", ptr " <> captureAddr <> ", " <> "i32 0, i32 " <> show i
+          putAsmLn $ sigil Local <> show (idToText fv) <> " = load " <> toAsm (typeOf fv) <> ", ptr " <> fvAddr
+          pure (fv, Local)
+      pure $ \env -> env {interned = newEnv <> env.interned}
+putLocalDefLn LocalDef {_variable} = putAsmLn $ "; " <> show _variable
+
+-- TODO: Use apply function like `stgApply` to prevent code explosion
 callClosure ::
   (MonadReader CodeGenEnv m, MonadIO m) =>
-  -- \| Function address
+  -- | Function address
   Register ->
   -- | Function type
   Type ->
@@ -107,12 +182,27 @@ callClosure ::
   Register ->
   -- | Arguments
   [Register] ->
-  ContT () m Register
+  BlockBuilder m Register
 callClosure func (params :-> ret) capture args = do
   let args' = zipWith (\p a -> toAsm p <> " " <> a) params args
   register "callClosure" $ do
     putAsmLn $ "call " <> toAsm ret <> " " <> func <> "(" <> Text.intercalate ", " ("ptr " <> capture : args') <> ")"
 callClosure _ t _ _ = errorDoc $ sep ["invalid type in callClosure:", pPrint t]
+
+call ::
+  (MonadReader CodeGenEnv m, MonadIO m) =>
+  -- | Function address
+  Register ->
+  -- | Function type
+  Type ->
+  -- | Arguments
+  [Register] ->
+  BlockBuilder m Register
+call func (params :-> ret) args = do
+  let args' = zipWith (\p a -> toAsm p <> " " <> a) params args
+  register "call" $ do
+    putAsmLn $ "call " <> toAsm ret <> " " <> func <> "(" <> Text.intercalate ", " args' <> ")"
+call _ t _ = errorDoc $ sep ["invalid type in call:", pPrint t]
 
 load ::
   (MonadReader CodeGenEnv m, MonadIO m) =>
@@ -120,7 +210,7 @@ load ::
   Type ->
   -- | Address of the value
   Register ->
-  ContT () m Register
+  BlockBuilder m Register
 load typ address = register "load" $ do
   putAsmLn $ "load " <> toAsm typ <> ", ptr " <> address
 
@@ -132,11 +222,11 @@ store ::
   Register ->
   -- | Address of the value
   Register ->
-  ContT () m ()
+  BlockBuilder m ()
 store typ value address = do
   putAsmLn $ "store " <> toAsm typ <> " " <> value <> ", ptr " <> address
 
-gep :: (MonadReader CodeGenEnv m, MonadIO m) => Type -> Register -> [Int] -> ContT () m Register
+gep :: (MonadReader CodeGenEnv m, MonadIO m) => Type -> Register -> [Int] -> BlockBuilder m Register
 gep typ address index = do
   register "gep" $ do
     putAsmLn $
@@ -146,19 +236,16 @@ gep typ address index = do
         <> toAsm typ
         <> " "
         <> address
-        <> " "
-        <> "["
+        <> ", "
         <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
-        <> "]"
+
+toInnerType :: Type -> Text
+toInnerType (_ :-> _) = "{ ptr, ptr }"
+toInnerType StringT = "i8"
+toInnerType (SumT cs) =
+  let size = maximum $ sizeOfCon <$> toList cs
+   in "{ i8, " <> if size == (0 :: Int) then "{} }" else "<" <> show size <> " x " <> "i8>" <> " }"
   where
-    toInnerType (_ :-> _) = "{ ptr, ptr }"
-    toInnerType StringT = "i8"
-    toInnerType (SumT cs) =
-      let size = maximum $ sizeOfCon <$> toList cs
-       in "{ i8, " <> if size == (0 :: Int) then "{}" else "<" <> show size <> " x " <> "i8>" <> " }"
-    toInnerType (PtrT ty) = toAsm ty
-    toInnerType AnyT = "i8"
-    toInnerType t = errorDoc $ sep ["invalid type in toInnerType:", pPrint t]
     sizeOfCon (Con _ ts) = sum $ sizeOfType <$> ts
     sizeOfType (_ :-> _) = 8
     sizeOfType Int32T = 4
@@ -173,6 +260,9 @@ gep typ address index = do
     sizeOfType (RecordT _) = 8
     sizeOfType AnyT = 8
     sizeOfType VoidT = 0
+toInnerType (PtrT ty) = toAsm ty
+toInnerType AnyT = "i8"
+toInnerType t = errorDoc $ sep ["invalid type in toInnerType:", pPrint t]
 
 variable ::
   (MonadReader CodeGenEnv m, MonadIO m) =>
@@ -181,6 +271,7 @@ variable ::
   Expr KName ->
   m ()
 variable name _ expr = do
+  resetRegister
   name <- lookupName name
   putAsm $ name <> " = "
   putGlobalValue expr
@@ -198,6 +289,7 @@ function ::
   Expr KName ->
   m ()
 function name params (_ :-> ret) expr = do
+  resetRegister
   name' <- lookupName name
   register <- newIORef mempty
   (modifier, params') <- prepare params
@@ -223,22 +315,19 @@ putGlobalValue ::
   Expr KName ->
   m ()
 putGlobalValue (Atom atom) = do
-  atom <- atomToAsm atom
-  putAsmLn $ "global " <> atom
+  atom' <- atomToConstant atom
+  putAsmLn $ "global " <> toAsm (typeOf atom) <> " " <> atom'
 putGlobalValue e | toAsm (typeOf e) == "ptr" = putAsmLn "global ptr undef"
 putGlobalValue e = errorDoc $ sep ["cannot be global:", pPrint e]
 
-atomToAsm ::
-  MonadReader CodeGenEnv m =>
-  Atom KName ->
-  m Text
-atomToAsm (Var name) = lookupName name
-atomToAsm (Unboxed (Int32 i)) = pure $ "i32 " <> show i
-atomToAsm (Unboxed (Int64 i)) = pure $ "i64 " <> show i
-atomToAsm (Unboxed (Float f)) = pure $ "bitcast i32 " <> show (castFloatToWord32 f) <> " to float"
-atomToAsm (Unboxed (Double d)) = pure $ "bitcast i64 " <> show (castDoubleToWord64 d) <> " to double"
-atomToAsm (Unboxed (Char c)) = pure $ "i8 " <> show (ord c)
-atomToAsm (Unboxed (String s)) = do
+atomToConstant :: HasCallStack => MonadReader CodeGenEnv m => Atom KName -> m Text
+atomToConstant (Var name) = lookupName name
+atomToConstant (Unboxed (Int32 i)) = pure $ show i
+atomToConstant (Unboxed (Int64 i)) = pure $ show i
+atomToConstant (Unboxed (Float f)) = pure $ show f
+atomToConstant (Unboxed (Double d)) = pure $ show d
+atomToConstant (Unboxed (Char c)) = pure $ show (ord c)
+atomToConstant (Unboxed (String s)) =
   pure $
     "getelementptr inbounds ptr, "
       <> "["
@@ -247,7 +336,7 @@ atomToAsm (Unboxed (String s)) = do
       <> "["
       <> Text.intercalate ", " (map (\c -> "i8 " <> show (ord c)) (convertString s))
       <> "i8 0], i64 0, i64 0"
-atomToAsm (Unboxed (Bool b)) = pure $ "i1 " <> show (fromEnum b)
+atomToConstant (Unboxed (Bool b)) = pure $ show (fromEnum b)
 
 data NameSpace = Global | Local
 
@@ -259,6 +348,7 @@ data CodeGenEnv = CodeGenEnv
   { moduleName :: ModuleName,
     interned :: HashMap KName NameSpace,
     register :: IORef (HashMap Text Int),
+    postprocess :: IORef [ReaderT CodeGenEnv IO ()],
     output :: Handle
   }
 
@@ -307,14 +397,14 @@ sigil :: NameSpace -> Text
 sigil Global = "@"
 sigil Local = "%"
 
-lookupName :: MonadReader CodeGenEnv m => KName -> m Text
+lookupName :: HasCallStack => MonadReader CodeGenEnv m => KName -> m Register
 lookupName name = do
   CodeGenEnv {interned} <- ask
   case HashMap.lookup name interned of
     Just namespace -> pure $ sigil namespace <> show (idToText name)
     Nothing -> errorDoc $ "unbound variable: " <> pPrint name
 
-register :: (MonadReader CodeGenEnv m, MonadIO m) => Text -> m () -> BlockBuilder m Text
+register :: (MonadReader CodeGenEnv m, MonadIO m) => Text -> m () -> BlockBuilder m Register
 register hint value = do
   reg <- newRegister hint
   putAsm $ reg <> " = "
@@ -330,6 +420,11 @@ register hint value = do
       let count = HashMap.lookupDefault 0 hint register'
       modifyIORef register $ HashMap.insert hint (count + 1)
       pure $ sigil Local <> show (hint <> show count)
+
+resetRegister :: (MonadReader CodeGenEnv m, MonadIO m) => m ()
+resetRegister = do
+  CodeGenEnv {register} <- ask
+  writeIORef register HashMap.empty
 
 label :: (MonadReader CodeGenEnv m, MonadIO m) => Text -> m Text
 label hint = do
@@ -348,3 +443,8 @@ define name retType body = do
   putAsmLn $ "define " <> toAsm retType <> " @" <> name <> "() {"
   void $ runBlockBuilder body (\opr -> putAsmLn $ "ret " <> toAsm retType <> " " <> opr)
   putAsmLn "}"
+
+defer :: (MonadReader CodeGenEnv m, MonadIO m) => ReaderT CodeGenEnv IO () -> m ()
+defer action = do
+  CodeGenEnv {postprocess} <- ask
+  modifyIORef postprocess (action :)

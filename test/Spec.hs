@@ -5,7 +5,6 @@
 
 import Data.String.Conversions (convertString)
 import Data.Text qualified as Text
-import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (timeout)
@@ -190,7 +189,6 @@ test testcase typ lambdaLift noOptimize option compileMode = do
         ( proc
             opt
             [ "-S",
-              "-instnamer",
               "-o",
               llPath,
               llPath
