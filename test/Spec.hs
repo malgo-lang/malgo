@@ -49,7 +49,7 @@ testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
 
 outputDir :: FilePath
-outputDir = "/tmp/malgo_test"
+outputDir = "./test/tmp/malgo_test"
 
 main :: IO ()
 main =
@@ -161,6 +161,7 @@ findCommand list =
         ExitFailure _ -> go xs
 
 test ::
+  HasCallStack =>
   -- | File path of the test case
   FilePath ->
   -- | Type of the test case
@@ -195,7 +196,7 @@ test testcase typ lambdaLift noOptimize option compileMode = do
             ]
         )
     putText $ convertString err
-    exitCode `shouldBe` ExitSuccess
+    (opt, exitCode) `shouldBe` (opt, ExitSuccess)
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- findCommand ["clang-15", "clang"]
@@ -215,7 +216,7 @@ test testcase typ lambdaLift noOptimize option compileMode = do
                ]
       )
   putText $ convertString err
-  exitCode `shouldBe` ExitSuccess
+  (clang, exitCode) `shouldBe` (clang, ExitSuccess)
 
   (exitCode, result) <-
     timeoutWrapper "run" $
@@ -224,7 +225,7 @@ test testcase typ lambdaLift noOptimize option compileMode = do
           ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
               & setStdin (byteStringInput "Hello")
           )
-  exitCode `shouldBe` ExitSuccess
+  ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
   expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
   map ("-- Expected: " <>) (lines $ Text.stripEnd result) `shouldBe` expected
   where

@@ -8,6 +8,7 @@ import Data.List qualified as List
 import Data.Maybe (fromJust)
 import Data.Text qualified as T
 import Data.Traversable (for)
+import Koriel.Core.Alpha (AlphaEnv (..), alpha)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import Koriel.Core.Type qualified as C
@@ -302,14 +303,17 @@ curryFun isToplevel hint ps e = curryFun' ps []
         then do
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
-          fun <- newExternalId (hint <> "_curry") (C.typeOf $ Fun ps e) -- =<< view moduleName
+          fun <- newExternalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           globalDefs <>= [FunDef fun ps (C.typeOf fun) e]
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do
-          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e) -- =<< view moduleName
+          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
-          pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps e)] body)
+          ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
+          uniqSupply <- asks (.uniqSupply)
+          e' <- alpha e (AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps $ map C.Var ps'})
+          pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
     curryFun' (x : xs) as = do
       fun <- curryFun' xs (C.Var x : as)
       let funObj = uncurry Fun fun
