@@ -111,6 +111,8 @@ library
     , optparse-applicative
     , parser-combinators
     , pretty
+    , raw-strings-qq
+    , regex-tdfa
     , relude >=1.0.0.0
     , string-conversions
     , syb
@@ -168,6 +170,8 @@ executable malgo
     , optparse-applicative
     , parser-combinators
     , pretty
+    , raw-strings-qq
+    , regex-tdfa
     , relude >=1.0.0.0
     , string-conversions
     , syb
@@ -228,6 +232,8 @@ test-suite malgo-test
     , parser-combinators
     , pretty
     , prettyprinter
+    , raw-strings-qq
+    , regex-tdfa
     , relude >=1.0.0.0
     , silently
     , string-conversions
@@ -290,6 +296,8 @@ benchmark malgo-bench
     , optparse-applicative
     , parser-combinators
     , pretty
+    , raw-strings-qq
+    , regex-tdfa
     , relude >=1.0.0.0
     , string-conversions
     , syb

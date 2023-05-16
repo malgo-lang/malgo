@@ -120,6 +120,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       -- TODO: Can we only optimize the code that has been lambda lifted?
       -- TODO: Improve the function inliner to reduce the code explosion.
       -- TODO: Add more information to `call` instruction to improve the function inliner.
+      -- Or simply skip inlining and do other optimizations.
 
       case env.compileMode of
         LLVM -> do

@@ -1,6 +1,9 @@
+{-# LANGUAGE QuasiQuotes #-}
+
 module Koriel.Core.CodeGen.PrintLLVM (codeGen) where
 
-import Control.Lens (ifor, ifor_, view, _1)
+import Control.Exception (assert)
+import Control.Lens (ifor_, view, _1)
 import Control.Monad.Cont (ContT, runContT, withContT)
 import Control.Monad.Extra (whileM)
 import Data.Foldable (maximum)
@@ -15,8 +18,13 @@ import Koriel.Id (Id (..), ModuleName (..), idToText)
 import Koriel.Prelude
 import Koriel.Pretty
 import Relude.Unsafe qualified as Unsafe
+import Text.RawString.QQ (r)
+import Text.Regex.TDFA ((=~))
 
 type KName = Id Type
+
+validRegisterPattern :: Text
+validRegisterPattern = "^[-a-zA-Z$._][-a-zA-Z$._0-9]*$"
 
 -- Note: LLVM IR is not probably newline sensitive.
 -- So we don't care about newlines. (except for readability)
@@ -36,12 +44,14 @@ codeGen srcPath dstPath moduleName Program {..} = do
           foldr buildInternTable mempty topVars
             & \m -> foldr buildInternTable m topFuns
     register <- newIORef mempty
+    stringCount <- newIORef 0
     postprocess <- newIORef []
     runReaderT ?? CodeGenEnv {..} $ do
       putAsmLn $ "source_filename = \"" <> toText srcPath <> "\""
       extern "GC_init" [] VoidT
       extern "malgo_malloc" [Int64T] AnyT
       extern "malgo_hash_table_new" [] AnyT
+      extern "malgo_hash_table_insert" [AnyT, StringT, AnyT] VoidT
 
       for_ extFuns \case
         (name, ps :-> r) -> extern name ps r
@@ -68,7 +78,7 @@ codeGen srcPath dstPath moduleName Program {..} = do
         void $ sequence_ postprocess'
         not . null <$> readIORef postprocess
   where
-    buildInternTable s = HashMap.insert (view _1 s) (sigil Global <> show (idToText (view _1 s)))
+    buildInternTable s = HashMap.insert (view _1 s) (sigil Global <> toAsm (view _1 s))
     uncurry4 f (w, x, y, z) = f w x y z
 
 type BlockBuilder m a = ContT () m a
@@ -86,7 +96,6 @@ withTerminator = flip withContT
 type Register = Text
 
 putExprLn ::
-  HasCallStack =>
   (MonadReader CodeGenEnv m, MonadIO m) =>
   Expr KName ->
   -- | Register name of the result
@@ -101,14 +110,16 @@ putExprLn (Call f xs) = do
 
   funcAddr <- register "funcAddr" $ gep (typeOf f) f' [0, 1]
   func <- register "func" $ load (typeOf f) funcAddr -- typeOf f == "ptr"
-  callClosure func (typeOf f) capture xs'
+  register "call" $ callClosure func (typeOf f) capture xs'
 putExprLn (CallDirect f xs) = do
   f' <- lookupName f
   xs' <- traverse atomToConstant xs
-  call f' (typeOf f) xs'
+  register "calldirect" $ call f' (typeOf f) xs'
 putExprLn (RawCall name (params :-> ret) xs) = do
   xs' <- traverse atomToConstant xs
-  call (sigil Global <> show name) (params :-> ret) xs'
+  if name =~ validRegisterPattern
+    then register "rawcall" $ call (sigil Global <> name) (params :-> ret) xs'
+    else error $ "invalid function name: " <> show name
 putExprLn BinOp {} = error "not implemented"
 putExprLn (Cast ty a)
   | toAsm ty /= toAsm (typeOf a) = do
@@ -231,11 +242,10 @@ callClosure ::
   Register ->
   -- | Arguments
   [Register] ->
-  BlockBuilder m Register
+  m ()
 callClosure func (params :-> ret) capture args = do
   let args' = zipWith (\p a -> toAsm p <> " " <> a) params args
-  register "callClosure" $ do
-    putAsmLn $ "call " <> toAsm ret <> " " <> func <> "(" <> Text.intercalate ", " ("ptr " <> capture : args') <> ")"
+  putAsmLn $ "call " <> toAsm ret <> " " <> func <> "(" <> Text.intercalate ", " ("ptr " <> capture : args') <> ")"
 callClosure _ t _ _ = errorDoc $ sep ["invalid type in callClosure:", pPrint t]
 
 call ::
@@ -246,11 +256,10 @@ call ::
   Type ->
   -- | Arguments
   [Register] ->
-  BlockBuilder m Register
+  m ()
 call func (params :-> ret) args = do
   let args' = zipWith (\p a -> toAsm p <> " " <> a) params args
-  register "call" $ do
-    putAsmLn $ "call " <> toAsm ret <> " " <> func <> "(" <> Text.intercalate ", " args' <> ")"
+  putAsmLn $ "call " <> toAsm ret <> " " <> func <> "(" <> Text.intercalate ", " args' <> ")"
 call _ t _ = errorDoc $ sep ["invalid type in call:", pPrint t]
 
 mallocBytes ::
@@ -266,8 +275,7 @@ mallocType ::
   -- | Type
   Text ->
   m ()
-mallocType typ =
-  putAsmLn $ "call ptr @malgo_malloc(i64 " <> sizeOf typ <> ")"
+mallocType typ = mallocBytes $ sizeOf typ
   where
     sizeOf typ = "ptrtoint (ptr getelementptr (" <> typ <> ", ptr null, i32 1) to i64)"
 
@@ -400,7 +408,7 @@ putGlobalValue (Atom atom) = do
 putGlobalValue e | toAsm (typeOf e) == "ptr" = putAsmLn "global ptr undef"
 putGlobalValue e = errorDoc $ sep ["cannot be global:", pPrint e]
 
-atomToConstant :: HasCallStack => MonadReader CodeGenEnv m => Atom KName -> m Text
+atomToConstant :: (HasCallStack, MonadIO m) => MonadReader CodeGenEnv m => Atom KName -> m Text
 atomToConstant (Var name) = lookupName name
 atomToConstant (Unboxed (Int32 i)) = pure $ show i
 atomToConstant (Unboxed (Int64 i)) = pure $ show i
@@ -408,7 +416,12 @@ atomToConstant (Unboxed (Float f)) = pure $ show f
 atomToConstant (Unboxed (Double d)) = pure $ show d
 atomToConstant (Unboxed (Char c)) = pure $ show (ord c)
 -- TODO: add global variable and return its name
-atomToConstant (Unboxed (String s)) = error "not implemented"
+atomToConstant (Unboxed (String s)) = do
+  -- Generate global variable identifier
+  sName <- newStringName
+  defer $ putAsmLn $ sName <> " = constant [" <> show (Text.length s + 1) <> " x i8] c\"" <> s <> "\\00\""
+  pure sName
+-- Generate global variable storing the string
 atomToConstant (Unboxed (Bool b)) = pure $ show (fromEnum b)
 
 data NameSpace = Global | Local
@@ -421,6 +434,7 @@ data CodeGenEnv = CodeGenEnv
   { moduleName :: ModuleName,
     interned :: HashMap KName Register,
     register :: IORef (HashMap Text Int),
+    stringCount :: IORef Int,
     postprocess :: IORef [ReaderT CodeGenEnv IO ()],
     output :: Handle
   }
@@ -455,18 +469,24 @@ instance ToAsm Type where
   toAsm AnyT = "ptr"
   toAsm VoidT = "void"
 
+instance ToAsm KName where
+  toAsm :: KName -> Text
+  toAsm = show . idToText
+
 -- * Utilities
 
-intern :: HasCallStack => MonadReader CodeGenEnv m => KName -> NameSpace -> m (CodeGenEnv -> CodeGenEnv, Text)
+intern :: MonadReader CodeGenEnv m => KName -> NameSpace -> m (CodeGenEnv -> CodeGenEnv, Text)
 intern name given = do
   CodeGenEnv {interned} <- ask
-  case HashMap.lookup name interned of
-    Just defined ->
-      let register = sigil given <> Text.dropEnd 1 (Text.drop 1 defined) <> ".\""
-       in pure (\env -> env {interned = HashMap.insert name register interned}, register)
-    Nothing ->
-      let register = sigil given <> show (idToText name)
-       in pure (\env -> env {interned = HashMap.insert name register interned}, register)
+  let register = newName (HashMap.lookup name interned)
+  pure (\env -> env {interned = HashMap.insert name register interned}, register)
+  where
+    -- Generate a new register name based on the interned name.
+    newName :: Maybe Register -> Register
+    newName Nothing = sigil given <> toAsm name
+    -- Add a '$' to the end of the name to avoid name conflict.
+    -- '$' used as the prefix of temporal (mean generated by compiler) identifiers in Koriel, so any identifier in Koriel cannot end with '$'.
+    newName (Just defined) = sigil given <> Text.dropEnd 1 (Text.drop 1 defined) <> "$\""
 
 sigil :: NameSpace -> Text
 sigil Global = "@"
@@ -509,6 +529,13 @@ label hint = do
   let count = HashMap.lookupDefault 0 hint register'
   modifyIORef register $ HashMap.insert hint (count + 1)
   pure $ show (hint <> show count)
+
+newStringName :: (MonadReader CodeGenEnv m, MonadIO m) => m Text
+newStringName = do
+  CodeGenEnv {stringCount} <- ask
+  count <- readIORef stringCount
+  modifyIORef stringCount (+ 1)
+  pure $ "@str" <> show count
 
 extern :: (MonadReader CodeGenEnv m, MonadIO m) => Text -> [Type] -> Type -> m ()
 extern name params result = do
