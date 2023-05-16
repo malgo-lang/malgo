@@ -146,6 +146,8 @@ lintExpr (Destruct a _ xs e) = do
 lintExpr (DestructRecord a xs e) = do
   lintAtom a
   define (HashMap.elems xs) $ lintExpr e
+lintExpr (Assign x (Atom v) _) = do
+  errorDoc $ "reduntant assignment:" <+> pPrint x <+> pPrint v
 lintExpr (Assign x v e) = do
   lintExpr v
   define [x] (lintExpr e)

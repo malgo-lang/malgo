@@ -107,7 +107,9 @@ foldVariable :: (Eq a, Monad f) => Expr a -> f (Expr a)
 foldVariable = transformM
   \case
     Match (Atom a) [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
-    Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
+    -- (= x a e) -> e[x := a] is a valid transformation in 'foldVariable'.
+    -- But this transformation is not necessary, because 'Koriel.Core.Flat' and 'Koriel.Core.Lint' guarantee that '=' never binds an atom.
+    -- Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
     x -> pure x
 
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])

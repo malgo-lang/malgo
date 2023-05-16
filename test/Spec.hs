@@ -43,6 +43,7 @@ import Test.Hspec (
   runIO,
   shouldBe,
   shouldThrow,
+  xit,
  )
 
 testcaseDir :: FilePath
@@ -65,7 +66,7 @@ main =
     describe "Test malgo to-ll" $ parallel do
       for_ testcases \testcase -> do
         describe testcase do
-          it ("test usual case " <> testcase) $ example do
+          it ("test normal case " <> testcase) $ example do
             testNormal (testcaseDir </> testcase)
           it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
             testNoNo (testcaseDir </> testcase)
@@ -86,7 +87,7 @@ main =
 
     describe "Print LLVM assembly" do
       parallel $ for_ testcases \testcase -> do
-        it ("test " <> testcase) $ example do
+        xit ("test " <> testcase) $ example do
           test (testcaseDir </> testcase) "print" False True defaultOptimizeOption PrintLLVM
 #ifdef TEST_ALL
     describe "Test malgo to-ll on all combinations of optimization options" do

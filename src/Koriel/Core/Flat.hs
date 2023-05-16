@@ -43,18 +43,17 @@ flatExpr (Let ds e) = do
   tell . Endo . Let =<< traverseOf (traversed . expr) (runFlat . flatExpr) ds
   flatExpr e
 flatExpr (Match e cs) = flatMatch e cs
-flatExpr (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExpr) cs <*> flatExpr e
+flatExpr (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) (runFlat . flatExpr) cs <*> runFlat (flatExpr e)
+flatExpr (SwitchUnboxed v cs e) = SwitchUnboxed v <$> traverseOf (traversed . _2) (runFlat . flatExpr) cs <*> runFlat (flatExpr e)
 flatExpr (Destruct v con ps e) = do
   tell $ Endo $ \k -> Destruct v con ps k
   flatExpr e
 flatExpr (DestructRecord v kvs e) = do
   tell $ Endo $ \k -> DestructRecord v kvs k
   flatExpr e
-flatExpr (Assign x (Atom (Var v)) e) = do
-  flatExpr $ replaceOf atom (Var x) (Var v) e
 flatExpr (Assign x v e) = do
   v <- flatExpr v
-  tell $ Endo $ \k -> Assign x v k
+  tell $ Endo $ \k -> assign x v k
   flatExpr e
 flatExpr e = pure e
 
@@ -71,7 +70,7 @@ flatMatch ::
 flatMatch e [Unpack con ps e'] = do
   e <- flatExpr e
   v <- newTemporalId (nameFromCon con) (typeOf e)
-  tell $ Endo $ \k -> Assign v e k
+  tell $ Endo $ \k -> assign v e k
   tell $ Endo $ \k -> Destruct (Var v) con ps k
   flatExpr e'
   where
@@ -80,16 +79,13 @@ flatMatch e [Unpack con ps e'] = do
     nameFromCon (Con Tuple _) = "tuple"
 flatMatch e [Bind x _ e'] = do
   e <- flatExpr e
-  tell $ Endo $ \k ->
-    case k of
-      Atom (Var y) | x == y -> e -- (= x e x) -> v
-      _ -> Assign x e k
+  tell $ Endo $ assign x e
   flatExpr e'
 flatMatch e cs = do
   e <- flatExpr e
   cs <- traverseOf (traversed . expr) (runFlat . flatExpr) cs
   e' <- newTemporalId "match" (typeOf e)
-  tell $ Endo $ \k -> Assign e' e k
+  tell $ Endo $ assign e' e
   matchToSwitch e' cs
 
 -- | 'matchToSwitch' converts a match expression into a switch expression.
@@ -118,10 +114,15 @@ matchToSwitch scrutinee cs@(Exact {} : _) = do
     flatExact :: Case a -> (Unboxed, Expr a)
     flatExact (Exact u e) = (u, e)
     flatExact _ = error "flatExact: unreachable"
-matchToSwitch scrutinee (Bind x _ e : _) = pure $ Assign x (Atom $ Var scrutinee) e
+matchToSwitch scrutinee (Bind x _ e : _) = pure $ assign x (Atom $ Var scrutinee) e
 matchToSwitch _ _ = error "matchToSwitch: unreachable"
 
 -- | 'bindToAssign' converts a bind case into an assignment.
 bindToAssign :: Id Type -> Case (Id Type) -> Expr (Id Type)
-bindToAssign s (Bind x _ e) = Assign x (Atom (Var s)) e
+bindToAssign s (Bind x _ e) = assign x (Atom (Var s)) e
 bindToAssign _ _ = error "bindToAssign: unreachable"
+
+assign :: Id Type -> Expr (Id Type) -> Expr (Id Type) -> Expr (Id Type)
+assign x v (Atom (Var y)) | x == y = v
+assign x (Atom v) e = replaceOf atom (Var x) v e
+assign x v e = Assign x v e

@@ -205,6 +205,7 @@ dsExpr (G.Var (Typed typ _) name) = do
           -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
           case C.typeOf name' of
             pts :-> _ -> do
+              -- TODO: merge global closure
               clsId <- newTemporalId "gblcls" (C.typeOf name')
               ps <- traverse (newTemporalId "p") pts
               pure $ C.Let [LocalDef clsId (C.typeOf clsId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
