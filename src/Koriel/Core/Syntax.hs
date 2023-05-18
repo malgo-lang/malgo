@@ -250,17 +250,17 @@ data Expr a
   | -- | switch expression
     Switch
       (Atom a)
-      -- | cases
       [(Tag, Expr a)]
-      -- | default case
+      -- ^ cases
       (Expr a)
+      -- ^ default case
   | -- | switch by unboxed value
     SwitchUnboxed
       (Atom a)
-      -- | cases
       [(Unboxed, Expr a)]
-      -- | default case
+      -- ^ cases
       (Expr a)
+      -- ^ default case
   | -- | destruct a value
     Destruct (Atom a) Con [a] (Expr a)
   | -- | destruct a record
@@ -418,11 +418,11 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
     vcat $
       concat
         [ ["; variables"],
-          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) $ sort topVars,
+          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) topVars,
           ["; functions"],
-          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) $ sort topFuns,
+          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) $ sort extFuns
+          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) extFuns
         ]
 
 instance HasExpr Obj where

@@ -145,7 +145,7 @@ compile srcPath env = do
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
           diag' = addFile diag srcPath (toString src)
-       in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
+       in printDiagnostic stderr (not env.testMode) (not env.testMode) 4 defaultStyle diag' >> exitFailure
   when env.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst

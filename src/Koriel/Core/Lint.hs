@@ -2,13 +2,13 @@ module Koriel.Core.Lint (lint) where
 
 import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
 import Data.HashMap.Strict qualified as HashMap
+import Data.String.Conversions (convertString)
 import Koriel.Core.Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
-import Data.String.Conversions (convertString)
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
@@ -32,7 +32,9 @@ define pos xs m = do
     when (x `elem` env) $
       errorDoc $
         pPrint x <> " is already defined"
-        $$ "while defining" <+> pos <+> pPrint xs
+          $$ "while defining"
+          <+> pos
+          <+> pPrint xs
   local (xs <>) m
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool

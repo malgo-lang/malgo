@@ -14,6 +14,7 @@ import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Data.List qualified as List
 import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
@@ -565,6 +566,10 @@ genLocalDef ::
   LocalDef (Id C.Type) ->
   m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName _ (Fun ps e)) = do
+  globalValues <- HashSet.fromList . HashMap.keys <$> view globalValueMap
+  let fvs = toList $ freevars (Fun ps e) `HashSet.difference` globalValues
+  -- キャプチャされる変数を詰める構造体の型
+  let capType = StructureType False (map (convType . C.typeOf) fvs)
   -- クロージャの元になる関数を生成する
   name <- toName <$> newInternalId (funName.name <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
@@ -574,22 +579,19 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
       env <-
         HashMap.fromList <$> ifor fvs \i fv ->
           (fv,) <$> do
-            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i]
-            load (convType $ C.typeOf fv) fvAddr 0
+            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` (encodeUtf8 fv.name <> "_addr")
+            load (convType $ C.typeOf fv) fvAddr 0 `named` encodeUtf8 fv.name
       local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
   -- キャプチャされる変数を構造体に詰める
-  capture <- mallocType capType
+  capture <- mallocType capType `named` (encodeUtf8 funName.name <> "_capture")
   ifor_ fvs $ \i fv -> do
     fvOpr <- findVar fv
-    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr
+    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr `named` (encodeUtf8 fv.name)
   closAddr <- findVar funName
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` (encodeUtf8 funName.name <> "_capture")
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` (encodeUtf8 funName.name <> "_func")
   pure $ one (funName, closAddr)
   where
-    fvs = toList $ freevars (Fun ps e)
-    -- キャプチャされる変数を詰める構造体の型
-    capType = StructureType False (map (convType . C.typeOf) fvs)
     psTypes = ptr : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
 genLocalDef (LocalDef name@(C.typeOf -> SumT cs) _ (Pack _ con@(Con _ ts) xs)) = do

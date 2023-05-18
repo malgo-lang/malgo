@@ -19,9 +19,10 @@ import Relude.Extra.Map (member)
 
 data LambdaLiftState = LambdaLiftState
   { _funcs :: HashMap (Id Type) ([Id Type], Type, Expr (Id Type)),
-    -- | Known variables. These variables are defined in global scope.
-    -- If a function is known, that function can be called directly.
-    _knowns :: HashSet (Id Type)
+    -- | Known functions. If a function is known, that function can be called directly.
+    _knowns :: HashSet (Id Type),
+    -- | Variables that defined in global scope.
+    defined :: HashSet (Id Type)
   }
 
 funcs :: Lens' LambdaLiftState (HashMap (Id Type) ([Id Type], Type, Expr (Id Type)))
@@ -49,7 +50,7 @@ def name xs e = do
 lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
 lambdalift uniqSupply moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
-    evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars} $ do
+    evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars} $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
       funcs <>= HashMap.fromList (map (\(f, ps, t, e) -> (f, (ps, t, e))) topFuns)
       knowns <>= HashSet.fromList (map (view _1) topFuns)
@@ -90,7 +91,8 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
   (e', state) <- localState $ llift e
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
-  let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
+  defined <- gets (.defined)
+  let fvs = HashSet.difference (freevars body') (ks <> defined <> HashSet.fromList as)
   if null fvs && not (n `member` freevars e')
     then do
       put state
@@ -98,7 +100,8 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
     else do
       put backup
       body' <- llift body
-      let fvs = HashSet.difference (freevars body') (ks <> HashSet.fromList as)
+      defined <- gets (.defined)
+      let fvs = HashSet.difference (freevars body') (ks <> defined <> HashSet.fromList as)
       newFun <- def n (toList fvs <> as) body'
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e

@@ -361,14 +361,7 @@ tcExpr (Fn pos cs) = do
   let patNums :: Int = countPatNums c'
   for_ cs' \c -> do
     when (countPatNums c /= patNums) $ do
-      let srcFileName = sourceName pos._start
-      src <- decodeUtf8 <$> readFileBS srcFileName
-      let diag =
-            def & \diag ->
-              addFile diag srcFileName src & \diag ->
-                addReport diag (Err Nothing "The number of patterns in each clause must be the same" (mainDiag c' : map restDiag cs') [])
-      printDiagnostic stderr True True 4 defaultStyle diag
-      exitFailure
+      errorOn pos $ "The number of patterns in each clause must be the same"
     tell [(pos, typeOf c' :~ typeOf c)]
   pure $ Fn (Typed (typeOf c') pos) (c' :| cs')
   where

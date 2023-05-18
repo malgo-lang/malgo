@@ -37,7 +37,7 @@ desugar tcEnv (Module _ ds) = do
   malgoEnv <- ask
   runReaderT ?? makeDsEnv malgoEnv $ do
     (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
-    let ds'' = ds' <> dsEnv._globalDefs
+    let ds'' = dsEnv._globalDefs <> ds' -- ds' needs variables defined in globalDefs
     let varDefs = mapMaybe (preview _VarDef) ds''
     let funDefs = mapMaybe (preview _FunDef) ds''
     let extDefs = mapMaybe (preview _ExtDef) ds''
@@ -206,9 +206,15 @@ dsExpr (G.Var (Typed typ _) name) = do
           case C.typeOf name' of
             pts :-> _ -> do
               -- TODO: merge global closure
-              clsId <- newTemporalId "gblcls" (C.typeOf name')
+              -- clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
+              -- ps <- traverse (newTemporalId "p") pts
+              -- pure $ C.Let [LocalDef clsId (C.typeOf clsId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+              clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
+              internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
               ps <- traverse (newTemporalId "p") pts
-              pure $ C.Let [LocalDef clsId (C.typeOf clsId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+              let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
+              modify $ \s -> s {_globalDefs = clsDef : s._globalDefs}
+              pure $ Atom $ C.Var clsId
             _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where

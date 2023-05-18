@@ -43,7 +43,7 @@ import Test.Hspec (
   runIO,
   shouldBe,
   shouldThrow,
-  xit,
+  xit, shouldReturn,
  )
 
 testcaseDir :: FilePath
@@ -121,32 +121,31 @@ setupRuntime = do
 
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
-compile src dst modPaths lambdaLift noOptimize option compileMode =
-  hSilence [stderr] do
-    malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
-    malgoEnv <-
-      pure
-        malgoEnv
-          { dstPath = dst,
-            _modulePaths = [takeDirectory dst, outputDir </> "libs"],
-            lambdaLift,
-            noOptimize,
-            compileMode,
-            testMode = True,
-            optimizeOption = option
-          }
-    Driver.compile src malgoEnv
+compile src dst modPaths lambdaLift noOptimize option compileMode = do
+  malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
+  malgoEnv <-
+    pure
+      malgoEnv
+        { dstPath = dst,
+          _modulePaths = [takeDirectory dst, outputDir </> "libs"],
+          lambdaLift,
+          noOptimize,
+          compileMode,
+          testMode = True,
+          optimizeOption = option
+        }
+  Driver.compile src malgoEnv
 
-    -- Check if the generated Koriel code is valid
-    let korielPath = dst -<.> "kor"
-    koriel <- decodeUtf8 <$> readFileBS korielPath
-    case Koriel.parse korielPath koriel of
-      Left err ->
-        let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-            diag' = addFile diag korielPath (toString koriel)
-         in printDiagnostic stderr True False 4 defaultStyle diag' >> exitFailure
-      Right ast -> do
-        Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
+  -- Check if the generated Koriel code is valid
+  let korielPath = dst -<.> "kor"
+  koriel <- decodeUtf8 <$> readFileBS korielPath
+  case Koriel.parse korielPath koriel of
+    Left err ->
+      let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
+          diag' = addFile diag korielPath (toString koriel)
+       in printDiagnostic stdout False False 4 defaultStyle diag' >> exitFailure
+    Right ast -> do
+      Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
 
 findCommand :: [String] -> IO String
 findCommand list =
