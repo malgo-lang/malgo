@@ -106,13 +106,13 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       lint coreOpt
 
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= flat else pure coreOpt
-      lint coreLL
       when (env.debugMode && env.lambdaLift) $
         liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
       when env.testMode do
         writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
+      lint coreLL
 
       -- Optimization after lambda lifting causes code explosion.
       -- The effect of lambda lifting is expected to be fully realized by backend's optimization.

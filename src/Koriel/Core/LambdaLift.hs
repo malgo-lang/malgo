@@ -19,6 +19,8 @@ import Relude.Extra.Map (member)
 
 data LambdaLiftState = LambdaLiftState
   { _funcs :: HashMap (Id Type) ([Id Type], Type, Expr (Id Type)),
+    -- | Known variables. These variables are defined in global scope.
+    -- If a function is known, that function can be called directly.
     _knowns :: HashSet (Id Type)
   }
 
@@ -47,7 +49,7 @@ def name xs e = do
 lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
 lambdalift uniqSupply moduleName Program {..} =
   runReaderT ?? LambdaLiftEnv {..} $
-    evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns} $ do
+    evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars} $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
       funcs <>= HashMap.fromList (map (\(f, ps, t, e) -> (f, (ps, t, e))) topFuns)
       knowns <>= HashSet.fromList (map (view _1) topFuns)
