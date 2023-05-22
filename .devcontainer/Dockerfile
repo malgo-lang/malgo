@@ -31,8 +31,8 @@ RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.6.1 && ghcup set ghc 9.6.
 
 RUN ghcup install cabal 3.10.1.0 && ghcup set cabal 3.10.1.0
 
-# RUN ghcup compile hls --git-ref 6640ebf33eeb8a62ccd094e2f47f69106acfd200 --ghc 9.6.1 -j$(nproc)
-RUN ghcup install hls
+RUN ghcup compile hls --git-ref b84110b508e2f30899b84ffc3928a5e20be1615f --ghc 9.6.1 -j$(nproc)
+# RUN ghcup install hls
 
 RUN ghcup gc
 
