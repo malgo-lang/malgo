@@ -9,7 +9,7 @@ module Koriel.Core.CodeGen.LLVM (
 where
 
 import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
-import Control.Monad.Cont (ContT (..), MonadCont (callCC), evalContT, withContT)
+import Control.Monad.Cont (ContT, runContT)
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.Cont (shiftT)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
@@ -209,19 +209,6 @@ sizeofType (PtrT _) = 8
 sizeofType (RecordT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
-
--- | Change the current terminator.
-withTerminator ::
-  -- | Action
-  ContT () m Operand ->
-  -- | Builder of the new terminator based on the current terminator
-  ( (Operand -> m ()) ->
-    -- \^ Current terminator
-    Operand ->
-    m ()
-  ) ->
-  ContT () m Operand
-withTerminator = flip withContT
 
 findVar :: (MonadCodeGen m, MonadIRBuilder m) => Id C.Type -> m Operand
 findVar x = findLocalVar
@@ -436,14 +423,15 @@ genExpr (Match e cs)
             defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
             resultBlock <- block `named` "match_result"
             load (convType $ C.typeOf (Match e cs)) result 0
-        else
-          genExpr e `withTerminator` \k eOpr -> mdo
-            tagOpr <- case C.typeOf e of
-              SumT _ -> do
-                tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
-                load i8 tagAddr 0
-              RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-              _ -> pure eOpr
+        else shiftT \k -> do
+          eOpr <- genExpr e
+          tagOpr <- case C.typeOf e of
+            SumT _ -> do
+              tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
+              load i8 tagAddr 0
+            RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+            _ -> pure eOpr
+          lift mdo
             switch tagOpr defaultLabel labels
             -- 各ケースのコードとラベルを生成する
             -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
@@ -483,26 +471,13 @@ genExpr (Switch v bs e) = do
           load i8 tagAddr 0
         RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
         _ -> pure vOpr
-      lift $ mdo
+      lift mdo
         switch tagOpr defaultLabel labels
         labels <- traverse (genBranch (constructorList v) k) bs
         defaultLabel <- withBlock "switch_default" do
           runContT (genExpr e) k
         pure ()
   where
-    -- genAtom v `withTerminator` \k vOpr -> mdo
-    --   tagOpr <- case C.typeOf v of
-    --     SumT _ -> do
-    --       tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
-    --       load i8 tagAddr 0
-    --     RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-    --     _ -> pure vOpr
-    --   switch tagOpr defaultLabel labels
-    --   labels <- traverse (genBranch (constructorList v) k) bs
-    --   defaultLabel <- withBlock "switch_default" do
-    --     runContT (genExpr e) k
-    --   pure ()
-
     genBranch cs k (tag, e) = do
       let tag' = case C.typeOf v of
             SumT _ -> C.Int 8 $ fromIntegral $ Unsafe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
@@ -530,8 +505,9 @@ genExpr (SwitchUnboxed v bs e) = do
           switch vOpr defaultLabel labels
         resultBlock <- block `named` "switch-unboxed_result"
         load (convType $ C.typeOf e) result 0
-    else
-      genAtom v `withTerminator` \k vOpr -> mdo
+    else shiftT \k -> do
+      vOpr <- genAtom v
+      lift mdo
         br switchBlock
         labels <- traverse (genBranch k) bs
         defaultLabel <- withBlock "switch-unboxed_default" do
@@ -569,7 +545,7 @@ genExpr (Assign _ v e) | C.typeOf v == VoidT = do
 genExpr (Assign x v e) = do
   vOpr <- genExpr v
   local (over valueMap $ at x ?~ vOpr) $ genExpr e
-genExpr (Error _) = ContT \_ -> unreachable
+genExpr (Error _) = shiftT \_ -> unreachable
 
 -- | Get constructor list from the type of scrutinee.
 constructorList :: HasType s => s -> [Con]
