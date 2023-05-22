@@ -65,8 +65,7 @@ data CodeGenEnv = CodeGenEnv
     _valueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
     _funcMap :: HashMap (Id C.Type) Operand,
-    moduleName :: ModuleName,
-    isAllocaResult :: Bool
+    moduleName :: ModuleName
   }
 
 makeFieldsNoPrefix ''CodeGenEnv
@@ -78,8 +77,7 @@ newCodeGenEnv uniqSupply moduleName Program {..} =
       _valueMap = mempty,
       _globalValueMap = varMap,
       _funcMap = funcMap,
-      moduleName = moduleName,
-      isAllocaResult = False
+      moduleName = moduleName
     }
   where
     -- topVarsのOprMapを作成
@@ -398,10 +396,9 @@ genExpr (Match e (Bind x _ body : _)) = do
   local (over valueMap (at x ?~ eOpr)) (genExpr body)
 genExpr (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
-  | otherwise = do
-      isAllocaResult <- asks (.isAllocaResult)
-      if isAllocaResult
-        then do
+  | otherwise =
+      {-
+        do
           result <- alloca (convType $ C.typeOf (Match e cs)) Nothing 0
           eOpr <- genExpr e
           lift $ mdo
@@ -423,27 +420,27 @@ genExpr (Match e cs)
             defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
             resultBlock <- block `named` "match_result"
             load (convType $ C.typeOf (Match e cs)) result 0
-        else shiftT \k -> do
-          eOpr <- genExpr e
-          tagOpr <- case C.typeOf e of
-            SumT _ -> do
-              tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
-              load i8 tagAddr 0
-            RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-            _ -> pure eOpr
-          lift mdo
-            switch tagOpr defaultLabel labels
-            -- 各ケースのコードとラベルを生成する
-            -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-            (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
-            -- defaultsの先頭を取り出し、switchのデフォルトケースとする
-            -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-            defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
-            pure ()
-genExpr (Switch v bs e) = do
-  isAllocaResult <- asks (.isAllocaResult)
-  if isAllocaResult
-    then do
+        -}
+      shiftT \k -> do
+        eOpr <- genExpr e
+        tagOpr <- case C.typeOf e of
+          SumT _ -> do
+            tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
+            load i8 tagAddr 0
+          RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+          _ -> pure eOpr
+        lift mdo
+          switch tagOpr defaultLabel labels
+          -- 各ケースのコードとラベルを生成する
+          -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+          (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
+          -- defaultsの先頭を取り出し、switchのデフォルトケースとする
+          -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
+          defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
+          pure ()
+genExpr (Switch v bs e) =
+  {-
+    do
       result <- alloca (convType $ C.typeOf e) Nothing 0
       vOpr <- genAtom v
 
@@ -463,20 +460,21 @@ genExpr (Switch v bs e) = do
           runContT (genExpr e) cont
         resultBlock <- block `named` "switch_result"
         load (convType $ C.typeOf e) result 0
-    else shiftT \k -> do
-      vOpr <- genAtom v
-      tagOpr <- case C.typeOf v of
-        SumT _ -> do
-          tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
-          load i8 tagAddr 0
-        RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-        _ -> pure vOpr
-      lift mdo
-        switch tagOpr defaultLabel labels
-        labels <- traverse (genBranch (constructorList v) k) bs
-        defaultLabel <- withBlock "switch_default" do
-          runContT (genExpr e) k
-        pure ()
+  -}
+  shiftT \k -> do
+    vOpr <- genAtom v
+    tagOpr <- case C.typeOf v of
+      SumT _ -> do
+        tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
+        load i8 tagAddr 0
+      RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+      _ -> pure vOpr
+    lift mdo
+      switch tagOpr defaultLabel labels
+      labels <- traverse (genBranch (constructorList v) k) bs
+      defaultLabel <- withBlock "switch_default" do
+        runContT (genExpr e) k
+      pure ()
   where
     genBranch cs k (tag, e) = do
       let tag' = case C.typeOf v of
@@ -486,10 +484,9 @@ genExpr (Switch v bs e) = do
       label <- withBlock ("switch_branch_" <> encodeUtf8 (render (pPrint tag))) do
         runContT (genExpr e) k
       pure (tag', label)
-genExpr (SwitchUnboxed v bs e) = do
-  isAllocaResult <- asks (.isAllocaResult)
-  if isAllocaResult
-    then do
+genExpr (SwitchUnboxed v bs e) =
+  {-
+    do
       result <- alloca (convType $ C.typeOf e) Nothing 0
       vOpr <- genAtom v
 
@@ -505,16 +502,17 @@ genExpr (SwitchUnboxed v bs e) = do
           switch vOpr defaultLabel labels
         resultBlock <- block `named` "switch-unboxed_result"
         load (convType $ C.typeOf e) result 0
-    else shiftT \k -> do
-      vOpr <- genAtom v
-      lift mdo
-        br switchBlock
-        labels <- traverse (genBranch k) bs
-        defaultLabel <- withBlock "switch-unboxed_default" do
-          runContT (genExpr e) k
-        switchBlock <- withBlock "switch-unboxed_switch" do
-          switch vOpr defaultLabel labels
-        pure ()
+  -}
+  shiftT \k -> do
+    vOpr <- genAtom v
+    lift mdo
+      br switchBlock
+      labels <- traverse (genBranch k) bs
+      defaultLabel <- withBlock "switch-unboxed_default" do
+        runContT (genExpr e) k
+      switchBlock <- withBlock "switch-unboxed_switch" do
+        switch vOpr defaultLabel labels
+      pure ()
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
