@@ -19,7 +19,6 @@ import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
-import System.IO.Silently (hSilence)
 import System.Process.Typed (
   ExitCode (ExitFailure, ExitSuccess),
   byteStringInput,
@@ -43,7 +42,7 @@ import Test.Hspec (
   runIO,
   shouldBe,
   shouldThrow,
-  xit, shouldReturn,
+  xit,
  )
 
 testcaseDir :: FilePath
@@ -206,7 +205,8 @@ test testcase typ lambdaLift noOptimize option compileMode = do
           clang
           $ [ "-Wno-override-module",
               "-lm",
-              "-O3"
+              "-g"
+              -- "-O3"
             ]
             <> pkgConfig
             <> [ outputDir </> "libs" </> "runtime.c",
@@ -264,8 +264,7 @@ showOptimizeOption OptimizeOption {..} =
 
 optimizeOptions :: [OptimizeOption]
 optimizeOptions =
-  let inlineThreshold = 10
-      doSpecializeFunction = False
+  let OptimizeOption {..} = defaultOptimizeOption
    in [ OptimizeOption {..}
         | doFoldVariable <- [True, False],
           doInlineConstructor <- [True, False],

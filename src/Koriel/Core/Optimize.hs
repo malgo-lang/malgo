@@ -75,7 +75,11 @@ optimizeProgram ::
   Program (Id Type) ->
   m (Program (Id Type))
 optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
-  state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+  state <- execStateT ?? CallInlineEnv mempty $ do
+    for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+    for_ topVars $ \case
+      (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
+      _ -> pure ()
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
@@ -164,13 +168,17 @@ newtype CallInlineEnv = CallInlineEnv
 -- | Inline a function call.
 inlineFunction :: (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) => Expr (Id Type) -> f (Expr (Id Type))
 inlineFunction =
-  transformM \case
-    Call (Var f) xs -> lookupCallInline (Call . Var) f xs
-    CallDirect f xs -> lookupCallInline CallDirect f xs
-    Let ds e -> do
-      traverse_ checkInlinable ds
-      pure $ Let ds e
-    x -> pure x
+  transformM
+    ( \case
+        Let ds e -> do
+          traverse_ checkInlinable ds
+          pure $ Let ds e
+        e -> pure e
+    )
+    >=> transformM \case
+      Call (Var f) xs -> lookupCallInline (Call . Var) f xs
+      CallDirect f xs -> lookupCallInline CallDirect f xs
+      x -> pure x
 
 checkInlinable :: (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) => LocalDef (Id Type) -> m ()
 checkInlinable (LocalDef f _ (Fun ps v)) = do

@@ -442,12 +442,10 @@ genExpr (SwitchUnboxed v bs e) =
   shiftT \k -> do
     vOpr <- genAtom v
     lift mdo
-      br switchBlock
+      switch vOpr defaultLabel labels
       labels <- traverse (genBranch k) bs
       defaultLabel <- withBlock "switch-unboxed_default" do
         runContT (genExpr e) k
-      switchBlock <- withBlock "switch-unboxed_switch" do
-        switch vOpr defaultLabel labels
       pure ()
   where
     genBranch k (u, e) = do

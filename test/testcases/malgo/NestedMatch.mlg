@@ -1,0 +1,16 @@
+module NestedMatch = {
+  data Bool = False | True
+
+  foreign import malgo_print_string : String# -> ()
+
+  foreign import malgo_exit_failure : () -> a
+
+  def main = {
+    { True -> malgo_print_string "OK"#
+    | False -> malgo_exit_failure () }
+      ({ True -> False
+       | _ -> True } False)
+  }
+}
+
+-- Expected: OK
