@@ -78,7 +78,7 @@ newCodeGenEnv uniqSupply moduleName Program {..} =
       _globalValueMap = varMap,
       _funcMap = funcMap,
       moduleName = moduleName,
-      isAllocaResult = True
+      isAllocaResult = False
     }
   where
     -- topVarsのOprMapを作成
@@ -411,23 +411,50 @@ genExpr (Match e (Bind x _ body : _)) = do
 genExpr (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise = do
-      genExpr e `withTerminator` \k eOpr -> mdo
-        br switchBlock -- We need to end the current block before executing genCase
-        -- 各ケースのコードとラベルを生成する
-        -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-        (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
-        -- defaultsの先頭を取り出し、switchのデフォルトケースとする
-        -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-        defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
-        switchBlock <- withBlock "match_switch" do
-          tagOpr <- case C.typeOf e of
-            SumT _ -> do
-              tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
-              load i8 tagAddr 0
-            RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-            _ -> pure eOpr
-          switch tagOpr defaultLabel labels
-        pure ()
+      isAllocaResult <- asks (.isAllocaResult)
+      if isAllocaResult
+        then do
+          result <- alloca (convType $ C.typeOf (Match e cs)) Nothing 0
+          eOpr <- genExpr e
+          lift $ mdo
+            let cont = \opr -> do
+                  store result 0 opr
+                  br resultBlock
+            br switchBlock -- We need to end the current block before executing genCase
+            -- 各ケースのコードとラベルを生成する
+            -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+            (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) cont) cs
+            -- defaultsの先頭を取り出し、switchのデフォルトケースとする
+            -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
+            defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
+            switchBlock <- withBlock "match_switch" do
+              tagOpr <- case C.typeOf e of
+                SumT _ -> do
+                  tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
+                  load i8 tagAddr 0
+                RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+                _ -> pure eOpr
+              switch tagOpr defaultLabel labels
+            resultBlock <- block `named` "match_result"
+            load (convType $ C.typeOf (Match e cs)) result 0
+        else
+          genExpr e `withTerminator` \k eOpr -> mdo
+            br switchBlock -- We need to end the current block before executing genCase
+            -- 各ケースのコードとラベルを生成する
+            -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+            (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
+            -- defaultsの先頭を取り出し、switchのデフォルトケースとする
+            -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
+            defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
+            switchBlock <- withBlock "match_switch" do
+              tagOpr <- case C.typeOf e of
+                SumT _ -> do
+                  tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
+                  load i8 tagAddr 0
+                RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+                _ -> pure eOpr
+              switch tagOpr defaultLabel labels
+            pure ()
 genExpr (Switch v bs e) = do
   isAllocaResult <- asks (.isAllocaResult)
   if isAllocaResult
@@ -478,15 +505,34 @@ genExpr (Switch v bs e) = do
       label <- withBlock ("switch_branch_" <> encodeUtf8 (render (pPrint tag))) do
         runContT (genExpr e) k
       pure (tag', label)
-genExpr (SwitchUnboxed v bs e) =
-  genAtom v `withTerminator` \k vOpr -> mdo
-    br switchBlock
-    labels <- traverse (genBranch k) bs
-    defaultLabel <- withBlock "switch-unboxed_default" do
-      runContT (genExpr e) k
-    switchBlock <- withBlock "switch-unboxed_switch" do
-      switch vOpr defaultLabel labels
-    pure ()
+genExpr (SwitchUnboxed v bs e) = do
+  isAllocaResult <- asks (.isAllocaResult)
+  if isAllocaResult
+    then do
+      result <- alloca (convType $ C.typeOf e) Nothing 0
+      vOpr <- genAtom v
+
+      lift mdo
+        let cont = \opr -> do
+              store result 0 opr
+              br resultBlock
+        br switchBlock
+        labels <- traverse (genBranch cont) bs
+        defaultLabel <- withBlock "switch-unboxed_default" do
+          runContT (genExpr e) cont
+        switchBlock <- withBlock "switch-unboxed_switch" do
+          switch vOpr defaultLabel labels
+        resultBlock <- block `named` "switch-unboxed_result"
+        load (convType $ C.typeOf e) result 0
+    else
+      genAtom v `withTerminator` \k vOpr -> mdo
+        br switchBlock
+        labels <- traverse (genBranch k) bs
+        defaultLabel <- withBlock "switch-unboxed_default" do
+          runContT (genExpr e) k
+        switchBlock <- withBlock "switch-unboxed_switch" do
+          switch vOpr defaultLabel labels
+        pure ()
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
