@@ -397,30 +397,6 @@ genExpr (Match e (Bind x _ body : _)) = do
 genExpr (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
   | otherwise =
-      {-
-        do
-          result <- alloca (convType $ C.typeOf (Match e cs)) Nothing 0
-          eOpr <- genExpr e
-          lift $ mdo
-            let cont = \opr -> do
-                  store result 0 opr
-                  br resultBlock
-            tagOpr <- case C.typeOf e of
-              SumT _ -> do
-                tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
-                load i8 tagAddr 0
-              RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-              _ -> pure eOpr
-            switch tagOpr defaultLabel labels
-            -- 各ケースのコードとラベルを生成する
-            -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-            (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) cont) cs
-            -- defaultsの先頭を取り出し、switchのデフォルトケースとする
-            -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-            defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
-            resultBlock <- block `named` "match_result"
-            load (convType $ C.typeOf (Match e cs)) result 0
-        -}
       shiftT \k -> do
         eOpr <- genExpr e
         tagOpr <- case C.typeOf e of
@@ -439,28 +415,6 @@ genExpr (Match e cs)
           defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
           pure ()
 genExpr (Switch v bs e) =
-  {-
-    do
-      result <- alloca (convType $ C.typeOf e) Nothing 0
-      vOpr <- genAtom v
-
-      lift $ mdo
-        let cont = \opr -> do
-              store result 0 opr
-              br resultBlock
-        tagOpr <- case C.typeOf v of
-          SumT _ -> do
-            tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
-            load i8 tagAddr 0
-          RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-          _ -> pure vOpr
-        switch tagOpr defaultLabel labels
-        labels <- traverse (genBranch (constructorList v) cont) bs
-        defaultLabel <- withBlock "switch_default" do
-          runContT (genExpr e) cont
-        resultBlock <- block `named` "switch_result"
-        load (convType $ C.typeOf e) result 0
-  -}
   shiftT \k -> do
     vOpr <- genAtom v
     tagOpr <- case C.typeOf v of
@@ -485,24 +439,6 @@ genExpr (Switch v bs e) =
         runContT (genExpr e) k
       pure (tag', label)
 genExpr (SwitchUnboxed v bs e) =
-  {-
-    do
-      result <- alloca (convType $ C.typeOf e) Nothing 0
-      vOpr <- genAtom v
-
-      lift mdo
-        let cont = \opr -> do
-              store result 0 opr
-              br resultBlock
-        br switchBlock
-        labels <- traverse (genBranch cont) bs
-        defaultLabel <- withBlock "switch-unboxed_default" do
-          runContT (genExpr e) cont
-        switchBlock <- withBlock "switch-unboxed_switch" do
-          switch vOpr defaultLabel labels
-        resultBlock <- block `named` "switch-unboxed_result"
-        load (convType $ C.typeOf e) result 0
-  -}
   shiftT \k -> do
     vOpr <- genAtom v
     lift mdo
