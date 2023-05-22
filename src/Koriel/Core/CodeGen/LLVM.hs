@@ -416,51 +416,54 @@ genExpr (Match e cs)
         (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
         -- defaultsの先頭を取り出し、switchのデフォルトケースとする
         -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-        defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
-        switchBlock <- block
-        tagOpr <- case C.typeOf e of
-          SumT _ -> do
-            tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
-            load i8 tagAddr 0
-          RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-          _ -> pure eOpr
-        switch tagOpr defaultLabel labels
+        defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
+        switchBlock <- withBlock "match_switch" do
+          tagOpr <- case C.typeOf e of
+            SumT _ -> do
+              tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
+              load i8 tagAddr 0
+            RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+            _ -> pure eOpr
+          switch tagOpr defaultLabel labels
+        pure ()
 genExpr (Switch v bs e) =
   genAtom v `withTerminator` \k vOpr -> mdo
     br switchBlock
     labels <- traverse (genBranch (constructorList v) k) bs
-    defaultLabel <- block
-    runContT (genExpr e) k
-    switchBlock <- block
-    tagOpr <- case C.typeOf v of
-      SumT _ -> do
-        tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
-        load i8 tagAddr 0
-      RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-      _ -> pure vOpr
-    switch tagOpr defaultLabel labels
+    defaultLabel <- withBlock "switch_default" do
+      runContT (genExpr e) k
+    switchBlock <- withBlock "switch_switch" do
+      tagOpr <- case C.typeOf v of
+        SumT _ -> do
+          tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
+          load i8 tagAddr 0
+        RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+        _ -> pure vOpr
+      switch tagOpr defaultLabel labels
+    pure ()
   where
     genBranch cs k (tag, e) = do
-      label <- block
       let tag' = case C.typeOf v of
             SumT _ -> C.Int 8 $ fromIntegral $ Unsafe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
             RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
             _ -> error "Switch is not supported for this type."
-      runContT (genExpr e) k
+      label <- withBlock ("switch_branch_" <> encodeUtf8 (render (pPrint tag))) do
+        runContT (genExpr e) k
       pure (tag', label)
 genExpr (SwitchUnboxed v bs e) =
   genAtom v `withTerminator` \k vOpr -> mdo
     br switchBlock
     labels <- traverse (genBranch k) bs
-    defaultLabel <- block
-    runContT (genExpr e) k
-    switchBlock <- block
-    switch vOpr defaultLabel labels
+    defaultLabel <- withBlock "switch-unboxed_default" do
+      runContT (genExpr e) k
+    switchBlock <- withBlock "switch-unboxed_switch" do
+      switch vOpr defaultLabel labels
+    pure ()
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
-      label <- block
-      runContT (genExpr e) k
+      label <- withBlock ("switch-unboxed_branch_" <> encodeUtf8 (render (pPrint u))) do
+        runContT (genExpr e) k
       pure (u', label)
 genExpr (Destruct v (Con _ ts) xs e) = do
   v <- genAtom v
@@ -509,34 +512,34 @@ genCase ::
   m (Either LLVM.AST.Name (C.Constant, LLVM.AST.Name))
 genCase scrutinee cs k = \case
   Bind x _ e -> do
-    label <- block
-    void $ local (over valueMap $ at x ?~ scrutinee) $ runContT (genExpr e) k
+    label <- withBlock ("bind_" <> encodeUtf8 (render (pPrint x))) do
+      local (over valueMap $ at x ?~ scrutinee) $ runContT (genExpr e) k
     pure $ Left label
   Exact u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
-    label <- block
-    runContT (genExpr e) k
+    label <- withBlock ("exact_" <> encodeUtf8 (render (pPrint u))) do
+      runContT (genExpr e) k
     pure $ Right (u', label)
   Unpack con vs e -> do
-    label <- block
     let (tag, conType) = genCon cs con
-    payloadAddr <- gep (StructureType False [i8, conType]) scrutinee [int32 0, int32 1]
-    env <-
-      HashMap.fromList <$> ifor vs \i v ->
-        (v,) <$> do
-          vAddr <- gep conType payloadAddr [int32 0, int32 $ fromIntegral i]
-          load (convType $ C.typeOf v) vAddr 0
-    void $ local (over valueMap (env <>)) $ runContT (genExpr e) k
+    label <- withBlock ("unpack_" <> encodeUtf8 (render (pPrint con))) do
+      payloadAddr <- gep (StructureType False [i8, conType]) scrutinee [int32 0, int32 1]
+      env <-
+        HashMap.fromList <$> ifor vs \i v ->
+          (v,) <$> do
+            vAddr <- gep conType payloadAddr [int32 0, int32 $ fromIntegral i]
+            load (convType $ C.typeOf v) vAddr 0
+      local (over valueMap (env <>)) $ runContT (genExpr e) k
     pure $ Right (C.Int 8 tag, label)
   OpenRecord kvs e -> do
-    label <- block
-    kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
-      hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
-      i <- getUniq
-      key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
-      value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
-      pure (v, value)
-    local (over valueMap (HashMap.fromList kvs' <>)) $ runContT (genExpr e) k
+    label <- withBlock "open_record" do
+      kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
+        hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
+        i <- getUniq
+        key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
+        value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
+        pure (v, value)
+      local (over valueMap (HashMap.fromList kvs' <>)) $ runContT (genExpr e) k
     pure $ Left label
 
 genAtom ::
@@ -688,3 +691,9 @@ internalFunction label argtys retty body = do
             }
   emitDefn def
   pure $ ConstantOperand $ C.GlobalReference label
+
+withBlock :: MonadIRBuilder m => ShortByteString -> m () -> m Name
+withBlock hint m = do
+  label <- block `named` hint
+  void m
+  pure label
