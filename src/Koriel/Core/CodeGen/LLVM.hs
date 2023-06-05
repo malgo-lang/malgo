@@ -53,8 +53,13 @@ import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 import Relude.Unsafe qualified as Unsafe
 
--- | 'PrimMap' is a map from primitive function name to its LLVM function.
-type PrimMap = Map Name Operand
+data CodeGenState = CodeGenState
+  { -- | 'primMap' is a map from primitive function name to its LLVM function.
+    _primMap :: Map Name Operand,
+    stringMap :: HashMap Text C.Constant
+  }
+
+makeFieldsNoPrefix ''CodeGenState
 
 -- 変数のHashMapとknown関数のHashMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -90,14 +95,14 @@ newCodeGenEnv uniqSupply moduleName Program {..} =
 type MonadCodeGen m =
   ( MonadModuleBuilder m,
     MonadReader CodeGenEnv m,
-    MonadState PrimMap m
+    MonadState CodeGenState m
   ) ::
     Constraint
 
-runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
   execModuleBuilderT emptyModuleBuilder $
-    runReaderT (Lazy.evalStateT m mempty) env
+    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
@@ -220,7 +225,7 @@ findVar x = findLocalVar
         Just opr -> load (convType $ C.typeOf x) opr 0 -- global variable is a pointer to the actual value
         Nothing -> findExtVar
     findExtVar =
-      use (at $ toName x) >>= \case
+      use (primMap . at (toName x)) >>= \case
         Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
@@ -232,7 +237,7 @@ findVar x = findLocalVar
               linkage = LLVM.AST.Linkage.External
             }
       let opr = ConstantOperand (C.GlobalReference (toName x))
-      at (toName x) ?= opr
+      primMap . at (toName x) ?= opr
       load (convType $ C.typeOf x) opr 0
 
 findFun :: MonadCodeGen m => Id C.Type -> m Operand
@@ -248,9 +253,9 @@ findFun x =
 -- すでにexternしている場合は、そのOperandを返す
 findExt :: MonadCodeGen m => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
-  use (at x) >>= \case
+  use (primMap . at x) >>= \case
     Just x -> pure x
-    Nothing -> (at x <?=) =<< extern x ps r
+    Nothing -> (primMap . at x <?=) =<< extern x ps r
 
 mallocBytes ::
   (MonadCodeGen m, MonadIRBuilder m) =>
@@ -466,8 +471,7 @@ genExpr (DestructRecord scrutinee kvs e) = do
   scrutinee <- genAtom scrutinee
   kvs' <- for (HashMap.toList kvs) \(k, v) -> do
     hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
-    i <- getUniq
-    key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
+    key <- ConstantOperand <$> globalStringPtr k
     value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
     pure (v, value)
   local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e
@@ -523,8 +527,7 @@ genCase scrutinee cs k = \case
     label <- withBlock "open_record" do
       kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
         hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
-        i <- getUniq
-        key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
+        key <- ConstantOperand <$> globalStringPtr k
         value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
         pure (v, value)
       local (over valueMap (HashMap.fromList kvs' <>)) $ runContT (genExpr e) k
@@ -541,9 +544,7 @@ genAtom (Unboxed (Int64 x)) = pure $ int64 x
 genAtom (Unboxed (Float x)) = pure $ ConstantOperand $ C.BitCast (C.Int 32 $ toInteger $ castFloatToWord32 x) LT.float
 genAtom (Unboxed (Double x)) = pure $ ConstantOperand $ C.BitCast (C.Int 64 $ toInteger $ castDoubleToWord64 x) LT.double
 genAtom (Unboxed (Char x)) = pure $ int8 $ toInteger $ ord x
-genAtom (Unboxed (String x)) = do
-  i <- getUniq
-  ConstantOperand <$> globalStringPtr x (mkName $ "str" <> show i)
+genAtom (Unboxed (String x)) = ConstantOperand <$> globalStringPtr x
 genAtom (Unboxed (Bool True)) = pure $ int8 1
 genAtom (Unboxed (Bool False)) = pure $ int8 0
 
@@ -599,8 +600,7 @@ genLocalDef (LocalDef name _ (Record kvs)) = do
   newHashTable <- findExt "malgo_hash_table_new" [] ptr
   hashTable <- call (FunctionType ptr [] False) newHashTable []
   for_ (HashMap.toList kvs) \(k, v) -> do
-    i <- getUniq
-    k' <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
+    k' <- ConstantOperand <$> globalStringPtr k
     v <- genAtom v
     insert <- findExt "malgo_hash_table_insert" [ptr, ptr, ptr] LT.void
     call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` ("hash_insert_" <> encodeUtf8 k)
@@ -616,27 +616,34 @@ findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
   Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
 
-globalStringPtr :: MonadModuleBuilder m => Text -> Name -> m C.Constant
-globalStringPtr str nm = do
-  let utf8Vals = map toInteger $ BL.unpack $ convertString str
-      llvmVals = map (C.Int 8) (utf8Vals ++ [0])
-      char = IntegerType 8
-      charArray = C.Array char llvmVals
-  ty <-
-    LLVM.AST.Typed.typeOf charArray >>= \case
-      Left err -> error $ show err
-      Right ty -> pure ty
-  emitDefn $
-    GlobalDefinition
-      globalVariableDefaults
-        { LLVM.AST.Global.name = nm,
-          LLVM.AST.Global.type' = ty,
-          linkage = LLVM.AST.Linkage.External,
-          isConstant = True,
-          initializer = Just charArray,
-          unnamedAddr = Just GlobalAddr
-        }
-  pure $ C.GetElementPtr True ty (C.GlobalReference nm) [C.Int 32 0, C.Int 32 0]
+globalStringPtr :: (MonadModuleBuilder m, MonadReader CodeGenEnv m, MonadState CodeGenState m, MonadIO m) => Text -> m C.Constant
+globalStringPtr str = do
+  stringMap <- gets (.stringMap)
+  case HashMap.lookup str stringMap of
+    Just strOpr -> pure strOpr
+    Nothing -> do
+      name <- mkName . ("str" <>) . show <$> getUniq
+      let utf8Vals = map toInteger $ BL.unpack $ convertString str
+          llvmVals = map (C.Int 8) (utf8Vals ++ [0])
+          char = IntegerType 8
+          charArray = C.Array char llvmVals
+      ty <-
+        LLVM.AST.Typed.typeOf charArray >>= \case
+          Left err -> error $ show err
+          Right ty -> pure ty
+      emitDefn $
+        GlobalDefinition
+          globalVariableDefaults
+            { LLVM.AST.Global.name = name,
+              LLVM.AST.Global.type' = ty,
+              linkage = LLVM.AST.Linkage.External,
+              isConstant = True,
+              initializer = Just charArray,
+              unnamedAddr = Just GlobalAddr
+            }
+      let opr = C.GetElementPtr True ty (C.GlobalReference name) [C.Int 32 0, C.Int 32 0]
+      modify \s -> s {stringMap = HashMap.insert str opr $ s.stringMap}
+      pure opr
 
 gepAndStore ::
   (MonadIRBuilder m, MonadModuleBuilder m) =>

@@ -210,9 +210,13 @@ lookupCallInline call f as = do
     Nothing -> pure $ call f as
 
 -- | Remove a cast if it is redundant.
-foldRedundantCast :: (HasType a, Monad f) => Expr a -> f (Expr a)
+-- TODO: switch and match that ends with a cast can be simplified.
+foldRedundantCast :: Monad f => Expr (Id Type) -> f (Expr (Id Type))
 foldRedundantCast =
   transformM \case
+    -- (= x (cast t a) (= y (cast t' x)) e) -> (= y (cast t' a) e)
+    Assign x (Cast _ a) (Assign y (Cast t' (Var x')) e)
+      | x == x' && not (x `HashSet.member` freevars e) -> pure $ Assign y (Cast t' a) e
     Cast t e
       | typeOf e == t -> pure (Atom e)
       | otherwise -> pure (Cast t e)

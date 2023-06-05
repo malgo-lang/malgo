@@ -73,6 +73,8 @@ main =
             testNoOpt (testcaseDir </> testcase)
           it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
             testNoLift (testcaseDir </> testcase)
+          it ("test agressive case " <> testcase <> " (agressive optimization)") $ example do
+            testAggressive (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" $ parallel do
       for_ examples \examplecase -> do
@@ -180,22 +182,22 @@ test testcase typ lambdaLift noOptimize option compileMode = do
   timeoutWrapper "compile" $
     compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
 
-  -- Format the generated LLVM assembly
-  when (typ == "print") do
-    -- find opt or opt-15
-    opt <- findCommand ["opt-15", "opt"]
-    (exitCode, err) <-
-      readProcessStderr
-        ( proc
-            opt
-            [ "-S",
-              "-o",
-              llPath,
-              llPath
-            ]
-        )
-    putText $ convertString err
-    (opt, exitCode) `shouldBe` (opt, ExitSuccess)
+  -- Format and optimize the generated LLVM assembly
+  -- find opt or opt-15
+  opt <- findCommand ["opt-15", "opt"]
+  (exitCode, err) <-
+    readProcessStderr
+      ( proc
+          opt
+          [ "-S",
+            "-O3",
+            "-o",
+            llPath -<.> "opt.ll",
+            llPath
+          ]
+      )
+  putText $ convertString err
+  (opt, exitCode) `shouldBe` (opt, ExitSuccess)
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- findCommand ["clang-15", "clang"]
@@ -249,6 +251,13 @@ testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption LLVM
 
 testNoNo :: FilePath -> IO ()
 testNoNo testcase = test testcase "nono" False True defaultOptimizeOption LLVM
+
+testAggressive :: FilePath -> IO ()
+testAggressive testcase = test testcase "aggressive" True False aggressiveOptimizeOption LLVM
+
+aggressiveOptimizeOption :: OptimizeOption
+aggressiveOptimizeOption =
+  defaultOptimizeOption {inlineThreshold = 30, doSpecializeFunction = True}
 
 #ifdef TEST_ALL
 showOptimizeOption :: OptimizeOption -> [Text]
