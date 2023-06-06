@@ -10,6 +10,7 @@ import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM (codeGen)
 import Koriel.Core.CodeGen.PrintLLVM qualified as PrintLLVM
 import Koriel.Core.Flat (flat)
+import Koriel.Core.FlatDC qualified as FlatDC
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
@@ -73,19 +74,38 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       storeIndex index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
-      core <- flat core
-      _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-      writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
-      let inf = buildInterface moduleName rnState dsEnv
-      writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
+      _ <- do
+        core <- flat core
+        _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
+        -- writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
-      -- check module paths include dstName's directory
-      assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
-      core <- Link.link inf core
-      writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
+        let inf = buildInterface moduleName rnState dsEnv
+        writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
 
-      lint core
+        -- check module paths include dstName's directory
+        assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
+        core <- Link.link inf core
+        writeFile (env.dstPath -<.> "kor-prev") $ render $ pPrint core
+
+        lint core
+        pure core
+
+      core <- do
+        core <- FlatDC.normalize core
+        _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
+        writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
+
+        let inf = buildInterface moduleName rnState dsEnv
+        writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
+
+        -- check module paths include dstName's directory
+        assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
+        core <- Link.link inf core
+        writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
+
+        lint core
+        pure core
 
       when env.debugMode $
         liftIO do

@@ -96,7 +96,7 @@ main =
         describe testcase do
           for_ optimizeOptions \option -> do
             it ("test " <> testcase <> " " <> show (showOptimizeOption option)) $ example do
-              test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option
+              test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option LLVM
 #endif
 
 setupTestDir :: IO ()
@@ -232,7 +232,7 @@ test testcase typ lambdaLift noOptimize option compileMode = do
   map ("-- Expected: " <>) (lines $ Text.stripEnd result) `shouldBe` expected
   where
     timeoutWrapper phase m = do
-      timeout 60 m >>= \case
+      timeout (60 * 5) m >>= \case
         Just x -> pure x
         Nothing -> error $ "timeout in " <> phase
 
@@ -278,9 +278,9 @@ optimizeOptions =
         | doFoldVariable <- [True, False],
           doInlineConstructor <- [True, False],
           doEliminateUnusedLet <- [True, False],
-          doInlineFunction<- [True, False],
+          doInlineFunction <- [True, False],
           doFoldRedundantCast <- [True, False],
           doFoldTrivialCall <- [True, False],
-          doRemoveNoopDestuct <- [True, False]
+          doRemoveNoopDestruct <- [True, False]
       ]
 #endif

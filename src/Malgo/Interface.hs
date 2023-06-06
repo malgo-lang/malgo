@@ -3,6 +3,7 @@
 
 module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
 
+import Control.Exception (IOException, catch)
 import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.))
 import Control.Lens.TH
 import Control.Monad.Extra (firstJustM)
@@ -87,10 +88,11 @@ loadInterface (ModuleName modName) = do
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
+      modulePaths <- view modulePaths
       message <-
         firstJustM
-          (readFileIfExists (toInterfacePath $ convertString modName))
-          =<< view modulePaths
+          (liftIO . readFileIfExists (toInterfacePath $ convertString modName))
+          modulePaths
       case message of
         Just x -> do
           writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
@@ -103,3 +105,9 @@ loadInterface (ModuleName modName) = do
         (liftIO $ Directory.doesFileExist (directory </> file))
         (Just <$> liftIO (decodeFile (directory </> file)))
         (pure Nothing)
+        `catch` \(_ :: IOException) -> do
+          _ <- warningDoc $ "Cannot read interface file:" <+> quotes (pPrint file)
+          readFileIfExists file directory
+
+warningDoc :: Doc -> IO ()
+warningDoc doc = hPutStrLn stderr $ render $ "Warning:" <+> doc
