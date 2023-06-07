@@ -1,15 +1,23 @@
 -- | Normalization for Core using delimited continuations.
 module Koriel.Core.FlatDC (normalize) where
 
-import Control.Lens (traverseOf, traversed, _2)
-import Control.Monad.Trans.Cont (ContT (runContT), resetT, shiftT)
+import Control.Lens (has, traverseOf, traversed, _2)
+import Control.Monad.Trans.Cont (ContT (runContT), shiftT)
 import Data.Traversable (for)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
+import Koriel.MonadUniq (HasUniqSupply)
 import Koriel.Prelude
 
-normalize :: Monad m => Program (Id Type) -> m (Program (Id Type))
+normalize ::
+  ( MonadReader env m,
+    MonadIO m,
+    HasUniqSupply env,
+    HasModuleName env
+  ) =>
+  Program (Id Type) ->
+  m (Program (Id Type))
 normalize Program {..} = do
   topVars <- for topVars \(name, ty, expr) -> do
     expr' <- runContT (flat expr) pure
@@ -21,7 +29,14 @@ normalize Program {..} = do
 
 -- Traverse the expression tree.
 -- TODO: Implement the normalization.
-flat :: Monad m => Expr (Id Type) -> ContT (Expr (Id Type)) m (Expr (Id Type))
+flat ::
+  ( MonadReader env m,
+    MonadIO m,
+    HasUniqSupply env,
+    HasModuleName env
+  ) =>
+  Expr (Id Type) ->
+  ContT (Expr (Id Type)) m (Expr (Id Type))
 flat e@Atom {} = pure e
 flat e@Call {} = pure e
 flat e@CallDirect {} = pure e
@@ -32,10 +47,11 @@ flat (Let ds e) = shiftT \k -> do
   ds <- traverse flatLocalDef ds
   e <- inScope k $ flat e
   pure $ Let ds e
-flat (Match e cs) = shiftT \k -> do
-  e <- flat e
+flat (Match scr cs) = shiftT \k -> do
+  scr <- flat scr
   cs <- traverse (flatCase k) cs
-  pure $ Match e cs
+  scr' <- newTemporalId "scrutinee" (typeOf scr)
+  pure $ assign scr' scr $ matchToSwitch scr' cs
 flat (Switch v cs e) = shiftT \k -> do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
     inScope k $ flat e
@@ -54,19 +70,22 @@ flat (DestructRecord v kvs e) = do
   pure $ DestructRecord v kvs e
 flat (Assign x v e) = shiftT \k -> do
   v <- flat v
-  let builder = case v of
-        Atom v -> \e -> do
-          -- 自明な束縛は畳み込む
-          replaceOf atom (Var x) v e
-        v -> Assign x v
   -- eの中の式は、必ず(= x v [.])の中に現れないといけない。
   -- そのため、resetする。
   -- (= x v e)の外の式を持ち込むため、shiftしたkを適用する。
   e <- inScope k $ flat e
-  pure $ builder e
+  pure $ assign x v e
 flat e@Error {} = pure e
 
-flatCase :: Monad m => (Expr (Id Type) -> m (Expr (Id Type))) -> Case (Id Type) -> ContT r' m (Case (Id Type))
+flatCase ::
+  ( MonadReader env m,
+    MonadIO m,
+    HasUniqSupply env,
+    HasModuleName env
+  ) =>
+  (Expr (Id Type) -> m (Expr (Id Type))) ->
+  Case (Id Type) ->
+  ContT r' m (Case (Id Type))
 flatCase k (Unpack con as e) = do
   e <- inScope k $ flat e
   pure $ Unpack con as e
@@ -80,10 +99,48 @@ flatCase k (Bind n t e) = do
   e <- inScope k $ flat e
   pure $ Bind n t e
 
-flatLocalDef :: Monad m => LocalDef (Id Type) -> ContT (Expr (Id Type)) m (LocalDef (Id Type))
+matchToSwitch :: Id Type -> [Case (Id Type)] -> Expr (Id Type)
+matchToSwitch scr cs@(c@Unpack {} : _) =
+  let cs' = map (unpackToDestruct scr) $ takeWhile (has _Unpack) cs
+      defaultCase = fromMaybe (Error $ typeOf c) $ bindToAssign scr <$> find (has _Bind) cs
+   in Switch (Var scr) cs' defaultCase
+  where
+    unpackToDestruct scr (Unpack con@(Con tag _) xs e) = (tag, Destruct (Var scr) con xs e)
+    unpackToDestruct _ _ = error "unpackToDestruct: unreachable"
+matchToSwitch scr (OpenRecord kvs e : _) =
+  DestructRecord (Var scr) kvs e
+matchToSwitch scr cs@(c@Exact {} : _) =
+  let cs' = map flatExact $ takeWhile (has _Exact) cs
+      defaultCase = fromMaybe (Error $ typeOf c) $ bindToAssign scr <$> find (has _Bind) cs
+   in SwitchUnboxed (Var scr) cs' defaultCase
+  where
+    flatExact (Exact u e) = (u, e)
+    flatExact _ = error "flatExact: unreachable"
+matchToSwitch scr (Bind x _ e : _) = assign x (Atom $ Var scr) e
+matchToSwitch _ [] = error "matchToSwitch: unreachable"
+
+bindToAssign :: Id Type -> Case (Id Type) -> Expr (Id Type)
+bindToAssign scr (Bind x _ e) = assign x (Atom $ Var scr) e
+bindToAssign _ _ = error "bindToAssign: unreachable"
+
+flatLocalDef ::
+  ( MonadReader env m,
+    MonadIO m,
+    HasUniqSupply env,
+    HasModuleName env
+  ) =>
+  LocalDef (Id Type) ->
+  ContT (Expr (Id Type)) m (LocalDef (Id Type))
 flatLocalDef (LocalDef var ty obj) = LocalDef var ty <$> flatObj obj
 
-flatObj :: Monad m => Obj (Id Type) -> ContT (Expr (Id Type)) m (Obj (Id Type))
+flatObj ::
+  ( MonadReader env m,
+    MonadIO m,
+    HasUniqSupply env,
+    HasModuleName env
+  ) =>
+  Obj (Id Type) ->
+  ContT (Expr (Id Type)) m (Obj (Id Type))
 flatObj (Fun ps e) =
   -- eがFunを飛び出ないようresetする
   Fun ps <$> inScope pure (flat e)
@@ -100,3 +157,8 @@ inScope ::
 inScope k e =
   -- resetT $ lift . k =<< e
   lift $ runContT e k
+
+assign :: Id Type -> Expr (Id Type) -> Expr (Id Type) -> Expr (Id Type)
+assign x v (Atom (Var y)) | x == y = v
+assign x (Atom v) e = replaceOf atom (Var x) v e
+assign x v e = Assign x v e
