@@ -250,17 +250,17 @@ data Expr a
   | -- | switch expression
     Switch
       (Atom a)
-      -- | cases
       [(Tag, Expr a)]
-      -- | default case
+      -- ^ cases
       (Expr a)
+      -- ^ default case
   | -- | switch by unboxed value
     SwitchUnboxed
       (Atom a)
-      -- | cases
       [(Unboxed, Expr a)]
-      -- | default case
+      -- ^ cases
       (Expr a)
+      -- ^ default case
   | -- | destruct a value
     Destruct (Atom a) Con [a] (Expr a)
   | -- | destruct a record
