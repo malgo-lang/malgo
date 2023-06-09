@@ -2,7 +2,7 @@
 module Koriel.Core.FlatDC (normalize) where
 
 import Control.Lens (has, traverseOf, traversed, _2)
-import Control.Monad.Trans.Cont (ContT (runContT), shiftT)
+import Control.Monad.Trans.Cont (ContT (..), evalContT, resetT, shiftT)
 import Data.Traversable (for)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -54,19 +54,19 @@ flat (Match scr cs) = shiftT \k -> do
   pure $ assign scr' scr $ matchToSwitch scr' cs
 flat (Switch v cs e) = shiftT \k -> do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
-    inScope k $ flat e
-  e <- flat e
+    inScope k (flat e)
+  e <- inScope k (flat e)
   pure $ Switch v cs e
-flat (SwitchUnboxed v cs e) = shiftT \k -> do
+flat (SwitchUnboxed v cs e) = shiftT \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
-    inScope k $ flat e
-  e <- flat e
+    runContT (flat e) k
+  e <- runContT (flat e) k
   pure $ SwitchUnboxed v cs e
-flat (Destruct v con xs e) = do
-  e <- flat e
+flat (Destruct v con xs e) = shiftT \k -> do
+  e <- inScope k $ flat e
   pure $ Destruct v con xs e
-flat (DestructRecord v kvs e) = do
-  e <- flat e
+flat (DestructRecord v kvs e) = shiftT \k -> do
+  e <- inScope k $ flat e
   pure $ DestructRecord v kvs e
 flat (Assign x v e) = shiftT \k -> do
   v <- flat v
@@ -140,10 +140,10 @@ flatObj ::
     HasModuleName env
   ) =>
   Obj (Id Type) ->
-  ContT (Expr (Id Type)) m (Obj (Id Type))
+  m (Obj (Id Type))
 flatObj (Fun ps e) =
   -- eがFunを飛び出ないようresetする
-  Fun ps <$> inScope pure (flat e)
+  Fun ps <$> evalContT (flat e)
 flatObj o = pure o
 
 inScope ::
@@ -155,7 +155,27 @@ inScope ::
   ContT r m a ->
   ContT r' m r
 inScope k e =
-  -- resetT $ lift . k =<< e
+  {-
+    resetT $ lift . k =<< e
+  = lift . evalContT $ lift . k =<< e -- apply 'resetT'
+  = (\m -> ContT (m >>=)) . evalContT $ (\m -> ContT (m >>=)) . k =<< e -- apply 'lift'
+  = (\m -> ContT (m >>=)) $ evalContT $ (\m -> ContT (m >>=)) . k =<< e -- f . g $ x -> f $ g $ x
+  = ContT ((evalContT $ (\m -> ContT (m >>=)) . k =<< e) >>=) -- apply first '$'
+  = lift (evalContT $ (\m -> ContT (m >>=)) . k =<< e) -- unapply 'lift'
+  = lift (evalContT $ e >>= (\m -> ContT (m >>=)) . k) -- f =<< m -> m >>= f
+  = lift (evalContT $ e >>= (\x -> (\m -> ContT (m >>=)) . k $ x)) -- eta expansion
+  = lift (evalContT $ e >>= (\x -> (\m -> ContT (m >>=)) $ k $ x)) --  f . g $ x -> f $ g $ x
+  = lift (evalContT $ e >>= (\x -> ContT (k x >>=))) -- apply second and third '$'
+  = lift (evalContT (ContT \c -> runContT e (\x -> runContT ((\x -> ContT (k x >>=)) x) c))) -- apply first '>>='
+  = lift (runContT (ContT \c -> runContT e (\x -> runContT ((\x -> ContT (k x >>=)) x) c)) pure) -- apply 'evalContT'
+  = lift (runContT e (\x -> k x >>= pure)) -- apply some functions as same as above
+  = lift (runContT e (\x -> k x)) -- m >>= pure = m
+  = lift (runContT e k) -- eta reduction
+
+  This conversion can be derived from the type.
+  With 'k :: a -> m r' and 'e :: ContT r m a', we can get 'runContT e k :: m r'.
+  Then we can get 'lift $ runContT e k :: ContT r' m r'.
+  -}
   lift $ runContT e k
 
 assign :: Id Type -> Expr (Id Type) -> Expr (Id Type) -> Expr (Id Type)

@@ -9,7 +9,6 @@ import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM (codeGen)
 import Koriel.Core.CodeGen.PrintLLVM qualified as PrintLLVM
-import Koriel.Core.Flat (flat)
 import Koriel.Core.FlatDC qualified as FlatDC
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
@@ -75,22 +74,6 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
 
       (dsEnv, core) <- desugar tcEnv refinedAst
 
-      _ <- do
-        core <- flat core
-        _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-        -- writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
-
-        let inf = buildInterface moduleName rnState dsEnv
-        writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
-
-        -- check module paths include dstName's directory
-        assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
-        core <- Link.link inf core
-        writeFile (env.dstPath -<.> "kor-prev") $ render $ pPrint core
-
-        lint core
-        pure core
-
       core <- do
         core <- FlatDC.normalize core
         _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
@@ -117,7 +100,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core >>= flat
+      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core >>= FlatDC.normalize
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
@@ -125,7 +108,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
 
-      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= flat else pure coreOpt
+      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= FlatDC.normalize else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
         liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
