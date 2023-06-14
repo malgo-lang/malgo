@@ -288,10 +288,10 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
               | anySame $ Map.elems evidence -> errorOn (pos.value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
               | otherwise -> signatureMap . at name ?= declaredScheme
             Nothing ->
-              errorOn (pos.value) $
-                "Signature mismatch:"
-                  $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
-                  $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+              errorOn (pos.value)
+                $ "Signature mismatch:"
+                $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
+                $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
 
 -- | Which combination of variables should be unification to consider two types as equal?
 -- Use in `tcScDefs`.
@@ -419,8 +419,8 @@ tcPatterns (ConP pos con pats : ps) = do
   let (morePats, restPs) = List.splitAt (length conParams - length pats) ps
   -- 足りない分（morePats）を補充した残り（restPs）が空でなければ、
   -- 2引数以上の関数での文法エラー
-  when (not (null morePats) && not (null restPs)) $
-    errorOn pos "Invalid Pattern: You may need to put parentheses"
+  when (not (null morePats) && not (null restPs))
+    $ errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
   ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'

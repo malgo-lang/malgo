@@ -2,7 +2,6 @@ module Koriel.Core.Lint (lint) where
 
 import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
 import Data.HashMap.Strict qualified as HashMap
-import Data.String.Conversions (convertString)
 import Koriel.Core.Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type

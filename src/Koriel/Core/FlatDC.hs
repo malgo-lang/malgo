@@ -147,7 +147,7 @@ flatObj (Fun ps e) =
 flatObj o = pure o
 
 inScope ::
-  (Monad m) =>
+  Monad m =>
   -- | continuation
   (a -> m r) ->
   -- | computation must be in the scope

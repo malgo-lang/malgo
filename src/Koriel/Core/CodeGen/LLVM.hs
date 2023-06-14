@@ -99,10 +99,10 @@ type MonadCodeGen m =
   ) ::
     Constraint
 
-runCodeGenT :: (Monad m) => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
-  execModuleBuilderT emptyModuleBuilder $
-    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
+  execModuleBuilderT emptyModuleBuilder
+    $ runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
@@ -195,10 +195,10 @@ innerType (RecordT _) = LT.NamedTypeReference (mkName "struct.hash_table")
 innerType AnyT = i8
 innerType _ = error "invalid type"
 
-sizeofCon :: (Num a) => Con -> a
+sizeofCon :: Num a => Con -> a
 sizeofCon (Con _ ts) = sum $ map sizeofType ts
 
-sizeofType :: (Num a) => C.Type -> a
+sizeofType :: Num a => C.Type -> a
 sizeofType (_ :-> _) = 8
 sizeofType Int32T = 4
 sizeofType Int64T = 8
@@ -229,8 +229,8 @@ findVar x = findLocalVar
         Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
-      emitDefn $
-        GlobalDefinition
+      emitDefn
+        $ GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = toName x,
               LLVM.AST.Global.type' = convType $ C.typeOf x,
@@ -240,7 +240,7 @@ findVar x = findLocalVar
       primMap . at (toName x) ?= opr
       load (convType $ C.typeOf x) opr 0
 
-findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
+findFun :: MonadCodeGen m => Id C.Type -> m Operand
 findFun x =
   view (funcMap . at x) >>= \case
     Just opr -> pure opr
@@ -251,7 +251,7 @@ findFun x =
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
-findExt :: (MonadCodeGen m) => Name -> [LT.Type] -> LT.Type -> m Operand
+findExt :: MonadCodeGen m => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
   use (primMap . at x) >>= \case
     Just x -> pure x
@@ -280,7 +280,7 @@ toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
-genVar :: (MonadModuleBuilder m) => Id C.Type -> Expr (Id C.Type) -> m Operand
+genVar :: MonadModuleBuilder m => Id C.Type -> Expr (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
@@ -339,10 +339,10 @@ genExpr e@(CallDirect f xs) = do
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
 genExpr e@(RawCall name _ xs) = do
   let primOpr =
-        ConstantOperand $
-          C.GlobalReference $
-            LLVM.AST.mkName $
-              convertString name
+        ConstantOperand
+          $ C.GlobalReference
+          $ LLVM.AST.mkName
+          $ convertString name
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
 genExpr (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
@@ -485,7 +485,7 @@ genExpr (Assign x v e) = do
 genExpr (Error _) = shiftT (const unreachable)
 
 -- | Get constructor list from the type of scrutinee.
-constructorList :: (HasType s) => s -> [Con]
+constructorList :: HasType s => s -> [Con]
 constructorList scrutinee =
   case C.typeOf scrutinee of
     SumT cs -> cs
@@ -632,8 +632,8 @@ globalStringPtr str = do
         LLVM.AST.Typed.typeOf charArray >>= \case
           Left err -> error $ show err
           Right ty -> pure ty
-      emitDefn $
-        GlobalDefinition
+      emitDefn
+        $ GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = name,
               LLVM.AST.Global.type' = ty,
@@ -658,7 +658,7 @@ gepAndStore ty opr addrs val = do
   store addr 0 val
 
 internalFunction ::
-  (MonadModuleBuilder m) =>
+  MonadModuleBuilder m =>
   -- | Function name
   Name ->
   -- | Parameter types and name suggestions
@@ -688,7 +688,7 @@ internalFunction label argtys retty body = do
   emitDefn def
   pure $ ConstantOperand $ C.GlobalReference label
 
-withBlock :: (MonadIRBuilder m) => ShortByteString -> m () -> m Name
+withBlock :: MonadIRBuilder m => ShortByteString -> m () -> m Name
 withBlock hint m = do
   label <- block `named` hint
   void m

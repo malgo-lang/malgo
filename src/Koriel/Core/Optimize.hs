@@ -67,7 +67,7 @@ times n f x
 
 -- | Optimize a program
 optimizeProgram ::
-  (MonadIO m) =>
+  MonadIO m =>
   UniqSupply ->
   ModuleName ->
   Bool ->
@@ -100,8 +100,8 @@ optimizeExpr state expr = do
         >=> runOpt option.doSpecializeFunction specializeFunction
         >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
         >=> runFlat
-          . flatExpr
-    runOpt :: (Monad m) => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
+        . flatExpr
+    runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag
         then f
@@ -120,7 +120,7 @@ foldVariable = transformM
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 -- | Inline simple pattern match and pack.
-inlineConstructor :: (MonadReader InlineConstructorMap m) => Expr (Id Type) -> m (Expr (Id Type))
+inlineConstructor :: MonadReader InlineConstructorMap m => Expr (Id Type) -> m (Expr (Id Type))
 inlineConstructor =
   transformM \case
     Let ds e -> do
@@ -212,7 +212,7 @@ lookupCallInline call f as = do
 
 -- | Remove a cast if it is redundant.
 -- TODO: switch and match that ends with a cast can be simplified.
-foldRedundantCast :: (Monad f) => Expr (Id Type) -> f (Expr (Id Type))
+foldRedundantCast :: Monad f => Expr (Id Type) -> f (Expr (Id Type))
 foldRedundantCast =
   transformM \case
     -- (= x (cast t a) (= y (cast t' x)) e) -> (= y (cast t' a) e)
