@@ -46,8 +46,8 @@ makeFieldsNoPrefix ''RnEnv
 
 -- | Append resolved identifiers to the environment.
 appendRnEnv :: ASetter' RnEnv (HashMap PsId [Resolved]) -> [(PsId, Resolved)] -> RnEnv -> RnEnv
-appendRnEnv lens newEnv = over lens $
-  \e -> foldr (\(k, v) -> HashMap.insertWith (<>) k [v]) e newEnv
+appendRnEnv lens newEnv = over lens
+  $ \e -> foldr (\(k, v) -> HashMap.insertWith (<>) k [v]) e newEnv
 
 -- | Generate RnId of primitive types
 genBuiltinRnEnv :: ModuleName -> MalgoM RnEnv
@@ -62,8 +62,8 @@ genBuiltinRnEnv modName = do
     string_t <- newExternalId "String#" ()
     ptr_t <- newExternalId "Ptr#" ()
 
-    pure $
-      RnEnv
+    pure
+      $ RnEnv
         { _resolvedVarIdentMap = mempty,
           _resolvedTypeIdentMap =
             HashMap.fromList
@@ -97,11 +97,11 @@ lookupVarName pos name =
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
       Nothing ->
-        errorOn pos $
-          "Not in scope:"
-            <+> quotes (pPrint name)
-            $$ "Did you mean"
-            <+> pPrint names
+        errorOn pos
+          $ "Not in scope:"
+          <+> quotes (pPrint name)
+          $$ "Did you mean"
+          <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a type name that is already resolved
@@ -111,11 +111,11 @@ lookupTypeName pos name =
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
       Nothing ->
-        errorOn pos $
-          "Not in scope:"
-            <+> quotes (pPrint name)
-            $$ "Did you mean"
-            <+> pPrint names
+        errorOn pos
+          $ "Not in scope:"
+          <+> quotes (pPrint name)
+          $$ "Did you mean"
+          <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
 
 -- | Resolving a qualified variable name like Foo.x
@@ -126,11 +126,11 @@ lookupQualifiedVarName pos modName name =
       case find (\(Qualified visi _) -> visi == Explicit modName) names of
         Just (Qualified _ name) -> pure name
         Nothing ->
-          errorOn pos $
-            "Not in scope:"
-              <+> quotes (pPrint name)
-              <+> "in"
-              <+> pPrint modName
-              $$ "Did you mean"
-              <+> pPrint names
+          errorOn pos
+            $ "Not in scope:"
+            <+> quotes (pPrint name)
+            <+> "in"
+            <+> pPrint modName
+            $$ "Did you mean"
+            <+> pPrint names
     _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)

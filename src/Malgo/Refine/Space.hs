@@ -81,12 +81,13 @@ decompose (TyConApp (TyTuple _) ts) = do
   pure $ Tuple ss
 decompose (TyRecord kts) = do
   env <- ask
-  pure $
-    Record $
-      map (second $ space env) $
-        -- sort by key because the order of `toList` results is unspecified.
-        sortWith fst $
-          HashMap.toList kts
+  pure
+    $ Record
+    $ map (second $ space env)
+    $
+    -- sort by key because the order of `toList` results is unspecified.
+    sortWith fst
+    $ HashMap.toList kts
 decompose t = pure $ Type t
 
 constructorSpace :: MonadReader RefineEnv m => HashMap TypeVar Type -> (Id (), Scheme Type) -> m Space
@@ -119,12 +120,12 @@ subtract (Record kts1) (Record kts2)
         then pure Empty
         else pure $ Record kss
   | otherwise =
-      error $
-        "Record kts2 is invalid pattern:\n"
-          <> show kts1
-          <> "\n"
-          <> show kts2
-          <> "\n"
+      error
+        $ "Record kts2 is invalid pattern:\n"
+        <> show kts1
+        <> "\n"
+        <> show kts2
+        <> "\n"
 subtract (Union s1 s2) x = Union <$> subtract s1 x <*> subtract s2 x
 subtract x (Union s1 s2) = do
   s1' <- subtract x s1
@@ -139,9 +140,9 @@ subtract' k ss ws = do
   isSubSpace <- and <$> zipWithM subspace ss ws
   isEmpty <- anyM equalEmpty =<< zipWithM intersection ss ws
   if
-      | isSubSpace -> pure Empty
-      | isEmpty -> pure $ k ss
-      | otherwise -> aux [] ss ws
+    | isSubSpace -> pure Empty
+    | isEmpty -> pure $ k ss
+    | otherwise -> aux [] ss ws
   where
     aux _ [] [] = pure Empty
     aux acc (s : ss) (w : ws) = do

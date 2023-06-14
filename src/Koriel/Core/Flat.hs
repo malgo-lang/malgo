@@ -23,8 +23,9 @@ flat :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => 
 flat prog = do
   uniqSupply <- asks (.uniqSupply)
   moduleName <- asks (.moduleName)
-  runReaderT ?? FlatEnv {..} $
-    traverseOf expr (runFlat . flatExpr) prog
+  runReaderT
+    ?? FlatEnv {..}
+    $ traverseOf expr (runFlat . flatExpr) prog
 
 type FlatT m = WriterT (Endo (Expr (Id Type))) m
 

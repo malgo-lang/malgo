@@ -49,19 +49,22 @@ def name xs e = do
 -- | Lambda lifting
 lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
 lambdalift uniqSupply moduleName Program {..} =
-  runReaderT ?? LambdaLiftEnv {..} $
-    evalStateT ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars} $ do
+  runReaderT
+    ?? LambdaLiftEnv {..}
+    $ evalStateT
+    ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars}
+    $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
       funcs <>= HashMap.fromList (map (\(f, ps, t, e) -> (f, (ps, t, e))) topFuns)
       knowns <>= HashSet.fromList (map (view _1) topFuns)
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift topVars
       prog <-
-        flat $
-          Program
+        flat
+          $ Program
             topVars
-            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
-                HashMap.toList _funcs
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e))
+                $ HashMap.toList _funcs
             )
             extFuns
       traverseOf expr toDirect prog

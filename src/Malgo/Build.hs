@@ -85,8 +85,8 @@ run = do
       let ParsedDefinitions ds = _moduleDefinition
        in ( sourceFile,
             _moduleName,
-            ordNub $
-              mapMaybe
+            ordNub
+              $ mapMaybe
                 ( \case
                     Import _ imported _ -> Just imported
                     _ -> Nothing

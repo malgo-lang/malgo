@@ -29,12 +29,13 @@ define :: HasCallStack => MonadReader [Id Type] f => Doc -> [Id Type] -> f a -> 
 define pos xs m = do
   env <- ask
   for_ xs \x ->
-    when (x `elem` env) $
-      errorDoc $
-        pPrint x <> " is already defined"
-          $$ "while defining"
-          <+> pos
-          <+> pPrint xs
+    when (x `elem` env)
+      $ errorDoc
+      $ pPrint x
+      <> " is already defined"
+      $$ "while defining"
+      <+> pos
+      <+> pPrint xs
   local (xs <>) m
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
@@ -49,12 +50,12 @@ match :: (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> 
 match x y
   | isMatch x y = pass
   | otherwise =
-      errorDoc $
-        "type mismatch:"
-          $$ pPrint x
-          $$ nest 2 (":" <> pPrint (typeOf x))
-          $$ pPrint y
-          $$ nest 2 (":" <> pPrint (typeOf y))
+      errorDoc
+        $ "type mismatch:"
+        $$ pPrint x
+        $$ nest 2 (":" <> pPrint (typeOf x))
+        $$ pPrint y
+        $$ nest 2 (":" <> pPrint (typeOf y))
 
 lintExpr :: HasCallStack => MonadReader [Id Type] m => Expr (Id Type) -> m ()
 lintExpr (Atom x) = lintAtom x

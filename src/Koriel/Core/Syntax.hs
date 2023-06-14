@@ -131,12 +131,12 @@ instance Pretty a => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
   pPrint (Record kvs) =
-    parens $
-      sep
+    parens
+      $ sep
         [ "record"
             <+> parens
-              ( sep $
-                  map
+              ( sep
+                  $ map
                     ( \(k, v) ->
                         pPrint k
                           <+> pPrint v
@@ -415,8 +415,8 @@ data Program a = Program
 
 instance (Pretty a, Ord a) => Pretty (Program a) where
   pPrint Program {..} =
-    vcat $
-      concat
+    vcat
+      $ concat
         [ ["; variables"],
           map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) topVars,
           ["; functions"],

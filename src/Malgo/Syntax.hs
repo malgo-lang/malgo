@@ -146,11 +146,11 @@ instance Pretty (XId x) => Pretty (Expr x) where
   pPrintPrec l d (OpApp _ o e1 e2) =
     maybeParens (d > 10) $ sep [pPrintPrec l 11 e1, pPrintPrec l 10 o <+> pPrintPrec l 11 e2]
   pPrintPrec l _ (Fn _ cs) =
-    braces $
-      space
-        <> foldl1
-          (\a b -> sep [a, nest (-2) $ "|" <+> b])
-          (toList $ fmap (pPrintPrec l 0) cs)
+    braces
+      $ space
+      <> foldl1
+        (\a b -> sep [a, nest (-2) $ "|" <+> b])
+        (toList $ fmap (pPrintPrec l 0) cs)
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
@@ -474,12 +474,12 @@ deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
 
 instance Pretty (XId x) => Pretty (BindGroup x) where
   pPrint BindGroup {..} =
-    sep $
-      punctuate ";" $
-        map prettyDataDef _dataDefs
-          <> map prettyForeign _foreigns
-          <> map prettyScSig _scSigs
-          <> concatMap (map prettyScDef) _scDefs
+    sep
+      $ punctuate ";"
+      $ map prettyDataDef _dataDefs
+      <> map prettyForeign _foreigns
+      <> map prettyScSig _scSigs
+      <> concatMap (map prettyScDef) _scDefs
     where
       prettyDataDef (_, d, xs, cs) =
         sep

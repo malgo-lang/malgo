@@ -48,12 +48,12 @@ setupEnv = do
                   "-Xclang",
                   "-opaque-pointers"
                 ]
-                <> pkgConfig
-                <> [ outputDir </> "libs" </> "runtime.c",
-                     llPath,
-                     "-o",
-                     llPath -<.> "out"
-                   ]
+              <> pkgConfig
+              <> [ outputDir </> "libs" </> "runtime.c",
+                   llPath,
+                   "-o",
+                   llPath -<.> "out"
+                 ]
           )
       hPutStr stderr $ convertString err
 
@@ -67,17 +67,17 @@ main = do
     ]
   where
     runOpt testcase = bench (takeBaseName testcase) $ nfIO $ do
-      runProcess_ $
-        proc (outputDir </> takeBaseName testcase -<.> "out") []
-          & setStdout nullStream
+      runProcess_
+        $ proc (outputDir </> takeBaseName testcase -<.> "out") []
+        & setStdout nullStream
     runNoOpt testcase = bench (takeBaseName testcase) $ nfIO $ do
-      runProcess_ $
-        proc (outputDir </> takeBaseName testcase -<.> "no-opt.out") []
-          & setStdout nullStream
+      runProcess_
+        $ proc (outputDir </> takeBaseName testcase -<.> "no-opt.out") []
+        & setStdout nullStream
     runNoLL testcase = bench (takeBaseName testcase) $ nfIO $ do
-      runProcess_ $
-        proc (outputDir </> takeBaseName testcase -<.> "no-ll.out") []
-          & setStdout nullStream
+      runProcess_
+        $ proc (outputDir </> takeBaseName testcase -<.> "no-ll.out") []
+        & setStdout nullStream
 
 -- | Get the correct name of `clang`
 getClangCommand :: IO String

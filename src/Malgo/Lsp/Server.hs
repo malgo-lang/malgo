@@ -86,8 +86,8 @@ infoToLocation Info {..} =
 
 server :: LspOpt -> IO Int
 server opt = do
-  runServer $
-    ServerDefinition
+  runServer
+    $ ServerDefinition
       { onConfigurationChange = \_ _ -> Right (),
         defaultConfig = (),
         doInitialize = \env _req -> pure $ Right env,

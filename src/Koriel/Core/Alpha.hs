@@ -207,8 +207,8 @@ equivCase _ _ = pure False
 
 equivLocalDef :: MonadReader AlphaEnv m => LocalDef (Id Type) -> LocalDef (Id Type) -> m Subst
 equivLocalDef (LocalDef x t o) (LocalDef y u p) =
-  local (\e -> e {subst = one (x, Var y) <> e.subst}) $
-    ifM
+  local (\e -> e {subst = one (x, Var y) <> e.subst})
+    $ ifM
       ((t == u &&) <$> equivObj o p)
       (pure $ one (x, Var y))
       (pure mempty)
@@ -225,7 +225,7 @@ equivObj _ _ = pure False
 equivAtom :: MonadReader AlphaEnv m => Atom (Id Type) -> Atom (Id Type) -> m Bool
 equivAtom (Var x) (Var y) = do
   subst <- asks (.subst)
-  pure $
-    HashMap.lookupDefault (Var x) x subst
-      == HashMap.lookupDefault (Var y) y subst
+  pure
+    $ HashMap.lookupDefault (Var x) x subst
+    == HashMap.lookupDefault (Var y) y subst
 equivAtom x y = pure $ x == y
