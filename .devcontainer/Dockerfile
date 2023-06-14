@@ -27,18 +27,19 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 ENV PATH=$HOME/.cabal/bin:$HOME/.local/bin:$HOME/.ghcup/bin:${PATH}
 
-RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.6.1 && ghcup set ghc 9.6.1
+RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.4.5 && ghcup set ghc 9.4.5
 
 RUN ghcup install cabal 3.10.1.0 && ghcup set cabal 3.10.1.0
 
-RUN ghcup compile hls --git-ref b84110b508e2f30899b84ffc3928a5e20be1615f --ghc 9.6.1 -j$(nproc)
+RUN ghcup compile hls --git-ref b84110b508e2f30899b84ffc3928a5e20be1615f --ghc 9.4.5 -j$(nproc)
 # RUN ghcup install hls
 
 RUN ghcup gc
 
 WORKDIR $HOME
 
-RUN stack install fourmolu ghc-prof-flamegraph hlint
+RUN cabal install fourmolu-0.13.0.0 --ignore-project
+RUN cabal install ghc-prof-flamegraph hlint --ignore-project
 
 FROM buildpack-deps:stable
 
