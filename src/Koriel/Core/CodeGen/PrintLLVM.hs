@@ -1,15 +1,11 @@
-{-# LANGUAGE QuasiQuotes #-}
-
 module Koriel.Core.CodeGen.PrintLLVM (codeGen) where
 
-import Control.Exception (assert)
 import Control.Lens (ifor_, view, _1)
 import Control.Monad.Cont (ContT, runContT, withContT)
 import Control.Monad.Extra (whileM)
 import Data.Foldable (maximum)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
-import Data.String.Conversions (convertString)
 import Data.Text qualified as Text
 import Data.Tuple.Extra (uncurry3)
 import Koriel.Core.Syntax hiding (variable)
@@ -18,7 +14,6 @@ import Koriel.Id (Id (..), ModuleName (..), idToText)
 import Koriel.Prelude
 import Koriel.Pretty
 import Relude.Unsafe qualified as Unsafe
-import Text.RawString.QQ (r)
 import Text.Regex.TDFA ((=~))
 
 type KName = Id Type
@@ -69,13 +64,13 @@ codeGen srcPath dstPath moduleName Program {..} = do
                 name <- lookupName name
                 eOpr <- putExprLn expr
                 store typ eOpr name
-            | otherwise -> pure ()
+            | otherwise -> pass
         pure "0"
 
       whileM do
         postprocess' <- readIORef postprocess
         writeIORef postprocess []
-        void $ sequence_ postprocess'
+        sequence_ postprocess'
         not . null <$> readIORef postprocess
   where
     buildInternTable s = HashMap.insert (view _1 s) (sigil Global <> toAsm (view _1 s))
@@ -181,8 +176,8 @@ putLocalDefLn addr (LocalDef closureName (_ :-> ret) (Fun params body)) = do
       runBlockBuilder ?? (\opr -> putAsmLn $ "ret " <> toAsm ret <> " " <> opr) $ do
         -- unpack capture
         modifier <- unpackCapture captureRegister
-        local modifier
-          $ putExprLn body
+        local modifier $
+          putExprLn body
       putAsmLn "}"
   capture <- register "capture" $ mallocType captureType
   ifor_ fvs $ \i fv -> do
@@ -301,28 +296,28 @@ store ::
 store typ value address = do
   putAsmLn $ "store " <> toAsm typ <> " " <> value <> ", ptr " <> address
 
-alloca :: (MonadReader CodeGenEnv m, MonadIO m) => Type -> m ()
-alloca typ = putAsmLn $ "alloca " <> toInnerType typ
+-- alloca :: (MonadReader CodeGenEnv m, MonadIO m) => Type -> m ()
+-- alloca typ = putAsmLn $ "alloca " <> toInnerType typ
 
 gep :: (MonadReader CodeGenEnv m, MonadIO m) => Type -> Register -> [Int] -> m ()
 gep typ address index = do
-  putAsmLn
-    $ "getelementptr "
-    <> toInnerType typ
-    <> ", ptr "
-    <> address
-    <> ", "
-    <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
+  putAsmLn $
+    "getelementptr "
+      <> toInnerType typ
+      <> ", ptr "
+      <> address
+      <> ", "
+      <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
 
 gep' :: (MonadReader CodeGenEnv m, MonadIO m) => Text -> Text -> [Int] -> m ()
 gep' typ address index = do
-  putAsmLn
-    $ "getelementptr "
-    <> typ
-    <> ", ptr "
-    <> address
-    <> ", "
-    <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
+  putAsmLn $
+    "getelementptr "
+      <> typ
+      <> ", ptr "
+      <> address
+      <> ", "
+      <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
 
 toInnerType :: Type -> Text
 toInnerType (_ :-> _) = "{ ptr, ptr }"
@@ -408,7 +403,7 @@ putGlobalValue (Atom atom) = do
 putGlobalValue e | toAsm (typeOf e) == "ptr" = putAsmLn "global ptr undef"
 putGlobalValue e = errorDoc $ sep ["cannot be global:", pPrint e]
 
-atomToConstant :: (HasCallStack, MonadIO m) => MonadReader CodeGenEnv m => Atom KName -> m Text
+atomToConstant :: (HasCallStack, MonadIO m) => (MonadReader CodeGenEnv m) => Atom KName -> m Text
 atomToConstant (Var name) = lookupName name
 atomToConstant (Unboxed (Int32 i)) = pure $ show i
 atomToConstant (Unboxed (Int64 i)) = pure $ show i
@@ -475,7 +470,7 @@ instance ToAsm KName where
 
 -- * Utilities
 
-intern :: MonadReader CodeGenEnv m => KName -> NameSpace -> m (CodeGenEnv -> CodeGenEnv, Text)
+intern :: (MonadReader CodeGenEnv m) => KName -> NameSpace -> m (CodeGenEnv -> CodeGenEnv, Text)
 intern name given = do
   CodeGenEnv {interned} <- ask
   let register = newName (HashMap.lookup name interned)
@@ -493,7 +488,7 @@ sigil Global = "@"
 sigil Local = "%"
 
 -- TODO: If the register are global (head register == '@'), we should load the value and return it.
-lookupName :: HasCallStack => MonadReader CodeGenEnv m => KName -> m Register
+lookupName :: (HasCallStack, MonadReader CodeGenEnv m) => KName -> m Register
 lookupName name = do
   CodeGenEnv {interned} <- ask
   case HashMap.lookup name interned of

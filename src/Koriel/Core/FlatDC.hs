@@ -2,7 +2,7 @@
 module Koriel.Core.FlatDC (normalize) where
 
 import Control.Lens (has, traverseOf, traversed, _2)
-import Control.Monad.Trans.Cont (ContT (..), evalContT, resetT, shiftT)
+import Control.Monad.Trans.Cont (ContT (..), evalContT, shiftT)
 import Data.Traversable (for)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -102,7 +102,7 @@ flatCase k (Bind n t e) = do
 matchToSwitch :: Id Type -> [Case (Id Type)] -> Expr (Id Type)
 matchToSwitch scr cs@(c@Unpack {} : _) =
   let cs' = map (unpackToDestruct scr) $ takeWhile (has _Unpack) cs
-      defaultCase = fromMaybe (Error $ typeOf c) $ bindToAssign scr <$> find (has _Bind) cs
+      defaultCase = maybe (Error $ typeOf c) (bindToAssign scr) (find (has _Bind) cs)
    in Switch (Var scr) cs' defaultCase
   where
     unpackToDestruct scr (Unpack con@(Con tag _) xs e) = (tag, Destruct (Var scr) con xs e)
@@ -111,7 +111,7 @@ matchToSwitch scr (OpenRecord kvs e : _) =
   DestructRecord (Var scr) kvs e
 matchToSwitch scr cs@(c@Exact {} : _) =
   let cs' = map flatExact $ takeWhile (has _Exact) cs
-      defaultCase = fromMaybe (Error $ typeOf c) $ bindToAssign scr <$> find (has _Bind) cs
+      defaultCase = maybe (Error $ typeOf c) (bindToAssign scr) (find (has _Bind) cs)
    in SwitchUnboxed (Var scr) cs' defaultCase
   where
     flatExact (Exact u e) = (u, e)
@@ -147,7 +147,7 @@ flatObj (Fun ps e) =
 flatObj o = pure o
 
 inScope ::
-  Monad m =>
+  (Monad m) =>
   -- | continuation
   (a -> m r) ->
   -- | computation must be in the scope

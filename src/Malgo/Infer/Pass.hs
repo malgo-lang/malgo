@@ -7,11 +7,9 @@ import Data.List qualified as List
 import Data.List.Extra (anySame)
 import Data.Map qualified as Map
 import Data.Traversable (for)
-import Error.Diagnose (Marker (This, Where), Report (..), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Language.LSP.Types.Lens (HasRange (range))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
@@ -21,8 +19,6 @@ import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
-import Relude.Unsafe qualified as Unsafe
-import Text.Megaparsec (sourceName)
 
 -------------------------------
 -- Lookup the value of TcEnv --
@@ -292,10 +288,10 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
               | anySame $ Map.elems evidence -> errorOn (pos.value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
               | otherwise -> signatureMap . at name ?= declaredScheme
             Nothing ->
-              errorOn (pos.value)
-                $ "Signature mismatch:"
-                $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
-                $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+              errorOn (pos.value) $
+                "Signature mismatch:"
+                  $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
+                  $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
 
 -- | Which combination of variables should be unification to consider two types as equal?
 -- Use in `tcScDefs`.
@@ -363,19 +359,11 @@ tcExpr (Fn pos cs) = do
   let patNums :: Int = countPatNums c'
   for_ cs' \c -> do
     when (countPatNums c /= patNums) $ do
-      errorOn pos $ "The number of patterns in each clause must be the same"
+      errorOn pos "The number of patterns in each clause must be the same"
     tell [(pos, typeOf c' :~ typeOf c)]
   pure $ Fn (Typed (typeOf c') pos) (c' :| cs')
   where
     countPatNums (Clause _ ps _) = length ps
-    mainDiag (Clause _ ps _) =
-      let first = Unsafe.head ps
-          last = Unsafe.last ps
-       in (rangeToPosition (first ^. range <> last ^. range), This $ render $ "Length of patterns in this clause is" <+> pPrint (length ps))
-    restDiag (Clause _ ps _) =
-      let first = Unsafe.head ps
-          last = Unsafe.last ps
-       in (rangeToPosition (first ^. range <> last ^. range), Where $ render $ "Length of patterns in this clause is" <+> pPrint (length ps))
 tcExpr (Tuple pos es) = do
   es' <- traverse tcExpr es
   let esType = TyConApp (TyTuple $ length es) $ map typeOf es'
@@ -431,8 +419,8 @@ tcPatterns (ConP pos con pats : ps) = do
   let (morePats, restPs) = List.splitAt (length conParams - length pats) ps
   -- 足りない分（morePats）を補充した残り（restPs）が空でなければ、
   -- 2引数以上の関数での文法エラー
-  when (not (null morePats) && not (null restPs))
-    $ errorOn pos "Invalid Pattern: You may need to put parentheses"
+  when (not (null morePats) && not (null restPs)) $
+    errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
   ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'
