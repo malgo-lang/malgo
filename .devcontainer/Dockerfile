@@ -103,7 +103,7 @@ RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 COPY --from=ghcup-install $HOME/.ghcup/ $HOME/.ghcup/
 COPY --from=ghcup-install $HOME/.cabal/ $HOME/.cabal/
 COPY --from=ghcup-install $HOME/.stack/ $HOME/.stack/
-COPY --from=ghcup-install $HOME/.local/ $HOME/.local/
+# COPY --from=ghcup-install $HOME/.local/ $HOME/.local/
 
 ENV PATH=$HOME/.cabal/bin:$HOME/.local/bin:$HOME/.ghcup/bin:${PATH}
 

@@ -41,8 +41,8 @@ genTcEnv rnEnv = do
   let char_t = fromJust $ findBuiltinType "Char#" rnEnv
   let string_t = fromJust $ findBuiltinType "String#" rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
-  pure
-    $ TcEnv
+  pure $
+    TcEnv
       { _signatureMap = mempty,
         _typeDefMap =
           HashMap.fromList

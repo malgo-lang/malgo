@@ -83,8 +83,8 @@ makeFieldsNoPrefix ''LspOpt
 -- It ignores file names.
 findReferences :: SourcePos -> Index -> [Info]
 findReferences pos (Index refs _ _) =
-  HashMap.keys
-    $ HashMap.filter (any (isInRange pos)) refs
+  HashMap.keys $
+    HashMap.filter (any (isInRange pos)) refs
 
 isInRange :: SourcePos -> Range -> Bool
 isInRange pos Range {_start, _end}

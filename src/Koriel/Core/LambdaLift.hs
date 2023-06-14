@@ -52,7 +52,7 @@ lambdalift uniqSupply moduleName Program {..} =
   runReaderT
     ?? LambdaLiftEnv {..}
     $ evalStateT
-    ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars}
+      ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars}
     $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
       funcs <>= HashMap.fromList (map (\(f, ps, t, e) -> (f, (ps, t, e))) topFuns)
@@ -60,11 +60,11 @@ lambdalift uniqSupply moduleName Program {..} =
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift topVars
       prog <-
-        flat
-          $ Program
+        flat $
+          Program
             topVars
-            ( map (\(f, (ps, t, e)) -> (f, ps, t, e))
-                $ HashMap.toList _funcs
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
+                HashMap.toList _funcs
             )
             extFuns
       traverseOf expr toDirect prog

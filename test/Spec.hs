@@ -83,9 +83,9 @@ main =
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
     describe "Test malgo to-ll (must be error)" $ parallel do
       for_ errorcases \errorcase -> do
-        it ("test error case " <> errorcase)
-          $ testError (testcaseDir </> "error" </> errorcase)
-          `shouldThrow` anyException
+        it ("test error case " <> errorcase) $
+          testError (testcaseDir </> "error" </> errorcase)
+            `shouldThrow` anyException
 
     describe "Print LLVM assembly" do
       parallel $ for_ testcases \testcase -> do
@@ -180,8 +180,8 @@ test ::
 test testcase typ lambdaLift noOptimize option compileMode = do
   createDirectoryIfMissing True (outputDir </> typ)
   let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
-  timeoutWrapper "compile"
-    $ compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
+  timeoutWrapper "compile" $
+    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
 
   -- Format and optimize the generated LLVM assembly
   -- find opt or opt-15
@@ -211,23 +211,23 @@ test testcase typ lambdaLift noOptimize option compileMode = do
               "-g"
               -- "-O3"
             ]
-          <> pkgConfig
-          <> [ outputDir </> "libs" </> "runtime.c",
-               outputDir </> typ </> takeBaseName testcase -<.> ".ll",
-               "-o",
-               outputDir </> typ </> takeBaseName testcase -<.> ".out"
-             ]
+            <> pkgConfig
+            <> [ outputDir </> "libs" </> "runtime.c",
+                 outputDir </> typ </> takeBaseName testcase -<.> ".ll",
+                 "-o",
+                 outputDir </> typ </> takeBaseName testcase -<.> ".out"
+               ]
       )
   putText $ convertString err
   (clang, exitCode) `shouldBe` (clang, ExitSuccess)
 
   (exitCode, result) <-
-    timeoutWrapper "run"
-      $ second decodeUtf8
-      <$> readProcessStdout
-        ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
-            & setStdin (byteStringInput "Hello")
-        )
+    timeoutWrapper "run" $
+      second decodeUtf8
+        <$> readProcessStdout
+          ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
+              & setStdin (byteStringInput "Hello")
+          )
   ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
   expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
   map ("-- Expected: " <>) (lines $ Text.stripEnd result) `shouldBe` expected

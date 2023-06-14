@@ -29,11 +29,11 @@ loadCore (ModuleName modName) = do
     Right x -> pure x
     Left err -> do
       hPrint stderr err
-      errorDoc
-        $ "Cannot find module:"
-        <+> quotes (pPrint modName)
-        $$ "Module paths:"
-        <+> pPrint modPaths
+      errorDoc $
+        "Cannot find module:"
+          <+> quotes (pPrint modName)
+          $$ "Module paths:"
+          <+> pPrint modPaths
   where
     findAndReadFile [] modFile = pure $ Left (pPrint modFile <+> "not found")
     findAndReadFile (path : paths) modFile = do

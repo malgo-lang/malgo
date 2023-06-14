@@ -176,8 +176,8 @@ putLocalDefLn addr (LocalDef closureName (_ :-> ret) (Fun params body)) = do
       runBlockBuilder ?? (\opr -> putAsmLn $ "ret " <> toAsm ret <> " " <> opr) $ do
         -- unpack capture
         modifier <- unpackCapture captureRegister
-        local modifier
-          $ putExprLn body
+        local modifier $
+          putExprLn body
       putAsmLn "}"
   capture <- register "capture" $ mallocType captureType
   ifor_ fvs $ \i fv -> do
@@ -301,23 +301,23 @@ store typ value address = do
 
 gep :: (MonadReader CodeGenEnv m, MonadIO m) => Type -> Register -> [Int] -> m ()
 gep typ address index = do
-  putAsmLn
-    $ "getelementptr "
-    <> toInnerType typ
-    <> ", ptr "
-    <> address
-    <> ", "
-    <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
+  putAsmLn $
+    "getelementptr "
+      <> toInnerType typ
+      <> ", ptr "
+      <> address
+      <> ", "
+      <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
 
 gep' :: (MonadReader CodeGenEnv m, MonadIO m) => Text -> Text -> [Int] -> m ()
 gep' typ address index = do
-  putAsmLn
-    $ "getelementptr "
-    <> typ
-    <> ", ptr "
-    <> address
-    <> ", "
-    <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
+  putAsmLn $
+    "getelementptr "
+      <> typ
+      <> ", ptr "
+      <> address
+      <> ", "
+      <> Text.intercalate "," (map (\i -> "i32 " <> show i :: Text) index)
 
 toInnerType :: Type -> Text
 toInnerType (_ :-> _) = "{ ptr, ptr }"

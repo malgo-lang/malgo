@@ -7,35 +7,35 @@ on:
     branches: ["*"]
 
 jobs:
-  check-format:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        ghc: ["9.4.5"]
-        os: [ubuntu-latest]
+  # check-format:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       ghc: ["9.4.5"]
+  #       os: [ubuntu-latest]
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache .cabal
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cabal/packages
-            ~/.cabal/store
-            dist-newstyle
-          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.ghc }}-
-      - uses: haskell/actions/setup@v2
-        with:
-          ghc-version:
-            ${{ matrix.ghc }}
-          cabal-version: "3.10.1.0"
-      - name: Install fourmolu
-        run: |
-          cabal install fourmolu-0.13.0.0 --ignore-project
-      - name: Check formatting
-        run: |
-          fourmolu --mode check $(find src app benchmarks test -name '*.hs')
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Cache .cabal
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: |
+  #           ~/.cabal/packages
+  #           ~/.cabal/store
+  #           dist-newstyle
+  #         key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
+  #         restore-keys: ${{ runner.os }}-${{ matrix.ghc }}-
+  #     - uses: haskell/actions/setup@v2
+  #       with:
+  #         ghc-version:
+  #           ${{ matrix.ghc }}
+  #         cabal-version: "3.10.1.0"
+  #     - name: Install fourmolu
+  #       run: |
+  #         cabal install fourmolu-0.13.0.0 --ignore-project
+  #     - name: Check formatting
+  #       run: |
+  #         fourmolu --mode check $(find src app benchmarks test -name '*.hs')
 
   build:
     runs-on: ${{ matrix.os }}

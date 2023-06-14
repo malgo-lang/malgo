@@ -75,7 +75,7 @@ annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   local
     (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv})
     $ (name,params',ty,)
-    <$> annExpr body
+      <$> annExpr body
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pPrint name
 
 annExpr :: (MonadReader Context m, MonadIO m) => Expr Text -> m (Expr (Id Type))

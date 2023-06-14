@@ -101,8 +101,8 @@ type MonadCodeGen m =
 
 runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
-  execModuleBuilderT emptyModuleBuilder
-    $ runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
+  execModuleBuilderT emptyModuleBuilder $
+    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
@@ -229,8 +229,8 @@ findVar x = findLocalVar
         Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
-      emitDefn
-        $ GlobalDefinition
+      emitDefn $
+        GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = toName x,
               LLVM.AST.Global.type' = convType $ C.typeOf x,
@@ -339,10 +339,10 @@ genExpr e@(CallDirect f xs) = do
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
 genExpr e@(RawCall name _ xs) = do
   let primOpr =
-        ConstantOperand
-          $ C.GlobalReference
-          $ LLVM.AST.mkName
-          $ convertString name
+        ConstantOperand $
+          C.GlobalReference $
+            LLVM.AST.mkName $
+              convertString name
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
 genExpr (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
@@ -632,8 +632,8 @@ globalStringPtr str = do
         LLVM.AST.Typed.typeOf charArray >>= \case
           Left err -> error $ show err
           Right ty -> pure ty
-      emitDefn
-        $ GlobalDefinition
+      emitDefn $
+        GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = name,
               LLVM.AST.Global.type' = ty,

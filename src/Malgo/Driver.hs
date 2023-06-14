@@ -55,8 +55,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
   where
     moduleName = parsedAst._moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= moduleName.raw)
-        $ error "Module name must be source file's base name."
+      when (convertString (takeBaseName srcPath) /= moduleName.raw) $
+        error "Module name must be source file's base name."
 
       uniqSupply <- asks (.uniqSupply)
       when env.debugMode do
@@ -90,8 +90,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         lint core
         pure core
 
-      when env.debugMode
-        $ liftIO do
+      when env.debugMode $
+        liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pPrint core
 
@@ -109,8 +109,8 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       lint coreOpt
 
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= FlatDC.normalize else pure coreOpt
-      when (env.debugMode && env.lambdaLift)
-        $ liftIO do
+      when (env.debugMode && env.lambdaLift) $
+        liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
       when env.testMode do
@@ -136,7 +136,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       | griffId.name
           == "main"
           && griffId.moduleName
-          == moduleName =
+            == moduleName =
           Just coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
