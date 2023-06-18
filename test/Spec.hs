@@ -42,7 +42,6 @@ import Test.Hspec (
   runIO,
   shouldBe,
   shouldThrow,
-  xit,
  )
 
 testcaseDir :: FilePath
@@ -87,10 +86,6 @@ main =
           testError (testcaseDir </> "error" </> errorcase)
             `shouldThrow` anyException
 
-    describe "Print LLVM assembly" do
-      parallel $ for_ testcases \testcase -> do
-        xit ("test " <> testcase) $ example do
-          test (testcaseDir </> testcase) "print" False True defaultOptimizeOption PrintLLVM
 #ifdef TEST_ALL
     describe "Test malgo to-ll on all combinations of optimization options" do
       for_ testcases \testcase -> parallel $

@@ -9,7 +9,7 @@ where
 import Control.Lens (At (at), Lens', lens, traverseOf, traversed, use, view, (<>=), (?=), _1, _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
-import Koriel.Core.Flat
+import Koriel.Core.Flat (normalize)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -60,7 +60,7 @@ lambdalift uniqSupply moduleName Program {..} =
       LambdaLiftState {_funcs} <- get
       -- TODO: lambdalift topVars
       prog <-
-        flat $
+        normalize $
           Program
             topVars
             ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $

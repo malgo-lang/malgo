@@ -99,8 +99,7 @@ optimizeExpr state expr = do
         >=> runOpt option.doFoldTrivialCall foldTrivialCall
         >=> runOpt option.doSpecializeFunction specializeFunction
         >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
-        >=> runFlat
-        . flatExpr
+        >=> normalizeExpr
     runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag

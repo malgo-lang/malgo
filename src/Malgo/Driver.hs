@@ -8,7 +8,7 @@ import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM (codeGen)
-import Koriel.Core.FlatDC qualified as FlatDC
+import Koriel.Core.Flat qualified as Flat
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
@@ -74,7 +74,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       (dsEnv, core) <- desugar tcEnv refinedAst
 
       core <- do
-        core <- FlatDC.normalize core
+        core <- Flat.normalize core
         _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
         writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
@@ -99,7 +99,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core >>= FlatDC.normalize
+      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core >>= Flat.normalize
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
@@ -107,7 +107,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
 
-      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= FlatDC.normalize else pure coreOpt
+      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= Flat.normalize else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
         liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
