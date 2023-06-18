@@ -176,7 +176,7 @@ lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
 lintStmt :: MonadReader [Id Type] m => Stmt (Id Type) -> m ()
-lintStmt (Do e) = lintExpr e
+lintStmt (Ret e) = lintExpr e
 
 lintProgram :: HasCallStack => MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do

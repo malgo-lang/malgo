@@ -114,7 +114,7 @@ stmt =
   label "statement" do
     between (symbol "(") (symbol ")") do
       void $ symbol "do"
-      Do <$> expr
+      Ret <$> expr
 
 -- | Parse an expression.
 expr :: Parser (Expr Text)

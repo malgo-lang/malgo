@@ -76,7 +76,7 @@ lliftStmt ::
   ) =>
   Stmt (Id Type) ->
   f (Stmt (Id Type))
-lliftStmt (Do e) = Do <$> llift e
+lliftStmt (Ret e) = Ret <$> llift e
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Expr (Id Type) -> f (Expr (Id Type))
 llift (Atom a) = pure $ Atom a
@@ -88,11 +88,11 @@ llift (CallDirect f xs) = pure $ CallDirect f xs
 llift (RawCall f t xs) = pure $ RawCall f t xs
 llift (BinOp op x y) = pure $ BinOp op x y
 llift (Cast t x) = pure $ Cast t x
-llift (Let [LocalDef n t (Fun xs (Do call@Call {}))] e) = do
+llift (Let [LocalDef n t (Fun xs (Ret call@Call {}))] e) = do
   call' <- llift call
-  Let [LocalDef n t (Fun xs $ Do call')] <$> llift e
-llift (Let [LocalDef n t o@(Fun _ (Do RawCall {}))] e) = Let [LocalDef n t o] <$> llift e
-llift (Let [LocalDef n t o@(Fun _ (Do CallDirect {}))] e) = Let [LocalDef n t o] <$> llift e
+  Let [LocalDef n t (Fun xs $ Ret call')] <$> llift e
+llift (Let [LocalDef n t o@(Fun _ (Ret RawCall {}))] e) = Let [LocalDef n t o] <$> llift e
+llift (Let [LocalDef n t o@(Fun _ (Ret CallDirect {}))] e) = Let [LocalDef n t o] <$> llift e
 llift (Let [LocalDef n t (Fun as body)] e) = do
   backup <- get
   ks <- use knowns
@@ -115,7 +115,7 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       defined <- gets (.defined)
       let fvs = HashSet.difference (freevars body') (ks <> defined <> HashSet.fromList as)
       newFun <- def n (toList fvs <> as) body'
-      Let [LocalDef n t (Fun as (Do $ CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
+      Let [LocalDef n t (Fun as (Ret $ CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . expr) llift cs
 llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> llift e

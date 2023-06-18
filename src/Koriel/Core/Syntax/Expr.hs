@@ -20,26 +20,26 @@ import Koriel.Core.Type
 import Koriel.Prelude
 import Koriel.Pretty
 
-newtype Stmt a = Do (Expr a)
+newtype Stmt a = Ret (Expr a)
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
 instance HasAtom Stmt where
   atom f = \case
-    Do x -> Do <$> atom f x
+    Ret x -> Ret <$> atom f x
   {-# INLINE atom #-}
 
 instance HasType a => HasType (Stmt a) where
-  typeOf (Do x) = typeOf x
+  typeOf (Ret x) = typeOf x
   {-# INLINE typeOf #-}
 
 instance Pretty a => Pretty (Stmt a) where
-  pPrint (Do x) = parens $ sep ["do", pPrint x]
+  pPrint (Ret x) = parens $ sep ["do", pPrint x]
   {-# INLINE pPrint #-}
 
 instance HasFreeVar Stmt where
   freevars = \case
-    Do x -> freevars x
+    Ret x -> freevars x
   {-# INLINE freevars #-}
 
 -- | expressions
@@ -208,7 +208,7 @@ instance Plated (Expr a) where
   plate _ e@RawCall {} = pure e
   plate _ e@BinOp {} = pure e
   plate _ e@Cast {} = pure e
-  plate f (Let xs e) = Let <$> traverseOf (traversed . expr) f xs <*> f e
+  plate f (Let xs e) = Let <$> traverseOf (traversed . expr) (plate f) xs <*> f e
   plate f (Match e cs) = Match <$> f e <*> traverseOf (traversed . expr) f cs
   plate f (Switch v cs e) = Switch v <$> traverseOf (traversed . _2 . expr) f cs <*> expr f e
   plate f (SwitchUnboxed v cs e) = SwitchUnboxed v <$> traverseOf (traversed . _2) f cs <*> f e
@@ -227,7 +227,7 @@ instance HasExpr Expr where
 
 instance HasExpr Stmt where
   expr f = \case
-    Do e -> Do <$> f e
+    Ret e -> Ret <$> f e
   {-# INLINE expr #-}
 
 instance HasExpr Case where

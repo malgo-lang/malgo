@@ -167,7 +167,7 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
         _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
         _ <- bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
         pure e
-      pure (mainFuncId, ([], Do mainFuncBody))
+      pure (mainFuncId, ([], Ret mainFuncBody))
 
 convType :: C.Type -> LT.Type
 convType (_ :-> _) = ptr
@@ -324,7 +324,7 @@ genStmt ::
   ) =>
   Stmt (Id C.Type) ->
   ContT () m Operand
-genStmt (Do e) = genExpr e
+genStmt (Ret e) = genExpr e
 
 genExpr ::
   ( MonadIRBuilder m,
@@ -674,7 +674,7 @@ internalFunction ::
   Name ->
   -- | Parameter types and name suggestions
   [(LT.Type, ParameterName)] ->
-  -- | Return type
+  -- | Ret urn type
   LT.Type ->
   -- | Function body builder
   ([Operand] -> IRBuilderT m ()) ->

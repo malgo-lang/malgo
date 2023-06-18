@@ -87,7 +87,7 @@ flat (Assign x v e) = shiftT \k -> do
 flat e@Error {} = pure e
 
 flatStmt :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Stmt (Id Type) -> m (Stmt (Id Type))
-flatStmt (Do e) = Do <$> normalizeExpr e
+flatStmt (Ret e) = Ret <$> normalizeExpr e
 
 flatCase ::
   ( MonadReader env m,

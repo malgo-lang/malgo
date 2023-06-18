@@ -86,7 +86,7 @@ alphaExpr (Assign x v e) = do
 alphaExpr (Error t) = pure $ Error t
 
 alphaStmt :: (MonadReader AlphaEnv f, MonadIO f) => Stmt (Id Type) -> f (Stmt (Id Type))
-alphaStmt (Do e) = Do <$> alphaExpr e
+alphaStmt (Ret e) = Ret <$> alphaExpr e
 
 alphaAtom :: MonadReader AlphaEnv f => Atom (Id Type) -> f (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x
@@ -190,7 +190,7 @@ equivExpr (Error t) (Error u) = pure $ t == u
 equivExpr _ _ = pure False
 
 equivStmt :: MonadReader AlphaEnv m => Stmt (Id Type) -> Stmt (Id Type) -> m Bool
-equivStmt (Do e1) (Do e2) = equivExpr e1 e2
+equivStmt (Ret e1) (Ret e2) = equivExpr e1 e2
 
 equivCase :: MonadReader AlphaEnv m => Case (Id Type) -> Case (Id Type) -> m Bool
 equivCase (Unpack c ps e) (Unpack c' ps' e') | c == c' = do

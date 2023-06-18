@@ -79,7 +79,7 @@ annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pPrint name
 
 annStmt :: (MonadReader Context f, MonadIO f) => Stmt Text -> f (Stmt (Id Type))
-annStmt (Do expr) = Do <$> annExpr expr
+annStmt (Ret expr) = Ret <$> annExpr expr
 
 annExpr :: (MonadReader Context m, MonadIO m) => Expr Text -> m (Expr (Id Type))
 annExpr (Atom atom) = Atom <$> annAtom atom
