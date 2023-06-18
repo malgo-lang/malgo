@@ -1,7 +1,7 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
-import Control.Lens (At (at), preuse, preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2, _Just)
+import Control.Lens (At (at), over, preuse, preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2, _Just)
 import Data.Char qualified as Char
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
@@ -102,7 +102,7 @@ dsScDef (Typed typ _, name, expr) = do
       (ps, e) <- curryFun True name.name [] =<< runDef (fmap Atom (cast typ' =<< dsExpr expr))
       pure [FunDef name' ps (C.typeOf name') e]
 
-fnToObj :: (MonadIO f, MonadFail f, MonadReader DsEnv f, MonadState DsState f) => Bool -> Text -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Expr (Id C.Type))
+fnToObj :: (MonadIO f, MonadFail f, MonadReader DsEnv f, MonadState DsState f) => Bool -> Text -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Stmt (Id C.Type))
 fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
   ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
   eType <- dsType (GT.typeOf e)
@@ -164,11 +164,11 @@ dsDataDef (_, name, _, cons) =
       unfoldedType <- unfoldType retType
       packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ idToText conName) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
-    (ps, e) <- case ps of
-      [] -> pure ([], expr)
+    (ps, s) <- case ps of
+      [] -> pure ([], Do expr)
       _ -> curryFun True conName.name ps expr
     nameEnv . at conName ?= conName'
-    pure (FunDef conName' ps (C.typeOf conName') e)
+    pure (FunDef conName' ps (C.typeOf conName') s)
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
     buildConType [] retType = [] :-> retType
@@ -212,7 +212,7 @@ dsExpr (G.Var (Typed typ _) name) = do
               clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
               internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
               ps <- traverse (newTemporalId "p") pts
-              let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
+              let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ Do $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
               modify $ \s -> s {_globalDefs = clsDef : s._globalDefs}
               pure $ Atom $ C.Var clsId
             _ -> pure $ Atom $ C.Var name'
@@ -250,7 +250,7 @@ dsExpr (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
 dsExpr (G.Record _ _) = error "unreachable"
 dsExpr (G.Seq _ ss) = dsStmts ss
 
-dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Expr (Id C.Type))
+dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) => NonEmpty (G.Stmt (Malgo 'Refine)) -> m (C.Expr (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExpr e
 dsStmts (G.Let _ _ e :| []) = dsExpr e
 dsStmts (NoBind _ e :| s : ss) = runDef $ do
@@ -286,7 +286,7 @@ curryFun ::
   [Id C.Type] ->
   -- | uncurryされた関数値
   C.Expr (Id C.Type) ->
-  m ([Id C.Type], C.Expr (Id C.Type))
+  m ([Id C.Type], C.Stmt (Id C.Type))
 -- η展開
 curryFun isToplevel hint [] e = do
   case C.typeOf e of
@@ -294,7 +294,7 @@ curryFun isToplevel hint [] e = do
       body <- runDef do
         f <- bind e
         pure $ C.Call f []
-      pure ([], body)
+      pure ([], Do body)
     pts :-> _ -> do
       ps <- traverse (newTemporalId "eta") pts
       body <- runDef do
@@ -302,28 +302,29 @@ curryFun isToplevel hint [] e = do
         pure $ C.Call f (map C.Var ps)
       curryFun isToplevel hint ps body
     _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
-curryFun isToplevel hint ps e = curryFun' ps []
+curryFun isToplevel hint ps e = over _2 Do <$> curryFun' ps []
   where
+    curryFun' :: (MonadIO m, MonadReader DsEnv m, MonadState DsState m) => [Id C.Type] -> [C.Atom (Id C.Type)] -> m ([Id C.Type], C.Expr (Id C.Type))
     curryFun' [] _ = error "length ps >= 1"
     curryFun' [x] as = do
       if isToplevel
         then do
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
-          fun <- newExternalId (hint <> "_curry") (C.typeOf $ Fun ps e)
-          globalDefs <>= [FunDef fun ps (C.typeOf fun) e]
+          fun <- newExternalId (hint <> "_curry") (C.typeOf $ Fun ps $ Do e)
+          globalDefs <>= [FunDef fun ps (C.typeOf fun) $ Do e]
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do
-          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
+          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps $ Do e)
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
           ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
           uniqSupply <- asks (.uniqSupply)
           e' <- alpha e (AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps $ map C.Var ps'})
-          pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
+          pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' $ Do e')] body)
     curryFun' (x : xs) as = do
-      fun <- curryFun' xs (C.Var x : as)
-      let funObj = uncurry Fun fun
+      (ps, s) <- curryFun' xs (C.Var x : as)
+      let funObj = Fun ps $ Do s
       body <- runDef $ do
         fun <- let_ (C.typeOf funObj) funObj
         pure $ Atom fun

@@ -167,7 +167,7 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
         _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
         _ <- bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
         pure e
-      pure (mainFuncId, ([], mainFuncBody))
+      pure (mainFuncId, ([], Do mainFuncBody))
 
 convType :: C.Type -> LT.Type
 convType (_ :-> _) = ptr
@@ -297,7 +297,7 @@ genFunc ::
   ) =>
   Id C.Type ->
   [Id C.Type] ->
-  Expr (Id C.Type) ->
+  Stmt (Id C.Type) ->
   m Operand
 genFunc name params body = do
   moduleName <- asks (.moduleName)
@@ -306,7 +306,7 @@ genFunc name params body = do
           then function
           else internalFunction
   funcBuilder funcName llvmParams retty $ \args ->
-    local (over valueMap (HashMap.fromList (zip params args) <>)) $ runContT (genExpr body) ret
+    local (over valueMap (HashMap.fromList (zip params args) <>)) $ runContT (genStmt body) ret
   where
     funcName = toName name
     llvmParams =
@@ -314,6 +314,17 @@ genFunc name params body = do
         (\x -> (convType $ x.meta, ParameterName $ toShort $ encodeUtf8 $ idToText x))
         params
     retty = convType (C.typeOf body)
+
+genStmt ::
+  ( MonadIRBuilder m,
+    MonadCodeGen m,
+    MonadFail m,
+    MonadFix m,
+    MonadIO m
+  ) =>
+  Stmt (Id C.Type) ->
+  ContT () m Operand
+genStmt (Do e) = genExpr e
 
 genExpr ::
   ( MonadIRBuilder m,
@@ -574,7 +585,7 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
           (fv,) <$> do
             fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` (encodeUtf8 fv.name <> "_addr")
             load (convType $ C.typeOf fv) fvAddr 0 `named` encodeUtf8 fv.name
-      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
+      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genStmt e) ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType `named` (encodeUtf8 funName.name <> "_capture")
   ifor_ fvs $ \i fv -> do

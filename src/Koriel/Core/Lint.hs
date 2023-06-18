@@ -158,7 +158,7 @@ lintExpr (Assign x v e) = do
 lintExpr Error {} = pass
 
 lintObj :: HasCallStack => MonadReader [Id Type] m => Obj (Id Type) -> m ()
-lintObj (Fun params body) = define "fun" params $ lintExpr body
+lintObj (Fun params body) = define "fun" params $ lintStmt body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
@@ -175,6 +175,9 @@ lintAtom :: HasCallStack => MonadReader [Id Type] m => Atom (Id Type) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
+lintStmt :: MonadReader [Id Type] m => Stmt (Id Type) -> m ()
+lintStmt (Do e) = lintExpr e
+
 lintProgram :: HasCallStack => MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
   let vs = map (view _1) topVars
@@ -185,4 +188,4 @@ lintProgram Program {..} = do
       lintExpr e
     for_ topFuns \(f, ps, _, body) -> define (pPrint f) ps do
       match f (map typeOf ps :-> typeOf body)
-      lintExpr body
+      lintStmt body

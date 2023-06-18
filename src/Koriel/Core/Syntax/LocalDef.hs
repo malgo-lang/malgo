@@ -50,7 +50,7 @@ instance HasAtom LocalDef where
 -- | heap objects
 data Obj a
   = -- | function (arity >= 1)
-    Fun [a] (Expr a)
+    Fun [a] (Stmt a)
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
   | -- | record

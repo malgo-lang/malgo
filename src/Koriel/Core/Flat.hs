@@ -22,9 +22,9 @@ normalize Program {..} = do
   topVars <- for topVars \(name, ty, expr) -> do
     expr' <- runContT (flat expr) pure
     pure (name, ty, expr')
-  topFuns <- for topFuns \(name, params, ty, expr) -> do
-    expr' <- runContT (flat expr) pure
-    pure (name, params, ty, expr')
+  topFuns <- for topFuns \(name, params, ty, stmt) -> do
+    stmt' <- flatStmt stmt
+    pure (name, params, ty, stmt')
   pure Program {..}
 
 normalizeExpr ::
@@ -85,6 +85,9 @@ flat (Assign x v e) = shiftT \k -> do
   e <- inScope k $ flat e
   pure $ assign x v e
 flat e@Error {} = pure e
+
+flatStmt :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Stmt (Id Type) -> m (Stmt (Id Type))
+flatStmt (Do e) = Do <$> normalizeExpr e
 
 flatCase ::
   ( MonadReader env m,
@@ -152,7 +155,7 @@ flatObj ::
   m (Obj (Id Type))
 flatObj (Fun ps e) =
   -- eがFunを飛び出ないようresetする
-  Fun ps <$> evalContT (flat e)
+  Fun ps <$> evalContT (flatStmt e)
 flatObj o = pure o
 
 inScope ::
