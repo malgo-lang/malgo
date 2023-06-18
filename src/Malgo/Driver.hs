@@ -3,16 +3,18 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception (assert)
 import Data.Binary qualified as Binary
+import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM (codeGen)
-import Koriel.Core.Flat (flat)
+import Koriel.Core.Flat qualified as Flat
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (optimizeProgram)
-import Koriel.Id (ModuleName (..))
+import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), ModuleName (..))
 import Koriel.Pretty
+import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (buildInterface, loadInterface, toInterfacePath)
@@ -70,19 +72,22 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
       storeIndex index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
-      core <- flat core
-      _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-      writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
-      let inf = buildInterface moduleName rnState dsEnv
-      writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
+      core <- do
+        core <- Flat.normalize core
+        _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
+        writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
-      -- check module paths include dstName's directory
-      assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
-      core <- Link.link inf core
-      writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
+        let inf = buildInterface moduleName rnState dsEnv
+        writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
 
-      lint core
+        -- check module paths include dstName's directory
+        assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
+        core <- Link.link inf core
+        writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
+
+        lint core
+        pure core
 
       when env.debugMode $
         liftIO do
@@ -94,23 +99,44 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPutStrLn stderr "=== INTERFACE ==="
         hPutStrLn stderr $ renderStyle (style {lineLength = 120}) $ pPrint inf
 
-      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core
+      coreOpt <- if env.noOptimize then pure core else optimizeProgram uniqSupply moduleName env.debugMode env.optimizeOption core >>= Flat.normalize
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
+      when env.testMode do
         writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint coreOpt
-      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt else pure coreOpt
-      lint coreLL
+
+      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= Flat.normalize else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
         liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
-          writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
+      when env.testMode do
+        writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
+      lint coreLL
+
+      -- Optimization after lambda lifting causes code explosion.
+      -- The effect of lambda lifting is expected to be fully realized by backend's optimization.
+      -- So do not optimization again.
+      -- TODO: Can we only optimize the code that has been lambda lifted?
+      -- TODO: Improve the function inliner to reduce the code explosion.
+      -- TODO: Add more information to `call` instruction to improve the function inliner.
+      -- Or simply skip inlining and do other optimizations.
 
       case env.compileMode of
         LLVM -> do
-          codeGen srcPath env moduleName dsEnv coreLL
+          codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLL
+    -- エントリーポイントとなるmain関数を検索する
+    searchMain :: [(Id a, Id b)] -> Maybe (Id b)
+    searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
+      | griffId.name
+          == "main"
+          && griffId.moduleName
+            == moduleName =
+          Just coreId
+    searchMain (_ : xs) = searchMain xs
+    searchMain _ = Nothing
 
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
@@ -121,8 +147,8 @@ compile srcPath env = do
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
           diag' = addFile diag srcPath (toString src)
-       in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
+       in printDiagnostic stderr (not env.testMode) (not env.testMode) 4 defaultStyle diag' >> exitFailure
   when env.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
-  compileFromAST srcPath env {moduleName = parsedAst._moduleName} parsedAst
+  compileFromAST srcPath env {Malgo.Monad.moduleName = parsedAst._moduleName} parsedAst

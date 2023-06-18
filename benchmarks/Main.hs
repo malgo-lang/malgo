@@ -3,10 +3,11 @@ module Main (main) where
 import Criterion
 import Criterion.Main
 import Data.String.Conversions
+import Koriel.Id (ModuleName (..))
 import Malgo.Driver qualified as Driver
 import Malgo.Monad (MalgoEnv (..), newMalgoEnv)
 import Relude
-import System.Directory (copyFile, createDirectoryIfMissing, listDirectory, setCurrentDirectory)
+import System.Directory (copyFile, createDirectoryIfMissing, listDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.IO (hPutStr)
 import System.Process.Typed (ExitCode (..), nullStream, proc, readProcessStderr_, readProcessStdout_, runProcess, runProcess_, setStderr, setStdout)
@@ -48,15 +49,12 @@ setupEnv = do
                   "-Xclang",
                   "-opaque-pointers"
                 ]
-                <> pkgConfig
-                <> [ outputDir </> "libs" </> "runtime.c",
-                     llPath,
-                     -- outputDir </> "libs" </> "libgriff_rustlib.a",
-                     -- "-lpthread",
-                     -- "-ldl",
-                     "-o",
-                     llPath -<.> "out"
-                   ]
+              <> pkgConfig
+              <> [ outputDir </> "libs" </> "runtime.c",
+                   llPath,
+                   "-o",
+                   llPath -<.> "out"
+                 ]
           )
       hPutStr stderr $ convertString err
 
@@ -70,17 +68,17 @@ main = do
     ]
   where
     runOpt testcase = bench (takeBaseName testcase) $ nfIO $ do
-      runProcess_ $
-        proc (outputDir </> takeBaseName testcase -<.> "out") []
-          & setStdout nullStream
+      runProcess_
+        $ proc (outputDir </> takeBaseName testcase -<.> "out") []
+        & setStdout nullStream
     runNoOpt testcase = bench (takeBaseName testcase) $ nfIO $ do
-      runProcess_ $
-        proc (outputDir </> takeBaseName testcase -<.> "no-opt.out") []
-          & setStdout nullStream
+      runProcess_
+        $ proc (outputDir </> takeBaseName testcase -<.> "no-opt.out") []
+        & setStdout nullStream
     runNoLL testcase = bench (takeBaseName testcase) $ nfIO $ do
-      runProcess_ $
-        proc (outputDir </> takeBaseName testcase -<.> "no-ll.out") []
-          & setStdout nullStream
+      runProcess_
+        $ proc (outputDir </> takeBaseName testcase -<.> "no-ll.out") []
+        & setStdout nullStream
 
 -- | Get the correct name of `clang`
 getClangCommand :: IO String
@@ -119,7 +117,7 @@ setupRuntime = do
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
 compile src dst modPaths lambdaLift noOptimize = do
-  malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
+  malgoEnv <- newMalgoEnv src modPaths Nothing (ModuleName "tmp") Nothing Nothing
   malgoEnv <-
     pure
       malgoEnv

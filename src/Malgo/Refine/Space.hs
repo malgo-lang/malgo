@@ -139,9 +139,9 @@ subtract' k ss ws = do
   isSubSpace <- and <$> zipWithM subspace ss ws
   isEmpty <- anyM equalEmpty =<< zipWithM intersection ss ws
   if
-      | isSubSpace -> pure Empty
-      | isEmpty -> pure $ k ss
-      | otherwise -> aux [] ss ws
+    | isSubSpace -> pure Empty
+    | isEmpty -> pure $ k ss
+    | otherwise -> aux [] ss ws
   where
     aux _ [] [] = pure Empty
     aux acc (s : ss) (w : ws) = do

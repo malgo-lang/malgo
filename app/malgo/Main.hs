@@ -83,7 +83,10 @@ toLLOpt =
             <> help
               "Write LLVM IR to OUTPUT"
         )
-      <*> pure LLVM
+      <*> ( strOption (long "compile-mode" <> short 'c' <> metavar "COMPILE_MODE" <> value "llvm") <&> \case
+              ("llvm" :: String) -> LLVM
+              _ -> error "Invalid compile mode"
+          )
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
       <*> ( OptimizeOption
@@ -94,7 +97,8 @@ toLLOpt =
               <*> (read <$> strOption (long "finline-threshold" <> metavar "INT" <> value "10"))
               <*> switch (long "ffold-redundant-cast")
               <*> switch (long "ffold-trivial-call")
-              <*> switch (long "fspecialize-function")
+              <*> (not <$> switch (long "fspecialize-function"))
+              <*> switch (long "fremove-noop-destruct")
           )
       <*> switch (long "debug-mode")
       <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))

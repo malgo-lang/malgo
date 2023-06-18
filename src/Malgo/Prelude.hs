@@ -66,7 +66,8 @@ errorOn range x = do
   let diag =
         addReport def (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
           addFile diag (sourceName $ range._start) (decodeUtf8 src)
-  printDiagnostic stderr True True 4 defaultStyle diag
+  -- TODO: control flags by command line options
+  printDiagnostic stderr False False 4 defaultStyle diag
   exitFailure
 
 rangeToPosition :: Range -> Error.Diagnose.Position
@@ -84,7 +85,7 @@ warningOn range x = do
   let diag =
         addReport def (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
           addFile diag (sourceName $ range._start) (decodeUtf8 src)
-  printDiagnostic stderr True True 4 defaultStyle diag
+  printDiagnostic stderr False False 4 defaultStyle diag
   exitFailure
   where
     rangeToPosition (Range start end) =

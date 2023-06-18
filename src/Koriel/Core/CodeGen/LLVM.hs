@@ -9,10 +9,13 @@ module Koriel.Core.CodeGen.LLVM (
 where
 
 import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
+import Control.Monad.Cont (ContT, runContT)
 import Control.Monad.Fix (MonadFix)
+import Control.Monad.Trans.Cont (shiftT)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Data.List qualified as List
 import Data.List.Extra (headDef, maximum, mconcatMap)
 import Data.String.Conversions
@@ -48,12 +51,15 @@ import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
-import Malgo.Desugar.DsState (DsState (..), HasNameEnv (nameEnv))
-import Malgo.Monad (MalgoEnv (..))
 import Relude.Unsafe qualified as Unsafe
 
--- | 'PrimMap' is a map from primitive function name to its LLVM function.
-type PrimMap = Map Name Operand
+data CodeGenState = CodeGenState
+  { -- | 'primMap' is a map from primitive function name to its LLVM function.
+    _primMap :: Map Name Operand,
+    stringMap :: HashMap Text C.Constant
+  }
+
+makeFieldsNoPrefix ''CodeGenState
 
 -- 変数のHashMapとknown関数のHashMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
@@ -69,10 +75,10 @@ data CodeGenEnv = CodeGenEnv
 
 makeFieldsNoPrefix ''CodeGenEnv
 
-newCodeGenEnv :: HasUniqSupply r => r -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
-newCodeGenEnv malgoEnv moduleName Program {..} =
+newCodeGenEnv :: UniqSupply -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
+newCodeGenEnv uniqSupply moduleName Program {..} =
   CodeGenEnv
-    { uniqSupply = malgoEnv.uniqSupply,
+    { uniqSupply = uniqSupply,
       _valueMap = mempty,
       _globalValueMap = varMap,
       _funcMap = funcMap,
@@ -89,31 +95,33 @@ newCodeGenEnv malgoEnv moduleName Program {..} =
 type MonadCodeGen m =
   ( MonadModuleBuilder m,
     MonadReader CodeGenEnv m,
-    MonadState PrimMap m
+    MonadState CodeGenState m
   ) ::
     Constraint
 
-runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT PrimMap (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
   execModuleBuilderT emptyModuleBuilder $
-    runReaderT (Lazy.evalStateT m mempty) env
+    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
   (MonadFix m, MonadFail m, MonadIO m) =>
   -- | Source file path
   FilePath ->
-  -- | Malgo environment
-  MalgoEnv ->
+  -- | Destination file path
+  FilePath ->
+  -- | Unique supply
+  UniqSupply ->
   -- | Module name of the source program
   ModuleName ->
-  -- | Collected information from the desugarer
-  DsState ->
+  -- | Entry point of the source program
+  Maybe (Id C.Type) ->
   -- | Source program
   Program (Id C.Type) ->
   m ()
-codeGen srcPath malgoEnv modName dsState Program {..} = do
-  llvmir <- runCodeGenT (newCodeGenEnv malgoEnv modName Program {..}) do
+codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
+  llvmir <- runCodeGenT (newCodeGenEnv uniqSupply modName Program {..}) do
     _ <- typedef (mkName "struct.bucket") Nothing -- (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") Nothing -- (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
@@ -124,42 +132,33 @@ codeGen srcPath malgoEnv modName dsState Program {..} = do
         _ -> error "invalid type"
     traverse_ (\(n, _, e) -> genVar n e) topVars
     traverse_ (\(f, ps, _, body) -> genFunc f ps body) topFuns
-    case searchMain (HashMap.toList $ view nameEnv dsState) of
-      Just mainCall -> do
+    case mentry of
+      Just entry -> do
         (f, (ps, body)) <-
           mainFunc =<< runDef do
             let unitCon = C.Con C.Tuple []
             unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
-            _ <- bind $ mainCall [unit]
+            _ <- bind $ CallDirect entry [unit]
             pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
-    genLoadModule $ initTopVars topVars
+    genLoadModule $ runContT (initTopVars topVars) (const retVoid)
   let llvmModule =
         defaultModule
           { LLVM.AST.moduleName = fromString srcPath,
             moduleSourceFileName = fromString srcPath,
             moduleDefinitions = llvmir
           }
-  liftIO $ withContext $ \ctx -> writeFileBS malgoEnv.dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
-    initTopVars [] = retVoid
-    initTopVars ((name, _, expr) : xs) =
+    initTopVars [] = pass
+    initTopVars ((name, _, expr) : xs) = do
       view (globalValueMap . at name) >>= \case
         Nothing -> error $ show $ pPrint name <+> "is not found"
-        Just name' -> genExpr expr \eOpr -> do
-          -- TODO[genExpr does not return correctly-typed value]
-          -- eOpr <- bitcast eOpr (convType (C.typeOf name))
+        Just name' -> do
+          eOpr <- genExpr expr
           store name' 0 eOpr
           initTopVars xs
-    -- エントリーポイントとなるmain関数を検索する
-    searchMain :: [(Id a, Id b)] -> Maybe ([Atom (Id b)] -> Expr (Id b))
-    searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
-      | griffId.name == "main"
-          && griffId.moduleName == modName =
-          Just $ CallDirect coreId
-    searchMain (_ : xs) = searchMain xs
-    searchMain _ = Nothing
     -- Generate main function.
     mainFunc e = do
       -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
@@ -226,7 +225,7 @@ findVar x = findLocalVar
         Just opr -> load (convType $ C.typeOf x) opr 0 -- global variable is a pointer to the actual value
         Nothing -> findExtVar
     findExtVar =
-      use (at $ toName x) >>= \case
+      use (primMap . at (toName x)) >>= \case
         Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
@@ -238,7 +237,7 @@ findVar x = findLocalVar
               linkage = LLVM.AST.Linkage.External
             }
       let opr = ConstantOperand (C.GlobalReference (toName x))
-      at (toName x) ?= opr
+      primMap . at (toName x) ?= opr
       load (convType $ C.typeOf x) opr 0
 
 findFun :: MonadCodeGen m => Id C.Type -> m Operand
@@ -254,9 +253,9 @@ findFun x =
 -- すでにexternしている場合は、そのOperandを返す
 findExt :: MonadCodeGen m => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
-  use (at x) >>= \case
+  use (primMap . at x) >>= \case
     Just x -> pure x
-    Nothing -> (at x <?=) =<< extern x ps r
+    Nothing -> (primMap . at x <?=) =<< extern x ps r
 
 mallocBytes ::
   (MonadCodeGen m, MonadIRBuilder m) =>
@@ -291,9 +290,7 @@ genLoadModule m = do
 
 -- generate code for a 'known' function
 genFunc ::
-  ( MonadModuleBuilder m,
-    MonadReader CodeGenEnv m,
-    MonadState PrimMap m,
+  ( MonadCodeGen m,
     MonadFix m,
     MonadFail m,
     MonadIO m
@@ -302,14 +299,14 @@ genFunc ::
   [Id C.Type] ->
   Expr (Id C.Type) ->
   m Operand
-genFunc name params body
-  | idIsExternal name || idIsNative name = do
-      moduleName <- asks (.moduleName)
-      if name.moduleName == moduleName
-        then function funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExpr body ret
-        else internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExpr body ret
-  | otherwise =
-      internalFunction funcName llvmParams retty $ \args -> local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExpr body ret
+genFunc name params body = do
+  moduleName <- asks (.moduleName)
+  let funcBuilder =
+        if (idIsExternal name || idIsNative name) && name.moduleName == moduleName
+          then function
+          else internalFunction
+  funcBuilder funcName llvmParams retty $ \args ->
+    local (over valueMap (HashMap.fromList (zip params args) <>)) $ runContT (genExpr body) ret
   where
     funcName = toName name
     llvmParams =
@@ -319,59 +316,36 @@ genFunc name params body
     retty = convType (C.typeOf body)
 
 genExpr ::
-  ( MonadReader CodeGenEnv m,
-    MonadState PrimMap m,
-    MonadIRBuilder m,
-    MonadModuleBuilder m,
+  ( MonadIRBuilder m,
+    MonadCodeGen m,
     MonadFail m,
     MonadFix m,
     MonadIO m
   ) =>
   Expr (Id C.Type) ->
-  (Operand -> m ()) ->
-  m ()
-genExpr e k = genExp' e \eOpr -> do
-  case C.typeOf e of
-    VoidT -> k (ConstantOperand (C.Undef LT.void))
-    t
-      | convType t /= ptr -> k =<< bitcast eOpr (convType t)
-      | otherwise -> k eOpr
-
--- genUnpackでコード生成しつつラベルを返すため、CPSにしている
-genExp' ::
-  ( MonadReader CodeGenEnv m,
-    MonadState PrimMap m,
-    MonadIRBuilder m,
-    MonadModuleBuilder m,
-    MonadFail m,
-    MonadFix m,
-    MonadIO m
-  ) =>
-  Expr (Id C.Type) ->
-  (Operand -> m ()) ->
-  m ()
-genExp' (Atom x) k = k =<< genAtom x
-genExp' e@(Call f xs) k = do
+  ContT () m Operand
+genExpr (Atom x) = genAtom x
+genExpr e@(Call f xs) = do
   fOpr <- genAtom f
   captureAddr <- gep (innerType $ C.typeOf f) fOpr [int32 0, int32 0]
   captureOpr <- load ptr captureAddr 0
   funcAddr <- gep (innerType $ C.typeOf f) fOpr [int32 0, int32 1]
   funcOpr <- load ptr funcAddr 0
   xsOprs <- traverse genAtom xs
-  k =<< call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) funcOpr (map (,[]) $ captureOpr : xsOprs)
-genExp' e@(CallDirect f xs) k = do
+  call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) funcOpr (map (,[]) $ captureOpr : xsOprs)
+genExpr e@(CallDirect f xs) = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
-  k =<< call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
-genExp' e@(RawCall name _ xs) k = do
+  call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
+genExpr e@(RawCall name _ xs) = do
   let primOpr =
         ConstantOperand $
           C.GlobalReference $
             LLVM.AST.mkName $
               convertString name
   xsOprs <- traverse genAtom xs
-  k =<< call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
-genExp' (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
+  call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
+genExpr (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
   where
     genOp Op.Add = add
     genOp Op.Sub = sub
@@ -382,143 +356,110 @@ genExp' (BinOp o x y) k = k =<< join (genOp o <$> genAtom x <*> genAtom y)
     genOp Op.FSub = fsub
     genOp Op.FMul = fmul
     genOp Op.FDiv = fdiv
-    genOp Op.Eq = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.EQ x' y'
-        Int64T -> icmp IP.EQ x' y'
-        FloatT -> fcmp FP.OEQ x' y'
-        DoubleT -> fcmp FP.OEQ x' y'
-        CharT -> icmp IP.EQ x' y'
-        StringT -> icmp IP.EQ x' y'
-        BoolT -> icmp IP.EQ x' y'
-        SumT _ -> icmp IP.EQ x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Neq = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.NE x' y'
-        Int64T -> icmp IP.NE x' y'
-        FloatT -> fcmp FP.ONE x' y'
-        DoubleT -> fcmp FP.ONE x' y'
-        CharT -> icmp IP.NE x' y'
-        StringT -> icmp IP.NE x' y'
-        BoolT -> icmp IP.NE x' y'
-        SumT _ -> icmp IP.NE x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Lt = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.SLT x' y'
-        Int64T -> icmp IP.SLT x' y'
-        FloatT -> fcmp FP.OLT x' y'
-        DoubleT -> fcmp FP.OLT x' y'
-        CharT -> icmp IP.ULT x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Le = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.SLE x' y'
-        Int64T -> icmp IP.SLE x' y'
-        FloatT -> fcmp FP.OLE x' y'
-        DoubleT -> fcmp FP.OLE x' y'
-        CharT -> icmp IP.ULE x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Gt = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.SGT x' y'
-        Int64T -> icmp IP.SGT x' y'
-        FloatT -> fcmp FP.OGT x' y'
-        DoubleT -> fcmp FP.OGT x' y'
-        CharT -> icmp IP.UGT x' y'
-        t -> error $ show t <> " is not comparable"
-    genOp Op.Ge = \x' y' ->
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp IP.SGE x' y'
-        Int64T -> icmp IP.SGE x' y'
-        FloatT -> fcmp FP.OGE x' y'
-        DoubleT -> fcmp FP.OGE x' y'
-        CharT -> icmp IP.UGE x' y'
-        t -> error $ show t <> " is not comparable"
+    genOp Op.Eq = genCmpOp IP.EQ IP.EQ FP.OEQ
+    genOp Op.Neq = genCmpOp IP.NE IP.NE FP.ONE
+    genOp Op.Lt = genCmpOp IP.SLT IP.ULT FP.OLT
+    genOp Op.Le = genCmpOp IP.SLE IP.ULE FP.OLE
+    genOp Op.Gt = genCmpOp IP.SGT IP.UGT FP.OGT
+    genOp Op.Ge = genCmpOp IP.SGE IP.UGE FP.OGE
     genOp Op.And = LLVM.IRBuilder.and
     genOp Op.Or = LLVM.IRBuilder.or
     i1ToBool i1opr = zext i1opr i8
-genExp' (Cast ty x) k = do
+    genCmpOp signed unsigned ordered x' y' =
+      i1ToBool =<< case C.typeOf x of
+        Int32T -> icmp signed x' y'
+        Int64T -> icmp signed x' y'
+        FloatT -> fcmp ordered x' y'
+        DoubleT -> fcmp ordered x' y'
+        CharT -> icmp unsigned x' y'
+        StringT -> icmp unsigned x' y'
+        BoolT -> icmp unsigned x' y'
+        SumT _ -> icmp unsigned x' y'
+        t -> error $ show t <> " is not comparable"
+genExpr (Cast ty x) = do
   xOpr <- genAtom x
   xOprTy <- typeOf xOpr
   if Right (convType ty) /= xOprTy
-    then k =<< bitcast xOpr (convType ty)
-    else k xOpr
-genExp' (Let xs e) k = do
+    then bitcast xOpr (convType ty)
+    else pure xOpr
+genExpr (Let xs e) = do
   env <- foldMapM prepare xs
-  env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
-  local (over valueMap (env <>)) $ genExpr e k
+  env <- lift $ local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
+  local (over valueMap (env <>)) $ genExpr e
   where
     -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
     prepare (LocalDef name _ (Fun _ _)) =
-      one . (name,)
+      one
+        . (name,)
         <$> mallocType (StructureType False [ptr, ptr])
     prepare _ = pure mempty
 -- These `match` cases are not necessary.
-genExp' (Match e (Bind _ _ body : _)) k | C.typeOf e == VoidT = genExpr e $ \_ -> genExpr body k
-genExp' (Match e (Bind x _ body : _)) k = genExpr e $ \eOpr -> do
-  local (over valueMap (at x ?~ eOpr)) (genExpr body k)
-genExp' (Match e cs) k
+genExpr (Match e (Bind _ _ body : _)) | C.typeOf e == VoidT = do
+  _ <- genExpr e
+  genExpr body
+genExpr (Match e (Bind x _ body : _)) = do
+  eOpr <- genExpr e
+  local (over valueMap (at x ?~ eOpr)) (genExpr body)
+genExpr (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
-  | otherwise = genExpr e $ \eOpr -> mdo
-      -- eOprの型がptr i8だったときに正しくタグを取り出すため、bitcastする
-      -- TODO[genExpr does not return correctly-typed value]
-      -- genExpが正しい型の値を継続に渡すように変更する
-      -- eOpr' <- bitcast eOpr (convType $ C.typeOf e)
-      br switchBlock -- We need to end the current block before executing genCase
-      -- 各ケースのコードとラベルを生成する
-      -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-      (defaults, labels) <- partitionEithers . toList <$> traverse (genCase eOpr (constructorList e) k) cs
-      -- defaultsの先頭を取り出し、switchのデフォルトケースとする
-      -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-      defaultLabel <- headDef (block >>= \l -> unreachable >> pure l) $ map pure defaults
-      switchBlock <- block
-      tagOpr <- case C.typeOf e of
-        SumT _ -> do
-          tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
-          load i8 tagAddr 0
-        RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-        _ -> pure eOpr
+  | otherwise =
+      shiftT \k -> do
+        eOpr <- genExpr e
+        tagOpr <- case C.typeOf e of
+          SumT _ -> do
+            tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
+            load i8 tagAddr 0
+          RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+          _ -> pure eOpr
+        lift mdo
+          switch tagOpr defaultLabel labels
+          -- 各ケースのコードとラベルを生成する
+          -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+          (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
+          -- defaultsの先頭を取り出し、switchのデフォルトケースとする
+          -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
+          defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
+          pass
+genExpr (Switch v bs e) =
+  shiftT \k -> do
+    vOpr <- genAtom v
+    tagOpr <- case C.typeOf v of
+      SumT _ -> do
+        tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
+        load i8 tagAddr 0
+      RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+      _ -> pure vOpr
+    lift mdo
       switch tagOpr defaultLabel labels
-genExp' (Switch v bs e) k = mdo
-  vOpr <- genAtom v
-  br switchBlock
-  labels <- toList <$> traverse (genBranch (constructorList v) k) bs
-  defaultLabel <- block
-  genExpr e k
-  switchBlock <- block
-  tagOpr <- case C.typeOf v of
-    SumT _ -> do
-      tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
-      load i8 tagAddr 0
-    RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-    _ -> pure vOpr
-  switch tagOpr defaultLabel labels
+      labels <- traverse (genBranch (constructorList v) k) bs
+      defaultLabel <- withBlock "switch_default" do
+        runContT (genExpr e) k
+      pass
   where
     genBranch cs k (tag, e) = do
-      label <- block
       let tag' = case C.typeOf v of
             SumT _ -> C.Int 8 $ fromIntegral $ Unsafe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
             RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
             _ -> error "Switch is not supported for this type."
-      genExpr e k
+      label <- withBlock ("switch_branch_" <> encodeUtf8 (render (pPrint tag))) do
+        runContT (genExpr e) k
       pure (tag', label)
-genExp' (SwitchUnboxed v bs e) k = mdo
-  vOpr <- genAtom v
-  br switchBlock
-  labels <- toList <$> traverse (genBranch k) bs
-  defaultLabel <- block
-  genExpr e k
-  switchBlock <- block
-  switch vOpr defaultLabel labels
+genExpr (SwitchUnboxed v bs e) =
+  shiftT \k -> do
+    vOpr <- genAtom v
+    lift mdo
+      switch vOpr defaultLabel labels
+      labels <- traverse (genBranch k) bs
+      defaultLabel <- withBlock "switch-unboxed_default" do
+        runContT (genExpr e) k
+      pass
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
-      label <- block
-      genExpr e k
+      label <- withBlock ("switch-unboxed_branch_" <> encodeUtf8 (render (pPrint u))) do
+        runContT (genExpr e) k
       pure (u', label)
-genExp' (Destruct v (Con _ ts) xs e) k = do
+genExpr (Destruct v (Con _ ts) xs e) = do
   v <- genAtom v
   payloadAddr <- gep (StructureType False [i8, StructureType False (map convType ts)]) v [int32 0, int32 1]
   env <-
@@ -526,23 +467,22 @@ genExp' (Destruct v (Con _ ts) xs e) k = do
       (x,) <$> do
         xAddr <- gep (StructureType False (map convType ts)) payloadAddr [int32 0, int32 $ fromIntegral i]
         load (convType $ C.typeOf x) xAddr 0
-  local (over valueMap (env <>)) $ genExpr e k
-genExp' (DestructRecord scrutinee kvs e) k = do
-  scrutinee <- bitcast ?? convType (C.typeOf scrutinee) =<< genAtom scrutinee
+  local (over valueMap (env <>)) $ genExpr e
+genExpr (DestructRecord scrutinee kvs e) = do
+  scrutinee <- genAtom scrutinee
   kvs' <- for (HashMap.toList kvs) \(k, v) -> do
     hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
-    i <- getUniq
-    key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
+    key <- ConstantOperand <$> globalStringPtr k
     value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
-    value <- bitcast value (convType $ C.typeOf v)
     pure (v, value)
-  local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e k
-genExp' (Assign _ v e) k | C.typeOf v == VoidT = genExpr v $ \_ -> genExpr e k
-genExp' (Assign x v e) k = do
-  genExpr v $ \vOpr -> do
-    vOpr <- bitcast vOpr (convType $ C.typeOf v)
-    local (over valueMap $ at x ?~ vOpr) $ genExpr e k
-genExp' (Error _) _ = unreachable
+  local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e
+genExpr (Assign _ v e) | C.typeOf v == VoidT = do
+  _ <- genExpr v
+  genExpr e
+genExpr (Assign x v e) = do
+  vOpr <- genExpr v
+  local (over valueMap $ at x ?~ vOpr) $ genExpr e
+genExpr (Error _) = shiftT (const unreachable)
 
 -- | Get constructor list from the type of scrutinee.
 constructorList :: HasType s => s -> [Con]
@@ -552,9 +492,7 @@ constructorList scrutinee =
     _ -> []
 
 genCase ::
-  ( MonadReader CodeGenEnv m,
-    MonadModuleBuilder m,
-    MonadState PrimMap m,
+  ( MonadCodeGen m,
     MonadIRBuilder m,
     MonadFail m,
     MonadFix m,
@@ -567,37 +505,33 @@ genCase ::
   m (Either LLVM.AST.Name (C.Constant, LLVM.AST.Name))
 genCase scrutinee cs k = \case
   Bind x _ e -> do
-    label <- block
-    void $ local (over valueMap $ at x ?~ scrutinee) $ genExpr e k
+    label <- withBlock ("bind_" <> encodeUtf8 (render (pPrint x))) do
+      local (over valueMap $ at x ?~ scrutinee) $ runContT (genExpr e) k
     pure $ Left label
   Exact u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
-    label <- block
-    genExpr e k
+    label <- withBlock ("exact_" <> encodeUtf8 (render (pPrint u))) do
+      runContT (genExpr e) k
     pure $ Right (u', label)
   Unpack con vs e -> do
-    label <- block
     let (tag, conType) = genCon cs con
-    -- addr <- bitcast scrutinee (ptr $ StructureType False [i8, conType])
-    payloadAddr <- gep (StructureType False [i8, conType]) scrutinee [int32 0, int32 1]
-    -- WRONG: payloadAddr <- (bitcast ?? ptr conType) =<< gep scrutinee [int32 0, int32 1]
-    env <-
-      HashMap.fromList <$> ifor vs \i v ->
-        (v,) <$> do
-          vAddr <- gep conType payloadAddr [int32 0, int32 $ fromIntegral i]
-          load (convType $ C.typeOf v) vAddr 0
-    void $ local (over valueMap (env <>)) $ genExpr e k
+    label <- withBlock ("unpack_" <> encodeUtf8 (render (pPrint con))) do
+      payloadAddr <- gep (StructureType False [i8, conType]) scrutinee [int32 0, int32 1]
+      env <-
+        HashMap.fromList <$> ifor vs \i v ->
+          (v,) <$> do
+            vAddr <- gep conType payloadAddr [int32 0, int32 $ fromIntegral i]
+            load (convType $ C.typeOf v) vAddr 0
+      local (over valueMap (env <>)) $ runContT (genExpr e) k
     pure $ Right (C.Int 8 tag, label)
   OpenRecord kvs e -> do
-    label <- block
-    kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
-      hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
-      i <- getUniq
-      key <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
-      value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
-      value <- bitcast value (convType $ C.typeOf v)
-      pure (v, value)
-    local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e k
+    label <- withBlock "open_record" do
+      kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
+        hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
+        key <- ConstantOperand <$> globalStringPtr k
+        value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
+        pure (v, value)
+      local (over valueMap (HashMap.fromList kvs' <>)) $ runContT (genExpr e) k
     pure $ Left label
 
 genAtom ::
@@ -611,9 +545,7 @@ genAtom (Unboxed (Int64 x)) = pure $ int64 x
 genAtom (Unboxed (Float x)) = pure $ ConstantOperand $ C.BitCast (C.Int 32 $ toInteger $ castFloatToWord32 x) LT.float
 genAtom (Unboxed (Double x)) = pure $ ConstantOperand $ C.BitCast (C.Int 64 $ toInteger $ castDoubleToWord64 x) LT.double
 genAtom (Unboxed (Char x)) = pure $ int8 $ toInteger $ ord x
-genAtom (Unboxed (String x)) = do
-  i <- getUniq
-  ConstantOperand <$> globalStringPtr x (mkName $ "str" <> show i)
+genAtom (Unboxed (String x)) = ConstantOperand <$> globalStringPtr x
 genAtom (Unboxed (Bool True)) = pure $ int8 1
 genAtom (Unboxed (Bool False)) = pure $ int8 0
 
@@ -627,32 +559,32 @@ genLocalDef ::
   LocalDef (Id C.Type) ->
   m (HashMap (Id C.Type) Operand)
 genLocalDef (LocalDef funName _ (Fun ps e)) = do
+  globalValues <- HashSet.fromList . HashMap.keys <$> view globalValueMap
+  let fvs = toList $ freevars (Fun ps e) `HashSet.difference` globalValues
+  -- キャプチャされる変数を詰める構造体の型
+  let capType = StructureType False (map (convType . C.typeOf) fvs)
   -- クロージャの元になる関数を生成する
   name <- toName <$> newInternalId (funName.name <> "_closure") ()
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> error "The length of internal function parameters must be 1 or more"
     (capture : ps') -> do
       -- キャプチャした変数が詰まっている構造体を展開する
-      -- capture <- bitcast rawCapture (ptr capType)
       env <-
         HashMap.fromList <$> ifor fvs \i fv ->
           (fv,) <$> do
-            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i]
-            load (convType $ C.typeOf fv) fvAddr 0
-      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExpr e ret
+            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` (encodeUtf8 fv.name <> "_addr")
+            load (convType $ C.typeOf fv) fvAddr 0 `named` encodeUtf8 fv.name
+      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
   -- キャプチャされる変数を構造体に詰める
-  capture <- mallocType capType
+  capture <- mallocType capType `named` (encodeUtf8 funName.name <> "_capture")
   ifor_ fvs $ \i fv -> do
     fvOpr <- findVar fv
-    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr
+    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr `named` encodeUtf8 fv.name
   closAddr <- findVar funName
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` (encodeUtf8 funName.name <> "_capture")
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` (encodeUtf8 funName.name <> "_func")
   pure $ one (funName, closAddr)
   where
-    fvs = toList $ freevars (Fun ps e)
-    -- キャプチャされる変数を詰める構造体の型
-    capType = StructureType False (map (convType . C.typeOf) fvs)
     psTypes = ptr : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
 genLocalDef (LocalDef name@(C.typeOf -> SumT cs) _ (Pack _ con@(Con _ ts) xs)) = do
@@ -663,15 +595,14 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) _ (Pack _ con@(Con _ ts) xs)) =
   ifor_ xs $ \i x ->
     gepAndStore (StructureType False [i8, StructureType False $ map convType ts]) addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
-  one . (name,) <$> bitcast addr (convType $ SumT cs)
+  pure $ one (name, addr)
 genLocalDef (LocalDef (C.typeOf -> t) _ Pack {}) = error $ show t <> " must be SumT"
 genLocalDef (LocalDef name _ (Record kvs)) = do
   newHashTable <- findExt "malgo_hash_table_new" [] ptr
   hashTable <- call (FunctionType ptr [] False) newHashTable []
   for_ (HashMap.toList kvs) \(k, v) -> do
-    i <- getUniq
-    k' <- ConstantOperand <$> globalStringPtr k (mkName $ "key_" <> toString k <> show i)
-    v <- join $ bitcast <$> genAtom v <*> pure ptr
+    k' <- ConstantOperand <$> globalStringPtr k
+    v <- genAtom v
     insert <- findExt "malgo_hash_table_insert" [ptr, ptr, ptr] LT.void
     call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` ("hash_insert_" <> encodeUtf8 k)
   pure $ one (name, hashTable)
@@ -686,27 +617,34 @@ findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
   Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
 
-globalStringPtr :: MonadModuleBuilder m => Text -> Name -> m C.Constant
-globalStringPtr str nm = do
-  let utf8Vals = map toInteger $ BL.unpack $ convertString str
-      llvmVals = map (C.Int 8) (utf8Vals ++ [0])
-      char = IntegerType 8
-      charArray = C.Array char llvmVals
-  ty <-
-    LLVM.AST.Typed.typeOf charArray >>= \case
-      Left err -> error $ show err
-      Right ty -> pure ty
-  emitDefn $
-    GlobalDefinition
-      globalVariableDefaults
-        { LLVM.AST.Global.name = nm,
-          LLVM.AST.Global.type' = ty,
-          linkage = LLVM.AST.Linkage.External,
-          isConstant = True,
-          initializer = Just charArray,
-          unnamedAddr = Just GlobalAddr
-        }
-  pure $ C.GetElementPtr True ty (C.GlobalReference nm) [C.Int 32 0, C.Int 32 0]
+globalStringPtr :: (MonadModuleBuilder m, MonadReader CodeGenEnv m, MonadState CodeGenState m, MonadIO m) => Text -> m C.Constant
+globalStringPtr str = do
+  stringMap <- gets (.stringMap)
+  case HashMap.lookup str stringMap of
+    Just strOpr -> pure strOpr
+    Nothing -> do
+      name <- mkName . ("str" <>) . show <$> getUniq
+      let utf8Vals = map toInteger $ BL.unpack $ convertString str
+          llvmVals = map (C.Int 8) (utf8Vals ++ [0])
+          char = IntegerType 8
+          charArray = C.Array char llvmVals
+      ty <-
+        LLVM.AST.Typed.typeOf charArray >>= \case
+          Left err -> error $ show err
+          Right ty -> pure ty
+      emitDefn $
+        GlobalDefinition
+          globalVariableDefaults
+            { LLVM.AST.Global.name = name,
+              LLVM.AST.Global.type' = ty,
+              linkage = LLVM.AST.Linkage.External,
+              isConstant = True,
+              initializer = Just charArray,
+              unnamedAddr = Just GlobalAddr
+            }
+      let opr = C.GetElementPtr True ty (C.GlobalReference name) [C.Int 32 0, C.Int 32 0]
+      modify \s -> s {stringMap = HashMap.insert str opr $ s.stringMap}
+      pure opr
 
 gepAndStore ::
   (MonadIRBuilder m, MonadModuleBuilder m) =>
@@ -749,3 +687,9 @@ internalFunction label argtys retty body = do
             }
   emitDefn def
   pure $ ConstantOperand $ C.GlobalReference label
+
+withBlock :: MonadIRBuilder m => ShortByteString -> m () -> m Name
+withBlock hint m = do
+  label <- block `named` hint
+  void m
+  pure label

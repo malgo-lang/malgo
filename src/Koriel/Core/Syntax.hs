@@ -393,10 +393,10 @@ instance Plated (Expr a) where
   plate _ e@RawCall {} = pure e
   plate _ e@BinOp {} = pure e
   plate _ e@Cast {} = pure e
-  plate f (Let xs e) = Let <$> (traverseOf (traversed . expr) f xs) <*> f e
-  plate f (Match e cs) = Match <$> f e <*> (traverseOf (traversed . expr) f cs)
-  plate f (Switch v cs e) = Switch v <$> (traverseOf (traversed . _2) f cs) <*> f e
-  plate f (SwitchUnboxed v cs e) = SwitchUnboxed v <$> (traverseOf (traversed . _2) f cs) <*> f e
+  plate f (Let xs e) = Let <$> traverseOf (traversed . expr) f xs <*> f e
+  plate f (Match e cs) = Match <$> f e <*> traverseOf (traversed . expr) f cs
+  plate f (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) f cs <*> f e
+  plate f (SwitchUnboxed v cs e) = SwitchUnboxed v <$> traverseOf (traversed . _2) f cs <*> f e
   plate f (Destruct v con xs e) = Destruct v con xs <$> f e
   plate f (DestructRecord v kvs e) = DestructRecord v kvs <$> f e
   plate f (Assign x v e) = Assign x <$> f v <*> f e
@@ -418,11 +418,11 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
     vcat $
       concat
         [ ["; variables"],
-          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) $ sort topVars,
+          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) topVars,
           ["; functions"],
-          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) $ sort topFuns,
+          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) $ sort extFuns
+          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) extFuns
         ]
 
 instance HasExpr Obj where

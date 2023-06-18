@@ -7,7 +7,7 @@ module Koriel.Core.Optimize (
 )
 where
 
-import Control.Lens (At (at), lengthOf, makeFieldsNoPrefix, transformM, view)
+import Control.Lens (At (at), lengthOf, makeFieldsNoPrefix, transform, transformM, view)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
@@ -31,7 +31,8 @@ data OptimizeOption = OptimizeOption
     inlineThreshold :: Int,
     doFoldRedundantCast :: Bool,
     doFoldTrivialCall :: Bool,
-    doSpecializeFunction :: Bool
+    doSpecializeFunction :: Bool,
+    doRemoveNoopDestruct :: Bool
   }
 
 defaultOptimizeOption :: OptimizeOption
@@ -41,10 +42,11 @@ defaultOptimizeOption =
       doInlineConstructor = True,
       doEliminateUnusedLet = True,
       doInlineFunction = True,
-      inlineThreshold = 10,
+      inlineThreshold = 15,
       doFoldRedundantCast = True,
       doFoldTrivialCall = True,
-      doSpecializeFunction = False
+      doSpecializeFunction = False,
+      doRemoveNoopDestruct = True
     }
 
 data OptimizeEnv = OptimizeEnv
@@ -73,7 +75,11 @@ optimizeProgram ::
   Program (Id Type) ->
   m (Program (Id Type))
 optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
-  state <- execStateT ?? CallInlineEnv mempty $ for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+  state <- execStateT ?? CallInlineEnv mempty $ do
+    for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+    for_ topVars $ \case
+      (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
+      _ -> pass
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
@@ -92,7 +98,8 @@ optimizeExpr state expr = do
         >=> runOpt option.doFoldRedundantCast foldRedundantCast
         >=> runOpt option.doFoldTrivialCall foldTrivialCall
         >=> runOpt option.doSpecializeFunction specializeFunction
-        >=> runFlat . flatExpr
+        >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
+        >=> normalizeExpr
     runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag
@@ -104,7 +111,9 @@ foldVariable :: (Eq a, Monad f) => Expr a -> f (Expr a)
 foldVariable = transformM
   \case
     Match (Atom a) [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
-    Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
+    -- (= x a e) -> e[x := a] is a valid transformation in 'foldVariable'.
+    -- But this transformation is not necessary, because 'Koriel.Core.Flat' and 'Koriel.Core.Lint' guarantee that '=' never binds an atom.
+    -- Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
     x -> pure x
 
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
@@ -159,18 +168,23 @@ newtype CallInlineEnv = CallInlineEnv
 -- | Inline a function call.
 inlineFunction :: (MonadState CallInlineEnv f, MonadReader OptimizeEnv f, MonadIO f) => Expr (Id Type) -> f (Expr (Id Type))
 inlineFunction =
-  transformM \case
-    Call (Var f) xs -> lookupCallInline (Call . Var) f xs
-    CallDirect f xs -> lookupCallInline CallDirect f xs
-    Let ds e -> do
-      traverse_ checkInlinable ds
-      pure $ Let ds e
-    x -> pure x
+  transformM
+    ( \case
+        Let ds e -> do
+          traverse_ checkInlinable ds
+          pure $ Let ds e
+        e -> pure e
+    )
+    >=> transformM \case
+      Call (Var f) xs -> lookupCallInline (Call . Var) f xs
+      CallDirect f xs -> lookupCallInline CallDirect f xs
+      x -> pure x
 
 checkInlinable :: (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) => LocalDef (Id Type) -> m ()
 checkInlinable (LocalDef f _ (Fun ps v)) = do
   threshold <- asks (.option.inlineThreshold)
   -- atomの数がthreshold以下ならインライン展開する
+  -- TODO: 再帰関数かどうかコールグラフを作って判定する
   let isInlinable = threshold >= lengthOf atom v && not (f `member` freevars v)
   when isInlinable $ do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
@@ -196,9 +210,13 @@ lookupCallInline call f as = do
     Nothing -> pure $ call f as
 
 -- | Remove a cast if it is redundant.
-foldRedundantCast :: (HasType a, Monad f) => Expr a -> f (Expr a)
+-- TODO: switch and match that ends with a cast can be simplified.
+foldRedundantCast :: Monad f => Expr (Id Type) -> f (Expr (Id Type))
 foldRedundantCast =
   transformM \case
+    -- (= x (cast t a) (= y (cast t' x)) e) -> (= y (cast t' a) e)
+    Assign x (Cast _ a) (Assign y (Cast t' (Var x')) e)
+      | x == x' && not (x `HashSet.member` freevars e) -> pure $ Assign y (Cast t' a) e
     Cast t e
       | typeOf e == t -> pure (Atom e)
       | otherwise -> pure (Cast t e)
@@ -232,3 +250,10 @@ specializeFunction =
         | otherwise -> error "specializeFunction: invalid cast"
       _ -> pure (Cast (pts' :-> rt') f)
     e -> pure e
+
+-- | Remove `destruct` if it does not bind any variables.
+removeNoopDestruct :: Expr (Id a) -> Expr (Id a)
+removeNoopDestruct =
+  transform \case
+    Destruct _ _ [] e -> e
+    e -> e

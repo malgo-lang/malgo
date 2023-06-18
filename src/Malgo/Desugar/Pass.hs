@@ -8,6 +8,7 @@ import Data.List qualified as List
 import Data.Maybe (fromJust)
 import Data.Text qualified as T
 import Data.Traversable (for)
+import Koriel.Core.Alpha (AlphaEnv (..), alpha)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import Koriel.Core.Type qualified as C
@@ -36,7 +37,7 @@ desugar tcEnv (Module _ ds) = do
   malgoEnv <- ask
   runReaderT ?? makeDsEnv malgoEnv $ do
     (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
-    let ds'' = ds' <> dsEnv._globalDefs
+    let ds'' = dsEnv._globalDefs <> ds' -- ds' needs variables defined in globalDefs
     let varDefs = mapMaybe (preview _VarDef) ds''
     let funDefs = mapMaybe (preview _FunDef) ds''
     let extDefs = mapMaybe (preview _ExtDef) ds''
@@ -204,9 +205,16 @@ dsExpr (G.Var (Typed typ _) name) = do
           -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
           case C.typeOf name' of
             pts :-> _ -> do
-              clsId <- newTemporalId "gblcls" (C.typeOf name')
+              -- TODO: merge global closure
+              -- clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
+              -- ps <- traverse (newTemporalId "p") pts
+              -- pure $ C.Let [LocalDef clsId (C.typeOf clsId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+              clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
+              internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
               ps <- traverse (newTemporalId "p") pts
-              pure $ C.Let [LocalDef clsId (C.typeOf clsId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var clsId
+              let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
+              modify $ \s -> s {_globalDefs = clsDef : s._globalDefs}
+              pure $ Atom $ C.Var clsId
             _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
@@ -302,14 +310,17 @@ curryFun isToplevel hint ps e = curryFun' ps []
         then do
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
-          fun <- newExternalId (hint <> "_curry") (C.typeOf $ Fun ps e) -- =<< view moduleName
+          fun <- newExternalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           globalDefs <>= [FunDef fun ps (C.typeOf fun) e]
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do
-          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e) -- =<< view moduleName
+          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
-          pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps e)] body)
+          ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
+          uniqSupply <- asks (.uniqSupply)
+          e' <- alpha e (AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps $ map C.Var ps'})
+          pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
     curryFun' (x : xs) as = do
       fun <- curryFun' xs (C.Var x : as)
       let funObj = uncurry Fun fun

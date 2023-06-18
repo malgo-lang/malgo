@@ -17,8 +17,9 @@ import System.FilePath ((</>))
 -- | Linking a program with its dependencies.
 link :: (MonadIO m, MonadReader env m, HasModulePaths env [FilePath], Binary a) => Interface -> Program a -> m (Program a)
 link interface mainCoreIR = do
+  -- FIXME: Sort dependencies by topological order
   depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)
-  pure $ mconcat (mainCoreIR : depCoreIRs)
+  pure $ mconcat (depCoreIRs <> [mainCoreIR])
 
 loadCore :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath], Binary a) => ModuleName -> m (Program a)
 loadCore (ModuleName modName) = do

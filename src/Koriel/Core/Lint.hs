@@ -24,6 +24,19 @@ defined x
       env <- ask
       unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
 
+define :: HasCallStack => MonadReader [Id Type] f => Doc -> [Id Type] -> f a -> f a
+define pos xs m = do
+  env <- ask
+  for_ xs \x ->
+    when (x `elem` env) $
+      errorDoc $
+        pPrint x
+          <> " is already defined"
+            $$ "while defining"
+            <+> pos
+            <+> pPrint xs
+  local (xs <>) m
+
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
   and (zipWith isMatch ps0 ps1) && isMatch r0 r1
@@ -110,7 +123,7 @@ lintExpr (BinOp o x y) = do
     And -> match x BoolT >> match y BoolT
     Or -> match x BoolT >> match y BoolT
 lintExpr (Cast _ x) = lintAtom x
-lintExpr (Let ds e) = local (map (._variable) ds <>) $ do
+lintExpr (Let ds e) = define "let" (map (._variable) ds) $ do
   traverse_ (lintObj . (._object)) ds
   for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
   lintExpr e
@@ -133,25 +146,27 @@ lintExpr (SwitchUnboxed a cs e) = do
   lintExpr e
 lintExpr (Destruct a _ xs e) = do
   lintAtom a
-  local (xs <>) $ lintExpr e
+  define "destruct" xs $ lintExpr e
 lintExpr (DestructRecord a xs e) = do
   lintAtom a
-  local (HashMap.elems xs <>) $ lintExpr e
+  define "destruct-record" (HashMap.elems xs) $ lintExpr e
+lintExpr (Assign x (Atom v) _) = do
+  errorDoc $ "reduntant assignment:" <+> pPrint x <+> pPrint v
 lintExpr (Assign x v e) = do
   lintExpr v
-  local (x :) (lintExpr e)
+  define "assign" [x] (lintExpr e)
 lintExpr Error {} = pass
 
 lintObj :: HasCallStack => MonadReader [Id Type] m => Obj (Id Type) -> m ()
-lintObj (Fun params body) = local (params <>) $ lintExpr body
+lintObj (Fun params body) = define "fun" params $ lintExpr body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
 lintCase :: HasCallStack => MonadReader [Id Type] m => Expr (Id Type) -> Case (Id Type) -> m ()
-lintCase _ (Unpack _ vs e) = local (vs <>) $ lintExpr e
-lintCase _ (OpenRecord kvs e) = local (HashMap.elems kvs <>) $ lintExpr e
+lintCase _ (Unpack _ vs e) = define "unpack" vs $ lintExpr e
+lintCase _ (OpenRecord kvs e) = define "open-record" (HashMap.elems kvs) $ lintExpr e
 lintCase _ (Exact _ e) = lintExpr e
-lintCase scrutinee (Bind x t e) = local (x :) do
+lintCase scrutinee (Bind x t e) = define "bind" [x] do
   match x t
   match scrutinee x
   lintExpr e
@@ -162,8 +177,12 @@ lintAtom (Unboxed _) = pass
 
 lintProgram :: HasCallStack => MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
+  let vs = map (view _1) topVars
   let fs = map (view _1) topFuns
-  local (fs <>) $
-    for_ topFuns $ \(f, ps, _, body) -> local (ps <>) do
+  define "program" (vs <> fs) do
+    for_ topVars \(v, _, e) -> do
+      match v (typeOf e)
+      lintExpr e
+    for_ topFuns \(f, ps, _, body) -> define (pPrint f) ps do
       match f (map typeOf ps :-> typeOf body)
       lintExpr body

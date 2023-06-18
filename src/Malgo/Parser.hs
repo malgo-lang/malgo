@@ -92,7 +92,8 @@ pInfix = label "infix declaration" do
   a <-
     try (pKeyword "infixl" $> LeftA)
       <|> try (pKeyword "infixr" $> RightA)
-      <|> pKeyword "infix" $> NeutralA
+      <|> pKeyword "infix"
+      $> NeutralA
   i <- lexeme L.decimal
   x <- between (symbol "(") (symbol ")") operator
   end <- getSourcePos
@@ -116,7 +117,9 @@ pImport = label "import" do
   importList <-
     try (between (symbol "{") (symbol "}") importAll)
       <|> between (symbol "{") (symbol "}") importSelected
-      <|> As . ModuleName <$> pModuleName
+      <|> As
+      . ModuleName
+      <$> pModuleName
   void $ pOperator "="
   void $ pKeyword "import"
   modName <- ModuleName <$> pModuleName
@@ -170,9 +173,10 @@ pBoxed =
     try (Float <$> lexeme (L.float <* string' "F"))
       <|> try (Double <$> lexeme L.float)
       <|> try (Int64 <$> lexeme (L.decimal <* string' "L"))
-      <|> Int32 <$> lexeme L.decimal
-      <|> lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral)
-      <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"')))
+      <|> Int32
+      <$> lexeme L.decimal
+        <|> lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral)
+        <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"')))
 
 pUnboxed :: Parser (Literal Unboxed)
 pUnboxed =
@@ -180,9 +184,10 @@ pUnboxed =
     try (Double <$> lexeme (L.float <* char '#'))
       <|> try (Float <$> lexeme (L.float <* string' "F#"))
       <|> try (Int32 <$> lexeme (L.decimal <* char '#'))
-      <|> Int64 <$> lexeme (L.decimal <* string' "L#")
-      <|> lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'))
-      <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
+      <|> Int64
+      <$> lexeme (L.decimal <* string' "L#")
+        <|> lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'))
+        <|> lexeme (String . toText <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
 
 pVariable :: Parser (Expr (Malgo 'Parse))
 pVariable =
@@ -212,7 +217,8 @@ pFun =
     start <- getSourcePos
     clauses <-
       between (symbol "{") (symbol "}") $
-        NonEmpty.fromList <$> pClauses
+        NonEmpty.fromList
+          <$> pClauses
     end <- getSourcePos
     pure $ Fn (Range start end) clauses
 

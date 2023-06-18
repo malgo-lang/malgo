@@ -72,7 +72,8 @@ refineExpr (Fn x cs) = do
   isEmptys <- traverse Space.equalEmpty exhaustive
   when (any not isEmptys) $
     errorOn (x.value) $
-      "Pattern is not exhaustive:" <+> pPrint exhaustive
+      "Pattern is not exhaustive:"
+        <+> pPrint exhaustive
   pure $ Fn x cs'
   where
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps

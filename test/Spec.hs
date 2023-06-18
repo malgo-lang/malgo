@@ -1,10 +1,10 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE OverloadedStrings #-}
 -- For `undefined`
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
 import Data.String.Conversions (convertString)
 import Data.Text qualified as Text
-import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (timeout)
@@ -19,13 +19,13 @@ import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
-import System.IO.Silently (hSilence)
 import System.Process.Typed (
   ExitCode (ExitFailure, ExitSuccess),
   byteStringInput,
   nullStream,
   proc,
-  readProcessStderr_,
+  readProcessStderr,
+  readProcessStdout,
   readProcessStdout_,
   runProcess,
   setStderr,
@@ -40,6 +40,7 @@ import Test.Hspec (
   it,
   parallel,
   runIO,
+  shouldBe,
   shouldThrow,
  )
 
@@ -47,7 +48,7 @@ testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
 
 outputDir :: FilePath
-outputDir = "/tmp/malgo_test"
+outputDir = "./test/tmp/malgo_test"
 
 main :: IO ()
 main =
@@ -63,7 +64,7 @@ main =
     describe "Test malgo to-ll" $ parallel do
       for_ testcases \testcase -> do
         describe testcase do
-          it ("test usual case " <> testcase) $ example do
+          it ("test normal case " <> testcase) $ example do
             testNormal (testcaseDir </> testcase)
           it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
             testNoNo (testcaseDir </> testcase)
@@ -71,6 +72,8 @@ main =
             testNoOpt (testcaseDir </> testcase)
           it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
             testNoLift (testcaseDir </> testcase)
+          it ("test agressive case " <> testcase <> " (agressive optimization)") $ example do
+            testAggressive (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" $ parallel do
       for_ examples \examplecase -> do
@@ -80,7 +83,8 @@ main =
     describe "Test malgo to-ll (must be error)" $ parallel do
       for_ errorcases \errorcase -> do
         it ("test error case " <> errorcase) $
-          testError (testcaseDir </> "error" </> errorcase) `shouldThrow` anyException
+          testError (testcaseDir </> "error" </> errorcase)
+            `shouldThrow` anyException
 
 #ifdef TEST_ALL
     describe "Test malgo to-ll on all combinations of optimization options" do
@@ -88,7 +92,7 @@ main =
         describe testcase do
           for_ optimizeOptions \option -> do
             it ("test " <> testcase <> " " <> show (showOptimizeOption option)) $ example do
-              test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option
+              test (testcaseDir </> testcase) (toString $ Text.intercalate "-" $ showOptimizeOption option) True False option LLVM
 #endif
 
 setupTestDir :: IO ()
@@ -100,65 +104,64 @@ setupTestDir = do
 -- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
 setupBuiltin :: IO ()
 setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False defaultOptimizeOption
+  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
 
 -- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
 setupPrelude :: IO ()
 setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False defaultOptimizeOption
+  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
 setupRuntime = do
-  -- setCurrentDirectory "./griff"
-  -- runProcess_ $ proc "cargo" ["build", "--release"]
-  -- setCurrentDirectory "../"
-  -- copyFile "./griff/target/release/libgriff_rustlib.a" (outputDir </> "libs/libgriff_rustlib.a")
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
-compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> IO ()
-compile src dst modPaths lambdaLift noOptimize option =
-  hSilence [stderr] do
-    malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
-    malgoEnv <-
-      pure
-        malgoEnv
-          { dstPath = dst,
-            _modulePaths = [takeDirectory dst, outputDir </> "libs"],
-            lambdaLift,
-            noOptimize,
-            optimizeOption = option
-          }
-    Driver.compile src malgoEnv
+compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
+compile src dst modPaths lambdaLift noOptimize option compileMode = do
+  malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
+  malgoEnv <-
+    pure
+      malgoEnv
+        { dstPath = dst,
+          _modulePaths = [takeDirectory dst, outputDir </> "libs"],
+          lambdaLift,
+          noOptimize,
+          compileMode,
+          testMode = True,
+          optimizeOption = option
+        }
+  Driver.compile src malgoEnv
 
-    -- Check if the generated Koriel code is valid
-    let korielPath = dst -<.> "kor"
-    koriel <- decodeUtf8 <$> readFileBS korielPath
-    case Koriel.parse korielPath koriel of
-      Left err ->
-        let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-            diag' = addFile diag korielPath (toString koriel)
-         in printDiagnostic stderr True False 4 defaultStyle diag' >> exitFailure
-      Right ast -> do
-        Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
+  -- Check if the generated Koriel code is valid
+  let korielPath = dst -<.> "kor"
+  koriel <- decodeUtf8 <$> readFileBS korielPath
+  case Koriel.parse korielPath koriel of
+    Left err ->
+      let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
+          diag' = addFile diag korielPath (toString koriel)
+       in printDiagnostic stdout False False 4 defaultStyle diag' >> exitFailure
+    Right ast -> do
+      Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
 
--- | Get the correct name of `clang`
-getClangCommand :: IO String
-getClangCommand =
-  go ["clang-15", "clang"]
+findCommand :: [String] -> IO String
+findCommand list =
+  go list >>= \case
+    Nothing -> error $ "Command not found: " <> Text.intercalate ", " (map convertString list)
+    Just x -> pure x
   where
-    go [] = error "clang not found"
+    go [] = pure Nothing
     go (x : xs) = do
       exitCode <- runProcess (proc "which" [x] & setStdout nullStream & setStderr nullStream)
       case exitCode of
-        ExitSuccess -> pure x
+        ExitSuccess -> pure $ Just x
         ExitFailure _ -> go xs
 
 test ::
+  HasCallStack =>
   -- | File path of the test case
   FilePath ->
-  -- | Postfix of the output file
+  -- | Type of the test case
   String ->
   -- | Whether to perform lambda-lifting
   Bool ->
@@ -166,70 +169,91 @@ test ::
   Bool ->
   -- | Optimization option
   OptimizeOption ->
+  -- | Compile mode
+  CompileMode ->
   IO ()
-test testcase postfix lambdaLift noOptimize option = do
-  createDirectoryIfMissing True (outputDir </> postfix)
-  let llPath = outputDir </> postfix </> takeBaseName testcase -<.> ".ll"
+test testcase typ lambdaLift noOptimize option compileMode = do
+  createDirectoryIfMissing True (outputDir </> typ)
+  let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
   timeoutWrapper "compile" $
-    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option
+    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
+
+  -- Format and optimize the generated LLVM assembly
+  -- find opt or opt-15
+  opt <- findCommand ["opt-15", "opt"]
+  (exitCode, err) <-
+    readProcessStderr
+      ( proc
+          opt
+          [ "-S",
+            "-O3",
+            "-o",
+            llPath -<.> "opt.ll",
+            llPath
+          ]
+      )
+  putText $ convertString err
+  (opt, exitCode) `shouldBe` (opt, ExitSuccess)
 
   pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
-  clang <- getClangCommand
-  err <-
-    readProcessStderr_
+  clang <- findCommand ["clang-15", "clang"]
+  (exitCode, err) <-
+    readProcessStderr
       ( proc
           clang
           $ [ "-Wno-override-module",
-              "-lm"
-              -- "-Xclang",
-              -- "-opaque-pointers"
+              "-lm",
+              "-g"
+              -- "-O3"
             ]
             <> pkgConfig
             <> [ outputDir </> "libs" </> "runtime.c",
-                 outputDir </> postfix </> takeBaseName testcase -<.> ".ll",
-                 -- outputDir </> "libs" </> "libgriff_rustlib.a",
-                 -- "-lpthread",
-                 -- "-ldl",
+                 outputDir </> typ </> takeBaseName testcase -<.> ".ll",
                  "-o",
-                 outputDir </> postfix </> takeBaseName testcase -<.> ".out"
+                 outputDir </> typ </> takeBaseName testcase -<.> ".out"
                ]
       )
-  hPutStr stderr $ convertString err
-  result <-
+  putText $ convertString err
+  (clang, exitCode) `shouldBe` (clang, ExitSuccess)
+
+  (exitCode, result) <-
     timeoutWrapper "run" $
-      decodeUtf8
-        <$> readProcessStdout_
-          ( proc (outputDir </> postfix </> takeBaseName testcase -<.> ".out") []
+      second decodeUtf8
+        <$> readProcessStdout
+          ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
               & setStdin (byteStringInput "Hello")
           )
+  ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
   expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
-  if map ("-- Expected: " <>) (lines $ Text.stripEnd result) == expected
-    then pass
-    else do
-      Text.hPutStrLn stderr $ "Expected: " <> Text.concat expected
-      Text.hPutStrLn stderr $ "Actual: " <> result
-      exitFailure
+  map ("-- Expected: " <>) (lines $ Text.stripEnd result) `shouldBe` expected
   where
     timeoutWrapper phase m = do
-      timeout 60 m >>= \case
+      timeout (60 * 5) m >>= \case
         Just x -> pure x
         Nothing -> error $ "timeout in " <> phase
 
 testError :: FilePath -> IO ()
 testError testcase = do
-  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption
+  compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
 
 testNormal :: FilePath -> IO ()
-testNormal testcase = test testcase "" True False defaultOptimizeOption
+testNormal testcase = test testcase "normal" True False defaultOptimizeOption LLVM
 
 testNoLift :: FilePath -> IO ()
-testNoLift testcase = test testcase "nolift" False False defaultOptimizeOption
+testNoLift testcase = test testcase "nolift" False False defaultOptimizeOption LLVM
 
 testNoOpt :: FilePath -> IO ()
-testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption
+testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption LLVM
 
 testNoNo :: FilePath -> IO ()
-testNoNo testcase = test testcase "nono" False True defaultOptimizeOption
+testNoNo testcase = test testcase "nono" False True defaultOptimizeOption LLVM
+
+testAggressive :: FilePath -> IO ()
+testAggressive testcase = test testcase "aggressive" True False aggressiveOptimizeOption LLVM
+
+aggressiveOptimizeOption :: OptimizeOption
+aggressiveOptimizeOption =
+  defaultOptimizeOption {inlineThreshold = 30, doSpecializeFunction = True}
 
 #ifdef TEST_ALL
 showOptimizeOption :: OptimizeOption -> [Text]
@@ -241,17 +265,18 @@ showOptimizeOption OptimizeOption {..} =
     <> ["fold-redudant-cast" | doFoldRedundantCast]
     <> ["fold-trivial-call" | doFoldTrivialCall]
     <> ["specialize-function" | doSpecializeFunction]
+    <> ["remove-noop-destruct" | doRemoveNoopDestruct]
 
 optimizeOptions :: [OptimizeOption]
 optimizeOptions =
-  let inlineThreshold = 10
-      doSpecializeFunction = False
+  let OptimizeOption {..} = defaultOptimizeOption
    in [ OptimizeOption {..}
         | doFoldVariable <- [True, False],
           doInlineConstructor <- [True, False],
           doEliminateUnusedLet <- [True, False],
-          doInlineFunction<- [True, False],
+          doInlineFunction <- [True, False],
           doFoldRedundantCast <- [True, False],
-          doFoldTrivialCall <- [True, False]
+          doFoldTrivialCall <- [True, False],
+          doRemoveNoopDestruct <- [True, False]
       ]
 #endif

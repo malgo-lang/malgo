@@ -409,3 +409,5 @@ void *malgo_hash_table_get(struct hash_table *ht, char *key)
   }
   return NULL;
 }
+
+void malgo_print_tag(char tag) { fprintf(stderr, "tag: %d", tag); }

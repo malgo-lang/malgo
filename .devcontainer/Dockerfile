@@ -6,13 +6,13 @@ ARG USER_GID=$USER_UID
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    #
-    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+  && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+  #
+  # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+  && apt-get update \
+  && apt-get install -y sudo \
+  && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+  && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # ********************************************************
 # * Anything else you want to do like clean up goes here *
@@ -27,17 +27,19 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 ENV PATH=$HOME/.cabal/bin:$HOME/.local/bin:$HOME/.ghcup/bin:${PATH}
 
-RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.6.1 && ghcup set ghc 9.6.1
+RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.4.5 && ghcup set ghc 9.4.5
 
 RUN ghcup install cabal 3.10.1.0 && ghcup set cabal 3.10.1.0
 
-RUN ghcup compile hls --git-ref 6640ebf33eeb8a62ccd094e2f47f69106acfd200 --ghc 9.6.1 -j$(nproc)
+RUN ghcup compile hls --git-ref b84110b508e2f30899b84ffc3928a5e20be1615f --ghc 9.4.5 -j$(nproc)
+# RUN ghcup install hls
 
 RUN ghcup gc
 
 WORKDIR $HOME
 
-RUN stack install fourmolu ghc-prof-flamegraph hlint
+RUN cabal install fourmolu-0.13.0.0 --ignore-project
+RUN cabal install ghc-prof-flamegraph hlint --ignore-project
 
 FROM buildpack-deps:stable
 
@@ -47,13 +49,13 @@ ARG USER_GID=$USER_UID
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    #
-    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+  && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+  #
+  # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+  && apt-get update \
+  && apt-get install -y sudo \
+  && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+  && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # ********************************************************
 # * Anything else you want to do like clean up goes here *
@@ -101,6 +103,10 @@ RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 COPY --from=ghcup-install $HOME/.ghcup/ $HOME/.ghcup/
 COPY --from=ghcup-install $HOME/.cabal/ $HOME/.cabal/
 COPY --from=ghcup-install $HOME/.stack/ $HOME/.stack/
-COPY --from=ghcup-install $HOME/.local/ $HOME/.local/
+# COPY --from=ghcup-install $HOME/.local/ $HOME/.local/
 
 ENV PATH=$HOME/.cabal/bin:$HOME/.local/bin:$HOME/.ghcup/bin:${PATH}
+
+RUN sudo chown -R $USERNAME:$USERNAME $HOME/.ghcup
+RUN sudo chown -R $USERNAME:$USERNAME $HOME/.cabal
+RUN sudo chown -R $USERNAME:$USERNAME $HOME/.stack
