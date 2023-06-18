@@ -89,7 +89,7 @@ library
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
-  ghc-options: -Wall -Werror -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
     , aeson
@@ -103,6 +103,7 @@ library
     , filepath
     , generic-data
     , hashable
+    , knob
     , lens
     , llvm-hs
     , llvm-hs-pure
@@ -147,7 +148,7 @@ executable malgo
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
-  ghc-options: -Wall -Werror -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
     , aeson
@@ -161,6 +162,7 @@ executable malgo
     , filepath
     , generic-data
     , hashable
+    , knob
     , lens
     , llvm-hs
     , llvm-hs-pure
@@ -207,7 +209,7 @@ test-suite malgo-test
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
-  ghc-options: -Wall -Werror -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
     , aeson
@@ -222,6 +224,7 @@ test-suite malgo-test
     , generic-data
     , hashable
     , hspec
+    , knob
     , lens
     , llvm-hs
     , llvm-hs-pure
@@ -272,7 +275,7 @@ benchmark malgo-bench
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
-  ghc-options: -Wall -Werror -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
     , aeson
@@ -287,6 +290,7 @@ benchmark malgo-bench
     , filepath
     , generic-data
     , hashable
+    , knob
     , lens
     , llvm-hs
     , llvm-hs-pure

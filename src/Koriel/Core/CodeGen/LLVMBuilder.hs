@@ -1,6 +1,7 @@
 module Koriel.Core.CodeGen.LLVMBuilder (
   CodeGenM,
   CodeGenEnv (..),
+  runCodeGen,
   as,
   BlockBuilderT,
   runBlockBuilderT,
@@ -23,17 +24,17 @@ module Koriel.Core.CodeGen.LLVMBuilder (
   ret,
   function,
   newString,
+  generateAsByteString,
 ) where
 
 import Control.Lens (traverseOf, traversed, _1)
 import Control.Monad.Cont
 import Data.HashMap.Strict qualified as HashMap
+import Data.Knob qualified as Knob
 import Data.Text qualified as Text
 import Koriel.Prelude
 import Koriel.Pretty
 import Text.Regex.TDFA ((=~))
-
--- TODO: Remove dependency to Koriel.Core.Type
 
 -- * Monads
 
@@ -49,6 +50,23 @@ data CodeGenEnv = CodeGenEnv
 
 newtype CodeGen a = CodeGen (ReaderT CodeGenEnv IO a)
   deriving newtype (Functor, Applicative, Monad, MonadIO)
+
+runCodeGen :: CodeGen a -> Handle -> IO a
+runCodeGen (CodeGen m) output = do
+  register <- newIORef mempty
+  stringCount <- newIORef 0
+  postprocess <- newIORef []
+  let env = CodeGenEnv {register, hint = "x", stringCount, postprocess, output}
+  runReaderT m env
+
+generateAsByteString :: CodeGen () -> IO Text
+generateAsByteString m = do
+  knob <- Knob.newKnob ""
+  Knob.withFileHandle knob "knob_in_LLVMBuilder" WriteMode $ \h -> do
+    runCodeGen m h
+    hFlush h
+  bytes <- Knob.getContents knob
+  pure $ decodeUtf8 bytes
 
 as :: MonadReader CodeGenEnv m => m a -> Text -> m a
 as m hint = local (\env -> env {hint}) m
@@ -67,8 +85,10 @@ class ToAsm a where
 -- * LLVM objects
 
 data Type
-  = SimpleType Text
-  | FunctionType Type [Type]
+  = -- | e.g. "i32", "{ i32, i32 }"
+    SimpleType Text
+  | -- | e.g. "i32 (i32, i32)*" (After LLVM 16, function pointer is just "ptr". But we need to keep the structure of the function type.)
+    FunctionType Type [Type]
 
 instance Pretty Type where
   pPrint (SimpleType t) = pPrint t
@@ -311,3 +331,7 @@ mallocType typ = autoRegister do
   putAsmLn $ "call ptr @malgo_malloc(i64 " <> sizeOf typ <> ")"
   where
     sizeOf typ = "ptrtoint (ptr getelementptr (" <> typ <> ", ptr null, i32 1) to i64)"
+
+switch :: (MonadReader CodeGenEnv m, MonadIO m) => Constant -> m () -> [(Constant, m ())] -> m ()
+switch scrutinee defaultBranch branches = do
+  undefined
