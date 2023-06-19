@@ -1,7 +1,7 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
-import Control.Exception (assert)
+import Control.Exception (IOException, assert, catch)
 import Data.Binary qualified as Binary
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (ConvertibleStrings (convertString))
@@ -50,7 +50,14 @@ withDump isDump label m = do
 
 -- | Compile the parsed AST.
 compileFromAST :: FilePath -> MalgoEnv -> Syntax.Module (Malgo 'Parse) -> IO ()
-compileFromAST srcPath env parsedAst = runMalgoM env act
+compileFromAST srcPath env parsedAst =
+  runMalgoM env act
+    `catch` \(e :: IOException) -> do
+      -- Sometimes, `act` throws `ResourceVanished` exception.
+      -- I don't know why this happens, but I think it's not a big problem.
+      -- So, I catch this exception and print error message.
+      hPrint stderr e
+      exitFailure
   where
     moduleName = parsedAst._moduleName
     act = do

@@ -80,17 +80,14 @@ optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT
     for_ topVars $ \case
       (name, t, Ret (Let [LocalDef f _ (Fun ps e)] (Atom (Var v)))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
       _ -> pass
-  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeStmt state e) topVars
-  topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeStmt (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
+  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeTopStmt state e) topVars
+  topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeTopStmt (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
 
-optimizeStmt :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Stmt (Id Type) -> f (Stmt (Id Type))
-optimizeStmt state (Ret e) = Ret <$> optimizeExpr state e
-
-optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
-optimizeExpr state expr = do
+optimizeTopStmt :: (MonadReader OptimizeEnv m, MonadIO m) => CallInlineEnv -> Stmt (Id Type) -> m (Stmt (Id Type))
+optimizeTopStmt state s = do
   option <- asks (.option)
-  5 `times` opt option $ expr
+  times 5 (opt option) s
   where
     opt option = do
       pure
@@ -102,12 +99,12 @@ optimizeExpr state expr = do
         >=> runOpt option.doFoldTrivialCall foldTrivialCall
         >=> runOpt option.doSpecializeFunction specializeFunction
         >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
-        >=> normalizeExpr
-    runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
-    runOpt flag f =
+        >=> flatStmt
+    runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Stmt (Id Type) -> m (Stmt (Id Type))
+    runOpt flag f s =
       if flag
-        then f
-        else pure
+        then expr f s
+        else pure s
 
 -- | Remove variable binding if that variable is an alias of another variable.
 foldVariable :: (Eq a, Monad f) => Expr a -> f (Expr a)

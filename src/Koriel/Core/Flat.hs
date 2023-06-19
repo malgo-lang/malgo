@@ -1,5 +1,5 @@
 -- | Normalization for Core using delimited continuations.
-module Koriel.Core.Flat (normalize, normalizeExpr) where
+module Koriel.Core.Flat (normalize, normalizeExpr, flatStmt) where
 
 import Control.Lens (has, traverseOf, traversed, _2)
 import Control.Monad.Trans.Cont (ContT (..), evalContT, shiftT)
@@ -34,8 +34,8 @@ normalizeExpr ::
     HasUniqSupply env
   ) =>
   Expr (Id Type) ->
-  m (Expr (Id Type))
-normalizeExpr e = runContT (flat e) pure
+  m (Stmt (Id Type))
+normalizeExpr e = runContT (flat e) (pure . Ret)
 
 -- Traverse the expression tree.
 flat ::
@@ -45,7 +45,7 @@ flat ::
     HasModuleName env
   ) =>
   Expr (Id Type) ->
-  ContT (Expr (Id Type)) m (Expr (Id Type))
+  ContT (Stmt (Id Type)) m (Expr (Id Type))
 flat e@Atom {} = pure e
 flat e@Call {} = pure e
 flat e@CallDirect {} = pure e
@@ -54,40 +54,42 @@ flat e@BinOp {} = pure e
 flat e@Cast {} = pure e
 flat (Let ds e) = shiftT \k -> do
   ds <- traverse flatLocalDef ds
-  e <- inScope k $ flat e
-  pure $ Let ds e
+  Ret e <- inScope k $ flat e
+  pure $ Ret $ Let ds e
 flat (Match scr cs) = shiftT \k -> do
   scr <- flat scr
   cs <- traverse (flatCase k) cs
   scr' <- newTemporalId "scrutinee" (typeOf scr)
-  pure $ assign scr' scr $ matchToSwitch scr' cs
+  pure $ Ret $ assign scr' scr $ matchToSwitch scr' cs
 flat (Switch v cs e) = shiftT \k -> do
-  cs <- traverseOf (traversed . _2) ?? cs $ \e ->
-    inScope k (flat e)
-  e <- inScope k (flat e)
-  pure $ Switch v cs e
+  cs <- traverseOf (traversed . _2) ?? cs $ \e -> do
+    Ret e' <- inScope k (flat e)
+    pure e'
+  Ret e <- inScope k (flat e)
+  pure $ Ret $ Switch v cs e
 flat (SwitchUnboxed v cs e) = shiftT \k -> lift do
-  cs <- traverseOf (traversed . _2) ?? cs $ \e ->
-    runContT (flat e) k
-  e <- runContT (flat e) k
-  pure $ SwitchUnboxed v cs e
+  cs <- traverseOf (traversed . _2) ?? cs $ \e -> do
+    Ret e' <- runContT (flat e) k
+    pure e'
+  Ret e <- runContT (flat e) k
+  pure $ Ret $ SwitchUnboxed v cs e
 flat (Destruct v con xs e) = shiftT \k -> do
-  e <- inScope k $ flat e
-  pure $ Destruct v con xs e
+  Ret e <- inScope k $ flat e
+  pure $ Ret $ Destruct v con xs e
 flat (DestructRecord v kvs e) = shiftT \k -> do
-  e <- inScope k $ flat e
-  pure $ DestructRecord v kvs e
+  Ret e <- inScope k $ flat e
+  pure $ Ret $ DestructRecord v kvs e
 flat (Assign x v e) = shiftT \k -> do
   v <- flat v
   -- eの中の式は、必ず(= x v [.])の中に現れないといけない。
   -- そのため、resetする。
   -- (= x v e)の外の式を持ち込むため、shiftしたkを適用する。
-  e <- inScope k $ flat e
-  pure $ assign x v e
+  Ret e <- inScope k $ flat e
+  pure $ Ret $ assign x v e
 flat e@Error {} = pure e
 
 flatStmt :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Stmt (Id Type) -> m (Stmt (Id Type))
-flatStmt (Ret e) = Ret <$> normalizeExpr e
+flatStmt (Ret e) = normalizeExpr e
 
 flatCase ::
   ( MonadReader env m,
@@ -95,20 +97,20 @@ flatCase ::
     HasUniqSupply env,
     HasModuleName env
   ) =>
-  (Expr (Id Type) -> m (Expr (Id Type))) ->
+  (Expr (Id Type) -> m (Stmt (Id Type))) ->
   Case (Id Type) ->
   ContT r' m (Case (Id Type))
 flatCase k (Unpack con as e) = do
-  e <- inScope k $ flat e
+  Ret e <- inScope k $ flat e
   pure $ Unpack con as e
 flatCase k (OpenRecord kvs e) = do
-  e <- inScope k $ flat e
+  Ret e <- inScope k $ flat e
   pure $ OpenRecord kvs e
 flatCase k (Exact u e) = do
-  e <- inScope k $ flat e
+  Ret e <- inScope k $ flat e
   pure $ Exact u e
 flatCase k (Bind n t e) = do
-  e <- inScope k $ flat e
+  Ret e <- inScope k $ flat e
   pure $ Bind n t e
 
 matchToSwitch :: Id Type -> [Case (Id Type)] -> Expr (Id Type)
@@ -142,7 +144,7 @@ flatLocalDef ::
     HasModuleName env
   ) =>
   LocalDef (Id Type) ->
-  ContT (Expr (Id Type)) m (LocalDef (Id Type))
+  ContT (Stmt (Id Type)) m (LocalDef (Id Type))
 flatLocalDef (LocalDef var ty obj) = LocalDef var ty <$> flatObj obj
 
 flatObj ::
